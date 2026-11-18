@@ -9,6 +9,7 @@ extension GameStateTransfer on GameState {
     final idx = transferMarket.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
     final player = transferMarket[idx];
+    if (!_minorRuleAllows(player)) return false;
     final fee = TransferTermsEngine.agentFee(player.marketValue);
     if (_save!.budget < player.marketValue + fee) return false;
     if (!_registrationAllows(player)) return false;
@@ -21,6 +22,17 @@ extension GameStateTransfer on GameState {
     _notify();
     await _persist();
     return true;
+  }
+
+  /// 18歳未満の国際移籍の禁止に当たらないか。当たれば理由を
+  /// [lastSigningBlockReason]に入れる。
+  bool _minorRuleAllows(Player player) {
+    if (!_isInternationalMinor(player)) return true;
+    lastSigningBlockReason = Tr.pick(
+        '18歳未満の選手は国をまたいで移籍できません。',
+        'Players under 18 cannot move between countries.');
+    _notify();
+    return false;
   }
 
   /// 登録の決まり([SquadRegistration])で加えられるか。加えられないときは
@@ -82,6 +94,8 @@ extension GameStateTransfer on GameState {
     final idx = transferMarket.indexWhere((p) => p.id == playerId);
     if (idx < 0) return (attempted: false, accepted: false);
     final player = transferMarket[idx];
+    lastSigningBlockReason = null;
+    if (!_minorRuleAllows(player)) return (attempted: false, accepted: false);
     if (offer <= 0 ||
         _save!.budget < offer + TransferTermsEngine.agentFee(offer)) {
       return (attempted: false, accepted: false);
@@ -409,6 +423,7 @@ extension GameStateTransfer on GameState {
     final idx = transferMarket.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
     final player = transferMarket[idx];
+    if (!_minorRuleAllows(player)) return false;
     if (!_registrationAllows(player)) return false;
     final total = player.marketValue;
     final downPayment = (total * 0.3).round();
@@ -438,15 +453,23 @@ extension GameStateTransfer on GameState {
     return true;
   }
 
+  /// ローンで市場の選手を借りる。[length]が半年なら冬の窓が開く日まで、
+  /// 1年ならシーズン末(6月30日)まで。冬の窓より後に組む半年は1年と同じ。
+  ///
+  /// 窓の外でも、登録中の GK が全員出られないときは GK を1人だけ借りられる
+  /// ([isGoalkeeperEmergency])。
   Future<bool> signLoanPlayer(
     String playerId, {
     bool withBuyOption = false,
+    LoanLength length = LoanLength.full,
   }) async {
     if (_save == null) return false;
-    if (!isTransferWindowOpen) return false;
+    lastSigningBlockReason = null;
     final idx = transferMarket.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
     final player = transferMarket[idx];
+    if (!_windowAllowsSigning(player, permanent: false)) return false;
+    if (!_minorRuleAllows(player)) return false;
     if (!_registrationAllows(player)) return false;
     final fee = (player.marketValue * GameState.loanFeeRatioPercent / 100).round();
     if (_save!.budget < fee) return false;
@@ -455,7 +478,9 @@ extension GameStateTransfer on GameState {
 
     _book(LedgerCategory.transfers, -(fee));
     player.isLoan = true;
-    player.loanWeeksRemaining = GameState.loanDurationWeeks;
+    player.loanWeeksRemaining = 0;
+    player.loanEndDate =
+        TransferWindowCalendar.loanEndDate(today, currentLeagueTheme, length);
     player.wage = max(1, (player.wage * 0.6).round());
     player.loanBuyOptionFee = withBuyOption
         ? (player.marketValue * GameState.loanBuyOptionRatio).round()
@@ -482,6 +507,7 @@ extension GameStateTransfer on GameState {
     _book(LedgerCategory.transfers, -(fee));
     player.isLoan = false;
     player.loanWeeksRemaining = 0;
+    player.loanEndDate = null;
     player.loanBuyOptionFee = null;
     // ローン中は週俸を6割に軽減していた(signLoanPlayer)ため、完全移籍化に
     // あたって元の水準に戻す。そのままだと恒久的に割引契約のままになる。
@@ -565,9 +591,12 @@ extension GameStateTransfer on GameState {
     }
     final scoutLevel = _save!.infrastructure.staffLevel(StaffRole.scout);
     final count = ScoutingEngine.scoutCandidateCountFor(scoutLevel);
+    // 18歳未満は国をまたいで移れないので、スカウト網は国内の有望株だけを
+    // 探す(どの国の子かを付けておく)。
     scoutCandidates = List.generate(
       count,
-      (_) => ScoutingEngine.generateScoutedProspect(scoutLevel: scoutLevel),
+      (_) => ScoutingEngine.generateScoutedProspect(scoutLevel: scoutLevel)
+        ..originLeague = currentLeagueTheme.name,
     );
   }
 
@@ -604,11 +633,13 @@ extension GameStateTransfer on GameState {
     if (_save!.budget < cost) return false;
     if (_save!.youthProspects.length >= maxP) return false;
     _book(LedgerCategory.facilities, -(cost));
+    if (_isInternationalMinor(scoutCandidates[idx])) return false;
     final signed = scoutCandidates.removeAt(idx);
     _save!.youthProspects.add(signed);
     final scoutLevel = infra.staffLevel(StaffRole.scout);
     scoutCandidates.add(
-      ScoutingEngine.generateScoutedProspect(scoutLevel: scoutLevel),
+      ScoutingEngine.generateScoutedProspect(scoutLevel: scoutLevel)
+        ..originLeague = currentLeagueTheme.name,
     );
     _notify();
     await _persist();
@@ -707,10 +738,12 @@ extension GameStateTransfer on GameState {
   List<Player> get freeAgents => _save?.freeAgents ?? [];
 
   /// フリーエージェントを新規契約で獲得する(移籍金は発生しない)。
+  ///
+  /// 所属の無い選手は移籍ではないので、窓の外でも取れる(実在の決まりと
+  /// 同じ)。登録の枠と年俸の枠は窓の中と同じに見る。
   Future<bool> signFreeAgent(String playerId) async {
     if (_save == null) return false;
     lastSigningBlockReason = null;
-    if (!isTransferWindowOpen) return false;
     final idx = _save!.freeAgents.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
     if (!_registrationAllows(_save!.freeAgents[idx])) return false;
@@ -766,10 +799,15 @@ extension GameStateTransfer on GameState {
   /// 通常の貸出で受け取る週次のレンタル料の割合(市場価値に対する百分率)。
   static const int standardLoanFeePercent = 2;
 
+  ///
+  /// [length]が半年なら冬の窓が開く日、1年ならシーズン末に戻る。
+  /// [recallClause]を付けると、冬の窓のあいだに呼び戻せる
+  /// ([recallLoanedOutPlayer])。
   Future<bool> loanOutPlayer(
-    String playerId,
-    int weeks, {
+    String playerId, {
+    LoanLength length = LoanLength.half,
     bool guaranteePlayingTime = false,
+    bool recallClause = false,
   }) async {
     if (_save == null) return false;
     if (!isTransferWindowOpen) return false;
@@ -786,10 +824,12 @@ extension GameStateTransfer on GameState {
     if (candidates.isEmpty) return false;
     final destination = candidates[Random().nextInt(candidates.length)];
 
-    player.loanedOutWeeksRemaining = weeks.clamp(
-      GameState.loanOutMinWeeks,
-      GameState.loanOutMaxWeeks,
-    );
+    final until =
+        TransferWindowCalendar.loanEndDate(today, currentLeagueTheme, length);
+    player.loanedOutUntil = until;
+    player.loanedOutWeeksRemaining = max(
+        1, (TransferWindowCalendar.daysBetween(today, until) / 7).ceil());
+    player.loanRecallClause = recallClause;
     player.loanedOutToClubName = destination.name;
     // 育成型かどうか。約束させると成長は大きいが、レンタル料は入らない。
     player.loanedWithPlayingTime = guaranteePlayingTime;
@@ -799,6 +839,23 @@ extension GameStateTransfer on GameState {
     if (wasStarter) {
       LineupUtils.autoFill(team);
     }
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 呼び戻しの条項が付いた貸し出しを、冬の窓のあいだに打ち切って戻す。
+  bool canRecallLoanedOutPlayer(Player p) =>
+      p.isLoanedOut &&
+      p.loanRecallClause &&
+      currentTransferWindow?.kind == TransferWindowKind.winter;
+
+  Future<bool> recallLoanedOutPlayer(String playerId) async {
+    if (_save == null) return false;
+    final p = userTeam.players.where((p) => p.id == playerId).firstOrNull;
+    if (p == null || !canRecallLoanedOutPlayer(p)) return false;
+    lastLoanReturns = [];
+    _returnFromLoan(p);
     _notify();
     await _persist();
     return true;
@@ -887,6 +944,8 @@ extension GameStateTransfer on GameState {
     }
     if (team.players.length <= minSquadSize) return false;
     final player = team.players.firstWhere((p) => p.id == offer.playerId);
+    // 18歳未満は国をまたいで移れない。他の国のクラブには売れない。
+    if (player.age < 18 && _isForeignClub(offer.buyerClubName)) return false;
     if (player.isLoanedOut) {
       // ローン放出中の選手は貸出先クラブが保有しているため、その間はオファーを
       // 承諾できない(貸出期間が終われば復帰するので、オファー自体は保持する)。
@@ -995,7 +1054,7 @@ extension GameStateTransfer on GameState {
     // 締切の節には、相場より高い駆け込みのオファーが入ることがある。
     // 期限があるだけでは判断が変わらない。締切間際に「今なら高く売れる」
     // 場面が来るから、期限を意識することになる。
-    if (isTransferDeadlineMatchday) {
+    if (isTransferDeadlineDay) {
       final deadlineOffer = _rollDeadlineDayOffer(team);
       if (deadlineOffer != null) {
         _save!.incomingOffers.add(deadlineOffer);

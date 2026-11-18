@@ -67,4 +67,48 @@ class SquadRegistration {
 
   static bool canAdd(Team team, Player incoming) =>
       blockReason(team, incoming) == null;
+
+  /// 締切で登録の枠を超えているか(22歳以上が25人を超える、または国外で
+  /// 育った22歳以上が17人を超える)。誕生日で21歳を越えた選手が出ると起きる。
+  static bool isOverLimit(Team team) =>
+      seniorCount(team) > seniorLimit ||
+      nonHomegrownSeniorCount(team) > nonHomegrownLimit;
+
+  /// 締切で名簿から外す選手(枠を超えていなければ空)。
+  ///
+  /// オーナーが「外す」と決めた選手([Player.leaveOffRegistration])を先に
+  /// 外し、それでも超えていれば総合力の低い選手から外す。国外で育った
+  /// 選手が17人を超えていれば、まず国外で育った選手から外す。GK は
+  /// 登録に2人は残す(全員が出られないと試合が組めない)。
+  static List<Player> plannedExclusions(Team team) {
+    if (!isOverLimit(team)) return const [];
+    final seniors = team.players.where(isSenior).toList();
+    final registered = seniors.where((p) => !p.leaveOffRegistration).toList();
+    final excluded = seniors.where((p) => p.leaveOffRegistration).toList();
+
+    int gkCount() =>
+        registered.where((p) => p.position == Position.gk).length;
+
+    /// [pool]から総合力が最も低い1人を外す。外せる人が居なければ false。
+    bool dropLowest(bool Function(Player) inPool) {
+      final candidates = registered
+          .where(inPool)
+          .where((p) => p.position != Position.gk || gkCount() > 2)
+          .toList()
+        ..sort((a, b) => a.overall.compareTo(b.overall));
+      if (candidates.isEmpty) return false;
+      registered.remove(candidates.first);
+      excluded.add(candidates.first);
+      return true;
+    }
+
+    while (registered.where((p) => !p.isHomegrown).length >
+        nonHomegrownLimit) {
+      if (!dropLowest((p) => !p.isHomegrown)) break;
+    }
+    while (registered.length > seniorLimit) {
+      if (!dropLowest((_) => true)) break;
+    }
+    return excluded;
+  }
 }

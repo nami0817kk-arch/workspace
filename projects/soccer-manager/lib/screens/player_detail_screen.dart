@@ -7,6 +7,7 @@ import '../logic/retirement_engine.dart';
 import '../logic/dynamics_engine.dart';
 import '../logic/lineup_utils.dart';
 import '../logic/match_engine.dart';
+import '../logic/transfer_window.dart';
 import '../models/attributes.dart';
 import '../models/contract_negotiation.dart';
 import '../models/player.dart';
@@ -379,8 +380,12 @@ class PlayerDetailScreen extends StatelessWidget {
           ),
           Text(
             p.isLoan
-                ? Tr.pick('年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローン残り${p.loanWeeksRemaining}週',
-                    'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${Tr.plural(p.loanWeeksRemaining, 'week')} left on loan')
+                ? (p.loanEndDate != null
+                    ? Tr.pick(
+                        '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローンは${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}まで',
+                        'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / on loan until ${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}')
+                    : Tr.pick('年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローン残り${p.loanWeeksRemaining}週',
+                        'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${Tr.plural(p.loanWeeksRemaining, 'week')} left on loan'))
                 : Tr.pick(
                     '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}',
                     'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
@@ -564,11 +569,39 @@ class PlayerDetailScreen extends StatelessWidget {
           else if (p.isLoanedOut)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(
-                Tr.pick('他クラブへローン放出中は契約更新・放出の対象外です。期間終了時に自動的に復帰します。',
-                    'A player out on loan cannot be re-signed or released. They return automatically when the loan ends.'),
-                style: TextStyle(
-                    color: SemanticColors.subtleText(context), fontSize: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Tr.pick('他クラブへローン放出中は契約更新・放出の対象外です。期間終了時に自動的に復帰します。',
+                        'A player out on loan cannot be re-signed or released. They return automatically when the loan ends.'),
+                    style: TextStyle(
+                        color: SemanticColors.subtleText(context), fontSize: 12),
+                  ),
+                  if (p.loanedOutUntil != null)
+                    Text(
+                      Tr.pick(
+                          '${TransferWindowCalendar.formatMonthDay(p.loanedOutUntil!)}に戻ります${p.loanRecallClause ? '(冬の窓で呼び戻せる条項付き)' : ''}',
+                          'Back on ${TransferWindowCalendar.formatMonthDay(p.loanedOutUntil!)}${p.loanRecallClause ? ' (recall clause for the winter window)' : ''}'),
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  if (p.loanRecallClause) ...[
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.flight_land),
+                      onPressed: gameState.canRecallLoanedOutPlayer(p)
+                          ? () async {
+                              final ok =
+                                  await gameState.recallLoanedOutPlayer(playerId);
+                              ok
+                                  ? FeedbackService.success()
+                                  : FeedbackService.error();
+                            }
+                          : null,
+                      label: Text(Tr.pick('冬の窓で呼び戻す', 'Recall him in the winter window')),
+                    ),
+                  ],
+                ],
               ),
             )
           else ...[
@@ -989,7 +1022,11 @@ class PlayerDetailScreen extends StatelessWidget {
 
   void _showLoanOutDialog(BuildContext context) {
     final gameState = context.read<GameState>();
-    int weeks = 8;
+    final theme = gameState.currentLeagueTheme;
+    final today = gameState.today;
+    final halfOk = TransferWindowCalendar.halfLoanAvailable(today, theme);
+    LoanLength length = halfOk ? LoanLength.half : LoanLength.full;
+    bool recallClause = false;
     bool guaranteePlayingTime = false;
     showDialog<void>(
       context: context,
@@ -1000,16 +1037,37 @@ class PlayerDetailScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(Tr.pick('$weeks週間、他クラブへ貸し出します。期間中の給与は放出先が負担します。',
-                  'He goes out on loan for ${Tr.plural(weeks, 'week')}. The other club pays his wages while he is there.')),
-              Slider(
-                value: weeks.toDouble(),
-                min: GameState.loanOutMinWeeks.toDouble(),
-                max: GameState.loanOutMaxWeeks.toDouble(),
-                divisions:
-                    GameState.loanOutMaxWeeks - GameState.loanOutMinWeeks,
-                label: Tr.pick('$weeks週', Tr.plural(weeks, 'week')),
-                onChanged: (v) => setState(() => weeks = v.round()),
+              Text(Tr.pick(
+                  '${TransferWindowCalendar.formatMonthDay(TransferWindowCalendar.loanEndDate(today, theme, length))}まで他クラブへ貸し出します。期間中の給与は放出先が負担します。',
+                  'He goes out on loan until ${TransferWindowCalendar.formatMonthDay(TransferWindowCalendar.loanEndDate(today, theme, length))}. The other club pays his wages while he is there.')),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: [
+                  if (halfOk)
+                    ChoiceChip(
+                      selected: length == LoanLength.half,
+                      onSelected: (_) =>
+                          setState(() => length = LoanLength.half),
+                      label: Text(Tr.pick('半年(冬の窓まで)', 'Half season')),
+                    ),
+                  ChoiceChip(
+                    selected: length == LoanLength.full,
+                    onSelected: (_) => setState(() => length = LoanLength.full),
+                    label: Text(Tr.pick('1年(シーズン末まで)', 'Full season')),
+                  ),
+                ],
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                value: recallClause,
+                onChanged: (v) => setState(() => recallClause = v ?? false),
+                title: Text(Tr.pick('冬の窓で呼び戻せる条項を付ける', 'Add a winter recall clause')),
+                subtitle: Text(
+                  Tr.pick('冬の窓のあいだなら、期間の途中でも戻せる。',
+                      'You can bring him back during the winter window, before the loan ends.'),
+                  style: const TextStyle(fontSize: 12),
+                ),
               ),
               // 育成型レンタル。ただ出すか、育てるために出すかの違い。
               CheckboxListTile(
@@ -1036,8 +1094,9 @@ class PlayerDetailScreen extends StatelessWidget {
                 Navigator.pop(ctx);
                 final ok = await gameState.loanOutPlayer(
                   playerId,
-                  weeks,
+                  length: length,
                   guaranteePlayingTime: guaranteePlayingTime,
+                  recallClause: recallClause,
                 );
                 ok ? FeedbackService.success() : FeedbackService.error();
                 if (context.mounted) {

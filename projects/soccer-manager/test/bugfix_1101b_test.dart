@@ -170,7 +170,7 @@ void main() {
     }
     final candidate = team.players.firstWhere((p) => !p.isLoanedOut);
 
-    final ok = await game.loanOutPlayer(candidate.id, 8);
+    final ok = await game.loanOutPlayer(candidate.id);
 
     expect(ok, isFalse, reason: '試合に出せる人数が最低人数を割り込む');
   });

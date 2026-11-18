@@ -118,11 +118,16 @@ class PreMatchCheck {
   }
 
   static bool _cannotPlay(Player p) =>
-      p.isInjured || p.isSuspended || p.isLoanedOut || p.isOnInternationalDuty;
+      p.isInjured ||
+      p.isSuspended ||
+      p.isLoanedOut ||
+      p.isOnInternationalDuty ||
+      p.notRegistered;
 
   static String _reasonFor(Player p) {
     if (p.isInjured) return Tr.pick('負傷', 'injured');
     if (p.isSuspended) return Tr.pick('出場停止', 'suspended');
+    if (p.notRegistered) return Tr.pick('登録外', 'not registered');
     if (p.isLoanedOut) return Tr.pick('ローン放出中', 'out on loan');
     return Tr.pick('代表召集中', 'on international duty');
   }

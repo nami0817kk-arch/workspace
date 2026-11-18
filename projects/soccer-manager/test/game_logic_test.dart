@@ -1176,7 +1176,7 @@ void main() {
   });
 
   test(
-      'GameState.signLoanPlayer adds a loan player that returns after loanDurationWeeks',
+      'GameState.signLoanPlayer adds a loan player that returns at the season end',
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
@@ -1190,7 +1190,9 @@ void main() {
     final signed =
         gameState.userTeam.players.firstWhere((p) => p.id == target.id);
     expect(signed.isLoan, isTrue);
-    expect(signed.loanWeeksRemaining, GameState.loanDurationWeeks);
+    // 既定は1年(シーズン末の6月30日まで)。
+    expect(signed.loanEndDate,
+        DateTime(gameState.today.year + 1, 6, 30));
   });
 
   test(
@@ -3433,11 +3435,13 @@ void main() {
         team.players.firstWhere((p) => team.startingXI.contains(p.id));
     final wageBefore = ContractEngine.weeklyWageBill(team);
 
-    final ok = await gameState.loanOutPlayer(target.id, 8);
+    final ok = await gameState.loanOutPlayer(target.id);
 
     expect(ok, isTrue);
     expect(target.isLoanedOut, isTrue);
-    expect(target.loanedOutWeeksRemaining, 8);
+    // 既定は半年(冬の窓が開く日まで)。
+    expect(target.loanedOutUntil, isNotNull);
+    expect(target.loanedOutUntil!.month, 1);
     expect(team.startingXI.contains(target.id), isFalse);
     expect(ContractEngine.weeklyWageBill(team), wageBefore - target.wage);
   });
@@ -3448,13 +3452,29 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.userTeam.players.first;
-    await gameState.loanOutPlayer(target.id, GameState.loanOutMinWeeks);
-
-    for (int i = 0; i < GameState.loanOutMinWeeks; i++) {
-      await gameState.playNextMatchday();
-      if (gameState.isHalfTime) {
-        await gameState.playSecondHalf();
+    await gameState.loanOutPlayer(target.id);
+    // 戻る日の直前まで日付を進めておき、次の節で戻る日を越える。
+    final until = target.loanedOutUntil!;
+    gameState.save!.today = DateTime(until.year, until.month, until.day - 1);
+    final league = gameState.save!.league;
+    while (gameState.nextMatchDate != null &&
+        gameState.nextMatchDate!.isBefore(until)) {
+      // 戻る日より前の節は消化済みにしておく。
+      final next = league.nextUnplayedFixture!.matchday;
+      for (final f in league.fixturesForMatchday(next)) {
+        f.result ??= MatchResult(
+          matchday: next,
+          homeTeamId: f.homeTeamId,
+          awayTeamId: f.awayTeamId,
+          homeGoals: 0,
+          awayGoals: 0,
+          events: [],
+        );
       }
+    }
+    await gameState.playNextMatchday();
+    if (gameState.isHalfTime) {
+      await gameState.playSecondHalf();
     }
 
     expect(target.isLoanedOut, isFalse);
@@ -3510,12 +3530,8 @@ void main() {
     await gameState.startNewGame('テストFC');
     expect(gameState.isTransferWindowOpen, isTrue);
 
-    for (int i = 0; i < 5; i++) {
-      await gameState.playNextMatchday();
-      if (gameState.isHalfTime) {
-        await gameState.playSecondHalf();
-      }
-    }
+    // 夏の窓の締切(9月1日)を過ぎた秋の日。
+    gameState.save!.today = DateTime(gameState.today.year, 10, 15);
     expect(gameState.isTransferWindowOpen, isFalse);
 
     gameState.save!.budget = 999999;
@@ -3529,25 +3545,8 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final league = gameState.save!.league;
-    // 折り返しの節(クラブ数で変わる。24クラブなら46節の23節目)。
-    final half = league.fixtures
-            .map((f) => f.matchday)
-            .reduce((a, c) => a > c ? a : c) ~/
-        2;
-    for (final f in league.fixtures) {
-      if (f.matchday < half) {
-        f.result ??= MatchResult(
-          matchday: f.matchday,
-          homeTeamId: f.homeTeamId,
-          awayTeamId: f.awayTeamId,
-          homeGoals: 0,
-          awayGoals: 0,
-          events: [],
-        );
-      }
-    }
-
+    // 1月の冬の窓。
+    gameState.save!.today = DateTime(gameState.today.year + 1, 1, 15);
     expect(gameState.isTransferWindowOpen, isTrue);
   });
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/signing_proposal_engine.dart';
+import '../logic/squad_registration_engine.dart';
+import '../logic/transfer_window.dart';
 import '../logic/transfer_terms_engine.dart';
 import '../models/player.dart';
 import '../models/save_game.dart';
@@ -132,8 +134,16 @@ class _TransferScreenState extends State<TransferScreen>
       children: [
         _TransferWindowBanner(
           open: windowOpen,
+          deadlineDay: gameState.isTransferDeadlineDay,
           label: gameState.transferWindowStatusLabel,
         ),
+        if (gameState.isGoalkeeperEmergency)
+          _NoticeLine(
+            text: Tr.pick(
+                '登録中のGKが全員出られないため、窓の外でもGKを1人だけローンで取れます(緊急の特例)。',
+                'Every registered goalkeeper is unavailable, so you may take one goalkeeper on loan outside the window (emergency rule).'),
+          ),
+        _RegistrationCard(windowOpen: windowOpen),
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
           child: Row(
@@ -236,7 +246,12 @@ class _TransferScreenState extends State<TransferScreen>
                                   ),
                                   const SizedBox(width: 8),
                                   FilledButton(
-                                    onPressed: windowOpen && !squadFull
+                                    onPressed: (windowOpen ||
+                                                (gameState
+                                                        .isGoalkeeperEmergency &&
+                                                    pr.player.position ==
+                                                        Position.gk)) &&
+                                            !squadFull
                                         ? () => _showAcquireSheet(
                                             context, pr.player)
                                         : null,
@@ -268,6 +283,7 @@ class _TransferScreenState extends State<TransferScreen>
       children: [
         _TransferWindowBanner(
           open: windowOpen,
+          deadlineDay: gameState.isTransferDeadlineDay,
           label: gameState.transferWindowStatusLabel,
         ),
         Padding(
@@ -275,8 +291,8 @@ class _TransferScreenState extends State<TransferScreen>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              Tr.pick('移籍金なし・年俸のみで獲得できる選手です。',
-                  'These players cost no fee, only wages.'),
+              Tr.pick('移籍金なし・年俸のみで獲得できる選手です。所属が無いので、移籍の窓の外でも取れます。',
+                  'These players cost no fee, only wages. They have no club, so you can sign them outside the window too.'),
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
@@ -300,7 +316,7 @@ class _TransferScreenState extends State<TransferScreen>
                   players: freeAgents,
                   market: false,
                   budget: 0,
-                  canSign: !squadFull && windowOpen,
+                  canSign: !squadFull,
                   onSign: (p) => _signFreeAgent(context, p),
                 ),
         ),
@@ -424,6 +440,8 @@ class _TransferScreenState extends State<TransferScreen>
     final agentFee = TransferTermsEngine.agentFee(total);
     final loanFee = (total * GameState.loanFeeRatioPercent / 100).round();
     final buyOptionFee = (total * GameState.loanBuyOptionRatio).round();
+    // 窓の外で開けるのは GK の緊急の特例だけ。そのときは期限付き(ローン)のみ。
+    final permanentAllowed = gameState.isTransferWindowOpen;
 
     showModalBottomSheet<void>(
       context: context,
@@ -444,7 +462,7 @@ class _TransferScreenState extends State<TransferScreen>
                 title: Text(Tr.pick('一括で獲得', 'Pay it all now')),
                 subtitle:
                     Text(Tr.pick('${formatMoney(total)}を即座に支払う(別に代理人手数料${formatMoney(agentFee)})', 'Pay ${formatMoney(total)} immediately (plus ${formatMoney(agentFee)} agent fee)')),
-                enabled: save.budget >= total + agentFee,
+                enabled: permanentAllowed && save.budget >= total + agentFee,
                 onTap: () {
                   Navigator.pop(ctx);
                   _acquire(
@@ -464,8 +482,9 @@ class _TransferScreenState extends State<TransferScreen>
                       : Tr.pick('市場価値より安い移籍金を提示する(安いほど断られやすい)',
                           'Bid below his value. The lower you go, the more likely they refuse'),
                 ),
-                enabled: !gameState.transferOffersRejectedThisWeek
-                    .contains(player.id),
+                enabled: permanentAllowed &&
+                    !gameState.transferOffersRejectedThisWeek
+                        .contains(player.id),
                 onTap: () {
                   Navigator.pop(ctx);
                   _showNegotiationDialog(context, player);
@@ -476,7 +495,7 @@ class _TransferScreenState extends State<TransferScreen>
                 title: Text(Tr.pick('分割払いで獲得', 'Pay in instalments')),
                 subtitle: Text(Tr.pick('頭金${formatMoney(downPayment)} + 残額を4週で均等払い',
                     '${formatMoney(downPayment)} down, the rest in equal payments over 4 weeks')),
-                enabled: save.budget >= downPayment + agentFee,
+                enabled: permanentAllowed && save.budget >= downPayment + agentFee,
                 onTap: () {
                   Navigator.pop(ctx);
                   _acquire(
@@ -491,15 +510,17 @@ class _TransferScreenState extends State<TransferScreen>
                 title: Text(Tr.pick('ローンで獲得', 'Take him on loan')),
                 subtitle: Text(
                   Tr.pick(
-                      '契約金${formatMoney(loanFee)}・給与の6割を負担・${GameState.loanDurationWeeks}週で契約終了',
-                      '${formatMoney(loanFee)} fee, 60% of his wages, ending after ${Tr.plural(GameState.loanDurationWeeks, 'week')}'),
+                      '契約金${formatMoney(loanFee)}・給与の6割を負担・期間は半年(冬の窓まで)か1年(シーズン末まで)',
+                      '${formatMoney(loanFee)} fee, 60% of his wages, for half a season (to the winter window) or the full season'),
                 ),
                 enabled: save.budget >= loanFee,
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(ctx);
+                  final length = await _chooseLoanLength(context);
+                  if (length == null || !context.mounted) return;
                   _acquire(
                     context,
-                    () => gameState.signLoanPlayer(player.id),
+                    () => gameState.signLoanPlayer(player.id, length: length),
                     player.name,
                   );
                 },
@@ -514,13 +535,16 @@ class _TransferScreenState extends State<TransferScreen>
                       '${formatMoney(loanFee)} fee, 60% of his wages, and you can make it permanent for ${formatMoney(buyOptionFee)} at any point'),
                 ),
                 enabled: save.budget >= loanFee,
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(ctx);
+                  final length = await _chooseLoanLength(context);
+                  if (length == null || !context.mounted) return;
                   _acquire(
                     context,
                     () => gameState.signLoanPlayer(
                       player.id,
                       withBuyOption: true,
+                      length: length,
                     ),
                     player.name,
                   );
@@ -529,6 +553,38 @@ class _TransferScreenState extends State<TransferScreen>
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// ローンの長さを選ぶ。半年は冬の窓が開く日まで、1年はシーズン末まで。
+  /// 冬の窓より後(半年が組めない時期)は1年だけ。
+  Future<LoanLength?> _chooseLoanLength(BuildContext context) {
+    final gameState = context.read<GameState>();
+    final theme = gameState.currentLeagueTheme;
+    final today = gameState.today;
+    final halfOk = TransferWindowCalendar.halfLoanAvailable(today, theme);
+    final halfEnd = TransferWindowCalendar.formatMonthDay(
+        TransferWindowCalendar.loanEndDate(today, theme, LoanLength.half));
+    final fullEnd = TransferWindowCalendar.formatMonthDay(
+        TransferWindowCalendar.loanEndDate(today, theme, LoanLength.full));
+    return showDialog<LoanLength>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text(Tr.pick('ローンの期間', 'Loan length')),
+        children: [
+          if (halfOk)
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(ctx, LoanLength.half),
+              child: Text(Tr.pick('半年(冬の窓が開く$halfEndまで)',
+                  'Half a season (until the winter window opens, $halfEnd)')),
+            ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(ctx, LoanLength.full),
+            child: Text(Tr.pick('1年(シーズン末の$fullEndまで)',
+                'Full season (until $fullEnd)')),
+          ),
+        ],
       ),
     );
   }
@@ -556,15 +612,25 @@ class _TransferScreenState extends State<TransferScreen>
   }
 }
 
-/// 移籍ウィンドウの開閉状態を示すバナー。閉じている間は選手の獲得・放出ができない。
+/// 移籍の窓の開閉を示すバナー。閉じている間は選手の獲得・放出ができない
+/// (自由契約の選手はいつでも取れる)。締切日は札を付けて目立たせる。
 class _TransferWindowBanner extends StatelessWidget {
   final bool open;
+  final bool deadlineDay;
   final String label;
-  const _TransferWindowBanner({required this.open, required this.label});
+  const _TransferWindowBanner({
+    required this.open,
+    required this.label,
+    this.deadlineDay = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final color = open ? Colors.green.shade700 : Colors.grey.shade700;
+    final color = deadlineDay
+        ? SemanticColors.negative(context)
+        : open
+            ? Colors.green.shade700
+            : Colors.grey.shade700;
     return Container(
       width: double.infinity,
       color: color.withValues(alpha: 0.12),
@@ -573,6 +639,23 @@ class _TransferWindowBanner extends StatelessWidget {
         children: [
           Icon(open ? Icons.lock_open : Icons.lock, size: 16, color: color),
           const SizedBox(width: 8),
+          if (deadlineDay) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                Tr.pick('締切日', 'DEADLINE DAY'),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
           Expanded(
             child: Text(
               label,
@@ -580,6 +663,141 @@ class _TransferWindowBanner extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 1行の注意書き。
+class _NoticeLine extends StatelessWidget {
+  final String text;
+  const _NoticeLine({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.orange, fontSize: 12),
+      ),
+    );
+  }
+}
+
+/// 締切で出す登録の名簿。22歳以上が25人(国外で育った選手は17人)を
+/// 超えているときだけ出る。外れる予定の選手を見せ、入れ替えられるようにする。
+class _RegistrationCard extends StatelessWidget {
+  final bool windowOpen;
+  const _RegistrationCard({required this.windowOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    final team = gameState.userTeam;
+    final unregistered = team.players.where((p) => p.notRegistered).toList();
+    if (!windowOpen) {
+      if (unregistered.isEmpty) return const SizedBox.shrink();
+      return _NoticeLine(
+        text: Tr.pick(
+            '登録外(次の窓まで公式戦に出られない): ${unregistered.map((p) => p.name).join('、')}',
+            'Not registered (ineligible until the next window): ${unregistered.map((p) => p.name).join(', ')}'),
+      );
+    }
+    if (!SquadRegistration.isOverLimit(team)) return const SizedBox.shrink();
+    final planned = gameState.plannedRegistrationExclusions;
+    final deadline = gameState.transferDeadline;
+    return Card(
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Tr.pick('締切の登録名簿', 'Squad list at the deadline'),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              Tr.pick(
+                  '22歳以上は${SquadRegistration.seniorLimit}人まで(国外で育った選手は${SquadRegistration.nonHomegrownLimit}人まで)です。'
+                      '${deadline == null ? '締切' : TransferWindowCalendar.formatMonthDay(deadline)}に次の選手が名簿から外れ、次の窓まで公式戦に出られません: '
+                      '${planned.map((p) => p.name).join('、')}',
+                  'Only ${SquadRegistration.seniorLimit} players aged 22 or over may be registered (${SquadRegistration.nonHomegrownLimit} trained abroad). '
+                      'At the deadline${deadline == null ? '' : ' (${TransferWindowCalendar.formatMonthDay(deadline)})'} these players drop off the list and cannot play until the next window: '
+                      '${planned.map((p) => p.name).join(', ')}'),
+              style: const TextStyle(fontSize: 12),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () => _editRoster(context),
+                child: Text(Tr.pick('名簿を選ぶ', 'Choose the list')),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _editRoster(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => Consumer<GameState>(
+        builder: (ctx, gameState, _) {
+          final seniors = gameState.userTeam.players
+              .where(SquadRegistration.isSenior)
+              .toList()
+            ..sort((a, b) => b.overall.compareTo(a.overall));
+          final planned =
+              gameState.plannedRegistrationExclusions.map((p) => p.id).toSet();
+          return AlertDialog(
+            title: Text(Tr.pick('締切の登録名簿', 'Squad list at the deadline')),
+            content: SizedBox(
+              width: 420,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Text(
+                    Tr.pick('外す選手に印を付けてください。足りない分は総合力の低い選手から自動で外します。',
+                        'Tick the players to leave out. If that is not enough, the lowest rated are left out for you.'),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  for (final p in seniors)
+                    CheckboxListTile(
+                      dense: true,
+                      value: p.leaveOffRegistration,
+                      onChanged: (v) =>
+                          gameState.setLeaveOffRegistration(p.id, v ?? false),
+                      title: Text(Tr.pick(
+                          '${p.name}(${p.position.label}・${p.age}歳・総合${p.overall})',
+                          '${p.name} (${p.position.label}, ${p.age}, overall ${p.overall})')),
+                      subtitle: Text(
+                        [
+                          if (p.isHomegrown) Tr.pick('国内育成', 'Homegrown'),
+                          if (planned.contains(p.id))
+                            Tr.pick('締切で外れる', 'Left out at the deadline'),
+                        ].join(' / '),
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: planned.contains(p.id)
+                                ? SemanticColors.negative(ctx)
+                                : null),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(Tr.pick('閉じる', 'Close')),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

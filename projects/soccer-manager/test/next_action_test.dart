@@ -103,15 +103,21 @@ void main() {
     // 締切まで遠いうちは黙っている(毎週の雑音にしない)。
     expect(
       NextActionAdvisor.top(game.save!, game.userTeam,
-          transferDeadlineMatchdaysLeft:
-              NextActionAdvisor.deadlineWarningMatchdays + 1),
+          transferDeadlineDaysLeft: NextActionAdvisor.deadlineWarningDays + 1),
       isNull,
     );
 
     final soon = NextActionAdvisor.top(game.save!, game.userTeam,
-        transferDeadlineMatchdaysLeft: 1);
+        transferDeadlineDaysLeft: 0);
     expect(soon?.target, NextActionTarget.transfer);
-    expect(soon?.message, contains('今節'));
+    expect(soon?.message, contains('締切日'));
+
+    // 締切まで日があっても、次の試合の前に閉まるなら知らせる。
+    final last = NextActionAdvisor.top(game.save!, game.userTeam,
+        transferDeadlineDaysLeft: NextActionAdvisor.deadlineWarningDays + 5,
+        transferDeadlineBeforeNextMatch: true);
+    expect(last?.target, NextActionTarget.transfer);
+    expect(last?.message, contains('次の試合の前'));
   });
 
   test('ウィンドウが閉じているときは締切の話をしない', () async {
@@ -126,7 +132,7 @@ void main() {
     // 閉じているときは null を渡す約束。
     expect(
       NextActionAdvisor.top(game.save!, game.userTeam,
-          transferDeadlineMatchdaysLeft: null),
+          transferDeadlineDaysLeft: null),
       isNull,
     );
   });
@@ -136,7 +142,7 @@ void main() {
     game.save!.budget = -100;
 
     final all = NextActionAdvisor.all(game.save!, game.userTeam,
-        transferDeadlineMatchdaysLeft: 1);
+        transferDeadlineDaysLeft: 1);
     expect(all.length, greaterThan(1), reason: '検査の前提が崩れている');
     expect(NextActionAdvisor.top(game.save!, game.userTeam), isNotNull);
   });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../logic/transfer_window.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/contract_engine.dart';
@@ -205,8 +206,12 @@ class FinanceScreen extends StatelessWidget {
                           subtitle: Text(Tr.pick(
                               '${p.position.label} / 年俸 ${formatMoney(annualFromWeekly(p.wage))}',
                               '${p.position.label} / salary ${formatMoney(annualFromWeekly(p.wage))}')),
-                          trailing: Text(Tr.pick('残り${p.loanWeeksRemaining}週',
-                              '${Tr.plural(p.loanWeeksRemaining, 'week')} left')),
+                          trailing: Text(p.loanEndDate != null
+                              ? Tr.pick(
+                                  '${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}まで',
+                                  'until ${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}')
+                              : Tr.pick('残り${p.loanWeeksRemaining}週',
+                                  '${Tr.plural(p.loanWeeksRemaining, 'week')} left')),
                         ),
                       ),
                   ],

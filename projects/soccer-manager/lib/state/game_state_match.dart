@@ -256,7 +256,7 @@ extension GameStateMatch on GameState {
     // ユーザークラブのみローン期間(週単位)を処理する（CPUクラブは対象外）。
     // 選手契約自体は年単位で結ばれ、シーズン開始時にまとめて消化する
     // (startNextSeason参照)。
-    final loanEnded = ContractEngine.advanceLoanWeek(userTeam);
+    final loanEnded = ContractEngine.advanceLoanWeek(userTeam, today: today);
     for (final p in loanEnded) {
       _clearPlayerRoleReferences(userTeam, p.id);
     }
@@ -376,11 +376,14 @@ extension GameStateMatch on GameState {
     lastInternationalCallUps = _advanceInternationalDuty();
 
     // CPUクラブ同士の移籍市場の週次処理(ユーザーは関与しない)。
-    lastAiTransferNews = AiTransferEngine.maybeGenerate(
-      league.teams,
-      _save!.userTeamId,
-      GameState._aiTransferRng,
-    );
+    // 他のクラブも窓が開いている間しか移籍しない。
+    lastAiTransferNews = isTransferWindowOpen
+        ? AiTransferEngine.maybeGenerate(
+            league.teams,
+            _save!.userTeamId,
+            GameState._aiTransferRng,
+          )
+        : null;
 
     // CPUクラブの簡易的な週次成長(施設・スタッフの上乗せは無いが、
     // 何もしないとユーザーだけが伸び続けリーグ全体が停滞するため)。
@@ -499,25 +502,23 @@ extension GameStateMatch on GameState {
 
     // ローン放出の週次処理(期間終了で自動的にチームへ復帰する)。
     lastLoanReturns = [];
-    for (final p in userTeam.players.where((p) => p.isLoanedOut)) {
+    for (final p in userTeam.players.where((p) => p.isLoanedOut).toList()) {
       // 武者修行: 貸出先で毎週実戦に出て成長する(若手ほど効果大)。
       TrainingEngine.applyLoanDevelopment(p);
-      p.loanedOutWeeksRemaining -= 1;
-      if (p.loanedOutWeeksRemaining <= 0) {
-        final loanClub = p.loanedOutToClubName;
-        p.loanedOutToClubName = null;
-        lastLoanReturns.add(p.name);
-        if (p.loanStartOverall > 0) {
-          final delta = p.overall - p.loanStartOverall;
-          _logNews(
-            Tr.pick(
-                '${p.name}が武者修行(${loanClub ?? 'ローン先'})から復帰。総合 ${p.loanStartOverall}→${p.overall}${delta > 0 ? '(+$delta成長)' : ''}',
-                "${p.name} is back from his loan at ${loanClub ?? 'his loan club'}. Overall ${p.loanStartOverall}→${p.overall}${delta > 0 ? ' (+$delta)' : ''}"),
-            context: Tr.pick('ローン復帰', 'Loan return'),
-          );
-          p.loanStartOverall = 0;
+      final until = p.loanedOutUntil;
+      if (until != null) {
+        // 日付で持つ貸し出しは、戻る日に届いたら戻す。
+        if (!today.isBefore(until)) {
+          _returnFromLoan(p);
+        } else {
+          final days = TransferWindowCalendar.daysBetween(today, until);
+          p.loanedOutWeeksRemaining = max(1, (days / 7).ceil());
         }
+        continue;
       }
+      // 日付の無い貸し出し(旧セーブを読む前に作った選手など)は週数で数える。
+      p.loanedOutWeeksRemaining -= 1;
+      if (p.loanedOutWeeksRemaining <= 0) _returnFromLoan(p);
     }
 
     // 成長推移の記録(自クラブの選手とユース昇格候補のみ)。選手詳細の
@@ -685,7 +686,8 @@ extension GameStateMatch on GameState {
     }
 
     // 移籍市場は全員を作り直さず、数人だけ入れ替える(持続的な市場)。
-    transferMarket = TransferMarket.rotate(transferMarket);
+    transferMarket =
+        TransferMarket.rotate(transferMarket, home: currentLeagueTheme);
     transferOffersRejectedThisWeek.clear();
     _refreshScoutCandidates();
 

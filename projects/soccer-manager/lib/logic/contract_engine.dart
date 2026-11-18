@@ -25,10 +25,19 @@ class ContractEngine {
   /// チームから除外して返す(元クラブへ復帰するため、フリーエージェントには
   /// 加えない)。契約(年単位)自体はシーズン開始時に[advanceSeason]でまとめて
   /// 処理する。
-  static List<Player> advanceLoanWeek(Team team) {
+  ///
+  /// ローンの終わりは日付([Player.loanEndDate])で持つ。[today]がその日に
+  /// 届いたら戻す。日付の無いローン(旧セーブ・テストで作った選手)だけ、
+  /// 週数を1つ減らして数える。
+  static List<Player> advanceLoanWeek(Team team, {DateTime? today}) {
     final expired = <Player>[];
     for (final p in List<Player>.from(team.players)) {
       if (!p.isLoan) continue;
+      final end = p.loanEndDate;
+      if (end != null) {
+        if (today != null && !today.isBefore(end)) expired.add(p);
+        continue;
+      }
       if (p.loanWeeksRemaining > 0) {
         p.loanWeeksRemaining -= 1;
       }

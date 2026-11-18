@@ -68,7 +68,11 @@ class SquadTable extends StatelessWidget {
   Widget _row(BuildContext context, Player p, int index) {
     final scheme = Theme.of(context).colorScheme;
     final unavailable =
-        p.isInjured || p.isSuspended || p.isOnInternationalDuty || p.isLoanedOut;
+        p.isInjured ||
+        p.isSuspended ||
+        p.isOnInternationalDuty ||
+        p.isLoanedOut ||
+        p.notRegistered;
     final expiring = !p.isLoan && p.contractYearsRemaining <= 1;
     final starting = startingIds.contains(p.id);
     const small = TextStyle(fontSize: 12);

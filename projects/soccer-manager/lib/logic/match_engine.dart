@@ -561,7 +561,8 @@ class MatchEngine {
                 !p.isInjured &&
                 !p.isOnInternationalDuty &&
                 !p.isLoanedOut &&
-                !p.isSuspended,
+                !p.isSuspended &&
+                !p.notRegistered,
           )
           .toList();
       if (lineup.length >= 7) return lineup;
@@ -572,7 +573,8 @@ class MatchEngine {
               !p.isInjured &&
               !p.isOnInternationalDuty &&
               !p.isLoanedOut &&
-              !p.isSuspended,
+              !p.isSuspended &&
+              !p.notRegistered,
         )
         .toList()
       ..sort((a, b) => b.overall.compareTo(a.overall));
@@ -2076,7 +2078,8 @@ class MatchEngine {
     if (incoming.isInjured ||
         incoming.isSuspended ||
         incoming.isOnInternationalDuty ||
-        incoming.isLoanedOut) {
+        incoming.isLoanedOut ||
+        incoming.notRegistered) {
       return false;
     }
 
