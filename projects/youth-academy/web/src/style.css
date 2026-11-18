@@ -19,6 +19,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 #rail button.tab.on{background:linear-gradient(180deg,#2c5bb0,#1f4a9a);color:#fff;box-shadow:0 2px 4px rgba(0,0,0,.3)}
 #rail button.tab.on::before{content:"";position:absolute;left:-4px;top:7px;bottom:7px;width:4px;border-radius:0 3px 3px 0;background:var(--yellow)}
 #rail button.tab.on i{color:var(--yellow)}
+#rail .tdot{position:absolute;top:4px;right:9px;width:8px;height:8px;border-radius:50%;background:#ff6b5e;box-shadow:0 0 0 2px #1d3566}
 @media (max-height:400px){#rail{gap:1px}#rail button.tab{min-height:39px;padding:3px 0}#rail .logo{padding:1px 0 2px}}
 #main{flex:1;min-width:0;display:flex;flex-direction:column;padding:calc(6px + var(--sat)) calc(8px + var(--sar)) calc(6px + var(--sab)) 8px;gap:6px;position:relative}
 .full #rail{display:none}

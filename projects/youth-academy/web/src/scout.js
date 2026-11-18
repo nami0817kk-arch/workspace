@@ -290,6 +290,8 @@
       p.team = 'B';
       p.num = 0;
       p.hist = [{ y: w.year, w: 40, t: KIND_NAME[c.kind] + 'で入団' }];
+      p.route = KIND_NAME[c.kind]; // 卒業生の紹介文に使う（入ってきた経路と年）
+      p.joinY = w.year + 1;
       w.players[p.id] = p;
       names.add(p.name);
       n++;
@@ -310,6 +312,8 @@
         const G15 = { GK: ['GK'], DF: ['CB', 'CB', 'LB', 'RB'], MF: ['DM', 'CM', 'CM', 'AM'], FW: ['LW', 'RW', 'ST'] }[pos];
         const p = YA.genPlayer(rng, id, 1, G15[rng.int(0, G15.length - 1)], q, names);
         p.hist = [{ y: w.year, w: 40, t: '一般入団' }];
+        p.route = '一般入団';
+        p.joinY = w.year + 1;
         w.players[id] = p;
         have[pos]++;
         n++;
