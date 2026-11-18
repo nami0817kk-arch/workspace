@@ -18,6 +18,7 @@ import 'dart:ui' as ui;
 
 import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/scenario.dart';
 import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/rating.dart';
 import 'package:basketball_career/ui/app.dart';
@@ -105,6 +106,12 @@ void main() {
 
     final pre = careerAt(2, 20);
     await _shoot(t, '3_home_preseason', await _with(pre));
+    await _shoot(t, '1b_scenario', await _controller(), act: (t) async {
+      await t.tap(find.byKey(const Key('scenario')));
+      await t.pumpAndSettle();
+    });
+    final scn = Career.start(seed: 21, team: scenarioTeam(Career.start(seed: 21), Scenario.rebuild))..startScenario(Scenario.rebuild);
+    await _shoot(t, '3b_scenario_card', await _with(scn));
 
     final mid = careerAt(3, 12)..startSeason();
     mid.playBlock();

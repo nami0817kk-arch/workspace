@@ -15,6 +15,7 @@ import '../gm/game_sim.dart';
 import '../gm/league.dart';
 import '../gm/player.dart';
 import '../gm/profile.dart';
+import '../gm/scenario.dart';
 import '../gm/trade.dart';
 import '../monetization/monetization.dart';
 
@@ -123,6 +124,15 @@ class GmController extends ChangeNotifier {
   int newSeed() => _seeds.nextInt(0x7fffffff);
 
   /// [seed] のリーグで、[team] のGMに任される。
+  /// シナリオで始める(チームはお題に合わせて選ぶ)。
+  void newScenario(Scenario s, {int? seed, Difficulty difficulty = Difficulty.normal}) {
+    final sd = seed ?? newSeed();
+    final team = scenarioTeam(Career.start(seed: sd), s);
+    newCareer(team, seed: sd, difficulty: difficulty);
+    career!.startScenario(s);
+    _changed();
+  }
+
   void newCareer(int team, {int? seed, Difficulty difficulty = Difficulty.normal}) {
     career = Career.start(seed: seed ?? newSeed(), team: team, difficulty: difficulty);
     atHome = false;
