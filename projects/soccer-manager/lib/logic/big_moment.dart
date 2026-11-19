@@ -10,6 +10,7 @@ enum BigMomentKind {
   recordSigning,
   recordSale,
   clubRecord,
+  deadlineDay,
 }
 
 extension BigMomentInfo on BigMomentKind {
@@ -23,6 +24,7 @@ extension BigMomentInfo on BigMomentKind {
         BigMomentKind.recordSigning => 'assets/art/record_signing.jpg',
         BigMomentKind.recordSale => 'assets/art/forced_sale.jpg',
         BigMomentKind.clubRecord => 'assets/art/club_record.jpg',
+        BigMomentKind.deadlineDay => 'assets/art/record_signing.jpg',
       };
 
   /// 大きな見出し。
@@ -37,6 +39,7 @@ extension BigMomentInfo on BigMomentKind {
         BigMomentKind.recordSale =>
           Tr.pick('クラブ史上最高額の売却', 'Club record sale'),
         BigMomentKind.clubRecord => Tr.pick('クラブ記録を更新', 'A new club record'),
+        BigMomentKind.deadlineDay => Tr.pick('移籍の締切日', 'Deadline day'),
       };
 }
 

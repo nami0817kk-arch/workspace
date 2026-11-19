@@ -657,9 +657,9 @@ extension GameStateFinance on GameState {
     save.sponsorDeal = null;
     save.namingDeal = null;
     save.pendingNamingOffers = [];
-    save.pendingSponsorOffers = SponsorEngine.generateOffers(
+    save.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
         userTeam.overallRating,
-        tier: startTier);
+        tier: startTier));
     save.economyVersion = SaveGame.currentEconomyVersion;
     save.tvHolidaySeasons = 0;
     save.bankLoans = [];

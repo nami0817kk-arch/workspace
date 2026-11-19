@@ -1390,13 +1390,13 @@ extension GameStateSeason on GameState {
       }
     }
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
-      _save!.pendingSponsorOffers = SponsorEngine.generateOffers(
+      _save!.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
         userTeam.overallRating,
         tier: _save!.currentDivisionTier,
         managerReputation: _save!.managerReputation,
         stadiumLevel:
             _save!.infrastructure.facilityLevel(FacilityType.stadium),
-      );
+      ));
     }
 
     // スタッフの契約消化と、候補の入れ替え。良いスタッフはクラブの規模を

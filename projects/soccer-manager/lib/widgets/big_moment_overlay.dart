@@ -41,7 +41,11 @@ class _BigMomentPresenterState extends State<BigMomentPresenter> {
           .firstOrNull;
       if (kind != null) {
         // 祝いの場面だけ音を鳴らす(降格・決勝で敗れたときは静かに見せる)。
-        const quiet = {BigMomentKind.relegated, BigMomentKind.cupLost};
+        const quiet = {
+          BigMomentKind.relegated,
+          BigMomentKind.cupLost,
+          BigMomentKind.deadlineDay,
+        };
         if (quiet.contains(kind)) {
           FeedbackService.tap();
         } else {
