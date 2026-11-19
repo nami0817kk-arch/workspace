@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-/// はじめの画面の絵。夕焼けの屋外コートで、ゴールを見上げる少年(Gemini で生成した絵、`assets/art/title.jpg`)。
+/// はじめの画面の絵。GMの部屋の窓から、夜のアリーナを見下ろす後ろ姿(2026-11-20 に Cloudflare の FLUX で作り直した絵、`assets/art/title.jpg`)。
 /// 読み込めなければ、コードで描いた夕焼けの絵(ゴールに向かうボールと街のシルエット)に戻る。
 class TitleArt extends StatelessWidget {
   const TitleArt({super.key, this.height = 190});
