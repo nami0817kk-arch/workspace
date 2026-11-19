@@ -1102,6 +1102,7 @@ extension GameStateMatch on GameState {
     );
     if (f != null) {
       f.result = merged;
+      _publishFrontPage(merged, f, lastMilestones);
 
       // 4節ごとに月間最優秀監督賞を判定する(ユーザーが受賞した場合のみ通知・記録する)。
       if (f.matchday - _save!.lastManagerOfMonthCheckpoint >= 4) {
@@ -1304,4 +1305,36 @@ extension GameStateMatch on GameState {
         ..._save!.league.teams,
         ..._save!.continentalTeams,
       ];
+
+  /// 新聞の一面と監督の試合後の一言を作る(自クラブのリーグ戦のあと)。
+  void _publishFrontPage(
+      MatchResult r, Fixture f, List<String> milestones) {
+    final s = _save!;
+    final userId = s.userTeamId;
+    if (r.homeTeamId != userId && r.awayTeamId != userId) return;
+    final home = r.homeTeamId == userId;
+    final oppId = home ? r.awayTeamId : r.homeTeamId;
+    final opp = s.league.teams.where((t) => t.id == oppId).firstOrNull;
+    final gf = home ? r.homeGoals : r.awayGoals;
+    final ga = home ? r.awayGoals : r.homeGoals;
+    final rank = s.league.sortedStandings
+            .indexWhere((x) => x.teamId == userId) +
+        1;
+    s.frontPageHeadline = FrontPageEngine.headline(
+      club: s.clubName,
+      opponent: opp?.name ?? '-',
+      goalsFor: gf,
+      goalsAgainst: ga,
+      derby: isRivalFixture(f),
+      rank: rank,
+      milestones: milestones,
+    );
+    final style = s.infrastructure
+            .staffFor(StaffRole.manager)
+            ?.manager
+            ?.style ??
+        ManagerStyle.pragmatic;
+    s.frontPageQuote = FrontPageEngine.managerQuote(
+        goalsFor: gf, goalsAgainst: ga, style: style);
+  }
 }
