@@ -203,9 +203,13 @@ extension GameStateTalks on GameState {
     required int weeklyWage,
     required int endYear,
     int signingBonus = 0,
+    SquadStatus promise = SquadStatus.regular,
   }) async {
     final out = _termsCore(playerId,
-        weeklyWage: weeklyWage, endYear: endYear, signingBonus: signingBonus);
+        weeklyWage: weeklyWage,
+        endYear: endYear,
+        signingBonus: signingBonus,
+        promise: promise);
     if (out != TermsOutcome.blocked) {
       _notify();
       await _persist();
@@ -218,6 +222,7 @@ extension GameStateTalks on GameState {
     required int weeklyWage,
     required int endYear,
     int signingBonus = 0,
+    SquadStatus promise = SquadStatus.regular,
   }) {
     if (_save == null) return TermsOutcome.blocked;
     lastSigningBlockReason = null;
@@ -296,6 +301,8 @@ extension GameStateTalks on GameState {
       toTier: toTier,
       wasStarter: target?.club?.startingXI.contains(player.id) ?? false,
       wouldStart: _wouldStartHere(player),
+      stepDownFactor: player.traits.stepDownFactor,
+      promise: promise,
     );
     // 他のクラブも誘っていれば、選手は年俸とクラブの格を比べる。
     if (t.hasRival) {
@@ -357,6 +364,13 @@ extension GameStateTalks on GameState {
     if (signingBonus > 0) _book(LedgerCategory.transfers, -signingBonus);
     player.wage = weeklyWage;
     ContractEngine.renewContract(player, endYear: endYear);
+    // 約束した序列と、加入したときの機嫌(順応の高い選手ほど良い)。
+    player.squadStatus = promise;
+    player.promisedStatus =
+        promise.index <= SquadStatus.regular.index ? promise : null;
+    player.promiseMisses = 0;
+    player.promiseBroken = false;
+    player.happiness = player.traits.arrivalHappiness;
     userTeam.players.add(player);
     _save!.transferTalks.remove(t);
     _logNews(

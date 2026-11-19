@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../l10n/tr.dart';
 import 'economy_scale.dart';
+import '../models/player.dart';
 
 /// 選手(代理人)の返事の種類。
 enum TermsReplyKind { accept, counter, walkAway }
@@ -33,20 +34,38 @@ class PlayerTermsEngine {
     required int toTier,
     required bool wasStarter,
     required bool wouldStart,
+    double stepDownFactor = 1.0,
+    SquadStatus promise = SquadStatus.regular,
   }) {
     var base = currentWage.toDouble();
     if (fromTier != null) {
       base = max(currentWage, weeklyWageForValue(marketValue)) * 1.1;
       final diff = toTier - fromTier;
       if (diff > 0) {
-        base *= 1 + 0.2 * diff;
+        // 野心の強い選手ほど、下の部へ移ることを嫌う。
+        base *= 1 + 0.2 * diff * stepDownFactor;
       } else if (diff < 0) {
         base *= 0.95;
       }
     }
     if (wasStarter && !wouldStart) base *= 1.2;
+    base *= promiseFactor(promise);
     return max(minWeeklyWage, base.round());
   }
+
+  /// 約束する序列で、望む年俸がどれだけ変わるか。出番を約束するほど
+  /// 年俸は抑えられる(キープレイヤー -15%、ローテーション +10%、
+  /// 育成枠 +15%)。
+  static double promiseFactor(SquadStatus s) => switch (s) {
+        SquadStatus.keyPlayer => 0.85,
+        SquadStatus.regular => 1.0,
+        SquadStatus.rotation => 1.1,
+        SquadStatus.prospect => 1.15,
+      };
+
+  /// 約束を破ったことになる、続けて先発から外れた節の数。
+  static int promiseTolerance(SquadStatus s) =>
+      s == SquadStatus.keyPlayer ? 3 : 5;
 
   /// 他のクラブが動き始めてから、選手が行き先を決めるまでの日数。
   static const int rivalDecisionDays = 5;

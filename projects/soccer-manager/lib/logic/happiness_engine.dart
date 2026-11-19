@@ -30,9 +30,11 @@ class HappinessEngine {
         // スカッド・ステータス(出場機会の約束)が上の立場ほど、ベンチに
         // 置かれたときの不満が大きくなる(育成枠はほぼ気にしない)。
         final benchPenalty = p.overall >= 65 ? 4 : 2;
+        // 気性の荒い選手ほど、控えに置かれると荒れる。
         delta -= (benchPenalty *
                 personality.benchSensitivity *
-                p.squadStatus.benchExpectationFactor)
+                p.squadStatus.benchExpectationFactor *
+                p.traits.benchFactor)
             .round();
       }
 
@@ -49,6 +51,8 @@ class HappinessEngine {
         delta -= (2 * personality.resultSensitivity).round();
       }
 
+      // プロ意識の高い選手ほど、不満が溜まりにくい。
+      if (delta < 0) delta = (delta * p.traits.gloomFactor).round();
       p.happiness = (p.happiness + delta).clamp(0, 100);
     }
 
