@@ -989,8 +989,11 @@ extension GameStateFinance on GameState {
     // グッズ収入(マーチャンダイジング)。試合の有無に関わらず、監督の評価
     // (=クラブの知名度)が高いほど、商業施設が充実しているほど増える。
     // チケット・スポンサーだけに依存しない収入源として資金繰りを下支えする。
+    // 人気の選手がいるほどグッズが売れる(上位3人の人気から)。
     final merchandiseIncome = ((40 +
                 managerReputation +
+                PlayerPopularityEngine.weeklyMerchBonus(userTeam.players
+                    .where((p) => !p.isLoanedOut)) +
                 ProjectEngine.weeklyMerchandiseBonus(
                     _save!.projects, managerReputation)) *
             commercialMultiplier *
