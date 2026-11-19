@@ -313,6 +313,9 @@ class SaveGame {
 
   /// 今季、破綻して選手を投げ売りしているクラブ。
   List<String> distressedClubIds;
+  /// クラブの文化(ClubCulture の name)と、最後に変えた季。
+  String clubCulture;
+  int clubCultureChangedSeason;
 
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
@@ -616,6 +619,8 @@ class SaveGame {
     this.youthPolicy = 'balanced',
     Map<String, int>? clubCash,
     List<String>? distressedClubIds,
+    this.clubCulture = 'none',
+    this.clubCultureChangedSeason = 0,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -901,6 +906,9 @@ class SaveGame {
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (clubCash.isNotEmpty) 'clubCash': clubCash,
         if (distressedClubIds.isNotEmpty) 'distressedClubIds': distressedClubIds,
+        if (clubCulture != 'none') 'clubCulture': clubCulture,
+        if (clubCultureChangedSeason > 0)
+          'clubCultureChangedSeason': clubCultureChangedSeason,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1090,6 +1098,9 @@ class SaveGame {
         distressedClubIds: (json['distressedClubIds'] as List?)
             ?.map((e) => e as String)
             .toList(),
+        clubCulture: json['clubCulture'] as String? ?? 'none',
+        clubCultureChangedSeason:
+            json['clubCultureChangedSeason'] as int? ?? 0,
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
