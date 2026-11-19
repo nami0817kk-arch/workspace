@@ -4441,7 +4441,9 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
+    // 18歳未満は契約の上限が3年で、年数の検査に当たらない。18〜30歳で見る。
+    final player = gameState.userTeam.players
+        .firstWhere((p) => p.age >= 18 && p.age <= 30);
     player.personality = PlayerPersonality.balanced;
     player.contractYearsRemaining = 1;
     gameState.startContractNegotiation(player.id);
