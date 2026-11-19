@@ -544,7 +544,7 @@ extension GameStateSeason on GameState {
     // スーパーカップの相手は別ディビジョンのことがあり、そのクラブは
     // 再起動後に選手を持っていない(保存しないため)。0人では試合にならない。
     _ensureSquadsForActiveTier([home, away]);
-    final weather = WeatherEngine.roll();
+    final weather = WeatherEngine.roll(month: today.month);
     _liveCupKind = resolvedKind;
     _liveCupHome = home;
     _liveCupAway = away;

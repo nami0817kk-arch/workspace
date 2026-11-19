@@ -558,7 +558,8 @@ extension GameStateMatch on GameState {
         );
         continue;
       }
-      final weather = WeatherEngine.roll();
+      // 天気は季節(今日の月)に合わせる。
+      final weather = WeatherEngine.roll(month: today.month);
       f.weather = weather;
       // CPUクラブは対戦相手との力関係で試合ごとに姿勢を選ぶ
       // (ユーザーの設定には触れない)。
@@ -811,7 +812,7 @@ extension GameStateMatch on GameState {
         );
         continue;
       }
-      final weather = f.weather ?? WeatherEngine.roll();
+      final weather = f.weather ?? WeatherEngine.roll(month: today.month);
       f.weather = weather;
       CpuTacticsAI.applyPreMatch(home, away, userId);
       final isUserFixture = f.homeTeamId == userId || f.awayTeamId == userId;
