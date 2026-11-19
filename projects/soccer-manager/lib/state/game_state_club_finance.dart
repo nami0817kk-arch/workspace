@@ -129,4 +129,10 @@ extension GameStateClubFinance on GameState {
   /// テスト用: 季の終わりの経営の処理だけを走らせる。
   @visibleForTesting
   List<String> debugSettleAiClubFinances() => _settleAiClubFinances();
+
+  /// 自クラブの選手の総合の真ん中(緊急補強の力の目安)。選手がいなければ null。
+  int? get _squadMedianOverall {
+    final o = [for (final p in userTeam.players) p.overall]..sort();
+    return o.isEmpty ? null : o[o.length ~/ 2];
+  }
 }

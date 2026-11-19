@@ -234,6 +234,10 @@ extension GameStateMatch on GameState {
     // 練習はコーチ陣の仕事。オーナーは触れないので、この節の分をここで必ず実施する。
     await runWeeklyTraining();
 
+    // リーグカップは4節ごとに1回戦をまとめて消化する。週の回復より前に
+    // 済ませる(復帰したばかりの選手の試合勘を、カップの試合で戻さない)。
+    _playLeagueCupIfDue();
+
     // 週の経過による負傷回復と自然な疲労回復(休養日)。
     // 疲労回復はトレーニング方針(休養)とは別に、全チーム・
     // 全選手へ毎週一律で適用する。CPUクラブは練習メニューを設定できず、
@@ -273,7 +277,8 @@ extension GameStateMatch on GameState {
     // 緊急補強してスカッドが組めなくなる事態を防ぐ(安全網)。
     lastEmergencySignings = [];
     while (userTeam.players.length < minSquadSize) {
-      final signing = FreeAgentEngine.generateEmergencySigning();
+      final signing = FreeAgentEngine.generateEmergencySigning(
+          squadMedian: _squadMedianOverall);
       ContractEngine.renewContract(signing);
       userTeam.players.add(signing);
       lastEmergencySignings.add(signing.name);
@@ -299,8 +304,6 @@ extension GameStateMatch on GameState {
     _checkPromisesWeekly();
     // 大きな怪我は、手術か保存療法かを選ばせる。
     _reviewInjuries();
-    // リーグカップは4節ごとに1回戦をまとめて消化する。
-    _playLeagueCupIfDue();
     // 先発に仲の良い選手・仲の悪い選手がいるか。
     RelationsEngine.applyWeekly(userTeam);
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {

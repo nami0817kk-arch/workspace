@@ -1410,7 +1410,8 @@ extension GameStateSeason on GameState {
     // 契約満了・引退により編成人数が最低人数を割り込んだ場合の緊急補強(安全網)。
     lastEmergencySignings = [];
     while (userTeam.players.length < seasonStartSquadSize) {
-      final signing = FreeAgentEngine.generateEmergencySigning();
+      final signing = FreeAgentEngine.generateEmergencySigning(
+          squadMedian: _squadMedianOverall);
       ContractEngine.renewContract(signing);
       userTeam.players.add(signing);
       lastEmergencySignings.add(signing.name);
