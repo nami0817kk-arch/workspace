@@ -1243,6 +1243,11 @@ class GameState extends ChangeNotifier {
   /// 同じ週に再交渉できない(満額での獲得は引き続き可能)。節が進むとクリア。
   final Set<String> transferOffersRejectedThisWeek = {};
 
+  /// 交渉中の選手を他のクラブが狙い始めるか。乱数で起きるので、交渉の
+  /// 流れそのものを確かめるテストでは止める。
+  @visibleForTesting
+  bool rivalsEnabled = true;
+
   /// クラブニュース履歴の保持上限。超えた分は古いものから捨てる
   /// (セーブデータの肥大化を防ぎつつ、2〜3シーズン分は見返せる量)。
   static const int newsLogLimit = 120;

@@ -261,7 +261,7 @@ extension GameStateTalks on GameState {
       await _persist();
       return TermsOutcome.refused;
     }
-    final demand = PlayerTermsEngine.demand(
+    var demand = PlayerTermsEngine.demand(
       currentWage: player.wage,
       marketValue: player.marketValue,
       fromTier: fromTier,
@@ -269,6 +269,15 @@ extension GameStateTalks on GameState {
       wasStarter: target?.club?.startingXI.contains(player.id) ?? false,
       wouldStart: _wouldStartHere(player),
     );
+    // 他のクラブも誘っていれば、選手は年俸とクラブの格を比べる。
+    if (t.hasRival) {
+      demand = max(
+          demand,
+          PlayerTermsEngine.rivalPull(
+              rivalWage: t.rivalWage,
+              rivalTier: _tierOfClub(t.rivalClubId!) ?? toTier,
+              toTier: toTier));
+    }
     final years = max(1, endYear - Player.contractClockYear + 1);
     final effective = PlayerTermsEngine.effectiveWeekly(
         weeklyWage: weeklyWage, years: years, signingBonus: signingBonus);
@@ -342,8 +351,9 @@ extension GameStateTalks on GameState {
 
   /// 日付が進んだぶん、相手の返事を受け取り、期限の切れた話を流す。
   /// 来たオファーへの対案の返事もここで受け取る。
-  void _advanceTransferTalks(DateTime after) {
+  void _advanceTransferTalks(DateTime before, DateTime after) {
     if (_save == null) return;
+    final days = TransferWindowCalendar.daysBetween(before, after);
     _advanceIncomingCounters(after);
     final talks = _save!.transferTalks;
     if (talks.isEmpty) return;
@@ -364,7 +374,9 @@ extension GameStateTalks on GameState {
         final gone = !_save!.freeAgents.any((p) => p.id == t.playerId);
         if (gone || (t.deadline != null && t.deadline!.isBefore(after))) {
           talks.remove(t);
+          continue;
         }
+        _advanceRival(t, after, days);
         continue;
       }
       final player = talkPlayer(t.playerId);
@@ -390,6 +402,7 @@ extension GameStateTalks on GameState {
             context: ctx);
         continue;
       }
+      if (_advanceRival(t, after, days)) continue;
       if (t.stage != TransferTalkStage.waiting ||
           t.replyOn == null ||
           t.replyOn!.isAfter(after)) {
@@ -441,6 +454,100 @@ extension GameStateTalks on GameState {
               context: ctx);
       }
     }
+  }
+
+  // ---- 他のクラブとの競合 ----
+
+  /// 他のクラブが動き出す・選手が行き先を決める。選手が他へ行ったら true
+  /// (話は消える)。
+  bool _advanceRival(TransferTalk t, DateTime after, int days) {
+    if (!t.isOpen) return false;
+    if (!t.hasRival) {
+      if (days <= 0 || !rivalsEnabled) return false;
+      final player = talkPlayer(t.playerId);
+      if (player == null) return false;
+      final club = _sellingClubOf(t.playerId);
+      final key = club != null &&
+          ([...club.players]..sort((a, b) => b.overall.compareTo(a.overall)))
+              .take(3)
+              .any((q) => q.id == player.id);
+      final daily = PlayerTermsEngine.rivalDailyChance(keyPlayer: key);
+      final chance = 1 - pow(1 - daily, days);
+      if (GameState._transferOfferRng.nextDouble() < chance) {
+        _startRival(t, player, after);
+      }
+      return false;
+    }
+    final decides = t.rivalDecidesOn;
+    if (decides == null || !decides.isBefore(after)) return false;
+    final player = talkPlayer(t.playerId);
+    final rival =
+        _worldTeams.where((x) => x.id == t.rivalClubId).firstOrNull;
+    _save!.transferTalks.remove(t);
+    if (player == null || rival == null) return true;
+    if (t.freeAgent) {
+      _save!.freeAgents.removeWhere((p) => p.id == player.id);
+    } else {
+      final target = _acquisitionTarget(player.id);
+      if (target == null) return true;
+      _takeFromSeller(target);
+    }
+    player.wage = t.rivalWage;
+    ContractEngine.applyTransferContract(player);
+    rival.players.add(player);
+    _logNews(
+        Tr.pick('${player.name}は${rival.name}を選んだ(年俸${formatMoney(annualFromWeekly(t.rivalWage))})。こちらとの話は流れた。',
+            '${player.name} chose ${rival.name} (${formatMoney(annualFromWeekly(t.rivalWage))} a year). Your talks are over.'),
+        context: Tr.pick('移籍', 'Transfer'));
+    return true;
+  }
+
+  /// 他のクラブが[player]を狙い始める。同じかそれより上の部のクラブから選ぶ。
+  void _startRival(TransferTalk t, Player player, DateTime after) {
+    final seller = _sellingClubOf(player.id);
+    final sellerTier =
+        seller == null ? _save!.currentDivisionTier : (_tierOfClub(seller.id) ?? 1);
+    final candidates = [
+      for (final c in _worldTeams)
+        if (c.id != _save!.userTeamId &&
+            c.id != seller?.id &&
+            c.players.length < maxSquadSize &&
+            (_tierOfClub(c.id) ?? 99) <= sellerTier)
+          c,
+    ];
+    if (candidates.isEmpty) return;
+    final rival =
+        candidates[GameState._transferOfferRng.nextInt(candidates.length)];
+    final rivalTier = _tierOfClub(rival.id) ?? sellerTier;
+    final base = PlayerTermsEngine.demand(
+      currentWage: player.wage,
+      marketValue: player.marketValue,
+      fromTier: t.freeAgent ? null : sellerTier,
+      toTier: rivalTier,
+      wasStarter: false,
+      wouldStart: true,
+    );
+    t
+      ..rivalClubId = rival.id
+      ..rivalClubName = rival.name
+      ..rivalWage =
+          (base * (1 + GameState._transferOfferRng.nextDouble() * 0.15)).round()
+      ..rivalDecidesOn = after
+          .add(const Duration(days: PlayerTermsEngine.rivalDecisionDays));
+    _logNews(
+        Tr.pick(
+            '${rival.name}も${player.name}の獲得に動いている。${TransferWindowCalendar.formatMonthDay(t.rivalDecidesOn!)}ごろまでに契約しないと、あちらへ行く。',
+            '${rival.name} are after ${player.name} too. Sign him by about ${TransferWindowCalendar.formatMonthDay(t.rivalDecidesOn!)} or he goes there.'),
+        context: Tr.pick('移籍', 'Transfer'));
+  }
+
+  /// テスト用: [playerId]との話に、他のクラブを今すぐ入らせる。
+  @visibleForTesting
+  void debugStartRival(String playerId) {
+    final t = talkFor(playerId);
+    final p = talkPlayer(playerId);
+    if (t == null || p == null) return;
+    _startRival(t, p, today);
   }
 
   // ---- 売る側: 来たオファーに対案を返す ----

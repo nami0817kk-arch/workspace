@@ -656,6 +656,13 @@ class _TransferScreenState extends State<TransferScreen>
                   Text(Tr.pick(
                       '今の年俸: ${formatMoney(annualFromWeekly(current))}',
                       'Current salary: ${formatMoney(annualFromWeekly(current))}')),
+                  if (talk != null && talk.hasRival)
+                    Text(
+                      Tr.pick(
+                          '${talk.rivalClubName}も年俸${formatMoney(annualFromWeekly(talk.rivalWage))}で誘っています。選手は年俸とクラブの格を比べて選びます。',
+                          '${talk.rivalClubName} offer ${formatMoney(annualFromWeekly(talk.rivalWage))} a year too. He compares money and the size of the club.'),
+                      style: TextStyle(color: Colors.orange.shade800),
+                    ),
                   if (demand > 0)
                     Text(
                       Tr.pick(
@@ -945,6 +952,17 @@ class _TransferScreenState extends State<TransferScreen>
                   '${t.playerName} (${t.clubName})')),
               subtitle: Text(status),
             ),
+            if (t.hasRival && t.isOpen)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                child: Text(
+                  Tr.pick(
+                      '競合: ${t.rivalClubName}が年俸${formatMoney(annualFromWeekly(t.rivalWage))}で誘っている。${md(t.rivalDecidesOn)}ごろまでに契約しないと、選手はあちらへ行く',
+                      'Rival: ${t.rivalClubName} offer ${formatMoney(annualFromWeekly(t.rivalWage))} a year. Sign him by about ${md(t.rivalDecidesOn)} or he goes there'),
+                  style: TextStyle(
+                      fontSize: 12, color: Colors.orange.shade800),
+                ),
+              ),
             if (buttons.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),

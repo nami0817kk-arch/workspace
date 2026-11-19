@@ -139,7 +139,7 @@ extension GameStateSeason on GameState {
     // スカウトを送った地域・注目の選手が見えてくる。
     _advanceScouting(before, d);
     // 移籍の交渉の返事・期限、窓が閉じたら流す。
-    _advanceTransferTalks(d);
+    _advanceTransferTalks(before, d);
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {

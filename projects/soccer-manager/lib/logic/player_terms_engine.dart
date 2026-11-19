@@ -48,6 +48,26 @@ class PlayerTermsEngine {
     return max(minWeeklyWage, base.round());
   }
 
+  /// 他のクラブが動き始めてから、選手が行き先を決めるまでの日数。
+  static const int rivalDecisionDays = 5;
+
+  /// 1日あたり、他のクラブが同じ選手を狙い始める確率(主力は高い)。
+  static double rivalDailyChance({required bool keyPlayer}) =>
+      keyPlayer ? 0.06 : 0.03;
+
+  /// 他のクラブがいるとき、選手がこちらに求める週俸。他のクラブの額に、
+  /// 部の差(こちらが下なら1部ごとに +1割、上なら -5%)を掛ける。選手は
+  /// 年俸とクラブの格を比べて行き先を選ぶ。
+  static int rivalPull({
+    required int rivalWage,
+    required int rivalTier,
+    required int toTier,
+  }) {
+    final diff = toTier - rivalTier;
+    final f = diff > 0 ? 1 + 0.1 * diff : (diff < 0 ? 0.95 : 1.0);
+    return (rivalWage * f).round();
+  }
+
   /// 条件に関係なく断る理由(無ければ null)。30歳までの選手は、3部以上
   /// 下のクラブへは行かない。
   static String? refusal({
