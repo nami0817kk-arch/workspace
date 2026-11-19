@@ -89,11 +89,7 @@ class _DraftBoardViewState extends State<DraftBoardView> {
                 ),
                 p == null
                     ? Text(now ? 'いま指名中' : 'これから', style: TextStyle(fontSize: 11, color: now ? GmColors.ball : GmColors.sub))
-                    : Text(
-                        p.player.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                    : fitText(p.player.name, style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                 Text(p?.player.pos.short ?? '', style: const TextStyle(fontSize: 10, color: GmColors.sub)),
               ], highlight: pick.owner == car.mine);
@@ -173,11 +169,7 @@ class _DraftBoardViewState extends State<DraftBoardView> {
               [
                 numCell('${x.no}', color: x.no <= teamDefs.length ? GmColors.gold : GmColors.sub),
                 TeamBadge(team: x.team, size: 16),
-                Text(
-                  x.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                fitText(x.name, style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(Pos.values[x.pos.clamp(0, Pos.values.length - 1)].short, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
                 numCell('${shown(x.ovr)}', color: GmColors.sub),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
 import '../../gm/game_sim.dart';
+import 'gm_table.dart';
 import 'style.dart';
 
 /// 次の自分の試合を、区切り(1Q・前半・3Q・4Q残り4分)ごとに見ながら采配する。
@@ -117,7 +118,7 @@ class _LiveGameScreenState extends State<LiveGameScreen> {
 
   Widget _scoreboard(String home, String away, SimResult r, bool done) {
     Widget row(String name, List<int> q, int pts) => Row(children: [
-          SizedBox(width: 120, child: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold))),
+          SizedBox(width: 120, child: fitText(name, style: const TextStyle(fontWeight: FontWeight.bold))),
           for (var k = 0; k < 4; k++)
             SizedBox(width: 30, child: Text(k < q.length ? '${q[k]}' : '-', textAlign: TextAlign.center, style: const TextStyle(fontSize: 12.5, color: GmColors.sub))),
           const Spacer(),

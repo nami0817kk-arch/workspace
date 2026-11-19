@@ -813,6 +813,9 @@ class Career {
   /// 返事を待っている知らせ・読んでいない知らせの数。
   int get unread => inbox.where((m) => !m.read || m.needsAnswer).length;
 
+  /// 返事を待っている知らせの数(メニューの数字はこれだけ。読むだけの知らせは点で見せる)。
+  int get needsReply => inbox.where((m) => m.needsAnswer).length;
+
   void _mail(Sender from, String title, String body, {MsgKind kind = MsgKind.info, List<String> choices = const [], int? player}) {
     inbox.insert(0, Message(id: _msgId++, season: season, from: from, title: title, body: body, kind: kind, choices: choices, player: player));
     if (inbox.length > inboxLimit) inbox.removeRange(inboxLimit, inbox.length);

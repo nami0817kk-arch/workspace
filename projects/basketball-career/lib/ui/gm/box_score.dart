@@ -104,11 +104,7 @@ class _BoxScore extends StatelessWidget {
                 '試合の最優秀選手',
                 style: TextStyle(fontSize: 11, color: GmColors.gold, fontWeight: FontWeight.bold),
               ),
-              Text(
-                b.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              fitText(b.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
               Text(
                 '${b.pts}点 ${b.reb}リ ${b.ast}ア・FG ${b.fgm}/${b.fga}${b.tpa > 0 ? '・3P ${b.tpm}/${b.tpa}' : ''}',
@@ -246,20 +242,12 @@ class _TeamCompare extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  teamDefs[mine].short,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball),
+                child: fitText(teamDefs[mine].short, style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball),
                 ),
               ),
               const Text('チームの数字', style: TextStyle(fontSize: 11, color: GmColors.sub)),
               Expanded(
-                child: Text(
-                  teamDefs[opp].short,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.right,
+                child: fitText(teamDefs[opp].short, textAlign: TextAlign.right,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -331,7 +319,7 @@ class BoxTable extends StatelessWidget {
         for (final b in lines)
           GmRow([
             Text(b.pos, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
-            Text(b.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+            fitText(b.name, ),
             numCell('${b.min}', color: GmColors.sub),
             numCell('${b.pts}', bold: true, color: b.pts == top ? GmColors.ball : null),
             numCell('${b.reb}'),
@@ -432,11 +420,7 @@ class _QuarterTable extends StatelessWidget {
           TeamBadge(team: team, size: 22),
           const SizedBox(width: 6),
           Expanded(
-            child: Text(
-              teamDefs[team].short,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: g.winner == team ? FontWeight.bold : null),
+            child: fitText(teamDefs[team].short, style: TextStyle(fontWeight: g.winner == team ? FontWeight.bold : null),
             ),
           ),
           for (final x in qs)

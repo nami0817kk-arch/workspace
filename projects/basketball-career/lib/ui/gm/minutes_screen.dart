@@ -5,6 +5,7 @@ import '../../gm/player.dart';
 import '../gm_controller.dart';
 import '../layout.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'style.dart';
 
 /// 出場時間を選手ごとに決める。合計は240分(5人×48分)。36分を超えると疲れて力が落ち、けがもしやすい。
@@ -123,7 +124,7 @@ class _MinutesScreenState extends State<MinutesScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold)),
+              fitText(p.name, style: const TextStyle(fontWeight: FontWeight.bold)),
               Text(
                 p.injured > 0
                     ? 'けがで出られない'

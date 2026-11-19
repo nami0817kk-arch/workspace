@@ -14,13 +14,23 @@ class GmColors {
   static const gold = Color(0xFFFFC53D);
 
   /// 力の数字の色(高いほど明るい)。
+  /// OVR の段の色(見せる値で 89〜 金・84〜 橙・79〜 緑・74〜 水色・それより下は灰)。
   static Color ovr(int o) => o >= 80
       ? gold
       : o >= 72
           ? ball
           : o >= 64
-              ? const Color(0xFF8FD3FF)
-              : sub;
+              ? good
+              : o >= 56
+                  ? const Color(0xFF8FD3FF)
+                  : sub;
+
+  /// 年俸が力に見合うか。見合う額の1.4倍を超えると赤、0.7倍より安いと緑。
+  static Color? salary(int salary, int fair) => salary > fair * 1.4 && salary > fair + 300
+      ? bad
+      : salary < fair * 0.7 && fair > 300
+          ? good
+          : null;
 }
 
 ThemeData gmTheme() {

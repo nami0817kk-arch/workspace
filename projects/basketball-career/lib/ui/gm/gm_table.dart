@@ -99,7 +99,7 @@ class GmTable extends StatelessWidget {
                         c.sorted ? '${c.label}▼' : c.label,
                         maxLines: 1,
                         overflow: TextOverflow.clip,
-                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: c.sorted ? GmColors.ball : GmColors.sub, letterSpacing: 0.2),
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: c.sorted ? GmColors.ball : GmColors.sub, letterSpacing: 0.2),
                       ),
                     ),
                   ),
@@ -132,7 +132,7 @@ class GmTable extends StatelessWidget {
                     child: Opacity(
                       opacity: r.dim ? 0.5 : 1,
                       child: DefaultTextStyle.merge(
-                        style: const TextStyle(fontSize: 12, fontFeatures: [FontFeature.tabularFigures()]),
+                        style: const TextStyle(fontSize: 13, fontFeatures: [FontFeature.tabularFigures()]),
                         child: Row(children: [for (var k = 0; k < cols.length; k++) _cell(cols[k], r.cells[k])]),
                       ),
                     ),
@@ -166,8 +166,19 @@ Widget miniButton(String label, VoidCallback? onPressed, {bool filled = false}) 
 }
 
 /// 表の中の数字(色つき)。
-Widget numCell(String s, {Color? color, bool bold = false}) => Text(
-  s,
-  maxLines: 1,
-  style: TextStyle(color: color, fontWeight: bold ? FontWeight.bold : null),
+/// 数字のマス。狭いときは字を小さくして、数字を途中で切らない。
+Widget numCell(String s, {Color? color, bool bold = false}) => FittedBox(
+  fit: BoxFit.scaleDown,
+  child: Text(
+    s,
+    maxLines: 1,
+    style: TextStyle(color: color, fontWeight: bold ? FontWeight.bold : null),
+  ),
 );
+
+/// 名前のように切りたくない1行。入りきらなければ字を小さくして全部見せる(「…」で切らない)。
+Widget fitText(String text, {TextStyle? style, TextAlign? textAlign}) => FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: textAlign == TextAlign.right ? Alignment.centerRight : Alignment.centerLeft,
+      child: Text(text, maxLines: 1, softWrap: false, style: style),
+    );

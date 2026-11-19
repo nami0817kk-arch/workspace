@@ -4,6 +4,7 @@ import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'style.dart';
 
 /// 次の相手の分析(2026-11-15、ユーザー「2Kのプレイ動画とか調べて、質を近づける」。
@@ -58,7 +59,7 @@ class NextOpponentCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(them.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      fitText(them.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                       Text(
                         '${record(them)}・強さ$rank位${r == null || r[0] + r[1] == 0 ? '' : '・通算の対戦 ${r[0]}勝${r[1]}敗'}',
                         style: const TextStyle(fontSize: 11, color: GmColors.sub),

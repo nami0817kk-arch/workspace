@@ -114,11 +114,7 @@ class _Standings extends StatelessWidget {
                           TeamBadge(team: team, size: 20),
                           const SizedBox(width: 6),
                           Expanded(
-                            child: Text(
-                              p.name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: team == car.mine ? GmColors.ball : null),
+                            child: fitText(p.name, style: TextStyle(color: team == car.mine ? GmColors.ball : null),
                             ),
                           ),
                           Text(p.stats.line, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
@@ -304,11 +300,7 @@ class _Standings extends StatelessWidget {
                             TeamBadge(team: team, size: 18),
                             const SizedBox(width: 6),
                             Expanded(
-                              child: Text(
-                                p.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: team == car.mine ? GmColors.ball : null, fontSize: 13),
+                              child: fitText(p.name, style: TextStyle(color: team == car.mine ? GmColors.ball : null, fontSize: 13),
                               ),
                             ),
                             Text(key(p.stats).toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -487,14 +479,12 @@ class _Standings extends StatelessWidget {
                 TeamBadge(team: t.index, size: 18),
                 const SizedBox(width: 5),
                 Flexible(
-                  child: Text(t.def.short,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold, color: t.index == car.mine ? GmColors.ball : null)),
+                  flex: 3,
+                  child: fitText(t.def.short, style: TextStyle(fontWeight: FontWeight.bold, color: t.index == car.mine ? GmColors.ball : null)),
                 ),
                 if (t.index != car.mine) ...[
                   const SizedBox(width: 4),
-                  Flexible(child: Text(t.mode.label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9.5, color: GmColors.sub))),
+                  Flexible(flex: 2, child: Text(t.mode.label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9.5, color: GmColors.sub))),
                 ],
               ]),
               numCell('${t.wins}'),
