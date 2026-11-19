@@ -1438,7 +1438,8 @@ extension GameStateTransfer on GameState {
       playerId: target.id,
       playerName: target.name,
       buyerClubName: buyer.name,
-      amount: (target.marketValue * deadlineDayPremium).round(),
+      amount: MarketTrendEngine.apply(
+          (target.marketValue * deadlineDayPremium).round(), marketIndex),
       weeksRemaining: 1,
     );
   }
@@ -1576,9 +1577,11 @@ extension GameStateTransfer on GameState {
           _onPlayerSold(chosen, amount);
           autoSold.add(chosen.name);
         } else {
-          final amount =
-              (chosen.marketValue * (0.9 + GameState._offerRng.nextDouble() * 0.4))
-                  .round();
+          final amount = MarketTrendEngine.apply(
+              (chosen.marketValue *
+                      (0.9 + GameState._offerRng.nextDouble() * 0.4))
+                  .round(),
+              marketIndex);
           _save!.incomingOffers.add(
             IncomingOffer(
               id: 'offer${_incomingOfferSeq++}',

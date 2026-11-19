@@ -73,7 +73,8 @@ void main() {
       final save = gs.save!;
       save.economyNext = EconomyPhase.slump;
       final news = save.newsLog.length;
-      gs.debugAdvanceEconomy(0.0); // 不況のあとの 0.0 は好況
+      // 移籍の相場は動かさない(動くと相場のニュースも1件足される)。
+      gs.debugAdvanceEconomy(0.0, marketRoll: 0.0); // 不況のあとの 0.0 は好況
       expect(save.economyPhase, EconomyPhase.slump);
       expect(save.economyNext, EconomyPhase.boom);
       expect(save.newsLog.length, news + 1);

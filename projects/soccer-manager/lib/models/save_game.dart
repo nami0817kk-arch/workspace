@@ -126,6 +126,9 @@ class SaveGame {
 
   /// 今シーズンの景気と、来シーズンの景気(予報)。
   EconomyPhase economyPhase;
+
+  /// 移籍市場の相場(100 が基準)。
+  int marketIndex;
   EconomyPhase economyNext;
 
   /// オーナーが選んだクラブの方針。シーズンの開幕前にだけ変えられる。
@@ -648,6 +651,7 @@ class SaveGame {
     this.ruleSet = RuleSet.britain,
     this.economyVersion = currentEconomyVersion,
     this.economyPhase = EconomyPhase.normal,
+    this.marketIndex = 100,
     this.economyNext = EconomyPhase.normal,
     this.clubPolicy = ClubPolicy.balanced,
     Map<int, int>? clubValueHistory,
@@ -940,6 +944,7 @@ class SaveGame {
         'ruleSet': ruleSet.name,
         'economyVersion': economyVersion,
         'economyPhase': economyPhase.name,
+        if (marketIndex != 100) 'marketIndex': marketIndex,
         'economyNext': economyNext.name,
         'clubPolicy': clubPolicy.name,
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
@@ -1201,6 +1206,7 @@ class SaveGame {
             .firstOrNull ?? ClubPolicy.balanced,
         // 版が書かれていないのは、桁を変える前のセーブ。
         economyVersion: json['economyVersion'] as int? ?? 1,
+        marketIndex: json['marketIndex'] as int? ?? 100,
         economyPhase: EconomyPhase.values
             .where((e) => e.name == json['economyPhase'])
             .firstOrNull ?? EconomyPhase.normal,
