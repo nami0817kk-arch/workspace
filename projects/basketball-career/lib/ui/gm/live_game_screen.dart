@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../gm/career.dart';
 import '../../gm/game_sim.dart';
-import 'gm_table.dart';
+import 'live_court.dart';
 import 'style.dart';
 
 /// 次の自分の試合を、区切り(1Q・前半・3Q・4Q残り4分)ごとに見ながら采配する。
@@ -66,11 +66,11 @@ class _LiveGameScreenState extends State<LiveGameScreen> {
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) Navigator.of(context).pop(List<GameCall?>.of(calls));
       },
-      child: _page(context, home.def.short, away.def.short, r, my, opp, done, diff),
+      child: _page(context, home.def.short, away.def.short, r, my, opp, done, diff, g.$1, g.$2, mineHome),
     );
   }
 
-  Widget _page(BuildContext context, String homeName, String awayName, SimResult r, SimTeam my, SimTeam opp, bool done, int diff) {
+  Widget _page(BuildContext context, String homeName, String awayName, SimResult r, SimTeam my, SimTeam opp, bool done, int diff, int homeId, int awayId, bool mineHome) {
     return Scaffold(
       appBar: AppBar(
         title: Text('$awayName @ $homeName', style: const TextStyle(fontSize: 16)),
@@ -91,7 +91,15 @@ class _LiveGameScreenState extends State<LiveGameScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(14, 8, 8, 14),
                 children: [
-                  _scoreboard(homeName, awayName, r, done),
+                  LiveCourt(
+                    home: homeId,
+                    away: awayId,
+                    homeName: homeName,
+                    awayName: awayName,
+                    result: r,
+                    mineHome: mineHome,
+                    label: done ? '試合終了' : liveBreaks[r.stoppedAt],
+                  ),
                   const SizedBox(height: 10),
                   Text(done ? '試合終了' : '${liveBreaks[r.stoppedAt]}・${diff > 0 ? '$diff点リード' : diff < 0 ? '${-diff}点ビハインド' : '同点'}',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: diff > 0 ? GmColors.good : diff < 0 ? GmColors.bad : GmColors.text)),
@@ -113,21 +121,6 @@ class _LiveGameScreenState extends State<LiveGameScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _scoreboard(String home, String away, SimResult r, bool done) {
-    Widget row(String name, List<int> q, int pts) => Row(children: [
-          SizedBox(width: 120, child: fitText(name, style: const TextStyle(fontWeight: FontWeight.bold))),
-          for (var k = 0; k < 4; k++)
-            SizedBox(width: 30, child: Text(k < q.length ? '${q[k]}' : '-', textAlign: TextAlign.center, style: const TextStyle(fontSize: 12.5, color: GmColors.sub))),
-          const Spacer(),
-          Text('$pts', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        ]);
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(color: GmColors.panel, borderRadius: BorderRadius.circular(10), border: Border.all(color: GmColors.line)),
-      child: Column(children: [row(away, r.away.periods, r.away.pts), const SizedBox(height: 4), row(home, r.home.periods, r.home.pts)]),
     );
   }
 
