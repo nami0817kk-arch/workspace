@@ -1177,6 +1177,12 @@ class Player {
   /// 出場手当(万円)。契約更新時に決定され、リーグ公式戦でスタメン出場するたびに支払われる。
   int appearanceFee;
 
+  /// 出来高: リーグ戦で1点取るごとに払う額(万円。0なら無し)。
+  int goalBonus;
+
+  /// 段階昇給: 季が変わるたびに週給を上げる割合(%。0なら無し)。
+  int raisePct;
+
   /// プレースタイル(ロール)。デューティとは別に、活躍する能力値の傾向を表す。
   PlayerRole role;
 
@@ -1323,6 +1329,8 @@ class Player {
     this.loanBaseWage,
     this.originClubName,
     this.appearanceFee = 0,
+    this.goalBonus = 0,
+    this.raisePct = 0,
     this.role = PlayerRole.standard,
     this.instruction,
     this.injuryProneness = 10,
@@ -1625,6 +1633,8 @@ class Player {
     put('loanBaseWage', loanBaseWage, null);
     put('originClubName', originClubName, null);
     put('appearanceFee', appearanceFee, 0);
+    put('goalBonus', goalBonus, 0);
+    put('raisePct', raisePct, 0);
     put('role', role.name, PlayerRole.standard.name);
     put('instruction', instruction?.name, null);
     put('injuryProneness', injuryProneness, 10);
@@ -1770,6 +1780,8 @@ class Player {
       loanBaseWage: json['loanBaseWage'] as int?,
       originClubName: json['originClubName'] as String?,
       appearanceFee: json['appearanceFee'] as int? ?? 0,
+      goalBonus: json['goalBonus'] as int? ?? 0,
+      raisePct: json['raisePct'] as int? ?? 0,
       role: enumFromName(
         PlayerRole.values,
         json['role'] as String?,

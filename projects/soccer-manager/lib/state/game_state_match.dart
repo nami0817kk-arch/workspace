@@ -1117,6 +1117,8 @@ extension GameStateMatch on GameState {
     if (f != null) {
       f.result = merged;
       _publishFrontPage(merged, f, lastMilestones);
+      // 出来高の契約の選手の得点に、出来高を払う。
+      _payGoalBonuses(merged);
       // 優勝・昇格・降格が決まったか、カップの決勝を戦い終えたか。
       _checkClinchMoments(f.matchday);
       _checkCupFinalMoments();
