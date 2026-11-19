@@ -477,6 +477,7 @@ extension GameStateTransfer on GameState {
   /// 一度だけ流れる通知を、ニュース画面で後から見返せるようにする記録。
   void _logNews(String text, {String? context}) {
     if (_save == null || text.isEmpty) return;
+    _save!.newsTotal++;
     _save!.newsLog.insert(
       0,
       NewsItem(

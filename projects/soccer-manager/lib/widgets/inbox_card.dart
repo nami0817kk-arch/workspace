@@ -16,7 +16,9 @@ class InboxCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final gs = context.watch<GameState>();
     final all = gs.save?.newsLog ?? const [];
-    if (all.isEmpty) return const SizedBox.shrink();
+    final actions = gs.inboxActions;
+    if (all.isEmpty && actions.isEmpty) return const SizedBox.shrink();
+    final unread = gs.unreadNewsCount;
     // newsLog は新しい順に積まれている。先頭から読む。
     final recent = all.take(_shown).toList();
     final scheme = Theme.of(context).colorScheme;
@@ -31,17 +33,48 @@ class InboxCard extends StatelessWidget {
                 const Icon(Icons.inbox_outlined, size: 18),
                 const SizedBox(width: 6),
                 Expanded(
-                  child: Text(Tr.pick('受信箱', 'Inbox'),
+                  child: Text(
+                      unread > 0
+                          ? Tr.pick('受信箱(未読 $unread)', 'Inbox ($unread unread)')
+                          : Tr.pick('受信箱', 'Inbox'),
                       style: Theme.of(context).textTheme.titleSmall),
                 ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(builder: (_) => const NewsScreen()),
+                if (unread > 0)
+                  TextButton(
+                    onPressed: gs.markInboxRead,
+                    child: Text(Tr.pick('既読にする', 'Mark read')),
                   ),
+                TextButton(
+                  onPressed: () {
+                    gs.markInboxRead();
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                          builder: (_) => const NewsScreen()),
+                    );
+                  },
                   child: Text(Tr.pick('すべて見る', 'See all')),
                 ),
               ],
             ),
+            // 対応が要るもの(オーナーの答えを待っているもの)を先に。
+            for (final a in actions)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                child: Row(
+                  children: [
+                    Icon(Icons.priority_high,
+                        size: 14, color: Colors.orange.shade800),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(a,
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange.shade800)),
+                    ),
+                  ],
+                ),
+              ),
             for (final (i, n) in recent.indexed)
               Container(
                 color: i.isOdd ? scheme.surfaceContainerLow : null,
@@ -67,7 +100,11 @@ class InboxCard extends StatelessWidget {
                         n.text,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12),
+                        // 未読は太字。
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight:
+                                i < unread ? FontWeight.bold : FontWeight.normal),
                       ),
                     ),
                   ],
