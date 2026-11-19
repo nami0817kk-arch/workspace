@@ -125,6 +125,8 @@ import '../logic/scouting_engine.dart';
 import '../logic/season_projection_engine.dart';
 import '../logic/sponsor_engine.dart';
 import '../logic/big_moment.dart';
+import '../models/club_look.dart';
+import '../theme/club_palette.dart';
 import '../logic/sponsor_slots.dart';
 import '../logic/club_license.dart';
 import '../logic/market_trend.dart';
@@ -173,6 +175,7 @@ part 'game_state_nation.dart';
 part 'game_state_forms.dart';
 part 'game_state_league_cup.dart';
 part 'game_state_moments.dart';
+part 'game_state_club_look.dart';
 part 'game_state_rumors.dart';
 part 'game_state_affiliate.dart';
 part 'game_state_foreign.dart';
@@ -895,7 +898,12 @@ class GameState extends ChangeNotifier {
   /// ChangeNotifier.notifyListeners は @protected かつ @visibleForTesting
   /// のため、クラス外(part ファイルの extension)から直接呼ぶと解析警告になる。
   /// 通知はすべてこの委譲を経由させる。
-  void _notify() => notifyListeners();
+  void _notify() {
+    // エンブレムとユニフォームの色の出どころを、今のクラブの見た目に合わせる。
+    ClubLookRegistry.teamId = _save?.userTeamId;
+    ClubLookRegistry.look = _save?.clubLook;
+    notifyListeners();
+  }
 
   /// セーブデータをローカルストレージへ書き込む。ブラウザのストレージ容量
   /// 超過など、書き込み自体が失敗する場合がある(特にディビジョン数が増えて
