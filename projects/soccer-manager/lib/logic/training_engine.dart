@@ -206,7 +206,7 @@ class TrainingEngine {
       _rollBreakthrough(p, focus, effectiveGrowth);
     }
 
-    if (p.age >= _declineStartAge(p.growthType) &&
+    if (p.age >= declineStartAge(p) &&
         _rng.nextDouble() < _declineChance(p.growthType)) {
       _decline(p);
     }
@@ -413,7 +413,7 @@ class TrainingEngine {
           );
         }
       }
-      if (p.age >= _declineStartAge(p.growthType) &&
+      if (p.age >= declineStartAge(p) &&
           _rng.nextDouble() < _declineChance(p.growthType)) {
         _decline(p);
       }
@@ -528,12 +528,31 @@ class TrainingEngine {
     }
   }
 
-  /// 成長タイプ(早熟/標準/大器晩成)に応じて衰えが始まる年齢。
-  static int _declineStartAge(PlayerGrowthType type) => switch (type) {
+  /// ポジションによるピークのずれ(年)。GK は長く保ち、センターバックも
+  /// 経験で補える。走力で勝負するサイドの選手は早く落ちる(実在の傾向)。
+  static int positionPeakShift(Position pos) => switch (pos) {
+        Position.gk => 3,
+        Position.dc => 1,
+        Position.dr ||
+        Position.dl ||
+        Position.wbr ||
+        Position.wbl ||
+        Position.mr ||
+        Position.ml ||
+        Position.amr ||
+        Position.aml =>
+          -1,
+        _ => 0,
+      };
+
+  /// 成長タイプ(早熟/標準/大器晩成)とポジションに応じて衰えが始まる年齢。
+  static int declineStartAge(Player p) =>
+      switch (p.growthType) {
         PlayerGrowthType.early => 28,
         PlayerGrowthType.balanced => 31,
         PlayerGrowthType.late => 34,
-      };
+      } +
+      positionPeakShift(p.position);
 
   /// 衰え開始年齢に達した後、週次で実際に衰えが発生する確率。
   /// 1回の衰えは能力値1〜2項目が1ずつ下がるだけで、総合力([Player.overall])
@@ -747,10 +766,11 @@ class TrainingEngine {
   /// (実測でピーク年齢29〜34歳・ピークからの下落0.1を確認)。
   static double _conditioningAgeTaper(Player p) {
     final peakAge = switch (p.growthType) {
-      PlayerGrowthType.early => 25,
-      PlayerGrowthType.balanced => 27,
-      PlayerGrowthType.late => 29,
-    };
+          PlayerGrowthType.early => 25,
+          PlayerGrowthType.balanced => 27,
+          PlayerGrowthType.late => 29,
+        } +
+        positionPeakShift(p.position);
     if (p.age <= peakAge) return 1.0;
     return (1.0 - (p.age - peakAge) * 0.34).clamp(0.0, 1.0);
   }

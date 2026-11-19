@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../models/player.dart';
 import '../models/player_stub.dart';
+import 'training_engine.dart';
 
 /// 自クラブの部の外(他の部・他国)の選手の、年に1度の伸びと衰え。
 ///
@@ -12,15 +13,17 @@ class OffscreenDevelopment {
   /// 1年分の総合力の変化(年齢を1つ足した後に呼ぶ)。
   static int yearlyChange(Player p, Random rng) {
     final room = p.potential - p.overall;
+    // ポジションでピークがずれる(GK は長く保ち、サイドの選手は早く落ちる)。
+    final shift = TrainingEngine.positionPeakShift(p.position);
     if (p.age <= 23) {
       if (room <= 0) return 0;
       return min(room, 2 + rng.nextInt(4));
     }
-    if (p.age <= 28) {
+    if (p.age <= 28 + shift) {
       if (room <= 0) return rng.nextInt(3) - 1;
       return min(room, rng.nextInt(3));
     }
-    if (p.age <= 31) return -rng.nextInt(2);
+    if (p.age <= 31 + shift) return -rng.nextInt(2);
     return -(1 + rng.nextInt(3));
   }
 
