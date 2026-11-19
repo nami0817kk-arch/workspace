@@ -103,5 +103,20 @@ class PlayerStub {
         p.attributes[key] = (p.attributes[key]! + delta).clamp(1, 99);
       }
     }
+    // 一律にずらすと、上限(99)・下限(1)に張り付いた能力が動かず、総合98の
+    // 選手が97にしかならないことがあった(読み戻すたびに力が落ちる)。
+    // 届かないときは、まだ動かせる能力だけを1ずつ動かす。
+    for (var guard = 0; guard < 400 && p.overall != target; guard++) {
+      final up = p.overall < target;
+      final keys = [
+        for (final e in p.attributes.entries)
+          if (up ? e.value < 99 : e.value > 1) e.key,
+      ]..sort((a, b) => up
+          ? p.attributes[a]!.compareTo(p.attributes[b]!)
+          : p.attributes[b]!.compareTo(p.attributes[a]!));
+      if (keys.isEmpty) break;
+      final k = keys.first;
+      p.attributes[k] = p.attributes[k]! + (up ? 1 : -1);
+    }
   }
 }
