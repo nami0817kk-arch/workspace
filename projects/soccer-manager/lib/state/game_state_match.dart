@@ -1122,6 +1122,8 @@ extension GameStateMatch on GameState {
       _checkCupFinalMoments();
       // クラブの文化に沿った試合なら、サポーターが喜ぶ。
       _applyCultureBonus(merged);
+      // クラブの歴代記録(出場・得点・最大の勝ち試合)。
+      _recordClubMatch(merged, f);
 
       // 4節ごとに月間最優秀監督賞を判定する(ユーザーが受賞した場合のみ通知・記録する)。
       if (f.matchday - _save!.lastManagerOfMonthCheckpoint >= 4) {

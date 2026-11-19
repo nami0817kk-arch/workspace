@@ -361,6 +361,15 @@ class SaveGame {
   Map<String, int> rumorDenied;
   /// 系列クラブ(提携先のクラブ id。無ければ null)。
   String? affiliateClubId;
+  /// 自クラブでの公式戦の出場数・得点数(選手 id → 数)と、その名前。
+  /// 出ていった選手も残す(クラブの歴代記録)。
+  Map<String, int> clubApps;
+  Map<String, int> clubGoals;
+  Map<String, String> clubRecordNames;
+
+  /// 最大の勝ち試合(「季・相手・スコア」の文と、得失点差)。
+  String? biggestWin;
+  int biggestWinMargin;
 
   /// まだ見せていない大事な場面([種類, 小見出し, 説明])と、見せた場面の印。
   List<List<String>> pendingMoments;
@@ -705,6 +714,11 @@ class SaveGame {
     this.recordSaleFee = 0,
     this.clubLook,
     this.clubLookChangedSeason = 0,
+    Map<String, int>? clubApps,
+    Map<String, int>? clubGoals,
+    Map<String, String>? clubRecordNames,
+    this.biggestWin,
+    this.biggestWinMargin = 0,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -854,6 +868,9 @@ class SaveGame {
         pendingMoments = pendingMoments ?? [],
         momentKeys = momentKeys ?? [],
         rumorDenied = rumorDenied ?? {},
+        clubApps = clubApps ?? {},
+        clubGoals = clubGoals ?? {},
+        clubRecordNames = clubRecordNames ?? {},
         clubCash = clubCash ?? {},
         distressedClubIds = distressedClubIds ?? [],
         buyBacks = buyBacks ?? {},
@@ -1015,6 +1032,11 @@ class SaveGame {
         if (clubLook != null) 'clubLook': clubLook!.toJson(),
         if (clubLookChangedSeason > 0)
           'clubLookChangedSeason': clubLookChangedSeason,
+        if (clubApps.isNotEmpty) 'clubApps': clubApps,
+        if (clubGoals.isNotEmpty) 'clubGoals': clubGoals,
+        if (clubRecordNames.isNotEmpty) 'clubRecordNames': clubRecordNames,
+        if (biggestWin != null) 'biggestWin': biggestWin,
+        if (biggestWinMargin > 0) 'biggestWinMargin': biggestWinMargin,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1233,6 +1255,14 @@ class SaveGame {
             ? null
             : ClubLook.fromJson(json['clubLook'] as Map<String, dynamic>),
         clubLookChangedSeason: json['clubLookChangedSeason'] as int? ?? 0,
+        clubApps: (json['clubApps'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
+        clubGoals: (json['clubGoals'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
+        clubRecordNames: (json['clubRecordNames'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as String)),
+        biggestWin: json['biggestWin'] as String?,
+        biggestWinMargin: json['biggestWinMargin'] as int? ?? 0,
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
