@@ -36,6 +36,7 @@ import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
+import '../widgets/sponsor_slots_card.dart';
 import '../logic/economy_scale.dart';
 
 class FinanceScreen extends StatelessWidget {
@@ -309,6 +310,7 @@ class FinanceScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   _SponsorSection(gameState: gameState),
+                  const SponsorSlotsCard(),
                   const EquityCard(),
                   const OwnerWealthCard(),
                   const FiveYearPlanCard(),

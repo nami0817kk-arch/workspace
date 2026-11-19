@@ -982,7 +982,8 @@ extension GameStateFinance on GameState {
         .round();
     // 2部リーグは1部より観客動員が少ない(userAttendanceFactorに反映済み)。
     final sponsorIncome = (((_save!.sponsorDeal?.weeklyIncome ?? 0) +
-                (_save!.namingDeal?.weeklyIncome ?? 0)) *
+                (_save!.namingDeal?.weeklyIncome ?? 0) +
+                slotSponsorWeeklyIncome) *
             commercialMultiplier)
         .round();
     // グッズ収入(マーチャンダイジング)。試合の有無に関わらず、監督の評価
