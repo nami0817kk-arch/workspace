@@ -303,6 +303,9 @@ class SaveGame {
 
   /// 大きな怪我の手当て(選手 id → 'pending' | 'surgery' | 'rest')。
   Map<String, String> injuryPlans;
+  /// 育成の方針(YouthPolicy の name)。
+  String youthPolicy;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -602,6 +605,7 @@ class SaveGame {
     this.agmWageRatioPledge = 0,
     this.taxLossCarry = 0,
     Map<String, String>? injuryPlans,
+    this.youthPolicy = 'balanced',
     this.frontPageHeadline,
     this.frontPageQuote,
     this.parachuteFromTier = 0,
@@ -880,6 +884,7 @@ class SaveGame {
         },
         if (playerBook.isNotEmpty) 'playerBook': playerBook,
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
+        if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
         if (rivalOwners.isNotEmpty)
@@ -1062,6 +1067,7 @@ class SaveGame {
         taxLossCarry: json['taxLossCarry'] as int? ?? 0,
         injuryPlans: (json['injuryPlans'] as Map?)
             ?.map((k, v) => MapEntry(k as String, v as String)),
+        youthPolicy: json['youthPolicy'] as String? ?? 'balanced',
         frontPageHeadline: json['frontPageHeadline'] as String?,
         frontPageQuote: json['frontPageQuote'] as String?,
         parachuteFromTier: json['parachuteFromTier'] as int? ?? 0,

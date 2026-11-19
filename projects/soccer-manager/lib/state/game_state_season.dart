@@ -1080,14 +1080,22 @@ extension GameStateSeason on GameState {
     }
     final infra = _save!.infrastructure;
     // ユースインテーク: 複数候補を一括生成し、選抜はユーザーに委ねる。
-    final intakeCount = 3 + Random().nextInt(3);
+    // アカデミーの等級と育成の方針で、入ってくる子の数と質が変わる。
+    final category = academyCategory;
+    final policy = youthPolicy;
+    final intakeCount = 3 +
+        Random().nextInt(3) +
+        AcademyEngine.extraIntake(category) +
+        AcademyEngine.policyExtraIntake(policy);
     // 育成予算の効き。蓄積は毎季末にいまの配分へ近づき、受け入れの質に返る。
     _save!.youthMomentum = YouthInvestmentEngine.nextMomentum(
       momentum: _save!.youthMomentum,
       ratio: BudgetEngine.ratio(_save!.budgetPlan, BudgetCategory.youth),
     );
     final investmentBonus =
-        YouthInvestmentEngine.qualityBonus(_save!.youthMomentum);
+        YouthInvestmentEngine.qualityBonus(_save!.youthMomentum) +
+            AcademyEngine.qualityBonus(category) +
+            AcademyEngine.policyQualityBonus(policy);
     // 施設予算の効きも同じ仕組みで、もっとゆっくり蓄積する。
     _save!.facilityMomentum = FacilityInvestmentEngine.nextMomentum(
       momentum: _save!.facilityMomentum,
@@ -1102,6 +1110,9 @@ extension GameStateSeason on GameState {
         investmentBonus: investmentBonus,
       ),
     );
+    for (final p in _save!.pendingYouthIntake) {
+      AcademyEngine.applyPolicy(p, policy);
+    }
 
     // ユースリーグも年度が替わる。前年の順位表を残したままにすると、
     // 何節まで進んだのかも勝点も前の年のものになる。相手の強さも引き直す
