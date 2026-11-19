@@ -550,7 +550,9 @@
   function formFor(p, r) {
     const pos = p.best || p.main;
     const done = (p.awHist || []).map((x) => x.k);
-    let c = YA.AWAKE_FORMS.filter((f) => (f.pos.includes(pos) || f.pos.includes(p.main)) && !done.includes(f.k));
+    // オリジナル選手で決めた形（1回目の覚醒はこの形で目覚める）
+    if (p.formPick && !done.includes(p.formPick)) { const pick = YA.AWAKE_FORMS.find((f) => f.k === p.formPick); if (pick) return pick; }
+    let c =YA.AWAKE_FORMS.filter((f) => (f.pos.includes(pos) || f.pos.includes(p.main)) && !done.includes(f.k));
     if (!c.length) c = YA.AWAKE_FORMS.filter((f) => f.pos.includes(p.main) || f.pos.includes(pos));
     return r.weighted(c, (f) => Math.pow(f.abs.reduce((s, a) => s + (p.ab[a] || 6), 0) / f.abs.length, 2) * (YA.formLean ? YA.formLean(p, f) : 1));
   }
