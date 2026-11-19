@@ -59,6 +59,10 @@ Map<StaffAttribute, int> staffRoleWeights(StaffRole role) => switch (role) {
           StaffAttribute.coaching: 1,
           StaffAttribute.motivating: 1,
         },
+      StaffRole.sportingDirector => const {
+          StaffAttribute.judging: 3,
+          StaffAttribute.motivating: 1,
+        },
     };
 
 

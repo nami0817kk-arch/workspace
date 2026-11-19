@@ -91,6 +91,9 @@ class TransferTalk {
 
   bool get hasRival => rivalClubId != null;
 
+  /// SD が進めている話か(オーナーが自分で始めた話は false)。
+  bool bySd;
+
   TransferTalk({
     required this.playerId,
     required this.playerName,
@@ -112,6 +115,7 @@ class TransferTalk {
     this.rivalClubName,
     this.rivalWage = 0,
     this.rivalDecidesOn,
+    this.bySd = false,
   });
 
   /// まだ話が生きているか(決裂していない)。
@@ -149,6 +153,7 @@ class TransferTalk {
         if (rivalClubName != null) 'rivalClubName': rivalClubName,
         if (rivalWage > 0) 'rivalWage': rivalWage,
         if (rivalDecidesOn != null) 'rivalDecidesOn': _date(rivalDecidesOn),
+        if (bySd) 'bySd': true,
       };
 
   factory TransferTalk.fromJson(Map<String, dynamic> json) => TransferTalk(
@@ -174,5 +179,6 @@ class TransferTalk {
         rivalClubName: json['rivalClubName'] as String?,
         rivalWage: json['rivalWage'] as int? ?? 0,
         rivalDecidesOn: _parse(json['rivalDecidesOn']),
+        bySd: json['bySd'] as bool? ?? false,
       );
 }

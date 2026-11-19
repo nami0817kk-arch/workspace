@@ -110,7 +110,9 @@ class _TransferScreenState extends State<TransferScreen>
         leading: widget.embedded ? null : const BackButton(),
         controller: _tabController,
         tabs: [
-          Tr.pick('監督の案', 'Proposals'),
+          gameState.currentSd != null
+              ? Tr.pick('SDの案', 'SD shortlist')
+              : Tr.pick('監督の案', 'Proposals'),
           Tr.pick('探す', 'Search'),
           Tr.pick('交渉 (${gameState.transferTalks.length})',
               'Talks (${gameState.transferTalks.length})'),
@@ -180,6 +182,7 @@ class _TransferScreenState extends State<TransferScreen>
                 'Every registered goalkeeper is unavailable, so you may take one goalkeeper on loan outside the window (emergency rule).'),
           ),
         _RegistrationCard(windowOpen: windowOpen),
+        if (gameState.currentSd != null) const _SdBriefCard(),
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
           child: Row(
@@ -1336,6 +1339,109 @@ class _WatchButton extends StatelessWidget {
         FeedbackService.tap();
         game.toggleWatched(playerId);
       },
+    );
+  }
+}
+
+/// SD に渡す補強の方針(任せるか・移籍金の上限・欲しい位置・年齢・人数)。
+class _SdBriefCard extends StatelessWidget {
+  const _SdBriefCard();
+
+  static String _groupName(PositionGroup g) => switch (g) {
+        PositionGroup.gk => 'GK',
+        PositionGroup.def => Tr.pick('守備', 'DEF'),
+        PositionGroup.mid => Tr.pick('中盤', 'MID'),
+        PositionGroup.att => Tr.pick('攻撃', 'ATT'),
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    final sd = gameState.currentSd!;
+    final b = gameState.sdBrief;
+    final save = gameState.save!;
+    // 上限は資金までを目安に動かせる(今の値が上なら今の値まで)。
+    final top = [save.budget, b.maxFee, 10].reduce((a, c) => a > c ? a : c);
+    final working = gameState.transferTalks
+        .where((t) => t.bySd && t.isOpen)
+        .map((t) => t.playerName)
+        .toList();
+    final small =
+        TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
+    return Card(
+      margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+      child: ExpansionTile(
+        title: Text(Tr.pick('SD(${sd.name})に補強を任せる',
+            'Let your SD (${sd.name}) run signings')),
+        subtitle: Text(
+          b.active
+              ? Tr.pick(
+                  '任せている・この窓 ${save.sdSignedThisWindow}/${b.maxSignings}人${working.isEmpty ? '' : '・交渉中: ${working.join('、')}'}',
+                  'On • this window ${save.sdSignedThisWindow} of ${b.maxSignings}${working.isEmpty ? '' : ' • talking to ${working.join(', ')}'}')
+              : Tr.pick('任せていない', 'Off'),
+          style: small,
+        ),
+        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        children: [
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(Tr.pick('任せる', 'Hand it over')),
+            value: b.active,
+            onChanged: (v) => gameState.updateSdBrief(active: v),
+          ),
+          Text(Tr.pick('1人あたりの移籍金の上限: ${formatMoney(b.maxFee)}',
+              'Fee limit per player: ${formatMoney(b.maxFee)}')),
+          Slider(
+            value: b.maxFee.clamp(0, top).toDouble(),
+            max: top.toDouble(),
+            divisions: 40,
+            onChanged: (v) => gameState.updateSdBrief(maxFee: v.round()),
+          ),
+          Wrap(
+            spacing: 6,
+            children: [
+              for (final g in PositionGroup.values)
+                FilterChip(
+                  label: Text(_groupName(g)),
+                  selected: b.groups.contains(g),
+                  onSelected: (on) => gameState.updateSdBrief(
+                      groups: on ? {...b.groups, g} : ({...b.groups}..remove(g))),
+                ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(Tr.pick('年齢の上限: ${b.maxAge}歳', 'Age limit: ${b.maxAge}')),
+          Slider(
+            value: b.maxAge.toDouble(),
+            min: 18,
+            max: 35,
+            divisions: 17,
+            onChanged: (v) => gameState.updateSdBrief(maxAge: v.round()),
+          ),
+          Row(
+            children: [
+              Text(Tr.pick('この窓で取る人数', 'Signings this window')),
+              const SizedBox(width: 8),
+              for (final n in [1, 2, 3])
+                Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: ChoiceChip(
+                    label: Text('$n'),
+                    selected: b.maxSignings == n,
+                    onSelected: (_) => gameState.updateSdBrief(maxSignings: n),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            Tr.pick(
+                'SDは、見えている選手のうち方針に合い、今の先発より上の選手を探して、クラブとも選手とも交渉します。上限を超える値なら降ります。位置を選ばなければ全部の位置から探します。',
+                'Your SD looks for players you have scouted who fit the brief and beat your current starters, then negotiates with the club and the player. He walks away if the price passes your limit. Pick no position to search them all.'),
+            style: small,
+          ),
+        ],
+      ),
     );
   }
 }

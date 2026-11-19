@@ -84,6 +84,11 @@ String _staffEffectLabel(StaffRole role, int level,
           : null;
       return Tr.pick('追加疲労回復+$cur${next == null ? '' : ' → 次Lv: +$next'}',
           "Extra fatigue recovery +$cur${next == null ? '' : ' → next level: +$next'}");
+    case StaffRole.sportingDirector:
+      final judging = member?.levelOf(StaffAttribute.judging) ?? level;
+      final off = (1.5 * (judging - 1)).toStringAsFixed(1);
+      return Tr.pick('相手の言い値を$off%安くまとめる。移籍の画面で補強の交渉を任せられる',
+          'Brings asking prices down $off%. You can hand him your transfer talks on the Transfers screen');
   }
 }
 
