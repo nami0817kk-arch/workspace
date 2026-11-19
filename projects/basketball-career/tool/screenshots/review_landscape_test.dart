@@ -586,6 +586,8 @@ void main() {
       await t.ensureVisible(find.byKey(const Key('summer-card')));
       await t.pumpAndSettle();
     });
+    // オフの受信箱(合宿の場所・面談など)
+    await _shoot(t, '15f_off_inbox', await _with(toContracts()), act: (t) => _tap(t, '受信箱', first: true));
     final talk = await _with(toContracts());
     await _shoot(t, '15d_agent_talk', talk, act: (t) async {
       final car = talk.career!;

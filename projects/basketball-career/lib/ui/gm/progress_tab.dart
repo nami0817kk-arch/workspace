@@ -1147,6 +1147,8 @@ class ProgressTab extends StatelessWidget {
       if (car.sheetPlayer != null) (false, 'オファーシートに答える', '下の「同じ条件で残す」か「見送る」を押す'),
       if (car.inbox.where((m) => m.kind == MsgKind.offTalk && m.needsAnswer).length case final n when n > 0)
         (false, '選手との面談に答える($n人)', '受信箱に、話をしたい選手から知らせが来ている。答えないままオフを終えると、考えを説明したことになる'),
+      if (car.inbox.where((m) => const [MsgKind.offCamp, MsgKind.offNational, MsgKind.offRetire].contains(m.kind) && m.needsAnswer).length case final n when n > 0)
+        (false, 'オフの出来事に答える($n件)', '合宿の場所・代表・引退した選手の送り出しなど。受信箱で選ぶ。答えないままオフを終えると、効き目なしで閉じる'),
       if (car.optionPending.isNotEmpty)
         (false, '新人の選択権を決める(${car.optionPending.length}人)', '「使う」なら契約が1年続く。「使わない」なら契約切れ'),
       if (expiringCount > 0)
