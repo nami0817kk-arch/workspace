@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../art/title_art.dart';
 
+import '../../gm/calendar.dart';
 import '../../gm/block_report.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
@@ -37,7 +38,8 @@ class BlockReportScreen extends StatelessWidget {
             ? (r.wins >= r.played * 0.7 ? '好調!' : '勝ち越し')
             : (r.losses >= r.played * 0.7 ? '不調…' : '負け越し');
     return Scaffold(
-      appBar: AppBar(title: Text('${r.fromGame}〜${r.toGame}試合目の結果')),
+      appBar: AppBar(
+          title: Text('${dateShort(roundDate(car.season, r.fromGame - 1))}〜${dateShort(roundDate(car.season, r.toGame - 1))}の結果(${r.fromGame}〜${r.toGame}試合目)')),
       body: SafeArea(
         child: Column(children: [
           Expanded(
