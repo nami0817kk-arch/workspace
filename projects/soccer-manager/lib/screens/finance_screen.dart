@@ -22,6 +22,7 @@ import '../widgets/auto_columns.dart';
 import '../widgets/trend_chart.dart';
 import '../widgets/projection_card.dart';
 import '../widgets/owner_career_card.dart';
+import '../widgets/club_culture_card.dart';
 import '../widgets/rival_owners_card.dart';
 import '../widgets/owner_wealth_card.dart';
 import '../widgets/equity_card.dart';
@@ -312,6 +313,7 @@ class FinanceScreen extends StatelessWidget {
                   const EquityCard(),
                   const OwnerWealthCard(),
                   const FiveYearPlanCard(),
+                  const ClubCultureCard(),
                   const OwnerCareerCard(),
                   const RivalOwnersCard(),
                   const MediaDealsCard(),

@@ -1108,6 +1108,8 @@ extension GameStateMatch on GameState {
     if (f != null) {
       f.result = merged;
       _publishFrontPage(merged, f, lastMilestones);
+      // クラブの文化に沿った試合なら、サポーターが喜ぶ。
+      _applyCultureBonus(merged);
 
       // 4節ごとに月間最優秀監督賞を判定する(ユーザーが受賞した場合のみ通知・記録する)。
       if (f.matchday - _save!.lastManagerOfMonthCheckpoint >= 4) {
@@ -1341,5 +1343,43 @@ extension GameStateMatch on GameState {
         ManagerStyle.pragmatic;
     s.frontPageQuote = FrontPageEngine.managerQuote(
         goalsFor: gf, goalsAgainst: ga, style: style);
+  }
+
+  /// クラブの文化。
+  ClubCulture get clubCulture => ClubCulture.values.firstWhere(
+      (c) => c.name == _save?.clubCulture,
+      orElse: () => ClubCulture.none);
+
+  /// 文化を変えられるか(1季に1回まで)。
+  bool get canChangeClubCulture =>
+      _save != null && _save!.clubCultureChangedSeason != _save!.league.season;
+
+  /// クラブの文化を選ぶ。決めたものから変えると、古いサポーターが戸惑う。
+  Future<bool> setClubCulture(ClubCulture c) async {
+    final s = _save;
+    if (s == null || !canChangeClubCulture || c == clubCulture) return false;
+    if (clubCulture != ClubCulture.none) {
+      s.confidence =
+          (s.confidence - ClubCultureEngine.changePenalty).clamp(0, 100);
+    }
+    s.clubCulture = c.name;
+    s.clubCultureChangedSeason = s.league.season;
+    _addTimeline(Tr.pick('クラブの文化を「${c.label}」にした',
+        'Set the club identity to "${c.label}"'));
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  void _applyCultureBonus(MatchResult r) {
+    final s = _save!;
+    final team = userTeam;
+    final starters = [
+      for (final p in team.players)
+        if (team.startingXI.contains(p.id)) p,
+    ];
+    final bonus = ClubCultureEngine.matchBonus(
+        culture: clubCulture, r: r, userId: s.userTeamId, starters: starters);
+    if (bonus > 0) s.confidence = (s.confidence + bonus).clamp(0, 100);
   }
 }
