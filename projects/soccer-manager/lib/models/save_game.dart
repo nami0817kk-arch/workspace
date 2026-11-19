@@ -25,6 +25,7 @@ import 'rival_owner.dart';
 import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
+import 'club_look.dart';
 import 'sponsor.dart';
 import 'start_scenario.dart';
 import 'club_vision.dart';
@@ -368,6 +369,9 @@ class SaveGame {
   /// クラブ史上最高額の獲得・売却(万円)。
   int recordSigningFee;
   int recordSaleFee;
+  /// オーナーが決めたクラブの見た目(無ければ自動の見た目)と、最後に変えた季。
+  ClubLook? clubLook;
+  int clubLookChangedSeason;
 
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
@@ -699,6 +703,8 @@ class SaveGame {
     List<String>? momentKeys,
     this.recordSigningFee = 0,
     this.recordSaleFee = 0,
+    this.clubLook,
+    this.clubLookChangedSeason = 0,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -1006,6 +1012,9 @@ class SaveGame {
         if (momentKeys.isNotEmpty) 'momentKeys': momentKeys,
         if (recordSigningFee > 0) 'recordSigningFee': recordSigningFee,
         if (recordSaleFee > 0) 'recordSaleFee': recordSaleFee,
+        if (clubLook != null) 'clubLook': clubLook!.toJson(),
+        if (clubLookChangedSeason > 0)
+          'clubLookChangedSeason': clubLookChangedSeason,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1220,6 +1229,10 @@ class SaveGame {
             (json['momentKeys'] as List?)?.map((e) => e as String).toList(),
         recordSigningFee: json['recordSigningFee'] as int? ?? 0,
         recordSaleFee: json['recordSaleFee'] as int? ?? 0,
+        clubLook: json['clubLook'] == null
+            ? null
+            : ClubLook.fromJson(json['clubLook'] as Map<String, dynamic>),
+        clubLookChangedSeason: json['clubLookChangedSeason'] as int? ?? 0,
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),

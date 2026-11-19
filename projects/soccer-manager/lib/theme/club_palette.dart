@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../models/club_look.dart';
+
 /// チームIDから決定論的に決まるクラブカラー。
 ///
 /// エンブレム(ClubEmblem)とピッチ上のユニフォーム(PitchGame)が別々に色を
@@ -11,7 +13,10 @@ class ClubPalette {
   /// 色相(0..360)。この1つの値からすべての色を導く。
   final double hue;
 
-  const ClubPalette.fromHue(this.hue);
+  /// オーナーが差し色を決めたときの色相(無ければ主の色から導く)。
+  final double? accentHue;
+
+  const ClubPalette.fromHue(this.hue, {this.accentHue});
 
   /// クラブ名に色の語が入っていれば、その色を使う。無ければIDから決める。
   ///
@@ -19,6 +24,11 @@ class ClubPalette {
   /// いた。名前に書いてある色と、エンブレムやユニフォームの色が無関係だと、
   /// 作り手が決めた色には見えない。名前で色が決まるクラブだけ、名前に従う。
   factory ClubPalette.of(String teamId, {String? clubName}) {
+    // オーナーが決めた見た目があれば、それが先。
+    final look = ClubLookRegistry.lookFor(teamId);
+    if (look != null) {
+      return ClubPalette.fromHue(look.hue, accentHue: look.accentHue);
+    }
     final named = clubName == null ? null : hueForName(clubName);
     return ClubPalette.fromHue(
         named ?? Random(teamId.hashCode).nextDouble() * 360);
@@ -89,8 +99,10 @@ class ClubPalette {
   Color get base => HSLColor.fromAHSL(1, hue, 0.55, 0.42).toColor();
 
   /// エンブレムの差し色。
-  Color get accent =>
-      HSLColor.fromAHSL(1, (hue + 40) % 360, 0.6, 0.30).toColor();
+  Color get accent => HSLColor.fromAHSL(
+          1, accentHue ?? (hue + 40) % 360, accentHue == null ? 0.6 : 0.62,
+          accentHue == null ? 0.30 : 0.45)
+      .toColor();
 
   /// ピッチ上のユニフォーム色。芝の緑の上でも沈まないよう、
   /// エンブレムの地の色より明るくする。

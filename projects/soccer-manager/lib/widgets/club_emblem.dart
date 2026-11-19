@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import '../l10n/tr.dart';
+import '../models/club_look.dart';
 import '../theme/club_palette.dart';
 
 /// チームIDから決定論的に生成する、実際のロゴ画像を持たない代替のクラブエンブレム。
@@ -11,11 +12,15 @@ class ClubEmblem extends StatelessWidget {
   final String teamName;
   final double size;
 
+  /// 決める前の見た目を試しに描くとき(無ければ、決めた見た目か自動)。
+  final ClubLook? look;
+
   const ClubEmblem({
     super.key,
     required this.teamId,
     required this.teamName,
     this.size = 40,
+    this.look,
   });
 
   @override
@@ -23,14 +28,23 @@ class ClubEmblem extends StatelessWidget {
     final seed = teamId.hashCode;
     // 色の導出は ClubPalette に置いてある。ピッチ上のユニフォームも
     // 同じ値を引くので、ここで独自に計算すると画面ごとに色がずれる。
-    final palette = ClubPalette.of(teamId, clubName: teamName);
+    final override = look;
+    final palette = override != null
+        ? ClubPalette.fromHue(override.hue, accentHue: override.accentHue)
+        : ClubPalette.of(teamId, clubName: teamName);
     final base = palette.base;
     final accent = palette.accent;
-    final shapeIndex = seed.abs() % _EmblemPainter.shapeCount;
-    final motifIndex =
+    // オーナーが決めた見た目があれば、形・模様・頭文字もそれに従う。
+    final chosen = look ?? ClubLookRegistry.lookFor(teamId);
+    final shapeIndex =
+        chosen?.shape ?? seed.abs() % _EmblemPainter.shapeCount;
+    final motifIndex = chosen?.motif ??
         (seed.abs() ~/ _EmblemPainter.shapeCount) % _EmblemPainter.motifCount;
-    final initial =
-        teamName.trim().isEmpty ? '?' : teamName.trim().substring(0, 1);
+    final initial = (chosen != null && chosen.initial.trim().isNotEmpty)
+        ? chosen.initial.trim()
+        : (teamName.trim().isEmpty ? '?' : teamName.trim().substring(0, 1));
+    // 2文字は少し小さくする。
+    final letterSize = size * (initial.runes.length > 1 ? 0.28 : 0.38);
 
     return Semantics(
       label: Tr.pick('$teamNameのエンブレム', '$teamName crest'),
@@ -56,7 +70,7 @@ class ClubEmblem extends StatelessWidget {
               initial,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: size * 0.38,
+                fontSize: letterSize,
                 foreground: Paint()
                   ..style = PaintingStyle.stroke
                   ..strokeWidth = size * 0.07
@@ -69,7 +83,7 @@ class ClubEmblem extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: size * 0.38,
+                fontSize: letterSize,
               ),
             ),
           ],
