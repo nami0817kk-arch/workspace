@@ -955,6 +955,7 @@ class HomeScreen extends StatelessWidget {
   /// ライブ観戦せず、次節の結果だけを一括で確定させる(クイックシム)。
   Future<void> _quickSimNextMatch(BuildContext context, Fixture next) async {
     FeedbackService.tap();
+    FeedbackService.kickOff();
     final gameState = context.read<GameState>();
     final userTeamId = gameState.userTeam.id;
     final isHome = next.homeTeamId == userTeamId;
@@ -1055,6 +1056,9 @@ class HomeScreen extends StatelessWidget {
     final motmName = scorerNameOf(result.manOfTheMatchId);
     final motmOwnPlayerId = ownPlayerIdOf(result.manOfTheMatchId);
 
+    // 終わりの笛と、勝敗に合わせた歓声。
+    FeedbackService.matchResult(
+        won: userGoals > oppGoals, drew: userGoals == oppGoals);
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {

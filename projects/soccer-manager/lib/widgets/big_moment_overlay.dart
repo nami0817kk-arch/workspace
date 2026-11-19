@@ -40,7 +40,13 @@ class _BigMomentPresenterState extends State<BigMomentPresenter> {
           .where((k) => k.name == m[0])
           .firstOrNull;
       if (kind != null) {
-        FeedbackService.success();
+        // 祝いの場面だけ音を鳴らす(降格・決勝で敗れたときは静かに見せる)。
+        const quiet = {BigMomentKind.relegated, BigMomentKind.cupLost};
+        if (quiet.contains(kind)) {
+          FeedbackService.tap();
+        } else {
+          FeedbackService.celebrate();
+        }
         await showGeneralDialog<void>(
           context: context,
           barrierDismissible: true,
