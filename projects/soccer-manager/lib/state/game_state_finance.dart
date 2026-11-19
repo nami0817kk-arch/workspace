@@ -524,7 +524,7 @@ extension GameStateFinance on GameState {
     _settleOwnerLoanOnClubChange();
     save.ownerShare = 100;
     save.budget = (scaledMoney(GameState.initialBudgetTier5) *
-            save.difficulty.initialBudgetFactor)
+            save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     save.infrastructure = ClubInfrastructure();
     save.sponsorDeal = null;
@@ -641,7 +641,7 @@ extension GameStateFinance on GameState {
     _settleOwnerLoanOnClubChange();
     save.ownerShare = 100;
     save.budget = (scaleMoneyForTier(startTier, GameState.initialBudgetTier5) *
-            save.difficulty.initialBudgetFactor)
+            save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     save.infrastructure = ClubInfrastructure();
     save.sponsorDeal = null;

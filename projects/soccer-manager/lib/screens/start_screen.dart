@@ -199,6 +199,7 @@ class _StartScreenState extends State<StartScreen> {
         theme: result.theme,
         difficulty: result.difficulty,
         scenario: result.scenario,
+        difficultyItems: result.items,
       );
     } catch (_) {
       if (context.mounted) {
@@ -343,7 +344,9 @@ class _NewClubInput {
   final LeagueTheme theme;
   final GameDifficulty difficulty;
   final StartScenario scenario;
-  _NewClubInput(this.clubName, this.theme, this.difficulty, this.scenario);
+  final Map<DifficultyItem, GameDifficulty> items;
+  _NewClubInput(
+      this.clubName, this.theme, this.difficulty, this.scenario, this.items);
 }
 
 class _NewClubDialog extends StatefulWidget {
@@ -359,6 +362,9 @@ class _NewClubDialogState extends State<_NewClubDialog> {
   LeagueTheme _theme = LeagueTheme.england;
   GameDifficulty _difficulty = GameDifficulty.normal;
   StartScenario _scenario = StartScenario.standard;
+
+  /// 項目ごとに変えた難易度(無い項目は全体の難易度)。
+  final Map<DifficultyItem, GameDifficulty> _items = {};
 
   @override
   void dispose() {
@@ -414,7 +420,10 @@ class _NewClubDialogState extends State<_NewClubDialog> {
                     (d) => ChoiceChip(
                       label: Text(d.label),
                       selected: _difficulty == d,
-                      onSelected: (_) => setState(() => _difficulty = d),
+                      onSelected: (_) => setState(() {
+                        _difficulty = d;
+                        _items.clear();
+                      }),
                     ),
                   )
                   .toList(),
@@ -424,6 +433,35 @@ class _NewClubDialogState extends State<_NewClubDialog> {
               _difficulty.description,
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
+            ),
+            ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              title: Text(Tr.pick('項目ごとに決める', 'Set each item'),
+                  style: const TextStyle(fontSize: 14)),
+              children: [
+                for (final item in DifficultyItem.values)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.label),
+                        Wrap(
+                          spacing: 6,
+                          children: [
+                            for (final d in GameDifficulty.values)
+                              ChoiceChip(
+                                label: Text(item.effect(d)),
+                                selected: (_items[item] ?? _difficulty) == d,
+                                onSelected: (_) =>
+                                    setState(() => _items[item] = d),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 16),
             Text(Tr.pick('シナリオ', 'Scenario'),
@@ -461,7 +499,9 @@ class _NewClubDialogState extends State<_NewClubDialog> {
             final name = _controller.text.trim();
             if (name.isEmpty) return;
             Navigator.pop(
-                context, _NewClubInput(name, _theme, _difficulty, _scenario));
+                context,
+                _NewClubInput(name, _theme, _difficulty, _scenario,
+                    Map.of(_items)));
           },
           child: Text(context.l10n.startCreate),
         ),

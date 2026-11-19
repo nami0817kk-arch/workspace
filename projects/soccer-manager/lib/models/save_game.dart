@@ -50,11 +50,11 @@ extension GameDifficultyInfo on GameDifficulty {
       };
 
   String get description => switch (this) {
-        GameDifficulty.easy => Tr.pick('初期資金1.5倍・理事会の目標が2つ緩い',
-            "1.5x starting funds, and the board's target is two places softer"),
+        GameDifficulty.easy => Tr.pick('初期資金1.5倍・理事会の目標が2つ緩い・移籍金が1割安い',
+            "1.5x starting funds, the board's target two places softer, transfer prices 10% lower"),
         GameDifficulty.normal => Tr.pick('標準バランス', 'The standard balance'),
-        GameDifficulty.hard => Tr.pick('初期資金0.6倍・理事会の目標が1つ厳しい',
-            "0.6x starting funds, and the board's target is one place harder"),
+        GameDifficulty.hard => Tr.pick('初期資金0.6倍・理事会の目標が1つ厳しい・移籍金が1割高い',
+            "0.6x starting funds, the board's target one place harder, transfer prices 10% higher"),
       };
 
   /// 初期資金に掛ける倍率。
@@ -69,6 +69,39 @@ extension GameDifficultyInfo on GameDifficulty {
         GameDifficulty.easy => 2,
         GameDifficulty.normal => 0,
         GameDifficulty.hard => -1,
+      };
+
+  /// 移籍金の言い値に掛ける倍率。
+  double get transferPriceFactor => switch (this) {
+        GameDifficulty.easy => 0.9,
+        GameDifficulty.normal => 1.0,
+        GameDifficulty.hard => 1.1,
+      };
+}
+
+/// 難易度を項目ごとに決めるときの項目。
+enum DifficultyItem { funds, boardTarget, transferPrices }
+
+extension DifficultyItemInfo on DifficultyItem {
+  String get label => switch (this) {
+        DifficultyItem.funds => Tr.pick('初期資金', 'Starting funds'),
+        DifficultyItem.boardTarget => Tr.pick('理事会の目標', "Board's target"),
+        DifficultyItem.transferPrices => Tr.pick('移籍金の言い値', 'Transfer prices'),
+      };
+
+  /// [d]を選んだときの、この項目の中身。
+  String effect(GameDifficulty d) => switch (this) {
+        DifficultyItem.funds => Tr.pick('${d.initialBudgetFactor}倍',
+            '${d.initialBudgetFactor}x'),
+        DifficultyItem.boardTarget => d.boardTargetDelta == 0
+            ? Tr.pick('標準', 'Standard')
+            : d.boardTargetDelta > 0
+                ? Tr.pick('${d.boardTargetDelta}つ緩い',
+                    '${d.boardTargetDelta} place(s) softer')
+                : Tr.pick('${-d.boardTargetDelta}つ厳しい',
+                    '${-d.boardTargetDelta} place(s) harder'),
+        DifficultyItem.transferPrices => Tr.pick('${d.transferPriceFactor}倍',
+            '${d.transferPriceFactor}x'),
       };
 }
 
@@ -497,6 +530,17 @@ class SaveGame {
   /// ゲーム難易度(ニューゲーム時に選択)。
   GameDifficulty difficulty;
 
+  /// 項目ごとに変えた難易度(DifficultyItem の name → GameDifficulty の name)。
+  /// 無い項目は [difficulty] に従う。
+  Map<String, String> difficultyItems;
+
+  /// 項目[item]の難易度。
+  GameDifficulty difficultyOf(DifficultyItem item) =>
+      GameDifficulty.values
+          .where((d) => d.name == difficultyItems[item.name])
+          .firstOrNull ??
+      difficulty;
+
   /// 理事会が設定する週給総額の上限(万円/週)。0は未設定(旧セーブ)で、
   /// その場合はGameState側が現在の状況から同じ式で算出する。
   int wageBudget;
@@ -736,6 +780,7 @@ class SaveGame {
     this.careerCupPrize = 0,
     this.pkShootoutWins = 0,
     this.difficulty = GameDifficulty.normal,
+    Map<String, String>? difficultyItems,
     this.wageBudget = 0,
     this.boardCupTargetRound = 0,
     this.managerContractYears = 0,
@@ -769,6 +814,7 @@ class SaveGame {
         sdBrief = sdBrief ?? SdBrief(),
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
+        difficultyItems = difficultyItems ?? {},
         playerBook = playerBook ?? {},
         clubCash = clubCash ?? {},
         distressedClubIds = distressedClubIds ?? [],
@@ -1044,6 +1090,7 @@ class SaveGame {
         'careerCupPrize': careerCupPrize,
         'pkShootoutWins': pkShootoutWins,
         'difficulty': difficulty.name,
+        if (difficultyItems.isNotEmpty) 'difficultyItems': difficultyItems,
         'wageBudget': wageBudget,
         'boardCupTargetRound': boardCupTargetRound,
         'managerContractYears': managerContractYears,
@@ -1389,6 +1436,8 @@ class SaveGame {
         wageBudget: json['wageBudget'] as int? ?? 0,
         boardCupTargetRound: json['boardCupTargetRound'] as int? ?? 0,
         managerContractYears: json['managerContractYears'] as int? ?? 0,
+        difficultyItems: (json['difficultyItems'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as String)),
         difficulty: GameDifficulty.values.firstWhere(
           (d) => d.name == json['difficulty'],
           orElse: () => GameDifficulty.normal,
