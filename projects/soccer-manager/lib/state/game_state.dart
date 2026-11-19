@@ -160,6 +160,7 @@ part 'game_state_plan.dart';
 part 'game_state_rivals.dart';
 part 'game_state_money_rules.dart';
 part 'game_state_injury.dart';
+part 'game_state_nation.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }

@@ -38,7 +38,9 @@ extension GameStateTransfer on GameState {
   /// 登録の決まり([SquadRegistration])で加えられるか。加えられないときは
   /// 理由を[lastSigningBlockReason]に入れる(押しても何も起きない状態にしない)。
   bool _registrationAllows(Player player) {
-    final reason = SquadRegistration.blockReason(userTeam, player);
+    // アルビオン式のリーグでは、外国籍の選手に労働許可が要る。
+    final reason = SquadRegistration.blockReason(userTeam, player) ??
+        workPermitBlock(player);
     if (reason == null) return true;
     lastSigningBlockReason = reason;
     _notify();
@@ -172,6 +174,8 @@ extension GameStateTransfer on GameState {
   void _takeFromSeller(({Player player, Team? club}) target) {
     final p = target.player;
     final club = target.club;
+    // 国をまたいで移ることがあるので、先に国籍を覚えさせる。
+    _fixNationality(p);
     if (club == null) {
       transferMarket.removeWhere((q) => q.id == p.id);
       return;

@@ -1163,6 +1163,10 @@ class Player {
   /// またいで移れないので、自国以外の18歳未満は獲れない。
   String? originLeague;
 
+  /// 国籍(LeagueTheme の name)。国をまたいで移るときに覚える。それまでは
+  /// null で、GameState.nationalityOf が今いるリーグから決める。
+  String? nation;
+
   /// 移籍市場にスカウティング候補として掲載されている選手の現所属クラブ名
   /// (表示専用。自クラブの選手・フリーエージェントにはnull)。
   String? originClubName;
@@ -1309,6 +1313,7 @@ class Player {
     this.notRegistered = false,
     this.leaveOffRegistration = false,
     this.originLeague,
+    this.nation,
     this.loanEndDate,
     this.loanFromClubId,
     this.loanBaseWage,
@@ -1609,6 +1614,7 @@ class Player {
     put('notRegistered', notRegistered, false);
     put('leaveOffRegistration', leaveOffRegistration, false);
     put('originLeague', originLeague, null);
+    put('nation', nation, null);
     put('loanEndDate', _dateToJson(loanEndDate), null);
     put('loanFromClubId', loanFromClubId, null);
     put('loanBaseWage', loanBaseWage, null);
@@ -1752,6 +1758,7 @@ class Player {
       notRegistered: json['notRegistered'] as bool? ?? false,
       leaveOffRegistration: json['leaveOffRegistration'] as bool? ?? false,
       originLeague: json['originLeague'] as String?,
+      nation: json['nation'] as String?,
       loanEndDate: _dateFromJson(json['loanEndDate']),
       loanFromClubId: json['loanFromClubId'] as String?,
       loanBaseWage: json['loanBaseWage'] as int?,

@@ -489,8 +489,9 @@ class _TransferScreenState extends State<TransferScreen>
     return Card(
       child: ListTile(
         leading: PlayerFaceAvatar(playerId: p.id, position: p.position),
-        title: Text(Tr.pick('${p.name}(${p.position.label}・${p.age}歳)',
-            '${p.name} (${p.position.label}, ${p.age})')),
+        title: Text(Tr.pick(
+            '${p.name}(${p.position.label}・${p.age}歳・${GameStateNation.nationLabel(gameState.nationalityOf(p))})',
+            '${p.name} (${p.position.label}, ${p.age}, ${GameStateNation.nationLabel(gameState.nationalityOf(p))})')),
         subtitle: Text(Tr.pick(
             '${gameState.clubNameOf(p.id) ?? '-'}・総合力 $ovr・伸びしろ $pot・市場価値 ${formatMoney(p.marketValue)}\n見えている度合い $k%',
             '${gameState.clubNameOf(p.id) ?? '-'} • Overall $ovr • Potential $pot • Value ${formatMoney(p.marketValue)}\nScouted $k%')),
