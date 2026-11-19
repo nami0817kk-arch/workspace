@@ -232,10 +232,14 @@ extension GameStateFinance on GameState {
       LineupUtils.fillVacancies(user);
     }
     if (level >= 3) {
-      user.mentality = CpuTacticsAI.mentalityFor(
+      // 相手に合わせた構えを、監督の考え方の分だけずらす。
+      final style = save.infrastructure.staffFor(StaffRole.manager)?.manager
+              ?.style ??
+          ManagerStyle.pragmatic;
+      user.mentality = style.shift(CpuTacticsAI.mentalityFor(
         ownRating: user.overallRating,
         opponentRating: opp.overallRating,
-      );
+      ));
     }
   }
 
