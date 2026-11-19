@@ -1170,6 +1170,9 @@ extension GameStateSeason on GameState {
       for (int tier = 1; tier <= totalDivisionTiers; tier++) tier: <Team>[],
     };
     var relevantPlayoffMatches = const <PromotionPlayoffMatch>[];
+    // 昇格を決めたのに、上の部のライセンスが下りなかった部(無ければ null)。
+    int? licenseDeniedTier;
+    var licenseUnmet = const <String>[];
     for (int upperTier = 1; upperTier < totalDivisionTiers; upperTier++) {
       final lowerTier = upperTier + 1;
       final upperOrder = tierOrder[upperTier]!;
@@ -1185,6 +1188,21 @@ extension GameStateSeason on GameState {
       final lowerIds = lowerOrder.map((t) => t.id).toSet();
       final promoted =
           result.tier1.where((t) => !upperIds.contains(t.id)).toList();
+      // 自クラブが上がる権利を得ても、ライセンスが下りなければ上がれない。
+      // 権利は、まだ上がっていないうちで一番上の順位のクラブに移る。
+      final userIdx = promoted.indexWhere((t) => t.id == _save!.userTeamId);
+      if (userIdx >= 0) {
+        final unmet = clubLicenseUnmet(upperTier);
+        if (unmet.isNotEmpty) {
+          final promotedIds = {for (final t in promoted) t.id};
+          final next = lowerOrder.where((t) => !promotedIds.contains(t.id));
+          if (next.isNotEmpty) {
+            promoted[userIdx] = next.first;
+            licenseDeniedTier = upperTier;
+            licenseUnmet = unmet;
+          }
+        }
+      }
       final relegated =
           result.tier2.where((t) => !lowerIds.contains(t.id)).toList();
 
@@ -1281,6 +1299,12 @@ extension GameStateSeason on GameState {
           : Tr.pick(
               '昇格達成！来シーズンは$newTier部リーグに昇格します。理事会から補強予算${formatMoney(promotionBonus)}が支給されました。',
               'Promoted. You go up to tier $newTier next season, and the board has given you ${formatMoney(promotionBonus)} to strengthen.');
+    } else if (licenseDeniedTier != null) {
+      lastDivisionChangeMessage = Tr.pick(
+          '昇格の権利を得ましたが、$licenseDeniedTier部のクラブライセンスが下りず、来シーズンも$playedTier部で戦います。足りなかった条件: ${licenseUnmet.join('、')}。',
+          'You earned promotion, but were refused a tier $licenseDeniedTier licence and stay in tier $playedTier. Missing: ${licenseUnmet.join('; ')}.');
+      _logNews(lastDivisionChangeMessage!,
+          context: Tr.pick('クラブライセンス', 'Club licence'));
     } else if (userInPromotionPlayoff) {
       lastDivisionChangeMessage = Tr.pick(
           '昇格プレーオフで敗れ、来シーズンも$playedTier部リーグで戦います。',
