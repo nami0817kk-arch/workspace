@@ -209,6 +209,28 @@ async function clearEvents() {
   // 選手
   rail('選手');
   ok(txt().includes('進路') && txt().includes('様子') && txt().includes('特性') && txt().includes('性格'), '選手の詳細（能力・様子・進路）');
+  // 2026-11-19「能力値とかはいらない。FM の選手概要欄を参考にして」：最初に開くのは概要。能力の数字の棒は出さない
+  {
+    const ov = d.querySelector('#main .pdetail .overview');
+    ok(!!ov, '選手を開くと最初は概要');
+    ok(!!ov && ['コーチの見立て', 'プロフィール', 'ポジション', '状態', '試合', '特性'].every((t) => ov.textContent.includes(t)), '概要に見立て・プロフィール・ポジション・状態・試合・特性');
+    ok(!!ov && !ov.querySelector('.abg') && !ov.textContent.includes('ファーストタッチ'), '概要に能力の数字の表を出さない');
+    ok(!!ov && !!ov.querySelector('svg.posmap circle'), '概要にポジションの図');
+    ok(!!ov && ov.querySelectorAll('.ovpc .pro').length >= 1 && ov.querySelectorAll('.ovpc .con').length >= 1, '長所と短所を言葉で');
+    const W0 = w.YA._ui.app.w;
+    // どの子の見立ても、言葉のつながりが崩れない（「確かストライカー」「不安定うえ」が出ていた）
+    const bad = Object.values(W0.players).map((p) => w.YA.coachReport(W0, p)).filter((t) => /うえ、|確か[^な]|苦手こと|がちこと|がち[^な]|undefined|NaN/.test(t));
+    ok(bad.length === 0, 'コーチの見立ての文がつながる ' + (bad[0] || ''));
+    ok(Object.values(W0.players).every((p) => !/\d{2,}/.test(w.YA.futureWords(W0, p))), '将来の見立ては水準の名前だけ（数字なし）');
+    btn('能力').click();
+    ok(!!d.querySelector('#main .pdetail .abg'), '能力の数字は「能力」タブに残す');
+    // 直近の試合の採点（p.rl）：A・B とも残り、5つまで
+    const w2 = w.YA.newWorld(23);
+    for (let k = 0; k < 8; k++) w.YA.simulate(w2, { until: 'week', stopOnImportant: false });
+    const rls = Object.values(w2.players).map((p) => p.rl || []);
+    ok(rls.some((r) => r.some((x) => x.t === 'A')) && rls.some((r) => r.some((x) => x.t === 'B')), '直近の採点は A と B の試合で残る');
+    ok(rls.every((r) => r.length <= 5 && r.every((x) => x.r >= 3 && x.r <= 10)), '直近の採点は5つまで・3〜10');
+  }
   btn('様子').click();
   ok(txt().includes('調子') && txt().includes('コーチの一言'), '選手の様子');
   ok(![...d.querySelectorAll('#main .chip.gray')].some((c) => c.textContent === 'ふつう'), '性格に「ふつう」の札を並べない（2026-11-16）');
@@ -222,7 +244,7 @@ async function clearEvents() {
       ok(!!t && t.textContent === pc.dataset.tip, '説明つきの札を押すと、下にその説明が出る');
     } else ok(false, '説明つきの札が見つからない');
     const fut = [...d.querySelectorAll('#main .chip.trait')].find((c) => c.textContent.startsWith('伸びしろ'));
-    ok(!!fut && !!fut.dataset.tip && fut.querySelector('small').style.fontSize === '11px', '伸びしろの水準名は押すと説明、字は11px');
+    ok(!!fut && !!fut.dataset.tip && !/\d/.test(fut.textContent), '伸びしろは押すと説明、帯には数字を出さない（2026-11-19）');
   }
   btn('進路').click();
   ok(txt().includes('本人の希望') && txt().includes('トップへの近さ'), '選手の進路（希望・トップへの近さ）');

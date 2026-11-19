@@ -716,4 +716,156 @@
     const h = H();
     return h('div', {}, h('div', { class: 'h' }, '用語集'), h('div', { class: 'plist', style: 'margin-top:4px' }, YA.GLOSSARY.map(([k, v]) => h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;gap:6px' }, h('b', { style: 'width:110px;flex:none' }, k), h('span', { class: 'grow', style: 'font-size:11.5px' }, v)))));
   };
+  // ---------- 選手の概要（2026-11-19「能力値とかはいらない。FM の選手概要欄を参考にして」） ----------
+  // 選手を開いて最初に出る小タブ。能力の数字は出さず、コーチの見立て（文と長所・短所）・プロフィール・
+  // ポジションの図・状態・特性・試合の数字を言葉と絵で見せる。能力の数字は「能力」タブに残す。
+  // 直近の試合の採点：A・B の公式戦で出た試合を5つまで（p.rl）。この版から残す
+  const am1 = YA.applyMatch;
+  YA.applyMatch = function (w, m, which, opp, scheduled) {
+    const r = am1.apply(this, arguments);
+    try {
+      // B の試合は日程の外（scheduled=false）で回るので、B はいつも数える
+      if ((scheduled || which === 'B') && m && m.home && m.home.players) {
+        for (const [id, mp] of Object.entries(m.home.players)) {
+          const p = w.players[id];
+          if (!p || !mp.st || !(mp.st.minutes > 0)) continue;
+          const on = typeof opp === 'string' ? opp : opp && opp.name ? opp.name : '';
+          p.rl = (p.rl || []).concat([{ y: w.year, w: w.week, t: which, r: Math.round(mp.st.rating * 10) / 10, g: mp.st.goals || 0, a: mp.st.assists || 0, o: on }]).slice(-5);
+        }
+      }
+    } catch (er) { /* 形の違う試合 */ }
+    return r;
+  };
+  // 能力ごとの「長所の言い方」と「短所の言い方」
+  YA.AB_WORDS = {
+    ファーストタッチ: ['止める技術が高い', 'トラップが乱れやすい'], パス: ['パスの精度が高い', 'パスがずれやすい'], ドリブル: ['ドリブルで運べる', '持ち運ぶのがうまくない'],
+    フィニッシュ: ['決定力がある', '決めきれない場面が多い'], ロングシュート: ['遠目からも狙える', 'ミドルシュートは少ない'], クロス: ['クロスの質が高い', 'クロスの精度が低い'],
+    ヘディング: ['空中戦に強い', '頭での競り合いに弱い'], タックル: ['奪い切る守備ができる', 'タックルが軽い'], マーク: ['マークを外さない', 'マークを見失いやすい'],
+    テクニック: ['足もとの技術が光る', '技術はまだ粗い'], プレースキック: ['セットプレーのキッカーを任せられる', '止まった球を蹴るのがうまくない'], PK: ['PKに強い', 'PKに弱い'],
+    逆足の精度: ['両足を使える', '逆足はほとんど使えない'], 予測: ['先を読む力がある', '読みが遅れやすい'], 判断: ['判断が速く正しい', '判断に迷いが出る'],
+    視野: ['周りがよく見えている', '視野が狭くなりやすい'], ポジショニング: ['立ち位置が良い', '立ち位置がずれやすい'], オフザボール: ['ボールのない所の動きが良い', 'ボールのない所で止まりやすい'],
+    チームワーク: ['チームのために走れる', '自分のプレーに寄りやすい'], 運動量: ['よく走る', '運動量が少ない'], 集中: ['最後まで集中が切れない', '集中が途切れることがある'],
+    冷静さ: ['大事な場面でも落ち着いている', '大事な場面で慌てやすい'], 加速: ['出足が速い', '出足が遅い'], スピード: ['足が速い', 'スピードが足りない'],
+    敏しょう性: ['身のこなしが軽い', '切り返しについていけない'], バランス: ['当たられても倒れない', '体勢を崩しやすい'], ジャンプ: ['高く跳べる', '跳ぶ高さが足りない'],
+    スタミナ: ['90分走りきれる', '後半に足が止まる'], 強さ: ['体の強さがある', '当たり負けしやすい'],
+    ハンドリング: ['キャッチが安定している', 'ボールをこぼしやすい'], 反応: ['反応が鋭い', '反応が遅れる'], '1対1': ['1対1に強い', '1対1で先に倒れてしまう'],
+    飛び出し: ['飛び出しの判断が良い', '飛び出しをためらう'], 空中戦: ['ハイボールに強い', 'クロスの処理が安定しない'], エリアの支配: ['ゴール前を仕切れる', 'ゴール前で存在感が薄い'],
+    コーチング: ['声で守備を動かせる', '声が少ない'], 配球: ['配球で攻撃を始められる', '配球が粗い'],
+  };
+  // 長所3つ・短所2つ（数字は出さない）。長所は位置に効く能力と全体で目立つもの、短所は位置に効く能力の低いもの
+  YA.prosCons = function (p) {
+    const isGK = p.pos === 'GK';
+    const key = (YA.POS_ABS15[p.main] || (isGK ? YA.AB_GK : [])).filter((n) => YA.AB_WORDS[n]);
+    const pool = isGK ? YA.AB_GK : YA.AB_FIELD.filter((n) => n !== 'PK' && n !== 'プレースキック');
+    const v = (n) => p.ab[n] || 0;
+    const avg = pool.reduce((s, n) => s + v(n), 0) / pool.length;
+    // 位置に効く能力は少し上に見る（同じくらいなら位置の持ち味を先に）
+    const pros = pool.slice().sort((a, b) => v(b) + (key.indexOf(b) >= 0 ? 1.5 : 0) - (v(a) + (key.indexOf(a) >= 0 ? 1.5 : 0))).filter((n) => v(n) >= avg).slice(0, 3);
+    // 短所が無い子でも、位置に効く能力でいちばん低いものを1つは挙げる（FM の見立ても必ず課題を書く）
+    const rest = key.filter((n) => pros.indexOf(n) < 0).sort((a, b) => v(a) - v(b));
+    let cons = rest.filter((n) => v(n) < avg + 0.5).slice(0, 2);
+    if (!cons.length && rest.length) cons = [rest[0]];
+    return { pros, cons };
+  };
+  // 同じ学年の中での位置（言葉で）
+  const gradeWord = (w, p) => {
+    const mates = all(w).filter((q) => q.grade === p.grade).sort((a, b) => YA.ovr(b) - YA.ovr(a));
+    const k = mates.indexOf(p) / Math.max(1, mates.length - 1);
+    return k <= 0.15 ? '学年で指折りの力がある' : k <= 0.5 ? '学年では上のほう' : k <= 0.8 ? '学年では真ん中くらい' : '学年ではまだ下のほう';
+  };
+  const lvName = (v) => YA.levelOf(v).replace(/（.*?）/, '');
+  // 将来の見立てを水準の名前だけで（数字は出さない）
+  YA.futureWords = function (w, p) {
+    const f = YA.futureRange(w, p);
+    const a = lvName(f.lo);
+    const b = lvName(f.hi);
+    return a === b ? `「${a}」くらい` : `「${a}」〜「${b}」`;
+  };
+  // コーチの見立ての文（2〜3文）
+  YA.coachReport = function (w, p) {
+    const pc = YA.prosCons(p);
+    const W2 = YA.AB_WORDS;
+    const pos = YA.POS_NAME[p.main] || p.main;
+    const s1 = pc.pros.length >= 2 ? `${W2[pc.pros[0]][0]}${pos}。${W2[pc.pros[1]][0]}のも持ち味。` : pc.pros.length ? `${W2[pc.pros[0]][0]}${pos}。` : `目立った武器はまだ無い${pos}。`;
+    const s2 = pc.cons.length ? '課題は、' + pc.cons.map((n) => W2[n][1] + 'こと').join('と、') + '。' : '';
+    const st = YA.coachStars(w, p);
+    const s3 = `いまは${gradeWord(w, p)}。${p.grade < 3 ? (st >= 4 ? 'まだ大きく伸びそう。' : st >= 3 ? 'まだ伸びる余地がある。' : '伸びはゆるやかになりそう。') : ''}`;
+    return (s1 + s2 + s3).replace(/。。/g, '。');
+  };
+  // 状態を言葉で
+  YA.stateWords = function (p) {
+    const out = [];
+    if (p.inj > 0) out.push(['怪我 あと' + p.inj + '週', 'bad']);
+    out.push(p.conf >= 70 ? ['乗っている', 'good'] : p.conf <= 35 ? ['自信をなくしている', 'bad'] : ['落ち着いている', '']);
+    out.push(p.fat >= 70 ? ['疲れが溜まっている', 'bad'] : p.fat >= 40 ? ['少し疲れている', ''] : ['元気', 'good']);
+    out.push(p.unrest > 3 ? ['不満が溜まっている', 'bad'] : p.unrest > 1.5 ? ['気にしていることがある', ''] : ['不満はなさそう', 'good']);
+    if (p.suspend > 0) out.push(['出場停止 ' + p.suspend + '試合', 'bad']);
+    return out;
+  };
+  // ポジションの図（FM の位置の図）。横向きで右へ攻める。分かっている位置だけ丸を置く
+  const PXY = { GK: [7, 32], CB: [21, 32], LB: [23, 9], RB: [23, 55], LWB: [38, 8], RWB: [38, 56], DM: [36, 32], CM: [52, 32], LM: [58, 9], RM: [58, 55], AM: [68, 32], LW: [79, 10], RW: [79, 54], SS: [80, 32], ST: [92, 32] };
+  YA.posMapEl = function (p) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const s = (tag, at, txt) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (txt != null) e.textContent = txt; return e; };
+    const svg = s('svg', { viewBox: '-2 -2 104 68', class: 'posmap' });
+    const ln = { stroke: 'rgba(255,255,255,.75)', 'stroke-width': 0.6, fill: 'none' };
+    svg.append(s('rect', { x: -2, y: -2, width: 104, height: 68, fill: '#2f9a5f', rx: 3 }), s('rect', Object.assign({ x: 0, y: 0, width: 100, height: 64 }, ln)), s('line', Object.assign({ x1: 50, y1: 0, x2: 50, y2: 64 }, ln)), s('circle', Object.assign({ cx: 50, cy: 32, r: 8 }, ln)), s('rect', Object.assign({ x: 0, y: 16, width: 14, height: 32 }, ln)), s('rect', Object.assign({ x: 86, y: 16, width: 14, height: 32 }, ln)));
+    const known = p.pos === 'GK' ? ['GK'] : [p.main].concat(p.subs || []).concat(p.bestKnown && p.best ? [p.best] : []).filter((q, i, a) => a.indexOf(q) === i && PXY[q]);
+    const COL = { '◎': '#0f7a3d', '○': '#7dd49b', '△': '#f2c94c', '×': '#e07a7a' };
+    for (const q of known) {
+      const g = YA.aptGrade(p.apt[q] || 0);
+      const [x, y] = PXY[q];
+      svg.append(s('circle', { cx: x, cy: y, r: q === p.main ? 6.2 : 5.2, fill: COL[g], stroke: q === p.main ? '#fff' : 'rgba(0,0,0,.25)', 'stroke-width': q === p.main ? 1.2 : 0.5 }));
+      svg.append(s('text', { x, y: y + 1.6, 'text-anchor': 'middle', 'font-size': 4.4, 'font-weight': 900, fill: g === '◎' ? '#fff' : '#14284b' }, YA.POS_LABEL[q]));
+    }
+    return svg;
+  };
+  const foot = (p) => (p.foot === 'R' ? '右' : p.foot === 'L' ? '左' : '両足');
+  YA.playerOverview = function (w, p) {
+    const h = H();
+    const sec = (title, ...kids) => h('div', { class: 'ovsec' }, h('div', { class: 'ovh' }, title), ...kids);
+    const pc = YA.prosCons(p);
+    // コーチの見立て（横いっぱい）
+    const report = sec('コーチの見立て',
+      h('div', { class: 'ovtext' }, YA.coachReport(w, p)),
+      h('div', { class: 'ovpc' },
+        ...pc.pros.map((n) => h('div', { class: 'pro' }, h('b', {}, '＋'), YA.AB_WORDS[n][0])),
+        ...pc.cons.map((n) => h('div', { class: 'con' }, h('b', {}, '－'), YA.AB_WORDS[n][1]))),
+      h('div', { class: 'ovline' }, h('span', { class: 'sub' }, 'いま'), h('b', {}, lvName(YA.rating(p))), h('span', { class: 'sub' }, '将来'), YA.starsEl([YA.coachStars(w, p), YA.coachStars(w, p)]), h('b', {}, YA.futureWords(w, p))));
+    // プロフィール
+    const persAll = Object.values(p.pers || {}).filter((t) => t && t !== 'ふつう').slice(0, 3);
+    const rows = [
+      ['学年', `高${p.grade}（${15 + p.grade}歳）・${p.team}チーム`],
+      ['利き足', foot(p) + (p.height ? `・${p.height}cm` : '')],
+      p.nation && p.nation !== '日本' ? ['国籍', p.nation] : null,
+      p.joinY ? ['入団', `${p.joinY}年目・${p.route || '一般入団'}`] : null,
+      ['性格', persAll.length ? persAll.join('・') : 'おだやか'],
+      YA.bgText && p.bgKnow ? ['事情', YA.bgText(w, p)] : null,
+    ].filter(Boolean);
+    const prof = sec('プロフィール', h('div', { class: 'ovdl' }, ...rows.map(([k, v]) => h('div', { class: 'ovrow' }, h('span', { class: 'k' }, k), h('span', { class: 'v' }, v)))));
+    const pos = sec('ポジション', YA.posMapEl(p), h('div', { class: 'ovnote' }, h('span', { class: 'dot g1' }), '本職 ', h('span', { class: 'dot g2' }), 'こなせる ', h('span', { class: 'dot g3' }), '不慣れ'));
+    // 状態
+    const state = sec('状態', h('div', { class: 'ovchips' }, ...YA.stateWords(p).map(([t, k]) => h('span', { class: 'fit ' + (k || 'mid') }, t))));
+    // 特性（金・覚醒は色を変える）
+    const tr = (p.traits || []).map((x) => (YA.isGold && YA.isGold(p, x) ? h('span', { class: 'chip gold' }, '金 ' + YA.GOLD[x]) : h('span', { class: 'chip trait' }, x)));
+    if (p.aw && p.aw.trait) tr.unshift(h('span', { class: 'chip awk' }, '覚醒 ' + p.aw.trait));
+    const traits = sec('特性', h('div', { class: 'ovchips' }, ...(tr.length ? tr : [h('span', { class: 'sub' }, 'まだ特性はありません')])));
+    // 試合
+    const cs = p.cs || { apps: 0, goals: 0, assists: 0 };
+    const rl = (p.rl || []).slice(-5);
+    const isGK = p.pos === 'GK';
+    const games = sec('試合',
+      h('div', { class: 'ovstats' }, h('div', {}, h('b', {}, cs.apps), h('small', {}, 'A出場')), isGK ? null : h('div', {}, h('b', {}, cs.goals), h('small', {}, '得点')), isGK ? null : h('div', {}, h('b', {}, cs.assists), h('small', {}, 'アシスト')), rl.length ? h('div', {}, h('b', {}, (rl.reduce((a, x) => a + x.r, 0) / rl.length).toFixed(1)), h('small', {}, '採点')) : null),
+      rl.length
+        ? h('div', { class: 'ovform' }, ...rl.map((x) => h('div', { class: 'fbar', tip: `${x.y}年目 ${x.w}週（${x.t}）${x.o ? '・' + x.o : ''}${x.g ? `・${x.g}得点` : ''}${x.a ? `・${x.a}アシスト` : ''}` }, h('i', { style: `height:${Math.round(clamp((x.r - 4) / 5, 0.08, 1) * 100)}%;background:${x.r >= 7.5 ? '#1a9d57' : x.r >= 6.5 ? '#7dbf3f' : x.r >= 5.8 ? '#f2b84c' : '#e06a5a'}` }), h('span', {}, x.r.toFixed(1)), h('small', {}, x.t))))
+        : h('div', { class: 'sub', style: 'font-size:11.5px' }, 'まだ記録した試合がありません（これからの試合が5つまで並びます）'));
+    // ★の子：信頼と覚醒の鍵の近さ
+    let star = null;
+    if (p.star && YA.keysOf) {
+      const ks = YA.keysOf(w, p);
+      const done = ks.filter((k) => k.done).length;
+      star = sec('★ この子と', h('div', { class: 'ovtext' }, `信頼：${YA.TRUST_NAME[YA.trustLv(p)]}　／　${p.aw ? `覚醒した（${p.aw.form}）` : ks.length ? `覚醒の鍵 ${done}/${ks.length} がそろった` : '覚醒の鍵はまだ見えない'}`));
+    }
+    return h('div', { class: 'overview' }, report, h('div', { class: 'ovcols' }, h('div', { class: 'ovcol' }, prof, pos), h('div', { class: 'ovcol' }, state, games, traits, star)));
+  };
 })();

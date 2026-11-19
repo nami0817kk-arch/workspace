@@ -469,6 +469,7 @@
     left.append(h('div', { class: 'row', style: 'gap:4px;margin-bottom:4px;flex-wrap:nowrap' }, sorts, chips), list);
     const right = h('div', { class: 'card pbody pdetail', style: 'flex:1;min-width:0' });
     const info = h('div', {});
+    const starMsg0 = ui.starMsg;
     if (ui.starMsg) { info.append(h('div', { class: 'note', style: 'color:var(--ink)' }, ui.starMsg)); ui.starMsg = null; }
     info.append(keysBox(w, sel));
     info.append(growthBox(sel));
@@ -482,7 +483,8 @@
       h('button', { class: 'btn sm', 'aria-label': 'ほかの操作', style: 'min-width:38px;padding:4px 8px', onclick: () => playerMenu(w, sel) }, '…'),
       // 見出しを2行に収める（2026-11-16 3行あった）。将来の幅の水準名は押したときの説明へ
       // 水準名の説明は押すと下に出す（title の長押しは iPhone で見えない）。「将来」の字は11px（2026-11-17 点検）
-      h('span', { class: 'chip trait', tip: '伸びしろ：' + YA.futureRange(w, sel).text }, '伸びしろ ', YA.starsEl([YA.coachStars(w, sel), YA.coachStars(w, sel)]), h('small', { style: 'font-weight:700;font-size:11px' }, YA.futureRange(w, sel).text.replace(/（.*?）/, ''))), ...flags(sel).filter((e) => e && e.textContent !== '★注目'), // ★は右の印で出すので二重にしない
+      // 帯では数字を出さない（2026-11-19「能力値とかはいらない」）。将来の幅の数字は押したときの説明に残す
+      h('span', { class: 'chip trait', tip: '伸びしろ：' + YA.futureRange(w, sel).text }, '伸びしろ ', YA.starsEl([YA.coachStars(w, sel), YA.coachStars(w, sel)])),...flags(sel).filter((e) => e && e.textContent !== '★注目'), // ★は右の印で出すので二重にしない
       YA.starOpen(w, sel)
         ? h('button', { class: 'btn sm', onclick: () => { const r = YA.setStar(w, sel, !sel.star); ui.starMsg = r.msg; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : `★ 注目の印（高${sel.grade} ${YA.starsIn(w, sel.grade).length}/${YA.STAR_MAX}）`)
         : (sel.star ? h('span', { class: 'chip trait', title: '入団のときに決めた★です' }, '★ 入団時に決めた子') : h('button', { class: 'btn sm', disabled: true, why: YA.STAR_CLOSED, onclick: () => { ui.starMsg = YA.STAR_CLOSED; rerender(); } }, '★ は入団時に決める')), sel.star || sel.awake ? null : h('small', { class: 'sub', style: 'align-self:center' }, '覚醒するのは★の子だけ'),
@@ -541,12 +543,15 @@
     if (sel.mem && sel.mem.length && YA.memLines) mem.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'この子との記憶'), h('div', { class: 'note', style: 'color:var(--ink)' }, YA.memLines(sel).slice(0, 8).map((t) => h('div', {}, t))), YA.leanOf && YA.leanOf(sel).n ? h('div', { class: 'note' }, '育て方の傾き：' + Object.entries(YA.leanOf(sel).cnt).filter((x) => x[1]).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${YA.KIND_LABEL[k]}${n}`).join('・') + '（覚醒の形の出やすさに効く）') : null);
     if (sel.hist.length) mem.append(h('div', { class: 'h', style: 'margin-top:8px' }, '最近のこと'), h('div', { class: 'note', style: 'color:var(--ink)' }, sel.hist.slice(0, 10).map((x) => h('div', {}, `${x.y}年目 ${x.w}週：${x.t}`))));
     // 能力・面談・操作を切り替えて、スクロールせずに選手への操作へ届くようにする
-    ui.pTab = ui.pTab || 'info';
-    const PT = [['info', '能力'], ['ops', '様子'], ['grow', '育て方'], ['mem', '思い出'], ['talk', '進路']];
+    // 最初に開くのは概要（2026-11-19「能力値とかはいらない。FM の選手概要欄を参考にして」）。能力の数字は「能力」へ
+    ui.pTab = ui.pTab || 'ov';
+    const ov = YA.playerOverview ? YA.playerOverview(w, sel) : info;
+    if (starMsg0) ov.prepend(h('div', { class: 'note', style: 'color:var(--ink)' }, starMsg0));
+    const PT = [['ov', '概要'], ['info', '能力'], ['ops', '様子'], ['grow', '育て方'], ['mem', '思い出'], ['talk', '進路']];
     const tabsEl = h('div', { class: 'tabs' });
     const show = () => {
       tabsEl.replaceChildren(...PT.map(([k, n]) => h('button', { class: 'btn sm' + (ui.pTab === k ? ' on' : ''), onclick: () => { ui.pTab = k; show(); } }, n)));
-      right.replaceChildren({ talk, ops, grow, mem }[ui.pTab] || info);
+      right.replaceChildren({ ov, talk, ops, grow, mem }[ui.pTab] || info);
       right.scrollTop = 0;
     };
     show();
