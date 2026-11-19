@@ -657,9 +657,9 @@ extension GameStateFinance on GameState {
     save.sponsorDeal = null;
     save.namingDeal = null;
     save.pendingNamingOffers = [];
-    save.pendingSponsorOffers = SponsorEngine.generateOffers(
+    save.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
         userTeam.overallRating,
-        tier: startTier);
+        tier: startTier));
     save.economyVersion = SaveGame.currentEconomyVersion;
     save.tvHolidaySeasons = 0;
     save.bankLoans = [];
@@ -776,6 +776,8 @@ extension GameStateFinance on GameState {
     // 下位ディビジョンほど観客動員が少ない(ティアごとに段階的に低下する)。
     factor *= pow(0.8, _save!.currentDivisionTier - 1).toDouble();
     factor *= _save!.ticketPricing.attendanceMultiplier;
+    // ファンの層の満足(上下5%まで)。
+    factor *= fanAttendanceModifier;
     return factor.clamp(0.0, 1.0);
   }
 
@@ -814,8 +816,10 @@ extension GameStateFinance on GameState {
   }
 
   /// 毎節入る放映権料(万円)。部で決まり、順位や施設では変わらない。
-  int get weeklyBroadcastIncome => weeklyBroadcast(currentDivisionTier,
-      matchdays: matchdaysPerSeason);
+  int get weeklyBroadcastIncome => (weeklyBroadcast(currentDivisionTier,
+              matchdays: matchdaysPerSeason) *
+          currentEra.tvFactor)
+      .round();
 
   /// 選手の給与を毎節いくら払うか。表示の年俸(週俸×52)と1年に払う
   /// 総額が一致するよう、52週ぶんをその年の節の数で割る。
@@ -866,8 +870,11 @@ extension GameStateFinance on GameState {
     final i = MoneyCalendar.broadcastIndexOf(day);
     if (i == null) return 0;
     // 降格したクラブには、上の部との差の一部(パラシュート)が上乗せされる。
+    // 時代で放映権の額が変わる。
     return MoneyCalendar.broadcastInstallment(
-        annualBroadcast(currentDivisionTier) + parachuteAnnual, i);
+        (annualBroadcast(currentDivisionTier) * currentEra.tvFactor).round() +
+            parachuteAnnual,
+        i);
   }
 
   /// 第[matchday]節が祝日なら、その祝日の名前。

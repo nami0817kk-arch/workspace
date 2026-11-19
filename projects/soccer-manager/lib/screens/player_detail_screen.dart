@@ -25,6 +25,7 @@ import '../widgets/player_face_avatar.dart';
 import '../widgets/stat_bar.dart';
 import '../logic/rating_words.dart';
 import '../logic/player_popularity.dart';
+import '../widgets/contract_style_card.dart';
 import '../l10n/tr.dart';
 import '../widgets/player_stat_chips.dart';
 import '../logic/economy_scale.dart';
@@ -589,6 +590,7 @@ class PlayerDetailScreen extends StatelessWidget {
                         fontSize: 12,
                         color: SemanticColors.subtleText(context)),
                   ),
+                  ContractStyleCard(player: p),
                   const SizedBox(height: 8),
                   // 高齢の選手は、契約を残していてもシーズン終了時に引退しうる。
                   // 更新料を払った直後に引退されると、何が起きたのか分からない。

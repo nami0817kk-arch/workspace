@@ -884,6 +884,11 @@ extension GameStateSeason on GameState {
         .map((r) => league.teams.firstWhere((t) => t.id == r.teamId))
         .toList();
     final playedTier = _save!.currentDivisionTier;
+    // 持っているほかのクラブの損益(他国の1部の今季の順位で)。
+    _settleGroupClubs();
+    // 他国の1部の上位を控え(大陸大会の相手)、国の係数に今季を足す。
+    _rememberForeignTop();
+    _updateCountryCoefficients();
     // 他国の1部も季を締め、優勝を伝えて、次の季の日程を作る。
     _finishForeignSeasons();
     // 手放したクラブのその後を記録する(順位が決まったこの時点で)。
@@ -1371,6 +1376,12 @@ extension GameStateSeason on GameState {
     FreeAgentEngine.topUp(_save!.freeAgents);
 
     _rollNamingRights();
+    // 時代が変わったら知らせる。
+    _announceEra(_save!.league.season);
+    // 分析部門の年会費。
+    _rollAnalytics();
+    // 段階昇給の契約の選手は、季が変わるたびに週給が上がる。
+    _applySteppedRaises();
     // 系列クラブの年会費。
     _rollAffiliate();
     // 袖・背中・練習着のスポンサーも1年進め、空いた枠に提示を出す。
@@ -1383,13 +1394,13 @@ extension GameStateSeason on GameState {
       }
     }
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
-      _save!.pendingSponsorOffers = SponsorEngine.generateOffers(
+      _save!.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
         userTeam.overallRating,
         tier: _save!.currentDivisionTier,
         managerReputation: _save!.managerReputation,
         stadiumLevel:
             _save!.infrastructure.facilityLevel(FacilityType.stadium),
-      );
+      ));
     }
 
     // スタッフの契約消化と、候補の入れ替え。良いスタッフはクラブの規模を
@@ -1562,8 +1573,11 @@ extension GameStateSeason on GameState {
       _newLeagueCup(newActiveTeams.map((t) => t.id).toList()),
     ];
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
-    if (playedTier == 1 && finalRank <= 2) {
-      final continentalTeams = _generateContinentalTeams();
+    // 出場枠は国の係数の順位で決まる(2〜4クラブ)。相手は他国の1部の上位。
+    if (playedTier == 1 && finalRank <= continentalSpots) {
+      final real = _realContinentalOpponents();
+      final continentalTeams =
+          real.length >= 7 ? real : _generateContinentalTeams();
       _save!.continentalTeams = continentalTeams;
       _save!.continentalCup = ContinentalCupEngine.create(
         name: Tr.pick('大陸チャンピオンズカップ', 'Continental Champions Cup'),

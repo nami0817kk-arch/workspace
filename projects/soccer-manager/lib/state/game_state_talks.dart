@@ -50,7 +50,10 @@ extension GameStateTalks on GameState {
             level *
             affiliate *
             marketIndex /
-            100)
+            100 *
+            // 時代と、持っているクラブ(グループの中の移籍は半額)。
+            currentEra.transferFactor *
+            (isGroupClub(club.id) ? 0.5 : 1.0))
         .round();
   }
 

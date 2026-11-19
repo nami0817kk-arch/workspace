@@ -1083,6 +1083,11 @@ class HomeScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                 ),
+                // 分析部門があれば、xG(期待得点)も出す。
+                if (context.read<GameState>().xgOf(result) case final xg?)
+                  Text(Tr.pick(
+                      'xG ${xg.$1.toStringAsFixed(1)} - ${xg.$2.toStringAsFixed(1)}',
+                      'xG ${xg.$1.toStringAsFixed(1)} - ${xg.$2.toStringAsFixed(1)}')),
                 const SizedBox(height: 8),
                 Row(
                   children: [

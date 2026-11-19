@@ -306,6 +306,10 @@ extension GameStateMatch on GameState {
     _checkPromisesWeekly();
     // 大きな怪我は、手術か保存療法かを選ばせる。
     _reviewInjuries();
+    // 前の週に2試合以上戦っていたら、先発に疲れが残る(過密日程)。
+    _applyCongestion();
+    // 先発に入っていない21歳以下は、U21 の試合に出る。
+    _playU21Matchday();
     // 先発に仲の良い選手・仲の悪い選手がいるか。
     RelationsEngine.applyWeekly(userTeam);
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
@@ -355,13 +359,13 @@ extension GameStateMatch on GameState {
     // スポンサー契約(年単位)の消化はシーズン開始時にまとめて処理する
     // (startNextSeason参照)。分割払いの引き落としは引き続き週次で行う。
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
-      _save!.pendingSponsorOffers = SponsorEngine.generateOffers(
+      _save!.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
         userTeam.overallRating,
         tier: _save!.currentDivisionTier,
         managerReputation: _save!.managerReputation,
         stadiumLevel:
             _save!.infrastructure.facilityLevel(FacilityType.stadium),
-      );
+      ));
     }
     for (final inst in List<Installment>.from(_save!.pendingInstallments)) {
       _book(LedgerCategory.transfers, -(inst.weeklyAmount));
@@ -1117,8 +1121,12 @@ extension GameStateMatch on GameState {
     if (f != null) {
       f.result = merged;
       _publishFrontPage(merged, f, lastMilestones);
+      // 出来高の契約の選手の得点に、出来高を払う。
+      _payGoalBonuses(merged);
       // 優勝・昇格・降格が決まったか、カップの決勝を戦い終えたか。
       _checkClinchMoments(f.matchday);
+      // 移籍の締切日なら知らせる。
+      _checkDeadlineMoment();
       _checkCupFinalMoments();
       // クラブの文化に沿った試合なら、サポーターが喜ぶ。
       _applyCultureBonus(merged);

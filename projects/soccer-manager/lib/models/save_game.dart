@@ -386,6 +386,24 @@ class SaveGame {
   ClubLook? clubLook;
   int clubLookChangedSeason;
 
+  /// 国の係数の履歴(LeagueTheme の name → 季ごとの点、古い順に5季まで)。
+  Map<String, List<double>> countryCoefficients;
+
+  /// 自治体のスタジアムの補助(次の増築の割引%)と、最後に頼んだ季。
+  int stadiumSubsidyPct;
+  int municipalityAskSeason;
+
+  /// 分析部門を置いているか(年会費は季の切り替えで払う)。
+  bool hasAnalytics;
+
+  /// 過密日程: 前の週の終わりまでに自クラブが戦った公式戦の数と、
+  /// 直近の週が過密だったか。
+  int userMatchesCounted;
+  bool lastWeekCongested;
+
+  /// 持っているほかのクラブ(クラブ id → 買った値段)。
+  Map<String, int> groupClubs;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -725,6 +743,13 @@ class SaveGame {
     this.biggestWinMargin = 0,
     Map<String, String>? formerClubs,
     Map<String, List<int>>? formerClubStatus,
+    Map<String, List<double>>? countryCoefficients,
+    this.stadiumSubsidyPct = 0,
+    this.municipalityAskSeason = 0,
+    this.hasAnalytics = false,
+    this.userMatchesCounted = 0,
+    this.lastWeekCongested = false,
+    Map<String, int>? groupClubs,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -871,6 +896,8 @@ class SaveGame {
         lifeEvents = lifeEvents ?? {},
         difficultyItems = difficultyItems ?? {},
         playerBook = playerBook ?? {},
+        groupClubs = groupClubs ?? {},
+        countryCoefficients = countryCoefficients ?? {},
         pendingMoments = pendingMoments ?? [],
         momentKeys = momentKeys ?? [],
         rumorDenied = rumorDenied ?? {},
@@ -1047,6 +1074,15 @@ class SaveGame {
         if (biggestWinMargin > 0) 'biggestWinMargin': biggestWinMargin,
         if (formerClubs.isNotEmpty) 'formerClubs': formerClubs,
         if (formerClubStatus.isNotEmpty) 'formerClubStatus': formerClubStatus,
+        if (countryCoefficients.isNotEmpty)
+          'countryCoefficients': countryCoefficients,
+        if (stadiumSubsidyPct > 0) 'stadiumSubsidyPct': stadiumSubsidyPct,
+        if (municipalityAskSeason > 0)
+          'municipalityAskSeason': municipalityAskSeason,
+        if (hasAnalytics) 'hasAnalytics': hasAnalytics,
+        if (userMatchesCounted > 0) 'userMatchesCounted': userMatchesCounted,
+        if (lastWeekCongested) 'lastWeekCongested': lastWeekCongested,
+        if (groupClubs.isNotEmpty) 'groupClubs': groupClubs,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1278,6 +1314,16 @@ class SaveGame {
         formerClubStatus: (json['formerClubStatus'] as Map?)?.map((k, v) =>
             MapEntry(k as String,
                 (v as List).map((e) => e as int).toList())),
+        countryCoefficients: (json['countryCoefficients'] as Map?)?.map(
+            (k, v) => MapEntry(k as String,
+                (v as List).map((e) => (e as num).toDouble()).toList())),
+        stadiumSubsidyPct: json['stadiumSubsidyPct'] as int? ?? 0,
+        municipalityAskSeason: json['municipalityAskSeason'] as int? ?? 0,
+        hasAnalytics: json['hasAnalytics'] as bool? ?? false,
+        userMatchesCounted: json['userMatchesCounted'] as int? ?? 0,
+        lastWeekCongested: json['lastWeekCongested'] as bool? ?? false,
+        groupClubs: (json['groupClubs'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
