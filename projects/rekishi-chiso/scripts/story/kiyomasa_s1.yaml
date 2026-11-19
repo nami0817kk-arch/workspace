@@ -1,0 +1,156 @@
+# 物語完結型ショート 加藤清正 s1（2026-11-19）。本編 scripts/kiyomasa-story.yaml（11/24 19:00 公開予定、https://youtu.be/BQ1dWj8_eRs）から。11/25 9:30 に予約。
+# 形式は uesugi_s1〜s5・ii_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード 加藤清正_facts_20261119.yaml）。
+# 絵：本編の AI 絵（out/story/kiyomasa/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：会見の翌日の本多正純の報告では、迎えの場の清正は家康の10歳の息子・頼宣の付き添い（本編 序章・第1章、kiyomasa-09・11・12・21）。
+# hook＝清正が付き添ったのは秀頼ではなく家康の10歳の息子（答えはこのショートの中：本多正純の書状）。
+# tease＝会見から3か月足らずで、清正はなぜ急に死んだのか（答えは本編 第2〜5章）。
+# 計算：義直 1600年生まれ→1611年 数え12、頼宣 1602年生まれ→数え10（当代記の書き方どおり）。会見 3/28→死 6/24＝84日＝3か月足らず。
+# 理解テスト：①加藤清正の話 ②1611年3月、二条城の会見の迎えの場で ③家康の10歳の息子、頼宣に付き添った（報告の手紙） ④帰りの秀頼は伏見で清正のもとに立ち寄った
+title: "加藤清正｜付き添ったのは家康の息子"
+yt_title: "二条城の会見の迎えの場で、加藤清正が付き添ったのは秀頼ではなく家康の10歳の息子だった　会見の翌日に書かれた報告の手紙"
+description: |-
+  1611年3月、豊臣秀頼と徳川家康が会った二条城の会見。加藤清正は懐に短刀を隠して秀頼を守った、と江戸時代の軍記などが語ってきました。
+  ところが、会見の翌日に家康の側近・本多正純が江戸へ送った報告の手紙では、迎えの場で清正が付き添っていたのは、家康の10歳の息子・頼宣です。一方、醍醐寺の僧・義演の日記によれば、帰り道の秀頼は伏見で清正のもとに立ち寄っています。
+  本編では、この会見から3か月足らずで、清正がなぜ急に亡くなったのかを、当時の日記と江戸時代・明治の記録ごとに並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#加藤清正"
+- "#二条城"
+- "#豊臣秀頼"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/kiyomasa
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kiyomasa_story_s1
+header:
+  tag: "加藤清正（二条城の会見）"
+  title: "付き添ったのは、《家康の息子》"
+now:
+- {at: "1611年3月28日", text: "1611年3月28日　二条城", point: 0}
+- {at: "前の日", text: "1611年3月27日　淀", point: 0}
+- {at: "会見の翌日", text: "1611年3月29日　報告の手紙", point: 0}
+- {at: "帰り道", text: "1611年3月28日　伏見", point: 0}
+timeline:
+- {label: "1611"}
+shots:
+  K03_1:
+    kind: "ai"
+    file: "kiyomasa/main/K03.jpg"
+    focus: [0.45, 0.45]
+    move: "in"
+    must: "K03"
+  K05_2:
+    kind: "ai"
+    file: "kiyomasa/main/K05.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K05"
+  K04_3:
+    kind: "ai"
+    file: "kiyomasa/main/K04.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "K04"
+  K02_4:
+    kind: "ai"
+    file: "kiyomasa/main/K02.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K02"
+  K15_5:
+    kind: "ai"
+    file: "kiyomasa/main/K15.jpg"
+    focus: [0.45, 0.55]
+    move: "right"
+    must: "K15"
+  K02_6:
+    kind: "ai"
+    file: "kiyomasa/main/K02.jpg"
+    focus: [0.7, 0.55]
+    move: "right"
+    must: "K02"
+  K01_7:
+    kind: "ai"
+    file: "kiyomasa/main/K01.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K01"
+  K07_8:
+    kind: "ai"
+    file: "kiyomasa/main/K07.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "K07"
+  K08_9:
+    kind: "ai"
+    file: "kiyomasa/main/K08.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K08"
+  K12_10:
+    kind: "ai"
+    file: "kiyomasa/main/K12.jpg"
+    focus: [0.4, 0.55]
+    move: "right"
+    must: "K12"
+lines:
+  # fact: kiyomasa-11
+- 語り: "加藤清正が、秀頼を迎える場で付き添っていたのは、秀頼ではなく、家康の、10歳の息子だった。"
+  shot: K03_1
+  tone: 強調
+  pause: 0.12
+  # fact: kiyomasa-10
+- 語り: "1611年3月28日、豊臣秀頼は、京都の二条城で、徳川家康と会う。"
+  shot: K05_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-21
+- 語り: "清正は、懐に短刀を隠して、秀頼を守った。江戸時代の軍記などは、そう語ってきた。"
+  shot: K04_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-09
+- 語り: "前の日、秀頼を淀まで迎えに出たのは、家康の息子、12歳の義直と、10歳の頼宣。そして、池田輝政と、清正。"
+  shot: K02_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-11
+- 語り: "会見の翌日、家康の側近、本多正純が、江戸へ報告の手紙を送っている。"
+  shot: K15_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-11
+- 語り: "迎えの場で、義直には、浅野幸長が付き、頼宣には、加藤肥後守、つまり清正が付いた。"
+  shot: K02_6
+  tone: 重い
+  pause: 0.12
+  # fact: kiyomasa-11
+- 語り: "記録の上の清正は、家康の息子の付き添いだった。その娘は、のちに、この頼宣に嫁ぐ。"
+  shot: K01_7
+  tone: 重い
+  pause: 0.12
+  # fact: kiyomasa-12
+- 語り: "それでも、帰り道の秀頼は、伏見で、清正のもとに立ち寄った。醍醐寺の僧、義演の日記にある。"
+  shot: K07_8
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-14
+- 語り: "その会見から、3か月足らず。清正は、熊本で亡くなる。"
+  shot: K08_9
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第2〜5章（kiyomasa-14・18・38・48）
+- 語り: "あの清正は、なぜ、急に死んだのか。"
+  shot: K12_10
+  tone: 疑問
+  pause: 0.15
