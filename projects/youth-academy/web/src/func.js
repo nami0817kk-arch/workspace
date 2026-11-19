@@ -831,7 +831,7 @@
       h('div', { class: 'ovpc' },
         ...pc.pros.map((n) => h('div', { class: 'pro' }, h('b', {}, '＋'), YA.AB_WORDS[n][0])),
         ...pc.cons.map((n) => h('div', { class: 'con' }, h('b', {}, '－'), YA.AB_WORDS[n][1]))),
-      h('div', { class: 'ovline' }, h('span', { class: 'sub' }, 'いま'), h('b', {}, lvName(YA.rating(p))), h('span', { class: 'sub' }, '将来'), YA.starsEl([YA.coachStars(w, p), YA.coachStars(w, p)]), h('b', {}, YA.futureWords(w, p))));
+      h('div', { class: 'ovline' }, h('span', { class: 'sub' }, 'いま'), h('b', {}, (YA.ent && YA.ent.eye ? YA.rating(p) + '（' + lvName(YA.rating(p)) + '）' : lvName(YA.rating(p)))), h('span', { class: 'sub' }, '将来'), YA.starsEl([YA.coachStars(w, p), YA.coachStars(w, p)]), h('b', {}, YA.futureWords(w, p))));
     // プロフィール
     const persAll = Object.values(p.pers || {}).filter((t) => t && t !== 'ふつう').slice(0, 3);
     const rows = [

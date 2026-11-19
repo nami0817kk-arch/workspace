@@ -1702,7 +1702,45 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const base = YA.candView(wc, c0).ovr;
   YA.entSet({ eye: true });
   const keen = YA.candView(wc, c0).ovr;
-  ok(c0.seen === 1 && (keen[1] - keen[0]) < (base[1] - base[0]), '見抜く目で候補の幅が狭まる（見た回数は変わらない）');
+  ok(c0.seen === 1 && keen[0] === keen[1] && Math.abs(keen[0] - YA.ovr(c0.p)) < 0.06 && (base[1] - base[0]) > 0, '見抜く目で候補の総合力が数字で見える（見た回数は変わらない）');
+  const kv = YA.candView(wc, c0);
+  ok(kv.future === YA.futurePoint(c0.p) && kv.pers === c0.p.pers && kv.traits === c0.p.traits, '見抜く目で候補の将来・性格・特性が見える');
+  const fp = Object.values(wc.players)[1];
+  const fr = YA.futureRange(wc, fp);
+  ok(fr.lo === fr.hi && fr.lo === YA.futurePoint(fp) && /将来 \d+/.test(fr.text) && /^\d+（/.test(YA.futureWords(wc, fp)), '見抜く目で選手の将来の総合力が数字になる');
+  ok(fp.best && fp.bestKnown !== true ? (YA.eyeReveal(wc), fp.bestKnown === true) : true, '見抜く目で本当に向いたポジションが分かる');
+  YA.entSet(null);
+  const fr2 = YA.futureRange(wc, Object.values(wc.players)[2]);
+  ok(fr2.lo < fr2.hi, '見抜く目が無ければ将来は幅のまま');
+}
+// オリジナル選手を数字で作る（2026-11-19「選手作成、数値レベルで設定できる・個々の能力も覚醒スキルも設定可能」「伸び代は200」）
+{
+  YA.entSet({ tickets: 2 });
+  const w = YA.newWorld(81);
+  const ab = {}; for (const n of YA.AB_FIELD.concat(YA.AB_GK)) ab[n] = 10;
+  ab['フィニッシュ'] = 16; ab['スピード'] = 15;
+  const spec = { name: '数字 一郎', pos: 'ST', foot: 'R', fut: 200, ab, traits: ['裏への抜け出し', 'ループシュート', '終盤に強い'], form: 'scorer', pers: {} };
+  ok(YA.origValid(w, spec) === null, '数字で決めた入力が通る');
+  ok(YA.origValid(w, Object.assign({}, spec, { fut: 201 })) !== null && YA.origValid(w, Object.assign({}, spec, { fut: 99 })) !== null, '将来は100〜200');
+  ok(YA.origValid(w, Object.assign({}, spec, { ab: Object.assign({}, ab, { パス: 21 }) })) !== null && YA.origValid(w, Object.assign({}, spec, { ab: Object.assign({}, ab, { パス: 0 }) })) !== null, '能力は1〜20');
+  ok(YA.origValid(w, Object.assign({}, spec, { traits: spec.traits.concat(['カットイン']) })) !== null, '特性は3つまで');
+  ok(YA.origValid(w, Object.assign({}, spec, { traits: ['PKストップ'] })) !== null, 'GKの特性はフィールドの子に付けられない');
+  ok(YA.origValid(w, Object.assign({}, spec, { form: 'keeper' })) !== null, 'ポジションに合わない覚醒の形は選べない');
+  ok(YA.origValid(w, Object.assign({}, spec, { name: '数字 二郎', fut: 100, ab: Object.assign({}, ab, YA.AB_FIELD.reduce((o, n) => ((o[n] = 20), o), {})) })) !== null, '将来がいまより低いと通らない');
+  ok(YA.origCreate(w, spec).ok, '数字で決めた子が予定に入る');
+  const o = w.originals[0];
+  ok(o.fut === 200 && o.ab['フィニッシュ'] === 16 && o.form === 'scorer' && o.traits.length === 3, '予定に数字が残る');
+  w.scouting = YA.newScouting();
+  YA.intake(w, YA.rngOf(9), new Set(Object.values(w.players).map((p) => p.name)));
+  const p = Object.values(w.players).find((q) => q.name === '数字 一郎');
+  ok(p && p.ab['フィニッシュ'] === 16 && p.ab['スピード'] === 15 && p.ab['パス'] === 10, '決めた能力のまま入る');
+  ok(p && p.traits.join() === spec.traits.join(), '決めた特性のまま入る');
+  ok(p && Math.abs(YA.futurePoint(p) - 200) <= 2 && YA.potStars(p) === 5, '将来の総合力は決めた数（200）');
+  ok(p && YA.grow3Room(p) > 0 && Math.abs(p.sumIn - YA.abSum(p)) < 0.01, '3年間の伸びは決めた能力から数える');
+  YA.awaken(w, p);
+  ok(p.aw && p.aw.k === 'scorer' && p.awHist[0].k === 'scorer', '決めた覚醒の形で目覚める');
+  const gk = { name: '数字 守', pos: 'GK', foot: 'R', fut: 160, ab: Object.assign({}, ab), traits: ['PKストップ', '声で味方を動かす'], form: 'keeper', pers: {} };
+  ok(YA.origValid(w, gk) === null && YA.origAbList('GK').indexOf('反応') >= 0 && YA.origAbList('GK').indexOf('パス') < 0, 'GKはGKの能力と特性で作れる');
   YA.entSet(null);
 }
 // ★以外の子の出来事は控えめ（2026-11-15「★以外のイベントが多発する」「まだ多い」）：選手の出来事のうち★以外は2割まで（大事なものを除く）

@@ -907,11 +907,36 @@ async function clearEvents() {
       ob2.click();
       d.querySelector('.sheet input[type=text]').value = '迎え 太郎';
       d.querySelector('.sheet input[type=text]').dispatchEvent(new w.Event('input', { bubbles: true }));
+      // 数字で作る：能力のスライダー・将来の総合力・特性3つ・覚醒の形
+      const sh = d.querySelector('.sheet');
+      ok(sh.querySelectorAll('input[data-ab]').length === Y.AB_FIELD.length, '数字で作る: 能力をすべて1つずつ決められる（' + sh.querySelectorAll('input[data-ab]').length + '個）');
+      const fin = sh.querySelector('input[data-ab="フィニッシュ"]');
+      fin.value = '18'; fin.dispatchEvent(new w.Event('input', { bubbles: true }));
+      ok(fin.parentNode.textContent.indexOf('18') >= 0, '数字で作る: 動かした数がその場で出る');
+      const fut = sh.querySelector('input[data-fut]');
+      ok(fut && fut.max === '200', '数字で作る: 将来の総合力は200まで');
+      fut.value = '190'; fut.dispatchEvent(new w.Event('input', { bubbles: true }));
+      ok(/190（/.test(sh.textContent), '数字で作る: 将来の数と水準がその場で出る');
+      for (let i = 0; i < 3; i++) d.querySelector('.sheet button[data-tr]:not(.on):not([disabled])').click();
+      const trFull = d.querySelector('.sheet button[data-tr]:not(.on)');
+      ok(d.querySelectorAll('.sheet button[data-tr].on').length === 3 && trFull.disabled && /3つまで/.test(trFull.dataset.why || ''), '数字で作る: 特性は3つまで（4つ目は理由つきで押せない）');
+      d.querySelector('.sheet button[data-form]').click();
+      ok(d.querySelector('.sheet button[data-form].on') && /特性「/.test(d.querySelector('.sheet').textContent), '数字で作る: 覚醒の形を選ぶと中身が出る');
       posted.length = 0;
       btn('この子を迎える').click();
       await sleep(10);
       ok(A.w.originals.length === 1 && A.w.originals[0].serial === 1 && posted.some((m) => m.cmd === 'useTicket') && posted.findIndex((m) => m.k === Y.slotKey(A.slot || 0)) < posted.findIndex((m) => m.cmd === 'useTicket'), '課金: 予約を保存してからチケットを使う（通し番号つき）');
       ok(Y.ent.tickets === 1 && Y.ent.used === 1, '課金: 使ったチケットを数える');
+      const og = A.w.originals[0];
+      ok(og.ab && og.ab['フィニッシュ'] === 18 && og.fut === 190 && og.traits.length === 3 && !!og.form, '数字で作る: 決めた能力・将来・特性・覚醒の形が予定に残る');
+      // 見抜く目：選手の一覧と概要に将来の総合力の数字
+      const eye0 = Y.ent.eye;
+      Y.ent.eye = false;
+      const tab0 = A.tab; A.tab = 'players'; Y._ui.render();
+      ok(!/→\d{2,3}/.test(txt()), '見抜く目: 持っていなければ一覧は星のまま');
+      Y.ent.eye = true; Y._ui.render();
+      ok(/→\d{2,3}/.test(txt()) && /将来 \d{2,3}/.test(txt()), '見抜く目: 一覧と帯に将来の総合力が数字で出る');
+      Y.ent.eye = eye0; A.tab = tab0; Y._ui.render();
       ok([...d.querySelectorAll('#app button[disabled]')].every((b) => b.dataset.why), '課金: ショップの押せないボタンに理由がある');
       // 控えに戻す確認に、オリジナル選手の扱い
       const bakBtn = btn('控え（年度はじめ）に戻す');
