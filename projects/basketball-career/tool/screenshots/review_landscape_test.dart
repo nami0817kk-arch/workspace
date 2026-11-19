@@ -19,6 +19,7 @@ import 'dart:ui' as ui;
 import 'package:basketball_career/gm/bot.dart';
 import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/scenario.dart';
+import 'package:basketball_career/gm/inbox.dart';
 import 'package:basketball_career/gm/player.dart';
 import 'package:basketball_career/gm/rating.dart';
 import 'package:basketball_career/ui/app.dart';
@@ -588,6 +589,52 @@ void main() {
     });
     // オフの受信箱(合宿の場所・面談など)
     await _shoot(t, '15f_off_inbox', await _with(toContracts()), act: (t) => _tap(t, '受信箱', first: true));
+    // 他チームからの電話(契約の時期のカード)と、大物に会いに行く
+    Career callCar = toContracts();
+    for (final seed in [1, 2, 3, 4, 5]) {
+      if (callCar.calls.isNotEmpty) break;
+      callCar = careerAt(seed, 12);
+      var cg = 0;
+      while (callCar.phase != Phase.contracts && cg++ < 600) {
+        if (callCar.phase == Phase.seasonEnd) callCar.fired = false;
+        botStep(callCar);
+      }
+    }
+    if (callCar.calls.isNotEmpty) {
+      await _shoot(t, '15h_call', await _with(callCar), act: (t) async {
+        final card = find.byKey(const Key('call-0'));
+        await t.scrollUntilVisible(card, 200, scrollable: progress);
+        await t.pumpAndSettle();
+      });
+    }
+    await _shoot(t, '15i_pitch', await _with(toContracts()), act: (t) async {
+      await _tap(t, '補強', first: true);
+      await settle(t);
+      final go = find.textContaining('会いに行く');
+      if (go.evaluate().isNotEmpty) {
+        await t.ensureVisible(go.first);
+        await t.pumpAndSettle();
+        await t.tap(go.first);
+        await t.pumpAndSettle();
+      }
+    });
+    // 2年目のシーズン前(予想・宣言・スポンサー・指導役)
+    final plan = careerAt(6, 12);
+    var pg = 0;
+    while (!(plan.phase == Phase.preseason && plan.season >= 2) && pg++ < 3000) {
+      if (plan.phase == Phase.seasonEnd) plan.fired = false;
+      botStep(plan);
+    }
+    for (final m in [...plan.inbox]) {
+      if (m.season != plan.season || !m.needsAnswer) continue;
+      if (m.kind == MsgKind.declare) plan.answer(m.id, 0);
+      if (m.kind == MsgKind.sponsor) plan.answer(m.id, 1);
+      if (m.kind == MsgKind.forecast) plan.answer(m.id, 0);
+    }
+    final mVet = plan.me.roster.where(plan.mentorVet).firstOrNull;
+    final mYoung = plan.me.roster.where(plan.mentorYoung).firstOrNull;
+    if (mVet != null && mYoung != null) plan.setMentor(mVet.id, mYoung.id);
+    await _shoot(t, '16a_preseason_plans', await _with(plan));
     final talk = await _with(toContracts());
     await _shoot(t, '15d_agent_talk', talk, act: (t) async {
       final car = talk.career!;
