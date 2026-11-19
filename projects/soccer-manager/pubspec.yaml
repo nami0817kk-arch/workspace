@@ -48,6 +48,8 @@ dependencies:
   in_app_purchase: ^3.3.0
   # ストアの評価をその場で頼む(OSの小さな窓)。年3回までOS側が制限する。
   in_app_review: ^2.0.9
+  # 効果音(assets/sfx)を鳴らす。
+  audioplayers: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +105,8 @@ flutter:
     # 節目の演出に出す絵。枚数が決まっている場所にだけ画像を持つ
     # (選手とクラブは自動生成で点数が無限なので、絵は同梱できない)。
     - assets/art/
+    # 効果音。出どころは assets/sfx/CREDITS.md。
+    - assets/sfx/
 
   # しっぽり明朝は同梱する。google_fonts 経由だと初回起動時に
   # fonts.gstatic.com へ取りに行き、利用者のIPアドレスが Google に渡るため
