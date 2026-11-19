@@ -18,6 +18,7 @@ import '../widgets/advisor_card.dart';
 import '../widgets/club_ranking_card.dart';
 import '../widgets/club_timeline_card.dart';
 import '../widgets/club_value_card.dart';
+import '../widgets/trend_chart.dart';
 import '../widgets/projection_card.dart';
 import '../widgets/owner_career_card.dart';
 import '../widgets/rival_owners_card.dart';
@@ -184,6 +185,7 @@ class FinanceScreen extends StatelessWidget {
               children: [
                   const LedgerCard(),
                   const ProjectionCard(),
+                  const TrendsCard(),
                   if (save.pendingInstallments.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     Text(Tr.pick('分割払い残金', 'Instalments outstanding'),
