@@ -179,6 +179,7 @@ part 'game_state_club_look.dart';
 part 'game_state_rumors.dart';
 part 'game_state_affiliate.dart';
 part 'game_state_foreign.dart';
+part 'game_state_records.dart';
 part 'game_state_club_finance.dart';
 part 'game_state_sponsor_slots.dart';
 part 'game_state_license.dart';
