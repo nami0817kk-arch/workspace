@@ -23,6 +23,7 @@ import '../widgets/attribute_radar.dart';
 import '../widgets/growth_sparkline.dart';
 import '../widgets/player_face_avatar.dart';
 import '../widgets/stat_bar.dart';
+import '../logic/rating_words.dart';
 import '../l10n/tr.dart';
 import '../widgets/player_stat_chips.dart';
 import '../logic/economy_scale.dart';
@@ -295,6 +296,12 @@ class PlayerDetailScreen extends StatelessWidget {
                             color: OverallBadge.colorFor(context, p.overall),
                             fontFeatures: const [FontFeature.tabularFigures()],
                           ),
+                        ),
+                        Text(
+                          RatingWords.forOverall(p.overall),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: SemanticColors.subtleText(context)),
                         ),
                       ],
                     ),
