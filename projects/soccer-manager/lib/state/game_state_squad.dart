@@ -350,7 +350,16 @@ extension GameStateSquad on GameState {
     if (_save == null) return;
     final idx = userTeam.players.indexWhere((p) => p.id == playerId);
     if (idx < 0) return;
-    userTeam.players[idx].squadStatus = status;
+    final p = userTeam.players[idx];
+    p.squadStatus = status;
+    // 加入のときに約束した序列より下げれば、約束を破ったことになる。
+    final promised = p.promisedStatus;
+    if (promised != null && !p.promiseBroken && status.index > promised.index) {
+      _breakPromise(
+          p,
+          Tr.pick('${promised.label}の約束だったのに、${status.label}に下げた',
+              'He was promised ${promised.label} billing and you dropped him to ${status.label}'));
+    }
     _notify();
     _persist();
   }

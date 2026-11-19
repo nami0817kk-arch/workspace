@@ -146,6 +146,49 @@ extension GameStatePeople on GameState {
     }
   }
 
+  /// 節ごと: 序列を約束した選手が、出られるのに先発から外れ続けていないか。
+  /// 外れ続けたら約束を破ったことになり、選手は移籍を願い出る。
+  void _checkPromisesWeekly() {
+    final team = userTeam;
+    for (final p in team.players) {
+      final promised = p.promisedStatus;
+      if (promised == null || p.promiseBroken) continue;
+      if (team.startingXI.contains(p.id)) {
+        p.promiseMisses = 0;
+        continue;
+      }
+      // 出られない事情(負傷・出場停止・代表・貸し出し)があれば数えない。
+      if (p.isInjured ||
+          p.isSuspended ||
+          p.isOnInternationalDuty ||
+          p.isLoanedOut) {
+        continue;
+      }
+      p.promiseMisses++;
+      if (p.promiseMisses >= PlayerTermsEngine.promiseTolerance(promised)) {
+        _breakPromise(
+            p,
+            Tr.pick('${promised.label}として出すと約束したのに、${p.promiseMisses}節続けて先発から外れた',
+                'He was promised ${promised.label} billing but has missed ${p.promiseMisses} straight starts'));
+      }
+    }
+  }
+
+  /// テスト用: 約束の点検を1節ぶん行う。
+  @visibleForTesting
+  void debugCheckPromises() => _checkPromisesWeekly();
+
+  /// 約束を破った: 選手は大きく不満を持ち、移籍を願い出る(移籍リストに載る)。
+  void _breakPromise(Player p, String why) {
+    p.promiseBroken = true;
+    p.happiness = (p.happiness - 25).clamp(0, 100);
+    p.isTransferListed = true;
+    _logNews(
+        Tr.pick('${p.name}が「約束が違う」と移籍を願い出た($why)。',
+            '${p.name} has asked to leave, saying you broke your word ($why).'),
+        context: Tr.pick('選手', 'Players'));
+  }
+
   String _ordinal(int n) => switch (n % 100) {
         11 || 12 || 13 => '${n}th',
         _ => switch (n % 10) {

@@ -640,7 +640,8 @@ class _TransferScreenState extends State<TransferScreen>
     final bonusMax = [annualFromWeekly(top), (talk?.fee ?? 0) ~/ 10, 10]
         .reduce((a, b) => a > b ? a : b);
     var bonus = 0.0;
-    final submitted = await showDialog<(int, int, int)>(
+    var promise = SquadStatus.regular;
+    final submitted = await showDialog<(int, int, int, SquadStatus)>(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) {
@@ -691,6 +692,27 @@ class _TransferScreenState extends State<TransferScreen>
                     divisions: 40,
                     onChanged: (v) => setState(() => bonus = v),
                   ),
+                  Text(Tr.pick('約束する序列', 'Promised billing')),
+                  Wrap(
+                    spacing: 6,
+                    children: [
+                      for (final st in SquadStatus.values)
+                        ChoiceChip(
+                          label: Text(st.label),
+                          selected: promise == st,
+                          onSelected: (_) => setState(() => promise = st),
+                        ),
+                    ],
+                  ),
+                  Text(
+                    Tr.pick(
+                        '出番を約束するほど望む年俸は下がります(キープレイヤー -15%・ローテーション +10%・育成枠 +15%)。キープレイヤーは3節、主力は5節続けて先発から外すと約束を破ったことになり、移籍を願い出ます。',
+                        'Promising minutes lowers his wage demand (Key Player -15%, Squad Rotation +10%, Prospect +15%). Leave a Key Player out for 3 straight matches, or a First Team player for 5, and you have broken your word: he will ask to leave.'),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: SemanticColors.subtleText(context)),
+                  ),
+                  const SizedBox(height: 6),
                   if (choices.length > 1)
                     Wrap(
                       spacing: 6,
@@ -721,8 +743,8 @@ class _TransferScreenState extends State<TransferScreen>
                 child: Text(Tr.pick('やめる', 'Never mind')),
               ),
               FilledButton(
-                onPressed: () =>
-                    Navigator.pop(ctx, (w, endYear, bonus.round())),
+                onPressed: () => Navigator.pop(
+                    ctx, (w, endYear, bonus.round(), promise)),
                 child: Text(Tr.pick('条件を出す', 'Make the offer')),
               ),
             ],
@@ -734,7 +756,8 @@ class _TransferScreenState extends State<TransferScreen>
     final outcome = await gameState.offerPersonalTerms(player.id,
         weeklyWage: submitted.$1,
         endYear: submitted.$2,
-        signingBonus: submitted.$3);
+        signingBonus: submitted.$3,
+        promise: submitted.$4);
     if (!context.mounted) return;
     outcome == TermsOutcome.signed
         ? FeedbackService.success()

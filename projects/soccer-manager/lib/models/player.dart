@@ -1,5 +1,6 @@
 
 import 'player_instruction.dart';
+import 'player_traits.dart';
 import 'attributes.dart';
 import 'enum_json.dart';
 import '../l10n/tr.dart';
@@ -1125,6 +1126,16 @@ class Player {
   /// スカッド・ステータス(出場機会の約束)。旧セーブは「主力」扱い。
   SquadStatus squadStatus;
 
+  /// 加入のときに約束した序列(キープレイヤーか主力のときだけ)。先発から
+  /// 外し続けたり序列を下げたりすると、約束を破ったことになる。
+  SquadStatus? promisedStatus;
+
+  /// 約束した選手が、出られるのに先発から外れた節の数(続けて)。
+  int promiseMisses;
+
+  /// 約束を破られた(移籍を願い出ている)。
+  bool promiseBroken;
+
   /// 移籍リストに登録されているか。登録中は他クラブからのオファーが来やすくなる。
   bool isTransferListed;
 
@@ -1287,6 +1298,9 @@ class Player {
     this.tournamentBoostPct = 0,
     this.duty = PlayerDuty.support,
     this.squadStatus = SquadStatus.regular,
+    this.promisedStatus,
+    this.promiseMisses = 0,
+    this.promiseBroken = false,
     this.isTransferListed = false,
     this.loanedOutWeeksRemaining = 0,
     this.loanedOutToClubName,
@@ -1339,8 +1353,17 @@ class Player {
     positionFamiliarity[pos.name] = (current + amount).clamp(0, 100);
   }
 
-  /// 不満度が性格ごとの閾値を下回り、移籍を希望しているかどうか。
-  bool get wantsTransfer => happiness < personality.transferRequestThreshold;
+  /// 人柄の6つの軸(保存せず、id と性格から作る)。
+  PlayerTraits get traits => PlayerTraits.of(id, personality);
+
+  /// 不満度がこれを下回ると移籍を希望する。性格の閾値を、野心で上げ、
+  /// 忠誠で下げる。
+  int get transferRequestLine =>
+      (personality.transferRequestThreshold + traits.transferLineShift)
+          .clamp(0, 100);
+
+  /// 移籍を希望しているか(不満度が線を下回った、または約束を破られた)。
+  bool get wantsTransfer => promiseBroken || happiness < transferRequestLine;
 
   int attributeValue(String key) => attributes[key] ?? 50;
 
@@ -1575,6 +1598,9 @@ class Player {
     put('tournamentBoostPct', tournamentBoostPct, 0);
     put('duty', duty.name, PlayerDuty.support.name);
     put('squadStatus', squadStatus.name, SquadStatus.regular.name);
+    put('promisedStatus', promisedStatus?.name, null);
+    put('promiseMisses', promiseMisses, 0);
+    put('promiseBroken', promiseBroken, false);
     put('isTransferListed', isTransferListed, false);
     put('loanedOutWeeksRemaining', loanedOutWeeksRemaining, 0);
     put('loanedOutToClubName', loanedOutToClubName, null);
@@ -1712,6 +1738,12 @@ class Player {
         json['squadStatus'] as String?,
         SquadStatus.regular,
       ),
+      promisedStatus: json['promisedStatus'] == null
+          ? null
+          : enumFromName(SquadStatus.values,
+              json['promisedStatus'] as String?, SquadStatus.regular),
+      promiseMisses: json['promiseMisses'] as int? ?? 0,
+      promiseBroken: json['promiseBroken'] as bool? ?? false,
       isTransferListed: json['isTransferListed'] as bool? ?? false,
       loanedOutWeeksRemaining: json['loanedOutWeeksRemaining'] as int? ?? 0,
       loanedOutToClubName: json['loanedOutToClubName'] as String?,

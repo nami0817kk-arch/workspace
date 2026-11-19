@@ -1155,11 +1155,14 @@ void main() {
   test('Player.wantsTransfer reflects personality-specific thresholds', () {
     final p = PlayerGenerator.generate(position: Position.st, strengthTier: 60);
     p.personality = PlayerPersonality.ambitious; // 閾値30
+    // 線は性格の閾値を、人柄の野心・忠誠でずらしたもの。
+    final line = p.transferRequestLine;
+    expect(line, 30 + p.traits.transferLineShift);
 
-    p.happiness = 35;
+    p.happiness = line;
     expect(p.wantsTransfer, isFalse);
 
-    p.happiness = 29;
+    p.happiness = line - 1;
     expect(p.wantsTransfer, isTrue);
   });
 

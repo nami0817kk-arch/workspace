@@ -11,6 +11,7 @@ import '../logic/transfer_window.dart';
 import '../models/attributes.dart';
 import '../models/contract_negotiation.dart';
 import '../models/player.dart';
+import '../models/player_traits.dart';
 import '../models/training_result.dart';
 import '../data/glossary_entries.dart';
 import '../services/feedback_service.dart';
@@ -408,14 +409,34 @@ class PlayerDetailScreen extends StatelessWidget {
             style: TextStyle(
                 fontSize: 12, color: SemanticColors.subtleText(context)),
           ),
+          const SizedBox(height: 4),
+          _TraitsWrap(player: p),
+          if (p.promisedStatus != null)
+            Text(
+              p.promiseBroken
+                  ? Tr.pick('加入のときの約束(${p.promisedStatus!.label})を破られたとして、移籍を願い出ている',
+                      'Says you broke the promise made when he joined (${p.promisedStatus!.label}) and wants to leave')
+                  : Tr.pick(
+                      '加入のときに${p.promisedStatus!.label}を約束した(続けて先発から外れた節: ${p.promiseMisses})',
+                      'Promised ${p.promisedStatus!.label} billing when he joined (straight matches left out: ${p.promiseMisses})'),
+              style: TextStyle(
+                fontSize: 11,
+                color: p.promiseBroken
+                    ? Colors.redAccent
+                    : SemanticColors.subtleText(context),
+              ),
+            ),
           Text(
             p.wantsTransfer
-                ? Tr.pick(
-                    '不満度${p.happiness}が移籍希望ライン(${p.personality.transferRequestThreshold}未満)を下回っており、移籍を希望している',
-                    'Happiness ${p.happiness} has fallen below the transfer-request line (under ${p.personality.transferRequestThreshold}), so they want a move')
+                ? (p.promiseBroken
+                    ? Tr.pick('約束を破られたため、移籍を希望している',
+                        'Wants a move because you broke your word')
+                    : Tr.pick(
+                        '不満度${p.happiness}が移籍希望ライン(${p.transferRequestLine}未満)を下回っており、移籍を希望している',
+                        'Happiness ${p.happiness} has fallen below the transfer-request line (under ${p.transferRequestLine}), so they want a move'))
                 : Tr.pick(
-                    '移籍希望ライン: 不満度が${p.personality.transferRequestThreshold}未満になると移籍を希望する(現在${p.happiness})',
-                    'Transfer-request line: they ask for a move below ${p.personality.transferRequestThreshold} happiness (currently ${p.happiness})'),
+                    '移籍希望ライン: 不満度が${p.transferRequestLine}未満になると移籍を希望する(現在${p.happiness}。野心で上がり、忠誠で下がる)',
+                    'Transfer-request line: they ask for a move below ${p.transferRequestLine} happiness (currently ${p.happiness}; ambition raises it, loyalty lowers it)'),
             style: TextStyle(
               fontSize: 11,
               color: p.wantsTransfer
@@ -1451,4 +1472,27 @@ String _tournamentLeaveText(GameState game) {
   final day = TransferWindowCalendar.formatMonthDay(back);
   return Tr.pick('$nameのあとの休み($dayに合流するまで出場不可)',
       'Break after the $name (cannot play until he rejoins on $day)');
+}
+
+/// 人柄の6つの軸(1〜20)。押すと説明が出る。
+class _TraitsWrap extends StatelessWidget {
+  final Player player;
+  const _TraitsWrap({required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = player.traits;
+    return Wrap(
+      spacing: 6,
+      runSpacing: 4,
+      children: [
+        for (final a in TraitAxis.values)
+          Tooltip(
+            message: a.description,
+            triggerMode: TooltipTriggerMode.tap,
+            child: StatChip(label: a.label, value: '${t[a]}'),
+          ),
+      ],
+    );
+  }
 }

@@ -814,6 +814,8 @@ class TrainingEngine {
     c *= 0.7 + p.attributeValue(AttributeKeys.determination) / 165;
     // 性格によって自主練習への取り組み方が異なり、成長効率に差が出る。
     c *= p.personality.growthFactor;
+    // 向上心(人柄の軸)の高い選手ほど伸びる。
+    c *= p.traits.growthFactor;
     // 出場機会が乏しく実戦感覚(マッチシャープネス)が低い選手は伸び悩む。
     if (p.matchSharpness < 40) c *= 0.7;
     // ポテンシャルに近づくほど伸びしろが少なくなり、成長は緩やかになる

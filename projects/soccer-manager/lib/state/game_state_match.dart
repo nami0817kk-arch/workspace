@@ -288,6 +288,8 @@ extension GameStateMatch on GameState {
     );
     // 監督の立場(目標の順位との比べ)と、若手を使う監督の効き目。
     _updateManagerWeekly(preMatchRank);
+    // 序列を約束した選手を、先発から外し続けていないか。
+    _checkPromisesWeekly();
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
       userTeam.tacticalMeetingCooldownWeeks -= 1;
     }
