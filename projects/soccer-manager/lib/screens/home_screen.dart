@@ -822,6 +822,15 @@ class HomeScreen extends StatelessWidget {
                           onPressed: () => _playMatch(context),
                           child: Text(Tr.pick('次の節へ', 'Next matchday')),
                         ),
+                        const SizedBox(height: 4),
+                        // 何も決めることが無い週を続けて進める。
+                        OutlinedButton(
+                          onPressed: gameState.inboxActions.isEmpty
+                              ? () => _advanceToDecision(context)
+                              : null,
+                          child: Text(Tr.pick('決めることが出るまで進む',
+                              'Play on until a decision is needed')),
+                        ),
                         // 「結果だけ見る」は「次の節へ」と同じ動きになり、
                         // 偵察レポートは監督の仕事なので、どちらも置かない。
                       ],
@@ -894,6 +903,48 @@ class HomeScreen extends StatelessWidget {
     final fixture = gameState.save?.league.nextUnplayedFixture;
     if (fixture == null) return;
     await _quickSimNextMatch(context, fixture);
+  }
+
+  /// 受信箱に答えを待つものが出るまで(最大8節)、節を続けて進め、
+  /// 勝ち・引き分け・負けの数と、止まった理由を知らせる。
+  Future<void> _advanceToDecision(BuildContext context) async {
+    FeedbackService.tap();
+    final gameState = context.read<GameState>();
+    final userId = gameState.userTeam.id;
+    final List<MatchResult> results;
+    try {
+      results = await gameState.advanceToNextDecision();
+    } catch (e) {
+      if (context.mounted) _showProgressFailedSnackBar(context, e);
+      return;
+    }
+    if (!context.mounted) return;
+    var w = 0, d = 0, l = 0;
+    for (final r in results) {
+      final home = r.homeTeamId == userId;
+      final ours = home ? r.homeGoals : r.awayGoals;
+      final theirs = home ? r.awayGoals : r.homeGoals;
+      if (ours > theirs) {
+        w++;
+      } else if (ours == theirs) {
+        d++;
+      } else {
+        l++;
+      }
+    }
+    final why = gameState.inboxActions.isNotEmpty
+        ? gameState.inboxActions.first
+        : (gameState.save?.league.isSeasonComplete ?? false)
+            ? Tr.pick('季が終わりました', 'The season is over')
+            : Tr.pick('${GameStateRivals.advanceLimit}節進めたので一度止めました',
+                'Stopped after ${GameStateRivals.advanceLimit} matchdays');
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(Tr.pick(
+          '${results.length}節進めました($w勝$d分$l敗)。$why',
+          'Played ${results.length} matchday(s) (W$w D$d L$l). $why')),
+      duration: const Duration(seconds: 6),
+    ));
+    _showMatchdayNotifications(context, gameState);
   }
 
   /// ライブ観戦せず、次節の結果だけを一括で確定させる(クイックシム)。
