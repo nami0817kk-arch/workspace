@@ -54,6 +54,7 @@ class _StaffCard extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 11, color: SemanticColors.subtleText(context)),
               ),
+              if (role == StaffRole.manager) const _ManagerTargetPanel(),
             ],
             if (candidates.isNotEmpty) ...[
               const Divider(height: 20),
@@ -72,8 +73,9 @@ class _StaffCard extends StatelessWidget {
                       final ok = await gameState.hireStaff(c.id);
                       if (!ok) {
                         messenger.showSnackBar(SnackBar(
-                          content: Text(Tr.pick('給与予算が足りません。',
-                              'Your wage budget will not cover him.')),
+                          content: Text(gameState.lastSigningBlockReason ??
+                              Tr.pick('給与予算が足りません。',
+                                  'Your wage budget will not cover him.')),
                         ));
                       }
                     },
@@ -163,10 +165,111 @@ class _StaffRow extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (staff.manager != null) _ManagerProfileLines(staff: staff),
               ],
             ),
           ),
           trailing,
+        ],
+      ),
+    );
+  }
+}
+
+/// 監督の考え方・好みの布陣・経歴・(候補なら)今の所属と補償金。
+class _ManagerProfileLines extends StatelessWidget {
+  final StaffMember staff;
+  const _ManagerProfileLines({required this.staff});
+
+  @override
+  Widget build(BuildContext context) {
+    final m = staff.manager!;
+    final small =
+        TextStyle(fontSize: 11, color: SemanticColors.subtleText(context));
+    final recent = m.career.reversed.take(3).toList();
+    String season(int y) => '${y - 1}/${(y % 100).toString().padLeft(2, '0')}';
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            Tr.pick('考え方: ${m.style.label}(${m.style.description})・好みの布陣 ${m.formation.label}',
+                'Style: ${m.style.label} (${m.style.description}) • Preferred shape ${m.formation.label}'),
+            style: small,
+          ),
+          if (m.employerClubName != null)
+            Text(
+              Tr.pick(
+                  'いま${m.employerClubName}で指揮している。引き抜きには補償金${formatMoney(context.read<GameState>().scaledMoney(m.compensation))}',
+                  'Currently in charge at ${m.employerClubName}. Compensation to prise him away: ${formatMoney(context.read<GameState>().scaledMoney(m.compensation))}'),
+              style: TextStyle(fontSize: 11, color: Colors.orange.shade800),
+            ),
+          if (recent.isNotEmpty)
+            Text(
+              Tr.pick(
+                  '経歴: ${recent.map((c) => '${season(c.season)} ${c.club}(${c.tier}部) ${c.rank}位').join('、')}',
+                  'Record: ${recent.map((c) => '${season(c.season)} ${c.club} (tier ${c.tier}) ${c.rank}/${c.teams}').join(', ')}'),
+              style: small,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 今季の目標の順位と、監督の立場。
+class _ManagerTargetPanel extends StatelessWidget {
+  const _ManagerTargetPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    final teams = gameState.save!.league.teams.length;
+    final target = gameState.managerTarget;
+    final standing = gameState.managerStanding;
+    final color = standing < ManagerHrEngine.warningStanding
+        ? SemanticColors.negative(context)
+        : Theme.of(context).colorScheme.primary;
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(Tr.pick(
+                    '今季の目標: $target位(戦力どおりなら${gameState.suggestedManagerTarget}位)',
+                    'Target this season: position $target (squad strength says ${gameState.suggestedManagerTarget})')),
+              ),
+              IconButton(
+                tooltip: Tr.pick('目標を上げる', 'Raise the target'),
+                onPressed: target > 1
+                    ? () => gameState.setManagerTarget(target - 1)
+                    : null,
+                icon: const Icon(Icons.arrow_upward),
+              ),
+              IconButton(
+                tooltip: Tr.pick('目標を下げる', 'Lower the target'),
+                onPressed: target < teams
+                    ? () => gameState.setManagerTarget(target + 1)
+                    : null,
+                icon: const Icon(Icons.arrow_downward),
+              ),
+            ],
+          ),
+          Text(Tr.pick('監督の立場: $standing / 100', 'Manager standing: $standing / 100')),
+          const SizedBox(height: 4),
+          LinearProgressIndicator(value: standing / 100, color: color),
+          const SizedBox(height: 4),
+          Text(
+            Tr.pick(
+                '目標の順位を下回る節が続くと立場が下がり、${ManagerHrEngine.warningStanding}を割ると「危うい」と報じられます。解任すると、残りの契約の年俸を全額払います。',
+                'Each matchday below the target erodes his standing; under ${ManagerHrEngine.warningStanding} the press call him under pressure. Sacking him costs the rest of his contract in full.'),
+            style: TextStyle(
+                fontSize: 11, color: SemanticColors.subtleText(context)),
+          ),
         ],
       ),
     );

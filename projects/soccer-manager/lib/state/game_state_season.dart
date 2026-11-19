@@ -873,6 +873,9 @@ extension GameStateSeason on GameState {
         .map((r) => league.teams.firstWhere((t) => t.id == r.teamId))
         .toList();
     final playedTier = _save!.currentDivisionTier;
+    // 監督の経歴に今季を足し、目標を果たしたら立場を上げる。
+    _closeManagerSeason(
+        finalRank: finalRank, teams: league.teams.length, tier: playedTier);
 
     // シーズン開始時点の総合力からの成長を選手ごとに算出し、シーズン終了時に
     // 一覧表示できるようにする。

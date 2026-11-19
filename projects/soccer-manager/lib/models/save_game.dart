@@ -258,6 +258,15 @@ class SaveGame {
   /// スカウトを送っている地域('home:<部>' か 'foreign:<国>')。
   List<String> scoutRegionKeys;
 
+  /// オーナーが監督に伝えた今季の目標の順位。0 は「戦力どおり」(自動)。
+  int managerTargetRank;
+
+  /// 監督の立場(0〜100)。目標を下回る節が続くと下がる。
+  int managerStanding;
+
+  /// 今季、監督の立場が危ういと報じたか(1季に1回だけ報じる)。
+  bool managerWarned;
+
   /// 初回ガイドで既に開いた画面のステップ名(FirstRunStep.name)。
   /// 試合数や成長のように既存のカウンタから判定できるものは記録しない。
   List<String> firstRunStepsSeen;
@@ -509,6 +518,9 @@ class SaveGame {
     this.leagueName = 'リーグ',
     this.budget = 20000, // 5部の年収の半年分ほど(GameState.initialBudgetTier5)
     this.boardTargetRank = 4,
+    this.managerTargetRank = 0,
+    this.managerStanding = 60,
+    this.managerWarned = false,
     this.confidence = 60,
     this.shareholderExpectation = 60,
     List<OwnerLegacy>? ownerLegacies,
@@ -746,6 +758,9 @@ class SaveGame {
         'leagueName': leagueName,
         'budget': budget,
         'boardTargetRank': boardTargetRank,
+        if (managerTargetRank > 0) 'managerTargetRank': managerTargetRank,
+        'managerStanding': managerStanding,
+        if (managerWarned) 'managerWarned': true,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
         'ownerLegacies': ownerLegacies.map((l) => l.toJson()).toList(),
@@ -898,6 +913,9 @@ class SaveGame {
         leagueName: json['leagueName'] as String? ?? 'リーグ',
         budget: json['budget'] as int? ?? 3000,
         boardTargetRank: json['boardTargetRank'] as int? ?? 4,
+        managerTargetRank: json['managerTargetRank'] as int? ?? 0,
+        managerStanding: json['managerStanding'] as int? ?? 60,
+        managerWarned: json['managerWarned'] as bool? ?? false,
         confidence: json['confidence'] as int? ?? 60,
         shareholderExpectation: json['shareholderExpectation'] as int? ?? 60,
         ownerGoal: OwnerGoal.values

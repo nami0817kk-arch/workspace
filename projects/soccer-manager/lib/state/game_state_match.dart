@@ -286,6 +286,8 @@ extension GameStateMatch on GameState {
       leagueRank: preMatchRank,
       boardTargetRank: _save!.boardTargetRank,
     );
+    // 監督の立場(目標の順位との比べ)と、若手を使う監督の効き目。
+    _updateManagerWeekly(preMatchRank);
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
       userTeam.tacticalMeetingCooldownWeeks -= 1;
     }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/scouting_engine.dart';
+import '../logic/manager_hr_engine.dart';
+import '../models/formation.dart';
+import '../models/manager_profile.dart';
 import '../models/club_infrastructure.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';

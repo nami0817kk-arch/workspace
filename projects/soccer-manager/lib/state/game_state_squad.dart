@@ -201,6 +201,7 @@ extension GameStateSquad on GameState {
           if (s != null) s.name,
       },
     );
+    _addManagerCandidates();
   }
 
   /// いま雇えるスタッフの候補。シーズンごとに入れ替わる。
@@ -228,11 +229,23 @@ extension GameStateSquad on GameState {
   /// 済んだ旧レベル制と違い、良いスタッフを抱えるほど毎週の重荷になる。
   Future<bool> hireStaff(String staffId) async {
     if (_save == null) return false;
+    lastSigningBlockReason = null;
     final idx = _save!.staffCandidates.indexWhere((s) => s.id == staffId);
     if (idx < 0) return false;
     final hired = _save!.staffCandidates[idx];
     final previous = _save!.infrastructure.staffFor(hired.role);
     final severance = scaledMoney(previous?.severance ?? 0);
+    // 他のクラブの監督を引き抜くなら、そのクラブへ補償金を払う。
+    final profile = hired.manager;
+    final compensation = scaledMoney(profile?.compensation ?? 0);
+    if (compensation + severance > 0 &&
+        _save!.budget < compensation + severance) {
+      lastSigningBlockReason = Tr.pick(
+          '資金が足りません(補償金${formatMoney(compensation)}・前任の違約金${formatMoney(severance)})。',
+          'You cannot afford it (compensation ${formatMoney(compensation)}, severance ${formatMoney(severance)}).');
+      _notify();
+      return false;
+    }
 
     // 週俸の総額が給与予算を食い潰さないよう、選手と同じ枠で見る。
     // 入れ替えなら前任者の週俸は出ていかなくなるので、差額で見る。
@@ -244,6 +257,9 @@ extension GameStateSquad on GameState {
     _save!.infrastructure.staff[hired.role] = hired;
     _save!.staffCandidates.removeAt(idx);
     if (severance > 0) _book(LedgerCategory.staffWages, -severance);
+    if (hired.role == StaffRole.manager) {
+      _onManagerHired(hired, compensation);
+    }
     // 入れ替えで空いた人は候補に戻さない。断った相手が翌週も同じ条件で
     // 待っているのは不自然なため。
     if (previous != null) {
