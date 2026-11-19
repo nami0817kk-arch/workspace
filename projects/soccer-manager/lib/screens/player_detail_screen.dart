@@ -58,9 +58,8 @@ class PlayerDetailScreen extends StatelessWidget {
     }
 
     // この選手で効いている能力。詳細一覧で印を付けるのに使う。
-    final keyAttributeKeys = AttributeContextEngine.keyAttributesFor(p)
-        .map((k) => k.key)
-        .toSet();
+    final keyAttributeKeys =
+        AttributeContextEngine.keyAttributesFor(p).map((k) => k.key).toSet();
 
     final categories = [
       AttributeCategory.technical,
@@ -69,822 +68,897 @@ class PlayerDetailScreen extends StatelessWidget {
       if (p.position == Position.gk) AttributeCategory.goalkeeping,
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(p.name),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline),
-            tooltip: Tr.pick('能力値の意味を見る', 'What the attributes mean'),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const GlossaryScreen(
-                  initialCategory: GlossaryCategory.attribute,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Row(
-            children: [
-              PlayerFaceAvatar(
-                playerId: p.id,
-                position: p.position,
-                size: 56,
-                highlighted: true,
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  Tr.pick(
-                      '${p.position.fullLabel} ・ ${p.age}歳(誕生日 ${p.birthMonth}月${p.birthDay}日)',
-                      '${p.position.fullLabel} • ${p.age} (birthday ${TransferWindowCalendar.formatMonthDay(p.birthdayIn(2001))})'),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
+    // 経歴のタブに出すものが何も無いか(出場・負傷歴・成長の記録)。
+    final history = [
+      if (seasonStats.appearances > 0) 1,
+      if (p.careerAppearances > 0) 1,
+      if (p.injuryHistoryCounts.isNotEmpty) 1,
+      if (p.overallHistory.length >= 2) 1,
+    ];
+
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(p.name),
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: [
+              Tab(text: Tr.pick('概要', 'Overview')),
+              Tab(text: Tr.pick('能力', 'Attributes')),
+              Tab(text: Tr.pick('契約', 'Contract')),
+              Tab(text: Tr.pick('人柄', 'Character')),
+              Tab(text: Tr.pick('経歴', 'History')),
             ],
           ),
-          if (p.secondaryPositions.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                Tr.pick(
-                    '対応可能ポジション: ${p.secondaryPositions.map((s) => s.label).join(', ')}',
-                    "Also plays: ${p.secondaryPositions.map((s) => s.label).join(', ')}"),
-                style: TextStyle(color: SemanticColors.subtleText(context)),
-              ),
-            ),
-          if (seasonStats.appearances > 0)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                Tr.pick(
-                    '今シーズン: ${seasonStats.appearances}試合 ${seasonStats.goals}得点${seasonStats.yellowCards > 0 ? ' 警告${seasonStats.yellowCards}' : ''}${seasonStats.redCards > 0 ? ' 退場${seasonStats.redCards}' : ''} / 平均採点${seasonStats.averageRating!.toStringAsFixed(1)}',
-                    "This season: ${Tr.plural(seasonStats.appearances, 'app')}, ${Tr.plural(seasonStats.goals, 'goal')}${seasonStats.yellowCards > 0 ? ', ${seasonStats.yellowCards} yellow' : ''}${seasonStats.redCards > 0 ? ', ${seasonStats.redCards} red' : ''} / avg rating ${seasonStats.averageRating!.toStringAsFixed(1)}"),
-                style: const TextStyle(
-                  color: Colors.teal,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          if (p.careerAppearances > 0)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                Tr.pick('通算成績: ${p.careerAppearances}試合 ${p.careerGoals}得点',
-                    'Career: ${Tr.plural(p.careerAppearances, 'app')}, ${Tr.plural(p.careerGoals, 'goal')}'),
-                style: TextStyle(
-                    color: SemanticColors.subtleText(context), fontSize: 12),
-              ),
-            ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: [
-              if (isStarting)
-                Chip(
-                  label: Text(Tr.pick('スタメン', 'Starter')),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.primaryContainer,
-                ),
-              if (team.captainId == p.id)
-                Chip(
-                  label: Text(Tr.pick('キャプテン', 'Captain')),
-                  backgroundColor: Colors.amber,
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-              if (team.viceCaptainId == p.id)
-                Chip(
-                  label: Text(Tr.pick('副キャプテン', 'Vice Captain')),
-                  backgroundColor: Colors.blueGrey,
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-              // ダイナミクス: 影響力上位のチームリーダー。機嫌がロッカー
-              // ルーム全体へ波及し、放出するとチームが動揺する。
-              if (DynamicsEngine.isTeamLeader(team, p.id))
-                Chip(
-                  label: Text(Tr.pick('チームリーダー', 'Team Leader')),
-                  backgroundColor: Colors.deepOrange,
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-              if (p.isLoan)
-                Chip(
-                  label: Text(Tr.pick('ローン加入中', 'On loan here')),
-                  backgroundColor: Colors.indigo,
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-              if (p.wantsTransfer)
-                Chip(
-                  label: Text(Tr.pick('移籍を希望している', 'Wants a move away')),
-                  backgroundColor: Colors.redAccent,
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-              Chip(label: Text(p.personality.label)),
-              if (p.isOnInternationalDuty)
-                Chip(
-                  label: Text(p.onTournamentLeave
-                      ? Tr.pick('大会明けの休み', 'Post-tournament break')
-                      : Tr.pick('代表召集中', 'On international duty')),
-                  backgroundColor: Colors.blueAccent,
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-              if (p.isLoanedOut)
-                Chip(
-                  label: Text(Tr.pick('${p.loanedOutToClubName}へローン中',
-                      'On loan at ${p.loanedOutToClubName}')),
-                  backgroundColor: Colors.deepPurple,
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-              if (p.isTransferListed)
-                Chip(
-                  label: Text(Tr.pick('移籍リスト登録中', 'Transfer listed')),
-                  backgroundColor: Colors.orange,
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-            ],
-          ),
-          if (p.isInjured)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                p.injuryType == null
-                    ? Tr.pick('負傷中（あと${p.injuryWeeks}週は出場不可）',
-                        'Injured (out for another ${Tr.plural(p.injuryWeeks, 'week')})')
-                    : Tr.pick(
-                        '${p.injuryType!.label}で負傷中（あと${p.injuryWeeks}週は出場不可）',
-                        '${p.injuryType!.label} (out for another ${Tr.plural(p.injuryWeeks, 'week')})'),
-                style: const TextStyle(
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          if (p.injuryHistoryCounts.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                '${Tr.pick('負傷歴', 'Injury history')}: ${p.injuryHistoryCounts.entries.map((e) {
-                  final type = InjuryType.values.firstWhere(
-                      (t) => t.name == e.key,
-                      orElse: () => InjuryType.bruise);
-                  return Tr.pick(
-                      '${type.label}${e.value}回', '${type.label} x${e.value}');
-                }).join(Tr.pick('・', ' • '))}',
-                style: TextStyle(
-                    color: SemanticColors.subtleText(context), fontSize: 12),
-              ),
-            ),
-          if (p.isSuspended)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                Tr.pick('出場停止中（あと${p.suspendedMatches}試合は出場不可）',
-                    'Suspended (out for another ${Tr.plural(p.suspendedMatches, 'match', 'matches')})'),
-                style: const TextStyle(
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          if (p.yellowCards > 0)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                Tr.pick(
-                    '警告累積: ${p.yellowCards}/$yellowCardSuspensionThreshold(あと${yellowCardSuspensionThreshold - p.yellowCards}枚で出場停止)',
-                    'Yellow cards: ${p.yellowCards}/$yellowCardSuspensionThreshold (${yellowCardSuspensionThreshold - p.yellowCards} more brings a ban)'),
-                style: TextStyle(
-                  color: p.yellowCards >= yellowCardSuspensionThreshold - 1
-                      ? Colors.redAccent
-                      : SemanticColors.subtleText(context),
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          if (p.isOnInternationalDuty)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                p.onTournamentLeave
-                    ? _tournamentLeaveText(context.read<GameState>())
-                    : Tr.pick(
-                        '代表召集中（あと${p.internationalDutyWeeksRemaining}週は出場不可）',
-                        'On international duty (away for another ${Tr.plural(p.internationalDutyWeeksRemaining, 'week')})'),
-                style: const TextStyle(
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          const SizedBox(height: 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // この画面の主役の数字。明朝の titleLarge に「総合力: 78」と
-              // 書いていた頃は、見出しの一部に見えて目が止まらなかった。
-              // 見出しを小さく上に置き、数字を大きく太く出す。
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    Tr.pick('総合力', 'Overall'),
-                    style: TextStyle(
-                        fontSize: 11,
-                        color: SemanticColors.subtleText(context)),
-                  ),
-                  Text(
-                    '${p.overall}',
-                    style: TextStyle(
-                      fontFamily: 'NotoSansJP',
-                      fontSize: 34,
-                      fontWeight: FontWeight.w800,
-                      height: 1.05,
-                      letterSpacing: -1,
-                      color: OverallBadge.colorFor(context, p.overall),
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                    ),
-                  ),
-                ],
-              ),
-              if (latestGrowth != null && latestGrowth.overallDelta != 0) ...[
-                const SizedBox(width: 8),
-                Text(
-                  Tr.pick(
-                      '(今週${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})',
-                      " (this week ${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})"),
-                  style: TextStyle(
-                    color: latestGrowth.overallDelta > 0
-                        ? Colors.green
-                        : Colors.redAccent,
-                    fontWeight: FontWeight.bold,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.help_outline),
+              tooltip: Tr.pick('能力値の意味を見る', 'What the attributes mean'),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const GlossaryScreen(
+                    initialCategory: GlossaryCategory.attribute,
                   ),
                 ),
-              ],
-            ],
-          ),
-          Builder(
-            builder: (context) {
-              final potentialProgress = p.potential > 0
-                  ? (p.overall / p.potential * 100).clamp(0, 100)
-                  : 0.0;
-              final seasonStart =
-                  gameState.save?.seasonStartOverallByPlayerId[p.id];
-              final seasonDelta =
-                  seasonStart != null ? p.overall - seasonStart : null;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
+              ),
+            ),
+          ],
+        ),
+        body: TabBarView(
+          children: [
+            ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Row(
                   children: [
-                    Text(
-                      Tr.pick(
-                          '潜在能力到達度: ${potentialProgress.toStringAsFixed(0)}%',
-                          'Potential reached: ${potentialProgress.toStringAsFixed(0)}%'),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.purple,
+                    PlayerFaceAvatar(
+                      playerId: p.id,
+                      position: p.position,
+                      size: 56,
+                      highlighted: true,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        Tr.pick(
+                            '${p.position.fullLabel} ・ ${p.age}歳(誕生日 ${p.birthMonth}月${p.birthDay}日)',
+                            '${p.position.fullLabel} • ${p.age} (birthday ${TransferWindowCalendar.formatMonthDay(p.birthdayIn(2001))})'),
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
-                    if (seasonDelta != null) ...[
-                      const SizedBox(width: 12),
+                  ],
+                ),
+                if (p.secondaryPositions.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      Tr.pick(
+                          '対応可能ポジション: ${p.secondaryPositions.map((s) => s.label).join(', ')}',
+                          "Also plays: ${p.secondaryPositions.map((s) => s.label).join(', ')}"),
+                      style:
+                          TextStyle(color: SemanticColors.subtleText(context)),
+                    ),
+                  ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
+                    if (isStarting)
+                      Chip(
+                        label: Text(Tr.pick('スタメン', 'Starter')),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                      ),
+                    if (team.captainId == p.id)
+                      Chip(
+                        label: Text(Tr.pick('キャプテン', 'Captain')),
+                        backgroundColor: Colors.amber,
+                        labelStyle: const TextStyle(color: Colors.white),
+                      ),
+                    if (team.viceCaptainId == p.id)
+                      Chip(
+                        label: Text(Tr.pick('副キャプテン', 'Vice Captain')),
+                        backgroundColor: Colors.blueGrey,
+                        labelStyle: const TextStyle(color: Colors.white),
+                      ),
+                    // ダイナミクス: 影響力上位のチームリーダー。機嫌がロッカー
+                    // ルーム全体へ波及し、放出するとチームが動揺する。
+                    if (DynamicsEngine.isTeamLeader(team, p.id))
+                      Chip(
+                        label: Text(Tr.pick('チームリーダー', 'Team Leader')),
+                        backgroundColor: Colors.deepOrange,
+                        labelStyle: const TextStyle(color: Colors.white),
+                      ),
+                    if (p.isLoan)
+                      Chip(
+                        label: Text(Tr.pick('ローン加入中', 'On loan here')),
+                        backgroundColor: Colors.indigo,
+                        labelStyle: const TextStyle(color: Colors.white),
+                      ),
+                    if (p.wantsTransfer)
+                      Chip(
+                        label: Text(Tr.pick('移籍を希望している', 'Wants a move away')),
+                        backgroundColor: Colors.redAccent,
+                        labelStyle: const TextStyle(color: Colors.white),
+                      ),
+                    Chip(label: Text(p.personality.label)),
+                    if (p.isOnInternationalDuty)
+                      Chip(
+                        label: Text(p.onTournamentLeave
+                            ? Tr.pick('大会明けの休み', 'Post-tournament break')
+                            : Tr.pick('代表召集中', 'On international duty')),
+                        backgroundColor: Colors.blueAccent,
+                        labelStyle: const TextStyle(color: Colors.white),
+                      ),
+                    if (p.isLoanedOut)
+                      Chip(
+                        label: Text(Tr.pick('${p.loanedOutToClubName}へローン中',
+                            'On loan at ${p.loanedOutToClubName}')),
+                        backgroundColor: Colors.deepPurple,
+                        labelStyle: const TextStyle(color: Colors.white),
+                      ),
+                    if (p.isTransferListed)
+                      Chip(
+                        label: Text(Tr.pick('移籍リスト登録中', 'Transfer listed')),
+                        backgroundColor: Colors.orange,
+                        labelStyle: const TextStyle(color: Colors.white),
+                      ),
+                  ],
+                ),
+                if (p.isInjured)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      p.injuryType == null
+                          ? Tr.pick('負傷中（あと${p.injuryWeeks}週は出場不可）',
+                              'Injured (out for another ${Tr.plural(p.injuryWeeks, 'week')})')
+                          : Tr.pick(
+                              '${p.injuryType!.label}で負傷中（あと${p.injuryWeeks}週は出場不可）',
+                              '${p.injuryType!.label} (out for another ${Tr.plural(p.injuryWeeks, 'week')})'),
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                if (p.isSuspended)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      Tr.pick('出場停止中（あと${p.suspendedMatches}試合は出場不可）',
+                          'Suspended (out for another ${Tr.plural(p.suspendedMatches, 'match', 'matches')})'),
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                if (p.yellowCards > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      Tr.pick(
+                          '警告累積: ${p.yellowCards}/$yellowCardSuspensionThreshold(あと${yellowCardSuspensionThreshold - p.yellowCards}枚で出場停止)',
+                          'Yellow cards: ${p.yellowCards}/$yellowCardSuspensionThreshold (${yellowCardSuspensionThreshold - p.yellowCards} more brings a ban)'),
+                      style: TextStyle(
+                        color:
+                            p.yellowCards >= yellowCardSuspensionThreshold - 1
+                                ? Colors.redAccent
+                                : SemanticColors.subtleText(context),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                if (p.isOnInternationalDuty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      p.onTournamentLeave
+                          ? _tournamentLeaveText(context.read<GameState>())
+                          : Tr.pick(
+                              '代表召集中（あと${p.internationalDutyWeeksRemaining}週は出場不可）',
+                              'On international duty (away for another ${Tr.plural(p.internationalDutyWeeksRemaining, 'week')})'),
+                      style: const TextStyle(
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // この画面の主役の数字。明朝の titleLarge に「総合力: 78」と
+                    // 書いていた頃は、見出しの一部に見えて目が止まらなかった。
+                    // 見出しを小さく上に置き、数字を大きく太く出す。
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          Tr.pick('総合力', 'Overall'),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: SemanticColors.subtleText(context)),
+                        ),
+                        Text(
+                          '${p.overall}',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansJP',
+                            fontSize: 34,
+                            fontWeight: FontWeight.w800,
+                            height: 1.05,
+                            letterSpacing: -1,
+                            color: OverallBadge.colorFor(context, p.overall),
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (latestGrowth != null &&
+                        latestGrowth.overallDelta != 0) ...[
+                      const SizedBox(width: 8),
                       Text(
                         Tr.pick(
-                            '今シーズンの成長: ${seasonDelta > 0 ? '+' : ''}$seasonDelta',
-                            "Growth this season: ${seasonDelta > 0 ? '+' : ''}$seasonDelta"),
+                            '(今週${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})',
+                            " (this week ${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})"),
                         style: TextStyle(
-                          fontSize: 12,
-                          color: seasonDelta > 0
+                          color: latestGrowth.overallDelta > 0
                               ? Colors.green
-                              : SemanticColors.subtleText(context),
-                          fontWeight: seasonDelta > 0
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                              : Colors.redAccent,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ],
                 ),
-              );
-            },
-          ),
-          Text(Tr.pick('市場価値: ${formatMoney(p.marketValue)}', 'Value: ${formatMoney(p.marketValue)}')),
-          Builder(
-            builder: (context) {
-              final b = p.marketValueBreakdown;
-              return Text(
-                Tr.pick(
-                    '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ' 夏の大会の活躍×${b.tournamentFactor.toStringAsFixed(2)}' : ''}',
-                    'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ', summer tournament ${b.tournamentFactor.toStringAsFixed(2)}' : ''}'),
-                style: TextStyle(
-                    fontSize: 11, color: SemanticColors.subtleText(context)),
-              );
-            },
-          ),
-          Text(
-            p.isLoan
-                ? (p.loanEndDate != null
-                    ? Tr.pick(
-                        '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローンは${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}まで',
-                        'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / on loan until ${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}')
-                    : Tr.pick('年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローン残り${p.loanWeeksRemaining}週',
-                        'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${Tr.plural(p.loanWeeksRemaining, 'week')} left on loan'))
-                : Tr.pick(
-                    '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}',
-                    'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${ContractEngine.contractLabel(p)}'),
-          ),
-          if (p.releaseClause != null)
-            Text(
-              Tr.pick('リリース条項: ${formatMoney(p.releaseClause!)}',
-                  'Release clause: ${formatMoney(p.releaseClause!)}'),
-              style: const TextStyle(color: Colors.deepPurple),
-            ),
-          const SizedBox(height: 4),
-          Text(
-            p.personality.description,
-            style: TextStyle(
-                fontSize: 12, color: SemanticColors.subtleText(context)),
-          ),
-          const SizedBox(height: 4),
-          _TraitsWrap(player: p),
-          if (p.promisedStatus != null)
-            Text(
-              p.promiseBroken
-                  ? Tr.pick('加入のときの約束(${p.promisedStatus!.label})を破られたとして、移籍を願い出ている',
-                      'Says you broke the promise made when he joined (${p.promisedStatus!.label}) and wants to leave')
-                  : Tr.pick(
-                      '加入のときに${p.promisedStatus!.label}を約束した(続けて先発から外れた節: ${p.promiseMisses})',
-                      'Promised ${p.promisedStatus!.label} billing when he joined (straight matches left out: ${p.promiseMisses})'),
-              style: TextStyle(
-                fontSize: 11,
-                color: p.promiseBroken
-                    ? Colors.redAccent
-                    : SemanticColors.subtleText(context),
-              ),
-            ),
-          Text(
-            p.wantsTransfer
-                ? (p.promiseBroken
-                    ? Tr.pick('約束を破られたため、移籍を希望している',
-                        'Wants a move because you broke your word')
-                    : Tr.pick(
-                        '不満度${p.happiness}が移籍希望ライン(${p.transferRequestLine}未満)を下回っており、移籍を希望している',
-                        'Happiness ${p.happiness} has fallen below the transfer-request line (under ${p.transferRequestLine}), so they want a move'))
-                : Tr.pick(
-                    '移籍希望ライン: 不満度が${p.transferRequestLine}未満になると移籍を希望する(現在${p.happiness}。野心で上がり、忠誠で下がる)',
-                    'Transfer-request line: they ask for a move below ${p.transferRequestLine} happiness (currently ${p.happiness}; ambition raises it, loyalty lowers it)'),
-            style: TextStyle(
-              fontSize: 11,
-              color: p.wantsTransfer
-                  ? Colors.redAccent
-                  : SemanticColors.subtleText(context),
-            ),
-          ),
-          if (p.role != PlayerRole.standard) ...[
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick('ロール: ${p.role.label} — ${p.role.description}',
-                  'Role: ${p.role.label} — ${p.role.description}'),
-              style: const TextStyle(fontSize: 12, color: Colors.teal),
-            ),
-          ],
-          // 怪我のしやすさ。同じ疲労でも壊れやすい選手がいる。
-          // 補強で見るべき情報なので、特性と並べて出す。
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              Tr.pick('怪我のしやすさ: ${p.injuryPronenessLabel}',
-                  'Injury proneness: ${p.injuryPronenessLabel}'),
-              style: TextStyle(
-                fontSize: 12,
-                color: p.injuryProneness >= 14
-                    ? SemanticColors.negative(context)
-                    : SemanticColors.subtleText(context),
-              ),
-            ),
-          ),
-          if (p.trait != null) ...[
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick(
-                  '特性(${p.trait!.category.label}): ${p.trait!.label} — ${p.trait!.description}',
-                  'Trait (${p.trait!.category.label}): ${p.trait!.label} — ${p.trait!.description}'),
-              style: const TextStyle(fontSize: 12, color: Colors.deepOrange),
-            ),
-            // 能力値で発動する特性は、条件に届いていないと何も起きない。
-            // その条件が実装の中にしか無く、持っているのに効果が無い状態が
-            // 説明されないままだった。判定に使っている表をそのまま出す。
-            Builder(builder: (context) {
-              final gate = MatchEngine.attributeGatedTraits[p.trait!];
-              if (gate == null) return const SizedBox.shrink();
-              final current = p.attributeValue(gate.attribute);
-              final active = current >= gate.threshold;
-              final gain = ((gate.bonus - 1) * 100).round();
-              return Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Text(
-                  active
-                      ? Tr.pick(
-                          '発動中: ${AttributeKeys.labelOf(gate.attribute)}$current '
-                              '（${gate.threshold}以上）→ 出来が+$gain%',
-                          'Active: ${AttributeKeys.labelOf(gate.attribute)} $current '
-                              '(needs ${gate.threshold}) → +$gain% to his display')
-                      : Tr.pick(
-                          '未発動: ${AttributeKeys.labelOf(gate.attribute)}が'
-                              '${gate.threshold}以上で+$gain%（現在$current / あと'
-                              '${gate.threshold - current}）',
-                          'Dormant: needs ${AttributeKeys.labelOf(gate.attribute)} '
-                              '${gate.threshold} for +$gain% '
-                              '(now $current, ${gate.threshold - current} to go)'),
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: active
-                        ? SemanticColors.positive(context)
-                        : SemanticColors.subtleText(context),
-                  ),
+                Builder(
+                  builder: (context) {
+                    final potentialProgress = p.potential > 0
+                        ? (p.overall / p.potential * 100).clamp(0, 100)
+                        : 0.0;
+                    final seasonStart =
+                        gameState.save?.seasonStartOverallByPlayerId[p.id];
+                    final seasonDelta =
+                        seasonStart != null ? p.overall - seasonStart : null;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Row(
+                        children: [
+                          Text(
+                            Tr.pick(
+                                '潜在能力到達度: ${potentialProgress.toStringAsFixed(0)}%',
+                                'Potential reached: ${potentialProgress.toStringAsFixed(0)}%'),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.purple,
+                            ),
+                          ),
+                          if (seasonDelta != null) ...[
+                            const SizedBox(width: 12),
+                            Text(
+                              Tr.pick(
+                                  '今シーズンの成長: ${seasonDelta > 0 ? '+' : ''}$seasonDelta',
+                                  "Growth this season: ${seasonDelta > 0 ? '+' : ''}$seasonDelta"),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: seasonDelta > 0
+                                    ? Colors.green
+                                    : SemanticColors.subtleText(context),
+                                fontWeight: seasonDelta > 0
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              );
-            }),
-          ],
-          if (p.growthType != PlayerGrowthType.balanced) ...[
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick(
-                  '成長タイプ: ${p.growthType.label} — ${p.growthType.description}',
-                  'Growth: ${p.growthType.label} — ${p.growthType.description}'),
-              style: const TextStyle(fontSize: 12, color: Colors.indigo),
+                const SizedBox(height: 12),
+                Center(child: AttributeRadar(player: p)),
+                const SizedBox(height: 12),
+                _MatchImpactSummary(
+                  player: p,
+                  isStarting: isStarting,
+                  assignedSlot: assignedSlot,
+                ),
+              ],
             ),
-          ],
-          if (latestGrowth != null && latestGrowth.isBreakthrough) ...[
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick('★ 今週、才能開花が発生しました！', '★ A breakthrough came this week.'),
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.amber,
-                fontWeight: FontWeight.bold,
-              ),
+            ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                _AttributeGrid(
+                    player: p, categories: categories, keys: keyAttributeKeys),
+                const Divider(height: 32),
+                StatBar(label: Tr.pick('攻撃', 'Attack'), value: p.attack),
+                StatBar(label: Tr.pick('守備', 'Defence'), value: p.defense),
+                StatBar(label: Tr.pick('技術', 'Technical'), value: p.technique),
+                StatBar(label: Tr.pick('スタミナ', 'Stamina'), value: p.stamina),
+                if (p.position == Position.gk)
+                  StatBar(
+                      label: Tr.pick('ゴールキーピング', 'Goalkeeping'),
+                      value: p.goalkeeping),
+                const Divider(height: 32),
+                StatBar(
+                    label: Tr.pick('潜在能力', 'Potential'),
+                    value: p.potential,
+                    color: Colors.purple),
+                StatBar(
+                  label: Tr.pick('疲労', 'Fatigue'),
+                  value: p.fatigue,
+                  max: 100,
+                  color: Colors.redAccent,
+                ),
+                StatBar(
+                  label: Tr.pick('士気', 'Morale'),
+                  value: p.morale,
+                  max: 100,
+                  color: Colors.blueAccent,
+                ),
+                StatBar(
+                  label: Tr.pick('マッチシャープネス', 'Match Sharpness'),
+                  value: p.matchSharpness,
+                  max: 100,
+                  color: Colors.teal,
+                ),
+                StatBar(
+                  label:
+                      Tr.pick('不満度(高いほど満足)', 'Happiness (higher is happier)'),
+                  value: p.happiness,
+                  max: 100,
+                  color: p.happiness < 30
+                      ? SemanticColors.negative(context)
+                      : SemanticColors.positive(context),
+                ),
+                const Divider(height: 32),
+                // 42項目のうち、この選手で実際に効いているものだけを先に出す。
+                // 全部並べても、どれを見ればいいのか分からない。
+                _KeyAttributesCard(player: p),
+                const SizedBox(height: 12),
+                Text(Tr.pick('詳細能力値', 'Full attributes'),
+                    style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 4),
+                for (final category in categories)
+                  Theme(
+                    data: Theme.of(context)
+                        .copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      title: Text(Tr.pick(
+                          '${category.label}（${category.keys.length}項目）',
+                          '${category.label} (${category.keys.length})')),
+                      subtitle: Text(
+                        Tr.pick(
+                            '平均 ${(category.keys.fold<int>(0, (s, k) => s + p.attributeValue(k)) / category.keys.length).round()}',
+                            'avg ${(category.keys.fold<int>(0, (s, k) => s + p.attributeValue(k)) / category.keys.length).round()}'),
+                        style: TextStyle(
+                            color: SemanticColors.subtleText(context)),
+                      ),
+                      initiallyExpanded: false,
+                      children: [
+                        for (final key in category.keys)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: StatBar(
+                              // 効いている能力には印を付ける。折りたたみを
+                              // 開いたときにも、見るべき行が分かるように。
+                              label: keyAttributeKeys.contains(key)
+                                  ? Tr.pick('★${AttributeKeys.labelOf(key)}',
+                                      '* ${AttributeKeys.labelOf(key)}')
+                                  : AttributeKeys.labelOf(key),
+                              value: p.attributeValue(key),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
-          ],
-          if (p.overallHistory.length >= 2) ...[
-            const SizedBox(height: 12),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
+            ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Text(Tr.pick('市場価値: ${formatMoney(p.marketValue)}',
+                    'Value: ${formatMoney(p.marketValue)}')),
+                Builder(
+                  builder: (context) {
+                    final b = p.marketValueBreakdown;
+                    return Text(
                       Tr.pick(
-                          '成長推移(直近${p.overallHistory.length}節): 総合 ${p.overallHistory.first} → ${p.overallHistory.last}',
-                          'Progress (last ${p.overallHistory.length} matchdays): overall ${p.overallHistory.first} → ${p.overallHistory.last}'),
-                      style: const TextStyle(
+                          '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ' 夏の大会の活躍×${b.tournamentFactor.toStringAsFixed(2)}' : ''}',
+                          'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ', summer tournament ${b.tournamentFactor.toStringAsFixed(2)}' : ''}'),
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: SemanticColors.subtleText(context)),
+                    );
+                  },
+                ),
+                Text(
+                  p.isLoan
+                      ? (p.loanEndDate != null
+                          ? Tr.pick(
+                              '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローンは${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}まで',
+                              'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / on loan until ${TransferWindowCalendar.formatMonthDay(p.loanEndDate!)}')
+                          : Tr.pick(
+                              '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ローン残り${p.loanWeeksRemaining}週',
+                              'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${Tr.plural(p.loanWeeksRemaining, 'week')} left on loan'))
+                      : Tr.pick(
+                          '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}',
+                          'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${ContractEngine.contractLabel(p)}'),
+                ),
+                if (p.releaseClause != null)
+                  Text(
+                    Tr.pick('リリース条項: ${formatMoney(p.releaseClause!)}',
+                        'Release clause: ${formatMoney(p.releaseClause!)}'),
+                    style: const TextStyle(color: Colors.deepPurple),
+                  ),
+                const SizedBox(height: 16),
+                Text(Tr.pick('選手を操作', 'Player actions'),
+                    style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                if (p.isLoan)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          Tr.pick(
+                              'ローン加入中の選手は契約更新・放出の対象外です。ローン期間終了時に自動的にチームを離れます。',
+                              'Players on loan here cannot be re-signed or released. They leave automatically when the loan ends.'),
+                          style: TextStyle(
+                              color: SemanticColors.subtleText(context),
+                              fontSize: 12),
+                        ),
+                        if (p.loanBuyOptionFee != null) ...[
+                          const SizedBox(height: 8),
+                          FilledButton(
+                            onPressed:
+                                gameState.save!.budget < p.loanBuyOptionFee!
+                                    ? null
+                                    : () => _exerciseBuyOption(context),
+                            child: Text(Tr.pick(
+                                '買取オプションを行使する（${formatMoney(p.loanBuyOptionFee!)}）',
+                                'Trigger the buy option (${formatMoney(p.loanBuyOptionFee!)})')),
+                          ),
+                        ],
+                      ],
+                    ),
+                  )
+                else if (p.isLoanedOut)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          Tr.pick('他クラブへローン放出中は契約更新・放出の対象外です。期間終了時に自動的に復帰します。',
+                              'A player out on loan cannot be re-signed or released. They return automatically when the loan ends.'),
+                          style: TextStyle(
+                              color: SemanticColors.subtleText(context),
+                              fontSize: 12),
+                        ),
+                        if (p.loanedOutUntil != null)
+                          Text(
+                            Tr.pick(
+                                '${TransferWindowCalendar.formatMonthDay(p.loanedOutUntil!)}に戻ります${p.loanRecallClause ? '(冬の窓で呼び戻せる条項付き)' : ''}',
+                                'Back on ${TransferWindowCalendar.formatMonthDay(p.loanedOutUntil!)}${p.loanRecallClause ? ' (recall clause for the winter window)' : ''}'),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        if (p.loanRecallClause) ...[
+                          const SizedBox(height: 8),
+                          OutlinedButton.icon(
+                            icon: const Icon(Icons.flight_land),
+                            onPressed: gameState.canRecallLoanedOutPlayer(p)
+                                ? () async {
+                                    final ok = await gameState
+                                        .recallLoanedOutPlayer(playerId);
+                                    ok
+                                        ? FeedbackService.success()
+                                        : FeedbackService.error();
+                                  }
+                                : null,
+                            label: Text(Tr.pick(
+                                '冬の窓で呼び戻す', 'Recall him in the winter window')),
+                          ),
+                        ],
+                      ],
+                    ),
+                  )
+                else ...[
+                  Text(
+                    Tr.pick('現在の出場手当: ${formatMoney(p.appearanceFee)}/試合',
+                        'Current appearance fee: ${formatMoney(p.appearanceFee)} per match'),
+                    style: TextStyle(
                         fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        color: SemanticColors.subtleText(context)),
+                  ),
+                  const SizedBox(height: 8),
+                  // 高齢の選手は、契約を残していてもシーズン終了時に引退しうる。
+                  // 更新料を払った直後に引退されると、何が起きたのか分からない。
+                  // 引退判定が実際に使っている確率をそのまま出す。
+                  if (RetirementEngine.retirementChance(p) > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        Tr.pick(
+                            '今シーズン終了時に引退する可能性: '
+                                '${(RetirementEngine.retirementChance(p) * 100).round()}%'
+                                '（契約が残っていても引退します）',
+                            'Chance he retires at the end of this season: '
+                                '${(RetirementEngine.retirementChance(p) * 100).round()}%'
+                                ' (he retires even with time left on his deal)'),
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.subtleText(context)),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    GrowthSparkline(history: p.overallHistory),
-                  ],
-                ),
-              ),
-            ),
-          ],
-          const SizedBox(height: 12),
-          Center(child: AttributeRadar(player: p)),
-          const SizedBox(height: 12),
-          _MatchImpactSummary(
-            player: p,
-            isStarting: isStarting,
-            assignedSlot: assignedSlot,
-          ),
-          const SizedBox(height: 16),
-          Text(Tr.pick('選手を操作', 'Player actions'),
-              style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          if (p.isLoan)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    Tr.pick('ローン加入中の選手は契約更新・放出の対象外です。ローン期間終了時に自動的にチームを離れます。',
-                        'Players on loan here cannot be re-signed or released. They leave automatically when the loan ends.'),
-                    style: TextStyle(
-                        color: SemanticColors.subtleText(context),
-                        fontSize: 12),
-                  ),
-                  if (p.loanBuyOptionFee != null) ...[
-                    const SizedBox(height: 8),
-                    FilledButton(
-                      onPressed: gameState.save!.budget < p.loanBuyOptionFee!
-                          ? null
-                          : () => _exerciseBuyOption(context),
-                      child: Text(Tr.pick(
-                          '買取オプションを行使する（${formatMoney(p.loanBuyOptionFee!)}）',
-                          'Trigger the buy option (${formatMoney(p.loanBuyOptionFee!)})')),
+                  // 資金が足りないとボタンが灰色になるだけで、何がどれだけ
+                  // 足りないのかが出ていなかった。更新できない理由が分からないと、
+                  // 資金を作るのか、諦めて放出するのかも決められない。
+                  if (gameState.save!.budget < totalRenewalCost)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        Tr.pick(
+                            '資金が${formatMoney(totalRenewalCost - gameState.save!.budget)}足りません'
+                                '（必要${formatMoney(totalRenewalCost)} / 手元${formatMoney(gameState.save!.budget)}）。'
+                                '選手の放出や融資で資金を作るか、年俸交渉で更新してください。',
+                            'You are ${formatMoney(totalRenewalCost - gameState.save!.budget)} short '
+                                '(need ${formatMoney(totalRenewalCost)}, you have ${formatMoney(gameState.save!.budget)}). '
+                                'Sell someone, take a loan, or re-sign him through wage talks.'),
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.negative(context)),
+                      ),
                     ),
-                  ],
-                ],
-              ),
-            )
-          else if (p.isLoanedOut)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    Tr.pick('他クラブへローン放出中は契約更新・放出の対象外です。期間終了時に自動的に復帰します。',
-                        'A player out on loan cannot be re-signed or released. They return automatically when the loan ends.'),
-                    style: TextStyle(
-                        color: SemanticColors.subtleText(context), fontSize: 12),
-                  ),
-                  if (p.loanedOutUntil != null)
+                  // 仮契約で出ていく・「延長しない」選手とは更新できない。
+                  if (gameState.renewalBlockReason(p) != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        gameState.renewalBlockReason(p)!,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.negative(context)),
+                      ),
+                    ),
+                  // 延長オプション(満了の年の3月31日まで)。
+                  if (p.contractOption) ...[
                     Text(
                       Tr.pick(
-                          '${TransferWindowCalendar.formatMonthDay(p.loanedOutUntil!)}に戻ります${p.loanRecallClause ? '(冬の窓で呼び戻せる条項付き)' : ''}',
-                          'Back on ${TransferWindowCalendar.formatMonthDay(p.loanedOutUntil!)}${p.loanRecallClause ? ' (recall clause for the winter window)' : ''}'),
+                          '延長オプション: ${TransferWindowCalendar.formatMonthDay(ContractEngine.optionDeadline(p.contractEndYear))}までに行使すると、同じ年俸で${ContractEngine.untilLabel(p.contractEndYear + 1)}に延びます。',
+                          '1-year option: take it up by ${TransferWindowCalendar.formatMonthDay(ContractEngine.optionDeadline(p.contractEndYear))} to extend him on the same salary ${ContractEngine.untilLabel(p.contractEndYear + 1)}.'),
                       style: const TextStyle(fontSize: 12),
                     ),
-                  if (p.loanRecallClause) ...[
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     OutlinedButton.icon(
-                      icon: const Icon(Icons.flight_land),
-                      onPressed: gameState.canRecallLoanedOutPlayer(p)
+                      icon: const Icon(Icons.event_repeat),
+                      onPressed: gameState.canExerciseContractOption(playerId)
                           ? () async {
-                              final ok =
-                                  await gameState.recallLoanedOutPlayer(playerId);
+                              final ok = await gameState
+                                  .exerciseContractOption(playerId);
                               ok
                                   ? FeedbackService.success()
                                   : FeedbackService.error();
                             }
                           : null,
-                      label: Text(Tr.pick('冬の窓で呼び戻す', 'Recall him in the winter window')),
+                      label: Text(
+                          Tr.pick('延長オプションを行使する', 'Take up the 1-year option')),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  FilledButton(
+                    onPressed: gameState.save!.budget < totalRenewalCost ||
+                            gameState.renewalBlockReason(p) != null
+                        ? null
+                        : () => _renew(context),
+                    child: Text(
+                      Tr.pick(
+                          '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / 新出場手当${formatMoney(newAppearanceFee)}）',
+                          'Renew his contract (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / new appearance fee ${formatMoney(newAppearanceFee)})'),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.handshake_outlined),
+                    onPressed: !isNegotiatingThisPlayer &&
+                            gameState.renewalBlockReason(p) != null
+                        ? null
+                        : () => _negotiate(context, isNegotiatingThisPlayer),
+                    label: Text(
+                      isNegotiatingThisPlayer
+                          ? Tr.pick(
+                              '交渉を続ける（選手の対案: 年俸${formatMoney(annualFromWeekly(negotiation.counterWage))}）',
+                              'Keep negotiating (their counter: ${formatMoney(annualFromWeekly(negotiation.counterWage))} a year)')
+                          : Tr.pick('年俸交渉で更新する', 'Re-sign after wage talks'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton(
+                    onPressed: (team.players.length <= minSquadSize ||
+                            !gameState.isTransferWindowOpen)
+                        ? null
+                        : () => _confirmSell(context, netReleaseValue),
+                    child: Text(
+                      netReleaseValue >= 0
+                          ? Tr.pick('放出する（${formatMoney(netReleaseValue)} 獲得）',
+                              'Release him (you receive ${formatMoney(netReleaseValue)})')
+                          : Tr.pick(
+                              '放出する（違約金${formatMoney(-netReleaseValue)} 支払い）',
+                              'Release him (you pay ${formatMoney(-netReleaseValue)} in compensation)'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.sell_outlined),
+                    onPressed: () {
+                      FeedbackService.tap();
+                      gameState.setTransferListed(
+                          playerId, !p.isTransferListed);
+                    },
+                    label: Text(p.isTransferListed
+                        ? Tr.pick('移籍リストから外す', 'Take off the transfer list')
+                        : Tr.pick('移籍リストに登録する', 'Put on the transfer list')),
+                  ),
+                  const SizedBox(height: 8),
+                  // 合意して契約を解除する(窓の外でもできる。選手は自由契約になる)。
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.assignment_return_outlined),
+                    onPressed: team.players.length <= minSquadSize ||
+                            gameState.mutualTerminationCostFor(playerId) == null
+                        ? null
+                        : () => _confirmMutualTermination(context),
+                    label: Text(
+                        Tr.pick('合意して契約を解除する', 'Terminate by mutual consent')),
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.flight_takeoff),
+                    onPressed: (team.players.length <= minSquadSize ||
+                            !gameState.isTransferWindowOpen)
+                        ? null
+                        : () => _showLoanOutDialog(context),
+                    label: Text(Tr.pick('他クラブへローン放出する', 'Loan him out')),
+                  ),
+                  if (!gameState.isTransferWindowOpen) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      gameState.transferWindowStatusLabel,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.subtleText(context)),
                     ),
                   ],
                 ],
-              ),
-            )
-          else ...[
-            Text(
-              Tr.pick('現在の出場手当: ${formatMoney(p.appearanceFee)}/試合',
-                  'Current appearance fee: ${formatMoney(p.appearanceFee)} per match'),
-              style: TextStyle(
-                  fontSize: 12, color: SemanticColors.subtleText(context)),
+                const SizedBox(height: 8),
+                if (!p.isLoan && !p.isLoanedOut) ...[
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.gavel),
+                    onPressed: () => _editReleaseClause(
+                        context, p.releaseClause, p.marketValue),
+                    label: Text(
+                      p.releaseClause == null
+                          ? Tr.pick('リリース条項を設定する', 'Set a release clause')
+                          : Tr.pick('リリース条項を変更する', 'Change the release clause'),
+                    ),
+                  ),
+                ],
+              ],
             ),
-            const SizedBox(height: 8),
-            // 高齢の選手は、契約を残していてもシーズン終了時に引退しうる。
-            // 更新料を払った直後に引退されると、何が起きたのか分からない。
-            // 引退判定が実際に使っている確率をそのまま出す。
-            if (RetirementEngine.retirementChance(p) > 0)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Text(
-                  Tr.pick(
-                      '今シーズン終了時に引退する可能性: '
-                          '${(RetirementEngine.retirementChance(p) * 100).round()}%'
-                          '（契約が残っていても引退します）',
-                      'Chance he retires at the end of this season: '
-                          '${(RetirementEngine.retirementChance(p) * 100).round()}%'
-                          ' (he retires even with time left on his deal)'),
+            ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                const SizedBox(height: 4),
+                Text(
+                  p.personality.description,
                   style: TextStyle(
                       fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
-              ),
-            // 資金が足りないとボタンが灰色になるだけで、何がどれだけ
-            // 足りないのかが出ていなかった。更新できない理由が分からないと、
-            // 資金を作るのか、諦めて放出するのかも決められない。
-            if (gameState.save!.budget < totalRenewalCost)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Text(
-                  Tr.pick(
-                      '資金が${formatMoney(totalRenewalCost - gameState.save!.budget)}足りません'
-                          '（必要${formatMoney(totalRenewalCost)} / 手元${formatMoney(gameState.save!.budget)}）。'
-                          '選手の放出や融資で資金を作るか、年俸交渉で更新してください。',
-                      'You are ${formatMoney(totalRenewalCost - gameState.save!.budget)} short '
-                          '(need ${formatMoney(totalRenewalCost)}, you have ${formatMoney(gameState.save!.budget)}). '
-                          'Sell someone, take a loan, or re-sign him through wage talks.'),
+                const SizedBox(height: 4),
+                _TraitsWrap(player: p),
+                if (p.promisedStatus != null)
+                  Text(
+                    p.promiseBroken
+                        ? Tr.pick(
+                            '加入のときの約束(${p.promisedStatus!.label})を破られたとして、移籍を願い出ている',
+                            'Says you broke the promise made when he joined (${p.promisedStatus!.label}) and wants to leave')
+                        : Tr.pick(
+                            '加入のときに${p.promisedStatus!.label}を約束した(続けて先発から外れた節: ${p.promiseMisses})',
+                            'Promised ${p.promisedStatus!.label} billing when he joined (straight matches left out: ${p.promiseMisses})'),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: p.promiseBroken
+                          ? Colors.redAccent
+                          : SemanticColors.subtleText(context),
+                    ),
+                  ),
+                Text(
+                  p.wantsTransfer
+                      ? (p.promiseBroken
+                          ? Tr.pick('約束を破られたため、移籍を希望している',
+                              'Wants a move because you broke your word')
+                          : Tr.pick(
+                              '不満度${p.happiness}が移籍希望ライン(${p.transferRequestLine}未満)を下回っており、移籍を希望している',
+                              'Happiness ${p.happiness} has fallen below the transfer-request line (under ${p.transferRequestLine}), so they want a move'))
+                      : Tr.pick(
+                          '移籍希望ライン: 不満度が${p.transferRequestLine}未満になると移籍を希望する(現在${p.happiness}。野心で上がり、忠誠で下がる)',
+                          'Transfer-request line: they ask for a move below ${p.transferRequestLine} happiness (currently ${p.happiness}; ambition raises it, loyalty lowers it)'),
                   style: TextStyle(
-                      fontSize: 12, color: SemanticColors.negative(context)),
+                    fontSize: 11,
+                    color: p.wantsTransfer
+                        ? Colors.redAccent
+                        : SemanticColors.subtleText(context),
+                  ),
                 ),
-              ),
-            // 仮契約で出ていく・「延長しない」選手とは更新できない。
-            if (gameState.renewalBlockReason(p) != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Text(
-                  gameState.renewalBlockReason(p)!,
-                  style: TextStyle(
-                      fontSize: 12, color: SemanticColors.negative(context)),
+                if (p.role != PlayerRole.standard) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    Tr.pick('ロール: ${p.role.label} — ${p.role.description}',
+                        'Role: ${p.role.label} — ${p.role.description}'),
+                    style: const TextStyle(fontSize: 12, color: Colors.teal),
+                  ),
+                ],
+                // 怪我のしやすさ。同じ疲労でも壊れやすい選手がいる。
+                // 補強で見るべき情報なので、特性と並べて出す。
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    Tr.pick('怪我のしやすさ: ${p.injuryPronenessLabel}',
+                        'Injury proneness: ${p.injuryPronenessLabel}'),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: p.injuryProneness >= 14
+                          ? SemanticColors.negative(context)
+                          : SemanticColors.subtleText(context),
+                    ),
+                  ),
                 ),
-              ),
-            // 延長オプション(満了の年の3月31日まで)。
-            if (p.contractOption) ...[
-              Text(
-                Tr.pick(
-                    '延長オプション: ${TransferWindowCalendar.formatMonthDay(ContractEngine.optionDeadline(p.contractEndYear))}までに行使すると、同じ年俸で${ContractEngine.untilLabel(p.contractEndYear + 1)}に延びます。',
-                    '1-year option: take it up by ${TransferWindowCalendar.formatMonthDay(ContractEngine.optionDeadline(p.contractEndYear))} to extend him on the same salary ${ContractEngine.untilLabel(p.contractEndYear + 1)}.'),
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 4),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.event_repeat),
-                onPressed: gameState.canExerciseContractOption(playerId)
-                    ? () async {
-                        final ok =
-                            await gameState.exerciseContractOption(playerId);
-                        ok
-                            ? FeedbackService.success()
-                            : FeedbackService.error();
-                      }
-                    : null,
-                label: Text(
-                    Tr.pick('延長オプションを行使する', 'Take up the 1-year option')),
-              ),
-              const SizedBox(height: 8),
-            ],
-            FilledButton(
-              onPressed: gameState.save!.budget < totalRenewalCost ||
-                      gameState.renewalBlockReason(p) != null
-                  ? null
-                  : () => _renew(context),
-              child: Text(
-                Tr.pick(
-                    '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / 新出場手当${formatMoney(newAppearanceFee)}）',
-                    'Renew his contract (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / new appearance fee ${formatMoney(newAppearanceFee)})'),
-                textAlign: TextAlign.center,
-              ),
+                if (p.trait != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    Tr.pick(
+                        '特性(${p.trait!.category.label}): ${p.trait!.label} — ${p.trait!.description}',
+                        'Trait (${p.trait!.category.label}): ${p.trait!.label} — ${p.trait!.description}'),
+                    style:
+                        const TextStyle(fontSize: 12, color: Colors.deepOrange),
+                  ),
+                  // 能力値で発動する特性は、条件に届いていないと何も起きない。
+                  // その条件が実装の中にしか無く、持っているのに効果が無い状態が
+                  // 説明されないままだった。判定に使っている表をそのまま出す。
+                  Builder(builder: (context) {
+                    final gate = MatchEngine.attributeGatedTraits[p.trait!];
+                    if (gate == null) return const SizedBox.shrink();
+                    final current = p.attributeValue(gate.attribute);
+                    final active = current >= gate.threshold;
+                    final gain = ((gate.bonus - 1) * 100).round();
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        active
+                            ? Tr.pick(
+                                '発動中: ${AttributeKeys.labelOf(gate.attribute)}$current '
+                                    '（${gate.threshold}以上）→ 出来が+$gain%',
+                                'Active: ${AttributeKeys.labelOf(gate.attribute)} $current '
+                                    '(needs ${gate.threshold}) → +$gain% to his display')
+                            : Tr.pick(
+                                '未発動: ${AttributeKeys.labelOf(gate.attribute)}が'
+                                    '${gate.threshold}以上で+$gain%（現在$current / あと'
+                                    '${gate.threshold - current}）',
+                                'Dormant: needs ${AttributeKeys.labelOf(gate.attribute)} '
+                                    '${gate.threshold} for +$gain% '
+                                    '(now $current, ${gate.threshold - current} to go)'),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: active
+                              ? SemanticColors.positive(context)
+                              : SemanticColors.subtleText(context),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+                if (p.growthType != PlayerGrowthType.balanced) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    Tr.pick(
+                        '成長タイプ: ${p.growthType.label} — ${p.growthType.description}',
+                        'Growth: ${p.growthType.label} — ${p.growthType.description}'),
+                    style: const TextStyle(fontSize: 12, color: Colors.indigo),
+                  ),
+                ],
+                if (latestGrowth != null && latestGrowth.isBreakthrough) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    Tr.pick('★ 今週、才能開花が発生しました！',
+                        '★ A breakthrough came this week.'),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.amber,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ],
             ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.handshake_outlined),
-              onPressed: !isNegotiatingThisPlayer &&
-                      gameState.renewalBlockReason(p) != null
-                  ? null
-                  : () => _negotiate(context, isNegotiatingThisPlayer),
-              label: Text(
-                isNegotiatingThisPlayer
-                    ? Tr.pick('交渉を続ける（選手の対案: 年俸${formatMoney(annualFromWeekly(negotiation.counterWage))}）',
-                        'Keep negotiating (their counter: ${formatMoney(annualFromWeekly(negotiation.counterWage))} a year)')
-                    : Tr.pick('年俸交渉で更新する', 'Re-sign after wage talks'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            OutlinedButton(
-              onPressed: (team.players.length <= minSquadSize ||
-                      !gameState.isTransferWindowOpen)
-                  ? null
-                  : () => _confirmSell(context, netReleaseValue),
-              child: Text(
-                netReleaseValue >= 0
-                    ? Tr.pick('放出する（${formatMoney(netReleaseValue)} 獲得）',
-                        'Release him (you receive ${formatMoney(netReleaseValue)})')
-                    : Tr.pick('放出する（違約金${formatMoney(-netReleaseValue)} 支払い）',
-                        'Release him (you pay ${formatMoney(-netReleaseValue)} in compensation)'),
-              ),
-            ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.sell_outlined),
-              onPressed: () {
-                FeedbackService.tap();
-                gameState.setTransferListed(playerId, !p.isTransferListed);
-              },
-              label: Text(p.isTransferListed
-                  ? Tr.pick('移籍リストから外す', 'Take off the transfer list')
-                  : Tr.pick('移籍リストに登録する', 'Put on the transfer list')),
-            ),
-            const SizedBox(height: 8),
-            // 合意して契約を解除する(窓の外でもできる。選手は自由契約になる)。
-            OutlinedButton.icon(
-              icon: const Icon(Icons.assignment_return_outlined),
-              onPressed: team.players.length <= minSquadSize ||
-                      gameState.mutualTerminationCostFor(playerId) == null
-                  ? null
-                  : () => _confirmMutualTermination(context),
-              label: Text(
-                  Tr.pick('合意して契約を解除する', 'Terminate by mutual consent')),
-            ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.flight_takeoff),
-              onPressed: (team.players.length <= minSquadSize ||
-                      !gameState.isTransferWindowOpen)
-                  ? null
-                  : () => _showLoanOutDialog(context),
-              label: Text(Tr.pick('他クラブへローン放出する', 'Loan him out')),
-            ),
-            if (!gameState.isTransferWindowOpen) ...[
-              const SizedBox(height: 4),
-              Text(
-                gameState.transferWindowStatusLabel,
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.subtleText(context)),
-              ),
-            ],
-          ],
-          const SizedBox(height: 8),
-          if (!p.isLoan && !p.isLoanedOut) ...[
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.gavel),
-              onPressed: () =>
-                  _editReleaseClause(context, p.releaseClause, p.marketValue),
-              label: Text(
-                p.releaseClause == null
-                    ? Tr.pick('リリース条項を設定する', 'Set a release clause')
-                    : Tr.pick('リリース条項を変更する', 'Change the release clause'),
-              ),
-            ),
-          ],
-          const Divider(height: 32),
-          StatBar(label: Tr.pick('攻撃', 'Attack'), value: p.attack),
-          StatBar(label: Tr.pick('守備', 'Defence'), value: p.defense),
-          StatBar(label: Tr.pick('技術', 'Technical'), value: p.technique),
-          StatBar(label: Tr.pick('スタミナ', 'Stamina'), value: p.stamina),
-          if (p.position == Position.gk)
-            StatBar(
-                label: Tr.pick('ゴールキーピング', 'Goalkeeping'),
-                value: p.goalkeeping),
-          const Divider(height: 32),
-          StatBar(
-              label: Tr.pick('潜在能力', 'Potential'),
-              value: p.potential,
-              color: Colors.purple),
-          StatBar(
-            label: Tr.pick('疲労', 'Fatigue'),
-            value: p.fatigue,
-            max: 100,
-            color: Colors.redAccent,
-          ),
-          StatBar(
-            label: Tr.pick('士気', 'Morale'),
-            value: p.morale,
-            max: 100,
-            color: Colors.blueAccent,
-          ),
-          StatBar(
-            label: Tr.pick('マッチシャープネス', 'Match Sharpness'),
-            value: p.matchSharpness,
-            max: 100,
-            color: Colors.teal,
-          ),
-          StatBar(
-            label: Tr.pick('不満度(高いほど満足)', 'Happiness (higher is happier)'),
-            value: p.happiness,
-            max: 100,
-            color: p.happiness < 30
-                ? SemanticColors.negative(context)
-                : SemanticColors.positive(context),
-          ),
-          const Divider(height: 32),
-          // 42項目のうち、この選手で実際に効いているものだけを先に出す。
-          // 全部並べても、どれを見ればいいのか分からない。
-          _KeyAttributesCard(player: p),
-          const SizedBox(height: 12),
-          Text(Tr.pick('詳細能力値', 'Full attributes'),
-              style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 4),
-          for (final category in categories)
-            Theme(
-              data:
-                  Theme.of(context).copyWith(dividerColor: Colors.transparent),
-              child: ExpansionTile(
-                title: Text(Tr.pick(
-                    '${category.label}（${category.keys.length}項目）',
-                    '${category.label} (${category.keys.length})')),
-                subtitle: Text(
-                  Tr.pick(
-                      '平均 ${(category.keys.fold<int>(0, (s, k) => s + p.attributeValue(k)) / category.keys.length).round()}',
-                      'avg ${(category.keys.fold<int>(0, (s, k) => s + p.attributeValue(k)) / category.keys.length).round()}'),
-                  style: TextStyle(color: SemanticColors.subtleText(context)),
-                ),
-                initiallyExpanded: false,
-                children: [
-                  for (final key in category.keys)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: StatBar(
-                        // 効いている能力には印を付ける。折りたたみを
-                        // 開いたときにも、見るべき行が分かるように。
-                        label: keyAttributeKeys.contains(key)
-                            ? Tr.pick('★${AttributeKeys.labelOf(key)}',
-                                '* ${AttributeKeys.labelOf(key)}')
-                            : AttributeKeys.labelOf(key),
-                        value: p.attributeValue(key),
+            ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                if (seasonStats.appearances > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      Tr.pick(
+                          '今シーズン: ${seasonStats.appearances}試合 ${seasonStats.goals}得点${seasonStats.yellowCards > 0 ? ' 警告${seasonStats.yellowCards}' : ''}${seasonStats.redCards > 0 ? ' 退場${seasonStats.redCards}' : ''} / 平均採点${seasonStats.averageRating!.toStringAsFixed(1)}',
+                          "This season: ${Tr.plural(seasonStats.appearances, 'app')}, ${Tr.plural(seasonStats.goals, 'goal')}${seasonStats.yellowCards > 0 ? ', ${seasonStats.yellowCards} yellow' : ''}${seasonStats.redCards > 0 ? ', ${seasonStats.redCards} red' : ''} / avg rating ${seasonStats.averageRating!.toStringAsFixed(1)}"),
+                      style: const TextStyle(
+                        color: Colors.teal,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                  ),
+                if (p.careerAppearances > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      Tr.pick(
+                          '通算成績: ${p.careerAppearances}試合 ${p.careerGoals}得点',
+                          'Career: ${Tr.plural(p.careerAppearances, 'app')}, ${Tr.plural(p.careerGoals, 'goal')}'),
+                      style: TextStyle(
+                          color: SemanticColors.subtleText(context),
+                          fontSize: 12),
+                    ),
+                  ),
+                if (p.injuryHistoryCounts.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      '${Tr.pick('負傷歴', 'Injury history')}: ${p.injuryHistoryCounts.entries.map((e) {
+                        final type = InjuryType.values.firstWhere(
+                            (t) => t.name == e.key,
+                            orElse: () => InjuryType.bruise);
+                        return Tr.pick('${type.label}${e.value}回',
+                            '${type.label} x${e.value}');
+                      }).join(Tr.pick('・', ' • '))}',
+                      style: TextStyle(
+                          color: SemanticColors.subtleText(context),
+                          fontSize: 12),
+                    ),
+                  ),
+                if (p.overallHistory.length >= 2) ...[
+                  const SizedBox(height: 12),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Tr.pick(
+                                '成長推移(直近${p.overallHistory.length}節): 総合 ${p.overallHistory.first} → ${p.overallHistory.last}',
+                                'Progress (last ${p.overallHistory.length} matchdays): overall ${p.overallHistory.first} → ${p.overallHistory.last}'),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          GrowthSparkline(history: p.overallHistory),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
-              ),
+                if (history.isEmpty)
+                  Text(Tr.pick('まだ記録がありません。', 'Nothing on record yet.')),
+              ],
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -962,99 +1036,101 @@ class PlayerDetailScreen extends StatelessWidget {
     );
     await showDialog<void>(
       context: context,
-      builder: (dialogContext) => StatefulBuilder(
-          builder: (dialogContext, setState) {
+      builder: (dialogContext) =>
+          StatefulBuilder(builder: (dialogContext, setState) {
         final negotiation = gameState.pendingContractNegotiation ?? first;
         final endYear =
             negotiation.endYear ?? ContractEngine.defaultRenewalEndYear(player);
         return AlertDialog(
-        title: Text(Tr.pick('年俸交渉', 'Salary negotiation')),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(Tr.pick('現在の年俸: ${formatMoney(annualFromWeekly(negotiation.initialWage))}',
-                'Current salary: ${formatMoney(annualFromWeekly(negotiation.initialWage))} a year')),
-            Text(
-              Tr.pick('選手の対案: 年俸${formatMoney(annualFromWeekly(negotiation.counterWage))}',
-                  'His counter-offer: ${formatMoney(annualFromWeekly(negotiation.counterWage))} a year'),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              Tr.pick(
-                  '交渉回数: ${negotiation.roundsUsed}/${ContractEngine.maxNegotiationRounds}',
-                  'Rounds used: ${negotiation.roundsUsed}/${ContractEngine.maxNegotiationRounds}'),
-              style: TextStyle(
-                  color: SemanticColors.subtleText(context), fontSize: 12),
-            ),
-            const SizedBox(height: 8),
-            // 契約の長さ(最長5年、18歳未満は3年)。
-            if (choices.isNotEmpty)
-              DropdownButton<int>(
-                value: choices.contains(endYear) ? endYear : choices.last,
-                isExpanded: true,
-                items: [
-                  for (final y in choices)
-                    DropdownMenuItem(
-                        value: y, child: Text(ContractEngine.untilLabel(y))),
-                ],
-                onChanged: (y) {
-                  if (y == null) return;
-                  gameState.setNegotiationTerms(endYear: y);
-                  setState(() {});
-                },
+          title: Text(Tr.pick('年俸交渉', 'Salary negotiation')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(Tr.pick(
+                  '現在の年俸: ${formatMoney(annualFromWeekly(negotiation.initialWage))}',
+                  'Current salary: ${formatMoney(annualFromWeekly(negotiation.initialWage))} a year')),
+              Text(
+                Tr.pick(
+                    '選手の対案: 年俸${formatMoney(annualFromWeekly(negotiation.counterWage))}',
+                    'His counter-offer: ${formatMoney(annualFromWeekly(negotiation.counterWage))} a year'),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-            CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              value: negotiation.option,
-              onChanged: ContractEngine.canAttachOption(endYear, player.age)
-                  ? (v) {
-                      gameState.setNegotiationTerms(option: v ?? false);
-                      final n = gameState.pendingContractNegotiation;
-                      if (n != null) {
-                        controller.text =
-                            annualFromWeekly(n.counterWage).toString();
+              Text(
+                Tr.pick(
+                    '交渉回数: ${negotiation.roundsUsed}/${ContractEngine.maxNegotiationRounds}',
+                    'Rounds used: ${negotiation.roundsUsed}/${ContractEngine.maxNegotiationRounds}'),
+                style: TextStyle(
+                    color: SemanticColors.subtleText(context), fontSize: 12),
+              ),
+              const SizedBox(height: 8),
+              // 契約の長さ(最長5年、18歳未満は3年)。
+              if (choices.isNotEmpty)
+                DropdownButton<int>(
+                  value: choices.contains(endYear) ? endYear : choices.last,
+                  isExpanded: true,
+                  items: [
+                    for (final y in choices)
+                      DropdownMenuItem(
+                          value: y, child: Text(ContractEngine.untilLabel(y))),
+                  ],
+                  onChanged: (y) {
+                    if (y == null) return;
+                    gameState.setNegotiationTerms(endYear: y);
+                    setState(() {});
+                  },
+                ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                value: negotiation.option,
+                onChanged: ContractEngine.canAttachOption(endYear, player.age)
+                    ? (v) {
+                        gameState.setNegotiationTerms(option: v ?? false);
+                        final n = gameState.pendingContractNegotiation;
+                        if (n != null) {
+                          controller.text =
+                              annualFromWeekly(n.counterWage).toString();
+                        }
+                        setState(() {});
                       }
-                      setState(() {});
-                    }
-                  : null,
-              title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
-                  'Add a 1-year club option (salary +5%)')),
+                    : null,
+                title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
+                    'Add a 1-year club option (salary +5%)')),
+              ),
+              const SizedBox(height: 4),
+              TextField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    labelText: Tr.pick('提示する年俸（万円）',
+                        'Salary you are offering (in units of 10,000 yen)')),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                gameState.cancelContractNegotiation();
+                Navigator.pop(dialogContext);
+              },
+              child: Text(Tr.pick('交渉をやめる', 'Walk away')),
             ),
-            const SizedBox(height: 4),
-            TextField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                  labelText: Tr.pick('提示する年俸（万円）',
-                      'Salary you are offering (in units of 10,000 yen)')),
+            FilledButton(
+              onPressed: () async {
+                final annual = int.tryParse(controller.text);
+                if (annual == null || annual <= 0) return;
+                final result = await gameState
+                    .offerContractWage(max(1, (annual / 52).round()));
+                if (dialogContext.mounted) Navigator.pop(dialogContext);
+                if (context.mounted) {
+                  _showNegotiationResultSnackBar(context, result);
+                }
+              },
+              child: Text(Tr.pick('提示する', 'Offer')),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              gameState.cancelContractNegotiation();
-              Navigator.pop(dialogContext);
-            },
-            child: Text(Tr.pick('交渉をやめる', 'Walk away')),
-          ),
-          FilledButton(
-            onPressed: () async {
-              final annual = int.tryParse(controller.text);
-              if (annual == null || annual <= 0) return;
-              final result = await gameState
-                  .offerContractWage(max(1, (annual / 52).round()));
-              if (dialogContext.mounted) Navigator.pop(dialogContext);
-              if (context.mounted) {
-                _showNegotiationResultSnackBar(context, result);
-              }
-            },
-            child: Text(Tr.pick('提示する', 'Offer')),
-          ),
-        ],
-      );
+        );
       }),
     );
     controller.dispose();
@@ -1132,7 +1208,8 @@ class PlayerDetailScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Tr.pick('市場価値: ${formatMoney(marketValue)}', 'Value: ${formatMoney(marketValue)}')),
+                Text(Tr.pick('市場価値: ${formatMoney(marketValue)}',
+                    'Value: ${formatMoney(marketValue)}')),
                 const SizedBox(height: 8),
                 TextField(
                   controller: controller,
@@ -1220,7 +1297,8 @@ class PlayerDetailScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 value: recallClause,
                 onChanged: (v) => setState(() => recallClause = v ?? false),
-                title: Text(Tr.pick('冬の窓で呼び戻せる条項を付ける', 'Add a winter recall clause')),
+                title: Text(
+                    Tr.pick('冬の窓で呼び戻せる条項を付ける', 'Add a winter recall clause')),
                 subtitle: Text(
                   Tr.pick('冬の窓のあいだなら、期間の途中でも戻せる。',
                       'You can bring him back during the winter window, before the loan ends.'),
@@ -1233,7 +1311,8 @@ class PlayerDetailScreen extends StatelessWidget {
                 value: guaranteePlayingTime,
                 onChanged: (v) =>
                     setState(() => guaranteePlayingTime = v ?? false),
-                title: Text(Tr.pick('出場機会を約束させる', 'Guarantee him playing time')),
+                title:
+                    Text(Tr.pick('出場機会を約束させる', 'Guarantee him playing time')),
                 subtitle: Text(
                   Tr.pick('確実に試合に出るので大きく伸びる。代わりにレンタル料は受け取れない。',
                       'He is sure to play and comes on a lot. In return you get no loan fee.'),
@@ -1284,7 +1363,8 @@ class PlayerDetailScreen extends StatelessWidget {
           netReleaseValue >= 0
               ? Tr.pick('${formatMoney(netReleaseValue)}を獲得しますが、元には戻せません。',
                   'You receive ${formatMoney(netReleaseValue)}, and this cannot be undone.')
-              : Tr.pick('違約金として${formatMoney(-netReleaseValue)}を支払うことになりますが、元には戻せません。',
+              : Tr.pick(
+                  '違約金として${formatMoney(-netReleaseValue)}を支払うことになりますが、元には戻せません。',
                   'You pay ${formatMoney(-netReleaseValue)} in compensation, and this cannot be undone.'),
         ),
         actions: [
@@ -1391,7 +1471,6 @@ class _MatchImpactSummary extends StatelessWidget {
   }
 }
 
-
 /// この選手で効いている能力を、理由つきで並べるカード。
 ///
 /// 42項目を全部見せても、どれを見ればいいのかは分からない。ロールが
@@ -1466,8 +1545,7 @@ String _tournamentLeaveText(GameState game) {
   final back = game.tournamentReturnDate;
   final name = game.summerTournament?.name ?? '';
   if (back == null) {
-    return Tr.pick('夏の大会のあとの休み(まもなく合流)',
-        'Post-tournament break (back soon)');
+    return Tr.pick('夏の大会のあとの休み(まもなく合流)', 'Post-tournament break (back soon)');
   }
   final day = TransferWindowCalendar.formatMonthDay(back);
   return Tr.pick('$nameのあとの休み($dayに合流するまで出場不可)',
@@ -1493,6 +1571,93 @@ class _TraitsWrap extends StatelessWidget {
             child: StatChip(label: a.label, value: '${t[a]}'),
           ),
       ],
+    );
+  }
+}
+
+/// FM 風の能力の一覧。分類ごとに列を分け、値の高さで色を変える。
+/// この選手で効いている能力には印を付ける。
+class _AttributeGrid extends StatelessWidget {
+  final Player player;
+  final List<AttributeCategory> categories;
+  final Set<String> keys;
+  const _AttributeGrid({
+    required this.player,
+    required this.categories,
+    required this.keys,
+  });
+
+  static Color colorFor(BuildContext context, int v) {
+    if (v >= 80) return Colors.green.shade700;
+    if (v >= 65) return Colors.lightGreen.shade700;
+    if (v >= 45) return Theme.of(context).colorScheme.onSurface;
+    if (v >= 30) return Colors.orange.shade800;
+    return Colors.red.shade700;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final small =
+        TextStyle(fontSize: 11, color: SemanticColors.subtleText(context));
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final c in categories)
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(c.label,
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 2),
+                          for (final k in c.keys)
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    keys.contains(k)
+                                        ? Tr.pick(
+                                            '★${AttributeKeys.labelOf(k)}',
+                                            '* ${AttributeKeys.labelOf(k)}')
+                                        : AttributeKeys.labelOf(k),
+                                    style: const TextStyle(fontSize: 11),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                Text(
+                                  '${player.attributeValue(k)}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: colorFor(
+                                        context, player.attributeValue(k)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+                Tr.pick('色: 80以上 濃い緑・65以上 緑・45未満 橙・30未満 赤。★はこの選手で効いている能力。',
+                    'Colours: 80+ dark green, 65+ green, under 45 orange, under 30 red. * marks the attributes that matter for him.'),
+                style: small),
+          ],
+        ),
+      ),
     );
   }
 }
