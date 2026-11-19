@@ -17,6 +17,7 @@ import '../widgets/youth_league_table.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
+import 'club_detail_screen.dart';
 
 /// 大陸カップ出場資格が得られる順位(GameState.startNextSeasonの`finalRank <= 2`と一致)。
 const int _continentalQualifyCount = 2;
@@ -519,7 +520,13 @@ class _StandingsTab extends StatelessWidget {
                   ],
                 ),
               );
-              if (!isUser) return row;
+              // 他のクラブの行を押すと、そのクラブのページを開く。
+              if (!isUser) {
+                return InkWell(
+                  onTap: () => openClubPage(context, team),
+                  child: row,
+                );
+              }
               return Semantics(
                 label: Tr.pick(
                     '自クラブ。${i + 1}位: ${team.name}、${r.played}試合 勝${r.won} 分${r.draw} 敗${r.lost} 得失点差${r.goalDiff}、${r.points}pt、戦力${team.overallRating}',

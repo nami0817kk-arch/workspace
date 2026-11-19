@@ -4,6 +4,10 @@ part of 'game_state.dart';
 extension GameStateRivals on GameState {
   List<RivalOwner> get rivalOwners => _save?.rivalOwners ?? const [];
 
+  /// クラブを id で探す(自国の全部の部と、他の国の1部)。
+  Team? worldTeamById(String id) =>
+      _save == null ? null : _worldTeams.where((t) => t.id == id).firstOrNull;
+
   /// 作り物のオーナーの名前(実在しない)。
   static List<String> get _ownerNames => [
         Tr.pick('実業家 バルガス', 'Tycoon Vargas'),
