@@ -149,6 +149,14 @@ void main() {
       await t.tap(more);
       await t.pumpAndSettle();
     });
+    // まとめて進めるあいだ、結果が流れる(途中で撮って、最後まで流す)
+    await _shoot(t, '4j3_sim_ticker', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      await t.tap(find.textContaining('次の20試合へ'));
+      for (var i = 0; i < 8; i++) {
+        await t.pump(const Duration(milliseconds: 130));
+      }
+    });
+    await t.pumpAndSettle(const Duration(milliseconds: 200));
     await _shoot(t, '4j_sim_stops', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
       final more = find.byKey(const Key('sim-more'));
       await t.ensureVisible(more);

@@ -29,7 +29,9 @@ class CalendarScreen extends StatelessWidget {
           final homeW = log.where((r) => r[1] == 1 && r[2] > r[3]).length, homeL = log.where((r) => r[1] == 1 && r[2] < r[3]).length;
           final awayW = log.where((r) => r[1] == 0 && r[2] > r[3]).length, awayL = log.where((r) => r[1] == 0 && r[2] < r[3]).length;
           return Scaffold(
-            appBar: AppBar(title: const Text('日程表'), toolbarHeight: 40),
+            appBar: AppBar(
+                title: Text(car.phase == Phase.season ? '日程表(これからの試合を押すと、その手前まで進められる)' : '日程表', style: const TextStyle(fontSize: 16)),
+                toolbarHeight: 40),
             body: SafeArea(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
@@ -57,7 +59,7 @@ class CalendarScreen extends StatelessWidget {
                       ),
                     ),
                     Wrap(spacing: 4, runSpacing: 4, children: [
-                      for (final i in rounds) _cell(car, i, games[i], i < log.length ? log[i] : null),
+                      for (final i in rounds) _cell(context, car, i, games[i], i < log.length ? log[i] : null),
                     ]),
                   ],
                 ],
@@ -78,9 +80,35 @@ class CalendarScreen extends StatelessWidget {
     return out;
   }
 
-  Widget _cell(Career car, int i, (int, bool) g, List<int>? r) {
+  /// これからの試合を押したら、その試合の手前まで進めるかを聞き、進めるなら節の番号を返して閉じる。
+  Future<void> _ask(BuildContext context, Career car, int i, int opp, bool home) async {
+    final n = car.roundsUntil(i);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('${dateLabel(roundDate(car.season, i))}の${home ? 'ホーム' : 'アウェー'}・${car.teams[opp].def.short}戦の前まで進める?'),
+        content: Text('$n試合を進める。止まる場面(申し込み・けがなど)があれば、そこで止まる。'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('やめる')),
+          FilledButton(key: const Key('calendar-go'), onPressed: () => Navigator.pop(ctx, true), child: Text('$n試合進める')),
+        ],
+      ),
+    );
+    if (ok == true && context.mounted) Navigator.of(context).pop(i);
+  }
+
+  Widget _cell(BuildContext context, Career car, int i, (int, bool) g, List<int>? r) {
     final (opp, home) = g;
     final next = r == null && i == car.roundAt && car.phase == Phase.season;
+    final pickable = car.phase == Phase.season && r == null && i > car.roundAt && !c.busy;
+    return GestureDetector(
+      key: Key('calendar-cell-$i'),
+      onTap: pickable ? () => _ask(context, car, i, opp, home) : null,
+      child: _cellBox(car, i, opp, home, r, next),
+    );
+  }
+
+  Widget _cellBox(Career car, int i, int opp, bool home, List<int>? r, bool next) {
     final win = r != null && r[2] > r[3];
     final color = r == null ? (next ? GmColors.gold : GmColors.line) : (win ? GmColors.good : GmColors.bad);
     return Container(

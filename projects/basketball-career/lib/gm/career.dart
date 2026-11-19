@@ -2418,11 +2418,17 @@ class Career {
   void playBlock() => _playRounds(blockStart(block + 1) - roundAt);
 
   /// 1週間(3節)進める。区切りの終わりは越えない。区切りの終わりに着いたら true。
-  bool playWeek() {
+  bool playWeek() => playDays(daysPerWeek);
+
+  /// [n] 節進める。区切りの終わりは越えない。区切りの終わりに着いたら true。
+  bool playDays(int n) {
     final before = block;
-    _playRounds(math.min(daysPerWeek, blockStart(block + 1) - roundAt));
+    _playRounds(math.min(n, blockStart(block + 1) - roundAt));
     return block != before;
   }
+
+  /// 今から [round] 節目の手前まで(その節は進めない)の節の数。
+  int roundsUntil(int round) => (round - roundAt).clamp(0, gamesPerSeason - roundAt);
 
   /// 1週間に進める節の数。
   static const daysPerWeek = 3;
