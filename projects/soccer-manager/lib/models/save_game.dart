@@ -308,6 +308,12 @@ class SaveGame {
   /// 買い戻し条項(選手 id → [買い戻しの額, 期限の年])。
   Map<String, List<int>> buyBacks;
 
+  /// 他のクラブ(自国)の資金(クラブ id → 万円)。季の終わりに動く。
+  Map<String, int> clubCash;
+
+  /// 今季、破綻して選手を投げ売りしているクラブ。
+  List<String> distressedClubIds;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -608,6 +614,8 @@ class SaveGame {
     this.taxLossCarry = 0,
     Map<String, String>? injuryPlans,
     this.youthPolicy = 'balanced',
+    Map<String, int>? clubCash,
+    List<String>? distressedClubIds,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -747,6 +755,8 @@ class SaveGame {
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
         playerBook = playerBook ?? {},
+        clubCash = clubCash ?? {},
+        distressedClubIds = distressedClubIds ?? [],
         buyBacks = buyBacks ?? {},
         injuryPlans = injuryPlans ?? {},
         rivalOwners = rivalOwners ?? [],
@@ -889,6 +899,8 @@ class SaveGame {
         if (playerBook.isNotEmpty) 'playerBook': playerBook,
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
+        if (clubCash.isNotEmpty) 'clubCash': clubCash,
+        if (distressedClubIds.isNotEmpty) 'distressedClubIds': distressedClubIds,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1073,6 +1085,11 @@ class SaveGame {
         injuryPlans: (json['injuryPlans'] as Map?)
             ?.map((k, v) => MapEntry(k as String, v as String)),
         youthPolicy: json['youthPolicy'] as String? ?? 'balanced',
+        clubCash: (json['clubCash'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
+        distressedClubIds: (json['distressedClubIds'] as List?)
+            ?.map((e) => e as String)
+            .toList(),
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
