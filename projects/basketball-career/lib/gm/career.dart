@@ -883,6 +883,10 @@ class Career {
       }
       return;
     }
+    if (m.kind == MsgKind.forecast) {
+      if (m.season == season && forecastSeason == season && phase != Phase.seasonEnd) forecastBet = choice + 1;
+      return;
+    }
     if (m.kind == MsgKind.offCamp) {
       switch (choice) {
         case 0:
@@ -991,6 +995,7 @@ class Career {
         }
       case MsgKind.offCamp:
       case MsgKind.offRetire:
+      case MsgKind.forecast:
       case MsgKind.info:
       case MsgKind.press:
       case MsgKind.ownerGoal:
@@ -1163,6 +1168,56 @@ class Career {
           '約束すると気持ちは大きく上がるが、来季に守れないと本人とチームの気持ちが下がる。説明が通じるかは、これまで約束を守ってきたか(言葉の重み)で決まる。',
           kind: MsgKind.offTalk, choices: const ['来季は先発で使うと約束する', 'トレード先を探すと約束する', 'チームの考えを説明する'], player: p.id);
     }
+  }
+
+  // ---------------------------------------------------------------- 記者の順位予想
+
+  /// 順位予想を出したシーズン(このシーズンの予想が [forecast])。
+  int forecastSeason = 0;
+
+  /// 自分の地区の、記者の予想の並び(チームの番号、上から)。
+  List<int> forecast = [];
+
+  /// 予想への答え(0: まだ・答えていない、1: 覆してみせる、2: 妥当だ)。
+  int forecastBet = 0;
+
+  /// 今シーズンの、記者の予想での自分の順位(予想が無ければ 0)。
+  int get forecastRank => forecastSeason == season ? forecast.indexOf(mine) + 1 : 0;
+
+  /// シーズン前に、記者が自分の地区の順位を予想する(戦力の順。乱数は使わない)。
+  void _makeForecast() {
+    final conf = [for (final t in teams) if (t.east == me.east) t.index]..sort((a, b) => strengthRank(a).compareTo(strengthRank(b)));
+    forecast = conf;
+    forecastSeason = season;
+    forecastBet = 0;
+    final rank = forecast.indexOf(mine) + 1;
+    _mail(Sender.press, '記者の順位予想: ${me.east ? '東' : '西'}地区$rank位',
+        '記者たちが$season年目の順位を予想した。${teams[forecast[0]].def.short}が1位、${teams[forecast[1]].def.short}が2位、${teams[forecast[2]].def.short}が3位。'
+        'このチームは$rank位という見立て。\n'
+        '「覆してみせる」と答えると、予想より上で終えたとき人気と信頼が上がり、届かなければ人気が下がる。',
+        kind: MsgKind.forecast, choices: const ['予想を覆してみせる', '妥当な予想だ']);
+  }
+
+  /// シーズンの終わりに、予想と結果を突き合わせる。
+  void _settleForecast() {
+    final rank = forecastRank;
+    if (rank == 0) return;
+    final now = confRank;
+    final beat = now < rank;
+    var note = '';
+    if (forecastBet == 1) {
+      if (beat) {
+        hype = (hype + 4).clamp(0, 100);
+        trust = (trust + 2).clamp(0, 100);
+        note = '\n「覆してみせる」と言ったとおりになった。人気+4・信頼+2。';
+      } else {
+        hype = (hype - 3).clamp(0, 100);
+        note = '\n「覆してみせる」と言ったが、届かなかった。人気-3。';
+      }
+    }
+    _mail(Sender.press, '予想は$rank位、結果は$now位',
+        '${beat ? '記者の予想を上回った。' : now == rank ? '記者の予想どおりだった。' : '記者の予想を下回った。'}$note');
+    forecastBet = 0;
   }
 
   /// 選手の出来事(区切りのあと、1区切りに1つまで。乱数は使わない)。
@@ -2698,6 +2753,7 @@ class Career {
       hype = (hype + (ok ? 3 : -4)).clamp(0, 100);
       trust = (trust + (ok ? 2 : -2)).clamp(0, 100);
     }
+    _settleForecast();
     final raw = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta + liked + kept + stance;
     // オーナーの厳しさ: 信頼が減るときだけ、難しさの倍率をかける
     final delta = raw < 0 ? (raw * difficulty.ownerStrict).round() : raw;
@@ -3908,6 +3964,7 @@ class Career {
     _aiTrades(1);
     phase = Phase.preseason;
     _setModes();
+    _makeForecast();
   }
 
   void _aiFreeAgency() {
@@ -4506,6 +4563,9 @@ class Career {
         if (summerSeason != 0) 'sms': summerSeason,
         if (summer.isNotEmpty) 'sml': [for (final x in summer) x.toJson()],
         if (summerWins != 0) 'smw': summerWins,
+        if (forecastSeason != 0) 'fcs': forecastSeason,
+        if (forecast.isNotEmpty) 'fc': forecast,
+        if (forecastBet != 0) 'fcb': forecastBet,
         if (camp.isNotEmpty) 'cmp': {for (final e in camp.entries) '${e.key}': e.value.index},
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
@@ -4641,6 +4701,9 @@ class Career {
       ..summerSeason = (j['sms'] as int?) ?? 0
       ..summer = [for (final x in (j['sml'] as List? ?? const [])) SummerLine.fromJson((x as Map).cast<String, dynamic>())]
       ..summerWins = (j['smw'] as int?) ?? 0
+      ..forecastSeason = (j['fcs'] as int?) ?? 0
+      ..forecast = [for (final x in (j['fc'] as List? ?? const [])) x as int]
+      ..forecastBet = (j['fcb'] as int?) ?? 0
       ..camp = {
         for (final e in ((j['cmp'] as Map?) ?? const {}).entries)
           if (e.value is int && (e.value as int) >= 0 && (e.value as int) < Attr.values.length) int.parse(e.key as String): Attr.values[e.value as int]
