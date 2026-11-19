@@ -301,6 +301,9 @@ class SaveGame {
   /// 法人税の繰越欠損(万円)。赤字の年に積み、黒字の年に差し引く。
   int taxLossCarry;
 
+  /// 大きな怪我の手当て(選手 id → 'pending' | 'surgery' | 'rest')。
+  Map<String, String> injuryPlans;
+
   /// パラシュート(降格前の部・残りの季)。0 は無し。
   int parachuteFromTier;
   int parachuteSeasonsLeft;
@@ -595,6 +598,7 @@ class SaveGame {
     this.agmWageRatio = 0,
     this.agmWageRatioPledge = 0,
     this.taxLossCarry = 0,
+    Map<String, String>? injuryPlans,
     this.parachuteFromTier = 0,
     this.parachuteSeasonsLeft = 0,
     Map<String, List<int>>? playerBook,
@@ -731,6 +735,7 @@ class SaveGame {
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
         playerBook = playerBook ?? {},
+        injuryPlans = injuryPlans ?? {},
         rivalOwners = rivalOwners ?? [],
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
@@ -869,6 +874,7 @@ class SaveGame {
           'parachuteSeasonsLeft': parachuteSeasonsLeft,
         },
         if (playerBook.isNotEmpty) 'playerBook': playerBook,
+        if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (rivalOwners.isNotEmpty)
           'rivalOwners': rivalOwners.map((r) => r.toJson()).toList(),
         if (newsTotal > 0) 'newsTotal': newsTotal,
@@ -1047,6 +1053,8 @@ class SaveGame {
         agmWageRatioPledge:
             (json['agmWageRatioPledge'] as num?)?.toDouble() ?? 0,
         taxLossCarry: json['taxLossCarry'] as int? ?? 0,
+        injuryPlans: (json['injuryPlans'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as String)),
         parachuteFromTier: json['parachuteFromTier'] as int? ?? 0,
         parachuteSeasonsLeft: json['parachuteSeasonsLeft'] as int? ?? 0,
         playerBook: (json['playerBook'] as Map?)?.map((k, v) => MapEntry(

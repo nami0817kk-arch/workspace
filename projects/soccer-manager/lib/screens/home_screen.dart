@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../data/quick_access_destinations.dart';
 import '../widgets/owner_event_card.dart';
 import '../widgets/agm_demand_card.dart';
+import '../widgets/surgery_decision_card.dart';
 import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
@@ -448,6 +449,8 @@ class HomeScreen extends StatelessWidget {
                 ),
               if (gameState.pendingOwnerEvent != null) const OwnerEventCard(),
               if (gameState.agmDemand != null) const AgmDemandCard(),
+              if (gameState.playersAwaitingSurgeryDecision.isNotEmpty)
+                const SurgeryDecisionCard(),
               if (gameState.pendingSuperCup != null)
                 _SuperCupCard(gameState: gameState),
               if (gameState.isUserDomesticCupMatchUpNext)
