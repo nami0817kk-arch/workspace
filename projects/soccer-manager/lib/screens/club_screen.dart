@@ -17,6 +17,7 @@ import '../l10n/tr.dart';
 import '../models/staff_member.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/player_stat_chips.dart';
+import '../widgets/affiliate_card.dart';
 import '../widgets/club_license_card.dart';
 import '../logic/economy_scale.dart';
 
@@ -245,6 +246,8 @@ class ClubScreen extends StatelessWidget {
               ),
             const SizedBox(height: 8),
             const ClubLicenseCard(),
+            const SizedBox(height: 8),
+            const AffiliateCard(),
             const Divider(height: 32),
             Text(Tr.pick('チケット価格戦略', 'Ticket pricing'),
                 style: Theme.of(context).textTheme.titleMedium),
