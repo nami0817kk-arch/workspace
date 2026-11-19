@@ -224,6 +224,35 @@ class _MarketTabState extends State<MarketTab> {
     );
   }
 
+  /// 大物に会いに行き、話すことを選ぶ。
+  Future<void> _pitch(BuildContext context, Career car, Player p) async {
+    final kind = await showDialog<int>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text('${p.name}に会って、何を話すか'),
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+            child: Text('大事にしていることに合い、本当らしく聞こえる話ほど、関心が上がる。口だけだと逆効果。'
+                '(優勝: 戦力が10位以内なら本当らしい。主役: 自分より力が上の選手が2人まで。街: 人気が50以上)',
+                style: const TextStyle(fontSize: 12.5, color: GmColors.sub, height: 1.5)),
+          ),
+          for (var i = 0; i < Career.pitchLines.length; i++)
+            SimpleDialogOption(
+              key: Key('pitch-line-$i'),
+              onPressed: () => Navigator.pop(ctx, i),
+              child: Text('「${Career.pitchLines[i]}」${i == 1 ? '(取れたら、来季は先発で使う約束になる)' : ''}'),
+            ),
+        ],
+      ),
+    );
+    if (kind == null || !context.mounted) return;
+    c.pitch(p.id, kind);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${p.name}は${c.career!.pitchReaction(p)}')));
+    }
+  }
+
   /// 大物の行。関心・ほかの申し込み・自分の申し込みを見せる。
   Widget _bigRow(BuildContext context, Career car, Player p, Ask ask) {
     final mine = car.myBid(p.id);
@@ -246,6 +275,17 @@ class _MarketTabState extends State<MarketTab> {
             '${car.leaningTo(p) >= 0 ? '・いま有力 ${car.teams[car.leaningTo(p)].def.short}' : ''}',
             style: TextStyle(fontSize: 12, color: rivals > 0 ? GmColors.gold : GmColors.sub)),
         _twoWayButton(car, p),
+        if (car.pitches[p.id] case final k?)
+          Text('会った: 「${Career.pitchLines[k]}」と話した。${car.pitchReaction(p)}',
+              style: TextStyle(fontSize: 12, color: car.pitchBonus(p) >= 5 ? GmColors.good : GmColors.sub))
+        else if (car.pitchProblem(p) == null)
+          TextButton.icon(
+            key: Key('pitch-${p.id}'),
+            style: TextButton.styleFrom(minimumSize: const Size(0, 26), padding: EdgeInsets.zero, visualDensity: VisualDensity.compact),
+            onPressed: c.busy ? null : () => _pitch(context, car, p),
+            icon: const Icon(Icons.restaurant_rounded, size: 16),
+            label: Text('会いに行く(このオフあと${Career.pitchMax - car.pitches.length}人)', style: const TextStyle(fontSize: 12)),
+          ),
         if (mine != null) ...[
           Text('申し込み中 ${mine.years}年 ${money(mine.salary)}・選ばれる見込み ${(car.winChanceOf(p) * 100).round()}%',
               style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.good)),

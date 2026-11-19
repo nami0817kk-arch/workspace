@@ -1183,6 +1183,63 @@ class Career {
     }
   }
 
+  // ---------------------------------------------------------------- 大物の勧誘
+
+  /// このオフに会いに行った大物(選手の id → 話したこと。[pitchLines] の番号)。
+  Map<int, int> pitches = {};
+
+  /// 1オフに会える大物の数。
+  static const pitchMax = 2;
+
+  static const pitchLines = ['優勝を狙えるチームだ', '主役として使う', 'この街で長くやってほしい'];
+
+  /// 会いに行けない理由(行けるなら null)。
+  String? pitchProblem(Player p) {
+    if (phase != Phase.contracts || faDay >= faDays) return '会いに行けるのは、自由契約の日が残っているあいだ';
+    if (!isBigFa(p)) return '会いに行けるのは大物(最低年俸より高く求める選手)だけ';
+    if (pitches.containsKey(p.id)) return 'もう会った';
+    if (pitches.length >= pitchMax) return 'このオフに会えるのは$pitchMax人まで';
+    return null;
+  }
+
+  /// 話が本当らしく聞こえるか(優勝: 戦力が10位以内、主役: 自分より力が上の選手が2人まで、街: 人気が50以上)。
+  bool pitchCredible(Player p, int kind) => switch (kind) {
+        0 => strengthRank(mine) < 10,
+        1 => me.roster.where((x) => x.ovr > p.ovr && !expiring.contains(x.id)).length < 3,
+        _ => hype >= 50,
+      };
+
+  /// 話が選手の大事にしていることに合うか(勝ちたい→優勝、お金→主役、忠誠・地元っ子→街)。
+  bool pitchFits(Player p, int kind) {
+    final pers = personalityOf(p);
+    return switch (kind) {
+      0 => pers.value == Value.win,
+      1 => pers.value == Value.money,
+      _ => pers.value == Value.loyal || pers.traits.contains(Trait.hometown),
+    };
+  }
+
+  /// 勧誘で上がった関心(会っていなければ 0)。
+  int pitchBonus(Player p) {
+    final k = pitches[p.id];
+    if (k == null) return 0;
+    final fits = pitchFits(p, k), credible = pitchCredible(p, k);
+    return fits && credible ? 14 : fits ? 4 : credible ? 5 : -3;
+  }
+
+  /// 会ったときの選手の様子。
+  String pitchReaction(Player p) {
+    final b = pitchBonus(p);
+    return b >= 14 ? '身を乗り出して聞いていた' : b >= 5 ? 'うなずいていた' : b >= 0 ? '表情を変えなかった' : '首をかしげていた(口だけだと思われた)';
+  }
+
+  /// 大物に会いに行く。乱数は使わない(会わなければ何も変わらない)。
+  void pitch(int id, int kind) {
+    final p = freeAgents.where((x) => x.id == id).firstOrNull;
+    if (p == null || kind < 0 || kind >= pitchLines.length || pitchProblem(p) != null) return;
+    pitches = {...pitches, id: kind};
+  }
+
   // ---------------------------------------------------------------- 若手の指導役
 
   /// 指導役の組(ベテランの id、若手の id)。次のオフの伸びで答えが出て、空になる。
@@ -3393,6 +3450,7 @@ class Career {
     coachPool = _makeCoaches(season, start: false);
     _offTalks();
     _offEvents();
+    pitches = {};
     // 引退した力のある選手が、コーチやスカウトの候補に加わる
     for (final r in retirees) {
       final role = Staff.values[(r[0] as String).length % Staff.values.length];
@@ -3716,7 +3774,7 @@ class Career {
     if (team != mine && t.mode == TeamMode.contend) v += 8;
     final better = t.roster.where((x) => x.ovr > p.ovr && !(team == mine && expiring.contains(x.id))).length;
     v += better < 3 ? 18 : better < 5 ? 10 : better < 8 ? 0 : -12;
-    if (team == mine) v += (hype - 50) / 5 + (me.chem - 50) / 10;
+    if (team == mine) v += (hype - 50) / 5 + (me.chem - 50) / 10 + pitchBonus(p);
     // 価値観: 勝ちたい選手は勝率をさらに重く見る。忠誠と地元っ子は前のチームに残りたがる
     final pers = personalityOf(p);
     if (pers.value == Value.win) v += (t.winPct - 0.5) * 25;
@@ -3859,7 +3917,9 @@ class Career {
     faLog.insert(0, '${faDay + 1}日目 $text');
     if (b.team == mine) {
       p.morale = 65;
-      _mail(Sender.agent, '${p.name}が契約に合意', '${p.name}が申し込みを受けた。${b.years}年 ${money(b.salary)}。');
+      if (pitches[p.id] == 1) _promise(PromiseKind.starter, (season + 1) * blocksPerSeason + 2, p: p);
+      _mail(Sender.agent, '${p.name}が契約に合意', '${p.name}が申し込みを受けた。${b.years}年 ${money(b.salary)}。'
+          '${pitches[p.id] == 1 ? '「主役として使う」と言ったので、来季は先発で使う約束になった。' : ''}');
       _log('移籍: $text');
     } else if (p.ovr >= 70) {
       _log('移籍: $text');
@@ -4687,6 +4747,7 @@ class Career {
         if (forecastBet != 0) 'fcb': forecastBet,
         if (declared != 0) 'dcl': [declared, declaredSeason],
         if (mentor.isNotEmpty) 'mnt': mentor,
+        if (pitches.isNotEmpty) 'pch': {for (final e in pitches.entries) '${e.key}': e.value},
         if (camp.isNotEmpty) 'cmp': {for (final e in camp.entries) '${e.key}': e.value.index},
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
@@ -4828,6 +4889,7 @@ class Career {
       ..declared = j['dcl'] is List ? ((j['dcl'] as List)[0] as int).clamp(0, 3) : 0
       ..declaredSeason = j['dcl'] is List ? (j['dcl'] as List)[1] as int : 0
       ..mentor = [for (final x in (j['mnt'] as List? ?? const [])) x as int]
+      ..pitches = {for (final e in ((j['pch'] as Map?) ?? const {}).entries) int.parse(e.key as String): ((e.value as int?) ?? 0).clamp(0, 2)}
       ..camp = {
         for (final e in ((j['cmp'] as Map?) ?? const {}).entries)
           if (e.value is int && (e.value as int) >= 0 && (e.value as int) < Attr.values.length) int.parse(e.key as String): Attr.values[e.value as int]
