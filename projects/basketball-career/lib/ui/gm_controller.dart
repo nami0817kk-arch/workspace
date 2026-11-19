@@ -320,6 +320,18 @@ class GmController extends ChangeNotifier {
   }
   void exerciseOption(int id) => _act((c) => c.exerciseOption(id));
 
+  /// オフの電話の申し込みを受ける。成立したら true。
+  bool acceptCall(int i) {
+    final c = career;
+    if (c == null || busy) return false;
+    final ok = c.acceptCall(i);
+    _record(c);
+    _changed();
+    return ok;
+  }
+
+  void declineCall(int i) => _act((c) => c.declineCall(i));
+
   /// 大物に会いに行く(話すことは [Career.pitchLines] の番号)。
   void pitch(int id, int kind) => _act((c) => c.pitch(id, kind));
 

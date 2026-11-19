@@ -387,6 +387,43 @@ class ProgressTab extends StatelessWidget {
     ];
   }
 
+  /// オフにほかの GM から電話で届いたトレードの申し込み。
+  List<Widget> _callCards(BuildContext context, Career car) {
+    return [
+      for (var i = 0; i < car.calls.length; i++)
+        if (car.callValid(car.calls[i]))
+          Builder(builder: (context) {
+            final o = car.calls[i];
+            final them = car.teams[o.partner];
+            final give = car.me.roster.where((p) => o.give.contains(p.id)).toList();
+            final get = them.roster.where((p) => o.get.contains(p.id)).toList();
+            return _card(key: Key('call-$i'), edge: GmColors.gold, [
+              _head('他チームからの電話: ${them.name}', icon: Icons.phone_in_talk_rounded, color: GmColors.gold),
+              const SizedBox(height: 4),
+              Text('相手の考え: ${them.mode.label}。${them.mode.wants}。', style: const TextStyle(color: GmColors.sub, fontSize: 13)),
+              const SizedBox(height: 8),
+              const Text('出す', style: TextStyle(color: GmColors.bad, fontWeight: FontWeight.bold)),
+              for (final p in give) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: car.mine)),
+              const SizedBox(height: 8),
+              const Text('受け取る', style: TextStyle(color: GmColors.good, fontWeight: FontWeight.bold)),
+              for (final p in get) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: o.partner)),
+              const SizedBox(height: 10),
+              Row(children: [
+                Expanded(child: OutlinedButton(key: Key('call-decline-$i'), onPressed: c.busy ? null : () => c.declineCall(i), child: const Text('断る'))),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton(
+                    key: Key('call-accept-$i'),
+                    onPressed: c.busy ? null : () => tradeWithShow(context, c, o, () => c.acceptCall(i)),
+                    child: const Text('受ける'),
+                  ),
+                ),
+              ]),
+            ]);
+          }),
+    ];
+  }
+
   /// 返事を待っている知らせがあれば、受信箱への案内を出す。
   List<Widget> _inboxCard(BuildContext context, Career car) {
     final waiting = car.inbox.where((m) => m.needsAnswer).toList();
@@ -1008,6 +1045,7 @@ class ProgressTab extends StatelessWidget {
       ]),
       _contractsGuide(car, exp.length),
       _summerCard(context, car),
+      ..._callCards(context, car),
       ..._fanCard(car),
       if (car.growth.isNotEmpty) _growthCard(car),
       if (car.sheetPlayer != null) _sheetCard(context, car),
