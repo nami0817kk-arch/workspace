@@ -56,7 +56,8 @@ class FeedbackService {
     }
     if (_soundOn) {
       SfxService.play(Sfx.whistleEnd, volume: 0.7);
-      if (!drew) {
+      // テストでは遅らせる処理(時計)も作らない。
+      if (!drew && !SfxService.inTest) {
         Future<void>.delayed(const Duration(milliseconds: 900), () {
           SfxService.play(won ? Sfx.goalCheer : Sfx.concedeAway);
         });

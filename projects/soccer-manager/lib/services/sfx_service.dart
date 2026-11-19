@@ -20,13 +20,13 @@ class SfxService {
   static bool _configured = false;
 
   /// テスト(flutter test)では鳴らさない。部品が無く例外になるため。
-  static bool get _inTest {
+  static bool get inTest {
     final name = WidgetsBinding.instance.runtimeType.toString();
     return name.contains('Test');
   }
 
   static Future<void> play(Sfx s, {double volume = 0.8}) async {
-    if (_inTest) return;
+    if (inTest) return;
     try {
       if (!_configured && !kIsWeb) {
         _configured = true;
