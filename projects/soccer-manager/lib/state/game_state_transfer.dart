@@ -1436,6 +1436,8 @@ extension GameStateTransfer on GameState {
   List<String> _advanceIncomingOffers() {
     final autoSold = <String>[];
     for (final o in List<IncomingOffer>.from(_save!.incomingOffers)) {
+      // 対案の返事を待っているあいだは、オファーは消えない。
+      if (o.askedAmount != null) continue;
       o.weeksRemaining -= 1;
       if (o.weeksRemaining <= 0) {
         _save!.incomingOffers.remove(o);

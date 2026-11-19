@@ -6,6 +6,8 @@ import '../logic/signing_proposal_engine.dart';
 import '../logic/squad_registration_engine.dart';
 import '../logic/transfer_window.dart';
 import '../logic/transfer_terms_engine.dart';
+import '../logic/transfer_talk_engine.dart';
+import '../models/transfer_talk.dart';
 import '../models/player.dart';
 import '../models/save_game.dart';
 import '../services/feedback_service.dart';
@@ -80,7 +82,7 @@ class _TransferScreenState extends State<TransferScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
   }
 
   @override
@@ -108,6 +110,8 @@ class _TransferScreenState extends State<TransferScreen>
         tabs: [
           Tr.pick('監督の案', 'Proposals'),
           Tr.pick('探す', 'Search'),
+          Tr.pick('交渉 (${gameState.transferTalks.length})',
+              'Talks (${gameState.transferTalks.length})'),
           Tr.pick('注目 (${save.watchlistPlayerIds.length})',
               'Watchlist (${save.watchlistPlayerIds.length})'),
           Tr.pick('フリーエージェント (${gameState.freeAgents.length})',
@@ -126,6 +130,7 @@ class _TransferScreenState extends State<TransferScreen>
             _buildProposalTab(context, gameState, save, squadFull, targets,
                 same),
             _buildSearchTab(context, gameState, squadFull, targets, same),
+            _buildTalksTab(context, gameState),
             _buildWatchTab(
                 context, gameState, save, squadFull, targets, same),
             _buildFreeAgentTab(context, gameState, squadFull),
@@ -633,45 +638,58 @@ class _TransferScreenState extends State<TransferScreen>
     }
   }
 
-  /// 移籍金の値切り交渉ダイアログ。提示割合をスライダーで選び、成立見込みを
-  /// 事前に示した上でオファーを出す。断られるとその週は再交渉できない。
-  Future<void> _showNegotiationDialog(
+  /// 移籍金を提示する(新しく申し込む、または相手の対案に出し直す)。
+  Future<void> _showBidDialog(
     BuildContext context,
-    Player player,
-  ) async {
+    Player player, {
+    TransferTalk? talk,
+  }) async {
     final gameState = context.read<GameState>();
-    final total = player.marketValue;
-    double ratio = 0.85;
-    final submitted = await showDialog<int>(
+    final value = player.marketValue;
+    final minBid = talk == null ? (value * 0.5).round() : talk.bid + 1;
+    final maxBid = [value * 2, (talk?.fee ?? 0) * 3 ~/ 2, minBid + 1]
+        .reduce((a, b) => a > b ? a : b);
+    var bid = (talk?.fee ?? value).clamp(minBid, maxBid).toDouble();
+    var inst = talk?.installments ?? false;
+    final submitted = await showDialog<(int, bool)>(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) {
-          final offer = (total * ratio).round();
-          final chance = gameState.transferOfferAcceptChance(total, offer,
-              player: player);
+          final amount = bid.round();
+          final pct = value <= 0 ? 0 : (amount * 100 / value).round();
           return AlertDialog(
             title: Text(Tr.pick(
-                '${player.name}への移籍金オファー', 'Your bid for ${player.name}')),
+                '${player.name}の移籍金を提示', 'Bid for ${player.name}')),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Tr.pick('市場価値: ${formatMoney(total)}', 'Value: ${formatMoney(total)}')),
-                Text(Tr.pick('提示額: ${formatMoney(offer)}(${(ratio * 100).round()}%)',
-                    'Your bid: ${formatMoney(offer)} (${(ratio * 100).round()}%)')),
+                Text(Tr.pick('市場価値: ${formatMoney(value)}',
+                    'Value: ${formatMoney(value)}')),
+                if (talk != null)
+                  Text(Tr.pick(
+                      '相手の対案: ${formatMoney(talk.fee)}・前の提示: ${formatMoney(talk.bid)}',
+                      'Their terms: ${formatMoney(talk.fee)} • Your last bid: ${formatMoney(talk.bid)}')),
+                Text(Tr.pick('提示額: ${formatMoney(amount)}(市場価値の$pct%)',
+                    'Your bid: ${formatMoney(amount)} ($pct% of value)')),
                 Slider(
-                  value: ratio,
-                  min: 0.6,
-                  max: 1.0,
-                  divisions: 8,
-                  label: '${(ratio * 100).round()}%',
-                  onChanged: (v) => setState(() => ratio = v),
+                  value: bid,
+                  min: minBid.toDouble(),
+                  max: maxBid.toDouble(),
+                  divisions: 60,
+                  onChanged: (v) => setState(() => bid = v),
                 ),
-                Text(Tr.pick('成立見込み: ${(chance * 100).round()}%',
-                    'Chance of acceptance: ${(chance * 100).round()}%')),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: inst,
+                  onChanged: (v) => setState(() => inst = v ?? false),
+                  title: Text(Tr.pick('分割払い(頭金3割、残りを4週で)',
+                      'Instalments (30% now, the rest over 4 weeks)')),
+                ),
                 Text(
-                  Tr.pick('断られるとこの週は再交渉できない(満額での獲得は可能)。',
-                      'If they turn you down you cannot bid again this week, though you can still pay full price.'),
+                  Tr.pick(
+                      '返事は${TransferTalkEngine.replyDays}日ほどで来ます。安すぎると話を打ち切られます。提示できるのは${TransferTalkEngine.maxRounds}回まで。主力や若い有望株は高く、契約の残りが短い選手は安く売ってくれます。',
+                      'Expect a reply in about ${TransferTalkEngine.replyDays} days. Bid too low and they walk away. You get ${TransferTalkEngine.maxRounds} bids at most. Key men and young prospects cost more; players near the end of their contracts cost less.'),
                   style: TextStyle(
                       fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
@@ -683,8 +701,8 @@ class _TransferScreenState extends State<TransferScreen>
                 child: Text(Tr.pick('やめる', 'Never mind')),
               ),
               FilledButton(
-                onPressed: () => Navigator.pop(ctx, offer),
-                child: Text(Tr.pick('オファーを出す', 'Make the bid')),
+                onPressed: () => Navigator.pop(ctx, (amount, inst)),
+                child: Text(Tr.pick('提示する', 'Make the bid')),
               ),
             ],
           );
@@ -692,42 +710,155 @@ class _TransferScreenState extends State<TransferScreen>
       ),
     );
     if (submitted == null || !context.mounted) return;
-    final result = await gameState.makeTransferOffer(player.id, submitted);
+    final ok = await gameState.openTransferTalk(player.id, submitted.$1,
+        installments: submitted.$2);
     if (!context.mounted) return;
-    if (result.accepted) {
-      FeedbackService.success();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(Tr.pick('${player.name}を${formatMoney(submitted)}で獲得しました!',
-                'You signed ${player.name} for ${formatMoney(submitted)}!'))),
-      );
-    } else if (result.attempted) {
-      FeedbackService.error();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(Tr.pick('オファーは断られた。この週は再交渉できない。',
-                'The bid was rejected. You cannot go back this week.'))),
-      );
-    } else {
-      FeedbackService.error();
-      final reason = gameState.lastSigningBlockReason;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(reason ??
-              Tr.pick('交渉できませんでした(資金・スカッド枠・ウィンドウを確認)',
-                  'The talks could not open. Check your funds, squad space and the transfer window')),
-          duration: Duration(seconds: reason != null ? 6 : 4),
+    ok ? FeedbackService.tap() : FeedbackService.error();
+    final reason = gameState.lastSigningBlockReason;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(ok
+            ? Tr.pick('提示しました。返事は「交渉」のタブに届きます。',
+                'Bid made. The reply will appear on the Talks tab.')
+            : (reason ??
+                Tr.pick('提示できませんでした', 'The bid could not be made'))),
+        duration: Duration(seconds: reason != null && !ok ? 6 : 4),
+      ),
+    );
+  }
+
+  /// 交渉: クラブとの移籍金の交渉の一覧。
+  Widget _buildTalksTab(BuildContext context, GameState gameState) {
+    final talks = gameState.transferTalks;
+    final small =
+        TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
+    if (talks.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(
+            Tr.pick('交渉中の話はありません。「探す」や「注目」で選手の「獲得」から移籍金を提示できます。',
+                'No talks under way. Use Sign on a player in Search or Watchlist to make a bid.'),
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     }
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      children: [
+        Text(
+          Tr.pick(
+              '提示すると、${TransferTalkEngine.replyDays}日ほどで相手のクラブから返事が来ます。返事は「合意」「対案」「打ち切り」のどれかです。提示できるのは${TransferTalkEngine.maxRounds}回まで。合意したら${TransferTalkEngine.agreementDays}日以内に移籍を決めてください。窓が閉じると、まとまらなかった話は流れます。',
+              'After a bid, the club replies in about ${TransferTalkEngine.replyDays} days: a deal, a counter, or a walk-out. You get ${TransferTalkEngine.maxRounds} bids at most. Once you have a deal, complete it within ${TransferTalkEngine.agreementDays} days. Anything unfinished falls through when the window shuts.'),
+          style: small,
+        ),
+        const SizedBox(height: 8),
+        for (final t in talks) _talkCard(context, gameState, t),
+      ],
+    );
+  }
+
+  Widget _talkCard(BuildContext context, GameState gameState, TransferTalk t) {
+    String md(DateTime? d) =>
+        d == null ? '-' : TransferWindowCalendar.formatMonthDay(d);
+    final pay = t.installments && t.installmentsOk
+        ? Tr.pick('分割', 'instalments')
+        : Tr.pick('一括', 'up front');
+    final terms = [
+      formatMoney(t.fee),
+      if (t.sellOnPercent > 0)
+        Tr.pick('売却条項${t.sellOnPercent}%', '${t.sellOnPercent}% sell-on'),
+      pay,
+    ].join(Tr.pick('・', ', '));
+    final status = switch (t.stage) {
+      TransferTalkStage.waiting => Tr.pick(
+          '提示 ${formatMoney(t.bid)}(${t.installments ? '分割' : '一括'})・返事は${md(t.replyOn)}ごろ',
+          'Bid ${formatMoney(t.bid)} (${t.installments ? 'instalments' : 'up front'}) • reply around ${md(t.replyOn)}'),
+      TransferTalkStage.countered => Tr.pick(
+          '対案: $terms(こちらの提示 ${formatMoney(t.bid)}・${t.round}/${TransferTalkEngine.maxRounds}回目)',
+          'Their terms: $terms (your bid ${formatMoney(t.bid)}, ${t.round} of ${TransferTalkEngine.maxRounds})'),
+      TransferTalkStage.agreed => Tr.pick(
+          '合意: $terms・${md(t.deadline)}までに決める',
+          'Agreed: $terms • complete by ${md(t.deadline)}'),
+      TransferTalkStage.collapsed => Tr.pick(
+          '決裂(この窓のあいだは申し込めない)',
+          'Broken off (no more bids this window)'),
+    };
+    final player = gameState.talkPlayer(t.playerId);
+    final withdraw = TextButton(
+      onPressed: () {
+        FeedbackService.tap();
+        gameState.withdrawTransferTalk(t.playerId);
+      },
+      child: Text(Tr.pick('取り下げる', 'Withdraw')),
+    );
+    final buttons = <Widget>[
+      if (t.stage == TransferTalkStage.waiting) withdraw,
+      if (t.stage == TransferTalkStage.countered) ...[
+        withdraw,
+        TextButton(
+          onPressed: player != null && t.round < TransferTalkEngine.maxRounds
+              ? () => _showBidDialog(context, player, talk: t)
+              : null,
+          child: Text(Tr.pick('出し直す', 'Bid again')),
+        ),
+        FilledButton(
+          onPressed: () {
+            FeedbackService.tap();
+            gameState.acceptTalkCounter(t.playerId);
+          },
+          child: Text(Tr.pick('対案をのむ', 'Accept their terms')),
+        ),
+      ],
+      if (t.stage == TransferTalkStage.agreed) ...[
+        withdraw,
+        FilledButton(
+          onPressed: () => _acquire(
+            context,
+            () => gameState.completeTransferTalk(t.playerId),
+            t.playerName,
+          ),
+          child: Text(Tr.pick('移籍を決める', 'Complete the transfer')),
+        ),
+      ],
+    ];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ListTile(
+              leading: player == null
+                  ? null
+                  : PlayerFaceAvatar(
+                      playerId: player.id, position: player.position),
+              title: Text(Tr.pick('${t.playerName}(${t.clubName})',
+                  '${t.playerName} (${t.clubName})')),
+              subtitle: Text(status),
+            ),
+            if (buttons.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: OverflowBar(
+                  alignment: MainAxisAlignment.end,
+                  spacing: 8,
+                  children: buttons,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showAcquireSheet(BuildContext context, Player player) {
     final gameState = context.read<GameState>();
     final save = gameState.save!;
     final total = player.marketValue;
-    final downPayment = (total * 0.3).round();
     final agentFee = TransferTermsEngine.agentFee(total);
+    final talk = gameState.talkFor(player.id);
     final loanFee = (total * GameState.loanFeeRatioPercent / 100).round();
     final buyOptionFee = (total * GameState.loanBuyOptionRatio).round();
     // 窓の外で開けるのは GK の緊急の特例だけ。そのときは期限付き(ローン)のみ。
@@ -748,51 +879,18 @@ class _TransferScreenState extends State<TransferScreen>
               ),
               const SizedBox(height: 12),
               ListTile(
-                leading: const Icon(Icons.payments),
-                title: Text(Tr.pick('一括で獲得', 'Pay it all now')),
-                subtitle:
-                    Text(Tr.pick('${formatMoney(total)}を即座に支払う(別に代理人手数料${formatMoney(agentFee)})', 'Pay ${formatMoney(total)} immediately (plus ${formatMoney(agentFee)} agent fee)')),
-                enabled: permanentAllowed && save.budget >= total + agentFee,
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _acquire(
-                    context,
-                    () => gameState.buyPlayer(player.id),
-                    player.name,
-                  );
-                },
-              ),
-              ListTile(
                 leading: const Icon(Icons.handshake),
-                title: Text(Tr.pick('値切り交渉で獲得', 'Haggle over the fee')),
-                subtitle: Text(
-                  gameState.transferOffersRejectedThisWeek.contains(player.id)
-                      ? Tr.pick('今週は既に断られている(来週また交渉できる)',
-                          'They already said no this week; you can try again next week')
-                      : Tr.pick('市場価値より安い移籍金を提示する(安いほど断られやすい)',
-                          'Bid below his value. The lower you go, the more likely they refuse'),
-                ),
-                enabled: permanentAllowed &&
-                    !gameState.transferOffersRejectedThisWeek
-                        .contains(player.id),
+                title: Text(Tr.pick('移籍金を提示する', 'Make a bid')),
+                subtitle: Text(talk != null
+                    ? Tr.pick('もう交渉しています(「交渉」のタブで続きを)',
+                        'Talks are already under way (see the Talks tab)')
+                    : Tr.pick(
+                        '相手のクラブと交渉します。返事は${TransferTalkEngine.replyDays}日ほどで来ます(別に代理人手数料${formatMoney(agentFee)}ほど)',
+                        'Open talks with his club. They reply in about ${TransferTalkEngine.replyDays} days (plus about ${formatMoney(agentFee)} in agent fees)')),
+                enabled: permanentAllowed && talk == null,
                 onTap: () {
                   Navigator.pop(ctx);
-                  _showNegotiationDialog(context, player);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.calendar_view_week),
-                title: Text(Tr.pick('分割払いで獲得', 'Pay in instalments')),
-                subtitle: Text(Tr.pick('頭金${formatMoney(downPayment)} + 残額を4週で均等払い',
-                    '${formatMoney(downPayment)} down, the rest in equal payments over 4 weeks')),
-                enabled: permanentAllowed && save.budget >= downPayment + agentFee,
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _acquire(
-                    context,
-                    () => gameState.buyPlayerOnInstallments(player.id),
-                    player.name,
-                  );
+                  _showBidDialog(context, player);
                 },
               ),
               ListTile(

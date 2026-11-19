@@ -18,6 +18,7 @@ import 'news_item.dart';
 import 'youth_league.dart';
 import 'player.dart';
 import 'pre_contract.dart';
+import 'transfer_talk.dart';
 import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
@@ -483,6 +484,9 @@ class SaveGame {
   /// 結ばれている仮契約(ボスマン)。7月1日に選手が移る。旧セーブは空。
   List<PreContract> preContracts;
 
+  /// 他のクラブとの移籍金の交渉(買う側)。窓が閉じると空になる。
+  List<TransferTalk> transferTalks;
+
   /// 1月1日の仮契約の解禁(他のクラブの更新と、AI の仮契約)を済ませた
   /// シーズン。旧セーブは0(そのシーズンの1月1日を過ぎていれば読み込み後に行う)。
   int preContractOpenedSeason;
@@ -620,10 +624,12 @@ class SaveGame {
     this.liveMatchProgress,
     this.today,
     List<PreContract>? preContracts,
+    List<TransferTalk>? transferTalks,
     this.preContractOpenedSeason = 0,
     this.optionDeadlineSeason = 0,
     this.unpaidWagesNoticeGiven = false,
   })  : preContracts = preContracts ?? [],
+        transferTalks = transferTalks ?? [],
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
@@ -868,6 +874,8 @@ class SaveGame {
         'today': today == null ? null : formatSaveDate(today!),
         if (preContracts.isNotEmpty)
           'preContracts': preContracts.map((c) => c.toJson()).toList(),
+        if (transferTalks.isNotEmpty)
+          'transferTalks': transferTalks.map((t) => t.toJson()).toList(),
         'preContractOpenedSeason': preContractOpenedSeason,
         'optionDeadlineSeason': optionDeadlineSeason,
         if (unpaidWagesNoticeGiven) 'unpaidWagesNoticeGiven': true,
@@ -1193,6 +1201,11 @@ class SaveGame {
         preContracts: (json['preContracts'] as List?)
                 ?.map((e) =>
                     PreContract.fromJson((e as Map).cast<String, dynamic>()))
+                .toList() ??
+            [],
+        transferTalks: (json['transferTalks'] as List?)
+                ?.map((e) =>
+                    TransferTalk.fromJson((e as Map).cast<String, dynamic>()))
                 .toList() ??
             [],
         preContractOpenedSeason: json['preContractOpenedSeason'] as int? ?? 0,
