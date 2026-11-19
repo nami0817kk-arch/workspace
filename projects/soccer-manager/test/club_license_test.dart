@@ -49,7 +49,8 @@ void main() {
     await gs.startNewGame('赤字FC');
     playInTier4(gs);
     winEverything(gs);
-    gs.save!.budget = -1000;
+    // 季末の賞金などで判定の前にプラスへ戻らないよう、大きく赤字にする。
+    gs.save!.budget = -1000000;
     expect(gs.clubLicenseUnmet(3), isNotEmpty);
     await gs.startNextSeason();
     expect(gs.currentDivisionTier, 4);

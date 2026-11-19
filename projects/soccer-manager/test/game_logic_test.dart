@@ -1879,12 +1879,14 @@ void main() {
         pending?.defender?.id,
       };
       final outId = team.startingXI.firstWhere((id) => !involved.contains(id));
+      // 登録外の選手は試合に出せない(交代でも入れない)。
       final bench = team.players.firstWhere((p) =>
           !team.startingXI.contains(p.id) &&
           !p.isInjured &&
           !p.isSuspended &&
           !p.isOnInternationalDuty &&
-          !p.isLoanedOut);
+          !p.isLoanedOut &&
+          !p.notRegistered);
       expect(
         gameState.makeLiveSubstitution(
             outPlayerId: outId, inPlayerId: bench.id),
