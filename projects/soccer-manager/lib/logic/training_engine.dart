@@ -219,6 +219,9 @@ class TrainingEngine {
     double intensityFactor,
     double injuryFactor,
   ) {
+    // 怪我をしている選手は練習に出ていない。ここで新しく怪我を振ると、
+    // 残りの離脱が1〜3週に上書きされ、長い怪我が短くなっていた(5週が2週に)。
+    if (p.injuryWeeks > 0) return;
     final naturalFitnessFactor =
         (1 - (p.attributeValue(AttributeKeys.naturalFitness) - 50) / 200).clamp(
       0.5,

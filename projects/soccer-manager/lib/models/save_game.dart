@@ -21,6 +21,7 @@ import 'pre_contract.dart';
 import 'transfer_talk.dart';
 import 'sd_brief.dart';
 import 'staff_offer.dart';
+import 'rival_owner.dart';
 import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
@@ -299,6 +300,9 @@ class SaveGame {
 
   /// 法人税の繰越欠損(万円)。赤字の年に積み、黒字の年に差し引く。
   int taxLossCarry;
+
+  /// 同じリーグで競う他のオーナー。
+  List<RivalOwner> rivalOwners;
 
   /// 5か年計画が始まった季(0 は計画なし)と、3つの目標。
   int planStartSeason;
@@ -579,6 +583,7 @@ class SaveGame {
     this.agmWageRatioPledge = 0,
     this.taxLossCarry = 0,
     this.planStartSeason = 0,
+    List<RivalOwner>? rivalOwners,
     this.planTargetTier = 0,
     this.planTargetValue = 0,
     this.planTargetStadium = 0,
@@ -707,6 +712,7 @@ class SaveGame {
         sdBrief = sdBrief ?? SdBrief(),
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
+        rivalOwners = rivalOwners ?? [],
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
@@ -839,6 +845,8 @@ class SaveGame {
         if (agmWageRatio > 0) 'agmWageRatio': agmWageRatio,
         if (agmWageRatioPledge > 0) 'agmWageRatioPledge': agmWageRatioPledge,
         if (taxLossCarry > 0) 'taxLossCarry': taxLossCarry,
+        if (rivalOwners.isNotEmpty)
+          'rivalOwners': rivalOwners.map((r) => r.toJson()).toList(),
         if (planStartSeason > 0) ...{
           'planStartSeason': planStartSeason,
           'planTargetTier': planTargetTier,
@@ -1013,6 +1021,11 @@ class SaveGame {
         agmWageRatioPledge:
             (json['agmWageRatioPledge'] as num?)?.toDouble() ?? 0,
         taxLossCarry: json['taxLossCarry'] as int? ?? 0,
+        rivalOwners: (json['rivalOwners'] as List?)
+                ?.map((e) =>
+                    RivalOwner.fromJson((e as Map).cast<String, dynamic>()))
+                .toList() ??
+            [],
         planStartSeason: json['planStartSeason'] as int? ?? 0,
         planTargetTier: json['planTargetTier'] as int? ?? 0,
         planTargetValue: json['planTargetValue'] as int? ?? 0,

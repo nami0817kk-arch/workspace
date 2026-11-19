@@ -544,6 +544,7 @@ extension GameStateFinance on GameState {
       save.ownerGoalStartValue = clubValue.total;
     }
     _refreshStaffCandidates();
+    _assignRivalOwners();
     _notify();
     await _persist();
     return true;
@@ -675,6 +676,7 @@ extension GameStateFinance on GameState {
     transferMarket = [];
     _refreshScoutCandidates();
     _refreshStaffCandidates();
+    _assignRivalOwners();
     _addTimeline(Tr.pick('${theme.label}(${theme.flavorLabel})で新しいクラブ${userTeam.name}を立ち上げた',
         'Founded ${userTeam.name} in the ${theme.label}'));
     _notify();

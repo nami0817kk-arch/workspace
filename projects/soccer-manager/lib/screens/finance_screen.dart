@@ -20,6 +20,7 @@ import '../widgets/club_timeline_card.dart';
 import '../widgets/club_value_card.dart';
 import '../widgets/projection_card.dart';
 import '../widgets/owner_career_card.dart';
+import '../widgets/rival_owners_card.dart';
 import '../widgets/owner_wealth_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
@@ -309,6 +310,7 @@ class FinanceScreen extends StatelessWidget {
                   const OwnerWealthCard(),
                   const FiveYearPlanCard(),
                   const OwnerCareerCard(),
+                  const RivalOwnersCard(),
                   const MediaDealsCard(),
 
               ],

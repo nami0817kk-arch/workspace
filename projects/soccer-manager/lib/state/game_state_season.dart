@@ -149,6 +149,8 @@ extension GameStateSeason on GameState {
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {
+      // 他のオーナーが補強に動く。
+      _rivalOwnersInvest();
       _reopenRegistration();
     }
     // 締切を過ぎて今は閉じていれば、名簿を締める。
@@ -1004,6 +1006,7 @@ extension GameStateSeason on GameState {
     _enforceLeagueRules();
     _holdShareholdersMeeting();
     _reviewFiveYearPlan();
+    _resetRivalOwners();
     _resolveSeasonRisks();
     _tickProjects();
     _settleAdvisors();

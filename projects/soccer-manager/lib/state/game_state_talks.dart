@@ -567,7 +567,9 @@ extension GameStateTalks on GameState {
           c,
     ];
     if (candidates.isEmpty) return;
-    final rival =
+    // 競うオーナーのクラブが、まず横取りしに来る。
+    final rival = _rivalOwnerClubFor(
+            sellerTier, seller?.id, GameState._transferOfferRng) ??
         candidates[GameState._transferOfferRng.nextInt(candidates.length)];
     final rivalTier = _tierOfClub(rival.id) ?? sellerTier;
     final base = PlayerTermsEngine.demand(
