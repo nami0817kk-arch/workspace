@@ -1342,6 +1342,8 @@ extension GameStateSeason on GameState {
     FreeAgentEngine.topUp(_save!.freeAgents);
 
     _rollNamingRights();
+    // 袖・背中・練習着のスポンサーも1年進め、空いた枠に提示を出す。
+    _rollSlotSponsors();
     // スポンサー契約(年単位)はシーズン境界で1年分消化する。
     if (_save!.sponsorDeal != null) {
       _save!.sponsorDeal!.yearsRemaining -= 1;

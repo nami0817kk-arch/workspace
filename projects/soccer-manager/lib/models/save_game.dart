@@ -380,6 +380,10 @@ class SaveGame {
   SponsorDeal? namingDeal;
   List<SponsorDeal> pendingNamingOffers;
 
+  /// 枠ごとのスポンサー(SponsorSlot の name → 契約)と、その提示。
+  Map<String, SponsorDeal> slotSponsors;
+  Map<String, SponsorDeal> slotSponsorOffers;
+
   /// 放映権の分配金の受け取り方と、前払いの精算で分配金が出ない残りの季数。
   TvDeal tvDeal;
   int tvHolidaySeasons;
@@ -695,6 +699,8 @@ class SaveGame {
     this.sponsorDeal,
     this.namingDeal,
     List<SponsorDeal>? pendingNamingOffers,
+    Map<String, SponsorDeal>? slotSponsors,
+    Map<String, SponsorDeal>? slotSponsorOffers,
     this.tvDeal = TvDeal.fixed,
     this.tvHolidaySeasons = 0,
     List<SponsorDeal>? pendingSponsorOffers,
@@ -791,6 +797,8 @@ class SaveGame {
         continentalTeams = continentalTeams ?? [],
         pendingSponsorOffers = pendingSponsorOffers ?? [],
         pendingNamingOffers = pendingNamingOffers ?? [],
+        slotSponsors = slotSponsors ?? {},
+        slotSponsorOffers = slotSponsorOffers ?? {},
         retiredNumberIds = retiredNumberIds ?? [],
         projects = projects ?? {},
         advisors = advisors ?? {},
@@ -985,6 +993,11 @@ class SaveGame {
         'sponsorDeal': sponsorDeal?.toJson(),
         'namingDeal': namingDeal?.toJson(),
         'pendingNamingOffers': pendingNamingOffers.map((s) => s.toJson()).toList(),
+        if (slotSponsors.isNotEmpty)
+          'slotSponsors': slotSponsors.map((k, v) => MapEntry(k, v.toJson())),
+        if (slotSponsorOffers.isNotEmpty)
+          'slotSponsorOffers':
+              slotSponsorOffers.map((k, v) => MapEntry(k, v.toJson())),
         'tvDeal': tvDeal.name,
         'tvHolidaySeasons': tvHolidaySeasons,
         'pendingSponsorOffers':
@@ -1276,6 +1289,12 @@ class SaveGame {
         namingDeal: json['namingDeal'] == null
             ? null
             : SponsorDeal.fromJson(json['namingDeal'] as Map<String, dynamic>),
+        slotSponsors: (json['slotSponsors'] as Map?)?.map((k, v) =>
+            MapEntry(k as String,
+                SponsorDeal.fromJson(v as Map<String, dynamic>))),
+        slotSponsorOffers: (json['slotSponsorOffers'] as Map?)?.map((k, v) =>
+            MapEntry(k as String,
+                SponsorDeal.fromJson(v as Map<String, dynamic>))),
         pendingNamingOffers: (json['pendingNamingOffers'] as List?)
                 ?.map((e) => SponsorDeal.fromJson(e as Map<String, dynamic>))
                 .toList() ??

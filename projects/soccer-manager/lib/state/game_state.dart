@@ -124,6 +124,7 @@ import '../logic/scout_knowledge.dart';
 import '../logic/scouting_engine.dart';
 import '../logic/season_projection_engine.dart';
 import '../logic/sponsor_engine.dart';
+import '../logic/sponsor_slots.dart';
 import '../logic/super_cup_engine.dart';
 import '../logic/training_engine.dart';
 import '../logic/weather_engine.dart';
@@ -167,6 +168,7 @@ part 'game_state_nation.dart';
 part 'game_state_forms.dart';
 part 'game_state_league_cup.dart';
 part 'game_state_club_finance.dart';
+part 'game_state_sponsor_slots.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -1182,6 +1184,8 @@ class GameState extends ChangeNotifier {
     // 新規開始時もキャンプの判断から始まる。
     _save!.preseasonCampPending = true;
     _save!.today = SeasonCalendar.preseasonDate(league.season);
+    // 袖・背中・練習着のスポンサーの最初の提示。
+    _offerEmptySlotSponsors();
     // 開始時は全役職が空席。誰を先に雇うかが最初の判断になる。
     _refreshStaffCandidates();
     _assignRivalOwners();
