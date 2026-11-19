@@ -7,6 +7,7 @@ import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
+import '../widgets/trend_chart.dart';
 import '../l10n/tr.dart';
 
 /// シーズンごとの最終成績(順位・勝敗・昇降格・カップ優勝歴)を振り返る画面。
@@ -57,11 +58,14 @@ class SeasonHistoryScreen extends StatelessWidget {
               )
             : ListView.builder(
                 padding: const EdgeInsets.all(16),
-                itemCount: history.length,
-                itemBuilder: (context, i) => _SeasonRecordCard(
-                  record: history[i],
-                  award: awardFor(history[i].season),
-                ),
+                // 先頭に推移のグラフ、続けて季ごとの記録。
+                itemCount: history.length + 1,
+                itemBuilder: (context, i) => i == 0
+                    ? const TrendsCard()
+                    : _SeasonRecordCard(
+                        record: history[i - 1],
+                        award: awardFor(history[i - 1].season),
+                      ),
               ),
       ),
     );
