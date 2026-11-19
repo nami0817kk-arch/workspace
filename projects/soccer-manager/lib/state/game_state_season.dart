@@ -1374,6 +1374,8 @@ extension GameStateSeason on GameState {
     FreeAgentEngine.topUp(_save!.freeAgents);
 
     _rollNamingRights();
+    // 分析部門の年会費。
+    _rollAnalytics();
     // 段階昇給の契約の選手は、季が変わるたびに週給が上がる。
     _applySteppedRaises();
     // 系列クラブの年会費。

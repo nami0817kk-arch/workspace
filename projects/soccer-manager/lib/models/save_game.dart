@@ -393,6 +393,9 @@ class SaveGame {
   int stadiumSubsidyPct;
   int municipalityAskSeason;
 
+  /// 分析部門を置いているか(年会費は季の切り替えで払う)。
+  bool hasAnalytics;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -735,6 +738,7 @@ class SaveGame {
     Map<String, List<double>>? countryCoefficients,
     this.stadiumSubsidyPct = 0,
     this.municipalityAskSeason = 0,
+    this.hasAnalytics = false,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -1063,6 +1067,7 @@ class SaveGame {
         if (stadiumSubsidyPct > 0) 'stadiumSubsidyPct': stadiumSubsidyPct,
         if (municipalityAskSeason > 0)
           'municipalityAskSeason': municipalityAskSeason,
+        if (hasAnalytics) 'hasAnalytics': hasAnalytics,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1299,6 +1304,7 @@ class SaveGame {
                 (v as List).map((e) => (e as num).toDouble()).toList())),
         stadiumSubsidyPct: json['stadiumSubsidyPct'] as int? ?? 0,
         municipalityAskSeason: json['municipalityAskSeason'] as int? ?? 0,
+        hasAnalytics: json['hasAnalytics'] as bool? ?? false,
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),

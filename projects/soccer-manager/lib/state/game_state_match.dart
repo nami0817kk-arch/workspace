@@ -306,6 +306,8 @@ extension GameStateMatch on GameState {
     _checkPromisesWeekly();
     // 大きな怪我は、手術か保存療法かを選ばせる。
     _reviewInjuries();
+    // 先発に入っていない21歳以下は、U21 の試合に出る。
+    _playU21Matchday();
     // 先発に仲の良い選手・仲の悪い選手がいるか。
     RelationsEngine.applyWeekly(userTeam);
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
