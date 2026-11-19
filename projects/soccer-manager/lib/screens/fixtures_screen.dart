@@ -63,8 +63,9 @@ class FixturesScreen extends StatelessWidget {
             Tr.pick('日程', 'Fixtures'),
             for (final (tier, _) in otherDivisions)
               Tr.pick('$tier部順位表', 'Tier $tier table'),
-            for (final (name, _) in foreign) name,
             if (youthLeague != null) Tr.pick('ユース', 'Academy'),
+            // 他国の1部はユースの後ろ(タブの並びの最後)に置く。
+            for (final (name, _) in foreign) name,
           ],
           actions: [
             IconButton(
@@ -97,16 +98,16 @@ class FixturesScreen extends StatelessWidget {
                   userTeamId: userTeamId,
                   divisionTier: tier,
                 ),
+              if (youthLeague != null)
+                ListView(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  children: [YouthLeagueTable(league: youthLeague)],
+                ),
               for (final (_, foreignLeague) in foreign)
                 _StandingsTab(
                   league: foreignLeague,
                   userTeamId: userTeamId,
                   divisionTier: 1,
-                ),
-              if (youthLeague != null)
-                ListView(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  children: [YouthLeagueTable(league: youthLeague)],
                 ),
             ],
           ),
