@@ -10,6 +10,7 @@ class SettingsController extends ChangeNotifier {
   static const _textScaleKey = 'settings_text_scale';
   static const _soundEnabledKey = 'settings_sound_enabled';
   static const _hapticsEnabledKey = 'settings_haptics_enabled';
+  static const _momentsEnabledKey = 'settings_moments_enabled';
   static const _onboardingSeenKey = 'settings_onboarding_seen';
   static const _colorblindModeKey = 'settings_colorblind_mode';
   static const _boldTextModeKey = 'settings_bold_text_mode';
@@ -23,6 +24,9 @@ class SettingsController extends ChangeNotifier {
   double textScale = 1.0;
   bool soundEnabled = true;
   bool hapticsEnabled = true;
+
+  /// 大事な場面を画面いっぱいの1枚で見せるか。
+  bool momentsEnabled = true;
   bool hasSeenOnboarding = false;
 
   /// 色覚サポートモード。勝敗などの色分け表現を、赤緑ではなく青とオレンジに置き換える。
@@ -47,6 +51,7 @@ class SettingsController extends ChangeNotifier {
     textScale = prefs.getDouble(_textScaleKey) ?? 1.0;
     soundEnabled = prefs.getBool(_soundEnabledKey) ?? true;
     hapticsEnabled = prefs.getBool(_hapticsEnabledKey) ?? true;
+    momentsEnabled = prefs.getBool(_momentsEnabledKey) ?? true;
     hasSeenOnboarding = prefs.getBool(_onboardingSeenKey) ?? false;
     colorblindMode = prefs.getBool(_colorblindModeKey) ?? false;
     boldTextMode = prefs.getBool(_boldTextModeKey) ?? false;
@@ -90,6 +95,13 @@ class SettingsController extends ChangeNotifier {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_soundEnabledKey, value);
+  }
+
+  Future<void> setMomentsEnabled(bool value) async {
+    momentsEnabled = value;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_momentsEnabledKey, value);
   }
 
   Future<void> setHapticsEnabled(bool value) async {

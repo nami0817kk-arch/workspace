@@ -165,6 +165,13 @@ class SettingsScreen extends StatelessWidget {
                   onChanged: (v) => settings.setSoundEnabled(v),
                 ),
                 SwitchListTile(
+                  title: Text(Tr.pick('大事な場面の演出', 'Big moments')),
+                  subtitle: Text(Tr.pick('優勝・昇格・降格・決勝・史上最高額の移籍を画面いっぱいの絵で見せます',
+                      'Shows titles, promotion, relegation, finals and record transfers full screen')),
+                  value: settings.momentsEnabled,
+                  onChanged: (v) => settings.setMomentsEnabled(v),
+                ),
+                SwitchListTile(
                   title: Text(Tr.pick('触覚フィードバック', 'Haptic feedback')),
                   subtitle: Text(Tr.pick('ボタン操作や試合の展開に合わせて振動します',
                       'Vibrates on taps and during matches')),

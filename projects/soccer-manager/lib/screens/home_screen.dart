@@ -46,6 +46,7 @@ import '../logic/board_target_progress.dart';
 import '../models/club_vision.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
+import '../widgets/big_moment_overlay.dart';
 import '../widgets/rumor_card.dart';
 import '../logic/economy_scale.dart';
 
@@ -450,6 +451,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              // まだ見せていない大事な場面があれば、画面いっぱいの1枚で出す。
+              const BigMomentPresenter(),
               if (gameState.pendingOwnerEvent != null) const OwnerEventCard(),
               if (gameState.agmDemand != null) const AgmDemandCard(),
               if (gameState.save?.pendingRumor != null) const RumorCard(),
@@ -2131,7 +2134,15 @@ class _SaleScreen extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               shrinkWrap: true,
               children: [
-                const Icon(Icons.gavel, size: 56, color: Colors.redAccent),
+                // 手放す夜の絵(大事な場面の1枚と同じ作風)。
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: Image.asset('assets/art/forced_sale.jpg',
+                        fit: BoxFit.cover),
+                  ),
+                ),
                 const SizedBox(height: 12),
                 Text(
                   Tr.pick('$clubName を手放すことになりました',

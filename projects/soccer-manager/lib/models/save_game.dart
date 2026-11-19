@@ -361,6 +361,14 @@ class SaveGame {
   /// 系列クラブ(提携先のクラブ id。無ければ null)。
   String? affiliateClubId;
 
+  /// まだ見せていない大事な場面([種類, 小見出し, 説明])と、見せた場面の印。
+  List<List<String>> pendingMoments;
+  List<String> momentKeys;
+
+  /// クラブ史上最高額の獲得・売却(万円)。
+  int recordSigningFee;
+  int recordSaleFee;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -687,6 +695,10 @@ class SaveGame {
     this.pendingRumor,
     Map<String, int>? rumorDenied,
     this.affiliateClubId,
+    List<List<String>>? pendingMoments,
+    List<String>? momentKeys,
+    this.recordSigningFee = 0,
+    this.recordSaleFee = 0,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -833,6 +845,8 @@ class SaveGame {
         lifeEvents = lifeEvents ?? {},
         difficultyItems = difficultyItems ?? {},
         playerBook = playerBook ?? {},
+        pendingMoments = pendingMoments ?? [],
+        momentKeys = momentKeys ?? [],
         rumorDenied = rumorDenied ?? {},
         clubCash = clubCash ?? {},
         distressedClubIds = distressedClubIds ?? [],
@@ -988,6 +1002,10 @@ class SaveGame {
         if (pendingRumor != null) 'pendingRumor': pendingRumor,
         if (rumorDenied.isNotEmpty) 'rumorDenied': rumorDenied,
         if (affiliateClubId != null) 'affiliateClubId': affiliateClubId,
+        if (pendingMoments.isNotEmpty) 'pendingMoments': pendingMoments,
+        if (momentKeys.isNotEmpty) 'momentKeys': momentKeys,
+        if (recordSigningFee > 0) 'recordSigningFee': recordSigningFee,
+        if (recordSaleFee > 0) 'recordSaleFee': recordSaleFee,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1195,6 +1213,13 @@ class SaveGame {
         rumorDenied: (json['rumorDenied'] as Map?)
             ?.map((k, v) => MapEntry(k as String, v as int)),
         affiliateClubId: json['affiliateClubId'] as String?,
+        pendingMoments: (json['pendingMoments'] as List?)
+            ?.map((e) => (e as List).map((x) => x as String).toList())
+            .toList(),
+        momentKeys:
+            (json['momentKeys'] as List?)?.map((e) => e as String).toList(),
+        recordSigningFee: json['recordSigningFee'] as int? ?? 0,
+        recordSaleFee: json['recordSaleFee'] as int? ?? 0,
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
