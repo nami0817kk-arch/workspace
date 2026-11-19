@@ -3,6 +3,8 @@
 ///     flutter test tool/art/club_look_preview_test.dart
 library;
 
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
 import 'dart:io';
 import 'dart:ui' as ui;
 
