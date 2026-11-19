@@ -71,6 +71,7 @@ void main() {
     Future<(GameState, Player)> start(double ratio) async {
       final gs = GameState();
       await gs.startNewGame('交渉FC');
+      gs.rivalsEnabled = false; // 競合は rival_test で見る
       expect(gs.isTransferWindowOpen, isTrue, reason: '始めた日は窓が開いている前提');
       gs.save!.budget = 99999999;
       gs.save!.wageBudget = 99999999;

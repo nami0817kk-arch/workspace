@@ -61,6 +61,7 @@ void main() {
     Future<(GameState, Player)> agreed() async {
       final gs = GameState();
       await gs.startNewGame('条件FC');
+      gs.rivalsEnabled = false; // 競合は rival_test で見る
       gs.save!.budget = 99999999;
       gs.save!.wageBudget = 99999999;
       final same = gs.sameLeaguePlayerIds();

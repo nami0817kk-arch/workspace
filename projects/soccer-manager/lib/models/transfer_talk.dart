@@ -79,6 +79,18 @@ class TransferTalk {
   /// 選手が望む週俸(万円)。一度条件を出して返されるまでは 0(分からない)。
   int demandWage;
 
+  /// 同じ選手を狙う他のクラブ(いなければ null)。
+  String? rivalClubId;
+  String? rivalClubName;
+
+  /// 他のクラブが選手に出している週俸(万円)。
+  int rivalWage;
+
+  /// この日までにこちらと契約しなければ、選手は他のクラブへ行く。
+  DateTime? rivalDecidesOn;
+
+  bool get hasRival => rivalClubId != null;
+
   TransferTalk({
     required this.playerId,
     required this.playerName,
@@ -96,6 +108,10 @@ class TransferTalk {
     this.freeAgent = false,
     this.termsRound = 0,
     this.demandWage = 0,
+    this.rivalClubId,
+    this.rivalClubName,
+    this.rivalWage = 0,
+    this.rivalDecidesOn,
   });
 
   /// まだ話が生きているか(決裂していない)。
@@ -129,6 +145,10 @@ class TransferTalk {
         if (freeAgent) 'freeAgent': true,
         if (termsRound > 0) 'termsRound': termsRound,
         if (demandWage > 0) 'demandWage': demandWage,
+        if (rivalClubId != null) 'rivalClubId': rivalClubId,
+        if (rivalClubName != null) 'rivalClubName': rivalClubName,
+        if (rivalWage > 0) 'rivalWage': rivalWage,
+        if (rivalDecidesOn != null) 'rivalDecidesOn': _date(rivalDecidesOn),
       };
 
   factory TransferTalk.fromJson(Map<String, dynamic> json) => TransferTalk(
@@ -150,5 +170,9 @@ class TransferTalk {
         freeAgent: json['freeAgent'] as bool? ?? false,
         termsRound: json['termsRound'] as int? ?? 0,
         demandWage: json['demandWage'] as int? ?? 0,
+        rivalClubId: json['rivalClubId'] as String?,
+        rivalClubName: json['rivalClubName'] as String?,
+        rivalWage: json['rivalWage'] as int? ?? 0,
+        rivalDecidesOn: _parse(json['rivalDecidesOn']),
       );
 }
