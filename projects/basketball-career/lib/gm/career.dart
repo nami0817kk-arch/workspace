@@ -883,6 +883,18 @@ class Career {
       }
       return;
     }
+    if (m.kind == MsgKind.declare) {
+      if (m.season != season || phase != Phase.preseason) return;
+      final before = declaredNow;
+      declared = choice == 3 ? 0 : choice + 1;
+      declaredSeason = season;
+      // すぐ効く人気は、前の答えを取り消してから(答え直しはできないが、念のため)
+      if (before == 1) hype = (hype - 3).clamp(0, 100);
+      if (before == 3) hype = (hype + 3).clamp(0, 100);
+      if (declared == 1) hype = (hype + 3).clamp(0, 100);
+      if (declared == 3) hype = (hype - 3).clamp(0, 100);
+      return;
+    }
     if (m.kind == MsgKind.forecast) {
       if (m.season == season && forecastSeason == season && phase != Phase.seasonEnd) forecastBet = choice + 1;
       return;
@@ -996,6 +1008,7 @@ class Career {
       case MsgKind.offCamp:
       case MsgKind.offRetire:
       case MsgKind.forecast:
+      case MsgKind.declare:
       case MsgKind.info:
       case MsgKind.press:
       case MsgKind.ownerGoal:
@@ -1168,6 +1181,40 @@ class Career {
           '約束すると気持ちは大きく上がるが、来季に守れないと本人とチームの気持ちが下がる。説明が通じるかは、これまで約束を守ってきたか(言葉の重み)で決まる。',
           kind: MsgKind.offTalk, choices: const ['来季は先発で使うと約束する', 'トレード先を探すと約束する', 'チームの考えを説明する'], player: p.id);
     }
+  }
+
+  // ---------------------------------------------------------------- 方針の宣言
+
+  /// 今シーズンの方針の宣言(0: なし、1: 優勝を狙う、2: 若手を育てる、3: 立て直す)と、宣言したシーズン。
+  int declared = 0;
+  int declaredSeason = 0;
+
+  static const declareLabels = ['宣言しない', '優勝を狙う', '若手を育てる', '立て直す'];
+
+  /// 今シーズンの宣言(シーズンが違えば 0)。
+  int get declaredNow => declaredSeason == season ? declared : 0;
+
+  void _askDeclare() {
+    _mail(Sender.owner, '$season年目の方針を宣言するか',
+        'オーナーと記者が、今シーズンの方針を聞いている。開幕までに答える(答えなければ宣言しない)。\n'
+        '・優勝を狙う: すぐ人気+3。プレーオフの2回戦に届けば信頼+5、届かなければ-5\n'
+        '・若手を育てる: 勝ち数の目標が3つ下がる。25歳以下を先発に2人置けば信頼+4、置けなければ-3\n'
+        '・立て直す: 勝ち数の目標が6つ下がり、すぐ人気-3。黒字で終えれば信頼+3',
+        kind: MsgKind.declare, choices: const ['優勝を狙う', '若手を育てる', '立て直す', '宣言しない']);
+  }
+
+  /// シーズンの終わりの、宣言の答え合わせ(信頼の増減を返す)。
+  int _settleDeclare(int res) {
+    final d = declaredNow;
+    if (d == 0) return 0;
+    final (ok, delta) = switch (d) {
+      1 => (res >= 2, res >= 2 ? 5 : -5),
+      2 => (goalOk(OwnerGoal(GoalKind.youth)), goalOk(OwnerGoal(GoalKind.youth)) ? 4 : -3),
+      _ => (profit >= 0, profit >= 0 ? 3 : 0),
+    };
+    _mail(Sender.owner, '「${declareLabels[d]}」の答え合わせ', '${ok ? '宣言どおりのシーズンだった' : '宣言どおりにはいかなかった'}。信頼${delta >= 0 ? '+' : ''}$delta。');
+    declared = 0;
+    return delta;
   }
 
   // ---------------------------------------------------------------- 記者の順位予想
@@ -2043,6 +2090,12 @@ class Career {
     _setModes();
     final r = strengthRank(mine);
     target = (gamesPerSeason * (0.72 - r * 0.016)).round();
+    if (declaredNow == 2) target -= 3;
+    if (declaredNow == 3) target -= 6;
+    // 答えないまま開幕したら、宣言しないことにして閉じる
+    for (final m in inbox) {
+      if (m.kind == MsgKind.declare && m.needsAnswer) m.answer = 3;
+    }
     revenue = 0;
     cupField = [];
     cupRounds = [];
@@ -2754,7 +2807,8 @@ class Career {
       trust = (trust + (ok ? 2 : -2)).clamp(0, 100);
     }
     _settleForecast();
-    final raw = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta + liked + kept + stance;
+    final declare = _settleDeclare(res);
+    final raw = ((me.wins - target) * 1.5).round() + resultTrust[res] - lastTax + goalDelta + liked + kept + stance + declare;
     // オーナーの厳しさ: 信頼が減るときだけ、難しさの倍率をかける
     final delta = raw < 0 ? (raw * difficulty.ownerStrict).round() : raw;
     trust = (trust + delta).clamp(0, 100);
@@ -3965,6 +4019,7 @@ class Career {
     phase = Phase.preseason;
     _setModes();
     _makeForecast();
+    _askDeclare();
   }
 
   void _aiFreeAgency() {
@@ -4566,6 +4621,7 @@ class Career {
         if (forecastSeason != 0) 'fcs': forecastSeason,
         if (forecast.isNotEmpty) 'fc': forecast,
         if (forecastBet != 0) 'fcb': forecastBet,
+        if (declared != 0) 'dcl': [declared, declaredSeason],
         if (camp.isNotEmpty) 'cmp': {for (final e in camp.entries) '${e.key}': e.value.index},
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
@@ -4704,6 +4760,8 @@ class Career {
       ..forecastSeason = (j['fcs'] as int?) ?? 0
       ..forecast = [for (final x in (j['fc'] as List? ?? const [])) x as int]
       ..forecastBet = (j['fcb'] as int?) ?? 0
+      ..declared = j['dcl'] is List ? ((j['dcl'] as List)[0] as int).clamp(0, 3) : 0
+      ..declaredSeason = j['dcl'] is List ? (j['dcl'] as List)[1] as int : 0
       ..camp = {
         for (final e in ((j['cmp'] as Map?) ?? const {}).entries)
           if (e.value is int && (e.value as int) >= 0 && (e.value as int) < Attr.values.length) int.parse(e.key as String): Attr.values[e.value as int]
