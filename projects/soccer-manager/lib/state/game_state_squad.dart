@@ -480,6 +480,10 @@ extension GameStateSquad on GameState {
     if (_save!.budget < campCost) return false;
 
     _book(LedgerCategory.facilities, -campCost);
+    // 海外ツアーは興行の収入が入る(グッズの売上として数える)。
+    if (camp.revenue > 0) {
+      _book(LedgerCategory.merchandise, scaledMoney(camp.revenue));
+    }
     _save!.preseasonCampPending = false;
 
     final team = userTeam;

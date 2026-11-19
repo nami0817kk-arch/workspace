@@ -17,6 +17,9 @@ enum PreseasonCamp {
 
   /// 若手中心の遠征。若い選手が伸びるが、主力の仕上がりは犠牲になる。
   youth,
+
+  /// 海外ツアー。興行の収入が入るが、移動の疲れを大きく残し、戦術は進まない。
+  overseasTour,
 }
 
 extension PreseasonCampInfo on PreseasonCamp {
@@ -25,6 +28,7 @@ extension PreseasonCampInfo on PreseasonCamp {
         PreseasonCamp.fitness => Tr.pick('フィジカル重視', 'Fitness camp'),
         PreseasonCamp.tactical => Tr.pick('戦術の作り込み', 'Tactical camp'),
         PreseasonCamp.youth => Tr.pick('若手中心の遠征', 'Youth tour'),
+        PreseasonCamp.overseasTour => Tr.pick('海外ツアー', 'Overseas tour'),
       };
 
   String get description => switch (this) {
@@ -36,6 +40,9 @@ extension PreseasonCampInfo on PreseasonCamp {
             'The shape beds in, but they are not physically ready.'),
         PreseasonCamp.youth => Tr.pick('23歳以下が伸びるが、主力の仕上がりは犠牲になる。',
             'The under-23s come on. The senior men do not.'),
+        PreseasonCamp.overseasTour => Tr.pick(
+            '興行の収入が入るが、移動の疲れを大きく残し、戦術は進まない。',
+            'Brings in tour money, but the travel leaves the squad tired and tactics untouched.'),
       };
 
   /// 費用(万円)。
@@ -44,6 +51,13 @@ extension PreseasonCampInfo on PreseasonCamp {
         PreseasonCamp.fitness => 300,
         PreseasonCamp.tactical => 300,
         PreseasonCamp.youth => 200,
+        PreseasonCamp.overseasTour => 0,
+      };
+
+  /// 興行の収入(5部の物差しの万円)。海外ツアーだけ。
+  int get revenue => switch (this) {
+        PreseasonCamp.overseasTour => 1500,
+        _ => 0,
       };
 
   /// 全選手の実戦感覚への加算。
@@ -52,6 +66,7 @@ extension PreseasonCampInfo on PreseasonCamp {
         PreseasonCamp.fitness => 25,
         PreseasonCamp.tactical => 8,
         PreseasonCamp.youth => 5,
+        PreseasonCamp.overseasTour => 10,
       };
 
   /// 開幕時に残る疲労。
@@ -60,6 +75,7 @@ extension PreseasonCampInfo on PreseasonCamp {
         PreseasonCamp.fitness => 18,
         PreseasonCamp.tactical => 6,
         PreseasonCamp.youth => 8,
+        PreseasonCamp.overseasTour => 20,
       };
 
   /// 布陣の習熟度への加算。
@@ -68,6 +84,7 @@ extension PreseasonCampInfo on PreseasonCamp {
         PreseasonCamp.fitness => 0,
         PreseasonCamp.tactical => 20,
         PreseasonCamp.youth => 0,
+        PreseasonCamp.overseasTour => 0,
       };
 
   /// 23歳以下の選手が受け取る成長の機会(確率)。
