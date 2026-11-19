@@ -1520,8 +1520,20 @@ extension GameStateFinance on GameState {
   EconomyPhase get economyNext => _save?.economyNext ?? EconomyPhase.normal;
 
   /// シーズン末に景気を1つ進める。来季の予報が今季になり、次の予報を引く。
-  void _advanceEconomy({double? roll}) {
+  void _advanceEconomy({double? roll, double? marketRoll}) {
     final save = _save!;
+    // 移籍の相場は、終えた季の景気に連れて動く。
+    final before = save.marketIndex;
+    save.marketIndex = MarketTrendEngine.next(
+        before, save.economyPhase, marketRoll ?? Random().nextDouble());
+    final diff = save.marketIndex - before;
+    if (diff != 0) {
+      _logNews(
+          Tr.pick(
+              '移籍の相場: ${diff > 0 ? '上がった' : '下がった'}(基準100に対して${save.marketIndex})。移籍金の言い値も、来るオファーの額も、これに連れて動きます。',
+              'Transfer market: prices ${diff > 0 ? 'rose' : 'fell'} (now ${save.marketIndex} against a base of 100). Asking prices and the bids you receive move with it.'),
+          context: Tr.pick('移籍の相場', 'Transfer market'));
+    }
     save.economyPhase = save.economyNext;
     save.economyNext =
         EconomyEngine.next(save.economyPhase, roll ?? Random().nextDouble());
@@ -1535,7 +1547,11 @@ extension GameStateFinance on GameState {
 
   /// テスト用: 景気を1つ進める。
   @visibleForTesting
-  void debugAdvanceEconomy(double roll) => _advanceEconomy(roll: roll);
+  void debugAdvanceEconomy(double roll, {double? marketRoll}) =>
+      _advanceEconomy(roll: roll, marketRoll: marketRoll);
+
+  /// 移籍市場の相場(100 が基準)。
+  int get marketIndex => _save?.marketIndex ?? 100;
 
   /// オーナーが選んだクラブの方針。
   ClubPolicy get clubPolicy => _save?.clubPolicy ?? ClubPolicy.balanced;
