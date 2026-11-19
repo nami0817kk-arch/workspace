@@ -37,7 +37,7 @@ class ProgressTab extends StatelessWidget {
     final list = ListView(
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
       children: [
-        if (scene != null) ...[SceneStrip('assets/art/${scene.$1}.jpg', scene.$2, key: Key('scene-${scene.$1}')), const SizedBox(height: 8)],
+        if (scene != null) ...[SceneStrip(scene.$1, scene.$2, key: Key(scene.$1)), const SizedBox(height: 8)],
         ...switch (car.phase) {
         Phase.preseason => _preseason(context, car),
         Phase.season => _season(context, car),
@@ -69,10 +69,10 @@ class ProgressTab extends StatelessWidget {
 
   /// いまの時期の場面の絵と名前(プレーオフ・シーズンの終わりは、それぞれの画面の絵があるので出さない)。
   (String, String)? _sceneOf(Career car) => switch (car.phase) {
-        Phase.preseason => ('scene_preseason', '${car.season}年目・開幕前'),
-        Phase.season when car.block == tradeDeadlineBlock - 1 => ('scene_deadline', 'トレードの締め切りが近い'),
-        Phase.season => ('scene_season', '${car.season}年目・シーズン ${car.roundAt}/$gamesPerSeason試合'),
-        Phase.contracts => ('scene_offseason', '${car.season}年目・オフ'),
+        Phase.preseason => ('assets/art/scene_preseason.jpg', '${car.season}年目・開幕前'),
+        Phase.season when car.block == tradeDeadlineBlock - 1 => ('assets/art/scene_deadline.jpg', 'トレードの締め切りが近い'),
+        Phase.season => ('assets/art/scene_season.jpg', '${car.season}年目・シーズン ${car.roundAt}/$gamesPerSeason試合'),
+        Phase.contracts => ('assets/art/scene_offseason.jpg', '${car.season}年目・オフ'),
         _ => null,
       };
 

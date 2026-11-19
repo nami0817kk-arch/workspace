@@ -37,7 +37,7 @@ class _LotteryScreenState extends State<LotteryScreen> {
         child: Column(children: [
           Expanded(
             child: ListView(padding: const EdgeInsets.fromLTRB(14, 8, 14, 16), children: [
-              const SceneStrip('assets/art/scene_draft.jpg', 'ドラフトくじ', height: 84),
+              const SceneStrip('assets/art/scene_draft.jpg', '上位4つの指名は、くじで決まる', height: 84),
               const SizedBox(height: 8),
               Text(
                 'プレーオフに出なかった${rows.length}チームで、1〜$lotteryPicks番目の指名をくじで決める。残りは成績の悪い順。',
