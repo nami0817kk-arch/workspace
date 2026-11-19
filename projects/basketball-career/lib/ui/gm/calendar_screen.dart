@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/calendar.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../gm_controller.dart';
@@ -45,18 +46,18 @@ class CalendarScreen extends StatelessWidget {
                         ),
                       ]),
                   ]),
-                  for (var b = 0; b < blocksPerSeason; b++) ...[
+                  for (final (month, rounds) in _byMonth(car.season, games.length)) ...[
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 4),
                       child: Text(
-                        '${b + 1}区切り(${blockStart(b) + 1}〜${blockStart(b + 1)}試合)'
-                        '${b == tradeDeadlineBlock - 1 ? '・終わりにトレードの締め切り・オールスター・カップ戦' : ''}'
-                        '${b == blocksPerSeason - 1 ? '・終わるとプレーオフ' : ''}',
+                        '$month月(${rounds.length}試合)'
+                        '${deadlineDate(car.season).month == month ? '・${dateLabel(deadlineDate(car.season))}にトレードの締め切りとカップ戦、${dateLabel(allStarDate(car.season))}にオールスター' : ''}'
+                        '${rounds.last == gamesPerSeason - 1 ? '・最終戦のあとプレーオフ' : ''}',
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                     ),
                     Wrap(spacing: 4, runSpacing: 4, children: [
-                      for (var i = blockStart(b); i < blockStart(b + 1) && i < games.length; i++) _cell(car, i, games[i], i < log.length ? log[i] : null),
+                      for (final i in rounds) _cell(car, i, games[i], i < log.length ? log[i] : null),
                     ]),
                   ],
                 ],
@@ -65,6 +66,17 @@ class CalendarScreen extends StatelessWidget {
           );
         },
       );
+
+  /// 節を月ごとにまとめる((月, 節の番号の一覧)、古い順)。
+  static List<(int, List<int>)> _byMonth(int season, int n) {
+    final out = <(int, List<int>)>[];
+    for (var i = 0; i < n; i++) {
+      final m = roundDate(season, i).month;
+      if (out.isEmpty || out.last.$1 != m) out.add((m, <int>[]));
+      out.last.$2.add(i);
+    }
+    return out;
+  }
 
   Widget _cell(Career car, int i, (int, bool) g, List<int>? r) {
     final (opp, home) = g;
@@ -80,7 +92,7 @@ class CalendarScreen extends StatelessWidget {
         border: Border.all(color: color, width: next ? 2 : 1),
       ),
       child: Column(children: [
-        Text('${i + 1}${home ? '' : ' @'}', style: const TextStyle(fontSize: 10, color: GmColors.sub)),
+        Text('${dateShort(roundDate(car.season, i))}${home ? '' : ' @'}', style: const TextStyle(fontSize: 10, color: GmColors.sub)),
         TeamBadge(team: opp, size: 20),
         Text(
           r == null ? (home ? 'ホーム' : 'アウェー') : '${win ? '勝' : '負'} ${r[2]}-${r[3]}',

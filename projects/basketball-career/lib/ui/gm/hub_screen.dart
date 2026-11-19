@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/calendar.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
@@ -18,12 +19,12 @@ import 'style.dart';
 import 'trade_tab.dart';
 
 String phaseLabel(Career c) => switch (c.phase) {
-      Phase.preseason => 'シーズン前',
-      Phase.season => 'シーズン ${c.roundAt}/$gamesPerSeason試合',
-      Phase.playoffs => 'プレーオフ前',
-      Phase.seasonEnd => 'シーズン終了',
-      Phase.draft => 'オフ・ドラフト',
-      Phase.contracts => 'オフ・契約',
+      Phase.preseason => 'シーズン前(${c.season == 1 ? '10月' : offseasonMonths['preseason']})',
+      Phase.season => '${dateLabel(roundDate(c.season, c.roundAt.clamp(0, gamesPerSeason - 1)))}・${c.roundAt}/$gamesPerSeason試合',
+      Phase.playoffs => 'プレーオフ(${offseasonMonths['playoffs']})',
+      Phase.seasonEnd => 'シーズン終了(${offseasonMonths['seasonEnd']})',
+      Phase.draft => 'オフ・ドラフト(${offseasonMonths['draft']})',
+      Phase.contracts => 'オフ・契約(${offseasonMonths['contracts']})',
       Phase.over => '任期の終わり',
     };
 

@@ -71,11 +71,11 @@ void main() {
     await _closeDialogs(tester);
     expect(c.career!.block, 1);
     // 進めたら報告が画面いっぱいに出て、閉じるまで戻らない
-    expect(find.text('1〜20試合目の結果'), findsOneWidget);
+    expect(find.textContaining('の結果(1〜20試合目)'), findsOneWidget);
     expect(find.textContaining('オーナーの目標'), findsWidgets);
     await tester.tap(find.text('閉じる'));
     await tester.pumpAndSettle();
-    expect(find.text('1〜20試合目の結果'), findsNothing);
+    expect(find.textContaining('の結果(1〜20試合目)'), findsNothing);
     await tester.scrollUntilVisible(find.textContaining('この20試合'), 300, scrollable: _progress);
     expect(find.textContaining('この20試合'), findsOneWidget);
   });

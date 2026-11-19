@@ -37,6 +37,7 @@ import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
+import '../widgets/club_comparison_card.dart';
 import '../widgets/sponsor_slots_card.dart';
 import '../logic/economy_scale.dart';
 
@@ -317,6 +318,7 @@ class FinanceScreen extends StatelessWidget {
                   const FiveYearPlanCard(),
                   const ClubCultureCard(),
                   const OwnerCareerCard(),
+                  const ClubComparisonCard(),
                   const RivalOwnersCard(),
                   const MediaDealsCard(),
 

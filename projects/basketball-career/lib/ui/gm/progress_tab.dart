@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/calendar.dart';
 import '../../gm/block_report.dart';
 import '../../gm/career.dart';
 import '../../gm/inbox.dart';
@@ -271,11 +272,12 @@ class ProgressTab extends StatelessWidget {
     return [
       ..._scenarioCard(car),
       _card([
-        _head(played == 0 ? '開幕' : '$played試合を終えて'),
+        _head(played == 0 ? '開幕(${roundLabel(car.season, 0)})' : '${roundLabel(car.season, played - 1)}まで・$played試合を終えて'),
         const SizedBox(height: 8),
         _kv('成績', '${me.wins}勝${me.losses}敗($conf ${car.confRank}位)'),
+        if (played < gamesPerSeason) _kv('次の試合', roundLabel(car.season, played)),
         _kv('オーナーの目標', '${car.target}勝', color: me.wins + (gamesPerSeason - played) < car.target ? GmColors.bad : null),
-        _kv('トレード', deadline ? 'あと${tradeDeadlineBlock - car.block}区切りで締め切り' : '締め切りを過ぎた', color: deadline ? null : GmColors.sub),
+        _kv('トレード', deadline ? '${dateLabel(deadlineDate(car.season))}に締め切り(あと${blockStart(tradeDeadlineBlock) - played}試合)' : '締め切りを過ぎた', color: deadline ? null : GmColors.sub),
         _todo(_seasonTodo(car)),
         const SizedBox(height: 12),
         // 進めるのは大きいボタン1つ。采配と、まとめて進める方法は横に寄せる
@@ -456,7 +458,7 @@ class ProgressTab extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: Row(children: [
-              SizedBox(width: 44, child: Text('${car.roundAt + i + 1}戦目', style: const TextStyle(fontSize: 12, color: GmColors.sub))),
+              SizedBox(width: 44, child: Text(dateShort(roundDate(car.season, car.roundAt + i)), style: const TextStyle(fontSize: 12, color: GmColors.sub))),
               SizedBox(width: 22, child: Text(home ? 'vs' : '@', style: const TextStyle(fontSize: 12, color: GmColors.sub))),
               TeamBadge(team: opp, size: 20),
               const SizedBox(width: 6),
