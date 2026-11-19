@@ -370,15 +370,46 @@ void main() {
     await _closeDialogs(tester);
     final start = find.textContaining(RegExp('プレーオフを戦う|プレーオフの結果を見る'));
     await tester.scrollUntilVisible(start, 300, scrollable: _progress);
+    await tester.ensureVisible(start);
+    await tester.pumpAndSettle();
     await tester.tap(start);
     await tester.pumpAndSettle();
     await _closeDialogs(tester);
-    final mine = car.playoffs.where((s) => s.high == car.mine || s.low == car.mine).toList();
-    if (mine.isNotEmpty) {
-      expect(find.text('第1戦を見る'), findsOneWidget);
-      await tester.tap(find.text('第1戦を見る'));
+    // 出られたときは1試合ずつ戦う: 1試合進めてボックススコアを閉じ、残りはまとめて
+    if (car.poLive) {
+      expect(find.byKey(const Key('po-live')), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const Key('po-next')));
       await tester.pumpAndSettle();
-      expect(find.text('第1戦'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('po-next')));
+      await tester.pumpAndSettle();
+      expect(car.myLastPlayoffGame, isNotNull);
+      Future<void> popAll() async {
+        await _closeDialogs(tester);
+        while (Navigator.of(tester.element(find.byType(Scaffold).last)).canPop()) {
+          Navigator.of(tester.element(find.byType(Scaffold).last)).pop();
+          await tester.pumpAndSettle();
+        }
+      }
+
+      // ボックススコアを閉じてから、残りをまとめて
+      await popAll();
+      if (car.phase == Phase.playoffs) {
+        await tester.ensureVisible(find.byKey(const Key('po-all')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('po-all')));
+        await tester.pumpAndSettle();
+      }
+      await popAll();
+      await _closeDialogs(tester);
+      expect(car.phase, Phase.seasonEnd);
+      expect(find.text('オーナーの評価'), findsOneWidget);
+      // あとから振り返れる
+      await tester.ensureVisible(find.byKey(const Key('po-review')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('po-review')));
+      await tester.pumpAndSettle();
+      expect(find.text('第1戦を見る'), findsOneWidget);
+      return;
     }
     var guard = 0;
     while (find.textContaining('シーズンの終わりへ').evaluate().isEmpty && guard++ < 60) {

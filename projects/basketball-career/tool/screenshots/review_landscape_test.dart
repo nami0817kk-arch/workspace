@@ -149,6 +149,15 @@ void main() {
       await t.tap(more);
       await t.pumpAndSettle();
     });
+    // プレーオフを1試合ずつ(第1戦を終えたところ)
+    final poLive = careerAt(1, 2)..startSeason();
+    while (poLive.phase == Phase.season) {
+      poLive.playBlock();
+    }
+    poLive
+      ..startPlayoffs()
+      ..playPlayoffGame();
+    if (poLive.poLive) await _shoot(t, '4c3_po_live', await _with(poLive));
     // まとめて進めるあいだ、結果が流れる(途中で撮って、最後まで流す)
     await _shoot(t, '4j3_sim_ticker', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
       await t.tap(find.textContaining('次の20試合へ'));
@@ -247,8 +256,9 @@ void main() {
       po.declineIncoming();
       po.playBlock();
     }
+    po.playPlayoffs();
     await _shoot(t, '4c_playoff_run', await _with(po), act: (t) async {
-      final b = find.textContaining(RegExp('プレーオフを戦う|プレーオフの結果を見る'));
+      final b = find.byKey(const Key('po-review'));
       await t.ensureVisible(b);
       await t.pump(const Duration(milliseconds: 300));
       await t.tap(b);
@@ -282,8 +292,9 @@ void main() {
       po2.declineIncoming();
       po2.playBlock();
     }
+    po2.playPlayoffs();
     await _shoot(t, '4c2_playoff_stream', await _with(po2), act: (t) async {
-      final b = find.textContaining(RegExp('プレーオフを戦う|プレーオフの結果を見る'));
+      final b = find.byKey(const Key('po-review'));
       await t.ensureVisible(b);
       await t.pump(const Duration(milliseconds: 300));
       await t.tap(b);

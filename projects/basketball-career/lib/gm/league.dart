@@ -876,23 +876,33 @@ class Series {
 
   void play(List<Team> teams, Rng rng, int mine) {
     while (!over) {
-      final n = highWins + lowWins;
-      // 上位のチームが1・2・5・7試合目をホームで
-      final highHome = n == 0 || n == 1 || n == 4 || n == 6;
-      final h = teams[highHome ? high : low], a = teams[highHome ? low : high];
-      final w0 = h.wins, l0 = h.losses, w1 = a.wins, l1 = a.losses;
-      final g = playGame(h, a, rng, mine: mine, count: false);
-      // プレーオフはシーズンの勝敗に数えない
-      h.wins = w0;
-      h.losses = l0;
-      a.wins = w1;
-      a.losses = l1;
-      games.add(g);
-      if (g.winner == high) {
-        highWins++;
-      } else {
-        lowWins++;
-      }
+      playOne(teams, rng, mine);
+    }
+  }
+
+  /// 次の試合で、上位のチームがホームか(上位のチームが1・2・5・7試合目をホームで)。
+  bool get highHomeNext {
+    final n = highWins + lowWins;
+    return n == 0 || n == 1 || n == 4 || n == 6;
+  }
+
+  /// 次の1試合を戦う。[liveSeed] と [calls] は、自分の試合を采配したとき。
+  void playOne(List<Team> teams, Rng rng, int mine, {int? liveSeed, List<GameCall?> calls = const []}) {
+    if (over) return;
+    final highHome = highHomeNext;
+    final h = teams[highHome ? high : low], a = teams[highHome ? low : high];
+    final w0 = h.wins, l0 = h.losses, w1 = a.wins, l1 = a.losses;
+    final g = playGame(h, a, rng, mine: mine, count: false, liveSeed: liveSeed, calls: calls);
+    // プレーオフはシーズンの勝敗に数えない
+    h.wins = w0;
+    h.losses = l0;
+    a.wins = w1;
+    a.losses = l1;
+    games.add(g);
+    if (g.winner == high) {
+      highWins++;
+    } else {
+      lowWins++;
     }
   }
 

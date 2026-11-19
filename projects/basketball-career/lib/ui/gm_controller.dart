@@ -359,11 +359,44 @@ class GmController extends ChangeNotifier {
   Future<void> playPlayoffs() async {
     final c = career;
     if (c == null || c.phase != Phase.playoffs || busy) return;
-    await _maybeInterstitial();
+    if (!c.poLive) await _maybeInterstitial();
     c.playPlayoffs();
-    unawaited(Sfx.play(c.myResult >= 5 ? SoundEffect.fanfare : SoundEffect.buzzer));
-    await money?.tournamentPlayed();
-    pending.addAll(profile.recordSeason(c));
+    await _afterPlayoffStep(c);
+  }
+
+  /// プレーオフを始める(自分の最初の試合の手前まで進む)。
+  Future<void> startPlayoffs() async {
+    final c = career;
+    if (c == null || c.phase != Phase.playoffs || c.poLive || busy) return;
+    await _maybeInterstitial();
+    c.startPlayoffs();
+    await _afterPlayoffStep(c);
+  }
+
+  /// プレーオフの自分の次の1試合を戦う([calls] は采配したとき)。
+  Future<void> playPlayoffGame({List<GameCall?>? calls}) async {
+    final c = career;
+    if (c == null || c.phase != Phase.playoffs || !c.poLive || busy) return;
+    c.playPlayoffGame(calls: calls);
+    unawaited(Sfx.play(SoundEffect.buzzer));
+    await _afterPlayoffStep(c);
+  }
+
+  /// 今のシリーズが決まるまで戦う。
+  Future<void> playPlayoffSeries() async {
+    final c = career;
+    if (c == null || c.phase != Phase.playoffs || !c.poLive || busy) return;
+    c.playPlayoffSeries();
+    await _afterPlayoffStep(c);
+  }
+
+  /// プレーオフが終わっていれば、音・広告の数・記録を済ませる。
+  Future<void> _afterPlayoffStep(Career c) async {
+    if (c.phase == Phase.seasonEnd) {
+      unawaited(Sfx.play(c.myResult >= 5 ? SoundEffect.fanfare : SoundEffect.buzzer));
+      await money?.tournamentPlayed();
+      pending.addAll(profile.recordSeason(c));
+    }
     _record(c);
     _changed();
   }
