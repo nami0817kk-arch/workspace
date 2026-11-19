@@ -1493,6 +1493,8 @@ extension GameStateFinance on GameState {
   /// シーズン末の株主総会。外部の株主へ配当を払い、総会の様子をニュースに残す。
   void _holdShareholdersMeeting() {
     final save = _save!;
+    // 決算(法人税)のあとに配当と議案。
+    _settleCorporateTax();
     final dividend = EquityEngine.dividend(
         ownerShare: save.ownerShare, seasonProfit: currentLedger.profit);
     if (dividend > 0) _book(LedgerCategory.financing, -dividend);
@@ -1503,6 +1505,7 @@ extension GameStateFinance on GameState {
           'Shareholders\' meeting: ${EquityEngine.mood(save.shareholderExpectation)}. ${outside > 0 ? 'Paid outside holders ($outside%) a dividend of ${formatMoney(dividend)}.' : 'There are no outside shareholders.'}'),
       context: Tr.pick('株主総会', 'Shareholders\' meeting'),
     );
+    _raiseAgmDemand();
   }
 
   /// 今シーズンの景気。

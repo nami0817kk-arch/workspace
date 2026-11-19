@@ -285,6 +285,21 @@ class SaveGame {
   /// オーナーが最後に出資した季(株主の喜びは1季に1回)。
   int ownerInjectionSeason;
 
+  /// 株主総会の要求(AgmDemand の name)。答えるまで残る。
+  String? agmDemand;
+
+  /// 要求が「配当の上乗せ」のときの額(万円)。
+  int agmPayout;
+
+  /// 総会のときの人件費率(要求の説明と約束の基準)。
+  double agmWageRatio;
+
+  /// 「人件費を下げる」と約束した人件費率の上限(0 は約束なし)。
+  double agmWageRatioPledge;
+
+  /// 法人税の繰越欠損(万円)。赤字の年に積み、黒字の年に差し引く。
+  int taxLossCarry;
+
   /// 自クラブの選手の私生活の出来事(選手 id → 起きた出来事の印)。
   /// 結婚は1回だけ、ホームシックは1季に1回、のように重ならないために持つ。
   Map<String, List<String>> lifeEvents;
@@ -552,6 +567,11 @@ class SaveGame {
     this.ownerWealth = -1,
     this.ownerLoanBalance = 0,
     this.ownerInjectionSeason = 0,
+    this.agmDemand,
+    this.agmPayout = 0,
+    this.agmWageRatio = 0,
+    this.agmWageRatioPledge = 0,
+    this.taxLossCarry = 0,
     this.managerWarned = false,
     this.confidence = 60,
     this.shareholderExpectation = 60,
@@ -804,6 +824,11 @@ class SaveGame {
         if (ownerLoanBalance > 0) 'ownerLoanBalance': ownerLoanBalance,
         if (ownerInjectionSeason > 0)
           'ownerInjectionSeason': ownerInjectionSeason,
+        if (agmDemand != null) 'agmDemand': agmDemand,
+        if (agmPayout > 0) 'agmPayout': agmPayout,
+        if (agmWageRatio > 0) 'agmWageRatio': agmWageRatio,
+        if (agmWageRatioPledge > 0) 'agmWageRatioPledge': agmWageRatioPledge,
+        if (taxLossCarry > 0) 'taxLossCarry': taxLossCarry,
         if (managerWarned) 'managerWarned': true,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
@@ -966,6 +991,12 @@ class SaveGame {
         ownerWealth: json['ownerWealth'] as int? ?? -1,
         ownerLoanBalance: json['ownerLoanBalance'] as int? ?? 0,
         ownerInjectionSeason: json['ownerInjectionSeason'] as int? ?? 0,
+        agmDemand: json['agmDemand'] as String?,
+        agmPayout: json['agmPayout'] as int? ?? 0,
+        agmWageRatio: (json['agmWageRatio'] as num?)?.toDouble() ?? 0,
+        agmWageRatioPledge:
+            (json['agmWageRatioPledge'] as num?)?.toDouble() ?? 0,
+        taxLossCarry: json['taxLossCarry'] as int? ?? 0,
         lifeEvents: (json['lifeEvents'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as String])),
         staffOffers: (json['staffOffers'] as List?)
