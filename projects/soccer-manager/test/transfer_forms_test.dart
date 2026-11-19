@@ -39,7 +39,9 @@ void main() {
     await gs.startNewGame('形FC');
     final s = gs.save!..budget = 99999999;
     s.wageBudget = 99999999;
-    final p = gs.userTeam.players.firstWhere((p) => !p.isLoan);
+    // 呼び戻すときにも労働許可が要る。下りない外国籍の選手は選ばない。
+    final p = gs.userTeam.players
+        .firstWhere((p) => !p.isLoan && gs.workPermitBlock(p) == null);
     final buyer = s.league.teams.firstWhere((t) => t.id != s.userTeamId);
     s.incomingOffers.add(IncomingOffer(
         id: 'bb',
@@ -52,7 +54,8 @@ void main() {
     expect(s.buyBacks[p.id]![0], 1350, reason: '900 × 1.5');
     expect(gs.buyBackCandidates.map((x) => x.id), contains(p.id));
     if (gs.isTransferWindowOpen) {
-      expect(await gs.exerciseBuyBack(p.id), isTrue);
+      expect(await gs.exerciseBuyBack(p.id), isTrue,
+          reason: gs.lastSigningBlockReason);
       expect(gs.userTeam.players.any((x) => x.id == p.id), isTrue);
       expect(s.buyBacks.containsKey(p.id), isFalse);
     }
