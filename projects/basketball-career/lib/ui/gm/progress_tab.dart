@@ -5,6 +5,7 @@ import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../../gm/rating.dart';
+import '../../gm/summer.dart';
 import '../../monetization/monetization.dart';
 import '../art/title_art.dart';
 import '../gm_controller.dart';
@@ -14,6 +15,7 @@ import 'calendar_screen.dart';
 import 'coaches_screen.dart';
 import 'common.dart';
 import 'draft_show_screen.dart';
+import 'gm_table.dart';
 import 'inbox_screen.dart';
 import 'live_game_screen.dart';
 import 'negotiate_dialog.dart';
@@ -76,7 +78,8 @@ class ProgressTab extends StatelessWidget {
         _ => null,
       };
 
-  Widget _card(List<Widget> children, {Color? edge}) => Card(
+  Widget _card(List<Widget> children, {Color? edge, Key? key}) => Card(
+        key: key,
         shape: edge == null
             ? null
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color: edge, width: 1.5)),
@@ -998,6 +1001,7 @@ class ProgressTab extends StatelessWidget {
         ],
       ]),
       _contractsGuide(car, exp.length),
+      _summerCard(car),
       ..._fanCard(car),
       if (car.growth.isNotEmpty) _growthCard(car),
       if (car.sheetPlayer != null) _sheetCard(context, car),
@@ -1023,6 +1027,53 @@ class ProgressTab extends StatelessWidget {
     ];
   }
 
+  /// 夏の過ごし方(サマーリーグ)。
+  Widget _summerCard(Career car) {
+    final problem = car.summerProblem;
+    final players = car.summerPlayers;
+    return _card(key: const Key('summer-card'), [
+      _head('夏の過ごし方', icon: Icons.wb_sunny_rounded, color: GmColors.gold),
+      const SizedBox(height: 6),
+      if (!car.summerDone) ...[
+        const Text('サマーリーグに若手(24歳まで・2年目まで)を出す。$summerGames試合で、出来が良いと少し伸びて気持ちが上がる。出た選手は性格が分かる。',
+            style: TextStyle(color: GmColors.sub, fontSize: 12.5, height: 1.5)),
+        if (players.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Text('出る選手: ${[for (final p in players) p.name].join('・')}', style: const TextStyle(fontSize: 12.5, height: 1.4)),
+        ],
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: FilledButton.icon(
+            key: const Key('summer-play'),
+            onPressed: c.busy || problem != null ? null : c.playSummerLeague,
+            icon: const Icon(Icons.sports_basketball_rounded),
+            label: const Text('サマーリーグを開く'),
+          ),
+        ),
+        if (problem != null && players.isEmpty) Text(problem, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+      ] else ...[
+        Text('サマーリーグ ${car.summerWins}勝${summerGames - car.summerWins}敗', style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        for (final x in car.summer)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(children: [
+              Expanded(child: fitText(x.name, style: const TextStyle(fontSize: 13))),
+              const SizedBox(width: 10),
+              SizedBox(width: 112, child: Text('${x.pts}点 ${x.reb}リ ${x.ast}ア', style: const TextStyle(fontSize: 12.5, color: GmColors.sub))),
+              SizedBox(
+                width: 72,
+                child: Text(summerGradeText(x.grade),
+                    style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: x.grade == 'A' ? GmColors.gold : x.grade == 'D' ? GmColors.bad : GmColors.text)),
+              ),
+              SizedBox(width: 44, child: Text(x.delta > 0 ? 'OVR+${x.delta}' : '', style: const TextStyle(fontSize: 12, color: GmColors.good))),
+            ]),
+          ),
+      ],
+    ]);
+  }
+
   /// オフの「やること」の一覧。済んだものにはチェックが付き、いま手を付けるものが太字で出る。
   Widget _contractsGuide(Career car, int expiringCount) {
     final steps = <(bool, String, String)>[
@@ -1033,6 +1084,7 @@ class ProgressTab extends StatelessWidget {
         (false, '契約が切れた選手を決める($expiringCount人)', '残したい選手は「再契約」、いらない選手は「放す」。そのままだと出ていく')
       else
         (true, '契約が切れた選手は決め終わった', ''),
+      (car.summerDone, car.summerDone ? 'サマーリーグは済んだ' : 'お好みで: サマーリーグで若手を試す', car.summerDone ? '' : '下の「夏の過ごし方」。出来が良い若手は少し伸びる'),
       (false, 'お好みで: 自由契約の選手を取って補強する', '左のメニューの「補強」か、下の「自由契約の選手を見る」(しなくてもよい)'),
       (false, '終わったら「オフを終えて、シーズン前へ」を押す', '画面の下に固定してあるボタン。次はトレードをして、開幕する'),
     ];

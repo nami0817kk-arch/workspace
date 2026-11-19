@@ -319,6 +319,12 @@ class GmController extends ChangeNotifier {
     unawaited(Sfx.play(SoundEffect.chime));
   }
   void exerciseOption(int id) => _act((c) => c.exerciseOption(id));
+
+  /// サマーリーグを開く(オフの契約の時期に1回)。
+  void playSummerLeague() {
+    _act((c) => c.playSummerLeague());
+    unawaited(Sfx.play(SoundEffect.chime));
+  }
   void declineOption(int id) => _act((c) => c.declineOption(id));
 
   /// 任期を自分で終える(任期に上限は無い)。
