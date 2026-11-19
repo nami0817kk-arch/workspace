@@ -5415,7 +5415,9 @@ void main() {
     int goalkeepingDeclines(Position position) {
       var count = 0;
       for (int i = 0; i < 2500; i++) {
-        final p = makeFreshPlayer(position: position, age: 33);
+        // GK は衰えの始まりが3年遅い(ポジション別のピーク)。どの成長の型でも
+        // 衰えている歳にする。
+        final p = makeFreshPlayer(position: position, age: 38);
         final before = {
           for (final k in AttributeKeys.all) k: p.attributeValue(k)
         };
