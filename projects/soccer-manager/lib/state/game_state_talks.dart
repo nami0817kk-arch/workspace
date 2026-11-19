@@ -255,7 +255,9 @@ extension GameStateTalks on GameState {
     final inst = t != null && t.installments && t.installmentsOk;
     final fee = fa != null ? 0 : t!.fee;
     final upfront = inst ? (fee * 0.3).round() : fee;
-    final agentFee = TransferTermsEngine.agentFee(fee);
+    // 代理人の手数料は、代理人の個性で率が違う。
+    final agent = RelationsEngine.agentOf(player);
+    final agentFee = (fee * agent.feePercent / 100).round();
     if (weeklyWage <= 0 || signingBonus < 0) return TermsOutcome.blocked;
     if (_save!.budget < upfront + agentFee + signingBonus) {
       _blockTalk(Tr.pick('資金が足りません(移籍金・代理人手数料・サイン料)。',
@@ -303,6 +305,7 @@ extension GameStateTalks on GameState {
       wouldStart: _wouldStartHere(player),
       stepDownFactor: player.traits.stepDownFactor,
       promise: promise,
+      agentFactor: agent.demandFactor,
     );
     // 他のクラブも誘っていれば、選手は年俸とクラブの格を比べる。
     if (t.hasRival) {
@@ -318,7 +321,10 @@ extension GameStateTalks on GameState {
         weeklyWage: weeklyWage, years: years, signingBonus: signingBonus);
     t.termsRound += 1;
     switch (PlayerTermsEngine.judge(
-        effective: effective, demand: demand, round: t.termsRound)) {
+        effective: effective,
+        demand: demand,
+        round: t.termsRound,
+        walkAway: agent.walkAwayRatio)) {
       case TermsReplyKind.walkAway:
         t.stage = TransferTalkStage.collapsed;
         lastSigningBlockReason = Tr.pick(

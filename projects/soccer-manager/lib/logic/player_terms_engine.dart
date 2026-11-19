@@ -36,6 +36,7 @@ class PlayerTermsEngine {
     required bool wouldStart,
     double stepDownFactor = 1.0,
     SquadStatus promise = SquadStatus.regular,
+    double agentFactor = 1.0,
   }) {
     var base = currentWage.toDouble();
     if (fromTier != null) {
@@ -50,6 +51,8 @@ class PlayerTermsEngine {
     }
     if (wasStarter && !wouldStart) base *= 1.2;
     base *= promiseFactor(promise);
+    // 代理人の個性(強気なら高く、穏やかなら少し安く)。
+    base *= agentFactor;
     return max(minWeeklyWage, base.round());
   }
 
@@ -114,9 +117,10 @@ class PlayerTermsEngine {
     required int effective,
     required int demand,
     required int round,
+    double walkAway = walkAwayRatio,
   }) {
     if (effective >= demand) return TermsReplyKind.accept;
-    if (effective < demand * walkAwayRatio) return TermsReplyKind.walkAway;
+    if (effective < demand * walkAway) return TermsReplyKind.walkAway;
     if (round >= maxRounds) return TermsReplyKind.walkAway;
     return TermsReplyKind.counter;
   }

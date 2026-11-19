@@ -290,6 +290,8 @@ extension GameStateMatch on GameState {
     _updateManagerWeekly(preMatchRank);
     // 序列を約束した選手を、先発から外し続けていないか。
     _checkPromisesWeekly();
+    // 先発に仲の良い選手・仲の悪い選手がいるか。
+    RelationsEngine.applyWeekly(userTeam);
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
       userTeam.tacticalMeetingCooldownWeeks -= 1;
     }
