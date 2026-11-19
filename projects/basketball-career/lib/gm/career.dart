@@ -931,6 +931,19 @@ class Career {
           if (!stayIds.contains(p.id)) stayIds = [...stayIds, p.id];
           p.morale = (p.morale + 5).clamp(0, 100);
         }
+      case MsgKind.offTalk:
+        // 約束の期限は来シーズン(オフを終えるとシーズンが1つ進む)
+        switch (choice) {
+          case 0:
+            p.morale = (p.morale + (15 * w).round()).clamp(0, 100);
+            _promise(PromiseKind.starter, (season + 1) * blocksPerSeason + 2, p: p);
+          case 1:
+            p.morale = (p.morale + (8 * w).round()).clamp(0, 100);
+            _promise(PromiseKind.trade, (season + 1) * blocksPerSeason + tradeDeadlineBlock, p: p);
+          default:
+            // 説明が通じるかは、これまで約束を守ってきたか(言葉の重み)で決まる
+            p.morale = (p.morale + (word >= 45 ? (6 * w).round() : -4)).clamp(0, 100);
+        }
       case MsgKind.info:
       case MsgKind.press:
       case MsgKind.ownerGoal:
@@ -1069,6 +1082,23 @@ class Career {
         '${players.length}人の若手が$summerGames試合に出た。いちばん目立ったのは${best.name}(1試合${best.pts}点)。'
         '${summer.where((x) => x.delta > 0).isEmpty ? '' : '伸びた選手: ${[for (final x in summer.where((x) => x.delta > 0)) x.name].join('・')}。'}'
         '出た選手は、性格が分かるようになった。');
+  }
+
+  /// オフの面談: 気持ちの低い選手(契約が続く選手)が、2人まで話をしに来る。乱数は使わない。
+  void _offTalks() {
+    final top = me.order.take(5).toSet();
+    final unhappy = [for (final p in me.roster) if (p.morale < 45 && !expiring.contains(p.id)) p]..sort((a, b) => a.morale.compareTo(b.morale));
+    for (final p in unhappy.take(2)) {
+      final want = p.morale < 20
+          ? '「正直、ここを出たいと思っている」'
+          : !top.contains(p) && shown(p.ovr) >= 65
+              ? '「来季はもっと出番がほしい。このままでは力を出せない」'
+              : '「チームがどこへ向かっているのか、聞かせてほしい」';
+      _mail(Sender.player, '${p.name}が話をしたいと言ってきた',
+          '${p.name}(${p.pos.short}・${p.age}歳・OVR${shown(p.ovr)}・気持ち${p.moraleLabel})$want\n'
+          '約束すると気持ちは大きく上がるが、来季に守れないと本人とチームの気持ちが下がる。説明が通じるかは、これまで約束を守ってきたか(言葉の重み)で決まる。',
+          kind: MsgKind.offTalk, choices: const ['来季は先発で使うと約束する', 'トレード先を探すと約束する', 'チームの考えを説明する'], player: p.id);
+    }
   }
 
   /// 選手の出来事(区切りのあと、1区切りに1つまで。乱数は使わない)。
@@ -3117,6 +3147,7 @@ class Career {
     faLog = [];
     faMoves = [];
     coachPool = _makeCoaches(season, start: false);
+    _offTalks();
     // 引退した力のある選手が、コーチやスカウトの候補に加わる
     for (final r in retirees) {
       final role = Staff.values[(r[0] as String).length % Staff.values.length];
@@ -3783,6 +3814,9 @@ class Career {
       nextFaDay();
     }
     if (sheet != null) declineSheet();
+    for (final m in inbox) {
+      if (m.kind == MsgKind.offTalk && m.needsAnswer) m.answer = 2;
+    }
     _runCamp();
     bids = {};
     _aiFreeAgency();
