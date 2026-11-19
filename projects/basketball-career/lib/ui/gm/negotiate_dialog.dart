@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../art/title_art.dart';
 
 import '../../gm/career.dart';
 import '../../gm/player.dart';
@@ -27,13 +28,18 @@ Future<void> negotiate(BuildContext context, GmController c, Player p, {required
   final ok = c.offer(p.id, years, factor, agreed: agreed);
   messenger.showSnackBar(
     SnackBar(
-      content: Text(
+      content: Row(children: [
+        if (ok) ...[const EventArt('assets/art/event_signing.jpg', width: 64, height: 36), const SizedBox(width: 10)],
+        Expanded(
+          child: Text(
         ok
             ? '${p.name}と$years年 ${money(p.salary)}で契約した'
             : factor < 1 && !agreed
             ? '${p.name}は値下げを断った(気持ちが下がった)'
             : '契約できなかった(年俸の上限を確かめる)',
-      ),
+          ),
+        ),
+      ]),
     ),
   );
 }

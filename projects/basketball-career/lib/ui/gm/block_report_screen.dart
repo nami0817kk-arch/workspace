@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../art/title_art.dart';
 
 import '../../gm/block_report.dart';
 import '../../gm/career.dart';
@@ -107,7 +108,14 @@ class BlockReportScreen extends StatelessWidget {
               ],
               if (r.myNews.isNotEmpty) ...[
                 const SectionTitle('チームの出来事'),
-                for (final n in r.myNews) _bullet(n, bold: true),
+                if (r.myNews.any((n) => n.contains('けが')))
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    const EventArt('assets/art/event_injury.jpg', key: Key('event-injury')),
+                    const SizedBox(width: 10),
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [for (final n in r.myNews) _bullet(n, bold: true)])),
+                  ])
+                else
+                  for (final n in r.myNews) _bullet(n, bold: true),
               ],
               if (r.leagueNews.isNotEmpty) ...[
                 const SectionTitle('リーグの出来事'),

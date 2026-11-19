@@ -33,6 +33,16 @@ flutter:
     - assets/art/title.jpg
     - assets/art/scene_national.jpg
     - assets/art/scene_final.jpg
+    - assets/art/scene_preseason.jpg
+    - assets/art/scene_season.jpg
+    - assets/art/scene_deadline.jpg
+    - assets/art/scene_playoffs.jpg
+    - assets/art/scene_draft.jpg
+    - assets/art/scene_offseason.jpg
+    - assets/art/event_trade.jpg
+    - assets/art/event_signing.jpg
+    - assets/art/event_injury.jpg
+    - assets/art/event_draft.jpg
     - assets/art/players/
     - assets/art/logos/
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../art/title_art.dart';
 
 import '../../gm/career.dart';
 import '../../gm/draft.dart';
@@ -36,6 +37,8 @@ class _LotteryScreenState extends State<LotteryScreen> {
         child: Column(children: [
           Expanded(
             child: ListView(padding: const EdgeInsets.fromLTRB(14, 8, 14, 16), children: [
+              const SceneStrip('assets/art/scene_draft.jpg', 'ドラフトくじ', height: 84),
+              const SizedBox(height: 8),
               Text(
                 'プレーオフに出なかった${rows.length}チームで、1〜$lotteryPicks番目の指名をくじで決める。残りは成績の悪い順。',
                 style: const TextStyle(color: GmColors.sub, fontSize: 12, height: 1.5),
@@ -273,6 +276,8 @@ class DraftSummaryScreen extends StatelessWidget {
         child: Column(children: [
           Expanded(
             child: ListView(padding: const EdgeInsets.fromLTRB(14, 8, 14, 16), children: [
+              const SceneStrip('assets/art/event_draft.jpg', 'ドラフトの夜', height: 84),
+              const SizedBox(height: 4),
               SectionTitle('自分の指名(${s.mine.length}人)'),
               if (s.mine.isEmpty)
                 const Text('今年は指名しなかった。', style: TextStyle(color: GmColors.sub))
