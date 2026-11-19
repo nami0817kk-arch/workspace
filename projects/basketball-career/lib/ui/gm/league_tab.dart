@@ -248,7 +248,9 @@ class _Standings extends StatelessWidget {
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(
-                                '${teamDefs[sr.winner].short} ${sr.winner == sr.high ? sr.highWins : sr.lowWins}-${sr.winner == sr.high ? sr.lowWins : sr.highWins} ${teamDefs[sr.loser].short}',
+                                sr.over
+                                    ? '${teamDefs[sr.winner].short} ${sr.winner == sr.high ? sr.highWins : sr.lowWins}-${sr.winner == sr.high ? sr.lowWins : sr.highWins} ${teamDefs[sr.loser].short}'
+                                    : '${teamDefs[sr.high].short} ${sr.highWins}-${sr.lowWins} ${teamDefs[sr.low].short}(戦っている途中)',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

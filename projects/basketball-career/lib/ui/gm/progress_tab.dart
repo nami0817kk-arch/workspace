@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../gm/calendar.dart';
 import '../../gm/block_report.dart';
 import '../../gm/career.dart';
+import '../../gm/game_sim.dart';
 import '../../gm/inbox.dart';
 import '../../gm/league.dart';
 import '../../gm/personality.dart';
@@ -17,6 +18,7 @@ import 'box_score.dart';
 import 'calendar_screen.dart';
 import 'coaches_screen.dart';
 import 'common.dart';
+import 'champion_screen.dart';
 import 'draft_show_screen.dart';
 import 'gm_table.dart';
 import 'inbox_screen.dart';
@@ -47,7 +49,7 @@ class ProgressTab extends StatelessWidget {
         ...switch (car.phase) {
         Phase.preseason => _preseason(context, car),
         Phase.season => _season(context, car),
-        Phase.playoffs => _beforePlayoffs(context, car),
+        Phase.playoffs => car.poLive ? _livePlayoffs(context, car) : _beforePlayoffs(context, car),
         Phase.seasonEnd => _seasonEnd(context, car),
         Phase.contracts => _contracts(context, car),
         Phase.over => _over(context, car),
@@ -812,9 +814,130 @@ class ProgressTab extends StatelessWidget {
   /// プレーオフを戦い、自分のシリーズを1試合ずつ見せる。
   Future<void> _playoffs(BuildContext context) async {
     final nav = Navigator.of(context);
+    final car = c.career!;
+    // 出られるチームは、1試合ずつ戦う(試合の間に先発や出場時間を変えられる)
+    if (car.confRank <= playInSeeds) {
+      await c.startPlayoffs();
+      if (c.career?.phase == Phase.seasonEnd) await nav.push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => PlayoffRunScreen(c: c)));
+      return;
+    }
     await c.playPlayoffs();
     if (c.career?.phase != Phase.seasonEnd) return;
     await nav.push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => PlayoffRunScreen(c: c)));
+  }
+
+  /// プレーオフを1試合ずつ戦っている途中の画面。
+  List<Widget> _livePlayoffs(BuildContext context, Career car) {
+    final s = car.myLiveSeries;
+    if (s == null) return const [];
+    final opp = s.high == car.mine ? s.low : s.high;
+    final myWins = s.high == car.mine ? s.highWins : s.lowWins;
+    final theirWins = s.high == car.mine ? s.lowWins : s.highWins;
+    final n = s.games.length + 1;
+    final home = s.highHomeNext == (s.high == car.mine);
+    final single = s.need == 1;
+    return [
+      const SceneStrip('assets/art/scene_playoffs.jpg', 'プレーオフ', height: 90),
+      const SizedBox(height: 8),
+      _card(key: const Key('po-live'), edge: GmColors.gold, [
+        _head('${s.label} vs ${car.teams[opp].name}', icon: Icons.emoji_events_rounded, color: GmColors.gold),
+        const SizedBox(height: 8),
+        Row(children: [
+          TeamBadge(team: car.mine, size: 34),
+          Expanded(
+            child: Column(children: [
+              Text(single ? '1試合勝負' : '$myWins - $theirWins', style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+              Text(single ? '負けたら終わり' : '先に4勝で勝ち抜け', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+            ]),
+          ),
+          TeamBadge(team: opp, size: 34),
+        ]),
+        const SizedBox(height: 8),
+        for (final (i, g) in s.games.indexed)
+          InkWell(
+            onTap: () => showBoxScore(context, g, car.mine),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: Row(children: [
+                SizedBox(width: 52, child: Text('第${i + 1}戦', style: const TextStyle(fontSize: 13, color: GmColors.sub))),
+                Tag(g.winner == car.mine ? '勝' : '負', color: g.winner == car.mine ? GmColors.good : GmColors.bad),
+                const SizedBox(width: 8),
+                Text('${g.ptsOf(car.mine)}-${g.ptsAgainst(car.mine)}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(width: 8),
+                Text(g.home == car.mine ? 'ホーム' : 'アウェー', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+                const Spacer(),
+                const Icon(Icons.chevron_right_rounded, size: 18, color: GmColors.sub),
+              ]),
+            ),
+          ),
+        const SizedBox(height: 6),
+        Text('次は${single ? '' : '第$n戦・'}${home ? 'ホーム' : 'アウェー'}。試合の間に、チームの画面で先発・出場時間・休ませる選手を変えられる。',
+            style: const TextStyle(fontSize: 12.5, color: GmColors.sub, height: 1.4)),
+        const SizedBox(height: 10),
+        Row(children: [
+          Expanded(
+            child: OutlinedButton.icon(
+              key: const Key('po-live-game'),
+              onPressed: c.busy ? null : () => _poGame(context, live: true),
+              icon: const Icon(Icons.sports_basketball_rounded, size: 18),
+              label: FittedBox(fit: BoxFit.scaleDown, child: Text(single ? '采配する' : '第$n戦を采配')),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            flex: 2,
+            child: FilledButton.icon(
+              key: const Key('po-next'),
+              onPressed: c.busy ? null : () => _poGame(context, live: false),
+              icon: const Icon(Icons.play_arrow_rounded),
+              label: Text(single ? '試合へ' : '第$n戦へ'),
+            ),
+          ),
+        ]),
+        const SizedBox(height: 6),
+        Row(children: [
+          if (!single)
+            Expanded(
+              child: TextButton(
+                key: const Key('po-series'),
+                onPressed: c.busy ? null : () => _poAfter(context, c.playPlayoffSeries),
+                child: const Text('このシリーズの終わりまで'),
+              ),
+            ),
+          Expanded(
+            child: TextButton(
+              key: const Key('po-all'),
+              onPressed: c.busy ? null : () => _poAfter(context, c.playPlayoffs),
+              child: const Text('プレーオフの終わりまで'),
+            ),
+          ),
+        ]),
+      ]),
+    ];
+  }
+
+  /// プレーオフの次の1試合(采配するなら試合の画面から)。終わったらボックススコアを見せる。
+  Future<void> _poGame(BuildContext context, {required bool live}) async {
+    final car = c.career!;
+    List<GameCall?>? calls;
+    if (live) {
+      calls = await showLiveGame(context, car);
+      if (calls == null || !context.mounted) return;
+    }
+    await _poAfter(context, () => c.playPlayoffGame(calls: calls), box: true);
+  }
+
+  /// プレーオフを進めたあと: 1試合ならボックススコア、終わっていれば優勝の画面か結果の流れ。
+  Future<void> _poAfter(BuildContext context, Future<void> Function() step, {bool box = false}) async {
+    final nav = Navigator.of(context);
+    await step();
+    final car = c.career;
+    if (car == null || !nav.mounted) return;
+    final g = car.myLastPlayoffGame;
+    if (box && g != null) await showBoxScore(nav.context, g, car.mine);
+    if (car.phase == Phase.seasonEnd && nav.mounted && car.myResult >= 5) {
+      await nav.push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => ChampionScreen(car: car)));
+    }
   }
 
   /// オフへ。指名権が無くドラフトがその場で終わったときも、くじとドラフトのまとめは見せる。
@@ -845,6 +968,16 @@ class ProgressTab extends StatelessWidget {
         _kv('成績', '${h.wins}勝${h.losses}敗(${car.me.east ? '東' : '西'}地区 ${h.rank}位)'),
         _kv('プレーオフ', h.resultLabel, color: champ ? GmColors.gold : null),
         _kv('優勝', car.teams[car.champion].name),
+        if (car.playoffs.any((s) => s.high == car.mine || s.low == car.mine))
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              key: const Key('po-review'),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => PlayoffRunScreen(c: c))),
+              icon: const Icon(Icons.replay_rounded, size: 18),
+              label: const Text('プレーオフを振り返る'),
+            ),
+          ),
       ]),
       _card([
         _head('オーナーの評価', icon: Icons.handshake_rounded),
