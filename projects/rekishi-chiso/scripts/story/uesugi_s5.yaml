@@ -1,0 +1,140 @@
+# 物語完結型ショート 上杉景勝と直江兼続のその後 s5（2026-11-19）。本編 scripts/uesugi-sonogo-story.yaml（11/23 19:00 公開予定、https://youtu.be/kjuSGhzZWyw）から。11/24 19:30 に予約。
+# 形式は atsuhime_s1・tsukiyama_s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（上杉景勝_facts_20261118.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/uesugi/main/ の U24＝活字で刷る・U25＝書庫・U26＝学ぶ少年たち ほか）と、本編で使った直江兼続像（パブリックドメイン）だけ。新しい絵は作らない。
+# 切り口：兼続の850冊の本（本編 第5章、uesugi-50・22・48・89・70・23・49）。
+# hook＝国宝の本はどこから来たのか（答えはこのショートの中：朝鮮で集めた話は伝説で、京都の大きな禅寺の僧から譲られた本）。
+# tease＝いま知られている兼続の肖像は、もとはどこに描かれていたのか（答えは本編 第6章：お船が高野山に建てた塔の壁の絵を『集古十種』が写した）。
+# 計算：1909−1618＝291。慶長12年＝1607年。
+# 理解テスト：①直江兼続の話 ②1607年に京都で文選を刷らせ、850冊の本を集めた ③朝鮮で集めた話は伝説で、禅寺の僧から譲られた本だった ④1618年に禅林寺を建てて学ぶ場に。その地に1909年、米沢図書館
+title: "直江兼続｜家老が集めた850冊"
+yt_title: "直江兼続が集めた850冊には、いま国宝の本もある　「朝鮮で集めた」という話は伝説だった"
+description: |-
+  上杉家の家老・直江兼続が集めた本は850冊。その中には、いま国宝になっている、中国の宋の時代に刷られた『史記』『漢書』『後漢書』もありました。1607年には京都の要法寺に頼んで『文選』を活字で刷らせています（直江版。市立米沢図書館に31冊）。
+  明治41年、米沢の郷土史家・伊佐早謙は、兼続が朝鮮で本を集めさせた、という話を紹介しました。けれど山形大学の解説によれば、昭和32年の調べで、もとは京都の大きな禅寺の僧から譲られた本だと分かり、朝鮮の話は伝説とされました。1618年、兼続は米沢に禅林寺を建てて学ぶ場にし、その境内に1909年、米沢図書館が開きます。
+  本編では、30万石になった上杉家と直江兼続のその後をたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#直江兼続"
+- "#米沢"
+- "#上杉家"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/uesugi
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: uesugi_story_s5
+header:
+  tag: "直江兼続（上杉家の家老）"
+  title: "家老が集めた、《850冊》"
+now:
+- {at: "1607年", text: "1607年　京都", point: 0}
+- {at: "明治41年", text: "1908年　米沢", point: 2}
+- {at: "1618年", text: "1618年　米沢", point: 1}
+- {at: "1909年", text: "1909年　米沢", point: 2}
+timeline:
+- {label: "1607"}
+- {label: "1618"}
+- {label: "1909"}
+# 台本だけの読み替え（readings.yaml は変えない）
+readings:
+  "『文選』という": "『もんぜん』という"
+shots:
+  U25_1:
+    kind: "ai"
+    file: "uesugi/main/U25.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "U25"
+  U24_2:
+    kind: "ai"
+    file: "uesugi/main/U24.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "U24"
+  U25_4:
+    kind: "ai"
+    file: "uesugi/main/U25.jpg"
+    focus: [0.2, 0.5]
+    move: "right"
+    must: "U25"
+  U07_5:
+    kind: "ai"
+    file: "uesugi/main/U07.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "U07"
+  U25_6:
+    kind: "ai"
+    file: "uesugi/main/U25.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "U25"
+  U26_7:
+    kind: "ai"
+    file: "uesugi/main/U26.jpg"
+    focus: [0.85, 0.5]
+    move: "in"
+    must: "U26 の僧の側（子どもの顔が崩れているので左は切る）"
+  U25_8:
+    kind: "ai"
+    file: "uesugi/main/U25.jpg"
+    focus: [0.55, 0.5]
+    move: "left"
+    must: "U25"
+  NK_9:
+    kind: real
+    image: paintings/mitsunari_naoe_kanetsugu_portrait.jpg
+    focus: [0.5, 0.3]
+    move: down
+    credit: "《直江兼続像》（パブリックドメイン）"
+    must: 直江兼続の肖像
+lines:
+  # fact: uesugi-50
+- 語り: "上杉家の家老、直江兼続が集めた本は、850冊。その中には、いま国宝の本もある。その本は、どこから来たのか。"
+  shot: U25_1
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-22, uesugi-48
+- 語り: "1607年。兼続は、京都の要法寺に頼んで、『文選』という中国の詩文集を、活字で刷らせた。"
+  shot: U24_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-50
+- 語り: "兼続の本には、中国の宋の時代に刷られた、史記、漢書、後漢書もあった。いまは、国宝だ。"
+  shot: U25_4
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-89
+- 語り: "明治41年、米沢の郷土史家、伊佐早謙は、ある話を紹介した。兼続は、朝鮮に攻め込んだとき、現地で本を集めさせた。"
+  shot: U07_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-70
+- 語り: "けれど、山形大学の解説では、昭和32年の調べで、もとは京都の大きな禅寺の僧から譲られた本だと分かり、朝鮮の話は、伝説とされた。"
+  shot: U25_6
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-23
+- 語り: "1618年。兼続は、米沢に禅林寺を建て、本を置いて、家臣の子どもたちが学ぶ場所にした。"
+  shot: U26_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-49
+- 語り: "禅林寺は、のちの法泉寺。禅林寺から291年後の1909年、その境内に、米沢図書館が開いた。"
+  shot: U25_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第6章（uesugi-72）
+- 語り: "では、いま知られている兼続の肖像は、もとは、どこに描かれていたのか。"
+  shot: NK_9
+  tone: 疑問
+  pause: 0.15

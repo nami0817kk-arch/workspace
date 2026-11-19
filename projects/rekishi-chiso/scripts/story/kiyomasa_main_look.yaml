@@ -1,0 +1,494 @@
+# 物語型の本編の見た目と絵の割り当て：加藤清正の最期（scripts/kiyomasa-story.yaml）。chiso/storymain.py が読む。
+# 11-19 作成（11/24 19:00 公開予定）。ii_main_look.yaml を写した。絵は Gemini（Chrome、写実の油彩、昼の光）。血・遺体は描かない。
+# 時代：1611年。二条城・伏見の屋敷・関船・熊本城（黒い板張りの櫓、白壁の天守にしない）。清正は長烏帽子形兜・片鎌槍。
+script: scripts/kiyomasa-story.yaml
+out: kiyomasa_story_main
+art_dir: out/story/kiyomasa/main
+main_art_dir: out/story/kiyomasa/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 清正はなぜ急に死んだのか
+    now: 1611年
+    dates: {}
+  1:
+    label: 第1章 清正は誰に付き添ったのか
+    now: 1611年3月
+    dates:
+      11: 1611年3月27日
+      13: 1611年3月29日
+      18: 1611年3月28日
+  2:
+    label: 第2章 口がきけなくなった清正
+    now: 1611年6月7日
+    dates:
+      36: 1611年5月
+      47: 1611年6月23日
+      48: 1611年6月24日
+      52: 1611年6月28日
+      53: 1611年7月3日
+      54: 1611年7月6日
+      56: null
+  3:
+    label: 第3章 当時の記録に病の名はあるのか
+    now: 1611年6月
+    dates:
+      60: 1613年8月
+      66: null
+      67: 1916年
+      70: 1941年
+      72: null
+  4:
+    label: 第4章 毒の話はどこから来たのか
+    now: 1797年
+    dates:
+      79: 1807年9月
+      82: 1827年
+      86: 1875年10月
+      87: 1879年
+      88: 1885年
+      90: null
+      91: 1913年
+      92: null
+  5:
+    label: 第5章 毒饅頭は作り話なのか
+    now: 1909年
+    dates:
+      105: 1916年
+      106: null
+      111: 1611年8月4日
+      114: 1611年8月24日
+      117: null
+  6:
+    label: 第6章 その後の加藤家
+    now: null
+    dates:
+      122: 1632年6月3日
+      126: 1632年6月
+      129: 1632年12月
+      133: 1653年
+      134: null
+  7:
+    label: まとめ なぜ急に死んだのか
+    now: null
+    dates: {}
+no_tag_from: 143
+references:
+- 『大日本史料』第十二編之八（慶長16年3月28日条・6月24日条）・『史籍雑纂』第二（『当代記』『駿府記』）・中野嘉太郎『加藤清正伝』（1909）（国立国会図書館デジタルコレクション）
+- 坪内逍遥・渥美清太郎編『歌舞伎脚本傑作集』・『音曲叢書』・三田村鳶魚『江戸の珍物』・頼山陽『日本外史』・依田学海『新評戯曲』・近藤瓶城『続日本政記』・岡本監輔『義勇芳軌』・『舞台之団十郎』・鈴木力『清正公』・三浦周行『歴史と人物』・中山太郎『伝統と民俗』
+- 熊本日日新聞「細川家文書を読む」（2025）・笠谷和比古（1990）・観光庁 多言語解説文（本妙寺・丸岡城跡）
+ai:
+  K01:
+    scene: 二条城の御殿の書院
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  K02:
+    scene: 淀の川辺の行列
+    pan: h
+    crops: *id001
+  K03:
+    scene: 加藤清正（AIの想像図）
+    pan: v
+    crops: *id001
+  K04:
+    scene: 書院に控える清正
+    pan: h
+    crops: *id001
+  K05:
+    scene: 二条城の対面の広間
+    pan: h
+    crops: *id001
+  K06:
+    scene: 建てかけの大仏殿
+    pan: h
+    crops: *id001
+  K07:
+    scene: 伏見の川沿いの大名屋敷
+    pan: h
+    crops: *id001
+  K08:
+    scene: 伏見の船着き場の見送り
+    pan: h
+    crops: *id001
+  K09:
+    scene: 瀬戸内を進む関船
+    pan: h
+    crops: *id001
+  K10:
+    scene: 船の屋形の病の武将
+    pan: h
+    crops: *id001
+  K11:
+    scene: 1611年の熊本城
+    pan: v
+    crops: *id001
+  K12:
+    scene: 熊本城の病床
+    pan: h
+    crops: *id001
+  K13:
+    scene: 江戸の屋敷で手紙を書く少年
+    pan: h
+    crops: *id001
+  K14:
+    scene: 醍醐寺で日記を書く老僧
+    pan: h
+    crops: *id001
+  K15:
+    scene: 文机の記録の本
+    pan: h
+    crops: *id001
+  K16:
+    scene: 道頓堀の芝居小屋
+    pan: h
+    crops: *id001
+  K17:
+    scene: 芝居小屋の舞台
+    pan: h
+    crops: *id001
+  K18:
+    scene: 明治の東京の歌舞伎の劇場
+    pan: h
+    crops: *id001
+  K19:
+    scene: 高坏の饅頭
+    pan: h
+    crops: *id001
+  K20:
+    scene: 本妙寺の石段
+    pan: v
+    crops: *id001
+  K21:
+    scene: 寺で写経する僧たち
+    pan: h
+    crops: *id001
+  K22:
+    scene: 熊本城の石垣の下の侍たち
+    pan: h
+    crops: *id001
+  K23:
+    scene: 出羽・丸岡の田園
+    pan: h
+    crops: *id001
+  TH:
+    scene: 加藤清正（サムネと同じ絵）
+    pan: v
+    crops: *id001
+  IEND:
+    scene: 熊本城の石垣と空（右半分に余白、終了画面）
+    pan: h
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:K03 wide
+- 1 ai:K05 wide
+- 2 ai:K12 wide
+- 3 ai:K13 wide
+- 4 ai:K04 wide
+- 5 ai:K19 wide
+- 6 ai:K15 wide
+- 7 ai:K14 wide
+- 8 ai:K02 wide
+- 9 ai:K14 left
+- 10 ai:K02 right
+- 11 ai:K02 left
+- 12 ai:K03 left
+- 13 ai:K15 right
+- 14 ai:K04 left
+- 15 ai:K04 right
+- 16 ai:K01 left
+- 17 ai:K05 right
+- 18 ai:K01 wide
+- 19 ai:K05 wide
+- 20 ai:K01 left
+- 21 ai:K05 left
+- 22 ai:K01 right
+- 23 ai:K14 right
+- 24 ai:K06 wide
+- 25 ai:K07 wide
+- 26 ai:K08 wide
+- 27 ai:K15 left
+- 28 ai:K08 left
+- 29 ai:K03 right
+- 30 ai:K07 right
+- 31 ai:K09 wide
+- 32 ai:K14 wide
+- 33 ai:K15 wide
+- 34 ai:K14 left
+- 35 ai:K09 left
+- 36 ai:K15 right
+- 37 ai:K09 right
+- 38 ai:K15 left
+- 39 ai:K10 wide
+- 40 ai:K10 left
+- 41 ai:K03 wide
+- 42 ai:K11 wide
+- 43 ai:K12 left
+- 44 ai:K15 wide
+- 45 ai:K15 right
+- 46 ai:K12 wide
+- 47 ai:K12 right
+- 48 ai:K11 left
+- 49 ai:K03 left
+- 50 ai:K15 left
+- 51 ai:K13 wide
+- 52 ai:K13 left
+- 53 ai:K13 right
+- 54 ai:K14 wide
+- 55 ai:K11 right
+- 56 ai:K15 wide
+- 57 ai:K15 left
+- 58 ai:K14 right
+- 59 ai:K04 wide
+- 60 ai:K15 right
+- 61 ai:K05 right
+- 62 ai:K15 wide
+- 63 ai:K04 left
+- 64 ai:K15 left
+- 65 ai:K14 wide
+- 66 ai:K12 wide
+- 67 ai:K14 left
+- 68 ai:K12 left
+- 69 ai:K12 right
+- 70 ai:K10 right
+- 71 ai:K15 right
+- 72 ai:K15 wide
+- 73 ai:K20 wide
+- 74 ai:K20 left
+- 75 ai:K19 wide
+- 76 ai:K16 wide
+- 77 ai:K17 wide
+- 78 ai:K16 left
+- 79 ai:K16 right
+- 80 ai:K17 left
+- 81 ai:K17 right
+- 82 ai:K14 wide
+- 83 ai:K05 wide
+- 84 ai:K15 left
+- 85 ai:K14 right
+- 86 ai:K18 wide
+- 87 ai:K15 wide
+- 88 ai:K19 left
+- 89 ai:K05 left
+- 90 ai:K04 wide
+- 91 ai:K19 right
+- 92 ai:K15 right
+- 93 ai:K19 wide
+- 94 ai:K05 right
+- 95 ai:K15 left
+- 96 ai:K07 wide
+- 97 ai:K14 left
+- 98 ai:K15 wide
+- 99 ai:K19 left
+- 100 ai:K15 right
+- 101 ai:K12 wide
+- 102 ai:K12 left
+- 103 ai:K09 wide
+- 104 ai:K12 right
+- 105 ai:K14 wide
+- 106 ai:K05 wide
+- 107 ai:K14 right
+- 108 ai:K15 left
+- 109 ai:K11 wide
+- 110 ai:K01 wide
+- 111 ai:K14 left
+- 112 ai:K13 wide
+- 113 ai:K01 right
+- 114 ai:K02 wide
+- 115 ai:K13 right
+- 116 ai:K13 left
+- 117 ai:K11 left
+- 118 ai:K20 wide
+- 119 ai:K20 right
+- 120 ai:K20 left
+- 121 ai:K21 wide
+- 122 ai:K22 wide
+- 123 ai:K15 wide
+- 124 ai:K14 right
+- 125 ai:K22 left
+- 126 ai:K22 right
+- 127 ai:K14 left
+- 128 ai:K15 right
+- 129 ai:K11 wide
+- 130 ai:K11 right
+- 131 ai:K14 wide
+- 132 ai:K11 left
+- 133 ai:K23 wide
+- 134 ai:K23 left
+- 135 ai:K20 right
+- 136 ai:K03 wide
+- 137 ai:K08 wide
+- 138 ai:K12 wide
+- 139 ai:K10 wide
+- 140 ai:K15 right
+- 141 ai:K17 wide
+- 142 ai:K14 wide
+- 143 ai:K03 left
+- 144 ai:K13 wide
+- 145 ai:IEND wide
+- end ai:IEND wide
+focus: {}
+fx: {}
+parts:
+- type: quote
+  from: 14
+  to: 14
+  label: 史料
+  text: 右兵衛督殿の御供に浅野紀伊守／常陸介殿の御供に加藤肥後守
+  source: 本多正純の書状 慶長16年3月29日（『大日本史料』第十二編之八）
+- type: quote
+  from: 33
+  to: 33
+  label: 史料
+  text: 加藤肥後守、去る廿六日より違例／祈念の儀、大蔵卿局より申し来る
+  source: 『義演准后日記』慶長16年6月7日（『大日本史料』）
+- type: quote
+  from: 40
+  to: 40
+  label: 史料
+  text: 熊本へ着城の二三日過ぎては／舌不自由にして、物いふ事かつてならず
+  source: 『続撰清正記』
+- type: versus3
+  from: 44
+  to: 44
+  items:
+  - - 『清正記』
+    - 遺言あり
+  - - 『続撰清正記』
+    - 遺言は無い
+  every: 2.5
+- type: quote
+  from: 53
+  to: 53
+  label: 史料
+  text: 清正様御煩い、験気を得させられ候の段／満足この事に候
+  source: 加藤虎藤の書状 7月3日（下川文書・『大日本史料』）
+- type: quote
+  from: 57
+  to: 57
+  label: 史料
+  text: 廿四日、肥後国加藤肥後守死去
+  source: 『当代記』慶長16年6月24日（『史籍雑纂』第二）
+- type: quote
+  from: 62
+  to: 62
+  label: 史料
+  text: 去々年加藤肥後守、浅野弾正…死したりしこと／偏に好色の故、虚の病と云々
+  source: 『当代記』慶長18年8月25日（『史籍雑纂』第二）
+- type: versus3
+  from: 90
+  to: 90
+  items:
+  - - 『義勇芳軌』
+    - 先に死んだ
+  - - 記録
+    - 1613年に死去
+  every: 2.5
+- type: quote
+  from: 98
+  to: 98
+  label: 史料
+  text: その事、もとより疑うべしといえども／しばらく左に附載す
+  source: 『大日本史料』第十二編之八 編者の注
+- type: quote
+  from: 123
+  to: 123
+  label: 要点
+  text: 近年は諸事に無作法／そのうえ曲事を起こした
+  source: 寛永9年6月3日 江戸幕府老中奉書（熊本日日新聞「細川家文書を読む」2025）
+- type: quote
+  from: 130
+  to: 130
+  label: 要点
+  text: これほど大きな城は／江戸城のほかに見たことがない
+  source: 細川忠利の書状 寛永9年12月10日（熊本日日新聞「細川家文書を読む」2025）
+figures:
+- from: 39
+  to: 39
+  spec:
+    type: map
+    title: 伏見から熊本へ
+    bounds:
+    - 129.3
+    - 137.3
+    - 32.0
+    - 35.6
+    reveal: true
+    places:
+    - - 伏見
+      - 135.77
+      - 34.93
+    - - 大坂
+      - 135.52
+      - 34.69
+    - - 熊本
+      - 130.71
+      - 32.8
+- from: 114
+  to: 114
+  spec:
+    type: map
+    title: 江戸から駿府へ
+    bounds:
+    - 136.5
+    - 141.0
+    - 34.2
+    - 36.6
+    reveal: true
+    places:
+    - - 江戸
+      - 139.75
+      - 35.68
+    - - 駿府
+      - 138.38
+      - 34.98
+- from: 133
+  to: 133
+  spec:
+    type: map
+    title: 熊本から出羽の丸岡へ
+    bounds:
+    - 129.0
+    - 142.5
+    - 31.5
+    - 40.0
+    reveal: true
+    places:
+    - - 熊本
+      - 130.71
+      - 32.8
+    - - 丸岡
+      - 139.79
+      - 38.7
+stills:
+- line: 0
+  note: 冒頭
+- line: 33
+  note: 違例
+- line: 45
+  note: 遺言の表
+- line: 62
+  note: 虚の病
+- line: 72
+  note: 病の名の表
+- line: 95
+  note: 毒を盛った人
+- line: 133
+  note: 丸岡の地図
+- end: true
+  note: 終了画面

@@ -1,0 +1,145 @@
+# 物語完結型ショート 井伊直弼 s1（2026-11-19）。本編 scripts/ii-naosuke-story.yaml（11/23 12:00 公開予定、https://youtu.be/9UPaGbmK_PE）から。11/24 9:00 に予約。
+# 形式は atsuhime_s1〜s5・tsukiyama_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact:（事実カード 井伊直弼_facts_20261118.yaml）だけ。
+# 絵：本編の AI 絵（out/story/ii/main/ の I01〜I23・TH）の切り出しだけ。新しい絵は作らない。顔・血・遺体は描かない。
+# 切り口：亡くなった大老に、将軍から見舞いが届いた（本編 序章・第5章、ii-08・59・11・35・36）。
+# hook＝亡くなった大老に見舞い、何が起きていたのか（答えはこのショートの中：死が伏せられていた）。
+# tease＝なぜ、そこまでして死を伏せたのか（答えは本編 第5章：永井博の挙げる2つの理由、ii-37）。
+# 計算：3月3日→閏3月30日＝約56〜57日→「2か月近く」（本編と同じ）。
+# 理解テスト：①井伊直弼（大老）の話 ②1860年3月3日、桜田門の外で襲われて亡くなった ③井伊家は「少々けが・ひとまず帰宅」と届け、幕府は死を伏せさせた ④将軍から見舞いが届き、死の公表は閏3月30日
+title: "井伊直弼｜亡くなった大老への見舞い"
+yt_title: "井伊直弼は桜田門外で亡くなっていた　それでも将軍は大老あてに見舞いの品を届けた　届は「少々けが、ひとまず帰宅」"
+description: |-
+  1860年3月3日、大老・井伊直弼は江戸城の桜田門の外で襲われ、亡くなりました。その夜、井伊家が幕府に出した届は、直弼本人の言葉で「少々けがをしたので、ひとまず帰宅した」。
+  幕府は彦根藩に死を伏せるよう命じた、と『維新史料綱要』は記します。将軍の家茂からは大老あてに朝鮮人参が、続いて鯛と氷砂糖が届きました。彦根藩が死を公にしたのは、閏3月30日です。
+  本編では、雪の朝の3分と、記録の食い違いを、時刻の順にたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#井伊直弼"
+- "#桜田門外の変"
+- "#幕末"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/ii
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: ii_story_s1
+header:
+  tag: "井伊直弼（幕府の大老）"
+  title: "亡くなった大老に、《見舞い》が届いた"
+now:
+- {at: "1860年", text: "1860年3月3日　桜田門外", point: 0}
+- {at: "その日の夜", text: "1860年3月3日　井伊家の屋敷", point: 0}
+- {at: "うるう3月の30日", text: "1860年閏3月30日　彦根藩", point: 1}
+timeline:
+- {label: "3月3日"}
+- {label: "閏3月30日"}
+shots:
+  I06_1:
+    kind: "ai"
+    file: "ii/main/I06.jpg"
+    focus: [0.4, 0.55]
+    move: "in"
+    must: "I06"
+  TH_2:
+    kind: "ai"
+    file: "ii/main/TH.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "TH"
+  I21_3:
+    kind: "ai"
+    file: "ii/main/I21.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "I21"
+  I09_4:
+    kind: "ai"
+    file: "ii/main/I09.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "I09"
+  I23_5:
+    kind: "ai"
+    file: "ii/main/I23.jpg"
+    focus: [0.55, 0.5]
+    move: "left"
+    must: "I23"
+  I11_6:
+    kind: "ai"
+    file: "ii/main/I11.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "I11"
+  I14_7:
+    kind: "ai"
+    file: "ii/main/I14.jpg"
+    focus: [0.45, 0.55]
+    move: "in"
+    must: "I14"
+  I18_8:
+    kind: "ai"
+    file: "ii/main/I18.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "I18"
+  I13_9:
+    kind: "ai"
+    file: "ii/main/I13.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "I13"
+lines:
+  # fact: ii-11, ii-36
+- 語り: "亡くなった大老に、将軍から、見舞いの品が届いた。何が起きていたのか。"
+  shot: I06_1
+  tone: 強調
+  pause: 0.12
+  # fact: ii-22, ii-36
+- 語り: "1860年、雪の朝。大老、井伊直弼は、江戸城の桜田門の外で、襲われて、亡くなった。"
+  shot: TH_2
+  tone: 重い
+  pause: 0.12
+  # fact: ii-08
+- 語り: "その日の夜。井伊家は、老中から呼び出されて、幕府に、届を出した。"
+  shot: I21_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-59
+- 語り: "和歌山の文書館に伝わる写しでは、届は、直弼本人の言葉で、こう結ぶ。取り押さえの指図をしているうちに、少々けがをしたので、ひとまず帰宅した。"
+  shot: I09_4
+  tone: 重い
+  pause: 0.12
+  # fact: ii-11
+- 語り: "幕府は、彦根藩に、大老の死を、伏せるよう命じた。昭和の記録集、『維新史料綱要』が、そう記している。"
+  shot: I23_5
+  tone: 重い
+  pause: 0.12
+  # fact: ii-35
+- 語り: "井伊家からは、直弼は病気だ、という届が出された。"
+  shot: I11_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-11
+- 語り: "そして、将軍の家茂からは、大老あてに、朝鮮人参が届く。続いて若年寄が遣わされ、鯛と、氷砂糖が、贈られた。"
+  shot: I14_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-36
+- 語り: "彦根藩が、直弼の死を公にしたのは、うるう3月の30日。事件から、2か月近くあとだった。"
+  shot: I18_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第5章（ii-37）
+- 語り: "では、なぜ、そこまでして、大老の死を伏せたのか。"
+  shot: I13_9
+  tone: 疑問
+  pause: 0.15

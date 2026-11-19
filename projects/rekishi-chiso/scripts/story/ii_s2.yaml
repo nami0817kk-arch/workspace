@@ -1,0 +1,153 @@
+# 物語完結型ショート 井伊直弼 s2（2026-11-19）。本編 scripts/ii-naosuke-story.yaml（11/23 12:00 公開予定、https://youtu.be/9UPaGbmK_PE）から。11/24 11:00 に予約。
+# 形式は atsuhime_s1〜s5・tsukiyama_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/ii/main/）の切り出しだけ。新しい絵は作らない。顔・血・遺体は描かない。
+# 切り口：守る侍は合羽と柄袋で、すぐには刀を抜けなかった。番所に残された柄袋（本編 第2章、ii-16・15・19・17）。
+# hook＝守る侍は、なぜ刀を抜けなかったのか（答えはこのショートの中：合羽と柄袋）。
+# tease＝駕籠の中の大老は、どうしていたのか（答えは本編 第2章：松井貞之進と浪士の話の食い違い、ii-20）。
+# 理解テスト：①桜田門外の変で大老を守った侍たちの話 ②1860年3月3日、大雪の朝、桜田門へ向かう途中 ③合羽と柄袋で刀を抜けず、1人は柄袋を投げ捨てて駆け戻った ④斬り合いは時計で3分ばかり
+title: "桜田門外の変｜抜けなかった刀"
+yt_title: "桜田門外の変　大老を守る侍たちは、すぐには刀を抜けなかった　上杉家の番所に残された「柄袋」"
+description: |-
+  1860年3月3日、大雪の朝。大老・井伊直弼の行列が襲われたとき、守る側の侍たちは、すぐには刀を抜けませんでした。雪よけの合羽を着て、刀の柄には袋（柄袋）をかぶせていたからです。紀州に伝わった写しも、捕まった浪士の話も、そう書いています。
+  近くの上杉家の屋敷の番人は、けがをした井伊家の侍が番所の前で黒い羅紗の柄袋を投げ捨て、刀を抜いて現場へ駆け戻った、と届けました。斬り合いは「時計で三分ばかり」と『堤蟻叢書』の書き留めにあります。
+  本編では、駕籠の中の大老の最期をめぐる、守った側と襲った側の話の食い違いをたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#桜田門外の変"
+- "#井伊直弼"
+- "#幕末"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/ii
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: ii_story_s2
+header:
+  tag: "桜田門外の変（1860年）"
+  title: "守る侍は、《刀を抜けなかった》"
+now:
+- {at: "1860年", text: "1860年3月3日　外桜田", point: 0}
+- {at: "上杉家", text: "1860年3月3日　上杉家の番所", point: 0}
+timeline:
+- {label: "1860年3月3日"}
+shots:
+  I05_1:
+    kind: "ai"
+    file: "ii/main/I05.jpg"
+    focus: [0.5, 0.45]
+    move: "in"
+    must: "I05"
+  I01_2:
+    kind: "ai"
+    file: "ii/main/I01.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "I01"
+  I03_3:
+    kind: "ai"
+    file: "ii/main/I03.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "I03"
+  TH_4:
+    kind: "ai"
+    file: "ii/main/TH.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "TH"
+  I05_5:
+    kind: "ai"
+    file: "ii/main/I05.jpg"
+    focus: [0.45, 0.6]
+    move: "left"
+    must: "I05"
+  I09_6:
+    kind: "ai"
+    file: "ii/main/I09.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "I09"
+  I08_7:
+    kind: "ai"
+    file: "ii/main/I08.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "I08"
+  I08_8:
+    kind: "ai"
+    file: "ii/main/I08.jpg"
+    focus: [0.75, 0.55]
+    move: "left"
+    must: "I08"
+  I07_9:
+    kind: "ai"
+    file: "ii/main/I07.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "I07"
+  I06_10:
+    kind: "ai"
+    file: "ii/main/I06.jpg"
+    focus: [0.35, 0.55]
+    move: "in"
+    must: "I06"
+lines:
+  # fact: ii-16
+- 語り: "大老を守る侍たちは、すぐには、刀を抜けなかった。なぜか。"
+  shot: I05_1
+  tone: 強調
+  pause: 0.12
+  # fact: ii-58
+- 語り: "1860年の3月3日。紀州に伝わった写しによれば、江戸は、ちょうど大雪の最中だった。"
+  shot: I01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-43
+- 語り: "大老、井伊直弼の行列は、外桜田の屋敷を出て、江戸城の桜田門へ向かっていた。"
+  shot: I03_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-19, ii-22
+- 語り: "そこへ、18人が襲いかかる。『堤蟻叢書』によれば、合図は、ピストルだった。"
+  shot: TH_4
+  tone: 重い
+  pause: 0.12
+  # fact: ii-16
+- 語り: "守る側は、雪よけの合羽を着て、刀の柄には、袋をかぶせていた。柄袋だ。"
+  shot: I05_5
+  tone: 重い
+  pause: 0.12
+  # fact: ii-16
+- 語り: "このことは、紀州の写しも、捕まった浪士の話も、書いている。立場の違う記録が、ここでは一致する。"
+  shot: I09_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-15
+- 語り: "近くの、上杉家の屋敷の番人は、こう届けた。けがをした井伊家の侍が1人、番所の前に走ってきた。"
+  shot: I08_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-15
+- 語り: "問いかけにも答えず、黒い羅紗の柄袋を投げ捨てて、刀を抜いて、現場へ駆け戻った。番所には、その柄袋が、残されている。"
+  shot: I08_8
+  tone: 重い
+  pause: 0.12
+  # fact: ii-17
+- 語り: "斬り合いは、時計で、3分ばかりだった、と書き留めは言う。"
+  shot: I07_9
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第2章（ii-20）
+- 語り: "では、そのとき、駕籠の中の大老は、どうしていたのか。"
+  shot: I06_10
+  tone: 疑問
+  pause: 0.15
