@@ -201,6 +201,8 @@ void main() {
       await game.startNewGame('仮契約FC');
       final clock = Player.contractClockYear;
       final cpu = game.save!.league.teams.firstWhere((t) => t.id != 'user');
+      // 相手のクラブが季末に経営破綻すると、主力を自由契約に出してしまう。
+      game.save!.clubCash[cpu.id] = 1 << 30;
       // 引退・ベテランの入れ替えで消えない年齢にしておく。
       final target = cpu.players.first
         ..age = 24
