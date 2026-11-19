@@ -428,6 +428,10 @@ class SaveGame {
 
   /// 放映権の分配金の受け取り方と、前払いの精算で分配金が出ない残りの季数。
   TvDeal tvDeal;
+
+  /// 年間シートとして先に売った入場券の割合(%)と、売った季(0 は未販売)。
+  int seasonTicketShare;
+  int seasonTicketSeason;
   int tvHolidaySeasons;
 
   /// 分割払いで獲得した選手の残金支払い予定。
@@ -758,6 +762,8 @@ class SaveGame {
     Map<String, SponsorDeal>? slotSponsors,
     Map<String, SponsorDeal>? slotSponsorOffers,
     this.tvDeal = TvDeal.fixed,
+    this.seasonTicketShare = 0,
+    this.seasonTicketSeason = 0,
     this.tvHolidaySeasons = 0,
     List<SponsorDeal>? pendingSponsorOffers,
     List<Installment>? pendingInstallments,
@@ -1061,6 +1067,8 @@ class SaveGame {
           'slotSponsorOffers':
               slotSponsorOffers.map((k, v) => MapEntry(k, v.toJson())),
         'tvDeal': tvDeal.name,
+        if (seasonTicketSeason > 0) 'seasonTicketShare': seasonTicketShare,
+        if (seasonTicketSeason > 0) 'seasonTicketSeason': seasonTicketSeason,
         'tvHolidaySeasons': tvHolidaySeasons,
         'pendingSponsorOffers':
             pendingSponsorOffers.map((s) => s.toJson()).toList(),
@@ -1368,6 +1376,8 @@ class SaveGame {
                 ?.map((e) => SponsorDeal.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
+        seasonTicketShare: json['seasonTicketShare'] as int? ?? 0,
+        seasonTicketSeason: json['seasonTicketSeason'] as int? ?? 0,
         tvDeal: TvDeal.values
                 .where((d) => d.name == json['tvDeal'])
                 .firstOrNull ??

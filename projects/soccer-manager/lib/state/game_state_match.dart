@@ -674,7 +674,11 @@ extension GameStateMatch on GameState {
       );
     }
     // 収入は内訳ごとに記録する。ダービー・祝日で増えた分は観客収入に入れる。
-    _book(LedgerCategory.gate, incomeParts.gate + (income - partsTotal));
+    // 年間シートで先に売った分は、節ごとの入場収入から除く(ダービー・祝日で
+    // 増えた分は当日券なので、そのまま入る)。
+    final gateNow = SeasonTicketEngine.remainingGate(
+        incomeParts.gate, seasonTicketShareNow);
+    _book(LedgerCategory.gate, gateNow + (income - partsTotal));
     _book(LedgerCategory.sponsor, incomeParts.sponsor);
     _book(LedgerCategory.merchandise, incomeParts.merchandise);
     // 営業ブーストは、収入が入った節で1つ使う。

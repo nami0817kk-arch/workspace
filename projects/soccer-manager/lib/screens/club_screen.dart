@@ -18,6 +18,7 @@ import '../models/staff_member.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/player_stat_chips.dart';
 import '../widgets/club_license_card.dart';
+import '../widgets/season_tickets_card.dart';
 import '../logic/economy_scale.dart';
 
 part 'club_screen_staff.dart';
@@ -253,6 +254,8 @@ class ClubScreen extends StatelessWidget {
               current: save.ticketPricing,
               onSelect: (p) => gameState.setTicketPricing(p),
             ),
+            const SizedBox(height: 8),
+            const SeasonTicketsCard(),
           ],
         ),
       ),

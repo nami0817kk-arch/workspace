@@ -128,6 +128,7 @@ import '../logic/sponsor_slots.dart';
 import '../logic/club_license.dart';
 import '../logic/market_trend.dart';
 import '../logic/player_popularity.dart';
+import '../logic/season_tickets.dart';
 import '../logic/super_cup_engine.dart';
 import '../logic/training_engine.dart';
 import '../logic/weather_engine.dart';
@@ -174,6 +175,7 @@ part 'game_state_rumors.dart';
 part 'game_state_club_finance.dart';
 part 'game_state_sponsor_slots.dart';
 part 'game_state_license.dart';
+part 'game_state_season_tickets.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
