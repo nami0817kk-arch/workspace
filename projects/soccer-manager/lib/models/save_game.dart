@@ -300,6 +300,12 @@ class SaveGame {
   /// 法人税の繰越欠損(万円)。赤字の年に積み、黒字の年に差し引く。
   int taxLossCarry;
 
+  /// 5か年計画が始まった季(0 は計画なし)と、3つの目標。
+  int planStartSeason;
+  int planTargetTier;
+  int planTargetValue;
+  int planTargetStadium;
+
   /// 自クラブの選手の私生活の出来事(選手 id → 起きた出来事の印)。
   /// 結婚は1回だけ、ホームシックは1季に1回、のように重ならないために持つ。
   Map<String, List<String>> lifeEvents;
@@ -572,6 +578,10 @@ class SaveGame {
     this.agmWageRatio = 0,
     this.agmWageRatioPledge = 0,
     this.taxLossCarry = 0,
+    this.planStartSeason = 0,
+    this.planTargetTier = 0,
+    this.planTargetValue = 0,
+    this.planTargetStadium = 0,
     this.managerWarned = false,
     this.confidence = 60,
     this.shareholderExpectation = 60,
@@ -829,6 +839,12 @@ class SaveGame {
         if (agmWageRatio > 0) 'agmWageRatio': agmWageRatio,
         if (agmWageRatioPledge > 0) 'agmWageRatioPledge': agmWageRatioPledge,
         if (taxLossCarry > 0) 'taxLossCarry': taxLossCarry,
+        if (planStartSeason > 0) ...{
+          'planStartSeason': planStartSeason,
+          'planTargetTier': planTargetTier,
+          'planTargetValue': planTargetValue,
+          'planTargetStadium': planTargetStadium,
+        },
         if (managerWarned) 'managerWarned': true,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
@@ -997,6 +1013,10 @@ class SaveGame {
         agmWageRatioPledge:
             (json['agmWageRatioPledge'] as num?)?.toDouble() ?? 0,
         taxLossCarry: json['taxLossCarry'] as int? ?? 0,
+        planStartSeason: json['planStartSeason'] as int? ?? 0,
+        planTargetTier: json['planTargetTier'] as int? ?? 0,
+        planTargetValue: json['planTargetValue'] as int? ?? 0,
+        planTargetStadium: json['planTargetStadium'] as int? ?? 0,
         lifeEvents: (json['lifeEvents'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as String])),
         staffOffers: (json['staffOffers'] as List?)
