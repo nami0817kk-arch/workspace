@@ -46,11 +46,17 @@ void main() {
     expect(s.biggestWinMargin, 4);
     expect(s.biggestWin, contains('5-1'));
 
+    // 小さな記録(10得点未満)では演出を出さない。
+    expect(s.pendingMoments.where((m) => m[0] == 'clubRecord'), isEmpty);
+    // 10得点を超えて歴代1位を塗り替えたら、演出が1つ出る。
+    gs.debugRecordClubMatch(result(3, 0), f);
+    expect(s.pendingMoments.where((m) => m[0] == 'clubRecord').length, 1);
+
     // 選手が出ていっても、名前と記録は残る。保存して読み戻せる。
     gs.userTeam.players.remove(a);
     expect(gs.clubGoalsLeaders().first.name, a.name);
     final back = SaveGame.fromJson(s.toJson());
-    expect(back.clubGoals[a.id], 8);
+    expect(back.clubGoals[a.id], 11);
     expect(back.biggestWinMargin, 4);
   });
 }

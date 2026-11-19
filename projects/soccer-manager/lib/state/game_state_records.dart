@@ -11,6 +11,10 @@ extension GameStateRecords on GameState {
     final team = userTeam;
     final mine = {for (final p in team.players) p.id: p};
     final played = r.playerRatings.keys.where(mine.containsKey).toSet();
+    // 塗り替える前の歴代1位(記録更新の演出に使う)。
+    int best(Map<String, int> m) => m.values.fold(0, max);
+    final appsBefore = best(s.clubApps);
+    final goalsBefore = best(s.clubGoals);
     for (final id in played) {
       s.clubApps[id] = (s.clubApps[id] ?? 0) + 1;
       s.clubRecordNames[id] = mine[id]!.name;
@@ -22,6 +26,10 @@ extension GameStateRecords on GameState {
       s.clubGoals[id] = (s.clubGoals[id] ?? 0) + 1;
       s.clubRecordNames[id] = mine[id]!.name;
     }
+    _checkClubRecordMoment(s.clubGoals, goalsBefore, 10, mine, f,
+        (n) => Tr.pick('$n得点', '$n goals'));
+    _checkClubRecordMoment(s.clubApps, appsBefore, 50, mine, f,
+        (n) => Tr.pick('$n試合出場', '$n appearances'));
     final home = r.homeTeamId == team.id;
     final ours = home ? r.homeGoals : r.awayGoals;
     final theirs = home ? r.awayGoals : r.homeGoals;
@@ -33,6 +41,24 @@ extension GameStateRecords on GameState {
       s.biggestWinMargin = margin;
       s.biggestWin = Tr.pick('${s.league.season}季 $ours-$theirs $opp',
           'Season ${s.league.season}: $ours-$theirs v $opp');
+    }
+  }
+
+  /// 歴代1位を塗り替えた選手がいれば、画面いっぱいの1枚で見せる
+  /// ([minimum]に届かない小さな記録は出さない)。
+  void _checkClubRecordMoment(Map<String, int> m, int before, int minimum,
+      Map<String, Player> mine, Fixture f, String Function(int) label) {
+    for (final e in m.entries) {
+      if (e.value <= before || e.value < minimum) continue;
+      final p = mine[e.key];
+      if (p == null) continue;
+      _queueMoment(
+          BigMomentKind.clubRecord,
+          'rec:${label(0)}:${e.key}:${e.value}',
+          p.name,
+          Tr.pick('${p.name}がクラブの歴代記録を塗り替えた(${label(e.value)})。',
+              '${p.name} set a new club record (${label(e.value)}).'));
+      break;
     }
   }
 
