@@ -1183,6 +1183,70 @@ class Career {
     }
   }
 
+  // ---------------------------------------------------------------- 他チームからの電話
+
+  /// オフの契約の時期に、ほかの GM から電話で届いたトレードの申し込み(2件まで)。
+  List<TradeOffer> calls = [];
+
+  /// 契約の時期の始めに、ほかの GM から電話が来る。トレードブロックの選手への申し込みが先。
+  /// 申し込みを作るのに、リーグとは別の乱数で相手の順を決める(受けなければ何も変わらない)。
+  void _makeCalls() {
+    calls = [];
+    final r = Rng(seed * 2027 + season * 53 + 7);
+    final others = [for (var i = 0; i < teams.length; i++) if (i != mine) i];
+    r.shuffle(others);
+    final used = <int>{};
+    for (final id in tradeBlock.where((id) => me.roster.any((p) => p.id == id))) {
+      for (final t in others) {
+        if (used.contains(t)) continue;
+        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t));
+        if (o != null && judge(o).ok) {
+          calls.add(o);
+          used.add(t);
+          break;
+        }
+      }
+      if (calls.length >= 2) break;
+    }
+    for (final t in others) {
+      if (calls.length >= 2) break;
+      if (used.contains(t)) continue;
+      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t));
+      // 同じ選手への申し込みは重ねない
+      // 契約の話し合い中の選手など、今は成り立たない申し込みは掛けてこない
+      if (o == null || calls.any((c) => c.give.any(o.give.contains)) || !judge(o).ok) continue;
+      calls.add(o);
+      used.add(t);
+    }
+    for (final o in calls) {
+      final give = [for (final id in o.give) me.roster.where((p) => p.id == id).firstOrNull?.name ?? ''].join('・');
+      _mail(Sender.league, '${teams[o.partner].def.short}の GM から電話', '$giveが欲しいという。進行の画面の「他チームからの電話」で中身を見て返事できる。');
+    }
+  }
+
+  /// 電話の申し込みが、まだ成り立つか(出す選手も受け取る選手も、それぞれのチームにいる)。
+  bool callValid(TradeOffer o) =>
+      o.give.every((id) => me.roster.any((p) => p.id == id)) && o.get.every((id) => teams[o.partner].roster.any((p) => p.id == id));
+
+  /// 電話の申し込みを受ける。成立したら true。
+  bool acceptCall(int i) {
+    if (i < 0 || i >= calls.length || phase != Phase.contracts) return false;
+    final o = calls[i];
+    if (!callValid(o)) {
+      calls = [...calls]..removeAt(i);
+      return false;
+    }
+    final ok = propose(o);
+    calls = [for (final x in calls) if (x != o && callValid(x)) x];
+    if (ok) tradeBlock.removeWhere((id) => o.give.contains(id));
+    return ok;
+  }
+
+  void declineCall(int i) {
+    if (i < 0 || i >= calls.length) return;
+    calls = [...calls]..removeAt(i);
+  }
+
   // ---------------------------------------------------------------- 大物の勧誘
 
   /// このオフに会いに行った大物(選手の id → 話したこと。[pitchLines] の番号)。
@@ -3451,6 +3515,7 @@ class Career {
     _offTalks();
     _offEvents();
     pitches = {};
+    _makeCalls();
     // 引退した力のある選手が、コーチやスカウトの候補に加わる
     for (final r in retirees) {
       final role = Staff.values[(r[0] as String).length % Staff.values.length];
@@ -4119,6 +4184,7 @@ class Career {
       nextFaDay();
     }
     if (sheet != null) declineSheet();
+    calls = [];
     for (final m in inbox) {
       if (m.kind == MsgKind.offTalk && m.needsAnswer) m.answer = 2;
       // 出来事は効き目なしで閉じる(代表は断った扱いにはせず、送り出さなかっただけ)
@@ -4748,6 +4814,7 @@ class Career {
         if (declared != 0) 'dcl': [declared, declaredSeason],
         if (mentor.isNotEmpty) 'mnt': mentor,
         if (pitches.isNotEmpty) 'pch': {for (final e in pitches.entries) '${e.key}': e.value},
+        if (calls.isNotEmpty) 'cal': [for (final o in calls) o.toJson()],
         if (camp.isNotEmpty) 'cmp': {for (final e in camp.entries) '${e.key}': e.value.index},
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
@@ -4889,6 +4956,7 @@ class Career {
       ..declared = j['dcl'] is List ? ((j['dcl'] as List)[0] as int).clamp(0, 3) : 0
       ..declaredSeason = j['dcl'] is List ? (j['dcl'] as List)[1] as int : 0
       ..mentor = [for (final x in (j['mnt'] as List? ?? const [])) x as int]
+      ..calls = [for (final x in (j['cal'] as List? ?? const [])) TradeOffer.fromJson(Map<String, dynamic>.from(x as Map))]
       ..pitches = {for (final e in ((j['pch'] as Map?) ?? const {}).entries) int.parse(e.key as String): ((e.value as int?) ?? 0).clamp(0, 2)}
       ..camp = {
         for (final e in ((j['cmp'] as Map?) ?? const {}).entries)
