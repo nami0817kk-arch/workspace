@@ -825,6 +825,7 @@ extension GameStateTransfer on GameState {
     String playerId, {
     bool withBuyOption = false,
     LoanLength length = LoanLength.full,
+    bool withObligation = false,
   }) async {
     if (_save == null) return false;
     lastSigningBlockReason = null;
@@ -834,7 +835,12 @@ extension GameStateTransfer on GameState {
     if (!_windowAllowsSigning(player, permanent: false)) return false;
     if (!_minorRuleAllows(player)) return false;
     if (!_registrationAllows(player)) return false;
-    final fee = (player.marketValue * GameState.loanFeeRatioPercent / 100).round();
+    // 買取義務付きは、借り賃が半分(満了したら必ず買い取る)。
+    final fee = (player.marketValue *
+            GameState.loanFeeRatioPercent /
+            100 *
+            (withObligation ? GameStateForms.obligationLoanFeeFactor : 1))
+        .round();
     if (_save!.budget < fee) return false;
     lastSigningBlockReason = null;
     if (!_wageBudgetAllowsSigning((player.wage * 0.6).round())) return false;
@@ -847,9 +853,10 @@ extension GameStateTransfer on GameState {
     player.loanEndDate =
         TransferWindowCalendar.loanEndDate(today, currentLeagueTheme, length);
     player.wage = max(1, (player.wage * 0.6).round());
-    player.loanBuyOptionFee = withBuyOption
+    player.loanBuyOptionFee = withBuyOption || withObligation
         ? (player.marketValue * GameState.loanBuyOptionRatio).round()
         : null;
+    player.loanObligation = withObligation;
     // 前クラブで設定されていた解放条項が残っていると、ローン中の選手が
     // 自動移籍オファーの対象になってしまうため解除する。
     player.releaseClause = null;

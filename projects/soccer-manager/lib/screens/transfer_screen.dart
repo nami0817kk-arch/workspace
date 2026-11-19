@@ -881,6 +881,13 @@ class _TransferScreenState extends State<TransferScreen>
     final talks = gameState.transferTalks;
     final small =
         TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
+    final buyBacks = gameState.buyBackCandidates;
+    if (talks.isEmpty && buyBacks.isNotEmpty) {
+      return ListView(
+        padding: const EdgeInsets.all(12),
+        children: [_buyBackCard(context, gameState, buyBacks)],
+      );
+    }
     if (talks.isEmpty) {
       return Center(
         child: Padding(
@@ -903,8 +910,41 @@ class _TransferScreenState extends State<TransferScreen>
           style: small,
         ),
         const SizedBox(height: 8),
+        if (buyBacks.isNotEmpty) _buyBackCard(context, gameState, buyBacks),
         for (final t in talks) _talkCard(context, gameState, t),
       ],
+    );
+  }
+
+  /// 買い戻し条項で呼び戻せる選手。
+  Widget _buyBackCard(
+      BuildContext context, GameState gameState, List<Player> players) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('買い戻せる選手', 'Buy-back options'),
+                style: Theme.of(context).textTheme.titleSmall),
+            for (final p in players)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(p.name),
+                subtitle: Text(Tr.pick(
+                    '${gameState.clubNameOf(p.id) ?? '-'}・${formatMoney(gameState.buyBackClauses[p.id]![0])}で${gameState.buyBackClauses[p.id]![1]}年6月まで',
+                    '${gameState.clubNameOf(p.id) ?? '-'}: ${formatMoney(gameState.buyBackClauses[p.id]![0])} until June ${gameState.buyBackClauses[p.id]![1]}')),
+                trailing: FilledButton(
+                  onPressed: gameState.isTransferWindowOpen
+                      ? () => _acquire(context,
+                          () => gameState.exerciseBuyBack(p.id), p.name)
+                      : null,
+                  child: Text(Tr.pick('買い戻す', 'Buy back')),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -1093,6 +1133,33 @@ class _TransferScreenState extends State<TransferScreen>
                     () => gameState.signLoanPlayer(
                       player.id,
                       withBuyOption: true,
+                      length: length,
+                    ),
+                    player.name,
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.gavel),
+                title: Text(Tr.pick('買取義務付きローンで獲得', 'Loan with an obligation to buy')),
+                subtitle: Text(
+                  Tr.pick(
+                      '契約金${formatMoney((loanFee * GameStateForms.obligationLoanFeeFactor).round())}(ふつうの半分)・給与の6割を負担・満了したら必ず${formatMoney(buyOptionFee)}で買い取る',
+                      '${formatMoney((loanFee * GameStateForms.obligationLoanFeeFactor).round())} fee (half the usual), 60% of his wages, and you must buy him for ${formatMoney(buyOptionFee)} when it ends'),
+                ),
+                enabled: permanentAllowed &&
+                    save.budget >=
+                        (loanFee * GameStateForms.obligationLoanFeeFactor)
+                            .round(),
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  final length = await _chooseLoanLength(context);
+                  if (length == null || !context.mounted) return;
+                  _acquire(
+                    context,
+                    () => gameState.signLoanPlayer(
+                      player.id,
+                      withObligation: true,
                       length: length,
                     ),
                     player.name,

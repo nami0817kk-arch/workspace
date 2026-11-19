@@ -210,6 +210,8 @@ extension GameStateSeason on GameState {
     final ended = team.players
         .where((p) => p.isLoan && p.loanEndDate != null && !t.isBefore(p.loanEndDate!))
         .toList();
+    // 買取義務付きのローンは、満了で完全移籍に切り替わって残る。
+    ended.removeWhere(_completeObligationIfAny);
     for (final p in ended) {
       team.players.remove(p);
       team.startingXI.remove(p.id);
@@ -1006,6 +1008,7 @@ extension GameStateSeason on GameState {
     _enforceLeagueRules();
     _holdShareholdersMeeting();
     _reviewFiveYearPlan();
+    _expireBuyBacks();
     _resetRivalOwners();
     _resolveSeasonRisks();
     _tickProjects();
