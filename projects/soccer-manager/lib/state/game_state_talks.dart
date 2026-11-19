@@ -368,8 +368,10 @@ extension GameStateTalks on GameState {
       }
     }
     if (signingBonus > 0) _book(LedgerCategory.transfers, -signingBonus);
+    // 移籍金は契約の年数で償却する(簿価)。
     player.wage = weeklyWage;
     ContractEngine.renewContract(player, endYear: endYear);
+    _recordPlayerBook(player, fee);
     // 約束した序列と、加入したときの機嫌(順応の高い選手ほど良い)。
     player.squadStatus = promise;
     player.promisedStatus =

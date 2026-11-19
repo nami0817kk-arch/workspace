@@ -301,6 +301,13 @@ class SaveGame {
   /// 法人税の繰越欠損(万円)。赤字の年に積み、黒字の年に差し引く。
   int taxLossCarry;
 
+  /// パラシュート(降格前の部・残りの季)。0 は無し。
+  int parachuteFromTier;
+  int parachuteSeasonsLeft;
+
+  /// 獲得した選手の簿価(選手 id → [移籍金, 獲得した季の終わりの年, 償却の年数])。
+  Map<String, List<int>> playerBook;
+
   /// 同じリーグで競う他のオーナー。
   List<RivalOwner> rivalOwners;
 
@@ -582,6 +589,9 @@ class SaveGame {
     this.agmWageRatio = 0,
     this.agmWageRatioPledge = 0,
     this.taxLossCarry = 0,
+    this.parachuteFromTier = 0,
+    this.parachuteSeasonsLeft = 0,
+    Map<String, List<int>>? playerBook,
     this.planStartSeason = 0,
     List<RivalOwner>? rivalOwners,
     this.planTargetTier = 0,
@@ -712,6 +722,7 @@ class SaveGame {
         sdBrief = sdBrief ?? SdBrief(),
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
+        playerBook = playerBook ?? {},
         rivalOwners = rivalOwners ?? [],
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
@@ -845,6 +856,11 @@ class SaveGame {
         if (agmWageRatio > 0) 'agmWageRatio': agmWageRatio,
         if (agmWageRatioPledge > 0) 'agmWageRatioPledge': agmWageRatioPledge,
         if (taxLossCarry > 0) 'taxLossCarry': taxLossCarry,
+        if (parachuteSeasonsLeft > 0) ...{
+          'parachuteFromTier': parachuteFromTier,
+          'parachuteSeasonsLeft': parachuteSeasonsLeft,
+        },
+        if (playerBook.isNotEmpty) 'playerBook': playerBook,
         if (rivalOwners.isNotEmpty)
           'rivalOwners': rivalOwners.map((r) => r.toJson()).toList(),
         if (planStartSeason > 0) ...{
@@ -1021,6 +1037,10 @@ class SaveGame {
         agmWageRatioPledge:
             (json['agmWageRatioPledge'] as num?)?.toDouble() ?? 0,
         taxLossCarry: json['taxLossCarry'] as int? ?? 0,
+        parachuteFromTier: json['parachuteFromTier'] as int? ?? 0,
+        parachuteSeasonsLeft: json['parachuteSeasonsLeft'] as int? ?? 0,
+        playerBook: (json['playerBook'] as Map?)?.map((k, v) => MapEntry(
+            k as String, [for (final e in (v as List)) e as int])),
         rivalOwners: (json['rivalOwners'] as List?)
                 ?.map((e) =>
                     RivalOwner.fromJson((e as Map).cast<String, dynamic>()))
