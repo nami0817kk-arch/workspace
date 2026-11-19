@@ -6,6 +6,7 @@ import '../logic/scouting_engine.dart';
 import '../logic/youth_promotion_engine.dart';
 import '../logic/youth_departure_engine.dart';
 import '../logic/youth_match_engine.dart';
+import '../logic/academy_engine.dart';
 import '../models/player.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
@@ -125,6 +126,7 @@ class _YouthScreenState extends State<YouthScreen> {
       body: ResponsiveBody(
         child: ListView(
           children: [
+            const _AcademyCard(),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -664,3 +666,50 @@ class _YouthScreenState extends State<YouthScreen> {
   }
 }
 
+
+/// アカデミーの等級と、育成の方針。
+class _AcademyCard extends StatelessWidget {
+  const _AcademyCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final cat = gs.academyCategory;
+    final policy = gs.youthPolicy;
+    final small =
+        TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
+    return Card(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('アカデミー: カテゴリー$cat', 'Academy: category $cat'),
+                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              Tr.pick(
+                  'ユース施設・ユースコーチ・育成予算の積み重ねで決まります(1が最上)。入ってくる子は +${AcademyEngine.extraIntake(cat)}人、質 ${AcademyEngine.qualityBonus(cat) >= 0 ? '+' : ''}${AcademyEngine.qualityBonus(cat)}。',
+                  'Set by your youth facilities, youth coach and youth budget over time (1 is best). Intake +${AcademyEngine.extraIntake(cat)}, quality ${AcademyEngine.qualityBonus(cat) >= 0 ? '+' : ''}${AcademyEngine.qualityBonus(cat)}.'),
+              style: small,
+            ),
+            const SizedBox(height: 8),
+            Text(Tr.pick('育成の方針', 'Development policy')),
+            Wrap(
+              spacing: 6,
+              children: [
+                for (final p in YouthPolicy.values)
+                  ChoiceChip(
+                    label: Text(p.label),
+                    selected: p == policy,
+                    onSelected: (_) => gs.setYouthPolicy(p),
+                  ),
+              ],
+            ),
+            Text(policy.description, style: small),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -115,4 +115,32 @@ extension GameStateOwner on GameState {
     s.ownerWealth = ownerWealth + s.ownerLoanBalance;
     s.ownerLoanBalance = 0;
   }
+
+  // ---- アカデミー ----
+
+  /// アカデミーの等級の点。
+  double get academyScore {
+    final s = _save;
+    if (s == null) return 0;
+    return AcademyEngine.score(
+      facilityLevel: s.infrastructure.facilityLevel(FacilityType.youthFacility),
+      coachLevel: s.infrastructure.staffLevel(StaffRole.youthCoach),
+      momentum: s.youthMomentum,
+    );
+  }
+
+  /// アカデミーのカテゴリー(1〜4。1が最上)。
+  int get academyCategory => AcademyEngine.category(academyScore);
+
+  YouthPolicy get youthPolicy => YouthPolicy.values.firstWhere(
+      (p) => p.name == _save?.youthPolicy,
+      orElse: () => YouthPolicy.balanced);
+
+  /// 育成の方針を変える(次の入団から効く)。
+  Future<void> setYouthPolicy(YouthPolicy p) async {
+    if (_save == null) return;
+    _save!.youthPolicy = p.name;
+    _notify();
+    await _persist();
+  }
 }

@@ -15,6 +15,7 @@ import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/logic/contract_engine.dart';
 import 'package:soccer_manager/logic/dynamics_engine.dart';
 import 'package:soccer_manager/logic/relations_engine.dart';
+import 'package:soccer_manager/logic/academy_engine.dart';
 import 'package:soccer_manager/logic/squad_registration_engine.dart';
 import 'package:soccer_manager/logic/player_search.dart';
 import 'package:soccer_manager/logic/continental_cup_engine.dart';
@@ -2534,7 +2535,11 @@ void main() {
 
     await gameState.startNextSeason();
 
-    expect(gameState.pendingYouthIntake.length, inInclusiveRange(3, 5));
+    // 3〜5人に、アカデミーの等級(最大+2)と育成の方針(数を取るなら+2)の分。
+    final extra = AcademyEngine.extraIntake(gameState.academyCategory) +
+        AcademyEngine.policyExtraIntake(gameState.youthPolicy);
+    expect(gameState.pendingYouthIntake.length,
+        inInclusiveRange(3 + extra, 5 + extra));
     expect(gameState.managerReputation, inInclusiveRange(0, 100));
   });
 
