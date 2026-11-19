@@ -450,7 +450,7 @@
     // 卒業生名鑑と実績は系譜タブにまとめた（2026-11-18 ユーザビリティ7：2つのタブに同じ画面があった）。名鑑は系譜タブがここを借りて出す
     ui.mt = ui.mt || 'rec';
     if (U().app.tab === 'more' && ui.mt === 'alumni' && !(w && w.retired)) ui.mt = 'rec';
-    const tabs = h('div', { class: 'tabs' }, [['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '引退'], ['help', '用語集'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
+    const tabs = h('div', { class: 'tabs' }, [['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '引退'], ['howto', '遊び方'], ['help', '用語集'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
       // 絞り込み：全員・プロ・海外・代表・タイトル
@@ -484,6 +484,8 @@
       body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.levelNames(w)[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
       body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:68px' }, `${r.year}年目${r.week}週`), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
       if (YA.recordBookEl) body.append(YA.recordBookEl(w));
+    } else if (ui.mt === 'howto') {
+      if (YA.howtoEl) body.append(YA.howtoEl());
     } else if (ui.mt === 'help') {
       if (YA.glossaryEl) body.append(YA.glossaryEl());
     } else if (ui.mt === 'bteam') {
