@@ -92,7 +92,12 @@ void main() {
       final t = gs.talkFor(p.id)!;
       expect(t.stage, TransferTalkStage.agreed);
       final before = gs.save!.budget;
-      expect(await gs.completeTransferTalk(p.id), isTrue);
+      // 選手が望むより十分高い年俸を出せば、その場で加入する。
+      expect(
+          await gs.offerPersonalTerms(p.id,
+              weeklyWage: p.wage * 10 + 100,
+              endYear: Player.contractClockYear + 2),
+          TermsOutcome.signed);
       expect(gs.userTeam.players.contains(p), isTrue);
       expect(gs.talkFor(p.id), isNull);
       expect(before - gs.save!.budget, greaterThanOrEqualTo(t.fee));
