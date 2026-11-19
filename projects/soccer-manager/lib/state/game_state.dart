@@ -127,6 +127,7 @@ import '../logic/sponsor_engine.dart';
 import '../logic/sponsor_slots.dart';
 import '../logic/club_license.dart';
 import '../logic/market_trend.dart';
+import '../logic/player_popularity.dart';
 import '../logic/super_cup_engine.dart';
 import '../logic/training_engine.dart';
 import '../logic/weather_engine.dart';

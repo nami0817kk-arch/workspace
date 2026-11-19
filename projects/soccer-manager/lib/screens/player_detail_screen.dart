@@ -24,6 +24,7 @@ import '../widgets/growth_sparkline.dart';
 import '../widgets/player_face_avatar.dart';
 import '../widgets/stat_bar.dart';
 import '../logic/rating_words.dart';
+import '../logic/player_popularity.dart';
 import '../l10n/tr.dart';
 import '../widgets/player_stat_chips.dart';
 import '../logic/economy_scale.dart';
@@ -186,6 +187,11 @@ class PlayerDetailScreen extends StatelessWidget {
                         labelStyle: const TextStyle(color: Colors.white),
                       ),
                     Chip(label: Text(p.personality.label)),
+                    Chip(
+                      label: Text(Tr.pick(
+                          '人気${PlayerPopularityEngine.popularity(p)}・${PlayerPopularityEngine.label(PlayerPopularityEngine.popularity(p))}',
+                          'Popularity ${PlayerPopularityEngine.popularity(p)} - ${PlayerPopularityEngine.label(PlayerPopularityEngine.popularity(p))}')),
+                    ),
                     if (p.isOnInternationalDuty)
                       Chip(
                         label: Text(p.onTournamentLeave
