@@ -14,6 +14,7 @@ import 'package:soccer_manager/logic/best_eleven_engine.dart';
 import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/logic/contract_engine.dart';
 import 'package:soccer_manager/logic/dynamics_engine.dart';
+import 'package:soccer_manager/logic/relations_engine.dart';
 import 'package:soccer_manager/logic/player_search.dart';
 import 'package:soccer_manager/logic/continental_cup_engine.dart';
 import 'package:soccer_manager/logic/cup_engine.dart';
@@ -9020,8 +9021,14 @@ void main() {
     for (final p in team.players) {
       final prev = before[p.id];
       if (prev == null) continue;
+      // 仲の良かった選手には、友人が去った寂しさも重なる。
+      final friendLoss = RelationsEngine.areFriends(leader, p)
+          ? RelationsEngine.friendLeftPenalty
+          : 0;
       expect(
-          p.happiness, (prev - DynamicsEngine.leaderSalePenalty).clamp(0, 100),
+          p.happiness,
+          (prev - DynamicsEngine.leaderSalePenalty - friendLoss)
+              .clamp(0, 100),
           reason: 'リーダー放出で残った全員の不満度が下がる');
     }
   });

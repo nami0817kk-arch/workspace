@@ -275,6 +275,10 @@ class SaveGame {
   /// 他のクラブから来ている、こちらのスタッフの引き抜きの話。
   List<StaffOffer> staffOffers;
 
+  /// 自クラブの選手の私生活の出来事(選手 id → 起きた出来事の印)。
+  /// 結婚は1回だけ、ホームシックは1季に1回、のように重ならないために持つ。
+  Map<String, List<String>> lifeEvents;
+
   /// 今季、監督の立場が危ういと報じたか(1季に1回だけ報じる)。
   bool managerWarned;
 
@@ -534,6 +538,7 @@ class SaveGame {
     SdBrief? sdBrief,
     this.sdSignedThisWindow = 0,
     List<StaffOffer>? staffOffers,
+    Map<String, List<String>>? lifeEvents,
     this.managerWarned = false,
     this.confidence = 60,
     this.shareholderExpectation = 60,
@@ -658,6 +663,7 @@ class SaveGame {
         transferTalks = transferTalks ?? [],
         sdBrief = sdBrief ?? SdBrief(),
         staffOffers = staffOffers ?? [],
+        lifeEvents = lifeEvents ?? {},
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
@@ -780,6 +786,7 @@ class SaveGame {
         if (sdSignedThisWindow > 0) 'sdSignedThisWindow': sdSignedThisWindow,
         if (staffOffers.isNotEmpty)
           'staffOffers': staffOffers.map((o) => o.toJson()).toList(),
+        if (lifeEvents.isNotEmpty) 'lifeEvents': lifeEvents,
         if (managerWarned) 'managerWarned': true,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
@@ -939,6 +946,8 @@ class SaveGame {
             ? SdBrief.fromJson((json['sdBrief'] as Map).cast<String, dynamic>())
             : null,
         sdSignedThisWindow: json['sdSignedThisWindow'] as int? ?? 0,
+        lifeEvents: (json['lifeEvents'] as Map?)?.map((k, v) => MapEntry(
+            k as String, [for (final e in (v as List)) e as String])),
         staffOffers: (json['staffOffers'] as List?)
                 ?.map((e) =>
                     StaffOffer.fromJson((e as Map).cast<String, dynamic>()))

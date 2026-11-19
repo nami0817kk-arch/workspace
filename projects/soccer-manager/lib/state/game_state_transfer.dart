@@ -508,6 +508,7 @@ extension GameStateTransfer on GameState {
     _book(LedgerCategory.playerSales, net);
     _paySellOn(player, net);
     _placeSoldPlayerAtCpuClub(player);
+    _friendsMissPlayer(player);
     // ダイナミクス: チームリーダーの放出はロッカールーム全体を動揺させる。
     if (wasTeamLeader) {
       for (final p in team.players) {
@@ -1353,6 +1354,7 @@ extension GameStateTransfer on GameState {
       LineupUtils.autoFill(team);
     }
     _movePlayerToBuyer(player, offer.buyerClubName);
+    _friendsMissPlayer(player);
     _book(LedgerCategory.playerSales, offer.amount);
     _paySellOn(player, offer.amount);
     _notify();

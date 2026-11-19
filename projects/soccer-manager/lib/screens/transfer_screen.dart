@@ -8,6 +8,7 @@ import '../logic/transfer_window.dart';
 import '../logic/transfer_terms_engine.dart';
 import '../logic/transfer_talk_engine.dart';
 import '../logic/player_terms_engine.dart';
+import '../logic/relations_engine.dart';
 import '../logic/contract_engine.dart';
 import '../models/transfer_talk.dart';
 import '../models/player.dart';
@@ -660,6 +661,14 @@ class _TransferScreenState extends State<TransferScreen>
                   Text(Tr.pick(
                       '今の年俸: ${formatMoney(annualFromWeekly(current))}',
                       'Current salary: ${formatMoney(annualFromWeekly(current))}')),
+                  Text(
+                    Tr.pick(
+                        '代理人: ${RelationsEngine.agentOf(player).label}(${RelationsEngine.agentOf(player).description})',
+                        'Agent: ${RelationsEngine.agentOf(player).label} (${RelationsEngine.agentOf(player).description})'),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.subtleText(context)),
+                  ),
                   if (talk != null && talk.hasRival)
                     Text(
                       Tr.pick(

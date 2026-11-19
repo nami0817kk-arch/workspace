@@ -140,8 +140,10 @@ void main() {
       final game = GameState();
       await game.startNewGame('満了FC');
       final clock = Player.contractClockYear;
-      final mine = game.userTeam.players.first..contractEndYear = clock;
-      for (final p in game.userTeam.players.skip(1)) {
+      // 引退で抜けると「満了」に数えられないので、引退しない若い選手で見る。
+      final mine = game.userTeam.players.firstWhere((p) => p.age < 28)
+        ..contractEndYear = clock;
+      for (final p in game.userTeam.players.where((p) => p.id != mine.id)) {
         p.contractEndYear = clock + 3;
       }
       final cpu = game.save!.league.teams.firstWhere((t) => t.id != 'user');

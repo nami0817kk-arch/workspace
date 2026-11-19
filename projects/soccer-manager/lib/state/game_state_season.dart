@@ -142,6 +142,8 @@ extension GameStateSeason on GameState {
     _advanceTransferTalks(before, d);
     // スタッフの引き抜きの話・候補の月ごとの入れ替え。
     _advanceStaffMoves(before, d);
+    // 選手の私生活の出来事(月ごと)。
+    _rollLifeEvents(before, d);
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {

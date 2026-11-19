@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/logic/player_terms_engine.dart';
+import 'package:soccer_manager/logic/relations_engine.dart';
 import 'package:soccer_manager/logic/transfer_talk_engine.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/transfer_talk.dart';
@@ -65,7 +66,10 @@ void main() {
       gs.save!.budget = 99999999;
       gs.save!.wageBudget = 99999999;
       final same = gs.sameLeaguePlayerIds();
-      for (final p in gs.transferTargets.where((p) => same.contains(p.id))) {
+      // 代理人の個性で望む額と席を立つ線が変わるので、ふつうの代理人の選手で見る。
+      for (final p in gs.transferTargets.where((p) =>
+          same.contains(p.id) &&
+          RelationsEngine.agentOf(p) == AgentStyle.standard)) {
         if (await gs.openTransferTalk(p.id, gs.askingPriceFor(p) * 2)) {
           gs.debugAdvanceTodayTo(gs.today
               .add(const Duration(days: TransferTalkEngine.replyDays)));
@@ -132,7 +136,9 @@ void main() {
       final gs = GameState();
       await gs.startNewGame('条件FC');
       gs.save!.wageBudget = 99999999;
-      final fa = gs.freeAgents.first;
+      // 代理人の個性で望む額が変わるので、ふつうの代理人の選手で見る。
+      final fa = gs.freeAgents.firstWhere(
+          (p) => RelationsEngine.agentOf(p) == AgentStyle.standard);
       final end = Player.contractClockYear + 1;
       expect(
           await gs.offerPersonalTerms(fa.id,
