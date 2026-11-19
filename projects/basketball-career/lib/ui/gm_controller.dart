@@ -320,6 +320,9 @@ class GmController extends ChangeNotifier {
   }
   void exerciseOption(int id) => _act((c) => c.exerciseOption(id));
 
+  /// 大物に会いに行く(話すことは [Career.pitchLines] の番号)。
+  void pitch(int id, int kind) => _act((c) => c.pitch(id, kind));
+
   /// 若手の指導役を付ける・外す。
   void setMentor(int vet, int young) => _act((c) => c.setMentor(vet, young));
   void clearMentor() => _act((c) => c.clearMentor());
