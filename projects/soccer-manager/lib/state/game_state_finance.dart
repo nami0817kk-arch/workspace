@@ -618,6 +618,7 @@ extension GameStateFinance on GameState {
         name: theme.domesticCupName,
         teamIds: mine.teams.map((t) => t.id).toList(),
       ),
+      _newLeagueCup(mine.teams.map((t) => t.id).toList()),
     ];
     save.continentalCup = null;
     save.continentalTeams = [];
