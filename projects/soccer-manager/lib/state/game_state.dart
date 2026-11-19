@@ -45,6 +45,7 @@ import '../models/installment.dart';
 import '../models/transfer_talk.dart';
 import '../models/sd_brief.dart';
 import '../models/staff_offer.dart';
+import '../models/rival_owner.dart';
 import '../models/manager_profile.dart';
 import '../logic/manager_hr_engine.dart';
 import '../logic/transfer_talk_engine.dart';
@@ -155,6 +156,7 @@ part 'game_state_life.dart';
 part 'game_state_owner.dart';
 part 'game_state_agm.dart';
 part 'game_state_plan.dart';
+part 'game_state_rivals.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -1167,6 +1169,7 @@ class GameState extends ChangeNotifier {
     _save!.today = SeasonCalendar.preseasonDate(league.season);
     // 開始時は全役職が空席。誰を先に雇うかが最初の判断になる。
     _refreshStaffCandidates();
+    _assignRivalOwners();
     FreeAgentEngine.topUp(_save!.freeAgents);
     _ensureWorldSquads(_save!);
     // 第1季の前の夏(2026年)はワールドカップ。出た選手は遅れて合流する。
