@@ -55,6 +55,7 @@ void main() {
       final gs = GameState();
       await gs.startNewGame('誕生日FC');
       final ages = {for (final p in gs.userTeam.players) p.id: p.age};
+      final start = gs.today;
       final foreign = gs.save!.foreignLeagues.values.first.teams.first.players.first;
       final foreignAge = foreign.age;
       while (gs.save!.league.nextUnplayedFixture != null) {
@@ -64,7 +65,12 @@ void main() {
       for (final p in gs.userTeam.players) {
         final before = ages[p.id];
         if (before == null) continue; // 新しく入った選手
-        expect(p.age, before + 1, reason: p.name);
+        // 季の始まりの日は年によって1日ずれる。その隙間に誕生日がある選手は
+        // この季には歳を取らず、次の季に取る。実際に通った誕生日の数だけ
+        // 歳を取る(ほとんどの選手は1つ)。
+        expect(p.age, before + p.birthdaysBetween(start, gs.today),
+            reason: p.name);
+        expect(p.birthdaysBetween(start, gs.today), lessThanOrEqualTo(1));
       }
       expect(foreign.age, foreignAge + 1);
     });

@@ -31,10 +31,18 @@ void main() {
       game.save!.budget = 100000;
       final before = game.save!.budget;
 
-      final target = legacyMarket(game).first;
       game.save!.wageBudget = 999999; // 年俸の枠で止めない
-      expect(await game.buyPlayerOnInstallments(target.id), isTrue);
-      expect(await game.sellPlayer(target.id), isTrue);
+      // 市場の選手は作るたびに違い、登録の決まりで買えない選手もいる。
+      // 買えた選手で確かめる。
+      String? targetId;
+      for (final p in [...legacyMarket(game)]) {
+        if (await game.buyPlayerOnInstallments(p.id)) {
+          targetId = p.id;
+          break;
+        }
+      }
+      expect(targetId, isNotNull, reason: '分割で買える選手がいない');
+      expect(await game.sellPlayer(targetId!), isTrue);
 
       expect(game.save!.budget, lessThanOrEqualTo(before),
           reason: '買って売るだけで資金が増えている');
