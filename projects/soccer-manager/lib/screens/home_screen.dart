@@ -570,10 +570,30 @@ class HomeScreen extends StatelessWidget {
                                       Expanded(
                                         child: Text(
                                           Tr.pick(
-                                              '${entry[i].buyerClubName}が${entry[i].playerName}に${formatMoney(entry[i].amount)}',
-                                              '${entry[i].buyerClubName} bid ${formatMoney(entry[i].amount)} for ${entry[i].playerName}'),
+                                              '${entry[i].buyerClubName}が${entry[i].playerName}に${formatMoney(entry[i].amount)}${entry[i].isFinal ? '(これ以上は出さない)' : ''}',
+                                              '${entry[i].buyerClubName} bid ${formatMoney(entry[i].amount)} for ${entry[i].playerName}${entry[i].isFinal ? ' (final)' : ''}'),
                                         ),
                                       ),
+                                      if (entry[i].askedAmount != null)
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Text(
+                                            Tr.pick('返事待ち', 'Awaiting reply'),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: SemanticColors.subtleText(
+                                                  context),
+                                            ),
+                                          ),
+                                        )
+                                      else if (gameState
+                                          .canCounterIncomingOffer(entry[i]))
+                                        TextButton(
+                                          onPressed: () => _showCounterDialog(
+                                              context, entry[i]),
+                                          child: Text(Tr.pick('対案', 'Counter')),
+                                        ),
                                       TextButton(
                                         onPressed: () {
                                           FeedbackService.tap();
@@ -1254,6 +1274,60 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// 来たオファーに、もっと高い額を求める。
+  Future<void> _showCounterDialog(
+      BuildContext context, IncomingOffer offer) async {
+    var ratio = 1.15;
+    final asked = await showDialog<int>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setState) {
+          final amount = (offer.amount * ratio).round();
+          return AlertDialog(
+            title: Text(Tr.pick('${offer.buyerClubName}に対案を返す',
+                'Counter ${offer.buyerClubName}')),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(Tr.pick('今の提示: ${formatMoney(offer.amount)}',
+                    'Their bid: ${formatMoney(offer.amount)}')),
+                Text(Tr.pick('求める額: ${formatMoney(amount)}(+${((ratio - 1) * 100).round()}%)',
+                    'You ask: ${formatMoney(amount)} (+${((ratio - 1) * 100).round()}%)')),
+                Slider(
+                  value: ratio,
+                  min: 1.05,
+                  max: 1.6,
+                  divisions: 11,
+                  onChanged: (v) => setState(() => ratio = v),
+                ),
+                Text(
+                  Tr.pick('買い手が出せる額には上限があります。求めすぎると話を打ち切られます。返事は2日ほどで来ます。対案を返せるのは1回だけです。',
+                      'Every buyer has a limit. Ask too much and they walk away. They reply in about 2 days. You can only counter once.'),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(Tr.pick('やめる', 'Never mind')),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(ctx, amount),
+                child: Text(Tr.pick('対案を返す', 'Send counter')),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+    if (asked == null || !context.mounted) return;
+    FeedbackService.tap();
+    await context.read<GameState>().counterIncomingOffer(offer.id, asked);
   }
 
   void _confirmAcceptOffer(BuildContext context, IncomingOffer offer) {
