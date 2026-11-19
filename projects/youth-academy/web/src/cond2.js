@@ -13,7 +13,7 @@
   YA.INJ_PARTS = [['足首', 3], ['ハムストリング', 2.5], ['太もも', 2], ['膝', 1.6], ['ふくらはぎ', 1.5], ['腰', 1.2], ['鼠径部', 1], ['肩', 0.6], ['足の甲', 0.8], ['頭', 0.3]];
   YA.injSevName = (n) => (n >= 8 ? '重傷' : n >= 3 ? '中程度' : '軽傷');
   YA.RELAPSE_WEEKS = 6;
-  YA.RELAPSE_K = 2;
+  YA.RELAPSE_K = 1.6; // 2 だと怪我が年30件を超えた（tool/balance.js）
   function scanInj(w) {
     for (const p of all(w)) {
       if (p.inj > 0 && !p.injPart) {
@@ -37,7 +37,7 @@
   YA.scanInj = scanInj;
   const ik0 = YA.injK || (() => 1);
   YA.injK = function (p) {
-    return ik0(p) * (p.relapseW > 0 ? YA.RELAPSE_K : 1) * (p.gpain > 0 ? 1.25 : 1) * (p.mind && p.mind.k === 'burnout' ? 1.2 : 1);
+    return ik0(p) * (p.relapseW > 0 ? YA.RELAPSE_K : 1) * (p.gpain > 0 ? 1.15 : 1) * (p.mind && p.mind.k === 'burnout' ? 1.15 : 1);
   };
 
   // ---------- 心の状態 ----------
@@ -116,7 +116,7 @@
       if (p.gpain > 0) { p.gpain--; if (!p.gpain && YA.noteTier) YA.noteTier(w, 3, `${p.name}の成長痛がおさまった`, p.id); }
       else if (p.grade <= 2 && p.hH.length >= 5 && p.hH[4] - p.hH[0] >= 2 && r() < 0.3) {
         p.gpain = r.int(3, 6);
-        if (YA.noteTier) YA.noteTier(w, 2, `${p.num}番 ${p.name}が成長痛を訴えている（背が伸びている時期。${p.gpain}週ほど伸びが鈍り、怪我をしやすい）`, p.id);
+        if (YA.noteTier) YA.noteTier(w, 2, `${p.num}番 ${p.name}が成長痛を訴えている（背が伸びている時期。${p.gpain}週ほど伸びが鈍り、体を痛めやすい）`, p.id);
         if (p.hist) p.hist.unshift({ y: w.year, w: w.week, t: '成長痛' });
       }
       // 心の状態

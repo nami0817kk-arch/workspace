@@ -15,7 +15,7 @@ module.exports = (YA, ok) => {
   // ぶり返し：戻って6週は怪我をしやすい
   const p = ps.find((x) => x.pos !== 'GK');
   const k0 = YA.injK(Object.assign({}, p, { relapseW: 0, gpain: 0, mind: null }));
-  ok(YA.injK(Object.assign({}, p, { relapseW: 3, gpain: 0, mind: null })) >= k0 * 1.9, '戻ってすぐは怪我をしやすい');
+  ok(YA.injK(Object.assign({}, p, { relapseW: 3, gpain: 0, mind: null })) >= k0 * 1.5, '戻ってすぐは怪我をしやすい');
   ok(YA.injK(Object.assign({}, p, { relapseW: 0, gpain: 3, mind: null })) > k0, '成長痛の子は怪我をしやすい');
   ok(YA.growK(Object.assign({}, p, { gpain: 3, mind: null })) < YA.growK(Object.assign({}, p, { gpain: 0, mind: null })), '成長痛の子は伸びが鈍い');
   ok(YA.growK(Object.assign({}, p, { gpain: 0, mind: { k: 'burnout', w: 3 } })) < YA.growK(Object.assign({}, p, { gpain: 0, mind: null })) * 0.8, '燃え尽きの子は伸びが鈍い');
