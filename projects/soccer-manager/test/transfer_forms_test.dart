@@ -40,8 +40,9 @@ void main() {
     final s = gs.save!..budget = 99999999;
     s.wageBudget = 99999999;
     // 呼び戻すときにも労働許可が要る。下りない外国籍の選手は選ばない。
-    final p = gs.userTeam.players
-        .firstWhere((p) => !p.isLoan && gs.workPermitBlock(p) == null);
+    // 外国籍だと、売った先で力が境目を割ったとき許可が下りない。国内の選手にする。
+    final p = gs.userTeam.players.firstWhere(
+        (p) => !p.isLoan && gs.nationalityOf(p) == gs.currentLeagueTheme);
     final buyer = s.league.teams.firstWhere((t) => t.id != s.userTeamId);
     s.incomingOffers.add(IncomingOffer(
         id: 'bb',
