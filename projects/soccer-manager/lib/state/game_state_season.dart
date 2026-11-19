@@ -140,6 +140,8 @@ extension GameStateSeason on GameState {
     _advanceScouting(before, d);
     // 移籍の交渉の返事・期限、窓が閉じたら流す。
     _advanceTransferTalks(before, d);
+    // スタッフの引き抜きの話・候補の月ごとの入れ替え。
+    _advanceStaffMoves(before, d);
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {

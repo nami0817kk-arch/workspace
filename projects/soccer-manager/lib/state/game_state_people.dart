@@ -71,7 +71,7 @@ extension GameStatePeople on GameState {
         role: StaffRole.manager,
         divisionTier: max(1, s.currentDivisionTier - 1),
         confidence: s.confidence,
-        id: 'staff-${s.careerSeasons}-manager-employed-$i',
+        id: 'staff-${s.careerSeasons * 100 + today.month}-manager-employed-$i',
         avoid: avoid,
       );
       avoid.add(m.name);

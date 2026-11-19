@@ -55,6 +55,8 @@ class _StaffCard extends StatelessWidget {
                     fontSize: 11, color: SemanticColors.subtleText(context)),
               ),
               if (role == StaffRole.manager) const _ManagerTargetPanel(),
+              if (gameState.staffOfferFor(role) case final offer?)
+                _StaffOfferBox(offer: offer),
             ],
             if (candidates.isNotEmpty) ...[
               const Divider(height: 20),
@@ -160,9 +162,15 @@ class _StaffRow extends StatelessWidget {
                     ),
                     StatChip(
                       label: Tr.pick('契約', 'Deal'),
-                      value: Tr.pick('${staff.contractYears}年',
-                          '${staff.contractYears}y'),
+                      value: Tr.pick(
+                          '${Player.contractClockYear + staff.contractYears - 1}年6月まで',
+                          'to June ${Player.contractClockYear + staff.contractYears - 1}'),
                     ),
+                    if (staff.formerPlayerId != null)
+                      StatChip(
+                        label: Tr.pick('元選手', 'Ex-player'),
+                        value: Tr.pick('うちのOB', 'One of ours'),
+                      ),
                   ],
                 ),
                 if (staff.manager != null) _ManagerProfileLines(staff: staff),
@@ -269,6 +277,61 @@ class _ManagerTargetPanel extends StatelessWidget {
                 'Each matchday below the target erodes his standing; under ${ManagerHrEngine.warningStanding} the press call him under pressure. Sacking him costs the rest of his contract in full.'),
             style: TextStyle(
                 fontSize: 11, color: SemanticColors.subtleText(context)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 他のクラブからの引き抜きの話(手放す/昇給して残す)。
+class _StaffOfferBox extends StatelessWidget {
+  final StaffOffer offer;
+  const _StaffOfferBox({required this.offer});
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.read<GameState>();
+    final comp = formatMoney(gameState.scaledMoney(offer.compensation));
+    final until = TransferWindowCalendar.formatMonthDay(offer.expiresOn);
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.orange.shade700),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            Tr.pick(
+                '${offer.clubName}が${offer.staffName}を引き抜きに来ています。補償金$comp。$untilまでに決めなければ移っていきます。',
+                '${offer.clubName} want ${offer.staffName}. Compensation: $comp. Decide by $until or he leaves.'),
+            style: TextStyle(fontSize: 12, color: Colors.orange.shade800),
+          ),
+          OverflowBar(
+            alignment: MainAxisAlignment.end,
+            spacing: 8,
+            children: [
+              TextButton(
+                onPressed: () => gameState.releaseStaffToOffer(offer.id),
+                child: Text(Tr.pick('手放す', 'Let him go')),
+              ),
+              FilledButton(
+                onPressed: () async {
+                  final messenger = ScaffoldMessenger.of(context);
+                  final ok = await gameState.keepStaffWithRaise(offer.id);
+                  if (!ok) {
+                    messenger.showSnackBar(SnackBar(
+                        content: Text(gameState.lastSigningBlockReason ??
+                            Tr.pick('残せませんでした。', 'He could not be kept.'))));
+                  }
+                },
+                child: Text(Tr.pick('昇給(+${offer.raisePercent}%)して残す',
+                    'Keep him on a ${offer.raisePercent}% raise')),
+              ),
+            ],
           ),
         ],
       ),
