@@ -17,7 +17,8 @@ class TeamDef {
   final String color;
 
   /// 短い呼び名。同じ都市に2チームあるときは愛称も付ける。
-  String get short => teamDefs.where((d) => d.city == city).length > 1 ? '$city・$nick' : city;
+  /// ロサンゼルスは表で切れないよう「LA」と縮める(LAスクーナーズ)。
+  String get short => teamDefs.where((d) => d.city == city).length > 1 ? '${city == 'ロサンゼルス' ? 'LA' : '$city・'}$nick' : city;
 }
 
 /// 30チームのリーグ。都市・地区・色は NBA にそろえ、愛称は元のチームを思わせる題材の別の言葉にする

@@ -4,6 +4,7 @@ import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../team_colors.dart';
 import 'player_face.dart';
+import 'gm_table.dart';
 import 'style.dart';
 import 'team_logo.dart';
 
@@ -156,7 +157,7 @@ class PlayerRow extends StatelessWidget {
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
-                  Flexible(child: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
+                  Flexible(child: fitText(p.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
                   if (showMorale) ...[const SizedBox(width: 4), MoraleIcon(p: p)],
                 ]),
                 const SizedBox(height: 1),
@@ -352,7 +353,7 @@ class GameRow extends StatelessWidget {
         const SizedBox(width: 6),
         TeamBadge(team: opp, size: 20),
         const SizedBox(width: 6),
-        Expanded(flex: 2, child: Text(teamDefs[opp].short, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13))),
+        Expanded(flex: 2, child: fitText(teamDefs[opp].short, style: const TextStyle(fontSize: 13))),
         Text('${g.ptsOf(mine)} - ${g.ptsAgainst(mine)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, fontFeatures: [FontFeature.tabularFigures()])),
         if (g.topName != null) ...[
           const SizedBox(width: 8),

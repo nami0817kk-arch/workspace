@@ -141,11 +141,20 @@ void main() {
       await t.ensureVisible(card);
       await t.pumpAndSettle();
     });
-    await _shoot(t, '4j_sim_stops', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
-      final btn = find.byKey(const Key('sim-stops'));
-      await t.ensureVisible(btn);
+    await _shoot(t, '4j2_sim_menu', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      final more = find.byKey(const Key('sim-more'));
+      await t.ensureVisible(more);
       await t.pumpAndSettle();
-      await t.tap(btn);
+      await t.tap(more);
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '4j_sim_stops', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      final more = find.byKey(const Key('sim-more'));
+      await t.ensureVisible(more);
+      await t.pumpAndSettle();
+      await t.tap(more);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('sim-stops')));
       await t.pumpAndSettle();
       await t.tap(find.text(SimStop.slump.label));
       await t.pumpAndSettle();

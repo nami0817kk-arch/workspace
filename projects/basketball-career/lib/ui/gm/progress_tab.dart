@@ -254,15 +254,19 @@ class ProgressTab extends StatelessWidget {
         _kv('トレード', deadline ? 'あと${tradeDeadlineBlock - car.block}区切りで締め切り' : '締め切りを過ぎた', color: deadline ? null : GmColors.sub),
         _todo(_seasonTodo(car)),
         const SizedBox(height: 12),
+        // 進めるのは大きいボタン1つ。采配と、まとめて進める方法は横に寄せる
         Row(children: [
-          Expanded(
-            child: OutlinedButton(
-              onPressed: c.busy || next <= week ? null : () => _run(context, () => c.playWeek()),
-              // 文字が折り返さないように、狭い画面では縮める
-              child: FittedBox(fit: BoxFit.scaleDown, child: Text(week == Career.daysPerWeek ? '1週間' : '$week試合')),
+          if (car.nextMyGame != null) ...[
+            Expanded(
+              child: OutlinedButton.icon(
+                key: const Key('live-game'),
+                onPressed: c.busy ? null : () => _live(context, car),
+                icon: const Icon(Icons.sports_basketball_rounded, size: 18),
+                label: const FittedBox(fit: BoxFit.scaleDown, child: Text('1試合を采配')),
+              ),
             ),
-          ),
-          const SizedBox(width: 10),
+            const SizedBox(width: 10),
+          ],
           Expanded(
             flex: 2,
             child: FilledButton.icon(
@@ -271,40 +275,32 @@ class ProgressTab extends StatelessWidget {
               label: Text('次の$next試合へ'),
             ),
           ),
-        ]),
-        if (car.nextMyGame != null) ...[
-          const SizedBox(height: 8),
-          OutlinedButton.icon(
-            key: const Key('live-game'),
-            onPressed: c.busy ? null : () => _live(context, car),
-            icon: const Icon(Icons.sports_basketball_rounded, size: 18),
-            label: const Text('次の試合を采配する(1試合)'),
-          ),
-        ],
-        const SizedBox(height: 8),
-        // まとめて進める(申し込みが届いたら、そこで止まる)
-        Row(children: [
-          if (deadline) ...[
-            Expanded(
-              child: TextButton.icon(
-                onPressed: c.busy ? null : () => _run(context, () => c.simAhead(toDeadline: true)),
-                icon: const Icon(Icons.fast_forward_rounded, size: 18),
-                label: const Text('締め切りまで', style: TextStyle(fontSize: 13)),
-              ),
-            ),
-          ],
-          Expanded(
-            child: TextButton.icon(
-              onPressed: c.busy ? null : () => _run(context, () => c.simAhead(toDeadline: false)),
-              icon: const Icon(Icons.skip_next_rounded, size: 18),
-              label: const Text('シーズン終わりまで', maxLines: 1, style: TextStyle(fontSize: 13)),
-            ),
-          ),
-          IconButton(
-            key: const Key('sim-stops'),
-            tooltip: 'まとめて進めるときに止まる場面',
-            onPressed: () => _stopsDialog(context),
-            icon: const Icon(Icons.tune_rounded, size: 20, color: GmColors.sub),
+          const SizedBox(width: 6),
+          PopupMenuButton<String>(
+            key: const Key('sim-more'),
+            tooltip: 'ほかの進め方',
+            enabled: !c.busy,
+            icon: const Icon(Icons.more_horiz_rounded, color: GmColors.sub),
+            onSelected: (v) {
+              switch (v) {
+                case 'week':
+                  _run(context, () => c.playWeek());
+                case 'deadline':
+                  _run(context, () => c.simAhead(toDeadline: true));
+                case 'season':
+                  _run(context, () => c.simAhead(toDeadline: false));
+                case 'stops':
+                  _stopsDialog(context);
+              }
+            },
+            itemBuilder: (_) => [
+              if (next > week)
+                PopupMenuItem(value: 'week', child: _menuRow(Icons.calendar_view_week_rounded, week == Career.daysPerWeek ? '1週間だけ進める' : '$week試合だけ進める')),
+              if (deadline) PopupMenuItem(value: 'deadline', child: _menuRow(Icons.fast_forward_rounded, 'トレードの締め切りまで')),
+              PopupMenuItem(value: 'season', child: _menuRow(Icons.skip_next_rounded, 'シーズンの終わりまで')),
+              const PopupMenuDivider(),
+              PopupMenuItem(key: const Key('sim-stops'), value: 'stops', child: _menuRow(Icons.tune_rounded, 'まとめて進めるときに止まる場面')),
+            ],
           ),
         ]),
       ]),
@@ -670,6 +666,12 @@ class ProgressTab extends StatelessWidget {
       );
 
   /// 試合を進め、終わったら報告を画面いっぱいに出す。
+  Widget _menuRow(IconData icon, String text) => Row(children: [
+        Icon(icon, size: 18, color: GmColors.sub),
+        const SizedBox(width: 10),
+        Text(text),
+      ]);
+
   Future<void> _run(BuildContext context, Future<BlockReport?> Function() play) async {
     final nav = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);

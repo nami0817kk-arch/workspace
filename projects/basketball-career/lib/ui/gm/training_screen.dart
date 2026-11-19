@@ -5,6 +5,7 @@ import '../../gm/player.dart';
 import '../gm_controller.dart';
 import '../layout.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'style.dart';
 
 /// 練習。チームの練習の強さと、選手ごとの重点(オフに伸ばす能力)を決める。
@@ -70,7 +71,7 @@ class TrainingScreen extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold)),
+                fitText(p.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 Text('${p.pos.short}・${p.age}歳・${p.focus == null ? '得意 ${_best(p).label}' : '${p.focus!.label} ${shown(p.attr(p.focus!))}'}',
                     maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
               ]),

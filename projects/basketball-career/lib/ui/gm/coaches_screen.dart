@@ -6,6 +6,7 @@ import '../../gm/player.dart';
 import '../gm_controller.dart';
 import '../layout.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'style.dart';
 
 /// 段階の言葉。
@@ -66,7 +67,7 @@ class CoachesScreen extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(k.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    fitText(k.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                     Text('${coachLevelLabels[k.level - 1]}・${_effect(s, k)}・${money(k.salary)}',
                         maxLines: 2, style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                   ]),
@@ -89,7 +90,7 @@ class CoachesScreen extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(k.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            fitText(k.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
             Text('${coachLevelLabels[k.level - 1]}・${money(k.salary)}', style: TextStyle(fontSize: 12, color: better ? GmColors.good : GmColors.sub)),
           ]),
         ),

@@ -130,7 +130,7 @@ class _DraftViewState extends State<DraftView> {
                               GmRow([
                                 numCell('$k', color: GmColors.sub),
                                 TeamBadge(team: p.pickedBy!, size: 16),
-                                Text(p.player.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                fitText(p.player.name, ),
                                 Text(p.player.pos.short, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
                               ], highlight: p.pickedBy == car.mine),
                           ],
@@ -336,11 +336,7 @@ class _DraftViewState extends State<DraftView> {
                     Row(
                       children: [
                         Flexible(
-                          child: Text(
-                            pl.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          child: fitText(pl.name, style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                         if (p.scouted) ...[const SizedBox(width: 4), const PopIn(child: Tag('調査済', color: GmColors.gold))],
@@ -513,11 +509,7 @@ class _ProspectPanel extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  pl.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                child: fitText(pl.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
               ),
               Tag(pl.pos.short),

@@ -121,11 +121,7 @@ class _RankingsViewState extends State<RankingsView> {
                       [
                         numCell('${i + 1}', color: i < 3 ? GmColors.gold : GmColors.sub, bold: i < 3),
                         TeamBadge(team: t, size: 16),
-                        Text(
-                          p.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        fitText(p.name, style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(p.pos.short, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
                         numCell('${p.age}'),

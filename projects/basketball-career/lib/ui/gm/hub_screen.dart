@@ -68,6 +68,7 @@ class _HubScreenState extends State<HubScreen> {
             selected: _tab,
             onSelect: _go,
             unread: car.unread,
+            needsReply: car.needsReply,
             hasOffer: car.incoming != null,
             onInbox: _openInbox,
             onTitle: c.goHome,
@@ -132,6 +133,7 @@ class _SideMenu extends StatelessWidget {
     required this.selected,
     required this.onSelect,
     required this.unread,
+    required this.needsReply,
     required this.hasOffer,
     required this.onInbox,
     required this.onTitle,
@@ -139,6 +141,7 @@ class _SideMenu extends StatelessWidget {
   final int selected;
   final ValueChanged<int> onSelect;
   final int unread;
+  final int needsReply;
   final bool hasOffer;
   final VoidCallback onInbox;
   final VoidCallback onTitle;
@@ -170,7 +173,10 @@ class _SideMenu extends StatelessWidget {
             child: Column(children: [
               item(Icons.home_rounded, 'ホーム', on: selected == 0, onTap: () => onSelect(0)),
               item(Icons.mail_rounded, '受信箱',
-                  badge: Badge(isLabelVisible: unread > 0, label: Text('$unread'), child: const Icon(Icons.mail_rounded, size: 22, color: GmColors.sub)),
+                  // 数字は返事が要る知らせだけ。読むだけの知らせは小さな点
+                  badge: needsReply > 0
+                      ? Badge(key: const Key('inbox-badge-reply'), label: Text('$needsReply'), child: const Icon(Icons.mail_rounded, size: 22, color: GmColors.sub))
+                      : Badge(key: const Key('inbox-badge-dot'), isLabelVisible: unread > 0, smallSize: 8, backgroundColor: GmColors.sub, child: const Icon(Icons.mail_rounded, size: 22, color: GmColors.sub)),
                   onTap: onInbox),
               item(Icons.groups_rounded, 'チーム', on: selected == 1, onTap: () => onSelect(1)),
               item(Icons.swap_horiz_rounded, 'トレード',
@@ -225,7 +231,10 @@ class _HomeTab extends StatelessWidget {
   Widget _alerts(Career car) {
     final hurt = car.me.roster.where((p) => p.injured > 0).toList();
     final items = <(IconData, String, Color, VoidCallback)>[
-      if (car.unread > 0) (Icons.mail_rounded, '受信箱に未読が${car.unread}件', GmColors.ball, openInbox),
+      if (car.needsReply > 0)
+        (Icons.reply_rounded, '返事を待っている知らせが${car.needsReply}件', GmColors.ball, openInbox)
+      else if (car.unread > 0)
+        (Icons.mail_rounded, '新しい知らせ${car.unread}件', GmColors.sub, openInbox),
       if (car.incoming != null) (Icons.swap_horiz_rounded, 'トレードの申し込みが届いている', GmColors.ball, () => goTab(2)),
       if (hurt.isNotEmpty) (Icons.healing_rounded, 'けが人 ${hurt.length}人(${hurt.map((p) => p.name).take(2).join('・')}${hurt.length > 2 ? 'ほか' : ''})', GmColors.bad, () => goTab(1)),
       if (car.phase == Phase.season && car.canTrade) (Icons.event_rounded, 'トレードの締め切りまで受け付け中', GmColors.sub, () => goTab(2)),
@@ -317,7 +326,7 @@ class _HomeTab extends StatelessWidget {
             return GmRow(
               [
                 numCell(p.pos.short, color: GmColors.sub),
-                Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 11.5, color: p.injured > 0 ? GmColors.bad : null)),
+                fitText(p.name, style: TextStyle(fontSize: 11.5, color: p.injured > 0 ? GmColors.bad : null)),
                 numCell('${shown(p.ovr)}', bold: true, color: GmColors.ovr(p.ovr)),
                 numCell(s.gp == 0 ? '-' : one(s.ppg)),
                 numCell(s.gp == 0 ? '-' : one(s.rpg)),

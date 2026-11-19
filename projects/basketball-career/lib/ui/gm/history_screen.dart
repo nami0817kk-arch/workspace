@@ -7,6 +7,7 @@ import '../../gm/records.dart';
 import '../gm_controller.dart';
 import '../layout.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'player_card.dart';
 import 'style.dart';
 
@@ -233,10 +234,7 @@ class HistoryScreen extends StatelessWidget {
                           TeamBadge(team: a.team, size: 16),
                           const SizedBox(width: 6),
                           Expanded(
-                            child: Text(a.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: a.team == car.mine ? GmColors.gold : null)),
+                            child: fitText(a.name, style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: a.team == car.mine ? GmColors.gold : null)),
                           ),
                         ]),
                       ),

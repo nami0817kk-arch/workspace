@@ -6,6 +6,7 @@ import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../layout.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'style.dart';
 
 /// どのチームのGMになるかと、難しさを選ぶ。リーグは [seed] で決まり、選んだあとも同じリーグになる。
@@ -163,7 +164,7 @@ class _TeamCard extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(t.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                fitText(t.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 const SizedBox(height: 3),
                 Wrap(spacing: 6, runSpacing: 3, crossAxisAlignment: WrapCrossAlignment.center, children: [
                   Tag(o.label, color: color),

@@ -4,6 +4,7 @@ import '../../gm/player.dart';
 import '../gm_controller.dart';
 import '../layout.dart';
 import 'common.dart';
+import 'gm_table.dart';
 import 'player_card.dart';
 import 'style.dart';
 
@@ -92,7 +93,7 @@ class _StatsScreenState extends State<StatsScreen> {
                                 height: 30,
                                 child: Row(children: [
                                   SizedBox(width: 26, child: Text(p.pos.short, style: const TextStyle(fontSize: 10, color: GmColors.sub))),
-                                  Expanded(child: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13))),
+                                  Expanded(child: fitText(p.name, style: const TextStyle(fontSize: 13))),
                                 ]),
                               ),
                             ),

@@ -224,11 +224,7 @@ class _TradeTabState extends State<TradeTab> {
                         TeamBadge(team: _partner, size: 26),
                         const SizedBox(width: 6),
                         Flexible(
-                          child: Text(
-                            '${them.name}(${them.mode.label})',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          child: fitText('${them.name}(${them.mode.label})', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -429,11 +425,7 @@ class _TradeTabState extends State<TradeTab> {
                                 Row(
                                   children: [
                                     Flexible(
-                                      child: Text(
-                                        teamDefs[t].short,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(fontSize: 12, fontWeight: t == _partner ? FontWeight.bold : null),
+                                      child: fitText(teamDefs[t].short, style: TextStyle(fontSize: 12, fontWeight: t == _partner ? FontWeight.bold : null),
                                       ),
                                     ),
                                     if (wants.contains(t))
@@ -544,7 +536,7 @@ class _TradeTabState extends State<TradeTab> {
               Row(
                 children: [
                   Flexible(
-                    child: Text(p.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    child: fitText(p.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   ),
                   if (p.injured > 0) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.healing_rounded, size: 12, color: GmColors.bad)),
                   if (car.tradeBlock.contains(p.id)) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.campaign_rounded, size: 12, color: GmColors.ball)),
@@ -553,7 +545,7 @@ class _TradeTabState extends State<TradeTab> {
               Text(p.pos.short, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
               numCell('${p.age}'),
               numCell('${shown(p.ovr)}', color: GmColors.ovr(p.ovr), bold: true),
-              numCell(money(p.salary)),
+              numCell(money(p.salary), color: GmColors.salary(p.salary, fairSalary(p.ovr, p.age))),
               numCell('${p.years}', color: GmColors.sub),
             ],
             highlight: chosen.contains(p.id),
