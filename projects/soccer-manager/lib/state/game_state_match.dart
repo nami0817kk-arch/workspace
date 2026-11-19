@@ -229,6 +229,8 @@ extension GameStateMatch on GameState {
     _managerPreparesMatch(next);
     // 節の区切りで、オーナーの判断を迫る事件が起きる。
     _maybeRaiseOwnerEvent(next.matchday);
+    // たまに、看板選手の移籍の噂が出る(記者会見で答える)。
+    _maybeRaiseRumor();
     _refreshProposals();
 
     // 練習はコーチ陣の仕事。オーナーは触れないので、この節の分をここで必ず実施する。
