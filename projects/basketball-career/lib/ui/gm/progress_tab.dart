@@ -1001,7 +1001,7 @@ class ProgressTab extends StatelessWidget {
         ],
       ]),
       _contractsGuide(car, exp.length),
-      _summerCard(car),
+      _summerCard(context, car),
       ..._fanCard(car),
       if (car.growth.isNotEmpty) _growthCard(car),
       if (car.sheetPlayer != null) _sheetCard(context, car),
@@ -1028,7 +1028,7 @@ class ProgressTab extends StatelessWidget {
   }
 
   /// 夏の過ごし方(サマーリーグ)。
-  Widget _summerCard(Career car) {
+  Widget _summerCard(BuildContext context, Career car) {
     final problem = car.summerProblem;
     final players = car.summerPlayers;
     return _card(key: const Key('summer-card'), [
@@ -1071,7 +1071,73 @@ class ProgressTab extends StatelessWidget {
             ]),
           ),
       ],
+      const Divider(height: 22),
+      Text('個人練習(${car.camp.length}/${car.campSlots}人)', style: const TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 2),
+      const Text('オフを終えるときに、選んだ能力が上がる。若手は伸びやすく、30歳を過ぎた選手は衰えを取り戻すことがある。枠は練習施設を上げると増える。',
+          style: TextStyle(color: GmColors.sub, fontSize: 12.5, height: 1.5)),
+      for (final e in car.camp.entries)
+        if ([...car.me.roster, ...car.me.twoWay].where((p) => p.id == e.key).firstOrNull case final p?)
+          Row(children: [
+            Expanded(child: fitText('${p.name}(${p.age}歳・OVR${shown(p.ovr)})', style: const TextStyle(fontSize: 13))),
+            const SizedBox(width: 8),
+            Text(e.value.label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GmColors.gold)),
+            IconButton(
+              key: Key('camp-remove-${p.id}'),
+              tooltip: '外す',
+              visualDensity: VisualDensity.compact,
+              onPressed: c.busy ? null : () => c.setCamp(p.id, null),
+              icon: const Icon(Icons.close_rounded, size: 18),
+            ),
+          ]),
+      if (car.camp.length < car.campSlots) ...[
+        const SizedBox(height: 6),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: OutlinedButton.icon(
+            key: const Key('camp-add'),
+            onPressed: c.busy ? null : () => _pickCamp(context, car),
+            icon: const Icon(Icons.fitness_center_rounded),
+            label: const Text('練習する選手を選ぶ'),
+          ),
+        ),
+      ],
     ]);
+  }
+
+  /// 個人練習に呼ぶ選手と、伸ばす能力を選ぶ。
+  Future<void> _pickCamp(BuildContext context, Career car) async {
+    final options = [
+      for (final p in [...car.me.roster, ...car.me.twoWay])
+        if (!car.camp.containsKey(p.id) && car.campProblem(p) == null) p
+    ]..sort((a, b) => a.age.compareTo(b.age));
+    final p = await showDialog<Player>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: const Text('個人練習に呼ぶ選手'),
+        children: [
+          if (options.isEmpty) const Padding(padding: EdgeInsets.all(16), child: Text('選べる選手がいない')),
+          for (final p in options)
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(ctx, p),
+              child: Text('${p.name}(${p.pos.short}・${p.age}歳・OVR${shown(p.ovr)})${p.age <= 25 && p.ovr < p.pot ? '・伸びやすい' : p.age >= 31 ? '・衰えを取り戻す' : ''}'),
+            ),
+        ],
+      ),
+    );
+    if (p == null || !context.mounted) return;
+    final a = await showDialog<Attr>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text('${p.name}に伸ばしてほしい所'),
+        children: [
+          for (final a in Attr.values)
+            SimpleDialogOption(onPressed: () => Navigator.pop(ctx, a), child: Text('${a.label}(いま${shown(p.attr(a))})')),
+        ],
+      ),
+    );
+    if (a == null) return;
+    c.setCamp(p.id, a);
   }
 
   /// オフの「やること」の一覧。済んだものにはチェックが付き、いま手を付けるものが太字で出る。
