@@ -18,6 +18,7 @@ import '../widgets/advisor_card.dart';
 import '../widgets/club_ranking_card.dart';
 import '../widgets/club_timeline_card.dart';
 import '../widgets/club_value_card.dart';
+import '../widgets/auto_columns.dart';
 import '../widgets/trend_chart.dart';
 import '../widgets/projection_card.dart';
 import '../widgets/owner_career_card.dart';
@@ -86,8 +87,8 @@ class FinanceScreen extends StatelessWidget {
       body: TabBarView(
         children: [
           ResponsiveBody(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
+            // 広い画面(iPad の横向きなど)では2列に並べる。
+            child: AutoColumns(
               children: [
                   Card(
                     child: Padding(
@@ -180,8 +181,8 @@ class FinanceScreen extends StatelessWidget {
             ),
           ),
           ResponsiveBody(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
+            // 広い画面(iPad の横向きなど)では2列に並べる。
+            child: AutoColumns(
               children: [
                   const LedgerCard(),
                   const ProjectionCard(),
@@ -290,8 +291,8 @@ class FinanceScreen extends StatelessWidget {
             ),
           ),
           ResponsiveBody(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
+            // 広い画面(iPad の横向きなど)では2列に並べる。
+            child: AutoColumns(
               children: [
                   const SizedBox(height: 16),
                   Text(Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
@@ -319,8 +320,8 @@ class FinanceScreen extends StatelessWidget {
             ),
           ),
           ResponsiveBody(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
+            // 広い画面(iPad の横向きなど)では2列に並べる。
+            child: AutoColumns(
               children: [
                   const RulesCard(),
                   const ClubPolicyCard(),
@@ -333,8 +334,8 @@ class FinanceScreen extends StatelessWidget {
             ),
           ),
           ResponsiveBody(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
+            // 広い画面(iPad の横向きなど)では2列に並べる。
+            child: AutoColumns(
               children: [
                   const ClubValueCard(),
                   const ClubRankingCard(),
