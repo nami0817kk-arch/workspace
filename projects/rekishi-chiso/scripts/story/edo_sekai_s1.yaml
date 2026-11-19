@@ -1,0 +1,143 @@
+# 物語完結型ショート 江戸時代、世界はどうだった？ s1（2026-11-19）。本編 scripts/edo-sekai-story.yaml（11/24 12:00 公開予定、https://youtu.be/z6k-XcWaAq0）から。11/25 9:00 に予約。
+# 形式は ii_s1〜s5・uesugi_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact:（事実カード 江戸の世界くらべ_facts_20261119.yaml）だけ。
+# 絵：本編の AI 絵（out/story/edosekai/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：家康の将軍の日と、エリザベス1世の死の「同じ3月24日」（本編 序章・第1章・第2章、edo-01・02・21）。
+# hook＝同じ日なのか（答えはこのショートの中：今の暦で女王の死は4月3日、10日あと）。
+# tease＝家康の時代に「鎖国」という言葉はあったのか（答えは本編 序章・第4章：1801年に生まれた、edo-22）。
+# 計算：女王の死 ユリウス暦3月24日＝グレゴリオ暦4月3日、家康 グレゴリオ暦3月24日→10日（本編と同じ）。
+# 理解テスト：①家康とエリザベス1世の話 ②1603年、家康が将軍に・女王が亡くなる ③記録では同じ3月24日、イングランドはユリウス暦 ④今の暦では10日ずれ。1648年の条約も10日ずれて2つの日付
+title: "家康とエリザベス1世｜同じ3月24日"
+yt_title: "徳川家康が将軍になった日に、エリザベス1世が亡くなった？　記録では同じ1603年3月24日　今の暦に直すと10日ずれ"
+description: |-
+  徳川家康が将軍になったのは、慶長8年2月12日。国立天文台の暦のデータで今の暦に直すと、1603年3月24日です。イングランドの女王エリザベス1世が亡くなった日も、ウェストミンスター寺院の紹介では3月24日。
+  ところが、イングランドはこのころ古いユリウス暦を使っていました。女王の死を今の暦に直すと4月3日。家康が将軍になった10日あとでした。1648年のウェストファリア条約の日付も、10月14日と24日の2つで記録されています。
+  本編では、家康から慶喜までの260年を、同じ年の世界と並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#徳川家康"
+- "#エリザベス1世"
+- "#江戸時代"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/edosekai
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: edosekai_story_s1
+header:
+  tag: "徳川家康とエリザベス1世"
+  title: "同じ《3月24日》は、同じ日か"
+now:
+- {at: "1603年", text: "1603年　日本", point: 0}
+- {at: "同じ年", text: "1603年　イングランド", point: 0}
+- {at: "1648年", text: "1648年　ドイツ", point: 1}
+timeline:
+- {label: "1603"}
+- {label: "1648"}
+cards:
+  - type: table
+    title: 今の暦に直すと
+    from: 女王の死を
+    until: 日付のずれは
+    items:
+      - {at: 女王の死を, text: "家康が将軍に　3月24日"}
+      - {at: 4月3日, text: "女王の死　4月3日"}
+    text_y: 0.70
+shots:
+  I01_1:
+    kind: "ai"
+    file: "edosekai/main/I01.jpg"
+    focus: [0.35, 0.55]
+    move: "right"
+    must: "I01"
+  I02_2:
+    kind: "ai"
+    file: "edosekai/main/I02.jpg"
+    focus: [0.6, 0.45]
+    move: "left"
+    must: "I02"
+  I01_3:
+    kind: "ai"
+    file: "edosekai/main/I01.jpg"
+    focus: [0.6, 0.55]
+    move: "in"
+    must: "I01"
+  I02_4:
+    kind: "ai"
+    file: "edosekai/main/I02.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "I02"
+  I23_5:
+    kind: "ai"
+    file: "edosekai/main/I23.jpg"
+    focus: [0.4, 0.55]
+    move: "in"
+    must: "I23"
+  I07_6:
+    kind: "ai"
+    file: "edosekai/main/I07.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "I07"
+  I07_7:
+    kind: "ai"
+    file: "edosekai/main/I07.jpg"
+    focus: [0.7, 0.5]
+    move: "right"
+    must: "I07"
+  I22_8:
+    kind: "ai"
+    file: "edosekai/main/I22.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "I22"
+lines:
+  # fact: edo-01, edo-02
+- 語り: "徳川家康が将軍になった日に、イングランドの女王が、亡くなった。本当に、同じ日なのか。"
+  shot: I01_1
+  tone: 強調
+  pause: 0.12
+  # fact: edo-01
+- 語り: "1603年。家康が将軍になったのは、慶長8年の2月12日。国立天文台の暦のデータで、今の暦に直すと、3月24日だ。"
+  shot: I01_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-02
+- 語り: "同じ年。イングランドの女王、エリザベス1世が、亡くなった。ウェストミンスター寺院の紹介が書く日付も、3月24日。"
+  shot: I02_2
+  tone: 重い
+  pause: 0.12
+  # fact: edo-02
+- 語り: "ところが、イングランドは、このころまだ、古いユリウス暦を使っていた。"
+  shot: I02_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-02
+- 語り: "女王の死を、今の暦に直すと、4月3日。家康が将軍になった、《10日》あとだった。"
+  shot: I23_5
+  tone: 強調
+  pause: 0.12
+  # fact: edo-21
+- 語り: "日付のずれは、このあとも続く。1648年に、三十年戦争を終わらせた、ウェストファリア条約の日付は、10月14日と、10月24日の、2つで記録されている。"
+  shot: I07_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-21
+- 語り: "プロテスタントの土地は古い暦、カトリックの土地は今の暦。同じ日が、10日ずれて、書かれたのだ。"
+  shot: I07_7
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 序章・第4章（edo-22）
+- 語り: "では、家康の時代に、鎖国という言葉は、もう、あったのか。"
+  shot: I22_8
+  tone: 疑問
+  pause: 0.15
