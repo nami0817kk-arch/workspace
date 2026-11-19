@@ -884,6 +884,9 @@ extension GameStateSeason on GameState {
         .map((r) => league.teams.firstWhere((t) => t.id == r.teamId))
         .toList();
     final playedTier = _save!.currentDivisionTier;
+    // 他国の1部の上位を控え(大陸大会の相手)、国の係数に今季を足す。
+    _rememberForeignTop();
+    _updateCountryCoefficients();
     // 他国の1部も季を締め、優勝を伝えて、次の季の日程を作る。
     _finishForeignSeasons();
     // 手放したクラブのその後を記録する(順位が決まったこの時点で)。
@@ -1562,8 +1565,11 @@ extension GameStateSeason on GameState {
       _newLeagueCup(newActiveTeams.map((t) => t.id).toList()),
     ];
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
-    if (playedTier == 1 && finalRank <= 2) {
-      final continentalTeams = _generateContinentalTeams();
+    // 出場枠は国の係数の順位で決まる(2〜4クラブ)。相手は他国の1部の上位。
+    if (playedTier == 1 && finalRank <= continentalSpots) {
+      final real = _realContinentalOpponents();
+      final continentalTeams =
+          real.length >= 7 ? real : _generateContinentalTeams();
       _save!.continentalTeams = continentalTeams;
       _save!.continentalCup = ContinentalCupEngine.create(
         name: Tr.pick('大陸チャンピオンズカップ', 'Continental Champions Cup'),

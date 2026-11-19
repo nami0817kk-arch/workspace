@@ -386,6 +386,9 @@ class SaveGame {
   ClubLook? clubLook;
   int clubLookChangedSeason;
 
+  /// 国の係数の履歴(LeagueTheme の name → 季ごとの点、古い順に5季まで)。
+  Map<String, List<double>> countryCoefficients;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -725,6 +728,7 @@ class SaveGame {
     this.biggestWinMargin = 0,
     Map<String, String>? formerClubs,
     Map<String, List<int>>? formerClubStatus,
+    Map<String, List<double>>? countryCoefficients,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -871,6 +875,7 @@ class SaveGame {
         lifeEvents = lifeEvents ?? {},
         difficultyItems = difficultyItems ?? {},
         playerBook = playerBook ?? {},
+        countryCoefficients = countryCoefficients ?? {},
         pendingMoments = pendingMoments ?? [],
         momentKeys = momentKeys ?? [],
         rumorDenied = rumorDenied ?? {},
@@ -1047,6 +1052,8 @@ class SaveGame {
         if (biggestWinMargin > 0) 'biggestWinMargin': biggestWinMargin,
         if (formerClubs.isNotEmpty) 'formerClubs': formerClubs,
         if (formerClubStatus.isNotEmpty) 'formerClubStatus': formerClubStatus,
+        if (countryCoefficients.isNotEmpty)
+          'countryCoefficients': countryCoefficients,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1278,6 +1285,9 @@ class SaveGame {
         formerClubStatus: (json['formerClubStatus'] as Map?)?.map((k, v) =>
             MapEntry(k as String,
                 (v as List).map((e) => e as int).toList())),
+        countryCoefficients: (json['countryCoefficients'] as Map?)?.map(
+            (k, v) => MapEntry(k as String,
+                (v as List).map((e) => (e as num).toDouble()).toList())),
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
