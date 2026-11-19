@@ -883,6 +883,28 @@ class Career {
       }
       return;
     }
+    if (m.kind == MsgKind.offCamp) {
+      switch (choice) {
+        case 0:
+          hype = (hype + 3).clamp(0, 100);
+        case 1:
+          me.chem = (me.chem + 4).clamp(0, 100);
+        default:
+          for (final x in me.roster) {
+            x.morale = (x.morale + 3).clamp(0, 100);
+          }
+      }
+      return;
+    }
+    if (m.kind == MsgKind.offRetire) {
+      if (choice == 0) {
+        hype = (hype + 4).clamp(0, 100);
+        me.chem = (me.chem + 2).clamp(0, 100);
+      } else {
+        hype = (hype + 1).clamp(0, 100);
+      }
+      return;
+    }
     final p = m.player == null ? null : me.roster.where((x) => x.id == m.player).firstOrNull;
     if (p == null) return;
     // 約束の効き目は GM の言葉の重みで変わる(破ってきた GM の約束は、選手があまり喜ばない)
@@ -931,6 +953,29 @@ class Career {
           if (!stayIds.contains(p.id)) stayIds = [...stayIds, p.id];
           p.morale = (p.morale + 5).clamp(0, 100);
         }
+      case MsgKind.offNational:
+        if (choice == 0) {
+          // 代表で揉まれて伸びることも、けがをして帰ることもある(リーグの乱数とは別の乱数)
+          final r = Rng(seed * 4099 + season * 211 + p.id);
+          hype = (hype + 3).clamp(0, 100);
+          p.morale = (p.morale + 6).clamp(0, 100);
+          final notes = <String>[];
+          if (p.age <= 27 && p.ovr < p.pot && r.chance(0.35)) {
+            p.ovr = (p.ovr + 1).clamp(35, 99);
+            p.lastDelta += 1;
+            notes.add('代表で揉まれて、力が上がった(OVR+1)');
+          }
+          if (r.chance(0.18)) {
+            p
+              ..injured = math.max(p.injured, 4 + r.nextInt(8))
+              ..injPart = r.nextInt(injuryParts.length)
+              ..injCount = p.injCount + 1;
+            notes.add('代表の試合でけがをした(${p.injuryText})');
+          }
+          _mail(Sender.staff, '${p.name}が代表から戻った', notes.isEmpty ? '大きなけがもなく、元気に戻った。' : notes.join('。'), player: p.id);
+        } else {
+          p.morale = (p.morale - 6).clamp(0, 100);
+        }
       case MsgKind.offTalk:
         // 約束の期限は来シーズン(オフを終えるとシーズンが1つ進む)
         switch (choice) {
@@ -944,6 +989,8 @@ class Career {
             // 説明が通じるかは、これまで約束を守ってきたか(言葉の重み)で決まる
             p.morale = (p.morale + (word >= 45 ? (6 * w).round() : -4)).clamp(0, 100);
         }
+      case MsgKind.offCamp:
+      case MsgKind.offRetire:
       case MsgKind.info:
       case MsgKind.press:
       case MsgKind.ownerGoal:
@@ -1082,6 +1129,23 @@ class Career {
         '${players.length}人の若手が$summerGames試合に出た。いちばん目立ったのは${best.name}(1試合${best.pts}点)。'
         '${summer.where((x) => x.delta > 0).isEmpty ? '' : '伸びた選手: ${[for (final x in summer.where((x) => x.delta > 0)) x.name].join('・')}。'}'
         '出た選手は、性格が分かるようになった。');
+  }
+
+  /// オフの出来事(契約の時期の始め。乱数は使わない)。合宿の場所は毎年、代表は2年ごとに力のある選手へ。
+  void _offEvents() {
+    _mail(Sender.staff, '夏の合宿をどこでするか',
+        'コーチたちが、シーズン前の合宿の場所を決めてほしいと言っている。\n'
+        '地元で公開練習をすると人気が上がる(+3)。遠くで合宿をするとチームの相性が深まる(+4)。選手を休ませると、全員の気持ちが少し上がる(+3)。',
+        kind: MsgKind.offCamp, choices: const ['地元で公開練習', '遠くで合宿', '選手を休ませる']);
+    if (season.isEven) {
+      final star = ([for (final p in me.roster) if (p.age <= 32 && shown(p.ovr) >= 70 && !expiring.contains(p.id)) p]..sort((a, b) => b.ovr.compareTo(a.ovr))).firstOrNull;
+      if (star != null) {
+        _mail(Sender.league, '${star.name}が代表に呼ばれた',
+            '${star.name}(${star.age}歳・OVR${shown(star.ovr)})が、夏の国際大会の代表に選ばれた。\n'
+            '送り出すと人気(+3)と本人の気持ち(+6)が上がり、揉まれて伸びることもあるが、けがをして帰ってくることもある。断ると本人の気持ちが下がる(-6)。',
+            kind: MsgKind.offNational, choices: const ['送り出す', '休ませたいと断る'], player: star.id);
+      }
+    }
   }
 
   /// オフの面談: 気持ちの低い選手(契約が続く選手)が、2人まで話をしに来る。乱数は使わない。
@@ -2857,6 +2921,12 @@ class Career {
         _toHall(p, t.index);
         _noteRetiree(p);
         if (t.index == mine) news.add('${p.name}(${p.age}歳)が引退した');
+        if (t.index == mine && (p.tenure >= 5 || (p.tenure >= 3 && p.allStars >= 2))) {
+          _mail(Sender.owner, '${p.name}の引退を、どう送り出すか',
+              '${p.name}(${p.age}歳)がこのチームで${p.tenure}シーズンを過ごし、引退した。${p.allStars > 0 ? 'オールスター${p.allStars}回。' : ''}\n'
+              '背番号${jerseyOf(p)}を永久欠番にすると、人気(+4)とチームの相性(+2)が上がる。記念の映像を流すだけなら、人気が少し上がる(+1)。',
+              kind: MsgKind.offRetire, choices: ['背番号${jerseyOf(p)}を永久欠番にする', '記念の映像を流す'], player: p.id);
+        }
         if (p.ovr >= 72 || t.index == mine) _log('引退: ${p.name}(${t.def.short}・${p.age}歳)');
       }
     }
@@ -3148,6 +3218,7 @@ class Career {
     faMoves = [];
     coachPool = _makeCoaches(season, start: false);
     _offTalks();
+    _offEvents();
     // 引退した力のある選手が、コーチやスカウトの候補に加わる
     for (final r in retirees) {
       final role = Staff.values[(r[0] as String).length % Staff.values.length];
@@ -3816,6 +3887,8 @@ class Career {
     if (sheet != null) declineSheet();
     for (final m in inbox) {
       if (m.kind == MsgKind.offTalk && m.needsAnswer) m.answer = 2;
+      // 出来事は効き目なしで閉じる(代表は断った扱いにはせず、送り出さなかっただけ)
+      if ((m.kind == MsgKind.offCamp || m.kind == MsgKind.offNational || m.kind == MsgKind.offRetire) && m.needsAnswer) m.answer = m.choices.length - 1;
     }
     _runCamp();
     bids = {};
