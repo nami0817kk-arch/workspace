@@ -320,6 +320,10 @@ class GmController extends ChangeNotifier {
   }
   void exerciseOption(int id) => _act((c) => c.exerciseOption(id));
 
+  /// 若手の指導役を付ける・外す。
+  void setMentor(int vet, int young) => _act((c) => c.setMentor(vet, young));
+  void clearMentor() => _act((c) => c.clearMentor());
+
   /// 夏の個人練習で伸ばす能力を決める(null で外す)。
   void setCamp(int id, Attr? a) => _act((c) => c.setCamp(id, a));
 

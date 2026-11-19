@@ -1183,6 +1183,69 @@ class Career {
     }
   }
 
+  // ---------------------------------------------------------------- 若手の指導役
+
+  /// 指導役の組(ベテランの id、若手の id)。次のオフの伸びで答えが出て、空になる。
+  List<int> mentor = [];
+
+  /// 指導役になれるベテラン(29歳から)と、教わる若手(24歳まで)。
+  bool mentorVet(Player p) => p.age >= 29;
+  bool mentorYoung(Player p) => p.age <= 24;
+
+  /// 指導役を付けられない理由(付けられるなら null)。
+  String? mentorProblem(Player vet, Player young) {
+    if (phase != Phase.contracts && phase != Phase.preseason) return '指導役はオフとシーズン前に決める';
+    if (!me.roster.contains(vet) || !me.roster.contains(young)) return '自分のチームの選手だけ';
+    if (!mentorVet(vet)) return '指導役は29歳からの選手';
+    if (!mentorYoung(young)) return '教わるのは24歳までの選手';
+    if (expiring.contains(vet.id) && phase == Phase.contracts) return '契約が切れたベテランは選べない(再契約してから)';
+    if (mentor.isNotEmpty) return 'もう指導役を付けている(外してから)';
+    return null;
+  }
+
+  /// 指導役のベテランが若手を伸ばす見込み(性格で変わる)。
+  double mentorChance(Player vet) =>
+      (0.45 + (hasTrait(vet, Trait.leader) ? 0.2 : 0) + (hasTrait(vet, Trait.grinder) ? 0.1 : 0) - (hasTrait(vet, Trait.troublemaker) ? 0.3 : 0)).clamp(0.1, 0.8);
+
+  /// 指導役を付ける。ベテランは頼られて気持ちが上がる。
+  void setMentor(int vetId, int youngId) {
+    final vet = me.roster.where((p) => p.id == vetId).firstOrNull;
+    final young = me.roster.where((p) => p.id == youngId).firstOrNull;
+    if (vet == null || young == null || mentorProblem(vet, young) != null) return;
+    mentor = [vetId, youngId];
+    vet.morale = (vet.morale + 5).clamp(0, 100);
+    young.morale = (young.morale + 2).clamp(0, 100);
+  }
+
+  /// 指導役を外す(気持ちは戻さない)。
+  void clearMentor() {
+    if (phase != Phase.contracts && phase != Phase.preseason) return;
+    mentor = [];
+  }
+
+  /// オフの伸びのあとに、指導役の答えを出す。リーグの乱数は使わない(付けていなければ何も変わらない)。
+  void _runMentor() {
+    if (mentor.length != 2) return;
+    final young = me.roster.where((p) => p.id == mentor[1]).firstOrNull;
+    final vet = [...me.roster, for (final t in teams) ...t.roster].where((p) => p.id == mentor[0]).firstOrNull;
+    mentor = [];
+    if (young == null) return;
+    final r = Rng(seed * 3307 + season * 97 + young.id);
+    final chance = vet == null ? 0.45 : mentorChance(vet);
+    final who = vet?.name ?? '指導役';
+    if (young.ovr < young.pot && r.chance(chance)) {
+      young
+        ..ovr = (young.ovr + 1).clamp(35, 99)
+        ..lastDelta = young.lastDelta + 1;
+      news.add('$whoの指導で、${young.name}が伸びた(OVR+1)');
+    } else if (vet != null && hasTrait(vet, Trait.troublemaker)) {
+      young.morale = (young.morale - 5).clamp(0, 100);
+      news.add('$whoの指導は、${young.name}に合わなかった');
+    } else {
+      news.add('$whoが${young.name}に付いたが、目に見える伸びは無かった');
+    }
+  }
+
   // ---------------------------------------------------------------- 方針の宣言
 
   /// 今シーズンの方針の宣言(0: なし、1: 優勝を狙う、2: 若手を育てる、3: 立て直す)と、宣言したシーズン。
@@ -3040,6 +3103,7 @@ class Career {
         if (p.ovr >= 72 || t.index == mine) _log('引退: ${p.name}(${t.def.short}・${p.age}歳)');
       }
     }
+    _runMentor();
     for (final p in freeAgents) {
       ageOneYear(p, rng);
     }
@@ -4622,6 +4686,7 @@ class Career {
         if (forecast.isNotEmpty) 'fc': forecast,
         if (forecastBet != 0) 'fcb': forecastBet,
         if (declared != 0) 'dcl': [declared, declaredSeason],
+        if (mentor.isNotEmpty) 'mnt': mentor,
         if (camp.isNotEmpty) 'cmp': {for (final e in camp.entries) '${e.key}': e.value.index},
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
@@ -4762,6 +4827,7 @@ class Career {
       ..forecastBet = (j['fcb'] as int?) ?? 0
       ..declared = j['dcl'] is List ? ((j['dcl'] as List)[0] as int).clamp(0, 3) : 0
       ..declaredSeason = j['dcl'] is List ? (j['dcl'] as List)[1] as int : 0
+      ..mentor = [for (final x in (j['mnt'] as List? ?? const [])) x as int]
       ..camp = {
         for (final e in ((j['cmp'] as Map?) ?? const {}).entries)
           if (e.value is int && (e.value as int) >= 0 && (e.value as int) < Attr.values.length) int.parse(e.key as String): Attr.values[e.value as int]
