@@ -307,6 +307,7 @@ extension GameStateContracts on GameState {
       final dest = c == null ? null : _worldTeamById(c.toClubId);
       if (c != null && dest != null && c.fromClubId == userId) {
         PreContractEngine.applyOnJoin(p, c);
+        _fixNationality(p);
         dest.players.add(p);
         continue;
       }
