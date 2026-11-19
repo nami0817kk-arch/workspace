@@ -1,0 +1,120 @@
+# 取材メモ（2026年11月17日）ライス、アーセナルと新契約で口頭合意（Sky Sports の報道）。ニュースのショート。見せ方 Y＝本人の言葉から始める（14日の本人の発言）
+# 取材: 2026-11-17。WebFetch と requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 出典で確かめたこと:
+#   ・Sky Sports（2026-11-16 21:31 UK、ロブ・ドーセット記者、全文）: "Declan Rice has verbally agreed terms on a new long-term contract at Arsenal, Sky Sports News can reveal."
+#       新契約は、クラブの最高給のブカヨ・サカと同水準になると Sky Sports News は伝えられた。交渉は数か月続いていた。
+#       現契約は「18か月余り＋クラブ側の1年延長オプション」。新契約でライスは30代前半までクラブにいる形になる。ライスは27歳、2023年にウェストハムから移籍金1億500万ポンド（クラブ記録）で加入。
+#       昨季、アーセナルの年間最優秀選手。チームはプレミアを制した。
+#       本人の言葉（土曜＝14日、イングランドのネーションズリーグ最終戦＝スペイン戦の前）: "The new contract is hopefully on the horizon soon." / "I've always been stable in the clubs I'm at." / "I'm extremely lucky I'm at a club like Arsenal where the manager shows me so much trust."
+#       分析（サム・ブリッツ）: 今季はプレミアのアシスト首位（5つ、すべてオープンプレー）。最終3分の1への縦のパスの数は中盤で最多。
+#       ウーデゴール主将: 契約が同じ時期に切れる。本人は「まだ交渉は始まっていない。ストレスはない」。（ノルウェー代表の活動中の発言）
+#   ・週給の数字: Sky の記事URLには「320,000（ポンド）a week」とあるが、**本文には書かれていない**（本文は「サカと同水準」まで）。→ 台本に金額は出さない。依頼に「週給32万ポンドの報道」とあったが、本文で確かめられないので使わない。
+# 確度: 報道（Sky Sports News の独自。口頭合意で、契約書への署名・クラブ発表は記事に無い）。「合意した」と言い切らず、「口頭で合意したとスカイスポーツが伝えた」。
+# 食い違い・扱い:
+#   ①本人の言葉は14日（土）のもので、口頭合意の報道（16日）より前。「合意を認めた」とは書かない（記事も「近いと認めた」）。
+#   ②アシスト5・縦のパスの多さは Sky の分析のみ → 台本では「スカイスポーツによると」。
+#   ③写真: 記事の写真は Sky のサイズ・出どころが分からず使わない。Commons の CC BY-SA（Bryan Berlin ほか）、2026年6月のW杯（イングランド代表）の写真4枚。アーセナル時代の写真ではない → 台本で「アーセナルの写真」とは言わない。
+# 前の本との重なり: scripts/20261022_rice_bayern_arsenal・20260913_rice（過去）。covered.yaml の rice_workload（猛暑のW杯）とは別の話。今回の初出は契約の口頭合意と14日の発言。
+# 本人の言葉: あり（英語、Sky Sports）。Y。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [デクラン・ライス, アーセナル, ブカヨ・サカ, マルティン・ウーデゴール]
+
+short_style: Y
+short_hook_quote: 新しい契約は、近いうちにまとまればいいと思っています。
+short_photos:
+  - assets/images/20261117_rice_arsenal_contract/03_v.jpg
+  - assets/images/20261117_rice_arsenal_contract/01_v.jpg
+  - assets/images/20261117_rice_arsenal_contract/04_v.jpg
+  - assets/images/20261117_rice_arsenal_contract/02_v.jpg
+short_question: ライスの新契約は、年内に正式発表されると思いますか。
+short_telops: []
+
+theme:
+  id: rice_arsenal_contract
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ライスが語っていた新契約。アーセナルとは口頭で合意したと報じられた
+  hook: ""
+  question: ライスのアーセナルとの新契約は、どこまで進んでいるのか
+  takeaway: 報道によると、ライスは新契約に口頭で合意。条件は主将級の最高給サカと同水準と伝えられた。現契約はあと18か月余りで、署名とクラブの発表はまだ
+
+thumbnail:
+  layout: face
+  line1: ライス 新契約で口頭合意か
+  line2: 本人は14日に語っていた
+  tags: [アーセナル, デクラン・ライス]
+  photo: assets/images/20261117_rice_arsenal_contract/03_w.jpg
+  short_photo: assets/images/20261117_rice_arsenal_contract/03_v.jpg
+
+answer: 口頭で合意したと報じられた。署名とクラブの正式発表はまだ。現契約の残りは18か月余り
+watch: アーセナルの正式発表
+
+sections:
+  - id: what
+    main: true
+    heading: ライスは、新契約についてどう語ったのか
+    tier: 報道
+    telop: ライス「新しい契約は、近いうちに」
+    say:
+      - text: アーセナルのデクラン・ライスが、新しい契約について語っていました。
+        short_only: true
+        image: assets/images/20261117_rice_arsenal_contract/03_w.jpg
+      - voice: デクラン・ライス
+        text: 新しい契約は、近いうちにまとまればいいと思っています。
+        emph: true
+        image: assets/images/20261117_rice_arsenal_contract/03_w.jpg
+      - voice: デクラン・ライス
+        text: 私がいるのは、監督が深く信頼してくれるクラブです。
+        cont: true
+      - text: 14日の、イングランド代表のスペイン戦を前にした発言です。
+        image: assets/images/20261117_rice_arsenal_contract/01_w.jpg
+      - text: その2日後の16日、こんな報道が出ました。
+        image: assets/images/20261117_rice_arsenal_contract/04_w.jpg
+      - text: ライスは、アーセナルとの新しい長期契約に、口頭で合意した、と。
+        image: assets/images/20261117_rice_arsenal_contract/02_w.jpg
+      - text: ただし、署名とクラブの発表は、まだです。
+        image: assets/images/20261117_rice_arsenal_contract/02_w.jpg
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/12691/13612986/declan-rice-contract-arsenal-midfielder-verbally-agrees-new-320000-a-week-deal-with-the-premier-league-champions
+  - id: deal
+    heading: 報じられた新契約は、どんな中身なのか
+    tier: 報道
+    telop: 条件はサカと同水準。現契約は残り18か月余り
+    say:
+      - text: 新しい契約の条件は、クラブ最高給のブカヨ・サカと同じ水準になる、と伝えられています。
+        card: {type: table, title: ライスの契約（報道）, columns: [項目, 内容], rows: [[現契約の残り, 18か月余り＋クラブ側の1年延長], [新契約, 長期（30代前半まで）], [給与, クラブ最高給のサカと同水準]], highlight_row: 1}
+        image: assets/images/20261117_rice_arsenal_contract/01_w.jpg
+      - text: 交渉は、数か月続いていました。
+        card: none
+        image: assets/images/20261117_rice_arsenal_contract/04_w.jpg
+      - text: 27歳のライスは、2023年にウェストハムから加入。クラブ記録の1億500万ポンドでした。
+        image: assets/images/20261117_rice_arsenal_contract/03_w.jpg
+      - text: ただし、契約書への署名やクラブの発表は、この記事の時点ではありません。
+        image: assets/images/20261117_rice_arsenal_contract/02_w.jpg
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/12691/13612986/declan-rice-contract-arsenal-midfielder-verbally-agrees-new-320000-a-week-deal-with-the-premier-league-champions
+  - id: view
+    viewpoint: true
+    heading: ライスとウーデゴール、2人の契約はどうなっているのか
+    tier: 背景
+    telop: ライスはアシスト首位。同じ時期に切れるウーデゴールは未交渉
+    say:
+      - text: 見立てです。現契約は、クラブ側が延ばせる1年を使っても、残りは最長で30か月余り。
+        card: none
+        image: assets/images/20261117_rice_arsenal_contract/03_w.jpg
+      - text: 新契約なら、ライスは30代前半までクラブに残る形になります。
+        image: assets/images/20261117_rice_arsenal_contract/03_w.jpg
+      - text: ライスは今季、アシスト5でプレミア首位に立っています。
+        image: assets/images/20261117_rice_arsenal_contract/04_w.jpg
+      - text: 一方、契約が同じ時期に切れる主将ウーデゴールは、まだ交渉を始めていないと話しています。
+        image: assets/images/20261117_rice_arsenal_contract/01_w.jpg
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/12691/13612986/declan-rice-contract-arsenal-midfielder-verbally-agrees-new-320000-a-week-deal-with-the-premier-league-champions

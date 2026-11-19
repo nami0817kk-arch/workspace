@@ -1,0 +1,116 @@
+# 取材メモ（2026年11月16日）イングランドがスペインに3-2。W杯王者の無敗が43試合で止まる（ニュースのショート。見せ方 Y＝選手の言葉から始める）
+# 取材: 2026-11-16。ESPN の試合データ（site.api.espn.com summary・standings）、ESPN の記事（WebFetch）、ガーディアン（requests でライブ速報と試合記事の全文）。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ESPN 2026-11-15「England hold off Spain rally to end WC winner's 43-game unbeaten run」 https://www.espn.com/soccer/story/_/id/50493712/england-spain-43-game-unbeaten-run
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（uefa.nations summary event=401861175、2026-11-15 19:45 UTC、Riyadh Air Metropolitano）: スペイン 2-3 イングランド（ネーションズリーグ・グループA3）。
+#       45分 ケイン（PK）／53分 コンサ（ヘッド。アシスト ライス）／57分 ホワイト（アシスト ベリンガム）／63分 アンダーソン（イングランド）退場／65分 オヤルサバル（PK）／75分 ニコ・ウィリアムズ（アシスト ヤマル）。
+#   ・ESPN の記事: スペインの無敗は43試合。イングランドのGKは先発のトラフォード（ピックフォードに代わって）で、同点を狙うスペインの攻めを2つのセーブで止めた。アンダーソンのファウルがスペインの1点目につながった。
+#   ・ESPN の順位表（uefa.nations standings、11/16 取得）グループA3: イングランド 6試合 5勝1敗 勝ち点15（1位）／スペイン 6試合 5勝1敗 勝ち点15（2位）／クロアチア 6／チェコ 0。
+#   ・ガーディアン（試合記事 Hytner と ライブ速報。requests で全文）: トゥヘル監督の試合後の言葉「Against this team, half an hour feels like two hours.」（ライブ速報の引用）。ライスの試合後の言葉「We knew we was gonna beat them!」（同）。
+#       試合記事は、スペインを「トゥヘル監督の言葉で『負け方を忘れた』チーム」と書く（台本には使わない）。
+# 食い違い（出典どうし）:
+#   ①無敗の試合数：依頼の題は「44試合」。ESPN の記事・試合の速報・ガーディアンのライブ速報はいずれも「43」。→ 43を使う（ESPN）。
+#     （ガーディアン試合記事は「43試合で1度だけ負け＝昨年のPK戦」と数える。数え方が違うので「無敗」の数は言わず、ESPN の「43試合無敗」だけを使う）
+#   ②分：ガーディアンのライブは ホワイト58分・アンダーソン64分。ESPN は57分・63分。→ 試合データ（ESPN）。
+#   ③ESPN の試合ページの得点者欄はアンダーソンを得点者側に並べているが、試合の出来事（keyEvents）は Red Card。台本は keyEvents（退場）に従う。
+# 本人の言葉: あり（デクラン・ライス、トゥヘル監督。ガーディアン。英語を私が日本語にした）。Y。
+# 前3日の重なり: 11/15 の haaland_norway_win・portugal_no7_ronaldo・scaloni_no_messi と別の試合。写真も別（Commons の 2026年6月の Bryan Berlin 2枚＋ケイン2023年）。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+# 写真: Commons。Rice＝England v Ghana 2026-06-23（BY-SA 4.0・Bryan Berlin）、Bellingham＝同（BY-SA 4.0）、Kane＝2023（CC BY 2.0・Number 10。古いが他に取れなかった。ショートの入れ替え用の縦だけ）。
+#   トゥヘル（2016年・ドルトムント時代）・ホワイト（2023年・トゥーロン時代）・コンサ（2021年・小さい）は別クラブ・古い・小さいので外した。
+#   ライスのシャツの裾に「GHANA」の字がある（2026年6月の試合写真。縦の下端）。
+slot: overseas
+date: "2026年11月16日"
+format: news
+no_main: true
+people: [イングランド代表, スペイン代表]
+
+short_style: Y
+short_hook_quote: 自分たちが勝てると分かっていた。
+short_photos:
+  - assets/images/20261116_england_spain_streak/01_v.jpg
+  - assets/images/20261116_england_spain_streak/03_v.jpg
+  - assets/images/20261116_england_spain_streak/02_v.jpg
+short_question: イングランドは、W杯王者のスペインに勝ったこの試合で、本物の強さを見せたと思いますか。
+short_telops: []
+
+theme:
+  id: england_spain_streak
+  league: england
+  league_name: ネーションズリーグ
+  prefix: ""
+  title: イングランド、スペインに3対2。W杯王者の無敗が43試合で止まった
+  hook: ""
+  question: イングランドは、W杯王者スペインの43試合無敗をどう止めたのか
+  takeaway: イングランドは3-0とリードしたあと、1人退場して2点差に迫られながら3-2で逃げ切った。ともに勝ち点15で並び、順位はイングランドが1位、スペインが2位になった
+
+thumbnail:
+  layout: face
+  line1: イングランドがスペインに勝利
+  line2: W杯王者の43試合無敗が止まった
+  tags: [イングランド代表, スペイン代表]
+  photo: assets/images/20261116_england_spain_streak/01_w.jpg
+  short_photo: assets/images/20261116_england_spain_streak/01_v.jpg
+  photos:
+    - assets/images/20261116_england_spain_streak/01_w.jpg
+    - assets/images/20261116_england_spain_streak/02_w.jpg
+
+answer: 前半のPKから3-0。10人になって2点を返されたが、3-2で逃げ切った
+watch: ネーションズリーグ準々決勝
+
+sections:
+  - id: what
+    main: true
+    heading: スペインの43試合無敗を、イングランドはどう止めたか
+    tier: 報道
+    telop: ライス「自分たちが勝てると分かっていた」
+    say:
+      - text: ネーションズリーグで、イングランドがW杯王者のスペインに3対2。スペインの無敗が止まりました。
+        image: assets/images/20261116_england_spain_streak/01_w.jpg
+      - voice: デクラン・ライス
+        card: none
+        text: 自分たちが勝てると分かっていた。
+        emph: true
+      - text: 前半45分、ケインのPKでイングランドが先制しました。
+      - text: 後半の53分、ライスのアシストからコンサがヘッドで2点目。
+        image: assets/images/20261116_england_spain_streak/01_w.jpg
+      - text: 57分には、ベリンガムのアシストからホワイトが決めて3-0としました。
+        image: assets/images/20261116_england_spain_streak/02_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50493712/england-spain-43-game-unbeaten-run
+      - https://www.espn.com/soccer/match/_/gameId/401861175
+      - https://www.theguardian.com/football/live/2026/nov/15/spain-v-england-nations-league-live
+  - id: tenmen
+    heading: 3-0のあと、10人のイングランドは何に耐えたのか
+    tier: 報道
+    telop: トゥヘル監督「30分は2時間のように感じる」
+    say:
+      - text: ここからスペインが反撃します。63分、イングランドのアンダーソンがファウルで退場。
+        card: none
+        image: assets/images/20261116_england_spain_streak/02_w.jpg
+      - text: 65分にオヤルサバルがPKを決め、75分にはニコ・ウィリアムズが決めて、1点差になりました。
+      - text: 先発のGKトラフォードは、同点を狙うスペインの攻めを、2つのセーブで止めました。
+      - text: 試合後、トゥヘル監督はこう話しています。
+        image: assets/images/20261116_england_spain_streak/01_w.jpg
+      - voice: トゥヘル監督
+        text: あのチーム相手だと、30分は2時間のように感じる。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50493712/england-spain-43-game-unbeaten-run
+      - https://www.espn.com/soccer/match/_/gameId/401861175
+      - https://www.theguardian.com/football/live/2026/nov/15/spain-v-england-nations-league-live
+  - id: view
+    viewpoint: true
+    heading: 敗れたスペインと勝ったイングランド、順位はどうなったか
+    tier: 背景
+    telop: 勝ち点15で並び、イングランドが1位
+    say:
+      - text: 見立てです。ネーションズリーグのこのグループで、イングランドは、43試合無敗だったスペインと勝ち点15で並びました。
+        card: {type: table, title: ネーションズリーグ グループA3, columns: [順位, チーム, 勝敗, 勝ち点], rows: [[1位, イングランド, 5勝1敗, 15], [2位, スペイン, 5勝1敗, 15]], highlight_row: 0}
+      - text: 順位は、イングランドが1位、スペインが2位です。
+        emph: true
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401861175
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.nations/standings

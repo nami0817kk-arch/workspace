@@ -1,0 +1,126 @@
+# 取材メモ（2026年11月15日）中村敬斗、日本人初のブラジルから複数得点「1年間で見たら勝ち越した」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-15。requests（ブラウザUA）で本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-14 23:36（取材・文 矢内由美子）「久保の”スルー”に感謝のMF中村敬斗、ブラジル撃破弾再び「1年間で見たら勝ち越した」」（全文） https://web.gekisaka.jp/news/japan/detail/?463203-463203-fl
+#   サッカーキング 2026-11-14「中村敬斗は日本人初のブラジルから複数得点！ 1年前の勝利時に続いて2ゴール目」（全文） https://www.soccer-king.jp/news/japan/national/20261114/2227700.html
+# 写真の出どころ（本人の写真を探すため。サッカーキングの写真は説明に Getty Images とあるので使っていない。2枚目は 10/19 のリヨンの試合の写真＝今日の写真は1枚しか取れなかった）:
+#   https://web.gekisaka.jp/news/japan/detail/?463203-463203-fl
+#   https://web.gekisaka.jp/news/world/detail/?461356-461356-fl
+# 出典で確かめたこと:
+#   ・「日本人初」の記録（2社が一致）: ゲキサカ「日本史上初めてブラジル相手に2得点を決めた中村」／サッカーキング「日本人として初めてブラジルから複数得点を記録した選手」。日本は前回の対戦まででブラジル相手に9得点、いずれも別の選手が決めていて、中村は2025年10月にも決めていた（サッカーキング）。
+#   ・ESPN の試合データ（fifa.friendly summary event=401916337、2026-11-14）: 日本 3-2 ブラジル。19分 中村敬斗（右足、エリア中央からゴール左下。アシスト 中野就斗のクロス）。72分に伊東純也と交代。
+#     昨年10月: ESPN（event=757632、2025-10-14）日本 3-2 ブラジル、62分 中村敬斗（アシスト 伊東純也）。W杯: ESPN（event=760487、2026-06-29）ブラジル 2-1 日本。→「2勝1敗」は ESPN の3試合の結果から（日本の勝ち2・負け1）。
+#   ・ゲキサカ: 久保建英の先制点で1-0とリードした前半19分。GK鈴木彩艶の配球からつなぎ、右サイドを抜けた中野就斗がグラウンダーのクロス、ニアの久保がスルー、ゴール正面の中村が右足で。
+#   ・中村の言葉（原文。ゲキサカ。字は変えていない。括弧は記者の補足。台本は読点で行に分けた）:
+#       「ドフリーだったので、まず味方に感謝したいです。久保選手が動いてくれて、それによって後ろが空いてくれた。僕は決めるだけだったので周りに感謝したいです」
+#       「負けて良い試合はない。FIFAランキングに関わってくる以上、こういう親善試合とはいえ、絶対に勝つということが大事だった。今日は勝って本当によかった」
+#       「1年間で見たら(日本が2勝1敗と)勝ち越したと思います」（括弧は記者の補足。台本は括弧の外だけ読む）
+#   ・森保監督の試合後の円陣の話は「凡事徹底」（ゲキサカの地の文）。台本には使わない（題から離れる）。
+# 自分で数えたもの: 日本の対ブラジル得点者の数は、サッカーキングの一覧（9人）から。中村は10月の1点に今回の1点を足して2点（日本人初）。
+# 食い違い: なし（「日本人初」は2社一致、「2勝1敗」は ESPN の3試合の結果と一致）。
+# 前の本との重なり: 20261113_nakamura_brazil_third（試合前の「3度目の対戦・負けていい試合なんかない」）。今回の初出: 追加点そのもの・日本人初の記録・「勝ち越した」の言葉・久保への感謝。FIFAランキングの言葉は試合前と同じ内容なので、今回は試合後の「勝って本当によかった」の一文だけ使う。
+# 【言わないこと】ヴィニシウスの守備についての発言（選手を小さく見せないため）／森保監督の円陣の話／ブラジルの失点・退場。
+# 本人の言葉: あり（中村敬斗。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月15日"
+format: news
+no_main: true
+people: [中村敬斗, 久保建英, 中野就斗, 日本代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: 1年間で見たら勝ち越したと思います。
+short_photos:
+  - assets/images/20261115_nakamura_brazil_double_words/01_v.jpg
+  - assets/images/20261115_nakamura_brazil_double_words/02_v.jpg
+  - assets/images/20261115_nakamura_brazil_double_words/03_v.jpg
+short_question: 17日のパラグアイ戦でも、中村敬斗は点を取ると思いますか。
+short_telops: []
+
+theme:
+  id: nakamura_brazil_double_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 中村敬斗、日本人初のブラジルから複数得点。試合後に語った「勝ち越し」の意味
+  hook: ""
+  question: ブラジルから再びゴールを決めた中村敬斗は、試合後に何を語ったのか
+  takeaway: 日本がブラジルから取った得点は、前回の対戦まで9点で、すべて別の選手。中村は10月に続く2点目で、日本人初の複数得点者になった
+
+thumbnail:
+  layout: face
+  line1: 中村敬斗 日本人初
+  line2: ブラジルから2点目
+  tags: [中村敬斗, 日本代表, リヨン]
+  photo: assets/images/20261115_nakamura_brazil_double_words/01_w.jpg
+  short_photo: assets/images/20261115_nakamura_brazil_double_words/01_v.jpg
+
+answer: 中村は「1年間で見たら勝ち越した」と笑顔で語り、日本人初のブラジルから複数得点という記録を残した
+watch: 17日のパラグアイ戦（森保監督のラストマッチ）
+
+sections:
+  - id: what
+    main: true
+    heading: ブラジルから再びゴールを決めた中村敬斗は、何を語ったか
+    tier: 報道
+    telop: 中村敬斗「1年間で見たら勝ち越したと思います」
+    say:
+      - text: 日本が3対2で勝った14日のブラジル戦。追加点の中村敬斗が、試合後に笑顔でこう語りました。
+        image: assets/images/20261115_nakamura_brazil_double_words/01_w.jpg
+      - voice: 中村敬斗
+        text: 1年間で見たら勝ち越したと思います。
+        emph: true
+      - text: ブラジルとの対戦は、この1年で3回目。日本の2勝1敗です。
+      - text: 前半19分、中野就斗のクロスを久保建英がニアで触らずに流し、ゴール正面の中村が右足で決めました。
+        image: assets/images/20261115_nakamura_brazil_double_words/01_w.jpg
+      - text: 日本人として初めて、ブラジルから複数得点を記録しました。昨年10月の1点に、今回の1点を加えた2点です。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463203-463203-fl
+      - https://www.soccer-king.jp/news/japan/national/20261114/2227700.html
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: after
+    heading: 中村敬斗は、ゴールと勝利をどう振り返ったか
+    tier: 報道
+    telop: 中村敬斗「久保選手が動いてくれて」
+    say:
+      - text: 決めた場面について、中村はこう話しました。
+        image: assets/images/20261115_nakamura_brazil_double_words/03_w.jpg
+      - voice: 中村敬斗
+        text: ドフリーだったので、まず味方に感謝したいです。
+      - voice: 中村敬斗
+        text: 久保選手が動いてくれて、それによって後ろが空いてくれた。
+        cont: true
+      - voice: 中村敬斗
+        text: 僕は決めるだけだったので周りに感謝したいです。
+        cont: true
+      - text: 勝利については、こう話しました。
+        image: assets/images/20261115_nakamura_brazil_double_words/01_w.jpg
+      - voice: 中村敬斗
+        text: 負けて良い試合はない。
+      - voice: 中村敬斗
+        text: 今日は勝って本当によかった。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463203-463203-fl
+  - id: view
+    viewpoint: true
+    heading: 中村敬斗のブラジル戦は、この1年でどう動いたか
+    tier: 背景
+    telop: 3試合のうち、中村のゴールは日本が勝った2試合
+    say:
+      - text: 見立てです。W杯の1対2をはさんだ3試合のうち、中村がゴールを決めたのは日本が勝った2試合です。
+        card: {type: table, title: 中村敬斗とブラジル（この1年）, columns: [試合, 結果, 中村], rows: [[2025年10月, 3-2 勝ち, 62分 ゴール], [2026年6月 W杯, 1-2 負け, ゴール無し], [2026年11月, 3-2 勝ち, 19分 ゴール]], highlight_row: 2}
+      - text: 負けた6月のW杯で、中村は66分にピッチを退いています。
+        image: assets/images/20261115_nakamura_brazil_double_words/03_w.jpg
+        card: none
+      - text: 森保ジャパンの次の相手は、17日のパラグアイです。
+        image: assets/images/20261115_nakamura_brazil_double_words/01_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261114/2227700.html
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://www.espn.com/soccer/match/_/gameId/757632
+      - https://www.espn.com/soccer/match/_/gameId/760487

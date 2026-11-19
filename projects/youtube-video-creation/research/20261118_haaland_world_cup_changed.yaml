@@ -1,0 +1,152 @@
+# 取材メモ（2026年11月18日）ハーランド「W杯が私を変えた」。デンマーク戦を前に語った本人の言葉と、17日の試合（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-18。requests（ブラウザUA）で本文を読んだ（WebFetch はマルカを拒否した）。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: マルカ 2026-11-17 13:43 CET「Haaland: "El Mundial me cambió"」（ALBERTO RUBIO、全文を requests で読んだ）。
+# 出典で確かめたこと:
+#   ・マルカ（記事本文）: 「デンマーク戦（Nations League 準々決勝進出の枠がかかった試合）の前に、ハーランドはノルウェーの放送局 TV2 に非常に個人的なインタビューを出した」。
+#       本人の言葉（スペイン語。マルカが訳したもの。TV2 のノルウェー語原文は読んでいない）:
+#       "El Mundial era mi mayor objetivo desde que entré en la selección nacional. Y logramos convertirlo en una experiencia verdaderamente increíble en Estados Unidos: fue una locura total. Causamos sensación en todo el mundo. Llevará mucho tiempo asimilar lo que hemos vivido"
+#       "Creo que me ha cambiado a mí y que ha cambiado a Noruega. Ahora hay mucha más gente que sabe quién soy. Cuando llegué a Estados Unidos, no mucha gente sabía quién era. Pero cuando me fui, la mayoría me conocía"
+#       "Diría que hemos logrado bastante en los últimos años. Ganamos todos los partidos de la fase de clasificación para el Mundial, llegamos al Mundial y a los cuartos de final. No creo que muchos lo esperaran, al menos yo no. Ahora trataremos de clasificarnos también para la Eurocopa"
+#       "Tengo asuntos privados de los que no quiero que nadie escriba ni hable. Ya sea mi familia, mi casa o algo así, es algo que no me gusta"
+#       "Puedo mostrar quién soy de una manera diferente a como lo hago en una entrevista posterior al partido"
+#       "Por eso, publicar una foto completamente aleatoria puede ser muy bueno. Creo que me he hecho mayor y tal vez he ganado más confianza en mí mismo. Me siento más seguro al compartir cosa[s]"（末尾は原文のまま。切れていた所は補っていない）
+#       "Respeto al cien por cien a quienes no quieren compartir nada sobre su vida, o lo que sea, como hacía yo antes. Y también respeto a quienes publican mucho, o bastante"
+#       → 台本の言葉は、このスペイン語を私が日本語にしたもの。TV2 の原文ではなくマルカの訳からの重訳であることを、台本は「スペインの報道によると」と断る。
+#   ・ESPN の試合データ（uefa.nations, event 401861194、2026-11-17 19:45Z、Parken Stadium コペンハーゲン）: デンマーク 2-3 ノルウェー（ノルウェーのアウェー）。
+#       11分 ホイルンド（デ）／14分 ホイビュア（デ、アシスト イサクセン）／37分 ハーランド（アシスト エーデゴー）／83分 エーデゴー／90+6分 ハーランド（PK、左足、ゴール右下）。
+#       90+7分 ハーランドが「過度な喜び方」で警告。→ 0-2 から逆転。ハーランドは2得点、1点目はエーデゴーのアシスト。
+#   ・ESPN の順位（uefa.nations standings、2026-11-18 取得）グループA4: ポルトガル 勝ち点15（1位）／ノルウェー 9（2位）／デンマーク 9（3位）／ウェールズ 3。
+#       → 台本は「ESPN の順位表でノルウェーは2位」とだけ言う。準々決勝進出の確定は書かない（記事・ESPN の順位表に「進出」の語を確かめていないため）。
+# 食い違い・扱い:
+#   ①マルカは「66得点・60試合」と書く（11/15 のフットボールチャンネルは66、マルカは当時65）。得点数は台本に使わない。
+#   ②インタビューの収録日・TV2 の記事日は読めていない（マルカは「デンマーク戦の前に」とだけ）。台本は「デンマーク戦を前に」と言い、日付は言わない。
+#   ③ご依頼文の「終盤に勝ち越し/逆転の働き」は ESPN で確かめた（上）。90+6分の PK が勝ち越し点（3-2）。
+# 重なり: scripts/20261115_haaland_norway_win（ウェールズ戦 3-1、88分PK）とは別の試合・別の事実。ウェールズ戦の内容・「3連敗を止めた」は繰り返さない。
+#   scripts/20261105_city_leipzig_haaland は別件。
+# 写真: マルカの写真は EFE（ESPN 等の別社写真は photopool に任せる）。Getty/AFP/ロイター/AP/PA は使わない。
+# 本人の言葉: あり（上。マルカ経由・TV2）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [アーリング・ハーランド, ノルウェー代表, デンマーク代表, エーデゴー]
+
+short_style: Y
+short_hook_quote: W杯は、僕を変えたと思います。
+short_photos:
+  - assets/images/20261118_haaland_world_cup_changed/02_v.jpg
+  - assets/images/20261118_haaland_world_cup_changed/03_v.jpg
+  - assets/images/20261118_haaland_world_cup_changed/04_v.jpg
+short_question: W杯のあとのハーランドとノルウェーは、さらに上へ行けると思いますか。
+short_telops: []
+
+theme:
+  id: haaland_world_cup_changed
+  league: england
+  league_name: ノルウェー代表
+  prefix: ""
+  title: ハーランド「W杯は僕を変えた」。デンマーク戦を前に語った言葉
+  hook: ""
+  question: ハーランドは、W杯で何が変わったと語ったのか
+  takeaway: ハーランドは、W杯が自分もノルウェーも変えたと語った。17日のデンマーク戦では、0-2から2得点して3-2。ノルウェーはグループ2位
+
+thumbnail:
+  layout: face
+  line1: ハーランド「W杯が変えた」
+  line2: デンマーク戦を前に語った言葉
+  tags: [ハーランド, ノルウェー代表]
+  photo: assets/images/20261118_haaland_world_cup_changed/02_w.jpg
+  short_photo: assets/images/20261118_haaland_world_cup_changed/02_v.jpg
+
+answer: W杯は自分もノルウェーも変えた。アメリカに着いた時は知られていなかったが、去る時にはほとんどの人が知っていた
+watch: ノルウェーの次の試合
+
+sections:
+  - id: what
+    main: true
+    heading: ハーランドが語った、W杯で変わったこと
+    tier: 報道
+    telop: ハーランド「W杯は、僕を変えたと思います」
+    say:
+      - text: ノルウェーのハーランドが、W杯は自分を変えたと語りました。
+      - voice: ハーランド
+        text: W杯は、僕を変えたと思います。
+        emph: true
+      - voice: ハーランド
+        text: ノルウェーも変えたと思います。
+        image: assets/images/20261118_haaland_world_cup_changed/02_w.jpg
+        cont: true
+      - text: ノルウェーの放送局のインタビューでの言葉です。デンマーク戦を前に、スペインの報道が伝えました。
+        image: assets/images/20261118_haaland_world_cup_changed/02_w.jpg
+      - voice: ハーランド
+        text: 今は、僕が誰かを知っている人が、ずっと増えました。
+      - voice: ハーランド
+        text: アメリカに着いた時は、僕を知る人は多くなかった。
+        image: assets/images/20261118_haaland_world_cup_changed/04_w.jpg
+        cont: true
+      - voice: ハーランド
+        text: でも去る時には、ほとんどの人が知っていました。
+        cont: true
+      - voice: ハーランド
+        text: W杯に出て、準々決勝まで行きました。
+        image: assets/images/20261118_haaland_world_cup_changed/03_w.jpg
+      - voice: ハーランド
+        text: 多くの人が予想していたとは思いません。
+        cont: true
+      - voice: ハーランド
+        text: 少なくとも僕は、思っていませんでした。
+        image: assets/images/20261118_haaland_world_cup_changed/02_w.jpg
+        cont: true
+    official: false
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/11/17/haaland-mundial-me-cambio.html
+  - id: self
+    heading: 試合のあとのインタビューとは違う、ハーランド
+    tier: 報道
+    telop: ハーランド「少し自信がついたのかもしれません」
+    say:
+      - text: 変わったのは、ピッチの外の見せ方もでした。
+        image: assets/images/20261118_haaland_world_cup_changed/04_w.jpg
+      - voice: ハーランド
+        text: 試合後のインタビューとは違う形で、自分を見せられます。
+      - voice: ハーランド
+        text: まったくランダムな写真を載せるのも、
+        image: assets/images/20261118_haaland_world_cup_changed/02_w.jpg
+        cont: true
+      - voice: ハーランド
+        text: すごくいいことだと思います。
+        cont: true
+        image: assets/images/20261118_haaland_world_cup_changed/04_w.jpg
+      - voice: ハーランド
+        text: 年を重ねて、少し自信がついたのかもしれません。
+        cont: true
+      - text: 一方で、家族や家のことは、誰にも書いてほしくないし、話してほしくないとも語りました。
+        image: assets/images/20261118_haaland_world_cup_changed/03_w.jpg
+    official: false
+    sources:
+      - https://www.marca.com/futbol/nations-league/2026/11/17/haaland-mundial-me-cambio.html
+  - id: match
+    viewpoint: true
+    heading: 17日のデンマーク戦で、ハーランドは何をしたか
+    tier: 報道
+    telop: デンマーク2-3ノルウェー。ハーランドが2得点
+    say:
+      - text: そのノルウェーは、17日、ネーションズリーグのグループ最終戦で、デンマークの本拠地に乗り込みました。
+        image: assets/images/20261118_haaland_world_cup_changed/02_w.jpg
+      - text: 開始14分で、デンマークが2対0とリード。ノルウェーは追う展開でした。
+      - text: 37分、エーデゴーのパスからハーランドが決めて、2点差が1点差に。
+        image: assets/images/20261118_haaland_world_cup_changed/03_w.jpg
+      - text: 83分にエーデゴーが同点に。
+      - text: そして試合終了間際の90分すぎ、PK。ハーランドが決めて、ノルウェーが3対2で勝ちました。
+        emph: true
+        image: assets/images/20261118_haaland_world_cup_changed/04_w.jpg
+      - text: 見立て。W杯のあとも、ノルウェーの試合を動かすのはハーランドです。
+      - text: 0対2から、チームの3点のうち2点を、自分で決めました。
+        image: assets/images/20261118_haaland_world_cup_changed/02_w.jpg
+      - text: 順位表では、ノルウェーはこのグループの2位です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401861194
+      - https://www.goal.com/en/news/haaland-fires-norway-into-nations-league-quarter-finals-in-96th-minute/blt077d15d05f635357
+      - https://www.marca.com/futbol/nations-league/2026/11/17/haaland-mundial-me-cambio.html

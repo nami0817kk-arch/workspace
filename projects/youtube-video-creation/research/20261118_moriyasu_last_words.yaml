@@ -1,0 +1,162 @@
+# 取材メモ（2026年11月18日）森保一監督、ラストマッチは黒星。「選手たちには本当に幸せな思いをさせていただいた」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-18。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-18「ラストマッチは黒星…敗戦を悔やみながら感謝述べた森保一監督「選手たちには本当に幸せな思いをさせていただいた」」（全文）
+#   https://web.gekisaka.jp/news/japan/detail/?463390-463390-fl
+#   サッカーキング 2026-11-18「【結果まとめ】ありがとう森保一監督、8年間率いた日本代表を退任…“森保ジャパン”113試合77勝17分け19敗の軌跡」（1ページ目を全文。113試合の一覧つき）
+#   https://www.soccer-king.jp/news/japan/national/20261118/2228344.html
+# 写真の出どころ（森保本人の写真。_pool.png を目で見て、福田師王の写真は外した。サッカーキング 11/18 の写真は Getty 表記で使わない）:
+#   01: https://web.gekisaka.jp/news/japan/detail/?463390-463390-fl （今回の記事の主写真。横長を縦に寄せて顔を切り出した）
+#   03・04: Wikimedia Commons（CC BY 4.0）Japan-vs-Thailand-Football-International-Friendly-Match--2024-01-01 の森保（クレジットは credits.json）
+#   https://commons.wikimedia.org/wiki/File:Japan-vs-Thailand-Football-International-Friendly-Match--2024-01-01_0332.jpg
+#   https://commons.wikimedia.org/wiki/File:Japan-vs-Thailand-Football-International-Friendly-Match--2024-01-01_0341.jpg
+#   （Commons の 2025 年コロンバスの1枚は、顔が小さく森保かどうか自信が持てないので外した）
+# 写真（最終）: 19＝ゲキサカ463390（今回）、02＝463324、03＝463198、04＝463110、05＝463332（いずれも森保本人。02〜05は11/17の森保の回と同じ元記事）。Commons の2024年の1枚（06）は解像度が低く、ショートで2.7倍の引き伸ばしになるため台本では使わない。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916336、2026-11-17 13:10 UTC、シンガポール国立競技場）: 日本 1-2 パラグアイ。
+#       2分 パラグアイ（G・カセレスのCKにつながる形。ESPN は 2' Goal / Juan Jose Cáceres, Diego Gómez）／40分 パラグアイ（ヘディング、Gustavo Gómez）／85分 福田師王（ヘディング、日本）。
+#       → 記事の「立ち上がりと前半のうちにCKから2失点」と合う（2点とも前半）。
+#   ・ゲキサカ（本人の言葉。フラッシュインタビューと試合後。字は変えない）:
+#       「選手たちには本当に幸せな思いをさせていただいた。良い選手とスタッフに恵まれてこういった幸せな時間を過ごせたので感謝したい」
+#       「セットプレー2発でやられている。もっと賢くゲームを進めなければいけなかった」
+#       「1点ずつ返すこと、勝利を諦めずに最後まで攻める姿勢で頑張ってくれた。次に繋がると思う」
+#       「日本が世界一になるために力をつけていくことだと思うので、選手が常に成長することを願っている。日本代表が世界一になるステップアップをイチサポーターとして見守っていきたい」
+#       円陣で「これで終わりじゃない。日本代表は続いていく」（地の文は「選手を激励」）。
+#   ・サッカーキング: 2018年7月就任、日本代表史上初の通算100試合指揮、W杯2大会連続で指揮。通算113試合で77勝17分け19敗。
+#       → 自分で一覧（《1》〜《113》）を数え直した: ◯77／△17／●19＝113。一致。PK戦は引き分け扱い（エクアドル戦0-0 PK5-4・クロアチア戦1-1 PK1-3 とも△）。
+#   ・初陣（2018-09-11）は ESPN event=512438 で日本 3-0 コスタリカ。
+#   ・来年3月から大岩剛監督の新体制: ゲキサカ 463396（伊東の記事の地の文「来年3月に始まる大岩ジャパン」）。
+#   ・サッカーキングの一覧の最後: 《113》vsパラグアイ【1-2／●】福田師王。
+# 食い違い（台本では使わない）:
+#   ・取材の依頼文は「日本0-2パラグアイ」だったが、ESPN・ゲキサカ・サッカーキングとも 1-2。台本は 1-2。
+#   ・前日の台本 20261117_moriyasu_last_changes の見立て「113試合で78勝17分け18敗」は、試合前の数字として足し合わせが合わない（試合前は112試合のはず）。今回は試合後の一覧を数え直した 77勝17分け19敗を使う。前日の数字には触れない。
+# 前の本との重なり: 20261117_moriyasu_last_changes（前日会見「終わりかもしれない」・通算の見立て）／20261117_moriyasu_thunder_practice（雷雨で練習中止）／20261115_moriyasu_brazil_world_top（ブラジル戦後の評）／20261114_moriyasu_best_worst_game。
+#   → 今回の初出: 試合後の言葉（幸せな思い・セットプレー2発・続いていく・一サポーターとして）と、試合後に確定した通算成績の勝敗内訳。福田師王のデビュー弾・選手側の言葉（久保・堂安・小川・田中碧）は別の回の題材なので入れない。
+# 【言わないこと】大岩体制・アジア杯延期の話（記者の整理）／福田師王の得点の詳細（別の回）／前日の会見の言葉。
+# 本人の言葉: あり（森保一。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [森保一]
+
+short_style: Y
+short_hook_quote: 選手たちには本当に幸せな思いをさせていただいた
+short_photos:
+  - assets/images/20261118_moriyasu_last_words/19_v.jpg
+  - assets/images/20261118_moriyasu_last_words/02_v.jpg
+  - assets/images/20261118_moriyasu_last_words/04_v.jpg
+  - assets/images/20261118_moriyasu_last_words/03_v.jpg
+short_question: 森保ジャパンの8年間で、いちばん印象に残っている試合はどれですか。
+short_telops: []
+
+theme:
+  id: moriyasu_last_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 森保監督、ラストマッチは1対2の黒星。試合後に語った感謝と「続いていく」
+  hook: ""
+  question: ラストマッチに敗れた森保監督は、試合後に選手たちへ何を語ったのか
+  takeaway: 森保監督は通算113試合を戦い、77勝17分け19敗。最後の試合は1対2の黒星でも、試合後は感謝を語り、円陣では「日本代表は続いていく」と選手に伝えた
+
+thumbnail:
+  layout: face
+  line1: 森保監督 ラストマッチは黒星
+  line2: 「幸せな思いをさせていただいた」
+  tags: [森保一, 日本代表]
+  photo: assets/images/20261118_moriyasu_last_words/19_w.jpg
+  short_photo: assets/images/20261118_moriyasu_last_words/19_v.jpg
+
+answer: 選手たちに幸せな思いをさせてもらったと感謝し、円陣では「日本代表は続いていく」と伝えた
+watch: 日本代表は、来年3月から大岩剛監督の新体制
+
+sections:
+  - id: what
+    main: true
+    heading: ラストマッチに敗れた森保監督は、何を語ったのか
+    tier: 報道
+    telop: 森保監督「幸せな思いをさせていただいた」
+    say:
+      - text: 森保監督は、このパラグアイ戦を最後に退任。1対2の敗戦後に語りました。
+        image: assets/images/20261118_moriyasu_last_words/19_w.jpg
+      - voice: 森保一
+        text: 選手たちには本当に幸せな思いをさせていただいた。
+        emph: true
+      - voice: 森保一
+        text: 良い選手とスタッフに恵まれて、
+        image: assets/images/20261118_moriyasu_last_words/02_w.jpg
+        cont: true
+      - voice: 森保一
+        text: こういった幸せな時間を過ごせたので、感謝したい。
+        cont: true
+      - text: 敗れた試合については、こう悔やみました。
+        image: assets/images/20261118_moriyasu_last_words/02_w.jpg
+      - voice: 森保一
+        text: セットプレー2発でやられている。
+      - voice: 森保一
+        text: もっと賢くゲームを進めなければいけなかった。
+        image: assets/images/20261118_moriyasu_last_words/04_w.jpg
+        cont: true
+      - text: 後半に追い上げた選手たちについては、こう話しています。
+      - voice: 森保一
+        text: 1点ずつ返すこと、
+        image: assets/images/20261118_moriyasu_last_words/19_w.jpg
+      - voice: 森保一
+        text: 勝利を諦めずに最後まで攻める姿勢で、頑張ってくれた。
+        cont: true
+      - voice: 森保一
+        text: 次に繋がると思う。
+        image: assets/images/20261118_moriyasu_last_words/04_w.jpg
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463390-463390-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336
+  - id: game
+    heading: 森保ジャパンは、8年間でどんな成績だったのか
+    tier: 報道
+    telop: 通算113試合 77勝17分け19敗
+    say:
+      - text: 森保一監督は、2018年から8年間で、通算113試合を指揮しました。
+        image: assets/images/20261118_moriyasu_last_words/04_w.jpg
+      - text: 成績は、77勝17分け19敗です。
+        card: {type: table, title: 森保一監督の通算成績（PK戦は引き分け扱い）, columns: [試合, 勝, 分け, 敗], rows: [[113, 77, 17, 19]], highlight_row: 0}
+      - text: 日本代表史上初の、通算100試合の指揮も達成しています。
+        card: none
+      - text: 初陣の2018年9月11日は、コスタリカに3対0の勝利でした。最後は1対2です。
+        card: none
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261118/2228344.html
+  - id: view
+    viewpoint: true
+    heading: 森保監督は、最後に選手たちへ何を託したのか
+    tier: 背景
+    telop: 円陣で「日本代表は続いていく」
+    say:
+      - text: 見立てです。森保監督は、試合後の円陣で、選手たちに声をかけました。
+        image: assets/images/20261118_moriyasu_last_words/19_w.jpg
+      - voice: 森保一
+        text: これで終わりじゃない。日本代表は続いていく。
+        emph: true
+        card: none
+      - text: 日本代表への今の思いは、こうです。
+        image: assets/images/20261118_moriyasu_last_words/02_w.jpg
+      - voice: 森保一
+        text: 日本代表が世界一になるステップアップを、
+      - voice: 森保一
+        text: イチサポーターとして見守っていきたい。
+        image: assets/images/20261118_moriyasu_last_words/04_w.jpg
+        cont: true
+      - text: 次の日本代表は、来年3月から大岩剛監督の新体制です。
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463390-463390-fl
+      - https://web.gekisaka.jp/news/japan/detail/?463396-463396-fl
+      - https://www.espn.com/soccer/match/_/gameId/512438
+#   https://web.gekisaka.jp/news/japan/detail/?463198-463198-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463324-463324-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463332-463332-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463110-463110-fl

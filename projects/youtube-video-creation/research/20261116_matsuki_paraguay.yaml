@@ -1,0 +1,131 @@
+# 取材メモ（2026年11月16日）松木玖生、ブラジル戦ベンチ外でも「自分も試合に出たら自信がある」。次戦でデビュー戦ゴールの再現へ（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-16。requests（ブラウザUA）でゲキサカ本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-15 23:36（取材・文 矢内由美子）「自身はベンチ外もブラジル撃破に刺激を受けたMF松木玖生「自分も試合に出たら自信がある」」（全文） https://web.gekisaka.jp/news/japan/detail/?463292-463292-fl
+#   （題材ページはサッカーキング 2228148 も挙げていたが、今回は読めた範囲のゲキサカ全文だけを使った。サッカーキングの記事は読んでいない）
+# 写真の出どころ（本人の写真。Getty 表記のものは使っていない。05 は本人が写っていないので外した）:
+#   https://web.gekisaka.jp/news/japan/detail/?463292-463292-fl
+#   https://www.soccer-king.jp/news/japan/national/20261110/2226401.html
+#   https://www.southamptonfc.com/en/news/article/matsuki-it-was-a-great-moment
+#   https://www.southamptonfc.com/en/news/article/report-matsuki-strikes-to-give-saints-first-away-win
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（fifa.friendly summary event=401916337、2026-11-14）: 日本の試合メンバー26人（先発11＋控え15）に松木玖生の名前は無い＝ベンチ外（記事と一致）。日本の得点は 15分 久保建英・19分 中村敬斗（アシスト 中野就斗のクロス）・90+1分 坂元達裕。
+#   ・ESPN（event=401905330、2026-09-24 10:05 UTC、宮城スタジアム。11/11 の取材メモで確認済み）: 日本 3-1 ウルグアイ。11分 松木玖生（左足、エリア外からゴール左下。アシスト 中村敬斗）。松木は先発・代表デビュー。
+#   ・ESPN scoreboard 2026-11-17: Paraguay at Japan（event=401916336、シンガポール国立競技場）。
+#   ・ゲキサカ: 松木は 23歳。右サイドから中央へ切り込むプレーが手応えのある得意の形で、今回も右サイドでのプレーをイメージしながらブラジル戦を見ていた。パラグアイも組織的で守備の堅い相手。森保監督にとって最後の試合。
+#   ・松木の言葉（原文。ゲキサカ。字は変えていない。括弧は記者の補足。台本は読点で行に分けた）:
+#       「ブラジルから2点取ることができて、それが試合を優位に進めたと思います。同点に追いつかれながらも最後、勝ち切るところに、今の日本代表の強さがあるかなと思います」
+#       「みんな欧州でやっているぶん、自信もすごくついていると思いますし、自分も試合に出た時には自信があるので、そこ(ゴール)は狙っていきたいです」（括弧の中は記者の補足。台本は括弧の外だけ読む）
+#       「前半から攻撃的にいけたら、早い時間帯に点を取ることができると思うので、そこは狙っていきたい」
+#       「勝利することが最大の恩返し」
+# 食い違い: 記事は松木の印象に残った場面を「堂安律のゴールにつながる攻撃」と書くが、ESPN の日本の得点者に堂安は無い（久保の先制点のアシストが堂安）。→ 台本では堂安の名前を出さず、中村敬斗のフィニッシュと中野就斗の連係だけを使った（ESPN と一致）。
+# 自分で数えたもの: 日本の「早い時間の先制点」＝ウルグアイ戦 11分・ブラジル戦 15分（ESPN）。
+# 前の本との重なり: 20261111_matsuki_standard（「基準が二段階上がった」・デビュー戦11分の先制点を1行・クラブでの得点）。今回の初出: ブラジル戦ベンチ外のあとの言葉・「自信がある」・パラグアイ戦への狙い。「基準」の言葉・クラブの得点は繰り返さない。
+# 【言わないこと】クラブでの得点の数／「基準が上がった」／福田・後藤など他の選手の話。
+# 本人の言葉: あり（松木玖生。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月16日"
+format: news
+no_main: true
+people: [松木玖生, 森保一, 日本代表, パラグアイ代表, ブラジル代表]
+
+short_style: Y
+short_hook_quote: みんな欧州でやっているぶん、自信もすごくついていると思いますし、
+short_photos:
+  - assets/images/20261116_matsuki_paraguay/02_v.jpg
+  - assets/images/20261116_matsuki_paraguay/01_v.jpg
+  - assets/images/20261116_matsuki_paraguay/03_v.jpg
+  - assets/images/20261116_matsuki_paraguay/04_v.jpg
+short_question: 17日のパラグアイ戦で、松木玖生は早い時間にゴールを決めると思いますか。
+short_telops: []
+
+theme:
+  id: matsuki_paraguay
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 松木玖生、ブラジル戦ベンチ外で刺激を受けた夜。パラグアイ戦で狙うことを語る
+  hook: ""
+  question: ブラジル戦に出られなかった松木玖生は、次のパラグアイ戦へ何を語ったのか
+  takeaway: 日本の先制点は、ウルグアイ戦が前半11分、ブラジル戦が15分。松木の言う「早い時間帯」は、デビュー戦の自分のゴールとも重なる
+
+thumbnail:
+  layout: face
+  line1: 松木玖生 ベンチ外の夜
+  line2: 自信はある、狙う
+  tags: [松木玖生, 日本代表, パラグアイ戦]
+  photo: assets/images/20261116_matsuki_paraguay/02_w.jpg
+  short_photo: assets/images/20261116_matsuki_paraguay/02_v.jpg
+
+answer: 欧州組の自信に刺激を受け、自分も出たら狙う。前半から攻撃的に、早い時間帯の得点を狙いたい
+watch: 17日のパラグアイ戦（森保監督のラストマッチ）
+
+sections:
+  - id: what
+    main: true
+    heading: ブラジル戦のベンチ外のあと、松木玖生は何を語ったか
+    tier: 報道
+    telop: 松木玖生「自分も試合に出た時には自信がある」
+    say:
+      - text: 日本がブラジルに勝った試合でベンチ外だった松木玖生が、15日に語りました。
+        image: assets/images/20261116_matsuki_paraguay/02_w.jpg
+      - voice: 松木玖生
+        text: みんな欧州でやっているぶん、自信もすごくついていると思いますし、
+        emph: true
+      - voice: 松木玖生
+        text: 自分も試合に出た時には自信があるので、
+        cont: true
+      - voice: 松木玖生
+        text: そこは狙っていきたいです。
+        cont: true
+      - text: 松木が刺激を受けたのは、欧州組が自信を持って仕掛ける姿でした。
+      - text: 右サイドの中野就斗との連係と、中村敬斗がシュートを決める場面を挙げました。
+      - text: 松木は9月のウルグアイ戦で、代表デビューにして初先発。左足で初ゴールを決めています。
+        image: assets/images/20261116_matsuki_paraguay/04_w.jpg
+      - text: 右サイドから中央へ切り込むのが、松木の得意な形です。
+        image: assets/images/20261116_matsuki_paraguay/03_w.jpg
+      - text: ブラジル戦も、右サイドでのプレーをイメージしながら見ていたといいます。
+      - text: 次のパラグアイ戦に向けた意気込みを、松木は語りました。
+      - voice: 松木玖生
+        text: 前半から攻撃的にいけたら、
+        image: assets/images/20261116_matsuki_paraguay/02_w.jpg
+      - voice: 松木玖生
+        text: 早い時間帯に点を取ることができると思うので、
+        cont: true
+      - voice: 松木玖生
+        text: そこは狙っていきたい。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463292-463292-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://www.espn.com/soccer/match/_/gameId/401905330
+  - id: game
+    heading: 森保監督の最後の試合へ、松木が語った恩返し
+    tier: 報道
+    telop: 松木玖生「勝利することが最大の恩返し」
+    say:
+      - text: 17日のパラグアイ戦は、森保一監督にとって最後の試合です。
+      - text: 松木は、監督を勝利で送り出したいという思いを、こう話しました。
+      - voice: 松木玖生
+        text: 勝利することが最大の恩返し。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463292-463292-fl
+  - id: view
+    viewpoint: true
+    heading: 松木の言う「早い時間帯」は、日本の最近の形と重なるか
+    tier: 背景
+    telop: 日本の先制点 ウルグアイ戦11分、ブラジル戦15分
+    say:
+      - text: 見立てです。日本は9月のウルグアイ戦で前半11分、ブラジル戦で前半15分に先制しました。
+        card: {type: table, title: 日本の先制点, columns: [試合, 時間と得点者], rows: [[ウルグアイ戦（9月24日）, 11分 松木玖生], [ブラジル戦（11月14日）, 15分 久保建英]], highlight_row: 0}
+      - text: 1つめは、松木自身のゴールでした。
+        card: none
+        emph: true
+      - text: 前半から攻撃的に。次は17日、パラグアイ戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401905330
+      - https://www.espn.com/soccer/match/_/gameId/401916337
