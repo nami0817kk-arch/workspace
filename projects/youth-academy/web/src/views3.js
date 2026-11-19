@@ -163,7 +163,7 @@
   YA.slotBlock = function (body) {
     const app = U().app;
     const store = U().store;
-    body.append(h('div', { class: 'h', style: 'margin-top:10px' }, `セーブ枠（いま${YA.SLOT_COUNT}枠・無料は1枠）`), h('div', { class: 'note' }, '1つの遊びに自動セーブが1つ。枠ごとに別のクラブで遊べます。'));
+    body.append(h('div', { class: 'h slothead', style: 'margin-top:10px' }, `セーブ枠（いま${YA.SLOT_COUNT}枠・無料は1枠）`), h('div', { class: 'note' }, '1つの遊びに自動セーブが1つ。枠ごとに別のクラブで遊べます。'));
     for (let i = 0; i < YA.SLOT_COUNT; i++) {
       const cur = app.slot === i;
       const w = cur ? app.w : store.get(YA.slotKey(i), null);

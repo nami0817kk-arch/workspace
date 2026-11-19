@@ -39,6 +39,7 @@ const html = read('shell.html')
   .replace('/*__PRONEWS__*/', () => read('pronews.js'))
   .replace('/*__STARACTS__*/', () => read('staracts.js'))
   .replace('/*__SHOP__*/', () => read('shop.js'))
+  .replace('/*__GUIDE__*/', () => read('guide.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
@@ -825,6 +826,44 @@ async function clearEvents() {
     if (btn('閉じる')) btn('閉じる').click();
     rail('ほか');
     if (btn('用語集')) { btn('用語集').click(); ok(txt().includes('覚醒の鍵') && txt().includes('連帯貢献金'), '用語集'); }
+    // ---------- ガイド（2026-11-19「各操作や画面のガイドを充実させて」） ----------
+    {
+      const Y = w.YA;
+      const app = Y._ui.app;
+      // どの画面・小タブにもガイドがある
+      const keys = ['home', 'players', 'train', 'pre', 'play', 'result', 'club:money', 'club:over', 'club:staff', 'club:top', 'club:int', 'club:scout', 'club:sel', 'club:table', 'lineage:tree', 'lineage:alumni', 'more:howto', 'more:rec', 'more:bteam', 'more:ach', 'more:help', 'set:disp', 'set:notice', 'set:name', 'set:save'];
+      const miss = keys.filter((k) => { const g = Y.GUIDE[k]; return !g || !g.t || !g.what; });
+      ok(!miss.length, 'ガイド: 全画面に見出しと説明: ' + miss.join(','));
+      ok(Y.guideKey({ tab: 'club', ct: 'scout' }) === 'club:scout' && Y.guideKey({ tab: 'more', mt: 'set', st: 'save' }) === 'set:save' && Y.guideKey({ tab: 'match', view: 'pre' }) === 'pre', 'ガイド: 小タブまで鍵を作る');
+      ok(Y.guideOf({ tab: 'lineage', lt: 'rival' }) === Y.GUIDE.lineage, 'ガイド: 個別が無い小タブはタブのガイド');
+      // 左の「？」でいまの画面のガイドが開く（どのタブでも出る）
+      for (const [tb, title] of [['ホーム', 'ホーム'], ['練習', '練習'], ['クラブ', 'クラブ ―']]) {
+        rail(tb);
+        const q = d.querySelector('#rail .tiphelp');
+        ok(!!q, 'ガイド: ' + tb + 'に？');
+        if (!q) continue;
+        q.click();
+        await sleep(5);
+        const gs = d.querySelector('.sheet-in.guide');
+        ok(gs && gs.textContent.includes(title) && /できること/.test(gs.textContent), 'ガイド: ？で' + tb + 'のガイド');
+        const close = gs && [...gs.querySelectorAll('button')].find((b) => b.textContent === 'わかった');
+        if (close) close.click();
+        await sleep(5);
+        ok(!d.querySelector('.sheet-in.guide'), 'ガイド: わかったで閉じる');
+      }
+      // 「遊び方を章ごとに読む」→ ほか → 遊び方
+      d.querySelector('#rail .tiphelp').click();
+      await sleep(5);
+      [...d.querySelectorAll('.sheet-in.guide button')].find((b) => b.textContent === '遊び方を章ごとに読む').click();
+      await sleep(5);
+      ok(app.tab === 'more' && app.mt === 'howto' && d.querySelector('.howto'), 'ガイド: 遊び方へ移る');
+      ok(d.querySelectorAll('.howto .col button').length === Y.HOWTO.length && Y.HOWTO.length >= 9, 'ガイド: 遊び方の章が並ぶ');
+      btn('9. ショップ').click();
+      await sleep(5);
+      ok(/購入を復元/.test(d.querySelector('.howto').textContent), 'ガイド: 遊び方にショップの章');
+      ok(errors.length === 0, 'ガイドで例外なし: ' + errors.slice(0, 2).join('|'));
+      app.hw = 0;
+    }
     rail('ホーム');
     ok(txt().includes('お知らせ') && (txt().includes('留める') || txt().includes('すべて読んだ') || true), 'お知らせに留める');
     ok(errors.length === 0, '機能面の画面で例外なし: ' + errors.slice(0, 2).join('|'));
@@ -849,6 +888,14 @@ async function clearEvents() {
       Y.onNative({ ev: 'ent', v: { slots: 4, tickets: 2, used: 0, spent: [] } });
       const sb = d.querySelector('button[data-pid="youth_save_slot"]');
       ok(sb && sb.disabled && /5枠/.test(sb.dataset.why || ''), '課金: セーブ枠が上限なら押せない（理由つき）');
+      // ショップのガイド（2026-11-19）：買い方・商品ごとの「買うと／使う場所」・持っている商品の行き先
+      ok(d.querySelector('.shophow') && /Apple の購入画面/.test(d.querySelector('.shophow').textContent), 'ガイド: ショップに買い方');
+      ok(d.querySelectorAll('.sguide').length === Y.SHOP.length && [...d.querySelectorAll('.sguide')].every((e) => /^使う場所：./.test(e.textContent)), 'ガイド: 商品ごとに使う場所');
+      ok([...d.querySelectorAll('.sgo')].some((b) => b.textContent === '作る場所へ') && [...d.querySelectorAll('.sgo')].some((b) => b.textContent === 'セーブ枠を見る'), 'ガイド: 持っている商品に使う場所へのボタン');
+      Y.onNative({ ev: 'purchase', id: 'youth_ticket_1', outcome: 'purchased' });
+      ok(/オリジナル選手チケット（1枚）」が届きました。.*オリジナル選手を作る/.test(Y.shopMsg), 'ガイド: 買ったあとに使う場所を知らせる');
+      Y.onNative({ ev: 'purchase', id: 'youth_ticket_1', outcome: 'canceled' });
+      ok(Y.shopMsg === Y.PURCHASE_MSG.canceled, 'ガイド: 取りやめは元の文のまま');
       // オリジナル選手：3人そろっていたら作れない
       A.w.originals = [{ name: 'あ', pos: 'CM', stars: 3 }, { name: 'い', pos: 'CM', stars: 3 }, { name: 'う', pos: 'CM', stars: 3 }];
       Y._ui.render();

@@ -48,7 +48,7 @@
     if (!ev || typeof ev !== 'object') return;
     if (ev.ev === 'ent') { YA.entSet(ev.v); if (YA.bgm) YA.bgm.unlock(); }
     else if (ev.ev === 'prices') YA.shopPrices = Object.assign({}, YA.shopPrices, ev.map || {});
-    else if (ev.ev === 'purchase') YA.shopMsg = YA.PURCHASE_MSG[ev.outcome] || '';
+    else if (ev.ev === 'purchase') YA.shopMsg = ev.outcome === 'purchased' && YA.purchasedNext && YA.purchasedNext(ev.id || YA.lastBuy) ? YA.purchasedNext(ev.id || YA.lastBuy) : YA.PURCHASE_MSG[ev.outcome] || '';
     else if (ev.ev === 'restore') YA.shopMsg = YA.RESTORE_MSG[ev.outcome] || YA.RESTORE_MSG.failed;
     else if (ev.ev === 'adDone') adDone(ev);
     else if (ev.ev === 'adUnclaimed') { for (const x of ev.list || []) if (x) adDone({ tag: x.tag, result: 'earned', reward: x.reward }); }
@@ -60,7 +60,7 @@
     if (!YA.native.has()) return;
     YA.native.post({ cmd: 'hello', ids: YA.SHOP.map((x) => x.id) });
   };
-  YA.buy = (id) => YA.native.post({ cmd: 'buy', id });
+  YA.buy = (id) => { YA.lastBuy = id; return YA.native.post({ cmd: 'buy', id }); };
   // ショップを開いたら、取れていない価格を取り直す（続けて何度も頼まない）
   let pricesAsked = 0;
   YA.askPrices = function () {
@@ -286,14 +286,23 @@
     if (it.key === 'slot') return YA.ent.slots >= YA.SLOT_MAX - 1 ? '上限（5枠）' : `いま${YA.SLOT_COUNT}枠`;
     return `チケット ${YA.ent.tickets}枚`;
   }
+  // 持っている（使える）商品か。使う場所へのボタンを出す
+  function owned(it) {
+    if (it.key === 'noAds') return false;
+    if (it.key === 'eye') return !!YA.ent.eye;
+    if (it.key === 'slot') return YA.ent.slots > 0;
+    return YA.ent.tickets > 0;
+  }
   YA.shopBlock = function (body) {
     YA.askPrices();
     body.append(h('div', { class: 'h', style: 'margin-top:10px' }, 'ショップ'), h('div', { class: 'note' }, YA.native.has() ? '買い切りは、機種変更や入れ直しのあとに「購入を復元」で戻せます。' : 'ショップはアプリ版（iPhone）で使えます。'));
+    if (YA.shopHowEl) body.append(YA.shopHowEl());
     for (const it of YA.SHOP) {
       const st = stateOf(it);
       const done = it.once && st === '購入済み';
       body.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;display:flex;align-items:center;gap:6px' },
-        h('div', { class: 'grow' }, h('b', {}, it.name), h('div', { class: 'note' }, it.note), st ? h('div', { class: 'note', style: 'color:var(--ink)' }, st) : null),
+        h('div', { class: 'grow' }, h('b', {}, it.name), h('div', { class: 'note' }, it.note), YA.shopItemGuideEl ? YA.shopItemGuideEl(it) : null, st ? h('div', { class: 'note', style: 'color:var(--ink)' }, st) : null),
+        owned(it) && YA.shopGoEl ? YA.shopGoEl(it) : null,
         done ? null : (() => { const why = YA.buyWhy(it); return h('button', { class: 'btn sm pri', 'data-pid': it.id, disabled: !!why, why: why || '', onclick: () => { YA.shopMsg = ''; YA.buy(it.id); } }, priceOf(it) || (YA.native.has() ? 'ストアに接続中' : '買う')); })()));
     }
     body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:4px' }, h('button', { class: 'btn sm', disabled: !YA.native.has(), why: '購入の復元はアプリでだけできます', onclick: () => { YA.shopMsg = '確認しています…'; YA.restorePurchases(); rerender(); } }, '購入を復元'), h('span', { class: 'note' }, YA.shopMsg || '')));
@@ -304,7 +313,7 @@
     if (!w) return;
     const n = (w.originals || []).length;
     const why = YA.origFull(w) ? `来年度に迎えられるのは${YA.ORIG_MAX}人までです（もう${n}人決まっています）` : YA.ent.tickets < 1 ? 'オリジナル選手のチケットがありません' : !YA.native.has() ? 'オリジナル選手はアプリでだけ作れます' : null;
-    body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:6px' }, h('button', { class: 'btn sm', disabled: !!why, why: why || '', onclick: () => origModal() }, 'オリジナル選手を作る'), h('span', { class: 'note' }, `チケット${YA.ent.tickets}枚／来年度に迎える予定 ${n}人（${YA.ORIG_MAX}人まで）`)));
+    body.append(h('div', { class: 'row origrow', style: 'gap:6px;margin-top:6px' }, h('button', { class: 'btn sm', disabled: !!why, why: why || '', onclick: () => origModal() }, 'オリジナル選手を作る'), h('span', { class: 'note' }, `チケット${YA.ent.tickets}枚／来年度に迎える予定 ${n}人（${YA.ORIG_MAX}人まで）`)));
     if (n) body.append(h('div', { class: 'note' }, (w.originals || []).map((o) => `${o.name}（${YA.POS_LABEL ? YA.POS_LABEL[o.pos] || o.pos : o.pos}・伸びしろ${'★'.repeat(o.stars)}）`).join('、')));
   };
   function origModal() {
