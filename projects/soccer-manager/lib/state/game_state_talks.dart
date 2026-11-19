@@ -36,7 +36,10 @@ extension GameStateTalks on GameState {
       age: p.age,
       potentialGap: p.potential - p.overall,
     );
-    return (asking * sdPriceFactor).round();
+    // 破綻したクラブは、選手を投げ売りしている。
+    final distress =
+        isDistressedClub(club.id) ? GameStateClubFinance.distressDiscount : 1.0;
+    return (asking * sdPriceFactor * distress).round();
   }
 
   /// 移籍金[bid]を提示する(新しく申し込む、または対案に出し直す)。

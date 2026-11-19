@@ -9473,6 +9473,13 @@ void main() {
     }
     expect(youngEnough, greaterThan(60), reason: '緊急補強の多くが20代前半〜半ばである');
 
+    // 自クラブの水準を渡すと、その少し下の力の選手になる(5部に大物が来ない)。
+    for (var i = 0; i < 200; i++) {
+      final p = FreeAgentEngine.generateEmergencySigning(squadMedian: 50);
+      expect(p.overall, lessThanOrEqualTo(62),
+          reason: '総合の真ん中が50のクラブの緊急補強は、主力より上にならない');
+    }
+
     // 通常のFA市場は従来通りベテラン中心のまま(役割が違う)。
     for (var i = 0; i < 50; i++) {
       expect(FreeAgentEngine.generateVeteran().age, greaterThanOrEqualTo(27));

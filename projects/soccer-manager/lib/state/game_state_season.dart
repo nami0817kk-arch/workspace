@@ -883,6 +883,8 @@ extension GameStateSeason on GameState {
         .map((r) => league.teams.firstWhere((t) => t.id == r.teamId))
         .toList();
     final playedTier = _save!.currentDivisionTier;
+    // 他のクラブの経営: お金を動かし、赤字が続いたクラブは破綻する。
+    final collapsedClubs = _settleAiClubFinances();
     // 監督の経歴に今季を足し、目標を果たしたら立場を上げる。
     _closeManagerSeason(
         finalRank: finalRank, teams: league.teams.length, tier: playedTier);
@@ -1313,6 +1315,8 @@ extension GameStateSeason on GameState {
     );
     // ここから新しいシーズン。契約の残り年数もこのシーズンから数える。
     _syncContractClock();
+    // 破綻したクラブの勝ち点の剥奪も、来季の順位表に入れる。
+    _applyCollapsePenalties(collapsedClubs);
     // 規則違反の勝ち点剥奪は、来季の順位表に反映する。
     if (_save!.pendingPointsDeduction > 0) {
       _save!.league.pointsAdjustments[_save!.userTeamId] =
@@ -1406,7 +1410,8 @@ extension GameStateSeason on GameState {
     // 契約満了・引退により編成人数が最低人数を割り込んだ場合の緊急補強(安全網)。
     lastEmergencySignings = [];
     while (userTeam.players.length < seasonStartSquadSize) {
-      final signing = FreeAgentEngine.generateEmergencySigning();
+      final signing = FreeAgentEngine.generateEmergencySigning(
+          squadMedian: _squadMedianOverall);
       ContractEngine.renewContract(signing);
       userTeam.players.add(signing);
       lastEmergencySignings.add(signing.name);

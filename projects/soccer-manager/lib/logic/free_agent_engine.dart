@@ -31,9 +31,15 @@ class FreeAgentEngine {
   /// (長期実測で平均年齢が26→31歳まで上がることを確認)。緊急補強は
   /// 「クラブが慌てて確保する即戦力」なので、若手〜中堅(21〜29歳)から
   /// 拾ってくる。
-  static Player generateEmergencySigning() {
+  ///
+  /// [squadMedian](自クラブの選手の総合の真ん中)を渡すと、その少し下の力の
+  /// 選手にする。穴埋めなので主力より上の大物は来ない(5部のクラブに総合76・
+  /// 週給が主力の4倍の選手が入り、人件費が年ごとに膨らんでいた)。
+  static Player generateEmergencySigning({int? squadMedian}) {
     final position = Position.values[_rng.nextInt(Position.values.length)];
-    final tier = 40 + _rng.nextInt(36);
+    final tier = squadMedian == null
+        ? 40 + _rng.nextInt(36)
+        : (squadMedian - 6 + _rng.nextInt(7)).clamp(40, 75);
     final age = 21 + _rng.nextInt(9);
     final player = PlayerGenerator.generate(
       position: position,
