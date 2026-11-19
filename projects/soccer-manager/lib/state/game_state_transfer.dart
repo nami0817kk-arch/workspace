@@ -1228,7 +1228,11 @@ extension GameStateTransfer on GameState {
     final candidates =
         _save!.league.teams.where((t) => t.id != _save!.userTeamId).toList();
     if (candidates.isEmpty) return false;
-    final destination = candidates[Random().nextInt(candidates.length)];
+    // 系列クラブがあれば、そこへ出場機会付きで送る。
+    final affiliate = affiliateClub;
+    final destination =
+        affiliate ?? candidates[Random().nextInt(candidates.length)];
+    if (affiliate != null) guaranteePlayingTime = true;
 
     final until =
         TransferWindowCalendar.loanEndDate(today, currentLeagueTheme, length);

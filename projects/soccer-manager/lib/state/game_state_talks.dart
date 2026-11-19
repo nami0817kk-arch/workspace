@@ -39,10 +39,18 @@ extension GameStateTalks on GameState {
     // 破綻したクラブは、選手を投げ売りしている。
     final distress =
         isDistressedClub(club.id) ? GameStateClubFinance.distressDiscount : 1.0;
-    // 難易度(移籍金の言い値)と、移籍の相場(季ごとに動く)。
+    // 難易度(移籍金の言い値)・系列クラブの割引・移籍の相場(季ごとに動く)。
     final level =
         _save!.difficultyOf(DifficultyItem.transferPrices).transferPriceFactor;
-    return (asking * sdPriceFactor * distress * level * marketIndex / 100)
+    final affiliate =
+        isAffiliateClub(club.id) ? GameStateAffiliate.priceDiscount : 1.0;
+    return (asking *
+            sdPriceFactor *
+            distress *
+            level *
+            affiliate *
+            marketIndex /
+            100)
         .round();
   }
 

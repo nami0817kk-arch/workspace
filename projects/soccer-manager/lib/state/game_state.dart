@@ -172,6 +172,7 @@ part 'game_state_nation.dart';
 part 'game_state_forms.dart';
 part 'game_state_league_cup.dart';
 part 'game_state_rumors.dart';
+part 'game_state_affiliate.dart';
 part 'game_state_club_finance.dart';
 part 'game_state_sponsor_slots.dart';
 part 'game_state_license.dart';
