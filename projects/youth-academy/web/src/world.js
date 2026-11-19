@@ -161,7 +161,10 @@
     }
     // 隠れた中身：伸びしろ（能力の合計の上限）・伸びる速さ・項目ごとの伸びやすさ
     const room = Math.round((90 + quality * 28 + rng.int(-25, 40)) * (grade === 1 ? 1.25 : grade === 2 ? 1 : 0.75));
-    p.pot = abSum(p) + clamp(room, 25, 260);
+    // GK は能力が8つ（フィールドは29）。伸びしろは能力1つあたりで同じ物差しにする（2026-11-20：GK の将来が高く出すぎていた）
+    const potK = (pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length / YA.AB_FIELD.length;
+    p.pot = abSum(p) + Math.round(clamp(room, 25, 260) * potK);
+    p.potFix = 1;
     p.sumIn = abSum(p) - (grade - 1) * (pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length * 1.2; // 3年間の伸びの上限の起点（入団したとき）
     p.rate = Math.round((0.75 + rng() * 0.6) * 100) / 100;
     p.aff = {};
@@ -582,7 +585,7 @@
         const tdays = plan.days.filter((d) => YA.MENUS[d.menu] && YA.MENUS[d.menu].fat > 0);
         const hardShare = tdays.length ? tdays.filter((d) => d.int === 'hard').length / tdays.length : 0;
         const lightShare = tdays.length ? tdays.filter((d) => d.int === 'light').length / tdays.length : 0;
-        const risk = (1 + hardShare) * (1 - lightShare * 0.4) * (0.003 + Math.max(0, p.fat - 60) / 100 * 0.02 + (p.spurt > 0 ? 0.006 : 0)) * tfx.inj * (w.campMult > 1.5 ? 1.5 : 1);
+        const risk = (1 + hardShare) * (1 - lightShare * 0.4) * (0.003 + Math.max(0, p.fat - 60) / 100 * 0.02 + (p.spurt > 0 ? 0.006 : 0)) * tfx.inj * (w.campMult > 1.5 ? 1.5 : 1) * (YA.injK ? YA.injK(p) : 1);
         if (rng() < risk * (light ? 0.5 : 1) * (p.pos === 'GK' ? 0.6 : 1)) {
           // ふつうは1〜5週。まれに長い怪我（8〜24週）
           p.inj = rng() < YA.BIG_INJ_P ? rng.int(8, 24) : rng.int(1, p.fat > 80 ? 7 : 5);
@@ -626,7 +629,7 @@
       for (const [a, e] of Object.entries(exp)) {
         const aff = p.aff[a] || 1;
         const env = YA.staffMult ? YA.growMult(YA.staffMult(w, p, a) * YA.coachMult(w) * dscMult) * (w.campMult || 1) : 1;
-        const g = e * YA.GROW_BASE * p.rate * aff * roomF * cond * diligence * heightK(p, a) * stateK(p) * env * (p.adapt > 0 ? 0.92 : 1) * (p.awake ? 1.2 : 1);
+        const g = e * YA.GROW_BASE * p.rate * aff * roomF * cond * diligence * heightK(p, a) * stateK(p) * env * (p.adapt > 0 ? 0.92 : 1) * (p.awake ? 1.2 : 1) * (YA.growK ? YA.growK(p) : 1);
         // 高い値ほど伸びにくい
         const hard = clamp(1.25 - p.ab[a] / 22, 0.25, 1) * (p.ab[a] >= 15 ? clamp(1 - (p.ab[a] - 14) * 0.15, 0.1, 1) : 1);
         p.prog[a] = (p.prog[a] || 0) + g * hard;
@@ -1126,7 +1129,7 @@
         if (!(p.inj > 0)) {
           const tfx = YA.trainerFx ? YA.trainerFx(w) : { inj: 1 };
           const ir = YA.rngOf((w.seed | 0) * 29 + w.year * 577 + w.week * 41 + (which === 'A' ? 0 : 7) + YA.hash(id));
-          const risk = (mm / 90) * (YA.MATCH_INJ.base + Math.max(0, p.fat - 50) / 100 * YA.MATCH_INJ.fat) * tfx.inj * (p.pos === 'GK' ? 0.3 : 1); // GKは試合の怪我が少ない
+          const risk = (mm / 90) * (YA.MATCH_INJ.base + Math.max(0, p.fat - 50) / 100 * YA.MATCH_INJ.fat) * tfx.inj * (p.pos === 'GK' ? 0.3 : 1) * (YA.injK ? YA.injK(p) : 1); // GKは試合の怪我が少ない
           if (ir() < risk) {
             p.inj = ir() < YA.BIG_INJ_P * 1.5 ? ir.int(8, 24) : ir.int(1, 5);
             p._injLen = p.inj;

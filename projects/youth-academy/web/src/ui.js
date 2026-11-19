@@ -211,20 +211,25 @@
   const surname = (p) => { const n = p.name.split(' ')[0]; return n.includes('・') ? n.split('・').pop() : n; };
   // 学年の印（自分のチームの選手だけ。相手は学年を持たない）
   const gtag = (p) => (p && p.grade ? h('span', { class: 'gtag g' + p.grade }, '高' + p.grade) : null);
+  // 見えている性格だけ（persona.js：新入生の性格は時間をかけて見えてくる）
+  const visP = (p) => (YA.persVisible ? YA.persVisible(p) : p.pers);
   function persText(p) {
-    const keys = Object.keys(p.pers).filter((g) => p.pers[g] !== 'ふつう');
-    return keys.map((g) => p.pers[g]).join('・') || 'ふつう';
+    const pv = visP(p);
+    const keys = Object.keys(pv).filter((g) => pv[g] !== 'ふつう');
+    return keys.map((g) => pv[g]).join('・') || 'ふつう';
   }
   function persChips(p, all) {
-    const keys = Object.keys(p.pers).filter((g) => all || p.pers[g] !== 'ふつう');
+    const pv = visP(p);
+    const keys = Object.keys(pv).filter((g) => all || pv[g] !== 'ふつう');
     if (!keys.length) return [h('span', { class: 'chip gray' }, '性格：ふつう')];
-    return keys.map((g) => h('span', { class: 'chip pers', tip: YA.PERS_NOTE[p.pers[g]] ? `${p.pers[g]}：${YA.PERS_NOTE[p.pers[g]]}` : '' }, p.pers[g]));
+    return keys.map((g) => h('span', { class: 'chip pers', tip: YA.PERS_NOTE[pv[g]] ? `${pv[g]}：${YA.PERS_NOTE[pv[g]]}` : '' }, pv[g]));
   }
   // 性格と、その意味（1行ずつ）
   function persExplain(p) {
-    const keys = Object.keys(p.pers).filter((g) => p.pers[g] !== 'ふつう');
+    const pv = visP(p);
+    const keys = Object.keys(pv).filter((g) => pv[g] !== 'ふつう');
     if (!keys.length) return h('div', { class: 'note' }, 'ふつう（目立った癖はない）');
-    return h('div', {}, keys.map((g) => h('div', { class: 'row', style: 'gap:5px;margin-top:2px' }, h('span', { class: 'chip pers' }, p.pers[g]), h('span', { class: 'note' }, YA.PERS_NOTE[p.pers[g]] || ''))));
+    return h('div', {}, keys.map((g) => h('div', { class: 'row', style: 'gap:5px;margin-top:2px' }, h('span', { class: 'chip pers' }, pv[g]), h('span', { class: 'note' }, YA.PERS_NOTE[pv[g]] || ''))));
   }
   // 棒の濃い部分＝いまの値、薄い緑＝次の+1までの進み。右の緑＝今月の伸び、灰＝今年の伸び
   function abBar(name, v, gain, prog, yr) {
@@ -1231,7 +1236,7 @@
           const row = sceneHead.querySelector('.tagrow');
           while (S.tagShown < S.tags.length && R.t >= 1.3 + S.tagShown * 0.55) {
             const f = S.tags[S.tagShown++];
-            row.append(h('div', { class: 'tag' }, h('span', { class: 'chip ' + f.kind }, f.kind === 'trait' ? '特性' : f.kind === 'gold' ? '金特性' : f.kind === 'awake' ? '覚醒' : f.kind === 'pers' ? '性格' : '指示'), h('span', {}, f.tag), h('small', {}, `${f.num}番 ${surname({ name: f.name })}：${f.text}`)));
+            row.append(h('div', { class: 'tag' }, h('span', { class: 'chip ' + f.kind }, f.kind === 'trait' ? '特性' : f.kind === 'gold' ? '金特性' : f.kind === 'awake' ? '覚醒' : f.kind === 'pers' ? '性格' : f.kind === 'habit' ? '癖' : f.kind === 'combo' ? '組み合わせ' : '指示'), h('span', {}, f.tag), h('small', {}, `${f.num}番 ${surname({ name: f.name })}：${f.text}`)));
           }
           if (R.t >= sc.dur) endScene();
         } else {
@@ -1336,7 +1341,7 @@
     }
     const ins = Object.values(cnt).sort((a, b) => b.g - a.g || b.n - a.n).slice(0, 5);
     if (!ins.length) right.append(h('div', { class: 'note' }, 'この試合は、特性や性格が目立つ場面がありませんでした。'));
-    for (const c of ins) right.append(h('div', { class: 'insight' }, h('span', { class: 'chip ' + c.f.kind }, c.f.kind === 'trait' ? '特性' : c.f.kind === 'gold' ? '金特性' : c.f.kind === 'awake' ? '覚醒' : c.f.kind === 'pers' ? '性格' : '指示'), ` ${c.f.num}番 ${surname({ name: c.f.name })}の「${c.f.tag}」が${c.n}回効いた` + (c.g ? `（うち得点${c.g}）` : '')));
+    for (const c of ins) right.append(h('div', { class: 'insight' }, h('span', { class: 'chip ' + c.f.kind }, c.f.kind === 'trait' ? '特性' : c.f.kind === 'gold' ? '金特性' : c.f.kind === 'awake' ? '覚醒' : c.f.kind === 'pers' ? '性格' : c.f.kind === 'habit' ? '癖' : c.f.kind === 'combo' ? '組み合わせ' : '指示'), ` ${c.f.num}番 ${surname({ name: c.f.name })}の「${c.f.tag}」が${c.n}回効いた` + (c.g ? `（うち得点${c.g}）` : '')));
     for (const n of summary.notes) right.append(h('div', { class: 'insight bad' }, n.text));
     const sh = m.stats.home;
     const sa = m.stats.away;

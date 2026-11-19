@@ -169,7 +169,8 @@
     for (const p of all(w)) {
       const c = p.convert;
       if (!c || !p.apt) continue;
-      if (p.apt[c.pos] < 17) p.apt[c.pos] = Math.min(17, p.apt[c.pos] + 0.09 + (p.ab['判断'] || 8) * 0.002);
+      // 育った分は p.aptX に残す（毎週の YA.refreshApt が適性を作り直しても消えないように。2026-11-20 直し）
+      if (p.apt[c.pos] < 17) { p.aptX = p.aptX || {}; p.aptX[c.pos] = (p.aptX[c.pos] || 0) + (0.09 + (p.ab['判断'] || 8) * 0.002) * (YA.adaptK ? YA.adaptK(p) : 1); YA.refreshApt(p); }
       else if (!c.doneSaid) { c.doneSaid = true; YA.noteTier(w, 2, `${p.name}の${YA.POS_LABEL[c.pos] || c.pos}への転向が身についた（適性${Math.round(p.apt[c.pos])}）`, p.id); }
     }
     YA.planUpdate(w);
