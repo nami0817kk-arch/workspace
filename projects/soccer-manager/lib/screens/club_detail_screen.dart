@@ -135,8 +135,9 @@ class _PlayerRow extends StatelessWidget {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.zero,
-      title: Text(Tr.pick('${p.name}(${p.position.label}・${p.age}歳)',
-          '${p.name} (${p.position.label}, ${p.age})')),
+      title: Text(Tr.pick(
+          '${p.name}(${p.position.label}・${p.age}歳・${GameStateNation.nationLabel(gs.nationalityOf(p))})',
+          '${p.name} (${p.position.label}, ${p.age}, ${GameStateNation.nationLabel(gs.nationalityOf(p))})')),
       subtitle: Text(Tr.pick(
           '総合力 $ovr・伸びしろ $pot・市場価値 ${formatMoney(p.marketValue)}・見えている度合い $k%',
           'Overall $ovr, potential $pot, value ${formatMoney(p.marketValue)}, scouted $k%')),
