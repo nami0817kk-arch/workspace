@@ -1,0 +1,486 @@
+# 物語型の本編の見た目と絵の割り当て：近藤勇の最期（scripts/kondo-story.yaml）。chiso/storymain.py が読む。
+# 11-19 作成（11/25 19:00 公開予定）。kiyomasa_main_look.yaml を写した。絵は Gemini（Chrome、写実の油彩、昼の光）。血・遺体・処刑の場面は描かない。
+# 時代：1868年。和装に洋式の小銃、官軍は黒い筒袖と陣笠。新選組のだんだら羽織は描かない。実在の古写真・錦絵は額（frame:）で。
+script: scripts/kondo-story.yaml
+out: kondo_story_main
+art_dir: out/story/kondo/main
+main_art_dir: out/story/kondo/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 なぜ切腹ではなく斬首だったのか
+    now: 1868年
+    dates: {}
+  1:
+    label: 第1章 170人の隊は「1万人」を名乗った
+    now: 1868年3月
+    dates:
+      14: 1868年3月6日
+  2:
+    label: 第2章 近藤が自由に過ごした最後の場所
+    now: 1868年3月13日
+    dates:
+      22: null
+      24: 1868年3月29日
+      27: 1868年4月1日
+  3:
+    label: 第3章 近藤はなぜ官軍の陣へ出ていったのか
+    now: 1868年4月3日
+    dates:
+      39: null
+      49: 1868年4月6日
+      50: 1868年4月
+  4:
+    label: 第4章 正体は誰が見破ったのか
+    now: 1868年4月
+    dates:
+      61: 1868年4月4日
+      62: 1868年4月5日
+  5:
+    label: 第5章 なぜ斬首に決まったのか
+    now: 1868年4月
+    dates:
+      86: null
+  6:
+    label: 第6章 投降から22日と辞世の詩
+    now: 1868年4月
+    dates:
+      90: null
+      92: 1868年4月25日
+      102: null
+  7:
+    label: 第7章 首はどこへ行ったのか
+    now: 1868年閏4月
+    dates:
+      118: null
+  8:
+    label: まとめ なぜ斬首だったのか
+    now: null
+    dates: {}
+no_tag_from: 138
+references:
+- 『復古記』第11冊・谷干城「東征私記」（『谷干城遺稿』上）・『太政官日誌』・『房総叢書』第5巻・『中山忠能履歴資料』・『新聞集成明治編年史』第一巻・『近代世相全史』（国立国会図書館デジタルコレクション）
+- 西村兼文『文明史略』・『明治回天集』・『峡中沿革史』・松村巌『近藤勇』・『戊辰物語』・『近藤勇ト土佐勤王党』・徳重浅吉『日本文化史の研究』
+- 足立区立郷土博物館・流山市立博物館・甲州市教育委員会・北区・三鷹市・会津若松観光ナビ・岡崎市観光協会・板橋史談会・市民タイムス（2026）
+credits:
+  paintings/hijikata_kondo_isami.jpg: 近藤勇の写真（1865〜68年ころ）
+  paintings/hijikata_koshu_katsunuma_1880.jpg: 甲州勝沼の戦いの図（1880年）
+  paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg: 歌川広重《東海道五十三次 京師 三条大橋》1833年ごろ
+  paintings/ryoma_kyoto_shijo_kamogawa_hiroshige2.jpg: 二代歌川広重《四条河原》1860年ごろ
+ai:
+  D01:
+    scene: 甲州街道を進む隊
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  D02:
+    scene: 勝沼の宿場の札
+    pan: h
+    crops: *id001
+  D03:
+    scene: 柏尾の坂の硝煙
+    pan: h
+    crops: *id001
+  D04:
+    scene: 五兵衛新田の名主屋敷
+    pan: h
+    crops: *id001
+  D05:
+    scene: 名主屋敷の座敷の侍たち
+    pan: h
+    crops: *id001
+  D06:
+    scene: 文机の記録の本
+    pan: h
+    crops: *id001
+  D07:
+    scene: 流山の宿場と江戸川
+    pan: h
+    crops: *id001
+  D08:
+    scene: 宿場を囲む官軍と大砲
+    pan: h
+    crops: *id001
+  D09:
+    scene: 本陣の門から出る武士
+    pan: h
+    crops: *id001
+  D10:
+    scene: 近藤勇（AIの想像図）
+    pan: v
+    crops: *id001
+  D11:
+    scene: 官軍の陣へ向かう3騎
+    pan: h
+    crops: *id001
+  D12:
+    scene: 板橋の宿場と本陣
+    pan: h
+    crops: *id001
+  D13:
+    scene: 戸の隙間の向こうの武士
+    pan: h
+    crops: *id001
+  D14:
+    scene: 縁側の下の筵
+    pan: h
+    crops: *id001
+  D15:
+    scene: 総督府の言い争い
+    pan: h
+    crops: *id001
+  D16:
+    scene: 脇本陣の一室
+    pan: h
+    crops: *id001
+  D17:
+    scene: 文机の短冊
+    pan: h
+    crops: *id001
+  D18:
+    scene: 中山道の一里塚
+    pan: h
+    crops: *id001
+  D19:
+    scene: 街道脇の高札
+    pan: h
+    crops: *id001
+  D20:
+    scene: 街道を運ばれる樽
+    pan: h
+    crops: *id001
+  D21:
+    scene: 京都の三条大橋と鴨川
+    pan: h
+    crops: *id001
+  D22:
+    scene: 岡崎の山寺の石塔
+    pan: h
+    crops: *id001
+  D23:
+    scene: 板橋駅前の供養塔
+    pan: h
+    crops: *id001
+  D24:
+    scene: 会津の山寺の墓地
+    pan: h
+    crops: *id001
+  TH:
+    scene: 近藤勇（サムネと同じ絵）
+    pan: v
+    crops: *id001
+  IEND:
+    scene: 多摩の野と空（右半分に余白、終了画面）
+    pan: h
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:D10 wide
+- 1 ai:D09 wide
+- 2 ai:D13 wide
+- 3 ai:D15 wide
+- 4 ai:D15 left
+- 5 ai:D10 left
+- 6 ai:D19 wide
+- 7 ai:D01 wide
+- 8 frame:paintings/hijikata_kondo_isami.jpg
+- 9 ai:D06 wide
+- 10 ai:D01 left
+- 11 ai:D06 right
+- 12 ai:D02 wide
+- 13 ai:D02 right
+- 14 frame:paintings/hijikata_koshu_katsunuma_1880.jpg
+- 15 ai:D03 wide
+- 16 ai:D03 left
+- 17 ai:D19 left
+- 18 ai:D10 right
+- 19 ai:D04 wide
+- 20 ai:D04 left
+- 21 ai:D05 wide
+- 22 ai:D06 left
+- 23 ai:D04 right
+- 24 ai:D06 wide
+- 25 ai:D05 left
+- 26 ai:D05 right
+- 27 ai:D07 wide
+- 28 ai:D07 left
+- 29 ai:D06 right
+- 30 ai:D07 right
+- 31 ai:D08 wide
+- 32 ai:D08 right
+- 33 ai:D07 wide
+- 34 ai:D08 left
+- 35 ai:D09 left
+- 36 ai:D09 right
+- 37 ai:D10 wide
+- 38 ai:D09 wide
+- 39 ai:D11 wide
+- 40 ai:D16 wide
+- 41 ai:D11 left
+- 42 ai:D06 left
+- 43 ai:D06 right
+- 44 ai:D09 wide
+- 45 ai:D06 wide
+- 46 ai:D15 left
+- 47 ai:D06 right
+- 48 ai:D11 wide
+- 49 ai:D01 right
+- 50 ai:D01 left
+- 51 ai:D12 wide
+- 52 ai:D13 left
+- 53 ai:D12 left
+- 54 ai:D11 left
+- 55 ai:D13 right
+- 56 ai:D13 wide
+- 57 ai:D15 wide
+- 58 ai:D16 left
+- 59 ai:D15 right
+- 60 ai:D06 left
+- 61 ai:D12 right
+- 62 ai:D16 wide
+- 63 ai:D14 left
+- 64 ai:D15 left
+- 65 ai:D03 wide
+- 66 ai:D10 left
+- 67 ai:D15 right
+- 68 ai:D14 wide
+- 69 ai:D10 left
+- 70 ai:D14 right
+- 71 ai:D01 wide
+- 72 ai:D15 wide
+- 74 ai:D14 left
+- 75 ai:D06 right
+- 76 ai:D15 right
+- 77 ai:D16 right
+- 78 ai:D12 wide
+- 79 ai:D15 left
+- 80 ai:D12 left
+- 81 ai:D06 right
+- 82 ai:D14 right
+- 83 ai:D10 wide
+- 84 ai:D06 wide
+- 85 ai:D19 wide
+- 86 ai:D06 left
+- 87 ai:D06 right
+- 88 ai:D18 wide
+- 89 ai:D16 wide
+- 90 ai:D17 wide
+- 91 ai:D12 right
+- 92 ai:D16 left
+- 93 ai:D12 left
+- 94 ai:D18 wide
+- 95 ai:D18 right
+- 96 ai:D06 wide
+- 97 frame:paintings/hijikata_kondo_isami.jpg
+- 98 ai:D19 wide
+- 99 ai:D19 left
+- 100 ai:D19 right
+- 101 ai:D06 left
+- 102 ai:D06 wide
+- 103 ai:D17 right
+- 104 ai:D06 right
+- 105 ai:D01 left
+- 106 ai:D06 left
+- 107 ai:D10 left
+- 108 ai:D20 wide
+- 109 ai:D20 left
+- 110 ai:D20 right
+- 111 ai:D06 wide
+- 112 frame:paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg
+- 113 ai:D21 wide
+- 114 ai:D06 left
+- 115 ai:D06 right
+- 116 frame:paintings/ryoma_kyoto_shijo_kamogawa_hiroshige2.jpg
+- 117 ai:D21 right
+- 118 ai:D22 wide
+- 119 ai:D22 left
+- 120 ai:D21 wide
+- 121 ai:D22 right
+- 122 ai:D24 left
+- 123 ai:D23 wide
+- 124 ai:D23 left
+- 125 ai:D06 wide
+- 126 ai:D24 right
+- 127 ai:D24 wide
+- 128 ai:D18 wide
+- 129 ai:D23 wide
+- 130 ai:D10 wide
+- 131 ai:D02 wide
+- 132 ai:D09 wide
+- 133 ai:D13 wide
+- 134 ai:D15 wide
+- 135 ai:D19 wide
+- 136 ai:D06 wide
+- 137 ai:D21 wide
+- 138 ai:D10 left
+- 139 ai:IEND wide
+- end ai:IEND wide
+focus: {}
+fx: {}
+parts:
+- type: versus3
+  from: 13
+  to: 13
+  items:
+  - - 『峡中沿革史』
+    - 170人
+  - - ほかの記録
+    - 200人あまり
+  - - 官軍
+    - 1,200人ほど
+  every: 2.0
+- type: quote
+  from: 43
+  to: 43
+  label: 史料
+  text: 汝は隊長の儀につき一応督府に参り／御詫び申すべし　我れ同道せん
+  source: 山内家の家記（『復古記』第11冊）
+- type: quote
+  from: 56
+  to: 56
+  label: 史料
+  text: 高台寺連に成り居たる者を呼び／戸の隙より見せしむ　果して勇なり
+  source: 谷干城「東征私記」（『谷干城遺稿』上）
+- type: quote
+  from: 61
+  to: 61
+  label: 史料
+  text: 大久保大和守の義は／新撰組隊長近藤勇につき
+  source: 総督府日記 慶応4年4月4日（『房総叢書』第5巻）
+- type: quote
+  from: 76
+  to: 76
+  label: 史料
+  text: この儀を御採用なき時は／兵を率い帰ると申すほどの勢
+  source: 谷干城「東征私記」（『谷干城遺稿』上）
+- type: quote
+  from: 99
+  to: 100
+  label: 史料
+  text: 近藤勇　右は元来浮浪の者にて／大久保大和と変名し
+  source: 板橋の捨札の写し（江湖新聞 慶応4年閏4月6日）
+- type: quote
+  from: 103
+  to: 103
+  label: 史料
+  text: 孤軍援け絶えて俘囚となる／君恩を顧念して涙自ずから流る
+  source: 中外新聞（作者不詳として掲載）
+- type: quote
+  from: 113
+  to: 113
+  label: 史料
+  text: 兇悪の罪跡あまたこれ有る上／勝沼・流山にて官軍に敵対
+  source: 三条河原の札 慶応4年閏4月7日
+figures:
+- from: 10
+  to: 10
+  spec:
+    type: map
+    title: 江戸から甲府へ
+    bounds:
+    - 138.2
+    - 140.2
+    - 35.2
+    - 36.1
+    reveal: true
+    places:
+    - - 江戸
+      - 139.75
+      - 35.68
+    - - 勝沼
+      - 138.73
+      - 35.66
+    - - 甲府
+      - 138.57
+      - 35.66
+- from: 27
+  to: 27
+  spec:
+    type: map
+    title: 五兵衛新田から流山へ
+    bounds:
+    - 139.55
+    - 140.1
+    - 35.6
+    - 35.98
+    reveal: true
+    places:
+    - - 五兵衛新田
+      - 139.83
+      - 35.77
+    - - 千住
+      - 139.8
+      - 35.75
+    - - 流山
+      - 139.9
+      - 35.86
+- from: 54
+  to: 54
+  spec:
+    type: map
+    title: 流山から越谷・板橋へ
+    bounds:
+    - 139.55
+    - 140.1
+    - 35.6
+    - 35.98
+    reveal: true
+    places:
+    - - 流山
+      - 139.9
+      - 35.86
+    - - 越谷
+      - 139.79
+      - 35.89
+    - - 板橋
+      - 139.71
+      - 35.75
+- from: 109
+  to: 109
+  spec:
+    type: map
+    title: 板橋から京都へ
+    bounds:
+    - 134.8
+    - 140.6
+    - 33.9
+    - 36.8
+    reveal: true
+    places:
+    - - 板橋
+      - 139.71
+      - 35.75
+    - - 京都
+      - 135.77
+      - 35.01
+stills:
+- line: 0
+  note: 冒頭
+- line: 13
+  note: 人数
+- line: 44
+  note: 出頭の理由の表
+- line: 56
+  note: 戸の隙間
+- line: 76
+  note: 兵を率いて帰る
+- line: 101
+  note: 手がかりの表
+- line: 112
+  note: 三条大橋
+- end: true
+  note: 終了画面

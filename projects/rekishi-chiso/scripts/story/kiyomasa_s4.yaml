@@ -1,0 +1,144 @@
+# 物語完結型ショート 加藤清正 s4（2026-11-19）。本編 scripts/kiyomasa-story.yaml（11/24 19:00 公開予定、https://youtu.be/BQ1dWj8_eRs）から。11/25 17:30 に予約。
+# 形式は uesugi_s1〜s5・ii_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード 加藤清正_facts_20261119.yaml）。
+# 絵：本編の AI 絵（out/story/kiyomasa/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：その年の『当代記』は清正の死を1行で書き、病名が無い。同じ月の堀尾吉晴には霍乱と書く。2年後に「好色の故、虚の病」（本編 第3章、kiyomasa-07・37・38・39）。
+# hook＝その年の記録はたった1行、病の名が無い（答えはこのショートの中：「肥後国加藤肥後守死去」）。
+# tease＝毒饅頭の話はいつ、どこから来たのか（答えは本編 第4章：1797年の大坂の芝居・1807年の浄瑠璃・1875年の団十郎、kiyomasa-41・42・46）。
+# 計算：1613−1611＝2年後。
+# 理解テスト：①加藤清正の死の記録の話 ②1611年の『当代記』と、2年後1613年の記事 ③清正の死は1行で病名なし、2年後に「好色のせいの虚の病」 ④唐瘡の名は幸長で、清正本人には付いていない
+title: "加藤清正｜記録はたった1行"
+yt_title: "加藤清正の死を、その年の記録は、たった1行で書いた　病の名は無い　2年後の記事に出てくる「虚の病」"
+description: |-
+  1611年6月24日、加藤清正は熊本で亡くなりました。当時の記録『当代記』のその日の記事は「肥後国加藤肥後守死去」の1行だけで、病の名はありません。同じ月に亡くなった堀尾吉晴には「霍乱」と病名まで書いています。
+  清正の病に触れるのは、2年後、1613年の記事です。浅野幸長の死を唐瘡（梅毒）と書いたあと、清正たちの死は「好色の故、虚の病」だという、と続けます。ただ、唐瘡の名が付いているのは幸長で、清正本人ではありません。
+  本編では、のちの病名の説と、毒の話がいつ広まったのかを、記録ごとに並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#加藤清正"
+- "#当代記"
+- "#戦国武将"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/kiyomasa
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kiyomasa_story_s4
+header:
+  tag: "加藤清正（死の記録）"
+  title: "その年の記録は、《たった1行》"
+now:
+- {at: "1611年6月24日", text: "1611年6月24日　熊本", point: 0}
+- {at: "1613年", text: "1613年　『当代記』", point: 1}
+timeline:
+- {label: "1611"}
+- {label: "1613"}
+shots:
+  K15_1:
+    kind: "ai"
+    file: "kiyomasa/main/K15.jpg"
+    focus: [0.45, 0.55]
+    move: "in"
+    must: "K15"
+  K11_2:
+    kind: "ai"
+    file: "kiyomasa/main/K11.jpg"
+    focus: [0.5, 0.45]
+    move: "left"
+    must: "K11"
+  K14_3:
+    kind: "ai"
+    file: "kiyomasa/main/K14.jpg"
+    focus: [0.7, 0.5]
+    move: "right"
+    must: "K14"
+  K15_4:
+    kind: "ai"
+    file: "kiyomasa/main/K15.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "K15"
+  K14_5:
+    kind: "ai"
+    file: "kiyomasa/main/K14.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "K14"
+  K05_6:
+    kind: "ai"
+    file: "kiyomasa/main/K05.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K05"
+  K15_7:
+    kind: "ai"
+    file: "kiyomasa/main/K15.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "K15"
+  K04_8:
+    kind: "ai"
+    file: "kiyomasa/main/K04.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "K04"
+  K19_9:
+    kind: "ai"
+    file: "kiyomasa/main/K19.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "K19"
+lines:
+  # fact: kiyomasa-07
+- 語り: "加藤清正の死を、その年の記録は、たった1行で書いた。病の名は、無い。"
+  shot: K15_1
+  tone: 強調
+  pause: 0.12
+  # fact: kiyomasa-17
+- 語り: "1611年6月24日。清正は、熊本で亡くなる。"
+  shot: K11_2
+  tone: 重い
+  pause: 0.12
+  # fact: kiyomasa-37, kiyomasa-07
+- 語り: "『当代記』という当時の記録の、その日の記事は、これだけ。肥後の国の、加藤肥後守、死去。"
+  shot: K14_3
+  tone: 重い
+  pause: 0.12
+  # fact: kiyomasa-37
+- 語り: "同じ月の17日、出雲の大名、堀尾吉晴の死には、霍乱と、病名まで書いてある。激しく吐いたり、下したりする病だ。"
+  shot: K15_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-38
+- 語り: "清正の病に触れるのは、2年後、1613年の記事だ。"
+  shot: K14_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-38, kiyomasa-39
+- 語り: "その年に死んだ浅野幸長の病を、『当代記』は、唐瘡、今の梅毒と書いた。"
+  shot: K05_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-38
+- 語り: "そして、こう続ける。おととしの清正たちの死は、ひとえに、好色のせいの、虚の病だ、という。"
+  shot: K15_7
+  tone: 重い
+  pause: 0.12
+  # fact: kiyomasa-39
+- 語り: "ただ、唐瘡の名が付いているのは、幸長だ。清正本人には、付いていない。虚の病が何を指すのか、記事は、それ以上を書かない。"
+  shot: K04_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第4章（kiyomasa-41・42・46）
+- 語り: "では、毒饅頭の話は、いつ、どこから来たのか。"
+  shot: K19_9
+  tone: 疑問
+  pause: 0.15

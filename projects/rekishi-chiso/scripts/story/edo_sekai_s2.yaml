@@ -1,0 +1,145 @@
+# 物語完結型ショート 江戸時代、世界はどうだった？ s2（2026-11-19）。本編 scripts/edo-sekai-story.yaml（11/24 12:00 公開予定、https://youtu.be/z6k-XcWaAq0）から。11/25 11:00 に予約。
+# 形式は ii_s1〜s5・uesugi_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact:（事実カード 江戸の世界くらべ_facts_20261119.yaml）だけ。
+# 絵：本編の AI 絵（out/story/edosekai/main/）の切り出しだけ。I14（江戸の呉服の大店）は本編で使っていない絵。新しい絵は作らない。
+# 切り口：1700年ごろの江戸・ロンドン・パリの人口（本編 第3章、edo-32・33・34・36）。
+# hook＝江戸はロンドンやパリより大きかったのか（答えはこのショートの中：100万の半分は武家の推計。ハンレーは大きかったと書き、都立図書館は難しいとする）。
+# tease＝150年後、江戸とロンドンはどうなっていたのか（答えは本編 第5章：1851年のロンドン236万、江戸の2倍あまり、edo-90）。
+# 計算：1700→1851＝151年→「およそ150年後」。
+# 理解テスト：①1700年ごろの江戸の町の大きさの話 ②ロンドン57万5千・パリ50万あまり、江戸は100万と言われてきた ③100万の中身は町人50万（1721年の調べ）＋武家50万（推計） ④ハンレーは大きかったと書き、都立図書館は正確には難しいとする
+title: "元禄の江戸｜ロンドンより大きかった？"
+yt_title: "1700年ごろの江戸は100万人、ロンドンは57万5千人　ただし江戸の半分は武家の推計　数え方を見ると世界一の町かはどうなる"
+description: |-
+  1700年のロンドンは、リグリーの推計でおよそ57万5千人。パリは50万人あまりとされます。江戸は、およそ100万人と言われてきました。
+  ただ、その中身は、1721年の調べで町人がおよそ50万人。残りの50万人は、武士とその家族の推計です。アメリカの研究者ハンレーは、1700年の江戸はどのヨーロッパの町より大きかったと書き、東京都立図書館は、正確に見積もるのは難しいとしています。
+  本編では、家康から慶喜までの260年を、同じ年の世界と並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#江戸時代"
+- "#元禄"
+- "#世界史"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は実在の人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/edosekai
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: edosekai_story_s2
+header:
+  tag: "元禄の江戸（1700年ごろ）"
+  title: "江戸は《ロンドン》より、大きかった？"
+now:
+- {at: "1700年ごろ", text: "1700年ごろ", point: 0}
+- {at: "1700年のロンドン", text: "1700年　ロンドン", point: 0}
+- {at: "およそ100万人", text: "1700年ごろ　江戸", point: 0}
+- {at: "1721年", text: "1721年　江戸", point: 1}
+- {at: "1800年代", text: "1800年代の初め", point: 2}
+timeline:
+- {label: "1700"}
+- {label: "1721"}
+- {label: "1800年代"}
+cards:
+  - type: versus
+    from: 残りの50万人は
+    until: アメリカの研究者
+    left: {tag: 町人（調べ）, big: 50万, dots: 5, color: blue}
+    right: {tag: 武家（推計）, big: 50万, dots: 5, color: red}
+    mid: ＋
+    text_y: 0.66
+shots:
+  I09_1:
+    kind: "ai"
+    file: "edosekai/main/I09.jpg"
+    focus: [0.45, 0.55]
+    move: "in"
+    must: "I09"
+  I12_2:
+    kind: "ai"
+    file: "edosekai/main/I12.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "I12"
+  I09_3:
+    kind: "ai"
+    file: "edosekai/main/I09.jpg"
+    focus: [0.3, 0.6]
+    move: "right"
+    must: "I09"
+  I14_4:
+    kind: "ai"
+    file: "edosekai/main/I14.jpg"
+    focus: [0.45, 0.55]
+    move: "left"
+    must: "I14"
+  I01_5:
+    kind: "ai"
+    file: "edosekai/main/I01.jpg"
+    focus: [0.6, 0.6]
+    move: "in"
+    must: "I01"
+  I09_6:
+    kind: "ai"
+    file: "edosekai/main/I09.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "I09"
+  I23_7:
+    kind: "ai"
+    file: "edosekai/main/I23.jpg"
+    focus: [0.45, 0.55]
+    move: "in"
+    must: "I23"
+  I31_8:
+    kind: "ai"
+    file: "edosekai/main/I31.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "I31"
+lines:
+  # fact: edo-32, edo-34
+- 語り: "1700年ごろの江戸は、ロンドンやパリより、大きな町だったのか。"
+  shot: I09_1
+  tone: 強調
+  pause: 0.12
+  # fact: edo-34, edo-36
+- 語り: "1700年のロンドンは、イギリスの歴史人口学者、リグリーの推計で、およそ57万5千人。パリは、50万人あまりとされる。"
+  shot: I12_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-32
+- 語り: "江戸は、およそ100万人。そう言われてきた。"
+  shot: I09_3
+  tone: 強調
+  pause: 0.12
+  # fact: edo-32
+- 語り: "ただ、中身を見ると、町人は、1721年の調べで、およそ50万人。"
+  shot: I14_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-32
+- 語り: "残りの50万人は、武士とその家族の推計だ。内閣府の報告書も、その50万人を、どう数えたのかは書いていない。"
+  shot: I01_5
+  tone: 重い
+  pause: 0.12
+  # fact: edo-34
+- 語り: "アメリカの研究者、ハンレーは、武家の数は推計だと断ったうえで、1700年の江戸は、どのヨーロッパの町より大きかった、と書いた。"
+  shot: I09_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-33
+- 語り: "一方、東京都立図書館は、当時の江戸の人口を、正確に見積もるのは難しい、とする。1800年代の初めの比べとして載せるのは、江戸が90万、ロンドンが86万だ。"
+  shot: I23_7
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第5章（edo-90）
+- 語り: "では、およそ150年後。江戸とロンドンは、どうなっていたのか。"
+  shot: I31_8
+  tone: 疑問
+  pause: 0.15
