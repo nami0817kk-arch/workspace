@@ -46,6 +46,7 @@ import '../logic/board_target_progress.dart';
 import '../models/club_vision.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
+import '../widgets/rumor_card.dart';
 import '../logic/economy_scale.dart';
 
 /// 移籍オファーを選手ごとにグループ化し、各グループ内は金額の高い順に並べる
@@ -451,6 +452,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               if (gameState.pendingOwnerEvent != null) const OwnerEventCard(),
               if (gameState.agmDemand != null) const AgmDemandCard(),
+              if (gameState.save?.pendingRumor != null) const RumorCard(),
               if (PreseasonTourCard.visible(gameState))
                 const PreseasonTourCard(),
               if (gameState.playersAwaitingSurgeryDecision.isNotEmpty)

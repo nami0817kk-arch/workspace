@@ -147,6 +147,9 @@ extension GameStateRivals on GameState {
     return [
       if (s.pendingOwnerEvent != null)
         Tr.pick('オーナーの判断を待つ出来事があります', 'An owner decision is waiting'),
+      if (s.pendingRumor != null)
+        Tr.pick('${s.pendingRumor![1]}の噂に、記者会見で答えていません',
+            'Answer the ${s.pendingRumor![1]} rumour at the press conference'),
       if (s.agmDemand != null)
         Tr.pick('株主の要求に答えていません', 'The shareholders want an answer'),
       if (s.incomingOffers.isNotEmpty)

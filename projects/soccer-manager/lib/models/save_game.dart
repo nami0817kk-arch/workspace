@@ -317,6 +317,12 @@ class SaveGame {
   String clubCulture;
   int clubCultureChangedSeason;
 
+  /// 移籍の噂(記者会見で答えを待っているもの)。[選手 id, 選手名, クラブ名]。
+  List<String>? pendingRumor;
+
+  /// 記者会見で「売らない」と言った選手と、その季(選手 id → 季)。
+  Map<String, int> rumorDenied;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -625,6 +631,8 @@ class SaveGame {
     List<String>? distressedClubIds,
     this.clubCulture = 'none',
     this.clubCultureChangedSeason = 0,
+    this.pendingRumor,
+    Map<String, int>? rumorDenied,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -766,6 +774,7 @@ class SaveGame {
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
         playerBook = playerBook ?? {},
+        rumorDenied = rumorDenied ?? {},
         clubCash = clubCash ?? {},
         distressedClubIds = distressedClubIds ?? [],
         buyBacks = buyBacks ?? {},
@@ -917,6 +926,8 @@ class SaveGame {
         if (clubCulture != 'none') 'clubCulture': clubCulture,
         if (clubCultureChangedSeason > 0)
           'clubCultureChangedSeason': clubCultureChangedSeason,
+        if (pendingRumor != null) 'pendingRumor': pendingRumor,
+        if (rumorDenied.isNotEmpty) 'rumorDenied': rumorDenied,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1114,6 +1125,11 @@ class SaveGame {
         clubCulture: json['clubCulture'] as String? ?? 'none',
         clubCultureChangedSeason:
             json['clubCultureChangedSeason'] as int? ?? 0,
+        pendingRumor: (json['pendingRumor'] as List?)
+            ?.map((e) => e as String)
+            .toList(),
+        rumorDenied: (json['rumorDenied'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),

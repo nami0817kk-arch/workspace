@@ -56,6 +56,8 @@ extension GameStateMoneyRules on GameState {
   /// 市場価値の7割で手放す「放出」には、連帯貢献金はかからない。
   void _onPlayerSold(Player player, int salePrice) {
     final s = _save!;
+    // 記者会見で「売らない」と言った季に売ると、サポーターが怒る。
+    _checkBrokenRumorPromise(player);
     {
       final pay = solidarityFor(player, salePrice);
       if (pay > 0) {
