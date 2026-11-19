@@ -305,6 +305,8 @@ class SaveGame {
   Map<String, String> injuryPlans;
   /// 育成の方針(YouthPolicy の name)。
   String youthPolicy;
+  /// 買い戻し条項(選手 id → [買い戻しの額, 期限の年])。
+  Map<String, List<int>> buyBacks;
 
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
@@ -607,6 +609,7 @@ class SaveGame {
     Map<String, String>? injuryPlans,
     this.youthPolicy = 'balanced',
     this.frontPageHeadline,
+    Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
     this.parachuteFromTier = 0,
     this.parachuteSeasonsLeft = 0,
@@ -744,6 +747,7 @@ class SaveGame {
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
         playerBook = playerBook ?? {},
+        buyBacks = buyBacks ?? {},
         injuryPlans = injuryPlans ?? {},
         rivalOwners = rivalOwners ?? [],
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
@@ -886,6 +890,7 @@ class SaveGame {
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
+        if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
         if (rivalOwners.isNotEmpty)
           'rivalOwners': rivalOwners.map((r) => r.toJson()).toList(),
@@ -1069,6 +1074,8 @@ class SaveGame {
             ?.map((k, v) => MapEntry(k as String, v as String)),
         youthPolicy: json['youthPolicy'] as String? ?? 'balanced',
         frontPageHeadline: json['frontPageHeadline'] as String?,
+        buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
+            k as String, [for (final e in (v as List)) e as int])),
         frontPageQuote: json['frontPageQuote'] as String?,
         parachuteFromTier: json['parachuteFromTier'] as int? ?? 0,
         parachuteSeasonsLeft: json['parachuteSeasonsLeft'] as int? ?? 0,

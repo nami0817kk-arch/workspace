@@ -1105,6 +1105,9 @@ class Player {
   /// 買取オプションがない通常のローンの場合はnull。
   int? loanBuyOptionFee;
 
+  /// ローンに買取義務が付いているか(満了すると必ず買い取る)。
+  bool loanObligation;
+
   /// リリース条項(解放金額、万円)。設定されている場合、他クラブがこの金額を
   /// 提示すると交渉なしで自動的に移籍が成立する。未設定はnull。
   int? releaseClause;
@@ -1296,6 +1299,7 @@ class Player {
     this.isLoan = false,
     this.loanWeeksRemaining = 0,
     this.loanBuyOptionFee,
+    this.loanObligation = false,
     this.releaseClause,
     this.internationalDutyWeeksRemaining = 0,
     this.onTournamentLeave = false,
@@ -1597,6 +1601,7 @@ class Player {
     put('isLoan', isLoan, false);
     put('loanWeeksRemaining', loanWeeksRemaining, 0);
     put('loanBuyOptionFee', loanBuyOptionFee, null);
+    put('loanObligation', loanObligation, false);
     put('releaseClause', releaseClause, null);
     put('internationalDutyWeeksRemaining', internationalDutyWeeksRemaining, 0);
     put('onTournamentLeave', onTournamentLeave, false);
@@ -1717,6 +1722,7 @@ class Player {
       isLoan: json['isLoan'] as bool? ?? false,
       loanWeeksRemaining: json['loanWeeksRemaining'] as int? ?? 0,
       loanBuyOptionFee: json['loanBuyOptionFee'] as int?,
+      loanObligation: json['loanObligation'] as bool? ?? false,
       releaseClause: json['releaseClause'] as int?,
       internationalDutyWeeksRemaining:
           json['internationalDutyWeeksRemaining'] as int? ?? 0,

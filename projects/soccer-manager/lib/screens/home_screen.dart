@@ -1361,6 +1361,18 @@ class HomeScreen extends StatelessWidget {
             onPressed: () => Navigator.pop(ctx),
             child: Text(Tr.pick('キャンセル', 'Cancel')),
           ),
+          if (!offer.viaReleaseClause)
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                FeedbackService.success();
+                context
+                    .read<GameState>()
+                    .acceptIncomingOfferWithBuyBack(offer.id);
+              },
+              child: Text(Tr.pick('買い戻し条項付きで承諾(売値-10%)',
+                  'Accept with a buy-back clause (-10%)')),
+            ),
           FilledButton(
             onPressed: () {
               Navigator.pop(ctx);
