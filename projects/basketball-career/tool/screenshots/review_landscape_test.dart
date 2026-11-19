@@ -574,7 +574,11 @@ void main() {
       await settle(t);
     });
     // 夏の過ごし方(サマーリーグを開いたあと)
-    await _shoot(t, '15e_summer', await _with(toContracts()), act: (t) async {
+    final summerCar = toContracts();
+    for (final (i, p) in [for (final p in summerCar.me.roster) if (!summerCar.expiring.contains(p.id)) p].take(2).indexed) {
+      summerCar.setCamp(p.id, i == 0 ? Attr.outside : Attr.defense);
+    }
+    await _shoot(t, '15e_summer', await _with(summerCar), act: (t) async {
       final play = find.byKey(const Key('summer-play'));
       await t.scrollUntilVisible(play, 200, scrollable: progress);
       await t.tap(play);

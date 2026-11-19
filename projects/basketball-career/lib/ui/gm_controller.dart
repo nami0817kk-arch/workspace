@@ -320,6 +320,9 @@ class GmController extends ChangeNotifier {
   }
   void exerciseOption(int id) => _act((c) => c.exerciseOption(id));
 
+  /// 夏の個人練習で伸ばす能力を決める(null で外す)。
+  void setCamp(int id, Attr? a) => _act((c) => c.setCamp(id, a));
+
   /// サマーリーグを開く(オフの契約の時期に1回)。
   void playSummerLeague() {
     _act((c) => c.playSummerLeague());

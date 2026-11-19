@@ -971,6 +971,66 @@ class Career {
     return null;
   }
 
+  // ---------------------------------------------------------------- 夏の個人練習
+
+  /// 夏の個人練習(選手の id → 伸ばす能力)。オフを終えるときに結果が出て、空になる。
+  Map<int, Attr> camp = {};
+
+  /// 個人練習の枠(練習施設の段階＋1。2〜4人)。
+  int get campSlots => facilityLevel(Facility.training) + 1;
+
+  /// 個人練習に選べない理由(選べるなら null)。
+  String? campProblem(Player p) {
+    if (phase != Phase.contracts) return '個人練習はオフの契約の時期だけ';
+    if (!me.roster.contains(p) && !me.twoWay.contains(p)) return '自分のチームの選手だけ';
+    if (expiring.contains(p.id)) return '契約が切れた選手は選べない(再契約してから)';
+    if (!camp.containsKey(p.id) && camp.length >= campSlots) return '枠がいっぱい(練習施設を上げると増える)';
+    return null;
+  }
+
+  /// 個人練習で伸ばす能力を決める([a] が null なら外す)。
+  void setCamp(int id, Attr? a) {
+    final p = [...me.roster, ...me.twoWay].where((x) => x.id == id).firstOrNull;
+    if (p == null) return;
+    if (a == null) {
+      camp = {...camp}..remove(id);
+      return;
+    }
+    if (campProblem(p) != null) return;
+    camp = {...camp, id: a};
+  }
+
+  /// 個人練習の結果を出す(オフを終えるとき)。リーグの乱数は使わない(選んでいなければ何も変わらない)。
+  /// 若手(25歳まで)は伸びやすく、30歳を過ぎた選手は衰えを取り戻すことがある。選んだ能力はどの年でも上がる。
+  void _runCamp() {
+    if (camp.isEmpty) return;
+    final r = Rng(seed * 6151 + season * 389 + 3);
+    final lines = <String>[];
+    for (final e in camp.entries) {
+      final p = [...me.roster, ...me.twoWay].where((x) => x.id == e.key).firstOrNull;
+      if (p == null) continue;
+      final a = e.value;
+      final up = p.age <= 25 ? 2 : p.age <= 30 ? 2 : 1;
+      p.attrs[a.index] = math.min(p.attrs[a.index] + up, 15);
+      final chance = p.age <= 25
+          ? (p.ovr < p.pot ? 0.5 : 0.1)
+          : p.age <= 30
+              ? (p.ovr < p.pot ? 0.3 : 0.12)
+              : 0.35;
+      final grew = r.chance(chance);
+      if (grew) {
+        p.ovr = (p.ovr + 1).clamp(35, 99);
+        if (p.pot < p.ovr) p.pot = p.ovr;
+        p.lastDelta += 1;
+      }
+      p.morale = (p.morale + 3).clamp(0, 100);
+      lines.add('${p.name}(${p.age}歳): ${a.label}+$up${grew ? '・OVR+1' : ''}');
+    }
+    camp = {};
+    if (lines.isEmpty) return;
+    _mail(Sender.staff, '夏の個人練習の結果', '${lines.join('\n')}\n練習に付き合ってもらった選手は、気持ちが少し上がった。');
+  }
+
   /// サマーリーグを開く。若手が4試合に出て、出来が良いと少し伸び、気持ちが上がる。出た選手は性格が分かる。
   /// リーグの乱数は使わない(押さなければ、何も変わらない)。
   void playSummerLeague() {
@@ -3723,6 +3783,7 @@ class Career {
       nextFaDay();
     }
     if (sheet != null) declineSheet();
+    _runCamp();
     bids = {};
     _aiFreeAgency();
     for (final t in teams) {
@@ -4338,6 +4399,7 @@ class Career {
         if (summerSeason != 0) 'sms': summerSeason,
         if (summer.isNotEmpty) 'sml': [for (final x in summer) x.toJson()],
         if (summerWins != 0) 'smw': summerWins,
+        if (camp.isNotEmpty) 'cmp': {for (final e in camp.entries) '${e.key}': e.value.index},
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
         'hy': hype,
@@ -4472,6 +4534,10 @@ class Career {
       ..summerSeason = (j['sms'] as int?) ?? 0
       ..summer = [for (final x in (j['sml'] as List? ?? const [])) SummerLine.fromJson((x as Map).cast<String, dynamic>())]
       ..summerWins = (j['smw'] as int?) ?? 0
+      ..camp = {
+        for (final e in ((j['cmp'] as Map?) ?? const {}).entries)
+          if (e.value is int && (e.value as int) >= 0 && (e.value as int) < Attr.values.length) int.parse(e.key as String): Attr.values[e.value as int]
+      }
       ..rfa = [for (final x in (j['rf'] as List? ?? const [])) x as int]
       ..sheet = j['sh'] is List ? [for (final x in j['sh'] as List) x as int] : null
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
