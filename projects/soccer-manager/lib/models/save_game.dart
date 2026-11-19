@@ -19,6 +19,7 @@ import 'youth_league.dart';
 import 'player.dart';
 import 'pre_contract.dart';
 import 'transfer_talk.dart';
+import 'sd_brief.dart';
 import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
@@ -263,6 +264,12 @@ class SaveGame {
 
   /// 監督の立場(0〜100)。目標を下回る節が続くと下がる。
   int managerStanding;
+
+  /// SD に渡している補強の方針。
+  SdBrief sdBrief;
+
+  /// SD がこの窓で取った人数(窓が閉じると 0 に戻る)。
+  int sdSignedThisWindow;
 
   /// 今季、監督の立場が危ういと報じたか(1季に1回だけ報じる)。
   bool managerWarned;
@@ -520,6 +527,8 @@ class SaveGame {
     this.boardTargetRank = 4,
     this.managerTargetRank = 0,
     this.managerStanding = 60,
+    SdBrief? sdBrief,
+    this.sdSignedThisWindow = 0,
     this.managerWarned = false,
     this.confidence = 60,
     this.shareholderExpectation = 60,
@@ -642,6 +651,7 @@ class SaveGame {
     this.unpaidWagesNoticeGiven = false,
   })  : preContracts = preContracts ?? [],
         transferTalks = transferTalks ?? [],
+        sdBrief = sdBrief ?? SdBrief(),
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
@@ -760,6 +770,8 @@ class SaveGame {
         'boardTargetRank': boardTargetRank,
         if (managerTargetRank > 0) 'managerTargetRank': managerTargetRank,
         'managerStanding': managerStanding,
+        'sdBrief': sdBrief.toJson(),
+        if (sdSignedThisWindow > 0) 'sdSignedThisWindow': sdSignedThisWindow,
         if (managerWarned) 'managerWarned': true,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
@@ -915,6 +927,10 @@ class SaveGame {
         boardTargetRank: json['boardTargetRank'] as int? ?? 4,
         managerTargetRank: json['managerTargetRank'] as int? ?? 0,
         managerStanding: json['managerStanding'] as int? ?? 60,
+        sdBrief: json['sdBrief'] is Map
+            ? SdBrief.fromJson((json['sdBrief'] as Map).cast<String, dynamic>())
+            : null,
+        sdSignedThisWindow: json['sdSignedThisWindow'] as int? ?? 0,
         managerWarned: json['managerWarned'] as bool? ?? false,
         confidence: json['confidence'] as int? ?? 60,
         shareholderExpectation: json['shareholderExpectation'] as int? ?? 60,

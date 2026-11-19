@@ -28,7 +28,7 @@ extension GameStateTalks on GameState {
     if (club == null) return p.marketValue;
     final top = [...club.players]
       ..sort((a, b) => b.overall.compareTo(a.overall));
-    return TransferTalkEngine.askingPrice(
+    final asking = TransferTalkEngine.askingPrice(
       marketValue: p.marketValue,
       keyPlayer: top.take(3).any((q) => q.id == p.id),
       starter: club.startingXI.contains(p.id),
@@ -36,6 +36,7 @@ extension GameStateTalks on GameState {
       age: p.age,
       potentialGap: p.potential - p.overall,
     );
+    return (asking * sdPriceFactor).round();
   }
 
   /// 移籍金[bid]を提示する(新しく申し込む、または対案に出し直す)。
@@ -43,6 +44,15 @@ extension GameStateTalks on GameState {
   /// 申し込めなければ false(理由は[lastSigningBlockReason])。
   Future<bool> openTransferTalk(String playerId, int bid,
       {bool installments = false}) async {
+    final ok = _openTalkCore(playerId, bid, installments: installments);
+    if (ok) {
+      _notify();
+      await _persist();
+    }
+    return ok;
+  }
+
+  bool _openTalkCore(String playerId, int bid, {bool installments = false}) {
     if (_save == null) return false;
     lastSigningBlockReason = null;
     if (!isTransferWindowOpen) {
@@ -109,8 +119,6 @@ extension GameStateTalks on GameState {
             '$clubに${player.name}の移籍金として${formatMoney(bid)}を提示した(${installments ? '分割' : '一括'})。返事は${TransferWindowCalendar.formatMonthDay(replyOn)}ごろ。',
             'Bid ${formatMoney(bid)} to $club for ${player.name} (${installments ? 'in instalments' : 'up front'}). Expect a reply around ${TransferWindowCalendar.formatMonthDay(replyOn)}.'),
         context: Tr.pick('移籍', 'Transfer'));
-    _notify();
-    await _persist();
     return true;
   }
 
@@ -122,6 +130,15 @@ extension GameStateTalks on GameState {
 
   /// 相手の対案をのむ(その条件で合意する)。
   Future<bool> acceptTalkCounter(String playerId) async {
+    final ok = _acceptCounterCore(playerId);
+    if (ok) {
+      _notify();
+      await _persist();
+    }
+    return ok;
+  }
+
+  bool _acceptCounterCore(String playerId) {
     final t = talkFor(playerId);
     if (t == null || t.stage != TransferTalkStage.countered) return false;
     if (!isTransferWindowOpen) return false;
@@ -134,8 +151,6 @@ extension GameStateTalks on GameState {
         Tr.pick('${t.clubName}の対案(${formatMoney(t.fee)})をのみ、${t.playerName}の移籍で合意した。',
             'Accepted ${t.clubName}\'s terms (${formatMoney(t.fee)}) for ${t.playerName}.'),
         context: Tr.pick('移籍', 'Transfer'));
-    _notify();
-    await _persist();
     return true;
   }
 
@@ -189,6 +204,21 @@ extension GameStateTalks on GameState {
     required int endYear,
     int signingBonus = 0,
   }) async {
+    final out = _termsCore(playerId,
+        weeklyWage: weeklyWage, endYear: endYear, signingBonus: signingBonus);
+    if (out != TermsOutcome.blocked) {
+      _notify();
+      await _persist();
+    }
+    return out;
+  }
+
+  TermsOutcome _termsCore(
+    String playerId, {
+    required int weeklyWage,
+    required int endYear,
+    int signingBonus = 0,
+  }) {
     if (_save == null) return TermsOutcome.blocked;
     lastSigningBlockReason = null;
     final fa = _save!.freeAgents.where((p) => p.id == playerId).firstOrNull;
@@ -257,8 +287,6 @@ extension GameStateTalks on GameState {
       lastSigningBlockReason = refusal;
       _logNews(Tr.pick('${player.name}: $refusal', '${player.name}: $refusal'),
           context: ctx);
-      _notify();
-      await _persist();
       return TermsOutcome.refused;
     }
     var demand = PlayerTermsEngine.demand(
@@ -290,13 +318,9 @@ extension GameStateTalks on GameState {
             '${player.name}は条件に納得せず、話は流れました。',
             '${player.name} was not happy with the terms. The deal is off.');
         _logNews(lastSigningBlockReason!, context: ctx);
-        _notify();
-        await _persist();
         return TermsOutcome.refused;
       case TermsReplyKind.counter:
         t.demandWage = demand;
-        _notify();
-        await _persist();
         return TermsOutcome.counter;
       case TermsReplyKind.accept:
         break;
@@ -344,8 +368,6 @@ extension GameStateTalks on GameState {
                 '${player.name}が${t.clubName}から加入した(移籍金${formatMoney(fee)}・年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${signingBonus > 0 ? '・サイン料${formatMoney(signingBonus)}' : ''})。',
                 '${player.name} joined from ${t.clubName} (fee ${formatMoney(fee)}, ${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${signingBonus > 0 ? ', ${formatMoney(signingBonus)} signing bonus' : ''}).'),
         context: ctx);
-    _notify();
-    await _persist();
     return TermsOutcome.signed;
   }
 
@@ -353,6 +375,15 @@ extension GameStateTalks on GameState {
   /// 来たオファーへの対案の返事もここで受け取る。
   void _advanceTransferTalks(DateTime before, DateTime after) {
     if (_save == null) return;
+    _advanceTransferTalksInner(before, after);
+    if (!TransferWindowCalendar.isOpen(after, currentLeagueTheme)) {
+      _save!.sdSignedThisWindow = 0;
+    } else {
+      _runSportingDirector();
+    }
+  }
+
+  void _advanceTransferTalksInner(DateTime before, DateTime after) {
     final days = TransferWindowCalendar.daysBetween(before, after);
     _advanceIncomingCounters(after);
     final talks = _save!.transferTalks;
