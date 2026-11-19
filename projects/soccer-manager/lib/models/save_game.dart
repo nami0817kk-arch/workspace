@@ -486,6 +486,12 @@ class SaveGame {
   /// GameState側で上限管理する。旧セーブには存在しないため空で補完する。
   List<NewsItem> newsLog;
 
+  /// これまでに積んだお知らせの数(増える一方)。未読の数を出すのに使う。
+  int newsTotal;
+
+  /// 受信箱を最後に開いたときの[newsTotal]。
+  int newsSeenTotal;
+
   /// 獲得したタイトルの履歴(リーグ優勝・カップ優勝など)。
   List<String> trophyHistory;
 
@@ -594,6 +600,8 @@ class SaveGame {
     Map<String, List<int>>? playerBook,
     this.planStartSeason = 0,
     List<RivalOwner>? rivalOwners,
+    this.newsTotal = 0,
+    this.newsSeenTotal = 0,
     this.planTargetTier = 0,
     this.planTargetValue = 0,
     this.planTargetStadium = 0,
@@ -863,6 +871,8 @@ class SaveGame {
         if (playerBook.isNotEmpty) 'playerBook': playerBook,
         if (rivalOwners.isNotEmpty)
           'rivalOwners': rivalOwners.map((r) => r.toJson()).toList(),
+        if (newsTotal > 0) 'newsTotal': newsTotal,
+        if (newsSeenTotal > 0) 'newsSeenTotal': newsSeenTotal,
         if (planStartSeason > 0) ...{
           'planStartSeason': planStartSeason,
           'planTargetTier': planTargetTier,
@@ -1041,6 +1051,8 @@ class SaveGame {
         parachuteSeasonsLeft: json['parachuteSeasonsLeft'] as int? ?? 0,
         playerBook: (json['playerBook'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
+        newsTotal: json['newsTotal'] as int? ?? 0,
+        newsSeenTotal: json['newsSeenTotal'] as int? ?? 0,
         rivalOwners: (json['rivalOwners'] as List?)
                 ?.map((e) =>
                     RivalOwner.fromJson((e as Map).cast<String, dynamic>()))

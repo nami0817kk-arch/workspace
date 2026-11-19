@@ -1229,6 +1229,14 @@ class HomeScreen extends StatelessWidget {
       gameState.lastBudgetCrisisWarning = null;
     }
 
+    // 通知を減らす: 注意でないもの(代表召集・出場給・満期など)は受信箱に
+    // 積むだけにして、画面には出さない。毎節ダイアログが出ると、本当に
+    // 見るべき注意が埋もれる。
+    for (final (text, isWarning) in messages) {
+      if (!isWarning) gameState.addInboxNote(text);
+    }
+    messages.removeWhere((m) => !m.$2);
+
     if (messages.isEmpty) return;
     if (messages.length == 1) {
       final (text, isWarning) = messages.first;
