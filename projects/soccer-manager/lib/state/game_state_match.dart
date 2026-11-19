@@ -1117,6 +1117,9 @@ extension GameStateMatch on GameState {
     if (f != null) {
       f.result = merged;
       _publishFrontPage(merged, f, lastMilestones);
+      // 優勝・昇格・降格が決まったか、カップの決勝を戦い終えたか。
+      _checkClinchMoments(f.matchday);
+      _checkCupFinalMoments();
       // クラブの文化に沿った試合なら、サポーターが喜ぶ。
       _applyCultureBonus(merged);
 

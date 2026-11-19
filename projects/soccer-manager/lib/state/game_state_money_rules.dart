@@ -56,6 +56,8 @@ extension GameStateMoneyRules on GameState {
   /// 市場価値の7割で手放す「放出」には、連帯貢献金はかからない。
   void _onPlayerSold(Player player, int salePrice) {
     final s = _save!;
+    // クラブ史上最高額の売却なら、画面いっぱいの1枚で見せる。
+    _checkRecordSale(player, salePrice);
     // 記者会見で「売らない」と言った季に売ると、サポーターが怒る。
     _checkBrokenRumorPromise(player);
     {
@@ -82,6 +84,8 @@ extension GameStateMoneyRules on GameState {
   /// 獲得した選手の簿価を付ける(移籍金を契約の年数で償却する)。
   void _recordPlayerBook(Player p, int fee) {
     if (fee <= 0) return;
+    // クラブ史上最高額の獲得なら、画面いっぱいの1枚で見せる。
+    _checkRecordSigning(p, fee);
     final years = max(1, p.contractEndYear - Player.contractClockYear + 1);
     _save!.playerBook[p.id] = [fee, Player.contractClockYear, years];
   }
