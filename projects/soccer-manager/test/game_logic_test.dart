@@ -15,6 +15,7 @@ import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/logic/contract_engine.dart';
 import 'package:soccer_manager/logic/dynamics_engine.dart';
 import 'package:soccer_manager/logic/relations_engine.dart';
+import 'package:soccer_manager/logic/squad_registration_engine.dart';
 import 'package:soccer_manager/logic/player_search.dart';
 import 'package:soccer_manager/logic/continental_cup_engine.dart';
 import 'package:soccer_manager/logic/cup_engine.dart';
@@ -3505,7 +3506,10 @@ void main() {
     await gameState.startNewGame('テストFC');
     expect(gameState.freeAgents, isNotEmpty);
 
-    final target = gameState.freeAgents.first;
+    // 登録の決まり(22歳以上の枠など)で取れない選手もいる。取れる選手で見る。
+    gameState.save!.wageBudget = 99999999;
+    final target = gameState.freeAgents.firstWhere(
+        (p) => SquadRegistration.canAdd(gameState.userTeam, p));
     final budgetBefore = gameState.save!.budget;
     final squadSizeBefore = gameState.userTeam.players.length;
 
@@ -8954,8 +8958,11 @@ void main() {
 
     // 上限を現在の週給総額ちょうどまで絞ると、どんな新加入も枠を超える。
     gameState.save!.wageBudget = gameState.weeklyWageBill;
-    final target = legacyMarket(gameState).first;
-    gameState.save!.budget = target.marketValue + 10000;
+    // 登録の決まりで止まる選手だと理由が違うので、加えられる選手で見る。
+    // 資金は代理人手数料(5%)の分も足りるようにする。
+    final target = legacyMarket(gameState)
+        .firstWhere((p) => SquadRegistration.canAdd(gameState.userTeam, p));
+    gameState.save!.budget = target.marketValue * 2 + 10000;
     final bought = await gameState.buyPlayer(target.id);
     expect(bought, isFalse);
     expect(gameState.lastSigningBlockReason, contains('給与予算'));

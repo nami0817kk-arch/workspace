@@ -72,7 +72,8 @@ void main() {
             reason: p.name);
         expect(p.birthdaysBetween(start, gs.today), lessThanOrEqualTo(1));
       }
-      expect(foreign.age, foreignAge + 1);
+      // 他の国の選手も、通った誕生日の数だけ歳を取る。
+      expect(foreign.age, foreignAge + foreign.birthdaysBetween(start, gs.today));
     });
   });
 
