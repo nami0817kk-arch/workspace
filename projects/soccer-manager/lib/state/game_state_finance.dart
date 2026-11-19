@@ -521,6 +521,7 @@ extension GameStateFinance on GameState {
     save.pendingJobOfferTeamId = null;
     save.confidence = 60;
     save.shareholderExpectation = 60;
+    _settleOwnerLoanOnClubChange();
     save.ownerShare = 100;
     save.budget = (scaledMoney(GameState.initialBudgetTier5) *
             save.difficulty.initialBudgetFactor)
@@ -635,6 +636,7 @@ extension GameStateFinance on GameState {
     save.declinedProposalIds = [];
     save.confidence = 60;
     save.shareholderExpectation = 60;
+    _settleOwnerLoanOnClubChange();
     save.ownerShare = 100;
     save.budget = (scaleMoneyForTier(startTier, GameState.initialBudgetTier5) *
             save.difficulty.initialBudgetFactor)

@@ -144,6 +144,8 @@ extension GameStateSeason on GameState {
     _advanceStaffMoves(before, d);
     // 選手の私生活の出来事(月ごと)。
     _rollLifeEvents(before, d);
+    // オーナーの本業の収入と、貸付の利息(月ごと)。
+    _advanceOwnerMoney(before, d);
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {

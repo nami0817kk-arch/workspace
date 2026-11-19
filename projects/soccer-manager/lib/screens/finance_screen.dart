@@ -18,6 +18,7 @@ import '../widgets/advisor_card.dart';
 import '../widgets/club_ranking_card.dart';
 import '../widgets/club_timeline_card.dart';
 import '../widgets/club_value_card.dart';
+import '../widgets/owner_wealth_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
 import '../widgets/project_card.dart';
@@ -302,6 +303,7 @@ class FinanceScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   _SponsorSection(gameState: gameState),
                   const EquityCard(),
+                  const OwnerWealthCard(),
                   const MediaDealsCard(),
 
               ],

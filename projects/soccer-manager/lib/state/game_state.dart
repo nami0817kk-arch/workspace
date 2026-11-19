@@ -149,6 +149,7 @@ part 'game_state_people.dart';
 part 'game_state_sd.dart';
 part 'game_state_staff_moves.dart';
 part 'game_state_life.dart';
+part 'game_state_owner.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }

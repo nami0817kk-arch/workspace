@@ -275,6 +275,16 @@ class SaveGame {
   /// 他のクラブから来ている、こちらのスタッフの引き抜きの話。
   List<StaffOffer> staffOffers;
 
+  /// オーナー個人の資産(万円)。-1 は「まだ決めていない」(旧セーブ。
+  /// GameState が初期資金の3倍で始める)。
+  int ownerWealth;
+
+  /// クラブがオーナーに借りている額(万円)。
+  int ownerLoanBalance;
+
+  /// オーナーが最後に出資した季(株主の喜びは1季に1回)。
+  int ownerInjectionSeason;
+
   /// 自クラブの選手の私生活の出来事(選手 id → 起きた出来事の印)。
   /// 結婚は1回だけ、ホームシックは1季に1回、のように重ならないために持つ。
   Map<String, List<String>> lifeEvents;
@@ -539,6 +549,9 @@ class SaveGame {
     this.sdSignedThisWindow = 0,
     List<StaffOffer>? staffOffers,
     Map<String, List<String>>? lifeEvents,
+    this.ownerWealth = -1,
+    this.ownerLoanBalance = 0,
+    this.ownerInjectionSeason = 0,
     this.managerWarned = false,
     this.confidence = 60,
     this.shareholderExpectation = 60,
@@ -787,6 +800,10 @@ class SaveGame {
         if (staffOffers.isNotEmpty)
           'staffOffers': staffOffers.map((o) => o.toJson()).toList(),
         if (lifeEvents.isNotEmpty) 'lifeEvents': lifeEvents,
+        if (ownerWealth >= 0) 'ownerWealth': ownerWealth,
+        if (ownerLoanBalance > 0) 'ownerLoanBalance': ownerLoanBalance,
+        if (ownerInjectionSeason > 0)
+          'ownerInjectionSeason': ownerInjectionSeason,
         if (managerWarned) 'managerWarned': true,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
@@ -946,6 +963,9 @@ class SaveGame {
             ? SdBrief.fromJson((json['sdBrief'] as Map).cast<String, dynamic>())
             : null,
         sdSignedThisWindow: json['sdSignedThisWindow'] as int? ?? 0,
+        ownerWealth: json['ownerWealth'] as int? ?? -1,
+        ownerLoanBalance: json['ownerLoanBalance'] as int? ?? 0,
+        ownerInjectionSeason: json['ownerInjectionSeason'] as int? ?? 0,
         lifeEvents: (json['lifeEvents'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as String])),
         staffOffers: (json['staffOffers'] as List?)
