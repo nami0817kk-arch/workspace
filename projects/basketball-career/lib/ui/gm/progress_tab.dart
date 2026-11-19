@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../gm/block_report.dart';
 import '../../gm/career.dart';
+import '../../gm/inbox.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../../gm/rating.dart';
@@ -1144,6 +1145,8 @@ class ProgressTab extends StatelessWidget {
   Widget _contractsGuide(Career car, int expiringCount) {
     final steps = <(bool, String, String)>[
       if (car.sheetPlayer != null) (false, 'オファーシートに答える', '下の「同じ条件で残す」か「見送る」を押す'),
+      if (car.inbox.where((m) => m.kind == MsgKind.offTalk && m.needsAnswer).length case final n when n > 0)
+        (false, '選手との面談に答える($n人)', '受信箱に、話をしたい選手から知らせが来ている。答えないままオフを終えると、考えを説明したことになる'),
       if (car.optionPending.isNotEmpty)
         (false, '新人の選択権を決める(${car.optionPending.length}人)', '「使う」なら契約が1年続く。「使わない」なら契約切れ'),
       if (expiringCount > 0)
