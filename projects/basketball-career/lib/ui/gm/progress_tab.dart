@@ -4,6 +4,7 @@ import '../../gm/block_report.dart';
 import '../../gm/career.dart';
 import '../../gm/inbox.dart';
 import '../../gm/league.dart';
+import '../../gm/personality.dart';
 import '../../gm/player.dart';
 import '../../gm/rating.dart';
 import '../../gm/summer.dart';
@@ -154,6 +155,7 @@ class ProgressTab extends StatelessWidget {
         ],
       ]),
       _ownerCard(car),
+      _card(key: const Key('mentor-card'), [..._mentorSection(context, car)]),
       ..._offerCard(context, car),
       _goalsCard(car),
       _moneyCard(car),
@@ -1106,7 +1108,79 @@ class ProgressTab extends StatelessWidget {
           ),
         ),
       ],
+      const Divider(height: 22),
+      ..._mentorSection(context, car),
     ]);
+  }
+
+  /// 若手の指導役(ベテラン1人を若手1人に付ける)。
+  List<Widget> _mentorSection(BuildContext context, Career car) {
+    final pair = car.mentor.length == 2
+        ? (car.me.roster.where((p) => p.id == car.mentor[0]).firstOrNull, car.me.roster.where((p) => p.id == car.mentor[1]).firstOrNull)
+        : (null, null);
+    final (vet, young) = pair;
+    return [
+      const Text('若手の指導役', style: TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 2),
+      const Text('ベテラン(29歳から)を1人、若手(24歳まで)に付ける。次のオフに若手が伸びやすくなり、ベテランは頼られて気持ちが上がる。リーダーや練習の虫だと効きやすく、問題児だと逆効果。',
+          style: TextStyle(color: GmColors.sub, fontSize: 12.5, height: 1.5)),
+      const SizedBox(height: 4),
+      if (vet != null && young != null)
+        Row(children: [
+          Expanded(child: fitText('${vet.name}(${vet.age}歳) → ${young.name}(${young.age}歳)', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
+          IconButton(
+            key: const Key('mentor-clear'),
+            tooltip: '外す',
+            visualDensity: VisualDensity.compact,
+            onPressed: c.busy ? null : c.clearMentor,
+            icon: const Icon(Icons.close_rounded, size: 18),
+          ),
+        ])
+      else
+        Align(
+          alignment: Alignment.centerLeft,
+          child: OutlinedButton.icon(
+            key: const Key('mentor-add'),
+            onPressed: c.busy ? null : () => _pickMentor(context, car),
+            icon: const Icon(Icons.handshake_rounded),
+            label: const Text('指導役を決める'),
+          ),
+        ),
+    ];
+  }
+
+  Future<void> _pickMentor(BuildContext context, Career car) async {
+    final vets = [for (final p in car.me.roster) if (car.mentorVet(p) && !(car.phase == Phase.contracts && car.expiring.contains(p.id))) p]
+      ..sort((a, b) => b.ovr.compareTo(a.ovr));
+    final youngs = [for (final p in car.me.roster) if (car.mentorYoung(p)) p]..sort((a, b) => (b.pot - b.ovr).compareTo(a.pot - a.ovr));
+    if (vets.isEmpty || youngs.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(vets.isEmpty ? '29歳からの選手がいない' : '24歳までの選手がいない')));
+      return;
+    }
+    String traits(Player p) => personalityKnown(p) ? '・${personalityOf(p).traits.map((t) => t.label).join('・')}' : '・性格はまだ分からない';
+    final vet = await showDialog<Player>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: const Text('指導役にするベテラン'),
+        children: [
+          for (final p in vets)
+            SimpleDialogOption(onPressed: () => Navigator.pop(ctx, p), child: Text('${p.name}(${p.pos.short}・${p.age}歳・OVR${shown(p.ovr)}${traits(p)})')),
+        ],
+      ),
+    );
+    if (vet == null || !context.mounted) return;
+    final young = await showDialog<Player>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: Text('${vet.name}が教える若手'),
+        children: [
+          for (final p in youngs)
+            SimpleDialogOption(onPressed: () => Navigator.pop(ctx, p), child: Text('${p.name}(${p.pos.short}・${p.age}歳・OVR${shown(p.ovr)}・伸びしろ${p.grade})')),
+        ],
+      ),
+    );
+    if (young == null) return;
+    c.setMentor(vet.id, young.id);
   }
 
   /// 個人練習に呼ぶ選手と、伸ばす能力を選ぶ。
