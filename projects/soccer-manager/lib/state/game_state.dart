@@ -50,6 +50,9 @@ import '../logic/manager_hr_engine.dart';
 import '../logic/transfer_talk_engine.dart';
 import '../logic/player_terms_engine.dart';
 import '../logic/relations_engine.dart';
+import '../logic/agm_engine.dart';
+import '../logic/projection_engine.dart';
+import '../logic/owner_history_engine.dart';
 import '../models/league_theme.dart';
 import '../models/player.dart';
 import '../models/player_season_stats.dart';
@@ -149,6 +152,9 @@ part 'game_state_people.dart';
 part 'game_state_sd.dart';
 part 'game_state_staff_moves.dart';
 part 'game_state_life.dart';
+part 'game_state_owner.dart';
+part 'game_state_agm.dart';
+part 'game_state_plan.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }

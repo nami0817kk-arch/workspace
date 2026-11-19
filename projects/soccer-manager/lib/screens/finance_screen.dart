@@ -18,6 +18,9 @@ import '../widgets/advisor_card.dart';
 import '../widgets/club_ranking_card.dart';
 import '../widgets/club_timeline_card.dart';
 import '../widgets/club_value_card.dart';
+import '../widgets/projection_card.dart';
+import '../widgets/owner_career_card.dart';
+import '../widgets/owner_wealth_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
 import '../widgets/project_card.dart';
@@ -179,6 +182,7 @@ class FinanceScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               children: [
                   const LedgerCard(),
+                  const ProjectionCard(),
                   if (save.pendingInstallments.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     Text(Tr.pick('分割払い残金', 'Instalments outstanding'),
@@ -302,6 +306,9 @@ class FinanceScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   _SponsorSection(gameState: gameState),
                   const EquityCard(),
+                  const OwnerWealthCard(),
+                  const FiveYearPlanCard(),
+                  const OwnerCareerCard(),
                   const MediaDealsCard(),
 
               ],
