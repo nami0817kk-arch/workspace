@@ -135,6 +135,8 @@ class ProgressTab extends StatelessWidget {
         const SizedBox(height: 10),
         _kv('いまの戦力', '30チーム中 $rank位'),
         if (car.declaredNow > 0) _kv('方針の宣言', Career.declareLabels[car.declaredNow], color: GmColors.gold),
+        if (car.sponsorNow > 0) _kv('スポンサー', Career.sponsorLabels[car.sponsorNow]),
+        if (car.namingSold) _kv('アリーナ', car.arenaName),
         if (car.forecastRank > 0)
           _kv('記者の予想', '${car.me.east ? '東' : '西'}地区 ${car.forecastRank}位${switch (car.forecastBet) { 1 => '(覆すと答えた)', 2 => '(妥当と答えた)', _ => '(受信箱で答えられる)' }}'),
         _kv('登録', '${car.me.roster.length}人($minRoster〜$maxRoster人)', color: car.me.roster.length > maxRoster ? GmColors.bad : null),

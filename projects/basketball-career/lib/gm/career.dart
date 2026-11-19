@@ -883,6 +883,20 @@ class Career {
       }
       return;
     }
+    if (m.kind == MsgKind.sponsor) {
+      if (m.season != season || phase != Phase.preseason) return;
+      sponsorDeal = choice >= 3 ? 0 : choice + 1;
+      sponsorSeason = season;
+      return;
+    }
+    if (m.kind == MsgKind.naming) {
+      if (choice == 0 && !namingSold) {
+        namingSold = true;
+        arenaName = '${_namingCompanies[(seed + m.season) % _namingCompanies.length]}アリーナ';
+        hype = (hype - 4).clamp(0, 100);
+      }
+      return;
+    }
     if (m.kind == MsgKind.declare) {
       if (m.season != season || phase != Phase.preseason) return;
       final before = declaredNow;
@@ -1009,6 +1023,8 @@ class Career {
       case MsgKind.offRetire:
       case MsgKind.forecast:
       case MsgKind.declare:
+      case MsgKind.sponsor:
+      case MsgKind.naming:
       case MsgKind.info:
       case MsgKind.press:
       case MsgKind.ownerGoal:
@@ -1181,6 +1197,75 @@ class Career {
           '約束すると気持ちは大きく上がるが、来季に守れないと本人とチームの気持ちが下がる。説明が通じるかは、これまで約束を守ってきたか(言葉の重み)で決まる。',
           kind: MsgKind.offTalk, choices: const ['来季は先発で使うと約束する', 'トレード先を探すと約束する', 'チームの考えを説明する'], player: p.id);
     }
+  }
+
+  // ---------------------------------------------------------------- スポンサー契約と命名権
+
+  /// 今シーズンのスポンサー契約(0: なし、1: 決まった額、2: 勝ち数で上乗せ、3: プレーオフで上乗せ)と、結んだシーズン。
+  int sponsorDeal = 0;
+  int sponsorSeason = 0;
+
+  int get sponsorNow => sponsorSeason == season ? sponsorDeal : 0;
+
+  /// スポンサーの額の単位(10万ドル)。
+  int get sponsorUnit => (baseIncome * 0.06).round();
+
+  /// 契約ごとの(はじめから入る額, 条件を満たすと上乗せされる額)。
+  (int, int) sponsorTerms(int deal) => switch (deal) {
+        1 => (sponsorUnit, 0),
+        2 => ((sponsorUnit * 0.4).round(), (sponsorUnit * 1.4).round()),
+        3 => ((sponsorUnit * 0.2).round(), (sponsorUnit * 2.2).round()),
+        _ => (0, 0),
+      };
+
+  static const sponsorLabels = ['なし', '決まった額', '勝ち数で上乗せ', 'プレーオフで上乗せ'];
+
+  /// アリーナの命名権を売ったか、と今の名前。
+  bool namingSold = false;
+  String arenaName = '';
+
+  /// 命名権で毎シーズン入る額(10万ドル)。
+  int get namingIncome => (sponsorUnit * 0.8).round();
+
+  static const _namingCompanies = ['ソラリ通信', 'カザミ電機', 'ナギサ食品', 'ハヤテ自動車', 'ミナモ銀行', 'ツバサ航空', 'イブキ製薬'];
+
+  /// シーズン前の、スポンサーと命名権の申し出(乱数は使わない)。
+  void _askSponsor() {
+    final (a, _) = sponsorTerms(1);
+    final (b0, b1) = sponsorTerms(2);
+    final (c0, c1) = sponsorTerms(3);
+    _mail(Sender.owner, '$season年目のスポンサーの申し出',
+        '3社から申し出が来ている。開幕までに1つ選ぶ(答えなければ断ったことになる)。\n'
+        '・決まった額: ${money(a)}\n'
+        '・勝ち数で上乗せ: ${money(b0)}、勝ち数の目標に届けば${money(b1)}を上乗せ\n'
+        '・プレーオフで上乗せ: ${money(c0)}、プレーオフに出れば${money(c1)}を上乗せ\n'
+        '入るのはシーズンの終わり(収支に入る)。',
+        kind: MsgKind.sponsor, choices: const ['決まった額', '勝ち数で上乗せ', 'プレーオフで上乗せ', '断る']);
+    if (!namingSold && season >= 2 && season % 3 == 2) {
+      final company = _namingCompanies[(seed + season) % _namingCompanies.length];
+      _mail(Sender.owner, 'アリーナの命名権を買いたいという会社がある',
+          '$companyが、アリーナの名前を「$companyアリーナ」にしたいと言っている。\n'
+          '売ると毎シーズン${money(namingIncome)}が入る(ずっと続く)。ただ、古くからのファンは嫌がり、すぐ人気-4。売ったら戻せない。',
+          kind: MsgKind.naming, choices: const ['売る', '売らない']);
+    }
+  }
+
+  /// シーズンの終わりに、スポンサーと命名権の額を収入に入れる。
+  void _sponsorIncome(int res) {
+    final d = sponsorNow;
+    if (d != 0) {
+      final (base, bonus) = sponsorTerms(d);
+      final hit = switch (d) {
+        2 => me.wins >= target,
+        3 => res >= 1,
+        _ => false,
+      };
+      final v = base + (hit ? bonus : 0);
+      _earn(Income.sponsor, v);
+      _mail(Sender.owner, 'スポンサーから${money(v)}', '「${sponsorLabels[d]}」の契約。${bonus == 0 ? '' : hit ? '条件を満たし、上乗せが付いた。' : '条件に届かず、上乗せは無かった。'}');
+      sponsorDeal = 0;
+    }
+    if (namingSold) _earn(Income.sponsor, namingIncome);
   }
 
   // ---------------------------------------------------------------- 他チームからの電話
@@ -2279,6 +2364,8 @@ class Career {
     // 答えないまま開幕したら、宣言しないことにして閉じる
     for (final m in inbox) {
       if (m.kind == MsgKind.declare && m.needsAnswer) m.answer = 3;
+      if (m.kind == MsgKind.sponsor && m.needsAnswer) m.answer = 3;
+      if (m.kind == MsgKind.naming && m.needsAnswer) m.answer = 1;
     }
     revenue = 0;
     cupField = [];
@@ -2961,6 +3048,7 @@ class Career {
     if (me.payroll > taxLine) costs += ((me.payroll - taxLine) * 1.5).round();
     final poHome = playoffs.where((s) => s.round >= 1 && (s.high == mine || s.low == mine)).fold(0, (n, s) => n + (s.games.where((g) => g.home == mine).length));
     _earn(Income.playoffs, poHome * ((gatePerGame + concessionPerGame) * 1.5).round());
+    _sponsorIncome(res);
     lastProfit = profit;
     for (final g in goals) {
       g.met = goalOk(g);
@@ -4210,6 +4298,7 @@ class Career {
     _setModes();
     _makeForecast();
     _askDeclare();
+    _askSponsor();
   }
 
   void _aiFreeAgency() {
@@ -4813,6 +4902,8 @@ class Career {
         if (forecastBet != 0) 'fcb': forecastBet,
         if (declared != 0) 'dcl': [declared, declaredSeason],
         if (mentor.isNotEmpty) 'mnt': mentor,
+        if (sponsorDeal != 0) 'spd': [sponsorDeal, sponsorSeason],
+        if (namingSold) 'arn': arenaName,
         if (pitches.isNotEmpty) 'pch': {for (final e in pitches.entries) '${e.key}': e.value},
         if (calls.isNotEmpty) 'cal': [for (final o in calls) o.toJson()],
         if (camp.isNotEmpty) 'cmp': {for (final e in camp.entries) '${e.key}': e.value.index},
@@ -4956,6 +5047,10 @@ class Career {
       ..declared = j['dcl'] is List ? ((j['dcl'] as List)[0] as int).clamp(0, 3) : 0
       ..declaredSeason = j['dcl'] is List ? (j['dcl'] as List)[1] as int : 0
       ..mentor = [for (final x in (j['mnt'] as List? ?? const [])) x as int]
+      ..sponsorDeal = j['spd'] is List ? ((j['spd'] as List)[0] as int).clamp(0, 3) : 0
+      ..sponsorSeason = j['spd'] is List ? (j['spd'] as List)[1] as int : 0
+      ..namingSold = j['arn'] is String
+      ..arenaName = (j['arn'] as String?) ?? ''
       ..calls = [for (final x in (j['cal'] as List? ?? const [])) TradeOffer.fromJson(Map<String, dynamic>.from(x as Map))]
       ..pitches = {for (final e in ((j['pch'] as Map?) ?? const {}).entries) int.parse(e.key as String): ((e.value as int?) ?? 0).clamp(0, 2)}
       ..camp = {
