@@ -217,7 +217,12 @@ extension GameStateSquad on GameState {
   int facilityUpgradeCostFor(FacilityType type) {
     if (_save == null) return 0;
     final lvl = _save!.infrastructure.facilityLevel(type);
+    // 自治体の補助が下りていれば、スタジアムの増築は割り引かれる。
+    final subsidy = type == FacilityType.stadium
+        ? (100 - _save!.stadiumSubsidyPct) / 100
+        : 1.0;
     return (scaledMoney(ClubInfrastructure.facilityUpgradeCost(lvl)) *
+            subsidy *
             BudgetEngine.facilityCostMultiplier(_save!.budgetPlan) *
             PolicyEngine.facilityCostMultiplier(_save!.clubPolicy) *
             AdvisorEngine.facilityCostMultiplier(
@@ -309,6 +314,8 @@ extension GameStateSquad on GameState {
     if (_save!.budget < cost) return false;
     _book(LedgerCategory.facilities, -(cost));
     infra.upgradeFacility(type);
+    // 補助は1回の増築で使い切る。
+    if (type == FacilityType.stadium) _save!.stadiumSubsidyPct = 0;
     _notify();
     await _persist();
     return true;

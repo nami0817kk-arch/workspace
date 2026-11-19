@@ -776,6 +776,8 @@ extension GameStateFinance on GameState {
     // 下位ディビジョンほど観客動員が少ない(ティアごとに段階的に低下する)。
     factor *= pow(0.8, _save!.currentDivisionTier - 1).toDouble();
     factor *= _save!.ticketPricing.attendanceMultiplier;
+    // ファンの層の満足(上下5%まで)。
+    factor *= fanAttendanceModifier;
     return factor.clamp(0.0, 1.0);
   }
 

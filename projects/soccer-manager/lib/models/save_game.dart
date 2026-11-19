@@ -389,6 +389,10 @@ class SaveGame {
   /// 国の係数の履歴(LeagueTheme の name → 季ごとの点、古い順に5季まで)。
   Map<String, List<double>> countryCoefficients;
 
+  /// 自治体のスタジアムの補助(次の増築の割引%)と、最後に頼んだ季。
+  int stadiumSubsidyPct;
+  int municipalityAskSeason;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -729,6 +733,8 @@ class SaveGame {
     Map<String, String>? formerClubs,
     Map<String, List<int>>? formerClubStatus,
     Map<String, List<double>>? countryCoefficients,
+    this.stadiumSubsidyPct = 0,
+    this.municipalityAskSeason = 0,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -1054,6 +1060,9 @@ class SaveGame {
         if (formerClubStatus.isNotEmpty) 'formerClubStatus': formerClubStatus,
         if (countryCoefficients.isNotEmpty)
           'countryCoefficients': countryCoefficients,
+        if (stadiumSubsidyPct > 0) 'stadiumSubsidyPct': stadiumSubsidyPct,
+        if (municipalityAskSeason > 0)
+          'municipalityAskSeason': municipalityAskSeason,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1288,6 +1297,8 @@ class SaveGame {
         countryCoefficients: (json['countryCoefficients'] as Map?)?.map(
             (k, v) => MapEntry(k as String,
                 (v as List).map((e) => (e as num).toDouble()).toList())),
+        stadiumSubsidyPct: json['stadiumSubsidyPct'] as int? ?? 0,
+        municipalityAskSeason: json['municipalityAskSeason'] as int? ?? 0,
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),

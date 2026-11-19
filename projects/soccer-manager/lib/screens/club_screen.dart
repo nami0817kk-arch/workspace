@@ -17,6 +17,7 @@ import '../l10n/tr.dart';
 import '../models/staff_member.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/player_stat_chips.dart';
+import '../widgets/fan_segments_card.dart';
 import '../widgets/club_look_card.dart';
 import '../widgets/affiliate_card.dart';
 import '../widgets/club_license_card.dart';
@@ -248,6 +249,8 @@ class ClubScreen extends StatelessWidget {
               ),
             const SizedBox(height: 8),
             const ClubLicenseCard(),
+            const SizedBox(height: 8),
+            const FanSegmentsCard(),
             const SizedBox(height: 8),
             const ClubLookCard(),
             const SizedBox(height: 8),
