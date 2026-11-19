@@ -224,3 +224,28 @@ button.pitem{min-height:34px}
 
 /* 押すと説明が出る札（data-tip）。下に点線を引いて、押せることを見せる */
 [data-tip]{cursor:pointer;text-decoration:underline dotted rgba(0,0,0,.35);text-underline-offset:2px}
+/* 選手の概要（2026-11-19 FM の選手概要の形） */
+.overview{display:flex;flex-direction:column;gap:6px}
+.ovcols{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:start}
+.ovcol{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ovsec{background:#f5f8fd;border:1px solid var(--line);border-radius:10px;padding:6px 9px;min-width:0}
+.ovh{font-size:11px;font-weight:900;color:var(--navy);letter-spacing:.04em;margin-bottom:3px}
+.ovtext{font-size:12.5px;line-height:1.55;color:var(--ink)}
+.ovpc{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;margin-top:4px;font-size:12px}
+.ovpc .pro b{color:#1a9d57;margin-right:3px}.ovpc .con b{color:#d63a3a;margin-right:3px}
+.ovline{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:5px;padding-top:4px;border-top:1px dashed var(--line);font-size:12px}
+.ovdl{display:flex;flex-direction:column;gap:2px;font-size:12px}
+.ovrow{display:flex;gap:8px}.ovrow .k{width:44px;flex:none;color:var(--sub);font-weight:700}.ovrow .v{min-width:0;color:var(--ink)}
+.posmap{width:100%;max-width:190px;display:block;margin:2px auto 0}
+.ovnote{font-size:10.5px;color:var(--sub);display:flex;align-items:center;gap:3px;justify-content:center;margin-top:2px}
+.ovnote .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-left:5px}
+.dot.g1{background:#0f7a3d}.dot.g2{background:#7dd49b}.dot.g3{background:#f2c94c}
+.ovchips{display:flex;flex-wrap:wrap;gap:4px}
+.fit.mid{background:#eef2f8;color:var(--ink)}
+.chip.awk{background:linear-gradient(180deg,#f3e6ff,#d9b8ff);color:#4a1a7a;border:1px solid #a070d8;font-weight:900}
+.ovstats{display:flex;gap:4px}.ovstats>div{flex:1;text-align:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:2px 0}
+.ovstats b{display:block;font-size:15px;color:var(--navy);line-height:1.2}.ovstats small{font-size:10.5px;color:var(--sub);white-space:nowrap}
+.ovform{display:flex;gap:5px;align-items:flex-end;height:58px;margin-top:5px}
+.fbar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:10.5px}
+.fbar i{display:block;width:70%;border-radius:3px 3px 0 0;min-height:3px}
+.fbar span{font-weight:800;color:var(--ink)}.fbar small{color:var(--sub);font-size:10.5px;line-height:1}
