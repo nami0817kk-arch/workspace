@@ -42,9 +42,14 @@ class FixturesScreen extends StatelessWidget {
     // ユースリーグは有望株がいる年だけ存在する。順位表を見に来た流れで
     // 目に入るよう、ここにも置く(いままではユース画面からしか見られなかった)。
     final youthLeague = gameState.save!.youthLeague;
+    // 他国の1部の順位表。
+    final foreign = gameState.foreignLeagueTables;
 
     return DefaultTabController(
-      length: 2 + otherDivisions.length + (youthLeague == null ? 0 : 1),
+      length: 2 +
+          otherDivisions.length +
+          foreign.length +
+          (youthLeague == null ? 0 : 1),
       child: Scaffold(
         appBar: screenBar(
           context,
@@ -52,13 +57,15 @@ class FixturesScreen extends StatelessWidget {
           // いまは下タブ専用だが、スタメン・スカッドと同じ作り(ドロワーあり)
           // なので、どこかから開かれた瞬間に戻れなくなる。先に塞いでおく。
           leading: Navigator.of(context).canPop() ? const BackButton() : null,
-          scrollable: otherDivisions.isNotEmpty,
+          scrollable: otherDivisions.isNotEmpty || foreign.isNotEmpty,
           tabs: [
             Tr.pick('順位表', 'Table'),
             Tr.pick('日程', 'Fixtures'),
             for (final (tier, _) in otherDivisions)
               Tr.pick('$tier部順位表', 'Tier $tier table'),
             if (youthLeague != null) Tr.pick('ユース', 'Academy'),
+            // 他国の1部はユースの後ろ(タブの並びの最後)に置く。
+            for (final (name, _) in foreign) name,
           ],
           actions: [
             IconButton(
@@ -95,6 +102,12 @@ class FixturesScreen extends StatelessWidget {
                 ListView(
                   padding: const EdgeInsets.only(bottom: 16),
                   children: [YouthLeagueTable(league: youthLeague)],
+                ),
+              for (final (_, foreignLeague) in foreign)
+                _StandingsTab(
+                  league: foreignLeague,
+                  userTeamId: userTeamId,
+                  divisionTier: 1,
                 ),
             ],
           ),

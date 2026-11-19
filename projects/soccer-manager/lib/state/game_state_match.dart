@@ -637,6 +637,9 @@ extension GameStateMatch on GameState {
       }
     }
 
+    // 他国の1部も同じ節を裏で進める。
+    _playForeignMatchday(md);
+
     // 試合の日に入るのは観客・スポンサー・グッズ。放映権は年4回の入金日に、
     // 給与は毎月末に払う(MoneyCalendar)。
     final incomeParts = weeklyIncomeParts(_save!.userTeamId);
