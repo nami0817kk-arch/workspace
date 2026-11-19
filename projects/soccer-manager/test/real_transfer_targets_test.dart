@@ -25,7 +25,9 @@ void main() {
     for (final t in gs.save!.league.teams) {
       if (t.id == gs.save!.userTeamId) continue;
       for (final p in t.players) {
+        // 18歳未満と、労働許可の下りない外国籍の選手は除く(取れないため)。
         if (p.age < 18 || !targets.contains(p.id)) continue;
+        if (gs.workPermitBlock(p) != null) continue;
         if (best == null || p.marketValue < best.marketValue) {
           best = p;
           club = t;
