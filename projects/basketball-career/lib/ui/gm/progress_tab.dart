@@ -298,7 +298,7 @@ class ProgressTab extends StatelessWidget {
           Expanded(
             flex: 2,
             child: FilledButton.icon(
-              onPressed: c.busy ? null : () => _run(context, () => runSimTicker(context, c, next, '次の$next試合')),
+              onPressed: c.busy ? null : () => _run(context, () => runSimTicker(context, c, next, '次の$next試合', stops: false)),
               icon: const Icon(Icons.play_arrow_rounded),
               label: Text('次の$next試合へ'),
             ),

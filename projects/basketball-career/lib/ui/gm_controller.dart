@@ -220,8 +220,8 @@ class GmController extends ChangeNotifier {
 
   /// [n] 節を1節ずつ進める(区切りをまたいでよい)。1節ごとに [onRound] を待つ(画面が結果を流して見せる)。
   /// 申し込み・返事の要る知らせ・連敗/連勝に入った・疲れ・先発のけがで止まる(止まる場面の設定どおり)。
-  /// [simCancel] を立てると、その節で止まる。全画面広告の番は最初に1回だけ見る。
-  Future<BlockReport?> simRounds(int n, {Future<void> Function(List<GameResult> games)? onRound}) async {
+  /// [simCancel] を立てると、その節で止まる。[stops] が false なら止まる場面では止まらない(区切りを進めるボタン)。全画面広告の番は最初に1回だけ見る。
+  Future<BlockReport?> simRounds(int n, {Future<void> Function(List<GameResult> games)? onRound, bool stops = true}) async {
     final c = career;
     if (c == null || c.phase != Phase.season || busy || n <= 0) return null;
     await _maybeInterstitial();
@@ -245,6 +245,7 @@ class GmController extends ChangeNotifier {
       if (onRound != null) await onRound(got);
       if (c.phase != Phase.season || left == 1) break;
       if (simCancel) break;
+      if (!stops) continue;
       final reason = _stopReasonNew(c, asked, streak, tired);
       if (reason != null) {
         simStopReason = reason;
