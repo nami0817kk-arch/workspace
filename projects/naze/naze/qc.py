@@ -38,6 +38,66 @@ def _plain(s: str) -> str:
     return re.sub(r"[【】|\n、。，．,.「」『』・？！?!\s　（）()〜~…]", "", s)
 
 
+# ---- 2026-11-19 の作り直しの決まり(docs/writing.md の冒頭) -------------------------------------------------
+# この版より前の決まりで点検した結果では、投稿の関門(gate)を通さない。決まりを変えたら版を上げる。
+RULES = "2026-11-19"
+ANSWER_FROM = 0.7                       # ショート・単発の本編は、答えの行を後ろ 3 割に置く(冒頭で言わない)
+OPEN_KINDS = ("scene", "belief")        # 冒頭の 1 行目の印: 場面から入る / 見る人の思い込みから入る
+DAIBEN = re.compile(r"よね[。、]?\s*ええ|^ええ、|。ええ、|じゃないの[？?]|じゃない[？?]")   # 見る人の声の代弁(しない)
+LONG_MIN = 480.0                        # 本編は 8 分以上(long.py が見る)
+CUTS_MIN = 6.0                          # 絵の切り替え(1 分あたり)。伸びているチャンネル 8 本は 7〜12 回(2026-11-19 に数えた)
+
+
+def position(ep: dict) -> str:
+    """この台本が何か: short(縦)/ only(章の無い横)/ first・middle・last(本編の章)。"""
+    folder = ep.get("_folder")
+    if folder is not None and (Path(folder).parent / "long.py").exists():
+        src = (Path(folder).parent / "long.py").read_text(encoding="utf-8")
+        names = re.findall(r"ep\s*=\s*[\"']([^\"']+)[\"']", src)
+        if Path(folder).name in names:
+            i = names.index(Path(folder).name)
+            return "last" if i == len(names) - 1 else ("first" if i == 0 else "middle")
+    if folder is not None:
+        land = re.search(r"aspect\s*=\s*[\"']landscape", (Path(folder) / "ep.py").read_text(encoding="utf-8"))
+        return "only" if land else "short"
+    return "short" if ASPECT == "portrait" else "only"
+
+
+def rules(ep: dict) -> tuple[list, list]:
+    """台本だけで見られる決まり(声の前でも使える。`python -m naze lint` もこれを呼ぶ)。"""
+    fails, warns = [], []
+    body = [d for d in ep["lines"] if d.get("style") != "cta"]
+    if not body:
+        return ["台本が空"], []
+    pos = position(ep)
+    # 冒頭: 場面か思い込みから入る(答えや問いの言い切りから入らない)
+    if pos in ("short", "only", "first"):
+        o = body[0].get("open")
+        if o not in OPEN_KINDS:
+            fails.append(f"冒頭の印が無い [{body[0]['id']}] 1 行目に open=\"scene\"(場面)か open=\"belief\"(思い込み)を付ける(docs/writing.md)")
+        elif o == "belief" and not any(TWIST.search(d["text"]) for d in body[:5]):
+            fails.append("思い込みから入ったのに、5 行目までに「ところが・しかし・実は」で裏切っていない")
+    # 答え: 最後まで引っ張る
+    ans = [i for i, d in enumerate(body) if d.get("answer")]
+    if pos in ("first", "middle"):
+        if ans:
+            fails.append(f"本編の最後の章より前に答えがある [{body[ans[0]]['id']}](答えは最後の章で言う)")
+    else:
+        if not ans:
+            fails.append("答えの行に印が無い(答えを言う行に answer=True を付ける)")
+        elif pos in ("short", "only") and ans[0] < int(len(body) * ANSWER_FROM):
+            fails.append(f"答えが早い [{body[ans[0]]['id']}] {ans[0] + 1}/{len(body)} 行目(後ろ 3 割まで引っ張る)")
+    # 代弁はしない
+    for d in body:
+        if DAIBEN.search(d["text"]):
+            fails.append(f"見る人の声を代弁している [{d['id']}]「{d['text'][:24]}」(しない決まり)")
+    # 数字は身近な物に置き換える
+    whole = "".join(d["text"] for d in body)
+    if re.search(r"\d", whole) and not COMPARE.search(whole):
+        fails.append("数字を身近な物に置き換えていない(倍・個分・杯分・歩いて○分・〜と同じ など)")
+    return fails, warns
+
+
 def script(ep: dict, tl: dict) -> tuple[list, list]:
     fails, warns = [], []
     defs = {d["id"]: d for d in ep["lines"]}
@@ -63,11 +123,9 @@ def script(ep: dict, tl: dict) -> tuple[list, list]:
     nums = len(re.findall(r"\d+", whole))
     if nums / (dur_body / 60) < NUMS_PER_MIN:
         warns.append(f"数字が少ない {nums} 個({nums / (dur_body / 60):.1f}/分、目安 {NUMS_PER_MIN}/分)")
-    first = body[0]["text"]
-    if first.rstrip("。").endswith(("？", "?", "の")) and not re.search(r"\d", first):
-        warns.append("冒頭が問いだけ(意外な事実を数字つきで言い切ってから問う。docs/writing.md)")
-    if not COMPARE.search(whole):
-        warns.append("身近な比べが無い(倍・個分・歩いて○分 など)")
+    rf, rw = rules(ep)                    # 2026-11-19 の決まり(冒頭・答え・代弁・比べ)。冒頭の「数字で言い切る」と比べの △ はこちらに置き換えた
+    fails += rf
+    warns += rw
     if not TWIST.search(whole):
         warns.append("思い込みの切り返しが無い(普通は〜のはず、ところが〜)")
     last = ep.get("cta", True)            # 本編の途中の章(cta=False)には結びの型を求めない
@@ -77,9 +135,6 @@ def script(ep: dict, tl: dict) -> tuple[list, list]:
         warns.append("本編なのに伏線の回収が無い(〜を思い出してください)")
     if ASPECT == "portrait" and tl["total"] > 178:
         fails.append(f"ショートが長すぎる {tl['total']:.0f} 秒(3 分以内)")
-    first = tl["lines"][0]
-    if first["end"] > 4.0:
-        warns.append(f"最初の問いが長い(終わりが {first['end']:.1f} 秒。4 秒以内に)")
     return fails, warns
 
 
@@ -147,7 +202,10 @@ def picture(video: Path) -> tuple[list, list, dict]:
             run = 0
     cuts = int((d > 12).sum())
     minutes = len(g) / SAMPLE_FPS / 60
-    stats = dict(切り替え=cuts, 一分あたり=round(cuts / max(minutes, 1e-6), 1), 動いている割合=round(float((~still).mean()), 2))
+    per = cuts / max(minutes, 1e-6)
+    if minutes >= 0.5 and per < CUTS_MIN:
+        fails.append(f"絵の切り替えが少ない 1 分に {per:.1f} 回({CUTS_MIN:.0f} 回以上。文ごとに絵を替える。伸びているチャンネルは 7〜12 回)")
+    stats = dict(切り替え=cuts, 一分あたり=round(per, 1), 動いている割合=round(float((~still).mean()), 2))
     return fails, warns, stats
 
 
@@ -219,7 +277,7 @@ def run(ep: dict, out: Path, kind_mod, name: str) -> bool:
         pst = {**pst, **vst}
     sh = sheet(ep, tl, fr, out)
     st = video.stat()
-    res = dict(passed=not F, at=datetime.now().isoformat(timespec="seconds"), video=video.name, size=st.st_size, mtime=st.st_mtime,
+    res = dict(passed=not F, rules=RULES, at=datetime.now().isoformat(timespec="seconds"), video=video.name, size=st.st_size, mtime=st.st_mtime,
                fails=F, warns=Wn, stats={**pst, **sst, "長さ": round(tl["total"], 1)})
     (out / "qc.json").write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
     md = [f"# 点検 {name}({res['at']})", "", f"結果: {'通過' if res['passed'] else '✖ 通らない'}", "",
@@ -284,5 +342,7 @@ def gate(video: Path) -> None:
     st = video.stat()
     if r.get("video") != video.name or r.get("size") != st.st_size or abs(r.get("mtime", 0) - st.st_mtime) > 1:
         raise SystemExit("点検のあとで動画が変わっている: 点検し直す")
+    if r.get("rules") != RULES:
+        raise SystemExit(f"古い決まりで点検した結果({r.get('rules') or '版なし'}): 今の決まり {RULES} で点検し直す(docs/writing.md の冒頭)")
     if not r.get("passed"):
         raise SystemExit("点検に通っていない:\n" + "\n".join(r.get("fails", [])))

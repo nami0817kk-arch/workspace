@@ -15,7 +15,8 @@ description: 解説チャンネル「理の書」（YouTube @kotowari_no_sho、�
 - 台本: `docs/writing.md` の冒頭。**答えは冒頭で言わない**（下の「答えを一言」は古い）・冒頭は場面か思い込み・数字は身近な物に置き換える・代弁はしない
 - 画面: 実写の映像・写真に奥行き・立体の地形・AI の絵を同じ色の調整でつなぎ、文ごとに絵を替える（見本 `tools/look_sample.py`）
 - 声は剣崎雌雄、読み方そのまま、BGM なし
-- 新しい画面の仕組みと qc の直しは 2026-11-20 時点で未完成。作る前に状態を確かめる
+- **台本を書いたらすぐ `python -m naze lint episodes/<題材>`**。✖ を無くしてから見せる。印は 1 行目 `open="scene"|"belief"`、答えの行 `answer=True`（qc・long・upload も同じ決まりで止める）
+- 新しい画面の仕組みは 2026-11-20 時点で未完成。作る前に状態を確かめる
 
 
 チャンネル: [@kotowari_no_sho](https://www.youtube.com/@kotowari_no_sho)（運営：のこぎり社。2026-10-26 に旧 棒人間ストーリーを作り替えた）

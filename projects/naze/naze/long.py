@@ -104,15 +104,21 @@ def main(folder: Path, args) -> int:
     # 本編の点検: どの章も点検に通っていて、つないだ全体の音がそろっていること(upload の関門が qc.json を見る)
     import json
     from datetime import datetime
-    from .qc import sound
+    from .qc import LONG_MIN, RULES, sound
     fails = []
     for part in L["parts"]:
         q = OUT / f"{folder.name}_{part['ep']}" / "qc.json"
-        if not q.exists() or not json.loads(q.read_text(encoding="utf-8")).get("passed"):
+        r = json.loads(q.read_text(encoding="utf-8")) if q.exists() else {}
+        if not r.get("passed"):
             fails.append(f"章が点検に通っていない: {part['ep']}")
+        elif r.get("rules") != RULES:
+            fails.append(f"章を古い決まりで点検している: {part['ep']}(今の決まり {RULES} で qc し直す)")
+    total = _duration(ff, final)
+    if total < LONG_MIN:
+        fails.append(f"本編が短い {_stamp(total)}(8 分以上。行を足して伸ばさず、8 分に届かない題材は本編にしない)")
     _, warns, stats = sound(final)
     st = final.stat()
-    (out / "qc.json").write_text(json.dumps(dict(passed=not fails, at=datetime.now().isoformat(timespec="seconds"), video=final.name,
+    (out / "qc.json").write_text(json.dumps(dict(passed=not fails, rules=RULES, at=datetime.now().isoformat(timespec="seconds"), video=final.name,
                                                  size=st.st_size, mtime=st.st_mtime, fails=fails, warns=warns, stats=stats),
                                             ensure_ascii=False, indent=1), encoding="utf-8")
     print("点検", "通過" if not fails else "✖ " + " / ".join(fails), *warns)
