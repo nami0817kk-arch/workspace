@@ -51,6 +51,7 @@ import '../logic/transfer_talk_engine.dart';
 import '../logic/player_terms_engine.dart';
 import '../logic/relations_engine.dart';
 import '../logic/agm_engine.dart';
+import '../logic/projection_engine.dart';
 import '../models/league_theme.dart';
 import '../models/player.dart';
 import '../models/player_season_stats.dart';

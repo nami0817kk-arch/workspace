@@ -95,4 +95,38 @@ extension GameStateAgm on GameState {
     await _persist();
     return true;
   }
+
+  /// 5年の収支の見込み(今の収入と人件費が続いた場合の目安)。
+  ///
+  /// 季の途中なら今季の数字を1年分に引き延ばす。始まったばかり(15%未満)
+  /// なら前の季の数字を使う。人件費は今の顔ぶれの年俸で見る。
+  List<ProjectionYear> get fiveYearProjection {
+    final s = _save;
+    if (s == null) return const [];
+    final total = _totalMatchdaysThisSeason;
+    final next = s.league.nextUnplayedFixture?.matchday ?? (total + 1);
+    final progress = total == 0 ? 0.0 : ((next - 1) / total).clamp(0.0, 1.0);
+    final past = pastLedgers;
+    final base = progress < 0.15 && past.isNotEmpty ? past.last : currentLedger;
+    final p = identical(base, currentLedger) ? progress : 1.0;
+    // 始めたばかりで前の季も無いときは、1節の収入から見積もる。
+    final fresh = identical(base, currentLedger) && progress < 0.15;
+    final int income = fresh
+        ? (weeklyIncomeFor(s.userTeamId) * max(1, total)).round()
+        : ProjectionEngine.annualize(base.operatingIncome, p);
+    final wages = annualFromWeekly(weeklyWageBill);
+    final int other = fresh
+        ? 0
+        : max<int>(
+            0,
+            ProjectionEngine.annualize(
+                base.operatingIncome - base.wageCost - base.profit, p));
+    return ProjectionEngine.project(
+      income: income,
+      wages: wages,
+      otherCosts: other,
+      budget: s.budget,
+      lossCarry: s.taxLossCarry,
+    );
+  }
 }
