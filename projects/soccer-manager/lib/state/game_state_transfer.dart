@@ -1356,6 +1356,8 @@ extension GameStateTransfer on GameState {
     _movePlayerToBuyer(player, offer.buyerClubName);
     _friendsMissPlayer(player);
     _book(LedgerCategory.playerSales, offer.amount);
+    // 移籍金を受け取る売却: 連帯貢献金と、簿価との差(売却益)。
+    _onPlayerSold(player, offer.amount);
     _paySellOn(player, offer.amount);
     _notify();
     await _persist();
@@ -1559,6 +1561,7 @@ extension GameStateTransfer on GameState {
           _clearPlayerRoleReferences(team, chosen.id);
           _movePlayerToBuyer(chosen, buyer.name);
           _book(LedgerCategory.playerSales, amount);
+          _onPlayerSold(chosen, amount);
           autoSold.add(chosen.name);
         } else {
           final amount =

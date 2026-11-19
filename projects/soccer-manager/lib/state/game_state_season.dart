@@ -1437,6 +1437,7 @@ extension GameStateSeason on GameState {
     if (newTier > playedTier) {
       _addTimeline(Tr.pick('$newTier部へ降格', 'Relegated to tier $newTier'));
     }
+    _updateParachute(playedTier: playedTier, newTier: newTier);
     for (final cup in cupsWonThisSeason) {
       _addTimeline(Tr.pick('$cupで優勝', 'Won $cup'));
     }

@@ -854,8 +854,9 @@ extension GameStateFinance on GameState {
   int broadcastInstallmentOn(DateTime day) {
     final i = MoneyCalendar.broadcastIndexOf(day);
     if (i == null) return 0;
+    // 降格したクラブには、上の部との差の一部(パラシュート)が上乗せされる。
     return MoneyCalendar.broadcastInstallment(
-        annualBroadcast(currentDivisionTier), i);
+        annualBroadcast(currentDivisionTier) + parachuteAnnual, i);
   }
 
   /// 第[matchday]節が祝日なら、その祝日の名前。

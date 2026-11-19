@@ -2304,7 +2304,8 @@ void main() {
     final ok = await gameState.acceptIncomingOffer('o1');
 
     expect(ok, isTrue);
-    expect(gameState.save!.budget, 500);
+    // 移籍金から連帯貢献金(5%、アカデミー出身は0)が引かれる。
+    expect(gameState.save!.budget, 500 - gameState.solidarityFor(target, 500));
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isFalse);
     expect(gameState.incomingOffers, isEmpty);
   });
@@ -2336,7 +2337,7 @@ void main() {
     final ok = await gameState.acceptIncomingOffer('o2');
 
     expect(ok, isTrue);
-    expect(gameState.save!.budget, 650);
+    expect(gameState.save!.budget, 650 - gameState.solidarityFor(target, 650));
     expect(gameState.incomingOffers, isEmpty);
   });
 
