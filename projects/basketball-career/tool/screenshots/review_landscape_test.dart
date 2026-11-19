@@ -573,6 +573,15 @@ void main() {
       await _tap(t, '次の日へ');
       await settle(t);
     });
+    // 夏の過ごし方(サマーリーグを開いたあと)
+    await _shoot(t, '15e_summer', await _with(toContracts()), act: (t) async {
+      final play = find.byKey(const Key('summer-play'));
+      await t.scrollUntilVisible(play, 200, scrollable: progress);
+      await t.tap(play);
+      await settle(t);
+      await t.ensureVisible(find.byKey(const Key('summer-card')));
+      await t.pumpAndSettle();
+    });
     final talk = await _with(toContracts());
     await _shoot(t, '15d_agent_talk', talk, act: (t) async {
       final car = talk.career!;

@@ -13,6 +13,7 @@ import 'player.dart';
 import 'rating.dart';
 import 'records.dart';
 import 'skills.dart';
+import 'summer.dart';
 import 'rng.dart';
 import 'scenario.dart';
 import 'trade.dart';
@@ -946,6 +947,69 @@ class Career {
 
   /// 契約最終年で「結果を見てから」と言われた選手(延長で上乗せを求めない)。
   List<int> hungry = [];
+
+  // ---------------------------------------------------------------- サマーリーグ
+
+  /// サマーリーグを最後に開いたシーズン(このシーズンなら、今年のオフは済んだ)。
+  int summerSeason = 0;
+
+  /// 直近のサマーリーグの成績(出た選手ごと)と勝ち負け。
+  List<SummerLine> summer = [];
+  int summerWins = 0;
+
+  bool get summerDone => summerSeason == season && summer.isNotEmpty;
+
+  /// サマーリーグに出す選手(若手を力の高い順に、[summerMaxPlayers] 人まで)。
+  List<Player> get summerPlayers =>
+      ([...me.roster, ...me.twoWay].where(summerEligible).toList()..sort((a, b) => b.ovr.compareTo(a.ovr))).take(summerMaxPlayers).toList();
+
+  /// サマーリーグを開けない理由(開けるなら null)。
+  String? get summerProblem {
+    if (phase != Phase.contracts) return 'サマーリーグはオフの契約の時期だけ';
+    if (summerSeason == season) return '今年のサマーリーグは済んだ';
+    if (summerPlayers.isEmpty) return '出られる若手(24歳まで・2年目まで)がいない';
+    return null;
+  }
+
+  /// サマーリーグを開く。若手が4試合に出て、出来が良いと少し伸び、気持ちが上がる。出た選手は性格が分かる。
+  /// リーグの乱数は使わない(押さなければ、何も変わらない)。
+  void playSummerLeague() {
+    if (summerProblem != null) return;
+    final r = Rng(seed * 7919 + season * 131 + 17);
+    final players = summerPlayers;
+    final avg = players.fold(0, (a, p) => a + p.ovr) / players.length;
+    summerWins = 0;
+    for (var g = 0; g < summerGames; g++) {
+      if (avg + r.nextInt(13) - 6 >= 56 + r.nextInt(8)) summerWins++;
+    }
+    summer = [];
+    for (var i = 0; i < players.length; i++) {
+      final p = players[i];
+      // 出来: 運と、伸びしろの大きさ(伸びしろの大きい若手ほど、夏に目立ちやすい)
+      final form = r.nextInt(17) - 8 + ((p.pot - p.ovr) / 6).round();
+      final grade = form >= 7 ? 'A' : form >= 1 ? 'B' : form >= -4 ? 'C' : 'D';
+      final lead = i < 3 ? 5 : i < 6 ? 2 : 0;
+      final pts = ((p.ovr - 42) * 0.45 + form * 0.6 + lead).round().clamp(2, 34);
+      final reb = (3 + (p.attr(Attr.rebound) - 55) / 5 + form / 4).round().clamp(1, 15);
+      final ast = (1 + (p.attr(Attr.passing) - 55) / 5 + form / 5).round().clamp(0, 12);
+      var delta = 0;
+      if (p.ovr < p.pot && (grade == 'A' ? r.chance(0.6) : grade == 'B' ? r.chance(0.25) : false)) delta = 1;
+      final mood = switch (grade) { 'A' => 8, 'B' => 4, 'C' => 0, _ => -3 };
+      p
+        ..ovr = (p.ovr + delta).clamp(35, 99)
+        ..lastDelta = p.lastDelta + delta
+        ..morale = (p.morale + mood).clamp(0, 100)
+        ..traitsKnown = true;
+      summer.add(SummerLine(id: p.id, name: p.name, pts: pts, reb: reb, ast: ast, grade: grade, delta: delta, mood: mood));
+    }
+    if (summerWins >= 3) hype = (hype + 1).clamp(0, 100);
+    summerSeason = season;
+    final best = ([...summer]..sort((a, b) => b.pts.compareTo(a.pts))).first;
+    _mail(Sender.staff, 'サマーリーグを終えた($summerWins勝${summerGames - summerWins}敗)',
+        '${players.length}人の若手が$summerGames試合に出た。いちばん目立ったのは${best.name}(1試合${best.pts}点)。'
+        '${summer.where((x) => x.delta > 0).isEmpty ? '' : '伸びた選手: ${[for (final x in summer.where((x) => x.delta > 0)) x.name].join('・')}。'}'
+        '出た選手は、性格が分かるようになった。');
+  }
 
   /// 選手の出来事(区切りのあと、1区切りに1つまで。乱数は使わない)。
   /// 1区切り目のあと: 契約最終年の主力、2区切り目のあと: 伸び悩む新人、最後の区切りの前: 34歳以上のベテラン。
@@ -4271,6 +4335,9 @@ class Career {
         'sty': storyIds,
         'stay': stayIds,
         'hun': hungry,
+        if (summerSeason != 0) 'sms': summerSeason,
+        if (summer.isNotEmpty) 'sml': [for (final x in summer) x.toJson()],
+        if (summerWins != 0) 'smw': summerWins,
         if (rfa.isNotEmpty) 'rf': rfa,
         if (sheet != null) 'sh': sheet,
         'hy': hype,
@@ -4402,6 +4469,9 @@ class Career {
       ..storyIds = [for (final x in (j['sty'] as List? ?? const [])) x as int]
       ..stayIds = [for (final x in (j['stay'] as List? ?? const [])) x as int]
       ..hungry = [for (final x in (j['hun'] as List? ?? const [])) x as int]
+      ..summerSeason = (j['sms'] as int?) ?? 0
+      ..summer = [for (final x in (j['sml'] as List? ?? const [])) SummerLine.fromJson((x as Map).cast<String, dynamic>())]
+      ..summerWins = (j['smw'] as int?) ?? 0
       ..rfa = [for (final x in (j['rf'] as List? ?? const [])) x as int]
       ..sheet = j['sh'] is List ? [for (final x in j['sh'] as List) x as int] : null
       ..hype = ((j['hy'] as int?) ?? 50).clamp(0, 100)
