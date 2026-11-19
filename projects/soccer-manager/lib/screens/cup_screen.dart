@@ -83,6 +83,7 @@ class _DomesticCupTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        const _LeagueCupCard(),
         if (cup.isComplete)
           Card(
             color: cup.championId == userId
@@ -589,6 +590,47 @@ class _RoundSection extends StatelessWidget {
         childrenPadding: const EdgeInsets.only(top: 4),
         title: Text(title, style: Theme.of(context).textTheme.titleSmall),
         children: children,
+      ),
+    );
+  }
+}
+
+/// リーグカップ(2つ目の国内カップ)の進み具合。4節ごとに1回戦ずつ自動で進む。
+class _LeagueCupCard extends StatelessWidget {
+  const _LeagueCupCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final cup = gs.leagueCup;
+    if (cup == null) return const SizedBox.shrink();
+    final userId = gs.userTeam.id;
+    final teams = gs.allTeamsForCups;
+    String nameOf(String id) =>
+        teams.where((t) => t.id == id).firstOrNull?.name ?? '-';
+    // 1回戦の組の数から、決勝までの回戦の数を出す。
+    var total = 0;
+    for (var n = cup.rounds.first.length * 2; n > 1; n ~/= 2) {
+      total++;
+    }
+    final String status;
+    if (cup.isComplete) {
+      status = Tr.pick('優勝: ${nameOf(cup.championId!)}',
+          'Winners: ${nameOf(cup.championId!)}');
+    } else if (cup.isEliminated(userId)) {
+      status = Tr.pick('自クラブは敗退しました', 'You are out');
+    } else {
+      final round = cup.nextUnplayedMatch?.round ?? cup.currentRoundNumber;
+      status = Tr.pick('次は${CupEngine.roundLabel(round, total)}',
+          'Next: ${CupEngine.roundLabel(round, total)}');
+    }
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.emoji_events_outlined),
+        title: Text(gs.leagueCupName),
+        subtitle: Text(Tr.pick(
+            '$status。4節ごとに1回戦ずつ自動で進みます(賞金は国内カップの半分)。',
+            '$status. A round is played automatically every four matchdays (half the domestic cup prize money).')),
       ),
     );
   }

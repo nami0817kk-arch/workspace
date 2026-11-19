@@ -1521,6 +1521,7 @@ extension GameStateSeason on GameState {
         name: currentLeagueTheme.domesticCupName,
         teamIds: newActiveTeams.map((t) => t.id).toList(),
       ),
+      _newLeagueCup(newActiveTeams.map((t) => t.id).toList()),
     ];
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
     if (playedTier == 1 && finalRank <= 2) {

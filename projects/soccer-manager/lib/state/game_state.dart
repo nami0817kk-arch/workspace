@@ -164,6 +164,7 @@ part 'game_state_money_rules.dart';
 part 'game_state_injury.dart';
 part 'game_state_nation.dart';
 part 'game_state_forms.dart';
+part 'game_state_league_cup.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -1141,6 +1142,11 @@ class GameState extends ChangeNotifier {
         CupEngine.createKnockout(
           type: CupType.domestic,
           name: theme.domesticCupName,
+          teamIds: teams.map((t) => t.id).toList(),
+        ),
+        CupEngine.createKnockout(
+          type: CupType.leagueCup,
+          name: Tr.pick('リーグカップ', 'League Cup'),
           teamIds: teams.map((t) => t.id).toList(),
         ),
       ],

@@ -299,6 +299,8 @@ extension GameStateMatch on GameState {
     _checkPromisesWeekly();
     // 大きな怪我は、手術か保存療法かを選ばせる。
     _reviewInjuries();
+    // リーグカップは4節ごとに1回戦をまとめて消化する。
+    _playLeagueCupIfDue();
     // 先発に仲の良い選手・仲の悪い選手がいるか。
     RelationsEngine.applyWeekly(userTeam);
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
