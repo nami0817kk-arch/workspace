@@ -46,7 +46,7 @@
   };
 
   // 覚醒の特性（core.js の p.aw）は、元の特性と同じ働きをする
-  const has = (p, t) => p.traits.indexOf(t) >= 0 || !!(p.aw && p.aw.as && p.aw.as.indexOf(t) >= 0);
+  const has = (p, t) => p.traits.indexOf(t) >= 0 || !!(p.aw && p.aw.as && p.aw.as.indexOf(t) >= 0) || !!(p.aw2 && p.aw2.as && p.aw2.as.indexOf(t) >= 0);
   const pers = (p, g, v) => p.pers[g] === v;
   const anyPers = (p, v) => Object.values(p.pers).indexOf(v) >= 0;
 
@@ -296,6 +296,13 @@
         b -= 2;
         this._fx(sc, p, 'pers', 'プレッシャーに弱い', '終盤の競った場面で固くなった');
       }
+      // 隠れた能力「大一番の強さ」（body.js。終盤の競った場面と、大会の決勝・プレーオフ）
+      if (YA.bigGameMod && p.hid) {
+        const bm = YA.bigGameMod(p, close, !!t.big);
+        b += bm;
+        if (bm >= 0.8) this._fx(sc, p, 'pers', '大一番に強い', '大事な試合で力を出した');
+        else if (bm <= -0.8) this._fx(sc, p, 'pers', '大一番で固くなる', '大事な試合で硬さが出た');
+      }
       if (diff < 0 && pers(p, '気持ちの強さ', '負けず嫌い')) {
         b += 1.5;
         this._fx(sc, p, 'pers', '負けず嫌い', 'リードされて火が付いた');
@@ -320,6 +327,31 @@
         b += 1.2;
         this._fx(sc, p, 'pers', '献身的', '最後まで戻って体を張った');
       }
+      b += this.traitXMod(sc, t, p, kind, diff);
+      if (YA.compatMod && (p._cg || p._cb)) b += YA.compatMod(p); // 性格どうしの相性（persona.js）
+      if (YA.atmoMod && t.atmo != null) b += YA.atmoMod(t); // チームの雰囲気（team2.js）
+      return b;
+    }
+    // 2026-11-20 に足した特性30個（YA.TRAIT_X）・悪い癖（YA.HABITS・p.habits）・特性の組み合わせ（YA.TRAIT_COMBO）
+    traitXMod(sc, t, p, kind, diff) {
+      let b = 0;
+      const isGK = p.pos === 'GK';
+      const fits = (x) => x && (x.k === 'any' || x.k === kind) && !!x.gk === isGK && (!x.c || x.c(this, t, p, diff));
+      if (YA.TRAIT_X) {
+        const mine = p.traits.concat((p.aw && p.aw.as) || [], (p.aw2 && p.aw2.as) || []);
+        for (const tr of mine) { const x = YA.TRAIT_X[tr]; if (fits(x)) b += this.traitBonus(sc, p, tr, x.a, x.t); }
+      }
+      if (YA.HABITS && p.habits) for (const hb of p.habits) {
+        const x = YA.HABITS[hb];
+        if (!fits(x)) continue;
+        b += x.a;
+        this._fx(sc, p, 'habit', hb, x.t);
+      }
+      if (YA.TRAIT_COMBO) for (const [a1, a2, name, k, amt] of YA.TRAIT_COMBO) {
+        if ((k !== 'any' && k !== kind) || !has(p, a1) || !has(p, a2)) continue;
+        b += amt;
+        this._fx(sc, p, 'combo', name, `「${a1}」と「${a2}」が噛み合った`);
+      }
       return b;
     }
     // 特性が効いた回数（札が出たかどうかに関わらず）。金の特性の条件に使う
@@ -334,7 +366,7 @@
       this._use(p, trait);
       if (p.traits.indexOf(trait) < 0) {
         // 覚醒の特性：札は覚醒の名前で出し、効きは少し強い
-        this._fx(sc, p, 'awake', p.aw.trait, text);
+        this._fx(sc, p, 'awake', p.aw && p.aw.as && p.aw.as.indexOf(trait) >= 0 ? p.aw.trait : p.aw2 ? p.aw2.trait : trait, text);
         return amount * 1.4;
       }
       if (YA.isGold(p, trait)) {
@@ -369,7 +401,7 @@
       if (!rd) return 0;
       const hit = rd.traits.filter((x) => has(p, x)).length;
       let fit;
-      if (hit) fit = 1;
+      if (hit || (p.favRole && p.favRole === s.role)) fit = 1; // 得意な役割（pos2.js）
       else {
         // 役割に効く能力を重みつきで見る
         let sw = 0;

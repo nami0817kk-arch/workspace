@@ -135,13 +135,13 @@
       opts: [opt('取材を受けさせる', 'push', (w, p) => { conf(p, 5); if (YA.addRep) YA.addRep(w, 1); }), opt('チームのおかげだと言わせる', 'warm', (w) => { for (const q of A(w)) conf(q, 1); }), opt('取材は断る', 'firm')] },
     // 関係
     { id: 'r_mentor', name: '師弟', w: 0.6, pick: (w, r) => pickOf(r, all(w).filter((p) => p.grade === 3 && YA.relWith(w, p, 'mentor').length)),
-      text: (p, w) => { const q = YA.relWith(w, p, 'mentor')[0]; return `${p.name}が、後輩の${q.name}に居残りで教えている。${say(p, 'こいつ、昔の自分に似てるんです')}`; },
-      opts: [opt('二人の時間を増やす', 'warm', (w, p) => { const q = YA.relWith(w, p, 'mentor')[0]; prog(q, '判断', 0.3); prog(q, 'ポジショニング', 0.3); }), opt('高3は自分の練習を優先させる', 'firm'), opt('見守る', 'wait')] },
+      text: (p, w) => { const q = YA.relWith(w, p, 'mentor')[0]; return `${p.name}が、後輩の${q ? q.name : 'ひとり'}に居残りで教えている。${say(p, 'こいつ、昔の自分に似てるんです')}`; },
+      opts: [opt('二人の時間を増やす', 'warm', (w, p) => { const q = YA.relWith(w, p, 'mentor')[0]; if (!q) return; prog(q, '判断', 0.3); prog(q, 'ポジショニング', 0.3); }), opt('高3は自分の練習を優先させる', 'firm'), opt('見守る', 'wait')] },
     { id: 'r_overtaken', name: '追い抜かれた先輩', w: 0.5, pick: (w, r) => pickOf(r, all(w).filter((p) => p.grade === 3 && p.team === 'B' && all(w).some((q) => q.grade === 1 && q.team === 'A' && q.main === p.main))),
       text: (p, w) => { const q = all(w).find((x) => x.grade === 1 && x.team === 'A' && x.main === p.main); return `高1の${q ? q.name : '後輩'}に先発を取られた${p.name}が、黙って居残り練習をしている。`; },
       opts: [opt('後輩の面倒を見る役を頼む', 'push', (w, p) => { const q = all(w).find((x) => x.grade === 1 && x.team === 'A' && x.main === p.main); if (q) addRel(w, p.id, q.id, 'mentor'); conf(p, 3); }), opt('チャンスはあると言う', 'warm', (w, p) => conf(p, 4)), opt('現実を伝える', 'firm', (w, p) => { conf(p, -3); p.unrest = (p.unrest || 0) + 1; })] },
     { id: 'r_samejh', name: '同じ中学', w: 0.4, pick: (w, r) => pickOf(r, all(w).filter((p) => p.grade === 1 && YA.relWith(w, p, 'samejh').length)),
-      text: (p, w) => { const q = YA.relWith(w, p, 'samejh')[0]; return `高1の${p.name}は、同じ中学の先輩の${q.name}にくっついて回っている。`; },
+      text: (p, w) => { const q = YA.relWith(w, p, 'samejh')[0]; return `高1の${p.name}は、同じ中学の先輩の${q ? q.name : '先輩'}にくっついて回っている。`; }, // 同じ週に先輩が抜けたときは名前を出さない
       opts: [opt('先輩に面倒を頼む', 'warm', (w, p) => conf(p, 4)), opt('自分の友達を作れと言う', 'push', (w, p) => { const f = all(w).find((x) => x.grade === p.grade && x.id !== p.id); if (f) addRel(w, p.id, f.id, 'friend'); }), opt('見守る', 'wait')] },
     { id: 'r_faction', name: '派閥', w: 0.3, pick: (w, r) => { const c = w.captain && w.players[w.captain]; return c && (w.disc || 60) < 55 ? pickOf(r, all(w).filter((p) => p.grade === 3 && p.id !== c.id && YA.ovr(p) >= YA.ovr(c))) : null; },
       text: (p) => `${p.name}のまわりに、主将とは別の輪ができている。ロッカーの空気が二つに割れている。`,

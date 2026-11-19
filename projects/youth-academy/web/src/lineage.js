@@ -359,7 +359,7 @@
   const leanHint = (f) => { const ks = Object.keys(YA.FORM_LEAN || {}).filter((k) => YA.FORM_LEAN[k].includes(f.k)); return ks.length ? ks.map((k) => YA.KIND_LABEL[k]).join('か') + '接し方で育てた子に出やすい' : ''; };
   function dexTab(body, w) {
     const n = YA.dexCount(w), all = YA.AWAKE_FORMS;
-    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種・10種・20種で育成基金のごほうび（300・600・1000万円）。'));
+    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種・10種・20種・30種・40種で育成基金のごほうび（300・600・1000・1500・2000万円）。'));
     const next = [5, 10, 20].find((x) => x > n);
     if (next) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `次のごほうびまで あと${next - n}種（${YA.DEX_REWARD[next]}万円）`));
     // 4列の札にして、見つけた形を金色で先に（2026-11-16 見つけた形が一覧のいちばん下にあった）

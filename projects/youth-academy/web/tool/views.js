@@ -40,6 +40,14 @@ const html = read('shell.html')
   .replace('/*__STARACTS__*/', () => read('staracts.js'))
   .replace('/*__SHOP__*/', () => read('shop.js'))
   .replace('/*__GUIDE__*/', () => read('guide.js'))
+  .replace('/*__BODY__*/', () => read('body.js'))
+  .replace('/*__POS2__*/', () => read('pos2.js'))
+  .replace('/*__TRAITS2__*/', () => read('traits2.js'))
+  .replace('/*__PERSONA__*/', () => read('persona.js'))
+  .replace('/*__COND2__*/', () => read('cond2.js'))
+  .replace('/*__STARS2__*/', () => read('stars2.js'))
+  .replace('/*__TEAM2__*/', () => read('team2.js'))
+  .replace('/*__RECORDS__*/', () => read('records.js'))
   .replace('/*__VIEWS3__*/', () => read('views3.js'))
   .replace('/*__IMGDATA__*/', () => read('imgdata.js'))
   .replace('/*__ART__*/', () => read('art.js'));
@@ -216,6 +224,9 @@ async function clearEvents() {
     ok(!!ov, '選手を開くと最初は概要');
     ok(!!ov && ['コーチの見立て', 'プロフィール', 'ポジション', '状態', '試合', '特性'].every((t) => ov.textContent.includes(t)), '概要に見立て・プロフィール・ポジション・状態・試合・特性');
     ok(!!ov && !ov.querySelector('.abg') && !ov.textContent.includes('ファーストタッチ'), '概要に能力の数字の表を出さない');
+    // 2026-11-20 選手を構成する要素：体格・誕生日・出身・仲間・性格と相性・8週のグラフ・記録
+    ok(!!ov && ['体格', '誕生日', '出身', '仲間', '性格と相性', 'cm', 'kg'].every((t) => ov.textContent.includes(t)), '概要に体格・誕生日・出身・仲間・性格と相性 ' + ['体格', '誕生日', '出身', '仲間', '性格と相性'].filter((t) => !(ov && ov.textContent.includes(t))).join('・'));
+    ok(!!ov && /適性20/.test(ov.textContent), '概要のポジションに適性20の位置');
     ok(!!ov && !!ov.querySelector('svg.posmap circle'), '概要にポジションの図');
     ok(!!ov && ov.querySelectorAll('.ovpc .pro').length >= 1 && ov.querySelectorAll('.ovpc .con').length >= 1, '長所と短所を言葉で');
     const W0 = w.YA._ui.app.w;
@@ -259,7 +270,7 @@ async function clearEvents() {
     A.w.saUsed = null;
     w.YA._ui.render();
     btn('進路').click();
-    ok(['★の子と過ごす（今週あと2回', '居残り練習に付き合う', '試合の映像を一緒に見る', '覚醒の手がかりを話し合う', 'ご飯に連れて行く', '目標を約束する', '卒業生に会わせる'].every((x) => txt().includes(x)), '★の子の働きかけが並ぶ');
+    ok(['★の子と過ごす（今週あと2回', '居残り練習に付き合う', '試合の映像を一緒に見る', '覚醒の手がかりを話し合う', 'ご飯に連れて行く', '目標を約束する', '卒業生に会わせる', '自主練のメニューを一緒に作る', '休ませて話を聞く', '家族と話す', '試合前に声をかける', '別の位置を試させる', '本を薦める'].every((x) => txt().includes(x)), '★の子の働きかけが12並ぶ');
     btn('ご飯に連れて行く').click();
     ok(errors.length === 0 && txt().includes('今週あと1回') && txt().includes('信頼+8') && txt().includes('「'), 'ご飯に連れて行くと結果と本人の一言が出る: ' + errors.slice(0, 2).join('|'));
     const mb = [...d.querySelectorAll('#main button')].find((b) => b.textContent.startsWith('ご飯に連れて行く'));
@@ -283,6 +294,9 @@ async function clearEvents() {
   rail('クラブ');
   ok(txt().includes('予算と施設') && txt().includes('概要') && txt().includes('順位と日程'), 'クラブの8項目');
   btn('概要').click();
+  ok(txt().includes('チームの雰囲気') && /の輪/.test(txt()) && !!btn('チーム全員で話す'), 'クラブの概要にチームの雰囲気と仲良しの輪（2026-11-20）');
+  btn('チーム全員で話す').click();
+  { const tb = [...d.querySelectorAll('#main button')].find((b) => b.textContent === 'チーム全員で話す'); ok(txt().includes('雰囲気+') && !!tb && tb.disabled && /月1回/.test(tb.dataset.why || ''), 'チームへの働きかけは月1回 ' + (tb && [tb.disabled, tb.dataset.why].join('|'))); }
   ok(txt().includes('信頼度') && txt().includes('今年の目標') && !txt().includes('undefined'), 'クラブの概要（信頼度の名前が出る）');
   ok(txt().includes('指導の方針') && txt().includes('強化部長') && txt().includes('寄り添い'), 'クラブの概要に指導の方針と強化部長');
   ok(txt().includes('中長期の計画'), 'クラブの概要に中長期の計画');
@@ -732,12 +746,12 @@ async function clearEvents() {
         ok(d.querySelectorAll('#main .chip[data-tip]').length > 0 && !d.querySelector('#main .chip[title]'), '実績の銅銀金の札は押すと名前が出る');
       }
       ltab('図鑑');
-      ok(txt().includes('覚醒の図鑑 ') && txt().includes('/20') && txt().includes('？'), '図鑑：20種が並び、未発見は？');
+      ok(txt().includes('覚醒の図鑑 ') && txt().includes('/40') && txt().includes('？'), '図鑑：40種が並び、未発見は？');
       ltab('実績');
       ok(txt().includes('/69') && txt().includes('銅'), '実績は69個の銅銀金');
       ok(d.querySelectorAll('#main .plist > .pitem').length === 23, '実績は銅銀金を1行にまとめて23行（2026-11-16）');
       ltab('図鑑');
-      { const g = [...d.querySelectorAll('#main .scroll')].find((e) => e.style.display === 'grid'); ok(!!g && g.children.length === 20 && g.style.gridTemplateColumns.includes('repeat(4'), '図鑑は4列の札（2026-11-16）'); }
+      { const g = [...d.querySelectorAll('#main .scroll')].find((e) => e.style.display === 'grid'); ok(!!g && g.children.length === 40 && g.style.gridTemplateColumns.includes('repeat(4'), '図鑑は4列の札・40種（2026-11-20）'); }
       ltab('実績');
       rail('ホーム');
       ok(txt().includes('系譜') && txt().includes('次の実績'), 'ホームに系譜の小窓と次の実績');
@@ -816,7 +830,7 @@ async function clearEvents() {
     btn('思い出').click();
     ok(!txt().includes('今年の育成計画') && (txt().includes('最近のこと') || txt().includes('まだ思い出はありません')), '選手の思い出は別の小タブ');
     btn('…').click();
-    ok(!!btn('PK戦のキッカー') && !!btn('名前を変える'), '「…」に比べる・PK・名前');
+    ok(!!btn('PK戦のキッカー') && !btn('名前を変える'), '「…」に比べる・PK（名前は変えられない）');
     btn('他の子と比べる').click();
     ok(!!d.querySelector('.sheet') && txt().includes('比べる子を選ぶ'), '比べる画面が開く');
     const sh2 = d.querySelector('.sheet');

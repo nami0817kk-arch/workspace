@@ -503,7 +503,7 @@
     wk(w);
     for (const p of Object.values(w.players)) {
       if (YA.isForeign(p)) {
-        p.adaptF = Math.min(6, (p.adaptF || 0) + 0.1);
+        p.adaptF = Math.min(6, (p.adaptF || 0) + 0.1 * (YA.adaptK ? YA.adaptK(p) : 1));
         p.adapt = Math.max(p.adapt || 0, p.adaptF < 3 ? 1 : 0);
       }
     }

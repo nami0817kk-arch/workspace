@@ -522,7 +522,7 @@
       const g = (v, lo, hi) => (v >= hi ? '良い' : v <= lo ? '低い' : 'ふつう');
       const unrest = sel.unrest > 3 ? '不満が溜まっている' : sel.unrest > 1.5 ? '少し気にしていることがある' : '不満はなさそう';
       // 「ふつう」は札にしない（2026-11-16 6つ並んでいた）。目立つ性格だけ札にして、残りは「ほかはふつう」
-      const persAll = Object.values(sel.pers || {}).filter(Boolean);
+      const persAll = Object.values(YA.persVisible ? YA.persVisible(sel) : sel.pers || {}).filter(Boolean);
       const pers = persAll.filter((t) => t !== 'ふつう').slice(0, 8);
       const persNorm = persAll.length - persAll.filter((t) => t !== 'ふつう').length;
       const tip = sel.inj > 0 ? '怪我の回復が先です。無理に出さないで、完治を待ちましょう。' : sel.fat >= 70 ? '疲れが溜まっています。今週は休ませるか、軽めにしたほうがよさそうです。' : sel.unrest > 3 ? 'ひとこと声をかけてあげてください（進路タブの面談）。' : sel.conf < 35 ? '自信を失っています。出番か、励ましの言葉が効きそうです。' : sel.conf >= 70 ? '乗っています。この流れを切らさずに使いたい子です。' : '目立った心配はありません。';
@@ -557,15 +557,14 @@
     show();
     main.append(h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' }, left, h('div', { style: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;min-height:0' }, head, tabsEl, right)));
   }
-  // 選手の「…」：比べる・PK戦のキッカー・名前を変える（様子の画面の下にあった操作）
+  // 選手の「…」：比べる・PK戦のキッカー（名前は 2026-11-20 から変えられない。オリジナル選手は作るときに名付ける）
   function playerMenu(w, sel) {
     const pkIdx = (w.pkOrder || []).indexOf(sel.id);
     const pkN = (w.pkOrder || []).filter((id) => w.players[id]).length;
     modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:7px' },
       h('div', { class: 'row' }, h('div', { class: 'h grow' }, `${sel.num} ${sel.name}`), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
       h('button', { class: 'btn', onclick: () => { close(); YA.compareModal(w, sel); } }, '他の子と比べる'),
-      h('button', { class: 'btn' + (pkIdx >= 0 ? ' on' : ''), disabled: pkIdx < 0 && pkN >= 5, why: 'PK戦のキッカーは5人までです。先にだれかを外してください', onclick: () => { const r = YA.pkToggle(w, sel); U().app.starMsg = r.msg; YA.saveWorld(); close(); rerender(); } }, pkIdx >= 0 ? `PK戦のキッカー ${pkIdx + 1}番目（外す）` : `PK戦のキッカーに入れる（${pkN}/5）`),
-      h('button', { class: 'btn', onclick: () => { close(); YA.renameBox(sel); } }, '名前を変える')));
+      h('button', { class: 'btn' + (pkIdx >= 0 ? ' on' : ''), disabled: pkIdx < 0 && pkN >= 5, why: 'PK戦のキッカーは5人までです。先にだれかを外してください', onclick: () => { const r = YA.pkToggle(w, sel); U().app.starMsg = r.msg; YA.saveWorld(); close(); rerender(); } }, pkIdx >= 0 ? `PK戦のキッカー ${pkIdx + 1}番目（外す）` : `PK戦のキッカーに入れる（${pkN}/5）`)));
   }
   // 総合力の水準の表（200＝歴史上No.1）
   function levelTable(now) {
