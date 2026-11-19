@@ -1064,7 +1064,8 @@ class GameState extends ChangeNotifier {
   /// 難易度に応じて理事会の目標順位を緩和/厳格化する。イージーは2つ緩く、
   /// ハードは1つ厳しくなる(1位〜リーグチーム数の範囲でクランプ)。
   int _difficultyAdjustedTarget(int target) {
-    final delta = _save?.difficulty.boardTargetDelta ?? 0;
+    final delta =
+        _save?.difficultyOf(DifficultyItem.boardTarget).boardTargetDelta ?? 0;
     return (target + delta).clamp(1, _save?.league.teams.length ?? teamsPerLeague);
   }
 
@@ -1073,6 +1074,7 @@ class GameState extends ChangeNotifier {
     LeagueTheme theme = LeagueTheme.england,
     GameDifficulty difficulty = GameDifficulty.normal,
     StartScenario scenario = StartScenario.standard,
+    Map<DifficultyItem, GameDifficulty>? difficultyItems,
   }) async {
     // ここから先はこのセーブが正。古い予約は無効になる。
     _saveGeneration++;
@@ -1167,12 +1169,18 @@ class GameState extends ChangeNotifier {
       currentDivisionTier: userStartTier,
       clubHistory: [clubName],
       difficulty: difficulty,
+      difficultyItems: {
+        for (final e in (difficultyItems ?? const {}).entries)
+          if (e.value != difficulty) e.key.name: e.value.name,
+      },
       scenario: scenario,
     );
     // 最初のシーズンは平常。来季の予報だけ引いておく。
     _save!.economyNext = EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
     // 難易度による初期条件の補正(資金と理事会目標の厳しさ)。
-    _save!.budget = (_save!.budget * difficulty.initialBudgetFactor).round();
+    _save!.budget = (_save!.budget *
+            _save!.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
+        .round();
     _save!.boardTargetRank = _difficultyAdjustedTarget(_save!.boardTargetRank);
     _save!.wageBudget = BoardEngine.wageBudgetFor(
       tier: userStartTier,
