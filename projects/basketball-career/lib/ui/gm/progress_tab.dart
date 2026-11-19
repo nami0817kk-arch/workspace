@@ -25,6 +25,7 @@ import 'negotiate_dialog.dart';
 import 'offseason_show_screen.dart';
 import 'opponent_card.dart';
 import 'player_card.dart';
+import 'sim_ticker.dart';
 import 'skills_screen.dart';
 import 'trade_show_screen.dart';
 import 'style.dart';
@@ -264,7 +265,8 @@ class ProgressTab extends StatelessWidget {
     final me = car.me;
     final played = car.roundAt;
     final next = car.block < blocksPerSeason ? blockStart(car.block + 1) - played : 0;
-    final week = next < Career.daysPerWeek ? next : Career.daysPerWeek;
+    final month = roundsLeftInMonth(car.season, played);
+    final toDeadline = blockStart(tradeDeadlineBlock) - played;
     final last = car.lastGames.length;
     final conf = me.east ? '東地区' : '西地区';
     final deadline = car.block < tradeDeadlineBlock;
@@ -296,7 +298,7 @@ class ProgressTab extends StatelessWidget {
           Expanded(
             flex: 2,
             child: FilledButton.icon(
-              onPressed: c.busy ? null : () => _run(context, () => c.playBlock()),
+              onPressed: c.busy ? null : () => _run(context, () => runSimTicker(context, c, next, '次の$next試合')),
               icon: const Icon(Icons.play_arrow_rounded),
               label: Text('次の$next試合へ'),
             ),
@@ -309,21 +311,30 @@ class ProgressTab extends StatelessWidget {
             icon: const Icon(Icons.more_horiz_rounded, color: GmColors.sub),
             onSelected: (v) {
               switch (v) {
+                case 'one':
+                  _runOne(context);
                 case 'week':
-                  _run(context, () => c.playWeek());
+                  _run(context, () => runSimTicker(context, c, Career.daysPerWeek, '1週間'));
+                case 'month':
+                  _run(context, () => runSimTicker(context, c, month, '${roundDate(car.season, played).month}月の終わりまで'));
                 case 'deadline':
-                  _run(context, () => c.simAhead(toDeadline: true));
+                  _run(context, () => runSimTicker(context, c, toDeadline, 'トレードの締め切りまで'));
                 case 'season':
-                  _run(context, () => c.simAhead(toDeadline: false));
+                  _run(context, () => runSimTicker(context, c, gamesPerSeason - played, 'シーズンの終わりまで'));
+                case 'date':
+                  _pickDate(context);
                 case 'stops':
                   _stopsDialog(context);
               }
             },
             itemBuilder: (_) => [
-              if (next > week)
-                PopupMenuItem(value: 'week', child: _menuRow(Icons.calendar_view_week_rounded, week == Career.daysPerWeek ? '1週間だけ進める' : '$week試合だけ進める')),
-              if (deadline) PopupMenuItem(value: 'deadline', child: _menuRow(Icons.fast_forward_rounded, 'トレードの締め切りまで')),
-              PopupMenuItem(value: 'season', child: _menuRow(Icons.skip_next_rounded, 'シーズンの終わりまで')),
+              PopupMenuItem(key: const Key('sim-one'), value: 'one', child: _menuRow(Icons.looks_one_rounded, '1試合だけ進める(${dateShort(roundDate(car.season, played))})')),
+              if (gamesPerSeason - played > Career.daysPerWeek)
+                PopupMenuItem(value: 'week', child: _menuRow(Icons.calendar_view_week_rounded, '1週間(${Career.daysPerWeek}試合)進める')),
+              if (month > 1) PopupMenuItem(key: const Key('sim-month'), value: 'month', child: _menuRow(Icons.calendar_month_rounded, '${roundDate(car.season, played).month}月の終わりまで($month試合)')),
+              if (deadline) PopupMenuItem(value: 'deadline', child: _menuRow(Icons.fast_forward_rounded, '締め切りまで($toDeadline試合)')),
+              PopupMenuItem(value: 'season', child: _menuRow(Icons.skip_next_rounded, 'シーズンの終わりまで(${gamesPerSeason - played}試合)')),
+              PopupMenuItem(key: const Key('sim-date'), value: 'date', child: _menuRow(Icons.event_rounded, '日付を選んで進める')),
               const PopupMenuDivider(),
               PopupMenuItem(key: const Key('sim-stops'), value: 'stops', child: _menuRow(Icons.tune_rounded, 'まとめて進めるときに止まる場面')),
             ],
@@ -470,7 +481,7 @@ class ProgressTab extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: TextButton.icon(
             key: const Key('open-calendar'),
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CalendarScreen(c: c))),
+            onPressed: () => _pickDate(context),
             icon: const Icon(Icons.calendar_month_rounded, size: 16),
             label: const Text('日程表(82試合)を見る', style: TextStyle(fontSize: 12.5)),
           ),
@@ -700,6 +711,31 @@ class ProgressTab extends StatelessWidget {
     if (!context.mounted || car.block != blockBefore || car.lastGames.length <= before) return;
     await showBoxScore(context, car.lastGames.last, car.mine);
   }
+  /// 1試合だけ進め、その試合のボックススコアを見せる(区切りの終わりなら区切りの報告)。
+  Future<void> _runOne(BuildContext context) async {
+    final car = c.career!;
+    final block = car.block;
+    final before = car.seasonLog.length;
+    final nav = Navigator.of(context);
+    final report = await c.simRounds(1);
+    if (!nav.mounted) return;
+    if (car.block != block || car.phase != Phase.season) {
+      await showBlockReport(nav, c, report);
+      return;
+    }
+    if (car.seasonLog.length > before && car.lastGames.isNotEmpty) await showBoxScore(nav.context, car.lastGames.last, car.mine);
+  }
+
+  /// 日程表を開き、押した試合の手前まで進める。
+  Future<void> _pickDate(BuildContext context) async {
+    final target = await Navigator.of(context).push<int>(MaterialPageRoute(builder: (_) => CalendarScreen(c: c)));
+    final car = c.career;
+    if (target == null || car == null || !context.mounted) return;
+    final n = car.roundsUntil(target);
+    if (n <= 0) return;
+    await _run(context, () => runSimTicker(context, c, n, '${dateLabel(roundDate(car.season, target))}の試合の前まで'));
+  }
+
   /// まとめて進めるときに止まる場面を選ぶ。
   Future<void> _stopsDialog(BuildContext context) => showDialog<void>(
         context: context,
@@ -729,10 +765,10 @@ class ProgressTab extends StatelessWidget {
       );
 
   /// 試合を進め、終わったら報告を画面いっぱいに出す。
-  Widget _menuRow(IconData icon, String text) => Row(children: [
+  Widget _menuRow(IconData icon, String text) => Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(icon, size: 18, color: GmColors.sub),
         const SizedBox(width: 10),
-        Text(text),
+        Flexible(child: Text(text, maxLines: 1, overflow: TextOverflow.ellipsis)),
       ]);
 
   Future<void> _run(BuildContext context, Future<BlockReport?> Function() play) async {

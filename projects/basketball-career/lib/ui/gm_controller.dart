@@ -218,6 +218,62 @@ class GmController extends ChangeNotifier {
     return BlockReport.make(c, snap, games);
   }
 
+  /// [n] 節を1節ずつ進める(区切りをまたいでよい)。1節ごとに [onRound] を待つ(画面が結果を流して見せる)。
+  /// 申し込み・返事の要る知らせ・連敗/連勝に入った・疲れ・先発のけがで止まる(止まる場面の設定どおり)。
+  /// [simCancel] を立てると、その節で止まる。全画面広告の番は最初に1回だけ見る。
+  Future<BlockReport?> simRounds(int n, {Future<void> Function(List<GameResult> games)? onRound}) async {
+    final c = career;
+    if (c == null || c.phase != Phase.season || busy || n <= 0) return null;
+    await _maybeInterstitial();
+    final snap = BlockSnapshot.of(c);
+    final games = <GameResult>[];
+    injuryStop = null;
+    simStopReason = null;
+    simCancel = false;
+    for (var left = n; left > 0 && c.phase == Phase.season; left--) {
+      final starters = _healthyStarters(c);
+      final asked = {for (final m in c.inbox) if (m.needsAnswer) m.id};
+      final streak = c.me.streak;
+      final tired = c.me.roster.any((p) => p.wear > wearSlumpLine);
+      final before = c.lastGames.length;
+      final fromStart = c.roundAt == blockStart(c.block);
+      final ended = c.playDays(1);
+      final got = fromStart ? [...c.lastGames] : c.lastGames.sublist(before);
+      games.addAll(got);
+      if (ended) await money?.tournamentPlayed();
+      _changed();
+      if (onRound != null) await onRound(got);
+      if (c.phase != Phase.season || left == 1) break;
+      if (simCancel) break;
+      final reason = _stopReasonNew(c, asked, streak, tired);
+      if (reason != null) {
+        simStopReason = reason;
+        break;
+      }
+      if (c.stopsOn(SimStop.injury)) {
+        injuryStop = _newlyHurt(c, starters);
+        if (injuryStop != null) break;
+      }
+    }
+    simCancel = false;
+    _record(c);
+    _changed();
+    return BlockReport.make(c, snap, games);
+  }
+
+  /// [simRounds] を途中で止める(画面の「止める」)。
+  bool simCancel = false;
+
+  /// 1節ずつ進めるときの止まる場面。連敗・連勝・疲れは、その節で新しく入ったときだけ止まる(続いているあいだ毎節止まらない)。
+  static SimStop? _stopReasonNew(Career c, Set<int> asked, int streakBefore, bool tiredBefore) {
+    if (c.stopsOn(SimStop.offer) && c.incoming != null) return SimStop.offer;
+    if (c.stopsOn(SimStop.mail) && c.inbox.any((m) => m.needsAnswer && !asked.contains(m.id))) return SimStop.mail;
+    if (c.stopsOn(SimStop.slump) && c.me.streak == -4 && streakBefore == -3) return SimStop.slump;
+    if (c.stopsOn(SimStop.hot) && c.me.streak == 5 && streakBefore == 4) return SimStop.hot;
+    if (c.stopsOn(SimStop.tired) && !tiredBefore && c.me.roster.any((p) => p.wear > wearSlumpLine)) return SimStop.tired;
+    return null;
+  }
+
   /// まとめて進めている途中で、先発の選手が長めのけがをした(画面が止めて「組み直すか」を聞く)。聞いたら null に戻す。
   Player? injuryStop;
 
