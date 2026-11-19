@@ -39,7 +39,7 @@ class SfxService {
       player.onPlayerComplete.first.then((_) => player.dispose());
       await player.play(AssetSource('sfx/${s.file}'), volume: volume);
     } catch (e) {
-      debugPrint('効果音を鳴らせなかった: $e');
+      debugPrint('sfx: $e');
     }
   }
 }
