@@ -7,6 +7,8 @@ import '../logic/squad_registration_engine.dart';
 import '../logic/transfer_window.dart';
 import '../logic/transfer_terms_engine.dart';
 import '../logic/transfer_talk_engine.dart';
+import '../logic/player_terms_engine.dart';
+import '../logic/contract_engine.dart';
 import '../models/transfer_talk.dart';
 import '../models/player.dart';
 import '../models/save_game.dart';
@@ -585,8 +587,8 @@ class _TransferScreenState extends State<TransferScreen>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              Tr.pick('移籍金なし・年俸のみで獲得できる選手です。所属が無いので、移籍の窓の外でも取れます。',
-                  'These players cost no fee, only wages. They have no club, so you can sign them outside the window too.'),
+              Tr.pick('移籍金なし・年俸のみで獲得できる選手です。所属が無いので、移籍の窓の外でも取れます。年俸・年数・サイン料を本人と話して決めます。',
+                  'These players cost no fee, only wages. They have no club, so you can sign them outside the window too. Agree salary, length and signing bonus with the player.'),
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
@@ -611,31 +613,135 @@ class _TransferScreenState extends State<TransferScreen>
                   market: false,
                   budget: 0,
                   canSign: !squadFull,
-                  onSign: (p) => _signFreeAgent(context, p),
+                  onSign: (p) => _showTermsDialog(context, p),
                 ),
         ),
       ],
     );
   }
 
-  Future<void> _signFreeAgent(BuildContext context, Player player) async {
+  /// 選手(代理人)に年俸・契約の満了の年・サイン料を出す。他のクラブの
+  /// 選手はクラブと合意したあと、フリーエージェントはいつでも。
+  Future<void> _showTermsDialog(BuildContext context, Player player) async {
     final gameState = context.read<GameState>();
-    final ok = await gameState.signFreeAgent(player.id);
-    ok ? FeedbackService.success() : FeedbackService.error();
-    if (context.mounted) {
-      final reason = gameState.lastSigningBlockReason;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            ok
-                ? Tr.pick('${player.name}と契約しました', 'You signed ${player.name}')
-                : (reason ??
-                    Tr.pick('契約できませんでした', 'The signing did not go through')),
-          ),
-          duration: Duration(seconds: reason != null && !ok ? 6 : 4),
-        ),
-      );
-    }
+    final talk = gameState.talkFor(player.id);
+    final demand = talk?.demandWage ?? 0;
+    final current = player.wage;
+    final top = [current * 3, demand * 2, 20].reduce((a, b) => a > b ? a : b);
+    final low = (current ~/ 2).clamp(minWeeklyWage, top - 1);
+    var wage = (demand > 0 ? demand : current).clamp(low, top).toDouble();
+    final choices = ContractEngine.endYearChoicesNow(player.age);
+    var endYear = choices.isEmpty
+        ? Player.contractClockYear + 1
+        : choices[(choices.length - 1).clamp(0, 2)];
+    final bonusMax = [annualFromWeekly(top), (talk?.fee ?? 0) ~/ 10, 10]
+        .reduce((a, b) => a > b ? a : b);
+    var bonus = 0.0;
+    final submitted = await showDialog<(int, int, int)>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setState) {
+          final w = wage.round();
+          final years = endYear - Player.contractClockYear + 1;
+          final effective = PlayerTermsEngine.effectiveWeekly(
+              weeklyWage: w, years: years, signingBonus: bonus.round());
+          return AlertDialog(
+            title: Text(Tr.pick(
+                '${player.name}に条件を出す', 'Offer terms to ${player.name}')),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(Tr.pick(
+                      '今の年俸: ${formatMoney(annualFromWeekly(current))}',
+                      'Current salary: ${formatMoney(annualFromWeekly(current))}')),
+                  if (demand > 0)
+                    Text(
+                      Tr.pick(
+                          '望む年俸: ${formatMoney(annualFromWeekly(demand))}(サイン料を含めて)',
+                          'He wants: ${formatMoney(annualFromWeekly(demand))} a year (signing bonus included)'),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  const SizedBox(height: 8),
+                  Text(Tr.pick('年俸: ${formatMoney(annualFromWeekly(w))}',
+                      'Salary: ${formatMoney(annualFromWeekly(w))} a year')),
+                  Slider(
+                    value: wage,
+                    min: low.toDouble(),
+                    max: top.toDouble(),
+                    divisions: 60,
+                    onChanged: (v) => setState(() => wage = v),
+                  ),
+                  Text(Tr.pick('サイン料: ${formatMoney(bonus.round())}',
+                      'Signing bonus: ${formatMoney(bonus.round())}')),
+                  Slider(
+                    value: bonus,
+                    max: bonusMax.toDouble(),
+                    divisions: 40,
+                    onChanged: (v) => setState(() => bonus = v),
+                  ),
+                  if (choices.length > 1)
+                    Wrap(
+                      spacing: 6,
+                      children: [
+                        for (final y in choices)
+                          ChoiceChip(
+                            label: Text(Tr.pick('$y年6月まで', 'To June $y')),
+                            selected: endYear == y,
+                            onSelected: (_) => setState(() => endYear = y),
+                          ),
+                      ],
+                    ),
+                  const SizedBox(height: 6),
+                  Text(
+                    Tr.pick(
+                        'サイン料は契約の年数でならして年俸に足して見られます(実質 ${formatMoney(annualFromWeekly(effective))})。下の部へ移る選手や、こちらで控えになりそうな選手は多く望みます。条件を出せるのは${PlayerTermsEngine.maxRounds}回まで。離れすぎた額だと席を立たれます。',
+                        'The bonus is spread over the contract and added to the salary (about ${formatMoney(annualFromWeekly(effective))} a year in all). Players dropping a division, or likely to be on your bench, want more. You get ${PlayerTermsEngine.maxRounds} offers; a lowball makes him walk away.'),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.subtleText(context)),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(Tr.pick('やめる', 'Never mind')),
+              ),
+              FilledButton(
+                onPressed: () =>
+                    Navigator.pop(ctx, (w, endYear, bonus.round())),
+                child: Text(Tr.pick('条件を出す', 'Make the offer')),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+    if (submitted == null || !context.mounted) return;
+    final outcome = await gameState.offerPersonalTerms(player.id,
+        weeklyWage: submitted.$1,
+        endYear: submitted.$2,
+        signingBonus: submitted.$3);
+    if (!context.mounted) return;
+    outcome == TermsOutcome.signed
+        ? FeedbackService.success()
+        : FeedbackService.error();
+    final want = gameState.talkFor(player.id)?.demandWage ?? 0;
+    final text = switch (outcome) {
+      TermsOutcome.signed =>
+        Tr.pick('${player.name}と契約しました', 'You signed ${player.name}'),
+      TermsOutcome.counter => Tr.pick(
+          '${player.name}はもっと欲しいそうです(年俸${formatMoney(annualFromWeekly(want))}ほど)。',
+          '${player.name} wants more (about ${formatMoney(annualFromWeekly(want))} a year).'),
+      _ => gameState.lastSigningBlockReason ??
+          Tr.pick('契約できませんでした', 'The signing did not go through'),
+    };
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(text), duration: const Duration(seconds: 6)),
+    );
   }
 
   /// 移籍金を提示する(新しく申し込む、または相手の対案に出し直す)。
@@ -749,8 +855,8 @@ class _TransferScreenState extends State<TransferScreen>
       children: [
         Text(
           Tr.pick(
-              '提示すると、${TransferTalkEngine.replyDays}日ほどで相手のクラブから返事が来ます。返事は「合意」「対案」「打ち切り」のどれかです。提示できるのは${TransferTalkEngine.maxRounds}回まで。合意したら${TransferTalkEngine.agreementDays}日以内に移籍を決めてください。窓が閉じると、まとまらなかった話は流れます。',
-              'After a bid, the club replies in about ${TransferTalkEngine.replyDays} days: a deal, a counter, or a walk-out. You get ${TransferTalkEngine.maxRounds} bids at most. Once you have a deal, complete it within ${TransferTalkEngine.agreementDays} days. Anything unfinished falls through when the window shuts.'),
+              '提示すると、${TransferTalkEngine.replyDays}日ほどで相手のクラブから返事が来ます。返事は「合意」「対案」「打ち切り」のどれかです。提示できるのは${TransferTalkEngine.maxRounds}回まで。クラブと合意したら、${TransferTalkEngine.agreementDays}日以内に選手(代理人)と年俸・年数・サイン料を決めます。窓が閉じると、まとまらなかった話は流れます。',
+              'After a bid, the club replies in about ${TransferTalkEngine.replyDays} days: a deal, a counter, or a walk-out. You get ${TransferTalkEngine.maxRounds} bids at most. Once the clubs agree, settle salary, length and signing bonus with the player within ${TransferTalkEngine.agreementDays} days. Anything unfinished falls through when the window shuts.'),
           style: small,
         ),
         const SizedBox(height: 8),
@@ -778,9 +884,13 @@ class _TransferScreenState extends State<TransferScreen>
       TransferTalkStage.countered => Tr.pick(
           '対案: $terms(こちらの提示 ${formatMoney(t.bid)}・${t.round}/${TransferTalkEngine.maxRounds}回目)',
           'Their terms: $terms (your bid ${formatMoney(t.bid)}, ${t.round} of ${TransferTalkEngine.maxRounds})'),
-      TransferTalkStage.agreed => Tr.pick(
-          '合意: $terms・${md(t.deadline)}までに決める',
-          'Agreed: $terms • complete by ${md(t.deadline)}'),
+      TransferTalkStage.agreed => t.freeAgent
+          ? Tr.pick(
+              '条件の話し合い中・望む年俸 ${t.demandWage > 0 ? formatMoney(annualFromWeekly(t.demandWage)) : '?'}',
+              'Discussing terms • wants ${t.demandWage > 0 ? formatMoney(annualFromWeekly(t.demandWage)) : '?'} a year')
+          : Tr.pick(
+              'クラブと合意: $terms・${md(t.deadline)}までに選手と契約する${t.demandWage > 0 ? '・望む年俸 ${formatMoney(annualFromWeekly(t.demandWage))}' : ''}',
+              'Clubs agreed: $terms • sign him by ${md(t.deadline)}${t.demandWage > 0 ? ' • wants ${formatMoney(annualFromWeekly(t.demandWage))} a year' : ''}'),
       TransferTalkStage.collapsed => Tr.pick(
           '決裂(この窓のあいだは申し込めない)',
           'Broken off (no more bids this window)'),
@@ -814,12 +924,9 @@ class _TransferScreenState extends State<TransferScreen>
       if (t.stage == TransferTalkStage.agreed) ...[
         withdraw,
         FilledButton(
-          onPressed: () => _acquire(
-            context,
-            () => gameState.completeTransferTalk(t.playerId),
-            t.playerName,
-          ),
-          child: Text(Tr.pick('移籍を決める', 'Complete the transfer')),
+          onPressed:
+              player == null ? null : () => _showTermsDialog(context, player),
+          child: Text(Tr.pick('選手と話す', 'Talk to the player')),
         ),
       ],
     ];

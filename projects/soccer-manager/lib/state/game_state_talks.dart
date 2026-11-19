@@ -14,6 +14,8 @@ extension GameStateTalks on GameState {
     if (_save == null) return null;
     final m = transferMarket.where((p) => p.id == playerId).firstOrNull;
     if (m != null) return m;
+    final fa = _save!.freeAgents.where((p) => p.id == playerId).firstOrNull;
+    if (fa != null) return fa;
     return _sellingClubOf(playerId)
         ?.players
         .where((p) => p.id == playerId)
@@ -149,64 +151,193 @@ extension GameStateTalks on GameState {
     await _persist();
   }
 
-  /// 合意した条件で移籍を決める。払えない・登録の決まりに当たるなどで
-  /// 決められなければ false(理由は[lastSigningBlockReason])。
-  Future<bool> completeTransferTalk(String playerId) async {
-    if (_save == null) return false;
-    lastSigningBlockReason = null;
-    final t = talkFor(playerId);
-    if (t == null || t.stage != TransferTalkStage.agreed) return false;
-    if (!isTransferWindowOpen) {
-      return _blockTalk(Tr.pick('移籍の窓が閉じています。', 'The transfer window is shut.'));
+  /// クラブの id → 部(自国の各部。他の国の1部は 1)。見つからなければ null。
+  int? _tierOfClub(String clubId) {
+    final s = _save!;
+    if (s.league.teams.any((t) => t.id == clubId)) return s.currentDivisionTier;
+    for (var i = 0; i < s.otherDivisionLeagues.length; i++) {
+      if (s.otherDivisionLeagues[i]?.teams.any((t) => t.id == clubId) ??
+          false) {
+        return i + 1;
+      }
     }
-    final target = _acquisitionTarget(playerId);
-    if (target == null) return false;
-    final player = target.player;
-    if (!_minorRuleAllows(player)) return false;
-    if (!_registrationAllows(player)) return false;
-    final inst = t.installments && t.installmentsOk;
-    final upfront = inst ? (t.fee * 0.3).round() : t.fee;
-    final agentFee = TransferTermsEngine.agentFee(t.fee);
-    if (_save!.budget < upfront + agentFee) {
-      return _blockTalk(Tr.pick('資金が足りません(代理人手数料も要ります)。',
-          'You cannot afford it (the agent fee comes on top).'));
-    }
-    if (!_wageBudgetAllowsSigning(player.wage)) return false;
+    if (_foreignTeamIds().containsKey(clubId)) return 1;
+    return null;
+  }
 
-    _book(LedgerCategory.transfers, -upfront);
-    if (inst) {
-      const weeks = 4;
-      _save!.pendingInstallments.add(Installment(
-        description: Tr.pick(
-            '${player.name} 分割払い残金', '${player.name} instalments outstanding'),
-        weeklyAmount: ((t.fee - upfront) / weeks).ceil(),
-        weeksRemaining: weeks,
+  /// こちらへ来たら先発になれそうか(同じ大分類の先発の一番下より上)。
+  bool _wouldStartHere(Player p) {
+    final team = userTeam;
+    final starters = [
+      for (final q in team.players)
+        if (team.startingXI.contains(q.id) &&
+            q.position.group == p.position.group)
+          q.overall,
+    ];
+    if (starters.isEmpty) return true;
+    return p.overall > starters.reduce(min);
+  }
+
+  /// 選手に年俸・契約の満了の年・サイン料を出す。
+  ///
+  /// 他のクラブの選手は、クラブと移籍金で合意してから(窓のあいだだけ)。
+  /// フリーエージェントは、いつでも直接。のめば加入し、足りなければ
+  /// 望む額を返され([TransferTalk.demandWage])、離れすぎていれば断られる。
+  Future<TermsOutcome> offerPersonalTerms(
+    String playerId, {
+    required int weeklyWage,
+    required int endYear,
+    int signingBonus = 0,
+  }) async {
+    if (_save == null) return TermsOutcome.blocked;
+    lastSigningBlockReason = null;
+    final fa = _save!.freeAgents.where((p) => p.id == playerId).firstOrNull;
+    var t = talkFor(playerId);
+    ({Player player, Team? club})? target;
+    final Player player;
+    if (fa != null) {
+      player = fa;
+      if (t != null && t.stage == TransferTalkStage.collapsed) {
+        _blockTalk(Tr.pick('${fa.name}はもう話を聞いてくれません。',
+            '${fa.name} will not talk to you any more.'));
+        return TermsOutcome.blocked;
+      }
+    } else {
+      if (t == null || t.stage != TransferTalkStage.agreed) {
+        return TermsOutcome.blocked;
+      }
+      if (!isTransferWindowOpen) {
+        _blockTalk(Tr.pick('移籍の窓が閉じています。', 'The transfer window is shut.'));
+        return TermsOutcome.blocked;
+      }
+      target = _acquisitionTarget(playerId);
+      if (target == null) return TermsOutcome.blocked;
+      player = target.player;
+    }
+    if (!_minorRuleAllows(player)) return TermsOutcome.blocked;
+    if (!_registrationAllows(player)) return TermsOutcome.blocked;
+
+    final inst = t != null && t.installments && t.installmentsOk;
+    final fee = fa != null ? 0 : t!.fee;
+    final upfront = inst ? (fee * 0.3).round() : fee;
+    final agentFee = TransferTermsEngine.agentFee(fee);
+    if (weeklyWage <= 0 || signingBonus < 0) return TermsOutcome.blocked;
+    if (_save!.budget < upfront + agentFee + signingBonus) {
+      _blockTalk(Tr.pick('資金が足りません(移籍金・代理人手数料・サイン料)。',
+          'You cannot afford it (fee, agent fee and signing bonus).'));
+      return TermsOutcome.blocked;
+    }
+    if (!_wageBudgetAllowsSigning(weeklyWage)) return TermsOutcome.blocked;
+
+    if (t == null) {
+      t = TransferTalk(
         playerId: player.id,
-      ));
+        playerName: player.name,
+        clubId: '',
+        clubName: Tr.pick('所属なし', 'Free agent'),
+        bid: 0,
+        stage: TransferTalkStage.agreed,
+        freeAgent: true,
+        deadline:
+            today.add(const Duration(days: TransferTalkEngine.agreementDays)),
+      );
+      _save!.transferTalks.add(t);
     }
-    _bookAgentFee(player, agentFee);
-    if (t.sellOnPercent > 0) {
-      _save!.sellOnClauses[player.id] = t.sellOnPercent;
-      _logNews(
-          Tr.pick('${player.name}の獲得で、${t.clubName}に売却条項(${t.sellOnPercent}%)を約束した。',
-              'To land ${player.name} we agreed a ${t.sellOnPercent}% sell-on clause with ${t.clubName}.'),
-          context: Tr.pick('移籍', 'Transfer'));
+    final ctx = Tr.pick('移籍', 'Transfer');
+    final fromTier = fa != null
+        ? null
+        : (target!.club == null
+            ? _save!.currentDivisionTier
+            : _tierOfClub(target.club!.id));
+    final toTier = _save!.currentDivisionTier;
+    final refusal = PlayerTermsEngine.refusal(
+        fromTier: fromTier, toTier: toTier, age: player.age);
+    if (refusal != null) {
+      t.stage = TransferTalkStage.collapsed;
+      lastSigningBlockReason = refusal;
+      _logNews(Tr.pick('${player.name}: $refusal', '${player.name}: $refusal'),
+          context: ctx);
+      _notify();
+      await _persist();
+      return TermsOutcome.refused;
     }
-    ContractEngine.applyTransferContract(player);
-    _takeFromSeller(target);
+    final demand = PlayerTermsEngine.demand(
+      currentWage: player.wage,
+      marketValue: player.marketValue,
+      fromTier: fromTier,
+      toTier: toTier,
+      wasStarter: target?.club?.startingXI.contains(player.id) ?? false,
+      wouldStart: _wouldStartHere(player),
+    );
+    final years = max(1, endYear - Player.contractClockYear + 1);
+    final effective = PlayerTermsEngine.effectiveWeekly(
+        weeklyWage: weeklyWage, years: years, signingBonus: signingBonus);
+    t.termsRound += 1;
+    switch (PlayerTermsEngine.judge(
+        effective: effective, demand: demand, round: t.termsRound)) {
+      case TermsReplyKind.walkAway:
+        t.stage = TransferTalkStage.collapsed;
+        lastSigningBlockReason = Tr.pick(
+            '${player.name}は条件に納得せず、話は流れました。',
+            '${player.name} was not happy with the terms. The deal is off.');
+        _logNews(lastSigningBlockReason!, context: ctx);
+        _notify();
+        await _persist();
+        return TermsOutcome.refused;
+      case TermsReplyKind.counter:
+        t.demandWage = demand;
+        _notify();
+        await _persist();
+        return TermsOutcome.counter;
+      case TermsReplyKind.accept:
+        break;
+    }
+
+    if (fa != null) {
+      _save!.freeAgents.remove(fa);
+    } else {
+      _book(LedgerCategory.transfers, -upfront);
+      if (inst) {
+        const weeks = 4;
+        _save!.pendingInstallments.add(Installment(
+          description: Tr.pick('${player.name} 分割払い残金',
+              '${player.name} instalments outstanding'),
+          weeklyAmount: ((fee - upfront) / weeks).ceil(),
+          weeksRemaining: weeks,
+          playerId: player.id,
+        ));
+      }
+      _bookAgentFee(player, agentFee);
+      if (t.sellOnPercent > 0) {
+        _save!.sellOnClauses[player.id] = t.sellOnPercent;
+        _logNews(
+            Tr.pick('${player.name}の獲得で、${t.clubName}に売却条項(${t.sellOnPercent}%)を約束した。',
+                'To land ${player.name} we agreed a ${t.sellOnPercent}% sell-on clause with ${t.clubName}.'),
+            context: ctx);
+      }
+      _takeFromSeller(target!);
+      if (fee < player.marketValue) {
+        _save!.negotiationSignings++;
+        _evaluateAchievements();
+      }
+    }
+    if (signingBonus > 0) _book(LedgerCategory.transfers, -signingBonus);
+    player.wage = weeklyWage;
+    ContractEngine.renewContract(player, endYear: endYear);
     userTeam.players.add(player);
     _save!.transferTalks.remove(t);
-    if (t.fee < player.marketValue) {
-      _save!.negotiationSignings++;
-      _evaluateAchievements();
-    }
     _logNews(
-        Tr.pick('${player.name}が${t.clubName}から加入した(移籍金${formatMoney(t.fee)})。',
-            '${player.name} joined from ${t.clubName} for ${formatMoney(t.fee)}.'),
-        context: Tr.pick('移籍', 'Transfer'));
+        fa != null
+            ? Tr.pick(
+                '${player.name}と契約した(年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${signingBonus > 0 ? '・サイン料${formatMoney(signingBonus)}' : ''})。',
+                'Signed ${player.name} (${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${signingBonus > 0 ? ', ${formatMoney(signingBonus)} signing bonus' : ''}).')
+            : Tr.pick(
+                '${player.name}が${t.clubName}から加入した(移籍金${formatMoney(fee)}・年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${signingBonus > 0 ? '・サイン料${formatMoney(signingBonus)}' : ''})。',
+                '${player.name} joined from ${t.clubName} (fee ${formatMoney(fee)}, ${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${signingBonus > 0 ? ', ${formatMoney(signingBonus)} signing bonus' : ''}).'),
+        context: ctx);
     _notify();
     await _persist();
-    return true;
+    return TermsOutcome.signed;
   }
 
   /// 日付が進んだぶん、相手の返事を受け取り、期限の切れた話を流す。
@@ -218,17 +349,24 @@ extension GameStateTalks on GameState {
     if (talks.isEmpty) return;
     final ctx = Tr.pick('移籍', 'Transfer');
     if (!TransferWindowCalendar.isOpen(after, currentLeagueTheme)) {
-      final open = talks.where((t) => t.isOpen).length;
-      talks.clear();
+      final open = talks.where((t) => t.isOpen && !t.freeAgent).length;
+      talks.removeWhere((t) => !t.freeAgent);
       if (open > 0) {
         _logNews(
             Tr.pick('移籍の窓が閉じ、まとまらなかった交渉$open件は流れた。',
                 'The window has shut. $open unfinished negotiation(s) fell through.'),
             context: ctx);
       }
-      return;
     }
     for (final t in [...talks]) {
+      if (t.freeAgent) {
+        // フリーエージェントとの話は、期限か、選手がいなくなったら消える。
+        final gone = !_save!.freeAgents.any((p) => p.id == t.playerId);
+        if (gone || (t.deadline != null && t.deadline!.isBefore(after))) {
+          talks.remove(t);
+        }
+        continue;
+      }
       final player = talkPlayer(t.playerId);
       final stillThere = player != null &&
           (t.clubId.isEmpty || _sellingClubOf(t.playerId)?.id == t.clubId);
@@ -247,7 +385,7 @@ extension GameStateTalks on GameState {
           t.deadline!.isBefore(after)) {
         talks.remove(t);
         _logNews(
-            Tr.pick('${t.playerName}の合意は、期限までに決めなかったので流れた。',
+            Tr.pick('${t.playerName}の合意は、期限までに選手と契約しなかったので流れた。',
                 'The deal for ${t.playerName} lapsed because you did not complete it in time.'),
             context: ctx);
         continue;

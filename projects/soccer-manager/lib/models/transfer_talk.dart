@@ -18,6 +18,21 @@ enum TransferTalkStage {
   collapsed,
 }
 
+/// 選手に条件を出した結果。
+enum TermsOutcome {
+  /// 条件をのみ、加入した。
+  signed,
+
+  /// もっと欲しいと返された([TransferTalk.demandWage]に望む額)。
+  counter,
+
+  /// 断られた(話は流れた)。
+  refused,
+
+  /// 条件を出せなかった(資金・登録・窓など。理由は lastSigningBlockReason)。
+  blocked,
+}
+
 class TransferTalk {
   final String playerId;
 
@@ -54,6 +69,16 @@ class TransferTalk {
   /// 合意の期限。この日を過ぎても決めなければ話は流れる。
   DateTime? deadline;
 
+  /// フリーエージェント(所属なし)との話か。クラブとの交渉は無く、
+  /// 窓が閉じても流れない(期限で流れる)。
+  final bool freeAgent;
+
+  /// 選手に条件を出した回数。
+  int termsRound;
+
+  /// 選手が望む週俸(万円)。一度条件を出して返されるまでは 0(分からない)。
+  int demandWage;
+
   TransferTalk({
     required this.playerId,
     required this.playerName,
@@ -68,6 +93,9 @@ class TransferTalk {
     this.sellOnPercent = 0,
     this.installmentsOk = false,
     this.deadline,
+    this.freeAgent = false,
+    this.termsRound = 0,
+    this.demandWage = 0,
   });
 
   /// まだ話が生きているか(決裂していない)。
@@ -98,6 +126,9 @@ class TransferTalk {
         if (sellOnPercent > 0) 'sellOnPercent': sellOnPercent,
         if (installmentsOk) 'installmentsOk': true,
         if (deadline != null) 'deadline': _date(deadline),
+        if (freeAgent) 'freeAgent': true,
+        if (termsRound > 0) 'termsRound': termsRound,
+        if (demandWage > 0) 'demandWage': demandWage,
       };
 
   factory TransferTalk.fromJson(Map<String, dynamic> json) => TransferTalk(
@@ -116,5 +147,8 @@ class TransferTalk {
         sellOnPercent: json['sellOnPercent'] as int? ?? 0,
         installmentsOk: json['installmentsOk'] as bool? ?? false,
         deadline: _parse(json['deadline']),
+        freeAgent: json['freeAgent'] as bool? ?? false,
+        termsRound: json['termsRound'] as int? ?? 0,
+        demandWage: json['demandWage'] as int? ?? 0,
       );
 }
