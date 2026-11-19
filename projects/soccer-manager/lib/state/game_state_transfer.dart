@@ -534,6 +534,9 @@ extension GameStateTransfer on GameState {
   /// (受け入れ余地のあるクラブがなければやむなく引退扱い=移動なし)。
   void _placeSoldPlayerAtCpuClub(Player player) {
     lastSaleNews = null;
+    // 自クラブの選手は自国の扱い。他のクラブへ移る前に国籍を確定させる
+    // (確定させないと、移った先のクラブの選手として国籍を引き直してしまう)。
+    _fixNationality(player);
     final destinations = _save!.league.teams
         .where((t) => t.id != _save!.userTeamId && t.players.length < 26)
         .toList();
@@ -1395,6 +1398,9 @@ extension GameStateTransfer on GameState {
   /// ときは、従来どおりどこにも移さない。
   void _movePlayerToBuyer(Player player, String buyerClubName) {
     if (_save == null) return;
+    // 自クラブの選手は自国の扱い。他のクラブへ移る前に国籍を確定させる
+    // (確定させないと、移った先のクラブの選手として国籍を引き直してしまう)。
+    _fixNationality(player);
     Team? buyer;
     for (final t in _save!.allTeams) {
       if (t.id == _save!.userTeamId || t.name != buyerClubName) continue;
