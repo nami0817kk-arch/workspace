@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../logic/attribute_context_engine.dart';
 import '../logic/contract_engine.dart';
+import '../logic/injury_care.dart';
 import '../logic/retirement_engine.dart';
 import '../logic/dynamics_engine.dart';
 import '../logic/lineup_utils.dart';
@@ -215,8 +216,8 @@ class PlayerDetailScreen extends StatelessWidget {
                           ? Tr.pick('負傷中（あと${p.injuryWeeks}週は出場不可）',
                               'Injured (out for another ${Tr.plural(p.injuryWeeks, 'week')})')
                           : Tr.pick(
-                              '${p.injuryType!.label}で負傷中（あと${p.injuryWeeks}週は出場不可）',
-                              '${p.injuryType!.label} (out for another ${Tr.plural(p.injuryWeeks, 'week')})'),
+                              '${InjuryCare.describe(p)}で負傷中（あと${p.injuryWeeks}週は出場不可）',
+                              '${InjuryCare.describe(p)} (out for another ${Tr.plural(p.injuryWeeks, 'week')})'),
                       style: const TextStyle(
                         color: Colors.redAccent,
                         fontWeight: FontWeight.bold,

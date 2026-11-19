@@ -241,9 +241,16 @@ extension GameStateMatch on GameState {
     // 続けてしまうため。復帰直後は試合勘が鈍っているためマッチシャープ
     // ネスを大きく下げる。
     for (final t in league.teams) {
+      final mine = t.id == _save!.userTeamId;
       for (final p in t.players) {
         if (p.injuryWeeks > 0) {
           p.injuryWeeks -= 1;
+          // 自クラブの選手が治ったら、保存療法の再発を振る。
+          if (p.injuryWeeks == 0 &&
+              mine &&
+              _onUserInjuryHealed(p, GameState._offerRng.nextDouble())) {
+            continue;
+          }
           if (p.injuryWeeks == 0) {
             p.matchSharpness = min(p.matchSharpness, 40);
             p.injuryType = null;
@@ -290,6 +297,8 @@ extension GameStateMatch on GameState {
     _updateManagerWeekly(preMatchRank);
     // 序列を約束した選手を、先発から外し続けていないか。
     _checkPromisesWeekly();
+    // 大きな怪我は、手術か保存療法かを選ばせる。
+    _reviewInjuries();
     // 先発に仲の良い選手・仲の悪い選手がいるか。
     RelationsEngine.applyWeekly(userTeam);
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
