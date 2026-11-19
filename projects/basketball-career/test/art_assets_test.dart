@@ -6,7 +6,11 @@ import 'package:basketball_career/ui/team_colors.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const arts = ['title', 'scene_national', 'scene_final'];
+  const arts = [
+    'title', 'scene_national', 'scene_final', //
+    'scene_preseason', 'scene_season', 'scene_deadline', 'scene_playoffs', 'scene_draft', 'scene_offseason',
+    'event_trade', 'event_signing', 'event_injury', 'event_draft',
+  ];
 
   test('アプリ内の絵がすべて assets にあり、pubspec.yaml に宣言されている', () {
     final pubspec = File('pubspec.yaml').readAsStringSync();

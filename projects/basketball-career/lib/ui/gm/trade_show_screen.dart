@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../art/title_art.dart';
 
 import '../../gm/player.dart';
 import '../../gm/trade.dart';
@@ -69,6 +70,8 @@ class TradeDoneScreen extends StatelessWidget {
         child: Column(children: [
           Expanded(
             child: ListView(padding: const EdgeInsets.fromLTRB(14, 8, 14, 16), children: [
+              const SceneStrip('assets/art/event_trade.jpg', '新しい顔ぶれ', height: 84),
+              const SizedBox(height: 8),
               Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 side('出した', GmColors.bad, s.give, s.givePicks),
                 const SizedBox(width: 8),

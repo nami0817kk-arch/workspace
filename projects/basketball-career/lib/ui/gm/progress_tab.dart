@@ -33,9 +33,12 @@ class ProgressTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final car = c.career!;
+    final scene = _sceneOf(car);
     final list = ListView(
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
-      children: switch (car.phase) {
+      children: [
+        if (scene != null) ...[SceneStrip(scene.$1, scene.$2, key: Key(scene.$1)), const SizedBox(height: 8)],
+        ...switch (car.phase) {
         Phase.preseason => _preseason(context, car),
         Phase.season => _season(context, car),
         Phase.playoffs => _beforePlayoffs(context, car),
@@ -44,6 +47,7 @@ class ProgressTab extends StatelessWidget {
         Phase.over => _over(context, car),
         Phase.draft => const [],
       },
+      ],
     );
     if (car.phase != Phase.contracts) return list;
     // オフの契約は長い一覧なので、「オフを終える」を下に固定して、いつでも押せるようにする
@@ -62,6 +66,15 @@ class ProgressTab extends StatelessWidget {
       ),
     ]);
   }
+
+  /// いまの時期の場面の絵と名前(プレーオフ・シーズンの終わりは、それぞれの画面の絵があるので出さない)。
+  (String, String)? _sceneOf(Career car) => switch (car.phase) {
+        Phase.preseason => ('assets/art/scene_preseason.jpg', '${car.season}年目・開幕前'),
+        Phase.season when car.block == tradeDeadlineBlock - 1 => ('assets/art/scene_deadline.jpg', 'トレードの締め切りが近い'),
+        Phase.season => ('assets/art/scene_season.jpg', '${car.season}年目・シーズン ${car.roundAt}/$gamesPerSeason試合'),
+        Phase.contracts => ('assets/art/scene_offseason.jpg', '${car.season}年目・オフ'),
+        _ => null,
+      };
 
   Widget _card(List<Widget> children, {Color? edge}) => Card(
         shape: edge == null
@@ -591,7 +604,7 @@ class ProgressTab extends StatelessWidget {
             ? '地区$rank位。プレーイン(1試合勝負)を勝ち抜けば、プレーオフに出られる。'
             : '地区$rank位。プレーオフには届かなかった。';
     return [
-      const ArtBanner('assets/art/scene_final.jpg', height: 130),
+      const SceneStrip('assets/art/scene_playoffs.jpg', 'プレーオフ', height: 110),
       const SizedBox(height: 8),
       _card([
         _head('レギュラーシーズン終了', icon: Icons.emoji_events_rounded, color: GmColors.gold),
