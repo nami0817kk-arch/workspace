@@ -110,8 +110,8 @@ class StaffMember {
   /// 1-20 の能力値。
   final Map<StaffAttribute, int> attributes;
 
-  /// 週俸(万円)。契約時に確定し、以後は変わらない。
-  final int wage;
+  /// 週俸(万円)。契約時に決まる。引き抜きを断って残すときだけ上がる。
+  int wage;
 
   /// 残り契約年数。0になると契約満了で去る。
   int contractYears;
@@ -121,6 +121,9 @@ class StaffMember {
 
   /// 監督だけが持つもの(考え方・好みの布陣・経歴・今の所属)。監督以外は null。
   ManagerProfile? manager;
+
+  /// 自クラブで引退した選手なら、その選手の id(元選手の印)。
+  final String? formerPlayerId;
 
   StaffMember({
     required this.id,
@@ -132,6 +135,7 @@ class StaffMember {
     this.contractYears = 2,
     this.specialty = StaffSpecialty.balanced,
     this.manager,
+    this.formerPlayerId,
   });
 
   int attribute(StaffAttribute a) => attributes[a] ?? 1;
@@ -220,6 +224,7 @@ class StaffMember {
         'contractYears': contractYears,
         'specialty': specialty.name,
         if (manager != null) 'manager': manager!.toJson(),
+        if (formerPlayerId != null) 'formerPlayerId': formerPlayerId,
       };
 
   static StaffMember fromJson(Map<String, dynamic> json) {
@@ -246,6 +251,7 @@ class StaffMember {
           ? ManagerProfile.fromJson(
               (json['manager'] as Map).cast<String, dynamic>())
           : null,
+      formerPlayerId: json['formerPlayerId'] as String?,
     );
   }
 }

@@ -195,16 +195,18 @@ extension GameStateSquad on GameState {
     _save!.staffCandidates = StaffMarket.generate(
       divisionTier: _save!.currentDivisionTier,
       confidence: _save!.confidence,
-      seed: _save!.careerSeasons,
+      // 候補は月ごとに入れ替わる。id が前の月と重ならないよう月を混ぜる。
+      seed: _save!.careerSeasons * 100 + today.month,
       avoidNames: {
         for (final s in _save!.infrastructure.staff.values)
           if (s != null) s.name,
       },
     );
     _addManagerCandidates();
+    _addFormerPlayerCandidates();
   }
 
-  /// いま雇えるスタッフの候補。シーズンごとに入れ替わる。
+  /// いま雇えるスタッフの候補。月ごとに入れ替わる。
   List<StaffMember> staffCandidatesFor(StaffRole role) =>
       _save?.staffCandidates.where((s) => s.role == role).toList() ?? [];
 

@@ -20,6 +20,7 @@ import 'player.dart';
 import 'pre_contract.dart';
 import 'transfer_talk.dart';
 import 'sd_brief.dart';
+import 'staff_offer.dart';
 import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
@@ -270,6 +271,9 @@ class SaveGame {
 
   /// SD がこの窓で取った人数(窓が閉じると 0 に戻る)。
   int sdSignedThisWindow;
+
+  /// 他のクラブから来ている、こちらのスタッフの引き抜きの話。
+  List<StaffOffer> staffOffers;
 
   /// 今季、監督の立場が危ういと報じたか(1季に1回だけ報じる)。
   bool managerWarned;
@@ -529,6 +533,7 @@ class SaveGame {
     this.managerStanding = 60,
     SdBrief? sdBrief,
     this.sdSignedThisWindow = 0,
+    List<StaffOffer>? staffOffers,
     this.managerWarned = false,
     this.confidence = 60,
     this.shareholderExpectation = 60,
@@ -652,6 +657,7 @@ class SaveGame {
   })  : preContracts = preContracts ?? [],
         transferTalks = transferTalks ?? [],
         sdBrief = sdBrief ?? SdBrief(),
+        staffOffers = staffOffers ?? [],
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
@@ -772,6 +778,8 @@ class SaveGame {
         'managerStanding': managerStanding,
         'sdBrief': sdBrief.toJson(),
         if (sdSignedThisWindow > 0) 'sdSignedThisWindow': sdSignedThisWindow,
+        if (staffOffers.isNotEmpty)
+          'staffOffers': staffOffers.map((o) => o.toJson()).toList(),
         if (managerWarned) 'managerWarned': true,
         'confidence': confidence,
         'shareholderExpectation': shareholderExpectation,
@@ -931,6 +939,11 @@ class SaveGame {
             ? SdBrief.fromJson((json['sdBrief'] as Map).cast<String, dynamic>())
             : null,
         sdSignedThisWindow: json['sdSignedThisWindow'] as int? ?? 0,
+        staffOffers: (json['staffOffers'] as List?)
+                ?.map((e) =>
+                    StaffOffer.fromJson((e as Map).cast<String, dynamic>()))
+                .toList() ??
+            [],
         managerWarned: json['managerWarned'] as bool? ?? false,
         confidence: json['confidence'] as int? ?? 60,
         shareholderExpectation: json['shareholderExpectation'] as int? ?? 60,
