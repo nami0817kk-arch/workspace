@@ -1,0 +1,145 @@
+# 物語完結型ショート 井伊直弼 s3（2026-11-19）。本編 scripts/ii-naosuke-story.yaml（11/23 12:00 公開予定、https://youtu.be/9UPaGbmK_PE）から。11/24 13:30 に予約。
+# 形式は atsuhime_s1〜s5・tsukiyama_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/ii/main/）の切り出しだけ。新しい絵は作らない。顔・血・遺体は描かない。
+# 切り口：鳥取の安達清一郎の日記「ピストルの弾が胸先に当たって死んだ」と、よく知られた「太ももから腰」（本編 第3章、ii-28・29・30）。
+# hook＝弾は胸先、と書いた日記が鳥取にある（答えはこのショートの中：関鉄之介の話を安達が書き留めた）。
+# tease＝ピストルを撃ったのは誰か（答えは本編 第3章：『歴史街道』は黒沢忠三郎、歴史探偵は少なくとも3挺、ii-31）。
+# 理解テスト：①井伊直弼を撃った弾の話 ②1860年の桜田門外の変の約2か月後、鳥取で ③関鉄之介の話を安達が日記に書いた ④胸先か腰か、記録と解説で割れたまま
+title: "井伊直弼｜弾は胸先、と鳥取の日記"
+yt_title: "井伊直弼を撃った弾は「胸先」に当たった　桜田門外の変の2か月後、逃げた指揮役の話を書き留めた鳥取の日記"
+description: |-
+  1860年、桜田門外の変のおよそ2か月後。逃げていた襲う側の指揮役・関鉄之介は、鳥取藩の旧い知り合い・安達清一郎を訪ねました。安達は日記に、直弼はピストルの弾が胸先に当たって死んだ、と書き留めています。
+  日記は鳥取県立博物館にあり、原本のありかが分かったのは2018年。一方、よく知られた話では、弾は太ももから腰に当たったとされます。弾の当たった所は、記録と解説で割れたままです。
+  本編では、ピストルを撃ったのは誰か、駕籠の中の大老はどうしていたのかを、記録ごとに並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#井伊直弼"
+- "#桜田門外の変"
+- "#幕末"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/ii
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: ii_story_s3
+header:
+  tag: "井伊直弼（桜田門外の変）"
+  title: "弾は《胸先》、と鳥取の日記"
+now:
+- {at: "1860年", text: "1860年3月3日　桜田門外", point: 0}
+- {at: "2か月後", text: "1860年　鳥取", point: 0}
+- {at: "2022年", text: "2022年　中国新聞", point: 1}
+- {at: "2018年", text: "2018年　原本のありか", point: 1}
+timeline:
+- {label: "1860"}
+- {label: "2018"}
+shots:
+  I12_1:
+    kind: "ai"
+    file: "ii/main/I12.jpg"
+    focus: [0.45, 0.55]
+    move: "in"
+    must: "I12"
+  TH_2:
+    kind: "ai"
+    file: "ii/main/TH.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "TH"
+  I10_3:
+    kind: "ai"
+    file: "ii/main/I10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "I10"
+  I11_4:
+    kind: "ai"
+    file: "ii/main/I11.jpg"
+    focus: [0.5, 0.6]
+    move: "right"
+    must: "I11"
+  I07_5:
+    kind: "ai"
+    file: "ii/main/I07.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "I07"
+  I09_6:
+    kind: "ai"
+    file: "ii/main/I09.jpg"
+    focus: [0.45, 0.55]
+    move: "in"
+    must: "I09"
+  I12_7:
+    kind: "ai"
+    file: "ii/main/I12.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "I12"
+  I06_8:
+    kind: "ai"
+    file: "ii/main/I06.jpg"
+    focus: [0.4, 0.55]
+    move: "right"
+    must: "I06"
+  I05_9:
+    kind: "ai"
+    file: "ii/main/I05.jpg"
+    focus: [0.5, 0.45]
+    move: "in"
+    must: "I05"
+lines:
+  # fact: ii-28
+- 語り: "大老を撃った弾は、胸先に当たった。そう書いた日記が、鳥取にある。"
+  shot: I12_1
+  tone: 強調
+  pause: 0.12
+  # fact: ii-19, ii-36
+- 語り: "1860年、江戸城の桜田門の外で、大老、井伊直弼は、襲われて亡くなった。合図は、ピストルだった。"
+  shot: TH_2
+  tone: 重い
+  pause: 0.12
+  # fact: ii-28
+- 語り: "事件の、およそ2か月後。逃げていた、襲う側の指揮役、関鉄之介が、鳥取藩の旧い知り合い、安達清一郎を訪ねる。"
+  shot: I10_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-28
+- 語り: "安達は、日記に、関の話を書き留めた。直弼は、ピストルの弾が、胸先に当たって、死んだ。"
+  shot: I11_4
+  tone: 重い
+  pause: 0.12
+  # fact: ii-29
+- 語り: "2022年の中国新聞の記事によれば、同じ日記には、合図の音のあと、守る侍たちが、15メートルほど退いた、ともある。"
+  shot: I07_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-28
+- 語り: "この日記は、鳥取県立博物館にある。原本のありかが分かったのは、2018年のことだ。"
+  shot: I09_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: ii-30
+- 語り: "ところが、よく知られた話では、弾は、太ももから、腰に当たった、とされる。"
+  shot: I12_7
+  tone: 重い
+  pause: 0.12
+  # fact: ii-30
+- 語り: "胸先か、腰か。弾の当たった所は、記録と解説で、割れたままだ。"
+  shot: I06_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第3章（ii-31）
+- 語り: "では、そのピストルを撃ったのは、誰だったのか。"
+  shot: I05_9
+  tone: 疑問
+  pause: 0.15

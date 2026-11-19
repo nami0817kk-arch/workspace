@@ -1,0 +1,159 @@
+# 物語完結型ショート 上杉景勝と直江兼続のその後 s1（2026-11-19）。本編 scripts/uesugi-sonogo-story.yaml（11/23 19:00 公開予定、https://youtu.be/kjuSGhzZWyw）から。11/24 9:30 に予約。
+# 形式は atsuhime_s1・tsukiyama_s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/上杉景勝_facts_20261118.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/uesugi/main/ の U01〜U32）の切り出しと、本編で使った上杉景勝像（パブリックドメイン）だけ。新しい絵は作らない。
+# 切り口：6千人の町に3万人（本編 序章・第2章、uesugi-13・16・17・38・19）。
+# hook＝その3万人は、どこに住んだのか（答えはこのショートの中：城下に入りきらず、城下の外れで田畑を耕す原方衆に）。
+# tease＝町のそばの暴れ川を、兼続はどう抑えたのか（答えは本編 第3章：赤崩の山から見て、谷地河原に石の堤＝直江石堤）。
+# 計算（自分で計算し直した）：30000÷6027≒4.98＝約5倍。120万石→30万石＝4分の1。天保11年（1840）−1601＝239＝240年ほど。
+# 理解テスト：①上杉家の家臣の話 ②1601年、米沢に3万人が移った ③城下に入りきらない下級の武士は外れで田畑を耕しながら仕えた ④原方衆と呼ばれ、240年後も8つの組で暮らしていた
+title: "上杉家｜6千人の町に3万人"
+yt_title: "人口6千人の米沢に3万人が引っ越してきた　関ヶ原のあと、上杉家の家臣はどこに住んだのか"
+description: |-
+  1601年、人口6千人ほどの米沢の町に、およそ3万人が移ってきました。関ヶ原の年に家康に逆らい、会津120万石から米沢30万石に減らされた、上杉家の家臣と家族です。
+  昭和19年の伝記『直江兼続伝』によれば、当時の米沢は人口6,027人・803軒。城下に入りきらない下級の武士は、南原など城下の外れに置かれ、田畑を耕しながら仕える「原方衆」になりました（長井政太郎の研究、1936年）。
+  本編では、30万石になった上杉家と直江兼続のその後を、当時の書状・江戸時代の記録・博物館と図書館の調べでたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#上杉景勝"
+- "#直江兼続"
+- "#米沢"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/uesugi
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: uesugi_story_s1
+header:
+  tag: "上杉家（関ヶ原のあと）"
+  title: "6千人の町に、《3万人》"
+now:
+- {at: "1601年", text: "1601年　米沢", point: 0}
+- {at: "240年ほどのち", text: "1840年　米沢", point: 1}
+timeline:
+- {label: "1601"}
+- {label: "1840"}
+# 台本だけの読み替え（readings.yaml は変えない）。「山や野」をサンヤと読んだ
+readings:
+  "山や野に住む": "やまやのにすむ"
+shots:
+  U01_1:
+    kind: "ai"
+    file: "uesugi/main/U01.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "U01"
+  KG_2:
+    kind: real
+    image: paintings/mitsunari_uesugi_kagekatsu_armor.jpg
+    focus: [0.5, 0.35]
+    move: down
+    credit: "《上杉景勝像》17世紀（米沢市上杉博物館蔵・パブリックドメイン）"
+    must: 上杉景勝の肖像
+  U02_3:
+    kind: "ai"
+    file: "uesugi/main/U02.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "U02"
+  U03_4:
+    kind: "ai"
+    file: "uesugi/main/U03.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "U03"
+  U03_5:
+    kind: "ai"
+    file: "uesugi/main/U03.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "U03"
+  U11_6:
+    kind: "ai"
+    file: "uesugi/main/U11.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "U11"
+  U10_7:
+    kind: "ai"
+    file: "uesugi/main/U10.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "U10"
+  U10_8:
+    kind: "ai"
+    file: "uesugi/main/U10.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "U10"
+  U15_9:
+    kind: "ai"
+    file: "uesugi/main/U15.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "U15"
+  U13_10:
+    kind: "ai"
+    file: "uesugi/main/U13.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "U13"
+lines:
+  # fact: uesugi-38
+- 語り: "1601年、人口6千人ほどの米沢の町に、およそ3万人が、引っ越してきた。その3万人は、どこに住んだのか。"
+  shot: U01_1
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-13
+- 語り: "関ヶ原の年に、家康に逆らった上杉家は、120万石から、30万石へ。領地は、4分の1。"
+  shot: KG_2
+  tone: 重い
+  pause: 0.12
+  # fact: uesugi-16
+- 語り: "家臣の取り分も、前の3分の1になった。"
+  shot: U02_3
+  tone: 重い
+  pause: 0.12
+  # fact: uesugi-17
+- 語り: "昭和19年の伝記、直江兼続伝によれば、当時の米沢は、人口6千27人。家は、803軒しかなかった。"
+  shot: U03_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-38
+- 語り: "そこへ、家臣と家族、およそ3万人。町の5倍ほどの人だ。"
+  shot: U03_5
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-19
+- 語り: "昭和11年の研究によれば、城下に入りきらない下級の武士は、南原など、城下の外れに置かれた。"
+  shot: U11_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-19, uesugi-43
+- 語り: "荒れた土地を開き、田畑を耕しながら、武士として仕える。彼らは、原方衆と呼ばれた。"
+  shot: U10_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-19
+- 語り: "240年ほどのちの旅日記は、こう書く。山や野に住む侍は、8つの組。1つの組に、200人あまり。"
+  shot: U10_8
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-19
+- 語り: "原方の者の力は、城下の侍の3倍だ、と語った人もいた。"
+  shot: U15_9
+  tone: 強調
+  pause: 0.12
+  # tease：答えは本編 第3章（uesugi-20・44）
+- 語り: "では、町のそばの暴れ川を、家老の直江兼続は、どう抑えたのか。"
+  shot: U13_10
+  tone: 疑問
+  pause: 0.15

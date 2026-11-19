@@ -1,0 +1,148 @@
+# 物語完結型ショート 上杉景勝と直江兼続のその後 s3（2026-11-19）。本編 scripts/uesugi-sonogo-story.yaml（11/23 19:00 公開予定、https://youtu.be/kjuSGhzZWyw）から。11/24 15:30 に予約。
+# 形式は atsuhime_s1・tsukiyama_s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（上杉景勝_facts_20261118.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/uesugi/main/）の切り出しと、本編で使った徳川家康像（パブリックドメイン）だけ。新しい絵は作らない。
+# 切り口：家康の重臣・本多正信の息子を婿に（本編 第4章、uesugi-24・25・85・29・33）。
+# hook＝息子がいたのに、なぜ家康の重臣の息子を婿にしたのか（答えはこのショートの中：本多家譜＝景勝に実子が無く、生まれた男子に上杉家を継がせる約束。軍役の免除も）。
+# tease＝婿が去ったあと、兼続の実の息子・景明はどうなったのか（答えは本編 第6章：1615年に18歳で死去）。
+# 計算：景明 1598年生まれ→1604年に数え7。定勝 1604年5月5日生まれ。慶長7〜8年＝1602〜1603年。1609＋2＝1611。軍役の3分の1＝10万石分。
+# 理解テスト：①直江兼続の話 ②1604年、本多正信の次男・政重を婿養子に ③本多家譜＝景勝に実子が無く、生まれた男子に上杉家を継がせる約束。同じ年に景勝に跡継ぎ ④1609年に軍役を3分の1減らされ、1611年に政重は去った
+title: "直江兼続｜家康の重臣の息子を婿に"
+yt_title: "直江兼続は、数えで7歳の息子がいたのに、家康の重臣・本多正信の息子を婿に迎えた　本多家の記録が書く約束"
+description: |-
+  関ヶ原で家康に逆らった上杉家の家老・直江兼続は、1604年、家康の重臣・本多正信の次男、本多政重を婿養子に迎えました。兼続には、数えで7歳の息子・景明がいました。
+  本多家の家譜は、景勝に実の子が無いので、兼続の娘を景勝の養女として政重に嫁がせ、生まれた男の子に上杉家を継がせたい、と書きます。ところが同じ1604年の5月5日、景勝には跡継ぎの定勝が生まれていました。1609年、幕府は上杉家の軍役を3分の1減らし、1611年、政重は上杉家を去ります。
+  本編では、30万石になった上杉家と直江兼続のその後をたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#直江兼続"
+- "#上杉景勝"
+- "#本多正信"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/uesugi
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: uesugi_story_s3
+header:
+  tag: "直江兼続（上杉家の家老）"
+  title: "家康の重臣の息子を、《婿》に"
+now:
+- {at: "1604年の秋", text: "1604年秋　米沢", point: 0}
+- {at: "1609年6月", text: "1609年6月", point: 1}
+- {at: "1611年", text: "1611年", point: 2}
+timeline:
+- {label: "1604"}
+- {label: "1609"}
+- {label: "1611"}
+shots:
+  NK_1:
+    kind: real
+    image: paintings/mitsunari_naoe_kanetsugu_portrait.jpg
+    focus: [0.5, 0.3]
+    move: down
+    credit: "《直江兼続像》（パブリックドメイン）"
+    must: 直江兼続の肖像
+  IE_2:
+    kind: real
+    image: paintings/sekigahara_tokugawa_ieyasu.jpg
+    focus: [0.5, 0.3]
+    move: down
+    credit: "《徳川家康像》17世紀（パブリックドメイン）"
+    must: 徳川家康の肖像
+  U07_3:
+    kind: "ai"
+    file: "uesugi/main/U07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "U07"
+  U21_4:
+    kind: "ai"
+    file: "uesugi/main/U21.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "U21"
+  U22_5:
+    kind: "ai"
+    file: "uesugi/main/U22.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "U22"
+  U04_6:
+    kind: "ai"
+    file: "uesugi/main/U04.jpg"
+    focus: [0.7, 0.45]
+    move: "in"
+    must: "U04"
+  U23_7:
+    kind: "ai"
+    file: "uesugi/main/U23.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "U23"
+  U05_8:
+    kind: "ai"
+    file: "uesugi/main/U05.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "U05"
+  U28_9:
+    kind: "ai"
+    file: "uesugi/main/U28.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "U28"
+lines:
+  # fact: uesugi-25, uesugi-24
+- 語り: "上杉家の家老、直江兼続は、数えで7歳の息子がいたのに、なぜ、家康の重臣の息子を、婿に迎えたのか。"
+  shot: NK_1
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-24
+- 語り: "婿の名は、本多政重。家康の重臣、本多正信の次男だ。"
+  shot: IE_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-85
+- 語り: "本多家の記録、家譜は、こう書く。景勝には、実の子が無い。兼続の娘を景勝の養女にして、政重に嫁がせ、生まれた男の子に、上杉家を継がせたい。"
+  shot: U07_3
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-24
+- 語り: "1604年の秋。兼続は、政重を養子に迎え、長女と夫婦にした。"
+  shot: U21_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-29
+- 語り: "ところが、同じ年の5月5日。景勝に、初めての男の子が生まれていた。のちの、上杉定勝だ。"
+  shot: U22_5
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-85
+- 語り: "昭和19年の伝記で木村徳衛は、約束は定勝が生まれる前、1602年か1603年だった、と見ている。"
+  shot: U04_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: uesugi-33
+- 語り: "1609年6月。幕府は、上杉家の軍役、つまり幕府に出す兵と負担を、3分の1減らした。兼続が願い出て、正信が取りなした、と木村は書く。"
+  shot: U23_7
+  tone: 強調
+  pause: 0.12
+  # fact: uesugi-24
+- 語り: "その2年後の1611年。政重は、上杉家を去った。"
+  shot: U05_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第6章（uesugi-25）
+- 語り: "では、兼続の実の息子、景明は、どうなったのか。"
+  shot: U28_9
+  tone: 疑問
+  pause: 0.15
