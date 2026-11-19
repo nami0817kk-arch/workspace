@@ -516,6 +516,10 @@ extension GameStateFinance on GameState {
     if (team == null || team.id == save.userTeamId) return false;
 
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
+    // 手放したクラブを覚えておく(季の終わりにその後を知らせる)。
+    save.formerClubs[save.userTeamId] = save.clubName;
+    save.formerClubs.remove(team.id);
+    save.formerClubStatus.remove(team.id);
     save.userTeamId = team.id;
     save.clubName = team.name;
     save.pendingJobOfferTeamId = null;

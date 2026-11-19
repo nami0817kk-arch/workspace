@@ -886,6 +886,8 @@ extension GameStateSeason on GameState {
     final playedTier = _save!.currentDivisionTier;
     // 他国の1部も季を締め、優勝を伝えて、次の季の日程を作る。
     _finishForeignSeasons();
+    // 手放したクラブのその後を記録する(順位が決まったこの時点で)。
+    _recordFormerClubs(playedTier);
     // 他のクラブの経営: お金を動かし、赤字が続いたクラブは破綻する。
     final collapsedClubs = _settleAiClubFinances();
     // 監督の経歴に今季を足し、目標を果たしたら立場を上げる。
