@@ -401,6 +401,9 @@ class SaveGame {
   int userMatchesCounted;
   bool lastWeekCongested;
 
+  /// 持っているほかのクラブ(クラブ id → 買った値段)。
+  Map<String, int> groupClubs;
+
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -746,6 +749,7 @@ class SaveGame {
     this.hasAnalytics = false,
     this.userMatchesCounted = 0,
     this.lastWeekCongested = false,
+    Map<String, int>? groupClubs,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -892,6 +896,7 @@ class SaveGame {
         lifeEvents = lifeEvents ?? {},
         difficultyItems = difficultyItems ?? {},
         playerBook = playerBook ?? {},
+        groupClubs = groupClubs ?? {},
         countryCoefficients = countryCoefficients ?? {},
         pendingMoments = pendingMoments ?? [],
         momentKeys = momentKeys ?? [],
@@ -1077,6 +1082,7 @@ class SaveGame {
         if (hasAnalytics) 'hasAnalytics': hasAnalytics,
         if (userMatchesCounted > 0) 'userMatchesCounted': userMatchesCounted,
         if (lastWeekCongested) 'lastWeekCongested': lastWeekCongested,
+        if (groupClubs.isNotEmpty) 'groupClubs': groupClubs,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1316,6 +1322,8 @@ class SaveGame {
         hasAnalytics: json['hasAnalytics'] as bool? ?? false,
         userMatchesCounted: json['userMatchesCounted'] as int? ?? 0,
         lastWeekCongested: json['lastWeekCongested'] as bool? ?? false,
+        groupClubs: (json['groupClubs'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
