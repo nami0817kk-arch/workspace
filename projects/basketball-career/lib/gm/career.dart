@@ -2497,6 +2497,8 @@ class Career {
 
   /// 次の節の自分の試合(ホーム, アウェー)。レギュラーシーズン中で残っているときだけ。
   (int, int)? get nextMyGame {
+    final po = myLiveSeries;
+    if (po != null) return po.highHomeNext ? (po.high, po.low) : (po.low, po.high);
     if (phase != Phase.season || block >= blocksPerSeason) return null;
     final sched = seasonSchedule(teams.length);
     if (roundAt >= sched.length || roundAt >= blockStart(block + 1)) return null;
@@ -2510,10 +2512,11 @@ class Career {
   SimResult? previewLive(List<GameCall?> calls, int? stopAt) {
     final g = nextMyGame;
     if (g == null) return null;
-    final rested = _restBeforeGame();
+    final po = phase == Phase.playoffs;
+    final rested = po ? const <Player>[] : _restBeforeGame();
     try {
       final h = teams[g.$1], a = teams[g.$2];
-      return simulateGame(h, a, Rng(liveSeed),
+      return simulateGame(h, a, Rng(po ? poLiveSeed : liveSeed),
           homeStr: h.strength, awayStr: a.strength, record: true, calls: calls, stopAt: stopAt, side: g.$1 == mine ? 0 : 1);
     } finally {
       for (final p in rested) {
@@ -2527,6 +2530,10 @@ class Career {
   /// 采配した試合のある1節を進める(ほかの試合はふつうに進む)。区切りの終わりに着いたら true。
   bool playLiveDay(List<GameCall?> calls) {
     if (nextMyGame == null) return false;
+    if (phase == Phase.playoffs) {
+      playPlayoffGame(calls: calls);
+      return false;
+    }
     final before = block;
     _liveCalls = calls;
     try {
@@ -2908,25 +2915,105 @@ class Career {
   bool get canSimToDeadline => phase == Phase.season && block < tradeDeadlineBlock;
 
   /// プレーオフ。地区ごとに1〜6位はそのまま、7〜10位はプレーインで2枠を争う。どの回戦も4勝で勝ち抜け。
+  /// 始めていなければ最初から、1試合ずつ進めている途中なら続きから、最後まで戦う。
   void playPlayoffs() {
     if (phase != Phase.playoffs) return;
+    if (!poLive) playoffs = [];
+    _runBracket(null);
+    _finishPlayoffs();
+  }
+
+  // ---------------------------------------------------------------- プレーオフを1試合ずつ
+
+  /// プレーオフを1試合ずつ進めている途中か(2026-11-19、ユーザー「プレーオフを1試合ずつ」)。
+  bool poLive = false;
+
+  /// 自分の、いま戦っているシリーズ(1試合ずつ進めている途中だけ)。
+  Series? get myLiveSeries =>
+      phase == Phase.playoffs && poLive ? playoffs.where((s) => (s.high == mine || s.low == mine) && !s.over).lastOrNull : null;
+
+  /// 采配するプレーオフの試合の乱数の種(見る途中と、確定した試合でそろう)。
+  int get poLiveSeed => (seed * 1000003 + season * 9176 + 0x7a11 + playoffs.length * 131 + (myLiveSeries?.games.length ?? 0) * 17) & 0x7fffffff;
+
+  /// プレーオフを始める。自分の最初の試合の手前まで進める(出られなければ最後まで)。
+  void startPlayoffs() {
+    if (phase != Phase.playoffs || poLive) return;
     playoffs = [];
+    poLive = true;
+    if (_runBracket(0)) _finishPlayoffs();
+  }
+
+  /// 自分の次の1試合を戦う(ほかのシリーズは、その前後に決まった順で進む)。[calls] は采配したとき。
+  void playPlayoffGame({List<GameCall?>? calls}) {
+    if (phase != Phase.playoffs || !poLive) return;
+    if (_runBracket(1, calls: calls)) _finishPlayoffs();
+  }
+
+  /// 今のシリーズが決まるまで戦う。
+  void playPlayoffSeries() {
+    final s = myLiveSeries;
+    while (s != null && phase == Phase.playoffs && poLive && myLiveSeries == s) {
+      playPlayoffGame();
+    }
+  }
+
+  /// プレーオフの組み合わせを、いつも同じ順にたどって進める。自分のシリーズは [myBudget] 試合まで(null なら最後まで)。
+  /// 前から順にたどり直すので、途中で止めても、あとで続きから進められる。最後まで終わったら true。
+  /// [myBudget] が null のときは前と同じ順で乱数を使う(自動で遊ぶGMの結果は変わらない)。
+  bool _runBracket(int? myBudget, {List<GameCall?>? calls}) {
+    var k = 0;
+    var budget = myBudget;
+    var live = calls;
+    var stopped = false;
+    Series? run(int high, int low, int need, int round) {
+      if (stopped) return null;
+      final Series s;
+      if (k < playoffs.length) {
+        s = playoffs[k];
+      } else {
+        s = Series(high: high, low: low, need: need, round: round);
+        playoffs.add(s);
+      }
+      k++;
+      final mineIn = s.high == mine || s.low == mine;
+      while (!s.over) {
+        if (mineIn && budget != null) {
+          if (budget == 0) {
+            stopped = true;
+            return null;
+          }
+          budget = budget! - 1;
+          final seed = live == null ? null : poLiveSeed;
+          s.playOne(teams, rng, mine, liveSeed: seed, calls: live ?? const []);
+          live = null;
+        } else {
+          s.playOne(teams, rng, mine);
+        }
+      }
+      return s;
+    }
+
     final champs = <int>[];
     for (final east in [true, false]) {
       final st = standings(teams, east: east).map((t) => t.index).toList();
       // プレーイン: 7位と8位の勝者が7番目。敗者と、9位と10位の勝者が8番目を争う
-      final a = _series(st[6], st[7], 1, 0);
-      final b = _series(st[8], st[9], 1, 0);
-      final c = _series(a.loser, b.winner, 1, 0);
+      final a = run(st[6], st[7], 1, 0);
+      if (a == null) return false;
+      final b = run(st[8], st[9], 1, 0);
+      if (b == null) return false;
+      final c = run(a.loser, b.winner, 1, 0);
+      if (c == null) return false;
       final seeds = [...st.take(directSeeds), a.winner, c.winner];
       // 1回戦: 1-8・4-5・2-7・3-6。勝ち上がりは山の形のまま
       var alive = [seeds[0], seeds[7], seeds[3], seeds[4], seeds[1], seeds[6], seeds[2], seeds[5]];
       for (var round = 1; alive.length > 1; round++) {
         final next = <int>[];
-        for (var k = 0; k < alive.length; k += 2) {
-          final hi = st.indexOf(alive[k]) < st.indexOf(alive[k + 1]) ? alive[k] : alive[k + 1];
-          final lo = hi == alive[k] ? alive[k + 1] : alive[k];
-          next.add(_series(hi, lo, 4, round).winner);
+        for (var j = 0; j < alive.length; j += 2) {
+          final hi = st.indexOf(alive[j]) < st.indexOf(alive[j + 1]) ? alive[j] : alive[j + 1];
+          final lo = hi == alive[j] ? alive[j + 1] : alive[j];
+          final s = run(hi, lo, 4, round);
+          if (s == null) return false;
+          next.add(s.winner);
         }
         alive = next;
       }
@@ -2935,17 +3022,15 @@ class Career {
     // ファイナルは、シーズンの成績が上のほうがホーム
     final all = standings(teams).map((t) => t.index).toList();
     final hi = all.indexOf(champs[0]) < all.indexOf(champs[1]) ? champs[0] : champs[1];
-    _series(hi, hi == champs[0] ? champs[1] : champs[0], 4, 4);
+    return run(hi, hi == champs[0] ? champs[1] : champs[0], 4, 4) != null;
+  }
+
+  void _finishPlayoffs() {
+    poLive = false;
     _giveAwards();
     _closeSeason();
     _log('優勝: ${teams[champion].name}(ファイナルで${teams[finals!.loser].def.short}を${finals!.winner == finals!.high ? finals!.highWins : finals!.lowWins}勝${finals!.winner == finals!.high ? finals!.lowWins : finals!.highWins}敗)');
     phase = Phase.seasonEnd;
-  }
-
-  Series _series(int high, int low, int need, int round) {
-    final s = Series(high: high, low: low, need: need, round: round)..play(teams, rng, mine);
-    playoffs.add(s);
-    return s;
   }
 
   /// ファイナル。
@@ -4837,6 +4922,7 @@ class Career {
         'lg': [for (final g in lastGames) g.toJson()],
         if (form.isNotEmpty) 'frm': form,
         'po': [for (final s in playoffs) s.toJson()],
+        if (poLive) 'pol': true,
         'fa': [for (final p in freeAgents) p.toJson()],
         'picks': [for (final p in picks) p.toJson()],
         'pros': [for (final p in prospects) p.toJson()],
@@ -4975,6 +5061,7 @@ class Career {
       ..lastGames = [for (final g in maps('lg')) GameResult.fromJson(g)]
       ..form = [for (final x in (j['frm'] as List? ?? const [])) x as int]
       ..playoffs = [for (final s in maps('po')) Series.fromJson(s)]
+      ..poLive = j['pol'] == true
       ..freeAgents = [for (final p in maps('fa')) Player.fromJson(p)]
       ..picks = [for (final p in maps('picks')) DraftPick.fromJson(p)]
       ..prospects = [for (final p in maps('pros')) Prospect.fromJson(p)]
