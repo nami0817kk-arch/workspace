@@ -1270,9 +1270,9 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     let mvAl = wt2.alumni;
     if (!mvAl.some((a) => (a.moves || []).length)) { const t5 = YA.testStart({ seed: 3, tier: 1 }); for (let y = 0; y < 5; y++) YA.testYear(t5); mvAl = t5.w.alumni; }
     const mv = mvAl.filter((a) => (a.moves || []).length);
-    ok(mv.length >= 1 && mv.every((a) => a.moves.length === a.transfers && a.moves.every((m) => m.fee >= 0 && m.from && m.to && m.from !== m.to) && a.feeTotal === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
+    ok(mv.length >= 1 && mv.every((a) => a.moves.filter((m) => !m.join).length === (a.transfers || 0) && a.moves.every((m) => m.fee >= 0 && m.from && m.to && m.from !== m.to) && (a.feeTotal || 0) === a.moves.reduce((t, m) => t + m.fee, 0)), '移籍は移籍金・どこから・どこへが残り、合計と合う（' + mv.length + '人）');
     ok(mv.every((a) => a.moves.every((m, i) => i === 0 || a.moves[i - 1].to === m.from)), '移籍の記録はつながる（前の行き先が次の出どころ）');
-    ok(mv.every((a) => a.moves.every((m) => { const ss = (a.seasons || []).find((x) => x.y === m.y); return !ss || ss.club === m.from; })), '移籍した年の成績は、移籍する前のクラブで付く');
+    ok(mv.every((a) => a.moves.every((m) => { if (m.join) return true; const ss = (a.seasons || []).find((x) => x.y === m.y); return !ss || ss.club === m.from; })), '移籍した年の成績は、移籍する前のクラブで付く');
     const pros = wt2.alumni.filter((a) => a.status === 'pro' && (a.seasons || []).length);
     ok(pros.every((a) => a.seasons.filter((x) => x.club && YA.clubLeague(x.club) || x.value != null).every((x) => x.value == null || x.value >= 0)) && pros.some((a) => a.seasons.some((x) => x.value > 0)), 'プロの年ごとの市場価値');
     ok(YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 24 }) > YA.marketValue({ status: 'pro', abroad: false, ovr: 18, age: 24 }) && YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 22 }) > YA.marketValue({ status: 'pro', abroad: true, ovr: 18, age: 31 }) && YA.marketValue({ status: 'univ', ovr: 18, age: 22 }) === 0, '市場価値：海外は高く、若いほど高い。プロ以外は0');
