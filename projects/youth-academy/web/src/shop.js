@@ -51,6 +51,8 @@
     else if (ev.ev === 'prices') YA.shopPrices = Object.assign({}, YA.shopPrices, ev.map || {});
     else if (ev.ev === 'purchase') YA.shopMsg = ev.outcome === 'purchased' && YA.purchasedNext && YA.purchasedNext(ev.id || YA.lastBuy) ? YA.purchasedNext(ev.id || YA.lastBuy) : YA.PURCHASE_MSG[ev.outcome] || '';
     else if (ev.ev === 'restore') YA.shopMsg = YA.RESTORE_MSG[ev.outcome] || YA.RESTORE_MSG.failed;
+    // 結果の文はショップのいちばん下（購入を復元の横）にしか出ず、押した商品の所からは見えなかった（2026-11-20）。知らせでも出す
+    if ((ev.ev === 'purchase' || ev.ev === 'restore') && YA.shopMsg && YA.toast) { try { YA.toast(YA.shopMsg); } catch (e) { /* 画面なし */ } }
     else if (ev.ev === 'adDone') adDone(ev);
     else if (ev.ev === 'adUnclaimed') { for (const x of ev.list || []) if (x) adDone({ tag: x.tag, result: 'earned', reward: x.reward }); }
     else if (ev.ev === 'saveFail') { if (YA.saveFailed) YA.saveFailed(); return; }
@@ -387,7 +389,7 @@
       body.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;display:flex;align-items:center;gap:6px' },
         h('div', { class: 'grow' }, h('b', {}, it.name), h('div', { class: 'note' }, it.note), YA.shopItemGuideEl ? YA.shopItemGuideEl(it) : null, st ? h('div', { class: 'note', style: 'color:var(--ink)' }, st) : null),
         owned(it) && YA.shopGoEl ? YA.shopGoEl(it) : null,
-        done ? null : (() => { const why = YA.buyWhy(it); return h('button', { class: 'btn sm pri', 'data-pid': it.id, disabled: !!why, why: why || '', onclick: () => { YA.shopMsg = YA.buy(it.id) ? `「${it.name}」の購入を手続き中です…` : ''; rerender(); } }, priceOf(it) || (YA.native.has() ? 'ストアに接続中' : '買う')); })()));
+        done ? null : (() => { const why = YA.buyWhy(it); return h('button', { class: 'btn sm pri', 'data-pid': it.id, disabled: !!why, why: why || '', onclick: () => { YA.shopMsg = YA.buy(it.id) ? `「${it.name}」の購入を手続き中です…` : ''; rerender(); if (YA.shopMsg) { try { YA.toast(YA.shopMsg); } catch (e) { /* 画面なし */ } } } }, priceOf(it) || (YA.native.has() ? 'ストアに接続中' : '買う')); })()));
     }
     body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:4px' }, h('button', { class: 'btn sm', disabled: !YA.native.has(), why: '購入の復元はアプリでだけできます', onclick: () => { YA.shopMsg = '確認しています…'; YA.restorePurchases(); rerender(); } }, '購入を復元'), h('span', { class: 'note' }, YA.shopMsg || '')));
     YA.origButton(body);
