@@ -625,16 +625,16 @@ class _TradeTabState extends State<TradeTab> {
         for (var k = 0; k < 3; k++)
           FilterChip(
             label: Text(
-              '${k == 0
-                  ? '今年'
-                  : k == 1
-                  ? '来年'
-                  : '$k年後'}の1巡目',
+              '${switch (car.swapFrom + k - car.season) {
+                0 => '今年',
+                1 => '来年',
+                final d => '$d年後',
+              }}の1巡目',
               style: const TextStyle(fontSize: 12),
             ),
             tooltip: note,
-            selected: chosen.contains(car.season + k),
-            onSelected: (v) => setState(() => v ? chosen.add(car.season + k) : chosen.remove(car.season + k)),
+            selected: chosen.contains(car.swapFrom + k),
+            onSelected: (v) => setState(() => v ? chosen.add(car.swapFrom + k) : chosen.remove(car.swapFrom + k)),
           ),
       ],
     ),
@@ -701,6 +701,9 @@ class _TradeTabState extends State<TradeTab> {
         _get.clear();
         _givePicks.clear();
         _getPicks.clear();
+        _giveSwaps.clear();
+        _getSwaps.clear();
+        _protect.clear();
       });
     }
   }

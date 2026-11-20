@@ -525,6 +525,7 @@ class Career {
     h2h = {};
     facilities = [1, 1, 1];
     facilityDebt = 0;
+    staffDebt = 0;
     budgetLevel = 2;
     goalStance = 0;
     namingSold = false;
@@ -823,7 +824,11 @@ class Career {
 
   void _mail(Sender from, String title, String body, {MsgKind kind = MsgKind.info, List<String> choices = const [], int? player}) {
     inbox.insert(0, Message(id: _msgId++, season: season, from: from, title: title, body: body, kind: kind, choices: choices, player: player));
-    if (inbox.length > inboxLimit) inbox.removeRange(inboxLimit, inbox.length);
+    if (inbox.length > inboxLimit) {
+      // 上限を超えた古い知らせを消す。返事を待っている知らせは消さない(答えられなくなるので)
+      final over = [for (var i = inboxLimit; i < inbox.length; i++) if (!inbox[i].needsAnswer) inbox[i]];
+      inbox.removeWhere(over.contains);
+    }
   }
 
   /// 知らせを読んだ。
@@ -851,6 +856,7 @@ class Career {
   void answer(int id, int choice) {
     final m = inbox.where((x) => x.id == id).firstOrNull;
     if (m == null || !m.needsAnswer || choice < 0 || choice >= m.choices.length) return;
+    if (m.kind == MsgKind.ownerGoal && (m.season != season || phase != Phase.season || block > 0)) return;
     m
       ..answer = choice
       ..read = true;
@@ -860,7 +866,7 @@ class Career {
     }
     if (m.kind == MsgKind.ownerGoal) {
       // 下げてもらうと今すぐ信頼が減り、シーズンの終わりにも少し引かれる。上を約束すると、果たせば信頼と格の点
-      if (m.season != season || phase != Phase.season || roundAt > 0) return;
+      if (m.season != season || phase != Phase.season || block > 0) return;
       goalStance = choice;
       if (choice == 1) {
         target -= 5;
@@ -1942,6 +1948,9 @@ class Career {
   /// 施設を上げた費用のうち、まだ支出に入れていない分(シーズン前・オフに上げると、次の開幕で入る)。
   int facilityDebt = 0;
 
+  /// オフとシーズン前にコーチを替えた違約金(開幕で支出に入れる)。
+  int staffDebt = 0;
+
   int facilityLevel(Facility f) => f.index < facilities.length ? facilities[f.index].clamp(1, 3) : 1;
 
   /// 施設の維持費の合計(1シーズン)。
@@ -2158,7 +2167,10 @@ class Career {
     give(AwardKind.roy, pool.where((x) => x.$1.exp == 0 && x.$1.stats.ppg >= 5), mvp);
     give(AwardKind.dpoy, pool, dpoy);
     // シックスマン賞は、シーズンの終わりに先発の5人に入っていない選手から
-    final starters = {for (final t in teams) ...t.order.take(5).map((p) => p.id)};
+    double mpg(Player p) => p.stats.gp == 0 ? 0 : p.stats.min / p.stats.gp;
+    final starters = {
+      for (final t in teams) ...(t.roster.toList()..sort((a, b) => mpg(b).compareTo(mpg(a)))).take(5).map((p) => p.id),
+    };
     give(AwardKind.sixth, pool.where((x) => !starters.contains(x.$1.id)), (x) => x.$1.stats.ppg + 0.4 * x.$1.stats.rpg + 0.6 * x.$1.stats.apg);
     // 躍進賞は、前のシーズンにも出ていた選手の伸び
     double rise((Player, Team) x) => x.$1.stats.ppg - x.$1.prev.ppg + 0.5 * (x.$1.stats.rpg - x.$1.prev.rpg + x.$1.stats.apg - x.$1.prev.apg);
@@ -2400,6 +2412,13 @@ class Career {
       seasonLog = [];
       if (t.index != mine) _aiTrim(t);
     }
+    // 自由契約と2ウェイの選手も、昨季の成績を前のシーズンへ移す(途中で取ったとき、昨季の分が今季に足されないように)
+    for (final p in [...freeAgents, ...me.twoWay]) {
+      p.prev = p.stats;
+      p.stats = Stats();
+      p.wear = 0;
+      p.restGames = 0;
+    }
     _setModes();
     final r = strengthRank(mine);
     target = (gamesPerSeason * (0.72 - r * 0.016)).round();
@@ -2417,8 +2436,9 @@ class Career {
     cupRounds = [];
     incomeBy = List.filled(Income.values.length, 0);
     // 施設を上げた費用と維持費は、開幕で支出に入れる
-    costs = facilityDebt + facilityUpkeepTotal;
+    costs = facilityDebt + staffDebt + facilityUpkeepTotal;
     facilityDebt = 0;
+    staffDebt = 0;
     final third = [GoalKind.playoffs, GoalKind.youth, GoalKind.noTax];
     // 強いチームにはプレーオフ、立て直しには若手、上限を大きく超えたチームには税を
     final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - capScaled(50) ? GoalKind.noTax : third[rng.nextInt(third.length)];
@@ -2609,6 +2629,7 @@ class Career {
       _snapshotBlock();
     }
     final games = <GameResult>[];
+    var bestStreak = 0;
     for (final round in seasonSchedule(teams.length).sublist(roundAt, roundAt + n)) {
       for (final (h, a) in round) {
         final rested = h == mine || a == mine ? _restBeforeGame() : const <Player>[];
@@ -2623,9 +2644,13 @@ class Career {
           p.injured = 0;
           p.restGames++;
         }
-        if (g.involves(mine)) games.add(g);
+        if (g.involves(mine)) {
+          games.add(g);
+          bestStreak = math.max(bestStreak, me.streak);
+        }
       }
     }
+    if (bestStreak > 0) _setRecord('s_streak', bestStreak.toDouble(), me.def.short);
     roundAt += n;
     _tickTenDay(n);
     lastGames = [...lastGames, ...games];
@@ -2814,12 +2839,15 @@ class Career {
     final o = incoming;
     if (o == null || !canTrade) return false;
     incoming = null;
+    // 届いたあとで出す選手を放した・指名権が動いた、なら成り立たない。オーナーとの予算の約束も守る
+    if (!callValid(o) || _tradeBudgetProblem(o) != null) return false;
     if (!judgeTrade(teams, picks, mine, o, season, hardness: _hard(o.partner)).ok) return false;
     _logTrade(mine, o);
     _fanTrade(o);
     _keepTrade(o);
     applyTrade(teams, picks, mine, o);
     tradesDone++;
+    if (phase == Phase.draft) _advanceDraft();
     return true;
   }
 
@@ -3543,7 +3571,7 @@ class Career {
 
   /// 指名できない理由(できるなら null)。
   String? get draftProblem {
-    if (signedCount >= offseasonRoster) return '契約中の選手が$offseasonRoster人いて、これ以上は指名できない。チームの画面で放すか、見送る';
+    if (signedCount >= offseasonRoster) return '契約中の選手が$offseasonRoster人いて、これ以上は指名できない。トレードで減らすか、見送る';
     return null;
   }
 
@@ -3684,7 +3712,9 @@ class Career {
   /// 返すのは (元のチーム, 指名権の持ち主, 保護) の並び(1巡目のあと2巡目)。乱数は使わない。
   List<(int, int, int)> projectedDraftOrder() {
     // シーズン中とプレーオフは今の勝率で、それ以外(シーズン前など)はまだ試合が無いので戦力の低い順
-    final byStrength = phase != Phase.season && phase != Phase.playoffs;
+    final byStrength = phase == Phase.preseason || phase == Phase.contracts;
+    // 契約の時期は今年のドラフトが済んでいるので、次の年の指名権を並べる
+    final s = phase == Phase.contracts ? season + 1 : season;
     final byRecord = [...teams]
       ..sort((a, b) {
         final w = byStrength ? 0 : a.winPct.compareTo(b.winPct);
@@ -3694,7 +3724,7 @@ class Career {
       for (final round in [1, 2])
         for (final t in byRecord)
           for (final pk in picks)
-            if (pk.season == season && pk.round == round && pk.from == t.index) (pk.from, pk.owner, pk.protect),
+            if (pk.season == s && pk.round == round && pk.from == t.index) (pk.from, pk.owner, pk.protect),
     ];
   }
 
@@ -3946,7 +3976,7 @@ class Career {
     final s = sheet!;
     sheet = null;
     rfa.remove(p.id);
-    _signBid(p, FaBid(mine, s[2], s[3]));
+    _signBid(p, FaBid(mine, s[2], s[3]), useException: false);
     p.morale = 70;
     return true;
   }
@@ -4156,8 +4186,11 @@ class Career {
   bool bid(int id, int years, double factor) {
     final p = freeAgents.where((x) => x.id == id).firstOrNull;
     if (p == null || bidProblem(p, factor: factor) != null) return false;
+    final sal = _offerSalary(p, factor);
+    final base = me.payroll + _bidTotal(mine, except: id);
+    final ex = sal > minSalary && base + sal > salaryCap ? exceptionFor(sal, base: base) : null;
     final list = bids.putIfAbsent(id, () => [])..removeWhere((b) => b.team == mine);
-    list.add(FaBid(mine, _offerSalary(p, factor), years.clamp(1, askOf(p, me).maxYears)));
+    list.add(FaBid(mine, sal, years.clamp(1, math.min(askOf(p, me).maxYears, ex?.maxYears ?? 9))));
     return true;
   }
 
@@ -4183,6 +4216,7 @@ class Career {
         final t = teams[b.team];
         final count = b.team == mine ? t.roster.length - expiring.length : t.roster.length;
         if (count >= maxRoster) return false;
+        if (b.team == mine && budgetProblem(t.payroll + b.salary) != null) return false;
         if (t.payroll + b.salary <= salaryCap) return true;
         return b.team == mine && exceptionFor(b.salary) != null;
       }).toList();
@@ -4207,14 +4241,16 @@ class Career {
     faDay++;
   }
 
-  void _signBid(Player p, FaBid b) {
+  void _signBid(Player p, FaBid b, {bool useException = true}) {
     freeAgents.remove(p);
     p
       ..salary = b.salary
-      ..years = b.years;
+      ..years = b.years
+      ..nextSalary = null;
     final t = teams[b.team];
     p.tenure = 0;
-    if (b.team == mine && t.payroll + b.salary > salaryCap) {
+    if (b.team == mine) p.guarantee = 100;
+    if (useException && b.team == mine && t.payroll + b.salary > salaryCap) {
       final ex = exceptionFor(b.salary);
       if (ex != null) _useException(ex);
     }
@@ -4260,17 +4296,19 @@ class Career {
     final r = math.max(1, p.years);
     // 一部保証の契約は、2年目以降の年俸が保証の割合だけ残る
     final gf = p.guarantee / 100;
+    // 延長した選手は、来季から延長の額になる
+    final ns = p.nextSalary ?? p.salary;
     switch (mode) {
       case ReleaseMode.full:
-        return (now: p.salary, later: List.filled(r - 1, (p.salary * gf).round()));
+        return (now: p.salary, later: List.filled(r - 1, (ns * gf).round()));
       case ReleaseMode.stretch:
         // 残りの年俸の全部を、残り年数の2倍＋1年に均して払う(今季の負担は軽く、長く残る)
         final n = 2 * r + 1;
-        final per = (p.salary * (1 + (r - 1) * gf) / n).ceil();
+        final per = ((p.salary + (r - 1) * ns * gf) / n).ceil();
         return (now: per, later: List.filled(n - 1, per));
       case ReleaseMode.buyout:
         // 選手が残りの年俸の3割を諦める。払いは全額のときと同じ形で、3割少ない
-        return (now: (p.salary * 0.7).round(), later: List.filled(r - 1, (p.salary * 0.7 * gf).round()));
+        return (now: (p.salary * 0.7).round(), later: List.filled(r - 1, (ns * 0.7 * gf).round()));
     }
   }
 
@@ -4279,6 +4317,7 @@ class Career {
     if (!me.roster.contains(p)) return '自分の登録選手だけ';
     if (expiring.contains(p.id)) return '契約が切れる選手は放す必要がない';
     if (!(phase == Phase.preseason || phase == Phase.season || phase == Phase.contracts)) return '今は放せない';
+    if (phase == Phase.season && me.roster.length - 1 < minRoster) return 'シーズン中は登録を$minRoster人より減らせない';
     if (mode == ReleaseMode.stretch && p.years < 2) return '残りが1年の契約はストレッチできない(2年以上の契約だけ)';
     if (mode == ReleaseMode.buyout) {
       if (p.years < 2) return 'バイアウトは残りが2年以上の契約だけ';
@@ -4305,6 +4344,7 @@ class Career {
       if (open.isNotEmpty) {
         final t = open.first;
         me.roster.remove(p);
+        optionPending.remove(p.id);
         p.tenure = 0;
         t.roster.add(p);
         _log('ウェーバー: ${p.name}を${t.def.short}が拾った(年俸の負担は残らない)');
@@ -4312,6 +4352,7 @@ class Career {
       }
     }
     me.roster.remove(p);
+    optionPending.remove(p.id);
     final cost = releaseCost(p, mode);
     me.deadCap += cost.now;
     for (var i = 0; i < cost.later.length; i++) {
@@ -4324,7 +4365,9 @@ class Career {
     p.raise = 0;
     p
       ..salary = askOf(p, teams[(mine + 1) % teams.length]).salary
-      ..years = 1;
+      ..years = 1
+      ..nextSalary = null
+      ..guarantee = 100;
     freeAgents
       ..add(p)
       ..sort((a, b) => b.ovr.compareTo(a.ovr));
@@ -4345,6 +4388,8 @@ class Career {
     if (!canSign) return '今は契約できない';
     if (me.twoWay.length >= twoWayMax) return '2ウェイは$twoWayMax人まで';
     if (p.exp > twoWayMaxExp) return '2ウェイはリーグ$twoWayMaxExp年目までの若手だけ';
+    // 求める額が最低年俸より上の選手は、2ウェイでは来ない(競り合いや上限を飛ばせないように)
+    if (freeAgents.contains(p) && askOf(p, me).salary > minSalary) return '最低年俸より上を求める選手は、2ウェイでは来ない';
     return null;
   }
 
@@ -4367,6 +4412,8 @@ class Career {
   String? toTwoWayProblem(Player p) {
     if (!(phase == Phase.draft || phase == Phase.contracts || phase == Phase.preseason)) return 'オフとシーズン前だけ';
     if (expiring.contains(p.id)) return '契約が切れる選手は、再契約か自由契約で決める';
+    if (optionPending.contains(p.id)) return '選択権を決めてから';
+    if (p.salary > minSalary || p.nextSalary != null) return '2ウェイに下げられるのは、最低年俸の選手だけ';
     return twoWayProblem(p);
   }
 
@@ -4380,7 +4427,9 @@ class Career {
     p
       ..salary = twoWaySalary
       ..years = 2
-      ..optionYears = 0;
+      ..optionYears = 0
+      ..nextSalary = null
+      ..raise = 0;
     me.twoWay.add(p);
   }
 
@@ -4398,7 +4447,8 @@ class Career {
     me.twoWay.remove(p);
     p
       ..salary = minSalary
-      ..years = 2;
+      ..years = 2
+      ..guarantee = 100;
     me.roster.add(p);
   }
 
@@ -4526,12 +4576,28 @@ class Career {
   TradeVerdict judge(TradeOffer o) {
     if (!canTrade) return const TradeVerdict(false, '今はトレードできない(締め切りを過ぎた)', 0);
     if (o.give.any((id) => expiring.contains(id) || optionPending.contains(id))) return const TradeVerdict(false, '契約の話し合い中の選手は出せない', 0);
-    final gs = [for (final id in o.give) me.roster.where((p) => p.id == id).firstOrNull?.salary ?? 0].fold(0, (a, b) => a + b);
-    final ts = [for (final id in o.get) teams[o.partner].roster.where((p) => p.id == id).firstOrNull?.salary ?? 0].fold(0, (a, b) => a + b);
-    final bp = budgetProblem(me.payroll - gs + ts);
+    if (phase == Phase.season && me.roster.length - o.give.length + o.get.length < minRoster) {
+      return const TradeVerdict(false, 'シーズン中は登録を$minRoster人より減らせない', 0);
+    }
+    if (phase == Phase.draft) {
+      final used = {for (var k = 0; k < draftAt && k < order.length; k++) order[k]};
+      if ([...o.givePicks, ...o.getPicks].any(used.contains)) return const TradeVerdict(false, 'その指名権は、もう使った', 0);
+    }
+    if ([...o.giveSwaps, ...o.getSwaps].any((s) => s < swapFrom)) return const TradeVerdict(false, 'その年の入れ替え権は、もう順が決まっている', 0);
+    final bp = _tradeBudgetProblem(o);
     if (bp != null) return TradeVerdict(false, bp, 0);
     return judgeTrade(teams, picks, mine, o, season,
         rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner), needs: true);
+  }
+
+  /// 入れ替え権を出し入れできる最初の年(今年のドラフトの順が決まったあとは、次の年から)。
+  int get swapFrom => phase == Phase.draft || phase == Phase.contracts ? season + 1 : season;
+
+  /// トレードで年俸が増えて、オーナーとの予算の約束を超えるなら、その理由。
+  String? _tradeBudgetProblem(TradeOffer o) {
+    final gs = [for (final id in o.give) me.roster.where((p) => p.id == id).firstOrNull?.salary ?? 0].fold(0, (a, b) => a + b);
+    final ts = [for (final id in o.get) teams[o.partner].roster.where((p) => p.id == id).firstOrNull?.salary ?? 0].fold(0, (a, b) => a + b);
+    return budgetProblem(me.payroll - gs + ts);
   }
 
   /// トレードで両チームの強さと、82試合での勝ち数の見込みがどう変わるか
@@ -4578,6 +4644,8 @@ class Career {
     applyTrade(teams, picks, mine, o, swaps: swaps);
     tradesDone++;
     incoming = null;
+    // ドラフト中に今の指名権を出したら、次の自分の番まで進める(止まったままにならないように)
+    if (phase == Phase.draft) _advanceDraft();
     return true;
   }
 
@@ -4670,7 +4738,8 @@ class Career {
     final old = me.coachOf(c.role);
     if (old != null) {
       me.coaches.remove(old);
-      costs += old.salary ~/ 2;
+      // 開幕で支出をまとめ直すので、それまで持ち越す
+      staffDebt += old.salary ~/ 2;
       coachPool.add(old);
     }
     me.coaches.add(c);
@@ -4688,7 +4757,7 @@ class Career {
     }
     final total = m.values.fold(0, (a, b) => a + b);
     if (total != totalMinutes || m.values.any((v) => v < 0 || v > maxMinutes)) return;
-    me.minutes = {for (final e in m.entries) if (me.roster.any((p) => p.id == e.key)) e.key: e.value};
+    me.minutes = {for (final e in m.entries) if (me.roster.any((p) => p.id == e.key && p.injured == 0)) e.key: e.value};
   }
 
   /// 選手が期待する出場時間(力の順位から)。
@@ -4862,8 +4931,7 @@ class Career {
   /// けが人を順の後ろへ回し、出場時間を自動に戻す(まとめて進める途中で主力がけがをしたときの「自動で組み直す」)。
   void benchInjured() {
     if (phase == Phase.over) return;
-    final o = me.order;
-    me.rotation = [for (final p in o) if (p.injured == 0) p.id, for (final p in o) if (p.injured > 0) p.id];
+    // 順を固定すると、治ったあとも後ろに残るので触らない(けが人は order がいつも後ろへ回す)
     me.minutes = {};
   }
 
@@ -4882,8 +4950,9 @@ class Career {
   /// 「相手に聞く」: [partner] から [get] を受け取るのに、こちらが出せばよい組み合わせ。契約の話し合い中の選手は出さない。
   TradeOffer? askPartner(int partner, {List<int> get = const [], List<int> getPicks = const []}) {
     if (!canTrade || (get.isEmpty && getPicks.isEmpty)) return null;
-    return findPackage(teams, picks, mine, partner,
-        get: get, getPicks: getPicks, exclude: expiring, nowSeason: season, hardness: _hard(partner));
+    final o = findPackage(teams, picks, mine, partner,
+        get: get, getPicks: getPicks, exclude: [...expiring, ...optionPending], nowSeason: season, hardness: _hard(partner));
+    return o != null && judge(o).ok ? o : null;
   }
 
   /// 今の申し込みに、こちらから1つ(選手か指名権)足せば受けてもらえるもの。相手にとって値打ちの低いものから選ぶ。無ければ null。
@@ -5072,6 +5141,7 @@ class Career {
         if (concessionLevel != 1) 'cl': concessionLevel,
         if (facilities.any((x) => x != 1)) 'fcl': facilities,
         if (facilityDebt != 0) 'fcd': facilityDebt,
+        if (staffDebt != 0) 'sfd': staffDebt,
         'cs': costs,
         'lp': lastProfit,
         'gl': [for (final g in goals) g.toJson()],
@@ -5226,6 +5296,7 @@ class Career {
           (j['fcl'] is List && (j['fcl'] as List).length > i && (j['fcl'] as List)[i] is int) ? ((j['fcl'] as List)[i] as int).clamp(1, 3) : 1,
       ]
       ..facilityDebt = ((j['fcd'] as int?) ?? 0).clamp(0, 100000)
+      ..staffDebt = ((j['sfd'] as int?) ?? 0).clamp(0, 100000)
       ..costs = (j['cs'] as int?) ?? 0
       ..lastProfit = (j['lp'] as int?) ?? 0
       ..goals = [for (final g in maps('gl')) OwnerGoal.fromJson(g)]

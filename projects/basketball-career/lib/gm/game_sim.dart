@@ -339,7 +339,8 @@ SimResult simulateGame(Team home, Team away, Rng r,
         me.courtOverride = closers(me);
       case GameCall.bench:
         final idx = [for (var i = 0; i < me.order.length; i++) i]..sort((x, y) => me.mins[y].compareTo(me.mins[x]));
-        final rest = idx.skip(5).toList();
+        // 控えは出られる選手だけ(けが人と休ませた選手は時間が0)
+        final rest = idx.skip(5).where((i) => me.mins[i] > 0).toList();
         final five = [...rest.take(5), ...idx.take(5).toList().reversed].take(5).toList()..sort();
         me.courtOverride = five;
       case GameCall.plan:

@@ -79,7 +79,10 @@ class GmController extends ChangeNotifier {
       if (ps != null && !_dirty) {
         try {
           profile = Profile.fromJson(jsonDecode(ps));
-        } catch (_) {}
+        } catch (_) {
+          // 読めなかった記録は、上書きされる前に別の場所へ残す
+          p.setString('$_profileKey.broken', ps);
+        }
       }
       final cs = p.getString(_careerKey);
       if (cs != null && career == null && !_dirty) {
@@ -87,6 +90,8 @@ class GmController extends ChangeNotifier {
           career = Career.fromJson(jsonDecode(cs));
         } catch (_) {
           career = null;
+          // 読めなかった任期は、新しく始めて消える前に別の場所へ残す
+          p.setString('$_careerKey.broken', cs);
         }
       }
     }
@@ -132,6 +137,9 @@ class GmController extends ChangeNotifier {
   }
 
   void newCareer(int team, {int? seed, Difficulty difficulty = Difficulty.normal}) {
+    // 終わった任期の上に始めるときも、終わった任期を記録に数える
+    final old = career;
+    if (old != null && old.phase == Phase.over) pending.addAll(profile.recordCareerEnd(old));
     career = Career.start(seed: seed ?? newSeed(), team: team, difficulty: difficulty);
     atHome = false;
     _changed();
