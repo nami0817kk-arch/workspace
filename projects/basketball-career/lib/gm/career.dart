@@ -1237,6 +1237,21 @@ class Career {
 
   static const sponsorLabels = ['なし', '決まった額', '勝ち数で上乗せ', 'プレーオフで上乗せ'];
 
+  /// スポンサーの「勝ち数で上乗せ」の目標。方針の宣言やオーナーとの交渉で動く前の、チームの力から決まった勝ち数
+  /// (宣言で目標を下げても、スポンサーとの約束は軽くならない)。
+  int get sponsorTarget =>
+      target +
+      switch (declaredNow) {
+        2 => 3,
+        3 => 6,
+        _ => 0,
+      } +
+      switch (goalStance) {
+        1 => 5,
+        2 => -4,
+        _ => 0,
+      };
+
   /// アリーナの命名権を売ったか、と今の名前。
   bool namingSold = false;
   String arenaName = '';
@@ -1273,13 +1288,14 @@ class Career {
     if (d != 0) {
       final (base, bonus) = sponsorTerms(d);
       final hit = switch (d) {
-        2 => me.wins >= target,
+        2 => me.wins >= sponsorTarget,
         3 => res >= 1,
         _ => false,
       };
       final v = base + (hit ? bonus : 0);
       _earn(Income.sponsor, v);
-      _mail(Sender.owner, 'スポンサーから${money(v)}', '「${sponsorLabels[d]}」の契約。${bonus == 0 ? '' : hit ? '条件を満たし、上乗せが付いた。' : '条件に届かず、上乗せは無かった。'}');
+      final cond = d == 2 ? '(目標$sponsorTarget勝に対して${me.wins}勝)' : '';
+      _mail(Sender.owner, 'スポンサーから${money(v)}', '「${sponsorLabels[d]}」の契約。${bonus == 0 ? '' : hit ? '条件を満たし、上乗せが付いた$cond。' : '条件に届かず、上乗せは無かった$cond。'}');
       sponsorDeal = 0;
     }
     if (namingSold) _earn(Income.sponsor, namingIncome);

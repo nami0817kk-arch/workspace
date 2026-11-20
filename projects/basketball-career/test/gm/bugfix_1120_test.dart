@@ -115,6 +115,26 @@ void main() {
     }
   });
 
+  test('スポンサーの勝ち数の目標は、方針の宣言や目標の交渉で動かない', () {
+    final base = careerAt(7, 12)..startSeason();
+    final plain = base.target;
+    expect(base.sponsorTarget, plain);
+    for (final (decl, stance) in [(2, 0), (3, 0), (3, 1), (0, 2)]) {
+      final c = careerAt(7, 12);
+      c.declared = decl;
+      c.declaredSeason = c.season;
+      c.startSeason();
+      c.goalStance = stance;
+      c.target += switch (stance) {
+        1 => -5,
+        2 => 4,
+        _ => 0,
+      };
+      expect(c.target, isNot(plain), reason: '宣言=$decl 交渉=$stance で目標が動いていない');
+      expect(c.sponsorTarget, plain, reason: '宣言=$decl 交渉=$stance');
+    }
+  });
+
   test('まとめて進めても、トレードの締め切り前の最後の1試合の手前で止まる', () async {
     SharedPreferences.setMockInitialValues({});
     final g = GmController(prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
