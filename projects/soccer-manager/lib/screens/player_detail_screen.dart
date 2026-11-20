@@ -19,6 +19,8 @@ import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import 'glossary_screen.dart';
+import '../widgets/amount_nudger.dart';
+import '../widgets/auto_columns.dart';
 import '../widgets/attribute_radar.dart';
 import '../widgets/growth_sparkline.dart';
 import '../widgets/player_face_avatar.dart';
@@ -111,8 +113,8 @@ class PlayerDetailScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            ListView(
-              padding: const EdgeInsets.all(16),
+            // 横画面では左右2列に分けて、横幅を使い切る(1列だと縦に長かった)。
+            AutoColumns(
               children: [
                 Row(
                   children: [
@@ -383,8 +385,9 @@ class PlayerDetailScreen extends StatelessWidget {
                 ),
               ],
             ),
-            ListView(
-              padding: const EdgeInsets.all(16),
+            // 能力の表は名前が切れないよう、横幅いっぱいの1列のまま。
+            AutoColumns(
+              twoColumnWidth: double.infinity,
               children: [
                 _AttributeGrid(
                     player: p, categories: categories, keys: keyAttributeKeys),
@@ -472,8 +475,8 @@ class PlayerDetailScreen extends StatelessWidget {
                   ),
               ],
             ),
-            ListView(
-              padding: const EdgeInsets.all(16),
+            // 横画面では左右2列に分けて、横幅を使い切る(1列だと縦に長かった)。
+            AutoColumns(
               children: [
                 Text(Tr.pick('市場価値: ${formatMoney(p.marketValue)}',
                     'Value: ${formatMoney(p.marketValue)}')),
@@ -766,8 +769,8 @@ class PlayerDetailScreen extends StatelessWidget {
                 ],
               ],
             ),
-            ListView(
-              padding: const EdgeInsets.all(16),
+            // 横画面では左右2列に分けて、横幅を使い切る(1列だと縦に長かった)。
+            AutoColumns(
               children: [
                 const SizedBox(height: 4),
                 Text(
@@ -901,8 +904,8 @@ class PlayerDetailScreen extends StatelessWidget {
                 ],
               ],
             ),
-            ListView(
-              padding: const EdgeInsets.all(16),
+            // 横画面では左右2列に分けて、横幅を使い切る(1列だと縦に長かった)。
+            AutoColumns(
               children: [
                 if (seasonStats.appearances > 0)
                   Padding(
@@ -1126,6 +1129,10 @@ class PlayerDetailScreen extends StatelessWidget {
                     labelText: Tr.pick('提示する年俸（万円）',
                         'Salary you are offering (in units of 10,000 yen)')),
               ),
+              AmountNudger(
+                controller: controller,
+                target: annualFromWeekly(negotiation.counterWage),
+              ),
             ],
           ),
           actions: [
@@ -1243,6 +1250,12 @@ class PlayerDetailScreen extends StatelessWidget {
                         : Tr.pick(
                             '1以上の金額を入力してください', 'Enter an amount of 1 or more'),
                   ),
+                ),
+                AmountNudger(
+                  controller: controller,
+                  target: marketValue,
+                  targetLabel: Tr.pick('市場価値', 'Market value'),
+                  onChanged: (_) => setState(() {}),
                 ),
               ],
             ),

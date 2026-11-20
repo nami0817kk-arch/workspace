@@ -103,7 +103,11 @@ class _StaffCard extends StatelessWidget {
       trailing: FilledButton(
         onPressed: () async {
           final messenger = ScaffoldMessenger.of(context);
-          final ok = await gameState.hireStaff(c.id);
+          final ok = await runUndoable(
+            context,
+            action: () => gameState.hireStaff(c.id),
+            done: Tr.pick('${c.name}を雇いました', 'Hired ${c.name}'),
+          );
           if (!ok) {
             messenger.showSnackBar(SnackBar(
               content: Text(gameState.lastSigningBlockReason ??

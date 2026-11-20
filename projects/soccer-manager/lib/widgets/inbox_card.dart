@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
-import '../screens/news_screen.dart';
+import '../screens/inbox_screen.dart';
 import '../state/game_state.dart';
 
 /// 受信箱。直近のお知らせを新しい順に並べる(FM のホームの受信箱に寄せる)。
-/// 全部は「すべて見る」から、ニュース画面で絞り込んで読める。
+/// 全部は「すべて見る」から受信箱の画面で読める(絞り込みはその先のニュース画面)。
 class InboxCard extends StatelessWidget {
   const InboxCard({super.key});
 
@@ -45,13 +45,12 @@ class InboxCard extends StatelessWidget {
                     child: Text(Tr.pick('既読にする', 'Mark read')),
                   ),
                 TextButton(
-                  onPressed: () {
-                    gs.markInboxRead();
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                          builder: (_) => const NewsScreen()),
-                    );
-                  },
+                  // 受信箱の全部(対応が要るもの＋お知らせ)を開く。以前は
+                  // クラブニュースが開き、対応が要るものが見えなかった。
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                        builder: (_) => const InboxScreen()),
+                  ),
                   child: Text(Tr.pick('すべて見る', 'See all')),
                 ),
               ],
@@ -103,8 +102,9 @@ class InboxCard extends StatelessWidget {
                         // 未読は太字。
                         style: TextStyle(
                             fontSize: 12,
-                            fontWeight:
-                                i < unread ? FontWeight.bold : FontWeight.normal),
+                            fontWeight: i < unread
+                                ? FontWeight.bold
+                                : FontWeight.normal),
                       ),
                     ),
                   ],
