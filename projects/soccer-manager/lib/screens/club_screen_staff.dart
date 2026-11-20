@@ -42,7 +42,8 @@ class _StaffCard extends StatelessWidget {
                 trailing: TextButton(
                   onPressed: () => gameState.dismissStaff(role),
                   child: Text(current.severance > 0
-                      ? Tr.pick('解任(違約金${formatMoney(context.read<GameState>().scaledMoney(current.severance))})',
+                      ? Tr.pick(
+                          '解任(違約金${formatMoney(context.read<GameState>().scaledMoney(current.severance))})',
                           'Dismiss (severance ${formatMoney(context.read<GameState>().scaledMoney(current.severance))})')
                       : Tr.pick('解任', 'Dismiss')),
                 ),
@@ -58,7 +59,28 @@ class _StaffCard extends StatelessWidget {
               if (gameState.staffOfferFor(role) case final offer?)
                 _StaffOfferBox(offer: offer),
             ],
-            if (candidates.isNotEmpty) ...[
+            // 候補の一覧。就いている人がいる役職は畳んでおき、押すと開く
+            // (6役それぞれに候補が並び、ページが縦に12画面分あった)。
+            if (candidates.isNotEmpty && current != null)
+              Theme(
+                data: Theme.of(context)
+                    .copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  tilePadding: EdgeInsets.zero,
+                  childrenPadding: EdgeInsets.zero,
+                  title: Text(
+                    Tr.pick('雇える候補(${candidates.length}人)',
+                        'Available to hire (${candidates.length})'),
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: SemanticColors.subtleText(context)),
+                  ),
+                  children: [
+                    for (final c in candidates) _candidateRow(context, c),
+                  ],
+                ),
+              )
+            else if (candidates.isNotEmpty) ...[
               const Divider(height: 20),
               Text(
                 Tr.pick('雇える候補', 'Available to hire'),
@@ -66,27 +88,31 @@ class _StaffCard extends StatelessWidget {
                     fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
               const SizedBox(height: 4),
-              for (final c in candidates)
-                _StaffRow(
-                  staff: c,
-                  trailing: FilledButton(
-                    onPressed: () async {
-                      final messenger = ScaffoldMessenger.of(context);
-                      final ok = await gameState.hireStaff(c.id);
-                      if (!ok) {
-                        messenger.showSnackBar(SnackBar(
-                          content: Text(gameState.lastSigningBlockReason ??
-                              Tr.pick('給与予算が足りません。',
-                                  'Your wage budget will not cover him.')),
-                        ));
-                      }
-                    },
-                    child: Text(Tr.pick('雇う', 'Hire')),
-                  ),
-                ),
+              for (final c in candidates) _candidateRow(context, c),
             ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _candidateRow(BuildContext context, StaffMember c) {
+    final gameState = context.read<GameState>();
+    return _StaffRow(
+      staff: c,
+      trailing: FilledButton(
+        onPressed: () async {
+          final messenger = ScaffoldMessenger.of(context);
+          final ok = await gameState.hireStaff(c.id);
+          if (!ok) {
+            messenger.showSnackBar(SnackBar(
+              content: Text(gameState.lastSigningBlockReason ??
+                  Tr.pick(
+                      '給与予算が足りません。', 'Your wage budget will not cover him.')),
+            ));
+          }
+        },
+        child: Text(Tr.pick('雇う', 'Hire')),
       ),
     );
   }
@@ -202,7 +228,8 @@ class _ManagerProfileLines extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            Tr.pick('考え方: ${m.style.label}(${m.style.description})・好みの布陣 ${m.formation.label}',
+            Tr.pick(
+                '考え方: ${m.style.label}(${m.style.description})・好みの布陣 ${m.formation.label}',
                 'Style: ${m.style.label} (${m.style.description}) • Preferred shape ${m.formation.label}'),
             style: small,
           ),
@@ -267,7 +294,8 @@ class _ManagerTargetPanel extends StatelessWidget {
               ),
             ],
           ),
-          Text(Tr.pick('監督の立場: $standing / 100', 'Manager standing: $standing / 100')),
+          Text(Tr.pick(
+              '監督の立場: $standing / 100', 'Manager standing: $standing / 100')),
           const SizedBox(height: 4),
           LinearProgressIndicator(value: standing / 100, color: color),
           const SizedBox(height: 4),

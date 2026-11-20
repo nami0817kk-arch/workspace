@@ -243,12 +243,12 @@ void main() {
     }
     // 見出しの帯に文字で並ぶタブ(Tab ではない作り)も開いて測る。
     const headerTabs = {
-      'クラブ': ['施設・スタッフ', 'ユース・スカウト'],
+      'クラブ': ['スタッフ', '施設', 'ファンと街', 'ユース・スカウト'],
       '選手': ['スカッド', '登録と契約'],
       'リーグ': ['順位・日程', 'カップ戦', 'ランキング', '個人タイトル'],
       'オーナー室': [
-        'オーナーの仕事', '年間予定', 'ニュース', 'シーズン分析',
-        'シーズン成績', 'ベストイレブン', '殿堂', '実績',
+        'オーナーの仕事', 'オーナーと世界', '年間予定', 'ニュース',
+        'シーズン分析', '記録',
       ],
     };
     for (final e in headerTabs.entries) {
@@ -268,6 +268,17 @@ void main() {
         await tester.tap(f.first, warnIfMissed: false);
         await tester.pump(const Duration(milliseconds: 500));
         measureLength('${e.key}/$t');
+        {
+          final boundary = tester
+              .renderObject<RenderRepaintBoundary>(find.byKey(boundaryKey));
+          await tester.runAsync(() async {
+            final image = await boundary.toImage(pixelRatio: 1.0);
+            final data =
+                await image.toByteData(format: ui.ImageByteFormat.png);
+            File('$_out/${e.key}_$t.png')
+                .writeAsBytesSync(data!.buffer.asUint8List());
+          });
+        }
         // 長いページは見出し(札の題)を並べる。
         final heads = <String>[];
         for (final h in find.byType(Text).evaluate()) {

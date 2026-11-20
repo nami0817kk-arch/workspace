@@ -8,13 +8,14 @@ import 'package:flutter/material.dart';
 class AutoColumns extends StatelessWidget {
   final List<Widget> children;
 
-  /// これ以上の幅なら2列。
+  /// これ以上の幅なら2列。スマホの横画面(左のメニューを除いて約690)でも
+  /// 2列にする。1列だと札が縦に5〜7画面分続いていた。
   final double twoColumnWidth;
 
   const AutoColumns({
     super.key,
     required this.children,
-    this.twoColumnWidth = 1000,
+    this.twoColumnWidth = 640,
   });
 
   /// 2列に分ける位置(後半の先頭)。真ん中から、カード以外(間隔・見出し)を

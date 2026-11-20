@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'quick_access_drawer.dart';
+
 /// 横画面の左メニューの中に埋め込まれている印。
 ///
 /// 埋め込まれた画面は、戻るボタンや引き出しの取っ手を出さない(左のメニューが
@@ -65,22 +67,39 @@ PreferredSizeWidget screenBar(
     );
   }
   if (EmbeddedInShell.of(context)) {
+    // 左のメニューのページは、どれも「題＋タブ」の同じ形にする(グループの
+    // ページと同じ)。他の画面への入口は上の帯の左端にあるので、ここの≡は出さない。
+    final titleText = Text(
+      title,
+      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+    );
     return AppBar(
       automaticallyImplyLeading: false,
       toolbarHeight: 48,
       centerTitle: false,
-      titleSpacing: 8,
+      titleSpacing: 12,
       title: tabs.isEmpty
-          ? Text(title, style: const TextStyle(fontSize: 15))
-          : TabBar(
-              controller: controller,
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              dividerColor: Colors.transparent,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 14),
-              tabs: [for (final t in tabs) Tab(height: 48, text: t)],
+          ? titleText
+          : Row(
+              children: [
+                titleText,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TabBar(
+                    controller: controller,
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    dividerColor: Colors.transparent,
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 14),
+                    tabs: [for (final t in tabs) Tab(height: 48, text: t)],
+                  ),
+                ),
+              ],
             ),
-      actions: actions,
+      actions: [
+        for (final a in actions)
+          if (a is! QuickAccessMenuButton) a,
+      ],
     );
   }
   return AppBar(
