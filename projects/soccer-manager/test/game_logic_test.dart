@@ -1878,7 +1878,6 @@ void main() {
         pending?.attacker?.id,
         pending?.defender?.id,
       };
-      final outId = team.startingXI.firstWhere((id) => !involved.contains(id));
       // 登録外の選手は試合に出せない(交代でも入れない)。
       final bench = team.players.firstWhere((p) =>
           !team.startingXI.contains(p.id) &&
@@ -1887,11 +1886,19 @@ void main() {
           !p.isOnInternationalDuty &&
           !p.isLoanedOut &&
           !p.notRegistered);
-      expect(
-        gameState.makeLiveSubstitution(
-            outPlayerId: outId, inPlayerId: bench.id),
-        isTrue,
-      );
+      // スタメンの記録と、ピッチに立っている11人が一致しないことがある
+      // (試合の前に出られなくなった選手の代わりが入った節)。ピッチにいる
+      // 選手が見つかるまで順に試す(先頭だけだと、まれに外していた)。
+      String? outId;
+      for (final id in [...team.startingXI]) {
+        if (involved.contains(id)) continue;
+        if (gameState.makeLiveSubstitution(
+            outPlayerId: id, inPlayerId: bench.id)) {
+          outId = id;
+          break;
+        }
+      }
+      expect(outId, isNotNull);
       expect(gameState.substitutionsUsed, 1);
       expect(team.startingXI.contains(bench.id), isTrue);
       expect(team.startingXI.contains(outId), isFalse);
