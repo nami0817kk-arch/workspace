@@ -14,6 +14,7 @@ import 'screens/onboarding_screen.dart';
 import 'screens/start_screen.dart';
 import 'widgets/fm_panel.dart';
 import 'widgets/landscape_scale.dart';
+import 'widgets/notch_side_insets.dart';
 import 'widgets/save_error_notifier.dart';
 import 'logic/economy_scale.dart';
 
@@ -246,9 +247,11 @@ class SoccerManagerApp extends StatelessWidget {
                       Brightness.dark,
                       boldText: settings.boldTextMode,
                     ),
-                    child: SaveErrorNotifier(
-                      child: _DeliverPendingPurchases(
-                        child: _SaveOnPause(child: child!),
+                    child: NotchSideInsets(
+                      child: SaveErrorNotifier(
+                        child: _DeliverPendingPurchases(
+                          child: _SaveOnPause(child: child!),
+                        ),
                       ),
                     ),
                   ),
