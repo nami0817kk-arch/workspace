@@ -1,0 +1,140 @@
+# 物語完結型ショート 五摂家 s1（2026-11-11）。本編 scripts/gosekke-kakeizu-story.yaml（11/12 19:00 公開、https://youtu.be/CeEjUwzjJRQ）から。11/13 に予約。
+# 形式は genbaku_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/五摂家_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/gosekke/main。人物なし・後ろ姿だけ）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 答えの席（今、当主の名前が公に分かる家はいくつか）は言い切らない。存命の人の名前は出さない。
+# 切り口：「この世をば」の歌を書き残したのは道長ではなく実資（本編1章）。
+# 計算：1018年10月16日。
+# 理解テスト4問：①藤原道長 ②1018年10月16日、三女威子が中宮に立った夜の宴 ③道長は実資に返歌を求め歌を詠み、実資は返歌せず「皆で吟じましょう」。歌を書き留めたのは道長の日記ではなく実資の『小右記』 ④道長は関白になっていないのに日記は御堂関白記と呼ばれる。なぜか（本編1章）
+title: "藤原道長｜この世をばの歌を書き残した人"
+yt_title: "「この世をば」の歌を書き残したのは道長ではない　1018年10月16日、三后の夜に何があったか"
+description: |-
+  1018年10月16日、藤原道長の三女、威子が後一条天皇の中宮に立ちました。一つの家から、后が3人。同じ時代の貴族、藤原実資は、日記『小右記』に「一家立三后、未曾有なり」と書きました。
+  その夜の宴で、道長は実資に、和歌を詠むから返歌をしてほしい、と持ちかけます。詠まれたのが「この世をば、わが世とぞ思ふ、望月の、欠けたることも、なしと思へば」。実資は返歌をせず、皆で吟じましょう、とその場をおさめました。道長自身の『御堂関白記』は歌を書き留めておらず、歌が後世に知られたのは、実資の『小右記』によってです。
+  道長は関白に一度もならなかったのに、なぜ、日記は『御堂関白記』と呼ばれるのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#藤原道長"
+- "#御堂関白記"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/gosekke
+out: gosekke_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "藤原道長と「この世をば」の夜"
+  title: "歌を書き残したのは、《誰》か"
+now:
+- {at: "10月16日", text: "1018年10月16日　夜の宴", point: 0}
+timeline:
+- {label: "1018"}
+shots:
+  EmF:
+    kind: "ai"
+    file: "gosekke/main/K10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "誰もいない広間と襖絵（宴の座）"
+  J07a:
+    kind: "ai"
+    file: "gosekke/main/J07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の内裏の門と松明"
+  EmG:
+    kind: "ai"
+    file: "gosekke/main/K07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "屋敷の白壁と門（立后の日）"
+  H07:
+    kind: "ai"
+    file: "gosekke/main/H07.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "書斎の机の上の巻物と行灯（実資の日記）"
+  J07b:
+    kind: "ai"
+    file: "gosekke/main/J07.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "夜の内裏の門（宴の夜）"
+  H09:
+    kind: "ai"
+    file: "gosekke/main/H09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "縁側から庭を見る公達の後ろ姿（歌を詠む）"
+  EmF2:
+    kind: "ai"
+    file: "gosekke/main/K02.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "誰もいない広間とろうそく（その場をおさめる）"
+  Diary:
+    kind: "real"
+    image: "paintings/gosekke_midokanpaku_diary.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    credit: "藤原道長自筆『御堂関白記』（陽明文庫蔵。パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "道長自筆の御堂関白記"
+  K15:
+    kind: "ai"
+    file: "gosekke/main/K15.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "机の上の古い巻物と和綴じの本"
+lines:
+- 語り: "この世をばの歌を、書き残したのは、道長ではない。"
+  shot: EmF
+  tone: 強調
+  pause: 0.12
+  # fact: gosekke-04
+- 語り: "では、誰なのか。"
+  shot: J07a
+  tone: 疑問
+  pause: 0.15
+  # fact: gosekke-01
+- 語り: "10月16日。道長の三女、威子が、後一条天皇の、中宮に立った。"
+  shot: EmG
+  tone: しみじみ
+  pause: 0.12
+  # fact: gosekke-01, gosekke-02
+- 語り: "一つの家から、后が3人。実資は日記『小右記』に、一家立三后、未曾有なり、と書いた。"
+  shot: H07
+  tone: 重い
+  pause: 0.12
+  # fact: gosekke-04
+- 語り: "その夜の宴で、道長は実資に、歌を詠むから、返歌をしてくれ、と持ちかける。"
+  shot: J07b
+  tone: しみじみ
+  pause: 0.12
+  # fact: gosekke-03
+- 語り: "詠まれたのが、この世をば、わが世とぞ思ふ、望月の、欠けたることも、なしと思へば。"
+  shot: H09
+  tone: 重い
+  pause: 0.12
+  # fact: gosekke-04
+- 語り: "実資は、返歌をしなかった。皆で吟じましょう、と言って、その場をおさめた。"
+  shot: EmF2
+  tone: しみじみ
+  pause: 0.12
+  # fact: gosekke-03
+- 語り: "道長自身の『御堂関白記』は、この歌を書き留めていない。歌が後世に知られたのは、実資の日記によってだ。"
+  shot: Diary
+  tone: 重い
+  pause: 0.12
+  # fact: gosekke-06
+- 語り: "道長は、関白に一度もならなかったのに、なぜ、日記は、御堂関白記と呼ばれるのか。"
+  shot: K15
+  tone: 疑問
+  pause: 0.15

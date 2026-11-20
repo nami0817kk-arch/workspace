@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:baseball_manager/game/skills.dart';
+import 'package:baseball_manager/game/after_career.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/childhood.dart';
 import 'package:baseball_manager/game/flavor.dart';
@@ -11,6 +13,7 @@ import 'package:baseball_manager/game/life.dart';
 import 'package:baseball_manager/game/path.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/game/traits.dart';
+import 'package:baseball_manager/game/tryout.dart';
 import 'package:baseball_manager/ui/app.dart';
 import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/history.dart';
@@ -63,6 +66,26 @@ Game _until(bool Function(Game) stop, {int seed = 1, int? potential}) {
   return g;
 }
 
+/// 結婚して引退した選手。プロで恋人がいるところまで進め、絆を満タンにして引退する
+/// (自然に結婚まで行く選手を探すと、乱数や引退の年齢の決まりが変わるたびに見つからなくなった)。
+Game _marriedLife() {
+  for (var sd = 0; sd < 200; sd++) {
+    final g = _until(
+        (g) =>
+            g.stage == Stage.pro &&
+            g.phase == Phase.term &&
+            g.cast.lover != null &&
+            g.player.age >= 26,
+        seed: sd,
+        potential: 90);
+    if (g.phase == Phase.retired || g.cast.lover == null) continue;
+    g.cast.lover!.addBond(100);
+    g.retire();
+    if (g.ending?.married ?? false) return g;
+  }
+  fail('結婚して引退した選手がいない');
+}
+
 /// 下のタブを切り替える(train=育成 / ability=能力 / career=キャリア)。
 Future<void> _tab(WidgetTester t, String name) async {
   await t.tap(find.byKey(Key('tab-$name')));
@@ -78,7 +101,25 @@ Future<void> _dismissMilestones(WidgetTester t) async {
 }
 
 void main() {
+  // 公開ビルドでは使えない管理者モードを、テストでは使えるようにする
+  GameController.adminAllowed = true;
   _rankTests();
+  testWidgets('公開ビルドでは管理者モードが使えない(スイッチも7連打も効かない)', (t) async {
+    GameController.adminAllowed = false;
+    addTearDown(() => GameController.adminAllowed = true);
+    final c = GameController(rng: Random(1));
+    final now = DateTime(2026, 1, 1);
+    for (var i = 0; i < 8; i++) {
+      expect(c.tapTitle(now: now), isFalse);
+    }
+    c.toggleAdmin();
+    expect(c.adminMode, isFalse);
+    await t.pumpWidget(BaseballManagerApp(controller: c));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const Key('settings-open')));
+    await t.pumpAndSettle();
+    expect(find.byKey(const Key('admin-switch')), findsNothing);
+  });
   testWidgets('はじめの画面から選手を作ると、6歳の春から始まる', (t) async {
     await _start(t);
     expect(find.text('はじめる'), findsOneWidget);
@@ -90,8 +131,8 @@ void main() {
     expect(find.textContaining('ひなた'), findsWidgets);
     expect(find.textContaining('6歳'), findsOneWidget);
     expect(find.textContaining('春'), findsWidgets);
-    expect(find.text('球威'), findsWidgets); // 投手の能力
-    expect(find.text('ミート'), findsNothing);
+    expect(find.text('球速'), findsWidgets); // 投手の能力
+    expect(find.text('変化球'), findsWidgets);
   });
 
   testWidgets('練習すると季節が進み、経験点が貯まり、能力に振り分けられる', (t) async {
@@ -120,10 +161,12 @@ void main() {
   testWidgets('練習のあと、「いまの結果」に貯まった経験点が出る。能力のランクが並ぶ', (t) async {
     final c = await _start(t);
     c.newGame('テスト', Role.batter);
+    c.recent = []; // 生まれ(引き直しの見本)によっては、生まれ持った才能の知らせが出るので消す
+    c.notifyListeners();
     await t.pumpAndSettle();
     expect(find.byKey(const Key('recent')), findsNothing);
     await _tab(t, 'ability');
-    expect(find.text('G'), findsNWidgets(6)); // 15は全部Gランク(5能力+総合)
+    expect(find.text('G'), findsNWidgets(8)); // 15は全部Gランク(7能力+総合)
     await _tab(t, 'train');
     await t.tap(find.byKey(const Key('act-train')));
     await t.pumpAndSettle();
@@ -143,6 +186,7 @@ void main() {
   testWidgets('育成タブに、おすすめの印つきの行動が並び、疲れると休養がおすすめになる', (t) async {
     final c = await _start(t);
     c.newGame('テスト', Role.batter);
+    c.recent = []; // 生まれ持った才能の知らせは消しておく
     await t.pumpAndSettle();
     expect(find.byKey(const Key('recommended-train')), findsOneWidget);
     expect(c.recent, isEmpty);
@@ -237,7 +281,7 @@ void main() {
     await t.pumpAndSettle();
     expect(c.game!.player.role, Role.twoWay);
     await _tab(t, 'ability');
-    expect(find.text('球威'), findsWidgets); // 投手の能力も並ぶ
+    expect(find.text('球速'), findsWidgets); // 投手の能力も並ぶ
     expect(find.text('ミート'), findsWidgets);
     await _tab(t, 'career');
     await t.tap(find.byKey(const Key('retire')));
@@ -372,6 +416,12 @@ void _rankTests() {
       }
       await t.tap(find.byKey(const Key('act-train')));
       await t.pumpAndSettle();
+      // 決勝まで来たら、見せ場の作戦を選ぶ。
+      if (c.game!.phase == Phase.event &&
+          c.game!.pendingEvent!.id == 'final-moment') {
+        await t.tap(find.byKey(const Key('event-1')));
+        await t.pumpAndSettle();
+      }
       if (find.text('優勝!').evaluate().isNotEmpty) return;
       while (find.byKey(const Key('milestone-ok')).evaluate().isNotEmpty) {
         await t.tap(find.byKey(const Key('milestone-ok')));
@@ -469,14 +519,14 @@ void _rankTests() {
             .containsAll({Trait.lateBloomer, Trait.earlyBloomer}),
         isTrue);
 
-    // コーチ: 教える特性を決めて、コツを満タンにすると習得する。
-    await t.ensureVisible(find.byKey(const Key('admin-teach-clutch')));
-    await t.tap(find.byKey(const Key('admin-teach-clutch')));
+    // コーチ: 教える特殊能力を決めて、コツを満タンにすると習得する。
+    await t.ensureVisible(find.byKey(const Key('admin-teach-chance')));
+    await t.tap(find.byKey(const Key('admin-teach-chance')));
     await t.pumpAndSettle();
     await t.ensureVisible(find.byKey(const Key('admin-tips')));
     await t.drag(find.byKey(const Key('admin-tips')), const Offset(2000, 0));
     await t.pumpAndSettle();
-    expect(c.game!.player.traits, contains(Trait.clutch));
+    expect(c.game!.skillTips[Skill.chance], maxSkillTips);
 
     // 天賦: スライダーで書き換えられ、レア特性も付けられる。覚醒済みの印も切り替えられる。
     await t.ensureVisible(find.byKey(const Key('admin-gift-contact')));
@@ -493,6 +543,17 @@ void _rankTests() {
     await t.tap(find.byKey(const Key('admin-awakened')));
     await t.pumpAndSettle();
     expect(c.game!.awakened, isTrue);
+
+    // 特殊能力: 付け外しと、コツの満タン。
+    await t.ensureVisible(find.byKey(const Key('admin-skill-stealer')));
+    await t.tap(find.byKey(const Key('admin-skill-stealer')));
+    await t.pumpAndSettle();
+    expect(c.game!.player.skills, contains(Skill.stealer));
+    await t.ensureVisible(find.byKey(const Key('admin-tips-max')));
+    await t.tap(find.byKey(const Key('admin-tips-max')));
+    await t.pumpAndSettle();
+    expect(c.game!.skillTips[Skill.powerHitter], maxSkillTips);
+    expect(c.game!.skillTips.containsKey(Skill.stealer), isFalse);
   });
 
   testWidgets('管理者モードは覚えていて、7回タップでもう一度切れる', (t) async {
@@ -546,7 +607,7 @@ void _rankTests() {
     expect(find.textContaining('通算'), findsWidgets);
   });
 
-  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る。打者の欄は出ない', (t) async {
+  testWidgets('成績: 投手は勝敗・防御率・奪三振の欄が出る。打撃は投球のあとに小さく出る', (t) async {
     final c = await _start(t);
     final g = Game.newGame(
         name: '投手', role: Role.pitcher, rng: Random(2), potential: 70);
@@ -564,7 +625,8 @@ void _rankTests() {
     await t.pumpAndSettle();
     expect(find.text('防御率'), findsWidgets);
     expect(find.text('奪三振'), findsWidgets);
-    expect(find.text('打率'), findsNothing);
+    expect(find.byKey(const Key('pitcher-batting')), findsOneWidget);
+    expect(find.text('OPS'), findsNothing); // 投手の打席の指標は出さない
   });
 
   testWidgets('成績: プロのシーズンは順位とプロ通算が出る', (t) async {
@@ -582,10 +644,11 @@ void _rankTests() {
     await t.tap(find.byKey(const Key('records-open')));
     await t.pumpAndSettle();
     expect(find.textContaining('プロ通算 ('), findsOneWidget);
-    // 順位(「3位」)か、優勝(「リーグ優勝」)のどちらかが表に出る。
+    // 順位(「3位」)か、優勝(「リーグ優勝」)のどちらかが表に出る。ポストシーズンの結果が続くこともある(「3位・CSファイナル敗退」)。
     expect(
         find.byWidgetPredicate((w) =>
-            w is Text && RegExp(r'^(\d位|リーグ優勝)$').hasMatch(w.data ?? '')),
+            w is Text &&
+            RegExp(r'^(\d位|リーグ優勝)(・.+)?$').hasMatch(w.data ?? '')),
         findsWidgets);
   });
 
@@ -721,11 +784,11 @@ void _rankTests() {
     expect(find.text('経歴'), findsOneWidget);
     expect(find.text('ひなた'), findsWidgets);
     expect(find.textContaining('総合評価'), findsOneWidget);
-    expect(find.text('素質 ★★★★☆'), findsOneWidget);
+    expect(find.text('才能 ★★★★★'), findsOneWidget);
     expect(find.byKey(const Key('trait-clutch')), findsOneWidget);
     expect(find.byKey(const Key('trait-sturdy')), findsOneWidget);
     expect(find.textContaining('大会での体調が'), findsOneWidget); // 特性の説明が読める
-    expect(find.text('球威'), findsWidgets);
+    expect(find.text('球速'), findsWidgets);
     expect(find.text('いまの状態'), findsOneWidget); // 育成中だけ出る
 
     await t.tap(find.byKey(const Key('tab-records')));
@@ -879,19 +942,16 @@ void _rankTests() {
     expect(find.text('ごほうびをもらった'), findsOneWidget);
   });
 
-  testWidgets('難しさ: はじめの画面で選べ、選んだものでその選手が始まる。説明が出る', (t) async {
+  testWidgets('難しさは選ばない(2026-10-24 ユーザー「難しさのコントロールはいらない」)。いつも「ふつう」で始まる', (t) async {
     final c = await _start(t);
-    expect(find.text('難しさ'), findsOneWidget);
-    expect(find.textContaining('ほどよい難しさ'), findsOneWidget);
-    await t.tap(find.text('むずかしい'));
-    await t.pumpAndSettle();
-    expect(find.textContaining('経験点が0.9倍'), findsOneWidget);
+    expect(find.text('難しさ'), findsNothing);
+    expect(find.byKey(const Key('difficulty')), findsNothing);
     await t.tap(find.text('はじめる'));
     await t.pumpAndSettle();
-    expect(c.game!.difficulty, Difficulty.hard);
+    expect(c.game!.difficulty, Difficulty.normal);
     await t.tap(find.byKey(const Key('player-open')));
     await t.pumpAndSettle();
-    expect(find.text('むずかしい'), findsOneWidget); // 選手情報に出る
+    expect(find.text('難しさ'), findsNothing); // 選手情報にも出さない
   });
 
   testWidgets('実績: 一生が終わると解除され、ダイアログとエンディングで知らせる。保存されて、ホームと一覧に出る', (t) async {
@@ -1008,7 +1068,11 @@ void _rankTests() {
     expect(t.takeException(), isNull, reason: 'ホーム(殿堂つき)');
     // 継承ポイントがあるときの新規開始画面も、狭い画面・大きい文字で溢れない
     c.legacyPoints = 12;
-    c.seenTraits = {Trait.genius.name, Trait.hardWorker.name, Trait.leader.name};
+    c.seenTraits = {
+      Trait.genius.name,
+      Trait.hardWorker.name,
+      Trait.leader.name
+    };
     c.notifyListeners();
     await t.pumpAndSettle();
     await t.scrollUntilVisible(find.byKey(const Key('carry-genius')), 200,
@@ -1169,7 +1233,7 @@ void _rankTests() {
       const c0 = Condition(fatigue: 10, morale: 50);
       final p1 = p0.copyWith(abilities: {...p0.abilities, Ability.stuff: 33});
       final c1 = c0.copyWith(morale: 58, fatigue: 6);
-      expect(eventResultText(p0, c0, p1, c1), '球威 +3 / やる気 +8 / 疲れ -4');
+      expect(eventResultText(p0, c0, p1, c1), '球速 +3 / やる気 +8 / 疲れ -4');
       expect(eventResultText(p0, c0, p0, c0), '');
       expect(
           eventResultText(p0, c0, p0.copyWith(traits: {Trait.hardWorker}), c0,
@@ -1234,6 +1298,41 @@ void _rankTests() {
       final line = t.widget<Text>(find.byKey(const Key('profile-card'))).data!;
       expect(line, contains('背番号'));
       expect(line, contains('投'));
+    });
+
+    testWidgets('能力タブ: 投手は「投手」「打撃・守備」の見出しで分かれる。打者は見出しなし', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.pitcher);
+      await t.pumpAndSettle();
+      await _tab(t, 'ability');
+      expect(find.byKey(const Key('ability-group-stuff')), findsOneWidget);
+      await t.scrollUntilVisible(
+          find.byKey(const Key('ability-group-contact')), 200,
+          scrollable: find.byType(Scrollable).first);
+      expect(find.byKey(const Key('ability-group-contact')), findsOneWidget);
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      await _tab(t, 'ability');
+      expect(find.byKey(const Key('ability-group-contact')), findsNothing);
+    });
+
+    testWidgets('投手の重点は投球の4つが先に出て、「打撃・守備」で開くと打撃の7つが出る', (t) async {
+      final c = await _start(t);
+      c.newGame('テスト', Role.pitcher);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('focus-stuff')), findsOneWidget);
+      expect(find.byKey(const Key('focus-breaking')), findsOneWidget);
+      expect(find.byKey(const Key('focus-contact')), findsNothing);
+      await t.ensureVisible(find.byKey(const Key('focus-more')));
+      await t.tap(find.byKey(const Key('focus-more')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('focus-contact')), findsOneWidget);
+      expect(find.byKey(const Key('focus-catching')), findsOneWidget);
+      // 打者は最初から全部出る(開く札は無い)
+      c.newGame('テスト', Role.batter);
+      await t.pumpAndSettle();
+      expect(find.byKey(const Key('focus-more')), findsNothing);
+      expect(find.byKey(const Key('focus-catching')), findsOneWidget);
     });
 
     testWidgets('練習の名前は重点の能力で変わる(素振り→ノック)', (t) async {
@@ -1419,24 +1518,15 @@ void _rankTests() {
   });
 
   group('操作性', () {
-    testWidgets('「ひとつ前に戻す」で、直前の行動を取り消せる', (t) async {
+    testWidgets('「ひとつ前に戻す」ボタンは無い(行動は取り消せない)', (t) async {
       final c = await _start(t);
       c.newGame('テスト', Role.batter);
       await t.pumpAndSettle();
-      expect(find.byKey(const Key('undo')), findsNothing);
-      final fatigue = c.game!.condition.fatigue;
       await t.tap(find.byKey(const Key('act-special')));
       await t.pumpAndSettle();
       await _dismissMilestones(t);
-      if (c.game!.phase == Phase.event) c.game!.resolveEvent(0);
-      c.notifyListeners();
-      await t.pumpAndSettle();
-      expect(find.byKey(const Key('undo')), findsOneWidget);
-      await t.tap(find.byKey(const Key('undo')));
-      await t.pumpAndSettle();
-      expect(c.game!.condition.fatigue, fatigue);
-      expect(c.game!.exp.total, 0);
       expect(find.byKey(const Key('undo')), findsNothing);
+      expect(find.byTooltip('ひとつ前に戻す'), findsNothing);
     });
 
     testWidgets('キーボード: Enterでおすすめ、Rで休養', (t) async {
@@ -1527,20 +1617,15 @@ void _rankTests() {
   });
 
   group('操作の手ごたえ(第3弾)', () {
-    testWidgets('結果のトーストから「戻す」で取り消せる', (t) async {
+    testWidgets('結果のトーストに「戻す」は付かない', (t) async {
       final c = await _start(t);
       c.newGame('テスト', Role.batter);
       await t.pumpAndSettle();
       await t.tap(find.byKey(const Key('act-special')));
       await t.pump();
       await t.pump(const Duration(milliseconds: 1000));
-      expect(find.byKey(const Key('toast-undo')), findsOneWidget);
-      expect(c.canUndo, isTrue);
-      // (テストの大きな画面では押下位置がずれるので、ボタンの処理を直接呼ぶ)
-      t.widget<SnackBarAction>(find.byKey(const Key('toast-undo'))).onPressed();
-      await t.pumpAndSettle();
-      expect(c.canUndo, isFalse);
-      expect(c.game!.exp.total, 0);
+      expect(find.byKey(const Key('toast-undo')), findsNothing);
+      expect(find.text('戻す'), findsNothing);
     });
 
     testWidgets('経験点のチップをタップすると能力タブへ。最も低い能力に「伸ばしどころ」', (t) async {
@@ -1550,8 +1635,8 @@ void _rankTests() {
       await t.tap(find.byKey(const Key('exp-batting')));
       await t.pumpAndSettle();
       expect(find.byKey(const Key('buy-contact')), findsOneWidget);
-      expect(find.text('伸ばしどころ'), findsOneWidget);
-      expect(find.textContaining('あと+'), findsWidgets);
+      expect(find.textContaining('伸ばしどころ', findRichText: true), findsOneWidget);
+      expect(find.textContaining('あと+', findRichText: true), findsWidgets);
     });
 
     testWidgets('疲れが高いと特訓・練習試合に危険の印。数字キーで行動できる', (t) async {
@@ -1566,6 +1651,7 @@ void _rankTests() {
       expect(find.byKey(const Key('danger-match')), findsOneWidget);
       expect(find.byKey(const Key('danger-train')), findsNothing);
       c.game!.condition = c.game!.condition.copyWith(fatigue: 0);
+      c.recent = []; // 生まれ持った才能の知らせは消しておく
       c.notifyListeners();
       await t.pumpAndSettle();
       expect(c.recent, isEmpty);
@@ -1612,13 +1698,8 @@ void _rankTests() {
 
     testWidgets('結婚して引退したら、そのまま二世で続けられる', (t) async {
       final c = await _start(t);
-      Game? g;
-      for (var sd = 0; sd < 400 && g == null; sd++) {
-        final x = _until((g) => false, seed: sd, potential: 90);
-        if (x.ending?.married ?? false) g = x;
-      }
-      expect(g, isNotNull);
-      c.adopt(g!);
+      final g = _marriedLife();
+      c.adopt(g);
       await t.pumpAndSettle();
       await _dismissMilestones(t);
       await t.scrollUntilVisible(find.byKey(const Key('continue-heir')), 300,
@@ -1790,7 +1871,7 @@ void _rankTests() {
       expect(
           find.descendant(
               of: find.byKey(const Key('mark-ability')),
-              matching: find.text('5')),
+              matching: find.text('7')),
           findsOneWidget);
     });
 
@@ -2027,13 +2108,7 @@ void _rankTests() {
   });
 
   group('二世の画面', () {
-    Game marriedLife() {
-      for (var sd = 0; sd < 400; sd++) {
-        final g = _until((g) => false, seed: sd, potential: 90);
-        if (g.ending?.married ?? false) return g;
-      }
-      fail('結婚して引退した選手がいない');
-    }
+    Game marriedLife() => _marriedLife();
 
     testWidgets('殿堂に結婚した選手が居ると、二世として始められる', (t) async {
       SharedPreferences.setMockInitialValues({});
@@ -2132,13 +2207,130 @@ void _rankTests() {
     expect(find.byType(Image), findsWidgets);
     expect(t.takeException(), isNull, reason: '画像の読み込み');
     // プロを引退したエンディングに絵が出る
-    final done = _until((g) => false, seed: 3, potential: 95);
+    // プロ入りして引退する乱数の種を探す(バランスを変えると、プロ入りする種が変わるため)
+    var seed = 3;
+    var done = _until((g) => false, seed: seed, potential: 95);
+    while (!done.ending!.madePro && seed < 40) {
+      done = _until((g) => false, seed: ++seed, potential: 95);
+    }
     expect(done.ending!.madePro, isTrue);
     c.adopt(done);
     await t.pumpAndSettle();
     await _dismissMilestones(t);
     expect(find.byKey(const Key('retire-image')), findsOneWidget);
     expect(t.takeException(), isNull, reason: 'エンディング');
+  });
+
+  test('結果のコピーに、特性(レアは★・覚醒の印)が入る', () {
+    final g = _until((g) => false, seed: 3, potential: 95)
+      ..adminSetTraits({Trait.hardWorker, Trait.monster})
+      ..adminSetAwakened(true);
+    final text = endingShareText(g);
+    expect(text, contains('特性: '));
+    expect(text, contains('★怪物'));
+    expect(text, contains('努力家'));
+    expect(text, contains('(覚醒)'));
+    g.adminSetTraits({});
+    expect(endingShareText(g), isNot(contains('特性: ')));
+  });
+
+  testWidgets('殿堂の一覧に、レア特性を持っていた選手の★が出る', (t) async {
+    SharedPreferences.setMockInitialValues({});
+    _tall(t);
+    final rare = _until((g) => false, seed: 3, potential: 95)
+      ..adminSetTraits({Trait.monster})
+      ..adminSetSkills({Skill.averageHitter, Skill.geniusBat});
+    final plain = _until((g) => false, seed: 4, potential: 95)
+      ..adminSetTraits({Trait.hardWorker});
+    await SaveStore()
+        .saveHistory([HistoryEntry.of(rare), HistoryEntry.of(plain)]);
+    final c = GameController(rng: Random(1));
+    await t.pumpWidget(BaseballManagerApp(controller: c));
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(find.textContaining('★怪物'), 200,
+        scrollable: find.byType(Scrollable).first);
+    expect(find.textContaining('★怪物'), findsOneWidget);
+    expect(find.textContaining('★努力家'), findsNothing);
+    expect(find.textContaining('金特1'), findsOneWidget);
+  });
+
+  testWidgets('戦力外のトライアウト: 「受ける」「引退する」の選択が出て、引退を選ぶと終わる', (t) async {
+    final c = await _start(t);
+    final g = _until((g) => g.stage == Stage.pro, seed: 3, potential: 95)
+      ..pendingEvent = tryoutEvent
+      ..phase = Phase.event;
+    c.adopt(g);
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(find.textContaining('戦力外通告を受けた'), findsWidgets);
+    expect(find.text('トライアウトを受ける'), findsOneWidget);
+    expect(find.text('現役を引退する'), findsOneWidget);
+    await t.tap(find.byKey(const Key('event-1')));
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(c.game!.phase, Phase.retired);
+    expect(t.takeException(), isNull);
+  });
+
+  testWidgets('決勝の見せ場: 見出しと3つの作戦が出て、選ぶと大会の結果が出る', (t) async {
+    final c = await _start(t);
+    Game? g;
+    for (var sd = 0; sd < 60 && g == null; sd++) {
+      final x = _until(
+          (g) => g.phase == Phase.event && g.pendingEvent?.id == 'final-moment',
+          seed: sd,
+          potential: 100);
+      if (x.phase == Phase.event) g = x;
+    }
+    expect(g, isNotNull);
+    c.adopt(g!);
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(find.text('決勝の見せ場'), findsOneWidget);
+    expect(find.textContaining('決勝、最終回'), findsOneWidget);
+    for (var i = 0; i < 3; i++) {
+      expect(find.byKey(Key('event-$i')), findsOneWidget);
+    }
+    expect(find.textContaining('パワー'), findsWidgets);
+    final recs = g.records.length;
+    await t.tap(find.byKey(const Key('event-1')));
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(c.game!.records.length, recs + 1);
+    expect(c.game!.pendingFinal, isNull);
+    expect(t.takeException(), isNull);
+  });
+
+  testWidgets('引退後の道: プロを引退すると5つの道が出て、選ぶと物語が出る(殿堂にも残る)', (t) async {
+    final c = await _start(t);
+    Game? g;
+    for (var sd = 0; sd < 40 && g == null; sd++) {
+      final x = _until((g) => false, seed: sd, potential: 100);
+      if (x.ending!.madePro) g = x;
+    }
+    expect(g, isNotNull);
+    c.adopt(g!);
+    c.autoSpend(); // 引退を殿堂に書き込む
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    await t.scrollUntilVisible(find.byKey(const Key('after-path')), 200,
+        scrollable: find.byType(Scrollable).first);
+    expect(find.byKey(const Key('after-path')), findsOneWidget);
+    for (final p in AfterPath.values) {
+      expect(find.byKey(Key('after-${p.name}')), findsOneWidget);
+    }
+    expect(find.byKey(const Key('after-tier')), findsNothing);
+    await t.ensureVisible(find.byKey(const Key('after-commentator')));
+    await t.tap(find.byKey(const Key('after-commentator')));
+    await t.pumpAndSettle();
+    await _dismissMilestones(t);
+    expect(c.game!.afterPath, AfterPath.commentator);
+    expect(find.byKey(const Key('after-tier')), findsOneWidget);
+    expect(find.byKey(const Key('after-line')), findsWidgets);
+    // 殿堂の最新の記録にも、選んだ道が入る
+    expect(c.history.first.snapshot!.afterPath, 'commentator');
+    expect(c.unlocked, contains('second-career'));
+    expect(t.takeException(), isNull);
   });
 
   testWidgets('継承ポイント: 引退で貯まり、図鑑にある特性を次の選手に持たせられる', (t) async {

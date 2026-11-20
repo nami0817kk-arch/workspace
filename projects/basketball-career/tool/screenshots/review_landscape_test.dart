@@ -1,0 +1,684 @@
+/// 横画面の点検用の画像を作る(ストア掲載用ではない。掲載用は `capture_test.dart`)。
+///
+/// **CI では回らない。** 手元で:
+///
+///     flutter test tool/screenshots/review_landscape_test.dart
+///     DEVICE=ipad flutter test tool/screenshots/review_landscape_test.dart
+///
+/// 出力: `build/review_landscape/<端末>/*.png`。撮ったら必ず目で見る(はみ出し・切れ・空白)。
+library;
+
+// 生成器はテストの外にあるため、setMockInitialValues が警告になる。実体は flutter test で走らせる。
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
+import 'dart:async';
+import 'dart:io';
+import 'dart:math';
+import 'dart:ui' as ui;
+
+import 'package:basketball_career/gm/bot.dart';
+import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/scenario.dart';
+import 'package:basketball_career/gm/inbox.dart';
+import 'package:basketball_career/gm/player.dart';
+import 'package:basketball_career/gm/rating.dart';
+import 'package:basketball_career/ui/app.dart';
+import 'package:basketball_career/ui/gm/champion_screen.dart';
+import 'package:basketball_career/ui/gm/common.dart';
+import 'package:basketball_career/ui/gm/gm_table.dart';
+import 'package:basketball_career/ui/gm/player_card.dart';
+import 'package:basketball_career/ui/gm/negotiate_dialog.dart';
+import 'package:basketball_career/ui/gm/progress_tab.dart';
+import 'package:basketball_career/ui/gm_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final _device = Platform.environment['DEVICE'] ?? 'iphone';
+final _size = _device == 'ipad' ? const Size(1376, 1032) : const Size(844, 390);
+final _ratio = _device == 'ipad' ? 1.0 : 2.0;
+final _key = GlobalKey();
+
+Future<void> _loadFonts() async {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  final noto = FontLoader('NotoSansJP');
+  for (final f in ['NotoSansJP-Regular.ttf', 'NotoSansJP-Bold.ttf']) {
+    noto.addFont(Future.value(ByteData.view(File('assets/fonts/$f').readAsBytesSync().buffer)));
+  }
+  await noto.load();
+  final root = Platform.environment['FLUTTER_ROOT'];
+  if (root != null) {
+    final icons = File('$root/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf');
+    if (icons.existsSync()) {
+      final loader = FontLoader('MaterialIcons')..addFont(Future.value(ByteData.view(icons.readAsBytesSync().buffer)));
+      await loader.load();
+    }
+  }
+}
+
+Future<GmController> _controller() async => GmController(prefs: await SharedPreferences.getInstance(), seedSource: Random(7));
+
+Future<GmController> _with(Career car) async {
+  final c = await _controller();
+  c.setCareer(car);
+  c.pending.clear();
+  return c;
+}
+
+Future<void> _shoot(WidgetTester t, String name, GmController c, {Future<void> Function(WidgetTester)? act}) async {
+  t.view.physicalSize = _size * _ratio;
+  t.view.devicePixelRatio = _ratio;
+  await t.pumpWidget(RepaintBoundary(key: _key, child: KeyedSubtree(key: ValueKey(name), child: BasketballCareerApp(controller: c))));
+  await t.pump(const Duration(milliseconds: 100));
+  await t.pump(const Duration(milliseconds: 100));
+  if (act != null) await act(t);
+  await t.runAsync(() => Future.delayed(const Duration(milliseconds: 700)));
+  await t.pump();
+  await t.pump(const Duration(milliseconds: 200));
+  expect(t.takeException(), isNull, reason: '$name で例外');
+  await t.runAsync(() async {
+    final b = _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+    final img = await b.toImage(pixelRatio: _ratio);
+    final data = await img.toByteData(format: ui.ImageByteFormat.png);
+    final dir = Directory('build/review_landscape/$_device')..createSync(recursive: true);
+    File('${dir.path}/$name.png').writeAsBytesSync(data!.buffer.asUint8List());
+  });
+}
+
+Future<void> _tap(WidgetTester t, String text, {bool first = false}) async {
+  final f = first ? find.text(text).first : find.text(text).last;
+  await t.ensureVisible(f);
+  await t.pump(const Duration(milliseconds: 300));
+  await t.tap(f);
+  await t.pump();
+  await t.pump(const Duration(milliseconds: 400));
+}
+
+void main() {
+  setUpAll(_loadFonts);
+
+  testWidgets('横画面の点検', (t) async {
+    addTearDown(t.view.reset);
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
+    await _shoot(t, '1_title', await _controller());
+    await _shoot(t, '2_teampick', await _controller(), act: (t) => _tap(t, 'GMに就任する'));
+
+    final pre = careerAt(2, 20);
+    await _shoot(t, '3_home_preseason', await _with(pre));
+    await _shoot(t, '1b_scenario', await _controller(), act: (t) async {
+      await t.tap(find.byKey(const Key('scenario')));
+      await t.pumpAndSettle();
+    });
+    final scn = Career.start(seed: 21, team: scenarioTeam(Career.start(seed: 21), Scenario.rebuild))..startScenario(Scenario.rebuild);
+    await _shoot(t, '3b_scenario_card', await _with(scn));
+
+    final mid = careerAt(3, 12)..startSeason();
+    mid.playBlock();
+    await _shoot(t, '4_home_season', await _with(mid));
+    await _shoot(t, '4e_next_opponent', await _with(mid), act: (t) async {
+      final card = find.text('次の相手の分析');
+      await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      // 見出しを画面の上へ(欄の全体が見える)
+      await t.ensureVisible(card);
+      await t.pumpAndSettle();
+    });
+    // 疲れがたまった主力(休ませる設定を1人に。もう1人は出し続けてシュートが落ちる線を超えた形)
+    final tired = careerAt(3, 12)..startSeason();
+    tired
+      ..playBlock()
+      ..playBlock();
+    final top = tired.me.order.where((p) => p.injured == 0).toList();
+    top[0].wear = max(top[0].wear, 56);
+    top[1].wear = 74;
+    tired.toggleRest(top[0].id);
+    final talked = careerAt(3, 12)..startSeason();
+    talked.playBlock();
+    talked.fanPosts = ['812|ペンバートンが来るなんて最高! 今年は行ける', '455|GMやるじゃん。ペンバートンは大当たり'];
+    await _shoot(t, '4i_column', await _with(talked), act: (t) async {
+      final card = find.text('リーグの話題');
+      await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.ensureVisible(card);
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '4j2_sim_menu', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      final more = find.byKey(const Key('sim-more'));
+      await t.ensureVisible(more);
+      await t.pumpAndSettle();
+      await t.tap(more);
+      await t.pumpAndSettle();
+    });
+    // プレーオフを1試合ずつ(第1戦を終えたところ)
+    final poLive = careerAt(1, 2)..startSeason();
+    while (poLive.phase == Phase.season) {
+      poLive.playBlock();
+    }
+    poLive
+      ..startPlayoffs()
+      ..playPlayoffGame();
+    if (poLive.poLive) await _shoot(t, '4c3_po_live', await _with(poLive));
+    // まとめて進めるあいだ、結果が流れる(途中で撮って、最後まで流す)
+    await _shoot(t, '4j3_sim_ticker', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      await t.tap(find.textContaining('次の20試合へ'));
+      for (var i = 0; i < 8; i++) {
+        await t.pump(const Duration(milliseconds: 130));
+      }
+    });
+    await t.pumpAndSettle(const Duration(milliseconds: 200));
+    await _shoot(t, '4j_sim_stops', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      final more = find.byKey(const Key('sim-more'));
+      await t.ensureVisible(more);
+      await t.pumpAndSettle();
+      await t.tap(more);
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('sim-stops')));
+      await t.pumpAndSettle();
+      await t.tap(find.text(SimStop.slump.label));
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '9b_inbox_needs', await _with(mid), act: (t) async {
+      await _tap(t, '受信箱', first: true);
+      final chip = find.byKey(const Key('inbox-needs'));
+      if (chip.evaluate().isNotEmpty) {
+        await t.tap(chip);
+        await t.pumpAndSettle();
+      }
+    });
+    final cal = careerAt(3, 12)..startSeason();
+    cal.playBlock();
+    cal.playWeek();
+    await _shoot(t, '4k_calendar', await _with(cal), act: (t) async {
+      final btn = find.byKey(const Key('open-calendar'));
+      await t.scrollUntilVisible(btn, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.pumpAndSettle();
+      await t.tap(btn);
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '4g_wear', await _with(tired), act: (t) async {
+      final card = find.text('疲れがたまっている');
+      await t.scrollUntilVisible(card, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.ensureVisible(card);
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '4h_live', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      final btn = find.byKey(const Key('live-game'));
+      await t.ensureVisible(btn);
+      await t.pumpAndSettle();
+      await t.tap(btn);
+      await t.pumpAndSettle();
+      await t.tap(find.text('タイムアウト'));
+      await t.pumpAndSettle();
+      await t.tap(find.textContaining('で前半終了まで'));
+      await t.pumpAndSettle();
+      await t.tap(find.text('主力で押し切る'));
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '4d_box_score', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
+      await _tap(t, '次の20試合へ');
+      await t.pumpAndSettle();
+      final list = find.textContaining('試合ごとの結果');
+      await t.scrollUntilVisible(list, 200, scrollable: find.byType(Scrollable).last);
+      await t.pumpAndSettle();
+      await t.tap(list);
+      await t.pumpAndSettle();
+      final row = find.byType(GameRow).first;
+      await t.ensureVisible(row);
+      await t.pumpAndSettle();
+      await t.tap(row);
+      await t.pumpAndSettle();
+    });
+    final rep = careerAt(3, 12)..startSeason();
+    await _shoot(t, '4b_block_report', await _with(rep), act: (t) async {
+      await _tap(t, '次の20試合へ');
+    });
+    // 優勝の祝い(優勝するまで種を替えて、プレーオフを終えたところで開く。紙吹雪の途中で撮る)
+    Career? champ;
+    for (var seed = 1; seed <= 40 && champ == null; seed++) {
+      final x = careerAt(seed, 0)..startSeason();
+      var g = 0;
+      while (x.phase != Phase.seasonEnd && g++ < 60) {
+        botStep(x);
+      }
+      if (x.champion == x.mine) champ = x;
+    }
+    if (champ != null) {
+      final won = champ;
+      await _shoot(t, '4f_champion', await _with(won), act: (t) async {
+        Navigator.of(t.element(find.byType(Scaffold).first)).push(MaterialPageRoute<void>(builder: (_) => ChampionScreen(car: won)));
+        for (var i = 0; i < 16; i++) {
+          await t.pump(const Duration(milliseconds: 150));
+        }
+      });
+    }
+    final po = careerAt(4, 3)..startSeason();
+    while (po.phase == Phase.season) {
+      po.declineIncoming();
+      po.playBlock();
+    }
+    po.playPlayoffs();
+    await _shoot(t, '4c_playoff_run', await _with(po), act: (t) async {
+      final b = find.byKey(const Key('po-review'));
+      await t.ensureVisible(b);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(b);
+      for (var i = 0; i < 4; i++) {
+        await t.pump(const Duration(milliseconds: 500));
+        if (i < 3 && find.byType(FilledButton).evaluate().isNotEmpty) await t.tap(find.byType(FilledButton).last);
+      }
+    });
+    // 解任されたあとの、ほかのチームからの誘い
+    final fired = careerAt(8, 10)..startSeason();
+    var fg = 0;
+    while (fired.phase != Phase.playoffs && fg++ < 60) {
+      botStep(fired);
+    }
+    fired
+      ..trust = 1
+      ..target = 82;
+    fg = 0;
+    while (fired.phase != Phase.seasonEnd && fg++ < 60) {
+      botStep(fired);
+    }
+    await _shoot(t, '14c_job_offers', await _with(fired), act: (t) async {
+      final head = find.text('ほかのチームからの誘い');
+      await t.scrollUntilVisible(head, 200, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+      await t.ensureVisible(head);
+      await t.pumpAndSettle();
+    });
+    // 流して見る(接戦で止まり、流れが開く)
+    final po2 = careerAt(4, 3)..startSeason();
+    while (po2.phase == Phase.season) {
+      po2.declineIncoming();
+      po2.playBlock();
+    }
+    po2.playPlayoffs();
+    await _shoot(t, '4c2_playoff_stream', await _with(po2), act: (t) async {
+      final b = find.byKey(const Key('po-review'));
+      await t.ensureVisible(b);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(b);
+      for (var i = 0; i < 3; i++) {
+        await t.pump(const Duration(milliseconds: 400));
+      }
+      // 知らせの幕が重なることがあるので、ボタンの動作を直接呼ぶ
+      if (find.text('OK').evaluate().isNotEmpty) {
+        await t.tap(find.text('OK'));
+        await t.pump(const Duration(milliseconds: 400));
+      }
+      t.widget<ButtonStyleButton>(find.ancestor(of: find.text('流して見る'), matching: find.bySubtype<ButtonStyleButton>()).first).onPressed!();
+      for (var i = 0; i < 12; i++) {
+        await t.pump(const Duration(milliseconds: 300));
+      }
+    });
+    await _shoot(t, '5_team', await _with(mid), act: (t) => _tap(t, 'チーム', first: true));
+    await _shoot(t, '6_trade', await _with(mid), act: (t) => _tap(t, 'トレード', first: true));
+    // 選手を選んだあと(相手の反応・強さと勝ち数の見込みの変化)
+    await _shoot(t, '6c_trade_offer', await _with(mid), act: (t) async {
+      await _tap(t, 'トレード', first: true);
+      // 相手のいちばん上の選手を選ぶ(一覧は画面に入った分しか作られないので、行の部品で探す)
+      final box = find.byIcon(Icons.check_box_outline_blank_rounded);
+      await t.ensureVisible(box.first);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(box.first);
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 400));
+    });
+    // 自分の選手を1人選ぶと、欲しがるチーム(左の一覧に印)
+    await _shoot(t, '6d_trade_suitors', await _with(mid), act: (t) async {
+      await _tap(t, 'トレード', first: true);
+      final mineTable = find.ancestor(of: find.text('出す(自分のチーム)'), matching: find.byType(GmTable));
+      final box = find.descendant(of: mineTable, matching: find.byIcon(Icons.check_box_outline_blank_rounded));
+      await t.tap(box.at(2));
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 400));
+    });
+    // トレード成立の画面(届いた申し込みを受ける)
+    Career? offered;
+    for (final seed in [3, 7, 11, 19]) {
+      final x = careerAt(10, seed)..startSeason();
+      while (x.phase == Phase.season && (x.incoming == null || !x.canTrade)) {
+        x.playBlock();
+      }
+      if (x.incoming != null && x.judge(x.incoming!).ok) {
+        offered = x;
+        break;
+      }
+    }
+    if (offered != null) {
+      await _shoot(t, '6b_trade_done', await _with(offered), act: (t) async {
+        final b = find.widgetWithText(FilledButton, '受ける');
+        await t.scrollUntilVisible(b, 300, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first);
+        await t.ensureVisible(b);
+        await t.pump(const Duration(milliseconds: 300));
+        await t.tap(b);
+        for (var i = 0; i < 6; i++) {
+          await t.pump(const Duration(milliseconds: 150));
+        }
+      });
+    }
+    await _shoot(t, '5b_policy', await _with(mid), act: (t) async {
+      await _tap(t, 'チーム', first: true);
+      await _tap(t, 'チームの方針');
+    });
+    await _shoot(t, '5c_team_tiles', await _with(mid), act: (t) async {
+      await _tap(t, 'チーム', first: true);
+      await t.drag(find.byType(Scrollable).last, const Offset(0, -120));
+      await t.pump(const Duration(milliseconds: 300));
+    });
+    await _shoot(t, '8b_history', await _with(mid), act: (t) async {
+      await _tap(t, 'リーグ', first: true);
+      await t.scrollUntilVisible(find.text('歴代の優勝・表彰・殿堂'), 300, scrollable: find.byType(Scrollable).last);
+      await _tap(t, '歴代の優勝・表彰・殿堂');
+    });
+    // 3年目まで進めた経歴(トレードの答え合わせと、年ごとのグラフ)
+    final vet = careerAt(3, 12);
+    var vg = 0;
+    while (vet.season < 3 && vg++ < 6000) {
+      if (vet.phase == Phase.seasonEnd) vet.fired = false;
+      botStep(vet);
+    }
+    while (vet.phase != Phase.season && vg++ < 7000) {
+      botStep(vet);
+    }
+    for (final p in [...vet.me.order]) {
+      final offers = vet.blockOffers(p.id);
+      if (offers.isNotEmpty && vet.acceptBlockOffer(offers.first)) break;
+    }
+    final vetC = await _with(vet);
+    await _shoot(t, '8e_trade_grades', vetC, act: (t) async {
+      await _tap(t, 'リーグ', first: true);
+      await t.scrollUntilVisible(find.text('歴代の優勝・表彰・殿堂'), 300, scrollable: find.byType(Scrollable).last);
+      await _tap(t, '歴代の優勝・表彰・殿堂');
+      final s = find.text('自分のトレードの答え合わせ');
+      if (s.evaluate().isNotEmpty) {
+        await t.scrollUntilVisible(s, 200, scrollable: find.byType(Scrollable).last);
+        await t.pumpAndSettle();
+      }
+    });
+    await _shoot(t, '8f_career_chart', vetC, act: (t) async {
+      final p = vet.me.roster.reduce((a, b) => a.career.length >= b.career.length ? a : b);
+      unawaited(showPlayerCard(t.element(find.byType(Scaffold).first), vet, p, vet.mine));
+      await t.pumpAndSettle();
+      final chart = find.byKey(const Key('career-chart'));
+      if (chart.evaluate().isNotEmpty) {
+        await t.ensureVisible(chart);
+        await t.pumpAndSettle();
+      }
+    });
+    await _shoot(t, '7_market', await _with(mid), act: (t) => _tap(t, '補強', first: true));
+    await _shoot(t, '8_league', await _with(mid), act: (t) => _tap(t, 'リーグ', first: true));
+    // ドラフトの全体(1回ドラフトを終えた2年目のシーズン前: 過去のドラフトと次の指名の順)
+    final after = careerAt(5, 12)..startSeason();
+    var ag = 0;
+    while (after.phase != Phase.preseason && ag++ < 300) {
+      if (after.phase == Phase.seasonEnd) after.fired = false;
+      botStep(after);
+    }
+    await _shoot(t, '8d_draft_board', await _with(after), act: (t) async {
+      await _tap(t, 'リーグ', first: true);
+      await _tap(t, 'ドラフト');
+    });
+    await _shoot(t, '8c_rankings', await _with(mid), act: (t) async {
+      await _tap(t, 'リーグ', first: true);
+      await _tap(t, 'ランキング');
+    });
+    await _shoot(t, '9_inbox', await _with(mid), act: (t) => _tap(t, '受信箱', first: true));
+
+    final draft = careerAt(5, 28);
+    var guard = 0;
+    while (draft.phase != Phase.draft && guard++ < 400) {
+      if (draft.phase == Phase.seasonEnd) draft.fired = false;
+      botStep(draft);
+    }
+    Career toDraft() {
+      final d = careerAt(5, 28);
+      var g = 0;
+      while (d.phase != Phase.draft && g++ < 400) {
+        if (d.phase == Phase.seasonEnd) d.fired = false;
+        botStep(d);
+      }
+      return d;
+    }
+
+    Future<void> settle(WidgetTester t) async {
+      for (var i = 0; i < 6; i++) {
+        await t.pump(const Duration(milliseconds: 150));
+      }
+    }
+
+    await _shoot(t, '10a_lottery', await _with(toDraft()), act: settle);
+    await _shoot(t, '10b_lottery_open', await _with(toDraft()), act: (t) async {
+      await settle(t);
+      await _tap(t, '全部開ける');
+    });
+    Future<void> openDraft(WidgetTester t) async {
+      await settle(t);
+      await _tap(t, '全部開ける');
+      await _tap(t, 'ドラフトへ');
+      await settle(t);
+      // 実績の知らせ(くじを引き当てる)が出ていたら閉じる
+      if (find.text('OK').evaluate().isNotEmpty) {
+        await t.tap(find.text('OK'));
+        await settle(t);
+      }
+    }
+
+    await _shoot(t, '10_draft', await _with(draft), act: openDraft);
+    await _shoot(t, '10e_workout', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final w = find.byKey(const Key('workout'));
+      if (w.evaluate().isNotEmpty) {
+        await t.ensureVisible(w);
+        await t.pumpAndSettle();
+        await t.tap(w);
+        await t.pumpAndSettle();
+      }
+    });
+    await _shoot(t, '10f_rumors', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final r = find.byKey(const Key('draft-rumors'));
+      if (r.evaluate().isNotEmpty) {
+        await t.tap(r);
+        await t.pumpAndSettle();
+      }
+    });
+    // 動きの途中(指名の発表・スカウトで幅が狭まるところ)
+    await _shoot(t, '10b2_pick_intro', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final b = find.widgetWithText(FilledButton, '指名').first;
+      await t.ensureVisible(b);
+      await t.pumpAndSettle();
+      await t.tap(b);
+      // 実績の知らせ(くじを引き当てる)が重なったら閉じる。出てくる途中は押せないので、出きってから押す
+      // 閉じかけの知らせを押すと下の発表まで飛ばしてしまうので、押すのは1回だけ
+      var closed = false;
+      for (var i = 0; i < 9; i++) {
+        await t.pump(const Duration(milliseconds: 100));
+        if (!closed && i >= 3 && find.text('OK').evaluate().isNotEmpty) {
+          await t.tap(find.text('OK'));
+          closed = true;
+        }
+      }
+    });
+    await _shoot(t, '10b3_scouting', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final b = find.widgetWithText(OutlinedButton, 'スカウト').first;
+      await t.ensureVisible(b);
+      await t.pumpAndSettle();
+      await t.tap(b);
+      await t.pump(const Duration(milliseconds: 50));
+      if (find.text('OK').evaluate().isNotEmpty) {
+        await t.tap(find.text('OK'));
+      }
+      for (var i = 0; i < 3; i++) {
+        await t.pump(const Duration(milliseconds: 60));
+      }
+    });
+    await _shoot(t, '10c_pick_reveal', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      final b = find.widgetWithText(FilledButton, '指名').first;
+      await t.ensureVisible(b);
+      await t.pumpAndSettle();
+      await t.tap(b);
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '10d_draft_summary', await _with(toDraft()), act: (t) async {
+      await openDraft(t);
+      for (var i = 0; i < 8 && find.textContaining('ドラフトのまとめ').evaluate().isEmpty; i++) {
+        final pick = find.widgetWithText(FilledButton, '指名');
+        final pass = find.text('この指名を見送る');
+        final b = pass.evaluate().isNotEmpty ? pass : pick.first;
+        await t.ensureVisible(b);
+        await t.pumpAndSettle();
+        await t.tap(b);
+        await t.pumpAndSettle();
+        if (find.text('続ける').evaluate().isNotEmpty) {
+          await t.tap(find.text('続ける'));
+          await t.pumpAndSettle();
+        }
+      }
+    });
+    // シーズンの終わり(GM の格の内訳と、任期を終えるボタンまで送って撮る)
+    final end = careerAt(4, 3);
+    guard = 0;
+    while (end.phase != Phase.seasonEnd && guard++ < 100) {
+      botStep(end);
+    }
+    final progress = find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first;
+    await _shoot(t, '12_seasonend_top', await _with(end));
+    await _shoot(t, '13_seasonend_rating', await _with(end),
+        act: (t) => t.scrollUntilVisible(find.text('GMの格 Lv${end.gmLevel}(${ratingNameOf(end.gmLevel)})'), 200, scrollable: progress));
+    await _shoot(t, '13b_skills', await _with(end), act: (t) async {
+      await t.scrollUntilVisible(find.textContaining('GMの技能'), 200, scrollable: progress);
+      await _tap(t, 'GMの技能(使える点 ${end.skillPoints})');
+    });
+    await _shoot(t, '14_seasonend_bottom', await _with(end),
+        act: (t) => t.scrollUntilVisible(find.text('ここで任期を終える'), 300, scrollable: progress));
+    // 経営の札の施設(シーズン前、アリーナを1段上げたところ)
+    final fac = careerAt(5, 10)..upgradeFacility(Facility.arena);
+    await _shoot(t, '14b_facilities', await _with(fac),
+        act: (t) => t.scrollUntilVisible(find.text('施設'), 300, scrollable: find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first));
+    // 契約の画面(1巡目の新人の選択権が保留になっている)
+    final opt = careerAt(6, 8);
+    final rookie = opt.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b)
+      ..years = 3
+      ..optionYears = 2
+      ..age = 21;
+    guard = 0;
+    while (opt.phase != Phase.seasonEnd && guard++ < 200) {
+      botStep(opt);
+    }
+    opt.toOffseason();
+    while (opt.phase != Phase.contracts && guard++ < 400) {
+      botStep(opt);
+    }
+    await _shoot(t, '15_contracts_option', await _with(opt),
+        act: (t) => t.scrollUntilVisible(find.text('使う(年俸 ${money(opt.optionSalary(rookie))})'), 200, scrollable: progress));
+    // 自由契約の1日の発表(大物に申し込んでから日を進める)と、オフのまとめ
+    Career toContracts() {
+      final d = careerAt(6, 28);
+      var g = 0;
+      while (d.phase != Phase.contracts && g++ < 600) {
+        if (d.phase == Phase.seasonEnd) d.fired = false;
+        botStep(d);
+      }
+      final target = d.freeAgents.where((p) => d.isBigFa(p) && d.bidProblem(p) == null).firstOrNull;
+      if (target != null) d.bid(target.id, 2, 1.05);
+      return d;
+    }
+
+    await _shoot(t, '15b_fa_day', await _with(toContracts()), act: (t) async {
+      await _tap(t, '補強', first: true);
+      await _tap(t, '次の日へ');
+      await settle(t);
+    });
+    // 夏の過ごし方(サマーリーグを開いたあと)
+    final summerCar = toContracts();
+    for (final (i, p) in [for (final p in summerCar.me.roster) if (!summerCar.expiring.contains(p.id)) p].take(2).indexed) {
+      summerCar.setCamp(p.id, i == 0 ? Attr.outside : Attr.defense);
+    }
+    await _shoot(t, '15e_summer', await _with(summerCar), act: (t) async {
+      final play = find.byKey(const Key('summer-play'));
+      await t.scrollUntilVisible(play, 200, scrollable: progress);
+      await t.tap(play);
+      await settle(t);
+      await t.ensureVisible(find.byKey(const Key('summer-card')));
+      await t.pumpAndSettle();
+    });
+    // オフの受信箱(合宿の場所・面談など)
+    await _shoot(t, '15f_off_inbox', await _with(toContracts()), act: (t) => _tap(t, '受信箱', first: true));
+    // 他チームからの電話(契約の時期のカード)と、大物に会いに行く
+    Career callCar = toContracts();
+    for (final seed in [1, 2, 3, 4, 5]) {
+      if (callCar.calls.isNotEmpty) break;
+      callCar = careerAt(seed, 12);
+      var cg = 0;
+      while (callCar.phase != Phase.contracts && cg++ < 600) {
+        if (callCar.phase == Phase.seasonEnd) callCar.fired = false;
+        botStep(callCar);
+      }
+    }
+    if (callCar.calls.isNotEmpty) {
+      await _shoot(t, '15h_call', await _with(callCar), act: (t) async {
+        final card = find.byKey(const Key('call-0'));
+        await t.scrollUntilVisible(card, 200, scrollable: progress);
+        await t.pumpAndSettle();
+      });
+    }
+    await _shoot(t, '15i_pitch', await _with(toContracts()), act: (t) async {
+      await _tap(t, '補強', first: true);
+      await settle(t);
+      final go = find.textContaining('会いに行く');
+      if (go.evaluate().isNotEmpty) {
+        await t.ensureVisible(go.first);
+        await t.pumpAndSettle();
+        await t.tap(go.first);
+        await t.pumpAndSettle();
+      }
+    });
+    // 2年目のシーズン前(予想・宣言・スポンサー・指導役)
+    final plan = careerAt(6, 12);
+    var pg = 0;
+    while (!(plan.phase == Phase.preseason && plan.season >= 2) && pg++ < 3000) {
+      if (plan.phase == Phase.seasonEnd) plan.fired = false;
+      botStep(plan);
+    }
+    for (final m in [...plan.inbox]) {
+      if (m.season != plan.season || !m.needsAnswer) continue;
+      if (m.kind == MsgKind.declare) plan.answer(m.id, 0);
+      if (m.kind == MsgKind.sponsor) plan.answer(m.id, 1);
+      if (m.kind == MsgKind.forecast) plan.answer(m.id, 0);
+    }
+    final mVet = plan.me.roster.where(plan.mentorVet).firstOrNull;
+    final mYoung = plan.me.roster.where(plan.mentorYoung).firstOrNull;
+    if (mVet != null && mYoung != null) plan.setMentor(mVet.id, mYoung.id);
+    await _shoot(t, '16a_preseason_plans', await _with(plan));
+    final talk = await _with(toContracts());
+    await _shoot(t, '15d_agent_talk', talk, act: (t) async {
+      final car = talk.career!;
+      // 自由契約のふつうの選手は最低年俸ばかりなので、契約の切れる自分の選手と話す
+      final p = car.me.roster.where((p) => car.expiring.contains(p.id) && car.askOf(p, car.me).salary > minSalary * 2).first;
+      unawaited(negotiate(t.element(find.byType(Scaffold).first), talk, p, freeAgent: false));
+      await settle(t);
+      final chips = find.descendant(of: find.byKey(const Key('agent-talk')), matching: find.byType(ChoiceChip));
+      expect(chips, findsWidgets, reason: '代理人と値切る欄が出ている');
+      await t.ensureVisible(chips.first);
+      await t.pumpAndSettle();
+      await t.tap(chips.first);
+      await t.pumpAndSettle();
+      await t.tap(find.text('この額を申し出る'));
+      await t.pumpAndSettle();
+      if (find.byKey(const Key('agent-talk')).evaluate().isNotEmpty) await t.ensureVisible(find.byKey(const Key('agent-talk')));
+      await t.pumpAndSettle();
+    });
+    await _shoot(t, '15c_off_summary', await _with(toContracts()), act: (t) async {
+      await t.scrollUntilVisible(find.text('自由契約の選手を見る'), 300, scrollable: progress);
+      await _tap(t, 'オフを終えて、シーズン前へ');
+      if (find.text('終える').evaluate().isNotEmpty) await _tap(t, '終える');
+      await settle(t);
+    });
+    final over = botPlayCareer(8, team: teamAtRank(8, 15));
+    await _shoot(t, '11_over', await _with(over));
+  });
+}

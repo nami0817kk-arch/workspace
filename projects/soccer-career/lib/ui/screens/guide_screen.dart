@@ -590,6 +590,9 @@ final List<_GuideSection> _sections = [
         '誰と組むか（${TrainingCompanion.values.map((c) => c.label).join('／')}）。',
     '追い込むほど大成功（1週で2つ伸びる）が出やすいが、疲れて怪我もしやすい。'
         '疲れている週ほど空回りする。追い込み続けた身体は、衰えが早く来る。',
+    '${Formulas.declineAge}歳前後から衰えが始まり、歳とともに速くなる。落ちるのは'
+        '走力と身体からが多い。その週に練習しているカテゴリは衰えないので、'
+        '後半は「何を守るか」を練習で選ぶ。脚を守ればパスが落ち、パスを守れば脚が落ちる。',
     'コンディションが決めた値を下回った週は、自動で休養になる。'
         '練習も居残りも止まる。既定は40未満で、「育成」タブで変えられる'
         '（切ることもできる）。効いた週は試合結果の画面にそう出る。',
@@ -637,8 +640,23 @@ final List<_GuideSection> _sections = [
     '選べないものも試合を動かす。相手に退場者が出れば'
         ' +${(Formulas.numbersUpBonus * 100).round()}%、'
         '終盤に相手が前がかりになれば得点の手が通りやすくなる。逆もある。',
-    '終盤（75分以降）に同点以下から決めた得点は、評価点が重く付く。'
-        '終盤の局面はそのときのスコアで中身が変わり、追いかけているならリスクを取る局面、'
+    '試合の状況で、手の値打ちが変わる。追いかけている時間（1点差なら'
+        '${Formulas.situationalMinute}分、2点差なら${Formulas.bigDeficitMinute}分から）と'
+        '同点の終盤（${Formulas.lateGameMinute}分以降）は、決めにいく手の評価が'
+        '×${Formulas.decisiveGoalFactor.toStringAsFixed(1)}、つなぐだけの手は'
+        '×${Formulas.stakesChasePlay}（同点なら×${Formulas.stakesLevelPlay}）。'
+        'リードして${Formulas.situationalMinute}分を過ぎたら、つなぐ手が'
+        '×${Formulas.stakesHoldPlay}、外したときの減点が×${Formulas.stakesHoldFailure}。'
+        '手の横に「今は重い」「今は軽い」「外すと痛い」と出る。',
+    '自陣の局面で手を外すと、そのまま失点することがある。シュートを打たれれば'
+        '${(Formulas.concedeOnShot * 100).round()}%、決定機を与えれば'
+        '${(Formulas.concedeOnChance * 100).round()}%、PKなら'
+        '${(Formulas.concedeOnPenalty * 100).round()}%で決まる。手の横に「外すと失点○%」と出る。'
+        '前に出て奪う手は外すと危ないが、通ればこの後の失点を1つ防ぐ（「通れば1点防ぐ」）。'
+        '遅らせる・構える・蹴り返す手は通りやすいが、通っても攻撃は終わらない。'
+        '評価は止めたときの${(Formulas.lingerSuccessFactor * 100).round()}%で、'
+        '続いた攻撃で${(Formulas.concedeOnLinger * 100).round()}%失点する（「通っても失点」）。',
+    '終盤の局面はそのときのスコアで中身が変わり、追いかけているならリスクを取る局面、'
         'リードしているなら時間の使い方を問う局面が来る。',
     '1試合の1/4くらいは逆足で対応することになる。逆足の精度が低いとそこで落ちる。',
   ]),

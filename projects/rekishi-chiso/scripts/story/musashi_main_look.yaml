@@ -1,0 +1,245 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：宮本武蔵（scripts/musashi-story.yaml）。chiso/storymain.py が読む。
+# 10-29 作成（11/1 12:00 公開）。takasugi_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（M01〜M15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵の後ろ姿・遠景の影だけ。実在の自画像とされる絵（島田美術館蔵、ウィキメディア・コモンズ、パブリックドメイン。出典は台本の portrait の caption と下の credits）は額（frame:）。
+#   絵図・錦絵・名所図会は絵図の一部（part:）。
+#   この回の決まり：AI 絵に武蔵・小次郎の顔は描かない。決闘・斬る・負傷・死の場面は描かない（巌流島は遠景の海と島の砂浜、櫂や木刀は物だけ）。実在の誰か・俳優に似せない。顔が分かるのは実在の自画像の額だけ。
+# AI 絵の指示の一覧（英語・姿の設定）：dev/output/rekishi-chiso/research/musashi_ai_images.md
+# 届く前は art_dir の仮の絵（M01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に M01.jpg〜を置くだけ。
+#   仮の絵は out/ にあり git に入らない。無ければ 1376×768 の灰色の板に「M01（仮）」と場面を書いて作り直す。
+script: scripts/musashi-story.yaml
+out: musashi_story_main
+art_dir: out/story/musashi/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/musashi/main   # Gemini の 16:9 の絵（M01.jpg〜M15.jpg）
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本の語りは和暦と西暦が混じるので、語りが言った形のまま。
+# dates＝語りがその年・月日を言った行から替える（研究・報告・展示・報道の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 巌流島の勝者は、なぜ門司へ逃げたと書かれたのか, now: null,
+      dates: {3: 寛文12年, 5: null, 7: 慶長17年4月13日, 8: null}}
+  1: {label: 第1章 最初の記録・小倉碑文は、決闘をどう書いたのか, now: 承応3年,
+      dates: {9: 承応3年, 13: 承応3年4月19日, 15: 承応3年}}
+  2: {label: 第2章 『沼田家記』は、勝った武蔵をどう書いたのか, now: 寛文12年,
+      dates: {27: 寛文12年}}
+  3: {label: 第3章 いま知られる巌流島は、どこから来たのか, now: null,
+      dates: {}}
+  4: {label: 第4章 巌流島は、いまも同じ島なのか, now: 明治,
+      dates: {56: 明治34年, 57: 明治19年}}
+  5: {label: 第5章 武蔵の手紙が語る、島原の石, now: 寛永14年,
+      dates: {60: 寛永14年}}
+  6: {label: 第6章 熊本の客分になった武蔵は、何をしていたのか, now: 寛永17年,
+      dates: {66: 寛永17年, 74: 寛永17年11月, 81: 寛永19年閏9月, 85: 寛永20年9月}}
+  7: {label: 第7章 『五輪書』は、何を書き、何を書かなかったのか, now: 寛永20年,
+      dates: {89: 寛永20年10月, 94: 正保2年5月}}
+  8: {label: まとめ 勝った武蔵は、なぜ逃げたと書かれたのか, now: null,
+      dates: {}}
+
+# 概要欄「■ 参考にした資料」（事実カード 宮本武蔵_facts_20261029.yaml のうち本文を開いた主なもの。10-29）
+references:
+  - 巌流島（山口県観光連盟）　https://yamaguchi-tourism.jp/feature/ganryujima
+  - 宮本武蔵と佐々木小次郎は巌流島で決闘したことについて知りたい（レファレンス協同データベース）　https://crd.ndl.go.jp/reference/entry/index.php?page=ref_view&id=1000071814
+  - 巌流島佐々木小次郎の最後　武蔵の弟子とどめを刺した？（J-CAST ニュース 2010）　https://www.j-cast.com/2010/02/07059333.html
+  - 宮本武蔵晩年の人物像を示す新史料4点を発見（熊本大学 報道発表 2022）　https://www.kumamoto-u.ac.jp/daigakujouhou/kouhou/pressrelease/2022-file/release220915-2.pdf
+  - 特別展「細川家と宮本武蔵」（永青文庫、国立美術館 NACT アートコモンズ）　https://www.nact.jp/artcommons/user/detail/5678
+  - 宮本武蔵の碑（北九州市小倉北区）　https://www.city.kitakyushu.lg.jp/kokurakita/file_0080.html
+  - 手向山公園（旅の雑誌）　https://tabi-mag.jp/fu0016/
+  - 小倉碑文（Wikid。福田正秀『宮本武蔵研究論文集』資料編の読み下しを載せる）　https://ja.wikid.org/小倉碑文
+  - 巌流島雑考 沼田家記を再考する（カクヨム、奇水。『沼田家記』の翻刻を引用）　https://kakuyomu.jp/works/1177354054891792562/episodes/1177354054891792624
+  - 宮本武蔵 生涯無敗伝説の裏で一揆衆の「投石作戦」に完敗（NEWSポストセブン、SAPIO 2017年4月号）　https://www.news-postseven.com/archives/20170329_500848.html/2
+  - 宮本武蔵（nippon.com）　https://www.nippon.com/ja/japan-topics/g00689/
+  - 宮本武蔵（1）吉川英治の小説は史実とはかなり違う／武蔵の養子・宮本伊織が異例の出世をとげた理由（日刊ゲンダイ、本郷和人 2026）　https://www.nikkan-gendai.com/articles/view/life/390898/2
+  - 五輪書（ちくま学芸文庫、校注：佐藤正英）　https://www.chikumashobo.co.jp/product/9784480091949/
+  - File:Miyamoto Musashi Self-Portrait.jpg（ウィキメディア・コモンズ）　https://commons.wikimedia.org/wiki/File:Miyamoto_Musashi_Self-Portrait.jpg
+no_tag_from: 109                      # 締め（手向山の碑から）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/musashi_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は顔を描かないので使わない）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus・fx の region）は仮の値。届いた絵を見て合わせる
+ai:
+  M01: {scene: 朝の海に浮かぶ、砂浜のある小さな島の遠景（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M02: {scene: 高台から見下ろす、海峡に面した城下町の遠景（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M03: {scene: 海を望む高台に立つ、文字の無い古い石碑（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M04: {scene: 夜の海峡を渡る小さな舟の影（遠景）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M05: {scene: 石垣の上の城と、海を望む門の遠景（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M06: {scene: 灯の下に開かれた古い書物と筆（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M07: {scene: 芝居小屋の屋根が並ぶ夕景の通り（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M08: {scene: 砂浜と松のある小さな島に寄せる波（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M09: {scene: 石垣と、崩れた石の転がる斜面の遠景（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M10: {scene: 山の斜面に建つ茶屋の遠景（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M11: {scene: 岩山の中腹にある洞窟の入口の遠景（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M12: {scene: 洞窟の中、机に向かう老人の後ろ姿（遠景）と灯, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M13: {scene: 墨の鳥の絵が立てられた、静かな座敷（人物なし）, pan: h, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M14: {scene: 夕暮れの高台から見下ろす、遠い島と海（人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5], right: [1.18, 0.60, 0.5]}}
+  M15: {scene: 終了画面用。夕暮れの海と島（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx: {}
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/musashi_self_portrait_shimada_bust.jpg: 宮本武蔵の自画像とされる絵（島田美術館蔵。ウィキメディア・コモンズ、パブリックドメイン。上半身を切り出し）
+  paintings/musashi_ganryujima_yoshifusa.jpg: 歌川芳房の錦絵（巌流島の決闘。1843〜1847年ごろ。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/kanbei_kokura_castle_ndl.jpg: 豊前小倉之城図（『日本古城絵図』、国立国会図書館蔵）
+  paintings/kanbei_bungo_kuniezu.jpg: 豊後国絵図（慶長10年ごろの下図。臼杵市歴史資料館蔵）
+  paintings/kanbei_chikuzen_hakozaki_hiroshige.jpg: 歌川広重《六十余州名所図会 筑前 筥崎》
+  paintings/kanbei_buzen_rakanji_hiroshige.jpg: 歌川広重《六十余州名所図会 豊前 羅漢寺》
+  paintings/ryoma_shimonoseki_view_lacma_1865.jpg: 下関の景（1865年ごろ。ロサンゼルス郡立美術館）
+  paintings/ryoma_choshu_hiroshige_shimonoseki.jpg: 歌川広重《六十余州名所図会 長門 下之関》
+  paintings/ryoma_shimonoseki_strait_map_1864.jpg: 下関海峡の地図（1864年）
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 絵の割り当て（行の番号は台本の語りの行。0 始まり。章の切れ目は札で分かる）
+  - 0 ai:M01 wide                                                  # 五輪書に巌流島は一行も無い（最初のカットは AI 絵にする：額の下地に要る）
+  - 1 ai:M03 wide                                                  # 碑に「岩流」とだけ
+  - 2 ai:M06 wide                                                  # 決闘のときの文書は無い
+  - 3 ai:M05 wide                                                  # 1672年 沼田家記
+  - 4 ai:M04 wide                                                  # 逃れられなくなり門司へ
+  - 5 ai:M08 right                                                 # 蘇生した小次郎・弟子
+  - 6 ai:M01 left                                                  # なぜ逃げたのか・なぜ書かなかったのか
+  - 7 part:paintings/ryoma_choshu_hiroshige_shimonoseki.jpg        # 1612年4月13日 舟嶋
+  - 8 ai:M03 left                                                  # 最初の碑から見ていく
+  - 9 part:paintings/kanbei_kokura_castle_ndl.jpg                  # 1654年 養子の伊織が碑を建てる
+  - 10 ai:M02 wide                                                  # 新免武蔵玄信・播磨
+  - 11 part:paintings/kanbei_kokura_castle_ndl.jpg                  # 伊織 15歳で仕え、20歳で家老
+  - 12 ai:M02 right                                                 # 島原の乱に出陣
+  - 13 ai:M03 right                                                 # 孝子某
+  - 14 ai:M02 wide                                                  # 碑文の一節「天仰実相円満 兵法逝去不絶」
+  - 15 ai:M06 left                                                  # 岩流・木刃・舟嶋（史料の札）14〜15
+  - 16 ai:M08 left                                                  # （絵の偏りを減らすため追加）
+  - 17 ai:M01 wide                                                  # 岩流嶋
+  - 18 ai:M06 right                                                 # 小次郎の名は無い・弟子の話も無い
+  - 19 ai:M02 right                                                 # 魚住教授：最も信頼できる史料
+  - 20 ai:M03 left                                                  # 手向山の由来・宮本家の墓
+  - 21 part:paintings/ryoma_choshu_hiroshige_shimonoseki.jpg        # （絵の偏りを減らすため追加）
+  - 22 ai:M03 wide                                                  # 碑は巌流島を向く・砲台
+  - 23 ai:M14 wide                                                  # 小次郎の碑 1952年
+  - 24 ai:M14 left                                                  # 武蔵・小次郎まつり
+  - 25 ai:M05 left                                                  # 細川家の家臣の家
+  - 26 ai:M04 left                                                  # 勝った武蔵が逃げていた
+  - 27 ai:M05 wide                                                  # 1672年 延元の子孫
+  - 28 ai:M01 left                                                  # 沼田延元は門司城をあずかる
+  - 29 ai:M05 left                                                  # 沼田家記の書き出し：武蔵は豊前で二刀兵法の師
+  - 30 ai:M06 wide                                                  # 発端は弟子の優劣論争（レファレンス協同データベース）
+  - 31 ai:M08 right                                                 # 弟子は来ない約束（史料の札）28〜29
+  - 32 ai:M04 right                                                 # （絵の偏りを減らすため追加）
+  - 33 ai:M05 wide                                                  # 逃れられなくなり門司に（史料の札）
+  - 34 part:paintings/kanbei_bungo_kuniezu.jpg                      # 城に置いて豊後へ送らせた
+  - 35 ai:M06 left                                                  # 碑文と沼田家記の食い違い（台本の図）32〜33
+  - 36 ai:M01 wide                                                  # （絵の偏りを減らすため追加）
+  - 37 ai:M05 wide                                                  # 魚住教授の疑問
+  - 38 ai:M08 left                                                  # 細川護熙さん「私の履歴書」
+  - 39 ai:M04 right                                                 # 助けた側の子孫が書いた
+  - 40 ai:M07 wide                                                  # 3つ目の記録は100年以上あと
+  - 41 part:paintings/musashi_ganryujima_yoshifusa.jpg              # 二天記・豊田景英
+  - 42 ai:M06 left                                                  # 成立1755年とも1776年とも（台本の図）39〜40
+  - 44 ai:M07 right                                                 # （絵の偏りを減らすため追加）
+  - 45 ai:M07 left                                                  # 近代の決闘像・吉川英治
+  - 46 ai:M06 right                                                 # 歌舞伎『敵討巌流島』1737年
+  - 47 ai:M01 left                                                  # 創作とみる見方
+  - 48 ai:M05 right                                                 # 毛利秀元記・玄信公伝来にも決闘の記述なし
+  - 50 ai:M01 right                                                 # 「佐々木小次郎」の名の真偽
+  - 51 ai:M07 left                                                  # 3つの記録の書き手と年（台本の図）46〜47
+  - 52 ai:M06 left                                                  # （絵の偏りを減らすため追加）
+  - 54 ai:M08 wide                                                  # 舞台の島は同じか
+  - 55 part:paintings/ryoma_shimonoseki_strait_map_1864.jpg         # 船島・巌流島
+  - 56 ai:M08 left                                                  # 彦島村・埋め立て
+  - 57 ai:M08 right                                                 # 1886年 コレラ病院
+  - 58 ai:M01 wide                                                  # 島の姿は変わった
+  - 59 ai:M12 wide                                                  # 武蔵本人の手が書いたものは
+  - 60 part:paintings/kanbei_kokura_castle_ndl.jpg                  # 1637年 島原・天草一揆
+  - 61 ai:M09 wide                                                  # 有馬直純あての書状（史料の札）
+  - 62 ai:M09 right                                                 # 石に当たった
+  - 63 part:paintings/kanbei_kokura_castle_ndl.jpg    # 養子の伊織も同じ陣
+  - 64 ai:M06 left                                                  # 確かな一次史料はごくわずか
+  - 66 ai:M10 wide                                                  # 寛永17年 忠利は江戸で柳生・沢庵と
+  - 67 part:paintings/kanbei_bungo_kuniezu.jpg    # 武蔵が肥後に来る
+  - 68 part:paintings/kanbei_chikuzen_hakozaki_hiroshige.jpg        # 七人扶持・合力米18石
+  - 69 frame:paintings/musashi_self_portrait_shimada_bust.jpg       # 59歳／生年は「？」（台本の図）62〜63
+  - 71 ai:M06 left                                                  # 2022年 新史料4点
+  - 72 ai:M10 left                                                  # 見つけたのは後藤典子さんら
+  - 74 ai:M06 wide    # 山鹿の御茶屋
+  - 75 ai:M13 left                                                  # 11月3日から問答
+  - 76 ai:M10 right                                                 # 山鹿の宿に小姓衆・鉄炮衆
+  - 77 ai:M13 wide                                                  # 足利道鑑・津川・朝山意林庵
+  - 78 ai:M06 right                                                 # 思想としての兵法の体現者
+  - 79 ai:M10 wide                                                  # 兵法の大家として評価
+  - 80 ai:M11 wide                                                  # 【想像1】……わしの兵法を、求めてくださるか
+  - 81 ai:M05 right                                                 # 桑山作右衛門が出奔
+  - 82 ai:M13 left                                                  # 隣の武蔵に長持と鎧櫃を預ける
+  - 83 ai:M05 wide                                                  # 客分・米500石
+  - 84 ai:M13 left                                                  # 封を条件に預かる
+  - 85 ai:M10 left                                                  # 光尚の書状（史料の札）
+  - 87 ai:M05 wide                                                  # 忠利の死後も良い関係
+  - 88 ai:M11 left                                                  # ひと月後 ある本を書き始める
+  - 89 ai:M11 wide                                                  # 10月10日 霊巌洞
+  - 90 part:paintings/kanbei_buzen_rakanji_hiroshige.jpg            # 35か条の兵法書
+  - 91 ai:M12 wide                                                  # 60余度の勝負
+  - 92 ai:M11 right                                                 # 巌流島の名は無い
+  - 93 frame:paintings/musashi_self_portrait_shimada_bust.jpg       # 署名 新免武蔵守藤原玄信
+  - 94 ai:M12 left                                                  # 亡くなる1週間前に完成
+  - 95 ai:M12 wide                                                  # 【想像2】……これで、よい
+  - 96 ai:M06 wide                                                  # 細川家本・吉田家本
+  - 97 ai:M12 right                                                 # 自筆の五輪書は確かめられなかった
+  - 98 ai:M06 left    # 自筆で残るのは書状2通・水墨画
+  - 99 ai:M13 wide                                                  # 水墨画
+  - 101 ai:M12 left                                                  # 若い藩主や家老のための兵法の書
+  - 102 ai:M11 right                                                 # なぜ巌流島を書かなかったのか
+  - 103 ai:M04 wide                                                  # 逃げたと書くのは沼田家記
+  - 104 ai:M05 wide                                                  # 助けた側の子孫が60年後に
+  - 105 ai:M03 right                                                 # 小倉碑文には逃げた話も小次郎の名も無い
+  - 106 ai:M06 wide                                                  # 五輪書に巌流島は無い
+  - 107 ai:M01 wide                                                  # 決闘のときの文書は存在しない
+  - 108 frame:paintings/musashi_self_portrait_shimada_bust.jpg       # 晩年の熊本の武蔵
+  - 109 ai:M03 wide                                                  # 手向山の碑は巌流島のほうを向いている
+  - 110 ai:M14 wide                                                  # 一行もありませんでした
+  - 111 ai:M15 wide                                                  
+  - end ai:M15 wide                                                  
+# look だけで足す図（台本には無い）
+figures: []
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
+focus:
+  M06: {書物|筆|記録: [1.3, 0.50, 0.55]}
+  M03: {碑|石: [1.3, 0.50, 0.55]}
+  M12: {灯|机: [1.3, 0.50, 0.55]}
+  paintings/musashi_self_portrait_shimada_bust.jpg: {顔|肖像|自画像: [1.3, 0.5, 0.2]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。範囲は仮（届いた絵で見て直す）
+fx:
+  M01: {water: {region: [0, 0.60, 1, 1.0]}}                               # 島のまわりの海面
+  M04: {mist: {region: [0, 0.55, 1, 1.0], alpha: 0.08, speed: 3}}        # 夜の海峡の靄
+  M06: {lamp: {region: [0.40, 0.25, 0.65, 0.55]}}                         # 書物の灯
+  M12: {lamp: {region: [0.55, 0.30, 0.80, 0.60]}}                         # 洞窟の灯
+  M14: {water: {region: [0, 0.65, 1, 1.0]}}                               # 夕暮れの海面
+  M15: {water: {region: [0, 0.65, 1, 1.0]}}                               # 夕暮れの海面
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: quote, from: 15, to: 16, label: 史料, text: 木刃の一撃を以て之を殺す／故に俗、舟嶋を改めて岩流嶋と謂ふ,
+     source: 小倉碑文の読み下し（福田正秀『宮本武蔵研究論文集』資料編。Wikid が掲載）}
+  - {type: quote, from: 31, to: 32, label: 史料, text: 双方共に弟子一人も不参筈に相定／其後に小次郎蘇生致候得共　彼弟子共参合　後にて打殺申候,
+     source: 『沼田家記』の翻刻（個人の記事が引用。カクヨム「巌流島雑考」）}
+  - {type: quote, from: 33, to: 33, label: 史料, text: 依之武蔵難遁門司に遁来／延元様を偏に奉願候に付御請合被成,
+     source: 『沼田家記』の翻刻（個人の記事が引用。カクヨム「巌流島雑考」）}
+  - {type: quote, from: 61, to: 61, label: 史料, text: 敵の落とした石に当たって、脛も立てないでいる,
+     source: 武蔵が有馬直純にあてた書状（NEWSポストセブン、SAPIO 2017年4月号）}
+  - {type: quote, from: 85, to: 86, label: 史料, text: 春には熊本に下って、対面で話をしよう（大意）,
+     source: 細川光尚の書状の控え 寛永20年9月13日（熊本大学の報道発表 2022年）}
+  - {type: quote, from: 107, to: 107, label: 要点, text: 決闘のときに書かれた文書は、存在しない,
+     source: J-CAST ニュース 2010／山口県観光連盟}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）巌流島の遠景（M01）と自画像の額}
+  - {line: 15, note: 第1章 小倉碑文の読み下し（史料の札）}
+  - {line: 31, note: 第2章 沼田家記の翻刻（史料の札）}
+  - {line: 35, note: 第2章 碑文と沼田家記の食い違い（図）}
+  - {line: 42, note: 第3章 二天記の成立年の食い違い（図）}
+  - {line: 51, note: 第3章 3つの記録の書き手と年（図）}
+  - {line: 61, note: 第5章 島原の書状（史料の札）}
+  - {line: 69, note: 第6章 武蔵の年齢の食い違い（図と自画像の額）}
+  - {line: 85, note: 第6章 光尚の書状（史料の札）}
+  - {line: 109, note: まとめ 手向山の碑}
+  - {end: true, note: 終了画面の空き}

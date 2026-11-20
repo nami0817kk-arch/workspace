@@ -1,0 +1,134 @@
+# 物語完結型ショート 洞爺丸 s5（2026-11-15）。本編 scripts/toyamaru-story.yaml（11/18 19:00 公開予定、https://youtu.be/i6YryMy_fHQ）から。11/19 に予約。
+# 形式は habsburg_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/洞爺丸_facts_20261114_hand.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/toyamaru/main/ の S01〜S14）の切り出し・組み合わせだけ。新しい絵は作らない。煙突が目立つ絵は主役にしない（実物は太い4本、本編の絵は1本）。切り口：裁決の結論（船長だけでなく構造と運航管理も一因）と、死者数の出どころ（1,155・1,139・旅客1,142）、慰霊
+# 計算（自分で数え直した）：1,314−1,155＝159／1954-09-26→1959-02-09（二審）／1961-04-20に確定／1954-09-28は事故の2日後／2024−1954＝70年
+# 台風の目ではなかったという研究（本編の答え）は、ここでは言わない。
+title: "洞爺丸｜裁決は、船長だけの責任とは言わなかった"
+yt_title: "洞爺丸の裁決は、船長の過失のほかに、船の構造と運航の管理も一因とした　死者の数は資料によって違う　1,155人（裁決）、1,139人（気象庁）"
+description: |-
+  洞爺丸には1,314人が乗り、裁決の数では、1,155人が亡くなりました。助かったのは159人です。
+  1959年の高等海難審判庁の裁決は、遭難は船長の運航上の過失から起きたとしたうえで、船の構造と運航の管理も、一因としました。管理する側が、部下を非常勤務につかせず、自ら指揮もしなかった、とも認定しています。
+  死者の数は、気象庁は1,139人、事故の2日後の国会の途中の数字は旅客1,142人。資料によって違います。
+  風は、なぜ弱まったのか。本編は概要欄のリンクからどうぞ。
+  亡くなった方々とご遺族に、敬意を払って作っています。
+  https://youtu.be/i6YryMy_fHQ
+hashtags:
+- "#洞爺丸"
+- "#青函連絡船"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の資料を写したものではありません。亡くなった方々とご遺族に敬意を払って作っています。創作の台詞は入れていません。"
+art_dir: out/story/toyamaru
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: toyamaru_story_s5
+header:
+  tag: "洞爺丸　裁決"
+  title: "裁決は、《運航管理》も挙げた"
+now:
+- {at: "1954年", text: "1954年　遭難", point: 0}
+- {at: "1959年", text: "1959年　二審の裁決", point: 1}
+- {at: "2024年", text: "2024年　70年の法要", point: 2}
+timeline:
+- {label: "1954"}
+- {label: "1959"}
+- {label: "2024"}
+shots:
+  S13_1:
+    kind: "ai"
+    file: "toyamaru/main/S13.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "海辺の慰霊の碑と花"
+  S09_2:
+    kind: "ai"
+    file: "toyamaru/main/S09.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "審判の法廷"
+  S09_3:
+    kind: "ai"
+    file: "toyamaru/main/S09.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "審判の法廷"
+  S09_4:
+    kind: "ai"
+    file: "toyamaru/main/S09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "審判の法廷"
+  S11_5:
+    kind: "ai"
+    file: "toyamaru/main/S11.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "月夜の荒れた海"
+  S14_6:
+    kind: "ai"
+    file: "toyamaru/main/S14.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "天気図と電話の机"
+  S13_7:
+    kind: "ai"
+    file: "toyamaru/main/S13.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "海辺の慰霊の碑と花"
+  S04_8:
+    kind: "ai"
+    file: "toyamaru/main/S04.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "夕焼けの函館の桟橋"
+lines:
+  # fact: toyamaru-13
+- 語り: "1954年の洞爺丸の遭難。1,314人が乗っていた。亡くなったのは、1,155人。助かったのは、159人だ。"
+  shot: S13_1
+  tone: 重い
+  pause: 0.12
+  # fact: toyamaru-14
+- 語り: "この数は、高等海難審判庁の、裁決の数だ。"
+  shot: S09_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: toyamaru-14
+- 語り: "1,139人。これは、気象庁の数だ。事故の2日後、国会で示された途中の数字は、旅客1,142人。数は、資料によって違う。"
+  shot: S09_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: toyamaru-16
+- 語り: "1959年の裁決の結論は、こうだ。遭難は、船長の、運航上の職務の過失から起きた。"
+  shot: S09_4
+  tone: 強調
+  pause: 0.12
+  # fact: toyamaru-16
+- 語り: "さらに、船の構造と、運航の管理が、適当でなかったことも、一因だ、と。"
+  shot: S11_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: toyamaru-17
+- 語り: "青函局長ら、管理する側は、部下を非常勤務につかせず、自ら指揮もしなかった、と裁決は認定した。"
+  shot: S14_6
+  tone: 重い
+  pause: 0.12
+  # fact: toyamaru-32
+- 語り: "北斗市の七重浜には、翌年、慰霊の碑が建てられた。2024年9月26日にも、70年の法要が営まれた。"
+  shot: S13_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: toyamaru-04
+- 語り: "では、出航を決めた、17時40分ごろの風は、なぜ弱まったのか。"
+  shot: S04_8
+  tone: 疑問
+  pause: 0.15

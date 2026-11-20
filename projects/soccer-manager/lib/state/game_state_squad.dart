@@ -2,7 +2,7 @@ part of 'game_state.dart';
 
 /// スカッド運用: 育成・トレーニング設定、施設/スタッフ強化、戦術、ラインナップ。
 extension GameStateSquad on GameState {
-  /// チーム既定のトレーニング方針を設定する（個別方針未設定の選手に適用される）。
+  /// チーム既定のトレーニング方針を設定する(全選手に適用される)。
   void setTeamTrainingFocus(TrainingFocus focus) {
     if (_save == null) return;
     userTeam.defaultTrainingFocus = focus;
@@ -10,79 +10,31 @@ extension GameStateSquad on GameState {
     _persist();
   }
 
-  /// 選手個別のトレーニング方針を設定する。nullでチーム既定に戻す。
-  void setPlayerTrainingFocus(String playerId, TrainingFocus? focus) {
-    if (_save == null) return;
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    player.individualFocus = focus;
-    _notify();
-    _persist();
-  }
+  /// 営業ブーストの倍率。ブーストが残っている節の週収入にかかる。
+  /// 資金を直接配らないので、赤字を消すほどの力は持たない。
+  static const double marketingBoostMultiplier = 1.5;
 
-  /// ユース昇格候補の個別トレーニング方針を設定する。nullでポジション別の
-  /// 既定の育成配分に戻す(TrainingEngine.applyYouthAcademyGrowth参照)。
-  void setYouthProspectTrainingFocus(String playerId, TrainingFocus? focus) {
-    if (_save == null) return;
-    final player = _save!.youthProspects.firstWhere((p) => p.id == playerId);
-    player.individualFocus = focus;
-    _notify();
-    _persist();
-  }
+  /// 貯めておける営業ブーストの上限(節数)。
+  static const int marketingBoostCap = 3;
 
-  /// ユースの有望株のメンターになれる一軍の選手。
-  ///
-  /// 条件は2つ。[TrainingEngine.minMentorAge]以上であること、そして
-  /// **一軍の若手のメンターを兼ねていないこと**。兼任を許すと、ベテランを
-  /// 1人抱えるだけでクラブ中の若手が速く育ち、誰を誰に付けるかという判断が
-  /// 無くなる。指導の時間は有限、という扱いにしてある。
-  List<Player> youthMentorCandidates({String? forProspectId}) {
-    if (_save == null) return const [];
-    final takenInFirstTeam = {
-      for (final p in userTeam.players)
-        if (p.mentorId != null) p.mentorId!,
-    };
-    final takenInYouth = {
-      for (final p in _save!.youthProspects)
-        if (p.mentorId != null && p.id != forProspectId) p.mentorId!,
-    };
-    return userTeam.players
-        .where((p) =>
-            p.age >= TrainingEngine.minMentorAge &&
-            !takenInFirstTeam.contains(p.id) &&
-            !takenInYouth.contains(p.id))
-        .toList()
-      ..sort((a, b) => b.overall.compareTo(a.overall));
-  }
+  /// 営業ブーストの残り(節数)。
+  int get marketingBoostWeeks => _save?.marketingBoostWeeks ?? 0;
 
-  /// ユースの有望株にメンターを付ける。nullで解除。
-  void setYouthProspectMentor(String prospectId, String? mentorId) {
-    if (_save == null) return;
-    final prospect =
-        _save!.youthProspects.firstWhere((p) => p.id == prospectId);
-    prospect.mentorId = mentorId;
-    _notify();
-    _persist();
-  }
-
-  /// 現在のディビジョンに応じた特典資金の額(万円)。
-  /// ボタンに「いくら貰えるか」を出すため、受け取り前に参照できるようにする。
-  int get rewardFundsAmount =>
-      RewardOffer.fundsFor(_save?.currentDivisionTier ?? 5);
-
-  /// リワード広告の視聴、またはサポーター購入による特典資金を受け取る。
+  /// リワード広告の視聴、またはサポーター購入による特典を受け取る。
+  /// 次の1節だけ、チケット・スポンサー・グッズの収入が上がる。
   ///
   /// 広告を見せたか・購入済みかの判定は MonetizationController の責務で、
-  /// ここはゲームの状態を触るだけ。受け取った事実はクラブニュースに残す
-  /// (資金が増えた理由が後から分からないと、収支を追えなくなるため)。
-  int claimRewardFunds() {
+  /// ここはゲームの状態を触るだけ。受け取った事実はクラブニュースに残す。
+  /// 戻り値は受け取り後の残り節数。
+  int claimMarketingBoost() {
     if (_save == null) return 0;
-    final amount = rewardFundsAmount;
-    _save!.budget += amount;
-    _logNews(Tr.pick('スポンサーの特別協賛金として$amount万円を受け取った。',
-        'You received $amount in special sponsorship.'));
+    _save!.marketingBoostWeeks =
+        (_save!.marketingBoostWeeks + 1).clamp(0, marketingBoostCap);
+    _logNews(Tr.pick('営業を強化した。次の1節は収入が増える。',
+        'Marketing pushed: income is up for the next matchday.'));
     _notify();
     _persist();
-    return amount;
+    return _save!.marketingBoostWeeks;
   }
 
   /// 資金パックの購入で受け取る額(万円)。所属ディビジョンに比例する。
@@ -96,9 +48,9 @@ extension GameStateSquad on GameState {
   int claimPurchasedFunds(FundsPack pack) {
     if (_save == null) return 0;
     final amount = purchasedFundsAmount(pack);
-    _save!.budget += amount;
-    _logNews(Tr.pick('${pack.label}で$amount万円をクラブ資金に追加した。',
-        'You added $amount to the club budget from a ${pack.label}.'));
+    _book(LedgerCategory.other, amount);
+    _logNews(Tr.pick('${pack.label}で${formatMoney(amount)}をクラブ資金に追加した。',
+        'You added ${formatMoney(amount)} to the club budget from a ${pack.label}.'));
     _notify();
     _persist();
     return amount;
@@ -108,18 +60,7 @@ extension GameStateSquad on GameState {
   /// (負の値で減額も可能)。設定画面の管理者専用メニューからのみ呼ばれる。
   void addDebugFunds(int amount) {
     if (_save == null) return;
-    _save!.budget += amount;
-    _notify();
-    _persist();
-  }
-
-  /// ポジションコンバート特訓の目標ポジションを設定する(nullで解除)。
-  /// 生成時に偶然割り当てられた副ポジションとは無関係に、任意のポジション
-  /// への転向を目指せる。
-  void setPlayerTrainingConvertTarget(String playerId, Position? target) {
-    if (_save == null) return;
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    player.trainingConvertTargetPosition = target?.name;
+    _book(LedgerCategory.other, amount);
     _notify();
     _persist();
   }
@@ -145,148 +86,6 @@ extension GameStateSquad on GameState {
   void setAutoTrainingEnabled(bool enabled) {
     if (_save == null) return;
     userTeam.autoTrainingEnabled = enabled;
-    _notify();
-    _persist();
-  }
-
-  /// 選手にメンター(指導役のベテラン)を指名する。[minMentorAge]未満の選手や
-  /// 本人自身は指名できない。nullで解除する。
-  bool setMentor(String menteeId, String? mentorId) {
-    if (_save == null) return false;
-    final mentee = userTeam.players.firstWhere((p) => p.id == menteeId);
-    if (mentorId == null) {
-      mentee.mentorId = null;
-      _notify();
-      _persist();
-      return true;
-    }
-    if (mentorId == menteeId) return false;
-    Player? mentor;
-    for (final p in userTeam.players) {
-      if (p.id == mentorId) {
-        mentor = p;
-        break;
-      }
-    }
-    if (mentor == null || mentor.age < TrainingEngine.minMentorAge) {
-      return false;
-    }
-    mentee.mentorId = mentorId;
-    _notify();
-    _persist();
-    return true;
-  }
-
-  /// 育成アドバイザーの提案を、その場で適用する。
-  ///
-  /// 助言を読んでから該当画面へ移動して設定する往復が、毎週分だけ積み重なる。
-  /// 提案どおりでよいときは1タップで済ませられるようにする。
-  /// 適用できたら true。ドリルは枠(ヘッドコーチのレベル)が埋まっていると
-  /// 失敗するので、その結果をそのまま返す。
-  bool applyAdviceFix(DevelopmentAdvice advice) {
-    final fix = advice.fix;
-    if (fix == null) return false;
-    switch (fix) {
-      case AssignMentorFix(:final mentorId):
-        return setMentor(advice.playerId, mentorId);
-      case SetDrillFix(:final attributeKey):
-        return setDrillAttribute(advice.playerId, attributeKey);
-      case RestFix():
-        setPlayerTrainingFocus(advice.playerId, TrainingFocus.rest);
-        return true;
-    }
-  }
-
-  /// 同時にピンポイント特訓ドリルを指定できる人数の上限。ヘッドコーチの
-  /// レベルが高いほど、より多くの選手を同時に個別指導できる。
-  int get maxDrillSlots =>
-      _save == null ? 1 : _save!.infrastructure.staffLevel(StaffRole.headCoach);
-
-  /// 選手のピンポイント特訓ドリル(重点的に伸ばす1属性)を設定する。nullで解除。
-  /// 既に[maxDrillSlots]人が指定済みの場合、新規の指定はfalseを返し失敗する
-  /// (解除・指定済み選手の対象属性変更は上限に関係なく常に可能)。
-  bool setDrillAttribute(String playerId, String? attributeKey) {
-    if (_save == null) return false;
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    if (attributeKey != null && player.drillAttributeKey == null) {
-      final activeCount =
-          userTeam.players.where((p) => p.drillAttributeKey != null).length;
-      if (activeCount >= maxDrillSlots) return false;
-    }
-    player.drillAttributeKey = attributeKey;
-    _notify();
-    _persist();
-    return true;
-  }
-
-  /// 選手の2つ目のピンポイント特訓ドリルを設定する。nullで解除。
-  /// 1つ目のドリルとは独立して[maxDrillSlots]の上限が適用される。
-  bool setDrillAttribute2(String playerId, String? attributeKey) {
-    if (_save == null) return false;
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    if (attributeKey != null && player.drillAttributeKey2 == null) {
-      final activeCount =
-          userTeam.players.where((p) => p.drillAttributeKey2 != null).length;
-      if (activeCount >= maxDrillSlots) return false;
-    }
-    player.drillAttributeKey2 = attributeKey;
-    _notify();
-    _persist();
-    return true;
-  }
-
-  /// 選手個別の特性特訓の目標特性を設定する。nullで解除。既に特性を
-  /// 保有している選手にも設定自体は可能(効果が発現しないだけ)。技術
-  /// カテゴリ以外の特性(才能・性格)は練習では習得できないため無視する。
-  void setTraitTrainingTarget(String playerId, PlayerTrait? target) {
-    if (_save == null) return;
-    if (target != null && target.category != PlayerTraitCategory.technical) {
-      return;
-    }
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    player.traitTrainingTarget = target;
-    _notify();
-    _persist();
-  }
-
-  /// 選手個別の性格特性の目標を設定する。nullで解除。メンター(チーム
-  /// メイト)や監督との関わりを通じて習得を目指す仕組みのため、性格
-  /// カテゴリ以外の特性は無視する。
-  void setPersonalityTraitTrainingTarget(String playerId, PlayerTrait? target) {
-    if (_save == null) return;
-    if (target != null && target.category != PlayerTraitCategory.personality) {
-      return;
-    }
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    player.personalityTraitTrainingTarget = target;
-    _notify();
-    _persist();
-  }
-
-  /// 選手個別の育成プラン(目標ロール)を設定する。nullで解除。
-  /// 選手のポジション大分類で選択できないロール、およびstandard
-  /// (プレースタイルを指定しない)は無視する。
-  void setDevelopmentTargetRole(String playerId, PlayerRole? role) {
-    if (_save == null) return;
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    if (role != null &&
-        (role == PlayerRole.standard ||
-            !role.allowedGroups.contains(player.position.group))) {
-      return;
-    }
-    player.developmentTargetRole = role;
-    _notify();
-    _persist();
-  }
-
-  /// 選手個別のローテーション方針(週替わりで自動的に切り替わる複数方針)を
-  /// 設定する。nullまたは空リストで解除し、個別方針/チーム既定方針に戻る。
-  void setPlayerFocusRotation(String playerId, List<TrainingFocus>? rotation) {
-    if (_save == null) return;
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    player.focusRotation =
-        (rotation == null || rotation.isEmpty) ? null : rotation;
-    player.rotationWeekIndex = 0;
     _notify();
     _persist();
   }
@@ -342,16 +141,13 @@ extension GameStateSquad on GameState {
     // リザーブ(Bチーム)の試合。トップに絡めない選手が公式戦に近い形で
     // 出場する。人数が足りるならこちらを行い、足りないときだけ紅白戦に
     // 落とす。両方やると疲労も成長も二重取りになる。
-    lastReserveMatch = ReserveMatchEngine.play(
+    final reserveMatch = ReserveMatchEngine.play(
       userTeam,
       opponentName: Tr.pick('リザーブ', 'Reserves'),
     );
-    lastPracticeMatchCount = lastReserveMatch == null
-        ? TrainingEngine.applyIntraSquadMatch(userTeam).length
-        : 0;
+    if (reserveMatch == null) TrainingEngine.applyIntraSquadMatch(userTeam);
     for (final p in userTeam.players) {
       if (p.hadBreakthroughThisWeek) _save!.breakthroughCount++;
-      if (p.acquiredTraitThisWeek != null) _save!.traitsAcquired++;
     }
     _evaluateAchievements();
     _save!.trainingDoneThisWeek = true;
@@ -376,9 +172,7 @@ extension GameStateSquad on GameState {
         final before = prevAttrs[entry.key] ?? entry.value;
         if (entry.value != before) deltas[entry.key] = entry.value - before;
       }
-      if (deltas.isNotEmpty ||
-          p.overall != prevOverall ||
-          p.acquiredTraitThisWeek != null) {
+      if (deltas.isNotEmpty || p.overall != prevOverall) {
         changes.add(
           PlayerGrowthSummary(
             playerId: p.id,
@@ -387,7 +181,6 @@ extension GameStateSquad on GameState {
             overallAfter: p.overall,
             attributeDeltas: deltas,
             isBreakthrough: p.hadBreakthroughThisWeek,
-            acquiredTrait: p.acquiredTraitThisWeek,
           ),
         );
       }
@@ -402,15 +195,18 @@ extension GameStateSquad on GameState {
     _save!.staffCandidates = StaffMarket.generate(
       divisionTier: _save!.currentDivisionTier,
       confidence: _save!.confidence,
-      seed: _save!.careerSeasons,
+      // 候補は月ごとに入れ替わる。id が前の月と重ならないよう月を混ぜる。
+      seed: _save!.careerSeasons * 100 + today.month,
       avoidNames: {
         for (final s in _save!.infrastructure.staff.values)
           if (s != null) s.name,
       },
     );
+    _addManagerCandidates();
+    _addFormerPlayerCandidates();
   }
 
-  /// いま雇えるスタッフの候補。シーズンごとに入れ替わる。
+  /// いま雇えるスタッフの候補。月ごとに入れ替わる。
   List<StaffMember> staffCandidatesFor(StaffRole role) =>
       _save?.staffCandidates.where((s) => s.role == role).toList() ?? [];
 
@@ -421,7 +217,17 @@ extension GameStateSquad on GameState {
   int facilityUpgradeCostFor(FacilityType type) {
     if (_save == null) return 0;
     final lvl = _save!.infrastructure.facilityLevel(type);
-    return ClubInfrastructure.facilityUpgradeCost(lvl);
+    // 自治体の補助が下りていれば、スタジアムの増築は割り引かれる。
+    final subsidy = type == FacilityType.stadium
+        ? (100 - _save!.stadiumSubsidyPct) / 100
+        : 1.0;
+    return (scaledMoney(ClubInfrastructure.facilityUpgradeCost(lvl)) *
+            subsidy *
+            BudgetEngine.facilityCostMultiplier(_save!.budgetPlan) *
+            PolicyEngine.facilityCostMultiplier(_save!.clubPolicy) *
+            AdvisorEngine.facilityCostMultiplier(
+                _save!.advisors[Advisor.scouting.name] ?? 0))
+        .round();
   }
 
   /// 候補[staffId]を雇う。既にその役職に人がいれば入れ替わる。
@@ -430,16 +236,37 @@ extension GameStateSquad on GameState {
   /// 済んだ旧レベル制と違い、良いスタッフを抱えるほど毎週の重荷になる。
   Future<bool> hireStaff(String staffId) async {
     if (_save == null) return false;
+    lastSigningBlockReason = null;
     final idx = _save!.staffCandidates.indexWhere((s) => s.id == staffId);
     if (idx < 0) return false;
     final hired = _save!.staffCandidates[idx];
+    final previous = _save!.infrastructure.staffFor(hired.role);
+    final severance = scaledMoney(previous?.severance ?? 0);
+    // 他のクラブの監督を引き抜くなら、そのクラブへ補償金を払う。
+    final profile = hired.manager;
+    final compensation = scaledMoney(profile?.compensation ?? 0);
+    if (compensation + severance > 0 &&
+        _save!.budget < compensation + severance) {
+      lastSigningBlockReason = Tr.pick(
+          '資金が足りません(補償金${formatMoney(compensation)}・前任の違約金${formatMoney(severance)})。',
+          'You cannot afford it (compensation ${formatMoney(compensation)}, severance ${formatMoney(severance)}).');
+      _notify();
+      return false;
+    }
 
     // 週俸の総額が給与予算を食い潰さないよう、選手と同じ枠で見る。
-    if (!_wageBudgetAllowsSigning(hired.wage)) return false;
+    // 入れ替えなら前任者の週俸は出ていかなくなるので、差額で見る。
+    if (!_wageBudgetAllowsSigning(
+        scaledMoney(hired.wage - (previous?.wage ?? 0)))) {
+      return false;
+    }
 
-    final previous = _save!.infrastructure.staffFor(hired.role);
     _save!.infrastructure.staff[hired.role] = hired;
     _save!.staffCandidates.removeAt(idx);
+    if (severance > 0) _book(LedgerCategory.staffWages, -severance);
+    if (hired.role == StaffRole.manager) {
+      _onManagerHired(hired, compensation);
+    }
     // 入れ替えで空いた人は候補に戻さない。断った相手が翌週も同じ条件で
     // 待っているのは不自然なため。
     if (previous != null) {
@@ -466,6 +293,8 @@ extension GameStateSquad on GameState {
     final current = _save!.infrastructure.staffFor(role);
     if (current == null) return false;
     _save!.infrastructure.staff[role] = null;
+    final severance = scaledMoney(current.severance);
+    if (severance > 0) _book(LedgerCategory.staffWages, -severance);
     _logNews(
       Tr.pick('${current.name}が${role.label}を退任しました。',
           '${current.name} leaves his post as ${role.label}.'),
@@ -481,10 +310,12 @@ extension GameStateSquad on GameState {
     final infra = _save!.infrastructure;
     final lvl = infra.facilityLevel(type);
     if (lvl >= ClubInfrastructure.maxLevel) return false;
-    final cost = ClubInfrastructure.facilityUpgradeCost(lvl);
+    final cost = facilityUpgradeCostFor(type);
     if (_save!.budget < cost) return false;
-    _save!.budget -= cost;
+    _book(LedgerCategory.facilities, -(cost));
     infra.upgradeFacility(type);
+    // 補助は1回の増築で使い切る。
+    if (type == FacilityType.stadium) _save!.stadiumSubsidyPct = 0;
     _notify();
     await _persist();
     return true;
@@ -526,7 +357,16 @@ extension GameStateSquad on GameState {
     if (_save == null) return;
     final idx = userTeam.players.indexWhere((p) => p.id == playerId);
     if (idx < 0) return;
-    userTeam.players[idx].squadStatus = status;
+    final p = userTeam.players[idx];
+    p.squadStatus = status;
+    // 加入のときに約束した序列より下げれば、約束を破ったことになる。
+    final promised = p.promisedStatus;
+    if (promised != null && !p.promiseBroken && status.index > promised.index) {
+      _breakPromise(
+          p,
+          Tr.pick('${promised.label}の約束だったのに、${status.label}に下げた',
+              'He was promised ${promised.label} billing and you dropped him to ${status.label}'));
+    }
     _notify();
     _persist();
   }
@@ -643,9 +483,14 @@ extension GameStateSquad on GameState {
   /// 費用が払えなければ実施できない。見送る(none)ことはいつでもできる。
   Future<bool> choosePreseasonCamp(PreseasonCamp camp) async {
     if (_save == null || !_save!.preseasonCampPending) return false;
-    if (_save!.budget < camp.cost) return false;
+    final campCost = scaledMoney(camp.cost);
+    if (_save!.budget < campCost) return false;
 
-    _save!.budget -= camp.cost;
+    _book(LedgerCategory.facilities, -campCost);
+    // 海外ツアーは興行の収入が入る(グッズの売上として数える)。
+    if (camp.revenue > 0) {
+      _book(LedgerCategory.merchandise, scaledMoney(camp.revenue));
+    }
     _save!.preseasonCampPending = false;
 
     final team = userTeam;

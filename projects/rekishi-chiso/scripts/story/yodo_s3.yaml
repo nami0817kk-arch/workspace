@@ -1,0 +1,137 @@
+# 物語完結型ショート 淀殿 s3（2026-10-29）。本編 scripts/yodo-story.yaml の第3章（玄朔の診療・石山寺・「秀頼御袋より」）から。投稿しない。
+# 形式は masamune_s1.yaml を写した。想像の台詞なし。絵は本編の AI 絵（Gemini のみ）と実在の絵。
+# 事実カード：yodo-27・41・09。玄朔の症状は黒田基樹の紹介する記録の文で言う（nippon.com と食い違うので）。
+# 理解テスト4問：①誰の話か＝茶々（淀殿）②いつ・どこで何が＝1601年に玄朔が診て気がふさぎ食べられず、1602年に石山寺の蓮如堂など建て直し ③何をしたか＝寺を建て直し続けた。『時慶卿記』は「秀頼御袋より」と記録 ④どうなった＝記録に残るのは病みながら寺を建てる茶々で、悪女の姿ではない
+title: 淀殿｜記録が名を挙げたのは、「秀頼御袋より」
+yt_title: 淀殿は「秀頼御袋より」と記録された　石山寺の建て直しと医師の診療記録
+description: |-
+  慶長6年、1601年の6月。関ヶ原の戦いの翌年に、医師の曲直瀬玄朔が大坂城の茶々、のちの淀殿を診ました。黒田基樹さんが紹介する玄朔の記録には、「秀頼公の御母、御年、三十余り。気がふさぎ、食べられず、目がくらむ」とあります。
+  その茶々が力を注いだのが、寺の建て直しです。滋賀県の文化財の解説によれば、石山寺の慶長の建て直しは淀殿によるもので、寺に残る文書から分かるといいます。境内の蓮如堂は慶長7年、1602年に建てられた建物の一つです。当時の公家の日記『時慶卿記』には、石山寺の堂はことごとく再興された、「秀頼御袋より」とあります。
+  のちの読み物は茶々を悪女のように描きますが、同じ時代の記録に残るのは、気がふさぎながら寺を建て直す茶々の姿です。
+hashtags: ["#淀殿", "#日本史", "#戦国時代"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/yodo
+out: yodo_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 淀殿（茶々。豊臣秀頼の母）
+  title: "記録の名は、《「秀頼御袋より」》"
+now:
+  - {at: 関ヶ原, text: "1601年　大坂城", point: 0}
+  - {at: 近江の, text: "慶長　石山寺", point: 1}
+  - {at: 慶長7年, text: "1602年　蓮如堂", point: 1}
+  - {at: 当時の公家, text: "公家の日記", point: 2}
+timeline:
+  - {label: "1601"}
+  - {label: "1602"}
+  - {label: "日記"}
+shots:
+  Y08f:
+    kind: ai
+    file: yodo/main/Y08.jpg
+    focus: [0.42, 0.3]
+    move: in
+    zoom: 0.14
+    must: 薬湯を前に座る茶々の横顔
+  Y08t:
+    kind: ai
+    file: yodo/main/Y08.jpg
+    focus: [0.75, 0.8]
+    move: in
+    zoom: 0.1
+    must: 薬湯の碗と盆
+  Osaka:
+    kind: real
+    image: paintings/yodo_osaka_castle_zu_byobu.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "大坂図屏風（部分、江戸時代）"
+    must: 大坂城の屏風絵
+  Y09:
+    kind: ai
+    file: yodo/main/Y09.jpg
+    focus: [0.38, 0.5]
+    move: right
+    must: 石山寺の堂の建て直し
+  Ishiyama:
+    kind: real
+    image: paintings/yodo_ishiyamadera_hiroshige.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "歌川広重《近江八景 石山秋月》（メトロポリタン美術館蔵）"
+    must: 石山寺と瀬田川
+  Nara:
+    kind: real
+    image: paintings/yodo_portrait_nara.jpg
+    focus: [0.5, 0.68]
+    move: in
+    text_box: true
+    credit: "伝淀殿像（奈良県立美術館蔵）"
+    must: 伝淀殿像
+  Y09r:
+    kind: ai
+    file: yodo/main/Y09.jpg
+    focus: [0.62, 0.5]
+    move: in
+    zoom: 0.14
+    must: 建て直しの足場と大工
+  Y08q:
+    kind: ai
+    file: yodo/main/Y08.jpg
+    focus: [0.5, 0.75]
+    move: in
+    zoom: 0.2
+    must: 薬湯の碗
+lines:
+  # fact: yodo-27
+  - 語り: 関ヶ原の翌年、1601年の6月。医師の曲直瀬玄朔が、大坂城の茶々を診た。
+    shot: Y08f
+    tone: 強調
+  # fact: yodo-27
+  - 語り: 黒田基樹さんが紹介する玄朔の記録には、こうある。秀頼公の御母、御年、三十余り。気がふさぎ、食べられず、目がくらむ。
+    shot: Y08t
+    tone: 重い
+    pause: 0.12
+  - 語り: 茶々は、まだ幼い秀頼を抱えて、大坂城にいた。
+    shot: Osaka
+    tone: しみじみ
+    pause: 0.12
+  # fact: yodo-41
+  - 語り: その茶々が力を注いだのが、寺の建て直しだ。滋賀県の文化財の解説によれば、近江の石山寺の慶長の建て直しは、淀殿によるものだという。
+    shot: Y09
+    tone: しみじみ
+    pause: 0.12
+  # fact: yodo-41
+  - 語り: 境内の蓮如堂は、慶長7年、1602年に、そのとき建てられた建物の一つだ。
+    shot: Ishiyama
+    tone: しみじみ
+    pause: 0.12
+  # fact: yodo-09
+  - 語り: 当時の公家の日記、『時慶卿記』には、石山寺の堂は、ことごとく再興された、「秀頼御袋より」、とある。
+    shot: Y09r
+    tone: 強調
+    pause: 0.12
+  - 語り: 御袋は、秀頼の母。記録が名を挙げたのは、若い秀頼ではなく、母の茶々だった。
+    shot: Nara
+    tone: しみじみ
+    pause: 0.12
+  - 語り: のちの読み物は、茶々を、秀吉の心を乱した女として描く。けれど、記録に残るのは、気がふさぎながら、寺を建て直す茶々だ。
+    shot: Y08f
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 寺を建て直し続けた人を、あなたは、悪女と、呼べますか。
+    shot: Y08q
+    tone: 疑問
+    pause: 0.15

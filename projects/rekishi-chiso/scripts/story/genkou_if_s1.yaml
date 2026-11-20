@@ -1,0 +1,146 @@
+# 物語完結型ショート 元寇（もしも）s1（2026-10-31）。本編 scripts/genkou-if-story.yaml（11/3 12:00 公開、https://youtu.be/TfyxJjTTW9Y）から。切り口：新暦11月26日（荒川秀俊の3つの根拠）
+# 形式は jeanne_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「時宗想像」「御家人想像」「季長想像」は使わない）。戦闘・負傷・遺体の絵なし。
+# 絵は本編の AI 絵（out/story/genkou-if/main/G01〜G15。人物は描かない）と実在の絵（paintings/genkou_*）。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/元寇_facts_20261030.yaml）：genkou-if-07・08・10
+# ・暦の換算：今の暦で11月26日ごろ、は本編の言い方のまま（荒川 1958）。月日の換算そのものは本編でも確かめ直していないので、年号・月日は転記だけ。
+# ・風が吹いたかどうかは言い切らない（問いで閉じる）。1281年の台風が本当に吹いたことは荒川さん自身も認めている（08）。
+# ・『元史』『高麗史』『愚童訓』の書き分けは s2 に回す（ここでは問いにするだけ）。
+# 理解テスト4問：
+#   ①誰の話か：荒川秀俊さんと、「神風」が吹いたとされる夜の疑い
+#   ②いつ・どこで何が：1274年10月20日の夜、博多湾の元・高麗軍の船団が去った。1958年に荒川さんが、新暦では11月26日ごろで台風の季節ではない、と指摘
+#   ③何が問題か：根拠は季節・確かな文書に記載なし・1281年の台風との混同。ただし1281年の台風は本当に吹いた
+#   ④どうなったか：山口秀樹さんも1961年に腑に落ちない点を書いた。風が吹いたかは問いで閉じる
+title: 元寇｜神風が吹いた夜は、新暦の11月26日だった
+yt_title: 元寇の神風が吹いたとされる夜は新暦11月26日　台風の季節ではないという指摘
+description: |-
+  元寇で日本を救った「神風」。その風が吹いたとされる夜は、今の暦で、11月26日ごろです。
+  1274年10月20日の夜、博多湾に来ていた元と高麗の連合軍の船団が去りました。1958年、荒川秀俊さんは新聞への寄稿で、台風の季節ではない、と指摘します。根拠は、季節、確かな文書に大風雨の記載がないこと、そして1281年の台風と混ざった可能性の3つでした。ただし、1281年の台風は、本当に吹いています。疑われたのは、その7年前の夜のほうです。
+  その夜を、当時の記録は、どう書いたのか。この問いを、記録の食い違いから掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#元寇', '#日本史', '#鎌倉時代']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/genkou-if
+out: genkou_if_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 元寇（鎌倉時代の日本とモンゴル）
+  title: "神風が吹いた夜は、新暦の《11月26日》だった"
+now:
+  - {at: 1274年, text: "1274年10月　博多湾", point: 0}
+  - {at: 1958年, text: "1958年　荒川秀俊さんの寄稿", point: 1}
+  - {at: 1961年, text: "1961年　山口秀樹さんの論文", point: 2}
+timeline:
+  - {label: "1274"}
+  - {label: "1958"}
+  - {label: "1961"}
+cards:
+  - type: table
+    title: 荒川さんの3つの根拠
+    from: 荒川さんが挙げた
+    until: ただし
+    items:
+      - {at: 荒川さんが挙げた, text: "①季節　新暦11月26日ごろ"}
+      - {at: 確かな文書, text: "②確かな文書に大風雨の記載なし"}
+      - {at: そして, text: "③1281年の台風と混ざった可能性"}
+    text_y: 0.70
+shots:
+  G01:
+    kind: ai
+    file: genkou-if/main/G01.jpg
+    focus: [0.3, 0.55]
+    move: in
+    must: 夜明けの博多湾。沖に霧と船影
+  G03:
+    kind: ai
+    file: genkou-if/main/G03.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 夜の暗い海。船の影が遠ざかる
+  G02:
+    kind: ai
+    file: genkou-if/main/G02.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 朝の博多湾。浜に小さな船影
+  G12:
+    kind: ai
+    file: genkou-if/main/G12.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 夕暮れの博多湾。沖に船影、浜に石の壁
+  G08:
+    kind: ai
+    file: genkou-if/main/G08.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 荒れた灰色の海と暗い雲
+  G03b:
+    kind: ai
+    file: genkou-if/main/G03.jpg
+    focus: [0.3, 0.5]
+    move: in
+    must: 夜の暗い海
+  G11:
+    kind: ai
+    file: genkou-if/main/G11.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 静かな入り江と小さな島
+  G01b:
+    kind: ai
+    file: genkou-if/main/G01.jpg
+    focus: [0.65, 0.5]
+    move: left
+    must: 夜明けの海に霧と船影
+lines:
+  # fact: genkou-if-07
+  - 語り: 元寇で日本を救った、「神風」。その風が吹いたとされる夜は、今の暦で、《!11月26日》ごろだ。
+    shot: G01
+    tone: 強調
+    pause: 0.12
+  # fact: genkou-if-07
+  - 語り: 1274年。10月20日の夜、博多湾に来ていた元と高麗の連合軍の船団が、去った。
+    shot: G03
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-07
+  - 語り: 台風の季節では、ない。1958年、荒川秀俊さんは、新聞への寄稿で、そう指摘した。
+    shot: G02
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-08
+  - 語り: 荒川さんが挙げた根拠は、3つ。季節。確かな文書に、大風雨の記載がないこと。そして、1281年の台風と、混ざった可能性だ。
+    shot: G12
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-08
+  - 語り: ただし、1281年の台風は、本当に吹いた。荒川さん自身も、そこは認めている。
+    shot: G08
+    tone: 重い
+    pause: 0.12
+  # fact: genkou-if-08
+  - 語り: 疑われたのは、その7年前の、あの夜のほうだ。
+    shot: G03b
+    tone: 重い
+    pause: 0.12
+  # fact: genkou-if-10
+  - 語り: 荒川さんの新説を論じた山口秀樹さんも、1961年に、「文永の役の神風には、どうも腑に落ちない点を持ち続けている」と書いた。
+    shot: G11
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: では、その夜を、当時の記録は、どう書いたのか。
+    shot: G01b
+    tone: 疑問
+    pause: 0.15

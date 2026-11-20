@@ -76,9 +76,8 @@ void main() {
       await gameState.startNewGame('テストFC');
     });
 
-    final before = gameState.save!.budget;
+    final before = gameState.marketingBoostWeeks;
     final newsBefore = gameState.save!.newsLog.length;
-    final expected = gameState.rewardFundsAmount;
 
     await tester.pumpWidget(MultiProvider(
       providers: [
@@ -95,8 +94,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(gameState.save!.budget - before, expected,
-        reason: '受け取り額が表示と違う(二重加算になっていないか)');
+    expect(gameState.marketingBoostWeeks - before, 1,
+        reason: '1回の受け取りで2節ぶん入っている(二重加算になっていないか)');
     expect(gameState.save!.newsLog.length - newsBefore, 1,
         reason: '1回の受け取りでニュースが複数残っている');
     expect(money.claimedToday, 1);

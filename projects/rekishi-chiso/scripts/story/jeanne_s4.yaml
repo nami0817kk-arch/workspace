@@ -1,0 +1,159 @@
+# 物語完結型ショート ジャンヌ・ダルク s4（2026-10-30）。本編 scripts/jeanne-story.yaml（11/2 19:00 公開）から。切り口：25年後の復権のための調べでの、誓約書の長さの食い違い（立ち会った3人の証言）。
+# 形式は musashi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。処刑・火刑の描写なし（絵にも当てない）。
+# 絵は本編の AI 絵（out/story/jeanne/main/N01〜N15。人物なし）だけ。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/ジャンヌ・ダルク_facts_20261029.yaml）：jeanne-02・03・25。
+# 理解テスト4問：
+#   ①誰の話か：ジャンヌ・ダルクが署名した誓約書
+#   ②いつ・どこで何が：1431年5月24日ルーアンの墓地で十字。のちの調べで立ち会った人が長さを証言した（1455・1456年）
+#   ③何が食い違うか：裁判記録は罪を数える長い文、証人は6、7行・主の祈りほど
+#   ④どうなったか：読まれた紙と記録の文が同じか、記録からは確かめられない（問いで閉じる）
+# 語りの字数（句読点を除く）：354
+title: ジャンヌ・ダルク｜署名した紙は、記録と食い違う
+yt_title: ジャンヌ・ダルクが署名した紙は何行だったか　記録は長文、立会人は6、7行
+description: |-
+  ジャンヌ・ダルクが署名した紙は、何行だったのか。裁判記録は長い文、立ち会った3人は「6、7行」などと言います。
+  1431年5月24日、ルーアンの墓地で、ジャンヌは誓約書に十字を書きました。裁判記録に載る誓約の文は、罪を数え、男の服も悔いる長い文です。ところが、のちの復権のための調べで、修道院長のミジエ（1455年）は「主の祈りほどの長さ」、医師のラシャンブルと神学者のモネ（1456年）は「6、7行ほど」と証言しました。
+  公証人のタケルは、今ある形の記録に整えられたのは、ジャンヌの死のずっとあとだと証言しています。読まれた紙と記録の文が同じものなのか、記録からは確かめられません。本編は概要欄のリンクからどうぞ。
+hashtags: ['#ジャンヌ・ダルク', '#世界史', '#百年戦争']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/jeanne
+out: jeanne_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: ジャンヌ・ダルク（百年戦争のフランスの少女）
+  title: "署名の紙は、記録と《食い違う》"
+now:
+  - {at: 5月24日, text: "1431年5月24日　ルーアン", point: 0}
+  - {at: 1455年, text: "1455年　復権のための調べ", point: 1}
+  - {at: 1456年, text: "1456年　復権のための調べ", point: 2}
+timeline:
+  - {label: "1431"}
+  - {label: "1455"}
+  - {label: "1456"}
+cards:
+  - type: table                          # 誓約書の長さ（語った順に1行ずつ）
+    title: 誓約書の長さ
+    from: 裁判記録の誓約
+    until: 公証人
+    items:
+      - {at: 罪をひとつずつ, text: "裁判記録　罪を数える長い文"}
+      - {at: 主の祈り, text: "ミジエ　1455　主の祈りほど"}
+      - {at: 二つ折り, text: "ラシャンブル・モネ　1456　6行か7行"}
+    text_y: 0.70
+shots:
+  N08:
+    kind: ai
+    file: jeanne/main/N08.jpg
+    focus: [0.35, 0.65]
+    move: in
+    must: 机の上の2通の白紙の書状
+  N07:
+    kind: ai
+    file: jeanne/main/N07.jpg
+    focus: [0.3, 0.6]
+    move: right
+    must: 墓地に組まれた木の台
+  N02:
+    kind: ai
+    file: jeanne/main/N02.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 灯の下の白紙の羊皮紙
+  N12:
+    kind: ai
+    file: jeanne/main/N12.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 大聖堂の内部の石の柱
+  N08b:
+    kind: ai
+    file: jeanne/main/N08.jpg
+    focus: [0.65, 0.65]
+    move: left
+    zoom: 0.2
+    must: 右の白紙の書状
+  N08c:
+    kind: ai
+    file: jeanne/main/N08.jpg
+    focus: [0.3, 0.65]
+    move: right
+    zoom: 0.2
+    must: 左の白紙の書状
+  N10:
+    kind: ai
+    file: jeanne/main/N10.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 灯のもとで書類を書く書記の後ろ姿
+  N02b:
+    kind: ai
+    file: jeanne/main/N02.jpg
+    focus: [0.72, 0.4]
+    move: left
+    zoom: 0.12
+    must: 灯のともる机
+  N15:
+    kind: ai
+    file: jeanne/main/N15.jpg
+    focus: [0.3, 0.55]
+    move: in
+    text_y: 0.74
+    must: 夕暮れの石畳の広場
+lines:
+  # fact: jeanne-03
+  - 語り: ジャンヌが署名した紙は、何行だったのか。記録は長い文。立ち会った3人は、《!6行か7行》と言う。
+    shot: N08
+    tone: 強調
+    pause: 0.12
+  # fact: jeanne-02
+  - 語り: 1431年5月24日。ルーアンの墓地で、ジャンヌは、誓約書に、十字を書いた。
+    shot: N07
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-03
+  - 語り: 裁判記録の誓約の文は、長い。罪をひとつずつ数え、男の服も、髪を丸く切ったことも、悔いる。
+    shot: N02
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-03
+  - 語り: ところが、復権のための調べで、立ち会った人たちは、違う姿を語る。
+    shot: N12
+    tone: 重い
+    pause: 0.12
+  # fact: jeanne-03
+  - 語り: 修道院長のミジエは、1455年に、主の祈りくらいの長さだった、と言う。
+    shot: N08b
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-03
+  - 語り: 医師のラシャンブルは、1456年に、「6行か7行ほどの、二つ折りの紙」と言う。神学者のモネも、短い書面、と言う。
+    shot: N08c
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-25
+  - 語り: 公証人のタケルは、1456年5月に証言した。今の形の記録に整えたのは、ジャンヌの死の、ずっとあとだ、と。
+    shot: N10
+    tone: 重い
+    pause: 0.12
+  # fact: jeanne-03, jeanne-25
+  - 語り: 読まれた紙と、記録の文は、同じものか。記録からは、確かめられない。
+    shot: N02b
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: あなたなら、どちらの紙を、信じますか。
+    shot: N15
+    tone: 疑問
+    pause: 0.15

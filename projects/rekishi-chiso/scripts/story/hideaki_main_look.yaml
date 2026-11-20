@@ -1,0 +1,279 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：小早川秀秋（scripts/hideaki-story.yaml）。chiso/storymain.py が読む。
+# 10-29 作成（10/31 公開予定）。この look は行の番号（0 始まり）で絵を当てるので、台本の行を増減したら shots の番号を直す。決まりは docs/story-main.md・スキル rekishi-story-screen。見本は yodo・hijikata の look。
+# 絵の方針：AI 絵は 15 枚（H01〜H15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵に出さない（後ろ姿・遠景・手元だけ。顔の寄りは作らない）。人物は実在の絵（パブリックドメイン。出典は台本の caption と下の credits:）を額（frame:）で、
+#   屏風・陣立図・地図は一部（part:）で使う。伝小早川秀秋像は「伝」を付ける。芳年《小早川秀秋 大谷吉継の亡霊に怯える》は、後世の創作の絵として問い鉄砲の行に当てる。
+# AI 絵の指示の一覧（英語・場面）：dev/output/rekishi-chiso/research/hideaki_ai_images.md
+# 届く前は art_dir の仮の絵（番号と場面だけ書いた灰色の板。10-29 に PIL で 1376×768 で作った）で代える。届いたら main_art_dir に H01.jpg〜を置くだけ。
+#   crops・focus・fx の位置は仮の値。届いた絵を見て合わせ直す。
+# 最期の場面（H13）は人を描かない（病床・亡骸の絵なし）。最期・死因の行に人物の絵を当てない。
+script: scripts/hideaki-story.yaml
+out: hideaki_story_main
+art_dir: out/story/hideaki/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/hideaki/main   # Gemini の 16:9 の絵（H01.jpg〜H15.jpg）
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。dates＝語りがその年・月日を言った行から替える（書状・記事・書物の年は物語の「いま」ではないので替えない。null で章題だけ）。第6章（検証）とまとめは now: null
+chapters:
+  0: {label: 序章 鉄砲を書いた最も古い本は63年後, now: 寛文3年,
+      dates: {4: 慶長5年9月17日, 7: 慶長5年9月20日, 10: 慶長5年8月26日, 11: 慶長5年9月9日, 12: null}}
+  1: {label: 第1章 なぜ秀秋は領地を取り上げられたのか, now: null,
+      dates: {18: 慶長3年, 26: 慶長4年, 28: 慶長5年4月9日, 30: 慶長5年}}
+  2: {label: 第2章 開戦の半月前に何が届いたか, now: 慶長5年8月,
+      dates: {31: 慶長5年8月23日, 33: 慶長5年8月26日, 34: 慶長5年8月28日, 35: 慶長5年9月13日, 37: 慶長5年9月14日, 43: 慶長5年9月14日の夜, 48: null, 50: 慶長5年9月15日}}
+  3: {label: 第3章 裏切りは何時だったのか, now: 慶長5年9月15日}
+  4: {label: 第4章 秀秋は岡山で何をしたのか, now: 慶長5年,
+      dates: {84: 慶長6年8月, 89: 慶長7年}}
+  5: {label: 第5章 秀秋の最期と小早川家のその後, now: 慶長7年10月,
+      dates: {99: 慶長7年, 100: 明治12年, 101: null}}
+  6: {label: 第6章 「裏切り者」はいつ生まれたのか, now: null}
+  7: {label: まとめ なぜ「裏切り者」になったのか, now: null}
+
+# 概要欄「■ 参考にした資料」（事実カード 小早川秀秋_facts_20261029.yaml のうち本文を開いた主なもの。10-29。書状・日記・軍記の原文は開けておらず、紹介を通した）
+references:
+  - 呉座勇一『動乱の日本戦国史』抜粋（PRESIDENT WOMAN Online、2023）　https://president.jp/articles/-/75697
+  - 高橋陽介『シン・関ヶ原』抜粋（現代ビジネス、2025）　https://gendai.media/articles/-/160526
+  - 高橋陽介『シン・関ヶ原』抜粋（現代ビジネス、2025）　https://gendai.media/articles/-/160330
+  - 高橋陽介『シン・関ヶ原』抜粋（現代ビジネス、2025）　https://gendai.media/articles/-/160537
+  - 高橋陽介『シン・関ヶ原』抜粋（現代ビジネス、2025）　https://gendai.media/articles/-/161090
+  - 呉座勇一「大河ドラマ『どうする家康』解説⑧」（アゴラ、2023）　https://agora-web.jp/archives/231127082504.html
+  - 渡邊大門「小早川秀秋の筑前・筑後召し上げ」（Yahoo!ニュース エキスパート、2023）　https://news.yahoo.co.jp/expert/articles/06540ec6295f410c055d6041246a1ef70ea7d884
+  - 小早川秀秋の関ヶ原の裏切り（vegcale、2026）　https://vegcale.com/2026/09/26/kobayakawa-hideaki-sekigahara-uragiri/
+  - 真山知幸「小早川秀秋の生涯」（幻冬舎GOLD ONLINE、2024）　https://gentosha-go.com/articles/-/62116
+  - 深井元惠「小早川秀秋が辿った生涯」（サライ.jp、2023）　https://serai.jp/hobby/1157704/2
+  - 澤田真一「真の敵は酒中にあり!?」（サライ.jp、2017）　https://serai.jp/health/200200
+  - 関ヶ原の裏切り者・小早川秀秋はなぜ21歳で死んだのか（武将ジャパン、2026）　https://bushoojapan.com/bushoo/toyotomi/2026/10/17/222303
+  - 岡山市「小早川秀秋」「二十日堀」　https://www.city.okayama.jp/0000049766.html　https://www.city.okayama.jp/shisei/0000016537.html
+  - 岡山県 古代吉備文化財センター「岡山城跡」　https://www.pref.okayama.jp/site/kodai/622723.html
+  - 萩原さちこ「石垣が圧巻！宇喜多秀家が築いた岡山城が“特別な城”である理由」（文春オンライン、2019）　https://bunshun.jp/articles/-/14931
+  - 岡山観光WEB おかたび「岡山城2代目城主・小早川秀秋ゆかりの地」　https://www.okayama-kanko.jp/okatabi/1583/page
+  - コトバンク「小早川氏」（日本大百科全書・世界大百科事典）　https://kotobank.jp/word/小早川氏-65794
+  - 論争 関ヶ原合戦（新潮社）　https://www.shinchosha.co.jp/book/603887/
+  - ニッポン旅マガジン「関ヶ原 小早川秀秋」　https://tabi-mag.jp/kobayakawa-sekigahara/
+  - 和樂web「小早川秀秋」　https://intojapanwaraku.com/culture/32499
+no_tag_from: 119                     # 締め（冒頭の鉄砲に戻る所）から札を出さない
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/sekigahara_zubyobu.jpg: 関ヶ原合戦図屏風（江戸時代）
+  paintings/sekigahara_ii_naomasa.jpg: 井伊直政像
+  paintings/mitsunari_busanjin_1592.jpg: 釜山鎮の戦いの図（1592年）
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: 豊臣秀吉像（大阪市立美術館蔵）
+  paintings/hideyoshi_nene_kodaiin_1910copy.jpg: 高台院像（高台寺本の模写、1910年）
+  paintings/sekigahara_kobayakawa_hideaki_yoshiiku.jpg: 落合芳幾《太平記英勇伝 小早川秀秋》幕末（1860年代）
+  paintings/mitsunari_yoshitoshi_hideaki_fears_otani.jpg: 月岡芳年《小早川秀秋 大谷吉継の亡霊に怯える》1868年（後世の創作の絵）
+  paintings/mitsunari_photo_matsuo_from_mitsunari_camp_ccby.jpg: 石田三成陣跡から望む松尾山方面（gundam2345、2010年撮影、CC BY 3.0）
+  paintings/sekigahara_map_1926.jpg: 関ヶ原の戦い 地図（藤井治左衛門、1926年）
+  paintings/mitsunari_sekigahara_kisokaido_hiroshige.jpg: 歌川広重・溪斎英泉《木曽海道六拾九次之内 関ヶ原》江戸後期
+  paintings/hideyoshi_osaka_zu_byobu.jpg: 大坂図屏風（豊臣期の大坂。城と堀の描き方の参考）
+  paintings/mitsunari_kobayakawa_hideaki_inscribed.jpg: 権中納言秀秋像（栗原信充の模写とされる。江戸後期）
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/hideaki_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は人物の顔を描かないので使わない）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  H01: {scene: 霧の朝、麓から松尾山の稜線を見上げる（人物なし）, pan: v, crops: {close: [1.25, 0.5, 0.35]}}
+  H02: {scene: 筑前の海に面した城下を丘から見渡す（遠景）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  H03: {scene: 夏の街道を急ぐ使者の後ろ姿（遠景）, pan: h, crops: {right: [1.18, 0.62, 0.5]}}
+  H04: {scene: 霧の朝の関ヶ原の谷を高い所から見る（遠景）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  H05: {scene: 川沿いに城が立つ岡山の城下の遠景（人物なし）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5], close: [1.25, 0.45, 0.45]}}
+  H06: {scene: 城の石垣と櫓の外観（人物なし）, pan: h, crops: {close: [1.25, 0.5, 0.55], right: [1.18, 0.62, 0.5]}}
+  H07: {scene: 江戸前期の書斎の机の上の軍記の巻物と行灯（手元だけ）, pan: h, crops: {close: [1.25, 0.45, 0.55], left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  H08: {scene: 行灯の下で軍記の頁をめくる手（顔なし）, pan: h, crops: {close: [1.25, 0.45, 0.55]}}
+  H09: {scene: 縁側から庭を見る若い公達の後ろ姿, pan: h, crops: {close: [1.2, 0.5, 0.55]}}
+  H10: {scene: 書状を読む手と畳の上の巻紙（手元だけ）, pan: h, crops: {close: [1.25, 0.45, 0.55], right: [1.18, 0.62, 0.5]}}
+  H11: {scene: 陣幕の内の床几と灯（夜・人物なし）, pan: h, crops: {close: [1.25, 0.5, 0.5], right: [1.18, 0.62, 0.5]}}
+  H12: {scene: 山の斜面に連なる陣幕と無地の旗の列（遠景）, pan: h, crops: {right: [1.18, 0.62, 0.5]}}
+  H13: {scene: 夕暮れの岡山城の遠景（秋・最期・人物なし）, pan: h, crops: {close: [1.2, 0.5, 0.45], right: [1.18, 0.62, 0.5]}}
+  H14: {scene: 静かな寺の境内（人物なし）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  H15: {scene: 終了画面用。夕暮れの松尾山の稜線と谷（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜14）：63年後の本 → 通説の筋 → 連署状 → 近衛書状 → 射程 → 半月前 → 19歳 → 約束 → 筑前へ
+  - 0 ai:H01 wide
+  - 1 ai:H07 wide
+  - 2 part:paintings/sekigahara_zubyobu.jpg
+  - 3 part:paintings/sekigahara_screen_gifu.jpg
+  - 4 frame:paintings/sekigahara_tokugawa_ieyasu.jpg
+  - 5 ai:H10 wide                      # 史料の札（連署状）
+  - 6 ai:H10 close
+  - 7 ai:H07 close
+  - 8 ai:H01 close
+  - 9 part:paintings/mitsunari_photo_matsuo_from_mitsunari_camp_ccby.jpg
+  - 10 ai:H03 wide
+  - 11 part:paintings/mitsunari_sekigahara_kisokaido_hiroshige.jpg
+  - 12 frame:paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg   # 覚えてほしい名前（12〜13）の下地
+  - 13 frame:paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+  - 14 ai:H02 wide
+  # 第1章（15〜30）：筑前の少年国主
+  - 15 frame:paintings/hideyoshi_nene_kodaiin_1910copy.jpg
+  - 16 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 17 ai:H02 left
+  - 18 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 19 ai:H02 wide                     # 越前の石高（versus3）
+  - 20 part:paintings/mitsunari_busanjin_1592.jpg
+  - 21 part:paintings/mitsunari_busanjin_1592.jpg
+  - 22 frame:paintings/sekigahara_ishida_mitsunari.jpg
+  - 23 ai:H10 right
+  - 24 frame:paintings/sekigahara_ishida_mitsunari.jpg
+  - 25 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 26 frame:paintings/sekigahara_tokugawa_ieyasu.jpg
+  - 27 ai:H09 wide
+  - 28 ai:H10 close                    # 史料の札（4月9日の書状）
+  - 29 frame:paintings/hideyoshi_nene_kodaiin_1910copy.jpg
+  - 30 ai:H03 wide
+  # 第2章（31〜50）：開戦の半月前
+  - 31 part:paintings/sekigahara_map_1926.jpg
+  - 32 ai:H03 right                    # 半月の表（台本の図）
+  - 33 ai:H03 wide
+  - 34 frame:paintings/mitsunari_kuroda_nagamasa_yoshitora.jpg
+  - 35 ai:H11 wide
+  - 36 ai:H09 close                    # 【想像1】十九の私に……
+  - 37 ai:H01 wide
+  - 38 part:paintings/mitsunari_photo_matsuo_from_mitsunari_camp_ccby.jpg
+  - 39 ai:H12 wide                     # 伊藤盛正の石高（versus3）
+  - 40 part:paintings/sekigahara_zubyobu.jpg
+  - 41 ai:H10 wide
+  - 42 frame:paintings/sekigahara_kikkawa_hiroie.jpg
+  - 43 ai:H11 close
+  - 44 ai:H11 right
+  - 45 ai:H07 wide
+  - 46 ai:H08 wide
+  - 47 ai:H08 close
+  - 48 part:paintings/sekigahara_screen_gifu.jpg
+  - 49 frame:paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+  - 50 ai:H04 wide
+  # 第3章（51〜72）：9月15日 午前8時か10時か
+  - 51 part:paintings/sekigahara_zubyobu.jpg      # 開戦の時刻（versus3）
+  - 52 part:paintings/sekigahara_senjinzu_toiteppo.jpg
+  - 53 part:paintings/sekigahara_screen_gifu.jpg
+  - 54 ai:H12 right
+  - 55 ai:H10 close
+  - 56 part:paintings/sekigahara_screen_1854_trim.jpg
+  - 57 part:paintings/sekigahara_zubyobu.jpg
+  - 58 ai:H04 right
+  - 59 frame:paintings/sekigahara_ii_naomasa.jpg
+  - 60 ai:H04 left
+  - 61 part:paintings/sekigahara_senjinzu_toiteppo.jpg
+  - 62 frame:paintings/sekigahara_kikkawa_hiroie.jpg
+  - 63 part:paintings/sekigahara_zubyobu.jpg
+  - 64 frame:paintings/sanada_otani_yoshitsugu_yoshiiku.jpg
+  - 65 ai:H12 wide
+  - 66 ai:H12 right
+  - 67 part:paintings/sekigahara_screen_1854_trim.jpg
+  - 68 ai:H07 close
+  - 69 ai:H08 wide
+  - 70 frame:paintings/mitsunari_yoshitoshi_hideaki_fears_otani.jpg   # 後世の創作の絵
+  - 71 part:paintings/sekigahara_zubyobu.jpg
+  - 72 ai:H01 wide
+  # 第4章（73〜89）：岡山の2年
+  - 73 ai:H05 wide
+  - 74 ai:H05 right                    # 岡山の石高（versus3）
+  - 75 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 76 ai:H05 close
+  - 77 ai:H05 right
+  - 78 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 79 ai:H06 close
+  - 80 ai:H05 left
+  - 81 frame:paintings/mitsunari_kobayakawa_hideaki_inscribed.jpg
+  - 82 ai:H05 left
+  - 83 ai:H06 left
+  - 84 ai:H07 left
+  - 85 ai:H08 wide
+  - 86 ai:H07 close
+  - 87 ai:H09 wide                     # 【想像2】この堀の内で……
+  - 88 ai:H08 close
+  - 89 ai:H05 wide
+  # 第5章（90〜103）：急死と断絶
+  - 90 ai:H13 wide
+  - 91 ai:H13 right
+  - 92 ai:H07 close                    # 史料の札（舜旧記）
+  - 93 ai:H08 close
+  - 94 ai:H10 close
+  - 95 ai:H07 wide
+  - 96 ai:H08 wide
+  - 97 ai:H07 right
+  - 98 ai:H13 right                    # 病か酒か不運か（人は描かない）
+  - 99 ai:H13 close                    # 小早川家の数直線（台本の図）
+  - 100 ai:H14 left
+  - 101 ai:H14 wide
+  - 102 ai:H14 right
+  - 103 ai:H07 wide
+  # 第6章（104〜113）：検証「裏切り者」はどう育ったか
+  - 104 ai:H07 wide                    # 数直線（台本の図）
+  - 105 ai:H08 wide
+  - 106 frame:paintings/mitsunari_kobayakawa_hideaki_inscribed.jpg
+  - 107 ai:H07 left
+  - 108 part:paintings/sekigahara_senjinzu_toiteppo.jpg
+  - 109 frame:paintings/sekigahara_kobayakawa_hideaki_yoshiiku.jpg
+  - 110 ai:H08 close
+  - 111 frame:paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+  - 112 part:paintings/sekigahara_zubyobu.jpg
+  - 113 ai:H01 wide
+  # まとめ（114〜120）：研究者の見立ては割れたまま → 63年後の本 → 冒頭の鉄砲に戻る締め
+  - 114 part:paintings/sekigahara_screen_gifu.jpg
+  - 115 ai:H08 close
+  - 116 part:paintings/sekigahara_senjinzu_toiteppo.jpg
+  - 117 ai:H05 wide
+  - 118 frame:paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg
+  - 119 ai:H01 close                   # 締め：冒頭の鉄砲に戻る
+  - 120 ai:H15 wide
+  - end ai:H15 wide
+
+# look だけで足す図（台本には無い）。spec: null はその行の台本の図を外す
+figures: []
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮の値（届いた絵で合わせる）
+focus:
+  H01: {松尾山|稜線|山: [1.25, 0.5, 0.35]}
+  H07: {軍記|本|書: [1.25, 0.45, 0.55]}
+  H10: {書状|手紙: [1.25, 0.45, 0.55]}
+  H06: {櫓|石垣: [1.25, 0.5, 0.55]}
+  H05: {堀|城: [1.25, 0.45, 0.45]}
+  H13: {城|岡山城: [1.2, 0.5, 0.45]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。届いた絵で範囲を見て直す
+fx:
+  H01: {mist: {region: [0, 0.4, 1, 0.9], alpha: 0.12, speed: 4}}      # 麓の霧（山頂の旗にはかけない）
+  H04: {mist: {region: [0, 0.45, 1, 0.95], alpha: 0.12, speed: 4}}    # 谷の霧
+  H07: {lamp: {region: [0.62, 0.0, 0.85, 0.35]}}                       # 行灯の灯（手元にはかけない）
+  H08: {lamp: {region: [0.0, 0.0, 0.25, 0.3]}}                         # 行灯の灯（手と本にはかけない）
+  H11: {lamp: {region: [0.40, 0.30, 0.60, 0.60]}}                      # 陣幕の灯
+  H13: {mist: {region: [0, 0.6, 1, 0.95], alpha: 0.10, speed: 3}}     # 川面の薄い霧
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: names, from: 12, to: 13, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[小早川秀秋, 関ヶ原のとき数えで19歳, paintings/sekigahara_kobayakawa_hideaki_portrait_trim.jpg, [0.5, 0.3]],
+             [徳川家康, 東軍の総大将, paintings/sekigahara_tokugawa_ieyasu.jpg, [0.5, 0.3]],
+             [石田三成, 西軍の中心, paintings/sekigahara_ishida_mitsunari.jpg, [0.5, 0.3]]]}
+  - {type: quote, from: 5, to: 5, label: 要点, text: 十五日の巳の刻／戦いが始まってすぐに秀秋ら4人が東軍に味方,
+     source: 石川康通・彦坂元正の連署状写（堀文書、慶長5年9月17日。呉座勇一さんの紹介）}
+  - {type: versus3, from: 19, to: 19, every: 1.2,
+     items: [[幻冬舎の解説, 越前12万石], [サライの記事, 越前15万石]]}
+  - {type: quote, from: 28, to: 28, label: 史料, text: 昨日は大酒ゆえ、さんざん酔い、正体なく候,
+     source: 小早川秀秋の書状（慶長5年4月9日付。武将ジャパンの紹介）}
+  - {type: versus3, from: 39, to: 39, every: 1.2,
+     items: [[高橋陽介が引く本, 3万4000石], [呉座勇一の本文, 3万石]]}
+  - {type: versus3, from: 51, to: 51, every: 1.2,
+     items: [[通説（呉座勇一の紹介）, 午前8時ごろ], [高橋陽介, 午前10時ごろ], [連署状の「巳の刻」, 午前10時前後]]}
+  - {type: versus3, from: 74, to: 74, every: 1.2,
+     items: [[岡山市の紹介ページ, 50万石], [岡山市の別のページ, 51万石], [幻冬舎の記事, 55万石]]}
+  - {type: quote, from: 92, to: 92, label: 史料, text: 同月に兄弟三人病死也／諸人、不思儀と申す,
+     source: 『舜旧記』梵舜（慶長7年10月18日条。武将ジャパンの紹介）}
+  - {type: quote, from: 107, to: 107, label: 要点, text: 9月14日に秀秋と吉継はともに山中にいた／この筋だと開戦と同時の背後攻撃はできない,
+     source: 陸軍参謀本部編『日本戦史 関原役』（通説の出どころ。高橋陽介さんの指摘）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）霧の松尾山}
+  - {line: 5, note: 序章 連署状の札}
+  - {line: 12, note: 序章の終わり 覚えてほしい名前}
+  - {line: 19, note: 第1章 越前の石高の食い違い}
+  - {line: 32, note: 第2章 開戦前の半月の表}
+  - {line: 51, note: 第3章 開戦の時刻の食い違い}
+  - {line: 74, note: 第4章 岡山の石高の食い違い}
+  - {line: 92, note: 第5章 舜旧記の札}
+  - {line: 99, note: 第5章 小早川家のその後の数直線}
+  - {line: 104, note: 第6章 問い鉄砲を書いた本の出る年の数直線}
+  - {end: true, note: 終了画面の空き}

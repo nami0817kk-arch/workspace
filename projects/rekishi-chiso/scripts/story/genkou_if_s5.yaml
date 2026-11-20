@@ -1,0 +1,143 @@
+# 物語完結型ショート 元寇（もしも）s5（2026-10-31）。本編 scripts/genkou-if-story.yaml（11/3 12:00 公開、https://youtu.be/TfyxJjTTW9Y）から。切り口：竹崎季長の直訴と『蒙古襲来絵詞』：「神風」は誰の言葉か
+# 形式は jeanne_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「時宗想像」「御家人想像」「季長想像」は使わない）。戦闘・負傷・遺体の絵なし。
+# 絵は本編の AI 絵（out/story/genkou-if/main/G01〜G15。人物は描かない）と実在の絵（paintings/genkou_*）。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/元寇_facts_20261030.yaml）：genkou-if-21・33・55・56・58・59
+# ・本編どおり。『世界大百科事典』の恩賞の書き方（59）、呉座勇一さんの絵詞の評価（58）、作った理由の推定（56）、所蔵の経緯（33：大矢野家・1890年献納・1989年国の所有・2021年国宝のうち尺のため1890年・三の丸尚蔵館・2021年）。
+# ・「文永の役の翌年」は本編の言い方（年号の数え方は書かない）。服部英雄さんの指摘は nippon.com の紹介（21、出どころ1つ）なので「指摘している」とだけ言い、断定しない。
+# ・本編の「永仁元年」の話・霜月騒動・徳政令は尺のため入れない。想像の台詞（季長想像）は使わない。
+# 理解テスト4問：
+#   ①誰の話か：竹崎季長（肥後の御家人）と『蒙古襲来絵詞』
+#   ②いつ・どこで何が：文永の役の翌年に鎌倉で安達泰盛へ直訴し、海東郷の地頭職を得た
+#   ③何が問題か：戦後の恩賞は十分でなく不満がつのった（防衛戦で新しい領地が乏しい）。季長が絵詞を作らせた
+#   ④どうなったか：絵詞は1890年に皇室へ献納され2021年に国宝。神風を主張したのは寺社の側だったという指摘が、問いとして残る
+title: 元寇｜竹崎季長の直訴と、「神風」は誰の言葉だったのか
+yt_title: 竹崎季長は恩賞を求めて鎌倉へ　『蒙古襲来絵詞』と「神風は誰の言葉か」
+description: |-
+  文永の役の翌年、竹崎季長は、鎌倉へ赴き、御恩奉行の安達泰盛に直訴しました。そして、肥後の海東郷の地頭職を、恩賞として得ます。
+  『世界大百科事典』は、戦後の恩賞は十分なものではなく、武士や寺社は不満をつのらせた、と書きます。防衛戦だったので、配るべき新しい領地が乏しかったのです。季長が作らせた『蒙古襲来絵詞』は、実際に戦った季長の証言にもとづくので、史料としての価値が高い、と呉座勇一さんは書きます。1890年に皇室へ献納され、2021年に国宝になりました。服部英雄さんは、寺社が神風を主張して恩賞を求めた面があり、戦った武士にはそうした感覚はなかった、と指摘しています。
+  「神風」は、誰の言葉だったのか。この問いを掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#元寇', '#日本史', '#鎌倉時代']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/genkou-if
+out: genkou_if_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 竹崎季長（肥後の御家人）
+  title: "「神風」は、誰の言葉だったのか"
+now:
+  - {at: 文永の役の翌年, text: "文永の役の翌年　鎌倉", point: 0}
+  - {at: 1890年, text: "1890年　皇室へ献納", point: 1}
+timeline:
+  - {label: "翌年"}
+  - {label: "1890"}
+shots:
+  G14:
+    kind: ai
+    file: genkou-if/main/G14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 朝の山道を行く小さな後ろ姿の旅人
+  Take:
+    kind: real
+    image: paintings/genkou_ekotoba1_takezaki.jpg
+    crop: [0.2, 0.05, 0.95, 0.65]
+    focus: [0.5, 0.4]
+    move: in
+    credit: "『蒙古襲来絵詞』の一部（竹崎季長が戦う場面。13世紀末。宮内庁三の丸尚蔵館蔵。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 絵詞の竹崎季長の場面（上半分）
+  G12:
+    kind: ai
+    file: genkou-if/main/G12.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夕暮れの博多湾
+  G11:
+    kind: ai
+    file: genkou-if/main/G11.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 朝の入り江と小さな島
+  Take2:
+    kind: real
+    image: paintings/genkou_ekotoba1_takezaki.jpg
+    focus: [0.42, 0.3]
+    move: in
+    credit: "『蒙古襲来絵詞』の一部（竹崎季長が戦う場面。13世紀末。宮内庁三の丸尚蔵館蔵。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 絵詞の竹崎季長の名の書き込みと武士
+  Take3:
+    kind: real
+    image: paintings/genkou_ekotoba1_takezaki.jpg
+    focus: [0.85, 0.3]
+    move: left
+    credit: "『蒙古襲来絵詞』の一部（竹崎季長が戦う場面。13世紀末。宮内庁三の丸尚蔵館蔵。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 絵詞の松と武士
+  G09:
+    kind: ai
+    file: genkou-if/main/G09.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 嵐のあとの静かな浜
+  G05:
+    kind: ai
+    file: genkou-if/main/G05.jpg
+    focus: [0.5, 0.55]
+    move: left
+    must: 松林の海岸線に続く石の壁
+lines:
+  # fact: genkou-if-55
+  - 語り: 文永の役の翌年、竹崎季長は、鎌倉へ赴き、御恩奉行の安達泰盛に、直訴した。
+    shot: G14
+    tone: 強調
+    pause: 0.12
+  # fact: genkou-if-55
+  - 語り: そして、肥後の海東郷の地頭職を、恩賞として得た。
+    shot: Take
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-59
+  - 語り: 世界大百科事典は、戦後の恩賞は十分なものではなく、武士や寺社は不満をつのらせた、と書く。
+    shot: G12
+    tone: 重い
+    pause: 0.12
+  # fact: genkou-if-59
+  - 語り: 防衛戦だったので、配るべき新しい領地が、乏しかったのだ。
+    shot: G11
+    tone: 重い
+    pause: 0.12
+  # fact: genkou-if-58
+  - 語り: 季長が作らせたのが、蒙古襲来絵詞。実際に戦った季長の証言にもとづくので、史料としての価値が高い、と呉座勇一さんは書く。
+    shot: Take2
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-56
+  - 語り: 作った理由は、氏神への報恩と、子孫に伝えるため、と推定されている。
+    shot: Take3
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-33
+  - 語り: 絵詞は、1890年に皇室へ献納され、いまは宮内庁の三の丸尚蔵館にある。2021年に、国宝になった。
+    shot: G09
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-21
+  - 語り: 服部英雄さんは、寺社が神風を主張して恩賞を求めた面があり、戦った武士には、そうした感覚はなかった、と指摘している。
+    shot: G05
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: 「神風」は、誰の言葉だったのか。
+    shot: G11
+    tone: 疑問
+    pause: 0.15

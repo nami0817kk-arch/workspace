@@ -1,0 +1,178 @@
+# 物語完結型ショート 島原・天草一揆 s3（2026-10-31）。本編 scripts/shimabara-story.yaml（11/3 19:00 公開）から。11/4 15:30 に投稿。
+# 形式は yoritomo_s1.yaml・jeanne_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。戦闘・遺体・炎の絵なし（絵は本編の AI 絵 P01〜P15＝景色と物だけ、と実在の絵図・写真）。
+# 切り口：幕府の総大将（上使）板倉重昌が元日の総攻めで戦死した。旅の違い（重昌21日・信綱30日）と、間に合わなかった知らせ。人数（s1）・鉛（s2）・発端（s4）・オランダ船（s5）には踏み込まない。
+# 事実カード（dev/output/rekishi-chiso/research/shimabara_facts_20261030.yaml）：shimabara-24・58・62・96。
+#   ・寛永15年元日＝1638年2月14日（本編 第3章 4）。細川忠利の書状は本編の「今の言葉にすると」の訳のまま。戦死の場面の絵なし（景色と書状の机のみ）。
+#   ・本編の「重矩は加増なしの1万石の移封」は、事実カード95では1万5千石から弟へ5千石を分けた結果で、言い方が粗いので使わない。
+# 理解テスト4問：
+#   ①誰の話か：幕府が最初に送った総大将（上使）、板倉重昌
+#   ②いつ・どこで何が：寛永15年の元日（いまの暦で2月14日）、島原の総攻めに失敗し、重昌は戦死した
+#   ③なぜか：最初の軍は寄せ集めで、あとから来る信綱は大人数で30日かけていた。元日の前に着いていれば敗戦はなかったかもしれない、という推測
+#   ④どうなったか：知らせは信綱が島原に入った日に届いた。総攻めに失敗した幕府は、このあと何をやめたのか、は問いで閉じる
+title: 島原の乱｜幕府の総大将は、元日に戦死した
+yt_title: 島原の乱で幕府の総大将は元日に戦死した　知らせは後から来た老中が着いた日に届いた
+description: |-
+  島原・天草一揆（島原の乱、1637〜38年）で、幕府が最初に送った総大将、板倉重昌は、寛永15年の元日に戦死しました。
+  重昌は数十名で、21日かけて島原に着きました。あとから来る老中、松平信綱は、従卒1300名で30日かけて向かい、重昌の戦死の知らせは、信綱が島原に入った日に届きます。東京大学史料編纂所の報告書で武田昌憲さんは、元日の前に信綱が着いていれば、敗戦はなかったかもしれない、と推測しています。
+  総攻めに失敗した幕府は、このあと、何をやめたのか。本編は、概要欄のリンクからどうぞ。
+hashtags: ['#島原の乱', '#日本史', '#板倉重昌']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+readings: {原城: はらじょう}      # 本編の声は「ハラノジョオ」だった（公開済み・直さない）。ショートは台本ごとの読み替えで直す
+art_dir: out/story/shimabara
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: shimabara_story_s3
+header:
+  tag: 板倉重昌（幕府の上使）
+  title: "幕府の総大将は、《元日》に戦死した"
+now:
+  - {at: 上使, text: "寛永14年11月　江戸", point: 0}
+  - {at: 元日, text: "寛永15年1月1日　原城", point: 1}
+timeline:
+  - {label: "寛永14年11月"}
+  - {label: "寛永15年1月"}
+cards: []
+shots:
+  P14:
+    kind: ai
+    file: shimabara/main/P14.jpg
+    focus: [0.45, 0.5]
+    move: in
+    must: 夜明けの海岸線と霧に沈む城跡
+  Map:
+    kind: real
+    image: paintings/shimabara_battle_map_c17.jpg
+    focus: [0.5, 0.45]
+    move: in
+    text_box: true
+    credit: "島原の乱の陣図（17世紀ごろ、作者不詳）"
+    must: 島原の乱の陣図
+  P04:
+    kind: ai
+    file: shimabara/main/P04.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 荒れる前の暗い海と灰色の雲
+  P08:
+    kind: ai
+    file: shimabara/main/P08.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 朝の高台に並ぶ竹の柵と筵の囲い
+  P04b:
+    kind: ai
+    file: shimabara/main/P04.jpg
+    focus: [0.72, 0.55]
+    move: left
+    zoom: 0.12
+    must: 岩に打ち寄せる海
+  P10:
+    kind: ai
+    file: shimabara/main/P10.jpg
+    focus: [0.35, 0.58]
+    move: in
+    must: 灯のもとの文机と書状の巻物
+  P10b:
+    kind: ai
+    file: shimabara/main/P10.jpg
+    focus: [0.7, 0.6]
+    move: left
+    zoom: 0.12
+    must: 机の上の巻物と筆
+  P14b:
+    kind: ai
+    file: shimabara/main/P14.jpg
+    focus: [0.25, 0.6]
+    move: right
+    zoom: 0.1
+    must: 霧の中の海辺の岩
+  P08b:
+    kind: ai
+    file: shimabara/main/P08.jpg
+    focus: [0.3, 0.55]
+    move: right
+    zoom: 0.1
+    must: 高台の柵と朝の山並み
+  Map2:
+    kind: real
+    image: paintings/shimabara_battle_map_c17.jpg
+    focus: [0.5, 0.78]
+    move: up
+    zoom: 0.1
+    text_box: true
+    credit: "島原の乱の陣図（17世紀ごろ、作者不詳）"
+    must: 島原の乱の陣図の下の側
+  P01:
+    kind: ai
+    file: shimabara/main/P01.jpg
+    focus: [0.7, 0.45]
+    move: in
+    text_y: 0.74
+    must: 夜明けの有明海に突き出す台地と古い石垣
+lines:
+  # fact: shimabara-03, shimabara-62
+  - 語り: 島原の乱で、攻める側の総大将は、《!元日》に、戦死した。
+    shot: P14
+    tone: 強調
+    pause: 0.12
+  # fact: shimabara-58
+  - 語り: 板倉重昌。幕府が、上使として、江戸から島原へ送った人だ。
+    shot: Map
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-96
+  - 語り: 重昌は、数十名で、21日かけて、島原に着いた。
+    shot: P04
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-24
+  - 語り: 最初の討伐軍は、各藩の指導者が参勤で江戸にいたため、寄せ集めで、士気も戦力も低かった。
+    shot: P08
+    tone: 重い
+    pause: 0.12
+  # fact: shimabara-96
+  - 語り: 一方、あとから来る老中、松平信綱は、従卒1300名で、30日かけて向かった。
+    shot: P04b
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-62
+  - 語り: 寛永15年の元日。旧暦の1月1日で、いまの暦では、2月14日だ。
+    shot: P10
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-62
+  - 語り: 細川忠利の書状に、「島原、当月朔日、総攻め仕り、攻め損じ候」。総攻めに失敗した、という意味だ。
+    shot: P10b
+    tone: 重い
+    pause: 0.12
+  # fact: shimabara-62
+  - 語り: 同じ書状に、「板倉内膳、討死仕られ」。内膳は、重昌のことだ。
+    shot: P14b
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: shimabara-96
+  - 語り: その知らせは、信綱が島原に入った日に、届いた。
+    shot: P08b
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-96
+  - 語り: 武田昌憲さんは、元日の前に信綱が着いていれば、敗戦は、なかったかもしれない、と推測する。
+    shot: Map2
+    tone: しみじみ
+    pause: 0.12
+  # fact: （本編 第3章 9）
+  - 語り: では、総攻めに失敗した幕府は、このあと、何を、やめたのか。
+    shot: P01
+    tone: 疑問
+    pause: 0.15

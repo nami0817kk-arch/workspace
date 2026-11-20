@@ -1,0 +1,126 @@
+# 物語完結型ショート 西郷隆盛 s1（2026-11-12）。本編 scripts/saigo-story.yaml（11/13 19:00 公開、https://youtu.be/19SEyS1d5CA）から。11/14 に予約。
+# 形式は gosekke_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/西郷隆盛_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/saigo/main。人物は後ろ姿・遠景）と実在の錦絵（パブリックドメイン）。新しい絵は作らない。死・遺体の場面に人物の絵は当てない。
+# 本編の弱点（JACAR は翻刻のみで原画像未確認・二次引用あり）：言えること＝「読めた電報の翻刻に〜とある」、言えないこと＝洞窟を出た時刻・倒れた場所・最期の言葉の形・首を隠した者・切腹か介錯か。断定しない。
+# 切り口：死んだその日の電報の言葉（本編序章）。山縣＝斃す、東伏見＝打ち取り・自殺。saigo-01, saigo-02。
+# 理解テスト4問：①西郷隆盛 ②1877年9月24日、城山の戦いの当日に官軍が打った電報 ③山縣参軍は「斃す」、東伏見少将は西郷を「打ち取り」、桐野・別府・逸見は「自殺」と書き分ける。読めた翻刻に切腹・介錯の語は見当たらない ④西郷が誰の手で命を落としたかは、この電報だけでは決まらない（本編へ）
+title: "西郷隆盛｜死んだ日の電報に切腹の語はない"
+yt_title: "西郷隆盛の死を伝えた電報に「切腹」の語はない　山縣有朋は「斃す」、東伏見少将は「打ち取り」"
+description: |-
+  西郷隆盛の死を伝える電報に、切腹の二文字は見当たりません。1877年9月24日、城山の戦いの日に官軍が打った電報です。
+  参軍の山縣有朋は、午前8時に戦いが収まったと伝え、「西郷桐野以下ヲ斃ス」と書きました。東伏見少将は、西郷は「我手ニテ打取リ」、桐野・別府・逸見らは「自殺」と書き分けています。読めた電報の翻刻に、切腹、介錯の語はありません。
+  電報・日記は、アジア歴史資料センターの内容欄の翻刻を読んだもので、原画像までは確かめていません。翻刻には誤字や欠けがあります。切腹だったのかどうかは、この電報だけでは言えません。
+  西郷は、誰の手で、命を落としたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#西郷隆盛"
+- "#西南戦争"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/saigo
+out: saigo_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "西郷隆盛の死と官軍の電報"
+  title: "電報に、切腹の《二文字》はない"
+now:
+- {at: "9月24日", text: "1877年9月24日", point: 0}
+timeline:
+- {label: "1877"}
+shots:
+  Tel:
+    kind: "ai"
+    file: "saigo/main/S06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "電信局の将校が電文を書く"
+  Fight:
+    kind: "real"
+    image: "paintings/saigo_nishiki_saigo_fighting.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "《西南戦争の錦絵》（中央に西郷隆盛と伝わる）19世紀（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "西南戦争の錦絵"
+  Gun:
+    kind: "ai"
+    file: "saigo/main/S07.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "夜明け前、大砲が火を噴く"
+  TelB:
+    kind: "ai"
+    file: "saigo/main/S06.jpg"
+    focus: [0.3, 0.55]
+    move: "right"
+    must: "電信局の将校が電文を書く"
+  Shozan:
+    kind: "real"
+    image: "paintings/saigo_nishiki_kagoshima_battle_shozan.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    credit: "早川松山《鹿児島の戦い》錦絵（三連の一部）1877年（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "城山の戦いの錦絵"
+  Dep:
+    kind: "real"
+    image: "paintings/saigo_nishiki_kagoshima_departure_yoshitoshi.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "月岡芳年《鹿児島暴徒出陣図》錦絵（三連の一部）1879年（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "鹿児島出陣の錦絵"
+  Gate:
+    kind: "ai"
+    file: "saigo/main/S09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "岩崎谷の石垣の道と門"
+lines:
+  # fact: saigo-02
+- 語り: "西郷隆盛の死を伝えた電報に、切腹の二文字は、ない。"
+  shot: Tel
+  tone: 強調
+  pause: 0.12
+  # fact: saigo-02
+- 語り: "では、何と書いてあるのか。"
+  shot: Fight
+  tone: 疑問
+  pause: 0.15
+  # fact: saigo-01
+- 語り: "1877年9月24日。城山の戦いは、午前4時に始まった。"
+  shot: Gun
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-01
+- 語り: "参軍、山縣有朋は、午前8時に収まったと打ち、西郷桐野以下を、斃す、と書く。"
+  shot: TelB
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-02
+- 語り: "東伏見少将の電報は、西郷は、我が手で、打ち取り、と書く。"
+  shot: Shozan
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-02
+- 語り: "桐野、別府、逸見らは、自殺、と書き分けている。"
+  shot: Dep
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-02
+- 語り: "読めた電報の翻刻には、切腹も、介錯も、見当たらない。"
+  shot: Tel
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-02
+- 語り: "では、西郷は、誰の手で、命を落としたのか。"
+  shot: Gate
+  tone: 疑問
+  pause: 0.15

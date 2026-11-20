@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' show Offset, Rect;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,10 +37,61 @@ String injectBoot(String html, Map<String, Object?> boot) {
   return html.substring(0, i + head.length) + tag + html.substring(i + head.length);
 }
 
+/// 結果のシェアの中身（ゲームの canvas で描いた画像と、送る文）。
+class ShareRequest {
+  const ShareRequest({required this.bytes, required this.mime, required this.text, this.origin});
+  final Uint8List bytes;
+  final String mime;
+  final String text;
+
+  /// 押したボタンの位置（WebView の中の CSS の座標）。iPad の共有シートの吹き出しの元
+  final Rect? origin;
+
+  /// 画像の大きさの上限（1080×1350 の JPEG はおよそ 0.3〜0.6MB）
+  static const maxBytes = 8 * 1024 * 1024;
+  static final _dataUrl = RegExp(r'^data:(image/(?:png|jpeg));base64,');
+
+  /// `{"type":"share","img":"data:image/jpeg;base64,…","text":"…","rect":{x,y,w,h}}` を読む。形が違えば null
+  static ShareRequest? parse(Map<String, Object?> m) {
+    final img = m['img'];
+    final text = m['text'];
+    if (img is! String || text is! String || text.isEmpty || text.length > 500) return null;
+    final head = _dataUrl.firstMatch(img);
+    if (head == null) return null;
+    final Uint8List bytes;
+    try {
+      bytes = base64Decode(img.substring(head.end));
+    } catch (_) {
+      return null;
+    }
+    if (bytes.isEmpty || bytes.length > maxBytes) return null;
+    Rect? origin;
+    final r = m['rect'];
+    if (r is Map) {
+      final v = [r['x'], r['y'], r['w'], r['h']];
+      if (v.every((e) => e is num && e.isFinite)) {
+        final n = v.cast<num>().map((e) => e.toDouble()).toList();
+        if (n[2] > 0 && n[3] > 0) origin = Rect.fromLTWH(n[0], n[1], n[2], n[3]);
+      }
+    }
+    return ShareRequest(bytes: bytes, mime: head.group(1)!, text: text, origin: origin);
+  }
+}
+
+/// iPad の共有シートの吹き出しの元（画面の座標）。押したボタンの位置を WebView の位置でずらし、
+/// WebView の中に収める。位置が無い・外れているときは WebView の下の真ん中にする（大きさ0だと iPad で出ない）。
+Rect shareOrigin(Rect? inPage, Rect view) {
+  final fallback = Rect.fromCenter(center: Offset(view.center.dx, view.bottom - 60), width: 2, height: 2);
+  if (inPage == null) return fallback;
+  final r = inPage.shift(view.topLeft).intersect(view);
+  if (r.width < 1 || r.height < 1) return fallback;
+  return r;
+}
+
 /// ゲーム本体から届く頼みごとを受けて、広告・課金・保存・外部リンクにつなぐ。
 ///
-/// 届く形は JSON 1つ: `{"type": "reward"|"rewardCancel"|"between"|"prepInter"|"store"|"buy"|"restore"|"refresh"|"open"|"licenses"|"haptic"|"review"|"theme"|"bgm"|"voice", ...}`。
-/// 返事は JS の関数を呼んで返す（`hikariAdResult` / `hikariAdShowing` / `hikariBetweenDone` / `hikariSetApp`）。
+/// 届く形は JSON 1つ: `{"type": "reward"|"rewardCancel"|"between"|"prepInter"|"store"|"buy"|"restore"|"refresh"|"open"|"licenses"|"haptic"|"review"|"theme"|"bgm"|"voice"|"share", ...}`。
+/// 返事は JS の関数を呼んで返す（`hikariAdResult` / `hikariAdShowing` / `hikariBetweenDone` / `hikariSetApp` / `hikariShareDone`）。
 /// 動画の頼みには番号（id）が付き、返事にも同じ番号を付ける（「やめる」の後に届いた結果を、別の特典に入れないため）。
 class GameBridge {
   GameBridge({
@@ -52,6 +105,7 @@ class GameBridge {
     this.theme,
     this.bgm,
     this.voice,
+    this.share,
   });
 
   final Monetization money;
@@ -74,6 +128,9 @@ class GameBridge {
 
   /// 台詞の声（`f1/0a1b2c3d` の形。声のキーとファイル名）
   final void Function(String file)? voice;
+
+  /// 結果のシェア（iOS の共有シートを出す）。出せたら true
+  final Future<bool> Function(ShareRequest req)? share;
 
   /// 鳴らしてよい BGM（tool/make_bgm.py の TRACKS と同じ）
   static const bgmKeys = {'title', 'practice', 'night', 'stage', 'judge', 'ending'};
@@ -143,6 +200,8 @@ class GameBridge {
       case 'voice':
         final f = m['f'];
         if (f is String && _voiceFile.hasMatch(f)) voice?.call(f);
+      case 'share':
+        await _share(m);
     }
   }
 
@@ -175,6 +234,20 @@ class GameBridge {
     }
   }
 
+  /// 共有シートを出す。閉じたら（出せなかったときも）ゲームに返す。ゲームは返事でボタンを戻す
+  Future<void> _share(Map<String, Object?> m) async {
+    final req = ShareRequest.parse(m);
+    var ok = false;
+    if (req != null && share != null) {
+      try {
+        ok = await share!(req);
+      } catch (_) {
+        ok = false;
+      }
+    }
+    await runJs('window.hikariShareDone&&hikariShareDone($ok,${jsonEncode(ok ? null : '共有できませんでした')})');
+  }
+
   Future<void> _buy(String id) async {
     final r = await money.buy(id);
     await pushApp(msg: switch (r) {
@@ -189,9 +262,15 @@ class GameBridge {
   }
 
   Future<void> _restore() async {
+    bool owned() => money.adFree || Monetization.packIds.any(money.owns);
+    final had = owned();
     final r = await money.restore();
-    final any = money.adFree || Monetization.packIds.any(money.owns);
-    await pushApp(msg: r == PurchaseOutcome.purchased || any ? '購入を復元しました' : '復元できる購入が見つかりませんでした');
+    final msg = r == PurchaseOutcome.purchased || (!had && owned())
+        ? '購入を復元しました'
+        : had
+            ? '購入はすでに入っています'
+            : '復元できる購入が見つかりませんでした';
+    await pushApp(msg: msg);
   }
 
   /// 広告を消したか・価格をゲーム本体に伝える（購入が後から届いたときにも呼ぶ）。

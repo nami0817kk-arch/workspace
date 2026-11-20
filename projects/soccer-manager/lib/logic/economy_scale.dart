@@ -1,0 +1,158 @@
+import 'dart:math';
+
+import '../l10n/tr.dart';
+
+/// お金の桁を部ごとに変える物差し。金額はすべて万円の int。
+///
+/// 以前は全部の額が5部の規模で決まっていて、部による差は観客の係数
+/// (1つ下がるごとに0.8倍)だけだった。1部に上がっても主力の週俸が
+/// 数百万円、移籍金が最大2億円と、実在のサッカーとは桁が2つ違った。
+///
+/// ここでは、5部の額を基準(倍率1)として、上の部ほど大きくする。
+/// 目安は次の通り(クラブの年収)。
+///
+/// | 部 | 年収 | 主力の年俸 |
+/// |---|---|---|
+/// | 1部 | 300〜800億 | 5〜30億 |
+/// | 2部 | 40〜80億 | |
+/// | 3部 | 10〜20億 | |
+/// | 4部 | 5〜10億 | |
+/// | 5部 | 2〜5億 | 500〜1500万 |
+///
+/// 選手の価値と給与は部ではなく能力から決まる(1部の選手は能力が高い
+/// ので、結果として桁が上がる)。部で決まるのは、クラブの規模で決まる額
+/// (費用・賞金・収入)だけ。
+
+/// 費用・賞金など「クラブの規模で決まる額」にかける倍率。
+/// 5部=1、4部 3.8、3部 14.4、2部 55、1部 209。
+double moneyScale(int tier) => pow(3.8, 5 - tier.clamp(1, 5)).toDouble();
+
+/// 5部の額 [base] を、[tier] 部の規模に直す。
+int scaleMoneyForTier(int tier, int base) => (base * moneyScale(tier)).round();
+
+/// 観客・グッズ・スポンサーの収入にかける倍率。
+///
+/// 出発点は moneyScale ÷ (0.8^(部-1) ÷ 0.8^4)。観客の収入は、もともと
+/// 0.8^(部-1) の係数を持っている(下の部ほど客が少ない)ので、二重に
+/// 掛けないよう割り戻す。この式だと 5部 1、4部 3.0、3部 9.2、2部 28、
+/// 1部 85。
+///
+/// そこから実測で合わせ込んだ(test/economy_scale_test.dart)。
+/// - 5部は3倍。もとの観客・グッズの式が小さく、年収が1億に届かなかった。
+/// - 1部は式の約0.6倍。放映権(250億)と合わせて年収330億前後、
+///   人件費率は 40〜70%。
+/// - 2〜4部は式とほぼ同じか少し下(2部 約55億、3部 約13億、4部 約6.5億)。
+///   人件費率は 2部 80〜100%、3部 100%前後、4部 45〜70%。
+/// 部ごとのクラブの強さの幅(division_strength.dart)と組で合わせてある。
+/// 片方だけ変えると人件費率が大きくずれる。
+double incomeScale(int tier) => switch (tier.clamp(1, 5)) {
+      1 => 50,
+      2 => 16,
+      3 => 6.2,
+      4 => 3.6,
+      _ => 3,
+    };
+
+/// 部ごとの、真ん中くらいのクラブの年収の目安(万円)。理事会が給与の
+/// 枠を組むときの基準に使う。実測(放映権を含む営業収入)に合わせた。
+int typicalAnnualIncome(int tier) => switch (tier.clamp(1, 5)) {
+      1 => 3300000, // 330億
+      2 => 550000, // 55億
+      3 => 140000, // 14億
+      4 => 55000, // 5.5億
+      _ => 40000, // 4億
+    };
+
+/// 1シーズンの放映権料(万円)。上の部ほど大きく、1部では年収の半分を
+/// 超える。下の部は、ほとんど入らない。
+int annualBroadcast(int tier) => switch (tier.clamp(1, 5)) {
+      1 => 2500000, // 250億
+      2 => 300000, // 30億
+      3 => 40000, // 4億
+      4 => 10000, // 1億
+      _ => 2000, // 2,000万
+    };
+
+/// 毎節入る放映権料(万円)。1シーズンの額を節の数で割る。
+/// 節の数は国(部のクラブ数)で違うので、渡せるようにしてある。
+int weeklyBroadcast(int tier, {int matchdays = 38}) =>
+    (annualBroadcast(tier) / max(1, matchdays)).round();
+
+/// 能力 [overall] から見た市場価値の基準(万円)。
+///
+/// 60 × e^(0.1768 × (総合 − 40))。総合45で約145万、78で約5億、
+/// 85で約17億、90で約41億、95で約100億。年齢・潜在・性格・リーダー
+/// シップの係数は、ここに掛ける。
+double marketValueBase(int overall) =>
+    60 * exp(0.1768 * (overall - 40));
+
+/// 市場価値の上限(万円)。150億。
+const int maxMarketValue = 1500000;
+
+/// 市場価値の下限(万円)。
+const int minMarketValue = 50;
+
+/// 市場価値 [value] の選手が求める年俸(万円)。2.4 × 価値^0.88。
+int annualWageForValue(int value) =>
+    (2.4 * pow(max(0, value), 0.88)).round();
+
+/// 給与の下限(万円/週)。
+const int minWeeklyWage = 5;
+
+/// 市場価値 [value] の選手の週俸(万円)。年俸 ÷ 52、最低 [minWeeklyWage]。
+int weeklyWageForValue(int value) =>
+    max(minWeeklyWage, (annualWageForValue(value) / 52).round());
+
+/// 週俸を年俸に直す(表示用)。
+int annualFromWeekly(int weekly) => weekly * 52;
+
+/// 1年(52週)の給与を、その年の節の数で割って毎節払う。
+/// 表示の年俸(週俸×52)と、1年に払う総額が一致する。
+int perMatchdayFromWeekly(int weekly, int matchdays) =>
+    (weekly * 52 / max(1, matchdays)).round();
+
+/// 金額の表示。1億以上は「1.2億」(小数1桁、整数なら「3億」)、
+/// それ未満は「3,500万」。英語は円の桁で「1.2bn yen」「120m yen」
+/// 「35m yen」(1億円 = 100m yen)。同梱フォントに「¥」の字形が無いので、
+/// 記号ではなく yen と書く。
+String formatMoney(int man) {
+  final neg = man < 0;
+  final v = man.abs();
+  final sign = neg ? '-' : '';
+  return Tr.pick('$sign${_formatJa(v)}', '$sign${_formatEn(v)}');
+}
+
+/// 符号付きの表示(+1.2億 / -3,500万)。0 は符号なし。
+String formatMoneySigned(int man) =>
+    man > 0 ? '+${formatMoney(man)}' : formatMoney(man);
+
+// i18n-ignore: 単位の字(億・万)。formatMoney の Tr.pick の日本語側でだけ使う。
+String _formatJa(int v) {
+  if (v >= 10000) {
+    return '${_oneDecimal(v / 10000)}億';
+  }
+  return '${_grouped(v)}万';
+}
+
+String _formatEn(int v) {
+  // 1万円 = 10k yen。10億円 = 1bn yen。
+  if (v >= 100000) return '${_oneDecimal(v / 100000)}bn yen';
+  if (v >= 100) return '${_oneDecimal(v / 100)}m yen';
+  return '${v * 10}k yen';
+}
+
+String _oneDecimal(double x) {
+  final r = (x * 10).round() / 10;
+  if (r == r.roundToDouble()) return _grouped(r.round());
+  return r.toStringAsFixed(1);
+}
+
+String _grouped(int v) {
+  final s = v.toString();
+  final buf = StringBuffer();
+  for (var i = 0; i < s.length; i++) {
+    if (i > 0 && (s.length - i) % 3 == 0) buf.write(',');
+    buf.write(s[i]);
+  }
+  return buf.toString();
+}

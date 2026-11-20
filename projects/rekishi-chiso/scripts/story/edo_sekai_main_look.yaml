@@ -1,0 +1,237 @@
+# 物語型の本編の見た目と絵の割り当て：江戸時代、世界はどうだった？（scripts/edo-sekai-story.yaml）。chiso/storymain.py が読む。
+# 11-19 作成（11/24 12:00 公開予定）。ii_main_look.yaml を写した。絵は Gemini（Chrome /u/0、写実の油彩・昼の光）。人の顔・血・遺体は描かない。
+# 時代と地域：1600〜1867年の日本・イングランド・オランダ・ドイツ・清・フランス・アメリカ・ロシア。近代の物は描かない。I14・TH は使っていない（TH は江戸にオランダ船が入っていて史実と合わないため）。
+script: scripts/edo-sekai-story.yaml
+out: edosekai_story_main
+art_dir: out/story/edosekai/main
+main_art_dir: out/story/edosekai/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 同じ3月24日
+    now: 1603年
+    dates: {5: 2017年, 6: 1801年, 7: null, 8: 1603年}
+  1:
+    label: 第1章 家康が将軍になった年
+    now: 1603年
+    dates: {11: 1602年, 14: 1600年, 16: 1609年, 17: 1600年ごろ, 23: 1630年ごろ, 26: null}
+  2:
+    label: 第2章 鎖国の完成と戦の世界
+    now: 1639年
+    dates: {30: 1641年, 31: 1638年, 35: 1640年ごろ, 36: 1618〜1648年, 39: 1642年, 40: 1644年, 42: 1648年, 45: null}
+  3:
+    label: 第3章 元禄の江戸と世界の町
+    now: 1680年
+    dates: {49: 1682〜1709年, 51: 1691年, 54: 1826年, 55: 1700年ごろ, 62: 1721年, 67: 1694年, 70: 1730年, 73: 1776年}
+  4:
+    label: 第4章 独立宣言と寛政の改革
+    now: 1776年
+    dates: {76: 1774年, 77: 1783年, 82: 1780〜1792年, 86: 1790年, 87: null, 88: 1792年, 89: 1787年, 90: 1789年, 92: 1791年, 93: 1792年, 94: 1795〜1799年, 96: 1810年ごろ, 98: 1801年, 100: null}
+  5:
+    label: 第5章 ペリーの4隻と世界の戦
+    now: 1840年
+    dates: {104: 1852年, 105: 1853年, 107: 1853年7月, 110: 1853年, 116: 1860年, 117: 1861年, 119: 1860年, 121: 1862年, 122: 1851年, 124: 1867年, 126: null}
+  6:
+    label: まとめ 取り残されていたのか
+    now: null
+    dates: {}
+no_tag_from: 135
+references:
+- 国立天文台 暦象年表・暦日データベース／ウェストミンスター寺院／オランダ国立公文書館／長崎市／観光庁 多言語解説文／国立国会図書館／内閣府 災害教訓の継承に関する専門調査会 報告書／東京都立図書館
+- 斎藤修・高島正憲（2015）・Schreurs（2017、一橋大学 SSPJ）・Wilson（2008）・Hanley（1987）・Rozman・Schaede（1989）・本庄栄治郎（1927）・鬼頭宏・Hacker（2011）・Zambri ほか（2019）・Thordarson ほか（PNAS 2011）
+- 東京大学史料編纂所紀要18（2008、別段風説書の翻刻）・US Census Bureau・荒野泰典
+ai:
+  I01: {scene: 1603年、伏見城の御殿の前庭に並ぶ武士, pan: h, crops: &c {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  I02: {scene: 1603年のロンドン、テムズ川と古いロンドン橋, pan: h, crops: *c}
+  I03: {scene: 1600年、豊後の浜に流れ着いたオランダ船, pan: h, crops: *c}
+  I04: {scene: 17世紀初めの日本の銀山, pan: h, crops: *c}
+  I05: {scene: 1640年代の長崎・出島とオランダ船, pan: h, crops: *c}
+  I06: {scene: 1638年、原城を囲む陣（遠景）, pan: h, crops: *c}
+  I07: {scene: 三十年戦争で荒れたドイツの農村, pan: h, crops: *c}
+  I08: {scene: 1644年の北京・紫禁城, pan: h, crops: *c}
+  I09: {scene: 元禄の江戸・日本橋, pan: h, crops: *c}
+  I10: {scene: 1680年代のヴェルサイユ宮殿, pan: h, crops: *c}
+  I11: {scene: 1691年、江戸城の大広間のオランダ人一行, pan: h, crops: *c}
+  I12: {scene: 1700年ごろのロンドン, pan: h, crops: *c}
+  I13: {scene: 1730年ごろの大坂・堂島の米市場, pan: h, crops: *c}
+  I14: {scene: 江戸の呉服の大店, pan: h, crops: *c}
+  I15: {scene: 1776年のフィラデルフィア, pan: h, crops: *c}
+  I16: {scene: 1776年の炭鉱の蒸気機関, pan: h, crops: *c}
+  I17: {scene: 1783年、ラキ火山の割れ目噴火, pan: h, crops: *c}
+  I18: {scene: 1783年、浅間山の噴火, pan: h, crops: *c}
+  I19: {scene: 天明の東北の冬の農村, pan: h, crops: *c}
+  I20: {scene: 1789年、バスティーユを囲む群衆, pan: h, crops: *c}
+  I21: {scene: 1792年、根室の入り江のロシア船, pan: h, crops: *c}
+  I22: {scene: 1800年ごろの出島とオランダの旗, pan: h, crops: *c}
+  I23: {scene: 文机の書付と地球儀, pan: h, crops: *c}
+  I24: {scene: 1853年、浦賀沖の黒い蒸気船, pan: h, crops: *c}
+  I25: {scene: 1853年、南京の城壁と大軍, pan: h, crops: *c}
+  I26: {scene: 1854年、セヴァストポリを囲む陣地, pan: h, crops: *c}
+  I27: {scene: 1860年、太平洋を進む咸臨丸, pan: h, crops: *c}
+  I28: {scene: 南北戦争の野営地, pan: h, crops: *c}
+  I29: {scene: 1867年、パリ万博の会場, pan: h, crops: *c}
+  I30: {scene: 1867年、二条城の大広間, pan: h, crops: *c}
+  I31: {scene: 1851年のロンドンと蒸気船, pan: h, crops: *c}
+  TH2: {scene: 1700年ごろの長崎の港と出島（サムネと同じ絵）, pan: h, crops: *c}
+  IEND: {scene: 江戸の海辺の遠景（右に余白、終了画面）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+- 0 ai:I01 wide
+- 1 ai:I02 wide
+- 2 ai:I02 left
+- 3 ai:TH2 wide
+- 4 ai:I05 wide
+- 5 ai:I23 wide
+- 6 ai:I22 wide
+- 7 ai:TH2 left
+- 8 ai:I03 wide
+- 9 ai:I01 left
+- 10 ai:I02 right
+- 11 ai:I05 left
+- 12 ai:TH2 right
+- 13 ai:I05 right
+- 14 ai:I03 wide
+- 15 ai:I01 right
+- 16 ai:I05 wide
+- 17 ai:I09 wide
+- 18 ai:I23 left
+- 19 ai:I09 left
+- 20 ai:I09 left
+- 21 ai:I09 right
+- 22 ai:I04 wide
+- 23 ai:I04 left
+- 24 ai:I04 right
+- 25 ai:TH2 wide
+- 26 ai:TH2 wide
+- 27 ai:I05 left
+- 28 ai:I05 wide
+- 29 ai:I05 right
+- 30 ai:I22 left
+- 31 ai:I06 wide
+- 32 ai:I06 left
+- 33 ai:I06 left
+- 34 ai:I06 right
+- 35 ai:I07 wide
+- 36 ai:I07 left
+- 37 ai:I23 left
+- 38 ai:I07 right
+- 39 ai:I02 right
+- 40 ai:I08 wide
+- 41 ai:I08 left
+- 42 ai:I07 right
+- 43 ai:I23 right
+- 44 ai:I08 right
+- 45 ai:TH2 left
+- 46 ai:I11 wide
+- 47 ai:I09 wide
+- 48 ai:I10 wide
+- 49 ai:I10 left
+- 50 ai:I10 right
+- 51 ai:I05 left
+- 52 ai:I11 wide
+- 53 ai:I23 wide
+- 54 ai:I11 right
+- 55 ai:I09 left
+- 56 ai:I12 wide
+- 57 ai:I09 right
+- 58 ai:I09 wide
+- 59 ai:I12 left
+- 60 ai:I12 right
+- 61 ai:I08 wide
+- 62 ai:I09 left
+- 63 ai:I23 left
+- 64 ai:I12 wide
+- 65 ai:I12 wide
+- 66 ai:I08 left
+- 67 ai:I12 right
+- 68 ai:I12 left
+- 69 ai:I14 wide
+- 70 ai:I13 wide
+- 71 ai:I23 wide
+- 72 ai:I13 right
+- 73 ai:I15 wide
+- 74 ai:I15 left
+- 75 ai:I16 wide
+- 76 ai:I23 right
+- 77 ai:I17 wide
+- 78 ai:I17 left
+- 79 ai:I17 right
+- 80 ai:I18 wide
+- 81 ai:I19 wide
+- 82 ai:I19 left
+- 83 ai:I19 right
+- 84 ai:I23 wide
+- 85 ai:I19 wide
+- 86 ai:I15 right
+- 87 ai:I23 left
+- 88 ai:I09 wide
+- 89 ai:I01 right
+- 90 ai:I20 wide
+- 91 ai:I20 left
+- 92 ai:I23 right
+- 93 ai:I21 wide
+- 94 ai:I05 wide
+- 95 ai:I22 left
+- 96 ai:I22 right
+- 97 ai:TH2 right
+- 98 ai:I23 wide
+- 99 ai:I11 left
+- 100 ai:I24 wide
+- 101 ai:I23 left
+- 102 ai:I22 wide
+- 103 ai:I23 right
+- 104 ai:TH2 wide
+- 105 ai:I24 left
+- 106 ai:I23 wide
+- 107 ai:I24 wide
+- 108 ai:I24 right
+- 109 ai:I24 left
+- 110 ai:I25 wide
+- 111 ai:I25 left
+- 112 ai:I23 left
+- 113 ai:I26 wide
+- 114 ai:I26 left
+- 115 ai:I25 wide
+- 116 ai:I27 wide
+- 117 ai:I28 wide
+- 118 ai:I28 left
+- 119 ai:I28 right
+- 120 ai:I27 right
+- 121 ai:I31 wide
+- 122 ai:I31 left
+- 123 ai:I09 wide
+- 124 ai:I29 wide
+- 125 ai:I30 wide
+- 126 ai:TH2 wide
+- 127 ai:I23 left
+- 128 ai:I09 left
+- 129 ai:I12 wide
+- 130 ai:I01 wide
+- 131 ai:I24 wide
+- 132 ai:I31 right
+- 133 ai:TH2 left
+- 134 ai:I01 left
+- 135 ai:IEND wide
+- end ai:IEND wide
+focus: {}
+fx:
+  I17: {fire: {region: [0.0, 0.45, 0.6, 0.65]}}
+  I18: {smoke: {region: [0.30, 0.0, 0.75, 0.45], alpha: 0.12, speed: 4}}
+parts:
+- {type: versus3, from: 1, to: 1, items: [[家康が将軍に（今の暦）, 3月24日], [女王の死（今の暦）, 4月3日]], every: 2.5}
+- {type: quote, from: 53, to: 53, label: 史料, text: 羽織を脱げ・歩け・踊れ・跳ねろ／ケンペルは「猿芝居」と書いた, source: ケンペルの手稿（校訂版。Michel 2023 の紹介による）}
+- {type: versus3, from: 84, to: 84, items: [[人口の調べの差（6年）, 92万人減], [辞典の飢饉の死者, 90万人以上]], every: 2.5}
+- {type: quote, from: 99, to: 99, label: 史料, text: 最良の見識によって／国を閉ざしている日本王国, source: ケンペルの論文の原題（1801年、志筑忠雄が『鎖国論』と訳す）}
+- {type: quote, from: 105, to: 106, label: 史料, text: 船13隻・大砲236門・3125人, source: 1853年の別段風説書（東京大学史料編纂所紀要18、2008年の翻刻）}
+figures:
+- {from: 16, to: 16, spec: {type: map, title: オランダ船の来た港, bounds: [128.5, 141.5, 30.5, 37.5], reveal: true,
+    places: [[平戸, 129.55, 33.37], [長崎, 129.87, 32.75], [江戸, 139.75, 35.68]]}}
+- {from: 93, to: 93, spec: {type: map, title: ラクスマンは根室へ, bounds: [128.5, 147.5, 30.5, 46.0], reveal: true,
+    places: [[根室, 145.58, 43.33], [江戸, 139.75, 35.68]]}}
+stills:
+- {line: 0, note: 冒頭}
+- {line: 1, note: 10日のずれ}
+- {line: 19, note: 人口の推計の表}
+- {line: 53, note: 猿芝居}
+- {line: 105, note: 別段風説書}
+- {end: true, note: 終了画面}

@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/l10n/app_localizations.dart';
 import 'package:soccer_manager/l10n/tr.dart';
-import 'package:soccer_manager/logic/development_advisor.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/screens/player_detail_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
@@ -47,25 +46,14 @@ void main() {
         ),
       );
 
-  testWidgets('疲労が濃い選手を開くと、その指摘が出る', (tester) async {
-    final (game, settings) = await prepare(tester);
-    final p = game.userTeam.players.first;
-    p.fatigue = DevelopmentAdvisor.fatigueThreshold + 10;
-
-    await tester.pumpWidget(wrap(game, settings, p));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 400));
-
-    expect(find.textContaining('疲労'), findsWidgets);
-  });
-
+  // 育成の助言は練習(コーチ陣の仕事)の話なので、オーナーが見る選手の
+  // 画面には出さない。判定そのもの(下の test)は残してある。
   testWidgets('手を打つことが無ければ、助言の枠を出さない', (tester) async {
     final (game, settings) = await prepare(tester);
     // 指摘の条件をすべて外す。
     for (final p in game.userTeam.players) {
       p.fatigue = 0;
       p.matchSharpness = 100;
-      p.mentorId = 'someone';
       p.potential = p.overall;
     }
     final p = game.userTeam.players.first;
@@ -79,20 +67,4 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  test('助言の判定は、選手ごとに絞り込める', () async {
-    final game = GameState();
-    await game.startNewGame('絞り込みFC');
-    final team = game.userTeam;
-    for (final p in team.players) {
-      p.fatigue = 0;
-    }
-    final target = team.players.first
-      ..fatigue = DevelopmentAdvisor.fatigueThreshold + 5;
-
-    final mine = DevelopmentAdvisor.advise(team)
-        .where((a) => a.playerId == target.id)
-        .toList();
-    expect(mine, isNotEmpty);
-    expect(mine.every((a) => a.playerId == target.id), isTrue);
-  });
 }

@@ -1,0 +1,176 @@
+# 物語完結型ショート 千利休 s1（2026-10-28）。本編 scripts/rikyu-story.yaml の序章・第1章（三つの記録の食い違い）から。投稿しない。
+# 形式は kazumasa_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/rikyu/main/R*.jpg・K05）を縦に切り出す。
+# 事実カード（dev/output/rekishi-chiso/research/千利休_facts_20261028.yaml）：rikyu-01・06・07・08
+#   ・北野社家日記「成敗」（rikyu-07）・多聞院日記「うわさ」と「高野山へ追放」（rikyu-06）・由緒書は江岑宗左が紀州徳川家の命で出した後年の文書（rikyu-08）は、
+#     どれも田中仙堂（PRESIDENT Online 2017）が並べ直したもの → 語りで田中さんの名と年を言う。
+#   ・語りでは日記の名を言わず「北野天満宮の日記」「興福寺の僧の日記」とし、名は表に出す（画面で『』が行末に残るのを避けた）。
+#   ・「成敗＝罰として命を取られた」の言い換えは本編と同じ。由緒書の年はカードに無いので言わない（「後の時代に」）。
+# 理解テスト4問：
+#   ①誰の話か：千利休（秀吉に仕えた茶人）の最期
+#   ②いつ・どこで何が：天正19年2月、秀吉の命で腹を切ったと伝えられてきた
+#   ③記録はそれぞれ何と書いたか（語りは「北野天満宮の日記」「興福寺の僧の日記」、名は表に出る）：『北野社家日記』は「成敗された」（自分で腹を切ったとは書かない）／『多聞院日記』は2月28日の切腹を「うわさ」とし、高野山へ追放の話も
+#   ④どうなったか：切腹の場面を詳しく書くのは、ひ孫の世代の江岑宗左が紀州徳川家の命で後に出した『千利休由緒書』。記録は時代を下るほど詳しくなる
+title: 千利休｜最期の記録は、3つに割れた
+yt_title: 千利休の最期は「切腹」だけではない　同じ時代の日記は「成敗」と「うわさ」
+description: |-
+  天正19年2月、茶人・千利休は、豊臣秀吉の命で腹を切った、と伝えられてきました。
+  けれど、大日本茶道学会の田中仙堂さんが2017年の記事で並べ直した記録は、ひとつに定まりません。
+  北野天満宮の『北野社家日記』は、利休が「成敗された」と書きます。奈良・興福寺の『多聞院日記』は、2月28日の切腹を「うわさ」とし、同じ日記に、高野山へ追放されたという話も載せています。
+  切腹の場面を、天気や見張りの様子まで詳しく書くのは『千利休由緒書』。利休のひ孫の世代の江岑宗左が、紀州徳川家に命じられて、のちの時代に差し出した文書でした。
+hashtags: ["#千利休", "#日本史", "#戦国時代"]
+ai_images: true
+art_dir: out/story/rikyu
+out: rikyu_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 千利休（豊臣秀吉に仕えた茶人）
+  title: "最期の記録は、《3つ》に割れた"
+now:
+  - {at: 秀吉に仕えた, text: "天正19年2月　京", point: 0}
+  - {at: 2017年, text: "2017年　記事", point: 0}
+  - {at: 北野天満宮, text: "天正19年　京", point: 0}
+  - {at: 興福寺, text: "天正19年　奈良", point: 0}
+  - {at: 書いたのは, text: "後の時代　紀州徳川家", point: 1}
+timeline:
+  - {label: "天正19"}
+  - {label: "後の時代"}
+cards:
+  - type: table                          # 記録はどう書いたか（語った順に1行ずつ）
+    title: 利休の最期　記録はどう書いたか
+    from: 北野天満宮
+    until: うわさと追放
+    items:
+      - {at: 北野天満宮, text: "北野社家日記　「成敗された」"}
+      - {at: 興福寺, text: "多聞院日記　切腹は「うわさ」"}
+      - {at: 高野山, text: "同じ日記に　高野山へ追放とも"}
+      - {at: 切腹の場面を, text: "千利休由緒書　場面を詳しく"}
+shots:
+  R01f:                                  # 1文目：利休の顔（顔は絵の上 0.1〜0.4 → 寄って帯の下へ）
+    kind: ai
+    file: rikyu/main/R01.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.5
+    text_y: 0.80
+    must: 利休の顔
+  K05:                                   # 秀吉の命で
+    kind: ai
+    file: rikyu/main/K05.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 金の襖の前の秀吉
+  R10:                                   # 田中仙堂さんが記録を並べ直す＝文机の書状
+    kind: ai
+    file: rikyu/main/R10.jpg
+    focus: [0.45, 0.6]
+    move: right
+    must: 文机の書状と行灯
+  R03:                                   # 北野社家日記「成敗された」＝門に兵、縁側の利休の後ろ姿
+    kind: ai
+    file: rikyu/main/R03.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 雨の夜、兵の立つ門と利休の後ろ姿
+  R10b:                                  # 多聞院日記（同じ書状の別の所）
+    kind: ai
+    file: rikyu/main/R10.jpg
+    focus: [0.7, 0.7]
+    move: left
+    must: 書状
+  R05L:                                  # 高野山へ追放の話（霧の山の松と寺）
+    kind: ai
+    file: rikyu/main/R05.jpg
+    focus: [0.15, 0.5]
+    move: right
+    must: 霧の松と寺の門
+  Poem:                                  # 由緒書（辞世の偈入りの利休像）
+    kind: real
+    image: paintings/hidenaga_rikyu_death_poem_met.jpg
+    crop: [0.0, 0.05, 1.0, 0.85]
+    focus: [0.5, 0.45]
+    move: down
+    text_box: true
+    credit: "《千利休像》辞世の偈入り、17世紀前半（メトロポリタン美術館・パブリックドメイン）"
+    must: 利休の肖像と讃の字
+  R10c:                                  # ひ孫の世代が書いて差し出した文書（書状の手前。R02 は頭が表の下に隠れたので替えた）
+    kind: ai
+    file: rikyu/main/R10.jpg
+    focus: [0.3, 0.75]
+    move: in
+    zoom: 0.25
+    must: 書状と硯
+  R01w:                                  # まとめ：利休の胸から上
+    kind: ai
+    file: rikyu/main/R01.jpg
+    focus: [0.5, 0.3]
+    move: out
+    zoom: 0.12
+    text_y: 0.80
+    must: 利休
+  R01q:                                  # 最後の問い：顔に寄る
+    kind: ai
+    file: rikyu/main/R01.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.7
+    text_y: 0.80
+    must: 利休の顔
+lines:
+  # fact: rikyu-01, rikyu-06, rikyu-07, rikyu-08
+  - 語り: 秀吉に仕えた茶人、千利休。その最期は、記録によって、《!3つ》に割れている。
+    shot: R01f
+    tone: 強調
+  # fact: rikyu-01
+  - 語り: 天正19年2月、利休は、秀吉の命で、腹を切った。そう伝えられてきた。
+    shot: K05
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-06, rikyu-07
+  - 語り: けれど、大日本茶道学会の会長、田中仙堂さんは、2017年の記事で、そのころの記録を並べ直した。
+    shot: R10
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-07
+  - 語り: 京の北野天満宮の日記は、「利休は《成敗》された」と書く。自分で腹を切ったとは、書いていない。
+    shot: R03
+    tone: 強調
+    pause: 0.12
+  # fact: rikyu-06
+  - 語り: 奈良の興福寺の僧の日記は、2月28日の切腹を、「うわさ」として書いた。
+    shot: R10b
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-06
+  - 語り: しかも同じ日記には、利休は《高野山》に追放された、という話まで載っている。
+    shot: R05L
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: rikyu-08
+  - 語り: 切腹の場面を、天気や見張りの様子まで詳しく書くのは、『千利休由緒書』だ。
+    shot: Poem
+    tone: しみじみ
+    pause: 0.15
+  # fact: rikyu-08
+  - 語り: 書いたのは、利休のひ孫の世代の、江岑宗左。紀州徳川家に命じられて、のちの時代に差し出した文書だった。
+    shot: R10c
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 成敗、うわさと追放、そして詳しい切腹の場面。記録は、時代を下るほど、詳しくなっていく。
+    shot: R01w
+    tone: 重い
+    pause: 0.15
+  - 語り: あなたなら、どの記録を、《信じますか》。
+    shot: R01q
+    tone: 疑問
+    pause: 0.15

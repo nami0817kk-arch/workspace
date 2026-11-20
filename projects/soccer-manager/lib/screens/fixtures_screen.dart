@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../logic/promotion_engine.dart';
 import '../models/league.dart';
+import '../models/league_theme.dart';
 import '../models/match_result.dart';
 import '../models/team.dart';
 import '../services/feedback_service.dart';
+import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/chip_switcher.dart';
 import '../widgets/achievement_unlock_notifier.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/youth_league_table.dart';
 import '../widgets/responsive_body.dart';
-import 'scout_report_screen.dart';
 import '../l10n/tr.dart';
+import '../widgets/screen_bar.dart';
+import 'club_detail_screen.dart';
 
 /// 大陸カップ出場資格が得られる順位(GameState.startNextSeasonの`finalRank <= 2`と一致)。
 const int _continentalQualifyCount = 2;
@@ -40,26 +43,32 @@ class FixturesScreen extends StatelessWidget {
     // ユースリーグは有望株がいる年だけ存在する。順位表を見に来た流れで
     // 目に入るよう、ここにも置く(いままではユース画面からしか見られなかった)。
     final youthLeague = gameState.save!.youthLeague;
+    // 他国の1部の順位表。
+    final foreign = gameState.foreignLeagueTables;
 
     return DefaultTabController(
-      length: 2 + otherDivisions.length + (youthLeague == null ? 0 : 1),
+      // 他の部と他国は、それぞれ1つのタブにまとめ、中で選ぶ(タブが8つ並んで
+      // 横にはみ出していた)。
+      length: 2 +
+          (otherDivisions.isEmpty ? 0 : 1) +
+          (foreign.isEmpty ? 0 : 1) +
+          (youthLeague == null ? 0 : 1),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(Tr.pick('日程・順位表', 'Fixtures & table')),
+        appBar: screenBar(
+          context,
+          title: Tr.pick('日程・順位表', 'Fixtures & table'),
           // いまは下タブ専用だが、スタメン・スカッドと同じ作り(ドロワーあり)
           // なので、どこかから開かれた瞬間に戻れなくなる。先に塞いでおく。
           leading: Navigator.of(context).canPop() ? const BackButton() : null,
-          bottom: TabBar(
-            isScrollable: otherDivisions.isNotEmpty,
-            tabs: [
-              Tab(text: Tr.pick('順位表', 'Table')),
-              Tab(text: Tr.pick('日程', 'Fixtures')),
-              for (final (tier, _) in otherDivisions)
-                Tab(text: Tr.pick('$tier部順位表', 'Tier $tier table')),
-              if (youthLeague != null)
-                Tab(text: Tr.pick('ユース', 'Academy')),
-            ],
-          ),
+          scrollable: otherDivisions.isNotEmpty || foreign.isNotEmpty,
+          tabs: [
+            Tr.pick('順位表', 'Table'),
+            Tr.pick('日程', 'Fixtures'),
+            if (otherDivisions.isNotEmpty) Tr.pick('他の部', 'Other tiers'),
+            if (youthLeague != null) Tr.pick('ユース', 'Academy'),
+            // 他国の1部はユースの後ろ(タブの並びの最後)に置く。
+            if (foreign.isNotEmpty) Tr.pick('他国', 'Abroad'),
+          ],
           actions: [
             IconButton(
               icon: const Icon(Icons.query_stats),
@@ -85,17 +94,35 @@ class FixturesScreen extends StatelessWidget {
                 divisionTier: divisionTier,
               ),
               _ScheduleTab(league: league, userTeamId: userTeamId),
-              for (final (tier, otherLeague) in otherDivisions)
-                _StandingsTab(
-                  league: otherLeague,
-                  userTeamId: userTeamId,
-                  divisionTier: tier,
-                ),
+              if (otherDivisions.isNotEmpty)
+                ChipSwitcher(items: [
+                  for (final (tier, otherLeague) in otherDivisions)
+                    (
+                      Tr.pick('$tier部', 'Tier $tier'),
+                      (_) => _StandingsTab(
+                            league: otherLeague,
+                            userTeamId: userTeamId,
+                            divisionTier: tier,
+                          ),
+                    ),
+                ]),
               if (youthLeague != null)
                 ListView(
                   padding: const EdgeInsets.only(bottom: 16),
                   children: [YouthLeagueTable(league: youthLeague)],
                 ),
+              if (foreign.isNotEmpty)
+                ChipSwitcher(items: [
+                  for (final (name, foreignLeague) in foreign)
+                    (
+                      name,
+                      (_) => _StandingsTab(
+                            league: foreignLeague,
+                            userTeamId: userTeamId,
+                            divisionTier: 1,
+                          ),
+                    ),
+                ]),
             ],
           ),
         ),
@@ -271,11 +298,12 @@ class FixturesScreen extends StatelessWidget {
                           ),
                         ),
                         title: Text(
-                    team.name,
-                    style: TextStyle(
-                      fontWeight: isUser ? FontWeight.w800 : FontWeight.w600,
-                    ),
-                  ),
+                          team.name,
+                          style: TextStyle(
+                            fontWeight:
+                                isUser ? FontWeight.w800 : FontWeight.w600,
+                          ),
+                        ),
                         subtitle: Text(
                           Tr.pick('予測勝点 ${p.avgFinalPoints.toStringAsFixed(1)}',
                               'Projected points ${p.avgFinalPoints.toStringAsFixed(1)}'),
@@ -351,13 +379,15 @@ class _StandingsTab extends StatelessWidget {
     final showContinental = divisionTier == 1;
     final showPromotion = divisionTier > 1;
     final showRelegation = divisionTier < totalDivisionTiers;
-    final maxOverall = league.teams.fold<int>(
-      1,
-      (m, t) => t.overallRating > m ? t.overallRating : m,
-    );
-    final relegationStart = rows.length - PromotionEngine.swapCount;
-    const autoPromotionEnd = PromotionEngine.automaticPromotionCount;
-    const playoffEnd = autoPromotionEnd + PromotionEngine.playoffPoolSize;
+    // 入れ替えの数は国ごとに違う(ドイツ・フランス風は入れ替え戦がある)。
+    final theme = context.read<GameState>().currentLeagueTheme;
+    final below = theme.rulesBelow(divisionTier);
+    final above = theme.rulesBelow(divisionTier - 1);
+    final relegationStart = rows.length - below.relegationZone;
+    final autoPromotionEnd = above.autoUp;
+    final playoffEnd = autoPromotionEnd +
+        (above.playoffPool > 0 ? above.playoffPool : 0) +
+        (above.relegationPlayoff ? 1 : 0);
     return Column(
       children: [
         Padding(
@@ -377,7 +407,9 @@ class _StandingsTab extends StatelessWidget {
                 ),
                 _ZoneLegend(
                   color: Colors.deepPurple.shade300,
-                  label: Tr.pick('昇格プレーオフ圏', 'Promotion play-offs'),
+                  label: above.relegationPlayoff
+                      ? Tr.pick('入れ替え戦圏', 'Relegation play-off')
+                      : Tr.pick('昇格プレーオフ圏', 'Promotion play-offs'),
                 ),
               ],
               if (showRelegation)
@@ -385,12 +417,58 @@ class _StandingsTab extends StatelessWidget {
                   color: SemanticColors.negative(context),
                   label: Tr.pick('降格圏', 'Relegation'),
                 ),
+              Text(
+                [
+                  if (showPromotion) theme.describeRules(divisionTier - 1),
+                  if (showRelegation) theme.describeRules(divisionTier),
+                ].join(' '),
+                style: TextStyle(
+                    fontSize: 11, color: SemanticColors.subtleText(context)),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          padding: const EdgeInsets.only(left: 4, right: 8, top: 4, bottom: 4),
+          child: Row(
+            children: [
+              for (final (label, w) in [
+                ('#', 26.0),
+              ])
+                SizedBox(
+                    width: w,
+                    child: Text(label,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.bold))),
+              const SizedBox(width: 26),
+              Expanded(
+                  child: Text(Tr.pick('クラブ', 'Club'),
+                      style: const TextStyle(
+                          fontSize: 11, fontWeight: FontWeight.bold))),
+              for (final (label, w) in [
+                (Tr.pick('試', 'P'), 26.0),
+                (Tr.pick('勝', 'W'), 24.0),
+                (Tr.pick('分', 'D'), 24.0),
+                (Tr.pick('敗', 'L'), 24.0),
+                (Tr.pick('差', 'GD'), 34.0),
+                (Tr.pick('戦力', 'OVR'), 30.0),
+                (Tr.pick('点', 'Pts'), 34.0),
+              ])
+                SizedBox(
+                    width: w,
+                    child: Text(label,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.bold))),
             ],
           ),
         ),
         Expanded(
           child: ListView.builder(
             itemCount: rows.length,
+            itemExtent: 34,
             itemBuilder: (context, i) {
               final r = rows[i];
               final team = league.teams.firstWhere((t) => t.id == r.teamId);
@@ -405,139 +483,77 @@ class _StandingsTab extends StatelessWidget {
               } else if (showRelegation && i >= relegationStart) {
                 zoneColor = SemanticColors.negative(context);
               }
+              final scheme = Theme.of(context).colorScheme;
+              const num = TextStyle(
+                fontSize: 12,
+                fontFeatures: [FontFeature.tabularFigures()],
+              );
+              Widget cell(String s, double w, {TextStyle? style}) => SizedBox(
+                    width: w,
+                    child: Text(s,
+                        textAlign: TextAlign.center, style: style ?? num),
+                  );
               final row = Container(
+                height: 34,
+                padding: const EdgeInsets.only(right: 8),
                 decoration: BoxDecoration(
                   // 自分の行は、20行の中から一目で見つかる必要がある。
-                  // 薄い色だけだと、昇格圏の帯に紛れて見失っていた。
                   color: isUser
-                      ? Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withValues(alpha: 0.72)
-                      : null,
+                      ? scheme.primaryContainer.withValues(alpha: 0.72)
+                      : (i.isOdd ? scheme.surfaceContainerLow : null),
                   border: Border(
                     left: BorderSide(
                       color: zoneColor ??
-                          (isUser
-                              ? Theme.of(context).colorScheme.primary
-                              : Colors.transparent),
+                          (isUser ? scheme.primary : Colors.transparent),
                       width: 4,
                     ),
                   ),
                 ),
-                child: ListTile(
-                  leading: SizedBox(
-                    // 順位20 + 間隔6 + エンブレム24 = 50。ここを48にすると
-                    // 常に2pxはみ出す。
-                    width: 50,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 20,
-                          // 順位は縦に並べて読む数字。等幅にしないと
-                          // 1桁と2桁で頭の位置がずれる。
-                          child: Text(
-                            '${i + 1}',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontFamily: 'NotoSansJP',
-                              fontWeight:
-                                  isUser ? FontWeight.w800 : FontWeight.w600,
-                              fontFeatures: const [
-                                FontFeature.tabularFigures()
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        ClubEmblem(
-                          teamId: team.id,
-                          teamName: team.name,
-                          size: 24,
-                        ),
-                      ],
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 26,
+                      child: Text(
+                        '${i + 1}',
+                        textAlign: TextAlign.center,
+                        style: num.copyWith(
+                            fontWeight:
+                                isUser ? FontWeight.w800 : FontWeight.w600),
+                      ),
                     ),
-                  ),
-                  title: Text(
-                    team.name,
-                    style: TextStyle(
-                      fontWeight: isUser ? FontWeight.w800 : FontWeight.w600,
+                    ClubEmblem(teamId: team.id, teamName: team.name, size: 20),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        team.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight:
+                              isUser ? FontWeight.w800 : FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        Tr.pick(
-                            '${r.played}試合 勝${r.won} 分${r.draw} 敗${r.lost} 得失点差${r.goalDiff}',
-                            'P${r.played} W${r.won} D${r.draw} L${r.lost} GD${r.goalDiff}'),
-                      ),
-                      const SizedBox(height: 4),
-                      _FormGuide(results: league.recentFormFor(r.teamId)),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 80,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(3),
-                              child: LinearProgressIndicator(
-                                value: team.overallRating / maxOverall,
-                                minHeight: 5,
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainerHighest,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          // 末尾の勝点表示が伸びるとこの行に回る幅が減る。
-                          // ゲージは固定幅なので、ラベル側を縮ませる。
-                          Flexible(
-                            child: Text(
-                              Tr.pick('戦力${team.overallRating}',
-                                  'Squad ${team.overallRating}'),
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: SemanticColors.subtleText(context),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  // 勝点は一覧でいちばん見る数字。明朝の titleMedium だと
-                  // 添え物に見えていた。太いゴシックの等幅にする。
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${r.points}',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansJP',
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          height: 1.0,
-                          color: Theme.of(context).colorScheme.onSurface,
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                        ),
-                      ),
-                      Text(
-                        Tr.pick('pt', 'pts'),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: SemanticColors.subtleText(context),
-                        ),
-                      ),
-                    ],
-                  ),
+                    cell('${r.played}', 26),
+                    cell('${r.won}', 24),
+                    cell('${r.draw}', 24),
+                    cell('${r.lost}', 24),
+                    cell('${r.goalDiff >= 0 ? '+' : ''}${r.goalDiff}', 34),
+                    cell('${team.overallRating}', 30,
+                        style: num.copyWith(color: scheme.onSurfaceVariant)),
+                    cell('${r.points}', 34,
+                        style: num.copyWith(
+                            fontSize: 14, fontWeight: FontWeight.w800)),
+                  ],
                 ),
               );
-              if (!isUser) return row;
+              // 他のクラブの行を押すと、そのクラブのページを開く。
+              if (!isUser) {
+                return InkWell(
+                  onTap: () => openClubPage(context, team),
+                  child: row,
+                );
+              }
               return Semantics(
                 label: Tr.pick(
                     '自クラブ。${i + 1}位: ${team.name}、${r.played}試合 勝${r.won} 分${r.draw} 敗${r.lost} 得失点差${r.goalDiff}、${r.points}pt、戦力${team.overallRating}',
@@ -548,54 +564,6 @@ class _StandingsTab extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-/// 直近5試合の勝敗(W/D/L)を古い順→新しい順の丸アイコンで示すフォームガイド。
-class _FormGuide extends StatelessWidget {
-  final List<String> results;
-
-  const _FormGuide({required this.results});
-
-  @override
-  Widget build(BuildContext context) {
-    if (results.isEmpty) return const SizedBox.shrink();
-    Color colorFor(String r) => switch (r) {
-          'W' => SemanticColors.positive(context),
-          'L' => SemanticColors.negative(context),
-          _ => SemanticColors.neutral(context),
-        };
-    return Semantics(
-      label: Tr.pick('直近${results.length}試合のフォーム: ${results.join('、')}',
-          "Form over the last ${results.length}: ${results.join(', ')}"),
-      child: ExcludeSemantics(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final r in results)
-              Container(
-                margin: const EdgeInsets.only(right: 3),
-                width: 16,
-                height: 16,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: colorFor(r),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  r,
-                  style: const TextStyle(
-                    fontSize: 9,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    height: 1,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -812,6 +780,17 @@ class _ScheduleTabState extends State<_ScheduleTab> {
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                CalendarEngine.formatDate(
+                    gameState.dateOfMatchday(_selectedMatchday)),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ),
           const Divider(height: 1),
           Expanded(
             child: _MatchdayList(
@@ -961,7 +940,10 @@ class _UserFixtureList extends StatelessWidget {
         final opponent = league.teams.firstWhere((t) => t.id == opponentId);
         final result = f.result;
         final isNext = f.matchday == nextMatchday;
-        final isDerby = context.read<GameState>().isRivalFixture(f);
+        final gameState = context.read<GameState>();
+        final isDerby = gameState.isRivalFixture(f);
+        final dateLabel = CalendarEngine.formatShortDate(
+            gameState.dateOfMatchday(f.matchday));
         return Container(
           color: isNext
               ? Theme.of(context)
@@ -970,29 +952,19 @@ class _UserFixtureList extends StatelessWidget {
                   .withValues(alpha: 0.3)
               : null,
           child: ListTile(
-            onTap: () {
-              if (result != null) {
-                final home = league.teams.firstWhere(
-                  (t) => t.id == f.homeTeamId,
-                );
-                final away = league.teams.firstWhere(
-                  (t) => t.id == f.awayTeamId,
-                );
-                _showFixtureResultDialog(context, result, home, away);
-              } else {
-                final userTeam = league.teams.firstWhere(
-                  (t) => t.id == userTeamId,
-                );
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ScoutReportScreen(
-                      opponent: opponent,
-                      userTeam: userTeam,
-                    ),
-                  ),
-                );
-              }
-            },
+            // 終わった試合だけ、結果の詳しい中身を開ける。これからの試合の
+            // 相手の分析は監督の仕事なので開かない。
+            onTap: result == null
+                ? null
+                : () {
+                    final home = league.teams.firstWhere(
+                      (t) => t.id == f.homeTeamId,
+                    );
+                    final away = league.teams.firstWhere(
+                      (t) => t.id == f.awayTeamId,
+                    );
+                    _showFixtureResultDialog(context, result, home, away);
+                  },
             leading: SizedBox(
               width: 76,
               child: Row(
@@ -1010,6 +982,7 @@ class _UserFixtureList extends StatelessWidget {
                 ],
               ),
             ),
+            subtitle: Text(dateLabel),
             title: Row(
               children: [
                 Flexible(

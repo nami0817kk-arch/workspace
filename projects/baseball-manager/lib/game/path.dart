@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'career.dart';
 import 'player.dart';
+import 'skills.dart';
 import 'traits.dart';
 
 /// プロに入れなかったときの道。
@@ -13,15 +14,16 @@ enum Course {
   final int years;
 }
 
-/// 能力の総合評価 0〜99。二刀流は得意なほうで見る。
+/// 能力の総合評価 0〜99。二刀流は得意なほうで見る。特殊能力も評価に入る(`skillRating`)。
 double overall(Player p) {
   double avg(List<Ability> l) =>
       l.map(p.of).fold<int>(0, (a, b) => a + b) / l.length;
-  return switch (p.role) {
+  final base = switch (p.role) {
     Role.batter => avg(batterAbilities),
     Role.pitcher => avg(pitcherAbilities),
     Role.twoWay => _twoWayOverall(avg(batterAbilities), avg(pitcherAbilities)),
   };
+  return min(100.0, base + skillRating(p));
 }
 
 /// 二刀流の総合評価。得意な方が土台で、もう一方も育っているほど上乗せされる
@@ -35,7 +37,8 @@ double _twoWayOverall(double a, double b) {
 double draftScore(Player p, double achievement) =>
     0.7 * overall(p) + 0.3 * achievement.clamp(0, 100) + draftBonus(p.traits);
 
-const draftLine = 58.0; // 運を除いた合否ライン
+/// 運を除いた合否ライン(dart run -DBAL_DRAFT=600 で試せる。単位は0.1)。
+const draftLine = int.fromEnvironment('BAL_DRAFT', defaultValue: 595) / 10;
 const draftLuck = 10.0; // 運の振れ幅(±)
 
 /// ドラフトで指名されるか。能力と実績に運が乗る。
@@ -63,9 +66,17 @@ bool hasSecondChance({required bool alreadyRetried}) => !alreadyRetried;
 const releaseLine = 35.0;
 const releaseYears = 2;
 
+/// 年齢ごとの戦力外の基準。30歳までは `releaseLine`、そこから1歳ごとに3.5ずつ上がる
+/// (衰えたベテランは、若手より高い出来を求められる。2026-10-26 測ると、ふつうの選手が
+/// 一軍に20年以上いて、全員が40歳を過ぎても現役だった)。`-DBAL_RELSTEP=0` で従来。
+double releaseLineFor(int age) {
+  const step = int.fromEnvironment('BAL_RELSTEP', defaultValue: 35) / 10;
+  return releaseLine + max(0, age - 30) * step;
+}
+
 /// 今年の評価を踏まえた「低迷の連続年数」。基準を上回れば0に戻る。
 int nextLowYears(Player p, int lowYears) =>
-    overall(p) < releaseLine ? lowYears + 1 : 0;
+    overall(p) < releaseLineFor(p.age) ? lowYears + 1 : 0;
 
 bool isReleased(int lowYears) => lowYears >= releaseYears;
 

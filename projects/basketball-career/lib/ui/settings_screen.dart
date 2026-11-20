@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../app/links.dart';
 import '../monetization/monetization.dart';
+import '../sound/sound.dart';
 import 'howto_screen.dart';
 import '../monetization/purchase_service.dart';
 import 'layout.dart';
+import 'remove_ads_offer.dart';
 
 /// 設定。広告を消す・購入の復元・プライバシー・問い合わせ・ライセンス。
 class SettingsScreen extends StatefulWidget {
@@ -70,14 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } finally {
       if (mounted) setState(() => _busy = false);
     }
-    final msg = switch (r) {
-      PurchaseOutcome.purchased =>
-        restore ? '購入を復元した。広告が出なくなった。' : 'ありがとう! 広告が出なくなった。',
-      PurchaseOutcome.pending => '承認待ち。承認されると広告が消える。',
-      PurchaseOutcome.canceled => null,
-      PurchaseOutcome.unavailable => restore ? '復元できる購入が見つからなかった。' : '購入できなかった。',
-      PurchaseOutcome.failed => restore ? '復元に失敗した。あとでもう一度。' : '購入に失敗した。あとでもう一度。',
-    };
+    final msg = purchaseMessage(r, restore: restore);
     if (msg != null) {
       messenger.removeCurrentSnackBar();
       messenger.showSnackBar(SnackBar(content: Text(msg)));
@@ -100,6 +97,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Card(
                     child: Column(
                       children: [
+                        SwitchListTile(
+                          secondary: const Icon(Icons.volume_up_rounded),
+                          title: const Text('効果音'),
+                          subtitle: const Text('区切りのブザー・契約やトレードの成立音など。'),
+                          value: Sfx.enabled,
+                          onChanged: (v) async {
+                            setState(() => Sfx.enabled = v);
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool('gmSound', v);
+                            if (v) await Sfx.play(SoundEffect.chime);
+                          },
+                        ),
                         if (m.adFree)
                           const ListTile(
                             leading: Icon(Icons.check_circle_rounded),
@@ -109,7 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ListTile(
                             leading: const Icon(Icons.block_rounded),
                             title: Text('広告を消す(${displayPrice(_price!)})'),
-                            subtitle: const Text('全画面広告が出なくなり、動画なしで回復できる。'),
+                            subtitle: const Text('全画面広告が出なくなり、引き直し・やり直しも動画なしで使える。'),
                             enabled: !_busy,
                             onTap: () => _run(restore: false),
                           ),
@@ -153,7 +162,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         leading: const Icon(Icons.description_outlined),
                         title: const Text('ライセンス'),
                         onTap: () => showLicensePage(
-                            context: context, applicationName: 'バスケ育成'),
+                            context: context, applicationName: 'バスケGM'),
                       ),
                     ],
                   ),

@@ -24,6 +24,9 @@ const STATES = {
     await p.route(/^https?:/, r => r.abort());   // 外へは読みに行かない（書体など）
     await p.goto(url);
     await p.waitForTimeout(300);
+    // 保存がある状態では「つづきから」が出る（2026-11-01：v3 の保存を読めず、毎回「はじめる」になっていた）
+    const go = await p.evaluate(() => document.getElementById('titleGo').textContent);
+    if (go !== (st ? 'つづきから' : 'はじめる')) { fails++; console.log(`NG ${name}: タイトルが「${go}」`); }
     const click = async sel => p.evaluate(s => { const el = document.querySelector(s); if (el && el.offsetParent !== null && !el.disabled) el.click(); }, sel);
     for (const sel of ['#titleGo', '#offX2', '#offOk', '[data-tab=crew]', '#pCrew [data-bn=max]', '#wB0', '#wB3', '[data-tab=tool]', '#pickBuy', '#adBoost',
       '[data-tab=book]', '[data-item=kosen]', '#itemClose', '[data-appr]', '[data-sell]', '[data-tab=co]', '#rbOpen', '.copt', '#rbCancel', '#setBtn', '#soundBtn', '#ambBtn', '#redBtn', '#setClose']) {

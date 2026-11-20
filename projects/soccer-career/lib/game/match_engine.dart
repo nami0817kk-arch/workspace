@@ -110,6 +110,25 @@ class ChanceFactor {
 }
 
 /// 試合1つぶんの進行状態。UI はこれを介して局面を1つずつ進める。
+/// **試合の状況で、手の値打ちが変わる**（2026-11-15）。
+///
+/// 同じ局面でも、負けている終盤と勝っている終盤では選ぶべき手が違う。
+/// 以前は評価点の物差しが状況を見ておらず、実測（`test/choice_sim.dart`）で
+/// 中盤の選手は出会う局面の半分で答えが9割以上同じだった。
+enum MatchStakes {
+  /// 状況は手の値打ちを変えない（序盤・中盤、点差がついていない時間）。
+  none,
+
+  /// 追う展開。決めにいく手が重く、つなぐだけの手は軽い。
+  chasing,
+
+  /// 同点の終盤。決めにいく手が重い。
+  leveling,
+
+  /// 守り切る展開。外したときの減点が重く、つなぐ手が重い。
+  protecting,
+}
+
 class MatchInProgress {
   MatchInProgress({
     required this.matchday,
@@ -126,7 +145,8 @@ class MatchInProgress {
     this.fatigue = 0,
     List<int> teammateGoalMinutes = const [],
     double? expectedTeammateGoals,
-    this.concededMinutes = const [],
+    List<int> concededMinutes = const [],
+    double? expectedConceded,
     this.allyBonus = 0,
     this.moodBonus = 0,
     this.extraRating = 0,
@@ -139,6 +159,10 @@ class MatchInProgress {
     Random? random,
   }) : assert(scenarios.length == minutes.length),
        teammateGoalMinutes = [...teammateGoalMinutes],
+       // 外して失点すると足すので、渡されたものとは別に持つ。
+       concededMinutes = [...concededMinutes],
+       expectedConceded =
+           expectedConceded ?? concededMinutes.length.toDouble(),
        expectedTeammateGoals =
            expectedTeammateGoals ?? teammateGoalMinutes.length.toDouble(),
        _random = random ?? Random() {
@@ -182,6 +206,9 @@ class MatchInProgress {
   /// 隠されているので、画面と自動進行には予定そのものではなく、
   /// 力関係と残り時間から出るこの見込みを使う（[assistConversionAt]）。
   final double expectedTeammateGoals;
+
+  /// 相手が決める得点の見込み（試合開始時の期待値）。奪う手の見積もりに使う。
+  final double expectedConceded;
 
   /// 累積疲労 0〜100。終盤の落ち込みに効く。
   ///
@@ -408,6 +435,12 @@ class MatchInProgress {
       turnConversionFactor *
       (combo ? Formulas.comboConversion : 1.0);
 
+  /// この後に失点の予定がある見込み（試合開始時の期待値と残り時間から）。
+  double concedeLaterChance(int minute) {
+    final remaining = ((90 - minute) / 90).clamp(0.0, 1.0);
+    return 1 - exp(-expectedConceded * remaining);
+  }
+
   double assistConversionAt(int minute) {
     final remaining = ((90 - minute) / 90).clamp(0.0, 1.0);
     final chance = 1 - exp(-expectedTeammateGoals * remaining);
@@ -486,6 +519,95 @@ class MatchInProgress {
 
   /// 終盤か。ここでの1点は重い。
   bool get lateGame => !isFinished && currentMinute >= Formulas.lateGameMinute;
+
+  /// 今の局面で、状況が手の値打ちをどう変えているか。
+  ///
+  /// 区切りは局面の差し替え（[tempoNow]）と同じ線を使う。
+  /// 別の線を引くと、「1点ビハインド・残り30分」と出ているのに
+  /// 値打ちは変わっていない、という食い違いが起きる。
+  MatchStakes get stakes {
+    if (isFinished) return MatchStakes.none;
+    switch (tempoNow) {
+      case ScenarioTempo.chase:
+        return MatchStakes.chasing;
+      case ScenarioTempo.hold:
+        return MatchStakes.protecting;
+      case ScenarioTempo.any:
+        return lateGame && margin == 0
+            ? MatchStakes.leveling
+            : MatchStakes.none;
+    }
+  }
+
+  /// その手が通ったときの見返りに、状況が掛ける倍率。
+  ///
+  /// 決めにいく手（ゴール・アシスト）は、決定機・得点・アシスト・仕留めの
+  /// 上乗せに掛かる。つなぐ手（play）は、通ったときの基本の評価に掛かる。
+  /// **判定（[choose]）と物差し（[expectedDelta]）と画面が同じものを読む。**
+  static double stakesSuccessFactor(MatchStakes stakes, ScenarioOption option) {
+    final attack = option.outcome != Outcome.play;
+    switch (stakes) {
+      case MatchStakes.none:
+        return 1.0;
+      case MatchStakes.chasing:
+        return attack ? Formulas.decisiveGoalFactor : Formulas.stakesChasePlay;
+      case MatchStakes.leveling:
+        return attack ? Formulas.decisiveGoalFactor : Formulas.stakesLevelPlay;
+      case MatchStakes.protecting:
+        return attack ? 1.0 : Formulas.stakesHoldPlay;
+    }
+  }
+
+  /// 外したときの減点に、状況が掛ける倍率。
+  static double stakesFailureFactor(MatchStakes stakes) =>
+      stakes == MatchStakes.protecting ? Formulas.stakesHoldFailure : 1.0;
+
+  /// 状況がその手の値打ちを変えているなら、手の側に出すひと言。
+  ///
+  /// **見えない計算で答えが変わるだけだと、迷いではなく当てずっぽうになる。**
+  String? stakesNoteFor(ScenarioOption option) {
+    final s = stakes;
+    final up = stakesSuccessFactor(s, option);
+    if (up > 1) return '今は重い';
+    if (up < 1) return '今は軽い';
+    if (s == MatchStakes.protecting) return '外すと痛い';
+    return null;
+  }
+
+  /// **外したとき、それがそのまま失点になる確率**（2026-11-15）。
+  ///
+  /// 判定（[choose]）・物差し（[expectedDelta]）・画面が同じものを読む。
+  static double concedeChanceOf(ScenarioOption option) =>
+      switch (option.exposure) {
+        Exposure.none => 0,
+        Exposure.shot => Formulas.concedeOnShot,
+        Exposure.chance => Formulas.concedeOnChance,
+        Exposure.penalty => Formulas.concedeOnPenalty,
+      };
+
+  /// 手の側に出す「外すと失点 30%」。危なさの無い手には出さない。
+  static String? concedeNoteFor(ScenarioOption option) {
+    final q = concedeChanceOf(option);
+    if (q <= 0) return null;
+    return '外すと失点${(q * 100).round()}%';
+  }
+
+  /// 自分が手を外して、そのまま失点した回数（測定用）。
+  int goalsCaused = 0;
+
+  /// 状況が何を変えているかを一言で。局面の札（[situationLabel]）に添える。
+  String? get stakesLabel {
+    switch (stakes) {
+      case MatchStakes.none:
+        return null;
+      case MatchStakes.chasing:
+        return '攻める手が重い';
+      case MatchStakes.leveling:
+        return '決める手が重い';
+      case MatchStakes.protecting:
+        return '外すと痛い';
+    }
+  }
 
   /// 今の状況を一言で。画面に出す。
   ///
@@ -904,6 +1026,10 @@ class MatchInProgress {
     final role = current.roleOf(option);
     final combo = comboLands(option);
     if (role == ComboRole.finish) setupReady = false;
+    // 状況は手を選んだ時点のもの。得点が入ってから読むと、
+    // 追いついた1本が「同点」の重さで数えられてしまう。
+    final stakesNow = stakes;
+    final up = stakesSuccessFactor(stakesNow, option);
 
     final chance = chanceFor(option);
     final success = _random.nextDouble() < chance;
@@ -927,16 +1053,21 @@ class MatchInProgress {
     }
 
     var delta = success
-        ? Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(chance)
-        : Formulas.ratingPerFailure * Formulas.ratingFailureWeight(chance);
+        ? Formulas.ratingPerSuccess *
+              Formulas.ratingSuccessWeight(chance) *
+              (option.outcome == Outcome.play ? up : 1.0) *
+              (option.lingering ? Formulas.lingerSuccessFactor : 1.0)
+        : Formulas.ratingPerFailure *
+              Formulas.ratingFailureWeight(chance) *
+              stakesFailureFactor(stakesNow);
     var outcome = option.outcome;
     var text = success ? option.successText : option.failureText;
 
     if (success && outcome != Outcome.play) {
       // 決定機を作った。決まらなくても、無難な手とは違う。
-      delta += Formulas.ratingPerChance;
+      delta += Formulas.ratingPerChance * up;
       // 布石から繋がったぶんは、ここでまとめて返す。
-      if (combo) delta += Formulas.ratingPerCombo;
+      if (combo) delta += Formulas.ratingPerCombo * up;
       final rolled =
           _random.nextDouble() <
           (outcome == Outcome.goal
@@ -957,15 +1088,11 @@ class MatchInProgress {
           _claimTeammateGoal(currentMinute);
         }
         if (outcome == Outcome.goal) {
-          // 追いついた・突き放した1点は重く見る。
-          final before = margin;
+          // 追う展開・同点の終盤の1点は重く見る（[stakes]）。
           ownGoalMinutes.add(currentMinute);
-          final decisive = lateGame && before <= 0;
-          delta +=
-              Formulas.ratingPerGoal *
-              (decisive ? Formulas.decisiveGoalFactor : 1.0);
+          delta += Formulas.ratingPerGoal * up;
         } else {
-          delta += Formulas.ratingPerAssist;
+          delta += Formulas.ratingPerAssist * up;
         }
       } else {
         text = outcome == Outcome.goal ? missedGoal : missedAssist;
@@ -978,7 +1105,40 @@ class MatchInProgress {
       final index = concededMinutes.indexWhere((m) => m > currentMinute);
       if (index >= 0) {
         concededMinutes.removeAt(index);
-        delta += Formulas.ratingPerGoalPrevented;
+        delta += option.isTacticalFoul
+            ? Formulas.ratingPerGoalPrevented
+            : Formulas.ratingPerStop;
+      }
+    }
+
+    // **受け身の手は、通っても攻撃が終わらない。**
+    if (success && option.lingering) {
+      if (_random.nextDouble() < Formulas.concedeOnLinger) {
+        concededMinutes
+          ..add(currentMinute)
+          ..sort();
+        goalsCaused++;
+        delta += Formulas.ratingPerLingerGoal;
+        text = '$text だが攻撃は続き、最後は失点した。';
+      }
+    }
+
+    // **外した。渡した好機が、そのまま失点になることがある。**
+    // 危なさの無い手では乱数を引かない（引くと、関係の無い試合の
+    // 乱数の並びまでずれる）。
+    if (!success) {
+      final q = concedeChanceOf(option);
+      if (q > 0 && _random.nextDouble() < q) {
+        concededMinutes
+          ..add(currentMinute)
+          ..sort();
+        goalsCaused++;
+        delta += Formulas.ratingPerGoalCaused;
+        text = '$text そのまま失点した。';
+      } else if (option.exposure == Exposure.chance ||
+          option.exposure == Exposure.penalty) {
+        // 決定機を渡したのに何も起きないと、文と結果が食い違って見える。
+        text = '$text 相手が外し、命拾いした。';
       }
     }
 
@@ -1067,11 +1227,22 @@ class MatchInProgress {
   ///
   /// 決まる確率まで含めて見る。含めないと、自動進行が得点の手を
   /// 実際の価値より高く買ってしまう。
-  double expectedDelta(ScenarioOption option) {
+  ///
+  /// [asIf] は測る道具（`test/choice_sim.dart`）のためのもの。同じ局面を
+  /// 「状況が何も変えていなかったら」で比べるときに渡す。
+  double expectedDelta(ScenarioOption option, {MatchStakes? asIf}) {
     final p = chanceFor(option);
-    var gain = Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(p);
-    if (option.outcome != Outcome.play) gain += Formulas.ratingPerChance;
-    if (comboLands(option)) gain += Formulas.ratingPerCombo;
+    // 状況の重みは判定（[choose]）と同じものを読む。
+    final s = asIf ?? stakes;
+    final up = stakesSuccessFactor(s, option);
+    final attack = option.outcome != Outcome.play;
+    var gain =
+        Formulas.ratingPerSuccess *
+        Formulas.ratingSuccessWeight(p) *
+        (attack ? 1.0 : up) *
+        (option.lingering ? Formulas.lingerSuccessFactor : 1.0);
+    if (attack) gain += Formulas.ratingPerChance * up;
+    if (comboLands(option)) gain += Formulas.ratingPerCombo * up;
     // 自動進行にもノリを見せる。見ないと、自動で進めるだけでは
     // 「刻んでから決めにいく」が一度も起きない（切り札と同じ理屈）。
     // **布石の「先の価値」は見せない。** 今この手で得られるものだけを数える。
@@ -1081,26 +1252,51 @@ class MatchInProgress {
     // 隠すと自動進行がただ弱くなるだけになる。
     final combo = comboLands(option);
     if (option.outcome == Outcome.goal) {
-      gain += Formulas.ratingPerGoal * goalConversionNow(combo: combo);
+      gain += Formulas.ratingPerGoal * up * goalConversionNow(combo: combo);
     }
     if (option.outcome == Outcome.assist) {
       gain +=
           Formulas.ratingPerAssist *
+          up *
           assistConversionNow(currentMinute, combo: combo);
     }
     // カードのぶんを引く。ここを入れないと、自動進行が「止めるための反則」を
     // 代償なしの安い手として選び続ける。
+    // すでに警告を受けていれば、次の1枚は退場になる。見積もりがそれを
+    // 知らないと、守り切る局面で「掴んで止める」がいつも最善になる。
+    final cardCost =
+        Formulas.ratingPerYellow +
+        (yellowCards >= 1 ? Formulas.ratingPerRedCard : 0.0);
     final card = option.isTacticalFoul
-        ? Formulas.ratingPerYellow
-        : (1 - p) * cardChanceFor(option) * Formulas.ratingPerYellow;
+        ? cardCost
+        : (1 - p) * cardChanceFor(option) * cardCost;
     // 止めたぶんも数える。片方だけ入れると、ただ損な手に見える。
-    final prevented = option.preventsGoal
-        ? p * Formulas.ratingPerGoalPrevented
-        : 0.0;
+    // 止める手が消せるのは「この後に入るはずだった失点」だけ。予定そのものは
+    // 隠されているので、力関係と残り時間から出る見込みで数える
+    // （アシストの見込みと同じ形）。反則で止める手も同じ——見込みを掛けずに
+    // 0.6 を丸ごと数えていたので、守り切る終盤でも「掴んで止める」が
+    // いつも最善だった（2026-11-15）。
+    final prevented = !option.preventsGoal
+        ? 0.0
+        : p *
+              (option.isTacticalFoul
+                  ? Formulas.ratingPerGoalPrevented
+                  : Formulas.ratingPerStop) *
+              concedeLaterChance(currentMinute);
+    // 外して失点するぶん。止めたぶんと対にして入れる。
+    final caused =
+        (1 - p) * concedeChanceOf(option) * Formulas.ratingPerGoalCaused +
+        (option.lingering
+            ? p * Formulas.concedeOnLinger * Formulas.ratingPerLingerGoal
+            : 0.0);
     return p * gain +
-        (1 - p) * Formulas.ratingPerFailure * Formulas.ratingFailureWeight(p) +
+        (1 - p) *
+            Formulas.ratingPerFailure *
+            Formulas.ratingFailureWeight(p) *
+            stakesFailureFactor(s) +
         card +
-        prevented;
+        prevented +
+        caused;
   }
 
   /// スタイルに沿って手を1つ選ぶ。
@@ -1534,7 +1730,18 @@ class MatchEngine {
     final teammateGoals = _poissonish(
       (1.25 + advantage / 40) * Formulas.teammateGoalShareFor(player.position),
     );
-    final conceded = _poissonish(1.25 - advantage / 40);
+    // 守る選手が出る試合は、選択で動くぶんの失点を先に置いておく。
+    final concedeShare = switch (appearance) {
+      Appearance.start => Formulas.concedeShareFor(player.position),
+      Appearance.sub =>
+        1 + (Formulas.concedeShareFor(player.position) - 1) * Formulas.subLiftShare,
+      _ => 1.0,
+    };
+    final concededMean = ((1.25 - advantage / 40) * concedeShare).clamp(
+      0.2,
+      4.0,
+    );
+    final conceded = _poissonish(concededMean);
 
     return MatchInProgress(
       matchday: matchday,
@@ -1554,6 +1761,7 @@ class MatchEngine {
           (1.25 + advantage / 40) *
           Formulas.teammateGoalShareFor(player.position),
       concededMinutes: _goalMinutes(conceded),
+      expectedConceded: concededMean,
       allyBonus: allyBonus,
       moodBonus: moodBonus,
       extraRating: extraRating,
@@ -1635,6 +1843,8 @@ class MatchEngine {
     Development development = const Development(),
     void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
+    List<AttributeKey> protect = const [],
+    void Function(Detail detail, bool shielded)? declined,
   }) {
     if (rating == null) return player.attributes;
 
@@ -1643,8 +1853,48 @@ class MatchEngine {
         player.traits.declineAgeOffset +
         player.personality.declineAgeOffset +
         declineOffset;
-    if (player.age >= declineAge && _random.nextDouble() < 0.25) {
-      return player.attributes.bumpDetail(_randomDetail(), -1);
+    if (player.age >= declineAge &&
+        _random.nextDouble() <
+            Formulas.declineChanceFor(player.age - declineAge)) {
+      // **衰えの行き先は、その週に練習しているカテゴリを避ける**（2026-11-15）。
+      // 以前は無作為の1項目が落ちるだけで、25歳を過ぎると週の9割で何も
+      // 起きないうえ、落ちる側にも選ぶ余地が無かった。落ちる回数と量は
+      // 変えない——変わるのは「どこが落ちるか」だけ。
+      final goalkeeper = player.position == Position.gk;
+      Detail pick(bool Function(Detail d) allowed) {
+        final pool = [
+          for (final d in Detail.values)
+            if (allowed(d))
+              for (
+                var i = 0;
+                i <
+                    Formulas.declineWeightFor(
+                      d.category,
+                      goalkeeper: goalkeeper,
+                    );
+                i++
+              )
+                d,
+        ];
+        return pool[_random.nextInt(pool.length)];
+      }
+
+      var detail = pick((_) => true);
+      var shielded = false;
+      if (protect.contains(detail.category)) {
+        final open = Detail.values.any(
+          (d) =>
+              !protect.contains(d.category) &&
+              Formulas.declineWeightFor(d.category, goalkeeper: goalkeeper) >
+                  0,
+        );
+        if (open) {
+          detail = pick((d) => !protect.contains(d.category));
+          shielded = true;
+        }
+      }
+      declined?.call(detail, shielded);
+      return player.attributes.bumpDetail(detail, -1);
     }
 
     if (rating < Formulas.growthRatingThreshold) return player.attributes;
@@ -1855,6 +2105,7 @@ class MatchEngine {
     int fatigue = 0,
     void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
+
     /// 復帰直後の再発しやすさ（`RehabPlan.relapseFactor`）。
     ///
     /// **練習中の負傷はここを読んでいなかった。** 試合まわりの判定

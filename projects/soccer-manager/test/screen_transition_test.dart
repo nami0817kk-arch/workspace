@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/main.dart';
-import 'package:soccer_manager/screens/training_screen.dart';
+import 'package:soccer_manager/screens/transfer_screen.dart';
 
 /// 画面遷移の品質を固定するテスト。
 ///
@@ -47,12 +47,17 @@ void main() {
 
   testWidgets('tapping a quick-access tile twice opens only one screen',
       (WidgetTester tester) async {
+    // 既定の 800x600 は横長で2ペインになり、最初の Scrollable が左ペインに
+    // なって目当てのタイルへ届かない。縦長の1本リストで試す。
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
     await createClub(tester);
 
     // ホームのクラブ運営タイルまでスクロールする。scrollUntilVisible は
     // 見つかるまで繰り返し評価するので、.last のような空集合で例外になる
     // ファインダは渡せない。
-    final tile = find.text('Training');
+    final tile = find.text('Transfers');
     await tester.scrollUntilVisible(tile, 200,
         scrollable: find.byType(Scrollable).first);
     await tester.pumpAndSettle();
@@ -64,7 +69,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byType(TrainingScreen),
+      find.byType(TransferScreen),
       findsOneWidget,
       reason: '同じ画面が複数積まれている。連打で二重にpushされている。',
     );

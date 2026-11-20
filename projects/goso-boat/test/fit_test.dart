@@ -12,7 +12,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:goso_boat/app/progress.dart';
 import 'package:goso_boat/app/settings.dart';
 import 'package:goso_boat/engine/puzzle.dart';
+import 'package:goso_boat/engine/rules.dart';
 import 'package:goso_boat/l10n/app_localizations.dart';
+import 'package:goso_boat/l10n/l10n_ext.dart';
 import 'package:goso_boat/main.dart';
 import 'package:goso_boat/monetization/monetization.dart';
 import 'package:goso_boat/ui/game_screen.dart';
@@ -31,6 +33,14 @@ const devices = {
   // iPad では縦固定が効かない（マルチタスク対応のため）。横向きと、分割画面の細い方も見る
   'iPad 横': (Size(1180, 820), 2.0),
   'iPad 分割': (Size(320, 1180), 2.0),
+};
+
+/// 決まりの説明シートと舞台の紹介を開いて見る端末（小さい iPhone から）。
+/// 2026-11-01、iPhone SE で62面・mini で9面・SE（第1世代）でほぼ全面、決まりのシートの下が切れていた。
+const sheetDevices = {
+  'iPhone SE（第1世代）': (Size(320, 568), 2.0),
+  'iPhone SE（第3世代）': (Size(375, 667), 2.0),
+  'iPhone mini': (Size(375, 812), 3.0),
 };
 
 /// ストアが使える状態（値段の出るボタンを描かせるため）。値段は長めの表記も試す。
@@ -56,7 +66,7 @@ Future<void> _loadFonts() async {
 }
 
 void _setDevice(WidgetTester tester, String name, {double textScale = 1.3}) {
-  final (size, dpr) = devices[name]!;
+  final (size, dpr) = devices[name] ?? sheetDevices[name]!;
   tester.view.physicalSize = size * dpr;
   tester.view.devicePixelRatio = dpr;
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
@@ -113,6 +123,66 @@ void main() {
         await tester.pumpWidget(const SizedBox());
         await tester.pump(const Duration(seconds: 3));
       });
+    }
+
+    for (final device in sheetDevices.keys) {
+      for (final scale in const [1.0, 1.3]) {
+        testWidgets('決まりのシートと舞台の紹介が収まる: $device・${locale.languageCode}・文字$scale倍', (tester) async {
+          _setDevice(tester, device, textScale: scale);
+          addTearDown(() => _resetDevice(tester));
+          final (p, _, st) = await _deps();
+          late BuildContext ctx;
+          await tester.pumpWidget(_wrap(
+            Builder(builder: (c) {
+              ctx = c;
+              return const Scaffold(body: SizedBox.expand());
+            }),
+            locale,
+            st,
+          ));
+          await tester.pump();
+
+          // 決まりの説明シート（面の右上の「？」）を全120面で開く
+          for (final l in p.levels) {
+            final done = showRules(ctx, l);
+            await tester.pump();
+            await tester.pump(const Duration(milliseconds: 400));
+            expect(tester.takeException(), isNull, reason: '${l.id} の決まりのシートで例外（はみ出しなど）');
+            // 最後の役の説明まで、スクロールすれば画面の中に出せること
+            final roles = Role.values.where((r) => l.count(r) > 0).toList();
+            final last = find.textContaining(ctx.l10n.roleDesc(roles.last));
+            expect(last, findsOneWidget, reason: '${l.id} の最後の役の説明が無い');
+            await tester.ensureVisible(last);
+            await tester.pump();
+            final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
+            expect(tester.getRect(last).bottom, lessThanOrEqualTo(screen.height), reason: '${l.id} の最後の役の説明が画面の外');
+            expect(tester.takeException(), isNull, reason: '${l.id} の決まりのシートで例外（スクロール後）');
+            Navigator.of(ctx).pop();
+            await tester.pump();
+            await tester.pump(const Duration(milliseconds: 400));
+            await done;
+          }
+
+          // 舞台の紹介（舞台ごとに1つ）を全舞台で開く
+          for (final w in worlds) {
+            final done = showIntro(ctx, w);
+            await tester.pump();
+            await tester.pump(const Duration(milliseconds: 400));
+            expect(tester.takeException(), isNull, reason: '舞台${w.no} の紹介で例外（はみ出しなど）');
+            final ok = find.text(ctx.l10n.gotIt);
+            await tester.ensureVisible(ok);
+            await tester.pump();
+            await tester.tap(ok);
+            await tester.pump();
+            await tester.pump(const Duration(milliseconds: 400));
+            await done;
+            expect(tester.takeException(), isNull, reason: '舞台${w.no} の紹介で例外（閉じるとき）');
+          }
+
+          await tester.pumpWidget(const SizedBox());
+          await tester.pump(const Duration(seconds: 1));
+        });
+      }
     }
 
     testWidgets('メニューの画面が収まる: 最小の iPhone・${locale.languageCode}・文字1.3倍', (tester) async {

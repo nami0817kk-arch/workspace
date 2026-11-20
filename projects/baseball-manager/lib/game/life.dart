@@ -18,7 +18,7 @@ enum Plan {
   study, // 研究: 気持ちが乗り、重点が少し伸びる
   social, // 交流: 友人・家族と過ごして気持ちを上げる
   match, // 練習試合・遠征: 全体が少し伸びる
-  lesson; // コーチに教わる: 少し伸び、コツが貯まる(貯まると特性を習得)
+  lesson; // コーチに教わる: 少し伸び、コツが貯まる(4回でコーチの特殊能力のコツが満タン)
 
   /// 重点の能力が要るか。
   bool get needsFocus =>
@@ -66,13 +66,22 @@ class Condition {
 /// 倍率は「1年ぶんの伸び」に対する割合で、通常の練習が 0.25(=4季節で1年)。
 ({double scale, int fatigue, int morale}) effectOf(Plan a) => switch (a) {
       Plan.train => (scale: 0.25, fatigue: 15, morale: 0),
-      Plan.special => (scale: 0.45, fatigue: 35, morale: -5),
+      Plan.special => (scale: tSpecial / 100, fatigue: tSpecialFatigue, morale: -5),
       Plan.rest => (scale: 0.05, fatigue: -40, morale: 5),
-      Plan.study => (scale: 0.12, fatigue: 5, morale: 10),
+      Plan.study => (scale: 0.12, fatigue: 5, morale: 10), // 主役は特殊能力のコツ(Game._gainTips)
       Plan.social => (scale: 0.03, fatigue: -10, morale: 20),
-      Plan.match => (scale: 0.11, fatigue: 20, morale: 0),
-      Plan.lesson => (scale: 0.15, fatigue: 12, morale: 0),
+      Plan.match => (scale: tMatch / 1000, fatigue: 20, morale: 0),
+      Plan.lesson => (scale: tLesson / 100, fatigue: 12, morale: 0),
     };
+
+// ── バランス調整のつまみ(dart run -DBAL_SPECIAL=40 tool/balance.dart で試せる) ──
+const tSpecial = int.fromEnvironment('BAL_SPECIAL', defaultValue: 40);
+const tSpecialFatigue = int.fromEnvironment('BAL_SPFAT', defaultValue: 35);
+const tLesson = int.fromEnvironment('BAL_LESSON', defaultValue: 15);
+const tMatchFix = bool.fromEnvironment('BAL_MATCHFIX', defaultValue: true);
+const tLessonGap = int.fromEnvironment('BAL_LGAP', defaultValue: 10);
+const tMatch = int.fromEnvironment('BAL_MATCH', defaultValue: 105);
+const tLessonGapCap = int.fromEnvironment('BAL_LGAPCAP', defaultValue: 40);
 
 /// 怪我の確率。疲れているほど、特訓ほど高い。
 double injuryChance(Condition c, Plan a, [Set<Trait> traits = const {}]) =>
@@ -99,11 +108,13 @@ bool hasOutcome(Plan a) =>
 
 /// 出来を決める。特訓は振れ幅が大きい(失敗も大成功も多い)。
 /// 平均の倍率は1.0前後になるようにしてある(全体のバランスは変えない)。
-Outcome rollOutcome(Plan a, Random rng, [Set<Trait> traits = const {}]) {
+/// `badFactor` は失敗の確率にかかる倍率(行動の連携で下がる)。
+Outcome rollOutcome(Plan a, Random rng,
+    [Set<Trait> traits = const {}, double badFactor = 1.0]) {
   if (!hasOutcome(a)) return Outcome.normal;
   final r = rng.nextDouble();
   final luck = outcomeLuck(traits);
-  final bad = (a == Plan.special ? 0.20 : 0.12) * luck.bad;
+  final bad = (a == Plan.special ? 0.20 : 0.12) * luck.bad * badFactor;
   final great = (a == Plan.special ? 0.10 : 0.08) * luck.great;
   final good = 0.20;
   if (r < bad) return Outcome.bad;
@@ -142,6 +153,8 @@ TermResult playTerm(
   double trainBonus = 1.0,
   double recoveryBonus = 1.0,
   double injuryFactor = 1.0,
+  double badFactor = 1.0,
+  bool keepMorale = false,
 }) {
   if (c.injured) {
     return TermResult(
@@ -152,22 +165,24 @@ TermResult playTerm(
     );
   }
   final e = effectOf(action);
-  final outcome = rollOutcome(action, rng, p.traits);
+  final outcome = rollOutcome(action, rng, p.traits, badFactor);
   final motiv = motivationOf(c.morale).expMultiplier * outcome.multiplier;
   final next = Map<Ability, int>.of(p.abilities);
   final gained = <Category, int>{};
   for (final a in abilitiesOf(p.role)) {
     // 練習試合は特定の能力に偏らない。
-    final f = action == Plan.match ? a : focus;
-    var x = yearlyDelta(p, a, f) *
-        e.scale *
-        share *
-        (action == Plan.study ? studyMultiplier(p.traits) : 1.0);
+    // (投手の打撃・守備の能力は、練習試合でも重点にしない)
+    final f = action == Plan.match && !(p.role == Role.pitcher && !pitcherAbilities.contains(a)) ? a : focus;
+    var x = yearlyDelta(p, a, f) * e.scale * share;
+    // 練習試合は全部の能力が重点扱いなので、能力の数で割る補正(roleExpFactor)を戻す
+    if (tMatchFix && action == Plan.match && p.role == Role.pitcher && pitcherAbilities.contains(a)) {
+      x *= pitcherPace / roleExpFactor(p.role, a);
+    }
     if (x > 0) x *= trainBonus; // 投資(専属トレーナー)
     if (x >= 0) {
       final cat = categoryOf(a);
       gained[cat] = (gained[cat] ?? 0) +
-          (x * expPerPoint * motiv * roleExpFactor(p.role)).round();
+          (x * expPerPoint * motiv * roleExpFactor(p.role, a)).round();
     } else {
       // 衰えは経験点を通さず直接下がる。端数は確率で切り上げる。
       final whole = x.truncate();
@@ -187,7 +202,9 @@ TermResult playTerm(
           .round();
   var dMorale = e.morale > 0
       ? (e.morale * moraleGainMultiplier(p.traits) * share).round()
-      : (e.morale * moraleLossMultiplier(p.traits) * share).round();
+      : keepMorale
+          ? 0
+          : (e.morale * moraleLossMultiplier(p.traits) * share).round();
   // 大成功は気持ちが上がり、失敗は疲れが増える。
   if (outcome == Outcome.great) dMorale += (6 * share).round();
   final extraFatigue = outcome == Outcome.bad ? (6 * share).round() : 0;
@@ -202,6 +219,21 @@ TermResult playTerm(
     exp: gained,
     outcome: outcome,
   );
+}
+
+/// 重点の能力 `f` だけを `scale`(1年ぶんに対する割合)だけ伸ばしたときの経験点。超回復に使う。
+/// 衰える年齢(伸びが0以下)なら空。乱数は使わない。
+Map<Category, int> focusExpOf(
+    Player p, Ability f, double scale, double share, int morale) {
+  final x = yearlyDelta(p, f, f) * scale * share;
+  if (x <= 0) return const {};
+  return {
+    categoryOf(f): (x *
+            expPerPoint *
+            motivationOf(morale).expMultiplier *
+            roleExpFactor(p.role, f))
+        .round(),
+  };
 }
 
 /// 年の終わり: 年齢が1つ進み、疲れが少し抜ける。
@@ -241,7 +273,7 @@ class EventChoice {
 
 class GameEvent {
   const GameEvent(this.id, this.text, this.choices,
-      {this.when, this.weight = 1.0});
+      {this.when, this.weight = 1.0, this.roles});
   final String id;
   final String text;
   final List<EventChoice> choices;
@@ -251,6 +283,9 @@ class GameEvent {
 
   /// 選ばれやすさ(既定1)。足した出来事は低くして、既存の出来事の頻度を薄めない。
   final double weight;
+
+  /// 起きる役割(変化球・遠投のように、役割に合う出来事だけ)。省略なら誰にでも。
+  final Set<Role>? roles;
 }
 
 Player _gain(Player p, Ability a, int n) {
@@ -279,7 +314,7 @@ final List<GameEvent> events = [
     EventChoice('今は断る',
         (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 5))),
   ]),
-  GameEvent('rival', '同い年のライバルが現れた。', [
+  GameEvent('rival', 'よそのチームに、手ごわい同い年の選手が現れた。', [
     EventChoice(
         '意識して追いかける',
         (p, c, f) => (
@@ -340,7 +375,7 @@ final List<GameEvent> events = [
       when: (stage, cast) => cast.lover != null),
   GameEvent(
       'family',
-      '母がお弁当を作って待っていた。',
+      '母が、好物の手料理を作って待っていてくれた。',
       [
         EventChoice(
           '感謝して食べる',
@@ -443,7 +478,8 @@ final List<GameEvent> events = [
           '付き合う',
           (p, c, f) => (
             player: _gain(p, f, 1),
-            condition: c.copyWith(morale: c.morale + 8)
+            // 2026-11-03: 疲れなしで能力1・やる気8は、遊ぶ(やる気6・疲れ-5)より明らかに得だった
+            condition: c.copyWith(morale: c.morale + 5, fatigue: c.fatigue + 5)
           ),
           (cast, rng) => cast.family?.addBond(10),
         ),
@@ -523,7 +559,7 @@ final List<GameEvent> events = [
       );
     }),
   ]),
-  GameEvent('big-chance', '練習試合で先発のチャンスが回ってきた。', [
+  GameEvent('big-chance', '次の試合で、先発出場のチャンスが回ってきた。', [
     EventChoice.risky('挑む', (p, c, f, rng) {
       if (rng.nextDouble() < 0.5) {
         return (
@@ -562,12 +598,13 @@ final List<GameEvent> events = [
           '教えを聞く',
           (p, c, f) => (
             player: _gain(p, f, 2),
-            condition: c.copyWith(morale: c.morale + 5)
+            // 2026-11-03: 能力2・やる気5と、貫く(やる気8)では聞くのが一択だった。教わるのは少し疲れる
+            condition: c.copyWith(morale: c.morale + 2, fatigue: c.fatigue + 5)
           ),
         ),
         EventChoice(
           '自分のやり方を貫く',
-          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 8)),
+          (p, c, f) => (player: p, condition: c.copyWith(morale: c.morale + 10)),
         ),
       ],
       when: (stage, cast) => stage == Stage.pro),
@@ -741,7 +778,8 @@ final List<GameEvent> events = [
           '毎日手入れして使い込む',
           (p, c, f) => (
             player: _gain(p, Ability.fielding, 2),
-            condition: c.copyWith(morale: c.morale + 10)
+            // 2026-11-03: 能力2とやる気10で、自慢(やる気14)を選ぶ理由がなかった
+            condition: c.copyWith(morale: c.morale + 4)
           ),
         ),
         EventChoice(
@@ -827,8 +865,9 @@ final List<GameEvent> events = [
           },
         ),
         EventChoice(
-          '放っておく',
-          (p, c, f) => (player: p, condition: c),
+          // 2026-11-03: 絆が下がるだけで得るものが無く、選ぶ意味がなかった。自分の練習に戻れる
+          '放っておいて、自分の練習に戻る',
+          (p, c, f) => (player: _gain(p, f, 1), condition: c),
           (cast, rng) {
             for (final m in cast.teammates) {
               m.addBond(-4);
@@ -962,7 +1001,7 @@ final List<GameEvent> events = [
       weight: 0.5),
   GameEvent(
       'summer-camp',
-      '夏の合宿に誘われた。',
+      '強化合宿に誘われた。',
       [
         EventChoice(
             '最後まで参加する',
@@ -1015,9 +1054,12 @@ final List<GameEvent> events = [
                       c.copyWith(morale: c.morale + 8, fatigue: c.fatigue + 3)
                 )),
         EventChoice(
+            // 2026-11-03: やる気+1だけで、話を聞く(やる気+8)の一択だった。浮いた時間で練習できる
             '自分で考えろと伝える',
-            (p, c, f) =>
-                (player: p, condition: c.copyWith(morale: c.morale + 1))),
+            (p, c, f) => (
+                  player: _gain(p, f, 1),
+                  condition: c.copyWith(morale: c.morale + 1)
+                )),
       ],
       when: (stage, cast) => stage == Stage.pro || stage == Stage.highSchool,
       weight: 0.5),
@@ -1045,6 +1087,108 @@ final List<GameEvent> events = [
       ],
       when: (stage, cast) => stage != Stage.youth,
       weight: 0.5),
+  // ── 2026-11-03: 弾道・肩力・捕球・変化球(パワプロと同じにした能力)に関わる出来事 ──
+  GameEvent(
+      'new-pitch',
+      'ブルペンで、新しい変化球の握りを教わった。',
+      [
+        EventChoice(
+            '投げ込んで自分のものにする',
+            (p, c, f) => (
+                  player: _gain(p, Ability.breaking, 2),
+                  condition: c.copyWith(fatigue: c.fatigue + 10)
+                )),
+        EventChoice(
+            '今の球種を磨く',
+            (p, c, f) => (
+                  player: _gain(p, Ability.control, 1),
+                  condition: c.copyWith(morale: c.morale + 3)
+                )),
+      ],
+      roles: const {Role.pitcher, Role.twoWay},
+      when: (stage, cast) => stage != Stage.youth,
+      weight: 0.5),
+  GameEvent(
+      'catcher-signs',
+      '捕手から、配球を一緒に考えようと誘われた。',
+      [
+        EventChoice(
+            'じっくり話し込む',
+            (p, c, f) => (
+                  player: _gain(p, Ability.control, 2),
+                  // 2026-11-03: 疲れなしで能力2・やる気4は、ほぼ一択だった
+                  condition: c.copyWith(morale: c.morale + 2, fatigue: c.fatigue + 6)
+                )),
+        EventChoice(
+            '自分の感覚を信じて投げる',
+            (p, c, f) => (
+                  player: _gain(p, Ability.stuff, 1),
+                  condition: c.copyWith(morale: c.morale + 8)
+                )),
+      ],
+      roles: const {Role.pitcher, Role.twoWay},
+      weight: 0.5),
+  GameEvent(
+      'long-toss',
+      '遠投で、肩の強さをコーチにほめられた。',
+      [
+        EventChoice(
+            '遠投を毎日の日課にする',
+            (p, c, f) => (
+                  player: _gain(p, Ability.arm, 2),
+                  condition: c.copyWith(fatigue: c.fatigue + 8)
+                )),
+        EventChoice(
+            '肩を休めて、捕る練習に回す',
+            (p, c, f) => (
+                  player: _gain(p, Ability.catching, 1),
+                  condition: c.copyWith(morale: c.morale + 3)
+                )),
+      ],
+      roles: const {Role.batter, Role.twoWay},
+      weight: 0.5),
+  GameEvent(
+      'launch-angle',
+      '打球の角度を測る機械で、自分の打球を見せてもらった。',
+      [
+        EventChoice.risky('角度を上げる打ち方に挑む', (p, c, f, rng) {
+          if (rng.nextDouble() < 0.6) {
+            return (
+              player: _gain(p, Ability.trajectory, 3),
+              condition: c.copyWith(morale: c.morale + 5)
+            );
+          }
+          return (
+            player: p,
+            condition: c.copyWith(morale: c.morale - 5, fatigue: c.fatigue + 5)
+          );
+        }),
+        EventChoice(
+            '今の打ち方を固める',
+            (p, c, f) => (
+                  player: _gain(p, Ability.contact, 1),
+                  condition: c.copyWith(morale: c.morale + 2)
+                )),
+      ],
+      roles: const {Role.batter, Role.twoWay},
+      when: (stage, cast) => stage != Stage.youth,
+      weight: 0.5),
+  GameEvent(
+      'ground-balls',
+      'ゴロ捕球の特守(特別な守備練習)に誘われた。',
+      [
+        EventChoice(
+            '泥だらけになって受ける',
+            (p, c, f) => (
+                  player: _gain(p, Ability.catching, 2),
+                  condition: c.copyWith(fatigue: c.fatigue + 12)
+                )),
+        EventChoice(
+            '今日は遠慮する',
+            (p, c, f) =>
+                (player: p, condition: c.copyWith(morale: c.morale + 3))),
+      ],
+      weight: 0.5),
 ];
 
 /// 出来事の起きる確率(1季節あたり)。
@@ -1057,12 +1201,14 @@ GameEvent? drawEvent(Random rng,
     Stage? stage,
     Cast? cast,
     String? exclude,
+    Role? role,
     Set<String> recent = const {}}) {
   if (rng.nextDouble() >= eventChance * share) return null;
   final pool = [
     for (final e in events)
-      if (e.when == null ||
-          (stage != null && cast != null && e.when!(stage, cast)))
+      if ((e.when == null ||
+              (stage != null && cast != null && e.when!(stage, cast))) &&
+          (e.roles == null || (role != null && e.roles!.contains(role))))
         e,
   ];
   // 直前と同じ出来事、最近起きた出来事は避ける(候補が無くなるなら、避けるのをやめる)。

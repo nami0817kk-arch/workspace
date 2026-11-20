@@ -1,0 +1,157 @@
+# 物語完結型ショート 徳川将軍の1日 s5（2026-11-06）。本編 scripts/shogun-story.yaml（11/9 19:00 公開、https://youtu.be/-kxBsJCne_k）の第6章から。11/10 19:30 公開。
+# 形式は ooku_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（小姓の言葉は記録。出どころを言ってから引く）。絵は本編の AI 絵。新しい絵は作らない。
+# 切り口：夜の将軍。糠袋・10枚の浴衣・獏の掛け軸・5〜6個の枕・寝ずの番の小姓2人と「咳ひとつできない」。
+#   大奥へ入る手順・精進日・枕のくい違いは使わない。家慶の歯（shogun-47、第7章）は tease の答えとして本編に残す。
+# どの将軍の記録か：『千代田城大奥』（1892）・松平太郎『江戸時代制度の研究』（1919）＝12代家慶・13代家定のころの元御小姓の話。
+# 事実カード：shogun-29・25・30・31。言い方は本編のまま。
+#   ・四つ＝午後10時（松平太郎）。浴衣10枚ほど・7〜8枚掛ける、糠袋7〜8個。本編どおり。
+#   ・小姓の言葉は『千代田城大奥』コマ131「中々眠られたるものにあらず、君の御目覺中は、猶更咳聲も出來ず」（本編の言い直しのまま）。
+# 理解テスト4問：
+#   ①誰の話か：幕末の徳川将軍（家慶・家定のころ）の夜
+#   ②何をしたか：糠袋は一度きり、浴衣を1枚ずつ掛け替えて乾かす。夜10時に床。枕元に獏の絵、枕は5〜6個
+#   ③そばに誰がいたか：寝ずの番の小姓が2人
+#   ④どうだったか：番の小姓は、将軍が起きているうちは咳ひとつできなかった
+title: 徳川将軍｜夜は、ひとりで眠れたのか
+yt_title: 徳川将軍は夜ひとりで眠れたのか　一度きりの糠袋、獏の掛け軸、そして脇で寝ずの番をする小姓2人
+description: |-
+  天下を治めた徳川将軍は、夜、ひとりで眠れたのでしょうか。
+  明治25年（1892年）の『千代田城大奥』と、1919年の松平太郎『江戸時代制度の研究』に、12代家慶や13代家定のころの将軍の夜が残っています。湯殿では糠袋を7つか8つ用意し、一度肌につけた糠袋は二度と使いません。湯から上がると白い浴衣を10枚ほど用意し、1枚ずつ掛けては替え、7枚から8枚掛けて体を乾かしました。四つ、午後10時に床に入ると、枕元には悪い夢を食べるという獏の絵の掛け軸。枕は5つか6つあり、夜中に用を足して戻るたびに新しい枕に替えました。そして将軍の脇には、寝ずの番の小姓が2人、横になっていました。番を勤めた小姓は、なかなか眠れるものではない、将軍が目を覚ましているうちは咳ひとつできない、と語っています。
+  では、60歳の将軍の歯は、どうなっていたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川将軍', '#日本史', '#江戸時代']
+ai_images: true
+ai_disclosure: この動画の将軍の暮らしの場面・室内・人物の画像は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。将軍の姿も特定の肖像を写したものではありません。
+art_dir: out/story/shogun
+readings: {床に入る: とこに入る}      # 台本ごとの読み替え（readings.yaml は変えない。ユカを避ける）
+out: shogun_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 徳川将軍の夜（家慶・家定のころ）
+  title: "将軍は夜、《ひとりで眠れたのか》"
+now:
+  - {at: 将軍は夜, text: "幕末　江戸城の中奥", point: 0}
+  - {at: 明治25年, text: "1892年　『千代田城大奥』", point: 1}
+  - {at: 湯殿では, text: "幕末　将軍の夜", point: 0}
+timeline:
+  - {label: "幕末"}
+  - {label: "1892"}
+cards:
+  - type: table
+    title: 将軍の夜（『千代田城大奥』ほか）
+    from: 湯殿では
+    until: そして
+    items:
+      - {at: 湯殿では, text: "糠袋　一度きり"}
+      - {at: 湯から上がると, text: "浴衣　10枚ほど"}
+      - {at: 枕は, text: "枕　5つか6つ"}
+    text_y: 0.70
+shots:
+  S12:
+    kind: ai
+    file: shogun/main/S12.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: ろうそくのともる夜の広間
+  S10:
+    kind: ai
+    file: shogun/main/S10.jpg
+    focus: [0.6, 0.55]
+    move: right
+    must: 灯の下の書物
+  G11:
+    kind: ai
+    file: shogun/main/G11.jpg
+    focus: [0.45, 0.5]
+    move: left
+    must: 湯殿の将軍（後ろ姿）
+  G11b:
+    kind: ai
+    file: shogun/main/G11.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 白い浴衣を掛けられる将軍
+  G13:
+    kind: ai
+    file: shogun/main/G13.jpg
+    focus: [0.47, 0.45]
+    move: up
+    must: 枕元の獏の掛け軸
+  G13P:
+    kind: ai
+    file: shogun/main/G13P.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 並べた箱枕
+  G12:
+    kind: ai
+    file: shogun/main/G12.jpg
+    focus: [0.7, 0.55]
+    move: in
+    must: 将軍の脇の小姓2人
+  G12b:
+    kind: ai
+    file: shogun/main/G12.jpg
+    focus: [0.35, 0.6]
+    move: left
+    must: 眠る将軍
+  S04:
+    kind: ai
+    file: shogun/main/S04.jpg
+    focus: [0.5, 0.55]
+    move: left
+    must: 灯のともる座敷
+lines:
+  - 語り: 将軍は、夜、ひとりで眠れたのか。
+    shot: S12
+    tone: 疑問
+    pause: 0.12
+  # fact: shogun-29, shogun-30
+  - 語り: 明治25年の、『千代田城大奥』と、大正の、松平太郎の本に、12代家慶や、13代家定のころの、将軍の夜が残る。
+    shot: S10
+    tone: 強調
+    pause: 0.12
+  # fact: shogun-29
+  - 語り: 湯殿では、糠袋を、7つか8つ。一度、肌につけた糠袋は、二度と使わない。
+    shot: G11
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-29
+  - 語り: 湯から上がると、白い浴衣を、10枚ほど用意し、1枚ずつ掛けては替え、7枚から8枚で、体を乾かした。
+    shot: G11b
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-25, shogun-30
+  - 語り: 四つ、午後10時に、床に入る。枕元には、悪い夢を食べるという、獏の絵の掛け軸。
+    shot: G13
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-30
+  - 語り: 枕は、5つか6つ。夜中に用を足して戻るたび、新しい枕に替えた。
+    shot: G13P
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  # fact: shogun-31
+  - 語り: そして、将軍の脇には、寝ずの番の小姓が、《!2人》、横になっていた。
+    shot: G12
+    tone: 重い
+    pause: 0.12
+  # fact: shogun-31
+  - 語り: 番を勤めた小姓は、こう語る。なかなか、眠れるものではない。将軍が目を覚ましているうちは、《咳ひとつ》、できない。
+    shot: G12b
+    tone: 重い
+    pause: 0.15
+  # fact: shogun-47（答えは本編の第7章：60歳でもすり減っていない）
+  - 語り: では、60歳の将軍の歯は、どうなっていたのか。
+    shot: S04
+    tone: 疑問
+    pause: 0.15

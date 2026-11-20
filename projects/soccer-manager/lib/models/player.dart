@@ -1,10 +1,10 @@
-import 'dart:math';
 
 import 'player_instruction.dart';
+import 'player_traits.dart';
 import 'attributes.dart';
 import 'enum_json.dart';
-import 'training_focus.dart';
 import '../l10n/tr.dart';
+import '../logic/economy_scale.dart';
 
 /// Football Manager風の詳細ポジション（14種類）。
 enum Position { gk, dr, dc, dl, wbr, wbl, dm, mr, mc, ml, amr, amc, aml, st }
@@ -139,13 +139,13 @@ extension SquadStatusInfo on SquadStatus {
       };
 
   String get description => switch (this) {
-        SquadStatus.keyPlayer => Tr.pick('毎試合の出場を約束。外すと大きく不満だが、週給要求も高い',
+        SquadStatus.keyPlayer => Tr.pick('毎試合の出場を約束。外すと大きく不満だが、給与要求も高い',
             'Promised a start every match. Leaving them out upsets them badly, and they demand high wages.'),
         SquadStatus.regular => Tr.pick('基本的に出場を想定する標準の立場',
             'The standard billing: expected to play most weeks.'),
         SquadStatus.rotation => Tr.pick('出場は状況次第。ベンチでも不満が溜まりにくい',
             'Plays as circumstances allow. Rarely unsettled by a spell on the bench.'),
-        SquadStatus.prospect => Tr.pick('出場より育成優先。不満はほぼ溜まらず週給も控えめ',
+        SquadStatus.prospect => Tr.pick('出場より育成優先。不満はほぼ溜まらず給与も控えめ',
             'Development before minutes. Barely ever unsettled, and cheap on wages.'),
       };
 
@@ -877,11 +877,10 @@ extension PlayerTraitInfo on PlayerTrait {
       };
 }
 
-/// 選手特性の習得経路による分類。
-/// - [technical]: 具体的な技術・フィジカルの練習(特訓)で身につけられる。
-/// - [personality]: 練習では身につかず、メンター(チームメイト)や監督との
-///   関わり(声かけ)を通じて選手の中で育っていく。
-/// - [talent]: 生まれ持った資質であり、特訓によって後から獲得することはできない。
+/// 選手特性の分類。特性は加入した時点で決まり、あとから身に付くことはない。
+/// - [technical]: 具体的な技術・フィジカルの能力値と結びついた持ち味。
+/// - [personality]: 対戦相手・状況への向き合い方など、メンタル面の資質。
+/// - [talent]: 天候・年齢・調子の波など、生まれ持った資質。
 enum PlayerTraitCategory { technical, personality, talent }
 
 extension PlayerTraitCategoryInfo on PlayerTraitCategory {
@@ -890,23 +889,13 @@ extension PlayerTraitCategoryInfo on PlayerTraitCategory {
         PlayerTraitCategory.personality => Tr.pick('性格', 'Personality'),
         PlayerTraitCategory.talent => Tr.pick('才能', 'Natural'),
       };
-
-  String get acquisitionHint => switch (this) {
-        PlayerTraitCategory.technical => Tr.pick('特訓(練習)で狙って身につけられる',
-            'Can be picked up deliberately through focused training.'),
-        PlayerTraitCategory.personality => Tr.pick('メンターや監督の声かけを通じて育っていく',
-            'Grows through mentoring and words from the manager.'),
-        PlayerTraitCategory.talent => Tr.pick('生まれ持った資質。特訓では身につけられない',
-            'Innate. Cannot be acquired through training.'),
-      };
 }
 
 /// 各選手特性がどの分類に属するか。
-/// 技術: 特定の技術・フィジカル能力値に直結し、練習で伸ばせるもの。
-/// 性格: 対戦相手・状況への向き合い方やメンタル面の資質で、チームメイト
-///   (メンター)や監督との関わりの中で育つもの。
+/// 技術: 特定の技術・フィジカル能力値に直結するもの。
+/// 性格: 対戦相手・状況への向き合い方やメンタル面の資質。
 /// 才能: 天候・年齢・調子の波など、選手自身の生まれ持った資質や外的条件に
-///   左右され、練習では後天的に獲得できないもの。
+///   左右されるもの。
 extension PlayerTraitCategoryOf on PlayerTrait {
   PlayerTraitCategory get category => switch (this) {
         PlayerTrait.giantKiller => PlayerTraitCategory.personality,
@@ -1007,23 +996,6 @@ Position parsePosition(String raw) {
   }
 }
 
-/// セーブデータの技術特訓ターゲットを復元する。カテゴリ分類の導入以前の
-/// セーブデータでは技術以外の特性が入っている場合があるため、その場合は
-/// 練習では習得できない特性として黙って読み捨てる(null扱い)。
-PlayerTrait? _technicalTraitTargetFromJson(String? raw) {
-  if (raw == null) return null;
-  final trait = enumFromName(PlayerTrait.values, raw, PlayerTrait.streaky);
-  return trait.category == PlayerTraitCategory.technical ? trait : null;
-}
-
-/// セーブデータの性格特性ターゲットを復元する。性格カテゴリ以外の特性が
-/// 入っていた場合は同様に読み捨てる。
-PlayerTrait? _personalityTraitTargetFromJson(String? raw) {
-  if (raw == null) return null;
-  final trait = enumFromName(PlayerTrait.values, raw, PlayerTrait.streaky);
-  return trait.category == PlayerTraitCategory.personality ? trait : null;
-}
-
 class Player {
   final String id;
   String name;
@@ -1059,15 +1031,47 @@ class Player {
   int careerAppearances;
   int careerGoals;
 
-  /// 個別のトレーニング方針。nullの場合はチームの既定方針に従う。
-  TrainingFocus? individualFocus;
-
   /// 週俸（万円）
   int wage;
 
-  /// 契約残り年数。0になると自由契約としてチームを去る(シーズン開始時に
-  /// 1年ずつ消化する)。
-  int contractYearsRemaining;
+  /// 契約の満了日の年。契約は「この年の6月30日まで」。
+  ///
+  /// 以前は残り年数で持ち、シーズン末に1つ減らしていた。実在の契約と同じく
+  /// 満了日で持つ。7月1日に新しいシーズンへ入ったとき、満了日を過ぎた
+  /// 選手は自由契約になる。
+  int contractEndYear;
+
+  /// 残り年数を数える基準の年(今のシーズンが終わる年。第1季は2027)。
+  ///
+  /// 選手は今日の日付を知らないので、ゲームの側がシーズンの切り替わり・
+  /// 読み込み・新規開始のたびに合わせる(GameState._syncContractClock)。
+  /// 保存はしない。保存するのは満了の年だけ。
+  static int contractClockYear = defaultContractClockYear;
+
+  /// 第1季(2026/27)が終わる年。
+  static const int defaultContractClockYear = 2027;
+
+  /// [season]季が終わる年(6月30日の年)。
+  static int seasonEndYearOf(int season) => defaultContractClockYear + season - 1;
+
+  /// 今のシーズンを含めた契約の残りのシーズン数。1なら今のシーズン末
+  /// (6月30日)で満了する。0は満了済み(フリーエージェント)。
+  int get contractYearsRemaining {
+    final years = contractEndYear - contractClockYear + 1;
+    return years < 0 ? 0 : years;
+  }
+
+  /// 残りのシーズン数で満了の年を決める(1なら今のシーズン末)。
+  set contractYearsRemaining(int years) =>
+      contractEndYear = contractClockYear + years - 1;
+
+  /// クラブ側の1年延長オプションが付いているか。満了の年の3月31日までに
+  /// 行使すると、同じ年俸で満了が1年延びる。行使しなければ消える。
+  bool contractOption;
+
+  /// 「契約を延長しない」と言い出した選手か(残り1年に入ったときに決まる)。
+  /// 更新の交渉に応じない。売るか、満了でただで失うかになる。
+  bool refusesRenewal;
 
   /// 性格。不満度の変動しやすさ・移籍希望の出やすさに影響する。
   PlayerPersonality personality;
@@ -1075,26 +1079,34 @@ class Player {
   /// 不満度（0-100）。低いほど移籍を希望しやすくなる。
   int happiness;
 
-  /// 話し合い(reassure)の再実施までの残り週数。0なら実施可能。
-  /// 連発による不満度管理の形骸化を防ぐためのクールダウン。
-  int reassureCooldownWeeks;
-
-  /// 個別声かけ(モチベーショントーク)の再実施までの残り週数。0なら実施可能。
-  /// reassureが不満度(happiness)を対象にするのに対し、こちらは士気(morale)を
-  /// 対象にした短期的なコマンドで、連発を防ぐためのクールダウン。
-  int talkCooldownWeeks;
-
   /// ローンでの加入かどうか。ローン選手は契約更新・放出の対象外で、
   /// [loanWeeksRemaining]が0になると自動的にチームを離れる。
   bool isLoan;
 
-  /// ローン期間の残り週数（ローン選手でない場合は0）。
+  /// ローン期間の残り週数（ローン選手でない場合は0）。旧セーブの持ち方で、
+  /// 今は[loanEndDate]で持つ。日付の無いローン(旧セーブを読んだ直後・
+  /// テストで作った選手)だけがこの週数で数える。
   int loanWeeksRemaining;
+
+  /// ローンが終わる日(この日になったら元のクラブへ戻る)。半年なら冬の窓が
+  /// 開く日、1年ならシーズン末(6月30日)。ローン選手でなければ null。
+  DateTime? loanEndDate;
+
+  /// 他のクラブから借りている選手の、元のクラブの id。ローンが終わると
+  /// そのクラブへ戻る。作り物の市場から借りた旧セーブの選手は null(戻る先が無い)。
+  String? loanFromClubId;
+
+  /// 借りる前の週俸。ローン中はこちらが6割だけ負担するので下げてある。
+  /// 元のクラブへ戻る・買い取るときにこの額へ戻す。
+  int? loanBaseWage;
 
   /// ローン契約に買取オプションが付いている場合の買取金額(万円)。
   /// ローン期間中いつでもこの金額を支払えば恒久的に完全移籍へ切り替えられる。
   /// 買取オプションがない通常のローンの場合はnull。
   int? loanBuyOptionFee;
+
+  /// ローンに買取義務が付いているか(満了すると必ず買い取る)。
+  bool loanObligation;
 
   /// リリース条項(解放金額、万円)。設定されている場合、他クラブがこの金額を
   /// 提示すると交渉なしで自動的に移籍が成立する。未設定はnull。
@@ -1104,11 +1116,28 @@ class Player {
   /// 招集中はスタメン・自動編成の対象外になる。
   int internationalDutyWeeksRemaining;
 
+  /// 夏の代表の大会(ワールドカップ・大陸選手権)のあとの休みで、まだ
+  /// クラブに合流していない。合流の日まで試合に出せない。
+  bool onTournamentLeave;
+
+  /// 夏の大会の活躍で上がった市場価値(%)。次のシーズンの始まりで消える。
+  int tournamentBoostPct;
+
   /// 戦術上のデューティ(守備的/バランス/攻撃的)。試合エンジンの攻守貢献度に補正がかかる。
   PlayerDuty duty;
 
   /// スカッド・ステータス(出場機会の約束)。旧セーブは「主力」扱い。
   SquadStatus squadStatus;
+
+  /// 加入のときに約束した序列(キープレイヤーか主力のときだけ)。先発から
+  /// 外し続けたり序列を下げたりすると、約束を破ったことになる。
+  SquadStatus? promisedStatus;
+
+  /// 約束した選手が、出られるのに先発から外れた節の数(続けて)。
+  int promiseMisses;
+
+  /// 約束を破られた(移籍を願い出ている)。
+  bool promiseBroken;
 
   /// 移籍リストに登録されているか。登録中は他クラブからのオファーが来やすくなる。
   bool isTransferListed;
@@ -1118,12 +1147,41 @@ class Player {
   int loanedOutWeeksRemaining;
   String? loanedOutToClubName;
 
+  /// 他クラブへ貸している選手が戻る日。日付の無い貸し出し(旧セーブ・
+  /// テストで作った選手)は[loanedOutWeeksRemaining]で数える。
+  DateTime? loanedOutUntil;
+
+  /// 貸し出しに「冬の窓で呼び戻せる」条項が付いているか。
+  bool loanRecallClause;
+
+  /// 締切の時点で登録の名簿から外れた選手か。次の窓が開くまで公式戦に
+  /// 出られない(自動編成からも外す)。
+  bool notRegistered;
+
+  /// オーナーが「締切の名簿から外す」と決めた選手か。登録の枠を超えて
+  /// いるときだけ効く(超えていなければ誰も外さない)。
+  bool leaveOffRegistration;
+
+  /// 移籍市場の選手が今いる国([LeagueTheme]の name)。18歳未満は国を
+  /// またいで移れないので、自国以外の18歳未満は獲れない。
+  String? originLeague;
+
+  /// 国籍(LeagueTheme の name)。国をまたいで移るときに覚える。それまでは
+  /// null で、GameState.nationalityOf が今いるリーグから決める。
+  String? nation;
+
   /// 移籍市場にスカウティング候補として掲載されている選手の現所属クラブ名
   /// (表示専用。自クラブの選手・フリーエージェントにはnull)。
   String? originClubName;
 
   /// 出場手当(万円)。契約更新時に決定され、リーグ公式戦でスタメン出場するたびに支払われる。
   int appearanceFee;
+
+  /// 出来高: リーグ戦で1点取るごとに払う額(万円。0なら無し)。
+  int goalBonus;
+
+  /// 段階昇給: 季が変わるたびに週給を上げる割合(%。0なら無し)。
+  int raisePct;
 
   /// プレースタイル(ロール)。デューティとは別に、活躍する能力値の傾向を表す。
   PlayerRole role;
@@ -1167,6 +1225,17 @@ class Player {
   /// 買ってきた選手と、育てた選手を見分けるための印。旧セーブは false。
   bool academyGraduate;
 
+  /// 国内で育った選手か(登録の決まりの「自国育成」)。生成時に決める。
+  /// 自クラブのユース出身([academyGraduate])も国内育成として数える。
+  bool homegrown;
+
+  bool get isHomegrown => homegrown || academyGraduate;
+
+  /// 旧セーブには印が無いので、id から決まった値を出す(読み込むたびに
+  /// 変わらないように、文字列の hashCode ではなく文字コードの和を使う)。
+  static bool homegrownFromId(String id) =>
+      id.codeUnits.fold<int>(0, (a, c) => a + c) % 5 < 3;
+
   /// 背番号。ユースから一軍へ昇格したとき、または移籍で加入したときに
   /// 割り当てる。旧セーブ・ユース在籍中は null。
   int? squadNumber;
@@ -1179,52 +1248,6 @@ class Player {
   /// 上限はTrainingEngine.overallHistoryLimit。自クラブの選手とユース
   /// 昇格候補のみ記録され、選手詳細の成長推移グラフに使う。旧セーブは空。
   List<int> overallHistory;
-
-  /// メンター(指導役)に指名されたベテラン選手のID。若手選手の成長率に
-  /// ボーナスを与える代わりに、メンター自身の士気も少し上がる。
-  String? mentorId;
-
-  /// ピンポイントで重点的に伸ばしたい能力値。設定するとチーム/個別の
-  /// トレーニング方針とは別に、この1項目の成長確率が上乗せされる。
-  String? drillAttributeKey;
-
-  /// 2つ目のピンポイント特訓ドリル(任意)。[drillAttributeKey]より成長率は
-  /// 抑えめだが、同時に2項目を重点的に伸ばせる。
-  String? drillAttributeKey2;
-
-  /// 特性未保有の選手に対し、週次トレーニングで狙って習得させたい選手特性
-  /// ([PlayerTrait])。技術カテゴリの特性のみ指定できる(才能・性格の特性は
-  /// 練習では身につかないため)。設定すると毎週低確率でこの特性を獲得する
-  /// 判定が行われ、選手の能力値・年齢がその特性に適性が高いほど成功率が
-  /// 上がる。既に特性を持つ選手には効果がない。
-  PlayerTrait? traitTrainingTarget;
-
-  /// 特性未保有の選手に対し、メンター(チームメイト)や監督との関わりを
-  /// 通じて習得させたい性格カテゴリの選手特性。設定すると、有効なメンターが
-  /// いる週・監督が個別に声をかけた週に、低確率でこの特性を獲得する判定が
-  /// 行われる。既に特性を持つ選手には効果がない。
-  PlayerTrait? personalityTraitTrainingTarget;
-
-  /// 複数のトレーニング方針を登録し、週次トレーニングのたびに順番に
-  /// 切り替える個別ローテーション。設定されている間は[individualFocus]
-  /// より優先される。空またはnullならローテーションを使わない。
-  List<TrainingFocus>? focusRotation;
-
-  /// [focusRotation]の中で次に適用する方針のインデックス。
-  int rotationWeekIndex;
-
-  /// ポジションコンバート特訓(TrainingFocus.positionSwitch)で目標とする
-  /// ポジション(Position.name)。設定した場合、生成時に偶然割り当てられた
-  /// secondaryPositionsとは関係なく、このポジションの慣れ度を集中的に
-  /// 伸ばす。慣れ度が上限(100)に達するとsecondaryPositionsへ自動的に
-  /// 追加され、実際にそのポジションで起用できるようになる。
-  String? trainingConvertTargetPosition;
-
-  /// 育成プラン: この選手を将来どのロール(プレースタイル)に育てたいか。
-  /// 設定すると、週次トレーニングでそのロールの重視能力値
-  /// ([PlayerRoleInfo.keyAttributes])が優先的に伸びる追加の成長判定が
-  /// 行われる。選手のポジション大分類に合ったロールのみ設定できる。
-  PlayerRole? developmentTargetRole;
 
   /// 選手特性(格上キラー/横綱相撲/波がある)。持たない選手も多い(null)。
   PlayerTrait? trait;
@@ -1255,11 +1278,6 @@ class Player {
   /// のたびに設定し直す一時的なフラグで、セーブデータには保存しない。
   bool hadBreakthroughThisWeek = false;
 
-  /// 直近の週次トレーニングで特性トレーニングにより獲得した選手特性
-  /// (獲得しなかった場合はnull)。[TrainingEngine]が週次トレーニングの
-  /// たびに設定し直す一時的なフラグで、セーブデータには保存しない。
-  PlayerTrait? acquiredTraitThisWeek;
-
   Player({
     required this.id,
     required this.name,
@@ -1277,25 +1295,42 @@ class Player {
     this.suspendedMatches = 0,
     this.careerAppearances = 0,
     this.careerGoals = 0,
-    this.individualFocus,
     this.wage = 20,
-    this.contractYearsRemaining = 2,
+    int? contractEndYear,
+    int contractYearsRemaining = 2,
+    this.contractOption = false,
+    this.refusesRenewal = false,
     this.personality = PlayerPersonality.balanced,
     this.happiness = 70,
-    this.reassureCooldownWeeks = 0,
-    this.talkCooldownWeeks = 0,
     this.isLoan = false,
     this.loanWeeksRemaining = 0,
     this.loanBuyOptionFee,
+    this.loanObligation = false,
     this.releaseClause,
     this.internationalDutyWeeksRemaining = 0,
+    this.onTournamentLeave = false,
+    this.tournamentBoostPct = 0,
     this.duty = PlayerDuty.support,
     this.squadStatus = SquadStatus.regular,
+    this.promisedStatus,
+    this.promiseMisses = 0,
+    this.promiseBroken = false,
     this.isTransferListed = false,
     this.loanedOutWeeksRemaining = 0,
     this.loanedOutToClubName,
+    this.loanedOutUntil,
+    this.loanRecallClause = false,
+    this.notRegistered = false,
+    this.leaveOffRegistration = false,
+    this.originLeague,
+    this.nation,
+    this.loanEndDate,
+    this.loanFromClubId,
+    this.loanBaseWage,
     this.originClubName,
     this.appearanceFee = 0,
+    this.goalBonus = 0,
+    this.raisePct = 0,
     this.role = PlayerRole.standard,
     this.instruction,
     this.injuryProneness = 10,
@@ -1308,19 +1343,13 @@ class Player {
     this.youthMatchGoals = 0,
     this.squadNumber,
     this.academyGraduate = false,
+    this.homegrown = false,
     this.lastYouthMatchRating = 0,
-    this.mentorId,
-    this.drillAttributeKey,
-    this.drillAttributeKey2,
-    this.traitTrainingTarget,
-    this.personalityTraitTrainingTarget,
-    this.focusRotation,
-    this.rotationWeekIndex = 0,
-    this.trainingConvertTargetPosition,
-    this.developmentTargetRole,
     this.trait,
     this.growthType = PlayerGrowthType.balanced,
-  })  : secondaryPositions = secondaryPositions ?? [],
+  })  : contractEndYear =
+            contractEndYear ?? contractClockYear + contractYearsRemaining - 1,
+        secondaryPositions = secondaryPositions ?? [],
         attributes = attributes ?? {for (final k in AttributeKeys.all) k: 50},
         positionFamiliarity = positionFamiliarity ?? {},
         injuryHistoryCounts = injuryHistoryCounts ?? {},
@@ -1341,8 +1370,17 @@ class Player {
     positionFamiliarity[pos.name] = (current + amount).clamp(0, 100);
   }
 
-  /// 不満度が性格ごとの閾値を下回り、移籍を希望しているかどうか。
-  bool get wantsTransfer => happiness < personality.transferRequestThreshold;
+  /// 人柄の6つの軸(保存せず、id と性格から作る)。
+  PlayerTraits get traits => PlayerTraits.of(id, personality);
+
+  /// 不満度がこれを下回ると移籍を希望する。性格の閾値を、野心で上げ、
+  /// 忠誠で下げる。
+  int get transferRequestLine =>
+      (personality.transferRequestThreshold + traits.transferLineShift)
+          .clamp(0, 100);
+
+  /// 移籍を希望しているか(不満度が線を下回った、または約束を破られた)。
+  bool get wantsTransfer => promiseBroken || happiness < transferRequestLine;
 
   int attributeValue(String key) => attributes[key] ?? 50;
 
@@ -1437,7 +1475,37 @@ class Player {
 
   bool get isSuspended => suspendedMatches > 0;
 
-  bool get isOnInternationalDuty => internationalDutyWeeksRemaining > 0;
+  bool get isOnInternationalDuty =>
+      internationalDutyWeeksRemaining > 0 || onTournamentLeave;
+
+  /// 誕生日を2001年(うるう年でない年)に置いた日。月と日だけを使う。
+  /// id から決まるので保存しない。2月29日生まれはいない。
+  late final DateTime _birthday = _birthdayOf(id);
+
+  static DateTime _birthdayOf(String id) {
+    var h = 7;
+    for (final c in id.codeUnits) {
+      h = (h * 131 + c) & 0x3fffffff;
+    }
+    return DateTime(2001, 1, 1 + h % 365);
+  }
+
+  int get birthMonth => _birthday.month;
+  int get birthDay => _birthday.day;
+
+  /// [year]年の誕生日。
+  DateTime birthdayIn(int year) => DateTime(year, birthMonth, birthDay);
+
+  /// [before]の翌日から[after]まで(両端は前を含まず後を含む)に来た誕生日の数。
+  int birthdaysBetween(DateTime before, DateTime after) {
+    if (!after.isAfter(before)) return 0;
+    var n = 0;
+    for (var y = before.year; y <= after.year; y++) {
+      final b = birthdayIn(y);
+      if (b.isAfter(before) && !b.isAfter(after)) n++;
+    }
+    return n;
+  }
 
   /// 他クラブへローン放出中で、自クラブの試合には出場できない状態かどうか。
   bool get isLoanedOut => loanedOutWeeksRemaining > 0;
@@ -1450,10 +1518,13 @@ class Player {
     double ageFactor,
     double personalityFactor,
     double leadershipFactor,
+    double tournamentFactor,
   }) get marketValueBreakdown {
-    final ovr = (overall - 40).clamp(0, 60);
-    final base = pow(ovr, 1.8) * 3;
-    final potentialBonus = (potential - overall).clamp(0, 40) * 15;
+    // 能力に対して指数で伸びる(総合78で約5億、85で約17億、95で約100億)。
+    final base = marketValueBase(overall);
+    // 伸びしろ1あたり、基礎の3%を上乗せする。以前は1あたり15万円の
+    // 足し算だったが、基礎が億の桁になると伸びしろが無いのと同じになる。
+    final potentialBonus = base * (potential - overall).clamp(0, 40) * 0.03;
     double ageFactor;
     if (age <= 21) {
       ageFactor = 1.4;
@@ -1474,6 +1545,7 @@ class Player {
       ageFactor: ageFactor,
       personalityFactor: personality.marketValueFactor,
       leadershipFactor: leadershipFactor,
+      tournamentFactor: 1 + tournamentBoostPct / 100,
     );
   }
 
@@ -1483,8 +1555,9 @@ class Player {
     final value = (b.base + b.potentialBonus) *
         b.ageFactor *
         b.personalityFactor *
-        b.leadershipFactor;
-    return value.round().clamp(50, 20000);
+        b.leadershipFactor *
+        b.tournamentFactor;
+    return value.round().clamp(minMarketValue, maxMarketValue);
   }
 
   /// セーブデータへの書き出し。既定値のままの項目は書き出さない
@@ -1505,9 +1578,9 @@ class Player {
       // 変えてはならない(変えると旧セーブの値が別の属性にずれてしまう)。
       'attributes': [for (final k in AttributeKeys.all) attributes[k] ?? 50],
       'potential': potential,
-      // 契約年数は「キーが無い=旧セーブ」とみなして2年に移行する処理が
-      // あるため、0年でも必ず書き出す。
-      'contractYearsRemaining': contractYearsRemaining,
+      // 満了の年。キーが無いのは旧セーブ(残り年数で持っていた)なので、
+      // 必ず書き出す。
+      'contractEndYear': contractEndYear,
     };
     // 既定値と異なるときだけ書き出す。
     void put(String key, Object? value, Object? defaultValue) {
@@ -1528,24 +1601,40 @@ class Player {
     put('suspendedMatches', suspendedMatches, 0);
     put('careerAppearances', careerAppearances, 0);
     put('careerGoals', careerGoals, 0);
-    put('individualFocus', individualFocus?.name, null);
     put('wage', wage, 20);
+    put('contractOption', contractOption, false);
+    put('refusesRenewal', refusesRenewal, false);
     put('personality', personality.name, PlayerPersonality.balanced.name);
     put('happiness', happiness, 70);
-    put('reassureCooldownWeeks', reassureCooldownWeeks, 0);
-    put('talkCooldownWeeks', talkCooldownWeeks, 0);
     put('isLoan', isLoan, false);
     put('loanWeeksRemaining', loanWeeksRemaining, 0);
     put('loanBuyOptionFee', loanBuyOptionFee, null);
+    put('loanObligation', loanObligation, false);
     put('releaseClause', releaseClause, null);
     put('internationalDutyWeeksRemaining', internationalDutyWeeksRemaining, 0);
+    put('onTournamentLeave', onTournamentLeave, false);
+    put('tournamentBoostPct', tournamentBoostPct, 0);
     put('duty', duty.name, PlayerDuty.support.name);
     put('squadStatus', squadStatus.name, SquadStatus.regular.name);
+    put('promisedStatus', promisedStatus?.name, null);
+    put('promiseMisses', promiseMisses, 0);
+    put('promiseBroken', promiseBroken, false);
     put('isTransferListed', isTransferListed, false);
     put('loanedOutWeeksRemaining', loanedOutWeeksRemaining, 0);
     put('loanedOutToClubName', loanedOutToClubName, null);
+    put('loanedOutUntil', _dateToJson(loanedOutUntil), null);
+    put('loanRecallClause', loanRecallClause, false);
+    put('notRegistered', notRegistered, false);
+    put('leaveOffRegistration', leaveOffRegistration, false);
+    put('originLeague', originLeague, null);
+    put('nation', nation, null);
+    put('loanEndDate', _dateToJson(loanEndDate), null);
+    put('loanFromClubId', loanFromClubId, null);
+    put('loanBaseWage', loanBaseWage, null);
     put('originClubName', originClubName, null);
     put('appearanceFee', appearanceFee, 0);
+    put('goalBonus', goalBonus, 0);
+    put('raisePct', raisePct, 0);
     put('role', role.name, PlayerRole.standard.name);
     put('instruction', instruction?.name, null);
     put('injuryProneness', injuryProneness, 10);
@@ -1557,21 +1646,27 @@ class Player {
     put('overallHistory', overallHistory, null);
     put('youthMatchGoals', youthMatchGoals, 0);
     put('lastYouthMatchRating', lastYouthMatchRating, 0);
-    put('mentorId', mentorId, null);
     put('squadNumber', squadNumber, null);
     put('academyGraduate', academyGraduate, false);
-    put('drillAttributeKey', drillAttributeKey, null);
-    put('drillAttributeKey2', drillAttributeKey2, null);
-    put('traitTrainingTarget', traitTrainingTarget?.name, null);
-    put('personalityTraitTrainingTarget', personalityTraitTrainingTarget?.name,
-        null);
-    put('focusRotation', focusRotation?.map((f) => f.name).toList(), null);
-    put('rotationWeekIndex', rotationWeekIndex, 0);
-    put('trainingConvertTargetPosition', trainingConvertTargetPosition, null);
-    put('developmentTargetRole', developmentTargetRole?.name, null);
+    json['homegrown'] = homegrown;
     put('trait', trait?.name, null);
     put('growthType', growthType.name, PlayerGrowthType.balanced.name);
     return json;
+  }
+
+  /// 日付を「2026-08-15」の形で書き出す(時刻は持たない)。
+  static String? _dateToJson(DateTime? d) => d == null
+      ? null
+      : '${d.year.toString().padLeft(4, '0')}-'
+          '${d.month.toString().padLeft(2, '0')}-'
+          '${d.day.toString().padLeft(2, '0')}';
+
+  static DateTime? _dateFromJson(Object? raw) {
+    if (raw is! String) return null;
+    final parsed = DateTime.tryParse(raw);
+    return parsed == null
+        ? null
+        : DateTime(parsed.year, parsed.month, parsed.day);
   }
 
   factory Player.fromJson(Map<String, dynamic> json) {
@@ -1623,29 +1718,26 @@ class Player {
       suspendedMatches: json['suspendedMatches'] as int? ?? 0,
       careerAppearances: json['careerAppearances'] as int? ?? 0,
       careerGoals: json['careerGoals'] as int? ?? 0,
-      individualFocus: json['individualFocus'] == null
-          ? null
-          : enumFromName(
-              TrainingFocus.values,
-              json['individualFocus'] as String?,
-              TrainingFocus.balanced,
-            ),
       wage: json['wage'] as int? ?? 20,
-      contractYearsRemaining: _migrateContractYears(json),
+      contractEndYear: json['contractEndYear'] as int? ??
+          contractEndYearFromYears(_migrateContractYears(json)),
+      contractOption: json['contractOption'] as bool? ?? false,
+      refusesRenewal: json['refusesRenewal'] as bool? ?? false,
       personality: enumFromName(
         PlayerPersonality.values,
         json['personality'] as String?,
         PlayerPersonality.balanced,
       ),
       happiness: json['happiness'] as int? ?? 70,
-      reassureCooldownWeeks: json['reassureCooldownWeeks'] as int? ?? 0,
-      talkCooldownWeeks: json['talkCooldownWeeks'] as int? ?? 0,
       isLoan: json['isLoan'] as bool? ?? false,
       loanWeeksRemaining: json['loanWeeksRemaining'] as int? ?? 0,
       loanBuyOptionFee: json['loanBuyOptionFee'] as int?,
+      loanObligation: json['loanObligation'] as bool? ?? false,
       releaseClause: json['releaseClause'] as int?,
       internationalDutyWeeksRemaining:
           json['internationalDutyWeeksRemaining'] as int? ?? 0,
+      onTournamentLeave: json['onTournamentLeave'] as bool? ?? false,
+      tournamentBoostPct: json['tournamentBoostPct'] as int? ?? 0,
       duty: enumFromName(
         PlayerDuty.values,
         json['duty'] as String?,
@@ -1668,11 +1760,28 @@ class Player {
         json['squadStatus'] as String?,
         SquadStatus.regular,
       ),
+      promisedStatus: json['promisedStatus'] == null
+          ? null
+          : enumFromName(SquadStatus.values,
+              json['promisedStatus'] as String?, SquadStatus.regular),
+      promiseMisses: json['promiseMisses'] as int? ?? 0,
+      promiseBroken: json['promiseBroken'] as bool? ?? false,
       isTransferListed: json['isTransferListed'] as bool? ?? false,
       loanedOutWeeksRemaining: json['loanedOutWeeksRemaining'] as int? ?? 0,
       loanedOutToClubName: json['loanedOutToClubName'] as String?,
+      loanedOutUntil: _dateFromJson(json['loanedOutUntil']),
+      loanRecallClause: json['loanRecallClause'] as bool? ?? false,
+      notRegistered: json['notRegistered'] as bool? ?? false,
+      leaveOffRegistration: json['leaveOffRegistration'] as bool? ?? false,
+      originLeague: json['originLeague'] as String?,
+      nation: json['nation'] as String?,
+      loanEndDate: _dateFromJson(json['loanEndDate']),
+      loanFromClubId: json['loanFromClubId'] as String?,
+      loanBaseWage: json['loanBaseWage'] as int?,
       originClubName: json['originClubName'] as String?,
       appearanceFee: json['appearanceFee'] as int? ?? 0,
+      goalBonus: json['goalBonus'] as int? ?? 0,
+      raisePct: json['raisePct'] as int? ?? 0,
       role: enumFromName(
         PlayerRole.values,
         json['role'] as String?,
@@ -1691,36 +1800,10 @@ class Player {
       youthMatchGoals: json['youthMatchGoals'] as int? ?? 0,
       squadNumber: json['squadNumber'] as int?,
       academyGraduate: json['academyGraduate'] as bool? ?? false,
+      homegrown: json['homegrown'] as bool? ??
+          Player.homegrownFromId(json['id'] as String? ?? ''),
       lastYouthMatchRating:
           (json['lastYouthMatchRating'] as num?)?.toDouble() ?? 0,
-      mentorId: json['mentorId'] as String?,
-      drillAttributeKey: json['drillAttributeKey'] as String?,
-      drillAttributeKey2: json['drillAttributeKey2'] as String?,
-      traitTrainingTarget: _technicalTraitTargetFromJson(
-        json['traitTrainingTarget'] as String?,
-      ),
-      personalityTraitTrainingTarget: _personalityTraitTargetFromJson(
-        json['personalityTraitTrainingTarget'] as String?,
-      ),
-      focusRotation: (json['focusRotation'] as List?)
-          ?.map(
-            (e) => enumFromName(
-              TrainingFocus.values,
-              e as String?,
-              TrainingFocus.balanced,
-            ),
-          )
-          .toList(),
-      rotationWeekIndex: json['rotationWeekIndex'] as int? ?? 0,
-      trainingConvertTargetPosition:
-          json['trainingConvertTargetPosition'] as String?,
-      developmentTargetRole: json['developmentTargetRole'] == null
-          ? null
-          : enumFromName(
-              PlayerRole.values,
-              json['developmentTargetRole'] as String?,
-              PlayerRole.standard,
-            ),
       trait: json['trait'] == null
           ? null
           : enumFromName(
@@ -1778,6 +1861,14 @@ class Player {
     }
     return map;
   }
+
+  /// 残り年数(今のシーズンを含む)を満了の年に直す。旧セーブの年数は
+  /// シーズン末に1つ減らし、0で退団する持ち方だった。残り1年は「今の
+  /// シーズン末(6月30日)で満了」なので、満了の年は
+  /// 今のシーズンが終わる年 + 残り年数 - 1。0年(フリーエージェント)は
+  /// 前のシーズン末に満了済み。
+  static int contractEndYearFromYears(int years) =>
+      contractClockYear + years - 1;
 
   /// 旧セーブ(契約を週数で管理していた版)からの移行用。新フィールドが
   /// あればそれを使い、なければ旧フィールドの週数を年数に丸めて引き継ぐ。

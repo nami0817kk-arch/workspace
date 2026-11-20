@@ -1,0 +1,108 @@
+# 物語完結型ショート ルイ14世 s2（2026-11-13）。本編 scripts/louis14-story.yaml（11/15 19:00 公開予定、https://youtu.be/FqHUnnLL6JM）から。11/16 に予約。
+# 形式は cleopatra_s2.yaml・kaishu_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/ルイ14世_facts_20261112.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（V04・V05・V09・V16、サムネ thumb/lever.png）の再利用と、新しく作った shorts/N1〜N5（Gemini、人物は後ろ姿か手元）・実在の絵（リゴー・パテル）。本編で代用だった V01〜V03・V08・V13〜V15 は使わない。
+title: "ルイ14世｜昼の食卓に座れたのは王だけ"
+yt_title: "ルイ14世の昼の食卓に、座れたのは王だけだった　王太子も立ったまま、弟は丸椅子"
+description: |-
+  昼1時、ルイ14世の食卓に座れるのは、王ひとりだけでした。サン=シモンによれば、寝室の四角い食卓で食べる「小さな食事」で、いちばん簡素な日でも、料理は3回に分けて出されました。編者ボワリルの注では1回分が5皿から7皿で、3回分を掛けると15皿から21皿です（掛け算は台本の計算）。
+  主な廷臣と、顔の知られた人が入って、それを立ったまま見ていました。王太子とその息子も、王が椅子を勧めない限り立ったまま。王の弟だけは、王が「弟よ、さあ、お座りなさい」と言うと、背中の後ろに丸椅子が置かれ、ようやく座れました。
+  死の7日前の1715年8月25日にも、ダンジョーは、王に昼食に人を入れる力が残っていた、と書いています。では、夜10時の大食卓には、誰が見に来たのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/FqHUnnLL6JM
+hashtags:
+- "#ルイ14世"
+- "#ヴェルサイユ宮殿"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の室内・宮殿の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/louis14
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: louis14_story_s2
+header:
+  tag: "昼の食事「小さな食事」"
+  title: "食卓に座れたのは、《王だけ》だった"
+now:
+- {at: "昼1時", text: "昼1時　王の寝室", point: 0}
+timeline:
+- {label: "13時"}
+shots:
+  TableC:
+    kind: "ai"
+    file: "louis14/shorts/N1.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "立つ貴族と王の食卓"
+  TableL:
+    kind: "ai"
+    file: "louis14/shorts/N1.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "立つ貴族と王の食卓"
+  TableR:
+    kind: "ai"
+    file: "louis14/shorts/N1.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "立つ貴族と王の食卓"
+  Night:
+    kind: "ai"
+    file: "louis14/main/V04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜のろうそくの大広間"
+  Stool:
+    kind: "ai"
+    file: "louis14/shorts/N2.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "椅子と丸椅子"
+lines:
+  # fact: l14-ss-09
+- 語り: "昼1時。ルイ14世の食卓に、座れるのは、王ひとりだった、とサン=シモンは書く。"
+  shot: TableC
+  tone: 強調
+  pause: 0.12
+  # fact: l14-ss-08
+- 語り: "寝室の四角い食卓。「小さな食事」と呼ばれたが、いちばん簡素な日でも、料理は3回に分けて出された。"
+  shot: TableL
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-ss-08
+- 語り: "本文は、たくさんの皿、としか書かない。編者ボワリルの注では、1回分が5皿から7皿。3回分を掛けると、15皿から21皿になる。"
+  shot: TableR
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-ss-08
+- 語り: "主な廷臣と、顔の知られた人が入って、立ったまま、それを見ていた。"
+  shot: TableC
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-ss-09
+- 語り: "王太子と、その息子も、王が椅子を勧めない限り、立ったままだ。"
+  shot: TableL
+  tone: 重い
+  pause: 0.12
+  # fact: l14-ss-09
+- 語り: "王の弟だけは、特別だった。王が、弟よ、さあ、お座りなさい、と言うと、背中の後ろに、丸椅子が置かれる。弟が座れるのは、そのときだ。"
+  shot: Stool
+  tone: 重い
+  pause: 0.12
+  # fact: l14-hd-19
+- 語り: "死の7日前の、1715年8月25日も、ダンジョーは、昼食に人を入れる力が残っていた、と書く。"
+  shot: TableR
+  tone: しみじみ
+  pause: 0.12
+  # 問い（本編へ）
+- 語り: "では、夜10時の大食卓には、誰が、見に来たのか。"
+  shot: Night
+  tone: 疑問
+  pause: 0.15

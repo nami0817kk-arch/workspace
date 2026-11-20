@@ -59,10 +59,19 @@ void main() {
   test('どの出来事も、どちらかの選択肢が全面的に有利にならない(特性・コツ・絆の利益があるものを除く)', () {
     // 特性の獲得(winter-menu)やコーチのコツ(coach-extra)は、ここで測れない利益がある。
     const exempt = {'winter-menu', 'coach-extra'};
-    final p = _p();
     const c = Condition(fatigue: 50, morale: 50);
     for (final e in events) {
       if (exempt.contains(e.id)) continue;
+      // 役割の決まった出来事(変化球・遠投など)は、その役割の選手で比べる
+      final role = e.roles?.first ?? Role.batter;
+      final p = role == Role.batter
+          ? _p()
+          : Player(
+              name: 't',
+              role: role,
+              age: 16,
+              potential: 50,
+              abilities: {for (final a in abilitiesOf(role)) a: 50});
       final scores = <List<double>>[];
       for (final ch in e.choices) {
         var ab = 0.0, fa = 0.0, mo = 0.0;
@@ -71,7 +80,7 @@ void main() {
           final r = ch.risky != null
               ? ch.risky!(p, c, Ability.contact, Random(i))
               : ch.apply(p, c, Ability.contact);
-          ab += abilitiesOf(Role.batter)
+          ab += abilitiesOf(role)
               .fold<int>(0, (s, a) => s + r.player.of(a) - p.of(a));
           fa += r.condition.fatigue - c.fatigue;
           mo += r.condition.morale - c.morale;
@@ -195,6 +204,48 @@ void main() {
         ..members
             .removeWhere((m) => m.kind == Kind.teammate && m.id != 'mate0');
       expect(can('mate-quarrel', Stage.highSchool, one), isFalse);
+    });
+  });
+
+  group('役割に合う出来事だけが起きる(2026-11-03)', () {
+    test('変化球・配球は投手と二刀流だけ、遠投・打球の角度は打者と二刀流だけ', () {
+      final c = _cast();
+      final seen = <Role, Set<String>>{for (final r in Role.values) r: {}};
+      for (final r in Role.values) {
+        for (var s = 0; s < 3000; s++) {
+          final e = drawEvent(Random(s),
+              share: 10, stage: Stage.pro, cast: c, role: r);
+          if (e != null) seen[r]!.add(e.id);
+        }
+      }
+      expect(seen[Role.batter], isNot(contains('new-pitch')));
+      expect(seen[Role.batter], isNot(contains('catcher-signs')));
+      expect(seen[Role.pitcher], isNot(contains('long-toss')));
+      expect(seen[Role.pitcher], isNot(contains('launch-angle')));
+      expect(seen[Role.pitcher], containsAll(['new-pitch', 'catcher-signs']));
+      expect(seen[Role.batter], containsAll(['long-toss', 'launch-angle']));
+      expect(seen[Role.twoWay],
+          containsAll(['new-pitch', 'long-toss', 'ground-balls']));
+    });
+
+    test('役割を渡さないときは、役割の決まった出来事は出ない', () {
+      for (var s = 0; s < 2000; s++) {
+        final e = drawEvent(Random(s), share: 10);
+        if (e != null) expect(e.roles, isNull);
+      }
+    });
+
+    test('変化球の出来事は、投手の変化球を伸ばす', () {
+      final e = events.firstWhere((e) => e.id == 'new-pitch');
+      final p = Player(
+          name: 't',
+          role: Role.pitcher,
+          age: 20,
+          potential: 50,
+          abilities: {for (final a in abilitiesOf(Role.pitcher)) a: 50});
+      final r = e.choices.first
+          .apply(p, const Condition(fatigue: 20, morale: 50), Ability.stuff);
+      expect(r.player.of(Ability.breaking), 52);
     });
   });
 

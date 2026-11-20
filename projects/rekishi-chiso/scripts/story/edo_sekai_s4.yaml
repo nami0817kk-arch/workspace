@@ -1,0 +1,154 @@
+# 物語完結型ショート 江戸時代、世界はどうだった？ s4（2026-11-19）。本編 scripts/edo-sekai-story.yaml（11/24 12:00 公開予定、https://youtu.be/z6k-XcWaAq0）から。11/25 16:30 に予約。
+# 形式は ii_s1〜s5・uesugi_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact:（事実カード 江戸の世界くらべ_facts_20261119.yaml）だけ。
+# 絵：本編の AI 絵（out/story/edosekai/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：お金の工面（1694年 イングランド銀行／1695年 元禄の改鋳）と、1730年の堂島の米の先物（本編 第3章、edo-41・42・45）。
+# hook＝同じころ、足りないお金を、イングランドと幕府はどう工面したのか（答えはこのショートの中：借りた／金を薄めた）。
+# tease＝同じころの日本の人口は、イングランドの何倍だったのか（答えは本編 第3章：およそ6倍、edo-38・40）。
+# 計算：1694→1695＝翌年。1730→1848＝118年。
+# 理解テスト：①同じころのイングランドと幕府のお金の工面の話 ②1694年 イングランド銀行が市民から120万ポンド、1695年 幕府が元禄の改鋳 ③借りるか、金を薄めるか ④1730年に堂島の米の先物が認められ、シカゴの取引所はその118年後
+title: "1694年と1695年｜お金の工面"
+yt_title: "1694年、イングランド銀行は市民から11日で120万ポンドを集めた　翌1695年、幕府は小判の金を減らした　借りる国と、薄める幕府"
+description: |-
+  1694年、イングランドでは、新しくできたイングランド銀行が、1268人の市民から11日で120万ポンドを集め、フランスとの戦の資金として政府に貸しました。その翌年の1695年、幕府は、小判に含まれる金を減らす元禄の改鋳をします。
+  1730年には、大坂の堂島の米の市場が幕府に認められ、先物の取引も一緒に開かれていました。研究者のシェーデは、今の先物取引所の条件をそろえた最初の組織的な取引所は18世紀の日本にあった、と書いています。シカゴの商品取引所ができるのは1848年です。
+  本編では、家康から慶喜までの260年を、同じ年の世界と並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#江戸時代"
+- "#元禄"
+- "#堂島米市場"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は実在の人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/edosekai
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: edosekai_story_s4
+header:
+  tag: "イングランドと江戸幕府"
+  title: "お金を《借りる》国、《薄める》幕府"
+now:
+- {at: "1694年", text: "1694年　イングランド", point: 0}
+- {at: "その翌年", text: "1695年　江戸", point: 1}
+- {at: "1730年", text: "1730年　大坂・堂島", point: 2}
+timeline:
+- {label: "1694"}
+- {label: "1695"}
+- {label: "1730"}
+cards:
+  - type: versus
+    from: シカゴの商品取引所は
+    until: 同じころの日本の人口
+    left: {tag: 大坂・堂島, big: 1730年, dots: 1, color: blue}
+    right: {tag: シカゴ, big: 1848年, dots: 1, color: red}
+    mid: 対
+    text_y: 0.66
+shots:
+  I12_1:
+    kind: "ai"
+    file: "edosekai/main/I12.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "I12"
+  I12_2:
+    kind: "ai"
+    file: "edosekai/main/I12.jpg"
+    focus: [0.65, 0.45]
+    move: "left"
+    must: "I12"
+  I09_3:
+    kind: "ai"
+    file: "edosekai/main/I09.jpg"
+    focus: [0.4, 0.55]
+    move: "in"
+    must: "I09"
+  I14_4:
+    kind: "ai"
+    file: "edosekai/main/I14.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "I14"
+  I13_5:
+    kind: "ai"
+    file: "edosekai/main/I13.jpg"
+    focus: [0.35, 0.6]
+    move: "left"
+    must: "I13"
+  I13_6:
+    kind: "ai"
+    file: "edosekai/main/I13.jpg"
+    focus: [0.7, 0.5]
+    move: "in"
+    must: "I13"
+  I23_7:
+    kind: "ai"
+    file: "edosekai/main/I23.jpg"
+    focus: [0.4, 0.55]
+    move: "right"
+    must: "I23"
+  I13_8:
+    kind: "ai"
+    file: "edosekai/main/I13.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "I13"
+  I02_9:
+    kind: "ai"
+    file: "edosekai/main/I02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "I02"
+lines:
+  # fact: edo-45
+- 語り: "イングランドと幕府は、同じころ、足りないお金を、どうやって工面したのか。"
+  shot: I12_1
+  tone: 強調
+  pause: 0.12
+  # fact: edo-45
+- 語り: "1694年。イングランドでは、新しくできたイングランド銀行が、1268人の市民から、11日で、120万ポンドを集め、フランスとの戦の資金として、政府に貸した。"
+  shot: I12_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-45
+- 語り: "その翌年、1695年。幕府は、小判に含まれる金を減らす、元禄の改鋳をする。"
+  shot: I09_3
+  tone: 重い
+  pause: 0.12
+  # fact: edo-45
+- 語り: "同じころ、イングランドは《借りて》、幕府は金を《薄めて》、お金を工面していた。"
+  shot: I14_4
+  tone: 強調
+  pause: 0.12
+  # fact: edo-41
+- 語り: "1730年。大坂の堂島の米の市場が、幕府に認められる。"
+  shot: I13_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-41
+- 語り: "先の日の値段を、今のうちに決めて売り買いする、先物の取引も、一緒に開かれていた。"
+  shot: I13_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: edo-42
+- 語り: "1989年、研究者のシェーデは、今の先物取引所の条件をそろえた、最初の組織的な取引所は、18世紀の日本にあった、と書いた。"
+  shot: I23_7
+  tone: 強調
+  pause: 0.12
+  # fact: edo-42
+- 語り: "シカゴの商品取引所は、1848年にできる。堂島が認められた、118年後だ。"
+  shot: I13_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第3章（edo-38・40）
+- 語り: "では、同じころの日本の人口は、イングランドの、何倍だったのか。"
+  shot: I02_9
+  tone: 疑問
+  pause: 0.15

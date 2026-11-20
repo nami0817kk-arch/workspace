@@ -1,468 +1,504 @@
+import 'dart:async';
 import 'dart:math';
 
-import 'package:basketball_career/game/game.dart';
-import 'package:basketball_career/game/traits.dart';
-import 'package:basketball_career/game/life.dart';
-import 'package:basketball_career/game/match.dart';
-import 'package:basketball_career/game/path.dart';
-import 'package:basketball_career/game/player.dart';
-import 'package:basketball_career/game/rival.dart';
+import 'package:basketball_career/gm/bot.dart';
+import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/league.dart';
+import 'package:basketball_career/gm/trade.dart';
 import 'package:basketball_career/ui/app.dart';
-import 'package:basketball_career/ui/controller.dart';
-import 'package:basketball_career/ui/milestone_dialog.dart';
-import 'package:flutter/material.dart' hide Action, Route;
-import 'package:flutter/services.dart';
+import 'package:basketball_career/ui/gm/progress_tab.dart';
+import 'package:basketball_career/ui/gm/trade_tab.dart';
+import 'package:basketball_career/ui/gm_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// 何も保存しない(探索の途中の保存が、あとから起動時に読み込まれないように)。
-class _NullStore extends SaveStore {
-  @override
-  Future<void> save(Map<String, dynamic> json) async {}
-  @override
-  Future<void> clear() async {}
-  @override
-  Future<Map<String, dynamic>?> load() async => null;
+Future<GmController> _controller([Map<String, Object> saved = const {}]) async {
+  SharedPreferences.setMockInitialValues(saved);
+  return GmController(prefs: await SharedPreferences.getInstance(), seedSource: Random(3));
 }
 
-void main() {
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+void _size(WidgetTester t, double w, double h) {
+  t.view.physicalSize = Size(w, h);
+  t.view.devicePixelRatio = 1;
+  addTearDown(t.view.reset);
+}
 
-  /// ListView は画面外を作らないので、縦長の画面にして全部を作らせる。
-  void tall(WidgetTester t) {
-    t.view.physicalSize = const Size(800, 4000);
-    t.view.devicePixelRatio = 1;
-    addTearDown(t.view.reset);
+Future<void> _closeDialogs(WidgetTester tester) async {
+  while (find.text('OK').evaluate().isNotEmpty) {
+    await tester.tap(find.text('OK').first);
+    await tester.pumpAndSettle();
   }
+}
 
-  testWidgets('はじめの画面から始めて、季節を進められる', (tester) async {
-    tall(tester);
-    final c = GameController(rng: Random(1), events: false);
+/// 縦に流れる一覧(トレードの画面には、相手を選ぶ横の一覧もある)。
+final _vertical = find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).last;
+
+/// ホームの左側(いまやること)の縦に流れる一覧。右の札の一覧や左のメニューとは別。
+final _progress = find.descendant(of: find.byType(ProgressTab), matching: find.byType(Scrollable)).first;
+
+void main() {
+  testWidgets('はじめの画面から就任し、開幕して20試合を進める', (tester) async {
+    _size(tester, 844, 390);
+    final c = await _controller();
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    expect(find.text('6歳から始める'), findsOneWidget);
+    expect(find.text('バスケGM'), findsOneWidget);
 
-    await tester.enterText(find.byType(TextField), 'ミナト');
-    await tester.tap(find.text('6歳から始める'));
+    await tester.tap(find.text('GMに就任する'));
     await tester.pumpAndSettle();
-    // はじめてなら、先に遊び方が出る。
+    // チームを選ぶ: 西地区に切り替えて、いちばん上のチームを見て、GMになる
+    expect(find.text('どのチームを任される?'), findsOneWidget);
+    await tester.tap(find.text('西地区'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.chevron_right_rounded).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('のGMになる'));
+    await tester.pumpAndSettle();
+    // はじめてなら、先に遊び方
     expect(find.text('遊び方'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('はじめる'), 300);
     await tester.tap(find.text('はじめる'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('ミナト'), findsWidgets);
-    expect(find.text('春の過ごし方'), findsOneWidget);
+    expect(find.text('1年目のシーズン前'), findsOneWidget);
+    expect(c.career!.me.east, isFalse, reason: '西地区のチームを選んだ');
 
-    await tester.tap(find.text('休養'));
+    await tester.tap(find.text('開幕する'));
     await tester.pumpAndSettle();
-    expect(find.text('夏の過ごし方'), findsOneWidget);
-    expect(find.text('いまの結果'), findsOneWidget);
+    expect(c.career!.phase, Phase.season);
+    await tester.tap(find.text('次の20試合へ'));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    expect(c.career!.block, 1);
+    // 進めたら報告が画面いっぱいに出て、閉じるまで戻らない
+    expect(find.textContaining('の結果(1〜20試合目)'), findsOneWidget);
+    expect(find.textContaining('オーナーの目標'), findsWidgets);
+    await tester.tap(find.text('閉じる'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('の結果(1〜20試合目)'), findsNothing);
+    await tester.scrollUntilVisible(find.textContaining('この20試合'), 300, scrollable: _progress);
+    expect(find.textContaining('この20試合'), findsOneWidget);
   });
 
-  testWidgets('はじめの画面に難易度の選択は無く、特性のくじと振り直しがある', (tester) async {
-    tall(tester);
-    final c = GameController(rng: Random(1), events: false);
+  testWidgets('トレードの画面で選ぶと相手の反応が出て、釣り合えば成立する', (tester) async {
+    _size(tester, 844, 390);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(1, 15), seed: 1);
+    final car = c.career!;
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    for (final d in ['やさしい', 'ふつう', 'むずかしい']) {
-      expect(find.text(d), findsNothing, reason: '難易度の選択は無くした');
+    await tester.tap(find.text('トレード').first);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('相手の反応が出る'), findsOneWidget);
+    // 相手のいちばん下の選手を、こちらのいちばんの選手で取りに行く(相手はきっと受ける)
+    final them = car.teams[car.mine == 0 ? 1 : 0];
+    final theirs = them.roster.reduce((a, b) => a.ovr <= b.ovr ? a : b);
+    final ours = car.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
+    await tester.scrollUntilVisible(find.text(theirs.name), 200, scrollable: _vertical);
+    // 下の申し込みの欄に隠れないよう、全体が見える所まで送ってから押す
+    await tester.ensureVisible(find.text(theirs.name).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(theirs.name).first);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text(ours.name), 300, scrollable: _vertical);
+    await tester.ensureVisible(find.text(ours.name).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(ours.name).last);
+    await tester.pumpAndSettle();
+    final v = car.judge(TradeOffer(partner: them.index, give: [ours.id], get: [theirs.id]));
+    final ok = v.ok;
+    expect(find.text(ok ? '受けてくれそう' : v.reason), findsOneWidget);
+    if (ok) {
+      await tester.tap(find.text('申し込む'));
+      await tester.pumpAndSettle();
+      expect(car.me.roster.any((p) => p.id == theirs.id), isTrue);
+      expect(find.textContaining('トレードが成立した'), findsOneWidget);
     }
-    expect(find.text('生まれつきの特性(くじ引き)'), findsOneWidget);
-    expect(find.text('振り直す'), findsOneWidget);
-    await tester.tap(find.text('振り直す'));
-    await tester.pumpAndSettle();
-    expect(find.text('6歳から始める'), findsOneWidget);
   });
 
-  test('始めるときに渡した生まれつきの特性が、そのまま選手に入る(空でもよい)', () {
-    final c = GameController(rng: Random(1), events: false);
-    c.newGame('くじ', traits: {Trait.genius, Trait.lefty});
-    expect(c.game!.player.traits, {Trait.genius, Trait.lefty});
-    final d = GameController(rng: Random(1), events: false);
-    d.newGame('なし', traits: <Trait>{});
-    expect(d.game!.player.traits, isEmpty);
-  });
-
-  testWidgets('遊び方は1度だけ自動で出て、あとはいつでも開ける', (tester) async {
-    tall(tester);
-    SharedPreferences.setMockInitialValues({howtoKey: true});
-    final c = GameController(rng: Random(1), events: false);
+  testWidgets('トレード: 相手の一覧は、選んでいるチームが見える所まで送られている', (tester) async {
+    _size(tester, 844, 390);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(1, 15), seed: 1);
+    final car = c.career!;
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    // 見たことがあるので、すぐ始まる。
-    await tester.tap(find.text('6歳から始める'));
-    await tester.pumpAndSettle();
-    expect(find.text('春の過ごし方'), findsOneWidget);
-  });
-
-  testWidgets('はじめの画面から遊び方をいつでも開ける', (tester) async {
-    tall(tester);
-    final c = GameController(rng: Random(1), events: false);
-    await tester.pumpWidget(BasketballCareerApp(controller: c));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('遊び方'));
-    await tester.pumpAndSettle();
-    expect(find.text('1年は春夏秋冬の4回'), findsOneWidget);
-    expect(find.text('はじめる'), findsNothing, reason: 'いつでも開く場合は開始ボタンを出さない');
-  });
-
-  testWidgets('はじめの画面で背番号を選べる', (tester) async {
-    tall(tester);
-    SharedPreferences.setMockInitialValues({howtoKey: true});
-    final c = GameController(rng: Random(1), events: false);
-    await tester.pumpWidget(BasketballCareerApp(controller: c));
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(ChoiceChip, '23'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('6歳から始める'));
-    await tester.pumpAndSettle();
-    expect(c.game!.number, 23);
-    expect(find.textContaining('#23'), findsOneWidget);
-  });
-
-  testWidgets('進路の画面から契約を選べる', (tester) async {
-    final c = GameController(rng: Random(1), events: false);
-    tall(tester);
-    c.game = Game(
-      player: Player(
-        name: 'ケイ',
-        age: 19,
-        potential: 90,
-        heightCm: 205,
-        heightGenes: 0.9,
-        abilities: {for (final a in Ability.values) a: 90},
-      ),
-      rng: Random(1),
-      eventsEnabled: false,
-      pathPending: true,
+    final last = car.mine == teamDefs.length - 1 ? teamDefs.length - 2 : teamDefs.length - 1;
+    tester.state<NavigatorState>(find.byType(Navigator).first).push(
+      MaterialPageRoute<void>(builder: (_) => Scaffold(body: TradeTab(c: c, initialPartner: last))),
     );
+    await tester.pumpAndSettle();
+    final row = find.text(teamDefs[last].short).first;
+    final list = find.ancestor(of: row, matching: find.byType(Scrollable)).first;
+    expect(tester.state<ScrollableState>(list).position.pixels, greaterThan(0));
+    final r = tester.getRect(row), box = tester.getRect(list);
+    expect(r.top >= box.top && r.bottom <= box.bottom, isTrue, reason: '選んだチームの行が一覧の中に見えている');
+  });
+
+  testWidgets('トレード: 自分の選手を1人選ぶと、欲しがるチームが出て、印が付き、並べられる', (tester) async {
+    _size(tester, 844, 390);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(1, 15), seed: 1);
+    final car = c.career!;
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    expect(find.text(Route.pro.label), findsOneWidget);
-    await tester.tap(find.text(Route.pro.label));
+    await tester.tap(find.text('トレード').first);
     await tester.pumpAndSettle();
-    expect(c.game!.track, Track.pro);
-    expect(find.text('プロ契約を勝ち取った!'), findsOneWidget);
+    // 欲しがるチームがいる選手を選ぶ
+    final p = car.me.roster.firstWhere((x) => !car.expiring.contains(x.id) && car.blockOffers(x.id).isNotEmpty);
+    final offers = car.blockOffers(p.id);
+    await tester.scrollUntilVisible(find.text(p.name), 200, scrollable: _vertical);
+    await tester.ensureVisible(find.text(p.name).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(p.name).last);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.textContaining('を欲しがるチーム'), -200, scrollable: _vertical);
+    expect(find.textContaining('${p.name}を欲しがるチーム: ${offers.length}チーム'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite_rounded), findsWidgets);
+    await tester.tap(find.text('出してくれるものを見る'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('並べる').first);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('出す: ${p.name}'), findsOneWidget);
+    expect(find.text('受けてくれそう'), findsOneWidget);
   });
 
-  testWidgets('引退するとエンディングが出て、新しい選手を始められる', (tester) async {
-    tall(tester);
-    final c = GameController(rng: Random(1), events: false);
-    c.game = Game(
-      player: Player(
-        name: 'ユウ',
-        age: 25,
-        potential: 70,
-        heightCm: 190,
-        heightGenes: 0.5,
-        abilities: {for (final a in Ability.values) a: 70},
-      ),
-      rng: Random(1),
-      track: Track.pro,
-    );
-    c.game!.retire();
+  testWidgets('続きは保存され、起動するとはじめの画面から「続きから」で戻れる', (tester) async {
+    _size(tester, 844, 390);
+    final c = await _controller();
+    c.newCareer(teamAtRank(1, 28), seed: 1);
+    c.startSeason();
+    await tester.pumpWidget(const SizedBox());
+    final prefs = await SharedPreferences.getInstance();
+    final c2 = GmController(prefs: prefs, seedSource: Random(4));
+    await tester.pumpWidget(BasketballCareerApp(controller: c2));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('続きから'), findsOneWidget);
+    await tester.tap(find.textContaining('続きから'));
+    await tester.pumpAndSettle();
+    expect(find.text('次の20試合へ'), findsOneWidget);
+    expect(c2.career!.me.roster.length, c.career!.me.roster.length);
+  });
+
+  testWidgets('先発と控えの順の画面を開いて、この順にする(小さいスマホでもはみ出さない)', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(1, 15), seed: 1);
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    expect(find.text('ユウの物語'), findsOneWidget);
-    await tester.tap(find.text('新しい選手を育てる'));
+    await tester.tap(find.text('チーム').first);
     await tester.pumpAndSettle();
-    expect(find.text('6歳から始める'), findsOneWidget);
+    await tester.tap(find.text('先発と控えの順'));
+    await tester.pumpAndSettle();
+    expect(find.text('先発と控えの順'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('この順にする'));
+    await tester.pumpAndSettle();
+    expect(c.career!.me.rotation, isNotEmpty);
   });
 
-  test('操作のたびに保存され、読み戻せる', () async {
-    final c = GameController(rng: Random(2), events: false);
-    c.newGame('セーブ');
-    c.act(Action.practice);
-    await pumpEventQueue();
-    final d = GameController(rng: Random(3));
-    expect(await d.loadSaved(), isTrue);
-    expect(d.game!.slot, 1);
-    expect(d.game!.player.name, 'セーブ');
-  });
-
-  testWidgets('出来事が起きたら選べて、結果が出る', (tester) async {
-    tall(tester);
-    final c = GameController(rng: Random(1), events: false);
-    c.game = Game.start('イベント', rng: Random(1), events: false)
-      ..pendingEventId = 'friends';
-    await tester.pumpWidget(BasketballCareerApp(controller: c));
-    await tester.pumpAndSettle();
-    expect(find.text('友だちの誘い'), findsOneWidget);
-    await tester.tap(find.text('遊びに行く'));
-    await tester.pumpAndSettle();
-    expect(c.game!.pendingEventId, isNull);
-    expect(find.textContaining('「遊びに行く」を選んだ'), findsOneWidget);
-    expect(find.text('春の過ごし方'), findsOneWidget);
-  });
-
-  testWidgets('勝負どころで止まり、その場でプレーを選べる', (tester) async {
-    tall(tester);
-    GameController? c;
-    for (var seed = 0; seed < 400 && c == null; seed++) {
-      final t = GameController(
-          store: _NullStore(), rng: Random(seed), events: false);
-      t.game = Game(
-        eventsEnabled: false,
-        player: Player(
-          name: 'ケイ',
-          age: 15,
-          potential: 80,
-          heightCm: 195,
-          heightGenes: 0.5,
-          abilities: {for (final a in Ability.values) a: 80},
-        ),
-        rng: Random(seed),
-        slot: 1,
-      );
-      t.act(Action.rest);
-      while (t.game!.phase == Phase.halftime) {
-        t.game!.resolveHalftime(Halftime.keep);
-      }
-      if (t.game!.phase == Phase.clutch) c = t;
-    }
-    expect(c, isNotNull, reason: '勝負どころになる乱数が見つからない');
-    await tester.pumpWidget(BasketballCareerApp(controller: c!));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('勝負どころ!'), findsOneWidget);
-    expect(find.textContaining('成功率'), findsNWidgets(Clutch.values.length));
-    // 大会の途中でまた勝負どころが来ることもある。終わるまで選び続ける。
+  testWidgets('まとめて進める: 締め切りまで・シーズンの終わりまで(申し込みが届いたら止まる)', (tester) async {
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(2, 15), seed: 2);
+    c.startSeason();
+    await c.simAhead(toDeadline: true);
+    final car = c.career!;
+    expect(car.block >= tradeDeadlineBlock || car.incoming != null, isTrue);
     var guard = 0;
-    while ((c.game!.phase == Phase.clutch || c.game!.phase == Phase.halftime) &&
-        guard++ < 20) {
-      if (c.game!.phase == Phase.halftime) {
-        await tester.tap(find.textContaining('このまま続ける'));
+    while (car.phase == Phase.season && guard++ < 10) {
+      car.declineIncoming();
+      await c.simAhead(toDeadline: false);
+    }
+    expect(car.phase, Phase.playoffs);
+    expect(car.me.wins + car.me.losses, gamesPerSeason);
+  });
+
+  testWidgets('ドラフト: くじを開け、指名すると答え合わせ、終わるとまとめが出る(小さいスマホ)', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(6, 28), seed: 6);
+    c.startSeason();
+    final car = c.career!;
+    while (car.phase == Phase.season) {
+      car.declineIncoming();
+      car.playBlock();
+    }
+    car.playPlayoffs();
+    car.fired = false;
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    final off = find.text('オフへ(ドラフト・契約)');
+    await tester.scrollUntilVisible(off, 300, scrollable: _progress);
+    await tester.tap(off);
+    await tester.pumpAndSettle();
+    expect(car.phase, Phase.draft);
+    expect(find.textContaining('ドラフトくじ'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('4番目を開ける'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('全部開ける'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ドラフトへ'));
+    await tester.pumpAndSettle();
+    var picked = 0;
+    var guard = 0;
+    while (car.phase == Phase.draft && guard++ < 10) {
+      // 実績などの知らせが出ていれば閉じてから
+      await _closeDialogs(tester);
+      if (car.canDraftPick) {
+        final b = find.widgetWithText(FilledButton, '指名').first;
+        await tester.ensureVisible(b);
+        await tester.pumpAndSettle();
+        await tester.tap(b);
+        await tester.pumpAndSettle();
+        expect(find.textContaining('を指名'), findsOneWidget);
+        expect(find.textContaining('本当の力'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        picked++;
+        await tester.tap(find.text('続ける'));
+        await tester.pumpAndSettle();
       } else {
-        await tester.tap(find.textContaining('ドライブ  成功率'));
+        final b = find.text('この指名を見送る');
+        await tester.ensureVisible(b);
+        await tester.tap(b);
+        await tester.pumpAndSettle();
       }
+    }
+    expect(picked, greaterThan(0));
+    expect(car.phase, Phase.contracts);
+    expect(find.textContaining('ドラフトのまとめ'), findsOneWidget);
+    expect(find.textContaining('自分の指名($picked人)'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('契約へ'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('ドラフトのまとめ'), findsNothing);
+  });
+
+  testWidgets('自由契約: 日を進めるとその日の動きが出て、オフを終えるとまとめが出る(小さいスマホ)', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(6, 28), seed: 6);
+    final car = c.career!;
+    var guard = 0;
+    while (car.phase != Phase.contracts && guard++ < 600) {
+      if (car.phase == Phase.seasonEnd) car.fired = false;
+      botStep(car);
+    }
+    expect(car.phase, Phase.contracts);
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    final see = find.text('自由契約の選手を見る');
+    await tester.scrollUntilVisible(see, 300, scrollable: _progress);
+    // 下に固定した「オフを終える」の帯に隠れないよう、画面の上の方へ寄せる
+    unawaited(Scrollable.ensureVisible(tester.element(see), alignment: 0.2));
+    await tester.pumpAndSettle();
+    await tester.tap(see);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('次の日へ'));
+    await tester.pumpAndSettle();
+    expect(find.text('自由契約 1日目の動き'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('続ける'));
+    await tester.pumpAndSettle();
+    expect(car.faDay, 1);
+    // 進み具合の画面に戻って、オフを終える
+    await tester.tap(find.text('ホーム'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('オフを終えて、シーズン前へ'));
+    await tester.pumpAndSettle();
+    if (find.text('終える').evaluate().isNotEmpty) {
+      await tester.tap(find.text('終える'));
       await tester.pumpAndSettle();
     }
-    expect(c.game!.records, isNotEmpty);
-    expect(find.textContaining('の夏の大会'), findsWidgets);
+    expect(car.phase, Phase.preseason);
+    expect(find.textContaining('オフのまとめ'), findsOneWidget);
+    expect(find.textContaining('入った選手'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('シーズン前へ'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('オフのまとめ'), findsNothing);
   });
 
-  testWidgets('ハーフタイムで作戦を選べる', (tester) async {
-    tall(tester);
-    GameController? c;
-    for (var seed = 0; seed < 400 && c == null; seed++) {
-      final t = GameController(store: _NullStore(), rng: Random(seed), events: false);
-      t.game = Game(
-        eventsEnabled: false,
-        player: Player(
-          name: 'ケイ', age: 15, potential: 80, heightCm: 195, heightGenes: 0.5,
-          abilities: {for (final a in Ability.values) a: 70}),
-        rng: Random(seed),
-        slot: 1,
-      );
-      t.act(Action.rest);
-      if (t.game!.phase == Phase.halftime) c = t;
-    }
-    expect(c, isNotNull, reason: 'ハーフタイムで止まる乱数が見つからない');
-    await tester.pumpWidget(BasketballCareerApp(controller: c!));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('ハーフタイム'), findsWidgets);
-    expect(find.textContaining('後半の作戦を選ぼう'), findsOneWidget);
-    for (final h in Halftime.values) {
-      expect(find.textContaining(h.label), findsWidgets);
-    }
-    expect(find.textContaining('(おすすめ)'), findsOneWidget);
-    // 相手の持ち味の説明文にも「守りを固めて…」と出るので、ボタンの中の文字を押す。
-    final defense = find.descendant(
-        of: find.byType(FilledButton), matching: find.textContaining('守りを固める'));
-    await tester.ensureVisible(defense);
-    await tester.pumpAndSettle();
-    await tester.tap(defense);
-    await tester.pumpAndSettle();
-    // 作戦を選んだので、次の止まりどころ(勝負どころか次の試合のハーフタイム)か終了へ進む。
-    // (接戦なら勝負どころで止まり、まだ試合の結果は無い。ハーフタイムのままでなければ進んでいる。)
-    final moved = c.game!.phase != Phase.halftime ||
-        (c.game!.run?.matches.length ?? c.game!.records.length) > 0;
-    expect(moved, isTrue);
-  });
-
-  testWidgets('エンディングで結果をコピーできる', (tester) async {
-    tall(tester);
-    String? copied;
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        SystemChannels.platform, (call) async {
-      if (call.method == 'Clipboard.setData') {
-        copied = (call.arguments as Map)['text'] as String?;
+  testWidgets('トレード: 届いた申し込みを受けると、成立の画面が出る(小さいスマホ)', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    Career? car;
+    for (final seed in [3, 7, 11, 19]) {
+      c.newCareer(teamAtRank(10, 28), seed: seed);
+      c.startSeason();
+      final x = c.career!;
+      while (x.phase == Phase.season && (x.incoming == null || !x.canTrade)) {
+        x.playBlock();
       }
-      return null;
-    });
-    addTearDown(() => tester.binding.defaultBinaryMessenger
-        .setMockMethodCallHandler(SystemChannels.platform, null));
-    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
-    final g = Game(
-      eventsEnabled: false,
-      player: Player(
-          name: 'ユウ', age: 25, potential: 70, heightCm: 190, heightGenes: 0.5,
-          abilities: {for (final a in Ability.values) a: 70}),
-      rng: Random(1),
-      track: Track.pro,
-    )..retire();
-    c.game = g;
+      if (x.incoming != null && x.judge(x.incoming!).ok) {
+        car = x;
+        break;
+      }
+    }
+    expect(car, isNotNull);
     await tester.pumpWidget(BasketballCareerApp(controller: c));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('結果をコピー'));
+    await _closeDialogs(tester);
+    final accept = find.widgetWithText(FilledButton, '受ける');
+    await tester.scrollUntilVisible(accept, 300, scrollable: _progress);
+    await tester.ensureVisible(accept);
     await tester.pumpAndSettle();
-    expect(copied, contains('ユウの物語'));
-    expect(copied, contains('#バスケ育成'));
-    expect(find.textContaining('結果をコピーした'), findsOneWidget);
+    await tester.tap(accept);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('トレード成立'), findsOneWidget);
+    expect(find.textContaining('評価: '), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('閉じる'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('トレード成立'), findsNothing);
   });
 
-  test('ライバルとはじめて戦うと出会いの節目が1度だけ出る', () {
-    final c = GameController(store: _NullStore(), rng: Random(2), events: false);
-    c.game = Game(
-      eventsEnabled: false,
-      player: Player(
-        name: 'ケイ', age: 13, potential: 80, heightCm: 170, heightGenes: 0.5,
-        abilities: {for (final a in Ability.values) a: 70}),
-      rng: Random(2),
-      slot: 1,
-      rival: Rival(name: '黒瀬ユウマ', potential: 70),
-    );
-    // 準決勝(2戦目)まで勝ち上がれるまで、乱数を変えて探す。
-    var met = false;
-    for (var seed = 0; seed < 60 && !met; seed++) {
-      final t = GameController(store: _NullStore(), rng: Random(seed), events: false);
-      t.game = Game(
-        eventsEnabled: false,
-        player: Player(
-          name: 'ケイ', age: 13, potential: 80, heightCm: 170, heightGenes: 0.5,
-          abilities: {for (final a in Ability.values) a: 90}),
-        rng: Random(seed),
-        slot: 1,
-        rival: Rival(name: '黒瀬ユウマ', potential: 70),
-      );
-      t.act(Action.rest, ask: false);
-      if (t.game!.rivalMet) {
-        met = true;
-        expect(t.pending.where((m) => m.kind == MilestoneKind.rival).length, 1);
-        expect(t.pending.firstWhere((m) => m.kind == MilestoneKind.rival).body,
-            contains('黒瀬ユウマ'));
-        // 次の年の対戦では、もう出ない。
-        t.pending.clear();
-        for (var i = 0; i < 4; i++) {
-          t.act(Action.rest, ask: false);
+  testWidgets('プレーオフは自分のシリーズを1試合ずつめくり、最後に結果を見てシーズンの終わりへ', (tester) async {
+    _size(tester, 667, 375);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(0, 15), seed: 4);
+    c.startSeason();
+    final car = c.career!;
+    while (car.phase == Phase.season) {
+      car.declineIncoming();
+      car.playBlock();
+    }
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    final start = find.textContaining(RegExp('プレーオフを戦う|プレーオフの結果を見る'));
+    await tester.scrollUntilVisible(start, 300, scrollable: _progress);
+    await tester.ensureVisible(start);
+    await tester.pumpAndSettle();
+    await tester.tap(start);
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    // 出られたときは1試合ずつ戦う: 1試合進めてボックススコアを閉じ、残りはまとめて
+    if (car.poLive) {
+      expect(find.byKey(const Key('po-live')), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const Key('po-next')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('po-next')));
+      await tester.pumpAndSettle();
+      expect(car.myLastPlayoffGame, isNotNull);
+      Future<void> popAll() async {
+        await _closeDialogs(tester);
+        while (Navigator.of(tester.element(find.byType(Scaffold).last)).canPop()) {
+          Navigator.of(tester.element(find.byType(Scaffold).last)).pop();
+          await tester.pumpAndSettle();
         }
-        t.act(Action.rest, ask: false);
-        expect(t.pending.where((m) => m.kind == MilestoneKind.rival), isEmpty);
       }
+
+      // ボックススコアを閉じてから、残りをまとめて
+      await popAll();
+      if (car.phase == Phase.playoffs) {
+        await tester.ensureVisible(find.byKey(const Key('po-all')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('po-all')));
+        await tester.pumpAndSettle();
+      }
+      await popAll();
+      await _closeDialogs(tester);
+      expect(car.phase, Phase.seasonEnd);
+      expect(find.text('オーナーの評価'), findsOneWidget);
+      // あとから振り返れる
+      await tester.ensureVisible(find.byKey(const Key('po-review')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('po-review')));
+      await tester.pumpAndSettle();
+      expect(find.text('第1戦を見る'), findsOneWidget);
+      return;
     }
-    expect(met, isTrue);
-    expect(c.pending, isEmpty);
-  });
-
-  testWidgets('おすすめの過ごし方に印が付き、状態で変わる', (tester) async {
-    tall(tester);
-    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
-    c.game = Game.start('ケイ', rng: Random(2), events: false);
-    await tester.pumpWidget(BasketballCareerApp(controller: c));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('(おすすめ)'), findsOneWidget);
-    // 疲れていれば休養がおすすめになる。
-    c.game!.condition = const Condition(fatigue: 90);
-    c.notifyListeners();
-    await tester.pumpAndSettle();
-    expect(find.text('休養  (おすすめ)'), findsOneWidget);
-    expect(find.textContaining('(おすすめ)'), findsOneWidget);
-  });
-
-  test('能力のランクが上がると知らせる', () {
-    final c = GameController(store: _NullStore(), rng: Random(3), events: false);
-    c.game = Game(
-      eventsEnabled: false,
-      player: Player(
-        name: 'ケイ',
-        age: 12,
-        potential: 90,
-        heightCm: 150,
-        heightGenes: 0.5,
-        abilities: {for (final a in Ability.values) a: 39},
-      ),
-      rng: Random(3),
-    );
-    var saw = false;
-    for (var i = 0; i < 6 && !saw; i++) {
-      c.act(Action.practice, ask: false);
-      saw = c.recent.any((l) => l.startsWith('ランクアップ!'));
+    var guard = 0;
+    while (find.textContaining('シーズンの終わりへ').evaluate().isEmpty && guard++ < 60) {
+      await tester.tap(find.byType(FilledButton).last);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
     }
-    expect(saw, isTrue);
+    await tester.tap(find.textContaining('シーズンの終わりへ'));
+    await tester.pumpAndSettle();
+    await _closeDialogs(tester);
+    expect(car.phase, Phase.seasonEnd);
+    expect(find.text('オーナーの評価'), findsOneWidget);
   });
 
-  testWidgets('節目はダイアログで見せ、閉じると次の節目が出る', (tester) async {
-    tall(tester);
-    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
-    c.game = Game.start('ケイ', rng: Random(2), events: false);
-    c.pending.addAll(const [
-      Milestone(MilestoneKind.champion, '優勝!', '夏の大会を制した。'),
-      Milestone(MilestoneKind.goal, '目標達成!', 'ごほうび'),
-    ]);
-    await tester.pumpWidget(BasketballCareerApp(controller: c));
-    await tester.pumpAndSettle();
-    c.notifyListeners();
-    await tester.pumpAndSettle();
-    expect(find.text('優勝!'), findsOneWidget);
-    await tester.tap(find.text('つぎへ'));
-    await tester.pumpAndSettle();
-    expect(find.text('目標達成!'), findsOneWidget);
-    await tester.tap(find.text('つぎへ'));
-    await tester.pumpAndSettle();
-    expect(find.text('つぎへ'), findsNothing);
-    expect(c.pending, isEmpty);
-  });
+  for (final s in const [Size(667, 375), Size(932, 430), Size(1376, 1032)]) {
+    testWidgets('選手の画面は閉じるボタンと外を押して戻れ、画面いっぱいにならない($s)', (tester) async {
+      _size(tester, s.width, s.height);
+      final c = await _controller({'gmHowtoSeen': true});
+      c.newCareer(teamAtRank(1, 15), seed: 1);
+      await tester.pumpWidget(BasketballCareerApp(controller: c));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('チーム').first);
+      await tester.pumpAndSettle();
+      final star = c.career!.me.order.first;
+      await tester.scrollUntilVisible(find.text(star.name), 200, scrollable: _vertical);
+      await tester.tap(find.text(star.name).first);
+      await tester.pumpAndSettle();
+      expect(find.text('この選手を放す'), findsOneWidget);
+      // 閉じるボタンで戻る
+      await tester.tap(find.byTooltip('閉じる'));
+      await tester.pumpAndSettle();
+      expect(find.text('この選手を放す'), findsNothing);
+      // 板の上に暗い所が残っていて、押すと閉じる
+      await tester.tap(find.text(star.name).first);
+      await tester.pumpAndSettle();
+      final sheet = tester.getRect(find.byType(BottomSheet));
+      expect(sheet.top, greaterThan(40), reason: '画面の上まで覆わない');
+      await tester.tapAt(Offset(s.width / 2, sheet.top / 2));
+      await tester.pumpAndSettle();
+      expect(find.text('この選手を放す'), findsNothing);
+    });
+  }
 
-  test('中学に上がると進学の節目が出る。プロ契約・海外挑戦も', () {
-    final c = GameController(store: _NullStore(), rng: Random(1), events: false);
-    c.game = Game(
-      eventsEnabled: false,
-      player: Player(
-          name: 'ケイ', age: 12, potential: 50, heightCm: 150, heightGenes: 0.5),
-      rng: Random(1),
-    );
-    for (var i = 0; i < 4; i++) {
-      c.act(Action.rest, ask: false);
+  group('どの画面も、小さいスマホ・大きいスマホ・iPad ではみ出さない', () {
+    const sizes = [Size(667, 375), Size(844, 390), Size(932, 430), Size(1376, 1032)];
+
+    Future<void> show(WidgetTester tester, GmController c, Size s, {String? tab}) async {
+      _size(tester, s.width, s.height);
+      await tester.pumpWidget(BasketballCareerApp(controller: c));
+      await tester.pumpAndSettle();
+      await _closeDialogs(tester);
+      if (tab != null) {
+        await tester.tap(find.text(tab).first);
+        await tester.pumpAndSettle();
+      }
+      expect(tester.takeException(), isNull, reason: '$s $tab ${c.career?.phase}');
+      await tester.pumpWidget(const SizedBox());
     }
-    expect(c.pending.any((m) => m.kind == MilestoneKind.stage), isTrue);
 
-    final p = GameController(store: _NullStore(), rng: Random(1), events: false);
-    p.game = Game(
-      eventsEnabled: false,
-      player: Player(
-        name: 'ユウ',
-        age: 21,
-        potential: 90,
-        heightCm: 205,
-        heightGenes: 0.9,
-        abilities: {for (final a in Ability.values) a: 90},
-      ),
-      rng: Random(1),
-      pathPending: true,
-    );
-    p.chooseRoute(Route.pro);
-    expect(p.pending.any((m) => m.kind == MilestoneKind.contract), isTrue);
-    p.goAbroad();
-    expect(p.pending.any((m) => m.kind == MilestoneKind.abroad), isTrue);
-  });
-
-  test('おすすめで1年進める', () async {
-    final c = GameController(rng: Random(4), events: false);
-    c.newGame('オート');
-    await c.autoYear();
-    expect(c.game!.player.age, 7);
-    expect(c.recent.first, contains('1年進めた'));
-  });
-
-  test('おすすめで3年まとめて進める(止まる場面があれば、そこまで)', () async {
-    final c = GameController(rng: Random(4), events: false);
-    c.newGame('オート');
-    await c.autoYears(3);
-    expect(c.game!.player.age, 9);
-    expect(c.recent.first, contains('3年進めた'));
-    // 進路の画面など、季節の画面でなくなったら、それ以上は進まない。
-    final d = GameController(rng: Random(5), events: false);
-    d.newGame('オート');
-    await d.autoYears(40);
-    expect(d.game!.phase, isNot(Phase.season), reason: '進路・引退などで止まる');
-    expect(d.game!.player.age, lessThan(60));
+    for (final s in sizes) {
+      testWidgets('$s', (tester) async {
+        final c = await _controller({'gmHowtoSeen': true});
+        await show(tester, c, s); // はじめの画面
+        c.newCareer(teamAtRank(1, 1), seed: 1);
+        final car = c.career!;
+        for (final tab in [null, 'チーム', 'トレード', '補強', 'リーグ']) {
+          await show(tester, c, s, tab: tab);
+        }
+        c.startSeason();
+        car.playBlock();
+        await show(tester, c, s);
+        await show(tester, c, s, tab: 'リーグ');
+        while (car.phase == Phase.season) {
+          car.playBlock();
+        }
+        await show(tester, c, s); // プレーオフ前
+        car.playPlayoffs();
+        await show(tester, c, s); // シーズン終了
+        car.fired = false;
+        car.toOffseason();
+        await show(tester, c, s); // ドラフト
+        while (car.phase == Phase.draft) {
+          botStep(car);
+        }
+        await show(tester, c, s); // 契約
+        await show(tester, c, s, tab: '補強');
+        car.phase = Phase.over;
+        await show(tester, c, s);
+      });
+    }
   });
 }

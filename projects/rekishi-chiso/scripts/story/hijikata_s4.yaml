@@ -1,0 +1,157 @@
+# 物語完結型ショート 土方歳三 s4（2026-10-29）。本編 scripts/hijikata-story.yaml の第3章（洋装の写真は、いつ誰が撮ったのか）から。
+# 形式は masamune_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「……この姿を、残しておくか」は使わない）。
+# 絵は実在の写真（洋装の写真2枚・箱館奉行所）と本編の AI 絵（J04 は写真館の後ろ姿）。
+# 事実カード（dev/output/rekishi-chiso/research/土方歳三_facts_20261029.yaml）：hijikata-02・24・37・38・73
+#   ・撮った人と時期は記録で食い違う。佐藤家の目録（田本研造・明治元年12月）／東京都写真美術館 2013年（田本研造か・明治2年ごろ）／土方愛さん（亡くなる半年前に函館で）。
+#   ・函館市中央図書館のプリントは後年の焼き直し（hijikata-38）。柔和な表情は愛さんの話（hijikata-73）。
+# 理解テスト4問：
+#   ①誰の話か：土方歳三の洋装の写真
+#   ②いつ・どこで何が：箱館で、洋服で椅子に腰かけた姿を撮った。田本研造と伝わる
+#   ③何が食い違うか：撮った人と時期。目録は田本研造・明治元年12月と言い切り、写真美術館は田本研造か・明治2年ごろ、愛さんは亡くなる半年前に函館で
+#   ④どうなったか：言い切る記録と言い切らない記録があり、分からないことが残る。愛さんは柔和な表情がよかったと話す
+title: 土方歳三｜洋装の写真を撮ったのは、いつ、誰か
+yt_title: 土方歳三の洋装の写真は、いつ誰が撮った？　目録と美術館で食い違う記録
+description: |-
+  よく知られた、洋服姿の土方歳三の写真。箱館で、椅子に腰かけた姿を撮ったのは、写真師の田本研造だと伝えられます。けれど、いつ撮ったのか、本当に田本なのか、記録の書き方はそろっていません。
+  日野の佐藤家の写真の目録は、田本研造が写した、と言い切り、年代を明治元年の12月と記します。東京都写真美術館は、2013年の展示で、撮った人を「田本研造か」とし、時期を「明治2年ごろ」としました。子孫の土方愛さんは、亡くなる半年前に函館で撮られたもの、と話しています。
+  愛さんは、最後はつらい状況だったのに、柔和な表情で写っているのがよかった、とも話しています。
+hashtags: ["#土方歳三", "#日本史", "#幕末"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/hijikata
+out: hijikata_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 土方歳三（新選組の副長）
+  title: "洋装の写真は、いつ《誰が》撮ったのか"
+now:
+  - {at: 箱館で, text: "箱館", point: 0}
+  - {at: 明治元年の12月, text: "明治元年12月　佐藤家の目録", point: 0}
+  - {at: 2013年, text: "2013年　東京都写真美術館", point: 1}
+timeline:
+  - {label: "明治元"}
+  - {label: "2013"}
+cards:
+  - type: table                          # 食い違う記録（語った順に1行ずつ）
+    title: 撮った人と時期
+    from: 日野の佐藤家の
+    until: 撮った人も
+    items:
+      - {at: 日野の佐藤家の, text: "佐藤家の目録　田本研造・明治元年12月"}
+      - {at: 東京都写真美術館, text: "写真美術館　田本研造か・明治2年ごろ"}
+      - {at: 土方愛さん, text: "愛さん　亡くなる半年前・函館"}
+shots:
+  Seated:                                # 1文目：洋装の写真（楕円の別の焼き付け。顔が上の帯の下に出る）
+    kind: real
+    image: paintings/hijikata_photo_portrait.jpg
+    focus: [0.5, 0.45]
+    move: in
+    credit: "土方歳三の洋装の写真（1869年ごろ。別の焼き付け）"
+    must: 洋装の土方歳三の写真
+  J04:                                   # 箱館の写真館（後ろ姿）
+    kind: ai
+    file: hijikata/main/J04.jpg
+    focus: [0.62, 0.5]
+    move: in
+    must: 写真機と椅子の男の後ろ姿
+  J04l:                                  # 写真機
+    kind: ai
+    file: hijikata/main/J04.jpg
+    focus: [0.88, 0.4]
+    move: left
+    must: 黒い布の写真機
+  Bugyosho:                              # 箱館の奉行所（実在）
+    kind: real
+    image: paintings/hijikata_hakodate_bugyosho_1868.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "五稜郭の箱館奉行所（1868年ごろの写真）"
+    must: 箱館奉行所の写真
+  J10:                                   # 箱館・函館の雪景色
+    kind: ai
+    file: hijikata/main/J10.jpg
+    focus: [0.4, 0.5]
+    move: left
+    must: 雪の五稜郭
+  Oval:                                  # 楕円の写真（顔）
+    kind: real
+    image: paintings/hijikata_photo_1869.jpg
+    focus: [0.5, 0.45]
+    move: in
+    credit: "土方歳三の洋装の写真（1869年ごろ）"
+    must: 洋装の土方歳三の写真
+  OvalC:                                 # 柔和な表情
+    kind: real
+    image: paintings/hijikata_photo_1869.jpg
+    focus: [0.5, 0.4]
+    move: in
+    zoom: 0.2
+    credit: "土方歳三の洋装の写真（1869年ごろ）"
+    must: 洋装の土方歳三の顔
+  OvalQ:                                 # 最後の問い
+    kind: real
+    image: paintings/hijikata_photo_1869.jpg
+    focus: [0.5, 0.4]
+    move: in
+    zoom: 0.1
+    text_y: 0.78
+    credit: "土方歳三の洋装の写真（1869年ごろ）"
+    must: 洋装の土方歳三の写真
+lines:
+  # fact: hijikata-24
+  - 語り: 土方歳三の洋装写真。いつ、誰が撮ったのかは、記録によって、《!食い違う》。
+    shot: Seated
+    tone: 強調
+  # fact: hijikata-02
+  - 語り: 箱館で、洋服を着て、椅子に腰かけた姿。撮ったのは、箱館の写真師、田本研造、と伝えられる。
+    shot: J04
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-24, hijikata-37
+  - 語り: 日野の佐藤家の写真の目録は、田本研造が写した、と言い切り、年代を、明治元年の12月と記す。
+    shot: J04l
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-24
+  - 語り: 東京都写真美術館は、2013年の展示で、撮った人を、田本研造か、とし、時期を、明治2年ごろ、とした。
+    shot: Bugyosho
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-37
+  - 語り: 子孫の土方愛さんは、亡くなる半年前に、函館で撮られたもの、と話している。
+    shot: J10
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 撮った人も、撮った時も、言い切る記録と、言い切らない記録がある。
+    shot: Oval
+    tone: 強調
+    pause: 0.12
+  # fact: hijikata-38
+  - 語り: 函館市中央図書館にも、この写真があるが、撮ったときに焼いたものではなく、のちの時代に、焼き直したものだ。
+    shot: Bugyosho
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-73
+  - 語り: 愛さんは、最後はつらい状況だったのに、柔和な表情で写っているのがよかった、と話す。
+    shot: OvalC
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: よく知られた一枚にも、分からないことが、残っている。
+    shot: Seated
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたは、この表情を、いつ、誰が撮ったと、《思いますか》。
+    shot: OvalQ
+    tone: 疑問
+    pause: 0.15

@@ -1,0 +1,148 @@
+# 物語完結型ショート 五摂家 s3（2026-11-11）。本編 scripts/gosekke-kakeizu-story.yaml（11/12 19:00 公開、https://youtu.be/CeEjUwzjJRQ）から。11/13 に予約。
+# 形式は genbaku_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/五摂家_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/gosekke/main。人物なし・後ろ姿だけ）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 答えの席（今、当主の名前が公に分かる家はいくつか）は言い切らない。存命の人の名前は出さない。
+# 切り口：父に「子孫とは認めない」と言われた二条家の祖・良実（本編3章）。五摂家がそろった年（1252年説・1273年説）は言わず、tease にする。
+# 計算：1242→1287＝45年。1226年・頼経は1218年生＝数え9歳。
+# 理解テスト4問：①九条道家と息子の良実（二条家の祖） ②1246年に関白を弟に譲らされ、1250年に財産を渡さない文書、2年後に子孫と認めない文書 ③道家は幼いころから良実を疎んじたと三田武繁さんは書く ④二条家は初代の関白から2人目の摂関まで45年待たされた。次は五つの家がそろった年（本編3章）
+title: "藤原道長の子孫｜子孫とは認められなかった息子"
+yt_title: "「自分の子孫とは認めない」と父に言われた息子が二条家の祖になった　九条道家と良実"
+description: |-
+  九条家の道家は、子の頼経を、1226年、数えで9歳で、鎌倉幕府の将軍にしました。一方で、のちに二条家の祖となる息子の良実を、幼いころから疎んじた、と三田武繁さんは書いています。
+  1246年、良実は、関白の座を弟に譲るよう、道家に強いられました。1250年、道家は惣処分状で、良実の子孫には財産を渡さない、と定め、その2年後には、良実を自分の子孫とは認めない、という文書まで作ります。その良実の家が、二条家です。初代の良実が1242年に関白になってから、2人目の摂関が出たのは1287年、45年待たされました。
+  では、五つの家が、そろったのは、いつなのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#藤原道長"
+- "#五摂家"
+- "#二条家"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/gosekke
+out: gosekke_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "二条家の祖・良実と父の道家"
+  title: "父が息子を、《子孫と認めない》"
+now:
+- {at: "1226年", text: "1226年", point: 0}
+- {at: "1246年", text: "1246年", point: 1}
+- {at: "1250年", text: "1250年", point: 2}
+- {at: "1287年", text: "1287年", point: 3}
+timeline:
+- {label: "1226"}
+- {label: "1246"}
+- {label: "1250"}
+- {label: "1287"}
+shots:
+  K10a:
+    kind: "ai"
+    file: "gosekke/main/K10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "誰もいない広間と襖絵（父と子の家）"
+  H09:
+    kind: "ai"
+    file: "gosekke/main/H09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "縁側から庭を見る若い公達の後ろ姿（息子）"
+  K01:
+    kind: "ai"
+    file: "gosekke/main/K01.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "夜明けの川向こうの城と荷車（鎌倉へ）"
+  K05a:
+    kind: "ai"
+    file: "gosekke/main/K05.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "灯の下の書状と筆"
+  K18:
+    kind: "ai"
+    file: "gosekke/main/K18.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "灯のともる座敷（関白を譲る）"
+  K15:
+    kind: "ai"
+    file: "gosekke/main/K15.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "机の上の古い巻物（惣処分状）"
+  K05b:
+    kind: "ai"
+    file: "gosekke/main/K05.jpg"
+    focus: [0.75, 0.5]
+    move: "right"
+    must: "白い書状（義絶の文書）"
+  Hana:
+    kind: "real"
+    image: "paintings/gosekke_hananogosho.png"
+    focus: [0.5, 0.5]
+    move: "right"
+    credit: "上杉本洛中洛外図屏風 花の御所（京都アスニー収蔵。パブリックドメイン）"
+    must: "洛中洛外図屏風の公家の町"
+    crop: [0.1, 0, 0.7, 1]
+  K06:
+    kind: "ai"
+    file: "gosekke/main/K06.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "松並木の朝の街道（次の問い）"
+lines:
+  # fact: gosekke-14
+- 語り: "九条道家は、息子を、自分の子孫とは、認めなかった。"
+  shot: K10a
+  tone: 強調
+  pause: 0.12
+  # fact: gosekke-14
+- 語り: "その息子は、のちに、一つの家の祖になる。何という家か。"
+  shot: H09
+  tone: 疑問
+  pause: 0.15
+  # fact: gosekke-18
+- 語り: "道家は、子の頼経を、1226年、数えで9歳で、鎌倉幕府の将軍にした。"
+  shot: K01
+  tone: しみじみ
+  pause: 0.12
+  # fact: gosekke-14
+- 語り: "一方、二条家の祖となる良実を、幼いころから疎んじた、と、三田武繁さんは書く。"
+  shot: K05a
+  tone: 重い
+  pause: 0.12
+  # fact: gosekke-14
+- 語り: "1246年、良実は、関白の座を、弟に譲るよう、道家に強いられた。"
+  shot: K18
+  tone: 重い
+  pause: 0.12
+  # fact: gosekke-14
+- 語り: "1250年、道家は、惣処分状で、良実の子孫には、財産を渡さない、と定める。"
+  shot: K15
+  tone: 重い
+  pause: 0.12
+  # fact: gosekke-14
+- 語り: "その2年後には、良実を、自分の子孫とは認めない、という文書まで、作った。"
+  shot: K05b
+  tone: 重い
+  pause: 0.12
+  # fact: gosekke-13
+- 語り: "その良実の家が、二条家だ。初代の良実が、1242年に関白になってから、2人目の摂関が出たのは、1287年。45年、待たされた。"
+  shot: Hana
+  tone: しみじみ
+  pause: 0.12
+  # fact: gosekke-12
+- 語り: "では、五つの家が、そろったのは、いつなのか。"
+  shot: K06
+  tone: 疑問
+  pause: 0.15

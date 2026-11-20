@@ -11,14 +11,31 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' as io show Platform;
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show WidgetsBinding;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/achievement.dart';
 import '../models/bank_loan.dart';
 import '../models/investment.dart';
+import '../models/ledger.dart';
+import '../logic/division_strength.dart';
+import '../logic/ledger_engine.dart';
+import '../logic/economy_engine.dart';
+import '../logic/advisor_engine.dart';
+import '../logic/club_ranking_engine.dart';
+import '../logic/equity_engine.dart';
+import '../logic/media_deals_engine.dart';
+import '../logic/project_engine.dart';
+import '../models/start_scenario.dart';
+import '../logic/proposal_engine.dart';
+import '../logic/risk_engine.dart';
+import '../logic/league_rules.dart';
+import '../logic/policy_engine.dart';
+import '../logic/club_value_engine.dart';
 import '../models/best_eleven.dart';
 import '../models/club_infrastructure.dart';
 import '../models/continental_cup.dart';
@@ -27,6 +44,22 @@ import '../models/cup.dart';
 import '../models/formation.dart';
 import '../models/incoming_offer.dart';
 import '../models/installment.dart';
+import '../models/transfer_talk.dart';
+import '../models/sd_brief.dart';
+import '../models/staff_offer.dart';
+import '../models/rival_owner.dart';
+import '../models/manager_profile.dart';
+import '../logic/manager_hr_engine.dart';
+import '../logic/transfer_talk_engine.dart';
+import '../logic/player_terms_engine.dart';
+import '../logic/relations_engine.dart';
+import '../logic/injury_care.dart';
+import '../logic/front_page_engine.dart';
+import '../logic/club_culture.dart';
+import '../logic/academy_engine.dart';
+import '../logic/agm_engine.dart';
+import '../logic/projection_engine.dart';
+import '../logic/owner_history_engine.dart';
 import '../models/league_theme.dart';
 import '../models/player.dart';
 import '../models/player_season_stats.dart';
@@ -42,15 +75,34 @@ import '../models/team_talk.dart';
 import '../models/training_result.dart';
 import '../models/team.dart';
 import '../models/league.dart';
+import '../models/live_match_progress.dart';
 import '../models/match_result.dart';
 import '../models/weather.dart';
 import '../logic/achievement_engine.dart';
 import '../logic/ai_transfer_engine.dart';
-import '../logic/calendar_engine.dart';
+import '../logic/money_calendar.dart';
+import '../logic/season_calendar.dart';
+import '../logic/summer_tournament.dart';
+import '../logic/transfer_window.dart';
 import '../logic/awards_engine.dart';
 import '../logic/background_match_engine.dart';
 import '../logic/best_eleven_engine.dart';
 import '../logic/board_engine.dart';
+import '../logic/budget_engine.dart';
+import '../models/budget_plan.dart';
+import '../models/owner_event.dart';
+import '../models/owner_work.dart';
+import '../logic/transfer_terms_engine.dart';
+import '../logic/partner_club_engine.dart';
+import '../logic/youth_investment_engine.dart';
+import '../logic/facility_investment_engine.dart';
+import '../logic/club_health_engine.dart';
+import '../models/matchday_promo.dart';
+import '../models/owner_goal.dart';
+import '../models/owner_legacy.dart';
+import '../logic/offscreen_development.dart';
+import '../logic/shareholder_engine.dart';
+import '../logic/squad_registration_engine.dart';
 import '../logic/contract_engine.dart';
 import '../logic/continental_cup_engine.dart';
 import '../logic/dynamics_engine.dart';
@@ -60,32 +112,46 @@ import '../logic/happiness_engine.dart';
 import '../logic/investment_engine.dart';
 import '../logic/loan_engine.dart';
 import '../logic/manager_career_engine.dart';
-import '../logic/press_conference_engine.dart';
 import '../logic/player_generator.dart';
 import '../logic/promotion_engine.dart';
 import '../logic/retirement_engine.dart';
+import '../logic/pre_contract_engine.dart';
+import '../models/pre_contract.dart';
 import '../logic/rotation_engine.dart';
 import '../logic/fixture_generator.dart';
 import '../logic/free_agent_engine.dart';
 import '../logic/lineup_utils.dart';
 import '../logic/match_engine.dart';
+import '../logic/scout_knowledge.dart';
 import '../logic/scouting_engine.dart';
 import '../logic/season_projection_engine.dart';
 import '../logic/sponsor_engine.dart';
+import '../logic/era_engine.dart';
+import '../logic/analytics_engine.dart';
+import '../models/player_stub.dart';
+import '../logic/fan_segments.dart';
+import '../logic/contract_style.dart';
+import '../logic/country_coefficient.dart';
+import '../logic/big_moment.dart';
+import '../models/club_look.dart';
+import '../theme/club_palette.dart';
+import '../logic/sponsor_slots.dart';
+import '../logic/club_license.dart';
+import '../logic/market_trend.dart';
+import '../logic/player_popularity.dart';
+import '../logic/season_tickets.dart';
 import '../logic/super_cup_engine.dart';
 import '../logic/training_engine.dart';
-import '../logic/transfer_market.dart';
 import '../logic/weather_engine.dart';
 import '../logic/youth_departure_engine.dart';
 import '../logic/youth_league_engine.dart';
 import '../logic/youth_promotion_engine.dart';
 import '../logic/youth_match_engine.dart';
 import '../data/name_pool.dart';
+import '../data/nation_names.dart';
 import '../models/first_run_step.dart';
 import '../monetization/funds_pack.dart';
-import '../monetization/reward_offer.dart';
 import '../l10n/tr.dart';
-import '../logic/development_advisor.dart';
 import '../logic/match_factor_engine.dart';
 import '../logic/reserve_match_engine.dart';
 import '../logic/staff_market.dart';
@@ -95,30 +161,64 @@ import '../models/preseason_camp.dart';
 import '../models/opposition_plan.dart';
 import '../models/player_instruction.dart';
 import '../models/staff_member.dart';
+import '../logic/economy_scale.dart';
 
 part 'game_state_squad.dart';
 part 'game_state_transfer.dart';
 part 'game_state_finance.dart';
 part 'game_state_match.dart';
 part 'game_state_season.dart';
+part 'game_state_contracts.dart';
+part 'game_state_talks.dart';
+part 'game_state_people.dart';
+part 'game_state_sd.dart';
+part 'game_state_staff_moves.dart';
+part 'game_state_life.dart';
+part 'game_state_owner.dart';
+part 'game_state_agm.dart';
+part 'game_state_plan.dart';
+part 'game_state_rivals.dart';
+part 'game_state_money_rules.dart';
+part 'game_state_injury.dart';
+part 'game_state_nation.dart';
+part 'game_state_forms.dart';
+part 'game_state_league_cup.dart';
+part 'game_state_era_group.dart';
+part 'game_state_congestion.dart';
+part 'game_state_youth_analytics.dart';
+part 'game_state_fans.dart';
+part 'game_state_contract_style.dart';
+part 'game_state_coefficient.dart';
+part 'game_state_moments.dart';
+part 'game_state_club_look.dart';
+part 'game_state_rumors.dart';
+part 'game_state_affiliate.dart';
+part 'game_state_foreign.dart';
+part 'game_state_records.dart';
+part 'game_state_former_clubs.dart';
+part 'game_state_club_finance.dart';
+part 'game_state_sponsor_slots.dart';
+part 'game_state_license.dart';
+part 'game_state_season_tickets.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
 
-const int maxSquadSize = 26;
+/// 在籍の総数の上限(21歳以下を含む)。登録の決まりは [SquadRegistration]。
+const int maxSquadSize = SquadRegistration.totalLimit;
 
 /// スカッドの最低人数。放出・ローン放出はこの人数を割り込む操作を拒否し、
 /// 契約満了・ローン満了でこれを下回った場合はフリーエージェントで自動補充
 /// される。12だと負傷・出場停止が重なった際に11人を組めなくなる危険が
 /// あるため(長期実測で12人に張り付く状態を確認)、ベンチ要員を含めて
 /// 最低限回る16人とする。
-const int minSquadSize = 16;
+const int minSquadSize = 18;
 
 /// シーズン開始時に自動補強で確保する推奨人数。最低人数ちょうど(16人)で
 /// 張り付くと、負傷者と出場停止が数人重なるだけでベンチが空になり、
 /// ローテーションの選択肢そのものが消えてしまう(長期実測で毎シーズン
 /// 16人に張り付くことを確認)。シーズン開始時だけこの人数まで底上げする。
-const int seasonStartSquadSize = 18;
+const int seasonStartSquadSize = 21;
 
 /// ライブ観戦できるカップ試合の種別。リーグ戦([GameState.playNextMatchday])
 /// と同じインタラクティブ進行を、どの大会の試合として開始するかを表す。
@@ -164,6 +264,9 @@ class RestorePointInfo {
     this.matchday,
   });
 }
+
+/// [GameState.encodeSaveOffMain] が別の処理で呼ぶ(トップレベルでないと渡せない)。
+String _encodeSave(SaveGame save) => jsonEncode(save.toJson());
 
 class GameState extends ChangeNotifier {
   /// 旧バージョンで使われていた単一スロットのキー。起動時にスロット0へ移行する。
@@ -211,9 +314,9 @@ class GameState extends ChangeNotifier {
   /// [SaveGame.transferMarketPlayers]が実体)。
   List<Player> _transferMarketFallback = [];
 
-  /// 移籍市場に出ている選手一覧。毎節数人ずつ入れ替わる持続的な市場で
-  /// ([TransferMarket.rotate])、セーブデータに保存されるためロードしても
-  /// 同じ顔ぶれが維持される。
+  /// 作り物の移籍市場の選手。**ゲームはもう作らない**(獲得の相手は
+  /// [transferTargets]の他のクラブの選手)。テストが選手を置くためと、
+  /// 獲得の関数が先に見る場所として残してある。
   List<Player> get transferMarket =>
       _save?.transferMarketPlayers ?? _transferMarketFallback;
 
@@ -261,6 +364,12 @@ class GameState extends ChangeNotifier {
   /// (1回表示したら呼び出し側でクリアする想定)。
   List<String> lastContractWarnings = [];
 
+  /// 直近のstartNextSeasonで「契約を延長しない」と言い出した選手名。
+  List<String> lastRenewalRefusals = [];
+
+  /// 直近のstartNextSeasonで仮契約(ボスマン)により加入した選手名。
+  List<String> lastPreContractArrivals = [];
+
   /// 契約切れでスカッドが最低人数を割り込んだ際、自動的に緊急補強された
   /// フリーエージェントの選手名(1回表示したら呼び出し側でクリアする想定)。
   List<String> lastEmergencySignings = [];
@@ -271,14 +380,6 @@ class GameState extends ChangeNotifier {
   /// 直近のrunWeeklyTrainingで実際に変化(成長・衰え)があった選手の一覧
   /// (1回表示したら呼び出し側でクリアする想定)。
   List<PlayerGrowthSummary> lastTrainingResults = [];
-
-  /// 直近の週次トレーニングで紅白戦に参加した(=実戦感覚を維持できた)
-  /// スタメン外の選手の人数。トレーニング結果の表示に使う。
-  int lastPracticeMatchCount = 0;
-
-  /// 直近のリザーブ(Bチーム)の試合結果。人数が足りず行われなかった週は null。
-  /// セーブには残さない。次の週次処理で必ず入れ替わるため。
-  ReserveMatchResult? lastReserveMatch;
 
   /// 直近の節送りで行われたユース練習試合の結果(候補が0人ならnull)。
   /// ユース画面での直近戦の表示に使う(セーブデータには保存しない)。
@@ -309,6 +410,11 @@ class GameState extends ChangeNotifier {
 
   /// 信頼度が0まで落ち、監督が解任された状態かどうか。
   bool get isDismissed => _save != null && _save!.confidence <= 0;
+
+  /// 株主の期待が0まで落ちた状態かどうか。売却を迫られる条件になる予定で、
+  /// いまは判定だけを置いてある(解任の扱いは変えていない)。
+  bool get isShareholderRevolt =>
+      _save != null && _save!.shareholderExpectation <= 0;
 
   /// 監督としての通算成績(勝敗数)。保存済みの過去シーズン分に加え、
   /// 進行中のシーズンの現在の順位表の成績もその場で合算して返す
@@ -345,64 +451,120 @@ class GameState extends ChangeNotifier {
     return (total - nextMd + 1).clamp(0, total);
   }
 
-  /// 移籍ウィンドウが開いているか。プレシーズン(開幕前)・シーズン中盤の
-  /// 数節・シーズン終了後(オフシーズン)にのみ、選手の獲得・放出ができる。
-  bool get isTransferWindowOpen {
-    if (_save == null) return true;
-    final nextMd = _save!.league.nextUnplayedFixture?.matchday;
-    if (nextMd == null) return true; // シーズン終了後(オフシーズン)
-    if (nextMd <= 1) return true; // プレシーズン(開幕前)
-    final total = _totalMatchdaysThisSeason;
-    if (total == 0) return true;
-    final midStart = total ~/ 2;
-    return nextMd >= midStart && nextMd <= midStart + 2;
-  }
-
-  /// 移籍ウィンドウが閉じるまでの残り節数。
+  /// いま開いている移籍の窓。閉じていれば null。
   ///
-  /// 閉じているとき、オフシーズン、開幕前(締切は開幕そのもの)は null。
-  /// 締切が見えないと「まだ動ける」と思っているうちに閉まってしまう。
-  int? get transferWindowMatchdaysLeft {
-    if (_save == null || !isTransferWindowOpen) return null;
-    final nextMd = _save!.league.nextUnplayedFixture?.matchday;
-    if (nextMd == null) return null; // オフシーズン(期限なし)
-    final total = _totalMatchdaysThisSeason;
-    if (total == 0) return null;
-    if (nextMd <= 1) return 1; // 開幕前。開幕したら閉まる
-    final midStart = total ~/ 2;
-    return midStart + 2 - nextMd + 1;
+  /// 窓は日付で開け閉めする(国ごとに実在の日付。[TransferWindowCalendar])。
+  TransferWindowPeriod? get currentTransferWindow => _save == null
+      ? null
+      : TransferWindowCalendar.openOn(today, currentLeagueTheme);
+
+  /// 移籍の窓が開いているか。開いている間だけ、移籍金のかかる獲得・
+  /// ローン・売却・貸し出しができる(自由契約の選手はいつでも取れる)。
+  bool get isTransferWindowOpen =>
+      _save == null || currentTransferWindow != null;
+
+  /// 締切まで残り何日か(締切日の当日は0)。閉じていれば null。
+  int? get transferWindowDaysLeft {
+    final w = currentTransferWindow;
+    if (w == null) return null;
+    return TransferWindowCalendar.daysBetween(today, w.closes);
   }
 
-  /// この節を終えるとウィンドウが閉じるか。
-  bool get isTransferDeadlineMatchday => transferWindowMatchdaysLeft == 1;
+  /// 次に開く窓。開いている間は null。
+  TransferWindowPeriod? get nextTransferWindow {
+    if (_save == null || isTransferWindowOpen) return null;
+    return TransferWindowCalendar.nextAfter(today, currentLeagueTheme);
+  }
 
-  /// UI表示用の移籍ウィンドウ状態文言。
+  /// 今日より後で最初のリーグ戦の日(残っていなければ null)。
+  DateTime? get _nextLeagueDateAfterToday {
+    if (_save == null || _save!.league.fixtures.isEmpty) return null;
+    final t = today;
+    for (final d in seasonCalendar.matchdayDates) {
+      if (d.isAfter(t)) return d;
+    }
+    return null;
+  }
+
+  /// 締切日か。今日が締切日のとき、または次のリーグ戦の日には窓が
+  /// 閉じているとき(この節のあいだが最後の機会)。
+  ///
+  /// 日付は試合をするたびに進むので、締切日ちょうどに止まるとは限らない。
+  /// 「次の試合の前に閉まる」も締切日として目立たせる。
+  bool get isTransferDeadlineDay {
+    final w = currentTransferWindow;
+    if (w == null) return false;
+    if (TransferWindowCalendar.daysBetween(today, w.closes) <= 0) return true;
+    final next = _nextLeagueDateAfterToday;
+    return next != null && next.isAfter(w.closes);
+  }
+
+  /// 締切日(閉じていれば null)。
+  DateTime? get transferDeadline => currentTransferWindow?.closes;
+
+  /// UI表示用の移籍の窓の状態の文言。
   String get transferWindowStatusLabel {
-    if (isTransferWindowOpen) {
-      final left = transferWindowMatchdaysLeft;
-      if (left == null) {
-        return Tr.pick('移籍ウィンドウ: オープン中', 'Transfer window: open');
+    final w = currentTransferWindow;
+    if (_save == null) {
+      return Tr.pick('移籍の窓: 開いています', 'Transfer window: open');
+    }
+    if (w != null) {
+      final left = TransferWindowCalendar.daysBetween(today, w.closes);
+      final deadline = TransferWindowCalendar.formatMonthDay(w.closes);
+      if (left <= 0) {
+        return Tr.pick('${w.kind.label}: 今日が締切です($deadline)',
+            'Transfer window: deadline day today ($deadline)');
       }
-      if (left <= 1) {
-        return Tr.pick('移籍ウィンドウ: 今節で締切', 'Transfer window: deadline is this matchday');
+      if (isTransferDeadlineDay) {
+        return Tr.pick('${w.kind.label}: 締切まで残り$left日($deadline)。次の試合の前に閉まります',
+            'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline). It shuts before the next match');
       }
-      return Tr.pick('移籍ウィンドウ: オープン中（あと$left節で締切）',
-          'Transfer window: open ($left matchdays to the deadline)');
+      return Tr.pick('${w.kind.label}: 締切まで残り$left日($deadline)',
+          'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline)');
     }
-    final nextMd = _save?.league.nextUnplayedFixture?.matchday;
-    final total = _totalMatchdaysThisSeason;
-    if (nextMd == null || total == 0) {
-      return Tr.pick('移籍ウィンドウ: クローズ中', 'Transfer window: closed');
-    }
-    final midStart = total ~/ 2;
-    if (nextMd < midStart) {
-      return Tr.pick('移籍ウィンドウ: クローズ中(第$midStart節に再開)',
-          'Transfer window: closed (reopens on matchday $midStart)');
-    }
-    return Tr.pick('移籍ウィンドウ: クローズ中(来シーズン開幕前に再開)',
-        'Transfer window: closed (reopens before next season)');
+    final next = TransferWindowCalendar.nextAfter(today, currentLeagueTheme);
+    final opens = TransferWindowCalendar.formatMonthDay(next.opens);
+    return Tr.pick('移籍の窓: 閉じています。次の窓は$opensから',
+        'Transfer window: shut. The next one opens on $opens');
   }
 
+  /// 登録中の GK が全員出られない(怪我・出場停止・代表・貸し出し中・
+  /// 名簿の外)か。窓の外でも GK を1人だけ取れる特例の条件。
+  bool get isGoalkeeperEmergency {
+    if (_save == null || isTransferWindowOpen) return false;
+    return !userTeam.players.any((p) =>
+        p.position == Position.gk &&
+        !p.isInjured &&
+        !p.isSuspended &&
+        !p.isOnInternationalDuty &&
+        !p.isLoanedOut &&
+        !p.notRegistered);
+  }
+
+  /// [player]を今とれるか(窓の開閉と GK の特例)。
+  bool _windowAllowsSigning(Player player, {bool permanent = true}) {
+    if (isTransferWindowOpen) return true;
+    // GK の緊急獲得は期限付き(ローン)だけ。完全移籍は次の窓まで待つ。
+    if (permanent) return false;
+    return player.position == Position.gk && isGoalkeeperEmergency;
+  }
+
+  /// 18歳未満で、他の国から来る選手か(国をまたいで移れない)。
+  bool _isInternationalMinor(Player player) {
+    if (player.age >= 18) return false;
+    final origin = player.originLeague;
+    if (origin == null) return false;
+    return origin != currentLeagueTheme.name;
+  }
+
+  /// [clubName]が他の国のクラブか。
+  bool _isForeignClub(String clubName) {
+    if (_save == null) return false;
+    for (final l in _save!.foreignLeagues.values) {
+      if (l.teams.any((t) => t.name == clubName)) return true;
+    }
+    return false;
+  }
 
   /// 保存文字列からセーブを復元する。壊れていれば null。
   SaveGame? _decodeSave(String raw) {
@@ -440,7 +602,6 @@ class GameState extends ChangeNotifier {
         'Your save was damaged, so the last good copy was restored. You may be a little behind where you left off.');
     return restored;
   }
-
 
   /// いまのセーブを控えとして書き出す。シーズンの切り替わりで呼ぶ。
   ///
@@ -516,7 +677,7 @@ class GameState extends ChangeNotifier {
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final restored = SaveGame.fromJson(json['save'] as Map<String, dynamic>);
       _save = restored;
-      _reseedPlayerIdCounter(restored);
+      _repairLoadedSave(restored);
       _migrateDivisionPyramidIfNeeded();
       _refreshScoutCandidates();
       // 戻す前の節の出来事を持ち越すと、戻した後にそれを知らせてしまう。
@@ -543,30 +704,144 @@ class GameState extends ChangeNotifier {
     currentSlot = prefs.getInt(_currentSlotKey) ?? 0;
     _save = await _loadSlotData(prefs, currentSlot);
     if (_save != null) {
-      _reseedPlayerIdCounter(_save!);
+      _repairLoadedSave(_save!);
       _migrateDivisionPyramidIfNeeded();
-      // 市場はセーブに保存された顔ぶれを維持する(旧セーブ等で空の場合のみ
-      // 新規生成する)。
-      if (transferMarket.isEmpty) {
-        transferMarket = TransferMarket.generate();
-      }
+      // 作り物の移籍市場はやめた(獲得の相手は他のクラブの選手)。旧セーブに
+      // 残っている市場の選手は捨てる。
+      transferMarket = [];
       _refreshScoutCandidates();
     }
     initialized = true;
     _notify();
   }
 
-  /// セーブデータ内の全選手IDを集め、[PlayerGenerator]のIDカウンターへ反映する。
-  void _reseedPlayerIdCounter(SaveGame save) {
-    final ids = <String>[
-      for (final t in save.allTeams)
-        for (final p in t.players) p.id,
-      for (final p in save.youthProspects) p.id,
-      for (final p in save.pendingYouthIntake) p.id,
-      for (final p in save.freeAgents) p.id,
-      for (final p in save.retiredLegends) p.id,
+  /// 読み込んだセーブを、遊べる状態に整える(読み込み口すべてから呼ぶ)。
+  ///
+  /// - 選手IDのカウンターを全選手より上へ引き上げ、既に重複したIDを振り直す。
+  /// - 相手クラブが今のリーグに居ない監督オファーを消す(残っているとホーム
+  ///   画面が開くたびに落ち、セーブが詰む)。
+  void _repairLoadedSave(SaveGame save) {
+    _syncContractClock(save);
+    _reseedPlayerIdCounter(save);
+    _ensureWorldSquads(save);
+    save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
+    _dropDanglingJobOffer(save);
+    _migrateEconomyIfNeeded(save);
+    // 今日の日付を持たない旧セーブは、ここで日付を作る。
+    save.today ??= _rebuiltToday();
+    _migrateLoanDates(save);
+    _dropInternationalMinorsFromMarket(save);
+  }
+
+  /// お金の桁を部ごとに変える前(版1)のセーブを、一度だけ新しい桁に直す。
+  ///
+  /// - 全選手(自クラブ・他クラブ・他国・移籍市場・フリーエージェント・
+  ///   ユース)の週俸を、新しい価値の曲線から作り直す。違約金条項と
+  ///   買い取りオプションは、価値が何倍になったかに合わせて直す。
+  /// - 資金・災害基金・スポンサーと命名権の契約の額・融資の残り・分割払い
+  ///   の残り・預金を、今の部の収入の倍率(incomeScale)倍にする。
+  /// - 古い桁で始まった交渉と移籍の申し出は、額が合わないので取り下げる。
+  void _migrateEconomyIfNeeded(SaveGame save) {
+    if (save.economyVersion >= SaveGame.currentEconomyVersion) return;
+    final scale = incomeScale(save.currentDivisionTier);
+    int up(int v) => (v * scale).round();
+
+    for (final p in save.allPlayers) {
+      final ratio = p.marketValue / max(1, GameState.legacyMarketValue(p));
+      p.wage = weeklyWageForValue(p.marketValue);
+      if (p.releaseClause != null) {
+        p.releaseClause = (p.releaseClause! * ratio).round();
+      }
+      if (p.loanBuyOptionFee != null) {
+        p.loanBuyOptionFee = (p.loanBuyOptionFee! * ratio).round();
+      }
+    }
+
+    save.budget = up(save.budget);
+    save.reserveFund = up(save.reserveFund);
+    for (final deal in [
+      if (save.sponsorDeal != null) save.sponsorDeal!,
+      if (save.namingDeal != null) save.namingDeal!,
+      ...save.pendingSponsorOffers,
+      ...save.pendingNamingOffers,
+    ]) {
+      deal.weeklyIncome = up(deal.weeklyIncome);
+    }
+    save.bankLoans = [
+      for (final l in save.bankLoans)
+        BankLoan(
+          id: l.id,
+          principal: up(l.principal),
+          weeklyRepayment: up(l.weeklyRepayment),
+          termWeeks: l.termWeeks,
+          weeksRemaining: l.weeksRemaining,
+        ),
     ];
-    PlayerGenerator.ensureIdCounterAbove(ids);
+    for (final i in save.pendingInstallments) {
+      i.weeklyAmount = up(i.weeklyAmount);
+    }
+    save.fixedDeposits = [
+      for (final d in save.fixedDeposits)
+        FixedDeposit(
+          id: d.id,
+          principal: up(d.principal),
+          maturityValue: up(d.maturityValue),
+          termWeeks: d.termWeeks,
+          weeksRemaining: d.weeksRemaining,
+        ),
+    ];
+    save.incomingOffers = [];
+    save.pendingContractNegotiation = null;
+    // 給与の枠は新しい桁で引き直す(古い枠のままだと誰も獲れない)。
+    final userTeam = _findTeam(save.league.teams, save.userTeamId);
+    if (userTeam != null) {
+      save.wageBudget = BoardEngine.wageBudgetFor(
+        tier: save.currentDivisionTier,
+        currentWeeklyWageBill: ContractEngine.weeklyWageBill(userTeam) +
+            scaleMoneyForTier(save.currentDivisionTier,
+                save.infrastructure.totalStaffWeeklyWage),
+      );
+    }
+    save.economyVersion = SaveGame.currentEconomyVersion;
+  }
+
+  /// 桁を変える前の市場価値(万円)。旧セーブの換算で、価値が何倍に
+  /// なったかを測るためだけに使う。
+  @visibleForTesting
+  static int legacyMarketValue(Player p) {
+    final b = p.marketValueBreakdown;
+    final ovr = (p.overall - 40).clamp(0, 60);
+    final base = pow(ovr, 1.8) * 3;
+    final potentialBonus = (p.potential - p.overall).clamp(0, 40) * 15;
+    final value = (base + potentialBonus) *
+        b.ageFactor *
+        b.personalityFactor *
+        b.leadershipFactor;
+    return value.round().clamp(50, 20000);
+  }
+
+  /// セーブデータ内の全選手IDを集め、[PlayerGenerator]のIDカウンターへ反映する。
+  ///
+  /// **選手を持つ場所は [SaveGame.allPlayers] で漏れなく数える。** 移籍市場を
+  /// 数えていなかったため、再起動後に作った選手が市場の選手と同じIDになっていた。
+  /// スカウト候補はセーブに入らないが、メモリ上に残っていれば一緒に数える。
+  void _reseedPlayerIdCounter(SaveGame save) {
+    PlayerGenerator.ensureIdCounterAbove([
+      for (final p in save.allPlayers) p.id,
+      for (final p in scoutCandidates) p.id,
+    ]);
+  }
+
+  /// 相手クラブが今のリーグに居ない監督オファーを消す。
+  ///
+  /// 以前のバージョンで、保留中に相手が別のリーグへ移ったセーブは、ホーム
+  /// 画面が開くたびに落ちて先へ進めなくなっていた。読み込みで直す。
+  void _dropDanglingJobOffer(SaveGame save) {
+    final teamId = save.pendingJobOfferTeamId;
+    if (teamId == null) return;
+    if (_findTeam(save.league.teams, teamId) == null) {
+      save.pendingJobOfferTeamId = null;
+    }
   }
 
   /// [teams]から指定IDのチームを探す。見つからない場合はnull(移籍・世代交代
@@ -641,7 +916,12 @@ class GameState extends ChangeNotifier {
   /// ChangeNotifier.notifyListeners は @protected かつ @visibleForTesting
   /// のため、クラス外(part ファイルの extension)から直接呼ぶと解析警告になる。
   /// 通知はすべてこの委譲を経由させる。
-  void _notify() => notifyListeners();
+  void _notify() {
+    // エンブレムとユニフォームの色の出どころを、今のクラブの見た目に合わせる。
+    ClubLookRegistry.teamId = _save?.userTeamId;
+    ClubLookRegistry.look = _save?.clubLook;
+    notifyListeners();
+  }
 
   /// セーブデータをローカルストレージへ書き込む。ブラウザのストレージ容量
   /// 超過など、書き込み自体が失敗する場合がある(特にディビジョン数が増えて
@@ -652,6 +932,36 @@ class GameState extends ChangeNotifier {
   /// [lastSaveError] に記録するに留める。
   /// 保存をまとめるためのタイマー。
   Timer? _persistTimer;
+
+  /// セーブを JSON にする重い処理を、画面を描く処理とは別のところで行う。
+  ///
+  /// セーブは約1.5MB あり、JSON にするのに PC でも約160ms かかっていた
+  /// (60fps の10コマ分)。節を進めるたびに画面が一瞬止まる元になる。
+  /// 別の処理へは中身を写して渡すので、写した後に元が変わっても混ざらない。
+  /// 写せないものが混じっていた場合と Web では、これまでどおりここで行う。
+  static bool get _underTest {
+    // flutter test は FLUTTER_TEST を立てる(画面を使わないテストでも分かる)。
+    if (!kIsWeb && io.Platform.environment.containsKey('FLUTTER_TEST')) {
+      return true;
+    }
+    try {
+      return WidgetsBinding.instance.runtimeType.toString().contains('Test');
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @visibleForTesting
+  static Future<String> encodeSaveOffMain(SaveGame save) async {
+    // Web と、テスト(時間を止めて動かす画面のテストでは別の処理が終わらず、
+    // 待ち続けてしまう)では、これまでどおりここで行う。
+    if (kIsWeb || _underTest) return jsonEncode(save.toJson());
+    try {
+      return await compute(_encodeSave, save);
+    } catch (_) {
+      return jsonEncode(save.toJson());
+    }
+  }
 
   /// 保存の間隔。短くすると中断時に失う変更が減るが、まとめる効果も減る。
   static const Duration persistDebounce = Duration(milliseconds: 400);
@@ -712,9 +1022,7 @@ class GameState extends ChangeNotifier {
         await prefs.remove(_slotKey(target));
       } else {
         await prefs.setString(
-          _slotKey(target),
-          jsonEncode(_save!.toJson()),
-        );
+            _slotKey(target), await encodeSaveOffMain(_save!));
       }
       lastSaveError = null;
     } catch (e) {
@@ -773,13 +1081,11 @@ class GameState extends ChangeNotifier {
     await prefs.setInt(_currentSlotKey, slot);
     _save = await _loadSlotData(prefs, slot);
     if (_save != null) {
-      _reseedPlayerIdCounter(_save!);
+      _repairLoadedSave(_save!);
       _migrateDivisionPyramidIfNeeded();
-      // 市場はセーブに保存された顔ぶれを維持する(旧セーブ等で空の場合のみ
-      // 新規生成する)。
-      if (transferMarket.isEmpty) {
-        transferMarket = TransferMarket.generate();
-      }
+      // 作り物の移籍市場はやめた(獲得の相手は他のクラブの選手)。旧セーブに
+      // 残っている市場の選手は捨てる。
+      transferMarket = [];
       _refreshScoutCandidates();
     } else {
       transferMarket = [];
@@ -801,6 +1107,12 @@ class GameState extends ChangeNotifier {
     await prefs.remove(_slotKey(slot));
     // 控えも一緒に消す。残すと、消したはずのクラブに戻せてしまう。
     await prefs.remove(_restorePointKey(slot));
+    // 壊れたとき用の自動の控えも、この枠のものなら消す。残すと、同じ枠に
+    // 作った新しいセーブが壊れたとき、消したはずのクラブに戻ってしまう。
+    if (prefs.getInt(_backupSlotKey) == slot) {
+      await prefs.remove(_backupKey);
+      await prefs.remove(_backupSlotKey);
+    }
     if (slot == currentSlot) {
       _save = null;
       transferMarket = [];
@@ -812,14 +1124,18 @@ class GameState extends ChangeNotifier {
   /// 難易度に応じて理事会の目標順位を緩和/厳格化する。イージーは2つ緩く、
   /// ハードは1つ厳しくなる(1位〜リーグチーム数の範囲でクランプ)。
   int _difficultyAdjustedTarget(int target) {
-    final delta = _save?.difficulty.boardTargetDelta ?? 0;
-    return (target + delta).clamp(1, teamsPerLeague);
+    final delta =
+        _save?.difficultyOf(DifficultyItem.boardTarget).boardTargetDelta ?? 0;
+    return (target + delta)
+        .clamp(1, _save?.league.teams.length ?? teamsPerLeague);
   }
 
   Future<void> startNewGame(
     String clubName, {
     LeagueTheme theme = LeagueTheme.england,
     GameDifficulty difficulty = GameDifficulty.normal,
+    StartScenario scenario = StartScenario.standard,
+    Map<DifficultyItem, GameDifficulty>? difficultyItems,
   }) async {
     // ここから先はこのセーブが正。古い予約は無効になる。
     _saveGeneration++;
@@ -827,6 +1143,11 @@ class GameState extends ChangeNotifier {
     _notify();
     // ローディング表示を1フレーム描画させてから、重いクラブ生成処理に入る。
     await Future<void>.delayed(Duration.zero);
+    // 契約の満了の年は第1季から数える(前に遊んでいたセーブの年のままに
+    // しない)。
+    Player.contractClockYear = Player.seasonEndYearOf(1);
+    // 選手の名前はリーグの国の名前で作る(他国の選手は後で国籍に合わせる)。
+    NamePool.homeTheme = theme;
     final userTeam = PlayerGenerator.generateSquad(
       id: 'user',
       name: clubName,
@@ -837,21 +1158,15 @@ class GameState extends ChangeNotifier {
     const userStartTier = totalDivisionTiers;
     final allNames = NamePool.themedClubNames(
       theme,
-      teamsPerLeague * totalDivisionTiers - 1,
+      theme.teamsByTier.fold<int>(0, (a, n) => a + n) - 1,
     );
     var nameIndex = 0;
     String nextName() => allNames[nameIndex++];
 
-    // 上位ティアほど平均的なチーム力が高くなるようにする(1部が最強)。
-    // ユーザーの開始ティアでの強さ幅は、旧来の1部CPUと同じ(40-74)に揃え、
-    // 従来通りの難易度バランスを保つ。
-    int strengthForTier(int tier) {
-      final tiersAboveUser = userStartTier - tier;
-      final base = 40 + tiersAboveUser * 10;
-      return (base + rng.nextInt(35)).clamp(20, 99);
-    }
+    // 上位ティアほど強い(1部が最強)。部ごとの幅は division_strength.dart。
+    int strengthForTier(int tier) => rollDivisionStrength(tier, rng);
 
-    const cpuCount = teamsPerLeague - 1;
+    final cpuCount = theme.teamsInTier(userStartTier) - 1;
     final cpuTeams = <Team>[];
     for (int i = 0; i < cpuCount; i++) {
       cpuTeams.add(
@@ -871,7 +1186,7 @@ class GameState extends ChangeNotifier {
     for (int tier = 1; tier <= totalDivisionTiers; tier++) {
       if (tier == userStartTier) continue;
       final tierTeams = <Team>[
-        for (int i = 0; i < teamsPerLeague; i++)
+        for (int i = 0; i < theme.teamsInTier(tier); i++)
           PlayerGenerator.generateSquad(
             id: 'div${tier}_$i',
             name: nextName(),
@@ -895,11 +1210,17 @@ class GameState extends ChangeNotifier {
       userTeamId: 'user',
       league: league,
       leagueName: theme.label,
+      ruleSet: RuleSet.forTheme(theme),
       boardTargetRank: BoardEngine.estimateTargetRank(league, 'user'),
       cups: [
         CupEngine.createKnockout(
           type: CupType.domestic,
           name: theme.domesticCupName,
+          teamIds: teams.map((t) => t.id).toList(),
+        ),
+        CupEngine.createKnockout(
+          type: CupType.leagueCup,
+          name: Tr.pick('リーグカップ', 'League Cup'),
           teamIds: teams.map((t) => t.id).toList(),
         ),
       ],
@@ -911,9 +1232,19 @@ class GameState extends ChangeNotifier {
       currentDivisionTier: userStartTier,
       clubHistory: [clubName],
       difficulty: difficulty,
+      difficultyItems: {
+        for (final e in (difficultyItems ?? const {}).entries)
+          if (e.value != difficulty) e.key.name: e.value.name,
+      },
+      scenario: scenario,
     );
+    // 最初のシーズンは平常。来季の予報だけ引いておく。
+    _save!.economyNext =
+        EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
     // 難易度による初期条件の補正(資金と理事会目標の厳しさ)。
-    _save!.budget = (_save!.budget * difficulty.initialBudgetFactor).round();
+    _save!.budget = (_save!.budget *
+            _save!.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
+        .round();
     _save!.boardTargetRank = _difficultyAdjustedTarget(_save!.boardTargetRank);
     _save!.wageBudget = BoardEngine.wageBudgetFor(
       tier: userStartTier,
@@ -921,16 +1252,24 @@ class GameState extends ChangeNotifier {
     );
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
     _save!.managerContractYears = 3;
+    _applyScenario(scenario);
     final rival = cpuTeams[rng.nextInt(cpuTeams.length)];
     _save!.rivalTeamId = rival.id;
     _save!.rivalTeamName = rival.name;
-    transferMarket = TransferMarket.generate();
+    transferMarket = [];
     _refreshScoutCandidates();
     // 新規開始時もキャンプの判断から始まる。
     _save!.preseasonCampPending = true;
+    _save!.today = SeasonCalendar.preseasonDate(league.season);
+    // 袖・背中・練習着のスポンサーの最初の提示。
+    _offerEmptySlotSponsors();
     // 開始時は全役職が空席。誰を先に雇うかが最初の判断になる。
     _refreshStaffCandidates();
+    _assignRivalOwners();
     FreeAgentEngine.topUp(_save!.freeAgents);
+    _ensureWorldSquads(_save!);
+    // 第1季の前の夏(2026年)はワールドカップ。出た選手は遅れて合流する。
+    _startSummerTournament();
     lastContractExpirations = [];
     isBusy = false;
     _notify();
@@ -980,9 +1319,9 @@ class GameState extends ChangeNotifier {
       return false;
     }
     _save = restored;
-    _reseedPlayerIdCounter(restored);
+    _repairLoadedSave(restored);
     _migrateDivisionPyramidIfNeeded();
-    transferMarket = TransferMarket.generate();
+    transferMarket = [];
     _refreshScoutCandidates();
     _notify();
     await _persistNow();
@@ -1018,6 +1357,11 @@ class GameState extends ChangeNotifier {
   /// 同じ週に再交渉できない(満額での獲得は引き続き可能)。節が進むとクリア。
   final Set<String> transferOffersRejectedThisWeek = {};
 
+  /// 交渉中の選手を他のクラブが狙い始めるか。乱数で起きるので、交渉の
+  /// 流れそのものを確かめるテストでは止める。
+  @visibleForTesting
+  bool rivalsEnabled = true;
+
   /// クラブニュース履歴の保持上限。超えた分は古いものから捨てる
   /// (セーブデータの肥大化を防ぎつつ、2〜3シーズン分は見返せる量)。
   static const int newsLogLimit = 120;
@@ -1025,25 +1369,16 @@ class GameState extends ChangeNotifier {
   /// 直近の[sellPlayer]で選手が移籍した行き先のニュース文言(表示用)。
   String? lastSaleNews;
 
-  /// 個別声かけ(モチベーショントーク)の基礎士気上昇量。reassure(不満度)
-  /// とは異なり士気(morale)を対象にした、より短い周期で使える個別コマンド。
-  /// クールダウン週数は[TrainingEngine.talkCooldownWeeks]で一元管理する
-  /// (週次トレーニングの性格特性習得判定からも参照するため)。
-  static const int talkBaseMoraleBoost = 10;
-
   /// 戦術ミーティングの再実施までのクールダウン週数。
   static const int tacticalMeetingCooldownWeeks = 3;
 
   /// ローン(期限付き移籍)で移籍市場の選手を獲得する。頭金は移籍金の2割、
-  /// 週俸は6割に軽減される代わりに20週で自動的にチームを離れる。
+  /// 週俸は6割に軽減される代わりに、決めた日(半年なら冬の窓が開く日、
+  /// 1年ならシーズン末)で自動的にチームを離れる。
   static const int loanFeeRatioPercent = 20;
-  static const int loanDurationWeeks = 20;
 
   /// 買取オプション付きローンの場合の買取金額(移籍金に対する割合)。
   static const double loanBuyOptionRatio = 0.6;
-
-  static const int loanOutMinWeeks = 4;
-  static const int loanOutMaxWeeks = 16;
 
   int _incomingOfferSeq = 0;
 
@@ -1100,6 +1435,7 @@ class GameState extends ChangeNotifier {
     if (baseAttendance <= 0) return income;
     return (income * (actualAttendance / baseAttendance)).round();
   }
+
   static const double derbyConfidenceMultiplier = 1.5;
 
   /// 直近の試合の観客動員数(ダービーなら増幅される)。未実施の場合はnull。
@@ -1117,6 +1453,10 @@ class GameState extends ChangeNotifier {
   InteractiveHalfState? _liveFirstHalfState;
   InteractiveHalfState? _liveSecondHalfState;
   int _liveSubstitutionsUsed = 0;
+
+  /// 再起動後に後半の途中から再開するときの、後半の途中経過と再開する分。
+  /// [GameStateMatch.playSecondHalf]が一度だけ使う。
+  ({HalfTally tally, int resumeMinute})? _liveSecondHalfResume;
   static const int maxSubstitutionsPerMatch = 3;
 
   // ---- カップ戦のライブ観戦(リーグ戦と同じ進行を再利用する) ----
@@ -1126,14 +1466,6 @@ class GameState extends ChangeNotifier {
   Weather? _liveCupWeather;
   CupMatch? _liveCupMatch;
   CupTie? _liveCupTie;
-
-  /// ライブ観戦したカップ試合がPK戦で決着した場合などの補足文言
-  /// (フルタイム画面で表示する。次のライブ試合開始時にクリアされる)。
-  String? lastLiveCupNote;
-
-  /// 直近のライブ観戦カップ戦がPK戦にもつれた場合の、1本ごとの記録
-  /// (フルタイム画面の演出用。セーブには保存しない一時データ)。
-  PenaltyShootoutResult? lastShootout;
 
   /// 現在進行中のライブ試合が「決定機の判断あり(インタラクティブ)」で
   /// 開始されたかどうか。ライブ観戦での勝利数(実績)のカウントに使う。
@@ -1150,6 +1482,15 @@ class GameState extends ChangeNotifier {
 
   /// 国内カップで1勝するごとの賞金(単位: 資金)。ラウンドが深いほど高額。
   static int domesticCupWinPrizeFor(int round) => 20 + 15 * round;
+
+  /// 国内カップ優勝の報酬(5部の額)。
+  static const int domesticCupChampionPrize = 700;
+
+  /// 大陸カップ優勝の報酬(5部の額)。
+  static const int continentalChampionPrize = 1500;
+
+  /// 新しいゲームの初期資金(5部の額)。5部の年収の半年分ほど。
+  static const int initialBudgetTier5 = 20000;
 
   /// 大陸カップのグループステージで1勝するごとの賞金。
   static const int continentalGroupWinPrize = 40;

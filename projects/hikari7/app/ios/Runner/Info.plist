@@ -14,6 +14,9 @@
 		<string>ja</string>
 		<string>en</string>
 	</array>
+	<!-- 結果のシェア：共有シートの「画像を保存」で写真に保存するときに出す説明（無いと保存を押した時点で落ちる） -->
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>シェアする結果の画像を写真に保存します。</string>
 	<key>CFBundleDisplayName</key>
 	<string>ひかりの指名</string>
 	<key>CFBundleExecutable</key>
@@ -279,5 +282,16 @@
 				<string>3qcr597p9d.skadnetwork</string>
 			</dict>
 		</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.namiki.hikari7</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>hikari7</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

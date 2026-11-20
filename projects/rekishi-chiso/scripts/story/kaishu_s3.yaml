@@ -1,0 +1,143 @@
+# 物語完結型ショート 勝海舟 s3（2026-11-12）。本編 scripts/kaishu-story.yaml（11/14 19:00 公開、https://youtu.be/KIXtgjggYl0）から。11/15 に予約。
+# 形式は inou_s1.yaml・saigo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/勝海舟_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/kaishu/main。勝は後ろ姿・斜め後ろ・手元）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：元老院議官の217日（本編第2章）。辞表→承認の間の出勤なしと給料、官職の外での千両。
+# 計算：1875-04-25→1875-11-28＝217日（本編と同じ。A28）。
+# 理解テスト4問：①勝海舟と元老院議官 ②1875年4月25日に議官に移され、27日に辞表、11月28日に承認。217日 ③出勤せず給料はもらい、政府に返すのも変だと考えた ④同じ年、商法講習所へ千両の援助を申し出た。そのあとの金の行方は本編
+# 本編の弱点：315円と350両は別の日の記載で円と両の違いの意味は未確認（「とある」だけ言う）。A25 の「2年前の10月」は1873年10月25日。海軍卿の座談（A26）は「と語る」。辞表の理由（台湾出兵反対）は言わない。
+title: "勝海舟｜辞表を出して、217日、出勤しなかった"
+yt_title: "勝海舟は元老院議官の辞表を出してから217日、出勤しなかった　それでも給料は払われた"
+description: |-
+  1875年4月25日、勝海舟は元老院議官に移され、2日後の27日には辞表を出しました。承認されたのは11月28日で、移されてから数えて217日です。
+  この間、海舟は引き籠って出勤しませんでしたが、給料は支払われ、「海舟日記」には5月29日に315円、6月17日に350両とあります。海舟は「政府に返すも変なものなり」と考えていました（髙橋秀悦の論文による）。
+  同じ年の8月28日、海舟は商法講習所の資金難を聞き、森有礼へ千両の援助を申し出ています。円と両の表記の違いの意味は確かめられていません。
+  官職を辞め続けた海舟の金は、このあと、どこへ向かったのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/KIXtgjggYl0
+hashtags:
+- "#勝海舟"
+- "#明治"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/kaishu
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kaishu_story_s3
+header:
+  tag: "勝海舟と元老院議官"
+  title: "辞表のあと、《217日》"
+now:
+- {at: "1875年", text: "1875年4月　元老院", point: 0}
+timeline:
+- {label: "1875"}
+shots:
+  Hall:
+    kind: "ai"
+    file: "kaishu/main/F06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "役所の広間・一人座る勝（後ろ姿）"
+  Katsu:
+    kind: "real"
+    image: "paintings/yoshinobu_katsu_kaishu.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    credit: "《勝海舟》（ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "勝海舟の肖像"
+  HallL:
+    kind: "ai"
+    file: "kaishu/main/F06.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "役所の広間・一人座る勝（後ろ姿）"
+  Desk:
+    kind: "ai"
+    file: "kaishu/main/F04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯の下で日記を書く勝（斜め後ろ）"
+  Ledger:
+    kind: "ai"
+    file: "kaishu/main/F07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "行灯の下の帳簿とそろばん"
+  Night:
+    kind: "ai"
+    file: "kaishu/main/F13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の縁側に座る勝（斜め後ろ）"
+  HallR:
+    kind: "ai"
+    file: "kaishu/main/F06.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "役所の広間・一人座る勝（後ろ姿）"
+  Hand:
+    kind: "ai"
+    file: "kaishu/main/F12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "墨で書を書く手元"
+  DeskL:
+    kind: "ai"
+    file: "kaishu/main/F04.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "灯の下で日記を書く勝（斜め後ろ）"
+lines:
+  # fact: kaishu-A28
+- 語り: "元老院議官に移されて、217日。勝海舟は、その間、出勤しなかった。"
+  shot: Hall
+  tone: 強調
+  pause: 0.12
+  # fact: kaishu-A28
+- 語り: "1875年4月25日、海舟は議官に移された。2日後の27日には、もう辞表を出した。"
+  shot: Katsu
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-A28
+- 語り: "辞表が承認されたのは、11月28日。海舟は、引き籠っていた。"
+  shot: HallL
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-A28
+- 語り: "それでも、給料は支払われた。日記には、5月29日に315円、6月17日に350両、とある。"
+  shot: Ledger
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-A28
+- 語り: "海舟は、政府に返すのも変なものだ、と考えていた。"
+  shot: Night
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-A25
+- 語り: "2年前の10月には、参議兼海軍卿を命じられている。日記に、才がなく勤めがたい、と岩倉に申し上げた、とある。"
+  shot: Desk
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-A26
+- 語り: "後年の座談では、時々出ていって、小さな印を押すだけだ、と語る。"
+  shot: HallR
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-A30
+- 語り: "その同じ年の8月。商法講習所の資金難を聞いて、海舟は、千両の援助を申し出た。"
+  shot: Hand
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-B08
+- 語り: "官職を辞め続けた海舟の金は、このあと、どこへ向かったのか。"
+  shot: DeskL
+  tone: 疑問
+  pause: 0.15

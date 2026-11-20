@@ -28,8 +28,10 @@ PlayerSnapshot _snap({
   Difficulty difficulty = Difficulty.normal,
   bool married = false,
   Course? route,
+  int peakAbility = 0,
 }) =>
     PlayerSnapshot(
+      peakAbility: peakAbility,
       name: 't',
       role: role,
       age: age,
@@ -68,7 +70,7 @@ bool _has(String id, PlayerSnapshot s) => earnedBy(s).contains(id);
 
 void main() {
   test('実績は十数個から数十個で、idは重複せず、名前と説明がある', () {
-    expect(achievements.length, inInclusiveRange(15, 60));
+    expect(achievements.length, inInclusiveRange(15, 70));
     expect(achievements.map((a) => a.id).toSet().length, achievements.length);
     for (final a in achievements) {
       expect(a.title, isNotEmpty, reason: a.id);
@@ -234,6 +236,28 @@ void main() {
           _has('rival-winner', _snap(rivalWins: 9, rivalLosses: 0)), isFalse);
       expect(_has('s-rank', _snap(abilities: {Ability.contact: 90})), isTrue);
       expect(_has('s-rank', _snap(abilities: {Ability.contact: 89})), isFalse);
+      // 体の衰えで引退時には落ちていても、人生の中で90に届いていれば取れる
+      expect(
+          _has('s-rank',
+              _snap(abilities: {Ability.contact: 70}, peakAbility: 91)),
+          isTrue);
+      expect(
+          _has('s-rank',
+              _snap(abilities: {Ability.contact: 70}, peakAbility: 89)),
+          isFalse);
+      // 二軍の年の1位は「リーグ優勝」に数えない
+      expect(
+          _has(
+              'league-champion',
+              _snap(records: [
+                SeasonRecord(
+                    age: 19,
+                    stage: Stage.pro,
+                    line: const Line(),
+                    rank: 1,
+                    farm: true)
+              ])),
+          isFalse);
       expect(
           _has(
               'traits-full',
@@ -245,27 +269,12 @@ void main() {
               })),
           isTrue);
       expect(
-          _has('traits-full',
-              _snap(traits: {Trait.genius, Trait.sturdy, Trait.sunny})),
+          _has('traits-full', _snap(traits: {Trait.genius, Trait.sturdy})),
           isFalse);
     });
 
-    test('むずかしいでの実績は、むずかしいでだけ', () {
-      expect(
-          _has('hard-pro', _snap(difficulty: Difficulty.hard, proStartAge: 19)),
-          isTrue);
-      expect(
-          _has('hard-pro',
-              _snap(difficulty: Difficulty.normal, proStartAge: 19)),
-          isFalse);
-      expect(
-          _has('hard-legend',
-              _snap(difficulty: Difficulty.hard, ending: 'レジェンド')),
-          isTrue);
-      expect(
-          _has('hard-legend',
-              _snap(difficulty: Difficulty.easy, ending: 'レジェンド')),
-          isFalse);
+    test('難しさの選択はなくしたので、むずかしい専用の実績も無い', () {
+      expect(achievements.any((a) => a.id.startsWith('hard-')), isFalse);
     });
   });
 

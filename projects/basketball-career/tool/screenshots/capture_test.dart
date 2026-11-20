@@ -3,8 +3,9 @@
 /// **CI では回らない**(`test/` の外にある生成器。実行するとファイルを書き換える)。
 ///
 ///     flutter test tool/screenshots/capture_test.dart
+///     DEVICE=ipad flutter test tool/screenshots/capture_test.dart
 ///
-/// 出力: `marketing/screenshots/*.png`
+/// 出力: `marketing/screenshots/<端末>/*.png`、点検用は `build/review/<端末>/`、課金の審査用は `marketing/iap_review/`。
 ///
 /// 決まり(`docs/app-pitfalls.md` #4、Apple 2.3.2・2.3.7):
 /// - **読み込み中のまま撮らない。** 撮るたびに、読み込みの丸が無いこと・文字が一定数あることを検査する。
@@ -18,50 +19,36 @@ library;
 // @visibleForTesting の項目(setMockInitialValues)を使うと警告になる。実体は flutter test で走らせる生成器。
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 
-import 'package:basketball_career/game/advice.dart';
-import 'package:basketball_career/game/build.dart';
-import 'package:basketball_career/game/collection.dart';
-import 'package:basketball_career/game/honors.dart';
-import 'package:basketball_career/game/skills.dart';
-import 'package:basketball_career/game/special.dart';
-import 'package:basketball_career/game/traits.dart';
-import 'package:basketball_career/game/game.dart';
-import 'package:basketball_career/game/life.dart';
-import 'package:basketball_career/game/match.dart';
-import 'package:basketball_career/game/path.dart';
-import 'package:basketball_career/game/player.dart';
+import 'package:basketball_career/gm/bot.dart';
+import 'package:basketball_career/gm/career.dart';
+import 'package:basketball_career/gm/draft.dart';
+import 'package:basketball_career/gm/league.dart';
+import 'package:basketball_career/gm/player.dart';
+import 'package:basketball_career/gm/trade.dart';
 import 'package:basketball_career/monetization/monetization.dart';
 import 'package:basketball_career/monetization/purchase_service.dart';
-import 'package:basketball_career/ui/settings_screen.dart';
 import 'package:basketball_career/ui/app.dart';
-import 'package:basketball_career/ui/controller.dart';
-import 'package:flutter/material.dart' hide Action, Route;
+import 'package:basketball_career/ui/gm/common.dart';
+import 'package:basketball_career/ui/gm/style.dart';
+import 'package:basketball_career/ui/gm_controller.dart';
+import 'package:basketball_career/ui/remove_ads_offer.dart';
+import 'package:basketball_career/ui/settings_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class _NullStore extends SaveStore {
-  @override
-  Future<void> save(Map<String, dynamic> json) async {}
-  @override
-  Future<void> clear() async {}
-  @override
-  Future<Map<String, dynamic>?> load() async => null;
-}
-
-/// 端末。`DEVICE=ipad flutter test tool/screenshots/capture_test.dart` で iPad 13インチ(2064x2752)。
-/// 何も付けなければ iPhone(Dynamic Island 搭載の中型、1206x2622)。出力は `marketing/screenshots/<端末>/`。
+/// 端末。`DEVICE=ipad` で iPad 13インチ(2064x2752)。何も付けなければ iPhone(中型、1206x2622)。
 final _device = Platform.environment['DEVICE'] ?? 'iphone';
 final _ipad = _device == 'ipad';
 final _logical = _ipad ? const Size(1032, 1376) : const Size(402, 874);
 final _ratio = _ipad ? 2.0 : 3.0;
-final _bandHeight = _ipad ? 200.0 : 150.0;
+final _bandHeight = _ipad ? 210.0 : 160.0;
 
 Future<void> _loadFonts() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -71,54 +58,61 @@ Future<void> _loadFonts() async {
     noto.addFont(Future.value(ByteData.view(bytes.buffer)));
   }
   await noto.load();
-  // アイコンフォントは Flutter SDK にある。
   final root = Platform.environment['FLUTTER_ROOT'];
   if (root != null) {
-    final icons = File(
-      '$root/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
-    );
+    final icons = File('$root/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf');
     if (icons.existsSync()) {
       final loader = FontLoader('MaterialIcons');
-      loader.addFont(
-        Future.value(ByteData.view(icons.readAsBytesSync().buffer)),
-      );
+      loader.addFont(Future.value(ByteData.view(icons.readAsBytesSync().buffer)));
       await loader.load();
     }
   }
 }
 
-/// 帯つきで描く。上に言葉、下にアプリの画面。
-Widget _framed(String caption, Color top, Color bottom, Widget app) {
+/// 上に見出し、下にアプリの画面。夜の体育館の色にそろえる。
+Widget _framed(String caption, Widget app) {
   return Directionality(
     textDirection: TextDirection.ltr,
-    child: Column(
-      children: [
-        Container(
-          height: _bandHeight,
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [top, bottom],
+    child: ColoredBox(
+      color: GmColors.bg,
+      child: Column(
+        children: [
+          SizedBox(
+            height: _bandHeight,
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  caption,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'NotoSansJP',
+                    color: Colors.white,
+                    fontSize: _ipad ? 46 : 29,
+                    height: 1.3,
+                    fontWeight: FontWeight.w700,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(width: _ipad ? 90 : 60, height: 5, color: GmColors.ball),
+              ],
             ),
           ),
-          child: Text(
-            caption,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'NotoSansJP',
-              color: Colors.white,
-              fontSize: _ipad ? 44 : 30,
-              fontWeight: FontWeight.w700,
-              decoration: TextDecoration.none,
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(_ipad ? 40 : 14, 0, _ipad ? 40 : 14, 0),
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+                border: Border.all(color: GmColors.line, width: 2),
+              ),
+              child: app,
             ),
           ),
-        ),
-        Expanded(child: app),
-      ],
+        ],
+      ),
     ),
   );
 }
@@ -129,91 +123,181 @@ Future<void> _shoot(
   WidgetTester t,
   String name,
   String caption,
-  GameController c,
-  (Color, Color) colors, {
+  GmController c, {
   Future<void> Function(WidgetTester)? act,
+  String? outDir,
 }) async {
   t.view.physicalSize = _logical * _ratio;
   t.view.devicePixelRatio = _ratio;
+  final inset = _ipad ? 80.0 : 28.0;
   await t.pumpWidget(
     RepaintBoundary(
       key: _key,
       child: _framed(
         caption,
-        colors.$1,
-        colors.$2,
         MediaQuery(
           data: MediaQueryData(
-            size: Size(_logical.width, _logical.height - _bandHeight),
+            size: Size(_logical.width - inset, _logical.height - _bandHeight),
             devicePixelRatio: _ratio,
           ),
-          // 前の画面の State を使い回さない(controller が替わらなくなる)。
-        child: KeyedSubtree(
-            key: ValueKey(name), child: BasketballCareerApp(controller: c)),
+          child: KeyedSubtree(key: ValueKey(name), child: BasketballCareerApp(controller: c)),
         ),
       ),
     ),
   );
   await t.pump(const Duration(milliseconds: 100));
   await t.pump(const Duration(milliseconds: 100));
-  if (act != null) await act(t); // 画面を開く操作(殿堂など)
-  // 画面の絵・ボタンのアイコン(assets の画像)の読み込みを待つ。待たないと空白で撮れる。
-  await t.runAsync(() => Future.delayed(const Duration(milliseconds: 600)));
+  if (act != null) await act(t);
+  // 絵(assets の画像)の読み込みを待つ。待たないと空白で撮れる。
+  await t.runAsync(() => Future.delayed(const Duration(milliseconds: 700)));
   await t.pump();
   await t.pump(const Duration(milliseconds: 200));
-  // 読み込み中のまま撮っていないことを検査する。
-  expect(
-    find.byType(CircularProgressIndicator),
-    findsNothing,
-    reason: '$name が読み込み中のまま撮られている',
-  );
-  expect(
-    find.byType(Text),
-    findsAtLeastNWidgets(3),
-    reason: '$name に文字がほとんど無い(描画を待たずに撮っている)',
-  );
+  expect(find.byType(CircularProgressIndicator), findsNothing, reason: '$name が読み込み中のまま撮られている');
+  expect(find.byType(Text), findsAtLeastNWidgets(3), reason: '$name に文字がほとんど無い');
+  expect(t.takeException(), isNull, reason: '$name で例外');
   await t.runAsync(() async {
     final b = _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    // iPhone は論理 402x874 の3倍=1206x2622、iPad は論理 1032x1376 の2倍=2064x2752 で書き出す。
     final img = await b.toImage(pixelRatio: _ratio);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    final dir = Directory('marketing/screenshots/$_device')..createSync(recursive: true);
+    final dir = Directory(outDir ?? 'marketing/screenshots/$_device')..createSync(recursive: true);
     File('${dir.path}/$name.png').writeAsBytesSync(data!.buffer.asUint8List());
   });
 }
 
-GameController _controller(Game g) {
-  final c = GameController(store: _NullStore(), rng: Random(1), events: false);
-  c.game = g;
+Future<GmController> _controller() async =>
+    GmController(prefs: await SharedPreferences.getInstance(), seedSource: Random(7));
+
+Future<GmController> _with(Career car) async {
+  final c = await _controller();
+  c.setCareer(car);
+  c.pending.clear();
   return c;
 }
 
-/// おすすめで進める(勝負どころは自動)。
-void _play(Game g, {required int untilAge}) {
-  var guard = 0;
-  while (g.phase != Phase.retired && g.player.age < untilAge && guard++ < 600) {
-    switch (g.phase) {
-      case Phase.season:
-        if (g.goal == null && g.goalOptions.isNotEmpty && g.slot <= 2) {
-          g.adoptGoal(0);
-        }
-        g.choose(recommendedAction(g), recommendedFocus(g.player));
-        if (g.canGoAbroad) g.goAbroad();
-      case Phase.halftime:
-        g.resolveHalftime(bestHalftime(g.player, g.halftimeInfo!));
-      case Phase.clutch:
-        g.resolveClutch(Clutch.drive);
-      case Phase.event:
-        g.resolveEvent(0);
-      case Phase.path:
-        final ok = g.chooseRoute(Route.pro);
-        if (!ok && !g.retired) g.chooseRoute(Route.university);
-      case Phase.retired:
-        break;
+/// 条件に合う局面が出るまで、種を変えて自動で進める。
+Career _find(int rank, bool Function(Career) found, {int from = 1}) {
+  for (var seed = from; seed < from + 400; seed++) {
+    final car = careerAt(seed, rank);
+    var guard = 0;
+    while (car.phase != Phase.over && guard++ < 400) {
+      if (found(car)) return car;
+      if (car.phase == Phase.seasonEnd) car.fired = false;
+      botStep(car);
     }
   }
+  throw StateError('局面が見つからない');
 }
 
+Future<void> _tap(WidgetTester t, String text) async {
+  // 一覧の端で半分隠れていると押し損ねるので、全体が見える位置まで送ってから押す
+  await t.ensureVisible(find.text(text).last);
+  await t.pump(const Duration(milliseconds: 300));
+  await t.tap(find.text(text).last);
+  await t.pump();
+  await t.pump(const Duration(milliseconds: 400));
+}
+
+Finder get _list => find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.down).last;
+
+/// 相手が受けてくれる、見栄えのするトレード(若手と指名権で、相手の主力を取りに行く)。
+(Career, TradeOffer) _tradeScene() {
+  for (var seed = 3; seed < 400; seed++) {
+    final car = careerAt(seed, 28);
+    for (var t = 0; t < teamDefs.length; t++) {
+      if (t == car.mine) continue;
+      final them = car.teams[t];
+      if (them.mode != TeamMode.rebuild && them.mode != TeamMode.cutCost) continue;
+      final target = them.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
+      if (target.age < 28 || target.ovr < 73) continue;
+      final young = [...car.me.roster]..sort((a, b) => b.pot.compareTo(a.pot));
+      final pick = car.picksOf(car.mine).firstWhere((i) => car.picks[i].round == 1);
+      for (final y in young.take(5)) {
+        final o = TradeOffer(partner: t, give: [y.id], get: [target.id], givePicks: [pick]);
+        final v = car.judge(o);
+        if (v.ok && v.ratio < 1.3) return (car, o);
+      }
+    }
+  }
+  throw StateError('トレードの局面が見つからない');
+}
+
+Future<void> _tradeShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final (car, o) = _tradeScene();
+  final c = await _with(car);
+  final them = car.teams[o.partner];
+  await _shoot(t, name, caption, c, outDir: outDir, act: (t) async {
+    await _tap(t, 'トレード');
+    // 相手を選ぶ横の一覧は、見えていない分は作られていないので、送ってから押す
+    final row = find.byWidgetPredicate((w) => w is Scrollable && w.axisDirection == AxisDirection.right).first;
+    await t.scrollUntilVisible(find.text(them.def.short), 150, scrollable: row);
+    await _tap(t, them.def.short);
+    for (final id in o.get) {
+      final n = them.roster.firstWhere((p) => p.id == id).name;
+      await t.scrollUntilVisible(find.text(n), 200, scrollable: _list);
+      await _tap(t, n);
+    }
+    for (final id in o.give) {
+      final n = car.me.roster.firstWhere((p) => p.id == id).name;
+      await t.scrollUntilVisible(find.text(n), 200, scrollable: _list);
+      await _tap(t, n);
+    }
+    for (final i in o.givePicks) {
+      final label = '指名権 ${car.picks[i].label(car.teams, car.season)}';
+      await t.scrollUntilVisible(find.text(label), 200, scrollable: _list);
+      await _tap(t, label);
+    }
+    expect(find.text('受けてくれそう'), findsOneWidget);
+    // 受け取る選手が見える位置に戻す
+    final first = them.roster.firstWhere((p) => p.id == o.get.first).name;
+    await t.scrollUntilVisible(find.text(first), -300, scrollable: _list);
+    await t.pump(const Duration(milliseconds: 300));
+  });
+}
+
+Future<void> _draftShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(28, (c) => c.phase == Phase.draft && c.myTurn && c.draftAt <= 3, from: 5);
+  car.news.clear();
+  final open = byMid(car);
+  car.scoutProspect(open[0]);
+  car.scoutProspect(open[2]);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _rosterShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(28, (c) => c.phase == Phase.preseason && c.season == 3, from: 9);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir, act: (t) => _tap(t, 'チーム'));
+}
+
+Future<void> _seasonShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(15, (c) => c.phase == Phase.season && c.block == 2 && c.me.wins >= 24 && c.incoming == null, from: 2);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _offerShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(15, (c) => c.phase == Phase.season && c.block == 1 && c.incoming != null, from: 4);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _contractShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(
+      1,
+      (c) =>
+          c.phase == Phase.contracts &&
+          c.expiring.length >= 2 &&
+          c.me.roster.where((p) => c.expiring.contains(p.id)).any((p) => p.ovr >= 72),
+      from: 3);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _championShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(1, (c) => c.phase == Phase.seasonEnd && c.myResult == 5 && !c.fired);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir);
+}
+
+Future<void> _leagueShot(WidgetTester t, String name, String caption, {String? outDir}) async {
+  final car = _find(15, (c) => c.phase == Phase.playoffs && c.history.length >= 2, from: 6);
+  await _shoot(t, name, caption, await _with(car), outDir: outDir, act: (t) => _tap(t, 'リーグ'));
+}
 
 /// 課金アイテムの審査用: 値段(¥370)が出る設定画面を撮るための、偽のストア。
 class _PricedStore implements PurchaseService {
@@ -239,173 +323,194 @@ class _PricedStore implements PurchaseService {
 
 void main() {
   testWidgets('ストア用スクリーンショット', (t) async {
-    SharedPreferences.setMockInitialValues({'howtoSeen': true});
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     await _loadFonts();
     addTearDown(t.view.reset);
-    const orange = (Color(0xFFBF360C), Color(0xFFE65100));
-    const blue = (Color(0xFF1A237E), Color(0xFF3949AB));
-    const green = (Color(0xFF004D40), Color(0xFF00796B));
-    const purple = (Color(0xFF4A148C), Color(0xFF7B1FA2));
+    await _tradeShot(t, '01_trade', '相手の考えを読んで、\nトレードを組む');
+    await _draftShot(t, '02_draft', '指名するまで、\n本当の力は分からない');
+    await _rosterShot(t, '03_roster', '伸びる若手と、\n年俸のやりくり');
+    await _seasonShot(t, '04_season', '82試合を進めて、\nプレーオフへ');
+    await _offerShot(t, '05_offer', '相手から届く、\nトレードの申し込み');
+    await _contractShot(t, '06_contracts', '契約の切れた主力を、\n残すか放すか');
+    await _championShot(t, '07_champion', 'めざせ、ファイナル制覇');
+    await _leagueShot(t, '08_league', '東西30チームのリーグで、\nGMになる');
+  });
 
-    // 1. 育成画面: 6年ぶんの成長のあとの、年のはじめ(目標の選択が出る)。
-    final a = Game.start('ミナト', rng: Random(11), events: false);
-    _play(a, untilAge: 12);
-    while (a.slot != 0 && a.phase == Phase.season) {
-      a.choose(Action.rest, recommendedFocus(a.player));
-    }
-    await _shoot(t, '01_season', '6歳から、選手を育てる', _controller(a), orange);
-
-    // 2. 勝負どころ: ライバル戦(タイムアウトのボタンも出る)。
-    GameController? clutch;
-    for (var seed = 0; seed < 600 && clutch == null; seed++) {
-      final g = Game.start('ミナト', rng: Random(seed), events: false);
-      _play(g, untilAge: 14);
-      while (g.slot != 1 && g.phase == Phase.season) {
-        g.choose(Action.rest, recommendedFocus(g.player));
-      }
-      if (g.phase != Phase.season) continue;
-      g.choose(Action.rest, recommendedFocus(g.player), askClutch: true);
-      if (g.phase == Phase.clutch && g.run!.pending!.vsRival) {
-        clutch = _controller(g);
-      }
-    }
-    expect(clutch, isNotNull, reason: 'ライバル戦の勝負どころが見つからない');
-    await _shoot(t, '02_clutch', '勝負どころは自分で選ぶ', clutch!, blue);
-
-    // 3. ハーフタイム: 相手の持ち味との相性、ファウルトラブル、勢い。
-    Game? half;
-    for (var seed = 0; seed < 3000 && half == null; seed++) {
-      final base = Game.start('ミナト', rng: Random(seed), events: false);
-      final g = Game(
-        eventsEnabled: false,
-        player: base.player.copyWith(
-          age: 26,
-          heightCm: 196,
-          abilities: {
-            for (final x in Ability.values)
-              x: (x == Ability.defense || x == Ability.physical) ? 90 : 66,
-          },
-        ),
-        rng: Random(seed),
-        track: Track.pro,
-        salary: 3000,
-        slot: 1,
-      );
-      g.choose(Action.rest, Ability.defense, askClutch: true, askHalftime: true);
-      var guard = 0;
-      while ((g.phase == Phase.halftime || g.phase == Phase.clutch) && guard++ < 30) {
-        if (g.phase == Phase.halftime) {
-          final h = g.halftimeInfo!;
-          if (h.fouls >= 3 && g.run!.streak != 0 && h.style != OppStyle.balanced) {
-            half = g;
-            break;
-          }
-          g.resolveHalftime(Halftime.keep);
-        } else {
-          g.resolveClutch(Clutch.drive);
-        }
-      }
-    }
-    expect(half, isNotNull, reason: 'ファウルトラブルと勢いのあるハーフタイムが見つからない');
-    await _shoot(t, '03_halftime', '作戦は相手に合わせる', _controller(half!), blue);
-
-    // 4. 進路(19歳)。
-    final pbase = Game.start('ミナト', rng: Random(3), events: false);
-    final path = Game(
-      eventsEnabled: false,
-      player: pbase.player.copyWith(
-        age: 19,
-        heightCm: 190,
-        abilities: {for (final x in Ability.values) x: 66},
-      ),
-      rng: Random(4),
-      pathPending: true,
-    );
-    await _shoot(t, '04_path', '19歳、進路は自分で選ぶ', _controller(path), green);
-
-    // 5. プロの状態: ドラフト・年俸・スポンサー・ビルド。
-    final sbase = Game.start('ミナト', rng: Random(3), events: false);
-    final pro = Game(
-      eventsEnabled: false,
-      player: sbase.player.copyWith(
-        age: 27,
-        heightCm: 196,
-        abilities: {
-          for (final x in Ability.values)
-            x: (x == Ability.threePoint || x == Ability.midRange || x == Ability.freeThrow) ? 84 : 58,
-        },
-      ),
-      rng: Random(4),
-      track: Track.pro,
-      number: 23,
-      draftPick: 7,
-      salary: 12500,
-      sponsor: 1800,
-      totalEarnings: 48300,
-    );
-    await _shoot(t, '05_pro', '年俸もビルドも育てる', _controller(pro), orange);
-
-    // 6. 図鑑(殿堂): 集めたタイトル・ビルド・特性・得意技。
-    // アプリは起動時に保存済みの図鑑を読み直すので、保存の模擬データとして先に入れる。
-    SharedPreferences.setMockInitialValues({
-      'howtoSeen': true,
-      collectionKey: jsonEncode(Collection(
-        honors: {Honor.scoringKing, Honor.rookie, Honor.allStar, Honor.finalMvp},
-        traits: {Trait.lefty.name, Trait.hardWorker.name, Trait.captain.name, Trait.clutch.name},
-        skills: {Skill.stepBack.name, Skill.dunk.name, Skill.pickAndRoll.name},
-        builds: {Build.sharpshooter.name: 2, Build.playmaker.name: 1, Build.slasher.name: 0},
-      ).toJson()),
-    });
-    final zc = _controller(Game.start('ミナト', rng: Random(2), events: false));
-    await _shoot(t, '06_zukan', '集めて埋める、図鑑', zc, purple, act: (t) async {
-      await t.tap(find.byTooltip('殿堂・実績'));
-      await t.pumpAndSettle();
-    });
-
-    // 7. エンディング: 海外に渡って優勝した一生。
-    GameController? ending;
-    for (var seed = 0; seed < 400 && ending == null; seed++) {
-      final g = Game.start('ミナト', rng: Random(seed), events: false);
-      _play(g, untilAge: 60);
-      if (g.phase == Phase.retired && g.abroad && g.titles >= 2) {
-        ending = _controller(g);
-      }
-    }
-    expect(ending, isNotNull, reason: '見栄えのするエンディングが見つからない');
-    await _shoot(t, '07_ending', '称号と殿堂が物語を残す', ending!, purple);
-
-    // 8. どんな選手を目指すか: 育成画面の「型を選ぶ」ダイアログ(選んだ型の説明つき)。
-    final st = Game.start('ミナト', rng: Random(11), events: false, style: Build.sharpshooter);
-    _play(st, untilAge: 12);
-    while (st.slot != 0 && st.phase == Phase.season) {
-      st.choose(Action.rest, recommendedFocus(st.player));
-    }
-    await _shoot(t, '08_style', '目指す選手を、自分で選ぶ', _controller(st), orange,
-        act: (t) async {
-      await t.tap(find.text('型を選ぶ'));
+  // 画面の点検用(掲載画像ではない)。build/review/ に書き出す(git には入れない)。
+  testWidgets('画面の点検用', (t) async {
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
+    await _loadFonts();
+    addTearDown(t.view.reset);
+    final out = 'build/review/$_device';
+    await _shoot(t, 'r1_home', 'はじめの画面', await _controller(), outDir: out);
+    final mail = _find(15, (c) => c.phase == Phase.season && c.block == 2 && c.inbox.length >= 4, from: 3);
+    await _shoot(t, 'r9_inbox', '受信箱', await _with(mail), outDir: out, act: (t) async {
+      await t.tap(find.byIcon(Icons.mail_rounded).first);
+      await t.pump();
       await t.pump(const Duration(milliseconds: 400));
     });
-
-    // 9. 特殊能力: ポイントを使って、好きな能力を選んで習得する画面。
-    final sg = Game.start('ミナト', rng: Random(11), events: false, style: Build.sharpshooter);
-    _play(sg, untilAge: 14);
-    while (sg.slot != 0 && sg.phase == Phase.season) {
-      sg.choose(Action.rest, recommendedFocus(sg.player));
+    final cardCar = _find(5, (c) => c.phase == Phase.preseason && c.season == 3, from: 2);
+    await _shoot(t, 'r10_card', '選手のカード', await _with(cardCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await _tap(t, cardCar.me.order.first.name);
+    });
+    final boxCar = _find(15, (c) => c.phase == Phase.season && c.block == 1 && c.incoming == null, from: 3);
+    await _shoot(t, 'r11_box', 'ボックススコア', await _with(boxCar), outDir: out, act: (t) async {
+      final first = boxCar.lastGames.first;
+      final opp = teamDefs[first.opponentOf(boxCar.mine)].short;
+      // 結果の一覧まで送ってから、最初の試合を押す
+      await t.scrollUntilVisible(find.textContaining('ボックススコアが見られる'), 300, scrollable: _list);
+      await _tap(t, opp);
+    });
+    final trainCar = _find(12, (c) => c.phase == Phase.contracts && c.season == 1, from: 3);
+    trainCar.setTraining(2);
+    trainCar.setFocus(trainCar.me.order.first.id, Attr.outside);
+    trainCar.setFocus(trainCar.me.order[2].id, Attr.defense);
+    await _shoot(t, 'r15_growth', 'オフの成長', await _with(trainCar), outDir: out);
+    await _shoot(t, 'r16_training', '練習', await _with(trainCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await _tap(t, '練習');
+    });
+    await _rosterShot(t, 'r23_roster', 'チーム(先発の並び)', outDir: out);
+    final blockCar = _find(12, (c) => c.phase == Phase.season && c.block == 1 && c.incoming == null, from: 3);
+    final onBlock = blockCar.me.order[3];
+    blockCar.toggleTradeBlock(onBlock.id);
+    await _shoot(t, 'r21_block', 'トレードブロック', await _with(blockCar), outDir: out, act: (t) async {
+      await _tap(t, 'トレード');
+      await _tap(t, '申し込みを集める');
+    });
+    await _shoot(t, 'r22_season', 'まとめて進める', await _with(blockCar), outDir: out);
+    final draftCar = _find(28, (c) => c.phase == Phase.draft && c.myTurn && c.draftAt <= 3, from: 5);
+    final ranks = mockRanks(draftCar.prospects);
+    final star = ranks.entries.firstWhere((e) => e.value == 1).key;
+    draftCar
+      ..toggleBoard(star)
+      ..scoutProspect(star);
+    await _shoot(t, 'r20_prospect', 'ドラフトの候補', await _with(draftCar), outDir: out, act: (t) async {
+      await t.scrollUntilVisible(find.text(star.player.name), 200, scrollable: _list);
+      await _tap(t, star.player.name);
+    });
+    final statCar = _find(12, (c) => c.phase == Phase.season && c.block == 2, from: 3);
+    await _shoot(t, 'r19_stats', 'チームの成績', await _with(statCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await _tap(t, 'チームの成績');
+    });
+    final minCar = careerAt(3, 12);
+    await _shoot(t, 'r17_minutes', '出場時間', await _with(minCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await _tap(t, '出場時間');
+      // 主力に長く出す(疲れる表示を見る)
+      for (var k = 0; k < 5; k++) {
+        await t.tap(find.byIcon(Icons.add_circle_outline_rounded).first);
+        await t.pump();
+      }
+    });
+    final coachCar = careerAt(3, 12);
+    await _shoot(t, 'r18_coaches', 'コーチ陣', await _with(coachCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      await _tap(t, 'コーチ陣');
+    });
+    final faCar = _find(28, (c) => c.phase == Phase.contracts && c.freeAgents.any((p) => c.isBigFa(p) && c.bidProblem(p) == null), from: 3);
+    final target = faCar.freeAgents.firstWhere((p) => faCar.isBigFa(p) && faCar.bidProblem(p) == null);
+    faCar
+      ..nextFaDay()
+      ..bid(target.id, 2, 1.0);
+    await _shoot(t, 'r14_fa', '自由契約の競り合い', await _with(faCar), outDir: out, act: (t) async {
+      await _tap(t, '補強');
+      if (faCar.myBid(target.id) != null) await t.scrollUntilVisible(find.textContaining('申し込み中'), 300, scrollable: _list);
+    });
+    final histCar = _find(15, (c) => c.phase == Phase.preseason && c.hall.isNotEmpty, from: 4);
+    await _shoot(t, 'r12_history', 'リーグの歴史', await _with(histCar), outDir: out, act: (t) async {
+      await _tap(t, 'リーグ');
+      await t.scrollUntilVisible(find.text('歴代の優勝・表彰・殿堂'), 300, scrollable: _list);
+      await _tap(t, '歴代の優勝・表彰・殿堂');
+    });
+    final vetCar = _find(15, (c) => c.phase == Phase.preseason && c.season >= 4, from: 4);
+    await _shoot(t, 'r13_career', '選手の通算成績', await _with(vetCar), outDir: out, act: (t) async {
+      await _tap(t, 'チーム');
+      final p = vetCar.me.order.firstWhere((p) => p.career.length >= 2, orElse: () => vetCar.me.order.first);
+      await t.scrollUntilVisible(find.text(p.name), 200, scrollable: _list);
+      await _tap(t, p.name);
+      await t.scrollUntilVisible(find.text('年ごとの成績'), 300, scrollable: find.byType(Scrollable).last);
+    });
+    // 前の撮影で保存された続きがあると「新しく任される?」が出るので、保存を空にしてから
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
+    await _shoot(t, 'r1b_teampick', 'チームを選ぶ', await _controller(), outDir: out, act: (t) => _tap(t, 'GMに就任する'));
+    await _shoot(t, 'r2_preseason', 'シーズン前', await _with(careerAt(2, 28)), outDir: out);
+    await _shoot(t, 'r3_market', '補強', await _with(Career.start(seed: 2)), outDir: out, act: (t) => _tap(t, '補強'));
+    await _shoot(t, 'r4_playoffs', 'プレーオフ前', await _with(_find(1, (c) => c.phase == Phase.playoffs)), outDir: out);
+    // 解任の局面は、信頼を1にして目標に届かないシーズンを作る
+    final fired = careerAt(3, 1)
+      ..trust = 1
+      ..startSeason()
+      ..target = gamesPerSeason;
+    while (fired.phase == Phase.season) {
+      fired.playBlock();
     }
-    sg.sp = 9;
-    sg.learnSpecial(Special.calm);
-    await _shoot(t, '09_special', '特殊能力を選んで習得', _controller(sg), green,
-        act: (t) async {
-      await t.tap(find.text('習得できる!'));
+    fired.playPlayoffs();
+    await _shoot(t, 'r5_fired', '解任', await _with(fired), outDir: out);
+    await _shoot(t, 'r6_over', '任期の終わり', await _with(botPlayCareer(8, team: teamAtRank(8, 15))), outDir: out);
+    final offer = await _controller();
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
+    final m = Monetization(await SharedPreferences.getInstance(), store: _PricedStore());
+    await _shoot(t, 'r7_offer', '広告を消す案内', offer, outDir: out, act: (t) async {
+      final ctx = t.element(find.text('GMに就任する'));
+      showRemoveAdsOffer(ctx, m);
+      await t.runAsync(() => Future.delayed(const Duration(milliseconds: 200)));
+      await t.pump();
       await t.pump(const Duration(milliseconds: 400));
+    });
+    await _shoot(t, 'r8_howto', '遊び方の画面', await _controller(), outDir: out, act: (t) async {
+      await t.scrollUntilVisible(find.text('遊び方'), 200, scrollable: _list);
+      await _tap(t, '遊び方');
     });
   });
 
-  // 課金アイテムの審査用(App Store Connect の「審査に関する情報」)。値段(¥370)が写った設定画面。
+  // 30チームのロゴの一覧(点検用)。
+  testWidgets('ロゴの一覧', (t) async {
+    if (_ipad) return;
+    await _loadFonts();
+    addTearDown(t.view.reset);
+    t.view.physicalSize = const Size(402, 1100) * 2;
+    t.view.devicePixelRatio = 2;
+    await t.pumpWidget(RepaintBoundary(
+      key: _key,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: gmTheme(),
+        home: Scaffold(
+          body: GridView.count(
+            crossAxisCount: 5,
+            padding: const EdgeInsets.all(8),
+            childAspectRatio: 0.62,
+            children: [
+              for (var i = 0; i < teamDefs.length; i++)
+                Column(children: [
+                  TeamBadge(team: i, size: 64),
+                  const SizedBox(height: 4),
+                  Text(teamDefs[i].nick, textAlign: TextAlign.center, maxLines: 2, style: const TextStyle(fontSize: 10)),
+                  const SizedBox(height: 4),
+                  TeamBadge(team: i, size: 22),
+                ]),
+            ],
+          ),
+        ),
+      ),
+    ));
+    await t.pump(const Duration(milliseconds: 300));
+    await t.runAsync(() async {
+      final b = _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final img = await b.toImage(pixelRatio: 2);
+      final data = await img.toByteData(format: ui.ImageByteFormat.png);
+      final dir = Directory('build/review')..createSync(recursive: true);
+      File('${dir.path}/logos.png').writeAsBytesSync(data!.buffer.asUint8List());
+    });
+  });
+
   // 掲載画像ではないので、値段が写っていてよい。iPhone の寸法だけ作る。
   testWidgets('課金アイテムの審査用', (t) async {
     if (_ipad) return;
-    SharedPreferences.setMockInitialValues({'howtoSeen': true});
+    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
     await _loadFonts();
     addTearDown(t.view.reset);
     t.view.physicalSize = _logical * _ratio;
@@ -417,7 +522,7 @@ void main() {
         data: MediaQueryData(size: _logical, devicePixelRatio: _ratio),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(fontFamily: 'NotoSansJP', colorSchemeSeed: const Color(0xFFE65100)),
+          theme: gmTheme(),
           home: SettingsScreen(money: m),
         ),
       ),

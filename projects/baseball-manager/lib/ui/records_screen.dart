@@ -45,7 +45,7 @@ class RecordsView extends StatelessWidget {
       return const Card(
         child: Padding(
           padding: EdgeInsets.all(16),
-          child: Text('まだ成績がありません。\n夏の大会(プロは10月のシーズン終了)のあとに記録されます。'),
+          child: Text('まだ成績がありません。\nその年の大会(高校は夏の大会、プロはシーズン終了)のあとに記録されます。'),
         ),
       );
     }
@@ -169,7 +169,8 @@ class _Summary extends StatelessWidget {
             Text(isPro ? 'プロ通算 (${pro.length}年)' : 'アマチュア通算 (大会)',
                 style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 10),
-            if (l.hasBatting)
+            // 投手の打席(先発した試合だけ)は、投球のあとに小さく出す
+            if (l.hasBatting && !(l.pitcherBat && l.hasPitching))
               Wrap(spacing: 20, runSpacing: 8, children: [
                 _Stat('試合', '${l.games}'),
                 _Stat('打率', fmtRate(l.battingAverage)),
@@ -177,7 +178,8 @@ class _Summary extends StatelessWidget {
                 _Stat('本塁打', '${l.homeRuns}'),
                 _Stat('OPS', fmtRate(l.ops)),
               ]),
-            if (l.hasBatting && l.hasPitching) const SizedBox(height: 10),
+            if (l.hasBatting && l.hasPitching && !l.pitcherBat)
+              const SizedBox(height: 10),
             if (l.hasPitching)
               Wrap(spacing: 20, runSpacing: 8, children: [
                 _Stat('登板', '${l.starts}'),
@@ -186,6 +188,19 @@ class _Summary extends StatelessWidget {
                 _Stat('奪三振', '${l.strikeouts}'),
                 _Stat('投球回', l.inningsText),
               ]),
+            if (l.hasBatting && l.pitcherBat && l.hasPitching) ...[
+              const SizedBox(height: 10),
+              Text('打撃(先発した試合の打席)',
+                  key: const Key('pitcher-batting'),
+                  style: Theme.of(context).textTheme.labelMedium),
+              const SizedBox(height: 4),
+              Wrap(spacing: 20, runSpacing: 8, children: [
+                _Stat('打率', fmtRate(l.battingAverage)),
+                _Stat('安打', '${l.hits}'),
+                _Stat('本塁打', '${l.homeRuns}'),
+                _Stat('打点', '${l.rbi}'),
+              ]),
+            ],
             if (isPro) ...[
               const SizedBox(height: 10),
               _Stat('通算収入', fmtSalary(careerEarnings(pro))),
@@ -224,6 +239,8 @@ class _Metrics extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = totalOf(records);
     if (!l.hasBatting && !l.hasPitching) return const SizedBox.shrink();
+    final chances = records.fold<int>(0, (a, r) => a + r.chances);
+    final errors = records.fold<int>(0, (a, r) => a + r.errors);
     final t = Theme.of(context).textTheme;
     return Card(
       key: const Key('metrics'),
@@ -234,7 +251,8 @@ class _Metrics extends StatelessWidget {
           children: [
             Text(pro ? '指標(プロ通算)' : '指標(大会通算)', style: t.titleSmall),
             Text('項目をタップすると意味が出ます。100が平均の指標は、大きいほど良い。', style: t.bodySmall),
-            if (l.hasBatting) ...[
+            // 投手の打席は数が少なく、指標が極端になるので出さない
+            if (l.hasBatting && !(l.pitcherBat && l.hasPitching)) ...[
               const SizedBox(height: 10),
               Text('打者', style: t.labelLarge),
               const SizedBox(height: 4),
@@ -262,6 +280,13 @@ class _Metrics extends StatelessWidget {
                     small: true, hint: '盗塁: 走力を生かして進んだ塁の数。'),
                 _Stat('二塁打', '${l.doubles}', small: true),
                 _Stat('三塁打', '${l.triples}', small: true),
+                if (chances > 0)
+                  _Stat('守備率', fmtRate(1 - errors / chances),
+                      small: true,
+                      hint: '守備率: 守備機会のうち、失策をしなかった割合。.990を超えると守備の名手。'),
+                if (chances > 0)
+                  _Stat('失策', '$errors',
+                      small: true, hint: '失策: 守備でのミスの数。少ないほど良い。'),
               ]),
             ],
             if (l.hasPitching) ...[
@@ -301,7 +326,8 @@ class _Table extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bat = records.any((r) => r.line.hasBatting);
+    // 投手の打席(先発の試合だけ)は年度別の表には出さない(通算の欄に小さく出す)
+    final bat = records.any((r) => r.line.hasBatting && !r.line.pitcherBat);
     final pit = records.any((r) => r.line.hasPitching);
     final cs = Theme.of(context).colorScheme;
     DataColumn col(String s, {bool num = false}) =>
@@ -411,7 +437,7 @@ class _Table extends StatelessWidget {
                               : '-')),
                         ],
                         if (records.any((r) => r.stage == Stage.pro))
-                          DataCell(Text(fmtSalary(salaryOf(r)))),
+                          DataCell(Text(fmtSalary(salaryIn(records, r)))),
                         DataCell(Text(
                             r.titles.isEmpty ? '' : r.titles.join('・'),
                             style: TextStyle(color: cs.tertiary))),
@@ -455,14 +481,21 @@ class _Grades extends StatelessWidget {
             const SizedBox(height: 6),
             Wrap(spacing: 10, runSpacing: 6, children: [
               for (final r in records)
-                InkWell(
-                  key: Key('grade-${r.age}'),
-                  onTap: () => _showSeason(context, r, all: records),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    RankBadge(value: r.line.rating.round()),
-                    const SizedBox(width: 4),
-                    Text('${r.age}歳', style: t.bodySmall),
-                  ]),
+                Semantics(
+                  button: true,
+                  child: InkWell(
+                    key: Key('grade-${r.age}'),
+                    onTap: () => _showSeason(context, r, all: records),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 44),
+                      child:
+                          Row(mainAxisSize: MainAxisSize.min, children: [
+                        RankBadge(value: r.line.rating.round()),
+                        const SizedBox(width: 4),
+                        Text('${r.age}歳', style: t.bodySmall),
+                      ]),
+                    ),
+                  ),
                 ),
             ]),
           ],
@@ -604,12 +637,14 @@ void _showSeason(BuildContext context, SeasonRecord start,
           if (describeLine(r.line).isNotEmpty) describeLine(r.line),
           if (r.line.hasBatting)
             'OPS+ ${fmtPlus(r.line.opsPlus)} ・ 打点 ${r.line.rbi} ・ 盗塁 ${r.line.stolenBases}',
+          if (r.chances > 0)
+            '守備: 守備機会${r.chances} ・ 失策${r.errors} ・ 守備率${fmtRate(r.fieldingPct)}',
           if (r.line.hasPitching)
             'ERA+ ${fmtPlus(r.line.eraPlus)} ・ WHIP ${fmt2(r.line.whip)} ・ 奪三振 ${r.line.strikeouts}',
           if (r.titles.isNotEmpty) 'タイトル: ${r.titles.join('・')}',
           if (r.awards.isNotEmpty) '表彰: ${r.awards.join('・')}',
           if (r.rivalWon != null) 'ライバル対決: ${r.rivalWon! ? '勝ち' : '負け'}',
-          if (r.stage == Stage.pro) '年俸 ${fmtSalary(salaryOf(r))}',
+          if (r.stage == Stage.pro) '年俸 ${fmtSalary(salaryIn(list, r))}',
         ];
         return AlertDialog(
           key: const Key('season-detail'),

@@ -1,0 +1,142 @@
+# 物語完結型ショート 伊能忠敬 s1（2026-11-11）。本編 scripts/inou-story.yaml（11/13 12:00 公開予約、https://youtu.be/AG2oS5iUwgU）から。11/14 に予約。
+# 形式は gosekke_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/伊能忠敬_facts_20261111.yaml）と本編の # fact: だけ。
+# 出どころは大谷亮吉『伊能忠敬』（1917）の翻刻を通した記述。原日記は未確認なので「大谷は書く」「日記には〜とある」と言う。奥宮正樹の読みは未確認のため名前は語らない。
+# 絵は本編の AI 絵（out/story/inou/main。人物なし）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：辞令の肩書「元百姓、浪人」と手当（本編1章）。大谷の読み（試みに）は「と読む」と言う。
+# 計算：閏4月14日→19日＝5日後。1800年6月11日。数えで56歳。年を51歳と書いた話（inou-07）は本編に残し、tease にする。
+# 理解テスト4問：①伊能忠敬 ②1800年、辞令の肩書は元百姓・浪人、手当は1日銀7匁5分 ③自費で行くと願い出た旅に手当がついた。大谷は「試みに」を腕を信じていない表れと読む ④5日後に出発。年を書付にどう書いたかは本編
+title: "伊能忠敬｜辞令の肩書は「浪人」だった"
+yt_title: "日本地図を作った伊能忠敬の辞令には「元百姓、浪人」とあった　手当は1日、銀7匁5分"
+description: |-
+  1800年、寛政12年の閏4月。蝦夷地の測量を自費でもやりたいと願い出た伊能忠敬に、幕府は辞令を出しました。肩書は「元百姓、浪人」。手当は1日に銀7匁5分、金に直すと2朱です。この文面と換算は、大谷亮吉『伊能忠敬』（1917年）が載せる辞令書と注によります。
+  大谷は、手当は十分な便宜とは言えず、「試みに」という言葉も、幕府が忠敬の腕をまだ信じていなかった表れだと読みます。出発は辞令の5日後、1800年6月11日（旧暦閏4月19日）、数えで56歳でした。
+  出発の朝、忠敬は幕府に出した書付に、自分の年をどう書いたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#伊能忠敬"
+- "#日本地図"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini など）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/inou
+out: inou_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "伊能忠敬の辞令"
+  title: "辞令の肩書は、《浪人》"
+now:
+- {at: "1800年", text: "1800年　江戸から蝦夷地へ", point: 0}
+timeline:
+- {label: "1800"}
+shots:
+  Nihon:
+    kind: "real"
+    image: "paintings/sankin_hoeido_nihonbashi_hiroshige.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "歌川広重《名所江戸百景 日本橋》（1850年代。パブリックドメイン）"
+    must: "江戸日本橋の絵"
+  S12:
+    kind: "ai"
+    file: "inou/main/S12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "ろうそくのともる広間"
+  S10:
+    kind: "ai"
+    file: "inou/main/S10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯の下の書状と筆"
+  S10b:
+    kind: "ai"
+    file: "inou/main/S10.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "灯の下の書状と筆"
+  S13:
+    kind: "ai"
+    file: "inou/main/S13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯と積まれた帳面"
+  S11:
+    kind: "ai"
+    file: "inou/main/S11.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の座敷の行灯と机"
+  P04:
+    kind: "ai"
+    file: "inou/main/P04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "霧の宿場の門と白壁"
+  Nihon2:
+    kind: "real"
+    image: "paintings/sankin_hoeido_nihonbashi_hiroshige.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    credit: "歌川広重《名所江戸百景 日本橋》（1850年代。パブリックドメイン）"
+    must: "江戸日本橋の絵"
+  S15:
+    kind: "ai"
+    file: "inou/main/S15.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの寺の屋根"
+lines:
+- 語り: "日本地図を作った伊能忠敬の辞令には、元百姓、浪人、と書かれていた。"
+  shot: Nihon
+  tone: 強調
+  pause: 0.12
+  # fact: inou-01
+- 語り: "では、幕府は、この男に、何を与えたのか。"
+  shot: S12
+  tone: 疑問
+  pause: 0.15
+  # fact: inou-01
+- 語り: "1800年、寛政12年の閏4月。蝦夷地の測量を、自費でもやりたいと願い出た忠敬に、幕府は、辞令を出した。"
+  shot: S10
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-01
+- 語り: "下総国佐原村の、元百姓、浪人、伊能勘解由。蝦夷地を、試みに測量させる。"
+  shot: S10b
+  tone: 重い
+  pause: 0.12
+  # fact: inou-01
+- 語り: "手当は、1日に、銀7匁5分。大谷亮吉の本は、金に直すと、2朱にあたる、と注をつけている。"
+  shot: S13
+  tone: 重い
+  pause: 0.12
+  # fact: inou-01
+- 語り: "大谷は、十分な便宜とは言えない、と書く。試みに、という言葉も、幕府が、まだ忠敬の腕を信じていなかった表れだ、と読む。"
+  shot: S11
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-02
+- 語り: "辞令から5日後。1800年6月11日の朝、忠敬は、深川の仮住まいを出た。数えで56歳。"
+  shot: P04
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-06
+- 語り: "付き従うのは、弟子が2人と、息子の秀蔵、下男が2人。忠敬を入れて、たった6人だった。"
+  shot: Nihon2
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-06
+- 語り: "出発の朝、忠敬は、幕府に出した書付に、自分の年を、どう書いたのか。"
+  shot: S15
+  tone: 疑問
+  pause: 0.15
+  # fact: inou-07

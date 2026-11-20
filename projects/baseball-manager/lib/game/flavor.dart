@@ -17,28 +17,78 @@ int _h(String s, [int salt = 0]) {
 String trainingMenu(Ability a) => switch (a) {
       Ability.contact => '素振りとティー打撃',
       Ability.power => 'ウエイトと打ち込み',
+      Ability.trajectory => 'ティー打撃で打球の角度づくり',
       Ability.speed => 'ダッシュとベースランニング',
+      Ability.arm => '遠投と送球練習',
       Ability.fielding => 'ノック(守備練習)',
-      Ability.eye => 'マシンで球の見極め',
+      Ability.catching => 'キャッチボールとゴロ捕球',
       Ability.stuff => 'ブルペンで投げ込み',
       Ability.control => '的を狙うコントロール練習',
       Ability.stamina => 'ランニングと投げ込み',
+      Ability.breaking => '変化球の握りと投げ込み',
     };
 
-const _youthTeams = ['青葉', '若鷹', '北風', '朝日', '白波', '緑ヶ丘', '星空', '双葉'];
-const _schools = ['青陵', '北嶺', '朱鷺', '光明', '紅葉台', '大和', '桜丘', '蒼海', '白鷺', '緑風'];
+const _youthTeams = [
+  '青葉',
+  '若鷹',
+  '北風',
+  '朝日',
+  '白波',
+  '緑ヶ丘',
+  '星空',
+  '双葉',
+  '若竹',
+  '虹ヶ丘',
+  '小鷲',
+  '海風',
+  '若草',
+  '桜台',
+  '富士見',
+  '銀杏',
+];
+const _schools = [
+  '青陵',
+  '北嶺',
+  '朱鷺',
+  '光明',
+  '紅葉台',
+  '大和',
+  '桜丘',
+  '蒼海',
+  '白鷺',
+  '緑風',
+  '清流',
+  '星城',
+  '朝霧',
+  '若松',
+  '東陽',
+  '西峰',
+  '南風',
+  '北翔',
+  '城山',
+  '晴嵐',
+];
+const _ownUni = ['青嶺', '城北', '海南', '東和', '武蔵野台', '関西学林', '北海', '九州文理'];
+const _ownCorp = ['東邦鉄鋼', '日本海運', '中央自動車', '山陽電力', '北陸化学', '若葉生命'];
 
 /// 所属(少年野球のチーム・中学・高校・プロ球団)。プロ入り前後で変わる。
-String affiliationOf(Stage stage, String name, {String? proTeam}) {
+/// `seed` は選手ごとの種(`Game.teamSeed`)。名前だけだと、同じ名前で始めるたびに同じチームだった。
+/// 0 は古いセーブ(名前だけで決める)。`course` は大学・社会人のどちらに進んだか(未定なら null)。
+String affiliationOf(Stage stage, String name,
+    {String? proTeam, int seed = 0, bool? corporate}) {
+  final key = seed == 0 ? name : '$name#$seed';
   switch (stage) {
     case Stage.youth:
-      return '${_youthTeams[_h(name, 1) % _youthTeams.length]}ジュニアーズ';
+      return '${_youthTeams[_h(key, 1) % _youthTeams.length]}ジュニアーズ';
     case Stage.juniorHigh:
-      return '${_schools[_h(name, 2) % _schools.length]}中学 野球部';
+      return '${_schools[_h(key, 2) % _schools.length]}中学 野球部';
     case Stage.highSchool:
-      return '${_schools[_h(name, 3) % _schools.length]}高校 野球部';
+      return '${_schools[_h(key, 3) % _schools.length]}高校 野球部';
     case Stage.pathChoice:
-      return '進路を考え中';
+      if (corporate == null) return '進路を考え中';
+      return corporate
+          ? '${_ownCorp[_h(key, 4) % _ownCorp.length]} 野球部'
+          : '${_ownUni[_h(key, 4) % _ownUni.length]}大学 野球部';
     case Stage.pro:
     case Stage.retired:
       return proTeam ?? 'プロ野球';
@@ -111,50 +161,81 @@ String handednessOf(String name) {
 /// 守備位置・役割。ポジションごとに、必要な能力の組み合わせ(適性)が違う。
 enum Pos {
   catcher('捕手', {
-    Ability.fielding: .5,
-    Ability.eye: .2,
-    Ability.power: .2,
-    Ability.contact: .1
+    Ability.catching: .35,
+    Ability.arm: .2,
+    Ability.fielding: .15,
+    Ability.power: .15,
+    Ability.contact: .15
   }),
   first('一塁手', {
-    Ability.power: .45,
+    Ability.power: .4,
     Ability.contact: .3,
-    Ability.eye: .15,
+    Ability.trajectory: .1,
+    Ability.catching: .1,
     Ability.fielding: .1
   }),
   second('二塁手', {
-    Ability.fielding: .4,
-    Ability.contact: .3,
+    Ability.fielding: .3,
+    Ability.contact: .25,
     Ability.speed: .2,
-    Ability.eye: .1
+    Ability.catching: .15,
+    Ability.arm: .1
   }),
   third('三塁手', {
-    Ability.power: .3,
-    Ability.fielding: .35,
-    Ability.contact: .25,
-    Ability.speed: .1
-  }),
-  shortstop(
-      '遊撃手', {Ability.fielding: .5, Ability.speed: .3, Ability.contact: .2}),
-  left('左翼手', {
-    Ability.power: .4,
-    Ability.contact: .35,
-    Ability.eye: .15,
-    Ability.speed: .1
-  }),
-  center(
-      '中堅手', {Ability.speed: .4, Ability.fielding: .35, Ability.contact: .25}),
-  right('右翼手', {
-    Ability.power: .3,
-    Ability.speed: .25,
+    Ability.power: .25,
     Ability.fielding: .25,
-    Ability.contact: .2
+    Ability.arm: .2,
+    Ability.contact: .2,
+    Ability.catching: .1
   }),
-  dh('指名打者', {Ability.power: .4, Ability.contact: .4, Ability.eye: .2}),
-  starter('先発', {Ability.stamina: .4, Ability.control: .3, Ability.stuff: .3}),
-  reliever(
-      '中継ぎ', {Ability.stuff: .4, Ability.control: .35, Ability.stamina: .25}),
-  closer('抑え', {Ability.stuff: .55, Ability.control: .3, Ability.stamina: .15});
+  shortstop('遊撃手', {
+    Ability.fielding: .35,
+    Ability.speed: .25,
+    Ability.arm: .2,
+    Ability.catching: .1,
+    Ability.contact: .1
+  }),
+  left('左翼手', {
+    Ability.power: .35,
+    Ability.contact: .3,
+    Ability.trajectory: .15,
+    Ability.speed: .1,
+    Ability.arm: .1
+  }),
+  center('中堅手', {
+    Ability.speed: .3,
+    Ability.fielding: .25,
+    Ability.contact: .2,
+    Ability.arm: .15,
+    Ability.catching: .1
+  }),
+  right('右翼手', {
+    Ability.power: .25,
+    Ability.arm: .25,
+    Ability.speed: .2,
+    Ability.fielding: .15,
+    Ability.contact: .15
+  }),
+  dh('指名打者',
+      {Ability.power: .35, Ability.contact: .35, Ability.trajectory: .3}),
+  starter('先発', {
+    Ability.stamina: .35,
+    Ability.control: .25,
+    Ability.stuff: .25,
+    Ability.breaking: .15
+  }),
+  reliever('中継ぎ', {
+    Ability.stuff: .35,
+    Ability.control: .3,
+    Ability.breaking: .2,
+    Ability.stamina: .15
+  }),
+  closer('抑え', {
+    Ability.stuff: .5,
+    Ability.control: .25,
+    Ability.breaking: .15,
+    Ability.stamina: .1
+  });
 
   const Pos(this.label, this.weights);
   final String label;
@@ -223,9 +304,12 @@ String positionOf(Player p, [Pos? chosen]) =>
     effectivePosition(p, chosen).label;
 
 /// 背番号。少年野球は付けない(null)。投手は1〜19、野手は2〜99。
-int? uniformNumberOf(Stage stage, Player p) {
+/// `ikusei` は育成契約(二軍スタート)の間。実際のプロ野球と同じく3桁の背番号で、
+/// 一軍に上がる(支配下登録)と2桁に変わる。
+int? uniformNumberOf(Stage stage, Player p, {bool ikusei = false}) {
   if (stage == Stage.youth) return null;
   final h = _h(p.name, 5 + stage.index);
+  if (stage == Stage.pro && ikusei) return 101 + h % 40;
   if (p.role == Role.pitcher) {
     return stage == Stage.pro ? 11 + h % 19 : 1 + h % 11;
   }
@@ -235,9 +319,9 @@ int? uniformNumberOf(Stage stage, Player p) {
 
 /// 1行の選手カード: 「背番号18 ・ 右投左打 ・ 遊撃手」。
 String playerCardLine(Stage stage, Player p,
-    {Pos? position, int? numberOverride}) {
-  final n =
-      (stage == Stage.pro ? numberOverride : null) ?? uniformNumberOf(stage, p);
+    {Pos? position, int? numberOverride, bool ikusei = false}) {
+  final n = (stage == Stage.pro ? numberOverride : null) ??
+      uniformNumberOf(stage, p, ikusei: ikusei);
   return [
     if (n != null) '背番号$n',
     handednessOf(p.name),
@@ -245,7 +329,24 @@ String playerCardLine(Stage stage, Player p,
   ].join(' ・ ');
 }
 
-const _oppYouth = ['北斗', '若葉', '黒潮', '大空', '赤城', '旭', '鷲羽', '松風', '蒼', '日向'];
+const _oppYouth = [
+  '北斗',
+  '若葉',
+  '黒潮',
+  '大空',
+  '赤城',
+  '旭',
+  '鷲羽',
+  '松風',
+  '蒼',
+  '日向',
+  '飛鳥',
+  '白樺',
+  '千歳',
+  '岬',
+  '湊',
+  '高原',
+];
 const _oppSchool = [
   '桜丘',
   '東雲',
@@ -258,14 +359,21 @@ const _oppSchool = [
   '潮見',
   '雷鳴',
   '鳳凰',
-  '明星'
+  '明星',
+  '大鷲',
+  '若潮',
+  '常盤',
+  '春日',
+  '霧島',
+  '有明',
 ];
 const _oppUni = ['東都', '西海', '北辰', '南陵', '中京', '湘南', '浪速', '瀬戸'];
 const _oppCorp = ['大和製作所', '日の出重工', '三星ガス', '青空電機', '北辰食品', '新生運輸'];
 
 /// 勝ち抜き戦の相手の名前(架空)。同じ年・同じ回戦なら毎回同じ。自分の所属とは別の名前にする。
+/// `seed` は選手ごとの種(0 は古いセーブ)。年齢と回戦だけで決めると、どの選手でも同じ相手だった。
 String opponentName(Stage stage, int age, int round,
-    {bool corporate = false, String own = ''}) {
+    {bool corporate = false, String own = '', int seed = 0}) {
   final pool = switch (stage) {
     Stage.youth => _oppYouth.map((n) => '$nジュニアーズ').toList(),
     Stage.juniorHigh => _oppSchool.map((n) => '$n中学').toList(),
@@ -275,7 +383,10 @@ String opponentName(Stage stage, int age, int round,
         : _oppUni.map((n) => '$n大学').toList(),
     _ => _oppSchool.map((n) => '$n高校').toList(),
   };
-  var i = _h('$age/$round/${stage.index}') % pool.length;
+  var i = _h(seed == 0
+          ? '$age/$round/${stage.index}'
+          : '$age/$round/${stage.index}/$seed') %
+      pool.length;
   // 自分の所属と同じ名前は避ける。
   for (var k = 0;
       k < pool.length &&

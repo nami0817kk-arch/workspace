@@ -27,6 +27,8 @@ NOVELTY_MAX_SEC = 20.0   # 20秒に1回は新しいもの（絵・札・図・�
 REACTION_MAX = 2         # つむぎの寄り（reaction）は1本に2回まで
 # 掛け合い（10-04・10-07）
 HOST_SHARE_MAX = 0.70    # 剣崎の字数の割合（10-07 の5本は72〜79%で講義に近かった）
+SOLO_SHARE = 0.10        # つむぎの字数がこれ以下なら、語り1人の物語型として剣崎の割合を見ない（10-22）
+IMAGINED_MAX = 8         # 物語型の想像の台詞は1本にこの数まで（10-24 ユーザー決定）
 # 文体（10-08、chiso/style.py。既存6本に掛けて決めた）
 ENDING_RUN = 4           # 剣崎の同じ語尾がこの数だけ続いたら知らせる
 PHRASE_LEN = 8           # この字数以上の言い回しを数える
@@ -184,7 +186,8 @@ def episode(script) -> tuple[list[str], list[str]]:
     last = script.sections[-1].title if script.sections else ""
     if not ("まとめ" in last or "見立て" in last):        # 10-07 から人物・出来事を掘る形。最後は「まとめ：…」（前の回の「見立て」も通す）
         errors.append("最後の節は「まとめ：…」にする（その人・出来事は何だったのか）")
-    if not script.next:
+    story = bool(getattr(script, "story", False))           # 物語型（10-24）：次回予告と締めの決まり文句は必須にしない
+    if not script.next and not story:
         errors.append("次回予告（next: {title, teaser}）がありません")
     if not script.thumbnail:
         errors.append("サムネイル（thumbnail:）がありません")
@@ -230,6 +233,7 @@ def episode(script) -> tuple[list[str], list[str]]:
             errors.append(f"挿絵の名前が分かりません: {name}")
     warns += reaction_rules(script)
     warns += opening_rules(script)
+    warns += story_opening_rules(script)
     warns += short_opening_rules(script)
     warns += short_question_rules(script)
     warns += chapter_titles(script)
@@ -293,10 +297,29 @@ def cast_rules(script) -> tuple[list[str], list[str]]:
     lines = script.lines
     if lines and lines[0].speaker != host:
         errors.append("最初の行は進行役の剣崎（語り）が話す")
-    if not lines or lines[-1].speaker != "二人" or CLOSING not in lines[-1].text:
-        errors.append(f"最後の行は二人で「{CLOSING}！」")
-    if not any(HOST_CLOSE in l.text and l.speaker == host for l in lines):
-        errors.append(f"締めに剣崎の「{HOST_CLOSE}」がありません")
+    if getattr(script, "story", False):
+        # 物語型の本編（台本の一番上に story: true。10-24 ユーザー決定）：締めは剣崎の余韻の一文（＋登録のお願い）。
+        # 「今日の地層は、ここまでです」と二人の「また一緒に、掘りましょう！」は使わない（旧型の台本は下の決まりのまま）
+        if lines and lines[-1].speaker != host:
+            errors.append("物語型の最後の行は剣崎（語り）の余韻の一文にする")
+        if any(l.speaker == "二人" for l in lines):
+            warns.append("物語型の本編に「二人」の行があります（締めは剣崎1人。10-24）")
+        # 想像の台詞（10-24）：1本に IMAGINED_MAX か所まで。「〇〇想像」の声と imagined: true の印をそろえる（札は印で出る）
+        imagined = [l for l in lines if getattr(l, "imagined", False)]
+        if len(imagined) > IMAGINED_MAX:
+            warns.append(f"想像の台詞が{len(imagined)}か所（1本{IMAGINED_MAX}か所まで）")
+        for l in lines:
+            mark = bool(getattr(l, "imagined", False))
+            role = l.speaker.endswith("想像")
+            if mark and not role:
+                errors.append(f"{l.index + 1}行目：imagined: true の行は「〇〇想像」の声（roles）で読む（記録の声と分ける）")
+            elif role and not mark:
+                errors.append(f"{l.index + 1}行目：想像の声の行に imagined: true がありません（字幕の上の「想像」の札が出ない）")
+    else:
+        if not lines or lines[-1].speaker != "二人" or CLOSING not in lines[-1].text:
+            errors.append(f"最後の行は二人で「{CLOSING}！」")
+        if not any(HOST_CLOSE in l.text and l.speaker == host for l in lines):
+            errors.append(f"締めに剣崎の「{HOST_CLOSE}」がありません")
     for l in lines:
         if re.search(r"めすお|べっつー", l.text):
             errors.append(f"{l.index + 1}行目：呼び方は「剣崎さん」「つむぎさん」（公式のあだ名は使わない）")
@@ -372,7 +395,8 @@ def pacing(script) -> list[str]:
                 "det": getattr(l, "detail", None), "mark": getattr(l, "mark", None)}
     total = sum(len(display_text(l.text)) for l in script.lines) or 1
     host = sum(len(display_text(l.text)) for l in script.lines if l.speaker == "語り")
-    if host / total > HOST_SHARE_MAX:
+    asker = sum(len(display_text(l.text)) for l in script.lines if l.speaker == "聞き")
+    if host / total > HOST_SHARE_MAX and asker / total > SOLO_SHARE:   # 聞き手が1割以下なら語り1人の物語型（10-22）。講義とは数えない
         warns.append(f"剣崎の字数が{host * 100 // total}%（{HOST_SHARE_MAX:.0%}まで。つむぎにも事実を言わせる）")
     return warns
 
@@ -432,6 +456,89 @@ def opening_rules(script) -> list[str]:
         return [f"冒頭15秒（最初の{len(window)}行・{chars}字）に数字・年・人名がありません"
                 "（冒頭15秒でいちばん重い事実を1文）"]
     return []
+
+
+# --- 冒頭の1分（10-22。本編を物語型に作り替える決定の機械的な検査）------------------------------------
+# 維持率の調べで、開始35秒で約4割・1分で約5割が離れていた。原因は冒頭の台本：未知の語から入る／予定の説明／
+# 暦の説明／断り書き／自作の比喩。冒頭は「誰でも知る意外な一点」か「感情の結末予告」だけにする。
+# どれも「!（直すと効く）」止まり。予約済みの台本は止めない。対象は最初の約330字（≒1分）。
+STORY_WINDOW_CHARS = 330     # 7字／秒 × 約47秒＋間 ≒ 1分
+NOUN_WINDOW_CHARS = 100      # 固有名詞の密度を見る範囲
+NOUN_DENSE = 5               # この数以上の固有名詞が最初の100字にあれば知らせる
+_PLAN = re.compile(r"まずは.{0,24}(?:並べ|見て|整理|確か|紹介)|(?:今日|今回)は.{0,14}[0-9０-９一二三四五六七八九十]+つ|問いは.{0,4}[0-9０-９一二三四五六七八九十]+つ"
+                   r"|この動画では|(?:並べ|掘り|見ていき|追っていき|確かめていき|分けて見ていき)ます|今日(?:掘る|扱う)|(?:今日|今回)は[^。]{0,24}(?:掘り|見ていき|追い|扱い|紹介|お話し|確かめ|比べ)|今日は、?(?:この|その先|これから|まず)")
+_CALENDAR = re.compile(r"和暦と西暦|西暦と和暦|当時の暦|旧暦|西暦に直|暦の月日|ユリウス暦|グレゴリオ暦|太陰暦|数え年")
+_DISCLAIM = re.compile(r"[ぁ-んァ-ヶ一-鿿]*とは関係なく|諸説あ|諸説が|断っておき|先にお断り|あらかじめ断")
+_ASKBACK = re.compile(r"誰[？?]|って誰|って何|ってなに|とは何[？?]|ってどういう|どういう意味|何のこと|何それ|なにそれ")
+_OWN_METAPHOR = re.compile(r"今日の地表|今日の地層は[、,]?(?:この|次の)|地表は[、,]|掘り出し(?:ます|ていき)|層を分け")
+_PLACE = re.compile(r"[一-鿿]{1,3}(?:城|寺|宮|国|藩|府|県|郡|山|川|島|港|幕府|京|坂|原|野|峠)")
+_ROLE = re.compile(r"[一-鿿]{1,4}(?:卿|令|守|将軍|天皇|宰相|大将|大名|奉行|家臣|氏|公|王|帝|殿)")
+_KATA = re.compile(r"[ァ-ヴー]{3,}(?:・[ァ-ヴー]{2,})*")
+_SURPRISE = re.compile(r"[？?！!]|なぜ|なんと|実は|のに|だけ|誰も|だれも|殺|死|亡く|滅|討たれ|襲|裏切|背[くい]|復讐|誓|憎|愛|泣|涙|無念|壮絶|最期|消え|消した|二度と|奪|捨て|別れ|失|救|逃|倒れ|選ん|隠|謎|嘘|本当")
+_LEAD_DATE = re.compile(r"^[「『（ ]*(?:紀元前)?(?:[0-9０-９]+年|[0-9０-９]+月|明治|大正|昭和|慶長|天正|元亀|永禄|文久|慶応|安政|嘉永|寛永|元禄|享保)")
+
+
+def _head_window(script, chars: int = STORY_WINDOW_CHARS):
+    """最初の約330字ぶんの行（またぐ行まで）。"""
+    out, n = [], 0
+    for l in script.lines:
+        if n >= chars:
+            break
+        out.append(l)
+        n += len(display_text(l.text))
+    return out
+
+
+def count_nouns(text: str, names: list[str]) -> int:
+    """固有名詞（人名・役職・地名・カタカナの名）の数の目安。形態素解析は入れていないので、台本の人物名・
+    地名や役職の語尾・カタカナの連なり・『』の題で拾う。重なる所は1つと数える。"""
+    spans: list[tuple[int, int]] = []
+    pats = [re.compile("|".join(map(re.escape, sorted(names, key=len, reverse=True))))] if names else []
+    for pat in pats + [_PLACE, _ROLE, _KATA, re.compile(r"[『「][^』」]{2,}[』」]")]:
+        for m in pat.finditer(text):
+            if not any(m.start() < e and s < m.end() for s, e in spans):
+                spans.append((m.start(), m.end()))
+    return len({text[s:e] for s, e in spans})
+
+
+def story_opening_rules(script) -> list[str]:
+    """冒頭の約330字（≒1分）の書き方（10-22、本編を物語型にする）。(a)予定・段取りの説明 (b)暦・表記の説明
+    (c)冒頭での断り書き (d)聞き手が「誰？」「って何」と聞き返す行 (e)固有名詞の密度 (f)1行目が日付・人名・役職の並びだけ
+    (g)自作の言い回し（「今日の地表は」）。どれも知らせるだけ（!）。"""
+    win = _head_window(script)
+    if not win:
+        return []
+    warns = []
+
+    def hits(pat, label: str, fix: str, speakers=None):
+        rows, shown = [], []
+        for l in win:
+            if speakers and l.speaker not in speakers:
+                continue
+            m = pat.search(display_text(l.text))
+            if m:
+                rows.append(l.index + 1)
+                shown.append(m.group(0))
+        if rows:
+            warns.append(f"冒頭：{label}（{span(rows)}行目「{'」「'.join(dict.fromkeys(shown))}」）。{fix}")
+
+    hits(_PLAN, "予定・段取りの説明に使っています", "冒頭1分は物語の一点だけにして、段取りは言わない")
+    hits(_CALENDAR, "暦・表記の説明に使っています", "暦の断りは概要欄か中盤の章に回し、冒頭では日付を当時のまま言う")
+    hits(_DISCLAIM, "断り書きがあります", "「関係なく」「諸説あり」は冒頭で言わない（必要なら中盤で）")
+    hits(_ASKBACK, "聞き手が「誰？」「って何」と聞き返しています", "未知の語の説明に最初の1分を使わない（誰でも知る言葉に置き換える）", speakers=("聞き",))
+    hits(_OWN_METAPHOR, "自作の言い回しです", "「今日の地表は」のような自分の言葉の比喩は冒頭に置かない")
+    names = name_words(script)
+    plain = "".join(display_text(l.text) for l in win)
+    n = count_nouns(plain[:NOUN_WINDOW_CHARS], names)
+    if n >= NOUN_DENSE:
+        warns.append(f"冒頭：最初の{NOUN_WINDOW_CHARS}字に固有名詞（人名・役職・地名）が{n}個あります（{NOUN_DENSE}個以上）。"
+                     "聞き取れず離れる。主役1人と、誰でも知る一点に絞る")
+    first = display_text(win[0].text)
+    sentence = re.split(r"[。！？]", first, maxsplit=1)[0]
+    if _LEAD_DATE.match(first) and not _SURPRISE.search(sentence):
+        warns.append(f"冒頭：1行目の最初の文が日付・人名・役職の並びだけです（「{sentence[:30]}」）。"
+                     "驚き・感情・結末予告の語から入る（「東京駅前は400年前は海の底でした」「愛する娘を殺された男は復讐を誓った」）")
+    return warns
 
 
 def short_opening_rules(script) -> list[str]:
@@ -776,3 +883,77 @@ def glyph_errors(script, fonts: dict) -> list[str]:
 
 def _order(at: str) -> int:
     return int(at[:-2]) if at.endswith("行目") else 0
+
+# --- 書き出してから気づく画面の不具合を、書き出す前に見つける（10-15。今日の直しの約半分がここ）-------------------
+WIDE_RATIO = 2.4         # 横長がこれ以上の絵は、真ん中の額に出ると細い帯になる
+_NUMLIKE = re.compile(r"^(約|およそ|第)?[0-9０-９][0-9０-９,.，]*\s*(年|日|月|人|石|万|千|km|キロ|%|％|隻|枚|本|回|倍|歳|両|トン|タエス|点|基|m|メートル)?")
+_PERSON_IMAGE = re.compile(r"portrait|_zou|_zou\.|eiyuden|meishokagami|_kao")
+
+
+def _is_numlike(text) -> bool:
+    return bool(_NUMLIKE.match(str(text).strip()))
+
+
+def render_risks(script, assets: Path) -> tuple[list[str], list[str]]:
+    """画面の描き方で、作ってから気づきやすい不具合。
+    × 描くときに落ちる・図が崩れる（labels が数字／flow の `{}` の題・札がカンマで切れた）
+    ! 見映えが崩れる（stats の並びが逆・背景が人物の絵・横長の絵が額で細い帯）"""
+    import json
+    errors: list[str] = []
+    warns: list[str] = []
+    seen = set()
+    from .figures import base_key
+    for l in script.lines:
+        if not l.figure:
+            continue
+        key = base_key(l.figure)
+        if key in seen:
+            continue
+        seen.add(key)
+        spec = json.loads(l.figure)
+        title = spec.get("title", "")
+        stray = [k for k, v in spec.items() if v is None or re.match(r"^[0-9０-９]", str(k))]
+        if stray:
+            errors.append(f"{l.index + 1}行目：図「{title}」の書き方が崩れています（題・注にカンマがあると切れる。"
+                          f"\"…\" で囲む）: {'・'.join(map(str, stray))}")
+        labels = spec.get("labels")
+        if labels and any(not isinstance(x, str) for x in labels):
+            errors.append(f"{l.index + 1}行目：図「{title}」の labels は文字列にする（数字のままだと描くときに落ちる）")
+        if spec.get("type") == "stats":
+            for it in spec.get("items", []):
+                if len(it) >= 2 and _is_numlike(it[0]) and not _is_numlike(it[1]):
+                    warns.append(f"{l.index + 1}行目：図「{title}」の stats は [ラベル, 数字, 注] の順（「{it[0]}」が先頭で、"
+                                 f"数字とラベルが逆に見えます）")
+                    break
+    portraits = {l.portrait.image for l in script.lines if l.portrait}
+    sizes: dict[str, tuple[int, int] | None] = {}
+
+    def size(img: str):
+        if img not in sizes:
+            try:
+                from PIL import Image
+                with Image.open(assets / img) as im:
+                    sizes[img] = im.size
+            except Exception:
+                sizes[img] = None
+        return sizes[img]
+    said_person, said_wide, said_portrait = set(), set(), set()
+    for l in script.lines:
+        bg = l.background.image if l.background else None
+        if bg and bg not in said_person and (bg in portraits or _PERSON_IMAGE.search(bg.rsplit("/", 1)[-1])):
+            said_person.add(bg)
+            warns.append(f"{l.index + 1}行目：背景が人物の絵（{bg.rsplit('/', 1)[-1]}）。拡大すると染みのように粗くなる"
+                         f"（肖像は portrait に、背景は風景・地図・城・戦の絵に）")
+        if bg and l.portrait is None and not l.figure and not getattr(l, "detail", None) and bg not in said_wide:
+            sz = size(bg)
+            if sz and sz[0] / max(sz[1], 1) >= WIDE_RATIO:
+                said_wide.add(bg)
+                warns.append(f"{l.index + 1}行目：背景の絵（{bg.rsplit('/', 1)[-1]}）が極端に横長（{sz[0] / sz[1]:.1f}:1）。"
+                             f"真ん中の額で細い帯になる（肖像か detail を付ける・別の絵に）")
+        if l.portrait and l.portrait.image not in said_portrait:
+            sz = size(l.portrait.image)
+            if sz and (sz[0] / max(sz[1], 1) >= 2.2 or sz[0] / max(sz[1], 1) <= 0.3):
+                said_portrait.add(l.portrait.image)
+                warns.append(f"{l.index + 1}行目：肖像の額に出す絵（{l.portrait.image.rsplit('/', 1)[-1]}）の縦横比が極端です")
+    return errors, warns
+

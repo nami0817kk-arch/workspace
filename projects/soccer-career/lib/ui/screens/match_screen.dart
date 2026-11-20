@@ -359,9 +359,15 @@ class _ScenarioView extends StatelessWidget {
                               background: theme.colorScheme.tertiaryContainer,
                               foreground: theme.colorScheme.onTertiaryContainer,
                             ),
+                          // 状況が何を変えているかまで、同じ札に書く。
+                          // 「1点ビハインド」だけでは、なぜ手の印が変わったのか
+                          // 分からない。札を増やすと行が増えるので、1枚に収める。
                           if (match.situationLabel != null)
                             Tag(
-                              match.situationLabel!,
+                              match.stakesLabel == null
+                                  ? match.situationLabel!
+                                  : '${match.situationLabel!} ・ '
+                                        '${match.stakesLabel!}',
                               background: match.margin < 0
                                   ? theme.colorScheme.errorContainer
                                   : theme.colorScheme.secondaryContainer,
@@ -438,6 +444,8 @@ class _ScenarioView extends StatelessWidget {
               chance: match.chanceFor(scenario.options[i]),
               assistConversion: match.assistConversionAt(match.currentMinute),
               factors: match.distinctFactorsFor(scenario.options[i]),
+              stakesNote: match.stakesNoteFor(scenario.options[i]),
+              concedeNote: MatchInProgress.concedeNoteFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
             const SizedBox(height: 8),
@@ -570,6 +578,8 @@ class _OptionButton extends StatelessWidget {
     required this.chance,
     required this.assistConversion,
     required this.factors,
+    required this.stakesNote,
+    required this.concedeNote,
     required this.onPressed,
   });
 
@@ -608,6 +618,16 @@ class _OptionButton extends StatelessWidget {
   /// その数字を作っているもの。積み上げたものが試合のどこで効いているかを、
   /// 選ぶその場で見せる。
   final List<ChanceFactor> factors;
+
+  /// **試合の状況で、この手の値打ちが変わっているか**（今は重い／今は軽い／
+  /// 外すと痛い）。判定と同じ式（`MatchInProgress.stakesNoteFor`）から引く。
+  /// 見えない計算で答えが変わるだけだと、迷いではなく当てずっぽうになる。
+  final String? stakesNote;
+
+  /// **外したら、それがそのまま失点になる確率**（外すと失点30%）。
+  /// 判定と同じ式（`MatchInProgress.concedeNoteFor`）から引く。
+  /// 守る選手の3つの手は、ここでしか見分けが付かないことが多い。
+  final String? concedeNote;
 
   final VoidCallback onPressed;
 
@@ -703,6 +723,29 @@ class _OptionButton extends StatelessWidget {
               Expanded(
                 child: Text(option.label, style: theme.textTheme.titleSmall),
               ),
+              // 題名と同じ行に置く。行を足すと3つ目の手が画面の外へ押し出される。
+              if (stakesNote != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Tag(
+                    stakesNote!,
+                    background: stakesNote == '今は軽い'
+                        ? theme.colorScheme.surfaceContainerHighest
+                        : theme.colorScheme.errorContainer,
+                    foreground: stakesNote == '今は軽い'
+                        ? theme.colorScheme.onSurfaceVariant
+                        : theme.colorScheme.onErrorContainer,
+                  ),
+                ),
+              if (concedeNote != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 6),
+                  child: Tag(
+                    concedeNote!,
+                    background: theme.colorScheme.errorContainer,
+                    foreground: theme.colorScheme.onErrorContainer,
+                  ),
+                ),
               if (option.outcome != Outcome.play)
                 // 手が通る確率と、それが点になる確率は別。
                 // 「決まるのは半分ほど」を数字で見せておく。
@@ -762,6 +805,30 @@ class _OptionButton extends StatelessWidget {
                     '監督好み',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              // 通れば、この後に入るはずだった失点が1つ消える。
+              // 危ない手を選ぶ理由は、ここにしか書いていない。
+              if (option.preventsGoal)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text(
+                    '通れば1点防ぐ',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              // 受け身の手は、通っても攻撃が終わらない。易しさの代わりに
+              // 払っているものを書かないと、いつも同じ手を押すことになる。
+              if (option.lingering)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text(
+                    '通っても失点${(Formulas.concedeOnLinger * 100).round()}%',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.error,
                     ),
                   ),
                 ),
@@ -1146,6 +1213,21 @@ class _MatchSummary extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
+              // **衰えは、何を守ったかと一緒に出す。** 落ちたことだけ書くと、
+              // 練習を選ぶ意味が見えない（2026-11-15）。
+              if (week.declined != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  week.shielded.isEmpty
+                      ? '衰え: ${week.declined!.label} が 1 落ちた'
+                      : '衰え: ${week.declined!.label} が 1 落ちた'
+                            '（守ったのは ${week.shielded.map((k) => k.label).join('・')}）',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.error,
                   ),
                 ),
               ],

@@ -1,0 +1,355 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：ロゼッタストーンは、どうやって読めたのか（scripts/rosetta-story.yaml）。chiso/storymain.py が読む。
+# 11-14 作成（11/18 12:00 公開予定）。galileo_main_look.yaml を写した。絵は Gemini（Chrome・無料版）で新しく作る。人物の顔は描かない（後ろ姿・手元・風景・物）。
+script: scripts/rosetta-story.yaml
+out: rosetta_story_main
+art_dir: out/story/rosetta/main
+main_art_dir: out/story/rosetta/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 答えつきの石
+    now: null
+    dates:
+      6: 1799年7月
+      12: null
+  1:
+    label: 第1章 壁の中の石
+    now: 1799年7月
+    dates:
+      18: 1799年10月
+      19: 1799年
+  2:
+    label: 第2章 戦利品になった石
+    now: 1800年
+    dates:
+      27: 1801年4月
+      28: 1801年8月
+      32: 1802年
+      35: 1803年
+      36: 1803年5月
+      37: 1814年
+      38: 1802年
+  3:
+    label: 第3章 最初の突破と行き止まり
+    now: 1802年
+    dates:
+      46: 1802年11月
+      48: 1814年夏
+  4:
+    label: 第4章 枠の中の名前
+    now: 1814年
+    dates:
+      52: 1819年
+  5:
+    label: 第5章 兄に呼ばれた少年と1822年
+    now: 1790年
+    dates:
+      56: 1801年
+      57: 1807年
+      58: 1821年12月
+      62: 1822年9月
+      63: null
+      66: 1822年
+      67: 1822年9月
+      71: 1822年8月
+      72: null
+  6:
+    label: 第6章 先取り争い
+    now: 1815年
+    dates:
+      75: 1815年5月
+      76: 1819年
+      81: 1824年
+      82: 1823年
+      85: 1822年9月
+      87: 1829年
+      90: 2020年
+      91: null
+  7:
+    label: 第7章 23年は、どこで消えたのか
+    now: null
+    dates: {}
+  8:
+    label: まとめ ロゼッタストーンは、どうやって読めたのか
+    now: null
+    dates: {}
+no_tag_from: 103
+references:
+- ルクラントの論文（仏エジプト学会紀要146号, 1999）
+- トマソン（2020）・クァーク（2023）・ポリス（2022）の論文
+- シャンポリオン『ダシエ氏への手紙』（1822）・『概説』（1824）
+- ヤング『エジプト』（ブリタニカ補遺, 1819）・『最近の発見の報告』（1823）
+- ハルトレーベン『シャンポリオン、その生涯と業績』（1906）
+ai:
+  H01:
+    scene: 博物館の暗い展示室で、スポットライトを浴びる黒っぽい石板。表面に3つの段に分かれた刻み模様（読めない記号）が見える
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  C02:
+    scene: 夜明けのナイル川沿いの町ロゼッタ。海ぞいに石造りの古い砦（18世紀末のエジプト）と、ナポレオン軍の兵士たち
+    pan: h
+    crops: *id001
+  C03:
+    scene: 砦の古い石壁を壊す兵士たちと、壁の中から黒い石板が顔を出している場面（朝の光、土ぼこり）
+    pan: h
+    crops: *id001
+  C04:
+    scene: ナイル・デルタの内陸にある、崩れた古い神殿の石柱と砂地（夕景、人はいない）
+    pan: h
+    crops: *id001
+  C05:
+    scene: 石板の表面のクローズアップ。上から絵文字、崩した文字、ギリシャ文字の3段が刻まれている（読めない形・文字は判読不能）
+    pan: h
+    crops: *id001
+  C06:
+    scene: パリの学士院の広間。長い机で学者たちが拓本や版画の刷りを広げて見ている（19世紀初めの服装、窓からの光）
+    pan: h
+    crops: *id001
+  C07:
+    scene: カイロの研究所の工房。石板に黒インクを塗り、紙を押し当てて刷りを取る職人たち（ランプの光）
+    pan: h
+    crops: *id001
+  C08:
+    scene: ろうそくの灯る机で、羽ペンで手紙を書く19世紀初めの学者の手元（紙、封蝋、インク壺。人物は後ろ姿か手元だけ）
+    pan: h
+    crops: *id001
+  C09:
+    scene: 1801年のアレクサンドリアの港。帆船が並び、赤い軍服の兵士と青い軍服の兵士が向かい合う（遠景）
+    pan: h
+    crops: *id001
+  C10:
+    scene: 重い石板を縄で荷車にくくりつけ、兵士たちが引く。木箱と船が背景（昼、港の石畳）
+    pan: h
+    crops: *id001
+  C11:
+    scene: 1802年ごろの博物館の展示室。広間の中央の台に黒い石板が置かれ、見学者の影が並ぶ
+    pan: h
+    crops: *id001
+  C12:
+    scene: 学者の書斎。机いっぱいに手書きの字母表の紙と拓本、羽ペン、本の山（昼の窓光。人物は後ろ姿）
+    pan: h
+    crops: *id001
+  C13:
+    scene: 古い図書館。羊皮紙の本が開かれ、不思議な絵文字の版画が見える（暖色のランプ、人物なし）
+    pan: h
+    crops: *id001
+  C14:
+    scene: 19世紀初めのイギリスの海辺の町の書斎。窓の外に海、机に石膏の型と紙の束（医者の机、人物は後ろ姿）
+    pan: h
+    crops: *id001
+  C15:
+    scene: 楕円の枠（カルトゥーシュ）の中に絵文字が並ぶ石の彫刻のクローズアップ。金色の光が当たる
+    pan: h
+    crops: *id001
+  C16:
+    scene: 1821年、ロンドンの河岸の埠頭。船から巨大な石のオベリスクが吊り下ろされる（曇り空、作業員たち）
+    pan: h
+    crops: *id001
+  C17:
+    scene: パリの書斎の朝。机に2つの楕円の枠の絵文字の写し絵と古い本。後ろ姿の人物1人
+    pan: h
+    crops: *id001
+  C18:
+    scene: 夜明けのアブ・シンベル神殿の正面（実在の遺跡）
+    pan: h
+    crops: *id001
+  C19:
+    scene: 夕暮れの大聖堂の回廊、石壁に無地の記念碑の板
+    pan: h
+    crops: *id001
+  C20:
+    scene: 1803年の英仏海峡の軍港、帆船の戦列艦
+    pan: h
+    crops: *id001
+  YEND:
+    scene: 夜明けの博物館の窓辺と空（終了画面、右半分に余白）
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+paint_fx: {}
+shots:
+- 0 ai:H01 wide
+- 1 ai:C15 left
+- 2 ai:C14 right
+- 3 ai:C11 right
+- 4 ai:C12 wide
+- 5 ai:C11 left
+- 6 ai:C02 wide
+- 7 ai:C03 left
+- 8 ai:C04 right
+- 9 ai:C08 left
+- 10 ai:C12 right
+- 11 ai:C04 wide
+- 12 ai:H01 right
+- 13 ai:C11 left
+- 14 ai:C05 wide
+- 15 ai:C15 right
+- 16 ai:C04 left
+- 17 ai:C05 left
+- 18 ai:C06 wide
+- 19 ai:C07 right
+- 20 ai:C13 wide
+- 21 ai:C12 right
+- 22 ai:C07 left
+- 23 ai:C06 wide
+- 24 ai:C08 wide
+- 25 ai:C13 left
+- 26 ai:C12 right
+- 27 ai:C02 wide
+- 28 ai:C09 left
+- 29 ai:C12 left
+- 30 ai:C10 wide
+- 31 ai:C09 right
+- 32 ai:C11 wide
+- 33 ai:C14 right
+- 34 ai:C06 right
+- 35 ai:C07 left
+- 36 ai:C20 wide
+- 37 ai:C08 right
+- 38 ai:C12 wide
+- 39 ai:C13 left
+- 40 ai:C08 right
+- 41 ai:C05 left
+- 42 ai:C12 right
+- 43 ai:C14 left
+- 44 ai:C13 wide
+- 45 ai:C12 wide
+- 46 ai:C08 wide
+- 47 ai:C19 left
+- 48 ai:C14 wide
+- 49 ai:C12 left
+- 50 ai:C15 left
+- 51 ai:C05 right
+- 52 ai:C15 right
+- 53 ai:C14 right
+- 54 ai:C15 wide
+- 55 ai:C13 wide
+- 56 ai:C06 left
+- 57 ai:C13 left
+- 58 ai:C16 wide
+- 59 ai:C09 left
+- 60 ai:C17 right
+- 61 ai:C12 left
+- 62 ai:C18 wide
+- 63 ai:C04 left
+- 64 ai:C06 right
+- 65 ai:C17 wide
+- 66 ai:C12 left
+- 67 ai:C06 wide
+- 68 ai:C15 wide
+- 69 ai:C05 right
+- 70 ai:C06 left
+- 71 ai:C19 wide
+- 72 ai:C08 left
+- 73 ai:C12 wide
+- 74 ai:C13 right
+- 75 ai:C12 wide
+- 76 ai:C06 right
+- 77 ai:C14 wide
+- 78 ai:C15 wide
+- 79 ai:C05 right
+- 80 ai:C17 wide
+- 81 ai:C06 right
+- 82 ai:C08 left
+- 83 ai:C14 right
+- 84 ai:C12 left
+- 85 ai:C08 wide
+- 86 ai:C13 right
+- 87 ai:C19 wide
+- 88 ai:C11 left
+- 89 ai:C06 right
+- 90 ai:C14 left
+- 91 ai:C16 wide
+- 92 ai:C09 wide
+- 93 ai:C07 wide
+- 94 ai:C20 left
+- 95 ai:C16 right
+- 96 ai:C13 wide
+- 97 ai:C16 left
+- 98 ai:C15 wide
+- 99 ai:H01 wide
+- 100 ai:C11 wide
+- 101 ai:C17 wide
+- 102 ai:C14 wide
+- 103 ai:C12 wide
+- 104 ai:C06 wide
+- 105 ai:YEND wide
+- end ai:YEND wide
+focus: {}
+fx:
+  C08:
+    lamp:
+      region:
+      - 0.0
+      - 0.2
+      - 1.0
+      - 0.9
+parts:
+- type: versus3
+  from: 9
+  to: 9
+  items:
+  - - 15日説
+    - 出どころの文書なし
+  - - 19日説
+    - 会合日の取り違えが元とみられる
+  - - ルクラント
+    - 7月14〜25日
+  every: 2.0
+- type: quote
+  from: 17
+  to: 17
+  label: 史料
+  text: 硬い石の碑に／聖なる文字・土地の文字・ギリシャの文字で／刻みなさい
+  source: メンフィスの勅令 紀元前196年（英訳・要旨）
+- type: quote
+  from: 28
+  to: 28
+  label: 史料
+  text: 遺物は公有財産とし／連合軍の将軍の処分に委ねる
+  source: アレクサンドリア降伏協定 第16条 1801年（要旨）
+- type: quote
+  from: 81
+  to: 81
+  label: 史料
+  text: ヤングは最初に／いくつかの正確な知見を公刊した
+  source: シャンポリオン『概説』1824年（要旨）
+- type: quote
+  from: 85
+  to: 85
+  label: 史料
+  text: 英国の鍵を借りたとしても／錠はひどく錆びていて並の腕では回せなかった
+  source: ヤングからハミルトンへの手紙 1822年9月29日（要旨）
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 6
+  note: 発見
+- line: 17
+  note: 石の命令
+- line: 28
+  note: 降伏協定
+- line: 62
+  note: ひらめき
+- line: 78
+  note: 数の違い
+- line: 93
+  note: 勘定
+- line: 103
+  note: 余韻
+- end: true
+  note: 終了画面

@@ -1,0 +1,207 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：西郷隆盛の最期（scripts/saigo-story.yaml）。chiso/storymain.py が読む。
+# 11-11 作成（11/13 19:00 公開予定）。kenshin_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（S01〜S16・SEND）は Gemini（Chrome、無料版）。西郷の顔は想像上で実在の肖像に似せない（多くは後ろ姿）。実在の絵は額（frame:）と錦絵の一部（part:）。
+#   S14 は上の看板に字のような模様があるので切り出しを下寄りにしてある。S16 は上野の像に近い（像そのものの話の行だけで使う）。
+script: scripts/saigo-story.yaml
+out: saigo_story_main
+art_dir: out/story/saigo/main
+main_art_dir: out/story/saigo/main
+ai_disclosure: この動画の情景・人物の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 切腹の二文字はない電報, now: 1877年9月24日, dates: {}}
+  1: {label: 第1章 洞窟に、何人がいたのか, now: 1877年9月1日, dates: {}}
+  2: {label: 第2章 使者は、何を問うたのか, now: 1877年9月21日, dates: {28: 1877年9月23日}}
+  3: {label: 第3章 号砲は何発、何時に鳴ったのか, now: 1877年9月24日, dates: {}}
+  4: {label: 第4章 洞窟を出たのは何時か, now: 1877年9月24日, dates: {}}
+  5: {label: 第5章 「もう、ここらでよか」は本当の言葉か, now: 1877年9月24日, dates: {}}
+  6: {label: 第6章 西郷の首はどこにあったのか, now: 1877年9月24日, dates: {}}
+  7: {label: 第7章 切腹の話は、いつ生まれたのか, now: null, dates: {}}
+  8: {label: 第8章 死ぬ前に、なぜ西郷は星になったのか, now: 1877年9月, dates: {96: 1891年, 98: 1889年, 99: 1898年}}
+  9: {label: まとめ 西郷隆盛の最期、記録から言えること, now: null, dates: {}}
+no_tag_from: 109
+
+references:
+  - 山縣有朋・東伏見少将・渡辺中佐・小沢大佐らの電報、第4旅団・別働第2旅団の日記、軍団本営の発翰録（アジア歴史資料センター所蔵の防衛省防衛研究所の資料。『電報綴』『軍略戦況』ほか。内容欄の翻刻）
+  - 『攻城砲隊戦闘報告 明治十年九月十九日より同二十四日に至る』（国立国会図書館「史料にみる日本の近代」の翻刻）
+  - 'Mark Ravina, "The Apocryphal Suicide of Saigō Takamori: Samurai, Seppuku, and the Politics of Legend", Journal of Asian Studies 69(3), 2010（要旨と参考文献表）'
+  - 千田登文の履歴書（2014年に刊行された大野敏明『西郷隆盛の首を発見した男』文春新書の紹介記事による。履歴書の原文は未見）
+  - Edward S. Morse, Japan Day by Day, vol.1, 1917（1877年9月8日の項）／野尻抱影『日本星名辞典』1973（Wikipedia「西郷星」経由）
+  - 国立公文書館「あの日の公文書」（9月24日 南洲忌）／日本語版ウィキペディア「西郷隆盛」「西南戦争」／KAGOPIC（西郷洞窟・別府晋介の墓）／鹿児島の観光案内
+
+credits:
+  paintings/saigo_takamori_portrait.jpg: 《西郷隆盛》キヨッソーネ系の肖像画（C. ナカガワ、1935年以前の版。本人の写真は現存しない）
+  paintings/saigo_nishiki_kagoshima_battle_shozan.jpg: 早川松山《鹿児島の戦い》錦絵（三連の一部）1877年
+  paintings/saigo_nishiki_saigo_fighting.jpg: 《西南戦争の錦絵》（中央に西郷隆盛と伝わる）19世紀
+
+ai:
+  S01: {scene: 夜明けの城山と桜島（霧と陣の灯）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  S02: {scene: 洞窟の中、ランタンと男たち, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.65, 0.6]}}
+  S03: {scene: 夕暮れの丘に並ぶ官軍と大砲, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.55, 0.5]}}
+  S04: {scene: 夜の砲列と砲兵の影, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.7, 0.6]}}
+  S05: {scene: 着物の2人が兵の線へ歩く, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.4, 0.5]}}
+  S06: {scene: 電信局の将校が電文を書く, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.3, 0.45]}}
+  S07: {scene: 夜明け前、大砲が火を噴く, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.3, 0.45]}}
+  S08: {scene: 霧の斜面を登る歩兵, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S09: {scene: 岩崎谷の石垣の道と門, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.6, 0.45]}}
+  S10: {scene: 洞窟前に並ぶ男たち（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.6]}}
+  S11: {scene: 朝の道を下る大柄な男の後ろ姿, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.4, 0.5]}}
+  S12: {scene: 寺の境内、白布の台と将校, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.6, 0.55]}}
+  S13: {scene: 苔むした石の溝と門, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.35, 0.6]}}
+  S14: {scene: 絵草紙屋の前の人だかり, pan: h, crops: {wide: [1.4, 0.3, 0.6], left: [1.4, 0.3, 0.6], right: [1.35, 0.35, 0.65], face: [1.3, 0.3, 0.72]}}
+  S15: {scene: 夜の屋根と赤い星, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.8, 0.3]}}
+  S16: {scene: 犬を連れた男の銅像, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.58, 0.5]}}
+  SEND: {scene: 終了画面用。夕暮れの鹿児島湾と桜島（右半分を空ける）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx:
+  paintings/saigo_takamori_portrait.jpg: {crop: [0.05, 0.03, 0.95, 0.62]}
+
+shots:
+  - 0 ai:S06 wide
+  - 1 ai:S06 right
+  - 2 ai:S09 wide
+  - 3 ai:S07 wide
+  - 4 ai:S11 wide
+  - 5 ai:S01 wide
+  - 6 ai:S06 left
+  - 7 ai:S13 wide
+  - 8 ai:S12 wide
+  - 9 ai:S01 left
+  - 10 ai:S01 right
+  - 11 frame:paintings/saigo_takamori_portrait.jpg
+  - 12 ai:S03 wide
+  - 13 ai:S03 left
+  - 14 ai:S03 right
+  - 15 ai:S04 wide
+  - 16 ai:S04 left
+  - 17 ai:S02 wide
+  - 18 ai:S02 left
+  - 19 ai:S02 right
+  - 20 ai:S05 wide
+  - 21 ai:S05 left
+  - 22 ai:S06 right
+  - 23 ai:S05 right
+  - 24 ai:S06 left
+  - 25 ai:S05 wide
+  - 26 ai:S06 face
+  - 27 ai:S06 wide
+  - 28 ai:S02 face
+  - 29 ai:S10 wide
+  - 30 ai:S02 right
+  - 31 ai:S02 left
+  - 32 ai:S07 wide
+  - 33 ai:S07 left
+  - 34 ai:S07 right
+  - 35 ai:S04 right
+  - 36 ai:S06 face
+  - 37 ai:S03 left
+  - 38 ai:S08 wide
+  - 39 ai:S04 wide
+  - 40 ai:S08 left
+  - 41 ai:S08 right
+  - 42 ai:S10 left
+  - 43 ai:S10 right
+  - 44 ai:S10 face
+  - 45 ai:S10 wide
+  - 46 ai:S11 left
+  - 47 ai:S08 face
+  - 48 ai:S06 right
+  - 49 ai:S09 left
+  - 50 ai:S09 right
+  - 51 ai:S06 wide
+  - 52 ai:S01 wide
+  - 53 ai:S01 left
+  - 54 ai:S09 wide
+  - 55 ai:S11 wide
+  - 56 ai:S11 face
+  - 57 ai:S11 right
+  - 58 ai:S10 wide
+  - 59 ai:S06 left
+  - 60 ai:S06 face
+  - 61 ai:S06 right
+  - 62 ai:S09 face
+  - 63 ai:S12 wide
+  - 64 ai:S12 left
+  - 65 ai:S12 right
+  - 66 ai:S12 face
+  - 67 ai:S13 wide
+  - 68 ai:S06 left
+  - 69 ai:S09 left
+  - 70 ai:S13 left
+  - 71 ai:S12 face
+  - 72 ai:S13 right
+  - 73 ai:S13 face
+  - 74 ai:S12 wide
+  - 75 ai:S13 wide
+  - 76 ai:S09 right
+  - 77 ai:S06 face
+  - 78 ai:S12 right
+  - 79 ai:S01 right
+  - 80 ai:S01 left
+  - 81 ai:S06 wide
+  - 82 ai:S06 face
+  - 83 ai:S09 face
+  - 84 ai:S13 face
+  - 85 ai:S01 face
+  - 86 ai:S15 wide
+  - 87 ai:S01 wide
+  - 88 ai:S06 wide
+  - 89 ai:S11 left
+  - 90 ai:S14 face
+  - 91 ai:S14 right
+  - 92 ai:S15 wide
+  - 93 ai:S15 left
+  - 94 ai:S14 left
+  - 95 ai:S14 face
+  - 96 ai:S15 right
+  - 97 ai:S05 face
+  - 98 frame:paintings/saigo_takamori_portrait.jpg
+  - 99 ai:S16 wide
+  - 100 ai:S16 left
+  - 101 ai:S16 right
+  - 102 ai:S01 wide
+  - 103 ai:S12 wide
+  - 104 ai:S06 wide
+  - 105 ai:S11 left
+  - 106 ai:S13 left
+  - 107 ai:S09 left
+  - 108 frame:paintings/saigo_takamori_portrait.jpg
+  - 109 ai:S10 right
+  - 110 ai:SEND wide
+  - end ai:SEND wide
+
+focus: {}
+
+fx:
+  S02: {lamp: {region: [0.55, 0.45, 0.9, 0.85]}}
+  S06: {lamp: {region: [0.6, 0.4, 0.85, 0.75]}}
+
+parts:
+  - {type: quote, from: 1, to: 1, label: 史料, text: 賊魁西郷桐野以下ヲ斃ス／賊魁西郷ハ我手ニテ打取リ, source: 山縣参軍・東伏見少将の電報（明治10年9月24日）}
+  - {type: quote, from: 28, to: 28, label: 史料, text: 今午後五時ヲ限リ可申出旨ヲ申含致放還候, source: 山縣参軍の達し（第4旅団日記 9月23日の条）}
+  - {type: quote, from: 35, to: 35, label: 史料, text: 同廿四日午前四時、城山四面大攻撃, source: 『攻城砲隊戦闘報告』}
+  - {type: versus3, from: 46, to: 46, items: [[観光案内の一つ, 午前4時], [別府晋介の墓の解説, 午前6時ごろ]], every: 2.0}
+  - {type: quote, from: 48, to: 48, label: 史料, text: 西郷ハ小銃ニ当リ／桐野ハ大砲ニアタリタル, source: 田ノ浦発 午前10時の電報（翻刻）}
+  - {type: quote, from: 64, to: 64, label: 史料, text: 何レモ銃丸若シクハバヨネツトニテ／斃レタルモノニ候, source: 山縣参軍の電報（9月24日）}
+  - {type: quote, from: 68, to: 68, label: 史料, text: 西郷ヲ追掛ケ安村ハ手負トナリ／首ヲ取兼シハ残リ惜シ, source: 東伏見少将の電報（9月24日）}
+  - {type: quote, from: 74, to: 74, label: 史料, text: 果シテ門脇ノ小溝ニ埋メアルヲ発見シ, source: 千田登文の履歴書（紹介記事による引用）}
+  - {type: versus3, from: 75, to: 75, items: [[第4旅団の日記, 折田庄輔の屋敷], [千田の履歴書, 門脇の小溝], [解説の一つ, 折田庄助邸の前], ], every: 1.8}
+  - {type: quote, from: 84, to: 84, label: 要旨, text: crippled by a bullet wound／and beheaded by his followers, source: Mark Ravina, Journal of Asian Studies（2010）}
+  - {type: quote, from: 94, to: 94, label: 史料, text: "the planet Mars, in the centre of which／is General Saigo, the rebel chief", source: モース『Japan Day by Day』（9月8日の項）}
+  - {type: quote, from: 105, to: 105, label: 要点, text: 言えること＝午前4時開戦、午前8時に収まる／言えないこと＝洞窟を出た時刻、切腹か, source: この動画のまとめ}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 1, note: 電報の史料}
+  - {line: 11, note: 西郷の肖像（額）}
+  - {line: 14, note: 薩軍の数の表}
+  - {line: 37, note: 号砲の時刻の表}
+  - {line: 46, note: 洞窟を出た時刻}
+  - {line: 52, note: 戦いの終わりの表}
+  - {line: 75, note: 首の場所}
+  - {line: 88, note: 最期の書き方の表}
+  - {line: 94, note: モース日記}
+  - {line: 105, note: 要点}
+  - {end: true, note: 終了画面の空き}

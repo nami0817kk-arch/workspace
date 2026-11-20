@@ -46,7 +46,7 @@ class Goal {
   bool? achieved;
 
   String get text => switch (kind) {
-        GoalKind.rounds => '夏の大会で${target.round()}勝以上',
+        GoalKind.rounds => '今年の大会で${target.round()}勝以上',
         GoalKind.rank => '${target.round()}位以内',
         GoalKind.battingAverage => '打率${fmtRate(target)}以上',
         GoalKind.homeRuns => '本塁打${target.round()}本以上',
@@ -124,13 +124,14 @@ double _interp(List<(double, double)> table, double x) {
 }
 
 // 総合評価ごとの、プロの1シーズンの平均成績(tool/balance と test/goals_test の実測)。
+// 2026-11-03: 打撃の上の伸びを抑えた(`ownTopContact`・`ownContactSlope`)ので測り直した(150シーズンの平均)
 const _hrTable = [
-  (30.0, 6.6),
-  (45.0, 11.3),
-  (60.0, 17.1),
-  (75.0, 23.8),
-  (90.0, 33.6),
-  (99.0, 44.9)
+  (30.0, 5.1),
+  (45.0, 10.3),
+  (60.0, 15.1),
+  (75.0, 21.2),
+  (90.0, 28.3),
+  (99.0, 36.2)
 ];
 const _winsTable = [
   (30.0, 0.9),
@@ -147,12 +148,12 @@ const _eraTable = [
   (90.0, 1.91)
 ];
 const _avgTable = [
-  (30.0, 0.194),
-  (45.0, 0.229),
-  (60.0, 0.264),
-  (75.0, 0.303),
-  (90.0, 0.368),
-  (99.0, 0.454)
+  (30.0, 0.166),
+  (45.0, 0.215),
+  (60.0, 0.244),
+  (75.0, 0.271),
+  (90.0, 0.301),
+  (99.0, 0.353)
 ];
 
 /// その年の目標を決める。いまの総合評価 `ov` から、届くか届かないか五分五分ぐらいの高さにする。

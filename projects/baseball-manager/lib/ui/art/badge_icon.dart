@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../game/life.dart';
+import '../../game/player.dart';
 
 /// 丸いバッジのアイコン(`assets/icons/`)。読み込めなければ `fallback` を出す。
 /// 素材は Gemini で作ったイラスト(文字・ロゴ無し)を、円形に切って小さくしたもの。
@@ -35,7 +36,10 @@ class BadgeIcon extends StatelessWidget {
 }
 
 /// 行動(練習・特訓…)のバッジ絵。
-String planBadgeAsset(Plan a) => switch (a) {
+/// `focus` が投球の能力なら、「練習」は投げる絵にする(投手なのに打者の絵が出ていた。2026-11-03)。
+String planBadgeAsset(Plan a, [Ability? focus]) => switch (a) {
+      Plan.train when focus != null && pitcherAbilities.contains(focus) =>
+        pitcherTrainBadgeAsset,
       Plan.train => 'assets/icons/plan_train.png',
       Plan.special => 'assets/icons/plan_special.png',
       Plan.rest => 'assets/icons/plan_rest.png',
@@ -46,6 +50,7 @@ String planBadgeAsset(Plan a) => switch (a) {
     };
 
 const autoYearBadgeAsset = 'assets/icons/plan_auto.png';
+const pitcherTrainBadgeAsset = 'assets/icons/plan_train_pitcher.png';
 
 /// 下のタブ(育成・能力・キャリア・関係)のバッジ絵。
 const tabBadgeAssets = <String>[

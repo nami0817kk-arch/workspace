@@ -1,0 +1,131 @@
+# 物語完結型ショート 生類憐みの令 s4（2026-11-17）。本編 scripts/shorui-story.yaml（11/21 12:00 公開予定、https://youtu.be/CHq4clT-WUY）から。11/22 に予約。
+# 形式は titanic_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/生類憐みの令_facts_20261116.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/shorui/main/ の N01〜N26）の切り出しだけ。新しい絵は作らない（N09・N19 は使わない。N19 には今の石油ファンヒーターとコンセントが描かれている）。犬や人の死体・惨状・顔は絵にしない。
+# 切り口：「戌年だから犬を大事に」と隆光が勧めた話は、最初の触れ（1685年7月）と隆光の江戸入り（1686年）の年が合わない。教科書は『三王外記』にもとづく理解とする（本編の第5章）。
+# 計算（自分で計算し直した）：1686−1685＝翌年／綱吉の生年1646（正保3）＝丙戌
+title: "生類憐みの令｜戌年だから犬を、の話は年が合わない"
+yt_title: "生類憐みの令は、綱吉が戌年生まれだから？　僧の隆光が勧めたという話と、最初の触れの年が合わない"
+description: |-
+  将軍は戌年の生まれだから、犬を大事にすれば子に恵まれる。僧の隆光が、徳川綱吉にそう勧めた、という話があります。
+  けれど、最初の触れとしてよく挙げられる触れは1685年の7月、隆光が江戸の知足院に入ったのは、その翌年の1686年です。2013年の山川出版社の高校の教科書は、この話は『三王外記』という一冊の本にもとづく理解だと思われる、としています。
+  本編では、触れの中身・罰の記録・悪い評判の出どころを並べて、生類憐みの令は本当に悪法だったのかを確かめています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#生類憐みの令"
+- "#日本史"
+- "#歴史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/shorui
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: shorui_story_s4
+header:
+  tag: "生類憐みの令　戌年の話"
+  title: "戌年だから犬を？　《年》が合わない"
+now:
+- {at: "1646年", text: "1646年　綱吉の生まれ", point: 0}
+- {at: "1685年", text: "1685年7月　最初の触れ", point: 1}
+- {at: "1686年", text: "1686年　隆光、江戸へ", point: 2}
+timeline:
+- {label: "1646"}
+- {label: "1685"}
+- {label: "1686"}
+shots:
+  N18_1:
+    kind: "ai"
+    file: "shorui/main/N18.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N18"
+  N04_2:
+    kind: "ai"
+    file: "shorui/main/N04.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "N04"
+  N03_3:
+    kind: "ai"
+    file: "shorui/main/N03.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "N03"
+  N18_4:
+    kind: "ai"
+    file: "shorui/main/N18.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "N18"
+  N17_5:
+    kind: "ai"
+    file: "shorui/main/N17.jpg"
+    focus: [0.65, 0.5]
+    move: "right"
+    must: "N17"
+  N25_6:
+    kind: "ai"
+    file: "shorui/main/N25.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "N25"
+  N20_7:
+    kind: "ai"
+    file: "shorui/main/N20.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "N20"
+  N17_8:
+    kind: "ai"
+    file: "shorui/main/N17.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "N17"
+lines:
+  # fact: shorui-05
+- 語り: "犬を大事にすれば、子に恵まれる。将軍は、戌年の生まれだから。僧の隆光が、綱吉にそう勧めた、という話がある。"
+  shot: N18_1
+  tone: 強調
+  pause: 0.12
+  # fact: shorui-22
+- 語り: "5代将軍、徳川綱吉は、1646年、正保3年の正月の生まれ。この年は、たしかに戌年だった。"
+  shot: N04_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-18, shorui-27
+- 語り: "けれど、年が合わない。最初の触れとして、よく挙げられる、犬や猫をつながなくてよいという触れは、1685年の7月。"
+  shot: N03_3
+  tone: 重い
+  pause: 0.12
+  # fact: shorui-18
+- 語り: "隆光が、江戸の知足院に入ったのは、その翌年、1686年だ。"
+  shot: N18_4
+  tone: 重い
+  pause: 0.12
+  # fact: shorui-18
+- 語り: "2014年の朝日新聞は、隆光自身の日記に、そうした記述はない、と紹介した。"
+  shot: N17_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-19
+- 語り: "2013年の山川出版社の高校の教科書は、この話は、『三王外記』という一冊の本にもとづく理解だと思われる、とする。太宰春台が書いたと伝わる本だ。"
+  shot: N25_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-21
+- 語り: "ただ、戌年の話は、綱吉のころに江戸へ上った、ドイツ人の医者、ケンペルも、迷信だとして、書き留めている。"
+  shot: N20_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: shorui-20, shorui-24
+- 語り: "では、生類憐みの令の悪い評判は、誰の筆から、広まったのか。"
+  shot: N17_8
+  tone: 疑問
+  pause: 0.15

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// 幅の広い端末(iPad など)か。これを超えると、列を広げて文字を少し大きくする。
-const tabletWidth = 700.0;
+/// 幅の広い端末(iPad など)か。横画面専用なので、スマホの横(〜932)より広いところを iPad とする。
+/// これを超えると、画面全体を拡大して、列を広げる。
+const tabletWidth = 1000.0;
 
 bool isTablet(BuildContext context) => MediaQuery.sizeOf(context).width >= tabletWidth;
 

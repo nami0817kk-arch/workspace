@@ -1,0 +1,161 @@
+# 物語完結型ショート 曹操 s4（2026-10-29）。本編 scripts/sosou-story.yaml の第4章（3枚の銭と魏武王の石牌）から。11/2 公開。
+# 形式は takasugi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/sosou/main/S02・S04・S11〜S15。人物は手もとのみ・骨は描かない）と実在の写真（西高穴2号墓の墓道、2013年、Rolfmueller、CC BY-SA 3.0。画面の左下に出典を出し、概要欄にも書く）。
+# 事実カード（dev/output/rekishi-chiso/research/曹操_facts_20261029.yaml）：sosou-01・03・04・15・16
+#   ・墓の発表・銭3枚・玉石の飾り・石牌8件・遣冊の説明は中国新聞網の報道（潘偉斌・専門家の説明を伝える。sosou-03・04・15・16）→「と発表した」「と説明した」。
+#   ・墓は曹操の墓と発表されたもので、認定には異論がある（別の回 s5）→「曹操の墓と発表された墓」と留める。
+# 理解テスト4問：
+#   ①誰の話か：曹操の墓と発表された、河南省安陽の墓（2009年）
+#   ②いつ・どこで何が：約1年の発掘。盗まれたあとの墓から、出た銭は3枚。石の札に「黄豆二升」「刀尺一」
+#   ③それは何か：専門家は石牌を副葬品の目録（遣冊）と説明。「魏武王」と刻まれた石牌は8枚
+#   ④どうなったか：曹操は遺令で「金玉珍宝を蔵むること無かれ」と命じていた。銭3枚・大豆二升の中身は、簡素に、の遺言を思わせる
+title: 曹操の墓と発表された墓から出た、銭は3枚
+yt_title: 曹操の墓から出た銭は、たった3枚　石の札に刻まれた「黄豆二升」と「魏武王」
+description: |-
+  2009年12月、中国の河南省文物局は、安陽の西高穴村で、「魏武王曹操高陵」が見つかった、と発表しました。
+  中国新聞網が伝える潘偉斌さんの説明によれば、発掘は2008年12月中旬から、およそ1年。盗掘にあったあとの墓から出た銭は、わずか3枚でした。玉やメノウの飾り、金の糸、銀の環、雲母の薄片も出ています。
+  石の札には、副葬品の名と数が刻まれていました。「黄豆二升」「刀尺一」。専門家は、副葬品の目録、遣冊の役目だと説明しています。「魏武王」と刻まれた圭の形の石の札は8件で、7件は発掘で出て、1件は盗掘した者から取り戻したものです。
+  曹操は遺令で、「斂むるに時服を以てし、金玉珍宝を蔵むること無かれ」と命じていました（『三国志』武帝紀）。この墓を曹操の墓とすることには、異論もあります。
+  写真：西高穴2号墓の墓道（2013年、Rolfmueller撮影、CC BY-SA 3.0、ウィキメディア・コモンズ）
+hashtags: ["#曹操", "#曹操高陵", "#世界史"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/sosou
+out: sosou_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 曹操の墓と発表された墓（河南省安陽）
+  title: "出た銭は、たった《3枚》"
+now:
+  - {at: 2008年12月, text: "2008年12月　河南省安陽", point: 0}
+  - {at: 2009年12月, text: "2009年12月　発表", point: 1}
+timeline:
+  - {label: "2008"}
+  - {label: "2009"}
+cards: []
+shots:
+  S12:                                   # 石の墓室（冒頭：銭は3枚）
+    kind: ai
+    file: sosou/main/S12.jpg
+    focus: [0.55, 0.55]
+    move: in
+    must: 暗い石の墓室と散らばる器
+  Photo:                                 # 2009年 発表（西高穴2号墓の墓道の写真）
+    kind: real
+    image: paintings/sosou_xigaoxue_tomb2_front_2013.jpg
+    focus: [0.5, 0.5]
+    move: in
+    credit: "西高穴2号墓の墓道（2013年、Rolfmueller撮影、CC BY-SA 3.0）"
+    must: 墓道の写真
+  S11:                                   # 墓道と石の入口
+    kind: ai
+    file: sosou/main/S11.jpg
+    focus: [0.5, 0.55]
+    move: down
+    must: 黄土の長い墓道と石の入口
+  S14:                                   # 玉・金の糸・銀の環
+    kind: ai
+    file: sosou/main/S14.jpg
+    focus: [0.55, 0.85]
+    move: right
+    zoom: 0.12
+    must: 金糸・銀の環・玉の小皿
+  S13:                                   # 石の札（黄豆二升）
+    kind: ai
+    file: sosou/main/S13.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 銅の鎖でつながれた石の札
+  S13b:                                  # 魏武王の石牌
+    kind: ai
+    file: sosou/main/S13.jpg
+    focus: [0.75, 0.55]
+    move: left
+    zoom: 0.1
+    must: 並ぶ石の札
+  S02:                                   # 目録（書庫の竹簡）
+    kind: ai
+    file: sosou/main/S02.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 竹簡の棚が並ぶ書庫
+  S15q:                                  # 最後の問い（夕暮れの原）
+    kind: ai
+    file: sosou/main/S15.jpg
+    focus: [0.3, 0.55]
+    move: in
+    text_y: 0.74
+    must: 夕暮れの黄土の平原
+  S04:                                   # 遺令（手もと）
+    kind: ai
+    file: sosou/main/S04.jpg
+    focus: [0.7, 0.4]
+    move: in
+    must: 灯の下で竹簡に筆を走らせる手もと
+  S12b:                                  # 簡素な中身
+    kind: ai
+    file: sosou/main/S12.jpg
+    focus: [0.35, 0.8]
+    move: right
+    zoom: 0.12
+    text_y: 0.74
+    must: 墓室の床の素焼きの器
+lines:
+  # fact: sosou-15
+  - 語り: 曹操の墓と発表された墓から、出た銭は、たった3枚だった。
+    shot: S12
+    tone: 強調
+  # fact: sosou-03
+  - 語り: 2008年12月から、およそ1年の発掘。2009年12月、河南省文物局は、「魏武王曹操高陵が、見つかった」と発表した。
+    shot: Photo
+    tone: しみじみ
+    pause: 0.12
+  # fact: sosou-15
+  - 語り: 盗まれたあとの墓から、銭は、わずか3枚。
+    shot: S11
+    tone: 重い
+    pause: 0.12
+  # fact: sosou-15
+  - 語り: ほかに出たのは、玉やメノウの飾り、金の糸、銀の環。
+    shot: S14
+    tone: しみじみ
+    pause: 0.12
+  # fact: sosou-16
+  - 語り: 石の札には、副葬品の名と数が、刻まれていた。「黄豆二升」。大豆が、二升。「刀尺一」。
+    shot: S13
+    tone: 強調
+    pause: 0.12
+  # fact: sosou-16
+  - 語り: 専門家は、副葬品の目録、遣冊の役目だ、と説明した。
+    shot: S02
+    tone: しみじみ
+    pause: 0.12
+  # fact: sosou-04
+  - 語り: 「魏武王」と刻まれた石の札は、8枚。7枚は発掘で出て、1枚は、盗掘した者から、取り戻した品だ。
+    shot: S13b
+    tone: 重い
+    pause: 0.12
+  # fact: sosou-01
+  - 語り: 曹操は、遺令で、命じていた。『三国志』の武帝紀によれば、「金玉珍宝を蔵むること無かれ」。
+    shot: S04
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 簡素に、と命じた人の墓と発表された墓は、銭3枚と、わずかな金や玉の飾りだった。
+    shot: S12b
+    tone: しみじみ
+    pause: 0.12
+  - 語り: あなたなら、この中身を、遺言どおりだと言いますか。
+    shot: S15q
+    tone: 疑問
+    pause: 0.15

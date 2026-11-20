@@ -7,6 +7,7 @@ import '../models/league.dart';
 import '../models/team.dart';
 import '../models/match_result.dart';
 import '../l10n/tr.dart';
+import 'economy_scale.dart';
 
 /// シーズン終了時の監督契約の去就。
 enum ManagerContractEvent {
@@ -42,15 +43,18 @@ class BoardEngine {
     return (years: years, event: ManagerContractEvent.none);
   }
 
-  /// ディビジョンごとの週給予算の基準値(万円/週)。下位リーグほど
+  /// ディビジョンごとの給与予算の基準値(万円/週)。下位リーグほど
   /// 人件費に厳しく、昇格すると理事会が予算を引き上げる。
-  static int wageBudgetBaseForTier(int tier) => switch (tier) {
-        1 => 700,
-        2 => 480,
-        3 => 330,
-        4 => 230,
-        _ => 160,
-      };
+  ///
+  /// その部の真ん中くらいのクラブの年収([typicalAnnualIncome])の
+  /// [wageBudgetBaseIncomeShare] を、週あたりにした額。選手の給与は能力から
+  /// 決まり、1部の主力は年俸で億の桁になるので、枠も同じ桁で持たないと
+  /// 昇格した途端に誰も獲れなくなる。
+  static int wageBudgetBaseForTier(int tier) =>
+      (typicalAnnualIncome(tier) * wageBudgetBaseIncomeShare / 52).round();
+
+  /// 給与予算の基準が年収に占める割合。
+  static const double wageBudgetBaseIncomeShare = 0.55;
 
   /// 理事会が設定する週給総額の上限(万円/週)。ティア基準値と
   /// 「現在の週給総額+基準値の25%の余裕」の大きい方を採用するため、
@@ -75,9 +79,10 @@ class BoardEngine {
   /// 見積もりは、そのティアに実際に来る人材の相場から出す
   /// (StaffMember.expectedAbilityForTier)。willJoin と同じ式から導くので、
   /// 雇える人材と見積もりがずれない。
-  static int staffWageAllowanceFor(int tier) =>
+  static int staffWageAllowanceFor(int tier) => scaleMoneyForTier(
+      tier,
       StaffMember.askingWage(StaffMember.expectedAbilityForTier(tier)) *
-      StaffRole.values.length;
+          StaffRole.values.length);
 
   static int wageBudgetFor({
     required int tier,
@@ -88,7 +93,7 @@ class BoardEngine {
       wageBudgetBaseForTier(tier),
       (weeklyIncome * wageBudgetIncomeShare).round(),
     );
-    final headroom = max(60, (base * 0.4).round());
+    final headroom = max(scaleMoneyForTier(tier, 60), (base * 0.4).round());
     return max(base, currentWeeklyWageBill + headroom) +
         staffWageAllowanceFor(tier);
   }
@@ -186,6 +191,19 @@ class BoardEngine {
     if (userGoals > oppGoals) return 3;
     if (userGoals == oppGoals) return 0;
     return -3;
+  }
+
+  /// この値を超えた分の一部を、シーズン終了時に失う(期待への慣れ)。
+  static const int adaptationLine = 75;
+
+  /// 慣れで失う割合(%)。
+  static const int adaptationPercent = 40;
+
+  /// シーズン終了時の慣れを反映した信頼度。[adaptationLine] 以下は変わらない。
+  static int afterAdaptation(int confidence) {
+    if (confidence <= adaptationLine) return confidence;
+    final lost = ((confidence - adaptationLine) * adaptationPercent / 100).round();
+    return (confidence - lost).clamp(0, 100);
   }
 
   /// シーズン終了時の順位評価による信頼度の増減量を返す。

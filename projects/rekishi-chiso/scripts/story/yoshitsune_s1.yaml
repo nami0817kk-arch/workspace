@@ -1,0 +1,132 @@
+# 物語完結型ショート 義経（もしも） s1（2026-11-13）。本編 scripts/yoshitsune-if-story.yaml（11/15 12:00 公開、https://youtu.be/AI_giM-Gij8）から。11/16 に予約。
+# 切り口：院の「弓矢を袋にしまえ」と、頼朝が退けたこと（本編序章・第5章。yoshitsune-11, 13, 35, 36）。
+# 計算：7/16（院宣）→7/19（出発）＝3日後。宣旨は7/19付で、陣に着いたのは9/9（本編と同じ「7週間ほどあと」）。
+# 理解テスト4問：①後白河院と頼朝 ②1189年6月8日に院が「弓矢を袋にしまえ」と返し、7月に頼朝は院宣を退けて鎌倉を出発 ③頼朝は待たなかった（理由は記録にない）。宣旨は着くのが遅れた ④義経の死後も戦いは止まらなかった。もしもの問いは本編へ
+# 事実は事実カード（dev/output/rekishi-chiso/research/源義経_facts_20261112.yaml）と本編の # fact: だけ。想像の台詞なし。「もしも」の話は「もしもの話」と言ってから。
+# 絵は本編の AI 絵（out/story/yoshitsune-if/main の B 番号）の再利用だけ。新しい絵は作らない。B11（大物浦）・B07（平泉の町並み）・B17（蓮）は当てない。人物の顔・戦い・首・妻子の最期の絵なし。
+# 吾妻鏡の1185〜89年の本文は読み下しで読んだもの（本編と同じ扱い）。干支は使わない。
+
+title: "義経｜院は「弓矢を袋にしまえ」と言った"
+yt_title: "義経が死んでも戦いは止まらなかった　院の「弓矢を袋にしまえ」を頼朝が退けた日"
+description: |-
+  1189年6月8日、後白河院は頼朝に「国じゅうは静まるはずだ。今は、弓矢を袋にしまいなさい」と返しました。吾妻鏡に載る返事です。義経が討たれたあとのことです。
+  頼朝は従いませんでした。7月16日に「今年ばかりは待て」という院宣が届いても、どうして来年を待てようか、と退け、7月19日に鎌倉を出発します。追討の宣旨は7月19日付で、陣に届いたのは7週間ほどあとの9月9日でした。大石直正さんは、合戦のあとに事後承認の形で届いたと書き、入間田宣夫さんは、宣旨は求めたが宣下を待たずに出発したと書きます。
+  吾妻鏡の1185〜89年の本文は、読み下し文で確かめたものです。原文との照合は行っていません。
+  もしも義経が戦わず平泉にとどまっていたら、奥州藤原氏は滅びなかったのか。本編は次のリンクからどうぞ。
+hashtags:
+- "#源義経"
+- "#鎌倉時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/yoshitsune-if
+out: yoshitsune_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "もしも義経が平泉にとどまったら"
+  title: "院の言葉を、頼朝は《退けた》"
+now:
+- {at: "1189年", text: "1189年6月　院の返事", point: 0}
+- {at: "7月16日", text: "1189年7月　院宣を退ける", point: 0}
+timeline:
+- {label: "1189"}
+shots:
+  B01_in6:
+    kind: "ai"
+    file: "yoshitsune-if/main/B01.jpg"
+    focus: [0.62, 0.5]
+    move: "in"
+    must: "院の御所の一室、灯と控える公家の後ろ姿"
+  B01_right6:
+    kind: "ai"
+    file: "yoshitsune-if/main/B01.jpg"
+    focus: [0.62, 0.5]
+    move: "right"
+    must: "院の御所の一室、灯と控える公家の後ろ姿"
+  B02_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "鎌倉の武家屋敷の広間、庭を向く武将の後ろ姿"
+  B03_right4:
+    kind: "ai"
+    file: "yoshitsune-if/main/B03.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "夏の奥州の丘を進む騎馬の列（遠景）"
+  B18_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B18.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯のそばの机の古い日記の巻物"
+  B14_left6:
+    kind: "ai"
+    file: "yoshitsune-if/main/B14.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "灯のそばの机に広げた巻物と筆"
+  B15_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B15.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "丘の斜面の堀と土塁（阿津賀志山の想像図）"
+  T01_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/T01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "平泉を見下ろす丘に立つ武者の後ろ姿"
+lines:
+  # fact: yoshitsune-11
+- 語り: "《弓矢を袋にしまいなさい》。引退した天皇、後白河院は、源頼朝に、そう返した。"
+  shot: B01_in6
+  tone: 強調
+  pause: 0.12
+  # fact: yoshitsune-11
+- 語り: "1189年6月8日。義経が討たれたと知った院は、喜んだ、と吾妻鏡は書く。"
+  shot: B01_right6
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-13
+- 語り: "だが頼朝は、従わなかった。7月16日、今年ばかりは待て、という院宣が届いても、どうして来年を待てようか、と退けた。"
+  shot: B02_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshitsune-13
+- 語り: "3日後の7月19日、鎌倉を出発。吾妻鏡は、1000騎と記す。"
+  shot: B03_right4
+  tone: 重い
+  pause: 0.12
+  # fact: yoshitsune-13
+- 語り: "追討の宣旨も、7月19日付だ。けれど頼朝の陣に届いたのは、7週間ほどあとの、9月9日だった。"
+  shot: B18_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshitsune-35, yoshitsune-36
+- 語り: "大石直正さんは、宣旨は合戦のあとに、事後承認の形で届いた、と書く。入間田宣夫さんは、宣旨を求めたが、待たずに出発した、と書く。"
+  shot: B14_left6
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-13
+- 語り: "義経が死んだあとも、頼朝は攻めた。戦いは、止まらなかった。"
+  shot: B15_in5
+  tone: 重い
+  pause: 0.12
+  # fact: （本編へ）
+- 語り: "ここからは、もしもの話。義経が戦わず、平泉にとどまっていたら、奥州藤原氏は、滅びなかったのか。"
+  shot: T01_in5
+  tone: 疑問
+  pause: 0.15

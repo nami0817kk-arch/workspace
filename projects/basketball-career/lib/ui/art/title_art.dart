@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-/// はじめの画面の絵。夕焼けの屋外コートで、ゴールを見上げる少年(Gemini で生成した絵、`assets/art/title.jpg`)。
+/// はじめの画面の絵。GMの部屋の窓から、夜のアリーナを見下ろす後ろ姿(2026-11-20 に Cloudflare の FLUX で作り直した絵、`assets/art/title.jpg`)。
 /// 読み込めなければ、コードで描いた夕焼けの絵(ゴールに向かうボールと街のシルエット)に戻る。
 class TitleArt extends StatelessWidget {
   const TitleArt({super.key, this.height = 190});
@@ -157,4 +157,56 @@ class _TitlePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_TitlePainter old) => false;
+}
+
+/// ホームの上に置く、いまの時期の場面の帯(高さ [height])。下を暗くして、左下に時期の名前を載せる。
+class SceneStrip extends StatelessWidget {
+  const SceneStrip(this.asset, this.label, {super.key, this.height = 92});
+  final String asset;
+  final String label;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: SizedBox(
+          height: height,
+          width: double.infinity,
+          child: Stack(fit: StackFit.expand, children: [
+            ArtBanner(asset, height: height),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x00000000), Color(0xB3000000)],
+                  stops: [0.35, 1],
+                ),
+              ),
+            ),
+            Positioned(
+              left: 14,
+              bottom: 8,
+              child: Text(label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white, shadows: [Shadow(blurRadius: 6)])),
+            ),
+          ]),
+        ),
+      );
+}
+
+/// 出来事(トレード成立・契約・けが・指名)の小さな絵。角を丸めた横長。
+class EventArt extends StatelessWidget {
+  const EventArt(this.asset, {super.key, this.width = 120, this.height = 68});
+  final String asset;
+  final double width, height;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: SizedBox(
+          width: width,
+          height: height,
+          child: Image.asset(asset, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const ColoredBox(color: Color(0xFF213150))),
+        ),
+      );
 }

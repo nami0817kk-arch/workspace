@@ -201,6 +201,8 @@ extension GameStateMatch on GameState {
     final league = _save!.league;
     final next = league.nextUnplayedFixture;
     if (next == null) return null;
+    // 今日をこの節の試合日へ進める。
+    _advanceTodayTo(dateOfMatchday(next.matchday));
 
     // 既に外側の処理(simulateAheadMatchdays等)がisBusyにしている場合は、
     // ここで自分がfalseに戻してしまわないようにする。
@@ -210,23 +212,51 @@ extension GameStateMatch on GameState {
       _notify();
     }
 
-    _save!.trainingDoneThisWeek = false;
-
-    // トレーニング自動化が有効な場合、この節の分をここで自動的に実施する。
-    if (userTeam.autoTrainingEnabled) {
-      await runWeeklyTraining();
+    // この節の週の処理は済んでいる(試合の途中でアプリが終わった)。
+    // 週の処理を二度かけず、試合だけを途中から再開する。
+    if (_save!.weekProcessedSeason == league.season &&
+        _save!.weekProcessedMatchday == next.matchday) {
+      return _resumeInterruptedMatchday(
+        next,
+        interactive: interactive,
+        wasAlreadyBusy: wasAlreadyBusy,
+      );
     }
 
+    _save!.trainingDoneThisWeek = false;
+
+    // 勝負の試合でなければ、先発と構えは監督が決める。
+    _managerPreparesMatch(next);
+    // 節の区切りで、オーナーの判断を迫る事件が起きる。
+    _maybeRaiseOwnerEvent(next.matchday);
+    // たまに、看板選手の移籍の噂が出る(記者会見で答える)。
+    _maybeRaiseRumor();
+    _refreshProposals();
+
+    // 練習はコーチ陣の仕事。オーナーは触れないので、この節の分をここで必ず実施する。
+    await runWeeklyTraining();
+
+    // リーグカップは4節ごとに1回戦をまとめて消化する。週の回復より前に
+    // 済ませる(復帰したばかりの選手の試合勘を、カップの試合で戻さない)。
+    _playLeagueCupIfDue();
+
     // 週の経過による負傷回復と自然な疲労回復(休養日)。
-    // 疲労回復は個別のトレーニング方針(休養特訓)とは別に、全チーム・
+    // 疲労回復はトレーニング方針(休養)とは別に、全チーム・
     // 全選手へ毎週一律で適用する。CPUクラブは練習メニューを設定できず、
     // これを怠ると試合の疲労蓄積だけが積み重なって疲労が上限に張り付き
     // 続けてしまうため。復帰直後は試合勘が鈍っているためマッチシャープ
     // ネスを大きく下げる。
     for (final t in league.teams) {
+      final mine = t.id == _save!.userTeamId;
       for (final p in t.players) {
         if (p.injuryWeeks > 0) {
           p.injuryWeeks -= 1;
+          // 自クラブの選手が治ったら、保存療法の再発を振る。
+          if (p.injuryWeeks == 0 &&
+              mine &&
+              _onUserInjuryHealed(p, GameState._offerRng.nextDouble())) {
+            continue;
+          }
           if (p.injuryWeeks == 0) {
             p.matchSharpness = min(p.matchSharpness, 40);
             p.injuryType = null;
@@ -239,7 +269,7 @@ extension GameStateMatch on GameState {
     // ユーザークラブのみローン期間(週単位)を処理する（CPUクラブは対象外）。
     // 選手契約自体は年単位で結ばれ、シーズン開始時にまとめて消化する
     // (startNextSeason参照)。
-    final loanEnded = ContractEngine.advanceLoanWeek(userTeam);
+    final loanEnded = ContractEngine.advanceLoanWeek(userTeam, today: today);
     for (final p in loanEnded) {
       _clearPlayerRoleReferences(userTeam, p.id);
     }
@@ -249,10 +279,15 @@ extension GameStateMatch on GameState {
     // 緊急補強してスカッドが組めなくなる事態を防ぐ(安全網)。
     lastEmergencySignings = [];
     while (userTeam.players.length < minSquadSize) {
-      final signing = FreeAgentEngine.generateEmergencySigning();
+      final signing = FreeAgentEngine.generateEmergencySigning(
+          squadMedian: _squadMedianOverall);
       ContractEngine.renewContract(signing);
       userTeam.players.add(signing);
       lastEmergencySignings.add(signing.name);
+    }
+    // ローン満了でスタメンから外れた枠を埋める。埋めないと10人で戦う。
+    if (loanEnded.isNotEmpty) {
+      LineupUtils.fillVacancies(userTeam);
     }
 
     // 選手の不満度を更新する。
@@ -265,10 +300,18 @@ extension GameStateMatch on GameState {
       leagueRank: preMatchRank,
       boardTargetRank: _save!.boardTargetRank,
     );
-    // 個別声かけ(モチベーショントーク)のクールダウンも週次で減らす。
-    for (final p in userTeam.players) {
-      if (p.talkCooldownWeeks > 0) p.talkCooldownWeeks -= 1;
-    }
+    // 監督の立場(目標の順位との比べ)と、若手を使う監督の効き目。
+    _updateManagerWeekly(preMatchRank);
+    // 序列を約束した選手を、先発から外し続けていないか。
+    _checkPromisesWeekly();
+    // 大きな怪我は、手術か保存療法かを選ばせる。
+    _reviewInjuries();
+    // 前の週に2試合以上戦っていたら、先発に疲れが残る(過密日程)。
+    _applyCongestion();
+    // 先発に入っていない21歳以下は、U21 の試合に出る。
+    _playU21Matchday();
+    // 先発に仲の良い選手・仲の悪い選手がいるか。
+    RelationsEngine.applyWeekly(userTeam);
     if (userTeam.tacticalMeetingCooldownWeeks > 0) {
       userTeam.tacticalMeetingCooldownWeeks -= 1;
     }
@@ -316,16 +359,16 @@ extension GameStateMatch on GameState {
     // スポンサー契約(年単位)の消化はシーズン開始時にまとめて処理する
     // (startNextSeason参照)。分割払いの引き落としは引き続き週次で行う。
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
-      _save!.pendingSponsorOffers = SponsorEngine.generateOffers(
+      _save!.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
         userTeam.overallRating,
         tier: _save!.currentDivisionTier,
         managerReputation: _save!.managerReputation,
         stadiumLevel:
             _save!.infrastructure.facilityLevel(FacilityType.stadium),
-      );
+      ));
     }
     for (final inst in List<Installment>.from(_save!.pendingInstallments)) {
-      _save!.budget -= inst.weeklyAmount;
+      _book(LedgerCategory.transfers, -(inst.weeklyAmount));
       inst.weeksRemaining -= 1;
       if (inst.weeksRemaining <= 0) {
         _save!.pendingInstallments.remove(inst);
@@ -334,7 +377,7 @@ extension GameStateMatch on GameState {
 
     // 融資の週次返済。
     for (final loan in List<BankLoan>.from(_save!.bankLoans)) {
-      _save!.budget -= loan.weeklyRepayment;
+      _book(LedgerCategory.financing, -(loan.weeklyRepayment));
       loan.weeksRemaining -= 1;
       if (loan.weeksRemaining <= 0) {
         _save!.bankLoans.remove(loan);
@@ -346,7 +389,7 @@ extension GameStateMatch on GameState {
     for (final deposit in List<FixedDeposit>.from(_save!.fixedDeposits)) {
       deposit.weeksRemaining -= 1;
       if (deposit.weeksRemaining <= 0) {
-        _save!.budget += deposit.maturityValue;
+        _book(LedgerCategory.financing, deposit.maturityValue);
         _save!.fixedDeposits.remove(deposit);
         lastMaturedDeposits.add(deposit);
       }
@@ -359,14 +402,17 @@ extension GameStateMatch on GameState {
     lastInternationalCallUps = _advanceInternationalDuty();
 
     // CPUクラブ同士の移籍市場の週次処理(ユーザーは関与しない)。
-    lastAiTransferNews = AiTransferEngine.maybeGenerate(
-      league.teams,
-      _save!.userTeamId,
-      GameState._aiTransferRng,
-    );
+    // 他のクラブも窓が開いている間しか移籍しない。
+    lastAiTransferNews = isTransferWindowOpen
+        ? AiTransferEngine.maybeGenerate(
+            league.teams,
+            _save!.userTeamId,
+            GameState._aiTransferRng,
+          )
+        : null;
 
-    // CPUクラブの簡易的な週次成長(ユーザーのように個別指導はできないが、
-    // 何もしないとユーザーだけがドリル等で伸び続けリーグ全体が停滞するため)。
+    // CPUクラブの簡易的な週次成長(施設・スタッフの上乗せは無いが、
+    // 何もしないとユーザーだけが伸び続けリーグ全体が停滞するため)。
     // あわせてセットプレー担当も自動更新し、移籍で放出入りした穴を埋める。
     for (final t in league.teams) {
       if (t.id == _save!.userTeamId) continue;
@@ -379,8 +425,6 @@ extension GameStateMatch on GameState {
     TrainingEngine.applyYouthAcademyGrowth(
       _save!.youthProspects,
       _save!.infrastructure.facilityLevel(FacilityType.youthFacility),
-      // メンターに指名された一軍のベテランは、ユースに足を運んで教える。
-      mentors: userTeam.players,
       coachSpecialty: _save!.infrastructure
               .staffFor(StaffRole.youthCoach)
               ?.specialty ??
@@ -395,20 +439,16 @@ extension GameStateMatch on GameState {
       _save!.youthProspects,
       facilityLevel:
           _save!.infrastructure.facilityLevel(FacilityType.youthFacility),
-      mentorIds: {
-        for (final p in _save!.youthProspects)
-          if (p.mentorId != null) p.id,
-      },
     );
     for (final d in lastYouthDepartures) {
-      _save!.budget += d.compensation;
+      _book(LedgerCategory.playerSales, d.compensation);
       _logNews(
         d.poached
             ? Tr.pick(
-                'ユースの${d.player.name}が他クラブに引き抜かれました(育成補償金 ${d.compensation}万円)',
-                'Academy player ${d.player.name} was poached by another club (compensation ${d.compensation})')
+                'ユースの${d.player.name}が他クラブに引き抜かれました(育成補償金 ${formatMoney(d.compensation)})',
+                'Academy player ${d.player.name} was poached by another club (compensation ${formatMoney(d.compensation)})')
             : Tr.pick(
-                'ユースの${d.player.name}が出場機会を求めてクラブを去りました(育成補償金 ${d.compensation}万円)',
+                'ユースの${d.player.name}が出場機会を求めてクラブを去りました(育成補償金 ${formatMoney(d.compensation)})',
                 'Academy player ${d.player.name} left in search of first-team football (compensation ${d.compensation})'),
         context: Tr.pick('ユース', 'Youth'),
       );
@@ -488,25 +528,23 @@ extension GameStateMatch on GameState {
 
     // ローン放出の週次処理(期間終了で自動的にチームへ復帰する)。
     lastLoanReturns = [];
-    for (final p in userTeam.players.where((p) => p.isLoanedOut)) {
+    for (final p in userTeam.players.where((p) => p.isLoanedOut).toList()) {
       // 武者修行: 貸出先で毎週実戦に出て成長する(若手ほど効果大)。
       TrainingEngine.applyLoanDevelopment(p);
-      p.loanedOutWeeksRemaining -= 1;
-      if (p.loanedOutWeeksRemaining <= 0) {
-        final loanClub = p.loanedOutToClubName;
-        p.loanedOutToClubName = null;
-        lastLoanReturns.add(p.name);
-        if (p.loanStartOverall > 0) {
-          final delta = p.overall - p.loanStartOverall;
-          _logNews(
-            Tr.pick(
-                '${p.name}が武者修行(${loanClub ?? 'ローン先'})から復帰。総合 ${p.loanStartOverall}→${p.overall}${delta > 0 ? '(+$delta成長)' : ''}',
-                "${p.name} is back from his loan at ${loanClub ?? 'his loan club'}. Overall ${p.loanStartOverall}→${p.overall}${delta > 0 ? ' (+$delta)' : ''}"),
-            context: Tr.pick('ローン復帰', 'Loan return'),
-          );
-          p.loanStartOverall = 0;
+      final until = p.loanedOutUntil;
+      if (until != null) {
+        // 日付で持つ貸し出しは、戻る日に届いたら戻す。
+        if (!today.isBefore(until)) {
+          _returnFromLoan(p);
+        } else {
+          final days = TransferWindowCalendar.daysBetween(today, until);
+          p.loanedOutWeeksRemaining = max(1, (days / 7).ceil());
         }
+        continue;
       }
+      // 日付の無い貸し出し(旧セーブを読む前に作った選手など)は週数で数える。
+      p.loanedOutWeeksRemaining -= 1;
+      if (p.loanedOutWeeksRemaining <= 0) _returnFromLoan(p);
     }
 
     // 成長推移の記録(自クラブの選手とユース昇格候補のみ)。選手詳細の
@@ -540,7 +578,8 @@ extension GameStateMatch on GameState {
         );
         continue;
       }
-      final weather = WeatherEngine.roll();
+      // 天気は季節(今日の月)に合わせる。
+      final weather = WeatherEngine.roll(month: today.month);
       f.weather = weather;
       // CPUクラブは対戦相手との力関係で試合ごとに姿勢を選ぶ
       // (ユーザーの設定には触れない)。
@@ -550,7 +589,6 @@ extension GameStateMatch on GameState {
       if (isUserFixture) {
         userFixture = f;
         _liveWasInteractive = interactive;
-        lastShootout = null;
         final state = MatchEngine.beginInteractiveHalf(
           home: home,
           away: away,
@@ -603,8 +641,20 @@ extension GameStateMatch on GameState {
       }
     }
 
-    var income = weeklyIncomeFor(_save!.userTeamId);
+    // 他国の1部も同じ節を裏で進める。
+    _playForeignMatchday(md);
+
+    // 試合の日に入るのは観客・スポンサー・グッズ。放映権は年4回の入金日に、
+    // 給与は毎月末に払う(MoneyCalendar)。
+    final incomeParts = weeklyIncomeParts(_save!.userTeamId);
+    final partsTotal =
+        incomeParts.gate + incomeParts.sponsor + incomeParts.merchandise;
+    var income = partsTotal;
     final isDerby = userFixture != null && isRivalFixture(userFixture);
+    // 祝日の試合は客が増える(リーグ戦のみ)。
+    final holiday = userFixture == null
+        ? null
+        : MoneyCalendar.holidayName(dateOfMatchday(md), currentLeagueTheme);
 
     // ダービーは客が増える。ただし**入れる人数以上からは入場料を取れない**。
     // 観客数だけを収容人数で頭打ちにして、収入には倍率をそのまま掛けていた
@@ -617,24 +667,38 @@ extension GameStateMatch on GameState {
       attendance =
           (attendance * GameState.derbyAttendanceMultiplier).round();
     }
+    if (holiday != null) {
+      attendance =
+          (attendance * MoneyCalendar.holidayAttendanceMultiplier).round();
+    }
     final actualAttendance = attendance.clamp(0, stadiumCapacity);
     lastMatchAttendance = actualAttendance;
-    if (isDerby) {
+    if (isDerby || holiday != null) {
       income = GameState.derbyAdjustedIncome(
         income,
         baseAttendance: baseAttendance,
         actualAttendance: actualAttendance,
       );
     }
-    _save!.budget += income;
-    _save!.budget -= weeklyWageBill;
+    // 収入は内訳ごとに記録する。ダービー・祝日で増えた分は観客収入に入れる。
+    // 年間シートで先に売った分は、節ごとの入場収入から除く(ダービー・祝日で
+    // 増えた分は当日券なので、そのまま入る)。
+    final gateNow = SeasonTicketEngine.remainingGate(
+        incomeParts.gate, seasonTicketShareNow);
+    _book(LedgerCategory.gate, gateNow + (income - partsTotal));
+    _book(LedgerCategory.sponsor, incomeParts.sponsor);
+    _book(LedgerCategory.merchandise, incomeParts.merchandise);
+    // 営業ブーストは、収入が入った節で1つ使う。
+    if (_save!.marketingBoostWeeks > 0) _save!.marketingBoostWeeks -= 1;
+    // 試合日のイベントも、収入が入った節で使い切る。
+    _consumeMatchdayPromo();
 
     // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合・カップ戦は対象外)。
     if (userFixture != null) {
       lastAppearanceFeesPaid = userTeam.players
           .where((p) => userTeam.startingXI.contains(p.id))
           .fold<int>(0, (s, p) => s + p.appearanceFee);
-      _save!.budget -= lastAppearanceFeesPaid;
+      _book(LedgerCategory.appearanceFees, -(lastAppearanceFeesPaid));
     } else {
       lastAppearanceFeesPaid = 0;
     }
@@ -644,21 +708,22 @@ extension GameStateMatch on GameState {
     } else {
       _save!.consecutiveNegativeBudgetWeeks = 0;
     }
+    // 給料が払えない状態が続くと、選手は催告のうえ契約を解除できる。
+    _checkUnpaidWages();
     final budgetConfidenceDelta = BoardEngine.negativeBudgetConfidenceDelta(
       _save!.consecutiveNegativeBudgetWeeks,
     );
     if (budgetConfidenceDelta != 0) {
-      _save!.confidence = (_save!.confidence + budgetConfidenceDelta).clamp(
-        0,
-        100,
+      // 資金のマイナスは、成績に由来する信頼度ではなく株主の期待を下げる。
+      _save!.shareholderExpectation = ShareholderEngine.applied(
+        _save!.shareholderExpectation,
+        budgetConfidenceDelta,
       );
       lastBudgetCrisisWarning = Tr.pick(
-          '資金マイナスが${_save!.consecutiveNegativeBudgetWeeks}週続いています。理事会の信頼度が低下しました。',
-          "You have been in the red for ${Tr.plural(_save!.consecutiveNegativeBudgetWeeks, 'week')}. The board's confidence has slipped.");
+          '資金マイナスが${_save!.consecutiveNegativeBudgetWeeks}週続いています。株主の期待が低下しました。',
+          "You have been in the red for ${Tr.plural(_save!.consecutiveNegativeBudgetWeeks, 'week')}. The shareholders' confidence has slipped.");
     }
 
-    // 移籍市場は全員を作り直さず、数人だけ入れ替える(持続的な市場)。
-    transferMarket = TransferMarket.rotate(transferMarket);
     transferOffersRejectedThisWeek.clear();
     _refreshScoutCandidates();
 
@@ -687,8 +752,8 @@ extension GameStateMatch on GameState {
       final maturedTotal =
           lastMaturedDeposits.fold<int>(0, (s, d) => s + d.maturityValue);
       _logNews(
-          Tr.pick('定期預金が満期を迎え、$maturedTotal万円が払い戻されました',
-              'Your deposit matured and $maturedTotal was paid back'),
+          Tr.pick('定期預金が満期を迎え、${formatMoney(maturedTotal)}が払い戻されました',
+              'Your deposit matured and ${formatMoney(maturedTotal)} was paid back'),
           context: newsWeek);
     }
     if (lastAiTransferNews != null) {
@@ -726,12 +791,161 @@ extension GameStateMatch on GameState {
       _liveSubstitutionsUsed = 0;
     }
 
+    // 週の処理を済ませた印と、試合の途中経過を同じ保存に載せる。
+    _save!.weekProcessedSeason = league.season;
+    _save!.weekProcessedMatchday = md;
+    _recordLiveProgress();
+
     if (!wasAlreadyBusy) {
       isBusy = false;
     }
     _notify();
     await _persistNow();
     return userFirstHalf;
+  }
+
+  /// 週の処理が済んだ節を、試合だけ再開する。
+  ///
+  /// 保存してある途中経過([SaveGame.liveMatchProgress])があれば、その続き
+  /// から進める。前半で負けている試合を落としても、確定した得点は残る。
+  Future<HalfResult?> _resumeInterruptedMatchday(
+    Fixture next, {
+    required bool interactive,
+    required bool wasAlreadyBusy,
+  }) async {
+    final league = _save!.league;
+    final md = next.matchday;
+    final saved = _save!.liveMatchProgress;
+    final progress =
+        saved != null && saved.season == league.season && saved.matchday == md
+            ? saved
+            : null;
+    final userId = _save!.userTeamId;
+    Fixture? userFixture;
+    HalfResult? userFirstHalf;
+    _liveSecondHalfResume = null;
+    for (final f in league.fixturesForMatchday(md)) {
+      if (f.result != null) continue;
+      final home = _findTeam(league.teams, f.homeTeamId);
+      final away = _findTeam(league.teams, f.awayTeamId);
+      if (home == null || away == null) {
+        f.result = MatchResult(
+          matchday: md,
+          homeTeamId: f.homeTeamId,
+          awayTeamId: f.awayTeamId,
+          homeGoals: 0,
+          awayGoals: 0,
+          events: const [],
+        );
+        continue;
+      }
+      final weather = f.weather ?? WeatherEngine.roll(month: today.month);
+      f.weather = weather;
+      CpuTacticsAI.applyPreMatch(home, away, userId);
+      final isUserFixture = f.homeTeamId == userId || f.awayTeamId == userId;
+      if (!isUserFixture) {
+        f.result = MatchEngine.simulate(
+          home: home,
+          away: away,
+          matchday: md,
+          weather: weather,
+          homeAdvantageFactor: _homeAdvantageFor(home.id),
+        );
+        continue;
+      }
+      userFixture = f;
+      _liveWasInteractive = interactive;
+      final secondHalf = progress?.secondHalf;
+      if (progress != null && secondHalf != null) {
+        // 前半は終わっていた。ハーフタイムから再開し、後半は続きから。
+        _liveFirstHalfState = MatchEngine.finishedHalfFrom(
+          home: home,
+          away: away,
+          interactiveTeamId: userId,
+          carried: progress.firstHalf,
+          weather: weather,
+          homeAdvantageFactor: _homeAdvantageFor(home.id),
+        );
+        _liveSecondHalfResume =
+            (tally: secondHalf, resumeMinute: progress.resumeMinute);
+      } else {
+        final state = MatchEngine.beginInteractiveHalf(
+          home: home,
+          away: away,
+          startMinute: progress?.resumeMinute ?? 1,
+          endMinute: 45,
+          interactiveTeamId: userId,
+          weather: weather,
+          homeAdvantageFactor: _homeAdvantageFor(home.id),
+          carried: progress?.firstHalf,
+        );
+        if (!interactive) {
+          while (!state.isFinished) {
+            MatchEngine.resolvePendingChance(state, ChanceDecision.shoot);
+          }
+        }
+        _liveFirstHalfState = state;
+        if (state.isFinished) {
+          MatchEngine.applyHalfTimeFatigue(
+            home: home,
+            away: away,
+            weather: weather,
+          );
+        }
+      }
+      userFirstHalf = _liveFirstHalfState!.toHalfResult();
+    }
+    if (userFixture != null) {
+      _liveFixture = userFixture;
+      _liveSubstitutionsUsed = progress?.substitutionsUsed ?? 0;
+    }
+    _recordLiveProgress();
+
+    if (!wasAlreadyBusy) {
+      isBusy = false;
+    }
+    _notify();
+    await _persistNow();
+    return userFirstHalf;
+  }
+
+  /// 進行中のリーグ戦の途中経過をセーブに書く(保存の直前に呼ぶ)。
+  /// カップ戦のライブ観戦は対象外(週の処理と結びついていない)。
+  void _recordLiveProgress() {
+    final save = _save;
+    final f = _liveFixture;
+    final first = _liveFirstHalfState;
+    if (save == null) return;
+    if (f == null || first == null) {
+      save.liveMatchProgress = null;
+      return;
+    }
+    final second = _liveSecondHalfState;
+    final HalfTally firstTally;
+    HalfTally? secondTally;
+    final int resume;
+    if (!first.isFinished) {
+      resume = first.resumeMinute(45);
+      firstTally = first.toTally(beforeMinute: resume);
+    } else {
+      firstTally = first.toTally(beforeMinute: 46);
+      if (second == null) {
+        final pendingResume = _liveSecondHalfResume;
+        resume = pendingResume?.resumeMinute ?? 46;
+        secondTally = pendingResume?.tally ?? const HalfTally();
+      } else {
+        resume = second.resumeMinute(90);
+        secondTally = second.toTally(beforeMinute: resume);
+      }
+    }
+    save.liveMatchProgress = LiveMatchProgress(
+      season: save.league.season,
+      matchday: f.matchday,
+      resumeMinute: resume,
+      substitutionsUsed: _liveSubstitutionsUsed,
+      firstHalf: firstTally,
+      secondHalf: secondTally,
+    );
   }
 
   /// ハーフタイムでの交代・戦術変更を反映して後半を消化し、試合を確定する。
@@ -752,14 +966,18 @@ extension GameStateMatch on GameState {
     final weather = _liveWeatherNow;
     if (interactive) _liveWasInteractive = true;
 
+    // 再起動前に後半の途中まで進んでいたら、その続きから。
+    final resume = _liveSecondHalfResume;
+    _liveSecondHalfResume = null;
     final state = MatchEngine.beginInteractiveHalf(
       home: home,
       away: away,
-      startMinute: 46,
+      startMinute: resume?.resumeMinute ?? 46,
       endMinute: 90,
       interactiveTeamId: _save!.userTeamId,
       weather: weather,
       homeAdvantageFactor: _homeAdvantageFor(home.id),
+      carried: resume?.tally,
     );
     if (!interactive) {
       while (!state.isFinished) {
@@ -771,6 +989,7 @@ extension GameStateMatch on GameState {
     if (state.isFinished) {
       return _finalizeSecondHalf(state.toHalfResult());
     }
+    _recordLiveProgress();
     _notify();
     await _persistNow();
     return null;
@@ -793,6 +1012,7 @@ extension GameStateMatch on GameState {
         final merged = await _finalizeSecondHalf(secondState.toHalfResult());
         return (merged: merged, decisionEvent: event);
       }
+      _recordLiveProgress();
       _notify();
       await _persistNow();
       return (merged: null, decisionEvent: event);
@@ -808,6 +1028,7 @@ extension GameStateMatch on GameState {
               home: home, away: away, weather: _liveWeatherNow);
         }
       }
+      _recordLiveProgress();
       _notify();
       await _persistNow();
       return (merged: null, decisionEvent: event);
@@ -899,6 +1120,18 @@ extension GameStateMatch on GameState {
     );
     if (f != null) {
       f.result = merged;
+      _publishFrontPage(merged, f, lastMilestones);
+      // 出来高の契約の選手の得点に、出来高を払う。
+      _payGoalBonuses(merged);
+      // 優勝・昇格・降格が決まったか、カップの決勝を戦い終えたか。
+      _checkClinchMoments(f.matchday);
+      // 移籍の締切日なら知らせる。
+      _checkDeadlineMoment();
+      _checkCupFinalMoments();
+      // クラブの文化に沿った試合なら、サポーターが喜ぶ。
+      _applyCultureBonus(merged);
+      // クラブの歴代記録(出場・得点・最大の勝ち試合)。
+      _recordClubMatch(merged, f);
 
       // 4節ごとに月間最優秀監督賞を判定する(ユーザーが受賞した場合のみ通知・記録する)。
       if (f.matchday - _save!.lastManagerOfMonthCheckpoint >= 4) {
@@ -934,11 +1167,7 @@ extension GameStateMatch on GameState {
       // (引き分け時のPK戦・敗退時の信頼度低下・賞金・優勝処理を含む)。
       _applyLiveCupResult(merged);
     }
-    _save!.pendingPressConference = PressConferenceEngine.generateFor(
-      result: merged,
-      userTeamId: _save!.userTeamId,
-    );
-
+    // 記者会見は出さない(オーナーの仕事ではない)。
     _liveFixture = null;
     _liveCupKind = null;
     _liveCupHome = null;
@@ -948,6 +1177,8 @@ extension GameStateMatch on GameState {
     _liveCupTie = null;
     _liveFirstHalfState = null;
     _liveSecondHalfState = null;
+    _liveSecondHalfResume = null;
+    _save!.liveMatchProgress = null;
     _liveSubstitutionsUsed = 0;
     _liveWasInteractive = false;
 
@@ -1090,7 +1321,11 @@ extension GameStateMatch on GameState {
   /// を算出する。実際の試合結果には影響しない参考情報。
   List<TeamProjection> get seasonProjection => SeasonProjectionEngine.project(
         _save!.league,
-        relegationCount: PromotionEngine.swapCount,
+        relegationCount: _save!.currentDivisionTier < totalDivisionTiers
+            ? currentLeagueTheme
+                .rulesBelow(_save!.currentDivisionTier)
+                .relegationZone
+            : 0,
         // 大陸カップ出場枠は1部の上位2チームのみ(2部は対象外)。
         continentalQualifyCount: _save!.currentDivisionTier == 1 ? 2 : 0,
       );
@@ -1099,4 +1334,74 @@ extension GameStateMatch on GameState {
         ..._save!.league.teams,
         ..._save!.continentalTeams,
       ];
+
+  /// 新聞の一面と監督の試合後の一言を作る(自クラブのリーグ戦のあと)。
+  void _publishFrontPage(
+      MatchResult r, Fixture f, List<String> milestones) {
+    final s = _save!;
+    final userId = s.userTeamId;
+    if (r.homeTeamId != userId && r.awayTeamId != userId) return;
+    final home = r.homeTeamId == userId;
+    final oppId = home ? r.awayTeamId : r.homeTeamId;
+    final opp = s.league.teams.where((t) => t.id == oppId).firstOrNull;
+    final gf = home ? r.homeGoals : r.awayGoals;
+    final ga = home ? r.awayGoals : r.homeGoals;
+    final rank = s.league.sortedStandings
+            .indexWhere((x) => x.teamId == userId) +
+        1;
+    s.frontPageHeadline = FrontPageEngine.headline(
+      club: s.clubName,
+      opponent: opp?.name ?? '-',
+      goalsFor: gf,
+      goalsAgainst: ga,
+      derby: isRivalFixture(f),
+      rank: rank,
+      milestones: milestones,
+    );
+    final style = s.infrastructure
+            .staffFor(StaffRole.manager)
+            ?.manager
+            ?.style ??
+        ManagerStyle.pragmatic;
+    s.frontPageQuote = FrontPageEngine.managerQuote(
+        goalsFor: gf, goalsAgainst: ga, style: style);
+  }
+
+  /// クラブの文化。
+  ClubCulture get clubCulture => ClubCulture.values.firstWhere(
+      (c) => c.name == _save?.clubCulture,
+      orElse: () => ClubCulture.none);
+
+  /// 文化を変えられるか(1季に1回まで)。
+  bool get canChangeClubCulture =>
+      _save != null && _save!.clubCultureChangedSeason != _save!.league.season;
+
+  /// クラブの文化を選ぶ。決めたものから変えると、古いサポーターが戸惑う。
+  Future<bool> setClubCulture(ClubCulture c) async {
+    final s = _save;
+    if (s == null || !canChangeClubCulture || c == clubCulture) return false;
+    if (clubCulture != ClubCulture.none) {
+      s.confidence =
+          (s.confidence - ClubCultureEngine.changePenalty).clamp(0, 100);
+    }
+    s.clubCulture = c.name;
+    s.clubCultureChangedSeason = s.league.season;
+    _addTimeline(Tr.pick('クラブの文化を「${c.label}」にした',
+        'Set the club identity to "${c.label}"'));
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  void _applyCultureBonus(MatchResult r) {
+    final s = _save!;
+    final team = userTeam;
+    final starters = [
+      for (final p in team.players)
+        if (team.startingXI.contains(p.id)) p,
+    ];
+    final bonus = ClubCultureEngine.matchBonus(
+        culture: clubCulture, r: r, userId: s.userTeamId, starters: starters);
+    if (bonus > 0) s.confidence = (s.confidence + bonus).clamp(0, 100);
+  }
 }

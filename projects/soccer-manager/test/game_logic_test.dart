@@ -3,15 +3,20 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soccer_manager/logic/transfer_terms_engine.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/achievement_engine.dart';
 import 'package:soccer_manager/logic/ai_transfer_engine.dart';
 import 'package:soccer_manager/logic/calendar_engine.dart';
+import 'package:soccer_manager/logic/season_calendar.dart';
 import 'package:soccer_manager/logic/awards_engine.dart';
 import 'package:soccer_manager/logic/best_eleven_engine.dart';
 import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/logic/contract_engine.dart';
 import 'package:soccer_manager/logic/dynamics_engine.dart';
+import 'package:soccer_manager/logic/relations_engine.dart';
+import 'package:soccer_manager/logic/academy_engine.dart';
+import 'package:soccer_manager/logic/squad_registration_engine.dart';
 import 'package:soccer_manager/logic/player_search.dart';
 import 'package:soccer_manager/logic/continental_cup_engine.dart';
 import 'package:soccer_manager/logic/cup_engine.dart';
@@ -34,7 +39,6 @@ import 'package:soccer_manager/logic/season_projection_engine.dart';
 import 'package:soccer_manager/logic/sponsor_engine.dart';
 import 'package:soccer_manager/logic/tactics_ai.dart';
 import 'package:soccer_manager/logic/style_engine.dart';
-import 'package:soccer_manager/logic/development_advisor.dart';
 import 'package:soccer_manager/logic/youth_match_engine.dart';
 import 'package:soccer_manager/logic/training_engine.dart';
 import 'package:soccer_manager/logic/transfer_market.dart';
@@ -66,8 +70,10 @@ import 'package:soccer_manager/screens/youth_screen.dart';
 import 'package:soccer_manager/screens/glossary_screen.dart';
 import 'package:soccer_manager/data/glossary_entries.dart';
 import 'package:soccer_manager/data/guide_sections.dart';
+import 'package:soccer_manager/models/ledger.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/widgets/formation_layout.dart';
+import 'support/legacy_market.dart';
 import 'package:soccer_manager/widgets/match_widgets.dart'
     show matchCommentaryText;
 
@@ -282,8 +288,10 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final beforeCount = gameState.userTeam.players.length;
-    final target = gameState.transferMarket.first;
-    gameState.save!.budget = target.marketValue + 100;
+    final target = legacyMarket(gameState).first;
+    // 移籍金のほかに代理人手数料が掛かる。
+    gameState.save!.budget =
+        target.marketValue + TransferTermsEngine.agentFee(target.marketValue) + 100;
     // 週給予算(BD3)に引っかかると獲得が拒否されるため、余裕を明示的に与える
     // (与えないと、市場の顔ぶれ次第でごく稀に失敗する不安定なテストになる)。
     gameState.save!.wageBudget = 999999;
@@ -298,7 +306,8 @@ void main() {
   test('GameState.buyPlayer fails when budget is insufficient', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = 0;
 
     final ok = await gameState.buyPlayer(target.id);
@@ -320,8 +329,8 @@ void main() {
   });
 
   test(
-      'ContractEngine.advanceSeason decrements contracts by one year and '
-      'removes expired players', () {
+      'ContractEngine.advanceSeason removes players whose contract ended on '
+      '30 June', () {
     final team = PlayerGenerator.generateSquad(
         id: 't3', name: 'Test FC', strengthTier: 60);
     // 他の選手が偶然同じタイミングで契約切れにならないよう、十分な年数にしておく。
@@ -333,6 +342,10 @@ void main() {
     team.startingXI = [soonToExpire.id];
     final beforeCount = team.players.length;
 
+    // 7月1日に新しいシーズンへ入る(契約は満了の年で持つので、基準の年を進める)。
+    final clock = Player.contractClockYear;
+    addTearDown(() => Player.contractClockYear = clock);
+    Player.contractClockYear += 1;
     final result = ContractEngine.advanceSeason(team);
 
     expect(result.expired.map((p) => p.id), contains(soonToExpire.id));
@@ -353,6 +366,9 @@ void main() {
     enteringFinalYear.contractYearsRemaining = 2;
     final beforeCount = team.players.length;
 
+    final clock = Player.contractClockYear;
+    addTearDown(() => Player.contractClockYear = clock);
+    Player.contractClockYear += 1;
     final result = ContractEngine.advanceSeason(team);
 
     expect(enteringFinalYear.contractYearsRemaining, 1);
@@ -374,22 +390,6 @@ void main() {
     final academy = ScoutingEngine.generateAcademyGraduate();
     expect(scouted.age, inInclusiveRange(16, 19));
     expect(academy.age, inInclusiveRange(16, 19));
-  });
-
-  test('TrainingEngine respects a player individual focus override', () {
-    final team = PlayerGenerator.generateSquad(
-        id: 't5', name: 'Test FC', strengthTier: 60);
-    team.defaultTrainingFocus = TrainingFocus.rest;
-    final target = team.players.firstWhere((p) => p.position == Position.st);
-    target.individualFocus = TrainingFocus.attack;
-    target.setAttributeValue(AttributeKeys.finishing, 40);
-    target.potential = 99;
-    target.fatigue = 50;
-
-    // 個別方針(attack)が休養より疲労を増やす方向に働くことを確認する。
-    final fatigueBefore = target.fatigue;
-    TrainingEngine.applyWeeklyTraining(team);
-    expect(target.fatigue, greaterThanOrEqualTo(fatigueBefore));
   });
 
   test('MatchEngine.simulate runs without error under extreme tactic settings',
@@ -640,13 +640,23 @@ void main() {
     gameState.save!.budget = 100000;
     gameState.save!.wageBudget = 100000;
 
-    // 候補のうち一番良いスカウトを雇う。空席のときの水準は1なので、
-    // それより上の人を雇えば候補数が増える。
-    final best = gameState.staffCandidatesFor(StaffRole.scout)
-        .reduce((a, b) => a.effectiveLevel >= b.effectiveLevel ? a : b);
-    expect(best.effectiveLevel, greaterThan(1),
-        reason: '候補が全員最低水準では、この検証が成り立たない');
-    await gameState.hireStaff(best.id);
+    // 空席のときの水準は1なので、それより上の人を雇えば候補数が増える。
+    // 候補は乱数で作られ、たまたま全員が最低水準だと検証が成り立たない
+    // (実際に落ちていた)。水準の分かっている人を候補に入れて雇う。
+    final best = StaffMember(
+      id: 'test_scout',
+      name: '検証用スカウト',
+      age: 45,
+      role: StaffRole.scout,
+      attributes: const {
+        StaffAttribute.judging: 20,
+        StaffAttribute.motivating: 20,
+      },
+      wage: 10,
+    );
+    expect(best.effectiveLevel, greaterThan(1));
+    gameState.save!.staffCandidates.add(best);
+    expect(await gameState.hireStaff(best.id), isTrue);
 
     expect(gameState.scoutCandidateCount, greaterThan(baseCount));
   });
@@ -833,7 +843,9 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
+    // 18歳未満は契約の上限が3年なので、上限に掛からない年齢の選手で見る。
+    final player =
+        gameState.userTeam.players.firstWhere((p) => p.age >= 18);
     player.contractYearsRemaining = 1;
     final cost = gameState.renewalCostFor(player.id) +
         gameState.signingBonusFor(player.id);
@@ -1143,36 +1155,17 @@ void main() {
     expect(benched.happiness, lessThan(50));
   });
 
-  test(
-      'HappinessEngine.reassure raises happiness but not above the threshold gate',
-      () {
-    final p = PlayerGenerator.generate(position: Position.st, strengthTier: 60);
-    p.happiness = 20;
-
-    final ok = HappinessEngine.reassure(p);
-
-    expect(ok, isTrue);
-    expect(p.happiness, 40);
-  });
-
-  test('HappinessEngine.reassure fails once happiness is already high', () {
-    final p = PlayerGenerator.generate(position: Position.st, strengthTier: 60);
-    p.happiness = 80;
-
-    final ok = HappinessEngine.reassure(p);
-
-    expect(ok, isFalse);
-    expect(p.happiness, 80);
-  });
-
   test('Player.wantsTransfer reflects personality-specific thresholds', () {
     final p = PlayerGenerator.generate(position: Position.st, strengthTier: 60);
     p.personality = PlayerPersonality.ambitious; // 閾値30
+    // 線は性格の閾値を、人柄の野心・忠誠でずらしたもの。
+    final line = p.transferRequestLine;
+    expect(line, 30 + p.traits.transferLineShift);
 
-    p.happiness = 35;
+    p.happiness = line;
     expect(p.wantsTransfer, isFalse);
 
-    p.happiness = 29;
+    p.happiness = line - 1;
     expect(p.wantsTransfer, isTrue);
   });
 
@@ -1200,11 +1193,12 @@ void main() {
   });
 
   test(
-      'GameState.signLoanPlayer adds a loan player that returns after loanDurationWeeks',
+      'GameState.signLoanPlayer adds a loan player that returns at the season end',
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = target.marketValue; // ローン料は移籍金の一部で足りるはず
 
     final ok = await gameState.signLoanPlayer(target.id);
@@ -1213,7 +1207,9 @@ void main() {
     final signed =
         gameState.userTeam.players.firstWhere((p) => p.id == target.id);
     expect(signed.isLoan, isTrue);
-    expect(signed.loanWeeksRemaining, GameState.loanDurationWeeks);
+    // 既定は1年(シーズン末の6月30日まで)。
+    expect(signed.loanEndDate,
+        DateTime(gameState.today.year + 1, 6, 30));
   });
 
   test(
@@ -1221,7 +1217,8 @@ void main() {
       'convert the loan into a permanent signing', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     final expectedFee =
         (target.marketValue * GameState.loanBuyOptionRatio).round();
     gameState.save!.budget = target.marketValue + expectedFee;
@@ -1248,7 +1245,8 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     gameState.save!.budget = target.marketValue;
     await gameState.signLoanPlayer(target.id);
     gameState.save!.budget = 999999;
@@ -1431,7 +1429,7 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.budget = target.marketValue; // 頭金分は十分ある
     // 週給予算はシーズン開始時に確定し、獲得時はその枠でも判定される。
     // ここを広げないと、ランダム生成された市場の週給次第で約1.5%の確率で
@@ -1507,7 +1505,9 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC', theme: LeagueTheme.spain);
 
-    expect(gameState.save!.league.teams.length, teamsPerLeague);
+    // 部のクラブ数は国ごと(スペイン風の5部は18)。
+    expect(gameState.save!.league.teams.length,
+        LeagueTheme.spain.teamsInTier(gameState.currentDivisionTier));
     expect(gameState.save!.leagueName, LeagueTheme.spain.label);
   });
 
@@ -1878,18 +1878,27 @@ void main() {
         pending?.attacker?.id,
         pending?.defender?.id,
       };
-      final outId = team.startingXI.firstWhere((id) => !involved.contains(id));
+      // 登録外の選手は試合に出せない(交代でも入れない)。
       final bench = team.players.firstWhere((p) =>
           !team.startingXI.contains(p.id) &&
           !p.isInjured &&
           !p.isSuspended &&
           !p.isOnInternationalDuty &&
-          !p.isLoanedOut);
-      expect(
-        gameState.makeLiveSubstitution(
-            outPlayerId: outId, inPlayerId: bench.id),
-        isTrue,
-      );
+          !p.isLoanedOut &&
+          !p.notRegistered);
+      // スタメンの記録と、ピッチに立っている11人が一致しないことがある
+      // (試合の前に出られなくなった選手の代わりが入った節)。ピッチにいる
+      // 選手が見つかるまで順に試す(先頭だけだと、まれに外していた)。
+      String? outId;
+      for (final id in [...team.startingXI]) {
+        if (involved.contains(id)) continue;
+        if (gameState.makeLiveSubstitution(
+            outPlayerId: id, inPlayerId: bench.id)) {
+          outId = id;
+          break;
+        }
+      }
+      expect(outId, isNotNull);
       expect(gameState.substitutionsUsed, 1);
       expect(team.startingXI.contains(bench.id), isTrue);
       expect(team.startingXI.contains(outId), isFalse);
@@ -2306,7 +2315,8 @@ void main() {
     final ok = await gameState.acceptIncomingOffer('o1');
 
     expect(ok, isTrue);
-    expect(gameState.save!.budget, 500);
+    // 移籍金から連帯貢献金(5%、アカデミー出身は0)が引かれる。
+    expect(gameState.save!.budget, 500 - gameState.solidarityFor(target, 500));
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isFalse);
     expect(gameState.incomingOffers, isEmpty);
   });
@@ -2338,7 +2348,7 @@ void main() {
     final ok = await gameState.acceptIncomingOffer('o2');
 
     expect(ok, isTrue);
-    expect(gameState.save!.budget, 650);
+    expect(gameState.save!.budget, 650 - gameState.solidarityFor(target, 650));
     expect(gameState.incomingOffers, isEmpty);
   });
 
@@ -2534,7 +2544,11 @@ void main() {
 
     await gameState.startNextSeason();
 
-    expect(gameState.pendingYouthIntake.length, inInclusiveRange(3, 5));
+    // 3〜5人に、アカデミーの等級(最大+2)と育成の方針(数を取るなら+2)の分。
+    final extra = AcademyEngine.extraIntake(gameState.academyCategory) +
+        AcademyEngine.policyExtraIntake(gameState.youthPolicy);
+    expect(gameState.pendingYouthIntake.length,
+        inInclusiveRange(3 + extra, 5 + extra));
     expect(gameState.managerReputation, inInclusiveRange(0, 100));
   });
 
@@ -2741,9 +2755,11 @@ void main() {
       await gameState.playSecondHalf();
     }
 
-    expect(gameState.trainingDoneThisWeek, isFalse);
+    // 練習はコーチ陣が節の処理で必ず行う。すでに行われているので、
+    // 手で呼んでも二重には行われない。
+    expect(gameState.trainingDoneThisWeek, isTrue);
     final afterMatchday = await gameState.runWeeklyTraining();
-    expect(afterMatchday, isTrue);
+    expect(afterMatchday, isFalse);
   });
 
   test(
@@ -3104,7 +3120,9 @@ void main() {
         gameState.lastSeasonGrowthSummary.map((s) => s.playerId).toSet();
     expect(ids, isNotEmpty);
     expect(squadIdsAtSeasonStart.containsAll(ids), isTrue);
-  });
+    // 2シーズン分を進めるので、既定の30秒では混んだ CI で足りない
+    // (2026-11-20 に CI で30秒切れ。手元の Windows では55秒)。
+  }, timeout: const Timeout(Duration(minutes: 3)));
 
   test(
       'GameState maintains a live, week-by-week simulated standings table for '
@@ -3208,8 +3226,7 @@ void main() {
     expect(player.internationalDutyWeeksRemaining, 1);
   });
 
-  test(
-      'GameState.playSecondHalf generates a press conference question that can be answered',
+  test('GameState.playSecondHalf no longer raises a press conference (owner game)',
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
@@ -3218,15 +3235,7 @@ void main() {
 
     await gameState.playSecondHalf();
 
-    expect(gameState.pendingPressConference, isNotNull);
-    final confidenceBefore = gameState.save!.confidence;
-    final option = gameState.pendingPressConference!.options.first;
-
-    await gameState.answerPressConference(0);
-
     expect(gameState.pendingPressConference, isNull);
-    expect(gameState.save!.confidence,
-        (confidenceBefore + option.confidenceDelta).clamp(0, 100));
   });
 
   test(
@@ -3424,7 +3433,8 @@ void main() {
     expect(gameState.currentDivisionTier, 2);
     expect(gameState.lastDivisionChangeMessage, contains('降格'));
     expect(() => gameState.userTeam, returnsNormally);
-    expect(gameState.save!.league.teams.length, teamsPerLeague);
+    expect(gameState.save!.league.teams.length,
+        gameState.currentLeagueTheme.teamsInTier(2));
     expect(gameState.save!.otherDivisionLeagues[1], isNull);
     expect(
         gameState.save!.otherDivisionLeagues[0]!.teams.length, teamsPerLeague);
@@ -3458,11 +3468,13 @@ void main() {
         team.players.firstWhere((p) => team.startingXI.contains(p.id));
     final wageBefore = ContractEngine.weeklyWageBill(team);
 
-    final ok = await gameState.loanOutPlayer(target.id, 8);
+    final ok = await gameState.loanOutPlayer(target.id);
 
     expect(ok, isTrue);
     expect(target.isLoanedOut, isTrue);
-    expect(target.loanedOutWeeksRemaining, 8);
+    // 既定は半年(冬の窓が開く日まで)。
+    expect(target.loanedOutUntil, isNotNull);
+    expect(target.loanedOutUntil!.month, 1);
     expect(team.startingXI.contains(target.id), isFalse);
     expect(ContractEngine.weeklyWageBill(team), wageBefore - target.wage);
   });
@@ -3473,13 +3485,29 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final target = gameState.userTeam.players.first;
-    await gameState.loanOutPlayer(target.id, GameState.loanOutMinWeeks);
-
-    for (int i = 0; i < GameState.loanOutMinWeeks; i++) {
-      await gameState.playNextMatchday();
-      if (gameState.isHalfTime) {
-        await gameState.playSecondHalf();
+    await gameState.loanOutPlayer(target.id);
+    // 戻る日の直前まで日付を進めておき、次の節で戻る日を越える。
+    final until = target.loanedOutUntil!;
+    gameState.save!.today = DateTime(until.year, until.month, until.day - 1);
+    final league = gameState.save!.league;
+    while (gameState.nextMatchDate != null &&
+        gameState.nextMatchDate!.isBefore(until)) {
+      // 戻る日より前の節は消化済みにしておく。
+      final next = league.nextUnplayedFixture!.matchday;
+      for (final f in league.fixturesForMatchday(next)) {
+        f.result ??= MatchResult(
+          matchday: next,
+          homeTeamId: f.homeTeamId,
+          awayTeamId: f.awayTeamId,
+          homeGoals: 0,
+          awayGoals: 0,
+          events: [],
+        );
       }
+    }
+    await gameState.playNextMatchday();
+    if (gameState.isHalfTime) {
+      await gameState.playSecondHalf();
     }
 
     expect(target.isLoanedOut, isFalse);
@@ -3494,7 +3522,10 @@ void main() {
     await gameState.startNewGame('テストFC');
     expect(gameState.freeAgents, isNotEmpty);
 
-    final target = gameState.freeAgents.first;
+    // 登録の決まり(22歳以上の枠など)で取れない選手もいる。取れる選手で見る。
+    gameState.save!.wageBudget = 99999999;
+    final target = gameState.freeAgents.firstWhere(
+        (p) => SquadRegistration.canAdd(gameState.userTeam, p));
     final budgetBefore = gameState.save!.budget;
     final squadSizeBefore = gameState.userTeam.players.length;
 
@@ -3535,16 +3566,13 @@ void main() {
     await gameState.startNewGame('テストFC');
     expect(gameState.isTransferWindowOpen, isTrue);
 
-    for (int i = 0; i < 5; i++) {
-      await gameState.playNextMatchday();
-      if (gameState.isHalfTime) {
-        await gameState.playSecondHalf();
-      }
-    }
+    // 夏の窓の締切(9月1日)を過ぎた秋の日。
+    gameState.save!.today = DateTime(gameState.today.year, 10, 15);
     expect(gameState.isTransferWindowOpen, isFalse);
 
     gameState.save!.budget = 999999;
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
+    gameState.save!.wageBudget = 999999; // 年俸の枠で止めない
     final ok = await gameState.buyPlayer(target.id);
     expect(ok, isFalse);
   });
@@ -3553,20 +3581,8 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final league = gameState.save!.league;
-    for (final f in league.fixtures) {
-      if (f.matchday < 19) {
-        f.result ??= MatchResult(
-          matchday: f.matchday,
-          homeTeamId: f.homeTeamId,
-          awayTeamId: f.awayTeamId,
-          homeGoals: 0,
-          awayGoals: 0,
-          events: [],
-        );
-      }
-    }
-
+    // 1月の冬の窓。
+    gameState.save!.today = DateTime(gameState.today.year + 1, 1, 15);
     expect(gameState.isTransferWindowOpen, isTrue);
   });
 
@@ -4446,7 +4462,9 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
+    // 18歳未満は契約の上限が3年で、年数の検査に当たらない。18〜30歳で見る。
+    final player = gameState.userTeam.players
+        .firstWhere((p) => p.age >= 18 && p.age <= 30);
     player.personality = PlayerPersonality.balanced;
     player.contractYearsRemaining = 1;
     gameState.startContractNegotiation(player.id);
@@ -5111,7 +5129,9 @@ void main() {
     await gameState.playNextMatchday();
 
     expect(injured.injuryWeeks, 0);
-    expect(injured.matchSharpness, lessThanOrEqualTo(40));
+    // 治った日に40へ戻り、その週の試合に出ると少し上がる(+8 で48になる回が
+    // あり、5回に2回ほど落ちていた)。90から下がったことを確かめる。
+    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 10));
   });
 
   test(
@@ -5345,66 +5365,6 @@ void main() {
   });
 
   test(
-      'GameState.setMentor rejects self-mentoring and under-age mentors, '
-      'and a valid mentor boosts the mentee\'s growth chance', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final team = gameState.userTeam;
-    final mentee = team.players.first;
-    final tooYoung = team.players.firstWhere(
-        (p) => p.id != mentee.id && p.age < TrainingEngine.minMentorAge,
-        orElse: () => team.players[1]);
-    tooYoung.age = 20;
-
-    expect(gameState.setMentor(mentee.id, mentee.id), isFalse);
-    expect(gameState.setMentor(mentee.id, tooYoung.id), isFalse);
-    expect(mentee.mentorId, isNull);
-
-    final veteran = team.players.firstWhere((p) => p.id != mentee.id);
-    veteran.age = 30;
-    expect(gameState.setMentor(mentee.id, veteran.id), isTrue);
-    expect(mentee.mentorId, veteran.id);
-
-    expect(gameState.setMentor(mentee.id, null), isTrue);
-    expect(mentee.mentorId, isNull);
-  });
-
-  test('a valid mentor increases the mentee\'s training growth chance', () {
-    int countWithMentor(bool withMentor) {
-      var growths = 0;
-      for (int i = 0; i < 400; i++) {
-        final mentee = makeFreshPlayer();
-        final mentor = makeFreshPlayer(age: 32);
-        if (withMentor) mentee.mentorId = mentor.id;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [mentee, mentor],
-            defaultTrainingFocus: TrainingFocus.fitness);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (mentee.attributeValue(AttributeKeys.stamina) > 50) growths++;
-      }
-      return growths;
-    }
-
-    final withMentor = countWithMentor(true);
-    final withoutMentor = countWithMentor(false);
-    expect(withMentor, greaterThan(withoutMentor));
-  });
-
-  test(
-      'a mentor gains a small happiness boost after a week of valid '
-      'mentoring', () {
-    final mentee = makeFreshPlayer();
-    final mentor = makeFreshPlayer(age: 32);
-    mentee.mentorId = mentor.id;
-    mentor.happiness = 70;
-    final team = Team(id: 't', name: 'T', players: [mentee, mentor]);
-    TrainingEngine.applyWeeklyTraining(team);
-    expect(mentor.happiness, 71);
-  });
-
-  test(
       'TrainingFocus.positionSwitch grows familiarity for secondary '
       'positions without requiring a match appearance', () {
     final p = makeFreshPlayer(position: Position.mc);
@@ -5468,7 +5428,9 @@ void main() {
     int goalkeepingDeclines(Position position) {
       var count = 0;
       for (int i = 0; i < 2500; i++) {
-        final p = makeFreshPlayer(position: position, age: 33);
+        // GK は衰えの始まりが3年遅い(ポジション別のピーク)。どの成長の型でも
+        // 衰えている歳にする。
+        final p = makeFreshPlayer(position: position, age: 38);
         final before = {
           for (final k in AttributeKeys.all) k: p.attributeValue(k)
         };
@@ -5515,43 +5477,6 @@ void main() {
     expect(growths, greaterThan(0));
   });
 
-  test('GameState.setDrillAttribute sets and clears the drill attribute',
-      () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-
-    gameState.setDrillAttribute(player.id, AttributeKeys.finishing);
-    expect(player.drillAttributeKey, AttributeKeys.finishing);
-
-    gameState.setDrillAttribute(player.id, null);
-    expect(player.drillAttributeKey, isNull);
-  });
-
-  test(
-      'GameState.setPlayerTrainingConvertTarget lets a player convert to a '
-      "brand-new position not among their generated secondaryPositions",
-      () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player =
-        gameState.userTeam.players.firstWhere((p) => p.position == Position.mc);
-    player.secondaryPositions = [];
-    player.individualFocus = TrainingFocus.positionSwitch;
-
-    gameState.setPlayerTrainingConvertTarget(player.id, Position.dm);
-    expect(player.trainingConvertTargetPosition, Position.dm.name);
-    expect(player.canPlay(Position.dm), isFalse);
-
-    // 慣れ度が上限に達すると、実際に起用可能な副ポジションへ昇格するはず。
-    player.positionFamiliarity[Position.dm.name] = 100;
-    await gameState.runWeeklyTraining();
-
-    expect(player.secondaryPositions, contains(Position.dm));
-    expect(player.canPlay(Position.dm), isTrue);
-    expect(player.trainingConvertTargetPosition, isNull);
-  });
-
   test('GameState.addDebugFunds increases or decreases the club budget',
       () async {
     final gameState = GameState();
@@ -5565,136 +5490,9 @@ void main() {
     expect(gameState.save!.budget, before + 30000);
   });
 
-  test('a drill attribute grows noticeably more often than an undrilled one',
-      () {
-    int countFinishingGrowths(bool withDrill) {
-      var growths = 0;
-      for (int i = 0; i < 400; i++) {
-        final p = makeFreshPlayer();
-        if (withDrill) p.drillAttributeKey = AttributeKeys.finishing;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [p],
-            defaultTrainingFocus: TrainingFocus.rest);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (p.attributeValue(AttributeKeys.finishing) > 50) growths++;
-      }
-      return growths;
-    }
-
-    final withDrill = countFinishingGrowths(true);
-    final withoutDrill = countFinishingGrowths(false);
-    expect(withDrill, greaterThan(withoutDrill));
-  });
-
   test(
-      'a second drill slot (drillAttributeKey2) grows its attribute more '
-      'often than an undrilled one, at a reduced rate vs the first slot', () {
-    int countPassingGrowths(bool withDrill) {
-      var growths = 0;
-      for (int i = 0; i < 400; i++) {
-        final p = makeFreshPlayer();
-        if (withDrill) p.drillAttributeKey2 = AttributeKeys.passing;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [p],
-            defaultTrainingFocus: TrainingFocus.rest);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (p.attributeValue(AttributeKeys.passing) > 50) growths++;
-      }
-      return growths;
-    }
-
-    final withDrill = countPassingGrowths(true);
-    final withoutDrill = countPassingGrowths(false);
-    expect(withDrill, greaterThan(withoutDrill));
-  });
-
-  test(
-      'drillAttributeKey and drillAttributeKey2 grow independently on the '
-      'same player', () {
-    var bothGrowths = 0;
-    for (int i = 0; i < 400; i++) {
-      final p = makeFreshPlayer();
-      p.drillAttributeKey = AttributeKeys.finishing;
-      p.drillAttributeKey2 = AttributeKeys.passing;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.attributeValue(AttributeKeys.finishing) > 50 &&
-          p.attributeValue(AttributeKeys.passing) > 50) {
-        bothGrowths++;
-      }
-    }
-    expect(bothGrowths, greaterThan(0));
-  });
-
-  test(
-      'GameState.setDrillAttribute2 respects maxDrillSlots independently '
-      'from setDrillAttribute', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final players = gameState.userTeam.players;
-    expect(gameState.maxDrillSlots, 1);
-
-    final p0 = players[0];
-    final p1 = players[1];
-
-    expect(gameState.setDrillAttribute(p0.id, AttributeKeys.finishing), isTrue);
-    expect(
-        gameState.setDrillAttribute(p1.id, AttributeKeys.finishing), isFalse);
-
-    // 1つ目のドリル枠が埋まっていても、2つ目のドリル枠は独立してp0に設定できる。
-    expect(gameState.setDrillAttribute2(p0.id, AttributeKeys.passing), isTrue);
-    // 2つ目のドリル枠も上限に達したら、別の選手への新規指定は失敗する。
-    expect(gameState.setDrillAttribute2(p1.id, AttributeKeys.passing), isFalse);
-
-    gameState.setDrillAttribute2(p0.id, null);
-    expect(p0.drillAttributeKey2, isNull);
-  });
-
-  test(
-      'TrainingEngine._rollTraitAcquisition grants exactly the targeted '
-      'trait only when traitTrainingTarget is set and the player has no '
-      'trait yet', () {
-    int countAcquisitions(bool enabled, {bool alreadyHasTrait = false}) {
-      var count = 0;
-      for (int i = 0; i < 1500; i++) {
-        final p = makeFreshPlayer(determination: 99);
-        p.traitTrainingTarget = enabled ? PlayerTrait.clinicalFinisher : null;
-        if (alreadyHasTrait) p.trait = PlayerTrait.giantKiller;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [p],
-            defaultTrainingFocus: TrainingFocus.rest);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (p.trait != null && !alreadyHasTrait) {
-          expect(p.trait, PlayerTrait.clinicalFinisher);
-          count++;
-        }
-      }
-      return count;
-    }
-
-    final enabledCount = countAcquisitions(true);
-    final disabledCount = countAcquisitions(false);
-    final alreadyHasTraitCount = countAcquisitions(true, alreadyHasTrait: true);
-
-    expect(enabledCount, greaterThan(0));
-    expect(disabledCount, 0);
-    expect(alreadyHasTraitCount, 0);
-  });
-
-  test(
-      'TrainingEngine.traitSuitability scales attribute-based trait chances '
-      'so a well-suited player acquires the targeted trait faster than a '
-      'poorly-suited one', () {
+      'TrainingEngine.traitSuitability is higher for a player whose attribute '
+      'matches the trait', () {
     // 適性そのものは乱数を通さずに確かめられる。抽選結果の比較だけに
     // 頼ると、たまたま逆転したときに「仕組みが壊れた」と読めてしまう。
     final wellSuitedPlayer = makeFreshPlayer(determination: 99)
@@ -5708,78 +5506,6 @@ void main() {
           poorlySuitedPlayer, PlayerTrait.clinicalFinisher)),
       reason: '適性の計算そのものが能力値を反映していない',
     );
-
-    // 適性が実際に抽選へ効いていることは、回数を数えて確かめるほかない。
-    // 800回では取得数が 30 前後と 12 前後で、標準偏差に対する差が小さく、
-    // まれに逆転する(実際にフルスイートで一度落ちた)。試行を増やして
-    // ばらつきを相対的に小さくする。
-    int countAcquisitions(int finishingValue) {
-      var count = 0;
-      for (int i = 0; i < 3000; i++) {
-        final p = makeFreshPlayer(determination: 99);
-        p.setAttributeValue(AttributeKeys.finishing, finishingValue);
-        p.traitTrainingTarget = PlayerTrait.clinicalFinisher;
-        final team = Team(
-            id: 't',
-            name: 'T',
-            players: [p],
-            defaultTrainingFocus: TrainingFocus.rest);
-        TrainingEngine.applyWeeklyTraining(team);
-        if (p.trait != null) count++;
-      }
-      return count;
-    }
-
-    final wellSuited = countAcquisitions(95);
-    final poorlySuited = countAcquisitions(10);
-    expect(wellSuited, greaterThan(poorlySuited));
-  });
-
-  test(
-      'a player who acquires a trait via training has acquiredTraitThisWeek '
-      'set to match the targeted trait, and it resets the following week', () {
-    Player? acquirer;
-    for (int i = 0; i < 1500; i++) {
-      final p = makeFreshPlayer(determination: 99);
-      p.traitTrainingTarget = PlayerTrait.clinicalFinisher;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.trait != null) {
-        acquirer = p;
-        break;
-      }
-    }
-    expect(acquirer, isNotNull);
-    expect(acquirer!.trait, PlayerTrait.clinicalFinisher);
-    expect(acquirer.acquiredTraitThisWeek, acquirer.trait);
-
-    // 翌週は特性を既に保有しているため一時フラグはリセットされ、再度は付与されない。
-    final team = Team(
-        id: 't',
-        name: 'T',
-        players: [acquirer],
-        defaultTrainingFocus: TrainingFocus.rest);
-    TrainingEngine.applyWeeklyTraining(team);
-    expect(acquirer.acquiredTraitThisWeek, isNull);
-  });
-
-  test(
-      'GameState.setTraitTrainingTarget sets and clears the targeted trait '
-      'on the target player', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-    expect(player.traitTrainingTarget, isNull);
-
-    gameState.setTraitTrainingTarget(player.id, PlayerTrait.clinicalFinisher);
-    expect(player.traitTrainingTarget, PlayerTrait.clinicalFinisher);
-
-    gameState.setTraitTrainingTarget(player.id, null);
-    expect(player.traitTrainingTarget, isNull);
   });
 
   test(
@@ -5792,176 +5518,6 @@ void main() {
     expect(byCategory[PlayerTraitCategory.technical], 19);
     expect(byCategory[PlayerTraitCategory.personality], 20);
     expect(byCategory[PlayerTraitCategory.talent], 15);
-  });
-
-  test(
-      'GameState.setTraitTrainingTarget ignores non-technical traits '
-      '(personality/talent traits cannot be trained via drills)', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-
-    gameState.setTraitTrainingTarget(player.id, PlayerTrait.giantKiller);
-    expect(player.traitTrainingTarget, isNull);
-
-    gameState.setTraitTrainingTarget(player.id, PlayerTrait.wonderkid);
-    expect(player.traitTrainingTarget, isNull);
-  });
-
-  test(
-      'GameState.setPersonalityTraitTrainingTarget sets/clears a personality '
-      'trait target and ignores non-personality traits', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-    expect(player.personalityTraitTrainingTarget, isNull);
-
-    gameState.setPersonalityTraitTrainingTarget(
-      player.id,
-      PlayerTrait.warriorSpirit,
-    );
-    expect(player.personalityTraitTrainingTarget, PlayerTrait.warriorSpirit);
-
-    gameState.setPersonalityTraitTrainingTarget(player.id, null);
-    expect(player.personalityTraitTrainingTarget, isNull);
-
-    gameState.setPersonalityTraitTrainingTarget(
-      player.id,
-      PlayerTrait.clinicalFinisher,
-    );
-    expect(player.personalityTraitTrainingTarget, isNull);
-    gameState.setPersonalityTraitTrainingTarget(
-      player.id,
-      PlayerTrait.wonderkid,
-    );
-    expect(player.personalityTraitTrainingTarget, isNull);
-  });
-
-  test(
-      'personality trait acquisition never happens without a mentor or a '
-      "manager's talk this week, even when a personality target is set", () {
-    var count = 0;
-    for (int i = 0; i < 500; i++) {
-      final p = makeFreshPlayer(determination: 99);
-      p.personalityTraitTrainingTarget = PlayerTrait.warriorSpirit;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.trait != null) count++;
-    }
-    expect(count, 0);
-  });
-
-  test(
-      'a mentor grants personality trait acquisition a nonzero chance, and '
-      'the acquired trait exactly matches the targeted personality trait', () {
-    Player? acquirer;
-    for (int i = 0; i < 2000; i++) {
-      final p = makeFreshPlayer(determination: 99);
-      p.setAttributeValue(AttributeKeys.determination, 99);
-      p.personalityTraitTrainingTarget = PlayerTrait.warriorSpirit;
-      final mentor = makeFreshPlayer(age: 32);
-      p.mentorId = mentor.id;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p, mentor],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.trait != null) {
-        acquirer = p;
-        break;
-      }
-    }
-    expect(acquirer, isNotNull);
-    expect(acquirer!.trait, PlayerTrait.warriorSpirit);
-    expect(acquirer.acquiredTraitThisWeek, PlayerTrait.warriorSpirit);
-  });
-
-  test(
-      "a manager's talk this week (fresh talkCooldownWeeks) also grants "
-      'personality trait acquisition a nonzero chance without any mentor', () {
-    Player? acquirer;
-    for (int i = 0; i < 2000; i++) {
-      final p = makeFreshPlayer(determination: 99);
-      p.personalityTraitTrainingTarget = PlayerTrait.warriorSpirit;
-      p.talkCooldownWeeks = TrainingEngine.talkCooldownWeeks;
-      final team = Team(
-          id: 't',
-          name: 'T',
-          players: [p],
-          defaultTrainingFocus: TrainingFocus.rest);
-      TrainingEngine.applyWeeklyTraining(team);
-      if (p.trait != null) {
-        acquirer = p;
-        break;
-      }
-    }
-    expect(acquirer, isNotNull);
-    expect(acquirer!.trait, PlayerTrait.warriorSpirit);
-  });
-
-  test(
-      'Player.fromJson drops a stale traitTrainingTarget/'
-      'personalityTraitTrainingTarget whose category no longer matches the '
-      'field (e.g. from a save predating trait categories)', () {
-    final player = makeFreshPlayer();
-    final json = player.toJson();
-    json['traitTrainingTarget'] = PlayerTrait.giantKiller.name;
-    json['personalityTraitTrainingTarget'] = PlayerTrait.clinicalFinisher.name;
-    final restored = Player.fromJson(json);
-    expect(restored.traitTrainingTarget, isNull);
-    expect(restored.personalityTraitTrainingTarget, isNull);
-  });
-
-  test(
-      'Player/Team round-trip through JSON preserves '
-      'personalityTraitTrainingTarget', () {
-    final player = makeFreshPlayer()
-      ..personalityTraitTrainingTarget = PlayerTrait.calmHead;
-    final restored = Player.fromJson(player.toJson());
-    expect(restored.personalityTraitTrainingTarget, PlayerTrait.calmHead);
-  });
-
-  test(
-      'a player with a focusRotation cycles through the listed foci weekly, '
-      'taking priority over individualFocus', () {
-    final p = makeFreshPlayer();
-    p.individualFocus = TrainingFocus.fitness;
-    p.focusRotation = [TrainingFocus.attack, TrainingFocus.rest];
-    final team = Team(id: 't', name: 'T', players: [p]);
-
-    final fatigueBefore1 = p.fatigue;
-    TrainingEngine.applyWeeklyTraining(team);
-    // 1週目はローテーションの1番目(attack)が適用され、疲労は増加するはず。
-    expect(p.fatigue, greaterThan(fatigueBefore1));
-    expect(p.rotationWeekIndex, 1);
-
-    p.fatigue = 80;
-    TrainingEngine.applyWeeklyTraining(team);
-    // 2週目はローテーションの2番目(rest)が適用され、疲労は大きく減少するはず。
-    expect(p.fatigue, lessThan(80));
-    expect(p.rotationWeekIndex, 0);
-  });
-
-  test(
-      'GameState.setPlayerFocusRotation sets and clears the rotation, '
-      'resetting the week index', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-
-    gameState.setPlayerFocusRotation(
-        player.id, [TrainingFocus.attack, TrainingFocus.defense]);
-    expect(player.focusRotation, [TrainingFocus.attack, TrainingFocus.defense]);
-    player.rotationWeekIndex = 1;
-
-    gameState.setPlayerFocusRotation(player.id, null);
-    expect(player.focusRotation, isNull);
-    expect(player.rotationWeekIndex, 0);
   });
 
   test(
@@ -6026,8 +5582,9 @@ void main() {
     prospect.potential = 99;
     // 19歳を過ぎた有望株は出場機会を求めてユースを去る。ここで見たいのは
     // 「置いている間に伸びるか」なので、去らない年齢に固定しておく
-    // (固定せずに20節回して、途中で居なくなり CI が落ちた)。
-    prospect.age = YouthDepartureEngine.restlessAge - 1;
+    // (固定せずに20節回して、途中で居なくなり CI が落ちた)。誕生日が
+    // 来ると1つ歳を取るので、その分も余らせて2つ下にする。
+    prospect.age = YouthDepartureEngine.restlessAge - 2;
     final overallBefore = prospect.overall;
 
     for (int i = 0; i < 20; i++) {
@@ -6905,7 +6462,7 @@ void main() {
       'owns', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     gameState.save!.budget = target.marketValue;
     // 週給予算はシーズン開始時に確定し、獲得時はその枠でも判定される。
     // ここを広げないと、ランダム生成された市場の週給次第で約1.5%の確率で
@@ -6984,7 +6541,7 @@ void main() {
       'of permanently keeping the loan-period discount', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     final wageBeforeLoan = target.wage;
     final expectedFee =
         (target.marketValue * GameState.loanBuyOptionRatio).round();
@@ -7170,17 +6727,16 @@ void main() {
   });
 
   test(
-      'CalendarEngine.seasonAnchor and dateForMatchday always land on a '
-      'Saturday, exactly 7 days apart per matchday', () {
+      'SeasonCalendar opens each season on a Saturday and keeps every '
+      'matchday after the previous one', () {
     for (final season in [1, 2, 3, 10]) {
-      final anchor = CalendarEngine.seasonAnchor(season);
-      expect(anchor.weekday, DateTime.saturday);
-
-      final md1 = CalendarEngine.dateForMatchday(season, 1);
-      final md2 = CalendarEngine.dateForMatchday(season, 2);
-      expect(md1, anchor);
-      expect(md2.weekday, DateTime.saturday);
-      expect(md2.difference(md1).inDays, 7);
+      final cal = SeasonCalendar.build(
+          season: season, theme: LeagueTheme.england, totalMatchdays: 38);
+      expect(cal.dateForMatchday(1).weekday, DateTime.saturday);
+      for (var md = 2; md <= 38; md++) {
+        expect(cal.dateForMatchday(md).isAfter(cal.dateForMatchday(md - 1)),
+            isTrue);
+      }
     }
   });
 
@@ -7198,7 +6754,7 @@ void main() {
       season: 1,
     );
 
-    final matchDate = CalendarEngine.dateForMatchday(1, 1);
+    final matchDate = CalendarEngine.calendarFor(league).dateForMatchday(1);
     // トレーニング曜日をあえて試合日と同じ曜日に設定し、試合日が優先され
     // 二重にマークされないことを確認する。
     final days = CalendarEngine.buildRange(
@@ -7244,7 +6800,7 @@ void main() {
       ],
       lastPlayedAtMatchday: 2,
     );
-    final eligibleDate = CalendarEngine.dateForMatchday(1, 3);
+    final eligibleDate = CalendarEngine.calendarFor(league).cupDateBefore(3);
 
     final days = CalendarEngine.buildRange(
       from: eligibleDate.subtract(const Duration(days: 3)),
@@ -8015,7 +7571,7 @@ void main() {
     p.potential = 99;
     p.growthType = PlayerGrowthType.early;
     p.setAttributeValue(AttributeKeys.determination, 99);
-    p.individualFocus = TrainingFocus.attack;
+    gameState.userTeam.defaultTrainingFocus = TrainingFocus.attack;
 
     var flagged = false;
     for (int i = 0; i < 500 && !flagged; i++) {
@@ -8261,27 +7817,6 @@ void main() {
         .round()
         .clamp(50, 20000);
     expect(recombined, p.marketValue);
-  });
-
-  test(
-      'TrainingEngine.applyYouthAcademyGrowth respects a youth prospect\'s '
-      'individualFocus, growing the chosen attribute group instead of the '
-      'position-based default', () {
-    int finishingGrowths(TrainingFocus? focus) {
-      var growths = 0;
-      const trials = 400;
-      for (int i = 0; i < trials; i++) {
-        final p = makeFreshPlayer(position: Position.mc);
-        p.individualFocus = focus;
-        TrainingEngine.applyYouthAcademyGrowth([p], 5);
-        if (p.attributeValue(AttributeKeys.finishing) > 50) growths++;
-      }
-      return growths;
-    }
-
-    final withAttackFocus = finishingGrowths(TrainingFocus.attack);
-    final withDefenseFocus = finishingGrowths(TrainingFocus.defense);
-    expect(withAttackFocus, greaterThan(withDefenseFocus));
   });
 
   test(
@@ -8544,25 +8079,6 @@ void main() {
   });
 
   test(
-      'GameState.talkToPlayer boosts morale once, then blocks during '
-      'cooldown', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final player = gameState.userTeam.players.first;
-    player.morale = 50;
-
-    final ok1 = await gameState.talkToPlayer(player.id);
-    expect(ok1, isTrue);
-    expect(player.morale, greaterThan(50));
-    expect(player.talkCooldownWeeks, TrainingEngine.talkCooldownWeeks);
-
-    final moraleAfterFirst = player.morale;
-    final ok2 = await gameState.talkToPlayer(player.id);
-    expect(ok2, isFalse);
-    expect(player.morale, moraleAfterFirst);
-  });
-
-  test(
       'GameState.holdTacticalMeeting grows mental attributes for at least '
       'one player, then enforces a cooldown', () async {
     final gameState = GameState();
@@ -8594,13 +8110,8 @@ void main() {
     expect(ok2, isFalse);
   });
 
-  test('Player/Team round-trip through JSON preserves new cooldown fields', () {
-    final player =
-        PlayerGenerator.generate(position: Position.st, strengthTier: 60)
-          ..talkCooldownWeeks = 2;
-    final restoredPlayer = Player.fromJson(player.toJson());
-    expect(restoredPlayer.talkCooldownWeeks, 2);
-
+  test('Team round-trip through JSON preserves the tactical meeting cooldown',
+      () {
     final team = PlayerGenerator.generateSquad(
         id: 'json-team', name: 'JSON FC', strengthTier: 60)
       ..tacticalMeetingCooldownWeeks = 2;
@@ -8635,7 +8146,8 @@ void main() {
     final cup = gameState.domesticCup!;
     final match = cup.nextUnplayedMatch!;
     final userId = gameState.userTeam.id;
-    final budgetBefore = gameState.save!.budget;
+    // 試合の日までに月末を越えると給与が出るので、資金ではなく賞金の記録で見る。
+    final prizeBefore = gameState.currentLedger.of(LedgerCategory.prize);
     final appsBefore = gameState.userTeam.players
         .fold<int>(0, (s, p) => s + p.careerAppearances);
 
@@ -8663,7 +8175,8 @@ void main() {
       expect(match.penaltyWinnerId, isNotNull, reason: 'ノックアウトの引き分けはPK戦で決着する');
     }
     if (match.winnerId == userId) {
-      expect(gameState.save!.budget, greaterThan(budgetBefore),
+      expect(gameState.currentLedger.of(LedgerCategory.prize),
+          greaterThan(prizeBefore),
           reason: 'カップ戦の勝ち上がり賞金が入る');
     }
 
@@ -8701,97 +8214,14 @@ void main() {
     expect(appsAfter, greaterThan(appsBefore));
   });
 
-  test(
-      'GameState.setDevelopmentTargetRole accepts only roles allowed for the '
-      "player's position group (standard is rejected), and the plan "
-      'round-trips through JSON', () async {
+  test('作り物の移籍市場は作らず、試合を進めても空のまま', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    final gk = gameState.userTeam.players
-        .firstWhere((p) => p.position.group == PositionGroup.gk);
-
-    gameState.setDevelopmentTargetRole(gk.id, PlayerRole.poacher);
-    expect(gk.developmentTargetRole, isNull, reason: 'FW用ロールはGKに設定できない');
-
-    gameState.setDevelopmentTargetRole(gk.id, PlayerRole.standard);
-    expect(gk.developmentTargetRole, isNull, reason: 'standardは目標にできない');
-
-    gameState.setDevelopmentTargetRole(gk.id, PlayerRole.sweeperKeeper);
-    expect(gk.developmentTargetRole, PlayerRole.sweeperKeeper);
-
-    final restored = Player.fromJson(gk.toJson());
-    expect(restored.developmentTargetRole, PlayerRole.sweeperKeeper);
-
-    gameState.setDevelopmentTargetRole(gk.id, null);
-    expect(gk.developmentTargetRole, isNull);
-  });
-
-  test(
-      'a development plan (target role) makes the weekly training grow that '
-      "role's key attributes clearly faster than an otherwise identical "
-      'player without a plan', () {
-    Team buildSoloTeam(String id, {PlayerRole? plan}) {
-      final p = Player(
-        id: '$id-p',
-        name: '$id-p',
-        age: 20,
-        position: Position.dm,
-        potential: 99,
-      );
-      for (final key in AttributeKeys.all) {
-        p.setAttributeValue(key, 30);
-      }
-      p.developmentTargetRole = plan;
-      final team = Team(id: id, name: id, players: [p]);
-      return team;
-    }
-
-    int keySum(Team t) {
-      final p = t.players.first;
-      return PlayerRole.anchorMan.keyAttributes
-          .fold<int>(0, (s, k) => s + p.attributeValue(k));
-    }
-
-    final planned = buildSoloTeam('plan', plan: PlayerRole.anchorMan);
-    final unplanned = buildSoloTeam('noplan');
-    const weeks = 200;
-    for (int i = 0; i < weeks; i++) {
-      // 疲労・負傷でトレーニング効果が偏らないよう、毎週リセットして
-      // 純粋な成長判定の差だけを比較する。
-      for (final t in [planned, unplanned]) {
-        final p = t.players.first;
-        p.fatigue = 0;
-        p.injuryWeeks = 0;
-      }
-      TrainingEngine.applyWeeklyTraining(planned);
-      TrainingEngine.applyWeeklyTraining(unplanned);
-    }
-    expect(keySum(planned), greaterThan(keySum(unplanned)),
-        reason: '育成プランの重視能力値(タックル・ポジショニング)が優先的に伸びるはず');
-  });
-
-  test(
-      'the transfer market persists across matchdays with partial rotation '
-      '(most faces stay, a few are replaced) and the roster survives a JSON '
-      'round-trip of the save', () async {
-    final gameState = GameState();
-    await gameState.startNewGame('テストFC');
-    final before = gameState.transferMarket.map((p) => p.id).toSet();
-    expect(before, isNotEmpty);
-
+    expect(gameState.transferMarket, isEmpty);
+    expect(gameState.transferTargets, isNotEmpty);
     await gameState.playNextMatchday();
     await gameState.playSecondHalf();
-
-    final after = gameState.transferMarket.map((p) => p.id).toSet();
-    expect(after.length, 24);
-    final stayed = before.intersection(after);
-    expect(stayed.length, greaterThanOrEqualTo(before.length - 6),
-        reason: '1週の入れ替えは最大6人で、大半の選手は市場に残り続ける');
-    expect(stayed.length, lessThan(before.length), reason: '毎週数人は入れ替わる');
-
-    final restored = SaveGame.fromJson(gameState.save!.toJson());
-    expect(restored.transferMarketPlayers.map((p) => p.id).toSet(), after,
-        reason: '市場の顔ぶれはセーブに保存され、ロードしても維持される');
+    expect(gameState.transferMarket, isEmpty);
   });
 
   test(
@@ -8805,14 +8235,14 @@ void main() {
     // よう広げる(予算ブロック自体は専用テストで検証している)。
     gameState.save!.wageBudget = 999999;
 
-    final target = gameState.transferMarket.first;
+    final target = legacyMarket(gameState).first;
     final res =
         await gameState.makeTransferOffer(target.id, target.marketValue);
     expect(res.attempted, isTrue);
     expect(res.accepted, isTrue, reason: '満額オファーは必ず成立する');
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isTrue);
 
-    final target2 = gameState.transferMarket.first;
+    final target2 = legacyMarket(gameState).first;
     final low = (target2.marketValue * 0.5).floor();
     final res2 = await gameState.makeTransferOffer(target2.id, low);
     expect(res2.attempted, isTrue);
@@ -8826,7 +8256,7 @@ void main() {
         await gameState.makeTransferOffer(target2.id, target2.marketValue);
     expect(res3.attempted, isFalse, reason: '断られた週は同じ選手に再交渉できない');
     expect(
-      gameState.transferMarket.any((p) => p.id == target2.id),
+      legacyMarket(gameState).any((p) => p.id == target2.id),
       isTrue,
       reason: '交渉が成立していない選手は市場に残る',
     );
@@ -8891,33 +8321,29 @@ void main() {
     // ループ内アサーション(敗戦時にnoteが積まれない)は検証済み。
     if (noteAtWin != null) {
       final prize = GameState.domesticCupWinPrizeFor(roundAtWin!);
-      expect(noteAtWin, contains('$prize万円'));
+      // 5部の額なので、そのまま。表示は formatMoney(「35万」)。
+      expect(noteAtWin, contains('$prize万'));
     }
   });
 
   test(
       'guideSections and glossaryEntries cover the live-match experience '
       'and the newest transfer/training/cup features', () {
-    final live = guideSections.firstWhere(
-      (s) => s.title.contains('ライブ観戦'),
-    );
-    expect(live.topics.length, greaterThanOrEqualTo(5));
-    final liveTitles = live.topics.map((t) => t.title).join();
-    expect(liveTitles, contains('決定機'));
-    expect(liveTitles, contains('采配方針'));
-    expect(liveTitles, contains('ライブ交代'));
-    expect(liveTitles, contains('モメンタム'));
+    // オーナー型では、ライブ観戦・スタメン戦術・トレーニングの章は無く、
+    // 代わりに「オーナーの仕事」の章がある。
+    expect(guideSections.any((s) => s.title.contains('ライブ観戦')), isFalse);
+    expect(guideSections.any((s) => s.title == 'トレーニング画面'), isFalse);
+    final owner = guideSections.firstWhere((s) => s.title == 'オーナーの仕事');
+    final ownerTitles = owner.topics.map((t) => t.title).join();
+    expect(ownerTitles, contains('2つの期待'));
+    expect(ownerTitles, contains('次の節へ'));
+    expect(ownerTitles, contains('今週の決断'));
+    expect(ownerTitles, contains('売却と買い直し'));
 
     final transfer = guideSections.firstWhere((s) => s.title == '移籍市場画面');
     final transferTitles = transfer.topics.map((t) => t.title).join();
     expect(transferTitles, contains('値切り交渉'));
     expect(transferTitles, contains('持続的な移籍市場'));
-
-    final training = guideSections.firstWhere((s) => s.title == 'トレーニング画面');
-    expect(
-      training.topics.map((t) => t.title).join(),
-      contains('育成プラン'),
-    );
 
     final cups = guideSections.firstWhere((s) => s.title.contains('カップ戦'));
     expect(cups.topics.map((t) => t.title).join(), contains('勝ち上がり賞金'));
@@ -8930,15 +8356,11 @@ void main() {
       'モメンタム(試合の流れ)',
       'クイック消化',
       '値切り交渉',
-      '育成プラン(目標ロール)',
       '勝ち上がり賞金',
       '天候',
       '記者会見',
       'スカウティングレポート(試合プレビュー)',
-      '個別声かけ(モチベーショントーク)',
-      '話し合い',
       '戦術ミーティング',
-      'ローテーション方針',
       '自動トレーニング',
       '契約解除の違約金',
       // 契約は年単位(AB1)のため、旧「契約残り週数」は年数表記へ更新済み。
@@ -9111,28 +8533,6 @@ void main() {
   });
 
   test(
-      'TrainingEngine.breakthroughPoolFor includes the attributes the '
-      'player is deliberately working on (drills and development plan) in '
-      'addition to the focus-based base pool', () {
-    final p = PlayerGenerator.generate(
-        position: Position.dc, strengthTier: 60, ageOverride: 20);
-    p.drillAttributeKey = AttributeKeys.finishing;
-    p.drillAttributeKey2 = AttributeKeys.pace;
-    p.developmentTargetRole = PlayerRole.ballPlayingDefender;
-
-    final pool = TrainingEngine.breakthroughPoolFor(p, TrainingFocus.defense);
-
-    expect(pool, contains(AttributeKeys.finishing),
-        reason: '特訓ドリルで狙っている能力値は才能開花の候補に入る');
-    expect(pool, contains(AttributeKeys.pace));
-    for (final k in PlayerRole.ballPlayingDefender.keyAttributes) {
-      expect(pool, contains(k), reason: '育成プラン(目標ロール)の重視能力値も候補に入る');
-    }
-    expect(pool, contains(AttributeKeys.tackling),
-        reason: 'フォーカス由来の基本候補群はそのまま残る');
-  });
-
-  test(
       'CupEngine.simulateShootout returns a consistent record: kicks '
       'alternate starting with the home team, the winner has the higher '
       'score, and per-team kick counts differ by at most one', () {
@@ -9202,7 +8602,6 @@ void main() {
     final save = SaveGame(clubName: 'テストFC', userTeamId: 'a', league: league)
       ..negotiationSignings = 2
       ..breakthroughCount = 11
-      ..traitsAcquired = 4
       ..liveWins = 12
       ..careerCupPrize = 1234
       ..pkShootoutWins = 3;
@@ -9210,7 +8609,6 @@ void main() {
     final restored = SaveGame.fromJson(save.toJson());
     expect(restored.negotiationSignings, 2);
     expect(restored.breakthroughCount, 11);
-    expect(restored.traitsAcquired, 4);
     expect(restored.liveWins, 12);
     expect(restored.careerCupPrize, 1234);
     expect(restored.pkShootoutWins, 3);
@@ -9218,14 +8616,12 @@ void main() {
     final legacyJson = save.toJson()
       ..remove('negotiationSignings')
       ..remove('breakthroughCount')
-      ..remove('traitsAcquired')
       ..remove('liveWins')
       ..remove('careerCupPrize')
       ..remove('pkShootoutWins');
     final legacy = SaveGame.fromJson(legacyJson);
     expect(legacy.negotiationSignings, 0);
     expect(legacy.breakthroughCount, 0);
-    expect(legacy.traitsAcquired, 0);
     expect(legacy.liveWins, 0);
     expect(legacy.careerCupPrize, 0);
     expect(legacy.pkShootoutWins, 0);
@@ -9241,7 +8637,6 @@ void main() {
       'bargain_hunter',
       'cup_prize_1000',
       'breakthrough_10',
-      'trait_teacher',
       'live_wins_10',
       'shootout_winner',
     };
@@ -9255,7 +8650,6 @@ void main() {
     save.negotiationSignings = 0;
     save.careerCupPrize = 999;
     save.breakthroughCount = 9;
-    save.traitsAcquired = 2;
     save.liveWins = 9;
     save.pkShootoutWins = 0;
     expect(unlockedIds().intersection(counterIds), isEmpty);
@@ -9263,7 +8657,6 @@ void main() {
     save.negotiationSignings = 1;
     save.careerCupPrize = 1000;
     save.breakthroughCount = 10;
-    save.traitsAcquired = 3;
     save.liveWins = 10;
     save.pkShootoutWins = 1;
     expect(unlockedIds(), containsAll(counterIds));
@@ -9348,21 +8741,23 @@ void main() {
     final easyState = GameState();
     await easyState.startNewGame('イージーFC', difficulty: GameDifficulty.easy);
     expect(easyState.save!.difficulty, GameDifficulty.easy);
-    expect(easyState.save!.budget, 9000, reason: '初期資金6000万円の1.5倍');
+    expect(easyState.save!.budget, (GameState.initialBudgetTier5 * 1.5).round(),
+        reason: '初期資金(5部の年収の半年分)の1.5倍');
     expect(
       easyState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(easyState.save!.league, 'user') + 2)
-          .clamp(1, teamsPerLeague),
+          .clamp(1, easyState.save!.league.teams.length),
       reason: 'イージーは理事会目標が2つ緩い',
     );
 
     final hardState = GameState();
     await hardState.startNewGame('ハードFC', difficulty: GameDifficulty.hard);
-    expect(hardState.save!.budget, 3600, reason: '初期資金6000万円の0.6倍');
+    expect(hardState.save!.budget, (GameState.initialBudgetTier5 * 0.6).round(),
+        reason: '初期資金(5部の年収の半年分)の0.6倍');
     expect(
       hardState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(hardState.save!.league, 'user') - 1)
-          .clamp(1, teamsPerLeague),
+          .clamp(1, hardState.save!.league.teams.length),
       reason: 'ハードは理事会目標が1つ厳しい',
     );
 
@@ -9583,11 +8978,14 @@ void main() {
 
     // 上限を現在の週給総額ちょうどまで絞ると、どんな新加入も枠を超える。
     gameState.save!.wageBudget = gameState.weeklyWageBill;
-    final target = gameState.transferMarket.first;
-    gameState.save!.budget = target.marketValue + 10000;
+    // 登録の決まりで止まる選手だと理由が違うので、加えられる選手で見る。
+    // 資金は代理人手数料(5%)の分も足りるようにする。
+    final target = legacyMarket(gameState)
+        .firstWhere((p) => SquadRegistration.canAdd(gameState.userTeam, p));
+    gameState.save!.budget = target.marketValue * 2 + 10000;
     final bought = await gameState.buyPlayer(target.id);
     expect(bought, isFalse);
-    expect(gameState.lastSigningBlockReason, contains('週給予算'));
+    expect(gameState.lastSigningBlockReason, contains('給与予算'));
 
     // 上限を十分に広げれば同じ獲得が通る。
     gameState.save!.wageBudget = gameState.weeklyWageBill + target.wage + 50;
@@ -9653,8 +9051,14 @@ void main() {
     for (final p in team.players) {
       final prev = before[p.id];
       if (prev == null) continue;
+      // 仲の良かった選手には、友人が去った寂しさも重なる。
+      final friendLoss = RelationsEngine.areFriends(leader, p)
+          ? RelationsEngine.friendLeftPenalty
+          : 0;
       expect(
-          p.happiness, (prev - DynamicsEngine.leaderSalePenalty).clamp(0, 100),
+          p.happiness,
+          (prev - DynamicsEngine.leaderSalePenalty - friendLoss)
+              .clamp(0, 100),
           reason: 'リーダー放出で残った全員の不満度が下がる');
     }
   });
@@ -9984,55 +9388,6 @@ void main() {
   });
 
   test(
-      'DevelopmentAdvisor flags fatigue, low sharpness, untapped potential '
-      'and missing mentors, and stays quiet for well-managed squads', () {
-    Player make({required int age}) {
-      final p = PlayerGenerator.generate(
-          position: Position.mc, strengthTier: 55, ageOverride: age);
-      p.fatigue = 10;
-      p.matchSharpness = 80;
-      p.drillAttributeKey = AttributeKeys.passing;
-      p.mentorId = 'vet';
-      return p;
-    }
-
-    final veteran = make(age: 30);
-    final tired = make(age: 27)..fatigue = 90;
-    final rusty = make(age: 27)..matchSharpness = 20;
-    final rawTalent = make(age: 19)
-      ..drillAttributeKey = null
-      ..developmentTargetRole = null;
-    rawTalent.setAttributeValue(AttributeKeys.finishing, 30);
-    final noMentorKid = make(age: 19)..mentorId = null;
-    final team = Team(
-      id: 't',
-      name: 'T',
-      players: [veteran, tired, rusty, rawTalent, noMentorKid],
-    );
-
-    final advices = DevelopmentAdvisor.advise(team);
-    final kindsFor = <String, Set<AdviceKind>>{};
-    for (final a in advices) {
-      kindsFor.putIfAbsent(a.playerId, () => {}).add(a.kind);
-    }
-    expect(kindsFor[tired.id], contains(AdviceKind.highFatigue));
-    expect(kindsFor[rusty.id], contains(AdviceKind.lowSharpness));
-    if (rawTalent.potential - rawTalent.overall >=
-        DevelopmentAdvisor.potentialGapThreshold) {
-      expect(kindsFor[rawTalent.id], contains(AdviceKind.unusedPotential));
-    }
-    expect(kindsFor[noMentorKid.id], contains(AdviceKind.noMentor));
-    expect(kindsFor[veteran.id], isNull, reason: 'ケアの行き届いた選手には指摘が出ない');
-    expect(advices.length, lessThanOrEqualTo(DevelopmentAdvisor.maxAdvices));
-
-    // 重要度順(疲労が最優先)に並ぶ。
-    for (var i = 1; i < advices.length; i++) {
-      expect(advices[i].kind.index,
-          greaterThanOrEqualTo(advices[i - 1].kind.index));
-    }
-  });
-
-  test(
       'SquadScreen.filterAndSort supports the condition sorts and the '
       'starters/bench/needs-attention status filters', () {
     Player make() =>
@@ -10133,6 +9488,13 @@ void main() {
     }
     expect(youngEnough, greaterThan(60), reason: '緊急補強の多くが20代前半〜半ばである');
 
+    // 自クラブの水準を渡すと、その少し下の力の選手になる(5部に大物が来ない)。
+    for (var i = 0; i < 200; i++) {
+      final p = FreeAgentEngine.generateEmergencySigning(squadMedian: 50);
+      expect(p.overall, lessThanOrEqualTo(62),
+          reason: '総合の真ん中が50のクラブの緊急補強は、主力より上にならない');
+    }
+
     // 通常のFA市場は従来通りベテラン中心のまま(役割が違う)。
     for (var i = 0; i < 50; i++) {
       expect(FreeAgentEngine.generateVeteran().age, greaterThanOrEqualTo(27));
@@ -10210,7 +9572,7 @@ void main() {
             reason: '$label: 理事会目標が順位の範囲内');
         expect(save.managerContractYears, greaterThan(0),
             reason: '$label: 監督契約が結ばれている');
-        expect(gameState.transferMarket, isNotEmpty,
+        expect(legacyMarket(gameState), isNotEmpty,
             reason: '$label: 移籍市場に選手がいる');
 
         // 同姓同名が並ぶと、スタメン編成や交代で誰を選んでいるか分からなくなる。
@@ -10221,7 +9583,7 @@ void main() {
         expect(clubNames.toSet().length, clubNames.length,
             reason: '$label: リーグ内にクラブ名の重複がない');
         final marketNames =
-            gameState.transferMarket.map((p) => p.name).toList();
+            legacyMarket(gameState).map((p) => p.name).toList();
         expect(marketNames.toSet().length, marketNames.length,
             reason: '$label: 移籍市場に同姓同名が並ばない');
       }
@@ -10604,8 +9966,6 @@ void main() {
           reason: '$label: careerApps');
       expect(restored.careerGoals, p.careerGoals,
           reason: '$label: careerGoals');
-      expect(restored.individualFocus, p.individualFocus,
-          reason: '$label: individualFocus');
       expect(restored.wage, p.wage, reason: '$label: wage');
       expect(restored.contractYearsRemaining, p.contractYearsRemaining,
           reason: '$label: contractYears');
@@ -10646,25 +10006,6 @@ void main() {
           reason: '$label: loanStartOverall');
       expect(restored.overallHistory, p.overallHistory,
           reason: '$label: overallHistory');
-      expect(restored.mentorId, p.mentorId, reason: '$label: mentorId');
-      expect(restored.drillAttributeKey, p.drillAttributeKey,
-          reason: '$label: drill1');
-      expect(restored.drillAttributeKey2, p.drillAttributeKey2,
-          reason: '$label: drill2');
-      expect(restored.traitTrainingTarget, p.traitTrainingTarget,
-          reason: '$label: traitTarget');
-      expect(restored.personalityTraitTrainingTarget,
-          p.personalityTraitTrainingTarget,
-          reason: '$label: personalityTraitTarget');
-      expect(restored.focusRotation, p.focusRotation,
-          reason: '$label: focusRotation');
-      expect(restored.rotationWeekIndex, p.rotationWeekIndex,
-          reason: '$label: rotationIndex');
-      expect(restored.trainingConvertTargetPosition,
-          p.trainingConvertTargetPosition,
-          reason: '$label: convertTarget');
-      expect(restored.developmentTargetRole, p.developmentTargetRole,
-          reason: '$label: devRole');
       expect(restored.trait, p.trait, reason: '$label: trait');
       expect(restored.growthType, p.growthType, reason: '$label: growthType');
     }
@@ -10696,12 +10037,9 @@ void main() {
       ..suspendedMatches = 1
       ..careerAppearances = 210
       ..careerGoals = 61
-      ..individualFocus = TrainingFocus.attack
       ..wage = 340
       ..contractYearsRemaining = 4
       ..happiness = 22
-      ..reassureCooldownWeeks = 2
-      ..talkCooldownWeeks = 1
       ..isLoan = true
       ..loanWeeksRemaining = 12
       ..loanBuyOptionFee = 5200
@@ -10718,13 +10056,7 @@ void main() {
       ..youthMatchApps = 9
       ..youthMatchGoals = 4
       ..lastYouthMatchRating = 7.5
-      ..loanStartOverall = 58
-      ..rotationWeekIndex = 1
-      ..mentorId = 'mentor-1'
-      ..drillAttributeKey = AttributeKeys.finishing
-      ..drillAttributeKey2 = AttributeKeys.passing
-      ..focusRotation = [TrainingFocus.attack, TrainingFocus.fitness]
-      ..developmentTargetRole = PlayerRole.playmaker;
+      ..loanStartOverall = 58;
     custom.overallHistory.addAll([50, 51, 53]);
     custom.positionFamiliarity[Position.st.name] = 60;
     custom.injuryHistoryCounts[InjuryType.muscle.name] = 2;
@@ -10760,8 +10092,20 @@ void main() {
       'growthType': p.growthType.name,
       'personality': p.personality.name,
       'overallHistory': p.overallHistory,
-      'mentorId': null,
       'trait': p.trait?.name,
+      // 監督時代の個別育成の項目。いまは読まずに捨てる。
+      'mentorId': 'someone',
+      'individualFocus': 'attack',
+      'drillAttributeKey': AttributeKeys.finishing,
+      'drillAttributeKey2': AttributeKeys.passing,
+      'traitTrainingTarget': 'clinicalFinisher',
+      'personalityTraitTrainingTarget': 'warriorSpirit',
+      'focusRotation': ['attack', 'fitness'],
+      'rotationWeekIndex': 1,
+      'trainingConvertTargetPosition': 'dm',
+      'developmentTargetRole': 'playmaker',
+      'reassureCooldownWeeks': 2,
+      'talkCooldownWeeks': 1,
     };
     final fromVerbose = Player.fromJson(verbose);
     final fromSparse = Player.fromJson(sparse);
@@ -10771,6 +10115,8 @@ void main() {
     expect(fromVerbose.duty, fromSparse.duty);
     expect(fromVerbose.growthType, fromSparse.growthType);
     expect(fromVerbose.matchSharpness, fromSparse.matchSharpness);
+    expect(fromVerbose.toJson().keys.toSet(), fromSparse.toJson().keys.toSet(),
+        reason: '監督時代の項目が書き戻されている');
 
     // 未知のenum名は既定値へフォールバックし、例外にはならない。
     final corrupted = <String, dynamic>{
@@ -10801,7 +10147,7 @@ void main() {
     final save = gameState.save!;
     expect(save.friendlies, isNotEmpty, reason: '新規ゲームでプレシーズン親善試合が生成されていない');
 
-    final anchor = CalendarEngine.seasonAnchor(save.league.season);
+    final anchor = gameState.dateOfMatchday(1);
     final days = CalendarEngine.buildRange(
       from: anchor.subtract(const Duration(days: 30)),
       to: anchor.add(const Duration(days: 7)),
@@ -10810,6 +10156,7 @@ void main() {
       trainingDayOfWeek: gameState.userTeam.trainingDayOfWeek,
       today: anchor,
       friendlies: save.friendlies,
+      calendar: gameState.seasonCalendar,
     );
 
     final friendlyDays = days.where((d) => d.isFriendlyMatchDay).toList();
@@ -10830,16 +10177,12 @@ void main() {
       trainingDayOfWeek: gameState.userTeam.trainingDayOfWeek,
       today: anchor,
       friendlies: const [],
+      calendar: gameState.seasonCalendar,
     );
     expect(playedAll.any((d) => d.isFriendlyMatchDay), isFalse);
 
-    // 既定方針が「全体練習」に変わったことがガイド・用語集に反映されている。
-    final guideText = guideSections
-        .expand((s) => s.topics)
-        .map((t) => '${t.title}${t.description}')
-        .join();
-    expect(guideText.contains('全体練習'), isTrue,
-        reason: 'ガイドに既定のトレーニング方針(全体練習)の説明がない');
+    // 練習はコーチ陣の仕事になり、ガイドからトレーニングの章は外した。
+    // 用語としては残っているので、用語集で引けることだけを確かめる。
     expect(glossaryEntries.any((e) => e.term == '全体練習'), isTrue,
         reason: '用語集に「全体練習」が載っていない');
   });

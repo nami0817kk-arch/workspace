@@ -59,6 +59,9 @@ def items(sc) -> list[tuple[str, str]]:
             v = str((meta or {}).get(k) or "").replace("／", "").strip()
             if v:
                 out.append((f"ショート {sid} の {k}", v))
+        if str((meta or {}).get("tease") or "").strip():
+            from .shorts import CTA_SPOKEN
+            out.append((f"ショート {sid} の 登録のお願い", CTA_SPOKEN))
     return out
 
 

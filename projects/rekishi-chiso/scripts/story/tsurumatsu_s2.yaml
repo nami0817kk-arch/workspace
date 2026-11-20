@@ -1,0 +1,175 @@
+# 物語完結型ショート 鶴松 s2（2026-11-06）。本編 scripts/tsurumatsu-if-story.yaml（11/7 12:00 公開）の第1章（1589年の誕生）から。11/8 11:00 公開。
+# 形式は maizo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。「もしも」の部分は入れない（事実だけ）。
+# 絵は本編の AI 絵（out/story/tsurumatsu-if/main/T*）と本編で使った実在の肖像・屏風だけ。T07・T08・T29・T30 は使わない（s1 の頭のとおり）。
+# 切り口：跡継ぎが生まれた1589年、秀吉の猶子だった智仁親王（後陽成天皇の弟）が縁を解かれ、知行3000石の八条宮が立てられた。
+#   あわせて、幼い名の「棄」と、秀吉の年齢が本で割れること（54・52・天文6年生まれなら53）。本編の答え（鶴松の死と髻の塚）は言わない。
+# 事実カード：tsurumatsu-01・02・23・24・53。言い方は本編のまま。
+# 計算（自分で計算し直した）：天文6年＝1537年。1589年に数えで 1589−1537＋1＝53。天文5年（1536）なら54。52歳は本に数え方の説明なし（本編どおり言わない）。
+# 理解テスト4問：
+#   ①誰の話か：豊臣秀吉と、生まれた跡継ぎ（はじめ棄と呼ばれた子）
+#   ②いつ・どこで何が：1589年5月27日、茶々が山城の淀城で男の子を産んだ
+#   ③何が動いたか：同じ年、秀吉の形だけの子だった智仁親王が縁を解かれ、八条宮（のちの桂宮）が立てられた
+#   ④どうなったか：秀吉の年齢は本で割れるが、どの数え方でも50歳を過ぎて得た跡継ぎ。2年後の死の日の問いで閉じる
+title: 鶴松の誕生｜天皇の弟との縁が解かれた
+yt_title: 豊臣秀吉に跡継ぎの鶴松が生まれた1589年、天皇の弟・智仁親王は秀吉の猶子を解かれた　幼い名は「棄」
+description: |-
+  1589年の5月27日、豊臣秀吉の側室の茶々が、山城の淀城で男の子を産みました。のちの鶴松です。
+  男の子は、はじめ、棄と呼ばれました。1932年の『国史大図鑑』は、育つように祈って、わざと棄丸と呼ばせた、と説明します。このときの秀吉の年齢は、1914年の『豊公遺文』の年譜では54歳、1926年の『日本国宝全集』では52歳と、本によって割れます。天文6年の生まれなら、数えで53歳です。
+  その年、秀吉の猶子、つまり形だけの子になっていた、後陽成天皇の弟、智仁親王が、その縁を解かれました。代わりに、秀吉の願い出で、知行3000石の宮家、八条宮（のちの桂宮）が立てられています。
+  この子は2年後、数えで3歳で亡くなります。もしも鶴松が生きていたら、豊臣家はどうなったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#豊臣鶴松', '#豊臣秀吉', '#日本史']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/tsurumatsu-if
+out: tsurumatsu_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 豊臣鶴松（秀吉の跡継ぎ）
+  title: "《天皇の弟》との縁が、解かれた"
+now:
+  - {at: 1589年の5月27日, text: "1589年5月　山城・淀城", point: 0}
+  - {at: 1914年, text: "1914年・1926年の本", point: 1}
+  - {at: その年秀吉の猶子, text: "1589年　京都", point: 0}
+timeline:
+  - {label: "1589"}
+  - {label: "1914〜"}
+cards:
+  - type: table
+    title: 1589年の秀吉の年齢
+    from: 1914年
+    until: その年秀吉の猶子
+    items:
+      - {at: 1914年, text: "『豊公遺文』　54歳"}
+      - {at: 1926年, text: "『日本国宝全集』　52歳"}
+      - {at: 天文6年の生まれなら, text: "天文6年生まれなら　53歳"}
+    text_y: 0.70
+  - type: year
+    from: 代わりに
+    until: 跡継ぎが生まれて
+    big: 3000石
+    sub: 新しい宮家、八条宮（のちの桂宮）
+    text_y: 0.70
+shots:
+  T03:
+    kind: ai
+    file: tsurumatsu-if/main/T03.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 御殿に座る秀吉（跡継ぎが生まれた年）
+  T01:
+    kind: ai
+    file: tsurumatsu-if/main/T01.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 茶々と産着の赤子
+  T01b:
+    kind: ai
+    file: tsurumatsu-if/main/T01.jpg
+    focus: [0.5, 0.55]
+    move: left
+    zoom: 0.12
+    must: 抱かれた赤子（棄と呼ばれた子）
+  Hideyoshi:
+    kind: real
+    image: paintings/hideyoshi_portrait_osaka_city_1600.jpg
+    crop: [0.0, 0.12, 1.0, 0.85]
+    focus: [0.5, 0.45]
+    move: down
+    text_y: 0.82
+    credit: "《豊臣秀吉像》1600年 大阪市立美術館蔵（パブリックドメイン）"
+    must: 秀吉の肖像（秀吉の年齢）
+  T10:
+    kind: ai
+    file: tsurumatsu-if/main/T10.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 机の上の文書（生まれ年の記録）
+  T03b:
+    kind: ai
+    file: tsurumatsu-if/main/T03.jpg
+    focus: [0.5, 0.4]
+    move: out
+    zoom: 0.12
+    must: 秀吉の顔（50歳を過ぎて得た跡継ぎ）
+  Kyoto:
+    kind: real
+    image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+    focus: [0.7, 0.5]
+    move: left
+    credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻（パブリックドメイン）"
+    must: 京都の町と御所（天皇の家）
+  Kyotob:
+    kind: real
+    image: paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+    focus: [0.3, 0.45]
+    move: right
+    credit: "狩野永徳《洛中洛外図屏風》（上杉本）右隻（パブリックドメイン）"
+    must: 京都の町（宮家が立てられる）
+  T25:
+    kind: ai
+    file: tsurumatsu-if/main/T25.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 金の襖の広間に座る茶々（跡継ぎの母）
+  T06:
+    kind: ai
+    file: tsurumatsu-if/main/T06.jpg
+    focus: [0.55, 0.5]
+    move: out
+    must: 仏前に座る人々の後ろ姿（2年後の死）
+lines:
+  # fact: tsurumatsu-53
+  - 語り: 秀吉に跡継ぎが生まれた年、なぜ、《!天皇の弟》との縁が、解かれたのか。
+    shot: T03
+    tone: 強調
+    pause: 0.12
+  # fact: tsurumatsu-01
+  - 語り: 1589年の5月27日。秀吉の側室の茶々が、山城の淀城で、男の子を産んだ。
+    shot: T01
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-02
+  - 語り: 男の子は、はじめ、棄と呼ばれた。育つように祈って、わざと棄丸と呼ばせた、と1932年の国史大図鑑は説明する。
+    shot: T01b
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-24
+  - 語り: このとき、秀吉は何歳だったのか。1914年の豊公遺文は、54歳。1926年の日本国宝全集は、52歳と書く。
+    shot: Hideyoshi
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-23
+  - 語り: 秀吉の生まれ年は、天文5年と天文6年に割れている。天文6年の生まれなら、数えで53歳だ。
+    shot: T10
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-53
+  - 語り: その年、秀吉の猶子、つまり形だけの子になっていた、後陽成天皇の弟、智仁親王が、その縁を解かれた。
+    shot: Kyoto
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-53
+  - 語り: 代わりに、秀吉の願い出で、知行3000石の宮家、八条宮が立てられた。
+    shot: Kyotob
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-53
+  - 語り: 跡継ぎが生まれて、天皇の家との約束が、1つ書き換えられたのだ。
+    shot: T25
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: この子は、2年後に亡くなる。その日、大名たちは、何を切ったのか。
+    shot: T06
+    tone: 疑問
+    pause: 0.15

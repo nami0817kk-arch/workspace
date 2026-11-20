@@ -1,0 +1,145 @@
+# 物語完結型ショート 元寇（もしも）s3（2026-10-31）。本編 scripts/genkou-if-story.yaml（11/3 12:00 公開、https://youtu.be/TfyxJjTTW9Y）から。切り口：博多湾の石の壁（元寇防塁）：台風の前からあった防御
+# 形式は jeanne_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「時宗想像」「御家人想像」「季長想像」は使わない）。戦闘・負傷・遺体の絵なし。
+# 絵は本編の AI 絵（out/story/genkou-if/main/G01〜G15。人物は描かない）と実在の絵（paintings/genkou_*）。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/元寇_facts_20261030.yaml）：genkou-if-34・35・37・60・61・62・64
+# ・「北条時宗が九州の御家人に九州へ下るよう命じた」は本編（64）どおり。国ごと交代で博多を守る役（60）。1年のうち3か月ずつは本編にあるが、ここでは尺のため言わない。
+# ・石の壁の高さ・幅は文化遺産オンラインの要約（35、出どころ1つ）。築造の始まり・完成は『世界大百科事典』（61）。
+# ・最後の問いは本編の結論（台風がなければ、は言い切れない）の手前で閉じる。答えは言わない。
+# 理解テスト4問：
+#   ①誰の話か：博多湾の石の壁（元寇防塁）と、それを築かせた鎌倉幕府
+#   ②いつ・どこで何が：1275年に使者が斬られ、1276年3月ごろ博多湾で石の壁の築造が始まった。2016年に九州大学で石積みが見つかった
+#   ③何をしたか：九州の御家人を九州へ下らせ、9か国に長さを割り当てて築かせた
+#   ④どうなったか：1281年は防塁と防戦で上陸を阻まれた。台風が来なかったら止められたかは問いで閉じる
+title: 元寇｜台風の前から、博多湾には石の壁があった
+yt_title: 元寇防塁は台風の前から博多湾にあった　1276年に始まった石の壁の築造
+description: |-
+  1275年、元の使者が長門の室津に着き、鎌倉へ送られて、竜口で首を斬られました。北条時宗は九州の御家人に、九州へ下るよう命じます。
+  1276年3月ごろ、博多湾の浜辺で、石の壁の築造が始まりました。鎌倉幕府が九州9か国に、所領の広さに応じた長さを割り当てて築かせたものです。福岡市の今津では約3.9kmにわたって築かれ、高さは約3mでした。2016年9月には、九州大学の箱崎キャンパスで、南北17m以上の石積みが見つかっています。『山川 日本史小辞典』は、1281年の戦いについて、「防塁や日本軍の激しい防戦で上陸を阻まれ」と書きます。
+  台風が来なかった夏、この壁は、元軍を止められたのか。この問いを掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#元寇', '#日本史', '#鎌倉時代']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/genkou-if
+out: genkou_if_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 元寇（博多湾の防塁）
+  title: "台風の前から、《石の壁》があった"
+now:
+  - {at: 1275年, text: "1275年　長門・鎌倉", point: 0}
+  - {at: 1276年, text: "1276年　博多湾", point: 1}
+  - {at: 2016年, text: "2016年　九州大学", point: 2}
+timeline:
+  - {label: "1275"}
+  - {label: "1276"}
+  - {label: "2016"}
+cards:
+  - type: table
+    title: 石の壁（元寇防塁）の大きさ
+    from: 福岡市の今津
+    until: 2016年
+    items:
+      - {at: 福岡市の今津, text: "今津の約3900mに築かれた"}
+      - {at: 高さは約3m, text: "高さ約3m・下の幅約3m"}
+    text_y: 0.70
+shots:
+  G14:
+    kind: ai
+    file: genkou-if/main/G14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 朝の山道を行く小さな後ろ姿の旅人
+  G02:
+    kind: ai
+    file: genkou-if/main/G02.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 朝の博多湾
+  G04:
+    kind: ai
+    file: genkou-if/main/G04.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 朝の砂浜に続く積みかけの低い石の壁
+  G05:
+    kind: ai
+    file: genkou-if/main/G05.jpg
+    focus: [0.4, 0.55]
+    move: right
+    must: 松林の海岸線に続く石の壁
+  G05b:
+    kind: ai
+    file: genkou-if/main/G05.jpg
+    focus: [0.62, 0.55]
+    move: left
+    must: 松林の海岸線に続く石の壁
+  G04b:
+    kind: ai
+    file: genkou-if/main/G04.jpg
+    focus: [0.62, 0.55]
+    move: left
+    must: 石の壁の足もと
+  G12:
+    kind: ai
+    file: genkou-if/main/G12.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夕暮れの博多湾。沖に船影、浜に石の壁
+  G13:
+    kind: ai
+    file: genkou-if/main/G13.jpg
+    focus: [0.55, 0.55]
+    move: right
+    must: 夜の浜の石の壁とかがり火
+lines:
+  # fact: genkou-if-62
+  - 語り: 1275年。元の使者が、長門の室津に着いた。そのまま鎌倉へ送られ、竜口で首を斬られた。
+    shot: G14
+    tone: 重い
+    pause: 0.12
+  # fact: genkou-if-64, genkou-if-60
+  - 語り: 北条時宗は、九州の御家人に、九州へ下るよう命じた。国ごとに交代で、博多を守る役である。
+    shot: G02
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-61
+  - 語り: 1276年3月ごろ、博多湾の浜辺で、石の壁の築造が始まった。8月ごろに完成した、とされる。
+    shot: G04
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-34
+  - 語り: 鎌倉幕府は、九州9か国に命じて、所領の広さに応じた長さを割り当てて、築かせた。
+    shot: G05
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-35
+  - 語り: 福岡市の今津では、約3900mにわたって築かれた。高さは約3m、下の幅は約3mの台形だ。
+    shot: G05b
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-37
+  - 語り: 2016年9月、九州大学の箱崎キャンパスで、南北17m以上の石積みが見つかった。薩摩国が分担した、石の壁の一部の可能性が高い、と発表された。
+    shot: G04b
+    tone: しみじみ
+    pause: 0.12
+  # fact: genkou-if-61
+  - 語り: 山川日本史小辞典は、1281年の戦いについて、「防塁や日本軍の激しい防戦で上陸を阻まれ」と書く。
+    shot: G12
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: 台風が来る前から、この壁は、そこにあった。台風が来なかった夏、この壁は、元軍を止められたのか。
+    shot: G13
+    tone: 疑問
+    pause: 0.15

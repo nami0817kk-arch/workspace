@@ -2,6 +2,7 @@ import '../models/player.dart';
 import '../models/save_game.dart';
 import '../models/team.dart';
 import '../l10n/tr.dart';
+import 'contract_engine.dart';
 import 'youth_departure_engine.dart';
 
 /// 「次にやること」1件。
@@ -23,13 +24,11 @@ class NextAction {
 }
 
 /// 行き先。画面そのものを持たせると、このファイルが UI に依存してしまう。
-enum NextActionTarget { lineup, training, squad, youth, finance, transfer }
+enum NextActionTarget { squad, youth, finance, transfer }
 
 /// いまのクラブの状態を見て、次にやることを1つだけ挙げる。
 ///
-/// 画面は30以上あり、何から手を付ければよいのかが分からない。育成
-/// アドバイザー([DevelopmentAdvisor])はトレーニング画面の中だけで、
-/// 「そもそもその画面を開くべきか」は教えてくれなかった。
+/// 画面は30以上あり、何から手を付ければよいのかが分からない。
 ///
 /// 複数を並べると結局どれからか分からなくなるため、出すのは常に1件。
 class NextActionAdvisor {
@@ -42,25 +41,51 @@ class NextActionAdvisor {
   /// 控えの契約まで急かすことになる。
   static const int keyPlayerMargin = 0;
 
-  /// [transferDeadlineMatchdaysLeft] は移籍ウィンドウが閉じるまでの残り節数
-  /// (閉じている・期限なしのときは null)。締切は移籍画面を開かないと
-  /// 見えないので、ホームからも知らせる。
+  /// [transferDeadlineDaysLeft] は移籍の窓の締切までの残り日数
+  /// (閉じているときは null)。[transferDeadlineBeforeNextMatch] は次の試合の
+  /// 前に窓が閉まるか(この節のあいだが最後の機会)。締切は移籍画面を
+  /// 開かないと見えないので、ホームからも知らせる。
   static List<NextAction> all(
     SaveGame save,
     Team team, {
-    int? transferDeadlineMatchdaysLeft,
+    int? transferDeadlineDaysLeft,
+    bool transferDeadlineBeforeNextMatch = false,
+    bool hasSigningProposals = false,
   }) {
     final actions = <NextAction>[];
 
-    // 移籍の締切。過ぎると次のウィンドウまで動けない。
-    final left = transferDeadlineMatchdaysLeft;
-    if (left != null && left <= deadlineWarningMatchdays) {
+    // 移籍の締切。過ぎると次の窓まで動けない。
+    final left = transferDeadlineDaysLeft;
+    if (left != null &&
+        (left <= deadlineWarningDays || transferDeadlineBeforeNextMatch)) {
       actions.add(NextAction(
-        message: left <= 1
-            ? Tr.pick('移籍ウィンドウは今節で締切です。', 'The transfer window shuts this matchday.')
-            : Tr.pick('移籍ウィンドウの締切まであと$left節です。',
-                'The transfer window shuts in $left matchdays.'),
+        message: left <= 0
+            ? Tr.pick('今日が移籍の締切日です。', 'Today is transfer deadline day.')
+            : transferDeadlineBeforeNextMatch
+                ? Tr.pick('移籍の窓は次の試合の前に閉まります(残り$left日)。',
+                    'The transfer window shuts before the next match (${Tr.plural(left, 'day')} left).')
+                : Tr.pick('移籍の締切まで残り$left日です。',
+                    'The transfer window shuts in ${Tr.plural(left, 'day')}.'),
         target: NextActionTarget.transfer,
+      ));
+    }
+
+    // 監督から補強の候補が届いている。買うか見送るかを決める。
+    if (hasSigningProposals) {
+      actions.add(NextAction(
+        message: Tr.pick('監督から補強の候補が届いています。買うか見送るかを決めてください。',
+            'Your manager has sent signing candidates. Sign them or pass.'),
+        target: NextActionTarget.transfer,
+      ));
+    }
+
+    // 他クラブから売却のオファーが届いている。承認するか断るかを決める。
+    if (save.incomingOffers.isNotEmpty) {
+      actions.add(NextAction(
+        message: Tr.pick(
+            '${save.incomingOffers.first.playerName}に売却のオファーが届いています。承認するか断るかを決めてください。',
+            'An offer for ${save.incomingOffers.first.playerName} has arrived. Accept or turn it down.'),
+        target: NextActionTarget.squad,
       ));
     }
 
@@ -74,24 +99,6 @@ class NextActionAdvisor {
       ));
     }
 
-    // スタメンが組めていない。試合に影響する。
-    if (team.startingXI.length < 11) {
-      actions.add(NextAction(
-        message: Tr.pick('スタメンが${team.startingXI.length}人です。11人そろえてください。',
-            'Only ${team.startingXI.length} players are in your XI. Fill all eleven.'),
-        target: NextActionTarget.lineup,
-        urgent: true,
-      ));
-    }
-
-    // 今週のトレーニングが残っている。毎週の積み上げなので、逃すと戻らない。
-    if (!save.trainingDoneThisWeek) {
-      actions.add(NextAction(
-        message: Tr.pick('今週のトレーニングがまだです。', 'This week\'s training is still waiting.'),
-        target: NextActionTarget.training,
-      ));
-    }
-
     // ユースの有望株が出ていきそう。気づける場所が他にない。
     final atRisk = save.youthProspects
         .where(YouthDepartureEngine.isAtRisk)
@@ -99,8 +106,8 @@ class NextActionAdvisor {
     if (atRisk.isNotEmpty) {
       actions.add(NextAction(
         message: Tr.pick(
-            'ユースの${atRisk.first.name}(${atRisk.first.age}歳)が出場機会を求めています。昇格させるか、メンターを付けてください。',
-            '${atRisk.first.name} (${atRisk.first.age}) wants first-team football. Promote him or give him a mentor.'),
+            'ユースの${atRisk.first.name}(${atRisk.first.age}歳)が出場機会を求めています。昇格させるか、ユース施設を上げて引き止めてください。',
+            '${atRisk.first.name} (${atRisk.first.age}) wants first-team football. Promote him, or improve the academy to keep him.'),
         target: NextActionTarget.youth,
       ));
     }
@@ -109,8 +116,8 @@ class NextActionAdvisor {
     final key = _expiringKeyPlayer(team);
     if (key != null) {
       actions.add(NextAction(
-        message: Tr.pick('${key.name}の契約が残り${key.contractYearsRemaining}年です。更新しないと無償で失います。',
-            "${key.name}'s contract has ${key.contractYearsRemaining} year(s) left. Renew it or lose him for nothing."),
+        message: Tr.pick('${key.name}の契約は${ContractEngine.untilLabel(key.contractEndYear)}です。更新しないと無償で失います。',
+            "${key.name}'s contract runs ${ContractEngine.untilLabel(key.contractEndYear)}. Renew it or lose him for nothing."),
         target: NextActionTarget.squad,
       ));
     }
@@ -118,17 +125,22 @@ class NextActionAdvisor {
     return actions;
   }
 
-  /// 締切の何節前から知らせるか。早すぎると毎週の雑音になる。
-  static const int deadlineWarningMatchdays = 3;
+  /// 締切の何日前から知らせるか。早すぎると毎週の雑音になる
+  /// (およそ2節ぶん)。
+  static const int deadlineWarningDays = 14;
 
   /// いま出すべき1件。何も無ければ null。
   static NextAction? top(
     SaveGame save,
     Team team, {
-    int? transferDeadlineMatchdaysLeft,
+    int? transferDeadlineDaysLeft,
+    bool transferDeadlineBeforeNextMatch = false,
+    bool hasSigningProposals = false,
   }) {
     final actions = all(save, team,
-        transferDeadlineMatchdaysLeft: transferDeadlineMatchdaysLeft);
+        transferDeadlineDaysLeft: transferDeadlineDaysLeft,
+        transferDeadlineBeforeNextMatch: transferDeadlineBeforeNextMatch,
+        hasSigningProposals: hasSigningProposals);
     if (actions.isEmpty) return null;
     // 損が確定しているものを先に出す。
     final urgent = actions.where((a) => a.urgent);

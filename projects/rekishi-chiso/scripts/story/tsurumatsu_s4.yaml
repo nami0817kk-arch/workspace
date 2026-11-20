@@ -1,0 +1,165 @@
+# 物語完結型ショート 鶴松 s4（2026-11-06）。本編 scripts/tsurumatsu-if-story.yaml（11/7 12:00 公開）の第4章・第5章（秀次の関白と秀次事件）から。11/8 16:30 公開。
+# 形式は maizo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。「もしも」は最後の問いだけ（事実と混ぜない）。
+# 絵は本編の AI 絵（out/story/tsurumatsu-if/main/T*）と本編で使った実在の肖像だけ。T07・T08・T29・T30 は使わない（s1 の頭のとおり）。
+#   処刑・切腹の場面は描かない（腹を切った行は僧衣で書状を読む秀次の絵、三条河原は出さない）。
+# 切り口：秀吉が秀次の数え2歳の若君に大和を継がせると言い出した（4月26日、木下吉隆の4月27日付の手紙）2か月あまり後に、秀次は高野山で腹を切る。
+#   切腹を命じたかは研究者で割れる（矢部健太郎／2015年の奈良高専の紀要の論文）。本編の答え（もしもの見立て：つなぎの関白なら火種は小さい）は言わない。
+#   公開済みの秀次の回（10/28）と重ならないよう、命令の有無は1行で触れるだけ。
+# 事実カード：tsurumatsu-08・11・41・42・46・49・50。言い方は本編のまま。
+# 計算（自分で計算し直した）：1591年8月5日→12月27日（または28日）で5か月たたない。4月16日→27日は11日。4月27日→7月8日は2か月11日（「2か月あまり」）。
+#   秀保は1579年生まれで1595年に数え17（事実カードの享年）。拾は1593年生まれで1595年に数え3。
+# 理解テスト4問：
+#   ①誰の話か：豊臣秀吉の甥、関白の秀次
+#   ②いつ・どこで何が：1595年、秀吉が秀次の2歳の子に大和を継がせると言った2か月あまり後、秀次は伏見で会えず高野山へ
+#   ③何が起きていたか：1593年に拾（秀頼）が生まれ、12日に三成と増田長盛が拾への忠誠を誓う
+#   ④どうなったか：15日、秀次は高野山の青巌寺で腹を切った。命じたかは研究者で割れる。もしもの問いで閉じる
+title: 秀次事件｜2か月あまり前の約束
+yt_title: 秀吉は秀次の2歳の子に大和を継がせると言った　その2か月あまり後、関白の秀次は高野山で腹を切った
+description: |-
+  1591年、豊臣秀吉の跡継ぎ、鶴松が数えで3歳で亡くなり、5か月たたないうちに、甥の秀次が関白になりました。2年後の1593年、茶々が、また男の子を産みます。拾、のちの秀頼です。
+  1595年の4月16日、秀次の弟の秀保が、大和の十津川で死にます。4月27日付の木下吉隆の手紙によると、秀吉は前の日に、主のいなくなった大和の国を、秀次の数えで2歳の若君に継がせる、と言い出していました。
+  その2か月あまり後の7月8日、秀次は伏見城へ向かいますが、秀吉に会うことも許されず、高野山へ行くよう命じられます。12日、石田三成と増田長盛は、血判を押した起請文で、数えで3歳の拾に尽くすと誓いました。15日、秀次は高野山の青巌寺で腹を切ります。秀吉が命じたのか、自ら切ったのか、研究者の読みは割れています。
+  もしも鶴松が生きていたら、秀次事件は起きたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#豊臣秀次', '#豊臣秀吉', '#日本史']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/tsurumatsu-if
+out: tsurumatsu_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 豊臣秀次（秀吉の甥・関白）
+  title: "大和の約束から、《2か月あまり》"
+now:
+  - {at: 1591年, text: "1591年　秀次が関白に", point: 0}
+  - {at: 2年後の1593年, text: "1593年　拾が生まれる", point: 1}
+  - {at: 1595年の4月16日, text: "1595年4月　大和・十津川", point: 2}
+  - {at: 7月8日, text: "1595年7月　伏見から高野山へ", point: 2}
+timeline:
+  - {label: "1591"}
+  - {label: "1593"}
+  - {label: "1595"}
+cards:
+  - type: table
+    title: 1595年
+    from: 4月27日付の
+    until: 12日石田三成
+    items:
+      - {at: 4月27日付の, text: "4月26日　大和を秀次の若君に"}
+      - {at: 7月8日, text: "7月8日　伏見で会えず、高野山へ"}
+    text_y: 0.74
+shots:
+  T27:
+    kind: ai
+    file: tsurumatsu-if/main/T27.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 秀次（想像図）
+  Hidetsugu:
+    kind: real
+    image: paintings/hidenaga_hidetsugu.jpg
+    crop: [0.18, 0.22, 0.80, 0.56]
+    focus: [0.5, 0.45]
+    move: down
+    text_box: true
+    credit: "《豊臣秀次像》17世紀前半（パブリックドメイン）"
+    must: 関白になった秀次の肖像
+  T25:
+    kind: ai
+    file: tsurumatsu-if/main/T25.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 金の襖の広間に座る茶々（拾を産む）
+  T16:
+    kind: ai
+    file: tsurumatsu-if/main/T16.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 霧の谷（大和の十津川）
+  T10:
+    kind: ai
+    file: tsurumatsu-if/main/T10.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 机の上の文書（木下吉隆の手紙）
+  T12:
+    kind: ai
+    file: tsurumatsu-if/main/T12.jpg
+    focus: [0.6, 0.5]
+    move: up
+    must: 高野山への山道を行く後ろ姿
+  Mitsunari:
+    kind: real
+    image: paintings/sekigahara_ishida_mitsunari.jpg
+    crop: [0.0, 0.0, 1.0, 0.7]
+    focus: [0.5, 0.25]
+    move: down
+    credit: "《石田三成像》18〜19世紀ごろ（パブリックドメイン）"
+    must: 石田三成の肖像（起請文）
+  T13:
+    kind: ai
+    file: tsurumatsu-if/main/T13.jpg
+    focus: [0.66, 0.5]
+    move: in
+    must: 書院で書状を読む僧衣の秀次（高野山）
+  T23:
+    kind: ai
+    file: tsurumatsu-if/main/T23.jpg
+    focus: [0.5, 0.5]
+    move: up
+    must: 雨の境内の五輪塔の列
+lines:
+  # fact: tsurumatsu-49
+  - 語り: 秀次の子に、大和を継がせる。秀吉がそう言って、《!2か月あまり》で、何が起きたのか。
+    shot: T27
+    tone: 強調
+    pause: 0.12
+  # fact: tsurumatsu-08
+  - 語り: 1591年、秀吉の跡継ぎ、鶴松が死ぬ。5か月たたないうちに、甥の秀次が、関白になった。
+    shot: Hidetsugu
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-11
+  - 語り: 2年後の1593年、茶々が、また男の子を産む。拾、のちの秀頼だ。
+    shot: T25
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-50
+  - 語り: 1595年の4月16日、秀次の弟の秀保が、大和の十津川で死ぬ。
+    shot: T16
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-49
+  - 語り: 4月27日付の、木下吉隆の手紙によると、秀吉は前の日、主のいない大和を、秀次の2歳の若君に継がせる、と言い出していた。
+    shot: T10
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-41
+  - 語り: 7月8日、秀次は伏見城へ向かった。けれど、秀吉に会うことも許されず、高野山へ行くよう命じられる。
+    shot: T12
+    tone: 重い
+    pause: 0.12
+  # fact: tsurumatsu-46
+  - 語り: 12日、石田三成と増田長盛は、血判を押した起請文で、数えで3歳の拾に、裏表なく尽くすと誓った。
+    shot: Mitsunari
+    tone: しみじみ
+    pause: 0.12
+  # fact: tsurumatsu-41, tsurumatsu-42
+  - 語り: 15日、秀次は、高野山の青巌寺で腹を切る。秀吉が命じたのか、自ら切ったのか、研究者の読みは、割れている。
+    shot: T13
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: もしも、鶴松が生きていたら。秀次事件は、起きたのか。
+    shot: T23
+    tone: 疑問
+    pause: 0.15

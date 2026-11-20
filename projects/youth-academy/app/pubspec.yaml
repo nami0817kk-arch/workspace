@@ -1,0 +1,30 @@
+name: youth_academy
+description: "ユースの系譜（仮題）— 試合の試作"
+publish_to: 'none'
+
+# 版とビルド番号。App Store Connect は同じビルド番号を二度受け付けない
+version: 0.13.8+37
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.5.5
+  webview_flutter: ^4.13.0
+  google_mobile_ads: ^9.1.0
+  in_app_purchase: ^3.3.1
+  # 端末の購入記録（StoreKit 2 の Transaction.all）を読んで、返金・入れ直しを起動時に照らし合わせる
+  in_app_purchase_storekit: ^0.4.13
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  # 試合の画面と中身（web/ の src を tool/build.js が1枚にまとめたもの）。手で直さない・コミットしない
+  assets:
+    - assets/web/index.html

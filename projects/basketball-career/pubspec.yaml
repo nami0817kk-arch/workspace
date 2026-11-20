@@ -1,7 +1,7 @@
 name: basketball_career
 description: "バスケットボールの選手育成シミュレーション。"
 publish_to: 'none'
-version: 1.0.0+5
+version: 1.0.0+16
 
 environment:
   sdk: ^3.13.2
@@ -14,11 +14,16 @@ dependencies:
   in_app_purchase: ^3.3.1
   url_launcher: ^6.3.2
   in_app_purchase_storekit: ^0.4.13
+  share_plus: ^13.3.1
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  # 本物の購入処理を偽の App Store につないで試す(test/store_purchase_test.dart)
+  in_app_purchase_platform_interface: ^1.4.1
+  fake_async: ^1.3.3
 
 flutter:
   uses-material-design: true
@@ -26,20 +31,20 @@ flutter:
   assets:
     - assets/fonts/OFL-NotoSansJP.txt
     - assets/art/title.jpg
-    - assets/art/ending_glory.jpg
-    - assets/art/ending_quiet.jpg
-    - assets/art/path.jpg
-    - assets/art/hall.jpg
-    - assets/art/scene_minibasket.jpg
-    - assets/art/scene_junior.jpg
-    - assets/art/scene_high.jpg
-    - assets/art/scene_university.jpg
-    - assets/art/scene_corporate.jpg
-    - assets/art/scene_pro.jpg
-    - assets/art/scene_abroad.jpg
     - assets/art/scene_national.jpg
-    - assets/art/icons/
+    - assets/art/scene_final.jpg
+    - assets/art/scene_preseason.jpg
+    - assets/art/scene_season.jpg
+    - assets/art/scene_deadline.jpg
+    - assets/art/scene_playoffs.jpg
+    - assets/art/scene_draft.jpg
+    - assets/art/scene_offseason.jpg
+    - assets/art/event_trade.jpg
+    - assets/art/event_signing.jpg
+    - assets/art/event_injury.jpg
+    - assets/art/event_draft.jpg
     - assets/art/players/
+    - assets/art/logos/
 
   # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。
   fonts:

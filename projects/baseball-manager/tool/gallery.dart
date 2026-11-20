@@ -16,7 +16,6 @@ import 'package:baseball_manager/game/snapshot.dart';
 import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/ui/art/avatar.dart';
 import 'package:baseball_manager/ui/art/career_chart.dart';
-import 'package:baseball_manager/ui/art/radar.dart';
 import 'package:baseball_manager/ui/art/scene.dart';
 import 'package:baseball_manager/ui/controller.dart';
 import 'package:baseball_manager/ui/milestone_dialog.dart';
@@ -57,19 +56,6 @@ class _Gallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = Player(
-      name: 'ギャラリー',
-      role: Role.batter,
-      age: 22,
-      potential: 70,
-      abilities: {
-        Ability.contact: 72,
-        Ability.power: 58,
-        Ability.speed: 44,
-        Ability.fielding: 66,
-        Ability.eye: 81,
-      },
-    );
     return MaterialApp(
       theme: ThemeData(
           useMaterial3: true,
@@ -113,7 +99,6 @@ class _Gallery extends StatelessWidget {
                   mood: Mood.happy,
                   label: s.name),
             ),
-          AbilityRadar(player: p),
           CareerChart(history: [
             10,
             14,

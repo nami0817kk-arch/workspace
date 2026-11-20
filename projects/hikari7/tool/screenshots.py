@@ -12,6 +12,8 @@ import base64
 import functools
 import http.server
 import json
+import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -102,10 +104,42 @@ class Tab:
         return r.get('result', {}).get('value')
 
 
-async def shoot():
-    prof = tempfile.mkdtemp(prefix='hikari-shots-')
-    edge = subprocess.Popen([EDGE, '--headless=new', f'--remote-debugging-port={DEBUG}', f'--user-data-dir={prof}',
+def open_edge(prefix='hikari-shots-', port=DEBUG):
+    """画面なしの Edge を一時の作業フォルダで開く。終わったら必ず close_edge(edge, prof) で閉じる。
+    ほかの撮影スクリプトもこれを使う(import screenshots as ss; edge, prof = ss.open_edge('名前-'))。"""
+    prof = tempfile.mkdtemp(prefix=prefix)
+    edge = subprocess.Popen([EDGE, '--headless=new', f'--remote-debugging-port={port}', f'--user-data-dir={prof}',
                              '--hide-scrollbars', '--mute-audio', 'about:blank'])
+    return edge, prof
+
+
+def close_edge(edge, prof):
+    """開いた Edge を、子のプロセスごと閉じる。
+    edge.terminate() だけだと、Windows では起動した 1 つが止まるだけで、引き継いだ本体と子が残る。
+    2026-11-15 に、撮影スクリプトが閉じ忘れた Edge が 26 個・約 4.5GB 残り、PC の空きメモリが 1GB まで減った。
+    同じポートの Edge が残っていると、次に開いた Edge がつながらず、古い方を撮ってしまうこともある。"""
+    if os.name == 'nt':
+        subprocess.run(['taskkill', '/PID', str(edge.pid), '/T', '/F'], capture_output=True)
+        # 引き継がれた側(同じ作業フォルダで動く msedge)も止める
+        ps = ("Get-CimInstance Win32_Process -Filter \"Name='msedge.exe'\" | "
+              "Where-Object { $_.CommandLine -and $_.CommandLine.Contains($env:EDGE_PROF) } | "
+              "ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }")
+        subprocess.run(['powershell', '-NoProfile', '-Command', ps], capture_output=True, env={**os.environ, 'EDGE_PROF': prof})
+    else:
+        edge.terminate()
+    try:
+        edge.wait(5)
+    except Exception:
+        edge.kill()
+    for _ in range(10):                       # 止まった直後はフォルダがまだ使われていることがある
+        shutil.rmtree(prof, ignore_errors=True)
+        if not os.path.exists(prof):
+            break
+        time.sleep(.3)
+
+
+async def shoot():
+    edge, prof = open_edge()
     try:
         for _ in range(50):
             try:
@@ -151,7 +185,7 @@ async def shoot():
                         raise SystemExit(f'{p}: ほぼ単色（白紙）')
                     print('ok', dev, name, im.size)
     finally:
-        edge.terminate()
+        close_edge(edge, prof)
 
 
 if __name__ == '__main__':

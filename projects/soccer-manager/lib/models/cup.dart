@@ -5,12 +5,19 @@ import '../l10n/tr.dart';
 /// カップ戦の不在(不戦勝)を表す仮想チームID。
 const String byeTeamId = '__BYE__';
 
-enum CupType { domestic, continental }
+enum CupType {
+  domestic,
+  continental,
+
+  /// 2つ目の国内カップ(リーグカップ)。同じ部のクラブだけで戦う短い大会。
+  leagueCup,
+}
 
 extension CupTypeInfo on CupType {
   String get label => switch (this) {
         CupType.domestic => Tr.pick('国内カップ', 'Domestic Cup'),
         CupType.continental => Tr.pick('大陸カップ', 'Continental Cup'),
+        CupType.leagueCup => Tr.pick('リーグカップ', 'League Cup'),
       };
 }
 

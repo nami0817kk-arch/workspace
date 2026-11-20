@@ -13,19 +13,11 @@ export '../models/training_focus.dart';
 class TrainingEngine {
   static final Random _rng = Random();
 
-  /// メンターとして有効に扱える最低年齢。
-  static const int minMentorAge = 28;
-
-  /// 個別声かけ(GameState.talkToPlayer)のクールダウン週数。性格特性の
-  /// 獲得判定([_rollPersonalityTraitAcquisition])が「監督が今週声をかけたか」
-  /// を判定する際にも参照するため、ここで一元管理する。
-  static const int talkCooldownWeeks = 3;
-
-  /// チームの全選手にトレーニングを適用する。個別方針が設定されている選手は
-  /// それを優先し、未設定の選手はチームの既定方針に従う。
+  /// チームの全選手に、チームの既定方針でトレーニングを適用する。
+  /// 選手ごとの個別の方針は持たない(練習の中身はクラブのコーチ陣に任せる)。
   /// [headCoachLevel]は成長効率、[trainingGroundLevel]は成長効率と疲労回復を高める。
   /// [injuryFactor]はフィジオのレベルに応じた練習中の負傷リスク軽減係数。
-  /// [careerGrowthBonus]は監督としての生涯成長(通算実績)に応じた成長効率の
+  /// [careerGrowthBonus]はクラブの通算実績に応じた成長効率の
   /// 追加倍率(1.0でボーナスなし)。
   static void applyWeeklyTraining(
     Team team, {
@@ -43,15 +35,12 @@ class TrainingEngine {
     final fatigueRecoveryBonus =
         ClubInfrastructure.fatigueRecoveryBonus(trainingGroundLevel) +
             ClubInfrastructure.fitnessCoachRecoveryBonus(fitnessCoachLevel);
-    final byId = {for (final p in team.players) p.id: p};
-    final mentorIdsUsed = <String>{};
+    final focus = team.defaultTrainingFocus;
 
     for (final p in team.players) {
-      // 「才能開花」・特性獲得の発生有無は毎週リセットする(セーブデータには
+      // 「才能開花」の発生有無は毎週リセットする(セーブデータには
       // 保存しない一時的なフラグ)。
       p.hadBreakthroughThisWeek = false;
-      p.acquiredTraitThisWeek = null;
-      final focus = _resolveFocus(p, team.defaultTrainingFocus);
       // ローン放出中の選手は貸出先で練習しているため、自クラブの施設・
       // スタッフによる成長ボーナスは適用せず、貸出先の標準的な環境
       // ([loanHostGrowthMultiplier])で育つ。
@@ -61,13 +50,6 @@ class TrainingEngine {
       final effectiveFatigueRecoveryBonus =
           isLoanedOut ? 0 : fatigueRecoveryBonus;
 
-      final mentor = p.mentorId == null ? null : byId[p.mentorId];
-      final validMentor =
-          (mentor != null && mentor.id != p.id && mentor.age >= minMentorAge)
-              ? mentor
-              : null;
-      if (validMentor != null) mentorIdsUsed.add(validMentor.id);
-
       _applyToPlayer(
         p,
         focus,
@@ -75,32 +57,8 @@ class TrainingEngine {
         effectiveFatigueRecoveryBonus,
         team.trainingIntensity,
         injuryFactor,
-        validMentor != null,
       );
     }
-
-    // 有効なメンターは指導のやりがいから士気が少し上がる。
-    for (final id in mentorIdsUsed) {
-      final mentor = byId[id];
-      if (mentor != null) {
-        mentor.happiness = (mentor.happiness + 1).clamp(0, 100);
-      }
-    }
-  }
-
-  /// この週に適用する方針を決める。[Player.focusRotation]が設定されて
-  /// いれば個別方針より優先し、登録順に1週ごとへ切り替える(ローテーション
-  /// が一巡したら最初に戻る)。未設定なら個別方針、それも未設定ならチームの
-  /// 既定方針に従う(従来通り)。
-  static TrainingFocus _resolveFocus(Player p, TrainingFocus teamDefault) {
-    final rotation = p.focusRotation;
-    if (rotation != null && rotation.isNotEmpty) {
-      final index = p.rotationWeekIndex % rotation.length;
-      final focus = rotation[index];
-      p.rotationWeekIndex = (index + 1) % rotation.length;
-      return focus;
-    }
-    return p.individualFocus ?? teamDefault;
   }
 
   static void _applyToPlayer(
@@ -110,11 +68,9 @@ class TrainingEngine {
     int fatigueRecoveryBonus,
     TrainingIntensity intensity,
     double injuryFactor,
-    bool hasMentor,
   ) {
     final intensityFactor = intensity.factor;
-    final mentorBonus = hasMentor ? 1.2 : 1.0;
-    final effectiveGrowth = growthMultiplier * intensityFactor * mentorBonus;
+    final effectiveGrowth = growthMultiplier * intensityFactor;
 
     switch (focus) {
       case TrainingFocus.balanced:
@@ -214,28 +170,9 @@ class TrainingEngine {
         p.fatigue = (p.fatigue + (6 * intensityFactor).round()).clamp(0, 100);
         break;
       case TrainingFocus.positionSwitch:
-        final targetName = p.trainingConvertTargetPosition;
-        if (targetName != null) {
-          // 明示的に指定した目標ポジションへ集中的にコンバートする。
-          // 慣れ度が上限に達したら正式に副ポジションへ加え、目標は解除する。
-          final target = Position.values.firstWhere(
-            (v) => v.name == targetName,
-            orElse: () => p.position,
-          );
-          if (target != p.position &&
-              _rng.nextDouble() < (0.6 * effectiveGrowth).clamp(0, 1)) {
-            p.growFamiliarity(target, amount: 3);
-          }
-          if (p.familiarityFor(target) >= 100 &&
-              !p.secondaryPositions.contains(target)) {
-            p.secondaryPositions = [...p.secondaryPositions, target];
-            p.trainingConvertTargetPosition = null;
-          }
-        } else {
-          for (final pos in p.secondaryPositions) {
-            if (_rng.nextDouble() < (0.5 * effectiveGrowth).clamp(0, 1)) {
-              p.growFamiliarity(pos, amount: 2);
-            }
+        for (final pos in p.secondaryPositions) {
+          if (_rng.nextDouble() < (0.5 * effectiveGrowth).clamp(0, 1)) {
+            p.growFamiliarity(pos, amount: 2);
           }
         }
         p.fatigue = (p.fatigue + (8 * intensityFactor).round()).clamp(0, 100);
@@ -262,41 +199,6 @@ class TrainingEngine {
       }
     }
 
-    // ピンポイント特訓ドリル: フォーカスとは無関係に指定した属性を追加で伸ばす。
-    // 2つ目のドリルは同時に2項目を欲張る分、成長率を1つ目より抑える。
-    if (p.drillAttributeKey != null) {
-      _grow(p, p.drillAttributeKey!, 0.35 * growthMultiplier * intensityFactor);
-    }
-    if (p.drillAttributeKey2 != null) {
-      _grow(p, p.drillAttributeKey2!, 0.2 * growthMultiplier * intensityFactor);
-    }
-
-    // 育成プラン: 目標ロールが設定されていれば、そのロールの重視能力値を
-    // 追加で伸ばす(ドリルほど強くはないが、フォーカスと無関係に毎週かかる)。
-    final targetRole = p.developmentTargetRole;
-    if (targetRole != null) {
-      for (final key in targetRole.keyAttributes) {
-        _grow(p, key, 0.25 * growthMultiplier * intensityFactor);
-      }
-    }
-
-    // 特性トレーニング: 未保有の選手のみ、狙った技術特性を低確率で獲得する。
-    if (p.trait == null && p.traitTrainingTarget != null) {
-      _rollTraitAcquisition(p, p.traitTrainingTarget!, effectiveGrowth);
-    }
-
-    // 性格特性の習得: 練習ではなく、メンター(チームメイト)や監督の
-    // 個別声かけを通じて、未保有の選手が狙った性格特性を低確率で獲得する。
-    if (p.trait == null && p.personalityTraitTrainingTarget != null) {
-      final talkedThisWeek = p.talkCooldownWeeks == talkCooldownWeeks;
-      _rollPersonalityTraitAcquisition(
-        p,
-        p.personalityTraitTrainingTarget!,
-        hasMentor,
-        talkedThisWeek,
-      );
-    }
-
     p.fatigue = (p.fatigue - 5 - fatigueRecoveryBonus ~/ 2).clamp(0, 100);
 
     if (focus != TrainingFocus.rest) {
@@ -304,7 +206,7 @@ class TrainingEngine {
       _rollBreakthrough(p, focus, effectiveGrowth);
     }
 
-    if (p.age >= _declineStartAge(p.growthType) &&
+    if (p.age >= declineStartAge(p) &&
         _rng.nextDouble() < _declineChance(p.growthType)) {
       _decline(p);
     }
@@ -317,6 +219,9 @@ class TrainingEngine {
     double intensityFactor,
     double injuryFactor,
   ) {
+    // 怪我をしている選手は練習に出ていない。ここで新しく怪我を振ると、
+    // 残りの離脱が1〜3週に上書きされ、長い怪我が短くなっていた(5週が2週に)。
+    if (p.injuryWeeks > 0) return;
     final naturalFitnessFactor =
         (1 - (p.attributeValue(AttributeKeys.naturalFitness) - 50) / 200).clamp(
       0.5,
@@ -445,7 +350,7 @@ class TrainingEngine {
     return participants;
   }
 
-  /// CPUクラブ向けの簡易的な週次成長。個別方針・メンター・ドリルといった
+  /// CPUクラブ向けの簡易的な週次成長。施設・スタッフといった
   /// ユーザー専用の仕組みは適用しないが、何もしないとユーザーだけが
   /// 育成システムで伸び続け、CPUの相対的な強さが何シーズンも停滞して
   /// しまう(=対戦相手として意味を失う)ため、ポジションに応じた基本成長を
@@ -460,7 +365,7 @@ class TrainingEngine {
   static const double cpuYouthGrowthBonus = 2.5;
 
   /// CPUクラブの底上げに掛ける、ユーザークラブに対する割合。ユーザーは
-  /// 施設・メンター・ドリル・育成プランでさらに上乗せできるので、この値が
+  /// 施設・スタッフでさらに上乗せできるので、この値が
   /// 1.0でもユーザーが育成で優位に立てる。逆にここを絞りすぎるとリーグ全体が
   /// 年々弱くなり、対戦相手として意味を失う。
   static const double cpuConditioningShare = 0.85;
@@ -508,7 +413,7 @@ class TrainingEngine {
           );
         }
       }
-      if (p.age >= _declineStartAge(p.growthType) &&
+      if (p.age >= declineStartAge(p) &&
           _rng.nextDouble() < _declineChance(p.growthType)) {
         _decline(p);
       }
@@ -520,65 +425,31 @@ class TrainingEngine {
   static double youthAcademyGrowthFactor(int facilityLevel) =>
       0.5 + facilityLevel * 0.2;
 
-  /// ユース昇格候補の育成方針([Player.individualFocus])に応じて伸ばす
-  /// 属性群を返す。GKは方針によらずゴールキーピング系を伸ばす。方針が
-  /// 未設定(null)・休養・ポジションコンバートの場合は、従来通り
-  /// ポジション別の既定の属性群にフォールバックする。
+  /// ユース昇格候補(とローン先の選手)が伸ばす属性群。GKはゴールキーピング系、
+  /// DFは守備系、それ以外は攻撃系。
   static List<String> _youthGrowthKeysFor(Player p) {
     if (p.position.group == PositionGroup.gk) {
       return AttributeKeys.goalkeeping;
     }
-    switch (p.individualFocus) {
-      case TrainingFocus.attack:
-        return const [
-          AttributeKeys.finishing,
-          AttributeKeys.longShots,
-          AttributeKeys.dribbling,
-          AttributeKeys.offTheBall,
-        ];
-      case TrainingFocus.defense:
-        return const [
-          AttributeKeys.tackling,
-          AttributeKeys.marking,
-          AttributeKeys.positioning,
-          AttributeKeys.anticipation,
-        ];
-      case TrainingFocus.fitness:
-        return const [
-          AttributeKeys.stamina,
-          AttributeKeys.naturalFitness,
-          AttributeKeys.acceleration,
-          AttributeKeys.strength,
-        ];
-      case TrainingFocus.balanced:
-      case TrainingFocus.positionSwitch:
-      case TrainingFocus.rest:
-      case null:
-        return p.position.group == PositionGroup.def
-            ? const [
-                AttributeKeys.tackling,
-                AttributeKeys.marking,
-                AttributeKeys.positioning,
-                AttributeKeys.anticipation,
-              ]
-            : const [
-                AttributeKeys.finishing,
-                AttributeKeys.longShots,
-                AttributeKeys.dribbling,
-                AttributeKeys.offTheBall,
-              ];
-    }
+    return p.position.group == PositionGroup.def
+        ? const [
+            AttributeKeys.tackling,
+            AttributeKeys.marking,
+            AttributeKeys.positioning,
+            AttributeKeys.anticipation,
+          ]
+        : const [
+            AttributeKeys.finishing,
+            AttributeKeys.longShots,
+            AttributeKeys.dribbling,
+            AttributeKeys.offTheBall,
+          ];
   }
 
   /// スカウトした昇格候補は、昇格させるまでユース施設で育成され続ける。
   /// 実戦がない分CPUの週次成長よりは緩やかだが、ユース施設のレベルが
   /// 高いほど伸びが早く、昇格のタイミングを見極めるゲーム性が生まれる。
-  /// [Player.individualFocus]を設定した選手は、その方針に沿った属性群が
-  /// 優先的に伸びる(第一チームのトレーニング方針と同じ仕組みを流用)。
-  /// ユースの有望株にメンター(一軍のベテラン)を付けたときの成長倍率。
-  /// 一軍内のメンター(1.2倍)より高いのは、施設での育成が実戦から遠く、
-  /// 指導者が付くことの差が大きいため。
-  static const double youthMentorGrowthBonus = 1.35;
+  /// 伸びる属性群はポジションで決まる([_youthGrowthKeysFor])。
 
   /// ユースコーチの得意分野で、重点的に伸びる能力値。
   ///
@@ -588,8 +459,7 @@ class TrainingEngine {
   /// ユースコーチの指導で、追加で伸びる項目。
   ///
   /// **倍率を上げても効かない。** [_grow]は1週1項目につき最大+1で、確率が
-  /// 1を超えている選手は倍率を上げても毎週+1のままになる(メンターの
-  /// ボーナスで実測済み)。指導が高いほど「手の回る項目が増える」という
+  /// 1を超えている選手は倍率を上げても毎週+1のままになる(実測済み)。指導が高いほど「手の回る項目が増える」という
   /// 形にすると、確率が飽和していても差が出る。
   static List<String> coachTeachingKeys(int coachLevel, Player p) {
     final keys = _youthGrowthKeysFor(p);
@@ -630,29 +500,9 @@ class TrainingEngine {
     }
   }
 
-  /// メンターが有望株に「教える」能力値。メンター自身が得意な項目の上位
-  /// [mentorTeachingCount]件を返す。GK以外の有望株にゴールキーピングを
-  /// 教えても意味がないため、担当が違う項目は除く。
-  static const int mentorTeachingCount = 2;
-
-  static List<String> mentorTeachingKeys(Player mentor, Player prospect) {
-    final prospectIsKeeper = prospect.position.group == PositionGroup.gk;
-    final keys = AttributeKeys.all.where((k) {
-      final isKeeping = AttributeKeys.goalkeeping.contains(k);
-      return prospectIsKeeper ? isKeeping : !isKeeping;
-    }).toList()
-      ..sort((a, b) =>
-          mentor.attributeValue(b).compareTo(mentor.attributeValue(a)));
-    return keys.take(mentorTeachingCount).toList();
-  }
-
   static void applyYouthAcademyGrowth(
     List<Player> prospects,
     int facilityLevel, {
-    /// メンターになりうる一軍の選手。[Player.mentorId]で指名された選手が
-    /// ここに居て、かつ[minMentorAge]以上のときだけメンターとして働く。
-    List<Player> mentors = const [],
-
     /// ユースコーチの得意分野。その分野の能力が追加で伸びる。
     StaffSpecialty coachSpecialty = StaffSpecialty.balanced,
 
@@ -660,31 +510,10 @@ class TrainingEngine {
     int coachLevel = 1,
   }) {
     final factor = youthAcademyGrowthFactor(facilityLevel);
-    final byId = {for (final m in mentors) m.id: m};
-    final mentorIdsUsed = <String>{};
 
     for (final p in prospects) {
-      final mentor = p.mentorId == null ? null : byId[p.mentorId];
-      final validMentor =
-          (mentor != null && mentor.id != p.id && mentor.age >= minMentorAge)
-              ? mentor
-              : null;
-      if (validMentor != null) mentorIdsUsed.add(validMentor.id);
-
-      final bonus = validMentor != null ? youthMentorGrowthBonus : 1.0;
       for (final k in _youthGrowthKeysFor(p)) {
-        _grow(p, k, 0.5 * factor * bonus);
-      }
-
-      // **倍率だけでは効かない。** _grow は1週1項目につき最大+1で、確率が
-      // 1を超えている選手は倍率を上げても毎週+1のままになる(実測で
-      // メンターの有無に差が出なかった)。そこで、メンターが得意な能力を
-      // 「教わる項目」として追加で伸ばす。伸びる項目が増えるので、確率が
-      // 飽和していても差が出る。
-      if (validMentor != null) {
-        for (final k in mentorTeachingKeys(validMentor, p)) {
-          _grow(p, k, 0.5 * factor);
-        }
+        _grow(p, k, 0.5 * factor);
       }
 
       // ユースコーチの指導。手が回る項目が増える形で効く。
@@ -696,36 +525,34 @@ class TrainingEngine {
       for (final k in specialtyKeys(coachSpecialty, p)) {
         _grow(p, k, 0.5 * factor);
       }
-
-      // 性格特性は練習では身に付かない。ユースに居るあいだに手に入れる道は
-      // メンターだけで、一軍のように監督が直接声をかけることはできない。
-      if (validMentor != null &&
-          p.trait == null &&
-          p.personalityTraitTrainingTarget != null) {
-        _rollPersonalityTraitAcquisition(
-          p,
-          p.personalityTraitTrainingTarget!,
-          true,
-          false,
-        );
-      }
-    }
-
-    // 一軍内のメンターと同じく、教える側も少し前向きになる。
-    for (final id in mentorIdsUsed) {
-      final mentor = byId[id];
-      if (mentor != null) {
-        mentor.happiness = (mentor.happiness + 1).clamp(0, 100);
-      }
     }
   }
 
-  /// 成長タイプ(早熟/標準/大器晩成)に応じて衰えが始まる年齢。
-  static int _declineStartAge(PlayerGrowthType type) => switch (type) {
+  /// ポジションによるピークのずれ(年)。GK は長く保ち、センターバックも
+  /// 経験で補える。走力で勝負するサイドの選手は早く落ちる(実在の傾向)。
+  static int positionPeakShift(Position pos) => switch (pos) {
+        Position.gk => 3,
+        Position.dc => 1,
+        Position.dr ||
+        Position.dl ||
+        Position.wbr ||
+        Position.wbl ||
+        Position.mr ||
+        Position.ml ||
+        Position.amr ||
+        Position.aml =>
+          -1,
+        _ => 0,
+      };
+
+  /// 成長タイプ(早熟/標準/大器晩成)とポジションに応じて衰えが始まる年齢。
+  static int declineStartAge(Player p) =>
+      switch (p.growthType) {
         PlayerGrowthType.early => 28,
         PlayerGrowthType.balanced => 31,
         PlayerGrowthType.late => 34,
-      };
+      } +
+      positionPeakShift(p.position);
 
   /// 衰え開始年齢に達した後、週次で実際に衰えが発生する確率。
   /// 1回の衰えは能力値1〜2項目が1ずつ下がるだけで、総合力([Player.overall])
@@ -788,22 +615,8 @@ class TrainingEngine {
 
   /// フォーカス・ポジションに応じて、ブレイクスルーで伸ばす能力値の候補群を
   /// 返す。実際に取り組んでいる練習内容と無関係な能力が伸びると不自然な
-  /// ため、通常成長([_applyToPlayer]の各focus分岐)と同じ属性群をベースに、
-  /// その選手が個別に取り組んでいる特訓ドリルと育成プラン(目標ロール)の
-  /// 重視能力値も候補へ加える(狙って鍛えている能力こそ開花してほしい、
-  /// という育成の手応えに直結するため)。
-  static List<String> breakthroughPoolFor(Player p, TrainingFocus focus) {
-    final base = _breakthroughBasePoolFor(p, focus);
-    final extras = <String>{
-      if (p.drillAttributeKey != null) p.drillAttributeKey!,
-      if (p.drillAttributeKey2 != null) p.drillAttributeKey2!,
-      ...?p.developmentTargetRole?.keyAttributes,
-    };
-    if (extras.isEmpty) return base;
-    return {...base, ...extras}.toList();
-  }
-
-  static List<String> _breakthroughBasePoolFor(Player p, TrainingFocus focus) {
+  /// ため、通常成長([_applyToPlayer]の各focus分岐)と同じ属性群を使う。
+  static List<String> _breakthroughPoolFor(Player p, TrainingFocus focus) {
     if (p.position.group == PositionGroup.gk) {
       return AttributeKeys.goalkeeping;
     }
@@ -864,7 +677,7 @@ class TrainingEngine {
     chance *= 0.7 + p.attributeValue(AttributeKeys.determination) / 165;
     if (_rng.nextDouble() >= chance) return;
 
-    final pool = breakthroughPoolFor(p, focus);
+    final pool = _breakthroughPoolFor(p, focus);
     final shuffled = [...pool]..shuffle(_rng);
     final count = min(2 + _rng.nextInt(3), shuffled.length);
     for (var i = 0; i < count; i++) {
@@ -874,55 +687,6 @@ class TrainingEngine {
       p.setAttributeValue(key, (current + boost).clamp(1, p.potential));
     }
     p.hadBreakthroughThisWeek = true;
-  }
-
-  /// 特性未保有の選手が、狙った技術特性([target])を専用の特訓によって
-  /// 獲得するかどうかの判定。闘志が高く成長に前向きな性格の選手ほど、また
-  /// [traitSuitability]が高い(=その特性に元々向いている)選手ほど獲得しやすい。
-  /// 獲得すると[Player.acquiredTraitThisWeek]に反映してUI側で通知できるようにする。
-  /// [target]が技術カテゴリでない場合は何もしない(古いセーブデータ等に
-  /// 由来する不整合な指定に対する保険)。
-  static const double _traitAcquisitionBaseChance = 0.02;
-
-  static void _rollTraitAcquisition(
-    Player p,
-    PlayerTrait target,
-    double effectiveGrowth,
-  ) {
-    if (target.category != PlayerTraitCategory.technical) return;
-    final chance = (_traitAcquisitionBaseChance * effectiveGrowth) *
-        (0.7 + p.attributeValue(AttributeKeys.determination) / 165) *
-        p.personality.growthFactor *
-        traitSuitability(p, target);
-    if (_rng.nextDouble() >= chance.clamp(0, 1)) return;
-    p.trait = target;
-    p.acquiredTraitThisWeek = target;
-  }
-
-  /// 特性未保有の選手が、狙った性格特性([target])をメンター(チームメイト)
-  /// や監督の個別声かけを通じて獲得するかどうかの判定。技術特性の特訓とは
-  /// 異なり練習の強度・成長効率には依存せず、有効なメンターがいるか
-  /// ([hasMentor])・監督が今週声をかけたか([talkedThisWeek])のいずれかを
-  /// 満たした週にのみ判定を行う(いずれも満たさない週は何も起きない)。
-  /// [target]が性格カテゴリでない場合も何もしない。
-  static const double _personalityTraitAcquisitionBaseChance = 0.02;
-
-  static void _rollPersonalityTraitAcquisition(
-    Player p,
-    PlayerTrait target,
-    bool hasMentor,
-    bool talkedThisWeek,
-  ) {
-    if (target.category != PlayerTraitCategory.personality) return;
-    if (!hasMentor && !talkedThisWeek) return;
-    final chance = _personalityTraitAcquisitionBaseChance *
-        (hasMentor ? 1.5 : 1.0) *
-        (talkedThisWeek ? 1.3 : 1.0) *
-        p.personality.growthFactor *
-        traitSuitability(p, target);
-    if (_rng.nextDouble() >= chance.clamp(0, 1)) return;
-    p.trait = target;
-    p.acquiredTraitThisWeek = target;
   }
 
   /// 選手特性ごとに対応する属性キー(能力値ベースで適性を判定する特性のみ)。
@@ -960,7 +724,7 @@ class TrainingEngine {
   static String? traitAttributeKeyOf(PlayerTrait trait) =>
       _traitAttributeKeys[trait];
 
-  /// 選手が[trait]の特訓にどれだけ向いているかを表す倍率(特訓成功率に乗算)。
+  /// 選手が[trait]にどれだけ向いているかを表す倍率(生成時の特性の抽選の重み)。
   /// 対応する能力値・年齢が特性の発動条件に近い選手ほど高くなる
   /// (概ね0.3〜1.6の範囲)。対戦相手や天候・試合当日のコンディションに
   /// 依存する特性(判官びいき・天候系・波がある、等)は個人の資質だけでは
@@ -1002,10 +766,11 @@ class TrainingEngine {
   /// (実測でピーク年齢29〜34歳・ピークからの下落0.1を確認)。
   static double _conditioningAgeTaper(Player p) {
     final peakAge = switch (p.growthType) {
-      PlayerGrowthType.early => 25,
-      PlayerGrowthType.balanced => 27,
-      PlayerGrowthType.late => 29,
-    };
+          PlayerGrowthType.early => 25,
+          PlayerGrowthType.balanced => 27,
+          PlayerGrowthType.late => 29,
+        } +
+        positionPeakShift(p.position);
     if (p.age <= peakAge) return 1.0;
     return (1.0 - (p.age - peakAge) * 0.34).clamp(0.0, 1.0);
   }
@@ -1072,6 +837,8 @@ class TrainingEngine {
     c *= 0.7 + p.attributeValue(AttributeKeys.determination) / 165;
     // 性格によって自主練習への取り組み方が異なり、成長効率に差が出る。
     c *= p.personality.growthFactor;
+    // 向上心(人柄の軸)の高い選手ほど伸びる。
+    c *= p.traits.growthFactor;
     // 出場機会が乏しく実戦感覚(マッチシャープネス)が低い選手は伸び悩む。
     if (p.matchSharpness < 40) c *= 0.7;
     // ポテンシャルに近づくほど伸びしろが少なくなり、成長は緩やかになる

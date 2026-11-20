@@ -1537,28 +1537,31 @@ Future<void> showIntro(BuildContext context, WorldInfo w) => showDialog<void>(
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
-            padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
               color: Palette.card,
               border: Border.all(color: Palette.ink, width: 2),
               borderRadius: BorderRadius.circular(18),
               boxShadow: const [BoxShadow(color: Palette.ink, offset: Offset(0, 6))],
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (w.role != null)
-                  SizedBox(
-                    height: 90,
-                    child: AspectRatio(aspectRatio: Figure.aspect(w.role!), child: Figure(role: w.role!)),
-                  ),
-                const SizedBox(height: 8),
-                Text(t.introTitle(w.no), textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink)),
-                const SizedBox(height: 10),
-                Text(t.introBody(w.no), textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.7, color: Palette.ink)),
-                const SizedBox(height: 18),
-                ChunkyButton(label: t.gotIt, color: Palette.gold, fontSize: 17, onPressed: () => Navigator.of(ctx).pop()),
-              ],
+            // 小さい端末・文字の拡大でも下の「わかった」まで届くようにスクロールできる形にしておく
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(22),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (w.role != null)
+                    SizedBox(
+                      height: 90,
+                      child: AspectRatio(aspectRatio: Figure.aspect(w.role!), child: Figure(role: w.role!)),
+                    ),
+                  const SizedBox(height: 8),
+                  Text(t.introTitle(w.no), textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Palette.ink)),
+                  const SizedBox(height: 10),
+                  Text(t.introBody(w.no), textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.7, color: Palette.ink)),
+                  const SizedBox(height: 18),
+                  ChunkyButton(label: t.gotIt, color: Palette.gold, fontSize: 17, onPressed: () => Navigator.of(ctx).pop()),
+                ],
+              ),
             ),
           ),
         );
@@ -1566,15 +1569,20 @@ Future<void> showIntro(BuildContext context, WorldInfo w) => showDialog<void>(
     );
 
 /// 決まりの一覧（この面に出てくる役だけ）。
+///
+/// 役が多い面や小さい端末・文字の拡大では中身が高くなるので、
+/// 高さは画面の85%までにして、収まらない分はスクロールで読ませる。
 Future<void> showRules(BuildContext context, Level level) => showModalBottomSheet<void>(
       context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.85),
       backgroundColor: Palette.card,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
       builder: (ctx) {
         final t = ctx.l10n;
         final roles = Role.values.where((r) => level.count(r) > 0).toList();
         return SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,

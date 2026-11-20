@@ -1,0 +1,150 @@
+# 物語完結型ショート 土方歳三 s5（2026-10-29）。本編 scripts/hijikata-story.yaml の第5章（最期の場所・埋葬地・碧血碑・日野の墓）から。
+# 形式は masamune_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は実在の写真（最期の地の碑・旧幕府軍・石田寺の墓）と本編の AI 絵（J12・J13 は人物なし）。
+#   最期の場面は描かない・語らない（場所の記録の食い違いだけ）。本編に後から足した熊吉の「寺の僧とともに」は使わない。
+# 事実カード（dev/output/rekishi-chiso/research/土方歳三_facts_20261029.yaml）：hijikata-04・16・05・08・65・63・64・17・85
+#   ・埋葬地は分からない・賊軍と呼ばれ弔う人もいなかった・碧血碑の裏の文は誰をまつるか書かない（推測）は出どころが1つ → 「といわれる」「と見られている」。
+# 理解テスト4問：
+#   ①誰の話か：土方歳三（新選組の副長）
+#   ②何が分からないか：箱館で亡くなった場所の書き方は記録で違い、葬られた場所も分かっていない
+#   ③旧幕府軍の死者はどう扱われたか：賊軍と呼ばれ弔う人もいなかった。侠客の柳川熊吉が亡骸を集めて葬り、1875年に東京の碧血会が碧血碑を建てた。碑は誰をまつるか書いていない
+#   ④どうなったか：墓はふるさと日野の石田寺にあり、今も多くの人が訪れる
+title: 土方歳三｜葬られた場所は分からない　それでも墓はある
+yt_title: 土方歳三が葬られた場所は分からない　碑の裏に名が無い理由と、日野の墓
+description: |-
+  新選組の副長、土方歳三は、箱館で亡くなりました。けれど、亡くなった場所の書き方は記録によって違い、どこに葬られたのかも、分かっていない、といわれます。
+  箱館の戦いで亡くなった旧幕府軍の人々は、賊軍と呼ばれ、弔う人もいなかった、と南北海道の博物館や資料館でつくる協議会の解説は書いています。亡骸を集めて葬ったのは、箱館にいた侠客の柳川熊吉です。1875年の5月、東京の碧血会が函館に碧血碑を建てました。碑の裏の文は、誰をまつるのかを書いていません。
+  土方の墓は、ふるさと日野の石田寺にあり、命日の5月11日だけでなく、今も多くの人が訪れています。
+hashtags: ["#土方歳三", "#日本史", "#幕末"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/hijikata
+out: hijikata_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 土方歳三（新選組の副長）
+  title: "葬られた場所は、《分からない》"
+now:
+  - {at: 箱館で, text: "箱館", point: 0}
+  - {at: 1875年の5月, text: "1875年5月　函館", point: 1}
+  - {at: ふるさと日野, text: "いま　日野", point: 2}
+timeline:
+  - {label: "1869"}
+  - {label: "1875"}
+  - {label: "いま"}
+cards:
+  - type: table                          # 亡くなった場所の書き方（語った順に1行ずつ）
+    title: 亡くなった場所の書き方
+    from: 函館市は
+    until: 賊軍と
+    items:
+      - {at: 函館市は, text: "函館市　一本木関門のあたり"}
+      - {at: 日本大百科全書, text: "日本大百科全書　箱館一本木"}
+      - {at: 世界大百科事典, text: "世界大百科事典　場所の名なし"}
+shots:
+  J12:                                   # 1文目：夕暮れの函館山と港
+    kind: ai
+    file: hijikata/main/J12.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 夕暮れの函館山と港
+  J10:                                   # 箱館（雪の五稜郭）
+    kind: ai
+    file: hijikata/main/J10.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 雪の五稜郭
+  War:                                   # 旧幕府軍の人々（実在の写真）
+    kind: real
+    image: paintings/hijikata_hakodate_war_1869.jpg
+    focus: [0.5, 0.5]
+    move: left
+    credit: "箱館のフランス軍事顧問と旧幕府軍の人々（1869年の写真）"
+    must: 旧幕府軍の人々の写真
+  J12l:                                  # 亡骸を集めて葬る（港の遠景）
+    kind: ai
+    file: hijikata/main/J12.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 港の遠景
+  J13:                                   # 碧血碑（木立の中の石碑）
+    kind: ai
+    file: hijikata/main/J13.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 木立の中の石の碑
+  J13w:                                  # 碑の裏の文
+    kind: ai
+    file: hijikata/main/J13.jpg
+    focus: [0.6, 0.5]
+    move: left
+    must: 木立と石の碑
+  Grave:                                 # 日野の石田寺の墓（実在）
+    kind: real
+    image: paintings/hijikata_grave_ishidaji_2024.jpg
+    focus: [0.5, 0.5]
+    move: in
+    credit: "石田寺の土方家の墓（2024年）"
+    must: 石田寺の墓
+  J15:                                   # 最後の問い：夕暮れの多摩川
+    kind: ai
+    file: hijikata/main/J15.jpg
+    focus: [0.5, 0.5]
+    move: in
+    text_y: 0.76
+    must: 夕暮れの多摩川
+lines:
+  # fact: hijikata-05
+  - 語り: 新選組の土方歳三が、箱館で亡くなったあと、葬られた場所は、《!分かっていない》。
+    shot: J12
+    tone: 強調
+  # fact: hijikata-04, hijikata-16
+  - 語り: 亡くなった場所も、記録によって違う。函館市は、今の若松町の、一本木関門のあたりで、と言われている、と書く。
+    shot: J10
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-16
+  - 語り: 日本大百科全書は、箱館一本木。世界大百科事典は、場所の名を、挙げていない。
+    shot: J10
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-08
+  - 語り: 箱館で亡くなった旧幕府軍の人々は、賊軍と呼ばれ、弔う人もいなかった、と、南北海道の博物館や資料館でつくる協議会の解説は書く。
+    shot: War
+    tone: 重い
+    pause: 0.12
+  # fact: hijikata-65
+  - 語り: その亡骸を集めて葬ったのは、箱館にいた侠客、柳川熊吉だ。
+    shot: J12l
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-63
+  - 語り: 1875年の5月、東京の碧血会が、函館に、碧血碑を建てた。
+    shot: J13
+    tone: しみじみ
+    pause: 0.12
+  # fact: hijikata-64
+  - 語り: 碑の裏の文は、誰をまつるのかを、書いていない。賊軍の死者を、おおやけにまつることが、はばかられたためだろう、と見られている。
+    shot: J13w
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: hijikata-17, hijikata-85
+  - 語り: 葬られた場所は、分からなくても、土方の墓は、ふるさと、日野の石田寺にある。今も、多くの人が、訪れている。
+    shot: Grave
+    tone: 強調
+    pause: 0.12
+  - 語り: あなたなら、土方歳三に、どこで、《手を合わせます》か。
+    shot: J15
+    tone: 疑問
+    pause: 0.15

@@ -134,6 +134,68 @@ void main() {
     expect(await p.askIfEarned(state: state, adShown: false), isTrue);
   });
 
+  // **ここが今回の要。** 広告も星の依頼も季の切れ目にしか置けないので、
+  // 「広告が出た回は見送る」だけにすると、広告が毎季出るぶん星の依頼が
+  // ほぼ永久に順番待ちになる（実際そうなっていて、累計1,000DL超で星8件）。
+  test('星を頼みたい季かどうかは、広告と無関係に決まる', () async {
+    final service = _FakeReview();
+    final p = await prompt(service);
+    final state = await stateWith([
+      _season(year: 2026, objectiveMet: true),
+      _season(year: 2027, objectiveMet: true),
+      _season(year: 2028, objectiveMet: true),
+    ]);
+    // 呼ぶ側はこれを見て広告を譲る。
+    expect(p.wantsToAsk(state), isTrue);
+  });
+
+  test('負けた季と、季が浅いうちは頼みたがらない', () async {
+    final service = _FakeReview();
+    final p = await prompt(service);
+    expect(
+      p.wantsToAsk(await stateWith([
+        _season(year: 2026, objectiveMet: true),
+        _season(year: 2027, objectiveMet: true),
+      ])),
+      isFalse,
+      reason: '3季を終えるまでは頼まない',
+    );
+    expect(
+      p.wantsToAsk(await stateWith([
+        _season(year: 2026),
+        _season(year: 2027),
+        _season(year: 2028),
+      ])),
+      isFalse,
+      reason: '良い季ではない',
+    );
+  });
+
+  test('一度頼んだら、もう頼みたがらない（広告を譲り続けない）', () async {
+    final service = _FakeReview();
+    final p = await prompt(service);
+    final state = await stateWith([
+      _season(year: 2026, objectiveMet: true),
+      _season(year: 2027, objectiveMet: true),
+      _season(year: 2028, objectiveMet: true),
+    ]);
+    expect(await p.askIfEarned(state: state, adShown: false), isTrue);
+    expect(p.wantsToAsk(state), isFalse);
+  });
+
+  // `initialize` を済ませる前は「もう頼んだか」が読めていない。
+  // ここで true を返すと、**頼まないのに広告だけ減る**。
+  test('読み込みが終わるまでは、広告を譲らない', () async {
+    final p = ReviewPrompt(service: _FakeReview());
+    final state = await stateWith([
+      _season(year: 2026, objectiveMet: true),
+      _season(year: 2027, objectiveMet: true),
+      _season(year: 2028, objectiveMet: true),
+    ]);
+    expect(p.initialized, isFalse);
+    expect(p.wantsToAsk(state), isFalse);
+  });
+
   test('頼むのは1度だけ', () async {
     final service = _FakeReview();
     final p = await prompt(service);

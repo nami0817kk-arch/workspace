@@ -1,0 +1,154 @@
+# 物語完結型ショート 伊能忠敬 s5（2026-11-11）。本編 scripts/inou-story.yaml（11/13 12:00 公開予約、https://youtu.be/AG2oS5iUwgU）から。11/14 に予約。
+# 形式は gosekke_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/伊能忠敬_facts_20261111.yaml）と本編の # fact: だけ。
+# 出どころは大谷亮吉『伊能忠敬』（1917）の翻刻を通した記述。原日記は未確認なので「大谷は書く」「日記には〜とある」と言う。奥宮正樹の読みは未確認のため名前は語らない。
+# 絵は本編の AI 絵（out/story/inou/main。人物なし）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：隊の乱れと破門（本編5章）。大谷の評価は「と書く」と言う。薩摩の話（inou-34）は tease にとどめる。
+# 計算：旧暦1806年9月14日。
+# 理解テスト4問：①伊能忠敬の測量隊 ②1805年から幕府直轄、1806年に破門 ③忠敬が病で見られない間に弟子の規律が乱れ、幕府の耳に届いた ④弟子2人破門。大谷は忠敬の失敗と書く。薩摩の話は本編
+title: "伊能忠敬の測量隊で、弟子が二人、破門された"
+yt_title: "伊能忠敬の測量隊では、弟子が二人破門された　1806年、隊の乱れと忠敬の失敗"
+description: |-
+  1805年、文化2年から、伊能忠敬の測量は幕府の直轄になり、隊には天文方の下役も加わりました。大谷亮吉『伊能忠敬』によれば、同じ測量でも肩書に差が生まれ、弟子の平山郡蔵は、腕が立ち、新しい下役をしのぐような態度をとることもあったといいます。隊には不和が生まれ、そのさなか、忠敬は防長のあたりで病に倒れました。
+  隊長が仕事を見られないあいだに、弟子の規律は乱れます。宿で酒宴を開く、書画や骨董をほしがる、買った品に相応の代金を払わない。沿道の村人が迷惑しているという噂は、幕府の耳にも届き、1806年9月14日（旧暦）、幕府は忠敬に部下を厳しく戒めさせました。江戸に戻ると、平山郡蔵ともう1人は破門。大谷は、部下をまとめきれなかった失敗は、忠敬の生涯でこの時を除いてほとんど見られない、と書きます。
+  薩摩では、傘の中に測器を隠して測った、という話は、本当なのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#伊能忠敬"
+- "#日本地図"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini など）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/inou
+out: inou_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "伊能忠敬の測量隊"
+  title: "弟子が二人、《破門》された"
+now:
+- {at: "1805年", text: "1805年　幕府直轄の測量", point: 0}
+- {at: "1806年", text: "1806年　江戸へ戻る", point: 1}
+timeline:
+- {label: "1805"}
+- {label: "1806"}
+shots:
+  P03:
+    kind: "ai"
+    file: "inou/main/P03.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "宵の宿場町"
+  S12:
+    kind: "ai"
+    file: "inou/main/S12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "ろうそくのともる広間"
+  S10:
+    kind: "ai"
+    file: "inou/main/S10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯の下の書状と筆"
+  S13:
+    kind: "ai"
+    file: "inou/main/S13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯と積まれた帳面"
+  P01:
+    kind: "ai"
+    file: "inou/main/P01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "雨の山道"
+  P07:
+    kind: "ai"
+    file: "inou/main/P07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "雨の軒下に掛けた蓑と笠"
+  S11:
+    kind: "ai"
+    file: "inou/main/S11.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の座敷の行灯と机"
+  Nihon:
+    kind: "real"
+    image: "paintings/sankin_hoeido_nihonbashi_hiroshige.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "歌川広重《名所江戸百景 日本橋》（1850年代。パブリックドメイン）"
+    must: "江戸日本橋の絵"
+  S15:
+    kind: "ai"
+    file: "inou/main/S15.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの寺の屋根"
+  S14:
+    kind: "ai"
+    file: "inou/main/S14.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "霧の水辺の小舟"
+lines:
+- 語り: "伊能忠敬の測量隊では、弟子が二人、破門された。"
+  shot: P03
+  tone: 強調
+  pause: 0.12
+  # fact: inou-31
+- 語り: "何があったのか。"
+  shot: S12
+  tone: 疑問
+  pause: 0.15
+  # fact: inou-30
+- 語り: "1805年、文化2年から、測量は幕府の直轄になり、天文方の下役も加わった。"
+  shot: S10
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-30
+- 語り: "弟子の平山郡蔵は、腕が立ち、新しい下役を、しのぐような態度を、とることもあった、と大谷亮吉は書く。"
+  shot: S13
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-30
+- 語り: "隊には不和が生まれ、そのさなか、忠敬自身が、病に倒れた。"
+  shot: P01
+  tone: 重い
+  pause: 0.12
+  # fact: inou-30
+- 語り: "弟子の規律は、乱れた。書画や骨董を、ほしがる。買った品に、相応の代金を払わない。"
+  shot: P07
+  tone: 重い
+  pause: 0.12
+  # fact: inou-30
+- 語り: "沿道の村人が迷惑している、という噂は、幕府の耳にも届いた。1806年、9月14日、幕府は、忠敬に、部下を厳しく戒めさせる。"
+  shot: S11
+  tone: 重い
+  pause: 0.12
+  # fact: inou-31
+- 語り: "江戸に戻ると、平山郡蔵ともう1人は、破門。"
+  shot: Nihon
+  tone: 重い
+  pause: 0.12
+  # fact: inou-31
+- 語り: "大谷は書く。部下をまとめきれなかった失敗は、忠敬の生涯で、この時を除いて、ほとんど見られない、と。"
+  shot: S15
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-32
+- 語り: "では、薩摩では、傘の中に測器を隠して測った、という話は、本当なのか。"
+  shot: S14
+  tone: 疑問
+  pause: 0.15
+  # fact: inou-34

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -28,6 +29,7 @@ class _GameScreenState extends State<GameScreen> {
   bool? _dark;
   AppLifecycleListener? _life;
   final GameAudio _audio = GameAudio();
+  final _webKey = GlobalKey();
 
   @override
   void initState() {
@@ -83,6 +85,7 @@ class _GameScreenState extends State<GameScreen> {
       },
       bgm: (k, v) => unawaited(_audio.bgm(k, v)),
       voice: (f) => unawaited(_audio.voice(f)),
+      share: _share,
     );
     // 裏に回る直前に、ゲームの進み具合をその場で保存させる
     _life = AppLifecycleListener(
@@ -98,6 +101,22 @@ class _GameScreenState extends State<GameScreen> {
     unawaited(_load());
   }
 
+  /// 結果のシェア：ゲームが描いた画像と文を、iOS の共有シートに渡す
+  Future<bool> _share(ShareRequest req) async {
+    final box = _webKey.currentContext?.findRenderObject();
+    final view = box is RenderBox && box.hasSize ? box.localToGlobal(Offset.zero) & box.size : Offset.zero & MediaQuery.sizeOf(context);
+    final ext = req.mime == 'image/png' ? 'png' : 'jpg';
+    await SharePlus.instance.share(
+      ShareParams(
+        text: req.text,
+        files: [XFile.fromData(req.bytes, mimeType: req.mime)],
+        fileNameOverrides: ['hikari-shimei.$ext'],
+        sharePositionOrigin: shareOrigin(req.origin, view),
+      ),
+    );
+    return true;
+  }
+
   void _onMoney() => unawaited(_bridge.pushApp());
 
   void _pause() {
@@ -106,7 +125,11 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _load() async {
     final html = await rootBundle.loadString('assets/web/index.html');
+    if (!mounted) return;
+    // 端末の文字の大きさ（iOS の「さらに大きな文字」）。ゲームの文字の大きさをまだ自分で選んでいない人の初期値になる
+    final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
     final boot = <String, Object?>{
+      'textScale': textScale,
       'store': widget.store.snapshot(),
       'adFree': widget.money.adFree,
       // 追加パックは起動の時点で入れる（ストアの返事を待つ間に始めた遊びで、買ったパックが抜けないように）
@@ -138,7 +161,7 @@ class _GameScreenState extends State<GameScreen> {
         bottom: false,
         child: Stack(
           children: [
-            WebViewWidget(controller: _web),
+            WebViewWidget(key: _webKey, controller: _web),
             // 起動画面：ページが出るまでの間、題字を見せる
             if (!_loaded)
               Container(

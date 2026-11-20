@@ -1,0 +1,174 @@
+# 物語完結型ショート s14（2026-10-25）。投稿しない。形式は oichi_s10.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 切り口の判断：依頼の第一案「秀吉が許せなかった？――お市と秀吉、二度の対面」は使わない。
+#   ・お市と秀吉が会った、言葉を交わした、という当時の記録は oichi_facts.md・本編の調べに無い（「二度の対面」の根拠が無い）。
+#   ・「秀吉と勝家がお市を取り合った」は江戸前期後半の『村井重頼覚書』が出どころ。勝家自身の手紙には再婚を「秀吉と申し合わせ」とあり、
+#     黒田基樹は「再婚の理由を示す当時の史料はない」とする。お市が秀吉を許せなかった、と言える記録も無い。対立を作らないため替えた。
+#   → 代わりの切り口：「37歳なのに22、3歳に見えた」（『渓心院文』）と、「天下一の美人」と呼ばれた理由（江戸時代の書物・娘が描かせた肖像）。
+# 理解テスト4問：
+#   ①誰の話か：お市の方（織田信長の妹）
+#   ②いつ・どこで何が：1583年、北ノ庄城で娘3人を送り出した日、37歳なのに22、3歳に見えたと書き残された
+#   ③なぜ美人と言われたか：娘の初に仕えた人たちの覚書・江戸時代の書物『祖父物語』の「天下一の美人」・娘の茶々が描かせた肖像（顔を見た人がその場で書いた記録は無い）
+#   ④どうなったか：その日お市は生涯を閉じ、6年後に茶々が母の肖像を高野山に納めた。美しいお市は、娘たちの側が語り伝えた姿
+# 事実の出どころ（oichi_facts.md 1章・3章「美女という評判」「肖像画」）：『渓心院文』22、3歳に見えた [クレインス][黒田65260]／
+#   「天下一の美人」＝江戸時代の『祖父物語』[W市][濱田]／同時代に顔を見た人の記録は無い／1589年12月、茶々が父の十七回忌・母の七回忌に
+#   両親の肖像を高野山の持明院に納めた（有力。[W淀][W市]、本編では「と言われます」）／お市 37歳で生涯を閉じる [W市]
+title: お市の方｜37歳なのに、二十二三歳に見えた
+yt_title: お市の方は、37歳なのに二十二三歳に見えたと書き残された【お市の方】
+description: |-
+  1583年、北ノ庄城。お市の方は城に残ると決め、三人の娘だけを城の外へ送り出しました。
+  娘の初に仕えた人たちの覚書『渓心院文』は、その別れの日のお市を「37歳なのに、22、3歳に見えた」と書き残しています。
+  江戸時代の書物『祖父物語』は、お市を「天下一の美人」と書きました。けれど、お市の顔を見た人がその場で書いた記録は、見つかっていません。
+  お市の肖像は、お市の死から6年後、長女の茶々が母の供養のために高野山に納めたと言われます。美しいお市は、娘たちの側が語り伝えた姿でした。
+ai_images: true
+art_dir: out/story/oichi3
+out: oichi_story_s14
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 12
+max_ai: 10
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: お市の方（織田信長の妹）
+  title: "37歳なのに、《二十二三歳》に見えた"
+now:
+  - {at: お市の方は, text: "1583年　北ノ庄城", point: 0}
+  - {at: 江戸時代の書物, text: "江戸時代　祖父物語", point: 2}
+  - {at: お市の肖像は, text: "1589年　高野山", point: 1}
+  - {at: 美しいお市は, text: "1583年　北ノ庄城", point: 0}
+timeline:
+  - {label: "1583 北ノ庄"}
+  - {label: "1589 肖像"}
+  - {label: "江戸 書物"}
+cards:
+  - type: table                          # 「美人」の出どころ（語った順に1行ずつ書き込む）
+    title: 「美しいお市」の出どころ
+    from: 娘の初に仕えた
+    until: お市の肖像は
+    items:
+      - {at: 娘の初に仕えた, text: "渓心院文　二十二三歳に見えた（娘の側の覚書）"}
+      - {at: 江戸時代の書物, text: "祖父物語　天下一の美人（江戸時代）"}
+      - {at: 顔を見た人が, text: "その場で書いた記録　見つかっていない"}
+  - type: year
+    from: お市の肖像は
+    until: 美しいお市は
+    big: 6年後
+    sub: 娘の茶々が納めた肖像
+    text_y: 0.70
+shots:
+  A03:                                   # 1文目：お市（決意の表情）
+    kind: ai
+    file: oichi3/main/A03.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: お市の顔（決意）
+  A01:                                   # 1583年、囲まれた北ノ庄城
+    kind: ai
+    file: oichi3/main/A01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 篝火に囲まれた夜の天守
+  A20:                                   # 娘3人だけを送り出す
+    kind: ai
+    file: oichi3/main/A20.jpg
+    focus: [0.36, 0.5]
+    move: right
+    must: お市の後ろ姿から、門の先の娘3人へ
+  A21:                                   # 『渓心院文』＝書き留める手元
+    kind: ai
+    file: oichi3/main/A21.jpg
+    focus: [0.45, 0.6]
+    move: down
+    must: 巻紙に書く手元と灯
+  P6:                                    # 22、3歳に見えた（顔の寄り：語った瞬間だけ）
+    kind: ai
+    file: oichi3/gem/P6.jpg
+    move: in
+    zoom: 0.14
+    focus: [0.45, 0.4]
+    text_y: 0.74
+    must: お市の顔
+  Nishikie:                              # 江戸〜明治の「美人」像（錦絵の於市之方）
+    kind: real
+    image: paintings/oichi_taiheiki_shui_1870.jpg
+    focus: [0.5, 0.4]
+    move: down
+    text_box: true
+    credit: "落合芳幾《太平記拾遺 勝家の室於市之方》1870年（Wikimedia Commons・パブリックドメイン）"
+    must: 錦絵のお市
+  Utamaro:                               # 顔を見た人の記録は無い＝後の時代の絵（歌麿）
+    kind: real
+    image: paintings/oichi_katsuie_utamaro.jpg
+    focus: [0.3, 0.6]
+    move: up
+    bright: 0.78
+    text_box: true
+    credit: "喜多川歌麿《柴田修理進勝家と小谷の方》1803〜04年ごろ（Wikimedia Commons・パブリックドメイン）"
+    must: 歌麿の「小谷の方」
+  Jimyoin:                               # 茶々が納めた肖像（持明院）
+    kind: real
+    image: paintings/oichi_portrait_jimyoin_full.jpg
+    focus: [0.5, 0.35]
+    move: down
+    credit: "《浅井長政夫人像》（お市の方、高野山持明院蔵）16世紀後半（Wikimedia Commons・パブリックドメイン）"
+    must: 持明院の肖像
+  Chacha:
+    kind: real
+    image: paintings/oichi_chacha_yodo_portrait.jpg
+    focus: [0.5, 0.75]
+    move: down
+    credit: "伝 淀殿（茶々）像（奈良県立美術館蔵）17世紀（Wikimedia Commons・パブリックドメイン）"
+    must: 茶々の肖像
+  P5c:                                   # 最後の問い
+    kind: ai
+    file: oichi3/gem/P5c.jpg
+    move: in
+    focus: [0.5, 0.45]
+    text_y: 0.74
+    must: こちらを見るお市
+lines:
+  - 語り: お市の方は、37歳で城に残った日、《!二十二三歳》に見えたと、書き残された。
+    shot: A03
+    tone: 強調
+  - 語り: 1583年、お市の二人目の夫・柴田勝家の北ノ庄城は、秀吉の軍に囲まれた。
+    shot: A01
+    tone: 重い
+    pause: 0.15
+  - 語り: お市は城に残ると決め、三人の娘だけを、城の外へ送り出した。
+    shot: A20
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 娘の初に仕えた人たちの覚書、『渓心院文』は、その別れの日のお市を、こう書き残している。今の言葉にすると、こうだ。
+    shot: A21
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 「とても美しく、《二十二三歳》にも見えた」。
+    shot: P6
+    tone: 強調
+    pause: 0.3
+    dip: true
+  - 語り: 江戸時代の書物、『祖父物語』は、お市を「天下一の美人」と書いた。
+    shot: Nishikie
+    tone: しみじみ
+    pause: 0.12
+  - 語り: けれど、お市の顔を見た人が、その場で書いた記録は、見つかっていない。
+    shot: Utamaro
+    tone: 重い
+    pause: 0.15
+  - 語り: お市の肖像は、お市の死から6年後、長女の茶々が、母の供養のために、高野山に納めたと言われる。
+    shot: Jimyoin
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 美しいお市は、母を見送った娘たちと、娘に仕えた人たちが、《語り伝えた》姿だった。
+    shot: Chacha
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたなら、母のどんな姿を、残したいですか。
+    shot: P5c
+    tone: 疑問
+    pause: 0.15

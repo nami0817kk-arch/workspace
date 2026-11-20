@@ -1,0 +1,175 @@
+# 物語完結型ショート 石川数正 s5（2026-10-26）。本編 scripts/kazumasa-story.yaml の第4章（裏切りか、スパイか）と第6章の終わり（子孫の言葉）から。投稿しない。
+# 形式は oichi_s10.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/kazumasa/main/K*.jpg）を縦に切り出す。
+# 事実カード（dev/output/rekishi-chiso/research/石川数正_facts_20261026.yaml）：kazumasa-01・02・16・28・34・35
+#   ・スパイとして描いたのは山岡荘八の小説、本郷和人（東大史料編纂所）は退ける（kazumasa-16）。秀吉の引き抜き（kazumasa-35）。どちらも本郷さんの名で言う。
+#   ・辞典の食い違い：『日本大百科全書』「路線論争に敗れて」（kazumasa-28）／『国史大辞典』原因不詳（kazumasa-02）。
+#   ・子孫の家に嫁いだ女性の言葉（小和田哲男『徳川家家臣団―子孫たちの証言』、和樂web の引用。kazumasa-34）→ 語りは「と語っている」。
+#   ・小説の年・題名はカードに無いので言わない。s1（菅原の2週間の読み）とは重ならないよう、菅原説は出さない。
+# 理解テスト4問：
+#   ①誰の話か：石川数正（家康の重臣。天正13年11月13日に岡崎城を出て秀吉のもとへ）
+#   ②いつ・どこで何が：その理由を本人は書き残していない。山岡荘八の小説は、家康のためのスパイとして描いた
+#   ③研究者・辞典はどう言うか：本郷和人さんはスパイ説を退け、秀吉の引き抜きの一人とみる。『日本大百科全書』は路線論争に敗れて、『国史大辞典』は原因不詳
+#   ④どうなったか：子孫の家にも理由は伝わっておらず、「なぜなのかと思った」と語られている
+title: 石川数正｜スパイ説は、小説から
+yt_title: 石川数正は家康のスパイだった？ そう描いたのは小説だった【山岡荘八・本郷和人】
+description: |-
+  天正13年11月13日の夜、徳川家康の重臣・石川数正は、岡崎城を出て、羽柴秀吉のもとへ走りました。数正自身が理由を書き残した記録は、見つかっていません。
+  作家・山岡荘八の小説は、数正を、主君のためにわざと秀吉の側へ行ったスパイとして描きました。東京大学史料編纂所の本郷和人さんは、このスパイ説を退け、秀吉が盛んに行っていた有力な家臣の引き抜きに応じた一人とみています。
+  辞典も割れています。『日本大百科全書』は「路線論争に敗れて」と書き、『国史大辞典』は原因を不詳としています。
+  数正の子孫の家に嫁いだ女性は、理由は家に伝わっておらず、「なぜなのかと思った」ことがあると語っています。
+ai_images: true
+art_dir: out/story/kazumasa
+out: kazumasa_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 石川数正（徳川家康の重臣）
+  title: "スパイ説は、《小説》から"
+now:
+  - {at: 石川数正は, text: "小説の中の数正", point: 1}
+  - {at: 11月13日, text: "天正13年　岡崎城", point: 0}
+  - {at: 作家の山岡荘八, text: "小説　山岡荘八", point: 1}
+  - {at: 東京大学, text: "研究　本郷和人", point: 2}
+  - {at: 辞典も, text: "辞典　2つの説明", point: 2}
+  - {at: 数正の子孫, text: "いま　子孫の言葉", point: 2}
+timeline:
+  - {label: "天正13"}
+  - {label: "小説"}
+  - {label: "研究"}
+cards:
+  - type: table                          # 辞典の食い違い（語った順に1行ずつ）
+    title: 出奔の理由（辞典）
+    from: 辞典も
+    until: 数正の子孫
+    items:
+      - {at: 日本大百科全書, text: "日本大百科全書　路線論争に敗れて"}
+      - {at: 国史大辞典, text: "国史大辞典　原因は不詳"}
+shots:
+  K02:                                   # 1文目：数正の顔
+    kind: ai
+    file: kazumasa/main/K02.jpg
+    focus: [0.62, 0.3]
+    move: in
+    zoom: 0.14
+    text_y: 0.74
+    must: 数正の顔
+  K01:                                   # 天正13年11月13日の夜、岡崎城を出る
+    kind: ai
+    file: kazumasa/main/K01.jpg
+    focus: [0.72, 0.6]
+    move: left
+    must: 夜の城と、出ていく数騎
+  K09:                                   # 理由を書き残した記録は無い
+    kind: ai
+    file: kazumasa/main/K09.jpg
+    focus: [0.4, 0.55]
+    move: right
+    must: 書状
+  K03:                                   # 小説のスパイ：ひそかに書状を読む数正
+    kind: ai
+    file: kazumasa/main/K03.jpg
+    focus: [0.62, 0.4]
+    move: in
+    must: 書状を読む数正
+  K02b:                                  # 本郷さんはスパイ説を退ける
+    kind: ai
+    file: kazumasa/main/K02.jpg
+    focus: [0.62, 0.45]
+    move: down
+    must: 数正
+  K05:                                   # 秀吉の引き抜き
+    kind: ai
+    file: kazumasa/main/K05.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 金の襖の前の秀吉
+  K08:                                   # 路線論争：家康の前の数正
+    kind: ai
+    file: kazumasa/main/K08.jpg
+    focus: [0.84, 0.5]
+    move: right
+    must: 家康に手をつく数正
+  K16:                                   # 子孫の言葉：法要
+    kind: ai
+    file: kazumasa/main/K16.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 本堂の法要
+  K20:                                   # 「なぜなのかと思った」：供養塔
+    kind: ai
+    file: kazumasa/main/K20.jpg
+    focus: [0.68, 0.55]
+    move: in
+    must: 苔むした供養塔
+  K02q:                                  # 最後の問い：数正の顔に寄る
+    kind: ai
+    file: kazumasa/main/K02.jpg
+    focus: [0.62, 0.28]
+    move: in
+    zoom: 0.22
+    text_y: 0.74
+    must: 数正の顔
+lines:
+  # fact: kazumasa-16
+  - 語り: 石川数正は、家康のために敵へ入り込んだ《スパイ》だった。そう描いたのは、《!小説》だった。
+    shot: K02
+    tone: 強調
+  # fact: kazumasa-01
+  - 語り: 天正13年、家康の重臣の数正は、11月13日の夜、岡崎城を出て、秀吉のもとへ走った。
+    shot: K01
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-02
+  - 語り: 数正自身が、その理由を書き残した記録は、見つかっていない。
+    shot: K09
+    tone: 重い
+    pause: 0.15
+  # fact: kazumasa-16
+  - 語り: 作家の山岡荘八の小説では、数正は、主君のためにわざと秀吉の側へ行った、スパイとして描かれた。
+    shot: K03
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-16
+  - 語り: 東京大学史料編纂所の本郷和人さんは、このスパイ説を、《退けている》。
+    shot: K02b
+    tone: 強調
+    pause: 0.3
+    dip: true
+  # fact: kazumasa-35
+  - 語り: 本郷さんによれば、当時の秀吉は、ほかの大名の家臣を、しきりに《引き抜いていた》。数正も、その一人だった。
+    shot: K05
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-28
+  - 語り: 辞典も割れている。『日本大百科全書』は、数正が「路線論争に敗れて」去った、と書く。
+    shot: K08
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-02
+  - 語り: 『国史大辞典』は、原因を不詳、つまり、《分からない》としている。
+    shot: K08
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-34
+  - 語り: 数正の子孫の家に嫁いだ女性も、出奔の理由は、家に伝わっていない、と語っている。
+    shot: K16
+    tone: しみじみ
+    pause: 0.15
+  # fact: kazumasa-34
+  - 語り: 「《なぜなのかと思った》」ことはある、と。
+    shot: K20
+    tone: 重い
+    pause: 0.15
+  - 語り: あなたなら、数正を、裏切り者と《呼びますか》。
+    shot: K02q
+    tone: 疑問
+    pause: 0.15

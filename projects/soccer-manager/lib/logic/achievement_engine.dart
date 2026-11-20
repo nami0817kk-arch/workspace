@@ -175,9 +175,9 @@ class AchievementEngine {
           category: AchievementCategory.management,
           name: Tr.pick('潤沢な資金', 'Deep Pockets'),
           description: Tr.pick(
-              'クラブ資金が3万(万円)に到達する', "Build the club's funds up to 30,000"),
-          isUnlocked: (save, team) => save.budget >= 30000,
-          progress: (save, team) => (save.budget, 30000),
+              'クラブ資金が30億に到達する', "Build the club's funds up to 3bn yen"),
+          isUnlocked: (save, team) => save.budget >= 300000,
+          progress: (save, team) => (save.budget, 300000),
         ),
         Achievement(
           id: 'facilities_maxed',
@@ -220,7 +220,7 @@ class AchievementEngine {
           category: AchievementCategory.management,
           name: Tr.pick('賞金ハンター', 'Prize Hunter'),
           description: Tr.pick(
-              'カップ戦の賞金を通算1000万円獲得する', 'Collect 1,000 in cup prize money'),
+              'カップ戦の賞金を通算1,000万円獲得する', 'Collect 10m yen in cup prize money'),
           isUnlocked: (save, team) => save.careerCupPrize >= 1000,
           progress: (save, team) => (save.careerCupPrize, 1000),
         ),
@@ -296,19 +296,10 @@ class AchievementEngine {
           id: 'breakthrough_10',
           category: AchievementCategory.squad,
           name: Tr.pick('才能の開花請負人', 'Bringer of Breakthroughs'),
-          description: Tr.pick('週次トレーニングで才能開花を通算10回発生させる',
-              'Trigger ten breakthroughs in weekly training'),
+          description: Tr.pick('クラブの練習で選手の才能開花が通算10回起きる',
+              'See ten breakthroughs in the club\'s training'),
           isUnlocked: (save, team) => save.breakthroughCount >= 10,
           progress: (save, team) => (save.breakthroughCount, 10),
-        ),
-        Achievement(
-          id: 'trait_teacher',
-          category: AchievementCategory.squad,
-          name: Tr.pick('特性の伝道師', 'Teacher of Traits'),
-          description: Tr.pick('特訓・伝授で選手に特性を通算3回習得させる',
-              'Have players pick up three traits through training or mentoring'),
-          isUnlocked: (save, team) => save.traitsAcquired >= 3,
-          progress: (save, team) => (save.traitsAcquired, 3),
         ),
 
         // --- 監督キャリア ---

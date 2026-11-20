@@ -16,9 +16,12 @@ import 'glossary_screen.dart';
 import 'player_compare_screen.dart';
 import '../logic/match_engine.dart';
 import '../models/player_instruction.dart';
+import '../widgets/squad_table.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/screen_bar.dart';
+import '../logic/economy_scale.dart';
 
 enum SquadSortOption {
   position,
@@ -39,7 +42,7 @@ extension on SquadSortOption {
         SquadSortOption.overall => Tr.pick('総合力', 'Overall'),
         SquadSortOption.age => Tr.pick('年齢(若い順)', 'Age (youngest)'),
         SquadSortOption.potential => Tr.pick('ポテンシャル', 'Potential'),
-        SquadSortOption.wage => Tr.pick('週俸', 'Wage'),
+        SquadSortOption.wage => Tr.pick('年俸', 'Salary'),
         SquadSortOption.fatigue => Tr.pick('疲労が大きい順', 'Most tired'),
         SquadSortOption.sharpness => Tr.pick('実戦感覚が低い順', 'Least sharp'),
         SquadSortOption.happiness => Tr.pick('不満が大きい順', 'Least happy'),
@@ -158,6 +161,9 @@ class SquadScreen extends StatefulWidget {
 
 class _SquadScreenState extends State<SquadScreen> {
   bool _compareMode = false;
+
+  /// 表(FM風の密な一覧)で見せるか。横画面の既定は表、押すとカードに切り替わる。
+  bool _table = true;
   final List<String> _selected = [];
   PositionGroup? _filterGroup;
   SquadSortOption _sort = SquadSortOption.position;
@@ -209,19 +215,27 @@ class _SquadScreenState extends State<SquadScreen> {
                 const SizedBox(height: 4),
                 Text(
                   Tr.pick(
-                      '週俸: ${p.wage}万円 / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}',
-                      'Wage: ${p.wage} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
+                      '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}',
+                      'Salary: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}'),
                 ),
                 const SizedBox(height: 12),
+                if (gameState.renewalBlockReason(p) != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(gameState.renewalBlockReason(p)!,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.negative(context))),
+                  ),
                 if (gameState.save!.budget < totalCost)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
                       Tr.pick(
-                          '資金が${totalCost - gameState.save!.budget}万円足りません'
-                              '（必要$totalCost万円 / 手元${gameState.save!.budget}万円）。',
-                          'You are ${totalCost - gameState.save!.budget} short '
-                              '(need $totalCost, you have ${gameState.save!.budget}).'),
+                          '資金が${formatMoney(totalCost - gameState.save!.budget)}足りません'
+                              '（必要${formatMoney(totalCost)} / 手元${formatMoney(gameState.save!.budget)}）。',
+                          'You are ${formatMoney(totalCost - gameState.save!.budget)} short '
+                              '(need ${formatMoney(totalCost)}, you have ${formatMoney(gameState.save!.budget)}).'),
                       style: TextStyle(
                           fontSize: 12,
                           color: SemanticColors.negative(context)),
@@ -230,7 +244,8 @@ class _SquadScreenState extends State<SquadScreen> {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
-                    onPressed: gameState.save!.budget < totalCost
+                    onPressed: gameState.save!.budget < totalCost ||
+                            gameState.renewalBlockReason(p) != null
                         ? null
                         : () async {
                             Navigator.pop(sheetContext);
@@ -254,8 +269,8 @@ class _SquadScreenState extends State<SquadScreen> {
                           },
                     child: Text(
                       Tr.pick(
-                          '契約更新する（基本$renewalCost万円 + サインボーナス$signingBonus万円 / 新契約${ContractEngine.negotiatedYears(p)}年 / 新出場手当$newAppearanceFee万円）',
-                          'Renew (base $renewalCost + signing bonus $signingBonus / ${Tr.plural(ContractEngine.negotiatedYears(p), 'year')} / new appearance fee $newAppearanceFee)'),
+                          '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / 新契約${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / 新出場手当${formatMoney(newAppearanceFee)}）',
+                          'Renew (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / new appearance fee ${formatMoney(newAppearanceFee)})'),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -272,7 +287,7 @@ class _SquadScreenState extends State<SquadScreen> {
                         ),
                       );
                     },
-                    child: Text(Tr.pick('週俸交渉・放出など詳しい操作を開く',
+                    child: Text(Tr.pick('年俸交渉・放出など詳しい操作を開く',
                         'Open wage talks, release and other actions')),
                   ),
                 ),
@@ -363,6 +378,8 @@ class _SquadScreenState extends State<SquadScreen> {
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
     final team = gameState.userTeam;
+    final screen = MediaQuery.sizeOf(context);
+    final wide = screen.width > screen.height;
     final players = SquadScreen.filterAndSort(
       team.players,
       group: _filterGroup,
@@ -377,10 +394,11 @@ class _SquadScreenState extends State<SquadScreen> {
         ?.playerRatings;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_compareMode
+      appBar: screenBar(
+        context,
+        title: _compareMode
             ? Tr.pick('選手を2人選択', 'Pick two players')
-            : Tr.pick('スカッド', 'Squad')),
+            : Tr.pick('スカッド', 'Squad'),
         // 下タブの一員でもあり、ホームやガイドから直接開かれもする。
         // 開かれた場合は戻るボタンを出す(ドロワーがあると既定では出ない)。
         leading: Navigator.of(context).canPop() ? const BackButton() : null,
@@ -438,12 +456,36 @@ class _SquadScreenState extends State<SquadScreen> {
             )
           : null,
       body: ResponsiveBody(
-        child: Column(
-          children: [
+        maxWidth: wide ? 1100 : 720,
+        child: _SquadLayout(
+          wide: wide,
+          header: [
             if (!_compareMode) _SquadSummaryCard(team: team),
+            if (!_compareMode)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: SegmentedButton<bool>(
+                    showSelectedIcon: false,
+                    style: const ButtonStyle(
+                        visualDensity: VisualDensity.compact),
+                    segments: [
+                      ButtonSegment(
+                          value: true, label: Text(Tr.pick('表', 'Table'))),
+                      ButtonSegment(
+                          value: false, label: Text(Tr.pick('カード', 'Cards'))),
+                    ],
+                    selected: {_table},
+                    onSelectionChanged: (s) =>
+                        setState(() => _table = s.first),
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
               child: PositionFilterBar(
+                wrap: wide,
                 value: _filterGroup,
                 onChanged: (g) => setState(() => _filterGroup = g),
               ),
@@ -466,6 +508,8 @@ class _SquadScreenState extends State<SquadScreen> {
                           style: const TextStyle(fontSize: 12),
                         ),
                         visualDensity: VisualDensity.compact,
+                        labelPadding:
+                            const EdgeInsets.symmetric(horizontal: 2),
                         selected: _statusFilter == f,
                         onSelected: (_) => setState(() => _statusFilter = f),
                       ),
@@ -495,11 +539,22 @@ class _SquadScreenState extends State<SquadScreen> {
                 ),
               ),
             ),
-            Expanded(
-              child: players.isEmpty
+          ],
+          list: players.isEmpty
                   ? Center(
                       child: Text(Tr.pick('該当する選手がいません', 'No players match')))
-                  : ListView.builder(
+                  : (_table && !_compareMode)
+                      ? SquadTable(
+                          players: players,
+                          startingIds: team.startingXI.toSet(),
+                          onTap: (p) => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  PlayerDetailScreen(playerId: p.id),
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       itemCount: players.length,
                       itemBuilder: (context, i) {
@@ -674,8 +729,11 @@ class _SquadScreenState extends State<SquadScreen> {
                                 if (p.isOnInternationalDuty) ...[
                                   const SizedBox(width: 6),
                                   Tooltip(
-                                    message: Tr.pick(
-                                        '代表召集中', 'On international duty'),
+                                    message: p.onTournamentLeave
+                                        ? Tr.pick('大会明けの休み',
+                                            'Post-tournament break')
+                                        : Tr.pick('代表召集中',
+                                            'On international duty'),
                                     child: const Icon(
                                       Icons.flag,
                                       size: 16,
@@ -730,6 +788,9 @@ class _SquadScreenState extends State<SquadScreen> {
                                           ? Tr.pick(
                                               '出場停止（あと${p.suspendedMatches}試合）',
                                               'Suspended (${Tr.plural(p.suspendedMatches, 'match', 'matches')})')
+                                          : p.onTournamentLeave
+                                              ? Tr.pick('大会明けの休み（合流前）',
+                                                  'Post-tournament break (not back yet)')
                                           : p.isOnInternationalDuty
                                               ? Tr.pick(
                                                   '代表召集中（あと${p.internationalDutyWeeksRemaining}週）',
@@ -738,16 +799,21 @@ class _SquadScreenState extends State<SquadScreen> {
                                                   ? Tr.pick(
                                                       '${p.loanedOutToClubName}へローン放出中（あと${p.loanedOutWeeksRemaining}週）',
                                                       'On loan at ${p.loanedOutToClubName} (${Tr.plural(p.loanedOutWeeksRemaining, 'week')} left)')
+                                                  : p.notRegistered
+                                                  ? Tr.pick(
+                                                      '登録外（次の移籍の窓まで公式戦に出られない）',
+                                                      'Not registered (ineligible until the next window)')
                                                   : Tr.pick(
                                                       // 総合力は右端に大きく出している。ここに重ねて書くと、
                                                       // 同じ数字が1行に2回並ぶうえ、行が長くなって
                                                       // 「契約残り3年」が途中で折り返していた。
-                                                      '${p.age}歳 / ${p.position.label}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}',
-                                                      "Age ${p.age} / ${p.position.label}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}"),
+                                                      '${p.age}歳 / ${p.position.label}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.contractLabel(p)}'}',
+                                                      "Age ${p.age} / ${p.position.label}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.contractLabel(p)}'}"),
                                   style: (p.isInjured ||
                                           p.isSuspended ||
                                           p.isOnInternationalDuty ||
-                                          p.isLoanedOut)
+                                          p.isLoanedOut ||
+                                          p.notRegistered)
                                       ? const TextStyle(color: Colors.redAccent)
                                       : (!p.isLoan &&
                                               p.contractYearsRemaining <= 1)
@@ -842,10 +908,38 @@ class _SquadScreenState extends State<SquadScreen> {
                         );
                       },
                     ),
-            ),
-          ],
         ),
       ),
+    );
+  }
+}
+
+/// 絞り込みと一覧の並べ方。縦長の画面では上下に積み、横長の画面では
+/// 左に絞り込み・右に一覧を置く。横画面は高さが 400 ほどしかなく、上に
+/// 絞り込みを積むと選手が1人しか見えなくなる。
+class _SquadLayout extends StatelessWidget {
+  final bool wide;
+  final List<Widget> header;
+  final Widget list;
+
+  const _SquadLayout({
+    required this.wide,
+    required this.header,
+    required this.list,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (!wide) {
+      return Column(children: [...header, Expanded(child: list)]);
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(width: 340, child: ListView(children: header)),
+        const VerticalDivider(width: 1),
+        Expanded(child: list),
+      ],
     );
   }
 }
@@ -890,8 +984,8 @@ class _SquadSummaryCard extends StatelessWidget {
                   label: Tr.pick('平均年齢', 'Avg age'),
                   value: Tr.pick('$avgAge歳', '$avgAge')),
               _SummaryItem(
-                  label: Tr.pick('週俸', 'Wage'),
-                  value: Tr.pick('$wageBill万', '$wageBill')),
+                  label: Tr.pick('年俸の合計', 'Salaries'),
+                  value: formatMoney(annualFromWeekly(wageBill))),
               _SummaryItem(
                 label: Tr.pick('負傷', 'Injured'),
                 value: '$injured',

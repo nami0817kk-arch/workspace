@@ -1,6 +1,7 @@
 import '../models/player.dart';
 import 'dynamics_engine.dart';
 import '../models/team.dart';
+import 'economy_scale.dart';
 
 /// 選手の不満度(happiness)を週次で更新する。出場機会・待遇・チーム成績の
 /// 3要素を性格ごとの感度で重み付けする。
@@ -29,13 +30,15 @@ class HappinessEngine {
         // スカッド・ステータス(出場機会の約束)が上の立場ほど、ベンチに
         // 置かれたときの不満が大きくなる(育成枠はほぼ気にしない)。
         final benchPenalty = p.overall >= 65 ? 4 : 2;
+        // 気性の荒い選手ほど、控えに置かれると荒れる。
         delta -= (benchPenalty *
                 personality.benchSensitivity *
-                p.squadStatus.benchExpectationFactor)
+                p.squadStatus.benchExpectationFactor *
+                p.traits.benchFactor)
             .round();
       }
 
-      final fairWage = (p.marketValue / 40).round().clamp(5, 999);
+      final fairWage = weeklyWageForValue(p.marketValue);
       if (p.wage < fairWage * 0.7) {
         delta -= (2 * personality.wageSensitivity).round();
       } else if (p.wage >= fairWage) {
@@ -48,8 +51,9 @@ class HappinessEngine {
         delta -= (2 * personality.resultSensitivity).round();
       }
 
+      // プロ意識の高い選手ほど、不満が溜まりにくい。
+      if (delta < 0) delta = (delta * p.traits.gloomFactor).round();
       p.happiness = (p.happiness + delta).clamp(0, 100);
-      if (p.reassureCooldownWeeks > 0) p.reassureCooldownWeeks -= 1;
     }
 
     // ダイナミクス: チームリーダーの機嫌はロッカールーム全体に波及する。
@@ -71,19 +75,5 @@ class HappinessEngine {
         }
       }
     }
-  }
-
-  /// 選手と話し合い、不満度を引き上げる。連発を防ぐため不満度が高いうちは
-  /// 効果がなく、実施後は[reassureCooldownWeeks]の間は再実施できない。
-  static const int reassureThreshold = 70;
-  static const int reassureBoost = 20;
-  static const int reassureCooldownWeeks = 4;
-
-  static bool reassure(Player p) {
-    if (p.happiness >= reassureThreshold) return false;
-    if (p.reassureCooldownWeeks > 0) return false;
-    p.happiness = (p.happiness + reassureBoost).clamp(0, 100);
-    p.reassureCooldownWeeks = reassureCooldownWeeks;
-    return true;
   }
 }

@@ -1,0 +1,153 @@
+# 物語完結型ショート 高杉晋作 s3（2026-10-29）。本編 scripts/takasugi-story.yaml の第2章（身分を問わない奇兵隊は本当に身分を問わなかったか）から。
+# 形式は hijikata_s1.yaml・yodo_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（T03・T12・T14。Gemini のみ・人物は遠景の後ろ姿）。
+# 事実カード（dev/output/rekishi-chiso/research/高杉晋作_facts_20261029.yaml）：takasugi-17・18・20
+#   ・結成6月7日・総督6月27日は高杉晋作Museumと世界大百科事典（takasugi-17、2つ）。罷免8月16日は高杉晋作Museumの年表のみ（takasugi-18）→ 「年表によれば」。
+#   ・559名の身分は世界大百科事典が挙げる研究と、別の1つ（takasugi-20）。表の数は本編と同じ（272・237・25・25）。
+# 理解テスト4問：
+#   ①誰の話か：高杉晋作がつくった身分を問わない軍隊、奇兵隊
+#   ②いつ・どこで何が：1863年6月7日、下関の白石正一郎の屋敷で結成。8月16日、高杉は教法寺事件の責任を問われ総督を罷免された
+#   ③中身は：隊士559名のうち、士分格272名・農民237名・町人と神官・僧が25名ずつ
+#   ④どうなったか：身分を問わない隊の、およそ半分は武士の身分だった（誰でも入れたが中身は半々に近い）
+title: 高杉晋作｜身分を問わない奇兵隊の、半分は武士だった
+yt_title: 奇兵隊は本当に身分を問わなかった？　隊士559名の身分は、武士が半分、農民が4割あまり
+description: |-
+  高杉晋作がつくった、身分を問わない軍隊、奇兵隊。1863年6月7日、下関の白石正一郎の屋敷で結成されました。ところが高杉晋作Museumの年表によれば、結成の2か月後の8月16日に、高杉は教法寺事件の責任を問われて、総督を罷免されます。
+  では、身分を問わない隊には、実際にどんな人がいたのか。世界大百科事典は、隊士559名の身分を調べた研究を挙げています。士分格が272名、農民が237名、町人と神官・僧が25名ずつ。身分を問わない隊の、およそ半分は、武士の身分の人たちでした。
+hashtags: ["#高杉晋作", "#奇兵隊", "#日本史", "#幕末"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/takasugi
+out: takasugi_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 高杉晋作（奇兵隊をつくった人）
+  title: "身分を問わない隊の、半分は《武士》"
+now:
+  - {at: 1863年, text: "1863年　下関", point: 0}
+  - {at: 8月16日, text: "1863年8月　罷免", point: 0}
+  - {at: 隊士559名, text: "のちの調べ　559名", point: 1}
+timeline:
+  - {label: "1863"}
+  - {label: "のち"}
+cards:
+  - type: table                          # 隊士559名の身分（語った順に1行ずつ）
+    title: 奇兵隊士559名の身分
+    from: 士分格が
+    until: 身分を問わない隊の
+    items:
+      - {at: 士分格が, text: "士分格　272名"}
+      - {at: 農民が, text: "農民　237名"}
+      - {at: 町人と, text: "町人　25名"}
+      - {at: 神官, text: "神官・僧　25名"}
+shots:
+  T12:                                   # 奇兵隊の陣屋の若者たち（後ろ姿）
+    kind: ai
+    file: takasugi/main/T12.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 陣屋の広場に並ぶ若者たちの後ろ姿
+  T03b:                                  # 隊をつくる提案（夜明けの下関の海峡）
+    kind: ai
+    file: takasugi/main/T03.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 夜明けの下関の海峡と船
+  T12r:                                  # 6月7日、結成（陣屋の建物）
+    kind: ai
+    file: takasugi/main/T12.jpg
+    focus: [0.2, 0.55]
+    move: right
+    must: 陣屋の木造の建物
+  T03:                                   # 8月16日、罷免（夜明けの下関の海峡）
+    kind: ai
+    file: takasugi/main/T03.jpg
+    focus: [0.55, 0.5]
+    move: left
+    must: 夜明けの下関の海峡
+  T12l:                                  # どんな人がいたのか
+    kind: ai
+    file: takasugi/main/T12.jpg
+    focus: [0.45, 0.6]
+    move: in
+    zoom: 0.14
+    must: 笠をかぶった若者たちの後ろ姿
+  T12t:                                  # 559名の身分（表の下地）
+    kind: ai
+    file: takasugi/main/T12.jpg
+    focus: [0.75, 0.55]
+    move: left
+    must: 陣屋の広場の遠景
+  T03c:                                  # 559名を調べた研究（朝の海峡）
+    kind: ai
+    file: takasugi/main/T03.jpg
+    focus: [0.85, 0.45]
+    move: left
+    must: 朝靄の下関の海峡
+  T14:                                   # 半々に近かった（庵の縁側）
+    kind: ai
+    file: takasugi/main/T14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 縁側の筆と紙
+  T12q:                                  # 最後の問い
+    kind: ai
+    file: takasugi/main/T12.jpg
+    focus: [0.5, 0.6]
+    move: in
+    zoom: 0.2
+    text_y: 0.76
+    must: 陣屋の若者たち
+lines:
+  # fact: takasugi-20
+  - 語り: 身分を問わない軍隊、奇兵隊。その隊士の、およそ半分は、《!武士》だった。
+    shot: T12
+    tone: 強調
+  - 語り: 1863年、高杉晋作は、身分を問わず、志のある人を集めた隊を、つくるよう、藩主に提案した。
+    shot: T03b
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-17
+  - 語り: 6月7日、下関の白石正一郎の屋敷で、奇兵隊が結成される。20日後には、高杉が、総督に任じられた。
+    shot: T12r
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-18
+  - 語り: ところが、高杉晋作Museumの年表によれば、8月16日、教法寺事件の責任を問われて、高杉は、総督を罷免された。
+    shot: T03
+    tone: 重い
+    pause: 0.12
+  - 語り: では、身分を問わない隊には、実際に、どんな人が、いたのか。
+    shot: T12l
+    tone: 疑問
+    pause: 0.12
+  # fact: takasugi-20
+  - 語り: 世界大百科事典は、隊士559名の身分を調べた研究を、挙げている。
+    shot: T03c
+    tone: しみじみ
+    pause: 0.12
+  # fact: takasugi-20
+  - 語り: 士分格が、272名。農民が、237名。町人と、神官・僧が、25名ずつ。
+    shot: T12t
+    tone: 強調
+    pause: 0.12
+  # fact: takasugi-20
+  - 語り: 身分を問わない隊の、およそ半分は、武士の身分の人たちだった。農民は、4割あまり。
+    shot: T14
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: あなたは、この隊を、身分を問わない隊と、呼びますか。
+    shot: T12q
+    tone: 疑問
+    pause: 0.15

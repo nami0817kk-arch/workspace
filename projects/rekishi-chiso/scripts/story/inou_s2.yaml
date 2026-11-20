@@ -1,0 +1,141 @@
+# 物語完結型ショート 伊能忠敬 s2（2026-11-11）。本編 scripts/inou-story.yaml（11/13 12:00 公開予約、https://youtu.be/AG2oS5iUwgU）から。11/14 に予約。
+# 形式は gosekke_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/伊能忠敬_facts_20261111.yaml）と本編の # fact: だけ。
+# 出どころは大谷亮吉『伊能忠敬』（1917）の翻刻を通した記述。原日記は未確認なので「大谷は書く」「日記には〜とある」と言う。奥宮正樹の読みは未確認のため名前は語らない。
+# 絵は本編の AI 絵（out/story/inou/main。人物なし）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：旅の財布。手当は100両のうち20両、自腹80両（本編2章）。「150両」は動画の足し算と断る。
+# 計算：銀7.5匁×180日＝1,350匁。1,350÷60＝22.5両。手当20÷100＝2割。80＋70＝150両。
+# 理解テスト4問：①伊能忠敬 ②1800年の最初の蝦夷地の旅、180日 ③手当は1日銀7匁5分で20両ばかり、80両は自腹、測器の新調に70両 ④箱館から息子に何と書いたかは本編
+title: "伊能忠敬｜旅の費用の8割は自腹だった"
+yt_title: "伊能忠敬の最初の旅は、費用の8割が自腹だった　手当は100両のうち20両"
+description: |-
+  1800年、伊能忠敬の最初の蝦夷地の旅は、閏4月19日から10月21日までの180日。辞令の手当は1日に銀7匁5分で、180日分は1,350匁、60匁を1両とすれば22両あまりです。
+  師匠の高橋至時が間重富に宛てた手紙には、「御手当は20両ばかり」、道具代と支度料を除いても「80両の入れ足し」とあります（大谷亮吉『伊能忠敬』による）。100両のうち手当はおよそ2割、残りの80両は忠敬の自腹でした。大谷は、測器の新調にも旅の前から70両ほど自費を使ったと書き、80両と70両を足した「およそ150両」は動画の足し算で、史料に合計の言葉はありません。
+  その旅の途中、箱館から息子に送った手紙には、何と書かれていたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#伊能忠敬"
+- "#日本地図"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini など）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/inou
+out: inou_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "伊能忠敬の旅の財布"
+  title: "手当は、費用の《2割》"
+now:
+- {at: "1800年", text: "1800年　最初の蝦夷地の旅", point: 0}
+timeline:
+- {label: "1800"}
+shots:
+  S13:
+    kind: "ai"
+    file: "inou/main/S13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯と積まれた帳面"
+  S11:
+    kind: "ai"
+    file: "inou/main/S11.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の座敷の行灯と机"
+  Nihon:
+    kind: "real"
+    image: "paintings/sankin_hoeido_nihonbashi_hiroshige.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "歌川広重《名所江戸百景 日本橋》（1850年代。パブリックドメイン）"
+    must: "江戸日本橋の絵"
+  S10:
+    kind: "ai"
+    file: "inou/main/S10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯の下の書状と筆"
+  S12:
+    kind: "ai"
+    file: "inou/main/S12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "ろうそくのともる広間"
+  S13b:
+    kind: "ai"
+    file: "inou/main/S13.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "灯と積まれた帳面"
+  S04:
+    kind: "ai"
+    file: "inou/main/S04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯のともる座敷と膳"
+  S11b:
+    kind: "ai"
+    file: "inou/main/S11.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "夜の座敷の行灯と机"
+  S15:
+    kind: "ai"
+    file: "inou/main/S15.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの寺の屋根"
+lines:
+- 語り: "伊能忠敬の最初の旅は、手当が、かかった費用の、およそ2割だった。"
+  shot: S13
+  tone: 強調
+  pause: 0.12
+  # fact: inou-09
+- 語り: "では、残りは、誰が払ったのか。"
+  shot: S11
+  tone: 疑問
+  pause: 0.15
+  # fact: inou-09
+- 語り: "1800年、蝦夷地の旅は、閏4月19日から10月21日まで、180日。"
+  shot: Nihon
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-08
+- 語り: "手当は、1日に銀7匁5分。180日分で、1,350匁。60匁を1両とすれば、22両あまりだ。"
+  shot: S10
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-08
+- 語り: "師匠の高橋至時が、友人の間重富に書いた手紙には、こうある。御手当は、20両ばかり。道具代と支度料を除いても、80両の入れ足し。"
+  shot: S12
+  tone: 重い
+  pause: 0.12
+  # fact: inou-09
+- 語り: "100両のうち、手当が20両。残りの80両は、忠敬が、自分で出した。"
+  shot: S13b
+  tone: 重い
+  pause: 0.12
+  # fact: inou-09
+- 語り: "大谷亮吉は、もう一つ書く。測器を新しく作るのにも、旅の前から、自分のお金を、70両ほど、使っていた。"
+  shot: S04
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-10
+- 語り: "80両と70両で、あわせて、およそ150両。ただし、史料に、合計の言葉はない。"
+  shot: S11b
+  tone: 重い
+  pause: 0.12
+  # fact: inou-10
+- 語り: "その旅の途中、箱館から息子に送った手紙には、何と書かれていたのか。"
+  shot: S15
+  tone: 疑問
+  pause: 0.15
+  # fact: inou-13

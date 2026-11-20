@@ -1,0 +1,269 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：豊臣秀次（scripts/hidetsugu-story.yaml）。chiso/storymain.py が読む。
+# 10-28 作成（19:00 公開）。台本には手を入れない（承認・reading-ok 済み。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（H01〜H15）＋数正の回の K05（秀吉）をそのまま使う（新しく作らない）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は表情のある全面の AI 絵が主役。実在の絵（パブリックドメイン）は額（frame:）と屏風・絵図の一部（part:）。
+# AI 絵の指示の一覧（英語・顔立ちの設定）：dev/output/rekishi-chiso/research/hidetsugu_ai_images.md
+# 届く前は art_dir の仮の絵（H01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に H01.jpg〜を置くだけ。
+# K05 は out/story/kazumasa/main/ から out/story/hidetsugu/main/（と ph/）へ写してある（out/ は git に入らないので、無ければ写し直す）。
+# 処刑・切腹の場面は描かない（H10 の三条河原は遠景の人だかりだけ。台本の決まり：様子は描かない）。
+script: scripts/hidetsugu-story.yaml
+out: hidetsugu_story_main
+art_dir: out/story/hidetsugu/ph          # 仮の絵（placeholder）＋ K05 の写し
+main_art_dir: out/story/hidetsugu/main   # Gemini の 16:9 の絵（H01.jpg〜H15.jpg）＋ K05 の写し
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本は和暦を主に書くので札も和暦（2012年など今の出来事は西暦）。
+# dates＝語りがその年・月日を言った行から替える（研究・論文・書物の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 なぜ高野山で腹を切ったのか, now: 文禄4年7月12日,
+      dates: {3: 文禄4年7月15日, 7: 文禄4年7月16日, 9: 文禄4年, 11: null, 12: 文禄4年7月}}
+  1: {label: 第1章 伏見から高野山へ, now: 文禄4年7月,
+      dates: {16: 文禄4年7月8日, 17: 文禄4年7月9日, 19: 文禄4年7月13日, 21: 文禄4年7月, 24: 文禄4年7月8日, 28: 文禄4年7月12日}}
+  2: {label: 第2章 12日の条々と14日の使者, now: 文禄4年7月12日,
+      dates: {39: 文禄4年7月14日, 45: 文禄4年7月13日}}
+  3: {label: 第3章 命令はあったのか, now: 文禄4年7月15日,
+      dates: {50: 文禄4年7月16日, 52: null}}
+  4: {label: 第4章 「殺生関白」の出どころ, now: null,
+      dates: {94: 天正13年}}
+  5: {label: 第5章 消されたもの、残ったもの, now: 文禄4年7月,
+      dates: {103: 文禄4年8月2日, 104: null, 107: 文禄4年8月5日, 108: 文禄4年, 111: 2012年, 112: 2023年, 115: null, 116: 慶長16年, 117: null, 120: 文禄5年, 121: null}}
+# 概要欄「■ 参考にした資料」（事実カード 豊臣秀次_facts_20261028.yaml のうち本文を開いた主なもの。題はカードの題のまま。10-28）
+references:
+  - 関白秀次失脚自刃事件と木食応其上人　https://www.nara-k.ac.jp/nnct-library/publication/pdf/h27kiyo7.pdf
+  - 〔紹介〕矢部健太郎著『関白秀次の切腹』（國學院雜誌 118巻5号）　https://k-rain.repo.nii.ac.jp/record/284/files/kokugakuinzasshi_118_05_007.pdf
+  - 東洋経済オンライン（矢部健太郎 寄稿・秀次切腹事件の連載）　https://toyokeizai.net/articles/-/128078?page=3
+  - 豊太閤と其家族　https://dl.ndl.go.jp/pid/953289/1/74
+  - 増補大垣城主歴代記　https://dl.ndl.go.jp/pid/927203/1/16
+  - 国史叢書 將軍記二 續撰清正記　https://dl.ndl.go.jp/pid/3441721/1/70
+  - 川角太閤記 下　https://dl.ndl.go.jp/pid/899815/1/100
+  - 稿本石田三成　https://dl.ndl.go.jp/pid/1899420/1/83
+  - 聚楽第跡・平安宮跡の発掘調査（令和5年度 記者発表資料）　https://www.city.kyoto.lg.jp/bunshi/cmsfiles/contents/0000172/172102/R5juraku.pdf
+  - 京都府遺跡調査報告集 第156冊（報告書抄録）　https://www.kyotofu-maibun.or.jp/data/kankou/kankou-pdf/2013/G156/G156sr.pdf
+  - 瑞泉寺（日本歴史地名大系・コトバンク）　https://kotobank.jp/word/瑞泉寺
+  - 瑞泉寺（ニッポン旅マガジン）　https://tabi-mag.jp/ky0466/
+  - ｢豊臣兄弟!｣で山田涼介演じる"殺生関白"豊臣秀次は暴君ではなかった…城下町の美しさが語る"本当の資質"（プレジデントオンライン）　https://president.jp/articles/-/118874
+  - 八幡山（観光庁 多言語解説文データベース）　https://www.mlit.go.jp/tagengo-db/common/001777467.pdf
+  - 金剛峯寺本坊 大主殿及び奥書院（文化遺産オンライン）　https://online.bunka.go.jp/heritages/detail/600033
+no_tag_from: 130                     # 締め（冒頭の7月12日の条々に戻る所）から札を出さない
+
+# AI 絵（16:9 横・15枚＋K05）。scene は日本語の要約（英語の指示は research/hidetsugu_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus）は届いた絵（10-28）を見て合わせた
+ai:
+  H01: {scene: 秀次・胸から上（28歳前後・細面・関白の装束）。灯の下で思いつめた顔, pan: zoom, crops: {face: [1.25, 0.64, 0.38], left: [1.18, 0.30, 0.45]}}   # 届いた絵（10-28）：顔は右寄り（0.65, 0.40）、左に灯と襖
+  H02: {scene: 伏見から高野山への山道。雨・少人数（秀次は後ろ姿・刀なし）, pan: v, crops: {right: [1.18, 0.62, 0.45]}}
+  H03: {scene: 高野山の寺々を遠くから（夏・霧。人物なし）, pan: h, crops: {left: [1.18, 0.35, 0.45]}}
+  H04: {scene: 青巌寺の書院。柳と鷺の襖絵の部屋（人物なし）, pan: h, crops: {right: [1.18, 0.65, 0.45]}}
+  H05: {scene: 書院で書状を読む秀次（僧衣・横から）, pan: zoom, crops: {face: [1.25, 0.66, 0.38]}}   # 届いた絵：顔は右寄り（0.68, 0.35）、灯は左（0.32, 0.62）
+  H06: {scene: 文机の上の箇条書きの文書（読めない筆の跡）と硯, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  H07: {scene: 使者の到着。山寺の門の前で馬を下りる侍2人（後ろ姿）と頭を下げる僧, pan: h, crops: {left: [1.18, 0.38, 0.45], right: [1.18, 0.62, 0.45]}}
+  H08: {scene: 夜の縁側に一人座る秀次（後ろ姿・杉・小さな灯）, pan: h}
+  H09: {scene: 夜明けの高野山の杉木立（霧・光の筋。人物なし）, pan: v, crops: {left: [1.18, 0.40, 0.5]}}
+  H10: {scene: 三条河原の遠景（橋・竹の柵の向こうの小さな人だかり。残酷な描写なし）, pan: h, crops: {left: [1.18, 0.38, 0.5]}}
+  H11: {scene: 聚楽第の取り壊し。足場から瓦を下ろす職人、牛車, pan: h, crops: {left: [1.18, 0.38, 0.45], right: [1.18, 0.62, 0.45]}}
+  H12: {scene: 近江八幡の八幡堀と商人の町（1585年ごろ）。舟と蔵、奥の山に城, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  H13: {scene: 瑞泉寺の境内に並ぶ五輪塔（雨・文字なし。人物なし）, pan: h, crops: {left: [1.18, 0.38, 0.5], right: [1.18, 0.62, 0.5]}}
+  H14: {scene: 現代の京都の住宅地の発掘現場。石垣の根石と調査員の後ろ姿, pan: h, crops: {right: [1.18, 0.62, 0.5]}}
+  H15: {scene: 終了画面用。夕暮れの高野山の山並み（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+  K05: {scene: 数正の回の秀吉・金の襖の御殿に座る。笑みと鋭い目, crops: {face: [1.25, 0.5, 0.40]}}
+
+# 実在の絵の手当て（元の画像は変えない）。瑞泉寺の秀次像は一族・家臣の像と賛のある掛幅なので、秀次の所だけ切り出す
+paint_fx:
+  H01: {lamp: {region: [0.06, 0.55, 0.20, 0.85]}}                     # 左の燭台の灯（顔にはかけない）
+  paintings/hidenaga_hidetsugu.jpg: {crop: [0.18, 0.22, 0.80, 0.56]}
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: 《豊臣秀吉像》1600年（大阪市立美術館蔵）
+  paintings/oichi_hideyori.jpg: 伝《豊臣秀頼像》（養源院本の模写、1914年）
+  paintings/mitsunari_rakuchu_rakugai_pair.jpg: 《洛中洛外図屏風》（17世紀初め）
+  paintings/hideyoshi_jurakudai_screen_mitsui.jpg: 《聚楽第図屏風》桃山時代（三井記念美術館蔵）
+  paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1848.jpg: 歌川広重《京 三条大はし》1848年ごろ
+  paintings/nene_kyoto_map_1696.jpg: 《京都の地図》元禄9年（1696年）
+  paintings/sanada_kii_yamato_six_provinces_map_ndl_trim.jpg: 《紀伊大和河内伊賀山城伊勢六ヶ国絵図》の部分（江戸時代、国立国会図書館蔵）
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜13）：3日前の条々 → 15人・刀なし → 暮らすための決まり → 15日 青巌寺 → 命令状が無い → なぜ → むしちゆへ → 予告（聚楽第・五輪塔・殺生関白）→ 約束 → 橋渡し
+  - 0 ai:H06 wide
+  - 1 ai:H02 wide
+  - 2 ai:H08 wide
+  - 3 frame:paintings/hidenaga_hidetsugu.jpg
+  - 4 ai:K05 wide
+  - 5 ai:H06 right
+  - 6 ai:H01 face
+  - 7 ai:H04 wide
+  - 8 ai:H01 left
+  - 9 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 10 ai:H13 wide
+  - 11 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 12 ai:H03 wide                     # 覚えてほしい名前（12〜13）の下地
+  - 13 part:paintings/nene_fushimi_earthquake_yoshitoshi.jpg
+  # 第1章（14〜29）：伏見から高野山へ
+  - 14 ai:K05 wide                     # 関係図（秀吉—秀次—秀頼）14〜15
+  - 16 ai:H02 wide                     # 地図（台本：伏見→高野山）
+  - 17 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg   # 兼見卿記
+  - 18 part:paintings/mitsunari_rakuchu_rakugai_pair.jpg
+  - 19 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg   # 秀吉は「御わづらひ」
+  - 20 ai:K05 face
+  - 21 ai:H01 wide                     # 銀5000枚
+  - 22 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg
+  - 23 ai:H01 face
+  - 24 part:paintings/nene_fushimi_earthquake_yoshitoshi.jpg
+  - 25 ai:H03 wide
+  - 26 ai:H02 wide
+  - 27 ai:H02 right                    # 【想像1】……なぜ、こうなった
+  - 28 ai:K05 wide
+  - 29 ai:H06 wide
+  # 第2章（30〜47）：7月12日の条々と14日の使者
+  - 30 ai:H04 wide
+  - 31 ai:H04 right
+  - 32 ai:H06 wide                     # 条々の表（台本の図）32〜35
+  - 36 ai:H02 wide                     # 要点の札（7月12日の条々）
+  - 37 ai:H05 face
+  - 38 part:paintings/nene_fushimi_earthquake_yoshitoshi.jpg   # 福原が出発
+  - 39 ai:H07 wide
+  - 40 ai:H07 left                     # 川角太閤記「目出たく御仲直り」
+  - 41 ai:H06 left
+  - 42 ai:H02 right                    # 刀を帯びさせない決まりのとおり
+  - 43 ai:H05 wide
+  - 44 ai:H05 face                     # 【想像2】……仲直り、か
+  - 45 part:paintings/nene_fushimi_earthquake_yoshitoshi.jpg   # 13日 福島・池田が出発
+  - 46 ai:H08 wide
+  - 47 ai:H09 wide
+  # 第3章（48〜81）：命令はあったのか（矢部説と勢田説）
+  - 48 ai:H09 wide
+  - 49 ai:H04 wide
+  - 50 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg   # 御湯殿上日記 16日
+  - 51 ai:H04 right
+  - 52 ai:K05 wide
+  - 53 ai:H07 wide                     # 渡辺世祐 1919：15日に使者が着いた
+  - 54 ai:H07 left
+  - 55 part:paintings/sanada_kii_yamato_six_provinces_map_ndl_trim.jpg   # 大垣城主歴代記：青巌寺に押し込め
+  - 56 ai:H06 wide
+  - 57 ai:H08 wide
+  - 58 ai:H06 left
+  - 59 ai:K05 wide                     # 甫庵太閤記の13日付の命令状
+  - 60 ai:H06 right
+  - 61 ai:H05 wide
+  - 62 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 63 part:paintings/nene_fushimi_earthquake_yoshitoshi.jpg
+  - 64 ai:H07 wide                     # 3人の使者は別々に
+  - 65 ai:H03 wide
+  - 66 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg   # 矢部説
+  - 67 ai:H05 face
+  - 68 ai:K05 face
+  - 69 ai:H09 wide                     # 勢田説
+  - 70 ai:K05 wide
+  - 71 ai:H04 wide                     # ふたつの説の表（台本の図）71、73〜77
+  - 72 ai:H04 right                    # 史料の札（むしちゆへ）。この行だけ表を外す
+  - 73 ai:H04 wide
+  - 74 ai:H03 wide                     # 時間（13日の命令は間に合うか）
+  - 76 ai:H06 wide                     # どの記録を重んじるか
+  - 78 ai:H03 left
+  - 79 ai:H05 face                     # 【想像3】……もはや、これまで
+  - 80 ai:K05 wide
+  - 81 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  # 第4章（82〜101）：「殺生関白」の出どころと近江八幡
+  - 82 part:paintings/mitsunari_rakuchu_rakugai_pair.jpg
+  - 83 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg   # 京の辻々に夜ごと落書
+  - 84 ai:H01 left                      # 史料の札（落書）
+  - 85 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 86 frame:paintings/hidenaga_hidetsugu.jpg
+  - 87 part:paintings/nene_kyoto_map_1696.jpg   # 一条の辻
+  - 88 ai:H01 face
+  - 89 frame:paintings/hidenaga_hidetsugu.jpg
+  - 90 part:paintings/mitsunari_rakuchu_rakugai_pair.jpg
+  - 91 ai:H05 wide                     # 矢部「根拠のない作り話」
+  - 92 ai:H01 left
+  - 93 ai:H12 wide
+  - 94 part:paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg   # 地図（台本：近江八幡）
+  - 95 ai:H12 wide                     # 八幡堀
+  - 96 part:paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg   # H12 が続けて20秒を超えないように
+  - 97 ai:H12 right
+  - 98 frame:paintings/hidenaga_hidetsugu.jpg
+  - 99 ai:H01 face                     # 【想像4】……よい町に、なれ
+  - 100 ai:H11 wide
+  - 101 ai:H11 right
+  # 第5章（102〜134）：その後 ＋ 冒頭に戻る締め
+  - 102 ai:H10 wide
+  - 103 part:paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg   # 8月2日 三条河原
+  - 104 ai:H10 left                    # 妻子の処刑の日付の表（台本の図）104〜105
+  - 106 ai:H13 wide
+  - 107 ai:K05 wide                    # 銀5000枚が返される
+  - 108 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 109 ai:H11 wide                    # 日本西教史「一宇も残さず」
+  - 110 ai:H11 left
+  - 111 ai:H14 wide                    # 2012年の発掘
+  - 112 part:paintings/nene_kyoto_map_1696.jpg   # 2023年の発掘（西の外堀）。H14 が続けて20秒を超えないように
+  - 113 part:paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+  - 114 ai:H14 wide
+  - 115 part:paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1833.jpg   # 悪逆塚・畜生塚
+  - 116 part:paintings/ryoma_kyoto_sanjo_ohashi_hiroshige_1848.jpg   # 角倉了以・高瀬川
+  - 117 ai:H13 wide
+  - 118 part:paintings/nene_kyoto_map_1696.jpg
+  - 119 ai:H13 right                   # 49の五輪塔
+  - 120 frame:paintings/hidenaga_hidetsugu.jpg   # 日秀尼が瑞龍寺を開く
+  - 121 part:paintings/mitsunari_omi_hakkei_seta_hiroshige.jpg   # 八幡山の上へ
+  - 122 ai:H12 wide
+  - 123 ai:H13 left
+  - 124 ai:H04 wide                    # 柳の間
+  - 125 ai:H09 left                    # 大主殿（H04 が続けて20秒を超えないように）
+  - 126 ai:H03 wide
+  - 127 ai:H01 wide                    # 享年の表（台本の図）127〜128
+  - 129 ai:H09 wide
+  - 130 ai:H06 wide                    # 締め：冒頭の条々に戻る
+  - 131 ai:H05 face
+  - 132 ai:H07 wide
+  - 133 ai:H08 wide
+  - 134 ai:H03 wide
+  - end ai:H15 wide
+
+# look だけで足す図（台本には無い。語りがその名前・地点を言う 0.25 秒前に1つずつ書き込む）。spec: null はその行の台本の図を外す
+figures:
+  # 関係図：14「秀吉の姉の子です。子のいなかった秀吉の跡を継いで、関白」。秀頼は語りに出ない（名前を言わない項目は前の項目と一緒に出る）
+  - {from: 14, to: 15, spec: {type: people, title: 文禄4年 秀吉と秀次,
+      nodes: [[豊臣秀次, 秀吉の甥・関白], [豊臣秀吉, 叔父・太閤]],
+      edges: [[豊臣秀吉, 豊臣秀次, 叔父と甥・跡継ぎ]]}}            # 秀頼は語りに出ないので外した（10-28）
+  - {from: 72, to: 72, spec: null}     # むしちゆへの札（71・73〜77 は表のまま）
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は届いた絵（10-28）で合わせた
+focus:
+  H07: {使者|福原: [1.2, 0.40, 0.45]}
+  H11: {聚楽: [1.2, 0.5, 0.35]}
+  H12: {八幡堀|堀: [1.2, 0.5, 0.65], 城: [1.2, 0.35, 0.2]}
+  H13: {五輪塔: [1.2, 0.5, 0.5]}
+  H14: {石垣: [1.2, 0.45, 0.6], 金箔: [1.2, 0.78, 0.8]}
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: {秀吉: [1.5, 0.5, 0.30]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。届いた絵で範囲を見て直す
+fx:
+  H02: {mist: {region: [0, 0.0, 1, 0.45], alpha: 0.10, speed: 5}}     # 山道の雨霧（上の方だけ）
+  H03: {mist: {region: [0, 0.45, 1, 0.90], alpha: 0.12, speed: 6}}    # 山の霧
+  H05: {lamp: {region: [0.26, 0.48, 0.38, 0.76]}}                     # 手元の灯（顔にはかけない。届いた絵で位置を直す）
+  H08: {lamp: {region: [0.61, 0.58, 0.72, 0.82]}}                     # 縁側の提灯（人物の右）
+  H09: {mist: {region: [0, 0.50, 1, 0.95], alpha: 0.12, speed: 5}}    # 朝の霧
+  H13: {mist: {region: [0, 0.60, 1, 0.95], alpha: 0.10, speed: 5}}    # 雨の湿り気
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: names, from: 12, to: 13, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[豊臣秀次, 秀吉の甥・跡を継いだ関白, paintings/hidenaga_hidetsugu.jpg, [0.48, 0.26]],
+             [豊臣秀吉, 秀次の叔父・太閤, ai:K05, [0.5, 0.40]]]}
+  - {type: quote, from: 36, to: 36, label: 要点, text: 供は15人まで・刀は帯びない／山の出入り口に番を置く,
+     source: 秀吉の条々（文禄4年7月12日・『佐竹家旧記』ほかの写し）}
+  - {type: quote, from: 72, to: 72, label: 史料, text: むしちゆへ／かくの事候のよし申すなり,
+     source: 『御湯殿上日記』文禄4年7月16日}
+  - {type: quote, from: 84, to: 84, label: 史料, text: 院の御所手向のためのかりなれは／これをせつしやう関白といふ,
+     source: 『甫庵太閤記』の落書}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）7月12日の条々}
+  - {line: 12, note: 序章の終わり 覚えてほしい名前}
+  - {line: 14, note: 第1章 関係図（秀吉—秀次—秀頼）}
+  - {line: 36, note: 第2章 条々の要点}
+  - {line: 72, note: 第3章 むしちゆへ（記録・明朝）}
+  - {line: 84, note: 第4章 落書}
+  - {line: 104, note: 第5章 妻子の処刑の日付の食い違い}
+  - {end: true, note: 終了画面の空き}

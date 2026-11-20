@@ -1,0 +1,274 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも北条氏政が秀吉に頭を下げていたら（scripts/hojo-if-story.yaml）。chiso/storymain.py が読む。
+# 11-06 作成（11/8 12:00 公開）。tsurumatsu_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：新しい Gemini の絵は Q01（北条氏政と小田原を囲む陣のかがり火。11-06 作成、サムネと同じ絵）だけ。
+#   Gemini は CPU が他の書き出しで 100% のあいだ画面が固まり、2枚目以降が作れなかった。残りは前の回の Gemini の絵（16:9・1376×768）を
+#   out/story/hojo-if/main/ に H02〜H26 として写した（out/ は git に入らない。無ければ下の表から写し直す）。
+#   H02=tsurumatsu/T16（霧の谷と陣）H03=tsurumatsu/T09（巻紙の手元）H04=tsurumatsu/T10（机の文書）H05=tsurumatsu/T03（秀吉）
+#   H06=tsurumatsu/T12（山道を行く少人数）H07=tsurumatsu/T20（夕暮れの石垣と堀）H08=tsurumatsu/T22（街道を急ぐ使者）H09=tsurumatsu/T23（五輪塔の列）
+#   H10=hideaki/H06（山の上の石垣と櫓）H11=hideaki/H11（陣幕の内）H12=hideaki/H12（山の斜面の陣幕と旗）H13=kazumasa/K01（丘の上の夜の城と数騎）
+#   H15=genkou-if/G15（夕暮れの海と岬。終了画面）H16=asahi/K04（家康）H17=asahi/A06（輿と護衛の街道）H18=asahi/A10（夜の輿と松明）
+#   H19=asahi/A12（聚楽第の遠景）H20=maizo/M04（上野の山並み）H21=musashi/M02（海に面した城下）H22=musashi/M05（海を望む石垣の城）
+#   H23=shimabara/P08（竹の柵の陣）H24=shimabara/P10（文机の書状）H25=kakeizu/K02（広間とろうそく）H26=kakeizu/K06（霧の街道）
+#   実在の人物の顔は、実在の肖像（額）か、前の回で作った想像図（秀吉 H05・家康 H16）と、この回の氏政 Q01 だけ。切腹・処刑・磔の場面は描かない。
+script: scripts/hojo-if-story.yaml
+out: hojo_if_story_main
+art_dir: out/story/hojo-if/ph
+main_art_dir: out/story/hojo-if/main
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 なぜ氏政は、京へ上る費用を集めていたのか, now: 天正17年,
+      dates: {3: 天正17年11月, 4: 天正17年12月, 5: 天正18年7月, 6: 明治2年, 7: null}}
+  1: {label: 第1章 先に京へ上ったのは、誰だったのか, now: 天正16年2月,
+      dates: {12: 天正16年4月, 13: 天正16年5月, 15: 天正16年閏5月, 16: 天正16年7月, 17: 天正16年8月, 21: null, 25: 天正16年9月, 26: null}}
+  2: {label: 第2章 秀吉は、なぜ沼田の城を渡したのか, now: 天正17年,
+      dates: {32: 天正17年11月, 33: null, 34: 天正17年, 35: null, 37: 天正17年9月, 39: 天正17年}}
+  3: {label: 第3章 名胡桃城で、何が起きたのか, now: 天正17年秋,
+      dates: {42: null, 46: null, 47: 天正17年11月, 53: 天正17年12月, 60: null, 61: 天正18年春}}
+  4: {label: 第4章 小田原城は、なぜ開いたのか, now: 天正18年,
+      dates: {67: null, 69: 天正18年, 70: 天正18年6月, 72: 天正18年7月, 77: null, 78: 天正18年7月, 79: 天正18年8月}}
+  5: {label: 第5章 北条家は、どこで生き延びたのか, now: 天正19年,
+      dates: {85: 天正19年11月, 86: null, 89: 天正19年, 90: 慶長2年, 91: 文禄3年, 92: 元和2年, 94: 明治2年12月, 95: null}}
+  6: {label: 第6章 分岐1 上洛すれば、北条家は関東に残ったのか, now: null, dates: {}}
+  7: {label: 第7章 分岐2 家康は江戸へ行ったのか, now: 天正18年7月, dates: {125: null}}
+  8: {label: まとめ もしも氏政が頭を下げていたら, now: null, dates: {}}
+
+references:
+  - "中野等「豊臣政権の関東・奥羽仕置：続論」九州文化史研究所紀要 58（2015）　https://catalog.lib.kyushu-u.ac.jp/opac_download_md/1546818/p131.pdf"
+  - "黒田基樹「大河ドラマ『真田丸』ワンポイント解説（19）」駿河台大学法学部（2016）　https://www.surugadai.ac.jp/gakubu_in/hogaku/news/2016/19.html"
+  - "参謀本部 編『日本戦史 小田原役』（明治26年初版。元真社版 1914）附録文書・補伝　https://dl.ndl.go.jp/pid/936354"
+  - "東京帝国大学文科大学史料編纂掛『大日本古文書 家わけ第三 伊達家文書之一』（1908）　https://dl.ndl.go.jp/pid/1908790"
+  - "東京大学史料編纂所『史料綜覧』巻12　https://dl.ndl.go.jp/pid/2994258"
+  - "英俊『多聞院日記』第4巻（辻善之助 編、1938）　https://dl.ndl.go.jp/pid/1920664"
+  - "田中義成『豊臣時代史』（1925）　https://dl.ndl.go.jp/pid/1918425"
+  - "徳富猪一郎『近世日本国民史 第6 豊臣氏時代 丙篇』（1921）　https://dl.ndl.go.jp/pid/3433681"
+  - "足柄下郡教育会 編『足柄下郡史』（1929）　https://dl.ndl.go.jp/pid/1174054"
+  - "渡邊大門「北条氏政・氏直父子が豊臣秀吉の上洛要請に従い、氏規を遣わした背景を考えてみる」Yahoo!ニュース エキスパート（2023）"
+  - "八幡和郎（ダイヤモンド・オンライン、2023）・安藤優一郎『徳川家康「関東国替え」の真実』（有隣堂、2022）"
+  - "小田原市 文化財ガイド・小田原市の解説／八王子市 八王子城跡／静岡県立中央図書館「小田原合戦と農民」／かながわ考古学財団（2008）"
+  - "みなかみ町教育委員会 名胡桃城址／大阪狭山市の歴史・大阪府公文書館『大阪あーかいぶず』46号（2015）"
+  - "財務省 広報誌『ファイナンス』令和5年12月号（吾郷俊樹）"
+  - "真田宝物館 所蔵目録「北条氏直宛豊臣秀吉条目」（信州地域史料アーカイブ）"
+  - "日本大百科全書・世界大百科事典・ブリタニカ国際大百科事典（コトバンク）"
+no_tag_from: 135
+
+ai:
+  Q01: {scene: 北条氏政（想像図）と、夕暮れの小田原を囲む陣のかがり火, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.2, 0.38, 0.5], face: [1.5, 0.72, 0.4]}}
+  H02: {scene: 霧の谷と陣の遠景, pan: h, crops: {wide: [1.12, 0.5, 0.5], right: [1.18, 0.62, 0.5]}}
+  H03: {scene: 巻紙を開く手元と灯, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.55], right: [1.18, 0.62, 0.55]}}
+  H04: {scene: 机の上の文書と硯（読めない筆の跡）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  H05: {scene: 金の襖の御殿に座る秀吉（前の回の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H06: {scene: 山道を行く少人数の後ろ姿, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.45, 0.5]}}
+  H07: {scene: 夕暮れの石垣と堀, pan: h, crops: {wide: [1.12, 0.5, 0.5], right: [1.25, 0.4, 0.5]}}
+  H08: {scene: 街道を急ぐ使者, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  H09: {scene: 雨の境内の五輪塔の列（文字なし）, pan: v, crops: {wide: [1.12, 0.5, 0.5]}}
+  H10: {scene: 山の上の石垣と櫓（名胡桃城の代わりの想像図）, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5], right: [1.18, 0.6, 0.45]}}
+  H11: {scene: 陣幕の内の床几と灯（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H12: {scene: 山の斜面に連なる陣幕と無地の旗, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  H13: {scene: 丘の上の夜の城と、門を出る数騎, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H15: {scene: 終了画面用。夕暮れの海と岬の遠景（右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  H16: {scene: 書院の上座の家康（前の回の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.5, 0.45]}}
+  H17: {scene: 秋の街道を行く輿と護衛（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H18: {scene: 夜通し進む輿と松明の行列, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.55]}}
+  H19: {scene: 聚楽第の遠景と京の町屋の屋根, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  H20: {scene: 夕暮れの上野の山並み, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  H21: {scene: 海に面した城下の遠景（小田原の代わりの想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  H22: {scene: 海を望む石垣の城, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H23: {scene: 高台に並ぶ竹の柵と陣の囲い, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  H24: {scene: 灯のもとの文机と開いた書状, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  H25: {scene: 誰もいない広間とろうそく, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+  H26: {scene: 霧の朝の松並木の街道（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5]}}
+
+credits:
+  paintings/shingen_hojo_ujimasa_portrait.jpg: 《北条氏政像》
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: 《豊臣秀吉像》1600年（大阪市立美術館蔵）
+  paintings/ieyasu_portrait_toshodaigongen.jpg: 伝 狩野探幽《徳川家康像（東照大権現像）》江戸前期
+  paintings/hidenaga_mori_terumoto.jpg: 《毛利輝元像》江戸時代初め
+  paintings/hidenaga_chosokabe_yoshiiku.jpg: 落合芳幾《太平記英勇伝 長曽我部元親》1867年（後世の想像図）
+  paintings/masamune_portrait_yasunobu.jpg: 狩野安信《伊達政宗画像》1676年ころ
+  paintings/sanada_masayuki_portrait.jpg: 《真田昌幸像》（江戸時代）
+  paintings/mitsunari_uesugi_kagekatsu_armor.jpg: 《上杉景勝像》（部分、17世紀ごろ）
+  paintings/hideyoshi_jurakudai_screen_mitsui.jpg: 《聚楽第図屏風》桃山時代（三井記念美術館蔵）
+  paintings/shingen_odawara_castle_map.jpg: 《小田原城絵図》（江戸時代）
+  paintings/toshiie_odawara_castle_ndl75_trim.jpg: 《相州小田原城図》（日本古城絵図、国立国会図書館蔵。江戸時代）
+  paintings/sanada_kii_yamato_six_provinces_map_ndl_trim.jpg: 《紀伊大和河内伊賀山城伊勢六ヶ国絵図》の部分（江戸時代、国立国会図書館蔵）
+  paintings/ieyasu_edo_keicho_ezu_1608.jpg: 《慶長江戸図》1608年（東京都立中央図書館蔵）
+
+shots:
+  # 序章（0〜10）
+  - 0 ai:Q01 wide
+  - 1 ai:H13 wide
+  - 2 ai:H10 wide
+  - 3 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 4 ai:H03 wide
+  - 5 ai:H07 wide
+  - 6 part:paintings/sanada_kii_yamato_six_provinces_map_ndl_trim.jpg
+  - 7 ai:Q01 wide
+  - 8 ai:H26 wide
+  - 9 part:paintings/shingen_odawara_castle_map.jpg
+  - 10 ai:H18 wide
+  # 第1章（11〜28）
+  - 11 ai:H08 wide
+  - 12 part:paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+  - 13 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 14 ai:H24 wide
+  - 15 ai:H03 left
+  - 16 frame:paintings/hidenaga_mori_terumoto.jpg
+  - 17 ai:H17 wide
+  - 18 ai:H03 right
+  - 19 ai:H19 wide
+  - 20 ai:H25 wide
+  - 21 ai:H24 left
+  - 22 ai:H12 wide
+  - 23 part:paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+  - 24 ai:H07 right
+  - 25 frame:paintings/masamune_portrait_yasunobu.jpg
+  - 26 ai:H19 left
+  - 27 frame:paintings/shingen_hojo_ujimasa_portrait.jpg
+  - 28 ai:H13 wide
+  # 第2章（29〜40）
+  - 29 ai:H20 wide
+  - 30 ai:H10 left
+  - 31 ai:H13 wide
+  - 32 ai:H24 wide
+  - 33 ai:H24 left
+  - 34 ai:H03 wide
+  - 35 ai:H11 wide
+  - 36 ai:H08 wide
+  - 37 ai:H17 left
+  - 38 ai:H25 left
+  - 39 ai:H26 wide
+  - 40 ai:H02 wide
+  # 第3章（41〜62）
+  - 41 ai:H02 wide
+  - 42 ai:H12 left
+  - 43 ai:H04 left
+  - 44 ai:H04 right
+  - 45 ai:H23 wide
+  - 46 ai:H20 wide
+  - 47 frame:paintings/sanada_masayuki_portrait.jpg
+  - 48 ai:H05 wide
+  - 49 ai:H12 wide
+  - 50 ai:H17 left
+  - 51 ai:H24 right
+  - 52 ai:H08 wide
+  - 53 ai:H03 left
+  - 54 ai:H26 left
+  - 55 ai:H03 wide
+  - 56 ai:H25 wide
+  - 57 ai:H17 wide
+  - 58 ai:H18 wide
+  - 59 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 60 ai:H04 wide
+  - 61 ai:H12 wide
+  - 62 ai:H13 left
+  # 第4章（63〜81）
+  - 63 ai:H12 left
+  - 64 frame:paintings/toshiie_odawara_castle_ndl75_trim.jpg
+  - 65 ai:H23 wide
+  - 66 part:paintings/shingen_odawara_castle_map.jpg
+  - 67 ai:H07 right
+  - 68 part:paintings/toshiie_odawara_castle_ndl75_trim.jpg
+  - 69 ai:H10 wide
+  - 70 ai:H02 wide
+  - 71 ai:H06 left
+  - 72 ai:H13 wide
+  - 73 ai:H19 wide
+  - 74 ai:H25 wide
+  - 75 ai:H04 right
+  - 76 ai:H08 wide
+  - 77 ai:H09 wide
+  - 78 ai:H06 wide
+  - 79 ai:H26 wide
+  - 80 ai:H22 left
+  - 81 ai:H07 right
+  # 第5章（82〜96）
+  - 82 ai:H03 wide
+  - 83 ai:H04 left
+  - 84 ai:H08 wide
+  - 85 ai:H25 wide
+  - 86 ai:H24 wide
+  - 87 ai:H04 left
+  - 88 ai:H24 left
+  - 89 ai:H25 left
+  - 90 ai:H09 wide
+  - 91 part:paintings/sanada_kii_yamato_six_provinces_map_ndl_trim.jpg
+  - 92 ai:H20 wide
+  - 93 ai:H26 left
+  - 94 ai:H24 right
+  - 95 ai:H02 right
+  - 96 ai:Q01 wide
+  # 第6章（97〜119）
+  - 97 ai:H26 wide
+  - 98 ai:H16 wide
+  - 99 ai:H17 wide
+  - 100 ai:H18 wide
+  - 101 ai:H12 wide
+  - 102 ai:H23 wide
+  - 103 ai:H02 wide
+  - 104 ai:H16 left
+  - 105 ai:H19 wide
+  - 106 ai:Q01 wide
+  - 107 ai:H24 wide
+  - 108 ai:H10 wide
+  - 109 ai:H17 wide
+  - 110 frame:paintings/mitsunari_uesugi_kagekatsu_armor.jpg
+  - 111 ai:H03 wide
+  - 112 ai:H04 right
+  - 113 ai:H12 left
+  - 114 ai:H05 left
+  - 115 ai:H04 wide
+  - 116 ai:H02 wide
+  - 117 ai:H22 wide
+  - 118 ai:H08 wide
+  - 119 ai:H16 wide
+  # 第7章（120〜129）
+  - 120 part:paintings/ieyasu_edo_keicho_ezu_1608.jpg
+  - 121 ai:H20 wide
+  - 122 ai:H22 left
+  - 123 ai:H24 left
+  - 124 ai:H02 right
+  - 125 ai:H26 wide
+  - 126 part:paintings/ieyasu_edo_keicho_ezu_1608.jpg
+  - 127 ai:H15 left
+  - 128 ai:H13 wide
+  - 129 ai:Q01 wide
+  # まとめ（130〜137）
+  - 130 ai:H19 wide
+  - 131 ai:H10 wide
+  - 132 ai:H04 wide
+  - 133 ai:H26 left
+  - 134 ai:H03 wide
+  - 135 ai:H07 wide
+  - 136 ai:Q01 wide
+  - 137 ai:H15 left
+  - end ai:H15 wide
+figures: []
+
+focus:
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: {秀吉: [1.5, 0.5, 0.30]}
+
+fx:
+  Q01: {sparks: {region: [0.0, 0.45, 0.6, 1.0]}}
+  H02: {mist: {region: [0, 0.35, 1, 0.85], alpha: 0.10, speed: 5}}
+  H03: {lamp: {region: [0.05, 0.2, 0.15, 0.5]}}
+  H15: {water: {region: [0.35, 0.58, 1, 1.0]}}
+  H26: {mist: {region: [0, 0.4, 1, 0.9], alpha: 0.10, speed: 5}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 32, to: 32, label: 史料, text: 当年極月上旬、氏政出仕／致すべきの旨、御請の一札進上候, source: 秀吉朱印状（天正17年11月24日・北条氏直宛。『日本戦史 小田原役』附録。読み下し）}
+  - {type: quote, from: 49, to: 49, label: 史料, text: 来歳必ず節旄を携え進発せしめ／氏直が首を刎ぬべき事, source: 秀吉朱印状（天正17年11月24日。『伊達家文書』。読み下し）}
+  - {type: quote, from: 54, to: 54, label: 史料, text: 名胡桃の事、一切存ぜず候／名胡桃、当時百姓屋敷, source: 北条氏直書状（天正17年12月7日。『日本戦史 小田原役』附録。読み下し）}
+  - {type: quote, from: 55, to: 55, label: 史料, text: 或いは永く留め置かるべし／或いは国替え, source: 北条氏直書状（天正17年12月7日。『日本戦史 小田原役』附録。読み下し）}
+  - {type: quote, from: 132, to: 132, label: 要点, text: 上洛の代償／名胡桃の始末・国替えの恐れ, source: この動画のもしもの整理（推論）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）氏政と小田原}
+  - {line: 30, note: 第2章 沼田の裁き}
+  - {line: 43, note: 第3章 名胡桃の時期（くい違い）}
+  - {line: 56, note: 第3章 氏直の弁明の引用札}
+  - {line: 103, note: 第6章 従った大名の表}
+  - {line: 117, note: 第6章 もしもの表}
+  - {end: true, note: 終了画面の空き}

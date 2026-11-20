@@ -60,7 +60,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('テストFC'), findsWidgets);
-    expect(find.text('スカッド'), findsOneWidget);
+    expect(find.text('選手'), findsOneWidget); // 左メニューの項目
   });
 
   testWidgets(
@@ -78,16 +78,18 @@ void main() {
     await tester.tap(find.text('創設する'));
     await tester.pumpAndSettle();
 
-    // ホームタブから「スカッド」タブへ切り替える(ルートは積まれない)。
-    await tester.tap(find.text('スカッド'));
+    // ホームから「選手」へ切り替える(ルートは積まれない)。横画面の左メニュー。
+    // 上のバーには常にクラブ名があるので、画面の見出しで切り替わりを確かめる。
+    expect(find.text('選手'), findsOneWidget);
+    await tester.tap(find.text('選手'));
     await tester.pumpAndSettle();
-    expect(find.text('テストFC'), findsNothing);
+    expect(find.text('次の節へ'), findsOneWidget); // 上バーの進めるボタンは残る
 
     // ブラウザ/端末の戻る操作を発火する。
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
 
-    // タイトル画面まで戻るのではなく、ホームタブに戻るだけであるべき。
+    // タイトル画面まで戻るのではなく、ホームに戻るだけであるべき。
     expect(find.text('新規クラブ作成'), findsNothing);
     expect(find.text('テストFC'), findsWidgets);
 
@@ -154,7 +156,7 @@ void main() {
   });
 
   testWidgets(
-      'quick-sim ("結果だけ見る") shows a result dialog with the score '
+      'next matchday ("次の節へ") shows a result dialog with the score '
       'instead of only a snackbar', (WidgetTester tester) async {
     // ホーム画面のListViewの遅延構築で次節カードが画面外にならないよう、
     // 十分縦長なビューポートにしておく。
@@ -175,7 +177,8 @@ void main() {
     await tester.tap(find.text('創設する'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('結果だけ見る'));
+    // 試合はいつも数秒のダイジェスト(結果のダイアログ)で見せる。
+    await tester.tap(find.text('次の節へ').first);
     await tester.pumpAndSettle();
 
     expect(find.textContaining('結果: '), findsOneWidget);

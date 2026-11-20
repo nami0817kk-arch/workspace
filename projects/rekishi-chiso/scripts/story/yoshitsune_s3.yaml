@@ -1,0 +1,132 @@
+# 物語完結型ショート 義経（もしも） s3（2026-11-13）。本編 scripts/yoshitsune-if-story.yaml（11/15 12:00 公開、https://youtu.be/AI_giM-Gij8）から。11/16 に予約。
+# 切り口：義経の首が鎌倉に着くまで42日（本編序章・第4章。yoshitsune-10, 11, 12, 45, 46）。首・戦い・最期の絵なし（櫃は中身を描かない）。
+# 計算：閏4月30日（6月15日）→6月13日（7月27日）＝42日後（数えで43日目）。閏4月30日→5月22日（知らせ）＝22日後（ユリウス暦6/15→7/7）。
+# 理解テスト4問：①義経の首 ②1189年閏4月30日に衣川で自害、首が鎌倉の腰越に着いたのは6月13日＝42日後 ③「43日間酒に漬けた」は吾妻鏡に日数が無く計算値。頼朝は塔の供養まで持ってくるなと指示 ④実検のあと浜に打ち捨てられたという伝えと藤沢の井戸の伝説。泰衡のその後は本編へ
+# 事実は事実カード（dev/output/rekishi-chiso/research/源義経_facts_20261112.yaml）と本編の # fact: だけ。想像の台詞なし。「もしも」の話は「もしもの話」と言ってから。
+# 絵は本編の AI 絵（out/story/yoshitsune-if/main の B 番号）の再利用だけ。新しい絵は作らない。B11（大物浦）・B07（平泉の町並み）・B17（蓮）は当てない。人物の顔・戦い・首・妻子の最期の絵なし。
+# 吾妻鏡の1185〜89年の本文は読み下しで読んだもの（本編と同じ扱い）。干支は使わない。
+
+title: "義経｜首が着くまで、42日"
+yt_title: "義経の首が鎌倉に着くまで42日　「43日間酒に漬けた」は吾妻鏡に書かれていない"
+description: |-
+  1189年閏4月30日、藤原泰衡の兵が衣川の館を襲い、義経は自ら命を絶ちました。吾妻鏡は「年三十一」と記します。知らせが鎌倉に届いたのは、22日後の5月22日。首が腰越の浜に着いたのは、6月13日で、死から42日後（数えで43日目）です。
+  首は黒漆の櫃に入れ、酒に浸してありました。確かめたのは和田義盛と梶原景時で、見ていた人は皆、涙を拭い、袖を濡らした、と吾妻鏡は書きます。「43日間酒に漬けた」と語られることもありますが、吾妻鏡に日数は書かれていません。頼朝は6月7日、塔の供養を済ませるまでは首を持ってくるな、と奥州へ飛脚を送っていました。
+  首は実検のあと浜に打ち捨てられた、という伝えがあります（藤沢市の資料）。吾妻鏡の1185〜89年の本文は、読み下し文で確かめたものです。原文との照合は行っていません。
+  義経を討った泰衡は、そのあと、どうなったのか。本編は次のリンクからどうぞ。
+hashtags:
+- "#源義経"
+- "#鎌倉時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/yoshitsune-if
+out: yoshitsune_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "義経の首（衣川から鎌倉へ）"
+  title: "義経の首は、《42日》かかって着いた"
+now:
+- {at: "閏4月30日", text: "1189年閏4月30日　衣川", point: 0}
+- {at: "6月13日", text: "1189年6月13日　鎌倉の腰越", point: 0}
+timeline:
+- {label: "1189"}
+shots:
+  B05_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B05.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "板の間の黒漆の蓋付きの櫃と酒壺"
+  B04_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの川沿いの木造の館（想像図）"
+  B06_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "相模の海辺、松と波の浜（腰越の想像図）"
+  B05_right4:
+    kind: "ai"
+    file: "yoshitsune-if/main/B05.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "板の間の黒漆の蓋付きの櫃と酒壺"
+  B14_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B14.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯のそばの机に広げた巻物と筆"
+  B02_right6:
+    kind: "ai"
+    file: "yoshitsune-if/main/B02.jpg"
+    focus: [0.62, 0.5]
+    move: "right"
+    must: "鎌倉の武家屋敷の広間、庭を向く武将の後ろ姿"
+  B19_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B19.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの誰もいない川辺"
+  B16_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B16.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの川と一面の夏草"
+lines:
+  # fact: yoshitsune-12
+- 語り: "義経の首が、鎌倉に着いたのは、死から、《42日後》だった。"
+  shot: B05_in5
+  tone: 強調
+  pause: 0.12
+  # fact: yoshitsune-10
+- 語り: "1189年閏4月30日。藤原泰衡の兵が、衣川のやかたを襲い、義経は、自ら命を絶った。"
+  shot: B04_in5
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-12
+- 語り: "首が、鎌倉の腰越の浜に着いたのは、6月13日。閏4月30日から数えて、42日後だ。"
+  shot: B06_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshitsune-12
+- 語り: "首は、黒漆の櫃に入れられ、酒に浸してあった。見ていた人は皆、涙を拭い、袖を濡らした、と吾妻鏡は書く。"
+  shot: B05_right4
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-12, yoshitsune-45
+- 語り: "「43日間、酒に漬けた」と語られることもある。けれど、吾妻鏡に、日数は書かれていない。数えで43日目、という計算だ。"
+  shot: B14_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshitsune-12
+- 語り: "しかも頼朝は、6月7日、奥州へ飛脚を送っていた。塔の供養を済ませるまでは、首を持ってくるな、と。"
+  shot: B02_right6
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-46
+- 語り: "実検のあと、首は浜に打ち捨てられた、という伝えがある。藤沢には、流れ着いた首を洗い清めた、という井戸が残る。"
+  shot: B19_in5
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-14
+- 語り: "では、義経を討った泰衡は、そのあと、どうなったのか。"
+  shot: B16_in5
+  tone: 疑問
+  pause: 0.15

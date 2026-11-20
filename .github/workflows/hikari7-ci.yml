@@ -39,6 +39,11 @@ jobs:
       - name: 通しプレイの試算
         run: node tool/sim.js --quick
 
+      # 選択の差：よく考えた選び方が、1種類の選択を固定した遊び方（物語・出来事・1か月・講評・別れの言葉）を
+      # 下回っていないか（同じ乱数の種で回すので結果は毎回同じ。目安の +1.5 は手元の200回で見る）
+      - name: 選択の差が残っているか
+        run: node tool/sim.js --choices --quick
+
       # 全画面をブラウザなしで描き、描くときのエラーが0件か（男女・難しさ・チャレンジを変えて5シーズン）
       - name: 画面の点検
         run: node tool/views.js
@@ -59,6 +64,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # 新しい stable で material.dart が非推奨になり analyze が落ちた(2026-11-14)ため、basketball-ci と同じ版に固定する
+          flutter-version: 3.47.2
 
       - name: Install dependencies
         working-directory: projects/hikari7/app
@@ -88,6 +95,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          # 新しい stable で material.dart が非推奨になり analyze が落ちた(2026-11-14)ため、basketball-ci と同じ版に固定する
+          flutter-version: 3.47.2
       - working-directory: projects/hikari7/app
         run: flutter pub get
       - working-directory: projects/hikari7/app

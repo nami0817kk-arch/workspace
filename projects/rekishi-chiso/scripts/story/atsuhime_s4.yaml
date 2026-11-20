@@ -1,0 +1,150 @@
+# 物語完結型ショート 篤姫 s4（2026-11-18）。本編 scripts/atsuhime-story.yaml（11/22 12:00 公開予定、https://youtu.be/QA9Y8z3ZYFY）から。11/23 16:30 に予約。
+# 形式は shorui_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/天璋院_facts_20261117.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/atsuhime/main/ の A01〜A25）の切り出しだけ。新しい絵は作らない。人物は小さな後ろ姿だけ（A19 は手元だけ）。
+# 切り口：勝海舟の「私の姉」として町を歩き、浴衣・シャツ・こうもり傘・縫い物（本編 第4章、atsuhime-25・56・27・28）。
+#   本編の鉄瓶と銀の瓶のやりとり・「こうもり傘を杖に」は、事実カードの引用（「今では千駄ヶ谷は、角火鉢に銀瓶」「日傘代わり」）と合うか確かめきれないので使わない。
+# hook＝勝海舟は篤姫を何と呼んで町へ連れ出したのか（答えはこのショートの中：私の姉）。
+# tease＝そんな篤姫が最後まで嫌っていたのは誰か（答えは本編 第4章：徳川慶喜、atsuhime-26）。
+# 計算：なし（『海舟座談』の篤姫の話は明治31年＝1898年の談話）
+# 理解テスト：①篤姫と勝海舟の話 ②明治の東京、八百善・向島の柳屋・吉原・芸者屋 ③海舟に「私の姉」として連れ出され、町の暮らしを見た ④浴衣・シャツ・こうもり傘を自分で取り入れ、羽織を縫って贈るようになった
+title: "篤姫｜勝海舟と、料理屋へ"
+yt_title: "勝海舟は、元将軍の妻の篤姫を何と呼んで、料理屋や芸者屋へ連れ出したのか　浴衣・シャツ・こうもり傘の明治"
+description: |-
+  勝海舟は、晩年の談話『海舟座談』で、篤姫（天璋院）の用で、八百善に二、三度、向島の柳屋へも2度、吉原にも芸者屋にも行って、町の暮らしを見せた、と語っています。連れて歩くとき、海舟は篤姫を「私の姉」と言っていました。
+  湯を羽二重でこしていたお風呂は浴衣に、シャツを見ればすぐに着て、こうもり傘は日傘よりいい。のちには自分で縫い物もして、海舟に羽織を1枚くれたそうです。
+  本編では、城を出たあとの15年あまりを、当時の新聞・勝海舟の談話・昭和の本でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#篤姫"
+- "#天璋院"
+- "#勝海舟"
+- "#明治"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/atsuhime
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: atsuhime_story_s4
+header:
+  tag: "篤姫と勝海舟"
+  title: "勝海舟と、《料理屋》へ"
+now:
+- {at: "海舟座談", text: "1898年　勝海舟の談話", point: 1}
+- {at: "八百善", text: "明治の東京　料理屋", point: 0}
+- {at: "柳屋で", text: "明治の東京　向島の柳屋", point: 0}
+timeline:
+- {label: "明治"}
+- {label: "1898"}
+# 台本だけの読み替え（区切りの崩れを直す。readings.yaml は変えない）
+readings:
+  "八百善に": "ヤオゼンニ"
+shots:
+  A20_1:
+    kind: "ai"
+    file: "atsuhime/main/A20.jpg"
+    focus: [0.68, 0.5]
+    move: "in"
+    must: "A20"
+  A15_2:
+    kind: "ai"
+    file: "atsuhime/main/A15.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "A15"
+  A16_3:
+    kind: "ai"
+    file: "atsuhime/main/A16.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "A16"
+  A20_4:
+    kind: "ai"
+    file: "atsuhime/main/A20.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "A20"
+  A24_5:
+    kind: "ai"
+    file: "atsuhime/main/A24.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "A24"
+  A16_6:
+    kind: "ai"
+    file: "atsuhime/main/A16.jpg"
+    focus: [0.85, 0.5]
+    move: "left"
+    must: "A16"
+  A18_7:
+    kind: "ai"
+    file: "atsuhime/main/A18.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "A18"
+  A19_8:
+    kind: "ai"
+    file: "atsuhime/main/A19.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "A19"
+  A07_9:
+    kind: "ai"
+    file: "atsuhime/main/A07.jpg"
+    focus: [0.78, 0.5]
+    move: "left"
+    must: "A07"
+lines:
+  # fact: atsuhime-25
+- 語り: "勝海舟は、篤姫を、何と呼んで、町へ連れ出したのか。"
+  shot: A20_1
+  tone: 強調
+  pause: 0.12
+  # fact: atsuhime-25
+- 語り: "晩年の談話、海舟座談によれば、篤姫の用で、八百善に、二、三度。"
+  shot: A15_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-25
+- 語り: "向島の柳屋へも、2度。吉原にも、芸者屋にも行って、町の暮らしを、見せた。"
+  shot: A16_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-25
+- 語り: "連れて歩くとき、海舟は、13代将軍の妻だった人を、私の姉、と言っていた。"
+  shot: A20_4
+  tone: 強調
+  pause: 0.12
+  # fact: atsuhime-56
+- 語り: "それまで、篤姫の湯は、別に沸かして、羽二重の布で、こしたものだった。"
+  shot: A24_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-56
+- 語り: "それが、柳屋で浴衣を出されると、浴衣の方がいい、と言うようになった。"
+  shot: A16_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-27
+- 語り: "シャツも、すぐに着た。こうもり傘は、日傘よりもいい、と言った。"
+  shot: A18_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: atsuhime-28
+- 語り: "のちには、自分で縫い物もして、海舟にも、羽織を1枚、縫ってくれたという。"
+  shot: A19_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第4章（atsuhime-26）
+- 語り: "では、そんな篤姫が、最後まで嫌っていたのは、誰だったのか。"
+  shot: A07_9
+  tone: 疑問
+  pause: 0.15

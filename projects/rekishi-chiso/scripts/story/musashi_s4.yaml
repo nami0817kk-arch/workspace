@@ -1,0 +1,140 @@
+# 物語完結型ショート 宮本武蔵 s4（2026-10-29）。本編 scripts/musashi-story.yaml の第3章（『二天記』）から。
+# 形式は takasugi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（M*.jpg。人物なし）のみ。決闘を描いた錦絵（歌川芳房）は決闘の場面に人物の絵を当てない決まりのため使わない。
+# 事実カード：musashi-22・23・24・49
+#   ・成立年は山口県観光連盟が1755年（宝暦5年）、J-CAST ニュースが1776年。どちらとも決めず「1755年とも1776年とも」。
+#   ・歌舞伎の要素は魚住孝至教授の見方（musashi-23）。創作とみる見方が有力は国立国会図書館などの回答（musashi-24）。
+# 理解テスト4問：
+#   ①誰の話か：宮本武蔵の決闘を詳しく書く『二天記』
+#   ②いつ・どこで何が：八代藩の家臣、豊田景英が書いた。成立は1755年とも1776年とも。決闘の100年以上あと。遅れて来る武蔵に小次郎が怒る場面がある
+#   ③なぜ疑われるか：1737年初演の歌舞伎『敵討巌流島』などの要素が取り入れられている、と魚住教授は見る。決闘の記述は創作とみる見方が有力
+#   ④どうなったか：近代に広まった決闘の様子の多くはこの本に基づき、吉川英治の小説の下敷きになった
+title: 宮本武蔵｜遅れて来る武蔵は、100年以上あとの本にいた
+yt_title: 「遅れて来る武蔵」は『二天記』の場面　決闘の100年以上あとに書かれた巌流島
+description: |-
+  遅れて来た武蔵に、小次郎が怒る。巌流島の有名な場面は、『二天記』にあります。
+  書いたのは、八代藩の家臣、豊田景英。成立は1755年とも1776年ともいわれ、決闘の100年以上あとです。勝負の場面には、1737年に初演された歌舞伎『敵討巌流島』などの要素が取り入れられている、と国際武道大学の魚住孝至教授は見ています。決闘の記述は作者の創作とみる見方が有力だ、と国立国会図書館などの回答は紹介しています。
+  それでも、近代に広まった決闘の様子は、多くがこの本に基づくといいます。吉川英治の小説も、これを下敷きにしました。
+hashtags: ["#宮本武蔵", "#日本史", "#巌流島"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/musashi
+out: musashi_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 宮本武蔵（江戸初期の剣豪）
+  title: "遅れて来る武蔵は、《100年以上あと》の本に"
+now:
+  - {at: 1755年, text: "1755年　八代藩", point: 1}
+  - {at: 1776年, text: "1776年　八代藩", point: 2}
+timeline:
+  - {label: "1737"}
+  - {label: "1755"}
+  - {label: "1776"}
+cards:
+  - type: table                          # 二天記と歌舞伎の年（語った順に1行ずつ）
+    title: 『二天記』と歌舞伎
+    from: 成立は
+    until: 国立国会図書館
+    items:
+      - {at: 1755年, text: "1755年とも1776年とも　成立"}
+      - {at: 1737年, text: "1737年　歌舞伎『敵討巌流島』初演"}
+    text_y: 0.70
+shots:
+  M04:
+    kind: ai
+    file: musashi/main/M04.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 夜の海峡を渡る小さな舟の影
+  M06:
+    kind: ai
+    file: musashi/main/M06.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 灯の下の古い書物と筆
+  M05:
+    kind: ai
+    file: musashi/main/M05.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 石垣の上の城と門
+  M07:
+    kind: ai
+    file: musashi/main/M07.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 芝居小屋の屋根が並ぶ夕景の通り
+  M06r:
+    kind: ai
+    file: musashi/main/M06.jpg
+    focus: [0.35, 0.6]
+    move: left
+    zoom: 0.14
+    must: 書物の手前
+  M07r:
+    kind: ai
+    file: musashi/main/M07.jpg
+    focus: [0.3, 0.55]
+    move: in
+    zoom: 0.1
+    must: 芝居小屋の屋根
+  M01:
+    kind: ai
+    file: musashi/main/M01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 朝の海に浮かぶ島
+  M14:
+    kind: ai
+    file: musashi/main/M14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    text_y: 0.76
+    must: 夕暮れの高台から見る遠い島と海
+lines:
+  # fact: musashi-22
+  - 語り: 遅れて来た武蔵に、小次郎が怒る。この有名な場面は、『二天記』に、《!ある》。
+    shot: M04
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-24
+  - 語り: 書いたのは、八代藩の家臣、豊田景英。成立は、1755年とも、1776年とも、いわれる。決闘の、100年以上あとだ。
+    shot: M06
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-23
+  - 語り: 勝負の場面には、1737年に初演された、歌舞伎『敵討巌流島』などの要素が、取り入れられている。国際武道大学の魚住孝至教授は、そう見ている。
+    shot: M07
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-24
+  - 語り: 決闘の記述は、作者の創作とみる見方が有力だ。国立国会図書館などの回答は、そう紹介している。
+    shot: M06r
+    tone: 重い
+    pause: 0.12
+  # fact: musashi-24
+  - 語り: それでも、近代に広まった決闘の様子は、多くがこの本に基づく。吉川英治の小説も、これを下敷きにした。
+    shot: M07r
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-49
+  - 語り: いっぽう、長府藩の初代藩主の言行を記した『毛利秀元記』には、決闘の記録が、残っていない。
+    shot: M05
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: あなたが思い浮かべる巌流島は、どの本の、巌流島ですか。
+    shot: M14
+    tone: 疑問
+    pause: 0.15

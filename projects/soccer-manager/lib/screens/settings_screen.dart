@@ -15,6 +15,7 @@ import 'onboarding_screen.dart';
 import 'start_screen.dart';
 import '../theme/semantic_colors.dart';
 import '../monetization/ad_service.dart';
+import '../logic/economy_scale.dart';
 
 const String _privacyPolicyUrl =
     'https://soccer-manager.pages.dev/legal/privacy.html';
@@ -67,6 +68,12 @@ class SettingsScreen extends StatelessWidget {
           Text(
             Tr.pick('表示', 'Display'),
             style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            Tr.pick('横画面は、この設定にかかわらず暗い配色で表示します。',
+                'In landscape the app is always shown in the dark scheme, whatever you pick here.'),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 8),
           Card(
@@ -156,6 +163,13 @@ class SettingsScreen extends StatelessWidget {
                       'Plays on goals, results and similar moments')),
                   value: settings.soundEnabled,
                   onChanged: (v) => settings.setSoundEnabled(v),
+                ),
+                SwitchListTile(
+                  title: Text(Tr.pick('大事な場面の演出', 'Big moments')),
+                  subtitle: Text(Tr.pick('優勝・昇格・降格・決勝・史上最高額の移籍を画面いっぱいの絵で見せます',
+                      'Shows titles, promotion, relegation, finals and record transfers full screen')),
+                  value: settings.momentsEnabled,
+                  onChanged: (v) => settings.setMomentsEnabled(v),
                 ),
                 SwitchListTile(
                   title: Text(Tr.pick('触覚フィードバック', 'Haptic feedback')),
@@ -482,8 +496,8 @@ class SettingsScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(Tr.pick(
-                      '資金を${amount >= 0 ? '+' : ''}$amount万円しました',
-                      "Funds changed by ${amount >= 0 ? '+' : ''}$amount")),
+                      '資金を${amount >= 0 ? '+' : ''}${formatMoney(amount)}しました',
+                      "Funds changed by ${amount >= 0 ? '+' : ''}${formatMoney(amount)}")),
                 ),
               );
             },

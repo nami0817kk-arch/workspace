@@ -117,17 +117,37 @@ class ReviewPrompt extends ChangeNotifier {
     return false;
   }
 
+  /// この季は星を頼みたい季か。**広告を出すより先に、これを見る。**
+  ///
+  /// 広告も星の依頼も、置き場は1シーズンの切れ目しかない。広告は毎季出る
+  /// （`Monetization.adsFromSeason` が 1）ので、**「広告が出た回は見送る」
+  /// だけにしていた頃は、星の依頼がほぼ永久に順番待ちになっていた**
+  /// ——公開から5週で累計1,000ダウンロードを超えて、付いた星は8件だった。
+  ///
+  /// どちらかを譲るしかないが、**広告は1キャリアに約18.6回、星を頼むのは
+  /// 1回だけ**。だから頼む季は広告のほうを譲る（失うのは1人あたり広告1回）。
+  ///
+  /// `initialize` を済ませていないときは false を返す。まだ
+  /// 「もう頼んだか」を読めていないので、ここで広告を譲ると
+  /// **頼まないのに広告だけ減る**ことになる。
+  bool wantsToAsk(CareerState state) {
+    if (!initialized || asked) return false;
+    if (state.history.length < askFromSeason) return false;
+    return isGoodSeason(state);
+  }
+
   /// 頼んでよい瞬間か。
   ///
   /// [adShown] は、この季の切れ目に全画面広告を出したか。**広告を閉じた
   /// 直後に星を頼むのは最悪の順番**なので、出した回は見送る。
+  /// いまは [wantsToAsk] を見て広告のほうを譲るので、ここが true のまま
+  /// 広告も出る、という組み合わせは普通は起きない。念のため残してある。
   bool shouldAsk({
     required CareerState state,
     required bool adShown,
   }) {
-    if (asked || adShown) return false;
-    if (state.history.length < askFromSeason) return false;
-    return isGoodSeason(state);
+    if (adShown) return false;
+    return wantsToAsk(state);
   }
 
   /// 頼める瞬間なら頼む。頼んだら true。

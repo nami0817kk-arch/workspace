@@ -1,0 +1,265 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：参勤交代（scripts/sankin-story.yaml）。chiso/storymain.py が読む。
+# 10-31 作成（11/04 19:00 公開）。shimabara_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 9 枚（P01〜P09。人物・戦闘・文字・紋は描かせない。風景と物だけ）。実在の絵は浮世絵のパブリックドメイン（二代広重の霞ヶ関の行列・貞秀の薩埵峠・国輝の大井川・
+#   菱川派の絵巻・広重の土山）を part（絵の一部）で使う（行列そのものを描いた絵なので全面の主役にしてよいと判断。額ではなく一部を拡大してパン）。
+# P01 松並木の朝の街道／P02 増水した大きな川／P03 夕暮れの宿場／P04 江戸の武家屋敷の白壁と門／P05 旅籠の座敷／P06 帳面と算盤の机／P07 雨の山道の休み処／P08 米俵の蔵／P09 夕暮れの江戸の町並み（終了画面）
+script: scripts/sankin-story.yaml
+out: sankin_story_main
+art_dir: out/story/sankin/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/sankin/main   # Gemini の 16:9 の絵（P01.jpg〜P09.jpg）
+ai_disclosure: この動画の風景・室内の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 「お供を減らせ」と書かれた条文, now: null,
+      dates: {}}
+  1: {label: 第1章 「参勤」は、いつ、何から始まったのか, now: 1615年,
+      dates: {15: 1629年, 17: 1602年, 18: 寛永12年（1635年）, 19: 寛永19年（1642年）, 21: null}}
+  2: {label: 第2章 行列は、何人で、何日歩いたのか, now: null,
+      dates: {28: 嘉永5年, 29: null, 32: 天保13年（1842年）, 33: 享保16年（1731年）, 35: 享保6年（1721年）, 36: null}}
+  3: {label: 第3章 道中では、何が起きたのか, now: null,
+      dates: {45: 慶応4年（1868年）, 46: null, 47: 文政5年（1822年）, 49: null, 53: 安永10年（1781年）, 54: 安永7年（1778年）, 56: null}}
+  4: {label: 第4章 いくらかかったのか, now: 文化5年（1808年）,
+      dates: {60: 文政11年（1828年）, 61: null, 64: 延享4年（1747年）, 66: null, 69: 延宝7年（1679年）, 71: 万延元年（1860年）, 73: null}}
+  5: {label: 第5章 では、なぜ幕府は命じたのか, now: null,
+      dates: {78: 享保7年（1722年）, 81: 寛永12年（1635年）, 82: 享保6年（1721年）, 83: null, 85: 寛政9年（1797年）, 86: null}}
+  6: {label: 第6章 参勤交代は、どう終わり、何が残ったのか, now: 文久2年（1862年）,
+      dates: {96: 元治元年（1864年）, 97: null, 100: null}}
+  7: {label: まとめ なぜ、毎年の旅を命じたのか, now: null,
+      dates: {}}
+
+references:
+  - 武家諸法度(寛永十二年六月廿一日)第二条。底本『近世法制史料叢書 第二』(石井良助校訂、創文社、1959)所収『御当家令条』（1635年）　https://sybrma.sakura.ne.jp/488bukesyohatto.html
+  - 寛永令・参勤条(原典表記『徳川禁令考』)。EE-Arts【JH310】史料データベース(2021.12.08)の翻刻、読み下し体（1635年）　https://ee-arts.biz/database/jh310/520/
+  - 世界大百科事典(旧版)「参勤交代」（コトバンク）　https://kotobank.jp/word/%E6%AD%A6%E5%AE%B6%E8%AB%B8%E6%B3%95%E5%BA%A6
+  - 参勤交代(nippon.com)　https://www.nippon.com/ja/japan-topics/c08601/
+  - 参勤交代(展示パネル)（2017年）　https://www.library-archives.pref.fukui.lg.jp/fukui/08/m-exhbt/20170102AM/sankinkoutai.pdf
+  - 参勤交代の人数と抑制策（2020年）　https://www.nippon.com/ja/japan-topics/c08602/
+  - 改訂新版 世界大百科事典「参勤交代」（コトバンク）　https://kotobank.jp/word/%E5%8F%82%E5%8B%A4%E4%BA%A4%E4%BB%A3
+  - 九州からの参勤交代は17億かかる!? 『参勤交代のお勘定』【書評】（2025年）　https://ddnavi.com/article/1294188/a/
+  - 参勤交代(nippon.com 連載)　https://www.nippon.com/ja/japan-topics/c08609/
+  - 大名行列(日本大百科全書 藤野保/世界大百科事典 波田野富信、コトバンク転載)　https://kotobank.jp/word/大名行列
+  - 参勤交代(世界大百科事典 旧版 大名行列)　https://kotobank.jp/word/参勤交代
+  - eto-colle(石川県立歴史博物館の担当者コメント)（2026年）　https://www.museum.or.jp/eto-colle/2026/123577
+  - 12泊13日で2億4,000万円⁉︎ 前田家の大名行列が費用もスケジュールもヤバい！（2020年）　https://intojapanwaraku.com/culture/107225/
+  - 江戸から近い藩、遠い藩の日程・ルートを比べると…（2021年）　https://www.nippon.com/ja/japan-topics/c08607/
+  - PRESIDENT Online(参勤交代の記事)（2022年）　https://president.jp/articles/-/53155
+  - 企画展「江戸へ ー盛岡藩の参勤交代ー」（2021年）　https://www.museum.or.jp/event/103608
+  - 地方出身の下級武士はどんな生活をしていた？江戸のサラリーマン単身赴任生活実録ルポ（2020年）　https://intojapanwaraku.com/culture/94261/
+  - 文学・浮世絵作品から見た大井川の川越しの再評価について　https://www.city.shimada.shizuoka.jp/fs/9/3/7/5/1/9/_/7.pdf
+  - 大井川の川越しにかかる費用が知りたい(レファレンス事例)　https://crd.ndl.go.jp/reference/detail?page=ref_view&id=1000163750
+  - 街道と宿場町の発展が地方に強いた負担（2021年）　https://www.nippon.com/ja/japan-topics/c08606/
+  - 宿場町の誕生と発展(本陣・脇本陣)（2021年）　https://www.nippon.com/ja/japan-topics/c08605/
+  - 徳山毛利家文庫「御道中日記」について（2025年）　https://archives.pref.yamaguchi.lg.jp/cms/wp-content/uploads/2025/06/52yoshida.pdf
+  - 参勤交代のお勘定(婦人公論.jp)（2025年）　https://fujinkoron.jp/articles/-/18580?page=2
+  - 参勤交代が地方にもたらした文化交流（2021年）　https://www.nippon.com/ja/japan-topics/c08603/
+  - 山川 日本史小辞典 改訂新版「上米の制」（コトバンク）（1997年）　https://kotobank.jp/word/%E4%B8%8A%E7%B1%B3%E3%81%AE%E5%88%B6-3132080
+  - しながわデジタルアーカイブ 近世編 幕末の品川『6 参勤交代の緩和と長州征伐』　https://adeac.jp/shinagawa-city/texthtml/d000010/mp000010/ht004250
+  - ［第46話］参勤交代からみる幕末の越後の大名　https://www.pref-lib.niigata.niigata.jp/1b8446f94c08f7ae67441d7d895601a6/%E8%B6%8A%E5%BE%8C%E4%BD%90%E6%B8%A1%E3%83%92%E3%82%B9%E3%83%88%E3%83%AA%E3%82%A2/%EF%BC%BB%E7%AC%AC%EF%BC%94%EF%BC%96%E8%A9%B1%EF%BC%BD%E5%8F%82%E5%8B%A4%E4%BA%A4%E4%BB%A3%E3%81%8B%E3%82%89%E3%81%BF%E3%82%8B%E5%B9%95%E6%9C%AB%E3%81%AE%E8%B6%8A%E5%BE%8C%E3%81%AE%E5%A4%A7%E5%90%8D
+  - 参勤交代(コトバンク: 世界大百科事典・ニッポニカ・ブリタニカ)　https://kotobank.jp/word/%E5%8F%82%E5%8B%A4%E4%BA%A4%E4%BB%A3-70574
+  - 文久の参勤交代緩和と幕政改革について(法学新報121巻1・2号 pp.151-204)（2014年）　https://irdb.nii.ac.jp/01441/0004053307
+  - The Daimyo and Edo: Impact of the Sankin Kotai System (Marquette大のサイト上　https://academic.mu.edu/meissnerd/sankin-kotai.html
+  - 加賀藩上屋敷・赤門(文京ふるさと歴史館)　https://www.city.bunkyo.lg.jp/rekishikan/p004340.html
+  - このまちアーカイブス 丸の内・大手町『官庁街となった大手町』　https://smtrc.jp/town-archives/city/marunouchi/p02.html
+  - 日比谷公園(千代田区観光協会)　https://visit-chiyoda.tokyo/app/spot/detail/444
+  - 佐々木家文書(中央区民文化財)　https://www.city.chuo.lg.jp/a0052/bunkakankou/rekishi/bunkazai/kuminbunkazai/sasakikemonjyo.html
+  - このまちアーカイブス 日本橋　https://smtrc.jp/town-archives/city/nihombashi/p02.html?id=a02
+  - 維新後の東京、市井の人々はどう生きたか(日経ビジネス電子版)（2018年）　https://business.nikkei.com/atcl/opinion/15/213747/121800085/
+  - 江戸東京博物館 取材記事(museum.or.jp)（2026年）　https://www.museum.or.jp/report/125330
+  - 国立国会図書館 レファレンス協同データベース『明治元年から明治37年までの東京府の人口』　https://crd.ndl.go.jp/reference/detail?page=ref_view&id=1000149757
+  - Tour of Duty: Samurai, Military Service in Edo, and the Culture of Ear（2008年）　https://uhpress.hawaii.edu/title/tour-of-duty-samurai-military-service-in-edo-and-the-culture-of-early-modern-japan/
+  - Breaking Barriers: Travel and the State in Early Modern Japan(ハーバード大学ペ（1995年）　https://rijs.fas.harvard.edu/ja/node/911
+  - 武家諸法度(寛永六年) Wikisource(底本 史籍集覧 第17冊)（1629年）　https://ja.wikisource.org/wiki/武家諸法度_(寛永六年)
+  - 時代を紡ぐ「加賀藩江戸下屋敷平尾邸の拝領と前田綱紀」(広報いたばし 2014-08-23号)（2014年）　https://www.city.itabashi.tokyo.jp/bunka/bunkazi/jidai/1004884.html
+  - 鳥取藩江戸藩邸の解説ページ　https://www.pref.tottori.lg.jp/265587.htm
+  - Book review: Tour of Duty（2011年）　https://ahorbinski.dreamwidth.org/31254.html
+  - Constantine N. Vaporis, Tour of Duty（ハワイ大学出版局、2008年）　https://uhpress.hawaii.edu/title/tour-of-duty-samurai-military-service-in-edo-and-the-culture-of-early-modern-japan/
+  - File:Daimyo Procession at Kasumigaseki in Edo（LACMA、ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Daimyo_Procession_at_Kasumigaseki_in_Edo_LACMA_M.2006.136.285a-c.jpg
+  - File:MET DP148145.jpg（メトロポリタン美術館、ウィキメディア・コモンズ、CC0）　https://commons.wikimedia.org/wiki/File:MET_DP148145.jpg
+  - File:Utagawa Kuniteru II - A Daimyô Procession at the Ôi River.jpg（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Utagawa_Kuniteru_II_-_A_Daimy%C3%B4_Procession_at_the_%C3%94i_River.jpg
+  - File:Daimyo Procession to Edo MET DP-19027-012 crd.jpg（メトロポリタン美術館、CC0）　https://commons.wikimedia.org/wiki/File:Daimyo_Procession_to_Edo_MET_DP-19027-012_crd.jpg
+  - File:Hiroshige, Daimyo procession crossing a bridge.jpg（ウィキメディア・コモンズ、パブリックドメイン）　https://commons.wikimedia.org/wiki/File:Hiroshige,_Daimyo_procession_crossing_a_bridge.jpg
+no_tag_from: 112                     # 締め（「減らせ」と書かれた旅は…）から札を出さない
+
+# AI 絵（16:9 横・9枚）。pan：h＝左右（既定）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  P01: {scene: 松並木の朝の街道（霧・人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P02: {scene: 増水した大きな川と空の河原（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P03: {scene: 夕暮れの宿場の通り（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P04: {scene: 江戸の武家屋敷の白壁と門（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  P05: {scene: 旅籠の座敷（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P06: {scene: 帳面と算盤の机（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.6], left: [1.18, 0.4, 0.6], right: [1.18, 0.6, 0.6]}}
+  P07: {scene: 雨の山道の休み処（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P08: {scene: 米俵の蔵（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  P09: {scene: 夕暮れの江戸の町並み（終了画面用）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx: {}
+
+credits:
+  paintings/sankin_kasumigaseki_hiroshige2_1863.jpg: 江戸霞ヶ関の大名行列（二代歌川広重、1863年。LACMA 所蔵、ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/sankin_satta_sadahide_1862.jpg: 東海道中 薩埵峠の大名行列（歌川貞秀、1862年。メトロポリタン美術館所蔵、ウィキメディア・コモンズ、CC0）
+  paintings/sankin_oi_river_kuniteru2_1865.jpg: 東海道 大井川 行列之図（二代歌川国輝、1865年。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/sankin_hishikawa_crop.jpg: 大名行列の絵巻（菱川派、1700年ごろ。メトロポリタン美術館所蔵、ウィキメディア・コモンズ、CC0）
+  paintings/sankin_tsuchiyama_hiroshige_rain.jpg: 東海道五拾三次 土山 春之雨（歌川広重、保永堂版。ウィキメディア・コモンズ、パブリックドメイン）
+
+shots:
+  - 0 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg wide   # 参勤交代を命じた法令の同じ条文
+  - 1 ai:P06 wide   # 条文の翻刻（史料の札）
+  - 2 ai:P04 right   # 続き（史料の札）
+  - 3 ai:P05 wide   # 今の言葉にすると
+  - 4 part:paintings/sankin_satta_sadahide_1862.jpg left   # 加賀藩の人数（図）
+  - 5 part:paintings/sankin_satta_sadahide_1862.jpg wide   # 歴史博物館・1969人
+  - 6 part:paintings/sankin_satta_sadahide_1862.jpg right   # 686人は臨時の雇い
+  - 7 ai:P01 left   # 464キロ12泊13日
+  - 8 part:paintings/sankin_tsuchiyama_hiroshige_rain.jpg wide   # 薩摩 47泊48日
+  - 9 ai:P06 left   # お金：江戸での支出
+  - 10 ai:P08 wide   # 5〜10パーセント
+  - 11 ai:P04 left   # なぜ命じたのか（要点札）
+  - 12 ai:P01 right   # 答えを探して
+  - 13 ai:P06 wide   # 1615年 元和令
+  - 14 ai:P04 right   # 京都の作法
+  - 15 ai:P06 left   # 1629年 削られた
+  - 16 ai:P09 wide   # 家康の奨励・屋敷地
+  - 17 ai:P05 left   # 前田利長 人質
+  - 18 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg left   # 1635年 条文（図）
+  - 19 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg right   # 1642年 譜代
+  - 20 ai:P03 wide   # 交代の月の食い違い
+  - 21 ai:P04 wide   # 定府
+  - 22 ai:P01 wide   # 対馬・松前
+  - 23 part:paintings/sankin_satta_sadahide_1862.jpg wide   # 毎年の義務
+  - 24 part:paintings/sankin_oi_river_kuniteru2_1865.jpg left   # 加賀と薩摩を比べる
+  - 25 ai:P01 wide   # 464.1キロ
+  - 26 ai:P02 left   # 川73本
+  - 27 part:paintings/sankin_satta_sadahide_1862.jpg right   # 仙台・加賀・薩摩（図）
+  - 28 ai:P07 wide   # 薩摩 嘉永5年
+  - 29 ai:P01 right   # 盛岡・松江
+  - 30 part:paintings/sankin_hishikawa_crop.jpg left   # 人数 加賀・屏風473人
+  - 31 ai:P06 right   # 4千人・2千5百人の書き方
+  - 32 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg wide   # 仙台1577人・長州
+  - 33 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg right   # 徳山藩 373人（図）
+  - 34 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg left   # 内訳
+  - 35 ai:P06 right   # 享保6年の目安
+  - 36 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg left   # 渡り者
+  - 37 ai:P02 right   # 川が待っていた
+  - 38 ai:P02 wide   # 大井川
+  - 39 part:paintings/sankin_oi_river_kuniteru2_1865.jpg wide   # 橋がなかった
+  - 40 part:paintings/sankin_oi_river_kuniteru2_1865.jpg left   # 川札（図）
+  - 41 ai:P02 left   # 30両から40両
+  - 42 part:paintings/sankin_oi_river_kuniteru2_1865.jpg right   # 島田市の論文集
+  - 43 ai:P06 wide   # 国会図書館の回答
+  - 44 ai:P07 left   # 川留め最長28日
+  - 45 ai:P02 right   # 慶応4年か明治元年か
+  - 46 ai:P03 left   # 島田宿・金谷宿
+  - 47 ai:P03 right   # 二川宿の本陣
+  - 48 ai:P05 wide   # 福岡藩51人
+  - 49 ai:P03 wide   # 郡山宿 22.7日
+  - 50 ai:P05 right   # 予約のない月
+  - 51 ai:P07 right   # 助郷
+  - 52 part:paintings/sankin_oi_river_kuniteru2_1865.jpg right   # 賃金
+  - 53 ai:P05 left   # 矢掛宿の宿代
+  - 54 ai:P06 right   # 徳山藩の道中日記
+  - 55 part:paintings/sankin_tsuchiyama_hiroshige_rain.jpg left   # 神奈川から大磯
+  - 56 ai:P01 wide   # お金のかかる旅
+  - 57 ai:P06 wide   # 食い違う数字へ
+  - 58 ai:P06 left   # 加賀藩 文化5年
+  - 59 ai:P08 left   # 片道分・ほぼ倍
+  - 60 ai:P06 right   # 岡山藩
+  - 61 ai:P05 wide   # 婦人公論
+  - 62 ai:P07 wide   # 庄内藩 旅費が尽きた
+  - 63 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg wide   # 江戸での支出（図）
+  - 64 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg left   # 加賀・弘前・秋田
+  - 65 ai:P04 left   # 長岡・備中松山・松江
+  - 66 ai:P09 wide   # この表は
+  - 67 ai:P06 wide   # 安藤優一郎
+  - 68 ai:P08 right   # 数え方が違う
+  - 69 ai:P04 right   # 平尾邸
+  - 70 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg right   # 21万8千坪
+  - 71 part:paintings/sankin_hishikawa_crop.jpg left   # 勤番侍
+  - 72 ai:P05 left   # 183日のうち47日
+  - 73 ai:P01 right   # 旅の費用も
+  - 74 ai:P04 wide   # 通説と今の見方
+  - 75 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg wide   # 通説
+  - 76 ai:P06 left   # 書評
+  - 77 ai:P06 wide   # 共同通信（図）
+  - 78 ai:P08 wide   # 上米・半年
+  - 79 ai:P06 right   # 18万7000石
+  - 80 ai:P08 right   # 31年廃止
+  - 81 ai:P04 left   # 冒頭の条文へ・細川忠利
+  - 82 part:paintings/sankin_satta_sadahide_1862.jpg left   # 享保6年の目安・仙台1577人
+  - 83 part:paintings/sankin_oi_river_kuniteru2_1865.jpg wide   # ヴァポリス
+  - 84 ai:P01 wide   # 江戸を通らずに
+  - 85 ai:P05 left   # 弘前藩 弘道館
+  - 86 ai:P07 wide   # 木曽ひのき・秋田すぎ
+  - 87 ai:P01 left   # 見方は分かれた
+  - 88 ai:P03 right   # 幕末 文久2年
+  - 89 ai:P04 wide   # 文久2年 閏8月
+  - 90 ai:P06 left   # 在府の書き方（図）
+  - 91 ai:P06 wide   # 榎本浩章
+  - 92 ai:P05 wide   # 消極的な評価
+  - 93 part:paintings/sankin_satta_sadahide_1862.jpg wide   # 警備に動員
+  - 94 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg left   # 建具や畳まで
+  - 95 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg right   # 品川宿の大騒ぎ
+  - 96 ai:P03 wide   # 元治元年の復旧令（史料の札）
+  - 97 ai:P03 left   # 終わりの年（図）
+  - 98 ai:P07 left   # 1867年
+  - 99 ai:P01 left   # 終わりの年は違う
+  - 100 ai:P04 left   # 東京大学・赤門
+  - 101 ai:P09 left   # 大手町・司法省
+  - 102 ai:P04 wide   # 武家地（図）
+  - 103 ai:P09 wide   # 人口
+  - 104 ai:P04 wide   # 国会図書館
+  - 105 ai:P03 wide   # 日比谷公園
+  - 106 ai:P01 wide   # 最後に冒頭の問い
+  - 107 ai:P01 right   # なぜ
+  - 108 ai:P04 wide   # まとめ
+  - 109 ai:P06 wide   # 三つ（要点札）
+  - 110 ai:P08 wide   # 上米
+  - 111 part:paintings/sankin_oi_river_kuniteru2_1865.jpg wide   # 数え方で数が変わる
+  - 112 part:paintings/sankin_kasumigaseki_hiroshige2_1863.jpg wide   # 「減らせ」と書かれた旅
+  - 113 ai:P09 wide   # 登録のお願い
+  - end ai:P09 wide
+
+# 語りがその物を言うと、カットの終わりにそれが主役になる所で止まる（位置は仮）
+focus: {}
+
+fx:
+  P02: {water: {region: [0.30, 0.45, 1, 0.75]}}      # 増水した川の面
+  P06: {lamp: {region: [0.04, 0.20, 0.20, 0.55]}}    # 机の灯
+  P09: {mist: {region: [0.0, 0.40, 1, 0.80], alpha: 0.06, speed: 3}}
+
+parts:
+  - {type: quote, from: 1, to: 1, label: 史料, text: 毎年四月中可致參勤,
+     source: 武家諸法度 寛永12年6月21日（『御当家令条』の翻刻。石井良助校訂、創文社、1959年）}
+  - {type: quote, from: 2, to: 2, label: 史料, text: 從者員數近來甚多、且國郡之費且人民之勞也／向後以其相應、可減少之,
+     source: 同じ条（『御当家令条』の翻刻）}
+  - {type: quote, from: 11, to: 11, label: 要点, text: なぜ、毎年の往復を命じたのか／「お供を減らせ」と書きながら,
+     source: この動画の問い}
+  - {type: quote, from: 96, to: 96, label: 史料, text: 在国在邑の諸侯にして当年参勤年の面々は至急出府すべし,
+     source: 元治元年9月の布告（しながわデジタルアーカイブ『幕末の品川』）}
+  - {type: quote, from: 109, to: 109, label: 要点, text: 1615年「参覲」は京都の作法／1635年 参勤と「供を減らせ」／1722年 上米で在府は半年に,
+     source: 事典・翻刻}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）行列の三枚続}
+  - {line: 2, note: 条文の続き（史料の札）}
+  - {line: 4, note: 加賀藩の人数（図）}
+  - {line: 18, note: 1635年 条文の移り変わり（図）}
+  - {line: 40, note: 大井川の川札（図）}
+  - {line: 63, note: 江戸での支出の割合（図）}
+  - {line: 90, note: 文久2年の在府（図）}
+  - {line: 97, note: 終わりの年（図）}
+  - {line: 109, note: まとめの要点札}
+  - {end: true, note: 終了画面の空き}
+
+# look だけで足す図の上書き（台本の項目名が長く、3列の見出しが重なるので短くする。中身は台本のまま。10-31）
+figures:
+  - {from: 4, to: 5, spec: {"type": "stats", "title": "加賀藩の行列の人数　出どころごとの違い", "upto": 3, "items": [["日本大百科全書", "4千人", "最大の例"], ["世界大百科事典", "2千5百人余", "多いとき"], ["文政10年の記録", "1969人", "臨時の雇い686人"]]}}
+  - {from: 18, to: 18, spec: {"type": "stats", "title": "武家諸法度の参勤の条　3つの年", "upto": 3, "items": [["元和令", "1615年", "参覲の作法"], ["寛永6年令", "1629年", "参勤の条を削る"], ["寛永12年令", "1635年", "毎年4月・供は減らせ"]]}}
+  - {from: 27, to: 27, spec: {"type": "stats", "title": "江戸までの旅　藩ごとの違い", "upto": 3, "items": [["仙台藩", "8〜9日", "約359キロ"], ["加賀藩", "12〜15日", "約464キロ"], ["薩摩藩", "40〜60日", "約1,716キロ"]]}}
+  - {from: 33, to: 34, spec: {"type": "stats", "title": "行列の人数　藩ごとの違い", "upto": 3, "items": [["加賀藩（1827年）", "1969人", "臨時の雇い686人"], ["仙台藩（1842年）", "1577人", "「及んだといわれ」"], ["徳山藩（1731年）", "373人", "諸士105＋小者268"]]}}
+  - {from: 40, to: 40, spec: {"type": "stats", "title": "大井川の川越し　川札の枚数", "upto": 3, "items": [["浅いとき", "川札1枚", "48文"], ["肩車", "川札2枚", "人足が肩に"], ["連台", "川札6枚", "台に乗せる"]]}}
+  - {from: 63, to: 64, spec: {"type": "stats", "title": "藩の経費のうち、江戸での支出の割合", "upto": 3, "items": [["加賀藩（1747年）", "61%", "102万石"], ["弘前藩（1816年）", "63%", "10万石"], ["秋田藩（1745年）", "73%", "20万石"]]}}
+  - {from: 65, to: 65, spec: {"type": "stats", "title": "藩の経費のうち、江戸での支出の割合", "upto": 3, "items": [["長岡藩（1865年）", "78%", "7万石"], ["松江藩（1768年）", "53%", "19万石"], ["久留米藩（1815年）", "43%", "21万石"]]}}
+  - {from: 77, to: 77, spec: {"type": "stats", "title": "参勤交代の目的　出どころごとの見方", "upto": 3, "items": [["通説の紹介", "諸藩を弱体化", "nippon.com"], ["共同通信", "抑える効果", "目的とは言い切らず"], ["2025年の書評", "服属儀礼・軍役", "弱体化説は修正"]]}}
+  - {from: 90, to: 90, spec: {"type": "stats", "title": "文久2年の緩和　在府の期間の書き方", "upto": 3, "items": [["品川区の資料", "3か月か1年", "三四ヵ年目に"], ["新潟県立図書館", "1年か100日", "三年ごとに"], ["世界大百科事典", "1年か100日", "三年に一年"]]}}
+  - {from: 97, to: 98, spec: {"type": "stats", "title": "参勤交代の終わり　出どころごとの年", "upto": 3, "items": [["品川区の資料", "1864年", "復旧令を出した"], ["ブリタニカ", "1865年", "従う者なく廃れた"], ["米国の学生向け", "1867年", "正式に崩れた"]]}}
+  - {from: 102, to: 102, spec: {"type": "stats", "title": "江戸の土地に占める武家地", "upto": 2, "items": [["中央区の資料", "約70%", "朱引の内"], ["三井住友トラスト不動産", "約60%", "日本橋の記録"]]}}

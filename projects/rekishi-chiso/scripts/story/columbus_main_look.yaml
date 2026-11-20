@@ -1,0 +1,237 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしもコロンブスがアメリカにたどり着かなかったら（scripts/columbus-if-story.yaml）。chiso/storymain.py が読む。
+# 11-06 作成（11/9 12:00 公開）。hojo_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵は全部この回のために Gemini（Chrome）で新しく作った（out/story/columbus-if/main/、out/ は git に入らない）。
+#   Gemini のフルサイズのダウンロードが止まったため、C02 以降は画面の画像（1024×572）を保存した（C01・T01 は 1376×768）。
+#   コロンブスの顔は AI の想像図（T01・C01）だけ。実在の人物（イサベル女王ほか）は遠景で顔を描かない。先住民の死・奴隷・病の場面は描かない。
+#   実在の絵は《南蛮屏風》・『和泉名所図会』の鉄砲鍛冶・《支倉常長像》・ル・ブトゥーの日本図（パブリックドメイン）。
+script: scripts/columbus-if-story.yaml
+out: columbus_if_story_main
+art_dir: out/story/columbus-if/ph
+main_art_dir: out/story/columbus-if/main
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 この島は、日本に違いない, now: 1492年10月, dates: {5: null}}
+  1: {label: 第1章 日本は、どれほど近いと思われたのか, now: 1480年代, dates: {17: 1488年12月, 19: null}}
+  2: {label: 第2章 退けられた計画は、どう動き出したのか, now: null, dates: {25: 1492年1月, 28: 1492年4月17日, 30: null}}
+  3: {label: 第3章 1492年10月10日、船乗りは何を迫ったのか, now: 1492年8月3日, dates: {35: 1492年9月6日, 36: 1492年10月1日, 37: null, 38: 1492年10月10日, 42: 1492年10月11日, 43: 1492年10月12日, 44: 1492年10月21日, 45: 1492年11月2日, 46: 1494年6月, 47: 1503年, 48: null}}
+  4: {label: 第4章 分岐1 コロンブスが来なければ、誰が来たのか, now: 1021年, dates: {52: 1480年7月, 53: 1486年7月, 54: null, 55: 1496年3月, 56: 1497年, 57: 1500年4月, 58: 1500年5月, 59: 1507年, 60: null}}
+  5: {label: 第5章 じゃがいもは、何人を養ったのか, now: null, dates: {}}
+  6: {label: 第6章 銀は、どこへ流れたのか, now: 1545年, dates: {82: null, 83: 1565年10月, 84: 1571年, 85: 1533年, 86: null, 89: 1543年, 90: null, 91: 1609年9月, 93: 1613年, 94: null}}
+  7: {label: 第7章 疫病と砂糖は、何を変えたのか, now: null, dates: {}}
+  8: {label: 第8章 分岐2 日本の畑は、どう変わったのか, now: 1614年, dates: {115: 1590年代, 116: 1698年, 117: null, 121: 1607年, 122: null}}
+  9: {label: まとめ もしもアメリカにたどり着かなかったら, now: null, dates: {}}
+
+references:
+  - "航海日誌（ラス・カサスの要約）C. R. Markham 訳『The Journal of Christopher Columbus』（Hakluyt Society, 1893）　https://archive.org/details/journalofchristo00colu_0"
+  - "ラス・カサス『インディアス史』（1875年版）　https://www.gutenberg.org/ebooks/49298"
+  - "フェルナンド・コロン『提督伝』（1892年スペイン語版）　https://archive.org/details/historiadelalmir01col"
+  - "オビエド『インディアス博物誌』（1851年版）　https://archive.org/details/historiageneraly01fern"
+  - "R. H. Major 編『Select Letters of Christopher Columbus』（1847）"
+  - "A. W. Crosby『The Columbian Exchange』（1972）・AHA の小論（1987）"
+  - "N. Nunn & N. Qian, Quarterly Journal of Economics（2011）・Journal of Economic Perspectives（2010）"
+  - "A. Koch, C. Brierley, M. Maslin, S. Lewis, Quaternary Science Reviews（2019）"
+  - "M. Kuitems ほか、Nature 601（2021）／J. B. Russell（1997 講演）／ワシントン・アーヴィング『コロンブス伝』（1828）"
+  - "K. Pomeranz（ウォリック大学 CAGE）／E. J. Hamilton（1934、EH.net の書評）／J. Williams, Journal of Navigation（1988）"
+  - "Yale Avalon Project（トルデシリャス条約）／ブリストル大学（カボットの特許状）／米国議会図書館（ヴァルトゼーミュラー図）／SlaveVoyages"
+  - "カミーニャの手紙（ポルトガル語 Wikisource）／アコスタ『新大陸自然文化史』（1894年版）／メキシコ国立人類学歴史研究所（2025）"
+  - "『鉄炮記』（1606）／島根県・観光庁（石見銀山）／一橋大学の研究班の論文（2017）／千葉県（御宿）・仙台市（支倉常長）"
+  - "農畜産業振興機構（さつまいも・かぼちゃ・トマト）／北九州市中央卸売市場（じゃがいも）／ジャパンサーチ（たばこ）／東京消防庁"
+  - "Ho Ping-ti（1956）／Chen Shuo & J. Kung（2016）／『芝峰類説』（1614）"
+no_tag_from: 130
+
+ai:
+  T01: {scene: コロンブス（想像図）の横顔と、嵐の夕暮れの大西洋（サムネと同じ絵）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.2, 0.4, 0.5], face: [1.5, 0.68, 0.42]}}
+  C01: {scene: 甲板に立つ航海者（想像図）と、夕日の海の2隻, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.2, 0.35, 0.5]}}
+  C02: {scene: 夜明けの大西洋を進む帆船の船団, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C03: {scene: 夜明けの港町を離れる3隻と見送る人々, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.55]}}
+  C04: {scene: イスラム風のアーチの宮殿の広間と、奥の玉座（遠景の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C05: {scene: 修道院の部屋で地球儀を囲む学者たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C06: {scene: 船室の机のアストロラーベ・羅針盤・日誌（読めない筆の跡）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C07: {scene: 夜の甲板で航海者に詰め寄る船乗りたち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C08: {scene: 月夜の海、見張り台の人影と水平線の小さな灯, pan: v, crops: {wide: [1.12, 0.5, 0.5], right: [1.18, 0.6, 0.5]}}
+  C09: {scene: カリブ海の島の浜と、沖の帆船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  C10: {scene: カリブ海の島の村（想像図、遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C11: {scene: 冬の野の石橋を駆ける騎馬の使い, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  C12: {scene: アンデスの段々畑とじゃがいもの畑, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C13: {scene: 木の台に並ぶじゃがいも・トマト・とうもろこし・唐辛子・かぼちゃ, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C14: {scene: 銀の山と麓の鉱山の町（ポトシの想像図）, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C15: {scene: 太平洋を行くガレオン船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C16: {scene: サトウキビの畑と遠くの製糖の小屋の煙（人物は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C19: {scene: 軒下に干した赤い唐辛子と、籠のさつまいもの農家（江戸時代の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C20: {scene: 山あいの銀山の村と製錬の煙（石見の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C21: {scene: 船のいない夕暮れの大西洋（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  C22: {scene: 北の海岸に引き上げた長い船と草の屋根の小屋（ヴァイキングの想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C23: {scene: 段々畑のとうもろこしと中国の農村（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  C25: {scene: 緑の海岸の沖のポルトガルの船団, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C26: {scene: 北の港を出る小さな帆船（ブリストルの想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C27: {scene: 嵐の海で向きを変える帆船の船団, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+
+credits:
+  paintings/kanbei_japan_map_portuguese.jpg: ル・ブトゥー《日本の王国と地方の新しい正確な記述》17世紀
+  paintings/nobunaga_nanban_screen_naizen.png: 《南蛮屏風》（安土桃山時代）
+  paintings/nobunaga_teppo_sakai_gunsmith.jpg: 『和泉名所図会』堺の鉄砲鍛冶（1796年）
+  paintings/masamune_hasekura_portrait.jpg: 《支倉常長像》1615年（仙台市博物館蔵・国宝）
+
+shots:
+  - 0 ai:T01 wide
+  - 1 part:paintings/kanbei_japan_map_portuguese.jpg
+  - 2 ai:C02 wide
+  - 3 ai:C09 wide
+  - 4 ai:C07 wide
+  - 5 ai:C01 wide
+  - 6 ai:C27 wide
+  - 7 ai:C13 wide
+  - 8 ai:C06 wide
+  - 9 ai:C06 left
+  - 10 ai:C05 wide
+  - 11 ai:C06 right
+  - 12 ai:C05 left
+  - 13 ai:C02 right
+  - 14 ai:C05 right
+  - 15 ai:C06 wide
+  - 16 ai:C05 left
+  - 17 ai:C02 right
+  - 18 ai:C06 left
+  - 19 ai:C04 wide
+  - 20 ai:C05 left
+  - 21 ai:C04 left
+  - 22 ai:C05 wide
+  - 23 ai:C02 right
+  - 24 ai:C05 right
+  - 25 ai:C04 right
+  - 26 ai:C11 wide
+  - 27 ai:C04 wide
+  - 28 ai:C06 left
+  - 29 ai:C03 wide
+  - 30 ai:C03 left
+  - 31 ai:C07 wide
+  - 32 ai:C03 wide
+  - 33 ai:C06 wide
+  - 34 ai:C01 wide
+  - 35 ai:C02 wide
+  - 36 ai:C06 right
+  - 37 ai:C07 wide
+  - 38 ai:C07 left
+  - 39 ai:C01 left
+  - 40 ai:C07 right
+  - 41 ai:C01 wide
+  - 42 ai:C08 wide
+  - 43 ai:C09 wide
+  - 44 ai:C09 left
+  - 45 ai:C10 wide
+  - 46 ai:C02 right
+  - 47 ai:C06 left
+  - 48 ai:C27 wide
+  - 49 ai:C02 wide
+  - 50 ai:C22 wide
+  - 51 ai:C22 left
+  - 52 ai:C26 wide
+  - 53 ai:C06 right
+  - 54 ai:C02 wide
+  - 55 ai:C26 left
+  - 56 ai:C22 right
+  - 57 ai:C25 wide
+  - 58 ai:C25 left
+  - 59 ai:C05 wide
+  - 60 ai:C27 wide
+  - 61 ai:C25 right
+  - 62 ai:C02 wide
+  - 63 ai:C26 wide
+  - 64 ai:C04 left
+  - 65 ai:C09 left
+  - 66 ai:C13 left
+  - 67 ai:C06 wide
+  - 68 ai:C13 wide
+  - 69 ai:C23 wide
+  - 70 ai:C13 right
+  - 71 ai:C12 wide
+  - 72 ai:C12 right
+  - 73 ai:C03 left
+  - 74 ai:C26 left
+  - 75 ai:C13 left
+  - 76 ai:C13 wide
+  - 77 ai:C05 left
+  - 78 ai:C02 left
+  - 79 ai:C13 left
+  - 80 ai:C20 right
+  - 81 ai:C14 wide
+  - 82 ai:C14 left
+  - 83 ai:C15 wide
+  - 84 ai:C15 left
+  - 85 ai:C20 wide
+  - 86 ai:C20 left
+  - 87 ai:C14 right
+  - 88 part:paintings/nobunaga_nanban_screen_naizen.png
+  - 89 frame:paintings/nobunaga_teppo_sakai_gunsmith.jpg
+  - 90 ai:C25 left
+  - 91 ai:C15 right
+  - 92 ai:C20 right
+  - 93 frame:paintings/masamune_hasekura_portrait.jpg
+  - 94 part:paintings/nobunaga_nanban_screen_naizen.png
+  - 95 ai:C15 wide
+  - 96 ai:C16 wide
+  - 97 ai:C10 wide
+  - 98 ai:C10 left
+  - 99 ai:C09 wide
+  - 100 ai:C10 right
+  - 101 ai:C09 left
+  - 102 ai:C16 right
+  - 103 ai:C10 wide
+  - 104 ai:C16 wide
+  - 105 ai:C16 left
+  - 106 ai:C23 wide
+  - 107 ai:C26 wide
+  - 108 ai:C27 wide
+  - 109 ai:C21 left
+  - 110 ai:C02 right
+  - 111 ai:C19 wide
+  - 112 ai:C06 right
+  - 113 ai:C19 wide
+  - 114 ai:C20 wide
+  - 115 ai:C19 left
+  - 116 ai:C19 right
+  - 117 ai:C23 wide
+  - 118 ai:C23 left
+  - 119 part:paintings/nobunaga_nanban_screen_naizen.png
+  - 120 ai:C13 wide
+  - 121 ai:C19 wide
+  - 122 ai:C27 wide
+  - 123 ai:C13 right
+  - 124 ai:C19 left
+  - 125 ai:C01 wide
+  - 126 ai:C06 wide
+  - 127 ai:C02 wide
+  - 128 ai:C25 wide
+  - 129 frame:paintings/nobunaga_teppo_sakai_gunsmith.jpg
+  - 130 ai:T01 wide
+  - 131 ai:C01 left
+  - 132 ai:C19 wide
+  - 133 ai:C21 left
+  - end ai:C21 wide
+figures: []
+
+focus: {}
+
+fx:
+  C06: {lamp: {region: [0.05, 0.05, 0.4, 0.5]}}
+  C21: {water: {region: [0.0, 0.6, 1.0, 1.0]}}
+  C20: {smoke: {region: [0.0, 0.0, 1.0, 0.5]}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 22, to: 22, label: 史料, text: 何千年も知られなかった土地が／今さらあるはずがない, source: ラス・カサス『インディアス史』第1巻（委員会の言い分。今の言葉に）}
+  - {type: quote, from: 44, to: 44, label: 史料, text: キューバ島は／ジパングに違いないと思う, source: 航海日誌（ラス・カサスの要約）1492年10月23日（今の言葉に）}
+  - {type: quote, from: 58, to: 58, label: 史料, text: この土地は／カリカットへの航海の寄港地に使える, source: カミーニャの手紙（1500年5月1日。今の言葉に）}
+  - {type: quote, from: 123, to: 123, label: 要点, text: アメリカの作物は／つながらなければ日本に来ない, source: この動画のもしもの整理（推論）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）コロンブスの横顔}
+  - {line: 2, note: 冒頭 距離の見積り}
+  - {line: 39, note: 第3章 10月10日のくい違い}
+  - {line: 44, note: 第3章 ジパングの引用札}
+  - {line: 62, note: 第4章 もしもの表}
+  - {line: 87, note: 第6章 銀の産出}
+  - {line: 124, note: 第8章 日本のもしもの表}
+  - {end: true, note: 終了画面の空き}

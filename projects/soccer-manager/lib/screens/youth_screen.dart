@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/contract_engine.dart';
 import '../logic/scouting_engine.dart';
-import '../logic/training_engine.dart';
+import '../logic/youth_promotion_engine.dart';
 import '../logic/youth_departure_engine.dart';
 import '../logic/youth_match_engine.dart';
+import '../logic/academy_engine.dart';
 import '../models/player.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
@@ -15,6 +17,7 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../logic/economy_scale.dart';
 
 /// 潜在能力と現在能力の差がこの値以上なら、伸びしろの大きい「有望株」として強調する。
 const int _wonderkidGap = 15;
@@ -123,6 +126,7 @@ class _YouthScreenState extends State<YouthScreen> {
       body: ResponsiveBody(
         child: ListView(
           children: [
+            const _AcademyCard(),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -130,7 +134,7 @@ class _YouthScreenState extends State<YouthScreen> {
                 children: [
                   Flexible(
                     child: Text(
-                      Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
+                      Tr.pick('資金: ${formatMoney(save.budget)}', 'Funds: ${formatMoney(save.budget)}'),
                       style: Theme.of(context).textTheme.titleMedium,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -155,15 +159,15 @@ class _YouthScreenState extends State<YouthScreen> {
                   Expanded(
                     child: Text(
                       Tr.pick(
-                          'スカウト網（獲得費用: $scoutCost万円/人・${candidates.length}人閲覧可）',
-                          'Scouting network ($scoutCost per signing, ${candidates.length} to look at)'),
+                          'スカウト網（獲得費用: ${formatMoney(scoutCost)}/人・${candidates.length}人閲覧可）',
+                          'Scouting network (${formatMoney(scoutCost)} per signing, ${candidates.length} to look at)'),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.refresh),
-                    tooltip: Tr.pick('候補を更新する（$refreshCost万円）',
-                        'Refresh the shortlist ($refreshCost)'),
+                    tooltip: Tr.pick('候補を更新する（${formatMoney(refreshCost)}）',
+                        'Refresh the shortlist (${formatMoney(refreshCost)})'),
                     onPressed: canRefresh ? () => _refresh(context) : null,
                   ),
                 ],
@@ -321,10 +325,10 @@ class _YouthScreenState extends State<YouthScreen> {
                           Text(
                             d.poached
                                 ? Tr.pick(
-                                    '${d.player.name}(${d.player.age}歳)が他クラブに引き抜かれました。育成補償金 ${d.compensation}万円',
-                                    '${d.player.name} (${d.player.age}) was poached by another club. Development fee ${d.compensation}')
+                                    '${d.player.name}(${d.player.age}歳)が他クラブに引き抜かれました。育成補償金 ${formatMoney(d.compensation)}',
+                                    '${d.player.name} (${d.player.age}) was poached by another club. Development fee ${formatMoney(d.compensation)}')
                                 : Tr.pick(
-                                    '${d.player.name}(${d.player.age}歳)が出場機会を求めて去りました。育成補償金 ${d.compensation}万円',
+                                    '${d.player.name}(${d.player.age}歳)が出場機会を求めて去りました。育成補償金 ${formatMoney(d.compensation)}',
                                     '${d.player.name} (${d.player.age}) left in search of first-team football. Development fee ${d.compensation}'),
                           ),
                       ],
@@ -448,52 +452,6 @@ class _YouthScreenState extends State<YouthScreen> {
                                   : SemanticColors.subtleText(context),
                             ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                Tr.pick('育成方針: ', 'Focus: '),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              DropdownButton<TrainingFocus?>(
-                                value: p.individualFocus,
-                                isDense: true,
-                                // 色は指定しない。**暗いテーマだと黒文字が
-                                // 背景に沈んで読めなくなる。** テーマに任せる。
-                                style: const TextStyle(fontSize: 12),
-                                hint: Text(
-                                  Tr.pick(
-                                      'ポジション別(既定)', 'By position (default)'),
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                items: [
-                                  DropdownMenuItem<TrainingFocus?>(
-                                    value: null,
-                                    child: Text(Tr.pick(
-                                        'ポジション別(既定)', 'By position (default)')),
-                                  ),
-                                  for (final focus in const [
-                                    TrainingFocus.attack,
-                                    TrainingFocus.defense,
-                                    TrainingFocus.fitness,
-                                  ])
-                                    DropdownMenuItem<TrainingFocus?>(
-                                      value: focus,
-                                      child: Text(focus.label),
-                                    ),
-                                ],
-                                onChanged: (focus) {
-                                  FeedbackService.tap();
-                                  context
-                                      .read<GameState>()
-                                      .setYouthProspectTrainingFocus(
-                                        p.id,
-                                        focus,
-                                      );
-                                },
-                              ),
-                            ],
-                          ),
-                          _MentorRow(prospect: p),
                           if (YouthDepartureEngine.isAtRisk(p))
                             Text(
                               Tr.pick(
@@ -567,12 +525,35 @@ class _YouthScreenState extends State<YouthScreen> {
     final gameState = context.read<GameState>();
     // 昇格はプロ契約を結ぶ手続きになった。押した瞬間に契約金が引かれるので、
     // 条件を見せてから決めさせる。
-    final terms = gameState.youthPromotionTermsFor(playerId);
-    if (terms == null) return;
+    final first = gameState.youthPromotionTermsFor(playerId);
+    if (first == null) return;
+    final prospect = gameState.save?.youthProspects
+        .where((p) => p.id == playerId)
+        .firstOrNull;
+    if (prospect == null) return;
+    // プロ契約は16歳から。
+    if (!YouthPromotionEngine.oldEnough(prospect)) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(Tr.pick(
+              'プロ契約は${ContractEngine.minProfessionalAge}歳から結べます($nameは${prospect.age}歳)。',
+              'Professional contracts start at ${ContractEngine.minProfessionalAge} ($name is ${prospect.age}).'))));
+      return;
+    }
+    var years = first.years;
+    var option = false;
+    var terms = first;
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (ctx) => StatefulBuilder(builder: (ctx, setState) {
+        void refresh() {
+          terms = gameState.youthPromotionTermsFor(playerId,
+                  years: years, option: option) ??
+              terms;
+          option = terms.option;
+        }
+
+        return AlertDialog(
         title: Text(Tr.pick('$nameとプロ契約を結びますか？',
             'Sign $name to a professional contract?')),
         content: Column(
@@ -581,12 +562,44 @@ class _YouthScreenState extends State<YouthScreen> {
           children: [
             Text(Tr.pick('背番号: ${terms.squadNumber}',
                 'Squad number: ${terms.squadNumber}')),
-            Text(Tr.pick('週俸: ${terms.weeklyWage}万円',
-                'Wage: ${terms.weeklyWage} per week')),
-            Text(Tr.pick('契約金: ${terms.signingBonus}万円(一括)',
-                'Signing fee: ${terms.signingBonus} (one-off)')),
-            Text(Tr.pick('契約年数: ${terms.years}年',
-                'Contract: ${terms.years} years')),
+            Text(Tr.pick('年俸: ${formatMoney(annualFromWeekly(terms.weeklyWage))}',
+                'Salary: ${formatMoney(annualFromWeekly(terms.weeklyWage))} a year')),
+            Text(Tr.pick('契約金: ${formatMoney(terms.signingBonus)}(一括)',
+                'Signing fee: ${formatMoney(terms.signingBonus)} (one-off)')),
+            // 契約の長さ(今のシーズンを含めて。18歳未満は3年まで)。
+            DropdownButton<int>(
+              value: years,
+              isExpanded: true,
+              items: [
+                for (final y in YouthPromotionEngine.yearChoices(prospect))
+                  DropdownMenuItem(
+                    value: y,
+                    child: Text(Tr.pick(
+                        '$y年(${ContractEngine.untilLabel(Player.contractClockYear + y - 1)})',
+                        '${Tr.plural(y, 'year')} (${ContractEngine.untilLabel(Player.contractClockYear + y - 1)})')),
+                  ),
+              ],
+              onChanged: (y) {
+                if (y == null) return;
+                setState(() {
+                  years = y;
+                  refresh();
+                });
+              },
+            ),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              value: option,
+              onChanged: years < ContractEngine.capYears(prospect.age)
+                  ? (v) => setState(() {
+                        option = v ?? false;
+                        refresh();
+                      })
+                  : null,
+              title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
+                  'Add a 1-year club option (salary +5%)')),
+            ),
             const SizedBox(height: 8),
             Text(
               Tr.pick('昇格直後は一軍の強度に慣れておらず、実戦感覚が低い状態から始まります。出番を作ると戻ります。',
@@ -605,11 +618,13 @@ class _YouthScreenState extends State<YouthScreen> {
             child: Text(Tr.pick('契約して昇格', 'Sign and promote')),
           ),
         ],
-      ),
+      );
+      }),
     );
     if (confirmed != true) return;
 
-    final ok = await gameState.promoteYouthProspect(playerId);
+    final ok = await gameState.promoteYouthProspect(playerId,
+        years: years, option: option);
     ok ? FeedbackService.success() : FeedbackService.error();
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -651,74 +666,50 @@ class _YouthScreenState extends State<YouthScreen> {
   }
 }
 
-/// 有望株に付けるメンター(一軍のベテラン)の選択欄。
-///
-/// 性格特性はユースでは練習で身に付かず、メンターを通してしか手に入らない。
-/// 成長も速くなるが、ベテラン1人が見られるのは1人だけなので、誰に付けるかを
-/// 選ぶことになる。
-class _MentorRow extends StatelessWidget {
-  final Player prospect;
 
-  const _MentorRow({required this.prospect});
+/// アカデミーの等級と、育成の方針。
+class _AcademyCard extends StatelessWidget {
+  const _AcademyCard();
 
   @override
   Widget build(BuildContext context) {
-    final gameState = context.watch<GameState>();
-    final candidates =
-        gameState.youthMentorCandidates(forProspectId: prospect.id);
-    final current = prospect.mentorId == null
-        ? null
-        : gameState.userTeam.players
-            .where((p) => p.id == prospect.mentorId)
-            .firstOrNull;
-
-    // 付けられる相手が1人も居ないときは、空の選択欄を出しても押せるものが
-    // 無いだけなので、理由のほうを出す。
-    if (candidates.isEmpty && current == null) {
-      return Text(
-        Tr.pick('メンター: ${TrainingEngine.minMentorAge}歳以上の手の空いた選手がいません',
-            'Mentor: nobody aged ${TrainingEngine.minMentorAge}+ is free'),
-        style: const TextStyle(fontSize: 12),
-      );
-    }
-
-    return Row(
-      children: [
-        Text(Tr.pick('メンター: ', 'Mentor: '), style: const TextStyle(fontSize: 12)),
-        Flexible(
-          child: DropdownButton<String?>(
-            value: current?.id,
-            isDense: true,
-            isExpanded: true,
-            // 色は指定しない(暗いテーマで読めなくなる)。
-            style: const TextStyle(fontSize: 12),
-            hint: Text(Tr.pick('付けない', 'None'),
-                style: const TextStyle(fontSize: 12)),
-            items: [
-              DropdownMenuItem<String?>(
-                value: null,
-                child: Text(Tr.pick('付けない', 'None')),
-              ),
-              for (final m in [
-                if (current != null && !candidates.contains(current)) current,
-                ...candidates,
-              ])
-                DropdownMenuItem<String?>(
-                  value: m.id,
-                  child: Text(
-                    Tr.pick('${m.name} (${m.age}歳 / 総合${m.overall})',
-                        '${m.name} (${m.age} / ovr ${m.overall})'),
-                    overflow: TextOverflow.ellipsis,
+    final gs = context.watch<GameState>();
+    final cat = gs.academyCategory;
+    final policy = gs.youthPolicy;
+    final small =
+        TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
+    return Card(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('アカデミー: カテゴリー$cat', 'Academy: category $cat'),
+                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              Tr.pick(
+                  'ユース施設・ユースコーチ・育成予算の積み重ねで決まります(1が最上)。入ってくる子は +${AcademyEngine.extraIntake(cat)}人、質 ${AcademyEngine.qualityBonus(cat) >= 0 ? '+' : ''}${AcademyEngine.qualityBonus(cat)}。',
+                  'Set by your youth facilities, youth coach and youth budget over time (1 is best). Intake +${AcademyEngine.extraIntake(cat)}, quality ${AcademyEngine.qualityBonus(cat) >= 0 ? '+' : ''}${AcademyEngine.qualityBonus(cat)}.'),
+              style: small,
+            ),
+            const SizedBox(height: 8),
+            Text(Tr.pick('育成の方針', 'Development policy')),
+            Wrap(
+              spacing: 6,
+              children: [
+                for (final p in YouthPolicy.values)
+                  ChoiceChip(
+                    label: Text(p.label),
+                    selected: p == policy,
+                    onSelected: (_) => gs.setYouthPolicy(p),
                   ),
-                ),
-            ],
-            onChanged: (id) {
-              FeedbackService.tap();
-              context.read<GameState>().setYouthProspectMentor(prospect.id, id);
-            },
-          ),
+              ],
+            ),
+            Text(policy.description, style: small),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

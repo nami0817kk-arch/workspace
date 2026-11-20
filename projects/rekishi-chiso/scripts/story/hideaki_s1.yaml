@@ -1,0 +1,147 @@
+# 物語完結型ショート 小早川秀秋 s1（2026-10-29）。本編 scripts/hideaki-story.yaml の序章・第3章（「問い鉄砲」を書いた最も古い本は63年後）から。
+# 形式は hijikata_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/hideaki/main/H*.jpg。人物なし）と実在の絵（屏風・家康像・芳年）。伝秀秋像は使わない。
+# 事実カード（dev/output/rekishi-chiso/research/小早川秀秋_facts_20261029.yaml）：hideaki-02・04・06・07・40
+#   ・最古の本・通説の筋は呉座勇一の紹介（PRESIDENT WOMAN Online 2023）。連署状写は呉座の紹介→「紹介では」と語りで言う。
+#   ・1キロ以上・射程は白峰旬の指摘（hideaki-06）。史実の可能性は笠谷和比古（hideaki-07）。どちらも誰の見立てかを語りで言う。
+#   ・秀秋の動機は断定しない。「臆病」「愚か」と言わない。想像の台詞なし。
+# 理解テスト4問：
+#   ①誰の話か：関ヶ原で「家康の鉄砲に寝返らされた」とされる小早川秀秋
+#   ②何が問題か：その「問い鉄砲」を書いた確認できる最も古い本は、関ヶ原から63年後（1663年・慶長軍記）。関ヶ原の年の書状には見当たらない
+#   ③同じ時代の書状は何と書くか：合戦の2日後の連署状写は、午前10時ごろ、戦いが始まってすぐに秀秋たち4人が味方した、と書く（呉座の紹介）
+#   ④どうなったか：白峰旬は射程が届かないと指摘、笠谷和比古は史実の可能性を論じる。鉄砲の音は63年後の本までしかたどれない
+title: 小早川秀秋｜「問い鉄砲」を最初に書いた本は、関ヶ原から63年後
+yt_title: 小早川秀秋の「問い鉄砲」は63年後の本が最初　関ヶ原の年の書状には見当たらない
+description: |-
+  関ヶ原で、徳川家康の一発の鉄砲が小早川秀秋を寝返らせた。この「問い鉄砲」を書いた、確認できる最も古い本は、関ヶ原から63年後、寛文3年（1663）の軍記『慶長軍記』です。関ヶ原の年の書状には、この鉄砲は見当たりません。
+  合戦の2日後、慶長5年9月17日付で、家康の家臣の石川康通と彦坂元正が出した書状の写しは、午前10時ごろ、戦いが始まってすぐに、秀秋たち4人が東軍に味方した、と書いていると、呉座勇一さんは紹介しています。
+  白峰旬さんは、家康の陣から松尾山の山頂までは1キロ以上あり、火縄銃の有効な射程では届かない、と指摘します。一方、笠谷和比古さんは、『論争 関ヶ原合戦』で、史実の可能性をなお論じています。
+hashtags: ["#小早川秀秋", "#日本史", "#関ヶ原"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/hideaki
+out: hideaki_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 小早川秀秋（関ヶ原の若き武将）
+  title: "家康の鉄砲は、《63年後》の本から"
+now:
+  - {at: 寛文3年, text: "1663年　慶長軍記", point: 1}
+  - {at: 9月17日, text: "1600年9月　書状", point: 0}
+timeline:
+  - {label: "1600"}
+  - {label: "1663"}
+cards: []
+shots:
+  Zu:                                    # 1文目：関ヶ原合戦図屏風（実在）
+    kind: real
+    image: paintings/sekigahara_zubyobu.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "関ヶ原合戦図屏風（江戸時代。Wikimedia Commons）"
+    must: 関ヶ原合戦図屏風
+  H07:                                   # 慶長軍記（書斎の机）
+    kind: ai
+    file: hideaki/main/H07.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 巻物と行灯の机
+  Ieyasu:                                # 家康の家臣の書状（家康像）
+    kind: real
+    image: paintings/sekigahara_tokugawa_ieyasu.jpg
+    focus: [0.5, 0.25]
+    move: down
+    credit: "徳川家康像（17世紀）"
+    must: 徳川家康の像
+  H04:                                   # 午前10時ごろ、戦いが始まってすぐ（霧の関ヶ原の谷）
+    kind: ai
+    file: hideaki/main/H04.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 霧の関ヶ原の谷
+  H01:                                   # 通説：松尾山
+    kind: ai
+    file: hideaki/main/H01.jpg
+    focus: [0.6, 0.4]
+    move: in
+    must: 霧の松尾山
+  H12:                                   # 1キロ以上（山腹の陣幕）
+    kind: ai
+    file: hideaki/main/H12.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 山腹の陣幕と無地の旗
+  H08:                                   # 笠谷：論争（本の頁）
+    kind: ai
+    file: hideaki/main/H08.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 軍記の頁をめくる手
+  Yoshitoshi:                            # 後世の創作の絵
+    kind: real
+    image: paintings/mitsunari_yoshitoshi_hideaki_fears_otani.jpg
+    focus: [0.5, 0.5]
+    move: down
+    credit: "月岡芳年《小早川秀秋 大谷吉継の亡霊に怯える》（1868年）"
+    must: 芳年の絵
+  H15:                                   # 最後の問い（夕暮れの稜線）
+    kind: ai
+    file: hideaki/main/H15.jpg
+    focus: [0.4, 0.5]
+    move: in
+    must: 夕暮れの山の稜線
+lines:
+  # fact: hideaki-02
+  - 語り: 家康の鉄砲が、小早川秀秋を寝返らせた。その「問い鉄砲」を書いた、確認できる最古の本は、関ヶ原から《!63年後》のもの。
+    shot: Zu
+    tone: 強調
+  # fact: hideaki-02
+  - 語り: 寛文3年、1663年の、『慶長軍記』。関ヶ原の年の書状には、この鉄砲は、見当たらない。
+    shot: H07
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-04
+  - 語り: 9月17日、合戦の2日後。家康の家臣、石川康通と彦坂元正が出した、書状の写しが残る。
+    shot: Ieyasu
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-04
+  - 語り: 呉座勇一さんの紹介では、15日の巳の刻、午前10時ごろ、戦いが始まってすぐに、秀秋たち4人が東軍に味方した、と書かれている。
+    shot: H04
+    tone: 強調
+    pause: 0.12
+  # fact: hideaki-40
+  - 語り: 通説では、正午すぎ、家康が鉄砲を撃ちかけ、恐れた秀秋が山を下りる。
+    shot: H01
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-06
+  - 語り: けれど、白峰旬さんは、家康の陣から松尾山の山頂まで1キロ以上あり、火縄銃の有効な射程では届かない、と指摘する。
+    shot: H12
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-07
+  - 語り: 一方、笠谷和比古さんは、『論争 関ヶ原合戦』で、史実の可能性を論じる。
+    shot: H08
+    tone: しみじみ
+    pause: 0.12
+  # fact: hideaki-02
+  - 語り: 鉄砲の音は、63年後の本までしか、たどれない。
+    shot: Yoshitoshi
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: あなたは、家康の鉄砲を、《いつの》音だと、思いますか。
+    shot: H15
+    tone: 疑問
+    pause: 0.15

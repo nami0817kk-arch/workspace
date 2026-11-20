@@ -1,0 +1,159 @@
+# 物語完結型ショート 三種の神器 s1（2026-11-05）。本編 scripts/jingi-story.yaml（11/5 19:00 公開、https://youtu.be/XmWN5pboKa4）の序章・第2章から。11/6 9:30 公開。
+# 形式は sankin_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。絵は本編の AI 絵（out/story/jingi/main/J*。人物なし）と本編で使った絵巻だけ。新しい絵は作らない。
+# 切り口：宮中の神鏡は3回焼け、1040年に破片と金属の粒になった。それでも神鏡として安置され、神楽が三夜。剣（s2・s3）・南北朝（s4）・勾玉（s5）には踏み込まない。
+# 神器の扱い：宗教の言葉で語らず、「記録にこうある」の形で言う。
+# 事実カード（dev/output/rekishi-chiso/research/三種の神器_facts_20261031.yaml）：jingi-05・06・19・21・22・24・26。言い方は本編のまま。
+#   ・天徳4年＝960年、寛弘2年＝1005年、長暦4年＝1040年（長久への改元は1040年11月）を確かめた。960→1005 は45年（本編と同じ）。1005→1040 は35年。
+#   ・「1005年の例」：春記は「故一条院御時、神鏡焼損給之時」（一条天皇の在位 986〜1011 の中の焼損＝1005年）。本編第2章と同じ読み。
+#   ・破片と粒の安置は斎木涼子 2017（洛北史学19）の言葉 → 出どころを語りで言う。
+# 理解テスト4問：
+#   ①誰の話か：天皇のそばにまつられた宮中の神鏡（三種の神器の鏡）
+#   ②いつ・どこで何が：960年・1005年・1040年に内裏の火事で焼け、1040年に完全に壊れた
+#   ③どうしたか：新しく作らず、破片と金属の粒をそのまま神鏡として安置し、神楽を三夜続けた
+#   ④どうなったか：形を失っても、神鏡としてまつられ続けた
+title: 三種の神器｜神鏡は、破片と粒になった
+yt_title: 宮中の神鏡は1040年の火事で破片と金属の粒になった　それでも神鏡として安置された三種の神器の鏡
+description: |-
+  天皇のそばにまつられていた神鏡は、1040年の火事で、形を失いました。
+  平安京の内裏は、960年、1005年、1040年と火事にあい、神鏡も焼けます。960年の火事で、宮中の神鏡が3枚あったことがわかり、1005年には3枚のうち1枚だけが残りました。そして1040年、神鏡は完全に壊れます。このときは新しく作る話は出ず、鏡だった破片と金属の粒が、そのまま神鏡として安置された、と斎木涼子さんの論文は書いています。神楽は三夜続けられました。
+  剣と勾玉は、どんな旅をしたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#三種の神器', '#日本史', '#平安時代']
+ai_images: true
+ai_disclosure: この動画の風景・室内・箱の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、実在の神器・記録映像・写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/jingi
+out: jingi_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 三種の神器（宮中の神鏡）
+  title: "神鏡は、破片と《金属の粒》に"
+now:
+  - {at: 960年, text: "960年　内裏の火事", point: 0}
+  - {at: 1005年, text: "1005年　寛弘2年", point: 1}
+  - {at: 1040年, text: "1040年　長暦4年", point: 2}
+timeline:
+  - {label: "960"}
+  - {label: "1005"}
+  - {label: "1040"}
+cards:
+  - type: table
+    title: 宮中の神鏡
+    from: 3枚あった
+    until: そして
+    items:
+      - {at: 3枚あった, text: "960年　3枚あったとわかる"}
+      - {at: 残ったのは1枚, text: "1005年　残ったのは1枚"}
+    text_y: 0.70
+shots:
+  J02:
+    kind: ai
+    file: jingi/main/J02.jpg
+    focus: [0.55, 0.45]
+    move: in
+    must: 夜に燃える宮殿
+  Fire:
+    kind: real
+    image: paintings/jingi_heiji_sanjo_fire.jpg
+    crop: [0.35, 0.0, 0.7, 1.0]
+    focus: [0.5, 0.5]
+    move: right
+    credit: "平治物語絵巻 三条殿夜討の巻の部分（13世紀後半。ボストン美術館所蔵、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 絵巻の宮殿の場面
+  J01:
+    kind: ai
+    file: jingi/main/J01.jpg
+    focus: [0.45, 0.55]
+    move: in
+    must: 暗い殿舎の白い絹の箱
+  J11:
+    kind: ai
+    file: jingi/main/J11.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 誰もいない広間
+  J02b:
+    kind: ai
+    file: jingi/main/J02.jpg
+    focus: [0.8, 0.45]
+    move: left
+    zoom: 0.12
+    must: 燃え落ちる屋根
+  J01b:
+    kind: ai
+    file: jingi/main/J01.jpg
+    focus: [0.7, 0.55]
+    move: right
+    must: 灯の下の箱
+  J08:
+    kind: ai
+    file: jingi/main/J08.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 机の上の古い巻物と本
+  J09:
+    kind: ai
+    file: jingi/main/J09.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 光の差す杉の参道
+  J12:
+    kind: ai
+    file: jingi/main/J12.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 夜明けの海
+lines:
+  # fact: jingi-06, jingi-24
+  - 語り: 天皇のそばの神鏡は、火事で、《!形を失った》。
+    shot: J02
+    tone: 強調
+    pause: 0.12
+  # fact: jingi-19
+  - 語り: 960年、平安京の内裏が燃えた。翌日、焼け跡の瓦の上で、鏡が一面、見つかった。
+    shot: Fire
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-21
+  - 語り: この火事で、宮中の神鏡は、3枚あったことが、わかる。
+    shot: J01
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-05, jingi-22
+  - 語り: 45年後の1005年。火事で、鏡はまた焼けた。3枚のうち、残ったのは1枚だけだ。
+    shot: J11
+    tone: 重い
+    pause: 0.12
+  # fact: jingi-06
+  - 語り: そして1040年、長暦4年の9月。火事で、神鏡は、完全に壊れた。
+    shot: J02b
+    tone: 重い
+    pause: 0.12
+  # fact: jingi-24
+  - 語り: 残ったのは、鏡だった破片と、金属の粒。このときは、新しく作る話は、出なかった。
+    shot: J01b
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-24
+  - 語り: 破片と粒は、そのまま神鏡として、丁重に安置された、と斎木涼子さんの論文は書いている。
+    shot: J08
+    tone: しみじみ
+    pause: 0.12
+  # fact: jingi-26
+  - 語り: 1005年に焼けたときの例にならって、1040年には、神楽が三夜、続けられた。
+    shot: J09
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 形を失っても、神鏡としてまつられた鏡。では、剣と勾玉は、どんな旅をしたのか。
+    shot: J12
+    tone: 疑問
+    pause: 0.15

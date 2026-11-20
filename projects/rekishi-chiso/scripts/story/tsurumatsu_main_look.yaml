@@ -1,0 +1,278 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも鶴松が生きていたら（scripts/tsurumatsu-if-story.yaml）。chiso/storymain.py が読む。
+# 11-05 作成（11/7 12:00 公開）。france_main_look.yaml・hidetsugu_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：この回は新しい AI 絵を作っていない（11/5、Cloudflare FLUX の無料枠が切れていた。Chrome・Gemini は使わない指示）。
+#   前の回の Gemini の絵（16:9・1376×768）を out/story/tsurumatsu-if/main/ に T01〜T28 として写した（out/ は git に入らない。無ければ下の表から写し直す）。
+#   T01=yodo/Y06（茶々と産着の赤子）T02=hideaki/H05（川沿いの城下）T03=kazumasa/K05（秀吉）T04=yodo/Y05（祈る茶々）T05=rikyu/R05（禅寺の門）
+#   T06=kazumasa/K16（仏前の人々の後ろ姿）T08=hideaki/H02（湾に面した城下。湾に今の養殖の筏に見える物があり、使わない）T09=hideaki/H10（巻紙の手元）T10=hidetsugu/H06（机の文書）
+#   T11=yodo/Y10（大仏殿の普請）T12=hidetsugu/H02（高野山の山道）T13=hidetsugu/H05（書状を読む秀次）T14=hidetsugu/H10（三条河原の遠景）
+#   T15=hidetsugu/H11（聚楽第の取り壊し）T16=hideaki/H04（霧の谷と陣）T17=yodo/Y13（煙の上がる大坂城）T18=yodo/Y12（壊れた城の奥の部屋）
+#   T19=rikyu/R13（寺の庭）T20=yodo/Y15（夕暮れの石垣と堀）T22=hideaki/H03（街道を急ぐ使者）T23=hidetsugu/H13（五輪塔の列）
+#   T24=rikyu/R14（夕暮れの水辺・右を空けた構図。終了画面）T25=yodo/Y08（金の襖の広間）T27=hidetsugu/H01（秀次）T28=hidetsugu/H09（杉木立）
+#   使わなかったもの：T07（jingi/J11、白い腰掛けが今の物に見える）・T21・T26・T29・T30（神社のしめ縄）。1本 25 枚まで。
+#   実在の人物の顔は、実在の肖像（額）か、前の回で作った想像図（秀吉 T03・秀次 T27・茶々 T01/T04/T25）だけ。戦・処刑の場面は遠景だけ。
+script: scripts/tsurumatsu-if-story.yaml
+out: tsurumatsu_if_story_main
+art_dir: out/story/tsurumatsu-if/ph
+main_art_dir: out/story/tsurumatsu-if/main
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 跡継ぎが死んで、18日後, now: 天正19年8月, dates: {}}
+  1: {label: 第1章 その子は、なぜ棄と呼ばれたのか, now: 天正17年5月,
+      dates: {14: null, 16: 天正17年5月, 26: 天正17年9月, 28: 天正18年, 29: 天正19年}}
+  2: {label: 第2章 なぜ大名たちは、髻を切ったのか, now: 天正19年正月,
+      dates: {31: 天正19年閏正月, 33: 天正19年8月, 43: null, 44: 天正19年8月}}
+  3: {label: 第3章 分岐1 唐入りは止まったのか, now: 天正19年8月,
+      dates: {48: null, 50: 天正13年, 52: 天正14年, 53: 天正19年春, 56: 天正19年, 58: null, 59: 天正20年4月, 60: null}}
+  4: {label: 第4章 分岐2 秀次は関白になったのか, now: 天正19年8月,
+      dates: {65: 天正19年11月, 66: 天正19年12月, 70: 天正20年5月, 73: null, 75: 文禄2年}}
+  5: {label: 第5章 分岐3 秀次事件は起きたのか, now: 文禄2年8月,
+      dates: {82: 天正20年9月, 83: 文禄4年4月, 86: 文禄4年7月, 95: 文禄4年8月, 96: null, 101: 文禄4年}}
+  6: {label: 第6章 分岐4 秀吉が死んだ日, now: 慶長3年8月,
+      dates: {107: 慶長4年正月, 108: null}}
+  7: {label: 第7章 分岐5 関ヶ原と大坂の陣, now: 慶長5年,
+      dates: {115: 慶長8年, 116: 慶長19年, 117: 慶長20年5月, 119: null}}
+  8: {label: まとめ もしも鶴松が生きていたら, now: null, dates: {130: 元和元年, 131: null}}
+
+references:
+  - "池内宏『文禄慶長の役 正編第一』（1914）　https://dl.ndl.go.jp/pid/950628"
+  - "渡辺世祐『豊太閤と其家族』（1919）　https://dl.ndl.go.jp/pid/953289"
+  - "辻善之助『信長・秀吉・家康』（1943）　https://dl.ndl.go.jp/pid/1043052"
+  - "田中義成『豊臣時代史』（1925）　https://dl.ndl.go.jp/pid/1918425"
+  - "東京大学史料編纂所『史料綜覧』　https://dl.ndl.go.jp/pid/2994258"
+  - "東京大学史料編纂所『大日本史料』第11編之20（一柳文書）　https://dip-s.lab.hi.u-tokyo.ac.jp/en/item/850_8500_02_1120"
+  - "東京大学史料編纂所 堅田文書 公開資料（2019）　https://www.hi.u-tokyo.ac.jp/news/2019/katatamonjyo.pdf"
+  - "勢田勝郭「関白秀次失脚自刃事件と木食応其上人」奈良工業高等専門学校研究紀要 第51号（2015）　https://www.nara-k.ac.jp/nnct-library/publication/pdf/h27kiyo7.pdf"
+  - "矢部健太郎『関白秀次の切腹』（KADOKAWA、2016）　https://www.kadokawa.co.jp/product/321511000095/"
+  - "谷徹也「秀吉死後の政局と『五奉行』」立命館文学 696号　https://www.ritsumei.ac.jp/acd/cg/lt/rb/696/696PDF/tani.pdf"
+  - "文化庁 国指定文化財等データベース「木造豊臣棄丸坐像」「木造玩具船 豊臣棄丸所用」「小形武具 豊臣棄丸所用」"
+  - "京都市 淀・納所の遺跡マップ　https://www.city.kyoto.lg.jp/bunshi/cmsfiles/contents/0000148/148088/36.pdf"
+  - "京都市 元離宮二条城事務所 研究ノート（2024）"
+  - "京都市 令和5年度 記者発表資料（聚楽第跡の発掘調査）　https://www.city.kyoto.lg.jp/bunshi/cmsfiles/contents/0000172/172102/R5juraku.pdf"
+  - "佐賀県立名護屋城博物館 解説・令和6年度 年報　https://saga-museum.jp/nagoya/"
+  - "大阪市 文化財解説「大坂夏の陣越前兵首取状」　https://www.city.osaka.lg.jp/kyoiku/cmsfiles/contents/0000674/674603/8.pdf"
+  - "日本歴史地名大系・日本大百科全書・世界大百科事典・ブリタニカ国際大百科事典（コトバンク）"
+  - "本郷和人『インテリジェンス関ヶ原』（文春新書、2026）抜粋"
+no_tag_from: 133
+
+ai:
+  T01: {scene: 茶々と産着の赤子（淀城の奥の部屋）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.2, 0.45, 0.5], right: [1.2, 0.6, 0.45]}}
+  T02: {scene: 川沿いの城と城下（淀城の代わりの想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.45]}}
+  T03: {scene: 金の襖の御殿に座る秀吉（数正の回の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5], face: [1.3, 0.5, 0.38]}}
+  T04: {scene: 仏壇の前で手を合わせる茶々, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.42, 0.5], right: [1.18, 0.62, 0.5]}}
+  T05: {scene: 大きな禅寺の門, pan: v, crops: {wide: [1.12, 0.5, 0.5], right: [1.18, 0.6, 0.5]}}
+  T06: {scene: 仏前に座る人々の後ろ姿（葬儀）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  T09: {scene: 巻紙を開く手元と灯, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.55], right: [1.18, 0.62, 0.55]}}
+  T10: {scene: 机の上の文書と硯（読めない筆の跡）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  T11: {scene: 大仏殿の普請の柱と足場, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}}
+  T12: {scene: 高野山への山道を行く少人数の後ろ姿, pan: v, crops: {wide: [1.12, 0.5, 0.5]}}
+  T13: {scene: 書院で書状を読む秀次（僧衣）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.45, 0.5]}}
+  T14: {scene: 三条河原の遠景（竹の柵の向こうの人だかり）, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  T15: {scene: 足場の組まれた御殿と職人・牛車, pan: h, crops: {wide: [1.12, 0.5, 0.5], right: [1.18, 0.62, 0.5]}}
+  T16: {scene: 霧の谷と陣の遠景, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  T17: {scene: 夕方、煙の上がる大坂城の遠景, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  T18: {scene: 壊れた城の奥の部屋（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5]}}
+  T19: {scene: 紅葉の寺の庭（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  T20: {scene: 夕暮れの石垣と堀, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  T22: {scene: 街道を急ぐ使者の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.62, 0.55]}}
+  T23: {scene: 雨の境内の五輪塔の列（文字なし）, pan: v, crops: {wide: [1.12, 0.5, 0.5], right: [1.18, 0.6, 0.5]}}
+  T24: {scene: 終了画面用。夕暮れの水辺と橋（右を空けた構図）, crops: {left: [1.12, 0.45, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  T25: {scene: 金の襖の広間に座る茶々, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.38, 0.5], right: [1.18, 0.65, 0.45]}}
+  T27: {scene: 灯の下の秀次（関白の装束・想像図）, pan: zoom, crops: {face: [1.25, 0.6, 0.38], left: [1.18, 0.4, 0.45], wide: [1.1, 0.5, 0.5]}}
+  T28: {scene: 杉木立と石の道, pan: v, crops: {wide: [1.12, 0.5, 0.5], right: [1.18, 0.6, 0.5]}}
+
+credits:
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: 《豊臣秀吉像》1600年（大阪市立美術館蔵）
+  paintings/oichi_chacha_yodo_portrait.jpg: 伝 淀殿（茶々）像（奈良県立美術館蔵）17世紀
+  paintings/oichi_hideyori.jpg: 伝《豊臣秀頼像》（養源院本の模写、1914年）
+  paintings/hidenaga_hidetsugu.jpg: 《豊臣秀次像》17世紀前半
+  paintings/ieyasu_portrait_toshodaigongen.jpg: 伝 狩野探幽《徳川家康像（東照大権現像）》江戸前期
+  paintings/sekigahara_ishida_mitsunari.jpg: 《石田三成像》（18〜19世紀ごろ）
+  paintings/hideyoshi_nagoya_castle_screen.jpg: 伝 狩野光信《肥前名護屋城図屏風》（1590年代）
+  paintings/kanbei_nagoya_jinei_map.jpg: 吉村茂三郎《西肥名古屋城豊太閤陣営図》1934年（近代の絵地図）
+  paintings/hideyoshi_jurakudai_screen_mitsui.jpg: 《聚楽第図屏風》桃山時代（三井記念美術館蔵）
+  paintings/hideyoshi_osaka_zu_byobu.jpg: 《豊臣期大坂図屏風》1607〜1615年ごろ（エッゲンベルク城蔵）
+  paintings/akechi_rakuchu_rakugai_uesugi_right.jpg: 狩野永徳《洛中洛外図屏風》（上杉本）右隻
+  paintings/sekigahara_screen_gifu.jpg: 《関ヶ原合戦図屏風》（岐阜県歴史資料館蔵。江戸後期）
+  paintings/ieyasu_osaka_summer_screen_kuroda.jpg: 《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）
+  paintings/hideyoshi_daibutsu_okyo.jpg: 円山応挙《京大仏図》1796年以前（方広寺の大仏殿、江戸時代に建て直した姿）
+
+shots:
+  # 序章（0〜11）
+  - 0 ai:T16 wide
+  - 1 ai:T01 wide
+  - 2 ai:T19 wide
+  - 3 ai:T28 wide
+  - 4 ai:T06 wide
+  - 5 ai:T05 wide
+  - 6 ai:T27 face
+  - 7 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 8 ai:T03 wide
+  - 9 ai:T10 wide
+  - 10 part:paintings/kanbei_nagoya_jinei_map.jpg
+  - 11 ai:T03 face
+  # 第1章（12〜29）
+  - 12 ai:T01 left
+  - 13 ai:T02 wide
+  - 14 ai:T20 wide
+  - 15 ai:T02 right
+  - 16 ai:T01 right
+  - 17 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 18 ai:T09 wide
+  - 19 ai:T09 left
+  - 20 ai:T10 right
+  - 21 ai:T03 left
+  - 22 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 23 ai:T10 wide
+  - 24 ai:T19 left
+  - 25 ai:T01 right
+  - 26 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 27 ai:T09 right
+  - 28 ai:T16 wide
+  - 29 ai:T20 right
+  # 第2章（30〜45）
+  - 30 ai:T23 wide
+  - 31 ai:T02 left
+  - 32 ai:T04 right
+  - 33 ai:T01 wide
+  - 34 ai:T09 wide
+  - 35 ai:T10 left
+  - 36 ai:T05 right
+  - 37 ai:T06 wide
+  - 38 ai:T04 wide
+  - 39 ai:T28 right
+  - 40 ai:T05 wide
+  - 41 ai:T11 left
+  - 42 ai:T25 right
+  - 43 ai:T19 right
+  - 44 ai:T01 left
+  - 45 ai:T22 left
+  # 第3章（46〜63）
+  - 46 ai:T22 wide
+  - 47 ai:T09 left
+  - 48 ai:T04 left
+  - 49 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 50 ai:T10 wide
+  - 51 ai:T09 right
+  - 52 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 53 ai:T11 wide
+  - 54 ai:T03 left
+  - 55 ai:T10 left
+  - 56 frame:paintings/hideyoshi_nagoya_castle_screen.jpg
+  - 57 ai:T16 wide
+  - 58 part:paintings/kanbei_nagoya_jinei_map.jpg
+  - 59 frame:paintings/hideyoshi_nagoya_castle_screen.jpg
+  - 60 ai:T01 right
+  - 61 ai:T22 wide
+  - 62 ai:T03 wide
+  - 63 ai:T25 wide
+  # 第4章（64〜76）
+  - 64 ai:T22 left
+  - 65 ai:T27 face
+  - 66 ai:T10 wide
+  - 67 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 68 ai:T27 left
+  - 69 ai:T09 left
+  - 70 part:paintings/kanbei_nagoya_jinei_map.jpg
+  - 71 ai:T09 wide
+  - 72 ai:T03 left
+  - 73 ai:T01 wide
+  - 74 ai:T27 wide
+  - 75 frame:paintings/oichi_chacha_yodo_portrait.jpg
+  - 76 ai:T03 face
+  # 第5章（77〜102）
+  - 77 frame:paintings/oichi_hideyori.jpg
+  - 78 ai:T27 left
+  - 79 ai:T10 left
+  - 80 ai:T03 left
+  - 81 ai:T22 wide
+  - 82 ai:T23 wide
+  - 83 ai:T28 wide
+  - 84 ai:T09 right
+  - 85 frame:paintings/hidenaga_hidetsugu.jpg
+  - 86 part:paintings/hideyoshi_jurakudai_screen_mitsui.jpg
+  - 87 ai:T12 wide
+  - 88 ai:T13 left
+  - 89 frame:paintings/sekigahara_ishida_mitsunari.jpg
+  - 90 ai:T28 right
+  - 91 ai:T13 wide
+  - 92 ai:T10 wide
+  - 93 ai:T10 right
+  - 94 ai:T09 left
+  - 95 ai:T14 wide
+  - 96 ai:T01 left
+  - 97 ai:T15 wide
+  - 98 ai:T27 face
+  - 99 ai:T03 wide
+  - 100 frame:paintings/sekigahara_ishida_mitsunari.jpg
+  - 101 ai:T23 right
+  - 102 ai:T20 wide
+  # 第6章（103〜113）
+  - 103 frame:paintings/hideyoshi_portrait_osaka_city_1600.jpg
+  - 104 frame:paintings/oichi_hideyori.jpg
+  - 105 ai:T09 wide
+  - 106 ai:T22 wide
+  - 107 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 108 ai:T01 right
+  - 109 ai:T25 left
+  - 110 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 111 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 112 part:paintings/sekigahara_screen_gifu.jpg
+  - 113 ai:T16 wide
+  # 第7章（114〜124）
+  - 114 part:paintings/sekigahara_screen_gifu.jpg
+  - 115 frame:paintings/oichi_hideyori.jpg
+  - 116 part:paintings/ieyasu_osaka_summer_screen_kuroda.jpg
+  - 117 ai:T17 wide
+  - 118 ai:T20 wide
+  - 119 ai:T01 wide
+  - 120 ai:T16 wide
+  - 121 ai:T23 wide
+  - 122 ai:T27 left
+  - 123 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 124 ai:T19 wide
+  # まとめ（125〜136）
+  - 125 frame:paintings/hideyoshi_nagoya_castle_screen.jpg
+  - 126 ai:T13 wide
+  - 127 ai:T27 face
+  - 128 ai:T03 left
+  - 129 ai:T16 wide
+  - 130 ai:T05 right
+  - 131 ai:T09 wide
+  - 132 ai:T19 right
+  - 133 ai:T05 wide
+  - 134 ai:T22 wide
+  - 135 ai:T24 left
+  - 136 ai:T24 wide
+  - end ai:T24 wide
+figures: []
+
+focus:
+  paintings/hideyoshi_portrait_osaka_city_1600.jpg: {秀吉: [1.5, 0.5, 0.30]}
+
+fx:
+  T04: {lamp: {region: [0.82, 0.55, 0.92, 0.75]}}
+  T09: {lamp: {region: [0.05, 0.2, 0.15, 0.5]}}
+  T16: {mist: {region: [0, 0.35, 1, 0.85], alpha: 0.10, speed: 5}}
+  T17: {smoke: {region: [0.2, 0.0, 0.85, 0.45], alpha: 0.08, speed: 3}}
+  T24: {water: {region: [0.5, 0.7, 1, 1.0]}}
+  T28: {mist: {region: [0, 0.4, 1, 0.9], alpha: 0.10, speed: 5}}
+
+paint_fx:
+  paintings/hidenaga_hidetsugu.jpg: {crop: [0.18, 0.22, 0.80, 0.56]}
+
+parts:
+  - {type: quote, from: 34, to: 34, label: 史料, text: 若公様、昨日五日御他界候／是非に及ばず候, source: 毛利輝元書状（天正19年8月6日。渡辺世祐『豊太閤と其家族』所引。読み下し）}
+  - {type: quote, from: 50, to: 50, label: 史料, text: 日本国の事は申すに及ばず／唐国まで仰せ付けられ候心に候, source: 秀吉朱印状（天正13年9月3日・一柳家文書。『大日本史料』11編之20。読み下し）}
+  - {type: quote, from: 71, to: 71, label: 史料, text: 大唐関白、秀次へ譲らるべく候／都の廻り百ヶ国を御渡し, source: 秀吉の覚書（天正20年5月18日。『群書類従』所収。読み下し）}
+  - {type: quote, from: 89, to: 89, label: 史料, text: 御ひろい様へたいし奉り／聊か表裏別心を存ぜず, source: 石田三成・増田長盛 連署血判起請文（文禄4年7月12日）}
+  - {type: quote, from: 133, to: 133, label: 要点, text: 鶴松のおもちゃの船／いまも京都・妙心寺玉鳳院に, source: 文化庁 国指定文化財等データベース「木造玩具船 豊臣棄丸所用」}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）名護屋}
+  - {line: 18, note: 第1章 秀吉の年齢（くい違い）}
+  - {line: 42, note: 第2章 遺品の表}
+  - {line: 55, note: 第3章 研究者の見方}
+  - {line: 93, note: 第5章 切腹を命じたか}
+  - {line: 108, note: 第6章 年齢の比べ}
+  - {end: true, note: 終了画面の空き}

@@ -1,0 +1,161 @@
+# 物語完結型ショート 和宮 s1（2026-10-29）。本編 scripts/kazunomiya-story.yaml の導入とまとめ（棺のガラス板・写っていたのは誰か）から。
+# 形式は rikyu_s1.yaml・hidetsugu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/kazunomiya/main/W*.jpg・TKK）と実在の肖像。
+# 事実カード（dev/output/rekishi-chiso/research/和宮_facts_20261028.yaml）：kazunomiya-01・28・29・30・05
+#   ・ガラス板の話は山村竜也（Yahoo!ニュース エキスパート 2022）の紹介 → 語りで山村さんの名と年を言う。像が消えたのは「数日のうちに」（「翌日」とは言わない）。
+#   ・熾仁親王説も同じ記事の紹介（kazunomiya-29）→「という見方」まで。どちらにも寄せない。
+#   ・墓・棺・遺骨の中は描かない絵だけ（W01 は発掘の遠景、W02 は布の上の板と手、TKK は灯の前でガラス板を見る女性）。
+# 理解テスト4問：
+#   ①誰の話か：和宮（孝明天皇の妹・将軍家茂の妻）
+#   ②いつ・どこで何が：1958年、増上寺の発掘で、和宮の棺の胸元にガラス板（写真の原板）が見つかった
+#   ③何が見えたか：一晩調べた美術史の学者には、烏帽子の17、8歳の男性＝家茂らしい顔が見えた
+#   ④どうなったか：像は数日で消えた。家茂には写真の記録が無く、婚約者だった熾仁親王ではという見方もある。確かめる手立ては無い
+title: 和宮｜棺のガラス板に写っていたのは誰か
+yt_title: 皇女和宮の棺から出たガラス板　写っていた男の姿は、数日で消えた
+description: |-
+  昭和33年、1958年。東京の増上寺で、徳川将軍家の墓が掘り返されました。皇女和宮の棺の中、白骨になった胸元に、一枚のガラス板が残っていました。写真の原板だったとされます。
+  歴史作家の山村竜也さんが2022年の記事で紹介した話では、美術史の学者が一晩かけて板を調べ、烏帽子をかぶった17、8歳の童顔の男性、夫の将軍家茂らしい顔が、かすかに見えたといいます。
+  ところが、その像は数日のうちに消えてしまいました。家茂には写真を撮った記録が無いため、かつての婚約者、有栖川宮熾仁親王ではないか、という見方もあります。
+hashtags: ["#和宮", "#日本史", "#幕末"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/kazunomiya
+out: kazunomiya_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 和宮（孝明天皇の妹・将軍家茂の妻）
+  title: "棺の《ガラス板》の姿が消えた"
+now:
+  - {at: 将軍の妻, text: "1958年　増上寺", point: 0}
+  - {at: 2022年, text: "2022年　記事", point: 1}
+timeline:
+  - {label: "1958"}
+  - {label: "2022"}
+cards:
+  - type: table                          # 写っていたのは誰か（語った順に1行ずつ）
+    title: ガラス板の人物は誰か
+    from: 夫か
+    until: あなたは
+    items:
+      - {at: 夫か, text: "調べた学者　夫・家茂らしい顔"}
+      - {at: 婚約者か, text: "別の見方　婚約者・熾仁親王"}
+shots:
+  W02f:                                  # 1文目：布の上のガラス板（人影）
+    kind: ai
+    file: kazunomiya/main/W02.jpg
+    focus: [0.45, 0.6]
+    move: in
+    zoom: 0.14
+    must: ガラス板と人影
+  W01:                                   # 1958年、増上寺の発掘（遠景）
+    kind: ai
+    file: kazunomiya/main/W01.jpg
+    focus: [0.6, 0.5]
+    move: left
+    must: 発掘の現場の遠景
+  TKK:                                   # 胸元に抱かれるように残っていたガラス板
+    kind: ai
+    file: kazunomiya/main/TKK.jpg
+    focus: [0.42, 0.5]
+    move: in
+    must: ガラス板を持つ女性
+  W02r:                                  # 学者が一晩かけて調べた（ルーペと白手袋）
+    kind: ai
+    file: kazunomiya/main/W02.jpg
+    focus: [0.75, 0.4]
+    move: left
+    must: ルーペと白手袋の手
+  Iemochi:                               # 烏帽子の若い男性＝家茂らしい
+    kind: real
+    image: paintings/kazu_iemochi_kano.jpg
+    crop: [0.2, 0.0, 0.85, 0.75]
+    focus: [0.5, 0.3]
+    move: in
+    credit: "徳川家茂（狩野派の絵師、19世紀）"
+    must: 家茂の肖像
+  W02d:                                  # 像は数日で消えた
+    kind: ai
+    file: kazunomiya/main/W02.jpg
+    focus: [0.45, 0.55]
+    move: out
+    zoom: 0.14
+    must: ガラス板
+  W09:                                   # 家茂には写真の記録が無い（夫婦の後ろ姿）
+    kind: ai
+    file: kazunomiya/main/W09.jpg
+    focus: [0.4, 0.5]
+    move: in
+    must: 廊下を歩く若い夫婦の後ろ姿
+  Taruhito:                              # かつての婚約者、熾仁親王
+    kind: real
+    image: paintings/kazu_arisugawa_taruhito.jpg
+    focus: [0.5, 0.35]
+    move: in
+    credit: "有栖川宮熾仁親王（昭和初期の刊行物より）"
+    must: 熾仁親王の写真
+  TKKq:                                  # 最後の問い：ガラス板を見つめる顔
+    kind: ai
+    file: kazunomiya/main/TKK.jpg
+    focus: [0.3, 0.35]
+    move: in
+    zoom: 0.18
+    text_y: 0.76
+    must: 女性の横顔とガラス板
+lines:
+  # fact: kazunomiya-01, kazunomiya-28
+  - 語り: 将軍の妻になった皇女、和宮。その棺のガラス板に写っていた男の姿は、数日で、《!消えた》。
+    shot: W02f
+    tone: 強調
+  # fact: kazunomiya-30
+  - 語り: 昭和33年、1958年。東京の増上寺で、徳川将軍家の墓が、掘り返された。
+    shot: W01
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-01, kazunomiya-30
+  - 語り: 白骨になった和宮の胸元に、一枚のガラス板が、抱かれるように残っていた。写真の原板だった、とされる。
+    shot: TKK
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-28
+  - 語り: 歴史作家の山村竜也さんの、2022年の記事によれば、美術史の学者が、一晩かけて板を調べた。
+    shot: W02r
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-28
+  - 語り: かすかに見えたのは、烏帽子をかぶった、17歳か18歳ほどの男性。夫の将軍、家茂らしい顔だった。
+    shot: Iemochi
+    tone: 強調
+    pause: 0.12
+  # fact: kazunomiya-01, kazunomiya-28
+  - 語り: ところが、その像は、数日のうちに薄れて、《!消えてしまった》。見たのは、数人の関係者だけ、と伝わる。
+    shot: W02d
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: kazunomiya-29
+  - 語り: しかも家茂には、写真を撮った記録が無い。
+    shot: W09
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazunomiya-29, kazunomiya-05
+  - 語り: 写っていたのは、かつての婚約者、有栖川宮熾仁親王では、という見方もある。
+    shot: Taruhito
+    tone: 強調
+    pause: 0.12
+  - 語り: 夫か、かつての婚約者か。像が消えた今、確かめる手立ては、もう無い。
+    shot: W02d
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたは、和宮が胸に抱いていたのは、誰だったと、《思いますか》。
+    shot: TKKq
+    tone: 疑問
+    pause: 0.15

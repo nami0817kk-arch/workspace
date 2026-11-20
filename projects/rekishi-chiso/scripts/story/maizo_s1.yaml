@@ -1,0 +1,168 @@
+# 物語完結型ショート 徳川埋蔵金 s1（2026-11-05）。本編 scripts/maizo-story.yaml（11/6 12:00 公開）の序章・第1章・第7章から。11/7 9:00 公開。
+# 形式は jingi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。
+# 絵は本編の AI 絵（out/story/maizo/main/M*。FLUX）と本編で使った実在の写真・屏風だけ。新しい絵は作らない。
+#   使わない AI 絵：M08（洋風の窓と金具の長持）・M12（城の前に貨車＝時代違い）・M13（蒸気の軍艦＝本編の答えに近い）・M14（箱に偽の字）・M15（洋風のランプと製本の本）。M01 の左の偽の字の灯は切り出しで外す。
+# 切り口：語られる360万両に対し、江戸城の金蔵の金銀の貨幣は最多でも171万7千両あまり（半分に届かない）。額は語り手ごとに動く。
+#   本編の答え（大坂から江戸へ向かった軍艦の金）は言わない。軍艦も出さない。
+# 事実カード（dev/output/rekishi-chiso/research/徳川埋蔵金_facts_20261105.yaml）：maizo-16・17・22・33・34・40・57。言い方は本編のまま。
+# 計算（自分で計算し直した）：171.7万÷360万＝47.7%（半分の180万に届かない）。350万（1928 蜷川新）・250万（1933 広告）・400万（1982 水野智之の本の題）。
+# 理解テスト4問：
+#   ①誰の話か：徳川幕府の金（埋蔵金として語られる360万両）と、江戸城の非常用の金蔵
+#   ②いつ・どこで何が：1868年、江戸城の明け渡しのとき金蔵は空だったと言われる。金蔵の金銀の貨幣は最多でも171万7千両あまり
+#   ③何が分かるか：語られる額の半分に届かず、幕末には使い果たされていた。額も本ごとに350万・250万・400万と動く
+#   ④どうなったか：360万両を初めて書いた記録には行き当たらない。では幕府の金はどこへ、の問いで閉じる
+title: 徳川埋蔵金｜金蔵には、半分も無かった
+yt_title: 徳川埋蔵金の360万両　江戸城の金蔵の貨幣は、いちばん多い時でも半分に届かなかった
+description: |-
+  徳川の埋蔵金は、360万両とも言われます。
+  ところが、江戸城の非常用の金蔵、奥御金蔵の金と銀の貨幣は、いちばん多かった時でも171万7千両あまりだった、と財政史の飯島千秋さんの研究は書いています。しかも幕末には使い果たされていた、といいます。語られる額そのものも、1928年の本では350万両、1933年の新聞の広告では250万両、1982年の本の題では400万両と動きます。
+  幕府の金は、どこへ消えたのか。5つの説を記録で採点した本編は、概要欄のリンクからどうぞ。
+hashtags: ['#徳川埋蔵金', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/maizo
+out: maizo_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 徳川埋蔵金（江戸幕府の金）
+  title: "金蔵には、《半分》も無かった"
+now:
+  - {at: 1868年, text: "1868年　江戸城の明け渡し", point: 1}
+  - {at: 奥御金蔵, text: "江戸城　奥御金蔵", point: 0}
+  - {at: 1928年の本, text: "1928年〜　語られた額", point: 2}
+timeline:
+  - {label: "江戸"}
+  - {label: "1868"}
+  - {label: "1928〜"}
+cards:
+  - type: versus
+    from: いちばん多い時でも
+    until: しかも
+    left: {tag: 金蔵の貨幣の最多, big: 171万両, dots: 17, color: blue}
+    right: {tag: 語られる額, big: 360万両, dots: 36, color: red}
+    mid: 対
+    text_y: 0.66
+  - type: table
+    title: 語られた額
+    from: 1928年の本
+    until: では360万両
+    items:
+      - {at: 1928年の本, text: "1928年の本　350万両"}
+      - {at: 1933年の新聞, text: "1933年の広告　250万両"}
+      - {at: 1982年の本, text: "1982年の本の題　400万両"}
+    text_y: 0.70
+shots:
+  M01:
+    kind: ai
+    file: maizo/main/M01.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 夜の城の石垣と堀と灯
+  Castle:
+    kind: real
+    image: paintings/kira_edo_castle_beato.jpg
+    focus: [0.75, 0.55]
+    move: left
+    credit: "フェリーチェ・ベアト撮影《江戸城》1860年代（パブリックドメイン）"
+    must: 江戸城の石垣と櫓
+  Byobu:
+    kind: real
+    image: paintings/ieyasu_edo_zu_byobu_castle_detail.jpg
+    focus: [0.85, 0.3]
+    move: down
+    credit: "《江戸図屏風》江戸城の部分（17世紀。パブリックドメイン）"
+    must: 屏風の江戸城と天守
+  M03:
+    kind: ai
+    file: maizo/main/M03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 暗い蔵の奥へ続く棚と灯
+  M02:
+    kind: ai
+    file: maizo/main/M02.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 石の蔵の空いた箱
+  M02b:
+    kind: ai
+    file: maizo/main/M02.jpg
+    focus: [0.55, 0.8]
+    move: right
+    zoom: 0.12
+    must: 空の箱の口
+  M03b:
+    kind: ai
+    file: maizo/main/M03.jpg
+    focus: [0.3, 0.55]
+    move: left
+    must: 蔵の棚
+  Moat:
+    kind: real
+    image: paintings/yoshinobu_beato_yedo_castle_moat.jpg
+    focus: [0.55, 0.55]
+    move: right
+    credit: "フェリーチェ・ベアト撮影《江戸城の濠》1863〜70年代初め（パブリックドメイン）"
+    must: 江戸城の濠
+  M01b:
+    kind: ai
+    file: maizo/main/M01.jpg
+    focus: [0.5, 0.65]
+    move: out
+    must: 夜の城と堀の灯
+lines:
+  # fact: maizo-57
+  - 語り: 徳川の埋蔵金、360万両。その《!半分》も、金蔵には無かった。
+    shot: M01
+    tone: 強調
+    pause: 0.12
+  # fact: maizo-17
+  - 語り: 1868年、江戸城が明け渡されたとき、金蔵は空だった、と言われている。
+    shot: Castle
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-16
+  - 語り: 江戸城には、非常用の金庫、奥御金蔵があった。天守の下の穴蔵にあった、と飯島千秋さんの研究は書く。
+    shot: Byobu
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-57
+  - 語り: 同じ研究によれば、金蔵の金と銀の貨幣は、いちばん多い時でも、171万7千両あまり。
+    shot: M03
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-57
+  - 語り: 語られる360万両の、半分に届かない。
+    shot: M02
+    tone: 重い
+    pause: 0.12
+  # fact: maizo-57
+  - 語り: しかも、その金は、幕末には、使い果たされていた、という。
+    shot: M02b
+    tone: 重い
+    pause: 0.15
+  # fact: maizo-33, maizo-34, maizo-40
+  - 語り: 額も、語り手で動く。1928年の本では、350万両。1933年の新聞の広告では、250万両。1982年の本の題では、400万両。
+    shot: M03b
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-22
+  - 語り: では、360万両という額は、いつ、誰が初めて書いたのか。記録をたどっても、行き当たらない。
+    shot: Moat
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 語られる額は、金蔵に無かった。では、幕府の金は、どこへ消えたのか。
+    shot: M01b
+    tone: 疑問
+    pause: 0.15

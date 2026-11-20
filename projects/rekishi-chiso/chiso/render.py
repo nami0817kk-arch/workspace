@@ -24,6 +24,8 @@ DIM = (176, 164, 140)
 EMPH = (196, 72, 24)            # 字幕の強調語（明るい箱の上で読める濃い朱）
 STRATA = [(70, 58, 44), (92, 74, 52), (120, 96, 62), (150, 118, 74), (110, 52, 44)]
 SPEAKER_COLORS = {"left": (96, 112, 150), "right": (214, 140, 40)}
+IMAGINED_TAG = "想像"             # 物語型の想像の台詞（10-24 ユーザー決定）。字幕の上の小さな札
+IMAGINED_COLOR = (88, 82, 96)     # 名札（深い赤）と取り違えない、落ち着いた灰紫
 ROLE_COLOR = (140, 36, 52)        # 人物の言葉（roles の声）の字幕。2人のどちらでもない深い赤
 
 HOP_PX = 22          # 話し始めに跳ねる高さ
@@ -71,6 +73,7 @@ class State:
     reaction: str | None = None
     detail: str | None = None
     mark: str | None = None
+    imagined: bool = False          # 想像の台詞の行（10-24）。字幕の上に小さく「想像」の札
 
 
 class Painter:
@@ -525,7 +528,8 @@ class Painter:
 
     # --- 立ち絵と字幕 -----------------------------------------------------
     def with_cast(self, base: Image.Image, speaker: str, hop: float = 0.0, text: str = "",
-                  tone: str = "普通", mouth: bool = False, blink: bool = False, reaction: str | None = None) -> Image.Image:
+                  tone: str = "普通", mouth: bool = False, blink: bool = False, reaction: str | None = None,
+                  imagined: bool = False) -> Image.Image:
         """立ち絵を重ねる。話している側は明るく、足もとに光、hop（0〜1）のぶん跳ねる。text は字幕。
         表情のある話者は、話しているあいだ tone の顔で mouth のとき口を開け、blink のとき目を閉じる。
         reaction（つむぎの寄り）があれば、下の小さい2人の代わりに聞き手を腰から上で大きく出す。"""
@@ -535,7 +539,7 @@ class Painter:
             who = _r.spec_of(reaction).get("who") or "聞き"
             _r.put_figure(self, img, reaction, speaker in (who, "二人"), mouth, blink, hop)
             if text:
-                self._subtitle(img, speaker, text)
+                self._subtitle(img, speaker, text, imagined)
             return img if self.layered else img.convert("RGB")
         for who, cast in self.config["cast"].items():
             talking = who == speaker or speaker == "二人"
@@ -551,7 +555,7 @@ class Painter:
                 img.alpha_composite(self._glow(who, x, ch.width))
             img.alpha_composite(ch, (x, self.H - ch.height + 10 - lift))
         if text:
-            self._subtitle(img, speaker, text)
+            self._subtitle(img, speaker, text, imagined)
         return img if self.layered else img.convert("RGB")
 
     def _dim(self, ch: Image.Image, key) -> Image.Image:
@@ -581,8 +585,9 @@ class Painter:
             dr.text((x, y), ch, font=font, fill=emph if on else color)
             x += font.getlength(ch)
 
-    def _subtitle(self, img: Image.Image, speaker: str, text: str) -> None:
-        """2人のあいだの下に字幕。高さは2行ぶんで固定。話している人の名前をその人の側に寄せて出す。"""
+    def _subtitle(self, img: Image.Image, speaker: str, text: str, imagined: bool = False) -> None:
+        """2人のあいだの下に字幕。高さは2行ぶんで固定。話している人の名前をその人の側に寄せて出す。
+        imagined（物語型の想像の台詞、10-24）なら、字幕の枠の左上に小さく「想像」の札を出す（名札とは反対の端）。"""
         x0, x1, y1 = 440, self.W - 440, self.H - 34
         h = 34 + 60 * SUB_ROWS
         y0 = y1 - h
@@ -601,6 +606,14 @@ class Painter:
         nx = {"left": x0 + 20, "right": x1 - 20 - nw}.get(side, (x0 + x1 - nw) / 2)
         dr.rounded_rectangle([nx, y0 - 20, nx + nw, y0 + 18], radius=8, fill=color)
         dr.text((nx + nw / 2, y0 - 1), name, font=nf, fill=(255, 255, 255), anchor="mm")
+        if imagined:
+            tag = IMAGINED_TAG
+            tf = self.font("gothic", 24)
+            tw = tf.getlength(tag) + 24
+            tx = x0 + 20 if side != "left" else x1 - 20 - tw      # 名札の反対の端
+            dr.rounded_rectangle([tx, y0 - 18, tx + tw, y0 + 14], radius=7, fill=IMAGINED_COLOR,
+                                 outline=(250, 246, 236), width=2)
+            dr.text((tx + tw / 2, y0 - 2), tag, font=tf, fill=(255, 255, 255), anchor="mm")
         body, mask = emphasis_mask(text)
         f = self.font("serif", 44, bold=True)
         rows = wrap_balanced(body, f, x1 - x0 - 70)[:SUB_ROWS]
@@ -806,7 +819,8 @@ def state_of(line) -> State:
     return State(line.section, line.background, line.portrait, line.card, line.year, line.speaker,
                  getattr(line, "memo", ()), getattr(line, "figure", None), getattr(line, "bubble", None),
                  getattr(line, "icon", None), getattr(line, "term", None), getattr(line, "place", None),
-                 getattr(line, "reaction", None), getattr(line, "detail", None), getattr(line, "mark", None))
+                 getattr(line, "reaction", None), getattr(line, "detail", None), getattr(line, "mark", None),
+                 bool(getattr(line, "imagined", False)))
 
 
 RECAP_MAX = 3
@@ -851,7 +865,10 @@ def _salt(painter) -> str:
         pass
     src += json.dumps(painter.config, sort_keys=True, ensure_ascii=False).encode("utf-8")
     src += json.dumps(getattr(painter.script, "look", {}) or {}, sort_keys=True).encode("utf-8")
-    for extra in ("pen.py", "texture.py"):
+    # 10-15：numbers.py の年号のカンマを直したのに、図の控えが古いまま使い回され、書き出しをやり直した。
+    # 図・札・額・吹き出しなど、画面を描くファイルは全部入れる
+    for extra in ("pen.py", "texture.py", "numbers.py", "figures.py", "extras.py", "reaction.py", "style.py",
+                  "people.py", "faces.py", "helmet.py", "jaw.py"):
         try:
             src += (Path(__file__).parent / extra).read_bytes()
         except OSError:
@@ -914,6 +931,9 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
 
     def _rk(s) -> dict:                  # つむぎの寄り（本編だけ。ショートはいつもの画面）
         return {"reaction": s.reaction} if (special and s.reaction) else {}
+
+    def _ik(s) -> dict:                  # 想像の台詞の札（本編だけ。ショートの with_cast は受け取らない）
+        return {"imagined": True} if (special and s.imagined) else {}
 
     def _mk(t) -> dict:                  # 赤ペンの描き進み（ショートの base は受け取らない）
         return {"mark_t": t} if (special and t < 1.0) else {}
@@ -1069,7 +1089,7 @@ def frames(painter: Painter, cues: list, total: float, frame_dir: Path, fps: int
                     base = painter.pop(base, words[0], pop_t, s.speaker)
                 if opening:                         # 冒頭の題は字幕と2人の下に敷く（10-08「字幕が見えない」）
                     base = painter.overlay_title(base, painter.script.series, painter.script.question, 0.8).convert("RGBA")
-                im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink, **_rk(s))
+                im = painter.with_cast(base, s.speaker, hop_t, text, tone, mouth_open, blink, **_rk(s), **_ik(s))
                 if shake_k:
                     im = painter.burst(im, side, shake_k / (SHAKE_FRAMES + 1))
                     im = painter.shake(im, shake_k)

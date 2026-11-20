@@ -1,0 +1,133 @@
+# 物語完結型ショート もしも鎖国 s4（2026-11-17）。本編 scripts/sakoku-if-story.yaml（11/21 19:00 公開予定、https://youtu.be/7dL7AYzb7zI）から。11/22 17:30 に予約。
+# 形式は titanic_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/鎖国if_facts_20261116.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/sakoku_if/main/ の B01〜B25・T01）の切り出しだけ。新しい絵は作らない。B22（西洋船に見える）は使わない。B23（イギリスの旗）はイギリスの話だけ。処刑・惨状・顔は絵にしない。
+# 切り口：1673年、イギリスのリターン号は、国王の結婚相手を理由に断られた。オランダの工作説には、カレン（2017）が史料の裏付けなしと指摘（本編 第5章）。
+# 計算（自分で数え直した）：平戸を去ったのは1623（国会図書館は1624）→1673＝およそ50年（年は言わず「50年ほど前」）。6月29日→8月28日＝60日（両端で61日）→「およそ2か月」。
+# 岩生成一の「もしも」は本編へ誘う問いに残す（答えは言わない）。
+title: "リターン号｜イギリス船は、国王の結婚相手で断られた"
+yt_title: "1673年、長崎に来たイギリス船リターン号は、国王の結婚相手を理由に断られた　「オランダが吹き込んだ」説は本当か"
+description: |-
+  1673年の夏、イギリス東インド会社の船、リターン号が長崎に入り、貿易の再開を求めました。イギリスは、その50年ほど前、平戸の商館を自分から閉じていました。
+  幕府の答えは、断る。1911年のブリタニカによると、理由は、国王チャールズ2世がポルトガルの王女と結婚していることでした。この理由はオランダが吹き込んだ、とする雑誌もありますが、2017年に研究者のカレンさんは、史料の裏付けがないと指摘しています。
+  日本の歴史家が考えた「もしも」は、本編で。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/7dL7AYzb7zI
+hashtags:
+- "#イギリス"
+- "#鎖国"
+- "#江戸時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の顔は描いていません。創作の台詞は入れていません。"
+art_dir: out/story/sakoku_if
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: sakoku_if_story_s4
+header:
+  tag: "1673年　リターン号"
+  title: "断られた理由は、《国王の妻》"
+now:
+- {at: "1673年", text: "1673年　長崎", point: 1}
+- {at: "50年ほど前", text: "約50年前　平戸", point: 0}
+- {at: "6月29日", text: "1673年　長崎", point: 1}
+timeline:
+- {label: "約50年前"}
+- {label: "1673"}
+shots:
+  B01_1:
+    kind: "ai"
+    file: "sakoku_if/main/B01.jpg"
+    focus: [0.37, 0.5]
+    move: "in"
+    must: "B01"
+  B01_2:
+    kind: "ai"
+    file: "sakoku_if/main/B01.jpg"
+    focus: [0.47, 0.5]
+    move: "left"
+    must: "B01"
+  B23_3:
+    kind: "ai"
+    file: "sakoku_if/main/B23.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "B23"
+  B20_4:
+    kind: "ai"
+    file: "sakoku_if/main/B20.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "B20"
+  B24_5:
+    kind: "ai"
+    file: "sakoku_if/main/B24.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "B24"
+  B10_6:
+    kind: "ai"
+    file: "sakoku_if/main/B10.jpg"
+    focus: [0.9, 0.5]
+    move: "in"
+    must: "B10"
+  B16_7:
+    kind: "ai"
+    file: "sakoku_if/main/B16.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "B16"
+  B25_8:
+    kind: "ai"
+    file: "sakoku_if/main/B25.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "B25"
+lines:
+  # fact: sakokuif-42, sakokuif-43
+- 語り: "イギリスの船が、国王の結婚相手を理由に、長崎で断られた。1673年の夏のことだ。"
+  shot: B01_1
+  tone: 強調
+  pause: 0.12
+  # fact: sakokuif-42
+- 語り: "イギリス東インド会社の船、リターン号。リターンとは、英語で、戻ること、という意味だ。"
+  shot: B01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: sakokuif-40
+- 語り: "イギリスは、50年ほど前、平戸の商館を、自分から閉じて、日本を去っていた。"
+  shot: B23_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: sakokuif-42
+- 語り: "長崎にいたのは、イギリス側の日付で、6月29日から8月28日まで。およそ2か月だ。"
+  shot: B20_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: sakokuif-43
+- 語り: "幕府の答えは、断る。1911年のブリタニカによると、理由は、国王チャールズ2世が、ポルトガルの王女と結婚していることだった。"
+  shot: B24_5
+  tone: 重い
+  pause: 0.12
+  # fact: sakokuif-43
+- 語り: "1924年の英語の雑誌は、この理由は、オランダが巧みに吹き込んだもの、と書く。"
+  shot: B10_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: sakokuif-44
+- 語り: "ところが2017年、研究者のカレンさんは、オランダの工作が原因だという見方には、史料の裏付けがない、と指摘した。"
+  shot: B16_7
+  tone: 疑問
+  pause: 0.12
+  # fact: sakokuif-44
+- 語り: "日本の歴史家は、この断りの先に、どんなもしもを考えたのか。"
+  shot: B25_8
+  tone: 疑問
+  pause: 0.15

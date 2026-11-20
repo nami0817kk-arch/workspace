@@ -1,0 +1,172 @@
+# 物語完結型ショート フランス革命（もしも）s4（2026-11-05）。本編 scripts/france-if-story.yaml（11/5 12:00 公開、https://youtu.be/0InK0OydYHM）から。切り口：1788年7月13日の雹の嵐と、同じ夏の国庫（第3章「金庫と空が同時に崩れた」）
+# 形式は kurofune_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（F01〜F16）と実在の絵（paintings/france_*）。新しい絵は作らない。F14（遠くにエッフェル塔）・F04（偽の字）は使わない。
+# 事実カード（dev/output/rekishi-chiso/research/フランス革命_facts_20261031.yaml）：france-if-40・41・42・43（本編の第3章の言い方のまま）
+# ・計算のやり直し：1788年7月13日 → 1789年7月14日 は1年と1日（1788年の2月29日は7月13日より前なので、間の365日に閏日は入らない）。
+#   1788年7月13日が日曜日なのは、科学アカデミーの報告の題（du dimanche 13 juillet 1788）と本編どおり。曜日も計算で確かめた（1789年7月14日が火曜で、その366日前）。
+#   損失 24,962,093リーヴル → 約2500万リーヴル（本編どおり）。8月8日 → 8月16日 は8日後（本編どおり）。
+# ・被害の村の数は報告の1039の小教区だけを言う（ル・ロワ・ラデュリの1059は言わない）。紙にした割合（カーライル・スタール夫人で割れる）は言わない。
+# ・雹が革命を起こした、とは言わない（本編も言っていない）。最後は問いで閉じる。
+# 理解テスト4問：
+#   ①誰の話か：革命の前の年のフランスの畑と、国の金庫
+#   ②いつ・どこで何が：1788年7月13日の日曜日、雹の嵐がフランスを横切った。1039の小教区が被害、損失は約2500万リーヴル
+#   ③国は何をしたか：8月8日に全国三部会を翌年5月1日に開くと発表し、8月16日に国庫の支払いの一部を紙の証券にした
+#   ④どうなったか：金庫と空が同じ夏に崩れた。もしも空が穏やかだったら、を問いで閉じる
+title: 1788年の雹｜バスティーユのちょうど1年と1日前、空から降ってきたもの
+yt_title: バスティーユのちょうど1年と1日前、フランスに雹が降った　1039の小教区を打った1788年7月13日
+description: |-
+  バスティーユが落ちる、ちょうど1年と1日前。フランスの空から、雹が降りました。
+  1788年7月13日、日曜日。雹の嵐が、フランスを横切ります。科学アカデミーが3人の学者に調べさせた報告では、分かっているだけで、被害を受けたのは1039の小教区、損失は約2500万リーヴル。1か所に雹が降っていたのは、7分から8分でした。8月8日、国王の政府は、全国三部会を翌年の5月1日に開くと発表します。その8日後の8月16日、国庫の支払いの一部が、現金ではなく、利子の付く紙の証券に変えられました。
+  国の金庫と空が、同じ夏に崩れた年。この1年を、史料から掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#フランス革命', '#世界史', '#歴史']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/france-if
+out: france_if_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 1788年（フランス革命の前の年）
+  title: "革命の1年前、空から《雹》が降った"
+now:
+  - {at: 1788年7月13日, text: "1788年7月13日　フランスの畑", point: 0}
+  - {at: 8月8日, text: "1788年8月　ヴェルサイユ", point: 1}
+timeline:
+  - {label: "7月"}
+  - {label: "8月"}
+cards:
+  - type: table
+    title: 雹の嵐（科学アカデミーの報告）
+    from: 被害を受けた小教区は
+    until: 8月8日
+    items:
+      - {at: 被害を受けた小教区は, text: "被害の小教区　1039"}
+      - {at: 損失は, text: "損失　約2500万リーヴル"}
+      - {at: 7分から8分, text: "1か所に降った時間　7〜8分"}
+    text_y: 0.72
+shots:
+  F11:
+    kind: ai
+    file: france-if/main/F11.jpg
+    focus: [0.5, 0.35]
+    move: down
+    must: 麦畑に迫る雹の嵐の雲
+  F11b:
+    kind: ai
+    file: france-if/main/F11.jpg
+    focus: [0.3, 0.7]
+    move: right
+    zoom: 0.12
+    must: 嵐の下の麦の穂
+  F08:
+    kind: ai
+    file: france-if/main/F08.jpg
+    focus: [0.75, 0.6]
+    move: left
+    must: 書斎の本と帳簿
+  F05:
+    kind: ai
+    file: france-if/main/F05.jpg
+    focus: [0.45, 0.55]
+    move: right
+    must: 畑の中の道を行く農民の後ろ姿
+  F11c:
+    kind: ai
+    file: france-if/main/F11.jpg
+    focus: [0.75, 0.45]
+    move: left
+    must: 遠くの暗い空と畑
+  F11d:
+    kind: ai
+    file: france-if/main/F11.jpg
+    focus: [0.5, 0.15]
+    move: up
+    zoom: 0.12
+    must: 暗い嵐の空
+  F03:
+    kind: ai
+    file: france-if/main/F03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: ろうそくの大広間と玉座
+  F08b:
+    kind: ai
+    file: france-if/main/F08.jpg
+    focus: [0.15, 0.75]
+    move: right
+    zoom: 0.12
+    must: 積んだ金貨
+  Necker:
+    kind: real
+    image: paintings/france_necker_duplessis.jpg
+    focus: [0.5, 0.4]
+    move: in
+    credit: "デュプレシにもとづく《ネッケルの肖像》（1781年ごろ。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 財務の大臣ネッケルの顔
+  F16:
+    kind: ai
+    file: france-if/main/F16.jpg
+    focus: [0.35, 0.5]
+    move: right
+    text_y: 0.76
+    must: 夕暮れの川
+lines:
+  # fact: france-if-40
+  - 語り: バスティーユの、ちょうど1年と1日前。フランスの空から、《!雹》が降った。
+    shot: F11
+    tone: 強調
+    pause: 0.12
+  # fact: france-if-40
+  - 語り: 1788年7月13日、日曜日。雹の嵐が、フランスを横切った。
+    shot: F11b
+    tone: 重い
+    pause: 0.12
+  # fact: france-if-40
+  - 語り: 科学アカデミーは、3人の学者に、被害を調べさせた。
+    shot: F08
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-40
+  - 語り: その報告では、分かっているだけで、被害を受けた小教区は、1039。教会ごとの、村の単位だ。
+    shot: F05
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-40
+  - 語り: 損失は、約2500万リーヴル。1か所に雹が降っていたのは、7分から8分だった。
+    shot: F11c
+    tone: 重い
+    pause: 0.12
+  # fact: france-if-41
+  - 語り: 8月8日、国王の政府は、全国三部会を、翌年の5月1日に開く、と発表する。
+    shot: F03
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-42
+  - 語り: その8日後、8月16日。国庫の支払いの一部が、現金ではなく、利子の付く紙の証券に変えられた。
+    shot: F08b
+    tone: 重い
+    pause: 0.12
+  # fact: france-if-43
+  - 語り: 8月24日、国王は、大臣のネッケルを呼び戻す。ネッケルの娘のスタール夫人は、国債の相場が、ひと朝で30パーセント上がった、と書いている。
+    shot: Necker
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 国の金庫と空が、同じ夏に崩れた。
+    shot: F11d
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: もしも、この年の空が穏やかだったら。翌年の革命は、起きなかったのか。
+    shot: F16
+    tone: 疑問
+    pause: 0.15

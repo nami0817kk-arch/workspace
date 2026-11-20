@@ -249,19 +249,68 @@ class AdMobAdService implements AdService {
     _ad = null;
     _adLoadedAt = null;
 
+    // 次回のために先読みしておく。
+    return showAndAwaitReward(ad, onClosed: () => unawaited(_load()));
+  }
+
+  /// 閉じる通知の後に、報酬の通知を待つ時間。
+  ///
+  /// 報酬の通知と閉じる通知は別々に届き、順番は決まっていない。閉じた
+  /// 時点で報酬が来ていなくても、少しだけ待ってから「見なかった」と決める。
+  static const Duration rewardAfterCloseGrace = Duration(seconds: 1);
+
+  /// リワード広告を出し、**閉じられるまで待って**から、報酬が付いたかを返す。
+  ///
+  /// **`ad.show(...)` を `await` しても広告は待てない。** あれが返るのは
+  /// 「ネイティブ側に表示を頼み終えた」時点で、報酬(`onUserEarnedReward`)も
+  /// 閉じる通知も後から届く。`await` の直後に報酬の有無を見ていた頃は、
+  /// 動画を最後まで見ても**常に「見なかった」になり、資金が入らなかった**。
+  /// 全画面広告([showInterstitialAd])と同じく、閉じる通知を `Completer` で待つ。
+  ///
+  /// 広告を差し替えて検査するため、インスタンスの状態に触れない形で切り出してある。
+  @visibleForTesting
+  static Future<bool> showAndAwaitReward(
+    RewardedAd ad, {
+    void Function()? onClosed,
+    Duration rewardGrace = rewardAfterCloseGrace,
+  }) async {
     var earned = false;
+    var failedToShow = false;
+    final rewarded = Completer<void>();
+    final closed = Completer<void>();
+
+    void finish(RewardedAd ad) {
+      if (closed.isCompleted) return;
+      ad.dispose();
+      onClosed?.call();
+      closed.complete();
+    }
+
     ad.fullScreenContentCallback = FullScreenContentCallback(
-      onAdDismissedFullScreenContent: (ad) {
-        ad.dispose();
-        unawaited(_load()); // 次回のために先読みしておく
-      },
+      onAdDismissedFullScreenContent: finish,
       onAdFailedToShowFullScreenContent: (ad, _) {
-        ad.dispose();
-        unawaited(_load());
+        failedToShow = true;
+        finish(ad);
       },
     );
 
-    await ad.show(onUserEarnedReward: (_, __) => earned = true);
+    try {
+      await ad.show(onUserEarnedReward: (_, __) {
+        earned = true;
+        if (!rewarded.isCompleted) rewarded.complete();
+      });
+    } catch (_) {
+      // 表示を頼むこと自体に失敗した。閉じる通知は来ないので、ここで終える。
+      failedToShow = true;
+      finish(ad);
+    }
+    await closed.future;
+
+    // 報酬の通知が閉じる通知より遅れて届くことがある。表示に失敗したときは
+    // 報酬が来ることはないので待たない。
+    if (!earned && !failedToShow) {
+      await rewarded.future.timeout(rewardGrace, onTimeout: () {});
+    }
     return earned;
   }
 

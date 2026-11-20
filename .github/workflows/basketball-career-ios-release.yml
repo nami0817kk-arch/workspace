@@ -1,4 +1,4 @@
-# バスケ育成の App Store 提出用 iOS リリースビルド（soccer-ios-release.yml を写したもの）。
+# バスケデッキの App Store 提出用 iOS リリースビルド（soccer-ios-release.yml を写したもの）。
 #
 # サカマネと同じチームなので、配信用証明書（IOS_DIST_CERT_*）・チームID・App Store Connect API キーは共用。
 # アプリごとに違うのは、プロビジョニングプロファイルと AdMob のIDだけ（BASKETBALL_ で始まる Secrets）。
@@ -8,7 +8,7 @@
 # GitHub Secrets から復元し、ジョブ終了時にランナーから消す。
 # 鍵の作り方 (Mac なしで CSR を作る手順を含む) と Secrets の一覧は
 # projects/soccer-manager/docs/RELEASE_GUIDE.md と ios-app-release スキルを参照。
-name: Build バスケ育成 (iOS Release)
+name: Build バスケデッキ (iOS Release)
 
 on:
   push:
@@ -136,8 +136,8 @@ jobs:
           for page in privacy support; do
             body=$(curl -fsSL "$LEGAL_BASE_URL/$page.html") \
               || { echo "::error::$LEGAL_BASE_URL/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
-            grep -q "バスケ育成" <<<"$body" \
-              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身がバスケ育成のページではありません。"; exit 1; }
+            grep -q "バスケデッキ" <<<"$body" \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身がバスケデッキのページではありません。"; exit 1; }
           done
           # AdMob が app-ads.txt を確かめられる状態か（robots.txt が HTML だと「アプリを確認」が通らない。2026-10-02）
           bash ../../scripts/check-app-site.sh "${LEGAL_BASE_URL#https://}" pub-6409014819339195

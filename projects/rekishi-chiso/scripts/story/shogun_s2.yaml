@@ -1,0 +1,167 @@
+# 物語完結型ショート 徳川将軍の1日 s2（2026-11-06）。本編 scripts/shogun-story.yaml（11/9 19:00 公開、https://youtu.be/-kxBsJCne_k）の第2章から。11/10 12:30 公開。
+# 形式は ooku_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵と《東照大権現像》。新しい絵は作らない。
+# 切り口：朝の膳は質素（汁・向付・平＋二の膳）、毎朝の鱚、毒見の道すじと、隣の炉と鍋。髪と医師（s1）には踏み込まない。
+#   吉宗の1日2食（shogun-16）は tease の答えとして本編に残す。家斉の献立・秤には触れない。
+# どの将軍の記録か：膳の話は『千代田城大奥』（1892）＝12代家慶・13代家定のころの元御小姓の話。毒見の始まりは家康（『東照宮御実紀附録』）。
+# 事実カード：shogun-10・01・09・12・14。言い方は本編のまま。
+#   ・「冷めたまま出したとは限らない」は本編の言い方どおり（「温め直した」とは書いていない。炉と鍋があっただけ）。
+# 理解テスト4問：
+#   ①誰の話か：幕末の徳川将軍（家慶・家定のころ）の朝の膳
+#   ②何が出たか：汁・向付・平、二の膳に吸物と皿。毎朝のように鱚を塩焼きと漬け焼きの両様で。1日・15日・28日は尾頭付き
+#   ③どう届いたか：御膳所で作り、笹の間で御膳奉行が毒見、御小納戸が次の間へ。毒見の役の始まりは家康
+#   ④どうだったか：次の間に大きな炉と鍋があり、冷めたまま出したとは限らない
+title: 徳川将軍｜朝ご飯は、豪華だったのか
+yt_title: 徳川将軍の朝ご飯は豪華だったのか　毎朝の鱚と、毒見を通って届く膳の道すじ
+description: |-
+  天下を治めた徳川将軍の朝ご飯は、豪華だったのでしょうか。
+  明治25年（1892年）の本『千代田城大奥』に残る、12代家慶や13代家定のころの元御小姓の話では、もともと将軍の食べ物は質素なものでした。朝は汁と向付と平、二の膳に吸物と皿があるだけ。その皿に毎朝のように載ったのが鱚で、塩焼きと漬け焼きを両方つけました。毎月1日・15日・28日だけは、鱚の代わりに鯛か平目の尾頭付きです。膳は台所の御膳所で作られ、笹の間で御膳奉行が毒見をします。毒見の役の始まりは家康で、大坂の陣のとき伊達政宗に食事に用心するよう勧められたためだと『東照宮御実紀附録』は書いています。毒見の済んだ膳は御小納戸が将軍の部屋の次の間へ運び、そこには大きな炉があって、鍋がいくつも掛けてありました。将軍の食事は冷めていたとよく言われますが、冷めたまま出したとは限らなかったようです。
+  では、8代吉宗は、1日に何回食べていたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川将軍', '#日本史', '#江戸時代']
+ai_images: true
+ai_disclosure: この動画の将軍の暮らしの場面・室内・人物の画像は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。将軍の姿も特定の肖像を写したものではありません。
+art_dir: out/story/shogun
+out: shogun_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 徳川将軍の朝の膳（家慶・家定のころ）
+  title: "将軍の朝ご飯は、《豪華だったのか》"
+now:
+  - {at: 将軍の朝ご飯は, text: "幕末　江戸城の中奥", point: 1}
+  - {at: 毒見の役の始まりは, text: "1614年　大坂の陣", point: 0}
+  - {at: 毒見の済んだ膳は, text: "幕末　江戸城の中奥", point: 1}
+timeline:
+  - {label: "1614"}
+  - {label: "幕末"}
+cards:
+  - type: table
+    title: 朝の膳が届くまで
+    from: 毒見の済んだ膳は
+    until: 将軍の食事は
+    items:
+      - {at: 毒見の済んだ膳は, text: "笹の間　毒見"}
+      - {at: 次の間へ, text: "次の間　炉と鍋"}
+    text_y: 0.70
+shots:
+  G03:
+    kind: ai
+    file: shogun/main/G03.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 漆塗りの朝の膳
+  S10:
+    kind: ai
+    file: shogun/main/S10.jpg
+    focus: [0.6, 0.55]
+    move: right
+    must: 灯の下の書物
+  G03L:
+    kind: ai
+    file: shogun/main/G03.jpg
+    focus: [0.33, 0.5]
+    move: left
+    must: 汁と飯の椀（膳の左）
+  G03R:
+    kind: ai
+    file: shogun/main/G03.jpg
+    focus: [0.72, 0.55]
+    move: in
+    must: 皿の焼き魚
+  S03:
+    kind: ai
+    file: shogun/main/S03.jpg
+    focus: [0.45, 0.6]
+    move: right
+    must: 並ぶ黒塗りの膳
+  G04:
+    kind: ai
+    file: shogun/main/G04.jpg
+    focus: [0.68, 0.5]
+    move: in
+    must: 膳の毒見をする役人
+  Ieyasu:
+    kind: real
+    image: paintings/ieyasu_portrait_toshodaigongen.jpg
+    focus: [0.5, 0.4]
+    move: up
+    credit: "《東照大権現像》（徳川家康の肖像。パブリックドメイン）"
+    text_y: 0.80
+    must: 家康の肖像
+  G05:
+    kind: ai
+    file: shogun/main/G05.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 膳を運ぶ係
+  G05R:
+    kind: ai
+    file: shogun/main/G05.jpg
+    focus: [0.82, 0.55]
+    move: in
+    must: 次の間の炉と鍋
+  S04:
+    kind: ai
+    file: shogun/main/S04.jpg
+    focus: [0.5, 0.55]
+    move: left
+    must: 灯のともる座敷と膳
+lines:
+  - 語り: 将軍の朝ご飯は、豪華だったのか。
+    shot: G03
+    tone: 疑問
+    pause: 0.12
+  # fact: shogun-10
+  - 語り: 『千代田城大奥』に残る、12代家慶や、13代家定のころの、元の御小姓の話。もともと、将軍の食べ物は、《!質素なもの》だ。
+    shot: S10
+    tone: 強調
+    pause: 0.12
+  # fact: shogun-10
+  - 語り: 朝は、汁と、向付と、平。二の膳に、吸物と、皿があるだけ。
+    shot: G03L
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-01, shogun-08
+  - 語り: その皿に、毎朝のように載ったのが、鱚。塩焼きと、漬け焼きを、両方つけた。
+    shot: G03R
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-09
+  - 語り: 毎月1日、15日、28日だけは、鱚の代わりに、鯛か平目の、尾頭付きだ。
+    shot: S03
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-12
+  - 語り: 膳は、台所で作られ、笹の間で、御膳奉行が、《毒見》をする。
+    shot: G04
+    tone: 重い
+    pause: 0.12
+  # fact: shogun-14
+  - 語り: 毒見の役の始まりは、家康だと、『東照宮御実紀附録』は書く。大坂の陣のとき、伊達政宗に、用心を勧められたという。
+    shot: Ieyasu
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-12
+  - 語り: 毒見の済んだ膳は、将軍の部屋の、次の間へ運ばれる。そこには、大きな炉があって、鍋が、いくつも掛けてあった。
+    shot: G05
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  # fact: shogun-12
+  - 語り: 将軍の食事は、冷めていた、とよく言われる。けれど、すぐ隣に、《炉と鍋》があった。
+    shot: G05R
+    tone: 重い
+    pause: 0.15
+  # fact: shogun-16（答えは本編の第2章：1日2食）
+  - 語り: では、8代吉宗は、1日に、何回、食べていたのか。
+    shot: S04
+    tone: 疑問
+    pause: 0.15

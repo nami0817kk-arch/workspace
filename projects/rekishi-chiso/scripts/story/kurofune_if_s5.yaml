@@ -1,0 +1,146 @@
+# 物語完結型ショート 黒船（もしも）s5（2026-10-31）。本編 scripts/kurofune-if-story.yaml（11/4 12:00 公開、https://youtu.be/QRZZXxHicQ4）から。切り口：ペリーの1か月半後に来たロシア（プチャーチン・下田の津波・ヘダ号・国境）
+# 形式は genkou_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。津波は町と海の景色だけ・人は描かない（本編の決まり）。
+# 絵は本編の AI 絵（out/story/kurofune-if/main/K01〜K15。人物は描かない）。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/黒船_facts_20261031.yaml）：kurofune-if-60・61・62・63・64（本編 第6章の言い方のまま）
+# ・計算のやり直し：ペリー 1853年7月8日（嘉永6年6月3日）→ プチャーチン 8月22日ごろ（嘉永6年7月18日）＝45日＝「約1か月半後」。
+#   和暦も確かめた：6月3日＝7月8日なら6月1日＝7月6日、6月が30日の月なら7月1日＝8月5日、7月18日＝8月22日。本編と合う。
+# ・交渉の開始 1854年12月22日、津波は翌日の12月23日（本編どおり）。下田の841戸・無事は高台の4戸（下田市の資料）。日露和親条約 1855年2月7日。
+# ・「何十回も回転した、と伝わる」は尺のため外す。ヘダ号は Russian Life の記事と出どころを言う。
+# 理解テスト4問：
+#   ①誰の話か：ロシアのプチャーチンの艦隊
+#   ②いつ・どこで何が：ペリーの約1か月半後の1853年8月22日ごろ長崎へ。1854年12月22日に下田で交渉を始め、翌日、津波
+#   ③どうなったか：ディアナ号は沈み、日本の船大工が約2か月半でヘダ号を造った
+#   ④結末：1855年2月7日に日露和親条約で国境を決めた。もしもペリーが来なかったら、を問いで閉じる
+title: 黒船｜ペリーの1か月半後、ロシアも来ていた
+yt_title: ペリーの約1か月半後にロシアのプチャーチンも来ていた　下田の津波とヘダ号
+description: |-
+  ペリーの約1か月半後、ロシアの艦隊も、日本に来ていました。
+  プチャーチンの艦隊が長崎に着いたのは、1853年8月22日ごろ。ロシアには、ペリーに無い目的がありました。国境です。交渉は1854年12月22日に下田で始まり、その翌日、安政東海地震の津波が下田を襲います。下田市の資料によると、841戸が全壊・流出し、無事だったのは高台の4戸だけでした。ロシアの軍艦ディアナ号は、修理に向かう途中で沈み、日本の船大工が、ロシア人技師の図面をもとに、約2か月半で洋式の帆船ヘダ号を造った、と雑誌 Russian Life は書いています。1855年2月7日の日露和親条約で、択捉島は日本、得撫島から北の千島はロシアと決まりました。
+  もしも、ペリーが来なかったら。最初に日本と条約を結んだのは、どの国だったのか。この問いを、史料から掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#黒船', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/kurofune-if
+out: kurofune_if_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: プチャーチン（ロシアの提督）
+  title: "ペリーの1か月半後、《ロシア》も来ていた"
+now:
+  - {at: 1853年8月22日, text: "1853年8月　長崎", point: 0}
+  - {at: 1854年の, text: "1854年12月　下田", point: 1}
+  - {at: 1855年2月7日, text: "1855年2月　日露和親条約", point: 2}
+timeline:
+  - {label: "1853"}
+  - {label: "1854"}
+  - {label: "1855"}
+cards:
+  - type: table
+    title: 下田を襲った津波（下田市の資料）
+    from: 下田市の資料
+    until: 港にいた
+    items:
+      - {at: 841戸, text: "全壊・流出　841戸"}
+      - {at: 高台の4戸, text: "無事　高台の4戸だけ"}
+    text_y: 0.70
+shots:
+  K13:
+    kind: ai
+    file: kurofune-if/main/K13.jpg
+    focus: [0.6, 0.35]
+    move: in
+    must: 丘から見下ろす港と帆船
+  K13b:
+    kind: ai
+    file: kurofune-if/main/K13.jpg
+    focus: [0.35, 0.6]
+    move: right
+    must: 港を見下ろす瓦屋根と松
+  K12:
+    kind: ai
+    file: kurofune-if/main/K12.jpg
+    focus: [0.6, 0.5]
+    move: left
+    must: 冬の朝の港町の瓦屋根と小舟
+  K12b:
+    kind: ai
+    file: kurofune-if/main/K12.jpg
+    focus: [0.3, 0.6]
+    move: in
+    must: 港町の屋根
+  K11:
+    kind: ai
+    file: kurofune-if/main/K11.jpg
+    focus: [0.6, 0.5]
+    move: right
+    must: 岬の下に停まる帆船
+  K14:
+    kind: ai
+    file: kurofune-if/main/K14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 浜で造りかけの木造船と、積まれた材木
+  K15:
+    kind: ai
+    file: kurofune-if/main/K15.jpg
+    focus: [0.45, 0.5]
+    move: left
+    must: 夕暮れの岬と静かな海
+  K01:
+    kind: ai
+    file: kurofune-if/main/K01.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 夜明けの湾の入り口と沖の小さな船影
+lines:
+  # fact: kurofune-if-61, kurofune-if-60
+  - 語り: 《!ロシア》の艦隊も、ペリーの約1か月半後に、日本に来ていた。
+    shot: K13
+    tone: 強調
+    pause: 0.12
+  # fact: kurofune-if-61, kurofune-if-64
+  - 語り: 1853年8月22日ごろ、プチャーチンの艦隊が、長崎に着いた。ロシアには、ペリーに無い目的があった。国境を決めることだ。
+    shot: K13b
+    tone: しみじみ
+    pause: 0.12
+  # fact: kurofune-if-62
+  - 語り: 交渉は、1854年の、12月22日に、下田で始まった。翌日の12月23日、安政東海地震の津波が、下田を襲う。
+    shot: K12
+    tone: 重い
+    pause: 0.12
+  # fact: kurofune-if-62
+  - 語り: 下田市の資料によると、841戸が全壊し、流れ出た。無事だったのは、高台の4戸だけだ。
+    shot: K12b
+    tone: 重い
+    pause: 0.12
+  # fact: kurofune-if-63
+  - 語り: 港にいたロシアの軍艦ディアナ号は、修理に向かう途中で、沈んだ。
+    shot: K11
+    tone: 重い
+    pause: 0.12
+  # fact: kurofune-if-63
+  - 語り: 日本の船大工が、ロシア人技師の図面をもとに、約2か月半で、洋式の帆船ヘダ号を造った。雑誌のロシアン・ライフが、そう書いている。
+    shot: K14
+    tone: しみじみ
+    pause: 0.12
+  # fact: kurofune-if-64
+  - 語り: 1855年2月7日、日露和親条約。択捉島は日本、得撫島から北の千島はロシアと、国境が決まった。
+    shot: K15
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: もしも、ペリーが来なかったら。最初に日本と条約を結んだのは、どの国だったのか。
+    shot: K01
+    tone: 疑問
+    pause: 0.15

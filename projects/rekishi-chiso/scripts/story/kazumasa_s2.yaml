@@ -1,0 +1,171 @@
+# 物語完結型ショート 石川数正 s2（2026-10-26）。本編 scripts/kazumasa-story.yaml の第5章（16日後の大地震）から。投稿しない。
+# 形式は oichi_s10.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/kazumasa/main/K*.jpg）を縦に切り出す。
+# 事実カード（dev/output/rekishi-chiso/research/石川数正_facts_20261026.yaml）：kazumasa-01・04・26・30・39・50（M7.8〜8.0 の kazumasa-12 は長さのため外した）
+#   ・秀吉の指図（正月15日より前に大垣城まで出向く）は『一柳家文書』（香原斗志・呉座勇一が紹介。kazumasa-30）。
+#   ・大垣城の全壊・焼失は岐阜県防災課（kazumasa-26）。帰雲城は「埋まったと伝わる」（300人は言わない＝伝承の数）。
+#   ・規模 M7.8〜8.0 は松浦律子 2011 の見積もり（出どころ1つ → 研究者の名で言う）。秀吉が大坂へ退いたのはフロイスの書簡（kazumasa-39、1つ → 「と書いている」）。
+#   ・地震が徳川攻めを止めたか：鎌田浩毅・呉座勇一は止めたとし、眞邊明人は疑問（kazumasa-04）→「見方は分かれている」。
+#   ・日付は和暦（天正13年11月13日・11月29日・天正14年正月）。地震だけ「西暦では1586年1月」を足す（本編と同じ）。
+# 理解テスト4問：
+#   ①誰の話か：石川数正（徳川家康の重臣）が秀吉のもとへ走った、その直後の話
+#   ②いつ・どこで何が：天正13年11月29日の夜、中部から近畿を天正地震が襲った（出奔の16日後）
+#   ③秀吉は何を決めていたか：翌年の正月に家康を討つ。正月15日より前に大垣城まで出向く（一柳家文書）
+#   ④どうなったか：大垣城は全壊して焼け、秀吉も大坂へ退いた。正月の徳川攻めは行われなかった（地震が止めたかは見方が分かれる）
+title: 石川数正｜出奔の16日後、大地震が来た
+yt_title: 石川数正が去って16日後、秀吉の徳川攻めの前に天正地震が来た【大垣城】
+description: |-
+  天正13年11月13日の夜、徳川家康の重臣・石川数正は、岡崎城を出て、羽柴秀吉のもとへ移りました。
+  数正を迎えた秀吉は、翌年の正月に家康を討つと決めます。『一柳家文書』には、正月15日より前に大垣城まで出向くので準備を怠るな、という指図が残っています。
+  出奔の16日後、天正13年11月29日の夜、天正地震が中部から近畿を襲いました。岐阜県の資料によれば、大垣城は全壊して焼けました。
+  正月の徳川攻めは、行われませんでした。地震が止めたのか、秀吉が別の道を選んだのか。研究者の見方は分かれています。
+ai_images: true
+art_dir: out/story/kazumasa
+out: kazumasa_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 石川数正（徳川家康の重臣）
+  title: "出奔の《16日後》、大地震が来た"
+now:
+  - {at: 家康の重臣, text: "天正13年　岡崎城", point: 0}
+  - {at: 11月13日, text: "11月13日　岡崎城", point: 0}
+  - {at: 翌年の正月, text: "翌年正月　大垣城", point: 2}
+  - {at: 11月29日, text: "11月29日　中部・近畿", point: 1}
+  - {at: 飛騨では, text: "11月29日　飛騨", point: 1}
+  - {at: 正月の徳川攻めは, text: "天正14年正月", point: 2}
+timeline:
+  - {label: "11/13"}
+  - {label: "11/29"}
+  - {label: "正月"}
+cards:
+  - type: year                           # 16日後（赤い下線が左から引かれる）
+    from: 11月29日
+    until: 岐阜県の
+    big: 16日後
+    sub: 天正地震（天正13年11月29日の夜）
+    text_y: 0.70
+shots:
+  K11:                                   # 1文目：地震で崩れる城下と炎
+    kind: ai
+    file: kazumasa/main/K11.jpg
+    focus: [0.45, 0.5]
+    move: in
+    ease: fast
+    must: 崩れる城下と遠くの炎
+  K10:                                   # 天正13年11月13日の夜、岡崎城を出る
+    kind: ai
+    file: kazumasa/main/K10.jpg
+    focus: [0.62, 0.55]
+    move: left
+    must: 夜道を行く一騎
+  K05:                                   # 数正を迎えた秀吉
+    kind: ai
+    file: kazumasa/main/K05.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 金の襖の前の秀吉
+  K09:                                   # 『一柳家文書』の指図＝書状
+    kind: ai
+    file: kazumasa/main/K09.jpg
+    focus: [0.4, 0.55]
+    move: right
+    must: 文机の書状
+  K11w:                                  # 天正13年11月29日の夜：崩れる町と逃げる人の影
+    kind: ai
+    file: kazumasa/main/K11.jpg
+    focus: [0.5, 0.6]
+    move: down
+    must: 崩れる家々と逃げる人の影
+  K11f:                                  # 大垣城は全壊して焼けた（炎に寄る）
+    kind: ai
+    file: kazumasa/main/K11.jpg
+    focus: [0.72, 0.35]
+    move: in
+    zoom: 0.16
+    must: 炎と崩れた城下
+  K12:                                   # 飛騨の帰雲城：山崩れ
+    kind: ai
+    file: kazumasa/main/K12.jpg
+    focus: [0.45, 0.5]
+    move: in
+    must: 山崩れの跡と谷川
+  K05b:                                  # フロイス：御殿が激しく揺れた（崩れる町の奥の城へ寄る）
+    kind: ai
+    file: kazumasa/main/K11.jpg
+    focus: [0.22, 0.4]
+    move: in
+    zoom: 0.16
+    must: 揺れる城と崩れた町
+  K08:                                   # 正月の徳川攻めは行われなかった：書院の家康
+    kind: ai
+    file: kazumasa/main/K08.jpg
+    focus: [0.2, 0.5]
+    move: right
+    must: 書院に座る家康
+  K04:                                   # 最後の問い：家康
+    kind: ai
+    file: kazumasa/main/K04.jpg
+    focus: [0.5, 0.3]
+    move: in
+    zoom: 0.18
+    text_y: 0.74
+    must: 家康の顔
+lines:
+  # fact: kazumasa-01, kazumasa-26, kazumasa-30
+  - 語り: 家康の重臣、石川数正が秀吉のもとへ走って《16日後》、秀吉が向かうはずの城が、《!地震で崩れた》。
+    shot: K11
+    tone: 強調
+  # fact: kazumasa-01
+  - 語り: 11月13日の夜、数正は、岡崎城を出て、秀吉の側へ移った。
+    shot: K10
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-30
+  - 語り: 数正を迎えた秀吉は、翌年の正月に、家康を討つと決めた。
+    shot: K05
+    tone: 重い
+    pause: 0.12
+  # fact: kazumasa-30
+  - 語り: 『一柳家文書』には、秀吉の指図が残る。正月15日より前に、大垣城まで出向く。準備を怠るな、と。
+    shot: K09
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-26, kazumasa-12
+  - 語り: その準備のさなか、天正13年、11月29日の夜、大きな地震が、中部から近畿を襲った。天正地震だ。
+    shot: K11w
+    tone: 重い
+    pause: 0.15
+    dip: true
+  # fact: kazumasa-26, kazumasa-30
+  - 語り: 岐阜県の資料によれば、秀吉が向かうはずだった大垣城は、《全壊して焼けた》。
+    shot: K11f
+    tone: 重い
+    pause: 0.15
+  # fact: kazumasa-26, kazumasa-50
+  - 語り: 飛騨では、帰雲城が、山崩れで城下ごと埋まったと伝わる。
+    shot: K12
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-39
+  - 語り: 宣教師のフロイスは、秀吉も、御殿が激しく揺れて、急いで大坂へ退いた、と書いている。
+    shot: K05b
+    tone: しみじみ
+    pause: 0.12
+  # fact: kazumasa-04
+  - 語り: 正月の徳川攻めは、《行われなかった》。地震が止めたのか、秀吉が別の道を選んだのか。研究者の見方は、分かれている。
+    shot: K08
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたなら、この地震を、家康の《運》と呼びますか。
+    shot: K04
+    tone: 疑問
+    pause: 0.15

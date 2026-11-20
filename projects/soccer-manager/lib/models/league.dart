@@ -57,9 +57,12 @@ class StandingRow {
   int goalsFor = 0;
   int goalsAgainst = 0;
 
+  /// 規則違反による勝ち点の増減(剥奪は負)。
+  int adjustment = 0;
+
   StandingRow({required this.teamId});
 
-  int get points => won * 3 + draw;
+  int get points => won * 3 + draw + adjustment;
   int get goalDiff => goalsFor - goalsAgainst;
 }
 
@@ -68,7 +71,15 @@ class League {
   List<Fixture> fixtures;
   int season;
 
-  League({required this.teams, required this.fixtures, this.season = 1});
+  /// チームごとの勝ち点の増減(規則違反の剥奪)。順位表にだけ効く。
+  final Map<String, int> pointsAdjustments;
+
+  League({
+    required this.teams,
+    required this.fixtures,
+    this.season = 1,
+    Map<String, int>? pointsAdjustments,
+  }) : pointsAdjustments = pointsAdjustments ?? {};
 
   Fixture? get nextUnplayedFixture {
     final unplayed = fixtures.where((f) => f.result == null).toList();
@@ -154,8 +165,13 @@ class League {
     return map;
   }
 
-  Map<String, StandingRow> computeStandings() =>
-      _accumulate(teams.map((t) => t.id).toList(), fixtures);
+  Map<String, StandingRow> computeStandings() {
+    final map = _accumulate(teams.map((t) => t.id).toList(), fixtures);
+    pointsAdjustments.forEach((id, delta) {
+      map[id]?.adjustment = delta;
+    });
+    return map;
+  }
 
   /// 勝点で並んだチーム群の順位を、まず当該チーム間の直接対決成績
   /// (勝点→得失点差→得点数)で決め、それでも並ぶ場合のみ全体の
@@ -206,6 +222,7 @@ class League {
             .toList(),
         'fixtures': fixtures.map((f) => f.toJson()).toList(),
         'season': season,
+        if (pointsAdjustments.isNotEmpty) 'pointsAdjustments': pointsAdjustments,
       };
 
   factory League.fromJson(Map<String, dynamic> json) => League(
@@ -216,5 +233,7 @@ class League {
             .map((e) => Fixture.fromJson(e as Map<String, dynamic>))
             .toList(),
         season: json['season'] as int? ?? 1,
+        pointsAdjustments: (json['pointsAdjustments'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
       );
 }

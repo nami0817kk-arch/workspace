@@ -213,7 +213,7 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('不満度', 'Happiness'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '選手のクラブへの満足度(0-100)。低いほど移籍を希望しやすくなる。出場機会・週俸・チーム成績・性格によって変動し、性格ごとの閾値を下回ると移籍希望のフラグが立つ。',
+            '選手のクラブへの満足度(0-100)。低いほど移籍を希望しやすくなる。出場機会・年俸・チーム成績・性格によって変動し、性格ごとの閾値を下回ると移籍希望のフラグが立つ。',
             'How content he is at the club (0-100). The lower it is, the more likely he asks to leave. Minutes, wages, results and his personality all move it, and each personality has its own threshold for requesting a move.'),
       ),
       GlossaryEntry(
@@ -245,11 +245,11 @@ List<GlossaryEntry> get glossaryEntries => [
             'How settled he is in a position that is not his own (0-100). It climbs with minutes there, and gradually eats away at the penalty for playing out of position.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('週俸', 'Wage'),
+        term: Tr.pick('年俸', 'Salary'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '選手に毎週支払う給料(万円)。契約更新の交渉で決まり、性格ごとの賃金感応度によって要求額が変わる。',
-            'What he is paid each week. Set in contract talks, and how hard he pushes depends on his personality.'),
+            '選手に1年で支払う給料。市場価値に応じて決まり(価値が高いほど高い)、毎節その年の節の数で割って支払う。契約更新の交渉で上がり、性格ごとの賃金感応度によって要求額が変わる。',
+            'What he is paid a year. It follows his market value and is paid out over the matchdays. Contract talks raise it, and how hard he pushes depends on his personality.'),
       ),
       GlossaryEntry(
         term: Tr.pick('契約残り年数', 'Years remaining'),
@@ -307,7 +307,7 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('ローン(期限付き移籍)', 'Loan'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '一定期間だけ他クラブへ選手を貸し出す/借り受ける制度。ローン中の選手の週俸は貸出先が負担し、期間満了で自動的に元クラブへ復帰する。買取オプション付きなら期間中に完全移籍へ切り替えられる。',
+            '一定期間だけ他クラブへ選手を貸し出す/借り受ける制度。ローン中の選手の年俸は貸出先が負担し、期間満了で自動的に元クラブへ復帰する。買取オプション付きなら期間中に完全移籍へ切り替えられる。',
             'Sending a player elsewhere, or taking one in, for a fixed spell. The receiving club pays his wages, and he returns automatically when it ends. With an option to buy, it can be made permanent at any point.'),
       ),
       GlossaryEntry(
@@ -363,20 +363,6 @@ List<GlossaryEntry> get glossaryEntries => [
             'How quickly you play (0-100). Quicker adds attacking threat, but tires the side.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('メンター', 'Mentor'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '若手選手に付ける指導役のベテラン選手(28歳以上)。メンティーの成長率にボーナスが付き、メンター自身も指導のやりがいから士気が少し上がる。',
-            "An older player (28 or over) paired with a young one. The younger man grows faster, and the mentor's own morale lifts a little from the responsibility."),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('ユースのメンター', 'Academy mentor'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            'ユースの有望株に付ける一軍のベテラン(28歳以上)。施設での成長が速くなり、ユースでは練習では身に付かない性格特性を習得する道が開ける。1人のベテランが見られるのは1人だけで、一軍の若手のメンターとは兼任できない。',
-            "A first-team player of 28 or over, paired with an academy prospect. He grows faster in the academy, and it opens the only route to a personality trait while he is still there. A veteran can only look after one player, and cannot mentor a first-teamer at the same time."),
-      ),
-      GlossaryEntry(
         term: Tr.pick('生え抜き', 'Academy graduate'),
         category: GlossaryCategory.club,
         description: Tr.pick(
@@ -422,22 +408,15 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('プロ契約(昇格)', 'First professional contract'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う週俸と契約金(一括)が発生する。契約金が払えない、または週給予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
+            'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う年俸と契約金(一括)が発生する。契約金が払えない、または給与予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
             "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing fee. Without the fee or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
       ),
       GlossaryEntry(
         term: Tr.pick('有望株の流出', 'Losing a prospect'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '19歳を過ぎた有望株は出場機会を求め、そのままにしておくとユースを去る。20歳を過ぎるとその確率は上がる。伸びしろの大きい選手は他クラブに引き抜かれ、伸び悩んだ選手は自分から去る。いずれも育成補償金が入る。メンターを付ける、ユース施設を上げる、一軍に昇格させる、のいずれかで引き止められる。',
-            'Past 19, a prospect wants first-team football and will leave the academy if nothing changes; past 20 it happens more often. The ones with room to grow get poached, the ones who stalled walk away. Either way you receive a development fee. A mentor, a better academy or a promotion to the first team will keep him.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('特訓ドリル', 'Focus drill'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            'チーム/個別のトレーニング方針とは別に、狙った能力値を集中的に伸ばす個別設定。1人あたり2つまで指定でき、同時に指定できる人数にはヘッドコーチのレベルに応じた上限がある。',
-            "Separate from the squad and individual focus, this drives one specific attribute hard. Up to two per player, with a cap on how many players at once that rises with your head coach's level."),
+            '19歳を過ぎた有望株は出場機会を求め、そのままにしておくとユースを去る。20歳を過ぎるとその確率は上がる。伸びしろの大きい選手は他クラブに引き抜かれ、伸び悩んだ選手は自分から去る。いずれも育成補償金が入る。ユース施設を上げる、一軍に昇格させる、のどちらかで引き止められる。',
+            'Past 19, a prospect wants first-team football and will leave the academy if nothing changes; past 20 it happens more often. The ones with room to grow get poached, the ones who stalled walk away. Either way you receive a development fee. A better academy or a promotion to the first team will keep him.'),
       ),
       GlossaryEntry(
         term: Tr.pick('全体練習', 'General training'),
@@ -506,7 +485,7 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('スカッド・ステータス', 'Squad status'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '選手に約束する出場機会の立場(キープレイヤー/主力/ローテーション/育成枠)。上の立場ほどベンチに置いたときの不満が大きく、契約交渉で求める週給も高くなる。選手詳細画面で設定する。',
+            '選手に約束する出場機会の立場(キープレイヤー/主力/ローテーション/育成枠)。上の立場ほどベンチに置いたときの不満が大きく、契約交渉で求める給与も高くなる。選手詳細画面で設定する。',
             'What you promise a player about his minutes: key player, first team, rotation or prospect. The higher the billing, the more he resents the bench and the more he asks for in wages. Set from his own page.'),
       ),
       GlossaryEntry(
@@ -517,10 +496,10 @@ List<GlossaryEntry> get glossaryEntries => [
             'How many came to the match: your stadium capacity times a turnout rate that moves with your league position, the board\'s confidence and your ticket prices, and which is lower the further down the pyramid you are. Matchday income follows from it, so a bad run thins the bank balance too.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('週給予算', 'Wage budget'),
+        term: Tr.pick('給与予算', 'Wage budget'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            '理事会が設定する週給総額の上限。シーズン開始時にディビジョンと現在の人件費から決まり、上限を超える新規獲得はブロックされる。クラブ経営画面で使用状況を確認できる。',
+            '理事会が設定する給与の総額の上限。シーズン開始時にディビジョンと現在の人件費から決まり、上限を超える新規獲得はブロックされる。クラブ経営画面で使用状況を確認できる。',
             'The ceiling the board puts on your total weekly wages. It is set at the start of the season from your division and current bill, and any signing that would break it is blocked. The finances screen shows where you stand.'),
       ),
       GlossaryEntry(
@@ -557,13 +536,6 @@ List<GlossaryEntry> get glossaryEntries => [
         description: Tr.pick(
             '選手の総合力を節送りごとに記録した週次の推移。選手詳細画面に折れ線グラフで表示され、伸びている選手・停滞している選手が一目で分かる。自クラブの選手とユース昇格候補が対象で、概ね1シーズン分を保持する。',
             "A weekly record of a player's overall, matchday by matchday. His page draws it as a line, so you can see at a glance who is climbing and who has stalled. Kept for your own players and academy prospects, roughly a season's worth."),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('育成アドバイザー', 'Development adviser'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            'コーチ陣が育成面で手を打つべき選手を挙げてくれるトレーニング画面の提案。疲労が濃い選手、実戦感覚が落ちて成長が鈍っている選手、伸びしろが手つかずの若手(特訓ドリル・育成プラン未設定)、メンターのいない若手を検知する。',
-            'Your coaches flagging players who need attention, shown on the training screen. It picks up heavy fatigue, growth stalling from lost sharpness, young players with untouched potential and no drill or plan set, and young players without a mentor.'),
       ),
       GlossaryEntry(
         term: Tr.pick('戦術スタイル', 'Style of play'),
@@ -643,13 +615,6 @@ List<GlossaryEntry> get glossaryEntries => [
             'Only a handful of names change each week. A target you have your eye on will usually still be there next week, though not forever.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('育成プラン(目標ロール)', 'Development plan'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '選手ごとに目標とするロール(プレースタイル)を設定する仕組み。週次トレーニングでそのロールが重視する能力値が優先的に伸びる。ポジションの大分類に合うロールのみ設定できる。',
-            'Setting a target role for a player. Weekly training then favours the attributes that role values. You can only choose roles that suit his position group.'),
-      ),
-      GlossaryEntry(
         term: Tr.pick('勝ち上がり賞金', 'Progression prize money'),
         category: GlossaryCategory.club,
         description: Tr.pick(
@@ -678,32 +643,11 @@ List<GlossaryEntry> get glossaryEntries => [
             'What you know about the next opponent: their strength, their key player and their recent form. Use it to prepare, for instance by putting a man-marker on the player it names.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('個別声かけ(モチベーショントーク)', 'A quiet word'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '監督が選手個人に声をかけて士気(モラール)を高めるコマンド。効果の大きさは選手の性格による感応度で変わり、一度使うと同じ選手には数週間のクールダウンがある。',
-            'Taking a player aside to lift his morale. How much it moves depends on his personality, and you cannot go back to the same player for a few weeks.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('話し合い', 'A talk'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '不満を抱えた選手と面談して不満度を和らげるコマンド。士気を対象にする個別声かけとは別物で、こちらにもクールダウンがある。移籍希望のフラグが立った選手を引き留める初手になる。',
-            'Sitting down with an unhappy player to ease his discontent. Separate from the quiet word, which targets morale, and it has its own cooldown. This is your first move when someone asks to leave.'),
-      ),
-      GlossaryEntry(
         term: Tr.pick('戦術ミーティング', 'Tactical meeting'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
             'チーム全体で戦術理解を深めるミーティング。判断力・ポジショニング・チームワークといったメンタル系能力値がわずかに成長する。連発はできず、数週間のクールダウンがある。',
             'Working through the tactics with the whole squad. Decisions, positioning and teamwork all improve a little. You cannot hold them back to back; there is a cooldown of a few weeks.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('ローテーション方針', 'Rotating focuses'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '選手個別のトレーニング方針を複数登録しておくと、週替わりで自動的に切り替わる仕組み。攻撃と守備を交互に鍛えるなど、毎週手動で切り替えなくてもバランス良く育成できる。',
-            'Queue up several training focuses for a player and he cycles through them week by week. Alternating attack and defence, say, without you changing it by hand every week.'),
       ),
       GlossaryEntry(
         term: Tr.pick('自動トレーニング', 'Automatic training'),

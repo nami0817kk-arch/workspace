@@ -1,0 +1,140 @@
+# 物語完結型ショート ガリレオ s1（2026-11-13）。本編 scripts/galileo-story.yaml（11/16 19:00 公開予定、https://youtu.be/O80RShvkLVU）から。11/17 に予約。
+# 形式は louis14_s1〜s5.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし・「作り話」と断定しない。事実は事実カード（dev/output/rekishi-chiso/research/ガリレオ_facts_20261113.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（out/story/galileo/main/ の H01・C02〜C19）の切り出し・組み合わせだけ。新しい絵は作らない。切り口：最初の活字は124年後
+# 計算（自分で数え直した）：1757−1633＝124年／1757−1642＝115年／1761−1757＝4年
+title: "ガリレオ｜「それでも」の最初の活字は、124年後"
+yt_title: "「それでも地球は動く」が最初に活字になったのは、ガリレオが誓った日の124年後　その本は6年の拷問、とも書いていた"
+description: |-
+  「それでも地球は動く」。この一言が、はじめて活字になったのは、1757年のロンドンの本でした。ガリレオが地動説を捨てると誓った1633年から数えて124年後、死から115年後です。
+  その本はバレッティの『イタリアの文庫』52ページ。出どころは書かれていません。同じ書き添えは、「6年間、異端審問所にいて、拷問も受けた」とも書いていますが、記録では、判決の翌日に軟禁へ変わり、拷問は脅しまででした。
+  判決にも、誓いの文書にも、弟子の伝記にも、この言葉はありません。では、足を踏み鳴らした話は、活字になる前、どこで育ったのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/O80RShvkLVU
+hashtags:
+- "#ガリレオ"
+- "#それでも地球は動く"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。ガリレオの姿も、特定の資料を写したものではありません。"
+art_dir: out/story/galileo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: galileo_story_s1
+header:
+  tag: "1757年ロンドンの本"
+  title: "「それでも」の活字は、《124年後》"
+now:
+- {at: "誓った日", text: "1633年6月22日　誓絶の日", point: 0}
+- {at: "1757年", text: "1757年　ロンドン", point: 1}
+timeline:
+- {label: "1633"}
+- {label: "1757"}
+shots:
+  C12_1:
+    kind: "ai"
+    file: "galileo/main/C12.jpg"
+    focus: [0.2, 0.5]
+    move: "in"
+    must: "活版印刷の工房"
+  C11_2:
+    kind: "ai"
+    file: "galileo/main/C11.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "机で書く18世紀の著者"
+  C12_3:
+    kind: "ai"
+    file: "galileo/main/C12.jpg"
+    focus: [0.8, 0.5]
+    move: "left"
+    must: "活版印刷の工房"
+  C13_4:
+    kind: "ai"
+    file: "galileo/main/C13.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "丘の上で空を見上げる老人"
+  C16_5:
+    kind: "ai"
+    file: "galileo/main/C16.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "鎖でつながれた本と書類の山"
+  C16_6:
+    kind: "ai"
+    file: "galileo/main/C16.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "鎖でつながれた本と書類の山"
+  C11_7:
+    kind: "ai"
+    file: "galileo/main/C11.jpg"
+    focus: [0.15, 0.5]
+    move: "right"
+    must: "机で書く18世紀の著者"
+  C03_8:
+    kind: "ai"
+    file: "galileo/main/C03.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "封蝋のある書状と羽根ペン"
+  C13_9:
+    kind: "ai"
+    file: "galileo/main/C13.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "丘の上で空を見上げる老人"
+lines:
+  # fact: galileo-23, galileo-53
+- 語り: "「それでも地球は動く」。この一言がはじめて活字になったのは、ガリレオが誓った日の、124年後だった。"
+  shot: C12_1
+  tone: 強調
+  pause: 0.12
+  # fact: galileo-23, galileo-24
+- 語り: "1757年、ロンドン。ジュゼッペ・バレッティの『イタリアの文庫』、52ページ。"
+  shot: C11_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: galileo-23, galileo-24
+- 語り: "ガリレオの『天文対話』の項目への、書き添えに、台詞は現れる。出どころは、書かれていない。"
+  shot: C12_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: galileo-23
+- 語り: "釈放された瞬間、足を踏み鳴らして言った、「それでも動く」。バレッティは、そう書く。"
+  shot: C13_4
+  tone: 重い
+  pause: 0.12
+  # fact: galileo-23, galileo-55
+- 語り: "ところが、同じ書き添えは、「6年間、異端審問所にいて、拷問も受けた」とも書く。"
+  shot: C16_5
+  tone: 重い
+  pause: 0.12
+  # fact: galileo-55, galileo-13, galileo-11
+- 語り: "記録では、判決の翌日に軟禁へ変わり、拷問は脅しまでだった。2つとも、合わない。"
+  shot: C16_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: galileo-25
+- 語り: "4年後、フランスの本も、同じ話を載せた。「といわれる」と、伝聞の形で、「6年の禁固」の誤りも、そのままだ。"
+  shot: C11_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: galileo-09
+- 語り: "判決にも、誓いの文書にも、弟子の伝記にも、この一言はない。"
+  shot: C03_8
+  tone: 重い
+  pause: 0.12
+  # fact: galileo-33
+- 語り: "では、足を踏み鳴らした話は、活字になる前の百年、どこで育ったのか。"
+  shot: C13_9
+  tone: 疑問
+  pause: 0.15

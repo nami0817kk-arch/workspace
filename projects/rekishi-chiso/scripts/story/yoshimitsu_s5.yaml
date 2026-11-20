@@ -1,0 +1,143 @@
+# 物語完結型ショート 足利義満 s5（2026-11-13）。本編 scripts/yoshimitsu-story.yaml（11/16 12:00 公開予定、https://youtu.be/6dJB0Rq7yeY）から。11/17 に予約。
+# 切り口：次男の元服の2日後に始まった発病（本編第3〜4章。yoshimitsu-10, 13, 19, 20, 21）。
+# 形式は louis14_s1.yaml・yoshitsune_s2.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/足利義満_facts_20261113_hand.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/yoshimitsu/main の S 番号）の切り出し・組み合わせの再利用だけ。新しい絵は作らない。
+# 計算：4月25日の元服→4月27日の発病＝2日。4月27日→5月6日の死＝9日（本編と同じ）。
+title: "足利義満｜元服の2日後に、病に倒れた"
+yt_title: "足利義満は、次男の元服の2日後に発病した　病名は書かれていない　発病から9日で亡くなる"
+description: |-
+  1408年、応永15年4月25日。足利義満の次男、義嗣が、清涼殿で元服しました。後小松天皇の猶子で、親王に準ずる扱いでした。同じ日、義嗣は参議、従三位になります。
+  椿葉記は、この元服を先例に準じたものとし、兄をも押しのけてしまいそうだ、という世間の声を書き留めます。2日後の4月27日、義満は発病します。鹿苑院殿追善記は、御不例、とだけ書き、病名は書かれていません。5月5日の朝は回復したものの、午の刻から再び重くなり、5月6日に亡くなりました。
+  跡継ぎは、誰になったのか。本編は次のリンクからどうぞ。
+  https://youtu.be/6dJB0Rq7yeY
+hashtags:
+- "#足利義満"
+- "#金閣"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の室内・風景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/yoshimitsu
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: yoshimitsu_story_s5
+header:
+  tag: "1408年4月の北山第"
+  title: "次男の元服の《2日後》、義満は倒れた"
+now:
+- {at: "4月25日", text: "1408年4月25日　義嗣の元服", point: 0}
+- {at: "4月27日", text: "1408年4月27日　発病", point: 1}
+- {at: "5月6日", text: "1408年5月6日　死", point: 2}
+timeline:
+- {label: "4/25"}
+- {label: "4/27"}
+- {label: "5/6"}
+shots:
+  S05_in5:
+    kind: "ai"
+    file: "yoshimitsu/main/S05.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "板の間に並ぶ人々と儀式の場（想像図）"
+  S05_right3:
+    kind: "ai"
+    file: "yoshimitsu/main/S05.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "板の間に並ぶ人々と儀式の場（想像図）"
+  S04_in5:
+    kind: "ai"
+    file: "yoshimitsu/main/S04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "門前に立つ後ろ姿の大人と子（想像図）"
+  S03_in5:
+    kind: "ai"
+    file: "yoshimitsu/main/S03.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "桜の門前に並ぶ牛車と人々（想像図）"
+  S02_in5:
+    kind: "ai"
+    file: "yoshimitsu/main/S02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯のともる室内、向き合う二人（想像図）"
+  S05_in6:
+    kind: "ai"
+    file: "yoshimitsu/main/S05.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "板の間に並ぶ人々と儀式の場（想像図）"
+  S02_right3:
+    kind: "ai"
+    file: "yoshimitsu/main/S02.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "灯のともる室内、向き合う二人（想像図）"
+  S05_left7:
+    kind: "ai"
+    file: "yoshimitsu/main/S05.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "板の間に並ぶ人々と儀式の場（想像図）"
+  S04_left3:
+    kind: "ai"
+    file: "yoshimitsu/main/S04.jpg"
+    focus: [0.3, 0.5]
+    move: "left"
+    must: "門前に立つ後ろ姿の大人と子（想像図）"
+lines:
+  # fact: yoshimitsu-19
+- 語り: "足利義満が病に倒れる、2日前。次男の義嗣が、親王に準ずる扱いで、元服した。"
+  shot: S05_in5
+  tone: 強調
+  pause: 0.12
+  # fact: yoshimitsu-19
+- 語り: "1408年4月25日。清涼殿で、義嗣は元服した。後小松天皇の猶子で、准親王の扱いだった。"
+  shot: S05_right3
+  tone: 重い
+  pause: 0.12
+  # fact: yoshimitsu-19
+- 語り: "同じ日、義嗣は、参議、従三位になる。階を飛び越える、越階だった。"
+  shot: S04_in5
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshimitsu-20
+- 語り: "椿葉記は、この元服を、先例に準じたものとし、兄をも押しのけてしまいそうだ、という世間の声を、書き留める。"
+  shot: S03_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshimitsu-10
+- 語り: "2日後の4月27日。義満は、発病する。鹿苑院殿追善記は、御不例、とだけ書き、病名は、書かれていない。"
+  shot: S02_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshimitsu-11
+- 語り: "同じ27日、義満は、山科嗣教、16歳の元服に、自ら加冠している。教言卿記は、希代の事なり、と書く。"
+  shot: S05_in6
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshimitsu-13
+- 語り: "5月5日の朝は、回復し、端午の菖蒲を祝った。ところが、午の刻から、再び重くなる。"
+  shot: S02_right3
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshimitsu-10
+- 語り: "発病から、9日。5月6日、義満は、亡くなった。"
+  shot: S05_left7
+  tone: 重い
+  pause: 0.12
+  # fact: yoshimitsu-08
+- 語り: "では、跡継ぎは、誰になったのか。"
+  shot: S04_left3
+  tone: 疑問
+  pause: 0.15

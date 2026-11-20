@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'career.dart';
+import 'competition.dart';
 import 'world.dart';
 import 'season.dart';
 
-/// 1年ぶんの成績(アマチュアは夏の大会、プロはシーズン通算)。
+/// 1年ぶんの成績(アマチュアはその年の大会、プロはシーズン通算とポストシーズン)。
 class SeasonRecord {
   const SeasonRecord({
     required this.age,
@@ -21,6 +22,12 @@ class SeasonRecord {
     this.awards = const [],
     this.months = const [],
     this.twoWay = false,
+    this.farm = false,
+    this.chances = 0,
+    this.errors = 0,
+    this.corporate = false,
+    this.post = '',
+    this.contract = 0,
   });
 
   final int age;
@@ -54,16 +61,42 @@ class SeasonRecord {
   /// 二刀流で戦った年か(スター性: 年俸×1.4・人気+1)。
   final bool twoWay;
 
-  bool get isLeague => rank != null;
-  bool get champion =>
-      isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds);
+  /// 守備の記録(守備機会・失策)。守っていない年・投手は0。古いセーブも0。
+  final int chances;
+  final int errors;
 
-  /// 表の「結果」欄: 「優勝」「2回戦敗退」「3位」など。
+  /// 守備率(1 - 失策/守備機会)。守備機会が無ければ null。
+  double? get fieldingPct => chances == 0 ? null : 1 - errors / chances;
+
+  /// 二軍(育成契約を含む)で戦った年か。タイトル・表彰・日本一の対象にならず、年俸も低い。
+  final bool farm;
+
+  /// 社会人(都市対抗)の年か。大学なら false。古いセーブも false。
+  final bool corporate;
+
+  /// プロのポストシーズンの結果(「日本一」「日本シリーズ敗退」「CSファイナル敗退」)。出なかった年・古いセーブは空。
+  final String post;
+
+  /// この年の年俸(万円)。シーズン前に決まっている額(1年目は新人の契約、2年目からは前の年の契約更改)。
+  /// 0 は古いセーブ(成績から計算した値を使う)。
+  final int contract;
+
+  bool get isLeague => rank != null;
+  // 二軍の年の1位は優勝に数えない(championships も増やさない)。
+  bool get champion =>
+      !farm && (isLeague ? rank == 1 : (rounds > 0 && roundsWon == rounds));
+
+  /// 表の「結果」欄: 「全国優勝」「地方大会 決勝敗退」「リーグ優勝・日本一」「3位・CSファイナル敗退」など。
   String get resultText {
-    if (isLeague) return rank == 1 ? 'リーグ優勝' : '$rank位';
+    if (isLeague) {
+      final base = rank == 1 ? 'リーグ優勝' : '$rank位';
+      return post.isEmpty ? base : '$base・$post';
+    }
     if (rounds == 0) return '-';
-    if (roundsWon == rounds) return '優勝';
-    return '${roundsWon + 1}回戦敗退';
+    if (roundsWon == rounds) {
+      return amateurChampionText(stage, corporate: corporate);
+    }
+    return amateurLossText(stage, roundsWon, rounds, corporate: corporate);
   }
 
   Map<String, dynamic> toJson() => {
@@ -81,6 +114,12 @@ class SeasonRecord {
         'awards': awards,
         'months': months,
         'twoWay': twoWay,
+        'farm': farm,
+        'chances': chances,
+        'errors': errors,
+        'corporate': corporate,
+        'post': post,
+        'contract': contract,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -106,6 +145,12 @@ class SeasonRecord {
           for (final t in (j['months'] as List?) ?? const []) t as String
         ],
         twoWay: (j['twoWay'] as bool?) ?? false,
+        farm: (j['farm'] as bool?) ?? false,
+        chances: (j['chances'] as num?)?.toInt() ?? 0,
+        errors: (j['errors'] as num?)?.toInt() ?? 0,
+        corporate: (j['corporate'] as bool?) ?? false,
+        post: (j['post'] as String?) ?? '',
+        contract: (j['contract'] as num?)?.toInt() ?? 0,
       );
 }
 
@@ -129,9 +174,12 @@ String fmtPlus(int? v) => v == null ? '-' : '$v';
 String fmtEra(double? v) => v == null ? '-' : v.toStringAsFixed(2);
 
 /// 成績の短い説明(画面のログ用)。打者・投手のどちらか、または両方。
-String describeLine(Line l) {
+/// 投手の打席(先発の試合に2打席)は、打率が.000でも見せる意味が薄いので、安打があるときだけ投球のあとに添える。
+/// `brief`(月ごとの記録など)では、投手の打席は本塁打があるときだけ「打撃 本塁打1」と添える。
+String describeLine(Line l, {bool brief = false}) {
   final parts = <String>[];
-  if (l.hasBatting) {
+  final pitcherBat = l.pitcherBat && l.hasPitching;
+  if (l.hasBatting && !pitcherBat) {
     parts.add(
         '打率${fmtRate(l.battingAverage)} 本塁打${l.homeRuns} OPS${fmtRate(l.ops)}');
   }
@@ -139,20 +187,31 @@ String describeLine(Line l) {
     final wl = (l.wins + l.losses) > 0 ? '${l.wins}勝${l.losses}敗 ' : '';
     parts.add('$wl防御率${fmtEra(l.era)} 奪三振${l.strikeouts}');
   }
+  if (l.hasBatting && pitcherBat && l.hits > 0) {
+    if (!brief) {
+      parts.add('打撃 打率${fmtRate(l.battingAverage)} 本塁打${l.homeRuns}');
+    } else if (l.homeRuns > 0) {
+      parts.add('打撃 本塁打${l.homeRuns}');
+    }
+  }
   return parts.join(' / ');
 }
 
 /// 1試合の中身を短く(「3打数2安打 1本塁打」「6回 被安打2 奪三振7」)。
+/// 失点は出さない: 失点は小数の推定値で、大会の防御率は負の値も足し合わせて出すため、
+/// 試合ごとに丸めると「失点1なのに防御率0.00」と食い違う(2026-11-03 に足して、同日に外した)。
+/// 投手の打席は、投球のあとに、安打があるときだけ添える(「2打数0安打」が毎試合続くと読みづらいため)。
 String describeGame(Line g) {
   final parts = <String>[];
-  if (g.atBats + g.walks > 0) {
-    parts.add('${g.atBats}打数${g.hits}安打'
-        '${g.homeRuns > 0 ? ' ${g.homeRuns}本塁打' : ''}'
-        '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}');
-  }
+  final pitcherBat = g.pitcherBat && g.faced > 0;
+  final bat = '${g.atBats}打数${g.hits}安打'
+      '${g.homeRuns > 0 ? ' ${g.homeRuns}本塁打' : ''}'
+      '${g.rbi > 0 ? ' ${g.rbi}打点' : ''}';
+  if (!pitcherBat && g.atBats + g.walks > 0) parts.add(bat);
   if (g.faced > 0) {
-    parts.add('${g.inningsText}回 被安打${g.hitsAllowed} 奪三振${g.strikeouts}');
+    parts.add('${g.inningsText}回 被安打${g.totalHitsAllowed} 奪三振${g.strikeouts}');
   }
+  if (pitcherBat && g.hits > 0) parts.add('打撃 $bat');
   return parts.join(' / ');
 }
 
@@ -175,7 +234,9 @@ List<String> titlesOf(Line l, {required int games, required int rank}) {
   if (l.homeRuns >= 40) t.add('本塁打王');
   if (qualifiedPitch && (l.era ?? 99) <= 1.60) t.add('最優秀防御率');
   if (l.wins >= 21) t.add('最多勝');
-  if (l.strikeouts >= 250) t.add('最多奪三振');
+  // 2026-11-03: 250 だと約3,000シーズンで1回しか出ず、投手三冠が誰にも取れなかった。
+  // 最多勝(約6%)・最優秀防御率(約5%)と同じくらいの出やすさになる 205 に下げた(tool の測定で上位約7%)。
+  if (l.strikeouts >= 205) t.add('最多奪三振');
   if (t.length >= 2 || (t.isNotEmpty && rank == 1)) t.add('MVP');
   return t;
 }
@@ -200,11 +261,25 @@ String careerSummary(List<SeasonRecord> rs) {
 int salaryOf(SeasonRecord r) {
   if (r.stage != Stage.pro) return 0;
   final base = 500 * pow(1.065, r.line.rating - 30);
+  // 投手は勝ち星と防御率でも評価される(評価の数字だけだと、19勝の投手が2000万円台だった)。
+  final l = r.line;
+  final pitcherOnly = l.hasPitching && (!l.hasBatting || l.pitcherBat);
+  final pitch = !pitcherOnly
+      ? 1.0
+      : (1 + 0.12 * max(0, l.wins - 5)).clamp(1.0, 3.0) *
+          switch (l.era ?? 9) {
+            <= 2.0 => 1.4,
+            <= 3.0 => 1.2,
+            <= 4.0 => 1.0,
+            _ => 0.85,
+          };
   // 海外のリーグは年俸が桁違い(×2.5)。
   final v = base *
+      pitch *
       (1 + 0.15 * r.titles.length) *
       (r.overseas ? 2.5 : 1.0) *
-      (r.twoWay ? 1.4 : 1.0); // 二刀流は話題性で年俸が高い
+      (r.twoWay ? 1.4 : 1.0) * // 二刀流は話題性で年俸が高い
+      (r.farm ? 0.4 : 1.0); // 二軍(育成契約を含む)は年俸が低い
   return ((v.clamp(400, 200000) / 10).round() * 10).toInt();
 }
 
@@ -217,9 +292,58 @@ String fmtSalary(int man) {
   return rest == 0 ? '$oku億円' : '$oku億$rest万円';
 }
 
+/// 新人の年俸(万円)。ドラフトの順位で決まる(実際のプロ野球の目安。6位=育成契約)。
+int rookieSalary(int round) => switch (round) {
+      1 => 1500,
+      2 => 1200,
+      3 => 1000,
+      4 => 900,
+      5 => 800,
+      _ => 400,
+    };
+
+/// 契約更改: 今季の年俸 `current` と今季の記録 `r` から、来季の年俸を決める。
+/// 今季の成績の年俸(`salaryOf`)を65%・今季の年俸を35%で混ぜる。下がるときは、
+/// 減額の上限(1億円を超える年俸は4割、それ以下は2割5分まで)より下げない。
+int renewSalary(int current, SeasonRecord r) {
+  final raw = salaryOf(r);
+  final floor = current * (current > 10000 ? 0.6 : 0.75);
+  final v = max(0.65 * raw + 0.35 * current, floor);
+  return ((v / 10).round() * 10).clamp(400, 200000).toInt();
+}
+
+/// 年ごとの年俸(万円)。記録に年俸(`contract`)があればそれを、無い古い記録は
+/// 前の年の年俸と成績から契約更改のように計算する。プロ以外の年は 0。
+List<int> salariesOf(List<SeasonRecord> rs) {
+  final out = <int>[];
+  int? prev;
+  SeasonRecord? prevRec;
+  for (final r in rs) {
+    if (r.stage != Stage.pro) {
+      out.add(0);
+      continue;
+    }
+    final s = r.contract > 0
+        ? r.contract
+        : (prev == null || prevRec == null
+            ? salaryOf(r)
+            : renewSalary(prev, prevRec));
+    out.add(s);
+    prev = s;
+    prevRec = r;
+  }
+  return out;
+}
+
+/// 記録 `r` の年の年俸(一覧 `rs` の中での、なだらかにした値)。一覧に無ければ、その年の成績だけで。
+int salaryIn(List<SeasonRecord> rs, SeasonRecord r) {
+  final i = rs.indexOf(r);
+  return i < 0 ? salaryOf(r) : salariesOf(rs)[i];
+}
+
 /// プロ通算の収入(万円)。
 int careerEarnings(List<SeasonRecord> rs) =>
-    rs.fold(0, (a, r) => a + salaryOf(r));
+    salariesOf(rs).fold(0, (a, s) => a + s);
 
 /// 人気(0〜100)。タイトル・優勝・日本代表・海外での活躍で上がる。古い年ほど薄れる。
 /// 保存せず、成績から計算する。

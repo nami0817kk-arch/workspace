@@ -6,6 +6,7 @@ import '../game/marks.dart';
 
 import '../game/career.dart';
 import '../game/exp.dart';
+import '../game/difficulty.dart';
 import '../game/game.dart';
 import '../game/life_log.dart';
 import '../game/path.dart' show overall;
@@ -13,7 +14,7 @@ import '../game/player.dart';
 import '../game/records.dart';
 import '../game/snapshot.dart';
 import 'art/avatar.dart';
-import 'art/radar.dart';
+import '../game/skills.dart';
 import '../game/talent.dart';
 import 'labels.dart';
 import 'records_screen.dart';
@@ -51,7 +52,7 @@ class PlayerScreen extends StatelessWidget {
                 onPressed: () async {
                   final m = ScaffoldMessenger.of(context);
                   await Clipboard.setData(
-                      ClipboardData(text: profileText(snapshot)));
+                      ClipboardData(text: profileCardText(snapshot)));
                   m.showSnackBar(
                       const SnackBar(content: Text('選手カードをコピーしました')));
                 },
@@ -85,6 +86,16 @@ class PlayerScreen extends StatelessWidget {
   }
 }
 
+/// コピーする選手カード。プロフィールに、本業の能力をランクと数字で添える
+/// (「能力: ミートC61・パワーD55・…」。パワプロの選手カードのように)。
+String profileCardText(PlayerSnapshot s) => [
+      profileText(s),
+      '能力: ${[
+        for (final a in mainAbilitiesOf(s.role))
+          '${abilityLabel(a)}${rankOf(s.of(a))}${s.of(a)}'
+      ].join('・')}',
+    ].join('\n');
+
 class _Scroll extends StatelessWidget {
   const _Scroll({required this.child});
   final Widget child;
@@ -110,10 +121,7 @@ double overallOf(PlayerSnapshot s) => overall(Player(
     ));
 
 /// 素質を星5つで。
-String potentialStars(int potential) {
-  final n = (potential / 20).ceil().clamp(1, 5);
-  return '★' * n + '☆' * (5 - n);
-}
+String potentialStars(int potential) => talentStars(potential);
 
 Player _playerOf(PlayerSnapshot s) => Player(
     name: s.name,
@@ -123,13 +131,13 @@ Player _playerOf(PlayerSnapshot s) => Player(
     abilities: s.abilities);
 
 Ability _best(PlayerSnapshot s) {
-  final a = abilitiesOf(s.role);
+  final a = mainAbilitiesOf(s.role);
   return a
       .reduce((x, y) => (s.abilities[y] ?? 0) > (s.abilities[x] ?? 0) ? y : x);
 }
 
 Ability _worst(PlayerSnapshot s) {
-  final a = abilitiesOf(s.role);
+  final a = mainAbilitiesOf(s.role);
   return a
       .reduce((x, y) => (s.abilities[y] ?? 0) < (s.abilities[x] ?? 0) ? y : x);
 }
@@ -152,6 +160,7 @@ class _ProfileTab extends StatelessWidget {
       potential: s.potential,
       abilities: s.abilities,
       traits: s.traits,
+      skills: s.skills,
     );
     final ov = overallOf(s).round();
     final proYears = s.records.where((r) => r.stage == Stage.pro).length;
@@ -196,7 +205,9 @@ class _ProfileTab extends StatelessWidget {
                           affiliationOf(
                               s.stage == Stage.retired ? Stage.pro : s.stage,
                               s.name,
-                              proTeam: s.overseasTeam ?? s.proTeam),
+                              proTeam: s.overseasTeam ?? s.proTeam,
+                              seed: s.teamSeed,
+                              corporate: s.corporate),
                           key: const Key('profile-affiliation')),
                       Text(
                           playerCardLine(
@@ -216,7 +227,7 @@ class _ProfileTab extends StatelessWidget {
                             Text('総合評価 $ov',
                                 style: Theme.of(context).textTheme.titleSmall),
                           ]),
-                      Text('素質 ${potentialStars(s.potential)}',
+                      Text('才能 ${potentialStars(s.potential)}',
                           key: const Key('potential-stars')),
                       Text(
                           '人気 ${rankOf(popularityOf(s.records, s.worldRecords))}'
@@ -235,6 +246,8 @@ class _ProfileTab extends StatelessWidget {
               ]),
             ),
           ),
+          const SizedBox(height: 8),
+          _AbilityPanel(snapshot: s, overall: ov),
           const SizedBox(height: 8),
           Card(
             child: ExpansionTile(
@@ -280,61 +293,14 @@ class _ProfileTab extends StatelessWidget {
                     'プロ入り', s.proStartAge == null ? 'なし' : '${s.proStartAge}歳'),
                 _Fact('プロ年数', '$proYears年'),
                 _Fact('記録された年', '${s.records.length}年'),
-                _Fact('難しさ', s.difficulty.label),
+                if (s.difficulty != Difficulty.normal)
+                  _Fact('難しさ', s.difficulty.label),
               ]),
             ),
           ),
           const SizedBox(height: 8),
           _Traits(snapshot: s),
           _Upbringing(snapshot: s),
-          const SizedBox(height: 8),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('能力', style: Theme.of(context).textTheme.titleSmall),
-                    AbilityRadar(player: p),
-                    for (final a in abilitiesOf(s.role))
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Row(children: [
-                          RankBadge(value: s.of(a)),
-                          const SizedBox(width: 6),
-                          SizedBox(
-                              width: 60,
-                              child: Tooltip(
-                                  message: (s.gifts[a] ?? 0) == 0
-                                      ? abilityHint(a)
-                                      : '${abilityHint(a)} 天賦: ${giftHint(s.gifts[a]!)}',
-                                  triggerMode: TooltipTriggerMode.tap,
-                                  child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          (s.gifts[a] ?? 0) == 0
-                                              ? abilityLabel(a)
-                                              : '${abilityLabel(a)}(${giftLabel(s.gifts[a]!)})',
-                                          key: Key('gift-${a.name}'))))),
-                          SizedBox(
-                              width: 28,
-                              child: Text('${s.of(a)}',
-                                  textAlign: TextAlign.right)),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: LinearProgressIndicator(
-                              value: s.of(a) / 99,
-                              minHeight: 10,
-                              color: rankColor(rankOf(s.of(a))),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                        ]),
-                      ),
-                  ]),
-            ),
-          ),
           const SizedBox(height: 8),
           Card(
             key: const Key('aptitude-card'),
@@ -417,7 +383,7 @@ class _Traits extends StatelessWidget {
           Text('特性 (${ts.length})',
               style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 4),
-          if (ts.isEmpty) const Text('特性はまだありません。コーチに教わると習得できます。'),
+          if (ts.isEmpty) const Text('特性(生まれつきの体質・性格)はありません。'),
           for (final t in ts)
             ListTile(
               key: Key('trait-${t.name}'),
@@ -435,6 +401,16 @@ class _Traits extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text(t.description),
             ),
+          if (snapshot.skills.isNotEmpty) ...[
+            const Divider(),
+            Text('特殊能力 (${snapshot.skills.length})',
+                key: const Key('profile-skills'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Wrap(spacing: 6, runSpacing: 6, children: [
+              for (final k in snapshot.skills) _SkillPill(skill: k),
+            ]),
+          ],
         ]),
       ),
     );
@@ -625,6 +601,237 @@ class _CareerTabState extends State<_CareerTab> {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(e.text))),
       ]),
+    );
+  }
+}
+
+/// 弾道の段階(1〜4)。パワプロと同じく、数字の代わりに矢印の数で見せる。
+int trajectoryLevel(int v) => v < 25 ? 1 : (v < 50 ? 2 : (v < 75 ? 3 : 4));
+
+/// 文字の色(黄色い背景だけ黒にして読みやすくする)。
+Color _rankInk(String r) => r == 'B' ? const Color(0xFF3E2723) : Colors.white;
+
+/// パワプロの選手能力画面に近づけた、能力の一覧。濃い緑の見出し・大きなランク文字・太い数字・
+/// ランクの色の棒。弾道は矢印の数、特殊能力は金・青・赤の札で見せる。
+class _AbilityPanel extends StatelessWidget {
+  const _AbilityPanel({required this.snapshot, required this.overall});
+  final PlayerSnapshot snapshot;
+  final int overall;
+
+  static const _head = Color(0xFF1B5E20);
+
+  @override
+  Widget build(BuildContext context) {
+    final s = snapshot;
+    // 打者は打撃・守備、投手は投球が先で打撃・守備があと、二刀流は打者と投手。
+    final groups = switch (s.role) {
+      Role.batter => [('', batterAbilities)],
+      Role.pitcher => [('投手', pitcherAbilities), ('打撃・守備', batterAbilities)],
+      Role.twoWay => [('打者', batterAbilities), ('投手', pitcherAbilities)],
+    };
+    return Card(
+      key: const Key('ability-panel'),
+      clipBehavior: Clip.antiAlias,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Container(
+          color: _head,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(children: [
+            const Expanded(
+              child: Text('基本能力',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)),
+            ),
+            const Text('総合 ',
+                style: TextStyle(color: Colors.white70, fontSize: 12)),
+            _RankSquare(value: overall, size: 28),
+          ]),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
+          child: Column(children: [
+            for (final g in groups) ...[
+              if (g.$1.isNotEmpty) _GroupLabel(g.$1),
+              for (final a in g.$2) _AbilityRow(snapshot: s, ability: a),
+            ],
+          ]),
+        ),
+      ]),
+    );
+  }
+}
+
+class _GroupLabel extends StatelessWidget {
+  const _GroupLabel(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 6, bottom: 2),
+          child: Text(text,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary)),
+        ),
+      );
+}
+
+/// 角の丸い四角に、ランクの文字。
+class _RankSquare extends StatelessWidget {
+  const _RankSquare({required this.value, this.size = 36});
+  final int value;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = rankOf(value);
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: rankColor(r),
+        borderRadius: BorderRadius.circular(size * 0.22),
+        border:
+            Border.all(color: Colors.white.withValues(alpha: 0.7), width: 1.5),
+      ),
+      child: Text(r,
+          style: TextStyle(
+              color: _rankInk(r),
+              fontWeight: FontWeight.w900,
+              fontSize: size * 0.62,
+              height: 1.0)),
+    );
+  }
+}
+
+class _AbilityRow extends StatelessWidget {
+  const _AbilityRow({required this.snapshot, required this.ability});
+  final PlayerSnapshot snapshot;
+  final Ability ability;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = ability;
+    final v = snapshot.of(a);
+    final gift = snapshot.gifts[a] ?? 0;
+    // 読み上げでは「ミート Dランク 51。才能★3。…」の1つにまとめる(文字・星・数字がばらばらに読まれていた)
+    return Semantics(
+      container: true,
+      label: '${abilityLabel(a)} ${rankOf(v)}ランク $v。才能${giftStarCount(gift)}つ星。'
+          '${a == Ability.trajectory ? '弾道${trajectoryLevel(v)}。' : ''}${abilityHint(a)}',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Row(children: [
+          _RankSquare(value: v),
+          const SizedBox(width: 10),
+          Expanded(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Tooltip(
+                    message: gift == 0
+                        ? abilityHint(a)
+                        : '${abilityHint(a)} 才能: ${giftHint(gift)}',
+                    triggerMode: TooltipTriggerMode.tap,
+                    child: Text(abilityLabel(a),
+                        key: Key('gift-${a.name}'),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(giftStars(gift),
+                      key: Key('gift-stars-${a.name}'),
+                      style: const TextStyle(
+                          fontSize: 10, color: Color(0xFFF9A825))),
+                  if (a == Ability.trajectory) ...[
+                    const SizedBox(width: 4),
+                    for (var i = 0; i < trajectoryLevel(v); i++)
+                      const Icon(Icons.north_east,
+                          size: 14, color: Color(0xFFEF6C00)),
+                  ],
+                ]),
+              ),
+              const SizedBox(height: 3),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: v / 99,
+                  minHeight: 8,
+                  color: rankColor(rankOf(v)),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 44,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: Text('$v',
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 24,
+                      fontFeatures: [FontFeature.tabularFigures()])),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+/// 特殊能力の札。金は金色、ふつうは青、弱点は赤(パワプロの金特・青特・赤特)。
+class _SkillPill extends StatelessWidget {
+  const _SkillPill({required this.skill});
+  final Skill skill;
+
+  @override
+  Widget build(BuildContext context) {
+    final k = skill;
+    final (bg, fg) = k.negative
+        ? (const Color(0xFFFFCDD2), const Color(0xFFB71C1C))
+        : (k.gold
+            ? (const Color(0xFFFFE082), const Color(0xFF5D4037))
+            : (const Color(0xFFBBDEFB), const Color(0xFF0D47A1)));
+    return Tooltip(
+      message: '${k.description} ${effectText(k)}',
+      triggerMode: TooltipTriggerMode.tap,
+      child: Container(
+        key: Key('profile-skill-${k.name}'),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+              color:
+                  k.gold ? const Color(0xFFC9A227) : fg.withValues(alpha: 0.5)),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(
+              k.negative
+                  ? Icons.trending_down
+                  : (k.gold ? Icons.workspace_premium : Icons.bolt),
+              size: 15,
+              color: fg),
+          const SizedBox(width: 4),
+          Text(k.label,
+              style: TextStyle(
+                  color: fg, fontWeight: FontWeight.bold, fontSize: 13)),
+        ]),
+      ),
     );
   }
 }

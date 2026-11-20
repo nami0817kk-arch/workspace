@@ -1,0 +1,137 @@
+# 物語完結型ショート 西郷隆盛 s5（2026-11-12）。本編 scripts/saigo-story.yaml（11/13 19:00 公開、https://youtu.be/19SEyS1d5CA）から。11/14 に予約。
+# 形式は gosekke_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/西郷隆盛_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/saigo/main。人物は後ろ姿・遠景）と実在の錦絵（パブリックドメイン）。新しい絵は作らない。死・遺体の場面に人物の絵は当てない。
+# 本編の弱点（JACAR は翻刻のみで原画像未確認・二次引用あり）：言えること＝「読めた電報の翻刻に〜とある」、言えないこと＝洞窟を出た時刻・倒れた場所・最期の言葉の形・首を隠した者・切腹か介錯か。断定しない。
+# 切り口：戦いの終わった時刻の食い違い（本編3・4章）。渡辺7時／山縣8時／別2日記8時30分／東伏見9時ごろ／小沢9時30分。最短7時と最長9時30分の差＝2時間30分（自分で計算）。saigo-05, saigo-06。
+# 理解テスト4問：①城山の戦い、1877年9月24日 ②号砲は午前4時（砲兵報告・山縣電）だが、別働第2旅団日記は午前3時 ③終わった時刻は7時から9時30分まで記録ごとに違い2時間30分の開き ④西郷が命を落としたのはこの間のいつか、記録からは言えない（本編へ）
+title: "西郷隆盛｜城山の戦いは、何時に終わったか"
+yt_title: "城山の戦いは何時に終わったのか　午前7時から9時30分まで、2時間半も違う官軍の記録"
+description: |-
+  1877年9月24日、城山の戦いが終わった時刻は、記録によって違います。渡辺中佐の電報は午前7時、山縣参軍の電報は午前8時、別働第2旅団の日記は8時30分、東伏見少将は9時ごろ、小沢大佐の電報は9時30分です。いちばん早い記録と遅い記録で、2時間30分の開きがあります。
+  始まった時刻も一つではありません。砲兵の報告と山縣の電報は午前4時の号砲。別働第2旅団の日記は午前3時に3発の砲を合図に一斉に攻撃した、と書きます。
+  終わった、が何を指すのか（塁が落ちた時か、銃声が止んだ時か、平定した時か）も、記録だけでははっきりしません。西郷隆盛が命を落とした時刻は、ここでは言えません。電報・日記は、アジア歴史資料センターの内容欄の翻刻を読んだもので、原画像までは確かめていません。翻刻には誤字や欠けがあります。
+  では、西郷は、この間のいつ、命を落としたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#西郷隆盛"
+- "#西南戦争"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/saigo
+out: saigo_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "西郷隆盛と城山の最後の一日"
+  title: "戦いの終わりは、《記録で違う》"
+now:
+- {at: "9月24日", text: "1877年9月24日", point: 0}
+timeline:
+- {label: "1877"}
+shots:
+  Gun:
+    kind: "ai"
+    file: "saigo/main/S07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜明け前、大砲が火を噴く"
+  Night:
+    kind: "ai"
+    file: "saigo/main/S04.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "夜の砲列と砲兵の影"
+  Hill:
+    kind: "ai"
+    file: "saigo/main/S03.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの丘に並ぶ官軍と大砲"
+  Climb:
+    kind: "ai"
+    file: "saigo/main/S08.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "霧の斜面を登る歩兵"
+  Tel:
+    kind: "ai"
+    file: "saigo/main/S06.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "電信局の将校が電文を書く"
+  TelB:
+    kind: "ai"
+    file: "saigo/main/S06.jpg"
+    focus: [0.65, 0.55]
+    move: "right"
+    must: "電信局の将校が電文を書く"
+  Shozan:
+    kind: "real"
+    image: "paintings/saigo_nishiki_kagoshima_battle_shozan.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "早川松山《鹿児島の戦い》錦絵（三連の一部）1877年（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "城山の戦いの錦絵"
+  Dawn:
+    kind: "ai"
+    file: "saigo/main/S01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜明けの城山と桜島（霧と陣の灯）"
+  Dep:
+    kind: "real"
+    image: "paintings/saigo_nishiki_kagoshima_departure_yoshitoshi.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    credit: "月岡芳年《鹿児島暴徒出陣図》錦絵（三連の一部）1879年（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "鹿児島出陣の錦絵"
+lines:
+  # fact: saigo-05
+- 語り: "戦いの終わりが、2時間半違う。"
+  shot: Gun
+  tone: 強調
+  pause: 0.12
+  # fact: saigo-06
+- 語り: "1877年9月24日。号砲は午前4時。砲兵の報告も、山縣参軍の電報も、そう書く。"
+  shot: Night
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-06
+- 語り: "ところが、別働第2旅団の日記は、午前3時に、3発の砲を合図に、一斉に攻撃した、と書く。"
+  shot: Hill
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-05
+- 語り: "山縣は、午前8時に収まった、と打った。"
+  shot: Tel
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-05
+- 語り: "渡辺中佐は、午前7時。別働第2旅団の日記は、8時30分。東伏見少将は、9時ごろ。小沢大佐は、9時30分。"
+  shot: TelB
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-05
+- 語り: "いちばん早い7時と、いちばん遅い9時30分で、2時間30分の開きがある。"
+  shot: Climb
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-05
+- 語り: "終わった、が何を指すのかも、はっきりしない。塁が落ちた時か。銃声が止んだ時か。平定した時か。"
+  shot: Shozan
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-05
+- 語り: "では、西郷が命を落としたのは、この間の、いつなのか。"
+  shot: Dep
+  tone: 疑問
+  pause: 0.15

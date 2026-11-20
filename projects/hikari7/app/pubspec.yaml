@@ -3,7 +3,7 @@ description: "ひかりの指名 — オーディション番組プロデュー�
 publish_to: 'none'
 
 # 版とビルド番号。App Store Connect は同じビルド番号を二度受け付けない
-version: 1.0.1+10
+version: 1.0.1+13
 
 environment:
   sdk: ^3.13.2
@@ -19,6 +19,8 @@ dependencies:
   in_app_purchase_storekit: ^0.4.13
   url_launcher: ^6.3.2
   webview_flutter: ^4.13.0
+  # 結果のシェア（iOS の共有シート）。版は固定（13.3.1 は 2026-10-01 公開）
+  share_plus: 13.3.1
 
 dev_dependencies:
   flutter_test:

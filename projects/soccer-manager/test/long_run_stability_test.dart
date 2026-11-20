@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:soccer_manager/logic/economy_scale.dart';
 import 'package:soccer_manager/models/attributes.dart';
 import 'package:soccer_manager/models/player_instruction.dart';
 import 'package:soccer_manager/models/save_game.dart';
@@ -137,7 +138,7 @@ void main() {
     // 資金が青天井に発散しないこと。
     expect(game.save!.budget, lessThan(1000000000));
     for (final p in game.userTeam.players) {
-      expect(p.marketValue, lessThanOrEqualTo(20000));
+      expect(p.marketValue, lessThanOrEqualTo(maxMarketValue));
     }
   }, timeout: const Timeout(Duration(minutes: 15)));
 

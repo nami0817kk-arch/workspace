@@ -1,0 +1,122 @@
+# 物語完結型ショート 義経（もしも） s5（2026-11-13）。本編 scripts/yoshitsune-if-story.yaml（11/15 12:00 公開、https://youtu.be/AI_giM-Gij8）から。11/16 に予約。
+# 切り口：九条兼実の玉葉が、義経を「義士」と呼び、のちにその死を「天下の悦び」と書いたこと（本編第4章。yoshitsune-11, 15, 04）。
+# 計算：1185年11月3日→1189年5月29日＝3年半（本編は「4年前」）。台本は年数を言わず日付を並べる。1181→1185＝4年（さかのぼる）。
+# 理解テスト4問：①九条兼実（京の公家・日記『玉葉』） ②1185年11月3日に義経が京を去った日、1189年5月29日に義経の死を聞いた日 ③前者は「義士と言うべきか」、後者は「天下の悦び、頼朝卿の運」と書いた。頼朝の守護・地頭は「言語の及ぶ所に非ず」、秀衡の陸奥守は「天下の恥」 ④衣川で何が起きたかは本編へ
+# 事実は事実カード（dev/output/rekishi-chiso/research/源義経_facts_20261112.yaml）と本編の # fact: だけ。想像の台詞なし。「もしも」の話は「もしもの話」と言ってから。
+# 絵は本編の AI 絵（out/story/yoshitsune-if/main の B 番号）の再利用だけ。新しい絵は作らない。B11（大物浦）・B07（平泉の町並み）・B17（蓮）は当てない。人物の顔・戦い・首・妻子の最期の絵なし。
+# 吾妻鏡の1185〜89年の本文は読み下しで読んだもの（本編と同じ扱い）。干支は使わない。
+
+title: "義経｜兼実は「義士」と書き、「天下の悦び」と書いた"
+yt_title: "九条兼実は義経を「義士」と書き、その死を「天下の悦び」と書いた　玉葉の言葉"
+description: |-
+  京の公家、九条兼実の日記、玉葉。1185年11月3日、義経が頼朝に追われて京を去った日、兼実はこう書きました。「義経等の所行、実に以て義士と謂うべきか」。
+  1189年5月29日、義経は泰衡に討たれたと聞いた兼実は、こう書きます。「天下の悦び何事かこれに如かず。頼朝卿の運」。兼実は頼朝にも厳しく、1185年11月、守護・地頭を置く願いが許されたと聞くと「言語の及ぶ所に非ず」と書きました。1181年、平氏が秀衡を陸奥守に任じたときは「天下の恥」です。
+  兼実が悦んだ義経の最期。衣川では、何が起きたのか。本編は次のリンクからどうぞ。
+hashtags:
+- "#九条兼実"
+- "#源義経"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/yoshitsune-if
+out: yoshitsune_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "九条兼実の日記『玉葉』"
+  title: "兼実は、義経を《義士》と書いた"
+now:
+- {at: "1185年", text: "1185年11月　義経が京を去る", point: 0}
+- {at: "1189年", text: "1189年5月　義経の死を聞く", point: 1}
+- {at: "1181年", text: "1181年　秀衡が陸奥守に", point: 0}
+timeline:
+- {label: "1185"}
+- {label: "1189"}
+shots:
+  B18_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B18.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯のそばの机の古い日記の巻物"
+  B01_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "院の御所の一室、灯と控える公家の後ろ姿"
+  B13_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の屋敷の門と明かり"
+  B14_left6:
+    kind: "ai"
+    file: "yoshitsune-if/main/B14.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "灯のそばの机に広げた巻物と筆"
+  B01_right6:
+    kind: "ai"
+    file: "yoshitsune-if/main/B01.jpg"
+    focus: [0.62, 0.5]
+    move: "right"
+    must: "院の御所の一室、灯と控える公家の後ろ姿"
+  B08_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B08.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "山あいの寺の門と石段"
+  B04_in5:
+    kind: "ai"
+    file: "yoshitsune-if/main/B04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕暮れの川沿いの木造の館（想像図）"
+lines:
+  # fact: yoshitsune-15, yoshitsune-11
+- 語り: "九条兼実は、義経を、《義士》と書いた。そして、その死を、《天下の悦び》と書いた。"
+  shot: B18_in5
+  tone: 強調
+  pause: 0.12
+  # fact: yoshitsune-15
+- 語り: "兼実は、京の公家だ。その日記が、玉葉。この時代を知る、大きな手がかりになっている。"
+  shot: B01_in5
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-15
+- 語り: "1185年、11月3日。義経が、頼朝に追われて、京を去った日。兼実は、書く。「義経らの所行は、実に、義士と言うべきか」。"
+  shot: B13_in5
+  tone: 重い
+  pause: 0.12
+  # fact: yoshitsune-11
+- 語り: "1189年、5月29日。義経が泰衡に討たれた、と聞いた兼実は、書く。「天下の悦び、何事かこれに如かず。頼朝卿の運」。"
+  shot: B14_left6
+  tone: 重い
+  pause: 0.12
+  # fact: yoshitsune-04
+- 語り: "だが、兼実は、頼朝にも、厳しかった。1185年11月、守護と地頭を置く願いが、許されたと聞くと、「言語の及ぶ所に非ず」と書いた。"
+  shot: B01_right6
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-15
+- 語り: "さらに4年さかのぼる、1181年。平氏が、秀衡を、陸奥守に任じたときは、「天下の恥」と書いた。"
+  shot: B08_in5
+  tone: しみじみ
+  pause: 0.12
+  # fact: yoshitsune-10
+- 語り: "兼実が、悦んだ、義経の最期。衣川では、何が起きたのか。"
+  shot: B04_in5
+  tone: 疑問
+  pause: 0.15

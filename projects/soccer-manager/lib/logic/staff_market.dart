@@ -43,6 +43,21 @@ class StaffMarket {
     return out;
   }
 
+  /// 役職[role]の候補を1人作る(引き抜きの候補など、全役職を作らないとき)。
+  static StaffMember generateOne({
+    required StaffRole role,
+    required int divisionTier,
+    required int confidence,
+    required String id,
+    Set<String> avoid = const {},
+  }) =>
+      _generateOne(
+          role: role,
+          divisionTier: divisionTier,
+          confidence: confidence,
+          id: id,
+          avoid: {...avoid});
+
   static StaffMember _generateOne({
     required StaffRole role,
     required int divisionTier,

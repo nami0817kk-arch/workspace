@@ -14,7 +14,6 @@ import 'package:soccer_manager/main.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/screens/fixtures_screen.dart';
 import 'package:soccer_manager/screens/home_screen.dart';
-import 'package:soccer_manager/screens/lineup_screen.dart';
 import 'package:soccer_manager/screens/squad_screen.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
 
@@ -43,7 +42,6 @@ List<({String label, WidgetBuilder builder})> _screensUnderTest() => [
         (label: d.label, builder: d.builder),
       (label: 'ホーム', builder: (_) => const HomeScreen()),
       (label: 'スカッド', builder: (_) => const SquadScreen()),
-      (label: '戦術', builder: (_) => const LineupScreen()),
       (label: '日程', builder: (_) => const FixturesScreen()),
     ];
 
@@ -55,6 +53,10 @@ void main() {
   const sizes = <String, Size>{
     '360x780': Size(360, 780),
     '320x568': Size(320, 568),
+    // 横画面前提のアプリ。高さが 375〜390 しかないので、縦に積む画面は
+    // ここで最初に溢れる。
+    '844x390': Size(844, 390),
+    '667x375': Size(667, 375),
     // iPad。掲載画像も出しているのに、この幅では一度も確かめていなかった。
     '1032x1376': Size(1032, 1376),
   };
@@ -135,7 +137,7 @@ void main() {
           await tester.pump();
           tester.takeException();
           expect(
-            find.text(lang == AppLanguage.english ? 'Training' : 'トレーニング'),
+            find.text(lang == AppLanguage.english ? 'Club calendar' : 'クラブの年間予定'),
             findsWidgets,
             reason: '$langLabel のはずが、その言語の見出しが描画されていない',
           );

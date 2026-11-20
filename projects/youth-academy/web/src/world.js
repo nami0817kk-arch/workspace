@@ -1,0 +1,1555 @@
+// 育成の中身：36人（高1〜高3）・1週の流れ・練習・成長・怪我・出来事・卒業と入学。
+// 見せ方には依存しない（試合の engine.js と同じ作り）。状態 w は JSON にそのまま保存できる。
+(function () {
+  'use strict';
+  const YA = (globalThis.YA = globalThis.YA || {});
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  // ---------- 暦 ----------
+  // 1年＝40週（4月第1週〜3月第4週あたり）。1〜30週は毎週試合、31〜39週は大会のない期間、40週は卒業式
+  const WEEKS = 40;
+  const MONTHS = ['4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月', '1月', '2月', '3月'];
+  YA.calendar = function (week) {
+    const m = Math.min(11, Math.floor(((week - 1) / WEEKS) * 12));
+    const first = Math.ceil((m / 12) * WEEKS) + 1;
+    return { month: MONTHS[m], nth: week - first + 1 };
+  };
+  YA.WEEKS = WEEKS;
+
+  // ---------- 能力の分類・特性の覚えやすさ ----------
+  YA.TRAIT_AFF = {
+    裏への抜け出し: ['オフザボール', '加速'], カットイン: ['ドリブル', '敏しょう性'], 縦への突破: ['スピード', 'ドリブル'], ワンツー: ['パス', 'チームワーク'], スルーパス: ['パス', '視野'],
+    アーリークロス: ['クロス', '視野'], 巻いて流し込むシュート: ['フィニッシュ', 'テクニック'], ループシュート: ['フィニッシュ', '冷静さ'], 弾丸ミドル: ['ロングシュート', '強さ'], ポストプレー: ['強さ', 'ファーストタッチ'],
+    ひらめき: ['テクニック', '判断'], 背負ってからのターン: ['バランス', '敏しょう性'], ニアへの飛び込み: ['オフザボール', '予測'], こぼれ球への嗅覚: ['予測', '集中'], ヘディングシュート: ['ヘディング', 'ジャンプ'],
+    下がって受ける: ['ファーストタッチ', '視野'], ボールを運ぶ: ['ドリブル', '運動量'], サイドチェンジ: ['パス', '視野'], オーバーラップ: ['スタミナ', '運動量'], タメを作る: ['ファーストタッチ', '冷静さ'],
+    前線からの守備: ['運動量', 'チームワーク'], 読みのインターセプト: ['予測', 'ポジショニング'], スライディング: ['タックル', '敏しょう性'], '1対1の粘り': ['タックル', 'マーク'], 空中戦の競り: ['ジャンプ', 'ヘディング'],
+    カバーリング: ['ポジショニング', '判断'], ボール奪取: ['タックル', '強さ'], ラインコントロール: ['ポジショニング', '集中'], シュートブロック: ['集中', '強さ'], 即時奪回: ['運動量', '加速'],
+    ロングスロー: ['強さ', 'スタミナ'], 直接FK: ['プレースキック', 'テクニック'], 曲がるCK: ['プレースキック', 'クロス'],
+    ファウルをもらう: ['バランス', '判断'], 声で味方を動かす: ['視野', 'チームワーク'], 試合を落ち着かせる: ['冷静さ', '集中'],
+    前に出るGK: ['飛び出し', '1対1'], PKストップ: ['反応', '1対1'], パンチング: ['ハンドリング', '空中戦'], 速い配球: ['配球', '判断'], 足元のうまいGK: ['ファーストタッチ', '配球'], クロスへの強さ: ['空中戦', 'エリアの支配'],
+    // 2026-11-15 に足した12個
+    ノールックパス: ['視野', 'テクニック'], 股抜き: ['テクニック', '敏しょう性'], ファーで待つ: ['オフザボール', 'ヘディング'], マイナスの折り返し: ['クロス', '判断'],
+    ダイレクトシュート: ['フィニッシュ', 'ファーストタッチ'], 両足のシュート: ['ロングシュート', 'テクニック'], 体を寄せる: ['強さ', 'バランス'], 最後の砦: ['集中', 'タックル'],
+    戻りの速さ: ['スピード', '運動量'], PKの名手: ['PK', '冷静さ'], 至近距離のセーブ: ['反応', '1対1'], ミドルに強いGK: ['反応', 'ハンドリング'],
+    トラップの名手: ['ファーストタッチ', 'テクニック'], ドリブルの緩急: ['加速', 'ドリブル'], GKとの駆け引き: ['冷静さ', 'フィニッシュ'], シュートフェイント: ['テクニック', '冷静さ'],
+    グラウンダーのクロス: ['クロス', 'パス'], ワンタッチパス: ['パス', 'ファーストタッチ'], '3人目の動き': ['オフザボール', 'チームワーク'], 高い打点: ['ジャンプ', 'ヘディング'],
+    コースを切る: ['ポジショニング', '集中'], マンマーク: ['マーク', '集中'], 正確なタックル: ['タックル', '予測'], ハイプレスの先頭: ['運動量', '加速'],
+    低く速いCK: ['プレースキック', 'パス'], 無回転FK: ['プレースキック', 'ロングシュート'], 終盤に強い: ['スタミナ', '冷静さ'], ビッグセーブ: ['反応', '飛び出し'],
+  };
+  const GK_TRAITS = YA.TRAIT_GROUPS.GK;
+  const FIELD_TRAITS = YA.TRAITS.filter((t) => GK_TRAITS.indexOf(t) < 0);
+
+  // 練習メニュー12（決定48）。ability → 効き。fat = 疲れの溜まりやすさ（回復は負）
+  const M = (ab, fat, note) => ({ ab, fat, note });
+  YA.MENUS = {
+    ボール回し: M({ パス: 1, ファーストタッチ: 1, テクニック: 0.8, 視野: 0.8, チームワーク: 0.7, 判断: 0.6 }, 1, 'パスと視野'),
+    対人: M({ タックル: 1, マーク: 1, ドリブル: 0.8, 敏しょう性: 0.7, 強さ: 0.7 }, 1.3, '1対1の強さ'),
+    シュート: M({ フィニッシュ: 1, ロングシュート: 0.8, PK: 0.6, 逆足の精度: 0.7, ヘディング: 0.5 }, 1, '決定力'),
+    クロスと合わせ: M({ クロス: 1, ヘディング: 0.9, フィニッシュ: 0.6, オフザボール: 0.7, ジャンプ: 0.6 }, 1, 'サイド攻撃'),
+    戦術: M({ 判断: 1, 予測: 1, ポジショニング: 1, チームワーク: 0.8, オフザボール: 0.7 }, 0.7, '頭の力'),
+    守備の組織: M({ ポジショニング: 1, マーク: 0.9, 予測: 0.9, 集中: 0.9, チームワーク: 0.7 }, 0.9, '守りの形'),
+    紅白戦: M({ 判断: 0.7, 予測: 0.6, ファーストタッチ: 0.6, パス: 0.5, ドリブル: 0.5, 運動量: 0.5, 集中: 0.5 }, 1.4, '総合（試合勘）'),
+    フィジカル: M({ スタミナ: 1, 強さ: 1, ジャンプ: 0.8, バランス: 0.8, 運動量: 0.7 }, 1.7, '体づくり'),
+    アジリティ: M({ 加速: 1, スピード: 1, 敏しょう性: 1, バランス: 0.6 }, 1.2, '素早さ'),
+    セットプレー: M({ プレースキック: 1, クロス: 0.7, ヘディング: 0.6, PK: 0.8 }, 0.6, 'FK・CK'),
+    相手の対策: M({ 予測: 0.8, 判断: 0.8, 集中: 0.8, ポジショニング: 0.6 }, 0.6, '次の相手に備える'),
+    回復: M({}, -2.2, '疲れを抜く'),
+  };
+  YA.MENUS['練習試合'] = M({ 判断: 0.7, 予測: 0.6, ファーストタッチ: 0.6, パス: 0.5, ドリブル: 0.5, 運動量: 0.5, 集中: 0.5, フィニッシュ: 0.4 }, 1.5, '出番の少ない子に試合の機会');
+  YA.MENU_NAMES = Object.keys(YA.MENUS);
+  const GK_TRAIN = { ハンドリング: 0.9, 反応: 0.9, '1対1': 0.8, 飛び出し: 0.8, 空中戦: 0.7, エリアの支配: 0.7, コーチング: 0.5, 配球: 0.6 };
+  // 決定104：きつい＝伸び約1.3倍（怪我のおそれは約2倍、下の risk）・軽め＝伸び少なめで回復が多め。
+  // 強さの倍率は、メニューの伸びだけでなく重点・チームの重点・戦術の上乗せにも掛ける（2026-11-17 直し：前はメニューの分だけで、
+  // きついと疲れの罰が上回って普通より伸びなかった）
+  const INTENS = { light: 0.8, normal: 1, hard: 1.3 };
+  const INT_FAT = { light: 0.5, normal: 1, hard: 1.45 }; // 強さごとの疲れのたまり方
+  YA.INTENS = INTENS;
+  YA.INT_FAT = INT_FAT;
+  // 疲れの回復（毎週）：決まった分＋いまの疲れの割合。休むと大きく抜ける
+  YA.FAT_REC = { base: 2, share: 0.07, rest: 10, restShare: 0.3 };
+  YA.UNREST_DECAY = 0.15; // 不満が毎週自然に和らぐ量
+  YA.BIG_INJ_P = 0.06; // 怪我のうち、長い怪我（8〜24週）になる割合
+  // 試合の怪我：90分あたりの確率（疲れが50を超えると上がる）
+  YA.MATCH_INJ = { base: 0.008, fat: 0.02 };
+  // 指導者・スタッフ・施設・合宿・規律の倍率は、掛け合わせたあとに上限のある形へ（2026-11-17 直し：年々伸びが大きくなり、
+  // 卒業時の総合力が上がり続けていた）。1 からのずれを半分にして 0.85〜1.15 に収める
+  YA.GROW_MULT_MAX = 1.15;
+  YA.growMult = (raw) => clamp(1 + (raw - 1) * 0.5, 0.85, YA.GROW_MULT_MAX);
+  // 伸びの基本の速さ（卒業時の平均が部ごとの目安に収まるように合わせる）
+  YA.GROW_BASE = 0.108; // 前は 0.17（卒業時の平均が2部で120〜130になっていた）
+  // 3年間の伸びの上限（入団したときの能力の合計から、能力1つあたり。覚醒した子は上限が広がる）
+  YA.GROW3_PER = 3.2;
+  YA.grow3Room = function (p) {
+    const n = (p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length;
+    if (p.sumIn == null) p.sumIn = YA.abSum(p) - ((p.grade || 1) - 1) * n * 1.2;
+    return p.sumIn + n * YA.GROW3_PER * (p.awake ? 1.4 : 1) - YA.abSum(p);
+  };
+  YA.INTENS_NAMES = { light: '軽め', normal: '普通', hard: 'きつい' };
+
+  const MENTAL_SET = new Set(YA.AB_MENTAL);
+
+  // ---------- 選手 ----------
+  const POS_ABS = {
+    GK: YA.AB_GK,
+    DF: ['タックル', 'マーク', 'ポジショニング', '予測', 'ヘディング', '強さ'],
+    MF: ['パス', '視野', '判断', 'ドリブル', '運動量', 'テクニック'],
+    FW: ['フィニッシュ', 'ドリブル', 'スピード', 'オフザボール', '加速', 'ヘディング'],
+  };
+  YA.ovr = function (p) {
+    const a = YA.POS_ABS15[p.main] || POS_ABS[p.pos];
+    return a.reduce((s, n) => s + p.ab[n], 0) / a.length;
+  };
+  const abSum = (p) => (p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).reduce((s, n) => s + p.ab[n], 0);
+  YA.abSum = abSum;
+  const abList = (p) => (p.pos === 'GK' ? YA.AB_GK.concat(YA.AB_MENTAL, YA.AB_PHYS) : YA.AB_FIELD);
+
+  const SUR = ['佐藤', '鈴木', '高橋', '田中', '伊藤', '渡辺', '山本', '中村', '小林', '加藤', '吉田', '山田', '佐々木', '山口', '松本', '井上', '木村', '林', '斎藤', '清水', '山崎', '森', '池田', '橋本', '阿部', '石川', '山下', '中島', '石井', '小川', '前田', '岡田', '長谷川', '藤田', '後藤', '近藤', '村上', '遠藤', '青木', '坂本', '福田', '太田', '西村', '藤井', '金子', '三浦', '岡本', '松田', '中川', '原田', '竹内', '和田', '上田', '柴田', '工藤', '横山', '宮崎', '内田', '高木', '安藤'];
+  const GIV = ['蓮', '大翔', '陽翔', '湊', '蒼', '樹', '悠真', '朝陽', '律', '颯太', '龍之介', '海斗', '凛', '奏', '隼人', '拓海', '翔', '航', '陸', '光', '諒', '慎', '健太', '直樹', '康介', '優斗', '駿', '瑛太', '晴', '誠', '大和', '陽太', '悠斗', '碧', '旭', '想', '勇気', '尚', '遼', '怜'];
+  const PERS_W = YA.PERS_W = {
+    気持ちの強さ: { ふつう: 4, 負けず嫌い: 2, 粘り強い: 2, 楽天家: 1.5, 繊細: 1.5, 完璧主義: 1 },
+    感情の波: { ふつう: 4, 気分屋: 1.5, 安定型: 2, 短気: 1.2 },
+    大舞台: { ふつう: 4, 大舞台に強い: 1.2, 目立ちたがり: 1, プレッシャーに弱い: 1.2, 慎重: 1.2 },
+    人との関わり: { ふつう: 3, リーダー気質: 1, 世話好き: 1, 仲間思い: 1.5, お調子者: 1.2, 一匹狼: 0.8, 人見知り: 1, 寡黙: 1 },
+    教えの受け止め方: { ふつう: 2, 素直: 3, 頑固: 1.5, マイペース: 1.5, 構ってほしい: 1.2, 反骨心: 1.2 },
+    練習への向き合い: { ふつう: 2, 真面目: 3, 勉強家: 1.5, 練習嫌い: 1.2 },
+    目指すもの: { ふつう: 3, 野心家: 1.5, クラブ愛: 1, 家族思い: 1.2, 寂しがり: 1 },
+    プレーの気質: { ふつう: 3, 闘争的: 1.3, 勇敢: 1.3, 献身的: 1.3, ずる賢い: 1, 自信家: 1.2 },
+  };
+
+  // 学年 g=1,2,3。quality は -2〜+2 の素質
+  YA.randName = function (rng, used) {
+    let name;
+    for (let k = 0; k < 50; k++) {
+      name = rng.pick(SUR) + ' ' + rng.pick(GIV);
+      if (!used || !used.has(name)) break;
+    }
+    if (used) used.add(name);
+    return name;
+  };
+  YA.genPlayer = function (rng, id, grade, pos, quality, used) {
+    let name;
+    for (;;) {
+      name = rng.pick(SUR) + ' ' + rng.pick(GIV);
+      if (!used || !used.has(name)) break;
+    }
+    if (used) used.add(name);
+    const lvl = 6.4 + grade * 0.8 + quality * 0.9; // 決定100：入学時は高1の平均（総合力62）に寄せる
+    // pos は15個のうちの1つ。素質は3割で隣のポジション向き（登録とずれている＝あとで気づく）
+    const grp = YA.GROUP[pos];
+    const NEAR = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], LWB: ['LB', 'LM'], RWB: ['RB', 'RM'], DM: ['CM', 'CB'], CM: ['DM', 'AM'], LM: ['LW', 'CM'], RM: ['RW', 'CM'], AM: ['CM', 'SS'], LW: ['LM', 'AM'], RW: ['RM', 'AM'], SS: ['AM', 'ST'], ST: ['SS', 'LW'] };
+    const trueP = pos === 'GK' ? pos : rng() < 0.12 ? NEAR[pos][rng.int(0, 1)] : pos;
+    const shifted = trueP !== pos;
+    const focus = YA.POS_ABS15[trueP];
+    const boost = {};
+    for (let k = 0; k < (shifted ? 4 : 3); k++) boost[rng.pick(focus)] = shifted ? rng.int(2, 5) : rng.int(1, 4);
+    for (const n of YA.AB_MENTAL.concat(YA.AB_PHYS, YA.AB_TECH)) if (!boost[n] && rng.chance(0.12)) boost[n] = rng.pick([-2, -1, 1, 2]);
+    const weak = rng.pick(YA.AB_FIELD);
+    boost[weak] = (boost[weak] || 0) - 2;
+    const p = YA.mkPlayer(rng, { id, num: 0, name, pos: grp, main: pos, best: trueP, lvl, boost, traits: [], pers: {}, height: 164 + rng.int(0, 22) + (grp === 'GK' ? 5 : pos === 'CB' ? 3 : 0) });
+    // 性格
+    for (const g of Object.keys(PERS_W)) {
+      const ent = Object.entries(PERS_W[g]);
+      p.pers[g] = rng.weighted(ent, (e) => e[1])[0];
+    }
+    YA.trimPers(p, rng);
+    // 特性：能力に合うものを1〜2個（高学年ほど持っている）
+    const pool = (pos === 'GK' ? GK_TRAITS : FIELD_TRAITS).filter((t) => t in YA.TRAIT_AFF);
+    const nt = grade === 1 ? rng.int(0, 1) : grade === 2 ? rng.int(0, 2) : rng.int(1, 2);
+    for (let k = 0; k < nt; k++) {
+      const t = rng.weighted(pool, (x) => Math.pow(YA.TRAIT_AFF[x].reduce((s, n) => s + (p.ab[n] || 1), 0) / 2 / 10, 3));
+      if (p.traits.indexOf(t) < 0) p.traits.push(t);
+    }
+    // 隠れた中身：伸びしろ（能力の合計の上限）・伸びる速さ・項目ごとの伸びやすさ
+    const room = Math.round((90 + quality * 28 + rng.int(-25, 40)) * (grade === 1 ? 1.25 : grade === 2 ? 1 : 0.75));
+    // GK は能力が8つ（フィールドは29）。伸びしろは能力1つあたりで同じ物差しにする（2026-11-20：GK の将来が高く出すぎていた）
+    const potK = (pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length / YA.AB_FIELD.length;
+    p.pot = abSum(p) + Math.round(clamp(room, 25, 260) * potK);
+    p.potFix = 1;
+    p.sumIn = abSum(p) - (grade - 1) * (pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length * 1.2; // 3年間の伸びの上限の起点（入団したとき）
+    p.rate = Math.round((0.75 + rng() * 0.6) * 100) / 100;
+    p.aff = {};
+    for (const n of abList(p)) p.aff[n] = Math.round((0.75 + rng() * 0.5) * 100) / 100;
+    p.grade = grade;
+    p.team = 'B';
+    p.fat = rng.int(0, 15);
+    p.inj = 0;
+    p.mins = 0;
+    p.prog = {};
+    p.train = { focus: null, trait: null };
+    p.tprog = {};
+    p.rest = null; // null | 'light' | 'rest'
+    p.star = false;
+    p.spurt = 0; // 成長期の残り週
+    p.unrest = 0; // 不満の溜まり
+    p.talk = -99; // 最後に面談した週（通し）
+    p.gain = {}; // 直近の伸び（表示用）
+    p.hist = []; // 履歴（最近の出来事）
+    p.stam = 100;
+    return p;
+  };
+
+  function numbers(w) {
+    const used = new Set(Object.values(w.players).map((p) => p.num).filter(Boolean));
+    const pref = { GK: [1, 12, 13, 21, 22], DF: [2, 3, 4, 5, 14, 15, 16, 17, 23, 24], MF: [6, 8, 10, 18, 19, 20, 25, 26, 27, 28], FW: [7, 9, 11, 29, 30, 31, 32] };
+    const take = (p) => {
+      for (const n of pref[p.pos]) if (!used.has(n)) return n;
+      for (let n = 2; n < 100; n++) if (!used.has(n)) return n;
+    };
+    for (const p of Object.values(w.players)) if (!p.num) {
+      p.num = take(p);
+      used.add(p.num);
+    }
+  }
+
+  // 1学年12人（GK1・DF4・MF4・FW3）
+  function genGrade(rng, w, grade, used) {
+    const NEARP = { CB: ['DM', 'LB'], LB: ['LWB', 'CB'], RB: ['RWB', 'CB'], DM: ['CM', 'CB'], CM: ['DM', 'LM'], AM: ['SS', 'RM'], LW: ['LM', 'SS'], RW: ['RM', 'SS'], ST: ['SS', 'LW'] };
+    const base15 = ['GK', 'CB', 'CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LW', 'RW', 'ST'];
+    const poss = base15.map((q) => (q !== 'GK' && rng.chance(0.3) ? NEARP[q][rng.int(0, 1)] : q));
+    for (const pos of poss) {
+      const id = 'p' + ++w.nextId;
+      // 始めた年の高2・高3は、前の指導者が選んで育ててきた子（入学時の水準を下げた分、1年目が弱くなりすぎないように）
+      const q = clamp(Math.round((rng() + rng() + rng() - 1.5) * 2.2) + (w.tierQ || 0) + (grade - 1) * 0.6, -2, 3);
+      w.players[id] = YA.genPlayer(rng, id, grade, pos, q, used);
+    }
+  }
+
+  YA.newWorld = function (seed, opts) {
+    opts = opts || {};
+    const rng = YA.rngOf(seed);
+    const w = { v: 1, seed, year: 1, week: 1, nextId: 0, players: {}, plan: null, inbox: [], events: [], alumni: [], results: [], rec: { w: 0, d: 0, l: 0, gf: 0, ga: 0 }, phase: 'plan', captain: null, formation: '4-3-3', lineupA: null, benchA: null, lineupB: null, tactic: null, lastWeek: null, season: 1, notes: [], clubName: '湘南 ベルマリーナU-18', matchDone: false, log: [] };
+    w.tierQ = (2 - (opts.tier || 2)) * 0.5; // 上の部のクラブほど、素質のある子が集まる
+    const used = new Set();
+    for (const g of [1, 2, 3]) genGrade(rng, w, g, used);
+    numbers(w);
+    autoTeams(w, true);
+    w.plan = defaultPlan();
+    w.v = 3;
+    w.coach = opts.coach ? Object.assign(YA.newCoach(), opts.coach) : YA.newCoach();
+    w.coachName = opts.coachName || '監督';
+    w.tut = { on: opts.tutorial !== false };
+    w.scouting = YA.newScouting();
+    w.disc = 60;
+    w.rules = [];
+    w.trophies = [];
+    w.h2h = {};
+    w.rel = [];
+    YA.newClub(w, opts.tier || 2, opts.clubName || w.clubName);
+    w.club.noFire = !!opts.noFire;
+    YA.initTop(w);
+    if (opts.repAdj) YA.addRep(w, opts.repAdj);
+    YA.relations(w);
+    YA.yearStart(w);
+    YA.autoPlan(w);
+    w.inbox.push({ week: 0, year: 1, tier: 2, text: '指導者として着任しました。高1〜高3の36人を預かります。まずは練習を組んで、週を進めましょう。' });
+    return w;
+  };
+
+  function defaultPlan() {
+    return { days: [{ menu: 'ボール回し', int: 'normal' }, { menu: '対人', int: 'normal' }, { menu: '戦術', int: 'normal' }, { menu: 'シュート', int: 'normal' }, { menu: '回復', int: 'light' }] };
+  }
+  YA.defaultPlan = defaultPlan;
+
+  // ---------- チーム（A・B）の自動選出 ----------
+  const SQUAD = { GK: 2, DF: 7, MF: 7, FW: 4 }; // Aの登録20
+  YA.YOUNG_A_BONUS = 0.3; // 年度替わりのおまかせの選び直しで、高1に足す力（能力の平均で）
+  function healthy(p) {
+    return p.inj <= 0 && !(p.away > 0) && !(p.suspend > 0);
+  }
+  function autoTeams(w, init, young) {
+    const all = Object.values(w.players);
+    // Aは能力の高い順に位置ごとの枠を埋める（学年は問わない）
+    const byPos = {};
+    for (const p of all) (byPos[p.pos] = byPos[p.pos] || []).push(p);
+    // 年度の目標に「高1をAで使う」約束があるので、年度替わりの選び直しでは高1を少し優先する（2026-11-17 直し：
+    // おまかせでは高1がAにほとんど入らず、約束の目標に届かなかった）
+    const youngK = (p) => (young && p.grade === 1 ? YA.YOUNG_A_BONUS : 0);
+    for (const k of Object.keys(byPos)) byPos[k].sort((a, b) => YA.ovr(b) + youngK(b) - YA.ovr(a) - youngK(a));
+    const A = new Set();
+    for (const pos of Object.keys(SQUAD)) byPos[pos].slice(0, SQUAD[pos]).forEach((p) => A.add(p.id));
+    for (const p of all) p.team = A.has(p.id) ? 'A' : 'B';
+    // 布陣4-3-3の11人
+    w._youngA = !!young;
+    pickLineup(w, 'A', init ? '4-3-3' : w.formation);
+    w._youngA = false;
+    pickLineup(w, 'B', (w.bCtl && w.bCtl.form) || '4-3-3');
+  }
+  // 枠に置いたときの値打ち：力×その位置の適性（◎はそのまま、○で1割弱、△で2〜3割、×は大きく落ちる）
+  YA.slotValue = function (p, p15) {
+    if ((p.pos === 'GK') !== (p15 === 'GK')) return -99;
+    const a = p.apt ? p.apt[p15] : 10;
+    const k = a >= 17 ? 1 : a >= 14 ? 1 - (17 - a) * 0.02 : a >= 10 ? 0.72 - (14 - a) * 0.04 : 0.35;
+    return YA.ovr(p) * k;
+  };
+  // 布陣の枠を、候補の少ない枠から順に、値打ちのいちばん高い選手で埋める
+  YA.fillSlots = function (fm, pool, key) {
+    const slots = fm.map((s, i) => ({ i, s, pos: YA.pos15OfSlot(s, i) }));
+    const left = pool.slice();
+    const lineup = new Array(fm.length);
+    const good = (sl) => left.filter((p) => (p.apt ? p.apt[sl.pos] : 10) >= 14).length;
+    const order = slots.slice();
+    while (order.length && left.length) {
+      order.sort((a, b) => (b.pos === 'GK') - (a.pos === 'GK') || good(a) - good(b));
+      const sl = order.shift();
+      let k = -1;
+      let bv = -1e9;
+      left.forEach((p, j) => {
+        const v = YA.slotValue(p, sl.pos) + (key ? key(p) : 0);
+        if (v > bv) { bv = v; k = j; }
+      });
+      const p = left.splice(k, 1)[0];
+      lineup[sl.i] = { pid: p.id, x: sl.s.x, y: sl.s.y, role: YA.defaultRole(sl.pos) };
+      YA.fixSlotRole(lineup[sl.i], sl.i);
+    }
+    return lineup;
+  };
+  const NEED = { '4-3-3': { GK: 1, DF: 4, MF: 3, FW: 3 }, '4-4-2': { GK: 1, DF: 4, MF: 4, FW: 2 }, '4-2-3-1': { GK: 1, DF: 4, MF: 5, FW: 1 }, '3-5-2': { GK: 1, DF: 3, MF: 5, FW: 2 }, '5-3-2': { GK: 1, DF: 5, MF: 3, FW: 2 } };
+  function pickLineup(w, which, formation) {
+    if (!YA.FORMATIONS[formation]) formation = '4-3-3';
+    const pool = Object.values(w.players).filter((p) => p.team === which);
+    // Bの起用方針が「手動」なら、いまの並びを残す（人が変わった・布陣が変わったときだけ組み直す）
+    if (which === 'B' && w.bCtl && w.bCtl.policy === 'manual' && w.lineupB && w.benchB && w.lineupB.length === YA.FORMATIONS[formation].length
+      && w.lineupB.every((s) => w.players[s.pid] && w.players[s.pid].team === 'B') && w.benchB.every((id) => w.players[id] && w.players[id].team === 'B')
+      && w.bCtl.formKept === formation) return;
+    const fm = YA.FORMATIONS[formation];
+    // Bチームの起用方針（決定30）：力の順／下級生を優先／疲れの少ない順
+    const pol = which === 'B' && w.bCtl ? w.bCtl.policy : 'best';
+    const key = (p) => -(p.fat * 0.01) + (pol === 'young' ? (3 - p.grade) * 0.6 : 0) - (pol === 'rest' ? p.fat * 0.04 : 0) + (which === 'A' && w._youngA && p.grade === 1 ? YA.YOUNG_A_BONUS * 0.8 : 0);
+    const cand = pool.filter(healthy);
+    // 動けるGKがいなければ、怪我のGKでも入れる（Bは repairLineup でフィールドの選手に替わる）
+    if (!cand.some((p) => p.pos === 'GK')) {
+      const g = pool.filter((p) => p.pos === 'GK').sort((a, b) => YA.ovr(b) - YA.ovr(a))[0];
+      if (g) cand.push(g);
+    }
+    const lineup = YA.fillSlots(fm, cand, key);
+    const bench = pool.filter((p) => !lineup.some((l) => l.pid === p.id)).sort((a, b) => YA.ovr(b) - YA.ovr(a)).map((p) => p.id);
+    if (which === 'A') {
+      w.lineupA = lineup;
+      w.benchA = bench.slice(0, 9);
+      w.formation = formation;
+    } else {
+      w.lineupB = lineup;
+      w.benchB = bench.slice(0, 9);
+    }
+  }
+  YA.autoTeams = autoTeams;
+  YA.pickLineup = pickLineup;
+
+  // 怪我などで抜けた選手を、同じ位置のベンチと入れ替える
+  function repairLineup(w, which) {
+    const lineup = which === 'A' ? w.lineupA : w.lineupB;
+    const bench = which === 'A' ? w.benchA : w.benchB;
+    const swaps = [];
+    lineup.forEach((s, i) => {
+      const p = w.players[s.pid];
+      const pos = YA.posOfSlot(s, i);
+      if (p && healthy(p) && pos === 'GK' && p.pos !== 'GK') {
+        // 代わりにゴールを守っていたフィールドの選手：GKが戻ったら交代する
+        const kg = bench.findIndex((id) => w.players[id] && w.players[id].pos === 'GK' && healthy(w.players[id]));
+        if (kg >= 0) {
+          const inId = bench[kg];
+          bench[kg] = s.pid;
+          s.pid = inId;
+          swaps.push([p, w.players[inId]]);
+        }
+        return;
+      }
+      if (p && healthy(p)) return;
+      let k = bench.findIndex((id) => w.players[id] && healthy(w.players[id]) && (pos === 'GK' ? w.players[id].pos === 'GK' : w.players[id].pos !== 'GK'));
+      if (pos !== 'GK') {
+        // その位置の適性が一番高いベンチの選手
+        const p15 = YA.pos15OfSlot(s, i);
+        let k2 = -1;
+        let bv2 = -1;
+        bench.forEach((id, kk) => {
+          const q = w.players[id];
+          if (q && healthy(q) && q.pos !== 'GK' && q.apt && q.apt[p15] > bv2) { bv2 = q.apt[p15]; k2 = kk; }
+        });
+        if (k2 >= 0) k = k2;
+      }
+      if (k < 0 && which === 'B' && pos === 'GK') {
+        // BのGKがいない：まずAの控えGKを借りる（怪我のGKはAのベンチへ）
+        const ka = (w.benchA || []).findIndex((id) => w.players[id] && w.players[id].pos === 'GK' && healthy(w.players[id]));
+        if (ka >= 0) {
+          const up = w.players[w.benchA[ka]];
+          w.benchA[ka] = s.pid;
+          if (p) p.team = 'A';
+          up.team = 'B';
+          s.pid = up.id;
+          swaps.push([p, up]);
+          return;
+        }
+        // それもいない：ベンチのフィールドの選手で、GKの適性がいちばん高い子がゴールを守る
+        let kf = -1;
+        let bf = -1;
+        bench.forEach((id, kk) => {
+          const q = w.players[id];
+          if (q && healthy(q) && q.pos !== 'GK' && (q.apt ? q.apt.GK : 1) > bf) { bf = q.apt ? q.apt.GK : 1; kf = kk; }
+        });
+        if (kf < 0) return;
+        const inId = bench[kf];
+        bench[kf] = s.pid;
+        s.pid = inId;
+        swaps.push([p, w.players[inId]]);
+        return;
+      }
+      if (k < 0) {
+        // Aのベンチに代わりがいない：Bのベンチから動ける選手を上げ、抜けた選手はBへ回す
+        if (which !== 'A' || !w.benchB) return;
+        const p15 = YA.pos15OfSlot(s, i);
+        let up = null;
+        let bvb = -1;
+        for (const q of Object.values(w.players)) {
+          if (q.team !== 'B' || !healthy(q) || (q.pos === 'GK') !== (pos === 'GK') || w.lineupB.some((x) => x.pid === q.id)) continue;
+          const v = (q.apt ? q.apt[p15] : 10) + (w.benchB.indexOf(q.id) >= 0 ? 0.1 : 0);
+          if (v > bvb) { bvb = v; up = q; }
+        }
+        // GKだけは、Bの先発GKでも上げる（Aの試合を優先。Bはこのあと控えの誰かがゴールを守る）
+        if (!up && pos === 'GK') up = Object.values(w.players).find((q) => q.team === 'B' && q.pos === 'GK' && healthy(q)) || null;
+        if (!up) return;
+        const kb = w.benchB.indexOf(up.id);
+        if (kb >= 0) w.benchB[kb] = s.pid;
+        const sb = kb < 0 ? w.lineupB.find((x) => x.pid === up.id) : null;
+        if (sb) sb.pid = s.pid;
+        if (p) p.team = 'B';
+        up.team = 'A';
+        s.pid = up.id;
+        YA.fixSlotRole(s, i);
+        swaps.push([p, up]);
+        return;
+      }
+      const inId = bench[k];
+      bench[k] = s.pid;
+      s.pid = inId;
+      swaps.push([p, w.players[inId]]);
+    });
+    swaps.push(...limitForeign(w, which));
+    return swaps;
+  }
+  // 外国籍の出場は3人まで（登録は5人まで）。超えたら、同じ括りの日本人のベンチと入れ替える
+  function isForeign(p) {
+    return !!p && !!p.nation && p.nation !== '日本';
+  }
+  YA.isForeign = isForeign;
+  function limitForeign(w, which) {
+    const lineup = which === 'A' ? w.lineupA : w.lineupB;
+    const bench = which === 'A' ? w.benchA : w.benchB;
+    const swaps = [];
+    let guard = 0;
+    while (guard++ < 6) {
+      const fs = lineup.map((s, i) => ({ s, i, p: w.players[s.pid] })).filter((x) => isForeign(x.p));
+      if (fs.length <= 3) break;
+      const out = fs.sort((a, b) => YA.ovr(a.p) - YA.ovr(b.p))[0];
+      const p15 = YA.pos15OfSlot(out.s, out.i);
+      let k = -1;
+      let bv = -1;
+      bench.forEach((id, kk) => {
+        const q = w.players[id];
+        if (q && healthy(q) && !isForeign(q) && (q.pos === 'GK') === (out.p.pos === 'GK') && q.apt && q.apt[p15] > bv) { bv = q.apt[p15]; k = kk; }
+      });
+      if (k < 0) break;
+      const inId = bench[k];
+      bench[k] = out.s.pid;
+      out.s.pid = inId;
+      swaps.push([out.p, w.players[inId]]);
+    }
+    return swaps;
+  }
+  YA.limitForeign = limitForeign;
+  YA.tactRepOf = function (w) {
+    const same = w.tactMem && w.tactic && w.tactMem.type === w.tactic.type ? w.tactMem.weeks : 0;
+    return Math.round((0.6 + 0.4 * Math.min(1, same / 12)) * 100) / 100;
+  };
+  YA.repairLineup = repairLineup;
+
+  // 名簿 → 試合用のチーム（engine の Match がそのまま使える形）
+  YA.teamFromWorld = function (w, which) {
+    const lineup = which === 'A' ? w.lineupA : w.lineupB;
+    // 出場停止の子はベンチにも入れない（先発から外れた子がベンチに回って、途中から出られていた）
+    const bench = (which === 'A' ? w.benchA : w.benchB).filter((id) => !(w.players[id] && w.players[id].suspend > 0));
+    lineup.forEach((s, i) => YA.fixSlotRole(s, i)); // 古い保存データの役割名や、任務のないスロットを直す
+    const ids = lineup.map((s) => s.pid).concat(bench);
+    const players = {};
+    for (const id of ids) {
+      const p = w.players[id];
+      // 疲れが25を超えた分だけ、試合のはじめのスタミナが減る（疲れがたまるようにしたので、少しの疲れでは響かない）
+      p._startStam = clamp(100 - Math.max(0, p.fat - 25) * 0.6, 35, 100);
+      p.isCap = w.captain === id;
+      p.isVice = w.vice === id;
+      p.friends = (w.rel || []).filter((x) => x.k === 'friend' && (x.a === id || x.b === id)).map((x) => (x.a === id ? x.b : x.a));
+      players[id] = p;
+    }
+    return { id: 'me', name: w.clubName + (which === 'B' ? ' B' : ''), short: YA.shortName(w.clubName) + (which === 'B' ? 'B' : ''), color: '#1f6feb', isUser: true, players, lineup: JSON.parse(JSON.stringify(lineup)), bench: bench.slice(), tactic: which === 'B' && w.bCtl && w.bCtl.tactic && YA.TACTICS[w.bCtl.tactic] ? Object.assign({ type: w.bCtl.tactic }, YA.TACTICS[w.bCtl.tactic]) : w.tactic ? JSON.parse(JSON.stringify(w.tactic)) : Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']), instr: {}, subsUsed: 0, windowsUsed: 0, formation: w.formation, prep: YA.analysisLevel ? YA.analysisLevel(w) : 0, coachTactic: w.coach ? w.coach.tactic : 10, disc: w.disc, tactRep: YA.tactRepOf(w) };
+  };
+
+  // 相手（週ごとに決まる）。年とともに強くなる
+  const AREAS = ['横浜', '川崎', '相模原', '千葉', '埼玉', '東京', '茨城', '静岡', '山梨', '栃木', '群馬', '長野'];
+  const NICK = ['ブルーウィング', 'シルバーホーク', 'アルバトロス', 'グリーンリーフ', 'ノースウィンド', 'サンライズ', 'レッドフォックス', 'ブラックベアーズ', 'ホワイトタイガース', 'ゴールデンイーグル'];
+  const HS = ['学院高校', '第一高校', '東高校', '南高校', '北高校', '工業高校', '大付属高校'];
+  YA.opponentOf = function (w) {
+    const r = YA.rngOf(w.seed * 31 + w.year * 1000 + w.week * 7);
+    const kind = r.chance(0.55) ? 'club' : 'high';
+    const area = r.pick(AREAS);
+    const name = kind === 'club' ? area + ' ' + r.pick(NICK) + 'ユース' : area + r.pick(HS);
+    const style = r.pick(['power', 'tech', 'defend']);
+    const tac = { power: 'ハイプレス', tech: 'ポゼッション', defend: '堅守' }[style];
+    const lvl = 9.6 + w.year * 0.35 + r() * 2.2 + (kind === 'club' ? 0.4 : 0);
+    const fm = r.pick(['4-4-2', '4-3-3', '5-3-2', '4-2-3-1']);
+    return { id: 'o' + w.year + '_' + w.week, name, short: name.length > 9 ? name.slice(0, 9) : name, color: r.pick(['#c0392b', '#2c3e50', '#7f8c8d', '#8e44ad', '#d35400', '#16a085']), lvl, formation: fm, tactic: tac, desc: style === 'power' ? '体が強く、前から奪いにくる' : style === 'tech' ? 'つないで崩す技術派' : '堅守速攻。裏抜けに注意', style, home: r.chance(0.5) };
+  };
+
+  // ---------- 1週を進める：練習 → 怪我・疲れ → 出来事 ----------
+  function noteTier(w, tier, text, pid) {
+    w.inbox.push({ week: w.week, year: w.year, tier, text, pid: pid || null, n: (w.inboxN = (w.inboxN || 0) + 1) });
+    if (w.inbox.length > 300) w.inbox.splice(0, w.inbox.length - 300);
+  }
+
+  // 背が高いと空中戦・ヘディング・強さが、小柄だと敏しょう性・加速・バランスが伸びやすい
+  const TALL_AB = new Set(['ヘディング', 'ジャンプ', '強さ', '空中戦']);
+  const SMALL_AB = new Set(['敏しょう性', '加速', 'バランス']);
+  function heightK(p, a) {
+    const d = p.height - 178;
+    if (TALL_AB.has(a)) return clamp(1 + d * 0.012, 0.85, 1.2);
+    if (SMALL_AB.has(a)) return clamp(1 - d * 0.01, 0.87, 1.15);
+    return 1;
+  }
+  // 伸び盛り（1.5倍）と壁（0.5倍）。数週間〜数か月続く
+  const stateK = (p) => (p.state && p.state.w > 0 ? (p.state.k === 'peak' ? 1.3 : 0.5) : 1);
+  YA.runTraining = function (w) {
+    const rng = YA.rngOf(w.seed * 13 + w.year * 777 + w.week * 31);
+    const plan = w.plan || defaultPlan();
+    const hasPractice = plan.days.some((d) => d.menu === '練習試合');
+    const all = Object.values(w.players);
+    const gains = {};
+    const tfx = YA.trainerFx ? YA.trainerFx(w) : { recover: 0, inj: 1 };
+    const dscMult = 0.9 + (w.disc == null ? 60 : w.disc) / 500;
+    let recoveries = 0;
+    for (const d of plan.days) if (d.menu === '回復') recoveries++;
+    for (const p of all) {
+      p.gain = {};
+      const inj = p.inj > 0;
+      const rest = p.rest === 'rest' || inj || p.away > 0;
+      const light = p.rest === 'light';
+      let fatAdd = 0;
+      let lightDays = 0;
+      const exp = {};
+      if (!rest) {
+        let kSum = 0;
+        let kN = 0;
+        for (const d of plan.days) {
+          const menu = YA.MENUS[d.menu];
+          const ik = INTENS[d.int] || 1;
+          if (menu.fat > 0) {
+            fatAdd += menu.fat * (INT_FAT[d.int] || 1) * (light ? 0.55 : 1);
+            kSum += ik;
+            kN++;
+            if (d.int === 'light') lightDays++;
+          } else fatAdd += menu.fat;
+          for (const [a, wgt] of Object.entries(menu.ab)) exp[a] = (exp[a] || 0) + wgt / 5;
+          if (p.pos === 'GK' && menu.fat > 0) for (const [a, wgt] of Object.entries(GK_TRAIN)) exp[a] = (exp[a] || 0) + (wgt * 0.55) / 5;
+        }
+        // チームの重点（決定143）：全員のその分野が少し伸びやすい
+        const tfa = plan.teamFocus && YA.TEAM_FOCUS ? YA.TEAM_FOCUS[plan.teamFocus] : null;
+        if (tfa) for (const a of tfa) if (p.ab[a] != null) exp[a] = (exp[a] || 0) + 0.22;
+        // 重点的に取り組む能力
+        const f = p.train.focus;
+        if (f && p.ab[f] != null) exp[f] = (exp[f] || 0) + 0.65;
+        // 戦術と役割に合った能力が伸びやすい：A・Bの戦術で大事な能力と、いまの役割に効く能力に、練習の経験が少し上乗せされる
+        const tb = YA.tacticTrainBonus(w, p);
+        for (const [a, v] of Object.entries(tb.exp)) exp[a] = (exp[a] || 0) + v;
+        p._tacNote = tb;
+        // 練習の強さ（日ごとの平均）と、その子だけの軽め。重点・チームの重点・戦術の上乗せにも同じく掛かる
+        const mk = (kN ? kSum / kN : 1) * (light ? 0.55 : 1);
+        for (const a of Object.keys(exp)) exp[a] *= mk;
+      }
+      // 試合の経験（頭の能力と自信に上乗せ。出番がなければなし）
+      // 練習試合：Bの選手に出番ができて、不満が和らぐ
+      if (hasPractice && !rest && p.team === 'B') {
+        p._weekMins = (p._weekMins || 0) + 45;
+        p.mins += 45;
+        p.unrest = Math.max(0, p.unrest - 0.6);
+        p.conf = clamp(p.conf + 1, 0, 100);
+      }
+      const mm = p._weekMins || 0;
+      if (mm > 0) {
+        const tier = (p.team === 'A' ? 1 : 0.55) * (w.league ? YA.LEVEL_EXP[w.league.level - 1] : 1);
+        for (const a of YA.AB_MENTAL) exp[a] = (exp[a] || 0) + (mm / 90) * 0.5 * tier;
+      }
+      p._weekMins = 0;
+      // 疲れ・怪我（2026-11-17 直し：回復が強すぎて平均6に張り付いていた。試合1回で10〜20たまり、毎週いまの疲れの割合で抜ける。
+      // 休むと大きく抜け、軽めの日・軽めの子は少し多く抜ける）
+      const FR = YA.FAT_REC;
+      const rec = rest ? FR.rest + p.fat * FR.restShare : FR.base + p.fat * FR.share + lightDays * 1.5 + (light ? 4 : 0);
+      p.fat = clamp(p.fat + fatAdd * 2.4 * (w.campMult > 1 ? 1.15 : 1) - rec - tfx.recover, 0, 100);
+      if (!rest) {
+        const tdays = plan.days.filter((d) => YA.MENUS[d.menu] && YA.MENUS[d.menu].fat > 0);
+        const hardShare = tdays.length ? tdays.filter((d) => d.int === 'hard').length / tdays.length : 0;
+        const lightShare = tdays.length ? tdays.filter((d) => d.int === 'light').length / tdays.length : 0;
+        const risk = (1 + hardShare) * (1 - lightShare * 0.4) * (0.003 + Math.max(0, p.fat - 60) / 100 * 0.02 + (p.spurt > 0 ? 0.006 : 0)) * tfx.inj * (w.campMult > 1.5 ? 1.5 : 1) * (YA.injK ? YA.injK(p) : 1);
+        if (rng() < risk * (light ? 0.5 : 1) * (p.pos === 'GK' ? 0.6 : 1)) {
+          // ふつうは1〜5週。まれに長い怪我（8〜24週）
+          p.inj = rng() < YA.BIG_INJ_P ? rng.int(8, 24) : rng.int(1, p.fat > 80 ? 7 : 5);
+          p._injLen = p.inj;
+          p.hist.unshift({ y: w.year, w: w.week, t: '怪我（' + p.inj + '週）' });
+          noteTier(w, 1, p.num + '番 ' + p.name + ' が練習中に怪我。全治' + p.inj + '週', p.id);
+        }
+      } else if (inj) {
+        p.inj = Math.max(0, p.inj - 1);
+        if (p.inj === 0) {
+          noteTier(w, 2, p.num + '番 ' + p.name + ' が怪我から復帰', p.id);
+          // 長い怪我は、体の能力が少し下がる（大怪我は2つ）
+          if ((p._injLen || 0) >= 6 && rng() < 0.55) {
+            const phys = ['スピード', '加速', 'スタミナ', '敏しょう性', 'バランス', 'ジャンプ', '強さ'];
+            const lost = [];
+            for (let k = 0; k < ((p._injLen || 0) >= 8 ? 2 : 1); k++) {
+              const n1 = rng.pick(phys);
+              if (p.ab[n1] > 4 && lost.indexOf(n1) < 0) {
+                p.ab[n1]--;
+                lost.push(n1);
+              }
+            }
+            if (lost.length) {
+              noteTier(w, 2, p.num + '番 ' + p.name + ' は長い怪我の影響で、' + lost.map((x) => '「' + x + '」').join('') + 'の能力が下がった', p.id);
+              p.hist.unshift({ y: w.year, w: w.week, t: '長い怪我で能力が下がった（' + lost.join('・') + '）' });
+            }
+          }
+          p._injLen = 0;
+        }
+      }
+      if (p.inj > 0 && !inj) {
+        /* 今週発生した怪我 */
+      }
+      // 成長
+      const sum = abSum(p);
+      // 伸びしろ（pot）と、3年間の伸びの上限の近いほう
+      const roomF = clamp(Math.min(p.pot - sum, YA.grow3Room(p) * 1.5) / 55, 0, 1);
+      // 疲れの罰は40を超えた分から、ゆるやかに（疲れがたまるようにしたので、前より緩めた）
+      const cond = clamp(1.1 - Math.max(0, p.fat - 40) / 220, 0.6, 1.1) * (p.conf < 35 ? 0.8 : p.conf > 70 ? 1.1 : 1) * (p.unrest > 3 ? 0.85 : 1) * (p.spurt > 0 ? 1.35 : 1) * (p.form > 1 ? 1.1 : 1);
+      const diligence = anyP(p, '真面目') ? 1.08 : anyP(p, '練習嫌い') ? 0.9 : 1;
+      for (const [a, e] of Object.entries(exp)) {
+        const aff = p.aff[a] || 1;
+        const env = YA.staffMult ? YA.growMult(YA.staffMult(w, p, a) * YA.coachMult(w) * dscMult) * (w.campMult || 1) : 1;
+        const g = e * YA.GROW_BASE * p.rate * aff * roomF * cond * diligence * heightK(p, a) * stateK(p) * env * (p.adapt > 0 ? 0.92 : 1) * (p.awake ? 1.2 : 1) * (YA.growK ? YA.growK(p) : 1);
+        // 高い値ほど伸びにくい
+        const hard = clamp(1.25 - p.ab[a] / 22, 0.25, 1) * (p.ab[a] >= 15 ? clamp(1 - (p.ab[a] - 14) * 0.15, 0.1, 1) : 1);
+        p.prog[a] = (p.prog[a] || 0) + g * hard;
+        while (p.prog[a] >= 1 && p.ab[a] < 20) {
+          p.prog[a] -= 1;
+          p.ab[a]++;
+          p.gain[a] = (p.gain[a] || 0) + 1;
+        }
+      }
+      // 特性練習
+      const tr = p.train.trait;
+      if (tr && !rest && p.traits.indexOf(tr) < 0) {
+        const aff2 = YA.TRAIT_AFF[tr];
+        const q = aff2.reduce((s, n) => s + p.ab[n], 0) / 2;
+        const speed = clamp((q / 11) * (q / 11), 0.35, 2.2) * p.rate * (light ? 0.55 : 1) * cond * 2.6;
+        p.tprog[tr] = (p.tprog[tr] || 0) + speed;
+        if (p.tprog[tr] >= 100) {
+          p.tprog[tr] = 0;
+          if (p.traits.length < 5) p.traits.push(tr);
+          p.train.trait = null;
+          p.hist.unshift({ y: w.year, w: w.week, t: '特性「' + tr + '」を習得' });
+          noteTier(w, 2, p.num + '番 ' + p.name + ' が特性「' + tr + '」を身につけた', p.id);
+        }
+      }
+      YA.refreshApt(p);
+      // 自信・調子は少しずつ戻る
+      p.form = Math.round((p.form * 0.6) * 10) / 10;
+      p.conf = clamp(p.conf + (p.conf < 55 ? 2.2 : -0.8), 0, 100);
+      if (p.spurt > 0) p.spurt--;
+      if (p.state && p.state.w > 0) {
+        p.state.w--;
+        if (p.state.w <= 0) p.state = null;
+      }
+      // 不満：Aの出場（minsA）が少ない上級生は少しずつたまる。自然に和らぐ量は前（0.5）より小さく（2026-11-17 直し：
+      // 前はBの試合の出場も数えていて、不満がほとんどたまらず、退団の理由が「能力」ばかりだった）
+      if (w.week > 4 && !(p.inj > 0)) {
+        const perWk = (p.minsA || 0) / Math.max(1, w.week - 1);
+        if (perWk < 25) {
+          const base = p.grade === 3 ? 0.24 : p.grade === 2 ? 0.18 : 0.06;
+          const temper = anyP(p, '負けず嫌い') || anyP(p, '野心家') ? 1.4 : anyP(p, 'クラブ愛') || anyP(p, 'マイペース') ? 0.6 : 1;
+          p.unrest += base * temper * (perWk < 8 ? 1 : 0.6);
+        }
+      }
+      p.unrest = Math.max(0, p.unrest - YA.UNREST_DECAY);
+      for (const a of Object.keys(p.gain)) gains[p.id] = (gains[p.id] || 0) + p.gain[a];
+    }
+    // 成長期（その子のタイミングで始まる）
+    for (const p of all) if (p.spurt <= 0 && rng() < 0.012 * (p.grade === 1 ? 1.4 : 0.8) && p.height < 190) {
+      p.spurt = rng.int(6, 12);
+      p.height += rng.int(1, 4);
+      // 急に伸びたあとは、しばらく敏しょう性とバランスが下がる
+      for (const n1 of ['敏しょう性', 'バランス']) if (p.ab[n1] > 3) p.ab[n1]--;
+      // 長い説明は最初の1回だけ（2026-11-17：1年に15回同じ説明が出ていた）
+      noteTier(w, 2, p.num + '番 ' + p.name + ' が成長期に入った' + (w.spurtTold ? '' : '（伸びやすい時期。体が急に伸びて、敏しょう性とバランスは一時的に下がる）'), p.id);
+      w.spurtTold = true;
+    }
+    // 目立つ伸び
+    const big = Object.keys(gains).map((id) => [id, gains[id]]).sort((a, b) => b[1] - a[1]).slice(0, 2);
+    // 1週に1行にまとめる（2026-11-17：1年に53回、1人ずつ出ていた）。能力の合計が4以上伸びた子だけ
+    const bigs = big.filter(([, g]) => g >= 4);
+    if (bigs.length) noteTier(w, 3, '今週よく伸びた：' + bigs.map(([id, g]) => w.players[id].num + '番 ' + w.players[id].name + '（能力の合計+' + g + '）').join('・'), bigs[0][0]);
+    return gains;
+  };
+  const anyP = (p, v) => Object.values(p.pers).indexOf(v) >= 0;
+
+  // ---------- 出来事（会話の選択肢）----------
+  const pname = (p) => p.num + '番 ' + p.name;
+  function conf(p, d) {
+    p.conf = clamp(p.conf + d, 0, 100);
+  }
+  const ST = (p, g, v) => p.pers[g] === v;
+  // 選んだ言葉×性格で反応が変わる。{msg, d:{...}} を返す。d は画面に小さく出す
+  // 反応の文は接し方×性格ごとに3〜5通りから選ぶ（2026-11-17：前は反応の半分が同じ2文だった）。
+  // 「任せる・見守る」は言葉をかけていないので、台詞ではなく様子の文にする（「分かりました」と返事をしない）
+  const RL = {
+    warm: ['少し肩の力が抜けたようだった', '小さくうなずいて、顔を上げた', '表情がやわらいだ', 'ほっとした顔を見せた', '「はい」と言って、少し笑った'],
+    warmKamatte: ['目を輝かせて「もっと頑張ります」と言った', 'うれしそうに何度もうなずいた', '「見ててください」と声が弾んだ'],
+    warmHanko: ['「これくらい、平気です」と少し不満そうだった', '気をつかわれるのが嫌なのか、むっとしていた', '「特別扱いはいりません」と言った'],
+    warmJishin: ['「分かってます」と頷いた', '「大丈夫ですよ」と軽く笑った', '当然という顔でうなずいた'],
+    firm: ['黙って受け止めた', '唇をかんで聞いていた', '何も言わずに頭を下げた'],
+    firmHanko: ['「見ていてください」と目の色が変わった', '悔しそうに顔を上げ、目つきが変わった', '「次で黙らせます」と言い返した'],
+    firmSunao: ['「はい」と引き締まった', '背筋を伸ばして「はい」と答えた', '真剣な顔でうなずいた'],
+    firmSensai: ['俯いて、しばらく言葉が出なかった', '目が赤くなっていた', '肩を落として、黙り込んだ'],
+    firmGanko: ['納得していない様子だが、聞いてはいた', '腕を組んだまま、黙って聞いていた', '「……考えます」とだけ言った'],
+    firmTanki: ['ふてくされて、そっぽを向いた', 'むっとした顔で横を向いた', 'ボールを強く蹴って、黙った'],
+    push: ['「やってやります」と頷いた', '「はい、やります」と顔を上げた', '力強くうなずいた', '目に力が戻った'],
+    pushMake: ['闘志に火が付いた', '「絶対に負けません」と目がぎらついた', '誰よりも早く走り出した'],
+    pushJuatsu: ['重圧を感じたのか、表情が固くなった', '「……はい」と答えたが、顔がこわばっていた', '期待を重く感じたようだ'],
+    wait: ['自分で考えている様子だった', 'しばらくして、いつもの顔に戻った', '何も言わずに練習へ戻っていった', '一人で黙々とボールを蹴っていた'],
+    waitKamatte: ['見放されたように感じたようだ', 'こちらを何度か振り返っていた', '寂しそうに一人でボールを蹴っていた'],
+    waitMypace: ['自分のペースでやれると安心した', 'のびのびと練習していた', '肩の力を抜いて、自分のやり方で続けた'],
+  };
+  function react(p, kind) {
+    // kind: warm（寄り添う）/ firm（厳しく）/ push（背中を押す）/ wait（任せる）
+    let c = 0;
+    let f = 0;
+    let k = kind === 'warm' || kind === 'firm' || kind === 'push' ? kind : 'wait';
+    const t = (g, v) => ST(p, g, v);
+    if (kind === 'warm') {
+      c = 5;
+      if (t('教えの受け止め方', '構ってほしい')) { c += 4; k = 'warmKamatte'; }
+      if (t('教えの受け止め方', '反骨心')) { c -= 3; k = 'warmHanko'; }
+      if (t('プレーの気質', '自信家')) { c -= 1; k = 'warmJishin'; }
+    } else if (kind === 'firm') {
+      c = -2;
+      if (t('教えの受け止め方', '反骨心')) { c = 6; f = 1; k = 'firmHanko'; }
+      else if (t('教えの受け止め方', '素直')) { c = 2; k = 'firmSunao'; }
+      else if (t('気持ちの強さ', '繊細')) { c = -8; f = -1; k = 'firmSensai'; }
+      else if (t('教えの受け止め方', '頑固')) { c = 0; k = 'firmGanko'; }
+      else if (t('感情の波', '短気')) { c = -4; f = -1; k = 'firmTanki'; }
+    } else if (kind === 'push') {
+      c = 4;
+      f = 0.5;
+      if (t('気持ちの強さ', '負けず嫌い')) { c += 3; f = 1; k = 'pushMake'; }
+      if (t('大舞台', 'プレッシャーに弱い') || t('気持ちの強さ', '繊細')) { c -= 6; f = -0.5; k = 'pushJuatsu'; }
+    } else {
+      c = 0;
+      if (t('教えの受け止め方', '構ってほしい')) { c = -4; k = 'waitKamatte'; }
+      if (t('教えの受け止め方', 'マイペース')) { c = 2; k = 'waitMypace'; }
+      if (t('気持ちの強さ', '楽天家')) { c = 2; }
+    }
+    const list = RL[k];
+    // 同じ子でも毎回同じ文にならないように（決まった値から選ぶので、同じ状態なら同じ文）
+    const line = list[YA.hash(String(p.id) + k + (p.hist ? p.hist.length : 0) + Math.round(p.conf || 0)) % list.length];
+    return { c, f, line };
+  }
+  YA.react = react;
+  function apply(p, r) {
+    conf(p, r.c);
+    p.form = clamp(p.form + r.f, -3, 3);
+    const parts = [];
+    // マイナスは「−」にそろえる（chains.js などと同じ）
+    if (r.c) parts.push('自信 ' + (r.c > 0 ? '+' : '−') + Math.abs(Math.round(r.c)));
+    if (r.f) parts.push('調子 ' + (r.f > 0 ? '+' : '−') + Math.abs(r.f));
+    return parts.join(' / ');
+  }
+  const opt = (label, kind, extra) => ({ label, kind, extra });
+
+  // その子の今の様子（出来事の文に書き込む）：ポジション・Aでの出場・同じ位置で先発している子・今月の伸び
+  function ctx(w, p) {
+    const pos = YA.POS_LABEL[p.main] || p.pos;
+    const minsA = Math.round(p.minsA || 0);
+    const inA = (w.lineupA || []).some((s) => s.pid === p.id);
+    const rivalSl = (w.lineupA || []).map((s) => w.players[s.pid]).find((q) => q && q.id !== p.id && q.main === p.main);
+    const gain = Object.values(p.gain || {}).reduce((a, b) => a + b, 0);
+    const last = p.lm && p.lm.y === w.year ? p.lm : null;
+    return { pos, minsA, inA, rival: rivalSl, gain, last, r: YA.rating(p), sur: p.name.split(' ')[0] };
+  }
+  // 文を何通りかから選ぶ（同じ出来事でも毎回同じ文にならないように）
+  const pickT = (p, list) => list[YA.hash(p.id + (p.minsA || 0) + (p.conf | 0)) % list.length];
+  // 約束：「Aの試合で使う」を、何週かのうちに守れたか
+  YA.addPromise = function (w, p, weeks, why) {
+    w.promises = (w.promises || []).filter((x) => x.pid !== p.id);
+    w.promises.push({ pid: p.id, name: p.name, from: w.year * 100 + w.week, until: w.week + weeks - 1, year: w.year, why }); // 今週を含めて weeks 週
+  };
+  YA.checkPromises = function (w) {
+    const keep = [];
+    for (const x of w.promises || []) {
+      const p = w.players[x.pid];
+      if (!p || x.year !== w.year) continue;
+      const played = p.lm && p.lm.y * 100 + p.lm.w > x.from && p.lm.mins > 0;
+      if (played) {
+        conf(p, 6);
+        p.unrest = 0;
+        noteTier(w, 2, `${pname(p)}との約束（${x.why}）を守った。本人の表情が明るくなった`, p.id);
+      } else if (w.week > x.until) {
+        conf(p, -10);
+        p.unrest += 3;
+        noteTier(w, 1, `${pname(p)}との約束（${x.why}）を守れなかった。信頼を失い、不満が大きくなっている`, p.id);
+      } else keep.push(x);
+    }
+    w.promises = keep;
+  };
+
+  const QUIT_OK = { 不満: 0.62, 怪我: 0.72, 能力: 0.42, 家庭: 0.35 };
+  const QUIT_NAME = { 不満: '不満', 怪我: '怪我', 能力: '能力的に厳しく', 家庭: '家庭の事情' };
+  YA.EVENTS = [
+    { id: 'unrest', name: '出番の不満', weight: 1.4,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.team === 'B' && (p.minsA || 0) < 60 && YA.ovr(p) > 8.5 && p.inj <= 0 && w.year * 40 + w.week > 6 && !(w.promises || []).some((x) => x.pid === p.id)); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const c = ctx(w, p); return pname(p) + 'が声をかけてきた。' + pickT(p, [
+        `「今年、Aではまだ${c.minsA}分しか出ていません。${c.rival ? c.rival.name.split(' ')[0] + 'さんとの差は何ですか」（' + c.pos + 'で先発しているのは' + c.rival.name + '）' : '何が足りないんでしょうか」'}`,
+        `「練習ではやれている手応えがあります。${c.pos}で、一度チャンスをください」（今年のAの出場${c.minsA}分・総合力${c.r}）`,
+        `「Bでずっと試合に出ていても、上に行ける気がしません」（Aの出場${c.minsA}分）`]); },
+      opts: [opt('次の3週のうちにAで使う、と約束する', 'warm', (w, p) => { p.unrest = Math.max(0, p.unrest - 2); YA.addPromise(w, p, 3, 'Aで使う'); }), opt('練習で見せろ、と求める', 'push', (w, p) => { p.train.promise = true; }), opt('今は我慢の時期だと伝える', 'firm', (w, p) => { p.unrest += 2; })] },
+    { id: 'lowconf', name: '自信喪失', weight: 1.6,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.conf < 38 && p.inj <= 0); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const c = ctx(w, p); return pname(p) + pickT(p, [
+        `の表情が暗い。${c.last && c.last.rating < 6 ? `この前の試合の採点は${c.last.rating.toFixed(1)}。` : ''}「自分には、無理なんじゃないかと思って…」`,
+        `が練習のあと、一人でボールを蹴っている。「ミスが怖くて、前みたいにプレーできないんです」`,
+        `が「${c.rival ? c.rival.name.split(' ')[0] + 'さんみたいには、なれない気がします' : 'このまま続けていいのか分からなくなりました'}」とこぼした（自信${Math.round(p.conf)}）`]); },
+      opts: [opt('ゆっくり話を聞いて励ます', 'warm'), opt('弱点と、できていることを具体的に示す', 'push'), opt('少し休んで気持ちを切り替えさせる', 'wait', (w, p) => { p.rest = 'light'; p.fat = clamp(p.fat - 12, 0, 100); })] },
+    { id: 'tired', name: '疲れ・練習のしすぎ', weight: 1.4,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.fat > 72 && p.inj <= 0); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const c = ctx(w, p); return `${pname(p)}の動きが重い。トレーナーが報告してきた。「疲れが${Math.round(p.fat)}まで溜まっています。` + (c.inA ? 'Aの先発ですが、このままだと怪我の恐れがあります」' : 'このままだと怪我の恐れがあります」'); },
+      opts: [opt('今週は休ませる', 'warm', (w, p) => { p.rest = 'rest'; }), opt('軽めのメニューに替える', 'wait', (w, p) => { p.rest = 'light'; }), opt('このまま続けさせる', 'firm', (w, p) => { p.fat += 4; })] },
+    { id: 'injury', name: '怪我の相談', weight: 1.4,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.inj >= 2); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const c = ctx(w, p); return `${pname(p)}の怪我について、トレーナーが相談してきた。「いまの見込みは、あと${p.inj}週です。早く戻すこともできますが、再発の恐れがあります」` + (c.inA ? `（Aの${c.pos}の先発）` : ''); },
+      opts: [opt('慎重に治す（1週のびる）', 'warm', (w, p) => { p.inj += 1; }), opt('早く戻す（3割で再発）', 'push', (w, p, r) => { p.inj = Math.max(1, p.inj - 1); if (r() < 0.3) { p.inj += 3; noteTier(w, 1, pname(p) + ' が無理をして再発した', p.id); } }), opt('本人に任せる', 'wait')] },
+    { id: 'rival', name: '張り合い', weight: 1.1,
+      pick: (w, r) => { const A = Object.values(w.players); const c = A.filter((p) => p.pos !== 'GK' && p.team === 'B' && A.some((q) => q.team === 'A' && q.main === p.main && Math.abs(YA.ovr(q) - YA.ovr(p)) < 1.4)); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const A = Object.values(w.players); const q = A.find((x) => x.team === 'A' && x.main === p.main && Math.abs(YA.ovr(x) - YA.ovr(p)) < 1.4); return `${pname(p)}（B・総合力${YA.rating(p)}）が、Aの${YA.POS_LABEL[p.main]}の${q ? q.name + '（総合力' + YA.rating(q) + '）' : '先輩'}を強く意識している。練習で張り合う場面が増えた`; },
+      opts: [opt('競わせて伸ばす', 'push'), opt('それぞれ役割を分けて育てる', 'warm'), opt('特に何も言わない', 'wait')] },
+    { id: 'senpai', name: '先輩の助言', weight: 1,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.grade === 3 && (ST(p, '人との関わり', '世話好き') || ST(p, '人との関わり', 'リーダー気質') || ST(p, '人との関わり', '仲間思い'))); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const k = Object.values(w.players).filter((q) => q.grade === 1 && q.pos === p.pos); return `${pname(p)}（高3）が、${k.length ? k[0].name + 'ら高1の' + (p.pos === 'GK' ? 'GK' : p.pos) + 'に' : '後輩に'}プレーのアドバイスをしている。いい雰囲気だ`; },
+      opts: [opt('後輩を任せて、もっと教えさせる（高1の判断・予測が伸びる）', 'warm', (w, p, r) => { const k = Object.values(w.players).filter((q) => q.grade === 1 && q.pos === p.pos && q.team !== undefined); if (k.length) { const q = r.pick(k); q.prog.判断 = (q.prog.判断 || 0) + 0.8; q.prog.予測 = (q.prog.予測 || 0) + 0.8; } }), opt('見守る', 'wait')] },
+    { id: 'family', name: '家庭の事情', weight: 0.8,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => ST(p, '目指すもの', '家族思い') || r() < 0.04); return c.length ? r.pick(c) : null; },
+      text: (p) => pname(p) + pickT(p, ['の家庭で、遠征費のことが話題になっているという。本人は気にしている様子だ', 'の家族が引っ越すかもしれない、と本人から聞いた。気持ちが揺れているようだ', 'の家で、進路のことで意見が分かれているらしい。練習に集中できていない']),
+      opts: [opt('本人の話を聞く', 'warm'), opt('クラブに相談してみる、と伝える', 'push'), opt('そっとしておく', 'wait')] },
+    { id: 'homesick', name: 'ホームシック', weight: 0.8,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => (ST(p, '目指すもの', '寂しがり') || ST(p, '人との関わり', '人見知り')) && p.dorm !== false); return c.length ? r.pick(c) : null; },
+      text: (p) => pname(p) + pickT(p, ['は、チームにまだ馴染みきれていないようだ。一人でいることが多い', 'は、寮の夜に家へ電話をかけることが増えたらしい。練習にも元気がない', 'は、休みの日も部屋にこもっているという']),
+      opts: [opt('仲の良い選手とペアで練習させる', 'warm', (w, p) => { p.unrest = Math.max(0, p.unrest - 1); }), opt('声をかけて背中を押す', 'push'), opt('様子を見る', 'wait')] },
+    { id: 'hot', name: '絶好調', weight: 1.1,
+      pick: (w, r) => { const c = Object.values(w.players).filter((p) => p.form >= 1 || p.conf > 80); return c.length ? r.pick(c) : null; },
+      text: (p, w) => { const c = ctx(w, p); return `${pname(p)}が絶好調だ。` + (c.last && c.last.mins > 0 ? `この前の試合は採点${c.last.rating.toFixed(1)}。` : '') + (c.gain ? `今月は能力が${c.gain}上がった。` : '練習でも目立っている。') + (c.inA ? '' : 'まだBの子だ'); },
+      opts: [opt('褒めて、さらに上を求める（伸び盛りに入りやすい）', 'push', (w, p) => { p.spurt = Math.max(p.spurt, 3); }), opt('調子に乗らないよう戒める', 'firm'), opt('そのまま伸ばす', 'wait')] },
+    { id: 'quit', name: '退団の相談', weight: 2, // 決定99：退団は年1〜2人
+      pick: (w, r) => {
+        // Aの出場（minsA）で見る（2026-11-17 直し：Bの試合の出場も数えていた）。「能力」は年の半ばまで様子を見る
+        const weak = (p) => p.grade >= 2 && YA.ovr(p) < 9 && (p.minsA || 0) < 150 && w.week >= 14;
+        const c = Object.values(w.players).filter((p) => (p.unrest >= 4 || (p.conf < 25 && (p.minsA || 0) < 120) || p.inj >= 8 || weak(p) || (ST(p, '目指すもの', '家族思い') && r() < 0.03)) && Object.keys(w.players).length > 32);
+        if (!c.length) return null;
+        // 長い怪我の子がいれば半分はその子（前は怪我による退団がほとんど起きなかった）
+        const hurt = c.filter((q) => q.inj >= 8);
+        const p = hurt.length && r() < 0.5 ? r.pick(hurt) : r.pick(c);
+        // 退団の理由は4つ：家庭の事情・怪我・能力的に厳しい・不満（決定29）
+        p._qr = p.inj >= 8 ? '怪我' : p.unrest >= 4 ? '不満' : weak(p) ? '能力' : ST(p, '目指すもの', '家族思い') ? '家庭' : '不満';
+        return p;
+      },
+      text: (p, w) => pname(p) + 'が思い詰めた様子で来た。「' + ({ 怪我: `怪我が長引いて（あと${p.inj}週）、続けられる自信がなくなりました`, 能力: 'みんなについていけません。サッカーを続けるのは厳しいと思います', 家庭: '家の事情で、続けるのが難しくなりました', 不満: `チームを辞めようと思っています。今年のAの出場は${Math.round(p.minsA || 0)}分で、悔しくて` }[p._qr || '不満']) + '」',
+      opts: [
+        opt('引き止める（本気で話し合う）', 'warm', (w, p, r) => { if (r() < QUIT_OK[p._qr || '不満']) { p.unrest = 0; conf(p, 8); } else p._leave = true; }),
+        opt('本人の意思を尊重して送り出す', 'wait', (w, p) => { p._leave = true; }),
+        opt('3週のうちにAで使う、と約束して残ってもらう', 'push', (w, p, r) => { if (r() < QUIT_OK[p._qr || '不満'] * 0.95) { p.unrest = 0; YA.addPromise(w, p, 3, 'Aで使う'); } else p._leave = true; }),
+      ] },
+    { id: 'change', name: '性格が変わる', weight: 0, pick: () => null, text: () => '', opts: [] },
+  ];
+
+  // 今週の出来事を作る（1〜2件。必ず止まる）
+  // ★以外の子の出来事が通る割合と、いつも通す出来事
+  YA.NONSTAR_KEEP = 0.15;
+  YA.EV_KEEP_ALWAYS = ['quit', 'injury', 'early', 'top', 'nat', 'natcall'];
+  YA.rollEvents = function (w) {
+    const r = YA.rngOf(w.seed * 17 + w.year * 555 + w.week * 11);
+    const n = r.chance(0.42) ? 1 : r.chance(0.12) ? 2 : 0;
+    const out = [];
+    for (const f of w.forced || []) out.push(f);
+    w.forced = [];
+    const used = new Set();
+    const hasStar = Object.values(w.players).some((p) => p.star);
+    for (let k = 0; k < n; k++) {
+      const defs = YA.EVENTS.filter((e) => e.weight > 0);
+      for (let tries = 0; tries < 8; tries++) {
+        const ev = r.weighted(defs, (e) => e.weight);
+        const p = ev.pick(w, r);
+        if (!p || used.has(p.id) || used.has(ev.id)) continue;
+        // ★以外の子の出来事は控えめに（2026-11-15「★以外のイベントが多発する」）。★がいる年だけ。大事なもの（退団・怪我・プロの話）は残す
+        if (w.players[p.id] && !p.star && !p._orig && hasStar && YA.EV_KEEP_ALWAYS.indexOf(ev.id) < 0 && r() > YA.NONSTAR_KEEP) break;
+        used.add(p.id);
+        used.add(ev.id);
+        out.push({ id: ev.id, pid: p.id || null, x: p._club != null ? p._club : p._staff, week: w.week, year: w.year });
+        break;
+      }
+    }
+    // 疲れがたまりきった子がいれば、トレーナーの報告（疲れの出来事）を出す（6週に1回まで。2026-11-17：疲れがたまるようにしたのに合わせて）
+    if (!out.some((e) => e.id === 'tired') && !(w._tiredY === w.year && w.week - w._tiredW < 6)) {
+      const tp = Object.values(w.players).filter((p) => p.fat > 72 && p.inj <= 0 && p.rest !== 'rest').sort((a, b) => b.fat - a.fat)[0];
+      if (tp && r() < 0.6) {
+        out.push({ id: 'tired', pid: tp.id, week: w.week, year: w.year });
+        w._tiredY = w.year;
+        w._tiredW = w.week;
+      }
+    }
+    // 一定の確率で、性格が隣へ変わる気づき
+    if (r() < 0.04) {
+      const p = r.pick(Object.values(w.players));
+      const g = r.pick(Object.keys(YA.PERS_GROUPS));
+      const list = YA.PERS_GROUPS[g].slice(1);
+      const i = list.indexOf(p.pers[g]);
+      const next = list[clamp(i + (r.chance(0.5) ? 1 : -1), 0, list.length - 1)];
+      if (next && next !== p.pers[g] && i >= 0) {
+        const old = p.pers[g];
+        p.pers[g] = next;
+        p.hist.unshift({ y: w.year, w: w.week, t: '性格が変わった（' + old + ' → ' + next + '）' });
+        noteTier(w, 1, p.num + '番 ' + p.name + ' の性格が変わった：' + old + ' → ' + next, p.id);
+      }
+    }
+    return YA.autoNonStar(w, out);
+  };
+  // ★以外の子の大事な出来事（退団・プロの話・怪我・進路）は、選ばせずにコーチに任せてお知らせだけにする
+  //（2026-11-15「★以外のイベントが多発する」「まだ多い」「更に減らす」）。★がいない年（初年度の最初）はそのまま
+  YA.EV_AUTO_NONSTAR = ['quit', 'early', 'top', 'injury', 'career'];
+  YA.autoNonStar = function (w, out) {
+    if (!Object.values(w.players).some((q) => q.star)) return out;
+    return out.filter((e) => {
+      const p = e.pid && w.players[e.pid];
+      // オリジナル選手（チケットで作った子）も★の子と同じく自分で選ぶ。2026-11-20：強く作った子が、トップ昇格の話を
+      // コーチに任されて入団直後に一覧から消えていた（能力14以上で3人に2人）
+      if (!p || p.star || p._orig || YA.EV_AUTO_NONSTAR.indexOf(e.id) < 0) return true;
+      try {
+        const v = YA.eventView(w, e);
+        if (!v) return false;
+        const i = Math.min(YA.autoChoice ? YA.autoChoice(e.id) : 0, v.opts.length - 1);
+        const rr = YA.resolveEvent(w, e, i);
+        noteTier(w, e.id === 'quit' || e.id === 'early' ? 1 : 2, `${pname(p)}：${v.name} → コーチに任せた（${v.opts[i]}）${rr.line ? '。' + rr.line : ''}${rr.leave ? '。' + rr.leave : ''}`, p.id);
+        return false;
+      } catch (er) {
+        return true;
+      }
+    });
+  };
+
+  YA.eventView = function (w, e) {
+    const def = YA.EVENTS.find((x) => x.id === e.id);
+    const p = e.pid ? w.players[e.pid] : null;
+    if (!def || (e.pid && !p)) return null;
+    if (e.x != null) {
+      w._clubReq = e.x;
+      w._staffIdx = Math.min(e.x, (w.club ? w.club.staff.length : 1) - 1);
+    }
+    // 選択肢ごとの接し方と、見えている性格から見た反応の目安（響きそう／逆効果かも）
+    const info = def.opts.map((o) => {
+      let hint = '';
+      if (p && !o.run && o.kind) {
+        const rr = react(p, o.kind);
+        hint = rr.c >= 6 || rr.f >= 1 ? 'good' : rr.c <= -3 || rr.f < 0 ? 'bad' : '';
+      }
+      return { label: o.label, kind: o.run ? null : o.kind, hint };
+    });
+    return { name: def.name, text: def.text(p, w), p, opts: def.opts.map((o) => o.label), info, about: YA.EVENT_ABOUT[e.id] || '' };
+  };
+  // 出来事ごとの「どういうことか・何に響くか」
+  YA.EVENT_ABOUT = {
+    unrest: 'Bで出番の少ない子の不満です。不満が溜まると、退団の相談につながります。',
+    lowconf: '自信が大きく落ちています。自信が低いと、試合で力を出しにくくなります。',
+    tired: '疲れが溜まっています。疲れたまま続けると、怪我をしやすくなります。',
+    injury: '怪我の治し方の相談です。早く戻すと、再び痛める恐れがあります。',
+    rival: 'Aの選手を意識しているBの子です。うまく乗せると伸び、こじれると不満になります。',
+    senpai: '面倒見のいい高3です。任せると、同じポジションの高1の頭（判断・予測）が伸びます。',
+    family: '家庭の事情で気持ちが揺れています。放っておくと、自信や不満に響きます。',
+    homesick: 'チームに馴染めていない子です。不満が溜まりやすい状態です。',
+    hot: '調子のいい子です。さらに乗せると伸び盛りに入りやすく、戒めると性格次第で落ち込みます。',
+    quit: '退団を考えています。引き止めに失敗すると、チームを去ります。',
+    top: 'トップチームからの練習参加の打診です。本人は大きく伸びますが、今週は不在になります。',
+    nat: '代表への招集です。本人とクラブの評判は上がりますが、2週間不在になります。',
+    club: 'クラブからの要望です。応じると信頼度が上がり、断ると下がります。',
+    media: '取材の依頼です。受けると評判が上がり、目立ちたがりの子は自信を付けます。',
+    poach: 'スタッフが他から誘われています。引き止めるには給料が上がります。',
+    late: '規律の問題です。チームの約束事と、全体の規律（緩むと出来事が増える）に響きます。',
+    fight: '規律の問題です。チームの約束事と、全体の規律（緩むと出来事が増える）に響きます。',
+    slack: '規律の問題です。チームの約束事と、全体の規律（緩むと出来事が増える）に響きます。',
+    adapt: '外国籍の子の生活の相談です。馴染めないと、力を出しにくいままです。',
+    jump: 'U-15の子をBに加える打診です。受けると人数が1人増えます。',
+    career: '卒業する高3の進路です。選んだ道で、プロ入りの決まりやすさが変わります。',
+    parent: '保護者からの相談です。対応次第で、本人の自信と不満が動きます。',
+    rivalry: '同じポジションの2人が先発を争っています。競わせると伸びますが、繊細な子は崩れることもあります。',
+  };
+  YA.KIND_LABEL = { warm: '寄り添う', firm: '厳しく', push: '背中を押す', wait: '任せる' };
+  YA.resolveEvent = function (w, e, idx) {
+    const def = YA.EVENTS.find((x) => x.id === e.id);
+    const p = e.pid ? w.players[e.pid] : null;
+    const o = def.opts[idx];
+    const r = YA.rngOf(w.seed * 5 + w.year * 99 + w.week * 3 + idx);
+    if (e.x != null) {
+      w._clubReq = e.x;
+      w._staffIdx = Math.min(e.x, w.club.staff.length - 1);
+    }
+    if (o.run) {
+      const rr = o.run(w, p, r);
+      return { line: rr.line, small: rr.small || '', leave: '' };
+    }
+    const res = react(p, o.kind);
+    const small = apply(p, res);
+    if (o.extra) o.extra(w, p, r);
+    p.hist.unshift({ y: w.year, w: w.week, t: def.name + '：' + o.label });
+    let leave = '';
+    let line = res.line;
+    if (p._leave) {
+      // 去る子の反応：引き止めたのに去るなら断りの言葉、送り出したならお礼（2026-11-17：失敗しても「ほっとした表情で」と出ていた）
+      line = LEAVE_LINE[o.kind === 'wait' ? 'bye' : p._qr || '不満'][YA.hash(String(p.id) + w.week) % 2];
+      delete p._leave;
+      removePlayer(w, p.id);
+      leave = pname(p) + ' はチームを去った。空いた枠は、途中加入で埋まった';
+      newcomer(w, r, 1); // 途中加入は高1だけ（同じ学年で埋めると、卒業生が12人を超えていた）
+    }
+    return { line, small: leave ? '' : small, leave };
+  };
+  const LEAVE_LINE = {
+    不満: ['「……もう決めたんです。すみません」と頭を下げた', '首を横に振った。「ここでは、もう続けられません」'],
+    怪我: ['「体が、もう言うことを聞かないんです」と首を振った', '「気持ちはうれしいです。でも……」と目を伏せた'],
+    能力: ['「ここにいても、迷惑をかけるだけです」と首を振った', '「自分の力は、自分がいちばん分かってます」と言った'],
+    家庭: ['「家族で決めたことなんです」と静かに言った', '「すみません。家のことを、放っておけないんです」と頭を下げた'],
+    bye: ['「今まで、ありがとうございました」と深く頭を下げた', '少しさみしそうに笑って「お世話になりました」と言った'],
+  };
+
+  function removePlayer(w, id) {
+    const p = w.players[id];
+    w.alumni.push({ name: p.name, pos: p.pos, year: w.year, ovr: Math.round(YA.ovr(p) * 10) / 10, note: '退団（' + (QUIT_NAME[p._qr] || '不満') + '）', grade: p.grade, age: null, status: 'left', club: '', apps: 0, goals: 0, nat: 0, transfers: 0, retired: false, traits: p.traits.slice() });
+    delete w.players[id];
+    for (const k of ['lineupA', 'lineupB']) { /* 入れ替えは autoTeams で */ }
+    autoTeamsKeep(w);
+  }
+  // 退団・加入のあと、抜けた分だけ補う（他の人の並びは変えない）
+  function autoTeamsKeep(w) {
+    const gone = (l) => l.some((s) => !w.players[s.pid]);
+    for (const [k, b, which] of [['lineupA', 'benchA', 'A'], ['lineupB', 'benchB', 'B']]) {
+      if (!w[k]) continue;
+      w[b] = w[b].filter((id) => w.players[id]);
+      if (gone(w[k])) {
+        w[k].forEach((s, i) => {
+          if (w.players[s.pid]) return;
+          const pos = YA.posOfSlot(s, i);
+          const j = w[b].findIndex((id) => w.players[id].pos === pos);
+          const jj = j >= 0 ? j : pos === 'GK' ? w[b].findIndex((id) => w.players[id].pos === 'GK') : w[b].findIndex((id) => w.players[id].pos !== 'GK');
+          if (jj < 0) {
+            // その位置の控えがいない：GKなら新しく入団させる、それ以外は誰でも
+            if (pos === 'GK') {
+              const q = newcomer(w, YA.rngOf(w.seed * 7 + w.year * 31 + w.week), 1, 'GK');
+              const at = w[b].indexOf(q.id);
+              if (at >= 0) w[b].splice(at, 1);
+              s.pid = q.id;
+            } else if (w[b].length) {
+              s.pid = w[b][0];
+              w[b].splice(0, 1);
+            } else {
+              // 控えが空：どの並びにも入っていない子を回し、それもいなければ新しく入団させる
+              const used = new Set([].concat(w.lineupA || [], w.lineupB || []).map((x) => x.pid).concat(w.benchA || [], w.benchB || []));
+              const free = Object.values(w.players).find((q) => !used.has(q.id) && q.pos !== 'GK');
+              s.pid = free ? free.id : newcomer(w, YA.rngOf(w.seed * 11 + w.year * 37 + w.week + i), 1, null).id;
+              const at = w[b].indexOf(s.pid);
+              if (at >= 0) w[b].splice(at, 1);
+            }
+            return;
+          }
+          if (jj >= 0) {
+            s.pid = w[b][jj];
+            w[b].splice(jj, 1);
+          }
+        });
+      }
+    }
+  }
+  YA.autoTeamsKeep = autoTeamsKeep;
+  YA.newcomer = (w, rng, grade, forcePos) => newcomer(w, rng, grade, forcePos);
+  // 使えない名前：いまの選手と卒業生（2026-11-18：途中加入と新入生が卒業生と同じ名前になっていた）
+  YA.usedNames = (w) => new Set(Object.values(w.players).map((p) => p.name).concat((w.alumni || []).map((a) => a.name)));
+  function newcomer(w, rng, grade, forcePos) {
+    const used = YA.usedNames(w);
+    // GKが足りなくなったら、途中加入はGK
+    const gkCount = Object.values(w.players).filter((q) => q.pos === 'GK').length;
+    const pos = forcePos || (gkCount < 3 ? 'GK' : rng.pick(['CB', 'LB', 'RB', 'DM', 'CM', 'CM', 'AM', 'LW', 'RW', 'ST']));
+    const id = 'p' + ++w.nextId;
+    const p = YA.genPlayer(rng, id, grade || 1, pos, rng.int(-1, 1), used);
+    p.team = 'B';
+    w.players[id] = p;
+    numbers(w);
+    w.benchB = (w.benchB || []).concat([id]).slice(0, 12);
+    return p;
+  }
+
+  // ---------- 試合の結果を名簿に戻す ----------
+  YA.applyMatch = function (w, m, which, opp, scheduled) {
+    const team = m.home;
+    for (const id of Object.keys(team.players)) {
+      const p = w.players[id];
+      if (!p) continue;
+      const mm = p.st ? p.st.minutes : 0;
+      const conf0 = p.conf;
+      const tu0 = p.tu == null ? 40 : p.tu;
+      const state0 = p.state ? p.state.k : null;
+      p.mins += mm;
+      const s15 = team.startSlot && team.startSlot[id];
+      if (s15 && mm > 0) {
+        p.fam = p.fam || {};
+        p.fam[s15] = Math.min(14, (p.fam[s15] || 0) + 1);
+      }
+      if (which === 'A') p.minsA = (p.minsA || 0) + mm;
+      if (mm > 0) {
+        // 役割をこなすうちに戦術の理解が伸びる（合っていると早い）
+        const li = team.lineup.findIndex((sl) => sl.pid === id);
+        const fit = li >= 0 ? YA.Match.prototype.roleFit.call(null, team, li) : 0;
+        p.tu = Math.min(100, (p.tu == null ? 40 : p.tu) + (fit >= 0 ? 2 : 0.5));
+      }
+      p._weekMins = (p._weekMins || 0) + mm;
+      // 退場した子は、次に試合のある週に出場停止（2026-11-18：退場しても次の試合に出られた）
+      if (p.sentOff && (scheduled || which === 'B')) {
+        p.banM = Math.max(p.banM || 0, 1);
+        p.hist.unshift({ y: w.year, w: w.week, t: '退場（次の試合は出場停止）' });
+        noteTier(w, 1, p.num + '番 ' + p.name + ' が退場。次の試合は出場停止', p.id);
+      }
+      if (mm > 0) {
+        // 試合の疲れ：出た時間と、試合で減ったスタミナから。90分で10〜20
+        const drop = Math.max(0, (p._startStam != null ? p._startStam : 100) - (p.stam != null ? p.stam : 100));
+        p.fat = clamp(p.fat + clamp((mm / 90) * 10 + drop * 0.12, 0, 22), 0, 100);
+        // 試合の怪我（2026-11-17 直し：前は試合で怪我をしなかった）。出た時間に応じて、疲れているほど起きやすい
+        if (!(p.inj > 0)) {
+          const tfx = YA.trainerFx ? YA.trainerFx(w) : { inj: 1 };
+          const ir = YA.rngOf((w.seed | 0) * 29 + w.year * 577 + w.week * 41 + (which === 'A' ? 0 : 7) + YA.hash(id));
+          const risk = (mm / 90) * (YA.MATCH_INJ.base + Math.max(0, p.fat - 50) / 100 * YA.MATCH_INJ.fat) * tfx.inj * (p.pos === 'GK' ? 0.3 : 1) * (YA.injK ? YA.injK(p) : 1); // GKは試合の怪我が少ない
+          if (ir() < risk) {
+            p.inj = ir() < YA.BIG_INJ_P * 1.5 ? ir.int(8, 24) : ir.int(1, 5);
+            p._injLen = p.inj;
+            p.hist.unshift({ y: w.year, w: w.week, t: '試合で怪我（' + p.inj + '週）' });
+            noteTier(w, 1, p.num + '番 ' + p.name + ' が試合で怪我。全治' + p.inj + '週' + (p.inj >= 8 ? '（長い離脱になる）' : ''), p.id);
+          }
+        }
+        // 試合中の上下は、試合のあとに半分ほど元へ戻る（勝てば少し上がる）
+        p.conf = clamp(p.conf + (55 - p.conf) * 0.45 + (m.score.home > m.score.away ? 3 : m.score.home < m.score.away ? -2 : 0), 0, 100);
+        if (p.st.rating >= 7.6) conf(p, 2);
+        if (p.st.rating <= 5.4) conf(p, -2);
+        // 大活躍のあとは伸び盛り、大きな失敗のあとは壁（反骨心の子は、失敗を力に変えて伸び盛り）
+        if (!(p.state && p.state.w > 0)) {
+          const rr = YA.rngOf(w.seed + w.week * 7 + w.year * 3 + p.num)();
+          if (p.st.rating >= 8.4 && rr < 0.5) {
+            p.state = { k: 'peak', w: 6 };
+            noteTier(w, 2, p.num + '番 ' + p.name + ' が大活躍で伸び盛りに入った', p.id);
+          } else if (p.st.rating <= 5.0 && rr < 0.5) {
+            if (anyP(p, '反骨心')) {
+              p.state = { k: 'peak', w: 5 };
+              noteTier(w, 2, p.num + '番 ' + p.name + ' は悔しさをバネに、伸び盛りに入った', p.id);
+            } else {
+              p.state = { k: 'wall', w: 6 };
+              noteTier(w, 2, p.num + '番 ' + p.name + ' が壁に当たっている（しばらく伸びにくい）', p.id);
+            }
+          }
+        }
+        if (p.pers && m.discontent && m.discontent[id] > 10) p.unrest += 0.7; // 役割が合わない場面が多い試合だけ、少しずつ
+      } else if (which === 'A' && p.team === 'A' && p.mins < 400) {
+        // 控えにもならなかった子の小さな不満
+        if (ST(p, '気持ちの強さ', '負けず嫌い') || ST(p, '目指すもの', '野心家')) p.unrest += 0.1;
+      }
+      if (mm > 0 && which === 'A') {
+        // 試合でもらった経験（試合後の画面に出す）。頭の能力の経験値は次の週の成長に入る
+        const tier = (p.team === 'A' ? 1 : 0.55) * (w.league ? YA.LEVEL_EXP[w.league.level - 1] : 1);
+        p.lm = { y: w.year, w: w.week, mins: mm, rating: p.st.rating, conf: Math.round(p.conf - conf0), tu: Math.round(((p.tu == null ? 40 : p.tu) - tu0) * 10) / 10, xp: Math.round((mm / 90) * 5 * tier * 10) / 10, pos: team.startSlot && team.startSlot[id], state: p.state && p.state.k !== state0 ? p.state.k : null };
+      }
+      delete p._startStam;
+    }
+    const gf = m.score.home;
+    const ga = m.score.away;
+    if (which === 'A' && scheduled) {
+      // 同じ戦い方を続けると、チームに浸透する
+      const ty = team.tactic.type;
+      w.tactMem = w.tactMem && w.tactMem.type === ty ? { type: ty, weeks: w.tactMem.weeks + 1 } : { type: ty, weeks: 1 };
+    }
+    if (which === 'A') {
+      w.results.push({ year: w.year, week: w.week, opp: opp.name, gf, ga, kind: opp.kindLabel || '' });
+      if (scheduled && YA.recordMatch) YA.recordMatch(w, m, opp);
+      if (gf > ga) w.rec.w++;
+      else if (gf === ga) w.rec.d++;
+      else w.rec.l++;
+      w.rec.gf += gf;
+      w.rec.ga += ga;
+    }
+  };
+
+  // Bチームの試合は、結果だけ自動で回す
+  YA.simulateB = function (w) {
+    const rng = YA.rngOf(w.seed * 3 + w.year * 400 + w.week);
+    const opp = YA.opponentOf(w);
+    const o2 = Object.assign({}, opp, { lvl: opp.lvl - 1.3, id: opp.id + 'B' });
+    const home = YA.teamFromWorld(w, 'B');
+    const away = YA.makeOpponent(o2, w.seed + w.week * 7);
+    const m = new YA.Match({ seed: w.seed * 11 + w.year * 100 + w.week, home, away, settings: { autoStop: false } });
+    let g = 0;
+    while (!m.finished && g++ < 2000) m.step();
+    YA.applyMatch(w, m, 'B', o2, false);
+    (w.resultsB = w.resultsB || []).push({ year: w.year, week: w.week, opp: o2.name, gf: m.score.home, ga: m.score.away });
+    if (w.resultsB.length > 30) w.resultsB.shift();
+    return { gf: m.score.home, ga: m.score.away, opp: o2.name };
+  };
+
+  // ---------- 戦術と役割で変わる成長 ----------
+  // 戻り値：{ exp: 能力→上乗せ, tactic: 戦術名, tabs: 戦術で伸びやすい能力, role: 役割名, rabs: 役割で伸びやすい能力 }
+  YA.tacBase = (t) => (t ? (t.type === 'カスタム' && t.baseType ? t.baseType : t.type) : null);
+  YA.tacticTrainBonus = function (w, p) {
+    const out = { exp: {}, tactic: null, tabs: [], role: null, rabs: [] };
+    if (!w.lineupA || p.pos === 'GK') return out;
+    const inA = w.lineupA.findIndex((s) => s.pid === p.id);
+    const inB = inA < 0 ? w.lineupB.findIndex((s) => s.pid === p.id) : -1;
+    const benchA = (w.benchA || []).indexOf(p.id) >= 0;
+    if (inA < 0 && inB < 0 && !benchA && p.team !== 'A') return out;
+    const team = inA >= 0 || benchA || p.team === 'A' ? 'A' : 'B';
+    // カスタムの戦術は、もとの型（baseType）で伸びる能力を決める（2026-11-18：カスタムにすると戦術の上乗せが消えていた）
+    const type = team === 'B' && w.bCtl && w.bCtl.tactic && YA.TAC_PROFILE[w.bCtl.tactic] ? w.bCtl.tactic : YA.tacBase(w.tactic);
+    const pf = YA.TAC_PROFILE[type];
+    const rep = team === 'A' ? YA.tactRepOf(w) : 0.8;
+    const wide = ['LW', 'RW', 'LB', 'RB', 'LWB', 'RWB', 'LM', 'RM'];
+    const who = !pf ? false : pf.who === 'front' ? p.pos === 'MF' || p.pos === 'FW' : pf.who === 'back' ? p.pos === 'DF' || p.main === 'DM' : pf.who === 'wide' ? wide.indexOf(p.main) >= 0 : true;
+    if (pf && who) {
+      out.tactic = type;
+      for (const a of pf.abs) if (p.ab[a] != null) { out.exp[a] = (out.exp[a] || 0) + 0.18 * rep; out.tabs.push(a); }
+    }
+    const lu = team === 'A' ? w.lineupA : w.lineupB;
+    const si = lu.findIndex((s) => s.pid === p.id);
+    if (si >= 0) {
+      const rd = YA.ROLE_DEF[lu[si].role];
+      if (rd) {
+        out.role = lu[si].role;
+        for (const [a, wt] of Object.entries(rd.absW)) if (p.ab[a] != null) { out.exp[a] = (out.exp[a] || 0) + 0.07 * wt; out.rabs.push(a); }
+      }
+    }
+    return out;
+  };
+
+  // ---------- 週の締め：出来事の反映・暦を進める・年度替わり ----------
+  // 成長の見える化：月の初めと年の初めの能力を控え、今月・今年の伸びと総合力の推移を出せるようにする
+  YA.growthTick = function (w) {
+    const mk = w.year * 100 + YA.monthIdx(w.week);
+    for (const p of Object.values(w.players)) {
+      const g = p.gr || (p.gr = { mk: null, y: null, mAb: null, yAb: null, log: [] });
+      if (g.mk !== mk) {
+        g.mk = mk;
+        g.mAb = Object.assign({}, p.ab);
+        g.log.push([mk, Math.round(YA.ovr(p) * 100) / 100]);
+        if (g.log.length > 40) g.log.shift();
+      }
+      if (g.y !== w.year) { g.y = w.year; g.yAb = Object.assign({}, p.ab); }
+    }
+  };
+  YA.growthOf = function (p) {
+    const g = p.gr;
+    const d = (base) => { const o = {}; if (base) for (const a of Object.keys(p.ab)) if (p.ab[a] !== base[a]) o[a] = p.ab[a] - (base[a] == null ? p.ab[a] : base[a]); return o; };
+    return { month: d(g && g.mAb), year: d(g && g.yAb), log: (g && g.log) || [] };
+  };
+  YA.startWeek = function (w) {
+    YA.growthTick(w);
+    w.planMonth = w.year * 100 + YA.monthIdx(w.week); // この月の練習は組んだことにする（同じ月の残りの週は1タップで進める）
+    // 今週の練習を実行して出来事を作る
+    w.campMult = 1;
+    if (YA.SCHED(w.week).t === 'camp') YA.applyCamp(w);
+    YA.weekExtras(w);
+    const gains = YA.runTraining(w);
+    w.events = YA.rollEvents(w);
+    w.phase = 'event';
+    w.matchDone = false;
+    return gains;
+  };
+  // 出来事のあと：欠けた先発を埋め、試合のある週は試合へ
+  YA.afterEvents = function (w) {
+    w.events = [];
+    const swaps = [repairLineup(w, 'A'), repairLineup(w, 'B')];
+    // 抜けた子がもうチームにいない（退団・卒業）こともある
+    for (const s of swaps[0]) if (s[1]) noteTier(w, 2, (s[0] ? s[0].num + '番 ' + s[0].name + ' が出られないため、' : '先発に空きが出たため、') + s[1].num + '番 ' + s[1].name + ' がAチームの先発に入った');
+    w.phase = YA.hasMatch(w.week, w) ? 'match' : 'after';
+  };
+  YA.endWeek = function (w) {
+    // Bの試合（自動）
+    const sch = YA.SCHED(w.week);
+    if (sch.t === 'league' || sch.t === 'cup') {
+      const b = YA.simulateB(w);
+      w.lastB = b;
+    }
+    if (sch.t === 'league' && sch.n === 22) {
+      const le = YA.leagueEnd(w);
+      const po = w.cup && w.cup.post && w.cup.post.alive ? w.cup.post.kind : null;
+      if (le) YA.noteTier(w, 1, `リーグ戦が終わりました。最終順位は${le.rank}位` + (le.move > 0 ? '（最下位。来年は一つ下のリーグへ降格）' : po === 'playoff' ? '（上位2位。1月の昇格のプレーオフに出ます。勝てば昇格）' : po === 'final' ? '（優勝。1月に EAST と WEST のファイナルに出ます）' : '') );
+    }
+    // 卒業式（年度末）：評価 → 卒業と入学 → 契約・解任
+    let grad = null;
+    if (w.week >= WEEKS) {
+      const le = YA.leagueEnd(w);
+      if (w.nextLevel) w.leagueLevel = w.nextLevel;
+      const ev = YA.evaluate(w);
+      w.coach.exp++;
+      w.pendingCoach = true;
+      grad = YA.graduate(w);
+      grad.eval = ev.rec;
+      if (ev.dismissed) {
+        const off = YA.moveOffers(w).sort((a, b) => b.tier - a.tier)[0];
+        YA.moveTo(w, off, '成績不振で解任されました。');
+        grad.dismissed = off;
+      } else if (w.club.contract.left <= 0) w.pendingContract = { offers: YA.moveOffers(w) };
+    } else w.week++;
+    for (const p of Object.values(w.players)) p.rest = p.rest === 'rest' ? null : p.rest === 'light' ? null : null;
+    w.phase = 'plan';
+    w.matchDone = false;
+    return grad;
+  };
+
+  // 3月：高3が卒業して名鑑へ。高2→高3、高1→高2。新しい高1が12人入る
+  YA.graduate = function (w) {
+    const rng = YA.rngOf(w.seed * 71 + w.year * 12345);
+    const out = [];
+    const grads = [];
+    if (YA.topSeason) YA.topSeason(w); // トップチームの1年（順位・昇格降格・入れ替わり）
+    YA.alumniTick(w);
+    // その年の卒業生を力の順に並べ、上位からプロ契約（人数は評判で変わる）。突出して高い子は上限を超えてプロへ
+    const seniors = Object.values(w.players).filter((q) => q.grade === 3).sort((a, b) => YA.ovr(b) - YA.ovr(a));
+    const K = clamp(Math.round(1.5 + (w.club.rep - 30) / 45 + (rng() - 0.5) * 1.6), 1, 4);
+    seniors.forEach((q, i) => {
+      const o = YA.ovr(q);
+      let path = (i < K && o >= 11.5) || o >= 15.5 ? 'pro' : o >= 10.5 ? 'univ' : 'amateur';
+      // 進路の相談（決定15）：推す・大学を勧める・他のクラブへ売り込む
+      if (q._push === 'top') {
+        if ((o >= 11.5 && i < K + 1) || (o >= 11 && rng() < 0.15)) path = 'pro';
+        else {
+          path = 'univ';
+          q._pushFail = true;
+        }
+      } else if (q._push === 'univ') path = o >= 10 ? 'univ' : path;
+      else if (q._push === 'sell') {
+        if (o >= 11 && rng() < 0.6) {
+          path = 'pro';
+          q._sold = true;
+        } else if (path === 'pro') path = 'univ';
+      }
+      // 在学中にトップから内定をもらった高3は、卒業と同時にプロ（2026-11-17：前は高3でも在学中に抜けていた）
+      if (q.naitei) path = 'pro';
+      q._path = path;
+    });
+    // プロ入りは、その年の目安（K人）まで。突出した子（16以上）だけ1人多く取れる。下から大学へ回す。内定の子が先
+    const pros = seniors.filter((q) => q._path === 'pro').sort((a, b) => (b.naitei ? 1 : 0) - (a.naitei ? 1 : 0) || YA.ovr(b) - YA.ovr(a));
+    // 在学中にトップと契約した子がいれば、そのぶん卒業時の枠は減る（その年のプロ入りの合計が目安に収まるように）
+    const early = (w.alumni || []).filter((a) => a.year === w.year && /高.でトップ昇格/.test(a.note || '')).length;
+    const K2 = Math.max(pros.filter((q) => q.naitei).length, K - early);
+    const cap = K2 + (pros[K2] && YA.ovr(pros[K2]) >= 16 ? 1 : 0);
+    for (const q of pros.slice(cap)) {
+      q._path = 'univ';
+      if (q._sold) q._sold = false;
+    }
+    for (const p of Object.values(w.players)) {
+      if (p.grade === 3) {
+        const o = Math.round(YA.ovr(p) * 10) / 10;
+        // トップの登録に入る力（YA.topCutLine）に届かないプロは、ほかのJクラブへ（scout.js の alumniEntry と同じ線）
+        const own = !p._sold && w.top && YA.topCutLine && YA.rate(Math.round(YA.ovr(p) * 10) / 10) >= YA.topCutLine(w);
+        const note = p._path === 'pro' ? (own ? 'プロ契約（トップ昇格）' : 'プロ契約（ほかのクラブへ）') : p._path === 'univ' ? (o >= 12 ? '大学（強豪）へ' : '大学へ') : '社会人・就職へ';
+        if (p._pushFail) YA.addTrust(w, -2, p.name + 'のトップ昇格の推薦が通らなかった');
+        if (p._sold) YA.addRep(w, 1);
+        grads.push([p, note]);
+        out.push({ name: p.name, pos: p.pos, main: p.main, ovr: o, note });
+        delete w.players[p.id];
+      } else {
+        p.grade++;
+        p.tprog = p.tprog || {};
+      }
+    }
+    // 在籍者の年またぎの調整
+    for (const p of Object.values(w.players)) {
+      p.fat = Math.max(0, p.fat - 30);
+      p.inj = Math.max(0, p.inj - 3);
+      p.mins = 0;
+      p.unrest = 0;
+    }
+    for (const [p, note] of grads) w.alumni.push(YA.alumniEntry(w, p, note));
+    const used = YA.usedNames(w);
+    YA.intake(w, rng, used);
+    numbers(w);
+    w.year++;
+    w.week = 1;
+    autoTeams(w, false, true);
+    YA.relations(w);
+    YA.yearStart(w);
+    const entered = Object.values(w.players).filter((p) => p.grade === 1).length;
+    noteTier(w, 1, w.year - 1 + '年目が終わりました。' + out.length + '人が卒業し、新しい高1の' + entered + '人が入団しました');
+    return { out, entered, contrib: w.club.solidarityLast || 0 };
+  };
+
+  // ---------- 面談 ----------
+  YA.TALKS = [
+    { k: 'praise', label: '褒める', kind: 'warm' },
+    { k: 'issue', label: '課題を伝える', kind: 'firm' },
+    { k: 'listen', label: '悩みを聞く', kind: 'warm' },
+    { k: 'push', label: '背中を押す', kind: 'push' },
+  ];
+  // 面談は1人につき月に1回（暦の月で数える）
+  YA.monthIdx = (week) => Math.min(11, Math.floor(((week - 1) / WEEKS) * 12));
+  YA.talkWeek = (w) => w.year * 100 + YA.monthIdx(w.week);
+  YA.canTalk = (w, p) => p.talk !== YA.talkWeek(w);
+  YA.talk = function (w, pid, k) {
+    const p = w.players[pid];
+    const t = YA.TALKS.find((x) => x.k === k);
+    if (!YA.canTalk(w, p)) return { ok: false, msg: '1人とは月に1回までです' };
+    p.talk = YA.talkWeek(w);
+    const res = react(p, t.kind);
+    if (res.c > 0 && w.coach) res.c = res.c * (1 + (w.coach.talk - 10) * 0.03);
+    // 話題によって少し違う
+    let extra = '';
+    if (k === 'issue' && p.train) {
+      // 課題の面談は、重点にする能力を示す（弱い能力を提案）
+      const weak = abList(p).filter((n) => p.ab[n] < 12).sort((a, b) => p.ab[a] - p.ab[b])[0];
+      if (weak) extra = '弱点：' + weak + '（' + p.ab[weak] + '）';
+      if (res.c >= 0 && weak) p.prog[weak] = (p.prog[weak] || 0) + 0.15;
+    }
+    if (k === 'listen' && p.unrest > 0) p.unrest = Math.max(0, p.unrest - 1);
+    if (k === 'praise' && w.talkCount > 14) res.c -= 1;
+    w.talkCount = (w.talkCount || 0) + 1;
+    const small = apply(p, res);
+    // えこひいき：話す相手が偏ると他の子が感じる（面談が多い子が3人を超える）
+    p.talks = (p.talks || 0) + 1;
+    if (YA.addCare) YA.addCare(w, p, 3);
+    return { ok: true, line: res.line, small, extra };
+  };
+
+  // ---------- 重点の方針（まとめて決める）----------
+  // strong＝得意を伸ばす（ポジションに要る能力のいちばん高いもの）、weak＝苦手を伸ばす（全部の能力でいちばん低いもの）、
+  // pos＝ポジションの弱点（ポジションに要る能力のいちばん低いもの。おまかせの既定）。手で選んだら manual
+  YA.FOCUS_POLICY = { strong: '得意を伸ばす', weak: '苦手を伸ばす', pos: 'ポジションの弱点' };
+  YA.focusByPolicy = function (p, policy) {
+    const posAbs = (p.pos === 'GK' ? YA.AB_GK : YA.POS_ABS15[p.main]).filter((n) => p.ab[n] < 20);
+    const allAbs = (p.pos === 'GK' ? YA.AB_GK.concat(YA.AB_MENTAL, YA.AB_PHYS) : YA.AB_FIELD).filter((n) => p.ab[n] < 20);
+    if (policy === 'strong') return posAbs.slice().sort((a, b) => p.ab[b] - p.ab[a])[0] || null;
+    if (policy === 'weak') return allAbs.slice().sort((a, b) => p.ab[a] - p.ab[b])[0] || null;
+    return posAbs.slice().sort((a, b) => p.ab[a] - p.ab[b])[0] || null;
+  };
+  YA.setPolicy = function (p, policy) {
+    p.train.policy = policy;
+    if (policy !== 'manual') p.train.focus = YA.focusByPolicy(p, policy);
+  };
+  // 方針の決まっている子は、能力が伸びたら重点も選び直す（毎週）
+  YA.refreshFocus = function (w) {
+    for (const p of Object.values(w.players)) if (p.train && p.train.policy && p.train.policy !== 'manual') p.train.focus = YA.focusByPolicy(p, p.train.policy);
+  };
+
+  // ---------- 練習の自動設定 ----------
+  // おまかせの練習の組み方（2026-11-17 直し：前は1年中同じ5つで、MFだけよく伸びてDF・FWが伸びにくかった）。
+  // 週ごとに、技術・体（アジリティ・フィジカル・対人）・頭（戦術・守備の組織・次の相手の対策）・ポジションの穴・回復の5日を回す。
+  // 4日目は、チームの中でいちばん伸びが遅れている括り（DF・MF・FW）に合わせる
+  const ROT = {
+    tech: ['ボール回し', 'シュート', 'クロスと合わせ', 'ボール回し', 'シュート', 'セットプレー'],
+    body: ['アジリティ', 'フィジカル', '対人', 'アジリティ', '対人', 'フィジカル'],
+    head: ['戦術', '守備の組織', '戦術', '守備の組織'],
+    DF: ['対人', '守備の組織', 'フィジカル'],
+    MF: ['ボール回し', '戦術', '紅白戦'],
+    FW: ['シュート', 'アジリティ', 'クロスと合わせ'],
+  };
+  YA.AUTO_ROT = ROT;
+  YA.autoPlanDays = function (w) {
+    const wk = (w.year || 1) * 40 + (w.week || 1);
+    const ps = Object.values(w.players);
+    // 括りごとの、いまの総合力の平均（低い括りを4日目に）
+    const grp = { DF: [], MF: [], FW: [] };
+    for (const p of ps) if (grp[p.pos]) grp[p.pos].push(YA.ovr(p));
+    const avgG = (k) => (grp[k].length ? grp[k].reduce((a, b) => a + b, 0) / grp[k].length : 99);
+    const order = ['DF', 'MF', 'FW'].sort((a, b) => avgG(a) - avgG(b));
+    const weakG = order[(wk % 3 === 2) ? 1 : 0];
+    const opp = YA.matchOf && YA.matchOf(w) ? (() => { try { return YA.opponentOf(w); } catch (e) { return null; } })() : null;
+    const head = opp && wk % 2 === 0 ? '相手の対策' : ROT.head[wk % ROT.head.length];
+    const fatigued = ps.filter((p) => p.fat > 70).length;
+    const noMatch = !(YA.matchOf && YA.matchOf(w));
+    const int = fatigued > 14 ? 'light' : noMatch && fatigued < 4 ? 'hard' : 'normal';
+    return [
+      { menu: ROT.tech[wk % ROT.tech.length], int },
+      { menu: ROT.body[wk % ROT.body.length], int },
+      { menu: head, int: int === 'hard' ? 'normal' : int },
+      { menu: ROT[weakG][Math.floor(wk / 3) % ROT[weakG].length], int },
+      { menu: '回復', int: fatigued > 6 ? 'normal' : 'light' },
+    ];
+  };
+  YA.autoPlan = function (w) {
+    // 練習を週ごとに回し、弱点を自動で重点に。疲れている子は軽めに
+    const plan = { days: YA.autoPlanDays(w) };
+    for (const p of Object.values(w.players)) {
+      // 方針を決めてある子はそのまま、決めていない子はポジションの弱点を
+      if (p.train.policy && p.train.policy !== 'manual') p.train.focus = YA.focusByPolicy(p, p.train.policy);
+      else YA.setPolicy(p, 'pos');
+      // 特性練習は、いちばん早く覚えられるものを（おまかせのとき）
+      if (!p.train.trait) {
+        const lt = YA.learnable(p)[0];
+        if (lt && lt.weeks <= 34) p.train.trait = lt.t;
+      }
+      p.rest = p.fat > 85 ? 'rest' : p.fat > 74 ? 'light' : null;
+    }
+    w.plan = plan;
+    return plan;
+  };
+  YA.learnable = function (p) {
+    const list = (p.pos === 'GK' ? GK_TRAITS : FIELD_TRAITS).filter((t) => p.traits.indexOf(t) < 0 && t in YA.TRAIT_AFF);
+    return list.map((t) => {
+      const q = YA.TRAIT_AFF[t].reduce((s, n) => s + p.ab[n], 0) / 2;
+      const speed = clamp((q / 11) * (q / 11), 0.35, 2.2) * p.rate * 2.6;
+      return { t, weeks: Math.ceil(100 / speed), q };
+    }).sort((a, b) => a.weeks - b.weeks);
+  };
+
+  // 潜在能力（行き着く高さ）を★0〜5に。能力が伸びても星は減らない
+  YA.potStars = function (p) {
+    const n = (p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length;
+    const v = p.pot / n;
+    return v >= 17 ? 5 : v >= 14.4 ? 4 : v >= 12.4 ? 3 : v >= 10.8 ? 2 : v >= 9.3 ? 1 : 0; // 入学時の水準を下げた（決定100）のに合わせて目盛りを下げた
+  };
+  YA.starsOf = function (p) {
+    // 見える伸びしろは★の幅。高学年ほど見極めがつき、幅が狭くなる
+    const s = YA.potStars(p);
+    const sw = p.grade >= 3 ? 0 : 1;
+    return [clamp(s - sw, 0, 5), clamp(s + sw, 0, 5)];
+  };
+
+  YA.summaryOf = function (w) {
+    const all = Object.values(w.players);
+    return {
+      injured: all.filter((p) => p.inj > 0),
+      tired: all.filter((p) => p.fat > 70 && p.inj <= 0),
+      lowconf: all.filter((p) => p.conf < 35),
+      hot: all.filter((p) => p.form >= 1 || p.spurt > 0),
+    };
+  };
+  YA.noteTier = noteTier;
+  YA._genGrade = genGrade;
+  YA._numbers = numbers;
+  YA.applyReact = apply;
+  YA.clampV = clamp;
+  // ビルド3までの保存データ（育成だけ）を、クラブ運営つきの形に移す
+  YA.migrate = function (w) {
+    if (w.club && w.v >= 2) return w;
+    w.v = 2;
+    w.coach = w.coach || YA.newCoach();
+    w.scouting = w.scouting || YA.newScouting();
+    w.disc = 60;
+    w.rules = [];
+    w.trophies = [];
+    w.h2h = {};
+    w.rel = [];
+    YA.newClub(w, 2, w.clubName);
+    YA.relations(w);
+    YA.yearStart(w);
+    w.yearIntro = false;
+    return w;
+  };
+})();

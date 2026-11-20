@@ -48,6 +48,8 @@ class _SupportScreenState extends State<SupportScreen> {
       // 承認されれば後から届く（そのとき広告が消える）。
       PurchaseOutcome.pending => '承認を待っています。承認されると反映されます。',
       PurchaseOutcome.unavailable => 'ストアに繋がりませんでした。',
+      // 買っていない人が「購入を復元」を押したとき。壊れて見せない。
+      PurchaseOutcome.nothingToRestore => '復元できる購入はありませんでした。',
       PurchaseOutcome.failed => '購入できませんでした。',
     };
     ScaffoldMessenger.of(context)
@@ -191,9 +193,7 @@ class _LegalLink extends StatelessWidget {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(content: Text('$label のURLをコピーしました。')),
-          );
+          ..showSnackBar(SnackBar(content: Text('$label のURLをコピーしました。')));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),

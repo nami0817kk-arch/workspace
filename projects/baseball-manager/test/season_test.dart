@@ -46,12 +46,14 @@ void main() {
         greaterThan(_avgAch(_p(Role.batter, 60), 30)));
   });
 
-  test('打者は投手成績を、投手は打撃成績を持たない。二刀流は両方', () {
+  test('打者は投手成績を持たない。投手は先発の試合に2打席だけ立つ。二刀流は両方', () {
     final b = playGame(_p(Role.batter, 60), 50, Random(1));
     final p = playGame(_p(Role.pitcher, 60), 50, Random(1));
     final t = playGame(_p(Role.twoWay, 60), 50, Random(1));
     expect(b.faced, 0);
-    expect(p.atBats + p.walks, 0);
+    expect(p.atBats + p.walks, 2);
+    expect(p.pitcherBat, isTrue);
+    expect(playGame(_p(Role.pitcher, 60), 50, Random(1), pitch: false).atBats, 0);
     expect(t.faced, greaterThan(0));
     expect(t.atBats + t.walks, greaterThan(0));
   });
@@ -122,7 +124,7 @@ void main() {
     });
 
     test('投手の指標を、式どおりに出す', () {
-      // 180回(540アウト)、被安打150、与四球50、奪三振200、被本塁打20
+      // 180回(540アウト)、被安打150(本塁打を除く)+被本塁打20 = 画面の被安打170、与四球50、奪三振200
       const p = Line(
         faced: 740,
         outs: 540,
@@ -134,12 +136,13 @@ void main() {
         losses: 6,
         starts: 28,
       );
-      expect(p.whip, closeTo((50 + 150) / 180, 1e-9));
+      expect(p.totalHitsAllowed, 170);
+      expect(p.whip, closeTo((50 + 170) / 180, 1e-9));
       expect(p.strikeoutsPer9, closeTo(200 * 9 / 180, 1e-9));
       expect(p.walksPer9, closeTo(50 * 9 / 180, 1e-9));
       expect(p.homeRunsPer9, closeTo(20 * 9 / 180, 1e-9));
       expect(p.strikeoutPerWalk, closeTo(4.0, 1e-9));
-      expect(p.battingAverageAgainst, closeTo(150 / 690, 1e-9));
+      expect(p.battingAverageAgainst, closeTo(170 / 690, 1e-9));
       expect(p.winRate, closeTo(0.7, 1e-9));
     });
 
@@ -203,7 +206,7 @@ void main() {
     });
   });
 
-  test('プロで全能力99の打者は、毎年ほぼ4割を打つ。90でも4割には届かない', () {
+  test('プロで全能力99の打者は3割5分前後。4割はめったに出ない(2026-11-03 に上を抑えた)', () {
     double mean(int v) {
       final p = Player(
           name: 't',
@@ -222,8 +225,8 @@ void main() {
       return xs.reduce((a, b) => a + b) / xs.length;
     }
 
-    expect(mean(99), greaterThan(0.42));
-    expect(mean(90), lessThan(0.40));
+    expect(mean(99), inInclusiveRange(0.33, 0.40));
+    expect(mean(90), lessThan(0.33));
     expect(mean(70), inInclusiveRange(0.26, 0.32)); // ふつうの一流は変わらない
   });
 
@@ -304,12 +307,49 @@ void main() {
             potential: 90,
             abilities: {for (final a in pitcherAbilities) a: 95});
         final s = playLeagueSeason(p,
-            teamLevel: 60,
-            opponents: const [55, 60, 65],
-            rng: Random(seed));
+            teamLevel: 60, opponents: const [55, 60, 65], rng: Random(seed));
         expect(s.line.losses, lessThanOrEqualTo(s.line.starts));
         expect(s.line.wins + s.line.losses, lessThanOrEqualTo(s.line.starts));
       }
+    });
+  });
+
+  group('防御率の下限', () {
+    test('30回以上投げて失点の推定が0でも、シーズンの防御率は下限(0.78)を下回らず、1点前後はなだらかに散らばる', () {
+      final zero = Line(
+          games: 24,
+          starts: 24,
+          faced: 700,
+          outs: 560,
+          runsRaw: -runBaseline * 700);
+      expect(zero.runsAllowed, 0);
+      expect(zero.era, closeTo(minSeasonEra, 1e-9));
+      // 1.20 より良い年は、縮めて並べる(順番は保つ)
+      Line pitched(double runs) => Line(
+          games: 24, starts: 24, faced: 700, outs: 560,
+          runsRaw: runs - runBaseline * 700);
+      final a = pitched(5).era!, b = pitched(20).era!;
+      expect(a, lessThan(b));
+      expect(a, greaterThan(minSeasonEra));
+      expect(b, lessThan(1.20));
+      // 少ない登板(1試合・1か月)は、そのまま 0.00 になりうる
+      final game = Line(
+          games: 1, starts: 1, faced: 24, outs: 18, runsRaw: -runBaseline * 24);
+      expect(game.era, 0);
+      // 下限より悪い防御率は変わらない
+      final normal = Line(
+          games: 24,
+          starts: 24,
+          faced: 700,
+          outs: 560,
+          runsRaw: 20 - runBaseline * 700 + 70);
+      expect(normal.era!, greaterThan(minSeasonEra));
+    });
+
+    test('勝敗(decidedStart)は下限を使わない: 無失点の登板に負けは付かない', () {
+      final g = Line(
+          games: 1, starts: 1, faced: 24, outs: 18, runsRaw: -runBaseline * 24);
+      expect(decidedStart(g, false).losses, 0);
     });
   });
 }

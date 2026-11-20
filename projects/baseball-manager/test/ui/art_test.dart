@@ -5,21 +5,12 @@ import 'package:baseball_manager/game/player.dart';
 import 'package:baseball_manager/ui/art/avatar.dart';
 import 'package:baseball_manager/ui/art/career_chart.dart';
 import 'package:baseball_manager/ui/art/confetti.dart';
-import 'package:baseball_manager/ui/art/radar.dart';
 import 'package:baseball_manager/ui/art/scene.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget _wrap(Widget w) =>
     MaterialApp(home: Scaffold(body: SingleChildScrollView(child: w)));
-
-Player _p(Role r, [int v = 40]) => Player(
-      name: 't',
-      role: r,
-      age: 20,
-      potential: 50,
-      abilities: {for (final a in abilitiesOf(r)) a: v},
-    );
 
 void main() {
   testWidgets('全ての段階・役割・表情で選手の絵が描ける', (t) async {
@@ -49,22 +40,6 @@ void main() {
               height: 120),
     ])));
     expect(tester(t), isNull);
-  });
-
-  testWidgets('レーダーは打者・投手・二刀流のどれでも描け、能力が変わっても落ちない', (t) async {
-    for (final r in Role.values) {
-      await t.pumpWidget(_wrap(AbilityRadar(player: _p(r, 20))));
-      await t.pumpWidget(_wrap(AbilityRadar(player: _p(r, 90))));
-      await t.pumpAndSettle();
-      expect(tester(t), isNull);
-    }
-  });
-
-  test('レーダーの外枠は、最高値より少し上(最低50・最大99)', () {
-    expect(radarScale(15), 50);
-    expect(radarScale(41), 60);
-    expect(radarScale(60), 70);
-    expect(radarScale(99), 99);
   });
 
   testWidgets('人生のグラフは、データが2つあれば描ける。伸びる途中でも落ちない', (t) async {

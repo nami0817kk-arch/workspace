@@ -12,6 +12,7 @@ import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/widgets/reward_funds_card.dart';
 
 import 'support/stub_purchase_service.dart';
+import 'support/legacy_market.dart';
 
 /// お金が湧く道・消える道の検査。
 ///
@@ -30,9 +31,18 @@ void main() {
       game.save!.budget = 100000;
       final before = game.save!.budget;
 
-      final target = game.transferMarket.first;
-      expect(await game.buyPlayerOnInstallments(target.id), isTrue);
-      expect(await game.sellPlayer(target.id), isTrue);
+      game.save!.wageBudget = 999999; // 年俸の枠で止めない
+      // 市場の選手は作るたびに違い、登録の決まりで買えない選手もいる。
+      // 買えた選手で確かめる。
+      String? targetId;
+      for (final p in [...legacyMarket(game)]) {
+        if (await game.buyPlayerOnInstallments(p.id)) {
+          targetId = p.id;
+          break;
+        }
+      }
+      expect(targetId, isNotNull, reason: '分割で買える選手がいない');
+      expect(await game.sellPlayer(targetId!), isTrue);
 
       expect(game.save!.budget, lessThanOrEqualTo(before),
           reason: '買って売るだけで資金が増えている');
@@ -47,9 +57,18 @@ void main() {
       await game.startNewGame('明細FC');
       game.save!.budget = 100000;
 
-      final target = game.transferMarket.first;
-      await game.buyPlayerOnInstallments(target.id);
-      await game.sellPlayer(target.id);
+      game.save!.wageBudget = 999999; // 年俸の枠で止めない
+      // 市場の選手は作るたびに違い、登録の決まりで買えない選手もいる。
+      // 買えた選手で確かめる。
+      String? targetId;
+      for (final p in [...legacyMarket(game)]) {
+        if (await game.buyPlayerOnInstallments(p.id)) {
+          targetId = p.id;
+          break;
+        }
+      }
+      expect(targetId, isNotNull, reason: '分割で買える選手がいない');
+      await game.sellPlayer(targetId!);
 
       expect(game.save!.newsLog.any((n) => n.text.contains('分割払いの残金')), isTrue,
           reason: '残金の精算が記録されていない');
@@ -59,8 +78,11 @@ void main() {
       final game = GameState();
       await game.startNewGame('通常FC');
       game.save!.budget = 100000;
+      // 年俸の枠で止まると売り買いの前提が崩れる(市場の先頭が高い選手だと
+      // 1割ほどの確率で枠を超える)。ここで見たいのは資金の出入りだけ。
+      game.save!.wageBudget = 1000000;
 
-      final target = game.transferMarket.first;
+      final target = legacyMarket(game).first;
       expect(await game.buyPlayer(target.id), isTrue);
       final afterBuy = game.save!.budget;
       final net = game.netReleaseValueFor(target.id);
@@ -91,7 +113,7 @@ void main() {
   });
 
   group('広告の特典', () {
-    testWidgets('見終えた後に画面を離れても、資金は入る', (tester) async {
+    testWidgets('見終えた後に画面を離れても、営業ブーストは入る', (tester) async {
       // 広告は最後まで見ているので、こちらには収入が立つ。受け取りを
       // mounted の後ろに置いていた頃は、回数だけ消費して資金が入らなかった。
       SharedPreferences.setMockInitialValues({});
@@ -108,7 +130,7 @@ void main() {
       Tr.language = AppLanguage.japanese;
       addTearDown(() => Tr.language = AppLanguage.system);
 
-      final before = game.save!.budget;
+      final before = game.marketingBoostWeeks;
       await tester.pumpWidget(MultiProvider(
         providers: [
           ChangeNotifierProvider<GameState>.value(value: game),
@@ -135,8 +157,8 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(game.save!.budget, greaterThan(before),
-          reason: '広告を見たのに資金が入っていない');
+      expect(game.marketingBoostWeeks, greaterThan(before),
+          reason: '広告を見たのに営業ブーストが入っていない');
       expect(money.claimedToday, 1);
 
       // 受け取りが保存を予約する。残したままテストを終えると、未処理の

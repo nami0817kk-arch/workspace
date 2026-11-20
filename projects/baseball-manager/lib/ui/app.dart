@@ -1,3 +1,4 @@
+import 'guide_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'controller.dart';
@@ -107,7 +108,6 @@ class _MilestoneHostState extends State<_MilestoneHost> {
         final m = ScaffoldMessenger.maybeOf(context);
         m?.hideCurrentSnackBar();
         final tone = widget.controller.toastTone;
-        final c = widget.controller;
         m?.showSnackBar(SnackBar(
           key: const Key('result-toast'),
           content: Row(children: [
@@ -122,10 +122,6 @@ class _MilestoneHostState extends State<_MilestoneHost> {
             const SizedBox(width: 8),
             Expanded(child: Text(t)),
           ]),
-          action: c.canUndo
-              ? SnackBarAction(
-                  key: const Key('toast-undo'), label: '戻す', onPressed: c.undo)
-              : null,
           duration: const Duration(seconds: 3),
           behavior: SnackBarBehavior.floating,
           // 広い画面では、操作バーと同じ幅に収める。
@@ -133,9 +129,20 @@ class _MilestoneHostState extends State<_MilestoneHost> {
         ));
       });
     }
-    if (_showing || widget.controller.pending.isEmpty) return;
+    if (_showing ||
+        (widget.controller.pending.isEmpty &&
+            !widget.controller.guidePending)) {
+      return;
+    }
     _showing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (mounted && widget.controller.guidePending) {
+        // はじめてのガイド(最初の選手を始めたとき、1度だけ)。
+        widget.controller.guidePending = false;
+        await showGuide(context);
+        widget.controller.markGuideSeen();
+        if (!mounted) return;
+      }
       while (mounted && widget.controller.pending.isNotEmpty) {
         final m = widget.controller.pending.first;
         await showDialog<void>(

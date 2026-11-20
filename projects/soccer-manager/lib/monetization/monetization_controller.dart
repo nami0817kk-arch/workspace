@@ -249,10 +249,12 @@ class MonetizationController extends ChangeNotifier {
     final at = remaining.indexOf(pack);
     if (at < 0) return;
     remaining.removeAt(at); // 同じパックを複数抱えていても1つだけ消す
+    // 手元の一覧を先に書き換える。保存を待っている間に別の受け取りが
+    // 一覧を読むと、渡し終えたパックがまだ残って見える。
+    undeliveredFundsPacks = remaining;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(
         _undeliveredFundsKey, remaining.map((p) => p.productId).toList());
-    undeliveredFundsPacks = remaining;
     notifyListeners();
   }
 

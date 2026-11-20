@@ -1,0 +1,181 @@
+# 物語完結型ショート 徳川将軍家 s1（2026-11-06）。本編 scripts/tokugawa-kakeizu-story.yaml（11/7 19:00 公開、https://youtu.be/VrUQJ4sBdyA）の序章・第1章から。11/8 9:30 公開。
+# 形式は oguri_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。
+# 絵は本編の AI 絵（out/story/kakeizu/main。既存の絵の写し。人物なし）と実在の写真（家達の少年時代・天璋院・慶喜・江戸城の堀）。新しい絵は作らない。
+#   使わない絵：K05（ガラスのろうそく立て＝oguri O12）・K01（下に貨車のような物）・K12/KEND（左下の看板）。
+# 切り口：将軍のあと家を継いだのは数え6歳の田安亀之助。領地（s2）・十六代様（s3）・慶喜家（s4）・18代（s5）には踏み込まない。
+# 事実カード（dev/output/rekishi-chiso/research/徳川将軍家_facts_20261105.yaml）：kakeizu-10・11・13・110・112・116。言い方は本編のまま。
+#   ・年齢を計算し直した：文久3年7月11日＝1863年8月24日生まれ。閏4月29日＝1868年6月19日 → 満4歳9か月余（「4歳と10か月近く」）、数え6歳（1863年を1歳）。本編どおり。
+#   ・1866年（家茂の死）に数え4歳（1863＝1 → 1866＝4）。本編どおり。
+#   ・慶喜が将軍になったのは慶応2年12月5日＝1867年1月10日なので、1866年は「家を継いだ」とだけ言う（本編の「このとき家を継ぎ、将軍になった」は西暦では年をまたぐ）。
+#   ・家茂が亀之助を挙げていた話は「と伝わる」（本編と同じ）。和宮の伝記は1943年の本と言ってから引く。
+# 理解テスト4問：
+#   ①誰の話か：将軍のあと徳川の家を継いだ、田安亀之助（のちの家達）
+#   ②いつ・どこで何が：1868年閏4月29日、江戸城で、新政府が宗家の跡継ぎを亀之助と伝えた
+#   ③なぜその子か：家茂が跡継ぎに挙げていたと伝わり、1866年には天璋院が和宮に亀之助を推す相談をしていた
+#   ④どうなったか：亀之助は家達と名を改め、徳川宗家の16代目になった
+title: 徳川将軍家｜将軍のあとを継いだ、数え6歳
+yt_title: 将軍が15代で終わったあと、徳川の家を継いだのは数え6歳の男の子だった　田安亀之助が16代目になるまで
+description: |-
+  将軍は15代の慶喜で終わりました。では、徳川の家を継いだのは、誰だったのか。
+  1868年閏4月29日、新政府は江戸城で、徳川宗家の跡継ぎを田安亀之助と伝えました。亀之助は1863年、御三卿の田安家に三男として生まれた子です。14代将軍の家茂は、もしものときの跡継ぎに亀之助を挙げていたと伝わり、1943年の和宮の伝記には、家茂が亡くなった知らせが届いた日に、天璋院が亀之助を推すことについて和宮に意見を尋ねた、とあります。継いだときの年齢は、函館市史が6歳、2025年の静岡新聞は5歳と書きます。生まれた日から数えると満4歳と10か月近く、6歳は数え年です。亀之助は名を家達と改め、徳川宗家の16代目になりました。
+  6歳の当主に、新政府が渡した領地はどれほどだったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川将軍家', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の風景・室内の画像は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/kakeizu
+out: kakeizu_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 徳川家達（徳川宗家16代）
+  title: "将軍のあとを継いだ、《数え6歳》"
+now:
+  - {at: 1868年, text: "1868年　江戸城", point: 2}
+  - {at: 1863年, text: "1863年　江戸の田安家", point: 0}
+  - {at: 1943年, text: "1943年　和宮の伝記", point: 1}
+  - {at: 1866年, text: "1866年　家茂が亡くなる", point: 1}
+  - {at: 閏4月29日, text: "1868年閏4月29日　江戸城", point: 2}
+timeline:
+  - {label: "1863"}
+  - {label: "1866"}
+  - {label: "1868"}
+cards:
+  - type: table
+    title: 継いだときの年齢
+    from: 年齢は
+    until: 名を家達と
+    items:
+      - {at: 函館市史が, text: "函館市史　6歳"}
+      - {at: 静岡新聞は, text: "静岡新聞　5歳"}
+      - {at: 満では, text: "満で　4歳10か月近く"}
+    text_y: 0.70
+shots:
+  Moat:
+    kind: real
+    image: paintings/yoshinobu_beato_yedo_castle_moat.jpg
+    focus: [0.5, 0.5]
+    move: left
+    credit: "フェリーチェ・ベアト撮影 江戸城の堀（1860年代。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 江戸城の堀と櫓
+  Child:
+    kind: real
+    image: paintings/kakeizu_iesato_child.jpg
+    crop: [0.0, 0.0, 1.0, 0.85]
+    focus: [0.5, 0.35]
+    move: in
+    credit: "徳川家達の少年時代の写真（1940年以前。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 少年の家達
+  K07:
+    kind: ai
+    file: kakeizu/main/K07.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 武家屋敷の白壁と門
+  K02:
+    kind: ai
+    file: kakeizu/main/K02.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 城の誰もいない広間とろうそく
+  Tenshoin:
+    kind: real
+    image: paintings/kazu_tenshoin_photo.png
+    crop: [0.0, 0.0, 1.0, 0.7]
+    focus: [0.5, 0.4]
+    move: down
+    credit: "天璋院の写真（1883年以前。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 天璋院
+  Yoshinobu:
+    kind: real
+    image: paintings/yoshinobu_portrait_sutton_osaka_1867.jpg
+    crop: [0.0, 0.0, 1.0, 0.62]
+    focus: [0.5, 0.35]
+    move: in
+    credit: "フレデリック・サットン撮影《徳川慶喜》（1867年、大坂城。パブリックドメイン）"
+    must: 将軍の慶喜
+  K10:
+    kind: ai
+    file: kakeizu/main/K10.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 誰もいない広間と松の襖絵
+  K15:
+    kind: ai
+    file: kakeizu/main/K15.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 机の上の古い巻物と和綴じの本
+  Child2:
+    kind: real
+    image: paintings/kakeizu_iesato_child.jpg
+    crop: [0.0, 0.0, 1.0, 0.85]
+    focus: [0.5, 0.3]
+    move: up
+    credit: "徳川家達の少年時代の写真（1940年以前。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 少年の家達（上へ流す。粗くなるので寄らない）
+  K08:
+    kind: ai
+    file: kakeizu/main/K08.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 駿府城と安倍川、遠くに富士
+lines:
+  # fact: kakeizu-76, kakeizu-11
+  - 語り: 1868年、将軍は、15代の慶喜で終わった。では、徳川の家を、継いだのは誰か。
+    shot: Moat
+    tone: 疑問
+    pause: 0.12
+  # fact: kakeizu-13, kakeizu-110
+  - 語り: 慶喜ではない。継いだのは、《!数えで6歳》の男の子、田安亀之助だった。
+    shot: Child
+    tone: 強調
+    pause: 0.12
+  # fact: kakeizu-10
+  - 語り: 亀之助は、1863年、江戸の田安家に、三男として生まれた。
+    shot: K07
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-110
+  - 語り: 14代将軍の家茂は、もしものときの跡継ぎに、亀之助を挙げていた、と伝わる。
+    shot: K02
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-112
+  - 語り: 1943年の、和宮の伝記には、家茂の死の知らせが届いた日に、天璋院が、亀之助を推すことを、和宮に尋ねた、とある。
+    shot: Tenshoin
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-13
+  - 語り: けれど、1866年に、徳川の家を継いだのは、慶喜だった。
+    shot: Yoshinobu
+    tone: 重い
+    pause: 0.12
+  # fact: kakeizu-11
+  - 語り: 2年後の、閏4月29日。江戸城で、宗家の跡継ぎは、亀之助と、伝えられた。受け取ったのは、代理の人だった。
+    shot: K10
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-13, kakeizu-116
+  - 語り: 年齢は、函館市史が6歳、静岡新聞は5歳と書く。満では、4歳と10か月近くだ。
+    shot: K15
+    tone: しみじみ
+    pause: 0.12
+  # fact: kakeizu-10, kakeizu-13
+  - 語り: 亀之助は、名を家達と改める。徳川宗家の、《16代目》だ。
+    shot: Child2
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: では、6歳の当主に、新政府が渡した領地は、どれほどだったのか。
+    shot: K08
+    tone: 疑問
+    pause: 0.15

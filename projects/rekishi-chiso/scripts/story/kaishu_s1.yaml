@@ -1,0 +1,141 @@
+# 物語完結型ショート 勝海舟 s1（2026-11-12）。本編 scripts/kaishu-story.yaml（11/14 19:00 公開、https://youtu.be/KIXtgjggYl0）から。11/15 に予約。
+# 形式は inou_s1.yaml・saigo_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/勝海舟_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/kaishu/main。勝は後ろ姿・斜め後ろ・手元）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：『氷川清話』は勝の言葉そのままか（本編第5章）。吉本襄の書き換え（Wikipedia・C21）と慶喜の「誇張」評（B23）。
+# 計算：1897-11-22→1899-01-19＝423日（本編と同じ。C20）。
+# 理解テスト4問：①勝海舟の語りをまとめた『氷川清話』 ②1897年11月22日に初版、編者は吉本襄、423日前 ③吉本は伊藤・陸奥・松方の名を削り、伊藤批判を「今の政治家」に書き換えたとWikipediaは書く。海舟は計画を認めていた ④慶喜は海舟の談話に誇張があると評した（何をかは本編）
+# 本編の弱点：C21・C23 は Wikipedia の抜き出しで本文未確認（本編と同じ扱い）。「と書く」「とある」と言う。
+title: "勝海舟｜『氷川清話』は、海舟の言葉そのままか"
+yt_title: "勝海舟『氷川清話』は本人の言葉そのままか　吉本襄が削った3人の名前と、慶喜の「誇張」評"
+description: |-
+  勝海舟の談話をまとめた『氷川清話』は、1897年11月22日に初版が出ました。編んだのは吉本襄で、海舟が亡くなる423日前です。
+  Wikipediaによると、吉本は1896年以前の談話から伊藤博文・陸奥宗光・松方正義の名前を削り、1896年5月28日の『国民新聞』にあった伊藤への批判を「今の政治家」への批判に書き換え、知行合一の一文を付け加えました。一方、海舟はこの本の計画を認めていた、とされます。成り立ちの説明は、研究者やWikipediaで割れています。
+  この点は、Wikipedia・飯田鼎の論文（1997年）・松岡正剛の解説などから確かめました。原談話の照合までは行っていません。
+  では、徳川慶喜は、海舟の談話の何を「誇張」と評したのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/KIXtgjggYl0
+hashtags:
+- "#勝海舟"
+- "#氷川清話"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/kaishu
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kaishu_story_s1
+header:
+  tag: "勝海舟『氷川清話』"
+  title: "海舟の言葉、《そのまま》か"
+now:
+- {at: "1897年", text: "1897年11月　初版", point: 1}
+- {at: "1896年", text: "1896年5月　国民新聞", point: 0}
+timeline:
+- {label: "1896"}
+- {label: "1897"}
+- {label: "1899"}
+shots:
+  Katsu:
+    kind: "real"
+    image: "paintings/yoshinobu_katsu_kaishu.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    credit: "《勝海舟》（ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "勝海舟の肖像"
+  Print:
+    kind: "ai"
+    file: "kaishu/main/F19.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "書物と新聞の山・印刷所の机"
+  PrintL:
+    kind: "ai"
+    file: "kaishu/main/F19.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "書物と新聞の山・印刷所の机"
+  Letter:
+    kind: "ai"
+    file: "kaishu/main/F18.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "机の上の書状と筆"
+  Hand:
+    kind: "ai"
+    file: "kaishu/main/F12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "墨を磨って書を書く手元"
+  Night:
+    kind: "ai"
+    file: "kaishu/main/F13.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の縁側に座る勝（斜め後ろ）"
+  LetterR:
+    kind: "ai"
+    file: "kaishu/main/F18.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "机の上の書状と筆"
+  Yo14:
+    kind: "real"
+    image: "paintings/yoshinobu_portrait_late_14.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    credit: "晩年の徳川慶喜（1913年以前の図版、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: "晩年の徳川慶喜の図版"
+lines:
+  # fact: kaishu-C20, kaishu-C21
+- 語り: "勝海舟の語りをまとめた『氷川清話』は、海舟の言葉そのままではないかもしれない。"
+  shot: Katsu
+  tone: 強調
+  pause: 0.12
+  # fact: kaishu-C20
+- 語り: "初版は、1897年11月22日。編んだのは、吉本襄。海舟が亡くなる、423日前だった。"
+  shot: Print
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-C21
+- 語り: "Wikipediaによると、吉本は、それまでの談話から、伊藤博文、陸奥宗光、松方正義の名前を、削った。"
+  shot: PrintL
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C21
+- 語り: "1896年5月28日の『国民新聞』にあった、伊藤への批判は、「今の政治家」への批判に、書き換えられた。"
+  shot: Letter
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C21
+- 語り: "知行合一の一文まで、付け加えられた、という。"
+  shot: Hand
+  tone: 重い
+  pause: 0.12
+  # fact: kaishu-C23
+- 語り: "海舟は、この本の計画を、認めていた。1897年10月6日の座談に、勝手にしなさい、と言っておいた、とある。"
+  shot: Night
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-C22
+- 語り: "成り立ちの説明も、割れる。飯田鼎さんは速記、Wikipediaは、新聞の談話を、吉本が編み直した本、と書く。"
+  shot: LetterR
+  tone: しみじみ
+  pause: 0.12
+  # fact: kaishu-B23
+- 語り: "海舟の談話には、誇張がある。そう評したのは、徳川慶喜だった。"
+  shot: Yo14
+  tone: 強調
+  pause: 0.12
+  # fact: kaishu-B23
+- 語り: "慶喜は、海舟の何を、誇張と見たのか。"
+  shot: Yo14
+  tone: 疑問
+  pause: 0.15

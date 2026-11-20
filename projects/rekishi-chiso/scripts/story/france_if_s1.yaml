@@ -1,0 +1,165 @@
+# 物語完結型ショート フランス革命（もしも）s1（2026-11-05）。本編 scripts/france-if-story.yaml（11/5 12:00 公開、https://youtu.be/0InK0OydYHM）から。切り口：バスティーユの囚人は7人だけ／国王の日記は「なし」
+# 形式は kurofune_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。戦闘・負傷・死の絵なし（ウエルの絵は塔と煙だけを切り出す）。
+# 絵は本編の AI 絵（out/story/france-if/main/F01〜F16。人物の顔は描かない）と実在の絵（paintings/france_*）。新しい絵は作らない。F14（遠くにエッフェル塔が見える）・F04（偽の字）は使わない。
+# 事実カード（dev/output/rekishi-chiso/research/フランス革命_facts_20261031.yaml）：france-if-61・63・65（本編の序章と第6章の言い方のまま）
+# ・計算のやり直し：7人＝偽造4＋心を病んだ2＋伯爵1（4＋2＋1＝7）。本編どおり。
+# ・ファンク・ブレンターノの本は本編どおり「19世紀の終わりの本」と言う（原書 1898年・英訳 1899年で年を言い切らない）。
+# ・日記の「なし」の説明は本編どおり「狩りが無かった印」（ニコラルド 1873年）。「獲物が無かった」説は言わない。
+# ・35か条（s2）・トクヴィル（本編）は入れない（同じ事実を2本に出さない）。
+# 理解テスト4問：
+#   ①誰の話か：1789年7月14日のバスティーユと、そこにいた7人の囚人、国王ルイ16世
+#   ②いつ・どこで何が：1789年7月14日、パリの民衆がバスティーユを攻め落とした。中の囚人は7人だった
+#   ③7人は誰だったか：偽造の罪の4人・心を病んだ2人・家族の願いで閉じ込められたソラージュ伯。襲った側の死者は98人と数えられた
+#   ④どうなったか：国王の日記の7月14日は「なし」（狩りが無かった印）。もしも革命が起きなかったら、を問いで閉じる
+title: バスティーユ｜攻め落とした牢獄に、囚人は7人しかいなかった
+yt_title: バスティーユ襲撃の日、牢獄にいた囚人は7人だけ　国王の日記の7月14日は「なし」
+description: |-
+  パリの民衆が攻め落としたバスティーユの牢獄に、囚人は、たった7人しかいませんでした。
+  1789年7月14日。研究者のファンク・ブレンターノは、19世紀の終わりの本で、そこにいた7人の名前を挙げています。偽造の罪の4人、心を病んだ2人、そして家族の願いで閉じ込められていたソラージュ伯です。同じ本では、襲った側の死者は98人と数えられています。その日、国王ルイ16世の日記の7月14日の欄には、ひとこと「なし」とあります。日記を活字にした人は、狩りが無かった印だと説明しています。
+  もしも、フランス革命が起きなかったら。この問いを、史料から掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#フランス革命', '#世界史', '#バスティーユ']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/france-if
+out: france_if_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: バスティーユ（フランス革命）
+  title: "攻め落とした牢獄に、囚人は《7人》"
+now:
+  - {at: 1789年7月14日, text: "1789年7月14日　パリ", point: 0}
+  - {at: 19世紀の終わり, text: "19世紀の終わり　研究者の本", point: 1}
+  - {at: 偽造の罪の4人, text: "1789年7月14日　バスティーユ", point: 0}
+  - {at: 7月14日の欄, text: "1789年7月14日　国王の日記", point: 0}
+timeline:
+  - {label: "1789"}
+  - {label: "19世紀末"}
+cards:
+  - type: table
+    title: バスティーユの囚人7人
+    from: 偽造の罪の4人
+    until: シャラントン
+    items:
+      - {at: 偽造の罪の4人, text: "偽造の罪　4人"}
+      - {at: 心を病んだ2人, text: "心を病んだ人　2人"}
+      - {at: ソラージュ伯, text: "家族の願い　1人（ソラージュ伯）"}
+    text_y: 0.70
+shots:
+  Robert:
+    kind: real
+    image: paintings/france_bastille_robert.jpg
+    focus: [0.45, 0.45]
+    move: in
+    credit: "ユベール・ロベール《取り壊しの始まったバスティーユ》（1789年。カルナヴァレ美術館。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: バスティーユの塔
+  F07:
+    kind: ai
+    file: france-if/main/F07.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 夜のパリの路地と遠くの群衆の影
+  F08:
+    kind: ai
+    file: france-if/main/F08.jpg
+    focus: [0.75, 0.6]
+    move: left
+    must: 開いた古い本と帳簿
+  F02:
+    kind: ai
+    file: france-if/main/F02.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 牢獄の開いた扉とランタン
+  F02b:
+    kind: ai
+    file: france-if/main/F02.jpg
+    focus: [0.55, 0.75]
+    move: up
+    zoom: 0.12
+    must: 床のランタンと扉の外の光
+  Houel:
+    kind: real
+    image: paintings/bastille_houel.png
+    crop: [0.0, 0.0, 0.62, 0.55]
+    focus: [0.5, 0.5]
+    move: right
+    credit: "ジャン・ピエール・ウエル《バスティーユ襲撃》（1789年。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 塔と煙だけ（人の争う場面は切る）
+  Louis:
+    kind: real
+    image: paintings/france_louis16_duplessis.jpg
+    focus: [0.5, 0.3]
+    move: down
+    credit: "ジョゼフ・シフレッド・デュプレシ《ルイ16世の肖像》（18世紀。コンデ美術館。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: ルイ16世の顔
+  F03:
+    kind: ai
+    file: france-if/main/F03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: ろうそくの大広間と空の玉座
+  F01:
+    kind: ai
+    file: france-if/main/F01.jpg
+    focus: [0.3, 0.7]
+    move: right
+    zoom: 0.14
+    text_y: 0.76
+    must: 夜明けのバスティーユ
+lines:
+  # fact: france-if-61
+  - 語り: バスティーユ。その牢獄に、囚人は、たった《!7人》しかいなかった。パリの民衆が、攻め落とした日のことだ。
+    shot: Robert
+    tone: 強調
+    pause: 0.12
+  # fact: france-if-61
+  - 語り: 1789年7月14日。民衆は、牢獄のバスティーユへ向かった。
+    shot: F07
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-61
+  - 語り: 研究者のファンク・ブレンターノは、19世紀の終わりの本で、そこにいた7人の名前を挙げている。
+    shot: F08
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-61
+  - 語り: 偽造の罪の4人。心を病んだ2人。そして、家族の願いで閉じ込められていた、ソラージュ伯が1人。
+    shot: F02
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-61
+  - 語り: 心を病んだ2人は、解放されたあと、まもなく、シャラントンの病院へ移された。
+    shot: F02b
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-63
+  - 語り: 同じ本では、襲った側の死者は、98人と数えられている。
+    shot: Houel
+    tone: 重い
+    pause: 0.12
+  # fact: france-if-65
+  - 語り: その日、国王ルイ16世の日記の、7月14日の欄には、ひとこと、「なし」とある。
+    shot: Louis
+    tone: 重い
+    pause: 0.12
+  # fact: france-if-65
+  - 語り: のちに日記を活字にした人は、「なし」は、狩りが無かったという印だ、と説明している。
+    shot: F03
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: もしも、フランス革命が起きなかったら。フランスは、どうなっていたのか。
+    shot: F01
+    tone: 疑問
+    pause: 0.15

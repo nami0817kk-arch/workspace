@@ -1,0 +1,187 @@
+# 物語完結型ショート 小栗忠順 s4（2026-11-05）。本編 scripts/oguri-story.yaml（11/6 19:00 公開、https://youtu.be/kU5JH7ybcrI）の第6章の頭・第7章の後半から。11/7 17:30 公開。
+# 形式は jingi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。斬首の場面の細部は描かない（「斬られた」とだけ言う）。
+# 絵は本編の AI 絵（out/story/oguri/main。人物は後ろ姿・遠景だけ）と小栗の肖像だけ。新しい絵は作らない。時代違いの物がある絵（O08・O09・O10・O12・O13・O17・O18・O03）は使わない（s1 の頭のコメント）。
+#   O14（夜の山道の女たち）は手に下げた籠が写るが、編んだ籠で時代違いではない（拡大して確かめた）。
+# 切り口：斬られる前の夜に逃がした家族。会津で生まれた娘から小栗の家が続いた。使い（s1）・取り調べ（s2）・命令書（s3）・碑（s5）には踏み込まない。
+#   最期の言葉は「婦女子には寛典を」の話だけ（蜷川 1928 の本の伝え、と言う。1931 の話は s2）。
+# 事実カード：oguri-10・19・21・22・37・63。言い方は本編のまま。
+#   ・又一の年齢は数え年で計算し直した：嘉永元年（1848）生まれ → 1868−1848＋1＝21。本編・高崎市の観光サイト（oguri-63）と同じ。
+#   ・娘の生まれた日：本編は「6月14日」と言うが、事実カード（oguri-10）の抜き書きで日まで確かめられたのは「6月」（丑木 2026）だけなので、ショートでは「6月」とだけ言う。
+#   ・出どころが1つの事実（oguri-37 の最期の言葉）は本の名を語りで言う。託した先・逃げた道は『群馬県史』の名を付ける。
+# 理解テスト4問：
+#   ①誰の話か：小栗忠順と、その母・妻みち子・又一の許婚
+#   ②いつ・どこで何が：1868年閏4月、上州の権田村。小栗は斬られる前の夜、3人を村の中島三左衛門に託して逃がした
+#   ③家族はどうしたか：越後を通って会津へ入り、6月、身ごもっていたみち子が女の子（国子）を産んだ
+#   ④どうなったか：小栗と又一は斬られたが、のちに国子が婿を迎え、小栗の家は続いた
+title: 小栗忠順｜斬られる前の夜、家族を逃がした
+yt_title: 小栗忠順は斬られる前の夜に母と身ごもった妻を逃がした　会津で生まれた娘から続いた小栗家
+description: |-
+  幕府の切れ者、小栗忠順は、斬られる前の夜、家族を逃がしていました。
+  1868年閏4月、新政府の軍は、小栗父子を召し捕れと命じていました。1927年の『群馬県史』によれば、小栗は、年老いた母と、妻のみち子、養子の又一の許婚の3人を、村の中島三左衛門に託します。妻は身ごもっていました。閏4月6日に小栗は斬られ、翌7日には又一も斬られます。21歳でした。逃げた家族は越後を通って会津へ入り、6月、みち子は女の子を産みます。のちの国子です。のちに大隈重信の世話で国子が婿を迎え、小栗の家は続いた、と伝わります。
+  父の顔を知らずに生まれた娘。その父は、なぜ斬られたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#小栗忠順', '#日本史', '#幕末']
+ai_images: true
+ai_disclosure: この動画の風景・室内・人物の後ろ姿の画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/oguri
+out: oguri_story_s4
+header_style: B
+readings:
+  又一の許婚: マタイチのいいなずけ
+  又一も: マタイチも
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 小栗忠順（幕府の勘定奉行）
+  title: "斬られる前の夜、《家族を逃がした》"
+now:
+  - {at: 1868年閏4月, text: "1868年閏4月　上州 権田村", point: 0}
+  - {at: 閏4月6日, text: "1868年閏4月6日　烏川", point: 0}
+  - {at: 1928年, text: "1928年　蜷川新の本", point: 0}
+  - {at: 越後を通って, text: "1868年　越後から会津へ", point: 1}
+  - {at: 1868年6月, text: "1868年6月　会津", point: 1}
+  - {at: 大隈重信, text: "明治　小栗家が続く", point: 2}
+timeline:
+  - {label: "閏4月"}
+  - {label: "6月"}
+  - {label: "明治"}
+cards:
+  - type: table
+    title: 逃がした3人
+    from: 年老いた母と
+    until: 身ごもって
+    items:
+      - {at: 年老いた母と, text: "年老いた母"}
+      - {at: 妻のみち子, text: "妻のみち子"}
+      - {at: 又一の許婚, text: "養子の又一の許婚"}
+    text_y: 0.70
+shots:
+  O14:
+    kind: ai
+    file: oguri/main/O14.jpg
+    focus: [0.35, 0.6]
+    move: in
+    must: 夜の山道を灯で行く女の後ろ姿
+  O11:
+    kind: ai
+    file: oguri/main/O11.jpg
+    focus: [0.42, 0.55]
+    move: right
+    must: 夕暮れの寺の本堂と兵の影（提灯の字は外す）
+  O02:
+    kind: ai
+    file: oguri/main/O02.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 誰もいない広間とろうそく
+  O14b:
+    kind: ai
+    file: oguri/main/O14.jpg
+    focus: [0.55, 0.3]
+    move: down
+    zoom: 0.12
+    must: 夜道の灯
+  O01:
+    kind: ai
+    file: oguri/main/O01.jpg
+    focus: [0.5, 0.5]
+    move: left
+    must: 霧の山あいの川
+  Portrait:
+    kind: real
+    image: paintings/oguri_portrait.jpg
+    crop: [0.0, 0.0, 1.0, 0.9]
+    focus: [0.5, 0.4]
+    move: in
+    credit: "小栗忠順の肖像（撮影年不明、1868年以前。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 小栗の顔
+  O07:
+    kind: ai
+    file: oguri/main/O07.jpg
+    focus: [0.5, 0.6]
+    move: up
+    must: 夜の谷の灯の列
+  O06:
+    kind: ai
+    file: oguri/main/O06.jpg
+    focus: [0.8, 0.5]
+    move: right
+    must: 山あいの村の屋根（街灯は入れない）
+  O02b:
+    kind: ai
+    file: oguri/main/O02.jpg
+    focus: [0.5, 0.85]
+    move: up
+    zoom: 0.12
+    must: ろうそくの火
+  O19:
+    kind: ai
+    file: oguri/main/O19.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 夕日の川面
+  Samurai:
+    kind: real
+    image: paintings/yoshinobu_beato_samurai.jpg
+    focus: [0.5, 0.5]
+    move: down
+    credit: "フェリーチェ・ベアト撮影 武士（1860年代。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 幕末の武士の写真
+lines:
+  # fact: oguri-10
+  - 語り: 小栗忠順は、斬られる前の夜、《!家族を逃がした》。
+    shot: O14
+    tone: 強調
+    pause: 0.12
+  # fact: oguri-19
+  - 語り: 1868年閏4月、上州の権田村。新政府の使いは、小栗父子を、召し捕れ、と命じた。
+    shot: Samurai
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-10
+  - 語り: 1927年の、『群馬県史』によれば、小栗は、年老いた母と、妻のみち子、又一の許婚の3人を、村の人に託した。
+    shot: O02
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-10
+  - 語り: 妻は、身ごもっていた。
+    shot: O14b
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-21, oguri-22, oguri-63
+  - 語り: 閏4月6日、小栗は、烏川の河原で斬られた。翌7日、又一も、高崎で斬られた。21歳だった。
+    shot: O01
+    tone: 重い
+    pause: 0.12
+  # fact: oguri-37
+  - 語り: 1928年の蜷川新の本は、最期の言葉を、こう伝える。母と妻は、すでに逃がした。この婦女子には、寛大な扱いを望む。
+    shot: Portrait
+    tone: 重い
+    pause: 0.12
+  # fact: oguri-10
+  - 語り: 逃げた家族は、越後を通って、会津へ入った。
+    shot: O07
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-10
+  - 語り: 1868年6月、会津で、みち子は、女の子を産んだ。のちの、国子だ。
+    shot: O06
+    tone: しみじみ
+    pause: 0.12
+  # fact: oguri-10
+  - 語り: のちに、大隈重信の世話で、国子が婿を迎え、小栗の家は、続いた、と伝わる。
+    shot: O02b
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  - 語り: 父の顔を知らずに、生まれた娘。その父は、なぜ、斬られたのか。
+    shot: O19
+    tone: 疑問
+    pause: 0.15

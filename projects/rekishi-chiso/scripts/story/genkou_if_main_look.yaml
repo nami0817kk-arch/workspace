@@ -1,0 +1,270 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：元寇（scripts/genkou-if-story.yaml）。chiso/storymain.py が読む。
+# 10-30 作成（11/3 12:00 公開）。yoritomo_main_look.yaml を写した。台本には手を入れない（承認のあと。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵は 15 枚（G01〜G15）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は AI 絵にほとんど描かない（海・浜・石の壁・船影の遠景。G13・G14 だけ小さな後ろ姿の影）。実在の絵『蒙古襲来絵詞』（竹崎季長の依頼で作られた絵巻。パブリックドメイン）は額（frame:）と絵図の一部（part:）。
+#   絵詞の模写（1846年、福田太華、東京国立博物館蔵）は元軍の船の絵。竹崎季長が戦う場面は絵詞そのものの一部。
+#   この回の決まり：戦闘・負傷・遺体は描かない。実在の誰か・俳優に似せない。文字・紋・旗を描かせない。顔が分かるのは実在の絵だけ。
+# AI 絵の指示の一覧（英語・姿の設定）：dev/output/rekishi-chiso/research/genkou_ai_images.md
+# 届く前は art_dir の仮の絵（G01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に G01.jpg〜を置くだけ。
+#   仮の絵は out/ にあり git に入らない。無ければ 1376×768 の灰色の板に「G01（仮）」と場面を書いて作り直す。
+script: scripts/genkou-if-story.yaml
+out: genkou_if_story_main
+art_dir: out/story/genkou-if/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/genkou-if/main   # Gemini の 16:9 の絵（G01.jpg〜G15.jpg）
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本の語りは年が混じるので、語りが言った形のまま。
+# dates＝語りがその年・月日を言った行から替える（研究・報告・展示・報道の年は物語の「いま」ではないので替えない。null で章題だけ）
+chapters:
+  0: {label: 序章 新暦11月26日の夜に、台風は来たのか, now: null,
+      dates: {}}
+  1: {label: 第1章 博多湾の元軍は、何を見たのか, now: 1274年10月,
+      dates: {27: null}}
+  2: {label: 第2章 石を積め　博多湾の石の壁, now: 1275年4月,
+      dates: {33: 1276年3月, 37: null, 39: null}}
+  3: {label: 第3章 3500隻か、4400隻か、9000隻か, now: 1281年,
+      dates: {46: 1279年, 48: 1281年}}
+  4: {label: 第4章 台風は、本当に吹いたのか, now: 1281年8月,
+      dates: {59: null}}
+  5: {label: 第5章 海の底から出てきた船, now: null,
+      dates: {}}
+  6: {label: 第6章 台風がなかったら、何が言えるのか, now: null,
+      dates: {}}
+  7: {label: 第7章 恩賞が、足りない　竹崎季長の直訴, now: 1275年,
+      dates: {116: 1285年, 118: 1297年, 121: null}}
+  8: {label: まとめ 台風が来なかったら、何が言えるのか, now: null,
+      dates: {}}
+
+# 概要欄「■ 参考にした資料」（事実カード 元寇_facts_20261030.yaml のうち本文を開いた主なもの。10-30）
+references:
+  - 元寇の台風は本当に吹いたのか（nippon.com、持田譲二 2024）　https://www.nippon.com/ja/japan-topics/c13705/
+  - 元寇の沈没船が語る蒙古襲来の真実（nippon.com、持田譲二 2024）　https://www.nippon.com/ja/japan-topics/c13704/
+  - 文永の役に神風は来なかった、という荒川理博の新説について（山口秀樹、『懐徳』32 1961）　https://ir.library.osaka-u.ac.jp/repo/ouka/all/90362/kaitoku_32_071.pdf
+  - 『高麗史』（鄭麟趾ら編 1451、中国語版ウィキソース所載の本文）　https://zh.wikisource.org/wiki/高麗史
+  - 『元史』巻208 外夷一 日本国（宋濂ら編 1370、中国語版ウィキソース所載の本文）　https://zh.wikisource.org/wiki/元史/卷208
+  - 鷹島神崎遺跡（長崎県文化財データベース）　https://www.pref.nagasaki.jp/bunkadb/index.php/view/348
+  - 鷹島神崎遺跡（文化庁 文化遺産オンライン）　https://online.bunka.go.jp/db/heritages/detail/284999
+  - 元寇防塁（文化庁 文化遺産オンライン）　https://online.bunka.go.jp/db/heritages/detail/206523
+  - 九州大学箱崎キャンパス内で石積み遺構を発見（九州大学 2016）　https://www.kyushu-u.ac.jp/f/28961/16_09_16_2.pdf
+  - 皇室の名品と長崎 プレスリリース（長崎県美術館 2025）　https://www.nagasaki-museum.jp/cms/wp-content/uploads/2025/09/20250718
+  - 元寇沈没船に墨書きの木板（共同通信配信、熊本日日新聞 2026）　https://kumanichi.com/articles/1986492
+  - 元寇の矢、長崎の沈没船から発見（共同通信配信、熊本日日新聞 2026）　https://kumanichi.com/articles/2027297
+  - 蒙古襲来絵詞のリアル 海底に残された元寇（artscape 2025）　https://artscape.jp/article/29545/
+  - Wrath of the Khan・Relics of the Kamikaze（Archaeology Magazine 2003）　https://archive.archaeology.org/0301/etc/wrath.html
+  - Kublai Khan vs. Kamikaze（HistoryNet）　https://historynet.com/kublai-khan-vs-kamikaze/
+  - In Little Need of Divine Intervention（Thomas D. Conlan 2001、紹介記事）　https://deremilitari.org/?p=1565
+  - 蒙古襲来絵詞（日本大百科全書・世界大百科事典、コトバンク）　https://kotobank.jp/word/蒙古襲来絵詞
+  - モンゴル襲来・元寇（世界大百科事典・日本大百科全書・山川 日本史小辞典、コトバンク）　https://kotobank.jp/word/モンゴル襲来
+no_tag_from: 129                      # 締め（新暦の11月26日の夜、は）から札を出さない
+
+# AI 絵（16:9 横・15枚）。scene は日本語の要約（英語の指示は research/genkou_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ。この回は顔を描かないので使わない）。crops＝切り出し [倍率, 中心x, 中心y]
+# 位置（crops・focus・fx の region）は届いた絵（10-30）を見て合わせた。G03 は欧州風の帆船4隻が写っていたため、船を消した版に差し替え済み（元は G03_orig_ships.jpg.bak）
+ai:
+  G01: {scene: 夜明けの博多湾。沖に霧と船影の遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G02: {scene: 朝の博多湾。浜に並ぶ小さな船影の遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  G03: {scene: 夜の海の暗い波。船の影が遠くへ消えていく遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G04: {scene: 朝の砂浜に続く、積みかけの低い石の壁（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.38, 0.55], right: [1.18, 0.62, 0.55]}}
+  G05: {scene: 松林の海岸線に長く続く石の壁の遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.62, 0.55]}}
+  G06: {scene: 水平線を埋める、数えきれない帆の影の遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G07: {scene: 浜に並ぶ、造りかけの大きな木の船体。無人（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.45], left: [1.18, 0.4, 0.45], right: [1.18, 0.6, 0.45]}}
+  G08: {scene: 荒れた灰色の海。大きな波と暗い雲（船なし・人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G09: {scene: 嵐のあとの朝の静かな浜。流木と砂だけ（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.58], left: [1.18, 0.4, 0.58], right: [1.18, 0.62, 0.58]}}
+  G10: {scene: 青い海中。砂の底に横たわる古い木の骨組みの影（人物なし）, pan: v, crops: {wide: [1.18, 0.5, 0.55], left: [1.18, 0.4, 0.55], right: [1.18, 0.6, 0.55]}}
+  G11: {scene: 朝の入り江と小さな島の静かな遠景（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G12: {scene: 夕暮れの博多湾。沖に船影、浜に石の壁（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  G13: {scene: 夜の浜の石の壁の上で揺れるかがり火。小さな後ろ姿の影だけ（顔なし）, pan: h, crops: {wide: [1.18, 0.55, 0.55], left: [1.18, 0.45, 0.55], right: [1.18, 0.65, 0.55]}}
+  G14: {scene: 朝の山道を行く、小さな後ろ姿の旅人の遠景（顔なし）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.45, 0.5], right: [1.18, 0.55, 0.5]}}
+  G15: {scene: 終了画面用。夕暮れの海と岬の遠景（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx:
+  paintings/genkou_ekotoba_tnm_copy.jpg: {crop: [0.34, 0.08, 0.97, 0.5]}   # 元軍の船の上半分だけ（左下の負傷の描写を外す。広告の配慮）
+
+# 台本に出てこない実在の絵の出典（左下の字・概要欄）
+credits:
+  paintings/genkou_ekotoba1_takezaki.jpg: 『蒙古襲来絵詞』の一部（竹崎季長が戦う場面。13世紀末。宮内庁三の丸尚蔵館蔵。ウィキメディア・コモンズ、パブリックドメイン）
+  paintings/genkou_ekotoba_tnm_copy.jpg: 『蒙古襲来絵詞』の模写（福田太華、1846年。東京国立博物館蔵。ウィキメディア・コモンズ、パブリックドメイン）
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  - 0 ai:G01 wide
+  - 1 frame:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 2 ai:G03 wide
+  - 3 ai:G01 left
+  - 4 ai:G02 wide
+  - 5 ai:G01 right
+  - 6 frame:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 7 ai:G03 left
+  - 8 ai:G01 wide
+  - 9 ai:G02 left
+  - 10 ai:G01 left
+  - 11 ai:G02 right
+  - 12 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 13 ai:G03 right
+  - 14 ai:G02 wide
+  - 15 ai:G01 right
+  - 16 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 17 ai:G03 wide
+  - 18 ai:G02 left
+  - 19 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 20 ai:G03 left
+  - 21 ai:G02 right
+  - 22 ai:G01 wide
+  - 23 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 24 ai:G03 right
+  - 25 ai:G02 wide
+  - 26 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 27 ai:G03 wide
+  - 28 ai:G04 wide
+  - 29 ai:G05 wide
+  - 30 frame:paintings/genkou_ekotoba1_takezaki.jpg
+  - 31 ai:G04 left
+  - 32 ai:G12 wide
+  - 33 ai:G05 left
+  - 34 ai:G04 right
+  - 35 ai:G05 right
+  - 36 frame:paintings/genkou_ekotoba1_takezaki.jpg
+  - 37 ai:G04 wide
+  - 38 ai:G12 left
+  - 39 ai:G05 wide
+  - 40 ai:G04 left
+  - 41 ai:G06 wide
+  - 42 ai:G07 wide
+  - 43 part:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 44 ai:G06 left
+  - 45 ai:G07 left
+  - 46 ai:G02 left
+  - 47 ai:G06 right
+  - 48 ai:G07 right
+  - 49 part:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 50 ai:G06 wide
+  - 51 ai:G07 wide
+  - 52 ai:G02 right
+  - 53 ai:G06 left
+  - 54 ai:G08 wide
+  - 55 ai:G09 wide
+  - 56 part:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 57 ai:G08 left
+  - 58 ai:G03 left
+  - 59 ai:G09 left
+  - 60 ai:G08 right
+  - 61 ai:G09 right
+  - 62 part:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 63 ai:G08 wide
+  - 64 ai:G03 right
+  - 65 ai:G09 wide
+  - 66 ai:G08 left
+  - 67 ai:G09 left
+  - 68 ai:G10 wide
+  - 69 ai:G11 wide
+  - 70 part:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 71 ai:G10 left
+  - 72 ai:G11 left
+  - 73 ai:G12 right
+  - 74 ai:G10 right
+  - 75 ai:G11 right
+  - 76 part:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 77 ai:G10 wide
+  - 78 ai:G11 wide
+  - 79 ai:G12 wide
+  - 80 ai:G10 left
+  - 81 ai:G11 left
+  - 82 part:paintings/genkou_ekotoba_tnm_copy.jpg
+  - 83 ai:G10 right
+  - 84 ai:G11 right
+  - 85 ai:G12 left
+  - 86 ai:G10 wide
+  - 87 ai:G12 right
+  - 88 ai:G13 wide
+  - 89 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 90 ai:G12 wide
+  - 91 ai:G06 right
+  - 92 ai:G13 left
+  - 93 ai:G12 left
+  - 94 ai:G13 right
+  - 95 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 96 ai:G12 right
+  - 97 ai:G06 wide
+  - 98 ai:G13 wide
+  - 99 ai:G12 wide
+  - 100 ai:G13 left
+  - 101 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 102 ai:G12 left
+  - 103 ai:G06 left
+  - 104 ai:G14 wide
+  - 105 ai:G15 wide
+  - 106 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 107 ai:G14 left
+  - 108 frame:paintings/genkou_ekotoba1_takezaki.jpg
+  - 109 ai:G11 wide
+  - 110 ai:G14 right
+  - 111 ai:G15 left
+  - 112 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 113 ai:G14 wide
+  - 114 frame:paintings/genkou_ekotoba1_takezaki.jpg
+  - 115 ai:G11 left
+  - 116 ai:G14 left
+  - 117 ai:G15 right
+  - 118 part:paintings/genkou_ekotoba1_takezaki.jpg
+  - 119 ai:G14 right
+  - 120 frame:paintings/genkou_ekotoba1_takezaki.jpg
+  - 121 ai:G11 right
+  - 122 ai:G14 wide
+  - 123 ai:G12 right
+  - 124 ai:G03 wide
+  - 125 ai:G01 left
+  - 126 ai:G15 wide
+  - 127 ai:G12 wide
+  - 128 ai:G03 left
+  - 129 ai:G01 right
+  - 130 ai:G15 left
+  - end ai:G15 wide
+# look だけで足す図（台本には無い）
+figures: []
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる。位置は仮（届いた絵で合わせる）
+focus:
+  G04: {石の壁|壁|石: [1.3, 0.35, 0.72]}
+  G05: {石の壁|防塁: [1.3, 0.4, 0.72]}
+  G06: {船団|船: [1.3, 0.5, 0.5]}
+  G10: {船|骨組み|船体: [1.3, 0.55, 0.55]}
+  G12: {防塁|石の壁: [1.3, 0.35, 0.72]}
+  paintings/genkou_ekotoba1_takezaki.jpg: {季長|武士: [1.3, 0.47, 0.3]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）。範囲は仮（届いた絵で見て直す）
+fx:
+  G01: {mist: {region: [0.2, 0.3, 1, 0.5], alpha: 0.08, speed: 3}}      # 沖の霧
+  G03: {water: {region: [0, 0.54, 1, 1.0]}}                               # 夜の波
+  G08: {water: {region: [0, 0.5, 1, 1.0]}}                                # 荒れた海
+  G11: {water: {region: [0.05, 0.56, 0.8, 0.82]}}                               # 入り江の水面
+  G13: {fire: {region: [0.5, 0.4, 0.65, 0.6]}, sparks: {region: [0.5, 0.3, 0.65, 0.5]}}  # かがり火（人物の影は外す）
+  G15: {water: {region: [0.35, 0.58, 1, 1.0]}}                               # 夕暮れの海面
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: quote, from: 3, to: 3, label: 史料, text: 官軍不整／又矢尽／惟虜掠四境而帰,
+     source: 『元史』巻208 日本国（至元11年の条。中国語版ウィキソース所載の本文）}
+  - {type: quote, from: 4, to: 4, label: 史料, text: 夜大風雨／戦艦触岩崖多敗,
+     source: 『高麗史』巻104 金方慶伝（中国語版ウィキソース所載の本文。字体は新字に直した）}
+  - {type: quote, from: 49, to: 49, label: 史料, text: 軍中又大疫／死者凡三千余人,
+     source: 『高麗史』巻104 金方慶伝（中国語版ウィキソース所載の本文。字体は新字に直した）}
+  - {type: quote, from: 54, to: 54, label: 史料, text: 八月一日，風破舟,
+     source: 『元史』巻208 日本国（至元18年の条。中国語版ウィキソース所載の本文）}
+  - {type: quote, from: 56, to: 56, label: 史料, text: 棄士卒十余万于山下,
+     source: 『元史』巻208 日本国（同。字体は新字に直した）}
+  - {type: quote, from: 100, to: 100, label: 要点, text: 元軍が上陸して定着した場合を論じた文は、見つからなかった,
+     source: 私たちの調べ（台風がなかったらどうなったかを論じた研究は確かめられなかった）}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）夜明けの博多湾（G01）}
+  - {line: 4, note: 序章 史料の札（高麗史）}
+  - {line: 19, note: 第1章 荒川さんの3つの根拠（図）}
+  - {line: 33, note: 第2章 石の壁の築造（G04）}
+  - {line: 41, note: 第3章 船の数（図）}
+  - {line: 61, note: 第4章 帰らなかった数の食い違い（図）}
+  - {line: 68, note: 第5章 鷹島（G10）}
+  - {line: 96, note: 第6章 3度目の遠征が止まった理由（図）}
+  - {line: 112, note: 第7章 絵詞（絵巻の一部）}
+  - {end: true, note: 終了画面の空き}

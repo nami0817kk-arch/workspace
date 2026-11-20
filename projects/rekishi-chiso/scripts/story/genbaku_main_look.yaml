@@ -1,0 +1,236 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも原爆が間に合わなかったら（scripts/genbaku-if-story.yaml）。chiso/storymain.py が読む。
+# 11-07 作成（11/11 12:00 公開）。mongol_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵は全部この回のために Gemini（Chrome）で新しく作った（out/story/genbaku-if/main/、out/ は git に入らない）。
+#   Gemini のフルサイズのダウンロードが止まったとき（B06〜B08・B10・B11）は、拡大表示を画面から保存した（1022×570）。
+#   原爆のきのこ雲・空襲・遺体・被害の場面は描かない。実在の人物の顔は描かない（後ろ姿・遠景）。旗・記章は入れない。
+script: scripts/genbaku-if-story.yaml
+out: genbaku_if_story_main
+art_dir: out/story/genbaku-if/ph
+main_art_dir: out/story/genbaku-if/main
+ai_disclosure: この動画の人物・情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 余った50万個の勲章, now: null, dates: {3: 1945年11月1日（予定）, 4: 1946年3月1日（予定）, 5: 1945年8月, 6: null}}
+  1: {label: 第1章 上陸の日は、11月1日, now: 1945年5月28日, dates: {17: 1945年6月}}
+  2: {label: 第2章 6月18日、ホワイトハウス, now: 1945年6月18日, dates: {25: null, 30: 1947年, 31: null}}
+  3: {label: 第3章 九州で、増え続けた兵, now: 1945年6月, dates: {38: 1945年7月29日, 39: 1945年8月2日, 41: null, 43: 1945年5月25日, 44: 1945年8月4日, 45: 1945年8月9日, 46: null}}
+  4: {label: 第4章 迎え撃つ、決号作戦, now: 1945年4月8日, dates: {52: 1945年6月8日, 54: 1945年6月20日, 55: 1945年7月17日, 57: null, 58: 1945年6月23日, 59: null}}
+  5: {label: 第5章 浜辺の陣地と、山の地下, now: 1945年, dates: {70: 1944〜1945年, 73: 1945年}}
+  6: {label: 第6章 原爆は、何発あったのか, now: 1945年7月16日, dates: {76: 1945年7月26日, 77: 1947年, 78: 1945年7月30日, 79: 1945年8月10日, 81: 1945年8月13日, 82: null}}
+  7: {label: 第7章 分岐1 ソ連の参戦だけで、降伏は来たのか, now: 1945年2月, dates: {89: 1945年7月17日, 91: 1945年7月21日, 93: 1945年8月9日, 95: null}}
+  8: {label: 第8章 分岐2 北海道は、どうなったのか, now: 1945年8月16日, dates: {109: 1945年8月22日, 110: null}}
+  9: {label: 第9章 分岐3 11月1日の九州と、冬の飢え, now: 1945年9月17日, dates: {119: 1945年10月10日, 120: null, 121: 1945年8月11日, 122: null}}
+  10: {label: まとめ もしも原爆が間に合わなかったら, now: null, dates: {}}
+
+references:
+  - "DOWNFALL: Strategic Plan for Operations in the Japanese Archipelago（GHQ, U.S. Army Forces in the Pacific, 1945年5月28日）"
+  - "FRUS 1945, Conference of Berlin (Potsdam) Vol. I d598（1945年6月18日の会議の記録）・Vol. II・FRUS 1945 Vol. VI d450・d452・d470"
+  - "D. J. MacEachin, The Final Months of the War With Japan（CIA Center for the Study of Intelligence, 1998）"
+  - "R. B. Frank, H-Diplo Roundtable: Racing the Enemy（2006）・防衛研究所 戦争史研究国際フォーラム報告書（2016・2018）"
+  - "長谷川毅, The Atomic Bombs and the Soviet Invasion（2007）／麻田貞雄（Pacific Historical Review, 1998）／米国戦略爆撃調査団 Summary Report（1946）"
+  - "National Security Archive, The Atomic Bomb and the End of World War II（W. Burr 編）"
+  - "H. L. Stimson, The Decision to Use the Atomic Bomb（Harper's, 1947）／K. Moore & D. M. Giangreco, Half a Million Purple Hearts（American Heritage, 2000）"
+  - "防衛研究所 NIDSコメンタリー第392号（新福祐一, 2025）・戦史研究年報（立川京一, 2010）・庄司潤一郎（2016）"
+  - "市原誠 大磯地区に於ける本土決戦期の遺構調査（2019・2021）／長野市 松代象山地下壕／鹿児島県・大崎町教育委員会／気象庁 災害をもたらした気象事例"
+  - "D. M. Glantz, August Storm（1983）／近藤康男 食糧統計の修正（1949）／立花義裕ほか（EGU 2018）／滋賀県平和祈念館"
+no_tag_from: 132
+
+ai:
+  T01: {scene: 1945年夏の南九州の砂浜と、水平線の艦隊（サムネと同じ絵）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B01: {scene: 倉庫の棚に箱詰めで並ぶ紫の勲章, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B02: {scene: 1945年の政府の会議室、机を囲む文官と軍人（後ろ姿・遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B03: {scene: 作戦室の机の海岸の地図と、指さす手（字は読めない）, pan: h, crops: {wide: [1.12, 0.5, 0.45], left: [1.18, 0.4, 0.42], right: [1.18, 0.6, 0.42]}}
+  B04: {scene: 丘から見下ろす南九州の弓なりの湾と砂浜（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B05: {scene: 宮崎の太平洋岸のまっすぐな砂浜と松林（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B06: {scene: 南の島の湾に集まった灰色の船団（遠景、戦いは描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B07: {scene: 無線を聞き取って書き写す部屋（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B08: {scene: 相模湾の岩山と海辺の町（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B09: {scene: 1945年の日本軍の司令部の部屋、地図を囲む将校（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B10: {scene: 丘の斜面に坑道を掘る兵（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B11: {scene: 湾を見下ろす丘のコンクリートのトーチカ（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B12: {scene: 海に向いた岩の洞窟の砲台の跡（大砲は無い）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B13: {scene: 学校の校庭で長い竹の棒を持って並ぶ村の人々（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B14: {scene: 岩を掘り抜いた長い地下壕（松代の想像図）, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.5, 0.4], right: [1.18, 0.5, 0.6]}}
+  B15: {scene: 夜明けの砂漠と遠くの細い鉄塔（実験の場の想像図、爆発は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B16: {scene: 高原の台地の木造の研究所の建物（想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B17: {scene: 夏の草原を進む戦車と車の列（遠景、戦いは描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B18: {scene: 夜の大使館の机のタイプライターと電報の束、窓の外の雪の町, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B19: {scene: 北海道の海辺の港町（1945年の想像図）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B20: {scene: 冷たい雨の夏の田と、蓑を着た農家の人（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B21: {scene: 海峡近くのトンネルへ入る蒸気機関車の貨物列車, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B22: {scene: 台風の高波と、しなる松の岩の海岸（人も壊れた家も描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B23: {scene: 1945年秋の静かな海辺の町の通り（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B24: {scene: 夕暮れの誰もいない砂浜（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+
+credits: {}
+
+shots:
+  - 0 ai:B01 wide
+  - 1 ai:B01 right
+  - 2 ai:B06 left
+  - 3 ai:T01 wide
+  - 4 ai:B08 wide
+  - 5 ai:B04 wide
+  - 6 ai:T01 right
+  - 7 ai:B15 wide
+  - 8 ai:B11 wide
+  - 9 ai:B06 wide
+  - 10 ai:B03 wide
+  - 11 ai:B04 wide
+  - 12 ai:B04 left
+  - 13 ai:B06 left
+  - 14 ai:B05 wide
+  - 15 ai:B08 left
+  - 16 ai:B03 right
+  - 17 ai:B02 wide
+  - 18 ai:B04 right
+  - 19 ai:B02 left
+  - 20 ai:B02 right
+  - 21 ai:B03 left
+  - 22 ai:B06 right
+  - 23 ai:B02 wide
+  - 24 ai:B06 wide
+  - 25 ai:B03 wide
+  - 26 ai:B03 right
+  - 27 ai:B07 left
+  - 28 ai:B01 wide
+  - 29 ai:B01 left
+  - 30 ai:B02 right
+  - 31 ai:B05 left
+  - 32 ai:B09 right
+  - 33 ai:B07 wide
+  - 34 ai:B03 left
+  - 35 ai:B03 right
+  - 36 ai:B07 right
+  - 37 ai:B04 right
+  - 38 ai:B07 left
+  - 39 ai:B05 wide
+  - 40 ai:B05 right
+  - 41 ai:B04 wide
+  - 42 ai:B10 wide
+  - 43 ai:B06 right
+  - 44 ai:B03 wide
+  - 45 ai:B02 wide
+  - 46 ai:B09 wide
+  - 47 ai:B08 wide
+  - 48 ai:B09 wide
+  - 49 ai:B03 wide
+  - 50 ai:B09 right
+  - 51 ai:B18 left
+  - 52 ai:B09 left
+  - 53 ai:B09 wide
+  - 54 ai:B05 wide
+  - 55 ai:B08 right
+  - 56 ai:B06 left
+  - 57 ai:B10 left
+  - 58 ai:B13 left
+  - 59 ai:B13 wide
+  - 60 ai:B11 left
+  - 61 ai:B08 wide
+  - 62 ai:B11 wide
+  - 63 ai:B08 left
+  - 64 ai:B10 wide
+  - 65 ai:B10 right
+  - 66 ai:B12 wide
+  - 67 ai:B12 left
+  - 68 ai:B12 right
+  - 69 ai:B10 left
+  - 70 ai:B14 wide
+  - 71 ai:B14 left
+  - 72 ai:B10 right
+  - 73 ai:B16 wide
+  - 74 ai:B15 wide
+  - 75 ai:B15 wide
+  - 76 ai:B02 right
+  - 77 ai:B16 left
+  - 78 ai:B16 right
+  - 79 ai:B15 left
+  - 80 ai:B03 left
+  - 81 ai:B07 right
+  - 82 ai:T01 wide
+  - 83 ai:B06 wide
+  - 84 ai:B09 right
+  - 85 ai:B05 right
+  - 86 ai:T01 left
+  - 87 ai:B04 wide
+  - 88 ai:B02 left
+  - 89 ai:B18 right
+  - 90 ai:B18 wide
+  - 91 ai:B09 wide
+  - 92 ai:B07 left
+  - 93 ai:B17 wide
+  - 94 ai:B17 left
+  - 95 ai:B05 wide
+  - 96 ai:B09 wide
+  - 97 ai:T01 right
+  - 98 ai:B02 left
+  - 99 ai:B03 right
+  - 100 ai:B02 right
+  - 101 ai:B02 left
+  - 102 ai:B02 wide
+  - 103 ai:B02 right
+  - 104 ai:T01 wide
+  - 105 ai:B18 right
+  - 106 ai:B19 wide
+  - 107 ai:B19 left
+  - 108 ai:B02 right
+  - 109 ai:B18 wide
+  - 110 ai:B03 right
+  - 111 ai:B19 right
+  - 112 ai:B17 right
+  - 113 ai:B19 wide
+  - 114 ai:B06 right
+  - 115 ai:B23 wide
+  - 116 ai:B04 right
+  - 117 ai:B22 wide
+  - 118 ai:B22 wide
+  - 119 ai:B22 left
+  - 120 ai:B06 left
+  - 121 ai:B21 wide
+  - 122 ai:B21 left
+  - 123 ai:B20 wide
+  - 124 ai:B20 left
+  - 125 ai:B20 right
+  - 126 ai:B09 left
+  - 127 ai:B23 left
+  - 128 ai:B03 wide
+  - 129 ai:B11 wide
+  - 130 ai:B05 right
+  - 131 ai:B01 right
+  - 132 ai:T01 wide
+  - 133 ai:B11 right
+  - 134 ai:B19 left
+  - 135 ai:B01 wide
+  - 136 ai:B01 left
+  - 137 ai:B05 wide
+  - 138 ai:B24 wide
+  - end ai:B24 wide
+figures:
+  - {from: 99, to: 99, spec: null}
+
+focus: {}
+
+fx:
+  B24: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+
+paint_fx: {}
+
+parts:
+  - {type: versus3, from: 26, to: 28, every: 6,
+     items: [[司令部の表, 5万800人], [ウィロビー, 20万人], [フーヴァー, 50万〜100万人]]}
+  - {type: quote, from: 38, to: 38, label: 史料, text: 攻める側と守る側は／1対1になりかねない, source: マッカーサー司令部の情報部の見積もりの追加（1945年7月29日。今の言葉に）}
+  - {type: quote, from: 53, to: 53, label: 史料, text: これはこれで良いよ, source: 保科善四郎のGHQ戦史課への陳述（1949年。立川京一 2010 が引く）}
+  - {type: versus3, from: 67, to: 68, every: 5,
+     items: [[軍の配置図, 12センチ砲], [片野一雄さん, 長門の14センチ砲]]}
+  - {type: quote, from: 80, to: 80, label: 史料, text: 大統領のはっきりした許しなしに／日本の上に落としてはならない, source: マーシャルの書き込み（1945年8月10日。今の言葉に）}
+  - {type: quote, from: 109, to: 109, label: 史料, text: こんな答えは／予想していなかった, source: スターリンからトルーマンへの手紙（1945年8月22日。今の言葉に）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）余った勲章}
+  - {line: 11, note: 第1章 上陸の地図}
+  - {line: 27, note: 第2章 見積もりのくい違い}
+  - {line: 39, note: 第3章 九州の兵の見積もり}
+  - {line: 68, note: 第5章 砲台のくい違い}
+  - {line: 103, note: 第7章 降伏の時期の表}
+  - {line: 106, note: 第8章 北海道の地図}
+  - {end: true, note: 終了画面の空き}

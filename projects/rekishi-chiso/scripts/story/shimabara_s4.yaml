@@ -1,0 +1,160 @@
+# 物語完結型ショート 島原・天草一揆 s4（2026-10-31）。本編 scripts/shimabara-story.yaml（11/3 19:00 公開）から。11/4 17:30 に投稿。
+# 形式は yoritomo_s1.yaml・jeanne_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。戦闘・遺体・炎の絵なし（絵は本編の AI 絵 P01〜P15＝景色と物だけ、と実在の絵図・写真）。
+# 切り口：天草の「今はデウスの御代にて候」と、宗教の一揆か年貢の一揆か（研究者の見方が割れている）。人数（s1）・鉛（s2）・上使（s3）・オランダ船（s5）には踏み込まない。
+# 事実カード（dev/output/rekishi-chiso/research/shimabara_facts_20261030.yaml）：shimabara-11・13・14・15・24・26（本編 第1章・第4章）。
+#   ・発端の日の食い違い（10/25〜27日）は本編 第1章 4。25日ごろとするものもある、と言う。決められる史料は調べた範囲では見つからなかった（本編 第4章 12）。
+#   ・年貢の細かな中身（ポルトガル船長の手紙）は出どころが又聞きなので使わない。殉教者の話も使わない。
+# 理解テスト4問：
+#   ①誰の話か：島原・天草一揆の始まりの頃の、天草と島原の百姓たち
+#   ②いつ・どこで何が：寛永14年秋、天草の須子村で「今はデウスの御代にて候」と宣言。10月26日に島原城下が襲われ、10日足らずで約2万5千人に
+#   ③なぜ立ち上がったか：弾圧と飢饉への大名の対応不足（稲葉）、過剰な年貢への怒り（木村）。農民一揆説が有力（大百科）。ただし税率の噂の真偽ははっきりしない
+#   ④どうなったか：宗教か年貢か、決められる史料は見つからなかった。問いを視聴者に返す
+title: 島原の乱｜「今はデウスの御代にて候」　宗教か、年貢か
+yt_title: 島原・天草一揆「今はデウスの御代にて候」の言葉　宗教の一揆か年貢の一揆か
+description: |-
+  島原・天草一揆（島原の乱、1637〜38年）の始まり。天草の須子村の百姓は、十字架を掲げ、鉄砲で武装して、寺沢家の代官の支配は過去のものだ、と宣言しました。その言葉は、「今はデウスの御代にて候」。
+  島原では寛永14年10月26日に島原城下が襲われ、一揆は10日足らずで、島原半島南部の12か村、約2万5千人に膨れ上がりました。なぜ立ち上がったのか。弾圧と飢饉への大名の対応不足、過剰な年貢への怒り。世界大百科事典は農民一揆説が有力と書きますが、どちらか一つに決められる史料は、調べた範囲では見つかりませんでした。
+  本編は、概要欄のリンクからどうぞ。
+hashtags: ['#島原の乱', '#日本史', '#天草']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+readings: {原城: はらじょう, 島原城下: しまばらじょうか, 御代にて候: みよにてそうろう}      # 本編の声は「ハラノジョオ」だった（公開済み・直さない）。ショートは台本ごとの読み替えで直す
+art_dir: out/story/shimabara
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: shimabara_story_s4
+header:
+  tag: 島原・天草一揆（1637年）
+  title: "「今は、《デウスの御代》にて候」"
+now:
+  - {at: 須子村, text: "寛永14年（1637年）秋　天草", point: 0}
+  - {at: 10月26日, text: "寛永14年10月26日　島原", point: 1}
+timeline:
+  - {label: "寛永14年秋"}
+  - {label: "10月26日"}
+cards: []
+shots:
+  P06:
+    kind: ai
+    file: shimabara/main/P06.jpg
+    focus: [0.6, 0.55]
+    move: in
+    must: 夜の山の斜面に点々と灯る火の遠景
+  P03:
+    kind: ai
+    file: shimabara/main/P03.jpg
+    focus: [0.5, 0.6]
+    move: right
+    must: 山あいの村の藁ぶき屋根と夕暮れの煙
+  P02:
+    kind: ai
+    file: shimabara/main/P02.jpg
+    focus: [0.4, 0.55]
+    move: in
+    must: 秋の棚田と実りの少ない畑
+  P09:
+    kind: ai
+    file: shimabara/main/P09.jpg
+    focus: [0.5, 0.6]
+    move: left
+    must: 浜に引き上げられた小舟と干した網
+  P03b:
+    kind: ai
+    file: shimabara/main/P03.jpg
+    focus: [0.3, 0.55]
+    move: right
+    zoom: 0.1
+    must: 村の屋根と畑道
+  P02b:
+    kind: ai
+    file: shimabara/main/P02.jpg
+    focus: [0.7, 0.65]
+    move: left
+    zoom: 0.12
+    must: ひび割れた畑の土
+  P04:
+    kind: ai
+    file: shimabara/main/P04.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 荒れる前の暗い海と灰色の雲
+  P10:
+    kind: ai
+    file: shimabara/main/P10.jpg
+    focus: [0.35, 0.58]
+    move: in
+    must: 灯のもとの文机と書状の巻物
+  P06b:
+    kind: ai
+    file: shimabara/main/P06.jpg
+    focus: [0.8, 0.6]
+    move: left
+    zoom: 0.12
+    must: 山の斜面の遠い灯
+  P12:
+    kind: ai
+    file: shimabara/main/P12.jpg
+    focus: [0.4, 0.5]
+    move: right
+    text_y: 0.74
+    must: 草の斜面の石垣と青い海
+lines:
+  # fact: shimabara-15
+  - 語り: 「今は、デウスの御代にて候」。天草の村で、こう宣言されたと、書状は伝える。
+    shot: P06
+    tone: 強調
+    pause: 0.12
+  # fact: shimabara-15
+  - 語り: 今の言葉にすると、「いまは、デウスの世である」。
+    shot: P03
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-15
+  - 語り: 宣言したのは、須子村の百姓。十字架を掲げ、鉄砲で武装していた。
+    shot: P02
+    tone: 重い
+    pause: 0.12
+  # fact: shimabara-13
+  - 語り: 島原では、10月26日に、島原城下が襲われた。
+    shot: P09
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-13
+  - 語り: 一揆は、10日足らずで、12か村、約2万5千人に膨れ上がった。
+    shot: P03b
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-14
+  - 語り: なぜ、立ち上がったのか。稲葉継陽さんは、厳しくなる弾圧と、10年続いた飢饉に、大名の対応が足りなかった、と書く。
+    shot: P02b
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-24
+  - 語り: 長崎大学の木村直樹さんは、直接の引き金は、過剰な年貢への、農民の怒りだ、と見る。
+    shot: P04
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-11
+  - 語り: 世界大百科事典も、宗門一揆説より、農民一揆説が有力、と書く。
+    shot: P10
+    tone: しみじみ
+    pause: 0.12
+  # fact: shimabara-26
+  - 語り: ただ、島原市の学芸員は、高い税率の記録の真偽は、はっきりしない、と書く。
+    shot: P06b
+    tone: 重い
+    pause: 0.12
+  # fact: （本編 第4章 12）
+  - 語り: 宗教の一揆か、年貢の一揆か。どちらか一つに決められる史料は、私たちの調べでは、見つからなかった。あなたは、あの言葉を、どちらに読みますか。
+    shot: P12
+    tone: 疑問
+    pause: 0.15

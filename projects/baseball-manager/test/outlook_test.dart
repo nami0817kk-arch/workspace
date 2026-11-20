@@ -51,7 +51,14 @@ void main() {
   });
 
   test('戦力外の警告は、プロで総合が低い年が続いているときだけ', () {
-    final g = _until((g) => g.stage == Stage.pro && g.phase == Phase.term);
+    // プロ入りできる乱数の種を探す(能力の入れ替えなどで、プロ入りする種が変わるため)
+    Game? found;
+    for (var seed = 1; seed <= 30 && found == null; seed++) {
+      final x = _until((g) => g.stage == Stage.pro && g.phase == Phase.term,
+          seed: seed);
+      if (x.stage == Stage.pro && x.phase == Phase.term) found = x;
+    }
+    final g = found!;
     expect(g.stage, Stage.pro);
     g.lowYears = 0;
     expect(g.releaseWarning, isNull);
@@ -65,9 +72,10 @@ void logTests() {
   test('年が変わるたびに、ログに「── N歳 ──」の見出しが入る', () {
     final g = _until((g) => g.player.age >= 9);
     final heads = g.log.where((l) => l.startsWith('── ')).toList();
+    expect(g.log.first, '── 6歳 ──'); // 最初の年にも見出し
     expect(heads, contains('── 7歳 ──'));
     expect(heads, contains('── 8歳 ──'));
-    expect(heads.length, g.player.age - 6);
+    expect(heads.length, g.player.age - 5);
   });
 }
 

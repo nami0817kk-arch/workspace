@@ -1,4 +1,5 @@
 import 'club_infrastructure.dart';
+import 'manager_profile.dart';
 import '../l10n/tr.dart';
 
 /// スタッフの能力値(1-20)。
@@ -53,6 +54,15 @@ Map<StaffAttribute, int> staffRoleWeights(StaffRole role) => switch (role) {
           StaffAttribute.medical: 3,
           StaffAttribute.motivating: 1,
         },
+      StaffRole.manager => const {
+          StaffAttribute.judging: 2,
+          StaffAttribute.coaching: 1,
+          StaffAttribute.motivating: 1,
+        },
+      StaffRole.sportingDirector => const {
+          StaffAttribute.judging: 3,
+          StaffAttribute.motivating: 1,
+        },
     };
 
 
@@ -100,14 +110,20 @@ class StaffMember {
   /// 1-20 の能力値。
   final Map<StaffAttribute, int> attributes;
 
-  /// 週俸(万円)。契約時に確定し、以後は変わらない。
-  final int wage;
+  /// 週俸(万円)。契約時に決まる。引き抜きを断って残すときだけ上がる。
+  int wage;
 
   /// 残り契約年数。0になると契約満了で去る。
   int contractYears;
 
   /// 得意分野。旧セーブには無いため、読み込み時は[StaffSpecialty.balanced]。
   final StaffSpecialty specialty;
+
+  /// 監督だけが持つもの(考え方・好みの布陣・経歴・今の所属)。監督以外は null。
+  ManagerProfile? manager;
+
+  /// 自クラブで引退した選手なら、その選手の id(元選手の印)。
+  final String? formerPlayerId;
 
   StaffMember({
     required this.id,
@@ -118,9 +134,18 @@ class StaffMember {
     required this.wage,
     this.contractYears = 2,
     this.specialty = StaffSpecialty.balanced,
+    this.manager,
+    this.formerPlayerId,
   });
 
   int attribute(StaffAttribute a) => attributes[a] ?? 1;
+
+  /// 契約の途中で解任するときの違約金(万円)。残りの契約の週俸の一部。
+  /// 監督は残りの契約の年俸を全額払う(実在のクラブと同じ)。他の役職は2割。
+  /// 契約が切れていれば掛からない。
+  int get severance =>
+      (wage * 52 * contractYears * (role == StaffRole.manager ? 1.0 : 0.2))
+          .round();
 
   /// この役職での仕事の質(1-20)。役職に関係ある能力だけの加重平均。
   ///
@@ -198,6 +223,8 @@ class StaffMember {
         'wage': wage,
         'contractYears': contractYears,
         'specialty': specialty.name,
+        if (manager != null) 'manager': manager!.toJson(),
+        if (formerPlayerId != null) 'formerPlayerId': formerPlayerId,
       };
 
   static StaffMember fromJson(Map<String, dynamic> json) {
@@ -220,6 +247,11 @@ class StaffMember {
         (v) => v.name == json['specialty'],
         orElse: () => StaffSpecialty.balanced,
       ),
+      manager: json['manager'] is Map
+          ? ManagerProfile.fromJson(
+              (json['manager'] as Map).cast<String, dynamic>())
+          : null,
+      formerPlayerId: json['formerPlayerId'] as String?,
     );
   }
 }

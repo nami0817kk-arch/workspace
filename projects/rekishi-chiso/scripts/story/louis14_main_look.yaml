@@ -1,0 +1,182 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：ルイ14世の1日（scripts/louis14-story.yaml）。chiso/storymain.py が読む。
+# 11-12 作成（11/15 19:00 公開予定）。inou_main_look.yaml を写した。台本には手を入れない。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：V01〜V16・VEND は Gemini で新規に作る（人物は後ろ姿か人物なし）。実在の絵は リゴー《ルイ14世》（1701、額）とパテル《1668年のヴェルサイユ城》（part）。
+script: scripts/louis14-story.yaml
+out: louis14_story_main
+art_dir: out/story/louis14/main
+main_art_dir: out/story/louis14/main
+ai_disclosure: この動画の室内・宮殿・庭園の画像の一部は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 「暦と時計があれば、300里先でも言い当てられる」, now: null, dates: {}}
+  1: {label: 第1章 朝8時　王の部屋に最初に入ったのは医者だった, now: null, dates: {}}
+  2: {label: 第2章 午前9時から　日課の命令・ミサ・会議, now: null, dates: {}}
+  3: {label: 第3章 昼1時　食卓に座れるのは王だけ, now: null, dates: {}}
+  4: {label: 第4章 医師が書いた王の体, now: null, dates: {}}
+  5: {label: 第5章 夜10時　大食卓と見に来る人たち, now: null, dates: {}}
+  6: {label: 第6章 夜　燭台を持つのは誰か, now: null, dates: {}}
+  7: {label: 第7章 王の名の言葉と書き手の癖, now: null, dates: {}}
+  8: {label: まとめ 見せ物の1日と見せなかった時間, now: null, dates: {}}
+no_tag_from: 107
+
+references:
+  - サン=シモン『回想録』（Chéruel 版）・『三人の初代ブルボン王の比較』（Faugère 編『Écrits inédits』1880）・Boislisle 版の注（1916）
+  - ダンジョー侯爵『日記』／『王の健康日誌』（Le Roi 編、1862）／パラティーヌ侯爵夫人の手紙（Brunet 訳、1857）
+  - ヴェルサイユ城研究センター ダ・ヴィニャ（2011）・ガロ（2008）／ヤサント・リゴー《ルイ14世》（1701）／ピエール・パテル《1668年のヴェルサイユ城》（いずれもパブリックドメイン）
+
+ai:
+  V01: {scene: 朝の光が差す王の寝室。金の装飾の天蓋つき寝台と大きな窓（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V02: {scene: まだ薄暗い寝室。寝台の足もとの床に敷かれた小さな寝台（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V03: {scene: 金の装飾の部屋に、かつらと華やかな服の貴族たちが並び、王の寝台のほうを見ている（後ろ姿・顔は見えない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V04: {scene: ヴェルサイユの鏡の回廊、朝の光（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V05: {scene: 金の装飾の小さな書斎。机と書状と羽根ペン（字なし・人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V06: {scene: 礼拝堂の上階の席から見下ろす、祈りの空間（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V07: {scene: 四角い小さな食卓に、金の食器と並んだたくさんの皿（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V08: {scene: 食卓のそばに立ち並ぶ貴族たちの後ろ姿。座っているのは奥のひとりだけ（顔は見えない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V09: {scene: ろうそくの下の医師の机。薬瓶・古い書物・羽根ペン（字なし・人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V10: {scene: 午後の光のヴェルサイユの庭園、噴水と並木（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V11: {scene: 夜のヴェルサイユ宮殿の正面、窓に灯り（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V12: {scene: 夜の大広間、無数のろうそく、大きな食卓を遠巻きに見守る人々（小さな人影・顔は見えない）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V13: {scene: ろうそく立てを掲げる、手袋を外した貴族の手（手元のアップ・顔なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V14: {scene: 暗い寝室、天蓋つき寝台とろうそく一本（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V15: {scene: 宮殿の細い裏階段と小さな隠し扉、ろうそく（人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  V16: {scene: 置き時計と暦の頁、ろうそくの光（字なし・人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  VEND: {scene: 夜明けの宮殿のシルエット（終了画面。右半分が空いた絵）, lock: [1.0, 0.5, 0.5]}
+
+credits:
+  paintings/louis14_rigaud_1701.jpg: ヤサント・リゴー《ルイ14世》（1701年。パブリックドメイン）
+  paintings/louis14_versailles_patel_1668.jpg: ピエール・パテル《1668年のヴェルサイユ城》（1668年。パブリックドメイン）
+shots:
+  - 0 ai:V16 wide
+  - 1 ai:V01 left
+  - 2 part:paintings/louis14_versailles_patel_1668.jpg wide
+  - 3 ai:V03 right
+  - 4 ai:V16 wide
+  - 5 frame:paintings/louis14_rigaud_1701.jpg
+  - 6 ai:V02 left
+  - 7 ai:V03 wide
+  - 8 ai:V16 right
+  - 9 ai:V02 wide
+  - 10 ai:V01 wide
+  - 11 ai:V03 left
+  - 12 ai:V04 wide
+  - 13 ai:V03 right
+  - 14 ai:V02 wide
+  - 15 ai:V03 wide
+  - 16 ai:V15 left
+  - 17 ai:V03 wide
+  - 18 ai:V01 right
+  - 19 ai:V03 wide
+  - 20 ai:V01 wide
+  - 21 ai:V05 left
+  - 22 ai:V01 wide
+  - 23 ai:V09 right
+  - 24 ai:V01 wide
+  - 25 ai:V06 wide
+  - 26 ai:V05 left
+  - 27 ai:V01 wide
+  - 28 ai:V06 right
+  - 29 ai:V05 wide
+  - 30 ai:V06 wide
+  - 31 ai:V05 left
+  - 32 ai:V06 wide
+  - 33 ai:V05 right
+  - 34 ai:V06 wide
+  - 35 ai:V05 wide
+  - 36 ai:V16 left
+  - 37 ai:V07 wide
+  - 38 ai:V08 right
+  - 39 ai:V07 wide
+  - 40 ai:V08 wide
+  - 41 ai:V07 left
+  - 42 ai:V08 wide
+  - 43 ai:V07 right
+  - 44 ai:V08 wide
+  - 45 ai:V10 wide
+  - 46 part:paintings/louis14_versailles_patel_1668.jpg left
+  - 47 ai:V09 wide
+  - 48 ai:V16 right
+  - 49 ai:V09 wide
+  - 50 ai:V05 wide
+  - 51 ai:V10 left
+  - 52 ai:V09 wide
+  - 53 ai:V16 right
+  - 54 ai:V09 wide
+  - 55 ai:V05 wide
+  - 56 ai:V09 left
+  - 57 ai:V16 wide
+  - 58 ai:V09 right
+  - 59 ai:V10 wide
+  - 60 ai:V09 wide
+  - 61 ai:V05 left
+  - 62 ai:V16 wide
+  - 63 ai:V04 right
+  - 64 ai:V12 wide
+  - 65 ai:V07 wide
+  - 66 ai:V12 left
+  - 67 ai:V07 wide
+  - 68 ai:V12 right
+  - 69 ai:V07 wide
+  - 70 ai:V12 wide
+  - 71 ai:V07 left
+  - 72 ai:V12 wide
+  - 73 ai:V07 right
+  - 74 ai:V11 wide
+  - 75 ai:V12 wide
+  - 76 ai:V14 left
+  - 77 ai:V13 wide
+  - 78 ai:V02 right
+  - 79 ai:V14 wide
+  - 80 ai:V13 wide
+  - 81 ai:V14 left
+  - 82 ai:V13 wide
+  - 83 ai:V14 right
+  - 84 ai:V13 wide
+  - 85 ai:V14 wide
+  - 86 ai:V13 left
+  - 87 ai:V14 wide
+  - 88 ai:V13 right
+  - 89 ai:V15 wide
+  - 90 ai:V01 wide
+  - 91 ai:V14 left
+  - 92 frame:paintings/louis14_rigaud_1701.jpg
+  - 93 ai:V16 right
+  - 94 ai:V05 wide
+  - 95 ai:V16 wide
+  - 96 ai:V05 left
+  - 97 ai:V16 wide
+  - 98 part:paintings/louis14_versailles_patel_1668.jpg right
+  - 99 ai:V16 wide
+  - 100 ai:V05 wide
+  - 101 frame:paintings/louis14_rigaud_1701.jpg
+  - 102 ai:V16 wide
+  - 103 ai:V15 right
+  - 104 ai:V14 wide
+  - 105 ai:V16 wide
+  - 106 ai:V05 left
+  - 107 ai:V01 wide
+  - 108 ai:V11 right
+  - 109 ai:V16 wide
+  - 110 ai:VEND wide
+  - 111 ai:VEND left
+  - end ai:VEND wide
+
+focus: {}
+
+parts:
+  - {type: quote, from: 2, to: 2, label: 史料, text: 暦と時計があれば／300里離れていても／王がいま何をしているか言い当てられる, source: サン=シモン『三人の初代ブルボン王の比較』（1740年着手）}
+  - {type: quote, from: 31, to: 31, label: 要点, text: 動かなかったのは／会議の時間だけ, source: ボワリルの注（サン=シモン『回想録』1916年版）}
+  - {type: quote, from: 69, to: 69, label: 史料, text: 様々なスープ4皿・雉1羽・ヤマウズラ1羽／ハム・羊の肉・菓子・果物・ゆで卵, source: パラティーヌ侯爵夫人の手紙（1718年12月5日・フランス語訳）}
+  - {type: quote, from: 93, to: 93, label: 史料, text: 人びとは見せ物を好む／そうして私たちは彼らの精神と心をつかむ, source: 『王太子への教え』1662年の部分}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 12, note: 起床の時間}
+  - {line: 31, note: 注}
+  - {line: 49, note: 医師の日誌}
+  - {line: 82, note: 燭台}
+  - {line: 86, note: 大就寝をやめた}
+  - {line: 99, note: 平均の1日}
+  - {end: true, note: 終了画面の空き}

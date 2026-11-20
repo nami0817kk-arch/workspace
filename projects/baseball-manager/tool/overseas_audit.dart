@@ -26,7 +26,7 @@ void main(List<String> a) {
             break;
           }
           if (g.stage == Stage.pro && g.canMoveOverseas) g.moveOverseas();
-          final ab = abilitiesOf(g.player.role);
+          final ab = mainAbilitiesOf(g.player.role);
           g.choose(g.condition.fatigue >= 60 ? Plan.rest : Plan.special,
               ab[g.slot % ab.length]);
         case Phase.event:

@@ -138,7 +138,29 @@ class Formulas {
   static const int bigDeficitMinute = 58;
 
   /// 追いついた・突き放した得点の評価点の倍率。
+  ///
+  /// **追う展開と、同点の終盤では、決めにいく手の見返り全体に掛ける**
+  /// （2026-11-15）。得点だけでなく、決定機を作ったぶん・アシスト・
+  /// 布石からの仕留めも同じ倍率で重くなる。以前は得点の評価だけに効き、
+  /// しかも自動進行の物差し（`expectedDelta`）には入っていなかった——
+  /// 試合の状況が手の値打ちを変えず、**同じ局面はいつも同じ答え**だった。
   static const double decisiveGoalFactor = 1.4;
+
+  /// **追う展開で、つなぐだけの手が通ったときの重み。**
+  /// 負けている終盤に横パスを通しても、試合は何も変わらない。
+  static const double stakesChasePlay = 0.5;
+
+  /// 同点の終盤で、つなぐだけの手が通ったときの重み。
+  /// 負けてはいないので、追う展開ほどは軽くしない。
+  static const double stakesLevelPlay = 0.75;
+
+  /// **守り切る展開で、つなぐ・止める手が通ったときの重み。**
+  /// リードしている終盤は、時間を進めること自体に値打ちがある。
+  static const double stakesHoldPlay = 1.25;
+
+  /// **守り切る展開で、手を外したときの減点の重み。**
+  /// 奪われればそのまま相手の好機になる。外しやすい手ほど損が大きい。
+  static const double stakesHoldFailure = 1.5;
 
   /// 味方が決める得点の量。自分の得点を上乗せするので、その分を差し引く。
   ///
@@ -343,11 +365,28 @@ class Formulas {
   /// ——**毎試合 0.18点ぶんクラブが弱かった**。同じ強さのクラブに居ても
   /// リーグ優勝が CM 1.4 / DM 1.2 / WG 1.1 回、CB・GK は 4.0 回だった。
   static double teammateGoalShareFor(Position position) => switch (position) {
-    Position.st => 0.70,
+    Position.st => 0.62,
     Position.wg => 0.84,
     Position.am => 0.97,
     Position.cm || Position.dm => 0.97,
     Position.sb || Position.cb || Position.gk => 1.0,
+  };
+
+  /// **守る選手が出る試合の、試合開始時の失点の割り増し**（2026-11-15）。
+  ///
+  /// 自陣の局面では、外せば失点が増え（`Exposure`）、前に出て奪う手が
+  /// 通れば失点が1つ消える（`preventsGoal`）。測ると消えるほうが多く、
+  /// 守る選手のクラブだけ出た試合の失点が 1.01 → 0.84 に減り、
+  /// リーグ優勝が 1.0 → 2.4〜3.2回に膨らんだ（`test/concede_sim.dart`）。
+  /// 味方の得点を差し引く（[teammateGoalShareFor]）のと同じ形で、
+  /// **選択で動くぶんを先に置いておく**。上手く守れば平均より減り、
+  /// まずい手を選べば増える。途中出場は局面が少ないので半分。
+  static double concedeShareFor(Position position) => switch (position) {
+    // 受け身の手（`lingering`）を入れて失点が増えたぶん、2026-11-15 に
+    // 1.17 から下げた。GK は自陣の局面しか引かないので、もう一段下げる。
+    Position.gk => 1.08,
+    Position.cb || Position.sb => 1.08,
+    _ => 1.0,
   };
 
   /// **試合を動かす展開**（局面ではないが、残りの試合の条件を変えるもの）。
@@ -492,6 +531,35 @@ class Formulas {
 
   static const int peakAge = 27;
   static const int declineAge = 31;
+
+  /// **衰え始めた年の、1試合あたりの衰えの確率**（2026-11-15）。
+  static const double declineChanceBase = 0.25;
+
+  /// 衰え始めてから1年ごとに上がる確率。歳とともに落ちる速さが上がる。
+  /// 以前は一定の 0.25 で、31歳から35歳でも総合力が 0.6 しか下がらず、
+  /// 「何を守るか」を練習で選んでも守るものが無かった。
+  static const double declinePerYear = 0.06;
+
+  /// 衰えの確率の上限。
+  static const double declineChanceMax = 0.6;
+
+  /// その年の衰えの確率。
+  static double declineChanceFor(int yearsPast) =>
+      (declineChanceBase + declinePerYear * yearsPast.clamp(0, 20)).clamp(
+        0.0,
+        declineChanceMax,
+      );
+
+  /// **衰えはどこから来るか。** 走力と身体を、ほかの3倍の重みで引く。
+  /// 現実の選手も脚から落ちる。技術と頭は残る。
+  static int declineWeightFor(AttributeKey key, {required bool goalkeeper}) =>
+      switch (key) {
+        AttributeKey.pace || AttributeKey.physical => 3,
+        // フィールドの選手は GK の能力が落ちても何も変わらない。
+        // そこに当てると衰えが空振りになる（以前は 3/22 が空振りだった）。
+        AttributeKey.goalkeeping => goalkeeper ? 3 : 0,
+        _ => 1,
+      };
 
   /// 身体の消耗 0〜100。**最近どう踏み込んできたか**を映す。
   ///
@@ -1215,6 +1283,42 @@ class Formulas {
   /// 自動で進めるときに、止めるための反則を「安いだけの手」とも
   /// 「損なだけの手」とも見ないようにするための重み。
   static const double ratingPerGoalPrevented = 0.6;
+
+  /// **前に出て奪い、この後の失点を1つ消したときの評価点**（2026-11-15）。
+  ///
+  /// 止めるための反則（[ratingPerGoalPrevented]）と同じ 0.6 を払ったら、
+  /// 守る選手の平均評価が +0.15、リーグ優勝が 1.0 → 2.5回に膨らんだ。
+  /// 反則は必ず警告を払うが、奪う手は通れば何も払わない。そのぶん軽くする。
+  static const double ratingPerStop = 0.3;
+
+  /// **手を外して、そのまま失点したときの評価点**（2026-11-15）。
+  /// 止めたとき（[ratingPerGoalPrevented]）と同じ大きさで裏返す。
+  /// 片方だけだと、自動進行がどちらかの手に倒れる。
+  static const double ratingPerGoalCaused = -0.6;
+
+  /// **受け身の手が通っても、続いた攻撃で失点する確率**（2026-11-15）。
+  /// 外したときのシュート（[concedeOnShot]）より低く置く——通ったのに
+  /// 外したより危ないなら、受け身の手を選ぶ理由が無くなる。
+  static const double concedeOnLinger = 0.08;
+
+  /// **受け身の手が通ったときの評価の重み**（2026-11-15）。
+  /// 遅らせた・構えた・蹴り返したは、止めたのとは違う。通りやすさだけで
+  /// 決まる並びを、ここで初めて崩す（失点の確率を足しただけでは、
+  /// 見積もりが 0.02 しか動かず、どの局面の答えも変わらなかった）。
+  static const double lingerSuccessFactor = 0.7;
+
+  /// 受け身の手が通ったあと、続いた攻撃で失点したときの評価点。
+  /// 手そのものは通っているので、外して失点したときの半分。
+  static const double ratingPerLingerGoal = -0.3;
+
+  /// 外してシュートを打たれたとき、それが決まる確率。
+  static const double concedeOnShot = 0.12;
+
+  /// 外して決定機を与えたとき、それが決まる確率。
+  static const double concedeOnChance = 0.3;
+
+  /// PK を与えた・止められなかったとき、それが決まる確率。
+  static const double concedeOnPenalty = 0.75;
 
   /// 警告を受けた試合の評価点への響き。退場はその倍。
   static const double ratingPerYellow = -0.35;

@@ -1,0 +1,148 @@
+# 物語完結型ショート ジャンヌ・ダルク s3（2026-10-30）。本編 scripts/jeanne-story.yaml（11/2 19:00 公開）から。切り口：男の服に戻った理由の食い違い（本人・マシュー・マション・ドミニコ会士）。
+# 形式は musashi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。処刑・火刑の描写なし（絵にも当てない）。
+# 絵は本編の AI 絵（out/story/jeanne/main/N01〜N15。人物なし）だけ。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/ジャンヌ・ダルク_facts_20261029.yaml）：jeanne-10・12・13・14（食い違いは決着させない）。
+# 理解テスト4問：
+#   ①誰の話か：ジャンヌ・ダルクが男の服に戻った理由
+#   ②いつ・どこで：1431年5月28日に本人が答え、1450年・1452年のあとの証言が別の理由を語る
+#   ③何が食い違うか：本人「自分の意志で」／服を取り上げられた／襲われるのが怖かった／暴行されかけ服は置かれていた
+#   ④どうなったか：記録からは決められない。本人の言葉とあとの証言のどちらを信じるか、は問いで閉じる
+# 語りの字数（句読点を除く）：355
+title: ジャンヌ・ダルク｜男の服に戻った理由は、4通りある
+yt_title: ジャンヌ・ダルクが男の服に戻った理由　本人と証人で4通りに食い違う
+description: |-
+  ジャンヌ・ダルクが男の服に戻った理由は、本人と証人たちで食い違います。
+  1431年5月28日、本人は「自分の意志で着ました。約束が守られなかったからです」と答えました。1450年、廷吏のマシューは、女の服を見張りに取り上げられたと、ジャンヌから聞いた話を証言します。1452年、公証人のマションは、夜に見張りが襲いかかるのを恐れたためと語り、ドミニコ会士のラドヴニュとイザンバールは、暴行されかけたと聞いたと証言しました。
+  証言が取られたのは、フランス王がルーアンを取り戻したあとです。どれが真実なのか、記録からは決められません。本編は概要欄のリンクからどうぞ。
+hashtags: ['#ジャンヌ・ダルク', '#世界史', '#百年戦争']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/jeanne
+out: jeanne_story_s3
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: ジャンヌ・ダルク（百年戦争のフランスの少女）
+  title: "男の服に戻った理由は《4通り》"
+now:
+  - {at: 1431年, text: "1431年5月　牢", point: 0}
+  - {at: 1450年, text: "1450年　ルーアン", point: 1}
+  - {at: 1452年, text: "1452年　ルーアン", point: 2}
+timeline:
+  - {label: "1431"}
+  - {label: "1450"}
+  - {label: "1452"}
+cards:
+  - type: table                          # 4通りの理由（語った順に1行ずつ）
+    title: 男の服に戻った理由
+    from: 1431年5月28日
+    until: ただ
+    items:
+      - {at: 1431年5月28日, text: "1431　本人「自分の意志で」"}
+      - {at: 1450年, text: "1450　マシュー「服を取り上げられた」"}
+      - {at: 1452年, text: "1452　マション「襲われるのが怖い」"}
+      - {at: ドミニコ会士, text: "ドミニコ会士「暴行されかけた」"}
+    text_y: 0.70
+shots:
+  N09:
+    kind: ai
+    file: jeanne/main/N09.jpg
+    focus: [0.3, 0.6]
+    move: in
+    must: 床の布の袋とたたまれた布
+  N04:
+    kind: ai
+    file: jeanne/main/N04.jpg
+    focus: [0.3, 0.45]
+    move: right
+    must: 牢の部屋の小窓
+  N09b:
+    kind: ai
+    file: jeanne/main/N09.jpg
+    focus: [0.72, 0.6]
+    move: left
+    zoom: 0.12
+    must: 床の布の袋
+  N05:
+    kind: ai
+    file: jeanne/main/N05.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 鉄格子の窓越しの中庭
+  N04b:
+    kind: ai
+    file: jeanne/main/N04.jpg
+    focus: [0.72, 0.65]
+    move: left
+    zoom: 0.12
+    must: 床に置かれた鉄の鎖
+  N06:
+    kind: ai
+    file: jeanne/main/N06.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 朝霧の川沿いの町と石橋
+  N02:
+    kind: ai
+    file: jeanne/main/N02.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 灯の下の白紙の羊皮紙
+  N15:
+    kind: ai
+    file: jeanne/main/N15.jpg
+    focus: [0.3, 0.55]
+    move: in
+    text_y: 0.74
+    must: 夕暮れの石畳の広場
+lines:
+  # fact: jeanne-10, jeanne-12, jeanne-13, jeanne-14
+  - 語り: ジャンヌは、なぜ、男の服に戻ったのか。その理由は、《!4通り》ある。
+    shot: N09
+    tone: 強調
+    pause: 0.12
+  # fact: jeanne-10
+  - 語り: 1431年5月28日。本人の答えは、こうだ。「自分の意志で、着ました。約束が、守られなかった、からです」。
+    shot: N04
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-12
+  - 語り: 1450年。廷吏のマシューは、ジャンヌから聞いた話を、証言する。女の服は、見張りに取り上げられた、と。
+    shot: N09b
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-13
+  - 語り: 1452年。公証人のマションは、夜、見張りが襲いかかるのが怖くて、男の服を、脱げなかった、と言う。
+    shot: N05
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-14
+  - 語り: ドミニコ会士の2人は、ジャンヌから、暴行されかけた、と聞いたという。服は、わざと、牢に置かれていた、とも言う。
+    shot: N04b
+    tone: 重い
+    pause: 0.12
+  # fact: （本編 第4章）
+  - 語り: ただ、1450年の調べは、フランス王が、ルーアンを取り戻したあと、国王の命令で開かれた。
+    shot: N06
+    tone: しみじみ
+    pause: 0.12
+  # fact: （本編 第4章）
+  - 語り: 同じ朝を、記録と証言が、4通りに語る。どれが真実なのか、記録からは、決められない。
+    shot: N02
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: あなたなら、本人の言葉と、あとの証言と、どちらを、信じますか。
+    shot: N15
+    tone: 疑問
+    pause: 0.15

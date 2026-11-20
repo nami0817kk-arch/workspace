@@ -10,11 +10,11 @@ import 'package:baseball_manager/ui/controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// 画面から呼ぶ入口(行動・出来事・おすすめで進める・ひとつ前に戻す・進路)を
+/// 画面から呼ぶ入口(行動・出来事・おすすめで進める・進路)を
 /// ランダムに混ぜて遊ばせても、状態が壊れず、保存を読み直しても同じになる。
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  test('操作と「戻す」を混ぜても、毎回セーブが読み直せて同じ状態になる', () async {
+  test('操作を混ぜても、毎回セーブが読み直せて同じ状態になる', () async {
     for (var seed = 0; seed < 25; seed++) {
       SharedPreferences.setMockInitialValues({});
       final r = Random(seed);
@@ -26,8 +26,8 @@ void main() {
         final g = c.game!;
         c.pending.clear();
         final roll = r.nextInt(10);
-        if (roll == 0 && c.canUndo) {
-          c.undo();
+        if (roll == 0) {
+          // (以前は「戻す」を混ぜていた。いまは何もしない回)
         } else {
           switch (g.phase) {
             case Phase.term:

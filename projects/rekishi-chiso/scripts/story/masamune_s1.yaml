@@ -1,0 +1,171 @@
+# 物語完結型ショート 伊達政宗 s1（2026-10-29）。本編 scripts/masamune-story.yaml の導入と第2章（眼帯と「独眼竜」はどこから来たのか）から。
+# 形式は rikyu_s1.yaml・hidetsugu_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（out/story/masamune/main/M*.jpg・TKM）と実在の肖像（狩野安信・土佐光貞と伝わる像）。
+#   この回の決まり：AI 絵の政宗に眼帯は無い。右目が見えている AI 絵の切り出しを作らない（M01 は両目が見えるので使わない。TKM・M09 は左の横顔だけ）。
+#   眼帯は M04（撮影所の小道具）だけ。実在の肖像は「両方の目が描かれている」「白く描いた像」と語る行に、顔に寄らない全身で出す。
+# 事実カード（dev/output/rekishi-chiso/research/伊達政宗_facts_20261028.yaml）：masamune-05・77・78・24・84・10
+#   ・眼帯の肖像が無い・映画やドラマで広がったイメージは仙台市博物館の佐々木徹（市政だより 2017）→ 名と年を言う。
+#   ・独眼竜＝李克用・頼山陽のたとえは谷原秀信（熊本大学 2013、masamune-24）→ 名と年を言う。
+#   ・右目を白く描いた像は出どころが1つ（masamune-10）→「といわれる」。絵師・所蔵は語りで言わない。
+# 理解テスト4問：
+#   ①誰の話か：伊達政宗（独眼竜）の眼帯の姿
+#   ②いつ・どこで何が：江戸時代の肖像画に眼帯の姿は一枚も無い（仙台市博物館の佐々木さん、2017年）
+#   ③眼帯と呼び名はどこから来たか：眼帯は映画・ドラマ・ゲームで広がったイメージ（1987年の大河は39.7%）。独眼竜は唐の李克用のあだ名で、頼山陽のたとえで広まった
+#   ④どうなったか：江戸時代の画像は両目か、右目を白く描いた像。どちらにも眼帯は無い
+title: 伊達政宗｜眼帯の肖像画は、一枚も無い
+yt_title: 伊達政宗の眼帯の肖像画は一枚も無い　独眼竜の姿はどこから来たのか
+description: |-
+  右目に眼帯をつけた独眼竜、伊達政宗。その姿で描かれた江戸時代の肖像画は、一枚もありません。仙台市博物館の学芸員、佐々木徹さんが、2017年の仙台市の広報で記しています。眼帯の姿は、映画やドラマ、ゲームなどで広がったイメージだろう、と。
+  1987年のNHK大河ドラマ『独眼竜政宗』は、平均視聴率39.7パーセント。大河ドラマの歴代最高といわれます。
+  「独眼竜」は、もとは唐の終わりごろの武将、李克用のあだ名。熊本大学の谷原秀信さんは2013年、江戸時代の学者、頼山陽が政宗を李克用になぞらえて、この名が広まったと述べています。
+  1676年ころの狩野安信の画像には、両方の目が描かれています。右目を白く濁ったように描いた像もわずかに伝わるといわれますが、その像にも眼帯はありません。
+hashtags: ["#伊達政宗", "#日本史", "#戦国時代"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/masamune
+out: masamune_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 伊達政宗（仙台藩の初代藩主）
+  title: "眼帯の肖像画は、《一枚も無い》"
+now:
+  - {at: 独眼竜, text: "江戸時代　仙台", point: 0}
+  - {at: 2017年, text: "2017年　市の広報", point: 2}
+  - {at: 1987年, text: "1987年　大河ドラマ", point: 1}
+  - {at: 唐の, text: "唐の終わりごろ　中国", point: 0}
+  - {at: 狩野安信, text: "1676年ころ　仙台", point: 0}
+timeline:
+  - {label: "江戸時代"}
+  - {label: "1987"}
+  - {label: "2017"}
+cards:
+  - type: table                          # 江戸時代の政宗の像（語った順に1行ずつ）
+    title: 江戸時代の政宗の像
+    from: 狩野安信
+    until: 眼帯の政宗は
+    items:
+      - {at: 狩野安信, text: "狩野安信の画像　両方の目"}
+      - {at: 白く濁った, text: "右目を白く描いた像"}
+      - {at: その像にも, text: "どちらも　眼帯は無い"}
+shots:
+  M04f:                                  # 1文目：台の上の黒い眼帯
+    kind: ai
+    file: masamune/main/M04.jpg
+    focus: [0.3, 0.7]
+    move: in
+    zoom: 0.16
+    must: 黒い眼帯と兜
+  Castletown:                            # 仙台市博物館の学芸員が記す
+    kind: real
+    image: paintings/masamune_sendai_castletown_1789.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "《仙台城下絵図》1789年ごろ（仙台市博物館蔵）"
+    must: 仙台城下の絵図
+  M04:                                   # 映画やドラマ、ゲームで広がったイメージ（撮影所）
+    kind: ai
+    file: masamune/main/M04.jpg
+    focus: [0.15, 0.4]
+    move: right
+    must: 撮影所のカメラと照明
+  M04r:                                  # 1987年の大河ドラマ（兜と鎧）
+    kind: ai
+    file: masamune/main/M04.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 兜と鎧
+  TKM:                                   # 独眼竜＝李克用のあだ名（左の横顔の武将）
+    kind: ai
+    file: masamune/main/TKM.jpg
+    focus: [0.62, 0.5]
+    move: in
+    must: 兜の武将の左の横顔
+  M09:                                   # 頼山陽が政宗を李克用になぞらえた
+    kind: ai
+    file: masamune/main/M09.jpg
+    focus: [0.86, 0.45]
+    move: in
+    must: 若い当主の左の横顔
+  Yasunobu:                              # 狩野安信の画像（両目）
+    kind: real
+    image: paintings/masamune_portrait_yasunobu.jpg
+    focus: [0.5, 0.55]
+    move: down
+    text_box: true
+    credit: "伊達政宗画像（狩野安信筆、1676年ころ）"
+    must: 政宗の画像の全身と讃の字
+  Mitsusada:                             # 右目を白く描いた像
+    kind: real
+    image: paintings/masamune_portrait_mitsusada.jpg
+    focus: [0.5, 0.5]
+    move: down
+    credit: "伊達政宗像（土佐光貞筆と伝わる、江戸時代）"
+    must: 政宗の像の全身
+  M04q:                                  # 最後の問い：眼帯に寄る
+    kind: ai
+    file: masamune/main/M04.jpg
+    focus: [0.27, 0.72]
+    move: in
+    zoom: 0.24
+    text_y: 0.5
+    must: 黒い眼帯
+lines:
+  # fact: masamune-05
+  - 語り: 右目に眼帯をつけた独眼竜、伊達政宗。その姿の江戸時代の肖像画は、《!一枚も無い》。
+    shot: M04f
+    tone: 強調
+  # fact: masamune-05
+  - 語り: 仙台市博物館の佐々木徹さんが、2017年、市の広報に記している。
+    shot: Castletown
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-77
+  - 語り: 眼帯の姿は、映画やドラマ、ゲームなどで広がったイメージだろう、と。
+    shot: M04
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-78
+  - 語り: 1987年の大河ドラマ、独眼竜政宗は、平均視聴率は、39.7パーセント。歴代最高といわれる。
+    shot: M04r
+    tone: 強調
+    pause: 0.12
+  # fact: masamune-24
+  - 語り: 独眼竜という呼び名も、もとは、唐の終わりごろの武将、李克用のあだ名だ。
+    shot: TKM
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-24
+  - 語り: 熊本大学の谷原秀信さんは、江戸時代の学者、頼山陽が、政宗を李克用になぞらえて、この名が広まった、とする。
+    shot: M09
+    tone: しみじみ
+    pause: 0.12
+  # fact: masamune-84
+  - 語り: では、江戸時代の画像は、どうか。1676年ころの、狩野安信の画像には、両方の目が、描かれている。
+    shot: Yasunobu
+    tone: 強調
+    pause: 0.12
+  # fact: masamune-10
+  - 語り: 右目を、白く濁ったように描いた像も、わずかに伝わる、といわれる。けれど、その像にも、《!眼帯は無い》。
+    shot: Mitsusada
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: masamune-77
+  - 語り: 眼帯の政宗は、のちの映画やドラマが広げた姿だ、と見られている。
+    shot: M04
+    tone: しみじみ
+    pause: 0.15
+  - 語り: あなたが思い浮かべる政宗に、眼帯は、《ついていましたか》。
+    shot: M04q
+    tone: 疑問
+    pause: 0.15

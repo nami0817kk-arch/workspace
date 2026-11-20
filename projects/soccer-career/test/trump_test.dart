@@ -101,9 +101,13 @@ void main() {
       final beforeOther = m.chanceFor(other);
 
       m.arm(signature);
+      // 成功率は 95% で止まる。易しい手に構えると、上乗せがそこで切れる。
       expect(
         m.chanceFor(option),
-        closeTo(beforeOption + Formulas.signatureArmedBonus, 0.0001),
+        closeTo(
+          (beforeOption + Formulas.signatureArmedBonus).clamp(0.05, 0.95),
+          0.0001,
+        ),
       );
       expect(m.chanceFor(other), beforeOther);
       // 画面に出す内訳にも、同じ値で出る。

@@ -266,9 +266,9 @@ def _layout_c(img, t, gothic):
 
 # --- 構図（10-07）。目印（地層の帯・字体・黄白赤）だけそろえて、文字の位置・大きさ・色の配分を構図ごとに変える ---
 
-LAYOUTS = ("classic", "face", "scene", "versus", "number", "map")
+LAYOUTS = ("classic", "face", "scene", "versus", "number", "map", "mask")
 DEFAULT_CAST = {"a": True, "b": False, "c": True, "face": False, "scene": False, "versus": False,
-                "number": True, "map": False}
+                "number": True, "map": False, "mask": False}
 SAFE_W = W - 170 - 40           # 右下の再生時間の表示にかかる行の、文字の右端
 STRATA_TOP = H - 15
 
@@ -285,7 +285,8 @@ def problems(t: dict) -> list[str]:
         return [f"サムネイルの構図（layout）が分かりません: {layout}（{'・'.join(LAYOUTS)} のどれか）"]
     need = {"classic": ("image", "crop", "name", "main"), "face": ("image", "crop", "name", "main"),
             "scene": ("image", "crop", "name", "main"), "number": ("image", "crop", "number", "name", "main"),
-            "versus": ("left", "right"), "map": ("map", "name", "main")}[layout]
+            "versus": ("left", "right"), "map": ("map", "name", "main"),
+            "mask": ("image", "main", "blanks")}[layout]
     if t.get("contrast"):                               # 落差の二語があれば main は要らない
         need = tuple(k for k in need if k != "main")
     out = [f"サムネイルの {k} がありません（構図 {layout}）" for k in need if not t.get(k)]
@@ -308,6 +309,15 @@ def problems(t: dict) -> list[str]:
                 figures.with_places(dict(m, marks=list(m.get("marks", []))))
             except ValueError as e:
                 out.append(f"サムネイルの地図: {e}")
+    if layout == "mask":
+        if not isinstance(t.get("main"), (list, tuple)) or not 1 <= len(t["main"]) <= 2:
+            out.append("サムネイルの main は1〜2行の並びで書く（構図 mask）")
+        for b in t.get("blanks") or []:
+            if not (isinstance(b, (list, tuple)) and len(b) == 2 and isinstance(b[1], int) and 1 <= b[1] <= 8):
+                out.append("サムネイルの blanks は [見出し, 伏せる字数（1〜8）] の並びで書く（構図 mask）")
+                break
+        if len(t.get("blanks") or []) > 3 or len(t.get("tags") or []) > 3:
+            out.append("サムネイルの blanks・tags は3つまで（構図 mask）")
     if layout == "face" and t.get("side", "right") not in ("left", "right"):
         out.append("サムネイルの side は right か left")
     if layout == "scene" and t.get("band", "bottom") not in ("top", "bottom"):
@@ -557,6 +567,82 @@ def _layout_versus(img, t, gothic, assets, o=OFF):
         _lead_main(dr, W // 2, 78, t, gothic, 120, W - 120, "mm", o=o, img=img)
 
 
+def _layout_mask(img, t, gothic, assets):
+    """伏せ字の構図（10-14）。参考＝「ほんとにあった日本史」の型：黄色い太い枠・特大の黄＋赤い影・斜めの赤い札。
+    もしもの話は「答えを黒い帯で伏せた問い」で見せる。
+        layout: mask
+        image: 肖像（右に大きく）  crop: [..]（省けば全体）
+        top: 上の小さな一言（白）
+        main: [もし光秀が, 動かなかったら]     # 特大の黄（1〜2行）
+        blanks: [[秀頼は, 5], [江戸幕府は, 3]]   # 見出し＋伏せる字数。**本編で答えが出ること**
+        tags: [信長は？, 秀吉は？]               # 右下の斜めの赤い札（互い違いに傾く）
+    """
+    with Image.open(assets / t["image"]) as im:
+        p = im.convert("RGB")
+    crop = t.get("crop")
+    pic0 = p.crop(tuple(crop)) if crop else p
+
+    def cover(src, w, h):
+        k = max(w / src.width, h / src.height)
+        s = src.resize((int(src.width * k) + 1, int(src.height * k) + 1), Image.LANCZOS)
+        x, y = (s.width - w) // 2, (s.height - h) // 2
+        return s.crop((x, y, x + w, y + h))
+
+    bg = ImageEnhance.Brightness(cover(pic0, W, H).filter(ImageFilter.GaussianBlur(14))).enhance(0.55)
+    img.paste(bg)
+    pw = 640
+    pic = ImageEnhance.Contrast(cover(pic0, pw, H)).enhance(1.1)
+    m = Image.new("L", (pw, H), 255)
+    g = ImageDraw.Draw(m)
+    for x in range(160):
+        g.line([(x, 0), (x, H)], fill=int(255 * x / 160))
+    img.paste(pic, (W - pw, 0), m)
+    shade = Image.new("L", (W, H), 0)
+    sd = ImageDraw.Draw(shade)
+    for x in range(W):
+        sd.line([(x, 0), (x, H)], fill=max(0, int(170 * (1 - x / 900))))
+    img.paste(Image.new("RGB", (W, H), BLACK), (0, 0), shade)
+    d = ImageDraw.Draw(img)
+    FRAME = (255, 222, 0)
+
+    def shadowed(xy, s, f, fill, stroke, off):
+        d.text((xy[0] + off, xy[1] + off), s, font=f, fill=RED, stroke_width=stroke, stroke_fill=BLACK)
+        d.text(xy, s, font=f, fill=fill, stroke_width=stroke, stroke_fill=BLACK)
+
+    if t.get("top"):
+        d.text((48, 50), str(t["top"]), font=_fit(gothic, str(t["top"]), 52, 700, 32), fill=WHITE,
+               stroke_width=8, stroke_fill=BLACK)
+    y = 112
+    for s in t["main"]:
+        shadowed((44, y), str(s), _fit(gothic, str(s), 132, 870, 80), FRAME, 12, 14)
+        y += 150
+    y = 470
+    for head, n in t.get("blanks") or []:
+        f = _font(gothic, 78)
+        d.text((48, y), str(head), font=f, fill=WHITE, stroke_width=8, stroke_fill=BLACK)
+        x = 48 + int(f.getlength(str(head)))
+        cell = int(78 * 0.92)
+        w = cell * n + 16
+        d.rounded_rectangle((x, y + 4, x + w, y + 92), radius=8, fill=(10, 10, 10), outline=WHITE, width=5)
+        for k in range(n):
+            d.text((x + 8 + cell * k + cell // 2, y + 48), "？", font=_font(gothic, 54), fill=FRAME, anchor="mm")
+        y += 106
+    spots = [(9, 890, 520), (-7, 935, 640), (6, 1000, 400)]
+    for s, (ang, cx, cy) in zip(t.get("tags") or [], spots):
+        f = _font(gothic, 72)
+        w, h = int(f.getlength(str(s))) + 52, 100
+        lay = Image.new("RGBA", (w + 40, h + 40), (0, 0, 0, 0))
+        ld = ImageDraw.Draw(lay)
+        ld.rounded_rectangle((20, 20, 20 + w, 20 + h), radius=10, fill=RED + (255,), outline=WHITE + (255,), width=7)
+        ld.text((20 + w // 2, 20 + h // 2 + 2), str(s), font=f, fill=WHITE, anchor="mm", stroke_width=3,
+                stroke_fill=(110, 0, 10))
+        sh = Image.new("RGBA", lay.size, (0, 0, 0, 0))
+        sh.paste((0, 0, 0, 150), (8, 8), lay.split()[3])
+        lay = Image.alpha_composite(sh, lay).rotate(ang, expand=True, resample=Image.BICUBIC)
+        img.paste(lay, (cx - lay.width // 2, cy - lay.height // 2), lay)
+    ImageDraw.Draw(img).rectangle((0, 0, W - 1, H - 1), outline=FRAME, width=18)
+
+
 _NUM_PART = re.compile(r"[0-9０-９][0-9０-９,，.．]*")
 
 
@@ -751,7 +837,7 @@ def text_room(t: dict, config: dict, assets: Path) -> list[str]:
         return []
     layout = layout_of(tt)
     layout = "a" if layout == "classic" else layout
-    if layout == "versus" or layout not in LAYOUTS + ("a",):
+    if layout in ("versus", "mask") or layout not in LAYOUTS + ("a",):
         return []
     x0, _, x1, _ = contrast_zone(tt, layout)
     if x1 - x0 >= TEXT_ROOM_MIN:
@@ -788,6 +874,8 @@ def render_spec(t: dict, config: dict, assets: Path, cache: Path | None = None) 
                 _layout_number(img, t, gothic, im.convert("RGB"), cast, o, assets)
         elif layout == "versus":
             _layout_versus(img, t, gothic, assets, o)
+        elif layout == "mask":
+            _layout_mask(img, t, gothic, assets)
         elif layout == "map":
             _layout_map(img, t, gothic, assets, o)
             hooks.under_text(img, t, gothic, cache)
@@ -814,7 +902,7 @@ def make(script, config: dict, assets: Path, cache: Path | None = None) -> Image
 def make_variants(script, config: dict, assets: Path, cache: Path | None = None) -> dict[str, Image.Image]:
     """3案（a・b・c）。YouTube Studio の「テストと比較」に載せる。"""
     t = script.thumbnail
-    if not (t.get("image") and t.get("crop")):          # versus・map は絵1枚の b・c が作れないので a だけ
+    if layout_of(t) == "mask" or not (t.get("image") and t.get("crop")):   # mask・versus・map は b・c が作れないので a だけ
         return {"a": render_spec(variant_spec(t, "a"), config, assets, cache)}
     with Image.open(assets / t["image"]) as im:
         size = im.size

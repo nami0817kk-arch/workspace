@@ -1,0 +1,163 @@
+# 物語完結型ショート フランス革命（もしも）s2（2026-11-05）。本編 scripts/france-if-story.yaml（11/5 12:00 公開、https://youtu.be/0InK0OydYHM）から。切り口：6月23日の親臨会議、国王の35か条（差し出したもの・譲らなかった線）
+# 形式は kurofune_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。国王の言葉は議会の記録（『アルシーヴ・パルルマンテール』）として、出どころを言ってから引く。
+# 絵は本編の AI 絵（F01〜F16）と実在の絵（paintings/france_*）。新しい絵は作らない。F14（遠くにエッフェル塔）・F04（偽の字）は使わない。
+# 事実カード（dev/output/rekishi-chiso/research/フランス革命_facts_20261031.yaml）：france-if-52・55・56・57（本編の序章と第5章の言い方のまま）
+# ・計算のやり直し：6月23日 → 7月14日 は 7＋14＝21日＝ちょうど3週間（本編どおり）。
+# ・賦役の永久廃止（第30条）は s3（テュルゴー）の結びに回す（同じ事実を2本に出さない）。
+# ・「交渉の土台にならないまま」は本編のまとめの言い方のまま。
+# 理解テスト4問：
+#   ①誰の話か：国王ルイ16世と、1789年6月23日の親臨会議の35か条
+#   ②いつ・どこで何が：バスティーユの3週間前、国王が議場で宣言を2本読ませた。1本目は6月17日の議決を無効に、2本目が35か条
+#   ③国王は何を差し出し、何を譲らなかったか：代表の同意のない新税は作らない・予算は毎年公開。十分の一税と領主の権利・軍への権限・3つの身分の区別は手放さない
+#   ④どうなったか：35か条は交渉の土台にならないまま、3週間後にバスティーユが落ちた。もしも土台になっていたら、を問いで閉じる
+title: ルイ16世｜バスティーユの3週間前、国王は「同意のない新税は作らない」と宣言させた
+yt_title: バスティーユの3週間前、ルイ16世は「同意のない新税は作らない」と宣言させていた　35か条の中身
+description: |-
+  バスティーユが落ちる3週間前、国王ルイ16世は、「代表の同意なしに、新しい税は作らない」と宣言させていました。
+  1789年6月23日、国王が自ら議場に出た親臨会議。読まれた宣言は2本で、1本目は、議員たちが国民議会を名乗った6月17日の議決を無効にするものでした。2本目は、35か条の「国王の意図の宣言」。予算は毎年公開する、と踏み込む一方で、十分の一税と領主の権利は財産として守り、軍への権限は王が持つ、と書いていました。議会の記録によると、国王は最後に「もし皆が私を見捨てるなら、私ひとりで、民の幸せをつくる」と言っています。
+  もしも、この35か条が交渉の土台になっていたら。この問いを、史料から掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#フランス革命', '#世界史', '#ルイ16世']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/france-if
+out: france_if_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: ルイ16世（フランス国王）
+  title: "バスティーユの3週間前、国王の《35か条》"
+now:
+  - {at: 1789年6月23日, text: "1789年6月23日　ヴェルサイユ", point: 0}
+  - {at: 3週間後, text: "1789年7月14日　パリ", point: 1}
+timeline:
+  - {label: "6月23日"}
+  - {label: "7月14日"}
+cards:
+  - type: table
+    title: 35か条から
+    from: 第1条
+    until: 議会の記録によると
+    items:
+      - {at: 第1条, text: "新しい税　代表の同意が要る"}
+      - {at: 毎年公開, text: "予算　毎年公開"}
+      - {at: 十分の一税と, text: "十分の一税・領主の権利　守る"}
+      - {at: 軍への権限, text: "軍への権限　王が持つ"}
+    text_y: 0.74
+shots:
+  Louis:
+    kind: real
+    image: paintings/france_louis16_duplessis.jpg
+    focus: [0.5, 0.3]
+    move: in
+    credit: "ジョゼフ・シフレッド・デュプレシ《ルイ16世の肖像》（18世紀。コンデ美術館。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: ルイ16世の顔
+  F03:
+    kind: ai
+    file: france-if/main/F03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: ろうそくの大広間と玉座
+  Couder:
+    kind: real
+    image: paintings/france_etats_generaux_couder.jpg
+    crop: [0.03, 0.05, 0.97, 0.88]
+    focus: [0.5, 0.5]
+    move: left
+    credit: "クデールの絵による版画《全国三部会の開会　1789年5月5日》（19世紀。パリ市立美術館群。ウィキメディア・コモンズ、CC0）"
+    must: 議場に並ぶ議員たち（下の題字は切る）
+  F09:
+    kind: ai
+    file: france-if/main/F09.jpg
+    focus: [0.5, 0.45]
+    move: up
+    must: 議場の長椅子の列
+  F08:
+    kind: ai
+    file: france-if/main/F08.jpg
+    focus: [0.75, 0.6]
+    move: right
+    must: 帳簿と金貨
+  F05:
+    kind: ai
+    file: france-if/main/F05.jpg
+    focus: [0.35, 0.6]
+    move: right
+    must: 道を行く農民の後ろ姿
+  Louis2:
+    kind: real
+    image: paintings/france_louis16_duplessis.jpg
+    focus: [0.5, 0.45]
+    move: down
+    zoom: 0.12
+    credit: "ジョゼフ・シフレッド・デュプレシ《ルイ16世の肖像》（18世紀。コンデ美術館。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 胸の勲章と青い綬
+  Robert:
+    kind: real
+    image: paintings/france_bastille_robert.jpg
+    focus: [0.45, 0.45]
+    move: in
+    credit: "ユベール・ロベール《取り壊しの始まったバスティーユ》（1789年。カルナヴァレ美術館。ウィキメディア・コモンズ、パブリックドメイン）"
+    must: バスティーユの塔
+  F16:
+    kind: ai
+    file: france-if/main/F16.jpg
+    focus: [0.35, 0.5]
+    move: right
+    text_y: 0.76
+    must: 夕暮れのセーヌ川
+lines:
+  # fact: france-if-55
+  - 語り: バスティーユの3週間前、国王は、《!新しい税》を、自分から縛る宣言をさせていた。
+    shot: Louis
+    tone: 強調
+    pause: 0.12
+  # fact: france-if-55
+  - 語り: 1789年6月23日、ヴェルサイユ。ルイ16世が自ら議場に出る、親臨会議だ。
+    shot: F03
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-52, france-if-55
+  - 語り: 読まれた宣言は、2つ。1つ目は、議員たちが国民議会を名乗った、6月17日の議決を、無効とした。
+    shot: Couder
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-55
+  - 語り: 2つ目は、35か条。その第1条。国民の代表の同意なしに、新しい税は作らない。
+    shot: F09
+    tone: 重い
+    pause: 0.12
+  # fact: france-if-56
+  - 語り: 予算は、毎年公開する、とも書いた。
+    shot: F08
+    tone: しみじみ
+    pause: 0.12
+  # fact: france-if-57
+  - 語り: ただし、譲らなかった線もある。十分の一税と、領主の権利は、財産として守る。軍への権限は、王が持つ。3つの身分の区別も、手放さない。
+    shot: F05
+    tone: 重い
+    pause: 0.12
+  # fact: france-if-55
+  - 語り: 議会の記録によると、国王は最後に、こう言った。もし皆が私を見捨てるなら、私ひとりで、民の幸せをつくる。
+    shot: Louis2
+    tone: 重い
+    pause: 0.12
+  # fact: （本編のまとめ）
+  - 語り: 35か条は、交渉の土台にならないまま、3週間後、バスティーユは落ちた。
+    shot: Robert
+    tone: しみじみ
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: もしも、この35か条が、交渉の土台になっていたら。革命は、起きなかったのか。
+    shot: F16
+    tone: 疑問
+    pause: 0.15

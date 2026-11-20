@@ -1,0 +1,12 @@
+.dart_tool/
+build/
+.flutter-plugins*
+.packages
+pubspec.lock.bak
+# tool/build.js が作る。手で直さない
+assets/web/index.html
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Pods/
+ios/Runner/GeneratedPluginRegistrant.*
+ios/.symlinks/

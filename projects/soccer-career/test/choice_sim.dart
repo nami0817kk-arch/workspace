@@ -14,6 +14,7 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/season.dart';
@@ -28,15 +29,36 @@ final _builds = <String, List<Detail>>{
   '守備': [Detail.tackling, Detail.marking, Detail.interceptions],
 };
 
+const _stakesName = {
+  MatchStakes.none: 'ふだん',
+  MatchStakes.chasing: '追う',
+  MatchStakes.leveling: '同点の終盤',
+  MatchStakes.protecting: '守り切る',
+};
+
 void main() {
   test('最善手が入れ替わるか', () async {
     const seeds = 8;
 
-    for (final position in [Position.st, Position.cm, Position.cb]) {
+    // 対象は `--dart-define=POS=gk,cb` で絞れる。`DETAIL=true` なら、
+    // 答えが決まっている局面を全部、最善の手と割合つきで並べる。
+    const only = String.fromEnvironment('POS', defaultValue: 'st,cm,cb');
+    const detail = bool.fromEnvironment('DETAIL');
+    // `QUICK=true` なら育て方は「平均」だけ（データを直しながら回す用）。
+    const quick = bool.fromEnvironment('QUICK');
+    final positions = [
+      for (final name in only.split(',')) Position.values.byName(name),
+    ];
+    for (final position in positions) {
       // 育て方 -> 局面 -> 最善だった手 -> 回数
       final byBuild = <String, Map<String, Map<String, int>>>{};
+      // 状況 -> [出会った回数, 状況が無かったときと最善手が違った回数]
+      final byStakes = <MatchStakes, List<int>>{};
+      // 局面 -> 手 -> [見積もりの合計, 回数]（平均の育て方）
+      final evs = <String, Map<String, List<double>>>{};
 
       for (final build in _builds.entries) {
+        if (quick && build.key != '平均') continue;
         final byScenario = <String, Map<String, int>>{};
         for (var seed = 0; seed < seeds; seed++) {
           await runCareer(
@@ -56,6 +78,27 @@ void main() {
                 (a, b) =>
                     match.expectedDelta(b) > match.expectedDelta(a) ? b : a,
               );
+              // **同じ局面を「状況が何も変えていなかったら」で比べる。**
+              // 局面ごとに数えると、序盤に出た回と終盤に出た回が混ざって
+              // 状況の効きが薄まって見える。1回ずつ、その場で比べる。
+              if (build.key == '平均') {
+                final evRow = evs.putIfAbsent(match.current.id, () => {});
+                for (final o in options) {
+                  final e = evRow.putIfAbsent(o.label, () => [0, 0]);
+                  e[0] += match.expectedDelta(o);
+                  e[1] += 1;
+                }
+                final plain = options.reduce(
+                  (a, b) =>
+                      match.expectedDelta(b, asIf: MatchStakes.none) >
+                          match.expectedDelta(a, asIf: MatchStakes.none)
+                      ? b
+                      : a,
+                );
+                final row = byStakes.putIfAbsent(match.stakes, () => [0, 0]);
+                row[0]++;
+                if (!identical(plain, best)) row[1]++;
+              }
               final counts = byScenario.putIfAbsent(match.current.id, () => {});
               counts[best.label] = (counts[best.label] ?? 0) + 1;
             },
@@ -78,6 +121,14 @@ void main() {
         );
         if (top.value / n < 0.9) continue;
         fixed++;
+        if (detail) {
+          final row = evs[entry.key] ?? {};
+          print(
+            '    ${entry.key.padRight(18)} ${top.key}'
+            '（${(top.value * 100 / n).toStringAsFixed(0)}%・$n回）  見積もり: '
+            '${[for (final e in row.entries) '${e.key} ${(e.value[0] / e.value[1]).toStringAsFixed(3)}'].join(' ／ ')}',
+          );
+        }
         final others = <String>{};
         for (final build in byBuild.entries) {
           if (build.key == '平均') continue;
@@ -101,6 +152,42 @@ void main() {
         '／ どう育てても同じ ${fixed - revived}'
         '${dead.isEmpty ? '' : '  例: ${dead.join(' ')}'}',
       );
+      // **育て方で最善の手が変わる局面**（答えが決まっているかどうかに関係なく）。
+      // 上の「育て方を変えると別の手になる」は、答えが決まっている局面の中しか
+      // 数えない。決まっている局面が0になると、何をしても0になる（2026-11-15 に
+      // それを根拠に「育て方が効いていない」と読み違えかけた）。
+      var buildFlips = 0;
+      var compared = 0;
+      for (final id in flat.keys) {
+        final tops = <String>{};
+        var enough = true;
+        for (final build in byBuild.values) {
+          final counts = build[id];
+          if (counts == null || counts.values.fold(0, (a, b) => a + b) < 20) {
+            enough = false;
+            break;
+          }
+          tops.add(
+            counts.entries.reduce((a, b) => a.value > b.value ? a : b).key,
+          );
+        }
+        if (!enough) continue;
+        compared++;
+        if (tops.length > 1) buildFlips++;
+      }
+      if (!quick) {
+        print('    育て方で一番多い手が変わる局面 $buildFlips / $compared');
+      }
+      final total = byStakes.values.fold(0, (a, r) => a + r[0]);
+      final parts = [
+        for (final s in MatchStakes.values)
+          if (byStakes[s] != null)
+            '${_stakesName[s]} ${byStakes[s]![0]}回'
+                '（${(byStakes[s]![0] * 100 / total).toStringAsFixed(1)}%）'
+                '・答えが変わる '
+                '${(byStakes[s]![1] * 100 / byStakes[s]![0]).toStringAsFixed(0)}%',
+      ];
+      print('    状況ごと（平均の育て方）: ${parts.join(' ／ ')}');
     }
   }, timeout: const Timeout(Duration(minutes: 90)));
 }

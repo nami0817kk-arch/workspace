@@ -1,0 +1,162 @@
+# 物語完結型ショート 大奥の奥女中 s5（2026-11-06）。本編 scripts/ooku-story.yaml（11/8 19:00 公開、https://youtu.be/28M-XkATUuY）の序章・第7章から。11/9 19:30 公開。
+# 形式は kakeizu_s3.yaml（year のカード）を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は楊洲周延《千代田の大奥》（1895年ごろ、メトロポリタン美術館、CC0）と本編の AI 絵（out/story/ooku/main。FLUX、人物は後ろ姿だけ）。新しい絵は作らない。
+# 切り口：華やかな大奥の錦絵は、大奥がなくなって26年後に描かれた。その前の聞き書き『旧事諮問録』と元女中どうしの食い違い。
+#   勤め（s1）・給金（s2）には踏み込まない。延享元年の年金（ooku-22・35）は tease の答えとして本編に残す。
+# 事実カード：ooku-47・79・73・74。（鳶魚の「曖昧」ooku-75 は長さのため外した）言い方は本編のまま。
+#   ・明治27〜29年＝1894〜96年。1868年（江戸城の明け渡し）→1894年＝26年後。本編どおり。
+#   ・明治24年＝1891年 → 23年後。本編どおり。
+#   ・「40点」（展示の一覧「全40点」）。本編の序章は「40枚の錦絵」と言うが、ここは第7章の「40点」に合わせた（報告に書く）。
+#   ・ませ子の言葉は『御殿女中』374頁。出どころを言ってから引く（本編と同じ）。
+# 理解テスト4問：
+#   ①誰の話か：華やかな大奥の錦絵《千代田の大奥》と、明治に元女中から話を聞いた『旧事諮問録』
+#   ②いつ何が：明治24年（1891年）から聞き書き、明治27〜29年に錦絵。大奥がなくなって23年・26年後
+#   ③何が食い違ったか：答えた箕浦はな子の素性を、大岡ませ子は「父が二の丸にいたというのは嘘」と言った
+#   ④どうなったか：誰も見られなくなった大奥を、明治の人は聞き書きと錦絵で思い描いた
+title: 大奥｜華やかな錦絵は、いつ描かれたのか
+yt_title: 華やかな大奥の錦絵はいつ描かれたのか　大奥がなくなって26年後の《千代田の大奥》と、元女中の「嘘です」
+description: |-
+  着飾った女性たちが花見や遊びに興じる、華やかな大奥の錦絵。いつ描かれたのでしょうか。
+  楊洲周延の《千代田の大奥》は、明治27年から29年に刷られた錦絵で、大奥がなくなって26年もたってからの作です。その少し前の明治24年（1891年）から、旧幕府の人々に話を聞いた『旧事諮問録』が作られ、元女中も答えています。答えたのは、12代家慶の大奥で中臈だったという箕浦はな子さん。ところが、三田村鳶魚の『御殿女中』で、同じ大奥にいた大岡ませ子さんは「父が二の丸にいたというのは嘘です」と語ります。2025年、東京国立博物館の江戸大奥展は、その第1章を「あこがれの大奥」と名づけています。
+  では、30年以上勤めて病で辞めた奥女中には、何が渡されたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#大奥', '#日本史', '#明治']
+ai_images: true
+ai_disclosure: この動画の室内・人物の後ろ姿の画像は、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/ooku
+out: ooku_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 《千代田の大奥》（楊洲周延の錦絵）
+  title: "華やかな錦絵は、《いつ描かれたのか》"
+now:
+  - {at: 華やかな, text: "明治　東京", point: 2}
+  - {at: 明治27年, text: "明治27〜29年　錦絵", point: 2}
+  - {at: 明治24年, text: "1891年　『旧事諮問録』", point: 1}
+  - {at: 2025年, text: "2025年　東京国立博物館", point: 2}
+timeline:
+  - {label: "1868"}
+  - {label: "1891"}
+  - {label: "1894"}
+cards:
+  - type: year
+    from: 明治27年
+    until: その少し前
+    big: 1894年
+    sub: 大奥がなくなって26年後
+    text_y: 0.70
+shots:
+  Hanami:
+    kind: real
+    image: paintings/ooku_chiyoda_371.jpg
+    focus: [0.62, 0.55]
+    move: left
+    credit: "楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）"
+    must: 花見の錦絵
+  Hina:
+    kind: real
+    image: paintings/ooku_chiyoda_372.jpg
+    focus: [0.5, 0.55]
+    move: right
+    credit: "楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）"
+    must: 雛人形の飾りの錦絵
+  Boat:
+    kind: real
+    image: paintings/ooku_chiyoda_390.jpg
+    focus: [0.5, 0.55]
+    move: left
+    credit: "楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）"
+    must: 着飾った女性たちの錦絵
+  O21:
+    kind: ai
+    file: ooku/main/O21.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 明治の書斎で話を書き取る男
+  Ladies:
+    kind: real
+    image: paintings/ooku_chiyoda_384.jpg
+    focus: [0.35, 0.55]
+    move: right
+    credit: "楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）"
+    must: 座って話す女中たちの錦絵
+  O16:
+    kind: ai
+    file: ooku/main/O16.jpg
+    focus: [0.45, 0.5]
+    move: left
+    must: 書き物をする女中（後ろ姿）
+  Cherry:
+    kind: real
+    image: paintings/ooku_chiyoda_373.jpg
+    focus: [0.4, 0.55]
+    move: left
+    credit: "楊洲周延《千代田の大奥》（1895年ごろ。メトロポリタン美術館、CC0）"
+    must: 桜と女性の錦絵
+  OEND:
+    kind: ai
+    file: ooku/main/OEND.jpg
+    focus: [0.35, 0.55]
+    move: in
+    must: 夕暮れの江戸城の石垣と女性（後ろ姿）
+  O20:
+    kind: ai
+    file: ooku/main/O20.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 髪を下ろした年老いた女性（後ろ姿）
+lines:
+  # fact: ooku-47
+  - 語り: 華やかな大奥の錦絵は、いつ、描かれたのか。
+    shot: Hanami
+    tone: 疑問
+    pause: 0.12
+  # fact: ooku-47, ooku-79
+  - 語り: 楊洲周延の、《千代田の大奥》。花見や舟遊び、雛人形の飾り。着飾った女性たちの、年中行事の絵だ。
+    shot: Hina
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-47
+  - 語り: 刷られたのは、明治27年から29年。全部で40点。大奥がなくなって、《!26年》もたってからだ。
+    shot: Boat
+    tone: 強調
+    pause: 0.12
+  # fact: ooku-73
+  - 語り: その少し前、明治24年、1891年から、旧幕府の人々に話を聞く、『旧事諮問録』が作られた。元女中も、そこで答えている。
+    shot: O21
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-73
+  - 語り: 答えたのは、箕浦はな子。12代家慶の大奥で、中臈だったという。
+    shot: Ladies
+    tone: しみじみ
+    pause: 0.12
+  # fact: ooku-74
+  - 語り: ところが、三田村鳶魚の、『御殿女中』で、同じ大奥にいた大岡ませ子は、こう語る。父が、二の丸にいたというのは、《嘘です》。
+    shot: O16
+    tone: 重い
+    pause: 0.12
+  # fact: ooku-47
+  - 語り: 2025年、東京国立博物館の江戸大奥展は、その第1章を、あこがれの大奥と名づけた。
+    shot: Cherry
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 誰も見られなくなった大奥を、明治の人たちは、聞き書きと錦絵で、《思い描いた》。
+    shot: OEND
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: ooku-22, ooku-35（答えは本編の第6章）
+  - 語り: では、30年以上勤めて、病で辞めた奥女中には、何が渡されたのか。
+    shot: O20
+    tone: 疑問
+    pause: 0.15

@@ -1678,7 +1678,14 @@ class CareerEngine {
   /// シーズン終了時に、大陸カップの結果と来季の登録状況を確定させる。
   ///
   /// リーグ戦を戦い終えてから呼ぶ。出場していなければ none のまま。
+  ///
+  /// **1シーズンに1回だけ効く**（`CareerState.seasonEndResolved`）。
+  /// 2回目以降は何もしない。季末の画面から抜けずにアプリが落ちると、
+  /// 起動し直したときにもう一度呼ばれ、世界大会が引き直されてキャップが
+  /// 二重に入っていた。
   void resolveSeasonEnd(CareerState state) {
+    if (state.seasonEndResolved) return;
+    state.seasonEndResolved = true;
     // 到達ラウンドは**戦った結果**から決まる。
     //
     // かつては `runContinental` / `runDomesticCup` がここで振っていた。

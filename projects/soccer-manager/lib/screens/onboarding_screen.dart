@@ -24,7 +24,7 @@ List<_OnboardingSlide> get _slides => [
       _OnboardingSlide(
         art: OnboardingArtKind.climb,
         title: Tr.pick('クラブを率いて頂点へ', 'Take a club to the top'),
-        description: Tr.pick('クラブを創設し、監督としてリーグ優勝・カップ制覇・昇格を目指しましょう。',
+        description: Tr.pick('クラブを創設し、オーナーとしてリーグ優勝・カップ制覇・昇格を目指しましょう。',
             'Found a club and manage it towards the title, the cup and promotion.'),
       ),
       _OnboardingSlide(

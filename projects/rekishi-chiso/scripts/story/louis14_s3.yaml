@@ -1,0 +1,114 @@
+# 物語完結型ショート ルイ14世 s3（2026-11-13）。本編 scripts/louis14-story.yaml（11/15 19:00 公開予定、https://youtu.be/FqHUnnLL6JM）から。11/16 に予約。
+# 形式は cleopatra_s2.yaml・kaishu_s3.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/ルイ14世_facts_20261112.yaml）と本編の # fact: だけ。
+# 絵：本編の AI 絵（V04・V05・V09・V16、サムネ thumb/lever.png）の再利用と、新しく作った shorts/N1〜N5（Gemini、人物は後ろ姿か手元）・実在の絵（リゴー・パテル）。本編で代用だった V01〜V03・V08・V13〜V15 は使わない。
+title: "ルイ14世｜体調の悪い日の記録"
+yt_title: "ルイ14世の1710年8月9日　医師ファゴンが書いた、体調の悪い日の1日"
+description: |-
+  王の医師たちは、1647年から1711年まで、ヴァロ、ダカン、ファゴンと代わりながら、王の体の様子を日誌に書き続けました。1862年に、ル・ロワがこれを1冊の本にしています。
+  その中の、1710年8月9日、土曜。ファゴンは、体調の悪かったこの日の王を細かく記しています。ミサの前に用便。ミサ、会議。会議を出ると大量の排便があり、そのまま食卓へ。汗が止まらず食欲がなく、ポタージュは食べずに、卵2個と桃だけ。食卓を離れると吐き気がして、汗を拭き、下着を替えて、軍の大臣と執務。そのあと、マントノン夫人の部屋へ行き、20時と22時にまた用便。それから就寝しました。
+  「王は生涯で2,000回、浣腸された」という数字は、この日誌のどこにも出てきません。日誌には、ほかにどんな日が残っているのか。本編は概要欄のリンクからどうぞ。
+  https://youtu.be/FqHUnnLL6JM
+hashtags:
+- "#ルイ14世"
+- "#ヴェルサイユ宮殿"
+- "#世界史"
+ai_images: true
+ai_disclosure: "この動画の室内・宮殿の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/louis14
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: louis14_story_s3
+header:
+  tag: "王の医師の日誌"
+  title: "医師が書いた、王の《体調の悪い日》"
+now:
+- {at: "1710年", text: "1710年8月9日　ヴェルサイユ", point: 0}
+timeline:
+- {label: "1710"}
+shots:
+  Drug:
+    kind: "ai"
+    file: "louis14/main/V09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "薬瓶の棚"
+  Books:
+    kind: "ai"
+    file: "louis14/main/V16.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "書物と灯"
+  Meal:
+    kind: "ai"
+    file: "louis14/shorts/N1.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "食卓"
+  DrugR:
+    kind: "ai"
+    file: "louis14/main/V09.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "薬瓶の棚"
+  Bed:
+    kind: "ai"
+    file: "louis14/shorts/N4.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "夜の寝室の寝台"
+  BooksL:
+    kind: "ai"
+    file: "louis14/main/V16.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "書物と灯"
+lines:
+  # fact: l14-hd-06
+- 語り: "1710年8月9日、土曜。ルイ14世は、体調が悪かった。その1日を、王の医師ファゴンが、日誌に細かく書いている。"
+  shot: Drug
+  tone: 強調
+  pause: 0.12
+  # fact: l14-hd-06
+- 語り: "ミサの前に、用便。ミサ、会議。会議から出ると、大量の排便があり、そのまま食卓へ。"
+  shot: Books
+  tone: 重い
+  pause: 0.12
+  # fact: l14-hd-06
+- 語り: "汗が止まらず、食欲がない。ポタージュは食べずに、卵2個と桃だけ。"
+  shot: Meal
+  tone: 重い
+  pause: 0.12
+  # fact: l14-hd-06
+- 語り: "食卓を離れると吐き気がして、汗を拭き、下着を替えて、軍の大臣と執務。"
+  shot: DrugR
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-hd-06
+- 語り: "そのあと、マントノン夫人の部屋へ行き、20時と22時に、また用便。それから、就寝。"
+  shot: Bed
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-hd-05
+- 語り: "この日誌は、1647年から1711年まで、ヴァロ、ダカン、ファゴンと、医師が代わりながら書き継いだ。1862年に、ル・ロワが、1冊の本にしている。"
+  shot: BooksL
+  tone: しみじみ
+  pause: 0.12
+  # fact: l14-hd-10
+- 語り: "ところが、王は生涯で2,000回、浣腸された、という数字は、この日誌のどこにも出てこない。日誌は年ごとの所見で、生涯の総数は、数えられないのだ。"
+  shot: Drug
+  tone: 重い
+  pause: 0.12
+  # 問い（本編へ）
+- 語り: "では、日誌には、ほかに、どんな日が残っているのか。"
+  shot: Books
+  tone: 疑問
+  pause: 0.15

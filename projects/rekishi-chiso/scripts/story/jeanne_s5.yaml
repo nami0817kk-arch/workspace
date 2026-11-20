@@ -1,0 +1,145 @@
+# 物語完結型ショート ジャンヌ・ダルク s5（2026-10-30）。本編 scripts/jeanne-story.yaml（11/2 19:00 公開）から。切り口：指輪の1431〜1914年の記録なし（出どころは The History Blog 1本だけ → 「ブログによれば」と明記）。
+# 形式は musashi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。処刑・火刑の描写なし（絵にも当てない）。
+# 絵は本編の AI 絵（out/story/jeanne/main/N01〜N15。人物なし）だけ。新しい絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/ジャンヌ・ダルク_facts_20261029.yaml）：jeanne-23（出どころ2つのうち、記録なしの指摘は The History Blog 2016-03-21 のみ。2016年の落札・購入者も同ブログ）。偽物とも本物とも言い切らない。
+# 理解テスト4問：
+#   ①誰の話か：ジャンヌ・ダルクの物だと言われる指輪
+#   ②いつ・どこで何が：2016年2月にタイムライン・オークションズで約41万ドルで落札、ピュイ・デュ・フーが購入。1431年の尋問でジャンヌが指輪の話をしていた
+#   ③何が問題か：ブログによれば1431年から1914年まで指輪に触れる記録がない
+#   ④どうなったか：本物とも偽物とも言い切れない（問いで閉じる）
+# 語りの字数（句読点を除く）：340
+title: ジャンヌ・ダルク｜41万ドルの指輪は、483年の記録がない
+yt_title: ジャンヌ・ダルクの指輪が41万ドルで落札　ところが483年分の記録がない
+description: |-
+  ジャンヌ・ダルクの物だと言われる指輪が、2016年に約41万ドルで落札されました。ところが、この指輪には483年分の記録がない、と指摘されています。
+  2016年2月、競売会社タイムライン・オークションズで落札され、買ったのはフランスのテーマパーク、ピュイ・デュ・フーです。1431年の裁判で、ジャンヌは「『ジェズス・マリア』の名が刻んであったと思います」と指輪の話をしていました。
+  ただし、「ヒストリー・ブログ」（2016年3月21日）は、1431年から1914年まで、この指輪に触れる記録はないと書いています。私たちが確かめられた出どころは、このブログ1つだけです。本物とも偽物とも、言い切れません。本編は概要欄のリンクからどうぞ。
+hashtags: ['#ジャンヌ・ダルク', '#世界史', '#百年戦争']
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/jeanne
+out: jeanne_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: ジャンヌ・ダルク（百年戦争のフランスの少女）
+  title: "41万ドルの指輪に、《483年》の記録がない"
+now:
+  - {at: 2016年, text: "2016年2月　競売", point: 2}
+  - {at: 1431年, text: "1431年　ルーアンの尋問", point: 0}
+  - {at: 1914年, text: "1914年", point: 1}
+timeline:
+  - {label: "1431"}
+  - {label: "1914"}
+  - {label: "2016"}
+cards:
+  - type: year                           # 記録のない年
+    from: 1431年から1914年まで
+    until: ない
+    big: 483年
+    sub: 指輪の記録なし（ブログ）
+    text_y: 0.70
+shots:
+  N14:
+    kind: ai
+    file: jeanne/main/N14.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 布の上の小さな指輪
+  N06:
+    kind: ai
+    file: jeanne/main/N06.jpg
+    focus: [0.3, 0.5]
+    move: right
+    must: 朝霧の川沿いの町と石橋
+  N02:
+    kind: ai
+    file: jeanne/main/N02.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 灯の下の白紙の羊皮紙
+  N13:
+    kind: ai
+    file: jeanne/main/N13.jpg
+    focus: [0.3, 0.6]
+    move: right
+    must: 古い薬壜の並ぶ木の棚
+  N06b:
+    kind: ai
+    file: jeanne/main/N06.jpg
+    focus: [0.72, 0.5]
+    move: left
+    zoom: 0.12
+    must: 川沿いの町と石橋
+  N13b:
+    kind: ai
+    file: jeanne/main/N13.jpg
+    focus: [0.7, 0.6]
+    move: left
+    zoom: 0.14
+    must: 薬壜の棚
+  N14b:
+    kind: ai
+    file: jeanne/main/N14.jpg
+    focus: [0.42, 0.55]
+    move: right
+    zoom: 0.2
+    must: 指輪の近く
+  N15:
+    kind: ai
+    file: jeanne/main/N15.jpg
+    focus: [0.3, 0.55]
+    move: in
+    text_y: 0.74
+    must: 夕暮れの石畳の広場
+lines:
+  # fact: jeanne-23
+  - 語り: ジャンヌの物だと言われる指輪が、約《!41万ドル》で、落札された。
+    shot: N14
+    tone: 強調
+    pause: 0.12
+  # fact: jeanne-23
+  - 語り: 2016年2月、競売にかけられた。買ったのは、フランスのテーマパーク、ピュイ・デュ・フーだ。
+    shot: N06
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-23
+  - 語り: 指輪の話は、裁判記録にもある。1431年、ジャンヌは、こう語った。「ジェズス・マリアの名が、刻んであったと思います」。
+    shot: N02
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-23
+  - 語り: ただし、「ヒストリー・ブログ」は、1431年から1914年まで、この指輪に触れる記録は、ない、と書く。
+    shot: N13
+    tone: 重い
+    pause: 0.12
+  # fact: jeanne-23
+  - 語り: 483年の空白だ。ブログによれば、オルレアン市も、ルーアンの展示館も、専門家の助言で、入札しなかった。
+    shot: N06b
+    tone: 重い
+    pause: 0.12
+  # fact: jeanne-23
+  - 語り: 私たちが確かめられた出どころは、このブログ1つだけだ。
+    shot: N13b
+    tone: しみじみ
+    pause: 0.12
+  # fact: jeanne-23
+  - 語り: 裁判記録の指輪と、競売の指輪は、同じものか。私たちには、本物とも、偽物とも、言い切れない。
+    shot: N14b
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編へ）
+  - 語り: 記録のない483年。あなたなら、この指輪に、いくら出しますか。
+    shot: N15
+    tone: 疑問
+    pause: 0.15

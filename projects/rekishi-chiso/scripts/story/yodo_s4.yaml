@@ -1,0 +1,147 @@
+# 物語完結型ショート 淀殿 s4（2026-10-29）。本編 scripts/yodo-story.yaml の第4章（最期の記録の食い違い）から。投稿しない。
+# 形式は masamune_s1.yaml を写した。想像の台詞なし。絵は本編の AI 絵（Gemini のみ）と実在の絵。
+# 女性の扱い：最期は「自ら命を絶った」まで。場面の細部・亡骸の様子は語らない。最期の行に人物の絵は当てない（蔵の外観・遠景・壊れた部屋のみ）。
+# 事実カード：yodo-04・15・31・32・34。人数は『日本史料』1893・竹越与三郎1896・山路愛山。コックスの日記の「続いての知らせ」は母は見つかり秀頼は見つからず。
+# 理解テスト4問：①誰の話か＝淀殿（茶々）と秀頼の最期 ②いつ・どこで何が＝1615年5月8日、大坂城山里丸の蔵 ③何が食い違うか＝ともに死んだ人の数（25人と侍女7人・42人・30人あまり）、コックス・パジェスの書き方 ④どうなったか＝一つには決まらないまま
+title: 淀殿｜最期の記録は、本ごとに違う
+yt_title: 淀殿と秀頼の最期は、本によって違う　山里丸の蔵・ともに死んだ人の数・コックスの日記
+description: |-
+  慶長20年、1615年の5月8日、大坂夏の陣。多くの本は、秀頼と淀殿は山里丸の蔵に入り、そこで自ら命を絶った、と書きます。
+  ともに死んだ人の数は、本によって違います。明治26年の『日本史料』は大野治長ら25人と侍女7人、明治29年の竹越与三郎の本は42人、山路愛山の『徳川家康』は30人あまりです。
+  平戸にいたイギリス商館長リチャード・コックスの日記では、最初の知らせは秀頼と母と子がそろって命を絶ったというものでしたが、続く知らせでは、母は亡くなって見つかり、秀頼の亡骸は見つからず、焼けた櫓の中で灰になったと考えられた、とあります。レオン・パジェスの本は、秀頼は町の中で倒れたらしいと書き、母の最期には触れていません。
+hashtags: ["#淀殿", "#日本史", "#戦国時代"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/yodo
+out: yodo_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 淀殿（茶々。豊臣秀頼の母）
+  title: "最期の記録は、《本ごとに違う》"
+now:
+  - {at: 1615年の5月, text: "1615年　大坂城", point: 0}
+  - {at: 5月8日, text: "5月8日　山里丸", point: 1}
+  - {at: ともに死んだ, text: "明治26年　日本史料", point: 2}
+  - {at: 平戸, text: "1615年　平戸", point: 3}
+timeline:
+  - {label: "1615"}
+  - {label: "5/8"}
+  - {label: "数"}
+  - {label: "日記"}
+cards:
+  - type: table                          # 本ごとの数（語った順に1行ずつ）
+    title: ともに死んだ人の数
+    from: 日本史料
+    until: 平戸
+    items:
+      - {at: 日本史料, text: "日本史料（1893年）　25人と侍女7人"}
+      - {at: 竹越与三郎, text: "竹越与三郎（1896年）　42人"}
+      - {at: 山路愛山, text: "山路愛山『徳川家康』　30人あまり"}
+shots:
+  Y13:
+    kind: ai
+    file: yodo/main/Y13.jpg
+    focus: [0.3, 0.5]
+    move: in
+    zoom: 0.12
+    must: 夕方、煙の上がる大坂城の天守の遠景
+  Natsu:
+    kind: real
+    image: paintings/yodo_natsunojin_byobu.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "大坂夏の陣図屏風（部分、江戸時代）"
+    must: 夏の陣の屏風絵
+  Y14:
+    kind: ai
+    file: yodo/main/Y14.jpg
+    focus: [0.62, 0.55]
+    move: in
+    zoom: 0.12
+    must: 山里丸の白壁の蔵の外観（人物なし）
+  Y14b:
+    kind: ai
+    file: yodo/main/Y14.jpg
+    focus: [0.3, 0.6]
+    move: right
+    must: 蔵の前の庭と松
+  Castle:
+    kind: real
+    image: paintings/yodo_natsunojin_castle.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "大坂夏の陣図屏風（大坂城の部分、江戸時代）"
+    must: 大坂城の屏風絵
+  Y13r:
+    kind: ai
+    file: yodo/main/Y13.jpg
+    focus: [0.7, 0.55]
+    move: right
+    must: 煙の上がる城
+  Y12:
+    kind: ai
+    file: yodo/main/Y12.jpg
+    focus: [0.65, 0.65]
+    move: in
+    zoom: 0.16
+    must: 倒れた茶箪笥と割れた茶碗（人物なし）
+  Y14q:
+    kind: ai
+    file: yodo/main/Y14.jpg
+    focus: [0.62, 0.55]
+    move: in
+    zoom: 0.2
+    must: 蔵の戸
+lines:
+  # fact: yodo-04, yodo-15
+  - 語り: 豊臣秀頼の母、淀殿の最期の記録は、本によって、食い違っている。
+    shot: Y13
+    tone: 強調
+  - 語り: 1615年の5月、大坂夏の陣で、城は燃え始めた。茶々にとって、三度目の落城だった。
+    shot: Natsu
+    tone: 重い
+    pause: 0.12
+  # fact: yodo-04
+  - 語り: 秀頼と茶々は、天守を出て、山里丸の蔵へ。多くの本は、5月8日、その蔵で自ら命を絶った、と書く。
+    shot: Y14
+    tone: 重い
+    pause: 0.12
+  # fact: yodo-15
+  - 語り: ともに死んだ人の数も違う。『日本史料』は25人と侍女7人、竹越与三郎の本は42人、山路愛山の『徳川家康』は30人あまり。
+    shot: Y14b
+    tone: しみじみ
+    pause: 0.12
+  # fact: yodo-31
+  - 語り: 平戸のイギリス商館長コックスの日記。最初の知らせは、秀頼と母と子が、そろって自ら命を絶った、というもの。
+    shot: Castle
+    tone: しみじみ
+    pause: 0.12
+  # fact: yodo-32
+  - 語り: 続く知らせでは、母は亡くなって見つかり、秀頼の亡骸は見つからず、焼けた櫓の中で灰になったと考えられた。
+    shot: Y13r
+    tone: 重い
+    pause: 0.12
+  # fact: yodo-34
+  - 語り: パジェスの本は、また違う。秀頼は町の中で倒れたらしいと書き、母の最期には触れない。
+    shot: Y12
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 誰が、何人、どこで。最期は、いまも、一つには決まらない。
+    shot: Y14
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 同じ日のことが、これほど違って伝わるのは、なぜだと、思いますか。
+    shot: Y14q
+    tone: 疑問
+    pause: 0.15

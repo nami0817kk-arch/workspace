@@ -43,7 +43,8 @@ class RotationEngine {
               !p.isInjured &&
               !p.isOnInternationalDuty &&
               !p.isLoanedOut &&
-              !p.isSuspended,
+              !p.isSuspended &&
+              !p.notRegistered,
         )
         .toList();
 

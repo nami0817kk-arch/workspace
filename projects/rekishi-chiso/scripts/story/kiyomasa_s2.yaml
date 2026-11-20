@@ -1,0 +1,158 @@
+# 物語完結型ショート 加藤清正 s2（2026-11-19）。本編 scripts/kiyomasa-story.yaml（11/24 19:00 公開予定、https://youtu.be/BQ1dWj8_eRs）から。11/25 12:30 に予約。
+# 形式は uesugi_s1〜s5・ii_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード 加藤清正_facts_20261119.yaml）。
+# 絵：本編の AI 絵（out/story/kiyomasa/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：江戸にいた11歳の息子・虎藤は、父の死の4日後・8日後に「よくなっていると聞いてうれしい」と書いた（本編 序章・第2章・第5章、kiyomasa-15・16）。
+# hook＝父の死のあとに「よくなっていてうれしい」と書いた息子（答えはこのショートの中：6月28日と7月3日の手紙）。
+# tease＝熊本の清正は、最期に遺言を残せたのか（答えは本編 第2章：『清正記』は遺言あり、『続撰清正記』は口がきけず遺言は無い、kiyomasa-17・18）。
+# 計算：虎藤（忠広）1601年生まれ→1611年 数え11。死 6/24、手紙 6/28＝4日後、7/3＝8日後（6月は小の月）。
+# 理解テスト：①加藤清正の息子、虎藤の話 ②1611年、江戸で ③父の死を知らないまま、よくなっていてうれしいと手紙を書いた ④8月24日に駿府で家康の前に出て、清正の跡を継いだ
+title: "加藤清正｜父の死を知らない息子の手紙"
+yt_title: "「父上がよくなっていると聞いてうれしい」　加藤清正の11歳の息子は、父の死の4日後にそう書いた"
+description: |-
+  1611年6月24日、加藤清正は熊本で亡くなりました。そのころ江戸には、徳川への人質として、数えで11歳の息子・虎藤がいました。
+  父の死の4日後、虎藤は母にあてて「父上が少しずつよくなっていると聞いて、うれしい」と書き、8日後にも家臣への手紙に「父上の病がよくなったと聞いて満足だ」と書いています（『大日本史料』）。8月24日、虎藤は国へ帰る途中の駿府で家康の前に出て、清正の跡を継ぎました。
+  本編では、二条城の会見から3か月足らずで、清正がなぜ急に亡くなったのかを、記録ごとに並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#加藤清正"
+- "#加藤忠広"
+- "#熊本城"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/kiyomasa
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kiyomasa_story_s2
+header:
+  tag: "加藤清正（息子の虎藤）"
+  title: "父の死を知らない、《息子の手紙》"
+now:
+- {at: "1611年", text: "1611年　江戸", point: 0}
+- {at: "6月24日", text: "1611年6月24日　熊本", point: 0}
+- {at: "6月28日", text: "1611年6月28日　江戸", point: 0}
+- {at: "7月3日", text: "1611年7月3日　江戸", point: 0}
+- {at: "8月4日", text: "1611年8月4日　駿府", point: 0}
+- {at: "8月24日", text: "1611年8月24日　駿府", point: 0}
+timeline:
+- {label: "1611"}
+shots:
+  K13_1:
+    kind: "ai"
+    file: "kiyomasa/main/K13.jpg"
+    focus: [0.6, 0.55]
+    move: "in"
+    must: "K13"
+  K13_2:
+    kind: "ai"
+    file: "kiyomasa/main/K13.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "K13"
+  K12_3:
+    kind: "ai"
+    file: "kiyomasa/main/K12.jpg"
+    focus: [0.4, 0.55]
+    move: "left"
+    must: "K12"
+  K13_4:
+    kind: "ai"
+    file: "kiyomasa/main/K13.jpg"
+    focus: [0.65, 0.5]
+    move: "left"
+    must: "K13"
+  K15_5:
+    kind: "ai"
+    file: "kiyomasa/main/K15.jpg"
+    focus: [0.45, 0.55]
+    move: "right"
+    must: "K15"
+  K13_6:
+    kind: "ai"
+    file: "kiyomasa/main/K13.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K13"
+  K01_7:
+    kind: "ai"
+    file: "kiyomasa/main/K01.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "K01"
+  K05_8:
+    kind: "ai"
+    file: "kiyomasa/main/K05.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "K05"
+  K11_9:
+    kind: "ai"
+    file: "kiyomasa/main/K11.jpg"
+    focus: [0.5, 0.45]
+    move: "left"
+    must: "K11"
+  K10_10:
+    kind: "ai"
+    file: "kiyomasa/main/K10.jpg"
+    focus: [0.4, 0.55]
+    move: "right"
+    must: "K10"
+lines:
+  # fact: kiyomasa-15
+- 語り: "加藤清正の息子は、父が死んだあとに、父上がよくなっていてうれしい、と手紙を書いていた。"
+  shot: K13_1
+  tone: 強調
+  pause: 0.12
+  # fact: kiyomasa-15
+- 語り: "1611年、清正の息子、数えで11歳の虎藤は、江戸にいた。徳川への、人質だった。"
+  shot: K13_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-17, kiyomasa-22
+- 語り: "その年の6月24日、清正は、熊本で亡くなる。数えで50歳。"
+  shot: K12_3
+  tone: 重い
+  pause: 0.12
+  # fact: kiyomasa-15
+- 語り: "4日後の、6月28日。虎藤は、母にあてて書いた。"
+  shot: K13_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-15
+- 語り: "父上が、少しずつ、よくなっていると聞いて、うれしい。上方から、医者が向かうそうです。"
+  shot: K15_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-15
+- 語り: "7月3日にも、家臣への手紙に、父上の病がよくなったと聞いて、満足だ、と書いている。父の死から、8日後だ。"
+  shot: K13_6
+  tone: 重い
+  pause: 0.12
+  # fact: kiyomasa-16
+- 語り: "8月4日。清正の跡を、この子に継がせてよいか。そう聞かれた家康は、そのまま跡を立てるように、と答えた。"
+  shot: K01_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-16
+- 語り: "8月24日。国へ帰る途中の虎藤は、駿府で、家康の前に出る。差し出したのは、金50枚と、銀100枚。"
+  shot: K05_8
+  tone: しみじみ
+  pause: 0.12
+  # fact: kiyomasa-16
+- 語り: "数えで11歳。清正の跡は、この少年に渡された。"
+  shot: K11_9
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第2章（kiyomasa-17・18）
+- 語り: "では、熊本の清正は、最期に、遺言を残せたのか。"
+  shot: K10_10
+  tone: 疑問
+  pause: 0.15

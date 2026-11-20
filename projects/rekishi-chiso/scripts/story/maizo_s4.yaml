@@ -1,0 +1,182 @@
+# 物語完結型ショート 徳川埋蔵金 s4（2026-11-05）。本編 scripts/maizo-story.yaml（11/6 12:00 公開）の第5章（浅草の堀）から。11/7 16:30 公開。
+# 形式は jingi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（願書に本人が書いたことだけ）。
+# 絵は本編の AI 絵（out/story/maizo/main/M*）と、明治初期の東京の写真（本編では使っていない。大久保利通の回の素材 paintings/okubo_syoheibashi_meiji.jpg）。
+#   M08・M12・M13・M14・M15 は使わない（s1 の頭のとおり）。M11 は夜の堀に舟と蔵の並び（奥に塔。浅草寺の五重塔に見えてよい）。
+# 切り口：明治10年、千両箱の音を聞いたという男が、10年近く黙ったあとに東京府へ出した「埋メ金引上ケ願書」。府は探すことを許したが、その先の記録は無い。
+#   本編の答え（軍艦の金）は言わない。点数（3点）は言わない。
+# 事実カード：maizo-49・50・51（東京都公文書館の解読文。本編の言い方のまま）。
+# 計算（自分で計算し直した）：明治10年＝1877年。明治元年＝1868年→1877年は9年（「10年近く」は本編どおり）。7月14日の願書→7月28日の許し（14日後。ショートには日数を入れない）。
+#   「4年前に甥に話し」は願書の時点から（1873年ごろ）。年は言わない。
+# 理解テスト4問：
+#   ①誰の話か：豊島村の島村弥三郎（明治10年に東京府へ願書を出した人）
+#   ②いつ・どこで何が：明治元年の夜、浅草の御蔵の五番・六番の堀を船で通ると、千両箱という声と箱を崩す音が聞こえた
+#   ③何をしたか：役人に口止めされ、10年近く黙っていたが、甥に話して証人を得て、1877年7月14日に引き上げを願い出た
+#   ④どうなったか：東京府は大蔵省に問い合わせて7月28日に探すことを許した。掘ったか・出たかは記録に無い
+title: 浅草の堀｜千両箱の音を聞いた男
+yt_title: 徳川埋蔵金は浅草の堀に沈んだ？　明治10年、千両箱の音を聞いた男が東京府に出した願書
+description: |-
+  明治10年（1877年）の7月14日、東京府に「埋メ金引上ケ願書」という一通の願書が出されました。
+  出したのは豊島村の島村弥三郎。明治元年の夜、浅草の御蔵の五番と六番の堀を船で通りかかると、大勢が騒がしく、千両箱という声と、箱を崩す音が聞こえた、と書いています。御蔵の役人からは誰にも話すなと固く止められ、4年前に甥に話して証人になると言われ、願い出たといいます。東京府は大蔵省に問い合わせ、7月28日に探すことを許しました。掘ったのか、何か出たのか。記録は、そこで終わっています（東京都公文書館の解読によります）。
+  では、記録で行き先まで追える幕府の金は、どこにあったのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川埋蔵金', '#浅草', '#日本史']
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/maizo
+out: maizo_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 浅草の堀の埋蔵金（明治10年の願書）
+  title: "《千両箱》の音を、聞いた男"
+now:
+  - {at: 明治10年, text: "1877年　東京府", point: 1}
+  - {at: 明治元年の夜, text: "1868年　浅草の御蔵", point: 0}
+  - {at: 東京府は, text: "1877年　東京府", point: 1}
+timeline:
+  - {label: "1868"}
+  - {label: "1877"}
+cards:
+  - type: year
+    from: 明治10年
+    until: 出したのは
+    big: 1877年
+    sub: 7月14日　東京府への願書
+    text_y: 0.70
+  - type: table
+    title: 願書のあと
+    from: 東京府は
+    until: では
+    items:
+      - {at: 東京府は, text: "大蔵省に問い合わせ"}
+      - {at: 7月28日, text: "7月28日　探すことを許す"}
+      - {at: 記録は, text: "その先の記録は無い"}
+    text_y: 0.70
+shots:
+  M11:
+    kind: ai
+    file: maizo/main/M11.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 夜の堀と蔵の並びと舟
+  Meiji:
+    kind: real
+    image: paintings/okubo_syoheibashi_meiji.jpg
+    focus: [0.35, 0.6]
+    move: right
+    credit: "《昌平橋》明治初期の写真（東京。パブリックドメイン）"
+    must: 明治初期の東京の堀と舟
+  Meijib:
+    kind: real
+    image: paintings/okubo_syoheibashi_meiji.jpg
+    focus: [0.75, 0.6]
+    move: left
+    credit: "《昌平橋》明治初期の写真（東京。パブリックドメイン）"
+    must: 明治初期の東京の人
+  M09:
+    kind: ai
+    file: maizo/main/M09.jpg
+    focus: [0.45, 0.65]
+    move: right
+    must: 霧の水面をゆく舟
+  M03:
+    kind: ai
+    file: maizo/main/M03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 暗い蔵の棚（幕府の米蔵）
+  M11b:
+    kind: ai
+    file: maizo/main/M11.jpg
+    focus: [0.3, 0.7]
+    move: left
+    zoom: 0.12
+    must: 夜の堀の舟
+  M11c:
+    kind: ai
+    file: maizo/main/M11.jpg
+    focus: [0.72, 0.55]
+    move: right
+    must: 堀沿いの灯
+  M06:
+    kind: ai
+    file: maizo/main/M06.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 村の道を歩く人（甥に話す）
+  Meijic:
+    kind: real
+    image: paintings/okubo_syoheibashi_meiji.jpg
+    focus: [0.5, 0.5]
+    move: in
+    credit: "《昌平橋》明治初期の写真（東京。パブリックドメイン）"
+    must: 明治初期の東京の橋
+  M09b:
+    kind: ai
+    file: maizo/main/M09.jpg
+    focus: [0.7, 0.5]
+    move: out
+    must: 霧の水面
+lines:
+  # fact: maizo-49, maizo-51
+  - 語り: 《!千両箱》の音を聞いた男は、10年近く、黙っていた。
+    shot: M11
+    tone: 強調
+    pause: 0.12
+  # fact: maizo-49
+  - 語り: 明治10年、1877年の7月14日。東京府の知事に、一通の願書が出された。
+    shot: Meiji
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-49, maizo-51
+  - 語り: 出したのは、豊島村の島村弥三郎。願いは、埋め金の、引き上げだった。
+    shot: Meijib
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-49
+  - 語り: 明治元年の夜、島村は、浅草の御蔵の、五番と六番の堀を、船で通りかかった。
+    shot: M09
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 浅草の御蔵は、隅田川のほとりにあった、幕府の米蔵だ。
+    shot: M03
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-49
+  - 語り: 大勢が騒がしく、千両箱、という声と、箱を崩す音が聞こえた。金が沈められたのだ、と島村は考えた。
+    shot: M11b
+    tone: 重い
+    pause: 0.15
+  # fact: maizo-51
+  - 語り: 御蔵の役人からは、誰にも話すな、と固く止められた、と島村は書いている。
+    shot: M11c
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-51
+  - 語り: 4年前に甥に話し、証人になると言われて、ようやく願い出たのだ。
+    shot: M06
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-50
+  - 語り: 東京府は、大蔵省に問い合わせ、7月28日に、探すことを許した。
+    shot: Meijic
+    tone: しみじみ
+    pause: 0.12
+  # fact: maizo-50
+  - 語り: 掘ったのか。何か出たのか。記録は、そこで終わっている。
+    shot: M09b
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: では、記録で行き先まで追える幕府の金は、どこにあったのか。
+    shot: M11
+    tone: 疑問
+    pause: 0.15

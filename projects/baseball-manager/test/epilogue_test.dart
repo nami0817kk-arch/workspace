@@ -35,12 +35,25 @@ void main() {
     expect(t, isNot(contains('ユニフォームを脱いだ')));
   });
 
+  test('プロになれなくても、優勝やライバルとの日々を添える', () {
+    final t = epilogueOf(_e(madePro: false, proYears: 0, rw: 6, rl: 2), 'ユウタ');
+    expect(t, contains('優勝'));
+    expect(t, contains('ライバル'));
+  });
+
   test('称号ごとに文が変わる', () {
     final legend = epilogueOf(_e(title: 'レジェンド'), 'ユウタ');
     final regular = epilogueOf(_e(title: 'レギュラー'), 'ユウタ');
     expect(legend, contains('語り継がれる'));
     expect(regular, contains('支えた'));
     expect(legend, isNot(regular));
+  });
+
+  test('独身の引退後の道は書かない(引退画面の「その後」と食い違わないように)', () {
+    for (final t in ['レジェンド', '一流選手', 'レギュラー']) {
+      final text = epilogueOf(_e(title: t), 'ユウタ');
+      expect(text, isNot(contains('引退後は')), reason: t);
+    }
   });
 
   test('二刀流・ライバル・結婚の一文が足される', () {

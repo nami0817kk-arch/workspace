@@ -5,10 +5,23 @@ import '../models/player.dart';
 import '../models/team.dart';
 import '../data/name_pool.dart';
 import 'training_engine.dart';
+import 'economy_scale.dart';
 
 class PlayerGenerator {
-  static final Random _rng = Random();
+  static Random _rng = Random();
   static int _idCounter = 0;
+
+  /// [seed]で決まる乱数で[body]を動かす。同じ種からは同じ選手ができる
+  /// (軽い形で保存した選手を作り直すのに使う。[PlayerStub])。
+  static T withSeed<T>(int seed, T Function() body) {
+    final saved = _rng;
+    _rng = Random(seed);
+    try {
+      return body();
+    } finally {
+      _rng = saved;
+    }
+  }
   static final RegExp _idPattern = RegExp(r'^pl(\d+)$');
 
   /// ロード直後に呼び出し、既存セーブ内の選手IDと衝突しないよう
@@ -22,6 +35,9 @@ class PlayerGenerator {
       if (n != null && n >= _idCounter) _idCounter = n + 1;
     }
   }
+
+  /// 新しい選手IDを1つ払い出す。読み込んだセーブの重複IDを振り直すときにも使う。
+  static String nextPlayerId() => 'pl${_idCounter++}';
 
   static const _gkStrong = {
     AttributeKeys.handling,
@@ -258,7 +274,7 @@ class PlayerGenerator {
   }
 
   /// 指定ポジションの選手が、現実的に無理なくこなせるようになりうる
-  /// 副ポジションの候補一覧(ポジションコンバート特訓の対象選択にも使う)。
+  /// 副ポジションの候補一覧。
   static List<Position> secondaryCandidatesFor(Position position) =>
       _secondaryCandidates[position] ?? const [];
 
@@ -280,7 +296,7 @@ class PlayerGenerator {
     int? ageOverride,
     Set<String>? avoidNames,
   }) {
-    final id = 'pl${_idCounter++}';
+    final id = nextPlayerId();
     final age = ageOverride ?? (17 + _rng.nextInt(18));
     final potential = (strengthTier + _rng.nextInt(21) - 10).clamp(40, 99);
 
@@ -319,6 +335,8 @@ class PlayerGenerator {
 
     final player = Player(
       id: id,
+      // 登録の決まりの「国内で育った選手」。6割ほどを国内育成にする。
+      homegrown: _rng.nextInt(5) < 3,
       name: NamePool.randomPlayerName(avoid: avoidNames),
       age: age,
       position: position,
@@ -333,7 +351,8 @@ class PlayerGenerator {
       // 全員同じだと補強で見るべき差にならない。
       injuryProneness: (6 + _rng.nextInt(5) + _rng.nextInt(5)).clamp(1, 20),
     );
-    player.wage = (player.marketValue / 40).round().clamp(5, 500);
+    // 週俸は市場価値から(年俸 = 2.4 × 価値^0.88 を 52 で割る)。上限は置かない。
+    player.wage = weeklyWageForValue(player.marketValue);
     player.contractYearsRemaining = 1 + _rng.nextInt(4);
     player.role = _pickRole(player);
     player.duty = _pickDuty(player);
@@ -522,7 +541,51 @@ class PlayerGenerator {
     }
   }
 
-  /// 1チーム分のスカッド構成（計23名）。
+  /// 上位のクラブのスカッド構成(計25名、GKは3人)。実在の1部のクラブは
+  /// 登録枠いっぱいの25人前後を抱える。
+  static const Map<Position, int> _largeSquadComposition = {
+    Position.gk: 3,
+    Position.dc: 4,
+    Position.dr: 2,
+    Position.dl: 2,
+    Position.wbr: 1,
+    Position.wbl: 1,
+    Position.dm: 2,
+    Position.mc: 2,
+    Position.mr: 1,
+    Position.ml: 1,
+    Position.amc: 1,
+    Position.amr: 1,
+    Position.aml: 1,
+    Position.st: 3,
+  };
+
+  /// 下位のクラブのスカッド構成(計22名)。お金が無いので少ない人数で回す。
+  static const Map<Position, int> _smallSquadComposition = {
+    Position.gk: 2,
+    Position.dc: 3,
+    Position.dr: 2,
+    Position.dl: 2,
+    Position.wbr: 1,
+    Position.wbl: 1,
+    Position.dm: 1,
+    Position.mc: 2,
+    Position.mr: 1,
+    Position.ml: 1,
+    Position.amc: 1,
+    Position.amr: 1,
+    Position.aml: 1,
+    Position.st: 3,
+  };
+
+  /// 強さに合わせたスカッド構成。強いクラブほど人数を多く抱える。
+  static Map<Position, int> compositionFor(int strengthTier) {
+    if (strengthTier >= 70) return _largeSquadComposition;
+    if (strengthTier < 50) return _smallSquadComposition;
+    return _squadComposition;
+  }
+
+  /// 中位のクラブのスカッド構成(計23名)。
   static const Map<Position, int> _squadComposition = {
     Position.gk: 2,
     Position.dc: 3,
@@ -547,7 +610,7 @@ class PlayerGenerator {
   }) {
     final players = <Player>[];
     final usedNames = <String>{};
-    _squadComposition.forEach((position, count) {
+    compositionFor(strengthTier).forEach((position, count) {
       for (int i = 0; i < count; i++) {
         final player = generate(
           position: position,
@@ -559,5 +622,33 @@ class PlayerGenerator {
       }
     });
     return Team(id: id, name: name, players: players);
+  }
+
+  /// 総合力(チームの[Team.overallRating])が[targetOverall]に近くなるよう
+  /// スカッドを作る。
+  ///
+  /// [generateSquad]の strengthTier は選手の潜在能力の目安で、出来上がる
+  /// チームの総合力はそれより1〜2割低い(若手は潜在能力まで育っていない)。
+  /// 保存しておいた総合力をそのまま strengthTier に渡すと、作り直すたびに
+  /// 弱くなる。出来上がりを見て strengthTier を合わせ込む。
+  static Team generateSquadWithOverall({
+    required String id,
+    required String name,
+    required int targetOverall,
+  }) {
+    var tier = targetOverall;
+    Team? best;
+    var bestGap = 1 << 30;
+    for (var attempt = 0; attempt < 6; attempt++) {
+      final squad = generateSquad(id: id, name: name, strengthTier: tier);
+      final gap = targetOverall - squad.overallRating;
+      if (gap.abs() < bestGap) {
+        best = squad;
+        bestGap = gap.abs();
+      }
+      if (gap.abs() <= 1) break;
+      tier = (tier + gap).clamp(15, 120);
+    }
+    return best!;
   }
 }

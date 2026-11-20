@@ -170,6 +170,677 @@ roles:
     tone_strength: 0.5
     max_intonation: 1.3
     max_speed: 1.0
+  徳川慶喜:                  # 10-14。大政奉還の上表の一節。玄野武宏（この回に秀吉・信長は出ない）
+    label: 徳川慶喜（上表の一節）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  信長想像:                  # 10-14。B（ifストーリー）の想像のセリフ。字幕は「（想像）」付き。信長（記録）と同じ声。記録のセリフと同じ節では混ぜない
+    label: 織田信長（想像）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  光秀想像:                  # 10-14。B（ifストーリー）の想像のセリフ。光秀（記録）と同じ声
+    label: 明智光秀（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀吉想像:                  # 10-14。Bの想像のセリフ。字幕は「（想像）」付き。光秀（玄野武宏）・信長（青山龍星）と別の声にするため白上虎太郎
+    label: 豊臣秀吉（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  家康想像:                  # 10-14。Bの想像のセリフ。落ち着いた別の男性の声として麒ヶ島宗麟
+    label: 徳川家康（想像）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+
+  慶喜の言葉:                # 10-15。慶喜の記録に伝わる言葉（慶喜IF の「では、打ち立つぞ」）。字幕の札は「伝わる言葉」。声は徳川慶喜（上表の一節）と同じ
+    label: 徳川慶喜（伝わる言葉）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  慶喜想像:                  # 10-15。Bの慶喜IFの想像のセリフ。徳川慶喜（記録）と同じ声の玄野武宏
+    label: 徳川慶喜（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  榎本想像:                  # 10-15。慶喜（玄野武宏）と別の声にするため白上虎太郎
+    label: 榎本武揚（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  勝想像:                    # 10-15。西郷想像（麒ヶ島宗麟）と別の声として雀松朱司
+    label: 勝海舟（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  西郷想像:                  # 10-15。勝想像（雀松朱司）と別の声として麒ヶ島宗麟
+    label: 西郷隆盛（想像）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  龍馬想像:                  # 10-15。Bの龍馬IFの想像のセリフ。龍馬（31歳）は若い声の白上虎太郎。中岡想像（青山龍星）・後藤想像（玄野武宏）・西郷想像（麒ヶ島宗麟）と同じ幕で重ならない
+    label: 坂本龍馬（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  中岡想像:                  # 10-15。第1幕の龍馬（白上虎太郎）と別の声として青山龍星
+    label: 中岡慎太郎（想像）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  後藤想像:                  # 10-15。第2幕の龍馬（白上虎太郎）と別の声として玄野武宏
+    label: 後藤象二郎（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  岩倉の言葉:                # 10-15。龍馬の死を嘆いた岩倉具視の言葉（伝わる記録）。想像の節には置かない。声は雀松朱司
+    label: 岩倉具視（伝わる言葉）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  忠勝想像:                  # 10-17。Bの三方ヶ原IFの想像のセリフ（第1幕）。本多忠勝（数え25歳）は未使用の男声 黒沢冴白。同じ幕の忠次想像（離途）と重ならない
+    label: 本多忠勝（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  忠次想像:                  # 10-17。酒井忠次（数え46歳）は未使用の男声 離途。第1幕は忠勝想像（黒沢冴白）・第2幕は信康想像（満別花丸）・第3幕は信長想像（青山龍星）と重ならない
+    label: 酒井忠次（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  信康想像:                  # 10-17。松平信康（数え14歳）は少年の声 満別花丸（ボーイ）。第2幕の忠次想像（離途）と重ならない
+    label: 松平信康（想像）
+    name: 満別花丸
+    style_id: 73
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  勝頼想像:                  # 10-17。Bの長篠IFの想像のセリフ（第1・4幕）。武田勝頼（数え30歳）は玄野武宏。同じ幕の馬場想像（雀松朱司）と重ならない
+    label: 武田勝頼（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  馬場想像:                  # 10-17。Bの長篠IFの想像のセリフ（第1・4幕）。馬場信春は落ち着いた年配の声として雀松朱司。勝頼想像（玄野武宏）と重ならない
+    label: 馬場信春（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  奥平想像:                  # 10-17。Bの長篠IFの想像のセリフ（第3幕）。奥平信昌は白上虎太郎。同じ幕の家康想像（麒ヶ島宗麟）と重ならない
+    label: 奥平信昌（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  三成想像:                  # 10-17。Bの朝鮮出兵IFの想像のセリフ（第1幕）。石田三成は雀松朱司。同じ幕の秀吉想像（白上虎太郎）と重ならない
+    label: 石田三成（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  清正想像:                  # 10-17。第2幕。加藤清正は黒沢冴白。同じ幕の行長想像（離途）と重ならない
+    label: 加藤清正（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  行長想像:                  # 10-17。第2幕。小西行長は離途。同じ幕の清正想像（黒沢冴白）と重ならない
+    label: 小西行長（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+
+  直政想像:                  # 10-17。Bの関ヶ原IFの想像のセリフ（第1幕）。井伊直政（数え40歳）は黒沢冴白。同じ幕の家康想像（麒ヶ島宗麟）と重ならない（別の回の忠勝想像と同じ声。回が違えば可）
+    label: 井伊直政（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  三成想像:                  # 10-17。Bの関ヶ原IFの想像のセリフ（第2幕）。石田三成は玄野武宏。同じ幕の秀秋想像（白上虎太郎）と重ならない
+    label: 石田三成（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀秋想像:                  # 10-17。Bの関ヶ原IFの想像のセリフ（第2幕）。小早川秀秋（数え19歳）は若い声の白上虎太郎
+    label: 小早川秀秋（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  輝元想像:                  # 10-17。Bの関ヶ原IFの想像のセリフ（第3幕）。毛利輝元は離途。同じ幕の広家想像（雀松朱司）と重ならない
+    label: 毛利輝元（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ナポレオン想像:            # 10-22。Bのワーテルロー IF の想像のセリフ（第1幕）。ナポレオン（満45歳）は玄野武宏（手紙の一文のナポレオンと同じ声）。同じ幕のネイ想像（黒沢冴白）と重ならない
+    label: ナポレオン（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ネイ想像:                  # 10-22。ワーテルロー IF 第1幕。ネイ元帥は黒沢冴白。ナポレオン想像（玄野武宏）と重ならない
+    label: ネイ元帥（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ウェリントン想像:          # 10-22。ワーテルロー IF 第2幕。ウェリントンは落ち着いた声の麒ヶ島宗麟。ブリュッヘル想像（雀松朱司）と重ならない
+    label: ウェリントン公（想像）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ブリュッヘル想像:          # 10-22。ワーテルロー IF 第2幕。ブリュッヘル（72歳）は年配の声として雀松朱司。ウェリントン想像（麒ヶ島宗麟）と重ならない
+    label: ブリュッヘル（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  アレクサンドル想像:        # 10-22。ワーテルロー IF 第3幕。アレクサンドル1世は白上虎太郎。メッテルニヒ想像（離途）と重ならない
+    label: アレクサンドル1世（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  メッテルニヒ想像:          # 10-22。ワーテルロー IF 第3幕。メッテルニヒは離途。アレクサンドル想像（白上虎太郎）と重ならない
+    label: メッテルニヒ（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  広家想像:                  # 10-17。Bの関ヶ原IFの想像のセリフ（第3幕）。吉川広家は雀松朱司
+    label: 吉川広家（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+
+  千姫想像:                  # 10-22。Bの秀頼IFの想像のセリフ（第1幕）。千姫（数え19歳）は落ち着いた若い女性の声として冥鳴ひまり。同じ幕の秀忠想像（青山龍星）と重ならない
+    label: 千姫（想像）
+    name: 冥鳴ひまり
+    style_id: 14
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀忠想像:                  # 10-22。Bの秀頼IFの想像のセリフ（第1幕）。徳川秀忠（数え37歳）は低めの男性の声 青山龍星。千姫想像（冥鳴ひまり）と重ならない
+    label: 徳川秀忠（想像）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀頼想像:                  # 10-22。Bの秀頼IFの想像のセリフ（第2幕）。豊臣秀頼（数え23歳）は若い声の白上虎太郎。同じ幕の家康想像（麒ヶ島宗麟）と重ならない
+    label: 豊臣秀頼（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  義元想像:                  # 10-22。Bの桶狭間IFの想像のセリフ（第1・4幕）。今川義元（数え42歳）は落ち着いた声の麒ヶ島宗麟。第1幕の朝比奈想像（雀松朱司）・第4幕の氏真想像（玄野武宏）と重ならない
+    label: 今川義元（想像）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  朝比奈想像:                # 10-22。桶狭間IF第1幕。朝比奈泰朝は雀松朱司。義元想像（麒ヶ島宗麟）と重ならない
+    label: 朝比奈泰朝（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  柴田想像:                  # 10-22。桶狭間IF第2幕。柴田勝家は黒沢冴白。同じ幕の信長想像（青山龍星）と重ならない
+    label: 柴田勝家（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  元康想像:                  # 10-22。桶狭間IF第3幕。松平元康（数え19歳）は若い声の白上虎太郎。同じ幕の忠次想像（離途）と重ならない
+    label: 松平元康（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 1.0
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.05
+  氏真想像:                  # 10-22。桶狭間IF第4幕。今川氏真（数え23歳）は玄野武宏。同じ幕の義元想像（麒ヶ島宗麟）と重ならない
+    label: 今川氏真（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+
+  桐野想像:                  # 10-22。Bの西郷IFの想像のセリフ（第1幕）。桐野利秋は玄野武宏。同じ幕の西郷想像（麒ヶ島宗麟）と重ならない
+    label: 桐野利秋（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  山県想像:                  # 10-22。Bの西郷IFの想像のセリフ（第2幕）。山県有朋は雀松朱司。同じ幕の参謀想像（離途）と重ならない
+    label: 山県有朋（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  参謀想像:                  # 10-22。第2幕。名の分からない政府軍の参謀の役。離途
+    label: 政府軍の参謀（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  池上想像:                  # 10-22。第3幕。池上四郎（薩軍の参謀）は黒沢冴白。同じ幕の西郷想像（麒ヶ島宗麟）と重ならない
+    label: 池上四郎（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  お市想像:                  # 10-24。物語型の本編（oichi-story）の想像の台詞。お市（記録の言葉）と同じ冥鳴ひまり。字幕の名札は「（想像）」付き
+    label: お市の方（想像）
+    name: 冥鳴ひまり
+    style_id: 14
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  勝家想像:                  # 10-24。oichi-story の想像の台詞。勝家（記録の言葉・辞世）と同じ玄野武宏（桶狭間IFの柴田想像＝黒沢冴白とは別の回）
+    label: 柴田勝家（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  長政想像:                  # 10-24。oichi-story の想像の台詞。浅井長政（数え29歳）は若い声の白上虎太郎。この回の勝家（玄野武宏）と別の声
+    label: 浅井長政（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  江想像:                    # 10-24。oichi-story の想像の台詞。江（数え43歳）は落ち着いた大人の女性の声 東北イタコ。この回のお市（冥鳴ひまり）と別の声
+    label: 江（想像）
+    name: 東北イタコ
+    style_id: 109
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  数正想像:                  # 10-26。kazumasa-story の想像の台詞。数正（出奔のとき50代）は落ち着いた年配の声 雀松朱司
+    label: 石川数正（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  家康:                      # 10-26。kazumasa-story の記録の言葉（天正13年11月28日付 北条氏規あて書状の一節）。家康想像と同じ麒ヶ島宗麟
+    label: 徳川家康（書状の一節）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  旭想像:                    # 10-26。asahi-story の想像の台詞。旭（嫁いだとき数え44歳）は落ち着いた女性の声 冥鳴ひまり（お市の回と同じ声。回が違えば可）
+    label: 旭（想像）
+    name: 冥鳴ひまり
+    style_id: 14
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  大政所想像:                # 10-26。asahi-story の想像の台詞。大政所（秀吉と旭の母）は大人の女性の声 東北イタコ。同じ回の旭（冥鳴ひまり）と別の声
+    label: 大政所（想像）
+    name: 東北イタコ
+    style_id: 109
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀吉書状:                  # 10-26。asahi-story の記録の言葉（天正14年5月24日付の朱印状・9月の書状の一節）。秀吉（記録）と同じ玄野武宏
+    label: 豊臣秀吉（書状の一節）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  利休想像:                  # 10-28。rikyu-story の想像の台詞。利休（数え70歳）は年配の落ち着いた男性の声 雀松朱司（秀吉書状の玄野武宏と別の声）
+    label: 千利休（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  秀次想像:                  # 10-28。hidetsugu-story の想像の台詞。秀次（数え28、32の説も）は若い男性の声 白上虎太郎（同じ回に他の人物の声は無い）
+    label: 豊臣秀次（想像）
+    name: 白上虎太郎
+    style_id: 12
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  和宮想像:                  # 10-28。kazunomiya-story の想像の台詞。和宮（15〜31歳）は落ち着いた女性の声 冥鳴ひまり（お市・旭と同じ声。回が違えば可。同じ回に他の人物の声は無い）
+    label: 和宮（想像）
+    name: 冥鳴ひまり
+    style_id: 14
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  政宗想像:                  # 10-28。masamune-story の想像の台詞。政宗（若いころ〜晩年）は落ち着いた男性の声 麒ヶ島宗麟（同じ回の陽徳院想像＝東北イタコと別の声）
+    label: 伊達政宗（想像）
+    name: 麒ヶ島宗麟
+    style_id: 53
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  陽徳院想像:                # 10-28。masamune-story の想像の台詞。陽徳院（愛姫、政宗の正室）は大人の女性の声 東北イタコ
+    label: 陽徳院・愛姫（想像）
+    name: 東北イタコ
+    style_id: 109
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  淀殿想像:                  # 10-29。yodo-story の想像の台詞。淀殿（茶々、少女〜40代）は、まだ使っていない落ち着いた大人の女性の声 No.7（ノーマル）。同じ回に他の人物の声は無い
+    label: 淀殿・茶々（想像）
+    name: No.7
+    style_id: 29
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  土方想像:                  # 10-29。hijikata-story の想像の台詞。土方歳三（20代〜数え35歳）は、まだ使っていない落ち着いた男性の声 栗田まろん（同じ回に他の人物の声は無い）
+    label: 土方歳三（想像）
+    name: 栗田まろん
+    style_id: 67
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  高杉想像:                  # 10-29。takasugi-story の想像の台詞。高杉晋作（23〜27歳）は若い男性の声 玄野武宏（慶喜想像と同じ声。別の回なので重ならない）。同じ回に他の人物の声は無い
+    label: 高杉晋作（想像）
+    name: 玄野武宏
+    style_id: 11
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  武蔵想像:                  # 10-29。musashi-story の想像の台詞。宮本武蔵（晩年の熊本・59〜62歳ごろ）は落ち着いた年配の男性の声 青山龍星（中岡想像・秀忠想像と同じ声。別の回なので重ならない）。同じ回に他の人物の声は無い
+    label: 宮本武蔵（想像）
+    name: 青山龍星
+    style_id: 13
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  曹操想像:                  # 10-29。sosou-story の想像の台詞（2か所・気持ちの言葉だけ）。曹操（遺令を残した66歳）は落ち着いた年配の男性の声 雀松朱司（勝想像・三成想像と同じ声。別の回なので重ならない）。同じ回に他の人物の声は無い
+    label: 曹操（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  ジャンヌ想像:              # 10-29。jeanne-story の想像の台詞（墓地の朝・気持ちだけ）。ジャンヌ（およそ19歳）は若い女性の声 中部つるぎ（まだ使っていない声。同じ回のイザベル想像＝東北ずん子と別の声）
+    label: ジャンヌ（想像）
+    name: 中部つるぎ
+    style_id: 94
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  イザベル想像:              # 10-29。jeanne-story の想像の台詞（1455年のノートルダム・気持ちだけ）。ジャンヌの母イザベル（老いた母）は落ち着いた大人の女性の声 東北ずん子（まだ使っていない声）
+    label: イザベル（想像）
+    name: 東北ずん子
+    style_id: 107
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+
+  頼朝想像:                  # 10-29。yoritomo-story の想像の台詞（愚管抄に同じ趣旨がある・気持ちだけ）。頼朝（亡くなる前年・数え52歳）は落ち着いた男性の声 黒沢冴白（10-17 の清正想像と同じ声。別の回なので重ならない。直近の本編の武蔵・曹操・土方・高杉とも別の声）
+    label: 源頼朝（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  重成想像:                  # 10-29。yoritomo-story の想像の台詞（駿馬で急いだ・気持ちだけ）。稲毛重成は別の男性の声 離途（10-17 の行長想像と同じ声。別の回なので重ならない）。同じ回の頼朝想像（黒沢冴白）と別の声
+    label: 稲毛重成（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  百姓想像:                  # 10-30。shimabara-story の想像の台詞（年貢に苦しむ島原の百姓・気持ちだけ）。落ち着いた男性の声 栗田まろん（土方想像と同じ声。別の回なので重ならない）。同じ回の商館長想像（黒沢冴白）と別の声
+    label: 島原の百姓（想像）
+    name: 栗田まろん
+    style_id: 67
+    speed: 0.92
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  商館長想像:                # 10-30。shimabara-story の想像の台詞（砲撃を求められた平戸のオランダ人・気持ちだけ）。落ち着いた男性の声 黒沢冴白（頼朝想像と同じ声。別の回なので重ならない）
+    label: 平戸のオランダ商館の人（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  御家人想像:                # 10-30。genkou-if-story の想像の台詞（博多湾の防塁を守る九州の御家人・気持ちだけ）。落ち着いた男性の声 黒沢冴白（頼朝想像・商館長想像と同じ声。別の回なので重ならない）。同じ回の季長想像（雀松朱司）・時宗想像（離途）と別の声
+    label: 博多湾の御家人（想像）
+    name: 黒沢冴白
+    style_id: 100
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  季長想像:                  # 10-30。genkou-if-story の想像の台詞（恩賞を求めた竹崎季長・気持ちだけ）。雀松朱司（勝想像・広家想像と同じ声。別の回なので重ならない）
+    label: 竹崎季長（想像）
+    name: 雀松朱司
+    style_id: 52
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
+  時宗想像:                  # 10-30。genkou-if-story の想像の台詞（使者を斬った北条時宗・気持ちだけ）。離途（重成想像と同じ声。別の回なので重ならない）
+    label: 北条時宗（想像）
+    name: 離途
+    style_id: 99
+    speed: 0.95
+    intonation: 1.0
+    tone_strength: 0.5
+    max_intonation: 1.3
+    max_speed: 1.0
 
 character_credits:
   - "立ち絵：春日部つむぎ公式立ち絵素材（春日部つくし）"

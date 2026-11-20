@@ -26,7 +26,7 @@ SeasonRecord _rec(
 void main() {
   group('目標の文面と判定', () {
     test('各種類の文面', () {
-      expect(Goal(GoalKind.rounds, 3).text, '夏の大会で3勝以上');
+      expect(Goal(GoalKind.rounds, 3).text, '今年の大会で3勝以上');
       expect(Goal(GoalKind.rank, 2).text, '2位以内');
       expect(Goal(GoalKind.battingAverage, 0.28).text, '打率.280以上');
       expect(Goal(GoalKind.homeRuns, 25).text, '本塁打25本以上');

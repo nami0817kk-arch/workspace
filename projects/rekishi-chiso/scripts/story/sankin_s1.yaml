@@ -1,0 +1,142 @@
+# 物語完結型ショート 参勤交代 s1（2026-10-31）。本編 scripts/sankin-story.yaml（11/4 19:00 公開、https://youtu.be/cZ1q-xRuDHc）の序章・第5章から。11/5 9:30 公開。
+# 形式は genkou_if_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。絵は本編の AI 絵（out/story/sankin/main/P01〜P09。人物なし）と本編で使った浮世絵だけ。新しい絵は作らない。
+# 切り口：参勤を命じた条文そのものに「供を減らせ」（寛永12年）。人数の食い違い（s2）・大井川（s3）・宿場（s4）・終わり（s5）には踏み込まない。
+# 事実カード（dev/output/rekishi-chiso/research/参勤交代_facts_20261031.yaml）：sankin-01・06・19・20。言い方は本編のまま。
+#   ・1635年＝寛永12年、1634年は「その前の年」、1721年＝享保6年、1842年＝天保13年は計算し直して合う。「230年近く」は1635→文久2年（1862）の緩和で227年（本編まとめの言い方）。
+#   ・細川忠利の願い出は小林明さん（nippon.com）の記述だけ（本編も出どころ付き）→「と小林明さんは書いている」。仙台藩の1577人は「といわれる」。
+# 理解テスト4問：
+#   ①誰の話か：江戸幕府と大名（参勤交代を命じた武家諸法度の条文）
+#   ②いつ・どこで何が：1635年（寛永12年）の武家諸法度が、毎年4月の参勤を命じ、同じ条で供を減らせと書いた
+#   ③何が起きたか：前年に細川忠利が削減を願い出ていた。1721年にも人数の目安。それでも仙台藩は1842年に1577人
+#   ④どうなったか：「減らせ」と書かれた旅は230年近く続いた → 幕府はなぜ命じたのか（本編へ）
+title: 参勤交代｜命じた条文に、「お供を減らせ」
+yt_title: 参勤交代を命じた条文には「お供を減らせ」と書かれていた　寛永12年の武家諸法度
+description: |-
+  参勤交代を命じた法令の、同じ条文に、「お供を減らしなさい」と書かれています。
+  1635年、寛永12年の武家諸法度。大名は、毎年4月に参勤せよ。その続きに、供の人数が近ごろとても多い、国や郡の費用で、人々の苦労でもある、これからは身分に応じて減らすように、とあります。その前の年には、熊本の細川忠利が従者の削減を願い出ていた、と小林明さんは書いています。1721年にも人数の目安が出ました。それでも、仙台藩の行列は、1842年に1577人に及んだといわれます。
+  幕府は、なぜ、毎年の往復を命じたのか。この問いを掘り下げた本編は、概要欄のリンクからどうぞ。
+hashtags: ['#参勤交代', '#日本史', '#江戸時代']
+ai_images: true
+ai_disclosure: この動画の風景・室内の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/sankin
+out: sankin_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 参勤交代（江戸幕府が大名に命じた制度）
+  title: "命じた条文に、「お供を《減らせ》」"
+now:
+  - {at: 1635年, text: "1635年　武家諸法度", point: 0}
+  - {at: 1634年, text: "1634年　細川忠利", point: 0}
+  - {at: 1721年, text: "1721年　人数の目安", point: 1}
+  - {at: 1842年, text: "1842年　仙台藩の行列", point: 2}
+timeline:
+  - {label: "1635"}
+  - {label: "1721"}
+  - {label: "1842"}
+shots:
+  Kasu:
+    kind: real
+    image: paintings/sankin_kasumigaseki_hiroshige2_1863.jpg
+    crop: [0.3, 0.35, 0.75, 1.0]
+    focus: [0.5, 0.5]
+    move: in
+    credit: "江戸霞ヶ関の大名行列（二代歌川広重、1863年。LACMA 所蔵、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 大名屋敷の前を進む行列
+  P06:
+    kind: ai
+    file: sankin/main/P06.jpg
+    focus: [0.45, 0.6]
+    move: in
+    must: 灯の下の帳面と算盤の机
+  P05:
+    kind: ai
+    file: sankin/main/P05.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 旅籠の座敷
+  P04:
+    kind: ai
+    file: sankin/main/P04.jpg
+    focus: [0.35, 0.5]
+    move: left
+    must: 江戸の武家屋敷の白壁と門
+  P06b:
+    kind: ai
+    file: sankin/main/P06.jpg
+    focus: [0.7, 0.6]
+    move: left
+    must: 机の上の帳面と筆
+  Satta:
+    kind: real
+    image: paintings/sankin_satta_sadahide_1862.jpg
+    crop: [0.0, 0.45, 0.55, 1.0]
+    focus: [0.5, 0.8]
+    move: right
+    credit: "東海道中 薩埵峠の大名行列（歌川貞秀、1862年。メトロポリタン美術館所蔵、ウィキメディア・コモンズ、CC0）"
+    must: 峠の道を埋める長い行列
+  P01:
+    kind: ai
+    file: sankin/main/P01.jpg
+    focus: [0.6, 0.5]
+    move: in
+    must: 松並木の朝の街道
+  Kasu2:
+    kind: real
+    image: paintings/sankin_kasumigaseki_hiroshige2_1863.jpg
+    crop: [0.0, 0.3, 0.45, 1.0]
+    focus: [0.5, 0.5]
+    move: left
+    credit: "江戸霞ヶ関の大名行列（二代歌川広重、1863年。LACMA 所蔵、ウィキメディア・コモンズ、パブリックドメイン）"
+    must: 江戸の屋敷町の行列
+lines:
+  # fact: sankin-01
+  - 語り: 参勤交代を命じた法令の、同じ条文に、こう書かれている。お供を、《!減らしなさい》。
+    shot: Kasu
+    tone: 強調
+    pause: 0.12
+  # fact: sankin-01, sankin-06
+  - 語り: 1635年、寛永12年の武家諸法度。大名は、毎年4月に、参勤せよ。
+    shot: P06
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-01
+  - 語り: その続きは、こうだ。供の人数が、近ごろ、とても多い。国や郡の費用で、人々の苦労でもある。
+    shot: P05
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-01
+  - 語り: これからは、身分に応じて、減らすように。
+    shot: P04
+    tone: 重い
+    pause: 0.12
+  # fact: sankin-20
+  - 語り: その前年、1634年には、熊本の細川忠利が、従者の削減を願い出ていた、と小林明さんは書いている。
+    shot: P06b
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-19
+  - 語り: 1721年、享保6年にも、幕府は、行列の人数の目安を出した。
+    shot: Satta
+    tone: しみじみ
+    pause: 0.12
+  # fact: sankin-20
+  - 語り: それでも、仙台藩の行列は、1842年に、総勢1577人に及んだ、といわれる。
+    shot: P01
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: （本編のまとめ。1635→1862年で227年）
+  - 語り: 「減らせ」と書かれた旅は、230年近く、続いた。幕府は、なぜ、毎年の往復を命じたのか。
+    shot: Kasu2
+    tone: 疑問
+    pause: 0.15

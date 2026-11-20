@@ -1,0 +1,319 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：石川数正（scripts/kazumasa-story.yaml）。chiso/storymain.py が読む。
+# 10-26 作成。台本には手を入れない（承認・reading-ok 済み。変えると控えが外れる）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針（ユーザー「絵はそんなにいらない」「絵の量は減らして」）：AI 絵は 17 枚（K01〜K17、20 枚まで）。同じ絵を時間をずらして使い回す
+#   （続けて 20 秒まで）。人物は表情のある全面の AI 絵が主役。実在の絵（パブリックドメイン）は額（frame:）と屏風・絵図の一部（part:）。
+# AI 絵の指示の一覧（英語・顔立ちの設定）：dev/output/rekishi-chiso/research/kazumasa_ai_images.md
+# 届く前は art_dir の仮の絵（K01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に K01.jpg〜を置くだけ。
+script: scripts/kazumasa-story.yaml
+out: kazumasa_story_main
+art_dir: out/story/kazumasa/ph          # 仮の絵（placeholder）
+main_art_dir: out/story/kazumasa/main   # Gemini の 16:9 の絵（K01.jpg〜K17.jpg）
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本は和暦を主に書くので札も和暦（出奔は「天正13年11月13日」、西暦の年は付けない）。
+# dates＝語りがその年・月日を言った行から替える（研究・論文の年は物語の「いま」ではないので替えない）
+chapters:
+  0: {label: 序章 なぜ秀吉のもとへ走ったのか, now: 天正13年11月,
+      dates: {14: 天正12年}}
+  1: {label: 第1章 人質と取次, now: 天正12年,
+      dates: {17: 天正12年12月, 30: 天正13年夏, 35: 天正13年秋}}
+  2: {label: 第2章 2週間の急転, now: 2023年,
+      dates: {37: 天正13年10月14日, 44: 天正13年10月17日, 48: 天正13年10月28日, 56: 天正13年11月}}
+  3: {label: 第3章 出奔の夜, now: 天正13年11月13日,
+      dates: {66: 天正13年11月28日}}
+  4: {label: 第4章 裏切りか、スパイか, now: null}
+  5: {label: 第5章 16日後の大地震, now: 天正13年11月,
+      dates: {92: 天正13年11月29日, 114: 天正14年}}
+  6: {label: 第6章 数正の家はどこへ, now: 天正13年〜,
+      dates: {120: 天正18年, 123: 文禄元年, 127: 1596年, 134: 慶長5年, 137: 慶長18年（1613年）, 144: 1971年, 146: 1973年〜, 150: 2025年}}
+# 概要欄「■ 参考にした資料」（事実カード 石川数正_facts_20261026.yaml のうち本文を開いた主なもの。10-26）
+references:
+  - 徳川家康書状（北条氏規宛、天正13年11月28日付・高岡市立博物館蔵）文化遺産オンライン　https://online.bunka.go.jp/heritages/detail/604149
+  - 菅原義勝「新出の織田信雄書状にみる石川数正出奔」『日本歴史』917号（2024）　https://cir.nii.ac.jp/crid/1520020242776812160
+  - 昼間たかし「家康に40年近く仕えたのに秀吉へ出奔…」プレジデントオンライン（2026、菅原2024の紹介）　https://president.jp/articles/-/120258
+  - 松本市『国宝松本城天守創建年代調査報告書（概要版）』（2025）　https://www.city.matsumoto.nagano.jp/uploaded/attachment/119628.pdf
+  - 文化庁 国指定文化財等データベース「松本城」　https://kunishitei.bunka.go.jp/bsys/maindetails/401/1167
+  - 松浦律子「天正地震の震源域特定：史料情報の詳細検討による最新成果」『活断層研究』35号（2011）　https://www.jstage.jst.go.jp/article/afr/2011/35/2011_29/_article/-char/ja
+  - 松浦律子「天正地震に関する欧州史料の素性と確実な内容」『地震 第2輯』65巻1号（2012）　https://doi.org/10.4294/zisin.65.1
+  - 小松原琢「濃尾平野西部における天正地震時の沈降に関する初歩的検討」産総研 地質調査総合センター速報 No.79（2019）　https://www.gsj.jp/data/coastal-geology/GSJ_INTERIMREP_079_2019_06.pdf
+  - 岐阜県 防災課「天正地震」　https://www.pref.gifu.lg.jp/kurashi/bosai/shizen-saigai/11115/siryou/tenshojishin.html
+  - ケンペル『日本誌』英訳（1727年、フロイスの書簡を引用）Internet Archive　https://archive.org/details/historyofjapanto01kaem
+  - 鎌田浩毅「江戸幕府の初代将軍・徳川家康は『討伐』されるはずだった…」現代ビジネス（2025）　https://gendai.media/articles/-/161145
+  - 眞邊明人「『石川数正』全てを抱え家康の下を去る53歳の決断」東洋経済オンライン（2023）　https://toyokeizai.net/articles/-/696509
+  - 本郷和人「家康の重臣・石川数正はスパイになったわけではない…」PRESIDENT WOMAN Online（2023）　https://president.jp/articles/-/73247
+  - 呉座勇一「大河ドラマ『どうする家康』解説⑥：家康はいつ秀吉に臣従したか」アゴラ（2023）　https://agora-web.jp/?p=389255
+  - 信濃毎日新聞「松本城、歴史の先人しのぶ 石川数正・康長親子の法要」（2016）　https://www.shinmai.co.jp/feature/matsumoto_castle/article/201612/14017510.html
+  - 松本市「兎川寺文書」（2025 市重要文化財）　https://www.city.matsumoto.nagano.jp/soshiki/134/182597.html
+no_tag_from: 153                     # 締め（冒頭の夜に戻る所）から札を出さない
+
+# AI 絵（16:9 横・17枚）。scene は日本語の要約（英語の指示は research/kazumasa_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下（天守・山の斜面）・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  K01: {scene: 天正13年冬の夜。丘の上の岡崎城、門から数騎が出ていく遠景（右下に小さく）, pan: h}
+  K02: {scene: 数正・胸から上。灯の下で前を見すえる（50代前半・決意と迷い）, pan: zoom, crops: {face: [1.25, 0.55, 0.40]}}
+  K03: {scene: 数正・夜の書院で書状を前に思い悩む（行灯・横から）, crops: {right: [1.15, 0.62, 0.45]}}
+  K04: {scene: 家康・書院の上座で決める厳しい顔（40代前半・胸から上）, pan: zoom, crops: {face: [1.25, 0.5, 0.40]}}
+  K05: {scene: 秀吉・金の襖の御殿に座る。笑みと鋭い目（40代後半・中くらいの引き）, crops: {face: [1.25, 0.5, 0.40]}}
+  K06: {scene: 天正12年12月。冬の城下を出る小さな行列（馬上の少年＝於義丸と、付き従う若い武士2人。後ろ姿）}
+  K07: {scene: 城門の前で、数正（右・横顔）が旅立つ息子2人（左・後ろ姿）を見送る, crops: {face: [1.25, 0.72, 0.42]}}
+  K08: {scene: 書院の対面。上座の家康（左）に、数正（右）が手をついて報告する（交渉の報告）}
+  K09: {scene: 文机の上の書状（和紙に筆の跡・読めない）と行灯（人物なし）, crops: {face: [1.25, 0.5, 0.5]}}
+  K10: {scene: 冬の夜道を行く一騎（数正・顔は見えない）、遠くに城の影、冷たい風}
+  K11: {scene: 天正13年11月29日の夜。地震で崩れる城下の家々と遠くの炎、逃げる人の影（細部は描かない）}
+  K12: {scene: 飛騨の山あいの谷。急な斜面の大きな山崩れの跡と川、曇り空（人物なし）, pan: v}
+  K13: {scene: 松本城の天守。黒い板壁と白い漆喰、堀に映る、朝霧、後ろに北アルプス（人物なし）, pan: v}
+  K14: {scene: 康長・40代。天守を見上げる（胸から上・父に似た細い目）, pan: zoom, crops: {face: [1.25, 0.45, 0.40]}}
+  K15: {scene: 康長・晩年。九州の配所の質素な部屋で、高さ30センチほどの木彫りの仏像を拝む（灯・斜め後ろから）, crops: {face: [1.25, 0.55, 0.45]}}
+  K16: {scene: 松本の寺の本堂の法要。線香の煙と灯明（人の顔は描かない）}
+  K17: {scene: 終了画面用。月夜の城跡の石垣と静かな川（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+  # 10-26 追加（信濃の広重の風景が話と合わなかった所）
+  K18: {scene: 松本城の黒門の南の武家屋敷（古山寺御殿）。冬の朝、後ろに北アルプス（人物なし）}
+  K19: {scene: 天守の内部。太い柱と梁、格子窓の細い光、木目と年輪（人物なし）, pan: v}
+  K20: {scene: 信濃の古い寺の境内の奥。苔むした石の供養塔2基と杉木立（人物なし）}
+
+# 台本に出てこない実在の絵の出典（左下の小さな字・概要欄）
+credits:
+  paintings/mikata_sakai_tadatsugu_portrait.jpg: 酒井忠次像（江戸時代）
+  paintings/kira_okazaki_hiroshige.jpg: 歌川広重《東海道五十三次 岡崎 矢作之橋》1833〜34年ごろ
+
+# 実在の絵の手当て（元の画像は変えない）
+paint_fx:
+  paintings/mikata_ishikawa_kazumasa_portrait.jpg: {bright: 1.12, contrast: 1.1}
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜14）：夜の岡崎城 → 15日後の家康の手紙 → 数正 → 秀吉 → ずれ（取次・息子も大坂）→ なぜ → かけら → 予告 → 約束 → 橋渡し
+  - 0 ai:K01 wide
+  - 1 ai:K09 wide
+  - 2 frame:paintings/mikata_ishikawa_kazumasa_portrait.jpg
+  - 3 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 4 ai:K08 wide
+  - 5 ai:K06 wide
+  - 6 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 7 ai:K02 face
+  - 8 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 9 ai:K09 left
+  - 10 ai:K03 wide
+  - 11 ai:K11 wide
+  - 12 ai:K13 wide
+  - 13 ai:K01 right                    # 覚えてほしい名前（13〜14）の下地
+  - 14 ai:K06 left
+  # 第1章（15〜35）
+  - 15 part:paintings/hidenaga_komaki_nagakute_screen.jpg
+  - 16 ai:K07 wide
+  - 17 frame:paintings/mikata_yuki_hideyasu_portrait.jpg
+  - 18 ai:K06 wide
+  - 19 ai:K08 wide                     # 関係図（家康—数正—秀吉）19〜20
+  - 21 ai:K02 wide
+  - 23 ai:K08 left
+  - 24 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 25 ai:K07 right
+  - 26 ai:K07 face                     # 【想像】康長、康勝。……体を、いとえよ
+  - 27 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 28 frame:paintings/mikata_ishikawa_kazumasa_portrait.jpg
+  - 29 frame:paintings/mikata_sakai_tadatsugu_portrait.jpg
+  - 30 frame:paintings/hidenaga_hideyoshi_portrait_1600.jpg
+  - 31 ai:K08 right
+  - 32 ai:K05 wide
+  - 33 part:paintings/ieyasu_komaki_chikanobu_honda_kato.jpg
+  - 34 frame:paintings/sanada_shinano_suwako_hiroshige2.jpg
+  - 35 ai:K03 wide
+  # 第2章（36〜56）
+  - 36 ai:K09 wide
+  - 37 ai:K09 face
+  - 38 part:paintings/hidenaga_komaki_nagakute_screen.jpg
+  - 39 frame:paintings/ieyasu_nagakute_yasunobu.jpg
+  - 40 ai:K09 left
+  - 41 ai:K04 wide
+  - 42 ai:K09 right
+  - 43 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 44 ai:K03 wide                     # 関係図（数正—貞慶—秀吉）
+  - 45 ai:K02 face                     # 【想像】貞慶殿が、秀吉の側へ……
+  - 46 frame:paintings/sanada_shinano_suwako_hiroshige2.jpg
+  - 47 ai:K03 right
+  - 48 ai:K04 wide
+  - 49 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 50 ai:K04 face                     # 【想像】人質は、もう出さぬ
+  - 51 ai:K03 wide                     # 数直線（台本の図）51〜52
+  - 53 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 54 ai:K02 face                     # 【想像】……殿
+  - 55 ai:K08 right
+  - 56 ai:K01 wide
+  # 第3章（57〜73）
+  - 57 part:paintings/mikata_okazaki_castle_photo_2012.jpg
+  - 58 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 59 ai:K01 left                     # 地図（岡崎→大坂）59〜60
+  - 61 ai:K02 face                     # 【想像】……行くぞ
+  - 62 ai:K10 wide
+  - 64 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 65 ai:K04 face                     # 【想像】数正が……
+  - 66 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 67 ai:K09 left                     # 史料の札（家康書状）67〜68
+  - 69 frame:paintings/ieyasu_portrait_toshodaigongen.jpg
+  - 70 frame:paintings/ieyasu_takeda_shingen_kuniyoshi.jpg
+  - 71 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 72 frame:paintings/hidenaga_hideyoshi_portrait_1600.jpg
+  - 73 ai:K02 wide
+  # 第4章（74〜88）：説を並べる
+  - 74 part:paintings/mikata_okazaki_castle_ndl_41.jpg   # 辞典の表（台本の図）74〜76
+  - 77 part:paintings/ieyasu_komaki_chikanobu_honda_kato.jpg
+  - 78 ai:K03 wide
+  - 79 part:paintings/hidenaga_komaki_nagakute_screen.jpg
+  - 80 frame:paintings/mikata_ishikawa_kazumasa_portrait.jpg
+  - 81 part:paintings/mikata_okazaki_castle_photo_2012.jpg
+  - 82 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 83 ai:K05 wide
+  - 84 ai:K03 right                    # 読みの表（台本の図）
+  - 85 ai:K09 wide
+  - 86 ai:K08 wide
+  - 87 ai:K02 wide                     # くい違いの3つの箱
+  - 88 ai:K11 left
+  # 第5章（89〜117）：天正地震
+  - 89 ai:K05 wide
+  - 90 frame:paintings/hidenaga_hideyoshi_portrait_1600.jpg   # 史料の札（一柳家文書）
+  - 91 ai:K05 face                     # 【想像】正月には、家康を討つ
+  - 92 ai:K11 wide
+  - 93 part:paintings/ieyasu_okazaki_castle_ryujo_zu.jpg
+  - 94 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 95 frame:paintings/hanbei_mino_map.jpg
+  - 96 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg
+  - 97 ai:K11 wide                     # 地図（台本：大坂→大垣→岡崎、大垣に赤丸）
+  - 98 ai:K12 wide                     # 地図（被害の地点を語る順に）98〜99
+  - 100 ai:K12 wide
+  - 102 ai:K11 right
+  - 103 ai:K11 left                    # 史料の札（フロイスの書簡）
+  - 104 frame:paintings/hanbei_nagahama_map.jpg
+  - 105 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 106 frame:paintings/hanbei_nagahama_map.jpg b
+  - 107 ai:K05 wide
+  - 108 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 109 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 110 ai:K09 wide
+  - 111 ai:K11 wide                    # 地震は止めたのか（台本の表）111〜113
+  - 114 part:paintings/hideyoshi_osaka_zu_byobu.jpg
+  - 115 ai:K08 wide
+  - 116 part:paintings/hidenaga_komaki_nagakute_screen.jpg
+  - 117 ai:K02 wide
+  # 第6章（118〜157）：その後 ＋ 冒頭に戻る締め
+  - 118 ai:K02 right                   # 名乗りの表（台本の図）
+  - 119 frame:paintings/hidenaga_hideyoshi_portrait_1600.jpg
+  - 120 ai:K13 wide
+  - 121 ai:K18 wide
+  - 122 ai:K13 wide
+  - 123 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg   # 124 は没年の表（台本の図）
+  - 125 ai:K13 wide
+  - 126 ai:K19 wide
+  - 127 ai:K13 wide                    # 数直線（台本の図）127〜128
+  - 129 ai:K13 right
+  - 130 ai:K14 wide
+  - 131 ai:K13 left
+  - 132 ai:K19 wide
+  - 133 ai:K13 wide
+  - 134 part:paintings/ieyasu_sekigahara_zubyobu.jpg
+  - 135 ai:K14 face
+  - 136 ai:K14 wide                    # 姻戚の関係図（数正—康長—長安）136〜137
+  - 138 frame:paintings/ieyasu_edo_keicho_ezu_1608.jpg
+  - 139 ai:K06 right                   # あの2人の息子（序章・第1章の行列に戻る）
+  - 140 ai:K13 right
+  - 141 ai:K18 wide
+  - 142 ai:K15 wide
+  - 143 ai:K15 face
+  - 144 ai:K13 wide                     # 松本市へ寄贈（10-26 広重の諏訪湖は話と合わないので替えた）
+  - 145 ai:K15 wide
+  - 146 ai:K16 wide
+  - 147 ai:K20 wide
+  - 148 part:paintings/kira_okazaki_hiroshige.jpg
+  - 149 part:paintings/mikata_okazaki_castle_ndl_41.jpg
+  - 150 ai:K20 wide
+  - 151 frame:paintings/mikata_ishikawa_kazumasa_portrait.jpg
+  - 152 ai:K02 wide
+  - 153 ai:K01 wide                    # 締め：冒頭の夜に戻る
+  - 154 ai:K09 wide
+  - 155 ai:K02 face
+  - 156 ai:K10 wide
+  - 157 ai:K01 right
+  - end ai:K17 wide
+
+# 台本の図を前後の行に広げる（語る順に書き込む）
+figure_extend:
+  - {line: 51, from: 51, to: 52, items: [信雄の手紙, 貞慶は秀吉側, 家康の決別]}
+
+# look だけで足す図（台本には無い。語りがその名前・地点を言う 0.25 秒前に1つずつ書き込む）。spec: null はその行の台本の図を外す
+figures:
+  # 関係図①：取次。19「数正を徳川家の取次…秀吉との交渉の窓口」→ 20「秀吉の言葉を家康に伝え…」。語る順に 数正 → 秀吉 → 家康
+  - {from: 19, to: 20, spec: {type: people, title: 天正12年 取次という役目,
+      nodes: [[石川数正, 徳川の取次（交渉の窓口）], [羽柴秀吉, 交渉の相手], [徳川家康, 主君]],
+      edges: [[石川数正, 羽柴秀吉, 交渉], [徳川家康, 石川数正, 主君と重臣]]}}
+  # 関係図②：44「菅原さんが目を向けたのは、小笠原貞慶です。10月17日付けの秀吉の手紙の時点で、貞慶は、すでに秀吉と通じていました」
+  - {from: 44, to: 44, spec: {type: people, title: 天正13年10月 数正の足もと,
+      nodes: [[石川数正, 後ろ盾], [小笠原貞慶, 信濃の大名], [羽柴秀吉, 関白]],
+      edges: [[石川数正, 小笠原貞慶, 後ろ盾], [小笠原貞慶, 羽柴秀吉, 10月17日には通じていた]]}}
+  # 出奔の夜（59〜60）の地図は外した（10-26）：行き先の「大坂」は事実カードに無い（カードは「秀吉のもとへ」まで）。絵 K01 のまま
+  # 90 は史料の札（一柳家文書）を主役にするので、台本の地図を外す（地図は 97 で大垣に赤丸つきで出る）
+  - {from: 90, to: 90, spec: null}
+  # 地図：天正地震の被害（98 岡崎城・長浜城 → 99 帰雲城）。地点を語る順に赤い点を打つ（道のりの線は引かない）
+  - {from: 98, to: 99, spec: {type: map, reveal: true, title: 天正13年11月29日 天正地震のおもな被害, bounds: [135.3, 137.7, 34.55, 36.45],
+      places: [[大垣城, 136.61, 35.36], [岡崎城, 137.16, 34.95], [長浜城, 136.27, 35.38], [帰雲城, 136.90, 36.18]],
+      note: 中部から近畿の一帯}}
+  # 姻戚の関係図：136「康長は、娘を、大久保長安の長男、藤三郎に嫁がせていました」→ 137 改易。数正（父）から始める
+  - {from: 136, to: 137, spec: {type: people, title: 石川家と大久保家,
+      nodes: [[石川数正, 父], [石川康長, 数正の子・松本城主], [娘, 康長の娘], [大久保長安, 藤三郎の父], [藤三郎, 長安の長男]],
+      edges: [[石川数正, 石川康長, 親子], [石川康長, 娘, 親子], [娘, 藤三郎, 嫁ぐ], [大久保長安, 藤三郎, 親子]]}}
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる（2つ語られれば1つ目→2つ目の明かしのパン）
+# AI 絵の位置は指示の構図（research/kazumasa_ai_images.md）に合わせた。絵が届いたら位置を見て直す
+focus:
+  K01: {岡崎城|城: [1.2, 0.42, 0.35], 消え|出: [1.2, 0.68, 0.70]}
+  K06: {家康の子|於義丸|家康の次男: [1.22, 0.42, 0.55], 息子|康長|康勝: [1.22, 0.62, 0.55]}
+  K07: {息子|康長|康勝: [1.2, 0.30, 0.55], 数正: [1.2, 0.72, 0.45]}
+  K08: {家康: [1.2, 0.30, 0.45], 数正|交渉: [1.2, 0.70, 0.50]}
+  K09: {手紙: [1.25, 0.5, 0.55]}
+  K10: {城: [1.2, 0.22, 0.40]}
+  K13: {天守: [1.25, 0.5, 0.35]}
+  K15: {仏像|念持仏: [1.25, 0.70, 0.55]}
+  paintings/mikata_ishikawa_kazumasa_portrait.jpg: {数正: [1.4, 0.58, 0.52]}
+  paintings/akechi_hideyoshi_kodaiji.jpg: {秀吉: [1.6, 0.42, 0.47]}
+  paintings/mikata_yuki_hideyasu_portrait.jpg: {秀康|於義丸: [1.6, 0.5, 0.40]}
+  paintings/hanbei_nagahama_map.jpg: {長浜: [1.5, 0.5, 0.45]}
+
+# 絵の一部だけを動かす（話に合う絵だけ・控えめに。顔・人物にはかけない）
+fx:
+  K01: {lamp: {region: [0.30, 0.20, 0.60, 0.55]}}                     # 城の窓・篝火の灯
+  K03: {lamp: {region: [0.05, 0.25, 0.35, 0.80]}}                     # 行灯（左）
+  K09: {lamp: {region: [0.65, 0.10, 0.98, 0.70]}}                     # 行灯（右）
+  K10: {mist: {region: [0, 0.55, 1, 0.98], alpha: 0.14, speed: 9}}     # 地をはう冷たい風
+  K11: {fire: {region: [0.55, 0, 1, 0.65]}, sparks: {count: 40}, smoke: {region: [0.3, 0, 1, 0.5], alpha: 0.10, speed: 8}}   # 遠くの炎（右奥）
+  K12: {mist: {region: [0, 0.10, 1, 0.55], alpha: 0.12, speed: 5}}    # 谷の霧
+  K13: {mist: {region: [0, 0.62, 1, 0.92], alpha: 0.14, speed: 6}}    # 堀の朝霧
+  K15: {lamp: {region: [0.70, 0.20, 0.98, 0.75]}}                     # 灯明
+  K16: {smoke: {region: [0.35, 0.05, 0.75, 0.6], alpha: 0.12, speed: 4}, lamp: {region: [0.30, 0.40, 0.80, 0.85]}}   # 線香の煙と灯明
+  K17: {water: {region: [0.05, 0.72, 0.50, 0.98], amp: 2.0}}          # 川面の月
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: names, from: 13, to: 14, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[石川数正, 秀吉のもとへ走った重臣, paintings/mikata_ishikawa_kazumasa_portrait.jpg, [0.58, 0.55]],
+             [小笠原貞慶, 数正が後ろ盾になった大名],
+             [石川康長, 松本城の天守を建てた子, ai:K14, [0.45, 0.40]]]}
+  - {type: quote, from: 67, to: 68, label: 史料, text: 石河伯耆退出已後／爰元手置等弥堅固申付候,
+     source: 徳川家康書状（天正13年11月28日付 北条氏規あて・高岡市立博物館蔵）}
+  - {type: versus3, from: 87, to: 87, every: 1.2,
+     items: [[一つ目の見方, 裏切り者], [二つ目の見方, 主君のために], [三つ目の見方, 追い詰められた]]}
+  - {type: quote, from: 90, to: 90, label: 史料, text: 正月15日より前に大垣まで出向く／油断なく用意せよ,
+     source: 『一柳家文書』の秀吉の指図（今の言葉にしたもの）}
+  - {type: quote, from: 103, to: 103, label: 史料, text: 大地は40日のあいだ／揺れ続けた,
+     source: ルイス・フロイスの書簡（1586年10月15日付・下関。今の言葉にしたもの）}
+  # ⑤ 史料の頁＋赤枠（doc）：パブリックドメインの頁の画像が手元に無い（家康書状は高岡市立博物館蔵、フロイス書簡はケンペル『日本誌』英訳 1727 年の頁が候補）。
+  #   頁の画像を assets/paintings に置いたら、次の形で 66 か 102 に足す：
+  #   {type: doc, from: 102, to: 102, image: paintings/<頁>.jpg, box: [左, 上, 右, 下], source: …, note: 40日揺れ続けた}
+
+# 静止画（story-main を --frames なしで回したとき。簡易の描き方で、パン・部品は出ない。目で見るのは --frames の方）
+stills:
+  - {line: 0, note: 冒頭（0秒）夜の岡崎城}
+  - {line: 13, note: 序章の終わり 覚えてほしい名前}
+  - {line: 19, note: 第1章 関係図（取次）}
+  - {line: 44, chapter: true, note: 第2章の頭（章題カード）}
+  - {line: 67, note: 第3章 家康書状（記録・明朝）}
+  - {line: 98, note: 第5章 地震の被害の地図}
+  - {line: 136, note: 第6章 姻戚の関係図}
+  - {end: true, note: 終了画面の空き}

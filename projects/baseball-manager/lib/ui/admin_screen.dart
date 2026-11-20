@@ -5,6 +5,7 @@ import '../game/exp.dart';
 import '../game/game.dart';
 import '../game/player.dart';
 import '../game/talent.dart';
+import '../game/skills.dart';
 import '../game/traits.dart';
 import 'controller.dart';
 import 'labels.dart';
@@ -31,11 +32,14 @@ class AdminScreen extends StatelessWidget {
                     child: ListView(
                       padding: const EdgeInsets.all(12),
                       children: [
-                        const Text('ルール(特性は4つまで・矛盾する組は不可)を無視して書き換えます。'),
+                        const Text(
+                            'ルール(特性は$maxTraitsつまで・矛盾する組は不可、特殊能力の年齢・コツ)を無視して書き換えます。'),
                         const SizedBox(height: 8),
                         _Potential(controller: controller, game: g),
                         const SizedBox(height: 8),
                         _Traits(controller: controller, game: g),
+                        const SizedBox(height: 8),
+                        _Skills(controller: controller, game: g),
                         const SizedBox(height: 8),
                         _Coach(controller: controller, game: g),
                         const SizedBox(height: 8),
@@ -143,7 +147,7 @@ class _Coach extends StatelessWidget {
           Text('コーチ: ${coach.name}',
               style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 4),
-          Text('コツ ${coach.tips} / $tipsNeeded(満タンにするとその場で習得)',
+          Text('コツ ${coach.tips} / $tipsNeeded(満タンにすると、教える特殊能力のコツがその場で満タン)',
               style: const TextStyle(fontSize: 12)),
           Slider(
             key: const Key('admin-tips'),
@@ -155,7 +159,7 @@ class _Coach extends StatelessWidget {
             onChanged: (x) =>
                 controller.admin((g) => g.adminSetCoachTips(x.round())),
           ),
-          const Text('教える特性'),
+          const Text('教える特殊能力'),
           Wrap(spacing: 6, children: [
             ChoiceChip(
               key: const Key('admin-teach-none'),
@@ -164,7 +168,7 @@ class _Coach extends StatelessWidget {
               onSelected: (_) =>
                   controller.admin((g) => g.adminSetCoachTeaches(null)),
             ),
-            for (final t in Trait.values)
+            for (final t in Skill.values.where((k) => !k.negative))
               ChoiceChip(
                 key: Key('admin-teach-${t.name}'),
                 label: Text(t.label),
@@ -172,6 +176,66 @@ class _Coach extends StatelessWidget {
                 onSelected: (_) =>
                     controller.admin((g) => g.adminSetCoachTeaches(t)),
               ),
+          ]),
+        ]),
+      ),
+    );
+  }
+}
+
+/// 特殊能力の付け外し(弱点も)と、コツの書き換え。
+class _Skills extends StatelessWidget {
+  const _Skills({required this.controller, required this.game});
+  final GameController controller;
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    final have = game.player.skills;
+    final list = skillsFor(game.player.role);
+    final open = [
+      for (final s in list)
+        if (!have.contains(s) && !s.negative) s
+    ];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('特殊能力 (${have.length})',
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 4),
+          Wrap(spacing: 6, runSpacing: 0, children: [
+            for (final s in list)
+              FilterChip(
+                key: Key('admin-skill-${s.name}'),
+                label: Text(s.negative
+                    ? '×${s.label}'
+                    : (s.gold ? '金${s.label}' : s.label)),
+                selected: have.contains(s),
+                onSelected: (on) => controller.admin((g) =>
+                    g.adminSetSkills(on ? {...have, s} : ({...have}..remove(s)))),
+              ),
+          ]),
+          const SizedBox(height: 8),
+          Wrap(spacing: 8, children: [
+            OutlinedButton(
+              key: const Key('admin-tips-max'),
+              onPressed: () => controller.admin((g) {
+                for (final s in open) {
+                  g.adminSetSkillTips(s, maxSkillTips);
+                }
+              }),
+              child: const Text('コツを全部満タン'),
+            ),
+            OutlinedButton(
+              key: const Key('admin-tips-clear'),
+              onPressed: () => controller.admin((g) {
+                for (final s in open) {
+                  g.adminSetSkillTips(s, 0);
+                }
+              }),
+              child: const Text('コツを全部0'),
+            ),
           ]),
         ]),
       ),

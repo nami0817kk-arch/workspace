@@ -1,0 +1,175 @@
+# 物語完結型ショート 謙信 s5（2026-11-11）。本編 scripts/kenshin-story.yaml（11/11 19:00 公開）の第8章（謙信の遺骸はどこへ行ったのか）から。11/12 19:30 公開。
+# 形式は mongol_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。死は「亡くなった」。遺骸の扱いは淡々と。景虎は「自ら命を絶った、と伝えられる」まで。
+# 絵は本編の AI 絵（out/story/kenshin/main/、Gemini）だけ。新しい絵は作らない。謙信の顔は実在の肖像に似せない想像図。
+# 切り口：遺骸の納め方（北越軍記系＝瓶に塩／旧米沢藩士＝瓦棺に朱漆／大正の伝記＝甲冑で甕）と、春日山→会津→米沢の20年。淡々と。
+#   本編の答え（謙信の最期の理由＝同時代の言葉は虫気だけ・厠は江戸の軍記で一説・言えること言えないこと）は言わない。
+# 事実カード（dev/output/rekishi-chiso/research/上杉謙信_facts_20261107.yaml）：kenshin-26・27・49・55・71。言い方は本編のまま。
+# 計算（自分で計算し直した）：1598−1578＝20年。慶長6年＝1601年、慶長8年＝1603年。（本編は慶長8年を「米沢藩士の話」としたが、カードでは『温古之栞』＝要報告。台本は『温古之栞』とした）
+# 理解テスト4問：
+#   ①誰の話か：亡くなった上杉謙信の遺骸
+#   ②いつ・どこで何が：納め方は記録で3通り。春日山城の中に置かれ、1598年に景勝が会津へ移されると会津若松へ、のち米沢へ。江戸時代を通じて米沢城の本丸の御堂に
+#   ③何が違うか：納め方（瓶に塩／瓦の棺に朱漆／甲冑で甕）と、米沢へ移した年（1601年／1603年）
+#   ④どうなったか：墓は1つではない。では「厠で倒れた」という話はいつ、どこで現れたのか、の問いで閉じる（答えは本編の第5章）
+title: 謙信の遺骸｜甲冑で甕に納められたのか
+yt_title: 上杉謙信の遺骸は、甲冑を着せて甕に納められたのか　記録は3通り、20年墓に入らず春日山から会津、米沢へ
+description: |-
+  上杉謙信の遺骸は、どのように納められたのか。記録は、3つに分かれます。
+  『北越軍記』の流れの書物は、瓶に入れ、塩を詰めて、棺に納めた、と書きます。旧米沢藩士の話を集めた本は、丈夫な瓦の棺に納め、朱の漆を満たした、戦のさなかなので墓は作らず、春日山の城の中に置いた、と書きます。大正6年の伝記は、遺骸に甲冑を着せて、甕の中に納めた、と書いています。
+  1598年、景勝が会津へ移されると、遺骸も会津若松の城へ移りました。謙信の死から、20年後です。そして米沢へ。移した年は、昭和14年の鉄道省の本では1601年、『温古之栞』では1603年で、食い違います。謙信の墓は、1つではありません。では、「厠で倒れた」という話は、いつ、どこで現れたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#上杉謙信"
+- "#米沢"
+- "#日本史"
+ai_images: true
+ai_disclosure: この動画の情景・人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。謙信の姿も、特定の資料を写したものではありません。
+art_dir: out/story/kenshin
+out: kenshin_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 謙信の遺骸（1578年〜）
+  title: 謙信の遺骸は、《甲冑》で甕に入ったのか
+now:
+- {at: 納め方は, text: 1578年　春日山城, point: 0}
+- {at: 1598年, text: 1598年　会津若松, point: 1}
+- {at: そして米沢へ, text: 1601〜1603年　米沢, point: 2}
+timeline:
+- {label: '1578'}
+- {label: '1598'}
+- {label: '1601'}
+cards:
+- type: table
+  title: 遺骸の納め方（記録で3通り）
+  from: 北越軍記
+  until: 1598年
+  items:
+  - {at: 瓶に入れ, text: 北越軍記の流れ　瓶に塩}
+  - {at: 瓦の棺, text: 旧米沢藩士の話　瓦の棺に朱漆}
+  - {at: 甲冑を着せて, text: 大正6年の伝記　甲冑を着せて甕}
+  text_y: 0.74
+shots:
+  K19a:
+    kind: ai
+    file: kenshin/main/K19.jpg
+    focus: [0.35, 0.5]
+    move: right
+    must: 薄暗いお堂の大きな甕と甲冑（甲冑で甕に納められたのか）
+  K19b:
+    kind: ai
+    file: kenshin/main/K19.jpg
+    focus: [0.75, 0.5]
+    move: left
+    must: 甕と灯（納め方は3通り）
+  K20a:
+    kind: ai
+    file: kenshin/main/K20.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 雪の山道を行く覆いをかけた輿の列（20年・春日山から）
+  K03:
+    kind: ai
+    file: kenshin/main/K03.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 雪の渡り廊下と小さな離れ（瓶に塩・棺）
+  K12:
+    kind: ai
+    file: kenshin/main/K12.jpg
+    focus: [0.4, 0.55]
+    move: down
+    must: 雪の山城の大井戸と小さなお堂（春日山の城の中に置いた）
+  K19c:
+    kind: ai
+    file: kenshin/main/K19.jpg
+    focus: [0.5, 0.35]
+    move: down
+    must: 甲冑（大正6年の伝記）
+  K20b:
+    kind: ai
+    file: kenshin/main/K20.jpg
+    focus: [0.3, 0.5]
+    move: left
+    must: 雪の山道の行列（1598年、会津へ）
+  K20c:
+    kind: ai
+    file: kenshin/main/K20.jpg
+    focus: [0.7, 0.55]
+    move: right
+    must: 雪の道を行く行列（そして米沢へ）
+  K22:
+    kind: ai
+    file: kenshin/main/K22.jpg
+    focus: [0.5, 0.55]
+    move: up
+    must: 森の中の石塔の墓（墓は1つではない）
+  K15:
+    kind: ai
+    file: kenshin/main/K15.jpg
+    focus: [0.4, 0.5]
+    move: right
+    must: 書物を書く江戸の学者（厠で倒れたという話の出どころ）
+lines:
+  # fact: kenshin-26
+- 語り: 謙信の遺骸は、甲冑を着せて、甕に納められたのか。
+  shot: K19a
+  tone: 強調
+  pause: 0.12
+  # fact: kenshin-26
+- 語り: 納め方は、記録で、3通りに分かれる。
+  shot: K19b
+  tone: 重い
+  pause: 0.12
+  # fact: kenshin-27
+- 語り: そして遺骸は、20年、墓に入らなかった。その行方を追う。
+  shot: K20a
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-26
+- 語り: "『北越軍記』の流れの書物は、瓶に入れ、塩を詰めて、棺に納めた、と書く。"
+  shot: K03
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-26
+- 語り: 旧米沢藩士の話を集めた本は、丈夫な瓦の棺に納め、朱の漆を満たした、と書く。
+  shot: K03
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-26
+- 語り: 戦のさなかなので、墓は作らず、春日山の城の中に置いた。
+  shot: K12
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-26
+- 語り: 大正6年の伝記は、遺骸に甲冑を着せて、甕の中に納めた、と書く。
+  shot: K19c
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-27
+- 語り: 1598年、景勝が会津へ移されると、遺骸も、会津若松の城へ移った。謙信の死から、20年後だ。
+  shot: K20b
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-27
+- 語り: そして米沢へ。移った年は、昭和14年の鉄道省の本では、1601年。『温古之栞』では、1603年だ。
+  shot: K20c
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-55
+- 語り: 謙信の墓は、1つではない。上越市の林泉寺、高野山、米沢の廟所などに、ある。
+  shot: K22
+  tone: しみじみ
+  pause: 0.12
+  # fact: kenshin-20
+- 語り: では、「厠で倒れた」という話は、いつ、どこで現れたのか。
+  shot: K15
+  tone: 疑問
+  pause: 0.15

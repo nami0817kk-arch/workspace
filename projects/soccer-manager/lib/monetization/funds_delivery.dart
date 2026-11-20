@@ -11,7 +11,31 @@ import 'monetization_controller.dart';
 /// 移してから預かり分を消す。逆にすると、途中で落ちたときに払ったぶんが
 /// 消える(消費型なので「復元」では戻らない)。この順なら、最悪でも
 /// 二重に渡ることはあっても、払ったのに届かないことは起きない。
+///
+/// **移す処理は同時に1つだけ走る。** 購入画面(資金パックのカード)と起動時の
+/// 見張り(main.dart の _DeliverPendingPurchases)の両方がここを呼ぶ。
+/// 同時に走ると、どちらも同じ預かりを見て加算し、預かりを消す前に
+/// もう一方が加算するので、同じパックが2回入っていた。後から来た呼び出しは
+/// 先の呼び出しが終わるのを待ち、残っているぶんだけを移す。
 Future<int> deliverPendingFunds(
+  MonetizationController money,
+  GameState gameState,
+) async {
+  while (_deliveryInFlight != null) {
+    await _deliveryInFlight;
+  }
+  final run = _deliverPendingFundsUnlocked(money, gameState);
+  _deliveryInFlight = run;
+  try {
+    return await run;
+  } finally {
+    if (identical(_deliveryInFlight, run)) _deliveryInFlight = null;
+  }
+}
+
+Future<int>? _deliveryInFlight;
+
+Future<int> _deliverPendingFundsUnlocked(
   MonetizationController money,
   GameState gameState,
 ) async {

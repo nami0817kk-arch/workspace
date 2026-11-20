@@ -1,0 +1,551 @@
+part of 'game_state.dart';
+
+/// 選手の契約の日付まわり: 満了日・仮契約(ボスマン)・延長オプション・
+/// 「延長しない」・給料の未払いによる解除・合意解除。
+extension GameStateContracts on GameState {
+  static Random contractRng = Random();
+
+  /// 契約の残り年数を数える基準の年を、セーブのシーズンに合わせる。
+  void _syncContractClock([SaveGame? save]) {
+    final s = save ?? _save;
+    if (s == null) return;
+    Player.contractClockYear = Player.seasonEndYearOf(s.league.season);
+  }
+
+  /// 選手を持つ全クラブ(自国の全部と他の4か国の1部)。
+  List<Team> get _worldTeams => [
+    ..._save!.allTeams,
+    for (final l in _save!.foreignLeagues.values) ...l.teams,
+  ];
+
+  bool _isForeignTeamId(String teamId) => _save!.foreignLeagues.values.any(
+    (l) => l.teams.any((t) => t.id == teamId),
+  );
+
+  Team? _worldTeamById(String id) {
+    for (final t in _worldTeams) {
+      if (t.id == id) return t;
+    }
+    return null;
+  }
+
+  /// 結ばれている仮契約の全部。
+  List<PreContract> get preContracts => _save?.preContracts ?? const [];
+
+  /// 自クラブが結んだ仮契約(7月1日に加入する選手)。
+  List<PreContract> get incomingPreContracts => [
+    for (final c in preContracts)
+      if (c.toClubId == _save!.userTeamId) c,
+  ];
+
+  /// 自クラブの選手が他のクラブと結んだ仮契約(7月1日に出ていく選手)。
+  List<PreContract> get outgoingPreContracts => [
+    for (final c in preContracts)
+      if (c.fromClubId == _save!.userTeamId) c,
+  ];
+
+  /// 選手が他のクラブと仮契約を結んでいれば、その仮契約。
+  PreContract? outgoingPreContractFor(String playerId) {
+    for (final c in outgoingPreContracts) {
+      if (c.playerId == playerId) return c;
+    }
+    return null;
+  }
+
+  /// 今日、仮契約を結べる時期か(満了の年の1月1日〜6月30日)。
+  bool get preContractWindowOpen =>
+      _save != null && PreContractEngine.isOpen(today);
+
+  /// 仮契約を結べる他のクラブの選手(総合力の高い順、[limit]人まで)。
+  /// 他国の18歳未満と、もう仮契約を結んだ選手は出さない。
+  List<({Player player, Team team})> preContractTargets({int limit = 40}) {
+    if (!preContractWindowOpen) return const [];
+    final taken = {for (final c in preContracts) c.playerId};
+    final list = <({Player player, Team team})>[];
+    for (final t in _worldTeams) {
+      if (t.id == _save!.userTeamId) continue;
+      final foreign = _isForeignTeamId(t.id);
+      for (final p in t.players) {
+        if (!PreContractEngine.inFinalYear(p)) continue;
+        if (taken.contains(p.id)) continue;
+        if (foreign && p.age < 18) continue;
+        list.add((player: p, team: t));
+      }
+    }
+    list.sort((a, b) => b.player.overall.compareTo(a.player.overall));
+    return list.length > limit ? list.sublist(0, limit) : list;
+  }
+
+  /// 他のクラブの選手と仮契約を結ぶ。年俸はその場の要求額
+  /// ([PreContractEngine.wageDemand])、満了の年は[endYear](省略時は年齢に
+  /// 応じた年数)。結べないときは[lastSigningBlockReason]に理由を入れて
+  /// false を返す。
+  Future<bool> signPreContract(
+    String playerId, {
+    int? endYear,
+    bool option = false,
+  }) async {
+    if (_save == null) return false;
+    lastSigningBlockReason = null;
+    Player? player;
+    Team? from;
+    for (final t in _worldTeams) {
+      if (t.id == _save!.userTeamId) continue;
+      for (final p in t.players) {
+        if (p.id == playerId) {
+          player = p;
+          from = t;
+        }
+      }
+    }
+    if (player == null || from == null) return false;
+    final reason = PreContractEngine.blockReason(
+      player,
+      today: today,
+      fromForeignLeague: _isForeignTeamId(from.id),
+      alreadyPreContracted: preContracts.any((c) => c.playerId == playerId),
+    );
+    if (reason != null) {
+      lastSigningBlockReason = switch (reason) {
+        'closed' => Tr.pick(
+          '仮契約は満了の年の1月1日から6月30日までに結べます。',
+          'Pre-contracts can be signed from 1 Jan to 30 Jun of the final year.',
+        ),
+        'notFinalYear' => Tr.pick(
+          'この選手の契約は今シーズン末では切れません。',
+          "This player's contract does not run out at the end of this season.",
+        ),
+        'taken' => Tr.pick(
+          'この選手はもう他のクラブと仮契約を結んでいます。',
+          'This player has already agreed a pre-contract elsewhere.',
+        ),
+        _ => Tr.pick(
+          '18歳未満の選手は国をまたいで移籍できません。',
+          'Players under 18 cannot move between countries.',
+        ),
+      };
+      _notify();
+      return false;
+    }
+    // 来季も残る選手(満了の年ではない選手とローン選手)と、仮契約で来る
+    // 選手で、登録の上限を超えないか。
+    final staying = userTeam.players
+        .where((p) => p.isLoan || p.contractEndYear > Player.contractClockYear)
+        .length;
+    if (staying + incomingPreContracts.length + 1 > maxSquadSize) {
+      lastSigningBlockReason = Tr.pick(
+        '来季の選手が上限($maxSquadSize人)を超えます。',
+        "That would take next season's squad over the limit of $maxSquadSize.",
+      );
+      _notify();
+      return false;
+    }
+    final choices = PreContractEngine.endYearChoices(player);
+    var end = endYear ?? PreContractEngine.defaultEndYear(player);
+    if (choices.isEmpty) return false;
+    if (end < choices.first) end = choices.first;
+    if (end > choices.last) end = choices.last;
+    final withOption =
+        option &&
+        ContractEngine.canAttachOption(end, player.age, nextSeasonStart: true);
+    final contract = PreContract(
+      playerId: player.id,
+      playerName: player.name,
+      fromClubId: from.id,
+      fromClubName: from.name,
+      toClubId: _save!.userTeamId,
+      toClubName: _save!.clubName,
+      wage: PreContractEngine.wageDemand(player, option: withOption),
+      endYear: end,
+      option: withOption,
+      signedOn: today,
+    );
+    _save!.preContracts.add(contract);
+    _logNews(
+      Tr.pick(
+        '${player.name}(${from.name})と仮契約を結びました。7月1日に移籍金なしで加入します(年俸${formatMoney(annualFromWeekly(contract.wage))}・${ContractEngine.untilLabel(end)})。',
+        'Pre-contract agreed with ${player.name} (${from.name}). He joins on a free on 1 Jul (salary ${formatMoney(annualFromWeekly(contract.wage))}, ${ContractEngine.untilLabel(end)}).',
+      ),
+      context: Tr.pick('仮契約', 'Pre-contract'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 日付が[before]から[after]へ進んだときの契約の処理。
+  void _onContractDatesAdvanced(DateTime before, DateTime after) {
+    if (_save == null) return;
+    final season = _save!.league.season;
+    // 1月1日: 仮契約の解禁。
+    if (!after.isBefore(PreContractEngine.opensOn()) &&
+        _save!.preContractOpenedSeason != season) {
+      _openPreContractSeason();
+    }
+    // 3月31日を過ぎた: 行使しなかった延長オプションは消える。
+    final deadline = ContractEngine.optionDeadline(Player.contractClockYear);
+    if (after.isAfter(deadline) && _save!.optionDeadlineSeason != season) {
+      _lapseUnusedOptions();
+    }
+    // 仮契約の時期は、他のクラブが自クラブの満了の年の選手に声をかける。
+    if (_save!.preContractOpenedSeason == season &&
+        PreContractEngine.isOpen(after)) {
+      final from = before.isBefore(PreContractEngine.opensOn())
+          ? PreContractEngine.opensOn()
+          : before;
+      final days = TransferWindowCalendar.daysBetween(from, after);
+      if (days > 0) _rollPoachingOfUserPlayers(days / 7);
+    }
+  }
+
+  /// 1月1日の解禁。他のクラブは満了の年の選手を更新するか決め、更新しない
+  /// 選手の一部とはほかのクラブが仮契約を結ぶ。自クラブの満了の年の選手を
+  /// 知らせる。
+  void _openPreContractSeason() {
+    _save!.preContractOpenedSeason = _save!.league.season;
+    final made = PreContractEngine.openSeasonForAi(
+      _worldTeams,
+      _save!.userTeamId,
+      contractRng,
+      today: today,
+      alreadyTaken: {for (final c in preContracts) c.playerId},
+    );
+    _save!.preContracts.addAll(made);
+    final mine = userTeam.players
+        .where(
+          (p) =>
+              PreContractEngine.inFinalYear(p) &&
+              outgoingPreContractFor(p.id) == null,
+        )
+        .toList();
+    _logNews(
+      mine.isEmpty
+          ? Tr.pick(
+              '今季末で契約が切れる他のクラブの選手と、仮契約を結べるようになりました(契約の画面)。',
+              'You can now sign pre-contracts with players at other clubs whose deals expire this summer (Contracts screen).',
+            )
+          : Tr.pick(
+              '仮契約の時期に入りました。自クラブで今季末に契約が切れる選手(${mine.map((p) => p.name).join('、')})は、他のクラブと仮契約を結ぶことがあります。',
+              'Pre-contract season is open. Your players whose deals expire this summer (${mine.map((p) => p.name).join(', ')}) may agree terms elsewhere.',
+            ),
+      context: Tr.pick('仮契約', 'Pre-contract'),
+    );
+  }
+
+  /// 3月31日までに行使しなかった延長オプションを消す。
+  void _lapseUnusedOptions() {
+    _save!.optionDeadlineSeason = _save!.league.season;
+    final lapsed = <Player>[];
+    for (final p in userTeam.players) {
+      if (p.contractOption && p.contractEndYear == Player.contractClockYear) {
+        p.contractOption = false;
+        lapsed.add(p);
+      }
+    }
+    if (lapsed.isEmpty) return;
+    _logNews(
+      Tr.pick(
+        '延長オプションを行使しなかったため、${lapsed.map((p) => p.name).join('、')}の契約は6月30日で満了します。',
+        'The 1-year options were not taken up, so ${lapsed.map((p) => p.name).join(', ')} will be out of contract on 30 Jun.',
+      ),
+      context: Tr.pick('契約', 'Contracts'),
+    );
+  }
+
+  /// 自クラブの満了の年の選手に、他のクラブが仮契約を持ちかける。
+  void _rollPoachingOfUserPlayers(double weeks) {
+    final cpuTeams = _save!.league.teams
+        .where((t) => t.id != _save!.userTeamId)
+        .toList();
+    final made = PreContractEngine.poachFromUser(
+      userTeam,
+      cpuTeams,
+      contractRng,
+      today: today,
+      weeks: weeks,
+      alreadyTaken: {for (final c in preContracts) c.playerId},
+    );
+    for (final c in made) {
+      _save!.preContracts.add(c);
+      if (_save!.pendingContractNegotiation?.playerId == c.playerId) {
+        _save!.pendingContractNegotiation = null;
+      }
+      _logNews(
+        Tr.pick(
+          '${c.playerName}が${c.toClubName}と仮契約を結びました。7月1日に移籍金なしで出ていきます。それまでに売れば移籍金が入ります。',
+          '${c.playerName} has agreed a pre-contract with ${c.toClubName} and will leave on a free on 1 Jul. Sell him before then to get a fee.',
+        ),
+        context: Tr.pick('仮契約', 'Pre-contract'),
+      );
+    }
+  }
+
+  /// 7月1日(新しいシーズンの始まり)の契約の処理。呼ぶ前に
+  /// [_syncContractClock]で新しいシーズンに合わせておくこと。
+  ///
+  /// 1. 自クラブ: 満了日を過ぎた選手が出ていく(仮契約の先があればそこへ、
+  ///    無ければフリーエージェントへ)。満了の年に入った選手を知らせ、
+  ///    一部は「延長しない」と言い出す。
+  /// 2. 仮契約: 自クラブが結んだ選手を加え、AI 同士の仮契約も移す。
+  /// 3. 他のクラブ: 満了日を過ぎた選手が出ていき、若手で埋める。
+  void _settleContractsAtSeasonStart() {
+    final userId = _save!.userTeamId;
+    final contracts = List<PreContract>.from(_save!.preContracts);
+    _save!.preContracts.clear();
+    final byPlayer = {for (final c in contracts) c.playerId: c};
+
+    // 1. 自クラブ。
+    final contractResult = ContractEngine.advanceSeason(userTeam);
+    lastContractExpirations = contractResult.expired
+        .map((p) => p.name)
+        .toList();
+    for (final p in contractResult.expired) {
+      _clearPlayerRoleReferences(userTeam, p.id);
+      userTeam.players.remove(p);
+      userTeam.startingXI.remove(p.id);
+      final c = byPlayer[p.id];
+      final dest = c == null ? null : _worldTeamById(c.toClubId);
+      if (c != null && dest != null && c.fromClubId == userId) {
+        PreContractEngine.applyOnJoin(p, c);
+        _fixNationality(p);
+        dest.players.add(p);
+        continue;
+      }
+      p.contractOption = false;
+      p.refusesRenewal = false;
+      if (_save!.freeAgents.length < FreeAgentEngine.maxPoolSize) {
+        _save!.freeAgents.add(p);
+      }
+    }
+    lastContractWarnings = contractResult.nearingExpiry
+        .map((p) => p.name)
+        .toList();
+    final refusing = <String>[];
+    for (final p in contractResult.nearingExpiry) {
+      if (p.contractOption || p.refusesRenewal) continue;
+      if (contractRng.nextDouble() < ContractEngine.refuseRenewalChance(p)) {
+        p.refusesRenewal = true;
+        refusing.add(p.name);
+      }
+    }
+    lastRenewalRefusals = refusing;
+
+    // 2. 仮契約で移る選手(自クラブへ・AI 同士)。
+    final joined = <String>[];
+    for (final c in contracts) {
+      if (c.fromClubId == userId) continue; // 上で済ませた
+      final from = _worldTeamById(c.fromClubId);
+      final player = from?.players.where((p) => p.id == c.playerId).firstOrNull;
+      if (from == null || player == null) continue; // 引退・消滅したクラブ
+      final to = c.toClubId == userId ? userTeam : _worldTeamById(c.toClubId);
+      if (to == null) continue;
+      _removeFromCpuTeam(from, player);
+      PreContractEngine.applyOnJoin(player, c);
+      player.originLeague = null;
+      player.originClubName = null;
+      to.players.add(player);
+      if (to.id == userId) {
+        joined.add(player.name);
+      } else {
+        LineupUtils.autoFill(to);
+      }
+      // 抜けたクラブは若手で埋める(人数を保つ)。
+      from.players.add(RetirementEngine.cpuRecruitFor(from, player.position));
+    }
+    lastPreContractArrivals = joined;
+
+    // 3. 他のクラブの満了。
+    for (final t in _worldTeams) {
+      if (t.id == userId) continue;
+      final expired = t.players
+          .where(
+            (p) => !p.isLoan && p.contractEndYear < Player.contractClockYear,
+          )
+          .toList();
+      if (expired.isEmpty) continue;
+      for (final p in expired) {
+        _removeFromCpuTeam(t, p);
+        if (_save!.freeAgents.length < FreeAgentEngine.maxPoolSize &&
+            p.age < 34) {
+          _save!.freeAgents.add(p);
+        }
+        t.players.add(RetirementEngine.cpuRecruitFor(t, p.position));
+      }
+      LineupUtils.autoFill(t);
+    }
+  }
+
+  /// CPU クラブから選手を外す(先発・役割の指名も外す)。
+  void _removeFromCpuTeam(Team team, Player p) {
+    team.players.remove(p);
+    team.startingXI.remove(p.id);
+    if (team.captainId == p.id) team.captainId = null;
+    if (team.viceCaptainId == p.id) team.viceCaptainId = null;
+    if (team.penaltyTakerId == p.id) team.penaltyTakerId = null;
+    if (team.freeKickTakerId == p.id) team.freeKickTakerId = null;
+    if (team.cornerTakerId == p.id) team.cornerTakerId = null;
+    if (team.manMarkerId == p.id) team.manMarkerId = null;
+    if (team.setPieceDefenderId == p.id) team.setPieceDefenderId = null;
+  }
+
+  // ---- 111. 延長オプション ----
+
+  /// 延長オプションを今日行使できるか。
+  bool canExerciseContractOption(String playerId) {
+    if (_save == null) return false;
+    final p = userTeam.players.where((p) => p.id == playerId).firstOrNull;
+    return p != null && ContractEngine.canExerciseOption(p, today);
+  }
+
+  /// 延長オプションを行使する。満了が1年延び、年俸はそのまま。
+  Future<bool> exerciseContractOption(String playerId) async {
+    if (!canExerciseContractOption(playerId)) return false;
+    final p = userTeam.players.firstWhere((p) => p.id == playerId);
+    ContractEngine.exerciseOption(p);
+    _logNews(
+      Tr.pick(
+        '${p.name}の延長オプションを行使しました(${ContractEngine.untilLabel(p.contractEndYear)})。',
+        'Took up the 1-year option on ${p.name} (${ContractEngine.untilLabel(p.contractEndYear)}).',
+      ),
+      context: Tr.pick('契約', 'Contracts'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  // ---- 113. 更新できない理由 ----
+
+  /// 更新の交渉ができない理由(できるなら null)。
+  String? renewalBlockReason(Player p) {
+    if (p.isLoan) {
+      return Tr.pick('ローン選手とは更新できません。', 'You cannot renew a loan player.');
+    }
+    if (outgoingPreContractFor(p.id) != null) {
+      return Tr.pick(
+        '他のクラブと仮契約を結んでいるので、更新に応じません。',
+        'He has agreed a pre-contract elsewhere and will not renew.',
+      );
+    }
+    if (p.refusesRenewal) {
+      return Tr.pick(
+        '契約を延長しないと言っています。売るか、満了で手放すことになります。',
+        'He has said he will not sign a new deal. Sell him, or lose him for nothing when it expires.',
+      );
+    }
+    return null;
+  }
+
+  // ---- 114. 給料の未払い ----
+
+  /// 資金のマイナスが続いたときの、給料の未払いの通告と契約の解除。
+  /// 毎週の処理から呼ぶ。出ていった選手の名前を返す。
+  List<String> _checkUnpaidWages() {
+    final weeks = _save!.consecutiveNegativeBudgetWeeks;
+    if (weeks == 0) {
+      _save!.unpaidWagesNoticeGiven = false;
+      return const [];
+    }
+    if (weeks >= ContractEngine.unpaidNoticeWeeks &&
+        !_save!.unpaidWagesNoticeGiven) {
+      _save!.unpaidWagesNoticeGiven = true;
+      _logNews(
+        Tr.pick(
+          '給料を2か月分払えていないとして、選手たちから支払いの催告が届きました。2週のうちに資金をプラスに戻さないと、契約を解除して出ていく選手が出ます。',
+          'The players have formally demanded two months of unpaid wages. Get back in the black within two weeks, or some will terminate their contracts and leave.',
+        ),
+        context: Tr.pick('契約', 'Contracts'),
+      );
+    }
+    final leaving = ContractEngine.unpaidWageWalkouts(
+      userTeam,
+      weeks,
+      contractRng,
+    );
+    if (leaving.isEmpty) return const [];
+    // 最低人数は割らない(試合ができなくなる)。
+    final room = userTeam.players.length - minSquadSize;
+    final names = <String>[];
+    for (final p in leaving.take(room < 0 ? 0 : room)) {
+      _clearPlayerRoleReferences(userTeam, p.id);
+      userTeam.players.remove(p);
+      userTeam.startingXI.remove(p.id);
+      _save!.preContracts.removeWhere((c) => c.playerId == p.id);
+      p.contractEndYear = Player.contractClockYear - 1;
+      p.contractOption = false;
+      p.refusesRenewal = false;
+      if (_save!.freeAgents.length < FreeAgentEngine.maxPoolSize) {
+        _save!.freeAgents.add(p);
+      }
+      names.add(p.name);
+    }
+    if (names.isEmpty) return const [];
+    LineupUtils.fillVacancies(userTeam);
+    _logNews(
+      Tr.pick(
+        '給料の未払いを理由に、${names.join('、')}が契約を解除して自由契約で出ていきました。',
+        '${names.join(', ')} terminated their contracts over unpaid wages and left on a free.',
+      ),
+      context: Tr.pick('契約', 'Contracts'),
+    );
+    return names;
+  }
+
+  // ---- 115. 合意解除 ----
+
+  /// 合意して契約を解除するときに払う額(万円)。解除できない選手は null。
+  int? mutualTerminationCostFor(String playerId) {
+    if (_save == null) return null;
+    final p = userTeam.players.where((p) => p.id == playerId).firstOrNull;
+    if (p == null || p.isLoan || p.isLoanedOut) return null;
+    return ContractEngine.mutualTerminationCost(p, today);
+  }
+
+  /// 残りの年俸の一部を払って、合意のうえで契約を解除する。選手は
+  /// 自由契約になる。資金が足りない・最低人数を割るときは false。
+  Future<bool> terminateContractByMutualConsent(String playerId) async {
+    if (_save == null) return false;
+    lastSigningBlockReason = null;
+    final cost = mutualTerminationCostFor(playerId);
+    if (cost == null) return false;
+    if (userTeam.players.length <= minSquadSize) {
+      lastSigningBlockReason = Tr.pick(
+        'これ以上人数を減らせません。',
+        'Your squad cannot get any smaller.',
+      );
+      _notify();
+      return false;
+    }
+    if (_save!.budget < cost) {
+      lastSigningBlockReason = Tr.pick(
+        '解除に払う${formatMoney(cost)}が足りません(資金${formatMoney(_save!.budget)})。',
+        'You cannot cover the ${formatMoney(cost)} settlement (funds ${formatMoney(_save!.budget)}).',
+      );
+      _notify();
+      return false;
+    }
+    final p = userTeam.players.firstWhere((p) => p.id == playerId);
+    _book(LedgerCategory.playerWages, -cost);
+    _clearPlayerRoleReferences(userTeam, p.id);
+    userTeam.players.remove(p);
+    userTeam.startingXI.remove(p.id);
+    _save!.preContracts.removeWhere((c) => c.playerId == p.id);
+    p.contractEndYear = Player.contractClockYear - 1;
+    p.contractOption = false;
+    p.refusesRenewal = false;
+    if (_save!.freeAgents.length < FreeAgentEngine.maxPoolSize) {
+      _save!.freeAgents.add(p);
+    }
+    LineupUtils.fillVacancies(userTeam);
+    _logNews(
+      Tr.pick(
+        '${p.name}と合意して契約を解除しました(${formatMoney(cost)}を支払い)。',
+        "Terminated ${p.name}'s contract by mutual consent (paid ${formatMoney(cost)}).",
+      ),
+      context: Tr.pick('契約', 'Contracts'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+}

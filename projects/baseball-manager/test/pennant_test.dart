@@ -218,7 +218,7 @@ void main() {
       }
     });
 
-    test('シーズンの記録に、月ごとの成績(6か月ぶん)が残る', () {
+    test('シーズンの記録に、月ごとの成績(4月〜10月の7か月ぶん)が残り、足すと1年の試合数になる', () {
       final g = _proGame();
       var n = 0;
       while (!g.records.any((r) => r.stage == Stage.pro) && n++ < 40) {
@@ -229,8 +229,16 @@ void main() {
         g.choose(Plan.rest, Ability.contact);
       }
       final r = g.records.lastWhere((r) => r.stage == Stage.pro);
-      expect(r.months.length, 6);
+      expect(r.months.length, 7);
       expect(r.months.first, contains('勝'));
+      expect(r.months.last, startsWith('10月'));
+      // 10月の残り試合も月に入れる(2026-11-03 まで、月ごとの勝敗を足しても年間にならなかった)
+      final played = [
+        for (final m in r.months)
+          for (final x in RegExp(r'(\d+)勝(\d+)敗$').allMatches(m))
+            int.parse(x.group(1)!) + int.parse(x.group(2)!)
+      ].fold<int>(0, (a, b) => a + b);
+      expect(played, leagueGames);
       expect(g.monthRows, isEmpty);
       final back = SeasonRecord.fromJson(r.toJson());
       expect(back.months, r.months);

@@ -240,11 +240,12 @@ class AdMobAdService implements AdService {
   ///
   /// [keepAfterDismiss] が true なら、閉じた通知では広告を捨てない（呼んだ側が後で捨てる）。
   /// 捨てた広告の通知はプラグインが握りつぶすので、閉じた後に届く報酬の通知を受けるにはこれが要る。
-  Future<bool> _present(
+  static Future<bool> _present(
     AdWithoutView ad,
     void Function(FullScreenContentCallback<AdWithoutView>) setCallback,
     Future<void> Function() show, {
     bool keepAfterDismiss = false,
+    Duration showTimeout = _showTimeout,
   }) async {
     final closed = Completer<bool>();
     final started = Completer<void>();
@@ -275,7 +276,7 @@ class AdMobAdService implements AdService {
     final began = await Future.any([
       started.future.then((_) => true),
       closed.future.then((_) => true),
-      Future.delayed(_showTimeout, () => false),
+      Future.delayed(showTimeout, () => false),
     ]);
     if (!began) {
       ad.dispose();
@@ -293,6 +294,19 @@ class AdMobAdService implements AdService {
     }
     // 見ている間に次の1本を読み始める（続けてヒントを押したときに待たせない）
     _loadRewarded();
+    final r = await presentRewarded(ad);
+    _loadRewarded(); // 見ている間の読み込みに失敗していたときのため
+    return r;
+  }
+
+  /// 動画を出して、閉じられるまで待つ。**`show` は表示を頼んだ時点で返り、報酬と閉じる通知は後から届く**
+  /// （google_mobile_ads の仕様。`await ad.show()` の直後に報酬を見ると必ず空。app-pitfalls #9）。
+  @visibleForTesting
+  static Future<RewardResult> presentRewarded(
+    RewardedAd ad, {
+    Duration rewardGrace = _rewardGrace,
+    Duration showTimeout = _showTimeout,
+  }) async {
     var earned = false;
     final shown = await _present(
       ad,
@@ -303,11 +317,11 @@ class AdMobAdService implements AdService {
       ),
       () => ad.show(onUserEarnedReward: (_, _) => earned = true),
       keepAfterDismiss: true,
+      showTimeout: showTimeout,
     );
     // 閉じた通知が報酬の通知より先に届くことがあるので、少しだけ待ってから捨てる
-    if (shown && !earned) await Future<void>.delayed(_rewardGrace);
+    if (shown && !earned) await Future<void>.delayed(rewardGrace);
     ad.dispose(); // 2回目の dispose はプラグイン側で何もしない
-    _loadRewarded(); // 見ている間の読み込みに失敗していたときのため
     if (earned) return RewardResult.earned;
     return shown ? RewardResult.closedEarly : RewardResult.showFailed;
   }
@@ -320,19 +334,24 @@ class AdMobAdService implements AdService {
       return false;
     }
     // 閉じられるまで待たないと、広告の裏で次の面が始まってしまう
-    final shown = await _present(
-      ad,
-      (cb) => ad.fullScreenContentCallback = FullScreenContentCallback<InterstitialAd>(
-        onAdShowedFullScreenContent: cb.onAdShowedFullScreenContent,
-        onAdDismissedFullScreenContent: cb.onAdDismissedFullScreenContent,
-        onAdFailedToShowFullScreenContent: cb.onAdFailedToShowFullScreenContent,
-      ),
-      () => ad.show(),
-    );
+    final shown = await presentInterstitial(ad);
     // 次の面への切り替えと重ならないよう、少し置いてから次を読む
     unawaited(Future<void>.delayed(const Duration(seconds: 2), _loadInterstitial));
     return shown;
   }
+
+  /// 全画面広告を出して、閉じられるまで待つ。出せたら true。
+  @visibleForTesting
+  static Future<bool> presentInterstitial(InterstitialAd ad, {Duration showTimeout = _showTimeout}) => _present(
+        ad,
+        (cb) => ad.fullScreenContentCallback = FullScreenContentCallback<InterstitialAd>(
+          onAdShowedFullScreenContent: cb.onAdShowedFullScreenContent,
+          onAdDismissedFullScreenContent: cb.onAdDismissedFullScreenContent,
+          onAdFailedToShowFullScreenContent: cb.onAdFailedToShowFullScreenContent,
+        ),
+        () => ad.show(),
+        showTimeout: showTimeout,
+      );
 
   @override
   void dispose() {

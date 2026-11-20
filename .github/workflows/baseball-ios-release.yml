@@ -1,8 +1,10 @@
 # 野球育成(baseball-manager) の iOS ビルド。TestFlight へ上げて、実機で試すためのワークフロー。
 #
-# 広告も課金も無いので、tenbin-ios-release.yml から AdMob・法務ページ・課金の確認を除いた形。
+# 広告(AdMob)と広告を消す課金(baseball_manager_remove_ads)がある。goso-boat-ios-release.yml を写した形。
+# 動作確認用のテスト版(test_build)は Google のテスト用IDのまま作れる。審査に出すビルドは本物のIDが要る。
 # 配信用証明書・チームID・App Store Connect API キーは、ほかのアプリと同じ(共用)。
-# このアプリだけ要るのは、プロビジョニングプロファイル(BASEBALL_IOS_PROVISIONING_PROFILE_BASE64)。
+# このアプリだけ要るのは、プロビジョニングプロファイル(BASEBALL_IOS_PROVISIONING_PROFILE_BASE64)と、
+# AdMob のID(BASEBALL_ADMOB_APP_ID_IOS / BASEBALL_ADMOB_REWARDED_IOS / BASEBALL_ADMOB_INTERSTITIAL_IOS)。
 # 手順と Secrets の一覧は projects/baseball-manager/docs/RELEASE.md を参照。
 #
 # 手で回す: Actions → 「Build 野球育成 (iOS / TestFlight)」→ Run workflow。
@@ -48,6 +50,9 @@ jobs:
     defaults:
       run:
         working-directory: projects/baseball-manager
+    env:
+      # 法務ページの置き場所。アプリへの埋め込みと、公開の確認の両方がここを見る
+      LEGAL_BASE_URL: https://baseball-ikusei.pages.dev
 
     steps:
       - name: Checkout
@@ -81,6 +86,61 @@ jobs:
             echo "::error::登録手順は projects/baseball-manager/docs/RELEASE.md を参照してください。"
             exit 1
           fi
+
+      # 署名と同じ扱いにする。テスト用の広告IDのまま公開すると、広告は出るのに収益がゼロになる。
+      # しかも審査は通ってしまう。テスト版(TestFlight の動作確認用。審査には出さない)は Google のテスト用IDのままでよい。
+      # iOS のアプリIDは Info.plist に直接書いてあるので、ここで置換し、置換できたことを確かめる。
+      - name: Verify AdMob production IDs and apply them
+        if: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.test_build == 'true') }}
+        env:
+          ADMOB_APP_ID: ${{ secrets.BASEBALL_ADMOB_APP_ID_IOS }}
+          ADMOB_REWARDED: ${{ secrets.BASEBALL_ADMOB_REWARDED_IOS }}
+          ADMOB_INTERSTITIAL: ${{ secrets.BASEBALL_ADMOB_INTERSTITIAL_IOS }}
+        run: |
+          set -euo pipefail
+          missing=""
+          [ -n "$ADMOB_APP_ID" ]   || missing="$missing BASEBALL_ADMOB_APP_ID_IOS"
+          [ -n "$ADMOB_REWARDED" ] || missing="$missing BASEBALL_ADMOB_REWARDED_IOS"
+          [ -n "$ADMOB_INTERSTITIAL" ] || missing="$missing BASEBALL_ADMOB_INTERSTITIAL_IOS"
+          if [ -n "$missing" ]; then
+            echo "::error::次の GitHub Secrets が未設定です:$missing"
+            echo "::error::未設定のままだと Google のテスト用IDで公開され、広告収益が発生しません。(動作確認だけなら test_build に印を付ける)"
+            exit 1
+          fi
+          case "$ADMOB_APP_ID$ADMOB_REWARDED$ADMOB_INTERSTITIAL" in
+            *ca-app-pub-3940256099942544*)
+              echo "::error::Google のテスト用IDが登録されています。自分の AdMob のIDに置き換えてください。"
+              exit 1 ;;
+          esac
+          # アプリIDは「~」、広告ユニットIDは「/」で区切る。取り違えると広告が1本も出ない
+          echo "$ADMOB_APP_ID" | grep -Eq '^ca-app-pub-[0-9]{16}~[0-9]{10}$' \
+            || { echo "::error::BASEBALL_ADMOB_APP_ID_IOS がアプリIDの形(ca-app-pub-…~…)ではありません。"; exit 1; }
+          for v in "$ADMOB_REWARDED" "$ADMOB_INTERSTITIAL"; do
+            echo "$v" | grep -Eq '^ca-app-pub-[0-9]{16}/[0-9]{10}$' \
+              || { echo "::error::広告ユニットIDの形(ca-app-pub-…/…)ではない Secret があります(REWARDED / INTERSTITIAL)。"; exit 1; }
+          done
+          pub() { echo "$1" | sed -E 's/^ca-app-pub-([0-9]{16}).*/\1/'; }
+          [ "$(pub "$ADMOB_APP_ID")" = "$(pub "$ADMOB_REWARDED")" ] && [ "$(pub "$ADMOB_APP_ID")" = "$(pub "$ADMOB_INTERSTITIAL")" ] \
+            || { echo "::error::アプリIDと広告ユニットIDが別の AdMob アカウントのものです。"; exit 1; }
+          [ "$ADMOB_REWARDED" != "$ADMOB_INTERSTITIAL" ] \
+            || { echo "::error::動画と全画面に同じ広告ユニットIDが入っています。"; exit 1; }
+          plutil -replace GADApplicationIdentifier -string "$ADMOB_APP_ID" ios/Runner/Info.plist
+          if grep -q "ca-app-pub-3940256099942544" ios/Runner/Info.plist; then
+            echo "::error::Info.plist にテスト用IDが残っています。置換に失敗しました。"
+            exit 1
+          fi
+          [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ] \
+            || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
+          echo "Info.plist の GADApplicationIdentifier を本番IDに置き換えました。"
+          # 設定画面のリンク先が開けて、中身が本物か(404 や別のページのまま出すと審査で却下される)
+          for page in privacy support; do
+            body=$(curl -fsSL "$LEGAL_BASE_URL/$page.html") \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html が開けません。法務ページを公開してから出してください。"; exit 1; }
+            grep -q "野球育成" <<<"$body" \
+              || { echo "::error::$LEGAL_BASE_URL/$page.html の中身が野球育成のページではありません。"; exit 1; }
+          done
+          # AdMob が app-ads.txt を確かめられる状態か(robots.txt が HTML だと「アプリを確認」が通らない)
+          bash ../../scripts/check-app-site.sh "${LEGAL_BASE_URL#https://}" pub-6409014819339195
 
       - name: Import signing certificate into a temporary keychain
         env:
@@ -189,6 +249,8 @@ jobs:
       - name: Build IPA
         env:
           BUILD_NUMBER: ${{ github.event.inputs.build_number }}
+          ADMOB_REWARDED: ${{ secrets.BASEBALL_ADMOB_REWARDED_IOS }}
+          ADMOB_INTERSTITIAL: ${{ secrets.BASEBALL_ADMOB_INTERSTITIAL_IOS }}
           # テスト版は手で回したときだけ。タグから走るビルドは通常版(管理者モードが最初からオンにならない)。
           TEST_BUILD: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.test_build == 'true' }}
         run: |
@@ -199,10 +261,13 @@ jobs:
             [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::ビルド番号は数字だけで入れてください。"; exit 1; }
             EXTRA="--build-number=$BUILD_NUMBER"
           fi
-          DEFINES=()
+          DEFINES=(--dart-define=LEGAL_BASE_URL="$LEGAL_BASE_URL")
           if [ "$TEST_BUILD" = "true" ]; then
-            DEFINES=(--dart-define=TEST_BUILD=true)
-            echo "::notice::テスト版(管理者モードが最初からオン)で作ります。審査には出さないでください。"
+            # テスト版は Google のテスト用ID(既定値)のまま。本物の広告を自分の端末で押さないため
+            DEFINES+=(--dart-define=TEST_BUILD=true)
+            echo "::notice::テスト版(管理者モードが最初からオン・広告はテスト用)で作ります。審査には出さないでください。"
+          else
+            DEFINES+=(--dart-define=ADMOB_REWARDED_IOS="$ADMOB_REWARDED" --dart-define=ADMOB_INTERSTITIAL_IOS="$ADMOB_INTERSTITIAL")
           fi
           flutter build ipa --release \
             --export-options-plist=ios/ExportOptions.plist $EXTRA \

@@ -1,0 +1,146 @@
+# 物語完結型ショート 宮本武蔵 s2（2026-10-29）。本編 scripts/musashi-story.yaml の第1章（小倉碑文）から。
+# 形式は takasugi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（M*.jpg。人物なし）と実在の絵図（豊前小倉之城図、国立国会図書館蔵）。決闘の場面に人物の絵は当てない。
+# 事実カード：musashi-07・08・09・10・20・25
+#   ・「木刃」「舟嶋」「岩流嶋」は福田正秀『宮本武蔵研究論文集』資料編の読み下し（Wikid が掲載）だけが出どころ → 「と読まれている」で留める。「孝子某」は言わない。
+#   ・相手の名が「岩流」だけで「小次郎」が無いのは山口県観光連盟（musashi-08）。
+# 理解テスト4問：
+#   ①誰の話か：宮本武蔵と、決闘の相手の名
+#   ②いつ・どこで何が：1654年、武蔵の死の9年後に、養子の宮本伊織が小倉の手向山に小倉碑文を建てた。相手は「岩流」とだけ書かれている
+#   ③碑文は何を書いたか：舟嶋で、岩流を武蔵が木の刃の一撃で倒した、と読まれている。小次郎の名も弟子の話も無い
+#   ④どうなったか：魚住孝至教授は最も信頼できる史料に挙げる。「佐々木小次郎」の名そのものも真偽は不明
+title: 宮本武蔵｜最初の碑に、小次郎の名は無い
+yt_title: 巌流島の相手は「小次郎」と書かれていない　武蔵の養子が建てた小倉碑文
+description: |-
+  巌流島の決闘の相手として知られる、佐々木小次郎。ところが、武蔵の養子が建てた最初の碑には、「小次郎」の名がありません。
+  承応3年、1654年。武蔵が亡くなって9年後に、宮本伊織が小倉の手向山に碑を建てました。碑文は、相手を「岩流」と書きます。福田正秀さんの読み下しを載せるサイトによれば、岩流は真剣を求め、武蔵は木の刃で応じ、その一撃で倒した、と読まれています。
+  国際武道大学の魚住孝至教授は、この小倉碑文を最も信頼できる史料に挙げています。「佐々木小次郎」という名前そのものも、真偽は不明だといいます。
+hashtags: ["#宮本武蔵", "#日本史", "#巌流島"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/musashi
+out: musashi_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 宮本武蔵（江戸初期の剣豪）
+  title: "最初の碑に、《小次郎》の名は無い"
+now:
+  - {at: 1654年, text: "1654年　小倉", point: 1}
+timeline:
+  - {label: "1612"}
+  - {label: "1654"}
+cards:
+  - type: year                           # 碑が建つ
+    from: 承応3年
+    until: 碑文は
+    big: 1654年
+    sub: 小倉碑文が建つ
+    text_y: 0.70
+shots:
+  M08:
+    kind: ai
+    file: musashi/main/M08.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 砂浜と松のある小さな島に寄せる波
+  Kokura:
+    kind: real
+    image: paintings/kanbei_kokura_castle_ndl.jpg
+    focus: [0.5, 0.5]
+    move: right
+    credit: "豊前小倉之城図（『日本古城絵図』、国立国会図書館蔵）"
+    must: 小倉城の絵図
+  M03:
+    kind: ai
+    file: musashi/main/M03.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 海を望む高台の石碑
+  M06:
+    kind: ai
+    file: musashi/main/M06.jpg
+    focus: [0.4, 0.55]
+    move: right
+    must: 灯の下の古い書物と筆
+  M01:
+    kind: ai
+    file: musashi/main/M01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 朝の海に浮かぶ島
+  M03r:
+    kind: ai
+    file: musashi/main/M03.jpg
+    focus: [0.5, 0.6]
+    move: left
+    zoom: 0.14
+    must: 石碑
+  M02:
+    kind: ai
+    file: musashi/main/M02.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 海峡に面した城下町の遠景
+  M14:
+    kind: ai
+    file: musashi/main/M14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    text_y: 0.76
+    must: 夕暮れの高台から見る遠い島と海
+lines:
+  # fact: musashi-08
+  - 語り: 巌流島の決闘の相手は、最初の碑に、《!小次郎》とは、書かれていない。
+    shot: M08
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-07
+  - 語り: 承応3年、1654年。武蔵が亡くなって9年後に、養子の宮本伊織が、小倉の手向山に、碑を建てた。
+    shot: Kokura
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-08
+  - 語り: 碑文は、場所を「舟嶋」、相手を「岩流」と書く。
+    shot: M03
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-09
+  - 語り: 福田正秀さんの読み下しを載せるサイトによれば、岩流は真剣を求め、武蔵は木の刃で応じ、その一撃で倒した、と読まれている。
+    shot: M06
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-10
+  - 語り: 同じ読み下しでは、この決闘のあと、世間では、舟嶋を「岩流嶋」と呼ぶようになった、とも読まれている。
+    shot: M01
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-08
+  - 語り: 「小次郎」の名はない。弟子の話もない。武蔵は、一撃で勝った。それだけだ。
+    shot: M03r
+    tone: 重い
+    pause: 0.12
+  # fact: musashi-20
+  - 語り: 国際武道大学の魚住孝至教授は、この小倉碑文を、最も信頼できる史料に挙げている。
+    shot: M02
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-25
+  - 語り: 「佐々木小次郎」という名前そのものも、真偽は不明だという。
+    shot: M01
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: あなたは、碑に無い名を、どこまで信じますか。
+    shot: M14
+    tone: 疑問
+    pause: 0.15

@@ -1,0 +1,148 @@
+# 物語完結型ショート 源頼朝 s5（2026-10-30）。本編 scripts/yoritomo-story.yaml から（死因の諸説（暗殺説は根拠を確かめられなかった））。11/2 12:00 公開の本編 → 11/3 に投稿。
+# 形式は musashi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編の「頼朝想像」「重成想像」は使わない）。
+# 絵は本編の AI 絵（out/story/yoritomo/main/Q01〜Q15。人物は描かない）と実在の絵・写真（paintings/yoritomo_*）。新しい AI 絵は作らない。
+# 事実カード（dev/output/rekishi-chiso/research/源頼朝_facts_20261029.yaml）：yoritomo-17・18・20・21・43・56
+#   ・暗殺説：『東鑑集要』の一文を nippon.com が根拠の一つとして紹介（21）。暗殺だったと言える史料は確かめられなかった。
+#   ・『保暦間記』は南北朝のころの歴史書（本編と同じ）。歌舞伎『頼朝の死』は創作（20）。最も支持されるのは落馬の怪我か落馬の原因の病（56、和樂web、出どころ1つ）→「と紹介している」。
+#   ・死の場面に人物の絵は当てない（本・橋・馬の遠景・石塔だけ）。
+# 理解テスト4問：
+#   ①誰の話か：源頼朝の死因
+#   ②いつ何が：建久9年12月27日に体調を崩し、翌年1月13日に死んだことはほぼ確実（細川重男）
+#   ③何と語られてきたか：亡霊を見て病んだ（保暦間記）・水神（承久記）・暗殺説（東鑑集要の一文）・歌舞伎の創作
+#   ④どうなったか：暗殺と言える史料は見つからず、いま最も支持されるのは落馬の怪我か、その原因の病
+title: 源頼朝｜死因で、確かなのは、2つの日付だけ
+yt_title: 源頼朝の死因は何通りも語られてきた　亡霊・水神・暗殺説・歌舞伎　確かなのは2つの日付だけ
+description: |-
+  源頼朝は、なぜ亡くなったのか。確かなのは、2つの日付だけです。
+  歴史学者の細川重男さんは、頼朝が建久9年12月27日に体調を崩し、翌年1月13日に死んだことは、ほぼ確実だと述べます。そのほかは、書かれた時代ごとに、違う姿で語られてきました。『保暦間記』は、義経らの亡霊を見て病んだ、『承久記』は「水神に領せられ」た、と書きます。江戸時代の『東鑑集要』の一文は、暗殺説を支える材料の一つにされてきましたが、暗殺だったと言える史料は、調べた範囲では見つかりませんでした。1932年初演の歌舞伎『頼朝の死』は創作です。
+  いま最も支持されているのは、落馬による怪我、あるいは落馬の原因になった病気だと、和樂webは紹介しています。
+hashtags: ["#源頼朝", "#日本史", "#吾妻鏡"]
+ai_images: true
+ai_disclosure: この動画の情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/yoritomo
+out: yoritomo_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 源頼朝（鎌倉幕府の初代将軍）
+  title: "死因は諸説、確かなのは《日付》だけ"
+now:
+  - {at: 建久9年, text: "1198年12月　相模川", point: 0}
+  - {at: 翌年, text: "1199年1月　鎌倉", point: 1}
+timeline:
+  - {label: "1198"}
+  - {label: "1199"}
+cards:
+  - type: table
+    title: 確かなのは、2つの日付
+    from: 建久9年12月27日
+    until: ほぼ確実
+    items:
+      - {at: 建久9年12月27日, text: "1198年12月27日　体調を崩す"}
+      - {at: 翌年1月13日, text: "1199年1月13日　亡くなる"}
+    text_y: 0.70
+shots:
+  Q13:
+    kind: ai
+    file: yoritomo/main/Q13.jpg
+    focus: [0.5, 0.6]
+    move: in
+    must: 暗い部屋の灯と閉じた書物
+  Q08:
+    kind: ai
+    file: yoritomo/main/Q08.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夕暮れの川にかかる長い木の橋
+  Q12:
+    kind: ai
+    file: yoritomo/main/Q12.jpg
+    focus: [0.7, 0.6]
+    move: in
+    must: 霧の川岸に残された一頭の馬
+  Q03:
+    kind: ai
+    file: yoritomo/main/Q03.jpg
+    focus: [0.5, 0.62]
+    move: in
+    must: 夜の武家屋敷の門
+  Q05:
+    kind: ai
+    file: yoritomo/main/Q05.jpg
+    focus: [0.45, 0.5]
+    move: right
+    must: 灯の下の文机と巻物
+  Q02:
+    kind: ai
+    file: yoritomo/main/Q02.jpg
+    focus: [0.5, 0.55]
+    move: in
+    must: 灯のもとで開かれた古い綴じ本
+  Q14:
+    kind: ai
+    file: yoritomo/main/Q14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 山あいの石段の上の小さな石塔
+  Q01:
+    kind: ai
+    file: yoritomo/main/Q01.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 夜明けの鎌倉の海と浜
+  Q15:
+    kind: ai
+    file: yoritomo/main/Q15.jpg
+    focus: [0.4, 0.5]
+    move: in
+    text_y: 0.76
+    must: 夕暮れの川と橋の遠景
+lines:
+  # fact: yoritomo-43
+  - 語り: 源頼朝は、なぜ亡くなったのか。確かなのは、2つの日付だけだ。
+    shot: Q13
+    tone: 強調
+    pause: 0.12
+  # fact: yoritomo-43
+  - 語り: 建久9年12月27日に体調を崩し、翌年1月13日に死んだことは、ほぼ確実だ、と細川重男さんは述べる。
+    shot: Q08
+    tone: 重い
+    pause: 0.12
+  # fact: yoritomo-17
+  - 語り: 『保暦間記』は、義経らの亡霊を見て、病んだ、と書く。『承久記』は、「水神に領せられ」た、と書く。
+    shot: Q12
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-21
+  - 語り: 江戸時代の『東鑑集要』の一文は、暗殺説を支える材料の一つにされてきた。
+    shot: Q03
+    tone: しみじみ
+    pause: 0.12
+  - 語り: けれど、暗殺だったと言える史料は、私たちの調べでは、見つからなかった。
+    shot: Q05
+    tone: 重い
+    pause: 0.12
+  # fact: yoritomo-20
+  - 語り: 1932年の歌舞伎『頼朝の死』は、頼朝が斬られ、落馬死として隠される筋だ。創作で、史料にある話ではない。
+    shot: Q02
+    tone: しみじみ
+    pause: 0.12
+  # fact: yoritomo-56
+  - 語り: いま最も支持されているのは、落馬による怪我、あるいは、その原因になった病気だと、和樂web は紹介している。
+    shot: Q14
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: あなたは、頼朝の最期を、どの姿で、思い浮かべますか。
+    shot: Q15
+    tone: 疑問
+    pause: 0.12

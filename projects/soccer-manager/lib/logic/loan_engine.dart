@@ -20,17 +20,32 @@ class LoanEngine {
 
   /// スタジアムのレベルと監督への世間の評価が高いほど、銀行からの信用が高く借入上限が上がる。
   /// 既存の融資残高はその分だけ借入余力から差し引かれる。
+  ///
+  /// [scale] はクラブの規模(部ごとの moneyScale)。上の部ほど大きく借りられる。
   static int maxBorrowable({
     required int stadiumLevel,
     required int reputation,
     required int outstandingDebt,
+    double scale = 1,
   }) {
-    final capacity = 1500 + stadiumLevel * 500 + reputation * 15;
+    final capacity =
+        ((1500 + stadiumLevel * 500 + reputation * 15) * scale).round();
     return (capacity - outstandingDebt).clamp(0, capacity);
   }
 
-  static int weeklyRepaymentFor(int principal, LoanTerm term) =>
-      (principal * (1 + term.interestRatePercent / 100) / term.weeks).round();
+  /// 週の返済額。切り上げで、最低1。
+  ///
+  /// 四捨五入していたため、小さな融資(例えば26週で10万円)では週の返済が
+  /// 0に丸まり、借りたぶんをまるごと返さずに済んでいた。小数の誤差で
+  /// 切り上げが1つ余計に乗らないよう、整数で割る。
+  static int weeklyRepaymentFor(int principal, LoanTerm term) {
+    if (principal <= 0) return 0;
+    final totalHundredths =
+        (principal * (100 + term.interestRatePercent)).round();
+    final perWeekDivisor = 100 * term.weeks;
+    final weekly = (totalHundredths + perWeekDivisor - 1) ~/ perWeekDivisor;
+    return weekly < 1 ? 1 : weekly;
+  }
 
   static int totalRepaymentFor(int principal, LoanTerm term) =>
       weeklyRepaymentFor(principal, term) * term.weeks;

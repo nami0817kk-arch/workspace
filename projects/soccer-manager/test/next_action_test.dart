@@ -38,19 +38,6 @@ void main() {
     expect(NextActionAdvisor.top(game.save!, game.userTeam), isNull);
   });
 
-  test('今週のトレーニングが残っていれば促す', () async {
-    final game = await newGame();
-    game.save!.trainingDoneThisWeek = false;
-    game.save!.budget = 5000;
-    for (final p in game.userTeam.players) {
-      p.contractYearsRemaining = 3;
-    }
-    game.save!.youthProspects.clear();
-
-    final action = NextActionAdvisor.top(game.save!, game.userTeam);
-    expect(action?.target, NextActionTarget.training);
-  });
-
   test('資金マイナスは、ほかの用事を追い越す', () async {
     final game = await newGame();
     game.save!.trainingDoneThisWeek = false; // 普通ならこちらが先
@@ -116,15 +103,21 @@ void main() {
     // 締切まで遠いうちは黙っている(毎週の雑音にしない)。
     expect(
       NextActionAdvisor.top(game.save!, game.userTeam,
-          transferDeadlineMatchdaysLeft:
-              NextActionAdvisor.deadlineWarningMatchdays + 1),
+          transferDeadlineDaysLeft: NextActionAdvisor.deadlineWarningDays + 1),
       isNull,
     );
 
     final soon = NextActionAdvisor.top(game.save!, game.userTeam,
-        transferDeadlineMatchdaysLeft: 1);
+        transferDeadlineDaysLeft: 0);
     expect(soon?.target, NextActionTarget.transfer);
-    expect(soon?.message, contains('今節'));
+    expect(soon?.message, contains('締切日'));
+
+    // 締切まで日があっても、次の試合の前に閉まるなら知らせる。
+    final last = NextActionAdvisor.top(game.save!, game.userTeam,
+        transferDeadlineDaysLeft: NextActionAdvisor.deadlineWarningDays + 5,
+        transferDeadlineBeforeNextMatch: true);
+    expect(last?.target, NextActionTarget.transfer);
+    expect(last?.message, contains('次の試合の前'));
   });
 
   test('ウィンドウが閉じているときは締切の話をしない', () async {
@@ -139,7 +132,7 @@ void main() {
     // 閉じているときは null を渡す約束。
     expect(
       NextActionAdvisor.top(game.save!, game.userTeam,
-          transferDeadlineMatchdaysLeft: null),
+          transferDeadlineDaysLeft: null),
       isNull,
     );
   });
@@ -147,9 +140,9 @@ void main() {
   test('出すのは常に1件', () async {
     final game = await newGame();
     game.save!.budget = -100;
-    game.save!.trainingDoneThisWeek = false;
 
-    final all = NextActionAdvisor.all(game.save!, game.userTeam);
+    final all = NextActionAdvisor.all(game.save!, game.userTeam,
+        transferDeadlineDaysLeft: 1);
     expect(all.length, greaterThan(1), reason: '検査の前提が崩れている');
     expect(NextActionAdvisor.top(game.save!, game.userTeam), isNotNull);
   });

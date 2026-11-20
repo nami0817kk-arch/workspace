@@ -1,0 +1,148 @@
+# 物語完結型ショート 宮本武蔵 s5（2026-10-29）。本編 scripts/musashi-story.yaml の第6章（熊本の客分・2022年の新史料）から。
+# 形式は takasugi_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。
+# 絵は本編の AI 絵（M*.jpg。人物なし）と実在の自画像とされる絵（島田美術館蔵）。
+# 事実カード：musashi-30・31・33・34・35
+#   ・足利道鑑は「遺児とされる」（musashi-35）。熊本大学の見方（体現者として招かれた）は「考えている」で言う。
+#   ・生年を「？」と書くのは熊本大学の発表（musashi-33）。
+# 理解テスト4問：
+#   ①誰の話か：熊本に客分として招かれた晩年の宮本武蔵
+#   ②いつ・どこで何が：1640年に細川忠利に招かれて熊本に来た。11月、山鹿の御茶屋に、足利道鑑らとともに呼ばれた
+#   ③なぜ分かったか：2022年9月15日に熊本大学が発表した新史料4点（惣奉行衆の書状の控え）から
+#   ④どうなったか：熊本大学は、思想としての兵法の体現者として招かれたと考える。その発表は武蔵の生年を「？」と書く
+title: 宮本武蔵｜晩年の熊本で、将軍の遺児と同じ席に呼ばれた
+yt_title: 宮本武蔵は晩年の熊本で「将軍の遺児とされる人」と同じ席に呼ばれていた　2022年の新史料
+description: |-
+  巌流島の勝者、宮本武蔵は、晩年の熊本で、将軍の遺児とされる人と同じ席に呼ばれていました。
+  寛永17年、1640年。武蔵は、熊本藩主の細川忠利に招かれ、客分として熊本に来ます。その年の11月、忠利は山鹿の御茶屋に、足利道鑑、津川四郎右衛門、朝山意林庵とともに、武蔵を呼びました。2022年9月15日に熊本大学が発表した、新しい史料4点で分かったことです。
+  熊本大学は、武蔵が思想としての兵法の体現者として招かれたと考えています。ただ、同じ発表は、武蔵の生年を「？」と書いています。
+hashtags: ["#宮本武蔵", "#日本史", "#熊本"]
+ai_images: true
+ai_disclosure: この動画の人物・情景の画像の多くは、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。
+art_dir: out/story/musashi
+out: musashi_story_s5
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 宮本武蔵（江戸初期の剣豪）
+  title: "晩年の熊本で、《将軍の遺児》と同じ席に"
+now:
+  - {at: 1640年, text: "1640年　熊本", point: 0}
+  - {at: 2022年, text: "2022年　熊本大学", point: 1}
+timeline:
+  - {label: "1640"}
+  - {label: "2022"}
+cards:
+  - type: year                           # 新史料
+    from: 2022年
+    until: 熊本大学は
+    big: 2022年
+    sub: 新史料4点を発表
+    text_y: 0.70
+shots:
+  M10:
+    kind: ai
+    file: musashi/main/M10.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 山の斜面に建つ茶屋の遠景
+  M05:
+    kind: ai
+    file: musashi/main/M05.jpg
+    focus: [0.5, 0.5]
+    move: right
+    must: 石垣の上の城と門
+  M13:
+    kind: ai
+    file: musashi/main/M13.jpg
+    focus: [0.5, 0.5]
+    move: in
+    must: 墨の鳥の絵が立てられた静かな座敷
+  M10r:
+    kind: ai
+    file: musashi/main/M10.jpg
+    focus: [0.6, 0.55]
+    move: left
+    zoom: 0.14
+    must: 茶屋の遠景
+  M06:
+    kind: ai
+    file: musashi/main/M06.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 灯の下の古い書物と筆
+  M13r:
+    kind: ai
+    file: musashi/main/M13.jpg
+    focus: [0.35, 0.55]
+    move: right
+    zoom: 0.12
+    must: 座敷の墨の絵
+  Portrait:
+    kind: real
+    image: paintings/musashi_self_portrait_shimada_bust.jpg
+    focus: [0.5, 0.3]
+    move: down
+    credit: "宮本武蔵の自画像とされる絵（島田美術館蔵）"
+    must: 自画像とされる絵
+  M14:
+    kind: ai
+    file: musashi/main/M14.jpg
+    focus: [0.5, 0.5]
+    move: in
+    text_y: 0.76
+    must: 夕暮れの高台から見る遠い島と海
+lines:
+  # fact: musashi-35
+  - 語り: 巌流島の勝者は、晩年の熊本で、将軍の遺児とされる人と、同じ席に、《!呼ばれていた》。
+    shot: M10
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-30
+  - 語り: 寛永17年、1640年。武蔵は、熊本藩主の細川忠利に招かれ、客分として、熊本に来た。
+    shot: M05
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-31
+  - 語り: 藩の記録には、七人扶持、合力米18石。のちに、300石になった、と書かれている。
+    shot: M13
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-34
+  - 語り: その年の11月、忠利は、山鹿の御茶屋に、武蔵を呼んだ。足利道鑑、津川四郎右衛門、朝山意林庵と、ともに。
+    shot: M10r
+    tone: 強調
+    pause: 0.12
+  # fact: musashi-35
+  - 語り: 道鑑は、足利13代将軍、義輝の遺児とされる人。津川は、斯波家の子孫。意林庵は、儒学者だ。
+    shot: M13r
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-34
+  - 語り: これは、2022年、9月15日に、熊本大学が発表した、新しい史料4点で分かった。
+    shot: M06
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-35
+  - 語り: 熊本大学は、武蔵が、思想としての兵法の体現者として、招かれたと考えている。
+    shot: M10
+    tone: しみじみ
+    pause: 0.12
+  # fact: musashi-33
+  - 語り: ただ、同じ発表は、武蔵の生年を、「？」と書く。
+    shot: Portrait
+    tone: 重い
+    pause: 0.3
+    dip: true
+  - 語り: 生まれた年さえ分からない武蔵を、あなたは、どこまで知っていますか。
+    shot: M14
+    tone: 疑問
+    pause: 0.15

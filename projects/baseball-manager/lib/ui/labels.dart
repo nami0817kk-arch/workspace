@@ -12,24 +12,30 @@ import '../game/traits.dart';
 String abilityLabel(Ability a) => switch (a) {
       Ability.contact => 'ミート',
       Ability.power => 'パワー',
+      Ability.trajectory => '弾道',
       Ability.speed => '走力',
+      Ability.arm => '肩力',
       Ability.fielding => '守備',
-      Ability.eye => '選球眼',
-      Ability.stuff => '球威',
-      Ability.control => '制球',
+      Ability.catching => '捕球',
+      Ability.stuff => '球速',
+      Ability.control => 'コントロール',
       Ability.stamina => 'スタミナ',
+      Ability.breaking => '変化球',
     };
 
 /// 能力が何に効くかの説明(ラベルの長押し・タップで出す)。
 String abilityHint(Ability a) => switch (a) {
       Ability.contact => 'ミート: 球に当てる力。ヒットが出やすくなる。',
       Ability.power => 'パワー: 長打・ホームランの出やすさ。',
+      Ability.trajectory => '弾道: 打球の角度。高いほど長打・ホームランが出やすい(パワーと合わせて効く)。',
       Ability.speed => '走力: 足の速さ。二塁打・三塁打に効く。',
-      Ability.fielding => '守備: 捕って投げる力。',
-      Ability.eye => '選球眼: 球を見きわめる力。四球が増える。',
-      Ability.stuff => '球威: 球の威力。三振が増え、打たれにくくなる。',
-      Ability.control => '制球: 狙ったところへ投げる力。四球が減る。',
+      Ability.arm => '肩力: 送球の強さ。外野・三塁・遊撃・捕手の適性に効く。',
+      Ability.fielding => '守備: 打球をさばく力。失策が減る。',
+      Ability.catching => '捕球: 球をつかむ力。失策が減り、捕手・一塁手の適性に効く。',
+      Ability.stuff => '球速: 球の速さ・威力。三振が増え、打たれにくくなる。',
+      Ability.control => 'コントロール: 狙ったところへ投げる力。四球が減る。',
       Ability.stamina => 'スタミナ: 長く投げられる。疲れにくくもなる。',
+      Ability.breaking => '変化球: 曲がり・落ちる球の切れ。球速に合わせて打ち取りやすくなる。',
     };
 
 String roleLabel(Role r) => switch (r) {
@@ -66,19 +72,19 @@ String planTitle(Plan a, Ability focus) => switch (a) {
 
 /// 重点の能力に合わせた、ひとこと。
 String planHint(Plan a, Ability focus) => switch (a) {
-      Plan.train => '${abilityLabel(focus)}の経験点が貯まる',
-      Plan.special => '${abilityLabel(focus)}がたくさん貯まる。疲れて怪我しやすい',
+      Plan.train => '${abilityLabel(focus)}の経験点が安定して貯まる',
+      Plan.special => '${abilityLabel(focus)}がたくさん貯まり、調子が良いと特殊能力のコツ。疲れて怪我しやすい',
       _ => actionHint(a),
     };
 
 String actionHint(Plan a) => switch (a) {
-      Plan.train => '重点の経験点が貯まる',
-      Plan.special => 'たくさん貯まる。疲れて怪我しやすい',
+      Plan.train => '重点の経験点が安定して貯まる',
+      Plan.special => 'たくさん貯まり、調子が良いと特殊能力のコツ。疲れて怪我しやすい',
       Plan.rest => '疲れを取る',
-      Plan.study => 'やる気が上がり、少し貯まる',
-      Plan.social => 'やる気が上がる。家族・恋人との絆',
-      Plan.match => '全体に少し貯まる',
-      Plan.lesson => 'コツが貯まる(4回で特性を習得)',
+      Plan.study => '特殊能力のコツ+2(安く取れるようになる)。経験点はわずか',
+      Plan.social => 'やる気が上がり、仲間から特殊能力のコツ。家族・恋人との絆',
+      Plan.match => '全体に少し貯まり、勝負どころの特殊能力のコツ',
+      Plan.lesson => 'コーチのコツが貯まる(4回でコーチの特殊能力のコツが満タン)',
     };
 
 String categoryLabel(Category c) => c.label;
@@ -103,11 +109,12 @@ List<String> birthTalentNotes(Player p) {
     lines.add('レア特性「${t.label}」を持って生まれた!');
   }
   final top = [
-    for (final a in abilitiesOf(p.role))
+    // 投手の打撃・守備の天賦は、生まれの知らせには出さない(本業の能力だけ)
+    for (final a in mainAbilitiesOf(p.role))
       if (p.gift(a) >= 2) abilityLabel(a)
   ];
   final low = [
-    for (final a in abilitiesOf(p.role))
+    for (final a in mainAbilitiesOf(p.role))
       if (p.gift(a) <= -2) abilityLabel(a)
   ];
   if (top.isNotEmpty) lines.add('天賦の才: ${top.join('・')}(経験点が少なくて済む)');

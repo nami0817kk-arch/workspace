@@ -1,0 +1,212 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：足利義満の最期（scripts/yoshimitsu-story.yaml）。chiso/storymain.py が読む。
+# 11-13 作成（11/16 12:00 公開予定）。saigo_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（S01〜S16・SEND）は全部 Gemini（Chrome、無料版）で新しく作った（11/15 のような使い回しはしない）。義満の顔は想像上で実在の肖像に似せない（多くは後ろ姿・遠景）。実在の古画の額は使わない。
+script: scripts/yoshimitsu-story.yaml
+out: yoshimitsu_story_main
+art_dir: out/story/yoshimitsu/main
+main_art_dir: out/story/yoshimitsu/main
+ai_disclosure: この動画の情景・人物の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 上皇になりかけた男, now: 1408年5月6日, dates: {}}
+  1: {label: 第1章 天皇を迎えた北山第, now: 1408年3月8日, dates: {}}
+  2: {label: 第2章 元服は宮中で, now: 1408年2月27日, dates: {32: 1408年4月25日}}
+  3: {label: 第3章 病の日々, now: 1408年4月27日, dates: {41: 1408年5月1日, 43: 1408年5月5日}}
+  4: {label: 第4章 5月6日の夜, now: 1408年5月6日, dates: {}}
+  5: {label: 第5章 上皇の称号はなぜ消えたのか, now: 1408年5月8日, dates: {77: 1405年, 79: 1406年12月}}
+  6: {label: 第6章 明が贈った名　恭献, now: 1408年, dates: {95: 1409年1月, 103: 1419年, 106: 1411年}}
+  7: {label: 第7章 北山第と金閣のその後, now: 1416年, dates: {}}
+  8: {label: まとめ 足利義満の最期、記録から言えること, now: null, dates: {}}
+no_tag_from: 128
+
+references:
+  - 小川剛生「足利義満の太上天皇尊号宣下」『藝文研究』101巻1号、2011年（慶應義塾大学学術情報リポジトリ。『荒暦』『東寺執行日記』『武家昇晋年譜』の引用を含む）
+  - 石原比伊呂「足利義持と後小松「王家」」『史学雑誌』116編6号、2007年／村井章介「明代「冊封」の古文書学的検討」『史学雑誌』127巻2号、2018年（J-STAGE の公開ページ）
+  - 『続史愚抄』『後鑑』（国立国会図書館デジタルコレクションの全文OCRと頁の画像。『教言卿記』の引用を含む）
+  - 群書類従『北山殿行幸記』『椿葉記』『鹿苑院殿薨葬記』『鹿苑院殿追善記』『鹿苑院殿をいためる辞』（同）
+  - 『明実録』『明史』『善隣国宝記』『日本国志』（ウィキソースの転写）
+  - 相国寺『相国寺物語』・鹿苑寺の年表（相国寺の公式ページ）／文化庁「文化遺産オンライン」／桑山浩然らの科研費報告（KAKEN）
+
+credits: {}
+
+ai:
+  S01: {scene: 夜明けの北山の池と金色の楼閣（霧）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S02: {scene: 灯の廊下、病室の前で待つ公家と僧, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S03: {scene: 春の門前に並ぶ行列と牛車, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S04: {scene: 総角の少年と大人の後ろ姿, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S05: {scene: 宮中の広間での元服の儀, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S06: {scene: 灯火の下で日記を書く公家, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S07: {scene: 護摩の炎の前の僧, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S08: {scene: 夜明け前の山道を進む輿と提灯, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S09: {scene: 御簾の前の公家と老臣の相談, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S10: {scene: 若い武士と老臣, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S11: {scene: 港に着いた明の使節, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S12: {scene: 机上の国書と赤い印, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S13: {scene: 解体される屋敷と残る金色の楼閣, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S14: {scene: 雪の朝の金色の楼閣, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S15: {scene: 屋根の上から見上げる客星, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  S16: {scene: 僧侶の葬列と寺の境内, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.5]}}
+  SEND: {scene: 終了画面用。夕暮れの池と金色の楼閣（右半分を空ける）, lock: [1.0, 0.5, 0.5]}
+
+shots:
+  - 0 ai:S01 wide
+  - 1 ai:S02 wide
+  - 2 ai:S08 wide
+  - 3 ai:S06 wide
+  - 4 ai:S05 wide
+  - 5 ai:S06 left
+  - 6 ai:S10 wide
+  - 7 ai:S09 wide
+  - 8 ai:S06 right
+  - 9 ai:S03 wide
+  - 10 ai:S03 left
+  - 11 ai:S01 left
+  - 12 ai:S10 left
+  - 13 ai:S06 wide
+  - 14 ai:S04 wide
+  - 15 ai:S06 left
+  - 16 ai:S03 right
+  - 17 ai:S06 right
+  - 18 ai:S03 wide
+  - 19 ai:S03 left
+  - 20 ai:S01 right
+  - 21 ai:S06 wide
+  - 22 ai:S04 left
+  - 23 ai:S06 left
+  - 24 ai:S05 left
+  - 25 ai:S05 right
+  - 26 ai:S04 right
+  - 27 ai:S05 wide
+  - 28 ai:S06 right
+  - 29 ai:S06 wide
+  - 30 ai:S04 wide
+  - 31 ai:S06 left
+  - 32 ai:S05 left
+  - 33 ai:S05 right
+  - 34 ai:S04 left
+  - 35 ai:S06 right
+  - 36 ai:S02 left
+  - 37 ai:S02 right
+  - 38 ai:S05 wide
+  - 39 ai:S06 wide
+  - 40 ai:S07 wide
+  - 41 ai:S02 wide
+  - 42 ai:S07 left
+  - 43 ai:S02 left
+  - 44 ai:S02 right
+  - 45 ai:S07 right
+  - 46 ai:S02 wide
+  - 47 ai:S06 left
+  - 48 ai:S06 right
+  - 49 ai:S12 wide
+  - 50 ai:S02 left
+  - 51 ai:S08 left
+  - 52 ai:S08 right
+  - 53 ai:S02 right
+  - 54 ai:S06 wide
+  - 55 ai:S06 left
+  - 56 ai:S09 left
+  - 57 ai:S16 wide
+  - 58 ai:S16 left
+  - 59 ai:S15 wide
+  - 60 ai:S15 left
+  - 61 ai:S09 right
+  - 62 ai:S09 wide
+  - 63 ai:S06 right
+  - 64 ai:S09 left
+  - 65 ai:S12 left
+  - 66 ai:S06 wide
+  - 67 ai:S10 right
+  - 68 ai:S06 left
+  - 69 ai:S09 right
+  - 70 ai:S06 right
+  - 71 ai:S10 wide
+  - 72 ai:S09 wide
+  - 73 ai:S10 left
+  - 74 ai:S12 right
+  - 75 ai:S06 wide
+  - 76 ai:S09 left
+  - 77 ai:S06 left
+  - 78 ai:S12 wide
+  - 79 ai:S09 right
+  - 80 ai:S06 right
+  - 81 ai:S09 wide
+  - 82 ai:S06 wide
+  - 83 ai:S09 left
+  - 84 ai:S10 right
+  - 85 ai:S09 right
+  - 86 ai:S10 wide
+  - 87 ai:S11 wide
+  - 88 ai:S12 left
+  - 89 ai:S11 left
+  - 90 ai:S12 right
+  - 91 ai:S10 left
+  - 92 ai:S12 wide
+  - 93 ai:S12 left
+  - 94 ai:S06 left
+  - 95 ai:S12 right
+  - 96 ai:S11 right
+  - 97 ai:S11 wide
+  - 98 ai:S12 wide
+  - 99 ai:S12 left
+  - 100 ai:S06 right
+  - 101 ai:S12 right
+  - 102 ai:S10 right
+  - 103 ai:S10 wide
+  - 104 ai:S09 wide
+  - 105 ai:S06 wide
+  - 106 ai:S11 left
+  - 107 ai:S09 left
+  - 108 ai:S01 wide
+  - 109 ai:S13 wide
+  - 110 ai:S13 left
+  - 111 ai:S01 left
+  - 112 ai:S14 wide
+  - 113 ai:S13 right
+  - 114 ai:S13 wide
+  - 115 ai:S14 left
+  - 116 ai:S01 right
+  - 117 ai:S14 right
+  - 118 ai:S01 wide
+  - 119 ai:S06 left
+  - 120 ai:S08 wide
+  - 121 ai:S09 right
+  - 122 ai:S10 left
+  - 123 ai:S12 wide
+  - 124 ai:S03 right
+  - 125 ai:S06 right
+  - 126 ai:S06 wide
+  - 127 ai:S12 left
+  - 128 ai:S14 wide
+  - 129 ai:SEND wide
+  - end ai:SEND wide
+
+focus: {}
+
+fx:
+  S02: {lamp: {region: [0.3, 0.4, 0.8, 0.85]}}
+  S07: {fire: {region: [0.3, 0.35, 0.75, 0.9]}}
+
+parts:
+  - {type: quote, from: 80, to: 80, label: 史料, text: "先急被申出尊号事／可有沙汰", source: "『荒暦』応永13年12月26日（小川剛生論文の引用）"}
+  - {type: quote, from: 39, to: 39, label: 史料, text: "希代事也／頗過分", source: "『教言卿記』応永15年4月27日（『後鑑』の引用）"}
+  - {type: quote, from: 41, to: 41, label: 史料, text: "御病悩漸篤", source: "『後鑑』巻119（5月1日の条）"}
+  - {type: quote, from: 66, to: 66, label: 史料, text: "昔ヨリ此例依無之／勘解由小路禅門申留云々", source: "『東寺執行日記』（小川剛生論文の引用）"}
+  - {type: quote, from: 97, to: 97, label: 史料, text: "日本國世子源義持以父源道義卒／賜謚恭獻", source: "『明実録』永楽6年12月17日"}
+  - {type: quote, from: 104, to: 104, label: 史料, text: "其易簀之際、以冊書誓諸神／永絶外國之通問", source: "『善隣国宝記』応永26年（1419年）"}
+  - {type: quote, from: 15, to: 15, label: 史料, text: "ひかる源氏のわらはすがたもかくやとおぼえたり", source: "『北山殿行幸記』"}
+  - {type: quote, from: 55, to: 55, label: 史料, text: "御あとつぎも申をかるゝむねもなし", source: "『椿葉記』（貞成親王）"}
+  - {type: quote, from: 60, to: 60, label: 史料, text: "客星見。天文博士某奏凶兆八箇條", source: "『続史愚抄』応永15年6月21日"}
+  - {type: quote, from: 125, to: 125, label: 要点, text: "言えること＝尊号は止められた／言えないこと＝病名・死の時刻", source: "この動画のまとめ"}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 25, note: 義嗣の昇進の表}
+  - {line: 48, note: 死の時刻の表}
+  - {line: 65, note: 尊号の表}
+  - {line: 80, note: 荒暦の言葉}
+  - {line: 97, note: 明実録}
+  - {line: 125, note: 要点}
+  - {end: true, note: 終了画面の空き}

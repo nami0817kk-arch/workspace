@@ -1,3 +1,5 @@
+import 'package:baseball_manager/game/training.dart';
+import 'package:baseball_manager/game/traits.dart';
 import 'package:baseball_manager/game/calendar.dart';
 import 'package:baseball_manager/game/career.dart';
 import 'package:baseball_manager/game/exp.dart';
@@ -64,7 +66,7 @@ void main() {
       abilities: {
         Ability.contact: 60,
         Ability.power: 20,
-        Ability.eye: 60,
+        Ability.trajectory: 60,
         Ability.speed: 40,
         Ability.fielding: 40,
       },
@@ -125,12 +127,16 @@ void _roleFactorTests() {
   test('役割が違っても、1能力あたりの経験点の貯まり方が揃う', () {
     // 重点1つ(1.0)とそれ以外(0.25)の合計を、能力の数で割った平均が打者と同じになる。
     double perAbility(Role r) {
-      final n = abilitiesOf(r).length;
+      // 投手の伸びは、投球の4つで数える(打撃・守備は別の補正)
+      final n = r == Role.pitcher ? pitcherAbilities.length : abilitiesOf(r).length;
       return (1 + 0.25 * (n - 1)) / n * roleExpFactor(r);
     }
 
-    expect(roleExpFactor(Role.batter), closeTo(1.0, 1e-9));
-    expect(perAbility(Role.pitcher), closeTo(perAbility(Role.batter), 1e-9));
+    // 打者は能力が7つなので、5つだった頃と1能力あたりの伸びを揃えるぶん少し速い(0.4 / (2.5/7))
+    expect(roleExpFactor(Role.batter), closeTo(1.12 * batterPace, 1e-9));
+    // 投手だけ、プロ入り率・レジェンド率を打者に揃えるため少し遅くしてある(pitcherPace)
+    expect(perAbility(Role.pitcher),
+        closeTo(perAbility(Role.batter) / batterPace * pitcherPace, 1e-9));
     expect(perAbility(Role.twoWay), closeTo(perAbility(Role.batter), 1e-9));
     expect(roleExpFactor(Role.pitcher), lessThan(1.0));
   });
@@ -151,8 +157,8 @@ void _seasonTests() {
   });
 
   group('役割ごとに使える経験点', () {
-    test('投手に打撃の経験点は使えない。打者に投球は使えない。二刀流は全部', () {
-      expect(usableCategories(Role.pitcher), isNot(contains(Category.batting)));
+    test('投手も打撃・守備の経験点を使える(パワプロと同じ)。打者に投球は使えない。二刀流は全部', () {
+      expect(usableCategories(Role.pitcher), Category.values);
       expect(usableCategories(Role.batter), isNot(contains(Category.pitching)));
       expect(usableCategories(Role.twoWay), Category.values);
     });
@@ -163,6 +169,44 @@ void _seasonTests() {
         expect(m.keys.toSet(), usableCategories(r).toSet());
         expect(m.values.toSet(), {6});
       }
+    });
+  });
+
+  group('年齢による上限(体の衰え)', () {
+    Player at(int age, int v, {Set<Trait> traits = const {}}) => Player(
+        name: 't',
+        role: Role.batter,
+        age: age,
+        potential: 60,
+        traits: traits,
+        abilities: {for (final a in abilitiesOf(Role.batter)) a: v});
+
+    test('29歳までは上限なし。体の能力は技術より早く・大きく下がる', () {
+      expect(ageCeiling(at(29, 80), Ability.power), 99);
+      expect(ageCeiling(at(32, 80), Ability.contact), 99);
+      final p38 = at(38, 80);
+      expect(ageCeiling(p38, Ability.power), lessThan(ageCeiling(p38, Ability.contact)));
+      expect(ageCeiling(at(42, 80), Ability.power),
+          lessThan(ageCeiling(at(38, 80), Ability.power)));
+    });
+
+    test('長持ちは衰えがゆるやか', () {
+      expect(ageCeiling(at(38, 80, traits: {Trait.longevity}), Ability.power),
+          greaterThan(ageCeiling(at(38, 80), Ability.power)));
+    });
+
+    test('上限より上には経験点で上げられない。年の変わり目に上限まで落ちる', () {
+      final p = at(40, 90);
+      final cap = ageCeiling(p, Ability.power);
+      expect(cap, lessThan(90));
+      const rich = ExpPool({Category.batting: 9999, Category.running: 9999});
+      expect(buy(p, rich, Ability.power), isNull);
+      final r = applyAgeCeiling(p);
+      expect(r.player.of(Ability.power), cap);
+      expect(r.drops.any((d) => d.$1 == Ability.power && d.$2 == 90 && d.$3 == cap), isTrue);
+      // 上限より下なら、上限までは上げられる
+      final low = at(40, cap - 5);
+      expect(buy(low, rich, Ability.power), isNotNull);
     });
   });
 }

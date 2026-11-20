@@ -21,3 +21,9 @@ def test_record_and_already_posted(tmp_path):
     assert up.already_posted(log, "a:main") is None
     up.record(log, {"key": "a:main", "video_id": "x", "publish_at": "t"})
     assert up.already_posted(log, "a:main")["video_id"] == "x"
+
+
+def test_status_body_synthetic_media_is_opt_in():
+    base = up.status_body("2026-10-05T10:00:00Z")
+    assert "containsSyntheticMedia" not in base and base["privacyStatus"] == "private"
+    assert up.status_body("2026-10-05T10:00:00Z", synthetic_media=True)["containsSyntheticMedia"] is True

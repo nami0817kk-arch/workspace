@@ -1,0 +1,59 @@
+# 物語完結型ショート（10-22 ユーザー決定）の見本。お市の方。投稿しない。
+# 型：冒頭1文＝感情の結末予告／起こり→事件→結末まで50〜60秒で語り切る／全面のAI人物絵＋中央に特大の1フレーズ／
+#     3〜5秒ごとに絵が替わる／語りは1人／キャラ立ち絵・枠・年表・字幕は出さない。
+# 書き方：
+#   語り   … 1行の語りの文。「｜」は絵の替わり目（読み上げでは外す）。｜の数＋1 が cuts の数。
+#   cuts   … 絵ごとの {prompt: 英語の絵の指示, phrase: 中央に出す特大フレーズ（12字以内。《》で囲んだ語だけ黄）}
+#   tone   … 調子（既定 普通。剣崎は抑えめに効く）
+# 事実の出どころは scripts/oichi.yaml の次の行だけ（台本に無い事実は足さない。伝承は「と伝わります」）：
+#   お市＝信長の妹／浅井長政に嫁ぎ茶々・初・江が生まれる … 第2〜3節（oichi.yaml 145〜210行目）
+#   兄と夫が敵になる・小谷城の落城・長政の最期 … 第4〜5節（229〜327行目）
+#   勝家と再婚・秀吉に敗れ北ノ庄城が囲まれる … 第7〜8節（395行目・456〜467行目）
+#   勝家が退去を勧め、お市は断ったと伝わる・小谷で逃げたことを悔やんだ（渓心院文） … 468〜481行目
+#   娘3人を城から出す・お市は勝家とともに生涯を閉じる … 487行目・503行目
+#   茶々は秀吉の妻・初は京極高次・江は徳川秀忠の妻 … 第9節（556〜585行目）
+#   大坂の陣（大坂城に茶々、和議をまとめる初、徳川の側に江）・茶々は大坂城とともに最期 … 597〜609行目
+#   肖像は茶々が両親の供養に納めたと言われる・高野山の持明院に伝わる … 650〜653行目
+title: お市の方｜逃げなかった姫と三人の娘
+yt_title: 二度目の落城で、逃げなかった姫｜お市の方と三人の娘
+ai_images: true
+art_dir: out/story/oichi
+cta: 本編は概要欄から
+lines:
+  - 語り: 二度目の落城で、逃げなかった姫がいた。｜送り出された三人の娘は、敵と味方に分かれていく。
+    cuts:
+      - {phrase: "《逃げなかった》", prompt: "a Japanese noblewoman in her thirties in layered silk kimono standing calmly and resolutely in a dark castle hall, a plain dark stone wall behind her with a soft orange firelight glow, no signs, no sign boards, no writing, determined sorrowful face"}
+      - {phrase: "《敵と味方》に", prompt: "three young Japanese sisters in kimono of different ages standing side by side on a stone path outside a castle at dawn, looking back over their shoulders with worried faces"}
+  - 語り: お市は、織田信長の妹。浅井長政に嫁ぎ、｜茶々・初・江が生まれました。
+    cuts:
+      - {phrase: "《信長の妹》が嫁ぐ", prompt: "a young Japanese princess in an elegant kimono seated gracefully in a castle room, a stern armored warlord standing in the background, folding screens, soft lamp light"}
+      - {phrase: "《三人の娘》誕生", prompt: "a young noblewoman and a warrior lord seated side by side in a hilltop castle hall, three small daughters playing quietly near them, warm morning light, peaceful"}
+  - 語り: 兄と夫は敵となり、夫の城は落ちました。｜再婚した柴田勝家の城も、秀吉に囲まれます。
+    tone: しみじみ
+    cuts:
+      - {phrase: "兄と夫が《敵》に", prompt: "a noblewoman seen from behind watching from a castle tower as two armies with banners face each other in the misty valley below, grey dawn light"}
+      - {phrase: "再び、《囲まれた》", prompt: "wide landscape view with the castle keep exactly in the center, a Japanese mountain castle on a hill surrounded by a vast army camp with many plain unmarked solid-color banners at dusk, smoke rising on the horizon, ominous sky, no people, no faces, no portrait"}
+  - 語り: 城を出るよう勧められても、お市は断ったと伝わります。｜小谷で逃げたことを悔やんでいた、と。
+    tone: しみじみ
+    cuts:
+      - {phrase: "それでも《断った》", prompt: "an older samurai general in dark armor gesturing toward the door urging a noblewoman to leave, the noblewoman shaking her head firmly, candlelit castle chamber, dramatic shadows"}
+      - {phrase: "《悔やんで》いた", prompt: "close portrait of a Japanese noblewoman in her late thirties with a sorrowful yet resolute expression, gazing toward a window with misty mountains beyond, candle glow on her face"}
+  - 語り: お市は娘たちを城から送り出し、｜勝家とともに生涯を閉じました。
+    tone: 重い
+    cuts:
+      - {phrase: "娘たちを《送り出す》", prompt: "a mother in kimono embracing her three daughters at a castle gate at night in torchlight, tears on her face, a retainer waiting to lead the girls away"}
+      - {phrase: "《生涯》を閉じた", prompt: "empty dark silhouette of a Japanese castle keep seen from far away against a glowing orange night sky with drifting embers, vast empty landscape, solemn"}
+  - 語り: 茶々は秀吉の妻に、初は京極高次に、江は徳川秀忠に。
+    cuts:
+      - {phrase: "三人の《それぞれの道》", prompt: "three young Japanese women in kimono standing at a crossroads in a spring field at dusk, each facing a different path, seen from behind, long shadows"}
+  - 語り: 1615年、大坂の陣。茶々は大坂城に、初は和議に、｜江は徳川の側に。三姉妹は敵と味方に分かれ、｜茶々は城とともに最期を迎えました。
+    tone: しみじみ
+    cuts:
+      - {phrase: "《1615年》大坂の陣", prompt: "wide landscape view of the great white Osaka castle with golden roof ornaments under a stormy sky, tiny armies with plain unmarked solid-color banners surrounding it far below, dramatic cinematic light, no people, no faces, no portrait"}
+      - {phrase: "姉妹は《敵味方》に", prompt: "a noblewoman in kimono holding a rolled peace-treaty scroll walking calmly between two opposing armies on a plain, tense atmosphere, banners in the wind"}
+      - {phrase: "茶々は《最期》を", prompt: "a noblewoman in kimono gazing up at a great white castle glowing in the red light of sunset and smoke, seen from behind, sorrowful and quiet"}
+  - 語り: 母の肖像を供養に納めたのは、茶々と言われます。｜その絵は、今も高野山にあります。
+    tone: しみじみ
+    cuts:
+      - {phrase: "《母の肖像》", prompt: "an artist painting a formal portrait of a noblewoman in layered kimono on a silk scroll in a quiet temple room, incense smoke, a young woman kneeling nearby watching with tears"}
+      - {phrase: "今も《高野山》に", prompt: "empty landscape of ancient wooden temple halls among tall cedar trees and drifting mist on a sacred mountain, peaceful morning light, quiet atmosphere, no people, no faces, no portrait"}

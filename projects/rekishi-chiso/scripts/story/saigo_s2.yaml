@@ -1,0 +1,146 @@
+# 物語完結型ショート 西郷隆盛 s2（2026-11-12）。本編 scripts/saigo-story.yaml（11/13 19:00 公開、https://youtu.be/19SEyS1d5CA）から。11/14 に予約。
+# 形式は gosekke_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/西郷隆盛_facts_20261111.yaml）と本編の # fact: だけ。
+# 絵は本編の AI 絵（out/story/saigo/main。人物は後ろ姿・遠景）と実在の錦絵（パブリックドメイン）。新しい絵は作らない。死・遺体の場面に人物の絵は当てない。
+# 本編の弱点（JACAR は翻刻のみで原画像未確認・二次引用あり）：言えること＝「読めた電報の翻刻に〜とある」、言えないこと＝洞窟を出た時刻・倒れた場所・最期の言葉の形・首を隠した者・切腹か介錯か。断定しない。
+# 切り口：切腹の話はいつ生まれたか。ラヴィーナ論文（2010）は要旨と参考文献表のみ確認（本文未読）なので「要旨は〜と見る」の形。saigo-27, saigo-18。
+# 理解テスト4問：①西郷隆盛の切腹の話 ②2010年、アメリカの歴史学者マーク・ラヴィーナの論文。西郷は銃弾で動けず従者に首を斬られたと見る ③切腹の話が定着したのは20世紀の初めと見る。参考文献に1900年の新渡戸『武士道』（死の23年後）。最期の言葉も紹介ごとに違う ④どれが正しいかは決められない。当日の電報は何と書いたか（本編へ）
+title: "西郷隆盛｜切腹の話は、いつ生まれたのか"
+yt_title: "西郷隆盛の「切腹」はいつ生まれた話か　ラヴィーナ論文と、死の23年後の『武士道』"
+description: |-
+  西郷隆盛は切腹した、という話は、いつ、生まれたのか。アメリカの歴史学者マーク・ラヴィーナは、2010年にアジア研究の学術誌に論文を出しました。
+  論文の要旨は、西郷は銃弾で動けなくなり、従者に首を斬られたと見て、切腹の話が定着したのは20世紀の初めだとします。参考文献には、1900年に英語で出た新渡戸稲造の『武士道』があり、西郷の死の23年後です。最期の言葉も、紹介する本によって「ここでよか」「ここらでよか」「介錯をお頼み申す」と形が違います。
+  論文は、要旨と参考文献表で確かめました（本文は読めていません）。最期の言葉は、徳富蘇峰『近世日本国民史』と井上清『西郷隆盛』（1970）を紹介する文章からで、原典の初出は確かめていません。どれが正しいかは、ここでは決められません。
+  では、死んだ日の官軍の電報は、何と書いていたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#西郷隆盛"
+- "#西南戦争"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/saigo
+out: saigo_story_s2
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "西郷隆盛の切腹とラヴィーナ論文"
+  title: "切腹の話は、いつ《生まれた》のか"
+now:
+- {at: "2010年", text: "2010年　ラヴィーナの論文", point: 2}
+- {at: "1900年", text: "1900年　新渡戸『武士道』", point: 1}
+timeline:
+- {label: "1877"}
+- {label: "1900"}
+- {label: "2010"}
+shots:
+  Fight:
+    kind: "real"
+    image: "paintings/saigo_nishiki_saigo_fighting.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "《西南戦争の錦絵》（中央に西郷隆盛と伝わる）19世紀（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "西南戦争の錦絵"
+  Doc:
+    kind: "ai"
+    file: "saigo/main/S06.jpg"
+    focus: [0.65, 0.6]
+    move: "left"
+    must: "電信局の将校が電文を書く"
+  Road:
+    kind: "ai"
+    file: "saigo/main/S09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "岩崎谷の石垣の道と門"
+  Dawn:
+    kind: "ai"
+    file: "saigo/main/S01.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "夜明けの城山と桜島（霧と陣の灯）"
+  Star:
+    kind: "ai"
+    file: "saigo/main/S15.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の屋根と赤い星"
+  DocB:
+    kind: "ai"
+    file: "saigo/main/S06.jpg"
+    focus: [0.3, 0.55]
+    move: "right"
+    must: "電信局の将校が電文を書く"
+  Dep:
+    kind: "real"
+    image: "paintings/saigo_nishiki_kagoshima_departure_yoshitoshi.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    credit: "月岡芳年《鹿児島暴徒出陣図》錦絵（三連の一部）1879年（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "鹿児島出陣の錦絵"
+  Shozan:
+    kind: "real"
+    image: "paintings/saigo_nishiki_kagoshima_battle_shozan.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    credit: "早川松山《鹿児島の戦い》錦絵（三連の一部）1877年（パブリックドメイン。ウィキメディア・コモンズ）"
+    must: "城山の戦いの錦絵"
+  Gun:
+    kind: "ai"
+    file: "saigo/main/S07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜明け前、大砲が火を噴く"
+lines:
+  # fact: saigo-27
+- 語り: "西郷隆盛の切腹は、作り話かもしれない。そう論じた論文がある。"
+  shot: Fight
+  tone: 強調
+  pause: 0.12
+  # fact: saigo-27
+- 語り: "2010年、アメリカの歴史学者、マーク・ラヴィーナが、アジア研究の学術誌に出した。"
+  shot: Doc
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-27
+- 語り: "要旨は、西郷は、銃弾で動けなくなり、従者に首を斬られた、と見る。"
+  shot: Road
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-27
+- 語り: "切腹の話が定着したのは、20世紀の初めだ、と。"
+  shot: Dawn
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-27
+- 語り: "それまでは、火星に昇った、ロシアへ逃げた、といった噂と並ぶ、数ある話の一つだった。"
+  shot: Star
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-27
+- 語り: "参考文献には、新渡戸稲造の『武士道』がある。1900年。西郷の死の、23年後だ。"
+  shot: DocB
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-18
+- 語り: "最期の言葉も、紹介ごとに違う。ここでよか。ここらでよか。介錯をお頼み申す。"
+  shot: Dep
+  tone: しみじみ
+  pause: 0.12
+  # fact: saigo-27
+- 語り: "どれが正しいかは、ここでは決められない。"
+  shot: Shozan
+  tone: 重い
+  pause: 0.12
+  # fact: saigo-02
+- 語り: "では、死んだ日の電報は、何と書いたのか。"
+  shot: Gun
+  tone: 疑問
+  pause: 0.15

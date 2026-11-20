@@ -119,7 +119,7 @@ def test_pacing_warns_long_same_background_and_host_share():
     from chiso import script
     long = "あ" * 70                                      # 1行およそ10秒
     sc = script.parse({"title": "t", "sections": [{"title": "s", "background": {"image": "a.jpg"},
-                       "lines": [{"語り": long}] * 6 + [{"聞き": "うん"}]}]})
+                       "lines": [{"語り": long}] * 6 + [{"聞き": "う" * 80}]}]})
     w = check.pacing(sc)
     assert any("同じ背景" in x for x in w) and any("剣崎の字数" in x for x in w)
 
@@ -195,3 +195,55 @@ def test_short_length_counts_hook_and_tease():
     assert any("ショート s1" in x and "372字" in x for x in w)
     w = check.lint(_sc([L("あ" * 120, shorts=("s1",))], {"s1": {}}))
     assert any("本文が120字" in x for x in w)
+
+
+# --- 冒頭の1分（10-22、物語型）-------------------------------------------------------------
+def _story(lines):
+    from chiso import script
+    return script.parse({"title": "豊臣秀長｜t", "people": {"豊臣秀長": {"born": "1540-01-01", "died": "1591-02-15", "match": ["秀長"]}},
+                         "sections": [{"title": "地表", "lines": lines}]})
+
+
+def _story_warns(lines):
+    return check.story_opening_rules(_story(lines))
+
+
+def test_story_opening_good_has_no_warning():
+    good = [{"語り": "東京駅前のオフィス街は、400年前は海の底でした。"},
+            {"語り": "その海を埋めた男は、なぜ最期に、すべてを手放したのでしょうか。"},
+            {"聞き": "海を埋めたの？ すごい話だね。"}]
+    assert _story_warns(good) == []
+
+
+def test_story_opening_flags_plan_calendar_disclaimer_askback():
+    bad = [{"語り": "1586年4月、大坂城。まずは、よく聞く話を4つ並べます。"},
+           {"聞き": "宗易って誰？"},
+           {"語り": "この動画は、ドラマとは関係なく、記録から追っていきます。"},
+           {"語り": "日付は和暦と西暦で19日ずれます。今日の地表は、この3つです。"}]
+    w = "\n".join(_story_warns(bad))
+    for key in ("予定・段取り", "暦・表記", "断り書き", "聞き返", "自作の言い回し", "日付・人名・役職の並びだけ"):
+        assert key in w, key
+
+
+def test_story_opening_noun_density_and_first_line():
+    dense = [{"語り": "大坂城の豊臣秀長は、京都の本能寺、江戸城、駿府城、小田原城へ、徳川家康公の使いを送りました。"}]
+    assert any("固有名詞" in x for x in _story_warns(dense))
+    emotional = [{"語り": "明治11年5月14日、大久保利通は、暗殺される朝にも、国の未来を語り続けました。"}]
+    assert not any("日付・人名・役職" in x for x in _story_warns(emotional))   # 結末の語（暗殺）があれば出さない
+
+
+def test_story_opening_only_looks_at_first_330_chars():
+    late = [{"語り": "あ" * 200}, {"語り": "い" * 200}, {"語り": "まずは、4つ並べます。"}]
+    assert not any("予定" in x for x in _story_warns(late))
+
+
+def test_story_opening_is_a_fix_not_a_stop():
+    bad = [{"語り": "1586年4月、大坂城。まずは、4つ並べます。"}]
+    rows = check.report([], _story_warns(bad))
+    assert rows and all(r.startswith("! 冒頭：") for r in rows)
+
+
+def test_solo_narrator_skips_host_share_warning():
+    from chiso import script
+    solo = script.parse({"title": "t", "sections": [{"title": "地表", "lines": [{"語り": "あ" * 50}] * 9 + [{"聞き": "う"}]}]})
+    assert not any("剣崎の字数" in w for w in check.pacing(solo))

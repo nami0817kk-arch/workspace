@@ -1,0 +1,176 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：福島正則のその後（scripts/fukushima-story.yaml）。chiso/storymain.py が読む。
+# 11-11 作成（11/12 12:00 公開）。kenshin_main_look.yaml を写した。台本には手を入れない（承認のあと）。決まりは docs/story-main.md・スキル rekishi-story-screen。
+# 絵の方針：AI 絵（F01〜F19・FEND）は Gemini（Chrome、無料版）。指示の一覧は dev/output/rekishi-chiso/research/fukushima_ai_images.md。
+#   実在の絵（パブリックドメイン）は額（frame:）と屏風の一部（part:）。正則の顔は実在の肖像に似せない想像図。死・遺体の場面に人物の絵は当てない。
+script: scripts/fukushima-story.yaml
+out: fukushima_story_main
+art_dir: out/story/fukushima/main
+main_art_dir: out/story/fukushima/main
+ai_disclosure: この動画の情景・人物の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 山あいで死んだ大名, now: 元和5年6月, dates: {}}
+  1: {label: 第1章 5千石から49万8千石へ, now: 天正11年, dates: {12: 慶長5年, 14: 慶長6年, 15: 慶長19年, 16: 元和3年}}
+  2: {label: 第2章 洪水と石垣の修理, now: 元和3年, dates: {23: 元和4年, 25: 元和5年}}
+  3: {label: 第3章 6月2日、将軍の決断, now: 元和5年4月, dates: {31: 元和5年6月2日, 32: 6月9日}}
+  4: {label: 第4章 家臣たちは城を開けなかった, now: 元和5年6月, dates: {39: 8月8日, 42: 10月}}
+  5: {label: 第5章 前田家の逸話集は別の処分を書く, now: null, dates: {}}
+  6: {label: 第6章 信濃・高井野の5年, now: 元和5年10月, dates: {53: 元和6年, 56: 寛永元年}}
+  7: {label: 第7章 検使が着く前に, now: 寛永元年7月, dates: {}}
+  8: {label: 第8章 死んだあとに取り上げられたもの, now: 寛永元年, dates: {72: 寛永14年, 73: 天和元年}}
+  9: {label: 第9章 墓と没後400年, now: null, dates: {}}
+  10: {label: まとめ なぜ死んだあとにも取り上げられたのか, now: null, dates: {}}
+no_tag_from: 86
+
+references:
+  - 広島城（広島市）「福島氏の入国と改易」「浅野氏の治世」（hiroshimacastle.jp）・広島市「福島正則没後400年記念事業」
+  - ひろしまWEB博物館（ひろしま・もぐりん）「福島正則書状（三奈木黒田家文書）」の解説
+  - 藤井讓治「福島正則」（PRESIDENT Online の記事）／サライ.jp「福島正則」（2021年・2026年）／攻城団ブログ（2021年）／Into the Japan Waraku／城びと／PHP 歴史街道（2024年）／幕末歴史ガイド「高井野藩」
+  - 高山村「福島正則荼毘所跡」「高山村指定文化財」／小布施町「文化財一覧」／長野県立長野図書館のレファレンス回答（NDL レファレンス協同データベース）
+  - 『柴田退治記』『太閤記』『老人雑話』『微妙公御夜話』（ウィキソースの翻刻）／世界大百科事典・日本大百科全書・日本人名大辞典（コトバンク）
+credits:
+  paintings/nene_fukushima_masanori_yoshiiku.jpg: 落合芳幾《福島正則》1867年
+  paintings/oichi_hidetada.jpg: 《徳川秀忠像》江戸時代
+  paintings/hidenaga_shizugatake_screen_1.jpg: 《賤ヶ岳合戦図屏風》江戸時代
+
+ai:
+  F01: {scene: 洪水で水に浸かった城下町と崩れかけた石垣（遠景）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F02: {scene: 川の三角州に建つ大きな城（朝）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F03: {scene: 崩れた石垣を人夫たちが積み直す（遠め）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F04: {scene: 灯の下の正則・胸から上（重い表情）, pan: zoom, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.3, 0.4]}}
+  F05: {scene: 江戸の城の広い板の間で平伏する大名（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.6]}}
+  F06: {scene: 夜明け、城門の前に並ぶ家臣たち（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F07: {scene: 秋の山道を進む行列（移封の旅）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F08: {scene: 秋の信濃の山あいの質素な屋敷（土塁と空堀・人物なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F09: {scene: 縁側で山を眺める老いた正則（斜め後ろ）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.4, 0.8, 0.45]}}
+  F10: {scene: 仏壇の前に座る老いた武将（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.35, 0.62, 0.62]}}
+  F11: {scene: 夏の夕方、山あいの屋敷の門前（人影なし）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F12: {scene: 夕方の山すそに立つ一筋の煙と若い杉（人物・遺体なし）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F13: {scene: 山道を馬で急ぐ幕府の使者たち（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F14: {scene: 帳簿に石高を書く手元（役所・蝋燭）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F15: {scene: 旗本屋敷の小さな門と若い武士（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F16: {scene: 古い寺の墓所の大きな五輪塔（人物なし）, pan: v, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F17: {scene: 夜明けの林で槍を構える若い武者（後ろ姿）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F18: {scene: にぎわう城下の川と橋（昼）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  F19: {scene: 家老たちが書状を読む（後ろ姿と横顔・灯）, pan: h, crops: {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5], face: [1.3, 0.5, 0.4]}}
+  FEND: {scene: 終了画面用。夕暮れの信濃の山（右半分を空ける）, lock: [1.0, 0.5, 0.5]}
+
+paint_fx: {}
+
+shots:
+  - 0 ai:F02 wide
+  - 1 ai:F01 wide
+  - 2 ai:F03 left
+  - 3 ai:F05 wide
+  - 4 ai:F05 left
+  - 5 frame:paintings/nene_fukushima_masanori_yoshiiku.jpg
+  - 6 ai:F17 wide
+  - 7 ai:F09 wide
+  - 8 ai:F17 left
+  - 9 part:paintings/hidenaga_shizugatake_screen_1.jpg
+  - 10 ai:F17 right
+  - 11 ai:F14 wide
+  - 12 ai:F18 wide
+  - 13 ai:F02 left
+  - 14 ai:F18 right
+  - 15 ai:F05 left
+  - 16 ai:F01 wide
+  - 17 ai:F01 right
+  - 18 ai:F01 left
+  - 19 ai:F05 right
+  - 20 ai:F14 left
+  - 21 ai:F14 right
+  - 22 ai:F14 wide
+  - 23 ai:F03 wide
+  - 24 ai:F01 right
+  - 25 ai:F02 right
+  - 26 ai:F05 face
+  - 27 frame:paintings/oichi_hidetada.jpg
+  - 28 ai:F19 wide
+  - 29 ai:F19 left
+  - 30 ai:F03 left
+  - 31 ai:F05 wide
+  - 32 ai:F13 wide
+  - 33 ai:F13 left
+  - 34 ai:F06 wide
+  - 35 ai:F06 left
+  - 36 ai:F06 right
+  - 37 ai:F19 right
+  - 38 ai:F19 wide
+  - 39 ai:F02 wide
+  - 40 ai:F07 wide
+  - 41 ai:F05 right
+  - 42 ai:F07 right
+  - 43 ai:F14 left
+  - 44 ai:F14 wide
+  - 45 ai:F14 right
+  - 46 ai:F19 left
+  - 47 ai:F14 left
+  - 48 ai:F08 wide
+  - 49 ai:F11 left
+  - 50 ai:F08 wide
+  - 51 ai:F11 right
+  - 52 ai:F08 left
+  - 53 ai:F10 wide
+  - 54 ai:F10 face
+  - 55 ai:F09 wide
+  - 56 ai:F11 wide
+  - 57 ai:F11 left
+  - 58 ai:F11 right
+  - 59 ai:F09 face
+  - 60 ai:F13 right
+  - 61 ai:F12 wide
+  - 62 ai:F13 left
+  - 63 ai:F12 right
+  - 64 ai:F16 wide
+  - 65 ai:F09 left
+  - 66 ai:F13 wide
+  - 67 ai:F14 right
+  - 68 ai:F14 wide
+  - 69 ai:F04 face
+  - 70 ai:F15 wide
+  - 71 ai:F15 left
+  - 72 ai:F15 right
+  - 73 ai:F10 right
+  - 74 ai:F15 face
+  - 75 ai:F15 wide
+  - 76 ai:F16 wide
+  - 77 ai:F08 right
+  - 78 ai:F18 wide
+  - 79 ai:F02 wide
+  - 80 ai:F02 left
+  - 81 ai:F18 left
+  - 82 ai:F12 wide
+  - 83 ai:F09 wide
+  - 84 ai:F01 wide
+  - 85 ai:F15 wide
+  - 86 ai:FEND wide
+  - 87 ai:FEND wide
+  - end ai:FEND wide
+
+focus: {}
+
+fx:
+  F04: {lamp: {region: [0.7, 0.1, 0.95, 0.6]}}
+  F10: {lamp: {region: [0.2, 0.3, 0.5, 0.7]}}
+  F14: {lamp: {region: [0.3, 0.2, 0.5, 0.5]}}
+  F19: {lamp: {region: [0.3, 0.5, 0.5, 0.8]}}
+  F12: {smoke: {region: [0.4, 0.1, 0.65, 0.75]}}
+
+parts:
+  - {type: versus3, from: 11, to: 11, items: [[柴田退治記（1583年）, 五千石か三千石], [太閤記（1625年）, 7人とも五千石], [老人雑話, 正則だけ五千石・ほか約三千石]], every: 1.8}
+  - {type: quote, from: 61, to: 61, label: 史料, text: 幕府の検死が済む前に／荼毘に付した, source: 高山村「福島正則荼毘所跡」}
+  - {type: quote, from: 84, to: 84, label: 要点, text: 修理は約45万石を／火葬は残る2万石を, source: この動画のまとめ}
+
+figures: []
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 2, note: 本丸の逆}
+  - {line: 11, note: 記録の食い違い}
+  - {line: 12, note: 石高の図}
+  - {line: 29, note: 壊す所の図}
+  - {line: 61, note: 検死の前に火葬}
+  - {line: 71, note: 福島家の石高}
+  - {line: 84, note: 要点}
+  - {end: true, note: 終了画面の空き}

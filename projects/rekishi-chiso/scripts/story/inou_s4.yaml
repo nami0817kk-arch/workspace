@@ -1,0 +1,141 @@
+# 物語完結型ショート 伊能忠敬 s4（2026-11-11）。本編 scripts/inou-story.yaml（11/13 12:00 公開予約、https://youtu.be/AG2oS5iUwgU）から。11/14 に予約。
+# 形式は gosekke_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は事実カード（dev/output/rekishi-chiso/research/伊能忠敬_facts_20261111.yaml）と本編の # fact: だけ。
+# 出どころは大谷亮吉『伊能忠敬』（1917）の翻刻を通した記述。原日記は未確認なので「大谷は書く」「日記には〜とある」と言う。奥宮正樹の読みは未確認のため名前は語らない。
+# 絵は本編の AI 絵（out/story/inou/main。人物なし）と実在の絵（パブリックドメイン）。新しい絵は作らない。
+# 切り口：迎える側の日記（本編4章）。奥宮正樹の読みが未確認なので、語りでは「土佐藩の役人」とだけ言う。
+# 計算：二丈六、七尺＝26〜27尺×30.3cm＝約8メートル。亥の刻＝夜10時ごろ。
+# 理解テスト4問：①土佐藩の役人 ②1808年、四国の測量で隊を国境で迎えた ③道の修繕を命じられ、人足400人、徹夜で磯の道を造った ④23日の日記に、一夜も眠れずと書いた。浜田藩の人足の数は本編
+title: "土佐藩の役人は、日記に「一夜も眠れず」と書いた"
+yt_title: "伊能忠敬の測量隊を迎えた土佐藩の役人は、日記に「一夜も眠れず」と書いた　人足400人と徹夜の道づくり"
+description: |-
+  1808年、文化5年。四国の測量で、伊能忠敬の隊は土佐藩の国境、甲浦に着きました。道の修繕を命じられた藩の役人は、一か月あまり隊に付き従い、日記を書きます。大谷亮吉『伊能忠敬』が、その日記を抜き書きしています。
+  日記のはじめには、測量の用に使う人足は400人ほど、大送りだという、とあります。隊の宿は寺で、門の前には長さ8メートルほどの竹に、赤、白、青の幟。磯の道が整えられないと名主が訴えた夜、役人は夜の10時ごろに宿を出て、人を集め、道を造り、枝を刈りました。23日の日記には「甲浦を出てから今日まで一夜も眠れず、ひどく疲れた」。
+  石見の浜田藩の記録は、忠敬の長持を運ぶのに、人足が何人かかったと書いたのか。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#伊能忠敬"
+- "#日本地図"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の風景・室内の画像は、Google の画像生成AI（Gemini など）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。"
+art_dir: out/story/inou
+out: inou_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: "土佐藩の役人の日記"
+  title: "迎える側は、《一夜も眠れず》"
+now:
+- {at: "1808年", text: "1808年　土佐の国境", point: 0}
+timeline:
+- {label: "1808"}
+shots:
+  P04:
+    kind: "ai"
+    file: "inou/main/P04.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "霧の宿場の門と白壁"
+  P01:
+    kind: "ai"
+    file: "inou/main/P01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "雨の山道"
+  S02:
+    kind: "ai"
+    file: "inou/main/S02.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "朝もやの御殿の屋根の並び"
+  S10:
+    kind: "ai"
+    file: "inou/main/S10.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "灯の下の書状と筆"
+  S07:
+    kind: "ai"
+    file: "inou/main/S07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "杉木立の参道に差す光"
+  S12:
+    kind: "ai"
+    file: "inou/main/S12.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "ろうそくのともる広間"
+  P07:
+    kind: "ai"
+    file: "inou/main/P07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "雨の軒下に掛けた蓑と笠"
+  P01b:
+    kind: "ai"
+    file: "inou/main/P01.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "雨の山道"
+  S11:
+    kind: "ai"
+    file: "inou/main/S11.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夜の座敷の行灯と机"
+  P09:
+    kind: "ai"
+    file: "inou/main/P09.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "夕焼けの城下町の遠景"
+lines:
+- 語り: "伊能忠敬の測量隊を迎えた、土佐藩の役人は、日記に、一夜も眠れなかった、と書いた。"
+  shot: P04
+  tone: 強調
+  pause: 0.12
+  # fact: inou-27
+- 語り: "隊が来ると、何が起きたのか。"
+  shot: P01
+  tone: 疑問
+  pause: 0.15
+  # fact: inou-22
+- 語り: "1808年、文化5年。四国の測量で、隊は、土佐藩の国境、甲浦に着いた。役人は、道の修繕を命じられ、一か月あまり、隊に付き従った。"
+  shot: S02
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-22
+- 語り: "日記のはじめには、こうある。測量の用に使う人足は、400人ほど、大送りだという。"
+  shot: S10
+  tone: 重い
+  pause: 0.12
+  # fact: inou-22
+- 語り: "隊の宿は寺。門の前には、長さ8メートルほどの竹に、赤、白、青の幟が立ててあった。"
+  shot: S07
+  tone: しみじみ
+  pause: 0.12
+  # fact: inou-24
+- 語り: "磯の道が整えられない、と名主が訴えた夜。役人は、夜の10時ごろに宿を出て、人を集め、道を造り、枝を刈った。夜が明けて、ようやく終わった。"
+  shot: P07
+  tone: 重い
+  pause: 0.12
+  # fact: inou-28
+- 語り: "23日の日記に、役人は書く。甲浦を出てから今日まで、一夜も眠れず、ひどく疲れた、と。"
+  shot: S11
+  tone: 重い
+  pause: 0.12
+  # fact: inou-27
+- 語り: "石見の浜田藩の記録は、忠敬の長持を運ぶのに、人足が何人かかった、と書いたのか。"
+  shot: P09
+  tone: 疑問
+  pause: 0.15
+  # fact: inou-29

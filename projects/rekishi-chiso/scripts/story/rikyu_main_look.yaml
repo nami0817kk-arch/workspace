@@ -1,0 +1,252 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：千利休（scripts/rikyu-story.yaml）。chiso/storymain.py が読む。
+# 10-28 作成（12:00 公開の急ぎ）。台本には手を入れない。決まりは docs/story-main.md・スキル rekishi-story-screen。見本は asahi_main_look.yaml。
+# 絵の方針：AI 絵は 14 枚（R01〜R14）＋数正の回の K05（秀吉）をそのまま使う（新しく作らない）。同じ絵を時間をずらして使い回す（続けて 20 秒まで）。
+#   人物は表情のある全面の AI 絵が主役。実在の絵（パブリックドメイン。出典は台本の background / portrait の credit・caption）は額（frame:）と屏風・絵図の一部（part:）。
+# AI 絵の指示の一覧（英語・顔立ちの設定）：dev/output/rekishi-chiso/research/rikyu_ai_images.md
+# 届く前は art_dir の仮の絵（R01.jpg〜、番号と場面だけ書いた灰色の板）で代える。届いたら main_art_dir に R01.jpg〜を置くだけ。
+# K05 は out/story/kazumasa/main/ から out/story/rikyu/main/（と ph/）へ写してある（out/ は git に入らないので、無ければ写し直す）。
+script: scripts/rikyu-story.yaml
+out: rikyu_story_main
+art_dir: out/story/rikyu/ph          # 仮の絵（placeholder）＋ K05 の写し
+main_art_dir: out/story/rikyu/main   # Gemini の 16:9 の絵（R01.jpg〜R14.jpg）＋ K05 の写し
+ai_disclosure: この動画の人物・情景の画像の多くは、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+# 章ごとの左上の札「いま｜章題」。台本は和暦を主に書くので札も和暦（西暦の年は付けない。2026年など今の出来事は西暦）。
+# dates＝語りがその年・月日を言った行から替える（研究・論文・書物の年、像の作られた年は物語の「いま」ではないので替えない）
+chapters:
+  0: {label: 序章 なぜ木像は磔にされたのか, now: 天正19年2月,
+      dates: {13: 2026年秋, 14: 天正19年2月}}
+  1: {label: 第1章 三つの記録の食い違い, now: 天正19年2月,
+      dates: {22: 天正15年, 23: 天正19年2月}}
+  2: {label: 第2章 大徳寺の三門 金毛閣, now: 天正19年2月}
+  3: {label: 第3章 秀長の死と四つの説, now: 天正19年1月22日,
+      dates: {65: 天正19年2月}}
+  4: {label: 第4章 「きのふりきうの茶にて」の書状, now: null}
+  5: {label: 第5章 利休はどこに眠るのか, now: 天正19年,
+      dates: {104: 文禄3年, 108: 寛永10年ごろ, 114: 2026年9月, 118: 2026年10月}}
+# 概要欄「■ 参考にした資料」（事実カード 千利休_facts_20261028.yaml のうち本文を開いた主なもの。題はカードの題のまま。10-28）
+references:
+  - 大日本古文書 家わけ第三 伊達家文書之二（伊達家に届いた書状）　https://dl.ndl.go.jp/pid/1908797
+  - 千利休は切腹せず生きていた?（PRESIDENT Online）　https://president.jp/articles/-/23498
+  - 近古史談原文集　https://dl.ndl.go.jp/pid/772664
+  - 竹茶杓  銘 泪　https://online.bunka.go.jp/heritages/detail/96849
+  - （戦国時代の人物学）大徳寺　https://president.jp/articles/-/288
+  - 一条戻橋（地域観光資源の多言語解説文DB）　https://www.mlit.go.jp/tagengo-db/R2-01418.html
+  - 開創700年記念 特別展「大徳寺」 解説記事　https://intojapanwaraku.com/culture/318348/
+  - 開創700年記念 特別展「大徳寺 本朝無双之禅苑」　https://www.tnm.jp/modules/r_free_page/index.php?id=2770
+  - 開創700年記念 特別展「大徳寺 本朝無双之禅苑」公式サイト　https://daitokuji2026.exhn.jp/
+  - 東博「大徳寺」展 記事　https://www.watch.impress.co.jp/docs/news/2150906.html
+  - 千利休居士遺蹟・不審菴　https://tabi-mag.jp/ky0596/
+  - 年未詳2月10日付 千宗易書状(榊原式部太夫宛)　https://online.bunka.go.jp/heritages/detail/624905
+  - 館蔵品展「新資料展」（2026/10/17〜12/20）　https://www.museum.or.jp/event/127295
+  - 史跡（堺市観光）　https://www.city.sakai.lg.jp/kanko/sakai/alacarte/shiseki.html
+no_tag_from: 122                     # 締め（冒頭の一条戻橋に戻る所）から札を出さない
+
+# AI 絵（16:9 横・14枚＋K05）。scene は日本語の要約（英語の指示は research/rikyu_ai_images.md）。
+# pan：h＝左右（既定）・v＝上下・zoom＝ゆっくり寄る（顔の感情の場面だけ）。crops＝切り出し [倍率, 中心x, 中心y]
+ai:
+  R01: {scene: 利休・胸から上、静かな決意の顔（灯の下）, pan: zoom, crops: {face: [1.25, 0.24, 0.32]}}   # 顔は左寄り（0.24, 0.20）
+  R02: {scene: 狭い茶室で茶を点てる利休（横から）, crops: {left: [1.18, 0.42, 0.40], face: [1.25, 0.50, 0.30]}}
+  R03: {scene: 雷雨の夜、屋敷の縁側に座る利休の後ろ姿（門に兵）, crops: {left: [1.18, 0.62, 0.50], right: [1.18, 0.74, 0.40]}}
+  R04: {scene: 雨の朝、屋敷を囲む兵（顔は描かない）, pan: h}
+  R05: {scene: 大徳寺の三門（二層の楼門）・人物なし, pan: v}
+  R06: {scene: 楼上の木像（僧形の立像）, crops: {face: [1.25, 0.78, 0.38], right: [1.18, 0.70, 0.45]}}
+  R07: {scene: 一条戻橋の人だかり、木の柱に縛られた木像（残酷描写なし）, pan: h, crops: {left: [1.2, 0.30, 0.40]}}   # 木像は左上（0.20, 0.25）
+  R08: {scene: 堺の港町を歩く若い頃の利休（後ろ姿）, pan: h}
+  R09: {scene: 畳の上の黒い楽茶碗と茶筅}
+  R10: {scene: 文机の上の書状（読めない筆の跡）と硯}
+  R11: {scene: 雪の会津の屋敷で座る少庵（横顔）}
+  R12: {scene: 京の町なかで小さな茶室を建て直す大工たち（江戸の初め）, pan: h}
+  R13: {scene: 寺の庭の奥の苔むした石塔（紅葉・人物なし）}
+  R14: {scene: 終了画面用。夕暮れの京の川と橋（右半分を空けた構図）, lock: [1.0, 0.5, 0.5]}
+  K05: {scene: 数正の回の秀吉・金の襖の御殿に座る。笑みと鋭い目, crops: {face: [1.25, 0.5, 0.40]}}
+
+# 絵の割り当て：「行の番号 種類:絵 [切り出し]」。次の行の指定まで続く。図（figure）の出る行は、その時の絵を暗くして図を置く（自動）
+shots:
+  # 序章（0〜15）：一条戻橋の磔 → 伊達家の書状 → 利休 → 大徳寺の門 → 食い違う記録 → なぜ → 生きていた説 → 2026年の像 → 名前
+  - 0 ai:R07 wide
+  - 1 part:paintings/hideyoshi_jurakudai_3.jpg
+  - 2 ai:R10 wide
+  - 3 ai:R07 right
+  - 4 frame:paintings/hidenaga_rikyu_tohaku.jpg
+  - 5 ai:R05 wide
+  - 6 ai:R06 wide
+  - 7 ai:R01 face
+  - 8 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg   # 史料の札（北野社家日記「成敗」）
+  - 9 part:paintings/hideyoshi_daibutsu_okyo.jpg
+  - 10 ai:R03 wide
+  - 11 ai:R01 wide
+  - 12 ai:K05 face
+  - 13 ai:R06 right
+  - 14 ai:R07 left                     # 覚えてほしい名前（14〜15）の下地
+  - 15 ai:R02 wide
+  # 第1章（16〜41）
+  - 16 ai:R08 wide
+  - 17 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 18 ai:K05 wide
+  - 19 ai:R09 wide
+  - 20 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg
+  - 21 ai:R10 wide                     # 最期の表①（台本の図）
+  - 22 part:paintings/hideyoshi_daigo_hanami_screen.jpg
+  - 23 ai:R02 wide
+  - 24 part:paintings/hideyoshi_daibutsu_okyo.jpg
+  - 25 ai:R10 left                     # 史料の札（多聞院日記）
+  - 26 ai:R03 wide                     # 最期の表②
+  - 27 ai:R01 face
+  - 28 part:paintings/hidenaga_rikyu_death_poem_met.jpg
+  - 29 ai:R03 left                     # 天気・見張りの様子
+  - 30 ai:R10 wide
+  - 31 part:paintings/hidenaga_jurakudai_mitsui.jpg   # 最期の表③
+  - 32 ai:R01 wide
+  - 33 part:paintings/hidenaga_jurakudai_mitsui.jpg
+  - 34 part:paintings/hidenaga_rikyu_death_poem_met.jpg
+  - 35 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg
+  - 36 ai:R02 left                     # 茶杓「泪」
+  - 37 ai:R02 wide
+  - 38 ai:R01 face                     # 【想像】……これで、よい
+  - 39 ai:R09 wide
+  - 40 ai:K05 face
+  - 41 ai:R06 wide
+  # 第2章（42〜61）：大徳寺の三門 金毛閣
+  - 42 ai:R05 wide
+  - 43 part:paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg
+  - 44 ai:R05 right
+  - 45 part:paintings/hideyoshi_daitokuji_funeral_yoshitoshi.jpg
+  - 46 ai:R06 wide
+  - 47 ai:R06 face
+  - 48 ai:K05 wide
+  - 49 ai:R07 wide                     # 史料の札（伊達家の書状「もどり橋…張付ニ」）
+  - 50 part:paintings/hideyoshi_jurakudai_3.jpg
+  - 51 ai:R07 left
+  - 52 ai:R07 right
+  - 53 part:paintings/akechi_rakuchu_rakugai_uesugi_left.jpg
+  - 54 ai:R01 face                     # 【想像】わしの姿が……
+  - 55 part:paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg
+  - 56 ai:R05 wide
+  - 57 ai:R09 wide
+  - 58 ai:R06 wide
+  - 59 ai:R05 left
+  - 60 ai:R02 wide
+  - 61 ai:R01 wide
+  # 第3章（62〜83）：秀長の死と四つの説
+  - 62 frame:paintings/hidenaga_portrait_shungakuin.jpg
+  - 63 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 64 part:paintings/hidenaga_jurakudai_mitsui.jpg
+  - 65 part:paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg
+  - 66 ai:K05 wide                     # 関係図（怒りの間に入ったふたり）
+  - 67 frame:paintings/hidenaga_omandokoro.jpg
+  - 68 part:paintings/hidenaga_jurakudai_screen.jpg   # 理由の表①
+  - 69 ai:K05 face                     # 理由の表②
+  - 70 ai:R02 wide
+  - 71 frame:paintings/ieyasu_ishida_mitsunari_portrait.jpg
+  - 72 ai:R04 wide                     # 3,000の兵
+  - 73 ai:R03 wide                     # 理由の表③
+  - 74 ai:R04 right
+  - 75 part:paintings/mitsunari_busanjin_1592.jpg
+  - 76 part:paintings/hideyoshi_five_wives_utamaro_met.jpg
+  - 77 ai:R09 wide
+  - 78 ai:R05 wide
+  - 79 ai:R10 left
+  - 80 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 81 ai:R01 wide
+  - 82 ai:R03 left
+  - 83 ai:K05 face
+  # 第4章（84〜102）：「きのふりきうの茶にて」の書状
+  - 84 part:paintings/mitsunari_hideyoshi_letter_shuin.jpg
+  - 85 ai:R10 wide
+  - 86 frame:paintings/akechi_hideyoshi_kodaiji.jpg
+  - 87 ai:K05 face                     # 秀吉書状の一節
+  - 88 ai:R10 right                    # 史料の札（きのふりきうの茶にて）
+  - 89 ai:R02 wide
+  - 90 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 91 ai:R07 wide
+  - 92 ai:R10 wide                     # 切腹したのかの表
+  - 93 ai:R09 wide
+  - 94 part:paintings/mitsunari_hideyoshi_letter_shuin.jpg
+  - 95 ai:R01 wide
+  - 96 ai:R10 left
+  - 97 part:paintings/hidenaga_rikyu_death_poem_met.jpg
+  - 98 part:paintings/hideyoshi_daibutsu_okyo.jpg
+  - 99 ai:R03 left
+  - 100 ai:R02 face                    # 【想像】……一服、いかがでございましょう
+  - 101 ai:R09 wide
+  - 102 ai:R11 wide
+  # 第5章（103〜126）：その後 ＋ 冒頭の橋に戻る締め
+  - 103 ai:R11 right                   # 地図（京→会津）
+  - 104 part:paintings/akechi_rakuchu_rakugai_uesugi_right.jpg
+  - 105 ai:R02 wide
+  - 106 part:paintings/hidenaga_jurakudai_screen.jpg
+  - 107 part:paintings/hidenaga_daitokuji_shoko_yoshitoshi.jpg
+  - 108 ai:R12 wide
+  - 109 ai:R12 right                   # 千家の表（台本の図）
+  - 110 ai:R13 wide
+  - 111 ai:R05 wide
+  - 112 part:paintings/ieyasu_sakai_montanus_engraving.jpg
+  - 113 ai:R08 wide
+  - 114 part:paintings/hidenaga_letter_1586.jpg
+  - 115 ai:R10 wide
+  - 116 ai:R10 left
+  - 117 ai:R13 right
+  - 118 ai:R05 right
+  - 119 ai:R06 wide
+  - 120 ai:R06 face                    # 三門の像の表（台本の図）
+  - 121 ai:R05 wide
+  - 122 ai:R07 wide                    # 締め：冒頭の一条戻橋に戻る
+  - 123 ai:K05 face
+  - 124 ai:R10 wide
+  - 125 ai:R06 wide
+  - 126 ai:R14 wide
+  - end ai:R14 wide
+
+# look だけで足す図（台本には無い。語りがその名前・地点を言う 0.25 秒前に1つずつ書き込む）
+figures:
+  # 関係図：66「秀吉の母の大政所と、亡くなった秀長の妻」。誰をとりなしたかは断定しない（台本の注）
+  - {from: 66, to: 66, spec: {type: people, title: 天正19年2月 怒りの間に入ったふたり,
+      nodes: [[豊臣秀吉, 天下人], [大政所, 秀吉の母], [秀長の妻, 亡き弟の妻]],
+      edges: [[大政所, 豊臣秀吉, 母と子], [秀長の妻, 豊臣秀吉, 義理の姉]]}}
+  # 地図：103「京を離れ、会津の蒲生氏郷のもとで」
+  - {from: 103, to: 104, spec: {type: map, title: 利休の死のあと 少庵の行き先, bounds: [135.3, 140.4, 34.6, 37.9],
+      places: [[京, 135.77, 35.01], [会津, 139.93, 37.49]], route: [京, 会津], note: 蒲生氏郷のもとへ}}
+
+# 語りがその物・人を言うと、カットの終わりにそれが主役になる所で止まる
+focus:
+  R03: {利休: [1.2, 0.68, 0.45], 見張り|兵: [1.2, 0.85, 0.45]}
+  R07: {木像|像: [1.3, 0.22, 0.35], 見物|人: [1.2, 0.15, 0.55]}
+  R13: {墓|石: [1.2, 0.60, 0.45]}
+  R05: {門の上|上の階|金毛閣: [1.25, 0.5, 0.35]}
+  R06: {像|木像: [1.25, 0.78, 0.40]}
+  K05: {秀吉: [1.2, 0.5, 0.40]}
+  paintings/hidenaga_rikyu_tohaku.jpg: {利休: [1.4, 0.5, 0.35]}
+  paintings/hidenaga_omandokoro.jpg: {大政所: [1.4, 0.40, 0.30]}
+
+# 絵の一部だけを動かす（顔・人物にはかけない）
+fx:
+  R01: {lamp: {region: [0.86, 0.15, 1.0, 0.75]}}                      # 行灯の灯
+  R03: {mist: {region: [0.62, 0.0, 1.0, 0.40], alpha: 0.10, speed: 6}} # 雨の煙り
+  R05: {mist: {region: [0, 0.55, 1, 0.95], alpha: 0.10, speed: 5}}    # 朝霧
+
+# 部品（from〜to の行、0 始まり。出ている間は絵を暗くする）
+parts:
+  - {type: names, from: 14, to: 15, title: この物語で覚えてほしい名前, every: 0.7,
+     items: [[千利休, 秀吉に仕えた茶人, paintings/hidenaga_rikyu_tohaku.jpg, [0.5, 0.35]],
+             [豊臣秀吉, 利休を罰した天下人, ai:K05, [0.5, 0.40]],
+             [少庵, 利休の養子・千家を興し直す, ai:R11, [0.62, 0.45]]]}
+  - {type: quote, from: 8, to: 8, label: 史料, text: 利休　成敗,
+     source: 『北野社家日記』天正19年2月}
+  - {type: quote, from: 25, to: 25, label: 史料, text: 2月28日　利休切腹のうわさ／高野山へ追放の話も,
+     source: 『多聞院日記』天正19年（今の言葉にしたもの）}
+  - {type: quote, from: 49, to: 49, label: 史料, text: もどり橋と申候所ニ、／張付ニかけさせられ候,
+     source: 伊達家に届いた書状（『大日本古文書 伊達家文書之二』）}
+  - {type: quote, from: 88, to: 88, label: 史料, text: きのふりきうの茶にて／御膳もあがり,
+     source: 秀吉の書状（利休の死の翌年とされる）}
+
+# 静止画（story-main を --frames なしで回したとき）
+stills:
+  - {line: 0, note: 冒頭（0秒）一条戻橋}
+  - {line: 14, note: 序章の終わり 覚えてほしい名前}
+  - {line: 25, note: 第1章 多聞院日記の札}
+  - {line: 49, note: 第2章 伊達家の書状の札}
+  - {line: 66, note: 第3章 関係図}
+  - {line: 88, note: 第4章 きのふりきうの茶にて}
+  - {line: 103, note: 第5章 京から会津への地図}
+  - {end: true, note: 終了画面の空き}

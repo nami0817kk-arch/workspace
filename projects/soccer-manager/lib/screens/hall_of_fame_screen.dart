@@ -28,7 +28,7 @@ class HallOfFameScreen extends StatelessWidget {
       ),
       drawer: const QuickAccessDrawer(),
       body: ResponsiveBody(
-        child: legends.isEmpty
+        child: legends.isEmpty && gameState.clubAppsLeaders().isEmpty
             ? Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
@@ -43,10 +43,17 @@ class HallOfFameScreen extends StatelessWidget {
                   ),
                 ),
               )
-            : ListView.builder(
+            : ListView(
                 padding: const EdgeInsets.all(16),
-                itemCount: legends.length,
-                itemBuilder: (context, i) => _LegendCard(player: legends[i]),
+                children: [
+                  const _ClubRecordsCard(),
+                  for (final p in legends)
+                    _LegendCard(
+                      player: p,
+                      retired: gameState.isNumberRetired(p.id),
+                      onRetireNumber: () => gameState.retireNumber(p.id),
+                    ),
+                ],
               ),
       ),
     );
@@ -55,7 +62,13 @@ class HallOfFameScreen extends StatelessWidget {
 
 class _LegendCard extends StatelessWidget {
   final Player player;
-  const _LegendCard({required this.player});
+  final bool retired;
+  final VoidCallback onRetireNumber;
+  const _LegendCard({
+    required this.player,
+    required this.retired,
+    required this.onRetireNumber,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +80,23 @@ class _LegendCard extends StatelessWidget {
           position: player.position,
         ),
         title: Text(player.name),
-        subtitle: Text(
-          Tr.pick(
-              '${player.position.fullLabel} ・ 引退時${player.age}歳 ・ 総合${player.overall}',
-              '${player.position.fullLabel} • retired at ${player.age} • overall ${player.overall}'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Tr.pick(
+                  '${player.position.fullLabel} ・ 引退時${player.age}歳 ・ 総合${player.overall}',
+                  '${player.position.fullLabel} • retired at ${player.age} • overall ${player.overall}'),
+            ),
+            if (retired)
+              Text(Tr.pick('永久欠番', 'Number retired'),
+                  style: const TextStyle(fontWeight: FontWeight.bold))
+            else
+              TextButton(
+                onPressed: onRetireNumber,
+                child: Text(Tr.pick('永久欠番にする', 'Retire his number')),
+              ),
+          ],
         ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -87,6 +113,56 @@ class _LegendCard extends StatelessWidget {
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// クラブの歴代記録(自クラブでの出場・得点の上位と、最大の勝ち試合)。
+class _ClubRecordsCard extends StatelessWidget {
+  const _ClubRecordsCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final apps = gs.clubAppsLeaders();
+    final goals = gs.clubGoalsLeaders();
+    final win = gs.save?.biggestWin;
+    if (apps.isEmpty && goals.isEmpty) return const SizedBox.shrink();
+    Widget list(String title, List<ClubRecordRow> rows, String unitJa,
+            String unitEn) =>
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            for (var i = 0; i < rows.length; i++)
+              Text(Tr.pick('${i + 1}. ${rows[i].name} ${rows[i].value}$unitJa',
+                  '${i + 1}. ${rows[i].name} ${rows[i].value} $unitEn')),
+          ],
+        );
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('クラブの記録', 'Club records'),
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            list(Tr.pick('出場数', 'Appearances'), apps, Tr.pick('試合', ''),
+                Tr.pick('', 'apps')),
+            const SizedBox(height: 8),
+            if (goals.isNotEmpty)
+              list(Tr.pick('得点', 'Goals'), goals, Tr.pick('点', ''),
+                  Tr.pick('', 'goals')),
+            if (win != null) ...[
+              const SizedBox(height: 8),
+              Text(Tr.pick('最大の勝ち試合', 'Biggest win'),
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(win),
+            ],
           ],
         ),
       ),

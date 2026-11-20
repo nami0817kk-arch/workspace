@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:soccer_manager/monetization/purchase_service.dart';
 import 'package:soccer_manager/monetization/reward_offer.dart';
+import 'package:soccer_manager/logic/economy_scale.dart';
 
 /// 課金要素の性質を固定する。
 ///
@@ -38,9 +39,12 @@ void main() {
     });
 
     test('1回の額が、そのディビジョンの経営を壊す規模ではない', () {
-      // 5部の週次収入は数百万円の規模。1回で数千万円配ると経営が消える。
+      // 1回の額は、その部の年収の1割に届かない(部の規模で大きくなる)。
+      for (var t = 1; t <= 5; t++) {
+        expect(RewardOffer.fundsFor(t), lessThan(typicalAnnualIncome(t) * 0.1),
+            reason: '$t部');
+      }
       expect(RewardOffer.fundsFor(5), lessThan(1000));
-      expect(RewardOffer.fundsFor(1), lessThanOrEqualTo(2000));
     });
   });
 

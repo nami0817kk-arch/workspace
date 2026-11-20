@@ -163,14 +163,16 @@ void main() {
       }
     });
 
-    test('「お金が関わるのは2つだけ」という説明が残っていない', () {
-      // 資金を売るようになったので、この書き方は嘘になる。
+    test('資金の購入は画面から外れ、設定画面の説明も「2つだけ」に揃っている', () {
+      // 1.2.0 のオーナー型では、買えば赤字を消せる商品は置かない。
+      // 説明と画面のどちらかだけが残ると、書いてあることと違う形になる。
       final section =
           File('lib/widgets/supporter_section.dart').readAsStringSync();
-      expect(section, isNot(contains('お金が関わるのは次の2つだけ')));
-      expect(section, isNot(contains('Only two things')));
-      // 買えば有利になることを、設定画面で隠さない。
-      expect(section, contains('有利になる商品です'));
+      expect(section, contains('お金が関わるのは次の2つだけ'));
+      expect(section, isNot(contains('有利になる商品です')));
+      final finance =
+          File('lib/screens/finance_screen.dart').readAsStringSync();
+      expect(finance, isNot(contains('FundsPackCard')));
     });
   });
 }

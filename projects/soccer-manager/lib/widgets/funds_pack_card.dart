@@ -8,6 +8,7 @@ import '../monetization/monetization_controller.dart';
 import '../monetization/purchase_service.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
+import '../logic/economy_scale.dart';
 
 /// 資金を買い切りで受け取るカード。クラブ経営画面に置く。
 ///
@@ -99,11 +100,17 @@ class _FundsPackCardState extends State<FundsPackCard> {
     // 加算するのは「このパック」ではなく「預かっているぶん全部」。買った
     // ぶんはストアからの通知で預かりに入るので、ここで直接このパックを
     // 足すと、通知で入ったぶんと二重になる。
-    final granted = await deliverPendingFunds(money, gameState);
+    //
+    // 起動時の見張り(main.dart)が先に移し終えていると、ここでは0が返る。
+    // そのときは買ったパックの額を知らせる(資金には既に入っている)。
+    final delivered = await deliverPendingFunds(money, gameState);
+    final granted = delivered > 0 || outcome != PurchaseOutcome.purchased
+        ? delivered
+        : gameState.purchasedFundsAmount(pack);
 
     final message = switch (outcome) {
       PurchaseOutcome.purchased =>
-        Tr.pick('$granted万円をクラブ資金に追加しました', 'Added $granted to the club budget'),
+        Tr.pick('${formatMoney(granted)}をクラブ資金に追加しました', 'Added ${formatMoney(granted)} to the club budget'),
       // 自分で取りやめただけなので、責めるような文言にしない。
       PurchaseOutcome.canceled =>
         Tr.pick('購入を取りやめました', 'Purchase cancelled'),
@@ -147,7 +154,7 @@ class _PackRow extends StatelessWidget {
               Text(pack.label,
                   style: Theme.of(context).textTheme.bodyMedium),
               Text(
-                Tr.pick('$amount万円', amount.toString()),
+                formatMoney(amount),
                 style: TextStyle(
                   color: scheme.primary,
                   fontWeight: FontWeight.bold,

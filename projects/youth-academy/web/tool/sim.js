@@ -1,0 +1,288 @@
+// 試合エンジンの点検：落ちない・釣り合う・特性や性格が結果に効く・操作の決まりが守られる
+'use strict';
+const path = require('path');
+require(path.join(__dirname, '../src/data.js'));
+require(path.join(__dirname, '../src/engine.js'));
+const YA = globalThis.YA;
+let fails = 0;
+const ok = (c, m) => {
+  if (!c) {
+    fails++;
+    console.log('FAIL:', m);
+  }
+};
+const mk = (seed, opp, auto) => new YA.Match({ seed, home: YA.makeOurs(1), away: YA.makeOpponent(YA.OPPONENTS[opp], seed * 7 + 3), settings: { autoStop: !!auto } });
+function run(seed, opp) {
+  const m = mk(seed, opp, false);
+  let guard = 0;
+  while (!m.finished && guard++ < 1000) m.step();
+  return m;
+}
+
+// 1. 通し：300試合が最後まで進み、場面の形が正しい
+const types = {};
+let goals = 0;
+let scenes = 0;
+const wins = [0, 0, 0];
+const N = 300;
+for (let s = 1; s <= N; s++) {
+  const m = run(s, s % 3);
+  goals += m.score.home + m.score.away;
+  scenes += m.scenes.length;
+  wins[m.score.home > m.score.away ? 0 : m.score.home === m.score.away ? 1 : 2]++;
+  ok(m.finished && m.min === 90, 'finish ' + s);
+  ok(m.scenes.length >= 13 && m.scenes.length <= 15, 'scene count ' + m.scenes.length);
+  for (const sc of m.scenes) {
+    types[sc.type] = (types[sc.type] || 0) + 1;
+    ok(sc.frames && sc.frames.length >= 3, 'frames ' + sc.type);
+    ok(sc.beats.length >= 2, 'beats ' + sc.type);
+    for (let i = 1; i < sc.frames.length; i++) ok(sc.frames[i].t >= sc.frames[i - 1].t, 'frame order ' + sc.type + ' ' + i);
+    for (const fr of sc.frames) {
+      ok(fr.ball.every(Number.isFinite), 'ball finite ' + sc.type);
+      for (const p of Object.values(fr.pos)) ok(p.every(Number.isFinite), 'pos finite ' + sc.type);
+    }
+    ok(sc.dur >= 3.5 && sc.dur <= 7, 'dur ' + sc.dur);
+  }
+  ok(m.scenes.filter((x) => x.goal).length === m.score.home + m.score.away, 'goal count');
+}
+console.log('平均得点', (goals / N).toFixed(2), '平均場面', (scenes / N).toFixed(1), '勝/分/負', wins.join('/'));
+console.log('場面の種類', JSON.stringify(types));
+ok(goals / N > 1.6 && goals / N < 4.2, '得点の平均が範囲外 ' + goals / N);
+for (const t of ['through', 'cross', 'dribble', 'longshot', 'fk', 'ck', 'counter', 'onetwo', 'steal', 'pk']) ok(types[t] > 0, '出ない場面 ' + t);
+
+// 2. 特性が効く：同じ相手・同じ種まきで、特性を外すと裏抜けの成功が減る
+function throughStats(strip) {
+  let g = 0;
+  let tot = 0;
+  for (let s = 1; s <= 600; s++) {
+    const home = YA.makeOurs(1);
+    if (strip) for (const p of Object.values(home.players)) p.traits = p.traits.filter((t) => t !== '裏への抜け出し' && t !== 'スルーパス');
+    const m = new YA.Match({ seed: s, home, away: YA.makeOpponent(YA.OPPONENTS[1], s), settings: { autoStop: false } });
+    while (!m.finished) m.step();
+    for (const sc of m.scenes)
+      if (sc.type === 'through' && sc.side === 'home') {
+        tot++;
+        if (sc.goal || sc.outcome === 'saved' || sc.outcome === 'missed' || sc.outcome === 'blocked' || sc.outcome === 'post') g++;
+      }
+  }
+  return { g, tot };
+}
+const a = throughStats(false);
+const b = throughStats(true);
+console.log('裏抜けで1対1まで持ち込めた割合 特性あり', (a.g / a.tot).toFixed(2), '特性なし', (b.g / b.tot).toFixed(2));
+ok(a.g / a.tot > b.g / b.tot + 0.03, '特性が裏抜けの成功率に効いていない');
+
+// 3. 場面に効いた特性・性格が記録される
+let fxTraits = 0;
+let fxPers = 0;
+for (let s = 1; s <= 100; s++) {
+  const m = run(s, 0);
+  for (const sc of m.scenes) for (const f of sc.fx) f.kind === 'trait' ? fxTraits++ : f.kind === 'pers' ? fxPers++ : 0;
+}
+console.log('効いた特性の記録', fxTraits, '性格', fxPers);
+ok(fxTraits > 200 && fxPers > 20, 'fx が少ない');
+
+// 3b. 2026-11-15 に足した特性28個が、どれも試合のどこかで効く（両チームの全員に持たせて回す）
+{
+  const NEW = ['ノールックパス', '股抜き', 'ファーで待つ', 'マイナスの折り返し', 'ダイレクトシュート', '両足のシュート', '体を寄せる', '最後の砦', '戻りの速さ', 'PKの名手', '至近距離のセーブ', 'ミドルに強いGK', 'トラップの名手', 'ドリブルの緩急', 'GKとの駆け引き', 'シュートフェイント', 'グラウンダーのクロス', 'ワンタッチパス', '3人目の動き', '高い打点', 'コースを切る', 'マンマーク', '正確なタックル', 'ハイプレスの先頭', '低く速いCK', '無回転FK', '終盤に強い', 'ビッグセーブ'];
+  ok(NEW.every((t) => YA.TRAITS.indexOf(t) >= 0) && YA.TRAITS.length === new Set(YA.TRAITS).size, '新しい特性が一覧にあり、重なりがない');
+  // 札は守備側2つまでしか出ないので、効き（足した数が0より大きい）で数える
+  const seen = new Set();
+  const P = YA.Match.prototype, tb0 = P.traitBonus, dt0 = P.defTrait;
+  P.traitBonus = function (sc, p, t) { const v = tb0.apply(this, arguments); if (v > 0) seen.add(t); return v; };
+  P.defTrait = function (sc, d, t) { const v = dt0.apply(this, arguments); if (v.b > 0) seen.add(t); return v; };
+  for (let s = 1; s <= 120 && NEW.some((t) => !seen.has(t)); s++) {
+    const m = mk(s, s % 3, false);
+    for (const t of [m.home, m.away]) for (const p of Object.values(t.players)) p.traits = p.traits.concat(NEW.filter((x) => p.traits.indexOf(x) < 0));
+    if (s % 2) m.home.tactic.crossType = 'low';
+    let g = 0;
+    while (!m.finished && g++ < 1000) m.step();
+  }
+  P.traitBonus = tb0;
+  P.defTrait = dt0;
+  ok(NEW.every((t) => seen.has(t)), '新しい特性がすべて試合で効く（効かなかったもの：' + NEW.filter((t) => !seen.has(t)).join('・') + '）');
+}
+
+// 3c. 金の特性：持っている子は札が「金特性」になり、効きが1.6倍
+{
+  ok(Object.keys(YA.GOLD).every((t) => YA.TRAITS.indexOf(t) >= 0) && new Set(Object.values(YA.GOLD)).size === Object.keys(YA.GOLD).length, '金の特性のもとが一覧にあり、名前が重ならない');
+  const seenG = new Set();
+  for (let s = 1; s <= 80 && seenG.size < 3; s++) {
+    const m = mk(s, s % 3, false);
+    for (const p of Object.values(m.home.players)) { p.traits = p.traits.concat(['スルーパス', 'ボール奪取', '弾丸ミドル'].filter((x) => p.traits.indexOf(x) < 0)); p.gold = ['スルーパス', 'ボール奪取', '弾丸ミドル']; }
+    let g = 0;
+    while (!m.finished && g++ < 1000) m.step();
+    for (const sc of m.scenes) for (const f of sc.fx) if (f.kind === 'gold') seenG.add(f.tag);
+  }
+  ok(seenG.size >= 2, '金の特性が試合の札に出る ' + [...seenG].join('・'));
+  const fake = { traits: ['スルーパス'], gold: ['スルーパス'] };
+  const mm = mk(1, 0, false);
+  ok(mm.traitBonus({ fx: [], side: 'home' }, Object.assign(Object.values(mm.home.players)[0], fake), 'スルーパス', 3, 'x') === 3 * YA.GOLD_MULT, '金の特性の効きは1.6倍');
+}
+
+// 4. 交代の決まり：5人まで・窓3回・GK同士
+{
+  const m2 = mk(2, 0);
+  const t = m2.home;
+  m2.min = 30;
+  ok(!m2.substitute(t, 'me_9', 'me_12').ok, 'GKとFWの交代は不可');
+  ok(m2.substitute(t, 'me_9', 'me_17').ok, '交代1');
+  ok(m2.substitute(t, 'me_11', 'me_16').ok, '同じ窓で交代2');
+  ok(t.windowsUsed === 1, '窓は1');
+  m2.closeWindow(t);
+  ok(m2.substitute(t, 'me_7', 'me_20').ok && t.windowsUsed === 2, '窓2');
+  m2.closeWindow(t);
+  ok(m2.substitute(t, 'me_6', 'me_19').ok && t.windowsUsed === 3, '窓3');
+  ok(m2.substitute(t, 'me_8', 'me_14').ok, '5人目（同じ窓）');
+  ok(!m2.substitute(t, 'me_10', 'me_15').ok, '6人目は不可');
+  const m3 = mk(2, 0);
+  m3.min = 30;
+  for (const [o, i] of [['me_9', 'me_17'], ['me_11', 'me_16'], ['me_7', 'me_20']]) {
+    ok(m3.substitute(m3.home, o, i).ok, 'x');
+    m3.closeWindow(m3.home);
+  }
+  ok(!m3.substitute(m3.home, 'me_6', 'me_19').ok, '4回目の窓は不可');
+  ok(m3.home.players.me_9.off, '交代した選手が下がる');
+  ok(m3.home.lineup.some((s) => s.pid === 'me_17') && !m3.home.lineup.some((s) => s.pid === 'me_9'), '入れ替わる');
+}
+
+// 5. 自動停止：前半終了・残り15分・設定で切れる／ユーザー停止
+{
+  const m = mk(11, 0, true);
+  const reasons = [];
+  let g = 0;
+  while (!m.finished && g++ < 2000) {
+    const e = m.step();
+    if (e.type === 'stop') reasons.push(e.reason);
+  }
+  ok(reasons.indexOf('half') >= 0 && reasons.indexOf('late') >= 0, '節目で止まる ' + reasons);
+  const m2 = mk(11, 0, false);
+  g = 0;
+  let st = 0;
+  while (!m2.finished && g++ < 2000) if (m2.step().type === 'stop') st++;
+  ok(st === 0, '設定で自動停止を切れる');
+  const m3 = mk(3, 1, false);
+  m3.step();
+  m3.requestStop();
+  ok(m3.step().type === 'stop', 'ユーザー停止');
+  ok(m3.step().type !== 'stop', '停止のあと再開できる');
+  // 失点で止まる
+  let conceded = 0;
+  for (let s = 1; s <= 60; s++) {
+    const mm = mk(s, 0, true);
+    let k = 0;
+    while (!mm.finished && k++ < 2000) {
+      const e = mm.step();
+      if (e.type === 'stop' && e.reason === 'conceded') conceded++;
+    }
+  }
+  ok(conceded > 5, '失点で止まる ' + conceded);
+}
+
+// 6. 声かけ・指示：性格で反応が分かれる
+{
+  const m = mk(4, 0, false);
+  const t = m.home;
+  const c0 = t.players.me_11.conf;
+  m.shout(t, 'me_11', 'scold'); // 繊細
+  ok(t.players.me_11.conf < c0 - 5, '繊細は叱られて大きく落ちる');
+  m.min = 5;
+  ok(!m.shout(t, 'me_11', 'scold').ok, '連続の声かけは止める');
+  const mm = mk(4, 0, false);
+  const c9 = mm.home.players.me_7.conf;
+  mm.shout(mm.home, 'me_7', 'praise');
+  ok(mm.home.players.me_7.conf > c9, '褒めると自信が上がる');
+  let follow = 0;
+  let follow2 = 0;
+  for (let i = 0; i < 200; i++) {
+    const q = mk(i + 1, 0, false);
+    if (q.instruct(q.home, 'me_9', 'dribble').followed) follow++;
+    if (q.instruct(q.home, 'me_3', 'dribble').followed) follow2++;
+  }
+  console.log('頑固な9番が従う割合', (follow / 200).toFixed(2), '素直な3番', (follow2 / 200).toFixed(2));
+  ok(follow / 200 > 0.5 && follow / 200 < 0.7, '頑固は4割ほど聞き流す');
+  ok(follow2 === 200, '素直は必ず従う');
+}
+
+// 7. 戦い方の型が場面の出方に効く
+{
+  const cnt = (type, want) => {
+    let c = 0;
+    for (let s = 1; s <= 200; s++) {
+      const h = YA.makeOurs(1);
+      const m0 = new YA.Match({ seed: s, home: h, away: YA.makeOpponent(YA.OPPONENTS[2], s), settings: { autoStop: false } });
+      m0.setType(h, type);
+      while (!m0.finished) m0.step();
+      for (const sc of m0.scenes) if (sc.side === 'home' && want.indexOf(sc.type) >= 0) c++;
+    }
+    return c;
+  };
+  const a2 = cnt('カウンター', ['counter', 'through']);
+  const b2 = cnt('ポゼッション', ['counter', 'through']);
+  const c2 = cnt('サイド攻撃', ['cross']);
+  const d2 = cnt('縦に速い', ['cross']);
+  console.log('カウンター型の速攻系', a2, 'ポゼッション型', b2, 'サイド攻撃のクロス', c2, '縦に速いのクロス', d2);
+  ok(a2 > b2, '戦い方の型が場面の出方に効く');
+  ok(c2 > d2, '幅のつまみがクロスに効く');
+}
+
+// 8. 決定的：同じ種なら同じ試合
+{
+  const x = run(9, 1);
+  const y = run(9, 1);
+  ok(JSON.stringify(x.scenes.map((s) => [s.type, s.outcome, s.minute])) === JSON.stringify(y.scenes.map((s) => [s.type, s.outcome, s.minute])), '同じ種で同じ試合');
+}
+// 9. 戦術・役割が結果に効く：戦術に合う能力を高めると得失点差が上がり、役割をでたらめにすると下がる
+{
+  const gd = (mod, tac) => {
+    let g = 0;
+    for (let sd = 1; sd <= 200; sd++) {
+      const home = YA.makeOurs(1);
+      if (tac) home.tactic = Object.assign({ type: tac }, YA.TACTICS[tac]);
+      if (mod) mod(home);
+      const m = new YA.Match({ seed: sd, home, away: YA.makeOpponent(YA.OPPONENTS[2], sd), settings: { autoStop: false } });
+      let n = 0;
+      while (!m.finished && n++ < 1000) m.step();
+      g += m.score.home - m.score.away;
+    }
+    return g / 200;
+  };
+  const rel = (tac) => (h) => { for (const p of Object.values(h.players)) for (const n of YA.TAC_PROFILE[tac].abs) p.ab[n] = Math.min(20, p.ab[n] + 3); };
+  const irr = (h) => { for (const p of Object.values(h.players)) for (const n of ['ヘディング', 'ジャンプ', 'バランス', 'プレースキック', 'PK']) p.ab[n] = Math.min(20, p.ab[n] + 3); };
+  const a = gd(rel('ポゼッション'), 'ポゼッション');
+  const b = gd(irr, 'ポゼッション');
+  console.log('戦術に合う能力+3', a.toFixed(2), '無関係な能力+3', b.toFixed(2));
+  ok(a > b + 0.2, '戦術に合う能力を上げたほうが強い');
+  const base = gd(null);
+  const bad = gd((h) => h.lineup.forEach((s, i) => { const pos = YA.pos15OfSlot(s, i); const alt = Object.keys(YA.ROLE_DEF).filter((r) => YA.ROLES15[pos] && YA.ROLES15[pos].indexOf(r) >= 0); if (alt.length) { s.role = alt[(i * 7) % alt.length]; YA.fixSlotRole(s, i); } }));
+  console.log('役割 基準', base.toFixed(2), 'でたらめ', bad.toFixed(2));
+  ok(bad < base - 0.1, '役割をでたらめにすると弱くなる');
+  const home = YA.makeOurs(1);
+  const f = YA.tacticFitOf(home, 'ポゼッション');
+  ok(typeof f.fit === 'number' && ['◎', '○', '△', '✕'].includes(f.mark) && f.abs.length === 5, '戦術の相性が出る');
+}
+// GK は点もアシストも記録しない（2026-11-15「ゴールキーパーなのにゴールしているバグとかないように」）。
+// キッカーに GK を指定しても蹴らない
+{
+  let bad = 0, n = 0;
+  for (let s = 1; s <= 200; s++) {
+    const m = mk(s, s % 3, false);
+    for (const t of [m.home, m.away]) {
+      const g = m.onPitch(t).find((x) => x.pos === 'GK');
+      if (g && s % 2) { t.tactic = t.tactic || {}; t.tactic.pk = g.p.id; t.tactic.fk = g.p.id; t.tactic.ck = g.p.id; }
+    }
+    let guard = 0;
+    while (!m.finished && guard++ < 1000) m.step();
+    for (const t of [m.home, m.away]) for (const x of m.onPitch(t)) if (x.pos === 'GK') { n++; if ((x.p.st.goals || 0) + (x.p.st.assists || 0) > 0) bad++; }
+    for (const sc of m.scenes) if (sc.goal) for (const t of [m.home, m.away]) for (const x of m.onPitch(t)) if (x.pos === 'GK' && (sc.shooter === x.p.id || sc.assist === x.p.id)) bad++;
+  }
+  ok(n >= 300 && bad === 0, 'GK が点かアシストを記録した ' + bad + '/' + n);
+}
+// 2026-11-17：シュートは両チームで1試合20本前後（場面の外のシュートも数える）。得点は変わらない
+{
+  let sh = 0, g = 0; const n = 60;
+  for (let s = 1; s <= n; s++) { const m = run(s, s % 3); sh += m.stats.home.shots + m.stats.away.shots; g += m.score.home + m.score.away; ok(m.stats.home.onTarget <= m.stats.home.shots && m.stats.away.onTarget <= m.stats.away.shots, '枠内はシュート以下'); }
+  ok(sh / n >= 15 && sh / n <= 28 && g / sh < 0.2, 'シュートは両チームで1試合15〜28本、決まる割合は2割未満（' + (sh / n).toFixed(1) + '本）');
+}
+console.log(fails ? '失敗 ' + fails : 'すべて通過');
+process.exit(fails ? 1 : 0);

@@ -1,0 +1,161 @@
+# 物語完結型ショート 徳川将軍の1日 s1（2026-11-06）。本編 scripts/shogun-story.yaml（11/9 19:00 公開、https://youtu.be/-kxBsJCne_k）の第1章・第3章から。11/10 9:30 公開。
+# 形式は ooku_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし（本編にも無い）。
+# 絵は本編の AI 絵（out/story/shogun/main。Gemini・FLUX）とベアト《江戸城》。新しい絵は作らない。
+# 切り口：朝の膳のあいだも髪を結われ、膳が下がると奥医師が脈をとる。秤の話（第2章）は tease の答えとして本編に残す。
+# どの将軍の記録か：『千代田城大奥』（1892）の「将軍の日課」＝おもに12代家慶・13代家定のころの元御小姓の話（本編の description_note のまま）。
+# 事実カード（dev/output/rekishi-chiso/research/将軍の1日_facts_20261106.yaml）：shogun-05・20・25・04・22・23・13。言い方は本編のまま。
+#   ・朝の膳は五つ＝午前8時ごろ（本編の第1章の終わり）。元結12〜13本、奥医師30人のうち6人ほど・2人ずつ。本編どおり。
+# 理解テスト4問：
+#   ①誰の話か：幕末の徳川将軍（12代家慶・13代家定のころ）の朝。元御小姓の話（『千代田城大奥』）
+#   ②いつ・どこで何が：江戸城の朝。六つに「モウ」で起き、五つに朝の膳。食べているあいだに小姓が髪を結った
+#   ③何が意外か：髪を結うほうが食事より長く、膳が下がると、結い終わらないうちに奥医師が2人ずつ脈をとった
+#   ④どうなっていたか：病気でなくても毎朝。朝ご飯のあいだも、ひとりではなかった
+title: 徳川将軍｜朝ご飯は、ひとりで食べたのか
+yt_title: 徳川将軍は朝ご飯をひとりで食べていたのか　食べながら髪を結われ、膳が下がれば医師が脈をとった朝
+description: |-
+  天下を治めた徳川将軍は、朝ご飯を、ひとりで食べていたのでしょうか。
+  明治25年（1892年）の本『千代田城大奥』に、12代家慶や13代家定に仕えた元の御小姓たちの話が残っています。朝の六つ時、将軍が目を覚ますと、小姓が「モウ」と声を上げ、それが起きた合図でした。朝の膳は五つ、午前8時ごろ。食べているあいだ、後ろでは御髪番の小姓たちが髪を結っていました。代々の将軍は、食事のときに髪を結う定めだったのです。髷の根元には白い元結を12本から13本も巻き、顔と月代を剃るのもこの係でした。しかも髪を結うほうが食事より長くかかり、膳が下がると、まだ結い終わらないうちに奥医師が入ってきます。30人のうち6人ほどが次の間に平伏し、2人ずつ進み出て脈をとりました。病気でなくても、毎朝のことでした。
+  では、具合が悪い日、将軍が食べたご飯は、どうされたのか。本編は概要欄のリンクからどうぞ。
+hashtags: ['#徳川将軍', '#日本史', '#江戸時代']
+ai_images: true
+ai_disclosure: この動画の将軍の暮らしの場面・室内・人物の画像は、画像生成AI（Google の Gemini・Black Forest Labs の FLUX.1）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。将軍の姿も特定の肖像を写したものではありません。
+art_dir: out/story/shogun
+readings: {白い元結: 白いもとゆい}      # 台本ごとの読み替え（readings.yaml は変えない。モットイを避ける）
+out: shogun_story_s1
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 徳川将軍（家慶・家定のころ）
+  title: "将軍は朝ご飯を、《ひとりで食べたのか》"
+now:
+  - {at: 将軍は, text: "幕末　江戸城の中奥", point: 0}
+  - {at: 1892年, text: "1892年　『千代田城大奥』", point: 1}
+  - {at: 朝の六つ時, text: "幕末　将軍の朝", point: 0}
+timeline:
+  - {label: "1853"}
+  - {label: "1892"}
+cards:
+  - type: table
+    title: 将軍の朝（『千代田城大奥』）
+    from: 朝の膳は
+    until: 病気でなくても
+    items:
+      - {at: 朝の膳は, text: "五つ　朝の膳"}
+      - {at: 後ろでは, text: "食べながら　髪を結う"}
+      - {at: 膳が下がると, text: "膳のあと　医師が脈"}
+    text_y: 0.70
+shots:
+  Castle:
+    kind: real
+    image: paintings/kira_edo_castle_beato.jpg
+    focus: [0.5, 0.5]
+    move: left
+    credit: "フェリーチェ・ベアト《江戸城》（1860年代。パブリックドメイン）"
+    must: 江戸城の石垣と堀
+  S10:
+    kind: ai
+    file: shogun/main/S10.jpg
+    focus: [0.6, 0.55]
+    move: right
+    must: 灯の下の書物と筆
+  G12:
+    kind: ai
+    file: shogun/main/G12.jpg
+    focus: [0.3, 0.6]
+    move: left
+    must: 寝所の将軍と脇の小姓（夜明け前）
+  G03:
+    kind: ai
+    file: shogun/main/G03.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 漆塗りの朝の膳と鱚
+  G01:
+    kind: ai
+    file: shogun/main/G01.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 朝の膳を食べる将軍の髪を結う小姓たち
+  G01b:
+    kind: ai
+    file: shogun/main/G01.jpg
+    focus: [0.45, 0.35]
+    move: up
+    must: 将軍の頭と髪を結う手（寄り）
+  G02:
+    kind: ai
+    file: shogun/main/G02.jpg
+    focus: [0.35, 0.55]
+    move: left
+    must: 平伏する奥医師たち
+  G02b:
+    kind: ai
+    file: shogun/main/G02.jpg
+    focus: [0.62, 0.5]
+    move: in
+    must: 将軍の脈をとる医師
+  S04:
+    kind: ai
+    file: shogun/main/S04.jpg
+    focus: [0.5, 0.55]
+    move: right
+    must: 灯のともる座敷と膳
+lines:
+  - 語り: 将軍は、朝ご飯を、ひとりで食べていたのか。
+    shot: Castle
+    tone: 疑問
+    pause: 0.12
+  # fact: shogun-05, shogun-38
+  - 語り: 1892年の本、『千代田城大奥』に、12代家慶や、13代家定に仕えた、元の御小姓たちの話が残る。
+    shot: S10
+    tone: 強調
+    pause: 0.12
+  # fact: shogun-05, shogun-20
+  - 語り: 朝の六つ時、将軍が目を覚ますと、小姓が、「モウ」と声を上げる。これが、起きた合図だ。
+    shot: G12
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-25
+  - 語り: 朝の膳は、五つ、午前8時ごろ。けれど、食べているあいだも、ひとりではない。
+    shot: G03
+    tone: 重い
+    pause: 0.12
+  # fact: shogun-04
+  - 語り: 後ろでは、御髪番の小姓たちが、将軍の髪を結っていた。代々の将軍は、食事のときに、髪を結う定めだった。
+    shot: G01
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-22
+  - 語り: 髷の根元には、白い元結を、12本から13本も巻いた。
+    shot: G01b
+    tone: しみじみ
+    pause: 0.12
+  # fact: shogun-22
+  - 語り: しかも、髪を結うほうが、食事より、長くかかった。膳が下がると、まだ結い終わらないうちに、奥医師が入ってくる。
+    shot: G02
+    tone: 重い
+    pause: 0.12
+  # fact: shogun-23
+  - 語り: 30人のうち、6人ほどが、次の間に平伏し、2人ずつ進み出て、将軍の《!脈をとった》。
+    shot: G02b
+    tone: 強調
+    pause: 0.3
+    dip: true
+  - 語り: 病気でなくても、毎朝のことだ。朝ご飯のあいだも、将軍は、《ひとりではなかった》。
+    shot: G02b
+    tone: 重い
+    pause: 0.15
+  # fact: shogun-13（答えは本編の第2章：秤で量る）
+  - 語り: では、具合が悪い日、将軍が食べたご飯は、どうされたのか。
+    shot: S04
+    tone: 疑問
+    pause: 0.15

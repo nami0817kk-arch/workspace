@@ -118,18 +118,34 @@ class HubScreen extends StatelessWidget {
             SeasonEndScreen(controller: controller, monetization: monetization),
       ),
     );
+    final state = controller.state;
+
+    // **星を頼む季は、広告を譲る。**
+    //
+    // 広告も星の依頼も、置き場は1シーズンの切れ目しかない。以前は
+    // 「広告を出した回は星を見送る」だけにしていたが、広告は毎季出るので
+    // **星の依頼がほぼ永久に順番待ちになっていた**——公開から5週で
+    // 累計1,000ダウンロードを超えて、付いた星は8件（0.6%）だった。
+    // ダイアログが出ていれば 2〜5% は付く帯で、星はストアの順位に効く
+    // （競合の中央値が26しかない「サッカー 育成」で35位に沈んでいた）。
+    //
+    // どちらかを譲るしかないが、**広告は1キャリアに約18.6回、星を頼むのは
+    // 1回だけ**。譲っても失うのは1人あたり広告1回で、週あたり50〜60円ほど。
+    final asking = state != null && (reviewPrompt?.wantsToAsk(state) ?? false);
+
     // **広告はシーズンの画面を閉じたあと。** 画面の中に挟むと、契約を
     // 選んでいる途中で割り込むことになる。ここなら1シーズンの区切りそのもの。
     // 出すかどうかは `Monetization` が決める（買った人・序盤・連発は出ない）。
-    final adShown =
-        await monetization?.showSeasonAd(
-          seasonsPlayed: controller.state?.history.length ?? 0,
-        ) ??
-        false;
+    final adShown = asking
+        ? false
+        : await monetization?.showSeasonAd(
+                seasonsPlayed: state?.history.length ?? 0,
+              ) ??
+              false;
 
-    // **星を頼むのもここ。ただし広告を出した回は見送る。**
-    // 全画面広告を閉じた直後に評価を求めるのは、順番として最悪になる。
-    final state = controller.state;
+    // **星を頼むのもここ。** 上で広告を譲っているので `adShown` は false。
+    // それでも渡しているのは、広告が出た回に頼まない、という決まりを
+    // `ReviewPrompt` の側に残しておくため。
     if (state != null) {
       await reviewPrompt?.askIfEarned(state: state, adShown: adShown);
     }

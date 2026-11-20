@@ -19,7 +19,7 @@ from pathlib import Path
 
 import yaml
 
-COST = {"list": 1, "playlists.insert": 50, "playlistItems.insert": 50, "videos.update": 50}
+COST = {"list": 1, "playlists.insert": 50, "playlistItems.insert": 50, "videos.update": 50, "playlists.update": 50}
 PRIVACY = "public"
 CHANNEL = "歴史の地層"
 DEFAULT_DESC = ("「{name}」の回をまとめた再生リストです。\n"
@@ -157,6 +157,26 @@ def sync(svc, p: Plan, descriptions: dict[str, dict], budget: Budget, log=print)
             break
     if report["stopped"]:
         log(f"! 今回の上限（{budget.limit} 単位）に届いたので止めました。もう一度打てば続きから入れます")
+    return report
+
+
+def update_meta(svc, descriptions: dict[str, dict], budget: Budget, log=print) -> dict:
+    """playlists.yaml の名前・説明・公開設定を、今あるリストに書き込む。was: があれば前の名前のリストを改名する。"""
+    report = {"updated": [], "missing": [], "stopped": False}
+    have = my_playlists(svc, budget)
+    for name, meta in descriptions.items():
+        pid = have.get(name) or have.get(str(meta.get("was") or ""))
+        if pid is None:
+            report["missing"].append(name)
+            continue
+        if not budget.spend("playlists.update"):
+            report["stopped"] = True
+            break
+        body = playlist_body(name, meta)
+        body["id"] = pid
+        svc.playlists().update(part="snippet,status", body=body).execute()
+        report["updated"].append(name)
+        log(f"  {meta.get('was') or name} → {name}（https://www.youtube.com/playlist?list={pid}）")
     return report
 
 

@@ -1,0 +1,228 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも現代人が江戸の長屋に住んだら（scripts/nagaya-if-story.yaml）。chiso/storymain.py が読む。
+# 11-19 作成（11/25 12:00 公開）。sakoku_if_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini）。T01・B01〜B24 はこの回のために作る（out/story/nagaya_if/main/nagaya_if_<名>.jpg）。
+#   時と所は文政〜天保の江戸の町人地。裏長屋は板葺きの屋根・障子紙・木の戸（瓦屋根の裏長屋・ガラス窓・電灯・字・紋・時計は描かない）。
+#   実在の人物は描かない。人は後ろ姿・遠景・顔の小さい群れだけ。湯屋の中は人を描かない。火事は遠景の空の赤さだけ（人の被害は描かない）。
+script: scripts/nagaya-if-story.yaml
+out: nagaya_if_story_main
+art_dir: out/story/nagaya_if/ph
+main_art_dir: out/story/nagaya_if/main
+ai_disclosure: この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 家賃は出費の8%, now: 文政のころ, dates: {}}
+  1: {label: 第1章 店賃は日当の何日分？, now: 文政のころ, dates: {12: 1860年, 13: null, 17: 1822年, 18: null, 22: 1842年, 24: null, 26: 天保のころ}}
+  2: {label: 第2章 水の代金は誰が払った？, now: null, dates: {32: 1654年, 33: null, 38: 7月7日, 39: null, 40: 1899年まで, 41: null}}
+  3: {label: 第3章 トイレの中身は誰のもの？, now: null, dates: {46: 天保年間, 47: null, 52: 1843年2月, 53: null}}
+  4: {label: 第4章 湯銭はいくら？, now: null, dates: {57: 1591年, 58: null, 59: 天保の改革, 60: null, 61: 幕末, 62: null, 63: 1808年, 64: null, 65: 1791年, 66: null}}
+  5: {label: 第5章 お米と豆腐はいくら？, now: null, dates: {76: 1833年10月, 77: null, 79: 1808年, 80: 1836年, 81: null, 88: 1842年5月, 90: 1843年2月, 91: 1791年, 92: null}}
+  6: {label: 第6章 行灯の油はいくら？, now: null, dates: {104: 1806年3月4日, 106: 1829年3月21日, 107: 1834年2月7日, 108: 1718年, 109: null}}
+  7: {label: まとめ 江戸の長屋の1か月, now: null, dates: {122: 1842年, 123: 1790年, 124: null}}
+
+references:
+  - "『文政年間漫録』（三田村鳶魚『江戸ばなし 其2』1943・『江戸生活のうらおもて』1930 の引用、国立国会図書館デジタルコレクション）"
+  - "東京都公文書館『江戸住宅事情』（都史紀要34、1990）・『東京市史稿』産業篇の解読の手引き（2011・2014）・東京都こどもホームページ"
+  - "鷲崎俊太郎（九州大学『經濟學研究』2012・2016、一橋大学 Hi-Stat 2008、国土交通政策研究所 勉強会 2015）・田中克佳（慶應義塾大学 2002）"
+  - "日本銀行金融研究所 貨幣博物館（FAQ・解説、小林延人 2017）・東京消防庁・森下雄治（立命館大学 2013）・東京大学地震研究所図書室の瓦版目録"
+  - "新宿区・江東区・深川江戸資料館・日本歴史地名大系・日本大百科全書・世界大百科事典・精選版日本国語大辞典・nippon.com（小林明）・imidas（山本博文）"
+  - "堅田元喜（キヤノングローバル戦略研究所 2021）・須田光輝（淑徳大学 2021）・磯田道史監修『新版 江戸の家計簿』（宝島社）・日本植物油協会・相模原市立橋本図書館・江原絢子（2000）"
+no_tag_from: 127
+
+ai:
+  T01: {scene: 明るい朝の江戸の裏長屋の路地、共同の井戸で水を汲む女たち、干した洗濯物、板葺きの屋根の長屋が並ぶ（サムネと同じ絵）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B01: {scene: 表通りから裏長屋へ入る木戸と、奥へまっすぐ続く細い路地、両側に板葺きの長屋（朝、人はいない）, pan: v, crops: {wide: [1.12, 0.5, 0.5], top: [1.18, 0.5, 0.4], bottom: [1.18, 0.5, 0.62]}}
+  B02: {scene: 九尺二間の長屋の部屋の中、土間にかまどと水がめ、4畳半の畳の居間、障子、行灯、家具はほとんどない（人はいない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B03: {scene: 江戸の町家の普請場で木材を削る大工たちの後ろ姿、木の足場、晴れた日, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B04: {scene: 江戸の町屋敷の帳場、低い机の上の帳面とそろばんと銭の束、座る人の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B05: {scene: 行灯の光の下の、和紙の古い証文と硯と筆（字は読めない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B06: {scene: 木の盆の上の、穴あき銭を紐に通した束と、銀の小粒、小判1枚の静物, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B07: {scene: 長屋の路地の共同井戸、木の井戸枠と釣瓶、桶で水を汲む女の後ろ姿, pan: v, crops: {wide: [1.12, 0.5, 0.5], top: [1.18, 0.5, 0.4], bottom: [1.18, 0.5, 0.62]}}
+  B08: {scene: 江戸の郊外の玉川上水の水路、土手の松並木と田畑、澄んだ水の流れ, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B09: {scene: 夏の長屋の井戸替え、井戸のまわりで桶をつるして水を汲み出す町人たちの後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B10: {scene: 深川の掘割を、水の入った大きな桶を積んで進む小舟、両岸に蔵と板葺きの家, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B11: {scene: 長屋の路地の奥、木の板で囲んだ共同便所の小屋と、ごみ溜めの木箱、小さな稲荷の祠（人はいない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B12: {scene: 天秤棒で2つの木の桶をかついで江戸の町はずれから村へ帰る農夫の後ろ姿、遠くに田畑, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B13: {scene: 夕方の江戸の湯屋の外観、無地の暖簾、屋根から立つ湯気、通りの人の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B14: {scene: 江戸の湯屋の中、板の洗い場に木の桶、奥に破風の飾りのある低い柘榴口（人はいない、湯気）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B15: {scene: 江戸の湯屋の二階の休み場、畳に碁盤と茶道具、湯上がりの男たちの後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B16: {scene: 江戸の米屋の店先、積まれた米俵と升、白米の山, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B17: {scene: 朝の長屋の路地を、天秤棒の両端の籠に大根と蕪を入れて売り歩く棒手振りの後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B18: {scene: 江戸の豆腐屋の店先、水を張った大きな木の箱に沈む白い豆腐, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B19: {scene: 夜の江戸の通りの、そばの屋台と無地の提灯、湯気, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B20: {scene: 夜の長屋の部屋、行灯のやわらかな灯りの下で膳を囲む家族の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B21: {scene: 夜、江戸の板葺きの家並みの向こうの空が大火で赤く染まる遠景, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B22: {scene: 煙の中で屋根に上がり、鳶口で家を壊す町火消たちの遠景のシルエット（纏・半纏に字や紋は描かない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B23: {scene: 大火のあとの焼け跡と、木の仮小屋が並ぶ朝、炊き出しの湯気（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B24: {scene: 夕暮れの江戸の裏長屋の板葺きの屋根と路地（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+
+credits: {}
+
+shots:
+  - 0 ai:T01 wide
+  - 1 ai:B02 wide
+  - 2 ai:B03 wide
+  - 3 ai:B01 wide
+  - 4 ai:T01 right
+  - 5 ai:B01 top
+  - 6 ai:B05 wide
+  - 7 ai:B04 left
+  - 8 ai:B01 bottom
+  - 9 ai:B02 wide
+  - 10 ai:B05 wide
+  - 11 ai:B02 right
+  - 12 ai:B05 left
+  - 13 ai:B04 wide
+  - 14 ai:B01 top
+  - 15 ai:B04 right
+  - 16 ai:B06 wide
+  - 17 ai:B05 right
+  - 18 ai:T01 left
+  - 19 ai:B06 left
+  - 20 ai:B03 wide
+  - 21 ai:B03 left
+  - 22 ai:B06 right
+  - 23 ai:B04 left
+  - 24 ai:B16 wide
+  - 25 ai:B06 left
+  - 26 ai:B01 bottom
+  - 27 ai:B07 wide
+  - 28 ai:B07 top
+  - 29 ai:B07 wide
+  - 30 ai:B07 bottom
+  - 31 ai:B08 left
+  - 32 ai:B08 wide
+  - 33 ai:B08 right
+  - 34 ai:T01 wide
+  - 35 ai:B04 wide
+  - 36 ai:B07 top
+  - 37 ai:B09 wide
+  - 38 ai:B09 right
+  - 39 ai:B10 left
+  - 40 ai:B10 wide
+  - 41 ai:B10 right
+  - 42 ai:B10 wide
+  - 43 ai:B07 bottom
+  - 44 ai:B11 left
+  - 45 ai:B11 wide
+  - 46 ai:B01 top
+  - 47 ai:B11 right
+  - 48 ai:B12 wide
+  - 49 ai:B04 left
+  - 50 ai:B12 right
+  - 51 ai:B05 wide
+  - 52 ai:B12 left
+  - 53 ai:B05 right
+  - 54 ai:T01 right
+  - 55 ai:B13 left
+  - 56 ai:B13 wide
+  - 57 ai:B13 right
+  - 58 ai:B14 wide
+  - 59 ai:B06 wide
+  - 60 ai:B14 left
+  - 61 ai:B13 wide
+  - 62 ai:B03 right
+  - 63 ai:B13 left
+  - 64 ai:B13 right
+  - 65 ai:B14 right
+  - 66 ai:B14 wide
+  - 67 ai:B14 left
+  - 68 ai:B13 wide
+  - 69 ai:B15 wide
+  - 70 ai:B04 wide
+  - 71 ai:B20 left
+  - 72 ai:B06 right
+  - 73 ai:B16 left
+  - 74 ai:B17 left
+  - 75 ai:B20 wide
+  - 76 ai:B16 right
+  - 77 ai:B23 wide
+  - 78 ai:B16 left
+  - 79 ai:B16 wide
+  - 80 ai:B16 wide
+  - 81 ai:B20 wide
+  - 82 ai:B17 wide
+  - 83 ai:B06 wide
+  - 84 ai:B06 left
+  - 85 ai:B02 left
+  - 86 ai:B03 left
+  - 87 ai:B17 left
+  - 88 ai:B18 wide
+  - 89 ai:B18 left
+  - 90 ai:B05 left
+  - 91 ai:B18 wide
+  - 92 ai:B18 left
+  - 93 ai:B19 wide
+  - 94 ai:B20 right
+  - 95 ai:B20 right
+  - 96 ai:B02 right
+  - 97 ai:B20 wide
+  - 98 ai:B20 left
+  - 99 ai:B20 wide
+  - 100 ai:B20 left
+  - 101 ai:B05 left
+  - 102 ai:B20 right
+  - 103 ai:B21 wide
+  - 104 ai:B21 left
+  - 105 ai:B23 wide
+  - 106 ai:B21 right
+  - 107 ai:B21 wide
+  - 108 ai:B22 wide
+  - 109 ai:B22 right
+  - 110 ai:B01 wide
+  - 111 ai:B03 wide
+  - 112 ai:T01 wide
+  - 113 ai:B02 wide
+  - 114 ai:B02 wide
+  - 115 ai:B02 wide
+  - 116 ai:B02 wide
+  - 117 ai:B03 right
+  - 118 ai:B06 wide
+  - 119 ai:B01 top
+  - 120 ai:B07 wide
+  - 121 ai:B18 right
+  - 122 ai:B05 wide
+  - 123 ai:B04 right
+  - 124 ai:B06 left
+  - 125 ai:B06 right
+  - 126 ai:B16 right
+  - 127 ai:B20 wide
+  - 128 ai:B24 left
+  - 129 ai:B24 wide
+  - end ai:B24 wide
+
+figures: []
+
+focus: {}
+
+fx:
+  B02: {lamp: {region: [0.6, 0.2, 1.0, 0.7]}}
+  B05: {lamp: {region: [0.0, 0.0, 0.5, 0.6]}}
+  B13: {smoke: {region: [0.0, 0.0, 1.0, 0.45]}}
+  B20: {lamp: {region: [0.3, 0.1, 0.8, 0.6]}}
+  B21: {fire: {region: [0.0, 0.0, 1.0, 0.55]}}
+  B24: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+
+paint_fx: {}
+
+parts:
+  - {type: versus3, from: 11, to: 11, every: 4,
+     items: [[都史紀要（1990年）, 台所まで入れて6畳分], [東京都の子ども向け, 居間は4畳半]]}
+  - {type: quote, from: 10, to: 10, label: 史料, text: 畳6畳分の広さに上り口と台所と居間／家具といえるものはほとんどない, source: 東京都公文書館『江戸住宅事情』（都史紀要34、1990年）}
+  - {type: versus3, from: 24, to: 25, every: 4,
+     items: [[米の値段で換算, 約6万円], [この動画の目安, 約11万円], [大工の賃金で換算, 約35万円]]}
+  - {type: versus3, from: 63, to: 64, every: 4,
+     items: [[山本博文, 523株], [日本大百科全書, 600軒余り]]}
+  - {type: quote, from: 85, to: 85, label: 史料, text: 妻に米代200文　味噌醤油代50文／子に菓子代12〜13文, source: 『文政年間漫録』の棒手振り（三田村鳶魚『江戸ばなし 其2』の引用。今の言葉に）}
+  - {type: quote, from: 128, to: 128, label: 史料, text: 子が2人あれば／1年の稼ぎを使い尽くしても足りない, source: 『文政年間漫録』の大工の話（三田村鳶魚の引用。今の言葉に）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 1, note: 序章 円グラフ}
+  - {line: 11, note: 第1章 広さの食い違い}
+  - {line: 20, note: 第1章 日当の計算}
+  - {line: 24, note: 第1章 1両の食い違い}
+  - {line: 32, note: 第2章 玉川上水の地図}
+  - {line: 63, note: 第4章 湯屋の数}
+  - {line: 80, note: 第5章 百相場}
+  - {line: 116, note: まとめ 計算}
+  - {end: true, note: 終了画面の空き}

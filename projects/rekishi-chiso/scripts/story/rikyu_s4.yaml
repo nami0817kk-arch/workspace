@@ -1,0 +1,173 @@
+# 物語完結型ショート 千利休 s4（2026-10-28）。本編 scripts/rikyu-story.yaml の第4章（「きのふりきうの茶にて」の書状・生存説）から。投稿しない。
+# 形式は kazumasa_s1.yaml を写した。決まりは docs/story-shorts.md。想像の台詞なし。絵は本編の AI 絵（out/story/rikyu/main/R*.jpg・K05）を縦に切り出す。
+# 事実カード（dev/output/rekishi-chiso/research/千利休_facts_20261028.yaml）：rikyu-01・06・09
+#   ・中村修也（文教大学）の説「利休は自刃せずに生きていた」と、根拠の秀吉の書状「きのふりきうの茶にて御せんもあがり」（死の翌年とされる）は、
+#     田中仙堂（PRESIDENT Online 2017「千利休は切腹せず生きていた?」）の紹介だけ（rikyu-09、出どころ1つ）→ 田中さんの記事として言い、言い切らない。
+#   ・中村さんの説の年（2015）はカードに無いので言わない（本編と同じ）。書状の絵は AI の書状（R10）。実在の秀吉の朱印状は別の手紙なので使わない。
+#   ・「年が一つずれれば生前の茶の話」は本編の言い方（書状の年が見立てであること）。
+# 理解テスト4問：
+#   ①誰の話か：千利休（天正19年2月に秀吉の命で腹を切ったと伝わる茶人）
+#   ②何が唱えられたか：文教大学の中村修也さんが「利休は切腹せずに生きていた」と唱えた
+#   ③根拠は何か：利休の死の翌年に書かれたという秀吉の手紙の「きのふりきうの茶にて御膳もあがり」（昨日は利休の茶で食事も進んだ）。同じ時代の『多聞院日記』も切腹を「うわさ」と書き、高野山へ追放の話も載せる
+#   ④どうなったか：手紙の年は見立てで、一つずれれば生前の話になる。紹介した田中仙堂さんの記事の題も「？」付きで、決め手は無い
+title: 千利休｜切腹のあとに、利休の茶？
+yt_title: 千利休は切腹せず生きていた？　根拠は秀吉の手紙の「きのふりきうの茶にて」
+description: |-
+  千利休は、天正19年2月、豊臣秀吉の命で腹を切ったと伝えられてきました。
+  ところが、文教大学の中村修也さんは「利休は切腹せずに生きていた」と唱えました。根拠は、利休の死の翌年に書かれたという、秀吉の手紙の一文「きのふ、りきうの茶にて、御膳も、あがり」。昨日は利休の茶で、食事も進んだ、という意味です。
+  同じ時代の『多聞院日記』も、切腹を「うわさ」と書き、高野山へ追放されたという話も載せています。
+  ただ、手紙の年は「翌年」という見立てで、年が一つずれれば、利休の生前の茶の話になります。この説を紹介した田中仙堂さんの2017年の記事の題も「千利休は切腹せず生きていた？」と、問いの形でした。
+hashtags: ["#千利休", "#日本史", "#戦国時代"]
+ai_images: true
+art_dir: out/story/rikyu
+out: rikyu_story_s4
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+header:
+  tag: 千利休（豊臣秀吉に仕えた茶人）
+  title: "切腹の翌年に、《利休の茶》？"
+now:
+  - {at: 天正19年, text: "天正19年2月　京", point: 0}
+  - {at: 唱えたのは, text: "いま　新説", point: 2}
+  - {at: 死の翌年, text: "翌年とされる　秀吉の手紙", point: 1}
+  - {at: 同じ時代の, text: "天正19年　奈良", point: 0}
+  - {at: ただ, text: "翌年とされる　秀吉の手紙", point: 1}
+  - {at: 田中仙堂さん, text: "2017年　記事", point: 2}
+timeline:
+  - {label: "天正19"}
+  - {label: "翌年？"}
+  - {label: "いま"}
+cards:
+  - type: table                          # 切腹したのか（語った順に1行ずつ）
+    title: 利休は切腹したのか
+    from: 同じ時代の
+    until: ただ
+    items:
+      - {at: 同じ時代の, text: "多聞院日記　切腹は「うわさ」"}
+      - {at: 高野山, text: "同じ日記に　高野山へ追放とも"}
+shots:
+  R01f:                                  # 1文目：利休の顔
+    kind: ai
+    file: rikyu/main/R01.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.5
+    text_y: 0.80
+    must: 利休の顔
+  R03:                                   # 天正19年2月、腹を切ったと伝わる（雨の夜、兵の立つ門）
+    kind: ai
+    file: rikyu/main/R03.jpg
+    focus: [0.55, 0.5]
+    move: in
+    must: 兵の立つ門と利休の後ろ姿
+  R10:                                   # 秀吉の手紙（文机の書状）
+    kind: ai
+    file: rikyu/main/R10.jpg
+    focus: [0.45, 0.6]
+    move: right
+    must: 文机の書状と行灯
+  R10z:                                  # 手紙の一文（書状に寄る）
+    kind: ai
+    file: rikyu/main/R10.jpg
+    focus: [0.55, 0.65]
+    move: in
+    zoom: 0.35
+    must: 書状の筆の跡
+  K05:                                   # 秀吉が利休の茶で食事が進んだ
+    kind: ai
+    file: rikyu/main/K05.jpg
+    focus: [0.5, 0.45]
+    move: in
+    must: 秀吉
+  R02:                                   # 利休の茶（茶を点てる利休）
+    kind: ai
+    file: rikyu/main/R02.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.45
+    text_y: 0.80
+    must: 茶を点てる利休
+  R05L:                                  # 多聞院日記・高野山へ追放の話（霧の松と寺）
+    kind: ai
+    file: rikyu/main/R05.jpg
+    focus: [0.15, 0.5]
+    move: right
+    must: 霧の松と寺の門
+  R10b:                                  # 手紙の年は見立て（同じ書状の別の所）
+    kind: ai
+    file: rikyu/main/R10.jpg
+    focus: [0.7, 0.7]
+    move: left
+    must: 書状
+  R09:                                   # 記事の題も「？」（茶碗と茶筅）
+    kind: ai
+    file: rikyu/main/R09.jpg
+    focus: [0.3, 0.6]
+    move: right
+    must: 黒い茶碗と茶筅
+  R01q:                                  # 最後の問い
+    kind: ai
+    file: rikyu/main/R01.jpg
+    focus: [0.5, 0.0]
+    move: in
+    zoom: 0.7
+    text_y: 0.80
+    must: 利休の顔
+lines:
+  # fact: rikyu-09
+  - 語り: 茶人、千利休は、腹を切らずに、《!生きていた》。そんな説がある。
+    shot: R01f
+    tone: 強調
+  # fact: rikyu-01
+  - 語り: 利休は、天正19年2月、秀吉の命で、腹を切った。そう伝えられてきた。
+    shot: R03
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-09
+  - 語り: 唱えたのは、文教大学の中村修也さん。根拠は、利休の死の翌年に書かれたという、秀吉の《1通の手紙》だ。
+    shot: R10
+    tone: しみじみ
+    pause: 0.12
+  # fact: rikyu-09（秀吉の書状。田中仙堂 2017 が引く）
+  - 語り: そこには、こうある。「きのふ、りきうの茶にて、御膳も、あがり」。
+    shot: R10z
+    tone: 強調
+    pause: 0.15
+  # fact: rikyu-09
+  - 語り: 昨日は、利休の茶で、食事も進んだ。秀吉は、そう書いている。
+    shot: K05
+    tone: しみじみ
+    pause: 0.12
+  - 語り: 亡くなったはずの利休の茶を、翌年、秀吉が、《飲んでいる》。
+    shot: R02
+    tone: 重い
+    pause: 0.3
+    dip: true
+  # fact: rikyu-06
+  - 語り: 同じ時代の奈良の日記、多聞院日記も、切腹をうわさとして書き、高野山へ追放された、という話まで載せていた。
+    shot: R05L
+    tone: しみじみ
+    pause: 0.15
+  # fact: rikyu-09
+  - 語り: ただ、手紙の年は、「翌年」という見立てだ。年が一つずれれば、利休の生前の茶の話になる。
+    shot: R10b
+    tone: しみじみ
+    pause: 0.15
+  # fact: rikyu-09
+  - 語り: この説を紹介した田中仙堂さんの記事の題も、「千利休は切腹せず生きていた？」。問いの形のままだ。
+    shot: R09
+    tone: しみじみ
+    pause: 0.12
+  - 語り: あなたなら、この1通で、利休は《生きていた》と思いますか。
+    shot: R01q
+    tone: 疑問
+    pause: 0.15

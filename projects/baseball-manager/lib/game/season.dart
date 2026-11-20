@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'at_bat.dart';
+import 'career.dart';
 import 'player.dart';
-import 'traits.dart';
+import 'skills.dart';
 
 /// 1試合(または大会・シーズン通算)の個人成績。打者として/投手として、それぞれ数える。
 class Line {
@@ -28,6 +29,7 @@ class Line {
     this.battingStrikeouts = 0,
     this.rbi = 0,
     this.stolenBases = 0,
+    this.pitcherBat = false,
   });
 
   /// 出場した試合数(打者または投手として)。
@@ -38,6 +40,9 @@ class Line {
 
   /// 打者の詳しい記録: 二塁打・三塁打・三振・打点・盗塁。
   final int doubles, triples, battingStrikeouts, rbi, stolenBases;
+
+  /// 投手の打席(投手が先発した試合の打席だけ)。評価・年俸・タイトルの判断には入れない。
+  final bool pitcherBat;
 
   // 投手
   final int faced, outs, strikeouts, walksGiven, hitsAllowed, homeRunsAllowed;
@@ -68,6 +73,7 @@ class Line {
         battingStrikeouts: battingStrikeouts + o.battingStrikeouts,
         rbi: rbi + o.rbi,
         stolenBases: stolenBases + o.stolenBases,
+        pitcherBat: pitcherBat || o.pitcherBat,
       );
 
   Line withDecision({bool win = false, bool loss = false}) => Line(
@@ -92,6 +98,7 @@ class Line {
         battingStrikeouts: battingStrikeouts,
         rbi: rbi,
         stolenBases: stolenBases,
+        pitcherBat: pitcherBat,
       );
 
   // ── 打者の指標 ──
@@ -136,11 +143,27 @@ class Line {
     return '${outs ~/ 3}${r == 0 ? '' : ' $r/3'}';
   }
 
-  double? get era => outs == 0 ? null : runsAllowed * 27 / outs;
+  /// 防御率。**30回以上投げた(90アウト〜)ときは、下限 `minSeasonEra`**(現実の記録でも1点を切る年はほぼ無い。
+  /// 失点の推定が0になるほど抑えた選手が「防御率0.00」で1シーズン投げ切るのを防ぐ)。
+  /// 1試合や1か月の防御率は、0.00になりうる。勝敗(`decidedStart`)は下限を使わない失点で決める。
+  double? get era {
+    if (outs == 0) return null;
+    final e = runsAllowed * 27 / outs;
+    if (outs < 90 || e >= _eraSoft) return e;
+    // 1.20 を下回るぶんは縮めて、下限(0.00 で `minSeasonEra`)へなだらかに寄せる
+    // (一律の下限だと、毎年「防御率0.90」がそろって作り物に見えた)。
+    return _eraSoft - (_eraSoft - e) * (_eraSoft - minSeasonEra) / _eraSoft;
+  }
+
+  static const _eraSoft = 1.20;
+
+  /// 被安打(本塁打を含む)。`hitsAllowed` は本塁打を別に数えているので、
+  /// 画面に出す被安打・WHIP・被打率はこちらを使う。
+  int get totalHitsAllowed => hitsAllowed + homeRunsAllowed;
 
   /// WHIP(1回あたりに出した走者の数)。
   double? get whip =>
-      outs == 0 ? null : (walksGiven + hitsAllowed) / inningsPitched;
+      outs == 0 ? null : (walksGiven + totalHitsAllowed) / inningsPitched;
 
   /// 9回あたりの奪三振・与四球・被本塁打。
   double? get strikeoutsPer9 => outs == 0 ? null : strikeouts * 27 / outs;
@@ -154,7 +177,7 @@ class Line {
   /// 被打率(打者のうち、四球を除いた対戦での被安打の割合)。
   double? get battingAverageAgainst {
     final ab = faced - walksGiven;
-    return ab <= 0 ? null : hitsAllowed / ab;
+    return ab <= 0 ? null : totalHitsAllowed / ab;
   }
 
   /// 勝率。勝ち負けがあれば。
@@ -182,7 +205,10 @@ class Line {
 
   /// 個人の評価。二刀流は両方の平均。
   double get rating {
-    final r = [battingRating, pitchingRating].whereType<double>().toList();
+    // 投手の打席は評価に入れない(打者が本業ではないので、投球の評価を下げない)
+    final r = [pitcherBat ? null : battingRating, pitchingRating]
+        .whereType<double>()
+        .toList();
     return r.isEmpty ? 50 : r.reduce((a, b) => a + b) / r.length;
   }
 
@@ -208,6 +234,7 @@ class Line {
         'battingStrikeouts': battingStrikeouts,
         'rbi': rbi,
         'stolenBases': stolenBases,
+        if (pitcherBat) 'pitcherBat': true,
       };
 
   /// 項目を足すときは既定値を置く。
@@ -235,6 +262,7 @@ class Line {
       battingStrikeouts: i('battingStrikeouts'),
       rbi: i('rbi'),
       stolenBases: i('stolenBases'),
+      pitcherBat: j['pitcherBat'] == true,
     );
   }
 }
@@ -245,6 +273,9 @@ const leagueEra = 3.90;
 
 /// 1打席あたりに足す、失点推定の基準値(平均的な環境で防御率が4点前後になる値)。
 const runBaseline = 0.10;
+
+/// シーズン(30回以上)の防御率の下限。
+const minSeasonEra = 0.78;
 
 /// その打席の打点(走者の動きは再現しないので、結果ごとの確率で決める)。
 int _rbiOf(AtBatResult r, Random rng) {
@@ -269,7 +300,21 @@ double _runValue(AtBatResult r) => switch (r) {
     };
 
 const _batterTurns = 4; // 1試合の打席
+const _pitcherTurns = 2; // 投手が先発した試合の打席
 const _pitcherFaced = 18; // 1試合の対戦打者(先発1人ぶんの目安)
+
+/// アマの大会で、エースが1試合に対戦する打者の基準(スタミナで0.75〜1倍ほど)。
+/// 少年・中学は7回制、高校から9回制。エースは完投に近い(2026-10-26 ログを読んで、2〜4回しか投げていなかった)。
+/// dart run -DBAL_TFACE=0 で従来(18人)に戻せる。
+int amateurFacedBase(Stage stage) {
+  const knob = int.fromEnvironment('BAL_TFACE', defaultValue: 1);
+  if (knob == 0) return _pitcherFaced;
+  return switch (stage) {
+    Stage.youth => 21,
+    Stage.juniorHigh => 24,
+    _ => 30,
+  };
+}
 
 /// 相手の強さ `opp`(0〜99)で1試合ぶんの個人成績を出す。
 /// `bat` / `pitch` で、その試合に打つか・投げるかを絞れる(先発ローテーションなど)。
@@ -285,11 +330,13 @@ Line playGame(
   var line = const Line();
   var appeared = false;
   var started = 0;
-  if (bat && p.role != Role.pitcher) {
+  // 投手は、先発した試合にだけ打席に立つ(2打席)。
+  final pitcherBats = p.role == Role.pitcher && pitch;
+  if (bat && (p.role != Role.pitcher || pitcherBats)) {
     appeared = true;
     final foe = Pitcher(control: opp, stuff: opp);
-    for (var i = 0; i < _batterTurns; i++) {
-      final r = simulateAtBat(foe, p.toBatter(), rng);
+    for (var i = 0; i < (pitcherBats ? _pitcherTurns : _batterTurns); i++) {
+      final r = simulateAtBat(foe, p.toBatter(), rng, ownBatter: true);
       final onBase = r == AtBatResult.walk || r == AtBatResult.single;
       line += Line(
         doubles: r == AtBatResult.double ? 1 : 0,
@@ -320,6 +367,7 @@ Line playGame(
           _ => 0,
         },
         homeRuns: r == AtBatResult.homeRun ? 1 : 0,
+        pitcherBat: pitcherBats,
       );
     }
   }
@@ -327,8 +375,11 @@ Line playGame(
     appeared = true;
     started = 1;
     final foe = Batter(contact: opp, power: opp, eye: opp);
-    // スタミナが低いと長く投げられない(対戦数が減る)。
-    final faced = (facedBase * (0.5 + p.of(Ability.stamina) / 200)).round();
+    // スタミナが低いと長く投げられない(対戦数が減る)。端数は確率で1人ぶん足す
+    // (四捨五入だと、スタミナ+6 程度の差がほとんどの能力で0人に丸められ、効かなかった)。
+    final rawFaced = facedBase * (0.5 + p.of(Ability.stamina) / 200);
+    final faced = rawFaced.floor() +
+        (rng.nextDouble() < rawFaced - rawFaced.floor() ? 1 : 0);
     for (var i = 0; i < faced; i++) {
       final r = simulateAtBat(p.toPitcher(), foe, rng);
       line += Line(
@@ -391,17 +442,18 @@ Tournament playTournament(
   required List<int> opponents,
   required Random rng,
   int condition = 50,
+  int facedBase = _pitcherFaced,
 }) {
   var line = const Line();
   var won = 0;
   final games = <TournamentGame>[];
   for (final opp in opponents) {
-    final g = playGame(p, opp, rng);
+    final g = playGame(p, opp, rng, facedBase: facedBase);
     line += g;
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (g.rating - 50) / 200 +
-            (condition + tournamentBonus(p.traits) - 50) / 500)
+            (condition + matchBonus(p) - 50) / 500)
         .clamp(0.0, 1.0);
     final roll = rng.nextDouble();
     final win = isShutout(g) || roll < pWin;
@@ -413,7 +465,138 @@ Tournament playTournament(
       roundsWon: won, rounds: opponents.length, line: line, games: games);
 }
 
-/// プロの1シーズン(リーグ戦)。
+/// 決勝の直前まで進めた途中経過。決勝で「見せ場の決断」を選べるように、決勝の勝ち負けだけ未決にしてある。
+/// (決勝の個人成績 `finalLine` は先に決めてあり、決断で変わるのは勝つ確率 `pWin` だけ)。
+class FinalMoment {
+  const FinalMoment({
+    required this.games,
+    required this.line,
+    required this.roundsWon,
+    required this.rounds,
+    required this.opponent,
+    required this.finalLine,
+    required this.pWin,
+  });
+
+  /// 決勝の前までの試合(全部勝っている)。
+  final List<TournamentGame> games;
+  final Line line;
+  final int roundsWon;
+  final int rounds;
+  final int opponent;
+  final Line finalLine;
+  final double pWin;
+
+  Map<String, dynamic> toJson() => {
+        'games': [
+          for (final g in games)
+            {'opponent': g.opponent, 'won': g.won, 'line': g.line.toJson()}
+        ],
+        'line': line.toJson(),
+        'roundsWon': roundsWon,
+        'rounds': rounds,
+        'opponent': opponent,
+        'finalLine': finalLine.toJson(),
+        'pWin': pWin,
+      };
+
+  factory FinalMoment.fromJson(Map<String, dynamic> j) => FinalMoment(
+        games: [
+          for (final g in (j['games'] as List? ?? const []))
+            TournamentGame(
+              opponent: ((g as Map)['opponent'] as num).toInt(),
+              won: g['won'] == true,
+              line: Line.fromJson((g['line'] as Map).cast<String, dynamic>()),
+            )
+        ],
+        line: Line.fromJson((j['line'] as Map).cast<String, dynamic>()),
+        roundsWon: (j['roundsWon'] as num).toInt(),
+        rounds: (j['rounds'] as num).toInt(),
+        opponent: (j['opponent'] as num).toInt(),
+        finalLine:
+            Line.fromJson((j['finalLine'] as Map).cast<String, dynamic>()),
+        pWin: (j['pWin'] as num).toDouble(),
+      );
+}
+
+/// `playTournamentToFinal` の結果。決勝まで進んだら `moment`(決勝は未決)、そこで負けていたら `done`。
+class TournamentProgress {
+  const TournamentProgress({this.done, this.moment});
+  final Tournament? done;
+  final FinalMoment? moment;
+}
+
+/// `playTournament` と同じ順で、**決勝の勝ち負けの手前まで**進める。
+/// 決勝より前で負ければ、その結果(`done`)を返す。決勝まで来たら `moment`。
+TournamentProgress playTournamentToFinal(
+  Player p, {
+  required int teamLevel,
+  required List<int> opponents,
+  required Random rng,
+  int condition = 50,
+  int facedBase = _pitcherFaced,
+}) {
+  var line = const Line();
+  var won = 0;
+  final games = <TournamentGame>[];
+  for (var i = 0; i < opponents.length; i++) {
+    final opp = opponents[i];
+    final g = playGame(p, opp, rng, facedBase: facedBase);
+    final pWin = (0.5 +
+            (teamLevel - opp) / 100 +
+            (g.rating - 50) / 200 +
+            (condition + matchBonus(p) - 50) / 500)
+        .clamp(0.0, 1.0);
+    if (i == opponents.length - 1) {
+      // 決勝: 勝ち負けは、見せ場の決断のあとで決める。
+      return TournamentProgress(
+        moment: FinalMoment(
+          games: games,
+          line: line,
+          roundsWon: won,
+          rounds: opponents.length,
+          opponent: opp,
+          finalLine: g,
+          pWin: pWin,
+        ),
+      );
+    }
+    line += g;
+    final roll = rng.nextDouble();
+    final win = isShutout(g) || roll < pWin;
+    games.add(TournamentGame(opponent: opp, won: win, line: g));
+    if (!win) {
+      return TournamentProgress(
+          done: Tournament(
+              roundsWon: won,
+              rounds: opponents.length,
+              line: line,
+              games: games));
+    }
+    won++;
+  }
+  // 試合が無い(通常は無い)。
+  return TournamentProgress(
+      done: Tournament(
+          roundsWon: won, rounds: opponents.length, line: line, games: games));
+}
+
+/// 決勝を決める。`bonus` は見せ場の決断で変わる勝つ確率(足し算)。無失点の登板は負けない(`isShutout`)。
+Tournament finishFinal(FinalMoment m, double bonus, Random rng) {
+  final roll = rng.nextDouble();
+  final win = isShutout(m.finalLine) || roll < (m.pWin + bonus).clamp(0.0, 1.0);
+  return Tournament(
+    roundsWon: m.roundsWon + (win ? 1 : 0),
+    rounds: m.rounds,
+    line: m.line + m.finalLine,
+    games: [
+      ...m.games,
+      TournamentGame(opponent: m.opponent, won: win, line: m.finalLine),
+    ],
+  );
+}
+
+/// プロのシーズン(リーグ戦)。
 class LeagueSeason {
   const LeagueSeason({
     required this.games,
@@ -439,7 +622,7 @@ class LeagueSeason {
 
 /// 勝率から順位(1〜6位)を決める。
 int leagueRank(double winPct) {
-  if (winPct >= 0.600) return 1;
+  if (winPct >= 0.575) return 1; // 0.600 だと優勝が6%しかなかった(6球団なら約17%)
   if (winPct >= 0.550) return 2;
   if (winPct >= 0.510) return 3;
   if (winPct >= 0.480) return 4;
@@ -515,15 +698,15 @@ LeagueProgress playLeagueChunk(
     }
     final starts = p.role != Role.batter && g % startInterval == 0;
     final game = playGame(p, opp, rng,
-        bat: p.role != Role.pitcher, pitch: starts, facedBase: 27);
+        bat: true, pitch: starts, facedBase: 27);
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
-            (condition + tournamentBonus(p.traits) - 50) / 800)
+            (condition + matchBonus(p) - 50) / 800)
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
-    line += (starts && game.outs >= 15) ? decidedStart(game, won) : game;
+    line += starts ? decidedStart(game, won) : game;
   }
   return LeagueProgress(
       games: prog.games + count,
@@ -539,11 +722,14 @@ LeagueProgress playLeagueChunk(
 /// ペナントまで強制すると、投手のリーグ優勝が倍になってバランスが崩れた。
 bool isShutout(Line game) => game.outs >= 15 && game.runsAllowed < 0.5;
 
-/// 5回以上投げた先発の勝敗を付ける。勝ちはチームが勝った試合。
-/// **負けは、チームが負け、かつ自分が失点した試合だけ**(無失点なのに負けにはならない。
-/// 勝敗も付かない試合になる)。防御率0なのに敗戦、という不自然さを防ぐ。
-Line decidedStart(Line game, bool teamWon) =>
-    game.withDecision(win: teamWon, loss: !teamWon && game.runsAllowed >= 0.5);
+/// 先発の勝敗を付ける。
+/// - 勝ち: チームが勝ち、5回(15アウト)以上投げて、失点が4点まで(打ち込まれた試合は勝ち投手にならない)。
+/// - 負け: チームが負け、自分が失点した試合。**投げた回に関係なく**付く(早い回でKOされても負け)。
+///   無失点なのに負けにはならない(防御率0なのに敗戦、という不自然さを防ぐ)。
+/// (2026-10-26 KOされた試合に負けが付かず、防御率3点台で268勝91敗(勝率.75)になっていた)
+Line decidedStart(Line game, bool teamWon) => game.withDecision(
+    win: teamWon && game.outs >= 15 && game.runsAllowed < 4.5,
+    loss: !teamWon && game.runsAllowed >= 0.5);
 
 /// プロの1シーズンの試合数。
 const leagueGames = 143;
@@ -567,15 +753,15 @@ LeagueSeason playLeagueSeason(
     final opp = opponents[g % opponents.length];
     final starts = p.role != Role.batter && g % startInterval == 0;
     final game = playGame(p, opp, rng,
-        bat: p.role != Role.pitcher, pitch: starts, facedBase: 27);
+        bat: true, pitch: starts, facedBase: 27);
     final pWin = (0.5 +
             (teamLevel - opp) / 100 +
             (game.rating - 50) / 400 +
-            (condition + tournamentBonus(p.traits) - 50) / 800)
+            (condition + matchBonus(p) - 50) / 800)
         .clamp(0.0, 1.0);
     final won = rng.nextDouble() < pWin;
     won ? wins++ : losses++;
-    line += (starts && game.outs >= 15) ? decidedStart(game, won) : game;
+    line += starts ? decidedStart(game, won) : game;
   }
   return LeagueSeason(games: games, wins: wins, losses: losses, line: line);
 }

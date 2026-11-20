@@ -62,6 +62,9 @@ class WeekReport {
     this.deadBall,
     this.newInjury,
     this.recovered = false,
+    this.declined,
+    this.shielded = const [],
+    this.declineRedirected = false,
   });
 
   /// その試合で起きたこと（得点・失点の時間）。
@@ -86,6 +89,16 @@ class WeekReport {
   final TrainingCompanion companion;
 
   final Detail? trained;
+
+  /// **その試合のあとに衰えた詳細能力**（2026-11-15）。衰え始める前は null。
+  final Detail? declined;
+
+  /// 衰えから守ったカテゴリ（その週の練習が扱うもの）。休養の週は空。
+  /// 衰えた週は、練習しているカテゴリには必ず当たらない。
+  final List<AttributeKey> shielded;
+
+  /// 本来は守ったカテゴリに当たるはずで、別の能力が受けたか（測定用）。
+  final bool declineRedirected;
 
   /// その週に覚えた個人技。
   final Signature? learned;
@@ -282,7 +295,7 @@ class CareerController extends ChangeNotifier {
     }
 
     // ピッチの外の出来事。試合と試合の間に起きる。
-    if (pendingEvent == null && _life.fires()) {
+    if (pendingEvent == null) {
       // 名前のある人は、出来事に出てきて初めて人になる。
       final people = <PersonKind, String>{
         if (state.manager != null) PersonKind.manager: state.manager!.name,
@@ -293,42 +306,50 @@ class CareerController extends ChangeNotifier {
         if (state.rival != null) PersonKind.rival: state.rival!.name,
         PersonKind.agent: state.agent.name,
       };
-      pendingEvent = _life
-          .pick(
-            LifeContext(
-              age: state.player.age,
-              fame: state.reputation.fame,
-              savings: state.finances.savings,
-              abroad: state.club.countryId != state.player.nationality.primary,
-              afterInjury: state.rehabWatch > 0,
-              sponsorOffered: state.sponsorOffer != null,
-              captaincyOffered: state.captaincyOffered,
-              lowMorale: state.morale.needsCare,
-              people: people,
-              overall: state.player.overall,
-              // 自分が選んだことが、ピッチの外の出来事になって返ってくる。
-              pushingHard: state.effort == TrainingEffort.hard,
-              promised: state.promise != null,
-              lowCondition:
-                  state.player.condition < Formulas.lowConditionForEvents,
-            ),
-            seen: state.seenEvents.toSet(),
-            recent: state.recentEvents,
-            // 一緒に練習している相手の話は出やすい。
-            with_: switch (state.companion) {
-              TrainingCompanion.alone => null,
-              TrainingCompanion.partner => PersonKind.partner,
-              TrainingCompanion.mentor => PersonKind.mentor,
-              TrainingCompanion.rival => PersonKind.competitor,
-            },
-          )
-          ?.withNames(
-            people,
-            values: {
-              // **もらう額を伏せない。** 受ければ疲労とコンディションを払う。
-              '<sponsorAnnual>': '${state.sponsorOffer?.annual ?? 0}',
-            },
-          );
+      final context = LifeContext(
+        age: state.player.age,
+        fame: state.reputation.fame,
+        savings: state.finances.savings,
+        abroad: state.club.countryId != state.player.nationality.primary,
+        afterInjury: state.rehabWatch > 0,
+        sponsorOffered: state.sponsorOffer != null,
+        captaincyOffered: state.captaincyOffered,
+        lowMorale: state.morale.needsCare,
+        people: people,
+        overall: state.player.overall,
+        // 自分が選んだことが、ピッチの外の出来事になって返ってくる。
+        pushingHard: state.effort == TrainingEffort.hard,
+        promised: state.promise != null,
+        lowCondition: state.player.condition < Formulas.lowConditionForEvents,
+      );
+      // 返事を待っている打診は、抽選を待たずに出す。
+      final waiting = _life.offerWaiting(context);
+      final LifeEvent? next;
+      if (waiting != null) {
+        next = waiting;
+      } else if (_life.fires()) {
+        next = _life.pick(
+          context,
+          seen: state.seenEvents.toSet(),
+          recent: state.recentEvents,
+          // 一緒に練習している相手の話は出やすい。
+          with_: switch (state.companion) {
+            TrainingCompanion.alone => null,
+            TrainingCompanion.partner => PersonKind.partner,
+            TrainingCompanion.mentor => PersonKind.mentor,
+            TrainingCompanion.rival => PersonKind.competitor,
+          },
+        );
+      } else {
+        next = null;
+      }
+      pendingEvent = next?.withNames(
+        people,
+        values: {
+          // **もらう額を伏せない。** 受ければ疲労とコンディションを払う。
+          '<sponsorAnnual>': '${state.sponsorOffer?.annual ?? 0}',
+        },
+      );
     }
   }
 
@@ -1399,8 +1420,16 @@ class CareerController extends ChangeNotifier {
       lastWeek = WeekReport(timeline: match.timeline, recovered: recovered);
     } else {
       final before = _sumOf(player.attributes);
+      Detail? declined;
+      var shielded = false;
       player = player.copyWith(
         attributes: _match.grow(
+          // その週に練習するカテゴリは衰えから守られる。
+          protect: state.menu.keys,
+          declined: (detail, wasShielded) {
+            declined = detail;
+            shielded = wasShielded;
+          },
           development: state.development,
           // 狙った項目を積む。**伸びたかどうかではなく狙った回数**を数える——
           // 頭打ちで土台に回された回も入れないと、鎖の深い項目は永久に尖れない。
@@ -1542,6 +1571,9 @@ class CareerController extends ChangeNotifier {
         redirected: week.redirected,
         deadBall: match.deadBallText,
         newInjury: newInjury,
+        declined: declined,
+        shielded: declined == null ? const [] : state.menu.keys,
+        declineRedirected: shielded,
       );
     }
 
@@ -1593,9 +1625,14 @@ class CareerController extends ChangeNotifier {
       _state == null ? salary : _career.takeHome(_state!, salary);
 
   /// シーズン終了時の処理（大陸カップの結果を確定させる）。
+  ///
+  /// **1シーズンに1回だけ。** 季末の画面は開くたびにここを呼ぶので、
+  /// 済ませた季は何もしない（保存した結果をそのまま見せる）。
+  /// 記事も二度は出さない。
   Future<void> finishSeason() async {
     final state = _state;
     if (state == null || !state.seasonFinished) return;
+    if (state.seasonEndResolved) return;
     _career.resolveSeasonEnd(state);
     // 口にした約束の結末を、記事として残す。
     if (state.promise != null &&
