@@ -6,6 +6,7 @@ module.exports = (YA, ok) => {
   ok(new Set(Object.values(YA.GOLD)).size === Object.keys(YA.GOLD).length, '金の名前が重ならない');
   ok(Object.values(YA.TRAIT_AFF).every((a) => a.every((n) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(n) >= 0)), '関わる能力の名前が正しい');
   ok(YA.AWAKE_FORMS.length === 80, '覚醒の形は80種');
+  { const lean = new Set(Object.values(YA.FORM_LEAN).flat()); ok(YA.AWAKE_FORMS.every((f) => lean.has(f.k)) && [...lean].every((k) => YA.AWAKE_FORMS.some((f) => f.k === k)), '覚醒の形はどれも接し方で出やすくなる（足した形も）'); }
   ok(YA.TRAIT_COMBO.every(([a, b]) => YA.TRAITS.indexOf(a) >= 0 && YA.TRAITS.indexOf(b) >= 0), '組み合わせの特性が一覧にある');
   // 新しい30個・悪い癖・組み合わせが試合で効く（両チームの全員に持たせて回す）
   const NEW = Object.keys(YA.TRAIT_X);

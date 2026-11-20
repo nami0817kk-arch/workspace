@@ -108,6 +108,14 @@
   YA.DEX_REWARD[60] = 3000;
   YA.DEX_REWARD[70] = 3500;
   YA.DEX_REWARD[80] = 4000;
+  // 接し方で出やすくなる形（memory.js の YA.FORM_LEAN）。初めの20種にしか無く、足した60種は接し方が効かなかった（2026-11-20 点検）
+  if (YA.FORM_LEAN) {
+    const L = YA.FORM_LEAN;
+    L.firm.push('anchor', 'stopper', 'killer', 'hound', 'clutch', 'destroyer', 'warrior', 'tackler', 'gatekeeper', 'nipper', 'calm', 'sweeper', 'deffb', 'pkgk');
+    L.push.push('poacher', 'arrow', 'inverted', 'volley', 'b2b', 'speedster', 'diver', 'complete9', 'joker', 'starter', 'stage', 'second', 'longshot', 'target', 'attwb', 'craftsman');
+    L.warm.push('shadow', 'widepm', 'trequartista', 'trickster', 'mood', 'creator', 'combo', 'worker', 'halfspace', 'mezzala', 'twoway', 'mind', 'carrier');
+    L.wait.push('regista', 'libero', 'invfb', 'fk', 'pillar', 'shotstop', 'skygk', 'false9', 'tempo', 'brain', 'switcher', 'corner', 'aerialset', 'doorgk', 'sweepgk', 'cmdgk', 'reflexgk');
+  }
   YA.AWAKE_DOUBLE = 0.08; // 覚醒のとき、まれに形が2つ同時に（特性が2つ）
 
   // ---------- 悪い癖 ----------
