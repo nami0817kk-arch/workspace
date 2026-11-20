@@ -132,12 +132,11 @@ class _TransferScreenState extends State<TransferScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildProposalTab(context, gameState, save, squadFull, targets,
-                same),
+            _buildProposalTab(
+                context, gameState, save, squadFull, targets, same),
             _buildSearchTab(context, gameState, squadFull, targets, same),
             _buildTalksTab(context, gameState),
-            _buildWatchTab(
-                context, gameState, save, squadFull, targets, same),
+            _buildWatchTab(context, gameState, save, squadFull, targets, same),
             _buildFreeAgentTab(context, gameState, squadFull),
             _buildScoutTab(context, gameState, save),
           ],
@@ -178,8 +177,7 @@ class _TransferScreenState extends State<TransferScreen>
         ),
         if (gameState.isGoalkeeperEmergency)
           _NoticeLine(
-            text: Tr.pick(
-                '登録中のGKが全員出られないため、窓の外でもGKを1人だけローンで取れます(緊急の特例)。',
+            text: Tr.pick('登録中のGKが全員出られないため、窓の外でもGKを1人だけローンで取れます(緊急の特例)。',
                 'Every registered goalkeeper is unavailable, so you may take one goalkeeper on loan outside the window (emergency rule).'),
           ),
         _RegistrationCard(windowOpen: windowOpen),
@@ -188,7 +186,9 @@ class _TransferScreenState extends State<TransferScreen>
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
           child: Row(
             children: [
-              Text(Tr.pick('資金 ${formatMoney(save.budget)}', 'Funds ${formatMoney(save.budget)}'),
+              Text(
+                  Tr.pick('資金 ${formatMoney(save.budget)}',
+                      'Funds ${formatMoney(save.budget)}'),
                   style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(width: 12),
               Text(
@@ -333,8 +333,8 @@ class _TransferScreenState extends State<TransferScreen>
       found = found.where((p) => p.age <= _searchMaxAge!).toList();
     }
     if (byEstimate) {
-      int key(Player p) => ScoutKnowledge.center(
-          _searchSort == TransferSortOption.overall
+      int key(Player p) =>
+          ScoutKnowledge.center(_searchSort == TransferSortOption.overall
               ? gameState.overallEstimate(p, sameLeagueIds: same)
               : gameState.potentialEstimate(p, sameLeagueIds: same));
       final keys = {for (final p in found) p.id: key(p)};
@@ -438,8 +438,7 @@ class _TransferScreenState extends State<TransferScreen>
         Padding(
           padding: const EdgeInsets.all(8),
           child: Text(
-            Tr.pick(
-                '星を付けた選手です。監督の案や「探す」で星を押すと入ります。',
+            Tr.pick('星を付けた選手です。監督の案や「探す」で星を押すと入ります。',
                 'Players you starred. Tap the star in Proposals or Search to add one.'),
             style: TextStyle(
                 fontSize: 12, color: SemanticColors.subtleText(context)),
@@ -460,8 +459,8 @@ class _TransferScreenState extends State<TransferScreen>
           Padding(
             padding: const EdgeInsets.all(24),
             child: Center(
-              child: Text(Tr.pick('注目している選手はいません',
-                  'You are not watching anyone')),
+              child:
+                  Text(Tr.pick('注目している選手はいません', 'You are not watching anyone')),
             ),
           ),
         for (final p in watched)
@@ -479,8 +478,8 @@ class _TransferScreenState extends State<TransferScreen>
     Set<String> same,
   ) {
     final k = gameState.knowledgeOf(p, sameLeagueIds: same);
-    final ovr = ScoutKnowledge.label(
-        gameState.overallEstimate(p, sameLeagueIds: same));
+    final ovr =
+        ScoutKnowledge.label(gameState.overallEstimate(p, sameLeagueIds: same));
     final pot = ScoutKnowledge.label(
         gameState.potentialEstimate(p, sameLeagueIds: same));
     final canSign = (gameState.isTransferWindowOpen ||
@@ -523,8 +522,8 @@ class _TransferScreenState extends State<TransferScreen>
       padding: const EdgeInsets.all(12),
       children: [
         Text(
-          Tr.pick('送っている場所 $used / $slots か所',
-              'Regions covered: $used of $slots'),
+          Tr.pick(
+              '送っている場所 $used / $slots か所', 'Regions covered: $used of $slots'),
           style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 4),
@@ -592,7 +591,8 @@ class _TransferScreenState extends State<TransferScreen>
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              Tr.pick('移籍金なし・年俸のみで獲得できる選手です。所属が無いので、移籍の窓の外でも取れます。年俸・年数・サイン料を本人と話して決めます。',
+              Tr.pick(
+                  '移籍金なし・年俸のみで獲得できる選手です。所属が無いので、移籍の窓の外でも取れます。年俸・年数・サイン料を本人と話して決めます。',
                   'These players cost no fee, only wages. They have no club, so you can sign them outside the window too. Agree salary, length and signing bonus with the player.'),
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
@@ -753,8 +753,8 @@ class _TransferScreenState extends State<TransferScreen>
                 child: Text(Tr.pick('やめる', 'Never mind')),
               ),
               FilledButton(
-                onPressed: () => Navigator.pop(
-                    ctx, (w, endYear, bonus.round(), promise)),
+                onPressed: () =>
+                    Navigator.pop(ctx, (w, endYear, bonus.round(), promise)),
                 child: Text(Tr.pick('条件を出す', 'Make the offer')),
               ),
             ],
@@ -807,8 +807,8 @@ class _TransferScreenState extends State<TransferScreen>
           final amount = bid.round();
           final pct = value <= 0 ? 0 : (amount * 100 / value).round();
           return AlertDialog(
-            title: Text(Tr.pick(
-                '${player.name}の移籍金を提示', 'Bid for ${player.name}')),
+            title: Text(
+                Tr.pick('${player.name}の移籍金を提示', 'Bid for ${player.name}')),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -869,8 +869,7 @@ class _TransferScreenState extends State<TransferScreen>
         content: Text(ok
             ? Tr.pick('提示しました。返事は「交渉」のタブに届きます。',
                 'Bid made. The reply will appear on the Talks tab.')
-            : (reason ??
-                Tr.pick('提示できませんでした', 'The bid could not be made'))),
+            : (reason ?? Tr.pick('提示できませんでした', 'The bid could not be made'))),
         duration: Duration(seconds: reason != null && !ok ? 6 : 4),
       ),
     );
@@ -974,9 +973,8 @@ class _TransferScreenState extends State<TransferScreen>
           : Tr.pick(
               'クラブと合意: $terms・${md(t.deadline)}までに選手と契約する${t.demandWage > 0 ? '・望む年俸 ${formatMoney(annualFromWeekly(t.demandWage))}' : ''}',
               'Clubs agreed: $terms • sign him by ${md(t.deadline)}${t.demandWage > 0 ? ' • wants ${formatMoney(annualFromWeekly(t.demandWage))} a year' : ''}'),
-      TransferTalkStage.collapsed => Tr.pick(
-          '決裂(この窓のあいだは申し込めない)',
-          'Broken off (no more bids this window)'),
+      TransferTalkStage.collapsed =>
+        Tr.pick('決裂(この窓のあいだは申し込めない)', 'Broken off (no more bids this window)'),
     };
     final player = gameState.talkPlayer(t.playerId);
     final withdraw = TextButton(
@@ -1035,8 +1033,7 @@ class _TransferScreenState extends State<TransferScreen>
                   Tr.pick(
                       '競合: ${t.rivalClubName}が年俸${formatMoney(annualFromWeekly(t.rivalWage))}で誘っている。${md(t.rivalDecidesOn)}ごろまでに契約しないと、選手はあちらへ行く',
                       'Rival: ${t.rivalClubName} offer ${formatMoney(annualFromWeekly(t.rivalWage))} a year. Sign him by about ${md(t.rivalDecidesOn)} or he goes there'),
-                  style: TextStyle(
-                      fontSize: 12, color: Colors.orange.shade800),
+                  style: TextStyle(fontSize: 12, color: Colors.orange.shade800),
                 ),
               ),
             if (buttons.isNotEmpty)
@@ -1065,111 +1062,131 @@ class _TransferScreenState extends State<TransferScreen>
     // 窓の外で開けるのは GK の緊急の特例だけ。そのときは期限付き(ローン)のみ。
     final permanentAllowed = gameState.isTransferWindowOpen;
 
+    // 横画面は縦が短く、4つの選び方の下が切れていた。中でスクロールでき、
+    // 横画面では2列に並べる。
     showModalBottomSheet<void>(
       context: context,
-      builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                Tr.pick('${player.name}を獲得', 'Sign ${player.name}'),
-                style: Theme.of(ctx).textTheme.titleMedium,
+      isScrollControlled: true,
+      constraints: const BoxConstraints(maxWidth: 760),
+      builder: (ctx) {
+        final size = MediaQuery.sizeOf(ctx);
+        final wide = size.width > size.height;
+        Widget cell(Widget tile) => wide
+            ? SizedBox(
+                width: ((size.width < 760 ? size.width : 760) - 48) / 2,
+                child: tile)
+            : tile;
+        return SafeArea(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: size.height * 0.9),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Tr.pick('${player.name}を獲得', 'Sign ${player.name}'),
+                    style: Theme.of(ctx).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(children: [
+                    cell(ListTile(
+                      leading: const Icon(Icons.handshake),
+                      title: Text(Tr.pick('移籍金を提示する', 'Make a bid')),
+                      subtitle: Text(talk != null
+                          ? Tr.pick('もう交渉しています(「交渉」のタブで続きを)',
+                              'Talks are already under way (see the Talks tab)')
+                          : Tr.pick(
+                              '相手のクラブと交渉します。返事は${TransferTalkEngine.replyDays}日ほどで来ます(別に代理人手数料${formatMoney(agentFee)}ほど)',
+                              'Open talks with his club. They reply in about ${TransferTalkEngine.replyDays} days (plus about ${formatMoney(agentFee)} in agent fees)')),
+                      enabled: permanentAllowed && talk == null,
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _showBidDialog(context, player);
+                      },
+                    )),
+                    cell(ListTile(
+                      leading: const Icon(Icons.swap_horiz),
+                      title: Text(Tr.pick('ローンで獲得', 'Take him on loan')),
+                      subtitle: Text(
+                        Tr.pick(
+                            '契約金${formatMoney(loanFee)}・給与の6割を負担・期間は半年(冬の窓まで)か1年(シーズン末まで)',
+                            '${formatMoney(loanFee)} fee, 60% of his wages, for half a season (to the winter window) or the full season'),
+                      ),
+                      enabled: save.budget >= loanFee,
+                      onTap: () async {
+                        Navigator.pop(ctx);
+                        final length = await _chooseLoanLength(context);
+                        if (length == null || !context.mounted) return;
+                        _acquire(
+                          context,
+                          () => gameState.signLoanPlayer(player.id,
+                              length: length),
+                          player.name,
+                        );
+                      },
+                    )),
+                    cell(ListTile(
+                      leading: const Icon(Icons.request_quote),
+                      title: Text(Tr.pick(
+                          '買取オプション付きローンで獲得', 'Loan with an option to buy')),
+                      subtitle: Text(
+                        Tr.pick(
+                            '契約金${formatMoney(loanFee)}・給与の6割を負担・ローン期間中いつでも${formatMoney(buyOptionFee)}で完全移籍化可能',
+                            '${formatMoney(loanFee)} fee, 60% of his wages, and you can make it permanent for ${formatMoney(buyOptionFee)} at any point'),
+                      ),
+                      enabled: save.budget >= loanFee,
+                      onTap: () async {
+                        Navigator.pop(ctx);
+                        final length = await _chooseLoanLength(context);
+                        if (length == null || !context.mounted) return;
+                        _acquire(
+                          context,
+                          () => gameState.signLoanPlayer(
+                            player.id,
+                            withBuyOption: true,
+                            length: length,
+                          ),
+                          player.name,
+                        );
+                      },
+                    )),
+                    cell(ListTile(
+                      leading: const Icon(Icons.gavel),
+                      title: Text(Tr.pick(
+                          '買取義務付きローンで獲得', 'Loan with an obligation to buy')),
+                      subtitle: Text(
+                        Tr.pick(
+                            '契約金${formatMoney((loanFee * GameStateForms.obligationLoanFeeFactor).round())}(ふつうの半分)・給与の6割を負担・満了したら必ず${formatMoney(buyOptionFee)}で買い取る',
+                            '${formatMoney((loanFee * GameStateForms.obligationLoanFeeFactor).round())} fee (half the usual), 60% of his wages, and you must buy him for ${formatMoney(buyOptionFee)} when it ends'),
+                      ),
+                      enabled: permanentAllowed &&
+                          save.budget >=
+                              (loanFee * GameStateForms.obligationLoanFeeFactor)
+                                  .round(),
+                      onTap: () async {
+                        Navigator.pop(ctx);
+                        final length = await _chooseLoanLength(context);
+                        if (length == null || !context.mounted) return;
+                        _acquire(
+                          context,
+                          () => gameState.signLoanPlayer(
+                            player.id,
+                            withObligation: true,
+                            length: length,
+                          ),
+                          player.name,
+                        );
+                      },
+                    )),
+                  ]),
+                ],
               ),
-              const SizedBox(height: 12),
-              ListTile(
-                leading: const Icon(Icons.handshake),
-                title: Text(Tr.pick('移籍金を提示する', 'Make a bid')),
-                subtitle: Text(talk != null
-                    ? Tr.pick('もう交渉しています(「交渉」のタブで続きを)',
-                        'Talks are already under way (see the Talks tab)')
-                    : Tr.pick(
-                        '相手のクラブと交渉します。返事は${TransferTalkEngine.replyDays}日ほどで来ます(別に代理人手数料${formatMoney(agentFee)}ほど)',
-                        'Open talks with his club. They reply in about ${TransferTalkEngine.replyDays} days (plus about ${formatMoney(agentFee)} in agent fees)')),
-                enabled: permanentAllowed && talk == null,
-                onTap: () {
-                  Navigator.pop(ctx);
-                  _showBidDialog(context, player);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.swap_horiz),
-                title: Text(Tr.pick('ローンで獲得', 'Take him on loan')),
-                subtitle: Text(
-                  Tr.pick(
-                      '契約金${formatMoney(loanFee)}・給与の6割を負担・期間は半年(冬の窓まで)か1年(シーズン末まで)',
-                      '${formatMoney(loanFee)} fee, 60% of his wages, for half a season (to the winter window) or the full season'),
-                ),
-                enabled: save.budget >= loanFee,
-                onTap: () async {
-                  Navigator.pop(ctx);
-                  final length = await _chooseLoanLength(context);
-                  if (length == null || !context.mounted) return;
-                  _acquire(
-                    context,
-                    () => gameState.signLoanPlayer(player.id, length: length),
-                    player.name,
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.request_quote),
-                title: Text(
-                    Tr.pick('買取オプション付きローンで獲得', 'Loan with an option to buy')),
-                subtitle: Text(
-                  Tr.pick(
-                      '契約金${formatMoney(loanFee)}・給与の6割を負担・ローン期間中いつでも${formatMoney(buyOptionFee)}で完全移籍化可能',
-                      '${formatMoney(loanFee)} fee, 60% of his wages, and you can make it permanent for ${formatMoney(buyOptionFee)} at any point'),
-                ),
-                enabled: save.budget >= loanFee,
-                onTap: () async {
-                  Navigator.pop(ctx);
-                  final length = await _chooseLoanLength(context);
-                  if (length == null || !context.mounted) return;
-                  _acquire(
-                    context,
-                    () => gameState.signLoanPlayer(
-                      player.id,
-                      withBuyOption: true,
-                      length: length,
-                    ),
-                    player.name,
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.gavel),
-                title: Text(Tr.pick('買取義務付きローンで獲得', 'Loan with an obligation to buy')),
-                subtitle: Text(
-                  Tr.pick(
-                      '契約金${formatMoney((loanFee * GameStateForms.obligationLoanFeeFactor).round())}(ふつうの半分)・給与の6割を負担・満了したら必ず${formatMoney(buyOptionFee)}で買い取る',
-                      '${formatMoney((loanFee * GameStateForms.obligationLoanFeeFactor).round())} fee (half the usual), 60% of his wages, and you must buy him for ${formatMoney(buyOptionFee)} when it ends'),
-                ),
-                enabled: permanentAllowed &&
-                    save.budget >=
-                        (loanFee * GameStateForms.obligationLoanFeeFactor)
-                            .round(),
-                onTap: () async {
-                  Navigator.pop(ctx);
-                  final length = await _chooseLoanLength(context);
-                  if (length == null || !context.mounted) return;
-                  _acquire(
-                    context,
-                    () => gameState.signLoanPlayer(
-                      player.id,
-                      withObligation: true,
-                      length: length,
-                    ),
-                    player.name,
-                  );
-                },
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -1197,8 +1214,8 @@ class _TransferScreenState extends State<TransferScreen>
             ),
           SimpleDialogOption(
             onPressed: () => Navigator.pop(ctx, LoanLength.full),
-            child: Text(Tr.pick('1年(シーズン末の$fullEndまで)',
-                'Full season (until $fullEnd)')),
+            child: Text(Tr.pick(
+                '1年(シーズン末の$fullEndまで)', 'Full season (until $fullEnd)')),
           ),
         ],
       ),
@@ -1471,8 +1488,8 @@ class _SdBriefCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
       child: ExpansionTile(
-        title: Text(Tr.pick('SD(${sd.name})に補強を任せる',
-            'Let your SD (${sd.name}) run signings')),
+        title: Text(Tr.pick(
+            'SD(${sd.name})に補強を任せる', 'Let your SD (${sd.name}) run signings')),
         subtitle: Text(
           b.active
               ? Tr.pick(
@@ -1505,7 +1522,8 @@ class _SdBriefCard extends StatelessWidget {
                   label: Text(_groupName(g)),
                   selected: b.groups.contains(g),
                   onSelected: (on) => gameState.updateSdBrief(
-                      groups: on ? {...b.groups, g} : ({...b.groups}..remove(g))),
+                      groups:
+                          on ? {...b.groups, g} : ({...b.groups}..remove(g))),
                 ),
             ],
           ),
