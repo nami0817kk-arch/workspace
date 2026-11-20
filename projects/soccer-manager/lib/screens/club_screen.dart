@@ -11,6 +11,7 @@ import '../logic/transfer_window.dart';
 import '../models/club_infrastructure.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
+import '../widgets/auto_columns.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
@@ -43,10 +44,9 @@ String _staffEffectLabel(StaffRole role, int level,
     case StaffRole.scout:
       final cur = scaleMoneyForTier(tier, ScoutingEngine.scoutCostFor(level));
       final curCount = ScoutingEngine.scoutCandidateCountFor(level);
-      final next =
-          level < maxLevel
-              ? scaleMoneyForTier(tier, ScoutingEngine.scoutCostFor(level + 1))
-              : null;
+      final next = level < maxLevel
+          ? scaleMoneyForTier(tier, ScoutingEngine.scoutCostFor(level + 1))
+          : null;
       final nextCount = level < maxLevel
           ? ScoutingEngine.scoutCandidateCountFor(level + 1)
           : null;
@@ -153,8 +153,14 @@ String _facilityEffectLabel(
   }
 }
 
+/// クラブの画面のどの部分を出すか。横画面ではタブで分け、1ページを短くする
+/// (全部を1列に並べると縦に12画面分あった)。null なら全部。
+enum ClubSection { staff, facilities, community }
+
 class ClubScreen extends StatelessWidget {
-  const ClubScreen({super.key});
+  const ClubScreen({super.key, this.section});
+
+  final ClubSection? section;
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +174,7 @@ class ClubScreen extends StatelessWidget {
     final maxTotalLevels =
         (StaffRole.values.length + FacilityType.values.length) *
             ClubInfrastructure.maxLevel;
+    bool show(ClubSection x) => section == null || section == x;
 
     return Scaffold(
       appBar: AppBar(
@@ -177,8 +184,11 @@ class ClubScreen extends StatelessWidget {
       ),
       drawer: const QuickAccessDrawer(),
       body: ResponsiveBody(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
+        // 横画面では札を2列に並べ、縦の長さを半分にする。
+        child: AutoColumns(
+          // スタッフは候補の行が横に長いので1列のまま。
+          twoColumnWidth:
+              section == ClubSection.staff ? double.infinity : 640,
           children: [
             Card(
               child: Padding(
@@ -187,12 +197,14 @@ class ClubScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      Tr.pick('資金: ${formatMoney(save.budget)}', 'Funds: ${formatMoney(save.budget)}'),
+                      Tr.pick('資金: ${formatMoney(save.budget)}',
+                          'Funds: ${formatMoney(save.budget)}'),
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      Tr.pick('スタッフの年俸の合計: ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))}',
+                      Tr.pick(
+                          'スタッフの年俸の合計: ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))}',
                           'Total staff salaries: ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))} a year'),
                       style: TextStyle(
                           fontSize: 12,
@@ -222,52 +234,57 @@ class ClubScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Text(Tr.pick('スタッフ', 'Staff'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            for (final role in StaffRole.values)
-              _StaffCard(role: role),
-            const Divider(height: 32),
-            Text(Tr.pick('施設', 'Facilities'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            for (final type in FacilityType.values)
-              _UpgradeCard(
-                title: type.label,
-                description: type.description,
-                level: infra.facilityLevel(type),
-                cost: gameState.facilityUpgradeCostFor(type),
-                costLabel: Tr.pick('建設費', 'Build cost'),
-                extraLabel: _facilityEffectLabel(
-                  type,
-                  infra.facilityLevel(type),
-                  gameState.expectedAttendance,
+            if (show(ClubSection.staff)) ...[
+              const SizedBox(height: 20),
+              Text(Tr.pick('スタッフ', 'Staff'),
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              for (final role in StaffRole.values) _StaffCard(role: role),
+              const SizedBox(height: 8),
+              const YouthAnalyticsCard(),
+            ],
+            if (show(ClubSection.facilities)) ...[
+              const Divider(height: 32),
+              Text(Tr.pick('施設', 'Facilities'),
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              for (final type in FacilityType.values)
+                _UpgradeCard(
+                  title: type.label,
+                  description: type.description,
+                  level: infra.facilityLevel(type),
+                  cost: gameState.facilityUpgradeCostFor(type),
+                  costLabel: Tr.pick('建設費', 'Build cost'),
+                  extraLabel: _facilityEffectLabel(
+                    type,
+                    infra.facilityLevel(type),
+                    gameState.expectedAttendance,
+                  ),
+                  canAfford:
+                      save.budget >= gameState.facilityUpgradeCostFor(type),
+                  onUpgrade: () => gameState.upgradeFacility(type),
                 ),
-                canAfford:
-                    save.budget >= gameState.facilityUpgradeCostFor(type),
-                onUpgrade: () => gameState.upgradeFacility(type),
+              const SizedBox(height: 8),
+              const ClubLicenseCard(),
+              const SizedBox(height: 8),
+              const AffiliateCard(),
+            ],
+            if (show(ClubSection.community)) ...[
+              const SizedBox(height: 8),
+              const FanSegmentsCard(),
+              const SizedBox(height: 8),
+              const ClubLookCard(),
+              const Divider(height: 32),
+              Text(Tr.pick('チケット価格戦略', 'Ticket pricing'),
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              _TicketPricingCard(
+                current: save.ticketPricing,
+                onSelect: (p) => gameState.setTicketPricing(p),
               ),
-            const SizedBox(height: 8),
-            const ClubLicenseCard(),
-            const SizedBox(height: 8),
-            const YouthAnalyticsCard(),
-            const SizedBox(height: 8),
-            const FanSegmentsCard(),
-            const SizedBox(height: 8),
-            const ClubLookCard(),
-            const SizedBox(height: 8),
-            const AffiliateCard(),
-            const Divider(height: 32),
-            Text(Tr.pick('チケット価格戦略', 'Ticket pricing'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            _TicketPricingCard(
-              current: save.ticketPricing,
-              onSelect: (p) => gameState.setTicketPricing(p),
-            ),
-            const SizedBox(height: 8),
-            const SeasonTicketsCard(),
+              const SizedBox(height: 8),
+              const SeasonTicketsCard(),
+            ],
           ],
         ),
       ),

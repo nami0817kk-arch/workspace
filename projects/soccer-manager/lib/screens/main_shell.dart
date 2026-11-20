@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../services/feedback_service.dart';
 import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
+import '../widgets/chip_switcher.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/quick_access_drawer.dart';
@@ -24,6 +25,7 @@ import 'home_screen.dart';
 import 'league_ranking_screen.dart';
 import 'news_screen.dart';
 import 'owner_work_screen.dart';
+import 'owner_world_screen.dart';
 import 'season_history_screen.dart';
 import 'squad_screen.dart';
 import 'transfer_screen.dart';
@@ -87,8 +89,12 @@ class _MainShellState extends State<MainShell> {
         GroupPage(
           title: Tr.pick('クラブ', 'Club'),
           tabs: [
-            GroupTab(Tr.pick('施設・スタッフ', 'Facilities & staff'),
-                (_) => const ClubScreen()),
+            GroupTab(Tr.pick('スタッフ', 'Staff'),
+                (_) => const ClubScreen(section: ClubSection.staff)),
+            GroupTab(Tr.pick('施設', 'Facilities'),
+                (_) => const ClubScreen(section: ClubSection.facilities)),
+            GroupTab(Tr.pick('ファンと街', 'Fans & city'),
+                (_) => const ClubScreen(section: ClubSection.community)),
             GroupTab(Tr.pick('ユース・スカウト', 'Youth & scouting'),
                 (_) => const YouthScreen()),
           ],
@@ -118,19 +124,34 @@ class _MainShellState extends State<MainShell> {
           tabs: [
             GroupTab(Tr.pick('オーナーの仕事', 'Owner\'s work'),
                 (_) => const OwnerWorkScreen()),
+            GroupTab(Tr.pick('オーナーと世界', 'Owner & world'),
+                (_) => const OwnerWorldScreen()),
             GroupTab(
                 Tr.pick('年間予定', 'Calendar'), (_) => const ClubCalendarScreen()),
             GroupTab(Tr.pick('ニュース', 'News'), (_) => const NewsScreen()),
             GroupTab(
                 Tr.pick('シーズン分析', 'Analysis'), (_) => const AnalysisScreen()),
-            GroupTab(Tr.pick('シーズン成績', 'Seasons'),
-                (_) => const SeasonHistoryScreen()),
-            GroupTab(Tr.pick('ベストイレブン', 'Team of the season'),
-                (_) => const BestElevenScreen()),
+            // 記録もの4つは1つのタブにまとめ、中で選ぶ(タブが8つあった)。
             GroupTab(
-                Tr.pick('殿堂', 'Hall of fame'), (_) => const HallOfFameScreen()),
-            GroupTab(Tr.pick('実績', 'Achievements'),
-                (_) => const AchievementsScreen()),
+                Tr.pick('記録', 'Records'),
+                (_) => ChipSwitcher(items: [
+                      (
+                        Tr.pick('シーズン成績', 'Seasons'),
+                        (_) => const SeasonHistoryScreen()
+                      ),
+                      (
+                        Tr.pick('ベストイレブン', 'Team of the season'),
+                        (_) => const BestElevenScreen()
+                      ),
+                      (
+                        Tr.pick('殿堂', 'Hall of fame'),
+                        (_) => const HallOfFameScreen()
+                      ),
+                      (
+                        Tr.pick('実績', 'Achievements'),
+                        (_) => const AchievementsScreen()
+                      ),
+                    ])),
           ],
         ),
       ];

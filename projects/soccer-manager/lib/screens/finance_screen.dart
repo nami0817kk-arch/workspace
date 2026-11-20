@@ -19,12 +19,9 @@ import '../widgets/club_ranking_card.dart';
 import '../widgets/club_timeline_card.dart';
 import '../widgets/club_value_card.dart';
 import '../widgets/auto_columns.dart';
+import '../widgets/owner_career_card.dart';
 import '../widgets/trend_chart.dart';
 import '../widgets/projection_card.dart';
-import '../widgets/owner_career_card.dart';
-import '../widgets/club_culture_card.dart';
-import '../widgets/rival_owners_card.dart';
-import '../widgets/owner_wealth_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
 import '../widgets/project_card.dart';
@@ -37,10 +34,6 @@ import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
-import '../widgets/era_group_card.dart';
-import '../widgets/country_coefficient_card.dart';
-import '../widgets/former_clubs_card.dart';
-import '../widgets/club_comparison_card.dart';
 import '../widgets/sponsor_slots_card.dart';
 import '../logic/economy_scale.dart';
 
@@ -75,27 +68,27 @@ class FinanceScreen extends StatelessWidget {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-      appBar: screenBar(
-        context,
-        title: Tr.pick('クラブ経営', 'Club finances'),
-        leading: embedded ? null : const BackButton(),
-        actions: const [QuickAccessMenuButton()],
-        scrollable: true,
-        tabs: [
-          Tr.pick('概要', 'Overview'),
-          Tr.pick('収支・契約', 'Accounts'),
-          Tr.pick('資金・取引', 'Funding'),
-          Tr.pick('投資・規則', 'Projects'),
-          Tr.pick('記録', 'Records'),
-        ],
-      ),
-      drawer: const QuickAccessDrawer(),
-      body: TabBarView(
-        children: [
-          ResponsiveBody(
-            // 広い画面(iPad の横向きなど)では2列に並べる。
-            child: AutoColumns(
-              children: [
+        appBar: screenBar(
+          context,
+          title: Tr.pick('クラブ経営', 'Club finances'),
+          leading: embedded ? null : const BackButton(),
+          actions: const [QuickAccessMenuButton()],
+          scrollable: true,
+          tabs: [
+            Tr.pick('概要', 'Overview'),
+            Tr.pick('収支・契約', 'Accounts'),
+            Tr.pick('資金・取引', 'Funding'),
+            Tr.pick('投資・規則', 'Projects'),
+            Tr.pick('記録', 'Records'),
+          ],
+        ),
+        drawer: const QuickAccessDrawer(),
+        body: TabBarView(
+          children: [
+            ResponsiveBody(
+              // 広い画面(iPad の横向きなど)では2列に並べる。
+              child: AutoColumns(
+                children: [
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -103,13 +96,16 @@ class FinanceScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Tr.pick('資金: ${formatMoney(save.budget)}', 'Funds: ${formatMoney(save.budget)}'),
+                            Tr.pick('資金: ${formatMoney(save.budget)}',
+                                'Funds: ${formatMoney(save.budget)}'),
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const SizedBox(height: 8),
-                          Text(Tr.pick('週間収入: +${formatMoney(income)}（観客動員・スポンサー・グッズ・放映権込み）',
+                          Text(Tr.pick(
+                              '週間収入: +${formatMoney(income)}（観客動員・スポンサー・グッズ・放映権込み）',
                               'Weekly income: +${formatMoney(income)} (gate, sponsorship, merchandise and broadcasting)')),
-                          Text(Tr.pick('週間人件費: -${formatMoney(wageBill)}（年俸を節の数で割った額・スタッフ込み）',
+                          Text(Tr.pick(
+                              '週間人件費: -${formatMoney(wageBill)}（年俸を節の数で割った額・スタッフ込み）',
                               'Weekly wages: -${formatMoney(wageBill)} (annual salaries spread over the matchdays, staff included)')),
                           Text(
                             Tr.pick(
@@ -118,7 +114,8 @@ class FinanceScreen extends StatelessWidget {
                             style: const TextStyle(fontSize: 12),
                           ),
                           if (loanRepayment > 0)
-                            Text(Tr.pick('週間融資返済: -${formatMoney(loanRepayment)}',
+                            Text(Tr.pick(
+                                '週間融資返済: -${formatMoney(loanRepayment)}',
                                 'Weekly loan repayment: -${formatMoney(loanRepayment)}')),
                           const SizedBox(height: 8),
                           _CashFlowBar(
@@ -127,7 +124,8 @@ class FinanceScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            Tr.pick('週間収支: ${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                            Tr.pick(
+                                '週間収支: ${net >= 0 ? '+' : ''}${formatMoney(net)}',
                                 "Weekly balance: ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
                             style: TextStyle(
                               color: net >= 0
@@ -141,8 +139,9 @@ class FinanceScreen extends StatelessWidget {
                           // ブロックされるため、残り枠を常に確認できるようにする。
                           Builder(builder: (context) {
                             final cap = gameState.wageBudgetCap;
-                            final usage =
-                                cap > 0 ? (weeklyBill / cap).clamp(0.0, 1.0) : 0.0;
+                            final usage = cap > 0
+                                ? (weeklyBill / cap).clamp(0.0, 1.0)
+                                : 0.0;
                             final over = weeklyBill > cap;
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,14 +181,13 @@ class FinanceScreen extends StatelessWidget {
                   const ProposalCard(),
                   const RewardFundsCard(),
                   const BudgetPlanCard(),
-
-              ],
+                ],
+              ),
             ),
-          ),
-          ResponsiveBody(
-            // 広い画面(iPad の横向きなど)では2列に並べる。
-            child: AutoColumns(
-              children: [
+            ResponsiveBody(
+              // 広い画面(iPad の横向きなど)では2列に並べる。
+              child: AutoColumns(
+                children: [
                   const LedgerCard(),
                   const ProjectionCard(),
                   const TrendsCard(),
@@ -208,7 +206,8 @@ class FinanceScreen extends StatelessWidget {
                           title: Text(inst.description),
                           subtitle: Text(Tr.pick('残り${inst.weeksRemaining}週',
                               '${Tr.plural(inst.weeksRemaining, 'week')} left')),
-                          trailing: Text(Tr.pick('-${formatMoney(inst.weeklyAmount)}/週',
+                          trailing: Text(Tr.pick(
+                              '-${formatMoney(inst.weeklyAmount)}/週',
                               '-${formatMoney(inst.weeklyAmount)} per week')),
                         ),
                       ),
@@ -238,68 +237,69 @@ class FinanceScreen extends StatelessWidget {
                   ],
                   const SizedBox(height: 16),
                   Text(
-                    Tr.pick('契約状況（残り年数が少ない順）', 'Contracts, shortest remaining first'),
+                    Tr.pick('契約状況（残り年数が少ない順）',
+                        'Contracts, shortest remaining first'),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   for (final (i, p) in sortedByExpiry.indexed)
-                  InkWell(
-                    onTap: () => _openPlayer(context, p.id),
-                    child: Container(
-                      height: 40,
-                      color: i.isOdd
-                          ? Theme.of(context).colorScheme.surfaceContainerLow
-                          : null,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(p.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.w600)),
-                          ),
-                          SizedBox(
-                            width: 44,
-                            child: Text(p.position.label,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 12)),
-                          ),
-                          SizedBox(
-                            width: 56,
-                            child: Text(
-                                formatMoney(annualFromWeekly(p.wage)),
+                    InkWell(
+                      onTap: () => _openPlayer(context, p.id),
+                      child: Container(
+                        height: 40,
+                        color: i.isOdd
+                            ? Theme.of(context).colorScheme.surfaceContainerLow
+                            : null,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(p.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600)),
+                            ),
+                            SizedBox(
+                              width: 44,
+                              child: Text(p.position.label,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 12)),
+                            ),
+                            SizedBox(
+                              width: 56,
+                              child: Text(formatMoney(annualFromWeekly(p.wage)),
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(fontSize: 12)),
+                            ),
+                            SizedBox(
+                              width: 64,
+                              child: Text(
+                                ContractEngine.untilShortLabel(
+                                    p.contractEndYear),
                                 textAlign: TextAlign.right,
-                                style: const TextStyle(fontSize: 12)),
-                          ),
-                          SizedBox(
-                            width: 64,
-                            child: Text(
-                              ContractEngine.untilShortLabel(
-                                  p.contractEndYear),
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: p.contractYearsRemaining <= 1
-                                    ? SemanticColors.negative(context)
-                                    : null,
-                                fontWeight: p.contractYearsRemaining <= 1
-                                    ? FontWeight.bold
-                                    : null,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: p.contractYearsRemaining <= 1
+                                      ? SemanticColors.negative(context)
+                                      : null,
+                                  fontWeight: p.contractYearsRemaining <= 1
+                                      ? FontWeight.bold
+                                      : null,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-          ResponsiveBody(
-            // 広い画面(iPad の横向きなど)では2列に並べる。
-            child: AutoColumns(
-              children: [
+            ResponsiveBody(
+              // 広い画面(iPad の横向きなど)では2列に並べる。
+              child: AutoColumns(
+                children: [
                   const SizedBox(height: 16),
                   Text(Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
                       style: Theme.of(context).textTheme.titleMedium),
@@ -317,48 +317,37 @@ class FinanceScreen extends StatelessWidget {
                   _SponsorSection(gameState: gameState),
                   const SponsorSlotsCard(),
                   const EquityCard(),
-                  const OwnerWealthCard(),
                   const FiveYearPlanCard(),
-                  const ClubCultureCard(),
-                  const OwnerCareerCard(),
-                  const FormerClubsCard(),
-                  const ClubComparisonCard(),
-                  const CountryCoefficientCard(),
-                  const EraGroupCard(),
-                  const RivalOwnersCard(),
                   const MediaDealsCard(),
-
-              ],
+                ],
+              ),
             ),
-          ),
-          ResponsiveBody(
-            // 広い画面(iPad の横向きなど)では2列に並べる。
-            child: AutoColumns(
-              children: [
+            ResponsiveBody(
+              // 広い画面(iPad の横向きなど)では2列に並べる。
+              child: AutoColumns(
+                children: [
                   const RulesCard(),
                   const ClubPolicyCard(),
                   const EconomyCard(),
                   const ProjectCard(),
                   const AdvisorCard(),
                   const RiskCard(),
-
-              ],
+                ],
+              ),
             ),
-          ),
-          ResponsiveBody(
-            // 広い画面(iPad の横向きなど)では2列に並べる。
-            child: AutoColumns(
-              children: [
+            ResponsiveBody(
+              // 広い画面(iPad の横向きなど)では2列に並べる。
+              child: AutoColumns(
+                children: [
                   const ClubValueCard(),
                   const ClubRankingCard(),
                   const RivalCard(),
                   const ClubTimelineCard(),
-
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -402,7 +391,8 @@ class _MoneyCalendarCard extends StatelessWidget {
                           style: const TextStyle(fontSize: 12)),
                     ),
                     Expanded(
-                      child: Text(e.label, style: const TextStyle(fontSize: 12)),
+                      child:
+                          Text(e.label, style: const TextStyle(fontSize: 12)),
                     ),
                     Text(
                       formatMoneySigned(e.amount),
@@ -474,8 +464,8 @@ class _SponsorSection extends StatelessWidget {
           title: Text(deal.name),
           subtitle: Text(ContractEngine.yearsShortLabel(deal.yearsRemaining)),
           trailing: Text(
-            Tr.pick(
-                '+${formatMoney(deal.weeklyIncome)}/週', '+${formatMoney(deal.weeklyIncome)} per week'),
+            Tr.pick('+${formatMoney(deal.weeklyIncome)}/週',
+                '+${formatMoney(deal.weeklyIncome)} per week'),
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -560,7 +550,8 @@ class _LoanSection extends StatelessWidget {
                     children: [
                       Expanded(
                           child: Text(Tr.pick('借入元本', 'Principal'),
-                              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
+                              style: const TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.bold))),
                       _LoanCell(Tr.pick('残り週', 'Weeks'), bold: true),
                       _LoanCell(Tr.pick('返済残額', 'To repay'), bold: true),
                       _LoanCell(Tr.pick('週返済', 'Weekly'), bold: true),
@@ -591,8 +582,8 @@ class _LoanSection extends StatelessWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.savings_outlined),
-                title: Text(Tr.pick(
-                    '借入可能額: ${formatMoney(maxAmount)}', 'You can borrow up to ${formatMoney(maxAmount)}')),
+                title: Text(Tr.pick('借入可能額: ${formatMoney(maxAmount)}',
+                    'You can borrow up to ${formatMoney(maxAmount)}')),
                 subtitle: Text(Tr.pick('スタジアムの規模・オーナーの評判が高いほど上限が上がる',
                     'A bigger stadium and a better reputation raise the ceiling')),
               ),
@@ -667,7 +658,8 @@ class _LoanRequestSheetState extends State<_LoanRequestSheet> {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              Tr.pick('借入可能額: ${formatMoney(maxAmount)}', 'You can borrow up to ${formatMoney(maxAmount)}'),
+              Tr.pick('借入可能額: ${formatMoney(maxAmount)}',
+                  'You can borrow up to ${formatMoney(maxAmount)}'),
               style: TextStyle(
                   color: SemanticColors.subtleText(context), fontSize: 12),
             ),
@@ -720,7 +712,8 @@ class _LoanRequestSheetState extends State<_LoanRequestSheet> {
     messenger.showSnackBar(
       SnackBar(
           content: Text(ok
-              ? Tr.pick('${formatMoney(amount)}を借り入れました', 'You borrowed ${formatMoney(amount)}')
+              ? Tr.pick('${formatMoney(amount)}を借り入れました',
+                  'You borrowed ${formatMoney(amount)}')
               : Tr.pick('融資を申し込めませんでした', 'The loan was not approved'))),
     );
   }
@@ -761,8 +754,8 @@ class _InvestmentSection extends StatelessWidget {
         Card(
           child: ListTile(
             leading: const Icon(Icons.account_balance_outlined),
-            title: Text(Tr.pick(
-                '運用可能な資金: ${formatMoney(available)}', 'Available to invest: ${formatMoney(available)}')),
+            title: Text(Tr.pick('運用可能な資金: ${formatMoney(available)}',
+                'Available to invest: ${formatMoney(available)}')),
             subtitle: Text(Tr.pick('満期まで引き出せない代わりに、満期時にまとまった利息を受け取れる',
                 'Locked away until it matures, and pays a lump of interest when it does')),
             trailing: FilledButton(
@@ -832,8 +825,8 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              Tr.pick(
-                  '運用可能な資金: ${formatMoney(maxAmount)}', 'Available to invest: ${formatMoney(maxAmount)}'),
+              Tr.pick('運用可能な資金: ${formatMoney(maxAmount)}',
+                  'Available to invest: ${formatMoney(maxAmount)}'),
               style: TextStyle(
                   color: SemanticColors.subtleText(context), fontSize: 12),
             ),
@@ -887,7 +880,8 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
     messenger.showSnackBar(
       SnackBar(
           content: Text(ok
-              ? Tr.pick('${formatMoney(amount)}を預け入れました', 'You deposited ${formatMoney(amount)}')
+              ? Tr.pick('${formatMoney(amount)}を預け入れました',
+                  'You deposited ${formatMoney(amount)}')
               : Tr.pick('定期預金を組めませんでした', 'The deposit could not be opened'))),
     );
   }
