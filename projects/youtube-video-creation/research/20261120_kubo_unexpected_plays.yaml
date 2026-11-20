@@ -1,0 +1,114 @@
+# 取材メモ（2026年11月20日）久保建英のブラジル戦・パラグアイ戦のプレーを、闘莉王が「意外だった」と評価（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。久保本人の言葉ではない）
+# 取材: 2026-11-20。WebFetch と requests（ブラウザUA）。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボール・トライブ 2026-11-19（ライター Shota）「久保建英、ブラジル戦＆パラグアイ戦のプレーは「意外だった」ソシエダでは「難しい」」（全文） https://football-tribe.com/japan/2026/11/19/361489/
+# **誰の発言か（依頼文の確認事項）: 久保本人ではない。日本代表OBの田中マルクス闘莉王さんが、2026-11-19 に自分の YouTube（闘莉王TV）でパラグアイ戦を採点する中で語った久保評。**
+#   見出しの「意外だった」「難しい」は闘莉王の言葉。記事本文: 「所属先でプレーしていないと、なかなかコンディションが上がってこないし難しい。この2026-11-17 のこの2試合でのパフォーマンスは意外だった。…」
+#   一次を探した: YouTube の動画（闘莉王TV）題名「「キレがヤバすぎる！ボールを持てば何かが起きる」パラグアイ戦敗北もエース久保を大絶賛！ソシエダで不遇も復活に太鼓判」（https://www.youtube.com/watch?v=Q_TGbz4hWfI 、検索結果で確認。題名に「ボールを持てば何かが起きる」とソシエダの話がある）。動画の音声・文字起こしは読んでいない＝発言の字句はトリベラ記事の引用に頼る。→ 台本は「闘莉王さんは〜と話しました」の伝聞で、voice: は使わない（本人の声ではない）。
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary）:
+#       ブラジル戦（event=401916337、2026-11-14）: 日本 3-2 ブラジル。15分 久保建英の先制ゴール（アシスト 堂安律）。久保は先発で62分に佐野海舟と交代。
+#       パラグアイ戦（event=401916336、2026-11-17）: 日本 1-2 パラグアイ。久保は61分に鈴木唯人と交代で途中出場。85分 福田師王のヘディング（セットプレーから）。
+#       福田のゴールが久保のFKから（GKが弾いたこぼれ球）: 11/18 の取材メモ（20261118_fukuda_debut_goal_words）で サッカーキング・ゲキサカの本文から確認済み。トリベラ記事も同じ。
+#   ・ESPN のレアル・ソシエダの日程（esp.1 teams/89/schedule、全12試合のうち記録のある試合）と各試合の出場記録: 久保は 先発5試合（8/21・8/26・9/3・10/18・11/8）／途中出場3試合（8/29・9/13・11/1）／出場なし4試合（9/7・9/20・10/11・10/25）。→ 自分で数えた。
+# 食い違い（台本では使わない）:
+#   ・トリベラ記事は「ゴールこそなかった」「ブラジル戦で…シュートは惜しくも外れた」と書くが、ESPN ではブラジル戦で久保が15分に決めている（11/15 の本で扱い済み）。記事の「ゴールこそなかった」はパラグアイ戦の話と読み、台本は ESPN に合わせる。ブラジル戦の外れたシュートの話は使わない。
+#   ・記事は「所属先で出場機会を得られていない」とするが、ESPN では 12試合中 先発5・途中出場3。闘莉王さんが言う「試合に出ていない」は「先発が減っている」の意味に近い。台本は闘莉王さんの言葉を伝聞で引き、数字は ESPN の数え方を別に出す（闘莉王さんの言葉の裏づけとは言わない）。
+# 前の本との重なり: 20261115_kubo_brazil_goal_words（久保本人の先制点の言葉）、20261118_kubo_moriyasu_words（久保の森保監督との過去）、20261118_fukuda_debut_goal_words（福田の初ゴール、久保のFKは1行）。→ 今回の初出は「闘莉王さんの久保評」と「ソシエダでの出場の数え方」。久保のFK・先制点は1行だけ。
+# 【言わないこと】久保本人の発言として読む／「久保はソシエダで出ていない」と言い切る／ブラジル戦の外れたシュート／鈴木唯人ら他の選手への評価（記事は「格の違い」と書くが、闘莉王さんの発言として確かめられない）。
+# 本人の言葉: 無し（久保本人ではなく闘莉王さんの言葉）。X。
+# 写真の出どころ（目で見た）: ゲキサカ 463202・463391・463395 の主写真（久保建英。03 は森保監督と話す場面）。Tribe の主写真は AFLO なので使わない。
+# 反応: 0件（実在の投稿を探していない／作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月20日"
+format: news
+no_main: true
+people: [久保建英, 闘莉王]
+
+short_style: X
+short_hook_word: 何かが起きる
+short_photos:
+  - assets/images/20261120_kubo_unexpected_plays/01_v.jpg
+  - assets/images/20261120_kubo_unexpected_plays/02_v.jpg
+  - assets/images/20261120_kubo_unexpected_plays/03_v.jpg
+short_question: 久保建英の2試合のプレーを見て、いちばん印象に残った場面はどこですか。
+short_telops: []
+
+theme:
+  id: kubo_unexpected_plays
+  league: spain
+  league_name: 日本代表
+  prefix: ""
+  title: 闘莉王が久保建英の2試合に付けた言葉「意外だった」の理由
+  hook: ""
+  question: 闘莉王は、久保建英のブラジル戦とパラグアイ戦の何を意外だと言ったのか
+  takeaway: 久保はブラジル戦で先制ゴール、パラグアイ戦は途中出場でFKから福田の得点を演出した。ソシエダでは、ここまでのリーグ戦12試合で先発が5試合。クラブでの出番が減る中で、代表の2試合で結果に絡んだ
+
+thumbnail:
+  layout: face
+  line1: 闘莉王が久保建英を評価
+  line2: ボールを持てば何かが起きる
+  tags: [久保建英, 闘莉王, 日本代表]
+  photo: assets/images/20261120_kubo_unexpected_plays/01_w.jpg
+  short_photo: assets/images/20261120_kubo_unexpected_plays/01_v.jpg
+
+answer: 試合に出ていない中でも、キレのあるプレーができていた
+watch: 久保のソシエダでの出場
+
+sections:
+  - id: what
+    main: true
+    heading: 闘莉王は、久保建英のどこを「意外」だと言ったのか
+    tier: 報道
+    telop: 闘莉王「ボールを持てば何かが起きる」久保建英を絶賛
+    say:
+      - text: 日本代表OBの闘莉王さんが、久保建英のプレーを評価しました。
+        image: assets/images/20261120_kubo_unexpected_plays/01_w.jpg
+      - text: 19日、自分のユーチューブで、パラグアイ戦を振り返っての採点です。
+      - text: 闘莉王さんは、久保を「ボールを持てば何かが起きる」と話しました。
+        image: assets/images/20261120_kubo_unexpected_plays/02_w.jpg
+        emph: true
+      - text: 所属先でプレーしていないと、コンディションは上がりにくい。
+        image: assets/images/20261120_kubo_unexpected_plays/03_w.jpg
+      - text: 難しいことだ、と闘莉王さんは言います。
+      - text: だから、ブラジル戦とパラグアイ戦のプレーは意外だった、と。
+        emph: true
+      - text: 試合に出ていないのに、あれだけのキレを出せるのは、珍しいそうです。
+        image: assets/images/20261120_kubo_unexpected_plays/01_w.jpg
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/19/361489/
+      - https://www.youtube.com/watch?v=Q_TGbz4hWfI
+  - id: game
+    heading: 久保建英は、その2試合で何をしたのか
+    tier: 報道
+    telop: ブラジル戦は先制ゴール、パラグアイ戦はFKから福田の得点
+    say:
+      - text: ブラジル戦は先発で、15分に先制ゴール。62分までプレーしました。
+        card: {type: table, title: 久保建英の代表2試合, columns: [試合, 出場, 結果], rows: [[ブラジル戦（11月14日）, 先発 62分まで, 15分 先制ゴール], [パラグアイ戦（11月17日）, 61分から途中出場, FKから福田の得点]], highlight_row: 0}
+        image: assets/images/20261120_kubo_unexpected_plays/02_w.jpg
+      - text: パラグアイ戦は61分から出て、85分、久保のフリーキックから福田師王が決めました。
+        card: {type: table, title: 久保建英の代表2試合, columns: [試合, 出場, 結果], rows: [[ブラジル戦（11月14日）, 先発 62分まで, 15分 先制ゴール], [パラグアイ戦（11月17日）, 61分から途中出場, FKから福田の得点]], highlight_row: 1}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://www.espn.com/soccer/match/_/gameId/401916336
+  - id: view
+    viewpoint: true
+    heading: ソシエダでの久保は、どれくらい出ているのか
+    tier: 背景
+    telop: ソシエダのリーグ戦12試合で、先発は5試合
+    say:
+      - text: 見立てです。ソシエダでの出場を、数字で見てみます。
+      - text: ソシエダのリーグ戦12試合で、久保の先発は5試合。途中出場が3試合です。
+        card: {type: table, title: 久保建英 ソシエダのリーグ戦12試合, columns: [出場, 試合数], rows: [[先発, 5], [途中出場, 3], [出場なし, 4]], highlight_row: 0}
+        image: assets/images/20261120_kubo_unexpected_plays/03_w.jpg
+      - text: 残る4試合は、出番がありませんでした。
+        card: none
+      - text: その久保が、代表の2試合で、ゴールと、ゴールにつながるFKを残しました。
+        emph: true
+      - text: 次の代表活動は、来年3月の大岩ジャパンです。
+      - text: それまでに、クラブでの出番が増えるかに注目です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/team/schedule/_/id/89
+      - https://football-tribe.com/japan/2026/11/19/361489/

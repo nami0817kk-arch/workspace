@@ -1,0 +1,66 @@
+# 候補テーマ（2026年11月15日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年11月15日"
+candidates:
+  - id: hokkaido_consadole_sapporo
+    title: "Hokkaido Consadole Sapporo 1 - 2 Sagan Tosu（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836369
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836369
+
+  - id: vanraure_hachinohe_iwaki
+    title: "Vanraure Hachinohe 2 - 2 Iwaki FC（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836375
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836375
+
+  - id: vegalta_sendai_blaublitz
+    title: "Vegalta Sendai 4 - 0 Blaublitz Akita（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836376
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836376
+
+  - id: fc_imabari_j
+    title: "FC Imabari 0 - 2 Júbilo Iwata（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836370
+    hours_ago: 10   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836370
+
+  - id: kataller_toyama_tokushima
+    title: "Kataller Toyama 2 - 3 Tokushima Vortis（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836374
+    hours_ago: 10   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5836374
+

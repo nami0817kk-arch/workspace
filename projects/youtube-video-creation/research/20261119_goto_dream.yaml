@@ -1,0 +1,167 @@
+# 取材メモ（2026年11月19日）21歳FW後藤啓介「夢みたいな時間」。森保ジャパンの8年と、ラストマッチの悔しさ（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-19。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-18（取材・文 竹内達也）「中1で発足した森保Jでの「夢みたいな時間」21歳FW後藤啓介はラストマッチの悔しさも糧に」（全文） https://web.gekisaka.jp/news/japan/detail/?463420-463420-fl
+# 出典で確かめたこと:
+#   ・後藤啓介の言葉（ゲキサカ。字は変えない。台本は読点で行に分けた。記者の補足の（　）は声に出さず落とした）:
+#       「せっかく先発で抜擢してくれたのに申し訳ない。1年経って(代表で)ノーゴールというのは自分としても悔しい」
+#       「それが代表なので。それは分かった上で来ている」
+#       「いつもよりは合わせる時間もなかったし、難しい点はあったけど、それも言い訳になってしまうので力が足りなかったなと思う」
+#       「森保さんが初めて監督になった時はまだ中1だったので、感慨深かった。見ていた選手たちと見ていた監督。(高校2年生だった)カタールW杯もテレビで全試合見ていたけど、テレビで見て叫んだ大会に出られたのも監督のおかげですし、すごく感謝しかないし、本当に感慨深い。夢みたいな時間でした」
+#       「クラブで結果を残さないとロス五輪があるから呼んでもらえるということはない」
+#       「まずはクラブで活躍することが代表への近道。まずはしっかりクラブで活躍して呼んでもらえるように」
+#   ・ゲキサカ（地の文）: 後藤（フライブルク）は昨年11月シリーズでA代表に初招集、今年夏の北中米W杯にも出場。来年3月から大岩剛監督（ロサンゼルス五輪世代を率いる）が就任し、今回唯一ロス世代でA代表入りした後藤に特別な期待がかかる。
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916336、2026-11-17 13:10 UTC）: 日本 1-2 パラグアイ。Keisuke Goto は先発（背番号9）、61' に Koki Ogawa と交代。ゲキサカの試合記事（463387）も「1トップを後藤啓介が務めた」「後半16分に後藤が下がり」。
+# 依頼文との違い・事実の注意:
+#   ・この記事の書き出しは「1トップで途中出場したが…後半15分に途中交代」だが、同じ記事の本人の言葉は「先発で抜擢してくれた」、ESPN の試合データ・ゲキサカの試合記事も先発・61分（後半16分）で交代。台本は「先発・61分で交代」と言う（「途中出場」「後半15分」は使わない）。
+#   ・依頼文は「21歳FW後藤啓介『夢みたいな時間』」。台本の冒頭は本人の言葉の「森保さんが初めて監督になった時はまだ中1だったので、感慨深かった」から入り、「夢みたいな時間でした」は同じ発言の結びとして出す。
+# 自分で数えたもの: 森保監督の就任は2018年7月。そのとき中学1年生だった後藤が、8年4か月後に同じ監督のもとで1トップで先発した。後藤の1年: 昨年11月に初招集→今年夏にW杯→11月17日に先発61分・代表でノーゴール（本人の言葉「1年経ってノーゴール」）。
+# 前の本との重なり: 20261106_goto_suzuki_freiburg（クラブの連勝）／20261019_goto_leverkusen_start・20261029_shiogai_goto_pokal（クラブ）／20261117_moriyasu_thunder_practice（雷雨で練習中止。台本では雷雨に触れない）／20261118_fukuda_debut_goal_words（福田師王のデビュー弾。入れない）。
+#   → 今回の初出: A代表の後藤本人の言葉（森保監督への感慨・悔しさ・クラブで結果を出すという決意）。クラブでの成績・試合の経過・福田のゴールは入れない。
+# 【言わないこと】試合の経過・福田のゴール／雷雨の練習中止（別の回）／クラブの成績／「途中出場」「後半15分」／後藤を小さく見せる言い方（「孤立した」は記者の評。本人の言葉「孤立していた」は使わない）。
+# 本人の言葉: あり（後藤啓介。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月19日"
+format: news
+no_main: true
+people: [後藤啓介, 森保一]
+
+short_style: Y
+short_hook_quote: 森保さんが初めて監督になった時はまだ中1だったので、感慨深かった
+short_photos:
+  - assets/images/20261119_goto_dream/01_v.jpg
+  - assets/images/20261119_goto_dream/03_v.jpg
+short_question: 後藤啓介は、大岩ジャパンでもA代表に呼ばれると思いますか。
+short_telops: []
+
+theme:
+  id: goto_dream
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 後藤啓介、21歳が語った森保ジャパンの「夢みたいな時間」。ラストマッチの悔しさ
+  hook: ""
+  question: 21歳の後藤啓介は、森保ジャパンでの時間とラストマッチの悔しさをどう語ったのか
+  takeaway: 後藤啓介は、森保監督が就任した2018年7月に中学1年生だった。昨年11月の初招集、今年夏のW杯を経て、ラストマッチは先発61分でノーゴール。来年3月からの大岩体制で、今回唯一のロス世代として呼ばれ続けるには、クラブでの結果が条件だと本人は話す
+
+thumbnail:
+  layout: face
+  line1: 後藤啓介 21歳
+  line2: 「夢みたいな時間」
+  tags: [後藤啓介, 森保一, 日本代表]
+  photo: assets/images/20261119_goto_dream/01_w.jpg
+  short_photo: assets/images/20261119_goto_dream/01_v.jpg
+
+answer: 夢みたいな時間。悔しさを糧に、まずはクラブで結果
+watch: 来年3月、大岩剛監督の新体制
+
+sections:
+  - id: what
+    main: true
+    heading: 後藤啓介は、森保ジャパンでの時間をどう語ったのか
+    tier: 報道
+    telop: 後藤啓介「夢みたいな時間でした」
+    say:
+      - text: 森保ジャパンの最終戦で、21歳の後藤啓介が1トップで先発しました。
+      - text: 交代は、61分でした。
+      - voice: 後藤啓介
+        text: 森保さんが初めて監督になった時はまだ中1だったので、感慨深かった。
+        emph: true
+      - voice: 後藤啓介
+        text: 見ていた選手たちと見ていた監督。
+        cont: true
+        image: assets/images/20261119_goto_dream/03_w.jpg
+      - text: 後藤は昨年11月にA代表へ初招集され、今年夏の北中米W杯にも出場しました。
+      - text: 森保監督が帰国の途に着く際には、ホテルの外まで見送りに出ていました。
+      - voice: 後藤啓介
+        text: カタールW杯もテレビで全試合見ていたけど、
+      - voice: 後藤啓介
+        text: テレビで見て叫んだ大会に出られたのも
+        cont: true
+        image: assets/images/20261119_goto_dream/01_w.jpg
+      - voice: 後藤啓介
+        text: 監督のおかげですし、
+        cont: true
+        image: assets/images/20261119_goto_dream/03_w.jpg
+      - voice: 後藤啓介
+        text: すごく感謝しかないし、本当に感慨深い。
+        cont: true
+      - voice: 後藤啓介
+        text: 夢みたいな時間でした。
+        cont: true
+        emph: true
+        image: assets/images/20261119_goto_dream/01_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463420-463420-fl
+      - https://web.gekisaka.jp/news/japan/detail/?463387-463387-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336
+  - id: words
+    heading: 後藤啓介は、ラストマッチの悔しさをどう受け止めたのか
+    tier: 報道
+    telop: 後藤啓介「力が足りなかったなと思う」
+    say:
+      - text: 一方で、ラストマッチには悔しさを口にしました。
+      - text: 昨年11月の初招集から、代表でのゴールはまだありません。
+        image: assets/images/20261119_goto_dream/03_w.jpg
+      - voice: 後藤啓介
+        text: せっかく先発で抜擢してくれたのに申し訳ない。
+      - voice: 後藤啓介
+        text: 1年経って
+        cont: true
+      - voice: 後藤啓介
+        text: ノーゴールというのは自分としても悔しい。
+        cont: true
+        emph: true
+      - text: 連係を合わせる時間が少なかったことには、こう話しました。
+        image: assets/images/20261119_goto_dream/01_w.jpg
+      - voice: 後藤啓介
+        text: それが代表なので。
+      - voice: 後藤啓介
+        text: それは分かった上で来ている。
+        cont: true
+      - voice: 後藤啓介
+        text: いつもよりは合わせる時間もなかったし、
+      - voice: 後藤啓介
+        text: 難しい点はあったけど、
+        cont: true
+      - voice: 後藤啓介
+        text: それも言い訳になってしまうので
+        cont: true
+      - voice: 後藤啓介
+        text: 力が足りなかったなと思う。
+        cont: true
+        emph: true
+      - text: 次へ向けては、クラブでの結果だと言います。
+        image: assets/images/20261119_goto_dream/03_w.jpg
+      - voice: 後藤啓介
+        text: クラブで結果を残さないと
+      - voice: 後藤啓介
+        text: ロス五輪があるから呼んでもらえるということはない。
+        cont: true
+      - voice: 後藤啓介
+        text: まずはクラブで活躍することが代表への近道。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463420-463420-fl
+  - id: view
+    viewpoint: true
+    heading: 後藤啓介の森保ジャパンの1年は、数字でどう見えるのか
+    tier: 背景
+    telop: 初招集から1年、先発61分で代表ノーゴール
+    say:
+      - text: 見立てです。後藤の1年を、順に並べました。
+        card: none
+      - text: 初招集から、ラストマッチまでの1年です。
+        card: {type: timeline, title: 後藤啓介 森保ジャパンの1年, rows: [[昨年11月, A代表に初招集], [今年夏, 北中米W杯に出場], [11月17日, 1トップで先発。61分で交代], [ここまで, 代表でノーゴール]], focus: 11月17日}
+      - text: 森保監督が就任した2018年7月、後藤は中学1年生でした。
+        card: none
+        image: assets/images/20261119_goto_dream/01_w.jpg
+      - text: 来年3月から、ロス五輪世代を率いる大岩剛監督が就任します。
+      - text: 今回、ロス世代でA代表に入ったのは後藤ひとりです。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463420-463420-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336

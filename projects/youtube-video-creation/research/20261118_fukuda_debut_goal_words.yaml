@@ -1,0 +1,160 @@
+# 取材メモ（2026年11月18日）福田師王、A代表デビューで初ゴール「点、決められるやんみたいな感じ」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-18。WebFetch と requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-18（取材・文 三島大輔）「「点、決められるやん」“強心臓”の福田師王、森保ジャパン最終戦で鮮烈デビュー弾！「W杯で日本を勝たせるのが夢」と決意新たに」（全文）
+#   https://www.soccer-king.jp/news/japan/national/20261118/2229290.html
+#   ゲキサカ 2026-11-17「森保Jラストマッチは黒星終幕…セットプレーで前半2失点、終盤FW福田師王がデビュー弾も反撃及ばず」（試合の流れ） https://web.gekisaka.jp/news/japan/detail/?463387-463387-fl
+#   ゲキサカ 2026-11-18「森保Jラストマッチで新鋭FW福田師王がデビュー弾「森保さんへの感謝と日本のためのゴール」」（本人の言葉・写真） https://web.gekisaka.jp/news/japan/detail/?463393-463393-fl
+# 依頼文との違い（確かめて直した）: 依頼文は「日本0-2パラグアイ」だったが、ESPN の試合データ・サッカーキング・ゲキサカ・フットボールチャンネルがすべて 日本 1-2 パラグアイ（0-2 は福田が入った時点のスコア）。台本は1-2。
+# 出典で確かめたこと:
+#   ・福田師王の言葉（サッカーキング。字は変えない。台本は読点・句点で行に分けた。「0-2」「3-2」は読み上げのため「0対2」「3対2」と書いた）:
+#       「点、決められるやんみたいな感じ。呼んでもらえて本当に嬉しかった」
+#       「もっと期待に応えられるように、チームに帰ってやっていかないといけないと思いましたし、0-2で入って3-2で勝つ実力をつけたい」
+#       「ワールドカップに出て日本を勝たせることが自分の夢なので、それができるように。1日1日練習して頑張っていけたら」
+#       「まずは自チーム（カールスルーエ）で活躍して、チームを1部に上げる、個人昇格が目標なので、それをやっていきたい」
+#   ・サッカーキング（地の文）: 22歳。71分から出場。前半に2点を追う日本は福田と小川航基の2トップの3-1-4-2で反撃。85分に久保建英がFKを左足で直接狙い、GKが弾いたところを福田が頭で押し込んだ。ブラジル戦はベンチの外から見守った。次回の代表活動は来年3月、大岩剛監督の新体制。
+#   ・ゲキサカ: 後半26分に菅原由勢と佐野海舟に代わって南野拓実とともに投入（福田はA代表デビュー）。後半39分（記事内は40分とも）にFKを獲得、久保のキックを相手GKがファンブルし、福田がヘディングで右に押し込んだ。→ 時刻の表記は媒体で後半26分＝71分、後半40分＝85分と一致（ゲキサカ本文の「後半39分」と「後半40分」は記事内で揺れるので、台本は ESPN の85分を使う）。
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916336、2026-11-17 13:10 UTC）: Japan 1-2 Paraguay。得点 2' Cáceres（パラグアイ）・40' G.Gómez（パラグアイ）・85' Shio Fukuda（日本、ヘディング）。71' Shio Fukuda と Takumi Minamino が交代で入る。福田は控え（B）から途中出場。→ 「0対2の71分に入って、85分に決めた」と一致。
+#   ・ESPN（2026-11-14 日本3-2ブラジル）の名簿に福田は無い（11/16 の取材メモ 20261116_fukuda_shio_first_call と同じ）。サッカーキングも「ベンチの外から」。→ ブラジル戦の出場は0分。
+# 自分で数えたもの: 71分に入って85分に決めた＝出場14分でのゴール。ブラジル戦は出場0分。
+# 前の本との重なり: 20261116_fukuda_shio_first_call（ブラジル戦ベンチ外・「出たら絶対に点を決める」）。→ 今回の初出: 出場14分でのゴールと、試合後の言葉（「点、決められるやん」「3対2で勝つ実力」「夢」「1部昇格が目標」）。同じ日の久保の本（FK）・南野・堂安・田中の本とは重ならないよう、久保のFKは1行だけ。
+# 【言わないこと】森保監督の「最後の練習」・戦術の評価／板倉滉を「兄貴」と慕う話（本人の言葉が記事に直接引かれていない地の文）／福田の過去の所属（ボルシアMG時代の話）。
+# 本人の言葉: あり（福田師王。サッカーキング）。Y。
+# 追加の本人の言葉（ゲキサカ 463393。字は変えない）: 「森保さんには感謝しかない。森保さんへの感謝のゴールと日本のためのゴールだと思っているのでとても嬉しく思っている」
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [福田師王, 久保建英, 森保一]
+
+short_style: Y
+short_hook_quote: 点、決められるやんみたいな感じ
+short_photos:
+  - assets/images/20261118_fukuda_debut_goal_words/02_v.jpg
+  - assets/images/20261118_fukuda_debut_goal_words/01_v.jpg
+  - assets/images/20261118_fukuda_debut_goal_words/03_v.jpg
+short_question: 福田師王は、3月の大岩ジャパンでも代表に呼ばれると思いますか。
+short_telops: []
+
+theme:
+  id: fukuda_debut_goal_words
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 福田師王、森保ジャパン最終戦でデビュー弾。試合後に語った夢と目標
+  hook: ""
+  question: ラストマッチでデビュー弾を決めた福田師王は、初めての代表戦をどう語ったのか
+  takeaway: 福田は71分に入って85分に決めた。出場14分でのゴールで、ブラジル戦の出場は0分だった。次の代表活動は3月、大岩監督の新体制になる
+
+thumbnail:
+  layout: face
+  line1: 福田師王 デビュー弾
+  line2: 「点、決められるやん」
+  tags: [福田師王, 日本代表]
+  photo: assets/images/20261118_fukuda_debut_goal_words/02_w.jpg
+  short_photo: assets/images/20261118_fukuda_debut_goal_words/02_v.jpg
+
+answer: 点、決められるやんみたいな感じ。夢はワールドカップで日本を勝たせること
+watch: 来年3月、大岩剛監督の新体制
+
+sections:
+  - id: what
+    main: true
+    heading: 福田師王は、デビュー戦と初ゴールをどう語ったのか
+    tier: 報道
+    telop: 福田師王「点、決められるやん」
+    say:
+      - text: 森保監督のラストマッチで、日本代表デビューの福田師王が初ゴールを決めました。
+      - voice: 福田師王
+        text: 点、決められるやんみたいな感じ。
+        emph: true
+      - voice: 福田師王
+        text: 呼んでもらえて本当に嬉しかった。
+        image: assets/images/20261118_fukuda_debut_goal_words/03_w.jpg
+        cont: true
+      - text: 2点を追う71分に、ピッチへ入りました。
+        card: {type: table, title: 福田師王のデビュー戦, columns: [時間, 出来事], rows: [[71分, 途中出場で日本代表デビュー], [85分, 久保建英のFKのこぼれ球を頭で押し込む]], highlight_row: 0}
+        image: assets/images/20261118_fukuda_debut_goal_words/03_w.jpg
+      - text: 85分、久保建英のフリーキックをGKが弾き、こぼれ球を頭で押し込みました。
+        card: {type: table, title: 福田師王のデビュー戦, columns: [時間, 出来事], rows: [[71分, 途中出場で日本代表デビュー], [85分, 久保建英のFKのこぼれ球を頭で押し込む]], highlight_row: 1}
+        image: assets/images/20261118_fukuda_debut_goal_words/01_w.jpg
+      - text: 福田は、森保監督への感謝も語りました。
+        card: none
+      - voice: 福田師王
+        text: 森保さんには感謝しかない。
+        image: assets/images/20261118_fukuda_debut_goal_words/02_w.jpg
+      - voice: 福田師王
+        text: 森保さんへの感謝のゴールと、
+        cont: true
+      - voice: 福田師王
+        text: 日本のためのゴールだと思っているので、
+        image: assets/images/20261118_fukuda_debut_goal_words/03_w.jpg
+        cont: true
+      - voice: 福田師王
+        text: とても嬉しく思っている。
+        cont: true
+      - text: 試合は1対2で敗れ、福田は悔しさも口にしています。
+        image: assets/images/20261118_fukuda_debut_goal_words/02_w.jpg
+      - voice: 福田師王
+        text: もっと期待に応えられるように、
+      - voice: 福田師王
+        text: チームに帰ってやっていかないといけないと思いましたし、
+        image: assets/images/20261118_fukuda_debut_goal_words/03_w.jpg
+        cont: true
+      - voice: 福田師王
+        text: 0対2で入って3対2で勝つ実力をつけたい。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261118/2229290.html
+      - https://web.gekisaka.jp/news/japan/detail/?463387-463387-fl
+      - https://web.gekisaka.jp/news/japan/detail/?463393-463393-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336
+  - id: next
+    heading: 22歳の福田は、次に何を目指すのか
+    tier: 報道
+    telop: 夢はワールドカップで日本を勝たせること
+    say:
+      - text: 22歳の福田は、これからの目標も語りました。
+        image: assets/images/20261118_fukuda_debut_goal_words/02_w.jpg
+      - voice: 福田師王
+        text: ワールドカップに出て日本を勝たせることが自分の夢なので、
+      - voice: 福田師王
+        text: それができるように。
+        image: assets/images/20261118_fukuda_debut_goal_words/01_w.jpg
+        cont: true
+      - voice: 福田師王
+        text: 1日1日練習して頑張っていけたら。
+        cont: true
+        emph: true
+      - text: 所属のカールスルーエでは、目標もはっきりしています。
+        image: assets/images/20261118_fukuda_debut_goal_words/03_w.jpg
+      - voice: 福田師王
+        text: チームを1部に上げる、個人昇格が目標なので、
+      - voice: 福田師王
+        text: それをやっていきたい。
+        image: assets/images/20261118_fukuda_debut_goal_words/02_w.jpg
+        cont: true
+      - text: 個人昇格とは、自分だけ、上のリーグのクラブへ移ることです。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261118/2229290.html
+  - id: view
+    viewpoint: true
+    heading: 出場から何分で、福田は決めたのか
+    tier: 背景
+    telop: 出場14分でのゴール
+    say:
+      - text: 見立てです。福田は71分に入って、85分に決めました。出場から14分です。
+        image: assets/images/20261118_fukuda_debut_goal_words/01_w.jpg
+        card: {type: table, title: 福田師王の代表での出場, columns: [試合, 出場], rows: [[ブラジル戦, 0分], [パラグアイ戦, 14分（1ゴール）]], highlight_row: 1}
+      - text: ブラジル戦は出場0分。そこから1試合で、14分でのゴールです。
+        card: none
+      - text: 次の代表活動は、来年3月。大岩剛監督の新体制で始まります。
+        image: assets/images/20261118_fukuda_debut_goal_words/03_w.jpg
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261118/2229290.html
+      - https://www.espn.com/soccer/match/_/gameId/401916336

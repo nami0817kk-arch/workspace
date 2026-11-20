@@ -1,0 +1,155 @@
+# 取材メモ（2026年11月16日）ガットゥーゾ体制のラツィオ、開幕11戦無敗で首位。OBベロンが語ったこと（ニュースのショート。見せ方 Y＝OBの言葉から始める）
+# 取材: 2026-11-16。サッカーキング 2228162（全文、requests・ブラウザUA。元は トゥット・メルカート・ウェブ 11/15）。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 題材の差し替え: 依頼の10番（クルーピ、フランス代表初ゴール）は本人の言葉が取れず、出来事も2-0の追加点なので作らず、この題材に替えた（理由は報告に書いた）。
+# 出典で確かめたこと:
+#   ・ESPN（site.api.espn.com ita.1 standings / ラツィオの日程、2026-11-16 取得）: ラツィオ 11試合 9勝2分け0敗 勝ち点29（得失点差+16）。2位インテル 勝ち点28、3位ローマ 27、4位ミラン 24。
+#       ラツィオの引き分けは 9/12 ミラン戦 2-2 と 11/8 ナポリ戦 1-1。11/1 カリアリ 2-1 まで6連勝のあとのナポリ戦で連勝が止まった。
+#       フラッテージ: 11試合出場 4ゴール（ESPN の選手成績 appearances 11・totalGoals 4）。
+#       次の試合: 11/21 14:00Z（日本時間 23時）ラツィオ対レッチェ（ホーム。ESPN scoreboard 20261121）。
+#   ・サッカーキング 2228162: 51歳のベロン氏（元アルゼンチン代表MF）が、古巣ラツィオについて語った（トゥット・メルカート・ウェブ、15日）。
+#       ベロン氏は 1999年夏から2001年夏までの2季ラツィオに在籍。1999-2000 にスーペルコッパ・コッパ・イタリア・セリエAの3冠、26年ぶり2度目のリーグ制覇に貢献。
+#       本人の言葉（日本語訳、サッカーキング）:
+#         「今シーズンのセリエAで、ラツィオ以上の力を持っていると示したチームはどこだろうか？ それはどこもない」
+#         「現在の順位は偶然の産物ではない。今後状況は変わるかもしれないし、選手たちはこれから疲労を感じるかもしれない。それでも、彼らが築き上げた基盤は非常に強固だ」
+#         （フラッテージについて）「一番ワクワクする」「今、とてつもない活躍をしている」「イタリアでは、彼のようにペナルティエリアに侵入できる選手はほとんどいない。それに彼はゴールも決める。サッカーにおいてゴールを決めることは決して些細なことではない」
+#       原文（イタリア語）は読んでいない。台本の言葉はサッカーキングの日本語をそのまま使い、「…」で切れた所は無い。
+#   ・サッカーキング本文: リーグ開幕前のコッパ・イタリアでマントヴァに敗れた（これは使わない）。
+# 食い違い・扱い:
+#   ①サッカーキング本文の「9勝2分け」と ESPN は一致。インテルとの差も 1 で一致。
+#   ②写真: 記事の写真は Getty なので使わない。Commons の CC BY-SA を使った（古い写真が混じる。ベロンは 2017 年、ガットゥーゾは 2013 年のシオン時代で、現ラツィオの写真ではない。台本では場面の説明をしない）。
+# 本人の言葉: あり（ベロン。題の人物＝ラツィオの話を語る当事者の言葉）。Y。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月16日"
+format: news
+no_main: true
+people: [ラツィオ, ガットゥーゾ, ベロン, フラッテージ]
+
+short_style: Y
+short_hook_quote: 現在の順位は偶然の産物ではない。
+short_photos:
+  - assets/images/20261116_lazio_gattuso_unbeaten/01_v.jpg
+  - assets/images/20261116_lazio_gattuso_unbeaten/04_v.jpg
+  - assets/images/20261116_lazio_gattuso_unbeaten/02_v.jpg
+  - assets/images/20261116_lazio_gattuso_unbeaten/03_v.jpg
+short_question: ラツィオは、このまま無敗でセリエAの首位を守れると思いますか。
+short_telops: []
+
+theme:
+  id: lazio_gattuso_unbeaten
+  league: italy
+  league_name: セリエA
+  prefix: ""
+  title: ラツィオ、開幕11戦無敗で首位。OBベロンが語った「偶然ではない」
+  hook: ""
+  question: 首位ラツィオについて、OBのベロンは何を語ったのか
+  takeaway: ラツィオは9勝2分けの勝ち点29で首位、2位インテルとは1点差。ベロンは「基盤は非常に強固だ」と話し、フラッテージの4ゴールを名指しで称えた
+
+thumbnail:
+  layout: face
+  line1: ラツィオ 開幕11戦無敗
+  line2: OBベロン「偶然ではない」
+  tags: [ラツィオ, ベロン]
+  photo: assets/images/20261116_lazio_gattuso_unbeaten/01_w.jpg
+  short_photo: assets/images/20261116_lazio_gattuso_unbeaten/01_v.jpg
+
+answer: 順位は偶然の産物ではない。築いた基盤は非常に強固で、フラッテージは今、とてつもない活躍をしている
+watch: 21日（日本時間23時）のレッチェ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 首位ラツィオについて、OBのベロンは何を語ったのか
+    tier: 報道
+    telop: ベロン「現在の順位は偶然の産物ではない」
+    say:
+      - text: ガットゥーゾ監督率いるラツィオが、セリエAで首位です。
+      - text: 開幕から11戦無敗。OBのベロンさんは、こう話しました。
+        image: assets/images/20261116_lazio_gattuso_unbeaten/01_w.jpg
+      - voice: ベロン
+        text: 現在の順位は偶然の産物ではない。
+        emph: true
+      - voice: ベロン
+        text: 今後状況は変わるかもしれない。
+        cont: true
+      - voice: ベロン
+        text: 選手たちはこれから疲労を感じるかもしれない。
+        image: assets/images/20261116_lazio_gattuso_unbeaten/04_w.jpg
+        cont: true
+      - voice: ベロン
+        text: それでも、彼らが築き上げた基盤は非常に強固だ。
+        image: assets/images/20261116_lazio_gattuso_unbeaten/02_w.jpg
+        cont: true
+      - text: 今季のセリエAで、ラツィオ以上のチームはあるのか。ベロンさんは、こう語りました。
+        image: assets/images/20261116_lazio_gattuso_unbeaten/04_w.jpg
+      - voice: ベロン
+        text: 今シーズンのセリエAで、ラツィオ以上の力を持っていると
+      - voice: ベロン
+        text: 示したチームはどこだろうか？
+        cont: true
+      - voice: ベロン
+        text: それはどこもない。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20261116/2228162.html
+  - id: table
+    heading: ラツィオは、今、どれだけ勝っているのか
+    tier: 報道
+    telop: 9勝2分け、勝ち点29。インテルと1点差
+    say:
+      - text: ラツィオは11試合で、9勝2分け。勝ち点は29です。
+        card: {type: table, title: セリエA 上位4クラブ（11試合を終えて）, columns: [順位, クラブ, 勝ち点], rows: [[1, ラツィオ, 29], [2, インテル, 28], [3, ローマ, 27], [4, ミラン, 24]], highlight_row: 0}
+        image: assets/images/20261116_lazio_gattuso_unbeaten/03_w.jpg
+      - text: 2位のインテルとは、勝ち点1の差です。
+        card: none
+        image: assets/images/20261116_lazio_gattuso_unbeaten/04_w.jpg
+      - text: 6連勝のあと、8日のナポリ戦は1対1。連勝は止まりましたが、無敗は続いています。
+        image: assets/images/20261116_lazio_gattuso_unbeaten/03_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+      - https://www.soccer-king.jp/news/world/ita/20261116/2228162.html
+  - id: fratt
+    heading: ベロンが「一番ワクワクする」と挙げた選手は誰か
+    tier: 報道
+    telop: ベロン「一番ワクワクする」フラッテージ
+    say:
+      - text: ベロンさんが名前を挙げたのは、ラツィオに今夏加入したフラッテージです。
+        image: assets/images/20261116_lazio_gattuso_unbeaten/04_w.jpg
+      - voice: ベロン
+        text: 一番ワクワクする。今、とてつもない活躍をしている。
+      - voice: ベロン
+        text: イタリアでは、彼のようにペナルティエリアに侵入できる選手は
+      - voice: ベロン
+        text: ほとんどいない。
+        cont: true
+        cont: true
+      - voice: ベロン
+        text: それに彼はゴールも決める。
+        cont: true
+      - text: フラッテージは、ここまでリーグ戦で4ゴールを決めています。
+        image: assets/images/20261116_lazio_gattuso_unbeaten/04_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20261116/2228162.html
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/teams/112/roster
+  - id: view
+    viewpoint: true
+    heading: 首位ラツィオは、無敗をどこまで伸ばせるのか
+    tier: 背景
+    telop: 次は21日、ホームでレッチェ戦
+    say:
+      - text: 見立てです。ベロンさんがいたのは、1999年から2000年のシーズン。
+        card: none
+        image: assets/images/20261116_lazio_gattuso_unbeaten/01_w.jpg
+      - text: ラツィオは、26年ぶりの優勝を果たしました。
+      - text: ガットゥーゾ監督のラツィオは、無敗を続けられるのか。
+        card: none
+        image: assets/images/20261116_lazio_gattuso_unbeaten/01_w.jpg
+      - text: 次の試合は、21日のホームでのレッチェ戦。日本時間では、23時からです。
+        image: assets/images/20261116_lazio_gattuso_unbeaten/03_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/ita.1/scoreboard?dates=20261121
+      - https://www.soccer-king.jp/news/world/ita/20261116/2228162.html

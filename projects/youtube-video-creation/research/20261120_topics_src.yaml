@@ -1,0 +1,74 @@
+title: 11月20日のショート題材（Claude選）
+lead: 代表ウィーク明けの日本人の話を中心に、日本人7本・海外3本を選びました。
+note: 確認なしの運用（11/4〜）のため、Claude が選んだ結果です。日本人の題は 9〜17時の枠、海外は18時以降。外した題：スペインの無敗停止（11/16に扱い済み）・プジョル（11/18に扱い済み）・後藤啓介（11/19に扱い済み）・ロナウジーニョ批判（出来事が小さい）・女子・J・高校選手権。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 冨安健洋、パレスの新監督が言及。コベントリー戦は欠場、「来週から練習に復帰」
+  why: フットボールチャンネル（20日）。条件：代表DF・大物。監督の発言あり（本人の言葉ではない）。
+  src: フットボールチャンネル
+  url: https://www.footballchannel.jp/2026/11/20/post1058431/
+  fmt: news
+- num: 2
+  slot: 日本人（W杯）
+  head: 上田綺世、リールの本拠地の第一印象
+  why: フットボールトライブ（19日）。条件：本人の言葉。
+  src: フットボールトライブ
+  url: https://football-tribe.com/japan/2026/11/19/361508/
+  fmt: quote
+- num: 3
+  slot: 日本人（代表）
+  head: 久保建英、ブラジル戦・パラグアイ戦のプレーは「意外だった」
+  why: フットボールトライブ（19日）。条件：代表・本人の言葉・大物。
+  src: フットボールトライブ
+  url: https://football-tribe.com/japan/2026/11/19/361489/
+  fmt: quote
+- num: 4
+  slot: 日本人（代表）
+  head: 鈴木彩艶「多少のミスは気にするほどのことではない」。2027年の飛躍を期待
+  why: フットボールトライブ（19日）。条件：代表・大物。
+  src: フットボールトライブ
+  url: https://football-tribe.com/japan/2026/11/19/361486/
+  fmt: news
+- num: 5
+  slot: 日本人（代表）
+  head: 伊東純也、起用法をめぐり森保監督に異論も
+  why: フットボールトライブ（19日）。条件：代表。
+  src: フットボールトライブ
+  url: https://football-tribe.com/japan/2026/11/19/361483/
+  fmt: news
+- num: 6
+  slot: 日本人（代表）
+  head: 田中碧に、リバプールなど7クラブ以上が関心
+  why: フットボールトライブ（19日）。条件：代表。
+  src: フットボールトライブ
+  url: https://football-tribe.com/japan/2026/11/19/361496/
+  fmt: news
+- num: 7
+  slot: 日本人（代表・記録）
+  head: 森保監督の8年間で、FIFAランキングは61位から17位へ
+  why: 2ch系まとめ（19日）→FIFA公式で確かめる。条件：代表・記録。
+  src: FIFA ランキング
+  url: https://footballnet.2chblog.jp/archives/60143340.html
+  fmt: news
+- num: 8
+  slot: 海外
+  head: ポチェッティーノ、マンUで「変える」。初日の言葉
+  why: Sky Sports ほか（19〜20日）。条件：本人の言葉・大物。
+  src: Sky Sports
+  url: https://www.skysports.com/
+  fmt: quote
+- num: 9
+  slot: 海外
+  head: ハリー・ケイン「ベンゼマの大ファンだった」
+  why: フランスの媒体（20日）。条件：本人の言葉・大物。
+  src: フランス紙
+  url: https://www.football-tribe.com/
+  fmt: quote
+- num: 10
+  slot: 海外
+  head: メッシの母がニコ・パスに「あなたは息子の後継者」。本人は「信じられない」
+  why: フットボールチャンネル・ゲキサカ（19日）。条件：本人の言葉・大物の名前。
+  src: フットボールチャンネル、ゲキサカ
+  url: https://web.gekisaka.jp/news/world/detail/?463447-463447-fl
+  fmt: quote
