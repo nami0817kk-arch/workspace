@@ -45,7 +45,7 @@ class _GroupPageState extends State<GroupPage> {
     return Column(
       children: [
         Container(
-          height: 38,
+          height: 48,
           decoration: BoxDecoration(
             color: scheme.surfaceContainerHighest,
             border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
@@ -72,7 +72,7 @@ class _GroupPageState extends State<GroupPage> {
                         InkWell(
                           onTap: () => _select(i),
                           child: Container(
-                            height: 38,
+                            height: 48,
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(

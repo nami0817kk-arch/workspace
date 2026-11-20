@@ -72,7 +72,8 @@ class FmPanel extends StatelessWidget {
 
 /// FM 風の表の1行(ラベルと値を左右に置く)。
 class FmRow extends StatelessWidget {
-  const FmRow({super.key, required this.label, required this.value, this.valueColor});
+  const FmRow(
+      {super.key, required this.label, required this.value, this.valueColor});
 
   final String label;
   final String value;
@@ -119,9 +120,12 @@ ThemeData fmDenseTheme(ThemeData base) {
   );
   return base.copyWith(
     textTheme: text,
-    // 押せる範囲を見た目どおりにする(チップやボタンの上下に余白が付き、
-    // 並べたときに行の間が広がっていた)。
-    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    // 押せる範囲は見た目より広く取る(指で押す目安は44pt)。以前は見た目
+    // どおりに詰めていて、ボタンが33〜38pt・絞り込みが30pt しかなかった。
+    materialTapTargetSize: MaterialTapTargetSize.padded,
+    iconButtonTheme: IconButtonThemeData(
+      style: IconButton.styleFrom(minimumSize: const Size(48, 48)),
+    ),
     // 見出しの帯。明朝(セリフ)をやめ、太字の小さい字で、少し濃い下地にする。
     appBarTheme: base.appBarTheme.copyWith(
       backgroundColor: scheme.surfaceContainerHighest,
@@ -134,7 +138,8 @@ ThemeData fmDenseTheme(ThemeData base) {
       ),
     ),
     tabBarTheme: base.tabBarTheme.copyWith(
-      labelStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, fontFamily: body),
+      labelStyle: TextStyle(
+          fontSize: 12, fontWeight: FontWeight.bold, fontFamily: body),
       unselectedLabelStyle: TextStyle(fontSize: 12, fontFamily: body),
     ),
     cardTheme: CardThemeData(
@@ -155,22 +160,22 @@ ThemeData fmDenseTheme(ThemeData base) {
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        minimumSize: const Size(0, 32),
+        minimumSize: const Size(0, 40),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
       ),
     ),
     // 枠だけのボタンも、小さく詰める(目標の選択肢などが縦に長く並ばないように)。
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-        minimumSize: const Size(0, 30),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        minimumSize: const Size(0, 40),
         textStyle: TextStyle(fontSize: 12, fontFamily: body),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        minimumSize: const Size(0, 30),
+        minimumSize: const Size(0, 40),
         textStyle: TextStyle(fontSize: 12, fontFamily: body),
       ),
     ),
@@ -231,6 +236,8 @@ ThemeData fmDarkTheme(ThemeData darkBase) {
     primaryTextTheme: dense.primaryTextTheme
         .apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface),
     iconTheme: dense.iconTheme.copyWith(color: scheme.onSurface),
+    // 押せない項目の字。既定(38%)では暗い地に沈んで読めなかった。
+    disabledColor: scheme.onSurface.withValues(alpha: 0.55),
     scaffoldBackgroundColor: surface,
     navigationBarTheme: themed.navigationBarTheme.copyWith(
       backgroundColor: scheme.surfaceContainer,

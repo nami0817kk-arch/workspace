@@ -84,9 +84,8 @@ class _TransferTableState extends State<TransferTable> {
             width: w,
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              alignment: a == TextAlign.left
-                  ? Alignment.centerLeft
-                  : Alignment.center,
+              alignment:
+                  a == TextAlign.left ? Alignment.centerLeft : Alignment.center,
               child: Text(TableSort.label(s, key, _sortKey, _asc),
                   style: head, textAlign: a),
             ),
@@ -96,7 +95,7 @@ class _TransferTableState extends State<TransferTable> {
       children: [
         Container(
           color: scheme.surfaceContainerHighest,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             children: [
               Expanded(
@@ -152,7 +151,9 @@ class _TransferTableState extends State<TransferTable> {
           if (showClub) cell(p.originClubName ?? '-', 84),
           cell('${p.age}', 26),
           cell(p.position.label, 40),
-          SizedBox(width: 34, child: Center(child: OverallBadge(overall: p.overall))),
+          SizedBox(
+              width: 34,
+              child: Center(child: OverallBadge(overall: p.overall))),
           if (showPot) cell('${p.potential}', 30),
           cell(
             market

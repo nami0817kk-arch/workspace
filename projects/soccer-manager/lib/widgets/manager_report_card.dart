@@ -59,7 +59,12 @@ class _Meter extends StatelessWidget {
       children: [
         SizedBox(
           width: compact ? 62 : 80,
-          child: Text(label, style: TextStyle(fontSize: size)),
+          // 英語(Shareholders)や大きい文字でも折り返さず、縮めて1行に収める。
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(label, maxLines: 1, style: TextStyle(fontSize: size)),
+          ),
         ),
         SizedBox(
           width: compact ? 70 : 140,
@@ -96,8 +101,7 @@ class ManagerReportCard extends StatelessWidget {
     if (save == null) return const SizedBox.shrink();
     final league = save.league;
     final standings = league.sortedStandings;
-    final rank =
-        standings.indexWhere((r) => r.teamId == save.userTeamId) + 1;
+    final rank = standings.indexWhere((r) => r.teamId == save.userTeamId) + 1;
 
     String? lastResult;
     for (final f in league.fixtures.reversed) {
@@ -131,9 +135,8 @@ class ManagerReportCard extends StatelessWidget {
     final health = ClubHealthEngine.assess(
       supporter: save.confidence,
       shareholder: save.shareholderExpectation,
-      wageRatio: league.fixtures.isEmpty
-          ? 0
-          : save.ledgerFor(league.season).wageRatio,
+      wageRatio:
+          league.fixtures.isEmpty ? 0 : save.ledgerFor(league.season).wageRatio,
       budget: save.budget,
     );
     return FmPanel(
@@ -142,7 +145,8 @@ class ManagerReportCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(report.headline,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+              style:
+                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
           const SizedBox(height: 6),
           for (final l in report.lines)
             Text(l, style: Theme.of(context).textTheme.bodySmall),

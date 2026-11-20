@@ -15,11 +15,12 @@ class LandscapeScale extends StatelessWidget {
   /// 組むときの基準の幅(スマホの横画面の標準)。
   static const designWidth = 844.0;
 
-  /// スマホ(844 幅)での描く倍率。
-  static const uiScale = 0.85;
+  /// スマホ(844 幅)での描く倍率。0.85 だと押す所が指に小さすぎた
+  /// (48 の部品が実寸41pt)。0.93 なら 48 の部品が44pt を超える。
+  static const uiScale = 0.93;
 
   /// 小さいスマホ(667 幅)でも、これより小さくはしない(字が読めなくなる)。
-  static const minScale = 0.8;
+  static const minScale = 0.88;
 
   /// 画面の大きさから、描く倍率を決める。1 なら縮めない。
   static double scaleFor(Size size) {
