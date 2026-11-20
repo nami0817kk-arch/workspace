@@ -253,6 +253,7 @@
   YA.endWeek = function (w) {
     YA.ensureBody(w);
     const res = ew0.apply(this, arguments);
+    YA.ensureBody(w); // 年度末の入団で入った子にも、その週のうちに出身地を（2026-11-20：次の週まで空いていた）
     for (const p of all(w)) {
       if (!p.gt || p.height >= (p.hFin || 0)) continue;
       const sh = (YA.GT_HEIGHT[p.gt] || YA.GT_HEIGHT.normal)[2][clamp(p.grade || 1, 1, 3) - 1];

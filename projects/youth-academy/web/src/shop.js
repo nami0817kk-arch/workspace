@@ -437,7 +437,8 @@
             h('input', { type: 'range', min: 1, max: 20, step: 1, value: st.ab[n], 'data-ab': n, style: 'flex:1;min-width:60px', oninput: (e) => { st.ab[n] = +e.target.value; val.textContent = e.target.value; sync(); } }),
             val);
         };
-        const setAll = (fn) => { for (const n of abList) st.ab[n] = fn(n); draw(); };
+        // まとめて決めたときは、将来がいまより低くならないよう将来も上げる（「全部20」のあと将来150のままで迎えられなかった）
+        const setAll = (fn) => { for (const n of abList) st.ab[n] = fn(n); st.fut = Math.max(st.fut, YA.origRating(st.pos, st.ab)); draw(); };
         const keyAbs = (YA.POS_ABS15 && YA.POS_ABS15[st.pos]) || [];
         const fsel = forms.find((f) => f.k === st.form);
         box.replaceChildren(
