@@ -70,7 +70,7 @@ class _SquadTableState extends State<SquadTable> {
       children: [
         Container(
           color: scheme.surfaceContainerHighest,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             children: [
               head('#', width: 22),
@@ -99,8 +99,7 @@ class _SquadTableState extends State<SquadTable> {
 
   Widget _row(BuildContext context, Player p, int index) {
     final scheme = Theme.of(context).colorScheme;
-    final unavailable =
-        p.isInjured ||
+    final unavailable = p.isInjured ||
         p.isSuspended ||
         p.isOnInternationalDuty ||
         p.isLoanedOut ||
@@ -114,9 +113,7 @@ class _SquadTableState extends State<SquadTable> {
       child: Container(
         color: starting
             ? scheme.primaryContainer.withValues(alpha: 0.35)
-            : (index.isOdd
-                ? scheme.surfaceContainerLow
-                : Colors.transparent),
+            : (index.isOdd ? scheme.surfaceContainerLow : Colors.transparent),
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Row(
           children: [
@@ -130,21 +127,24 @@ class _SquadTableState extends State<SquadTable> {
               child: Text(
                 p.name,
                 overflow: TextOverflow.ellipsis,
-                style: small.copyWith(
-                    fontWeight: FontWeight.w700, color: base),
+                style: small.copyWith(fontWeight: FontWeight.w700, color: base),
               ),
             ),
             SizedBox(
               width: 40,
               child: Text(p.position.label,
-                  textAlign: TextAlign.center, style: small.copyWith(color: base)),
+                  textAlign: TextAlign.center,
+                  style: small.copyWith(color: base)),
             ),
             SizedBox(
               width: 26,
               child: Text('${p.age}',
-                  textAlign: TextAlign.center, style: small.copyWith(color: base)),
+                  textAlign: TextAlign.center,
+                  style: small.copyWith(color: base)),
             ),
-            SizedBox(width: 34, child: Center(child: OverallBadge(overall: p.overall))),
+            SizedBox(
+                width: 34,
+                child: Center(child: OverallBadge(overall: p.overall))),
             SizedBox(
               width: 28,
               child: Text('${p.fatigue}',
@@ -160,8 +160,8 @@ class _SquadTableState extends State<SquadTable> {
                       : ContractEngine.untilTinyLabel(p.contractEndYear),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
-                  style: small.copyWith(
-                      color: expiring ? Colors.orange : base)),
+                  style:
+                      small.copyWith(color: expiring ? Colors.orange : base)),
             ),
             SizedBox(
               width: 52,

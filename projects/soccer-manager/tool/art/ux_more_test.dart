@@ -266,7 +266,10 @@ void main() {
     // その他 → 設定・用語集・ガイド
     for (final item in ['設定', '用語集', 'ガイド']) {
       where = item;
-      if (await tapText('その他')) {
+      final menu = find.byTooltip('設定・用語集・ガイド').hitTestable();
+      if (menu.evaluate().isNotEmpty) {
+        await tester.tap(menu.first);
+        await settle(6);
         if (await tapText(item, last: true)) {
           await snap('other_$item');
           close();

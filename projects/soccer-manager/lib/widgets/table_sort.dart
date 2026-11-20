@@ -38,13 +38,19 @@ class TableSort {
   static String label(String text, String? key, String? current, bool asc) =>
       key != null && key == current ? '$text${asc ? '^' : 'v'}' : text;
 
-  /// 押せる見出し。
+  /// 押せる見出し。指で押せるよう、文字の上下も押せる範囲にする
+  /// (以前は文字の高さ16pt だけだった)。
+  static const headerHeight = 46.0;
+
   static Widget header({
     required Widget child,
     required String? key,
     required void Function(String) onSort,
-  }) =>
-      key == null
-          ? child
-          : InkWell(onTap: () => onSort(key), child: child);
+  }) {
+    final cell = SizedBox(
+      height: headerHeight,
+      child: Align(alignment: Alignment.centerLeft, child: child),
+    );
+    return key == null ? cell : InkWell(onTap: () => onSort(key), child: cell);
+  }
 }

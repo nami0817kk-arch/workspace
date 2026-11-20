@@ -1113,6 +1113,10 @@ class PlayerDetailScreen extends StatelessWidget {
                     : null,
                 title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
                     'Add a 1-year club option (salary +5%)')),
+                subtitle: ContractEngine.canAttachOption(endYear, player.age)
+                    ? null
+                    : Text(Tr.pick('最長の契約年数なので付けられません。年数を1年短くすると付けられます。',
+                        'Not possible at the longest contract length. Shorten it by a year to add one.')),
               ),
               const SizedBox(height: 4),
               TextField(

@@ -26,7 +26,7 @@ class HideScreenBar extends InheritedWidget {
   bool updateShouldNotify(HideScreenBar oldWidget) => false;
 }
 
-/// 各画面の上の帯。
+/// 各画面の上の帯。タブは指で押せる高さ(48、実寸で44pt 以上)にする。
 ///
 /// 左メニューに埋め込まれた横画面では、見出しの帯とタブの帯を1本にする
 /// (タブがあれば見出しの代わりにタブを並べ、無ければ見出しだけ)。
@@ -48,7 +48,7 @@ PreferredSizeWidget screenBar(
     }
     return AppBar(
       automaticallyImplyLeading: false,
-      toolbarHeight: 36,
+      toolbarHeight: 48,
       centerTitle: false,
       titleSpacing: 8,
       title: tabs.isEmpty
@@ -59,7 +59,7 @@ PreferredSizeWidget screenBar(
               tabAlignment: TabAlignment.start,
               dividerColor: Colors.transparent,
               labelPadding: const EdgeInsets.symmetric(horizontal: 14),
-              tabs: [for (final t in tabs) Tab(height: 32, text: t)],
+              tabs: [for (final t in tabs) Tab(height: 48, text: t)],
             ),
       actions: actions,
     );
@@ -67,7 +67,7 @@ PreferredSizeWidget screenBar(
   if (EmbeddedInShell.of(context)) {
     return AppBar(
       automaticallyImplyLeading: false,
-      toolbarHeight: 40,
+      toolbarHeight: 48,
       centerTitle: false,
       titleSpacing: 8,
       title: tabs.isEmpty
@@ -78,7 +78,7 @@ PreferredSizeWidget screenBar(
               tabAlignment: TabAlignment.start,
               dividerColor: Colors.transparent,
               labelPadding: const EdgeInsets.symmetric(horizontal: 14),
-              tabs: [for (final t in tabs) Tab(height: 36, text: t)],
+              tabs: [for (final t in tabs) Tab(height: 48, text: t)],
             ),
       actions: actions,
     );
