@@ -746,12 +746,12 @@ async function clearEvents() {
         ok(d.querySelectorAll('#main .chip[data-tip]').length > 0 && !d.querySelector('#main .chip[title]'), '実績の銅銀金の札は押すと名前が出る');
       }
       ltab('図鑑');
-      ok(txt().includes('覚醒の図鑑 ') && txt().includes('/40') && txt().includes('？'), '図鑑：40種が並び、未発見は？');
+      ok(txt().includes('覚醒の図鑑 ') && txt().includes('/80') && txt().includes('？'), '図鑑：80種が並び、未発見は？');
       ltab('実績');
-      ok(txt().includes('/69') && txt().includes('銅'), '実績は69個の銅銀金');
-      ok(d.querySelectorAll('#main .plist > .pitem').length === 23, '実績は銅銀金を1行にまとめて23行（2026-11-16）');
+      ok(txt().includes('/72') && txt().includes('銅'), '実績は72個の銅銀金');
+      ok(d.querySelectorAll('#main .plist > .pitem').length === 24, '実績は銅銀金を1行にまとめて24行（2026-11-16。11-20 に図鑑の40/60/80種を足した）');
       ltab('図鑑');
-      { const g = [...d.querySelectorAll('#main .scroll')].find((e) => e.style.display === 'grid'); ok(!!g && g.children.length === 40 && g.style.gridTemplateColumns.includes('repeat(4'), '図鑑は4列の札・40種（2026-11-20）'); }
+      { const g = [...d.querySelectorAll('#main .scroll')].find((e) => e.style.display === 'grid'); ok(!!g && g.children.length === 80 && g.style.gridTemplateColumns.includes('repeat(4'), '図鑑は4列の札・80種（2026-11-20）'); }
       ltab('実績');
       rail('ホーム');
       ok(txt().includes('系譜') && txt().includes('次の実績'), 'ホームに系譜の小窓と次の実績');
