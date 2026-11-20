@@ -16,7 +16,8 @@ Future<BlockReport?> runSimTicker(BuildContext context, GmController c, int n, S
   return showDialog<BlockReport?>(
     context: context,
     barrierDismissible: false,
-    builder: (_) => _SimTicker(c: c, n: n, title: title, stops: stops),
+    // 戻るボタンで閉じない(閉じても裏で進み続けるので)
+    builder: (_) => PopScope(canPop: false, child: _SimTicker(c: c, n: n, title: title, stops: stops)),
   );
 }
 

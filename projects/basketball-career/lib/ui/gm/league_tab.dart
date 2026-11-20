@@ -244,7 +244,7 @@ class _Standings extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 2),
                         child: Row(
                           children: [
-                            TeamBadge(team: sr.winner, size: 18),
+                            TeamBadge(team: sr.over ? sr.winner : sr.high, size: 18),
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(

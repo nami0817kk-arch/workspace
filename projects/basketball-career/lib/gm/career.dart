@@ -527,6 +527,10 @@ class Career {
     facilityDebt = 0;
     budgetLevel = 2;
     goalStance = 0;
+    namingSold = false;
+    arenaName = '';
+    camp = {};
+    mentor = [];
     mine = team;
     ownerType = OwnerType.values[(seed * 7 + mine) % OwnerType.values.length];
     startRank = strengthRank(mine);
@@ -910,7 +914,7 @@ class Career {
       return;
     }
     if (m.kind == MsgKind.forecast) {
-      if (m.season == season && forecastSeason == season && phase != Phase.seasonEnd) forecastBet = choice + 1;
+      if (m.season == season && forecastSeason == season && phase == Phase.preseason) forecastBet = choice + 1;
       return;
     }
     if (m.kind == MsgKind.offCamp) {
@@ -930,6 +934,14 @@ class Career {
       if (choice == 0) {
         hype = (hype + 4).clamp(0, 100);
         me.chem = (me.chem + 2).clamp(0, 100);
+        // 名前と在籍は、送ったときの題と本文から読む(選手はもう引退していて、どこにもいない)
+        final name = m.title.split('の引退を').first;
+        final tenure = int.tryParse(RegExp(r'このチームで(\d+)シーズン').firstMatch(m.body)?.group(1) ?? '') ?? 0;
+        if (m.player != null && !retiredNames.contains(name)) {
+          retiredNumbers.add([jerseyOfId(m.player!), season, tenure]);
+          retiredNames.add(name);
+          _log('永久欠番: $nameの背番号${jerseyOfId(m.player!)}');
+        }
       } else {
         hype = (hype + 1).clamp(0, 100);
       }
@@ -1078,12 +1090,17 @@ class Career {
     if (phase != Phase.contracts) return '個人練習はオフの契約の時期だけ';
     if (!me.roster.contains(p) && !me.twoWay.contains(p)) return '自分のチームの選手だけ';
     if (expiring.contains(p.id)) return '契約が切れた選手は選べない(再契約してから)';
-    if (!camp.containsKey(p.id) && camp.length >= campSlots) return '枠がいっぱい(練習施設を上げると増える)';
+    if (!camp.containsKey(p.id) && campUsed >= campSlots) return '枠がいっぱい(練習施設を上げると増える)';
     return null;
   }
 
+  /// 個人練習に選んでいて、今もチームにいる選手の数(トレード・放出で出た選手は枠に数えない)。
+  int get campUsed => camp.keys.where((id) => [...me.roster, ...me.twoWay].any((p) => p.id == id)).length;
+
   /// 個人練習で伸ばす能力を決める([a] が null なら外す)。
   void setCamp(int id, Attr? a) {
+    // チームを出た選手は、ここで外す
+    camp = {for (final e in camp.entries) if ([...me.roster, ...me.twoWay].any((p) => p.id == e.key)) e.key: e.value};
     final p = [...me.roster, ...me.twoWay].where((x) => x.id == id).firstOrNull;
     if (p == null) return;
     if (a == null) {
@@ -1311,7 +1328,10 @@ class Career {
 
   /// 電話の申し込みが、まだ成り立つか(出す選手も受け取る選手も、それぞれのチームにいる)。
   bool callValid(TradeOffer o) =>
-      o.give.every((id) => me.roster.any((p) => p.id == id)) && o.get.every((id) => teams[o.partner].roster.any((p) => p.id == id));
+      o.give.every((id) => me.roster.any((p) => p.id == id)) &&
+      o.get.every((id) => teams[o.partner].roster.any((p) => p.id == id)) &&
+      o.getPicks.every((i) => i >= 0 && i < picks.length && picks[i].owner == o.partner) &&
+      o.givePicks.every((i) => i >= 0 && i < picks.length && picks[i].owner == mine);
 
   /// 電話の申し込みを受ける。成立したら true。
   bool acceptCall(int i) {
@@ -1405,9 +1425,12 @@ class Career {
     if (!mentorVet(vet)) return '指導役は29歳からの選手';
     if (!mentorYoung(young)) return '教わるのは24歳までの選手';
     if (expiring.contains(vet.id) && phase == Phase.contracts) return '契約が切れたベテランは選べない(再契約してから)';
-    if (mentor.isNotEmpty) return 'もう指導役を付けている(外してから)';
+    if (mentorLive) return 'もう指導役を付けている(外してから)';
     return null;
   }
+
+  /// 指導役の組が生きているか(2人ともまだ自分のチームにいる)。片方がトレード・放出で出たら、組は無かったことになる。
+  bool get mentorLive => mentor.length == 2 && mentor.every((id) => me.roster.any((p) => p.id == id));
 
   /// 指導役のベテランが若手を伸ばす見込み(性格で変わる)。
   double mentorChance(Player vet) =>
@@ -1433,9 +1456,11 @@ class Career {
   void _runMentor() {
     if (mentor.length != 2) return;
     final young = me.roster.where((p) => p.id == mentor[1]).firstOrNull;
-    final vet = [...me.roster, for (final t in teams) ...t.roster].where((p) => p.id == mentor[0]).firstOrNull;
+    // ベテランは自分のチームにいるときだけ(引退したばかりなら、教えた分は残る)
+    final vet = me.roster.where((p) => p.id == mentor[0]).firstOrNull;
+    final gone = vet == null && teams.any((t) => t.roster.any((p) => p.id == mentor[0]));
     mentor = [];
-    if (young == null) return;
+    if (young == null || gone) return;
     final r = Rng(seed * 3307 + season * 97 + young.id);
     final chance = vet == null ? 0.45 : mentorChance(vet);
     final who = vet?.name ?? '指導役';
@@ -1510,8 +1535,8 @@ class Career {
     _mail(Sender.press, '記者の順位予想: ${me.east ? '東' : '西'}地区$rank位',
         '記者たちが$season年目の順位を予想した。${teams[forecast[0]].def.short}が1位、${teams[forecast[1]].def.short}が2位、${teams[forecast[2]].def.short}が3位。'
         'このチームは$rank位という見立て。\n'
-        '「覆してみせる」と答えると、予想より上で終えたとき人気と信頼が上がり、届かなければ人気が下がる。',
-        kind: MsgKind.forecast, choices: const ['予想を覆してみせる', '妥当な予想だ']);
+        '${rank == 1 ? '「期待に応えてみせる」と答えると、1位で終えたとき人気と信頼が上がり、届かなければ人気が下がる。' : '「覆してみせる」と答えると、予想より上で終えたとき人気と信頼が上がり、届かなければ人気が下がる。'}',
+        kind: MsgKind.forecast, choices: rank == 1 ? const ['期待に応えてみせる', '妥当な予想だ'] : const ['予想を覆してみせる', '妥当な予想だ']);
   }
 
   /// シーズンの終わりに、予想と結果を突き合わせる。
@@ -1520,15 +1545,18 @@ class Career {
     if (rank == 0) return;
     final now = confRank;
     final beat = now < rank;
+    // 1位の予想には「期待に応える」と答える(1位で終えたら果たした)
+    final said = rank == 1 ? '期待に応えてみせる' : '覆してみせる';
+    final made = rank == 1 ? now == 1 : beat;
     var note = '';
     if (forecastBet == 1) {
-      if (beat) {
+      if (made) {
         hype = (hype + 4).clamp(0, 100);
         trust = (trust + 2).clamp(0, 100);
-        note = '\n「覆してみせる」と言ったとおりになった。人気+4・信頼+2。';
+        note = '\n「$said」と言ったとおりになった。人気+4・信頼+2。';
       } else {
         hype = (hype - 3).clamp(0, 100);
-        note = '\n「覆してみせる」と言ったが、届かなかった。人気-3。';
+        note = '\n「$said」と言ったが、届かなかった。人気-3。';
       }
     }
     _mail(Sender.press, '予想は$rank位、結果は$now位',
@@ -2366,6 +2394,7 @@ class Career {
       if (m.kind == MsgKind.declare && m.needsAnswer) m.answer = 3;
       if (m.kind == MsgKind.sponsor && m.needsAnswer) m.answer = 3;
       if (m.kind == MsgKind.naming && m.needsAnswer) m.answer = 1;
+      if (m.kind == MsgKind.forecast && m.needsAnswer) m.answer = 1;
     }
     revenue = 0;
     cupField = [];
@@ -2513,7 +2542,7 @@ class Career {
     final g = nextMyGame;
     if (g == null) return null;
     final po = phase == Phase.playoffs;
-    final rested = po ? const <Player>[] : _restBeforeGame();
+    final rested = _restBeforeGame();
     try {
       final h = teams[g.$1], a = teams[g.$2];
       return simulateGame(h, a, Rng(po ? poLiveSeed : liveSeed),
@@ -2987,10 +3016,25 @@ class Career {
           }
           budget = budget! - 1;
           final seed = live == null ? null : poLiveSeed;
-          s.playOne(teams, rng, mine, liveSeed: seed, calls: live ?? const []);
+          final rested = _restBeforeGame();
+          try {
+            s.playOne(teams, rng, mine, liveSeed: seed, calls: live ?? const []);
+          } finally {
+            for (final p in rested) {
+              p.injured = 0;
+            }
+          }
           live = null;
         } else {
-          s.playOne(teams, rng, mine);
+          // 自分のシリーズは、休ませると決めた選手を休ませる(自動で遊ぶGMは決めないので、何も変わらない)
+          final rested = mineIn ? _restBeforeGame() : const <Player>[];
+          try {
+            s.playOne(teams, rng, mine);
+          } finally {
+            for (final p in rested) {
+              p.injured = 0;
+            }
+          }
         }
       }
       return s;
@@ -3288,7 +3332,8 @@ class Career {
     }
     if (lastProfit > 0 && !goals.any((g) => g.kind == GoalKind.profit && g.met == true)) add('黒字', 5);
     if (goalStance == 2 && me.wins >= target) add('オーナーに約束した$target勝を果たした', 10);
-    final keptNow = promises.where((x) => x.season == season && x.state == PromiseState.kept).length;
+    // オフにした約束は、期限の来るシーズン(次のシーズン)の評価で数える
+    final keptNow = promises.where((x) => x.due ~/ blocksPerSeason == season && x.state == PromiseState.kept).length;
     if (keptNow > 0) add('選手や記者との約束を守った($keptNow件)', 3 * keptNow.clamp(0, 3));
     final before = gmLevel;
     final total = parts.fold(0, (n, x) => n + x.points);
@@ -3397,7 +3442,7 @@ class Career {
         _toHall(p, t.index);
         _noteRetiree(p);
         if (t.index == mine) news.add('${p.name}(${p.age}歳)が引退した');
-        if (t.index == mine && (p.tenure >= 5 || (p.tenure >= 3 && p.allStars >= 2))) {
+        if (t.index == mine && !retiredNames.contains(p.name) && (p.tenure >= 5 || (p.tenure >= 3 && p.allStars >= 2))) {
           _mail(Sender.owner, '${p.name}の引退を、どう送り出すか',
               '${p.name}(${p.age}歳)がこのチームで${p.tenure}シーズンを過ごし、引退した。${p.allStars > 0 ? 'オールスター${p.allStars}回。' : ''}\n'
               '背番号${jerseyOf(p)}を永久欠番にすると、人気(+4)とチームの相性(+2)が上がる。記念の映像を流すだけなら、人気が少し上がる(+1)。',
@@ -5245,7 +5290,8 @@ enum SimStop {
   mail('返事が要る知らせが届いた'),
   slump('4連敗した'),
   hot('5連勝した'),
-  tired('疲れが70を超えた選手が出た');
+  tired('疲れが70を超えた選手が出た'),
+  deadline('トレードの締め切りの前(締め切り前の最後の1試合の手前)');
 
   const SimStop(this.label);
   final String label;
