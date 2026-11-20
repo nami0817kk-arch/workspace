@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../l10n/tr.dart';
 import '../models/league_theme.dart';
+import 'nation_names.dart';
 
 class NamePool {
   static final Random _rng = Random();
@@ -335,8 +336,16 @@ class NamePool {
         : '$word $token';
   }
 
+  /// 今遊んでいるリーグの国。決まっていれば選手の名前はその国の名前で作る
+  /// (GameState が新しいゲーム・読み込みで入れる)。null なら従来の名前。
+  static LeagueTheme? homeTheme;
+
   static String randomPlayerName({Set<String>? avoid}) {
     String pick() {
+      final nation = homeTheme;
+      if (nation != null) {
+        return NationNames.nameFor(nation, _rng.nextInt(1 << 30));
+      }
       final surnames = _surnamePool;
       final givens = _givenNamePool;
       final s = surnames[_rng.nextInt(surnames.length)];

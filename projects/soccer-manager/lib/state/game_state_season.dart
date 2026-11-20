@@ -37,6 +37,8 @@ extension GameStateSeason on GameState {
       }
       final count = theme.teamsInTier(1);
       final names = NamePool.themedClubNames(theme, count);
+      // その国の選手はその国の名前で作る。
+      NamePool.homeTheme = theme;
       final teams = [
         for (var i = 0; i < count; i++)
           PlayerGenerator.generateSquad(
@@ -55,7 +57,10 @@ extension GameStateSeason on GameState {
         season: save.league.season,
       );
     }
+    NamePool.homeTheme = current;
     _ensureForeignFixtures(save);
+    // 選手の名前を国籍に合わせる(旧セーブの日本の姓名もここで直る)。
+    _localizeNames();
   }
 
   void _ensureSquadsForActiveTier(List<Team> teams) {
@@ -891,6 +896,8 @@ extension GameStateSeason on GameState {
     _updateCountryCoefficients();
     // 他国の1部も季を締め、優勝を伝えて、次の季の日程を作る。
     _finishForeignSeasons();
+    // 新しく入った選手(ユース・他国の新顔)の名前を国籍に合わせる。
+    _localizeNames();
     // 手放したクラブのその後を記録する(順位が決まったこの時点で)。
     _recordFormerClubs(playedTier);
     // 他のクラブの経営: お金を動かし、赤字が続いたクラブは破綻する。
