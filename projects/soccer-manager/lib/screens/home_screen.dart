@@ -175,7 +175,8 @@ class HomeScreen extends StatelessWidget {
                         end: Alignment.bottomRight,
                         colors: [top, bottom],
                       ),
-                      borderRadius: BorderRadius.circular(fmRadius(context, 18)),
+                      borderRadius:
+                          BorderRadius.circular(fmRadius(context, 18)),
                       boxShadow: [
                         BoxShadow(
                           color: bottom.withValues(alpha: 0.35),
@@ -185,7 +186,8 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(fmRadius(context, 18)),
+                      borderRadius:
+                          BorderRadius.circular(fmRadius(context, 18)),
                       child: Stack(
                         children: [
                           // 右に薄くエンブレムを敷く。名前を二度書かずに
@@ -258,8 +260,7 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      Tr.pick(
-                                          '位 / ${standings.length}クラブ',
+                                      Tr.pick('位 / ${standings.length}クラブ',
                                           ' of ${standings.length}'),
                                       style: TextStyle(
                                         fontSize: 13,
@@ -302,7 +303,8 @@ class HomeScreen extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 12,
                                         // 暗い地の上なので、明るいほうへ振る。
-                                        color: progress.onTrack && !progress.tight
+                                        color: progress.onTrack &&
+                                                !progress.tight
                                             ? const Color(0xFF8BE6A8)
                                             : progress.tight
                                                 ? const Color(0xFFFFA8A0)
@@ -350,7 +352,8 @@ class HomeScreen extends StatelessWidget {
                       icon: Icons.account_balance_wallet,
                       label: Tr.pick('資金', 'Funds'),
                       value: formatMoney(save.budget),
-                      sub: Tr.pick('週収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                      sub: Tr.pick(
+                          '週収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
                           "Weekly ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
                       color: net >= 0
                           ? SemanticColors.positive(context)
@@ -509,8 +512,7 @@ class HomeScreen extends StatelessWidget {
                       // 今季どれだけ守れてきたかの両方を出す。片方だけだと
                       // 「いま直せば間に合うのか」が分からない。
                       (gameState.isClubVisionSatisfied
-                              ? Tr.pick(
-                                  '守れています。', 'You are meeting it. ')
+                              ? Tr.pick('守れています。', 'You are meeting it. ')
                               : Tr.pick(
                                   '守れていません。', 'You are not meeting it. ')) +
                           gameState.clubVisionProgressLabel +
@@ -644,8 +646,9 @@ class HomeScreen extends StatelessWidget {
                                           ).comment,
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color:
-                                            Theme.of(context).colorScheme.onSurfaceVariant,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
                                       ),
                                     ),
                                   ),
@@ -845,32 +848,32 @@ class HomeScreen extends StatelessWidget {
               // 横画面では、どの画面も左メニューの項目から開ける。同じ入口を
               // 大きなタイルで並べ直すと、状況ページが縦に長くなるだけなので出さない。
               if (!EmbeddedInShell.of(context)) ...[
-              const SizedBox(height: 16),
-              Text(Tr.pick('クラブ運営', 'Running the club'),
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              LayoutBuilder(
-                builder: (context, constraints) => GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: constraints.maxWidth > 500 ? 3 : 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1.5,
-                  children: [
-                    for (final dest in quickAccessDestinations)
-                      _ActionTile(
-                        icon: dest.icon,
-                        label: dest.label,
-                        color: dest.color,
-                        // まだ中身が空になる画面は、開く前にその旨を見せる。
-                        lockedReason: dest.lockedReason?.call(gameState),
-                        onTap: () => Navigator.of(context)
-                            .push(MaterialPageRoute(builder: dest.builder)),
-                      ),
-                  ],
+                const SizedBox(height: 16),
+                Text(Tr.pick('クラブ運営', 'Running the club'),
+                    style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                LayoutBuilder(
+                  builder: (context, constraints) => GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: constraints.maxWidth > 500 ? 3 : 2,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 1.5,
+                    children: [
+                      for (final dest in quickAccessDestinations)
+                        _ActionTile(
+                          icon: dest.icon,
+                          label: dest.label,
+                          color: dest.color,
+                          // まだ中身が空になる画面は、開く前にその旨を見せる。
+                          lockedReason: dest.lockedReason?.call(gameState),
+                          onTap: () => Navigator.of(context)
+                              .push(MaterialPageRoute(builder: dest.builder)),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
               ],
             ],
           ),
@@ -944,8 +947,7 @@ class HomeScreen extends StatelessWidget {
             : Tr.pick('${GameStateRivals.advanceLimit}節進めたので一度止めました',
                 'Stopped after ${GameStateRivals.advanceLimit} matchdays');
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(Tr.pick(
-          '${results.length}節進めました($w勝$d分$l敗)。$why',
+      content: Text(Tr.pick('${results.length}節進めました($w勝$d分$l敗)。$why',
           'Played ${results.length} matchday(s) (W$w D$d L$l). $why')),
       duration: const Duration(seconds: 6),
     ));
@@ -982,7 +984,8 @@ class HomeScreen extends StatelessWidget {
       userTeamName: userTeamName,
       opponentName: opponentName,
       teams: teams,
-      supportDelta: (gameState.save?.confidence ?? supportBefore) - supportBefore,
+      supportDelta:
+          (gameState.save?.confidence ?? supportBefore) - supportBefore,
       shareDelta:
           (gameState.save?.shareholderExpectation ?? shareBefore) - shareBefore,
     );
@@ -1067,106 +1070,135 @@ class HomeScreen extends StatelessWidget {
             : userGoals < oppGoals
                 ? SemanticColors.negative(dialogContext)
                 : SemanticColors.neutral(dialogContext);
-        return AlertDialog(
-          title: Text(Tr.pick('結果: $resultLabel', 'Result: $resultLabel')),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$userTeamName $userGoals - $oppGoals $opponentName',
-                  style:
-                      Theme.of(dialogContext).textTheme.titleMedium?.copyWith(
-                            color: resultColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+        final head = <Widget>[
+          Text(
+            '$userTeamName $userGoals - $oppGoals $opponentName',
+            style: Theme.of(dialogContext).textTheme.titleMedium?.copyWith(
+                  color: resultColor,
+                  fontWeight: FontWeight.bold,
                 ),
-                // 分析部門があれば、xG(期待得点)も出す。
-                if (context.read<GameState>().xgOf(result) case final xg?)
-                  Text(Tr.pick(
-                      'xG ${xg.$1.toStringAsFixed(1)} - ${xg.$2.toStringAsFixed(1)}',
-                      'xG ${xg.$1.toStringAsFixed(1)} - ${xg.$2.toStringAsFixed(1)}')),
-                const SizedBox(height: 8),
-                Row(
+          ),
+          // 分析部門があれば、xG(期待得点)も出す。
+          if (context.read<GameState>().xgOf(result) case final xg?)
+            Text(Tr.pick(
+                'xG ${xg.$1.toStringAsFixed(1)} - ${xg.$2.toStringAsFixed(1)}',
+                'xG ${xg.$1.toStringAsFixed(1)} - ${xg.$2.toStringAsFixed(1)}')),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: _MeterDelta(
+                    label: Tr.pick('サポーター', 'Fans'), delta: supportDelta),
+              ),
+              Expanded(
+                child: _MeterDelta(
+                    label: Tr.pick('株主', 'Shareholders'), delta: shareDelta),
+              ),
+            ],
+          ),
+        ];
+        final scorers = <Widget>[
+          if (goals.isEmpty)
+            Text(
+              Tr.pick('得点者はいませんでした', 'Nobody scored'),
+              style: TextStyle(color: SemanticColors.subtleText(context)),
+            )
+          else ...[
+            Text(
+              Tr.pick('得点者', 'Scorers'),
+              style: Theme.of(dialogContext).textTheme.titleSmall,
+            ),
+            const SizedBox(height: 4),
+            for (final g in goals)
+              _buildGoalRow(
+                context,
+                dialogContext,
+                g,
+                ownPlayerIdOf(g.scorerId),
+                teamNameOf,
+              ),
+          ],
+          if (motmName != null) ...[
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: motmOwnPlayerId == null
+                  ? null
+                  : () {
+                      Navigator.pop(dialogContext);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => PlayerDetailScreen(
+                            playerId: motmOwnPlayerId,
+                          ),
+                        ),
+                      );
+                    },
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 44),
+                child: Row(
                   children: [
+                    const Icon(Icons.star, color: Colors.amber, size: 18),
+                    const SizedBox(width: 4),
                     Expanded(
-                      child: _MeterDelta(
-                          label: Tr.pick('サポーター', 'Fans'), delta: supportDelta),
-                    ),
-                    Expanded(
-                      child: _MeterDelta(
-                          label: Tr.pick('株主', 'Shareholders'),
-                          delta: shareDelta),
-                    ),
+                        child: Text(Tr.pick('マン・オブ・ザ・マッチ: $motmName',
+                            'Man of the match: $motmName'))),
                   ],
                 ),
-                const SizedBox(height: 12),
-                if (goals.isEmpty)
-                  Text(
-                    Tr.pick('得点者はいませんでした', 'Nobody scored'),
-                    style: TextStyle(color: SemanticColors.subtleText(context)),
-                  )
-                else ...[
-                  Text(
-                    Tr.pick('得点者', 'Scorers'),
-                    style: Theme.of(dialogContext).textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: 4),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 200),
-                    child: ListView(
-                      shrinkWrap: true,
+              ),
+            ),
+          ],
+        ];
+        final stats = MatchStatsBar(
+          result: result,
+          homeTeamName: teamNameOf(result.homeTeamId),
+          awayTeamName: teamNameOf(result.awayTeamId),
+        );
+        final size = MediaQuery.sizeOf(dialogContext);
+        // 横画面は縦が短い。得点者は左、数字は右の2列にし、それでも
+        // 収まらなければ中でスクロールする(下が切れて「閉じる」が隠れていた)。
+        final wide = size.width > size.height;
+        return AlertDialog(
+          insetPadding: wide
+              ? const EdgeInsets.symmetric(horizontal: 32, vertical: 12)
+              : const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+          title: Text(Tr.pick('結果: $resultLabel', 'Result: $resultLabel')),
+          content: SizedBox(
+            width: wide ? 680 : double.maxFinite,
+            child: SingleChildScrollView(
+              child: wide
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (final g in goals)
-                          _buildGoalRow(
-                            context,
-                            dialogContext,
-                            g,
-                            ownPlayerIdOf(g.scorerId),
-                            teamNameOf,
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-                MatchStatsBar(
-                  result: result,
-                  homeTeamName: teamNameOf(result.homeTeamId),
-                  awayTeamName: teamNameOf(result.awayTeamId),
-                ),
-                if (motmName != null) ...[
-                  const SizedBox(height: 12),
-                  InkWell(
-                    onTap: motmOwnPlayerId == null
-                        ? null
-                        : () {
-                            Navigator.pop(dialogContext);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => PlayerDetailScreen(
-                                  playerId: motmOwnPlayerId,
-                                ),
-                              ),
-                            );
-                          },
-                    child: Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 18),
-                        const SizedBox(width: 4),
                         Expanded(
-                            child: Text(Tr.pick('マン・オブ・ザ・マッチ: $motmName',
-                                'Man of the match: $motmName'))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...head,
+                              const SizedBox(height: 8),
+                              ...scorers
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(child: stats),
+                      ],
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...head,
+                        const SizedBox(height: 12),
+                        ...scorers,
+                        const SizedBox(height: 8),
+                        stats,
                       ],
                     ),
-                  ),
-                ],
-              ],
             ),
           ),
           actions: [
-            TextButton(
+            FilledButton(
+              style: FilledButton.styleFrom(minimumSize: const Size(120, 48)),
               onPressed: () => Navigator.pop(dialogContext),
               child: Text(Tr.pick('閉じる', 'Close')),
             ),
@@ -1378,7 +1410,8 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(Tr.pick('今の提示: ${formatMoney(offer.amount)}',
                     'Their bid: ${formatMoney(offer.amount)}')),
-                Text(Tr.pick('求める額: ${formatMoney(amount)}(+${((ratio - 1) * 100).round()}%)',
+                Text(Tr.pick(
+                    '求める額: ${formatMoney(amount)}(+${((ratio - 1) * 100).round()}%)',
                     'You ask: ${formatMoney(amount)} (+${((ratio - 1) * 100).round()}%)')),
                 Slider(
                   value: ratio,
@@ -1388,7 +1421,8 @@ class HomeScreen extends StatelessWidget {
                   onChanged: (v) => setState(() => ratio = v),
                 ),
                 Text(
-                  Tr.pick('買い手が出せる額には上限があります。求めすぎると話を打ち切られます。返事は2日ほどで来ます。対案を返せるのは1回だけです。',
+                  Tr.pick(
+                      '買い手が出せる額には上限があります。求めすぎると話を打ち切られます。返事は2日ほどで来ます。対案を返せるのは1回だけです。',
                       'Every buyer has a limit. Ask too much and they walk away. They reply in about 2 days. You can only counter once.'),
                   style: TextStyle(
                       fontSize: 12, color: SemanticColors.subtleText(context)),
@@ -1506,8 +1540,11 @@ class HomeScreen extends StatelessWidget {
       gameState.lastManagerContractNote = null;
     }
     if (gameState.lastSeasonManagerAwardWon) {
-      messages.add(
-          (Tr.pick('クラブの監督が年間最優秀監督賞を受賞しました！', 'Your manager won Manager of the Year.'), true));
+      messages.add((
+        Tr.pick(
+            'クラブの監督が年間最優秀監督賞を受賞しました！', 'Your manager won Manager of the Year.'),
+        true
+      ));
       gameState.lastSeasonManagerAwardWon = false;
     }
     final superCupNews = gameState.lastSuperCupNews;
@@ -2154,8 +2191,8 @@ class _SaleScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  Tr.pick('$clubName を手放すことになりました',
-                      'You have to sell $clubName'),
+                  Tr.pick(
+                      '$clubName を手放すことになりました', 'You have to sell $clubName'),
                   style: Theme.of(context).textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
@@ -2179,7 +2216,8 @@ class _SaleScreen extends StatelessWidget {
                 for (final t in candidates)
                   Card(
                     child: ListTile(
-                      leading: ClubEmblem(teamId: t.id, teamName: t.name, size: 36),
+                      leading:
+                          ClubEmblem(teamId: t.id, teamName: t.name, size: 36),
                       title: Text(t.name),
                       subtitle: Text(Tr.pick('総合力 ${t.overallRating}',
                           'Overall ${t.overallRating}')),
@@ -2204,9 +2242,8 @@ class _SaleScreen extends StatelessWidget {
                     for (final theme in LeagueTheme.values)
                       if (theme != gameState.currentLeagueTheme)
                         OutlinedButton(
-                          onPressed: () => context
-                              .read<GameState>()
-                              .buyClubInCountry(theme),
+                          onPressed: () =>
+                              context.read<GameState>().buyClubInCountry(theme),
                           child: Text(theme.flavorLabel),
                         ),
                   ],
@@ -2222,8 +2259,7 @@ class _SaleScreen extends StatelessWidget {
                       );
                     }
                   },
-                  child: Text(
-                      Tr.pick('最初からやり直す', 'Start over from scratch')),
+                  child: Text(Tr.pick('最初からやり直す', 'Start over from scratch')),
                 ),
               ],
             ),
