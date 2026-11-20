@@ -382,9 +382,11 @@ class ProgressTab extends StatelessWidget {
         const SizedBox(height: 8),
         const Text('出す', style: TextStyle(color: GmColors.bad, fontWeight: FontWeight.bold)),
         for (final p in give) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: car.mine)),
+        for (final i in o.givePicks) _pickLine(car, i),
         const SizedBox(height: 8),
         const Text('受け取る', style: TextStyle(color: GmColors.good, fontWeight: FontWeight.bold)),
         for (final p in get) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: o.partner)),
+        for (final i in o.getPicks) _pickLine(car, i),
         const SizedBox(height: 10),
         Row(children: [
           Expanded(child: OutlinedButton(onPressed: c.declineIncoming, child: const Text('断る'))),
@@ -404,6 +406,16 @@ class ProgressTab extends StatelessWidget {
     ];
   }
 
+  /// トレードの申し込みに入っている指名権の1行。
+  Widget _pickLine(Career car, int i) => Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Row(children: [
+          const Icon(Icons.confirmation_number_rounded, size: 18, color: GmColors.gold),
+          const SizedBox(width: 8),
+          Expanded(child: Text(car.picks[i].label(car.teams, car.season), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
+        ]),
+      );
+
   /// オフにほかの GM から電話で届いたトレードの申し込み。
   List<Widget> _callCards(BuildContext context, Career car) {
     return [
@@ -421,9 +433,11 @@ class ProgressTab extends StatelessWidget {
               const SizedBox(height: 8),
               const Text('出す', style: TextStyle(color: GmColors.bad, fontWeight: FontWeight.bold)),
               for (final p in give) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: car.mine)),
+              for (final i in o.givePicks) _pickLine(car, i),
               const SizedBox(height: 8),
               const Text('受け取る', style: TextStyle(color: GmColors.good, fontWeight: FontWeight.bold)),
               for (final p in get) Padding(padding: const EdgeInsets.only(top: 4), child: PlayerRow(p: p, team: o.partner)),
+              for (final i in o.getPicks) _pickLine(car, i),
               const SizedBox(height: 10),
               Row(children: [
                 Expanded(child: OutlinedButton(key: Key('call-decline-$i'), onPressed: c.busy ? null : () => c.declineCall(i), child: const Text('断る'))),
@@ -723,9 +737,10 @@ class ProgressTab extends StatelessWidget {
     if (!nav.mounted) return;
     if (car.block != block || car.phase != Phase.season) {
       await showBlockReport(nav, c, report);
-      return;
+    } else if (car.seasonLog.length > before && car.lastGames.isNotEmpty) {
+      await showBoxScore(nav.context, car.lastGames.last, car.mine);
     }
-    if (car.seasonLog.length > before && car.lastGames.isNotEmpty) await showBoxScore(nav.context, car.lastGames.last, car.mine);
+    await _askInjury(nav);
   }
 
   /// 日程表を開き、押した試合の手前まで進める。
@@ -749,7 +764,7 @@ class ProgressTab extends StatelessWidget {
               width: 460,
               child: SingleChildScrollView(
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  for (final s in SimStop.values)
+                  for (final s in SimStop.values.where((s) => s != SimStop.deadline))
                     CheckboxListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
@@ -782,6 +797,11 @@ class ProgressTab extends StatelessWidget {
       c.simStopReason = null;
       messenger.showSnackBar(SnackBar(content: Text('止まった: ${why.label}')));
     }
+    await _askInjury(nav);
+  }
+
+  /// 先発のけがで止まっていたら、組み直すかを聞く。
+  Future<void> _askInjury(NavigatorState nav) async {
     final hurt = c.injuryStop;
     if (hurt == null || !nav.mounted) return;
     // 先発がけがをした: 組み直すかを聞く
@@ -1289,7 +1309,7 @@ class ProgressTab extends StatelessWidget {
           ),
       ],
       const Divider(height: 22),
-      Text('個人練習(${car.camp.length}/${car.campSlots}人)', style: const TextStyle(fontWeight: FontWeight.bold)),
+      Text('個人練習(${car.campUsed}/${car.campSlots}人)', style: const TextStyle(fontWeight: FontWeight.bold)),
       const SizedBox(height: 2),
       const Text('オフを終えるときに、選んだ能力が上がる。若手は伸びやすく、30歳を過ぎた選手は衰えを取り戻すことがある。枠は練習施設を上げると増える。',
           style: TextStyle(color: GmColors.sub, fontSize: 12.5, height: 1.5)),
@@ -1307,7 +1327,7 @@ class ProgressTab extends StatelessWidget {
               icon: const Icon(Icons.close_rounded, size: 18),
             ),
           ]),
-      if (car.camp.length < car.campSlots) ...[
+      if (car.campUsed < car.campSlots) ...[
         const SizedBox(height: 6),
         Align(
           alignment: Alignment.centerLeft,

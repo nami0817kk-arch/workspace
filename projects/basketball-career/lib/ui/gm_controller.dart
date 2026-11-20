@@ -21,9 +21,7 @@ import '../monetization/monetization.dart';
 
 /// 画面と任期の間を取り持つ。保存・記録・広告の番もここで扱う(画面が閉じられていても受け取れるように)。
 class GmController extends ChangeNotifier {
-  GmController({this.money, SharedPreferences? prefs, Random? seedSource})
-      : _seeds = seedSource ?? Random(),
-        _sp = prefs;
+  GmController({this.money, SharedPreferences? prefs, Random? seedSource}) : _seeds = seedSource ?? Random(), _sp = prefs;
 
   final Monetization? money;
   SharedPreferences? _sp;
@@ -197,7 +195,10 @@ class GmController extends ChangeNotifier {
       final before = c.lastGames.length;
       final fromStart = c.roundAt == blockStart(c.block);
       final starters = _healthyStarters(c);
-      final asked = {for (final m in c.inbox) if (m.needsAnswer) m.id};
+      final asked = {
+        for (final m in c.inbox)
+          if (m.needsAnswer) m.id,
+      };
       c.playBlock();
       games.addAll(fromStart ? c.lastGames : c.lastGames.sublist(before));
       await money?.tournamentPlayed();
@@ -230,31 +231,46 @@ class GmController extends ChangeNotifier {
     injuryStop = null;
     simStopReason = null;
     simCancel = false;
-    for (var left = n; left > 0 && c.phase == Phase.season; left--) {
-      final starters = _healthyStarters(c);
-      final asked = {for (final m in c.inbox) if (m.needsAnswer) m.id};
-      final streak = c.me.streak;
-      final tired = c.me.roster.any((p) => p.wear > wearSlumpLine);
-      final before = c.lastGames.length;
-      final fromStart = c.roundAt == blockStart(c.block);
-      final ended = c.playDays(1);
-      final got = fromStart ? [...c.lastGames] : c.lastGames.sublist(before);
-      games.addAll(got);
-      if (ended) await money?.tournamentPlayed();
-      _changed();
-      if (onRound != null) await onRound(got);
-      if (c.phase != Phase.season || left == 1) break;
-      if (simCancel) break;
-      if (!stops) continue;
-      final reason = _stopReasonNew(c, asked, streak, tired);
-      if (reason != null) {
-        simStopReason = reason;
-        break;
+    busy = true;
+    try {
+      for (var left = n; left > 0 && c.phase == Phase.season; left--) {
+        final starters = _healthyStarters(c);
+        final asked = {
+          for (final m in c.inbox)
+            if (m.needsAnswer) m.id,
+        };
+        final streak = c.me.streak;
+        final tired = c.me.roster.any((p) => p.wear > wearSlumpLine);
+        final before = c.lastGames.length;
+        final fromStart = c.roundAt == blockStart(c.block);
+        final ended = c.playDays(1);
+        final got = fromStart ? [...c.lastGames] : c.lastGames.sublist(before);
+        games.addAll(got);
+        if (ended) await money?.tournamentPlayed();
+        // 1節ごとは画面を描き直すだけ(保存は最後に1回。毎節すべてを保存すると「一気に」で固まる)
+        notifyListeners();
+        if (onRound != null) await onRound(got);
+        if (c.phase != Phase.season) break;
+        // 先発のけがは、最後の1節でも聞く
+        if (stops && c.stopsOn(SimStop.injury)) {
+          injuryStop = _newlyHurt(c, starters);
+          if (injuryStop != null) break;
+        }
+        if (left == 1 || simCancel) break;
+        if (!stops) continue;
+        // トレードの締め切りを、気づかないまま越えない(締め切り前の最後の1試合の手前で止まる)
+        if (c.block == tradeDeadlineBlock - 1 && c.roundAt == blockStart(tradeDeadlineBlock) - 1) {
+          simStopReason = SimStop.deadline;
+          break;
+        }
+        final reason = _stopReasonNew(c, asked, streak, tired);
+        if (reason != null) {
+          simStopReason = reason;
+          break;
+        }
       }
-      if (c.stopsOn(SimStop.injury)) {
-        injuryStop = _newlyHurt(c, starters);
-        if (injuryStop != null) break;
-      }
+    } finally {
+      busy = false;
     }
     simCancel = false;
     _record(c);
@@ -292,11 +308,17 @@ class GmController extends ChangeNotifier {
 
   void toggleSimStop(SimStop s) => _act((c) => c.toggleSimStop(s));
 
-  static Set<int> _healthyStarters(Career c) => {for (final p in c.me.order.take(5)) if (p.injured == 0) p.id};
+  static Set<int> _healthyStarters(Career c) => {
+    for (final p in c.me.order.take(5))
+      if (p.injured == 0) p.id,
+  };
 
   /// [before] で元気だった先発のうち、3試合以上休むけがをした選手(力の高い順の1人)。
   static Player? _newlyHurt(Career c, Set<int> before) {
-    final hurt = [for (final p in c.me.roster) if (before.contains(p.id) && p.injured >= 3) p]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    final hurt = [
+      for (final p in c.me.roster)
+        if (before.contains(p.id) && p.injured >= 3) p,
+    ]..sort((a, b) => b.ovr.compareTo(a.ovr));
     return hurt.firstOrNull;
   }
 
@@ -408,6 +430,7 @@ class GmController extends ChangeNotifier {
     _act((c) => c.takeJob(team));
     unawaited(Sfx.play(SoundEffect.chime));
   }
+
   void exerciseOption(int id) => _act((c) => c.exerciseOption(id));
 
   /// オフの電話の申し込みを受ける。成立したら true。
@@ -437,6 +460,7 @@ class GmController extends ChangeNotifier {
     _act((c) => c.playSummerLeague());
     unawaited(Sfx.play(SoundEffect.chime));
   }
+
   void declineOption(int id) => _act((c) => c.declineOption(id));
 
   /// 任期を自分で終える(任期に上限は無い)。
@@ -445,6 +469,7 @@ class GmController extends ChangeNotifier {
     _act((c) => c.pickProspect(p));
     unawaited(Sfx.play(SoundEffect.tick));
   }
+
   void passPick() => _act((c) => c.passPick());
   void workout(Prospect p) => _act((c) => c.workout(p));
 
@@ -452,11 +477,13 @@ class GmController extends ChangeNotifier {
     _act((c) => c.scoutProspect(p));
     unawaited(Sfx.play(SoundEffect.chime));
   }
+
   void toggleBoard(Prospect p) => _act((c) => c.toggleBoard(p));
   void resign(int id, int years) {
     _act((c) => c.resign(id, years));
     unawaited(Sfx.play(SoundEffect.chime));
   }
+
   void letGo(int id) => _act((c) => c.letGo(id));
   void matchSheet() => _act((c) => c.matchSheet());
   void declineSheet() => _act((c) => c.declineSheet());
@@ -464,6 +491,7 @@ class GmController extends ChangeNotifier {
     _act((c) => c.signFreeAgent(id, years));
     unawaited(Sfx.play(SoundEffect.chime));
   }
+
   void release(int id, {ReleaseMode mode = ReleaseMode.full}) => _act((c) => c.release(id, mode: mode));
   void signTwoWay(int id) => _act((c) => c.signTwoWay(id));
   void signTenDay(int id) => _act((c) => c.signTenDay(id));
@@ -485,6 +513,7 @@ class GmController extends ChangeNotifier {
     _changed();
     return ok;
   }
+
   void setRotation(List<int> ids) => _act((c) => c.setRotation(ids));
   void readMessage(int id) => _act((c) => c.readMessage(id));
   void readAllMessages() => _act((c) => c.readAllMessages());
@@ -522,6 +551,7 @@ class GmController extends ChangeNotifier {
     _changed();
     return ok;
   }
+
   void acceptIncoming() => _act((c) => c.acceptIncoming());
   void declineIncoming() => _act((c) => c.declineIncoming());
 
@@ -550,15 +580,12 @@ class GmController extends ChangeNotifier {
   bool get needsAd => money?.recoverNeedsAd ?? false;
 
   /// 動画を見て、スカウトを2回増やす(ドラフトごとに1度)。
-  Future<RecoverGate> scoutsWithAd({void Function()? onWaiting}) =>
-      _withAd((c) => c.canAddScouts, (c) => c.addScouts(), onWaiting);
+  Future<RecoverGate> scoutsWithAd({void Function()? onWaiting}) => _withAd((c) => c.canAddScouts, (c) => c.addScouts(), onWaiting);
 
   /// 動画を見て、オーナーを説得する(解任を1度だけ取り消す)。
-  Future<RecoverGate> rescueWithAd({void Function()? onWaiting}) =>
-      _withAd((c) => c.canRescue, (c) => c.rescue(), onWaiting);
+  Future<RecoverGate> rescueWithAd({void Function()? onWaiting}) => _withAd((c) => c.canRescue, (c) => c.rescue(), onWaiting);
 
-  Future<RecoverGate> _withAd(
-      bool Function(Career c) allowed, void Function(Career c) grant, void Function()? onWaiting) async {
+  Future<RecoverGate> _withAd(bool Function(Career c) allowed, void Function(Career c) grant, void Function()? onWaiting) async {
     final c = career;
     if (c == null || busy || !allowed(c)) return RecoverGate.unavailable;
     final m = money;
