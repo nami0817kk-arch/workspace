@@ -34,7 +34,10 @@ class AutoColumns extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(builder: (context, c) {
-        if (c.maxWidth < twoColumnWidth || children.length < 4) {
+        // 文字を大きくしているときは、その分だけ幅が狭いものとして数える
+        // (1.3倍で2列のままだと、札の中の行が横にはみ出していた)。
+        final textScale = MediaQuery.textScalerOf(context).scale(1);
+        if (c.maxWidth / textScale < twoColumnWidth || children.length < 4) {
           return ListView(
               padding: const EdgeInsets.all(16), children: children);
         }

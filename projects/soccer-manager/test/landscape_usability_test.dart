@@ -71,8 +71,18 @@ void main() {
       final problems = <String>[];
       var where = '';
       final old = FlutterError.onError;
-      FlutterError.onError = (d) =>
-          problems.add('$where: ${d.exceptionAsString().split('\n').first}');
+      FlutterError.onError = (d) {
+        // はみ出した部品の場所(lib/ の行)も添える。CI と手元で字幅が違い、
+        // 手元では再現しないことがあるため。
+        final at = RegExp(r'lib/[\w/]+\.dart:\d+')
+            .allMatches(d.toString())
+            .map((m) => m.group(0))
+            .toSet()
+            .take(3)
+            .join(', ');
+        problems.add(
+            '$where: ${d.exceptionAsString().split('\n').first} [$at]');
+      };
 
       const app = SoccerManagerApp();
       await tester.pumpWidget(MultiProvider(
@@ -132,7 +142,8 @@ void main() {
           if (pos.axis != Axis.vertical || !pos.hasContentDimensions) continue;
           final screens = (pos.maxScrollExtent + pos.viewportDimension) /
               pos.viewportDimension;
-          if (screens > _maxScreens) {
+          // 文字を大きくすると、その分だけ長くなってよい。
+          if (screens > _maxScreens * scale) {
             problems.add('$page: ${screens.toStringAsFixed(1)} screens long');
           }
         }
