@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../services/feedback_service.dart';
 import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
+import '../widgets/chip_switcher.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/quick_access_drawer.dart';
@@ -24,6 +25,7 @@ import 'home_screen.dart';
 import 'league_ranking_screen.dart';
 import 'news_screen.dart';
 import 'owner_work_screen.dart';
+import 'owner_world_screen.dart';
 import 'season_history_screen.dart';
 import 'squad_screen.dart';
 import 'transfer_screen.dart';
@@ -87,8 +89,12 @@ class _MainShellState extends State<MainShell> {
         GroupPage(
           title: Tr.pick('クラブ', 'Club'),
           tabs: [
-            GroupTab(Tr.pick('施設・スタッフ', 'Facilities & staff'),
-                (_) => const ClubScreen()),
+            GroupTab(Tr.pick('スタッフ', 'Staff'),
+                (_) => const ClubScreen(section: ClubSection.staff)),
+            GroupTab(Tr.pick('施設', 'Facilities'),
+                (_) => const ClubScreen(section: ClubSection.facilities)),
+            GroupTab(Tr.pick('ファンと街', 'Fans & city'),
+                (_) => const ClubScreen(section: ClubSection.community)),
             GroupTab(Tr.pick('ユース・スカウト', 'Youth & scouting'),
                 (_) => const YouthScreen()),
           ],
@@ -110,8 +116,7 @@ class _MainShellState extends State<MainShell> {
             GroupTab(Tr.pick('カップ戦', 'Cups'), (_) => const CupScreen()),
             GroupTab(Tr.pick('ランキング', 'Rankings'),
                 (_) => const LeagueRankingScreen()),
-            GroupTab(Tr.pick('個人タイトル', 'Awards'),
-                (_) => const AwardsScreen()),
+            GroupTab(Tr.pick('個人タイトル', 'Awards'), (_) => const AwardsScreen()),
           ],
         ),
         GroupPage(
@@ -119,19 +124,34 @@ class _MainShellState extends State<MainShell> {
           tabs: [
             GroupTab(Tr.pick('オーナーの仕事', 'Owner\'s work'),
                 (_) => const OwnerWorkScreen()),
-            GroupTab(Tr.pick('年間予定', 'Calendar'),
-                (_) => const ClubCalendarScreen()),
+            GroupTab(Tr.pick('オーナーと世界', 'Owner & world'),
+                (_) => const OwnerWorldScreen()),
+            GroupTab(
+                Tr.pick('年間予定', 'Calendar'), (_) => const ClubCalendarScreen()),
             GroupTab(Tr.pick('ニュース', 'News'), (_) => const NewsScreen()),
-            GroupTab(Tr.pick('シーズン分析', 'Analysis'),
-                (_) => const AnalysisScreen()),
-            GroupTab(Tr.pick('シーズン成績', 'Seasons'),
-                (_) => const SeasonHistoryScreen()),
-            GroupTab(Tr.pick('ベストイレブン', 'Team of the season'),
-                (_) => const BestElevenScreen()),
-            GroupTab(Tr.pick('殿堂', 'Hall of fame'),
-                (_) => const HallOfFameScreen()),
-            GroupTab(Tr.pick('実績', 'Achievements'),
-                (_) => const AchievementsScreen()),
+            GroupTab(
+                Tr.pick('シーズン分析', 'Analysis'), (_) => const AnalysisScreen()),
+            // 記録もの4つは1つのタブにまとめ、中で選ぶ(タブが8つあった)。
+            GroupTab(
+                Tr.pick('記録', 'Records'),
+                (_) => ChipSwitcher(items: [
+                      (
+                        Tr.pick('シーズン成績', 'Seasons'),
+                        (_) => const SeasonHistoryScreen()
+                      ),
+                      (
+                        Tr.pick('ベストイレブン', 'Team of the season'),
+                        (_) => const BestElevenScreen()
+                      ),
+                      (
+                        Tr.pick('殿堂', 'Hall of fame'),
+                        (_) => const HallOfFameScreen()
+                      ),
+                      (
+                        Tr.pick('実績', 'Achievements'),
+                        (_) => const AchievementsScreen()
+                      ),
+                    ])),
           ],
         ),
       ];
@@ -211,7 +231,10 @@ class _MainShellState extends State<MainShell> {
                 children: [
                   SafeArea(
                     bottom: false,
-                    child: _FmTopBar(gameState: gameState),
+                    child: _FmTopBar(
+                      gameState: gameState,
+                      onMore: () => _scaffoldKey.currentState?.openDrawer(),
+                    ),
                   ),
                   const Divider(height: 1),
                   Expanded(
@@ -232,7 +255,6 @@ class _MainShellState extends State<MainShell> {
                                   gameState.pendingOwnerEvent == null ? 0 : 1,
                             },
                             onSelect: _go,
-                            onMore: () => _scaffoldKey.currentState?.openDrawer(),
                           ),
                         ),
                         const VerticalDivider(width: 1),
@@ -281,9 +303,12 @@ class _MainShellState extends State<MainShell> {
 /// 横画面の上バー(バスケGM と同じ作り)。クラブの印と、2行(クラブ名/季・節・部)、
 /// 資金、試合を進めるボタン。高さは 52 で固定。
 class _FmTopBar extends StatelessWidget {
-  const _FmTopBar({required this.gameState});
+  const _FmTopBar({required this.gameState, required this.onMore});
 
   final GameState gameState;
+
+  /// 設定・用語集・ガイドを開く(左のメニューに入りきらないので帯の左端に置く)。
+  final VoidCallback onMore;
 
   @override
   Widget build(BuildContext context) {
@@ -294,83 +319,95 @@ class _FmTopBar extends StatelessWidget {
     final matchday = next?.matchday ??
         (league.fixtures.isEmpty
             ? 0
-            : league.fixtures.map((f) => f.matchday).reduce((a, b) => a > b ? a : b));
+            : league.fixtures
+                .map((f) => f.matchday)
+                .reduce((a, b) => a > b ? a : b));
     final scheme = Theme.of(context).colorScheme;
     final sub = TextStyle(fontSize: 12, color: scheme.onSurfaceVariant);
-    return Container(
-      height: 52,
-      color: scheme.surfaceContainerHighest,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        children: [
-          ClubEmblem(
-            teamId: gameState.userTeam.id,
-            teamName: save.clubName,
-            size: 34,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            flex: 3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  save.clubName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  Tr.pick(
-                      '${CalendarEngine.formatDate(gameState.today)}  第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
-                      '${CalendarEngine.formatDate(gameState.today)}  Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: sub,
-                ),
-              ],
+    // 帯の高さは決まっているので、文字の大きさの設定は少しだけ効かせる
+    // (1.3倍だと「サポーター」が2行になり、メーターがはみ出していた)。
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: 1.1,
+      child: Container(
+        height: 52,
+        color: scheme.surfaceContainerHighest,
+        padding: const EdgeInsets.only(left: 4, right: 12),
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.menu),
+              tooltip: Tr.pick('設定・用語集・ガイド', 'Settings, glossary, guide'),
+              onPressed: onMore,
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            flex: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(Tr.pick('資金', 'Funds'), style: sub.copyWith(fontSize: 11)),
-                Text(
-                  formatMoney(save.budget),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: save.budget < 0 ? scheme.error : null,
+            ClubEmblem(
+              teamId: gameState.userTeam.id,
+              teamName: save.clubName,
+              size: 34,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    save.clubName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          const ExpectationMeters(compact: true),
-          const SizedBox(width: 12),
-          if (next != null && gameState.saleReason == null)
-            FilledButton.icon(
-              style: FilledButton.styleFrom(
-                minimumSize: const Size(0, 36),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                padding: const EdgeInsets.symmetric(horizontal: 14),
+                  Text(
+                    Tr.pick(
+                        '${CalendarEngine.formatDate(gameState.today)}  第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
+                        '${CalendarEngine.formatDate(gameState.today)}  Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: sub,
+                  ),
+                ],
               ),
-              onPressed: gameState.isBusy
-                  ? null
-                  : () => const HomeScreen().playMatch(context),
-              icon: const Icon(Icons.play_arrow, size: 18),
-              label: Text(Tr.pick('次の節へ', 'Next matchday')),
             ),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(Tr.pick('資金', 'Funds'),
+                      style: sub.copyWith(fontSize: 11)),
+                  Text(
+                    formatMoney(save.budget),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: save.budget < 0 ? scheme.error : null,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            const ExpectationMeters(compact: true),
+            const SizedBox(width: 12),
+            if (next != null && gameState.saleReason == null)
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size(0, 44),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                ),
+                onPressed: gameState.isBusy
+                    ? null
+                    : () => const HomeScreen().playMatch(context),
+                icon: const Icon(Icons.play_arrow, size: 18),
+                label: Text(Tr.pick('次の節へ', 'Next matchday')),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -383,16 +420,15 @@ class _FmSidebar extends StatelessWidget {
     required this.page,
     required this.badges,
     required this.onSelect,
-    required this.onMore,
   });
 
   final _Page page;
   final Map<_Page, int> badges;
   final void Function(_Page) onSelect;
-  final VoidCallback onMore;
 
-  // 7項目と「その他」が、横画面の低い高さ(約460)に収まる高さ。
-  static const double _itemHeight = 47;
+  // 7項目が、横画面の低い高さに収まり、指で押せる高さ(44pt 以上)。
+  // 「その他」は上の帯の左端へ移した。
+  static const double _itemHeight = 48;
 
   @override
   Widget build(BuildContext context) {
@@ -498,21 +534,12 @@ class _FmSidebar extends StatelessWidget {
                               : scheme.onSurfaceVariant,
                         );
                         final n = badges[p] ?? 0;
-                        return n > 0
-                            ? Badge(label: Text('$n'), child: i)
-                            : i;
+                        return n > 0 ? Badge(label: Text('$n'), child: i) : i;
                       }(),
                     ),
                 ],
               ),
             ),
-          ),
-          const Divider(height: 1),
-          item(
-            on: false,
-            label: Tr.pick('その他', 'More'),
-            onTap: onMore,
-            icon: Icon(Icons.menu, size: 22, color: scheme.onSurfaceVariant),
           ),
         ],
       ),

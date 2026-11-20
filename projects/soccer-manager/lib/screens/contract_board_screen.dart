@@ -33,8 +33,8 @@ class ContractBoardScreen extends StatelessWidget {
 
   Widget _body(BuildContext context, GameState game) {
     final team = game.userTeam;
-    final room = SquadRegistration.seniorLimit -
-        SquadRegistration.seniorCount(team);
+    final room =
+        SquadRegistration.seniorLimit - SquadRegistration.seniorCount(team);
     final homegrown = SquadRegistration.homegrownSeniorCount(team);
     final nonHomegrown = SquadRegistration.nonHomegrownSeniorCount(team);
     final byYears = ContractBoardEngine.byYearsRemaining(team);
@@ -93,8 +93,7 @@ class ContractBoardScreen extends StatelessWidget {
                       ContractEngine.untilLabel(Player.contractClockYear + 1),
                   value: '${byYears[2]}'),
               FmRow(
-                  label: Tr.pick(
-                      '${Player.contractClockYear + 2}年6月以降',
+                  label: Tr.pick('${Player.contractClockYear + 2}年6月以降',
                       'Jun ${Player.contractClockYear + 2} or later'),
                   value: '${byYears[3]}'),
             ],
@@ -141,7 +140,8 @@ class ContractBoardScreen extends StatelessWidget {
                             Expanded(
                               flex: 2,
                               child: Text(
-                                  Tr.pick('総合 ${p.overall}', 'OVR ${p.overall}'),
+                                  Tr.pick(
+                                      '総合 ${p.overall}', 'OVR ${p.overall}'),
                                   style: small),
                             ),
                             Expanded(
@@ -179,8 +179,8 @@ class ContractBoardScreen extends StatelessWidget {
                                           .renewContract(p.id);
                                     }
                                   : null,
-                              child: Text(Tr.pick(
-                                  '更新 ${formatMoney(cost(p))}', 'Renew ${formatMoney(cost(p))}')),
+                              child: Text(Tr.pick('更新 ${formatMoney(cost(p))}',
+                                  'Renew ${formatMoney(cost(p))}')),
                             ),
                           ],
                         ),
@@ -213,8 +213,8 @@ class ContractBoardScreen extends StatelessWidget {
           child: Text(text, style: small.copyWith(color: color)),
         );
     return FmPanel(
-      title: Tr.pick(
-          '仮契約(7月1日に移籍金なしで移る)', 'Pre-contracts (free moves on 1 Jul)'),
+      title:
+          Tr.pick('仮契約(7月1日に移籍金なしで移る)', 'Pre-contracts (free moves on 1 Jul)'),
       padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,8 +231,7 @@ class ContractBoardScreen extends StatelessWidget {
                   '${c.playerName} (from ${c.fromClubName}), salary ${formatMoney(annualFromWeekly(c.wage))}, ${ContractEngine.untilLabel(c.endYear)}${c.option ? ', 1-year option' : ''}')),
           ],
           if (outgoing.isNotEmpty) ...[
-            line(Tr.pick('出ていく選手', 'Leaving'),
-                color: theme.colorScheme.error),
+            line(Tr.pick('出ていく選手', 'Leaving'), color: theme.colorScheme.error),
             for (final c in outgoing)
               line(Tr.pick(
                   '${c.playerName} → ${c.toClubName}(7月1日。それまでに売れば移籍金が入る)',
@@ -329,6 +328,10 @@ class ContractBoardScreen extends StatelessWidget {
                       : null,
                   title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
                       'Add a 1-year club option (salary +5%)')),
+                  subtitle: canOption
+                      ? null
+                      : Text(Tr.pick('最長の契約年数なので付けられません。年数を1年短くすると付けられます。',
+                          'Not possible at the longest contract length. Shorten it by a year to add one.')),
                 ),
               ],
             ),
@@ -351,8 +354,8 @@ class ContractBoardScreen extends StatelessWidget {
         await game.signPreContract(p.id, endYear: endYear, option: option);
     done ? FeedbackService.success() : FeedbackService.error();
     if (!done && context.mounted && game.lastSigningBlockReason != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(game.lastSigningBlockReason!)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(game.lastSigningBlockReason!)));
     }
   }
 }

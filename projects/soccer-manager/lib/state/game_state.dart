@@ -11,9 +11,11 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' as io show Platform;
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show WidgetsBinding;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/achievement.dart';
@@ -263,6 +265,9 @@ class RestorePointInfo {
   });
 }
 
+/// [GameState.encodeSaveOffMain] が別の処理で呼ぶ(トップレベルでないと渡せない)。
+String _encodeSave(SaveGame save) => jsonEncode(save.toJson());
+
 class GameState extends ChangeNotifier {
   /// 旧バージョンで使われていた単一スロットのキー。起動時にスロット0へ移行する。
   static const _legacyPrefsKey = 'soccer_manager_save_v1';
@@ -511,8 +516,7 @@ class GameState extends ChangeNotifier {
             'Transfer window: deadline day today ($deadline)');
       }
       if (isTransferDeadlineDay) {
-        return Tr.pick(
-            '${w.kind.label}: 締切まで残り$left日($deadline)。次の試合の前に閉まります',
+        return Tr.pick('${w.kind.label}: 締切まで残り$left日($deadline)。次の試合の前に閉まります',
             'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline). It shuts before the next match');
       }
       return Tr.pick('${w.kind.label}: 締切まで残り$left日($deadline)',
@@ -598,7 +602,6 @@ class GameState extends ChangeNotifier {
         'Your save was damaged, so the last good copy was restored. You may be a little behind where you left off.');
     return restored;
   }
-
 
   /// いまのセーブを控えとして書き出す。シーズンの切り替わりで呼ぶ。
   ///
@@ -930,6 +933,36 @@ class GameState extends ChangeNotifier {
   /// 保存をまとめるためのタイマー。
   Timer? _persistTimer;
 
+  /// セーブを JSON にする重い処理を、画面を描く処理とは別のところで行う。
+  ///
+  /// セーブは約1.5MB あり、JSON にするのに PC でも約160ms かかっていた
+  /// (60fps の10コマ分)。節を進めるたびに画面が一瞬止まる元になる。
+  /// 別の処理へは中身を写して渡すので、写した後に元が変わっても混ざらない。
+  /// 写せないものが混じっていた場合と Web では、これまでどおりここで行う。
+  static bool get _underTest {
+    // flutter test は FLUTTER_TEST を立てる(画面を使わないテストでも分かる)。
+    if (!kIsWeb && io.Platform.environment.containsKey('FLUTTER_TEST')) {
+      return true;
+    }
+    try {
+      return WidgetsBinding.instance.runtimeType.toString().contains('Test');
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @visibleForTesting
+  static Future<String> encodeSaveOffMain(SaveGame save) async {
+    // Web と、テスト(時間を止めて動かす画面のテストでは別の処理が終わらず、
+    // 待ち続けてしまう)では、これまでどおりここで行う。
+    if (kIsWeb || _underTest) return jsonEncode(save.toJson());
+    try {
+      return await compute(_encodeSave, save);
+    } catch (_) {
+      return jsonEncode(save.toJson());
+    }
+  }
+
   /// 保存の間隔。短くすると中断時に失う変更が減るが、まとめる効果も減る。
   static const Duration persistDebounce = Duration(milliseconds: 400);
 
@@ -989,9 +1022,7 @@ class GameState extends ChangeNotifier {
         await prefs.remove(_slotKey(target));
       } else {
         await prefs.setString(
-          _slotKey(target),
-          jsonEncode(_save!.toJson()),
-        );
+            _slotKey(target), await encodeSaveOffMain(_save!));
       }
       lastSaveError = null;
     } catch (e) {
@@ -1095,7 +1126,8 @@ class GameState extends ChangeNotifier {
   int _difficultyAdjustedTarget(int target) {
     final delta =
         _save?.difficultyOf(DifficultyItem.boardTarget).boardTargetDelta ?? 0;
-    return (target + delta).clamp(1, _save?.league.teams.length ?? teamsPerLeague);
+    return (target + delta)
+        .clamp(1, _save?.league.teams.length ?? teamsPerLeague);
   }
 
   Future<void> startNewGame(
@@ -1207,7 +1239,8 @@ class GameState extends ChangeNotifier {
       scenario: scenario,
     );
     // 最初のシーズンは平常。来季の予報だけ引いておく。
-    _save!.economyNext = EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
+    _save!.economyNext =
+        EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
     // 難易度による初期条件の補正(資金と理事会目標の厳しさ)。
     _save!.budget = (_save!.budget *
             _save!.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
@@ -1402,6 +1435,7 @@ class GameState extends ChangeNotifier {
     if (baseAttendance <= 0) return income;
     return (income * (actualAttendance / baseAttendance)).round();
   }
+
   static const double derbyConfidenceMultiplier = 1.5;
 
   /// 直近の試合の観客動員数(ダービーなら増幅される)。未実施の場合はnull。

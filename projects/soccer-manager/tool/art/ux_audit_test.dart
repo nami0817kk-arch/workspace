@@ -158,10 +158,9 @@ void main() {
         // 見えている所だけ(スクロールの外は数えない)。
         if (!screen.overlaps(r)) continue;
         // 実寸に直す(LandscapeScale で縮めて描いている)。
-        final m = ro.getTransformTo(null);
-        final sx = m.getMaxScaleOnAxis();
-        final h = ro.size.height * sx;
-        final w = ro.size.width * sx;
+        final br = ro.localToGlobal(ro.size.bottomRight(Offset.zero));
+        final h = br.dy - r.top;
+        final w = br.dx - r.left;
         total++;
         final small = h < 44 || w < 44;
         if (small) rows.add((h < w ? h : w, '${w.toStringAsFixed(0)}x${h.toStringAsFixed(0)} ${labelOf(e)}'));
@@ -178,7 +177,9 @@ void main() {
         if (ro is! RenderParagraph || !ro.hasSize) continue;
         final r = ro.localToGlobal(Offset.zero) & ro.size;
         if (!screen.overlaps(r)) continue;
-        final sx = ro.getTransformTo(null).getMaxScaleOnAxis();
+        final sx = (ro.localToGlobal(const Offset(100, 0)).dx -
+                ro.localToGlobal(Offset.zero).dx) /
+            100;
         final fs = ((ro.text.style?.fontSize ?? 14) * sx).roundToDouble();
         sizes[fs] = (sizes[fs] ?? 0) + 1;
       }
@@ -242,16 +243,21 @@ void main() {
     }
     // 見出しの帯に文字で並ぶタブ(Tab ではない作り)も開いて測る。
     const headerTabs = {
-      'クラブ': ['施設・スタッフ', 'ユース・スカウト'],
+      'クラブ': ['スタッフ', '施設', 'ファンと街', 'ユース・スカウト'],
       '選手': ['スカッド', '登録と契約'],
       'リーグ': ['順位・日程', 'カップ戦', 'ランキング', '個人タイトル'],
       'オーナー室': [
-        'オーナーの仕事', '年間予定', 'ニュース', 'シーズン分析',
-        'シーズン成績', 'ベストイレブン', '殿堂', '実績',
+        'オーナーの仕事', 'オーナーと世界', '年間予定', 'ニュース',
+        'シーズン分析', '記録',
       ],
     };
     for (final e in headerTabs.entries) {
-      await tester.tap(find.text(e.key).first, warnIfMissed: false);
+      final page = find.text(e.key);
+      if (page.evaluate().isEmpty) {
+        report.writeln('  [${e.key}] 見つからない');
+        continue;
+      }
+      await tester.tap(page.first, warnIfMissed: false);
       await tester.pump(const Duration(milliseconds: 400));
       for (final t in e.value) {
         final f = find.text(t).hitTestable();
@@ -262,6 +268,17 @@ void main() {
         await tester.tap(f.first, warnIfMissed: false);
         await tester.pump(const Duration(milliseconds: 500));
         measureLength('${e.key}/$t');
+        {
+          final boundary = tester
+              .renderObject<RenderRepaintBoundary>(find.byKey(boundaryKey));
+          await tester.runAsync(() async {
+            final image = await boundary.toImage(pixelRatio: 1.0);
+            final data =
+                await image.toByteData(format: ui.ImageByteFormat.png);
+            File('$_out/${e.key}_$t.png')
+                .writeAsBytesSync(data!.buffer.asUint8List());
+          });
+        }
         // 長いページは見出し(札の題)を並べる。
         final heads = <String>[];
         for (final h in find.byType(Text).evaluate()) {

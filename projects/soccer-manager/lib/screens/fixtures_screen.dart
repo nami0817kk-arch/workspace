@@ -9,6 +9,7 @@ import '../services/feedback_service.dart';
 import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/chip_switcher.dart';
 import '../widgets/achievement_unlock_notifier.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
@@ -46,9 +47,11 @@ class FixturesScreen extends StatelessWidget {
     final foreign = gameState.foreignLeagueTables;
 
     return DefaultTabController(
+      // 他の部と他国は、それぞれ1つのタブにまとめ、中で選ぶ(タブが8つ並んで
+      // 横にはみ出していた)。
       length: 2 +
-          otherDivisions.length +
-          foreign.length +
+          (otherDivisions.isEmpty ? 0 : 1) +
+          (foreign.isEmpty ? 0 : 1) +
           (youthLeague == null ? 0 : 1),
       child: Scaffold(
         appBar: screenBar(
@@ -61,11 +64,10 @@ class FixturesScreen extends StatelessWidget {
           tabs: [
             Tr.pick('順位表', 'Table'),
             Tr.pick('日程', 'Fixtures'),
-            for (final (tier, _) in otherDivisions)
-              Tr.pick('$tier部順位表', 'Tier $tier table'),
+            if (otherDivisions.isNotEmpty) Tr.pick('他の部', 'Other tiers'),
             if (youthLeague != null) Tr.pick('ユース', 'Academy'),
             // 他国の1部はユースの後ろ(タブの並びの最後)に置く。
-            for (final (name, _) in foreign) name,
+            if (foreign.isNotEmpty) Tr.pick('他国', 'Abroad'),
           ],
           actions: [
             IconButton(
@@ -92,23 +94,35 @@ class FixturesScreen extends StatelessWidget {
                 divisionTier: divisionTier,
               ),
               _ScheduleTab(league: league, userTeamId: userTeamId),
-              for (final (tier, otherLeague) in otherDivisions)
-                _StandingsTab(
-                  league: otherLeague,
-                  userTeamId: userTeamId,
-                  divisionTier: tier,
-                ),
+              if (otherDivisions.isNotEmpty)
+                ChipSwitcher(items: [
+                  for (final (tier, otherLeague) in otherDivisions)
+                    (
+                      Tr.pick('$tier部', 'Tier $tier'),
+                      (_) => _StandingsTab(
+                            league: otherLeague,
+                            userTeamId: userTeamId,
+                            divisionTier: tier,
+                          ),
+                    ),
+                ]),
               if (youthLeague != null)
                 ListView(
                   padding: const EdgeInsets.only(bottom: 16),
                   children: [YouthLeagueTable(league: youthLeague)],
                 ),
-              for (final (_, foreignLeague) in foreign)
-                _StandingsTab(
-                  league: foreignLeague,
-                  userTeamId: userTeamId,
-                  divisionTier: 1,
-                ),
+              if (foreign.isNotEmpty)
+                ChipSwitcher(items: [
+                  for (final (name, foreignLeague) in foreign)
+                    (
+                      name,
+                      (_) => _StandingsTab(
+                            league: foreignLeague,
+                            userTeamId: userTeamId,
+                            divisionTier: 1,
+                          ),
+                    ),
+                ]),
             ],
           ),
         ),
@@ -284,11 +298,12 @@ class FixturesScreen extends StatelessWidget {
                           ),
                         ),
                         title: Text(
-                    team.name,
-                    style: TextStyle(
-                      fontWeight: isUser ? FontWeight.w800 : FontWeight.w600,
-                    ),
-                  ),
+                          team.name,
+                          style: TextStyle(
+                            fontWeight:
+                                isUser ? FontWeight.w800 : FontWeight.w600,
+                          ),
+                        ),
                         subtitle: Text(
                           Tr.pick('予測勝点 ${p.avgFinalPoints.toStringAsFixed(1)}',
                               'Projected points ${p.avgFinalPoints.toStringAsFixed(1)}'),
@@ -476,8 +491,7 @@ class _StandingsTab extends StatelessWidget {
               Widget cell(String s, double w, {TextStyle? style}) => SizedBox(
                     width: w,
                     child: Text(s,
-                        textAlign: TextAlign.center,
-                        style: style ?? num),
+                        textAlign: TextAlign.center, style: style ?? num),
                   );
               final row = Container(
                 height: 34,
@@ -928,8 +942,8 @@ class _UserFixtureList extends StatelessWidget {
         final isNext = f.matchday == nextMatchday;
         final gameState = context.read<GameState>();
         final isDerby = gameState.isRivalFixture(f);
-        final dateLabel =
-            CalendarEngine.formatShortDate(gameState.dateOfMatchday(f.matchday));
+        final dateLabel = CalendarEngine.formatShortDate(
+            gameState.dateOfMatchday(f.matchday));
         return Container(
           color: isNext
               ? Theme.of(context)
