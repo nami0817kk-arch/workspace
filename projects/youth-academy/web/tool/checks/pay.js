@@ -57,6 +57,21 @@ module.exports = (YA, ok) => {
     YA.entSet(null);
   }
 
+  // 2026-11-20「オリジナル選手が一覧から消える」：トップ昇格の話をコーチに任されて、入団直後に消えていた。
+  // オリジナル選手のプロの話・退団などは★の子と同じく選ばせる（コーチに任せない）
+  {
+    const w = YA.newWorld(307);
+    const ps = Object.values(w.players).filter((p) => p.grade === 1);
+    ps[0].star = true;
+    const orig = ps[1];
+    const plain = ps[2];
+    orig._orig = true;
+    const evs = [{ id: 'early', pid: orig.id, week: w.week, year: w.year }, { id: 'quit', pid: orig.id, week: w.week, year: w.year }, { id: 'early', pid: plain.id, week: w.week, year: w.year }];
+    const left = YA.autoNonStar(w, evs);
+    ok(left.filter((e) => e.pid === orig.id).length === 2 && w.players[orig.id], '課金: オリジナル選手のプロの話・退団は、コーチに任せず選ばせる');
+    ok(!left.some((e) => e.pid === plain.id), '課金: ほかの★以外の子は、これまでどおりコーチに任せる');
+  }
+
   // 2026-11-20：点検用の試しの世界の試合では、広告を出す番にしない
   {
     const live = YA.newWorld(305);
