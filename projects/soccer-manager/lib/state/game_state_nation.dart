@@ -37,6 +37,36 @@ extension GameStateNation on GameState {
     return others[(h ~/ 10) % others.length];
   }
 
+  /// 選手の名前を国籍に合わせる(読み込み・新しいゲーム・季の切り替えで呼ぶ)。
+  ///
+  /// 以前は日本語の表示で全員に日本の姓名を付けていて、欧州を模したリーグ
+  /// なのに「選手が日本人だけ」に見えた。国籍の名前の一覧から作られていない
+  /// 名前だけを、選手の id から決まる名前に付け替える(同じクラブで重ならない
+  /// ように引き直す)。一度合わせた名前は変えない。
+  void _localizeNames() {
+    final s = _save;
+    if (s == null) return;
+    NamePool.homeTheme = currentLeagueTheme;
+    for (final t in _worldTeams) {
+      final used = {for (final p in t.players) p.name};
+      for (final p in t.players) {
+        final nation = nationalityOf(p);
+        if (NationNames.fits(p.name, nation)) continue;
+        used.remove(p.name);
+        final h =
+            p.id.codeUnits.fold<int>(17, (a, c) => (a * 131 + c) % 1000003);
+        var name = NationNames.nameFor(nation, h);
+        for (var k = 1;
+            used.contains(name) && k < NationNames.combinations(nation);
+            k++) {
+          name = NationNames.nameFor(nation, h + k * 7);
+        }
+        p.name = name;
+        used.add(name);
+      }
+    }
+  }
+
   /// 国籍を覚えさせる(国をまたいで移る前に呼ぶ)。
   void _fixNationality(Player p) {
     p.nation ??= nationalityOf(p).name;

@@ -146,6 +146,7 @@ import '../logic/youth_league_engine.dart';
 import '../logic/youth_promotion_engine.dart';
 import '../logic/youth_match_engine.dart';
 import '../data/name_pool.dart';
+import '../data/nation_names.dart';
 import '../models/first_run_step.dart';
 import '../monetization/funds_pack.dart';
 import '../l10n/tr.dart';
@@ -1113,6 +1114,8 @@ class GameState extends ChangeNotifier {
     // 契約の満了の年は第1季から数える(前に遊んでいたセーブの年のままに
     // しない)。
     Player.contractClockYear = Player.seasonEndYearOf(1);
+    // 選手の名前はリーグの国の名前で作る(他国の選手は後で国籍に合わせる)。
+    NamePool.homeTheme = theme;
     final userTeam = PlayerGenerator.generateSquad(
       id: 'user',
       name: clubName,
