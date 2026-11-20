@@ -8,6 +8,7 @@ import '../models/owner_work.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/undoable.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/responsive_body.dart';
 import '../logic/economy_scale.dart';
@@ -133,7 +134,13 @@ class _WorkTile extends StatelessWidget {
               onPressed: can
                   ? () async {
                       FeedbackService.tap();
-                      await context.read<GameState>().doOwnerWork(work.id);
+                      await runUndoable(
+                        context,
+                        action: () =>
+                            context.read<GameState>().doOwnerWork(work.id),
+                        done: Tr.pick(
+                            '「${work.title}」を実行しました', 'Done: ${work.title}'),
+                      );
                     }
                   : null,
               child: Text(done
@@ -260,7 +267,15 @@ class _PromoCard extends StatelessWidget {
                 trailing: FilledButton(
                   onPressed: game.scaledMoney(p.cost) > budget
                       ? null
-                      : () => context.read<GameState>().setMatchdayPromo(p.id),
+                      : () => runUndoable(
+                            context,
+                            action: () async {
+                              context.read<GameState>().setMatchdayPromo(p.id);
+                              return true;
+                            },
+                            done: Tr.pick('次の節は「${p.title}」にしました',
+                                'Next matchday: ${p.title}'),
+                          ),
                   child: Text(Tr.pick('決める', 'Set')),
                 ),
               ),

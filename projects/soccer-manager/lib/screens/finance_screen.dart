@@ -9,6 +9,7 @@ import '../models/player.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/amount_nudger.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/budget_plan_card.dart';
 import '../widgets/ledger_card.dart';
@@ -673,6 +674,12 @@ class _LoanRequestSheetState extends State<_LoanRequestSheet> {
               ),
               onChanged: (_) => setState(() {}),
             ),
+            AmountNudger(
+              controller: _controller,
+              target: maxAmount,
+              targetLabel: Tr.pick('上限まで', 'Maximum'),
+              onChanged: (_) => setState(() {}),
+            ),
             const SizedBox(height: 12),
             for (final term in LoanEngine.terms)
               ListTile(
@@ -838,6 +845,12 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
                 labelText: Tr.pick('預入額(万円)', 'Amount to deposit'),
                 border: const OutlineInputBorder(),
               ),
+              onChanged: (_) => setState(() {}),
+            ),
+            AmountNudger(
+              controller: _controller,
+              target: maxAmount,
+              targetLabel: Tr.pick('全額', 'All of it'),
               onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: 12),

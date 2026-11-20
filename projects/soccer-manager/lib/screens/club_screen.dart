@@ -11,6 +11,7 @@ import '../logic/transfer_window.dart';
 import '../models/club_infrastructure.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
+import '../widgets/undoable.dart';
 import '../widgets/auto_columns.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
@@ -187,8 +188,7 @@ class ClubScreen extends StatelessWidget {
         // 横画面では札を2列に並べ、縦の長さを半分にする。
         child: AutoColumns(
           // スタッフは候補の行が横に長いので1列のまま。
-          twoColumnWidth:
-              section == ClubSection.staff ? double.infinity : 640,
+          twoColumnWidth: section == ClubSection.staff ? double.infinity : 640,
           children: [
             Card(
               child: Padding(
@@ -410,7 +410,11 @@ class _UpgradeCard extends StatelessWidget {
                 onPressed: isMax || !canAfford
                     ? null
                     : () async {
-                        final ok = await onUpgrade();
+                        final ok = await runUndoable(
+                          context,
+                          action: onUpgrade,
+                          done: Tr.pick('「$title」を増築しました', 'Upgraded: $title'),
+                        );
                         ok
                             ? FeedbackService.success()
                             : FeedbackService.error();

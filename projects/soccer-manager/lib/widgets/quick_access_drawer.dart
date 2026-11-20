@@ -46,36 +46,36 @@ class QuickAccessDrawer extends StatelessWidget {
             ),
             for (final dest in quickAccessDestinations)
               if (!onlyOthers || _otherLabels.contains(dest.label))
-              Builder(builder: (context) {
-                // まだ中身が空になる画面は、開く前にその旨を見せる。
-                // 隠さずに残すのは、機能の存在と到達条件を伝えるため。
-                final locked =
-                    dest.lockedReason?.call(context.watch<GameState>());
-                return ListTile(
-                  enabled: locked == null,
-                  leading: CircleAvatar(
-                    backgroundColor: locked == null
-                        ? dest.color
-                        : dest.color.withValues(alpha: 0.35),
-                    child: Icon(
-                      locked == null ? dest.icon : Icons.lock_outline,
-                      color: Colors.white,
-                      size: 20,
+                Builder(builder: (context) {
+                  // まだ中身が空になる画面は、開く前にその旨を見せる。
+                  // 隠さずに残すのは、機能の存在と到達条件を伝えるため。
+                  final locked =
+                      dest.lockedReason?.call(context.watch<GameState>());
+                  return ListTile(
+                    enabled: locked == null,
+                    leading: CircleAvatar(
+                      backgroundColor: locked == null
+                          ? dest.color
+                          : dest.color.withValues(alpha: 0.35),
+                      child: Icon(
+                        locked == null ? dest.icon : Icons.lock_outline,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
-                  ),
-                  title: Text(dest.label),
-                  subtitle: locked == null ? null : Text(locked),
-                  // 押しても開けないので、無反応にせず理由を出す。
-                  onTap: locked != null
-                      ? null
-                      : () {
-                          FeedbackService.tap();
-                          Navigator.of(context).pop();
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: dest.builder));
-                        },
-                );
-              }),
+                    title: Text(dest.label),
+                    subtitle: locked == null ? null : Text(locked),
+                    // 押しても開けないので、無反応にせず理由を出す。
+                    onTap: locked != null
+                        ? null
+                        : () {
+                            FeedbackService.tap();
+                            Navigator.of(context).pop();
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: dest.builder));
+                          },
+                  );
+                }),
           ],
         ),
       ),
@@ -95,6 +95,12 @@ class QuickAccessMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 横画面で重ねて開いた画面は、左上の戻るだけにする(≡と戻るの入口が
+    // 2つあって迷った)。他の画面へは戻ってから、上の帯の左端の≡で行く。
+    final size = MediaQuery.sizeOf(context);
+    if (size.width > size.height && Navigator.of(context).canPop()) {
+      return const SizedBox.shrink();
+    }
     return IconButton(
       icon: const Icon(Icons.menu),
       tooltip: Tr.pick('他の管理画面へ', 'Other screens'),
