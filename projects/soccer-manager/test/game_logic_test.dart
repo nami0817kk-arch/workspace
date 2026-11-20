@@ -3113,7 +3113,9 @@ void main() {
         gameState.lastSeasonGrowthSummary.map((s) => s.playerId).toSet();
     expect(ids, isNotEmpty);
     expect(squadIdsAtSeasonStart.containsAll(ids), isTrue);
-  });
+    // 2シーズン分を進めるので、既定の30秒では混んだ CI で足りない
+    // (2026-11-20 に CI で30秒切れ。手元の Windows では55秒)。
+  }, timeout: const Timeout(Duration(minutes: 3)));
 
   test(
       'GameState maintains a live, week-by-week simulated standings table for '

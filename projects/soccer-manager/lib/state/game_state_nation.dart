@@ -18,16 +18,28 @@ extension GameStateNation on GameState {
       return LeagueTheme.values.firstWhere((t) => t.name == stored,
           orElse: () => currentLeagueTheme);
     }
+    return _nationalityAt(p, _sellingClubOf(p.id), _foreignTeamIds());
+  }
+
+  /// [nationalityOf] の中身。所属クラブ[club]と他国のクラブの一覧[foreign]を
+  /// 外から渡せるようにして、全選手を回すときに毎回探し直さない(選手ごとに
+  /// 全クラブを探すと、3,500人で1回あたり数秒かかっていた)。
+  LeagueTheme _nationalityAt(
+      Player p, Team? club, Map<String, String> foreign) {
+    final stored = p.nation;
+    if (stored != null) {
+      return LeagueTheme.values.firstWhere((t) => t.name == stored,
+          orElse: () => currentLeagueTheme);
+    }
     final home = currentLeagueTheme;
-    final club = _sellingClubOf(p.id);
     // 自由契約・作り物の市場・自クラブの選手は自国(国籍の揺れはクラブに
     // いる他の選手だけに付ける)。
     if (club == null) return home;
-    final foreignName = _foreignTeamIds()[club.id];
+    final foreignName = foreign[club.id];
     final base = foreignName == null
         ? home
-        : LeagueTheme.values.firstWhere((t) => t.name == foreignName,
-            orElse: () => home);
+        : LeagueTheme.values
+            .firstWhere((t) => t.name == foreignName, orElse: () => home);
     final h = p.id.codeUnits.fold<int>(37, (a, c) => (a * 31 + c) % 1000003);
     if (h % 10 != 0) return base;
     final others = [
@@ -47,10 +59,12 @@ extension GameStateNation on GameState {
     final s = _save;
     if (s == null) return;
     NamePool.homeTheme = currentLeagueTheme;
+    final foreign = _foreignTeamIds();
     for (final t in _worldTeams) {
+      final club = t.id == s.userTeamId ? null : t;
       final used = {for (final p in t.players) p.name};
       for (final p in t.players) {
-        final nation = nationalityOf(p);
+        final nation = _nationalityAt(p, club, foreign);
         if (NationNames.fits(p.name, nation)) continue;
         used.remove(p.name);
         final h =
