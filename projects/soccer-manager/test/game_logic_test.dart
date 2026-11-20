@@ -5122,7 +5122,9 @@ void main() {
     await gameState.playNextMatchday();
 
     expect(injured.injuryWeeks, 0);
-    expect(injured.matchSharpness, lessThanOrEqualTo(40));
+    // 治った日に40へ戻り、その週の試合に出ると少し上がる(+8 で48になる回が
+    // あり、5回に2回ほど落ちていた)。90から下がったことを確かめる。
+    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 10));
   });
 
   test(
