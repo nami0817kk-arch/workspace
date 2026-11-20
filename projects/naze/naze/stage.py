@@ -88,11 +88,13 @@ def grade(a: np.ndarray, vig: float = 0.32, seed: int = 0) -> np.ndarray:
     return (np.clip(x, 0, 1) * 255).astype(np.uint8)
 
 
-def cover(img: np.ndarray, w: int = W, h: int = H) -> np.ndarray:
+def cover(img: np.ndarray, w: int = W, h: int = H, cx: float = 0.5) -> np.ndarray:
+    """画面いっぱいに切り出す。cx は横長の素材を縦に切るときの中心(0=左端、1=右端)。"""
     ih, iw = img.shape[:2]
     s = max(w / iw, h / ih)
     img = cv2.resize(img, (round(iw * s) + 1, round(ih * s) + 1), interpolation=cv2.INTER_AREA if s < 1 else cv2.INTER_CUBIC)
-    y, x = (img.shape[0] - h) // 2, (img.shape[1] - w) // 2
+    y = (img.shape[0] - h) // 2
+    x = int(min(max(img.shape[1] * cx - w / 2, 0), img.shape[1] - w))
     return img[y:y + h, x:x + w]
 
 
@@ -278,11 +280,11 @@ class Media:
         kind = "写真" if Path(src).suffix.lower() in (".jpg", ".jpeg", ".png", ".webp") else "映像"
         return f"{kind}: {s['by']} / {s.get('site', 'Pexels')}"
 
-    def frame(self, src: str, t: float) -> np.ndarray:
-        c = self.caps.get(src)
+    def frame(self, src: str, t: float, cx: float = 0.5) -> np.ndarray:
+        c = self.caps.get((src, cx))
         if c is None:
             cap = cv2.VideoCapture(str(self.path(src)))
-            c = self.caps[src] = [cap, -1.0, None, cap.get(cv2.CAP_PROP_FPS) or 30.0]
+            c = self.caps[(src, cx)] = [cap, -1.0, None, cap.get(cv2.CAP_PROP_FPS) or 30.0]
         cap, last, f, vfps = c
         if f is not None and abs(t - last) < 0.5 / vfps:
             return f
@@ -291,7 +293,7 @@ class Media:
         ok, g = cap.read()
         if not ok:
             return f if f is not None else np.zeros((H, W, 3), np.uint8)
-        c[1], c[2] = t, cover(cv2.cvtColor(g, cv2.COLOR_BGR2RGB))
+        c[1], c[2] = t, cover(cv2.cvtColor(g, cv2.COLOR_BGR2RGB), cx=cx)
         return c[2]
 
     def image(self, src: str, w: int = W, h: int = H) -> np.ndarray:
@@ -392,7 +394,7 @@ def s_map(c: Ctx, sc: dict) -> Image.Image:
 
 
 def s_video(c: Ctx, sc: dict) -> Image.Image:
-    f = c.st.media.frame(sc["src"], sc.get("start", 0.0) + c.t * sc.get("speed", 1.0))
+    f = c.st.media.frame(sc["src"], sc.get("start", 0.0) + c.t * sc.get("speed", 1.0), sc.get("cx", 0.5))
     return Image.fromarray(grade(f)).convert("RGBA")
 
 

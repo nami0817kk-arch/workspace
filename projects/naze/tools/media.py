@@ -42,6 +42,7 @@ def note(folder: Path, name: str, rec: dict) -> None:
 
 
 def main(a):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # 撮った人の名前に外国の文字があると cp932 で止まった(2026-11-20)
     mode = a[0]
     if mode == "find-v":
         v = api("https://api.pexels.com/videos/search?" + urllib.parse.urlencode(dict(query=a[1], orientation=a[2] if len(a) > 2 else "landscape", per_page=12)))

@@ -8,7 +8,9 @@
 """
 import math
 
-from PIL import Image, ImageDraw
+import cv2
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter
 
 from naze import stage as sg
 from naze import worldmap
@@ -70,7 +72,7 @@ EP = dict(
              scene=dict(kind="photo", src="assets/stock/fog.jpg", move="in"),
              fx=[dict(k="dim", on="雨には")]),
         dict(id="a12", text="2つ目は、沖を流れる【冷たい海流】です。", say="ふたつめは、おきをながれる、つめたいかいりゅうです。",
-             scene=dict(kind="custom", fn="cross", credit="図: 理の書", place=("ベンゲラ海流", "アフリカ南西の沖を北へ")),
+             scene=dict(kind="custom", fn="cross", credit="映像: Davis Arenas / Pexels", place=("ベンゲラ海流", "アフリカ南西の沖を北へ")),
              fx=[dict(k="step", n=1, on="冷たい")]),
         dict(id="a13", text="冷たい海は、すぐ上の空気を冷やします。",
              fx=[dict(k="step", n=2, on="空気")]),
@@ -85,61 +87,75 @@ EP = dict(
 )
 
 
+CROSS_SRC, CROSS_CX = "assets/stock/coastdune.mp4", 0.75
+
+
+def horizon(f: np.ndarray) -> int:
+    """空と海の境。右寄りの列の明るさが、空(上の方)より 25 落ちた最初の行。
+    いちばん大きく落ちる行を取ると、手前の波打ちぎわを拾った(2026-11-20)。"""
+    g = f[:, int(W * 0.55):, :].astype(np.float32).mean(axis=(1, 2))
+    sky = g[int(H * 0.22)]
+    below = np.nonzero(g[int(H * 0.28):int(H * 0.55)] < sky - 25)[0]
+    return int(H * 0.28) + (int(below[0]) if len(below) else int(H * 0.1))
+
+
 def draw_cross(img: Image.Image, t: float, c) -> None:
-    """断面: 冷たい海・冷たい空気・暖かい空気・砂漠。step 1=海を光らせる 2=冷たい空気の層 3=上がる空気が境で止まる 4=霧が陸へ流れる。"""
+    """砂丘が海に落ちる実写に重ねる。step 1=海が冷たい(海だけ青く光る) 2=海の上に冷たい空気の層 3=上がる空気が境で止まる 4=霧が陸へ流れる。
+    海は描かない(2026-11-20「海が作り物感すごい」)。重ねるのは空気・矢印・霧の透ける層と札だけ。"""
     steps = {f["n"]: c.when(f) for f in c.seg["fx"] if f["k"] == "step"}
+
     def k(n, d=0.6):
         return sg.ease((t - steps.get(n, 1e9)) / d)
-    base = sg.grade(sg.dark_bg(), 0.2)
+    f = c.st.media.frame(CROSS_SRC, 0.3 + t, CROSS_CX)
+    hz = c.st.cache_get(("hz", round(t * 2)), lambda: horizon(f))
+    base = sg.grade(f)
+    k1 = k(1, 0.8)
+    if k1 > 0:   # 海だけを冷たい色に: 元の絵で青みが砂より強く、影ほど暗くない所(影は色を整えると青くなるので元の絵で見る)
+        b = f.astype(np.int16)
+        lum = b.mean(axis=2)
+        m = np.clip((b[..., 2] - b[..., 0]) / 20.0, 0, 1) * np.clip((lum - 90) / 20.0, 0, 1)
+        m[:hz] = 0
+        m[hz + int(H * 0.25):] = 0
+        m = cv2.GaussianBlur(m.astype(np.float32), (0, 0), 3)[..., None] * k1 * (0.28 + 0.05 * math.sin(t * 3))   # 強いと塗った青に見える(0.55 で作り物に戻った)
+        base = (base * (1 - m) + np.array([40, 110, 210]) * m).astype(np.uint8)
     im = Image.fromarray(base).convert("RGBA")
-    d = ImageDraw.Draw(im, "RGBA")
-    sea_y, inv_y, shore = (int(H * 0.46), int(H * 0.31), int(W * 0.48)) if H > W else (int(H * 0.60), int(H * 0.44), int(W * 0.48))
-    for y in range(inv_y - 300, inv_y):
-        a = (y - (inv_y - 300)) / 300
-        d.line([(0, y), (W, y)], fill=(255, 150, 70, int(60 * a)))
+    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay, "RGBA")
+    inv = hz - int(H * 0.09)                                         # 冷たい空気の層の上の境
+    for y in range(inv - 300, inv + 40):                             # 上は暖かい空気(うすい橙。上下ともぼかして境を作らない)
+        d.line([(0, y), (W, y)], fill=(255, 150, 70, int(45 * max(0.0, 1 - abs(y - inv + 130) / 170))))
     k2 = k(2)
-    for y in range(inv_y, sea_y + 40):
-        d.line([(0, y), (W, y)], fill=(90, 160, 255, int(60 * k2)))
-    for y in range(sea_y, H):
-        u = (y - sea_y) / (H - sea_y)
-        d.line([(0, y), (shore + 60, y)], fill=(int(30 - 15 * u), int(90 - 40 * u), int(140 - 60 * u), 255))
-    land = [(shore - 60, H), (shore, sea_y + 6)] + [(x, sea_y - 10 - 60 * (1 - math.cos((x - shore) / 160)) - 20 * math.sin((x - shore) / 45)) for x in range(shore, W + 20, 12)] + [(W, H)]
-    tex = c.st.cache_get(("cross_tex",), lambda: (sg.cover(c.st.media.image("assets/stock/fog.jpg"))[int(H * 0.3):].copy()))
-    texi = Image.fromarray(sg.cover(tex))
-    m = Image.new("L", (W, H), 0)
-    ImageDraw.Draw(m).polygon(land, fill=255)
-    im.paste(texi, (0, 0), m)
-    d = ImageDraw.Draw(im, "RGBA")
-    k1 = k(1)
-    if k1 > 0:
-        d.rectangle([0, sea_y, shore + 60, H], outline=sg.YEL + (int(255 * k1),), width=5)
-    fL = sg.F("YuGothB.ttc", 40)
-    for x0 in range(0, W, 30):
-        d.line([(x0, inv_y), (x0 + 16, inv_y)], fill=(255, 255, 255, 150), width=2)
-    sg.stext(d, (40, inv_y - 60), "暖かい空気", fL, (255, 200, 150), anchor="lm")
     if k2 > 0:
-        sg.stext(d, (40, inv_y + 60), "冷たい空気", fL, (170, 210, 255, int(255 * k2)), anchor="lm")
-    sg.stext(d, (40, sea_y + 70), "冷たい海", fL, (170, 210, 255), anchor="lm")
-    sg.stext(d, (W - 60, sea_y - 170), "砂漠", fL, (255, 230, 200), anchor="rm")
-    k3 = k(3, 1.4)
-    if k3 > 0:
-        x = W * 0.24
-        y = sea_y - 10 - (sea_y - 10 - inv_y - 14) * k3
-        d.line([(x, sea_y - 10), (x, y)], fill=(200, 230, 255, 255), width=8)
-        d.polygon([(x - 18, y + 4), (x + 18, y + 4), (x, y - 22)], fill=(200, 230, 255, 255))
-        if k3 >= 1:
-            sg.stext(d, (x + 60, inv_y - 70), "×", sg.F("meiryob.ttc", 110), sg.YEL, anchor="mm")
+        for y in range(inv, hz + 2):
+            d.line([(0, y), (W, y)], fill=(90, 170, 255, int(85 * k2)))
+        for x0 in range(0, W, 30):
+            d.line([(x0, inv), (x0 + 16, inv)], fill=(255, 255, 255, int(200 * k2)), width=3)
     k4 = k(4, 1.0)
-    if k4 > 0:
+    if k4 > 0:   # 霧: 層の中を海から陸(左)へ流れる
         fl = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         fd = ImageDraw.Draw(fl)
-        for j in range(8):
-            x = (j * 220 + (t - steps[4]) * 120) % (W + 400) - 200
-            y = inv_y + 50 + (j * 47) % 120
-            fd.ellipse([x - 200, y - 28, x + 200, y + 28], fill=(235, 240, 245, int(80 * k4)))
-        from PIL import ImageFilter
-        fl = fl.filter(ImageFilter.GaussianBlur(20))
-        im.alpha_composite(fl)
-        d = ImageDraw.Draw(im, "RGBA")
-        sg.stext(d, (W * 0.70, inv_y + 60), "霧", fL, sg.WHITE + (int(255 * k4),), anchor="mm")
+        for j in range(9):
+            x = W + 200 - ((j * 230 + (t - steps[4]) * 150) % (W + 500))
+            y = inv + 20 + (j * 37) % max(hz - inv + 40, 1)
+            fd.ellipse([x - 220, y - 34, x + 220, y + 34], fill=(240, 244, 248, int(120 * k4)))
+        lay.alpha_composite(fl.filter(ImageFilter.GaussianBlur(22)))
+        d = ImageDraw.Draw(lay, "RGBA")
+    im.alpha_composite(lay)
+    d = ImageDraw.Draw(im, "RGBA")
+    fL = sg.F("YuGothB.ttc", 44)
+    sg.stext(d, (50, inv - 70), "暖かい空気", fL, (255, 205, 160), anchor="lm")
+    if k2 > 0:
+        sg.stext(d, (50, (inv + hz) // 2), "冷たい空気", fL, (185, 220, 255, int(255 * k2)), anchor="lm")
+    sg.stext(d, (W - 50, hz + 90), "冷たい海", fL, (185, 220, 255), anchor="rm")
+    sg.stext(d, (W - 50, hz + 430), "砂漠", fL, (255, 230, 200), anchor="rm")
+    k3 = k(3, 1.4)
+    if k3 > 0:
+        x, y0 = W * 0.62, hz + 40
+        y = y0 - (y0 - inv - 14) * k3
+        d.line([(x, y0), (x, y)], fill=(220, 238, 255, 255), width=8)
+        d.polygon([(x - 18, y + 4), (x + 18, y + 4), (x, y - 22)], fill=(220, 238, 255, 255))
+        if k3 >= 1:
+            sg.stext(d, (x + 70, inv - 60), "×", sg.F("meiryob.ttc", 110), sg.YEL, anchor="mm")
+    if k4 > 0:
+        sg.stext(d, (W * 0.40, (inv + hz) // 2 + 4), "霧", fL, sg.WHITE + (int(255 * k4),), anchor="mm")
     img.alpha_composite(im)
