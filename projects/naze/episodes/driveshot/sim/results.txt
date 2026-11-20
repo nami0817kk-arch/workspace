@@ -1,0 +1,16 @@
+# 縦の面 (足の向き=仰角 foot_el、d>0 は中心より上)
+d0_el20    d= +0.0cm foot_el=20.00 ball_speed=28.00 launch=20.00 spin_y= +0.00rps wall_z= 2.80 goal_z= 4.09 t=0.850 stroke=   1.5cm
+d0_in      d= +0.0cm foot_el=14.80 ball_speed=28.00 launch=14.80 spin_y= +0.00rps wall_z= 1.93 goal_z= 2.28 t=0.825 stroke=   7.5cm
+low_el20   d= -4.0cm foot_el=20.00 ball_speed=27.18 launch=30.34 spin_y= -4.25rps wall_z= 5.10 goal_z= 9.58 t=1.011 stroke=  -8.9cm
+low_el15   d= -4.0cm foot_el=15.00 ball_speed=27.18 launch=25.34 spin_y= -4.25rps wall_z= 4.10 goal_z= 7.55 t=0.949 stroke=  -7.2cm
+up_el20    d= +4.0cm foot_el=20.00 ball_speed=27.18 launch= 9.66 spin_y= +4.25rps wall_z= 0.75 goal_z=  nan t=nan stroke=  13.0cm
+up_fix     d= +4.0cm foot_el=28.80 ball_speed=27.18 launch=18.46 spin_y= +4.25rps wall_z= 2.18 goal_z= 1.81 t=0.855 stroke=   4.2cm
+up6_el20   d= +6.0cm foot_el=20.00 ball_speed=26.12 launch= 4.44 spin_y= +6.38rps wall_z=  nan goal_z=  nan t=nan stroke=  19.2cm
+up6_fix    d= +6.0cm foot_el=36.40 ball_speed=26.12 launch=20.84 spin_y= +6.38rps wall_z= 2.33 goal_z= 1.46 t=0.897 stroke=   3.4cm
+# d ごとの成功窓(足の仰角) (sweep.py より)
+# 横の面 (足の向き=仰角 β と方位 ψ を解いて、ゴール中央 y=0・高さ1.30m に着ける)
+d= +0.0cm foot_el=11.92 foot_az=  0.00 ball_speed=28.00 spin_z=+0.00rps launch_az=+0.00 launch_el=11.92 goal(y,z)=(+0.000,1.300) t=0.814 | foot_az=0: goal(y,z)=(+0.00,1.30) max_y=-
+d= -2.0cm foot_el=12.16 foot_az= -7.41 ball_speed=27.80 spin_z=+2.08rps launch_az=-2.13 launch_el=12.11 goal(y,z)=(-0.000,1.300) t=0.821 | foot_az=0: goal(y,z)=(+2.61,1.28) max_y=-
+d= -4.0cm foot_el=12.92 foot_az=-14.97 ball_speed=27.18 spin_z=+4.15rps launch_az=-4.37 launch_el=12.71 goal(y,z)=(-0.000,1.300) t=0.842 | foot_az=0: goal(y,z)=(+5.41,1.20) max_y=-
+d= -6.0cm foot_el=14.44 foot_az=-22.88 ball_speed=26.12 spin_z=+6.18rps launch_az=-6.84 launch_el=13.90 goal(y,z)=(-0.000,1.300) t=0.881 | foot_az=0: goal(y,z)=(+8.71,0.97) max_y=-
+d= -7.3cm foot_el=16.06 foot_az=-28.36 ball_speed=25.17 spin_z=+7.46rps launch_az=-8.67 launch_el=15.17 goal(y,z)=(-0.000,1.300) t=0.921 | foot_az=0: goal(y,z)=(+11.42,0.58) max_y=-

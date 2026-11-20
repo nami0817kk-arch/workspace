@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "0VRsWu_u6NQ",
+  "publish_at": "2026-11-01T19:00:00+09:00",
+  "thumb": "out/samurai/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "oGQrD7HsOtg",
+  "publish_at": "2026-11-02T11:00:00+09:00"
+ },
+ "s2": {
+  "id": "vTGZCtnYgEc",
+  "publish_at": "2026-11-02T12:00:00+09:00"
+ },
+ "s3": {
+  "id": "XUBXVur5uCM",
+  "publish_at": "2026-11-02T13:00:00+09:00"
+ },
+ "s4": {
+  "id": "Y0oeY9r7MTE",
+  "publish_at": "2026-11-02T14:00:00+09:00"
+ },
+ "s5": {
+  "id": "g7sngMbGSKc",
+  "publish_at": "2026-11-02T16:00:00+09:00"
+ }
+}

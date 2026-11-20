@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "0cnjJGmy78Y",
+  "publish_at": "2026-10-30T19:00:00+09:00",
+  "thumb": "out/shingeki/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "UH4O2cYF-fI",
+  "publish_at": "2026-10-31T11:00:00+09:00"
+ },
+ "s2": {
+  "id": "4o8bJ-SlnCc",
+  "publish_at": "2026-10-31T12:00:00+09:00"
+ },
+ "s3": {
+  "id": "EFTM-_nonAM",
+  "publish_at": "2026-10-31T13:00:00+09:00"
+ },
+ "s4": {
+  "id": "i_sry0eIc48",
+  "publish_at": "2026-10-31T14:00:00+09:00"
+ },
+ "s5": {
+  "id": "LgZtSRZj-L4",
+  "publish_at": "2026-10-31T16:00:00+09:00"
+ }
+}

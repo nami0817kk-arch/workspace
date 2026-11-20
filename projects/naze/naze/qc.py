@@ -1,0 +1,357 @@
+"""動画の点検。`python -m naze qc episodes/<題材>`(compose のあと)。
+
+見るもの(✖ は通らない、△ は目で確かめる):
+  台本  語りが速すぎる行(1 秒あたりの字数)・字幕が語りと食い違う行・字幕が長すぎて字が縮む行・
+        ショートの長さ(3 分以内)・つかみ(最初の問いが 4 秒以内に終わる)
+  画面  札と字幕・見出し・ほかの札の重なり・画面の外へのはみ出し・真っ黒なコマ・
+        画面が止まったままの区間・1 分あたりの切り替えの回数
+  音    音量(-17〜-12 LUFS)・ピーク・長い無音
+結果は out/<題材>/qc.md と qc.json。行ごとに 1 コマずつ並べた qc_sheet.png も書く(目で確かめる用)。
+qc.json の passed が true で、mp4 が点検のときから変わっていなければ、naze.upload が投稿を通す。
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+from datetime import datetime
+from pathlib import Path
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+from . import overlay as ov
+from .config import ASPECT, FPS, H, W, ffmpeg
+
+CPS_WARN, CPS_FAIL = 8.5, 10.0          # 語りの速さ(字/秒、句読点を除く)
+SENT_MAX = 25                           # 一文の字数(docs/writing.md)
+NUMS_PER_MIN = 4.0                      # 数字の数(1 分あたり)
+COMPARE = re.compile(r"倍|個分|杯分|歩いて|階建て|ぶん|分の|同じくらい|と同じ|ほどの")   # 身近な比べ
+TWIST = re.compile(r"実は|ところが|しかし|でも、|ではなく|多くの人|と思いますか|思うかもしれません")   # 思い込みの切り返し
+HANDOFF = re.compile(r"見てください|思い出してください|見たら|立ったら|通ったら|乗ったら|見上げたら")   # 暮らしへの渡し
+SHRINK_WARN = 0.8                       # 字幕が長すぎて元の大きさの 8 割より小さくなる
+STATIC_WARN, STATIC_FAIL = 4.0, 7.0     # 画面が止まったままの秒数
+SAMPLE_FPS = 6                          # 画面の点検で見るコマの間隔
+
+
+def _plain(s: str) -> str:
+    return re.sub(r"[【】|\n、。，．,.「」『』・？！?!\s　（）()〜~…]", "", s)
+
+
+# ---- 2026-11-19 の作り直しの決まり(docs/writing.md の冒頭) -------------------------------------------------
+# この版より前の決まりで点検した結果では、投稿の関門(gate)を通さない。決まりを変えたら版を上げる。
+RULES = "2026-11-19"
+ANSWER_FROM = 0.7                       # ショート・単発の本編は、答えの行を後ろ 3 割に置く(冒頭で言わない)
+OPEN_KINDS = ("scene", "belief")        # 冒頭の 1 行目の印: 場面から入る / 見る人の思い込みから入る
+DAIBEN = re.compile(r"よね[。、]?\s*ええ|^ええ、|。ええ、|じゃないの[？?]|じゃない[？?]")   # 見る人の声の代弁(しない)
+LONG_MIN = 480.0                        # 本編は 8 分以上(long.py が見る)
+CUTS_MIN = 6.0                          # 絵の切り替え(1 分あたり)。伸びているチャンネル 8 本は 7〜12 回(2026-11-19 に数えた)
+
+
+def position(ep: dict) -> str:
+    """この台本が何か: short(縦)/ only(章の無い横)/ first・middle・last(本編の章)。"""
+    folder = ep.get("_folder")
+    if folder is not None and (Path(folder).parent / "long.py").exists():
+        src = (Path(folder).parent / "long.py").read_text(encoding="utf-8")
+        names = re.findall(r"ep\s*=\s*[\"']([^\"']+)[\"']", src)
+        if Path(folder).name in names:
+            i = names.index(Path(folder).name)
+            return "last" if i == len(names) - 1 else ("first" if i == 0 else "middle")
+    if folder is not None:
+        land = re.search(r"aspect\s*=\s*[\"']landscape", (Path(folder) / "ep.py").read_text(encoding="utf-8"))
+        return "only" if land else "short"
+    return "short" if ASPECT == "portrait" else "only"
+
+
+def rules(ep: dict) -> tuple[list, list]:
+    """台本だけで見られる決まり(声の前でも使える。`python -m naze lint` もこれを呼ぶ)。"""
+    fails, warns = [], []
+    body = [d for d in ep["lines"] if d.get("style") != "cta"]
+    if not body:
+        return ["台本が空"], []
+    pos = position(ep)
+    # 冒頭: 場面か思い込みから入る(答えや問いの言い切りから入らない)
+    if pos in ("short", "only", "first"):
+        o = body[0].get("open")
+        if o not in OPEN_KINDS:
+            fails.append(f"冒頭の印が無い [{body[0]['id']}] 1 行目に open=\"scene\"(場面)か open=\"belief\"(思い込み)を付ける(docs/writing.md)")
+        elif o == "belief" and not any(TWIST.search(d["text"]) for d in body[:5]):
+            fails.append("思い込みから入ったのに、5 行目までに「ところが・しかし・実は」で裏切っていない")
+    # 答え: 最後まで引っ張る
+    ans = [i for i, d in enumerate(body) if d.get("answer")]
+    if pos in ("first", "middle"):
+        if ans:
+            fails.append(f"本編の最後の章より前に答えがある [{body[ans[0]]['id']}](答えは最後の章で言う)")
+    else:
+        if not ans:
+            fails.append("答えの行に印が無い(答えを言う行に answer=True を付ける)")
+        elif pos in ("short", "only") and ans[0] < int(len(body) * ANSWER_FROM):
+            fails.append(f"答えが早い [{body[ans[0]]['id']}] {ans[0] + 1}/{len(body)} 行目(後ろ 3 割まで引っ張る)")
+    # 代弁はしない
+    for d in body:
+        if DAIBEN.search(d["text"]):
+            fails.append(f"見る人の声を代弁している [{d['id']}]「{d['text'][:24]}」(しない決まり)")
+    # 数字は身近な物に置き換える
+    whole = "".join(d["text"] for d in body)
+    if re.search(r"\d", whole) and not COMPARE.search(whole):
+        fails.append("数字を身近な物に置き換えていない(倍・個分・杯分・歩いて○分・〜と同じ など)")
+    return fails, warns
+
+
+def script(ep: dict, tl: dict) -> tuple[list, list]:
+    fails, warns = [], []
+    defs = {d["id"]: d for d in ep["lines"]}
+    for l in tl["lines"]:
+        d = defs[l["id"]]
+        n = len(_plain(d["text"]))
+        dur = max(0.1, l["end"] - l["start"])
+        cps = n / dur
+        if cps > CPS_FAIL:
+            fails.append(f"語りが速すぎる [{l['id']}] {cps:.1f} 字/秒(上限 {CPS_FAIL})")
+        elif cps > CPS_WARN:
+            warns.append(f"語りがやや速い [{l['id']}] {cps:.1f} 字/秒")
+        sub = d.get("sub")
+        if sub and d.get("style") != "end" and _plain(sub) != _plain(d["text"]):
+            warns.append(f"字幕が語りと違う [{l['id']}] 字幕「{_plain(sub)}」/ 語り「{_plain(d['text'])}」")
+    body = [d for d in ep["lines"] if d.get("style") != "cta"]
+    whole = "".join(d["text"] for d in body)
+    for d in body:
+        for s in re.split(r"[。？！?!]", d["text"]):
+            if len(_plain(s)) > SENT_MAX + 8:
+                warns.append(f"一文が長い [{d['id']}] {len(_plain(s))}字「{s[:18]}…」(目安 {SENT_MAX} 字)")
+    dur_body = max(1.0, tl["lines"][len(body) - 1]["end"])
+    nums = len(re.findall(r"\d+", whole))
+    if nums / (dur_body / 60) < NUMS_PER_MIN:
+        warns.append(f"数字が少ない {nums} 個({nums / (dur_body / 60):.1f}/分、目安 {NUMS_PER_MIN}/分)")
+    rf, rw = rules(ep)                    # 2026-11-19 の決まり(冒頭・答え・代弁・比べ)。冒頭の「数字で言い切る」と比べの △ はこちらに置き換えた
+    fails += rf
+    warns += rw
+    if not TWIST.search(whole):
+        warns.append("思い込みの切り返しが無い(普通は〜のはず、ところが〜)")
+    last = ep.get("cta", True)            # 本編の途中の章(cta=False)には結びの型を求めない
+    if last and not HANDOFF.search(body[-1]["text"] + (body[-2]["text"] if len(body) > 1 else "")):
+        warns.append("結びに暮らしへの渡しが無い(次に〜したら〜を見てください)")
+    if last and ASPECT == "landscape" and not re.search(r"思い出して|冒頭|最初の", whole):
+        warns.append("本編なのに伏線の回収が無い(〜を思い出してください)")
+    if ASPECT == "portrait" and tl["total"] > 178:
+        fails.append(f"ショートが長すぎる {tl['total']:.0f} 秒(3 分以内)")
+    return fails, warns
+
+
+def _overlap(a, b) -> float:
+    x0, y0, x1, y1 = max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])
+    return max(0.0, x1 - x0) * max(0.0, y1 - y0)
+
+
+def layout(frame_fn, nf: int) -> tuple[list, list]:
+    """全コマ(SAMPLE_FPS 間隔)を描いて、札の重なり・はみ出し・字の縮みを数える。"""
+    hits: dict = {}
+    step = max(1, FPS // SAMPLE_FPS)
+    for fi in range(1, nf + 1, step):
+        frame_fn(fi)
+        t = (fi - 1) / FPS
+        bs = list(ov.BOXES)
+        for i, (k, b, s, sc) in enumerate(bs):
+            if b[0] < -2 or b[1] < -2 or b[2] > W + 2 or b[3] > H + 2:
+                hits.setdefault(("はみ出し", k, s), []).append(t)
+            if k == "text" and sc < SHRINK_WARN:
+                hits.setdefault(("字が縮む", k, s), []).append(t)
+            for k2, b2, s2, _ in bs[i + 1:]:
+                pair = {k, k2}
+                # 札は何とも重ならない。図の枠(panel)は札・地名とだけ見る(枠の中の字や、枠の下の字幕はわざと重ねている)
+                bad = "label" in pair or ("panel" in pair and pair & {"pin", "cta"})
+                if bad and _overlap(b, b2) > 0:
+                    hits.setdefault(("重なり", s, s2), []).append(t)
+    fails, warns = [], []
+    for key, ts in hits.items():
+        dur = len(ts) / SAMPLE_FPS
+        msg = f"{key[0]}「{key[1] if key[0] == '重なり' else key[2]}」" + (f"と「{key[2]}」" if key[0] == "重なり" else "") + f" {ts[0]:.1f}秒〜 計{dur:.1f}秒"
+        (warns if key[0] == "字が縮む" or dur < 0.4 else fails).append(msg)
+    return fails, warns
+
+
+def _gray(video: Path) -> np.ndarray:
+    w, h = (160, 284) if H > W else (284, 160)
+    r = subprocess.run([ffmpeg(), "-loglevel", "error", "-i", str(video), "-vf", f"fps={SAMPLE_FPS},scale={w}:{h}", "-f", "rawvideo", "-pix_fmt", "gray", "-"],
+                       capture_output=True, check=True)
+    return np.frombuffer(r.stdout, np.uint8).reshape(-1, h, w).astype(np.float32)
+
+
+def picture(video: Path) -> tuple[list, list, dict]:
+    g = _gray(video)
+    fails, warns = [], []
+    dark = np.where(g.mean(axis=(1, 2)) < 6)[0]
+    if len(dark):
+        fails.append(f"真っ黒なコマ {len(dark) / SAMPLE_FPS:.1f}秒ぶん({dark[0] / SAMPLE_FPS:.1f}秒〜)")
+    diff = np.abs(np.diff(g, axis=0))
+    d = diff.mean(axis=(1, 2))
+    # 止まっている = 目に見えて変わった画素がほとんど無い(小さな玉が動くだけでも「動いている」に数える)
+    still = (diff > 8).mean(axis=(1, 2)) < 0.0004
+    run, start = 0, 0
+    for i, s in enumerate(list(still) + [False]):
+        if s:
+            if run == 0:
+                start = i
+            run += 1
+        else:
+            sec = run / SAMPLE_FPS
+            if sec >= STATIC_FAIL:
+                fails.append(f"画面が止まったまま {start / SAMPLE_FPS:.1f}秒〜 {sec:.1f}秒")
+            elif sec >= STATIC_WARN:
+                warns.append(f"画面がほぼ止まっている {start / SAMPLE_FPS:.1f}秒〜 {sec:.1f}秒")
+            run = 0
+    cuts = int((d > 12).sum())
+    minutes = len(g) / SAMPLE_FPS / 60
+    per = cuts / max(minutes, 1e-6)
+    if minutes >= 0.5 and per < CUTS_MIN:
+        fails.append(f"絵の切り替えが少ない 1 分に {per:.1f} 回({CUTS_MIN:.0f} 回以上。文ごとに絵を替える。伸びているチャンネルは 7〜12 回)")
+    stats = dict(切り替え=cuts, 一分あたり=round(per, 1), 動いている割合=round(float((~still).mean()), 2))
+    return fails, warns, stats
+
+
+def sound(video: Path) -> tuple[list, list, dict]:
+    r = subprocess.run([ffmpeg(), "-hide_banner", "-i", str(video), "-af", "ebur128=peak=true,silencedetect=noise=-45dB:d=1.5", "-f", "null", "-"],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    err = r.stderr
+    fails, warns = [], []
+    m = re.findall(r"I:\s+(-?[\d.]+) LUFS", err)
+    lufs = float(m[-1]) if m else None
+    p = re.findall(r"Peak:\s+(-?[\d.]+) dBFS", err)
+    peak = float(p[-1]) if p else None
+    total = None
+    mm = re.search(r"Duration: (\d+):(\d+):([\d.]+)", err)
+    if mm:
+        total = int(mm.group(1)) * 3600 + int(mm.group(2)) * 60 + float(mm.group(3))
+    if lufs is None or not (-17 <= lufs <= -12):
+        warns.append(f"音量 {lufs} LUFS(-17〜-12 に)")
+    if peak is not None and peak > -0.5:
+        warns.append(f"ピークが高い {peak} dBFS")
+    for s, e in zip(re.findall(r"silence_start: ([\d.]+)", err), re.findall(r"silence_end: ([\d.]+)", err)):
+        s, e = float(s), float(e)
+        if total and e > total - 2.0:
+            continue                                   # 終わりの余韻は数えない
+        warns.append(f"無音 {s:.1f}〜{e:.1f}秒({e - s:.1f}秒)")
+    return fails, warns, dict(LUFS=lufs, peak=peak)
+
+
+def sheet(ep: dict, tl: dict, frame_fn, out: Path, fname: str = "qc_sheet.png") -> Path:
+    """行ごとに真ん中のコマを 1 枚ずつ並べ、行の id を添える。"""
+    tw = 270 if H > W else 480
+    th = int(tw * H / W)
+    cols = 6 if H > W else 4
+    ls = tl["lines"]
+    rows = (len(ls) + cols - 1) // cols
+    s = Image.new("RGB", (tw * cols, (th + 34) * rows), (20, 20, 24))
+    d = ImageDraw.Draw(s)
+    for i, l in enumerate(ls):
+        fi = int((l["start"] + l["end"]) / 2 * FPS) + 1
+        im = frame_fn(fi).resize((tw, th))
+        x, y = (i % cols) * tw, (i // cols) * (th + 34)
+        s.paste(im, (x, y + 34))
+        d.text((x + 8, y + 4), f"{i + 1}. {l['id']}  {l['start']:.1f}s", font=ov.font(22), fill=(230, 230, 230))
+    p = out / fname
+    s.save(p)
+    return p
+
+
+def stage_checks(ep: dict, fr, nf: int) -> tuple[list, list]:
+    """画面の作りの回(kind="stage")だけ: 文が替わっても絵が替わらない行・出典の無い素材・札の出しすぎ(naze/stage.py)。"""
+    if ep.get("kind") != "stage":
+        return [], []
+    from . import stage
+    f, w = stage.lint(ep)
+    return f + stage.labels_check(fr, nf), w
+
+
+def run(ep: dict, out: Path, kind_mod, name: str) -> bool:
+    tl = json.loads((out / "timeline.json").read_text(encoding="utf-8"))
+    video = out / f"{name}.mp4"
+    if not video.exists():
+        raise SystemExit(f"{video} が無い(compose を先に)")
+    fr, nf = kind_mod.frame_fn(ep, out)
+    F, Wn = [], []
+    for f, w in (script(ep, tl), layout(fr, nf), stage_checks(ep, fr, nf)):
+        F += f
+        Wn += w
+    pf, pw, pst = picture(video)
+    sf, sw, sst = sound(video)
+    F += pf + sf
+    Wn += pw + sw
+    mp = getattr(ep["_mod"], "MAP", None)
+    if mp is not None:                                        # 世界の地図の回は映像の点検も
+        from . import vqc
+        vf, vw, vst = vqc.check(ep, out, mp)
+        F += vf
+        Wn += vw
+        pst = {**pst, **vst}
+    sh = sheet(ep, tl, fr, out)
+    st = video.stat()
+    res = dict(passed=not F, rules=RULES, at=datetime.now().isoformat(timespec="seconds"), video=video.name, size=st.st_size, mtime=st.st_mtime,
+               fails=F, warns=Wn, stats={**pst, **sst, "長さ": round(tl["total"], 1)})
+    (out / "qc.json").write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+    md = [f"# 点検 {name}({res['at']})", "", f"結果: {'通過' if res['passed'] else '✖ 通らない'}", "",
+          "## ✖ 直すもの", *(f"- {x}" for x in F or ["なし"]), "", "## △ 目で確かめるもの", *(f"- {x}" for x in Wn or ["なし"]), "",
+          "## 数字", *(f"- {k}: {v}" for k, v in res["stats"].items()), "", f"行ごとのコマ: {sh.name}"]
+    (out / "qc.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    print("\n".join(md))
+    return res["passed"]
+
+
+def estimate(fr, nf: int, k: int = 6) -> dict:
+    """書き出しにかかる時間の見込み。全体に散らした k コマを描いて 1 コマの時間を測り、同時に描く数で割る。
+    同時に描くと 1 つずつは遅くなる(メモリと芯の取り合い)ので 1.8 倍しておく(ジオイドのショートで 4 つ同時が 1 つの 2.2 倍速だった、2026-11-15)。"""
+    import time
+    from . import compose
+    j = compose.jobs(nf)
+    ts = []
+    for i in range(k):
+        f = 1 + int((nf - 1) * (i + 0.5) / k)
+        t0 = time.time()
+        fr(f)
+        ts.append(time.time() - t0)
+    per = sorted(ts)[len(ts) // 2]
+    return dict(per=per, jobs=j, min=per * nf * (1.8 if j > 1 else 1.0) / j / 60)
+
+
+def pre(ep: dict, out: Path, kind_mod, name: str) -> bool:
+    """書き出しの前の点検(`python -m naze pre`)。動画は要らない。台本と、全コマの重なり・はみ出しを見て、行ごとのコマを並べる。
+    書き出し(1 本 1 時間)のあとで重なりが見つかり作り直しが続いたので足した(2026-11-15、海面の回で 4 本を 2 回ずつ書き出した)。
+    ここで ✖ が無くなり、pre_sheet.png を目で見てから compose する。"""
+    tl = json.loads((out / "timeline.json").read_text(encoding="utf-8"))
+    fr, nf = kind_mod.frame_fn(ep, out)
+    F, Wn = [], []
+    for f, w in (script(ep, tl), layout(fr, nf), stage_checks(ep, fr, nf)):
+        F += f
+        Wn += w
+    mp = getattr(ep["_mod"], "MAP", None)
+    if mp is not None:                                        # 世界の地図の回は、寄りすぎのぼけなども描く前に見る(qc と同じ vqc)
+        from . import vqc                                     # アラル海の回で、qc の ✖ 7 本のうち 6 本がぼけで、書き出し 2 時間が無駄になった(2026-11-16)
+        vf, vw, _ = vqc.check(ep, out, mp)
+        F += vf
+        Wn += vw
+    p = sheet(ep, tl, fr, out, "pre_sheet.png")
+    est = estimate(fr, nf)
+    if est["min"] > 15:
+        Wn.append(f"書き出しの見込みが {est['min']:.0f} 分(15 分超え)。重い絵(毎コマ描き直す地球・立体)を軽くできないか見る")
+    md = [f"# 書き出し前の点検 {name}", "", f"結果: {'通過' if not F else '✖ 直してから書き出す'}", "",
+          f"書き出しの見込み: 約 {est['min']:.0f} 分(1 コマ {est['per']:.2f} 秒 × {nf} コマ ÷ 同時 {est['jobs']})", "",
+          "## ✖ 直すもの", *(f"- {x}" for x in F or ["なし"]), "", "## △ 目で確かめるもの", *(f"- {x}" for x in Wn or ["なし"]), "",
+          f"行ごとのコマ: {p.name}(色の目盛りなど reg=False の字は数えていないので目で見る)"]
+    (out / "pre.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    print("\n".join(md))
+    return not F
+
+
+def gate(video: Path) -> None:
+    """投稿の前の関門: 点検に通っていて、そのあと動画が変わっていないこと。"""
+    q = video.parent / "qc.json"
+    if not q.exists():
+        raise SystemExit(f"点検していない: python -m naze qc で点検してから投稿する({q})")
+    r = json.loads(q.read_text(encoding="utf-8"))
+    st = video.stat()
+    if r.get("video") != video.name or r.get("size") != st.st_size or abs(r.get("mtime", 0) - st.st_mtime) > 1:
+        raise SystemExit("点検のあとで動画が変わっている: 点検し直す")
+    if r.get("rules") != RULES:
+        raise SystemExit(f"古い決まりで点検した結果({r.get('rules') or '版なし'}): 今の決まり {RULES} で点検し直す(docs/writing.md の冒頭)")
+    if not r.get("passed"):
+        raise SystemExit("点検に通っていない:\n" + "\n".join(r.get("fails", [])))

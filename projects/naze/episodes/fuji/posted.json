@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "MEypuNxqgxI",
+  "publish_at": "2026-10-27T21:00:00+09:00",
+  "thumb": "out/fuji/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "Ua_0ckJYcKA",
+  "publish_at": "2026-10-28T17:00:00+09:00"
+ },
+ "s2": {
+  "id": "qIUNsCUfG6c",
+  "publish_at": "2026-10-28T18:00:00+09:00"
+ },
+ "s3": {
+  "id": "GSfqD2L5RVI",
+  "publish_at": "2026-10-28T19:00:00+09:00"
+ },
+ "s4": {
+  "id": "sE-7j2gw7U0",
+  "publish_at": "2026-10-28T20:00:00+09:00"
+ },
+ "s5": {
+  "id": "nBUqzo1RgDg",
+  "publish_at": "2026-10-28T21:00:00+09:00"
+ }
+}

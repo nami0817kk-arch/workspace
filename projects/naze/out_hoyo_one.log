@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\なみ\dev\wt-naze\projects\naze\episodes\hoyo\sim\one.py", line 37, in <module>
+    sheet.save(p, quality=90)
+  File "C:\Users\なみ\AppData\Local\Programs\Python\Python312\Lib\site-packages\PIL\Image.py", line 2706, in save
+    fp = builtins.open(filename, "w+b")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\なみ\\dev\\wt-naze\\projects\\naze\\out\\hoyo\\one.jpg'

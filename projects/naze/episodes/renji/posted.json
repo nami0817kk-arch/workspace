@@ -1,0 +1,27 @@
+{
+ "long": {
+  "id": "U1Pc86CYu58",
+  "publish_at": "2026-10-30T21:00:00+09:00",
+  "thumb": "out/renji/thumb_long.jpg"
+ },
+ "s1": {
+  "id": "vjtxe46UClo",
+  "publish_at": "2026-10-31T17:00:00+09:00"
+ },
+ "s2": {
+  "id": "eNKnkrZ7EXI",
+  "publish_at": "2026-10-31T18:00:00+09:00"
+ },
+ "s3": {
+  "id": "mPnc0H0Yuls",
+  "publish_at": "2026-10-31T19:00:00+09:00"
+ },
+ "s4": {
+  "id": "2kiVfa0zXqQ",
+  "publish_at": "2026-10-31T20:00:00+09:00"
+ },
+ "s5": {
+  "id": "adnkhx18-eA",
+  "publish_at": "2026-10-31T21:00:00+09:00"
+ }
+}
