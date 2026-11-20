@@ -82,13 +82,16 @@
     return why === 'month';
   };
   YA.adPending = false;
+  // いま遊んでいる世界か（設定の「点検用」で回す試しの世界の試合では、広告を出す番にしない。2026-11-20）
+  const liveWorld = (w) => !(YA._ui && YA._ui.app && YA._ui.app.w && YA._ui.app.w !== w);
+  YA.adLiveWorld = liveWorld;
   const wk0 = YA.endWeek;
   if (wk0) {
     YA.endWeek = function (w) {
       const m0 = YA.monthIdx(w.week);
       const r = wk0.apply(this, arguments);
       // 月の区切り（週が進んで月が替わった）
-      if (YA.monthIdx(w.week) !== m0 && YA.interstitialDue(w, 'month')) adDue();
+      if (YA.monthIdx(w.week) !== m0 && liveWorld(w) && YA.interstitialDue(w, 'month')) adDue();
       w.sharpEye = !!YA.ent.eye; // 見抜く目（伸びしろの幅が狭まる）
       YA.eyeReveal(w);
       return r;
@@ -98,7 +101,7 @@
   if (am0) {
     YA.applyMatch = function (w) {
       const r = am0.apply(this, arguments);
-      if (YA.interstitialDue(w, 'match')) adDue();
+      if (liveWorld(w) && YA.interstitialDue(w, 'match')) adDue();
       return r;
     };
   }
@@ -319,7 +322,12 @@
           if (o.ab) p.sumIn = YA.abSum(p); // 3年間の伸びの起点は決めた能力から
           if (o.traits) p.traits = o.traits.slice(0, YA.ORIG_TRAITS);
           if (o.form) p.formPick = o.form;
-          const n = (p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length;
+          // 生まれたときの値（乱数の能力・利き足）で決めた左右の得手・得意な役割を、決めた中身で決め直す
+          // （2026-11-20：左利きにしても「右サイドが得意」のまま、決めた能力に合わない役割が残っていた）
+          if (YA.posInit) { delete p.pz; YA.posInit(p); }
+          // 自分で決めた子に悪い癖は付けない（中身はすべて買った人が決める。乱数の能力から付いていた）
+          if (p.habits) { p.habits = []; p.hbProg = {}; }
+          const n =(p.pos === 'GK' ? YA.AB_GK : YA.AB_FIELD).length;
           if (o.fut != null) {
             // 将来の総合力から行き着く高さ（futurePoint と同じ物差しを逆にたどる）
             const need = Math.max(0, (YA.unrate(Math.min(200, o.fut)) - YA.ovr(p)) / 0.75);
@@ -379,7 +387,7 @@
       body.append(h('div', { class: 'card', style: 'padding:6px 9px;margin:4px 0;display:flex;align-items:center;gap:6px' },
         h('div', { class: 'grow' }, h('b', {}, it.name), h('div', { class: 'note' }, it.note), YA.shopItemGuideEl ? YA.shopItemGuideEl(it) : null, st ? h('div', { class: 'note', style: 'color:var(--ink)' }, st) : null),
         owned(it) && YA.shopGoEl ? YA.shopGoEl(it) : null,
-        done ? null : (() => { const why = YA.buyWhy(it); return h('button', { class: 'btn sm pri', 'data-pid': it.id, disabled: !!why, why: why || '', onclick: () => { YA.shopMsg = ''; YA.buy(it.id); } }, priceOf(it) || (YA.native.has() ? 'ストアに接続中' : '買う')); })()));
+        done ? null : (() => { const why = YA.buyWhy(it); return h('button', { class: 'btn sm pri', 'data-pid': it.id, disabled: !!why, why: why || '', onclick: () => { YA.shopMsg = YA.buy(it.id) ? `「${it.name}」の購入を手続き中です…` : ''; rerender(); } }, priceOf(it) || (YA.native.has() ? 'ストアに接続中' : '買う')); })()));
     }
     body.append(h('div', { class: 'row', style: 'gap:6px;margin-top:4px' }, h('button', { class: 'btn sm', disabled: !YA.native.has(), why: '購入の復元はアプリでだけできます', onclick: () => { YA.shopMsg = '確認しています…'; YA.restorePurchases(); rerender(); } }, '購入を復元'), h('span', { class: 'note' }, YA.shopMsg || '')));
     YA.origButton(body);
