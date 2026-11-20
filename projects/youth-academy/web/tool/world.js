@@ -702,7 +702,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
       ok(YA.dexCount(wd) === 5 && wd.fund === fund0 + YA.DEX_REWARD[5], '図鑑：5種で育成基金300万円');
       ok(YA.achievements(wd).find((x) => x.k === 'dex0').done, '図鑑：実績「5種そろえる」に届く');
       for (const f of YA.AWAKE_FORMS.slice(5)) YA.dexAdd(wd, pl, f);
-      ok(YA.dexCount(wd) === YA.AWAKE_FORMS.length && wd.fund === fund0 + 300 + 600 + 1000 + 1500 + 2000, '図鑑：40種で合計5400万円');
+      ok(YA.dexCount(wd) === YA.AWAKE_FORMS.length && wd.fund === fund0 + 300 + 600 + 1000 + 1500 + 2000 + 2500 + 3000 + 3500 + 4000, '図鑑：80種で合計1億8400万円');
       JSON.parse(JSON.stringify(wd));
     }
     {
@@ -1391,7 +1391,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const ev = (w0.forced || []).find((e) => e.id === 'awake');
   const v = ev && YA.eventView(w0, ev);
   ok(v && /覚醒/.test(v.text) && v.text.indexOf(q.aw.trait) >= 0 && !/undefined|null|NaN/.test(v.text), '覚醒の知らせ ' + (v && v.text));
-  ok(YA.AWAKE_FORMS.length >= 40 && new Set(YA.AWAKE_FORMS.map((f) => f.k)).size === YA.AWAKE_FORMS.length && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は40種類・中身が正しい');
+  ok(YA.AWAKE_FORMS.length >= 80 && new Set(YA.AWAKE_FORMS.map((f) => f.k)).size === YA.AWAKE_FORMS.length && YA.AWAKE_FORMS.every((f) => f.as.every((t) => YA.TRAITS.indexOf(t) >= 0) && f.abs.every((a) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(a) >= 0)), '覚醒の形は80種類・中身が正しい');
   ok(YA.AWAKE_FORMS.every((f) => f.as.length === 4 && new Set(f.as).size === 4), '覚醒の特性はどの形も4つ');
   // プロの卒業生からの知らせ：どの種類のどの言い回しも、文が崩れない。毎週届き、同じ種類が続かない
   {
@@ -1464,7 +1464,7 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
 {
   const wl = YA.newWorld(31);
   const al0 = YA.achievements(wl);
-  ok(al0.length === YA.ACH_COUNT && YA.ACH_COUNT === 69 && new Set(al0.map((a) => a.k)).size === 69, '実績は69個で重ならない');
+  ok(al0.length === YA.ACH_COUNT && YA.ACH_COUNT === 72 && new Set(al0.map((a) => a.k)).size === 72, '実績は72個で重ならない');
   ok(YA.ACH_FIELDS.every((f) => al0.some((a) => a.field === f)) && ['銅', '銀', '金'].every((t) => al0.some((a) => a.tier === t)), '5分野・銅銀金がそろう');
   ok(!!YA.nextAchievement(wl), '次に届きそうな実績が出る');
   let years = 0;
@@ -1478,10 +1478,10 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     if (top) { top.nat = 1; top.caps = 5; YA.alumniTick(wl); hofX = top.hof ? 1 : 0; }
   }
   const hofN = wl.alumni.filter((a) => a.hof).length + hofX, fullN = wl.alumni.filter((a) => a.hof === 'full').length;
-  console.log('8年後 卒業生', wl.alumni.length, '殿堂候補以上', hofN, '正式', fullN, '基金', wl.fund, '実績', YA.achievements(wl).filter((a) => a.done).length + '/69');
+  console.log('8年後 卒業生', wl.alumni.length, '殿堂候補以上', hofN, '正式', fullN, '基金', wl.fund, '実績', YA.achievements(wl).filter((a) => a.done).length + '/72');
   console.log('殿堂候補の点', wl.alumni.filter((a) => a.hof).map((a) => a.hof + ':' + a.age + ':' + (a.nat * 2 + (a.titles || []).length * 2 + (a.awards || []).length + Math.floor((a.apps || 0) / 150) + (a.abroad ? 1 : 0))).join(' '));
   ok(hofN >= 1, '12年で殿堂候補が出る');
-  { const c = wl.alumni.find((a) => a.hof === 'cand' && (a.nat || 0) * 2 + (a.titles || []).length * 2 + (a.awards || []).length >= 6); if (c) { c.age = 31; YA.alumniTick(wl); ok(c.hof === 'full' || c.retired, '殿堂候補が点を満たして30代になると正式に殿堂入りする'); } }
+  { const c = wl.alumni.find((a) => a.hof === 'cand' && !a.retired && YA.hofScore(a) >= YA.HOF_FULL + 3); if (c) { c.age = 31; YA.alumniTick(wl); ok(c.hof === 'full' || c.retired, '殿堂候補が点を満たして30代になると正式に殿堂入りする'); } }
   ok(Object.keys(wl.achSeen || {}).length > 0 && wl.inbox.some((n) => /実績「/.test(n.text)), '届いた実績が知らされる');
   ok(fullN <= Math.ceil(wl.alumni.filter((a) => a.status === 'pro').length * 0.5) + 1, '正式な殿堂入りは多すぎない');
   ok((wl.fund || 0) + (wl.fundLog || []).reduce((s, x) => s + x.cost, 0) === (wl.fundIn || 0) && (wl.fundIn || 0) > 0, '連帯貢献金の一部が育成基金へ回る');

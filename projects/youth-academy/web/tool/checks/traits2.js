@@ -1,11 +1,11 @@
 // 選手を構成する要素 段階3（traits2.js・data.js の TRAIT_X/HABITS/TRAIT_COMBO・engine の traitXMod）
 'use strict';
 module.exports = (YA, ok) => {
-  ok(YA.TRAITS.length === 100 && new Set(YA.TRAITS).size === 100, `特性は100個で重なりがない（${YA.TRAITS.length}）`);
+  ok(YA.TRAITS.length === 150 && new Set(YA.TRAITS).size === 150, `特性は150個で重なりがない（${YA.TRAITS.length}）`);
   ok(YA.TRAITS.every((t) => YA.GOLD[t] && YA.TRAIT_AFF[t]), 'どの特性にも金と覚えやすさ（関わる能力）がある');
   ok(new Set(Object.values(YA.GOLD)).size === Object.keys(YA.GOLD).length, '金の名前が重ならない');
   ok(Object.values(YA.TRAIT_AFF).every((a) => a.every((n) => YA.AB_FIELD.concat(YA.AB_GK).indexOf(n) >= 0)), '関わる能力の名前が正しい');
-  ok(YA.AWAKE_FORMS.length === 40, '覚醒の形は40種');
+  ok(YA.AWAKE_FORMS.length === 80, '覚醒の形は80種');
   ok(YA.TRAIT_COMBO.every(([a, b]) => YA.TRAITS.indexOf(a) >= 0 && YA.TRAITS.indexOf(b) >= 0), '組み合わせの特性が一覧にある');
   // 新しい30個・悪い癖・組み合わせが試合で効く（両チームの全員に持たせて回す）
   const NEW = Object.keys(YA.TRAIT_X);
@@ -31,7 +31,7 @@ module.exports = (YA, ok) => {
     }
   } finally { P.traitBonus = tb0; P._fx = fx0; }
   const miss = NEW.filter((t) => !seen.has(t));
-  ok(miss.length <= 2, '新しい特性30個が試合で効く（効かなかったもの：' + miss.join('・') + '）');
+  ok(miss.length <= 3, '新しい特性80個が試合で効く（効かなかったもの：' + miss.join('・') + '）');
   ok(habitSeen.size >= 5, '悪い癖が試合で出る（' + [...habitSeen].join('・') + '）');
   ok(comboSeen.size >= 4, '特性の組み合わせが試合で出る（' + [...comboSeen].join('・') + '）');
   // 悪い癖：約3割が持つ・直せる

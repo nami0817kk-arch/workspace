@@ -18,6 +18,7 @@
     ['r155', 0, '日本代表級（総合力155）に届いた卒業生が{n}人', [1, 3, 8], (w) => cnt(w.alumni, (a) => YA.rate(a.ovr) >= 155)],
     ['grads', 0, '送り出した卒業生が{n}人', [36, 108, 360], (w) => w.alumni.length],
     ['dex', 0, '覚醒の図鑑を{n}種そろえる', [5, 10, 20], (w) => YA.dexCount(w)],
+    ['dexb', 0, '覚醒の図鑑を{n}種そろえる', [40, 60, 80], (w) => YA.dexCount(w)], // 2026-11-20 覚醒の形を80種に
     ['trophy', 1, '大会で優勝を{n}回', [1, 5, 15], (w) => (w.trophies || []).length],
     ['lwin', 1, 'リーグ優勝を{n}回', [1, 3, 8], (w) => (w.leagueHist || []).filter((x) => x.rank === 1).length],
     ['wins', 1, 'Aチームで通算{n}勝', [20, 100, 300], (w) => (w.rec && w.rec.w) || 0],
@@ -359,7 +360,7 @@
   const leanHint = (f) => { const ks = Object.keys(YA.FORM_LEAN || {}).filter((k) => YA.FORM_LEAN[k].includes(f.k)); return ks.length ? ks.map((k) => YA.KIND_LABEL[k]).join('か') + '接し方で育てた子に出やすい' : ''; };
   function dexTab(body, w) {
     const n = YA.dexCount(w), all = YA.AWAKE_FORMS;
-    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種・10種・20種・30種・40種で育成基金のごほうび（300・600・1000・1500・2000万円）。'));
+    body.append(h('div', { class: 'h' }, `覚醒の図鑑 ${n}/${all.length}`), h('div', { class: 'note' }, '★の子が覚醒すると、その形が載ります。形は位置と能力に加えて、節目や出来事でどう接してきたか（寄り添う・厳しく・背中を押す・任せる）で出やすさが変わります。5種から10種ごとに（5・10・20・30・40・50・60・70・80種）育成基金のごほうび（300万円〜4000万円）。'));
     const next = [5, 10, 20].find((x) => x > n);
     if (next) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `次のごほうびまで あと${next - n}種（${YA.DEX_REWARD[next]}万円）`));
     // 4列の札にして、見つけた形を金色で先に（2026-11-16 見つけた形が一覧のいちばん下にあった）
