@@ -263,6 +263,10 @@ class RestorePointInfo {
   });
 }
 
+
+/// [GameState.encodeSaveOffMain] が別の処理で呼ぶ(トップレベルでないと渡せない)。
+String _encodeSave(SaveGame save) => jsonEncode(save.toJson());
+
 class GameState extends ChangeNotifier {
   /// 旧バージョンで使われていた単一スロットのキー。起動時にスロット0へ移行する。
   static const _legacyPrefsKey = 'soccer_manager_save_v1';
@@ -930,6 +934,22 @@ class GameState extends ChangeNotifier {
   /// 保存をまとめるためのタイマー。
   Timer? _persistTimer;
 
+  /// セーブを JSON にする重い処理を、画面を描く処理とは別のところで行う。
+  ///
+  /// セーブは約1.5MB あり、JSON にするのに PC でも約160ms かかっていた
+  /// (60fps の10コマ分)。節を進めるたびに画面が一瞬止まる元になる。
+  /// 別の処理へは中身を写して渡すので、写した後に元が変わっても混ざらない。
+  /// 写せないものが混じっていた場合と Web では、これまでどおりここで行う。
+  @visibleForTesting
+  static Future<String> encodeSaveOffMain(SaveGame save) async {
+    if (kIsWeb) return jsonEncode(save.toJson());
+    try {
+      return await compute(_encodeSave, save);
+    } catch (_) {
+      return jsonEncode(save.toJson());
+    }
+  }
+
   /// 保存の間隔。短くすると中断時に失う変更が減るが、まとめる効果も減る。
   static const Duration persistDebounce = Duration(milliseconds: 400);
 
@@ -988,10 +1008,7 @@ class GameState extends ChangeNotifier {
       if (_save == null) {
         await prefs.remove(_slotKey(target));
       } else {
-        await prefs.setString(
-          _slotKey(target),
-          jsonEncode(_save!.toJson()),
-        );
+        await prefs.setString(_slotKey(target), await encodeSaveOffMain(_save!));
       }
       lastSaveError = null;
     } catch (e) {
