@@ -16,7 +16,14 @@
   奥行きは Depth Anything V2 small（`C:\Users\なみ\dev\assets3d\models`）。Blender の写実（Cycles）はこの PC で 1 コマ 2〜4 分なので全部は描かない
 - **声**: 剣崎雌雄のまま、読み方も今のまま。BGM は入れない
 - **仕組みで止める**（2026-11-20）: 台本は書いたらすぐ `python -m naze lint episodes/<題材>`。印は 1 行目 `open="scene"|"belief"`、答えの行 `answer=True`。qc が答えの位置・冒頭・代弁・比べ・切り替え（1 分 6 回以上）を、long が 8 分を見て ✖ にし、古い決まりで点検した動画は upload が止める（docs/writing.md の「点検」）
-- 画面の仕組み（素材を探して取る・奥行き・色の調整を作る手順に入れる）は**まだ作っていない**（2026-11-20 時点）
+- **画面の作り**（2026-11-20「いい感じ」で決定。新しい回は `kind="stage"` で作る。書き方は `naze/stage.py` の冒頭、見本は `episodes/stagetest/s1`）:
+  - **字の置き場を固定**: 左上＝問いの札（`qtag`）／右上＝出典（`assets/sources.json` から自動）／左下＝場所・人の札（場面の `place`）／上の真ん中＝ずっと出すメーター（`meter`）／下の真ん中＝字幕 2 行まで・大事な語だけ【】で黄色。**真ん中は絵だけ**（札は同時に 3 つまで。qc が止める）
+  - **1 文に 1 枚**: 行に `scene` を書けば絵が替わる。書かない行は `fx` で前の絵に足して育てる。どちらも無い行は lint が止める
+  - 場面: map・video・photo（奥行き）・words（黒地に字だけ。2 行目は黄色で時間差）・bars（柱の比べ、数え上がる）・boxes（予告の空の枠→埋まって全画面へ）・card（用語のカード）・split（左右。色は `colors` で 1 本の中で固定）・custom（題材が描く断面など）
+  - 足し方(fx): route（線が伸びる）・note（細い線と小さな札）・q（わからない所に「？」）・dim（打ち消しの文で暗く）・spot（注目以外を暗く）・person（人を丸で囲んで大きさの目安）・add/focus（柱を足す・1 つだけ濃く）・fill/expand。`on="言葉"` でその言葉の瞬間に出る
+  - 参考にしたチャンネル: 当たり前の謎・都市伝説アカデミー・生物システム研究所・夜ふかし解剖室・データ棒人間・ぼくらの防災（1 秒ごとに見た結果はメモ kotowari-quality-by-conversation）
+  - 素材: `python tools/media.py find-v "語" / get-v <id> episodes/<題材> 名前.mp4`。`assets/stock/` は git に入れない（出典の id で取り直す）。**素材は「この文を分からせる絵」を先に決めてから探す**
+  - 手順: `lint` → `kana` → `voice` → `pre`（✖ が無くなるまで。pre_sheet.png を目で見る）→ `compose` → `qc`
 
 ## 作り方
 

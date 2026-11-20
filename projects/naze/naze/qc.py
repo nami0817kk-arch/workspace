@@ -254,6 +254,15 @@ def sheet(ep: dict, tl: dict, frame_fn, out: Path, fname: str = "qc_sheet.png") 
     return p
 
 
+def stage_checks(ep: dict, fr, nf: int) -> tuple[list, list]:
+    """画面の作りの回(kind="stage")だけ: 文が替わっても絵が替わらない行・出典の無い素材・札の出しすぎ(naze/stage.py)。"""
+    if ep.get("kind") != "stage":
+        return [], []
+    from . import stage
+    f, w = stage.lint(ep)
+    return f + stage.labels_check(fr, nf), w
+
+
 def run(ep: dict, out: Path, kind_mod, name: str) -> bool:
     tl = json.loads((out / "timeline.json").read_text(encoding="utf-8"))
     video = out / f"{name}.mp4"
@@ -261,7 +270,7 @@ def run(ep: dict, out: Path, kind_mod, name: str) -> bool:
         raise SystemExit(f"{video} が無い(compose を先に)")
     fr, nf = kind_mod.frame_fn(ep, out)
     F, Wn = [], []
-    for f, w in (script(ep, tl), layout(fr, nf)):
+    for f, w in (script(ep, tl), layout(fr, nf), stage_checks(ep, fr, nf)):
         F += f
         Wn += w
     pf, pw, pst = picture(video)
@@ -311,7 +320,7 @@ def pre(ep: dict, out: Path, kind_mod, name: str) -> bool:
     tl = json.loads((out / "timeline.json").read_text(encoding="utf-8"))
     fr, nf = kind_mod.frame_fn(ep, out)
     F, Wn = [], []
-    for f, w in (script(ep, tl), layout(fr, nf)):
+    for f, w in (script(ep, tl), layout(fr, nf), stage_checks(ep, fr, nf)):
         F += f
         Wn += w
     mp = getattr(ep["_mod"], "MAP", None)

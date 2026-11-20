@@ -2,6 +2,7 @@
 
 手順(地形の回): kana(読みを出す)/ voice(声と時間割)/ prep(標高・色・カメラ)/ stills 1,60,120(確認用のコマ)/ render(全コマ)/ compose(mp4)/ all
 手順(計算の回): kana / voice / compose / all   … 画面は題材の ep.py の frame() が描く
+手順(画面の作りの回 kind="stage"、2026-11-20 から): kana / voice / pre / compose / qc … 画面は naze/stage.py(台本の行に scene と fx)
 台本の点検: lint … 台本を書いたらすぐ、見せる前(答えを引っ張る・冒頭の入り方・代弁・比べ。2026-11-19 の決まり)
 点検(両方): qc … compose のあと。通らなければ投稿できない(naze/qc.py)
 映像の点検(世界の地図の回): vqc … 描く前でも使える(naze/vqc.py)。qc の中でも走る
@@ -42,6 +43,10 @@ def lint(folder: Path) -> int:
     for f in folders:
         ep = load(f)
         F, Wn = qc.rules(ep)
+        if ep.get("kind") == "stage":                    # 画面の作りの回は、絵が替わらない文・出典も台本の段階で見る
+            from . import stage
+            f2, w2 = stage.lint(ep)
+            F, Wn = F + f2, Wn + w2
         print(f"== {f.name}({qc.position(ep)}) {'通過' if not F else '✖'}")
         for x in F:
             print("  ✖", x)
@@ -50,6 +55,18 @@ def lint(folder: Path) -> int:
         bad += bool(F)
     print(f"決まり {qc.RULES}: {len(folders) - bad}/{len(folders)} 本が通過")
     return 1 if bad else 0
+
+
+def kmod(kind: str):
+    """回の種類ごとの描き方。terrain=地形(Blender)、stage=画面の作り(2026-11-20 から)、それ以外=計算の回(ep.py の draw)。"""
+    if kind == "terrain":
+        from . import terrain_ep
+        return terrain_ep
+    if kind == "stage":
+        from . import stage_ep
+        return stage_ep
+    from . import sim_ep
+    return sim_ep
 
 
 def main(argv=None) -> int:
@@ -74,16 +91,13 @@ def main(argv=None) -> int:
         return 0 if vqc.run(ep, out, ep["_mod"].MAP) else 1
     if step == "qc":
         from . import qc
-        from . import terrain_ep, sim_ep
-        return 0 if qc.run(ep, out, terrain_ep if kind == "terrain" else sim_ep, out.name) else 1
+        return 0 if qc.run(ep, out, kmod(kind), out.name) else 1
     if step == "pre":                                     # 書き出しの前の点検(声のあと。重なり・はみ出し・台本と行ごとのコマ)
         from . import qc
-        from . import terrain_ep, sim_ep
-        return 0 if qc.pre(ep, out, terrain_ep if kind == "terrain" else sim_ep, out.name) else 1
+        return 0 if qc.pre(ep, out, kmod(kind), out.name) else 1
     if step == "seg":                                     # 分けて描くときの 1 切れ(compose._parallel が呼ぶ): seg <題材> <a> <b> <出力>
         from . import compose
-        from . import terrain_ep, sim_ep
-        fr, _ = (terrain_ep if kind == "terrain" else sim_ep).frame_fn(ep, out)
+        fr, _ = kmod(kind).frame_fn(ep, out)
         compose.render_video(fr, int(argv[2]), int(argv[3]), Path(argv[4]))
         return 0
     if kind == "terrain":
@@ -107,7 +121,7 @@ def main(argv=None) -> int:
             K.render(out)
             print(K.final(ep, out, out.name))
     else:
-        from . import sim_ep as S
+        S = kmod(kind)                                    # 計算の回(sim)と、画面の作りで描く回(stage)
         if step == "kana":
             S.kana(ep)
         elif step == "voice":
