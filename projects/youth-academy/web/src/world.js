@@ -890,7 +890,7 @@
         const p = ev.pick(w, r);
         if (!p || used.has(p.id) || used.has(ev.id)) continue;
         // ★以外の子の出来事は控えめに（2026-11-15「★以外のイベントが多発する」）。★がいる年だけ。大事なもの（退団・怪我・プロの話）は残す
-        if (w.players[p.id] && !p.star && hasStar && YA.EV_KEEP_ALWAYS.indexOf(ev.id) < 0 && r() > YA.NONSTAR_KEEP) break;
+        if (w.players[p.id] && !p.star && !p._orig && hasStar && YA.EV_KEEP_ALWAYS.indexOf(ev.id) < 0 && r() > YA.NONSTAR_KEEP) break;
         used.add(p.id);
         used.add(ev.id);
         out.push({ id: ev.id, pid: p.id || null, x: p._club != null ? p._club : p._staff, week: w.week, year: w.year });
@@ -929,7 +929,9 @@
     if (!Object.values(w.players).some((q) => q.star)) return out;
     return out.filter((e) => {
       const p = e.pid && w.players[e.pid];
-      if (!p || p.star || YA.EV_AUTO_NONSTAR.indexOf(e.id) < 0) return true;
+      // オリジナル選手（チケットで作った子）も★の子と同じく自分で選ぶ。2026-11-20：強く作った子が、トップ昇格の話を
+      // コーチに任されて入団直後に一覧から消えていた（能力14以上で3人に2人）
+      if (!p || p.star || p._orig || YA.EV_AUTO_NONSTAR.indexOf(e.id) < 0) return true;
       try {
         const v = YA.eventView(w, e);
         if (!v) return false;

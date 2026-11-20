@@ -285,6 +285,13 @@
       // 候補のときの顔が、在籍の子と重なっていたら選び直す
       if (p.face != null && faces.has(p.face % FN)) p.face = null;
       if (p.face != null) faces.add(p.face % FN);
+      // 候補のときの名前が、在籍の子・卒業生・同じ年の新入生と重なっていたら付け直す
+      // （2026-11-20：候補は半年前に作るので、その後に入った子と同じ名前のまま入団していた）
+      if (names.has(p.name) && !p._orig) { // オリジナル選手は付けた名前のまま（先に入るので、重なれば後の子が付け直される）
+        const old = p.name;
+        p.name = YA.randName(rng, names);
+        if (p.scoutNote && typeof p.scoutNote === 'string') p.scoutNote = p.scoutNote.split(old).join(p.name);
+      }
       p.grade = 1;
       p.id = 'p' + ++w.nextId;
       p.team = 'B';
