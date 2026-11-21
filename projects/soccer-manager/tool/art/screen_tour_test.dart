@@ -193,6 +193,21 @@ void main() {
         await tester.tap(f.first, warnIfMissed: false);
         await tester.pump(const Duration(milliseconds: 300));
         await shoot('$p-$l');
+        // 経営は各タブが長いので、下へ送りながら撮る。
+        if (p == '経営') {
+          // 座標は論理ピクセル(幅852)。左右2つの欄の両方を送る。
+          for (var i = 1; i <= 6; i++) {
+            await tester.dragFrom(
+                const Offset(300, 330), const Offset(0, -220));
+            await tester.dragFrom(
+                const Offset(640, 330), const Offset(0, -220));
+            await tester.pump(const Duration(milliseconds: 400));
+            await shoot('$p-$l-scroll$i');
+          }
+          await tester.dragFrom(const Offset(300, 200), const Offset(0, 5000));
+          await tester.dragFrom(const Offset(640, 200), const Offset(0, 5000));
+          await tester.pump(const Duration(milliseconds: 400));
+        }
         // 選手のスカッドは、表を下へ送ったところ・カード・選手の詳しい画面も撮る。
         if (p == '選手' && l == 'スカッド') {
           await tester.dragFrom(const Offset(940, 330), const Offset(0, -250));

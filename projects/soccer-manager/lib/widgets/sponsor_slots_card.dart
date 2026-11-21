@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
 import '../logic/sponsor_slots.dart';
 import '../state/game_state.dart';
+import 'help_button.dart';
 
 /// 枠ごとのスポンサー(袖・背中・練習着)。胸のスポンサーとは別の会社と結ぶ。
 class SponsorSlotsCard extends StatelessWidget {
@@ -20,14 +21,11 @@ class SponsorSlotsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('枠ごとのスポンサー', 'Other sponsor slots'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-                Tr.pick('胸のスポンサーとは別の会社と結べます。空いた枠には季の始めに提示が来ます。',
-                    'Each slot can carry a different company from your shirt sponsor. Empty slots get an offer at the start of each season.'),
-                style: const TextStyle(fontSize: 12)),
-            const SizedBox(height: 8),
+            TitleWithHelp(
+              title: Tr.pick('枠ごとのスポンサー', 'Other sponsor slots'),
+              help: Tr.pick('胸のスポンサーとは別の会社と結べます。空いた枠には季の始めに提示が来ます。',
+                  'Each slot can carry a different company from your shirt sponsor. Empty slots get an offer at the start of each season.'),
+            ),
             for (final slot in SponsorSlot.values) _SlotRow(slot: slot),
           ],
         ),

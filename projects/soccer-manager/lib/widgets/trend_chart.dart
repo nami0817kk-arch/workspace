@@ -173,6 +173,12 @@ class TrendsCard extends StatelessWidget {
         color: Colors.deepOrange,
       ),
     ];
+    // まだ線にならないグラフは並べない。空の枠が4つ並ぶと縦を取るだけ
+    // だった(2026-11-21)。
+    final ready = [
+      for (final ch in charts)
+        if (ch.points.length >= 2) ch,
+    ];
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -182,6 +188,14 @@ class TrendsCard extends StatelessWidget {
             Text(Tr.pick('推移', 'Trends'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
+            if (ready.isEmpty)
+              Text(
+                Tr.pick('2季目が終わると、順位・クラブ価値・収入・損益のグラフが出ます。',
+                    'Charts of position, club value, income and result appear after your second season.'),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
+              )
+            else
             LayoutBuilder(builder: (context, c) {
               // 横に広ければ2列。
               final cols = c.maxWidth >= 600 ? 2 : 1;
@@ -190,7 +204,7 @@ class TrendsCard extends StatelessWidget {
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  for (final ch in charts) SizedBox(width: w, child: ch),
+                  for (final ch in ready) SizedBox(width: w, child: ch),
                 ],
               );
             }),

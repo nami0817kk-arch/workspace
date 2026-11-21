@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/equity_engine.dart';
 import '../state/game_state.dart';
 import '../logic/economy_scale.dart';
+import 'help_button.dart';
 
 /// オーナーの持分。外部の株主へ株式を売って資金を得る(増資)。売った分は
 /// 毎季の配当で出ていく。買い戻すにはプレミアが要る。
@@ -28,31 +29,32 @@ class EquityCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('持分と株主', 'Ownership'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
+            // 決まりは「?」の中へ。金額はボタンに添える(2026-11-21)。
+            TitleWithHelp(
+              title: Tr.pick('持分と株主', 'Ownership'),
+              help: Tr.pick(
+                  '株式を${EquityEngine.step}%ずつ外部の株主へ売って資金を得られます(増資)。外部の株主には、黒字の半分が持分の割合で配当されます。買い戻すには売った値より多くかかります。持分は${EquityEngine.minOwnerShare}%を割れません。',
+                  'Sell ${EquityEngine.step}% at a time to outside holders to raise money. They share half of any profit by their stake. Buying back costs more than you sold for. You must keep ${EquityEngine.minOwnerShare}%.'),
+            ),
             Text(Tr.pick('オーナーの持分 $share%(外部 ${100 - share}%)',
                 'Your stake $share% (outside ${100 - share}%)')),
             Text(EquityEngine.mood(save.shareholderExpectation),
                 style: const TextStyle(fontSize: 12)),
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick(
-                  '${EquityEngine.step}%を売ると${formatMoney(sale)}。買い戻しは${formatMoney(buy)}。外部の株主には、黒字の半分が持分の割合で配当されます。持分は${EquityEngine.minOwnerShare}%を割れません。',
-                  'Selling ${EquityEngine.step}% raises ${formatMoney(sale)}; buying back costs ${formatMoney(buy)}. Outside holders share half of any profit. You must keep ${EquityEngine.minOwnerShare}%.'),
-              style: const TextStyle(fontSize: 12),
-            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
+              runSpacing: 4,
               children: [
                 FilledButton.tonal(
                   onPressed: canSell ? () => gs.sellStake() : null,
-                  child: Text(Tr.pick('株式を売る(増資)', 'Sell a stake')),
+                  child: Text(Tr.pick(
+                      '${EquityEngine.step}%売る(+${formatMoney(sale)})',
+                      'Sell ${EquityEngine.step}% (+${formatMoney(sale)})')),
                 ),
                 OutlinedButton(
                   onPressed: canBuy ? () => gs.buyBackStake() : null,
-                  child: Text(Tr.pick('買い戻す', 'Buy back')),
+                  child: Text(Tr.pick('買い戻す(${formatMoney(buy)})',
+                      'Buy back (${formatMoney(buy)})')),
                 ),
               ],
             ),

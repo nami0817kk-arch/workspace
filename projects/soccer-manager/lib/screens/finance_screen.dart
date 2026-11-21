@@ -36,6 +36,7 @@ import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
 import '../widgets/sponsor_slots_card.dart';
+import '../widgets/help_button.dart';
 import '../logic/economy_scale.dart';
 
 class FinanceScreen extends StatelessWidget {
@@ -96,44 +97,52 @@ class FinanceScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            Tr.pick('資金: ${formatMoney(save.budget)}',
-                                'Funds: ${formatMoney(save.budget)}'),
-                            style: Theme.of(context).textTheme.titleLarge,
+                          // 文章ではなく、週の数字を3つ大きく並べる。資金の
+                          // 額は上の段に出ているので、ここには出さない
+                          // (横画面では埋め込みのため。2026-11-21)。
+                          if (!EmbeddedInShell.of(context))
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text(
+                                Tr.pick('資金: ${formatMoney(save.budget)}',
+                                    'Funds: ${formatMoney(save.budget)}'),
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                            ),
+                          TitleWithHelp(
+                            title: Tr.pick('1週あたりのお金', 'Money per week'),
+                            style: Theme.of(context).textTheme.titleSmall,
+                            help: Tr.pick(
+                                '収入は観客動員・スポンサー・グッズ・放映権を合わせた額、人件費は年俸を節の数で割った額(スタッフ込み)です。\n\n給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。ここの週の額は1節あたりに直した目安です。',
+                                'Income is gate, sponsorship, merchandise and broadcasting together. Wages are annual salaries spread over the matchdays, staff included.\n\nWages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The weekly figures here are per-matchday averages.'),
                           ),
-                          const SizedBox(height: 8),
-                          Text(Tr.pick(
-                              '週間収入: +${formatMoney(income)}（観客動員・スポンサー・グッズ・放映権込み）',
-                              'Weekly income: +${formatMoney(income)} (gate, sponsorship, merchandise and broadcasting)')),
-                          Text(Tr.pick(
-                              '週間人件費: -${formatMoney(wageBill)}（年俸を節の数で割った額・スタッフ込み）',
-                              'Weekly wages: -${formatMoney(wageBill)} (annual salaries spread over the matchdays, staff included)')),
-                          Text(
-                            Tr.pick(
-                                '給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。上の週の額は1節あたりに直した目安です。',
-                                'Wages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The weekly figures above are per-matchday averages.'),
-                            style: const TextStyle(fontSize: 12),
+                          Row(
+                            children: [
+                              _BigFigure(
+                                label: Tr.pick('収入', 'Income'),
+                                value: '+${formatMoney(income)}',
+                              ),
+                              _BigFigure(
+                                label: loanRepayment > 0
+                                    ? Tr.pick('人件費・返済', 'Wages & loan')
+                                    : Tr.pick('人件費', 'Wages'),
+                                value:
+                                    '-${formatMoney(wageBill + loanRepayment)}',
+                              ),
+                              _BigFigure(
+                                label: Tr.pick('収支', 'Balance'),
+                                value:
+                                    '${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                                color: net >= 0
+                                    ? SemanticColors.positive(context)
+                                    : SemanticColors.negative(context),
+                              ),
+                            ],
                           ),
-                          if (loanRepayment > 0)
-                            Text(Tr.pick(
-                                '週間融資返済: -${formatMoney(loanRepayment)}',
-                                'Weekly loan repayment: -${formatMoney(loanRepayment)}')),
                           const SizedBox(height: 8),
                           _CashFlowBar(
                             income: income,
                             expenses: wageBill + loanRepayment,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            Tr.pick(
-                                '週間収支: ${net >= 0 ? '+' : ''}${formatMoney(net)}',
-                                "Weekly balance: ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
-                            style: TextStyle(
-                              color: net >= 0
-                                  ? SemanticColors.positive(context)
-                                  : SemanticColors.negative(context),
-                              fontWeight: FontWeight.bold,
-                            ),
                           ),
                           const SizedBox(height: 12),
                           // 理事会が設定する週給予算。上限を超える新規獲得は
@@ -302,19 +311,26 @@ class FinanceScreen extends StatelessWidget {
               child: AutoColumns(
                 children: [
                   const SizedBox(height: 16),
-                  Text(Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
-                      style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
+                  // 説明文は見出しの「?」の中へ(2026-11-21)。
+                  TitleWithHelp(
+                    title: Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
+                    help: Tr.pick('スタジアムの規模・オーナーの評判が高いほど、借りられる上限が上がります。',
+                        'A bigger stadium and a better reputation raise how much you can borrow.'),
+                  ),
                   _LoanSection(gameState: gameState),
-                  const SizedBox(height: 16),
-                  Text(Tr.pick('資金運用（定期預金）', 'Invest (fixed deposit)'),
-                      style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
+                  TitleWithHelp(
+                    title: Tr.pick('資金運用（定期預金）', 'Invest (fixed deposit)'),
+                    help: Tr.pick('満期まで引き出せない代わりに、満期のときにまとまった利息を受け取れます。',
+                        'Locked away until it matures, and pays a lump of interest when it does.'),
+                  ),
                   _InvestmentSection(gameState: gameState),
-                  const SizedBox(height: 16),
-                  Text(Tr.pick('スポンサー契約', 'Sponsorship'),
-                      style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
+                  TitleWithHelp(
+                    title: Tr.pick('スポンサー契約', 'Sponsorship'),
+                    help: Tr.pick('週の収入が高いほど、契約の期間は短くなります。契約する候補を1つ選んでください。',
+                        'The more it pays weekly, the shorter the deal. Choose which offer to take.'),
+                  ),
                   _SponsorSection(gameState: gameState),
                   const SponsorSlotsCard(),
                   const EquityCard(),
@@ -358,6 +374,33 @@ class FinanceScreen extends StatelessWidget {
       MaterialPageRoute(builder: (_) => PlayerDetailScreen(playerId: playerId)),
     );
   }
+}
+
+/// 小さな見出しと大きな数字の1組(概要の「1週あたりのお金」)。
+class _BigFigure extends StatelessWidget {
+  const _BigFigure({required this.label, required this.value, this.color});
+  final String label;
+  final String value;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) => Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label,
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context))),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(value,
+                  style: TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold, color: color)),
+            ),
+          ],
+        ),
+      );
 }
 
 /// 週間収入と支出(人件費+融資返済)の比率を視覚化する内訳バー。
@@ -484,18 +527,6 @@ class _SponsorSection extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              Tr.pick('週間収入が高いほど契約期間は短くなる。契約する候補を選んでください。',
-                  'The more it pays weekly, the shorter the deal. Choose which offer to take.'),
-              style: TextStyle(
-                  fontSize: 12, color: SemanticColors.subtleText(context)),
-            ),
-          ),
-        ),
         for (int i = 0; i < offers.length; i++)
           Card(
             margin: const EdgeInsets.only(bottom: 6),
@@ -585,8 +616,6 @@ class _LoanSection extends StatelessWidget {
                 leading: const Icon(Icons.savings_outlined),
                 title: Text(Tr.pick('借入可能額: ${formatMoney(maxAmount)}',
                     'You can borrow up to ${formatMoney(maxAmount)}')),
-                subtitle: Text(Tr.pick('スタジアムの規模・オーナーの評判が高いほど上限が上がる',
-                    'A bigger stadium and a better reputation raise the ceiling')),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -763,8 +792,6 @@ class _InvestmentSection extends StatelessWidget {
             leading: const Icon(Icons.account_balance_outlined),
             title: Text(Tr.pick('運用可能な資金: ${formatMoney(available)}',
                 'Available to invest: ${formatMoney(available)}')),
-            subtitle: Text(Tr.pick('満期まで引き出せない代わりに、満期時にまとまった利息を受け取れる',
-                'Locked away until it matures, and pays a lump of interest when it does')),
             trailing: FilledButton(
               onPressed:
                   available <= 0 ? null : () => _showDepositSheet(context),
