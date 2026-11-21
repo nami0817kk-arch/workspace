@@ -1,3 +1,8 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
 import 'dart:math';
 
 import '../game/formulas.dart';
@@ -10,15 +15,17 @@ import 'injury.dart';
 /// クラブごとに固定ではなく、監督に付く。監督が代われば、
 /// 同じクラブでも求められるものが変わる。
 enum Tactic {
-  possession('ポゼッション', [AttributeKey.passing, AttributeKey.dribbling]),
-  counter('カウンター', [AttributeKey.pace, AttributeKey.shooting]),
-  press('ハイプレス', [AttributeKey.physical, AttributeKey.defending]),
-  direct('ロングボール', [AttributeKey.physical, AttributeKey.shooting]),
-  balanced('バランス', []);
+  possession(Say('ポゼッション', 'Possession'), [AttributeKey.passing, AttributeKey.dribbling]),
+  counter(Say('カウンター', 'Counter-attack'), [AttributeKey.pace, AttributeKey.shooting]),
+  press(Say('ハイプレス', 'High press'), [AttributeKey.physical, AttributeKey.defending]),
+  direct(Say('ロングボール', 'Long ball'), [AttributeKey.physical, AttributeKey.shooting]),
+  balanced(Say('バランス', 'Balanced'), []);
 
-  const Tactic(this.label, this.favours);
+  const Tactic(Say label, this.favours) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   /// この戦術で重く見られる能力。
   final List<AttributeKey> favours;
@@ -62,39 +69,41 @@ class Manager {
   /// 在任年数。
   final int tenure;
 
-  static const List<String> _firstNames = [
-    'ラウル',
-    'ヨナス',
-    'ミハイル',
-    '相原',
-    'ディエゴ',
-    'アルフ',
-    'カルロ',
-    '安永',
-    'ヘンドリク',
-    'ソン',
-    'ファビオ',
-    '黒木',
+  static const List<Say> _firstNames = [
+    Say('ラウル', 'Raul'),
+    Say('ヨナス', 'Jonas'),
+    Say('ミハイル', 'Mikhail'),
+    Say('相原', 'Aihara'),
+    Say('ディエゴ', 'Diego'),
+    Say('アルフ', 'Alf'),
+    Say('カルロ', 'Carlo'),
+    Say('安永', 'Yasunaga'),
+    Say('ヘンドリク', 'Hendrik'),
+    Say('ソン', 'Son'),
+    Say('ファビオ', 'Fabio'),
+    Say('黒木', 'Kuroki'),
   ];
-  static const List<String> _lastNames = [
-    'メンドーサ',
-    'ベルガー',
-    'ソコロフ',
-    '達郎',
-    'アルベス',
-    'ソレンセン',
-    'ヴィターリ',
-    '慎司',
-    'デ・フリース',
-    'ジュンホ',
-    'ロッシ',
-    '亮平',
+  static const List<Say> _lastNames = [
+    Say('メンドーサ', 'Mendoza'),
+    Say('ベルガー', 'Berger'),
+    Say('ソコロフ', 'Sokolov'),
+    Say('達郎', 'Tatsuro'),
+    Say('アルベス', 'Alves'),
+    Say('ソレンセン', 'Sorensen'),
+    Say('ヴィターリ', 'Vitali'),
+    Say('慎司', 'Shinji'),
+    Say('デ・フリース', 'De Vries'),
+    Say('ジュンホ', 'Junho'),
+    Say('ロッシ', 'Rossi'),
+    Say('亮平', 'Ryohei'),
   ];
 
   factory Manager.roll(Random random) => Manager(
     name:
-        '${_firstNames[random.nextInt(_firstNames.length)]}・'
-        '${_lastNames[random.nextInt(_lastNames.length)]}',
+        [
+          _firstNames[random.nextInt(_firstNames.length)].t,
+          _lastNames[random.nextInt(_lastNames.length)].t,
+        ].join(tr('・', ' ')),
     tactic: Tactic.values[random.nextInt(Tactic.values.length)],
     demand: 1 + random.nextInt(5),
   );
@@ -135,10 +144,10 @@ class Manager {
 
   String fitLabel(Attributes attributes, Position position) {
     final fit = fitFor(attributes, position);
-    if (fit >= 0.4) return '戦術に嵌まっている';
-    if (fit >= 0.1) return '悪くない';
-    if (fit > -0.2) return '可も不可も無い';
-    return '戦術に合っていない';
+    if (fit >= 0.4) return tr('戦術に嵌まっている', 'Made for his system');
+    if (fit >= 0.1) return tr('悪くない', 'Not bad');
+    if (fit > -0.2) return tr('可も不可も無い', 'Neither here nor there');
+    return tr('戦術に合っていない', 'Does not fit his system');
   }
 
   Manager aged() =>
@@ -155,7 +164,7 @@ class Manager {
   factory Manager.fromJson(Map<String, dynamic>? json, Random random) {
     if (json == null) return Manager.roll(random);
     return Manager(
-      name: json['name'] as String? ?? '監督',
+      name: json['name'] as String? ?? tr('監督', 'Manager'),
       tactic: Tactic.values.any((t) => t.name == json['tactic'])
           ? Tactic.values.byName(json['tactic'] as String)
           : Tactic.balanced,
@@ -179,16 +188,21 @@ class Manager {
 ///
 /// 求めたものは手に入り、**そのぶん別のものを諦める**形に置き直す。
 enum Directive {
-  playingTime('出場機会が欲しい', '身の丈のクラブから声がかかる。出て点も取れるが、上は狙えない'),
-  winning('勝ちたい', '格上から声がかかり、監督の信頼も厚い。そのぶん序列は下から'),
-  money('条件を上げたい', '年俸の提示も交渉も通りやすいが、ロッカールームでは浮く'),
-  develop('育ててほしい', '練習の効きが上がる。若いうちに伸びる代わりに、試合では我慢する'),
-  none('特に伝えない', '');
+  playingTime(Say('出場機会が欲しい', 'I want to play'), Say('身の丈のクラブから声がかかる。出て点も取れるが、上は狙えない', 'Clubs your own size come calling. You play and you score, but the top is out of reach')),
+  winning(Say('勝ちたい', 'I want to win'), Say('格上から声がかかり、監督の信頼も厚い。そのぶん序列は下から', 'Bigger clubs call and the manager trusts you. You start at the back of the queue, though')),
+  money(Say('条件を上げたい', 'I want better terms'), Say('年俸の提示も交渉も通りやすいが、ロッカールームでは浮く', 'Wages and talks go your way, but you do not fit in the dressing room')),
+  develop(Say('育ててほしい', 'Bring me on'), Say('練習の効きが上がる。若いうちに伸びる代わりに、試合では我慢する', 'Training pays off more. You grow young, but you wait for your chances')),
+  none(Say('特に伝えない', 'Nothing in particular'), Say('', ''));
 
-  const Directive(this.label, this.effect);
+  const Directive(Say label, Say effect)
+    : _label = label,
+      _effect = effect;
 
-  final String label;
-  final String effect;
+  final Say _label;
+  final Say _effect;
+
+  String get label => _label.t;
+  String get effect => _effect.t;
 
   double get appearanceBonus => switch (this) {
     Directive.playingTime => 0.12,
@@ -249,13 +263,15 @@ enum Directive {
 /// 3種類しか置かないのは、名前のある他人を増やしても管理が増えるだけで、
 /// 効くのは「誰と競い、誰と組み、誰に学ぶか」の3つだけだから。
 enum TeammateKind {
-  rival('同ポジションの競争相手'),
-  partner('相方'),
-  mentor('メンター');
+  rival(Say('同ポジションの競争相手', 'Rival for your place')),
+  partner(Say('相方', 'Your partner')),
+  mentor(Say('メンター', 'Your mentor'));
 
-  const TeammateKind(this.label);
+  const TeammateKind(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// クラブの中に居る、名前のある1人。
@@ -277,19 +293,19 @@ class Teammate {
   /// 相方との呼吸 0〜100。一緒に試合を重ねると上がる。
   final int synergy;
 
-  static const List<String> _names = [
-    'カイル・ベネット',
-    'ルカ・ドラガン',
-    '南 廉',
-    'エミール・ノルド',
-    'ジョアン・ピレス',
-    '真木 遼',
-    'アダム・ケリー',
-    'ニコ・ヴァルタ',
-    'サム・オコエ',
-    '早瀬 樹',
-    'マテオ・リカルド',
-    'イヴァン・ペトロフ',
+  static const List<Say> _names = [
+    Say('カイル・ベネット', 'Kyle Bennett'),
+    Say('ルカ・ドラガン', 'Luka Dragan'),
+    Say('南 廉', 'Ren Minami'),
+    Say('エミール・ノルド', 'Emil Nord'),
+    Say('ジョアン・ピレス', 'Joao Pires'),
+    Say('真木 遼', 'Ryo Maki'),
+    Say('アダム・ケリー', 'Adam Kelly'),
+    Say('ニコ・ヴァルタ', 'Niko Valta'),
+    Say('サム・オコエ', 'Sam Okoe'),
+    Say('早瀬 樹', 'Itsuki Hayase'),
+    Say('マテオ・リカルド', 'Mateo Ricardo'),
+    Say('イヴァン・ペトロフ', 'Ivan Petrov'),
   ];
 
   /// 自分が引退させた選手か（[Manager.fromLegend] と同じ）。
@@ -328,7 +344,7 @@ class Teammate {
       TeammateKind.partner => 22 + random.nextInt(9),
     };
     return Teammate(
-      name: _names[random.nextInt(_names.length)],
+      name: _names[random.nextInt(_names.length)].t,
       kind: kind,
       overall: (clubStrength + random.nextInt(9) - 4).clamp(40, 92),
       age: age,
@@ -353,10 +369,10 @@ class Teammate {
       kind == TeammateKind.mentor && age <= 23 ? 1.12 : 1.0;
 
   String get synergyLabel => synergy >= 75
-      ? 'ほとんど見なくても分かる'
+      ? tr('ほとんど見なくても分かる', 'You barely have to look')
       : synergy >= 40
-      ? '呼吸が合ってきた'
-      : 'まだ手探り';
+      ? tr('呼吸が合ってきた', 'You are reading each other')
+      : tr('まだ手探り', 'Still feeling it out');
 
   Map<String, dynamic> toJson() => {
     'name': name,
@@ -370,7 +386,7 @@ class Teammate {
   static Teammate? fromJson(Map<String, dynamic>? json) {
     if (json == null) return null;
     return Teammate(
-      name: json['name'] as String? ?? '同僚',
+      name: json['name'] as String? ?? tr('同僚', 'Teammates'),
       kind: TeammateKind.values.any((k) => k.name == json['kind'])
           ? TeammateKind.values.byName(json['kind'] as String)
           : TeammateKind.partner,
@@ -402,15 +418,15 @@ class Rival {
   final int goals;
   final int caps;
 
-  static const List<String> _names = [
-    'ラファ・ドミンゴ',
-    '御堂 陸',
-    'エリク・ハンセン',
-    'ジョシュ・ベイリー',
-    'アンドレア・コンティ',
-    '雨宮 蒼',
-    'パヴェル・ノヴァク',
-    'テオ・ランベール',
+  static const List<Say> _names = [
+    Say('ラファ・ドミンゴ', 'Rafa Domingo'),
+    Say('御堂 陸', 'Riku Mido'),
+    Say('エリク・ハンセン', 'Erik Hansen'),
+    Say('ジョシュ・ベイリー', 'Josh Bailey'),
+    Say('アンドレア・コンティ', 'Andrea Conti'),
+    Say('雨宮 蒼', 'Ao Amamiya'),
+    Say('パヴェル・ノヴァク', 'Pavel Novak'),
+    Say('テオ・ランベール', 'Theo Lambert'),
   ];
 
   factory Rival.roll(
@@ -418,7 +434,7 @@ class Rival {
     required int overall,
     required String clubName,
   }) => Rival(
-    name: _names[random.nextInt(_names.length)],
+    name: _names[random.nextInt(_names.length)].t,
     clubName: clubName,
     overall: (overall + random.nextInt(7) - 2).clamp(40, 92),
   );
@@ -446,8 +462,8 @@ class Rival {
   static Rival? fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : Rival(
-          name: json['name'] as String? ?? 'ライバル',
-          clubName: json['clubName'] as String? ?? 'クラブ',
+          name: json['name'] as String? ?? tr('ライバル', 'Rival'),
+          clubName: json['clubName'] as String? ?? tr('クラブ', 'Club'),
           overall: json['overall'] as int? ?? 60,
           goals: json['goals'] as int? ?? 0,
           caps: json['caps'] as int? ?? 0,
@@ -479,7 +495,7 @@ class Facilities {
   /// 怪我からの戻りの早さ。離脱試合数に掛ける。
   double get recoveryFactor => 1.2 - medical * 0.06;
 
-  String get label => '練習環境 ${'★' * training}  医療 ${'★' * medical}';
+  String get label => tr('練習環境 ${'★' * training}  医療 ${'★' * medical}', 'Training ${'★' * training}  Medical ${'★' * medical}');
 }
 
 /// 復帰の進め方。
@@ -496,14 +512,19 @@ class Facilities {
 /// 重傷の恒久ダメージ（能力とポテンシャルの目減り）を**復帰のときに**、
 /// 戻し方で変える形にした。慎重なら半分、強行なら5割増し。
 enum RehabPlan {
-  cautious('慎重に', '長く休む代わりに、重傷が身体に残りにくい'),
-  standard('標準', 'クラブの言う通りに進める'),
-  rush('強行', '早く戻るが、再発しやすく、重傷が身体に残る');
+  cautious(Say('慎重に', 'Take it slowly'), Say('長く休む代わりに、重傷が身体に残りにくい', 'Longer out, but a bad injury is less likely to stay with you')),
+  standard(Say('標準', 'Standard'), Say('クラブの言う通りに進める', 'Do what the club says')),
+  rush(Say('強行', 'Rush back'), Say('早く戻るが、再発しやすく、重傷が身体に残る', 'Back sooner, but more likely to break down and a bad injury stays with you'));
 
-  const RehabPlan(this.label, this.effect);
+  const RehabPlan(Say label, Say effect)
+    : _label = label,
+      _effect = effect;
 
-  final String label;
-  final String effect;
+  final Say _label;
+  final Say _effect;
+
+  String get label => _label.t;
+  String get effect => _effect.t;
 
   /// 離脱試合数に掛かる倍率。
   double get lengthFactor => switch (this) {

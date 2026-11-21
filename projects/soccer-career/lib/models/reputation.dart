@@ -1,30 +1,37 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
 import '../game/formulas.dart';
 
 /// 通算のマイルストーンと受賞。
 ///
 /// キャリアの節目を記録に残す。引退画面で並ぶのがご褒美になる。
 enum Award {
-  debut('プロデビュー'),
-  firstGoal('初ゴール'),
-  hundredMatches('通算100試合'),
-  twoHundredMatches('通算200試合'),
-  fiftyGoals('通算50ゴール'),
-  hundredGoals('通算100ゴール'),
-  firstCap('代表デビュー'),
-  fiftyCaps('代表50キャップ'),
-  youngPlayer('新人王'),
-  topScorer('得点王'),
-  seasonBest('年間ベストイレブン'),
-  leagueTitle('リーグ優勝'),
-  promotion('昇格'),
-  continentalTitle('大陸カップ優勝'),
-  domesticCup('国内カップ優勝'),
-  worldCup('世界大会出場'),
-  worldCupTitle('世界大会優勝');
+  debut(Say('プロデビュー', 'Professional debut')),
+  firstGoal(Say('初ゴール', 'First goal')),
+  hundredMatches(Say('通算100試合', '100 appearances')),
+  twoHundredMatches(Say('通算200試合', '200 appearances')),
+  fiftyGoals(Say('通算50ゴール', '50 goals')),
+  hundredGoals(Say('通算100ゴール', '100 goals')),
+  firstCap(Say('代表デビュー', 'International debut')),
+  fiftyCaps(Say('代表50キャップ', '50 caps')),
+  youngPlayer(Say('新人王', 'Young player of the year')),
+  topScorer(Say('得点王', 'Top scorer')),
+  seasonBest(Say('年間ベストイレブン', 'Team of the year')),
+  leagueTitle(Say('リーグ優勝', 'League champion')),
+  promotion(Say('昇格', 'Promotion')),
+  continentalTitle(Say('大陸カップ優勝', 'Continental cup winner')),
+  domesticCup(Say('国内カップ優勝', 'Domestic cup winner')),
+  worldCup(Say('世界大会出場', 'At the world tournament')),
+  worldCupTitle(Say('世界大会優勝', 'World champion'));
 
-  const Award(this.label);
+  const Award(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// 評判と市場価値。
@@ -60,8 +67,9 @@ class Reputation {
       );
 
   String get valueLabel => marketValue >= 10000
-      ? '${(marketValue / 10000).toStringAsFixed(1)}億円'
-      : '$marketValue万円';
+      ? tr('${(marketValue / 10000).toStringAsFixed(1)}億円',
+            'JPY ${(marketValue / 100).toStringAsFixed(1)}M')
+      : tr('$marketValue万円', 'JPY ${(marketValue / 100).toStringAsFixed(1)}M');
 
   Map<String, dynamic> toJson() => {
     'marketValue': marketValue,
@@ -99,20 +107,20 @@ class Relations {
   );
 
   String get managerLabel => manager >= 75
-      ? '厚い信頼'
+      ? tr('厚い信頼', 'Full trust')
       : manager >= 50
-      ? '普通'
+      ? tr('普通', 'Normal')
       : manager >= 25
-      ? '疑われている'
-      : '構想外';
+      ? tr('疑われている', 'Doubted')
+      : tr('構想外', 'Frozen out');
 
   String get teammatesLabel => teammates >= 75
-      ? '中心人物'
+      ? tr('中心人物', 'At the heart of it')
       : teammates >= 50
-      ? '馴染んでいる'
+      ? tr('馴染んでいる', 'One of the group')
       : teammates >= 25
-      ? '距離がある'
-      : '浮いている';
+      ? tr('距離がある', 'Kept at a distance')
+      : tr('浮いている', 'On the outside');
 
   /// **次の段までの距離。** 言葉だけだと、近いのか遠いのかが分からない。
   ///
@@ -126,13 +134,17 @@ class Relations {
 
   /// 監督の信頼の、次の段と残り。
   (String, int)? get managerNext =>
-      nextStepFor(manager, const [(25, '疑われている'), (50, '普通'), (75, '厚い信頼')]);
+      nextStepFor(manager, [
+        (25, tr('疑われている', 'Doubted')),
+        (50, tr('普通', 'Normal')),
+        (75, tr('厚い信頼', 'Full trust')),
+      ]);
 
   /// ロッカールームの、次の段と残り。
-  (String, int)? get teammatesNext => nextStepFor(teammates, const [
-    (25, '距離がある'),
-    (50, '馴染んでいる'),
-    (75, '中心人物'),
+  (String, int)? get teammatesNext => nextStepFor(teammates, [
+    (25, tr('距離がある', 'Kept at a distance')),
+    (50, tr('馴染んでいる', 'One of the group')),
+    (75, tr('中心人物', 'At the heart of it')),
   ]);
 
   Map<String, dynamic> toJson() => {'manager': manager, 'teammates': teammates};
@@ -274,10 +286,20 @@ class Finances {
   int get moraleShift => lifestyle - 1;
 
   String get savingsLabel => savings >= 10000
-      ? '${(savings / 10000).toStringAsFixed(1)}億円'
-      : '$savings万円';
+      ? tr('${(savings / 10000).toStringAsFixed(1)}億円',
+            'JPY ${(savings / 100).toStringAsFixed(1)}M')
+      : tr('$savings万円', 'JPY ${(savings / 100).toStringAsFixed(1)}M');
 
-  static const List<String> lifestyleLabels = ['質素', '普通', '派手', '豪奢'];
+  /// 読むたびに言語を選ぶ。
+  static List<String> get lifestyleLabels =>
+      [for (final l in _lifestyleLabels) l.t];
+
+  static const List<Say> _lifestyleLabels = [
+    Say('質素', 'Frugal'),
+    Say('普通', 'Normal'),
+    Say('派手', 'Flashy'),
+    Say('豪奢', 'Lavish'),
+  ];
 
   String get lifestyleLabel => lifestyleLabels[lifestyle.clamp(0, 3)];
 

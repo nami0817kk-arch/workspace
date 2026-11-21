@@ -1,3 +1,8 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 /// 監督との約束。
 ///
 /// 監督が与える `SeasonObjective` は**向こうから降ってくる数字**で、
@@ -8,18 +13,21 @@
 /// 大きく出るほど見返りも罰も大きい。安全に生きるか、賭けるか。
 library;
 
+import '../l10n/lang.dart';
 import 'season.dart';
 
 /// 何を約束するか。
 enum PromiseKind {
-  goals('ゴール'),
-  contributions('得点関与'),
-  appearances('出場'),
-  rating('平均評価');
+  goals(Say('ゴール', 'Goals')),
+  contributions(Say('得点関与', 'Goals and assists')),
+  appearances(Say('出場', 'Appearances')),
+  rating(Say('平均評価', 'Average rating'));
 
-  const PromiseKind(this.label);
+  const PromiseKind(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// どれだけ大きく出るか。見返りと罰の大きさ。
@@ -33,22 +41,24 @@ enum PromiseKind {
 /// 3回に1回しか通らない `bold` が**押してはいけないボタン**になる。
 /// どの出方を選んでも、期待値はわずかに前向きになる幅に置いた。
 enum PromiseWeight {
-  modest('控えめに言う',
+  modest(Say('控えめに言う', 'Play it down'),
       trustKept: 4, trustBroken: 6, salaryKept: 1.04, salaryBroken: 0.94),
-  fair('順当に言う',
+  fair(Say('順当に言う', 'Say what is likely'),
       trustKept: 11, trustBroken: 11, salaryKept: 1.09, salaryBroken: 0.91),
-  bold('大きく出る',
+  bold(Say('大きく出る', 'Go big'),
       trustKept: 30, trustBroken: 12, salaryKept: 1.25, salaryBroken: 0.90);
 
   const PromiseWeight(
-    this.label, {
+    Say label, {
     required this.trustKept,
     required this.trustBroken,
     required this.salaryKept,
     required this.salaryBroken,
-  });
+  }) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   /// 果たしたときに乗る監督の信頼。
   final int trustKept;
@@ -96,10 +106,10 @@ class ManagerPromise {
 
   /// 「今季 15 ゴール」。
   String get label => switch (kind) {
-        PromiseKind.goals => '今季 $targetLabel ゴール',
-        PromiseKind.contributions => '今季 得点関与 $targetLabel',
-        PromiseKind.appearances => '今季 $targetLabel 試合出場',
-        PromiseKind.rating => '今季 平均評価 $targetLabel',
+        PromiseKind.goals => tr('今季 $targetLabel ゴール', '$targetLabel goals this season'),
+        PromiseKind.contributions => tr('今季 得点関与 $targetLabel', '$targetLabel goals and assists this season'),
+        PromiseKind.appearances => tr('今季 $targetLabel 試合出場', '$targetLabel appearances this season'),
+        PromiseKind.rating => tr('今季 平均評価 $targetLabel', 'An average rating of $targetLabel this season'),
       };
 
   /// 「あと3」。届いていれば null。
@@ -107,8 +117,8 @@ class ManagerPromise {
     final left = target - reached(stats);
     if (left <= 0) return null;
     return kind == PromiseKind.rating
-        ? '${left.toStringAsFixed(2)} 足りない'
-        : 'あと${left.ceil()}';
+        ? tr('${left.toStringAsFixed(2)} 足りない', '${left.toStringAsFixed(2)} short')
+        : tr('あと${left.ceil()}', '$targetLabel to go');
   }
 
   Map<String, dynamic> toJson() => {

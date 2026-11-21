@@ -1,3 +1,9 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
 import 'dart:math';
 
 /// 代理人。キャリア開始時に3人の候補から1人選び、**後から変えられる**。
@@ -15,15 +21,19 @@ import 'dart:math';
 /// オファーを引いてくる。手数料はその対価で、年俸から引かれる。
 class Agent {
   const Agent({
-    required this.name,
-    required this.style,
+    required Say name,
+    required Say style,
     required this.negotiation,
     required this.reach,
     required this.feePercent,
-  });
+  }) : _name = name,
+       _style = style;
 
-  final String name;
-  final String style;
+  final Say _name;
+  final Say _style;
+
+  String get name => _name.t;
+  String get style => _style.t;
 
   /// 交渉力 1〜5。
   final int negotiation;
@@ -35,30 +45,30 @@ class Agent {
   final int feePercent;
 
   String get description =>
-      '交渉力 ${'★' * negotiation}${'☆' * (5 - negotiation)}  人脈 +$reach  手数料 $feePercent%';
+      tr('交渉力 ${'★' * negotiation}${'☆' * (5 - negotiation)}  人脈 +$reach  手数料 $feePercent%', 'Negotiating ${'★' * negotiation}${'☆' * (5 - negotiation)}  Contacts +$reach  Fee $feePercent%');
 
   /// 全員架空。
   static const List<Agent> pool = [
-    Agent(name: '柏木 誠', style: '堅実', negotiation: 3, reach: 2, feePercent: 5),
+    Agent(name: Say('柏木 誠', 'Kashiwagi Makoto'), style: Say('堅実', 'Steady'), negotiation: 3, reach: 2, feePercent: 5),
     Agent(
-      name: 'ヴィクトル・ラング',
-      style: '強気',
+      name: Say('ヴィクトル・ラング', 'Viktor Lang'),
+      style: Say('強気', 'Pushy'),
       negotiation: 5,
       reach: 4,
       feePercent: 12,
     ),
-    Agent(name: '長谷 由紀', style: '人脈', negotiation: 2, reach: 8, feePercent: 8),
+    Agent(name: Say('長谷 由紀', 'Hase Yuki'), style: Say('人脈', 'Contacts'), negotiation: 2, reach: 8, feePercent: 8),
     Agent(
-      name: 'マルコ・ペレス',
-      style: '新人',
+      name: Say('マルコ・ペレス', 'Marco Perez'),
+      style: Say('新人', 'New to it'),
       negotiation: 2,
       reach: 1,
       feePercent: 3,
     ),
-    Agent(name: '大塚 玲', style: 'バランス', negotiation: 4, reach: 4, feePercent: 9),
+    Agent(name: Say('大塚 玲', 'Otsuka Rei'), style: Say('バランス', 'Balanced'), negotiation: 4, reach: 4, feePercent: 9),
     Agent(
-      name: 'エレナ・コスタ',
-      style: '交渉',
+      name: Say('エレナ・コスタ', 'Elena Costa'),
+      style: Say('交渉', 'Negotiating'),
       negotiation: 5,
       reach: 1,
       feePercent: 10,

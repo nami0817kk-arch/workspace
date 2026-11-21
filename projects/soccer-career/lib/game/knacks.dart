@@ -10,6 +10,7 @@
 /// - 出す3つは**キャリアから決まる**ので、待っても引き直せない
 library;
 
+import '../l10n/lang.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/traits.dart';
@@ -44,16 +45,16 @@ class Knacks {
   ///
   /// 「まだ出ない」のか「もう掴んだ」のかが分からないのが一番困る。
   static String? missing(CareerState state) {
-    if (state.learnedKnack) return 'コツは1つだけ。もう掴んでいる';
+    if (state.learnedKnack) return tr('コツは1つだけ。もう掴んでいる', 'Only one knack, and you already have it');
     final development = state.development;
     if (development.experience < experienceNeeded) {
-      return '試合経験があと${experienceNeeded - development.experience}';
+      return tr('試合経験があと${experienceNeeded - development.experience}', 'Match experience ${experienceNeeded - development.experience} to go');
     }
     if (development.greatWeeks < greatWeeksNeeded) {
-      return '練習の大成功があと${greatWeeksNeeded - development.greatWeeks}回';
+      return tr('練習の大成功があと${greatWeeksNeeded - development.greatWeeks}回', 'Great training weeks ${greatWeeksNeeded - development.greatWeeks} to go');
     }
     if (offer(state).isEmpty) {
-      return '同じ場面で$momentsNeeded回は勝負していないと、掴むものが無い';
+      return tr('同じ場面で$momentsNeeded回は勝負していないと、掴むものが無い', 'You need $momentsNeeded goes in the same situation before there is anything to pick up');
     }
     return null;
   }

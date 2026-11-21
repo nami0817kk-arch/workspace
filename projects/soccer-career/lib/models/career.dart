@@ -1,3 +1,4 @@
+import '../l10n/lang.dart';
 import 'dart:math';
 
 import '../game/formulas.dart';
@@ -616,11 +617,11 @@ class CareerState {
 
     final goalsShort = objective.contributions - stats.goals - stats.assists;
     if (goalsShort == 1 && achieved == 1) {
-      return '得点かアシストで、監督の期待に届く';
+      return tr('得点かアシストで、監督の期待に届く', 'A goal or an assist meets what the manager asked for');
     }
     final appearancesShort = objective.appearances - stats.appearances;
     if (appearancesShort == 1 && achieved == 1) {
-      return 'この試合に出れば、監督の期待に届く';
+      return tr('この試合に出れば、監督の期待に届く', 'Play in this match and you meet what the manager asked for');
     }
     return null;
   }
@@ -636,9 +637,9 @@ class CareerState {
     final left = promise.target - promise.reached(seasonStats);
     if (left != 1) return null;
     return switch (promise.kind) {
-      PromiseKind.goals => 'この1点で、約束を果たす',
-      PromiseKind.contributions => '得点かアシストで、約束を果たす',
-      PromiseKind.appearances => 'この試合に出れば、約束を果たす',
+      PromiseKind.goals => tr('この1点で、約束を果たす', 'This goal keeps your promise'),
+      PromiseKind.contributions => tr('得点かアシストで、約束を果たす', 'A goal or an assist keeps your promise'),
+      PromiseKind.appearances => tr('この試合に出れば、約束を果たす', 'Play in this match and you keep your promise'),
       PromiseKind.rating => null,
     };
   }

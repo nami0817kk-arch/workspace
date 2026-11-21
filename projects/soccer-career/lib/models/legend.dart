@@ -9,6 +9,7 @@
 /// このかたちのまま持つ。
 library;
 
+import '../l10n/lang.dart';
 import '../game/formulas.dart';
 import 'career.dart';
 import 'challenge.dart';
@@ -165,8 +166,8 @@ class Legend {
 
   /// 一覧に出す一言。
   String get summary =>
-      '$seasons季 ・ $appearances試合 ${goals}G ${assists}A ・ '
-      '平均 ${averageRating.toStringAsFixed(2)}';
+      tr('$seasons季 ・ $appearances試合 ${goals}G ${assists}A ・ '
+      '平均 ${averageRating.toStringAsFixed(2)}', '$seasons seasons - $appearances apps ${goals}G ${assists}A - avg ${averageRating.toStringAsFixed(2)}');
 
   /// 手にしたタイトルの数。0 なら出さない。
   int get titles => leagueTitles + cupTitles + continentalTitles;
@@ -307,7 +308,7 @@ class Legend {
   };
 
   factory Legend.fromJson(Map<String, dynamic> json) => Legend(
-    name: json['name'] as String? ?? '名無し',
+    name: json['name'] as String? ?? tr('名無し', 'Unnamed'),
     clubId: json['clubId'] as String? ?? '',
     positionLabel: json['positionLabel'] as String? ?? '',
     retiredYear: json['retiredYear'] as int? ?? 0,
@@ -450,10 +451,10 @@ class Hall {
 
     return [
       for (final r in [
-        best('通算ゴール', 'G', (l) => l.goals),
-        best('通算出場', '試合', (l) => l.appearances),
-        best('タイトル', '冠', (l) => l.titles),
-        best('ピーク総合力', '', (l) => l.peakOverall),
+        best(tr('通算ゴール', 'Career goals'), 'G', (l) => l.goals),
+        best(tr('通算出場', 'Career appearances'), tr('試合', 'apps'), (l) => l.appearances),
+        best(tr('タイトル', 'Titles'), tr('冠', 'titles'), (l) => l.titles),
+        best(tr('ピーク総合力', 'Peak overall'), '', (l) => l.peakOverall),
       ])
         ?r,
     ];

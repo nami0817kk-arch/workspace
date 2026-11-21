@@ -1,3 +1,7 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。
+// ignore_for_file: prefer_initializing_formals
+
 /// **キャリアを跨いで追いかけるもの。**
 ///
 /// 称号（[Award]）は1つのキャリアの中の出来事で、どれも「多いほど良い」。
@@ -10,35 +14,45 @@
 /// 遊び方を先に宣言する必要はない。**やってみたら達成していた**、でいい。
 library;
 
+import '../l10n/lang.dart';
 import 'competition.dart';
 import 'legend.dart';
 
 /// 挑戦1つ。
 enum Challenge {
-  oneClub('一途', '1つのクラブだけで300試合', '移籍すれば強いクラブへ行けるが、それでは終わらない記録がある。'),
-  wanderer('渡り鳥', '4つの国でプレーする', '言葉も制度も違う場所へ、4回移る。'),
+  oneClub(Say('一途', 'One club man'), Say('1つのクラブだけで300試合', '300 appearances for a single club'), Say('移籍すれば強いクラブへ行けるが、それでは終わらない記録がある。', 'A transfer would take you to a stronger club, but some records need you to stay.')),
+  wanderer(Say('渡り鳥', 'Wanderer'), Say('4つの国でプレーする', 'Play in four countries'), Say('言葉も制度も違う場所へ、4回移る。', 'Four moves to places with a different language and different rules.')),
   fromBelow(
-    '叩き上げ',
-    '最初のクラブと一緒に1部へ上がる',
-    '強いクラブに移れば1部には立てる。そうではなく、'
-        '最初に袖を通したクラブを連れて上がる。',
+    Say('叩き上げ', 'Up through the ranks'),
+    Say('最初のクラブと一緒に1部へ上がる', 'Go up to the top flight with your first club'),
+    Say('強いクラブに移れば1部には立てる。そうではなく、'
+        '最初に袖を通したクラブを連れて上がる。', 'Move to a strong club and you will reach the top flight. Instead, take the first shirt you wore up with you.'),
   ),
-  lateBloom('大器晩成', '30歳以降に総合力のピークを迎える', '若いうちに伸び切らなかった選手の道。'),
-  uncrowned('無冠の名手', 'タイトルを1つも獲らずに総合力80へ', 'チームが勝てなくても、その選手が優れていたことはある。'),
-  marksman('点取り屋', '通算200ゴール', ''),
-  ironman('鉄人', '通算600試合', '怪我をせず、外されず、長く。'),
-  worldChampion('世界一', '世界大会を制する', ''),
-  faceOfTheNation('代表の顔', '代表60キャップ', '');
+  lateBloom(Say('大器晩成', 'Late bloomer'), Say('30歳以降に総合力のピークを迎える', 'Peak after 30'), Say('若いうちに伸び切らなかった選手の道。', 'The path of a player who did not grow into it young.')),
+  uncrowned(Say('無冠の名手', 'Uncrowned'), Say('タイトルを1つも獲らずに総合力80へ', 'Reach 80 overall without a single title'), Say('チームが勝てなくても、その選手が優れていたことはある。', 'A team can fail to win and the player still be a great one.')),
+  marksman(Say('点取り屋', 'Goalscorer'), Say('通算200ゴール', '200 career goals'), Say('', '')),
+  ironman(Say('鉄人', 'Iron man'), Say('通算600試合', '600 career appearances'), Say('怪我をせず、外されず、長く。', 'No injuries, never dropped, for a long time.')),
+  worldChampion(Say('世界一', 'World champion'), Say('世界大会を制する', 'Win the world tournament'), Say('', '')),
+  faceOfTheNation(Say('代表の顔', 'The face of the nation'), Say('代表60キャップ', '60 caps'), Say('', ''));
 
-  const Challenge(this.label, this.requirement, this.note);
+  const Challenge(Say label, Say requirement, Say note)
+    : _label = label,
+      _requirement = requirement,
+      _note = note;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   /// 何をすれば達成なのか。**判定と同じ言葉で書く。**
-  final String requirement;
+  final Say _requirement;
+
+  String get requirement => _requirement.t;
 
   /// 補足。無ければ出さない。
-  final String note;
+  final Say _note;
+
+  String get note => _note.t;
 
   /// その選手が達成しているか。
   ///

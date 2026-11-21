@@ -1,3 +1,4 @@
+import '../l10n/lang.dart';
 import '../models/club.dart';
 import 'formulas.dart';
 import 'world.dart';
@@ -37,7 +38,7 @@ class LeagueRank {
 
   String get countryName => World.byId(countryId).name;
 
-  String get name => '$countryName $tier部';
+  String get name => tr('$countryName $tier部', '$countryName tier $tier');
 
   /// 上から何割の位置か（0 が最上位）。
   double get percentile => total <= 1 ? 0 : (rank - 1) / (total - 1);
@@ -56,11 +57,11 @@ class LeagueRank {
 
   /// 格の説明。文字だけだと何を意味するのか分からない。
   String get gradeLabel => switch (grade) {
-    'S' => '世界最高峰',
-    'A' => 'トップリーグ級',
-    'B' => '中堅リーグ',
-    'C' => '下部・地方リーグ',
-    _ => '最下層',
+    'S' => tr('世界最高峰', 'The best in the world'),
+    'A' => tr('トップリーグ級', 'Top-flight level'),
+    'B' => tr('中堅リーグ', 'Mid-table league'),
+    'C' => tr('下部・地方リーグ', 'Lower and regional leagues'),
+    _ => tr('最下層', 'The bottom'),
   };
 }
 
@@ -196,13 +197,13 @@ class Ranking {
   /// 「上位13%」のような数字が出て実感と合わない。ゲームの中で実際に
   /// 意味を持つしきい値（代表招集・最高峰リーグの平均）で切る。
   static (String, String) _band(int overall) => switch (overall) {
-    >= 88 => ('世界屈指', 'どのリーグでも中心になれる'),
-    >= 82 => ('ワールドクラス', '最高峰のリーグで主力を張れる'),
-    >= Formulas.callUpOverall => ('一流', '代表に呼ばれる水準'),
-    >= 70 => ('主力級', '上位リーグで計算される'),
-    >= 62 => ('戦力', '所属リーグで出場を積める'),
-    >= 52 => ('控え', '出場機会を争う段階'),
-    _ => ('育成中', 'まずは下の部で試合に出るところから'),
+    >= 88 => (tr('世界屈指', 'Among the best in the world'), tr('どのリーグでも中心になれる', 'Would be central to any league')),
+    >= 82 => (tr('ワールドクラス', 'World class'), tr('最高峰のリーグで主力を張れる', 'Would start in the strongest leagues')),
+    >= Formulas.callUpOverall => (tr('一流', 'Elite'), tr('代表に呼ばれる水準', 'At the level that gets called up')),
+    >= 70 => (tr('主力級', 'First choice'), tr('上位リーグで計算される', 'Counted on in a strong league')),
+    >= 62 => (tr('戦力', 'Squad player'), tr('所属リーグで出場を積める', 'Can build appearances in his league')),
+    >= 52 => (tr('控え', 'Back-up'), tr('出場機会を争う段階', 'Still fighting for game time')),
+    _ => (tr('育成中', 'Developing'), tr('まずは下の部で試合に出るところから', 'Starting with matches in a lower tier')),
   };
 
   /// 代表招集の線まで、あといくつか。届いていれば 0。
@@ -219,11 +220,11 @@ class Ranking {
   /// クラブの中での立ち位置。総合力とクラブの強さの差で決まる。
   static String standingIn(int overall, Club club) {
     final gap = overall - club.strength;
-    if (gap >= 8) return 'このクラブでは格上。もっと上でやれる';
-    if (gap >= 2) return 'チームの中心';
-    if (gap >= -4) return '主力の一角';
-    if (gap >= -12) return '出場機会を争う立場';
-    return 'このクラブでは力不足';
+    if (gap >= 8) return tr('このクラブでは格上。もっと上でやれる', 'Too good for this club. You could go higher');
+    if (gap >= 2) return tr('チームの中心', 'At the heart of the team');
+    if (gap >= -4) return tr('主力の一角', 'One of the first names down');
+    if (gap >= -12) return tr('出場機会を争う立場', 'Fighting for game time');
+    return tr('このクラブでは力不足', 'Not good enough for this club');
   }
 
   /// 能力値が1上がると、その局面の成功率が何%動くか。
