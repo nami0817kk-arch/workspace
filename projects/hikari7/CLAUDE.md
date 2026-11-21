@@ -14,7 +14,7 @@
 | 場所 | 中身 |
 |---|---|
 | `prototype/game.html` | 試作の本体（v17）。顔の絵は入っていない（`FACEDATA` の区間は仮の値） |
-| `prototype/faces/` | 顔の絵（280×280、2026-10-02 にユーザーが Gemini で作った3×3の一覧19枚から切り出し）と `pool.json`（男女・同じ顔の組 `group`）。男性78人74通り・女性82人74通り。1シーズンに同じ組は1人まで |
+| `prototype/faces/` | 顔の絵（480×480。2026-10-02 にユーザーが Gemini で作った3×3の一覧19枚から280×280で切り出し、2026-11-21 に Real-ESRGAN（realesrgan-x4plus-anime、GPU）で4倍にして480へ縮めた。道具は dev/tools-esrgan）と `pool.json`（男女・同じ顔の組 `group`）。男性78人74通り・女性82人74通り。1シーズンに同じ組は1人まで |
 | `prototype/bg/` | 背景の絵（Gemini・縦長）。stage=本番、hall=最終審査とデビューのポスター、practice=番組のテロップ、night=本番の夜、stage2=最後のひとりの発表。2026-10-03 に場面の絵を23枚追加（食堂・寮・屋上などの背景、out_*=お出かけ先、cg_*=顔を描かない一枚絵）。出来事の画面は `SCENE_EV`/`SCENE_X`/`SCENE_OUT`/`SCENE_TALK` で絵を選び、`--evbg` で敷く（無い絵は練習室に戻る）。cg_debut はエンドロール。cg_penlight はタイトル（`body.ttl` の背景）。cg_chairs はまだ使っていない。組み立てのときに埋め込む |
 | `tool/build_web_test.py` | 本体と顔を1枚のページに組み立て、`build/web/` に出す |
 | `tool/sim.js` | エンジンを自動で通しプレイして、つり合いを測る（遊び方3通り×男女）。`--quick` は CI 用。`PERKS=all`・`CHAL=poor` などでも回せる |
