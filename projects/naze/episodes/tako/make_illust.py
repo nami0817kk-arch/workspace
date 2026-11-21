@@ -29,6 +29,9 @@ P = {
                 "large eyes, resting on muddy limestone seafloor, murky water, soft light from above"),
     "coconut": ("A small veined octopus on a sandy tropical seafloor carrying two stacked halves of a brown coconut shell under its body, "
                 "walking on its stiff arms like stilts, clear water, coral rubble around"),
+    "cocounder": ("Underwater photo, side view at sand level: a small brown octopus walking across grey sand on the tips of its long arms like stilts, "
+                  "holding an empty brown coconut shell half cupped beneath its body with the hollow side facing up, a second shell half nested inside the first, "
+                  "the octopus body sits on top of the shells, murky tropical water"),
     "skinlab": ("A small piece of octopus skin with tiny brown and orange color spots lying in a glass petri dish in a dark laboratory, "
                 "lit by a soft blue light from above, macro photograph"),
 }

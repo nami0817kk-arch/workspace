@@ -146,7 +146,7 @@ CH["ch2"] = [
     dict(id="2-6", text="皮膚には、色の入った小さな袋が並んでいます。", scene=V("oct_skin", 40.0, cx=0.45)),
     dict(id="2-7", text="筋肉で袋を広げたり縮めたりして、模様を描きます。", fx=[dict(k="note", xy=XY(0.40, 0.55, 0.45), text="色の袋", on="筋肉")]),
     dict(id="2-8", text="ここで、ひとつ謎があります。", scene=V("oct_eye2", 2.0)),
-    dict(id="2-9", text="タコの目は、【色を見分けられません】。", fx=[dict(k="spot", box=BOX(0.30, 0.30, 0.45, 0.62), on="目は")]),
+    dict(id="2-9", text="タコの目は、【色を見分けられません】。", fx=[dict(k="spot", box=BOX(0.40, 0.48, 0.60, 0.82), on="目は")]),
     dict(id="2-10", text="光を感じる色素が、目に1種類しかないのです。", scene=dict(kind="words", rows=["目の色素は、", "【1種類だけ】"], rows_on=[None, "1種類"])),
     dict(id="2-11", text="色が見えないのに、なぜ周りの色に化けられるのか。", scene=V("camo2", 2.0, 0.6),
          fx=[dict(k="q", xy=XY(0.5, 0.45), label="なぜ化けられる？", on="なぜ")]),

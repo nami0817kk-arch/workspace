@@ -142,11 +142,18 @@ def _rows(d, segs, f, maxw) -> list:
     return rows
 
 
+def _hira(c: str) -> bool:
+    return "ぁ" <= c <= "ゖ"
+
+
 def _split(segs, n, wid, maxw) -> list:
     rows, rest = [], list(segs)
     for r in range(n, 1, -1):
         target = len(rest) / r
         cand = [i + 1 for i, (c, _) in enumerate(rest) if c in "、。" and target * 0.6 <= i + 1 <= target * 1.35 and wid(rest[:i + 1]) <= maxw]
+        if not cand:                                       # 句読点が無ければ、ひらがなの後ろで漢字・カタカナ・数字が始まる所(文節の切れ目)で切る
+            cand = [i for i in range(2, len(rest) - 1) if _hira(rest[i - 1][0]) and not _hira(rest[i][0]) and rest[i][0] not in "、。」）ー"
+                    and target * 0.6 <= i <= target * 1.35 and wid(rest[:i]) <= maxw]
         cut = min(cand, key=lambda i: abs(i - target)) if cand else int(round(target))
         while cut > 1 and wid(rest[:cut]) > maxw:
             cut -= 1
@@ -182,6 +189,11 @@ def subtitle(d: ImageDraw.ImageDraw, text: str, k: float = 0.0) -> None:
         lines = pages[0]
     lh = int(LAY["sub_size"] * 1.4)
     y0 = LAY["sub_y"] - lh * len(lines)
+    ww = max(d.textlength("".join(c for c, _ in ln), font=f) for ln in lines)
+    box = [int((W - ww) / 2) - 28, int(y0) - 12, int((W + ww) / 2) + 28, int(y0 + lh * len(lines)) + 8]
+    bg = getattr(d, "_image", None)
+    if bg is not None and np.asarray(bg.crop(box).convert("L")).mean() > 150:   # 白っぽい背景(実験室・お皿)では字の後ろに薄い暗幕
+        d.rounded_rectangle(box, 14, fill=(10, 12, 16, 150))
     for k, ln in enumerate(lines):
         w = d.textlength("".join(c for c, _ in ln), font=f)
         x, y = (W - w) / 2, y0 + lh * k
@@ -546,6 +558,8 @@ def s_card(c: Ctx, sc: dict) -> Image.Image:
     y = H * 0.30 if PORTRAIT else 300
     d.rectangle([x, y, x + 10, y + (520 if PORTRAIT else 380)], fill=YEL + (int(255 * a),))
     fT, fS, fB = F("yumindb.ttf", 92 if PORTRAIT else 100), F("YuGothM.ttc", 34), F("YuGothM.ttc", 42 if PORTRAIT else 40)
+    while d.textlength(sc["title"], font=fT) > W - x - 110 and fT.size > 40:   # 横に長い題(英語の論文名など)は縮めて収める
+        fT = F("yumindb.ttf", fT.size - 4)
     stext(d, (x + 50, y), sc["title"], fT, WHITE + (int(255 * a),), reg="words")
     tw = d.textlength(sc["title"], font=fT)
     if sc.get("sub"):
@@ -566,7 +580,7 @@ def s_card(c: Ctx, sc: dict) -> Image.Image:
 def _wrap(d, s: str, f, maxw: float) -> List[str]:
     out, cur = [], ""
     for ch in s:
-        if ch == "\n" or d.textlength(cur + ch, font=f) > maxw:
+        if ch == "\n" or (d.textlength(cur + ch, font=f) > maxw and ch not in "、。」）"):   # 句読点だけの行を作らない
             out.append(cur)
             cur = "" if ch == "\n" else ch
         else:
@@ -610,8 +624,11 @@ def draw_fx(img: Image.Image, c: Ctx) -> Image.Image:
     for f in c.active("dim"):
         a = c.k(f) * f.get("amount", 0.55)
         img = Image.blend(img, Image.new("RGBA", img.size, (0, 0, 0, 255)), a)
-    for f in c.active("spot"):
-        a = c.k(f) * f.get("amount", 0.6)
+    spots = c.active("spot")
+    # 注目は最後に出た 1 つだけ。あとから別の足し方(図の step など)が始まったら暗幕を上げる(重なると画面がほぼ真っ黒になった)
+    later = [c.when(g) for g in c.seg["fx"] if g["k"] != "spot" and spots and c.when(g) > c.when(spots[-1]) and c.when(g) <= c.t]
+    for f in spots[-1:]:
+        a = c.k(f) * f.get("amount", 0.6) * (1 - ease((c.t - min(later)) / 0.5) if later else 1)
         x0, y0, x1, y1 = f["box"]
         m = Image.new("L", img.size, int(255 * a))
         ImageDraw.Draw(m).rounded_rectangle([x0, y0, x1, y1], 24, fill=0)

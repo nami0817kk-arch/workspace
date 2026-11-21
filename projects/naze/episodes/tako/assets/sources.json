@@ -176,5 +176,35 @@
   "ai": true,
   "by": "AI",
   "what": "ai_tenarms2"
+ },
+ "ai_cocounder1.jpg": {
+  "ai": true,
+  "by": "AI",
+  "what": "ai_cocounder1"
+ },
+ "ai_cocounder2.jpg": {
+  "ai": true,
+  "by": "AI",
+  "what": "ai_cocounder2"
+ },
+ "ai_hearts1.jpg": {
+  "ai": true,
+  "by": "AI",
+  "what": "ai_hearts1"
+ },
+ "ai_hearts2.jpg": {
+  "ai": true,
+  "by": "AI",
+  "what": "ai_hearts2"
+ },
+ "ai_skinlab1.jpg": {
+  "ai": true,
+  "by": "AI",
+  "what": "ai_skinlab1"
+ },
+ "ai_skinlab2.jpg": {
+  "ai": true,
+  "by": "AI",
+  "what": "ai_skinlab2"
  }
 }
