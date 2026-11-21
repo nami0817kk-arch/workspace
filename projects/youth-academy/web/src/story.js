@@ -115,7 +115,7 @@
   // 力に合う道を、おすすめ順に2〜3個
   YA.pathCands = function (p) {
     const o = YA.ovr(p);
-    if (o >= 13.3) return ['abroad', 'pro', 'univ'];
+    if (o >= YA.unrate(140)) return ['abroad', 'pro', 'univ']; // 海外は総合力140から（2026-11-21）
     if (o >= 11.3) return ['pro', 'univ', 'corp'];
     if (o >= 9.8) return ['univ', 'corp', o >= 10.5 ? 'pro' : 'quit'];
     return ['corp', 'univ', 'quit'];

@@ -683,6 +683,11 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     }
     console.log('海外移籍が起きた世界', abroadCount + '/40');
     ok(abroadCount >= 3, '海外移籍が起きる');
+    // 2026-11-21「選手が簡単に海外にいく」→「厳しく」：Jから海外は総合力140以上・J1・そのシーズン25試合以上だけ。面談の「海外」も140から
+    { const r0 = () => 0; const mk = (o, lg, apps, age) => ({ ovr: YA.unrate(o), age: age || 24, seasons: [{ league: lg, apps }] });
+      ok(YA.jToAbroad(mk(150, 'J1リーグ', 30), 'J1リーグ', r0) && !YA.jToAbroad(mk(138, 'J1リーグ', 30), 'J1リーグ', r0) && !YA.jToAbroad(mk(150, 'J2リーグ', 30), 'J2リーグ', r0) && !YA.jToAbroad(mk(150, 'J1リーグ', 20), 'J1リーグ', r0) && !YA.jToAbroad(mk(150, 'J1リーグ', 30, 28), 'J1リーグ', r0), 'Jから海外の条件（140・J1・25試合・27歳まで）');
+    }
+    ok(YA.rate(YA.ABROAD_OVR) === 140, '海外の線は総合力140');
   }
   // 段2：実績・引退・お知らせの段・名前の書き換え・進路の相談・GK枠
   {
@@ -1809,6 +1814,8 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const ss = al.flatMap((a) => (a.seasons || []).map((s) => [a, s])).filter(([a]) => a.status === 'pro');
   ok(ss.every(([, s]) => s.apps <= (YA.LEAGUE_GAMES[s.league] || 38)), '出場はリーグの試合数まで');
   const first = al.flatMap((a) => (a.moves || []).filter((m) => m.abroad && /^J/.test(m.fromLg || '')).map((m) => m.toLg));
+  // 2026-11-21 に海外へ行く子を約5%に絞ったので、8年×4つでは数件しか起きない。行き先は選ぶ関数を直接200回引いて見る
+  { const rr = YA.rngOf(77); const pk = []; for (let i = 0; i < 200; i++) pk.push(YA.abroadPick(rr, YA.unrate(140 + (i % 25)), false, true, 24).league); first.push(...pk); }
   ok(first.length >= 5 && first.filter((lg) => YA.FIRST_ABROAD.indexOf(lg) >= 0).length / first.length >= 0.8, '最初の海外移籍は中堅のリーグから（' + first.length + '件）');
   const fees = al.flatMap((a) => (a.moves || []).filter((m) => !m.join).map((m) => m.fee));
   ok(fees.some((f) => f === 0) && fees.some((f) => f > 0) && new Set(fees).size > fees.length * 0.5, '移籍金に幅があり、契約満了の0円もある');
