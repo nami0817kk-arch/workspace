@@ -17,6 +17,27 @@ enum GmStyle {
   final double hardness;
 }
 
+/// GM の見る目(2026-11-21 の作り込み T-1)。ほかのチームの選手の伸びしろを、どれだけずれて見るか(伸びきったときの力の±)。
+enum GmEye {
+  sharp('鋭い', 1),
+  normal('ふつう', 4),
+  loose('甘い', 8);
+
+  const GmEye(this.label, this.noise);
+  final String label;
+  final int noise;
+}
+
+/// [p] の見る目(名前から決まる。鋭い3割・ふつう4割半・甘い2割半)。
+GmEye eyeOf(GmPerson p) {
+  var h = 17;
+  for (final u in p.name.codeUnits) {
+    h = (h * 131 + u) & 0x7fffffff;
+  }
+  final x = h % 20;
+  return x < 6 ? GmEye.sharp : x < 15 ? GmEye.normal : GmEye.loose;
+}
+
 /// ほかのチームの GM(名前と型)。
 class GmPerson {
   const GmPerson(this.name, this.style);
