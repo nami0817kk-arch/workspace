@@ -33,7 +33,8 @@ void main() {
     expect(r.ok, isFalse);
     if (r.counter != null) {
       expect(c.judge(r.counter!).ok || temperOf(c.gmPerson(o.partner)) == GmTemper.strong, isTrue);
-      expect(r.counter!.give.length, greaterThan(less.give.length));
+      // 足すものは選手か指名権
+      expect(r.counter!.give.length + r.counter!.givePicks.length, greaterThan(less.give.length + less.givePicks.length));
     }
   });
 

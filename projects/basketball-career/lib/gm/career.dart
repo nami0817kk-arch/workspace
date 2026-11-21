@@ -8,6 +8,7 @@ import 'gm_people.dart';
 import 'inbox.dart';
 import 'promise.dart';
 import 'league.dart';
+import 'league_plans.dart';
 import 'names.dart';
 import 'personality.dart';
 import 'player.dart';
@@ -2629,6 +2630,73 @@ class Career {
     return Player(id: nextId(), name: _uniqueName(), pos: pos ?? r, age: age, ovr: ovr, pot: ovr + (age < 26 ? rng.nextInt(5) : 0), salary: minSalary, years: 1, exp: age - 21);
   }
 
+  /// AI のチームの計画(チームの番号 → (計画, 始めたシーズン))。C-1。
+  Map<int, (TeamPlan, int)> teamPlans = {};
+
+  /// 計画が決まった・変わったチーム(その季のうわさにする。保存する: 読み直しても同じ続きになるように)。
+  List<int> planNews = [];
+
+  /// [t] の計画を決める(GM の型・強さの順・若いエース・年俸から。乱数は使わない)。
+  TeamPlan _choosePlan(Team t, int rank) {
+    final style = gmPerson(t.index).style;
+    final star = t.roster.any((p) => p.age <= 25 && p.ovr >= 78);
+    if (rank < 10 && (style == GmStyle.aggressive || style == GmStyle.gambler)) return TeamPlan.allIn;
+    if (rank >= 20) return style == GmStyle.thrifty || t.payroll > taxLine ? TeamPlan.slim : TeamPlan.rebuild3;
+    if (star) return TeamPlan.core;
+    if (t.payroll > taxLine) return TeamPlan.slim;
+    return rank < 12 ? TeamPlan.core : TeamPlan.rebuild3;
+  }
+
+  /// 計画からチームの考え方を決める(前倒し・切り替えも)。C-1。
+  void _planModes(Map<int, int> rankOf) {
+    // 自分のチームにも計画を当てて考え方を決める(どのチームを選んでも同じリーグになるように。自分の計画はうわさにしない)
+    for (final t in teams) {
+      final r = rankOf[t.index]!;
+      var cur = teamPlans[t.index];
+      // 計画が無い・終わった・外れたときは選び直す
+      if (cur != null) {
+        final (plan, since) = cur;
+        final year = season - since + 1;
+        final failed = plan == TeamPlan.allIn && year >= 2 && r >= 12;
+        final done = (plan == TeamPlan.rebuild3 && year > 4) || (plan == TeamPlan.slim && year > 2) || (plan == TeamPlan.core && !t.roster.any((p) => p.age <= 28 && p.ovr >= 76));
+        if (failed) {
+          // 賭けが外れた: すぐ立て直しへ
+          cur = (TeamPlan.rebuild3, season);
+          teamPlans[t.index] = cur;
+          planNews.add(t.index);
+        } else if (done) {
+          cur = null;
+        }
+      }
+      if (cur == null) {
+        cur = (_choosePlan(t, r), season);
+        teamPlans[t.index] = cur;
+        planNews.add(t.index);
+      }
+      final (plan, since) = cur;
+      final year = season - since + 1;
+      t.mode = switch (plan) {
+        // 立て直し: 1〜2年目は売り手、3年目(早く強くなれば2年目)に勝負に出る
+        TeamPlan.rebuild3 => year >= 3 || (year >= 2 && r < 10) ? TeamMode.contend : TeamMode.rebuild,
+        TeamPlan.allIn => TeamMode.contend,
+        TeamPlan.core => r < 8 ? TeamMode.contend : TeamMode.balanced,
+        // 身軽に: 1年目は年俸を減らし、2年目は FA の大物を狙う(バランス)
+        TeamPlan.slim => year <= 1 ? TeamMode.cutCost : TeamMode.balanced,
+      };
+    }
+  }
+
+  /// 季の初めに、計画が決まった・変わったチームのうわさを1つ届ける(全部は分からない)。
+  void _planRumor() {
+    final news = [for (final t in planNews) if (t != mine) t];
+    planNews = [];
+    if (news.isEmpty) return;
+    final t = news[(season * 7 + seed) % news.length];
+    final p = teamPlans[t];
+    if (p == null) return;
+    _mail(Sender.league, 'うわさ: ${teams[t].def.short}の計画', '${teams[t].def.short}は「${p.$1.label}」つもりらしい。${p.$1.text}。');
+  }
+
   /// 各チームの考え方を、強さの順と年俸から決める。
   void _setModes() {
     final st = {for (final t in teams) t.index: t.strength};
@@ -2645,6 +2713,8 @@ class Career {
         t.mode = TeamMode.balanced;
       }
     }
+    // AI のチームは、計画で考え方を決め直す(C-1)
+    _planModes({for (var r = 0; r < order.length; r++) order[r].index: r});
   }
 
   /// 強さの順位(0が1位)。
@@ -2673,6 +2743,7 @@ class Career {
   void startSeason() {
     if (phase != Phase.preseason || startProblem != null) return;
     _potentialNews();
+    _planRumor();
     _settleTrust();
     _tradeAnswers();
     // 今季のあとのドラフトのうわさ(A-5)。指名権の値打ちもその年の顔ぶれで変わる
@@ -5719,6 +5790,8 @@ class Career {
         if (policyGames > 0) 'pgm': policyGames,
         if (rumors.isNotEmpty) 'rmr': [for (final r in rumors) r.toJson()],
         if (hotTargets.isNotEmpty) 'hot': [for (final e in hotTargets.entries) [e.key, e.value.$1, e.value.$2]],
+        if (planNews.isNotEmpty) 'apn': planNews,
+        if (teamPlans.isNotEmpty) 'apl': [for (final e in teamPlans.entries) [e.key, e.value.$1.index, e.value.$2]],
         if (gmTrust.isNotEmpty) 'gtr': [for (final e in gmTrust.entries) [e.key, e.value]],
         if (tradeLastVerdict.isNotEmpty) 'tlv': tradeLastVerdict,
         if (tradeNames.isNotEmpty) 'tnm': [for (final e in tradeNames.entries) [e.key, e.value]],
@@ -5886,6 +5959,11 @@ class Career {
       ..tradeNames = {
         for (final x in (j['tnm'] as List? ?? const []))
           if (x is List && x.length == 2) x[0] as int: x[1] as String,
+      }
+      ..planNews = [for (final x in (j['apn'] as List? ?? const [])) x as int]
+      ..teamPlans = {
+        for (final x in (j['apl'] as List? ?? const []))
+          if (x is List && x.length == 3) x[0] as int: (TeamPlan.values[(x[1] as int).clamp(0, TeamPlan.values.length - 1)], x[2] as int),
       }
       ..gmTrust = {
         for (final x in (j['gtr'] as List? ?? const []))
