@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../game/formulas.dart';
+import '../l10n/lang.dart';
 
 /// 局面プールの種類。細かいポジションはこのどれかに属する。
 ///
@@ -8,21 +9,37 @@ import '../game/formulas.dart';
 /// 「どんな場面に立ち会うか」の単位でまとめてある。
 enum ScenarioFamily { goalkeeper, defence, midfield, forward }
 
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 /// 選手のポジション。
 enum Position {
-  gk('GK', 'ゴールキーパー', ScenarioFamily.goalkeeper),
-  cb('CB', 'センターバック', ScenarioFamily.defence),
-  sb('SB', 'サイドバック', ScenarioFamily.defence),
-  dm('DM', '守備的MF', ScenarioFamily.midfield),
-  cm('CM', 'セントラルMF', ScenarioFamily.midfield),
-  am('OMF', '攻撃的MF', ScenarioFamily.midfield),
-  wg('WG', 'ウイング', ScenarioFamily.forward),
-  st('ST', 'ストライカー', ScenarioFamily.forward);
+  gk(Say('GK', 'GK'), Say('ゴールキーパー', 'Goalkeeper'), ScenarioFamily.goalkeeper),
+  cb(Say('CB', 'CB'), Say('センターバック', 'Centre-back'), ScenarioFamily.defence),
+  sb(Say('SB', 'SB'), Say('サイドバック', 'Full-back'), ScenarioFamily.defence),
+  dm(Say('DM', 'DM'), Say('守備的MF', 'Defensive midfielder'), ScenarioFamily.midfield),
+  cm(Say('CM', 'CM'), Say('セントラルMF', 'Central midfielder'), ScenarioFamily.midfield),
+  am(Say('OMF', 'AM'), Say('攻撃的MF', 'Attacking midfielder'), ScenarioFamily.midfield),
+  wg(Say('WG', 'WG'), Say('ウイング', 'Winger'), ScenarioFamily.forward),
+  st(Say('ST', 'ST'), Say('ストライカー', 'Striker'), ScenarioFamily.forward);
 
-  const Position(this.label, this.fullName, this.family);
+  const Position(Say label, Say fullName, this.family)
+    : _label = label,
+      _fullName = fullName;
 
-  final String label;
-  final String fullName;
+  /// **名前は日本語と英語の2つを持つ**（[Say]）。enum の引数は定数なので
+  /// `tr()` を直に書けない。外には `String` のまま見せる。
+  ///
+  /// 略称はほとんど同じだが、攻撃的MF だけ日本語の慣習（OMF）と
+  /// 英語の慣習（AM）が違う。
+  final Say _label;
+  final Say _fullName;
+
+  String get label => _label.t;
+  String get fullName => _fullName.t;
+
   final ScenarioFamily family;
 
   /// 左右のある役割か。サイドバックとウイングだけ。
@@ -45,17 +62,19 @@ enum Position {
 
 /// 能力のカテゴリ。画面の上段と、練習の単位。
 enum AttributeKey {
-  pace('スピード'),
-  shooting('シュート'),
-  passing('パス'),
-  dribbling('ドリブル'),
-  defending('守備'),
-  physical('フィジカル'),
-  goalkeeping('GK');
+  pace(Say('スピード', 'Pace')),
+  shooting(Say('シュート', 'Shooting')),
+  passing(Say('パス', 'Passing')),
+  dribbling(Say('ドリブル', 'Dribbling')),
+  defending(Say('守備', 'Defending')),
+  physical(Say('フィジカル', 'Physical')),
+  goalkeeping(Say('GK', 'GK'));
 
-  const AttributeKey(this.label);
+  const AttributeKey(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   List<Detail> get details =>
       Detail.values.where((d) => d.category == this).toList();
@@ -66,38 +85,40 @@ enum AttributeKey {
 /// 「パスが上手い」で一括りにすると、スルーパスの名手とクロスの名手の
 /// 違いが出ない。カテゴリはあくまで見せ方と練習の単位で、判定はこちら。
 enum Detail {
-  acceleration('加速', AttributeKey.pace),
-  sprintSpeed('最高速', AttributeKey.pace),
+  acceleration(Say('加速', 'Acceleration'), AttributeKey.pace),
+  sprintSpeed(Say('最高速', 'Sprint speed'), AttributeKey.pace),
 
-  finishing('決定力', AttributeKey.shooting),
-  shotPower('シュート力', AttributeKey.shooting),
-  longShots('ロングシュート', AttributeKey.shooting),
-  heading('ヘディング', AttributeKey.shooting),
+  finishing(Say('決定力', 'Finishing'), AttributeKey.shooting),
+  shotPower(Say('シュート力', 'Shot power'), AttributeKey.shooting),
+  longShots(Say('ロングシュート', 'Long shots'), AttributeKey.shooting),
+  heading(Say('ヘディング', 'Heading'), AttributeKey.shooting),
 
-  shortPassing('ショートパス', AttributeKey.passing),
-  longPassing('ロングパス', AttributeKey.passing),
-  vision('視野', AttributeKey.passing),
-  crossing('クロス', AttributeKey.passing),
+  shortPassing(Say('ショートパス', 'Short passing'), AttributeKey.passing),
+  longPassing(Say('ロングパス', 'Long passing'), AttributeKey.passing),
+  vision(Say('視野', 'Vision'), AttributeKey.passing),
+  crossing(Say('クロス', 'Crossing'), AttributeKey.passing),
 
-  ballControl('ボールコントロール', AttributeKey.dribbling),
-  dribbling('ドリブル', AttributeKey.dribbling),
-  agility('敏捷性', AttributeKey.dribbling),
+  ballControl(Say('ボールコントロール', 'Ball control'), AttributeKey.dribbling),
+  dribbling(Say('ドリブル', 'Dribbling'), AttributeKey.dribbling),
+  agility(Say('敏捷性', 'Agility'), AttributeKey.dribbling),
 
-  tackling('タックル', AttributeKey.defending),
-  marking('マーク', AttributeKey.defending),
-  interceptions('インターセプト', AttributeKey.defending),
+  tackling(Say('タックル', 'Tackling'), AttributeKey.defending),
+  marking(Say('マーク', 'Marking'), AttributeKey.defending),
+  interceptions(Say('インターセプト', 'Interceptions'), AttributeKey.defending),
 
-  strength('筋力', AttributeKey.physical),
-  stamina('スタミナ', AttributeKey.physical),
-  jumping('ジャンプ', AttributeKey.physical),
+  strength(Say('筋力', 'Strength'), AttributeKey.physical),
+  stamina(Say('スタミナ', 'Stamina'), AttributeKey.physical),
+  jumping(Say('ジャンプ', 'Jumping'), AttributeKey.physical),
 
-  reflexes('セービング', AttributeKey.goalkeeping),
-  gkPositioning('ポジショニング', AttributeKey.goalkeeping),
-  handling('ハンドリング', AttributeKey.goalkeeping);
+  reflexes(Say('セービング', 'Reflexes'), AttributeKey.goalkeeping),
+  gkPositioning(Say('ポジショニング', 'Positioning'), AttributeKey.goalkeeping),
+  handling(Say('ハンドリング', 'Handling'), AttributeKey.goalkeeping);
 
-  const Detail(this.label, this.category);
+  const Detail(Say label, this.category) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
   final AttributeKey category;
 }
 
