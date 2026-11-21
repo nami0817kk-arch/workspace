@@ -74,9 +74,17 @@ class _DomesticCupTab extends StatelessWidget {
 
     final userId = gameState.userTeam.id;
     final teams = gameState.allTeamsForCups;
-    String nameOf(String id) =>
-        teams.firstWhere((t) => t.id == id, orElse: () => teams.first).name;
-    final totalRounds = cup.rounds.length;
+    // 見つからない id を先頭のクラブ(自クラブ)の名前で埋めていたため、
+    // 不戦勝の組が「◯◯ vs 青嵐FC 1-0」と出ていた(2026-11-21)。
+    String nameOf(String id) => id == byeTeamId
+        ? Tr.pick('(不戦勝)', '(bye)')
+        : teams.where((t) => t.id == id).firstOrNull?.name ?? '-';
+    // 回戦の数は、できている回戦の数ではなく1回戦の組の数から出す
+    // (1回戦しかできていないときに、1回戦が「決勝」と出ていた)。
+    var totalRounds = 0;
+    for (var n = (cup.rounds.firstOrNull?.length ?? 0) * 2; n > 1; n ~/= 2) {
+      totalRounds++;
+    }
     final nextMatch = cup.nextUnplayedMatch;
     final userEliminated = cup.isEliminated(userId);
 
@@ -120,17 +128,17 @@ class _DomesticCupTab extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
-                          onPressed: gameState.canPlayNextDomesticCupMatch
-                              ? () => _playNext(context)
-                              : null,
-                          child: Text(Tr.pick('次の試合を消化', 'Play the next tie')),
-                        ),
+                    onPressed: gameState.canPlayNextDomesticCupMatch
+                        ? () => _playNext(context)
+                        : null,
+                    child: Text(Tr.pick('次の試合をする', 'Play the next tie')),
+                  ),
                 ),
                 if (!gameState.canPlayNextDomesticCupMatch)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      Tr.pick('リーグ戦を1節進めると次の試合を消化できます',
+                      Tr.pick('リーグ戦を1節進めると、次の試合ができます',
                           'Play one more league matchday and you can take the next tie'),
                       style: TextStyle(
                           fontSize: 12,
@@ -146,7 +154,12 @@ class _DomesticCupTab extends StatelessWidget {
             initiallyExpanded:
                 round.any((m) => m.result == null) || round == cup.rounds.last,
             children: [
-              for (final m in round)
+              for (final m in [
+                ...round.where(
+                    (m) => m.homeTeamId == userId || m.awayTeamId == userId),
+                ...round.where(
+                    (m) => m.homeTeamId != userId && m.awayTeamId != userId)
+              ])
                 _BracketMatchCard(match: m, nameOf: nameOf, userId: userId),
             ],
           ),
@@ -248,18 +261,18 @@ class _ContinentalCupTab extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
-                          onPressed: gameState.canPlayNextContinentalMatch
-                              ? () => _playNextGroup(context)
-                              : null,
-                          child: Text(Tr.pick(
-                              '次のグループステージの試合を消化', 'Play the next group match')),
-                        ),
+                    onPressed: gameState.canPlayNextContinentalMatch
+                        ? () => _playNextGroup(context)
+                        : null,
+                    child: Text(Tr.pick(
+                        'グループステージの次の試合をする', 'Play the next group match')),
+                  ),
                 ),
                 if (!gameState.canPlayNextContinentalMatch)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      Tr.pick('リーグ戦を1節進めると次の試合を消化できます',
+                      Tr.pick('リーグ戦を1節進めると、次の試合ができます',
                           'Play one more league matchday and you can take the next tie'),
                       style: TextStyle(
                           fontSize: 12,
@@ -277,18 +290,18 @@ class _ContinentalCupTab extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
-                          onPressed: gameState.canPlayNextContinentalMatch
-                              ? () => _playNextKnockoutLeg(context)
-                              : null,
-                          child: Text(Tr.pick('次の決勝トーナメントのレグを消化',
-                              'Play the next knockout leg')),
-                        ),
+                    onPressed: gameState.canPlayNextContinentalMatch
+                        ? () => _playNextKnockoutLeg(context)
+                        : null,
+                    child: Text(Tr.pick(
+                        '決勝トーナメントの次の試合をする', 'Play the next knockout leg')),
+                  ),
                 ),
                 if (!gameState.canPlayNextContinentalMatch)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      Tr.pick('リーグ戦を1節進めると次の試合を消化できます',
+                      Tr.pick('リーグ戦を1節進めると、次の試合ができます',
                           'Play one more league matchday and you can take the next tie'),
                       style: TextStyle(
                           fontSize: 12,
@@ -399,28 +412,60 @@ class _BracketMatchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isUserMatch =
         match.homeTeamId == userId || match.awayTeamId == userId;
-    final resultLabel = match.result == null
-        ? Tr.pick('未消化', 'Not played')
-        : '${match.result!.homeGoals} - ${match.result!.awayGoals}';
-    final card = Card(
-      margin: const EdgeInsets.only(bottom: 6),
-      child: ListTile(
-        tileColor: isUserMatch
-            ? Theme.of(context)
-                .colorScheme
-                .primaryContainer
-                .withValues(alpha: 0.25)
-            : null,
-        title: Text(
-          '${nameOf(match.homeTeamId)} vs ${nameOf(match.awayTeamId)}',
-        ),
-        subtitle: match.penaltyWinnerId != null
-            ? Text(Tr.pick('PK戦: ${nameOf(match.penaltyWinnerId!)}が勝利',
-                'Shootout: ${nameOf(match.penaltyWinnerId!)} go through'))
-            : null,
-        trailing: match.result == null
-            ? Text(Tr.pick('未消化', 'Not played'))
-            : Text(resultLabel, style: Theme.of(context).textTheme.titleMedium),
+    final resultLabel = match.isBye
+        ? Tr.pick('不戦勝', 'Bye')
+        : match.result == null
+            ? Tr.pick('これから', 'To play')
+            : '${match.result!.homeGoals} - ${match.result!.awayGoals}';
+    final scheme = Theme.of(context).colorScheme;
+    // 1試合を細い1行に。自クラブの試合は色と太字ではっきり分ける
+    // (どれも同じ大きな札で、自分の試合を探しにくかった。2026-11-21)。
+    final card = Container(
+      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color:
+            isUserMatch ? scheme.primaryContainer : scheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  match.isBye
+                      ? nameOf(match.homeTeamId == byeTeamId
+                          ? match.awayTeamId
+                          : match.homeTeamId)
+                      : '${nameOf(match.homeTeamId)} vs ${nameOf(match.awayTeamId)}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight:
+                          isUserMatch ? FontWeight.bold : FontWeight.normal),
+                ),
+                if (match.penaltyWinnerId != null)
+                  Text(
+                      Tr.pick('PK戦: ${nameOf(match.penaltyWinnerId!)}が勝利',
+                          'Shootout: ${nameOf(match.penaltyWinnerId!)} go through'),
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: SemanticColors.subtleText(context))),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            resultLabel,
+            style: match.result == null || match.isBye
+                ? TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context))
+                : const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
     if (!isUserMatch) return card;
@@ -530,7 +575,7 @@ class _TieCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isUserTie = tie.teamAId == userId || tie.teamBId == userId;
     final legsLabel = tie.legs.isEmpty
-        ? Tr.pick('未消化', 'Not played')
+        ? Tr.pick('これから', 'To play')
         : tie.legs.map((r) => '${r.homeGoals}-${r.awayGoals}').join(' / ');
     final scoreLabel = tie.singleLeg
         ? Tr.pick('1試合制: $legsLabel', 'Single leg: $legsLabel')
@@ -589,7 +634,19 @@ class _RoundSection extends StatelessWidget {
         tilePadding: EdgeInsets.zero,
         childrenPadding: const EdgeInsets.only(top: 4),
         title: Text(title, style: Theme.of(context).textTheme.titleSmall),
-        children: children,
+        // 横画面では試合を2列に並べる(2026-11-21)。
+        children: [
+          LayoutBuilder(builder: (context, c) {
+            final cols = c.maxWidth >= 560 ? 2 : 1;
+            final w = (c.maxWidth - (cols - 1) * 8) / cols;
+            return Wrap(
+              spacing: 8,
+              children: [
+                for (final ch in children) SizedBox(width: w, child: ch),
+              ],
+            );
+          }),
+        ],
       ),
     );
   }
@@ -628,8 +685,7 @@ class _LeagueCupCard extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.emoji_events_outlined),
         title: Text(gs.leagueCupName),
-        subtitle: Text(Tr.pick(
-            '$status。4節ごとに1回戦ずつ自動で進みます(賞金は国内カップの半分)。',
+        subtitle: Text(Tr.pick('$status。4節ごとに1回戦ずつ自動で進みます(賞金は国内カップの半分)。',
             '$status. A round is played automatically every four matchdays (half the domestic cup prize money).')),
       ),
     );
