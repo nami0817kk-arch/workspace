@@ -893,6 +893,10 @@
     kickoff(team) {
       const m = this.match;
       this.poss = null;
+      // 並びはボールの位置で決まるので、先に真ん中へ置く（2026-11-22：網の中の球で並べていて、
+      // 決めた側の守りが真ん中の線に押しつけられ、サイドバックと中盤が重なっていた）
+      this.ball = [34, L / 2, 0];
+      this.owner = null;
       for (const id of Object.keys(this.base)) {
         const q = this.shapePos(id);
         const home = this.teamOf(id) === m.home;
