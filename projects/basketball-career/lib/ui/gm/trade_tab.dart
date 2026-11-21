@@ -2,6 +2,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../gm/potential_view.dart';
+import '../../gm/trade_ledger.dart';
+import '../../gm/situation.dart';
+import '../../gm/combos.dart';
 import '../../gm/gm_people.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
@@ -195,7 +199,6 @@ class _TradeTabState extends State<TradeTab> {
     final impact = o.give.isEmpty && o.get.isEmpty ? null : car.tradeImpact(o);
     final gs = car.me.roster.where((p) => _give.contains(p.id)).fold(0, (s, p) => s + p.salary);
     final ts = them.roster.where((p) => _get.contains(p.id)).fold(0, (s, p) => s + p.salary);
-    final pr = car.gmPerson(_partner);
     // 選んだものの名前(下の欄に並べる)
     String names(Iterable<Player> ps, Iterable<int> picks) => [
       for (final p in ps) p.name,
@@ -221,36 +224,20 @@ class _TradeTabState extends State<TradeTab> {
                         padding: EdgeInsets.only(bottom: 6),
                         child: Text('今はトレードできない(シーズン中は締め切りまで。オフの契約・シーズン前はできる)。', style: TextStyle(color: GmColors.bad, fontSize: 12)),
                       ),
-                    // 相手の要点(1行)
-                    Row(
-                      children: [
-                        TeamBadge(team: _partner, size: 26),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: fitText('${them.name}(${them.mode.label})', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            '${them.mode.wants}・GM ${pr.name}(${pr.style.label}・見る目 ${car.eyeKnown(_partner) ? eyeOf(pr).label : '？'}・こちらを${car.trustLabel(_partner)})・年俸 ${money(them.payroll)}・${them.roster.length}人',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 11, color: GmColors.sub),
-                          ),
-                        ),
-                      ],
-                    ),
-                    // 相手の事情(届いたうわさ。T-2)
-                    if (car.rumorsOf(_partner).isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2),
-                        child: Text('うわさ: ${car.rumorsOf(_partner).map((r) => r.text).join('・')}',
-                            maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: GmColors.gold)),
-                      ),
+                    // 相手チームの調書(トレード画面の向上 2)。たためば今までの1行
+                    _dossier(car),
                     _blockLine(context, car),
                     if (_give.length == 1) _suitorLine(context, car, suitors),
                     const SizedBox(height: 4),
+                    Row(children: [
+                      const Text('絞り込み ', style: TextStyle(fontSize: 11, color: GmColors.sub)),
+                      Expanded(child: _posChips()),
+                      TextButton.icon(
+                        onPressed: o.give.isEmpty && o.get.isEmpty ? null : () => _showAfter(context, car),
+                        icon: const Icon(Icons.compare_arrows_rounded, size: 16),
+                        label: const Text('交換後を見る', style: TextStyle(fontSize: 12)),
+                      ),
+                    ]),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -442,6 +429,11 @@ class _TradeTabState extends State<TradeTab> {
                                     ),
                                     if (wants.contains(t))
                                       const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.favorite_rounded, size: 11, color: GmColors.good)),
+                                    // 事情のうわさが届いている・こちらを警戒している(トレード画面の向上 2)
+                                    if (car.rumorsOf(t).isNotEmpty)
+                                      const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.campaign_rounded, size: 11, color: GmColors.gold)),
+                                    if (car.trustOf(t) <= -25)
+                                      const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.warning_amber_rounded, size: 11, color: GmColors.bad)),
                                   ],
                                 ),
                                 Text(
@@ -525,20 +517,37 @@ class _TradeTabState extends State<TradeTab> {
     final mine = team == car.mine;
     final players = [
       for (final p in lineup(car.teams[team].roster))
-        if (!mine || !car.expiring.contains(p.id)) p,
+        if ((!mine || !car.expiring.contains(p.id)) && (_pos == null || p.pos == _pos || chosen.contains(p.id))) p,
     ];
+    // 並べ替え(トレード画面の向上 3)
+    switch (_sort) {
+      case 1:
+        players.sort((a, b) => b.ovr.compareTo(a.ovr));
+      case 2:
+        players.sort((a, b) => a.age.compareTo(b.age));
+      case 3:
+        players.sort((a, b) => b.salary.compareTo(a.salary));
+      case 4:
+        players.sort((a, b) => a.years.compareTo(b.years));
+      case 5:
+        players.sort((a, b) => roleOf(a).index.compareTo(roleOf(b).index));
+    }
+    GmCol col(String label, int sort, {double? width, int flex = 1, TextAlign align = TextAlign.center}) =>
+        GmCol(label, width: width, flex: flex, align: align, sorted: _sort == sort, onTap: () => setState(() => _sort = _sort == sort ? 0 : sort));
     return GmTable(
       title: title,
       trailing: Text('${chosen.length}人を選択', style: TextStyle(fontSize: 11, color: chosen.isEmpty ? GmColors.sub : color)),
       rowHeight: 28,
-      cols: const [
-        GmCol('', width: 22),
-        GmCol('選手', flex: 1, align: TextAlign.left),
-        GmCol('位', width: 26),
-        GmCol('歳', width: 24),
-        GmCol('OVR', width: 32),
-        GmCol('年俸', width: 80, align: TextAlign.right),
-        GmCol('残', width: 22),
+      cols: [
+        const GmCol('', width: 22),
+        const GmCol('選手', flex: 1, align: TextAlign.left),
+        col('型', 5, width: 30),
+        const GmCol('位', width: 26),
+        col('歳', 2, width: 24),
+        col('OVR', 1, width: 32),
+        const GmCol('伸', width: 34),
+        col('年俸', 3, width: 74, align: TextAlign.right),
+        col('残', 4, width: 22),
       ],
       rows: [
         for (final p in players)
@@ -554,9 +563,14 @@ class _TradeTabState extends State<TradeTab> {
                   if (car.tradeBlock.contains(p.id)) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.campaign_rounded, size: 12, color: GmColors.ball)),
                 ],
               ),
+              Text(roleOf(p).label.substring(0, 2), style: const TextStyle(fontSize: 9.5, color: GmColors.sub)),
               Text(p.pos.short, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
               numCell('${p.age}'),
               numCell('${shown(p.ovr)}', color: GmColors.ovr(p.ovr), bold: true),
+              () {
+                final pv = car.potentialOf(p);
+                return numCell(pv.worthShowing ? pv.text : '', color: pv.bright ? GmColors.gold : GmColors.sub);
+              }(),
               numCell(money(p.salary), color: GmColors.salary(p.salary, fairSalary(p.ovr, p.age))),
               numCell('${p.years}', color: GmColors.sub),
             ],
@@ -704,6 +718,137 @@ class _TradeTabState extends State<TradeTab> {
     });
     messenger.showSnackBar(SnackBar(content: Text('${car.teams[_partner].def.short}の答え: 「これなら受ける」(出す${o.give.length + o.givePicks.length}件を選んだ)')));
   }
+
+  /// 表の並べ替え(0 先発の順・1 力・2 年齢・3 年俸・4 契約の残り・5 型)と、ポジションの絞り込み。
+  int _sort = 0;
+  Pos? _pos;
+
+  /// 調書を開いているか。
+  bool _dossierOpen = true;
+
+  /// 相手チームの調書(トレード画面の向上 2)。GM・事情・欲しい型と弱いポジション・税の線までの空き・この相手との取引。分からないものは「？」。
+  Widget _dossier(Career car) {
+    final them = car.teams[_partner];
+    final pr = car.gmPerson(_partner);
+    final rumors = car.rumorsOf(_partner);
+    final hole = holeOf(them);
+    final have = {for (final p in them.order.take(8)) roleOf(p)};
+    final want = [for (final r in Role.values) if (!have.contains(r)) r.label];
+    final room = taxLine - them.payroll;
+    final deals = [for (var i = 0; i < car.myTrades.length; i++) if (car.myTrades[i].partner == _partner) i];
+    final verdicts = [
+      for (final i in deals)
+        switch (tradeVerdict(car, car.myTrades[i])) { null => 'まだ', 1 => '勝ち', 0 => '五分', _ => '負け' },
+    ];
+    final trust = car.trustLabel(_partner);
+    final head = Row(
+      children: [
+        TeamBadge(team: _partner, size: 26),
+        const SizedBox(width: 6),
+        Flexible(child: fitText('${them.name}(${them.mode.label})', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
+        const SizedBox(width: 6),
+        Icon(trust == '信頼している' ? Icons.sentiment_very_satisfied_rounded : trust == '警戒している' ? Icons.sentiment_very_dissatisfied_rounded : Icons.sentiment_neutral_rounded,
+            size: 16, color: trust == '信頼している' ? GmColors.good : trust == '警戒している' ? GmColors.bad : GmColors.sub),
+        const Spacer(),
+        IconButton(
+          visualDensity: VisualDensity.compact,
+          tooltip: _dossierOpen ? '調書をたたむ' : '調書を開く',
+          icon: Icon(_dossierOpen ? Icons.expand_less_rounded : Icons.expand_more_rounded, size: 18),
+          onPressed: () => setState(() => _dossierOpen = !_dossierOpen),
+        ),
+      ],
+    );
+    if (!_dossierOpen) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        head,
+        Text('${them.mode.wants}・GM ${pr.name}(${pr.style.label})・年俸 ${money(them.payroll)}・${them.roster.length}人',
+            maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: GmColors.sub)),
+      ]);
+    }
+    Widget line(String k, String v, {Color? color}) => Padding(
+          padding: const EdgeInsets.only(top: 1),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(width: 62, child: Text(k, style: const TextStyle(fontSize: 11, color: GmColors.sub))),
+            Expanded(child: Text(v, style: TextStyle(fontSize: 11.5, color: color))),
+          ]),
+        );
+    return Container(
+      padding: const EdgeInsets.fromLTRB(8, 2, 4, 6),
+      decoration: BoxDecoration(color: GmColors.panel, borderRadius: BorderRadius.circular(8), border: Border.all(color: GmColors.line)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        head,
+        line('GM', '${pr.name}・${pr.style.label}・話し方 ${temperOf(pr).label}・見る目 ${car.eyeKnown(_partner) ? eyeOf(pr).label : '？'}・こちらを$trust'),
+        line('事情', rumors.isEmpty ? '？(うわさが届くと分かる)・${them.mode.wants}' : rumors.map((r) => '${r.text}(うわさ)').join('・'),
+            color: rumors.isEmpty ? null : GmColors.gold),
+        line('欲しい型', want.isEmpty ? 'そろっている' : want.take(3).join('・')),
+        line('弱い位置', hole == null ? 'なし' : '${hole.label}(けが人を除いて1人以下)'),
+        line('税の線まで', room >= 0 ? 'あと${money(room)}' : '${money(-room)}超えている', color: room < 0 ? GmColors.bad : null),
+        line('この相手と', deals.isEmpty ? 'まだ取引していない' : '${deals.length}回(${verdicts.join('・')})'),
+      ]),
+    );
+  }
+
+  /// 交換の前と後の、自分のチーム(先発と控え・年俸・分かっている組み合わせ。トレード画面の向上 3)。
+  void _showAfter(BuildContext context, Career car) {
+    final o = _offer;
+    final now = lineup(car.me.roster);
+    final gets = [for (final id in o.get) ...car.teams[_partner].roster.where((p) => p.id == id)];
+    final after = lineup([...car.me.roster.where((p) => !o.give.contains(p.id)), ...gets]);
+    final known = car.combosFound.toSet();
+    List<String> combosOf(List<Player> top) => [for (final x in combosOfPlayers(top.take(5).toList())) if (known.contains(x)) '${x.good ? '◎' : '×'}${x.label}'];
+    int pay(List<Player> ps) => ps.fold(0, (s, p) => s + p.salary);
+    int next(List<Player> ps) => ps.where((p) => p.years >= 2).fold(0, (s, p) => s + (p.nextSalary ?? p.salary));
+    Widget side(String title, List<Player> ps, {required bool before}) => Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            for (final (k, p) in ps.take(9).indexed)
+              Text(
+                '${k < 5 ? '先' : '控'} ${p.pos.short} ${p.name} ${shown(p.ovr)}',
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 1.45,
+                  color: before && o.give.contains(p.id)
+                      ? GmColors.bad
+                      : !before && o.get.contains(p.id)
+                          ? GmColors.good
+                          : GmColors.text,
+                  fontWeight: k < 5 ? FontWeight.bold : null,
+                ),
+              ),
+            const SizedBox(height: 6),
+            Text('年俸の合計 ${money(pay(ps))}(税の線 ${money(taxLine)})', style: TextStyle(fontSize: 11.5, color: pay(ps) > taxLine ? GmColors.bad : GmColors.sub)),
+            Text('来季の年俸 ${money(next(ps))}', style: const TextStyle(fontSize: 11.5, color: GmColors.sub)),
+            if (combosOf(ps).isNotEmpty) Text('組み合わせ: ${combosOf(ps).join('・')}', style: const TextStyle(fontSize: 11.5, color: GmColors.gold)),
+          ]),
+        );
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            const Text('交換の前と後', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text('抜ける選手は赤、入る選手は緑。組み合わせは図鑑で見つけたものだけ。', style: TextStyle(fontSize: 11.5, color: GmColors.sub)),
+            const SizedBox(height: 8),
+            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [side('今', now, before: true), const SizedBox(width: 12), side('交換後', after, before: false)]),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  /// ポジションの絞り込みの札(全部・PG〜C)。
+  Widget _posChips() => Wrap(spacing: 4, children: [
+        for (final p in [null, ...Pos.values])
+          ChoiceChip(
+            visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+            label: Text(p?.short ?? '全部', style: const TextStyle(fontSize: 11)),
+            selected: _pos == p,
+            onSelected: (_) => setState(() => _pos = p),
+          ),
+      ]);
 
   /// ゲージの幅(信頼している相手ほど、見る目を知っている相手ほど狭い。トレード画面の向上 1)。
   double _spread(Career car) => car.trustOf(_partner) >= 25
