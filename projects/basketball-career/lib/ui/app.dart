@@ -80,7 +80,8 @@ class _NoticeHostState extends State<_NoticeHost> {
 
   void _check() {
     final c = widget.controller;
-    if (_showing || (c.pending.isEmpty && !c.offerRemoveAds)) return;
+    // 試合を進めている間は出さない(進める窓の上に重なると、窓が閉じられなくなる)。終わると知らせが来て出る
+    if (_showing || c.busy || (c.pending.isEmpty && !c.offerRemoveAds)) return;
     _showing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       while (mounted && c.pending.isNotEmpty) {

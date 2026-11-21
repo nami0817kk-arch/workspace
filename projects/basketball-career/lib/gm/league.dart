@@ -211,7 +211,11 @@ class Team {
     // 自動のときも、出られる選手が少ない(けが人が多い)と時間が余るので、上から足して240分にする
     final m = minutes.isEmpty
         ? [for (var i = 0; i < o.length; i++) i < minutesByOrder.length && o[i].injured == 0 ? minutesByOrder[i] : 0]
-        : [for (final p in o) p.injured == 0 ? (minutes[p.id] ?? 0).clamp(0, maxMinutes) : 0];
+        // 表に無い選手(後から来た・決めたときけがだった)は、自動の時間から始める(多すぎる分は下から削る)
+        : [
+            for (var i = 0; i < o.length; i++)
+              o[i].injured == 0 ? (minutes[o[i].id] ?? (i < minutesByOrder.length ? minutesByOrder[i] : 0)).clamp(0, maxMinutes) : 0,
+          ];
     var total = m.fold(0, (a, b) => a + b);
     for (var i = 0; i < m.length && total < totalMinutes; i++) {
       if (o[i].injured > 0) continue;

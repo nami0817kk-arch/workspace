@@ -1247,10 +1247,11 @@ class ProgressTab extends StatelessWidget {
         const Text('新人の契約の最後の年。使えば次の年も少し高い年俸で契約が続き、使わなければ契約が切れて、再契約か自由契約になる。',
             style: TextStyle(color: GmColors.sub, fontSize: 12, height: 1.4)),
         const SizedBox(height: 6),
-        for (final id in car.optionPending) ...[
-          _optionRow(context, car, car.me.roster.firstWhere((p) => p.id == id)),
-          const SizedBox(height: 6),
-        ],
+        for (final id in car.optionPending)
+          if (car.me.roster.where((p) => p.id == id).firstOrNull case final p?) ...[
+            _optionRow(context, car, p),
+            const SizedBox(height: 6),
+          ],
       ],
       SectionTitle('契約が切れた選手(${exp.length}人)'),
       if (exp.isEmpty) const Text('いない', style: TextStyle(color: GmColors.sub)),

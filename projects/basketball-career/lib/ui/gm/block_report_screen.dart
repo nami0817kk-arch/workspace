@@ -306,7 +306,11 @@ class _PlayoffRunScreenState extends State<PlayoffRunScreen> with SingleTickerPr
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(
-                    won ? '${s.label}を勝ち抜いた!' : '${s.label}で敗れた…',
+                    won
+                        ? '${s.label}を勝ち抜いた!'
+                        : _series < mySeries.length - 1
+                            ? '${s.label}で敗れた。まだもう1試合ある'
+                            : '${s.label}で敗れた…',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: won ? GmColors.gold : GmColors.bad),
                   ),
@@ -400,7 +404,7 @@ class _PlayoffRunScreenState extends State<PlayoffRunScreen> with SingleTickerPr
                   icon: Icon(done ? Icons.arrow_forward_rounded : Icons.sports_basketball_rounded),
                   label: Text(!done
                       ? (_shown == 0 ? '第1戦を見る' : '第${_shown + 1}戦へ')
-                      : won && _series < mySeries.length - 1
+                      : _series < mySeries.length - 1
                           ? '次の戦いへ'
                           : '結果を見る'),
                 ),

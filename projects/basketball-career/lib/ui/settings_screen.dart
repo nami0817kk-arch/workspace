@@ -118,7 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ListTile(
                             leading: const Icon(Icons.block_rounded),
                             title: Text('広告を消す(${displayPrice(_price!)})'),
-                            subtitle: const Text('全画面広告が出なくなり、引き直し・やり直しも動画なしで使える。'),
+                            subtitle: const Text('全画面広告が出なくなり、スカウトの追加とオーナーの説得も動画なしで使える。'),
                             enabled: !_busy,
                             onTap: () => _run(restore: false),
                           ),

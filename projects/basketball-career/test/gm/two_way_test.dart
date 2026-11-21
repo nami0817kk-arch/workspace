@@ -19,7 +19,8 @@ Career _atContracts() {
   return c;
 }
 
-Player _young(Career c) => c.freeAgents.firstWhere((p) => p.exp <= twoWayMaxExp, orElse: () => c.freeAgents.first..exp = 1);
+/// 2ウェイで来る若手(最低年俸で来る選手だけが2ウェイに応じる)。
+Player _young(Career c) => c.freeAgents.firstWhere((p) => c.askOf(p, c.me).salary <= minSalary)..exp = 1;
 
 void main() {
   group('2ウェイ契約', () {
@@ -28,7 +29,7 @@ void main() {
       final roster = c.me.roster.length;
       final pay = c.me.payroll;
       final ids = <int>[];
-      for (final p in c.freeAgents.toList()) {
+      for (final p in c.freeAgents.where((p) => c.askOf(p, c.me).salary <= minSalary).toList()) {
         p.exp = 1;
         if (ids.length < twoWayMax) {
           c.signTwoWay(p.id);
@@ -69,7 +70,7 @@ void main() {
       expect(p.salary, minSalary);
       expect(p.years, 2);
 
-      final q = c.freeAgents.firstWhere((x) => x.id != p.id)..exp = 1;
+      final q = c.freeAgents.firstWhere((x) => x.id != p.id && c.askOf(x, c.me).salary <= minSalary)..exp = 1;
       c.signTwoWay(q.id);
       while (c.me.roster.length - c.expiring.length < maxRoster) {
         c.me.roster.add(c.freeAgents.firstWhere((x) => x.id != q.id));
@@ -83,9 +84,19 @@ void main() {
       expect(c.me.deadCap, dead);
     });
 
+    test('最低年俸より上を求める選手は2ウェイで来ず、高い年俸の選手は2ウェイに下げられない', () {
+      final c = _atContracts();
+      final rich = c.freeAgents.firstWhere((p) => c.askOf(p, c.me).salary > minSalary)..exp = 1;
+      expect(c.twoWayProblem(rich), isNotNull);
+      final big = c.me.roster.firstWhere((x) => x.salary > minSalary && !c.expiring.contains(x.id))..exp = 1;
+      expect(c.toTwoWayProblem(big), isNotNull);
+    });
+
     test('登録の若手を2ウェイに下げると登録に空きができる', () {
       final c = _atContracts();
-      final p = c.me.roster.firstWhere((x) => x.years > 0 && !c.expiring.contains(x.id))..exp = 1;
+      final p = c.me.roster.firstWhere((x) => x.years > 0 && !c.expiring.contains(x.id) && !c.optionPending.contains(x.id) && x.nextSalary == null)
+        ..exp = 1
+        ..salary = minSalary;
       final n = c.me.roster.length;
       expect(c.toTwoWayProblem(p), isNull);
       c.toTwoWay(p.id);
