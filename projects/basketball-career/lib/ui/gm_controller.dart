@@ -147,8 +147,9 @@ class GmController extends ChangeNotifier {
   void newCareer(int team, {int? seed, Difficulty difficulty = Difficulty.normal}) {
     // 終わった任期の上に始めるときも、終わった任期を記録に数える
     final old = career;
+    if (old != null) profile.recordLegacy(old);
     if (old != null && old.phase == Phase.over) pending.addAll(profile.recordCareerEnd(old));
-    career = Career.start(seed: seed ?? newSeed(), team: team, difficulty: difficulty);
+    career = Career.start(seed: seed ?? newSeed(), team: team, difficulty: difficulty)..legendNames = profile.legendNames;
     atHome = false;
     _changed();
   }
@@ -156,6 +157,7 @@ class GmController extends ChangeNotifier {
   /// 任期を閉じて、はじめの画面へ。終わった任期はここで数える。
   void closeCareer() {
     final c = career;
+    if (c != null) profile.recordLegacy(c);
     if (c != null && c.phase == Phase.over) pending.addAll(profile.recordCareerEnd(c));
     career = null;
     atHome = true;
