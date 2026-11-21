@@ -193,8 +193,19 @@ void main() {
         await tester.tap(f.first, warnIfMissed: false);
         await tester.pump(const Duration(milliseconds: 300));
         await shoot('$p-$l');
-        // 経営は各タブが長いので、下へ送りながら撮る。
-        if (p == '経営') {
+        // スタッフの候補の表を開いたところも撮る。
+        if (p == 'クラブ' && l == 'スタッフ') {
+          final open = find.textContaining('候補を見る').hitTestable();
+          if (open.evaluate().isNotEmpty) {
+            await tester.tap(open.first);
+            await tester.pump(const Duration(milliseconds: 600));
+            await shoot('$p-$l-candidates');
+            await tester.tap(open.first);
+            await tester.pump(const Duration(milliseconds: 600));
+          }
+        }
+        // 経営・クラブは各タブが長いので、下へ送りながら撮る。
+        if (p == '経営' || p == 'クラブ') {
           // 座標は論理ピクセル(幅852)。左右2つの欄の両方を送る。
           for (var i = 1; i <= 6; i++) {
             await tester.dragFrom(

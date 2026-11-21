@@ -6,15 +6,77 @@ import '../models/club_look.dart';
 import '../state/game_state.dart';
 import 'club_emblem.dart';
 
-/// クラブの見た目を決める。選んだ形を手元で見て、決めてから反映する。
-class ClubLookCard extends StatefulWidget {
+/// クラブの見た目の札。今のエンブレムと「見た目を変える」だけを出し、
+/// 色・形・模様を選ぶ欄は別の画面([ClubLookEditor])へ移した。タブの中に
+/// 広げていたときは画面2つ分を使っていた(2026-11-21)。
+class ClubLookCard extends StatelessWidget {
   const ClubLookCard({super.key});
 
   @override
-  State<ClubLookCard> createState() => _ClubLookCardState();
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final save = gs.save;
+    if (save == null) return const SizedBox.shrink();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          children: [
+            ClubEmblem(
+                teamId: save.userTeamId,
+                teamName: save.clubName,
+                size: 48,
+                look: gs.currentClubLook),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(Tr.pick('クラブの見た目', 'Club look'),
+                      style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    gs.clubLookChangeCosts
+                        ? Tr.pick(
+                            '1季に1回まで(変えると期待-${GameStateClubLook.changePenalty})',
+                            'Once a season (support -${GameStateClubLook.changePenalty})')
+                        : Tr.pick('最初の季は何度でも変えられます',
+                            'Free to change in your first season'),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => Scaffold(
+                  appBar: AppBar(title: Text(Tr.pick('クラブの見た目', 'Club look'))),
+                  body: const SingleChildScrollView(
+                    padding: EdgeInsets.all(12),
+                    child: ClubLookEditor(popOnSave: true),
+                  ),
+                ),
+              )),
+              child: Text(Tr.pick('見た目を変える', 'Change')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _ClubLookCardState extends State<ClubLookCard> {
+/// クラブの見た目を決める。選んだ形を手元で見て、決めてから反映する。
+class ClubLookEditor extends StatefulWidget {
+  const ClubLookEditor({super.key, this.popOnSave = false});
+
+  /// 決めたら前の画面へ戻るか(別の画面で開いたとき)。
+  final bool popOnSave;
+
+  @override
+  State<ClubLookEditor> createState() => _ClubLookEditorState();
+}
+
+class _ClubLookEditorState extends State<ClubLookEditor> {
   ClubLook? _draft;
   final _initial = TextEditingController();
 
@@ -136,7 +198,9 @@ class _ClubLookCardState extends State<ClubLookCard> {
                 onPressed: changed && gs.canChangeClubLook
                     ? () async {
                         final ok = await gs.setClubLook(draft);
-                        if (ok && mounted) setState(() => _draft = null);
+                        if (!ok || !mounted) return;
+                        setState(() => _draft = null);
+                        if (widget.popOnSave) Navigator.of(this.context).pop();
                       }
                     : null,
                 child: Text(gs.canChangeClubLook

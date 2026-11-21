@@ -26,6 +26,8 @@ import '../widgets/affiliate_card.dart';
 import '../widgets/club_license_card.dart';
 import '../widgets/season_tickets_card.dart';
 import '../logic/economy_scale.dart';
+import '../widgets/help_button.dart';
+import '../widgets/screen_bar.dart';
 
 part 'club_screen_staff.dart';
 
@@ -40,8 +42,8 @@ String _staffEffectLabel(StaffRole role, int level,
           ? ClubInfrastructure.trainingGrowthMultiplier(level + 1, 1)
           : null;
       return Tr.pick(
-          '成長倍率 ${cur.toStringAsFixed(2)}倍${next == null ? '' : ' → 次Lv: ${next.toStringAsFixed(2)}倍'}',
-          "Growth x${cur.toStringAsFixed(2)}${next == null ? '' : ' → next level: x${next.toStringAsFixed(2)}'}");
+          '練習での成長${_pct(cur)}${next == null ? '' : '(1つ上の人なら${_pct(next)})'}',
+          "Training growth ${_pct(cur)}${next == null ? '' : ' (${_pct(next)} with a better coach)'}");
     case StaffRole.scout:
       final cur = scaleMoneyForTier(tier, ScoutingEngine.scoutCostFor(level));
       final curCount = ScoutingEngine.scoutCandidateCountFor(level);
@@ -102,55 +104,65 @@ String _staffEffectLabel(StaffRole role, int level,
   }
 }
 
+/// 倍率を「+8%」の形にする(1.08 → +8%)。
+String _pct(double m) {
+  final d = ((m - 1) * 100).round();
+  return d >= 0 ? '+$d%' : '$d%';
+}
+
+/// 施設の効き目。式(x1.00 → 次Lv: x1.10)ではなく、「いま」と
+/// 「次のLvで」を言葉と%で出す(2026-11-21)。
 String _facilityEffectLabel(
   FacilityType type,
   int level,
   int expectedAttendance,
 ) {
   const maxLevel = ClubInfrastructure.maxLevel;
+  final hasNext = level < maxLevel;
   switch (type) {
     case FacilityType.trainingGround:
-      final curGrowth = ClubInfrastructure.trainingGrowthMultiplier(1, level);
-      final curFatigue = ClubInfrastructure.fatigueRecoveryBonus(level);
-      final next = level < maxLevel
+      final g = ClubInfrastructure.trainingGrowthMultiplier(1, level);
+      final f = ClubInfrastructure.fatigueRecoveryBonus(level);
+      final ng = hasNext
           ? ClubInfrastructure.trainingGrowthMultiplier(1, level + 1)
-          : null;
-      final nextFatigue = level < maxLevel
-          ? ClubInfrastructure.fatigueRecoveryBonus(level + 1)
-          : null;
+          : g;
+      final nf =
+          hasNext ? ClubInfrastructure.fatigueRecoveryBonus(level + 1) : f;
       return Tr.pick(
-          '成長倍率 ${curGrowth.toStringAsFixed(2)}倍 / 追加疲労回復+$curFatigue${next == null ? '' : ' → 次Lv: ${next.toStringAsFixed(2)}倍 / +$nextFatigue'}',
-          "Growth x${curGrowth.toStringAsFixed(2)} / extra recovery +$curFatigue${next == null ? '' : ' → next level: x${next.toStringAsFixed(2)} / +$nextFatigue'}");
+          'いま: 成長${_pct(g)}・疲労回復+$f${hasNext ? '\n次のLvで: 成長${_pct(ng)}・疲労回復+$nf' : ''}',
+          "Now: growth ${_pct(g)}, recovery +$f${hasNext ? '\nNext level: growth ${_pct(ng)}, recovery +$nf' : ''}");
     case FacilityType.stadium:
       final cur = ClubInfrastructure.stadiumCapacity(level);
-      final next = level < maxLevel
-          ? ClubInfrastructure.stadiumCapacity(level + 1)
-          : null;
+      final next =
+          hasNext ? ClubInfrastructure.stadiumCapacity(level + 1) : cur;
       return Tr.pick(
-          '収容人数 $cur人 (平均動員目安 $expectedAttendance人)${next == null ? '' : ' → 次Lv: $next人'}',
-          "Capacity $cur (typical attendance $expectedAttendance)${next == null ? '' : ' → next level: $next'}");
+          'いま: $cur人入る(ふだんの入り$expectedAttendance人)${hasNext ? '\n次のLvで: $next人' : ''}',
+          "Now: holds $cur (usual crowd $expectedAttendance)${hasNext ? '\nNext level: $next' : ''}");
     case FacilityType.youthFacility:
       final cur = ScoutingEngine.maxProspectsFor(level);
-      final next =
-          level < maxLevel ? ScoutingEngine.maxProspectsFor(level + 1) : null;
-      return Tr.pick('受け入れ枠 $cur人${next == null ? '' : ' → 次Lv: $next人'}',
-          "$cur academy places${next == null ? '' : ' → next level: $next'}");
+      final next = hasNext ? ScoutingEngine.maxProspectsFor(level + 1) : cur;
+      return Tr.pick('いま: 受け入れ$cur人${hasNext ? '\n次のLvで: $next人' : ''}',
+          "Now: $cur academy places${hasNext ? '\nNext level: $next' : ''}");
     case FacilityType.commercialFacility:
       final cur = ClubInfrastructure.commercialRevenueMultiplier(level);
-      final next = level < maxLevel
+      final next = hasNext
           ? ClubInfrastructure.commercialRevenueMultiplier(level + 1)
-          : null;
+          : cur;
       return Tr.pick(
-          '観客・スポンサー収入 x${cur.toStringAsFixed(2)}${next == null ? '' : ' → 次Lv: x${next.toStringAsFixed(2)}'}',
-          "Gate and sponsorship income x${cur.toStringAsFixed(2)}${next == null ? '' : ' → next level: x${next.toStringAsFixed(2)}'}");
+          'いま: 観客・スポンサー収入${_pct(cur)}${hasNext ? '\n次のLvで: ${_pct(next)}' : ''}',
+          "Now: gate and sponsorship income ${_pct(cur)}${hasNext ? '\nNext level: ${_pct(next)}' : ''}");
     case FacilityType.medicalCenter:
-      final cur = ClubInfrastructure.medicalCenterInjuryFactor(level);
-      final next = level < maxLevel
-          ? ClubInfrastructure.medicalCenterInjuryFactor(level + 1)
-          : null;
+      final cur =
+          ((1 - ClubInfrastructure.medicalCenterInjuryFactor(level)) * 100)
+              .round();
+      final next = hasNext
+          ? ((1 - ClubInfrastructure.medicalCenterInjuryFactor(level + 1)) *
+                  100)
+              .round()
+          : cur;
       return Tr.pick(
-          'フィジオと合わせて負傷リスク追加${((1 - cur) * 100).round()}%軽減${next == null ? '' : ' → 次Lv: 追加${((1 - next) * 100).round()}%軽減'}',
-          "With your physio, injury risk down a further ${((1 - cur) * 100).round()}%${next == null ? '' : ' → next level: a further ${((1 - next) * 100).round()}%'}");
+          'いま: 負傷リスク-$cur%(フィジオの分に上乗せ)${hasNext ? '\n次のLvで: -$next%' : ''}',
+          "Now: injury risk -$cur% (on top of your physio)${hasNext ? '\nNext level: -$next%' : ''}");
   }
 }
 
@@ -190,55 +202,70 @@ class ClubScreen extends StatelessWidget {
           // スタッフは候補の行が横に長いので1列のまま。
           twoColumnWidth: section == ClubSection.staff ? double.infinity : 640,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            // 上の札は細い1行に。資金は上の段に出ているので、横画面では
+            // 出さない(2026-11-21)。
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+              // 狭い画面では折り返す(1行に並べきれないことがある)。
+              child: Wrap(
+                spacing: 12,
+                runSpacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  if (!EmbeddedInShell.of(context))
                     Text(
-                      Tr.pick('資金: ${formatMoney(save.budget)}',
-                          'Funds: ${formatMoney(save.budget)}'),
-                      style: Theme.of(context).textTheme.titleMedium,
+                      Tr.pick('資金 ${formatMoney(save.budget)}',
+                          'Funds ${formatMoney(save.budget)}'),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      Tr.pick(
-                          'スタッフの年俸の合計: ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))}',
-                          'Total staff salaries: ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))} a year'),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: SemanticColors.subtleText(context)),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: totalLevels / maxTotalLevels,
-                              minHeight: 6,
-                            ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        Tr.pick('充実度 $totalLevels/$maxTotalLevels',
+                            'Development $totalLevels/$maxTotalLevels'),
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 80,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: totalLevels / maxTotalLevels,
+                            minHeight: 6,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          Tr.pick('充実度 $totalLevels/$maxTotalLevels',
-                              'Development $totalLevels/$maxTotalLevels'),
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    Tr.pick(
+                        'スタッフの年俸 ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))}',
+                        'Staff salaries ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))} a year'),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.subtleText(context)),
+                  ),
+                ],
               ),
             ),
             if (show(ClubSection.staff)) ...[
-              const SizedBox(height: 20),
-              Text(Tr.pick('スタッフ', 'Staff'),
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
+              Builder(builder: (context) {
+                final filled = StaffRole.values
+                    .where((r) => gameState.staffFor(r) != null)
+                    .length;
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+                  child: Text(
+                    Tr.pick(
+                        'スタッフ: ${StaffRole.values.length}役のうち$filled人を雇っています',
+                        'Staff: $filled of ${StaffRole.values.length} posts filled'),
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                );
+              }),
               for (final role in StaffRole.values) _StaffCard(role: role),
               const SizedBox(height: 8),
               const YouthAnalyticsCard(),
@@ -274,9 +301,6 @@ class ClubScreen extends StatelessWidget {
               const FanSegmentsCard(),
               const SizedBox(height: 8),
               const ClubLookCard(),
-              const Divider(height: 32),
-              Text(Tr.pick('チケット価格戦略', 'Ticket pricing'),
-                  style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               _TicketPricingCard(
                 current: save.ticketPricing,
@@ -306,14 +330,13 @@ class _TicketPricingCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              Tr.pick(
-                  '観客動員率と1人あたり収入はトレードオフです。値上げは収容人数に対する実入場者数を減らし、値下げは満員に近づけます。',
+            TitleWithHelp(
+              title: Tr.pick('チケットの値段', 'Ticket pricing'),
+              help: Tr.pick(
+                  '観客の入りと1人あたりの収入は、片方を取るともう片方が減ります。値上げすると席が埋まりにくくなり、値下げすると満員に近づきます。',
                   'Attendance and revenue per head pull against each other. Raise prices and fewer of your seats fill; lower them and you get closer to a full house.'),
-              style: TextStyle(
-                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 4),
             SegmentedButton<TicketPricing>(
               segments: TicketPricing.values
                   .map((p) => ButtonSegment(value: p, label: Text(p.label)))

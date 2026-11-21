@@ -52,7 +52,7 @@ void main() {
               children: [
                 const SizedBox(
                     width: 520,
-                    child: SingleChildScrollView(child: ClubLookCard())),
+                    child: SingleChildScrollView(child: ClubLookEditor())),
                 // 形と模様の組み合わせの例。
                 Expanded(
                   child: Wrap(
