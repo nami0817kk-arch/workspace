@@ -83,10 +83,10 @@ const w = dom.window;
 const d = w.document;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const btn = (t, scope) => [...(scope || d).querySelectorAll('button')].find((b) => b.textContent.includes(t) && !b.disabled);
-// 系譜の小タブは3つの群（卒業生・記録・監督）に分かれている（2026-11-18）。群を切り替えながら探して押す
+// 記録タブ（旧 系譜）の小タブは3つの群（卒業生・実績・年表・監督）に分かれている（2026-11-18）。群を切り替えながら探して押す
 const ltab = (label) => {
   const find = () => [...d.querySelectorAll('#main .tabs button:not(.grp)')].find((b) => b.textContent.trim() === label);
-  for (const g of ['卒業生', '記録', '監督']) {
+  for (const g of ['卒業生', '実績・年表', '監督']) {
     if (find()) break;
     const gb = [...d.querySelectorAll('#main .tabs button.grp')].find((x) => x.textContent.trim() === g);
     if (gb) gb.click();
@@ -343,7 +343,7 @@ async function clearEvents() {
     ok(cells.filter((c) => c.classList.contains('short')).every((c) => c.textContent.includes('不足')), '足りない位置は色だけでなく「不足」');
   }
   rail('ほか');
-  btn('記録').click();
+  btn('クラブ史', d.getElementById('main')).click();
   ok(txt().includes('主な記録') && txt().includes('リーグの履歴'), '記録の画面');
   btn('設定', d.getElementById('main')).click();
   ok(!btn('卒業生名鑑', d.querySelector('#main .tabs')), 'ほかに卒業生名鑑の重複が無い（系譜にまとめた）');
@@ -599,7 +599,7 @@ async function clearEvents() {
     }
     await sleep(20);
     ok(!d.querySelector('.sheet') && A.w.players, '書き出したデータを復元できる');
-    rail('系譜');
+    rail('記録');
     ltab('卒業生名鑑');
     ok(d.querySelectorAll('#main .pitem').length >= 12, '卒業生が名鑑に並ぶ');
     // 段2：設定の文字の大きさ・お知らせの重さ、実績、名前の書き換え
@@ -641,14 +641,15 @@ async function clearEvents() {
     }
     // 2段目その1：系譜タブ（決定139）
     {
-      rail('系譜');
-      ok(A.tab === 'lineage' && ['系譜図', '卒業生名鑑', '殿堂'].every((x) => txt().includes(x)) && ['卒業生', '記録', '監督'].every((x) => !!btn(x, d.querySelector('#main .tabs'))), '系譜タブは3つの群（卒業生・記録・監督）');
-      ok(ltab('実績') && /実績 \d+\/\d+/.test(txt()) && ltab('年表') && ltab('育成基金') && ltab('系譜図'), '記録の群に実績・年表・育成基金');
-      ok(!!d.querySelector('.lin-svg svg') || txt().includes('最初の卒業式'), '系譜図か空の案内が出る');
+      rail('記録');
+      ok(A.tab === 'lineage' && ['卒業生名鑑', '殿堂'].every((x) => txt().includes(x)) && ['卒業生', '実績・年表', '監督'].every((x) => !!btn(x, d.querySelector('#main .tabs'))), '記録タブは3つの群（卒業生・実績・年表・監督）');
+      ok(ltab('実績') && /実績 \d+\/\d+/.test(txt()) && ltab('年表') && ltab('育成基金'), '実績・年表の群に実績・年表・育成基金');
+      // 2026-11-21「系譜の画面はいらない」：系譜図の小タブとホームの系譜の小窓を外した
+      ok(!ltab('系譜図') && !d.querySelector('.lin-svg') && ![...d.querySelectorAll('#rail button')].some((b) => b.textContent.includes('系譜')), '系譜図が無く、左の帯は「記録」');
       // 2026-11-17：系譜の小タブは「監督の注文」「移籍先クラブ」（クラブ＞トップ・左の帯のクラブと中身が違うので）
       const ltabs = [];
-      for (const g of ['卒業生', '記録', '監督']) { btn(g, d.querySelector('#main .tabs')).click(); ltabs.push(...[...d.querySelectorAll('#main .tabs button:not(.grp)')].map((b) => b.textContent.trim())); }
-      ok(ltabs.includes('監督の注文') && ltabs.includes('移籍先クラブ') && !ltabs.includes('トップ') && !ltabs.includes('クラブ'), '系譜の小タブの名前が、ほかのトップ・クラブと重ならない ' + ltabs.join('・'));
+      for (const g of ['卒業生', '実績・年表', '監督']) { btn(g, d.querySelector('#main .tabs')).click(); ltabs.push(...[...d.querySelectorAll('#main .tabs button:not(.grp)')].map((b) => b.textContent.trim())); }
+      ok(ltabs.includes('監督の注文') && ltabs.includes('移籍先クラブ') && !ltabs.includes('トップ') && !ltabs.includes('クラブ'), '記録の小タブの名前が、ほかのトップ・クラブと重ならない ' + ltabs.join('・'));
       for (const n of ['ライバル', 'トップ', '移籍', 'クラブ']) {
         const label = { トップ: '監督の注文', クラブ: '移籍先クラブ' }[n] || n;
         ltab(label);
@@ -754,7 +755,7 @@ async function clearEvents() {
       { const g = [...d.querySelectorAll('#main .scroll')].find((e) => e.style.display === 'grid'); ok(!!g && g.children.length === 80 && g.style.gridTemplateColumns.includes('repeat(4'), '図鑑は4列の札・80種（2026-11-20）'); }
       ltab('実績');
       rail('ホーム');
-      ok(txt().includes('系譜') && txt().includes('次の実績'), 'ホームに系譜の小窓と次の実績');
+      ok(!txt().includes('系譜図') && !d.querySelector('.lin-svg') && txt().includes('次の実績'), 'ホームに次の実績（系譜の小窓は無い）');
       rail('ほか');
       ok(txt().includes('設定') || txt().includes('実績と引退'), '歯車から設定へ');
     }
@@ -845,7 +846,7 @@ async function clearEvents() {
       const Y = w.YA;
       const app = Y._ui.app;
       // どの画面・小タブにもガイドがある
-      const keys = ['home', 'players', 'train', 'pre', 'play', 'result', 'club:money', 'club:over', 'club:staff', 'club:top', 'club:int', 'club:scout', 'club:sel', 'club:table', 'lineage:tree', 'lineage:alumni', 'more:howto', 'more:rec', 'more:bteam', 'more:ach', 'more:help', 'set:disp', 'set:notice', 'set:name', 'set:save'];
+      const keys = ['home', 'players', 'train', 'pre', 'play', 'result', 'club:money', 'club:over', 'club:staff', 'club:top', 'club:int', 'club:scout', 'club:sel', 'club:table', 'lineage:alumni', 'more:howto', 'more:rec', 'more:bteam', 'more:ach', 'more:help', 'set:disp', 'set:notice', 'set:name', 'set:save'];
       const miss = keys.filter((k) => { const g = Y.GUIDE[k]; return !g || !g.t || !g.what; });
       ok(!miss.length, 'ガイド: 全画面に見出しと説明: ' + miss.join(','));
       ok(Y.guideKey({ tab: 'club', ct: 'scout' }) === 'club:scout' && Y.guideKey({ tab: 'more', mt: 'set', st: 'save' }) === 'set:save' && Y.guideKey({ tab: 'match', view: 'pre' }) === 'pre', 'ガイド: 小タブまで鍵を作る');
@@ -1015,12 +1016,12 @@ async function clearEvents() {
       btn('新しく始める').click();
       ok(d.querySelector('.sheet') && /新しく始めますか/.test(d.querySelector('.sheet').textContent) && A.w === wr, '引退後の「新しく始める」は確かめてから');
       btn('やめる', d.querySelector('.sheet')).click();
-      btn('名鑑・系譜を見る').click();
+      btn('名鑑・記録を見る').click();
       await sleep(10);
       ok(txt().includes('卒業生') && !!btn('まとめに戻る'), '引退後も名鑑が見られる');
-      btn('系譜').click();
+      [...d.querySelectorAll('button')].find((b) => b.textContent.trim() === '記録').click();
       await sleep(10);
-      ok(errors.length === 0, '引退後に系譜を開いて例外なし: ' + errors.slice(0, 2).join('|'));
+      ok(errors.length === 0, '引退後に記録を開いて例外なし: ' + errors.slice(0, 2).join('|'));
       btn('まとめに戻る').click();
       btn('セーブ枠').click();
       ok(d.querySelector('.sheet') && /セーブ枠（いま/.test(d.querySelector('.sheet').textContent), '引退後にセーブ枠を開ける');

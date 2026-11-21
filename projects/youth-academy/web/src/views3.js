@@ -251,7 +251,7 @@
     if (o && o.retireOnly) {
       // 実績の一覧は系譜タブの「記録」にある。ここは引退だけ
       const done = YA.achievements(w).filter((a) => a.done).length;
-      body.append(h('div', { class: 'row' }, h('div', { class: 'h grow' }, `実績 ${done}/${YA.achievements(w).length}`), h('button', { class: 'btn sm', onclick: () => { app.tab = 'lineage'; app.lt = 'ach'; rerender(); } }, '系譜タブで実績を見る')));
+      body.append(h('div', { class: 'row' }, h('div', { class: 'h grow' }, `実績 ${done}/${YA.achievements(w).length}`), h('button', { class: 'btn sm', onclick: () => { app.tab = 'lineage'; app.lt = 'ach'; rerender(); } }, '記録タブで実績を見る')));
     } else body.append(h('div', { class: 'h' }, '実績'));
     if (!(o && o.retireOnly)) for (const a of YA.achievements(w)) {
       body.append(h('div', { class: 'pitem', style: 'cursor:default;gap:6px' },
@@ -269,7 +269,7 @@
     if (app.retBrowse && YA.views[app.retBrowse]) {
       main.append(h('div', { class: 'row', style: 'gap:6px;margin:6px 8px 0' }, h('button', { class: 'btn sm', onclick: () => { app.retBrowse = null; rerender(); } }, '← まとめに戻る'),
         h('button', { class: 'btn sm' + (app.retBrowse === 'more' ? ' on' : ''), onclick: () => { app.retBrowse = 'more'; app.mt = 'alumni'; rerender(); } }, '卒業生名鑑'),
-        h('button', { class: 'btn sm' + (app.retBrowse === 'lineage' ? ' on' : ''), onclick: () => { app.retBrowse = 'lineage'; rerender(); } }, '系譜')));
+        h('button', { class: 'btn sm' + (app.retBrowse === 'lineage' ? ' on' : ''), onclick: () => { app.retBrowse = 'lineage'; rerender(); } }, '記録')));
       YA.views[app.retBrowse](main);
       return;
     }
@@ -284,7 +284,7 @@
     if (s.trophies.length) box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '獲ったもの'), ...s.trophies.map((t) => h('div', { class: 'note', style: 'color:var(--ink)' }, `・${t.year || ''}年 ${t.name}`)));
     box.append(h('div', { class: 'h', style: 'margin-top:4px' }, '実績'), ...s.ach.map((a) => h('div', { class: 'note', style: 'color:var(--ink)' }, (a.done ? '◎ ' : '・') + a.name)));
     box.append(h('div', { class: 'row', style: 'margin-top:8px;gap:6px' },
-      h('button', { class: 'btn', onclick: () => { app.retBrowse = 'more'; app.mt = 'alumni'; rerender(); } }, '名鑑・系譜を見る'),
+      h('button', { class: 'btn', onclick: () => { app.retBrowse = 'more'; app.mt = 'alumni'; rerender(); } }, '名鑑・記録を見る'),
       h('button', { class: 'btn', onclick: () => V().modal((close) => { const bx = h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(560px,96%);max-height:94%;padding:12px;gap:6px;overflow:auto' }); YA.slotBlock(bx); bx.append(h('button', { class: 'btn', onclick: close }, '閉じる')); return bx; }) }, 'セーブ枠'),
       h('button', { class: 'btn', onclick: exportBox }, 'セーブを書き出す'),
       h('button', { class: 'btn pri', onclick: () => confirmBox(`枠${(app.slot || 0) + 1}のセーブを消して新しく始めますか（この指導者人生の記録はこの枠から消えます。残したいときは先に「セーブを書き出す」か、別の枠で始めてください）`, () => { const st = U().store; st.set(YA.slotKey(app.slot), null); app.w = null; app.ng = null; app.retBrowse = null; rerender(); }) }, '新しく始める')));
