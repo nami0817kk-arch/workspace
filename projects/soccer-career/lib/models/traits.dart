@@ -493,7 +493,9 @@ enum Trait {
 
   static String _times(double factor) => '×${factor.toStringAsFixed(1)}';
 
-  static String _years(int offset) => offset > 0 ? tr('+$offset年', '+$offset yrs') : tr('$offset年', '$offset yrs');
+  static String _years(int offset) => offset > 0
+      ? tr('+$offset年', '+${plural(offset, 'yr')}')
+      : tr('$offset年', plural(offset, 'yr'));
 
   /// 局面での効き方。判定と画面が同じものを読む。
   List<TraitRule> get rules {

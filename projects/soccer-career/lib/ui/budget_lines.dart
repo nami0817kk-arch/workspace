@@ -47,7 +47,7 @@ class BudgetLines extends StatelessWidget {
             tr('出場給 ${budget.appearanceBonus > 0 ? '＋' : '−'}'
             '${_yen(budget.appearanceBonus.abs())}円'
             '（${state.seasonStats.appearances}試合 / 基準'
-            '${Formulas.appearanceBaseline}）', 'Appearance pay ${budget.appearanceBonus > 0 ? '+' : '−'}${_yen(budget.appearanceBonus.abs())} (${state.seasonStats.appearances} games / baseline ${Formulas.appearanceBaseline})'),
+            '${Formulas.appearanceBaseline}）', 'Appearance pay ${budget.appearanceBonus > 0 ? '+' : '−'}${_yen(budget.appearanceBonus.abs())} (${plural(state.seasonStats.appearances, 'game')} / baseline ${Formulas.appearanceBaseline})'),
             style: muted?.copyWith(
               color: budget.appearanceBonus > 0
                   ? theme.colorScheme.primary

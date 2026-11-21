@@ -441,7 +441,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     Text(
                       tr('${World.byId(_countryId!).confederation.label}  ・  '
                       '${World.byId(_countryId!).tiers}部制  ・  '
-                      '外国人ルール ${World.byId(_countryId!).foreignRule.summary}', '${World.byId(_countryId!).confederation.label}  -  ${World.byId(_countryId!).tiers} tiers  -  foreigner rule ${World.byId(_countryId!).foreignRule.summary}'),
+                      '外国人ルール ${World.byId(_countryId!).foreignRule.summary}', '${World.byId(_countryId!).confederation.label}  -  ${plural(World.byId(_countryId!).tiers, 'tier')}  -  foreigner rule ${World.byId(_countryId!).foreignRule.summary}'),
                       style: muted,
                     ),
                   ],
@@ -617,8 +617,9 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   const SizedBox(height: 24),
                   Row(
                     children: [
-                      Text(tr('生まれ持った特性', 'Traits you were born with'), style: theme.textTheme.labelLarge),
-                      const Spacer(),
+                      Expanded(
+                        child: Text(tr('生まれ持った特性', 'Traits you were born with'), style: theme.textTheme.labelLarge),
+                      ),
                       TextButton.icon(
                         onPressed: _rerollTraits,
                         icon: const Icon(Icons.casino_outlined, size: 18),
@@ -629,7 +630,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   Text(
                     tr('長所が2つ、3割で欠点が1つ。まれに特別なものが混じる。'
                     '伸ばせないが、効く場面は決まっている。'
-                    '${_rerolls > 0 ? '（$_rerolls回 引き直した）' : ''}', 'Two strengths, and a flaw three times in ten. Something rare turns up now and then. You cannot train them, but each one has its moments. ${_rerolls > 0 ? '(drawn again $_rerolls times)' : ''}'),
+                    '${_rerolls > 0 ? '（$_rerolls回 引き直した）' : ''}', 'Two strengths, and a flaw three times in ten. Something rare turns up now and then. You cannot train them, but each one has its moments. ${_rerolls > 0 ? '(drawn again ${plural(_rerolls, 'time')})' : ''}'),
                     style: muted,
                   ),
                   const SizedBox(height: 8),
@@ -834,7 +835,9 @@ class _TweakRow extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 84,
+            // 日本語は「シュート」の4文字、英語は Goalkeeping の11文字が
+            // 一番長い。84 のままだと途中で割れる。
+            width: pick(84.0, 102.0),
             child: Text(label, style: theme.textTheme.bodyMedium),
           ),
           IconButton(

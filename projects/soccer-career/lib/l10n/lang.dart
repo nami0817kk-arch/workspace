@@ -44,6 +44,21 @@ Lang get currentLang => _lang;
 /// 作り直しの手間は変わらない。
 String tr(String ja, String en) => _lang == Lang.en ? en : ja;
 
+/// 文ではないもの（札の枠の幅など）を言語で選ぶ。
+///
+/// **見た目の数字を言語で変えるのは、一番長い語に合わせた枠だけに留める。**
+/// 英語は1語が長いので、日本語の2〜3文字に合わせた枠では途中で割れる
+/// （「Opponent」が「Oppone / nt」になった）。文の中の数字は `tr()` に埋める。
+T pick<T>(T ja, T en) => _lang == Lang.en ? en : ja;
+
+/// 英語の数え方。**1のときだけ s を落とす。**
+///
+/// 日本語に単複は無いので、`tr()` の英語側にだけ要る。埋め込む数が
+/// 1になり得るなら、ここを通す——実際に「1 seasons」「1 bookings」が
+/// 画面に出ていた。形の変わる語は `many` を渡す。
+String plural(int n, String one, [String? many]) =>
+    '$n ${n.abs() == 1 ? one : (many ?? '${one}s')}';
+
 /// 言語の設定。端末の言語を初期値にして、アプリの中で変えられる。
 ///
 /// **ゲームの状態とは別に持つ**（`Monetization` と同じ理屈）。

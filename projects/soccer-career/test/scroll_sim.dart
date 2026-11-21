@@ -60,16 +60,19 @@ void main() {
     print('');
     print('tab      extent  screens');
     // 節に割ったタブは、札を押して両方測る。
-    const keys = {
-      '今週': 'tab-match',
-      '選手|能力': 'tab-player',
-      '選手|人となり': 'tab-player-person',
-      '育成|今週決める': 'tab-training',
-      '育成|長い目で狙う': 'tab-training-aim',
-      'クラブ|立ち位置': 'tab-club',
-      'クラブ|この国と、世界': 'tab-club-world',
-      '記録|今季': 'tab-career',
-      '記録|これまで': 'tab-career-total',
+    // **タブの字は言語で変わる。** 鍵（`tab-match` ほか）は日本語版と英語版を
+    // 1行ずつ突き合わせるためのものなので、ASCII のまま固定する（`shots.dart`
+    // が絵の名前を日本語で固定してあるのと同じ理屈）。
+    final keys = {
+      tr('今週', 'Week'): 'tab-match',
+      '${tr('選手', 'Player')}|${tr('能力', 'Attributes')}': 'tab-player',
+      '${tr('選手', 'Player')}|${tr('人となり', 'The person')}': 'tab-player-person',
+      '${tr('育成', 'Training')}|${tr('今週決める', 'Decide this week')}': 'tab-training',
+      '${tr('育成', 'Training')}|${tr('長い目で狙う', 'The long game')}': 'tab-training-aim',
+      '${tr('クラブ', 'Club')}|${tr('立ち位置', 'Where you stand')}': 'tab-club',
+      '${tr('クラブ', 'Club')}|${tr('この国と、世界', 'This country, and the world')}': 'tab-club-world',
+      '${tr('記録', 'Record')}|${tr('今季', 'This season')}': 'tab-career',
+      '${tr('記録', 'Record')}|${tr('これまで', 'So far')}': 'tab-career-total',
     };
     for (final tab in keys.keys) {
       final parts = tab.split('|');

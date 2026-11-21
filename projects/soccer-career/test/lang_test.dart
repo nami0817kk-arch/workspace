@@ -344,4 +344,94 @@ void main() {
       );
     });
   });
+
+  group('英語の数え方', () {
+    test('1のときだけ s を落とす', () {
+      expect(plural(1, 'season'), '1 season');
+      expect(plural(2, 'season'), '2 seasons');
+      expect(plural(0, 'season'), '0 seasons');
+      expect(plural(1, 'match', 'matches'), '1 match');
+      expect(plural(3, 'match', 'matches'), '3 matches');
+      // 早熟・大器晩成のピークのずれは負にもなる（「-1 yrs」と出ていた）。
+      expect(plural(-1, 'yr'), '-1 yr');
+      expect(plural(-2, 'yr'), '-2 yrs');
+    });
+
+    test('数を埋めた複数形は、plural() を通す', () {
+      // **実際に画面に出ていた**: 「1 seasons」「1 bookings」。
+      // 日本語に単複は無いので、英語にして初めて出る壊れ方で、
+      // 日本語の画面をいくら見ても見つからない。
+      //
+      // 1 になり得ない数だけ、素で書いてよい。
+      const skip = {
+        // `Formulas` ほかの定数。5 / 28 / 30 のように動かない。
+        'Formulas.',
+        'Signature.',
+        'CupRun.',
+        'Dependencies.',
+        'CareerState.',
+        // リーグのクラブ数・世界のクラブ数。構造上1にならない。
+        'grade.totalClubs',
+        'rows.length',
+        'country.clubsInTier',
+        // 数ではなく名前。
+        'detail.category.label',
+        'targetLabel',
+        // 代表の節目（10・25・50…）。1 はデビューの文に分けてある。
+        'mark',
+        'targetPoints',
+      };
+      const words = [
+        'seasons',
+        'times',
+        'games',
+        'caps',
+        'clubs',
+        'players',
+        'matches',
+        'years',
+        'weeks',
+        'goals',
+        'titles',
+        'apps',
+        'points',
+        'bookings',
+        'appearances',
+        'assists',
+        'sessions',
+        'meetings',
+        'moments',
+        'tiers',
+        'countries',
+        'offers',
+        'yrs',
+      ];
+      // **波括弧の有無で2通りある。** `${state.caps} caps` と `$caps caps`。
+      // 最初は前者しか見ておらず、殿堂の「1 seasons」が残った。
+      final pattern = RegExp(
+        r'\$(?:\{([^{}]{1,70})\}|([A-Za-z_][A-Za-z0-9_]*)) (' +
+            words.join('|') +
+            r')\b',
+      );
+      final leaks = <String>[];
+      for (final file in Directory('lib').listSync(recursive: true)) {
+        if (file is! File || !file.path.endsWith('.dart')) continue;
+        final path = file.path.replaceAll(r'\', '/');
+        final body = file.readAsStringSync();
+        for (final m in pattern.allMatches(body)) {
+          final expr = m.group(1) ?? m.group(2)!;
+          if (skip.any(expr.contains)) continue;
+          final line = body.substring(0, m.start).split('\n').length;
+          leaks.add('$path:$line  ${m.group(0)}');
+        }
+      }
+      expect(
+        leaks,
+        isEmpty,
+        reason:
+            '数が1のときに複数形になる:\n${leaks.join('\n')}\n'
+            "plural(数, '単数形') を通すこと。1 にならない数なら skip に足す。",
+      );
+    });
+  });
 }

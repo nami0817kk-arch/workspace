@@ -1702,7 +1702,7 @@ class CareerController extends ChangeNotifier {
                 '${Formulas.transferUnderContractRating}を超えれば', 'Your average is ${stats.averageRating.toStringAsFixed(2)} this season — finish above ${Formulas.transferUnderContractRating}, and ')
           : tr('今季の出来なら', 'The way this season is going, ');
       return tr('${window.label}。契約があと${state.contractYears}年あるので、'
-          '動かせるのは移籍金を積む上のクラブだけ。$need話が来る。', '${window.label} ${state.contractYears} years are left on your contract, so only a stronger club paying a fee can move you. ${need}offers will come.');
+          '動かせるのは移籍金を積む上のクラブだけ。$need話が来る。', '${window.label} ${plural(state.contractYears, 'year')} are left on your contract, so only a stronger club paying a fee can move you. ${need}offers will come.');
     }
     final stats = state.seasonStats;
     // クラブの器を超えていれば、評価点の門は通る。
@@ -1716,14 +1716,14 @@ class CareerController extends ChangeNotifier {
     if (short > 0) {
       return tr('${window.label}。契約は残り${state.contractYears}年だが、'
           '今季の出場が${stats.appearances}試合——'
-          'あと$short試合出ないと話は来ない。', '${window.label} ${state.contractYears} years are left on your contract, and you have ${stats.appearances} games this season — no offer comes until you play $short more.');
+          'あと$short試合出ないと話は来ない。', '${window.label} ${plural(state.contractYears, 'year')} are left on your contract, and you have ${plural(stats.appearances, 'game')} this season — no offer comes until you play $short more.');
     }
     if (stats.averageRating < Formulas.transferOfferRating) {
       return tr('${window.label}。契約は残り${state.contractYears}年だが、'
           '今季の平均評価が${stats.averageRating.toStringAsFixed(2)}——'
-          '${Formulas.transferOfferRating}を超えないと話は来ない。', '${window.label} ${state.contractYears} years are left on your contract, and your average is ${stats.averageRating.toStringAsFixed(2)} this season — no offer comes until it is above ${Formulas.transferOfferRating}.');
+          '${Formulas.transferOfferRating}を超えないと話は来ない。', '${window.label} ${plural(state.contractYears, 'year')} are left on your contract, and your average is ${stats.averageRating.toStringAsFixed(2)} this season — no offer comes until it is above ${Formulas.transferOfferRating}.');
     }
-    return tr('${window.label}。契約は残り${state.contractYears}年、話が来る。', '${window.label} ${state.contractYears} years are left on your contract, and offers will come.');
+    return tr('${window.label}。契約は残り${state.contractYears}年、話が来る。', '${window.label} ${plural(state.contractYears, 'year')} are left on your contract, and offers will come.');
   }
 
   /// **どこまで声がかかるか。** 行ける国の格と、その先へ行くのに要るもの。

@@ -88,7 +88,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
               const SizedBox(height: 12),
               Text(
                 tr('${state.player.positionLabel}  ${seasons.length}シーズン  '
-                '${state.player.age}歳で引退', '${state.player.positionLabel}  ${seasons.length} seasons  retired at ${state.player.age}'),
+                '${state.player.age}歳で引退', '${state.player.positionLabel}  ${plural(seasons.length, 'season')}  retired at ${state.player.age}'),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -120,7 +120,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
                       if (state.caps > 0) ...[
                         const SizedBox(height: 12),
                         Text(
-                          tr('代表 ${state.caps}キャップ  ${state.internationalGoals}ゴール', 'National team ${state.caps} caps  ${state.internationalGoals} goals'),
+                          tr('代表 ${state.caps}キャップ  ${state.internationalGoals}ゴール', 'National team ${plural(state.caps, 'cap')}  ${plural(state.internationalGoals, 'goal')}'),
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
@@ -273,7 +273,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   subtitle: Text(
                     tr('${record.tier}部 ${record.leaguePosition}位 ・ '
                     '${record.stats.appearances}試合 '
-                    '${record.stats.goals}G ${record.stats.assists}A', 'Tier ${record.tier} #${record.leaguePosition} - ${record.stats.appearances} games ${record.stats.goals}G ${record.stats.assists}A'),
+                    '${record.stats.goals}G ${record.stats.assists}A', 'Tier ${record.tier} #${record.leaguePosition} - ${plural(record.stats.appearances, 'game')} ${record.stats.goals}G ${record.stats.assists}A'),
                   ),
                   trailing: Text(
                     record.stats.appearances == 0

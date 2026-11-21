@@ -719,43 +719,59 @@ class _OptionButton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          // 題名と札を同じ行に置く。行を足すと3つ目の手が画面の外へ押し出される。
+          //
+          // **`Row` では入り切らない。** 札は幅を持たない子なので、要る幅を
+          // 先に取り、残りが題名の `Expanded` に回る——英語は札が長いので
+          // 残りが 0 になり、そこから先は横に溢れた（390px で 8.5px）。
+          // かといって題名に `flex: 3` を振ると、今度は**日本語の題名が
+          // 入り切らなくなって2行になる**（実測で手が 54px 伸びた）。
+          //
+          // `Wrap` なら、入るときは1行（`spaceBetween` で題名が左・札が右、
+          // `Row` と同じ見た目）、入らないときだけ札が次の行へ落ちる。
+          // 札は内側の `Wrap` にまとめて、固まりのまま落とす。
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 6,
+            runSpacing: 2,
             children: [
-              Expanded(
-                child: Text(option.label, style: theme.textTheme.titleSmall),
-              ),
-              // 題名と同じ行に置く。行を足すと3つ目の手が画面の外へ押し出される。
-              if (stakesNote != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: Tag(
-                    stakesNote!,
-                    background: stakesNote == tr('今は軽い', 'worth less now')
-                        ? theme.colorScheme.surfaceContainerHighest
-                        : theme.colorScheme.errorContainer,
-                    foreground: stakesNote == tr('今は軽い', 'worth less now')
-                        ? theme.colorScheme.onSurfaceVariant
-                        : theme.colorScheme.onErrorContainer,
-                  ),
-                ),
-              if (concedeNote != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 6),
-                  child: Tag(
-                    concedeNote!,
-                    background: theme.colorScheme.errorContainer,
-                    foreground: theme.colorScheme.onErrorContainer,
-                  ),
-                ),
-              if (option.outcome != Outcome.play)
-                // 手が通る確率と、それが点になる確率は別。
-                // 「決まるのは半分ほど」を数字で見せておく。
-                Tag(
-                  option.outcome == Outcome.goal
-                      ? tr('ゴール ${(chance * Formulas.goalConversion * 100).round()}%', 'Goal ${(chance * Formulas.goalConversion * 100).round()}%')
-                      : tr('アシスト ${(chance * assistConversion * 100).round()}%', 'Assist ${(chance * assistConversion * 100).round()}%'),
-                  background: theme.colorScheme.secondaryContainer,
-                  foreground: theme.colorScheme.onSecondaryContainer,
+              Text(option.label, style: theme.textTheme.titleSmall),
+              if (stakesNote != null ||
+                  concedeNote != null ||
+                  option.outcome != Outcome.play)
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 6,
+                  runSpacing: 2,
+                  children: [
+                    if (stakesNote != null)
+                      Tag(
+                        stakesNote!,
+                        background: stakesNote == tr('今は軽い', 'worth less now')
+                            ? theme.colorScheme.surfaceContainerHighest
+                            : theme.colorScheme.errorContainer,
+                        foreground: stakesNote == tr('今は軽い', 'worth less now')
+                            ? theme.colorScheme.onSurfaceVariant
+                            : theme.colorScheme.onErrorContainer,
+                      ),
+                    if (concedeNote != null)
+                      Tag(
+                        concedeNote!,
+                        background: theme.colorScheme.errorContainer,
+                        foreground: theme.colorScheme.onErrorContainer,
+                      ),
+                    if (option.outcome != Outcome.play)
+                      // 手が通る確率と、それが点になる確率は別。
+                      // 「決まるのは半分ほど」を数字で見せておく。
+                      Tag(
+                        option.outcome == Outcome.goal
+                            ? tr('ゴール ${(chance * Formulas.goalConversion * 100).round()}%', 'Goal ${(chance * Formulas.goalConversion * 100).round()}%')
+                            : tr('アシスト ${(chance * assistConversion * 100).round()}%', 'Assist ${(chance * assistConversion * 100).round()}%'),
+                        background: theme.colorScheme.secondaryContainer,
+                        foreground: theme.colorScheme.onSecondaryContainer,
+                      ),
+                  ],
                 ),
             ],
           ),
@@ -1351,7 +1367,7 @@ class _InjuryNotice extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            tr('${injury.matchesOut}試合の離脱', 'Out for ${injury.matchesOut} games'),
+            tr('${injury.matchesOut}試合の離脱', 'Out for ${plural(injury.matchesOut, 'game')}'),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onErrorContainer,
             ),

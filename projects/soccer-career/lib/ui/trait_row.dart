@@ -69,7 +69,7 @@ class TraitRow extends StatelessWidget {
           Text(
             trait.affectsPlay
                 ? (hits! > 0
-                    ? tr('今季 $hits回の局面で効いた', 'Mattered in $hits moments this season')
+                    ? tr('今季 $hits回の局面で効いた', 'Mattered in ${plural(hits!, 'moment')} this season')
                     : tr('今季はまだ効く局面が来ていない', 'No moment has called on it yet this season'))
                 : tr('試合の外で効く（回数は数えない）', 'Works off the pitch (not counted)'),
             style: muted,
