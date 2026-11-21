@@ -1,0 +1,150 @@
+# 物語完結型ショート 江戸の牢屋敷 s5（2026-11-21）。本編 scripts/rouyashiki-story.yaml（11/26 12:00 公開予定、https://youtu.be/Kuy09Ct1JDw）から。11/27 18:30 に予約。
+# 形式は nagaya_s1〜s5・kondo_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 小伝馬町牢屋敷_facts_20261120.yaml）だけ。
+# 絵：本編の AI 絵（out/story/rouyashiki/main/）の切り出しだけ。新しい絵は作らない。松陰は後ろ姿の B16（顔は描かない）。
+# 切り口：1854年に松陰が見た牢（本編 序章・第1章・第4章・第5章・第6章、rouya-04・22・33・38）。
+# hook＝松陰は牢で病死する人を自分の目で見ていた（答えはこのショートの中：3つの牢だけで毎日3人を下らない）。
+# tease＝5年後に再び入った牢で、松陰が恩を受けた囚人は誰か（答えは本編 第8章：名主代の沼崎吉五郎、rouya-46）。
+# 計算：1854年→1859年＝5年。
+# 理解テスト：①吉田松陰が見た江戸の牢の話 ②1854年、小伝馬町の牢屋敷の東口揚屋 ③役付きは揚屋に6人・牢に12人、飯は高盛り、湯の日の数 ④二間牢と西の大牢では病死が毎日3人を下らず、揚屋・女牢・百姓牢ではごく少ない
+title: "江戸の牢屋敷｜吉田松陰が見た牢"
+yt_title: "吉田松陰が1854年に見た江戸の牢　3つの牢だけで病で死ぬ人は毎日3人を下らない　揚屋や女牢ではごく少なかった"
+description: |-
+  1854年、江戸の小伝馬町の牢屋敷。異国の船に乗り込もうとした吉田松陰は、東口揚屋に入れられました。隣の東奥揚屋には佐久間象山、その先の東大牢には、一緒に船に乗り込もうとした金子重輔がいました。
+  松陰の『野山雑著』によると、役付きは揚屋に6人、牢に12人。物相の飯を役付きには高く盛り、ほかの者には平らに盛りました。湯の日は、夏は月に6度、春と秋は5度、冬は4度。そして、東と西の二間牢と西の大牢の3つの牢だけで、病で死ぬ人は毎日3人を下らない、と書いています。揚屋と女牢と百姓牢では、牢で死ぬ人はごく少ない、とも。
+  本編では、5年後に再びこの牢に入った松陰と、その遺書を守った囚人の話までたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#吉田松陰"
+- "#江戸時代"
+- "#牢屋敷"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/rouyashiki
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: rouyashiki_story_s5
+header:
+  tag: "吉田松陰（1854年の牢屋敷）"
+  title: "松陰が見た牢の、《数字》"
+now:
+- {at: "1854年", text: "1854年　小伝馬町の牢屋敷", point: 0}
+timeline:
+- {label: "1854"}
+cards:
+  - type: versus
+    from: 一方で揚屋と
+    until: 同じ牢屋敷でも
+    left: {tag: 揚屋・女牢・百姓牢, big: 少ない, dots: 1, color: blue}
+    right: {tag: 二間牢・西の大牢, big: 毎日3人, dots: 3, color: red}
+    mid: 対
+    text_y: 0.70
+shots:
+  B16_1:
+    kind: "ai"
+    file: "rouyashiki/main/B16.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "B16"
+  B01_2:
+    kind: "ai"
+    file: "rouyashiki/main/B01.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "B01"
+  B06_3:
+    kind: "ai"
+    file: "rouyashiki/main/B06.jpg"
+    focus: [0.55, 0.5]
+    move: "left"
+    must: "B06"
+  B10_4:
+    kind: "ai"
+    file: "rouyashiki/main/B10.jpg"
+    focus: [0.45, 0.55]
+    move: "in"
+    must: "B10"
+  B20_5:
+    kind: "ai"
+    file: "rouyashiki/main/B20.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "B20"
+  B23_6:
+    kind: "ai"
+    file: "rouyashiki/main/B23.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "B23"
+  B05_7:
+    kind: "ai"
+    file: "rouyashiki/main/B05.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "B05"
+  B12_8:
+    kind: "ai"
+    file: "rouyashiki/main/B12.jpg"
+    focus: [0.4, 0.55]
+    move: "right"
+    must: "B12"
+  B16_9:
+    kind: "ai"
+    file: "rouyashiki/main/B16.jpg"
+    focus: [0.6, 0.45]
+    move: "in"
+    must: "B16"
+lines:
+  # fact: rouya-38
+- 語り: "吉田松陰は、牢で病死する人を、自分の目で見ていた。"
+  shot: B16_1
+  tone: 強調
+  pause: 0.12
+  # fact: rouya-04, rouya-41
+- 語り: "1854年、江戸の小伝馬町の牢屋敷。異国の船に乗り込もうとした松陰は、東口揚屋に入れられた。"
+  shot: B01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-04
+- 語り: "隣の東奥揚屋には、佐久間象山。その先の東大牢には、一緒に船に乗り込もうとした、金子重輔がいた。"
+  shot: B06_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-22
+- 語り: "松陰の野山雑著によると、役付きは、揚屋に6人、牢に12人。物相という器の飯を、役付きには高く盛り、ほかの者には、平らに盛った。"
+  shot: B10_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-33
+- 語り: "湯の日は、夏は月に6度、春と秋は5度、冬は4度。"
+  shot: B20_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-38
+- 語り: "けれど、東と西の二間牢と、西の大牢。この3つの牢だけで、病で死ぬ人は、毎日3人を下らない。"
+  shot: B23_6
+  tone: 重い
+  pause: 0.12
+  # fact: rouya-38
+- 語り: "一方で、揚屋と女牢と百姓牢では、牢で死ぬ人は、ごく少ない、とも書いている。"
+  shot: B05_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-38（上の2行の比べ）
+- 語り: "同じ牢屋敷でも、入る牢によって、死ぬ人の数は、大きく違った。"
+  shot: B12_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第8章（rouya-46）
+- 語り: "では、5年後に再び入った牢で、松陰が恩を受けた囚人は、誰だったのか。"
+  shot: B16_9
+  tone: 疑問
+  pause: 0.15

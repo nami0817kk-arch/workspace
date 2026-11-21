@@ -1,0 +1,157 @@
+# 物語完結型ショート 江戸の牢屋敷 s1（2026-11-21）。本編 scripts/rouyashiki-story.yaml（11/26 12:00 公開予定、https://youtu.be/Kuy09Ct1JDw）から。11/27 9:00 に予約。
+# 形式は nagaya_s1〜s5・kondo_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 小伝馬町牢屋敷_facts_20261120.yaml）だけ。
+# 絵：本編の AI 絵（out/story/rouyashiki/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：時代劇の「畳を積んだ牢名主」。枚数を書いた江戸の記録は今回開いたものには無く、残るのは1777年の掟書の言葉（本編 序章・第4章、rouya-23・24・26・21・74）。
+#   1777年の掟書は古事類苑に引かれたもの（原本は見ていない）なので「古事類苑に引かれた」と出どころを言い、細部（月・条の数など）は言わない。
+# hook＝何枚積んだかは江戸の記録に見当たらない（答えはこのショートの中）。
+# tease＝この牢屋敷を代々預かった一家は誰か（答えは本編 第2章：石出帯刀、rouya-11）。
+# 理解テスト：①江戸の牢屋敷の牢名主と畳の話 ②江戸の小伝馬町の牢屋敷、1777年の掟書 ③役付きが名を付けて畳の数や厚さを思うままにし、掟書はそれを禁じた ④座る広さは役で決まり、上の役は畳1枚に1人、新入りは7人か8人
+title: "江戸の牢屋敷｜牢名主の畳は何枚？"
+yt_title: "時代劇の牢名主は畳を積む　けれど何枚積んだかは江戸の記録に見当たらない　残っていたのは1777年の掟書の言葉"
+description: |-
+  時代劇の牢名主は、畳を高く積んで座ります。けれど、何枚積んだのかは、今回開いた江戸時代の記録には見当たりませんでした。「10枚ほど」という数が出てくるのは、明治より後の本です。
+  江戸の記録にあるのは、『古事類苑』に引かれた1777年の牢内掟書の言葉です。牢の中の役付きが、名を付けて、畳の数や厚さ、居場所の広さを思うままにしてきたことを、掟書は禁じています。江戸の写本『牢獄秘録』では、上の役付きは畳1枚に1人、新入りは1枚に7人か8人でした。
+  本編では、江戸の小伝馬町の牢屋敷の暮らしを、入る所から出る所までたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#江戸時代"
+- "#牢屋敷"
+- "#牢名主"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。創作の台詞は入れていません。"
+art_dir: out/story/rouyashiki
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: rouyashiki_story_s1
+header:
+  tag: "江戸の牢屋敷（小伝馬町）"
+  title: "牢名主は、畳を《何枚》積んだ？"
+now:
+- {at: "小伝馬町の牢屋敷", text: "江戸時代　小伝馬町の牢屋敷", point: 0}
+- {at: "1777年", text: "1777年　牢内掟書", point: 0}
+timeline:
+- {label: "1777"}
+cards:
+  - type: year
+    from: 1777年の牢内掟書
+    until: 役付きは牢名主を頭に
+    big: 1777年
+    sub: 牢内掟書（古事類苑に引く）
+    text_y: 0.70
+  - type: versus
+    from: 牢獄秘録という
+    until: 積んだ枚数より
+    left: {tag: 上の役付き, big: 1人, dots: 1, color: blue}
+    right: {tag: 新入り, big: 7〜8人, dots: 8, color: red}
+    mid: 対
+    text_y: 0.70
+shots:
+  T01_1:
+    kind: "ai"
+    file: "rouyashiki/main/T01.jpg"
+    focus: [0.5, 0.35]
+    move: "in"
+    must: "T01"
+  B01_2:
+    kind: "ai"
+    file: "rouyashiki/main/B01.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "B01"
+  B22_3:
+    kind: "ai"
+    file: "rouyashiki/main/B22.jpg"
+    focus: [0.3, 0.6]
+    move: "left"
+    must: "B22"
+  B19_4:
+    kind: "ai"
+    file: "rouyashiki/main/B19.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "B19"
+  T01_5:
+    kind: "ai"
+    file: "rouyashiki/main/T01.jpg"
+    focus: [0.55, 0.3]
+    move: "right"
+    must: "T01"
+  B04_6:
+    kind: "ai"
+    file: "rouyashiki/main/B04.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "B04"
+  B12_7:
+    kind: "ai"
+    file: "rouyashiki/main/B12.jpg"
+    focus: [0.35, 0.55]
+    move: "in"
+    must: "B12"
+  B22_8:
+    kind: "ai"
+    file: "rouyashiki/main/B22.jpg"
+    focus: [0.65, 0.55]
+    move: "right"
+    must: "B22"
+  B03_9:
+    kind: "ai"
+    file: "rouyashiki/main/B03.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "B03"
+lines:
+  # fact: rouya-26
+- 語り: "時代劇の牢名主は、畳を高く積んで座る。けれど、何枚積んだのかは、今回開いた江戸の記録に、見当たらなかった。"
+  shot: T01_1
+  tone: 強調
+  pause: 0.12
+  # fact: rouya-74
+- 語り: "舞台は、江戸の小伝馬町の牢屋敷。中央区の解説では、ふだん300人から400人が、ここに入っていた。"
+  shot: B01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-26
+- 語り: "10枚ほど、という数が出てくるのは、明治より後の本だ。"
+  shot: B22_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-23（古事類苑 法律部12 所引の牢内掟書）
+- 語り: "江戸の記録にあるのは、別の言葉だ。古事類苑に引かれた、1777年の牢内掟書。"
+  shot: B19_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-23
+- 語り: "牢の中の役付きが、名を付けて、畳の数や厚さ、居場所の広さを、思うままにしてきた。掟書は、それを禁じている。"
+  shot: T01_5
+  tone: 重い
+  pause: 0.12
+  # fact: rouya-21
+- 語り: "役付きは、牢名主を頭に、囚人の中から選ばれた、囚人だった。"
+  shot: B04_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: rouya-24
+- 語り: "牢獄秘録という江戸の写本では、上の役付きは、畳1枚に1人。新入りは、1枚に7人か8人。"
+  shot: B12_7
+  tone: 重い
+  pause: 0.12
+  # fact: rouya-23, rouya-24（本編 第4章の結び）
+- 語り: "積んだ枚数より先に、座る広さが、牢の中の役で決まっていた。"
+  shot: B22_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第2章（rouya-11）
+- 語り: "では、この牢屋敷を、代々預かった一家は、誰だったのか。"
+  shot: B03_9
+  tone: 疑問
+  pause: 0.15

@@ -1,0 +1,288 @@
+# 物語型の本編の見た目と絵の割り当て：千姫は、大坂城から救い出されたあと、50年をどう生きたのか（scripts/senhime-story.yaml）。chiso/storymain.py が読む。
+# 11-21 作成（11/27 19:00 公開予定）。atsuhime_main_look.yaml を写した。絵は Gemini（Chrome）で作った（教科書の歴史画のような写実・明るめ）。
+# Gemini の上限（u/0 は上限、u/1 は未ログイン）で、S は新しく作った12枚、R は同じ作りの過去回の AI 絵（atsuhime・tsukiyama・uesugi）を写して使った。
+# 実在の古い絵（パブリックドメイン）は額（frame:）と部分（part:）で：千姫姿絵（弘経寺蔵）・徳川家康像・徳川秀忠像・豊臣秀頼像・大坂夏の陣図屏風。
+script: scripts/senhime-story.yaml
+out: senhime_story_main
+art_dir: out/story/senhime/main
+main_art_dir: out/story/senhime/main
+ai_disclosure: この動画の情景の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 燃える大坂城から救い出された姫
+    now: null
+    dates: {}
+  1:
+    label: 第1章 坂崎出羽守は、なぜ千姫を奪おうとしたのか
+    now: 元和2年
+    dates:
+      14: 元和2年7月
+      16: 元和2年9月
+      20: 慶長20年5月
+      21: null
+      27: 元和2年9月
+  2:
+    label: 第2章 姫路の10年は、幸せだったのか
+    now: 元和2年9月
+    dates:
+      40: 元和2年
+      41: 元和3年
+      44: 元和4年
+      46: 元和7年
+      49: 元和9年
+      51: 寛永3年5月
+      53: 寛永3年9月
+      54: null
+  3:
+    label: 第3章 竹橋の御殿で、天樹院は何をしていたのか
+    now: 寛永3年11月
+    dates:
+      59: null
+      63: 寛永5年
+      64: 寛永8年
+      65: 寛永12年正月
+      67: 正保元年
+      69: null
+      70: 慶安4年
+      71: null
+  4:
+    label: 第4章 秀頼の娘を、なぜ守り続けたのか
+    now: 慶長20年
+    dates:
+      76: null
+      79: 寛永11年
+      82: 寛永16年
+      83: null
+      85: 寛永20年
+      86: null
+      87: 正保2年2月
+      88: null
+  5:
+    label: 第5章 「吉田御殿」の千姫は、どこから来たのか
+    now: null
+    dates:
+      97: 享保4年
+      98: null
+  6:
+    label: まとめ 千姫は、救い出されたあとの50年を、どう生きたのか
+    now: 寛文6年2月
+    dates:
+      111: null
+      112: 寛文6年2月6日
+      114: 寛文6年4月
+      115: null
+no_tag_from: 117
+references:
+- 東京大学史料編纂所『大日本史料』第12編之25（1925年）元和2年9月是月条（コックス日記・本光国師日記・東武実録・元和年録・元寛日記・柳生家譜・及聞秘録・焼残反古ほか）　https://dl.ndl.go.jp/pid/3450645/1/330
+- 『諸家系譜』堀内氏の項（写本）　https://dl.ndl.go.jp/pid/11223370
+- 『徳川実紀』大猷院殿御実紀（続国史大系 第10巻、1905年）　https://dl.ndl.go.jp/pid/991117
+- 『徳川実紀』厳有院殿御実紀（続国史大系 第11巻、1905年）　https://dl.ndl.go.jp/pid/991118/1/11
+- 『年録』（江戸幕府の記録、写本）　https://dl.ndl.go.jp/pid/2561725
+- 『東京市史稿』市街篇第7・第8（1930年）　https://dl.ndl.go.jp/pid/3450754
+- 蜂屋茂橘『椎の実筆』（御代々所々御殿之儀申上候書付）　https://dl.ndl.go.jp/pid/2574767
+- 『玉露叢』・『道聴塗説』・『諸家系譜』（綱重の養子）　https://dl.ndl.go.jp/pid/11223333
+- 観光庁 地域観光資源の多言語解説文データベース（姫路市・書寫山圓教寺）　https://www.mlit.go.jp/tagengo-db/common/001553730.pdf
+- 太田市「縁切寺満徳寺遺跡」　https://www.city.ota.gunma.jp/page/4395.html
+- 東慶寺「東慶寺の歴史」　https://tokeiji.com/about/history
+- 具知會「幕藩権力下の尼寺に関する宗教政治史的研究」（東京大学 博士論文）　https://repository.dl.itc.u-tokyo.ac.jp/record/2008832/files/A38855.pdf
+- 熊沢淡庵『武将感状記』（1716年。1935年刊）　https://dl.ndl.go.jp/pid/1074536
+- 奥野久美子「史劇「坂崎出羽守」と講談本「番町皿屋敷」」（三鷹市山本有三記念館館報 第27号、2023年）　https://mitaka-sportsandculture.or.jp/_files/00027151/report_27.pdf
+- 『京の伝説と戯曲を語る』（1936年）　https://dl.ndl.go.jp/pid/1102923
+- 木谷蓬吟『大近松全集 解説註釈』第5巻（1923年）　https://dl.ndl.go.jp/pid/969896
+- 悟道軒円玉『番町皿屋敷 実説怪談』（1922年）　https://dl.ndl.go.jp/pid/912197
+- 山根秋伴『端唄註釈』（1911年）・山口孤剣『東都新繁昌記』（1918年）　https://dl.ndl.go.jp/pid/857058
+- 竜居松之助『日本名婦伝』（1937年）　https://dl.ndl.go.jp/pid/1446425
+- 文京区「伝通院」・知恩院「よくあるご質問」・弘経寺「弘経寺について」　https://www.city.bunkyo.lg.jp/bunka/kanko/spot/jisha/denzuin.html
+credits:
+  paintings/hideyori_senhime_portrait.jpg: 千姫姿絵（部分、江戸時代。茨城県常総市・弘経寺蔵）
+  paintings/sekigahara_tokugawa_ieyasu.jpg: 《徳川家康像》17世紀（パブリックドメイン）
+  paintings/sanada_tokugawa_hidetada_portrait.jpg: 徳川秀忠（江戸時代の肖像。パブリックドメイン）
+  paintings/yodo_hideyori_portrait.jpg: 豊臣秀頼（養源院蔵。パブリックドメイン）
+  paintings/ieyasu_osaka_summer_screen_kuroda.jpg: 《大坂夏の陣図屏風》右隻（黒田屏風、大阪城天守閣蔵、17世紀）
+ai:
+  S01: {scene: 1615年5月の夕方、炎と煙に包まれた大坂城の遠景, pan: h, crops: &id001 {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  S02: {scene: 燃える城の門から侍女と家臣に守られて出る千姫, pan: h, crops: *id001}
+  S04: {scene: 大名屋敷の白壁を取り囲む武士の列, pan: h, crops: *id001}
+  S05: {scene: 書院の座敷で書状を前に話し合う年配の武士たち, pan: h, crops: *id001}
+  S06: {scene: 桑名の渡し、帆掛け舟と花嫁の輿の行列, pan: h, crops: *id001}
+  S07: {scene: 婚礼の座敷、白無垢の千姫と若い武士, pan: h, crops: *id001}
+  S08: {scene: 姫路城の白い天守と城下の田園（晴れた昼）, pan: h, crops: *id001}
+  S09: {scene: 化粧櫓の中の畳の長い部屋と窓の向こうの天守, pan: h, crops: *id001}
+  S10: {scene: 赤子を抱く千姫、そばに幼い娘と乳母, pan: h, crops: *id001}
+  S12: {scene: 姫路城の櫓の窓から見た城下と男山の社, pan: h, crops: *id001}
+  S13: {scene: 書写山の杉木立の中の五輪塔の墓, pan: h, crops: *id001}
+  S14: {scene: 秋の御殿の縁側に立つ尼姿の天樹院, pan: h, crops: *id001}
+  # 以下 R は Gemini の上限（11-21）のため、同じ作りの過去回の AI 絵を写したもの（atsuhime・tsukiyama・uesugi）
+  R01: {scene: 江戸城の石垣と堀、桜（atsuhime A01）, pan: h, crops: *id001}
+  R02: {scene: 江戸城の堀端の道と桜（atsuhime A25）, pan: h, crops: *id001}
+  R03: {scene: 御殿の広い座敷、掛け軸（atsuhime A02）, pan: h, crops: *id001}
+  R04: {scene: 雪の江戸城の遠景（atsuhime A03）, pan: h, crops: *id001}
+  R05: {scene: 書院の文机と手紙・筆・硯（atsuhime A06）, pan: h, crops: *id001}
+  R06: {scene: 屋敷の縁側に座る白い頭巾の女性の後ろ姿と庭の池（atsuhime A07）, pan: h, crops: *id001}
+  R07: {scene: 屋敷の庭を歩く頭巾の女性と少年の後ろ姿（atsuhime A11）, pan: h, crops: *id001}
+  R08: {scene: 秋の屋敷の庭と紅葉（atsuhime A21）, pan: h, crops: *id001}
+  R09: {scene: 晩秋の寺の墓所の石の門と木立（atsuhime A22）, pan: h, crops: *id001}
+  R10: {scene: 夕方の屋敷の長い縁側の廊下（atsuhime A24）, pan: h, crops: *id001}
+  R11: {scene: 東海道の宿場町の通り、遠くに富士（tsukiyama T02）, pan: h, crops: *id001}
+  R12: {scene: 杉木立の中の寺と石段（tsukiyama T26）, pan: h, crops: *id001}
+  R13: {scene: 紅葉の山寺の門（tsukiyama T24）, pan: h, crops: *id001}
+  R14: {scene: 書院の机の上の書状と帳面（tsukiyama T12）, pan: h, crops: *id001}
+  R16: {scene: 冬の夕方、雪の屋敷と灯り（uesugi U28）, pan: h, crops: *id001}
+  R17: {scene: 雪の墓所の石塔（uesugi U32）, pan: h, crops: *id001}
+  R18: {scene: 筆で書状を書く手元（uesugi U07）, pan: h, crops: *id001}
+  R19: {scene: 金の襖の広間（uesugi U06）, pan: h, crops: *id001}
+  REND: {scene: 春の屋敷の庭の遠景（終了画面、右半分に余白。atsuhime AEND）, pan: h, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+# 序章（0〜10）
+- 0 ai:S01 wide
+- 1 ai:S04 left
+- 2 ai:S04 wide
+- 3 ai:S02 wide
+- 4 ai:R11 wide
+- 5 ai:R05 wide
+- 6 ai:S14 wide
+- 7 ai:S10 left
+- 8 ai:R06 wide
+- 9 ai:R12 wide
+- 10 ai:S06 left
+# 第1章（11〜35）
+- 11 frame:paintings/sekigahara_tokugawa_ieyasu.jpg
+- 12 ai:R19 wide
+- 13 ai:S07 wide
+- 14 ai:R18 wide
+- 15 ai:S07 right            # 史料の札（崇伝の手紙）
+- 16 ai:S04 right
+- 17 ai:R01 wide
+- 18 ai:S05 left
+- 19 frame:paintings/sanada_tokugawa_hidetada_portrait.jpg
+- 20 ai:S02 right
+- 21 ai:S05 wide
+- 22 ai:S05 right            # 図：理由の3つ
+- 23 ai:S05 left
+- 24 ai:S05 wide
+- 25 ai:S02 left
+- 26 frame:paintings/hideyori_senhime_portrait.jpg   # 史料の札（焼残反古）
+- 27 ai:S04 wide
+- 28 ai:S04 right
+- 29 ai:R10 wide
+- 30 ai:R03 wide
+- 31 ai:S04 left            # 史料の札（元寛日記）
+- 32 ai:S01 right
+- 33 ai:R14 wide
+- 34 ai:S06 wide
+- 35 ai:S06 right
+# 第2章（36〜56）
+- 36 ai:S06 left
+- 37 ai:S07 left
+- 38 ai:R13 wide
+- 39 ai:R12 right
+- 40 ai:S08 wide            # 史料の札（御知行十万石）
+- 41 ai:S08 right
+- 42 ai:S09 wide
+- 43 ai:S12 wide
+- 44 ai:S10 wide
+- 45 ai:S10 right
+- 46 ai:S13 left
+- 47 ai:R10 left
+- 48 ai:S09 right
+- 49 ai:S12 left
+- 50 ai:S01 left
+- 51 ai:S08 left
+- 52 ai:S13 wide
+- 53 ai:R01 left
+- 54 ai:S14 left
+- 55 ai:S08 wide
+- 56 ai:R02 wide
+# 第3章（57〜73）
+- 57 ai:R02 right
+- 58 ai:S14 wide
+- 59 ai:R01 wide
+- 60 ai:R03 wide            # 史料の札（御殿の書付）
+- 61 ai:R01 right
+- 62 ai:R19 left
+- 63 ai:S07 left
+- 64 ai:R19 right
+- 65 ai:R03 right
+- 66 ai:R08 wide
+- 67 ai:R07 wide
+- 68 ai:R07 right
+- 69 ai:R08 right
+- 70 ai:R05 wide
+- 71 ai:R06 wide
+- 72 ai:R06 right
+- 73 ai:S02 wide
+# 第4章（74〜92）
+- 74 frame:paintings/yodo_hideyori_portrait.jpg
+- 75 ai:R12 wide
+- 76 ai:R13 wide
+- 77 ai:R14 right
+- 78 ai:R12 right
+- 79 ai:R13 right
+- 80 ai:R18 right
+- 81 ai:R12 left
+- 82 ai:S04 right
+- 83 ai:R13 left
+- 84 ai:R12 wide            # 史料の札（武将感状記）
+- 85 ai:S04 left
+- 86 ai:R13 wide            # 図：会津の一件
+- 87 ai:R09 wide
+- 88 ai:R13 right
+- 89 ai:R06 left
+- 90 ai:R12 left
+- 91 ai:R11 wide
+- 92 ai:R11 right
+# 第5章（93〜108）
+- 93 ai:R11 left
+- 94 ai:R11 wide
+- 95 ai:R14 wide
+- 96 ai:R05 right
+- 97 ai:R11 right
+- 98 ai:R18 wide
+- 99 ai:R14 left
+- 100 ai:R01 wide           # 図：吉田御殿はどこに
+- 101 ai:R02 wide
+- 102 ai:S02 left
+- 103 ai:R11 wide
+- 104 ai:R11 left
+- 105 frame:paintings/hideyori_senhime_portrait.jpg
+- 106 ai:S14 wide
+- 107 ai:S14 right
+- 108 ai:R16 wide
+# まとめ（109〜122）
+- 109 ai:R04 wide
+- 110 ai:R16 right           # 史料の札（年録）
+- 111 ai:R10 wide            # 図：年齢
+- 112 ai:R09 wide
+- 113 ai:R04 right
+- 114 ai:R03 left
+- 115 ai:R17 wide
+- 116 frame:paintings/hideyori_senhime_portrait.jpg
+- 117 ai:S14 wide
+- 118 ai:S08 wide
+- 119 ai:R12 wide
+- 120 ai:S02 wide
+- 121 ai:S01 wide
+- 122 ai:REND wide
+- end ai:REND wide
+focus: {}
+fx:
+  S01: {fire: {region: [0.15, 0.15, 0.9, 0.55]}, sparks: {region: [0.15, 0.0, 0.9, 0.45]}}
+figures: []
+parts:
+- {type: quote, from: 15, to: 15, label: 史料, text: 大坂之姫君様、桑名平八郎殿へ／九月御祝言相定由候, source: 金地院崇伝『本光国師日記』元和2年7月19日の条}
+- {type: quote, from: 26, to: 26, label: 史料, text: 甚不器量なるを嫌ひ給ふ也, source: 『焼残反古』（『大日本史料』第12編之25 所収）}
+- {type: quote, from: 31, to: 31, label: 史料, text: 老臣遠藤某…斬主人之首／出寄手之中, source: 『元寛日記』（『大日本史料』第12編之25 所収）}
+- {type: quote, from: 40, to: 40, label: 史料, text: 姫君様御知行十万石御付被下候, source: 『元和年録』（『大日本史料』第12編之25 所収）}
+- {type: quote, from: 60, to: 60, label: 史料, text: 竹橋　寛永三丙寅之頃より／寛文六二月六日迄　天樹院様, source: 幕府の御殿の書付（蜂屋茂橘『椎の実筆』所収）}
+- {type: quote, from: 84, to: 84, label: 史料, text: 明成を滅却さするか／此の寺を頽顛せしむるか, source: 熊沢淡庵『武将感状記』（1716年）}
+- {type: quote, from: 110, to: 110, label: 史料, text: 当春迄追日御快気／俄御取詰　今暁寅刻逝去　御年七十, source: 幕府の記録『年録』寛文6年2月6日の条}
+stills:
+- {line: 0, note: 冒頭（0秒）燃える大坂城}
+- {line: 15, note: 崇伝の手紙}
+- {line: 22, note: 理由の3つ}
+- {line: 31, note: 元寛日記}
+- {line: 86, note: 会津の一件}
+- {line: 100, note: 吉田御殿の場所}
+- {line: 110, note: 年録}
+- {end: true, note: 終了画面}
