@@ -939,7 +939,7 @@ class ProgressTab extends StatelessWidget {
   /// プレーオフの次の1試合(采配するなら試合の画面から)。終わったらボックススコアを見せる。
   Future<void> _poGame(BuildContext context, {required bool live}) async {
     final car = c.career!;
-    List<GameCall?>? calls;
+    List<LiveCall>? calls;
     if (live) {
       calls = await showLiveGame(context, car);
       if (calls == null || !context.mounted) return;

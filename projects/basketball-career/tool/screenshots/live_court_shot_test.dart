@@ -80,11 +80,29 @@ void main() {
     // 采配の選択肢は、はじめは何も選ばれていない(速さの印が残らない)
     expect(t.widgetList<ChoiceChip>(find.byType(ChoiceChip)).where((c) => c.selected), isEmpty);
     // 3Qまで進めた所も撮る
-    await t.tap(find.textContaining('前半終了まで'));
+    await t.dragUntilVisible(find.byKey(const Key('live-next')), find.byType(ListView).last, const Offset(0, -200));
+    await t.tap(find.byKey(const Key('live-next')));
     for (var i = 0; i < 60; i++) {
       await t.pump(const Duration(milliseconds: 50));
     }
     await _save(t, 'd_q2_playing');
+    // タイムアウトを取ると、いまの攻めのあとで止まり、指示と交代ができる
+    await t.tap(find.byKey(const Key('live-timeout')));
+    await t.pump(const Duration(milliseconds: 100));
+    await _save(t, 'g_timeout');
+    // 交代: コートの1人を押してから、ベンチの1人を押す
+    final subs = find.byWidgetPredicate((w) => w is ChoiceChip && w.key is ValueKey<String> && (w.key as ValueKey<String>).value.startsWith('sub-'));
+    expect(subs, findsAtLeastNWidgets(5));
+    await t.dragUntilVisible(subs.at(0), find.byType(ListView).last, const Offset(0, -200));
+    await t.tap(subs.at(0));
+    await t.pump(const Duration(milliseconds: 100));
+    await t.dragUntilVisible(subs.at(5), find.byType(ListView).last, const Offset(0, -120));
+    await t.tap(subs.at(5));
+    await t.pump(const Duration(milliseconds: 300));
+    await _save(t, 'h_sub');
+    await t.dragUntilVisible(find.byKey(const Key('live-next')), find.byType(ListView).last, const Offset(0, -200));
+    await t.tap(find.byKey(const Key('live-next')));
+    await t.pump(const Duration(milliseconds: 100));
     await t.tap(find.textContaining('まで飛ばす'));
     await t.pump(const Duration(milliseconds: 100));
     await _save(t, 'e_half');

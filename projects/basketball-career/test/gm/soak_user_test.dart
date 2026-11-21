@@ -65,7 +65,7 @@ void _step(Career c, Random r) {
         case 1:
           final g = c.nextMyGame;
           if (g != null) {
-            final calls = List<GameCall?>.generate(liveBreaks.length, (_) => r.nextBool() ? GameCall.values[r.nextInt(GameCall.values.length)] : null);
+            final calls = breakCalls(List<GameCall?>.generate(liveBreaks.length, (_) => r.nextBool() ? GameCall.values[r.nextInt(GameCall.values.length)] : null));
             c.previewLive(calls, null);
             c.playLiveDay(calls);
           } else {
@@ -86,7 +86,7 @@ void _step(Career c, Random r) {
           case 1:
             c.playPlayoffs();
           case 2:
-            final calls = List<GameCall?>.generate(liveBreaks.length, (_) => r.nextBool() ? GameCall.values[r.nextInt(GameCall.values.length)] : null);
+            final calls = breakCalls(List<GameCall?>.generate(liveBreaks.length, (_) => r.nextBool() ? GameCall.values[r.nextInt(GameCall.values.length)] : null));
             if (c.nextMyGame != null) {
               c.previewLive(calls, null);
               c.playLiveDay(calls);

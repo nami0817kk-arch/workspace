@@ -2629,8 +2629,8 @@ class Career {
     return null;
   }
 
-  /// 采配しながら見る途中の結果(リーグも選手も変えない)。[stopAt] の区切りで止める(null なら最後まで)。
-  SimResult? previewLive(List<GameCall?> calls, int? stopAt) {
+  /// 采配しながら見る途中の結果(リーグも選手も変えない)。[stopAt] の時刻で止める(null なら最後まで)。
+  SimResult? previewLive(List<LiveCall> calls, LiveStop? stopAt) {
     final g = nextMyGame;
     if (g == null) return null;
     final po = phase == Phase.playoffs;
@@ -2646,10 +2646,10 @@ class Career {
     }
   }
 
-  List<GameCall?>? _liveCalls;
+  List<LiveCall>? _liveCalls;
 
   /// 采配した試合のある1節を進める(ほかの試合はふつうに進む)。区切りの終わりに着いたら true。
-  bool playLiveDay(List<GameCall?> calls) {
+  bool playLiveDay(List<LiveCall> calls) {
     if (nextMyGame == null) return false;
     if (phase == Phase.playoffs) {
       playPlayoffGame(calls: calls);
@@ -3089,7 +3089,7 @@ class Career {
   }
 
   /// 自分の次の1試合を戦う(ほかのシリーズは、その前後に決まった順で進む)。[calls] は采配したとき。
-  void playPlayoffGame({List<GameCall?>? calls}) {
+  void playPlayoffGame({List<LiveCall>? calls}) {
     if (phase != Phase.playoffs || !poLive) return;
     if (_runBracket(1, calls: calls)) _finishPlayoffs();
   }
@@ -3105,7 +3105,7 @@ class Career {
   /// プレーオフの組み合わせを、いつも同じ順にたどって進める。自分のシリーズは [myBudget] 試合まで(null なら最後まで)。
   /// 前から順にたどり直すので、途中で止めても、あとで続きから進められる。最後まで終わったら true。
   /// [myBudget] が null のときは前と同じ順で乱数を使う(自動で遊ぶGMの結果は変わらない)。
-  bool _runBracket(int? myBudget, {List<GameCall?>? calls}) {
+  bool _runBracket(int? myBudget, {List<LiveCall>? calls}) {
     var k = 0;
     var budget = myBudget;
     var live = calls;

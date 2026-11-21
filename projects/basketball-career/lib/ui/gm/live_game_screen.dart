@@ -11,11 +11,12 @@ import 'live_court.dart';
 import 'live_playback.dart';
 import 'style.dart';
 
-/// 次の自分の試合を、区切り(1Q・前半・3Q・4Q残り4分)ごとに見ながら采配する。
-/// 区切りの間は、コートで10人とボールが動いて流れて見える(2026-11-21)。
+/// 次の自分の試合を見ながら采配する。区切りの間は、コートで10人とボールが動いて流れて見える(2026-11-21)。
+/// 指示と交代ができるのは、クォーターの区切り(1Q・前半・3Qの終わり)と、自分でタイムアウトを取ったときだけ
+/// (2026-11-21、ユーザー「タイムアウトとQごとに指示できる」)。
 /// 確定すると、選んだ采配のリストを返す(呼ぶ側でその節を進める)。やめたら null。
-Future<List<GameCall?>?> showLiveGame(BuildContext context, Career car) =>
-    Navigator.of(context).push<List<GameCall?>>(MaterialPageRoute(builder: (_) => LiveGameScreen(car: car)));
+Future<List<LiveCall>?> showLiveGame(BuildContext context, Career car) =>
+    Navigator.of(context).push<List<LiveCall>>(MaterialPageRoute(builder: (_) => LiveGameScreen(car: car)));
 
 /// 見せる速さ(倍)。最後は「結果だけ」(動かさずに区切りまで飛ばす)。
 const _speeds = [1.0, 2.2, 6.0, 0.0];
@@ -33,11 +34,22 @@ class LiveGameScreen extends StatefulWidget {
 }
 
 class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProviderStateMixin {
-  final calls = List<GameCall?>.filled(liveBreaks.length, null);
+  final calls = <LiveCall>[];
 
-  /// いま止まっている(見ている)区切り(全部終えたら liveBreaks.length)。
-  int at = 0;
+  /// 1度でも先へ進めたか(1Qを見ただけなら、やめられる)。
+  bool _started = false;
+
+  /// 「ここからは任せて最後まで」を押したか。
+  bool _toEnd = false;
+
+  /// タイムアウトを取って止めているか(続けると、タイムアウトを1回使う)。
+  bool _inTimeout = false;
   GameCall? picked;
+
+  /// 交代で決めているコートの5人(止まっている間だけ)と、入れ替えようと選んだコートの1人。
+  List<int>? _court;
+  List<int> _courtAtStop = const [];
+  int? _swapOut;
   SimResult? res;
 
   // --- 流して見せる
@@ -76,8 +88,31 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
     super.dispose();
   }
 
-  void _run() {
-    res = car.previewLive(calls, at < liveBreaks.length ? at : null);
+  /// いまの時刻(止まっていればその時刻、はじめは試合の始め)。
+  LiveStop get _now => res?.stop ?? (0, 720);
+
+  /// [now] より後の、次のクォーターの区切り(無ければ null = 最後まで)。
+  LiveStop? _nextBreak(LiveStop now) {
+    for (var k = 0; k < liveBreaks.length; k++) {
+      final s = breakStop(k);
+      if (s.$1 > now.$1 || (s.$1 == now.$1 && s.$2 < now.$2)) return s;
+    }
+    return null;
+  }
+
+  bool _isBreak(LiveStop s) => [for (var k = 0; k < liveBreaks.length; k++) breakStop(k)].contains(s);
+
+  /// 止まっている所の名前(「前半終了」「タイムアウト 3Q 4:12」)。
+  String _stopName(LiveStop s) {
+    for (var k = 0; k < liveBreaks.length; k++) {
+      if (breakStop(k) == s) return liveBreaks[k];
+    }
+    return 'タイムアウト ${clockText(s.$1, s.$2)}';
+  }
+
+  void _run({LiveStop? stopAt}) {
+    final target = stopAt ?? (_toEnd ? null : _nextBreak(_now));
+    res = car.previewLive(calls, target);
     final r = res;
     if (r == null) return;
     _builder = PlaybackBuilder(
@@ -100,7 +135,10 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
     final r = res!;
     if (_cur >= r.events.length) {
       _script = null;
-      _clock.value = r.finished ? '試合終了' : liveBreaks[r.stoppedAt];
+      // 得点板の時計は短く(区切りの名前か、止めた時刻)。タイムアウトの印は右の欄の見出しに出す
+      final st = r.stop;
+      _clock.value = st == null ? '試合終了' : (_isBreak(st) ? _stopName(st) : clockText(st.$1, st.$2));
+      _prepareStop();
       return;
     }
     _script = _builder!.build(_cur, _endPos);
@@ -183,16 +221,62 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
     if (mounted) setState(() {});
   }
 
-  int get _timeoutsLeft => liveTimeouts - calls.where((c) => c == GameCall.timeout).length;
+  int get _timeoutsLeft => liveTimeouts - calls.where((c) => c.timeout).length - (_inTimeout ? 1 : 0);
+
+  SimTeam get _me => car.nextMyGame!.$1 == car.mine ? res!.home : res!.away;
+
+  /// 止まったときに、交代の欄をいまのコートの5人で用意する。
+  void _prepareStop() {
+    final r = res;
+    if (r == null || r.finished) return;
+    _courtAtStop = [..._me.court]..sort();
+    _court = List.of(_courtAtStop);
+    _swapOut = null;
+  }
+
+  /// タイムアウトを取る(いま見せている攻めを終えたところで止める)。
+  void _timeout() {
+    final r = res!;
+    final s = _script;
+    if (s == null || _cur >= r.events.length || _timeoutsLeft <= 0) return;
+    final e = r.events[_cur];
+    _finishScript(s);
+    _cur++;
+    _ticker.stop();
+    setState(() {
+      _inTimeout = true;
+      _run(stopAt: (e.period, e.clockEnd));
+      // 試合の最後の攻めだったなら、タイムアウトは取らずに終わる
+      if (res!.finished) _inTimeout = false;
+    });
+  }
 
   void _next({bool toEnd = false}) {
     setState(() {
-      if (at < liveBreaks.length) calls[at] = picked;
+      final st = res!.stop;
+      if (st != null) {
+        final court = _court;
+        final changed = court != null && !(court.length == _courtAtStop.length && court.toSet().containsAll(_courtAtStop));
+        if (picked != null || changed || _inTimeout) {
+          calls.add(LiveCall(period: st.$1, clock: st.$2, call: picked, timeout: _inTimeout, five: changed ? List.of(court) : null));
+        }
+      }
       picked = null;
-      at = toEnd ? liveBreaks.length : at + 1;
+      _inTimeout = false;
+      _court = null;
+      _started = true;
+      if (toEnd) _toEnd = true;
       _run();
     });
   }
+
+  /// 采配の1行(「前半終了: 外から打つ・交代」)。
+  String _callLine(LiveCall c) => [
+        '${_stopName((c.period, c.clock))}:',
+        if (c.call != null) c.call!.label,
+        if (c.five != null) '交代',
+        if (c.call == null && c.five == null) '流れを切る',
+      ].join(' ');
 
   @override
   Widget build(BuildContext context) {
@@ -204,9 +288,9 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
     final home = car.teams[g.$1], away = car.teams[g.$2];
     final mineHome = g.$1 == car.mine;
     return PopScope(
-      canPop: at == 0,
+      canPop: !_started,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) Navigator.of(context).pop(List<GameCall?>.of(calls));
+        if (!didPop) Navigator.of(context).pop(List<LiveCall>.of(calls));
       },
       child: _page(context, home.def.short, away.def.short, r, g.$1, g.$2, mineHome),
     );
@@ -257,8 +341,8 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
         // 1Qを見ただけなら、やめられる。采配を始めたあとに閉じると、残りは任せて進める(結果を見てからやり直せないように)
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
-          tooltip: at == 0 ? 'やめる' : '残りを任せて進める',
-          onPressed: () => Navigator.of(context).pop(at == 0 ? null : List<GameCall?>.of(calls)),
+          tooltip: !_started ? 'やめる' : '残りを任せて進める',
+          onPressed: () => Navigator.of(context).pop(!_started ? null : List<LiveCall>.of(calls)),
         ),
         automaticallyImplyLeading: false,
       ),
@@ -307,12 +391,14 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
             Expanded(
               flex: 5,
               child: ListView(
+                // 見ている・止まった・終わったで、いつも上から見せる(止まるたびに、指示の欄の頭から)
+                key: ValueKey(_playing ? 'watch' : done ? 'done' : 'stop-${r.stop}'),
                 padding: const EdgeInsets.fromLTRB(6, 6, 12, 12),
                 children: [
                   ...(_playing ? _watching() : (done ? _finish(diff) : _choices())),
                   const SizedBox(height: 10),
                   if (!_playing && !done)
-                    Text('${liveBreaks[r.stoppedAt]}・${diff > 0 ? '$diff点リード' : diff < 0 ? '${-diff}点ビハインド' : '同点'}',
+                    Text('${_stopName(r.stop!)}・${diff > 0 ? '$diff点リード' : diff < 0 ? '${-diff}点ビハインド' : '同点'}',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: diff > 0 ? GmColors.good : diff < 0 ? GmColors.bad : GmColors.text)),
                   const Text('試合の流れ(上が自分のリード)', style: TextStyle(fontSize: 11, color: GmColors.sub)),
                   const SizedBox(height: 2),
@@ -347,8 +433,10 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
   }
 
   /// 流れている間(速さと、区切りまで飛ばす)。
-  List<Widget> _watching() => [
-        Text(at < liveBreaks.length ? '${liveBreaks[at]}まで見ている' : '最後まで見ている', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+  List<Widget> _watching() {
+    final to = _toEnd ? null : _nextBreak(_now);
+    return [
+        Text(to != null ? '${_stopName(to)}まで見ている' : '最後まで見ている', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
         const Text('丸の数字は背番号。金の縁が自分のチーム。押すと今日の数字', style: TextStyle(fontSize: 11.5, color: GmColors.sub, height: 1.4)),
         const SizedBox(height: 6),
         Wrap(spacing: 6, runSpacing: 6, children: [
@@ -365,48 +453,107 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
             ),
         ]),
         const SizedBox(height: 10),
+        // タイムアウト: 押すと、いまの攻めが終わったところで止まり、指示と交代ができる
         FilledButton.icon(
+          key: const Key('live-timeout'),
+          onPressed: _timeoutsLeft > 0 ? _timeout : null,
+          icon: const Icon(Icons.pan_tool_rounded),
+          label: Text(_timeoutsLeft > 0 ? 'タイムアウト(あと$_timeoutsLeft回)' : 'タイムアウトは使いきった'),
+        ),
+        const SizedBox(height: 6),
+        OutlinedButton.icon(
           onPressed: _skip,
           icon: const Icon(Icons.fast_forward_rounded),
-          label: Text(at < liveBreaks.length ? '${liveBreaks[at]}まで飛ばす' : '最後まで飛ばす'),
+          label: Text(to != null ? '${_stopName(to)}まで飛ばす' : '最後まで飛ばす'),
         ),
-        if (calls.any((c) => c != null)) ...[
+        if (calls.isNotEmpty) ...[
           const SizedBox(height: 8),
-          Text(
-            'これまでの采配: ${[for (var k = 0; k < at && k < calls.length; k++) if (calls[k] != null) '${liveBreaks[k]}: ${calls[k]!.label}'].join(' / ')}',
-            style: const TextStyle(fontSize: 12, color: GmColors.sub),
-          ),
+          Text('これまでの采配: ${calls.map(_callLine).join(' / ')}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
         ],
       ];
+  }
 
   List<Widget> _choices() {
-    final used = [for (var k = 0; k < at; k++) if (calls[k] != null) '${liveBreaks[k]}: ${calls[k]!.label}'];
+    final st = res!.stop!;
+    final to = _nextBreak(st);
     return [
-      Text('采配(${liveBreaks[at]})', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-      Text('タイムアウトはあと$_timeoutsLeft回。選ばなければ、そのまま続ける。', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+      Text('${_inTimeout ? '' : '采配 '}${_stopName(st)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      Text(_inTimeout ? '続けると、3分のあいだ少し強くなる(流れを切る)。' : 'タイムアウトはあと$_timeoutsLeft回(試合の途中で押す)。', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
       const SizedBox(height: 6),
+      const Text('指示(選ばなければ、そのまま)', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+      const SizedBox(height: 4),
       Wrap(spacing: 6, runSpacing: 6, children: [
         for (final c in GameCall.values)
           ChoiceChip(
             key: ValueKey(c),
             label: Text(c.label, style: const TextStyle(fontSize: 12.5)),
             selected: picked == c,
-            onSelected: c == GameCall.timeout && _timeoutsLeft <= 0 ? null : (on) => setState(() => picked = on ? c : null),
+            onSelected: (on) => setState(() => picked = on ? c : null),
           ),
       ]),
-      const SizedBox(height: 6),
-      Text(picked?.help ?? '', style: const TextStyle(fontSize: 12.5, height: 1.4)),
-      if (used.isNotEmpty) ...[
+      if (picked != null) ...[
+        const SizedBox(height: 4),
+        Text(picked!.help, style: const TextStyle(fontSize: 12.5, height: 1.4)),
+      ],
+      const SizedBox(height: 10),
+      ..._subs(),
+      if (calls.isNotEmpty) ...[
         const SizedBox(height: 6),
-        Text('これまでの采配: ${used.join(' / ')}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+        Text('これまでの采配: ${calls.map(_callLine).join(' / ')}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
       ],
       const SizedBox(height: 10),
       FilledButton.icon(
+        key: const Key('live-next'),
         onPressed: () => _next(),
         icon: const Icon(Icons.play_arrow_rounded),
-        label: Text(at + 1 < liveBreaks.length ? '${picked == null ? 'そのまま' : picked!.label}で${liveBreaks[at + 1]}まで' : '${picked == null ? 'そのまま' : picked!.label}で最後まで'),
+        label: Text(to != null ? '${_stopName(to)}まで見る' : '最後まで見る'),
       ),
       TextButton(onPressed: () => _next(toEnd: true), child: const Text('ここからは任せて最後まで')),
+    ];
+  }
+
+  /// 交代: コートの5人とベンチ。コートの1人を押してから、ベンチの1人を押すと入れ替わる。
+  List<Widget> _subs() {
+    final me = _me;
+    final court = _court ?? _courtAtStop;
+    final bench = [
+      for (var i = 0; i < me.order.length; i++)
+        if (me.mins[i] > 0 && !court.contains(i)) i,
+    ];
+    Widget chip(int i, {required bool onCourt}) {
+      final p = me.order[i];
+      final min = me.secs[i] ~/ 60;
+      final tired = min >= 30;
+      final sel = onCourt && _swapOut == i;
+      return ChoiceChip(
+        key: ValueKey('sub-$i'),
+        showCheckmark: false,
+        selected: sel,
+        label: Text('#${jerseyOf(p)} ${p.name.split('・').last} ${p.pos.short} $min分 ${ptsAt(me, i)}点${tired ? ' 疲れ' : ''}',
+            style: TextStyle(fontSize: 11.5, color: tired ? GmColors.bad : null)),
+        onSelected: (_) => setState(() {
+          if (onCourt) {
+            _swapOut = sel ? null : i;
+          } else if (_swapOut != null) {
+            final c = List.of(court);
+            c[c.indexOf(_swapOut!)] = i;
+            _court = c..sort();
+            _swapOut = null;
+          }
+        }),
+      );
+    }
+
+    return [
+      Text(_swapOut == null ? '交代: コートの選手を押して、次にベンチの選手を押す' : 'ベンチから入れる選手を押す', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+      const SizedBox(height: 4),
+      const Text('コートの5人', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: GmColors.gold)),
+      const SizedBox(height: 2),
+      Wrap(spacing: 4, runSpacing: 4, children: [for (final i in court) chip(i, onCourt: true)]),
+      const SizedBox(height: 6),
+      const Text('ベンチ', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: GmColors.sub)),
+      const SizedBox(height: 2),
+      Wrap(spacing: 4, runSpacing: 4, children: [for (final i in bench) chip(i, onCourt: false)]),
     ];
   }
 
@@ -414,12 +561,12 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
         Text(diff > 0 ? '勝った' : '負けた', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: diff > 0 ? GmColors.good : GmColors.bad)),
         const SizedBox(height: 6),
         Text(
-          [for (var k = 0; k < liveBreaks.length; k++) if (calls[k] != null) '${liveBreaks[k]}: ${calls[k]!.label}'].join('\n').ifEmpty('采配はしなかった'),
+          calls.map(_callLine).join('\n').ifEmpty('采配はしなかった'),
           style: const TextStyle(fontSize: 13, height: 1.5),
         ),
         const SizedBox(height: 12),
         FilledButton.icon(
-          onPressed: () => Navigator.of(context).pop(List<GameCall?>.of(calls)),
+          onPressed: () => Navigator.of(context).pop(List<LiveCall>.of(calls)),
           icon: const Icon(Icons.check_rounded),
           label: const Text('この結果で進める'),
         ),

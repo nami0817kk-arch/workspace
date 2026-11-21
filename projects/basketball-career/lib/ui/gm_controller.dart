@@ -385,7 +385,7 @@ class GmController extends ChangeNotifier {
   }
 
   /// 采配した試合のある1節を進める。区切りの終わりに着いたときだけ報告を返す。
-  Future<BlockReport?> playLive(List<GameCall?> calls) async {
+  Future<BlockReport?> playLive(List<LiveCall> calls) async {
     final c = career;
     if (c == null || c.phase != Phase.season || busy || c.nextMyGame == null) return null;
     final snap = _blockSnapOf(c);
@@ -416,7 +416,7 @@ class GmController extends ChangeNotifier {
   }
 
   /// プレーオフの自分の次の1試合を戦う([calls] は采配したとき)。
-  Future<void> playPlayoffGame({List<GameCall?>? calls}) async {
+  Future<void> playPlayoffGame({List<LiveCall>? calls}) async {
     final c = career;
     if (c == null || c.phase != Phase.playoffs || !c.poLive || busy) return;
     c.playPlayoffGame(calls: calls);
