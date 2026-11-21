@@ -30,6 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # 画面の言葉を日本語と英語で持つ（`lib/l10n/lang.dart`）。
+  # Material 自身の部品（日付の選択など）もこれで言語に付いてくる。
+  flutter_localizations:
+    sdk: flutter
   shared_preferences: ^2.3.2
 
   # The following adds the Cupertino Icons font to your application.

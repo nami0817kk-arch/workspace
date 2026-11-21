@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/lang.dart';
 import '../models/traits.dart';
 
 /// 特性1つを、名前・説明・効き方の札で見せる。
@@ -34,11 +35,11 @@ class TraitRow extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             if (trait.flaw)
-              Text('欠点',
+              Text(tr('欠点', 'Flaw'),
                   style: theme.textTheme.labelSmall?.copyWith(color: accent)),
             if (trait.rare) ...[
               if (trait.flaw) const SizedBox(width: 6),
-              Text('稀',
+              Text(tr('稀', 'Rare'),
                   style: theme.textTheme.labelSmall
                       ?.copyWith(color: theme.colorScheme.tertiary)),
             ],
@@ -68,9 +69,9 @@ class TraitRow extends StatelessWidget {
           Text(
             trait.affectsPlay
                 ? (hits! > 0
-                    ? '今季 $hits回の局面で効いた'
-                    : '今季はまだ効く局面が来ていない')
-                : '試合の外で効く（回数は数えない）',
+                    ? tr('今季 $hits回の局面で効いた', 'Mattered in $hits moments this season')
+                    : tr('今季はまだ効く局面が来ていない', 'No moment has called on it yet this season'))
+                : tr('試合の外で効く（回数は数えない）', 'Works off the pitch (not counted)'),
             style: muted,
           ),
         ],

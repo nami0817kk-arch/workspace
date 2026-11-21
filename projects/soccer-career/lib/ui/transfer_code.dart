@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/lang.dart';
 import '../state/career_controller.dart';
 
 /// 引き継ぎコードの出し入れ。
@@ -21,14 +22,14 @@ class TransferCode {
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('引き継ぎコード'),
+        title: Text(tr('引き継ぎコード', 'Transfer code')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'このコードをコピーして、別の端末で「セーブを読み込む」に貼り付けると、'
-              '続きから遊べる。長いので、メモアプリなどに保存しておくとよい。',
+            Text(
+              tr('このコードをコピーして、別の端末で「セーブを読み込む」に貼り付けると、'
+              '続きから遊べる。長いので、メモアプリなどに保存しておくとよい。', 'Copy this code and paste it into Load save on another device to carry on from here. It is long, so keep it in a notes app.'),
             ),
             const SizedBox(height: 12),
             Container(
@@ -51,7 +52,7 @@ class TransferCode {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('閉じる'),
+            child: Text(tr('閉じる', 'Close')),
           ),
           FilledButton.icon(
             onPressed: () async {
@@ -61,10 +62,10 @@ class TransferCode {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
-                    const SnackBar(content: Text('引き継ぎコードをコピーした')));
+                    SnackBar(content: Text(tr('引き継ぎコードをコピーした', 'Copied the transfer code'))));
             },
             icon: const Icon(Icons.copy),
-            label: const Text('コピー'),
+            label: Text(tr('コピー', 'Copy')),
           ),
         ],
       ),
@@ -78,14 +79,14 @@ class TransferCode {
     final code = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('セーブを読み込む'),
+        title: Text(tr('セーブを読み込む', 'Load save')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '別の端末で作った引き継ぎコードを貼り付ける。'
-              '今のキャリアは上書きされる。',
+              tr('別の端末で作った引き継ぎコードを貼り付ける。'
+              '今のキャリアは上書きされる。', 'Paste a transfer code made on another device. Your current career will be overwritten.'),
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
@@ -105,11 +106,11 @@ class TransferCode {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('やめる'),
+            child: Text(tr('やめる', 'Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(input.text),
-            child: const Text('読み込む'),
+            child: Text(tr('読み込む', 'Load')),
           ),
         ],
       ),
@@ -120,7 +121,7 @@ class TransferCode {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
-        content: Text(ok ? 'キャリアを読み込んだ' : 'コードを読めなかった。今のキャリアはそのまま。'),
+        content: Text(ok ? tr('キャリアを読み込んだ', 'Career loaded') : tr('コードを読めなかった。今のキャリアはそのまま。', 'Could not read that code. Your career is untouched.')),
       ));
   }
 }

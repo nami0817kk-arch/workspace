@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/lang.dart';
 import '../models/club.dart';
 import '../models/development.dart';
 import '../models/pitch.dart';
@@ -58,7 +59,7 @@ class PitchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: '${spot.label}。相手は${style.label}',
+      label: tr('${spot.label}。相手は${style.label}', '${spot.label} Opponent: ${style.label}'),
       child: AspectRatio(
         aspectRatio: aspectRatio,
         child: CustomPaint(

@@ -45,6 +45,7 @@ import '../training_sheet.dart';
 import '../transfer_code.dart';
 import '../../dev/admin.dart';
 import '../../feedback/review_prompt.dart';
+import '../../l10n/lang.dart';
 import '../../monetize/monetization.dart';
 import 'admin_screen.dart';
 import 'guide_screen.dart';
@@ -60,6 +61,7 @@ class HubScreen extends StatelessWidget {
     required this.controller,
     this.monetization,
     this.reviewPrompt,
+    this.language,
   });
 
   final CareerController controller;
@@ -70,6 +72,33 @@ class HubScreen extends StatelessWidget {
 
   /// 星を頼む窓口。渡されなければ頼まない。
   final ReviewPrompt? reviewPrompt;
+
+  /// 画面の言葉。**渡されなければ切り替えを出さない**（テストと撮影）。
+  final Language? language;
+
+  /// 言葉を選ぶ。**その言語自身の呼び名で並べる**（`Lang.label`）——
+  /// 英語しか読めない人に「日本語」と漢字で出しても選べない。
+  Future<void> _chooseLanguage(BuildContext context) async {
+    final lang = language;
+    if (lang == null) return;
+    final picked = await showDialog<Lang>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text(tr('言語 / Language', 'Language / 言語')),
+        children: [
+          for (final l in Lang.values)
+            ListTile(
+              title: Text(l.label),
+              trailing: l == lang.value
+                  ? const Icon(Icons.check)
+                  : null,
+              onTap: () => Navigator.of(context).pop(l),
+            ),
+        ],
+      ),
+    );
+    if (picked != null) await lang.set(picked);
+  }
 
   Future<void> _playNext(BuildContext context) async {
     // カップ戦の週なら、そちらへ。1週1試合の刻みは変えない。
@@ -225,6 +254,8 @@ class HubScreen extends StatelessWidget {
                     _confirmDelete(context);
                   case 'support':
                     _openSupport(context);
+                  case 'lang':
+                    _chooseLanguage(context);
                   // 参照そのものを kAdmin で囲む。メニュー項目だけを囲んでも、
                   // ここが AdminScreen を名指ししているぶん画面が残ってしまう
                   // （公開ビルドに管理画面の文字列が入っていた）。
@@ -241,6 +272,11 @@ class HubScreen extends StatelessWidget {
                 const PopupMenuItem(value: 'import', child: Text('セーブを読み込む')),
                 const PopupMenuItem(value: 'hall', child: Text('これまでの選手')),
                 const PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
+                if (language != null)
+                  PopupMenuItem(
+                    value: 'lang',
+                    child: Text(tr('言語 / Language', 'Language / 言語')),
+                  ),
                 // 広告も課金もない環境（ブラウザ版・テスト）では出さない。
                 if (monetization != null)
                   const PopupMenuItem(value: 'support', child: Text('広告について')),

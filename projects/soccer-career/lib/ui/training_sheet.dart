@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/formulas.dart';
 import '../game/match_engine.dart';
+import '../l10n/lang.dart';
 import '../models/career.dart';
 import '../models/traits.dart';
 import '../models/training.dart';
@@ -57,13 +58,13 @@ class TrainingSheet {
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
-                      child: Text('今週の練習', style: theme.textTheme.titleMedium),
+                      child: Text(tr('今週の練習', 'This week in training'), style: theme.textTheme.titleMedium),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
                       child: Text(
-                        'コンディション ${state.player.condition}。'
-                        '${state.autoRestBelow > 0 ? '${state.autoRestBelow}を下回った週は自動で休養になる。' : '自動休養は切ってある。'}',
+                        tr('コンディション ${state.player.condition}。'
+                        '${state.autoRestBelow > 0 ? '${state.autoRestBelow}を下回った週は自動で休養になる。' : '自動休養は切ってある。'}', 'Condition ${state.player.condition}. ${state.autoRestBelow > 0 ? 'Weeks below ${state.autoRestBelow} turn into rest on their own.' : 'Automatic rest is off.'}'),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -71,7 +72,7 @@ class TrainingSheet {
                     ),
                     // 踏み込み方。ここが週の判断の中心。
                     _Row(
-                      label: '踏み込み',
+                      label: tr('踏み込み', 'Intensity'),
                       children: [
                         for (final effort in TrainingEffort.values)
                           ChoiceChip(
@@ -88,7 +89,7 @@ class TrainingSheet {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 2, 20, 0),
                       child: Text(
-                        '${state.effort.description}　'
+                        tr('${state.effort.description}　'
                         '大成功 ${(odds.great * 100).round()}%'
                         ' ・ 空回り ${(odds.flat * 100).round()}%'
                         ' ・ 消耗 ×${state.effort.cost}'
@@ -96,7 +97,7 @@ class TrainingSheet {
                         // 「怪我 ×1.8」では、それが何%なのか分からない。
                         // 判定（`rollInjury`）と同じ式から引く。
                         ' ・ 怪我 ${(controller.injuryChanceNow * 100).toStringAsFixed(1)}%'
-                        '（×${state.effort.injury}）',
+                        '（×${state.effort.injury}）', '${state.effort.description}  Great week ${(odds.great * 100).round()}% · wasted ${(odds.flat * 100).round()}% · wear ×${state.effort.cost} · injury ${(controller.injuryChanceNow * 100).toStringAsFixed(1)}% (×${state.effort.injury})'),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -112,7 +113,7 @@ class TrainingSheet {
                     // 組む相手。居ない相手は出さない。
                     if (state.companionChoices.length > 1) ...[
                       _Row(
-                        label: '組む相手',
+                        label: tr('組む相手', 'Training partner'),
                         children: [
                           for (final companion in state.companionChoices)
                             ChoiceChip(
@@ -139,10 +140,10 @@ class TrainingSheet {
                     // 居残りもここで決められるようにする。育成タブの奥にあると、
                     // 練習だけ変えて居残りを付けっぱなしにしてしまう。
                     _Row(
-                      label: '居残り',
+                      label: tr('居残り', 'Extra work'),
                       children: [
                         ChoiceChip(
-                          label: const Text('なし'),
+                          label: Text(tr('なし', 'None')),
                           selected: state.drill == null,
                           visualDensity: VisualDensity.compact,
                           onSelected: (_) async {
@@ -173,7 +174,7 @@ class TrainingSheet {
                         padding: const EdgeInsets.only(bottom: 12),
                         children: [
                           _MenuGroup(
-                            title: '休む',
+                            title: tr('休む', 'Rest'),
                             menus: [
                               for (final m in menus)
                                 if (m.isRest) m,
@@ -182,7 +183,7 @@ class TrainingSheet {
                             onPick: (m) => _pick(controller, sheetContext, m),
                           ),
                           _MenuGroup(
-                            title: '1か所を鍛える',
+                            title: tr('1か所を鍛える', 'One area'),
                             menus: [
                               for (final m in menus)
                                 if (!m.isRest && !m.isCompound && !m.weakFoot)
@@ -192,7 +193,7 @@ class TrainingSheet {
                             onPick: (m) => _pick(controller, sheetContext, m),
                           ),
                           _MenuGroup(
-                            title: '2か所を同時に',
+                            title: tr('2か所を同時に', 'Two at once'),
                             menus: [
                               for (final m in menus)
                                 if (m.isCompound) m,
@@ -201,7 +202,7 @@ class TrainingSheet {
                             onPick: (m) => _pick(controller, sheetContext, m),
                           ),
                           _MenuGroup(
-                            title: '苦手をつぶす',
+                            title: tr('苦手をつぶす', 'Weak spots'),
                             menus: [
                               for (final m in menus)
                                 if (m.weakFoot) m,
@@ -307,8 +308,8 @@ class _MenuGroup extends StatelessWidget {
           if (picked != null) ...[
             const SizedBox(height: 6),
             Text(
-              '${picked.description}'
-              '${picked.keys.isEmpty ? '' : ' ・ ${picked.keys.map((k) => k.label).join('・')}'}',
+              tr('${picked.description}'
+              '${picked.keys.isEmpty ? '' : ' ・ ${picked.keys.map((k) => k.label).join('・')}'}', '${picked.description}${picked.keys.isEmpty ? '' : ' · ${picked.keys.map((k) => k.label).join(', ')}'}'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -383,7 +384,7 @@ class _StrainBar extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text('身体の消耗', style: theme.textTheme.labelMedium),
+            Text(tr('身体の消耗', 'Wear on the body'), style: theme.textTheme.labelMedium),
             const SizedBox(width: 8),
             // 行き先は言葉で約束しない。疲れた週は自動休養が踏み込み方を
             // 落とすので、選んだ落ち着き先にそのまま着くとは限らない。
@@ -420,14 +421,14 @@ class _StrainBar extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '衰え始め $declineAge歳'
+          tr('衰え始め $declineAge歳'
           '${offset > 0
               ? '（消耗が軽いぶん +$offset年）'
               : offset < 0
               ? '（消耗が重いぶん $offset年）'
               : ''}'
           ' ・ 重傷の引きやすさ '
-          '×${Formulas.severeFactorForStrain(strain).toStringAsFixed(2)}',
+          '×${Formulas.severeFactorForStrain(strain).toStringAsFixed(2)}', 'Decline starts at $declineAge${offset > 0 ? ' (+$offset yr, wear is light)' : offset < 0 ? ' ($offset yr, wear is heavy)' : ''} · serious-injury risk ×${Formulas.severeFactorForStrain(strain).toStringAsFixed(2)}'),
           style: muted,
         ),
       ],
