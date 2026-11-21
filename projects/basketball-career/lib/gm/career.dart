@@ -752,6 +752,14 @@ class Career {
     }
   }
 
+  /// 指名権の値打ちに、うわさの出た年(今季のあとのドラフト)の顔ぶれを入れる。ほかの年は 1。
+  void refreshPickScales({bool started = false}) {
+    final known = started || phase != Phase.preseason;
+    for (final p in picks) {
+      p.classScale = known && p.season == season ? draftClassOf(seed, p.season).valueScale : 1.0;
+    }
+  }
+
   /// 自分の試合の相手 [t] の選手を、見たことにする。
   void _sawTeam(int t) {
     if (t == mine) return;
@@ -2497,6 +2505,9 @@ class Career {
   void startSeason() {
     if (phase != Phase.preseason || startProblem != null) return;
     _potentialNews();
+    // 今季のあとのドラフトのうわさ(A-5)。指名権の値打ちもその年の顔ぶれで変わる
+    _mail(Sender.staff, 'ドラフトのうわさ', '${draftClassOf(seed, season).rumor}。');
+    refreshPickScales(started: true);
     for (final t in teams) {
       t.wins = 0;
       t.losses = 0;
@@ -3672,7 +3683,7 @@ class Career {
     for (final i in conveyedBack) {
       _log('保護: ${teams[picks[i].from].def.short}の1巡目は上位${picks[i].protect}位に入ったので、${teams[picks[i].from].def.short}に戻った');
     }
-    final main = makeProspects(rng, nextId, order.length + 8, name: _uniqueName);
+    final main = makeProspects(rng, nextId, order.length + 8, name: _uniqueName, cls: draftClassOf(seed, season));
     // 層を厚くする(2巡目の後半にも選ぶ余地を残す)。リーグの続きをずらさないよう、別の乱数で作る
     final deepRng = Rng(seed * 104723 + season * 613 + 29);
     final used = {..._usedNames, for (final p in main) p.player.name};
@@ -5489,6 +5500,7 @@ class Career {
       .._nextId = (j['nid'] as int?) ?? 100000;
     // 前の版の保存(指名権が2年分)でも、4年分そろえる
     c._fillPicks(c.phase == Phase.contracts ? c.season + 1 : c.season);
+    c.refreshPickScales();
     return c;
   }
 

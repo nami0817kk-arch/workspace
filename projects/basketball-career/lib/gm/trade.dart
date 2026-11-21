@@ -16,6 +16,9 @@ class DraftPick {
   /// 上位いくつまで保護されているか(0なら保護なし)。保護の範囲に入ると、指名権は [from] のチームに戻る。
   int protect;
 
+  /// その年のドラフトの顔ぶれで変わる値打ちの倍率(保存しない。うわさが出た年だけ 1 以外。キャリアが入れる)。
+  double classScale = 1.0;
+
   String when(int nowSeason) => switch (season - nowSeason) {
         0 => '今年',
         1 => '来年',
@@ -66,7 +69,8 @@ double pickValue(DraftPick pick, TeamMode mode, int slotGuess, int nowSeason, {i
   if (pr > 0 && pick.round == 1) v *= slotGuess <= pr && years == 0 ? 0.15 : 1 - pr / 40;
   if (mode == TeamMode.rebuild) v *= 1.45;
   if (mode == TeamMode.contend) v *= 0.7;
-  return v;
+  // 豊作の年の指名権は高く、不作の年は安く見る(A-5)
+  return v * pick.classScale;
 }
 
 /// いまの強さの順から見た、そのチームの指名の見込みの順番(弱いほど早い)。
