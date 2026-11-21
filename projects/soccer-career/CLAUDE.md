@@ -3556,13 +3556,19 @@ C の続き。中盤 13・前線 7 の局面で答えが9割以上決まって�
 中身が英語になったので、**「掲載は日本語だけ」の決まりを外した**
 （`STORE_LISTING.md`。外す条件はその決まり自身に書いてあった）。
 
-**「英語に対応している」と名乗るには3つ揃える。** どれか1つだけでは足りない:
+**「英語に対応している」と名乗るには4つ揃える。** どれか1つだけでは足りない:
 
 | 揃えるもの | 無いとどうなるか |
 |---|---|
 | `Info.plist` の `CFBundleLocalizations` に `en` | — |
 | `ios/Runner/en.lproj/InfoPlist.strings` | **App Store が言語として認めない**（`ja.lproj` を置いた経緯と同じ） |
+| **`project.pbxproj` の `PBXVariantGroup` に `en`** | **ファイルを置いてもバンドルに入らない。** `knownRegions` に `en` があっても別物で、ここに並べて初めて Resources にコピーされる（CI の `preflight` が拾った） |
 | `STORE_LISTING.md` の「対応言語」 | 次に読む人が食い違いに気付けない |
+
+- **表示名は語ごとに違ってよい**（英語は `Player Career`）。`preflight.py` は
+  「`Info.plist` と一致すること」を求めていたが、それは日本語しか無かった頃の
+  決まりで、**訳した名前を置くと落ちる**。見るのは「宣言があって空でないこと」と、
+  「`Info.plist` の名前がどれかの語と同じ（＝受け皿が生きている）」の2つにした。
 
 - **掲載画像も英語で撮る**（`--dart-define=LANG=en` →
   `marketing/screenshots/en/`）。日本語の絵を英語のページに貼ると、

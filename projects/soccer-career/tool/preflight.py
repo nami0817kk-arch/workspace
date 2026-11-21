@@ -177,21 +177,38 @@ def main():
         )
     )
     regions = re.search(r"knownRegions = \((.*?)\);", pbx, re.S)
+    names = set()
     for lang in sorted(declared):
         path = os.path.join(ROOT, "ios", "Runner", f"{lang}.lproj", "InfoPlist.strings")
         check(f"{lang}.lproj/InfoPlist.strings がある", os.path.exists(path))
         if os.path.exists(path):
             body = read("ios", "Runner", f"{lang}.lproj", "InfoPlist.strings")
-            check(
-                f"{lang} の表示名が Info.plist と同じ",
-                f'"CFBundleDisplayName" = "{display}";' in body,
-                display,
+            # **語ごとに違う名前でよい**（英語は "Player Career"）。
+            # 以前は Info.plist と一致することを求めていたが、それは
+            # 日本語しか無かった頃の決まりで、**訳した名前を置くと落ちる**
+            # （2026-11-22）。見るのは「宣言があって、空でないこと」。
+            found = re.search(
+                r'"CFBundleDisplayName"\s*=\s*"([^"]*)"\s*;', body
             )
+            check(
+                f"{lang} の表示名が宣言されている",
+                found and found.group(1).strip(),
+                found.group(1) if found else "",
+            )
+            if found:
+                names.add(found.group(1))
         check(
             f"pbxproj が {lang}.lproj を指している",
             f"{lang}.lproj/InfoPlist.strings" in pbx,
         )
         check(f"knownRegions に {lang} がある", regions and lang in regions.group(1))
+    # Info.plist の名前は、どの語の lproj も当たらなかったときの受け皿。
+    # どこからも当たらないなら、それは消し忘れた古い名前。
+    check(
+        "Info.plist の表示名が、どれかの語の名前と同じ",
+        display in names,
+        f"{display} / " + ", ".join(sorted(names)),
+    )
     check(
         "InfoPlist.strings が Resources に入っている",
         "InfoPlist.strings in Resources" in pbx,
