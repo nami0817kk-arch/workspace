@@ -322,23 +322,48 @@ class _PlayersPainter extends CustomPainter {
 
 /// 自分から見た点差の流れ。上(リード)は緑、下(ビハインド)は赤。4つのクォーターに区切りの線。
 class MomentumBar extends StatelessWidget {
-  const MomentumBar({super.key, required this.diff});
+  const MomentumBar({super.key, required this.diff, this.marks = const [], this.onMark});
 
   /// 1分ごとの、自分から見た点差。
   final List<int> diff;
 
+  /// 印(試合の分・ひとこと・采配なら true)。采配は金、逆転は白の縦線。押すと [onMark] にひとこと。
+  final List<(int, String, bool)> marks;
+  final void Function(String)? onMark;
+
   @override
   Widget build(BuildContext context) => Container(
-        height: 46,
+        height: marks.isEmpty ? 46 : 58,
         decoration: BoxDecoration(color: GmColors.panel, borderRadius: BorderRadius.circular(8)),
         padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-        child: CustomPaint(painter: _MomentumPainter(diff), size: Size.infinite),
+        child: LayoutBuilder(
+          builder: (context, box) => GestureDetector(
+            onTapUp: onMark == null || marks.isEmpty
+                ? null
+                : (d) {
+                    final total = math.max(48, diff.length);
+                    (int, String, bool)? best;
+                    var bd = 18.0;
+                    for (final m in marks) {
+                      final x = box.maxWidth * (m.$1 + 0.5) / total;
+                      final dist = (x - d.localPosition.dx).abs();
+                      if (dist < bd) {
+                        bd = dist;
+                        best = m;
+                      }
+                    }
+                    if (best != null) onMark!(best.$2);
+                  },
+            child: CustomPaint(painter: _MomentumPainter(diff, marks), size: Size.infinite),
+          ),
+        ),
       );
 }
 
 class _MomentumPainter extends CustomPainter {
-  _MomentumPainter(this.diff);
+  _MomentumPainter(this.diff, [this.marks = const []]);
   final List<int> diff;
+  final List<(int, String, bool)> marks;
 
   @override
   void paint(Canvas canvas, Size s) {
@@ -378,8 +403,28 @@ class _MomentumPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.4,
     );
+    // 印(采配は金、逆転は白)。上に小さな三角
+    for (final m in marks) {
+      final mx = s.width * (m.$1 + 0.5) / total;
+      final c = m.$3 ? GmColors.gold : Colors.white;
+      canvas.drawLine(
+        Offset(mx, 6),
+        Offset(mx, s.height),
+        Paint()
+          ..color = c.withValues(alpha: 0.8)
+          ..strokeWidth = 1.2,
+      );
+      canvas.drawPath(
+        Path()
+          ..moveTo(mx - 4, 0)
+          ..lineTo(mx + 4, 0)
+          ..lineTo(mx, 6)
+          ..close(),
+        Paint()..color = c,
+      );
+    }
   }
 
   @override
-  bool shouldRepaint(covariant _MomentumPainter old) => old.diff.length != diff.length || old.diff != diff;
+  bool shouldRepaint(covariant _MomentumPainter old) => old.diff.length != diff.length || old.diff != diff || old.marks.length != marks.length;
 }
