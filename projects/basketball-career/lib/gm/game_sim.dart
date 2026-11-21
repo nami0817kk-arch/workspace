@@ -94,6 +94,9 @@ class SimTeam {
   /// 組み合わせごとの、この試合で一緒に出た秒([Combo] の順)。
   final comboSecs = List<int>.filled(Combo.values.length, 0);
 
+  /// 方針どうしの相性が効いた攻めの数([Matchup] の順。攻めた側も守った側も数える)。
+  final matchups = List<int>.filled(Matchup.values.length, 0);
+
   /// その試合の調子(シュートの入る見込みの±。性格で幅が変わる)。
   late List<double> form;
 
@@ -259,6 +262,29 @@ class PlayEvent {
   int get points => steps.fold(0, (s, x) => s + (x.kind == PlayStepKind.shot ? (x.made ? (x.three ? 3 : 2) : 0) + x.ftMade : 0));
 }
 
+/// 方針どうしの相性(じゃんけん。2026-11-21 の作り込み B-2)。[edge] は攻める側に足す強さ。
+enum Matchup {
+  packVsInside('中を固める守り は 中の攻め に強い', -1.5),
+  packVsOutside('中を固める守り は 外の攻め に弱い', 1.5),
+  pressVsAce('前から当たる守り は エース任せ に強い', -1.5),
+  pressVsPass('前から当たる守り は パス回し に弱い', 1.5),
+  runVsSlow('速攻 は じっくりの相手 に効く(リバウンドで負けていなければ)', 1.0),
+  runBack('速攻 は リバウンドで負けると逆に走られる', -1.0);
+
+  const Matchup(this.label, this.edge);
+  final String label;
+  final double edge;
+}
+
+/// 攻める側 [o] と守る側 [d] のあいだで効く相性。
+List<Matchup> matchupsOf(SimTeam o, SimTeam d) => [
+      if (d.press == 0 && o.focus == 2) Matchup.packVsInside,
+      if (d.press == 0 && o.focus == 0) Matchup.packVsOutside,
+      if (d.press == 2 && o.share == 0) Matchup.pressVsAce,
+      if (d.press == 2 && o.share == 2) Matchup.pressVsPass,
+      if (o.pace == 2 && d.pace == 0) o.cReb >= d.cReb ? Matchup.runVsSlow : Matchup.runBack,
+    ];
+
 /// 試合の中身(見せる用)。
 class SimResult {
   SimResult(this.home, this.away);
@@ -272,6 +298,9 @@ class SimResult {
 
   /// 攻めごとの出来事(自分の試合だけ。コートで選手を動かして見せる)。
   final events = <PlayEvent>[];
+
+  /// 負けているチームが方針を切り替えた所(クォーター・チーム 0 ホーム/1 アウェー・ひとこと)。
+  final switches = <(int, int, String)>[];
 
   /// リードが入れ替わった回数。
   int leadChanges = 0;
@@ -376,8 +405,15 @@ String _clock(int period, int left) {
 /// [home] と [away] の1試合を進める。チームの勝敗・個人成績・けがはここでは触らない(呼ぶ側で行う)。
 /// [calls] は自分の采配([side] 0 ならホーム。時刻の順)。[stopAt] の時刻に着いたら、そこで止めて途中の結果を返す。
 /// どちらも無ければ、ふつうの試合(采配で増やした処理は何もしない)。止める確かめと采配は乱数を使わないので、同じ采配なら止める位置で試合は変わらない。
+/// [userSide] は遊ぶ人のチーム(0 ホーム・1 アウェー・-1 どちらでもない)。それ以外のチームは、前半と3Qの終わりに8点以上負けていれば方針を切り替える。
 SimResult simulateGame(Team home, Team away, Rng r,
-    {required double homeStr, required double awayStr, bool record = false, List<LiveCall> calls = const [], LiveStop? stopAt, int side = 0}) {
+    {required double homeStr,
+    required double awayStr,
+    bool record = false,
+    List<LiveCall> calls = const [],
+    LiveStop? stopAt,
+    int side = 0,
+    int userSide = -1}) {
   final h = SimTeam(home, homeStr + 1.0), a = SimTeam(away, awayStr);
   h.rollForm(r);
   a.rollForm(r);
@@ -497,6 +533,18 @@ SimResult simulateGame(Team home, Team away, Rng r,
     final len = period < 4 ? 720 : 300;
     // 各クォーターの最初の攻めは、交互に(2Qと3Qはジャンプボールで取らなかった側)
     if (period > 0 && period < 4) offense = (period == 1 || period == 2) ? 1 - firstBall : firstBall;
+    // 負けている AI は、前半と3Qの終わりに方針を切り替える(外から打ち、前から当たる)。乱数は使わない
+    if (period == 2 || period == 3) {
+      for (final (k, t) in [(0, h), (1, a)]) {
+        if (k == userSide) continue;
+        final behind = k == 0 ? aScore - hScore : hScore - aScore;
+        if (behind >= 8 && (t.focus != 0 || t.press != 2)) {
+          t.focus = 0;
+          t.press = 2;
+          res.switches.add((period, k, '外から打ち、前から当たってきた'));
+        }
+      }
+    }
     var clock = len;
     final h0 = hScore, a0 = aScore;
     var nextMinute = len - 60;
@@ -625,8 +673,13 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play, [Play
   final oc = o.court, dc = d.court;
   if (oc.isEmpty || dc.isEmpty) return;
   // チームの強さの差と、いまコートにいる5人がチームの平均よりどれだけ強いか
-  // 組み合わせ(B-1): 攻める5人の型のかみ合いと、守る5人の守りのかみ合い
-  final diff = ((o.str + o.boost) - (d.str + d.boost)) + 0.35 * ((o.cOvr - o.avgOvr) - (d.cOvr - d.avgOvr)) + o.comboOff - d.comboDef;
+  // 組み合わせ(B-1): 攻める5人の型のかみ合いと、守る5人の守りのかみ合い。方針どうしの相性(B-2)
+  var diff = ((o.str + o.boost) - (d.str + d.boost)) + 0.35 * ((o.cOvr - o.avgOvr) - (d.cOvr - d.avgOvr)) + o.comboOff - d.comboDef;
+  for (final m in matchupsOf(o, d)) {
+    diff += m.edge;
+    o.matchups[m.index]++;
+    d.matchups[m.index]++;
+  }
   final edge = diff * edgePerStrength;
   final press = d.press; // 0 中を固める / 2 前から当たる
   final focus = o.focus; // 0 外 / 2 中

@@ -543,8 +543,10 @@ class Career {
       ..minutes = {}
       ..policy = defaultPolicy()
       ..training = 1
-      ..coaches = [];
+      ..coaches = []
+      ..familiar = 0;
     hype = 50;
+    policyGames = 0;
     priceLevel = 1;
     concessionLevel = 1;
     for (final m in inbox) {
@@ -767,8 +769,65 @@ class Career {
   /// 分かった組み合わせ。
   List<Combo> get combosFound => [for (final x in Combo.values) if (comboSecs[x.index] >= comboDiscoverSecs) x];
 
-  /// 自分の試合 [g] の組み合わせの時間を足し、新しく分かった組み合わせを知らせる。
+  /// 方針を変えずに続けた自分の試合の数(慣れ。B-2)。
+  int policyGames = 0;
+
+  /// 慣れで足す強さ(10試合で最大 +1)。
+  double get familiarity => math.min(1.0, policyGames / 10);
+
+  /// 自分のチームが関わった方針どうしの相性の数([Matchup] の順)。たまると相性が分かる(B-2・図鑑 B-3)。
+  List<int> matchupSeen = List.filled(Matchup.values.length, 0);
+
+  /// 分かった方針どうしの相性。
+  List<Matchup> get matchupsFound => [for (final x in Matchup.values) if (matchupSeen[x.index] >= matchupDiscoverCount) x];
+  static const matchupDiscoverCount = 30;
+
+  /// プレーオフの2戦目からは、相手がこちらの方針に対策する(B-2)。相手 [opp] の守り方を変え、元の方針を返す(試合のあとで戻す)。
+  /// こちらが中で攻めるなら中を固め、エース任せなら前から当たり、外で攻めるならふつうに戻す。
+  List<int>? _counterFor(int opp, int gamesPlayed) {
+    if (phase != Phase.playoffs || gamesPlayed == 0 || opp == mine) return null;
+    final t = teams[opp];
+    final keep = List.of(t.policy);
+    final f = me.policy[PolicyAxis.focus.index], s = me.policy[PolicyAxis.passing.index];
+    t.policy[PolicyAxis.defense.index] = f == 2
+        ? 0
+        : s == 0
+            ? 2
+            : f == 0
+                ? 1
+                : keep[PolicyAxis.defense.index];
+    return keep;
+  }
+
+  /// いまの自分のプレーオフのシリーズ(無ければ null)。
+  Series? get _mySeries => playoffs.where((s) => !s.over && (s.high == mine || s.low == mine)).lastOrNull;
+
+  /// ほかのチームの方針を、選手に合うものにする(AIの監督の好み。B-2)。合いが小さい軸は「ふつう」。乱数は使わない。
+  void _aiPolicies() {
+    for (final t in teams) {
+      if (t.index == mine) continue;
+      final top = [...t.healthy]..sort((a, b) => b.ovr.compareTo(a.ovr));
+      if (top.length < 5) continue;
+      for (final axis in [PolicyAxis.pace, PolicyAxis.focus, PolicyAxis.defense, PolicyAxis.passing]) {
+        final lo = teamAxisFit(top, axis, 0), hi = teamAxisFit(top, axis, 2);
+        t.policy[axis.index] = lo >= hi && lo > 0.25 ? 0 : hi > lo && hi > 0.25 ? 2 : 1;
+      }
+    }
+  }
+
+  /// 自分の試合 [g] の組み合わせの時間を足し、新しく分かった組み合わせを知らせる。慣れと相性もここで数える。
   void _noteCombos(GameResult g) {
+    policyGames = math.min(99, policyGames + 1);
+    me.familiar = familiarity;
+    if (g.matchups.length == Matchup.values.length) {
+      for (final x in Matchup.values) {
+        final before = matchupSeen[x.index];
+        matchupSeen[x.index] = math.min(9999, before + g.matchups[x.index]);
+        if (before < matchupDiscoverCount && matchupSeen[x.index] >= matchupDiscoverCount) {
+          _mail(Sender.staff, '方針の相性が分かった', '試合で確かめた: ${x.label}。相手の方針を見て、こちらの方針を選びたい。');
+        }
+      }
+    }
     if (g.comboSecs.length != Combo.values.length) return;
     for (final x in Combo.values) {
       final before = comboSecs[x.index];
@@ -2530,6 +2589,7 @@ class Career {
     _potentialNews();
     // 今季のあとのドラフトのうわさ(A-5)。指名権の値打ちもその年の顔ぶれで変わる
     _mail(Sender.staff, 'ドラフトのうわさ', '${draftClassOf(seed, season).rumor}。');
+    _aiPolicies();
     refreshPickScales(started: true);
     for (final t in teams) {
       t.wins = 0;
@@ -2718,14 +2778,18 @@ class Career {
     if (g == null) return null;
     final po = phase == Phase.playoffs;
     final rested = _restBeforeGame();
+    final opp = g.$1 == mine ? g.$2 : g.$1;
+    final ms = _mySeries;
+    final keep = po && ms != null ? _counterFor(opp, ms.highWins + ms.lowWins) : null;
     try {
       final h = teams[g.$1], a = teams[g.$2];
       return simulateGame(h, a, Rng(po ? poLiveSeed : liveSeed),
-          homeStr: h.strength, awayStr: a.strength, record: true, calls: calls, stopAt: stopAt, side: g.$1 == mine ? 0 : 1);
+          homeStr: h.strength, awayStr: a.strength, record: true, calls: calls, stopAt: stopAt, side: g.$1 == mine ? 0 : 1, userSide: g.$1 == mine ? 0 : 1);
     } finally {
       for (final p in rested) {
         p.injured = 0;
       }
+      if (keep != null) teams[opp].policy = keep;
     }
   }
 
@@ -2832,6 +2896,7 @@ class Career {
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    _aiPolicies();
     for (final p in [...me.roster, ...me.twoWay]) {
       blocksWithMe[p.id] = math.min(99, (blocksWithMe[p.id] ?? 0) + 1);
     }
@@ -2889,7 +2954,13 @@ class Career {
   /// チームの方針の [axis] 番目の軸を [choice](0・1・2)にする。
   void setPolicy(int axis, int choice) {
     if (axis < 0 || axis >= me.policy.length || phase == Phase.over) return;
-    me.policy[axis] = choice.clamp(0, 2);
+    final c = choice.clamp(0, 2);
+    // 方針を変えると、慣れはゼロから(B-2)
+    if (me.policy[axis] != c) {
+      policyGames = 0;
+      me.familiar = 0;
+    }
+    me.policy[axis] = c;
   }
 
   void setFocus(int id, Attr? a) {
@@ -3225,6 +3296,8 @@ class Career {
           budget = budget! - 1;
           final seed = live == null ? null : poLiveSeed;
           final rested = _restBeforeGame();
+          final opp = s.high == mine ? s.low : s.high;
+          final keep = _counterFor(opp, s.highWins + s.lowWins);
           try {
             s.playOne(teams, rng, mine, liveSeed: seed, calls: live ?? const []);
             _sawTeam(s.high == mine ? s.low : s.high);
@@ -3233,6 +3306,7 @@ class Career {
             for (final p in rested) {
               p.injured = 0;
             }
+            if (keep != null) teams[opp].policy = keep;
           }
           live = null;
         } else {
@@ -5288,6 +5362,8 @@ class Career {
         if (blocksWithMe.isNotEmpty) 'wb': [for (final e in blocksWithMe.entries) [e.key, e.value]],
         if (traitSeen.isNotEmpty) 'ts': [...traitSeen],
         if (comboSecs.any((x) => x > 0)) 'cb': comboSecs,
+        if (policyGames > 0) 'pgm': policyGames,
+        if (matchupSeen.any((x) => x > 0)) 'mtu': matchupSeen,
         if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
         if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
@@ -5442,6 +5518,8 @@ class Career {
       }
       ..traitSeen = {for (final x in (j['ts'] as List? ?? const [])) x as int}
       ..comboSecs = [for (var i = 0; i < Combo.values.length; i++) (j['cb'] is List && (j['cb'] as List).length > i) ? ((j['cb'] as List)[i] as int) : 0]
+      ..policyGames = (j['pgm'] as int?) ?? 0
+      ..matchupSeen = [for (var i = 0; i < Matchup.values.length; i++) (j['mtu'] is List && (j['mtu'] as List).length > i) ? ((j['mtu'] as List)[i] as int) : 0]
       ..seenGames = {
         for (final x in (j['sg'] as List? ?? const []))
           if (x is List && x.length == 2) x[0] as int: x[1] as int,
@@ -5533,6 +5611,7 @@ class Career {
     // 前の版の保存(指名権が2年分)でも、4年分そろえる
     c._fillPicks(c.phase == Phase.contracts ? c.season + 1 : c.season);
     c.refreshPickScales();
+    c.me.familiar = c.familiarity;
     return c;
   }
 

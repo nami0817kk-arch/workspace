@@ -295,6 +295,9 @@ class Team {
   /// チームの方針(軸ごとに 0・1・2。1 が「ふつう」)。自分のチームだけ変えられる。
   List<int> policy = defaultPolicy();
 
+  /// 方針を変えずに続けた慣れで足す強さ(自分のチームだけ。保存しない。キャリアが入れる。B-2)。
+  double familiar = 0;
+
   /// 方針が強さに足す値(全部「ふつう」なら0)。
   double get policyEffect {
     if (policy.every((c) => c == 1)) return 0;
@@ -307,7 +310,7 @@ class Team {
   /// チームの強さ。力の高い順に9人を重み付きで平均し、ガードとビッグがいなければ下げる。
   /// 自分で順を決めたときは、その順で数える(力の低い選手を先発にすると弱くなる)。
   double get strength =>
-      (rotation.isEmpty && minutes.isEmpty ? teamStrength(healthy) : orderStrength(order.where((p) => p.injured == 0).toList())) + minutesEffect + coachBonus + policyEffect + chemEffect;
+      (rotation.isEmpty && minutes.isEmpty ? teamStrength(healthy) : orderStrength(order.where((p) => p.injured == 0).toList())) + minutesEffect + coachBonus + policyEffect + chemEffect + familiar;
 
   Map<String, dynamic> toJson() => {
         'i': index,
@@ -537,6 +540,7 @@ class GameResult {
     this.homeMaxLead = 0,
     this.awayMaxLead = 0,
     this.comboSecs = const [],
+    this.matchups = const [],
   });
 
   /// ホームとアウェーの最大リード(自分のチームの試合だけ。前の版の保存は 0)。
@@ -544,6 +548,9 @@ class GameResult {
 
   /// 自分のチームの組み合わせごとの、一緒に出た秒(保存しない。組み合わせを見つけるのに使う)。
   final List<int> comboSecs;
+
+  /// 自分のチームが関わった方針どうしの相性の数([Matchup] の順。保存しない)。
+  final List<int> matchups;
 
   /// 延長の点(1回目のホーム、アウェー、2回目の…)。自分のチームの試合だけ。
   final List<int> overtime;
@@ -784,11 +791,12 @@ GameResult playGame(Team home, Team away, Rng rng,
   final hStr = home.strength, aStr = away.strength;
   final p = winChance(hStr, aStr);
   final isMine = mine == home.index || mine == away.index;
+  final userSide = mine == home.index ? 0 : mine == away.index ? 1 : -1;
   // 試合の中は、この試合だけの乱数で進める(リーグの乱数は1つだけ使う)
   final simSeed = rng.next() ^ 0x5bd1e995;
   final sim = liveSeed == null
-      ? simulateGame(home, away, Rng(simSeed), homeStr: hStr, awayStr: aStr, record: isMine)
-      : simulateGame(home, away, Rng(liveSeed), homeStr: hStr, awayStr: aStr, record: isMine, calls: calls, side: mine == away.index ? 1 : 0);
+      ? simulateGame(home, away, Rng(simSeed), homeStr: hStr, awayStr: aStr, record: isMine, userSide: userSide)
+      : simulateGame(home, away, Rng(liveSeed), homeStr: hStr, awayStr: aStr, record: isMine, calls: calls, side: mine == away.index ? 1 : 0, userSide: userSide);
   final h = sim.home, a = sim.away;
   final hp = h.pts, ap = a.pts;
   final homeWins = hp > ap;
@@ -832,6 +840,7 @@ GameResult playGame(Team home, Team away, Rng rng,
     homeMaxLead: isMine ? sim.homeMaxLead : 0,
     awayMaxLead: isMine ? sim.awayMaxLead : 0,
     comboSecs: isMine ? List.of((mine == home.index ? h : a).comboSecs) : const [],
+    matchups: isMine ? List.of((mine == home.index ? h : a).matchups) : const [],
   );
   if (homeWins) {
     home.wins++;

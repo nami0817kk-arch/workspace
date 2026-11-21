@@ -60,6 +60,11 @@ void main() {
       key: _key,
       child: MaterialApp(theme: gmTheme(), debugShowCheckedModeBanner: false, home: LiveGameScreen(car: car)),
     ));
+    await t.pump(const Duration(milliseconds: 100));
+    await _save(t, '0_scouting');
+    await t.dragUntilVisible(find.byKey(const Key('live-start')), find.byType(ListView).last, const Offset(0, -200));
+    await t.tap(find.byKey(const Key('live-start')));
+    await t.pump();
     final shots = [900, 1700, 2600, 4200, 9000, 16000, for (var k = 0; k < 40; k++) 20000 + k * 150];
     var at = 0;
     for (final ms in shots) {
@@ -137,6 +142,10 @@ void main() {
         key: _key,
         child: MaterialApp(theme: gmTheme(), debugShowCheckedModeBanner: false, home: LiveGameScreen(car: car)),
       ));
+      await t.pump(const Duration(milliseconds: 100));
+      await t.dragUntilVisible(find.byKey(const Key('live-start')), find.byType(ListView).last, const Offset(0, -200));
+      await t.tap(find.byKey(const Key('live-start')));
+      await t.pump();
       var at = 0;
       for (var k = 0; k < 40; k++) {
         final ms = 6000 + k * 150;

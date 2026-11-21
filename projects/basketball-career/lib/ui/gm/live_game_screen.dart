@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../../gm/career.dart';
+import '../../gm/combos.dart';
+import '../../gm/policy.dart';
 import '../../gm/game_review.dart';
 import '../../gm/game_sim.dart';
 import '../../gm/player.dart';
@@ -40,6 +42,9 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
 
   /// 1度でも先へ進めたか(1Qを見ただけなら、やめられる)。
   bool _started = false;
+
+  /// 試合前の相手の調べを見終えて、試合を始めたか(試合画面の向上 3)。
+  bool _go = false;
 
   /// 「ここからは任せて最後まで」を押したか。
   bool _toEnd = false;
@@ -126,6 +131,13 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
       poss: (w) => _team(w).order[w.$2].pos,
     );
     _startScript();
+    if (!_go) {
+      // 始める前は、最初の攻めの持ち場に並んだところを見せる
+      final sc = _script;
+      if (sc != null) _frame.value = sc.frameAt(math.min(700, sc.duration));
+      _clock.value = '試合前';
+      return;
+    }
     if (_speeds[_speedPick] == 0) {
       _skip();
     } else if (_playing && !_ticker.isActive) {
@@ -209,6 +221,13 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
     final e = res!.events[_cur];
     _homePts = e.homePts;
     _awayPts = e.awayPts;
+    // 相手が方針を切り替えたクォーターに入ったら、知らせる
+    final prev = _cur > 0 ? res!.events[_cur - 1] : null;
+    if (prev != null && prev.period != e.period) {
+      for (final (q, k, text) in res!.switches) {
+        if (q == e.period && k == _oppSide) _log.insert(0, ('${clockText(q, q < 4 ? 720 : 300)}  相手が方針を切り替えた: $text', true));
+      }
+    }
     // 得点板と同じく、左がアウェー・右がホーム
     _log.insert(0, ('${clockText(e.period, e.clockEnd)}  ${s.line}  $_awayPts-$_homePts', s.big));
     if (_log.length > 30) _log.removeLast();
@@ -400,7 +419,9 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
                 key: ValueKey(_playing ? 'watch' : done ? 'done' : 'stop-${r.stop}'),
                 padding: const EdgeInsets.fromLTRB(6, 6, 12, 12),
                 children: [
-                  ...(_playing ? _watching() : (done ? _finish(r, diff, mineHome, homeId, awayId) : _choices())),
+                  ...(!_go ? _scouting(r) : _playing ? _watching() : (done ? _finish(r, diff, mineHome, homeId, awayId) : _choices())),
+                  if (_go && !done) ...[const SizedBox(height: 6), _oppNow(r)],
+                  if (_go && !_playing && !done) _oppSoFar(r),
                   const SizedBox(height: 10),
                   if (!_playing && !done)
                     Text('${_stopName(r.stop!)}・${diff > 0 ? '$diff点リード' : diff < 0 ? '${-diff}点ビハインド' : '同点'}',
@@ -439,6 +460,140 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
         '#${jerseyOf(p)} ${p.name}(${p.pos.short})  ${d.pts}点・${d.reb}リバウンド・${d.ast}アシスト・出場$min分${min >= 30 ? '・疲れが出てきた' : ''}',
         style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
       ),
+    );
+  }
+
+  int get _mySide => car.nextMyGame!.$1 == car.mine ? 0 : 1;
+  int get _oppSide => 1 - _mySide;
+  int get _oppTeam => _mySide == 0 ? car.nextMyGame!.$2 : car.nextMyGame!.$1;
+
+  static String _choiceName(PolicyAxis a, int c) => a.options[c.clamp(0, 2)];
+
+  /// 相手の方針が前から分かっているか(今季もう対戦した)。
+  bool get _oppKnown => (car.h2h[_oppTeam]?.take(2).fold<int>(0, (s, x) => s + x) ?? 0) > 0;
+
+  /// 試合前の相手の調べ(試合画面の向上 3)。よく使う方針・中心の型・相性・慣れ。ここで方針を変えてから始められる。
+  List<Widget> _scouting(SimResult r) {
+    final them = car.teams[_oppTeam];
+    final roles = {for (final p in them.order.take(5)) roleOf(p)};
+    final known = _oppKnown;
+    const head = TextStyle(fontSize: 12, color: GmColors.sub, fontWeight: FontWeight.bold);
+    final my = car.me.policy, their = them.policy;
+    // 分かっている相性のうち、いまの方針どうしで効くもの
+    final hints = <(String, bool)>[];
+    final found = car.matchupsFound;
+    void hint(Matchup m, bool mineAttacks) {
+      if (found.contains(m)) hints.add((m.label, (m.edge > 0) == mineAttacks));
+    }
+
+    if (known) {
+      final tp = their[PolicyAxis.defense.index], mf = my[PolicyAxis.focus.index], ms = my[PolicyAxis.passing.index];
+      if (tp == 0 && mf == 2) hint(Matchup.packVsInside, true);
+      if (tp == 0 && mf == 0) hint(Matchup.packVsOutside, true);
+      if (tp == 2 && ms == 0) hint(Matchup.pressVsAce, true);
+      if (tp == 2 && ms == 2) hint(Matchup.pressVsPass, true);
+      final md = my[PolicyAxis.defense.index], tf = their[PolicyAxis.focus.index], ts = their[PolicyAxis.passing.index];
+      if (md == 0 && tf == 2) hint(Matchup.packVsInside, false);
+      if (md == 0 && tf == 0) hint(Matchup.packVsOutside, false);
+      if (md == 2 && ts == 0) hint(Matchup.pressVsAce, false);
+      if (md == 2 && ts == 2) hint(Matchup.pressVsPass, false);
+    }
+    Widget pick(PolicyAxis a) => Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(children: [
+            SizedBox(width: 78, child: Text(a.label, style: const TextStyle(fontSize: 11.5, color: GmColors.sub))),
+            for (var c = 0; c < 3; c++)
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: ChoiceChip(
+                  key: ValueKey('scout-${a.index}-$c'),
+                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                  label: Text(a.options[c], style: const TextStyle(fontSize: 11)),
+                  selected: car.me.policy[a.index] == c,
+                  onSelected: (_) => setState(() => car.setPolicy(a.index, c)),
+                ),
+              ),
+          ]),
+        );
+    return [
+      const Text('試合前の相手の調べ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      const SizedBox(height: 4),
+      const Text('相手のよく使う方針', style: head),
+      Text(
+        known
+            ? [for (final a in [PolicyAxis.pace, PolicyAxis.focus, PolicyAxis.passing, PolicyAxis.defense]) '${a.label}: ${_choiceName(a, their[a.index])}'].join('・')
+            : '？(今季まだ対戦していない。試合が進むと打ち方から見えてくる)',
+        style: const TextStyle(fontSize: 12.5, height: 1.4),
+      ),
+      const SizedBox(height: 4),
+      const Text('相手の中心の型(先発)', style: head),
+      Text(roles.map((x) => x.label).join('・'), style: const TextStyle(fontSize: 12.5)),
+      if (hints.isNotEmpty) ...[
+        const SizedBox(height: 4),
+        const Text('分かっている相性(図鑑)', style: head),
+        for (final (t, good) in hints)
+          Text('${good ? '有利' : '不利'}: $t', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: good ? GmColors.good : GmColors.bad)),
+      ],
+      const SizedBox(height: 4),
+      Text('慣れ: +${car.familiarity.toStringAsFixed(1)}(方針を変えずに${car.policyGames}試合。変えるとゼロから)', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+      const SizedBox(height: 4),
+      const Text('こちらの方針(合わせるか、通すか)', style: head),
+      pick(PolicyAxis.focus),
+      pick(PolicyAxis.defense),
+      const SizedBox(height: 10),
+      FilledButton.icon(
+        key: const Key('live-start'),
+        onPressed: () => setState(() {
+          _go = true;
+          _run();
+        }),
+        icon: const Icon(Icons.sports_basketball_rounded),
+        label: const Text('試合を始める'),
+      ),
+    ];
+  }
+
+  /// 相手の今の方針(試合中。見た攻めから)。
+  Widget _oppNow(SimResult r) {
+    PlayEvent? att, dfn;
+    var seen = 0;
+    for (var i = 0; i < _cur && i < r.events.length; i++) {
+      final e = r.events[i];
+      if (e.side == _oppSide) {
+        att = e;
+        seen++;
+      } else {
+        dfn = e;
+      }
+    }
+    if (att == null || dfn == null || (!_oppKnown && seen < 6)) {
+      return const Text('相手の方針: 見ているところ', style: TextStyle(fontSize: 12, color: GmColors.sub));
+    }
+    return Text(
+      '相手の今の方針: ${_choiceName(PolicyAxis.focus, att.focus)}・${_choiceName(PolicyAxis.passing, att.share)}・${_choiceName(PolicyAxis.pace, att.pace)}・守りは${_choiceName(PolicyAxis.defense, dfn.press)}',
+      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: GmColors.gold),
+    );
+  }
+
+  /// 止まったときの、ここまでの相手の攻め方。
+  Widget _oppSoFar(SimResult r) {
+    var shots = 0, threes = 0, made = 0, tov = 0;
+    for (var i = 0; i < _cur && i < r.events.length; i++) {
+      final e = r.events[i];
+      if (e.side != _oppSide) continue;
+      for (final s in e.steps) {
+        if (s.kind == PlayStepKind.shot && !(s.fouled && !s.made)) {
+          shots++;
+          if (s.three) threes++;
+          if (s.made) made++;
+        }
+        if (s.kind == PlayStepKind.turnover) tov++;
+      }
+    }
+    if (shots == 0) return const SizedBox.shrink();
+    return Text(
+      'ここまでの相手: シュート$shots本(3ポイント$threes本・${(threes * 100 / shots).round()}%)・入った${(made * 100 / shots).round()}%・ミス$tov',
+      style: const TextStyle(fontSize: 12, height: 1.4),
     );
   }
 
