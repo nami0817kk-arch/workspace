@@ -34,7 +34,7 @@ class TransferMarket {
     );
     var theme = LeagueTheme.values[_rng.nextInt(LeagueTheme.values.length)];
     if (home != null && player.age < 18) theme = home;
-    player.originClubName = NamePool.themedClubNames(theme, 1).first;
+    player.originClubName = NamePool.randomClubName(theme);
     player.originLeague = theme.name;
     return player;
   }

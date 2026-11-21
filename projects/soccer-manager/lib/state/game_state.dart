@@ -202,6 +202,7 @@ part 'game_state_sponsor_slots.dart';
 part 'game_state_license.dart';
 part 'game_state_season_tickets.dart';
 part 'game_state_calendar.dart';
+part 'game_state_club_names.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -875,8 +876,9 @@ class GameState extends ChangeNotifier {
         teams = existing.teams;
       } else {
         // 5部制導入前は存在しなかったティア。新規にチームを生成する。
-        final names = NamePool.themedClubNames(
+        final names = NamePool.clubNamesForTier(
           currentLeagueTheme,
+          tier,
           teamsPerLeague,
         );
         teams = [
@@ -1158,12 +1160,19 @@ class GameState extends ChangeNotifier {
       strengthTier: userStartStrength(userStartTier),
     );
     final rng = Random();
-    final allNames = NamePool.themedClubNames(
-      theme,
-      theme.teamsByTier.fold<int>(0, (a, n) => a + n) - 1,
-    );
-    var nameIndex = 0;
-    String nextName() => allNames[nameIndex++];
+    // クラブ名は実在の今季の顔ぶれに寄せて、部ごとに決まっている
+    // (data/club_names.dart。2026-11-22)。自クラブと同じ名前は避ける。
+    final namesByTier = {
+      for (var t = 1; t <= totalDivisionTiers; t++)
+        t: NamePool.clubNamesForTier(theme, t, theme.teamsInTier(t),
+            avoid: {clubName}),
+    };
+    final nameCursor = <int, int>{};
+    String nextName(int tier) {
+      final i = nameCursor[tier] ?? 0;
+      nameCursor[tier] = i + 1;
+      return namesByTier[tier]![i];
+    }
 
     // 上位ティアほど強い(1部が最強)。部ごとの幅は division_strength.dart。
     int strengthForTier(int tier) => rollDivisionStrength(tier, rng);
@@ -1174,7 +1183,7 @@ class GameState extends ChangeNotifier {
       cpuTeams.add(
         PlayerGenerator.generateSquad(
           id: 'cpu$i',
-          name: nextName(),
+          name: nextName(userStartTier),
           strengthTier: strengthForTier(userStartTier),
         ),
       );
@@ -1191,7 +1200,7 @@ class GameState extends ChangeNotifier {
         for (int i = 0; i < theme.teamsInTier(tier); i++)
           PlayerGenerator.generateSquad(
             id: 'div${tier}_$i',
-            name: nextName(),
+            name: nextName(tier),
             strengthTier: strengthForTier(tier),
           ),
       ];

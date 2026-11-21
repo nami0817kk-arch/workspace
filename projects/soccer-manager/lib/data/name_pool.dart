@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../l10n/tr.dart';
 import '../models/league_theme.dart';
+import 'club_names.dart';
 import 'nation_names.dart';
 
 class NamePool {
@@ -378,8 +379,60 @@ class NamePool {
     return combos.toList();
   }
 
-  /// 指定したリーグテーマの雰囲気に合わせたクラブ名を[count]件、重複なく生成する。
+  /// [theme] の国のクラブ名を[count]件、重複なく返す。実在に寄せた名前
+  /// ([ClubNames]。1部から順)を先に使い、足りない分は国風の語の組み合わせで
+  /// 作る(2026-11-22)。
   static List<String> themedClubNames(LeagueTheme theme, int count) {
+    final real = ClubNames.all(theme);
+    final list = <String>[];
+    final seen = <String>{};
+    for (final n in real) {
+      if (list.length >= count) break;
+      if (seen.add(n)) list.add(n);
+    }
+    if (list.length < count) {
+      for (final g
+          in _generatedThemedClubNames(theme, (count - list.length) * 2 + 10)) {
+        if (list.length >= count) break;
+        if (seen.add(g)) list.add(g);
+      }
+    }
+    return list;
+  }
+
+  /// [theme] の国の [tier] 部のクラブ名を[count]件。[avoid] にある名前
+  /// (自クラブの名前など)は飛ばす。足りなければ国風の語の組み合わせで埋める。
+  static List<String> clubNamesForTier(
+    LeagueTheme theme,
+    int tier,
+    int count, {
+    Set<String> avoid = const {},
+  }) {
+    final list = <String>[];
+    final seen = <String>{...avoid};
+    for (final n in ClubNames.tier(theme, tier)) {
+      if (list.length >= count) break;
+      if (seen.add(n)) list.add(n);
+    }
+    if (list.length < count) {
+      for (final g
+          in _generatedThemedClubNames(theme, (count - list.length) * 2 + 10)) {
+        if (list.length >= count) break;
+        if (seen.add(g)) list.add(g);
+      }
+    }
+    return list;
+  }
+
+  /// [theme] の国のクラブ名を1つ、ばらばらに(移籍市場の選手の元の所属など)。
+  static String randomClubName(LeagueTheme theme) {
+    final all = ClubNames.all(theme);
+    return all[_rng.nextInt(all.length)];
+  }
+
+  /// 国風の語と接尾辞の組み合わせで、クラブ名を[count]件、重複なく作る
+  /// (実在に寄せた名前が足りないときの埋め草)。
+  static List<String> _generatedThemedClubNames(LeagueTheme theme, int count) {
     final words = _themedWordPool(theme);
     final suffixes = _themedSuffixPool(theme);
     final combos = <String>{};
