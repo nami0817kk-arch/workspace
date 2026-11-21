@@ -52,6 +52,7 @@ import 'package:soccer_manager/models/cup.dart';
 import 'package:soccer_manager/models/enum_json.dart';
 import 'package:soccer_manager/models/formation.dart';
 import 'package:soccer_manager/models/incoming_offer.dart';
+import 'package:soccer_manager/logic/economy_scale.dart';
 import 'package:soccer_manager/models/league.dart';
 import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/match_result.dart';
@@ -8322,9 +8323,11 @@ void main() {
     // 自クラブが初戦で敗退した場合は勝利サンプルが取れないが、その場合も
     // ループ内アサーション(敗戦時にnoteが積まれない)は検証済み。
     if (noteAtWin != null) {
-      final prize = GameState.domesticCupWinPrizeFor(roundAtWin!);
-      // 5部の額なので、そのまま。表示は formatMoney(「35万」)。
-      expect(noteAtWin, contains('$prize万'));
+      // 額は部の規模で掛かる(3部から始まる。2026-11-22)。表示は
+      // formatMoney(「505万」)。
+      final prize =
+          gameState.scaledMoney(GameState.domesticCupWinPrizeFor(roundAtWin!));
+      expect(noteAtWin, contains(formatMoney(prize)));
     }
   });
 
