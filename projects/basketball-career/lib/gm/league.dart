@@ -251,6 +251,12 @@ class Team {
     return avg((i) => m[i]) - avg((i) => i < minutesByOrder.length ? minutesByOrder[i] : 0);
   }
 
+  /// 今季のチームの得点の合計(レギュラーシーズンだけ)。
+  int pointsFor = 0;
+
+  /// 今季の1試合あたりの得点。
+  double get ppg => wins + losses == 0 ? 0 : pointsFor / (wins + losses);
+
   /// けがをしていない選手。
   List<Player> get healthy => [for (final p in roster) if (p.injured == 0) p];
 
@@ -317,6 +323,7 @@ class Team {
         'sf': staff,
         if (twoWay.isNotEmpty) 'tw': [for (final p in twoWay) p.toJson()],
         if (streak != 0) 'sk': streak,
+        if (pointsFor != 0) 'pf': pointsFor,
         if (training != 1) 'tr': training,
         if (coaches.isNotEmpty) 'co': [for (final c in coaches) c.toJson()],
         if (minutes.isNotEmpty) 'mn': [for (final e in minutes.entries) [e.key, e.value]],
@@ -324,6 +331,7 @@ class Team {
 
   static Team fromJson(Map<String, dynamic> j) => _fromJson(j)
     ..streak = (j['sk'] as int?) ?? 0
+    ..pointsFor = (j['pf'] as int?) ?? 0
     ..training = ((j['tr'] as int?) ?? 1).clamp(0, 2)
     ..chem = ((j['ch'] as int?) ?? 50).clamp(0, 100)
     ..policy = [for (var i = 0; i < PolicyAxis.values.length; i++) i < ((j['po'] as List?)?.length ?? 0) ? ((j['po'] as List)[i] as int).clamp(0, 2) : 1]
@@ -526,7 +534,12 @@ class GameResult {
     this.flow = const [],
     this.plays = const [],
     this.leadChanges = 0,
+    this.homeMaxLead = 0,
+    this.awayMaxLead = 0,
   });
+
+  /// ホームとアウェーの最大リード(自分のチームの試合だけ。前の版の保存は 0)。
+  final int homeMaxLead, awayMaxLead;
 
   /// 延長の点(1回目のホーム、アウェー、2回目の…)。自分のチームの試合だけ。
   final List<int> overtime;
@@ -600,6 +613,8 @@ class GameResult {
         if (flow.isNotEmpty) 'fl': flow,
         if (plays.isNotEmpty) 'pl': plays,
         if (leadChanges != 0) 'lc': leadChanges,
+        if (homeMaxLead != 0) 'hm': homeMaxLead,
+        if (awayMaxLead != 0) 'am': awayMaxLead,
       };
 
   static GameResult fromJson(Map<String, dynamic> j) => GameResult(
@@ -619,6 +634,8 @@ class GameResult {
         flow: [for (final x in (j['fl'] as List? ?? const [])) x as int],
         plays: [for (final x in (j['pl'] as List? ?? const [])) x as String],
         leadChanges: (j['lc'] as int?) ?? 0,
+        homeMaxLead: (j['hm'] as int?) ?? 0,
+        awayMaxLead: (j['am'] as int?) ?? 0,
       );
 }
 
@@ -808,6 +825,8 @@ GameResult playGame(Team home, Team away, Rng rng,
     flow: isMine ? sim.flow : const [],
     plays: isMine ? sim.plays : const [],
     leadChanges: isMine ? sim.leadChanges : 0,
+    homeMaxLead: isMine ? sim.homeMaxLead : 0,
+    awayMaxLead: isMine ? sim.awayMaxLead : 0,
   );
   if (homeWins) {
     home.wins++;
@@ -817,6 +836,8 @@ GameResult playGame(Team home, Team away, Rng rng,
     home.losses++;
   }
   if (count) {
+    home.pointsFor += hp;
+    away.pointsFor += ap;
     // 連勝・連敗(+なら連勝、-なら連敗)
     final (w, l) = homeWins ? (home, away) : (away, home);
     w.streak = w.streak > 0 ? w.streak + 1 : 1;

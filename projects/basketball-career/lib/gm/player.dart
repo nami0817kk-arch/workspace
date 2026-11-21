@@ -191,8 +191,8 @@ const minRoster = 10;
 /// 10万ドルを「4900万ドル」「1.4億ドル」のように見せる。
 String money(int m) {
   if (m.abs() >= 1000) {
-    final oku = m / 1000;
-    final s = (oku * 10).round() % 10 == 0 ? oku.toStringAsFixed(0) : oku.toStringAsFixed(2).replaceFirst(RegExp(r'0$'), '');
+    // 単位は10万ドルなので、小数3けたで正確に出せる(1.95億と2.04億を、どちらも「2億」にしない)
+    final s = (m / 1000).toStringAsFixed(3).replaceFirst(RegExp(r'\.?0+$'), '');
     return '$s億ドル';
   }
   return '${m * 10}万ドル';

@@ -74,8 +74,9 @@ class Profile {
       if (h.champion && c.outlook == Outlook.rebuild) Achievement.rebuildTitle,
       if (h.champion && c.history.length >= 2 && c.history[c.history.length - 2].champion) Achievement.backToBack,
       if (c.titles >= 3) Achievement.dynasty,
-      if (!c.fired && c.history.length >= 10) Achievement.fullTerm,
-      if (!c.fired && c.history.length >= 20) Achievement.longHaul,
+      // 解任されずに続けた年数(誘いを受けて移った任期は数えない)
+      if (!c.fired && c.stints.length <= 1 && c.history.length >= 10) Achievement.fullTerm,
+      if (!c.fired && c.stints.length <= 1 && c.history.length >= 20) Achievement.longHaul,
       if (c.gmLevel >= 5) Achievement.level5,
       if (c.gmLevel >= 10) Achievement.level10,
       if (h.wins >= 60) Achievement.bigSeason,
@@ -95,8 +96,10 @@ class Profile {
     final mine = [for (final s in c.playoffs) if (s.high == c.mine || s.low == c.mine) s];
     final lost = mine.fold(0, (n, s) => n + (s.high == c.mine ? s.lowWins : s.highWins));
     final n = c.history.length;
+    // 立て直しの早さは、今の任期の年数で数える
+    final stintYears = c.history.where((r) => r.season >= c.stintStart).length;
     return [
-      if (h.champion && c.startRank >= 22 && n <= 3) Achievement.quickRebuild,
+      if (h.champion && c.startRank >= 22 && stintYears <= 3) Achievement.quickRebuild,
       if (h.champion && n >= 3 && c.history[n - 2].champion && c.history[n - 3].champion) Achievement.threePeat,
       if (h.champion && starters.where((p) => c.draftedIds.contains(p.id)).length >= 3) Achievement.homegrownCore,
       if (h.champion && starters.length == 5 && age <= 25) Achievement.youngTitle,

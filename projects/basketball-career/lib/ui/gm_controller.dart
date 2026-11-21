@@ -179,7 +179,7 @@ class GmController extends ChangeNotifier {
     final c = career;
     if (c == null || c.phase != Phase.season || busy) return null;
     if (c.roundAt == blockStart(c.block)) await _maybeInterstitial();
-    final snap = BlockSnapshot.of(c);
+    final snap = _blockSnapOf(c);
     c.playBlock();
     unawaited(Sfx.play(SoundEffect.buzzer));
     await money?.tournamentPlayed();
@@ -356,12 +356,24 @@ class GmController extends ChangeNotifier {
     return ok;
   }
 
+  /// 区切りの初めの様子((シーズン, 区切り, 様子))。区切りの途中から進めても、報告は区切りの初めと比べる。
+  (int, int, BlockSnapshot)? _blockSnap;
+
+  BlockSnapshot _blockSnapOf(Career c) {
+    final s = _blockSnap;
+    if (s != null && s.$1 == c.season && s.$2 == c.block && c.roundAt != blockStart(c.block)) return s.$3;
+    final now = BlockSnapshot.of(c);
+    // 控えが無い(アプリを開き直した)ときは、今の様子を区切りの初めの代わりにする
+    _blockSnap = (c.season, c.block, now);
+    return now;
+  }
+
   /// 1週間進める。区切りの終わりに着いたときだけ報告を返す。
   Future<BlockReport?> playWeek() async {
     final c = career;
     if (c == null || c.phase != Phase.season || busy) return null;
     if (c.roundAt == blockStart(c.block)) await _maybeInterstitial();
-    final snap = BlockSnapshot.of(c);
+    final snap = _blockSnapOf(c);
     final starters = _healthyStarters(c);
     final ended = c.playWeek();
     injuryStop = c.phase == Phase.season ? _newlyHurt(c, starters) : null;
@@ -376,7 +388,7 @@ class GmController extends ChangeNotifier {
   Future<BlockReport?> playLive(List<GameCall?> calls) async {
     final c = career;
     if (c == null || c.phase != Phase.season || busy || c.nextMyGame == null) return null;
-    final snap = BlockSnapshot.of(c);
+    final snap = _blockSnapOf(c);
     final starters = _healthyStarters(c);
     final ended = c.playLiveDay(calls);
     injuryStop = c.phase == Phase.season ? _newlyHurt(c, starters) : null;
