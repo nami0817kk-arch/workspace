@@ -1,0 +1,145 @@
+# 物語完結型ショート 千姫 s2（2026-11-21）。本編 scripts/senhime-story.yaml（11/27 19:00 公開予定、https://youtu.be/kFCIQA38bMI）から。11/28 12:30 に予約。
+# 形式は pompeii_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード 千姫_facts_20261121.yaml）。
+# 絵：本編の AI 絵（out/story/senhime/main/ の S・R）の切り出しだけ。新しい絵は作らない。過去回から写した R04（雪の江戸城の煙）は使わない。
+# 切り口：姫路で幸千代を亡くし、そのあとの不幸を秀頼の恨みと言われた（本編 第2章、senhime-20・22・25・26・27）。
+# 計算（数え直した）：幸千代 1619生→1621没＝数え3。忠刻 1596生→1626＝数え31。千姫 1597生→1626＝数え30。
+# tease の答え：天樹院が建て直した東慶寺と、秀頼の娘・天秀（本編 第4章 senhime-42・43）。
+title: "千姫｜姫路で、最初の夫の祟りから解かれるよう祈った"
+yt_title: "千姫は姫路で、なぜ秀頼の祟りから解かれるよう祈ったのか　数えで3歳で亡くなった息子・幸千代"
+description: |-
+  1616年、大坂城から救い出された千姫は、本多忠刻に嫁ぎ、翌年、姫路へ移りました。1618年に娘の勝姫、翌年に男の子の幸千代が生まれます。
+  ところが1621年、幸千代は数えで3歳で亡くなります。姫路市の解説によれば、千姫はそのあと流産を繰り返し、占い師はそれを、最初の夫・豊臣秀頼の恨みの魂のせいだと言いました。
+  千姫は観音像を作らせ、秀頼の祟りから解かれるよう願う祈りの文を納めたといいます。1626年には、夫の忠刻も数えで31歳で亡くなりました。
+  本編では、そのあと江戸で天樹院として過ごした40年と、秀頼の娘を守った寺の話までたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#千姫"
+- "#姫路城"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/senhime
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: senhime_story_s2
+header:
+  tag: "千姫（徳川家康の孫）"
+  title: "姫路の不幸は、《秀頼の恨み》と言われた"
+now:
+- {at: "1616年", text: "1616年　桑名", point: 0}
+- {at: "姫路へ", text: "1617年　姫路", point: 0}
+- {at: "1621年", text: "1621年　姫路", point: 1}
+- {at: "1626年", text: "1626年　姫路", point: 2}
+timeline:
+- {label: "1616"}
+- {label: "1621"}
+- {label: "1626"}
+shots:
+  S08_1:
+    kind: "ai"
+    file: "senhime/main/S08.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "S08"
+  S07_2:
+    kind: "ai"
+    file: "senhime/main/S07.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "S07"
+  S10_3:
+    kind: "ai"
+    file: "senhime/main/S10.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "S10"
+  S13_4:
+    kind: "ai"
+    file: "senhime/main/S13.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "S13"
+  S09_5:
+    kind: "ai"
+    file: "senhime/main/S09.jpg"
+    focus: [0.7, 0.5]
+    move: "right"
+    must: "S09"
+  R05_6:
+    kind: "ai"
+    file: "senhime/main/R05.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "R05"
+  S12_7:
+    kind: "ai"
+    file: "senhime/main/S12.jpg"
+    focus: [0.6, 0.5]
+    move: "right"
+    must: "S12"
+  S13_8:
+    kind: "ai"
+    file: "senhime/main/S13.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "S13"
+  R12_9:
+    kind: "ai"
+    file: "senhime/main/R12.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "R12"
+lines:
+  # fact: senhime-26
+- 語り: "千姫は、大坂城から救い出された家康の孫。姫路で、なぜ、最初の夫の祟りから解かれるよう、祈ったのか。"
+  shot: S08_1
+  tone: 強調
+  pause: 0.12
+  # fact: senhime-20
+- 語り: "1616年に、千姫は、本多忠刻に嫁いだ。最初の夫は、豊臣秀頼だ。"
+  shot: S07_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-22, senhime-25
+- 語り: "翌年に、本多家は姫路へ移る。1618年に娘の勝姫が、翌年には男の子、幸千代が生まれた。"
+  shot: S10_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-25
+- 語り: "ところが1621年。幸千代は、数えで3歳で、亡くなる。"
+  shot: S13_4
+  tone: 重い
+  pause: 0.12
+  # fact: senhime-26
+- 語り: "姫路市の説明では、千姫は、そのあと、流産を繰り返した。占い師は、それを、秀頼の恨みの魂のせいだ、と言った。"
+  shot: S09_5
+  tone: 重い
+  pause: 0.12
+  # fact: senhime-26
+- 語り: "千姫は、観音像を作らせた。中に納めたのは、秀頼の祟りから、解かれることを願う祈りの文だった、という。"
+  shot: R05_6
+  tone: 重い
+  pause: 0.12
+  # fact: senhime-26
+- 語り: "1623年には、男山に天満宮を建てさせた。毎日、手を合わせた、と伝わる。"
+  shot: S12_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-27
+- 語り: "そして1626年。夫の忠刻が、数えで31歳で亡くなる。千姫は、数えで30歳だった。"
+  shot: S13_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第4章（東慶寺と天秀、senhime-42・43）
+- 語り: "千姫はのちに、秀頼が残した、ある人のために力を尽くす。それは、誰だったのか。"
+  shot: R12_9
+  tone: 疑問
+  pause: 0.15
