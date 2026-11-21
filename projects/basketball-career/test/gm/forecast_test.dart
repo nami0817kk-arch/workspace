@@ -47,7 +47,8 @@ void main() {
       // 答えたほうと答えないほうで、試合の結果は同じ(予想は乱数を使わない)
       expect(a.me.wins, b.me.wins);
       expect(a.confRank, b.confRank);
-      final beat = a.confRank < rank;
+      // 1位の予想は「1位で終えたら果たした」(外れ扱いで比べない)
+      final beat = rank == 1 ? a.confRank == 1 : a.confRank < rank;
       if (beat) {
         beatSeen = true;
         expect(a.hype, greaterThan(b.hype));

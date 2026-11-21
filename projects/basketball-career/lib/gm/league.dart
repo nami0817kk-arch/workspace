@@ -536,10 +536,14 @@ class GameResult {
     this.leadChanges = 0,
     this.homeMaxLead = 0,
     this.awayMaxLead = 0,
+    this.comboSecs = const [],
   });
 
   /// ホームとアウェーの最大リード(自分のチームの試合だけ。前の版の保存は 0)。
   final int homeMaxLead, awayMaxLead;
+
+  /// 自分のチームの組み合わせごとの、一緒に出た秒(保存しない。組み合わせを見つけるのに使う)。
+  final List<int> comboSecs;
 
   /// 延長の点(1回目のホーム、アウェー、2回目の…)。自分のチームの試合だけ。
   final List<int> overtime;
@@ -827,6 +831,7 @@ GameResult playGame(Team home, Team away, Rng rng,
     leadChanges: isMine ? sim.leadChanges : 0,
     homeMaxLead: isMine ? sim.homeMaxLead : 0,
     awayMaxLead: isMine ? sim.awayMaxLead : 0,
+    comboSecs: isMine ? List.of((mine == home.index ? h : a).comboSecs) : const [],
   );
   if (homeWins) {
     home.wins++;

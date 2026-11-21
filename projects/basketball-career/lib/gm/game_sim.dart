@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'combos.dart';
 import 'league.dart';
 import 'personality.dart';
 import 'player.dart';
@@ -52,6 +53,8 @@ class SimTeam {
       for (final p in order) [for (final a in Attr.values) badgeTierOf(p, a)],
     ];
     clutch = [for (final p in order) hasTrait(p, Trait.clutch)];
+    roles = [for (final p in order) roleOf(p)];
+    bigs = [for (final p in order) p.pos.big];
     form = List.filled(n, 0.0);
     final usageExp = const [1.75, 1.4, 1.1][share];
     wUse = [for (var i = 0; i < n; i++) _pow((out[i] + ins[i]) / 2 - 40, usageExp)];
@@ -79,6 +82,17 @@ class SimTeam {
 
   /// 大舞台に強い選手か。
   late final List<bool> clutch;
+
+  /// 選手の型と、大型(PF・C)か(組み合わせ B-1 を見るため)。
+  late final List<Role> roles;
+  late final List<bool> bigs;
+
+  /// いまのコートの5人の組み合わせと、その攻め・守りの足し引き(チームの強さの単位)。
+  List<Combo> combos = const [];
+  double comboOff = 0, comboDef = 0;
+
+  /// 組み合わせごとの、この試合で一緒に出た秒([Combo] の順)。
+  final comboSecs = List<int>.filled(Combo.values.length, 0);
 
   /// その試合の調子(シュートの入る見込みの±。性格で幅が変わる)。
   late List<double> form;
@@ -155,6 +169,9 @@ class SimTeam {
     cStl = stl / n;
     cPerD = perD / n;
     cIntD = intD / n;
+    combos = combosOf([for (final i in c) roles[i]], [for (final i in c) bigs[i]]);
+    comboOff = combos.fold(0.0, (s, x) => s + x.off);
+    comboDef = combos.fold(0.0, (s, x) => s + x.def);
     cOut = o / n;
     cIns = i2 / n;
     cPas = pa / n;
@@ -517,10 +534,13 @@ SimResult simulateGame(Team home, Team away, Rng r,
         me.boostLeft -= used;
         if (me.boostLeft <= 0) me.boost = 0;
       }
-      // 出ている時間を数える
+      // 出ている時間を数える(組み合わせの時間も)
       for (final t in teams) {
         for (final i in t.court) {
           t.secs[i] += used;
+        }
+        for (final x in t.combos) {
+          t.comboSecs[x.index] += used;
         }
       }
       final before = o.pts;
@@ -605,7 +625,8 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play, [Play
   final oc = o.court, dc = d.court;
   if (oc.isEmpty || dc.isEmpty) return;
   // チームの強さの差と、いまコートにいる5人がチームの平均よりどれだけ強いか
-  final diff = ((o.str + o.boost) - (d.str + d.boost)) + 0.35 * ((o.cOvr - o.avgOvr) - (d.cOvr - d.avgOvr));
+  // 組み合わせ(B-1): 攻める5人の型のかみ合いと、守る5人の守りのかみ合い
+  final diff = ((o.str + o.boost) - (d.str + d.boost)) + 0.35 * ((o.cOvr - o.avgOvr) - (d.cOvr - d.avgOvr)) + o.comboOff - d.comboDef;
   final edge = diff * edgePerStrength;
   final press = d.press; // 0 中を固める / 2 前から当たる
   final focus = o.focus; // 0 外 / 2 中
