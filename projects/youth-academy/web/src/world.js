@@ -15,6 +15,9 @@
     return { month: MONTHS[m], nth: week - first + 1 };
   };
   YA.WEEKS = WEEKS;
+  // 週の呼び方を画面どこでも「7月第1週」にそろえる（2026-11-21：お知らせや最近のことは「11週」と出ていた）
+  YA.wkName = (week) => { if (!week) return ''; const c = YA.calendar(week); return `${c.month}第${c.nth}週`; };
+  YA.ywName = (y, week) => `${y}年目 ${YA.wkName(week)}`;
 
   // ---------- 能力の分類・特性の覚えやすさ ----------
   YA.TRAIT_AFF = {

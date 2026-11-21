@@ -306,10 +306,42 @@
       const pts = t.lineup.map((sl) => at(sl.x, sl.y));
       const overlays = [];
       const near = (i, fx) => pts.some((q, j) => j !== i && fx(q.sx - pts[i].sx, q.sy - pts[i].sy));
+      // 名前の札どうしの重なりをほどく（2026-11-21：横に並んだ「小林」と「山本」がまだ重なっていた）。
+      // まず上か下かを決め、札の箱が重なる組は下の子を反対側へ。それでも重なれば左右へ押し分ける
+      const NAME_UP = -5.8, NAME_DOWN = 8.6;
+      const nm = t.lineup.map((sl, i) => { const s0 = surname(t.players[sl.pid]); return { off: near(i, (dx, dy) => Math.abs(dx) < 11 && dy < 0 && dy > -13) ? NAME_DOWN : NAME_UP, dx: 0, w: s0.length * 3.4 + 1 }; });
+      const hit = (i, j) => Math.abs((pts[i].sx + nm[i].dx) - (pts[j].sx + nm[j].dx)) < (nm[i].w + nm[j].w) / 2 && Math.abs((pts[i].sy + nm[i].off) - (pts[j].sy + nm[j].off)) < 3.8;
+      for (let k = 0; k < 4; k++) for (let i = 0; i < nm.length; i++) for (let j = i + 1; j < nm.length; j++) {
+        if (!hit(i, j)) continue;
+        const b = pts[j].sy >= pts[i].sy ? j : i;
+        nm[b].off = nm[b].off === NAME_UP ? NAME_DOWN : NAME_UP;
+        if (!hit(i, j)) continue;
+        nm[b].off = nm[b].off === NAME_UP ? NAME_DOWN : NAME_UP;
+        const gap = (nm[i].w + nm[j].w) / 2 - Math.abs((pts[i].sx + nm[i].dx) - (pts[j].sx + nm[j].dx)) + 0.4;
+        const sgn = pts[j].sx + nm[j].dx >= pts[i].sx + nm[i].dx ? 1 : -1;
+        nm[i].dx -= sgn * gap / 2; nm[j].dx += sgn * gap / 2;
+      }
+      // 名前が隣の子の位置の札（丸の右の「CB◎20」）に重なるときも、上下を替えるか横へ逃がす
+      const posBox = (j) => (near(j, (dx, dy) => dx > 0 && dx < 17 && Math.abs(dy) < 6) ? null : { x0: pts[j].sx + 5.1, x1: pts[j].sx + 16.5, y0: pts[j].sy - 1.4, y1: pts[j].sy + 1.8 });
+      const onPos = (i, j) => { const q = posBox(j); if (!q) return false; const cx = pts[i].sx + nm[i].dx, cy = pts[i].sy + nm[i].off; return cx + nm[i].w / 2 > q.x0 && cx - nm[i].w / 2 < q.x1 && cy > q.y0 - 0.6 && cy - 3 < q.y1; };
+      // ぶつかる数がいちばん少ない置き場所（上か下・左右に少しずらす）を選ぶ。ぶつからなければ動かさない
+      const clash = (i) => nm.reduce((c, x, k) => c + (k !== i && (hit(i, k) || onPos(i, k)) ? 1 : 0), 0);
+      for (let r = 0; r < 2; r++) for (let i = 0; i < nm.length; i++) {
+        if (!clash(i)) continue;
+        const o0 = nm[i].off, d0 = nm[i].dx;
+        let best = null;
+        for (const off of [o0, o0 === NAME_UP ? NAME_DOWN : NAME_UP]) for (const dd of [0, -3, 3, -6, 6, -9, 9]) {
+          nm[i].off = off; nm[i].dx = d0 + dd;
+          const c = clash(i);
+          if (!best || c < best.c) best = { c, off, dx: d0 + dd };
+          if (!c) break;
+        }
+        nm[i].off = best.off; nm[i].dx = best.dx;
+      }
       t.lineup.forEach((sl, i) => {
         const p = t.players[sl.pid];
         const { sx, sy } = at(sl.x, sl.y);
-        const nameBelow = near(i, (dx, dy) => Math.abs(dx) < 11 && dy < 0 && dy > -13);
+        const nameBelow = nm[i].off === NAME_DOWN;
         const posAlt = near(i, (dx, dy) => dx > 0 && dx < 17 && Math.abs(dy) < 6);
         const pos = YA.posOfSlot(sl, i);
         const p15 = YA.pos15OfSlot(sl, i);
@@ -320,7 +352,7 @@
         // 適性が合っていない枠は、丸のふちを黄（△）・赤（×）にする
         const ring = grade === '×' ? '#ff4d4d' : grade === '△' ? '#ffd54a' : '#fff';
         g.append(s('circle', { r: 4.6, cx: 0.4, cy: 0.9, fill: 'rgba(0,0,0,.3)' }), s('circle', { r: 4.6, fill: colors[pos], stroke: ring, 'stroke-width': ring === '#fff' ? 0.9 : 1.5 }), s('text', { y: 1.7, 'text-anchor': 'middle', fill: '#fff', 'font-size': 4.6, 'font-weight': 900 }, p.num));
-        g.append(lab(nameBelow ? 8.6 : -5.8, '#fff', 3.4, surname(p)));
+        { const tl = lab(nm[i].off, '#fff', 3.4, surname(p)); if (nm[i].dx) tl.setAttribute('x', nm[i].dx.toFixed(2)); tl.setAttribute('class', 'bname'); g.append(tl); }
         // ポジション名と適性は丸の右に（縦に並ぶ最終ラインでも、名前と重ならない）
         // GK も適性が合っていないときは記号を出す（ふちの色だけでは分からない。2026-11-17 点検）
         if (p15 !== 'GK' || grade === '△' || grade === '×') g.append(s('text', Object.assign({ x: 5.3, y: 1.1, 'text-anchor': 'start', fill: ring === '#fff' ? '#fff6c2' : ring, 'font-size': 2.8, 'font-weight': 900, stroke: 'rgba(0,0,0,.55)', 'stroke-width': 0.8, 'paint-order': 'stroke' }, posAlt ? { x: 0, y: nameBelow ? -5.6 : 8.2, 'text-anchor': 'middle' } : {}), YA.POS_LABEL[p15] + (p15 === 'GK' ? grade : YA.aptLabel(p.apt ? p.apt[p15] : 17))));
@@ -993,7 +1025,7 @@
     const kick = h('div', { class: 'kick' },
       h('button', { class: 'btn pri', style: 'flex:1;font-size:14px', onclick: () => { persistTeam(t); startMatch(t, oppTeam, opp, sched); } }, 'キックオフ'),
       // 見ずに結果まで進める。試合中の「結果まで」と名前をそろえ、確かめてから進める（2026-11-17）
-      h('button', { class: 'btn sm', style: 'margin-left:10px', onclick: () => { persistTeam(t); YA.confirmBox('試合を見ずに、結果まで進めますか？（交代・指示はできません）', '結果まで進める', () => simulateAll(t, oppTeam, opp, sched)); } }, '結果まで'));
+      h('button', { class: 'btn sm', style: 'margin-left:10px', onclick: () => { persistTeam(t); YA.confirmBox('試合を見ずに、結果まで進めますか？（交代・指示はできません）', () => simulateAll(t, oppTeam, opp, sched), { yes: '結果まで進める', skip: 'skipmatch' }); } }, '結果まで'));
     top.append(kick);
     const panel = tacticPanel(t, { tabs: [['squad', '編成'], ['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
     preState = panel.state;
@@ -1060,7 +1092,7 @@
     const autoBtn = h('button', { class: 'btn sm', style: 'min-height:34px;white-space:nowrap' });
     // 「結果まで」は確かめてから。止めるボタンから離して、時計の隣に置く（2026-11-17：前は確かめずに試合を飛ばし、止めるの2つ隣だった）
     const skipNow = () => { cleanupPlay(); let e; let g = 0; while (!m.finished && g++ < 5000) { const ev = m.step(); if (ev.type === 'full') e = ev; } finishMatch(m, e); app.view = 'result'; render(); };
-    const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px;white-space:nowrap', onclick: () => { if (!play) return; const was = play.paused; play.paused = true; YA.confirmBox('残りを見ずに、結果まで進めますか？（交代・指示はできません）', '結果まで進める', skipNow, () => { if (play) play.paused = was; }); } }, '結果まで');
+    const skipBtn = h('button', { class: 'btn sm', style: 'min-height:34px;white-space:nowrap', onclick: () => { if (!play) return; const was = play.paused; play.paused = true; YA.confirmBox('残りを見ずに、結果まで進めますか？（交代・指示はできません）', skipNow, { yes: '結果まで進める', skip: 'skipmatch', no: () => { if (play) play.paused = was; } }); } }, '結果まで');
     const speeds = h('div', { class: 'speeds' });
     const top = h('div', { class: 'topbar' }, h('div', { class: 'scoreboard' }, YA.emblemEl(app.w, m.home.name, 18), h('span', { class: 'tn' }, m.home.short), scoreHome, h('span', { style: 'color:#8fa3c4' }, '-'), scoreAway, h('span', { class: 'tn' }, m.away.short), YA.emblemEl(app.w, m.away.name, 18)), clock, skipBtn, h('div', { class: 'grow' }), speeds, autoBtn, stopBtn);
     const stage = h('div', { class: 'stage' });

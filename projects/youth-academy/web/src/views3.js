@@ -137,6 +137,10 @@
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '試合の自動停止（前半終了・得点・失点・残り15分）'), h('button', { class: 'btn sm' + (app.autoStop ? ' on' : ''), onclick: () => { app.autoStop = !app.autoStop; store.set('autoStop', app.autoStop); rerender(); } }, app.autoStop ? 'ON' : 'OFF')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, '効果音'), h('button', { class: 'btn sm' + (YA.sfx.on ? ' on' : ''), onclick: () => { YA.sfx.on = !YA.sfx.on; store.set('sfx', YA.sfx.on); YA.sfx.play('tap'); rerender(); } }, YA.sfx.on ? 'ON' : 'OFF')));
     body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, 'BGM（ホームと試合で曲が変わります）'), h('button', { class: 'btn sm' + (YA.bgm.on ? ' on' : ''), onclick: () => { YA.bgm.setOn(!YA.bgm.on); store.set('bgm', YA.bgm.on); rerender(); } }, YA.bgm.on ? 'ON' : 'OFF')));
+    for (const [k, n] of YA.ASK_SKIPS || []) {
+      const on = store.get('ask.' + k, true) !== false;
+      body.append(h('div', { class: 'row', style: 'margin:6px 0' }, h('span', { class: 'grow' }, n), h('button', { class: 'btn sm' + (on ? ' on' : ''), 'data-ask': k, onclick: () => { store.set('ask.' + k, !on); rerender(); } }, on ? '出す' : '出さない')));
+    }
     fontAndNotices(body, 'font');
   };
   function saveShop(body) {
@@ -333,7 +337,7 @@
     // 結果は勝ち・引き分け・負けで色を分ける
     const rs = (w.resultsB || []).slice(-8).reverse();
     const wdl = (r) => (r.gf > r.ga ? ['勝', '#1e6b37', '#e6f5ea'] : r.gf < r.ga ? ['負', '#b02020', '#fdeaea'] : ['分', '#5b6b85', '#eef2f8']);
-    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの最近の結果'), ...(rs.length ? [h('div', { class: 'plist', style: 'gap:2px;margin-top:3px' }, rs.map((r) => { const [t, fg, bg] = wdl(r); return h('div', { class: 'pitem', style: 'cursor:default;gap:8px;padding:3px 8px;min-height:0;font-size:12px' }, h('span', { style: `background:${bg};color:${fg};font-weight:900;border-radius:5px;padding:0 6px;flex:none` }, t), h('b', { style: `color:${fg};width:34px;flex:none` }, `${r.gf}-${r.ga}`), h('span', { class: 'grow' }, `vs ${r.opp}`), h('span', { class: 'sub' }, `${r.year}年目${r.week}週`)); }))] : [h('div', { class: 'note' }, 'まだ試合がありません')]));
+    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'Bの最近の結果'), ...(rs.length ? [h('div', { class: 'plist', style: 'gap:2px;margin-top:3px' }, rs.map((r) => { const [t, fg, bg] = wdl(r); return h('div', { class: 'pitem', style: 'cursor:default;gap:8px;padding:3px 8px;min-height:0;font-size:12px' }, h('span', { style: `background:${bg};color:${fg};font-weight:900;border-radius:5px;padding:0 6px;flex:none` }, t), h('b', { style: `color:${fg};width:34px;flex:none` }, `${r.gf}-${r.ga}`), h('span', { class: 'grow' }, `vs ${r.opp}`), h('span', { class: 'sub' }, YA.ywName(r.year, r.week))); }))] : [h('div', { class: 'note' }, 'まだ試合がありません')]));
   };
   YA.nameBlock = function (body) {
     const app = U().app;
@@ -350,14 +354,23 @@
     for (const t of w.league.teams.filter((x) => !x.me)) body.append(h('div', { class: 'row', style: 'margin:3px 0' }, h('span', { class: 'grow', style: 'font-size:11.5px' }, t.name), h('button', { class: 'btn sm', onclick: () => ask('相手クラブの名前を変える', t.name, (v) => YA.renameTeam(w, t.id, v)) }, '変更')));
   };
   // 確認の窓。o.yes＝確定のボタンの言葉（動詞で。「はい」にしない）、o.danger＝取り返せない操作（確定は赤、「やめる」を主ボタンに）、o.note＝添え書き
-  function confirmBox(text, ok, o) {
-    // 試合の画面は (文, 確定の言葉, 関数) の形で呼ぶ（試合の直しと画面の直しを合わせた）
-    if (typeof ok === 'string') { const yes = ok; ok = o; o = { yes }; }
+  // o.skip＝「次回から聞かない」を付ける鍵（取り返せる操作だけ。端末の store に 'ask.<鍵>'=false で残る）。o.no＝やめたときの関数
+  function confirmBox(text, ok, o, no) {
+    // 試合の画面は (文, 確定の言葉, 関数, やめたとき) の形で呼ぶ（試合の直しと画面の直しを合わせた）
+    if (typeof ok === 'string') { const yes = ok; ok = o; o = { yes, no }; }
     o = o || {};
     const danger = !!o.danger;
+    const store = U().store;
+    const skip = o.skip && !danger ? 'ask.' + o.skip : null;
+    if (skip && store.get(skip, true) === false) { ok(); return; }
+    let quiet = false;
+    const box = skip ? h('input', { type: 'checkbox', onchange: (e) => { quiet = !!e.target.checked; } }) : null;
     V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(420px,95%);padding:12px;gap:8px' }, h('div', { class: 'h' }, text), o.note ? h('div', { class: 'note' }, o.note) : null,
-      h('div', { class: 'row' }, h('button', { class: 'btn' + (danger ? ' pri' : ''), onclick: close }, 'やめる'), h('button', { class: 'btn ' + (danger ? 'danger' : 'pri'), onclick: () => { close(); ok(); } }, o.yes || '決める'))));
+      box ? h('label', { class: 'row', style: 'gap:6px;font-size:12.5px;cursor:pointer;min-height:30px' }, box, '次回から聞かない（設定の「表示と音」で戻せます）') : null,
+      h('div', { class: 'row' }, h('button', { class: 'btn' + (danger ? ' pri' : ''), onclick: () => { close(); if (o.no) o.no(); } }, 'やめる'), h('button', { class: 'btn ' + (danger ? 'danger' : 'pri'), onclick: () => { if (skip && quiet) store.set(skip, false); close(); ok(); } }, o.yes || '決める'))));
   }
+  // 「次回から聞かない」にした確認（設定の「表示と音」で戻す）
+  YA.ASK_SKIPS = [['skipmatch', '試合を見ずに「結果まで」進めるときの確認']];
   YA.confirmBox = confirmBox;
   function switchSlot(i) {
     const app = U().app;

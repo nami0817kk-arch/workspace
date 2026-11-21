@@ -218,6 +218,8 @@ async function clearEvents() {
   // 選手
   rail('選手');
   ok(txt().includes('進路') && txt().includes('様子') && txt().includes('特性') && txt().includes('性格'), '選手の詳細（能力・様子・進路）');
+  { const hd = d.querySelector('#main .plhead'); ok(!!hd && ['名前', '学年', '総合'].every((x) => hd.textContent.includes(x)) && /伸び|将来/.test(hd.textContent), '選手一覧の数字に見出し（2026-11-21）'); }
+  ok(w.YA.wkName(1) === '4月第1週' && /^\d+年目 \d+月第\d週$/.test(w.YA.ywName(2, 11)), '週の呼び方は「4月第1週」の形（2026-11-21） ' + w.YA.ywName(2, 11));
   // 2026-11-19「能力値とかはいらない。FM の選手概要欄を参考にして」：最初に開くのは概要。能力の数字の棒は出さない
   {
     const ov = d.querySelector('#main .pdetail .overview');
@@ -300,6 +302,13 @@ async function clearEvents() {
   ok(txt().includes('信頼度') && txt().includes('今年の目標') && !txt().includes('undefined'), 'クラブの概要（信頼度の名前が出る）');
   ok(txt().includes('指導の方針') && txt().includes('強化部長') && txt().includes('寄り添い'), 'クラブの概要に指導の方針と強化部長');
   ok(txt().includes('中長期の計画'), 'クラブの概要に中長期の計画');
+  // 2026-11-21：クラブのやり残しは、どの小タブかに赤い点
+  {
+    const subs = w.YA.todoSubs(A.w);
+    const dots = [...d.querySelectorAll('#main .tabs .btn')].filter((b) => b.querySelector('.subdot')).map((b) => b.textContent.trim());
+    const SUBN = { int: '内部昇格', sel: 'セレクション', scout: 'スカウト', over: '概要' };
+    ok(Object.keys(subs).every((k) => dots.includes(SUBN[k]) || A.ct === k), 'クラブのやり残しの小タブに赤い点 ' + Object.keys(subs).join(',') + ' / ' + dots.join(','));
+  }
   for (const k of ['予算と施設', 'スタッフ', 'スカウト', '順位と日程', '概要']) {
     btn(k).click();
     await sleep(10);
@@ -307,7 +316,7 @@ async function clearEvents() {
     if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補') && txt().includes('監督との関係') && txt().includes('得意は'), 'スタッフの画面（性格・得意・関係が出る）');
     if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
     if (k === '順位と日程') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
-    if (k === '順位と日程') ok(/今年の日程（いま\d+週）/.test(txt()) && txt().includes('セレクション') && txt().includes('卒業式') && [...d.querySelectorAll('#main .chip')].some((c) => c.textContent === '今'), '今年の日程は表で、今週の行に印（2026-11-16）');
+    if (k === '順位と日程') ok(/今年の日程（いま\d+月第\d+週）/.test(txt()) && txt().includes('セレクション') && txt().includes('卒業式') && [...d.querySelectorAll('#main .chip')].some((c) => c.textContent === '今'), '今年の日程は表で、今週の行に印（2026-11-16）');
     if (k === 'スタッフ') ok(/（いま .+・能力\d+）/.test(txt()) && /[+-]?\d+・給料[+−]/.test(txt()), 'スタッフ候補は役ごとに、いまのスタッフとの差を1行で（2026-11-18）');
     // 2026-11-17：お金は YA.yen（「万」だけの表示をしない）
     if (k === '予算と施設' || k === 'スタッフ' || k === 'スカウト') { const mt = d.getElementById('main').textContent; ok(!/\d万(?![円人回])/.test(mt), 'お金の表示に「万」だけが出ない（' + k + '） ' + ((mt.match(/.{0,8}\d万(?![円人回]).{0,4}/) || [''])[0])); }
@@ -505,7 +514,17 @@ async function clearEvents() {
   ok(!d.querySelector('.sheet'), '再開でパネルが閉じる');
   btn('結果まで').click();
   ok(txt().includes('結果まで進めますか'), '結果までは確かめてから進む');
+  // 2026-11-21「確認タブ毎回出るの面倒」：やめると試合は止まる前の状態に戻り、「次回から聞かない」を選べる
+  {
+    btn('やめる', d.querySelector('.sheet')).click();
+    ok(!d.querySelector('.sheet'), '結果までの確認は「やめる」で閉じる');
+    btn('結果まで').click();
+    const cb = d.querySelector('.sheet input[type=checkbox]');
+    ok(!!cb && txt().includes('次回から聞かない'), '結果までの確認に「次回から聞かない」');
+    cb.checked = true; cb.dispatchEvent(new w.Event('change'));
+  }
   btn('結果まで進める').click();
+  ok(w.YA._ui.store.get('ask.skipmatch', true) === false, '「次回から聞かない」を選ぶと覚える');
   ok(txt().includes('見どころ') && txt().includes('気づき') && txt().includes('採点'), '試合後の画面');
   ok(A.w.phase === 'after' && A.w.rec.w + A.w.rec.d + A.w.rec.l === 1, '試合の結果が名簿の世界に入る');
   btn('ホームへ（次の週へ）').click();
@@ -569,6 +588,12 @@ async function clearEvents() {
     ok(['表示と音', 'お知らせ', '名前', 'セーブ・ショップ'].every((x) => !!btn(x, d.querySelector('.settabs'))), '設定は4つの小タブ');
     btn('表示と音', d.querySelector('.settabs')).click();
     ok(txt().includes('効果音') && txt().includes('文字の大きさ') && !txt().includes('セーブ枠（'), '設定の表示と音');
+    {
+      const ab = d.querySelector('[data-ask="skipmatch"]');
+      ok(!!ab && ab.textContent === '出さない', '設定に「結果まで」の確認の出す・出さない（聞かないにしたまま）');
+      ab.click();
+      ok(w.YA._ui.store.get('ask.skipmatch', true) === true && d.querySelector('[data-ask="skipmatch"]').textContent === '出す', '設定で「結果まで」の確認を出すに戻せる');
+    }
     btn('セーブ・ショップ', d.querySelector('.settabs')).click();
     ok(txt().includes('セーブ枠') && !!btn('書き出す') && !!btn('復元する'), '設定の画面');
     ok(txt().includes('点検用：新しい世界でシミュレーション') && !!btn('実行') && !!btn('10年'), '点検用シミュレーションの設定');
