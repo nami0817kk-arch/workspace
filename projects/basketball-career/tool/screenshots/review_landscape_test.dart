@@ -207,6 +207,10 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(btn);
       await t.pumpAndSettle();
+      // 試合前の相手の調べから始める
+      await t.dragUntilVisible(find.byKey(const Key('live-start')), find.byType(ListView).last, const Offset(0, -200));
+      await t.tap(find.byKey(const Key('live-start')));
+      await t.pumpAndSettle();
       // 1Qの終わりで止まる(采配はクォーターの区切りとタイムアウトだけ)
       await t.tap(find.text('外から打つ'));
       await t.pumpAndSettle();
