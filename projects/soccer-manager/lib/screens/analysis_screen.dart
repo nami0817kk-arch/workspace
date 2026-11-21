@@ -5,6 +5,8 @@ import '../logic/season_analysis_engine.dart';
 import '../state/game_state.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/auto_columns.dart';
+import '../widgets/responsive_body.dart';
 
 /// 今シーズンの傾向を見る画面。
 ///
@@ -63,61 +65,65 @@ class AnalysisScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(Tr.pick('シーズン分析', 'Season analysis'))),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _Section(
-            title: Tr.pick('ホームとアウェイ', 'Home and away'),
-            rows: [
-              AnalysisRow(
-                  label: Tr.pick('通算', 'Overall'), value: recordLabel(all)),
-              AnalysisRow(
-                  label: Tr.pick('ホーム', 'Home'), value: recordLabel(home)),
-              AnalysisRow(
-                  label: Tr.pick('アウェイ', 'Away'), value: recordLabel(away)),
-            ],
-            note: home.played > 0 && away.played > 0
-                ? _homeAwayNote(home, away)
-                : null,
-          ),
-          _Section(
-            title: Tr.pick('時間帯', 'When the goals come'),
-            rows: [
-              AnalysisRow(
-                label: Tr.pick('前半', 'First half'),
-                value: Tr.pick(
-                    '得点${periods.firstFor} / 失点${periods.firstAgainst}',
-                    '${periods.firstFor} for / ${periods.firstAgainst} against'),
-              ),
-              AnalysisRow(
-                label: Tr.pick('後半', 'Second half'),
-                value: Tr.pick(
-                    '得点${periods.secondFor} / 失点${periods.secondAgainst}',
-                    '${periods.secondFor} for / ${periods.secondAgainst} against'),
-              ),
-              AnalysisRow(
-                label: Tr.pick('うち終盤(75分以降)', 'of which late (75+)'),
-                value: Tr.pick(
-                    '得点${periods.lateFor} / 失点${periods.lateAgainst}',
-                    '${periods.lateFor} for / ${periods.lateAgainst} against'),
-              ),
-            ],
-            note: _periodNote(periods),
-          ),
-          _Section(
-            title: Tr.pick('落とし方', 'How you lose'),
-            rows: [
-              AnalysisRow(
-                label: Tr.pick('先制しながら負けた試合', 'Lost after scoring first'),
-                value: Tr.pick('$lostFromAhead試合', '$lostFromAhead'),
-              ),
-            ],
-            note: lostFromAhead >= 2
-                ? Tr.pick('先制しても守り切れていません。終盤の疲労と、リードしたときの姿勢を見直す価値があります。',
-                    'You are not holding on to leads. Look at late fatigue and how you set up in front.')
-                : null,
-          ),
-        ],
+      // 横画面では札を左右2列に(1列だと右半分が空いていた。2026-11-21)。
+      body: ResponsiveBody(
+        child: AutoColumns(
+          // 札は3つ。左にホームとアウェイ・落とし方、右に時間帯。
+          minChildren: 2,
+          children: [
+            _Section(
+              title: Tr.pick('ホームとアウェイ', 'Home and away'),
+              rows: [
+                AnalysisRow(
+                    label: Tr.pick('通算', 'Overall'), value: recordLabel(all)),
+                AnalysisRow(
+                    label: Tr.pick('ホーム', 'Home'), value: recordLabel(home)),
+                AnalysisRow(
+                    label: Tr.pick('アウェイ', 'Away'), value: recordLabel(away)),
+              ],
+              note: home.played > 0 && away.played > 0
+                  ? _homeAwayNote(home, away)
+                  : null,
+            ),
+            _Section(
+              title: Tr.pick('落とし方', 'How you lose'),
+              rows: [
+                AnalysisRow(
+                  label: Tr.pick('先制しながら負けた試合', 'Lost after scoring first'),
+                  value: Tr.pick('$lostFromAhead試合', '$lostFromAhead'),
+                ),
+              ],
+              note: lostFromAhead >= 2
+                  ? Tr.pick('先制しても守り切れていません。終盤の疲労と、リードしたときの姿勢を見直す価値があります。',
+                      'You are not holding on to leads. Look at late fatigue and how you set up in front.')
+                  : null,
+            ),
+            _Section(
+              title: Tr.pick('時間帯', 'When the goals come'),
+              rows: [
+                AnalysisRow(
+                  label: Tr.pick('前半', 'First half'),
+                  value: Tr.pick(
+                      '得点${periods.firstFor} / 失点${periods.firstAgainst}',
+                      '${periods.firstFor} for / ${periods.firstAgainst} against'),
+                ),
+                AnalysisRow(
+                  label: Tr.pick('後半', 'Second half'),
+                  value: Tr.pick(
+                      '得点${periods.secondFor} / 失点${periods.secondAgainst}',
+                      '${periods.secondFor} for / ${periods.secondAgainst} against'),
+                ),
+                AnalysisRow(
+                  label: Tr.pick('うち終盤(75分以降)', 'of which late (75+)'),
+                  value: Tr.pick(
+                      '得点${periods.lateFor} / 失点${periods.lateAgainst}',
+                      '${periods.lateFor} for / ${periods.lateAgainst} against'),
+                ),
+              ],
+              note: _periodNote(periods),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -129,28 +135,32 @@ class AnalysisScreen extends StatelessWidget {
     final homePoints = (home.won * 3 + home.drawn) / home.played;
     final awayPoints = (away.won * 3 + away.drawn) / away.played;
     if (homePoints - awayPoints >= 1.0) {
-      return Tr.pick('アウェイで大きく落としています。',
-          'You are dropping far more points on the road.');
+      return Tr.pick(
+          'アウェイで大きく落としています。', 'You are dropping far more points on the road.');
     }
     if (awayPoints - homePoints >= 1.0) {
-      return Tr.pick('ホームで取りこぼしています。',
-          'You are dropping points at home.');
+      return Tr.pick('ホームで取りこぼしています。', 'You are dropping points at home.');
     }
     return null;
   }
 
   static String? _periodNote(
-      ({int firstFor, int firstAgainst, int secondFor, int secondAgainst,
-              int lateFor, int lateAgainst})
-          p) {
+      ({
+        int firstFor,
+        int firstAgainst,
+        int secondFor,
+        int secondAgainst,
+        int lateFor,
+        int lateAgainst
+      }) p) {
     final totalAgainst = p.firstAgainst + p.secondAgainst;
     if (totalAgainst >= 5 && p.lateAgainst * 2 >= totalAgainst) {
       return Tr.pick('失点の半分以上が終盤です。疲労と交代を見直す価値があります。',
           'More than half your goals against come late. Look at fatigue and your substitutions.');
     }
     if (p.firstAgainst > p.secondAgainst * 2 && p.firstAgainst >= 4) {
-      return Tr.pick('立ち上がりに失点が集中しています。',
-          'You are conceding early far too often.');
+      return Tr.pick(
+          '立ち上がりに失点が集中しています。', 'You are conceding early far too often.');
     }
     return null;
   }
@@ -191,8 +201,8 @@ class _Section extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Text(r.value,
-                          style: const TextStyle(fontSize: 13)),
+                      child:
+                          Text(r.value, style: const TextStyle(fontSize: 13)),
                     ),
                   ],
                 ),

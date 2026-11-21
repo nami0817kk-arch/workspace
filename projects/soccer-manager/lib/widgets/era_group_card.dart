@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
 import '../logic/era_engine.dart';
 import '../state/game_state.dart';
+import 'help_button.dart';
 
 /// 時代の変化と、持っているほかのクラブ。
 class EraGroupCard extends StatelessWidget {
@@ -30,12 +31,16 @@ class EraGroupCard extends StatelessWidget {
                     '${era.summary} Eras change every ${EraEngine.length} seasons.'),
                 style: const TextStyle(fontSize: 12)),
             const Divider(height: 20),
-            Text(Tr.pick('持っているほかのクラブ', 'Your other clubs'),
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            TitleWithHelp(
+              title: Tr.pick('持っているほかのクラブ', 'Your other clubs'),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+              help: Tr.pick(
+                  'オーナーの私財(いま${formatMoney(gs.ownerWealth)})で他国の1部のクラブを買えます。采配はしませんが、順位に応じて毎季の損益が私財に入り、そのクラブの選手は半額で取れます。',
+                  'Use your own money (${formatMoney(gs.ownerWealth)} now) to buy a top-flight club abroad. You do not run it, but its league position earns or costs you money each season, and its players come at half price.'),
+            ),
             Text(
-                Tr.pick(
-                    'オーナーの私財(いま${formatMoney(gs.ownerWealth)})で他国の1部のクラブを買えます。采配はしませんが、順位に応じて毎季の損益が私財に入り、そのクラブの選手は半額で取れます。',
-                    'Use your own money (${formatMoney(gs.ownerWealth)} now) to buy a top-flight club abroad. You do not run it, but its league position earns or costs you money each season, and its players come at half price.'),
+                Tr.pick('いまの私財 ${formatMoney(gs.ownerWealth)}',
+                    'Your own money: ${formatMoney(gs.ownerWealth)}'),
                 style: const TextStyle(fontSize: 12)),
             for (final (t, paid, worth) in owned)
               Row(

@@ -147,7 +147,17 @@ void main() {
       }
       await tester.pump(const Duration(milliseconds: 600));
     }
+    // 環境変数 PAGES で撮るページを絞れる(例: オーナー室)。
+    const only = String.fromEnvironment('PAGES');
     for (final p in ['状況', '経営', 'クラブ', '選手', '移籍', 'リーグ', 'オーナー室']) {
+      if (only.isNotEmpty && !only.split(',').contains(p)) continue;
+      // 前のページで別の画面(用語集など)が開いたままなら閉じる。
+      for (var i = 0; i < 4; i++) {
+        final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
+        if (!nav.canPop()) break;
+        nav.pop();
+        await tester.pump(const Duration(milliseconds: 600));
+      }
       final side = find.text(p).hitTestable();
       if (side.evaluate().isEmpty) {
         await shoot('missing-$p');
@@ -205,7 +215,7 @@ void main() {
           }
         }
         // 経営・クラブは各タブが長いので、下へ送りながら撮る。
-        if (p == '経営' || p == 'クラブ') {
+        if (p == '経営' || p == 'クラブ' || p == 'オーナー室') {
           // 座標は論理ピクセル(幅852)。左右2つの欄の両方を送る。
           for (var i = 1; i <= 6; i++) {
             await tester.dragFrom(

@@ -83,16 +83,10 @@ class _WorkTile extends StatelessWidget {
   Widget _chip(BuildContext context, String label, int v,
       {bool money = false}) {
     if (v == 0) return const SizedBox.shrink();
-    final color = v > 0
-        ? SemanticColors.positive(context)
-        : SemanticColors.negative(context);
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: Text(
-          '$label ${money ? formatMoneySigned(v) : '${v > 0 ? '+' : ''}$v'}',
-          style: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.bold, color: color)),
-    );
+    return _EffectPill(
+        text:
+            '$label ${money ? formatMoneySigned(v) : '${v > 0 ? '+' : ''}$v'}',
+        good: v > 0);
   }
 
   @override
@@ -118,6 +112,8 @@ class _WorkTile extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall),
                   const SizedBox(height: 6),
                   Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
                     children: [
                       _chip(context, Tr.pick('資金', 'Funds'), funds,
                           money: true),
@@ -252,35 +248,97 @@ class _PromoCard extends StatelessWidget {
               ),
             ),
           ] else
+            // 効き目は式(観客収入 x1.10)ではなく、色の付いた札で
+            // (+10% は緑、-10% は赤)。費用はボタンに入れる(2026-11-21)。
             for (final p in matchdayPromos)
-              ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                title: Text(p.title),
-                subtitle: Text(
-                  '${p.description}\n'
-                  '${Tr.pick('費用 ${formatMoney(game.scaledMoney(p.cost))}', 'Cost ${formatMoney(game.scaledMoney(p.cost))}')} / '
-                  '${Tr.pick('観客収入', 'Gate')} x${p.gateMultiplier.toStringAsFixed(2)} / '
-                  '${Tr.pick('サポーター', 'Fans')} ${p.supporters >= 0 ? '+' : ''}${p.supporters}',
-                ),
-                isThreeLine: true,
-                trailing: FilledButton(
-                  onPressed: game.scaledMoney(p.cost) > budget
-                      ? null
-                      : () => runUndoable(
-                            context,
-                            action: () async {
-                              context.read<GameState>().setMatchdayPromo(p.id);
-                              return true;
-                            },
-                            done: Tr.pick('次の節は「${p.title}」にしました',
-                                'Next matchday: ${p.title}'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(p.title,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(p.description,
+                              style: Theme.of(context).textTheme.bodySmall),
+                          const SizedBox(height: 4),
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 4,
+                            children: [
+                              if (_gatePct(p) != 0)
+                                _EffectPill(
+                                    text: Tr.pick(
+                                        '観客収入 ${_gatePct(p) > 0 ? '+' : ''}${_gatePct(p)}%',
+                                        'Gate ${_gatePct(p) > 0 ? '+' : ''}${_gatePct(p)}%'),
+                                    good: _gatePct(p) > 0),
+                              if (p.supporters != 0)
+                                _EffectPill(
+                                    text: Tr.pick(
+                                        'サポーター ${p.supporters > 0 ? '+' : ''}${p.supporters}',
+                                        'Fans ${p.supporters > 0 ? '+' : ''}${p.supporters}'),
+                                    good: p.supporters > 0),
+                            ],
                           ),
-                  child: Text(Tr.pick('決める', 'Set')),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    FilledButton(
+                      onPressed: game.scaledMoney(p.cost) > budget
+                          ? null
+                          : () => runUndoable(
+                                context,
+                                action: () async {
+                                  context
+                                      .read<GameState>()
+                                      .setMatchdayPromo(p.id);
+                                  return true;
+                                },
+                                done: Tr.pick('次の節は「${p.title}」にしました',
+                                    'Next matchday: ${p.title}'),
+                              ),
+                      child: Text(p.cost == 0
+                          ? Tr.pick('決める(無料)', 'Set (free)')
+                          : Tr.pick(
+                              '決める(${formatMoney(game.scaledMoney(p.cost))})',
+                              'Set (${formatMoney(game.scaledMoney(p.cost))})')),
+                    ),
+                  ],
                 ),
               ),
         ],
       ),
+    );
+  }
+}
+
+/// 観客収入の倍率を%にする(1.10 → 10)。
+int _gatePct(MatchdayPromo p) => ((p.gateMultiplier - 1) * 100).round();
+
+/// 効き目の小さな札。良いものは緑、悪いものは赤。
+class _EffectPill extends StatelessWidget {
+  const _EffectPill({required this.text, required this.good});
+  final String text;
+  final bool good;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = good
+        ? SemanticColors.positive(context)
+        : SemanticColors.negative(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(text,
+          style: TextStyle(
+              fontSize: 12, fontWeight: FontWeight.bold, color: color)),
     );
   }
 }
