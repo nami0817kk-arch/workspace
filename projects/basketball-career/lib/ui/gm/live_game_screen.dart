@@ -84,7 +84,6 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
       events: r.events,
       names: (w) => _team(w).order[w.$2].name,
       poss: (w) => _team(w).order[w.$2].pos,
-      share: (s) => (s == 0 ? r.home : r.away).share,
     );
     _startScript();
     if (_speeds[_speedPick] == 0) {

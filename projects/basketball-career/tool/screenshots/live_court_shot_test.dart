@@ -9,6 +9,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:basketball_career/gm/bot.dart';
+import 'package:basketball_career/gm/policy.dart';
 import 'package:basketball_career/ui/gm/live_game_screen.dart';
 import 'package:basketball_career/ui/gm/style.dart';
 import 'package:flutter/material.dart';
@@ -37,13 +38,13 @@ Future<void> _loadFonts() async {
   }
 }
 
-Future<void> _save(WidgetTester t, String name) async {
+Future<void> _save(WidgetTester t, String name, {String dir = 'build/review_live'}) async {
   await t.runAsync(() async {
     final b = _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
     final img = await b.toImage(pixelRatio: _ratio);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    final dir = Directory('build/review_live')..createSync(recursive: true);
-    File('${dir.path}/$name.png').writeAsBytesSync(data!.buffer.asUint8List());
+    final d = Directory(dir)..createSync(recursive: true);
+    File('${d.path}/$name.png').writeAsBytesSync(data!.buffer.asUint8List());
   });
 }
 
@@ -89,4 +90,37 @@ void main() {
     await _save(t, 'e_half');
     expect(t.takeException(), isNull);
   });
+  // 方針ごとの動きの違い(攻めの重点・ボールの回し方・展開の速さ・守り方を、両チームに同じく入れる)
+  for (final (name, pol) in [
+    ('outside_pass_fast_press', [2, 0, 2, 2, 1]),
+    ('inside_ace_slow_pack', [0, 2, 0, 0, 1]),
+  ]) {
+    testWidgets('方針: $name', (t) async {
+      addTearDown(t.view.reset);
+      t.view.physicalSize = _size * _ratio;
+      t.view.devicePixelRatio = _ratio;
+      final car = careerAt(3, 12)..startSeason();
+      final g = car.nextMyGame!;
+      for (final team in [car.teams[g.$1], car.teams[g.$2]]) {
+        team.policy = List.of(pol);
+      }
+      expect(PolicyAxis.values.length, pol.length);
+      await t.pumpWidget(RepaintBoundary(
+        key: _key,
+        child: MaterialApp(theme: gmTheme(), debugShowCheckedModeBanner: false, home: LiveGameScreen(car: car)),
+      ));
+      var at = 0;
+      for (var k = 0; k < 40; k++) {
+        final ms = 6000 + k * 150;
+        while (at < ms) {
+          await t.pump(const Duration(milliseconds: 50));
+          at += 50;
+        }
+        await _save(t, 'f_$k', dir: 'build/review_live/$name');
+      }
+      await t.tap(find.textContaining('まで飛ばす'));
+      await t.pump(const Duration(milliseconds: 100));
+      expect(t.takeException(), isNull);
+    });
+  }
 }

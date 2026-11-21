@@ -1,5 +1,6 @@
 import 'package:basketball_career/gm/career.dart';
 import 'package:basketball_career/gm/game_sim.dart';
+import 'package:basketball_career/gm/policy.dart';
 import 'package:basketball_career/gm/rng.dart';
 import 'package:basketball_career/ui/gm/live_playback.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -58,7 +59,6 @@ void main() {
       events: s.events,
       names: (w) => (w.$1 == 0 ? s.home : s.away).order[w.$2].name,
       poss: (w) => (w.$1 == 0 ? s.home : s.away).order[w.$2].pos,
-      share: (side) => (side == 0 ? s.home : s.away).share,
     );
     Map<Who, Offset>? end;
     var lines = 0;
@@ -95,5 +95,52 @@ void main() {
     final run = runOf(s.events, s.events.length);
     expect(run.$1, anyOf(0, 1));
     expect(run.$2, greaterThan(0));
+  });
+  test('攻めごとに、そのときの方針を残す(試合中の采配で変えたあとも)', () {
+    final h = teams[8], a = teams[9];
+    final s = simulateGame(h, a, Rng(31), homeStr: h.strength, awayStr: a.strength, record: true, calls: const [GameCall.fast, GameCall.packPaint, null, null], side: 0);
+    final q1 = s.events.where((e) => e.period == 0 && e.side == 0);
+    final q2 = s.events.where((e) => e.period == 1 && e.side == 0);
+    final q3 = s.events.where((e) => e.period == 2 && e.side == 1);
+    expect(q1.every((e) => e.pace == h.policy[PolicyAxis.pace.index]), isTrue);
+    expect(q2.every((e) => e.pace == 2), isTrue);
+    // 前半の終わりに「中を固める」→ 3Q の相手の攻めでは、守り方が 0
+    expect(q3.every((e) => e.press == 0), isTrue);
+  });
+
+  test('守り方で守る位置が変わる(中を固めるとゴールに寄り、前から当たると相手に張りつく)', () {
+    double avgDefDist(int press) {
+      final h = teams[10], a = teams[11];
+      final keepH = List.of(h.policy), keepA = List.of(a.policy);
+      h.policy[PolicyAxis.defense.index] = press;
+      a.policy[PolicyAxis.defense.index] = press;
+      final s = simulateGame(h, a, Rng(41), homeStr: h.strength, awayStr: a.strength, record: true);
+      h.policy = keepH;
+      a.policy = keepA;
+      final b = PlaybackBuilder(
+        events: s.events,
+        names: (w) => (w.$1 == 0 ? s.home : s.away).order[w.$2].name,
+        poss: (w) => (w.$1 == 0 ? s.home : s.away).order[w.$2].pos,
+      );
+      Map<Who, Offset>? end;
+      var sum = 0.0, n = 0;
+      for (var i = 0; i < 60; i++) {
+        final e = s.events[i];
+        final p = b.build(i, end);
+        expect(e.press, press);
+        // 持ち場についたあと(運び終えたころ)の、守る5人とゴールの距離
+        final f = p.frameAt(1500);
+        for (final d in e.defCourt) {
+          sum += (f.pos[(1 - e.side, d)]! - basketOf(e.side)).distance;
+          n++;
+        }
+        end = p.end;
+      }
+      return sum / n;
+    }
+
+    final pack = avgDefDist(0), normal = avgDefDist(1), press = avgDefDist(2);
+    expect(pack, lessThan(normal));
+    expect(normal, lessThan(press));
   });
 }
