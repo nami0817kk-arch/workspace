@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../gm/gm_people.dart';
@@ -321,7 +323,7 @@ class _TradeTabState extends State<TradeTab> {
                       ],
                     ),
                     const SizedBox(height: 3),
-                    _Reaction(verdict: verdict),
+                    _Reaction(verdict: verdict, spread: _spread(car), shift: _shiftOf(o), face: car.gmPerson(_partner).name),
                     if (impact != null) ...[
                       const SizedBox(height: 2),
                       Text(
@@ -367,16 +369,18 @@ class _TradeTabState extends State<TradeTab> {
                     Expanded(
                       child: OutlinedButton.icon(
                         style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(40)),
-                        onPressed: (_get.isEmpty && _getPicks.isEmpty) || !car.canTrade || c.busy ? null : () => _ask(context, verdict),
+                        // 「何を足せば受ける?」は、申し込んだあとのやり取り(言い返す)に含めた。出すものを選ぶ前だけ「相手に聞く」
+                        onPressed: (_get.isEmpty && _getPicks.isEmpty) || _give.isNotEmpty || _givePicks.isNotEmpty || !car.canTrade || c.busy ? null : () => _ask(context, verdict),
                         icon: const Icon(Icons.forum_rounded, size: 18),
-                        label: FittedBox(fit: BoxFit.scaleDown, child: Text(_give.isEmpty && _givePicks.isEmpty ? '相手に聞く' : '何を足せば受ける?')),
+                        label: const FittedBox(fit: BoxFit.scaleDown, child: Text('相手に聞く')),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: FilledButton.icon(
                         style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(40)),
-                        onPressed: verdict != null && verdict.ok && !c.busy ? () => _propose(context) : null,
+                        // 申し込むと、相手とのやり取りになる(受ける・逆の案・打ち切り。T-3・トレード画面の向上 1)
+                        onPressed: verdict != null && verdict.ratio > 0 && !c.busy ? () => _talk(context) : null,
                         icon: const Icon(Icons.handshake_rounded),
                         label: const Text('申し込む'),
                       ),
@@ -701,6 +705,98 @@ class _TradeTabState extends State<TradeTab> {
     messenger.showSnackBar(SnackBar(content: Text('${car.teams[_partner].def.short}の答え: 「これなら受ける」(出す${o.give.length + o.givePicks.length}件を選んだ)')));
   }
 
+  /// ゲージの幅(信頼している相手ほど、見る目を知っている相手ほど狭い。トレード画面の向上 1)。
+  double _spread(Career car) => car.trustOf(_partner) >= 25
+      ? 0.06
+      : car.eyeKnown(_partner)
+          ? 0.1
+          : 0.18;
+
+  /// ゲージの幅の中で、本当の値がどこにあるか(案ごとに決まる)。
+  double _shiftOf(TradeOffer o) => (((_partner * 37 + o.give.length * 11 + o.get.length * 5 + o.givePicks.length * 3) % 7) - 3) / 3 * 0.5;
+
+  /// 相手とのやり取り(T-3)。相手の返事を見て、受ける・言い返す(案を直す)・やめる を選ぶ。
+  Future<void> _talk(BuildContext context) async {
+    final car = widget.c.career!;
+    final o = _offer;
+    final reply = car.talk(o);
+    final gm = car.gmPerson(_partner);
+    final temper = temperOf(gm);
+    if (!context.mounted) return;
+    final pick = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('${gm.name}(${car.teams[_partner].def.short}・${temper.label})', style: const TextStyle(fontSize: 16)),
+        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('こちらの案: ${_names(car, o)}', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
+          const SizedBox(height: 8),
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Icon(reply.ok ? Icons.sentiment_very_satisfied_rounded : reply.ended ? Icons.sentiment_very_dissatisfied_rounded : Icons.sentiment_neutral_rounded,
+                color: reply.ok ? GmColors.good : reply.ended ? GmColors.bad : GmColors.gold),
+            const SizedBox(width: 8),
+            Expanded(child: Text('「${reply.line}」', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, height: 1.4))),
+          ]),
+          if (reply.counter != null) ...[
+            const SizedBox(height: 8),
+            Text('相手の案: ${_names(car, reply.counter!)}', style: const TextStyle(fontSize: 12.5)),
+          ],
+          const SizedBox(height: 8),
+          if (!reply.ok && !reply.ended)
+            Text('話せるのは、あと${reply.roundsLeft.clamp(0, 9)}回(しつこく言い返すと機嫌が下がる)', style: const TextStyle(fontSize: 11.5, color: GmColors.sub)),
+        ]),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, 'stop'), child: const Text('やめる')),
+          if (reply.counter != null) TextButton(onPressed: () => Navigator.pop(ctx, 'edit'), child: const Text('言い返す(案を直す)')),
+          if (reply.counter != null) FilledButton(onPressed: () => Navigator.pop(ctx, 'take'), child: const Text('相手の案で受ける')),
+          if (reply.ok) FilledButton(onPressed: () => Navigator.pop(ctx, 'deal'), child: const Text('成立させる')),
+        ],
+      ),
+    );
+    if (!mounted || !context.mounted) return;
+    final counter = reply.counter;
+    switch (pick) {
+      case 'deal':
+        _propose(context);
+      case 'take' when counter != null:
+        setState(() => _setOffer(counter));
+        _propose(context);
+      case 'edit' when counter != null:
+        // 相手の案を出す側に入れて、直してから申し込み直す
+        setState(() => _setOffer(counter));
+      default:
+        break;
+    }
+  }
+
+  /// 案の中身(「出す: ○○・2巡目 / 受け取る: △△」)。
+  String _names(Career car, TradeOffer o) {
+    final give = [
+      for (final id in o.give) ...car.me.roster.where((p) => p.id == id).map((p) => p.name),
+      for (final i in o.givePicks) car.picks[i].label(car.teams, car.season),
+    ];
+    final get = [
+      for (final id in o.get) ...car.teams[o.partner].roster.where((p) => p.id == id).map((p) => p.name),
+      for (final i in o.getPicks) car.picks[i].label(car.teams, car.season),
+    ];
+    return '出す ${give.join('・')} / 受け取る ${get.join('・')}';
+  }
+
+  /// 選んでいるものを [o] にする(出すもの・受け取るもの)。
+  void _setOffer(TradeOffer o) {
+    _give
+      ..clear()
+      ..addAll(o.give);
+    _get
+      ..clear()
+      ..addAll(o.get);
+    _givePicks
+      ..clear()
+      ..addAll(o.givePicks);
+    _getPicks
+      ..clear()
+      ..addAll(o.getPicks);
+  }
+
   void _propose(BuildContext context) {
     final o = _offer;
     if (tradeWithShow(context, widget.c, o, () => widget.c.propose(o))) {
@@ -719,8 +815,12 @@ class _TradeTabState extends State<TradeTab> {
 
 /// 相手の反応の帯。
 class _Reaction extends StatelessWidget {
-  const _Reaction({required this.verdict});
+  const _Reaction({required this.verdict, this.spread = 0.18, this.shift = 0, this.face = ''});
   final TradeVerdict? verdict;
+
+  /// 見せる幅(片側)と、幅の中の本当の値の位置のずれ(-0.5〜0.5)。トレード画面の向上 1(ゲージは幅で見せる)。
+  final double spread, shift;
+  final String face;
 
   @override
   Widget build(BuildContext context) {
@@ -728,17 +828,31 @@ class _Reaction extends StatelessWidget {
     if (v == null) {
       return const Text('欲しい選手と出す選手をタップ。相手の反応が出る', style: TextStyle(fontSize: 13, color: GmColors.sub));
     }
-    final f = v.ratio.clamp(0.0, 1.0);
-    final color = v.ok
+    if (v.ratio <= 0) {
+      return Text(v.reason, style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.bad, fontSize: 13));
+    }
+    // 本当の見込みは幅のどこかにある(ぴったりは分からない)
+    final lo = (v.ratio - spread * (1 + shift)).clamp(0.0, 1.5), hi = (v.ratio + spread * (1 - shift)).clamp(0.0, 1.5);
+    final mid = (lo + hi) / 2;
+    final color = lo >= 1
         ? GmColors.good
-        : f >= 0.8
-        ? GmColors.gold
-        : GmColors.bad;
-    final face = v.ok
+        : hi < 0.8
+            ? GmColors.bad
+            : GmColors.gold;
+    final face = lo >= 1
         ? Icons.sentiment_very_satisfied_rounded
-        : f >= 0.8
-        ? Icons.sentiment_neutral_rounded
-        : Icons.sentiment_very_dissatisfied_rounded;
+        : hi < 0.8
+            ? Icons.sentiment_very_dissatisfied_rounded
+            : Icons.sentiment_neutral_rounded;
+    final word = lo >= 1
+        ? '悪くない(受けてくれそう)'
+        : hi < 0.5
+            ? '話にならない'
+            : hi < 0.8
+                ? 'ふむ…(足りなそう)'
+                : mid >= 0.95
+                    ? 'ふむ…(あと一押しかも)'
+                    : '五分五分';
     return Row(
       children: [
         Icon(face, color: color),
@@ -747,15 +861,27 @@ class _Reaction extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                v.ok ? '受けてくれそう' : v.reason,
-                style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 13),
-              ),
+              Text(word, style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 13)),
               const SizedBox(height: 4),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(value: v.ratio > 0 ? f : 0, minHeight: 7, color: color, backgroundColor: GmColors.line),
-              ),
+              LayoutBuilder(builder: (context, box) {
+                final w = box.maxWidth;
+                double x(double r) => w * (r / 1.5).clamp(0.0, 1.0);
+                return SizedBox(
+                  height: 8,
+                  child: Stack(children: [
+                    Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(color: GmColors.line, borderRadius: BorderRadius.circular(4)))),
+                    // 受けてもらえる線(1.0)
+                    Positioned(left: x(1.0) - 1, top: 0, bottom: 0, child: Container(width: 2, color: GmColors.text)),
+                    Positioned(
+                      left: x(lo),
+                      width: math.max(4, x(hi) - x(lo)),
+                      top: 1,
+                      bottom: 1,
+                      child: DecoratedBox(decoration: BoxDecoration(color: color.withValues(alpha: 0.85), borderRadius: BorderRadius.circular(4))),
+                    ),
+                  ]),
+                );
+              }),
             ],
           ),
         ),
