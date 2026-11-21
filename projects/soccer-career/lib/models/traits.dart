@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../l10n/lang.dart';
 import '../game/formulas.dart';
 import '../game/scenarios.dart';
 import 'attributes.dart';
@@ -74,106 +75,112 @@ class TraitRule {
 /// 引ける長所が多いほど、同じ能力値でも別の選手になる。
 enum Trait {
   // ---- 場面 ----
-  clutch('クラッチ', '後半30分以降、成功率が上がる'),
-  composed('冷静', 'ゴールに直結する手の成功率が上がる'),
-  fighter('負けず嫌い', '失敗した直後の手は成功率が上がる'),
-  homeHero('ホームの英雄', 'ホームで成功率が上がり、アウェイで少し下がる'),
-  roadWarrior('アウェイの狼', 'アウェイで成功率が上がり、ホームでは平常どおり'),
-  gambler('勝負師', 'ゴール・アシストの手が得意で、安全な手が苦手'),
-  craftsman('職人', '安全な手が得意で、ゴールの手が少し苦手'),
-  bigGame('大舞台', '代表戦で成功率が上がる'),
-  ironNerve('本番強者', '格上との対戦や代表戦で強い'),
-  comeback('逆境の男', '負けているときに強い'),
-  frontRunner('先行逃げ切り', 'リードしているとき強く、負けていると力が出ない'),
-  penaltyKing('PK職人', 'PKの局面で大きく有利'),
-  captain('キャプテンシー', '評価点が少し高くつく'),
-  twoFooted('両足使い', '逆足の局面でも精度がほとんど落ちない'),
-  cosmopolitan('国際派', '国外のクラブでも力を出せる'),
-  superSub('スーパーサブ', '途中出場のとき、成功率が上がる'),
-  fastStarter('出足が速い', '前半30分までは成功率が上がる'),
-  hotHand('乗ると止まらない', '成功した直後の手は成功率が上がる'),
-  assistKing('ラストパスの名手', 'アシストに直結する手の成功率が上がる'),
-  organizer('守備の統率者', '無失点で終えたときの評価が高い'),
+  clutch(Say('クラッチ', 'Clutch'), Say('後半30分以降、成功率が上がる', 'Better from the 75th minute on')),
+  composed(Say('冷静', 'Composed'), Say('ゴールに直結する手の成功率が上がる', 'Better on shots at goal')),
+  fighter(Say('負けず嫌い', 'Sore Loser'), Say('失敗した直後の手は成功率が上がる', 'Better on the move right after a failure')),
+  homeHero(Say('ホームの英雄', 'Home Hero'), Say('ホームで成功率が上がり、アウェイで少し下がる', 'Better at home, slightly worse away')),
+  roadWarrior(Say('アウェイの狼', 'Road Warrior'), Say('アウェイで成功率が上がり、ホームでは平常どおり', 'Better away, normal at home')),
+  gambler(Say('勝負師', 'Gambler'), Say('ゴール・アシストの手が得意で、安全な手が苦手', 'Strong on shots and assists, weak on the safe option')),
+  craftsman(Say('職人', 'Craftsman'), Say('安全な手が得意で、ゴールの手が少し苦手', 'Strong on the safe option, slightly weak on shots')),
+  bigGame(Say('大舞台', 'Big Stage'), Say('代表戦で成功率が上がる', 'Better in internationals')),
+  ironNerve(Say('本番強者', 'Nerves of Steel'), Say('格上との対戦や代表戦で強い', 'Strong against better sides and in internationals')),
+  comeback(Say('逆境の男', 'Fighting Spirit'), Say('負けているときに強い', 'Strong when behind')),
+  frontRunner(Say('先行逃げ切り', 'Front Runner'), Say('リードしているとき強く、負けていると力が出ない', 'Strong in the lead, flat when behind')),
+  penaltyKing(Say('PK職人', 'Penalty King'), Say('PKの局面で大きく有利', 'A big edge from the spot')),
+  captain(Say('キャプテンシー', 'Captaincy'), Say('評価点が少し高くつく', 'Match ratings come in slightly higher')),
+  twoFooted(Say('両足使い', 'Two-Footed'), Say('逆足の局面でも精度がほとんど落ちない', 'Barely loses accuracy on his weaker foot')),
+  cosmopolitan(Say('国際派', 'Cosmopolitan'), Say('国外のクラブでも力を出せる', 'Performs abroad as well as at home')),
+  superSub(Say('スーパーサブ', 'Super Sub'), Say('途中出場のとき、成功率が上がる', 'Better when coming off the bench')),
+  fastStarter(Say('出足が速い', 'Fast Starter'), Say('前半30分までは成功率が上がる', 'Better up to the 30th minute')),
+  hotHand(Say('乗ると止まらない', 'Hot Hand'), Say('成功した直後の手は成功率が上がる', 'Better on the move right after a success')),
+  assistKing(Say('ラストパスの名手', 'Last Pass'), Say('アシストに直結する手の成功率が上がる', 'Better on moves that lead to assists')),
+  organizer(Say('守備の統率者', 'Defensive Organiser'), Say('無失点で終えたときの評価が高い', 'Rated highly after a clean sheet')),
 
   // ---- 得意技 ----
-  aerialAce('空中戦の鬼', 'ヘディングと競り合いに強い'),
-  sprinter('スプリンター', 'スピード勝負に強い'),
-  playmaker('司令塔', 'パスの手に強い'),
-  poacher('ポーチャー', '決定力の手に強い'),
-  wall('鉄壁', '守備の手に強い'),
-  dribbler('ドリブラー', '仕掛ける手に強い'),
-  tackler('潰し屋', 'タックルとインターセプトに強い'),
-  longRange('ミドルの名手', 'ロングシュートに強い'),
-  crosser('クロッサー', 'クロスとロングパスに強い'),
-  tempoSetter('テンポメーカー', '短いパスとボール扱いに強い'),
-  sweeperKeeper('飛び出すGK', 'GKのポジショニングに強い'),
-  reflexKeeper('反応の鬼', 'セービングに強い'),
-  deadBallMaster('セットプレーの名手', '居残り練習の伸びが速く、キッカーとして強い'),
+  aerialAce(Say('空中戦の鬼', 'Aerial Ace'), Say('ヘディングと競り合いに強い', 'Strong in the air and in duels')),
+  sprinter(Say('スプリンター', 'Sprinter'), Say('スピード勝負に強い', 'Strong in a race for the ball')),
+  playmaker(Say('司令塔', 'Playmaker'), Say('パスの手に強い', 'Strong on passing moves')),
+  poacher(Say('ポーチャー', 'Poacher'), Say('決定力の手に強い', 'Strong on finishing moves')),
+  wall(Say('鉄壁', 'Rock at the Back'), Say('守備の手に強い', 'Strong on defensive moves')),
+  dribbler(Say('ドリブラー', 'Dribbler'), Say('仕掛ける手に強い', 'Strong when taking players on')),
+  tackler(Say('潰し屋', 'Destroyer'), Say('タックルとインターセプトに強い', 'Strong at tackles and interceptions')),
+  longRange(Say('ミドルの名手', 'Long Range'), Say('ロングシュートに強い', 'Strong at shots from distance')),
+  crosser(Say('クロッサー', 'Crosser'), Say('クロスとロングパスに強い', 'Strong at crosses and long passes')),
+  tempoSetter(Say('テンポメーカー', 'Tempo Setter'), Say('短いパスとボール扱いに強い', 'Strong at short passing and close control')),
+  sweeperKeeper(Say('飛び出すGK', 'Sweeper Keeper'), Say('GKのポジショニングに強い', 'Strong at goalkeeper positioning')),
+  reflexKeeper(Say('反応の鬼', 'Lightning Reflexes'), Say('セービングに強い', 'Strong at shot-stopping')),
+  deadBallMaster(Say('セットプレーの名手', 'Dead Ball Specialist'), Say('居残り練習の伸びが速く、キッカーとして強い', 'Improves quickly in extra sessions and is strong as the taker')),
 
   // ---- 体 ----
-  ironman('鉄人', '衰え始める年齢が2年遅い'),
-  robust('頑丈', '怪我をしにくい'),
-  engine('無尽蔵', '試合と練習の消耗が少ない'),
-  tireless('タフネス', '疲れが溜まりにくい'),
-  fastHealer('回復が早い', '離脱の期間が短い'),
-  quickRecovery('寝れば戻る', '休養で戻るコンディションが大きい'),
-  earlyBloomer('早熟', '若いうちに速く伸びるが、ピークが早い'),
-  lateBloomer('大器晩成', '若いうちは伸びにくいが、ピークが遅く長い'),
-  cleanPlayer('クリーンプレーヤー', '荒い手でも警告を受けにくい'),
+  ironman(Say('鉄人', 'Iron Man'), Say('衰え始める年齢が2年遅い', 'Starts to decline two years later')),
+  robust(Say('頑丈', 'Durable'), Say('怪我をしにくい', 'Rarely gets injured')),
+  engine(Say('無尽蔵', 'Bottomless'), Say('試合と練習の消耗が少ない', 'Loses less condition in matches and training')),
+  tireless(Say('タフネス', 'Tough'), Say('疲れが溜まりにくい', 'Fatigue builds up slowly')),
+  fastHealer(Say('回復が早い', 'Quick Healer'), Say('離脱の期間が短い', 'Spends less time out injured')),
+  quickRecovery(Say('寝れば戻る', 'Sleeps It Off'), Say('休養で戻るコンディションが大きい', 'Recovers more condition from rest')),
+  earlyBloomer(Say('早熟', 'Early Bloomer'), Say('若いうちに速く伸びるが、ピークが早い', 'Grows quickly when young, but peaks early')),
+  lateBloomer(Say('大器晩成', 'Late Bloomer'), Say('若いうちは伸びにくいが、ピークが遅く長い', 'Slow to grow when young, but peaks late and stays there')),
+  cleanPlayer(Say('クリーンプレーヤー', 'Clean Player'), Say('荒い手でも警告を受けにくい', 'Rarely booked, even for rough challenges')),
 
   // ---- 頭と心 ----
-  quickLearner('飲み込みが早い', '練習の効きが上がる'),
-  unshakable('動じない', '気持ちが落ちにくい'),
-  streaky('波に乗る', 'ゾーンにもスランプにも入りやすい'),
-  moodMaker('ムードメーカー', '良いことがあると気持ちが大きく上向く'),
-  studious('研究熱心', '相手の戦い方に慣れるのが速い'),
-  breaker('殻を破る', '限界突破が起きやすい'),
-  steady('足踏みしない', '停滞期が短い'),
-  coachable('監督受けがいい', '監督の信頼が上がりやすい'),
-  utility('ユーティリティ', '慣れないポジションでも力が落ちにくい'),
-  showman('華がある', '知名度が伸びやすい'),
+  quickLearner(Say('飲み込みが早い', 'Quick Learner'), Say('練習の効きが上がる', 'Gets more out of training')),
+  unshakable(Say('動じない', 'Unshakeable'), Say('気持ちが落ちにくい', 'Morale rarely drops')),
+  streaky(Say('波に乗る', 'Streaky'), Say('ゾーンにもスランプにも入りやすい', 'Falls into hot and cold spells easily')),
+  moodMaker(Say('ムードメーカー', 'Mood Setter'), Say('良いことがあると気持ちが大きく上向く', 'Morale rises sharply when things go well')),
+  studious(Say('研究熱心', 'Student of the Game'), Say('相手の戦い方に慣れるのが速い', 'Adapts quickly to an opponent\'s style')),
+  breaker(Say('殻を破る', 'Breaks Through'), Say('限界突破が起きやすい', 'Breaks his ceiling more often')),
+  steady(Say('足踏みしない', 'Never Stalls'), Say('停滞期が短い', 'Shorter plateaus')),
+  coachable(Say('監督受けがいい', 'Manager\'s Favourite'), Say('監督の信頼が上がりやすい', 'Earns the manager\'s trust easily')),
+  utility(Say('ユーティリティ', 'Utility'), Say('慣れないポジションでも力が落ちにくい', 'Barely drops off out of position')),
+  showman(Say('華がある', 'Star Quality'), Say('知名度が伸びやすい', 'Fame grows quickly')),
 
   // ---- 超越 ----
   // 1つの詳細能力だけ、上限（99）を超えて伸ばせる。ポテンシャルに達しても
   // その1つは伸び続ける。付いた瞬間には何も変わらず、上に行って初めて効く。
-  eagleEye('イーグルアイ', '視野だけ、上限を10超えて伸ばせる'),
-  cannon('大砲', 'シュート力だけ、上限を10超えて伸ばせる'),
-  lightning('韋駄天', '最高速だけ、上限を10超えて伸ばせる'),
-  glue('吸い付くボール', 'ボールコントロールだけ、上限を10超えて伸ばせる'),
-  sniper('狙撃手', '決定力だけ、上限を10超えて伸ばせる'),
-  hawk('鷹の読み', 'インターセプトだけ、上限を10超えて伸ばせる'),
-  ironLungs('鉄の肺', 'スタミナだけ、上限を10超えて伸ばせる'),
-  catReflex('猫の反射', 'セービングだけ、上限を10超えて伸ばせる'),
+  eagleEye(Say('イーグルアイ', 'Eagle Eye'), Say('視野だけ、上限を10超えて伸ばせる', 'Vision alone can go 10 past the ceiling')),
+  cannon(Say('大砲', 'Howitzer'), Say('シュート力だけ、上限を10超えて伸ばせる', 'Shot power alone can go 10 past the ceiling')),
+  lightning(Say('韋駄天', 'Flash'), Say('最高速だけ、上限を10超えて伸ばせる', 'Top speed alone can go 10 past the ceiling')),
+  glue(Say('吸い付くボール', 'Glue Touch'), Say('ボールコントロールだけ、上限を10超えて伸ばせる', 'Ball control alone can go 10 past the ceiling')),
+  sniper(Say('狙撃手', 'Marksman'), Say('決定力だけ、上限を10超えて伸ばせる', 'Finishing alone can go 10 past the ceiling')),
+  hawk(Say('鷹の読み', 'Hawk Eye'), Say('インターセプトだけ、上限を10超えて伸ばせる', 'Interceptions alone can go 10 past the ceiling')),
+  ironLungs(Say('鉄の肺', 'Iron Lungs'), Say('スタミナだけ、上限を10超えて伸ばせる', 'Stamina alone can go 10 past the ceiling')),
+  catReflex(Say('猫の反射', 'Cat Reflexes'), Say('セービングだけ、上限を10超えて伸ばせる', 'Shot-stopping alone can go 10 past the ceiling')),
 
   // ---- 欠点 ----
-  fragile('怪我がち', '怪我をしやすい', flaw: true),
-  moody('気分屋', '直前の結果に引きずられる。成功の後は強く、失敗の後は弱い', flaw: true),
-  slowStarter('スロースターター', '前半30分までは成功率が下がる', flaw: true),
-  bigGameShy('本番に弱い', '格上との対戦や代表戦で力を出せない', flaw: true),
-  homesick('ホームシック', '国外のクラブでは力を出しにくい', flaw: true),
-  slowHealer('治りが遅い', '離脱の期間が長い', flaw: true),
-  lazy('練習嫌い', '練習の効きが下がる', flaw: true),
-  hothead('瞬間湯沸かし器', '荒い手で警告を受けやすい', flaw: true),
-  benchCold('途中出場が苦手', '途中出場のとき、成功率が下がる', flaw: true),
-  difficult('扱いにくい', '監督の信頼が下がりやすい', flaw: true),
+  fragile(Say('怪我がち', 'Injury Prone'), Say('怪我をしやすい', 'Gets injured easily'), flaw: true),
+  moody(Say('気分屋', 'Moody'), Say('直前の結果に引きずられる。成功の後は強く、失敗の後は弱い', 'Carried along by the last result. Strong after a success, weak after a failure'), flaw: true),
+  slowStarter(Say('スロースターター', 'Slow Starter'), Say('前半30分までは成功率が下がる', 'Worse up to the 30th minute'), flaw: true),
+  bigGameShy(Say('本番に弱い', 'Shrinks on the Day'), Say('格上との対戦や代表戦で力を出せない', 'Cannot perform against better sides or in internationals'), flaw: true),
+  homesick(Say('ホームシック', 'Homesick'), Say('国外のクラブでは力を出しにくい', 'Struggles to perform at a club abroad'), flaw: true),
+  slowHealer(Say('治りが遅い', 'Slow Healer'), Say('離脱の期間が長い', 'Spends longer out injured'), flaw: true),
+  lazy(Say('練習嫌い', 'Hates Training'), Say('練習の効きが下がる', 'Gets less out of training'), flaw: true),
+  hothead(Say('瞬間湯沸かし器', 'Short Fuse'), Say('荒い手で警告を受けやすい', 'Booked easily for rough challenges'), flaw: true),
+  benchCold(Say('途中出場が苦手', 'Poor Substitute'), Say('途中出場のとき、成功率が下がる', 'Worse when coming off the bench'), flaw: true),
+  difficult(Say('扱いにくい', 'Difficult'), Say('監督の信頼が下がりやすい', 'Loses the manager\'s trust easily'), flaw: true),
 
   // ---- 稀 ----
   // 滅多に付かない代わりに、付けばキャリアの形が変わる。
-  genius('天才', '滅多に生まれない。伸びが速く、上限も高い', rare: true),
-  ironBody('鋼の身体', '滅多に生まれない。ほとんど怪我をせず、しても早い', rare: true),
-  bornStar('生まれながらの主役', '滅多に生まれない。名が広まり、評価も高くつく', rare: true),
-  bigMoment('大一番の申し子', '滅多に生まれない。終盤と大一番で別人になる', rare: true),
-  glassBody('ガラスの身体', '滅多に無い。怪我が多く、治りも遅い', flaw: true, rare: true);
+  genius(Say('天才', 'Genius'), Say('滅多に生まれない。伸びが速く、上限も高い', 'Rarely born. Grows fast, and the ceiling is high'), rare: true),
+  ironBody(Say('鋼の身体', 'Body of Steel'), Say('滅多に生まれない。ほとんど怪我をせず、しても早い', 'Rarely born. Hardly ever injured, and quick to recover'), rare: true),
+  bornStar(Say('生まれながらの主役', 'Born Star'), Say('滅多に生まれない。名が広まり、評価も高くつく', 'Rarely born. The name spreads, and ratings come in high'), rare: true),
+  bigMoment(Say('大一番の申し子', 'Child of the Big Night'), Say('滅多に生まれない。終盤と大一番で別人になる', 'Rarely born. A different player late on and on the big occasions'), rare: true),
+  glassBody(Say('ガラスの身体', 'Glass Body'), Say('滅多に無い。怪我が多く、治りも遅い', 'Rarely seen. Injuries are frequent, and slow to heal'), flaw: true, rare: true);
 
   const Trait(
-    this.label,
-    this.description, {
+    Say label,
+    Say description, {
     this.flaw = false,
     this.rare = false,
-  });
+  }) : _label = label,
+       _description = description;
 
-  final String label;
-  final String description;
+  /// **名前と説明は日本語と英語の2つを持つ**（[Say]）。enum の引数は
+  /// 定数なので `tr()` を直に書けない。外には `String` のまま見せる。
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 
   /// 欠点なら true。長所と同じ引き方はしない。
   final bool flaw;
@@ -486,89 +493,89 @@ enum Trait {
 
   static String _times(double factor) => '×${factor.toStringAsFixed(1)}';
 
-  static String _years(int offset) => offset > 0 ? '+$offset年' : '$offset年';
+  static String _years(int offset) => offset > 0 ? tr('+$offset年', '+$offset yrs') : tr('$offset年', '$offset yrs');
 
   /// 局面での効き方。判定と画面が同じものを読む。
   List<TraitRule> get rules {
     switch (this) {
       // ---- 場面 ----
       case Trait.clutch:
-        return [TraitRule('後半30分以降', 0.15, (c) => c.minute >= 75)];
+        return [TraitRule(tr('後半30分以降', 'From the 75th minute'), 0.15, (c) => c.minute >= 75)];
       case Trait.composed:
-        return [TraitRule('ゴールの手', 0.10, (c) => c.outcome == Outcome.goal)];
+        return [TraitRule(tr('ゴールの手', 'Shots at goal'), 0.10, (c) => c.outcome == Outcome.goal)];
       case Trait.fighter:
-        return [TraitRule('失敗した直後', 0.12, (c) => c.afterFailure)];
+        return [TraitRule(tr('失敗した直後', 'Right after a failure'), 0.12, (c) => c.afterFailure)];
       case Trait.homeHero:
         return [
-          TraitRule('ホーム', 0.08, (c) => !c.international && c.home),
-          TraitRule('アウェイ', -0.03, (c) => !c.international && !c.home),
+          TraitRule(tr('ホーム', 'At home'), 0.08, (c) => !c.international && c.home),
+          TraitRule(tr('アウェイ', 'Away'), -0.03, (c) => !c.international && !c.home),
         ];
       case Trait.roadWarrior:
-        return [TraitRule('アウェイ', 0.11, (c) => !c.international && !c.home)];
+        return [TraitRule(tr('アウェイ', 'Away'), 0.11, (c) => !c.international && !c.home)];
       case Trait.gambler:
         return [
-          TraitRule('ゴール・アシストの手', 0.09, (c) => c.outcome != Outcome.play),
-          TraitRule('安全な手', -0.07, (c) => c.outcome == Outcome.play),
+          TraitRule(tr('ゴール・アシストの手', 'Shots and assists'), 0.09, (c) => c.outcome != Outcome.play),
+          TraitRule(tr('安全な手', 'The safe option'), -0.07, (c) => c.outcome == Outcome.play),
         ];
       case Trait.craftsman:
         return [
-          TraitRule('安全な手', 0.10, (c) => c.outcome == Outcome.play),
-          TraitRule('ゴールの手', -0.05, (c) => c.outcome == Outcome.goal),
+          TraitRule(tr('安全な手', 'The safe option'), 0.10, (c) => c.outcome == Outcome.play),
+          TraitRule(tr('ゴールの手', 'Shots at goal'), -0.05, (c) => c.outcome == Outcome.goal),
         ];
       case Trait.bigGame:
-        return [TraitRule('代表戦', 0.15, (c) => c.international)];
+        return [TraitRule(tr('代表戦', 'Internationals'), 0.15, (c) => c.international)];
       case Trait.ironNerve:
-        return [TraitRule('格上との対戦・代表戦', 0.12, (c) => c.bigMatch)];
+        return [TraitRule(tr('格上との対戦・代表戦', 'Against better sides and in internationals'), 0.12, (c) => c.bigMatch)];
       case Trait.comeback:
-        return [TraitRule('負けているとき', 0.12, (c) => c.margin < 0)];
+        return [TraitRule(tr('負けているとき', 'When behind'), 0.12, (c) => c.margin < 0)];
       case Trait.frontRunner:
         return [
-          TraitRule('リードしているとき', 0.10, (c) => c.margin > 0),
-          TraitRule('負けているとき', -0.07, (c) => c.margin < 0),
+          TraitRule(tr('リードしているとき', 'When in the lead'), 0.10, (c) => c.margin > 0),
+          TraitRule(tr('負けているとき', 'When behind'), -0.07, (c) => c.margin < 0),
         ];
       case Trait.penaltyKing:
         return [TraitRule('PK', 0.20, (c) => c.scenarioId.contains('-pk'))];
       case Trait.twoFooted:
         // 逆足の落ち込みを打ち消す方向に働く。
-        return [TraitRule('逆足の局面', 0.14, (c) => c.weakFoot)];
+        return [TraitRule(tr('逆足の局面', 'On his weaker foot'), 0.14, (c) => c.weakFoot)];
       case Trait.cosmopolitan:
-        return [TraitRule('国外のクラブ', 0.09, (c) => c.abroad)];
+        return [TraitRule(tr('国外のクラブ', 'At a club abroad'), 0.09, (c) => c.abroad)];
       case Trait.superSub:
-        return [TraitRule('途中出場', 0.11, (c) => c.substitute)];
+        return [TraitRule(tr('途中出場', 'Off the bench'), 0.11, (c) => c.substitute)];
       case Trait.fastStarter:
-        return [TraitRule('前半30分まで', 0.09, (c) => c.minute < 30)];
+        return [TraitRule(tr('前半30分まで', 'Up to the 30th minute'), 0.09, (c) => c.minute < 30)];
       case Trait.hotHand:
-        return [TraitRule('成功した直後', 0.11, (c) => c.afterSuccess)];
+        return [TraitRule(tr('成功した直後', 'Right after a success'), 0.11, (c) => c.afterSuccess)];
       case Trait.assistKing:
-        return [TraitRule('アシストの手', 0.09, (c) => c.outcome == Outcome.assist)];
+        return [TraitRule(tr('アシストの手', 'Assist moves'), 0.09, (c) => c.outcome == Outcome.assist)];
 
       // ---- 得意技 ----
       case Trait.aerialAce:
         return [
           TraitRule(
-            'ヘディング・競り合い',
+            tr('ヘディング・競り合い', 'In the air and in duels'),
             0.13,
             (c) => c.detail == Detail.heading || c.detail == Detail.jumping,
           ),
         ];
       case Trait.sprinter:
-        return [TraitRule('スピードの手', 0.10, (c) => c.key == AttributeKey.pace)];
+        return [TraitRule(tr('スピードの手', 'A race for the ball'), 0.10, (c) => c.key == AttributeKey.pace)];
       case Trait.playmaker:
-        return [TraitRule('パスの手', 0.08, (c) => c.key == AttributeKey.passing)];
+        return [TraitRule(tr('パスの手', 'Passing moves'), 0.08, (c) => c.key == AttributeKey.passing)];
       case Trait.poacher:
-        return [TraitRule('決定力の手', 0.12, (c) => c.detail == Detail.finishing)];
+        return [TraitRule(tr('決定力の手', 'Finishing moves'), 0.12, (c) => c.detail == Detail.finishing)];
       case Trait.wall:
         return [
-          TraitRule('守備の手', 0.10, (c) => c.key == AttributeKey.defending),
+          TraitRule(tr('守備の手', 'Defensive moves'), 0.10, (c) => c.key == AttributeKey.defending),
         ];
       case Trait.dribbler:
         return [
-          TraitRule('仕掛ける手', 0.10, (c) => c.key == AttributeKey.dribbling),
+          TraitRule(tr('仕掛ける手', 'Taking players on'), 0.10, (c) => c.key == AttributeKey.dribbling),
         ];
       case Trait.tackler:
         return [
           TraitRule(
-            'タックル・インターセプト',
+            tr('タックル・インターセプト', 'Tackles and interceptions'),
             0.12,
             (c) =>
                 c.detail == Detail.tackling || c.detail == Detail.interceptions,
@@ -576,12 +583,12 @@ enum Trait {
         ];
       case Trait.longRange:
         return [
-          TraitRule('ロングシュート', 0.15, (c) => c.detail == Detail.longShots),
+          TraitRule(tr('ロングシュート', 'Shots from distance'), 0.15, (c) => c.detail == Detail.longShots),
         ];
       case Trait.crosser:
         return [
           TraitRule(
-            'クロス・ロングパス',
+            tr('クロス・ロングパス', 'Crosses and long passes'),
             0.12,
             (c) =>
                 c.detail == Detail.crossing || c.detail == Detail.longPassing,
@@ -590,7 +597,7 @@ enum Trait {
       case Trait.tempoSetter:
         return [
           TraitRule(
-            '短いパス・ボール扱い',
+            tr('短いパス・ボール扱い', 'Short passes and close control'),
             0.10,
             (c) =>
                 c.detail == Detail.shortPassing ||
@@ -600,32 +607,32 @@ enum Trait {
       case Trait.sweeperKeeper:
         return [
           TraitRule(
-            'GKのポジショニング',
+            tr('GKのポジショニング', 'Goalkeeper positioning'),
             0.13,
             (c) => c.detail == Detail.gkPositioning,
           ),
         ];
       case Trait.reflexKeeper:
-        return [TraitRule('セービング', 0.13, (c) => c.detail == Detail.reflexes)];
+        return [TraitRule(tr('セービング', 'Shot-stopping'), 0.13, (c) => c.detail == Detail.reflexes)];
 
       // ---- 欠点 ----
       case Trait.moody:
         return [
-          TraitRule('成功した直後', 0.09, (c) => c.afterSuccess),
-          TraitRule('失敗した直後', -0.10, (c) => c.afterFailure),
+          TraitRule(tr('成功した直後', 'Right after a success'), 0.09, (c) => c.afterSuccess),
+          TraitRule(tr('失敗した直後', 'Right after a failure'), -0.10, (c) => c.afterFailure),
         ];
       case Trait.slowStarter:
-        return [TraitRule('前半30分まで', -0.09, (c) => c.minute < 30)];
+        return [TraitRule(tr('前半30分まで', 'Up to the 30th minute'), -0.09, (c) => c.minute < 30)];
       case Trait.bigGameShy:
-        return [TraitRule('格上との対戦・代表戦', -0.12, (c) => c.bigMatch)];
+        return [TraitRule(tr('格上との対戦・代表戦', 'Against better sides and in internationals'), -0.12, (c) => c.bigMatch)];
       case Trait.homesick:
-        return [TraitRule('国外のクラブ', -0.10, (c) => c.abroad)];
+        return [TraitRule(tr('国外のクラブ', 'At a club abroad'), -0.10, (c) => c.abroad)];
       case Trait.benchCold:
-        return [TraitRule('途中出場', -0.11, (c) => c.substitute)];
+        return [TraitRule(tr('途中出場', 'Off the bench'), -0.11, (c) => c.substitute)];
       case Trait.bigMoment:
         return [
-          TraitRule('後半30分以降', 0.18, (c) => c.minute >= 75),
-          TraitRule('格上との対戦・代表戦', 0.15, (c) => c.bigMatch),
+          TraitRule(tr('後半30分以降', 'From the 75th minute'), 0.18, (c) => c.minute >= 75),
+          TraitRule(tr('格上との対戦・代表戦', 'Against better sides and in internationals'), 0.15, (c) => c.bigMatch),
         ];
 
       // ---- 試合の外でだけ効くもの ----
@@ -684,36 +691,36 @@ enum Trait {
   /// 各 getter から作るので、数字を変えれば画面も変わる。
   List<String> get offPitchEffects => [
     if (transcendDetail != null)
-      '${transcendDetail!.label}の上限 +${Formulas.ceilingBreak}'
+      tr('${transcendDetail!.label}の上限 +${Formulas.ceilingBreak}'
           '（${Formulas.absoluteMax}まで。${Formulas.transcendRunway}以上なら'
-          'ポテンシャルに達しても伸びる）',
-    if (potentialBonus != 0) '生まれたときのポテンシャル +$potentialBonus',
-    if (peakAgeOffset != 0) 'ピーク ${_years(peakAgeOffset)}',
-    if (declineAgeOffset != 0) '衰え始め ${_years(declineAgeOffset)}',
-    if (growthFactor(20) != 1.0) '22歳までの成長 ${_times(growthFactor(20))}',
-    if (growthFactor(30) != 1.0) '23歳からの成長 ${_times(growthFactor(30))}',
-    if (injuryFactor != 1.0) '怪我の確率 ${_times(injuryFactor)}',
-    if (conditionCostFactor != 1.0) '試合と練習の消耗 ${_times(conditionCostFactor)}',
-    if (fatigueFactor != 1.0) '疲労の溜まり ${_times(fatigueFactor)}',
-    if (restFactor != 1.0) '休養で戻る量 ${_times(restFactor)}',
-    if (trainingFactor != 1.0) '練習の効き ${_times(trainingFactor)}',
-    if (setPieceFactor != 1.0) '居残りの効き ${_times(setPieceFactor)}',
-    if (deadBallThresholdOffset != 0) 'キッカーになる水準 $deadBallThresholdOffset',
-    if (rehabFactor != 1.0) '離脱の期間 ${_times(rehabFactor)}',
-    if (moraleFactor != 1.0) '気持ちの落ち込み ${_times(moraleFactor)}',
-    if (moraleGainFactor != 1.0) '気持ちの上向き ${_times(moraleGainFactor)}',
-    if (formFactor != 1.0) '波の入りやすさ ${_times(formFactor)}',
-    if (ratingBonus != 0) '毎試合の評価点 +${ratingBonus.toStringAsFixed(2)}',
-    if (cleanSheetFactor != 1.0) '無失点の評価 ${_times(cleanSheetFactor)}',
-    if (cardFactor != 1.0) '警告の確率 ${_times(cardFactor)}',
-    if (fameFactor != 1.0) '知名度の伸び ${_times(fameFactor)}',
-    if (aptitudeFactor != 1.0) '慣れないポジションの減点 ${_times(aptitudeFactor)}',
-    if (adaptationFactor != 1.0) '相手への慣れ ${_times(adaptationFactor)}',
-    if (breakthroughFactor != 1.0) '限界突破の確率 ${_times(breakthroughFactor)}',
-    if (breakthroughWeekOffset != 0) '限界突破に要る大成功の週 $breakthroughWeekOffset回',
-    if (plateauFactor != 1.0) '停滞期の長さ ${_times(plateauFactor)}',
-    if (relationGainFactor != 1.0) '監督の信頼の上がり ${_times(relationGainFactor)}',
-    if (relationLossFactor != 1.0) '監督の信頼の下がり ${_times(relationLossFactor)}',
+          'ポテンシャルに達しても伸びる）', '${transcendDetail!.label} ceiling +${Formulas.ceilingBreak} (up to ${Formulas.absoluteMax}; from ${Formulas.transcendRunway} it keeps growing past his potential)'),
+    if (potentialBonus != 0) tr('生まれたときのポテンシャル +$potentialBonus', 'Potential at birth +$potentialBonus'),
+    if (peakAgeOffset != 0) tr('ピーク ${_years(peakAgeOffset)}', 'Peak ${_years(peakAgeOffset)}'),
+    if (declineAgeOffset != 0) tr('衰え始め ${_years(declineAgeOffset)}', 'Decline begins ${_years(declineAgeOffset)}'),
+    if (growthFactor(20) != 1.0) tr('22歳までの成長 ${_times(growthFactor(20))}', 'Growth to 22 ${_times(growthFactor(20))}'),
+    if (growthFactor(30) != 1.0) tr('23歳からの成長 ${_times(growthFactor(30))}', 'Growth from 23 ${_times(growthFactor(30))}'),
+    if (injuryFactor != 1.0) tr('怪我の確率 ${_times(injuryFactor)}', 'Injury chance ${_times(injuryFactor)}'),
+    if (conditionCostFactor != 1.0) tr('試合と練習の消耗 ${_times(conditionCostFactor)}', 'Condition cost of matches and training ${_times(conditionCostFactor)}'),
+    if (fatigueFactor != 1.0) tr('疲労の溜まり ${_times(fatigueFactor)}', 'Fatigue build-up ${_times(fatigueFactor)}'),
+    if (restFactor != 1.0) tr('休養で戻る量 ${_times(restFactor)}', 'Condition regained by rest ${_times(restFactor)}'),
+    if (trainingFactor != 1.0) tr('練習の効き ${_times(trainingFactor)}', 'Training effect ${_times(trainingFactor)}'),
+    if (setPieceFactor != 1.0) tr('居残りの効き ${_times(setPieceFactor)}', 'Extra-session effect ${_times(setPieceFactor)}'),
+    if (deadBallThresholdOffset != 0) tr('キッカーになる水準 $deadBallThresholdOffset', 'Level needed to be the taker $deadBallThresholdOffset'),
+    if (rehabFactor != 1.0) tr('離脱の期間 ${_times(rehabFactor)}', 'Time out injured ${_times(rehabFactor)}'),
+    if (moraleFactor != 1.0) tr('気持ちの落ち込み ${_times(moraleFactor)}', 'Drop in morale ${_times(moraleFactor)}'),
+    if (moraleGainFactor != 1.0) tr('気持ちの上向き ${_times(moraleGainFactor)}', 'Rise in morale ${_times(moraleGainFactor)}'),
+    if (formFactor != 1.0) tr('波の入りやすさ ${_times(formFactor)}', 'Chance of a hot or cold spell ${_times(formFactor)}'),
+    if (ratingBonus != 0) tr('毎試合の評価点 +${ratingBonus.toStringAsFixed(2)}', 'Match rating +${ratingBonus.toStringAsFixed(2)}'),
+    if (cleanSheetFactor != 1.0) tr('無失点の評価 ${_times(cleanSheetFactor)}', 'Clean sheet rating ${_times(cleanSheetFactor)}'),
+    if (cardFactor != 1.0) tr('警告の確率 ${_times(cardFactor)}', 'Booking chance ${_times(cardFactor)}'),
+    if (fameFactor != 1.0) tr('知名度の伸び ${_times(fameFactor)}', 'Growth in fame ${_times(fameFactor)}'),
+    if (aptitudeFactor != 1.0) tr('慣れないポジションの減点 ${_times(aptitudeFactor)}', 'Penalty out of position ${_times(aptitudeFactor)}'),
+    if (adaptationFactor != 1.0) tr('相手への慣れ ${_times(adaptationFactor)}', 'Adapting to an opponent ${_times(adaptationFactor)}'),
+    if (breakthroughFactor != 1.0) tr('限界突破の確率 ${_times(breakthroughFactor)}', 'Chance of breaking the ceiling ${_times(breakthroughFactor)}'),
+    if (breakthroughWeekOffset != 0) tr('限界突破に要る大成功の週 $breakthroughWeekOffset回', 'Great weeks needed to break the ceiling $breakthroughWeekOffset'),
+    if (plateauFactor != 1.0) tr('停滞期の長さ ${_times(plateauFactor)}', 'Length of a plateau ${_times(plateauFactor)}'),
+    if (relationGainFactor != 1.0) tr('監督の信頼の上がり ${_times(relationGainFactor)}', 'Trust gained from the manager ${_times(relationGainFactor)}'),
+    if (relationLossFactor != 1.0) tr('監督の信頼の下がり ${_times(relationLossFactor)}', 'Trust lost with the manager ${_times(relationLossFactor)}'),
   ];
 
   /// 効き方をすべて言葉にしたもの。画面とガイドの両方で使う。

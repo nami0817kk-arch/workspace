@@ -4,11 +4,16 @@
 /// `flutter test test/scroll_sim.dart`。`_test.dart` で終わらないので CI では走らない。
 ///
 /// 画面構成を触ったら回す。**「多い気がする」を数字にしないと直せない。**
+///
+/// **英語でも測る**（`--dart-define=LANG=en`）。英語は手の名前が長く、
+/// 日本語なら1行で収まるものが2行になるので、同じ画面でも高さが違う。
+/// `shots.dart` と同じ形。
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soccer_career/l10n/lang.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/fixture_banner.dart';
 import 'package:soccer_career/ui/pitch_view.dart';
@@ -17,7 +22,13 @@ import 'package:soccer_career/ui/stat_tile.dart';
 
 import 'ui_test.dart' as ui_test;
 
+const String _lang = String.fromEnvironment('LANG');
+
 void main() {
+  setUpAll(() {
+    if (_lang == 'en') Language.setForTest(Lang.en);
+  });
+
   testWidgets('tab heights', (tester) async {
     final controller = await ui_test.newCareer(
       age: 24,
