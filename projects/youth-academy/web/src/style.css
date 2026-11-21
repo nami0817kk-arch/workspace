@@ -120,9 +120,12 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .speeds{display:flex;gap:4px;background:var(--navy);padding:2px;border-radius:9px}
 .speeds button{color:#c9d6f0;font-weight:800;font-size:11.5px;padding:0 8px;min-height:34px;min-width:34px;border-radius:7px;white-space:nowrap}
 .speeds button.on{background:var(--yellow);color:#3b2d00}
-.comm{height:28px;background:#fff;border-radius:10px;box-shadow:var(--shadow-s);border:1px solid var(--line);display:flex;align-items:center;padding:0 12px;gap:8px;font-weight:700;font-size:13px;color:var(--navy);overflow:hidden}
+.comm{height:38px;background:#fff;border-radius:10px;box-shadow:var(--shadow-s);border:1px solid var(--line);display:flex;align-items:center;padding:0 12px;gap:8px;font-weight:700;font-size:13px;color:var(--navy);overflow:hidden}
 .comm .min{background:var(--navy);color:#fff;border-radius:6px;padding:1px 6px;font-size:11px;font-variant-numeric:tabular-nums}
+.comm .cl{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;line-height:1.25}
 .comm .tx{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comm .prev{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:600;color:#6b7a93}
+.comm .prev:empty{display:none}
 .logpop{position:absolute;left:8px;bottom:40px;width:min(520px,70%);background:rgba(255,255,255,.97);border-radius:10px;box-shadow:var(--shadow);padding:6px 10px;z-index:4;max-height:55%;overflow:auto;font-size:11.5px}
 .logpop div{padding:2px 0;border-bottom:1px dashed var(--line)}
 .logpop div b{color:var(--blue-d);margin-right:6px}

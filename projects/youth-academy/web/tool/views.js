@@ -497,6 +497,7 @@ async function clearEvents() {
   await sleep(300);
   ok(!!d.querySelector('canvas') && !!d.querySelector('.scoreboard'), '試合の画面');
   ok(txt().includes('止める') && txt().includes('自動停止') && txt().includes('結果まで'), '止めるボタン・自動停止・結果まで');
+  ok(!!d.querySelector('.comm .tx') && !!d.querySelector('.comm .prev'), '実況は最新と1つ前の2行');
   btn('見どころ').click();
   btn('止める').click();
   let n = 0;
