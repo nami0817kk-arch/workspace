@@ -51,7 +51,9 @@
     if (p.mind) return;
     p.mind = { k, w: weeks, y: w.year, s: w.week };
     p.mindLog = (p.mindLog || []).concat([{ y: w.year, w: w.week, k }]).slice(-10);
-    if (YA.noteTier) YA.noteTier(w, p.star ? 1 : 2, `${p.num}番 ${p.name}が${YA.MIND[k].name}に陥っている。${YA.MIND[k].about}`, p.id);
+    const ft = `${p.num}番 ${p.name}が${YA.MIND[k].name}に陥っている。${YA.MIND[k].about}`;
+    if (YA.noteMinor) YA.noteMinor(w, p, `${p.num}番 ${String(p.name).split(' ')[0]}が${YA.MIND[k].name}に陥った`, ft, p.star ? 1 : 2);
+    else if (YA.noteTier) YA.noteTier(w, p.star ? 1 : 2, ft, p.id);
     if (p.hist) p.hist.unshift({ y: w.year, w: w.week, t: YA.MIND[k].name });
   }
   function endMind(w, p, why) {
@@ -59,7 +61,9 @@
     const k = p.mind.k;
     p.mind = null;
     p.mindCool = 10; // 抜けてから10週は次の心の状態に陥らない
-    if (YA.noteTier) YA.noteTier(w, 3, `${p.name}の${YA.MIND[k].name}が抜けた${why ? '（' + why + '）' : ''}`, p.id);
+    const mt = `${p.name}の${YA.MIND[k].name}が抜けた${why ? '（' + why + '）' : ''}`;
+    if (YA.noteMinor) YA.noteMinor(w, p, `${p.num}番 ${String(p.name).split(' ')[0]}の${YA.MIND[k].name}が抜けた`, mt, 3);
+    else if (YA.noteTier) YA.noteTier(w, 3, mt, p.id);
   }
   YA.setMind = setMind;
   YA.endMind = endMind;
@@ -113,10 +117,10 @@
       if (p.relapseW > 0) p.relapseW--;
       // 成長痛：4週で2cm以上伸びた高1・高2
       p.hH = (p.hH || []).concat([p.height]).slice(-5);
-      if (p.gpain > 0) { p.gpain--; if (!p.gpain && YA.noteTier) YA.noteTier(w, 3, `${p.name}の成長痛がおさまった`, p.id); }
+      if (p.gpain > 0) { p.gpain--; if (!p.gpain && YA.noteMinor) YA.noteMinor(w, p, `${p.num}番 ${String(p.name).split(' ')[0]}の成長痛がおさまった`, `${p.name}の成長痛がおさまった`, 3); }
       else if (p.grade <= 2 && p.hH.length >= 5 && p.hH[4] - p.hH[0] >= 2 && r() < 0.3) {
         p.gpain = r.int(3, 6);
-        if (YA.noteTier) YA.noteTier(w, 2, `${p.num}番 ${p.name}が成長痛を訴えている（背が伸びている時期。${p.gpain}週ほど伸びが鈍り、体を痛めやすい）`, p.id);
+        if (YA.noteMinor) YA.noteMinor(w, p, `${p.num}番 ${String(p.name).split(' ')[0]}が成長痛`, `${p.num}番 ${p.name}が成長痛を訴えている（背が伸びている時期。${p.gpain}週ほど伸びが鈍り、体を痛めやすい）`);
         if (p.hist) p.hist.unshift({ y: w.year, w: w.week, t: '成長痛' });
       }
       // 心の状態

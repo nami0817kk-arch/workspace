@@ -56,7 +56,7 @@ function playYear(w, opts) {
     // スカウト：暦に合わせて自動で（4〜11月に出て、11月に内部昇格、1月にセレクション）
     if (opts.scout && w.scouting) YA.autoScout(w);
     YA.startWeek(w);
-    injuries += w.inbox.filter((n) => n.week === w.week && n.year === w.year && /怪我/.test(n.text)).length;
+    injuries += w.inbox.filter((n) => n.week === w.week && n.year === w.year).reduce((s, n) => s + (n.parts ? n.parts.filter((x) => /怪我/.test(x.f)).length : /怪我/.test(n.text) ? 1 : 0), 0);
     for (const e of w.events.slice()) {
       // 同じ週の別の出来事で抜けた子（プロ契約など）宛ては、画面と同じく飛ばす
       if (e.pid && !w.players[e.pid]) { w.events.splice(w.events.indexOf(e), 1); continue; }
@@ -1637,6 +1637,30 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(wh.scoutScore && wh.scoutScore.hit + wh.scoutScore.over + wh.scoutScore.under >= 1, '当たり外れの集計が残る');
   ok((wh.inbox || []).some((n) => /見立ては総合力/.test(n.text)) || noted.every((p) => p.scoutNote.kind === 'hit' && !p.scoutNote.hunch), '見立てと違った子・見立てが付いた子は知らせが出る');
   ok(JSON.parse(JSON.stringify(wh)).scoutScore, '当たり外れの集計が保存される');
+  ok((wh.inbox || []).filter((n) => n.year === wh.year && /^入団した/.test(n.text)).length <= 1, '入団の見立ての答え合わせは1件にまとまる');
+}
+// お知らせのまとめ（2026-11-21「品質向上」）：★以外の子の小さな動きは月に1件、★の子は1件ずつ
+{
+  const st = YA.testStart({ seed: 12, tier: 2, years: 1 });
+  const w = st.w;
+  const ps = Object.values(w.players);
+  const non = ps.filter((p) => !p.star).slice(0, 3);
+  const star = ps[0];
+  const s0 = star.star;
+  star.star = true;
+  const n0 = w.inbox.length;
+  for (const p of non) YA.noteMinor(w, p, p.num + '番が復帰', p.name + ' が怪我から復帰');
+  YA.noteMinor(w, star, star.num + '番が復帰', star.name + ' が怪我から復帰');
+  const add = w.inbox.slice(n0);
+  ok(add.length === 2, 'まとめ：★以外の3件は1件に、★の子は別の1件 ' + add.length);
+  const dg = add.find((n) => n.dg);
+  ok(dg && dg.parts.length === 3 && /^今月の選手の動き：/.test(dg.text) && YA.noticeKind(dg.text) === '選手の動き', 'まとめ：文と種類');
+  ok(add.some((n) => !n.dg && n.pid === star.id), 'まとめ：★の子は選手につながる1件');
+  ok(w.inbox[w.inbox.length - 1] === add[add.length - 1], 'まとめ：足すと一番新しい位置へ動く');
+  w.week += 4;
+  YA.noteMinor(w, non[0], 'x', 'y');
+  ok(w.inbox.filter((n) => n.dg).length === 2, 'まとめ：月が替わると別の1件');
+  star.star = s0;
 }
 // 卒業生の便り（決定111）・卒業生が顔を出す（決定112）・クラブの印（決定146）
 {

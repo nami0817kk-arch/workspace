@@ -85,7 +85,8 @@
       p.px[k] = 0;
       p.pxY = w.year;
       const txt = cur === 'ふつう' ? `${p.name}に「${to}」な面が出てきた（${why}）` : `${p.name}の性格が変わった：「${cur}」→「${to}」（${why}）`;
-      if (YA.noteTier) YA.noteTier(w, 2, txt, p.id);
+      if (cur === 'ふつう' && YA.noteMinor) YA.noteMinor(w, p, `${p.num}番 ${String(p.name).split(' ')[0]}に「${to}」な面`, txt);
+      else if (YA.noteTier) YA.noteTier(w, 2, txt, p.id);
       if (p.hist) p.hist.unshift({ y: w.year, w: w.week, t: `性格が「${to}」に（${why}）` });
       p.persCh = (p.persCh || []).concat([{ y: w.year, g, from: cur, to, why }]);
       return;

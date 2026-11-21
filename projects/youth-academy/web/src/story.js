@@ -347,6 +347,7 @@
     }
     const res = intake0.apply(this, arguments);
     let hit = 0, over = 0, under = 0;
+    const lines = [];
     for (const e of pre) {
       const p = e.p;
       const now = YA.rate(YA.ovr(p));
@@ -357,9 +358,12 @@
       if (kind === 'hit') hit++; else if (kind === 'over') over++; else under++;
       if (kind !== 'hit' || e.hunch) {
         const hn = e.hunch ? `「${e.hunch.text}」という見立ては${e.hunch.true ? '当たっていた' : '外れた'}（伸びしろ★${st}）。` : '';
-        YA.noteTier(w, kind === 'hit' ? 3 : 2, `入団した${p.name}：見立ては総合力${e.lo}〜${e.hi}、本当は${now}（${kind === 'over' ? '幅の上のほう＝当たり' : kind === 'under' ? '幅の下のほう＝外れ' : '見立てどおり'}）。${hn}`);
+        lines.push({ imp: kind !== 'hit', t: `${p.name}：見立ては総合力${e.lo}〜${e.hi}、本当は${now}（${kind === 'over' ? '幅の上のほう＝当たり' : kind === 'under' ? '幅の下のほう＝外れ' : '見立てどおり'}）。${hn}` });
       }
     }
+    // 1人1件だと入団の週に十数件届いていた（2026-11-21）。答え合わせは1件にまとめる
+    if (lines.length === 1) YA.noteTier(w, lines[0].imp ? 2 : 3, '入団した' + lines[0].t);
+    else if (lines.length) YA.noteTier(w, lines.some((x) => x.imp) ? 2 : 3, `入団した子の見立ての答え合わせ（${lines.length}人）：` + lines.map((x) => x.t).join('／'));
     w.scoutScore = w.scoutScore || { hit: 0, over: 0, under: 0 };
     w.scoutScore.hit += hit; w.scoutScore.over += over; w.scoutScore.under += under;
     return res;

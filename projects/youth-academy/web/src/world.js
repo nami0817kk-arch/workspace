@@ -506,6 +506,32 @@
     w.inbox.push({ week: w.week, year: w.year, tier, text, pid: pid || null, n: (w.inboxN = (w.inboxN || 0) + 1) });
     if (w.inbox.length > 300) w.inbox.splice(0, w.inbox.length - 300);
   }
+  // ★以外の子の小さな動き（復帰・成長期・伸び盛り・先発の入れ替え・性格・心の状態）は、月ごとに1件へまとめる
+  // （2026-11-21「品質向上」：お知らせが週7件あり、大事なものが埋もれていた。週ごとでは重ならず減らなかった）。
+  // 足すたびに一番新しい位置へ移す。★の子は1件ずつのまま
+  function noteMinor(w, p, short, full, tier) {
+    tier = tier || 2;
+    if (!p || p.star) return YA.noteTier(w, tier, full, p ? p.id : null);
+    const mk = w.year * 100 + (YA.monthIdx ? YA.monthIdx(w.week) : Math.floor(w.week / 4));
+    const part = { s: short, f: full, y: w.year, wk: w.week };
+    const i = w.inbox.findIndex((n) => n.dg === mk && n.tier === tier);
+    if (i < 0) {
+      YA.noteTier(w, tier, full, p.id);
+      const n = w.inbox[w.inbox.length - 1];
+      n.dg = mk;
+      n.parts = [part];
+      return;
+    }
+    const d = w.inbox.splice(i, 1)[0];
+    d.parts.push(part);
+    d.pid = null;
+    d.week = w.week;
+    d.n = w.inboxN = (w.inboxN || 0) + 1;
+    d.text = (tier === 3 ? '今月の選手の記録：' : '今月の選手の動き：') + d.parts.map((x) => x.s).join('／');
+    w.inbox.push(d);
+  }
+  YA.noteMinor = noteMinor;
+  const surOf = (p) => p.num + '番 ' + String(p.name).split(' ')[0];
 
   // 背が高いと空中戦・ヘディング・強さが、小柄だと敏しょう性・加速・バランスが伸びやすい
   const TALL_AB = new Set(['ヘディング', 'ジャンプ', '強さ', '空中戦']);
@@ -594,12 +620,14 @@
           p.inj = rng() < YA.BIG_INJ_P ? rng.int(8, 24) : rng.int(1, p.fat > 80 ? 7 : 5);
           p._injLen = p.inj;
           p.hist.unshift({ y: w.year, w: w.week, t: '怪我（' + p.inj + '週）' });
-          noteTier(w, 1, p.num + '番 ' + p.name + ' が練習中に怪我。全治' + p.inj + '週', p.id);
+          // 短い怪我（3週まで）の★以外の子は、月のまとめへ
+          if (p.inj < 4) noteMinor(w, p, surOf(p) + 'が怪我（' + p.inj + '週）', p.num + '番 ' + p.name + ' が練習中に怪我。全治' + p.inj + '週', p.star ? 1 : 2);
+          else noteTier(w, 1, p.num + '番 ' + p.name + ' が練習中に怪我。全治' + p.inj + '週', p.id);
         }
       } else if (inj) {
         p.inj = Math.max(0, p.inj - 1);
         if (p.inj === 0) {
-          noteTier(w, 2, p.num + '番 ' + p.name + ' が怪我から復帰', p.id);
+          noteMinor(w, p, surOf(p) + 'が復帰', p.num + '番 ' + p.name + ' が怪我から復帰');
           // 長い怪我は、体の能力が少し下がる（大怪我は2つ）
           if ((p._injLen || 0) >= 6 && rng() < 0.55) {
             const phys = ['スピード', '加速', 'スタミナ', '敏しょう性', 'バランス', 'ジャンプ', '強さ'];
@@ -654,7 +682,7 @@
           if (p.traits.length < 5) p.traits.push(tr);
           p.train.trait = null;
           p.hist.unshift({ y: w.year, w: w.week, t: '特性「' + tr + '」を習得' });
-          noteTier(w, 2, p.num + '番 ' + p.name + ' が特性「' + tr + '」を身につけた', p.id);
+          noteMinor(w, p, surOf(p) + 'が「' + tr + '」を習得', p.num + '番 ' + p.name + ' が特性「' + tr + '」を身につけた');
         }
       }
       YA.refreshApt(p);
@@ -686,8 +714,8 @@
       // 急に伸びたあとは、しばらく敏しょう性とバランスが下がる
       for (const n1 of ['敏しょう性', 'バランス']) if (p.ab[n1] > 3) p.ab[n1]--;
       // 長い説明は最初の1回だけ（2026-11-17：1年に15回同じ説明が出ていた）
-      noteTier(w, 2, p.num + '番 ' + p.name + ' が成長期に入った' + (w.spurtTold ? '' : '（伸びやすい時期。体が急に伸びて、敏しょう性とバランスは一時的に下がる）'), p.id);
-      w.spurtTold = true;
+      noteMinor(w, p, surOf(p) + 'が成長期に', p.num + '番 ' + p.name + ' が成長期に入った' + (w.spurtTold || !p.star ? '' : '（伸びやすい時期。体が急に伸びて、敏しょう性とバランスは一時的に下がる）'));
+      if (p.star) w.spurtTold = true;
     }
     // 目立つ伸び
     const big = Object.keys(gains).map((id) => [id, gains[id]]).sort((a, b) => b[1] - a[1]).slice(0, 2);
@@ -1139,7 +1167,8 @@
             p.inj = ir() < YA.BIG_INJ_P * 1.5 ? ir.int(8, 24) : ir.int(1, 5);
             p._injLen = p.inj;
             p.hist.unshift({ y: w.year, w: w.week, t: '試合で怪我（' + p.inj + '週）' });
-            noteTier(w, 1, p.num + '番 ' + p.name + ' が試合で怪我。全治' + p.inj + '週' + (p.inj >= 8 ? '（長い離脱になる）' : ''), p.id);
+            if (p.inj < 4) noteMinor(w, p, surOf(p) + 'が怪我（' + p.inj + '週）', p.num + '番 ' + p.name + ' が試合で怪我。全治' + p.inj + '週', p.star ? 1 : 2);
+            else noteTier(w, 1, p.num + '番 ' + p.name + ' が試合で怪我。全治' + p.inj + '週' + (p.inj >= 8 ? '（長い離脱になる）' : ''), p.id);
           }
         }
         // 試合中の上下は、試合のあとに半分ほど元へ戻る（勝てば少し上がる）
@@ -1151,11 +1180,11 @@
           const rr = YA.rngOf(w.seed + w.week * 7 + w.year * 3 + p.num)();
           if (p.st.rating >= 8.4 && rr < 0.5) {
             p.state = { k: 'peak', w: 6 };
-            noteTier(w, 2, p.num + '番 ' + p.name + ' が大活躍で伸び盛りに入った', p.id);
+            noteMinor(w, p, surOf(p) + 'が伸び盛りに', p.num + '番 ' + p.name + ' が大活躍で伸び盛りに入った');
           } else if (p.st.rating <= 5.0 && rr < 0.5) {
             if (anyP(p, '反骨心')) {
               p.state = { k: 'peak', w: 5 };
-              noteTier(w, 2, p.num + '番 ' + p.name + ' は悔しさをバネに、伸び盛りに入った', p.id);
+              noteMinor(w, p, surOf(p) + 'が伸び盛りに', p.num + '番 ' + p.name + ' は悔しさをバネに、伸び盛りに入った');
             } else {
               p.state = { k: 'wall', w: 6 };
               noteTier(w, 2, p.num + '番 ' + p.name + ' が壁に当たっている（しばらく伸びにくい）', p.id);
@@ -1279,7 +1308,7 @@
     w.events = [];
     const swaps = [repairLineup(w, 'A'), repairLineup(w, 'B')];
     // 抜けた子がもうチームにいない（退団・卒業）こともある
-    for (const s of swaps[0]) if (s[1]) noteTier(w, 2, (s[0] ? s[0].num + '番 ' + s[0].name + ' が出られないため、' : '先発に空きが出たため、') + s[1].num + '番 ' + s[1].name + ' がAチームの先発に入った');
+    for (const s of swaps[0]) if (s[1]) noteMinor(w, s[1], surOf(s[1]) + 'がAの先発に', (s[0] ? s[0].num + '番 ' + s[0].name + ' が出られないため、' : '先発に空きが出たため、') + s[1].num + '番 ' + s[1].name + ' がAチームの先発に入った');
     w.phase = YA.hasMatch(w.week, w) ? 'match' : 'after';
   };
   YA.endWeek = function (w) {
