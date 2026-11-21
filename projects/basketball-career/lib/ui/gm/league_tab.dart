@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/codex.dart';
+
 import '../../gm/career.dart';
 import '../../gm/draft.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../gm_controller.dart';
+import 'codex_screen.dart';
 import 'common.dart';
 import 'draft_board_view.dart';
 import 'rankings_view.dart';
@@ -377,6 +380,17 @@ class _Standings extends StatelessWidget {
           ),
         ],
         const SectionTitle('リーグの歴史'),
+        Card(
+          child: ListTile(
+            key: const Key('codex'),
+            leading: const Icon(Icons.menu_book_rounded, color: GmColors.gold),
+            title: const Text('図鑑', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('見つけたもの ${c.profile.codex.length} / ${codexEntries.length}(組み合わせ・相性・伸び方の型・隠れた特性・ドラフトの年)',
+                maxLines: 1, overflow: TextOverflow.ellipsis),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => CodexScreen(profile: c.profile, career: car))),
+          ),
+        ),
         Card(
           child: ListTile(
             leading: const Icon(Icons.account_balance_rounded, color: GmColors.gold),
