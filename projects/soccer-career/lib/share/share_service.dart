@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../l10n/lang.dart';
+
 /// 外に送る窓口。
 ///
 /// **文だけでは広まらない。** X も LINE も、画像が付いていないものは
@@ -93,9 +95,11 @@ ShareService createShareService() {
 /// **ストアの住所を必ず入れる。** 見た人が辿れないなら、広める意味がない。
 /// 名義は出さない（公開文面に本名も社名も載せない、という決まり）。
 abstract final class ShareText {
-  static const String appName = '選手キャリア';
+  /// **`const` では持てない**（言語を切り替えても古い名前が残る）。
+  static String get appName => tr('選手キャリア', 'Player Career');
   static const String storeUrl = 'https://apps.apple.com/jp/app/id6817971889';
-  static const String tag = '#選手キャリア';
+  /// 札も言語で変える。日本語の札は英語で探している人には届かない。
+  static String get tag => tr('#選手キャリア', '#PlayerCareer');
 
   /// 行を並べて、札とストアの住所で締める。空の行は落とす。
   static String compose(List<String> lines) =>

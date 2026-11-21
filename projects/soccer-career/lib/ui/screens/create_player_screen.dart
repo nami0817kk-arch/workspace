@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../l10n/lang.dart';
 import 'guide_screen.dart';
 import 'hall_screen.dart';
 import '../../game/career_engine.dart';
@@ -92,10 +93,10 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   /// まだ始められない理由。ボタンが灰色なだけでは、2画面ぶん
   /// スクロールした先で「何が足りないのか」が分からなかった。
   List<String> get _missing => [
-    if (_name.text.trim().isEmpty) '選手名を入れる',
+    if (_name.text.trim().isEmpty) tr('選手名を入れる', 'enter a name'),
     if (_tweakSum != 0)
-      '能力の割り振りを合計0にする（今 ${_tweakSum > 0 ? '+' : ''}$_tweakSum）',
-    if (_agent == null) '代理人を選ぶ',
+      tr('能力の割り振りを合計0にする（今 ${_tweakSum > 0 ? '+' : ''}$_tweakSum）', 'balance the attribute points to zero (now ${_tweakSum > 0 ? '+' : ''}$_tweakSum)'),
+    if (_agent == null) tr('代理人を選ぶ', 'pick an agent'),
   ];
 
   /// ポジションを変えると、基準値も割り振れる項目も変わる。
@@ -182,7 +183,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
             children: [
               if (!_busy && _missing.isNotEmpty) ...[
                 Text(
-                  'あと: ${_missing.join(' ・ ')}',
+                  tr('あと: ${_missing.join(' ・ ')}', 'Still to do: ${_missing.join(' · ')}'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.error,
@@ -194,9 +195,9 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: _ready ? _start : null,
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Text('キャリアを始める'),
+                    child: Text(tr('キャリアを始める', 'Start the career')),
                   ),
                 ),
               ),
@@ -215,12 +216,12 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('選手キャリア', style: theme.textTheme.headlineMedium),
+                  Text(tr('選手キャリア', 'Player Career'), style: theme.textTheme.headlineMedium),
                   const SizedBox(height: 8),
                   Text(
-                    '2部の下位クラブから始まる。38試合すべてに出て、'
+                    tr('2部の下位クラブから始まる。38試合すべてに出て、'
                     '評価点を積み上げて上を目指す。'
-                    'ポテンシャルは始めてから分かる。',
+                    'ポテンシャルは始めてから分かる。', 'You start at a struggling second-tier club. Play all 38 games, build up your ratings and climb. How far you can go is something you learn as you play.'),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -233,7 +234,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                         MaterialPageRoute(builder: (_) => const GuideScreen()),
                       ),
                       icon: const Icon(Icons.help_outline, size: 18),
-                      label: const Text('遊び方ガイドを読む'),
+                      label: Text(tr('遊び方ガイドを読む', 'Read how to play')),
                     ),
                   ),
                   // 前の選手をここから見に行ける。始める前に眺めるのが
@@ -255,11 +256,11 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                         // **次の選手を作る場所に、追うものを出す。**
                         // 挑戦は殿堂の中にあるので、開かないと存在に気付かない。
                         label: Text(
-                          'これまでの選手'
+                          tr('これまでの選手'
                           '（${widget.controller.hall.legends.length}人）'
                           ' ・ 挑戦 '
                           '${Challenge.values.where(widget.controller.hall.isCleared).length}'
-                          '/${Challenge.values.length}',
+                          '/${Challenge.values.length}', 'Players so far (${widget.controller.hall.legends.length}) · challenges ${Challenge.values.where(widget.controller.hall.isCleared).length}/${Challenge.values.length}'),
                         ),
                       ),
                     ),
@@ -274,22 +275,22 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '受け継ぐもの '
-                              '${widget.controller.hall.legacyPoints}pt',
+                              tr('受け継ぐもの '
+                              '${widget.controller.hall.legacyPoints}pt', 'Inherited ${widget.controller.hall.legacyPoints}pt'),
                               style: theme.textTheme.titleSmall,
                             ),
                             const SizedBox(height: 4),
                             Text(
                               widget.controller.hall.potentialBonus > 0
-                                  ? 'これまでの選手が残した記録で、この選手の'
+                                  ? tr('これまでの選手が残した記録で、この選手の'
                                         '伸びしろが'
                                         '+${widget.controller.hall.potentialBonus}'
                                         'される'
                                         '（${Formulas.legacyPerPotential}ptごとに+1、'
-                                        '上限+${Formulas.legacyPotentialCap}）。'
-                                  : 'あと'
+                                        '上限+${Formulas.legacyPotentialCap}）。', 'What your earlier players left behind raises this one ceiling by +${widget.controller.hall.potentialBonus} (+1 for every ${Formulas.legacyPerPotential}pt, up to +${Formulas.legacyPotentialCap}).')
+                                  : tr('あと'
                                         '${Formulas.legacyPerPotential - widget.controller.hall.legacyPoints}'
-                                        'ptで、次の選手の伸びしろが+1される。',
+                                        'ptで、次の選手の伸びしろが+1される。', '${Formulas.legacyPerPotential - widget.controller.hall.legacyPoints}pt more and the next player ceiling goes up by 1.'),
                               style: muted,
                             ),
                           ],
@@ -300,8 +301,8 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   const SizedBox(height: 20),
                   TextField(
                     controller: _name,
-                    decoration: const InputDecoration(
-                      labelText: '選手名',
+                    decoration: InputDecoration(
+                      labelText: tr('選手名', 'Name'),
                       border: OutlineInputBorder(),
                     ),
                     textInputAction: TextInputAction.done,
@@ -319,15 +320,15 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       const SizedBox(width: 14),
                       Expanded(
                         child: Text(
-                          '顔は描かない。髪と肌と、着ているもので「自分の選手」にする。'
-                          'クラブに入ると、そのクラブの色を着る。',
+                          tr('顔は描かない。髪と肌と、着ているもので「自分の選手」にする。'
+                          'クラブに入ると、そのクラブの色を着る。', 'No facial features are drawn. Hair, skin and kit are what make this your player. Once you join a club, you wear its colours.'),
                           style: muted,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
-                  Text('ポジション', style: theme.textTheme.labelLarge),
+                  Text(tr('ポジション', 'Position'), style: theme.textTheme.labelLarge),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -345,12 +346,12 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   Text(_position.fullName, style: muted),
                   if (_position.hasSide) ...[
                     const SizedBox(height: 12),
-                    Text('立つ側', style: theme.textTheme.labelLarge),
+                    Text(tr('立つ側', 'Side'), style: theme.textTheme.labelLarge),
                     const SizedBox(height: 4),
                     Text(
-                      '利き足と同じ側なら、逆足で対応する局面が減る。'
+                      tr('利き足と同じ側なら、逆足で対応する局面が減る。'
                       '逆サイドは逆足の局面が増える代わりに、'
-                      '内へ切り込んで利き足で打てる。',
+                      '内へ切り込んで利き足で打てる。', 'On your strong foot side, fewer moments force your weaker foot. On the other side there are more of them, but you can cut inside and shoot with your good foot.'),
                       style: muted,
                     ),
                     const SizedBox(height: 8),
@@ -368,17 +369,17 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     const SizedBox(height: 6),
                     Text(
                       _side.matches(_foot)
-                          ? '${_side.label}サイドの${_foot.label}。'
-                                '外を向いたまま蹴れる。'
-                          : '${_side.label}サイドの${_foot.label}。'
-                                '内へ切り込む形になる。',
+                          ? tr('${_side.label}サイドの${_foot.label}。'
+                                '外を向いたまま蹴れる。', '${_foot.label} on the ${_side.label}. You can play facing out.')
+                          : tr('${_side.label}サイドの${_foot.label}。'
+                                '内へ切り込む形になる。', '${_foot.label} on the ${_side.label}. You will be cutting inside.'),
                       style: muted,
                     ),
                   ],
                   const SizedBox(height: 24),
-                  Text('代理人', style: theme.textTheme.labelLarge),
+                  Text(tr('代理人', 'Agent'), style: theme.textTheme.labelLarge),
                   const SizedBox(height: 4),
-                  Text('契約交渉と移籍先の開拓を任せる。交渉力・人脈・手数料が違う。', style: muted),
+                  Text(tr('契約交渉と移籍先の開拓を任せる。交渉力・人脈・手数料が違う。', 'They handle your contracts and find you clubs. They differ in bargaining, contacts and fee.'), style: muted),
                   const SizedBox(height: 8),
                   for (final agent in _agents) ...[
                     _AgentCard(
@@ -389,7 +390,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     const SizedBox(height: 8),
                   ],
                   const SizedBox(height: 24),
-                  Text('年齢  $_age', style: theme.textTheme.labelLarge),
+                  Text(tr('年齢  $_age', 'Age  $_age'), style: theme.textTheme.labelLarge),
                   Slider(
                     value: _age.toDouble(),
                     min: 16,
@@ -400,17 +401,17 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   ),
                   Text(
                     _age <= 17
-                        ? '育成年代からの出発。一番下の部で、無名のまま始まる。'
-                              '伸びしろは長い。'
-                        : '若く始めるほど伸びしろは長いが、初期能力は低い。',
+                        ? tr('育成年代からの出発。一番下の部で、無名のまま始まる。'
+                              '伸びしろは長い。', 'Starting from the youth ranks. Bottom tier, no name yet, and a long way to grow.')
+                        : tr('若く始めるほど伸びしろは長いが、初期能力は低い。', 'The younger you start, the longer you have to grow, and the weaker you begin.'),
                     style: muted,
                   ),
                   const SizedBox(height: 24),
-                  Text('出身国', style: theme.textTheme.labelLarge),
+                  Text(tr('出身国', 'Country'), style: theme.textTheme.labelLarge),
                   const SizedBox(height: 4),
                   Text(
-                    '始めるリーグと、代表と、外国人としての扱いが決まる。'
-                    '格の高い国は水準も高いぶん、上がるのは難しい。',
+                    tr('始めるリーグと、代表と、外国人としての扱いが決まる。'
+                    '格の高い国は水準も高いぶん、上がるのは難しい。', 'This sets the league you start in, the national team you can play for, and how you are treated as a foreigner. A higher-standing country is a higher standard, and harder to climb.'),
                     style: muted,
                   ),
                   const SizedBox(height: 8),
@@ -419,7 +420,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     runSpacing: 8,
                     children: [
                       ChoiceChip(
-                        label: const Text('おまかせ'),
+                        label: Text(tr('おまかせ', 'Any')),
                         selected: _countryId == null,
                         onSelected: (_) => setState(() => _countryId = null),
                       ),
@@ -438,18 +439,18 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   if (_countryId != null) ...[
                     const SizedBox(height: 6),
                     Text(
-                      '${World.byId(_countryId!).confederation.label}  ・  '
+                      tr('${World.byId(_countryId!).confederation.label}  ・  '
                       '${World.byId(_countryId!).tiers}部制  ・  '
-                      '外国人ルール ${World.byId(_countryId!).foreignRule.summary}',
+                      '外国人ルール ${World.byId(_countryId!).foreignRule.summary}', '${World.byId(_countryId!).confederation.label}  ·  ${World.byId(_countryId!).tiers} tiers  ·  foreigner rule ${World.byId(_countryId!).foreignRule.summary}'),
                       style: muted,
                     ),
                   ],
                   const SizedBox(height: 24),
-                  Text('身体', style: theme.textTheme.labelLarge),
+                  Text(tr('身体', 'Body'), style: theme.textTheme.labelLarge),
                   const SizedBox(height: 4),
                   Text(
-                    '練習では動かない。高さは競り合いに、体重は当たりの強さと'
-                    'キレの入れ替えに効く。',
+                    tr('練習では動かない。高さは競り合いに、体重は当たりの強さと'
+                    'キレの入れ替えに効く。', 'Training does not change these. Height tells in the air; weight trades sharpness for strength in a duel.'),
                     style: muted,
                   ),
                   const SizedBox(height: 8),
@@ -472,7 +473,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text('身長  $_height cm', style: theme.textTheme.bodyMedium),
+                  Text(tr('身長  $_height cm', 'Height  $_height cm'), style: theme.textTheme.bodyMedium),
                   Slider(
                     value: _height.toDouble(),
                     min: 165,
@@ -481,7 +482,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     label: '$_height',
                     onChanged: (v) => setState(() => _height = v.round()),
                   ),
-                  Text('体重  $_weight kg', style: theme.textTheme.bodyMedium),
+                  Text(tr('体重  $_weight kg', 'Weight  $_weight kg'), style: theme.textTheme.bodyMedium),
                   Slider(
                     value: _weight.toDouble(),
                     min: 58,
@@ -504,21 +505,21 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     child: ExpansionTile(
                       tilePadding: EdgeInsets.zero,
                       childrenPadding: const EdgeInsets.only(bottom: 8),
-                      title: Text('見た目と背番号', style: theme.textTheme.labelLarge),
+                      title: Text(tr('見た目と背番号', 'Look and shirt number'), style: theme.textTheme.labelLarge),
                       subtitle: Text(
-                        '${_look.hair.label}  ・  '
+                        tr('${_look.hair.label}  ・  '
                         '${PlayerLook.hairColorLabels[_look.hairColor]}  ・  '
-                        '背番号 $_number',
+                        '背番号 $_number', '${_look.hair.label}  ·  ${PlayerLook.hairColorLabels[_look.hairColor]}  ·  no. $_number'),
                         style: muted,
                       ),
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text('試合の判定には効かない。', style: muted),
+                          child: Text(tr('試合の判定には効かない。', 'None of this affects anything on the pitch.'), style: muted),
                         ),
                         const SizedBox(height: 10),
                         _LookRow(
-                          label: '肌',
+                          label: tr('肌', 'Skin'),
                           children: [
                             for (
                               var i = 0;
@@ -535,7 +536,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                           ],
                         ),
                         _LookRow(
-                          label: '髪の色',
+                          label: tr('髪の色', 'Hair colour'),
                           children: [
                             for (
                               var i = 0;
@@ -552,7 +553,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                           ],
                         ),
                         _LookRow(
-                          label: '髪型',
+                          label: tr('髪型', 'Hair'),
                           children: [
                             for (final style in HairStyle.values)
                               ChoiceChip(
@@ -568,7 +569,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            '背番号  $_number',
+                            tr('背番号  $_number', 'Shirt number  $_number'),
                             style: theme.textTheme.bodyMedium,
                           ),
                         ),
@@ -584,12 +585,12 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text('能力の割り振り', style: theme.textTheme.labelLarge),
+                  Text(tr('能力の割り振り', 'Attribute points'), style: theme.textTheme.labelLarge),
                   const SizedBox(height: 4),
                   Text(
-                    'ポジションの基準値から、$tweakLimit まで動かせる。'
+                    tr('ポジションの基準値から、$tweakLimit まで動かせる。'
                     '増やしたぶんはどこかを削る（合計を0にすると始められる）。'
-                    'ポテンシャルは始めてから分かる。',
+                    'ポテンシャルは始めてから分かる。', 'You can move each attribute up to $tweakLimit from the baseline for your position. Whatever you add has to come off somewhere else — balance it to zero and you can start. How far you can grow is something you learn as you play.'),
                     style: muted,
                   ),
                   const SizedBox(height: 8),
@@ -604,9 +605,9 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   const SizedBox(height: 4),
                   Text(
                     _tweakSum == 0
-                        ? '割り振りは釣り合っている。'
-                        : '合計 ${_tweakSum > 0 ? '+' : ''}$_tweakSum。'
-                              '0にすると始められる。',
+                        ? tr('割り振りは釣り合っている。', 'The points are balanced.')
+                        : tr('合計 ${_tweakSum > 0 ? '+' : ''}$_tweakSum。'
+                              '0にすると始められる。', 'Total ${_tweakSum > 0 ? '+' : ''}$_tweakSum. Balance it to zero and you can start.'),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: _tweakSum == 0
                           ? theme.colorScheme.primary
@@ -616,19 +617,19 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   const SizedBox(height: 24),
                   Row(
                     children: [
-                      Text('生まれ持った特性', style: theme.textTheme.labelLarge),
+                      Text(tr('生まれ持った特性', 'Traits you were born with'), style: theme.textTheme.labelLarge),
                       const Spacer(),
                       TextButton.icon(
                         onPressed: _rerollTraits,
                         icon: const Icon(Icons.casino_outlined, size: 18),
-                        label: const Text('引き直す'),
+                        label: Text(tr('引き直す', 'Draw again')),
                       ),
                     ],
                   ),
                   Text(
-                    '長所が2つ、3割で欠点が1つ。まれに特別なものが混じる。'
+                    tr('長所が2つ、3割で欠点が1つ。まれに特別なものが混じる。'
                     '伸ばせないが、効く場面は決まっている。'
-                    '${_rerolls > 0 ? '（$_rerolls回 引き直した）' : ''}',
+                    '${_rerolls > 0 ? '（$_rerolls回 引き直した）' : ''}', 'Two strengths, and a flaw three times in ten. Something rare turns up now and then. You cannot train them, but each one has its moments. ${_rerolls > 0 ? '(drawn again $_rerolls times)' : ''}'),
                     style: muted,
                   ),
                   const SizedBox(height: 8),
@@ -697,11 +698,11 @@ class _DeclareCard extends StatelessWidget {
         data: theme.copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           key: const PageStorageKey('declare-challenge'),
-          title: Text('今回狙うもの', style: theme.textTheme.titleSmall),
+          title: Text(tr('今回狙うもの', 'What you are going for'), style: theme.textTheme.titleSmall),
           subtitle: Text(
             declared == null
-                ? '選ばなくてもいい（達成は宣言しなくても記録される）'
-                : '${declared!.label} ・ 達成で +${declared!.declaredBonus}pt',
+                ? tr('選ばなくてもいい（達成は宣言しなくても記録される）', 'You do not have to pick one — anything you clear is recorded either way')
+                : tr('${declared!.label} ・ 達成で +${declared!.declaredBonus}pt', '${declared!.label} · +${declared!.declaredBonus}pt if you do it'),
             style: muted,
           ),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -732,7 +733,7 @@ class _DeclareCard extends StatelessWidget {
                     ? theme.colorScheme.primary
                     : theme.colorScheme.outlineVariant,
               ),
-              title: const Text('宣言しない'),
+              title: Text(tr('宣言しない', 'Call nothing')),
               onTap: () => onPick(null),
             ),
           ],
@@ -899,7 +900,7 @@ class _AgentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${agent.name} ・ ${agent.style}',
+                      tr('${agent.name} ・ ${agent.style}', '${agent.name} · ${agent.style}'),
                       style: theme.textTheme.titleSmall,
                     ),
                     const SizedBox(height: 2),

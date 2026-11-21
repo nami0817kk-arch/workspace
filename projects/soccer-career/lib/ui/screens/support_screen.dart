@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../l10n/lang.dart';
 import '../../monetize/monetization.dart';
 import '../../monetize/purchase_service.dart';
 import '../readable_width.dart';
@@ -42,15 +43,15 @@ class _SupportScreenState extends State<SupportScreen> {
     // **取りやめは失敗ではない。** 赤い文字で出すと、自分で閉じた人に
     // 何か壊れたように見える。
     final message = switch (outcome) {
-      PurchaseOutcome.purchased => 'ありがとうございます。',
-      PurchaseOutcome.canceled => '購入は取りやめました。',
+      PurchaseOutcome.purchased => tr('ありがとうございます。', 'Thank you.'),
+      PurchaseOutcome.canceled => tr('購入は取りやめました。', 'The purchase was cancelled.'),
       // **「取りやめ」と出さない。** 家族の承認を待っている状態で、
       // 承認されれば後から届く（そのとき広告が消える）。
-      PurchaseOutcome.pending => '承認を待っています。承認されると反映されます。',
-      PurchaseOutcome.unavailable => 'ストアに繋がりませんでした。',
+      PurchaseOutcome.pending => tr('承認を待っています。承認されると反映されます。', 'Waiting for approval. It applies once approved.'),
+      PurchaseOutcome.unavailable => tr('ストアに繋がりませんでした。', 'Could not reach the store.'),
       // 買っていない人が「購入を復元」を押したとき。壊れて見せない。
-      PurchaseOutcome.nothingToRestore => '復元できる購入はありませんでした。',
-      PurchaseOutcome.failed => '購入できませんでした。',
+      PurchaseOutcome.nothingToRestore => tr('復元できる購入はありませんでした。', 'There was nothing to restore.'),
+      PurchaseOutcome.failed => tr('購入できませんでした。', 'The purchase did not go through.'),
     };
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -65,7 +66,7 @@ class _SupportScreenState extends State<SupportScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('広告について')),
+      appBar: AppBar(title: Text(tr('広告について', 'Ads and purchases'))),
       body: SafeArea(
         child: ReadableWidth(
           child: ListView(
@@ -73,12 +74,12 @@ class _SupportScreenState extends State<SupportScreen> {
             children: [
               Card(
                 color: theme.colorScheme.secondaryContainer,
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    '強くなるものは売っていない。'
+                    tr('強くなるものは売っていない。'
                     '能力・成長・移籍・試合結果に効く課金は1つも無く、'
-                    '買わなくても最後まで同じように遊べる。',
+                    '買わなくても最後まで同じように遊べる。', 'Nothing here makes you stronger. No purchase touches ability, growth, transfers or match results, and the game plays the same to the end without buying anything.'),
                   ),
                 ),
               ),
@@ -89,12 +90,12 @@ class _SupportScreenState extends State<SupportScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('広告を消す', style: theme.textTheme.titleMedium),
+                      Text(tr('広告を消す', 'Remove ads'), style: theme.textTheme.titleMedium),
                       const SizedBox(height: 6),
                       Text(
-                        '広告はシーズンの切れ目に1回だけ出る。'
+                        tr('広告はシーズンの切れ目に1回だけ出る。'
                         '試合中やメニューには割り込まない。'
-                        'バナーも出さない。',
+                        'バナーも出さない。', 'An ad shows once, between seasons. It never cuts into a match or a menu, and there are no banners.'),
                         style: muted,
                       ),
                       const SizedBox(height: 12),
@@ -107,7 +108,7 @@ class _SupportScreenState extends State<SupportScreen> {
                               color: theme.colorScheme.primary,
                             ),
                             const SizedBox(width: 6),
-                            const Text('購入済み。広告は出ない。'),
+                            Text(tr('購入済み。広告は出ない。', 'Purchased. No ads will show.')),
                           ],
                         )
                       else
@@ -117,8 +118,8 @@ class _SupportScreenState extends State<SupportScreen> {
                               : () => _run(() => _m.buy(Product.noAds)),
                           child: Text(
                             _m.prices[Product.noAds] == null
-                                ? '広告を消す'
-                                : '広告を消す（${_m.prices[Product.noAds]}）',
+                                ? tr('広告を消す', 'Remove ads')
+                                : tr('広告を消す（${_m.prices[Product.noAds]}）', 'Remove ads (${_m.prices[Product.noAds]})'),
                           ),
                         ),
                     ],
@@ -131,14 +132,14 @@ class _SupportScreenState extends State<SupportScreen> {
                 onPressed: _busy || !_m.storeAvailable
                     ? null
                     : () => _run(_m.restore),
-                child: const Text('購入を復元'),
+                child: Text(tr('購入を復元', 'Restore purchase')),
               ),
               if (!_m.storeAvailable)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
-                    'この環境ではストアに繋がらないので、購入はできない'
-                    '（ブラウザ版には広告も課金も無い）。',
+                    tr('この環境ではストアに繋がらないので、購入はできない'
+                    '（ブラウザ版には広告も課金も無い）。', 'This build cannot reach the store, so nothing can be bought (the browser version has no ads and no purchases).'),
                     style: muted,
                   ),
                 ),
@@ -146,23 +147,23 @@ class _SupportScreenState extends State<SupportScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(
-                    '広告はテスト用のままです（配信前のビルド）。',
+                    tr('広告はテスト用のままです（配信前のビルド）。', 'Ads are still the test ones (pre-release build).'),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.error,
                     ),
                   ),
                 ),
               const SizedBox(height: 24),
-              Text('決まりごと', style: theme.textTheme.titleSmall),
+              Text(tr('決まりごと', 'The small print'), style: theme.textTheme.titleSmall),
               const SizedBox(height: 6),
               // **押せば控えに入る。** 読むだけの文字列にしておくと、
               // スマホでは長押しして範囲を選んで…という手間になり、
               // 実質どこにも辿り着けない。ブラウザを開く仕掛け
               // （url_launcher）は端末側の部品が要るので、ここでは持たない。
-              for (final (path, label) in const [
-                ('privacy.html', 'プライバシーポリシー'),
-                ('terms.html', '利用規約'),
-                ('support.html', 'サポート・広告の報告'),
+              for (final (path, label) in [
+                ('privacy.html', tr('プライバシーポリシー', 'Privacy policy')),
+                ('terms.html', tr('利用規約', 'Terms of use')),
+                ('support.html', tr('サポート・広告の報告', 'Support and reporting an ad')),
               ])
                 _LegalLink(
                   url: '${SupportScreen.legalBase}/$path',
@@ -193,7 +194,7 @@ class _LegalLink extends StatelessWidget {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text('$label のURLをコピーしました。')));
+          ..showSnackBar(SnackBar(content: Text(tr('$label のURLをコピーしました。', 'Copied the $label URL.'))));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),

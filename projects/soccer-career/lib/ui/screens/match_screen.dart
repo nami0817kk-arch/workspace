@@ -5,6 +5,7 @@ import '../../game/match_engine.dart';
 import '../../game/match_target.dart';
 import '../../game/newsroom.dart';
 import '../../game/scenarios.dart';
+import '../../l10n/lang.dart';
 import '../../models/attributes.dart';
 import '../../models/development.dart';
 import '../../models/injury.dart';
@@ -76,8 +77,8 @@ class _MatchScreenState extends State<MatchScreen> {
   String _streakNote(int streak) {
     if (streak < 1) return '';
     final toStep = MatchTarget.streakStep - (streak % MatchTarget.streakStep);
-    if (toStep == MatchTarget.streakStep) return ' ・ $streak連続';
-    return ' ・ $streak連続、あと$toStepで経験点';
+    if (toStep == MatchTarget.streakStep) return tr(' ・ $streak連続', ' · $streak in a row');
+    return tr(' ・ $streak連続、あと$toStepで経験点', ' · $streak in a row, $toStep more for a point');
   }
 
   Widget _body(BuildContext context) {
@@ -112,7 +113,7 @@ class _MatchScreenState extends State<MatchScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('第${match.matchday}節  vs ${match.opponent.name}'),
+        title: Text(tr('第${match.matchday}節  vs ${match.opponent.name}', 'Round ${match.matchday}  vs ${match.opponent.name}')),
         automaticallyImplyLeading: false,
       ),
       // **今節の的。** 次節カードには余白が無い（1行増やすと
@@ -121,9 +122,9 @@ class _MatchScreenState extends State<MatchScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
           child: Text(
-            '今節の的: ${MatchTarget.of(widget.controller.state!).label}'
+            tr('今節の的: ${MatchTarget.of(widget.controller.state!).label}'
             '（達成で${MatchTarget.reward}万円）'
-            '${_streakNote(widget.controller.state!.targetStreak)}',
+            '${_streakNote(widget.controller.state!.targetStreak)}', 'Target: ${MatchTarget.of(widget.controller.state!).label} (¥${MatchTarget.reward}0K if you hit it)${_streakNote(widget.controller.state!.targetStreak)}'),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -167,7 +168,7 @@ class _MatchScreenState extends State<MatchScreen> {
                   TextButton(
                     onPressed: _busy ? null : _simulateRest,
                     child: Text(
-                      '残りを自動で進める（${widget.controller.state!.simStyle.label}）',
+                      tr('残りを自動で進める（${widget.controller.state!.simStyle.label}）', 'Play out the rest (${widget.controller.state!.simStyle.label})'),
                     ),
                   ),
               ],
@@ -209,8 +210,8 @@ class _MatchHeader extends StatelessWidget {
             ),
           ),
           caption: match.home
-              ? 'ホーム・${match.appearance.label}'
-              : 'アウェイ・${match.appearance.label}',
+              ? tr('ホーム・${match.appearance.label}', 'Home · ${match.appearance.label}')
+              : tr('アウェイ・${match.appearance.label}', 'Away · ${match.appearance.label}'),
         ),
         const SizedBox(height: 6),
         Row(
@@ -218,12 +219,12 @@ class _MatchHeader extends StatelessWidget {
           children: [
             StatTile(
               small: true,
-              label: '局面',
+              label: tr('局面', 'Moments'),
               value: '${match.currentIndex}/${match.scenarios.length}',
             ),
             StatTile(
               small: true,
-              label: '評価点',
+              label: tr('評価点', 'Rating'),
               value: match.rating.toStringAsFixed(1),
               accent: ratingColor(theme, match.rating),
             ),
@@ -234,7 +235,7 @@ class _MatchHeader extends StatelessWidget {
             ),
             StatTile(
               small: true,
-              label: '調子',
+              label: tr('調子', 'Form'),
               value: '${match.player.condition}',
             ),
           ],
@@ -329,8 +330,8 @@ class _ScenarioView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${MatchInProgress.minuteLabel(match.currentMinute)}'
-                        ' ・ ${match.scoreLine}',
+                        tr('${MatchInProgress.minuteLabel(match.currentMinute)}'
+                        ' ・ ${match.scoreLine}', '${MatchInProgress.minuteLabel(match.currentMinute)} · ${match.scoreLine}'),
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: theme.colorScheme.primary,
                         ),
@@ -352,10 +353,10 @@ class _ScenarioView extends StatelessWidget {
                           // 出さないと「なぜ決まったのか」が分からない。
                           if (match.momentum > 0)
                             Tag(
-                              'ノリ ${'●' * match.momentum}'
+                              tr('ノリ ${'●' * match.momentum}'
                               '${'○' * (Formulas.momentumMax - match.momentum)}'
                               ' 決まる確率 ×'
-                              '${match.momentumFactor.toStringAsFixed(2)}',
+                              '${match.momentumFactor.toStringAsFixed(2)}', 'Momentum ${'●' * match.momentum}${'○' * (Formulas.momentumMax - match.momentum)} conversion ×${match.momentumFactor.toStringAsFixed(2)}'),
                               background: theme.colorScheme.tertiaryContainer,
                               foreground: theme.colorScheme.onTertiaryContainer,
                             ),
@@ -366,8 +367,8 @@ class _ScenarioView extends StatelessWidget {
                             Tag(
                               match.stakesLabel == null
                                   ? match.situationLabel!
-                                  : '${match.situationLabel!} ・ '
-                                        '${match.stakesLabel!}',
+                                  : tr('${match.situationLabel!} ・ '
+                                        '${match.stakesLabel!}', '${match.situationLabel!} · ${match.stakesLabel!}'),
                               background: match.margin < 0
                                   ? theme.colorScheme.errorContainer
                                   : theme.colorScheme.secondaryContainer,
@@ -397,13 +398,13 @@ class _ScenarioView extends StatelessWidget {
                             ),
                           if (match.bigMatch)
                             Tag(
-                              '大一番',
+                              tr('大一番', 'Big game'),
                               background: theme.colorScheme.tertiaryContainer,
                               foreground: theme.colorScheme.onTertiaryContainer,
                             ),
                           if (match.weakFootMoment)
                             Tag(
-                              '逆足で対応',
+                              tr('逆足で対応', 'Weak foot'),
                               background: theme.colorScheme.errorContainer,
                               foreground: theme.colorScheme.onErrorContainer,
                             ),
@@ -518,7 +519,7 @@ class _TrumpCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                armed == null ? '切り札' : '${armed.label}を構えた',
+                armed == null ? tr('切り札', 'Trump card') : tr('${armed.label}を構えた', 'Holding ${armed.label}'),
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: armed == null
                       ? theme.colorScheme.onSurfaceVariant
@@ -528,7 +529,7 @@ class _TrumpCard extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  armed == null ? 'この試合に1回' : '${armed.detail.label}の手に乗る',
+                  armed == null ? tr('この試合に1回', 'Once a match') : tr('${armed.detail.label}の手に乗る', 'Applies to ${armed.detail.label} choices'),
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -538,9 +539,9 @@ class _TrumpCard extends StatelessWidget {
           ),
           if (armed == null)
             Text(
-              '乗る手に +${(Formulas.signatureArmedBonus * 100).round()}%'
+              tr('乗る手に +${(Formulas.signatureArmedBonus * 100).round()}%'
               ' ／ 外すと残り -'
-              '${(Formulas.signatureMissPenalty * 100).round()}%',
+              '${(Formulas.signatureMissPenalty * 100).round()}%', '+${(Formulas.signatureArmedBonus * 100).round()}% on a choice it fits / −${(Formulas.signatureMissPenalty * 100).round()}% for the rest if it misses'),
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -729,10 +730,10 @@ class _OptionButton extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 6),
                   child: Tag(
                     stakesNote!,
-                    background: stakesNote == '今は軽い'
+                    background: stakesNote == tr('今は軽い', 'worth less now')
                         ? theme.colorScheme.surfaceContainerHighest
                         : theme.colorScheme.errorContainer,
-                    foreground: stakesNote == '今は軽い'
+                    foreground: stakesNote == tr('今は軽い', 'worth less now')
                         ? theme.colorScheme.onSurfaceVariant
                         : theme.colorScheme.onErrorContainer,
                   ),
@@ -751,8 +752,8 @@ class _OptionButton extends StatelessWidget {
                 // 「決まるのは半分ほど」を数字で見せておく。
                 Tag(
                   option.outcome == Outcome.goal
-                      ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
-                      : 'アシスト ${(chance * assistConversion * 100).round()}%',
+                      ? tr('ゴール ${(chance * Formulas.goalConversion * 100).round()}%', 'Goal ${(chance * Formulas.goalConversion * 100).round()}%')
+                      : tr('アシスト ${(chance * assistConversion * 100).round()}%', 'Assist ${(chance * assistConversion * 100).round()}%'),
                   background: theme.colorScheme.secondaryContainer,
                   foreground: theme.colorScheme.onSecondaryContainer,
                 ),
@@ -792,7 +793,7 @@ class _OptionButton extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
                   child: Text(
-                    '重点',
+                    tr('重点', 'Focus'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.tertiary,
                     ),
@@ -802,7 +803,7 @@ class _OptionButton extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
                   child: Text(
-                    '監督好み',
+                    tr('監督好み', 'Manager likes'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.primary,
                     ),
@@ -814,7 +815,7 @@ class _OptionButton extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
                   child: Text(
-                    '通れば1点防ぐ',
+                    tr('通れば1点防ぐ', 'Stops a goal if it comes off'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.primary,
                     ),
@@ -826,7 +827,7 @@ class _OptionButton extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
                   child: Text(
-                    '通っても失点${(Formulas.concedeOnLinger * 100).round()}%',
+                    tr('通っても失点${(Formulas.concedeOnLinger * 100).round()}%', '${(Formulas.concedeOnLinger * 100).round()}% concede even if it works'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.error,
                     ),
@@ -837,7 +838,7 @@ class _OptionButton extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
                   child: Text(
-                    '布石',
+                    tr('布石', 'Set-up'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.tertiary,
                     ),
@@ -847,7 +848,7 @@ class _OptionButton extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
                   child: Text(
-                    setupReady ? '仕留め・布石あり' : '仕留め',
+                    setupReady ? tr('仕留め・布石あり', 'Finish · set-up ready') : tr('仕留め', 'Finish'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: setupReady
                           ? theme.colorScheme.primary
@@ -929,12 +930,12 @@ class _ResolutionCard extends StatelessWidget {
                   children: [
                     Text(
                       resolution.isGoal
-                          ? 'ゴール'
+                          ? tr('ゴール', 'Goal')
                           : resolution.isAssist
-                          ? 'アシスト'
+                          ? tr('アシスト', 'Assist')
                           : resolution.success
-                          ? '成功'
-                          : '失敗',
+                          ? tr('成功', 'Came off')
+                          : tr('失敗', 'Did not come off'),
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: onColor,
                         fontWeight: FontWeight.w800,
@@ -980,9 +981,9 @@ class _ReadyToFinish extends StatelessWidget {
         const Spacer(),
         FilledButton(
           onPressed: busy ? null : onFinish,
-          child: const Padding(
+          child: Padding(
             padding: EdgeInsets.symmetric(vertical: 12),
-            child: Text('試合終了'),
+            child: Text(tr('試合終了', 'Full time')),
           ),
         ),
       ],
@@ -1012,10 +1013,10 @@ class _BenchedView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('ベンチ外', style: theme.textTheme.headlineSmall),
+              Text(tr('ベンチ外', 'Out of the squad'), style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),
               Text(
-                '直近の評価点が低く、今節は招集されなかった。',
+                tr('直近の評価点が低く、今節は招集されなかった。', 'Your recent ratings were low, so you were left out this round.'),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -1023,9 +1024,9 @@ class _BenchedView extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 remaining <= 0
-                    ? '外れ続けている。次節は途中出場から声がかかる。'
-                    : 'あと$remaining試合外れると、まずは途中出場から戻ることになる。'
-                          '練習で調子を戻しておく。',
+                    ? tr('外れ続けている。次節は途中出場から声がかかる。', 'You have been left out for a while. Next round you come on from the bench.')
+                    : tr('あと$remaining試合外れると、まずは途中出場から戻ることになる。'
+                          '練習で調子を戻しておく。', 'Miss $remaining more and you come back from the bench first. Train your form back up.'),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.primary,
                 ),
@@ -1033,9 +1034,9 @@ class _BenchedView extends StatelessWidget {
               const SizedBox(height: 32),
               FilledButton(
                 onPressed: busy ? null : onDone,
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text('結果を見る'),
+                  child: Text(tr('結果を見る', 'See the result')),
                 ),
               ),
             ],
@@ -1076,7 +1077,7 @@ class _MatchSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final label = result.won ? '勝利' : (result.drawn ? '引き分け' : '敗戦');
+    final label = result.won ? tr('勝利', 'Win') : (result.drawn ? tr('引き分け', 'Draw') : tr('敗戦', 'Loss'));
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -1103,8 +1104,8 @@ class _MatchSummary extends StatelessWidget {
               if (targetMet) ...[
                 const SizedBox(height: 10),
                 Text(
-                  '今節の的を達成　+${MatchTarget.reward}万円'
-                  '${streak > 1 ? '　$streak連続' : ''}',
+                  tr('今節の的を達成　+${MatchTarget.reward}万円'
+                  '${streak > 1 ? '　$streak連続' : ''}', 'Target hit  +¥${MatchTarget.reward}0K${streak > 1 ? '  $streak in a row' : ''}'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: theme.colorScheme.primary,
@@ -1114,7 +1115,7 @@ class _MatchSummary extends StatelessWidget {
                 // 値段の上がらない側（経験点）が誤差に見える。
                 if (targetPoints > 0)
                   Text(
-                    '$streak連続　経験点 +$targetPoints',
+                    tr('$streak連続　経験点 +$targetPoints', '$streak in a row  +$targetPoints points'),
                     textAlign: TextAlign.center,
                     style: theme.textTheme.titleSmall?.copyWith(
                       color: theme.colorScheme.primary,
@@ -1125,9 +1126,9 @@ class _MatchSummary extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _stat(theme, '評価点', result.rating?.toStringAsFixed(1) ?? '—'),
-                  _stat(theme, 'ゴール', '${result.goals}'),
-                  _stat(theme, 'アシスト', '${result.assists}'),
+                  _stat(theme, tr('評価点', 'Rating'), result.rating?.toStringAsFixed(1) ?? '—'),
+                  _stat(theme, tr('ゴール', 'Goal'), '${result.goals}'),
+                  _stat(theme, tr('アシスト', 'Assist'), '${result.assists}'),
                 ],
               ),
               if (headline.isNotEmpty) ...[
@@ -1173,7 +1174,7 @@ class _MatchSummary extends StatelessWidget {
               if (week.autoRested) ...[
                 const SizedBox(height: 8),
                 Text(
-                  '疲れが残っていたので、今週は自動で休養にした。',
+                  tr('疲れが残っていたので、今週は自動で休養にした。', 'You were still tired, so this week turned into rest on its own.'),
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.error,
                   ),
@@ -1185,8 +1186,8 @@ class _MatchSummary extends StatelessWidget {
                 const SizedBox(height: 20),
                 Text(
                   week.companion == TrainingCompanion.alone
-                      ? '練習: ${week.outcome!.label}'
-                      : '練習: ${week.outcome!.label}（${week.companion.label}）',
+                      ? tr('練習: ${week.outcome!.label}', 'Training: ${week.outcome!.label}')
+                      : tr('練習: ${week.outcome!.label}（${week.companion.label}）', 'Training: ${week.outcome!.label} (${week.companion.label})'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: switch (week.outcome!) {
@@ -1208,8 +1209,8 @@ class _MatchSummary extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   week.redirected
-                      ? '土台から鍛え直した: ${week.trained!.label} が 1 伸びた'
-                      : '練習の成果: ${week.trained!.label} が 1 伸びた',
+                      ? tr('土台から鍛え直した: ${week.trained!.label} が 1 伸びた', 'Back to the foundation: ${week.trained!.label} up 1')
+                      : tr('練習の成果: ${week.trained!.label} が 1 伸びた', 'Training paid off: ${week.trained!.label} up 1'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.primary,
@@ -1222,9 +1223,9 @@ class _MatchSummary extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   week.shielded.isEmpty
-                      ? '衰え: ${week.declined!.label} が 1 落ちた'
-                      : '衰え: ${week.declined!.label} が 1 落ちた'
-                            '（守ったのは ${week.shielded.map((k) => k.label).join('・')}）',
+                      ? tr('衰え: ${week.declined!.label} が 1 落ちた', 'Decline: ${week.declined!.label} down 1')
+                      : tr('衰え: ${week.declined!.label} が 1 落ちた'
+                            '（守ったのは ${week.shielded.map((k) => k.label).join('・')}）', 'Decline: ${week.declined!.label} down 1 (you were protecting ${week.shielded.map((k) => k.label).join(', ')})'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.error,
@@ -1234,7 +1235,7 @@ class _MatchSummary extends StatelessWidget {
               if (week.drilled != null) ...[
                 const SizedBox(height: 12),
                 Text(
-                  '居残りの成果: ${week.drilled!.label} の精度が上がった',
+                  tr('居残りの成果: ${week.drilled!.label} の精度が上がった', 'Extra work paid off: ${week.drilled!.label} is sharper'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.primary,
@@ -1244,7 +1245,7 @@ class _MatchSummary extends StatelessWidget {
               if (week.learned != null) ...[
                 const SizedBox(height: 12),
                 Text(
-                  '個人技を覚えた: ${week.learned!.label}',
+                  tr('個人技を覚えた: ${week.learned!.label}', 'Learned a trick: ${week.learned!.label}'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: theme.colorScheme.primary,
@@ -1256,7 +1257,7 @@ class _MatchSummary extends StatelessWidget {
               if (week.polished != null) ...[
                 const SizedBox(height: 12),
                 Text(
-                  '${week.polished!.label} に磨きがかかった',
+                  tr('${week.polished!.label} に磨きがかかった', '${week.polished!.label} is more polished'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: theme.colorScheme.primary,
@@ -1266,7 +1267,7 @@ class _MatchSummary extends StatelessWidget {
               if (week.weakFootAwakened) ...[
                 const SizedBox(height: 12),
                 Text(
-                  '逆足が形になってきた。両足で持てる選手になりつつある。',
+                  tr('逆足が形になってきた。両足で持てる選手になりつつある。', 'Your weaker foot is coming along. You are becoming two-footed.'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.primary,
@@ -1276,7 +1277,7 @@ class _MatchSummary extends StatelessWidget {
               if (week.plateau) ...[
                 const SizedBox(height: 12),
                 Text(
-                  '伸び悩んでいる。しばらくは積み上がらない。',
+                  tr('伸び悩んでいる。しばらくは積み上がらない。', 'You have hit a plateau. Nothing will stack up for a while.'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
@@ -1286,7 +1287,7 @@ class _MatchSummary extends StatelessWidget {
               if (week.recovered) ...[
                 const SizedBox(height: 20),
                 Text(
-                  '離脱から復帰した。コンディションはまだ戻っていない。',
+                  tr('離脱から復帰した。コンディションはまだ戻っていない。', 'Back from injury. Your condition has not come back yet.'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.primary,
@@ -1300,9 +1301,9 @@ class _MatchSummary extends StatelessWidget {
               const SizedBox(height: 36),
               FilledButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text('戻る'),
+                  child: Text(tr('戻る', 'Back')),
                 ),
               ),
             ],
@@ -1344,14 +1345,14 @@ class _InjuryNotice extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '負傷: ${injury.name}（${injury.severity.label}）',
+            tr('負傷: ${injury.name}（${injury.severity.label}）', 'Injury: ${injury.name} (${injury.severity.label})'),
             style: theme.textTheme.titleSmall?.copyWith(
               color: theme.colorScheme.onErrorContainer,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            '${injury.matchesOut}試合の離脱',
+            tr('${injury.matchesOut}試合の離脱', 'Out for ${injury.matchesOut} games'),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onErrorContainer,
             ),
@@ -1359,7 +1360,7 @@ class _InjuryNotice extends StatelessWidget {
           if (severe) ...[
             const SizedBox(height: 4),
             Text(
-              '長期離脱。体は元どおりにはならない。',
+              tr('長期離脱。体は元どおりにはならない。', 'A long lay-off. Your body will not be quite the same again.'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onErrorContainer,
               ),
@@ -1387,7 +1388,7 @@ class _Timeline extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          '試合の流れ',
+          tr('試合の流れ', 'How the game went'),
           style: theme.textTheme.labelMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -1401,7 +1402,7 @@ class _Timeline extends StatelessWidget {
                 SizedBox(
                   width: 52,
                   child: Text(
-                    '${event.minute}分',
+                    tr('${event.minute}分', '${event.minute}\''),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/lang.dart';
 import '../../models/challenge.dart';
 import '../../models/club.dart';
 import '../../models/legend.dart';
@@ -30,16 +31,16 @@ class _HallScreenState extends State<HallScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('${legend.name}の記録を消しますか'),
-        content: const Text('戻せません。'),
+        title: Text(tr('${legend.name}の記録を消しますか', 'Delete the record of ${legend.name}?')),
+        content: Text(tr('戻せません。', 'This cannot be undone.')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('やめる'),
+            child: Text(tr('やめる', 'Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('消す'),
+            child: Text(tr('消す', 'Delete')),
           ),
         ],
       ),
@@ -55,7 +56,7 @@ class _HallScreenState extends State<HallScreen> {
     final theme = Theme.of(context);
     final legends = widget.controller.hall.legends;
     return Scaffold(
-      appBar: AppBar(title: const Text('これまでの選手')),
+      appBar: AppBar(title: Text(tr('これまでの選手', 'Players so far'))),
       body: SafeArea(
         child: ReadableWidth(
           child: legends.isEmpty
@@ -63,8 +64,8 @@ class _HallScreenState extends State<HallScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(32),
                     child: Text(
-                      '引退した選手はまだ居ない。\n'
-                      'キャリアを終えると、ここに1人ずつ残る。',
+                      tr('引退した選手はまだ居ない。\n'
+                      'キャリアを終えると、ここに1人ずつ残る。', 'No one has retired yet.\nEvery career you finish leaves a player here.'),
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
@@ -137,10 +138,10 @@ class _ChallengesCard extends StatelessWidget {
         data: theme.copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           key: const PageStorageKey('hall-challenges'),
-          title: Text('挑戦', style: theme.textTheme.titleSmall),
+          title: Text(tr('挑戦', 'Challenges'), style: theme.textTheme.titleSmall),
           subtitle: Text(
-            '$done / ${Challenge.values.length} 達成 ・'
-            ' どれも違う形のキャリアでしか届かない',
+            tr('$done / ${Challenge.values.length} 達成 ・'
+            ' どれも違う形のキャリアでしか届かない', '$done / ${Challenge.values.length} done · each one needs a differently shaped career'),
             style: muted,
           ),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -228,7 +229,7 @@ class _RecordsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('歴代の記録', style: theme.textTheme.titleSmall),
+            Text(tr('歴代の記録', 'All-time records'), style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             for (final r in records)
               Padding(
@@ -346,7 +347,7 @@ class _LegendCard extends StatelessWidget {
                             if (legend.tampered) ...[
                               const SizedBox(width: 6),
                               Text(
-                                '改変済み',
+                                tr('改変済み', 'Edited'),
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   color: onMuted,
                                 ),
@@ -355,8 +356,8 @@ class _LegendCard extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          '${legend.positionLabel} ・ '
-                          '${legend.retiredYear}年に${legend.retiredAge}歳で引退',
+                          tr('${legend.positionLabel} ・ '
+                          '${legend.retiredYear}年に${legend.retiredAge}歳で引退', '${legend.positionLabel} · retired in ${legend.retiredYear}, aged ${legend.retiredAge}'),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: onMuted,
                           ),
@@ -378,7 +379,7 @@ class _LegendCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'ピーク',
+                        tr('ピーク', 'Peak'),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: onMuted,
                         ),
@@ -391,7 +392,7 @@ class _LegendCard extends StatelessWidget {
                   // 書き換えた記録（`tampered`）は外に出さない。
                   if (!legend.tampered)
                     IconButton(
-                      tooltip: 'この記録を送る',
+                      tooltip: tr('この記録を送る', 'Share this record'),
                       onPressed: () {
                         final card = CareerShareCard(legend: legend);
                         showShareSheet(context, card: card, text: card.text);
@@ -407,7 +408,7 @@ class _LegendCard extends StatelessWidget {
                     ),
                   // 消すボタンは小さく。額の中で一番目立つものではない。
                   IconButton(
-                    tooltip: '記録を消す',
+                    tooltip: tr('記録を消す', 'Delete record'),
                     onPressed: onRemove,
                     color: onMuted,
                     padding: EdgeInsets.zero,
@@ -431,10 +432,10 @@ class _LegendCard extends StatelessWidget {
                 Text(legend.summary, style: muted),
                 if (legend.caps > 0)
                   Text(
-                    '代表 ${legend.caps}キャップ ${legend.internationalGoals}ゴール',
+                    tr('代表 ${legend.caps}キャップ ${legend.internationalGoals}ゴール', 'National team ${legend.caps} caps, ${legend.internationalGoals} goals'),
                     style: muted,
                   ),
-                Text('引退後: ${legend.secondCareer.label}', style: muted),
+                Text(tr('引退後: ${legend.secondCareer.label}', 'After football: ${legend.secondCareer.label}'), style: muted),
                 if (records.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Wrap(
@@ -443,7 +444,7 @@ class _LegendCard extends StatelessWidget {
                     children: [
                       for (final r in records)
                         Chip(
-                          label: Text('歴代1位 ${r.label}'),
+                          label: Text(tr('歴代1位 ${r.label}', 'All-time best · ${r.label}')),
                           backgroundColor: theme.colorScheme.tertiaryContainer,
                           visualDensity: VisualDensity.compact,
                         ),
@@ -457,23 +458,23 @@ class _LegendCard extends StatelessWidget {
                     runSpacing: 6,
                     children: [
                       if (legend.leagueTitles > 0)
-                        _Trophy(label: 'リーグ優勝 ${legend.leagueTitles}'),
+                        _Trophy(label: tr('リーグ優勝 ${legend.leagueTitles}', 'League titles ${legend.leagueTitles}')),
                       if (legend.cupTitles > 0)
-                        _Trophy(label: '国内カップ ${legend.cupTitles}'),
+                        _Trophy(label: tr('国内カップ ${legend.cupTitles}', 'Domestic cups ${legend.cupTitles}')),
                       if (legend.continentalTitles > 0)
-                        _Trophy(label: '大陸カップ ${legend.continentalTitles}'),
+                        _Trophy(label: tr('大陸カップ ${legend.continentalTitles}', 'Continental cups ${legend.continentalTitles}')),
                       if (legend.worldCupBest.participated)
-                        _Trophy(label: '世界大会 ${legend.worldCupBest.label}'),
+                        _Trophy(label: tr('世界大会 ${legend.worldCupBest.label}', 'World tournament ${legend.worldCupBest.label}')),
                     ],
                   ),
                 ],
                 const SizedBox(height: 10),
                 // 歩いた順。同じクラブに戻ってきたら別の区切りになる。
-                Text('歩み', style: theme.textTheme.labelMedium),
+                Text(tr('歩み', 'The road'), style: theme.textTheme.labelMedium),
                 const SizedBox(height: 4),
                 for (final spell in legend.spells)
                   Text(
-                    '${spell.clubName}（${spell.tier}部）  ${spell.seasons}季',
+                    tr('${spell.clubName}（${spell.tier}部）  ${spell.seasons}季', '${spell.clubName} (tier ${spell.tier})  ${spell.seasons} seasons'),
                     style: muted,
                   ),
                 if (legend.traits.isNotEmpty) ...[
@@ -483,7 +484,7 @@ class _LegendCard extends StatelessWidget {
                     child: ExpansionTile(
                       tilePadding: EdgeInsets.zero,
                       childrenPadding: const EdgeInsets.only(bottom: 8),
-                      title: Text('特性と称号', style: theme.textTheme.bodySmall),
+                      title: Text(tr('特性と称号', 'Traits and honours'), style: theme.textTheme.bodySmall),
                       children: [
                         for (final trait in legend.traits) ...[
                           TraitRow(trait: trait),

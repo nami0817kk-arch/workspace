@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../l10n/lang.dart';
 import '../budget_lines.dart';
 import '../readable_width.dart';
 import '../share_card.dart';
@@ -66,7 +67,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
       ..showSnackBar(
         SnackBar(
           content: Text(
-            found ? '代理人が${offers.length}件の話を取ってきた。' : '代理人は動いたが、今回は何も取れなかった。',
+            found ? tr('代理人が${offers.length}件の話を取ってきた。', 'Your agent came back with ${offers.length} offers.') : tr('代理人は動いたが、今回は何も取れなかった。', 'Your agent worked the phones, but nothing came of it.'),
           ),
         ),
       );
@@ -89,14 +90,14 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     final picked = await showDialog<Agent>(
       context: context,
       builder: (context) => SimpleDialog(
-        title: const Text('代理人を変える'),
+        title: Text(tr('代理人を変える', 'Change agent')),
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
             child: Text(
               savings < fee
-                  ? '違約金 $fee万円。貯蓄は$savings万円で、足りない。'
-                  : '違約金 $fee万円を貯蓄（$savings万円）から払う。',
+                  ? tr('違約金 $fee万円。貯蓄は$savings万円で、足りない。', 'The release clause is ¥${(fee / 100).toStringAsFixed(1)}M. You have ¥${(savings / 100).toStringAsFixed(1)}M saved, which is not enough.')
+                  : tr('違約金 $fee万円を貯蓄（$savings万円）から払う。', 'Pay the ¥${(fee / 100).toStringAsFixed(1)}M release clause out of your savings (¥${(savings / 100).toStringAsFixed(1)}M).'),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -149,9 +150,9 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     });
     final message = switch (result) {
       NegotiationResult.raised =>
-        '${before.club.name}が上乗せに応じた。${before.salary}万円 → ${after!.salary}万円',
-      NegotiationResult.refused => '${before.club.name}は据え置きを譲らなかった。',
-      NegotiationResult.withdrawn => '${before.club.name}がオファーを引き上げた。',
+        tr('${before.club.name}が上乗せに応じた。${before.salary}万円 → ${after!.salary}万円', '${before.club.name} came up to meet you. ¥${(before.salary / 100).toStringAsFixed(1)}M → ¥${(after.salary / 100).toStringAsFixed(1)}M'),
+      NegotiationResult.refused => tr('${before.club.name}は据え置きを譲らなかった。', '${before.club.name} would not move.'),
+      NegotiationResult.withdrawn => tr('${before.club.name}がオファーを引き上げた。', '${before.club.name} pulled the offer.'),
     };
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -183,16 +184,16 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('引退しますか'),
-        content: const Text('引退すると試合はできなくなり、通算成績だけが残ります。'),
+        title: Text(tr('引退しますか', 'Retire?')),
+        content: Text(tr('引退すると試合はできなくなり、通算成績だけが残ります。', 'Once you retire there are no more matches, only the career totals.')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('やめる'),
+            child: Text(tr('やめる', 'Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('引退する'),
+            child: Text(tr('引退する', 'Retire')),
           ),
         ],
       ),
@@ -220,13 +221,13 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     // この季に何を成したか。**成していない季には送る口を出さない。**
     final String? shareHeadline;
     if (state.leaguePosition == 1) {
-      shareHeadline = '${state.club.tier}部 優勝';
+      shareHeadline = tr('${state.club.tier}部 優勝', 'Tier ${state.club.tier} champions');
     } else if (fate == ClubFate.promoted) {
-      shareHeadline = '${state.club.tier - 1}部へ昇格';
+      shareHeadline = tr('${state.club.tier - 1}部へ昇格', 'Promoted to tier ${state.club.tier - 1}');
     } else if (state.continentalStage == ContinentalStage.winner) {
-      shareHeadline = '大陸カップ優勝';
+      shareHeadline = tr('大陸カップ優勝', 'Continental cup winners');
     } else if (state.cupStage == CupStage.winner) {
-      shareHeadline = '国内カップ優勝';
+      shareHeadline = tr('国内カップ優勝', 'Domestic cup winners');
     } else {
       shareHeadline = null;
     }
@@ -238,7 +239,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
       canPop: false,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('${state.year}シーズン終了'),
+          title: Text(tr('${state.year}シーズン終了', 'End of ${state.year}')),
           automaticallyImplyLeading: false,
         ),
         body: SafeArea(
@@ -296,7 +297,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                                 );
                               },
                               icon: const Icon(Icons.ios_share, size: 18),
-                              label: Text('$headline を送る'),
+                              label: Text(tr('$headline を送る', 'Share: $headline')),
                             ),
                           ),
                         ),
@@ -309,8 +310,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                               const SizedBox(height: 8),
                               Text(
                                 state.objective!.achieved(stats)
-                                    ? '監督の期待に応えた（${state.objective!.achievedCount(stats)}/3）'
-                                    : '監督の期待には届かなかった（${state.objective!.achievedCount(stats)}/3）',
+                                    ? tr('監督の期待に応えた（${state.objective!.achievedCount(stats)}/3）', 'You met what the manager asked for (${state.objective!.achievedCount(stats)}/3)')
+                                    : tr('監督の期待には届かなかった（${state.objective!.achievedCount(stats)}/3）', 'You fell short of what the manager asked for (${state.objective!.achievedCount(stats)}/3)'),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: state.objective!.achieved(stats)
                                       ? theme.colorScheme.primary
@@ -322,8 +323,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                               const SizedBox(height: 4),
                               Text(
                                 state.promiseKept!
-                                    ? '約束を果たした（${state.promise!.label}）'
-                                    : '約束に届かなかった（${state.promise!.label}）',
+                                    ? tr('約束を果たした（${state.promise!.label}）', 'You kept your word (${state.promise!.label})')
+                                    : tr('約束に届かなかった（${state.promise!.label}）', 'You did not keep your word (${state.promise!.label})'),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: state.promiseKept!
                                       ? theme.colorScheme.primary
@@ -334,12 +335,12 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                             ],
                             if (state.seasonCaps > 0) ...[
                               const SizedBox(height: 4),
-                              Text('代表 ${state.seasonCaps}試合', style: muted),
+                              Text(tr('代表 ${state.seasonCaps}試合', 'National team ${state.seasonCaps} games'), style: muted),
                             ],
                             if (state.cupStage.participated) ...[
                               const SizedBox(height: 6),
                               Tag(
-                                '国内カップ ${state.cupStage.label}',
+                                tr('国内カップ ${state.cupStage.label}', 'Domestic cup ${state.cupStage.label}'),
                                 background: state.cupStage == CupStage.winner
                                     ? theme.colorScheme.primaryContainer
                                     : null,
@@ -351,7 +352,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                             if (state.worldCupStage.participated) ...[
                               const SizedBox(height: 6),
                               Tag(
-                                '世界大会 ${state.worldCupStage.label}',
+                                tr('世界大会 ${state.worldCupStage.label}', 'World tournament ${state.worldCupStage.label}'),
                                 background: theme.colorScheme.tertiaryContainer,
                                 foreground:
                                     theme.colorScheme.onTertiaryContainer,
@@ -360,7 +361,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                             if (state.continentalStage.participated) ...[
                               const SizedBox(height: 6),
                               Tag(
-                                '大陸カップ ${state.continentalStage.label}',
+                                tr('大陸カップ ${state.continentalStage.label}', 'Continental cup ${state.continentalStage.label}'),
                                 background:
                                     state.continentalStage ==
                                         ContinentalStage.winner
@@ -377,12 +378,12 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _stat(theme, '出場', '${stats.appearances}'),
-                                _stat(theme, 'ゴール', '${stats.goals}'),
-                                _stat(theme, 'アシスト', '${stats.assists}'),
+                                _stat(theme, tr('出場', 'Games'), '${stats.appearances}'),
+                                _stat(theme, tr('ゴール', 'Goals'), '${stats.goals}'),
+                                _stat(theme, tr('アシスト', 'Assists'), '${stats.assists}'),
                                 _stat(
                                   theme,
-                                  '平均評価',
+                                  tr('平均評価', 'Avg rating'),
                                   stats.appearances == 0
                                       ? '—'
                                       : stats.averageRating.toStringAsFixed(2),
@@ -402,7 +403,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('今季のお金', style: theme.textTheme.titleSmall),
+                        Text(tr('今季のお金', 'Money this season'), style: theme.textTheme.titleSmall),
                         const SizedBox(height: 6),
                         // 契約を選ぶ前に見えていないと、来季も同じことになる。
                         BudgetLines(state: state),
@@ -426,21 +427,21 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                 ],
                 const SizedBox(height: 24),
                 if (mustRetire) ...[
-                  Text('${state.player.age}歳。体は限界を迎えた。', style: muted),
+                  Text(tr('${state.player.age}歳。体は限界を迎えた。', 'You are ${state.player.age}. Your body has had enough.'), style: muted),
                   const SizedBox(height: 20),
                   FilledButton(
                     onPressed: _busy ? null : _retire,
-                    child: const Padding(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Text('引退する'),
+                      child: Text(tr('引退する', 'Retire')),
                     ),
                   ),
                 ] else ...[
-                  Text('オフの過ごし方', style: theme.textTheme.titleMedium),
+                  Text(tr('オフの過ごし方', 'How you spend the off-season'), style: theme.textTheme.titleMedium),
                   const SizedBox(height: 4),
                   Text(
-                    '${state.player.physique.label}。'
-                    'ここで決めたことが、来季まるごとに乗る。',
+                    tr('${state.player.physique.label}。'
+                    'ここで決めたことが、来季まるごとに乗る。', '${state.player.physique.label}. What you choose here carries through all of next season.'),
                     style: muted,
                   ),
                   const SizedBox(height: 10),
@@ -462,11 +463,11 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   // 説明はツールチップに隠さない。スマホでは長押ししないと読めない。
                   Text(_offseason.description, style: muted),
                   const Divider(height: 32),
-                  Text('契約', style: theme.textTheme.titleMedium),
+                  Text(tr('契約', 'Contract'), style: theme.textTheme.titleMedium),
                   const SizedBox(height: 2),
                   // 1行に押し込むと「手数料 5…」で切れていた。折り返す。
                   Text(
-                    '代理人 ${state.agent.name}（${state.agent.description}）',
+                    tr('代理人 ${state.agent.name}（${state.agent.description}）', 'Agent ${state.agent.name} (${state.agent.description})'),
                     style: muted,
                   ),
                   const SizedBox(height: 6),
@@ -477,8 +478,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                     child: OutlinedButton(
                       onPressed: _busy ? null : () => _changeAgent(context),
                       child: Text(
-                        '代理人を変える'
-                        '（違約金 ${widget.controller.agentSwitchFee}万）',
+                        tr('代理人を変える'
+                        '（違約金 ${widget.controller.agentSwitchFee}万）', 'Change agent (fee ¥${(widget.controller.agentSwitchFee / 100).toStringAsFixed(1)}M)'),
                       ),
                     ),
                   ),
@@ -489,7 +490,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Text(
-                          '代理人に売り込ませる（前金 ${controller.solicitCost}万円）',
+                          tr('代理人に売り込ませる（前金 ${controller.solicitCost}万円）', 'Have your agent tout you around (¥${(controller.solicitCost / 100).toStringAsFixed(1)}M up front)'),
                         ),
                       ),
                     ),
@@ -520,22 +521,22 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   if (_offers.length == 1)
                     Text(
                       state.contractYears > 1
-                          ? '契約はあと${state.contractYears}年残っている。今は動けない。'
-                          : '他クラブからのオファーは無かった。',
+                          ? tr('契約はあと${state.contractYears}年残っている。今は動けない。', '${state.contractYears} years are left on your contract. You cannot move now.')
+                          : tr('他クラブからのオファーは無かった。', 'No other club came in for you.'),
                       style: muted,
                     ),
                   if (canRetire) ...[
                     const SizedBox(height: 16),
                     OutlinedButton(
                       onPressed: _busy ? null : _retire,
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Text('引退する'),
+                        child: Text(tr('引退する', 'Retire')),
                       ),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '${Formulas.retirementForcedAge}歳のシーズンを終えると引退になる。',
+                      tr('${Formulas.retirementForcedAge}歳のシーズンを終えると引退になる。', 'The season you turn ${Formulas.retirementForcedAge} is your last.'),
                       textAlign: TextAlign.center,
                       style: muted,
                     ),
@@ -602,9 +603,9 @@ class _OfferCard extends StatelessWidget {
     final quota = Squad.quotaFor(player.position.family);
     final rivals = squad.rivalsFor(player.position);
     final top = rivals.isEmpty ? null : rivals.first;
-    final head = ahead == 0 ? 'あなたの枠では一番上' : 'あなたの枠に上が $ahead 人';
-    final fate = ahead >= quota ? '（登録外になる）' : '（定員 $quota）';
-    final face = top == null ? '' : ' ・ 筆頭は ${top.name}（${top.overall}）';
+    final head = ahead == 0 ? tr('あなたの枠では一番上', 'You are first in your slot') : tr('あなたの枠に上が $ahead 人', '$ahead ahead of you in your slot');
+    final fate = ahead >= quota ? tr('（登録外になる）', ' (you would be left off the squad list)') : tr('（定員 $quota）', ' (quota $quota)');
+    final face = top == null ? '' : tr(' ・ 筆頭は ${top.name}（${top.overall}）', ' · the first of them is ${top.name} (${top.overall})');
     return '$head $fate$face';
   }
 
@@ -627,20 +628,20 @@ class _OfferCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    '${offer.club.name}'
-                    '（${World.byId(offer.club.countryId).name} ${offer.club.tier}部）',
+                    tr('${offer.club.name}'
+                    '（${World.byId(offer.club.countryId).name} ${offer.club.tier}部）', '${offer.club.name} (${World.byId(offer.club.countryId).name}, tier ${offer.club.tier})'),
                     style: theme.textTheme.titleSmall,
                   ),
                 ),
                 Chip(
                   label: Text(
                     offer.loan
-                        ? 'ローン'
+                        ? tr('ローン', 'Loan')
                         : offer.returning
-                        ? '復帰'
+                        ? tr('復帰', 'Return')
                         : offer.isRenewal
-                        ? '契約更改'
-                        : '移籍',
+                        ? tr('契約更改', 'Renewal')
+                        : tr('移籍', 'Transfer'),
                   ),
                   visualDensity: VisualDensity.compact,
                 ),
@@ -686,17 +687,17 @@ class _OfferCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '年俸 ${offer.salary}万円 ・ ${offer.years}年契約',
+                        tr('年俸 ${offer.salary}万円 ・ ${offer.years}年契約', 'Wage ¥${(offer.salary / 100).toStringAsFixed(1)}M · ${offer.years}-year deal'),
                         style: theme.textTheme.titleMedium,
                       ),
-                      Text('手取り $takeHome万円（手数料差引後）', style: muted),
+                      Text(tr('手取り $takeHome万円（手数料差引後）', 'Take-home ¥${(takeHome / 100).toStringAsFixed(1)}M (after the fee)'), style: muted),
                     ],
                   ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('起用', style: muted),
+                    Text(tr('起用', 'Your role'), style: muted),
                     Text(offer.role, style: theme.textTheme.titleSmall),
                   ],
                 ),
@@ -715,7 +716,7 @@ class _OfferCard extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: busy ? null : onNegotiate,
-                    child: Text(offer.negotiated ? '交渉済み' : '上乗せを要求'),
+                    child: Text(offer.negotiated ? tr('交渉済み', 'Already negotiated') : tr('上乗せを要求', 'Ask for more')),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -724,12 +725,12 @@ class _OfferCard extends StatelessWidget {
                     onPressed: busy ? null : onAccept,
                     child: Text(
                       offer.loan
-                          ? 'ローンに出る'
+                          ? tr('ローンに出る', 'Go on loan')
                           : offer.returning
-                          ? '戻る'
+                          ? tr('戻る', 'Go back')
                           : offer.isRenewal
-                          ? '残留する'
-                          : '移籍する',
+                          ? tr('残留する', 'Stay')
+                          : tr('移籍する', 'Join them'),
                     ),
                   ),
                 ),
@@ -741,10 +742,10 @@ class _OfferCard extends StatelessWidget {
               OutlinedButton(
                 onPressed: busy ? null : onIncentive,
                 child: Text(
-                  '出来高払いでサインする'
+                  tr('出来高払いでサインする'
                   '（年俸 −${Formulas.incentiveCutOf(offer.salary)}万、'
                   '目標2つで全額・3つで'
-                  '${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull).round()}万）',
+                  '${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull).round()}万）', 'Sign on performance terms (wage −¥${(Formulas.incentiveCutOf(offer.salary) / 100).toStringAsFixed(1)}M; two targets pays all of it back, three pays ¥${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull / 100).toStringAsFixed(1)}M)'),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -781,7 +782,7 @@ class _BackupCard extends StatelessWidget {
   static const int warnAfterYears = 3;
 
   /// 何をすると消えるか。動いている先で言い方を変える。
-  static String get erases => kIsWeb ? 'ブラウザのデータを消す' : 'アプリを消す';
+  static String get erases => kIsWeb ? tr('ブラウザのデータを消す', 'clearing your browser data') : tr('アプリを消す', 'deleting the app');
 
   @override
   Widget build(BuildContext context) {
@@ -796,7 +797,7 @@ class _BackupCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'セーブの持ち出し',
+              tr('セーブの持ち出し', 'Taking your save with you'),
               style: theme.textTheme.titleSmall?.copyWith(
                 color: warn ? theme.colorScheme.onErrorContainer : null,
               ),
@@ -804,11 +805,11 @@ class _BackupCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               everBackedUp
-                  ? '前に控えてから$years年。$erasesと、'
-                        'そこから先のキャリアは戻せない。'
-                  : 'この記録は、この端末の中にしか無い。'
+                  ? tr('前に控えてから$years年。$erasesと、'
+                        'そこから先のキャリアは戻せない。', '$years years since you last backed this up. If it comes to $erases, the career from that point on cannot be recovered.')
+                  : tr('この記録は、この端末の中にしか無い。'
                         '$erasesと消える。1度だけ控えておけば、'
-                        '別の端末でも続きから遊べる。',
+                        '別の端末でも続きから遊べる。', 'This record lives only on this device, and $erases wipes it. Back it up once and you can carry on from another device.'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: warn ? theme.colorScheme.onErrorContainer : null,
               ),
@@ -819,7 +820,7 @@ class _BackupCard extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: onBackup,
                 icon: const Icon(Icons.save_alt, size: 18),
-                label: const Text('引き継ぎコードを出す'),
+                label: Text(tr('引き継ぎコードを出す', 'Show the transfer code')),
               ),
             ),
           ],
@@ -846,7 +847,7 @@ class FateChip extends StatelessWidget {
     final theme = Theme.of(context);
     final promoted = fate == ClubFate.promoted;
     return Chip(
-      label: Text(promoted ? '${tier - 1}部昇格' : '${tier + 1}部降格'),
+      label: Text(promoted ? tr('${tier - 1}部昇格', 'Promoted to tier ${tier - 1}') : tr('${tier + 1}部降格', 'Relegated to tier ${tier + 1}')),
       backgroundColor: promoted
           ? theme.colorScheme.primaryContainer
           : theme.colorScheme.errorContainer,
@@ -904,8 +905,8 @@ class _SeasonBand extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    '${World.byId(state.club.countryId).name} '
-                    '${state.club.tier}部 ・ ${state.year}シーズン',
+                    tr('${World.byId(state.club.countryId).name} '
+                    '${state.club.tier}部 ・ ${state.year}シーズン', '${World.byId(state.club.countryId).name}, tier ${state.club.tier} · ${state.year}'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: on.withValues(alpha: 0.75),
                     ),
@@ -928,7 +929,7 @@ class _SeasonBand extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '位 / ${state.league.length}',
+                  tr('位 / ${state.league.length}', ' of ${state.league.length}'),
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: on.withValues(alpha: 0.75),
                   ),
@@ -962,11 +963,11 @@ class _NoAdsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('広告', style: theme.textTheme.titleSmall),
+            Text(tr('広告', 'Ads'), style: theme.textTheme.titleSmall),
             const SizedBox(height: 6),
             Text(
-              'シーズンの切れ目に1回だけ出る。買い切りで消せる。'
-              '強くなる課金は置いていない。',
+              tr('シーズンの切れ目に1回だけ出る。買い切りで消せる。'
+              '強くなる課金は置いていない。', 'One ad between seasons. A single purchase removes it. Nothing on sale makes you stronger.'),
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: 10),
@@ -975,7 +976,7 @@ class _NoAdsCard extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: onOpen,
                 icon: const Icon(Icons.block, size: 18),
-                label: const Text('広告を消す'),
+                label: Text(tr('広告を消す', 'Remove ads')),
               ),
             ),
           ],

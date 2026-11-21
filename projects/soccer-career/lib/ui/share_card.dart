@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/lang.dart';
 import '../models/club.dart';
 import '../models/competition.dart';
 import '../models/legend.dart';
@@ -46,11 +47,11 @@ class CareerShareCard extends StatelessWidget {
             tier: 1,
           );
     final titles = <String>[
-      if (legend.leagueTitles > 0) 'リーグ ${legend.leagueTitles}',
-      if (legend.cupTitles > 0) 'カップ ${legend.cupTitles}',
-      if (legend.continentalTitles > 0) '大陸 ${legend.continentalTitles}',
+      if (legend.leagueTitles > 0) tr('リーグ ${legend.leagueTitles}', 'League ${legend.leagueTitles}'),
+      if (legend.cupTitles > 0) tr('カップ ${legend.cupTitles}', 'Cup ${legend.cupTitles}'),
+      if (legend.continentalTitles > 0) tr('大陸 ${legend.continentalTitles}', 'Continental ${legend.continentalTitles}'),
       if (legend.worldCupBest != WorldCupStage.none)
-        '世界大会 ${legend.worldCupBest.label}',
+        tr('世界大会 ${legend.worldCupBest.label}', 'World ${legend.worldCupBest.label}'),
     ];
     return _Frame(
       club: club,
@@ -66,30 +67,30 @@ class CareerShareCard extends StatelessWidget {
       ),
       title: legend.name,
       subtitle:
-          '${legend.positionLabel} ・ '
-          '${legend.seasons}年のキャリア ・ ${legend.retiredAge}歳で引退',
+          tr('${legend.positionLabel} ・ '
+          '${legend.seasons}年のキャリア ・ ${legend.retiredAge}歳で引退', '${legend.positionLabel} · ${legend.seasons} seasons · retired at ${legend.retiredAge}'),
       stats: [
-        _Stat('出場', '${legend.appearances}'),
-        _Stat('ゴール', '${legend.goals}'),
-        _Stat('代表', '${legend.caps}'),
+        _Stat(tr('出場', 'Games'), '${legend.appearances}'),
+        _Stat(tr('ゴール', 'Goals'), '${legend.goals}'),
+        _Stat(tr('代表', 'Caps'), '${legend.caps}'),
       ],
       lines: [
-        _Line('ピーク総合力', '${legend.peakOverall}'),
-        _Line('平均評価', legend.averageRating.toStringAsFixed(2)),
-        if (legend.assists > 0) _Line('アシスト', '${legend.assists}'),
-        _Line('一番上で戦った部', '${legend.bestTier}部'),
-        _Line('渡り歩いたクラブ', '${legend.spells.length}'),
+        _Line(tr('ピーク総合力', 'Peak overall'), '${legend.peakOverall}'),
+        _Line(tr('平均評価', 'Avg rating'), legend.averageRating.toStringAsFixed(2)),
+        if (legend.assists > 0) _Line(tr('アシスト', 'Assists'), '${legend.assists}'),
+        _Line(tr('一番上で戦った部', 'Highest tier reached'), tr('${legend.bestTier}部', 'Tier ${legend.bestTier}')),
+        _Line(tr('渡り歩いたクラブ', 'Clubs played for'), '${legend.spells.length}'),
       ],
-      footnote: titles.isEmpty ? '無冠のキャリア' : titles.join(' ・ '),
+      footnote: titles.isEmpty ? tr('無冠のキャリア', 'A career without a trophy') : titles.join(tr(' ・ ', ' · ')),
     );
   }
 
   /// この1枚に添える文。
   String get text => ShareText.compose([
-    '${legend.seasons}年のキャリアを終えました。',
-    '通算 ${legend.appearances}試合 ${legend.goals}ゴール、'
-        '代表${legend.caps}キャップ。',
-    if (legend.leagueTitles > 0) 'リーグ優勝 ${legend.leagueTitles}回。',
+    tr('${legend.seasons}年のキャリアを終えました。', 'A ${legend.seasons}-season career is over.'),
+    tr('通算 ${legend.appearances}試合 ${legend.goals}ゴール、'
+        '代表${legend.caps}キャップ。', '${legend.appearances} games, ${legend.goals} goals, ${legend.caps} caps.'),
+    if (legend.leagueTitles > 0) tr('リーグ優勝 ${legend.leagueTitles}回。', '${legend.leagueTitles} league titles.'),
   ]);
 }
 
@@ -145,8 +146,8 @@ class SeasonShareCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final identity = ClubIdentity.of(club);
     final extra = <String>[
-      if (cupWon) '国内カップ優勝',
-      if (continentalWon) '大陸カップ優勝',
+      if (cupWon) tr('国内カップ優勝', 'Domestic cup winner'),
+      if (continentalWon) tr('大陸カップ優勝', 'Continental cup winner'),
     ];
     return _Frame(
       club: club,
@@ -160,28 +161,28 @@ class SeasonShareCard extends StatelessWidget {
         backdrop: const Color(0xFFF2F0E6),
       ),
       title: headline,
-      subtitle: '${club.name} ・ $year年 ・ $playerName',
+      subtitle: tr('${club.name} ・ $year年 ・ $playerName', '${club.name} · $year · $playerName'),
       stats: [
-        _Stat('出場', '${stats.appearances}'),
-        _Stat('ゴール', '${stats.goals}'),
-        _Stat('アシスト', '${stats.assists}'),
+        _Stat(tr('出場', 'Games'), '${stats.appearances}'),
+        _Stat(tr('ゴール', 'Goals'), '${stats.goals}'),
+        _Stat(tr('アシスト', 'Assists'), '${stats.assists}'),
       ],
       lines: [
-        _Line('平均評価', stats.averageRating.toStringAsFixed(2)),
-        _Line('順位', '$tier部 $leaguePosition位'),
-        _Line('得点に絡んだ数', '${stats.goals + stats.assists}'),
-        if (objectiveMet != null) _Line('監督の期待', '$objectiveMet / 3'),
-        if (caps > 0) _Line('今季の代表', '$caps キャップ'),
+        _Line(tr('平均評価', 'Avg rating'), stats.averageRating.toStringAsFixed(2)),
+        _Line(tr('順位', 'Finish'), tr('$tier部 $leaguePosition位', 'T$tier #$leaguePosition')),
+        _Line(tr('得点に絡んだ数', 'Goal involvements'), '${stats.goals + stats.assists}'),
+        if (objectiveMet != null) _Line(tr('監督の期待', 'Manager targets'), '$objectiveMet / 3'),
+        if (caps > 0) _Line(tr('今季の代表', 'Caps this season'), tr('$caps キャップ', '$caps caps')),
       ],
-      footnote: extra.isEmpty ? '' : extra.join(' ・ '),
+      footnote: extra.isEmpty ? '' : extra.join(tr(' ・ ', ' · ')),
     );
   }
 
   String get text => ShareText.compose([
-    '$headline（${club.name}・$year年）',
-    '${stats.appearances}試合 ${stats.goals}ゴール '
+    tr('$headline（${club.name}・$year年）', '$headline (${club.name}, $year)'),
+    tr('${stats.appearances}試合 ${stats.goals}ゴール '
         '${stats.assists}アシスト、平均評価 '
-        '${stats.averageRating.toStringAsFixed(2)}。',
+        '${stats.averageRating.toStringAsFixed(2)}。', '${stats.appearances} games, ${stats.goals} goals, ${stats.assists} assists, ${stats.averageRating.toStringAsFixed(2)} average.'),
   ]);
 }
 
