@@ -143,3 +143,42 @@ String growthLine(Career car, Player p) {
   final g = growthTypeOf(p);
   return '${g.label}(${g.text})';
 }
+
+/// 見える特性(初めから分かる)。ほかの特性は隠れていて、在籍しばらく・特性らしい出来事・下調べとワークアウトで分かる(A-4)。
+const visibleTraits = {Trait.hometown, Trait.media, Trait.leader};
+
+/// 隠れた特性が在籍で分かるまでの区切りの数(1〜2。選手ごとに決まる)。
+int traitRevealBlocks(Player p) => 1 + ((p.id * 69069 + 1) & 0xffff) % 2;
+
+/// [c] から見た [p] の性格の見え方。(分かっている特性, 価値観が分かっているか, まだ分からない特性があるかもしれないか)。
+(List<Trait>, bool, bool) traitsShown(Career? c, Player p) {
+  final pers = personalityOf(p);
+  if (c == null) return (pers.traits, true, false);
+  final mine = c.me.roster.contains(p) || c.me.twoWay.contains(p);
+  // 在籍しばらく(区切り1〜2)、前からいる選手(1年以上)、下調べ・ワークアウトをした選手は、全部分かる
+  final settled = p.traitsKnown || (mine && ((c.blocksWithMe[p.id] ?? 0) >= traitRevealBlocks(p) || p.tenure >= 1));
+  final shown = [
+    for (final t in pers.traits)
+      if (visibleTraits.contains(t) || settled || c.traitSeen.contains(p.id * 32 + t.index)) t,
+  ];
+  return (shown, settled, !settled);
+}
+
+/// 性格の1行(「性格: 勝ちたい・リーダー」。まだ分からないところは書き添える)。
+String traitsLine(Career? c, Player p) {
+  final (shown, valueKnown, more) = traitsShown(c, p);
+  final pers = personalityOf(p);
+  final parts = [
+    if (valueKnown) pers.value.label,
+    ...shown.map((t) => t.label),
+  ];
+  final head = parts.isEmpty ? '性格: まだ見えていない' : '性格: ${parts.join('・')}';
+  return more ? '$head(ほかはまだ分からない。チームにしばらくいると見えてくる)' : head;
+}
+
+/// 性格の説明(分かっている所だけ)。
+String traitsText(Career? c, Player p) {
+  final (shown, valueKnown, _) = traitsShown(c, p);
+  final pers = personalityOf(p);
+  return [if (valueKnown) pers.value.text, ...shown.map((t) => t.text)].map((x) => '$x。').join();
+}

@@ -7,7 +7,6 @@ import '../../gm/career.dart';
 import '../../gm/game_sim.dart';
 import '../../gm/inbox.dart';
 import '../../gm/league.dart';
-import '../../gm/personality.dart';
 import '../../gm/player.dart';
 import '../../gm/rating.dart';
 import '../../gm/summer.dart';
@@ -1390,7 +1389,10 @@ class ProgressTab extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(vets.isEmpty ? '29歳からの選手がいない' : '24歳までの選手がいない')));
       return;
     }
-    String traits(Player p) => personalityKnown(p) ? '・${personalityOf(p).traits.map((t) => t.label).join('・')}' : '・性格はまだ分からない';
+    String traits(Player p) {
+      final shown = traitsShown(car, p).$1;
+      return shown.isEmpty ? '・性格はまだ分からない' : '・${shown.map((t) => t.label).join('・')}';
+    }
     final vet = await showDialog<Player>(
       context: context,
       builder: (ctx) => SimpleDialog(

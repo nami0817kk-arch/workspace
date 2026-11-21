@@ -717,6 +717,12 @@ class Career {
   /// 伸びしろの見立ての幅を狭める(2026-11-21 の作り込み A-1。乱数は使わない)。
   Map<int, int> seenGames = {};
 
+  /// 自分のチームにいた区切りの数(選手の id → 区切り)。隠れた特性が分かる目安(A-4)。
+  Map<int, int> blocksWithMe = {};
+
+  /// 特性らしい出来事で分かった隠れた特性(選手の id × 32 + 特性の番号)。
+  Set<int> traitSeen = {};
+
   /// 伸び方の型が分かった選手(選手の id)。
   Set<int> growthKnown = {};
 
@@ -2779,12 +2785,19 @@ class Career {
     // 10日契約が切れるのは、この節の支出を数えたあと
     _tickTenDay(n);
     for (final (t, p) in injuries) {
+      // けがしがち: 自分の選手がけがをすると分かる(特性らしい出来事)
+      if (t == mine && hasTrait(p, Trait.fragile) && traitSeen.add(p.id * 32 + Trait.fragile.index)) {
+        _mail(Sender.staff, '${p.name}はけがしがちだ', 'トレーナーの見立て: ${p.name}は体が強くない。けがが多い(起きやすさ1.6倍)。出場時間を考えたい。', player: p.id);
+      }
       if (t == mine || p.ovr >= 76) _log('けが: ${p.name}(${teams[t].def.short})が${p.injured}試合欠場');
     }
     injuries.clear();
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    for (final p in [...me.roster, ...me.twoWay]) {
+      blocksWithMe[p.id] = math.min(99, (blocksWithMe[p.id] ?? 0) + 1);
+    }
     _potentialNews();
     _updateChem();
     _giveMonthly();
@@ -5231,6 +5244,8 @@ class Career {
         'sp': scoutPrep,
         if (potentialRevealed.isNotEmpty) 'pv': [...potentialRevealed],
         if (growthKnown.isNotEmpty) 'gk': [...growthKnown],
+        if (blocksWithMe.isNotEmpty) 'wb': [for (final e in blocksWithMe.entries) [e.key, e.value]],
+        if (traitSeen.isNotEmpty) 'ts': [...traitSeen],
         if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
         if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
@@ -5379,6 +5394,11 @@ class Career {
       ..prepScouted = (j['ps'] as int?) ?? 0
       ..potentialRevealed = {for (final x in (j['pv'] as List? ?? const [])) x as int}
       ..growthKnown = {for (final x in (j['gk'] as List? ?? const [])) x as int}
+      ..blocksWithMe = {
+        for (final x in (j['wb'] as List? ?? const []))
+          if (x is List && x.length == 2) x[0] as int: x[1] as int,
+      }
+      ..traitSeen = {for (final x in (j['ts'] as List? ?? const [])) x as int}
       ..seenGames = {
         for (final x in (j['sg'] as List? ?? const []))
           if (x is List && x.length == 2) x[0] as int: x[1] as int,
