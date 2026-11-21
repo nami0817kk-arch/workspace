@@ -2590,6 +2590,7 @@ class Career {
     if (phase != Phase.preseason || startProblem != null) return;
     _potentialNews();
     _settleTrust();
+    _tradeAnswers();
     // 今季のあとのドラフトのうわさ(A-5)。指名権の値打ちもその年の顔ぶれで変わる
     _mail(Sender.staff, 'ドラフトのうわさ', '${draftClassOf(seed, season).rumor}。');
     _aiPolicies();
@@ -5332,6 +5333,83 @@ class Career {
     gmTrust[team] = (trustOf(team) + d).clamp(-100, 100);
   }
 
+  /// トレードごとの、前に知らせた判定(myTrades と同じ順。-2 はまだ。T-6)。
+  List<int> tradeLastVerdict = [];
+
+  /// トレードに付けた名前(myTrades の番号 → 名前。T-6)。
+  Map<int, String> tradeNames = {};
+
+  void nameTrade(int i, String name) {
+    if (i < 0 || i >= myTrades.length) return;
+    final n = name.trim();
+    if (n.isEmpty) {
+      tradeNames.remove(i);
+    } else {
+      tradeNames[i] = n.length > 20 ? n.substring(0, 20) : n;
+    }
+  }
+
+  /// 通算のトレードの勝ち・五分・負けの数(判定まだは数えない)。
+  (int, int, int) get tradeRecord {
+    var w = 0, d = 0, l = 0;
+    for (final t in myTrades) {
+      switch (tradeVerdict(this, t)) {
+        case 1:
+          w++;
+        case 0:
+          d++;
+        case -1:
+          l++;
+      }
+    }
+    return (w, d, l);
+  }
+
+  /// いちばんの勝ちと負けのトレード(myTrades の番号。無ければ null)。
+  (int?, int?) get tradeBestWorst {
+    int? best, worst;
+    var bd = 0.0, wd = 0.0;
+    for (var i = 0; i < myTrades.length; i++) {
+      if (tradeVerdict(this, myTrades[i]) == null) continue;
+      final (a, b) = tradeValues(this, myTrades[i]);
+      final d = a - b;
+      if (d > bd) {
+        bd = d;
+        best = i;
+      }
+      if (d < wd) {
+        wd = d;
+        worst = i;
+      }
+    }
+    return (best, worst);
+  }
+
+  /// 開幕に、昔のトレードの判定が変わっていたら知らせる(答え合わせ。T-6)。
+  void _tradeAnswers() {
+    while (tradeLastVerdict.length < myTrades.length) {
+      tradeLastVerdict.add(-2);
+    }
+    for (var i = 0; i < myTrades.length; i++) {
+      final t = myTrades[i];
+      final v = tradeVerdict(this, t);
+      if (v == null || v == tradeLastVerdict[i]) continue;
+      final first = tradeLastVerdict[i] == -2;
+      tradeLastVerdict[i] = v;
+      // 初めての判定が五分なら黙っておく(知らせが多くなりすぎないように)
+      if (first && v == 0) continue;
+      final word = v == 1 ? '勝ち' : v == -1 ? '負け' : '五分';
+      final ago = season - t.season;
+      final gave = t.give.map((x) => x.$2).join('・');
+      final got = t.get.map((x) => x.$2).join('・');
+      _mail(
+        Sender.staff,
+        'トレードの答え合わせ: $word',
+        '$ago年前の${teams[t.partner].def.short}とのトレード(出した: ${gave.isEmpty ? '指名権' : gave} / もらった: ${got.isEmpty ? '指名権' : got})は、今の力で比べると$wordだ。${first ? '' : '(前の判定から変わった)'}',
+      );
+    }
+  }
+
   /// 開幕に、前の季のトレードの答え合わせをして信用を動かす(T-4)。信用は季ごとに「ふつう」へ2割戻る。
   void _settleTrust() {
     for (final k in gmTrust.keys.toList()) {
@@ -5553,6 +5631,8 @@ class Career {
         if (policyGames > 0) 'pgm': policyGames,
         if (rumors.isNotEmpty) 'rmr': [for (final r in rumors) r.toJson()],
         if (gmTrust.isNotEmpty) 'gtr': [for (final e in gmTrust.entries) [e.key, e.value]],
+        if (tradeLastVerdict.isNotEmpty) 'tlv': tradeLastVerdict,
+        if (tradeNames.isNotEmpty) 'tnm': [for (final e in tradeNames.entries) [e.key, e.value]],
         if (matchupSeen.any((x) => x > 0)) 'mtu': matchupSeen,
         if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
@@ -5709,6 +5789,11 @@ class Career {
       ..traitSeen = {for (final x in (j['ts'] as List? ?? const [])) x as int}
       ..comboSecs = [for (var i = 0; i < Combo.values.length; i++) (j['cb'] is List && (j['cb'] as List).length > i) ? ((j['cb'] as List)[i] as int) : 0]
       ..policyGames = (j['pgm'] as int?) ?? 0
+      ..tradeLastVerdict = [for (final x in (j['tlv'] as List? ?? const [])) x as int]
+      ..tradeNames = {
+        for (final x in (j['tnm'] as List? ?? const []))
+          if (x is List && x.length == 2) x[0] as int: x[1] as String,
+      }
       ..gmTrust = {
         for (final x in (j['gtr'] as List? ?? const []))
           if (x is List && x.length == 2) x[0] as int: x[1] as int,
