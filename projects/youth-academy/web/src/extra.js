@@ -193,7 +193,7 @@
   YA.simReport = function (w, before, log) {
     const lines = [];
     const fresh = (w.inbox || []).filter((n) => (n.n || 0) > before.n);
-    const span = `${before.year}年目 ${before.week}週 → ${w.year}年目 ${w.week}週（${log.weeks}週）`;
+    const span = `${YA.ywName(before.year, before.week)} → ${YA.ywName(w.year, w.week)}（${log.weeks}週）`;
     if (log.stopped) lines.push({ k: 'stop', t: `ここで止まりました：${log.stopped}` });
     const mm = log.matches;
     if (mm.length) {
@@ -299,7 +299,7 @@
   YA.slotKey = (i) => (i === 0 ? 'world' : 'world' + i);
   YA.slotSummary = function (w) {
     if (!w || !w.players) return null;
-    return `${w.clubName}（${w.year}年目 ${w.week}週）／${w.club ? YA.TIER_NAME[w.club.tier] : ''} ${w.rec ? w.rec.w + '勝' + w.rec.d + '分' + w.rec.l + '敗' : ''}`;
+    return `${w.clubName}（${YA.ywName(w.year, w.week)}）／${w.club ? YA.TIER_NAME[w.club.tier] : ''} ${w.rec ? w.rec.w + '勝' + w.rec.d + '分' + w.rec.l + '敗' : ''}`;
   };
   YA.exportWorld = (w) => JSON.stringify({ app: 'youth-academy', v: w.v, world: w });
   YA.importWorld = function (text) {

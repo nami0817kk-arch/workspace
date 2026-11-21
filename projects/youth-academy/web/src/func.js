@@ -511,7 +511,7 @@
           YA.alumniStoryEl(w, a),
           YA.alumniStats(w, a),
           (a.news || []).length ? h('div', { class: 'h', style: 'margin-top:4px' }, '最近の知らせ') : null,
-          (a.news || []).length ? h('div', { class: 'plist' }, a.news.slice(-8).reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'sub', style: 'width:72px;flex:none' }, `${x.y}年目 ${x.w}週`), h('span', {}, x.t)))) : null,
+          (a.news || []).length ? h('div', { class: 'plist' }, a.news.slice(-8).reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'sub', style: 'width:104px;flex:none' }, YA.ywName(x.y, x.w)), h('span', {}, x.t)))) : null,
           h('div', { class: 'h', style: 'margin-top:4px' }, 'その後の年表'),
           h('div', { class: 'plist' }, YA.alumniTimeline(w, a).map((x) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.y}年目`), h('span', { class: 'grow', style: 'font-size:11.5px' }, x.t)))));
       };
@@ -594,6 +594,9 @@
   // この週を過ぎると決められなくなるもの
   YA.todoDue = (w) => YA.todoList(w).filter((x) => x.hard && x.left <= 0);
   YA.todoTabs = (w) => new Set(YA.todoList(w).map((x) => x.tab));
+  // クラブの小タブごとのやり残し（2026-11-21：左の帯のクラブに赤い点が付いても、どの小タブか分からなかった）
+  const TODO_SUB = { int: 'int', sel: 'sel', offer: 'scout', scoutact: 'scout', policy: 'over' };
+  YA.todoSubs = (w) => { const m = {}; for (const x of YA.todoList(w)) if (x.tab === 'club' && TODO_SUB[x.id] && !m[TODO_SUB[x.id]]) m[TODO_SUB[x.id]] = x.t; return m; };
   // 方針の画面を開いたら、その年は見たことにする
   const pc0 = YA.policyCard;
   if (pc0) YA.policyCard = function (w) {
@@ -858,7 +861,7 @@
     const games = sec('試合',
       h('div', { class: 'ovstats' }, h('div', {}, h('b', {}, cs.apps), h('small', {}, 'A出場')), isGK ? null : h('div', {}, h('b', {}, cs.goals), h('small', {}, '得点')), isGK ? null : h('div', {}, h('b', {}, cs.assists), h('small', {}, 'アシスト')), rl.length ? h('div', {}, h('b', {}, (rl.reduce((a, x) => a + x.r, 0) / rl.length).toFixed(1)), h('small', {}, '採点')) : null),
       rl.length
-        ? h('div', { class: 'ovform' }, ...rl.map((x) => h('div', { class: 'fbar', tip: `${x.y}年目 ${x.w}週（${x.t}）${x.o ? '・' + x.o : ''}${x.g ? `・${x.g}得点` : ''}${x.a ? `・${x.a}アシスト` : ''}` }, h('i', { style: `height:${Math.round(clamp((x.r - 4) / 5, 0.08, 1) * 100)}%;background:${x.r >= 7.5 ? '#1a9d57' : x.r >= 6.5 ? '#7dbf3f' : x.r >= 5.8 ? '#f2b84c' : '#e06a5a'}` }), h('span', {}, x.r.toFixed(1)), h('small', {}, x.t))))
+        ? h('div', { class: 'ovform' }, ...rl.map((x) => h('div', { class: 'fbar', tip: `${YA.ywName(x.y, x.w)}（${x.t}）${x.o ? '・' + x.o : ''}${x.g ? `・${x.g}得点` : ''}${x.a ? `・${x.a}アシスト` : ''}` }, h('i', { style: `height:${Math.round(clamp((x.r - 4) / 5, 0.08, 1) * 100)}%;background:${x.r >= 7.5 ? '#1a9d57' : x.r >= 6.5 ? '#7dbf3f' : x.r >= 5.8 ? '#f2b84c' : '#e06a5a'}` }), h('span', {}, x.r.toFixed(1)), h('small', {}, x.t))))
         : h('div', { class: 'sub', style: 'font-size:11.5px' }, 'まだ記録した試合がありません（これからの試合が5つまで並びます）'));
     // ★の子：信頼と覚醒の鍵の近さ
     let star = null;

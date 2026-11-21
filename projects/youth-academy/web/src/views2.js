@@ -103,8 +103,8 @@
     const w = W();
     const ui = U().app;
     ui.ct = ui.ct || 'money';
-    const marks = YA.clubMarks(w);
-    const tabs = h('div', { class: 'tabs', style: 'flex:none' }, SUBS.map(([k, n]) => h('button', { class: 'btn' + (ui.ct === k ? ' on' : ''), title: marks[k] || '', onclick: () => { ui.ct = k; rerender(); } }, n, marks[k] ? h('b', { style: 'color:#d63a3a;margin-left:3px' }, '!') : null)));
+    const marks = Object.assign({}, YA.clubMarks(w), YA.todoSubs ? YA.todoSubs(w) : {});
+    const tabs = h('div', { class: 'tabs', style: 'flex:none' }, SUBS.map(([k, n]) => h('button', { class: 'btn' + (ui.ct === k ? ' on' : ''), title: marks[k] || '', onclick: () => { ui.ct = k; rerender(); } }, n, marks[k] ? h('b', { class: 'subdot', 'aria-label': marks[k] }) : null)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (!SUBS.some((x) => x[0] === ui.ct)) ui.ct = 'money';
     ({ over: over, top: topView, money: money, staff: staff, int: (b, w2) => recruit(b, w2, 'int'), scout: (b, w2) => recruit(b, w2, 'scout'), sel: (b, w2) => recruit(b, w2, 'sel'), table: table })[ui.ct](body, w);
@@ -376,7 +376,7 @@
           h('span', { class: 'sub', style: 'width:58px;flex:none' }, m0 === m1 ? m0 : `${m0}〜${m1}`),
           h('span', { class: 'grow' }, t), now ? h('span', { class: 'chip trait', style: 'font-size:11px;padding:0 5px' }, '今') : null);
       });
-      right.append(card(title(`今年の日程（いま${w.week}週）`), h('div', { class: 'plist', style: 'gap:2px' }, rowsS)));
+      right.append(card(title(`今年の日程（いま${YA.wkName(w.week)}）`), h('div', { class: 'plist', style: 'gap:2px' }, rowsS)));
     }
     right.append(card(title('通算の対戦成績'), ...(Object.keys(w.h2h || {}).length ? Object.entries(w.h2h).slice(-6).map(([n, v]) => h('div', { class: 'row', style: 'padding:2px 0;font-size:11px' }, h('span', { class: 'grow' }, n), h('span', { class: 'sub' }, `${v[0]}勝${v[1]}分${v[2]}敗`))) : [h('div', { class: 'note' }, 'まだありません')])));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
@@ -482,7 +482,7 @@
       body.append(title('主な記録'), h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-bottom:6px' }, h('span', { class: 'chip trait' }, `Aチーム ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`), h('span', { class: 'chip gray' }, `プロ入り ${w.alumni.filter((a) => a.status === 'pro').length}人`), h('span', { class: 'chip gray' }, `代表経験 ${w.alumni.filter((a) => a.nat).length}人`), h('span', { class: 'chip gray' }, `育成基金へ ${w.club.solidarityLast || 0}万円（今年度・連帯貢献金の半分）`)));
       body.append(title('獲得した大会'), ...(w.trophies && w.trophies.length ? w.trophies.map((t) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'chip trait' }, t.rank), h('span', { class: 'nm grow' }, t.name), h('span', { class: 'sub' }, `${t.year}年目`))) : [h('div', { class: 'note' }, 'まだありません')]));
       body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.levelNames(w)[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
-      body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:68px' }, `${r.year}年目${r.week}週`), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
+      body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:104px;flex:none' }, YA.ywName(r.year, r.week)), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
       if (YA.recordBookEl) body.append(YA.recordBookEl(w));
     } else if (ui.mt === 'howto') {
       if (YA.howtoEl) body.append(YA.howtoEl());

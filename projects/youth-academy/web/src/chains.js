@@ -378,7 +378,7 @@
     if (!p) return v;
     const pre = [];
     const last = (p.mem || []).filter((m) => m.k === e.id).slice(-1)[0];
-    if (last) pre.push(last.y === w.year ? `（${last.w}週にも同じことがあった。そのときは「${last.q}」）` : `（${w.year - last.y}年前、高${last.g || '?'}のときにも同じことがあった。そのときは「${last.q}」）`);
+    if (last) pre.push(last.y === w.year ? `（${YA.wkName(last.w)}にも同じことがあった。そのときは「${last.q}」）` : `（${w.year - last.y}年前、高${last.g || '?'}のときにも同じことがあった。そのときは「${last.q}」）`);
     // 季節の書き出しと、本音・事情の一文は、本人が話しに来る出来事だけ（怪我の相談や張り合いに付くと場面と合わない）
     const talk = TALK.has(e.id);
     const s = talk ? SEASON(w) : '';

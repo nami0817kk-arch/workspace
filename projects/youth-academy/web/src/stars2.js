@@ -214,7 +214,7 @@
         if (YA.trustOpen(p, 'diary') && (p.diary || []).length) {
           const d = add('', 'background:#fffaf0;border-radius:6px;padding:4px 7px;margin-top:3px');
           const hd = doc.createElement('b'); hd.textContent = '日誌'; hd.style.fontSize = '11px'; d.append(hd);
-          for (const e of p.diary.slice(-3).reverse()) { const x = doc.createElement('div'); x.textContent = `${e.y}年目${e.w}週：${e.t}`; d.append(x); }
+          for (const e of p.diary.slice(-3).reverse()) { const x = doc.createElement('div'); x.textContent = `${YA.ywName(e.y, e.w)}：${e.t}`; d.append(x); }
         } else if (p.star) add('日誌は、信頼が「よそよそしい」（2/5）になると読めます', 'color:var(--sub)');
       } catch (e) { /* 形の違う画面 */ }
       return el;
