@@ -1639,6 +1639,16 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(JSON.parse(JSON.stringify(wh)).scoutScore, '当たり外れの集計が保存される');
   ok((wh.inbox || []).filter((n) => n.year === wh.year && /^入団した/.test(n.text)).length <= 1, '入団の見立ての答え合わせは1件にまとまる');
 }
+// ライバル監督の試合前と試合のあとのひとことは1件（2026-11-21「まとめる」）
+{
+  const st = YA.testStart({ seed: 5, tier: 2, years: 2 });
+  YA.testYear(st); YA.testYear(st);
+  const both = st.w.inbox.filter((n) => /^相手は.*（通算 .*） → /.test(n.text));
+  const lone = st.w.inbox.filter((n) => /との関係：/.test(n.text) && !/^相手は/.test(n.text));
+  console.log('ライバル監督のひとこと：まとめ', both.length, '後だけ', lone.length);
+  ok(both.length >= 1 && both.every((n) => n.tier === 2), 'ライバル監督の試合前と試合のあとが1件にまとまる');
+  ok(lone.length <= both.length, 'ライバル監督の試合のあとだけの知らせは少ない');
+}
 // お知らせのまとめ（2026-11-21「品質向上」）：★以外の子の小さな動きは月に1件、★の子は1件ずつ
 {
   const st = YA.testStart({ seed: 12, tier: 2, years: 1 });
