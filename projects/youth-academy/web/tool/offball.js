@@ -5,7 +5,7 @@ for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 
 const YA = globalThis.YA;
 const cv = { getBoundingClientRect: () => ({ width: 844, height: 330 }), getContext: () => null };
 const st = { space: [], mark: [], off: 0, n: 0, lineSd: [], kicks: 0, through: 0 };
-for (const seed of [3, 8, 21]) {
+for (const seed of [3, 8, 21, 5, 13, 34]) { // 2026-11-22：3試合では乱数の並びで線をまたいで揺れた
   const w = YA.newWorld(seed); const home = YA.teamFromWorld(w, 'A'); const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
   const m = new YA.Match({ seed, home, away, settings: { autoStop: false } }); m.homeShare = () => 0.5;
   const R = new YA.Renderer(cv); R.setMatch(m);

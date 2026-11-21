@@ -22,6 +22,8 @@ for (const seed of (process.env.YA_SEEDS ? process.env.YA_SEEDS.split(',').map(N
   const m = new YA.Match({ seed, home, away, settings: { autoStop: false } });
   const R = new YA.Renderer(cv);
   R.setMatch(m);
+  // キックオフの並び：同じチームの子が同じ場所に重ならない（2026-11-22：得点のあとは網の中の球で並べていて、0m で重なっていた）
+  { const ko0 = R.kickoff.bind(R); R.kickoff = function (t) { ko0(t); for (const tm of [m.home, m.away]) { const ids = Object.keys(R.base).filter((id) => R.teamOf(id) === tm); for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++) st.koMin = Math.min(st.koMin == null ? 99 : st.koMin, Math.hypot(R.disp[ids[i]][0] - R.disp[ids[j]][0], R.disp[ids[i]][1] - R.disp[ids[j]][1])); } }; }
   const dt = 1 / 60;
   let prevB = R.ball.slice();
   let prevV = [0, 0];
@@ -97,6 +99,7 @@ for (const seed of (process.env.YA_SEEDS ? process.env.YA_SEEDS.split(',').map(N
 }
 console.log(JSON.stringify(st));
 ok(st.scenes > 30, '場面が出る');
+ok(st.koMin == null || st.koMin >= 3, 'キックオフで同じチームの子が重ならない（最小 ' + (st.koMin == null ? '-' : st.koMin.toFixed(1)) + 'm）');
 ok(!st.gifts, '場面の入りで相手の選手がこちらへボールを渡さない ' + (st.gifts || 0));
 ok(st.steals > 0, '相手が持っているときは、寄せて奪ってから場面に入る ' + (st.steals || 0));
 ok(st.ballMax < 30, 'ボールが速すぎない（最大 ' + st.ballMax.toFixed(1) + 'm/s）');

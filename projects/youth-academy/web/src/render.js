@@ -23,7 +23,7 @@
     loft: 19.5, // 浮き球の横の速さ
     shot: 25, // シュートの速さ
     maxGround: 23, // これより強く蹴らないと届かないなら浮かせる
-    ff: 2.6, // 場面の入りの早送りの倍率
+    ff: 3.4, // 場面の入りの早送りの倍率（2026-11-22 2.6→3.4：早送りが見る時間の16%あった）
     space: 2.2, // これより近づくと離れようとする
     tackle: 2.4, // 寄せた子がこの距離に入ると、奪いにいく
     celeb: 3.2, // 得点の喜びの長さ（秒。ボールが網に入ってから再開まで）
@@ -182,14 +182,14 @@
       }
       if (mine) {
         // 攻め：幅は戦い方の広さ（サイド攻撃は外に張る）
-        x = 34 + (x - 34) * (0.8 + tc.width * 0.6);
+        x = 34 + (x - 34) * (0.92 + tc.width * 0.6); // 2026-11-22：持っている側の横幅を45m→50m前後に少し広げた（本物は45〜55m）
         if (s.duty === 'att') yr += has('wide') ? 10 : 5; // 攻撃の任務のサイドは追い越して上がる
         if (s.duty === 'def' || has('stay')) yr -= 5; // 守備の任務は残る
         if (has('run')) yr += 4; // 裏を狙う
         if (has('post')) yr -= 6; // 降りて受ける
         if (has('cutin')) x = lerp(x, 34, 0.3);
         if (has('wide') && s.duty === 'att') x = 34 + (x - 34) * 1.15;
-        x = lerp(x, this.ball[0], 0.1);
+        x = lerp(x, this.ball[0], 0.08);
       } else {
         // 守り：横はボールへ絞る
         if (s.duty === 'att') yr += 4; // 攻撃の任務は戻りが遅い
@@ -274,7 +274,7 @@
           const runner = d > lastOpp - 14;
           if (runner) d = Math.max(d, lastOpp - 3.5 + ko * 2.5);
           // オフサイドにならない（パスが自分に出ていなければ、線より前に出ない）
-          if (!(this.fl && this.expect === id)) d = Math.min(d, lastOpp - 0.6);
+          if (!(this.fl && this.expect === id)) d = Math.min(d, lastOpp - 1.4); // 2026-11-22 0.6→1.4：守りが下がると追い越していた
         }
       } else {
         // マーク：自分の持ち場の近くの相手を、ゴール側から捕まえる
@@ -798,7 +798,7 @@
           if (this.teamOf(id) === my || fl.tried[id] || this.base[id][3] === 0) continue;
           if (dist(this.disp[id], b) > MOVE.reach) continue;
           fl.tried[id] = true;
-          if (Math.random() < 0.4 * (0.4 + this.shareOf(id) * 1.2) * (0.5 + this.ab01(id, '予測') + this.ab01(fl.by, 'パス') * -0.4 + 0.2)) { // 読みのいい子ほど止め、うまいパスほど通る
+          if (Math.random() < 0.4 * (0.4 + this.shareOf(id) * 1.2) * (0.5 + this.ab01(id, '予測') + this.ab01(fl.by, 'パス') * -1 + 0.5)) { // 読みのいい子ほど止め、うまいパスほど通る
             this.lastTouch = this.teamOf(id);
             this.fl = null;
             this.bv = [0, 0];
@@ -848,7 +848,7 @@
       const far = (depth < 30 ? 45 : 22 + tc.tempo * 14) + (this.ab01(me, '視野') - 0.5) * 16; // 速い攻めほど遠くへ蹴る。自陣の深くからは大きく蹴り出す。視野の広い子は遠くの味方を見つける
       let tgt = null;
       // 相手の陣の深くほど、相手に引っかかる（守りが固まっていて通らない）
-      if (Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(1.9 - this.shareOf(me) * 1.8, 0.5, 1.6) * (1.6 - this.ab01(me, 'パス') * 1.2)) { // パスのうまい子はミスが少ない // 押している側はミスが少ない
+      if (Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(1.9 - this.shareOf(me) * 1.8, 0.5, 1.6) * clamp(2.2 - this.ab01(me, 'パス') * 3, 0.25, 2)) { // パスのうまい子はミスが少ない（2026-11-22 効きを強めた：前はパス12以上と9以下で通る割合が同じだった） // 押している側はミスが少ない
         // 相手に渡ってしまうパス
         let bd = 30;
         for (const id of ids) if (this.teamOf(id) !== my && this.base[id][3] !== 0) { const d = dist(this.disp[id], q); if (d < bd && d > 5) { bd = d; tgt = id; } }
@@ -893,6 +893,10 @@
     kickoff(team) {
       const m = this.match;
       this.poss = null;
+      // 並びはボールの位置で決まるので、先に真ん中へ置く（2026-11-22：網の中の球で並べていて、
+      // 決めた側の守りが真ん中の線に押しつけられ、サイドバックと中盤が重なっていた）
+      this.ball = [34, L / 2, 0];
+      this.owner = null;
       for (const id of Object.keys(this.base)) {
         const q = this.shapePos(id);
         const home = this.teamOf(id) === m.home;
