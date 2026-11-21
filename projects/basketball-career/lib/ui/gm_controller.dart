@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../gm/potential_view.dart';
 import '../gm/block_report.dart';
 import '../gm/career.dart';
 import '../gm/skills.dart';
@@ -32,7 +33,14 @@ class GmController extends ChangeNotifier {
   static const _howtoKey = 'gmHowtoSeen';
 
   Profile profile = Profile();
-  Career? career;
+  Career? _career;
+
+  /// いまのキャリア。変えると、伸びしろの見立て([viewingCareer])もこのキャリアで見る。
+  Career? get career => _career;
+  set career(Career? c) {
+    _career = c;
+    viewingCareer = c;
+  }
 
   /// 新しく達成した実績(画面がダイアログで見せて消す)。
   final pending = <Achievement>[];

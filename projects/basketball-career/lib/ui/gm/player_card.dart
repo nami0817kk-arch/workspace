@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../gm/potential_view.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/personality.dart';
@@ -65,8 +66,8 @@ class PlayerCardHeader extends StatelessWidget {
             const SizedBox(height: 4),
             const Text('POT', style: TextStyle(fontSize: 10, color: Colors.white70, fontWeight: FontWeight.bold)),
             Text(() {
-              final (lo, hi) = potentialRange(p);
-              return '$lo〜$hi';
+              final pv = potentialShown(p);
+              return '${pv.potLo}〜${pv.potHi}';
             }(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white)),
           ]),
         ]),
@@ -210,7 +211,7 @@ Future<void> showPlayerCard(BuildContext context, Career car, Player p, int team
             if (p.allStars > 0) _line('オールスター', '${p.allStars}回'),
             if (awardsSummary(car, p).isNotEmpty) _line('表彰', awardsSummary(car, p)),
             _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
-            _line('伸びしろ', p.grade == '-' ? 'なし' : p.grade),
+            _line('伸びしろ', potentialLine(car, p)),
             if (p.injured > 0) _line('けが', p.injuryText.isEmpty ? 'あと${p.injured}試合' : p.injuryText),
             if (p.injCount >= 3) _line('けがの歴', '${p.injCount}回(繰り返している)'),
             RecentGames(car: car, p: p),

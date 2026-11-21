@@ -712,6 +712,18 @@ class Career {
   /// 向け先ごとの下調べ(0〜100%)。ドラフトの初めに、25%ごとに1人を調べ済みにする。
   List<int> scoutPrep = List.filled(ScoutFocus.values.length, 0);
 
+  /// 試合で見たほかのチームの選手(選手の id → 対戦した試合の数。けがで出ていない選手は数えない)。
+  /// 伸びしろの見立ての幅を狭める(2026-11-21 の作り込み A-1。乱数は使わない)。
+  Map<int, int> seenGames = {};
+
+  /// 自分の試合の相手 [t] の選手を、見たことにする。
+  void _sawTeam(int t) {
+    if (t == mine) return;
+    for (final p in teams[t].roster) {
+      if (p.injured == 0) seenGames[p.id] = math.min(99, (seenGames[p.id] ?? 0) + 1);
+    }
+  }
+
   /// このドラフトで、シーズン中の下調べから調べ済みにした候補の数。
   int prepScouted = 0;
 
@@ -2696,6 +2708,7 @@ class Career {
             healScale: medicalScale,
             liveSeed: live ? liveSeed : null,
             calls: live ? _liveCalls! : const []);
+        if (h == mine || a == mine) _sawTeam(h == mine ? a : h);
         for (final p in rested) {
           p.injured = 0;
           p.restGames++;
@@ -3132,6 +3145,7 @@ class Career {
           final rested = _restBeforeGame();
           try {
             s.playOne(teams, rng, mine, liveSeed: seed, calls: live ?? const []);
+            _sawTeam(s.high == mine ? s.low : s.high);
           } finally {
             for (final p in rested) {
               p.injured = 0;
@@ -3143,6 +3157,7 @@ class Career {
           final rested = mineIn ? _restBeforeGame() : const <Player>[];
           try {
             s.playOne(teams, rng, mine);
+            if (mineIn) _sawTeam(s.high == mine ? s.low : s.high);
           } finally {
             for (final p in rested) {
               p.injured = 0;
@@ -5177,6 +5192,7 @@ class Career {
         if (draftHistory.isNotEmpty) 'dhx': [for (final x in draftHistory) x.toJson()],
         if (scoutFocus != null) 'sf': scoutFocus!.index,
         'sp': scoutPrep,
+        if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
         if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
         'wd': word,
@@ -5322,6 +5338,10 @@ class Career {
       ..scoutFocus = j['sf'] is int ? ScoutFocus.values[(j['sf'] as int).clamp(0, ScoutFocus.values.length - 1)] : null
       ..scoutPrep = [for (var i = 0; i < ScoutFocus.values.length; i++) (j['sp'] is List && (j['sp'] as List).length > i) ? ((j['sp'] as List)[i] as int) : 0]
       ..prepScouted = (j['ps'] as int?) ?? 0
+      ..seenGames = {
+        for (final x in (j['sg'] as List? ?? const []))
+          if (x is List && x.length == 2) x[0] as int: x[1] as int,
+      }
       ..promises = [for (final x in maps('pr')) Promise.fromJson(x)]
       ..word = (j['wd'] as int?) ?? startWord
       ..goalStance = (j['gs'] as int?) ?? 0
