@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../budget_lines.dart';
 import '../readable_width.dart';
+import '../share_card.dart';
+import '../share_sheet.dart';
 import '../transfer_code.dart';
 import '../../game/career_engine.dart';
 import '../../game/squads.dart';
@@ -215,6 +217,20 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
       color: theme.colorScheme.onSurfaceVariant,
     );
 
+    // この季に何を成したか。**成していない季には送る口を出さない。**
+    final String? shareHeadline;
+    if (state.leaguePosition == 1) {
+      shareHeadline = '${state.club.tier}部 優勝';
+    } else if (fate == ClubFate.promoted) {
+      shareHeadline = '${state.club.tier - 1}部へ昇格';
+    } else if (state.continentalStage == ContinentalStage.winner) {
+      shareHeadline = '大陸カップ優勝';
+    } else if (state.cupStage == CupStage.winner) {
+      shareHeadline = '国内カップ優勝';
+    } else {
+      shareHeadline = null;
+    }
+
     // 「戻る」で拠点に抜けさせない。initState で finishSeason() を
     // 済ませているので、抜けてもう一度入ると大陸カップの結果が
     // 二度確定する。抜ける道は 契約を選ぶ／引退する のどちらかだけ。
@@ -244,6 +260,46 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                         fate: fate,
                         position: state.leaguePosition,
                       ),
+                      // **送る口は、成した季だけに出す。**
+                      // 19季ぶん毎回出すと、何でもない季まで「送れ」と
+                      // 言われているように見える。引退は1キャリアに1回しか
+                      // 来ないので、広まるとしたら回数が多いこちら。
+                      if (shareHeadline case final headline?)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: () {
+                                final card = SeasonShareCard(
+                                  club: state.club,
+                                  year: state.year,
+                                  tier: state.club.tier,
+                                  leaguePosition: state.leaguePosition,
+                                  stats: stats,
+                                  look: state.player.look,
+                                  squadNumber: state.squadNumber,
+                                  playerName: state.player.name,
+                                  headline: headline,
+                                  caps: state.seasonCaps,
+                                  objectiveMet: state.objective
+                                      ?.achievedCount(stats),
+                                  cupWon: state.cupStage == CupStage.winner,
+                                  continentalWon:
+                                      state.continentalStage ==
+                                      ContinentalStage.winner,
+                                );
+                                showShareSheet(
+                                  context,
+                                  card: card,
+                                  text: card.text,
+                                );
+                              },
+                              icon: const Icon(Icons.ios_share, size: 18),
+                              label: Text('$headline を送る'),
+                            ),
+                          ),
+                        ),
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(

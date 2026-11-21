@@ -4,9 +4,12 @@ import '../../models/challenge.dart';
 import '../../models/club.dart';
 import '../../models/legend.dart';
 import '../../state/career_controller.dart';
+import '../hall_plaque.dart';
 import '../player_banner.dart';
 import '../player_portrait.dart';
 import '../readable_width.dart';
+import '../share_card.dart';
+import '../share_sheet.dart';
 import '../trait_row.dart';
 
 /// 引退した選手たち。
@@ -183,32 +186,6 @@ class _ChallengesCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-/// 額の格。
-///
-/// 引退した選手が並ぶ画面が、白いカードに文字が並ぶだけだった。
-/// 20年かけて大陸を獲った選手が、10試合で辞めた選手と同じ見た目で残る。
-///
-/// 色を決めるのは**カードにすでに書いてあるもの**（獲ったタイトル）だけ。
-/// 見た目のためだけの数字は作らない。
-enum HallPlaque {
-  gold('金', Color(0xFF8A6B1F)),
-  silver('銀', Color(0xFF4C555F)),
-  bronze('銅', Color(0xFF5C3F2C));
-
-  const HallPlaque(this.label, this.color);
-
-  final String label;
-  final Color color;
-
-  static HallPlaque of(Legend legend) {
-    if (legend.continentalTitles > 0) return HallPlaque.gold;
-    if (legend.leagueTitles > 0 || legend.cupTitles > 0) {
-      return HallPlaque.silver;
-    }
-    return HallPlaque.bronze;
   }
 }
 
@@ -408,6 +385,26 @@ class _LegendCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  // **後から振り返っても送れるようにする。**
+                  // 引退の画面は一度閉じたら戻れないので、そこだけに
+                  // 置くと「あのとき送りそこねた」が残る。
+                  // 書き換えた記録（`tampered`）は外に出さない。
+                  if (!legend.tampered)
+                    IconButton(
+                      tooltip: 'この記録を送る',
+                      onPressed: () {
+                        final card = CareerShareCard(legend: legend);
+                        showShareSheet(context, card: card, text: card.text);
+                      },
+                      color: onMuted,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(Icons.ios_share, size: 18),
+                    ),
                   // 消すボタンは小さく。額の中で一番目立つものではない。
                   IconButton(
                     tooltip: '記録を消す',
