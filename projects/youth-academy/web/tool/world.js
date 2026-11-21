@@ -1645,9 +1645,11 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   const w = st.w;
   const ps = Object.values(w.players);
   const non = ps.filter((p) => !p.star).slice(0, 3);
-  const star = ps[0];
+  const star = ps.find((p) => non.indexOf(p) < 0);
   const s0 = star.star;
   star.star = true;
+  const y0 = w.year;
+  w.year = 99; // まだまとめの無い年で試す
   const n0 = w.inbox.length;
   for (const p of non) YA.noteMinor(w, p, p.num + '番が復帰', p.name + ' が怪我から復帰');
   YA.noteMinor(w, star, star.num + '番が復帰', star.name + ' が怪我から復帰');
@@ -1659,8 +1661,9 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
   ok(w.inbox[w.inbox.length - 1] === add[add.length - 1], 'まとめ：足すと一番新しい位置へ動く');
   w.week += 4;
   YA.noteMinor(w, non[0], 'x', 'y');
-  ok(w.inbox.filter((n) => n.dg).length === 2, 'まとめ：月が替わると別の1件');
+  ok(w.inbox.filter((n) => n.dg && n.year === 99).length === 2, 'まとめ：月が替わると別の1件');
   star.star = s0;
+  w.year = y0;
 }
 // 卒業生の便り（決定111）・卒業生が顔を出す（決定112）・クラブの印（決定146）
 {
