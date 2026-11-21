@@ -1,0 +1,144 @@
+# 物語完結型ショート 千姫 s5（2026-11-21）。本編 scripts/senhime-story.yaml（11/27 19:00 公開予定、https://youtu.be/kFCIQA38bMI）から。11/28 19:30 に予約。
+# 形式は pompeii_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード 千姫_facts_20261121.yaml）。
+# 絵：本編の AI 絵（out/story/senhime/main/ の S・R）の切り出しだけ。新しい絵は作らない。過去回から写した R04（雪の江戸城の煙）は使わない。
+# 切り口：江戸に戻った天樹院は、弟の将軍・家光にとってどんな姉だったか（本編 第3章、senhime-28・29・30・31・32・34・33）。
+# 計算（数え直した）：千姫 1597生→1635＝数え39。家光 1604生→1645＝数え42（厄年）。綱重 1644生→1645＝数え2。
+# tease の答え：亡くなった年の記録の違い（69・70・71・73歳）と、数え直すと数え70・満68（本編 まとめ senhime-37）。
+title: "天樹院｜将軍家光の姉として過ごした江戸の日々"
+yt_title: "千姫は江戸で、将軍家光の姉として何をしていたのか　天然痘の見舞い・綱重の養子・形見の1万両"
+description: |-
+  1626年、2人目の夫を亡くした千姫は江戸に戻り、髪を下ろして天樹院と名乗りました。住まいは江戸城の北の丸、竹橋の御殿。将軍は、弟の家光です。
+  1635年の正月、天樹院が天然痘に倒れると、家光は自分で見舞いに行きました。1644年に生まれた家光の子・のちの綱重は、言い習わしから天樹院の養子になったと記録にあります。
+  1651年に家光が亡くなると、形見として天樹院には金1万両。ほかの女性たちは5千両ずつでした。
+  本編では、天樹院がその力を誰のために使ったのか、そして亡くなった年が記録でどう分かれるかまでたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#千姫"
+- "#徳川家光"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/senhime
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: senhime_story_s5
+header:
+  tag: "天樹院（千姫）"
+  title: "江戸の千姫は、《将軍の姉》だった"
+now:
+- {at: "1626年", text: "1626年　江戸", point: 0}
+- {at: "1635年", text: "1635年　江戸", point: 1}
+- {at: "1651年", text: "1651年　江戸", point: 2}
+timeline:
+- {label: "1626"}
+- {label: "1635"}
+- {label: "1651"}
+shots:
+  S14_1:
+    kind: "ai"
+    file: "senhime/main/S14.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "S14"
+  R02_2:
+    kind: "ai"
+    file: "senhime/main/R02.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "R02"
+  R01_3:
+    kind: "ai"
+    file: "senhime/main/R01.jpg"
+    focus: [0.65, 0.5]
+    move: "right"
+    must: "R01"
+  R03_4:
+    kind: "ai"
+    file: "senhime/main/R03.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "R03"
+  R19_5:
+    kind: "ai"
+    file: "senhime/main/R19.jpg"
+    focus: [0.55, 0.5]
+    move: "right"
+    must: "R19"
+  R06_6:
+    kind: "ai"
+    file: "senhime/main/R06.jpg"
+    focus: [0.55, 0.5]
+    move: "left"
+    must: "R06"
+  R07_7:
+    kind: "ai"
+    file: "senhime/main/R07.jpg"
+    focus: [0.55, 0.5]
+    move: "right"
+    must: "R07"
+  R08_8:
+    kind: "ai"
+    file: "senhime/main/R08.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "R08"
+  R10_9:
+    kind: "ai"
+    file: "senhime/main/R10.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "R10"
+lines:
+  # fact: senhime-28
+- 語り: "千姫は、江戸に戻ったあと、将軍家光にとって、どんな姉だったのか。"
+  shot: S14_1
+  tone: 強調
+  pause: 0.12
+  # fact: senhime-28
+- 語り: "1626年に江戸へ戻った千姫は、竹橋の屋敷へ移り、髪を下ろして、天樹院と名乗った。"
+  shot: R02_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-29
+- 語り: "竹橋の御殿は、江戸城の北の丸にあった。亡くなるまでのおよそ40年、天樹院の住まいだった。"
+  shot: R01_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-30
+- 語り: "1628年には、娘の勝姫を、鳥取の池田光政に嫁がせた。"
+  shot: R03_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-31
+- 語り: "1631年。行いを責められた弟の忠長は、天樹院も頼った。家光へのとりなしを、願ったという。"
+  shot: R19_5
+  tone: 重い
+  pause: 0.12
+  # fact: senhime-32
+- 語り: "1635年の正月、天樹院が天然痘に倒れると、家光は、自分で見舞いに行った。病は、癒えた。"
+  shot: R06_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-34
+- 語り: "1644年には、家光に、男の子が生まれる。のちの綱重だ。言い習わしから、天樹院の養子になった、と記録にある。"
+  shot: R07_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-33
+- 語り: "1651年、家光が亡くなる。形見は、天樹院に金1万両。ほかの女性たちは、5千両ずつだった。"
+  shot: R08_8
+  tone: 強調
+  pause: 0.12
+  # tease：答えは本編 まとめ（亡くなった年の記録の違い、senhime-37）
+- 語り: "その天樹院が亡くなった年は、記録によって、4つに割れる。本当は、何歳だったのか。"
+  shot: R10_9
+  tone: 疑問
+  pause: 0.15
