@@ -22,10 +22,7 @@ extension GameStateSeason on GameState {
       if (l == null) continue;
       _ensureSquadsForActiveTier(l.teams);
     }
-    final current = LeagueTheme.values.firstWhere(
-      (t) => t.label == save.leagueName,
-      orElse: () => LeagueTheme.england,
-    );
+    final current = leagueThemeFromName(save.leagueName) ?? LeagueTheme.england;
     save.foreignLeagues.remove(current.name);
     final rng = Random();
     for (final theme in LeagueTheme.values) {
@@ -204,9 +201,8 @@ extension GameStateSeason on GameState {
   }
 
   /// 締切で名簿から外れる予定の選手(枠を超えていなければ空)。
-  List<Player> get plannedRegistrationExclusions => _save == null
-      ? const []
-      : SquadRegistration.plannedExclusions(userTeam);
+  List<Player> get plannedRegistrationExclusions =>
+      _save == null ? const [] : SquadRegistration.plannedExclusions(userTeam);
 
   /// 日付で終わるローンを片付ける(借りている選手は戻し、貸している選手は
   /// 呼び戻す)。シーズンの切り替わり(7月1日)でも呼ぶ。
@@ -214,7 +210,8 @@ extension GameStateSeason on GameState {
     final t = today;
     final team = userTeam;
     final ended = team.players
-        .where((p) => p.isLoan && p.loanEndDate != null && !t.isBefore(p.loanEndDate!))
+        .where((p) =>
+            p.isLoan && p.loanEndDate != null && !t.isBefore(p.loanEndDate!))
         .toList();
     // 買取義務付きのローンは、満了で完全移籍に切り替わって残る。
     ended.removeWhere(_completeObligationIfAny);
@@ -270,7 +267,8 @@ extension GameStateSeason on GameState {
     for (final team in save.league.teams) {
       for (final p in team.players) {
         if (p.isLoan && p.loanEndDate == null && p.loanWeeksRemaining > 0) {
-          p.loanEndDate = DateTime(t.year, t.month, t.day + 7 * p.loanWeeksRemaining);
+          p.loanEndDate =
+              DateTime(t.year, t.month, t.day + 7 * p.loanWeeksRemaining);
         }
         if (p.isLoanedOut && p.loanedOutUntil == null) {
           p.loanedOutUntil =
@@ -284,8 +282,8 @@ extension GameStateSeason on GameState {
   /// どの国から来たかを持たない旧セーブの18歳未満も外す。
   void _dropInternationalMinorsFromMarket(SaveGame save) {
     final home = currentLeagueTheme.name;
-    save.transferMarketPlayers.removeWhere(
-        (p) => p.age < 18 && (p.originLeague == null || p.originLeague != home));
+    save.transferMarketPlayers.removeWhere((p) =>
+        p.age < 18 && (p.originLeague == null || p.originLeague != home));
   }
 
   /// いま消化するカップ戦の日付へ今日を進める。リーグ戦の途中なら次の
@@ -296,8 +294,7 @@ extension GameStateSeason on GameState {
           SeasonCalendar.nextCupWeekdayAfter(today, continental: continental));
       return;
     }
-    _advanceTodayTo(seasonCalendar.cupDateBefore(
-        _currentLeagueMatchdayMarker,
+    _advanceTodayTo(seasonCalendar.cupDateBefore(_currentLeagueMatchdayMarker,
         continental: continental));
   }
 
@@ -711,7 +708,8 @@ extension GameStateSeason on GameState {
         match.homeTeamId == userId || match.awayTeamId == userId;
     if (userInvolved) {
       if (match.winnerId == userId) {
-        final prize = scaledMoney(GameState.domesticCupWinPrizeFor(match.round));
+        final prize =
+            scaledMoney(GameState.domesticCupWinPrizeFor(match.round));
         _book(LedgerCategory.prize, prize);
         _save!.careerCupPrize += prize;
         lastCupPrizeNote = Tr.pick('勝利賞金として${formatMoney(prize)}を獲得!',
@@ -933,10 +931,7 @@ extension GameStateSeason on GameState {
     _save!.careerLosses += userRow.lost;
     _save!.careerSeasons += 1;
     if (finalRank == 1) {
-      final divisionLabel = playedTier == 1
-          ? _save!.leagueName
-          : Tr.pick('${_save!.leagueName}($playedTier部)',
-              '${_save!.leagueName} (tier $playedTier)');
+      final divisionLabel = currentLeagueTheme.divisionName(playedTier);
       _save!.trophyHistory.add(Tr.pick(
           'シーズン${league.season}: $divisionLabel 優勝',
           'Season ${league.season}: $divisionLabel champions'));
@@ -986,7 +981,8 @@ extension GameStateSeason on GameState {
         visionDelta > 0
             ? Tr.pick('理事会: 今季は「${_save!.clubVision.label}」の路線に沿っていたと評価されました。',
                 'The board is satisfied you followed the "${_save!.clubVision.label}" direction.')
-            : Tr.pick('理事会: 今季は「${_save!.clubVision.label}」の路線に沿えていなかったと見られています。',
+            : Tr.pick(
+                '理事会: 今季は「${_save!.clubVision.label}」の路線に沿えていなかったと見られています。',
                 'The board feels you did not follow the "${_save!.clubVision.label}" direction.'),
         context: Tr.pick('理事会', 'Board'),
       );
@@ -1401,12 +1397,12 @@ extension GameStateSeason on GameState {
       }
     }
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
-      _save!.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
+      _save!.pendingSponsorOffers =
+          _economyAdjusted(SponsorEngine.generateOffers(
         userTeam.overallRating,
         tier: _save!.currentDivisionTier,
         managerReputation: _save!.managerReputation,
-        stadiumLevel:
-            _save!.infrastructure.facilityLevel(FacilityType.stadium),
+        stadiumLevel: _save!.infrastructure.facilityLevel(FacilityType.stadium),
       ));
     }
 
@@ -1499,7 +1495,8 @@ extension GameStateSeason on GameState {
     );
     _closeRivalSeason();
     if (finalRank == 1) {
-      _addTimeline(Tr.pick('$playedTier部リーグで優勝', 'Won the tier $playedTier league'));
+      _addTimeline(
+          Tr.pick('$playedTier部リーグで優勝', 'Won the tier $playedTier league'));
     }
     if (newTier < playedTier) {
       _addTimeline(Tr.pick('$newTier部へ昇格', 'Promoted to tier $newTier'));
@@ -1587,7 +1584,7 @@ extension GameStateSeason on GameState {
           real.length >= 7 ? real : _generateContinentalTeams();
       _save!.continentalTeams = continentalTeams;
       _save!.continentalCup = ContinentalCupEngine.create(
-        name: Tr.pick('大陸チャンピオンズカップ', 'Continental Champions Cup'),
+        name: Tr.pick('ヨーロピアン・チャンピオンズカップ', 'European Champions Cup'),
         teamIds: [_save!.userTeamId, ...continentalTeams.map((t) => t.id)],
       );
     } else {

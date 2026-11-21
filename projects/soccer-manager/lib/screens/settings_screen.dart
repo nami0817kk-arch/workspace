@@ -11,6 +11,7 @@ import '../state/game_state.dart';
 import '../state/settings_controller.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/supporter_section.dart';
+import 'club_rename_screen.dart';
 import 'onboarding_screen.dart';
 import 'start_screen.dart';
 import '../theme/semantic_colors.dart';
@@ -181,6 +182,22 @@ class SettingsScreen extends StatelessWidget {
               ],
             ),
           ),
+          if (gameState.save != null) ...[
+            const SizedBox(height: 20),
+            // クラブ名は実在の今季の顔ぶれに寄せた名前で始まる。好きな名前に
+            // 直せる(ユースのアプリと同じ。2026-11-22)。
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.drive_file_rename_outline),
+                title: Text(Tr.pick('クラブ名の書き換え', 'Rename clubs')),
+                subtitle: Text(Tr.pick('どのクラブの名前も、好きな名前に直せます',
+                    'Give any club the name you like')),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const ClubRenameScreen())),
+              ),
+            ),
+          ],
           const SizedBox(height: 20),
           Text(Tr.pick('ヘルプ', 'Help'),
               style: Theme.of(context).textTheme.titleMedium),

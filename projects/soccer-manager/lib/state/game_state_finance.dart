@@ -8,18 +8,15 @@ extension GameStateFinance on GameState {
   /// ユーザークラブが現在所属するディビジョン(1が最上位、[totalDivisionTiers]が最下位)。
   int get currentDivisionTier => _save?.currentDivisionTier ?? 1;
 
-  /// 画面表示用のリーグ名(2部以下所属時は「〇〇リーグ2部」のように部を付記する)。
-  String get leagueDisplayName => currentDivisionTier == 1
-      ? _save?.leagueName ?? Tr.pick('リーグ', 'League')
-      : Tr.pick('${_save!.leagueName}$currentDivisionTier部',
-          '${_save!.leagueName} tier $currentDivisionTier');
+  /// 画面表示用のリーグ名(いまの部の名前。2026-11-22 から部ごとに名前がある)。
+  String get leagueDisplayName => _save == null
+      ? Tr.pick('リーグ', 'League')
+      : currentLeagueTheme.divisionName(currentDivisionTier);
 
   /// 保存されているリーグ名から国風テーマを逆引きする(テーマ自体は
   /// SaveGameに保持していないため、開幕時に確定した表示名から復元する)。
-  LeagueTheme get currentLeagueTheme => LeagueTheme.values.firstWhere(
-        (t) => t.label == _save?.leagueName,
-        orElse: () => LeagueTheme.england,
-      );
+  LeagueTheme get currentLeagueTheme =>
+      leagueThemeFromName(_save?.leagueName) ?? LeagueTheme.england;
 
   /// シーズンごとに確定した個人タイトル(得点王・年間MVP)の履歴。新しい順。
   List<SeasonAward> get seasonAwards =>
@@ -155,7 +152,9 @@ extension GameStateFinance on GameState {
     final save = _save;
     final goal = save?.ownerGoal;
     if (save == null || goal == null) return 0;
-    return (save.ownerGoalStartSeason + goal.deadlineSeasons - save.league.season)
+    return (save.ownerGoalStartSeason +
+            goal.deadlineSeasons -
+            save.league.season)
         .clamp(0, goal.deadlineSeasons);
   }
 
@@ -196,7 +195,8 @@ extension GameStateFinance on GameState {
           '${save.clubName}: ${goal.label} (season $season)'));
       save.ownerGoal = null;
       save.confidence = (save.confidence + 10).clamp(0, 100);
-      save.shareholderExpectation = (save.shareholderExpectation + 10).clamp(0, 100);
+      save.shareholderExpectation =
+          (save.shareholderExpectation + 10).clamp(0, 100);
       _logNews(
         Tr.pick('オーナーの目標「${goal.label}」を達成しました。殿堂に残ります。',
             'Owner goal achieved: ${goal.label}. It joins your hall of fame.'),
@@ -220,7 +220,8 @@ extension GameStateFinance on GameState {
     final save = _save;
     if (save == null) return;
     final user = userTeam;
-    final oppId = next.homeTeamId == user.id ? next.awayTeamId : next.homeTeamId;
+    final oppId =
+        next.homeTeamId == user.id ? next.awayTeamId : next.homeTeamId;
     final opp = _findTeam(save.league.teams, oppId);
     if (opp == null) return;
     final level = save.infrastructure.staffLevel(StaffRole.manager);
@@ -233,9 +234,9 @@ extension GameStateFinance on GameState {
     }
     if (level >= 3) {
       // 相手に合わせた構えを、監督の考え方の分だけずらす。
-      final style = save.infrastructure.staffFor(StaffRole.manager)?.manager
-              ?.style ??
-          ManagerStyle.pragmatic;
+      final style =
+          save.infrastructure.staffFor(StaffRole.manager)?.manager?.style ??
+              ManagerStyle.pragmatic;
       user.mentality = style.shift(CpuTacticsAI.mentalityFor(
         ownRating: user.overallRating,
         opponentRating: opp.overallRating,
@@ -257,8 +258,8 @@ extension GameStateFinance on GameState {
     if (save == null || save.pendingOwnerEvent != null) return;
     if (!GameStateFinance.isOwnerEventMatchday(matchday)) return;
     final kinds = OwnerEventKind.values;
-    save.pendingOwnerEvent =
-        kinds[Random(save.league.season * 1000 + matchday).nextInt(kinds.length)];
+    save.pendingOwnerEvent = kinds[
+        Random(save.league.season * 1000 + matchday).nextInt(kinds.length)];
   }
 
   /// 事件に答える。選んだ答えの期待と資金の増減を反映する。
@@ -293,7 +294,8 @@ extension GameStateFinance on GameState {
   /// 今季すでに打った仕事か。
   bool ownerWorkDoneThisSeason(OwnerWork work) {
     final save = _save;
-    return save != null && save.ownerWorkDoneSeason[work.id] == save.league.season;
+    return save != null &&
+        save.ownerWorkDoneSeason[work.id] == save.league.season;
   }
 
   /// オーナーの仕事を打つ。資金と2つの期待に反映し、今季は打ち止めにする。
@@ -377,9 +379,9 @@ extension GameStateFinance on GameState {
     _book(LedgerCategory.other, -partnerSeasonCost);
     save.confidence =
         (save.confidence + PartnerClubEngine.supportersBonus).clamp(0, 100);
-    save.shareholderExpectation = (save.shareholderExpectation +
-            PartnerClubEngine.shareholdersBonus)
-        .clamp(0, 100);
+    save.shareholderExpectation =
+        (save.shareholderExpectation + PartnerClubEngine.shareholdersBonus)
+            .clamp(0, 100);
     _logNews(
         Tr.pick('${team.name}との提携で、知名度が上がった。',
             'The partnership with ${team.name} raised our profile.'),
@@ -482,7 +484,9 @@ extension GameStateFinance on GameState {
   List<Team> get buyoutCandidates {
     final save = _save;
     if (save == null) return const [];
-    final others = save.league.teams.where((t) => t.id != save.userTeamId).toList()
+    final others = save.league.teams
+        .where((t) => t.id != save.userTeamId)
+        .toList()
       ..sort((a, b) => a.overallRating.compareTo(b.overallRating));
     if (others.length <= 3) return others;
     return [others.first, others[others.length ~/ 2], others.last];
@@ -567,11 +571,18 @@ extension GameStateFinance on GameState {
     // 5部制のときは4部からだった。3部制では最下部の3部から(2026-11-22)。
     const startTier = totalDivisionTiers;
     final rng = Random();
-    final names =
-        NamePool.themedClubNames(
-            theme, theme.teamsByTier.fold<int>(0, (a, n) => a + n));
-    var ni = 0;
-    String nextName() => names[ni++];
+    // クラブ名は実在の今季の顔ぶれに寄せて、部ごとに決まっている。
+    final namesByTier = {
+      for (var t = 1; t <= totalDivisionTiers; t++)
+        t: NamePool.clubNamesForTier(theme, t, theme.teamsInTier(t) + 1),
+    };
+    final cursor = <int, int>{};
+    String nextName([int tier = startTier]) {
+      final i = cursor[tier] ?? 0;
+      cursor[tier] = i + 1;
+      return namesByTier[tier]![i];
+    }
+
     int strengthForTier(int tier) => rollDivisionStrength(tier, rng);
 
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
@@ -594,7 +605,7 @@ extension GameStateFinance on GameState {
             i++)
           PlayerGenerator.generateSquad(
             id: tier == startTier ? 'cpu$i' : 'div${tier}_$i',
-            name: nextName(),
+            name: nextName(tier),
             strengthTier: strengthForTier(tier),
           ),
       ];
@@ -660,9 +671,8 @@ extension GameStateFinance on GameState {
     save.sponsorDeal = null;
     save.namingDeal = null;
     save.pendingNamingOffers = [];
-    save.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
-        userTeam.overallRating,
-        tier: startTier));
+    save.pendingSponsorOffers = _economyAdjusted(
+        SponsorEngine.generateOffers(userTeam.overallRating, tier: startTier));
     save.economyVersion = SaveGame.currentEconomyVersion;
     save.tvHolidaySeasons = 0;
     save.bankLoans = [];
@@ -691,7 +701,8 @@ extension GameStateFinance on GameState {
     _refreshScoutCandidates();
     _refreshStaffCandidates();
     _assignRivalOwners();
-    _addTimeline(Tr.pick('${theme.label}(${theme.flavorLabel})で新しいクラブ${userTeam.name}を立ち上げた',
+    _addTimeline(Tr.pick(
+        '${theme.label}(${theme.flavorLabel})で新しいクラブ${userTeam.name}を立ち上げた',
         'Founded ${userTeam.name} in the ${theme.label}'));
     _notify();
     await _persist();
@@ -718,7 +729,8 @@ extension GameStateFinance on GameState {
       final r = f.result;
       if (r == null || !isRivalFixture(f)) continue;
       final mine = f.homeTeamId == save.userTeamId ? r.homeGoals : r.awayGoals;
-      final theirs = f.homeTeamId == save.userTeamId ? r.awayGoals : r.homeGoals;
+      final theirs =
+          f.homeTeamId == save.userTeamId ? r.awayGoals : r.homeGoals;
       if (mine > theirs) {
         w++;
       } else if (mine == theirs) {
@@ -819,10 +831,10 @@ extension GameStateFinance on GameState {
   }
 
   /// 毎節入る放映権料(万円)。部で決まり、順位や施設では変わらない。
-  int get weeklyBroadcastIncome => (weeklyBroadcast(currentDivisionTier,
-              matchdays: matchdaysPerSeason) *
-          currentEra.tvFactor)
-      .round();
+  int get weeklyBroadcastIncome =>
+      (weeklyBroadcast(currentDivisionTier, matchdays: matchdaysPerSeason) *
+              currentEra.tvFactor)
+          .round();
 
   /// 選手の給与を毎節いくら払うか。表示の年俸(週俸×52)と1年に払う
   /// 総額が一致するよう、52週ぶんをその年の節の数で割る。
@@ -881,8 +893,8 @@ extension GameStateFinance on GameState {
   }
 
   /// 第[matchday]節が祝日なら、その祝日の名前。
-  String? holidayOfMatchday(int matchday) => MoneyCalendar.holidayName(
-      dateOfMatchday(matchday), currentLeagueTheme);
+  String? holidayOfMatchday(int matchday) =>
+      MoneyCalendar.holidayName(dateOfMatchday(matchday), currentLeagueTheme);
 
   /// 第[matchday]節の試合の日に入る見込みの収入(観客・スポンサー・グッズ。
   /// 祝日なら客が増える。放映権は入金日に別に入る)。
@@ -895,8 +907,7 @@ extension GameStateFinance on GameState {
     return GameState.derbyAdjustedIncome(
       income,
       baseAttendance: base,
-      actualAttendance:
-          MoneyCalendar.holidayAttendance(base, stadiumCapacity),
+      actualAttendance: MoneyCalendar.holidayAttendance(base, stadiumCapacity),
     );
   }
 
@@ -1012,8 +1023,8 @@ extension GameStateFinance on GameState {
     // 人気の選手がいるほどグッズが売れる(上位3人の人気から)。
     final merchandiseIncome = ((40 +
                 managerReputation +
-                PlayerPopularityEngine.weeklyMerchBonus(userTeam.players
-                    .where((p) => !p.isLoanedOut)) +
+                PlayerPopularityEngine.weeklyMerchBonus(
+                    userTeam.players.where((p) => !p.isLoanedOut)) +
                 ProjectEngine.weeklyMerchandiseBonus(
                     _save!.projects, managerReputation)) *
             commercialMultiplier *
@@ -1025,7 +1036,8 @@ extension GameStateFinance on GameState {
         : 1.0;
     final factor = BudgetEngine.incomeMultiplier(_save!.budgetPlan) *
         PolicyEngine.incomeMultiplier(_save!.clubPolicy) *
-        AdvisorEngine.incomeMultiplier(_save!.advisors[Advisor.finance.name] ?? 0) *
+        AdvisorEngine.incomeMultiplier(
+            _save!.advisors[Advisor.finance.name] ?? 0) *
         _save!.economyPhase.incomeMultiplier *
         boost;
     final total =
@@ -1046,7 +1058,8 @@ extension GameStateFinance on GameState {
   /// 年の予算の総額(万円)。今の週収入が1シーズン続いた場合の見込み。
   int get annualBudgetPool => _save == null
       ? 0
-      : BudgetEngine.annualPool(weeklyIncome: weeklyIncomeFor(_save!.userTeamId));
+      : BudgetEngine.annualPool(
+          weeklyIncome: weeklyIncomeFor(_save!.userTeamId));
 
   /// [category] の配分を [share]% にする。残りの配り先は比率に応じて
   /// 分け直され、合計は100のまま。
@@ -1101,7 +1114,8 @@ extension GameStateFinance on GameState {
     save.transferBanSeasons = max(save.transferBanSeasons, penalty.banSeasons);
     save.pendingPointsDeduction += penalty.pointsDeduction;
     final parts = <String>[
-      if (fine > 0) Tr.pick('罰金${formatMoney(fine)}', 'fine of ${formatMoney(fine)}'),
+      if (fine > 0)
+        Tr.pick('罰金${formatMoney(fine)}', 'fine of ${formatMoney(fine)}'),
       if (penalty.pointsDeduction > 0)
         Tr.pick('来季の勝ち点${penalty.pointsDeduction}剥奪',
             '${penalty.pointsDeduction} points docked next season'),
@@ -1320,7 +1334,8 @@ extension GameStateFinance on GameState {
   }
 
   /// シーズン末: 保険料、地域貢献の効果、突発の出来事。
-  void _resolveSeasonRisks({double? chanceRoll, double? kindRoll, double? sizeRoll}) {
+  void _resolveSeasonRisks(
+      {double? chanceRoll, double? kindRoll, double? sizeRoll}) {
     final save = _save!;
     final tier = save.currentDivisionTier;
     if (save.insured) _book(LedgerCategory.other, -RiskEngine.premium(tier));
@@ -1368,7 +1383,8 @@ extension GameStateFinance on GameState {
         'Signed naming rights with ${save.namingDeal!.name}'));
     save.pendingNamingOffers = [];
     _logNews(
-      Tr.pick('スタジアムの命名権を結びました: ${save.namingDeal!.name}(1節${formatMoney(save.namingDeal!.weeklyIncome)}・${save.namingDeal!.yearsRemaining}年)',
+      Tr.pick(
+          'スタジアムの命名権を結びました: ${save.namingDeal!.name}(1節${formatMoney(save.namingDeal!.weeklyIncome)}・${save.namingDeal!.yearsRemaining}年)',
           'Naming rights signed: ${save.namingDeal!.name} (${formatMoney(save.namingDeal!.weeklyIncome)} a match, ${save.namingDeal!.yearsRemaining} yr)'),
       context: Tr.pick('命名権', 'Naming rights'),
     );
@@ -1394,7 +1410,8 @@ extension GameStateFinance on GameState {
     _book(LedgerCategory.broadcast, amount);
     save.tvHolidaySeasons = MediaDealsEngine.advanceHolidaySeasons;
     _logNews(
-      Tr.pick('放映権の前払い${formatMoney(amount)}を受け取りました。あと${save.tvHolidaySeasons}季は分配金が出ません',
+      Tr.pick(
+          '放映権の前払い${formatMoney(amount)}を受け取りました。あと${save.tvHolidaySeasons}季は分配金が出ません',
           'Took a TV advance of ${formatMoney(amount)}. No TV money for ${save.tvHolidaySeasons} seasons'),
       context: Tr.pick('放映権', 'TV rights'),
     );
@@ -1490,7 +1507,8 @@ extension GameStateFinance on GameState {
     _addTimeline(Tr.pick('持分$pct%を外部の株主に売却(残り${save.ownerShare}%)',
         'Sold a $pct% stake (${save.ownerShare}% left)'));
     _logNews(
-      Tr.pick('持分$pct%を外部の株主に売り、${formatMoney(price)}を調達しました(持分${save.ownerShare}%)',
+      Tr.pick(
+          '持分$pct%を外部の株主に売り、${formatMoney(price)}を調達しました(持分${save.ownerShare}%)',
           'Sold a $pct% stake for ${formatMoney(price)} (you now hold ${save.ownerShare}%)'),
       context: Tr.pick('株主', 'Shareholders'),
     );
@@ -1601,9 +1619,8 @@ extension GameStateFinance on GameState {
       policy: save.clubPolicy,
       finalRank: finalRank,
       targetRank: save.boardTargetRank,
-      youngCount: userTeam.players
-          .where((p) => p.age <= PolicyEngine.youngAge)
-          .length,
+      youngCount:
+          userTeam.players.where((p) => p.age <= PolicyEngine.youngAge).length,
       seasonProfit: currentLedger.profit,
     );
     if (result == null) return;
@@ -1639,14 +1656,13 @@ extension GameStateFinance on GameState {
     final past = save.ledgers
         .where((l) => l.season < save.league.season && l.operatingIncome > 0)
         .toList();
-    final matchdays = save.league.fixtures.fold<int>(
-        0, (m, f) => f.matchday > m ? f.matchday : m);
+    final matchdays = save.league.fixtures
+        .fold<int>(0, (m, f) => f.matchday > m ? f.matchday : m);
     final annual = past.isNotEmpty
         ? past.last.operatingIncome
         : weeklyIncomeFor(save.userTeamId) * matchdays;
     return ClubValueEngine.compute(
-      playersValue:
-          userTeam.players.fold<int>(0, (s, p) => s + p.marketValue),
+      playersValue: userTeam.players.fold<int>(0, (s, p) => s + p.marketValue),
       facilityLevels: [
         for (final f in FacilityType.values)
           save.infrastructure.facilityLevel(f),
@@ -1667,8 +1683,9 @@ extension GameStateFinance on GameState {
 
   /// 過去のシーズン末のクラブ価値(シーズン順)。
   List<(int, int)> get clubValueHistory => [
-        for (final e in (_save?.clubValueHistory.entries.toList() ?? [])
-          ..sort((a, b) => a.key.compareTo(b.key)))
+        for (final e
+            in (_save?.clubValueHistory.entries.toList() ?? [])
+              ..sort((a, b) => a.key.compareTo(b.key)))
           (e.key, e.value),
       ];
 

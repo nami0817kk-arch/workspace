@@ -1,58 +1,107 @@
 import '../l10n/tr.dart';
 
-/// 新規クラブ作成時に選べるリーグの雰囲気(架空名で再現した5つの国風リーグ)。
+/// 新規クラブ作成時に選べる国(実在の5か国のリーグに寄せる)。
 enum LeagueTheme { england, spain, germany, italy, france }
 
+/// 保存されたリーグ名([LeagueThemeInfo.label])から国を引く。表示の言語や、
+/// 2026-11-22 に名前を実在へ寄せる前の名前(アルビオン・リーグなど)でも引ける。
+LeagueTheme? leagueThemeFromName(String? name) {
+  if (name == null) return null;
+  for (final t in LeagueTheme.values) {
+    if (t._allNames.contains(name)) return t;
+  }
+  return null;
+}
+
 extension LeagueThemeInfo on LeagueTheme {
-  /// リーグの表示名。
-  String get label {
-    switch (this) {
-      case LeagueTheme.england:
-        return Tr.pick('アルビオン・リーグ', 'Albion League');
-      case LeagueTheme.spain:
-        return Tr.pick('イベリア・リーグ', 'Iberia League');
-      case LeagueTheme.germany:
-        return Tr.pick('ゲルマニア・リーグ', 'Germania League');
-      case LeagueTheme.italy:
-        return Tr.pick('アペニン・リーグ', 'Apennine League');
-      case LeagueTheme.france:
-        return Tr.pick('ガリア・リーグ', 'Gallia League');
-    }
+  /// リーグの表示名(1部の名前。セーブにはこれを入れる)。2026-11-22 に、
+  /// 実在の名前から少し変えたもの(プレミア・ディビジョンなど)にした。
+  String get label => divisionName(1);
+
+  /// [tier] 部の名前。実在の名前から少し変えたもの(2026-11-22)。
+  String divisionName(int tier) {
+    final t = tier.clamp(1, 3);
+    final (ja, en) = _divisionNames[this]![t - 1];
+    return Tr.pick(ja, en);
   }
 
-  /// どの国をイメージしたリーグかの補足表示。
-  /// 英語は "Albion League (England-inspired)" だと選択チップの幅に
-  /// 収まらないため、国名だけにする。「風」であることは架空のリーグ名を
-  /// 見れば分かる。
+  static const Map<LeagueTheme, List<(String, String)>> _divisionNames = {
+    // i18n-ignore: 部の名前(日本語と英語の組)。
+    LeagueTheme.england: [
+      ('プレミア・ディビジョン', 'Premier Division'),
+      ('チャンピオン・ディビジョン', 'Champion Division'),
+      ('リーグ・ディビジョン1', 'League Division One'),
+    ],
+    // i18n-ignore: 部の名前(日本語と英語の組)。
+    LeagueTheme.spain: [
+      ('プリメーラ・リーガ', 'Primera Liga'),
+      ('セグンダ・リーガ', 'Segunda Liga'),
+      ('テルセーラ・リーガ', 'Tercera Liga'),
+    ],
+    // i18n-ignore: 部の名前(日本語と英語の組)。
+    LeagueTheme.germany: [
+      ('ブンデスリーグ1', 'Bundesliga One'),
+      ('ブンデスリーグ2', 'Bundesliga Two'),
+      ('ドイツ3部リーグ', 'German Third League'),
+    ],
+    // i18n-ignore: 部の名前(日本語と英語の組)。
+    LeagueTheme.italy: [
+      ('セリエ・プリマ', 'Serie Prima'),
+      ('セリエ・セコンダ', 'Serie Seconda'),
+      ('セリエ・テルツァ', 'Serie Terza'),
+    ],
+    // i18n-ignore: 部の名前(日本語と英語の組)。
+    LeagueTheme.france: [
+      ('リーグ・プルミエール', 'Ligue Premiere'),
+      ('リーグ・ドゥジエーム', 'Ligue Deuxieme'),
+      ('ナシオナル・リーグ', 'Nationale League'),
+    ],
+  };
+
+  /// 国の名前(リーグを選ぶ画面で、リーグ名に添える)。
   String get flavorLabel {
     switch (this) {
       case LeagueTheme.england:
-        return Tr.pick('イングランド風', 'England');
+        return Tr.pick('イングランド', 'England');
       case LeagueTheme.spain:
-        return Tr.pick('スペイン風', 'Spain');
+        return Tr.pick('スペイン', 'Spain');
       case LeagueTheme.germany:
-        return Tr.pick('ドイツ風', 'Germany');
+        return Tr.pick('ドイツ', 'Germany');
       case LeagueTheme.italy:
-        return Tr.pick('イタリア風', 'Italy');
+        return Tr.pick('イタリア', 'Italy');
       case LeagueTheme.france:
-        return Tr.pick('フランス風', 'France');
+        return Tr.pick('フランス', 'France');
     }
   }
 
-  /// この国風テーマにおける国内カップ戦の名称(リーグ名の語幹に由来する)。
+  /// 国内カップ戦の名前。実在の名前から少し変えたもの(2026-11-22)。
   String get domesticCupName {
     switch (this) {
       case LeagueTheme.england:
-        return Tr.pick('アルビオン杯', 'Albion Cup');
+        return Tr.pick('イングランド協会カップ', 'English Association Cup');
       case LeagueTheme.spain:
-        return Tr.pick('イベリア杯', 'Iberia Cup');
+        return Tr.pick('コパ・デ・エスパーニャ', 'Copa de Espana');
       case LeagueTheme.germany:
-        return Tr.pick('ゲルマニア杯', 'Germania Cup');
+        return Tr.pick('ドイツ連盟カップ', 'German Federation Cup');
       case LeagueTheme.italy:
-        return Tr.pick('アペニン杯', 'Apennine Cup');
+        return Tr.pick('コッパ・ナツィオナーレ', 'Coppa Nazionale');
       case LeagueTheme.france:
-        return Tr.pick('ガリア杯', 'Gallia Cup');
+        return Tr.pick('クープ・ナシオナル', 'Coupe Nationale');
     }
+  }
+
+  /// この国のリーグとして保存されたことのある名前(日英・前の名前)。
+  Set<String> get _allNames {
+    final (ja, en) = _divisionNames[this]![0];
+    // i18n-ignore: 前の名前(古いセーブのリーグ名を引くため)。
+    final old = switch (this) {
+      LeagueTheme.england => const ['アルビオン・リーグ', 'Albion League'],
+      LeagueTheme.spain => const ['イベリア・リーグ', 'Iberia League'],
+      LeagueTheme.germany => const ['ゲルマニア・リーグ', 'Germania League'],
+      LeagueTheme.italy => const ['アペニン・リーグ', 'Apennine League'],
+      LeagueTheme.france => const ['ガリア・リーグ', 'Gallia League'],
+    };
+    return {ja, en, ...old};
   }
 }
 
@@ -124,8 +173,7 @@ extension LeagueStructure on LeagueTheme {
   String describeRules(int upperTier) {
     final r = rulesBelow(upperTier);
     final up = r.playoffPool > 0
-        ? Tr.pick(
-            '上位${r.autoUp}クラブが自動昇格、続く${r.playoffPool}クラブがプレーオフで1枠',
+        ? Tr.pick('上位${r.autoUp}クラブが自動昇格、続く${r.playoffPool}クラブがプレーオフで1枠',
             'top ${r.autoUp} go up, the next ${r.playoffPool} play off for one more place')
         : Tr.pick('上位${r.autoUp}クラブが自動昇格', 'top ${r.autoUp} go up');
     final down = r.relegationPlayoff
