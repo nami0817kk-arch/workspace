@@ -77,9 +77,11 @@ void main() {
       c.answer(9999, 0);
       expect(c.openPromises.single.kind, PromiseKind.trade);
       if (trade) {
-        // 出したことにする(ほかのチームへ移す)
+        // トレードで出したことにする(ほかのチームへ移し、トレードの記録に残す)
+        final to = (c.mine + 1) % c.teams.length;
         c.me.roster.remove(p);
-        c.teams[(c.mine + 1) % c.teams.length].roster.add(p);
+        c.teams[to].roster.add(p);
+        c.myTrades.add(MyTrade(season: c.season, partner: to, give: [(p.id, p.name, p.ovr)], get: const []));
       }
       var guard = 0;
       while (c.openPromises.isNotEmpty && c.phase == Phase.season && guard++ < 5) {
@@ -87,6 +89,20 @@ void main() {
       }
       expect(c.promises.first.state, trade ? PromiseState.kept : PromiseState.broken);
     }
+  });
+
+  test('「相手を探す」と答えた選手を放したら、約束は無かったことになる(守ったことにはしない)', () {
+    final c = careerAt(11, 8)..startSeason();
+    final p = c.me.order[3];
+    c.inbox.insert(
+      0,
+      Message(id: 9998, season: c.season, from: Sender.player, title: 'トレードの希望', body: '', kind: MsgKind.tradeRequest, choices: const ['探す', '残す'], player: p.id),
+    );
+    c.answer(9998, 0);
+    c.me.roster.remove(p);
+    c.freeAgents.add(p);
+    c.playBlock();
+    expect(c.promises.first.state, PromiseState.voided);
   });
 
   test('オーナーとの目標の話し合い: 下げると目標と信頼が下がり、上を約束すると目標が上がる。区切りを進めたら答えられない', () {
