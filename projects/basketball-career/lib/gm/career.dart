@@ -1498,7 +1498,7 @@ class Career {
     for (final id in tradeBlock.where((id) => me.roster.any((p) => p.id == id))) {
       for (final t in others) {
         if (used.contains(t)) continue;
-        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t));
+        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t));
         if (o != null && judge(o).ok) {
           calls.add(o);
           used.add(t);
@@ -1510,7 +1510,7 @@ class Career {
     for (final t in others) {
       if (calls.length >= 2) break;
       if (used.contains(t)) continue;
-      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t));
+      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t), seen: _eyeFn(t));
       // 同じ選手への申し込みは重ねない
       // 契約の話し合い中の選手など、今は成り立たない申し込みは掛けてこない
       if (o == null || calls.any((c) => c.give.any(o.give.contains)) || !judge(o).ok) continue;
@@ -3050,7 +3050,7 @@ class Career {
     if (onBlock.isNotEmpty) {
       final id = onBlock[rng.nextInt(onBlock.length)];
       for (final t in others.take(8)) {
-        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t));
+        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t));
         if (o != null) {
           incoming = o;
           final name = me.roster.firstWhere((p) => p.id == id).name;
@@ -3060,7 +3060,7 @@ class Career {
       }
     }
     for (final t in others.take(4)) {
-      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t));
+      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t), seen: _eyeFn(t));
       if (o != null) {
         incoming = o;
         _mail(Sender.league, '${teams[t].def.short}からトレードの申し込み', '進行の画面で、出す選手と受け取る選手を見て返事できる。');
@@ -3076,7 +3076,7 @@ class Career {
     incoming = null;
     // 届いたあとで出す選手を放した・指名権が動いた、なら成り立たない。オーナーとの予算の約束も守る
     if (!callValid(o) || _tradeBudgetProblem(o) != null) return false;
-    if (!judgeTrade(teams, picks, mine, o, season, hardness: _hard(o.partner)).ok) return false;
+    if (!judgeTrade(teams, picks, mine, o, season, hardness: _hard(o.partner), seen: _eyeFn(o.partner)).ok) return false;
     _logTrade(mine, o);
     _fanTrade(o);
     _keepTrade(o);
@@ -3163,7 +3163,7 @@ class Career {
     if (!canTrade) return const [];
     final out = [
       for (var t = 0; t < teams.length; t++)
-        if (t != mine) blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t)),
+        if (t != mine) blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t)),
     ].whereType<TradeOffer>().toList();
     double value(TradeOffer o) =>
         o.get.fold(0.0, (n, pid) => n + playerValue(teams[o.partner].roster.firstWhere((p) => p.id == pid), me.mode)) +
@@ -4841,7 +4841,7 @@ class Career {
     final bp = _tradeBudgetProblem(o);
     if (bp != null) return TradeVerdict(false, bp, 0);
     return judgeTrade(teams, picks, mine, o, season,
-        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner), needs: true);
+        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner), needs: true, seen: _eyeFn(o.partner));
   }
 
   /// 入れ替え権を出し入れできる最初の年(今年のドラフトの順が決まったあとは、次の年から)。
@@ -5201,11 +5201,32 @@ class Career {
   /// チームの GM(名前と型)。
   GmPerson gmPerson(int team) => gmOf(seed, team);
 
+  /// [team] の GM が、ほかのチームの選手の伸びしろをどれだけずれて見るか(T-1)。自分のチームの選手は正しく見る。乱数は使わない。
+  int Function(Player) _eyeFn(int team) {
+    final gm = gmPerson(team);
+    final amp = eyeOf(gm).noise;
+    var g = 7;
+    for (final u in gm.name.codeUnits) {
+      g = (g * 31 + u) & 0x7fffffff;
+    }
+    return (p) {
+      if (teams[team].roster.contains(p) || p.age >= 28) return 0;
+      final h = ((p.id * 2654435761) ^ (g * 97) ^ (season * 7919)) & 0x7fffffff;
+      return h % (2 * amp + 1) - amp;
+    };
+  }
+
+  /// [team] の GM が [p] を見るずれ(画面とテスト用)。
+  int eyeShift(int team, Player p) => _eyeFn(team)(p);
+
+  /// [team] の GM の見る目が分かっているか(その相手と2回トレードすると分かる。T-1)。
+  bool eyeKnown(int team) => myTrades.where((t) => t.partner == team).length >= 2;
+
   /// 「相手に聞く」: [partner] から [get] を受け取るのに、こちらが出せばよい組み合わせ。契約の話し合い中の選手は出さない。
   TradeOffer? askPartner(int partner, {List<int> get = const [], List<int> getPicks = const []}) {
     if (!canTrade || (get.isEmpty && getPicks.isEmpty)) return null;
     final o = findPackage(teams, picks, mine, partner,
-        get: get, getPicks: getPicks, exclude: [...expiring, ...optionPending], nowSeason: season, hardness: _hard(partner));
+        get: get, getPicks: getPicks, exclude: [...expiring, ...optionPending], nowSeason: season, hardness: _hard(partner), seen: _eyeFn(partner));
     return o != null && judge(o).ok ? o : null;
   }
 

@@ -378,7 +378,10 @@ class Player {
   String get grade => potentialGrade(ovr, pot, age);
 
   /// 何年か先の見込みの力。
-  int get future {
+  int get future => futureWith(pot);
+
+  /// 伸びきったときの力を [pot] と見たときの、何年か先の見込みの力(トレードの相手の見立てに使う。T-1)。
+  int futureWith(int pot) {
     final f = age <= 21
         ? 0.85
         : age <= 23
