@@ -1,5 +1,11 @@
+// 名前（`_label`）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 import 'dart:math';
 
+import '../l10n/lang.dart';
 import '../models/attributes.dart';
 import '../models/cup.dart';
 import '../models/club.dart';
@@ -17,16 +23,20 @@ import 'scenarios.dart';
 
 /// 試合で起きたことの種類。
 enum MatchEventKind {
-  ownGoal('あなたのゴール'),
-  ownAssist('あなたのアシスト'),
-  teammateGoal('味方のゴール'),
-  conceded('失点'),
-  sentOffThem('相手に退場者'),
-  sentOffUs('味方が退場');
+  ownGoal(Say('あなたのゴール', 'Your goal')),
+  ownAssist(Say('あなたのアシスト', 'Your assist')),
+  teammateGoal(Say('味方のゴール', 'Teammate goal')),
+  conceded(Say('失点', 'Conceded')),
+  sentOffThem(Say('相手に退場者', 'They go down to ten')),
+  sentOffUs(Say('味方が退場', 'We go down to ten'));
 
-  const MatchEventKind(this.label);
+  const MatchEventKind(Say label) : _label = label;
 
-  final String label;
+  /// **名前は日本語と英語の2つを持つ**（[Say]）。enum の引数は定数なので
+  /// `tr()` を直に書けない。外には `String` のまま見せる。
+  final Say _label;
+
+  String get label => _label.t;
 
   bool get isOurs =>
       this != MatchEventKind.conceded && this != MatchEventKind.sentOffUs;
@@ -39,20 +49,22 @@ enum MatchEventKind {
 /// 前に出てきた」——**選ぶことはできないが、次の手の意味が変わる**もの。
 enum MatchTurn {
   /// 相手に退場者。数的優位。
-  numbersUp('相手に退場者'),
+  numbersUp(Say('相手に退場者', 'They go down to ten')),
 
   /// 味方が退場。数的不利。
-  numbersDown('味方が退場'),
+  numbersDown(Say('味方が退場', 'We go down to ten')),
 
   /// リードされた相手が前に出てくる。点は取りやすくなる。
-  opponentOpen('相手が前がかり'),
+  opponentOpen(Say('相手が前がかり', 'They push forward')),
 
   /// リードした相手が引いて固める。点が取りにくくなる。
-  opponentShut('相手が守りを固めた');
+  opponentShut(Say('相手が守りを固めた', 'They shut up shop'));
 
-  const MatchTurn(this.label);
+  const MatchTurn(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// 試合で起きたこと1つ。
@@ -568,9 +580,9 @@ class MatchInProgress {
   String? stakesNoteFor(ScenarioOption option) {
     final s = stakes;
     final up = stakesSuccessFactor(s, option);
-    if (up > 1) return '今は重い';
-    if (up < 1) return '今は軽い';
-    if (s == MatchStakes.protecting) return '外すと痛い';
+    if (up > 1) return tr('今は重い', 'worth more now');
+    if (up < 1) return tr('今は軽い', 'worth less now');
+    if (s == MatchStakes.protecting) return tr('外すと痛い', 'costly if it misses');
     return null;
   }
 
@@ -589,7 +601,7 @@ class MatchInProgress {
   static String? concedeNoteFor(ScenarioOption option) {
     final q = concedeChanceOf(option);
     if (q <= 0) return null;
-    return '外すと失点${(q * 100).round()}%';
+    return tr('外すと失点${(q * 100).round()}%', '${(q * 100).round()}% concede if it misses');
   }
 
   /// 自分が手を外して、そのまま失点した回数（測定用）。
@@ -601,11 +613,11 @@ class MatchInProgress {
       case MatchStakes.none:
         return null;
       case MatchStakes.chasing:
-        return '攻める手が重い';
+        return tr('攻める手が重い', 'attacking moves matter more');
       case MatchStakes.leveling:
-        return '決める手が重い';
+        return tr('決める手が重い', 'finishing matters more');
       case MatchStakes.protecting:
-        return '外すと痛い';
+        return tr('外すと痛い', 'costly if it misses');
     }
   }
 
@@ -618,10 +630,10 @@ class MatchInProgress {
     if (isFinished) return null;
     final late = lateGame;
     if (!late && tempoNow == ScenarioTempo.any) return null;
-    final when = late ? '終盤' : '残り30分';
-    if (margin < 0) return '${-margin}点ビハインド・$when';
-    if (margin == 0) return '同点・$when';
-    return '$margin点リード・$when';
+    final when = late ? tr('終盤', 'late on') : tr('残り30分', '30 minutes left');
+    if (margin < 0) return tr('${-margin}点ビハインド・$when', '${-margin} down - $when');
+    if (margin == 0) return tr('同点・$when', 'level - $when');
+    return tr('$margin点リード・$when', '$margin up - $when');
   }
 
   /// 試合で起きたことを、時間順に並べたもの。
@@ -720,10 +732,10 @@ class MatchInProgress {
 
   /// 流れの中の1本を、どう書くか。守備の選手はセットプレーの的になる。
   String get _flowGoalText => switch (player.position.family) {
-    ScenarioFamily.forward => 'こぼれ球に詰めていた。流れの中から、押し込んだ。',
-    ScenarioFamily.midfield => '二列目から遅れて入ってきた。流れの中から、叩き込んだ。',
-    ScenarioFamily.defence => 'セットプレー。マークを外して、頭で合わせた。',
-    ScenarioFamily.goalkeeper => '流れの中から決めた。',
+    ScenarioFamily.forward => tr('こぼれ球に詰めていた。流れの中から、押し込んだ。', 'You were there for the rebound and bundled it in from open play.'),
+    ScenarioFamily.midfield => tr('二列目から遅れて入ってきた。流れの中から、叩き込んだ。', 'You arrived late from deep and hammered it in from open play.'),
+    ScenarioFamily.defence => tr('セットプレー。マークを外して、頭で合わせた。', 'A set piece. You lost your marker and met it with your head.'),
+    ScenarioFamily.goalkeeper => tr('流れの中から決めた。', 'You scored from open play.'),
   };
 
   /// **この試合が重いと、外（`Newsroom.isBigFixture`）で判断されたか。**
@@ -744,7 +756,7 @@ class MatchInProgress {
 
   /// 「前半 23分」のような表示用の文字列。
   static String minuteLabel(int minute) =>
-      minute <= 45 ? '前半 $minute分' : '後半 ${minute - 45}分';
+      minute <= 45 ? tr('前半 $minute分', '$minute min') : tr('後半 ${minute - 45}分', '${minute - 45} min');
 
   int get goals => resolutions.where((r) => r.isGoal).length;
   int get assists => resolutions.where((r) => r.isAssist).length;
@@ -846,7 +858,7 @@ class MatchInProgress {
 
     // 布石が通っている。**乗るのは仕留めの手だけ。**
     if (comboLands(option)) {
-      factors.add(ChanceFactor('布石が効いている', Formulas.comboBonus));
+      factors.add(ChanceFactor(tr('布石が効いている', 'the set-up is on'), Formulas.comboBonus));
     }
 
     // 試合を動かした展開。**選べないものが効いているときこそ、画面に出す。**
@@ -862,23 +874,23 @@ class MatchInProgress {
       if (value != 0) factors.add(ChanceFactor(turn.label, value));
     }
 
-    factors.add(ChanceFactor('コンディション', conditionModifier(player.condition)));
+    factors.add(ChanceFactor(tr('コンディション', 'Condition'), conditionModifier(player.condition)));
 
     // 終盤の消耗。スタミナで薄まり、累積疲労で深くなる。
     final late = lateFatigue;
-    if (late != 0) factors.add(ChanceFactor('終盤の消耗', late));
+    if (late != 0) factors.add(ChanceFactor(tr('終盤の消耗', 'Legs late on'), late));
 
     // 相手の格。上のリーグほど同じ手が通らなくなる。
     factors.add(
       ChanceFactor(
-        opponent.strength >= club.strength ? '格上の相手' : '格下の相手',
+        opponent.strength >= club.strength ? tr('格上の相手', 'Stronger side') : tr('格下の相手', 'Weaker side'),
         (Formulas.opponentBaseline - opponent.strength) *
             Formulas.opponentChanceSlope,
       ),
     );
 
     // 自信は小さく効かせる。性格で試合が決まると能力を伸ばす意味が薄れる。
-    factors.add(ChanceFactor('自信', player.personality.chanceModifier));
+    factors.add(ChanceFactor(tr('自信', 'Confidence'), player.personality.chanceModifier));
 
     // 積み上げてきたもの。型・個人技・相手への慣れ。
     if (development.identity != null) {
@@ -896,12 +908,12 @@ class MatchInProgress {
     // 構えた切り札。判定にも画面にも、同じここから出る。
     if (signatureLands(option)) {
       factors.add(
-        ChanceFactor('${armed!.label}（切り札）', Formulas.signatureArmedBonus),
+        ChanceFactor(tr('${armed!.label}（切り札）', '${armed!.label} (trump card)'), Formulas.signatureArmedBonus),
       );
     }
     // 外したぶんの力み。その試合の残り全部に効く。
     if (signatureMissed) {
-      factors.add(const ChanceFactor('力んだ', -Formulas.signatureMissPenalty));
+      factors.add(ChanceFactor(tr('力んだ', 'Over-trying'), -Formulas.signatureMissPenalty));
     }
     if (opponentStyle.hardFor == option.key) {
       factors.add(
@@ -918,7 +930,7 @@ class MatchInProgress {
       // その戦い方が空ける場所。**慣れでは動かない**——
       // 相手の弱点は、こちらが何度当たっても弱点のまま。
       factors.add(
-        ChanceFactor('${opponentStyle.label}の裏', Formulas.styleOpening),
+        ChanceFactor(tr('${opponentStyle.label}の裏', 'Behind the ${opponentStyle.label}'), Formulas.styleOpening),
       );
     }
 
@@ -926,7 +938,7 @@ class MatchInProgress {
     if (bigMatch) {
       factors.add(
         ChanceFactor(
-          '大一番',
+          tr('大一番', 'Big game'),
           -Formulas.bigMatchPressure +
               development.composure +
               (player.personality.confidence - 10) * 0.004,
@@ -936,19 +948,19 @@ class MatchInProgress {
 
     // 相方との呼吸。パスを受ける側が動いてくれるかどうか。
     if (option.outcome == Outcome.assist && allyBonus != 0) {
-      factors.add(ChanceFactor('相方との呼吸', allyBonus));
+      factors.add(ChanceFactor(tr('相方との呼吸', 'Understanding with your partner'), allyBonus));
     }
 
-    factors.add(ChanceFactor('気持ち・波', moodBonus));
+    factors.add(ChanceFactor(tr('気持ち・波', 'Morale and form'), moodBonus));
 
     // 逆足。利き足でないほうで対応する局面は、精度がそのまま出る。
     if (weakFootMoment && _usesFoot(option)) {
-      factors.add(ChanceFactor('逆足', -(5 - player.physique.weakFoot) * 0.03));
+      factors.add(ChanceFactor(tr('逆足', 'Weaker foot'), -(5 - player.physique.weakFoot) * 0.03));
     }
 
     // 逆サイドの選手は、内へ切り込んで利き足で打てる。
     if (player.isInverted && option.key == AttributeKey.shooting) {
-      factors.add(const ChanceFactor('内へ切り込む', Formulas.invertedShootingBonus));
+      factors.add(ChanceFactor(tr('内へ切り込む', 'Cutting inside'), Formulas.invertedShootingBonus));
     }
 
     factors.sort((a, b) => b.value.abs().compareTo(a.value.abs()));
@@ -994,8 +1006,16 @@ class MatchInProgress {
           option.key == AttributeKey.dribbling);
 
   /// 決めきれなかったときの文。
-  static const String missedGoal = 'シュートは枠を捉えたが、GKが弾いた。';
-  static const String missedAssist = '良いボールが入ったが、味方が決めきれなかった。';
+  ///
+  /// **`static const` には `tr()` を書けない**（起動時の言語で固まる）ので
+  /// getter にする。局面・特性と同じ壁。
+  static String get missedGoal =>
+      tr('シュートは枠を捉えたが、GKが弾いた。',
+          'The shot was on target, but the keeper pushed it away.');
+
+  static String get missedAssist =>
+      tr('良いボールが入ったが、味方が決めきれなかった。',
+          'A good ball in, but your teammate could not finish it.');
 
   /// その手がカードを招く確率。画面にも出すので、判定と同じ式から出す。
   ///
@@ -1119,7 +1139,7 @@ class MatchInProgress {
           ..sort();
         goalsCaused++;
         delta += Formulas.ratingPerLingerGoal;
-        text = '$text だが攻撃は続き、最後は失点した。';
+        text = tr('$text だが攻撃は続き、最後は失点した。', '$text The attack went on, though, and in the end you conceded.');
       }
     }
 
@@ -1134,11 +1154,11 @@ class MatchInProgress {
           ..sort();
         goalsCaused++;
         delta += Formulas.ratingPerGoalCaused;
-        text = '$text そのまま失点した。';
+        text = tr('$text そのまま失点した。', '$text You conceded straight from it.');
       } else if (option.exposure == Exposure.chance ||
           option.exposure == Exposure.penalty) {
         // 決定機を渡したのに何も起きないと、文と結果が食い違って見える。
-        text = '$text 相手が外し、命拾いした。';
+        text = tr('$text 相手が外し、命拾いした。', '$text They missed, and you got away with it.');
       }
     }
 
@@ -1154,7 +1174,7 @@ class MatchInProgress {
       delta += Formulas.ratingPerYellow;
       _book(minute);
       if (sentOff) delta += Formulas.ratingPerRedCard;
-      text = sentOff ? '$text 2枚目の警告。退場を命じられた。' : '$text 審判が笛を吹き、警告を受けた。';
+      text = sentOff ? tr('$text 2枚目の警告。退場を命じられた。', '$text A second booking. You were sent off.') : tr('$text 審判が笛を吹き、警告を受けた。', '$text The referee blew up and booked you.');
     }
 
     // ノリ。成功を重ねるほど決まるようになり、失敗で消える。
@@ -1177,7 +1197,7 @@ class MatchInProgress {
       delta += Formulas.ratingPerSetup;
     }
     if (combo) {
-      text = success ? '$text 布石が効いた。' : '$text 作ったものを使い切れなかった。';
+      text = success ? tr('$text 布石が効いた。', '$text The set-up paid off.') : tr('$text 作ったものを使い切れなかった。', '$text You could not use what you had built.');
     }
 
     // 構えた切り札は、乗った手を選んだ時点で使い切る。
@@ -1185,10 +1205,10 @@ class MatchInProgress {
     if (signatureLands(option)) {
       signatureSpent = true;
       if (success) {
-        text = '$text ${armed!.label}が出た。';
+        text = tr('$text ${armed!.label}が出た。', '$text ${armed!.label} came off.');
       } else {
         signatureMissed = true;
-        text = '$text ${armed!.label}を狙って、力んだ。';
+        text = tr('$text ${armed!.label}を狙って、力んだ。', '$text You went for ${armed!.label} and over-tried.');
       }
     }
     armed = null;
@@ -1392,18 +1412,18 @@ class MatchInProgress {
     switch (piece) {
       case SetPiece.freeKick:
         final hit = _random.nextDouble() < (skill - 40) / 220;
-        deadBallText = hit ? '直接FKを沈めた' : '直接FKは壁に当たった';
+        deadBallText = hit ? tr('直接FKを沈めた', 'You scored direct from the free kick') : tr('直接FKは壁に当たった', 'Your free kick hit the wall');
         if (hit) ownGoalMinutes.add(minute);
         return (hit ? 1 : 0, 0);
       case SetPiece.penalty:
         final hit =
             _random.nextDouble() < (0.55 + skill / 260).clamp(0.5, 0.95);
-        deadBallText = hit ? 'PKを決めた' : 'PKを止められた';
+        deadBallText = hit ? tr('PKを決めた', 'You scored the penalty') : tr('PKを止められた', 'Your penalty was saved');
         if (hit) ownGoalMinutes.add(minute);
         return (hit ? 1 : 0, 0);
       case SetPiece.corner:
         final hit = _random.nextDouble() < (skill - 30) / 200;
-        deadBallText = hit ? 'CKから味方の頭に合わせた' : 'CKは跳ね返された';
+        deadBallText = hit ? tr('CKから味方の頭に合わせた', 'Your corner was met by a teammate') : tr('CKは跳ね返された', 'Your corner was headed clear');
         if (hit) ownAssistMinutes.add(minute);
         return (0, hit ? 1 : 0);
     }

@@ -9,6 +9,7 @@
 /// `SeasonObjective`・`leaguePosition`・`ScorerRace` を1か所に集めるだけ。
 library;
 
+import '../l10n/lang.dart';
 import '../models/career.dart';
 import '../models/season.dart';
 import 'career_engine.dart';
@@ -45,11 +46,11 @@ class MatchBrief {
     if (manager != null) {
       final favours = manager.tactic.favours;
       lines.add(BriefLine(
-        '監督',
+        tr('監督', 'Manager'),
         favours.isEmpty
-            ? '${manager.tactic.label}。形は求めていない'
-            : '${manager.tactic.label}。'
-                '${favours.map((k) => k.label).join('と')}の手で応える',
+            ? tr('${manager.tactic.label}。形は求めていない', '${manager.tactic.label}. No shape asked for')
+            : tr('${manager.tactic.label}。'
+                '${favours.map((k) => k.label).join('と')}の手で応える', '${manager.tactic.label}. Answer with ${favours.map((k) => k.label).join(' and ')} moves'),
       ));
     }
 
@@ -59,17 +60,17 @@ class MatchBrief {
       final stats = state.seasonStats;
       final parts = <String>[];
       final appearances = objective.appearances - stats.appearances;
-      if (appearances > 0) parts.add('出場 あと$appearances');
+      if (appearances > 0) parts.add(tr('出場 あと$appearances', 'Appearances $appearances to go'));
       final contributions =
           objective.contributions - stats.goals - stats.assists;
-      if (contributions > 0) parts.add('得点関与 あと$contributions');
+      if (contributions > 0) parts.add(tr('得点関与 あと$contributions', 'Goals and assists $contributions to go'));
       if (stats.averageRating < objective.rating) {
-        parts.add('平均評価 ${objective.rating.toStringAsFixed(1)}');
+        parts.add(tr('平均評価 ${objective.rating.toStringAsFixed(1)}', 'Average rating ${objective.rating.toStringAsFixed(1)}'));
       }
       // 1枚に収める。長い注釈はクラブタブのカードに任せる。
       lines.add(BriefLine(
-        '目標',
-        parts.isEmpty ? '3つとも届いている' : parts.join(' ／ '),
+        tr('目標', 'Targets'),
+        parts.isEmpty ? tr('3つとも届いている', 'All three are within reach') : parts.join(' ／ '),
         urgent: state.objectiveReach != null,
       ));
     }
@@ -80,8 +81,8 @@ class MatchBrief {
     if (promise != null) {
       final short = promise.shortfall(state.seasonStats);
       lines.add(BriefLine(
-        '約束',
-        short == null ? '${promise.label} — 果たした' : '${promise.label}（$short）',
+        tr('約束', 'Promise'),
+        short == null ? tr('${promise.label} — 果たした', '${promise.label} - kept') : '${promise.label}（$short）',
         urgent: state.promiseReach != null,
       ));
     }
@@ -92,16 +93,16 @@ class MatchBrief {
       final position = state.leaguePosition;
       if (position > 0 && state.leagueResults.length >= tableMeaningfulFrom) {
         lines.add(BriefLine(
-            '順位', '${state.club.tier}部 $position位 / ${state.table.length}'));
+            tr('順位', 'Table'), tr('${state.club.tier}部 $position位 / ${state.table.length}', 'Tier ${state.club.tier}, #$position of ${state.table.length}')));
       }
 
       // 得点王レース。終盤で手が届くときだけ。
       final chase = ScorerRace.chaseFor(state);
-      if (chase != null) lines.add(BriefLine('得点王', chase, urgent: true));
+      if (chase != null) lines.add(BriefLine(tr('得点王', 'Top scorer'), chase, urgent: true));
 
       final opponent = state.opponentFor(state.matchday);
       final style = ClubStyle.of(opponent);
-      lines.add(BriefLine('相手', '${style.label}（${style.description}）'));
+      lines.add(BriefLine(tr('相手', 'Opponent'), '${style.label}（${style.description}）'));
 
       // 自分が出るぶん、クラブがどれだけ強くなるか。判定と同じ式を読む。
       // 1 未満なら出さない（「+0」は情報ではない）。
@@ -113,9 +114,9 @@ class MatchBrief {
       );
       if (lift >= 1) {
         lines.add(BriefLine(
-          'チーム',
-          '自分が出ると強さ ${state.club.strength} → '
-              '${state.club.strength + lift.round()}',
+          tr('チーム', 'Team'),
+          tr('自分が出ると強さ ${state.club.strength} → '
+              '${state.club.strength + lift.round()}', 'With you in the side, strength ${state.club.strength} -> ${state.club.strength + lift.round()}'),
         ));
       }
     }

@@ -29,7 +29,13 @@ final _ja = RegExp(r'[぀-ヿ一-鿿]');
 // `lib/l10n/lang.dart` はここに載せない——言語そのものの呼び名
 // （`'日本語'`）は訳すものではない。
 const List<String> translated = [
+  'lib/game/match_brief.dart',
+  'lib/game/match_engine.dart',
+  'lib/game/match_target.dart',
   'lib/game/scenarios.dart',
+  'lib/models/development.dart',
+  'lib/models/pitch.dart',
+  'lib/models/season.dart',
   'lib/models/attributes.dart',
   'lib/models/traits.dart',
   'lib/share/share_service.dart',

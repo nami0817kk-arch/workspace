@@ -1,6 +1,12 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 import 'dart:math';
 
 import '../game/formulas.dart';
+import '../l10n/lang.dart';
 import 'attributes.dart';
 import 'club.dart';
 import 'player.dart';
@@ -12,34 +18,41 @@ import 'season.dart';
 /// 同じ噛み合わせになり、「あそこは苦手だ」という記憶が成立する。
 enum ClubStyle {
   pressing(
-    'ハイプレス',
-    'パスが重い。背後は空く',
+    Say('ハイプレス', 'High press'),
+    Say('パスが重い。背後は空く', 'Passing is hard. Space in behind'),
     AttributeKey.passing,
     AttributeKey.pace,
   ),
   defensive(
-    '堅守速攻',
-    'ゴール前が固い。運べる',
+    Say('堅守速攻', 'Deep block'),
+    Say('ゴール前が固い。運べる', 'Hard to break down. Room to carry'),
     AttributeKey.shooting,
     AttributeKey.dribbling,
   ),
   technical(
-    '技巧派',
-    '持たれる。当たれば奪える',
+    Say('技巧派', 'Technical'),
+    Say('持たれる。当たれば奪える', 'They keep it. Win it and you are away'),
     AttributeKey.defending,
     AttributeKey.physical,
   ),
   physical(
-    '肉弾戦',
-    '仕掛けが潰される。外せば通る',
+    Say('肉弾戦', 'Physical'),
+    Say('仕掛けが潰される。外せば通る', 'Taking them on gets stopped. Passes get through'),
     AttributeKey.dribbling,
     AttributeKey.passing,
   );
 
-  const ClubStyle(this.label, this.description, this.hardFor, this.openFor);
+  const ClubStyle(Say label, Say description, this.hardFor, this.openFor)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  /// **名前と説明は日本語と英語の2つを持つ**（[Say]）。enum の引数は定数
+  /// なので `tr()` を直に書けない。外には `String` のまま見せる。
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 
   /// この相手に対して難しくなる能力。
   final AttributeKey hardFor;
@@ -67,42 +80,44 @@ enum ClubStyle {
 /// 覚えると、その技が出る局面だけ確率が上がる。
 enum Signature {
   // ---- 運ぶ・かわす ----
-  turn('切り返し', Detail.ballControl),
-  closeControl('足元の収まり', Detail.ballControl),
-  slalom('持ち出し', Detail.dribbling),
-  feint('緩急', Detail.agility),
+  turn(Say('切り返し', 'Cut inside'), Detail.ballControl),
+  closeControl(Say('足元の収まり', 'Sure touch'), Detail.ballControl),
+  slalom(Say('持ち出し', 'Push and go'), Detail.dribbling),
+  feint(Say('緩急', 'Change of pace'), Detail.agility),
 
   // ---- 配る ----
-  noLook('ノールックパス', Detail.vision),
-  spread('展開力', Detail.longPassing),
-  throughBall('刺すパス', Detail.shortPassing),
-  earlyCross('早いクロス', Detail.crossing),
+  noLook(Say('ノールックパス', 'No-look pass'), Detail.vision),
+  spread(Say('展開力', 'Switch of play'), Detail.longPassing),
+  throughBall(Say('刺すパス', 'Piercing pass'), Detail.shortPassing),
+  earlyCross(Say('早いクロス', 'Early cross'), Detail.crossing),
 
   // ---- 決める ----
-  knuckle('無回転シュート', Detail.shotPower),
-  placement('流し込み', Detail.finishing),
-  volley('ボレー', Detail.longShots),
-  attackTheBall('打点', Detail.heading),
+  knuckle(Say('無回転シュート', 'Knuckleball'), Detail.shotPower),
+  placement(Say('流し込み', 'Side-foot finish'), Detail.finishing),
+  volley(Say('ボレー', 'Volley'), Detail.longShots),
+  attackTheBall(Say('打点', 'Attacking the ball'), Detail.heading),
 
   // ---- 止める ----
-  read('読み', Detail.interceptions),
-  timing('足を出す間', Detail.tackling),
-  bodyPosition('立ち位置', Detail.marking),
+  read(Say('読み', 'Reading it'), Detail.interceptions),
+  timing(Say('足を出す間', 'Timing the tackle'), Detail.tackling),
+  bodyPosition(Say('立ち位置', 'Taking up position'), Detail.marking),
 
   // ---- 走る・当たる ----
-  burst('初速の一歩', Detail.acceleration),
-  afterburner('伸びる足', Detail.sprintSpeed),
-  shoulder('体の入れ方', Detail.strength),
-  spring('跳ぶ間合い', Detail.jumping),
+  burst(Say('初速の一歩', 'First yard'), Detail.acceleration),
+  afterburner(Say('伸びる足', 'Long stride'), Detail.sprintSpeed),
+  shoulder(Say('体の入れ方', 'Getting the body in'), Detail.strength),
+  spring(Say('跳ぶ間合い', 'Rising for it'), Detail.jumping),
 
   // ---- GK ----
-  handsUp('1対1の間合い', Detail.reflexes),
-  command('飛び出しの判断', Detail.gkPositioning),
-  safeHands('確実な処理', Detail.handling);
+  handsUp(Say('1対1の間合い', 'Narrowing the angle'), Detail.reflexes),
+  command(Say('飛び出しの判断', 'Coming off the line'), Detail.gkPositioning),
+  safeHands(Say('確実な処理', 'Safe hands'), Detail.handling);
 
-  const Signature(this.label, this.detail);
+  const Signature(Say label, this.detail) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   /// 元になる詳細能力。
   final Detail detail;
@@ -124,13 +139,17 @@ enum Signature {
   static const int maxMastery = 5;
 
   /// 磨いた段の呼び方。0段目は呼ばない。
-  static const List<String> masteryLabels = [
-    '',
-    '手に馴染む',
-    '磨きがかかる',
-    '得意技',
-    '型になる',
-    '代名詞',
+  ///
+  /// 読むときに言語を選ぶので [masteryLabel] を通す。
+  static String masteryLabel(int mastery) => _masteryLabels[mastery].t;
+
+  static const List<Say> _masteryLabels = [
+    Say('', ''),
+    Say('手に馴染む', 'Second nature'),
+    Say('磨きがかかる', 'Sharpened'),
+    Say('得意技', 'A strong suit'),
+    Say('型になる', 'Part of his game'),
+    Say('代名詞', 'What he is known for'),
   ];
 
   /// **そのポジションで意味を持つ技か。**
@@ -272,11 +291,11 @@ class Development {
   /// 数字を触ったときに「やや軽い」と出ているのに何も付いていない、
   /// という食い違いが起きる（実際、境目を測り直したときにそうなった）。
   String get strainLabel => switch (Formulas.declineOffsetForStrain(strain)) {
-    2 => '軽い',
-    1 => 'やや軽い',
-    -1 => '重い',
-    -2 => '限界',
-    _ => '普通',
+    2 => tr('軽い', 'Light'),
+    1 => tr('やや軽い', 'Fairly light'),
+    -1 => tr('重い', 'Heavy'),
+    -2 => tr('限界', 'At the limit'),
+    _ => tr('普通', 'Normal'),
   };
 
   /// アイデンティティが決まるのに要る選択の数。
@@ -297,14 +316,14 @@ class Development {
   }
 
   String get identityLabel => switch (identity) {
-    AttributeKey.pace => '走る選手',
-    AttributeKey.shooting => '仕留める選手',
-    AttributeKey.passing => '組み立てる選手',
-    AttributeKey.dribbling => '仕掛ける選手',
-    AttributeKey.defending => '潰す選手',
-    AttributeKey.physical => '身体で戦う選手',
-    AttributeKey.goalkeeping => '守る選手',
-    null => 'まだ型が無い',
+    AttributeKey.pace => tr('走る選手', 'A runner'),
+    AttributeKey.shooting => tr('仕留める選手', 'A finisher'),
+    AttributeKey.passing => tr('組み立てる選手', 'A creator'),
+    AttributeKey.dribbling => tr('仕掛ける選手', 'A dribbler'),
+    AttributeKey.defending => tr('潰す選手', 'A destroyer'),
+    AttributeKey.physical => tr('身体で戦う選手', 'A physical player'),
+    AttributeKey.goalkeeping => tr('守る選手', 'A defender'),
+    null => tr('まだ型が無い', 'No style yet'),
   };
 
   /// 自分の型に沿った手の成功率への上乗せ。
