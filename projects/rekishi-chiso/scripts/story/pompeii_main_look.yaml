@@ -1,0 +1,373 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：ポンペイの噴火はいつだったのか（scripts/pompeii-story.yaml）。chiso/storymain.py が読む。
+# 11-20 作成（11/26 19:00 公開予定）。pyramid_main_look.yaml を写した。絵は Gemini（Chrome、無料版）。石膏型・遺体は描かない。文字は入れない。
+script: scripts/pompeii-story.yaml
+out: pompeii_story_main
+art_dir: out/story/pompeii/main
+main_art_dir: out/story/pompeii/main
+ai_disclosure: この動画の情景・人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 年の書かれていない日付
+    now: null
+    dates: {}
+  1:
+    label: 第1章 17歳が見た雲
+    now: 79年
+    dates: {}
+  2:
+    label: 第2章 正午から翌朝まで
+    now: 79年
+    dates: {}
+  3:
+    label: 第3章 8月か、11月か
+    now: null
+    dates: {}
+  4:
+    label: 第4章 秋の手がかり
+    now: null
+    dates: {}
+  5:
+    label: 第5章 10月17日
+    now: 2018年10月16日
+    dates:
+      92: 2022年
+  6:
+    label: 第6章 考古公園は、炭の字を試した
+    now: 2023年
+    dates:
+      98: 2024年8月
+      100: 2024年12月12日
+      105: 2026年1月
+      106: 2025年11月
+      108: 2026年9月
+  7:
+    label: まとめ 記録から言えること
+    now: null
+    dates: {}
+no_tag_from: 120
+references:
+- 小プリニウス『書簡集』6.16・6.20（ラテン語原文）
+- Rolandi, Paone, Di Lascio, Stefani 2007（J. Volcanol. Geotherm. Res.）
+- Foss 2022『Pliny and the Eruption of Vesuvius』
+- ポンペイ考古公園 E-Journal 27号（2024年）
+- Renne ほか 2026（Science Advances）
+credits: {}
+ai:
+  P01:
+    scene: 明るい昼のナポリ湾。手前は岬の港ミセヌムの石の岸壁と、櫂の並ぶ古代ローマの軍船が数隻。海の向こうの遠い山から、白と灰色の
+    pan: h
+    crops: &id001
+      wide:
+      - 1.18
+      - 0.5
+      - 0.5
+      left:
+      - 1.18
+      - 0.4
+      - 0.5
+      right:
+      - 1.18
+      - 0.6
+      - 0.5
+  P02:
+    scene: 海を見下ろす古代ローマの別荘のテラス。白い柱と赤い瓦。昼の明るい光。トゥニカの年配の女性の後ろ姿が、湾の向こうの遠い山か
+    pan: h
+    crops: *id001
+  P03:
+    scene: 古代ローマの別荘の明るい書斎。日差しの入る中庭に面した部屋で、トーガの年配の太った男が寝椅子に横になり巻物を読んでいる横
+    pan: h
+    crops: *id001
+  P04:
+    scene: 9世紀ドイツの修道院の写字室。石の壁、窓からの柔らかい光。修道服の修道士の後ろ姿が、斜めの書見台で羊皮紙の写本に羽ペンで
+    pan: h
+    crops: *id001
+  P05:
+    scene: 灰色に暗くなった空の下、ナポリ湾を進む一隻の古代ローマの細長い軍船（リブルナ船）。櫂がそろって水をかき、帆は畳んである。
+    pan: h
+    crops: *id001
+  P06:
+    scene: 夜、ナポリ湾の岸の古代ローマの別荘の前の浜辺。松明を持った人々の小さな後ろ姿が、頭の上に枕を布で結びつけて、暗い海を見て
+    pan: h
+    crops: *id001
+  P07:
+    scene: 明るい晴れた朝の、古代ローマの町ポンペイの石畳の大通り。両側に赤や黄色の漆喰の壁の店と家、道の大きな踏み石、遠くの奥に緑
+    pan: h
+    crops: *id001
+  P08:
+    scene: 古代ローマの家の木の台所の台の上の静物。陶器の鉢に盛ったザクロ、クリ、クルミ、干したイチジク、ブドウの房。素焼きのアンフ
+    pan: h
+    crops: *id001
+  P09:
+    scene: 発掘現場の箱の中の静物。黒く炭になったザクロ、クルミ、イチジクの実が、灰色の火山灰の土の上に並ぶ。考古学の発掘の雰囲気、
+    pan: h
+    crops: *id001
+  P10:
+    scene: 古代ローマの田舎の別荘のワイン蔵の中庭。地面に半分埋めた大きな素焼きの甕（ドリウム）が何列も並び、口は丸い素焼きの蓋でふ
+    pan: h
+    crops: *id001
+  P11:
+    scene: 古代ローマの家のアトリウム。中央に雨水をためる四角い水盤、天井の開口から光。赤と黒のフレスコの壁。床に三本脚の青銅の火鉢
+    pan: h
+    crops: *id001
+  P12:
+    scene: 古代ローマの銀貨と金貨の小さな山と、革の小袋、金の腕輪が、石の床にこぼれている静物。硬貨の表面の模様や字はぼかして読めな
+    pan: h
+    crops: *id001
+  P13:
+    scene: 現代のポンペイの発掘現場。白いヘルメットの考古学者たちの後ろ姿が、掘り出されたローマの家の、赤いフレスコの壁の部屋で、刷
+    pan: h
+    crops: *id001
+  P14:
+    scene: 掘り出された古代ローマの家の部屋の、白い漆喰の壁の近景。壁の中ほどに、炭で走り書きした短い線が一行かすかに見える（文字と
+    pan: h
+    crops: *id001
+  P15:
+    scene: ナポリ湾の上空から見た遠景。円錐形の山から巨大な噴煙柱が成層圏まで立ちのぼり、上空の風で灰の雲が右下（南東）の方向へ長く
+    pan: h
+    crops: *id001
+  P16:
+    scene: 夕暮れの古代ローマの町ポンペイ。屋根の上に白い軽石が厚く積もり、瓦屋根がたわみ、空から軽石が降り続ける。通りに人はいない
+    pan: h
+    crops: *id001
+  P17:
+    scene: 夜明け前、ナポリ湾の岸の町ヘルクラネウムの遠景。海に面した石のアーチの並ぶ岸の建物の向こうから、灰色の熱い雲（火砕流）が
+    pan: h
+    crops: *id001
+  P18:
+    scene: 現代のヘルクラネウム遺跡の、海辺だった所に並ぶ石のアーチの舟小屋の列。中は空っぽで暗い。静かな昼の光。人はいない。
+    pan: h
+    crops: *id001
+  P19:
+    scene: 晴れた昼の現代のポンペイ遺跡。柱の並ぶ広場（フォルム）の廃墟と、その奥にそびえるヴェスヴィオ山。明るい青空。人はいない。
+    pan: h
+    crops: *id001
+  P20:
+    scene: 古代ローマの書斎で、トーガの中年の男が蝋板と巻物を前に、葦のペンで手紙を書いている後ろ姿。机の上に灯りのランプ、窓の外は
+    pan: h
+    crops: *id001
+  P21:
+    scene: 古代ローマの神殿の壁にはめ込まれた石の暦の板（ファスティ）。マス目が並ぶが字は読めない程度にぼかす。そばに立つトーガの人
+    pan: h
+    crops: *id001
+  SEND:
+    scene: 終了画面用。P19（晴れた昼のポンペイ遺跡とヴェスヴィオ山）を写したもの
+    lock:
+    - 1.0
+    - 0.5
+    - 0.5
+shots:
+- 0 ai:P07 wide
+- 1 ai:P14 wide
+- 2 ai:P13 wide
+- 3 ai:P20 left
+- 4 ai:P14 right
+- 5 ai:P01 wide
+- 6 ai:P20 right
+- 7 ai:P02 wide
+- 8 ai:P20 wide
+- 9 ai:P02 left
+- 10 ai:P01 left
+- 11 ai:P02 right
+- 12 ai:P21 wide
+- 13 ai:P21 left
+- 14 ai:P01 right
+- 15 ai:P21 right
+- 16 ai:P02 wide
+- 17 ai:P15 wide
+- 18 ai:P01 right
+- 19 ai:P15 left
+- 20 ai:P03 wide
+- 21 ai:P03 right
+- 22 ai:P05 wide
+- 23 ai:P05 right
+- 24 ai:P06 wide
+- 25 ai:P16 wide
+- 26 ai:P06 right
+- 27 ai:P07 left
+- 28 ai:P10 wide
+- 29 ai:P20 wide
+- 30 ai:P15 right
+- 31 ai:P15 wide
+- 32 ai:P01 wide
+- 33 ai:P16 wide
+- 34 ai:P17 wide
+- 35 ai:P16 left
+- 36 ai:P19 wide
+- 37 ai:P18 wide
+- 38 ai:P19 left
+- 39 ai:P04 wide
+- 40 ai:P20 left
+- 41 ai:P21 wide
+- 42 ai:P07 left
+- 43 ai:P21 right
+- 44 ai:P10 left
+- 45 ai:P20 right
+- 46 ai:P04 wide
+- 47 ai:P21 wide
+- 48 ai:P04 right
+- 49 ai:P20 wide
+- 50 ai:P04 left
+- 51 ai:P20 right
+- 52 ai:P09 wide
+- 53 ai:P08 wide
+- 54 ai:P04 right
+- 55 ai:P08 left
+- 56 ai:P15 left
+- 57 ai:P04 wide
+- 58 ai:P20 right
+- 59 ai:P09 left
+- 60 ai:P09 right
+- 61 ai:P08 wide
+- 62 ai:P10 wide
+- 63 ai:P09 wide
+- 64 ai:P08 right
+- 65 ai:P11 right
+- 66 ai:P09 left
+- 67 ai:P10 left
+- 68 ai:P10 right
+- 69 ai:P11 wide
+- 70 ai:P15 wide
+- 71 ai:P15 right
+- 72 ai:P01 left
+- 73 ai:P15 left
+- 74 ai:P12 wide
+- 75 ai:P01 wide
+- 76 ai:P21 left
+- 77 ai:P12 right
+- 78 ai:P11 left
+- 79 ai:P12 left
+- 80 ai:P14 wide
+- 81 ai:P13 wide
+- 82 ai:P11 right
+- 83 ai:P14 wide
+- 84 ai:P14 left
+- 85 ai:P14 right
+- 86 ai:P13 left
+- 87 ai:P13 right
+- 88 ai:P19 wide
+- 89 ai:P19 right
+- 90 ai:P14 wide
+- 91 ai:P11 left
+- 92 ai:P15 wide
+- 93 ai:P15 right
+- 94 ai:P14 left
+- 95 ai:P20 wide
+- 96 ai:P14 right
+- 97 ai:P13 wide
+- 98 ai:P14 wide
+- 99 ai:P14 left
+- 100 ai:P19 left
+- 101 ai:P19 right
+- 102 ai:P04 wide
+- 103 ai:P19 wide
+- 104 ai:P20 right
+- 105 ai:P07 right
+- 106 ai:P13 left
+- 107 ai:P16 wide
+- 108 ai:P15 left
+- 109 ai:P16 left
+- 110 ai:P20 wide
+- 111 ai:P02 wide
+- 112 ai:P19 wide
+- 113 ai:P04 left
+- 114 ai:P04 right
+- 115 ai:P14 wide
+- 116 ai:P14 left
+- 117 ai:P09 wide
+- 118 ai:P20 wide
+- 119 ai:P15 wide
+- 120 ai:P02 wide
+- 121 ai:P20 left
+- 122 ai:SEND wide
+- end ai:SEND wide
+focus: {}
+fx:
+  P11:
+    lamp:
+      region:
+      - 0.5
+      - 0.5
+      - 0.8
+      - 0.85
+parts:
+- type: quote
+  from: 23
+  to: 23
+  label: 史料
+  text: 勇者には、運が味方する／ポンポニアヌスのところへ向かえ
+  source: 小プリニウスの手紙（書簡集6.16）
+- type: quote
+  from: 29
+  to: 29
+  label: 史料
+  text: 手紙と歴史は、別物です
+  source: 小プリニウスの手紙（書簡集6.16）
+- type: versus3
+  from: 51
+  to: 51
+  every: 1.2
+  items:
+  - - 9世紀の写本
+    - 8月24日
+  - - 1474年ごろの版
+    - 11月1日
+  - - 失われた写本
+    - 11月3日
+- type: versus3
+  from: 58
+  to: 58
+  every: 1.2
+  items:
+  - - ロジーニ 1797年
+    - 11月23日
+  - - ロランディら 2007年
+    - 10月24日
+  - - フォス 2022年
+    - 8月24日
+- type: versus3
+  from: 94
+  to: 94
+  every: 1.2
+  items:
+  - - 小プリニウスの手紙
+    - 月と日だけ
+  - - 2018年の炭の字
+    - 月と日だけ
+  - - 書かれた年
+    - どちらも無い
+- type: quote
+  from: 101
+  to: 101
+  label: 要点
+  text: 今のところ／8月24日を捨てる十分な材料は無い
+  source: ポンペイ考古公園 E-Journal 27号（2024年12月、要旨）
+- type: quote
+  from: 103
+  to: 103
+  label: 史料
+  text: 必ず8月24日だった、という意味ではない
+  source: ツフトリーゲル所長のSNS（2024年、要旨）
+- type: quote
+  from: 118
+  to: 118
+  label: 要点
+  text: 言える＝最古の写本は8月24日／言えない＝8月とも10月とも言い切れない
+  source: この動画のまとめ
+figures: []
+stills:
+- line: 0
+  note: 冒頭
+- line: 1
+  note: 炭の字
+- line: 15
+  note: 数え方
+- line: 51
+  note: 写本の読み
+- line: 79
+  note: 手がかりと反論
+- line: 101
+  note: 公園の結論
+- line: 118
+  note: まとめ
+- end: true
+  note: 終了画面

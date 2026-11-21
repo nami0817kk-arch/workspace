@@ -1,0 +1,152 @@
+# 物語完結型ショート もしも江戸の長屋 s4（2026-11-20）。本編 scripts/nagaya-if-story.yaml（11/25 12:00 公開予定、https://youtu.be/bEaxpmLN3mw）から。11/26 16:30 に予約。
+# 形式は edo_sekai_s1〜s5・kiyomasa_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact: だけ（事実カード 江戸の長屋if_facts_20261119.yaml）。
+# 絵：本編の AI 絵（out/story/nagaya_if/main/）の切り出しだけ。新しい絵は作らない。湯屋の中は人なしの絵（B14）。
+# 切り口：天保の湯銭で家族3人が毎日通うと、大工の家のひと月の残りがほとんど消える（本編 第4章・まとめ、nagayaif-21・23・24）。
+# hook＝家族で毎日湯屋に通うと、ひと月の残りが消える（答えはこのショートの中：3人で600文＝約5匁5分、残り約6匁）。
+# tease＝大工の家のお米の値は天保に入ってどれだけ上がったか（答えは本編 第5章：百相場 8合5勺→4合、倍を超える、nagayaif-30）。
+# 計算（本編と同じ、計算し直した）：8＋8＋4＝20文。20×30＝600文。1匁＝6,500÷60＝108.3文 → 600÷108.3＝5.54匁。ひと月の残り 73.6÷12＝6.13匁。
+# 理解テスト：①江戸の湯屋の湯銭の話 ②天保の改革で大人8文・子ども6文・小さな子4文 ③大工の家計の出費の並びに湯銭がない ④3人で毎日通うとひと月約5匁5分、残り約6匁がほとんど消える
+title: "江戸の長屋｜湯銭で残りが消える"
+yt_title: "江戸の銭湯に家族3人で毎日通うと、大工の家のひと月の残りはほとんど消えた　天保の改革で決まった湯銭は大人8文"
+description: |-
+  江戸の湯銭は、喜田川守貞の『守貞謾稿』によると、はじめは大人10文ほど。それが天保の改革で、大人8文、子ども6文、小さな子は4文と決められました。
+  文政年間漫録に残る、ある大工の1年の家計。その出費の並びには、湯銭という項目がありません。夫婦と小さな子の3人が毎日通うと、1日20文、30日で600文。銀にすると、およそ5匁5分。大工の家のひと月の残りは、およそ6匁でした。
+  本編では、家賃・水・トイレ・お風呂・食べ物・灯りまで、江戸の長屋の1か月がいくらだったかを積み上げています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#江戸時代"
+- "#銭湯"
+- "#江戸の暮らし"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。創作の台詞は入れていません。"
+art_dir: out/story/nagaya_if
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: nagaya_story_s4
+header:
+  tag: "江戸の湯屋（天保の改革）"
+  title: "家族の湯銭で、《ひと月の残り》が消える"
+now:
+- {at: "守貞謾稿", text: "江戸の湯屋", point: 0}
+- {at: "天保の改革", text: "天保の改革のあと", point: 0}
+timeline:
+- {label: "天保"}
+cards:
+  - type: table
+    title: 大工の家のひと月
+    from: 夫婦と
+    until: 湯屋が開くのは
+    items:
+      - {at: 1日20文, text: "3人の湯銭　約5匁5分"}
+      - {at: ひと月の残りは, text: "ひと月の残り　約6匁"}
+    text_y: 0.70
+shots:
+  B13_1:
+    kind: "ai"
+    file: "nagaya_if/main/B13.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "B13"
+  B13_2:
+    kind: "ai"
+    file: "nagaya_if/main/B13.jpg"
+    focus: [0.75, 0.55]
+    move: "left"
+    must: "B13"
+  B14_3:
+    kind: "ai"
+    file: "nagaya_if/main/B14.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "B14"
+  B03_4:
+    kind: "ai"
+    file: "nagaya_if/main/B03.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "B03"
+  B20_5:
+    kind: "ai"
+    file: "nagaya_if/main/B20.jpg"
+    focus: [0.4, 0.55]
+    move: "left"
+    must: "B20"
+  B06_6:
+    kind: "ai"
+    file: "nagaya_if/main/B06.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "B06"
+  B14_7:
+    kind: "ai"
+    file: "nagaya_if/main/B14.jpg"
+    focus: [0.25, 0.55]
+    move: "right"
+    must: "B14"
+  B15_8:
+    kind: "ai"
+    file: "nagaya_if/main/B15.jpg"
+    focus: [0.55, 0.55]
+    move: "left"
+    must: "B15"
+  B16_9:
+    kind: "ai"
+    file: "nagaya_if/main/B16.jpg"
+    focus: [0.4, 0.55]
+    move: "in"
+    must: "B16"
+lines:
+  # fact: nagayaif-21, nagayaif-24
+- 語り: "江戸の大工の家が、家族で毎日、湯屋に通うと、ひと月の残りは、ほとんど消えた。"
+  shot: B13_1
+  tone: 強調
+  pause: 0.12
+  # fact: nagayaif-21
+- 語り: "江戸の湯銭は、喜田川守貞の、守貞謾稿によると、はじめは大人10文ほど。"
+  shot: B13_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-21
+- 語り: "それが天保の改革で、決められた。大人は8文。子どもは6文。小さな子は4文。"
+  shot: B14_3
+  tone: 強調
+  pause: 0.12
+  # fact: nagayaif-24
+- 語り: "文政年間漫録に残る、ある大工の、1年の家計。そこに挙がった出費の並びには、湯銭という項目が、ない。"
+  shot: B03_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-21
+- 語り: "夫婦と小さな子の3人が、天保の湯銭で毎日通うと、1日20文。30日で600文。銀にすると、およそ5匁5分。"
+  shot: B20_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-24
+- 語り: "その大工の家の、ひと月の残りは、およそ6匁。湯銭だけで、ほとんど《消える》計算だ。"
+  shot: B06_6
+  tone: 重い
+  pause: 0.12
+  # fact: nagayaif-23
+- 語り: "湯屋が開くのは、朝から夕方まで。夜は火事を恐れて開けず、風の強い日は、休んだ。"
+  shot: B14_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-23
+- 語り: "男湯の二階は、湯上がりの男たちの休み場。式亭三馬の浮世風呂は、そこでの会話をもとに書いたもの、とされる。"
+  shot: B15_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第5章（nagayaif-30）
+- 語り: "では、その大工の家が食べるお米の値は、天保に入って、どれだけ上がったのか。"
+  shot: B16_9
+  tone: 疑問
+  pause: 0.15

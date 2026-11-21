@@ -1,0 +1,150 @@
+# 物語完結型ショート もしも江戸の長屋 s1（2026-11-20）。本編 scripts/nagaya-if-story.yaml（11/25 12:00 公開予定、https://youtu.be/bEaxpmLN3mw）から。11/26 9:00 に予約。
+# 形式は edo_sekai_s1〜s5・kiyomasa_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。「もしも」は使わない。事実は本編の # fact:（事実カード 江戸の長屋if_facts_20261119.yaml）だけ。
+# 絵：本編の AI 絵（out/story/nagaya_if/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：長屋の店賃は、ひと月で大工の日当の2日分に足りない（本編 序章・第1章、nagayaif-24・nagayaif-41）。
+# hook＝家賃が日当の2日分足らず（答えはこのショートの中：店賃ひと月10匁、日当5匁4分）。
+# tease＝その部屋を預かる大家は誰だったのか（答えは本編 第1章：多くは持ち主ではなく家守、nagayaif-06）。
+# 計算（本編と同じ、計算し直した）：4.2＋1.2＝5.4匁。120÷12＝10匁。10÷5.4＝1.85日分。120÷1,514＝7.9%。700÷1,514＝46.2%。73.6÷5.4＝13.6日分。10匁×1,852円＝18,519円。
+# 理解テスト：①江戸の長屋の家賃の話 ②文政のころ、江戸の裏長屋、文政年間漫録の大工の家計 ③店賃はひと月10匁、日当5匁4分の2日分足らず ④出費の8%、重いのは塩・醤油・味噌・油・薪炭の46%、1年で残るのは日当の14日分ほど
+title: "江戸の長屋｜家賃は日当の2日分足らず"
+yt_title: "江戸の長屋の家賃は、ひと月で大工の日当の2日分足らず　出費のたった8%なのに、1年で残ったのは日当の14日分ほど"
+description: |-
+  文政のころの江戸の裏長屋。文政年間漫録に残る、ある大工の1年の家計では、店賃は1年に銀120匁、ひと月にすると10匁でした。大工の日当は5匁4分。ひと月の家賃は、日当の2日分にも足りません。
+  出費の中で、店賃はわずか8%。いちばん重かったのは「塩」「醤油」「味噌」「油」「薪と炭」で46%。1年働いて残ったお金は、日当の14日分ほどでした。
+  本編では、水・トイレ・お風呂・食べ物・灯りまで足して、江戸の長屋の1か月がいくらだったかを積み上げています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#江戸時代"
+- "#江戸の長屋"
+- "#江戸の暮らし"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。創作の台詞は入れていません。"
+art_dir: out/story/nagaya_if
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: nagaya_story_s1
+header:
+  tag: "江戸の長屋（文政のころ）"
+  title: "長屋の家賃は、《日当の2日分》足らず"
+now:
+- {at: "文政のころ", text: "文政のころ　江戸の裏長屋", point: 0}
+timeline:
+- {label: "文政"}
+cards:
+  - type: versus
+    from: 出費の中で
+    until: 1年働いて
+    left: {tag: 店賃, big: 8%, dots: 8, color: blue}
+    right: {tag: 塩・醤油・味噌・油・薪炭, big: 46%, dots: 46, color: red}
+    mid: 対
+    text_y: 0.70
+shots:
+  B01_1:
+    kind: "ai"
+    file: "nagaya_if/main/B01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "B01"
+  B02_2:
+    kind: "ai"
+    file: "nagaya_if/main/B02.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "B02"
+  B03_3:
+    kind: "ai"
+    file: "nagaya_if/main/B03.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "B03"
+  B03_4:
+    kind: "ai"
+    file: "nagaya_if/main/B03.jpg"
+    focus: [0.7, 0.5]
+    move: "right"
+    must: "B03"
+  B05_5:
+    kind: "ai"
+    file: "nagaya_if/main/B05.jpg"
+    focus: [0.45, 0.6]
+    move: "in"
+    must: "B05"
+  B06_6:
+    kind: "ai"
+    file: "nagaya_if/main/B06.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "B06"
+  B20_7:
+    kind: "ai"
+    file: "nagaya_if/main/B20.jpg"
+    focus: [0.4, 0.55]
+    move: "right"
+    must: "B20"
+  T01_8:
+    kind: "ai"
+    file: "nagaya_if/main/T01.jpg"
+    focus: [0.45, 0.55]
+    move: "in"
+    must: "T01"
+  B04_9:
+    kind: "ai"
+    file: "nagaya_if/main/B04.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "B04"
+lines:
+  # fact: nagayaif-24
+- 語り: "江戸の長屋の家賃は、ひと月で、大工の日当の、2日分にも足りなかった。"
+  shot: B01_1
+  tone: 強調
+  pause: 0.12
+  # fact: nagayaif-01
+- 語り: "時は文政のころ。場所は、江戸の町人地の、裏長屋。部屋は九尺二間と呼ばれ、台所まで入れて、畳6畳分の広さだった。"
+  shot: B02_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-24
+- 語り: "文政年間漫録という江戸の書き物に、ある大工が語った、1年の稼ぎと出費が残っている。"
+  shot: B03_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-24
+- 語り: "手間賃は、1日に銀4匁2分。飯米料の1匁2分と合わせて、日当は5匁4分。"
+  shot: B03_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-24
+- 語り: "店賃は、1年に銀120匁。ひと月にすると、10匁。大工の日当の、2日ぶんにも、足りない。"
+  shot: B05_5
+  tone: 強調
+  pause: 0.12
+  # fact: nagayaif-41
+- 語り: "今の目安で、日当を1万円とすると、ひと月の店賃は、およそ1万8500円だ。"
+  shot: B06_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-24
+- 語り: "出費の中で、店賃は、わずか8%。いちばん重かったのは、「塩」「醤油」。「味噌」「油」。「薪と炭」。これだけで、46%。"
+  shot: B20_7
+  tone: 重い
+  pause: 0.12
+  # fact: nagayaif-24
+- 語り: "1年働いて、この大工の家に残ったお金は、日当の、14日分ほどだった。"
+  shot: T01_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第1章（nagayaif-06）
+- 語り: "では、その部屋を預かる大家は、誰だったのか。"
+  shot: B04_9
+  tone: 疑問
+  pause: 0.15

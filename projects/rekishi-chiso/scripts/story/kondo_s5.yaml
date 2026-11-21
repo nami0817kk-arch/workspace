@@ -1,0 +1,148 @@
+# 物語完結型ショート 近藤勇 s5（2026-11-20）。本編 scripts/kondo-story.yaml（11/25 19:00 公開予定、https://youtu.be/yj1jX9IM9vA）から。11/26 19:30 に予約。
+# 形式は kiyomasa_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード 近藤勇_facts_20261119.yaml）。
+# 絵：本編の AI 絵（out/story/kondo/main/）の切り出しだけ。新しい絵は作らない。遺体・首は描かない（墓・寺・野の風景だけ）。
+# 切り口：墓や首塚とされる場所が各地にある（本編 第7章、kondo-42・60・61・63・66・68・69）。
+# hook＝近藤勇の墓はひとつではない（答えはこのショートの中：板橋・三鷹・会津若松・岡崎）。
+# tease＝なぜ切腹ではなく斬首だったのか（本編の問い。答えは本編 第5〜6章・まとめ、kondo-22・27・54・55）。
+# 計算：板橋の墓 1876年＝処刑（1868年）の8年後（本編どおり）。
+# 字幕では読点が消えるので、地名を並べず1行に1か所ずつ言う。
+# 理解テスト：①近藤勇の墓の話 ②1868年に板橋で斬首、1876年に板橋の墓 ③板橋・三鷹・会津若松・岡崎に墓や首塚とされる場所がある ④当時の記録で首や体がそこにあると確かめられた墓は無い
+title: "近藤勇｜墓は、ひとつではない"
+yt_title: "近藤勇の墓は、ひとつではない　板橋・三鷹・会津若松・岡崎、各地に残る墓と首塚"
+description: |-
+  1868年、板橋で斬首された新選組の局長、近藤勇。その墓や首塚とされる場所は、ひとつではありません。
+  JR板橋駅の東口の前の墓は、1876年、新選組の生き残りの永倉新八が呼びかけて建てたもので、正面の近藤の名は、2文字の順が逆に彫られています。東京の三鷹市の龍源寺には、遺族や門弟がひそかに体を運んで葬ったという言い伝えの墓が、福島県会津若松市の天寧寺には、土方歳三が遺髪などを仮に埋めたと伝わる墓があります。愛知県岡崎市の法蔵寺には、首塚と伝わる場所があります。
+  ただ、首や体がいまもそこにあると、当時の記録で確かめられた墓はありません。本編では、近藤勇がなぜ切腹ではなく斬首だったのかを、当時の記録で並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#近藤勇"
+- "#新選組"
+- "#お墓"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の墓・寺は実際の場所の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/kondo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kondo_story_s5
+header:
+  tag: "近藤勇（各地に残る墓）"
+  title: "近藤勇の墓は、《ひとつではない》"
+now:
+- {at: "1868年4月25日", text: "1868年4月25日　板橋", point: 0}
+- {at: "1876年", text: "1876年　板橋", point: 0}
+- {at: "三鷹市", text: "いま　東京・三鷹", point: 0}
+- {at: "会津若松", text: "いま　福島・会津若松", point: 0}
+- {at: "岡崎市", text: "いま　愛知・岡崎", point: 0}
+timeline:
+- {label: "1868"}
+- {label: "1876"}
+shots:
+  D23_1:
+    kind: "ai"
+    file: "kondo/main/D23.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "D23"
+  D18_2:
+    kind: "ai"
+    file: "kondo/main/D18.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "D18"
+  D23_3:
+    kind: "ai"
+    file: "kondo/main/D23.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "D23"
+  D23_4:
+    kind: "ai"
+    file: "kondo/main/D23.jpg"
+    focus: [0.5, 0.4]
+    move: "in"
+    must: "D23"
+  IEND_5:
+    kind: "ai"
+    file: "kondo/main/IEND.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "IEND"
+  D24_6:
+    kind: "ai"
+    file: "kondo/main/D24.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "D24"
+  D22_7:
+    kind: "ai"
+    file: "kondo/main/D22.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "D22"
+  D22_8:
+    kind: "ai"
+    file: "kondo/main/D22.jpg"
+    focus: [0.7, 0.55]
+    move: "in"
+    must: "D22"
+  D10_9:
+    kind: "ai"
+    file: "kondo/main/D10.jpg"
+    focus: [0.6, 0.45]
+    move: "in"
+    must: "D10"
+lines:
+  # fact: kondo-61, kondo-66, kondo-68, kondo-69
+- 語り: "新選組の局長、近藤勇の墓は、ひとつではない。東京にも、福島にも、愛知にも、墓や首塚とされる場所がある。"
+  shot: D23_1
+  tone: 強調
+  pause: 0.12
+  # fact: kondo-102, kondo-60
+- 語り: "1868年4月25日、近藤は、板橋で斬首された。北区の解説では、胴体は、滝野川の、無縁塚に埋められた。"
+  shot: D18_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: kondo-60, kondo-61
+- 語り: "いまのJR板橋駅の東口の前。1876年、そこに墓が建つ。新選組の生き残り、永倉新八が呼びかけた。処刑から、8年後だ。"
+  shot: D23_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: kondo-42, kondo-63
+- 語り: "ところが、正面に彫られた近藤の名は、まさよしの2文字の順が、逆になっている。"
+  shot: D23_4
+  tone: 重い
+  pause: 0.12
+  # fact: kondo-66
+- 語り: "東京の三鷹市の龍源寺。遺族や門弟が、ひそかに体を運んで葬った、という言い伝えの墓だ。"
+  shot: IEND_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: kondo-68
+- 語り: "福島県の会津若松の天寧寺。土方歳三が、遺髪などを、仮に埋めた、と伝わる。"
+  shot: D24_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: kondo-69
+- 語り: "愛知県の岡崎市の法蔵寺には、京都でさらされた首を、同志が持ち出した、と伝わる首塚がある。"
+  shot: D22_7
+  tone: しみじみ
+  pause: 0.12
+  # 本編 第7章の結び（fact なし、本編どおり）
+- 語り: "けれど、首や体が、いまもそこにあると、当時の記録で確かめられた墓は、無い。"
+  shot: D22_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第5〜6章・まとめ（kondo-22・27・54・55）
+- 語り: "そもそも、近藤は、なぜ、切腹ではなく、斬首だったのか。"
+  shot: D10_9
+  tone: 疑問
+  pause: 0.15
