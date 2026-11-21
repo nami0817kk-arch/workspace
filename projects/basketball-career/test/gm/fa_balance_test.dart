@@ -10,7 +10,8 @@ void main() {
     var sawLeaning = false;
     while (!(c.phase == Phase.preseason && c.season == 2) && guard++ < 300) {
       if (c.phase == Phase.seasonEnd) c.fired = false;
-      if (c.phase == Phase.contracts && c.faDay < 3) {
+      // 1日ずつ、3日目まで進めて見る(1日目に申し込みの無い年もある)
+      while (c.phase == Phase.contracts && c.faDay < 3) {
         // 自動で遊ぶ GM は日を一度に進めるので、ここで1日ずつ進めて途中の申し込みを見る
         c.nextFaDay();
         for (final p in c.freeAgents) {
