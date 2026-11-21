@@ -231,7 +231,7 @@ class _TradeTabState extends State<TradeTab> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            '${them.mode.wants}・GM ${pr.name}(${pr.style.label}・見る目 ${car.eyeKnown(_partner) ? eyeOf(pr).label : '？'})・年俸 ${money(them.payroll)}・${them.roster.length}人',
+                            '${them.mode.wants}・GM ${pr.name}(${pr.style.label}・見る目 ${car.eyeKnown(_partner) ? eyeOf(pr).label : '？'}・こちらを${car.trustLabel(_partner)})・年俸 ${money(them.payroll)}・${them.roster.length}人',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(fontSize: 11, color: GmColors.sub),

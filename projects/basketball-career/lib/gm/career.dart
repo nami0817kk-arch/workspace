@@ -20,6 +20,7 @@ import 'summer.dart';
 import 'rng.dart';
 import 'scenario.dart';
 import 'situation.dart';
+import 'trade_ledger.dart';
 import 'trade.dart';
 
 /// 自動で遊ぶGM・点検が1回に進める年数。ゲームの任期に上限は無い(解任か、自分で終えるまで続く)。
@@ -2588,6 +2589,7 @@ class Career {
   void startSeason() {
     if (phase != Phase.preseason || startProblem != null) return;
     _potentialNews();
+    _settleTrust();
     // 今季のあとのドラフトのうわさ(A-5)。指名権の値打ちもその年の顔ぶれで変わる
     _mail(Sender.staff, 'ドラフトのうわさ', '${draftClassOf(seed, season).rumor}。');
     _aiPolicies();
@@ -3091,6 +3093,8 @@ class Career {
     _keepTrade(o);
     applyTrade(teams, picks, mine, o);
     tradesDone++;
+    // 相手からの申し込みを受けると、信用が少し上がる(T-4)
+    _addTrust(o.partner, 5);
     if (phase == Phase.draft) _advanceDraft();
     return true;
   }
@@ -4849,6 +4853,8 @@ class Career {
     if ([...o.giveSwaps, ...o.getSwaps].any((s) => s < swapFrom)) return const TradeVerdict(false, 'その年の入れ替え権は、もう順が決まっている', 0);
     final bp = _tradeBudgetProblem(o);
     if (bp != null) return TradeVerdict(false, bp, 0);
+    // 強く警戒している相手は、話に応じない(T-4)
+    if (trustOf(o.partner) <= -60) return TradeVerdict(false, '${teams[o.partner].def.short}は警戒していて、話に応じない', 0);
     return judgeTrade(teams, picks, mine, o, season,
         rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner), needs: true, seen: _eyeFn(o.partner), cheap: _cheapOf(o.partner));
   }
@@ -5205,7 +5211,49 @@ class Career {
   }
 
   /// 相手のチームのトレードの受けにくさ(難しさ × 相手の GM の型)。
-  double _hard(int partner) => difficulty.tradeHardness * gmOf(seed, partner).style.hardness * (1 - 0.03 * skillOf(Skill.network));
+  double _hard(int partner) =>
+      difficulty.tradeHardness * gmOf(seed, partner).style.hardness * (1 - 0.03 * skillOf(Skill.network)) * (1 - 0.001 * trustOf(partner));
+
+  /// GM ごとの信用(-100〜100。0 はふつう。T-4)。公平な取引や相手の頼みを受けると上がり、だまされたと気づかれると下がる。
+  Map<int, int> gmTrust = {};
+
+  int trustOf(int team) => gmTrust[team] ?? 0;
+
+  /// 信用の言い方(信頼している・ふつう・警戒している)。
+  String trustLabel(int team) => trustOf(team) >= 25
+      ? '信頼している'
+      : trustOf(team) <= -25
+          ? '警戒している'
+          : 'ふつう';
+
+  void _addTrust(int team, int d) {
+    if (team == mine) return;
+    gmTrust[team] = (trustOf(team) + d).clamp(-100, 100);
+  }
+
+  /// 開幕に、前の季のトレードの答え合わせをして信用を動かす(T-4)。信用は季ごとに「ふつう」へ2割戻る。
+  void _settleTrust() {
+    for (final k in gmTrust.keys.toList()) {
+      gmTrust[k] = (gmTrust[k]! * 0.8).round();
+    }
+    for (final t in myTrades.where((t) => t.season == season - 1)) {
+      final (mineV, theirsV) = tradeValues(this, t);
+      final total = mineV + theirsV;
+      if (total <= 0) continue;
+      final d = (mineV - theirsV) / total;
+      final name = teams[t.partner].def.short;
+      if (d > 0.3) {
+        // 一方的だった: 相手が気づいて警戒する。ほかの GM にも少し伝わる
+        _addTrust(t.partner, -35);
+        for (var i = 0; i < teams.length; i++) {
+          if (i != t.partner) _addTrust(i, -5);
+        }
+        _mail(Sender.staff, '$nameの GM が警戒している', '前の季のトレードで、$nameは損をしたと気づいたらしい。しばらくは上乗せを求められ、話を断られることもある。ほかの GM にも話が伝わっている。');
+      } else if (d > -0.15) {
+        _addTrust(t.partner, 10);
+      }
+    }
+  }
 
   /// チームの GM(名前と型)。
   GmPerson gmPerson(int team) => gmOf(seed, team);
@@ -5403,6 +5451,7 @@ class Career {
         if (comboSecs.any((x) => x > 0)) 'cb': comboSecs,
         if (policyGames > 0) 'pgm': policyGames,
         if (rumors.isNotEmpty) 'rmr': [for (final r in rumors) r.toJson()],
+        if (gmTrust.isNotEmpty) 'gtr': [for (final e in gmTrust.entries) [e.key, e.value]],
         if (matchupSeen.any((x) => x > 0)) 'mtu': matchupSeen,
         if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
@@ -5559,6 +5608,10 @@ class Career {
       ..traitSeen = {for (final x in (j['ts'] as List? ?? const [])) x as int}
       ..comboSecs = [for (var i = 0; i < Combo.values.length; i++) (j['cb'] is List && (j['cb'] as List).length > i) ? ((j['cb'] as List)[i] as int) : 0]
       ..policyGames = (j['pgm'] as int?) ?? 0
+      ..gmTrust = {
+        for (final x in (j['gtr'] as List? ?? const []))
+          if (x is List && x.length == 2) x[0] as int: x[1] as int,
+      }
       ..rumors = [
         for (final x in (j['rmr'] as List? ?? const []))
           if (Rumor.fromJson(x) case final r?) r,
