@@ -14,7 +14,7 @@ class HelpButton extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
         icon: const Icon(Icons.help_outline, size: 18),
         tooltip: title,
-        visualDensity: VisualDensity.compact,
+        // 押せる広さは 48x48 を保つ(accessibility_test)。
         onPressed: () => showDialog<void>(
           context: context,
           builder: (ctx) => AlertDialog(
