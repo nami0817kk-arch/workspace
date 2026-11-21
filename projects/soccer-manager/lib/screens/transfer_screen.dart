@@ -13,6 +13,7 @@ import '../logic/contract_engine.dart';
 import '../models/transfer_talk.dart';
 import '../models/player.dart';
 import '../models/save_game.dart';
+import '../models/team.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
@@ -168,12 +169,24 @@ class _TransferScreenState extends State<TransferScreen>
       budget: save.budget,
       passed: _passed,
     );
+    // 理由が同じ候補はまとめ、理由は見出しとして1回だけ出す(2026-11-21)。
+    final groups = <String, List<SigningProposal>>{};
+    for (final pr in proposals) {
+      groups.putIfAbsent(pr.reason, () => []).add(pr);
+    }
+    final count = gameState.userTeam.players.length;
     return Column(
       children: [
         _TransferWindowBanner(
           open: windowOpen,
           deadlineDay: gameState.isTransferDeadlineDay,
           label: gameState.transferWindowStatusLabel,
+          // 資金は上の段に出ているので、ここはスカッドの人数だけ。
+          trailing: squadFull
+              ? Tr.pick('スカッド $count/$maxSquadSize(上限)',
+                  'Squad $count/$maxSquadSize (full)')
+              : Tr.pick('スカッド $count/$maxSquadSize',
+                  'Squad $count/$maxSquadSize'),
         ),
         if (gameState.isGoalkeeperEmergency)
           _NoticeLine(
@@ -182,42 +195,6 @@ class _TransferScreenState extends State<TransferScreen>
           ),
         _RegistrationCard(windowOpen: windowOpen),
         if (gameState.currentSd != null) const _SdBriefCard(),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-          child: Row(
-            children: [
-              Text(
-                  Tr.pick('資金 ${formatMoney(save.budget)}',
-                      'Funds ${formatMoney(save.budget)}'),
-                  style: Theme.of(context).textTheme.titleSmall),
-              const SizedBox(width: 12),
-              Text(
-                Tr.pick(
-                    'スカッド ${gameState.userTeam.players.length}/$maxSquadSize',
-                    'Squad ${gameState.userTeam.players.length}/$maxSquadSize'),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              if (squadFull) ...[
-                const SizedBox(width: 8),
-                Text(
-                  Tr.pick('枠が上限です', 'Squad full'),
-                  style: const TextStyle(color: Colors.orange, fontSize: 12),
-                ),
-              ],
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 4),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              Tr.pick('監督が挙げた補強の候補です。買うか見送るかを決めてください。',
-                  'Candidates your manager picked. Sign them or pass.'),
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-        ),
         Expanded(
           child: proposals.isEmpty
               ? Center(
@@ -231,85 +208,246 @@ class _TransferScreenState extends State<TransferScreen>
                   ),
                 )
               : ListView(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
                   children: [
-                    for (final pr in proposals)
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  PlayerFaceAvatar(
-                                      playerId: pr.player.id,
-                                      position: pr.player.position),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          Tr.pick(
-                                              '${pr.player.name}(${pr.player.position.label}・${pr.player.age}歳)',
-                                              '${pr.player.name} (${pr.player.position.label}, ${pr.player.age})'),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          Tr.pick(
-                                              '${gameState.clubNameOf(pr.player.id) ?? '-'}・総合力 ${ScoutKnowledge.label(gameState.overallEstimate(pr.player, sameLeagueIds: same))}・移籍金 ${formatMoney(pr.player.marketValue)}',
-                                              '${gameState.clubNameOf(pr.player.id) ?? '-'} • Overall ${ScoutKnowledge.label(gameState.overallEstimate(pr.player, sameLeagueIds: same))} • Fee ${formatMoney(pr.player.marketValue)}'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              Text(pr.reason),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  _WatchButton(playerId: pr.player.id),
-                                  const Spacer(),
-                                  TextButton(
-                                    onPressed: () {
-                                      FeedbackService.tap();
-                                      setState(() => _passed.add(pr.player.id));
-                                    },
-                                    child: Text(Tr.pick('見送る', 'Pass')),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  FilledButton(
-                                    onPressed: (windowOpen ||
-                                                (gameState
-                                                        .isGoalkeeperEmergency &&
-                                                    pr.player.position ==
-                                                        Position.gk)) &&
-                                            !squadFull
-                                        ? () => _showAcquireSheet(
-                                            context, pr.player)
-                                        : null,
-                                    child: Text(Tr.pick('買う', 'Sign')),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                    for (final g in groups.entries) ...[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 8, 4, 4),
+                        child: Text(
+                          g.key,
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: SemanticColors.subtleText(context)),
                         ),
                       ),
+                      Card(
+                        margin: EdgeInsets.zero,
+                        child: Column(
+                          children: [
+                            for (final (i, pr) in g.value.indexed) ...[
+                              if (i > 0) const Divider(height: 1),
+                              _proposalRow(context, gameState, pr.player,
+                                  windowOpen, squadFull, same),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
         ),
       ],
     );
+  }
+
+  /// 監督の案の1人分の行。名前・位置・年齢・所属と、総合力・移籍金を
+  /// 列にして並べ、注目・見送る・買うも同じ行に置く(2026-11-21)。
+  Widget _proposalRow(
+    BuildContext context,
+    GameState gameState,
+    Player p,
+    bool windowOpen,
+    bool squadFull,
+    Set<String> same,
+  ) {
+    final ovr =
+        ScoutKnowledge.label(gameState.overallEstimate(p, sameLeagueIds: same));
+    final fee = formatMoney(p.marketValue);
+    final affordable = gameState.save!.budget >= p.marketValue;
+    final club = gameState.clubNameOf(p.id) ?? '-';
+    final canSign = (windowOpen ||
+            (gameState.isGoalkeeperEmergency && p.position == Position.gk)) &&
+        !squadFull;
+    final subtle = SemanticColors.subtleText(context);
+    Widget value(String caption, String v, {Color? color}) => SizedBox(
+          width: 72,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(caption, style: TextStyle(fontSize: 10, color: subtle)),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(v,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: color)),
+              ),
+            ],
+          ),
+        );
+    return LayoutBuilder(builder: (context, c) {
+      final wide = c.maxWidth >= 520;
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Row(
+          children: [
+            PlayerFaceAvatar(playerId: p.id, position: p.position, size: 32),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(p.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    wide
+                        ? Tr.pick('${p.position.label}・${p.age}歳・$club',
+                            '${p.position.label} • ${p.age} • $club')
+                        : Tr.pick(
+                            '${p.position.label}・${p.age}歳・総合力 $ovr・移籍金 $fee',
+                            '${p.position.label} • ${p.age} • OVR $ovr • Fee $fee'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 12, color: subtle),
+                  ),
+                ],
+              ),
+            ),
+            if (wide) ...[
+              value(Tr.pick('総合力', 'Overall'), ovr),
+              value(Tr.pick('移籍金', 'Fee'), fee,
+                  color: affordable ? null : Theme.of(context).colorScheme.error),
+            ],
+            _WatchButton(playerId: p.id),
+            TextButton(
+              onPressed: () {
+                FeedbackService.tap();
+                setState(() => _passed.add(p.id));
+              },
+              child: Text(Tr.pick('見送る', 'Pass')),
+            ),
+            const SizedBox(width: 4),
+            FilledButton(
+              onPressed: canSign ? () => _showAcquireSheet(context, p) : null,
+              child: Text(Tr.pick('買う', 'Sign')),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  /// 他のクラブの選手を表で並べる(探す・注目)。数字を列にそろえて、
+  /// 選手どうしを比べやすくする(2026-11-21)。
+  Widget _targetTable(
+    BuildContext context,
+    GameState gameState,
+    List<Player> players,
+    bool squadFull,
+    Set<String> same, {
+    Widget? footer,
+  }) {
+    final scheme = Theme.of(context).colorScheme;
+    final budget = gameState.save!.budget;
+    final canSignNow = (gameState.isTransferWindowOpen) && !squadFull;
+    final head = TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        color: scheme.onSurfaceVariant);
+    const small = TextStyle(fontSize: 12);
+    Widget cell(String s, double w, {TextStyle? style, TextStyle? base}) =>
+        SizedBox(
+          width: w,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(s, textAlign: TextAlign.center, style: style ?? base),
+          ),
+        );
+    return LayoutBuilder(builder: (context, c) {
+      final wide = c.maxWidth >= 560;
+      final header = Container(
+        color: scheme.surfaceContainerHighest,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Row(
+          children: [
+            Expanded(child: Text(Tr.pick('名前', 'Name'), style: head)),
+            if (wide) cell(Tr.pick('所属', 'Club'), 96, base: head),
+            cell(Tr.pick('年', 'Age'), 28, base: head),
+            cell(Tr.pick('位置', 'Pos'), 40, base: head),
+            cell(Tr.pick('総合力', 'OVR'), 60, base: head),
+            cell(Tr.pick('伸びしろ', 'POT'), 60, base: head),
+            cell(Tr.pick('市場価値', 'Value'), 56, base: head),
+            if (wide) cell(Tr.pick('見え', 'Seen'), 40, base: head),
+            const SizedBox(width: 92),
+          ],
+        ),
+      );
+      Widget row(int i) {
+        final p = players[i];
+        final k = gameState.knowledgeOf(p, sameLeagueIds: same);
+        final canSign = canSignNow ||
+            (gameState.isGoalkeeperEmergency &&
+                p.position == Position.gk &&
+                !squadFull);
+        return Container(
+          color: i.isOdd ? scheme.surfaceContainerLow : null,
+          padding: const EdgeInsets.only(left: 8),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(p.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: small.copyWith(fontWeight: FontWeight.w700)),
+              ),
+              if (wide)
+                cell(gameState.clubNameOf(p.id) ?? '-', 96, base: small),
+              cell('${p.age}', 28, base: small),
+              cell(p.position.label, 40, base: small),
+              cell(
+                  ScoutKnowledge.label(
+                      gameState.overallEstimate(p, sameLeagueIds: same)),
+                  60,
+                  base: small.copyWith(fontWeight: FontWeight.w700)),
+              cell(
+                  ScoutKnowledge.label(
+                      gameState.potentialEstimate(p, sameLeagueIds: same)),
+                  60,
+                  base: small),
+              cell(formatMoney(p.marketValue), 56,
+                  base: small.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: budget >= p.marketValue ? null : scheme.error)),
+              if (wide)
+                cell('$k%', 40,
+                    base: small.copyWith(
+                        color: SemanticColors.subtleText(context))),
+              SizedBox(width: 40, child: _WatchButton(playerId: p.id)),
+              SizedBox(
+                width: 52,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(52, 40)),
+                  onPressed:
+                      canSign ? () => _showAcquireSheet(context, p) : null,
+                  child: Text(Tr.pick('獲得', 'Sign'), style: small),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+
+      return Column(
+        children: [
+          header,
+          Expanded(
+            child: ListView.builder(
+              itemCount: players.length + (footer == null ? 0 : 1),
+              itemBuilder: (context, i) => i < players.length
+                  ? SizedBox(height: 40, child: row(i))
+                  : footer!,
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   /// 探す: 他のクラブの選手を、ポジション・年齢で絞って並べる。
@@ -348,69 +486,88 @@ class _TransferScreenState extends State<TransferScreen>
           deadlineDay: gameState.isTransferDeadlineDay,
           label: gameState.transferWindowStatusLabel,
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-          child: Wrap(
-            spacing: 6,
-            runSpacing: 4,
-            crossAxisAlignment: WrapCrossAlignment.center,
+        // 絞り込みは1段に。説明文は「?」の中へ(2026-11-21)。
+        SizedBox(
+          height: 44,
+          child: Row(
             children: [
-              for (final g in <PositionGroup?>[null, ...PositionGroup.values])
-                ChoiceChip(
-                  label: Text(_groupLabel(g)),
-                  selected: _searchGroup == g,
-                  onSelected: (_) => setState(() => _searchGroup = g),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    children: [
+                      for (final g
+                          in <PositionGroup?>[null, ...PositionGroup.values])
+                        Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: ChoiceChip(
+                            label: Text(_groupLabel(g)),
+                            selected: _searchGroup == g,
+                            showCheckmark: false,
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (_) =>
+                                setState(() => _searchGroup = g),
+                          ),
+                        ),
+                      const SizedBox(width: 8),
+                      DropdownButton<int?>(
+                        value: _searchMaxAge,
+                        underline: const SizedBox.shrink(),
+                        items: [
+                          for (final a in const <int?>[null, 21, 25, 29])
+                            DropdownMenuItem(
+                              value: a,
+                              child: Text(a == null
+                                  ? Tr.pick('年齢を問わない', 'Any age')
+                                  : Tr.pick('$a歳以下', '$a or younger')),
+                            ),
+                        ],
+                        onChanged: (v) => setState(() => _searchMaxAge = v),
+                      ),
+                      const SizedBox(width: 12),
+                      DropdownButton<TransferSortOption>(
+                        value: _searchSort,
+                        underline: const SizedBox.shrink(),
+                        items: [
+                          for (final o in TransferSortOption.values)
+                            DropdownMenuItem(
+                                value: o, child: Text(_sortLabel(o))),
+                        ],
+                        onChanged: (v) =>
+                            setState(() => _searchSort = v ?? _searchSort),
+                      ),
+                    ],
+                  ),
                 ),
-              DropdownButton<int?>(
-                value: _searchMaxAge,
-                items: [
-                  for (final a in const <int?>[null, 21, 25, 29])
-                    DropdownMenuItem(
-                      value: a,
-                      child: Text(a == null
-                          ? Tr.pick('年齢を問わない', 'Any age')
-                          : Tr.pick('$a歳以下', '$a or younger')),
-                    ),
-                ],
-                onChanged: (v) => setState(() => _searchMaxAge = v),
               ),
-              DropdownButton<TransferSortOption>(
-                value: _searchSort,
-                items: [
-                  for (final o in TransferSortOption.values)
-                    DropdownMenuItem(value: o, child: Text(_sortLabel(o))),
-                ],
-                onChanged: (v) =>
-                    setState(() => _searchSort = v ?? _searchSort),
+              Text(
+                Tr.pick('該当${found.length}人', '${found.length} found'),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
+              ),
+              _HelpButton(
+                title: Tr.pick('探せる選手', 'Who you can search'),
+                text: Tr.pick(
+                    '自国の全部と、他の4か国の1部のクラブの選手から探せます。上から${shown.length}人を表示しています(下の「もっと見る」で増えます)。\n\n総合力と伸びしろは見立ての幅です。「見え」はスカウトがどれだけ見えているかで、高いほど幅が狭くなります。移籍金が資金より高い選手は赤で出ます。',
+                    'You can search every club at home and the top flights of the other four countries. Showing the top ${shown.length} ("Show more" at the bottom adds more).\n\nOverall and potential are estimated ranges. "Seen" is how well your scouts know the player; the higher it is, the narrower the range. Values above your funds are shown in red.'),
               ),
             ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              Tr.pick(
-                  '自国の全部と、他の4か国の1部のクラブの選手から探せます。該当 ${found.length}人(上から${shown.length}人を表示)。',
-                  'Search players at every club at home and in the top flights of the other four countries. ${found.length} match (showing the top ${shown.length}).'),
-              style: TextStyle(
-                  fontSize: 12, color: SemanticColors.subtleText(context)),
-            ),
           ),
         ),
         Expanded(
-          child: ListView(
-            padding: const EdgeInsets.all(8),
-            children: [
-              for (final p in shown)
-                _targetTile(context, gameState, p, squadFull, same),
-              if (found.length > shown.length)
-                TextButton(
-                  onPressed: () => setState(() => _searchLimit += 40),
-                  child: Text(Tr.pick('もっと見る', 'Show more')),
-                ),
-            ],
+          child: _targetTable(
+            context,
+            gameState,
+            shown,
+            squadFull,
+            same,
+            footer: found.length > shown.length
+                ? TextButton(
+                    onPressed: () => setState(() => _searchLimit += 40),
+                    child: Text(Tr.pick('もっと見る', 'Show more')),
+                  )
+                : null,
           ),
         ),
       ],
@@ -432,21 +589,23 @@ class _TransferScreenState extends State<TransferScreen>
         if (byId[id] != null) byId[id]!,
     ];
     final unavailable = save.watchlistPlayerIds.length - watched.length;
-    return ListView(
-      padding: const EdgeInsets.all(8),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
+    if (watched.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
           child: Text(
-            Tr.pick('星を付けた選手です。監督の案や「探す」で星を押すと入ります。',
-                'Players you starred. Tap the star in Proposals or Search to add one.'),
-            style: TextStyle(
-                fontSize: 12, color: SemanticColors.subtleText(context)),
+            Tr.pick('注目している選手はいません。監督の案や「探す」で星を押すと入ります。',
+                'You are not watching anyone. Tap the star in Proposals or Search to add one.'),
+            textAlign: TextAlign.center,
           ),
         ),
+      );
+    }
+    return Column(
+      children: [
         if (unavailable > 0)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
             child: Text(
               Tr.pick(
                   'ほかに$unavailable人は、今は申し込めません(自クラブの選手・ローン中・他のクラブと仮契約済み・引退など)。',
@@ -455,56 +614,10 @@ class _TransferScreenState extends State<TransferScreen>
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
           ),
-        if (watched.isEmpty)
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Center(
-              child:
-                  Text(Tr.pick('注目している選手はいません', 'You are not watching anyone')),
-            ),
-          ),
-        for (final p in watched)
-          _targetTile(context, gameState, p, squadFull, same),
+        Expanded(
+            child:
+                _targetTable(context, gameState, watched, squadFull, same)),
       ],
-    );
-  }
-
-  /// 他のクラブの選手の1行(所属・総合力・市場価値・注目・獲得)。
-  Widget _targetTile(
-    BuildContext context,
-    GameState gameState,
-    Player p,
-    bool squadFull,
-    Set<String> same,
-  ) {
-    final k = gameState.knowledgeOf(p, sameLeagueIds: same);
-    final ovr =
-        ScoutKnowledge.label(gameState.overallEstimate(p, sameLeagueIds: same));
-    final pot = ScoutKnowledge.label(
-        gameState.potentialEstimate(p, sameLeagueIds: same));
-    final canSign = (gameState.isTransferWindowOpen ||
-            (gameState.isGoalkeeperEmergency && p.position == Position.gk)) &&
-        !squadFull;
-    return Card(
-      child: ListTile(
-        leading: PlayerFaceAvatar(playerId: p.id, position: p.position),
-        title: Text(Tr.pick(
-            '${p.name}(${p.position.label}・${p.age}歳・${GameStateNation.nationLabel(gameState.nationalityOf(p))})',
-            '${p.name} (${p.position.label}, ${p.age}, ${GameStateNation.nationLabel(gameState.nationalityOf(p))})')),
-        subtitle: Text(Tr.pick(
-            '${gameState.clubNameOf(p.id) ?? '-'}・総合力 $ovr・伸びしろ $pot・市場価値 ${formatMoney(p.marketValue)}\n見えている度合い $k%',
-            '${gameState.clubNameOf(p.id) ?? '-'} • Overall $ovr • Potential $pot • Value ${formatMoney(p.marketValue)}\nScouted $k%')),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _WatchButton(playerId: p.id),
-            TextButton(
-              onPressed: canSign ? () => _showAcquireSheet(context, p) : null,
-              child: Text(Tr.pick('獲得', 'Sign')),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -518,41 +631,63 @@ class _TransferScreenState extends State<TransferScreen>
     final used = save.scoutRegionKeys.length;
     final slots = gameState.scoutSlots;
     final cost = gameState.scoutTripCostPerWeek;
-    return ListView(
-      padding: const EdgeInsets.all(12),
-      children: [
-        Text(
-          Tr.pick(
-              '送っている場所 $used / $slots か所', 'Regions covered: $used of $slots'),
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          Tr.pick(
+    final help = Tr.pick(
               '送った地域の選手は、毎週${gameState.scoutWeeklyGain}%ずつ見えてきます(出張費は1か所 毎週${formatMoney(cost)})。見えているほど、総合力と伸びしろの幅が狭くなります。同じ部の選手は試合で見ているので最初から${ScoutKnowledge.sameLeagueBase}%、注目リストの選手はどこにいても毎週${ScoutKnowledge.watchWeeklyGain}%ずつ見えてきます。送れる場所の数と見えてくる速さは、スカウトの見極めの力で決まります。',
-              'Players in the regions you cover become ${gameState.scoutWeeklyGain}% clearer each week (travel costs ${formatMoney(cost)} a week per region). The clearer they are, the narrower the overall and potential ranges. Players in your own division start at ${ScoutKnowledge.sameLeagueBase}% because you see them in matches, and watchlisted players anywhere gain ${ScoutKnowledge.watchWeeklyGain}% a week. Your scout\'s judging decides how many regions you can cover and how fast.'),
-          style: TextStyle(
-              fontSize: 12, color: SemanticColors.subtleText(context)),
-        ),
-        const SizedBox(height: 8),
-        for (final r in regions)
-          Card(
-            child: SwitchListTile(
-              title: Text(r.label),
-              subtitle: Text(Tr.pick(
-                  '平均 ${gameState.regionKnowledgePercent(r.key)}% 見えている',
-                  '${gameState.regionKnowledgePercent(r.key)}% scouted on average')),
-              value: gameState.isScoutRegionActive(r.key),
-              onChanged: gameState.isScoutRegionActive(r.key) || used < slots
-                  ? (_) {
-                      FeedbackService.tap();
-                      gameState.toggleScoutRegion(r.key);
-                    }
-                  : null,
-            ),
+              'Players in the regions you cover become ${gameState.scoutWeeklyGain}% clearer each week (travel costs ${formatMoney(cost)} a week per region). The clearer they are, the narrower the overall and potential ranges. Players in your own division start at ${ScoutKnowledge.sameLeagueBase}% because you see them in matches, and watchlisted players anywhere gain ${ScoutKnowledge.watchWeeklyGain}% a week. Your scout\'s judging decides how many regions you can cover and how fast.');
+    Widget region(({String key, String label, List<Team> teams}) r) => Card(
+          margin: const EdgeInsets.all(3),
+          child: SwitchListTile(
+            dense: true,
+            visualDensity: VisualDensity.compact,
+            title: Text(r.label, maxLines: 1, overflow: TextOverflow.ellipsis),
+            subtitle: Text(Tr.pick(
+                '平均 ${gameState.regionKnowledgePercent(r.key)}% 見えている',
+                '${gameState.regionKnowledgePercent(r.key)}% scouted on average')),
+            value: gameState.isScoutRegionActive(r.key),
+            onChanged: gameState.isScoutRegionActive(r.key) || used < slots
+                ? (_) {
+                    FeedbackService.tap();
+                    gameState.toggleScoutRegion(r.key);
+                  }
+                : null,
           ),
-      ],
-    );
+        );
+    return LayoutBuilder(builder: (context, c) {
+      // 横画面では地域を2列に並べる(2026-11-21)。
+      final cols = c.maxWidth >= 560 ? 2 : 1;
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(9, 4, 9, 12),
+        children: [
+          Row(
+            children: [
+              const SizedBox(width: 3),
+              Expanded(
+                child: Text(
+                  Tr.pick(
+                      '送っている場所 $used / $slots か所・出張費は1か所 毎週${formatMoney(cost)}',
+                      'Regions covered: $used of $slots • ${formatMoney(cost)} a week per region'),
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
+              _HelpButton(
+                  title: Tr.pick('スカウトの送り先', 'Scouting regions'),
+                  text: help),
+            ],
+          ),
+          for (var i = 0; i < regions.length; i += cols)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var j = i; j < i + cols; j++)
+                  Expanded(
+                      child: j < regions.length
+                          ? region(regions[j])
+                          : const SizedBox.shrink()),
+              ],
+            ),
+        ],
+      );
+    });
   }
 
   static String _groupLabel(PositionGroup? g) => switch (g) {
@@ -586,28 +721,36 @@ class _TransferScreenState extends State<TransferScreen>
           deadlineDay: gameState.isTransferDeadlineDay,
           label: gameState.transferWindowStatusLabel,
         ),
+        // 説明は1行に縮め、詳しくは「?」の中へ(2026-11-21)。
         Padding(
-          padding: const EdgeInsets.all(16),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              Tr.pick(
-                  '移籍金なし・年俸のみで獲得できる選手です。所属が無いので、移籍の窓の外でも取れます。年俸・年数・サイン料を本人と話して決めます。',
-                  'These players cost no fee, only wages. They have no club, so you can sign them outside the window too. Agree salary, length and signing bonus with the player.'),
-              style: TextStyle(
-                  fontSize: 12, color: SemanticColors.subtleText(context)),
-            ),
+          padding: const EdgeInsets.only(left: 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  squadFull
+                      ? Tr.pick('スカッドが上限のため、獲得するには誰かを放出してください。',
+                          'Your squad is full. Release someone before you sign anyone.')
+                      : Tr.pick('移籍金なし・年俸だけで取れる選手(窓の外でも取れます)',
+                          'No fee, wages only (you can sign them outside the window too)'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: squadFull
+                          ? Colors.orange
+                          : SemanticColors.subtleText(context)),
+                ),
+              ),
+              _HelpButton(
+                title: Tr.pick('フリーエージェント', 'Free agents'),
+                text: Tr.pick(
+                    '移籍金なし・年俸のみで獲得できる選手です。所属が無いので、移籍の窓の外でも取れます。年俸・年数・サイン料を本人と話して決めます。',
+                    'These players cost no fee, only wages. They have no club, so you can sign them outside the window too. Agree salary, length and signing bonus with the player.'),
+              ),
+            ],
           ),
         ),
-        if (squadFull)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              Tr.pick('スカッドが上限のため、獲得するには誰かを放出してください。',
-                  'Your squad is full. Release someone before you sign anyone.'),
-              style: const TextStyle(color: Colors.orange),
-            ),
-          ),
         Expanded(
           child: freeAgents.isEmpty
               ? Center(
@@ -1251,10 +1394,14 @@ class _TransferWindowBanner extends StatelessWidget {
   final bool open;
   final bool deadlineDay;
   final String label;
+
+  /// 右端に添える短い字(スカッドの人数など)。
+  final String? trailing;
   const _TransferWindowBanner({
     required this.open,
     required this.label,
     this.deadlineDay = false,
+    this.trailing,
   });
 
   @override
@@ -1264,17 +1411,18 @@ class _TransferWindowBanner extends StatelessWidget {
         : open
             ? Colors.green.shade700
             : Colors.grey.shade700;
+    // 横画面は縦が狭いので、1行・細めにする(2026-11-21)。
     return Container(
       width: double.infinity,
       color: color.withValues(alpha: 0.12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
       child: Row(
         children: [
-          Icon(open ? Icons.lock_open : Icons.lock, size: 16, color: color),
-          const SizedBox(width: 8),
+          Icon(open ? Icons.lock_open : Icons.lock, size: 14, color: color),
+          const SizedBox(width: 6),
           if (deadlineDay) ...[
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
               decoration: BoxDecoration(
                 color: color,
                 borderRadius: BorderRadius.circular(4),
@@ -1284,21 +1432,57 @@ class _TransferWindowBanner extends StatelessWidget {
                 style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 12),
+                    fontSize: 11),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
           ],
           Expanded(
             child: Text(
               label,
-              style: TextStyle(color: color, fontWeight: FontWeight.bold),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: color, fontWeight: FontWeight.bold, fontSize: 12),
             ),
           ),
+          if (trailing != null) ...[
+            const SizedBox(width: 8),
+            Text(trailing!,
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context))),
+          ],
         ],
       ),
     );
   }
+}
+
+/// 説明文は「?」を押したときだけ出す(横画面の縦を空けるため)。
+class _HelpButton extends StatelessWidget {
+  const _HelpButton({required this.title, required this.text});
+  final String title;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        icon: const Icon(Icons.help_outline, size: 18),
+        tooltip: title,
+        visualDensity: VisualDensity.compact,
+        onPressed: () => showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(title),
+            content: Text(text),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text(Tr.pick('閉じる', 'Close')),
+              ),
+            ],
+          ),
+        ),
+      );
 }
 
 /// 1行の注意書き。
