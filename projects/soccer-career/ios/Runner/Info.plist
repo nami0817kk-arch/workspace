@@ -21,6 +21,7 @@
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>ja</string>
+		<string>en</string>
 	</array>
 	<!-- OS 標準の HTTPS 以外に暗号化を使わないため、輸出コンプライアンス上の
 	     申告対象外。宣言しておかないと App Store Connect へのアップロードのたびに

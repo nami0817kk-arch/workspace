@@ -17,15 +17,64 @@ import 'package:soccer_career/ui/screens/support_screen.dart';
 
 String get _listing => File('STORE_LISTING.md').readAsStringSync();
 
-/// 三連バッククォートで囲まれた塊を順に取り出す。
+/// 見出しの下にある最初の囲みを取り出す。
+///
+/// **位置で数えない。** 以前は「1つ目がプロモーション、2つ目が説明、
+/// 3つ目がキーワード」と順番で取っていたので、**英語の掲載を足した瞬間に
+/// 全部ずれた**（2026-11-22）。見出しで引けば、間に何を足しても動かない。
 ///
 /// 改行は `\r?\n` で拾う。Windows で書き換えると CRLF になることがあり、
 /// `\n` 決め打ちだと塊が1つも見つからないまま通り過ぎる（実際に踏んだ）。
-List<String> get _blocks => RegExp('`' * 3 + r'\r?\n(.*?)' + '`' * 3,
-        dotAll: true)
-    .allMatches(_listing)
-    .map((m) => m.group(1)!)
-    .toList();
+String _block(String heading) {
+  final listing = _listing;
+  final at = listing.indexOf(heading);
+  if (at < 0) fail('STORE_LISTING.md に見出しが無い: $heading');
+  final m = RegExp('`' * 3 + r'\r?\n(.*?)' + '`' * 3, dotAll: true)
+      .firstMatch(listing.substring(at));
+  if (m == null) fail('$heading の下に囲みが無い（改行の種類が変わった？）');
+  return m.group(1)!;
+}
+
+/// 基本情報の表の1行を取り出す。
+String _row(String label) {
+  final m = RegExp('\\| ${RegExp.escape(label)} \\| ([^|]+) \\|')
+      .firstMatch(_listing);
+  if (m == null) fail('STORE_LISTING.md に行が無い: $label');
+  return m.group(1)!.trim();
+}
+
+/// 貼る文面の置き場。**日本語と英語で同じ検査を掛ける。**
+typedef Listing = ({
+  String label,
+  String name,
+  String subtitle,
+  String promo,
+  String description,
+  String keywords,
+  /// 空白を1字として数えるか。**英語は数える。**
+  bool countsSpaces,
+});
+
+final listings = <Listing>[
+  (
+    label: '日本語',
+    name: 'App 名（30字以内・ストア）',
+    subtitle: 'サブタイトル（30字以内）',
+    promo: '## プロモーションテキスト（170字以内・審査なしで差し替えられる）',
+    description: '## 説明（4000字以内）',
+    keywords: '## キーワード（App Store キーワードフィールド、100字以内）',
+    countsSpaces: false,
+  ),
+  (
+    label: '英語',
+    name: 'App 名（英語・30字以内）',
+    subtitle: 'サブタイトル（英語・30字以内）',
+    promo: '### プロモーションテキスト（英語）',
+    description: '### 説明（英語）',
+    keywords: '### キーワード（英語）',
+    countsSpaces: true,
+  ),
+];
 
 void main() {
   test('法務ページのURLが、アプリと掲載情報で一致する', () {
@@ -84,25 +133,27 @@ void main() {
   test('掲載する文面が、App Store の文字数に収まっている', () {
     // 名前とサブタイトルは、**検索で当たる語をここに置く**ぶん長くなりやすい。
     // 30字を1字でも超えると App Store Connect の入力欄が受け付けない。
-    for (final row in [
-      r'\| App 名（30字以内・ストア） \| ([^|]+) \|',
-      r'\| サブタイトル（30字以内） \| ([^|]+) \|',
-    ]) {
-      final value = RegExp(row).firstMatch(_listing)!.group(1)!.trim();
-      expect(value.length, lessThanOrEqualTo(30), reason: value);
+    for (final l in listings) {
+      for (final label in [l.name, l.subtitle]) {
+        final value = _row(label);
+        expect(value.length, lessThanOrEqualTo(30),
+            reason: '${l.label}: $value');
+      }
     }
 
-    final blocks = _blocks;
-    expect(blocks.length, greaterThanOrEqualTo(3),
-        reason: '囲みが見つからない（改行の種類が変わった？）');
-    // 1つ目がプロモーション、2つ目が説明、3つ目がキーワード。
-    expect(
-      blocks[0].replaceAll(RegExp(r'\s'), '').length,
-      lessThanOrEqualTo(170),
-      reason: 'プロモーションテキスト',
-    );
-    expect(blocks[1].length, lessThanOrEqualTo(4000), reason: '説明');
-    expect(blocks[2].trim().length, lessThanOrEqualTo(100), reason: 'キーワード');
+    for (final l in listings) {
+      // **英語は空白も1字。** 日本語は空白を入れないので落として数えて
+      // いたが、同じ数え方を英語に掛けると 170 を超えた文面が通ってしまう。
+      String measure(String text) => l.countsSpaces
+          ? text.trim()
+          : text.replaceAll(RegExp(r'\s'), '');
+      expect(measure(_block(l.promo)).length, lessThanOrEqualTo(170),
+          reason: '${l.label} のプロモーションテキスト');
+      expect(_block(l.description).length, lessThanOrEqualTo(4000),
+          reason: '${l.label} の説明');
+      expect(_block(l.keywords).trim().length, lessThanOrEqualTo(100),
+          reason: '${l.label} のキーワード');
+    }
   });
 
   test('App Store Connect が弾く記号を、貼る文面に入れていない', () {
@@ -114,13 +165,16 @@ void main() {
     // **markdown の `*` も見張る。** 貼る文面の中では強調にならず、
     // アスタリスクがそのまま App Store の説明に出る。
     const rejected = ['■', '…', '―', '•', '—', '★', '☆', '*'];
-    for (final (i, label) in <(int, String)>[
-      (0, 'プロモーションテキスト'),
-      (1, '説明'),
-      (2, 'キーワード'),
-    ]) {
-      final found = rejected.where(_blocks[i].contains).toList();
-      expect(found, isEmpty, reason: '$label に ${found.join(" ")}');
+    for (final l in listings) {
+      for (final (heading, label) in <(String, String)>[
+        (l.promo, 'プロモーションテキスト'),
+        (l.description, '説明'),
+        (l.keywords, 'キーワード'),
+      ]) {
+        final found = rejected.where(_block(heading).contains).toList();
+        expect(found, isEmpty,
+            reason: '${l.label} の$label に ${found.join(" ")}');
+      }
     }
   });
 
@@ -128,20 +182,17 @@ void main() {
     // App Store は「名前 + サブタイトル + キーワード」をまとめて索引し、
     // 語の組み合わせは自分で作る。**同じ語を二度書くと、その字数ぶんだけ
     // 当たる語が減る。** 字数は100しかない。
-    final listing = _listing;
-    final name = RegExp(r'\| App 名（30字以内・ストア） \| ([^|]+) \|')
-        .firstMatch(listing)!
-        .group(1)!;
-    final subtitle = RegExp(r'\| サブタイトル（30字以内） \| ([^|]+) \|')
-        .firstMatch(listing)!
-        .group(1)!;
-    final taken = '$name $subtitle';
-    final dup = _blocks[2]
-        .trim()
-        .split(',')
-        .where((word) => taken.contains(word))
-        .toList();
-    expect(dup, isEmpty, reason: '名前かサブタイトルと重複: ${dup.join(", ")}');
+    for (final l in listings) {
+      // 英語は大小を揃えてから見る（Football と football は同じ語）。
+      final taken = '${_row(l.name)} ${_row(l.subtitle)}'.toLowerCase();
+      final dup = _block(l.keywords)
+          .trim()
+          .split(',')
+          .where((word) => taken.contains(word.trim().toLowerCase()))
+          .toList();
+      expect(dup, isEmpty,
+          reason: '${l.label}: 名前かサブタイトルと重複 ${dup.join(", ")}');
+    }
   });
 
   test('アプリアイコンが、App Store の求める形で揃っている', () {

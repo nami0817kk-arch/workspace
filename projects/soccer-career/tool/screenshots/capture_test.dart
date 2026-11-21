@@ -4,6 +4,7 @@
 /// 生成器だからで、実行するとファイルを書き換える。
 ///
 ///     flutter test tool/screenshots/capture_test.dart
+///     flutter test tool/screenshots/capture_test.dart --dart-define=LANG=en
 ///
 /// 手で撮らずにここで作る理由:
 ///
@@ -20,7 +21,9 @@ library;
 // このファイルは test/ の外にあるため、解析器から見ると「テストではない
 // コード」になる。実体は flutter test で走らせる生成器で、テストと同じ立場で
 // アプリを組み立てる。
-// ignore_for_file: avoid_print
+// `Language.setForTest` も同じ理由で外す——このファイルは flutter test で
+// 走るが test/ の外にあるので、解析器からはテストに見えない。
+// ignore_for_file: avoid_print, invalid_use_of_visible_for_testing_member
 
 import 'dart:io';
 import 'dart:math';
@@ -31,6 +34,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
+import 'package:soccer_career/l10n/lang.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/agent.dart';
@@ -69,19 +73,36 @@ const devices = <Device>[phone, tablet];
 
 /// 撮る順番と、上に載せる一行。**ストアでは1枚目しか見られないことが多い**ので、
 /// このゲームの核（試合中の選択）を先頭に置く。
-const captions = <String, String>{
+///
+/// **絵の名前は ASCII のまま固定する。** 日本語版と英語版を1枚ずつ
+/// 突き合わせられるようにするため（`test/shots.dart` と同じ理屈）。
+Map<String, String> get captions => {
   // **1枚目は「何のゲームか」から書く。** 以前は「試合は、選ぶことでしか
   // 動かない」だった。中身は言い当てているが、一覧で初めて見た人には
   // 何の試合か分からない。
-  '01-match': 'サッカー選手の人生を、1試合ずつ選ぶ',
-  '02-create': '自分の選手を、ひとりつくる',
-  '03-week': '今週、何に時間を使うか',
-  '04-player': '伸びたところが、数字で残る',
-  '05-develop': '狙った技だけが、身につく',
-  '06-world': '上には、まだ何部もある',
-  '07-season': '1年ぶんの答えが出る',
-  '08-hall': '終わったあとに、記録が残る',
+  '01-match': tr('サッカー選手の人生を、1試合ずつ選ぶ',
+      'A footballer\'s life, one match at a time'),
+  '02-create': tr('自分の選手を、ひとりつくる', 'Make a player of your own'),
+  '03-week': tr('今週、何に時間を使うか', 'What you give this week to'),
+  '04-player': tr('伸びたところが、数字で残る',
+      'What you grew shows up in the numbers'),
+  '05-develop': tr('狙った技だけが、身につく',
+      'The trick you go for is the one you get'),
+  '06-world': tr('上には、まだ何部もある', 'There are more tiers above you'),
+  '07-season': tr('1年ぶんの答えが出る', 'A season gives you its answer'),
+  '08-hall': tr('終わったあとに、記録が残る',
+      'What is left when it is over'),
 };
+
+/// 書き出す言語。`--dart-define=LANG=en` で英語の掲載画像を作る。
+///
+/// **英語の掲載ページには、英語の絵が要る。** 日本語の絵を貼ると
+/// 「英語のページを見て入れたら中身が日本語だった」の見た目版になる。
+const String _lang = String.fromEnvironment('LANG');
+
+/// 言語ごとの置き場。日本語は従来どおり `marketing/screenshots/`、
+/// 英語はその下の `en/`（`test/shots.dart` と同じ形）。
+String get _langDir => _lang == 'en' ? '/en' : '';
 
 final shotKey = GlobalKey();
 
@@ -235,11 +256,11 @@ Future<void> dump(WidgetTester tester, Device device, String name) async {
         shotKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
     final image = await boundary.toImage(pixelRatio: device.ratio);
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    final dir = Directory('marketing/${device.dir}')
+    final dir = Directory('marketing/${device.dir}$_langDir')
       ..createSync(recursive: true);
     File('${dir.path}/$name.png').writeAsBytesSync(bytes!.buffer.asUint8List());
     written.add('${device.dir}/$name');
-    print('wrote marketing/${device.dir}/$name.png '
+    print('wrote marketing/${device.dir}$_langDir/$name.png '
         '(${image.width}x${image.height})');
   });
 }
@@ -285,7 +306,9 @@ Future<CareerController> newCareer({int seed = captureSeed}) async {
     random: Random(seed),
   );
   await controller.startCareer(
-    name: '新堂 陽',
+    // **英語の絵に漢字の名前を出さない。** 人の名前は引いた時点で決まって
+    // 保存に乗るので、撮る言語に合わせてここで選ぶ。
+    name: tr('新堂 陽', 'Haru Shindo'),
     position: Position.cm,
     age: 18,
     agent: Agent.pool.first,
@@ -325,6 +348,10 @@ Future<bool> nextSeason(CareerController controller) async {
 }
 
 /// タブを開き、節に割れているタブでは札も押す。
+///
+/// **タブの字は言語で変わる。** 呼ぶ側で `tr()` を通すこと——
+/// 日本語の字で探していたので、英語では最初の `tap()` で落ちていた
+/// （`test/scroll_sim.dart` で先に踏んだのと同じ）。
 Future<void> openTab(WidgetTester tester, String tab, [String? section]) async {
   await tester.tap(find.widgetWithText(Tab, tab));
   await tester.pumpAndSettle();
@@ -402,7 +429,10 @@ Future<void> capture(WidgetTester tester, Device device) async {
     captions['02-create']!,
   );
   // 名前の欄が空のまま撮れていた。入れてから撮る。
-  await tester.enterText(find.byType(TextField).first, '新堂 陽');
+  // 撮る言語に合わせる。名前欄だけ漢字が残っていた（撮った絵を見るまで
+  // 気付けない形——上の startCareer とは別に、ここでも打ち込んでいる）。
+  await tester.enterText(
+      find.byType(TextField).first, tr('新堂 陽', 'Haru Shindo'));
   await tester.pumpAndSettle();
   await dump(tester, device, '02-create');
 
@@ -423,7 +453,7 @@ Future<void> capture(WidgetTester tester, Device device) async {
     theme,
     captions['04-player']!,
   );
-  await openTab(tester, '選手', '能力');
+  await openTab(tester, tr('選手', 'Player'), tr('能力', 'Attributes'));
   await dump(tester, device, '04-player');
 
   await pump(
@@ -433,7 +463,8 @@ Future<void> capture(WidgetTester tester, Device device) async {
     theme,
     captions['05-develop']!,
   );
-  await openTab(tester, '育成', '今週決める');
+  await openTab(
+      tester, tr('育成', 'Training'), tr('今週決める', 'Decide this week'));
   await dump(tester, device, '05-develop');
 
   await pump(
@@ -443,7 +474,8 @@ Future<void> capture(WidgetTester tester, Device device) async {
     theme,
     captions['06-world']!,
   );
-  await openTab(tester, 'クラブ', 'この国と、世界');
+  await openTab(tester, tr('クラブ', 'Club'),
+      tr('この国と、世界', 'This country, and the world'));
   await dump(tester, device, '06-world');
 
   // シーズンの総括。
@@ -490,6 +522,7 @@ Future<void> capture(WidgetTester tester, Device device) async {
 
 void main() {
   setUpAll(() async {
+    if (_lang == 'en') Language.setForTest(Lang.en);
     await loadFonts();
     // **触った札の焦点の輪が、右下のボタンに黒枠で写っていた。**
     // 指で触る扱いにしておくと、焦点の輪そのものが出ない。
