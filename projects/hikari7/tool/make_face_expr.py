@@ -1,10 +1,10 @@
 # Cloudflare Workers AI の FLUX.2 [klein] で、顔の絵の表情だけを変える試作
-# 使い方: python cf_expr.py <顔のフォルダ> <出力フォルダ> <cry|joy> <ファイル名...>
+# 使い方: python tool/make_face_expr.py <顔のフォルダ> <出力フォルダ> <cry|joy> <ファイル名...>
 import sys, os, base64, json, io
 import requests
 from PIL import Image
 
-ENV = r'C:\Users\なみ\dev\workspace\platform\ai-lab\.env'
+ENV = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'platform', 'ai-lab', '.env')
 env = {}
 for line in open(ENV, encoding='utf-8'):
     if '=' in line and not line.lstrip().startswith('#'):
