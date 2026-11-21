@@ -33,7 +33,7 @@ part 'club_screen_staff.dart';
 
 /// スタッフ・施設の現在レベル(と最大未満なら次レベル)の具体的な効果を1行にまとめる。
 String _staffEffectLabel(StaffRole role, int level,
-    {StaffMember? member, int tier = 5}) {
+    {StaffMember? member, int tier = 3}) {
   const maxLevel = ClubInfrastructure.maxLevel;
   switch (role) {
     case StaffRole.headCoach:

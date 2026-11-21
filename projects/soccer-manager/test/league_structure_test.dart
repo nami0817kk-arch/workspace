@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/logic/promotion_engine.dart';
+import 'package:soccer_manager/models/league.dart';
 import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/team.dart';
 
@@ -12,18 +13,19 @@ List<Team> _teams(String prefix, int n, {int strength = 50}) => [
     ];
 
 void main() {
-  test('国ごとに部のクラブ数が違う(イングランド風は2部以下が24)', () {
-    expect(LeagueTheme.england.teamsByTier, [20, 24, 24, 24, 24]);
+  test('国ごとに部のクラブ数が違う(イングランド風は2部・3部が24)', () {
+    // 2026-11-22 に3部制にした(実在の上から3つのリーグ)。
+    expect(LeagueTheme.england.teamsByTier, [20, 24, 24]);
     expect(LeagueTheme.germany.teamsInTier(1), 18);
     expect(LeagueTheme.france.teamsInTier(1), 18);
     for (final t in LeagueTheme.values) {
-      expect(t.teamsByTier.length, 5);
+      expect(t.teamsByTier.length, totalDivisionTiers);
     }
   });
 
   test('どの国のどの段でも、上がる数と落ちる数が釣り合う', () {
     for (final theme in LeagueTheme.values) {
-      for (var upper = 1; upper < 5; upper++) {
+      for (var upper = 1; upper < totalDivisionTiers; upper++) {
         final r = theme.rulesBelow(upper);
         final up = r.autoUp + (r.playoffPool > 0 ? 1 : 0);
         expect(up, r.autoDown, reason: '$theme $upper部');
@@ -33,7 +35,7 @@ void main() {
 
   test('入れ替えの後も、上下の部のクラブ数は変わらない', () {
     for (final theme in LeagueTheme.values) {
-      for (var upper = 1; upper < 5; upper++) {
+      for (var upper = 1; upper < totalDivisionTiers; upper++) {
         final a = _teams('a', theme.teamsInTier(upper));
         final b = _teams('b', theme.teamsInTier(upper + 1));
         final r = PromotionEngine.resolve(

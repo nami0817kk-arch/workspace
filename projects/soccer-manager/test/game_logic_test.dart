@@ -52,6 +52,7 @@ import 'package:soccer_manager/models/cup.dart';
 import 'package:soccer_manager/models/enum_json.dart';
 import 'package:soccer_manager/models/formation.dart';
 import 'package:soccer_manager/models/incoming_offer.dart';
+import 'package:soccer_manager/logic/economy_scale.dart';
 import 'package:soccer_manager/models/league.dart';
 import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/match_result.dart';
@@ -616,7 +617,7 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    gameState.save!.budget = ScoutingEngine.scoutCost;
+    gameState.save!.budget = gameState.scaledMoney(ScoutingEngine.scoutCost);
     final candidateId = gameState.scoutCandidates.first.id;
     final poolSizeBefore = gameState.scoutCandidates.length;
 
@@ -665,7 +666,7 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    gameState.save!.budget = ScoutingEngine.scoutCost;
+    gameState.save!.budget = gameState.scaledMoney(ScoutingEngine.scoutCost);
     final candidateId = gameState.scoutCandidates.first.id;
     await gameState.scoutProspect(candidateId);
     final prospect = gameState.save!.youthProspects.first;
@@ -1103,11 +1104,12 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     // 大陸カップは1部限定のため、1部でプレー中という前提に切り替える
-    // (5部の枠は元々nullなので、1部の枠にあった実データを5部の枠へ移し、
-    // 1部の枠をnull化して整合を取る)。
+    // (最下部=3部の枠は元々nullなので、1部の枠にあった実データを3部の枠へ
+    // 移し、1部の枠をnull化して整合を取る)。
     final vacatedTier1League = gameState.save!.otherDivisionLeagues[0];
     gameState.save!.otherDivisionLeagues[0] = null;
-    gameState.save!.otherDivisionLeagues[4] = vacatedTier1League;
+    gameState.save!.otherDivisionLeagues[totalDivisionTiers - 1] =
+        vacatedTier1League;
     gameState.save!.currentDivisionTier = 1;
     final userId = gameState.userTeam.id;
     for (final f in gameState.save!.league.fixtures) {
@@ -3395,13 +3397,14 @@ void main() {
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    // ユーザーは5部制の最下層(5部)から始まるため降格が起きない。降格の
-    // 挙動そのものを検証するため、1部でプレー中という前提に切り替える。
-    // 5部の枠(ユーザーの現在の所属)は元々nullなので、1部の枠にあった
-    // 実データを5部の枠へ移し、1部の枠をnull化して整合を取る。
+    // ユーザーは最下層(3部)から始まるため降格が起きない。降格の挙動
+    // そのものを検証するため、1部でプレー中という前提に切り替える。
+    // 3部の枠(ユーザーの現在の所属)は元々nullなので、1部の枠にあった
+    // 実データを3部の枠へ移し、1部の枠をnull化して整合を取る。
     final vacatedTier1League = gameState.save!.otherDivisionLeagues[0];
     gameState.save!.otherDivisionLeagues[0] = null;
-    gameState.save!.otherDivisionLeagues[4] = vacatedTier1League;
+    gameState.save!.otherDivisionLeagues[totalDivisionTiers - 1] =
+        vacatedTier1League;
     gameState.save!.currentDivisionTier = 1;
     final userId = gameState.userTeam.id;
     for (final f in gameState.save!.league.fixtures) {
@@ -5572,7 +5575,7 @@ void main() {
       'the academy', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    gameState.save!.budget = ScoutingEngine.scoutCost;
+    gameState.save!.budget = gameState.scaledMoney(ScoutingEngine.scoutCost);
     final candidateId = gameState.scoutCandidates.first.id;
     await gameState.scoutProspect(candidateId);
     final prospect = gameState.save!.youthProspects.first;
@@ -8320,9 +8323,11 @@ void main() {
     // 自クラブが初戦で敗退した場合は勝利サンプルが取れないが、その場合も
     // ループ内アサーション(敗戦時にnoteが積まれない)は検証済み。
     if (noteAtWin != null) {
-      final prize = GameState.domesticCupWinPrizeFor(roundAtWin!);
-      // 5部の額なので、そのまま。表示は formatMoney(「35万」)。
-      expect(noteAtWin, contains('$prize万'));
+      // 額は部の規模で掛かる(3部から始まる。2026-11-22)。表示は
+      // formatMoney(「505万」)。
+      final prize =
+          gameState.scaledMoney(GameState.domesticCupWinPrizeFor(roundAtWin!));
+      expect(noteAtWin, contains(formatMoney(prize)));
     }
   });
 
@@ -8741,8 +8746,10 @@ void main() {
     final easyState = GameState();
     await easyState.startNewGame('イージーFC', difficulty: GameDifficulty.easy);
     expect(easyState.save!.difficulty, GameDifficulty.easy);
-    expect(easyState.save!.budget, (GameState.initialBudgetTier5 * 1.5).round(),
-        reason: '初期資金(5部の年収の半年分)の1.5倍');
+    expect(
+        easyState.save!.budget,
+        (GameState.initialBudgetFor(totalDivisionTiers) * 1.5).round(),
+        reason: '初期資金(始まりの部の年収の半年分)の1.5倍');
     expect(
       easyState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(easyState.save!.league, 'user') + 2)
@@ -8752,8 +8759,8 @@ void main() {
 
     final hardState = GameState();
     await hardState.startNewGame('ハードFC', difficulty: GameDifficulty.hard);
-    expect(hardState.save!.budget, (GameState.initialBudgetTier5 * 0.6).round(),
-        reason: '初期資金(5部の年収の半年分)の0.6倍');
+    expect(hardState.save!.budget, (GameState.initialBudgetFor(totalDivisionTiers) * 0.6).round(),
+        reason: '初期資金(始まりの部の年収の半年分)の0.6倍');
     expect(
       hardState.save!.boardTargetRank,
       (BoardEngine.estimateTargetRank(hardState.save!.league, 'user') - 1)

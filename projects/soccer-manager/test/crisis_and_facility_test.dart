@@ -34,7 +34,8 @@ void main() {
       save.shareholderExpectation = 50;
 
       expect(await game.doOwnerWork('emergency_loan'), isTrue);
-      expect(save.budget, 1500);
+      // 額は部の規模で掛かる(3部から始まる。2026-11-22)。
+      expect(save.budget, -1000 + game.scaledMoney(2500));
       expect(save.shareholderExpectation, 45);
       expect(await game.doOwnerWork('emergency_loan'), isFalse,
           reason: '今季は一度だけ');

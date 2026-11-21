@@ -53,7 +53,8 @@ void main() {
       }
     }
     // 全部で数千人(イングランド風 116 クラブ + 他国 76 クラブ)
-    expect(save.allPlayers.length, greaterThan(4000));
+    // 3部制(2026-11-22)で自国のクラブは約7割に減った(1国で約60〜70)。
+    expect(save.allPlayers.length, greaterThan(3000));
   });
 
   test('保存して読み込んでも、他の部と他国の選手がそのまま残る', () async {

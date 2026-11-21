@@ -38,9 +38,10 @@ void main() {
       final gs = GameState();
       await gs.startNewGame('テストFC');
       final save = gs.save!;
-      save.budget = 100000;
+      // 費用は部の規模で掛かる(3部から始まる。2026-11-22)。
+      save.budget = 10000000;
       expect(await gs.startProject(ClubProject.fanApp), isTrue);
-      expect(save.budget, 100000 - ClubProject.fanApp.cost);
+      expect(save.budget, 10000000 - gs.scaledMoney(ClubProject.fanApp.cost));
       expect(await gs.startProject(ClubProject.fanApp), isFalse);
     });
 

@@ -81,14 +81,14 @@ class OnboardingArtPainter extends CustomPainter {
     }
   }
 
-  /// 5部から1部へ。ディビジョンを帯として積み、上へ突き抜ける。
+  /// 3部から1部へ。ディビジョンを帯として積み、上へ突き抜ける。
   ///
   /// 棒グラフにすると通算成績([_career])の絵と見分けがつかなくなるので、
   /// 「段を上がる」ことが分かる形にしてある。
   void _climb(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
-    const tiers = 5;
+    const tiers = 3;
     final bandH = h / (tiers + 0.6);
     for (var i = 0; i < tiers; i++) {
       // i=0 が最上段(1部)。上ほど濃く、幅も広い。

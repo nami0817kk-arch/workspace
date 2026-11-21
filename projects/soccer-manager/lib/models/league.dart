@@ -3,8 +3,9 @@ import 'enum_json.dart';
 import 'match_result.dart';
 import 'weather.dart';
 
-/// 昇格ピラミッド全体のディビジョン数(1部が最上位、5部が最下位)。
-const int totalDivisionTiers = 5;
+/// 昇格ピラミッド全体のディビジョン数(1部が最上位、3部が最下位)。
+/// 2026-11-22 に5部制から3部制にした(実在の上から3つのリーグ)。
+const int totalDivisionTiers = 3;
 
 class Fixture {
   final int matchday;

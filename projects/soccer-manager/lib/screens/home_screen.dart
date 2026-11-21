@@ -2245,8 +2245,8 @@ class _SaleScreen extends StatelessWidget {
                   ),
                 const SizedBox(height: 8),
                 Text(
-                  Tr.pick('別の国で新しいクラブを立ち上げる(4部から。その国の規則に従います)',
-                      'Or found a new club in another country (starts in tier 4, under that country\'s rules)'),
+                  Tr.pick('別の国で新しいクラブを立ち上げる(3部から。その国の規則に従います)',
+                      'Or found a new club in another country (starts in tier 3, under that country\'s rules)'),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),

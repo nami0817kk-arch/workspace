@@ -18,7 +18,7 @@ void main() {
   test('始めたときの個人資産は、クラブの初期資金の3倍', () async {
     final gs = await start();
     expect(gs.ownerWealth,
-        gs.scaledMoney(GameState.initialBudgetTier5) *
+        GameState.initialBudgetFor(gs.currentDivisionTier) *
             GameStateOwner.startingWealthMultiple);
   });
 

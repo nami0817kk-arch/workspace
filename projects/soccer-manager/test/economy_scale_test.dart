@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soccer_manager/models/league.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/board_engine.dart';
@@ -107,7 +108,7 @@ void main() {
     }
   }
 
-  test('5部から始めて、スポンサーだけ結ぶオーナーでも4シーズン資金が破綻しない',
+  test('3部から始めて、スポンサーだけ結ぶオーナーでも4シーズン資金が破綻しない',
       () async {
     final game = GameState();
     await game.startNewGame('長期FC');
@@ -123,13 +124,13 @@ void main() {
       // 決まるので、ここでは見ない(尽きたらそこで止める)。
       expect(game.saleReason, isNot(SaleReason.shareholders),
           reason: log.join('\n'));
-      expect(s.budget, greaterThan(-GameState.initialBudgetTier5),
+      expect(s.budget, greaterThan(-GameState.initialBudgetFor(3)),
           reason: log.join('\n'));
       if (game.saleReason != null) break;
       await game.startNextSeason();
     }
     // ignore: avoid_print
-    print('5部からの4シーズン\n${log.join('\n')}');
+    print('3部からの4シーズン\n${log.join('\n')}');
   }, timeout: const Timeout(Duration(minutes: 8)));
 
   // 部ごとに、その部の真ん中くらいのクラブを自クラブにして1シーズン回す。
@@ -150,7 +151,7 @@ void main() {
       s.clubName = mid.name;
       s.rivalTeamId = null;
       s.currentDivisionTier = tier;
-      s.budget = scaleMoneyForTier(tier, GameState.initialBudgetTier5);
+      s.budget = GameState.initialBudgetFor(tier);
     }
     s.wageBudget = BoardEngine.wageBudgetFor(
         tier: tier,
@@ -193,21 +194,19 @@ void main() {
   test('部ごとの年収は上の部ほど大きい(実測をログに出す)', () async {
     final log = <String>[];
     final incomes = <int>[];
-    for (var tier = 1; tier <= 5; tier++) {
+    // 3部制(2026-11-22)。1〜3部を回す。
+    for (var tier = 1; tier <= totalDivisionTiers; tier++) {
       incomes.add((await runTier(tier, log)).operatingIncome);
     }
     // ignore: avoid_print
     print(log.join('\n'));
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < totalDivisionTiers - 1; i++) {
       expect(incomes[i], greaterThan(incomes[i + 1]), reason: log.join('\n'));
     }
-    // 4部と5部は、5部の優勝争い・売却で振れて重なることがある(CI で
-    // 4部5.7億・5部5.9億が出た)。下の部の8割は超える、までを見る。
-    expect(incomes[3], greaterThan(incomes[4] * 0.8),
+    // 3部の年収は 10〜20億が目安(economy_scale.dart の表)。優勝争い・
+    // 売却で振れるので、幅を広めに取る。
+    expect(incomes[2], inInclusiveRange(70000, 300000),
         reason: log.join('\n'));
-    // 5部の年収は 2〜5億が目安。優勝を争うクラブは少し超える(手元で
-    // 4.4億・4.8億、CI で 6.6億が出た。賞金・売却で振れる)。
-    expect(incomes[4], inInclusiveRange(20000, 80000), reason: log.join('\n'));
   }, timeout: const Timeout(Duration(minutes: 10)));
 
   group('旧セーブの換算', () {

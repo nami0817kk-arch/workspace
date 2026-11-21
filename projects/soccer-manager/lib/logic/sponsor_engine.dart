@@ -54,7 +54,7 @@ class SponsorEngine {
   /// 高額でも短い契約を選んで、上がった後に結び直す判断ができる。
   static List<SponsorDeal> generateOffers(
     int overallRating, {
-    int tier = 5,
+    int tier = 3,
     int managerReputation = 50,
     int stadiumLevel = 1,
   }) {

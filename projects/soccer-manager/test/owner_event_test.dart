@@ -52,7 +52,8 @@ void main() {
     expect(await gs.resolveOwnerEvent(1), isTrue);
     expect(save.confidence, 44);
     expect(save.shareholderExpectation, 54);
-    expect(save.budget, funds + 800);
+    // 額は部の規模で掛かる(3部から始まる。2026-11-22)。
+    expect(save.budget, funds + gs.scaledMoney(800));
     expect(gs.pendingOwnerEvent, isNull);
   });
 

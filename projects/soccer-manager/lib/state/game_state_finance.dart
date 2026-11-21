@@ -530,7 +530,7 @@ extension GameStateFinance on GameState {
     // 新しいクラブは、そのクラブの元の見た目から。
     save.clubLook = null;
     save.clubLookChangedSeason = 0;
-    save.budget = (scaledMoney(GameState.initialBudgetTier5) *
+    save.budget = (GameState.initialBudgetFor(save.currentDivisionTier) *
             save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     save.infrastructure = ClubInfrastructure();
@@ -558,13 +558,14 @@ extension GameStateFinance on GameState {
   }
 
   /// 別の国のクラブを新しく立ち上げて、続きを遊ぶ。その国の規則に従い、
-  /// 新しい国のピラミッド(5部制)の4部から始まる。実績は殿堂に残る。
+  /// 新しい国のピラミッドの最下部(3部)から始まる。実績は殿堂に残る。
   Future<bool> buyClubInCountry(LeagueTheme theme) async {
     final save = _save;
     final reason = saleReason;
     if (save == null || reason == null) return false;
     if (theme == currentLeagueTheme) return false;
-    const startTier = 4;
+    // 5部制のときは4部からだった。3部制では最下部の3部から(2026-11-22)。
+    const startTier = totalDivisionTiers;
     final rng = Random();
     final names =
         NamePool.themedClubNames(
@@ -576,7 +577,9 @@ extension GameStateFinance on GameState {
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
 
     final userTeam = PlayerGenerator.generateSquad(
-        id: 'user', name: nextName(), strengthTier: 60);
+        id: 'user',
+        name: nextName(),
+        strengthTier: GameState.userStartStrength(startTier));
     final others = List<League?>.filled(totalDivisionTiers, null);
     League? mine;
     final cpuInMine = <Team>[];
@@ -650,7 +653,7 @@ extension GameStateFinance on GameState {
     // 新しいクラブは、そのクラブの元の見た目から。
     save.clubLook = null;
     save.clubLookChangedSeason = 0;
-    save.budget = (scaleMoneyForTier(startTier, GameState.initialBudgetTier5) *
+    save.budget = (GameState.initialBudgetFor(startTier) *
             save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     save.infrastructure = ClubInfrastructure();
@@ -1128,7 +1131,8 @@ extension GameStateFinance on GameState {
       case StartScenario.standard:
         break;
       case StartScenario.debt:
-        save.budget = -(GameState.initialBudgetTier5 ~/ 4);
+        save.budget =
+            -(GameState.initialBudgetFor(save.currentDivisionTier) ~/ 4);
         save.shareholderExpectation = 45;
       case StartScenario.patron:
         save.budget = save.budget * 3;

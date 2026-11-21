@@ -86,29 +86,27 @@ class PromotionRules {
       PromotionRules(autoDown: 3, autoUp: 2, playoffPool: 4);
 }
 
-/// 国ごとのリーグの形。実在の国のピラミッドに寄せる(5部まで)。
+/// 国ごとのリーグの形。実在の国のピラミッドの上から3つに寄せる
+/// (3部まで。2026-11-22 に5部制から変えた)。
 extension LeagueStructure on LeagueTheme {
-  /// 1部から5部までのクラブ数。
+  /// 1部から3部までのクラブ数。
   List<int> get teamsByTier => switch (this) {
-        LeagueTheme.england => const [20, 24, 24, 24, 24],
-        LeagueTheme.spain => const [20, 22, 20, 20, 18],
-        LeagueTheme.germany => const [18, 18, 20, 18, 18],
-        LeagueTheme.italy => const [20, 20, 20, 20, 18],
-        LeagueTheme.france => const [18, 18, 18, 16, 16],
+        LeagueTheme.england => const [20, 24, 24],
+        LeagueTheme.spain => const [20, 22, 20],
+        LeagueTheme.germany => const [18, 18, 20],
+        LeagueTheme.italy => const [20, 20, 20],
+        LeagueTheme.france => const [18, 18, 18],
       };
 
-  int teamsInTier(int tier) => teamsByTier[(tier - 1).clamp(0, 4)];
+  int teamsInTier(int tier) =>
+      teamsByTier[(tier - 1).clamp(0, teamsByTier.length - 1)];
 
-  /// [upperTier]部と、その1つ下の部の入れ替えの決まり。
+  /// [upperTier]部と、その1つ下の部の入れ替えの決まり(1部と2部、2部と3部)。
   PromotionRules rulesBelow(int upperTier) {
     const playoff = PromotionRules.standard;
     switch (this) {
       case LeagueTheme.england:
-        return switch (upperTier) {
-          3 => const PromotionRules(autoDown: 4, autoUp: 3, playoffPool: 4),
-          4 => const PromotionRules(autoDown: 2, autoUp: 1, playoffPool: 4),
-          _ => playoff,
-        };
+        return playoff;
       case LeagueTheme.spain:
       case LeagueTheme.italy:
         return switch (upperTier) {
@@ -117,14 +115,8 @@ extension LeagueStructure on LeagueTheme {
         };
       case LeagueTheme.germany:
       case LeagueTheme.france:
-        return switch (upperTier) {
-          1 || 2 => const PromotionRules(
-              autoDown: 2, autoUp: 2, relegationPlayoff: true),
-          3 => this == LeagueTheme.germany
-              ? const PromotionRules(autoDown: 4, autoUp: 3, playoffPool: 4)
-              : playoff,
-          _ => playoff,
-        };
+        return const PromotionRules(
+            autoDown: 2, autoUp: 2, relegationPlayoff: true);
     }
   }
 
