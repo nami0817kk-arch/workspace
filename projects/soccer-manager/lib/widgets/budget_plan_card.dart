@@ -32,7 +32,8 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
         return Tr.pick('給与の上限 ${pct(BudgetEngine.wageCapMultiplier(plan))}',
             'Wage cap ${pct(BudgetEngine.wageCapMultiplier(plan))}');
       case BudgetCategory.youth:
-        return Tr.pick('効きは育成まわりに(準備中)', 'Youth effect (coming soon)');
+        // 育成の効き目はまだ数字で出せない。作りかけの字は出さない。
+        return '';
       case BudgetCategory.facilities:
         final m = BudgetEngine.facilityCostMultiplier(plan);
         return Tr.pick('増築費 ${pct(m)}', 'Upgrade cost ${pct(m)}');
@@ -68,23 +69,46 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 8),
+            // 1項目を2段に詰める(名前・%・金額・効き目 / つまみ)。
+            // 3段に積んでいたときは5項目で画面2つ分あった(2026-11-21)。
             for (final c in BudgetCategory.values) ...[
-              Text('${c.label}  ${plan.share(c)}%'
-                  '(${formatMoney(amounts[c] ?? 0)})'),
-              Text(_effect(c, plan),
-                  style: Theme.of(context).textTheme.bodySmall),
-              Slider(
-                value: plan.share(c).toDouble(),
-                min: 0,
-                max: 100,
-                divisions: 100,
-                label: '${plan.share(c)}%',
-                onChanged: (v) =>
-                    setState(() => _draft = plan.withShare(c, v.round())),
-                onChangeEnd: (v) async {
-                  await gameState.setBudgetShare(c, v.round());
-                  if (mounted) setState(() => _draft = null);
-                },
+              const SizedBox(height: 4),
+              Text.rich(
+                TextSpan(children: [
+                  TextSpan(
+                      text: '${c.label}  ${plan.share(c)}%',
+                      style: const TextStyle(fontWeight: FontWeight.w600)),
+                  TextSpan(
+                    text: '  ${[
+                      formatMoney(amounts[c] ?? 0),
+                      if (_effect(c, plan).isNotEmpty) _effect(c, plan),
+                    ].join(Tr.pick('・', ' • '))}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ]),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(
+                height: 32,
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                  ),
+                  child: Slider(
+                    value: plan.share(c).toDouble(),
+                    min: 0,
+                    max: 100,
+                    divisions: 100,
+                    label: '${plan.share(c)}%',
+                    onChanged: (v) =>
+                        setState(() => _draft = plan.withShare(c, v.round())),
+                    onChangeEnd: (v) async {
+                      await gameState.setBudgetShare(c, v.round());
+                      if (mounted) setState(() => _draft = null);
+                    },
+                  ),
+                ),
               ),
             ],
           ],

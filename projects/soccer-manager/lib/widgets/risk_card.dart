@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/risk_engine.dart';
 import '../state/game_state.dart';
 import '../logic/economy_scale.dart';
+import 'help_button.dart';
 
 /// 保険・災害基金・地域貢献。突発の出来事に備え、サポーターとの関係を育てる。
 class RiskCard extends StatelessWidget {
@@ -24,16 +25,12 @@ class RiskCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('備えと地域貢献', 'Safeguards and community'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick(
-                  'シーズンの終わりに、不祥事・設備故障・災害のどれかが起きることがあります(約35%)。保険は損失の半分を持ち、基金は残りを先に払います。',
-                  'At season end a scandal, breakdown or disaster may strike (about 35%). Insurance covers half; the fund pays the rest first.'),
-              style: const TextStyle(fontSize: 12),
+            TitleWithHelp(
+              title: Tr.pick('備えと地域貢献', 'Safeguards and community'),
+              help: Tr.pick(
+                  'シーズンの終わりに、不祥事・設備故障・災害のどれかが起きることがあります(約35%)。保険は損失の半分を持ち、基金は残りを先に払います。\n\n地域貢献を上げると、毎季末にサポーターの期待が上がり、不祥事の傷も浅くなります。',
+                  'At season end a scandal, breakdown or disaster may strike (about 35%). Insurance covers half; the fund pays the rest first.\n\nRaising community work lifts supporters every season end and softens scandals.'),
             ),
-            const SizedBox(height: 8),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: save.insured,
@@ -63,10 +60,16 @@ class RiskCard extends StatelessWidget {
             const Divider(height: 20),
             Text(Tr.pick('地域貢献 Lv$level / ${RiskEngine.maxCommunityLevel}',
                 'Community Lv$level / ${RiskEngine.maxCommunityLevel}')),
+            // Lv0 では「期待が0上がる」と出ていた。今の効き目があれば
+            // それを、まだ無ければ次のレベルで何が起きるかを出す。
             Text(
-              Tr.pick(
-                  '毎季末にサポーターの期待が${RiskEngine.communityTrustGain(level)}上がり、不祥事の傷も浅くなります。',
-                  'Each season end supporters rise by ${RiskEngine.communityTrustGain(level)}, and scandals hurt less.'),
+              level == 0
+                  ? Tr.pick(
+                      'Lv1にすると、毎季末にサポーターの期待が${RiskEngine.communityTrustGain(1)}上がります。',
+                      'At Lv1, supporters rise by ${RiskEngine.communityTrustGain(1)} every season end.')
+                  : Tr.pick(
+                      '毎季末にサポーターの期待が${RiskEngine.communityTrustGain(level)}上がります。',
+                      'Supporters rise by ${RiskEngine.communityTrustGain(level)} every season end.'),
               style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 4),

@@ -31,7 +31,9 @@ void main() {
     });
     await pump(tester, game);
     expect(tester.takeException(), isNull);
-    expect(find.text('2季以上たつと線になります'), findsWidgets);
+    // 空のグラフの枠は並べず、1行の案内だけを出す。
+    expect(find.textContaining('2季目が終わると'), findsOneWidget);
+    expect(find.byType(TrendChart), findsNothing);
   });
 
   testWidgets('3季ぶんの記録があれば、線と最初と最後の値が出る', (tester) async {

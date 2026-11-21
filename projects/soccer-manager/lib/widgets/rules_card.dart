@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
+import 'help_button.dart';
 
 /// このクラブのいる国の財務規則と、いまの状況。クラブ経営の画面に置く。
 class RulesCard extends StatelessWidget {
@@ -35,12 +36,12 @@ class RulesCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('リーグの規則: ${ruleSet.label}',
-                'League rules: ${ruleSet.label}'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(ruleSet.summary, style: const TextStyle(fontSize: 12)),
-            const SizedBox(height: 8),
+            // 規則の説明は「?」の中へ。いまの状況(問題なし/注意/違反)を先に。
+            TitleWithHelp(
+              title: Tr.pick('リーグの規則: ${ruleSet.label}',
+                  'League rules: ${ruleSet.label}'),
+              help: ruleSet.summary,
+            ),
             for (final s in report.statuses)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2),
