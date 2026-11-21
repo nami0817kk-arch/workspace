@@ -743,6 +743,22 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
         for (final e in effects)
           Text('${_callLine(e.call)}  ${e.mine}-${e.theirs}(${e.diff > 0 ? '+' : ''}${e.diff})',
               style: TextStyle(fontSize: 13, height: 1.5, fontWeight: FontWeight.bold, color: e.diff > 0 ? GmColors.good : e.diff < 0 ? GmColors.bad : GmColors.text)),
+        // この試合の発見(この試合で分かる組み合わせと方針の相性。B-3 の図鑑に載る)
+        ...() {
+          final me = side == 0 ? r.home : r.away;
+          final found = [
+            for (final x in Combo.values)
+              if (car.comboSecs[x.index] < comboDiscoverSecs && car.comboSecs[x.index] + me.comboSecs[x.index] >= comboDiscoverSecs) '組み合わせ: ${x.label}',
+            for (final x in Matchup.values)
+              if (car.matchupSeen[x.index] < Career.matchupDiscoverCount && car.matchupSeen[x.index] + me.matchups[x.index] >= Career.matchupDiscoverCount) '相性: ${x.label}',
+          ];
+          if (found.isEmpty) return const <Widget>[];
+          return [
+            const SizedBox(height: 6),
+            const Text('この試合の発見(図鑑に載る)', style: head),
+            for (final f in found) Text(f, style: const TextStyle(fontSize: 13, height: 1.5, fontWeight: FontWeight.bold, color: GmColors.gold)),
+          ];
+        }(),
         const SizedBox(height: 6),
         const Text('この試合の主役', style: head),
         Text('自分: ${star(stars.$1)}', style: const TextStyle(fontSize: 13, height: 1.5)),

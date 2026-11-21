@@ -1,4 +1,5 @@
 import 'career.dart';
+import 'codex.dart';
 import 'player.dart';
 
 /// 実績。任期をまたいで端末に残る。
@@ -54,6 +55,21 @@ class Profile {
 
   bool has(Achievement a) => done.contains(a);
 
+  /// 図鑑で見つけたもの(項目の key → いつ・何で見つけたか)。任期をまたいで残る(B-3)。
+  final Map<String, String> codex = {};
+
+  /// [c] で見つけたものを図鑑に足す(前に見つけたものは、そのまま)。新しく見つけた項目を返す。
+  List<CodexEntry> syncCodex(Career c) {
+    final got = <CodexEntry>[];
+    for (final e in discoveriesOf(c).entries) {
+      if (codex.containsKey(e.key)) continue;
+      codex[e.key] = e.value;
+      final entry = codexEntries.where((x) => x.key == e.key).firstOrNull;
+      if (entry != null) got.add(entry);
+    }
+    return got;
+  }
+
   List<Achievement> _grant(Iterable<Achievement> list) {
     final got = <Achievement>[];
     for (final a in list) {
@@ -64,6 +80,7 @@ class Profile {
 
   /// シーズンを終えたとき(プレーオフのあと)に呼ぶ。新しく達成した実績を返す。
   List<Achievement> recordSeason(Career c) {
+    syncCodex(c);
     final h = c.history.last;
     if (h.wins > bestWins) bestWins = h.wins;
     if (h.champion) titles++;
@@ -112,15 +129,19 @@ class Profile {
   }
 
   /// 動きのたびに呼ぶ(トレード・ドラフトの順番)。
-  List<Achievement> recordProgress(Career c) => _grant([
+  List<Achievement> recordProgress(Career c) {
+    syncCodex(c);
+    return _grant([
         if (c.tradesDone >= 8) Achievement.dealer,
         if (c.word >= 90) Achievement.wordKeeper,
         if (c.phase == Phase.draft && c.order.isNotEmpty && c.picks[c.order.first].owner == c.mine) Achievement.lottery,
         if (c.me.roster.any((p) => c.draftedIds.contains(p.id) && p.ovr >= 80)) Achievement.homegrown,
       ]);
+  }
 
   /// 任期を閉じるときに呼ぶ。
   List<Achievement> recordCareerEnd(Career c) {
+    syncCodex(c);
     careers++;
     if (c.titles > bestTitles) bestTitles = c.titles;
     return const [];
@@ -134,6 +155,7 @@ class Profile {
         'bt': bestTitles,
         'bl': bestLevel,
         'bp': bestFirst10,
+        if (codex.isNotEmpty) 'cx': codex,
       };
 
   static Profile fromJson(Map<String, dynamic> j) => Profile(
@@ -148,5 +170,5 @@ class Profile {
         bestTitles: (j['bt'] as int?) ?? 0,
         bestLevel: (j['bl'] as int?) ?? 0,
         bestFirst10: (j['bp'] as int?) ?? 0,
-      );
+      )..codex.addAll({for (final e in (j['cx'] as Map? ?? const {}).entries) '${e.key}': '${e.value}'});
 }
