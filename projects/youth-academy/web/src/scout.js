@@ -473,6 +473,7 @@
     return r() < clamp(0.12 + (a.ovr - 15) * 0.08, 0.12, 0.4) * (a.age < 21 ? 0.5 : 1);
   }
   YA.jToAbroad = jToAbroad;
+  YA.abroadPick = (...x) => abroadPick(...x);
   YA.alumniEntry = function (w, p, note) {
     const o = Math.round(YA.ovr(p) * 10) / 10;
     const r = YA.rngOf(w.seed + p.num * 7 + w.year);
