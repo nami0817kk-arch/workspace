@@ -1,0 +1,228 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：伊勢参りの旅費（scripts/ise-story.yaml）。chiso/storymain.py が読む。
+# 11-21 作成（11/27 12:00 公開）。nagaya_if_main_look.yaml・rouyashiki_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini、11-21）。B01〜B28・T02 はこの回のために作った（out/story/ise/main/<名>.jpg。T02 はサムネ案Bと同じ絵）。
+#   B02・B06・B12・B22 は Gemini の上限（u/0）で作れず、B03・B13・B05・B15 で代えた（11-21）。B09（箱根の関所）は門が鳥居の形になったので使わない（11-21）。
+#   1845年ごろの東海道と伊勢。旅姿は菅笠・脚絆・草鞋。字・紋・のぼりの字は描かない。実在の人物（国三郎・清河八郎ほか）の顔は描かない（後ろ姿・遠景・誰とも名指さない旅人）。
+script: scripts/ise-story.yaml
+out: ise_story_main
+art_dir: out/story/ise/ph
+main_art_dir: out/story/ise/main
+ai_disclosure: この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 旅の総額の3分の1あまり, now: 1845年正月, dates: {}}
+  1: {label: 第1章 旅のお金はどこから？, now: null, dates: {13: 1821年, 16: 1829年, 17: null, 18: 1849年, 19: 1845年正月, 21: 1858年, 23: 1747年, 25: null}}
+  2: {label: 第2章 1日目はいくら？, now: 1845年正月, dates: {30: null, 35: 1851年, 39: 1845年, 41: null, 43: 1855年}}
+  3: {label: 第3章 いちばん高い日は？, now: 1845年, dates: {54: 1855年, 58: 1845年}}
+  4: {label: 第4章 宿代は1泊いくら？, now: null, dates: {65: 1840年, 66: null, 68: 1856年, 69: null}}
+  5: {label: 第5章 伊勢まであと何日？, now: null, dates: {77: 1711年, 78: 1845年, 83: 1768年, 84: null}}
+  6: {label: 第6章 御師の宿でいくら払った？, now: null, dates: {88: 1871年, 89: null, 94: 1858年, 95: null, 96: 1840年, 97: null, 100: 1855年, 101: null, 102: 1871年}}
+  7: {label: 第7章 銭なしでも行けた？, now: 1830年, dates: {107: null, 109: 1830年, 120: null}}
+  8: {label: まとめ 旅は全部でいくらだったか, now: null, dates: {}}
+
+references:
+  - "谷釜尋徳「近世後期における江戸庶民の旅の費用」（東洋法学 53巻3号、2010。田中国三郎『伊勢参宮覚』1845・紀伊国屋長三郎『道中記』1851 の分析）・「近世後期の庶民の旅と草鞋」（同 53巻2号、2009）・同 56巻1号（2012）・58巻3号（2015）・東洋大学スポーツ健康科学紀要12号（2015）"
+  - "山本志乃「旅日記にみる近世後期の女性の旅」（国立歴史民俗博物館研究報告155集、2010。清河八郎『西遊草』）・鈴木景二「立山・伊勢・西国道中記（上）」（富山史壇197号、2022）・高橋陽一「近世の定宿講と旅行者」（郵政博物館研究紀要8号、2017）・藤井明広（横須賀市博物館研究報告67号、2023）"
+  - "長野市誌 第4巻・山口県文書館（往来手形）・島田市博物館・名古屋市熱田区・三重県・国土交通省・日本銀行金融研究所 貨幣博物館・東京都公文書館・山本博文（imidas）"
+  - "松尾充晶（島根県立古代出雲歴史博物館 2025）・山田恭大（皇學館論叢46巻1号、2013）・中村和行（地理学報告49号、1979）・佐藤一伯（國學院大學研究開発推進センター紀要16号、2022）・櫻井治男（2017）・伊勢市史 第3巻（三重県立図書館のレファレンス回答 2022 による）"
+  - "橘敏夫（愛知大学綜合郷土研究所紀要65輯、2020）・中井陽一（史泉105号、2007）・青木郁夫（阪南論集59巻1号、2023）・国立国会図書館（ジャパンサーチ 2022）・観光庁・nippon.com（2015）・静岡県立中央図書館"
+no_tag_from: 130
+
+ai:
+  B01: {scene: 早春の朝、茅葺きの農家の前で旅立つ農民と見送る村人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B03: {scene: 座敷で村の男たちが見守る中、木の箱からくじを引く, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B04: {scene: 寺の座敷で僧が旅の手形を農民に渡す, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B05: {scene: 富士を背に東海道の松並木を歩く旅人の列, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B07: {scene: 夜の旅籠の部屋、行灯の下で帳面に出費を書く旅人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B08: {scene: 箱根の石畳の山道を杖をついて登る旅人, pan: v, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.5, 0.4], right: [1.18, 0.5, 0.62]}}
+  B10: {scene: 大井川の川越し、肩車と連台で渡る旅人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B13: {scene: 峠の茶屋で休む旅人たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B14: {scene: 帆を上げた渡し船に乗り込む旅人と海, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B15: {scene: 松並木の伊勢街道を伊勢へ向かう大勢の参詣者, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B16: {scene: 宮川を渡し船で渡る参詣者と対岸の出迎え, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B17: {scene: 御師の屋敷の門前で手代が旅人を出迎える, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B18: {scene: 御師の屋敷の座敷で膳のもてなし, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B19: {scene: 神楽殿で神楽を奉納し講の人々が見守る, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B20: {scene: 五十鈴川の川辺で手を清める参詣者と杉の森, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B21: {scene: 夜の古市の座敷で揃いの着物の女たちが踊る, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B23: {scene: 街道沿いの商家が参詣者に握り飯と草鞋をふるまう施行, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B26: {scene: 農家の土間で手代が伊勢のお札を渡す, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B27: {scene: 木の盆の上の銭の束・一分銀・小判・帳面, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B28: {scene: 夕暮れの伊勢街道の松並木と遠ざかる旅人（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  T02: {scene: 茶店の縁台で財布の銭を数える旅の男と老いた母、奥に伊勢へ向かう旅人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+
+credits: {}
+
+shots:
+  - 0 ai:B01 wide
+  - 1 ai:B01 left
+  - 2 ai:B07 wide
+  - 3 ai:B15 wide
+  - 4 ai:B15 wide
+  - 5 ai:B13 wide
+  - 6 ai:B07 right
+  - 7 ai:B27 wide
+  - 8 ai:B27 left
+  - 9 ai:B03 wide
+  - 10 ai:B03 left
+  - 11 ai:B27 left
+  - 12 ai:B03 right
+  - 13 ai:B03 left
+  - 14 ai:B27 right
+  - 15 ai:B03 wide
+  - 16 ai:B01 wide
+  - 17 ai:B03 right
+  - 18 ai:B03 left
+  - 19 ai:B01 right
+  - 20 ai:B27 wide
+  - 21 ai:B13 wide
+  - 22 ai:B05 left
+  - 23 ai:B04 wide
+  - 24 ai:B04 right
+  - 25 ai:B27 left
+  - 26 ai:B05 right
+  - 27 ai:B05 left
+  - 28 ai:B01 wide
+  - 29 ai:B07 wide
+  - 30 ai:B27 left
+  - 31 ai:B27 right
+  - 32 ai:B07 left
+  - 33 ai:B27 wide
+  - 34 ai:B13 right
+  - 35 ai:B05 wide
+  - 36 ai:B07 right
+  - 37 ai:B13 left
+  - 38 ai:B07 left
+  - 39 ai:B05 wide
+  - 40 ai:B08 wide
+  - 41 ai:B05 right
+  - 42 ai:B08 left
+  - 43 ai:T02 right
+  - 44 ai:B08 right
+  - 45 ai:B10 left
+  - 46 ai:B05 left
+  - 47 ai:B13 wide
+  - 48 ai:B13 right
+  - 49 ai:B05 right
+  - 50 ai:B10 wide
+  - 51 ai:B10 left
+  - 52 ai:B27 right
+  - 53 ai:B10 right
+  - 54 ai:B08 wide
+  - 55 ai:B14 right
+  - 56 ai:B14 wide
+  - 57 ai:B07 wide
+  - 58 ai:B05 wide
+  - 59 ai:B07 right
+  - 60 ai:B13 left
+  - 61 ai:B13 wide
+  - 62 ai:B07 right
+  - 63 ai:B13 right
+  - 64 ai:B13 right
+  - 65 ai:B07 left
+  - 66 ai:B27 left
+  - 67 ai:B13 wide
+  - 68 ai:B13 left
+  - 69 ai:B05 left
+  - 70 ai:B05 right
+  - 71 ai:B13 right
+  - 72 ai:B05 wide
+  - 73 ai:B27 wide
+  - 74 ai:B15 left
+  - 75 ai:B15 right
+  - 76 ai:B14 wide
+  - 77 ai:B14 left
+  - 78 ai:B15 wide
+  - 79 ai:B15 left
+  - 80 ai:B15 right
+  - 81 ai:B16 left
+  - 82 ai:B27 wide
+  - 83 ai:B05 left
+  - 84 ai:B16 wide
+  - 85 ai:B17 wide
+  - 86 ai:B16 right
+  - 87 ai:B17 left
+  - 88 ai:B26 wide
+  - 89 ai:B18 wide
+  - 90 ai:B26 left
+  - 91 ai:B26 right
+  - 92 ai:B27 left
+  - 93 ai:B27 right
+  - 94 ai:B18 left
+  - 95 ai:B17 right
+  - 96 ai:B18 right
+  - 97 ai:B19 wide
+  - 98 ai:B27 left
+  - 99 ai:B27 right
+  - 100 ai:B21 wide
+  - 101 ai:B27 wide
+  - 102 ai:B20 wide
+  - 103 ai:B15 left
+  - 104 ai:B23 left
+  - 105 ai:B15 wide
+  - 106 ai:B13 wide
+  - 107 ai:B15 right
+  - 108 ai:B27 wide
+  - 109 ai:B15 left
+  - 110 ai:B23 right
+  - 111 ai:B23 wide
+  - 112 ai:B15 left
+  - 113 ai:B23 left
+  - 114 ai:B27 left
+  - 115 ai:B23 right
+  - 116 ai:B15 wide
+  - 117 ai:B01 left
+  - 118 ai:B26 left
+  - 119 ai:B04 right
+  - 120 ai:B20 wide
+  - 121 ai:B20 right
+  - 122 ai:B07 wide
+  - 123 ai:B05 wide
+  - 124 ai:T02 wide
+  - 125 ai:T02 left
+  - 126 ai:B27 wide
+  - 127 ai:B01 wide
+  - 128 ai:B13 wide
+  - 129 ai:B19 wide
+  - 130 ai:B23 wide
+  - 131 ai:B07 right
+  - 132 ai:B28 left
+  - end ai:B28 wide
+
+figures: []
+
+focus: {}
+
+fx:
+  B07: {lamp: {region: [0.6, 0.4, 0.9, 0.9]}}
+  B18: {lamp: {region: [0.7, 0.2, 1.0, 0.6]}}
+  B19: {lamp: {region: [0.7, 0.2, 1.0, 0.6]}}
+  B21: {lamp: {region: [0.0, 0.0, 1.0, 0.35]}}
+  B08: {mist: {region: [0.0, 0.0, 1.0, 0.6]}}
+  B28: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 24, to: 24, label: 史料, text: 紛れのない者なので／関所を通してほしい, source: 金津治兵衛の伊勢参りの手形（1747年、山口県文書館 金津家文書。今の言葉に）}
+  - {type: quote, from: 36, to: 36, label: 史料, text: 八百廿四文　保土ヶ谷ふじ屋泊り　三人, source: 紀伊国屋長三郎『道中記』（1851年。谷釜尋徳 2010 の引用）}
+  - {type: quote, from: 96, to: 96, label: 史料, text: 六百文　伊勢御師へ, source: 大倉与市の道中日記（1840年。『富山史壇』197号の史料紹介）}
+  - {type: versus3, from: 107, to: 108, every: 4,
+     items: [[国立国会図書館, 約430万人], [観光庁, 400万〜500万人], [nippon.com, 約500万人]]}
+  - {type: quote, from: 111, to: 111, label: 史料, text: 銭なしでも参り／所々に施行がある, source: 牛川村 松坂家の伊勢暦の書き込み（1830年。橘敏夫 2020 の引用。今の言葉に）}
+  - {type: quote, from: 119, to: 119, label: 史料, text: 主人の差し支えも顧みず参るのは／かえって神慮に叶わない, source: 三河吉田藩の触書（1830年4月11日。橘敏夫 2020 の引用。今の言葉に）}
+  - {type: versus3, from: 126, to: 126, every: 4,
+     items: [[2015年の論文（86日）, 3万3608文], [2010年の論文, 3万5771文]]}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 14, note: 第1章 講の積み立て}
+  - {line: 29, note: 第2章 地図と1日目}
+  - {line: 36, note: 第2章 保土ヶ谷の宿の史料}
+  - {line: 47, note: 第3章 1日ずつの棒グラフ}
+  - {line: 61, note: 第4章 内訳の円グラフ}
+  - {line: 81, note: 第5章 地図 伊勢}
+  - {line: 93, note: 第6章 丸岡家}
+  - {line: 107, note: 第7章 人数の食い違い}
+  - {line: 126, note: まとめ 総額の食い違い}
+  - {end: true, note: 終了画面の空き}

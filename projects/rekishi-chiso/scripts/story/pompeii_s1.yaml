@@ -1,0 +1,142 @@
+# 物語完結型ショート ポンペイ s1（2026-11-21）。本編 scripts/pompeii-story.yaml（11/26 19:00 公開予定、https://youtu.be/ShBxB9gQGR4）から。11/27 9:30 に予約。
+# 形式は titanic_s1〜s5・kondo_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード ポンペイ_facts_20261120.yaml）。
+# 絵：本編の AI 絵（out/story/pompeii/main/ の P01〜P21）の切り出しだけ。新しい絵は作らない。遺体・石膏型は出さない。
+# 切り口：8月24日は、手紙の写本によって読みが違う（本編 第1章・第3章、pom-05・14・15・16・17・19）。
+# 計算（自分で数え直した）：9月1日を1つ目に前の日へ9つ目＝8月24日／11月1日の9つ目＝10月24日。
+# 字幕では読点が消えるので、並べる語は「と」でつなぐ。
+title: "ポンペイ｜8月24日は、写本によって月が違う"
+yt_title: "ポンペイの噴火「8月24日」は、手紙の写本によって月が違う　9世紀の写本は9月、古い刷り本には11月"
+description: |-
+  ポンペイの噴火は、79年8月24日とされています。この日付は、噴火を見た小プリニウスが、のちに歴史家タキトゥスに書いた手紙の、たった1か所から来ています。
+  手紙の言葉は「9月のカレンダエの9日前」。いちばん古い、ほぼ完全な9世紀の写本は、この9月の読みです。ところが、ほかの写本には月の名が抜けたものがあり、古い時代に刷られた本には「11月のカレンダエ」と書くものもあります。
+  秋の噴火を唱える人が挙げる10月24日は、どの写本にも、そのままの形ではありません。
+  本編では、写本・秋の手がかり・2018年の炭の落書き・2024年の考古公園の試しを並べ、言えることと言えないことを分けています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#ポンペイ"
+- "#世界史"
+- "#歴史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/pompeii
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: pompeii_story_s1
+header:
+  tag: "ポンペイ　噴火の日付"
+  title: "8月24日は、《写本》で月が違う"
+now:
+- {at: "79年8月24日", text: "79年　ナポリ湾", point: 0}
+- {at: "9世紀", text: "9世紀　フルダの写本", point: 1}
+timeline:
+- {label: "79"}
+- {label: "9世紀"}
+shots:
+  P15_1:
+    kind: "ai"
+    file: "pompeii/main/P15.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "P15"
+  P20_2:
+    kind: "ai"
+    file: "pompeii/main/P20.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "P20"
+  P21_3:
+    kind: "ai"
+    file: "pompeii/main/P21.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "P21"
+  P21_4:
+    kind: "ai"
+    file: "pompeii/main/P21.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "P21"
+  P04_5:
+    kind: "ai"
+    file: "pompeii/main/P04.jpg"
+    focus: [0.6, 0.5]
+    move: "in"
+    must: "P04"
+  P04_6:
+    kind: "ai"
+    file: "pompeii/main/P04.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "P04"
+  P04_7:
+    kind: "ai"
+    file: "pompeii/main/P04.jpg"
+    focus: [0.85, 0.5]
+    move: "left"
+    must: "P04"
+  P19_8:
+    kind: "ai"
+    file: "pompeii/main/P19.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "P19"
+  P01_9:
+    kind: "ai"
+    file: "pompeii/main/P01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "P01"
+lines:
+  # fact: pom-05, pom-16
+- 語り: "広く知られたポンペイの噴火の日、79年8月24日。ところが、この日付を伝える手紙は、写本によって、月が違う。"
+  shot: P15_1
+  tone: 強調
+  pause: 0.12
+  # fact: pom-03, pom-04
+- 語り: "日付を書いたのは、噴火を見た小プリニウス。のちに、歴史家タキトゥスにあてた手紙だ。"
+  shot: P20_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: pom-05
+- 語り: "手紙の言葉は、9月のカレンダエの、9日前。カレンダエは、月のついたちのことだ。"
+  shot: P21_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: pom-14
+- 語り: "ローマ式では、9月1日を1つ目と数えて、前の日へ9つ目。これが、8月24日になる。"
+  shot: P21_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: pom-15
+- 語り: "いちばん古い、ほぼ完全な写本は、9世紀に、今のドイツのフルダで書かれた。これは、9月の読みだ。"
+  shot: P04_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: pom-16
+- 語り: "ところが、ほかの写本には、月の名が抜けて、9日前、としか書いていないものがある。"
+  shot: P04_6
+  tone: 重い
+  pause: 0.12
+  # fact: pom-17
+- 語り: "古い時代に刷られた本には、11月のカレンダエ、つまり、11月1日と書くものもある。"
+  shot: P04_7
+  tone: 重い
+  pause: 0.12
+  # fact: pom-19
+- 語り: "秋の噴火を唱える人が挙げる10月24日は、どの写本にも、そのままの形では無い。2007年に、この日をとった論文の著者たち自身が、そう書いている。"
+  shot: P19_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第4章〜第6章・まとめ
+- 語り: "写本の読みは、割れている。では、噴火は、本当に8月だったのか。"
+  shot: P01_9
+  tone: 疑問
+  pause: 0.15

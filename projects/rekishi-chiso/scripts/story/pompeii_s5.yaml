@@ -1,0 +1,142 @@
+# 物語完結型ショート ポンペイ s5（2026-11-21）。本編 scripts/pompeii-story.yaml（11/26 19:00 公開予定、https://youtu.be/ShBxB9gQGR4）から。11/27 19:30 に予約。
+# 形式は titanic_s1〜s5・kondo_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード ポンペイ_facts_20261120.yaml）。
+# 絵：本編の AI 絵（out/story/pompeii/main/ の P01〜P21）の切り出しだけ。新しい絵は作らない。遺体・石膏型は出さない。死は「最期」「倒れた」までで、体の様子は語らない。
+# 切り口：大プリニウスは見物の船を救助に切り替えた（本編 第1章、pom-07・08・09・10・04・11）。
+# 計算（自分で数え直した）：手紙は107年ごろ＝噴火から27年か28年あと（本編どおり）。小プリニウス「18年目」＝満17歳。
+title: "大プリニウス｜噴火の見物の船を、救助に切り替えた"
+yt_title: "博物誌の大プリニウスは、ヴェスヴィオの噴火で見物の船を救助に切り替えた　甥の小プリニウスが書き残した伯父の最期"
+description: |-
+  博物誌を書いた学者、大プリニウス。ナポリ湾の岬の港ミセヌムで、ローマの艦隊を率いていました。
+  ヴェスヴィオの噴火の日、見慣れない雲を近くで見ようと、速い船を用意させます。そこへ、山のふもとのレクティナという女性から、助けを求める書きつけが届き、大プリニウスは見物を救助に切り替えました。
+  この一日を書き残したのは、当時17歳の甥、小プリニウスです。噴火から27年か28年あとに、歴史家タキトゥスにあてた手紙でした。
+  本編では、この手紙のたった1か所の日付「8月24日」が、どこまで確かなのかを、写本・発掘・2018年の炭の落書きからたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#ポンペイ"
+- "#世界史"
+- "#歴史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、本人や特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/pompeii
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: pompeii_story_s5
+header:
+  tag: "大プリニウス（博物誌の学者）"
+  title: "見物の船を、《救助》に切り替えた"
+now:
+- {at: "ミセヌム", text: "79年　ミセヌム", point: 0}
+- {at: "スタビアエ", text: "79年　スタビアエ", point: 0}
+- {at: "27年か28年あとに", text: "107年ごろ　手紙", point: 1}
+timeline:
+- {label: "79"}
+- {label: "107ごろ"}
+shots:
+  P05_1:
+    kind: "ai"
+    file: "pompeii/main/P05.jpg"
+    focus: [0.4, 0.5]
+    move: "in"
+    must: "P05"
+  P01_2:
+    kind: "ai"
+    file: "pompeii/main/P01.jpg"
+    focus: [0.3, 0.6]
+    move: "right"
+    must: "P01"
+  P02_3:
+    kind: "ai"
+    file: "pompeii/main/P02.jpg"
+    focus: [0.35, 0.4]
+    move: "left"
+    must: "P02"
+  P03_4:
+    kind: "ai"
+    file: "pompeii/main/P03.jpg"
+    focus: [0.65, 0.5]
+    move: "right"
+    must: "P03"
+  P05_5:
+    kind: "ai"
+    file: "pompeii/main/P05.jpg"
+    focus: [0.75, 0.6]
+    move: "left"
+    must: "P05"
+  P06_6:
+    kind: "ai"
+    file: "pompeii/main/P06.jpg"
+    focus: [0.6, 0.6]
+    move: "right"
+    must: "P06"
+  P06_7:
+    kind: "ai"
+    file: "pompeii/main/P06.jpg"
+    focus: [0.3, 0.4]
+    move: "in"
+    must: "P06"
+  P20_8:
+    kind: "ai"
+    file: "pompeii/main/P20.jpg"
+    focus: [0.6, 0.5]
+    move: "left"
+    must: "P20"
+  P15_9:
+    kind: "ai"
+    file: "pompeii/main/P15.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "P15"
+lines:
+  # fact: pom-07, pom-08
+- 語り: "博物誌を書いた学者、大プリニウス。ヴェスヴィオの噴火の日、見物に出すはずの船を、救助に切り替えた。"
+  shot: P05_1
+  tone: 強調
+  pause: 0.12
+  # fact: pom-07
+- 語り: "大プリニウスは、ナポリ湾の岬の港ミセヌムで、ローマの艦隊を率いていた。"
+  shot: P01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: pom-05, pom-07
+- 語り: "昼すぎ、松に似た形の、見慣れない雲が出ている、と知らせが来た。"
+  shot: P02_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: pom-08
+- 語り: "近くで見ようと、速い船を用意させた。そのとき、山のふもとのレクティナという女性から、助けを求める書きつけが届いた。"
+  shot: P03_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: pom-09
+- 語り: "浜に近づけず、舵取りが、引き返そうと言った。大プリニウスは、勇者には運が味方する、と答え、湾の向こうのスタビアエへ向かった。"
+  shot: P05_5
+  tone: 重い
+  pause: 0.12
+  # fact: pom-10
+- 語り: "夜が明ける時刻になっても、あたりは、真っ暗。人々は、降ってくる石から身を守るため、枕を頭に結びつけて、外へ出た。"
+  shot: P06_6
+  tone: 重い
+  pause: 0.12
+  # fact: pom-10
+- 語り: "大プリニウスは、すぐに倒れた。濃い煙で、息が詰まったのだろう。甥は、そう推し量っている。"
+  shot: P06_7
+  tone: 重い
+  pause: 0.12
+  # fact: pom-04, pom-11
+- 語り: "書き残したのは、甥の小プリニウス。噴火のとき17歳。27年か28年あとに、歴史家タキトゥスにあてた手紙だ。"
+  shot: P20_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第3章〜まとめ（日付の1か所と写本、pom-06・15・16・17）
+- 語り: "噴火の日付が書かれているのも、この手紙の、たった1か所。その日付は、どこまで確かなのか。"
+  shot: P15_9
+  tone: 疑問
+  pause: 0.15
