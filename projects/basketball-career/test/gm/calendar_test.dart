@@ -22,14 +22,14 @@ void main() {
   });
 
   test('順位が決まったら主力を休ませる: 決まるまでは休まず、決まったら先発が休む', () {
-    for (var seed = 1; seed <= 40; seed++) {
+    for (var seed = 1; seed <= 80; seed++) {
       final b = _started(seed)..restWhenSettled = true;
       while (b.phase == Phase.season && !b.standingSettled) {
         expect(b.me.roster.fold(0, (n, p) => n + p.restGames), 0, reason: '決まる前は休まない');
         b.playWeek();
       }
       // 休ませる試合が残っていない(順位が決まったのが最後の数試合)なら、次の経歴で
-      if (b.phase != Phase.season || b.roundAt > gamesPerSeason - 6) continue;
+      if (b.phase != Phase.season || b.roundAt > gamesPerSeason - 3) continue;
       while (b.phase == Phase.season) {
         b.playWeek();
       }

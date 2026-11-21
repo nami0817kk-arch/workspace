@@ -1854,6 +1854,90 @@ class Career {
     _log('トレードの締め切りを迎えた(今季のトレード${trades.length}件)');
   }
 
+  // --- 締め切りの競り合い(2026-11-21 の作り込み T-5) ---
+
+  /// 締め切りの目玉(ほかのチームの選手。選手の id → (いたチーム, 関心のあるチームの数))。
+  Map<int, (int, int)> hotTargets = {};
+
+  /// 締め切りの1区切り前に、目玉を知らせる。自分の選手は関心のあるチームの数、ほかのチームの選手は今のいちばん高い案のうわさ。
+  void _announceHot() {
+    hotTargets = {};
+    if (!canTrade) return;
+    // 自分の選手: 申し込みの来る数(3チーム以上なら目玉)
+    final mineTop = [...me.roster]..sort((a, b) => b.ovr.compareTo(a.ovr));
+    for (final p in mineTop.take(6)) {
+      if (expiring.contains(p.id) || optionPending.contains(p.id)) continue;
+      final n = [
+        for (var t = 0; t < teams.length; t++)
+          if (t != mine && blockOfferFrom(teams, picks, mine, t, p.id, season, hardness: _hard(t), seen: _eyeFn(t)) != null) t,
+      ].length;
+      if (n >= 3) {
+        _mail(Sender.staff, '目玉: ${p.name}に$nチームが関心',
+            '締め切りを前に、${p.name}に$nチームが関心を持っている。トレードブロックに載せて申し込みを集めれば、並べて比べられる。待つと、ほかの選手に乗り換えるチームも出てくる。',
+            player: p.id);
+      }
+    }
+    // ほかのチームの目玉: 立て直し中・お金に困っている・もめているチームの主力
+    final buyers = [for (final t in teams) if (t.index != mine && t.mode == TeamMode.contend) t.index];
+    final cands = <(Player, int)>[];
+    for (final t in teams) {
+      if (t.index == mine) continue;
+      final selling = t.mode == TeamMode.rebuild || t.mode == TeamMode.cutCost || feudOf(t) != null;
+      if (!selling) continue;
+      for (final p in t.roster) {
+        if (p.ovr >= 74 && p.age >= 25) cands.add((p, t.index));
+      }
+    }
+    cands.sort((a, b) => b.$1.ovr.compareTo(a.$1.ovr));
+    for (final (p, t) in cands.take(3)) {
+      final n = (buyers.length).clamp(2, 6);
+      hotTargets[p.id] = (t, n);
+      // いちばん高い案のうわさ(優勝を狙うチームのうち、出せる案があるところ)
+      String best = '1巡目と若手くらい';
+      for (final b in buyers) {
+        final o = findPackage(teams, picks, b, t, get: [p.id], nowSeason: season);
+        if (o == null) continue;
+        final k = o.give.length + o.givePicks.length;
+        best = '${o.givePicks.isNotEmpty ? '指名権' : '選手'}を含めて$k件くらい';
+        break;
+      }
+      _mail(Sender.league, '締め切りの目玉: ${p.name}(${teams[t].def.short})',
+          '${p.name}に$nチームほどが関心を持っているらしい。今のいちばん高い案は、$bestといううわさだ(外れることもある)。締め切りまでに取らなければ、ほかのチームへ行く。',
+          player: p.id);
+    }
+  }
+
+  /// 締め切りの日に、まだ動いていない目玉を、関心のあったチームが取っていく(競り負け)。
+  void _rivalsTakeHot() {
+    for (final e in hotTargets.entries) {
+      final (from, _) = e.value;
+      final owner = teams[from];
+      final p = owner.roster.where((x) => x.id == e.key).firstOrNull;
+      if (p == null) continue; // もう動いた(自分が取った・ほかで動いた)
+      // 取りに行くのは、そのポジションの選手が少ない(2人まで)優勝を狙うチームから(先発が偏らないように)
+      int count(int t) => teams[t].roster.where((x) => x.pos == p.pos).length;
+      final buyers = [for (final t in teams) if (t.index != mine && t.index != from && t.mode == TeamMode.contend && count(t.index) <= 2) t.index]
+        ..sort((a, b) => count(a).compareTo(count(b)));
+      for (final b in buyers) {
+        final o = findPackage(teams, picks, b, from, get: [p.id], nowSeason: season);
+        if (o == null) continue;
+        // 両チームとも、どのポジションにも選手が残る取引だけ(ポジションが空くと試合にならない)
+        if (!_keepsPositions(b, o.give, [p]) || !_keepsPositions(from, [p.id], [for (final id in o.give) ...teams[b].roster.where((x) => x.id == id)])) continue;
+        _logTrade(b, o);
+        applyTrade(teams, picks, b, o);
+        _log('競り合い: ${p.name}は${teams[b].def.short}へ(締め切りの目玉)');
+        break;
+      }
+    }
+    hotTargets = {};
+  }
+
+  /// [team] が [outIds] を出して [incoming] を受け取っても、どのポジションにも選手が残るか。
+  bool _keepsPositions(int team, List<int> outIds, List<Player> incoming) {
+    final after = [...teams[team].roster.where((x) => !outIds.contains(x.id)), ...incoming];
+    return Pos.values.every((pos) => after.any((x) => x.pos == pos));
+  }
+
   /// 締め切り前の最後の区切りの前に、知らせを出す。
   void _deadlineWarning() {
     _mail(Sender.league, 'トレードの締め切りが近い', 'このあとの区切りでトレードの締め切りを迎える。補強やトレードを動かすなら、いまのうち。');
@@ -2916,11 +3000,15 @@ class Career {
     _updateChem();
     _giveMonthly();
     if (block == tradeDeadlineBlock) {
+      _rivalsTakeHot();
       _deadlineDay();
       _runCup();
       _pickAllStars();
     }
-    if (block == tradeDeadlineBlock - 1) _deadlineWarning();
+    if (block == tradeDeadlineBlock - 1) {
+      _deadlineWarning();
+      _announceHot();
+    }
     _checkPromises();
     _scoutReport();
     if (block < blocksPerSeason) _mailAfterBlock();
@@ -5630,6 +5718,7 @@ class Career {
         if (comboSecs.any((x) => x > 0)) 'cb': comboSecs,
         if (policyGames > 0) 'pgm': policyGames,
         if (rumors.isNotEmpty) 'rmr': [for (final r in rumors) r.toJson()],
+        if (hotTargets.isNotEmpty) 'hot': [for (final e in hotTargets.entries) [e.key, e.value.$1, e.value.$2]],
         if (gmTrust.isNotEmpty) 'gtr': [for (final e in gmTrust.entries) [e.key, e.value]],
         if (tradeLastVerdict.isNotEmpty) 'tlv': tradeLastVerdict,
         if (tradeNames.isNotEmpty) 'tnm': [for (final e in tradeNames.entries) [e.key, e.value]],
@@ -5789,6 +5878,10 @@ class Career {
       ..traitSeen = {for (final x in (j['ts'] as List? ?? const [])) x as int}
       ..comboSecs = [for (var i = 0; i < Combo.values.length; i++) (j['cb'] is List && (j['cb'] as List).length > i) ? ((j['cb'] as List)[i] as int) : 0]
       ..policyGames = (j['pgm'] as int?) ?? 0
+      ..hotTargets = {
+        for (final x in (j['hot'] as List? ?? const []))
+          if (x is List && x.length == 3) x[0] as int: (x[1] as int, x[2] as int),
+      }
       ..tradeLastVerdict = [for (final x in (j['tlv'] as List? ?? const [])) x as int]
       ..tradeNames = {
         for (final x in (j['tnm'] as List? ?? const []))
