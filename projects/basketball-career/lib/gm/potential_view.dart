@@ -9,7 +9,8 @@ import 'player.dart';
 /// - 自分のチームの選手: 在籍の年数・今季の出場時間・育成コーチの段階・前に対戦した数で知る
 /// - ほかのチームの選手: 対戦した試合の数(試合で見た分だけ)とスカウトの段階。幅は広いまま
 /// - 28歳以上は伸びしろが無いので、いつも正確(「なし」)
-/// 幅は、本当の値を必ず含む(外れることがあるのは A-2 で入れる)。知るほど幅は内側へ縮む(前に見せた幅からはみ出さない)。
+/// 幅は、ふつうは本当の値を含み、知るほど内側へ縮む(前に見せた幅からはみ出さない)。
+/// ただし5人に1人くらいは見立てが外れる(A-2。外れても1段)。スカウトが良いほど外れにくく、正確に分かるまで知ると本当の値に落ち着く。
 
 /// 等級の並び(0 は伸びしろなし)。
 const potentialGrades = ['-', 'C', 'B', 'A', 'S'];
@@ -63,11 +64,26 @@ extension PotentialKnowledge on Career {
   }
 
   /// [p] の伸びしろの見立て。
-  PotentialView potentialOf(Player p) => potentialViewOf(p, knowledgeOf(p));
+  PotentialView potentialOf(Player p) => potentialViewOf(p, knowledgeOf(p), miss: potentialMissOf(p));
+
+  /// [p] の見立てが外れているか(1 は高く見ている、-1 は低く見ている、0 は外れていない)。
+  /// 選手ごとに決まる(乱数は使わない)。外れる割合は、スカウトの段階で 20%・15%・10%。
+  int potentialMissOf(Player p) {
+    if (p.age >= 28) return 0;
+    final rate = const [20, 15, 10][(me.staffLevel(Staff.scout) - 1).clamp(0, 2)];
+    final h = (p.id * 1103515245 + 12345) & 0x7fffffff;
+    if (h % 100 >= rate) return 0;
+    final g = potentialGrades.indexOf(p.grade).clamp(0, 4);
+    // 端の等級は、外れようが無い向きには外さない
+    final up = (h ~/ 100).isEven;
+    if (up && g < 4) return 1;
+    if (!up && g > 0) return -1;
+    return g < 4 ? 1 : -1;
+  }
 }
 
-/// 知っている度合い [k] のときの、[p] の伸びしろの見立て。
-PotentialView potentialViewOf(Player p, int k) {
+/// 知っている度合い [k] のときの、[p] の伸びしろの見立て。[miss] が 0 でなければ、その向きに1段外す(正確に分かるときは外さない)。
+PotentialView potentialViewOf(Player p, int k, {int miss = 0}) {
   final g = potentialGrades.indexOf(p.grade).clamp(0, 4);
   final v = shown(p.pot);
   if (p.age >= 28) return PotentialView(g, g, v ~/ 5 * 5, (v ~/ 5 * 5 + 5).clamp(0, 99), 100);
@@ -88,6 +104,18 @@ PotentialView potentialViewOf(Player p, int k) {
   final block = v ~/ 5;
   final pLo = ((block - (r * span) ~/ 3) * 5).clamp(0, 95);
   final pHi = (pLo + (span + 1) * 5).clamp(0, 99);
+  if (span > 0 && miss > 0 && g < 4) {
+    // 高く見ている: 本当の等級のすぐ上から
+    final l = g + 1, h = (g + 1 + span).clamp(0, 4);
+    final q = (block + 1) * 5;
+    return PotentialView(l, h, q.clamp(0, 95), (q + (span + 1) * 5).clamp(0, 99), k);
+  }
+  if (span > 0 && miss < 0 && g > 0) {
+    // 低く見ている: 本当の等級のすぐ下まで
+    final h = g - 1, l = (g - 1 - span).clamp(0, 4);
+    final q = block * 5 - 1;
+    return PotentialView(l, h, (q - (span + 1) * 5 + 1).clamp(0, 95), q.clamp(0, 99), k);
+  }
   return PotentialView(lo, hi, pLo, pHi, k);
 }
 

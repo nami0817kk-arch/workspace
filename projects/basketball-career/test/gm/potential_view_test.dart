@@ -84,4 +84,44 @@ void main() {
     final y = Career.fromJson(x.toJson());
     expect(y.seenGames, x.seenGames);
   });
+  test('A-2: 5人に1人くらいは見立てが外れ、外れても1段。正確に分かるときは外れない', () {
+    final young = everyone.where((p) => p.age < 28).toList();
+    final missed = young.where((p) => c.potentialMissOf(p) != 0).toList();
+    final rate = missed.length / young.length;
+    expect(rate, inInclusiveRange(0.05, 0.3));
+    for (final p in missed) {
+      final g = potentialGrades.indexOf(p.grade);
+      final m = c.potentialMissOf(p);
+      for (final k in [0, 30, 60]) {
+        final v = potentialViewOf(p, k, miss: m);
+        if (m > 0) {
+          expect(v.lo, g + 1, reason: '${p.name} k=$k');
+        } else {
+          expect(v.hi, g - 1, reason: '${p.name} k=$k');
+        }
+      }
+      final sure = potentialViewOf(p, 95, miss: m);
+      expect((sure.lo, sure.hi), (g, g));
+    }
+  });
+
+  test('A-2: 外れていた見立てが正確に分かったら、1度だけ知らせ、保存しても残る', () {
+    // 見立てが外れている若手のいるリーグを探す
+    late Career x;
+    Player? p;
+    for (var seed = 8; seed < 40 && p == null; seed++) {
+      x = careerAt(seed, 12);
+      p = x.me.roster.where((q) => q.age < 28 && x.potentialMissOf(q) != 0).firstOrNull;
+    }
+    if (p == null) fail('見立てが外れている若手が見つからない');
+    final pl = p;
+    pl.tenure = 3;
+    final before = x.inbox.length;
+    x.startSeason();
+    expect(x.potentialRevealed, contains(pl.id));
+    final mails = x.inbox.skip(before).where((m) => m.title.contains(pl.name) && m.title.contains('見立て')).toList();
+    expect(mails.length, 1);
+    final y = Career.fromJson(x.toJson());
+    expect(y.potentialRevealed, contains(pl.id));
+  });
 }
