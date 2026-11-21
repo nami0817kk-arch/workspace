@@ -1,17 +1,26 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 import 'dart:math';
+
+import '../l10n/lang.dart';
 
 /// 髪型。
 enum HairStyle {
-  short('短髪'),
-  crop('刈り上げ'),
-  curly('くせ毛'),
-  long('長髪'),
-  bun('結ぶ'),
-  bald('坊主');
+  short(Say('短髪', 'Short')),
+  crop(Say('刈り上げ', 'Buzzed sides')),
+  curly(Say('くせ毛', 'Curly')),
+  long(Say('長髪', 'Long')),
+  bun(Say('結ぶ', 'Tied back')),
+  bald(Say('坊主', 'Shaved'));
 
-  const HairStyle(this.label);
+  const HairStyle(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// 見た目。
@@ -55,13 +64,17 @@ class PlayerLook {
     0xFFBFBFBF, // 白髪
   ];
 
-  static const List<String> hairColorLabels = [
-    '黒',
-    '焦茶',
-    '栗',
-    '金',
-    '赤茶',
-    '白',
+  /// 読むたびに言語を選ぶ。
+  static List<String> get hairColorLabels =>
+      [for (final l in _hairColorLabels) l.t];
+
+  static const List<Say> _hairColorLabels = [
+    Say('黒', 'Black'),
+    Say('焦茶', 'Dark brown'),
+    Say('栗', 'Chestnut'),
+    Say('金', 'Blond'),
+    Say('赤茶', 'Auburn'),
+    Say('白', 'White'),
   ];
 
   PlayerLook copyWith({int? skin, HairStyle? hair, int? hairColor}) =>

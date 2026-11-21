@@ -1,4 +1,10 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 import '../game/formulas.dart';
+import '../l10n/lang.dart';
 import 'attributes.dart';
 import 'entourage.dart';
 
@@ -11,8 +17,8 @@ import 'entourage.dart';
 /// 倍率と確率の両方を動かすと、どちらが効いているのか画面から追えなくなる。
 enum TrainingEffort {
   easy(
-    '流す',
-    '軽く。伸びは薄いが、身体が残る。衰え始めが遅くなる',
+    Say('流す', 'Take it easy'),
+    Say('軽く。伸びは薄いが、身体が残る。衰え始めが遅くなる', 'Light work. Less growth, but the body holds up. Decline starts later'),
     great: 0.02,
     flat: 0.45,
     cost: 0.5,
@@ -20,8 +26,8 @@ enum TrainingEffort {
     strain: 22,
   ),
   normal(
-    '普通',
-    'いつもどおり',
+    Say('普通', 'Normal'),
+    Say('いつもどおり', 'The usual'),
     great: 0.15,
     flat: 0.15,
     cost: 1.0,
@@ -29,9 +35,9 @@ enum TrainingEffort {
     strain: 50,
   ),
   hard(
-    '追い込む',
-    '限界まで。大きく伸びるが、消耗も怪我も跳ね上がる。'
-        '続ければ衰えが早く来る',
+    Say('追い込む', 'Push hard'),
+    Say('限界まで。大きく伸びるが、消耗も怪我も跳ね上がる。'
+        '続ければ衰えが早く来る', 'To the limit. Big gains, but condition and injuries both spike. Keep it up and decline comes early'),
     great: 0.45,
     flat: 0.10,
     cost: 1.9,
@@ -40,17 +46,21 @@ enum TrainingEffort {
   );
 
   const TrainingEffort(
-    this.label,
-    this.description, {
+    Say label,
+    Say description, {
     required this.great,
     required this.flat,
     required this.cost,
     required this.injury,
     required this.strain,
-  });
+  }) : _label = label,
+       _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 
   /// 大成功・空回りの出やすさ。
   final double great;
@@ -72,16 +82,20 @@ enum TrainingEffort {
 /// 相方・メンター・競争相手は**試合の外で勝手に動く飾り**だった。
 /// 週の選択に乗せて初めて、その人がクラブに居ることに意味が出る。
 enum TrainingCompanion {
-  alone('一人でやる', '自分の型で黙々と。大成功は出ないが、空回りもしない'),
-  partner('相方と組む', '呼吸が合う。手応えが出やすく、呼吸も深まる'),
-  mentor('メンターに付く', '年長者から盗む。手応えが出やすく、身体も残る'),
-  rival('競争相手と張り合う', '一番手応えが出る。そのぶん消耗し、怪我もしやすい');
+  alone(Say('一人でやる', 'On your own'), Say('自分の型で黙々と。大成功は出ないが、空回りもしない', 'Your own way, head down. No breakthroughs, but no wasted weeks either')),
+  partner(Say('相方と組む', 'With your partner'), Say('呼吸が合う。手応えが出やすく、呼吸も深まる', 'You read each other. Good weeks come easily, and the understanding deepens')),
+  mentor(Say('メンターに付く', 'With your mentor'), Say('年長者から盗む。手応えが出やすく、身体も残る', 'Learning from an older head. Good weeks come easily, and the body holds up')),
+  rival(Say('競争相手と張り合う', 'Against your rival'), Say('一番手応えが出る。そのぶん消耗し、怪我もしやすい', 'The best weeks of all. It costs more condition, and the injury risk is higher'));
 
-  const TrainingCompanion(this.label, this.description);
+  const TrainingCompanion(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
+  final Say _label;
+  final Say _description;
 
-  final String description;
+  String get label => _label.t;
+  String get description => _description.t;
 
   /// 誰と組むかで動く、大成功の出やすさ。
   double get greatBonus => switch (this) {
@@ -169,14 +183,19 @@ enum TrainingCompanion {
 /// 練習は「伸びたか伸びなかったか」しか出ていなかった。
 /// 伸びなかった週が、運が悪かったのか踏み込みが足りなかったのかも分からない。
 enum TrainingOutcome {
-  great('大成功', 'いつもより深く入った'),
-  good('手応えあり', 'いつもどおり積んだ'),
-  flat('空回り', '身体が言うことを聞かなかった');
+  great(Say('大成功', 'A great week'), Say('いつもより深く入った', 'You went deeper than usual')),
+  good(Say('手応えあり', 'A good week'), Say('いつもどおり積んだ', 'You put in the usual work')),
+  flat(Say('空回り', 'A wasted week'), Say('身体が言うことを聞かなかった', 'Your body would not do what you asked'));
 
-  const TrainingOutcome(this.label, this.description);
+  const TrainingOutcome(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 
   /// 伸びの抽選を何回引くか。大成功なら2回、空回りなら0回。
   int get rolls => switch (this) {
@@ -193,106 +212,106 @@ enum TrainingOutcome {
 /// どちらが得かが状況で変わるから、毎週の選択に意味が出る。
 enum TrainingMenu {
   rest(
-    '休養',
-    '完全に休む。コンディションが戻り、溜まった疲労も抜ける',
+    Say('休養', 'Rest'),
+    Say('完全に休む。コンディションが戻り、溜まった疲労も抜ける', 'Complete rest. Condition comes back, and built-up fatigue clears'),
     [],
     conditionCost: 0,
     recovery: 30,
     fatigueRelief: Formulas.restFatigueRelief,
   ),
   lightWork(
-    'リカバリー',
-    '軽く流す。しっかり戻して怪我も遠ざけるが、疲労は抜けない',
+    Say('リカバリー', 'Recovery'),
+    Say('軽く流す。しっかり戻して怪我も遠ざけるが、疲労は抜けない', 'Light work. Good recovery and fewer injuries, but fatigue stays'),
     [],
     conditionCost: 0,
     recovery: 38,
     injuryFactor: 0.6,
   ),
   sprint(
-    'スプリント',
-    'スピードを上げる',
+    Say('スプリント', 'Sprints'),
+    Say('スピードを上げる', 'Get quicker'),
     [AttributeKey.pace],
     conditionCost: 12,
     growthFactor: 1.1,
   ),
   strengthWork(
-    'ウェイト',
-    '当たりに強くなる',
+    Say('ウェイト', 'Weights'),
+    Say('当たりに強くなる', 'Stand up to contact'),
     [AttributeKey.physical],
     conditionCost: 12,
     growthFactor: 1.1,
     injuryFactor: 1.2,
   ),
   finishingWork(
-    'シュート',
-    '枠に飛ばす回数を増やす',
+    Say('シュート', 'Shooting'),
+    Say('枠に飛ばす回数を増やす', 'Hit the target more often'),
     [AttributeKey.shooting],
     conditionCost: 10,
     growthFactor: 1.1,
   ),
   technique(
-    'テクニック',
-    'ボールを止めて運ぶ',
+    Say('テクニック', 'Technique'),
+    Say('ボールを止めて運ぶ', 'Control it and carry it'),
     [AttributeKey.dribbling],
     conditionCost: 10,
     growthFactor: 1.1,
   ),
   passingWork(
-    'パス＆コントロール',
-    '味方に届ける',
+    Say('パス＆コントロール', 'Passing and control'),
+    Say('味方に届ける', 'Find your teammates'),
     [AttributeKey.passing],
     conditionCost: 10,
     growthFactor: 1.1,
   ),
   defenceWork(
-    '守備',
-    '奪う・止める',
+    Say('守備', 'Defending'),
+    Say('奪う・止める', 'Win it and stop it'),
     [AttributeKey.defending],
     conditionCost: 11,
     growthFactor: 1.1,
   ),
   keeperWork(
-    'GK専門',
-    'ゴール前の技術',
+    Say('GK専門', 'Goalkeeping'),
+    Say('ゴール前の技術', 'The craft of the six-yard box'),
     [AttributeKey.goalkeeping],
     conditionCost: 11,
     growthFactor: 1.1,
   ),
   athletic(
-    'フィジカル総合',
-    '走力と当たりを同時に',
+    Say('フィジカル総合', 'Full physical'),
+    Say('走力と当たりを同時に', 'Running and contact together'),
     [AttributeKey.pace, AttributeKey.physical],
     conditionCost: 16,
     growthFactor: 0.65,
     injuryFactor: 1.4,
   ),
   attacking(
-    '攻撃練習',
-    'シュートと仕掛けを合わせて',
+    Say('攻撃練習', 'Attacking'),
+    Say('シュートと仕掛けを合わせて', 'Shooting and taking players on'),
     [AttributeKey.shooting, AttributeKey.dribbling],
     conditionCost: 15,
     growthFactor: 0.65,
     injuryFactor: 1.2,
   ),
   tactical(
-    '戦術・判断',
-    'パスと守備の関係を詰める',
+    Say('戦術・判断', 'Tactics and decisions'),
+    Say('パスと守備の関係を詰める', 'Tighten passing and defending together'),
     [AttributeKey.passing, AttributeKey.defending],
     conditionCost: 14,
     growthFactor: 0.65,
   ),
   possession(
-    'ポゼッション',
-    '運ぶ技術と配球を合わせて',
+    Say('ポゼッション', 'Possession'),
+    Say('運ぶ技術と配球を合わせて', 'Carrying and distribution together'),
     [AttributeKey.dribbling, AttributeKey.passing],
     conditionCost: 14,
     growthFactor: 0.65,
   ),
-  weakFootWork('逆足', '利き足でないほうだけを使う', [], conditionCost: 10, weakFoot: true);
+  weakFootWork(Say('逆足', 'Weaker foot'), Say('利き足でないほうだけを使う', 'Nothing but your other foot'), [], conditionCost: 10, weakFoot: true);
 
   const TrainingMenu(
-    this.label,
-    this.description,
+    Say label,
+    Say description,
     this.keys, {
     required this.conditionCost,
     this.recovery = 0,
@@ -300,10 +319,14 @@ enum TrainingMenu {
     this.growthFactor = 1.0,
     this.injuryFactor = 1.0,
     this.weakFoot = false,
-  });
+  }) : _label = label,
+       _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 
   /// 伸ばす対象。空なら休養系。
   final List<AttributeKey> keys;
@@ -366,14 +389,18 @@ enum TrainingMenu {
 
 /// 居残りで磨く専門技術。
 enum SetPiece {
-  freeKick('FK', '直接フリーキック'),
-  penalty('PK', 'ペナルティキック'),
-  corner('CK', 'コーナーキック');
+  freeKick('FK', Say('直接フリーキック', 'Free kicks')),
+  penalty('PK', Say('ペナルティキック', 'Penalties')),
+  corner('CK', Say('コーナーキック', 'Corners'));
 
-  const SetPiece(this.label, this.description);
+  const SetPiece(this.label, Say description) : _description = description;
 
+  /// 略称（FK・PK・CK）はどちらの言語でも同じ。
   final String label;
-  final String description;
+
+  final Say _description;
+
+  String get description => _description.t;
 }
 
 /// セットプレーの精度 1〜99。
