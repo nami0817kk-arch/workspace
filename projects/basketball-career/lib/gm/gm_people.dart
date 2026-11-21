@@ -38,6 +38,25 @@ GmEye eyeOf(GmPerson p) {
   return x < 6 ? GmEye.sharp : x < 15 ? GmEye.normal : GmEye.loose;
 }
 
+/// GM の話し方(2026-11-21 の作り込み T-3)。強気は初めに高く吹っかけ、素直は落としどころに近い案を出し、気の短い GM は早く打ち切る。
+enum GmTemper {
+  strong('強気', 3),
+  honest('素直', 3),
+  short('気の短い', 2);
+
+  const GmTemper(this.label, this.rounds);
+  final String label;
+
+  /// やり取りできる回数。
+  final int rounds;
+}
+
+GmTemper temperOf(GmPerson p) => switch (p.style) {
+      GmStyle.aggressive || GmStyle.gambler => GmTemper.strong,
+      GmStyle.patient || GmStyle.analytic => GmTemper.honest,
+      GmStyle.thrifty => GmTemper.short,
+    };
+
 /// ほかのチームの GM(名前と型)。
 class GmPerson {
   const GmPerson(this.name, this.style);

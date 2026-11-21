@@ -107,9 +107,17 @@ void main() {
     await tester.pumpAndSettle();
     final v = car.judge(TradeOffer(partner: them.index, give: [ours.id], get: [theirs.id]));
     final ok = v.ok;
-    expect(find.text(ok ? '受けてくれそう' : v.reason), findsOneWidget);
+    // 相手の反応は幅で見せる(ぴったりは分からない)。釣り合わない形なら、その理由
+    if (v.ratio <= 0) {
+      expect(find.text(v.reason), findsOneWidget);
+    } else {
+      expect(find.textContaining(RegExp('受けてくれそう|あと一押し|五分五分|足りなそう|話にならない')), findsOneWidget);
+    }
     if (ok) {
+      // 申し込むと、相手とのやり取りになる(受けるなら「成立させる」)
       await tester.tap(find.text('申し込む'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('成立させる'));
       await tester.pumpAndSettle();
       expect(car.me.roster.any((p) => p.id == theirs.id), isTrue);
       expect(find.textContaining('トレードが成立した'), findsOneWidget);
@@ -160,7 +168,8 @@ void main() {
     await tester.tap(find.text('並べる').first);
     await tester.pumpAndSettle();
     expect(find.textContaining('出す: ${p.name}'), findsOneWidget);
-    expect(find.text('受けてくれそう'), findsOneWidget);
+    // 受けてもらえる申し込みでも、反応は幅で見せる(信頼や見る目しだいで「五分五分」に見えることもある)
+    expect(find.textContaining(RegExp('受けてくれそう|あと一押し|五分五分')), findsOneWidget);
   });
 
   testWidgets('続きは保存され、起動するとはじめの画面から「続きから」で戻れる', (tester) async {

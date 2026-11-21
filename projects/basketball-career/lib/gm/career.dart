@@ -4856,7 +4856,7 @@ class Career {
     // 強く警戒している相手は、話に応じない(T-4)
     if (trustOf(o.partner) <= -60) return TradeVerdict(false, '${teams[o.partner].def.short}は警戒していて、話に応じない', 0);
     return judgeTrade(teams, picks, mine, o, season,
-        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner), needs: true, seen: _eyeFn(o.partner), cheap: _cheapOf(o.partner));
+        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner) * (keenFor(o) ? 0.93 : 1.0), needs: true, seen: _eyeFn(o.partner), cheap: _cheapOf(o.partner));
   }
 
   /// 入れ替え権を出し入れできる最初の年(今年のドラフトの順が決まったあとは、次の年から)。
@@ -4907,6 +4907,10 @@ class Career {
   bool propose(TradeOffer o) {
     final v = judge(o);
     if (!v.ok) return false;
+    // 相手の逆の案を受けて成立したなら、信用が少し上がる(T-3・T-4)
+    if (_talkPartner == o.partner && _talkRounds > 1) _addTrust(o.partner, 5);
+    _talkPartner = -1;
+    _talkRounds = 0;
     _logTrade(mine, o);
     _fanTrade(o);
     _keepTrade(o);
@@ -4916,6 +4920,103 @@ class Career {
     // ドラフト中に今の指名権を出したら、次の自分の番まで進める(止まったままにならないように)
     if (phase == Phase.draft) _advanceDraft();
     return true;
+  }
+
+  // --- 駆け引き(2026-11-21 の作り込み T-3) ---
+  int _talkPartner = -1;
+  int _talkRounds = 0;
+
+  /// [partner] とあと何回やり取りできるか。
+  int talkRoundsLeft(int partner) => temperOf(gmPerson(partner)).rounds - (_talkPartner == partner ? _talkRounds : 0);
+
+  /// 相手の本気度: 相手の事情に合う申し込みか(ポジションの穴を埋める・年俸を引き取る・もめている選手を引き取る・優勝狙いに主力を出す)。
+  /// 本気なら相手は少し折れやすい(受けにくさ 0.93倍)。
+  bool keenFor(TradeOffer o) {
+    final t = teams[o.partner];
+    final give = [for (final id in o.give) ...me.roster.where((p) => p.id == id)];
+    final get = [for (final id in o.get) ...t.roster.where((p) => p.id == id)];
+    final hole = holeOf(t);
+    if (hole != null && give.any((p) => p.pos == hole)) return true;
+    if ((t.mode == TeamMode.cutCost || t.payroll > taxLine) && get.fold(0, (s, p) => s + p.salary) > give.fold(0, (s, p) => s + p.salary) + 50) return true;
+    final f = feudOf(t);
+    if (f != null && o.get.contains(f.id)) return true;
+    if (t.mode == TeamMode.contend && give.any((p) => p.ovr >= 78)) return true;
+    return false;
+  }
+
+  /// こちらの案 [o] への相手の返事(T-3)。受ける・逆の案(どこを直せば通るか)・打ち切り のどれか。
+  TalkReply talk(TradeOffer o) {
+    if (_talkPartner != o.partner) {
+      _talkPartner = o.partner;
+      _talkRounds = 0;
+    }
+    final temper = temperOf(gmPerson(o.partner));
+    final keen = keenFor(o);
+    final v = judge(o);
+    _talkRounds++;
+    final left = temper.rounds - _talkRounds;
+    if (v.ok) {
+      return TalkReply(
+        ok: true,
+        keen: keen,
+        roundsLeft: left,
+        line: keen
+            ? 'どうしても欲しかった。受けよう'
+            : temper == GmTemper.strong
+                ? '…いいだろう。乗った'
+                : 'いい話だ。受けよう',
+      );
+    }
+    if (v.ratio <= 0) return TalkReply(line: v.reason, roundsLeft: left);
+    if (left < 0) {
+      // しつこく言い返すと、機嫌が下がる(T-4 の信用)
+      _addTrust(o.partner, -3);
+      return TalkReply(ended: true, roundsLeft: 0, line: temper == GmTemper.short ? 'もういい。この話は終わりだ' : 'これ以上は話にならない。また今度にしよう');
+    }
+    var counter = suggestAddition(o);
+    // 強気の GM は、最初の返事で1つ多く求める(吹っかける)
+    if (counter != null && temper == GmTemper.strong && _talkRounds == 1) counter = _addCheapest(counter) ?? counter;
+    final what = counter == null ? '' : _addedText(o, counter);
+    final head = keen
+        ? 'この話は前向きに考えたい。'
+        : v.ratio < 0.5
+            ? 'それなら他を当たる。'
+            : '';
+    final line = counter == null
+        ? '$headどう足されても、この形では受けない'
+        : switch (temper) {
+            GmTemper.strong => '$head$whatも付けるなら、考えてやる',
+            GmTemper.honest => '$head$whatを足してくれれば受ける',
+            GmTemper.short => '$head$what。それで決めてくれ',
+          };
+    return TalkReply(counter: counter, keen: keen, roundsLeft: left, line: line);
+  }
+
+  /// こちらから出すものに、相手から見ていちばん惜しくないもの(選手か指名権)を1つ足した案(受けるかは見ない)。
+  TradeOffer? _addCheapest(TradeOffer o) {
+    final mode = teams[o.partner].mode;
+    TradeOffer? best;
+    var bv = double.infinity;
+    for (final p in me.roster) {
+      if (o.give.contains(p.id) || expiring.contains(p.id) || optionPending.contains(p.id)) continue;
+      final v = playerValue(p, mode);
+      if (v > 0 && v < bv) {
+        bv = v;
+        best = TradeOffer(partner: o.partner, give: [...o.give, p.id], get: o.get, givePicks: o.givePicks, protections: o.protections, getPicks: o.getPicks, giveSwaps: o.giveSwaps, getSwaps: o.getSwaps);
+      }
+    }
+    return best;
+  }
+
+  /// [from] から [to] で足されたもの(「○○と2巡目」)。
+  String _addedText(TradeOffer from, TradeOffer to) {
+    final names = [
+      for (final id in to.give)
+        if (!from.give.contains(id)) ...me.roster.where((p) => p.id == id).map((p) => p.name),
+      for (final i in to.givePicks)
+        if (!from.givePicks.contains(i)) '${picks[i].when(season)}の${picks[i].round}巡目',
+    ];
+    return names.join('と');
   }
 
   /// 自分のトレードの記録(古い順)。あとで「今の力」で評価する。
@@ -5798,3 +5899,26 @@ String tradeGradeOf(double score) => score >= 30
                 : score > -15
                     ? 'D'
                     : 'F';
+
+/// 申し込みへの相手の返事(T-3)。
+class TalkReply {
+  const TalkReply({required this.line, this.ok = false, this.counter, this.keen = false, this.roundsLeft = 0, this.ended = false});
+
+  /// 相手のひとこと。
+  final String line;
+
+  /// 受ける。
+  final bool ok;
+
+  /// 逆の案(これなら受ける)。
+  final TradeOffer? counter;
+
+  /// 本気度が高い(事情に合う申し込み)。
+  final bool keen;
+
+  /// あと何回やり取りできるか。
+  final int roundsLeft;
+
+  /// 話を打ち切られた。
+  final bool ended;
+}
