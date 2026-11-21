@@ -12,6 +12,7 @@ import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
 import '../widgets/youth_league_table.dart';
+import '../widgets/help_button.dart';
 import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
@@ -289,21 +290,14 @@ class _YouthScreenState extends State<YouthScreen> {
                   },
                 ),
             const Divider(height: 32),
+            // 説明は「?」の中へ(2026-11-21)。
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                Tr.pick('昇格候補', 'Academy prospects'),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                Tr.pick(
-                    '昇格候補はユース施設で育成され続けます(成長係数 x${gameState.youthAcademyGrowthFactor.toStringAsFixed(2)}。ユース施設のレベルを上げるとじっくり育てる価値が高まります)。毎週ユース練習試合も行われ、活躍した候補はさらに伸びます',
-                    'Prospects keep developing in your youth setup (growth x${gameState.youthAcademyGrowthFactor.toStringAsFixed(2)}; better facilities make it more worthwhile to be patient). They also play a youth match each week, and those who do well improve faster'),
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.subtleText(context)),
+              padding: const EdgeInsets.only(left: 16, right: 4),
+              child: TitleWithHelp(
+                title: Tr.pick('昇格候補', 'Academy prospects'),
+                help: Tr.pick(
+                    '昇格候補はユース施設で育ち続けます(いまの成長は${gameState.youthAcademyGrowthFactor.toStringAsFixed(2)}倍。ユース施設のレベルを上げるほど、じっくり育てる価値が高まります)。毎週ユースの練習試合もあり、活躍した候補はさらに伸びます。',
+                    'Prospects keep developing in your youth setup (growth x${gameState.youthAcademyGrowthFactor.toStringAsFixed(2)}; better facilities make it more worthwhile to be patient). They also play a youth match each week, and those who do well improve faster.'),
               ),
             ),
             if (gameState.save!.youthLeague != null)

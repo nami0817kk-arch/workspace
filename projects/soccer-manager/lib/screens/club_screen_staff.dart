@@ -15,28 +15,50 @@ class _StaffCard extends StatelessWidget {
     final current = gameState.staffFor(role);
     final candidates = gameState.staffCandidatesFor(role);
 
+    // 役職ごとに見出しの1行(役職・効き目・いまの人)。候補はいつも畳み、
+    // 「候補を見る」で開く。始めは全役職が空いていて、赤い空席の文と
+    // 候補3人ずつが並び、タブが画面7つ分あった(2026-11-21)。
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(role.label, style: Theme.of(context).textTheme.titleSmall),
-            Text(
-              role.description,
-              style: TextStyle(
-                  fontSize: 12, color: SemanticColors.subtleText(context)),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(role.label,
+                          style: Theme.of(context).textTheme.titleSmall),
+                      Text(
+                        role.description,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.subtleText(context)),
+                      ),
+                    ],
+                  ),
+                ),
+                if (current == null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, top: 2),
+                    child: Text(
+                      Tr.pick('まだいません', 'Not filled'),
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.orange.shade700),
+                    ),
+                  ),
+              ],
             ),
-            const SizedBox(height: 8),
-            if (current == null)
-              Text(
-                Tr.pick('空席です。就いている人がいない間、この役職の効果はありません。',
-                    'Vacant. Nothing works in this post while it is empty.'),
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.negative(context)),
-              )
-            else ...[
+            if (current != null) ...[
               _StaffRow(
                 staff: current,
                 trailing: TextButton(
@@ -59,65 +81,150 @@ class _StaffCard extends StatelessWidget {
               if (gameState.staffOfferFor(role) case final offer?)
                 _StaffOfferBox(offer: offer),
             ],
-            // 候補の一覧。就いている人がいる役職は畳んでおき、押すと開く
-            // (6役それぞれに候補が並び、ページが縦に12画面分あった)。
-            if (candidates.isNotEmpty && current != null)
+            // 候補の一覧はいつも畳んでおき、押すと表で開く。
+            if (candidates.isNotEmpty)
               Theme(
                 data: Theme.of(context)
                     .copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
                   tilePadding: EdgeInsets.zero,
                   childrenPadding: EdgeInsets.zero,
+                  dense: true,
                   title: Text(
-                    Tr.pick('雇える候補(${candidates.length}人)',
-                        'Available to hire (${candidates.length})'),
+                    Tr.pick('候補を見る(${candidates.length}人)',
+                        'See candidates (${candidates.length})'),
                     style: TextStyle(
                         fontSize: 13,
-                        color: SemanticColors.subtleText(context)),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
-                  children: [
-                    for (final c in candidates) _candidateRow(context, c),
-                  ],
+                  children: [_candidateTable(context, candidates)],
                 ),
-              )
-            else if (candidates.isNotEmpty) ...[
-              const Divider(height: 20),
-              Text(
-                Tr.pick('雇える候補', 'Available to hire'),
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
-              const SizedBox(height: 4),
-              for (final c in candidates) _candidateRow(context, c),
-            ],
           ],
         ),
       ),
     );
   }
 
-  Widget _candidateRow(BuildContext context, StaffMember c) {
+  /// 候補の表。同じ役職の候補は効く能力が同じなので、能力を列にそろえて
+  /// 見比べられるようにする(2026-11-21)。
+  Widget _candidateTable(BuildContext context, List<StaffMember> list) {
+    final weights = staffRoleWeights(role);
+    final gs = context.read<GameState>();
+    final scheme = Theme.of(context).colorScheme;
+    final head = TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        color: scheme.onSurfaceVariant);
+    const small = TextStyle(fontSize: 12);
+    Widget cell(String s, double w, TextStyle st) => SizedBox(
+          width: w,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(s, style: st),
+          ),
+        );
+    return Column(
+      children: [
+        Container(
+          color: scheme.surfaceContainerHighest,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Row(
+            children: [
+              Expanded(child: Text(Tr.pick('名前', 'Name'), style: head)),
+              for (final a in weights.keys) cell(a.label, 56, head),
+              cell(Tr.pick('年俸', 'Salary'), 60, head),
+              cell(Tr.pick('契約', 'Until'), 64, head),
+              const SizedBox(width: 72),
+            ],
+          ),
+        ),
+        for (final (i, c) in list.indexed)
+          Container(
+            color: i.isOdd ? scheme.surfaceContainerLow : null,
+            padding: const EdgeInsets.only(left: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(children: [
+                          TextSpan(
+                              text: '${c.name} (${c.age})',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                          if (c.specialty != StaffSpecialty.balanced)
+                            TextSpan(
+                                text: '  ${c.specialty.label}',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: SemanticColors.subtleText(context))),
+                          if (c.formerPlayerId != null)
+                            TextSpan(
+                                text: Tr.pick('  うちのOB', '  One of ours'),
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: SemanticColors.subtleText(context))),
+                        ]),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: small,
+                      ),
+                    ),
+                    for (final a in weights.keys)
+                      cell(
+                          '${c.attribute(a)}',
+                          56,
+                          small.copyWith(
+                              fontWeight: (weights[a] ?? 0) >= 0.5
+                                  ? FontWeight.bold
+                                  : null,
+                              color: (weights[a] ?? 0) >= 0.5
+                                  ? scheme.primary
+                                  : null)),
+                    cell(formatMoney(annualFromWeekly(gs.scaledMoney(c.wage))),
+                        60, small),
+                    cell(
+                        Tr.pick(
+                            '${Player.contractClockYear + c.contractYears - 1}/6',
+                            '6/${Player.contractClockYear + c.contractYears - 1}'),
+                        64,
+                        small),
+                    SizedBox(width: 72, child: _hireButton(context, c)),
+                  ],
+                ),
+                if (c.manager != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6, right: 8),
+                    child: _ManagerProfileLines(staff: c),
+                  ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _hireButton(BuildContext context, StaffMember c) {
     final gameState = context.read<GameState>();
-    return _StaffRow(
-      staff: c,
-      trailing: FilledButton(
-        onPressed: () async {
-          final messenger = ScaffoldMessenger.of(context);
-          final ok = await runUndoable(
-            context,
-            action: () => gameState.hireStaff(c.id),
-            done: Tr.pick('${c.name}を雇いました', 'Hired ${c.name}'),
-          );
-          if (!ok) {
-            messenger.showSnackBar(SnackBar(
-              content: Text(gameState.lastSigningBlockReason ??
-                  Tr.pick(
-                      '給与予算が足りません。', 'Your wage budget will not cover him.')),
-            ));
-          }
-        },
-        child: Text(Tr.pick('雇う', 'Hire')),
-      ),
+    return TextButton(
+      onPressed: () async {
+        final messenger = ScaffoldMessenger.of(context);
+        final ok = await runUndoable(
+          context,
+          action: () => gameState.hireStaff(c.id),
+          done: Tr.pick('${c.name}を雇いました', 'Hired ${c.name}'),
+        );
+        if (!ok) {
+          messenger.showSnackBar(SnackBar(
+            content: Text(gameState.lastSigningBlockReason ??
+                Tr.pick('給与予算が足りません。', 'Your wage budget will not cover him.')),
+          ));
+        }
+      },
+      child: Text(Tr.pick('雇う', 'Hire')),
     );
   }
 }
