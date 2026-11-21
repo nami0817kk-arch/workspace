@@ -24,7 +24,7 @@ void main() {
     expect(await gs.buyClubInCountry(LeagueTheme.germany), isFalse);
   });
 
-  test('手放したあとに別の国で立ち上げると、その国の規則・リーグ・4部から始まる', () async {
+  test('手放したあとに別の国で立ち上げると、その国の規則・リーグ・3部(最下部)から始まる', () async {
     final gs = GameState();
     await gs.startNewGame('テストFC');
     final save = gs.save!;
@@ -34,7 +34,7 @@ void main() {
     expect(await gs.buyClubInCountry(LeagueTheme.germany), isTrue);
     expect(gs.save!.leagueName, LeagueTheme.germany.label);
     expect(gs.ruleSet, RuleSet.germany);
-    expect(gs.save!.currentDivisionTier, 4);
+    expect(gs.save!.currentDivisionTier, 3);
     expect(gs.save!.ownerLegacies.length, legacies + 1);
     expect(gs.save!.confidence, 60);
     expect(gs.save!.league.teams.length, LeagueTheme.germany.teamsInTier(4));

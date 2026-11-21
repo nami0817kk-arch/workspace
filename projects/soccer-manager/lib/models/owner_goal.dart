@@ -76,8 +76,13 @@ extension OwnerGoalInfo on OwnerGoal {
 class OwnerGoalRules {
   const OwnerGoalRules._();
 
-  /// 「資金を増やす」の目標額(万円)。10億。5部の初期資金(2億)の5倍。
-  static const int richTarget = 100000;
+  /// 「資金を増やす」の目標額(万円)。35億。3部の初期資金(年収の半年分、
+  /// 7億)の5倍。5部制のときは10億(5部の初期資金 2億の5倍)だった。
+  static const int richTarget = typicalAnnualIncome3 ~/ 2 * 5;
+
+  /// 3部の年収の目安(economy_scale の typicalAnnualIncome(3))。const で
+  /// 使うので数で持つ。
+  static const int typicalAnnualIncome3 = 140000;
 
   /// 「クラブ価値を増やす」の倍率。
   static const double valueTarget = 2.0;

@@ -1150,14 +1150,14 @@ class GameState extends ChangeNotifier {
     Player.contractClockYear = Player.seasonEndYearOf(1);
     // 選手の名前はリーグの国の名前で作る(他国の選手は後で国籍に合わせる)。
     NamePool.homeTheme = theme;
+    // ピラミッドの最下層(3部制なので3部)からスタートする。
+    const userStartTier = totalDivisionTiers;
     final userTeam = PlayerGenerator.generateSquad(
       id: 'user',
       name: clubName,
-      strengthTier: 60,
+      strengthTier: userStartStrength(userStartTier),
     );
     final rng = Random();
-    // 5部制ピラミッドの最下層(5部)からスタートする。
-    const userStartTier = totalDivisionTiers;
     final allNames = NamePool.themedClubNames(
       theme,
       theme.teamsByTier.fold<int>(0, (a, n) => a + n) - 1,
@@ -1228,6 +1228,7 @@ class GameState extends ChangeNotifier {
       ],
       pendingSponsorOffers: SponsorEngine.generateOffers(
         userTeam.overallRating,
+        tier: userStartTier,
       ),
       friendlies: _generateFriendlies(teams, 'user'),
       otherDivisionLeagues: otherDivisionLeagues,
@@ -1244,7 +1245,7 @@ class GameState extends ChangeNotifier {
     _save!.economyNext =
         EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
     // 難易度による初期条件の補正(資金と理事会目標の厳しさ)。
-    _save!.budget = (_save!.budget *
+    _save!.budget = (initialBudgetFor(userStartTier) *
             _save!.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     _save!.boardTargetRank = _difficultyAdjustedTarget(_save!.boardTargetRank);
@@ -1493,6 +1494,18 @@ class GameState extends ChangeNotifier {
 
   /// 新しいゲームの初期資金(5部の額)。5部の年収の半年分ほど。
   static const int initialBudgetTier5 = 20000;
+
+  /// [tier] 部から始めるときの初期資金。その部の年収の半年分
+  /// (5部なら [initialBudgetTier5] と同じ 2億)。3部制にして3部から
+  /// 始まるようになった(2026-11-22)。
+  static int initialBudgetFor(int tier) => typicalAnnualIncome(tier) ~/ 2;
+
+  /// [tier] 部から始めるときの自クラブの強さ。その部の真ん中
+  /// (3部なら 72)。人件費率がその部の真ん中のクラブと同じくらいになる。
+  static int userStartStrength(int tier) {
+    final (lo, hi) = divisionStrengthRange(tier);
+    return (lo + hi) ~/ 2;
+  }
 
   /// 大陸カップのグループステージで1勝するごとの賞金。
   static const int continentalGroupWinPrize = 40;

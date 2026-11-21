@@ -35,40 +35,33 @@ void main() {
     }
   }
 
-  /// 4部で戦っている形にする(3部へ上がるにはライセンスで資金を見る)。
-  void playInTier4(GameState gs) {
-    final s = gs.save!;
-    final tier4 = s.otherDivisionLeagues[3];
-    s.otherDivisionLeagues[3] = null;
-    s.otherDivisionLeagues[4] = tier4;
-    s.currentDivisionTier = 4;
-  }
+  // 3部制(2026-11-22)。新しいゲームは最下部の3部から始まり、2部へ上がる
+  // にはライセンス(スタジアム2・資金がマイナスでない)を見る。
 
-  test('首位でも、資金がマイナスなら3部へ上がれず、権利は2位に移る', () async {
+  test('首位でも、資金がマイナスなら2部へ上がれず、権利は2位に移る', () async {
     final gs = GameState();
     await gs.startNewGame('赤字FC');
-    playInTier4(gs);
+    expect(gs.currentDivisionTier, 3);
+    gs.save!.infrastructure.facilityLevels[FacilityType.stadium] = 2;
     winEverything(gs);
     // 季末の賞金などで判定の前にプラスへ戻らないよう、大きく赤字にする。
-    gs.save!.budget = -1000000;
-    expect(gs.clubLicenseUnmet(3), isNotEmpty);
+    gs.save!.budget = -10000000;
+    expect(gs.clubLicenseUnmet(2), isNotEmpty);
     await gs.startNextSeason();
-    expect(gs.currentDivisionTier, 4);
+    expect(gs.currentDivisionTier, 3);
     expect(gs.lastDivisionChangeMessage, isNotNull);
     expect(gs.lastDivisionChangeMessage!.toLowerCase(),
         anyOf(contains('ライセンス'), contains('licence')));
   });
 
-  test('首位で資金が足りていれば、3部へ上がれる', () async {
+  test('首位で資金とスタジアムが足りていれば、2部へ上がれる', () async {
     final gs = GameState();
     await gs.startNewGame('黒字FC');
-    playInTier4(gs);
+    gs.save!.infrastructure.facilityLevels[FacilityType.stadium] = 2;
     winEverything(gs);
-    gs.save!.budget = 100000;
-    expect(gs.clubLicenseUnmet(3), isEmpty);
-    expect(
-        gs.save!.infrastructure.facilityLevel(FacilityType.stadium), 1);
+    gs.save!.budget = 1000000;
+    expect(gs.clubLicenseUnmet(2), isEmpty);
     await gs.startNextSeason();
-    expect(gs.currentDivisionTier, 3);
+    expect(gs.currentDivisionTier, 2);
   });
 }

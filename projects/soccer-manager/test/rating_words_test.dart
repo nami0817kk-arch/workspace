@@ -13,8 +13,9 @@ void main() {
     expect(RatingWords.forOverall(83), '1部で通用する');
     expect(RatingWords.forOverall(80), '2部の主力級');
     // 部の幅は重なっている。上の部で通用するなら、そちらを言う。
-    expect(RatingWords.forOverall(58), '4部で通用する');
-    expect(RatingWords.forOverall(50), '5部で通用する');
-    expect(RatingWords.forOverall(40), '5部でも控え');
+    expect(RatingWords.forOverall(66), '3部で通用する');
+    // 3部制(2026-11-22)。3部の幅(65〜)に届かなければ控え。
+    expect(RatingWords.forOverall(58), '3部でも控え');
+    expect(RatingWords.forOverall(40), '3部でも控え');
   });
 }

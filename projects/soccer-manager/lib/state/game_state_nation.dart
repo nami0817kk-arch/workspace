@@ -90,7 +90,7 @@ extension GameStateNation on GameState {
   bool get workPermitRequired => currentLeagueTheme == LeagueTheme.england;
 
   /// 労働許可に要る総合力(上の部ほど高い)。
-  int workPermitMinimum(int tier) => 76 - tier * 4; // 1部72・5部56
+  int workPermitMinimum(int tier) => 76 - tier * 4; // 1部72・3部64
 
   /// 労働許可が下りないなら、その理由。下りるなら null。
   String? workPermitBlock(Player p) {

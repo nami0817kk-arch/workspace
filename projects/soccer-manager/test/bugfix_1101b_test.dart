@@ -230,7 +230,8 @@ void main() {
     );
     save.staffCandidates.add(candidate);
     // 入れ替えると週俸は10増えるだけ。60を丸ごと足すと上限を超える。
-    save.wageBudget = game.weeklyWageBill + 20;
+    // スタッフの週俸は部の規模で掛かる(3部から始まる。2026-11-22)。
+    save.wageBudget = game.weeklyWageBill + game.scaledMoney(20);
 
     final ok = await game.hireStaff('new');
 

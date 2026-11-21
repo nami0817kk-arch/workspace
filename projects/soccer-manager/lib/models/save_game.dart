@@ -705,7 +705,7 @@ class SaveGame {
     required this.league,
     // i18n-ignore: セーブに保存されるデータの既定値(上のコメント参照)。
     this.leagueName = 'リーグ',
-    this.budget = 20000, // 5部の年収の半年分ほど(GameState.initialBudgetTier5)
+    this.budget = 20000, // 始めるときは GameState.initialBudgetFor(部) で入れ直す
     this.boardTargetRank = 4,
     this.managerTargetRank = 0,
     this.managerStanding = 60,
@@ -1247,7 +1247,7 @@ class SaveGame {
   factory SaveGame.fromJson(Map<String, dynamic> json) {
     final season = (json['league'] as Map?)?['season'] as int? ?? 1;
     Player.contractClockYear = Player.seasonEndYearOf(season);
-    return SaveGame._fromJson(json);
+    return SaveGame._fromJson(json).._fitToTierCount();
   }
 
   factory SaveGame._fromJson(Map<String, dynamic> json) => SaveGame(
@@ -1690,6 +1690,23 @@ class SaveGame {
     final parsed = DateTime.tryParse(raw);
     if (parsed == null) return null;
     return DateTime(parsed.year, parsed.month, parsed.day);
+  }
+
+  /// 部の数([totalDivisionTiers])に合わせる。2026-11-22 に5部制から3部制に
+  /// した。4部・5部にいたセーブは、いまのリーグをそのまま3部として続ける
+  /// (その季の順位と成績は引き継ぐ)。なくなった部のリーグは捨てる。
+  void _fitToTierCount() {
+    final tier = currentDivisionTier.clamp(1, totalDivisionTiers);
+    final fitted = List<League?>.filled(totalDivisionTiers, null);
+    for (var i = 0;
+        i < totalDivisionTiers && i < otherDivisionLeagues.length;
+        i++) {
+      fitted[i] = otherDivisionLeagues[i];
+    }
+    // 自クラブのいる部の欄は使わない(null)。
+    fitted[tier - 1] = null;
+    otherDivisionLeagues = fitted;
+    currentDivisionTier = tier;
   }
 
   /// 5部制ピラミッド導入前の旧セーブデータ(`otherDivisionLeagues`キーが
