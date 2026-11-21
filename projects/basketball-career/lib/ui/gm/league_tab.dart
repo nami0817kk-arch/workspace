@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/eras.dart';
 import '../../gm/codex.dart';
 
 import '../../gm/career.dart';
@@ -379,6 +380,35 @@ class _Standings extends StatelessWidget {
             ),
           ),
         ],
+        const SectionTitle('リーグの流行'),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('今は「${car.era.label}」', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: GmColors.gold)),
+              Text(car.era.text, style: const TextStyle(fontSize: 12)),
+              const SizedBox(height: 6),
+              for (final e in Era.values)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Row(children: [
+                    SizedBox(width: 110, child: Text(e.label, style: const TextStyle(fontSize: 11.5))),
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(3),
+                        child: LinearProgressIndicator(value: car.eraWeights[e.index], minHeight: 7, color: e == car.era ? GmColors.gold : GmColors.ball, backgroundColor: GmColors.line),
+                      ),
+                    ),
+                  ]),
+                ),
+              const SizedBox(height: 6),
+              Text('次は「${car.nextEra.label}」が来るといううわさ。流行から外れた型の選手は、トレードでも FA でも安い。', style: const TextStyle(fontSize: 11.5, color: GmColors.sub)),
+              if (car.eraHistory.isNotEmpty)
+                Text('これまで: ${[for (var i = 0; i < car.eraHistory.length; i++) '${i + 1}年目 ${Era.values[car.eraHistory[i]].label.replaceAll('の時代', '')}'].join('・')}',
+                    style: const TextStyle(fontSize: 11.5, color: GmColors.sub)),
+            ]),
+          ),
+        ),
         const SectionTitle('リーグの歴史'),
         Card(
           child: ListTile(

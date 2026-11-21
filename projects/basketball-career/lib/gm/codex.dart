@@ -1,6 +1,5 @@
 import 'career.dart';
 import 'combos.dart';
-import 'draft.dart';
 import 'game_sim.dart';
 import 'personality.dart';
 import 'player.dart';
@@ -74,7 +73,7 @@ Map<String, String> discoveriesOf(Career c) {
   // ドラフトの年: 終わったドラフト(今季のドラフトは、指名が始まってから)
   final last = c.phase == Phase.draft || c.phase == Phase.contracts || c.phase == Phase.over ? c.season : c.season - 1;
   for (var s = 1; s <= last; s++) {
-    final d = draftClassOf(c.seed, s);
+    final d = c.draftClassFor(s);
     if (d.quality == 1) out.putIfAbsent('draft:good', () => '$s年目のドラフト');
     if (d.quality == -1) out.putIfAbsent('draft:bad', () => '$s年目のドラフト');
     if (d.star) out.putIfAbsent('draft:star', () => '$s年目のドラフト');
