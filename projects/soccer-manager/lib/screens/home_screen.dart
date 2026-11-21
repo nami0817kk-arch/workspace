@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'advance_flow.dart';
 import 'package:provider/provider.dart';
 
 import '../data/quick_access_destinations.dart';
@@ -839,8 +840,10 @@ class HomeScreen extends StatelessWidget {
                         // 効く要素が増えたのに、それを見る場所が無かった。
                         const SizedBox(height: 12),
                         FilledButton(
-                          onPressed: () => _playMatch(context),
-                          child: Text(Tr.pick('次の節へ', 'Next matchday')),
+                          key: const ValueKey('advance-button'),
+                          onPressed: () => advanceToNextStop(context),
+                          child: Text(advanceButtonLabel(gameState) ??
+                              Tr.pick('次の節へ', 'Next matchday')),
                         ),
                         const SizedBox(height: 4),
                         // 何も決めることが無い週を続けて進める。

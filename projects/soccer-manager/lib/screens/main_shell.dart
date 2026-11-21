@@ -22,6 +22,8 @@ import 'finance_screen.dart';
 import 'fixtures_screen.dart';
 import 'hall_of_fame_screen.dart';
 import 'home_screen.dart';
+import 'advance_flow.dart';
+import 'calendar_screen.dart';
 import 'league_ranking_screen.dart';
 import 'news_screen.dart';
 import 'owner_work_screen.dart';
@@ -126,8 +128,17 @@ class _MainShellState extends State<MainShell> {
                 (_) => const OwnerWorkScreen()),
             GroupTab(Tr.pick('オーナーと世界', 'Owner & world'),
                 (_) => const OwnerWorldScreen()),
+            // 1か月のマス目のカレンダー。1年の予定の一覧は中で切り替える
+            // (2026-11-22)。左のメニューは7項目で高さいっぱいのため、ここに置く。
             GroupTab(
-                Tr.pick('年間予定', 'Calendar'), (_) => const ClubCalendarScreen()),
+                Tr.pick('カレンダー', 'Calendar'),
+                (_) => ChipSwitcher(items: [
+                      (Tr.pick('月', 'Month'), (_) => const CalendarScreen()),
+                      (
+                        Tr.pick('1年の予定', 'The year'),
+                        (_) => const ClubCalendarScreen()
+                      ),
+                    ])),
             GroupTab(Tr.pick('ニュース', 'News'), (_) => const NewsScreen()),
             GroupTab(
                 Tr.pick('シーズン分析', 'Analysis'), (_) => const AnalysisScreen()),
@@ -347,26 +358,31 @@ class _FmTopBar extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    save.clubName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    Tr.pick(
-                        '${CalendarEngine.formatDate(gameState.today)}  第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
-                        '${CalendarEngine.formatDate(gameState.today)}  Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: sub,
-                  ),
-                ],
+              // 日付を押すとカレンダーを開く(2026-11-22)。
+              child: InkWell(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const CalendarScreen(standalone: true))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      save.clubName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      Tr.pick(
+                          '${CalendarEngine.formatDate(gameState.today)}  第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
+                          '${CalendarEngine.formatDate(gameState.today)}  Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: sub,
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -396,15 +412,18 @@ class _FmTopBar extends StatelessWidget {
             const SizedBox(width: 12),
             if (next != null && gameState.saleReason == null)
               FilledButton.icon(
+                key: const ValueKey('advance-button'),
                 style: FilledButton.styleFrom(
                   minimumSize: const Size(0, 44),
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                 ),
-                onPressed: gameState.isBusy
-                    ? null
-                    : () => const HomeScreen().playMatch(context),
-                icon: const Icon(Icons.play_arrow, size: 18),
-                label: Text(Tr.pick('次の節へ', 'Next matchday')),
+                // 次の予定がある日まで進む。行き先の日付と中身をボタンに
+                // 書く(2026-11-22)。
+                onPressed:
+                    gameState.isBusy ? null : () => advanceToNextStop(context),
+                icon: Icon(advanceButtonIcon(gameState), size: 18),
+                label: Text(advanceButtonLabel(gameState) ??
+                    Tr.pick('次の節へ', 'Next matchday')),
               ),
           ],
         ),

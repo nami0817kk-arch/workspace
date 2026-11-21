@@ -767,8 +767,8 @@ class _ScheduleTabState extends State<_ScheduleTab> {
                 leading: const Icon(Icons.emoji_events_outlined),
                 title: Text(
                     Tr.pick('国内カップ戦の出番です', 'You are up in the domestic cup')),
-                subtitle: Text(Tr.pick('カップ戦画面で次の試合を消化できます',
-                    'Play the next tie from the cup screen')),
+                subtitle: Text(Tr.pick('進むボタンがカップ戦の日に止まって試合をします',
+                    'The advance button stops on the cup day and plays it')),
               ),
             ),
           ),
