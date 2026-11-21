@@ -107,8 +107,47 @@ Map<Prospect, int> mockRanks(List<Prospect> pool) {
 /// ドラフトの層を厚くする候補の数(指名の数＋8人に足す。合わせて約100人)。
 const deepProspects = 32;
 
+/// その年のドラフトの顔ぶれ(2026-11-21 の作り込み A-5)。リーグの種と年から決まる(乱数の列は使わない)。
+/// 豊作・ふつう・不作(25%・50%・25%)、得意なポジションの年(半分ほど)、目玉(年に1人ほど。7割の年)。
+class DraftClass {
+  const DraftClass(this.quality, this.strongPos, this.star);
+
+  /// 1 豊作・0 ふつう・-1 不作。
+  final int quality;
+
+  /// その年に多く、伸びしろも大きいポジション(無い年もある)。
+  final Pos? strongPos;
+
+  /// 目玉がいるか。
+  final bool star;
+
+  /// その年の指名権の値打ちの倍率。
+  double get valueScale => (quality == 1 ? 1.2 : quality == -1 ? 0.85 : 1.0) * (star ? 1.05 : 1.0);
+
+  String get qualityText => quality == 1 ? '豊作' : quality == -1 ? '不作' : 'ふつうの年';
+
+  /// うわさの文。
+  String get rumor => [
+        quality == 1
+            ? '今年のドラフトは豊作らしい。上の方の候補の層が厚い'
+            : quality == -1
+                ? '今年のドラフトは不作らしい。上の方でも当たり外れが大きい'
+                : '今年のドラフトは、ふつうの年らしい',
+        if (strongPos != null) '${strongPos!.label}に良い候補が多いという話もある',
+        if (star) '1人、飛び抜けた目玉がいるらしい',
+      ].join('。');
+}
+
+DraftClass draftClassOf(int seed, int season) {
+  final h = ((seed * 2654435761) ^ (season * 40503 + 977)) & 0x7fffffff;
+  final q = h % 4;
+  final pos = (h ~/ 4) % 10;
+  return DraftClass(q == 0 ? 1 : q == 3 ? -1 : 0, pos < 5 ? Pos.values[pos] : null, (h ~/ 40) % 10 < 7);
+}
+
 /// [deep] なら、どれも下の層(2巡目の後半〜指名されない層。たまに隠れた逸材)。
-List<Prospect> makeProspects(Rng rng, int Function() nextId, int count, {String Function()? name, bool deep = false}) {
+/// [cls] があれば、その年の顔ぶれ(豊作・不作、得意なポジション、目玉)を当てる(乱数は追加で使わない)。
+List<Prospect> makeProspects(Rng rng, int Function() nextId, int count, {String Function()? name, bool deep = false, DraftClass? cls}) {
   final list = <Prospect>[];
   for (var i = 0; i < count; i++) {
     // 上位の候補ほど伸びしろが大きい。たまに隠れた逸材がいる
@@ -117,12 +156,27 @@ List<Prospect> makeProspects(Rng rng, int Function() nextId, int count, {String 
     var ovr = [58, 52, 46, 42][tier] + rng.nextInt(9);
     var pot = ovr + [22, 18, 12, 10][tier] + rng.nextInt(10) - (age - 19) * 2;
     if (rng.chance(0.08)) pot += 10;
-    ovr = ovr.clamp(40, 70);
-    pot = pot.clamp(ovr + 3, 95);
+    var pos = Pos.values[rng.nextInt(Pos.values.length)];
+    if (cls != null) {
+      // 豊作・不作は上の層ほど効く
+      final w = tier == 0 ? 1.0 : tier == 1 ? 0.7 : 0.4;
+      ovr += (cls.quality * 2 * w).round();
+      pot += (cls.quality * 4 * w).round();
+      // 得意なポジションの年: 4人に1人はそのポジションで、伸びしろも大きい
+      if (cls.strongPos != null && i % 4 == 1) pos = cls.strongPos!;
+      if (cls.strongPos != null && pos == cls.strongPos) pot += 3;
+      // 目玉: いちばん上の候補が飛び抜ける
+      if (cls.star && i == 0) {
+        ovr += 5;
+        pot += 8;
+      }
+    }
+    ovr = ovr.clamp(40, 74);
+    pot = pot.clamp(ovr + 3, 97);
     final p = Player(
       id: nextId(),
       name: name?.call() ?? randomName(rng),
-      pos: Pos.values[rng.nextInt(Pos.values.length)],
+      pos: pos,
       age: age,
       ovr: ovr,
       pot: pot,
