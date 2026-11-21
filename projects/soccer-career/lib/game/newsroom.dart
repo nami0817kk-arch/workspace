@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../l10n/lang.dart';
 import 'squads.dart';
 import 'formulas.dart';
 import '../models/career.dart';
@@ -40,8 +41,8 @@ class Newsroom {
         _match(
           state,
           day,
-          '$nameがハットトリック',
-          '${result.opponentName}戦で3ゴール。${result.scoreLine}。',
+          tr('$nameがハットトリック', '$name with a hat-trick'),
+          tr('${result.opponentName}戦で3ゴール。${result.scoreLine}。', 'Three against ${result.opponentName}. ${result.scoreLine}.'),
         ),
       );
     } else if (former && result.goals > 0) {
@@ -49,13 +50,13 @@ class Newsroom {
         _match(
           state,
           day,
-          '$nameが古巣に牙を剥く',
-          'かつての本拠地で${result.goals}ゴール。${result.scoreLine}。',
+          tr('$nameが古巣に牙を剥く', '$name turns on his old club'),
+          tr('かつての本拠地で${result.goals}ゴール。${result.scoreLine}。', '${result.goals} goal(s) at his former home. ${result.scoreLine}.'),
         ),
       );
     } else if (result.goals == 2) {
       items.add(
-        _match(state, day, '$nameが2ゴール', '${result.opponentName}戦を決定づけた。'),
+        _match(state, day, tr('$nameが2ゴール', '$name with two'), tr('${result.opponentName}戦を決定づけた。', 'He settled the match against ${result.opponentName}.')),
       );
     } else if (result.goals == 1 &&
         result.won &&
@@ -64,8 +65,8 @@ class Newsroom {
         _match(
           state,
           day,
-          '$nameの1点が決勝点',
-          '${result.opponentName}戦、${result.scoreLine}。',
+          tr('$nameの1点が決勝点', '$name scores the winner'),
+          tr('${result.opponentName}戦、${result.scoreLine}。', 'Against ${result.opponentName}, ${result.scoreLine}.'),
         ),
       );
     } else if (rating != null &&
@@ -76,7 +77,7 @@ class Newsroom {
           state,
           day,
           _praise(state, day, name),
-          '${result.opponentName}戦で評価点${rating.toStringAsFixed(1)}。',
+          tr('${result.opponentName}戦で評価点${rating.toStringAsFixed(1)}。', 'Rated ${rating.toStringAsFixed(1)} against ${result.opponentName}.'),
         ),
       );
     } else if (rating != null &&
@@ -87,14 +88,14 @@ class Newsroom {
           state,
           day,
           _criticism(state, day, name),
-          '${result.opponentName}戦は評価点${rating.toStringAsFixed(1)}に終わった。',
+          tr('${result.opponentName}戦は評価点${rating.toStringAsFixed(1)}に終わった。', 'A rating of ${rating.toStringAsFixed(1)} against ${result.opponentName}.'),
         ),
       );
     } else if (result.conceded == 0 &&
         result.appearance != Appearance.benched &&
         _isDefender(state.player.position)) {
       items.add(
-        _match(state, day, '$nameを軸に完封', '${result.opponentName}戦を無失点で終えた。'),
+        _match(state, day, tr('$nameを軸に完封', 'A clean sheet built around $name'), tr('${result.opponentName}戦を無失点で終えた。', 'They kept ${result.opponentName} out.')),
       );
     } else if (result.conceded >= 4 &&
         !_recentlySaid(state, day, _collapses, (v) => '${state.club.name}$v')) {
@@ -103,7 +104,7 @@ class Newsroom {
           state,
           day,
           _vary(state, day, _collapses, (v) => '${state.club.name}$v'),
-          '${result.opponentName}に${result.conceded}失点。',
+          tr('${result.opponentName}に${result.conceded}失点。', '${result.conceded} conceded against ${result.opponentName}.'),
         ),
       );
     } else if (result.won &&
@@ -114,7 +115,7 @@ class Newsroom {
           state,
           day,
           _vary(state, day, _routs, (v) => '${state.club.name}$v'),
-          '${result.opponentName}を${result.scoreLine}で退けた。',
+          tr('${result.opponentName}を${result.scoreLine}で退けた。', '${result.opponentName} beaten ${result.scoreLine}.'),
         ),
       );
     }
@@ -124,40 +125,40 @@ class Newsroom {
     return items;
   }
 
-  static const List<String> _praises = [
-    '、文句なしの出来',
-    'が試合を支配した',
-    'に称賛の声',
-    'の一挙手一投足に沸いた',
-    'が違いを見せた',
-    'に地元紙も最高点',
-    'の一日だった',
-    'を止められる者がいなかった',
+  static const List<Say> _praises = [
+    Say('、文句なしの出来', ' was faultless'),
+    Say('が試合を支配した', ' ran the match'),
+    Say('に称賛の声', ' draws praise'),
+    Say('の一挙手一投足に沸いた', ' had the crowd on its feet'),
+    Say('が違いを見せた', ' made the difference'),
+    Say('に地元紙も最高点', ' given top marks by the local paper'),
+    Say('の一日だった', ' owned the day'),
+    Say('を止められる者がいなかった', ' could not be stopped'),
   ];
 
-  static const List<String> _criticisms = [
-    '、精彩を欠く',
-    'は最後まで流れに入れず',
-    'に厳しい採点',
-    'の不調が続く',
-    'は影が薄かった',
-    'に立て直しを求める声',
-    'は何も起こせず',
-    'に地元紙が苦言',
+  static const List<Say> _criticisms = [
+    Say('、精彩を欠く', ' off the pace'),
+    Say('は最後まで流れに入れず', ' never got into it'),
+    Say('に厳しい採点', ' marked down harshly'),
+    Say('の不調が続く', ' still out of form'),
+    Say('は影が薄かった', ' barely seen'),
+    Say('に立て直しを求める声', ' under pressure to turn it round'),
+    Say('は何も起こせず', ' could not make anything happen'),
+    Say('に地元紙が苦言', ' criticised by the local paper'),
   ];
 
-  static const List<String> _collapses = [
-    '、守備が崩壊',
-    'の守りが持たなかった',
-    '、後ろから崩される',
-    'の最終ラインが機能せず',
+  static const List<Say> _collapses = [
+    Say('、守備が崩壊', ' as the defence fell apart'),
+    Say('の守りが持たなかった', ' could not hold the line'),
+    Say('、後ろから崩される', ' opened up from the back'),
+    Say('の最終ラインが機能せず', ' and the back line did not work'),
   ];
 
-  static const List<String> _routs = [
-    'が快勝',
-    'が押し切った',
-    'が力の差を見せた',
-    'が危なげなく勝ち切る',
+  static const List<Say> _routs = [
+    Say('が快勝', ' win comfortably'),
+    Say('が押し切った', ' see it out'),
+    Say('が力の差を見せた', ' show the gap in class'),
+    Say('が危なげなく勝ち切る', ' win without alarm'),
   ];
 
   /// 同じ種類の見出しを、続けて出さないための間隔（節）。
@@ -172,10 +173,10 @@ class Newsroom {
   static bool _recentlySaid(
     CareerState state,
     int matchday,
-    List<String> variants,
+    List<Say> variants,
     String Function(String) build,
   ) {
-    final lines = {for (final v in variants) build(v)};
+    final lines = {for (final v in variants) build(v.t)};
     return state.news.any(
       (n) =>
           n.year == state.year &&
@@ -192,16 +193,16 @@ class Newsroom {
   static String _vary(
     CareerState state,
     int matchday,
-    List<String> variants,
+    List<Say> variants,
     String Function(String) build,
   ) {
     final used = state.news.map((n) => n.headline).toSet();
     for (var i = 0; i < variants.length; i++) {
-      final line = build(variants[(matchday + i) % variants.length]);
+      final line = build(variants[(matchday + i) % variants.length].t);
       if (!used.contains(line)) return line;
     }
     // 全部出尽くしたら、節で選んだものに戻る。
-    return build(variants[matchday % variants.length]);
+    return build(variants[matchday % variants.length].t);
   }
 
   static String _praise(CareerState state, int matchday, String name) =>
@@ -231,10 +232,10 @@ class Newsroom {
           _milestone(
             state,
             day,
-            mark == 1 ? '$nameがプロデビュー' : '$nameが通算$mark試合',
+            mark == 1 ? tr('$nameがプロデビュー', '$name makes his professional debut') : tr('$nameが通算$mark試合', '$name reaches $mark appearances'),
             mark == 1
-                ? '${state.club.name}の一員として、初めてピッチに立った。'
-                : '${state.player.age}歳での到達。',
+                ? tr('${state.club.name}の一員として、初めてピッチに立った。', 'He took the pitch for ${state.club.name} for the first time.')
+                : tr('${state.player.age}歳での到達。', 'Reached at ${state.player.age}.'),
           ),
         );
       }
@@ -248,8 +249,8 @@ class Newsroom {
             _milestone(
               state,
               day,
-              mark == 1 ? '$nameが記念すべき初ゴール' : '$nameが通算$markゴール',
-              '${result.opponentName}戦での一撃だった。',
+              mark == 1 ? tr('$nameが記念すべき初ゴール', '$name scores his first goal') : tr('$nameが通算$markゴール', '$name reaches $mark career goals'),
+              tr('${result.opponentName}戦での一撃だった。', 'It came against ${result.opponentName}.'),
             ),
           );
         }
@@ -263,8 +264,8 @@ class Newsroom {
             _national(
               state,
               day,
-              mark == 1 ? '$nameが代表デビュー' : '$nameが代表$markキャップ',
-              mark == 1 ? '呼ばれるだけでは終わらなかった。' : '',
+              mark == 1 ? tr('$nameが代表デビュー', '$name makes his international debut') : tr('$nameが代表$markキャップ', '$name reaches $mark caps'),
+              mark == 1 ? tr('呼ばれるだけでは終わらなかった。', 'Being called up was only the start.') : '',
             ),
           );
         }
@@ -288,32 +289,32 @@ class Newsroom {
       items.add(
         _club(
           state,
-          '${state.club.name}がリーグ優勝',
-          '$nameは${stats.appearances}試合${stats.goals}ゴールで貢献した。',
+          tr('${state.club.name}がリーグ優勝', '${state.club.name} are champions'),
+          tr('$nameは${stats.appearances}試合${stats.goals}ゴールで貢献した。', '$name contributed ${stats.goals} goal(s) in ${stats.appearances} appearances.'),
         ),
       );
     }
     if (promoted) {
       items.add(
-        _club(state, '${state.club.name}が昇格', '来季は${state.club.tier - 1}部で戦う。'),
+        _club(state, tr('${state.club.name}が昇格', '${state.club.name} are promoted'), tr('来季は${state.club.tier - 1}部で戦う。', 'Next season is in tier ${state.club.tier - 1}.')),
       );
     }
     if (relegated) {
-      items.add(_club(state, '${state.club.name}が降格', '$nameの去就に注目が集まる。'));
+      items.add(_club(state, tr('${state.club.name}が降格', '${state.club.name} are relegated'), tr('$nameの去就に注目が集まる。', 'Attention turns to where $name goes next.')));
     }
     if (stats.appearances >= 20 && stats.averageRating >= 7.4) {
       items.add(
         _milestone(
           state,
           0,
-          '$name、自己最高のシーズン',
-          '${stats.appearances}試合で平均評価${stats.averageRating.toStringAsFixed(2)}。',
+          tr('$name、自己最高のシーズン', '$name has his best season yet'),
+          tr('${stats.appearances}試合で平均評価${stats.averageRating.toStringAsFixed(2)}。', 'An average rating of ${stats.averageRating.toStringAsFixed(2)} in ${stats.appearances} appearances.'),
         ),
       );
     }
     if (stats.appearances <= 5) {
       items.add(
-        _club(state, '$name、出番のないまま1年', '今季の出場は${stats.appearances}試合にとどまった。'),
+        _club(state, tr('$name、出番のないまま1年', 'A year without a game for $name'), tr('今季の出場は${stats.appearances}試合にとどまった。', 'He played just ${stats.appearances} match(es) this season.')),
       );
     }
     return items;
@@ -331,17 +332,17 @@ class Newsroom {
     if (renewal) {
       return _transfer(
         state,
-        '$nameが$toClubと契約を更新',
-        '${state.contractYears}年の新しい契約になった。',
+        tr('$nameが$toClubと契約を更新', '$name signs a new deal with $toClub'),
+        tr('${state.contractYears}年の新しい契約になった。', 'A new ${state.contractYears}-year contract.'),
       );
     }
     if (loan) {
-      return _transfer(state, '$nameが$toClubへ期限付き移籍', '出場機会を求めての1年になる。');
+      return _transfer(state, tr('$nameが$toClubへ期限付き移籍', '$name joins $toClub on loan'), tr('出場機会を求めての1年になる。', 'A year in search of game time.'));
     }
     return _transfer(
       state,
-      '$nameが$toClubへ移籍',
-      fee > 0 ? '移籍金は${_money(fee)}と伝えられている。' : '',
+      tr('$nameが$toClubへ移籍', '$name joins $toClub'),
+      fee > 0 ? tr('移籍金は${_money(fee)}と伝えられている。', 'The fee is reported at ${_money(fee)}.') : '',
     );
   }
 
@@ -474,10 +475,10 @@ class Newsroom {
     year: state.year,
     matchday: result.matchday,
     kind: NewsKind.match,
-    headline: '${state.player.name}が退場',
+    headline: tr('${state.player.name}が退場', '${state.player.name} is sent off'),
     body:
-        '${result.opponentName}戦で退場を命じられた。'
-        '次の${Formulas.banForRedCard}試合は出られない。',
+        tr('${result.opponentName}戦で退場を命じられた。'
+        '次の${Formulas.banForRedCard}試合は出られない。', 'Sent off against ${result.opponentName}. He misses the next ${Formulas.banForRedCard} match(es).'),
   );
 
   /// ピッチの外の出来事のうち、世の中に出るもの。
@@ -492,22 +493,22 @@ class Newsroom {
     return switch (special) {
       LifeSpecial.takeCaptain => _life(
         state,
-        '$nameが${state.club.name}のキャプテンに',
-        '監督とロッカールームの両方に認められた。腕章は移籍すれば外れる。',
+        tr('$nameが${state.club.name}のキャプテンに', '$name is named captain of ${state.club.name}'),
+        tr('監督とロッカールームの両方に認められた。腕章は移籍すれば外れる。', 'The manager and the dressing room both backed him. The armband comes off if he moves.'),
       ),
       LifeSpecial.acceptSponsor =>
         state.sponsor == null
             ? null
             : _life(
                 state,
-                '$nameが${state.sponsor!.name}と契約',
-                '年${state.sponsor!.annual}万円。'
-                    '${state.sponsor!.years}年の契約になる。',
+                tr('$nameが${state.sponsor!.name}と契約', '$name signs with ${state.sponsor!.name}'),
+                tr('年${state.sponsor!.annual}万円。'
+                    '${state.sponsor!.years}年の契約になる。', 'JPY ${(state.sponsor!.annual / 100).toStringAsFixed(1)}M a year, over ${state.sponsor!.years} years.'),
               ),
       LifeSpecial.foundCharity => _life(
         state,
-        '$nameが財団を立ち上げる',
-        'ピッチの外での顔ができた。',
+        tr('$nameが財団を立ち上げる', '$name sets up a foundation'),
+        tr('ピッチの外での顔ができた。', 'He now has a face off the pitch.'),
       ),
       // 断った話は世の中に出ない。
       LifeSpecial.declineSponsor ||
@@ -542,10 +543,10 @@ class Newsroom {
           year: state.year,
           matchday: state.matchday,
           kind: NewsKind.club,
-          headline: '${state.club.name}、${tie.kind.label}優勝',
+          headline: tr('${state.club.name}、${tie.kind.label}優勝', '${state.club.name} win the ${tie.kind.label}'),
           body:
-              '${tie.opponentName}を破った。'
-              '${result.goals > 0 ? '$nameが決勝の舞台で${result.goals}点。' : ''}',
+              tr('${tie.opponentName}を破った。'
+              '${result.goals > 0 ? '$nameが決勝の舞台で${result.goals}点。' : ''}', 'They beat ${tie.opponentName}. ${result.goals > 0 ? '$name scored ${result.goals} on the big stage.' : ''}'),
         ),
       ];
     }
@@ -556,11 +557,11 @@ class Newsroom {
           matchday: state.matchday,
           kind: NewsKind.club,
           headline: tie.round == CupRound.finalRound
-              ? '${state.club.name}、${tie.kind.label}決勝で敗れる'
-              : '${state.club.name}、${tie.kind.label}${tie.round.label}で敗退',
+              ? tr('${state.club.name}、${tie.kind.label}決勝で敗れる', '${state.club.name} lose the ${tie.kind.label} final')
+              : tr('${state.club.name}、${tie.kind.label}${tie.round.label}で敗退', '${state.club.name} go out of the ${tie.kind.label} in the ${tie.round.label}'),
           body:
-              '${tie.opponentName}に屈した。'
-              '${result.appearance == Appearance.benched ? '$nameはベンチから見ていた。' : ''}',
+              tr('${tie.opponentName}に屈した。'
+              '${result.appearance == Appearance.benched ? '$nameはベンチから見ていた。' : ''}', 'They fell to ${tie.opponentName}. ${result.appearance == Appearance.benched ? '$name watched from the bench.' : ''}'),
         ),
       ];
     }
@@ -574,10 +575,10 @@ class Newsroom {
     year: state.year,
     matchday: state.matchday,
     kind: NewsKind.milestone,
-    headline: '${state.player.name}、${trait.label}の域に',
+    headline: tr('${state.player.name}、${trait.label}の域に', '${state.player.name} has grown into ${trait.label}'),
     body:
-        '${trait.description}。'
-        '長く同じ場面で勝負してきたことが、形になった。',
+        tr('${trait.description}。'
+        '長く同じ場面で勝負してきたことが、形になった。', '${trait.description}. Years in the same situations have taken shape.'),
   );
 
   /// 監督に約束したことを世に出す。
@@ -589,10 +590,10 @@ class Newsroom {
         year: state.year,
         matchday: state.matchday,
         kind: NewsKind.club,
-        headline: '${state.player.name}、${promise.label}を公言',
+        headline: tr('${state.player.name}、${promise.label}を公言', '${state.player.name} promises ${promise.label}'),
         body:
-            '「${promise.label}。それが自分の仕事だ」'
-            '${state.manager?.name ?? '監督'}の前で言い切った。',
+            tr('「${promise.label}。それが自分の仕事だ」'
+            '${state.manager?.name ?? '監督'}の前で言い切った。', 'He said it to ${state.manager?.name ?? 'the manager'}: that ${promise.label} is his job.'),
       );
 
   /// シーズンの終わりに、その約束がどうなったかを書く。
@@ -607,9 +608,9 @@ class Newsroom {
       matchday: state.fixtures.length,
       kind: NewsKind.club,
       headline: kept
-          ? '${state.player.name}、公言どおり${promise.label}を達成'
-          : '${state.player.name}、${promise.label}に届かず',
-      body: kept ? '$reached。言ったことをやってみせた。' : '$reached で終えた。言葉の重さだけが残る。',
+          ? tr('${state.player.name}、公言どおり${promise.label}を達成', '${state.player.name} delivers ${promise.label} as promised')
+          : tr('${state.player.name}、${promise.label}に届かず', '${state.player.name} falls short of ${promise.label}'),
+      body: kept ? tr('$reached。言ったことをやってみせた。', '$reached. He did what he said he would.') : tr('$reached で終えた。言葉の重さだけが残る。', '$reached in the end. Only the weight of the words is left.'),
     );
   }
 
@@ -621,8 +622,8 @@ class Newsroom {
     year: state.year,
     matchday: 0,
     kind: NewsKind.life,
-    headline: '${state.player.name}、専属スタッフとの契約を打ち切り',
-    body: '貯蓄が尽きた。練習の効きは元に戻る。',
+    headline: tr('${state.player.name}、専属スタッフとの契約を打ち切り', '${state.player.name} lets his personal staff go'),
+    body: tr('貯蓄が尽きた。練習の効きは元に戻る。', 'The savings ran out. Training goes back to normal.'),
   );
 
   static NewsItem _national(
@@ -648,7 +649,7 @@ class Newsroom {
       );
 
   static String _money(int value) =>
-      value >= 10000 ? '${(value / 10000).toStringAsFixed(1)}億円' : '$value万円';
+      value >= 10000 ? tr('${(value / 10000).toStringAsFixed(1)}億円', 'JPY ${(value / 100).toStringAsFixed(1)}M') : tr('$value万円', 'JPY ${(value / 100).toStringAsFixed(1)}M');
 }
 
 /// 得点ランキングの1人。
@@ -728,11 +729,11 @@ class ScorerRace {
     final me = all.firstWhere((s) => s.isPlayer);
     if (me.goals == 0) return null;
     final rank = all.indexWhere((s) => s.isPlayer) + 1;
-    if (rank == 1) return '得点王を走っている（${me.goals}点）';
+    if (rank == 1) return tr('得点王を走っている（${me.goals}点）', 'Leading the scoring charts (${me.goals})');
     final gap = all.first.goals - me.goals;
     // 残り試合で届かない差なら、煽らない。
     if (gap > left) return null;
-    return '得点王まであと$gap点（いま$rank位）';
+    return tr('得点王まであと$gap点（いま$rank位）', '$gap behind the top scorer (currently #$rank)');
   }
 
   /// そのクラブのエースが、その時点までに決めている数。

@@ -293,6 +293,10 @@ class World {
   /// 昔のまま残る。ID（`albion-t1-c0`）は不変なので、そこから作り直す。
   /// 知らない形の ID には `null` を返し、呼ぶ側が保存の文字列に戻る。
   static String? clubNameFor(String id) {
+    // **代表は国から作らない。** 架空の相手なので、ここに持つ。
+    final nat = _natNames[id];
+    if (nat != null) return nat.t;
+
     final m = _clubId.firstMatch(id);
     if (m == null) return null;
     final countryId = m.group(1)!;
@@ -319,6 +323,18 @@ class World {
         '${country.id}-t$tier-${currentLang.code}',
         () => _clubNames(country, tier, size),
       );
+
+  /// 代表の名前。`National` のデータは `static const` なので、
+  /// 名前の差し替えはここを通す（クラブ名と同じ入口）。
+  static const Map<String, Say> _natNames = {
+    'nat-home': Say('代表', 'National team'),
+    'nat-1': Say('アルヴェニア代表', 'Alvenia'),
+    'nat-2': Say('ベルガ代表', 'Berga'),
+    'nat-3': Say('カルディナ代表', 'Cardina'),
+    'nat-4': Say('ドルネア代表', 'Dornea'),
+    'nat-5': Say('エストラーダ代表', 'Estrada'),
+    'nat-6': Say('フィオルナ代表', 'Fiorna'),
+  };
 
   static final RegExp _clubId = RegExp(r'^(.+)-t(\d+)-c(\d+)$');
 

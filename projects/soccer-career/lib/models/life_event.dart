@@ -1,3 +1,8 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
 import '../game/formulas.dart';
 import 'attributes.dart';
 import 'development.dart';
@@ -7,16 +12,18 @@ import 'development.dart';
 /// 名前のある他人は既に居る（監督・競争相手・相方・メンター・同期・代理人）。
 /// 出来事に出てこなければ、ただの数字のままになる。
 enum PersonKind {
-  manager('監督'),
-  competitor('競争相手'),
-  partner('相方'),
-  mentor('メンター'),
-  rival('同期'),
-  agent('代理人');
+  manager(Say('監督', 'Manager')),
+  competitor(Say('競争相手', 'Rival')),
+  partner(Say('相方', 'Partner')),
+  mentor(Say('メンター', 'Mentor')),
+  rival(Say('同期', 'Of your intake')),
+  agent(Say('代理人', 'Agent'));
 
-  const PersonKind(this.label);
+  const PersonKind(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   /// 文中に置くしるし。表示するときに名前へ差し替える。
   String get token => '<$name>';
@@ -89,22 +96,22 @@ class LifeEffect {
   /// 選ぶ材料が一つも無かった（結果は押した後に初めて出る）。
   /// 伸びる能力だけは「どれだけ」を伏せる — 土台の都合で行き先が変わるので、
   /// 数字を書くと嘘になることがある。
-  List<String> get summary => _lines.isEmpty ? const ['何も動かない'] : _lines;
+  List<String> get summary => _lines.isEmpty ? [tr('何も動かない', 'Nothing changes')] : _lines;
 
   List<String> get _lines => [
-    if (train != null) '${train!.label}が伸びる',
-    if (insight != null) 'ひらめき',
-    if (condition != 0) 'コンディション ${_signed(condition)}',
-    if (totalFatigue != 0) '疲労 ${_signed(totalFatigue)}',
-    if (morale != 0) '気持ち ${_signed(morale)}',
-    if (manager != 0) '監督 ${_signed(manager)}',
-    if (teammates != 0) 'ロッカールーム ${_signed(teammates)}',
-    if (fame != 0) '知名度 ${_signed(fame)}',
-    if (money != 0) '貯蓄 ${_signed(money)}万円',
-    if (confidence != 0) '自信 ${_signed(confidence)}',
-    if (ambition != 0) '野心 ${_signed(ambition)}',
-    if (professionalism != 0) 'プロ意識 ${_signed(professionalism)}',
-    if (temper != 0) '気性 ${_signed(temper)}',
+    if (train != null) tr('${train!.label}が伸びる', '${train!.label} improves'),
+    if (insight != null) tr('ひらめき', 'A flash of insight'),
+    if (condition != 0) tr('コンディション ${_signed(condition)}', 'Condition ${_signed(condition)}'),
+    if (totalFatigue != 0) tr('疲労 ${_signed(totalFatigue)}', 'Fatigue ${_signed(totalFatigue)}'),
+    if (morale != 0) tr('気持ち ${_signed(morale)}', 'Morale ${_signed(morale)}'),
+    if (manager != 0) tr('監督 ${_signed(manager)}', 'Manager ${_signed(manager)}'),
+    if (teammates != 0) tr('ロッカールーム ${_signed(teammates)}', 'Dressing room ${_signed(teammates)}'),
+    if (fame != 0) tr('知名度 ${_signed(fame)}', 'Fame ${_signed(fame)}'),
+    if (money != 0) tr('貯蓄 ${_signed(money)}万円', 'Savings JPY ${_signed(money)}0K'),
+    if (confidence != 0) tr('自信 ${_signed(confidence)}', 'Confidence ${_signed(confidence)}'),
+    if (ambition != 0) tr('野心 ${_signed(ambition)}', 'Ambition ${_signed(ambition)}'),
+    if (professionalism != 0) tr('プロ意識 ${_signed(professionalism)}', 'Professionalism ${_signed(professionalism)}'),
+    if (temper != 0) tr('気性 ${_signed(temper)}', 'Temper ${_signed(temper)}'),
   ];
 
   static String _signed(int v) => v > 0 ? '+$v' : '$v';
@@ -123,15 +130,19 @@ enum LifeSpecial {
 /// 出来事に対する選択肢。
 class LifeChoice {
   const LifeChoice({
-    required this.label,
-    required this.outcome,
+    required Say label,
+    required Say outcome,
     required this.effect,
-  });
+  }) : _label = label,
+       _outcome = outcome;
 
-  final String label;
+  final Say _label;
 
   /// 選んだ後に表示する一文。
-  final String outcome;
+  final Say _outcome;
+
+  String get label => _label.t;
+  String get outcome => _outcome.t;
 
   final LifeEffect effect;
 }
@@ -255,16 +266,21 @@ class LifeContext {
 class LifeEvent {
   const LifeEvent({
     required this.id,
-    required this.title,
-    required this.body,
+    required Say title,
+    required Say body,
     required this.choices,
     this.requirement = const LifeRequirement(),
     this.once = true,
-  });
+  }) : _title = title,
+       _body = body;
 
   final String id;
-  final String title;
-  final String body;
+
+  final Say _title;
+  final Say _body;
+
+  String get title => _title.t;
+  String get body => _body.t;
   final List<LifeChoice> choices;
   final LifeRequirement requirement;
 
@@ -302,15 +318,23 @@ class LifeEvent {
       return result;
     }
 
+    // **名前を埋めた時点で、文は今の言語のものになる。**
+    // 差し替えた出来事は画面に出すためだけのものなので、
+    // 両方の言語に同じ文を入れて `Say` に戻す。
+    Say filled(String text) {
+      final out = fill(text);
+      return Say(out, out);
+    }
+
     return LifeEvent(
       id: id,
-      title: fill(title),
-      body: fill(body),
+      title: filled(title),
+      body: filled(body),
       choices: [
         for (final c in choices)
           LifeChoice(
-            label: fill(c.label),
-            outcome: fill(c.outcome),
+            label: filled(c.label),
+            outcome: filled(c.outcome),
             effect: c.effect,
           ),
       ],
