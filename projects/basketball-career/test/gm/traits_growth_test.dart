@@ -12,7 +12,8 @@ import 'package:flutter_test/flutter_test.dart';
 int _idWith(Trait t, {int from = 1}) {
   for (var id = from;; id++) {
     final p = personalityOf(_player(id));
-    if (p.traits.length == 1 && p.traits.first == t) return id;
+    // 伸び方の型(A-3)が「ふつう」の選手だけ(型の伸びが混ざらないように)
+    if (p.traits.length == 1 && p.traits.first == t && growthTypeOf(_player(id)) == GrowthType.normal) return id;
   }
 }
 
@@ -31,15 +32,52 @@ void main() {
     expect(extraGrowth(vet, -1), isEmpty);
   });
 
-  test('練習の虫は若いうちに伸び、年を取っても落ちにくい。遅咲きは24〜28歳で伸びる', () {
+  test('練習の虫は若いうちに伸び、年を取っても落ちにくい', () {
     final g = _idWith(Trait.grinder);
     final full = Stats(gp: 50, min: 50 * 20);
     expect(extraGrowth(_player(g)..stats = full, 1), [('練習の虫', 1)]);
     expect(extraGrowth(_player(g)..stats = full, 3), isEmpty, reason: '大きく伸びた年は上乗せしない');
     expect(extraGrowth(_player(g, age: 32)..stats = full, -3), [('練習の虫', 1)]);
-    final lb = _idWith(Trait.lateBloomer);
+  });
+
+  /// [g] の伸び方の型で、性格の伸びが混ざらない(リーダーだけの)選手の id。
+  int idOfType(GrowthType g) {
+    for (var id = 1;; id++) {
+      final p = personalityOf(_player(id));
+      if (growthTypeOf(_player(id)) == g && p.traits.length == 1 && p.traits.first == Trait.leader) return id;
+    }
+  }
+
+  test('伸び方の型(A-3): 遅咲き・早熟・化ける・伸び悩む', () {
+    final full = Stats(gp: 50, min: 50 * 20);
+    final lb = idOfType(GrowthType.late);
     expect(extraGrowth(_player(lb, age: 21)..stats = full, 4), [('遅咲き', -1)]);
     expect(extraGrowth(_player(lb, age: 26)..stats = full, 0), [('遅咲き', 1)]);
+    final early = idOfType(GrowthType.early);
+    expect(extraGrowth(_player(early, age: 21)..stats = full, 1), [('早熟', 1)]);
+    expect(extraGrowth(_player(early, age: 26)..stats = full, 1), [('早熟', -1)]);
+    final boom = idOfType(GrowthType.boom);
+    final at = boomAgeOf(_player(boom));
+    expect(at, inInclusiveRange(21, 24));
+    expect(extraGrowth(_player(boom, age: at)..stats = full, 1), [('化ける', 3)]);
+    expect(extraGrowth(_player(boom, age: at + 1)..stats = full, 1), isEmpty);
+    final bust = idOfType(GrowthType.bust);
+    expect(extraGrowth(_player(bust, age: 22)..stats = full, 2), [('伸び悩む', -1)]);
+    expect(extraGrowth(_player(bust, age: 27)..stats = full, 2), isEmpty);
+  });
+
+  test('伸び方の型の割合と、遅咲きは特性に付かない', () {
+    final n = {for (final g in GrowthType.values) g: 0};
+    for (var id = 1; id <= 4000; id++) {
+      final p = _player(id);
+      n[growthTypeOf(p)] = n[growthTypeOf(p)]! + 1;
+      expect(personalityOf(p).traits, isNot(contains(Trait.lateBloomer)));
+    }
+    expect(n[GrowthType.normal]! / 4000, closeTo(0.5, 0.04));
+    expect(n[GrowthType.early]! / 4000, closeTo(0.15, 0.03));
+    expect(n[GrowthType.late]! / 4000, closeTo(0.15, 0.03));
+    expect(n[GrowthType.boom]! / 4000, closeTo(0.1, 0.03));
+    expect(n[GrowthType.bust]! / 4000, closeTo(0.1, 0.03));
   });
 
   test('けがしがち・ムラっ気・安定感の数字', () {

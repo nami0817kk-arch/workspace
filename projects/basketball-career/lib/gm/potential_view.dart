@@ -1,5 +1,6 @@
 import 'career.dart';
 import 'league.dart';
+import 'personality.dart';
 import 'player.dart';
 
 /// 伸びしろの見立て(2026-11-21 の作り込み A-1、ユーザー「やり込みや発見がなく飽きがきそう」)。
@@ -134,4 +135,11 @@ String potentialLine(Career car, Player p) {
   if (pv.exact) return '${pv.lo == 0 ? 'なし' : pv.text}(${desc[pv.lo]}。見立ては確か)';
   final how = mine ? '在籍の年数・出場・育成コーチで絞れる' : '試合で対戦するほど絞れる';
   return '${pv.text}(${desc[pv.lo]}〜${desc[pv.hi]}。見立ての確かさ${pv.knowledge}%・$how)';
+}
+
+/// 選手の詳しい画面の「伸び方」の1行(A-3)。
+String growthLine(Career car, Player p) {
+  if (!car.growthTypeKnown(p)) return 'まだ分からない(型らしい伸びを見せるか、段階3の育成コーチがいると分かる)';
+  final g = growthTypeOf(p);
+  return '${g.label}(${g.text})';
 }

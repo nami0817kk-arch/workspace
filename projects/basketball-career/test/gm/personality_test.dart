@@ -17,7 +17,9 @@ void main() {
       traits.addAll(a.traits);
     }
     expect(values.length, Value.values.length);
-    expect(traits.length, Trait.values.length);
+    // 「遅咲き」は伸び方の型に移したので、特性には付かない(作り込み A-3)
+    expect(traits.length, Trait.values.length - 1);
+    expect(traits, isNot(contains(Trait.lateBloomer)));
   });
 
   test('性格は、同じチームに2年いると見えてくる', () {
