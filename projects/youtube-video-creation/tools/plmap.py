@@ -29,7 +29,7 @@ import clubleague  # noqa: E402
 # リーグは CLUB_LEAGUE で切り替える（2026-09-26 ラ・リーガ版）
 LEAGUE = clubleague.current()
 DATA = clubleague.data_dir()
-UA = {"User-Agent": "kaigai-soccer-riyuu/1.0 (nami.0817.kk@gmail.com)"}
+UA = {"User-Agent": "kaigai-soccer-riyuu/1.0"}
 API = "https://en.wikipedia.org/w/api.php"
 # Module:Location map/data/England の値（下の fetch_bounds で取り直して控える）
 MAP_FILE = LEAGUE["map_file"]

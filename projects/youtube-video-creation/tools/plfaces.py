@@ -33,7 +33,7 @@ import clubleague  # noqa: E402
 # リーグは CLUB_LEAGUE で切り替える（2026-09-26）
 DATA = clubleague.data_dir()
 OUT = ROOT / "assets" / "photos" / "pl"
-UA = {"User-Agent": "kaigai-soccer-riyuu/1.0 (nami.0817.kk@gmail.com)"}
+UA = {"User-Agent": "kaigai-soccer-riyuu/1.0"}
 EN = "https://en.wikipedia.org/w/api.php"
 JA = "https://ja.wikipedia.org/w/api.php"
 FREE = ("cc0", "cc by", "cc-by", "public domain", "pd-")

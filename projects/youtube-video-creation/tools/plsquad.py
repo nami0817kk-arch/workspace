@@ -35,7 +35,7 @@ def raw(title: str) -> str:
     for wait in (0, 5, 20, 60, 120):
         time.sleep(wait)
         got = subprocess.run(["curl", "-sL", "-w", "\n%{http_code}", "-A",
-                              "kaigai-soccer-research/1.0 (nami.0817.kk@gmail.com)", url],
+                              "kaigai-soccer-research/1.0", url],
                              capture_output=True).stdout.decode("utf-8", "replace")
         text, _, code = got.rpartition("\n")
         # 記事が無い（404）のは弾かれたのではない。待っても出てこないので、すぐ返す
