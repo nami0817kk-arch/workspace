@@ -882,7 +882,7 @@
   }
 
   // ---------- 画面の枠（左の縦タブ） ----------
-  const TABS = [['home', 'ホーム', '⌂'], ['players', '選手', '☺'], ['train', '練習', '✎'], ['match', '試合', '⚽'], ['club', 'クラブ', '▦'], ['lineage', '系譜', '❖']];
+  const TABS = [['home', 'ホーム', '⌂'], ['players', '選手', '☺'], ['train', '練習', '✎'], ['match', '試合', '⚽'], ['club', 'クラブ', '▦'], ['lineage', '記録', '❖']];
   function renderRail() {
     const rail = document.getElementById('rail');
     let todoTabs = null;

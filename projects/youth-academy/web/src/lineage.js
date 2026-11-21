@@ -289,21 +289,13 @@
   const V = () => YA._v;
   const h = (...a) => U().h(...a);
   const rerender = () => U().render();
-  const svgBox = (svg, scale, tall) => {
-    const d = document.createElement('div');
-    d.className = 'lin-svg';
-    d.style.cssText = `overflow:auto;${tall ? 'flex:1;min-height:0;' : ''}background:#f7f9fd;border-radius:8px`;
-    d.innerHTML = svg;
-    const el = d.firstChild;
-    if (el && scale) { el.setAttribute('width', String(Math.round(el.getAttribute('width') * scale))); el.setAttribute('height', String(Math.round(el.getAttribute('height') * scale))); }
-    return d;
-  };
+  // ホームの右列の小窓。系譜図は 2026-11-21「系譜の画面はいらない」で外し、次に届きそうな実績だけ出す
   YA.lineageMiniCard = function (w) {
     const na = YA.nextAchievement(w);
+    if (!na) return h('span', {});
     return h('div', { class: 'card', style: 'padding:6px 8px;margin-top:6px' },
-      h('div', { class: 'row' }, h('div', { class: 'h grow' }, '系譜'), h('button', { class: 'btn sm', onclick: () => { U().app.tab = 'lineage'; U().app.lt = 'tree'; rerender(); } }, '開く')),
-      w.alumni.length ? svgBox(YA.lineageSvg(w, { mini: true }), 1) : h('div', { class: 'note' }, '最初の卒業式のあとに、ここへ枝が伸びます'),
-      na ? h('div', { class: 'note', style: 'margin-top:4px' }, `次の実績：${na.name}（${Math.min(na.cur, na.goal)}/${na.goal}）`) : null);
+      h('div', { class: 'row' }, h('div', { class: 'h grow' }, '次の実績'), h('button', { class: 'btn sm', onclick: () => { U().app.tab = 'lineage'; U().app.lt = 'ach'; rerender(); } }, '開く')),
+      h('div', { class: 'note', style: 'margin-top:2px' }, `${na.name}（${Math.min(na.cur, na.goal)}/${na.goal}）`));
   };
   function achTab(body, w) {
     const ui = U().app;
@@ -350,13 +342,6 @@
     body.append(h('div', { class: 'plist', style: 'margin-top:5px' }, rows.map((r) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'sub', style: 'width:54px' }, `${r.y}年目`), h('span', { class: 'grow', style: r.k ? 'font-weight:800;color:#a37b00' : '' }, r.t)))));
     if (!rows.length) body.append(h('div', { class: 'note' }, 'まだ記録はありません。'));
   }
-  function treeTab(body, w) {
-    const ui = U().app;
-    ui.lz = ui.lz || 1;
-    body.append(h('div', { class: 'row', style: 'gap:4px' }, h('div', { class: 'h grow' }, `系譜図（${w.alumni.length}人）`), h('button', { class: 'btn sm', onclick: () => { ui.lz = Math.max(0.6, ui.lz - 0.2); rerender(); } }, '－'), h('button', { class: 'btn sm', onclick: () => { ui.lz = Math.min(2, ui.lz + 0.2); rerender(); } }, '＋')),
-      h('div', { class: 'note' }, '青い枝はプロ入り。金の丸は代表経験、金の縁は殿堂入り、銀の縁は殿堂候補。'));
-    body.append(w.alumni.length ? svgBox(YA.lineageSvg(w), ui.lz, true) : h('div', { class: 'note', style: 'margin-top:6px' }, '最初の卒業式（1年目の終わり）のあとに、ここへ枝が伸びます。'));
-  }
   const leanHint = (f) => { const ks = Object.keys(YA.FORM_LEAN || {}).filter((k) => YA.FORM_LEAN[k].includes(f.k)); return ks.length ? ks.map((k) => YA.KIND_LABEL[k]).join('か') + '接し方で育てた子に出やすい' : ''; };
   function dexTab(body, w) {
     const n = YA.dexCount(w), all = YA.AWAKE_FORMS;
@@ -386,13 +371,14 @@
   function viewLineage(main) {
     const w = U().app.w;
     const ui = U().app;
-    ui.lt = ui.lt || 'tree';
+    // 系譜図は 2026-11-21「系譜の画面はいらない」で外した。タブの名前は「記録」、開くと卒業生名鑑
+    ui.lt = ui.lt || 'alumni';
     const EXTRA = YA.lineageExtraTabs || [];
-    const TABS = [['tree', '系譜図'], ['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['ach', '実績'], ['dex', '図鑑'], ['chron', '年表'], ['fund', '育成基金']].concat(EXTRA.map((x) => [x[0], x[1]]));
+    const TABS = [['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['ach', '実績'], ['dex', '図鑑'], ['chron', '年表'], ['fund', '育成基金']].concat(EXTRA.map((x) => [x[0], x[1]]));
     // 小タブが12個で2行に折れていたので、3つの群に分けて1行に（2026-11-18 ユーザビリティ7）。群ごとに最後に見た小タブを覚える
-    const GRP = [['alumni', '卒業生', ['tree', 'alumni', 'hall', 'letters', 'clubs']], ['rec', '記録', ['ach', 'dex', 'chron', 'fund']], ['coach', '監督', ['rival', 'top', 'move']]];
+    const GRP = [['alumni', '卒業生', ['alumni', 'hall', 'letters', 'clubs']], ['rec', '実績・年表', ['ach', 'dex', 'chron', 'fund']], ['coach', '監督', ['rival', 'top', 'move']]];
     const grpOf = (k) => (GRP.find((g) => g[2].indexOf(k) >= 0) || GRP[1])[0];
-    if (!TABS.some((x) => x[0] === ui.lt)) ui.lt = 'tree';
+    if (!TABS.some((x) => x[0] === ui.lt)) ui.lt = 'alumni';
     const g0 = grpOf(ui.lt);
     ui.ltg = ui.ltg || {};
     ui.ltg[g0] = ui.lt;
@@ -401,8 +387,7 @@
       h('span', { style: 'width:6px;flex:none' }),
       ...TABS.filter(([k]) => grpOf(k) === g0).map(([k, n]) => h('button', { class: 'btn' + (ui.lt === k ? ' on' : ''), onclick: () => { ui.lt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0;display:flex;flex-direction:column' });
-    if (ui.lt === 'tree') treeTab(body, w);
-    else if (ui.lt === 'hall') hallTab(body, w);
+    if (ui.lt === 'hall') hallTab(body, w);
     else if (ui.lt === 'ach') achTab(body, w);
     else if (ui.lt === 'dex') dexTab(body, w);
     else if (ui.lt === 'chron') chronTab(body, w);

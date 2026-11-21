@@ -165,7 +165,7 @@
     if (!cs.length) return null;
     const c = r.pick(cs);
     w.moveOffer = { club: c.name, tier: c.tier, note: c.note, y: w.year };
-    YA.noteTier(w, 1, `${c.name}から、監督就任の打診が来ています。受けると、系譜と実績だけ持って移ります（系譜タブの「クラブ移籍」）`);
+    YA.noteTier(w, 1, `${c.name}から、監督就任の打診が来ています。受けると、系譜と実績だけ持って移ります（記録タブの「移籍」）`);
     return w.moveOffer;
   };
   // 移る。新しい世界を返す（呼び出し側が差し替える）。★の子は卒業生の枠で系譜に残る

@@ -450,7 +450,7 @@
     // 卒業生名鑑と実績は系譜タブにまとめた（2026-11-18 ユーザビリティ7：2つのタブに同じ画面があった）。名鑑は系譜タブがここを借りて出す
     ui.mt = ui.mt || 'rec';
     if (U().app.tab === 'more' && ui.mt === 'alumni' && !(w && w.retired)) ui.mt = 'rec';
-    const tabs = h('div', { class: 'tabs' }, [['rec', '記録'], ['bteam', 'Bチーム'], ['ach', '引退'], ['howto', '遊び方'], ['help', '用語集'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
+    const tabs = h('div', { class: 'tabs' }, [['rec', 'クラブ史'], ['bteam', 'Bチーム'], ['ach', '引退'], ['howto', '遊び方'], ['help', '用語集'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
       // 絞り込み：全員・プロ・海外・代表・タイトル
