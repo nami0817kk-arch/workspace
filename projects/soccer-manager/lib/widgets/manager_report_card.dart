@@ -144,14 +144,11 @@ class ManagerReportCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ひとことと経営診断だけ。順位・直近・収支・2つの期待は、帯・上バー・
+          // 右の箱に出ているので、ここでは繰り返さない(2026-11-21)。
           Text(report.headline,
               style:
                   const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-          const SizedBox(height: 6),
-          for (final l in report.lines)
-            Text(l, style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: 8),
-          const ExpectationMeters(),
           const SizedBox(height: 6),
           _HealthLine(health: health),
         ],

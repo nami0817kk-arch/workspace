@@ -135,18 +135,8 @@ class HomeScreen extends StatelessWidget {
           child: TwoPane(
             wide: wide,
             children: [
-              // 監督からの週次報告と、2つの期待のメーター。
-              ManagerReportCard(weeklyNet: net),
-              // いま手を付けるべきこと。画面が30以上あり、どこから見れば
-              // よいか分からない状態だった。出すのは常に1件だけ。
-              const NextActionCard(),
-              // 直近のお知らせ。FMの受信箱のように、状況を開いたらまず目に入る。
-              const InboxCard(),
-              // オーナーの目標。決めるまで選択肢を出し、決めたら残りを見せる。
-              const OwnerGoalCard(),
-              // 終わったばかりのシーズンの振り返り。閉じるまで出る。
-              const SeasonReviewCard(),
-              // クラブの色で染めた見出しの帯。
+              // クラブの色で染めた見出しの帯。**状況の先頭に置く**(2026-11-21)。
+              // 以前は左の欄の一番下にあり、開いても順位が見えなかった。
               //
               // **1枚だけ主役を作る。** 以前は「ヒント」「リーグ」「数字」
               // 「今週の予定」が全部同じ重さの白いカードで縦に並んでいて、
@@ -224,15 +214,20 @@ class HomeScreen extends StatelessWidget {
                                             ?.copyWith(color: Colors.white),
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
-                                    _BandPill(
-                                        text: CalendarEngine.formatDate(
-                                            gameState.today)),
-                                    const SizedBox(width: 6),
-                                    // 布陣は監督が決めるので、オーナーの帯には出さない。
-                                    _BandPill(
-                                        text: Tr.pick('S${league.season}',
-                                            'S${league.season}')),
+                                    // 日付と季は、横画面では上バーに出ている。
+                                    // 二度書くとリーグ名が「アルビオ…」で切れる
+                                    // ので、上バーが無い縦長のときだけ出す。
+                                    if (!EmbeddedInShell.of(context)) ...[
+                                      const SizedBox(width: 8),
+                                      _BandPill(
+                                          text: CalendarEngine.formatDate(
+                                              gameState.today)),
+                                      const SizedBox(width: 6),
+                                      // 上バーと同じ「第N季」に揃える(S1 と混ざっていた)。
+                                      _BandPill(
+                                          text: Tr.pick('第${league.season}季',
+                                              'Season ${league.season}')),
+                                    ],
                                   ],
                                 ),
                                 const SizedBox(height: 14),
@@ -303,13 +298,12 @@ class HomeScreen extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 12,
                                         // 暗い地の上なので、明るいほうへ振る。
-                                        color: progress.onTrack &&
-                                                !progress.tight
+                                        // 圏内は緑、圏外は赤。以前は「圏内でも
+                                        // 差が小さい」ときに赤く、圏内なのに
+                                        // 悪い知らせに見えた。
+                                        color: progress.onTrack
                                             ? const Color(0xFF8BE6A8)
-                                            : progress.tight
-                                                ? const Color(0xFFFFA8A0)
-                                                : Colors.white
-                                                    .withValues(alpha: 0.75),
+                                            : const Color(0xFFFFA8A0),
                                       ),
                                     ),
                                   ),
@@ -322,6 +316,17 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
+              // 監督からの週次報告(ひとことと経営診断)。
+              ManagerReportCard(weeklyNet: net),
+              // いま手を付けるべきこと。画面が30以上あり、どこから見れば
+              // よいか分からない状態だった。出すのは常に1件だけ。
+              const NextActionCard(),
+              // 直近のお知らせ。FMの受信箱のように、状況を開いたらまず目に入る。
+              const InboxCard(),
+              // オーナーの目標。決めるまで選択肢を出し、決めたら残りを見せる。
+              const OwnerGoalCard(),
+              // 終わったばかりのシーズンの振り返り。閉じるまで出る。
+              const SeasonReviewCard(),
               // 横画面では、ここまでが左、これ以降が右。縦長では何も出ない。
               const PaneBreak(divider: false),
               const SizedBox(height: 4),
@@ -348,40 +353,44 @@ class HomeScreen extends StatelessWidget {
                           '${userRow.won}W ${userRow.draw}D ${userRow.lost}L'),
                       color: Colors.amber.shade800,
                     ),
-                    _StatTile(
-                      icon: Icons.account_balance_wallet,
-                      label: Tr.pick('資金', 'Funds'),
-                      value: formatMoney(save.budget),
-                      sub: Tr.pick(
-                          '週収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
-                          "Weekly ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
-                      color: net >= 0
-                          ? SemanticColors.positive(context)
-                          : SemanticColors.negative(context),
-                    ),
-                    // 2つの期待。成績・順位はサポーター、収支は株主が見ている。
-                    // 用語集の項目は「監督への信頼度」のまま引く。
-                    _StatTile(
-                      icon: Icons.shield,
-                      label: Tr.pick('サポーターの期待', 'Supporter expectation'),
-                      glossaryTerm: Tr.pick('監督への信頼度', 'Board confidence'),
-                      value: '${save.confidence}',
-                      sub: Tr.pick('成績・順位', 'Results'),
-                      progress: save.confidence / 100,
-                      color: save.confidence <= 25
-                          ? Colors.redAccent
-                          : Colors.teal.shade700,
-                    ),
-                    _StatTile(
-                      icon: Icons.account_balance,
-                      label: Tr.pick('株主の期待', 'Shareholder expectation'),
-                      value: '${save.shareholderExpectation}',
-                      sub: Tr.pick('収支', 'Finances'),
-                      progress: save.shareholderExpectation / 100,
-                      color: save.shareholderExpectation <= 25
-                          ? Colors.redAccent
-                          : Colors.amber.shade800,
-                    ),
+                    // 資金と2つの期待は、横画面では上バーに出ている。
+                    // 3か所に同じ数字が並んでいたので、上バーが無いときだけ出す。
+                    if (!EmbeddedInShell.of(context)) ...[
+                      _StatTile(
+                        icon: Icons.account_balance_wallet,
+                        label: Tr.pick('資金', 'Funds'),
+                        value: formatMoney(save.budget),
+                        sub: Tr.pick(
+                            '週収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                            "Weekly ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
+                        color: net >= 0
+                            ? SemanticColors.positive(context)
+                            : SemanticColors.negative(context),
+                      ),
+                      // 2つの期待。成績・順位はサポーター、収支は株主が見ている。
+                      // 用語集の項目は「監督への信頼度」のまま引く。
+                      _StatTile(
+                        icon: Icons.shield,
+                        label: Tr.pick('サポーターの期待', 'Supporter expectation'),
+                        glossaryTerm: Tr.pick('監督への信頼度', 'Board confidence'),
+                        value: '${save.confidence}',
+                        sub: Tr.pick('成績・順位', 'Results'),
+                        progress: save.confidence / 100,
+                        color: save.confidence <= 25
+                            ? Colors.redAccent
+                            : Colors.teal.shade700,
+                      ),
+                      _StatTile(
+                        icon: Icons.account_balance,
+                        label: Tr.pick('株主の期待', 'Shareholder expectation'),
+                        value: '${save.shareholderExpectation}',
+                        sub: Tr.pick('収支', 'Finances'),
+                        progress: save.shareholderExpectation / 100,
+                        color: save.shareholderExpectation <= 25
+                            ? Colors.redAccent
+                            : Colors.amber.shade800,
+                      ),
+                    ],
                     _StatTile(
                       icon: Icons.bar_chart,
                       label: Tr.pick('平均総合力', 'Average overall'),
