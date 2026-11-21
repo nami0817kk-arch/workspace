@@ -1,3 +1,8 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 /// カップ戦。実際に戦うためのもの。
 ///
 /// これまでカップ戦は**シーズンの終わりに結果だけが決まる**ものだった。
@@ -8,32 +13,37 @@
 /// 前に入れた「取り返しのつかなさ」と、同じ手触りのものにする。
 library;
 
+import '../l10n/lang.dart';
 import 'competition.dart';
 
 /// どの大会か。
 enum CupKind {
-  domestic('国内カップ'),
-  continental('大陸カップ');
+  domestic(Say('国内カップ', 'Domestic cup')),
+  continental(Say('大陸カップ', 'Continental cup'));
 
-  const CupKind(this.label);
+  const CupKind(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// カップ戦のラウンド。
 ///
 /// 国内カップは1回戦から。大陸カップはグループステージから。
 enum CupRound {
-  group('グループステージ'),
-  round32('1回戦'),
-  round16('16強'),
-  quarter('準々決勝'),
-  semi('準決勝'),
-  finalRound('決勝');
+  group(Say('グループステージ', 'Group stage')),
+  round32(Say('1回戦', 'First round')),
+  round16(Say('16強', 'Round of 16')),
+  quarter(Say('準々決勝', 'Quarter-final')),
+  semi(Say('準決勝', 'Semi-final')),
+  finalRound(Say('決勝', 'Final'));
 
-  const CupRound(this.label);
+  const CupRound(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   /// 2戦合計で決めるラウンドか。**大陸カップの決勝トーナメントだけ。**
   ///
@@ -112,9 +122,9 @@ class CupTie {
   /// 画面に出す一言。「大陸カップ 準々決勝 第2戦」。
   String get label {
     if (round == CupRound.group) {
-      return '${kind.label} ${round.label} 第$groupMatch節';
+      return tr('${kind.label} ${round.label} 第$groupMatch節', '${kind.label} ${round.label} matchday $groupMatch');
     }
-    if (twoLegged) return '${kind.label} ${round.label} 第$leg戦';
+    if (twoLegged) return tr('${kind.label} ${round.label} 第$leg戦', '${kind.label} ${round.label} leg $leg');
     return '${kind.label} ${round.label}';
   }
 
@@ -145,7 +155,7 @@ class CupTie {
       round: CupRound.values.any((r) => r.name == json['round'])
           ? CupRound.values.byName(json['round'] as String)
           : CupRound.round32,
-      opponentName: json['opponentName'] as String? ?? '相手',
+      opponentName: json['opponentName'] as String? ?? tr('相手', 'Opponent'),
       opponentStrength: json['opponentStrength'] as int? ?? 60,
       home: json['home'] as bool? ?? true,
       leg: json['leg'] as int? ?? 1,
@@ -230,14 +240,14 @@ class CupRun {
 
   /// 画面に出す一言。
   String get label {
-    if (won) return '${kind.label} 優勝';
+    if (won) return tr('${kind.label} 優勝', '${kind.label} winners');
     if (eliminated) {
       return round == CupRound.finalRound
-          ? '${kind.label} 準優勝'
-          : '${kind.label} ${round.label}敗退';
+          ? tr('${kind.label} 準優勝', '${kind.label} runners-up')
+          : tr('${kind.label} ${round.label}敗退', '${kind.label}, out in the ${round.label}');
     }
     if (round == CupRound.group) {
-      return '${kind.label} グループ $groupPlayed/6試合・勝点$groupPoints';
+      return tr('${kind.label} グループ $groupPlayed/6試合・勝点$groupPoints', '${kind.label} group $groupPlayed/6 played, $groupPoints points');
     }
     return '${kind.label} ${round.label}';
   }

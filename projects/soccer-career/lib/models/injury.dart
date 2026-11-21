@@ -1,14 +1,22 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
 import '../models/attributes.dart';
 
 /// 怪我の重さ。
 enum InjurySeverity {
-  light('軽傷'),
-  moderate('中程度'),
-  severe('重傷');
+  light(Say('軽傷', 'Minor')),
+  moderate(Say('中程度', 'Moderate')),
+  severe(Say('重傷', 'Serious'));
 
-  const InjurySeverity(this.label);
+  const InjurySeverity(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// 負傷。離脱している間は試合に出られない。
@@ -65,14 +73,16 @@ class Injury {
 /// 怪我の種類。どの能力に後遺症が出るかまで決めてある。
 class InjuryKind {
   const InjuryKind({
-    required this.name,
+    required Say name,
     required this.severity,
     required this.minMatches,
     required this.maxMatches,
     required this.affects,
-  });
+  }) : _name = name;
 
-  final String name;
+  final Say _name;
+
+  String get name => _name.t;
   final InjurySeverity severity;
   final int minMatches;
   final int maxMatches;
@@ -82,49 +92,49 @@ class InjuryKind {
 
   static const List<InjuryKind> all = [
     InjuryKind(
-      name: '打撲',
+      name: Say('打撲', 'A knock'),
       severity: InjurySeverity.light,
       minMatches: 1,
       maxMatches: 2,
       affects: AttributeKey.physical,
     ),
     InjuryKind(
-      name: '軽い肉離れ',
+      name: Say('軽い肉離れ', 'A slight strain'),
       severity: InjurySeverity.light,
       minMatches: 2,
       maxMatches: 3,
       affects: AttributeKey.pace,
     ),
     InjuryKind(
-      name: '足首の捻挫',
+      name: Say('足首の捻挫', 'A sprained ankle'),
       severity: InjurySeverity.moderate,
       minMatches: 4,
       maxMatches: 7,
       affects: AttributeKey.dribbling,
     ),
     InjuryKind(
-      name: 'ハムストリングの肉離れ',
+      name: Say('ハムストリングの肉離れ', 'A hamstring strain'),
       severity: InjurySeverity.moderate,
       minMatches: 5,
       maxMatches: 9,
       affects: AttributeKey.pace,
     ),
     InjuryKind(
-      name: '疲労骨折',
+      name: Say('疲労骨折', 'A stress fracture'),
       severity: InjurySeverity.moderate,
       minMatches: 6,
       maxMatches: 10,
       affects: AttributeKey.physical,
     ),
     InjuryKind(
-      name: '膝の靭帯損傷',
+      name: Say('膝の靭帯損傷', 'Knee ligament damage'),
       severity: InjurySeverity.severe,
       minMatches: 12,
       maxMatches: 22,
       affects: AttributeKey.pace,
     ),
     InjuryKind(
-      name: 'アキレス腱断裂',
+      name: Say('アキレス腱断裂', 'A ruptured achilles'),
       severity: InjurySeverity.severe,
       minMatches: 16,
       maxMatches: 26,

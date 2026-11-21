@@ -1,3 +1,4 @@
+import '../l10n/lang.dart';
 import '../models/club.dart';
 import 'squads.dart';
 import '../models/country.dart';
@@ -25,10 +26,10 @@ class PermitCheck {
   bool get granted => !required || points >= needed;
 
   String get summary => !required
-      ? '労働許可は不要'
+      ? tr('労働許可は不要', 'No work permit needed')
       : granted
-      ? '労働許可: 要件を満たす（$points / $needed）'
-      : '労働許可: 不足（$points / $needed）';
+      ? tr('労働許可: 要件を満たす（$points / $needed）', 'Work permit: you qualify ($points / $needed)')
+      : tr('労働許可: 不足（$points / $needed）', 'Work permit: short ($points / $needed)');
 }
 
 /// 移籍できるかの判定材料。
@@ -53,10 +54,10 @@ class EligibilityReport {
   bool get canJoin => permit.granted && slotAvailable;
 
   String get slotSummary => !foreign
-      ? '外国人枠の対象外'
+      ? tr('外国人枠の対象外', 'Not counted as a foreigner')
       : slotLimit == null
-      ? '外国人枠 制限なし'
-      : '外国人枠 $slotUsed/$slotLimit';
+      ? tr('外国人枠 制限なし', 'No foreign player limit')
+      : tr('外国人枠 $slotUsed/$slotLimit', 'Foreign places $slotUsed/$slotLimit');
 }
 
 /// 国籍と外国人枠の判定。
@@ -109,29 +110,29 @@ class Eligibility {
     final ratio = caps / expected;
     if (ratio >= rule.minCapsRatio) {
       points += rule.capsRatioPoints;
-      reasons.add('代表での出場実績 +${rule.capsRatioPoints}');
+      reasons.add(tr('代表での出場実績 +${rule.capsRatioPoints}', 'International appearances +${rule.capsRatioPoints}'));
     } else {
-      reasons.add('代表での出場実績が足りない（$caps キャップ）');
+      reasons.add(tr('代表での出場実績が足りない（$caps キャップ）', 'Not enough international appearances ($caps caps)'));
     }
 
     if (origin.prestige >= rule.minLeaguePrestige) {
       points += rule.leaguePrestigePoints;
-      reasons.add('${origin.name}リーグの格 +${rule.leaguePrestigePoints}');
+      reasons.add(tr('${origin.name}リーグの格 +${rule.leaguePrestigePoints}', '${origin.name} league standing +${rule.leaguePrestigePoints}'));
     } else {
-      reasons.add('${origin.name}リーグの格が足りない');
+      reasons.add(tr('${origin.name}リーグの格が足りない', '${origin.name} league standing is not high enough'));
     }
 
     // 市場価値が高いほど「即戦力」と見なされる。
     if (marketValue >= 8000) {
       points += rule.feePoints;
-      reasons.add('市場価値 +${rule.feePoints}');
+      reasons.add(tr('市場価値 +${rule.feePoints}', 'Market value +${rule.feePoints}'));
     } else {
-      reasons.add('市場価値が足りない');
+      reasons.add(tr('市場価値が足りない', 'Market value is not high enough'));
     }
 
     if (continentalExperience) {
       points += rule.continentalPoints;
-      reasons.add('大陸カップ出場歴 +${rule.continentalPoints}');
+      reasons.add(tr('大陸カップ出場歴 +${rule.continentalPoints}', 'Continental cup experience +${rule.continentalPoints}'));
     }
 
     return PermitCheck(

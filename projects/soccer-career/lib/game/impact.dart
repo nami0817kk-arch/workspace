@@ -1,3 +1,4 @@
+import '../l10n/lang.dart';
 import '../models/season.dart';
 
 /// **自分が出た試合と、出なかった試合の成績。**
@@ -52,5 +53,5 @@ class Record3 {
     lost: lost + (!r.won && !r.drawn ? 1 : 0),
   );
 
-  String get label => '$won勝$drawn分$lost敗';
+  String get label => tr('$won勝$drawn分$lost敗', '${won}W ${drawn}D ${lost}L');
 }

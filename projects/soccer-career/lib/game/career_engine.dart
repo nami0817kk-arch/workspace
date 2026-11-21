@@ -1,3 +1,8 @@
+// 名前（`_label`）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
 import 'dart:math';
 
 import '../models/agent.dart';
@@ -101,38 +106,42 @@ class TransferOffer {
   /// 画面に出す但し書き。
   String get terms {
     final parts = <String>[
-      if (loan) 'ローン（1年）',
-      if (buyOption != null) '買い取りオプション ${_money(buyOption!)}',
-      if (fee > 0) '移籍金 ${_money(fee)}',
-      if (releaseClause != null) '違約金 ${_money(releaseClause!)}',
+      if (loan) tr('ローン（1年）', 'Loan (1 year)'),
+      if (buyOption != null) tr('買い取りオプション ${_money(buyOption!)}', 'Option to buy ${_money(buyOption!)}'),
+      if (fee > 0) tr('移籍金 ${_money(fee)}', 'Fee ${_money(fee)}'),
+      if (releaseClause != null) tr('違約金 ${_money(releaseClause!)}', 'Release clause ${_money(releaseClause!)}'),
     ];
-    return parts.join(' ・ ');
+    return parts.join(tr(' ・ ', ' - '));
   }
 
   static String _money(int value) =>
-      value >= 10000 ? '${(value / 10000).toStringAsFixed(1)}億円' : '$value万円';
+      value >= 10000 ? tr('${(value / 10000).toStringAsFixed(1)}億円', 'JPY ${(value / 100).toStringAsFixed(1)}M') : tr('$value万円', 'JPY ${(value / 100).toStringAsFixed(1)}M');
 }
 
 /// 上乗せ要求の結果。
 enum NegotiationResult {
-  raised('上乗せに成功'),
-  refused('据え置き'),
-  withdrawn('オファー撤回');
+  raised(Say('上乗せに成功', 'They came up to meet you')),
+  refused(Say('据え置き', 'No change')),
+  withdrawn(Say('オファー撤回', 'Offer withdrawn'));
 
-  const NegotiationResult(this.label);
+  const NegotiationResult(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// シーズン終了時に、所属クラブがどう動くか。
 enum ClubFate {
-  stay('残留'),
-  promoted('昇格'),
-  relegated('降格');
+  stay(Say('残留', 'Staying')),
+  promoted(Say('昇格', 'Promoted')),
+  relegated(Say('降格', 'Relegated'));
 
-  const ClubFate(this.label);
+  const ClubFate(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// キャリアの進行（シーズンの組み立て・結果の反映・移籍・引退）を受け持つ。
@@ -609,7 +618,7 @@ class CareerEngine {
       final parent = state.parentClub!;
       return TransferOffer(
         club: parent,
-        reason: 'ローンが明ける。${parent.name}に戻る。',
+        reason: tr('ローンが明ける。${parent.name}に戻る。', 'The loan is up. You go back to ${parent.name}.'),
         salary: state.salary,
         role: _roleFor(state.player.overall, parent),
         years: max(1, state.contractYears),
@@ -627,7 +636,7 @@ class CareerEngine {
     if (state.contractYears > 1) {
       return TransferOffer(
         club: club,
-        reason: '${club.name}との契約はあと${state.contractYears - 1}年ある。',
+        reason: tr('${club.name}との契約はあと${state.contractYears - 1}年ある。', 'You have ${state.contractYears - 1} year(s) left at ${club.name}.'),
         salary: state.salary,
         role: _roleFor(state.player.overall, club),
         years: state.contractYears - 1,
@@ -689,9 +698,9 @@ class CareerEngine {
       // 実測で、移籍を選び続けるキャリアは昇格を一度も経験しない（5%）。
       // 上がる/落ちるクラブに残る意味は、ここでしか伝わらない。
       reason: switch (fateOf(state)) {
-        ClubFate.promoted => '${club.name}が契約更改を提示した。来季は${club.tier}部で戦う。',
-        ClubFate.relegated => '${club.name}が契約更改を提示した。来季は${club.tier}部に落ちる。',
-        ClubFate.stay => '${club.name}が契約更改を提示した。',
+        ClubFate.promoted => tr('${club.name}が契約更改を提示した。来季は${club.tier}部で戦う。', '${club.name} have offered new terms. Next season is in tier ${club.tier}.'),
+        ClubFate.relegated => tr('${club.name}が契約更改を提示した。来季は${club.tier}部に落ちる。', '${club.name} have offered new terms. Next season drops to tier ${club.tier}.'),
+        ClubFate.stay => tr('${club.name}が契約更改を提示した。', '${club.name} have offered new terms.'),
       },
       salary: salary,
       role: _roleFor(state.player.overall, club),
@@ -782,7 +791,7 @@ class CareerEngine {
     return [
       TransferOffer(
         club: state.club,
-        reason: '${state.club.name}が買い取りオプションを行使する構えを見せている。',
+        reason: tr('${state.club.name}が買い取りオプションを行使する構えを見せている。', '${state.club.name} look ready to trigger the option to buy.'),
         salary: salary,
         role: _roleFor(state.player.overall, state.club),
         years: extras.rollContractYears(),
@@ -829,9 +838,9 @@ class CareerEngine {
     return [
       TransferOffer(
         club: club,
-        reason: '${club.name}が期限付きでの獲得を打診してきた。試合に出られる。',
+        reason: tr('${club.name}が期限付きでの獲得を打診してきた。試合に出られる。', '${club.name} have asked to take you on loan. You would play.'),
         salary: _round(state.salary * 0.85),
-        role: '主力として使う',
+        role: tr('主力として使う', 'Used as a first choice'),
         years: 1,
         loan: true,
         buyOption: option,
@@ -920,9 +929,9 @@ class CareerEngine {
             club: club,
             reason: country.id == state.club.countryId
                 ? (tier == 1
-                      ? '1部の${club.name}が、昨季の活躍を評価して獲得に動いた。'
-                      : '${club.name}が、主力としての起用を約束している。')
-                : '${country.name}の${club.name}から国外移籍の打診が届いた。',
+                      ? tr('1部の${club.name}が、昨季の活躍を評価して獲得に動いた。', '${club.name} of the top flight have moved for you on the back of last season.')
+                      : tr('${club.name}が、主力としての起用を約束している。', '${club.name} promise to use you as a first choice.'))
+                : tr('${country.name}の${club.name}から国外移籍の打診が届いた。', 'An approach from ${club.name} in ${country.name}.'),
             salary: salary,
             role: _roleFor(state.player.overall, club),
             years: extras.rollContractYears(),
@@ -969,9 +978,9 @@ class CareerEngine {
       special.add(
         TransferOffer(
           club: club,
-          reason: '古巣の$nameが、最後の1年をここで過ごさないかと言っている。',
+          reason: tr('古巣の$nameが、最後の1年をここで過ごさないかと言っている。', 'Your old club $name are asking you to spend your last year there.'),
           salary: _round(state.salary * 0.7),
-          role: '経験を買われての加入',
+          role: tr('経験を買われての加入', 'Signed for your experience'),
           years: 1,
         ),
       );
@@ -987,10 +996,10 @@ class CareerEngine {
         TransferOffer(
           club: base.club,
           reason:
-              '${base.club.name}の監督に就任した恩師・$mentorNameが、'
-              'あなたを呼んでいる。',
+              tr('${base.club.name}の監督に就任した恩師・$mentorNameが、'
+              'あなたを呼んでいる。', '$mentorName, the mentor who has taken over at ${base.club.name}, wants you.'),
           salary: _round(base.salary * 1.15),
-          role: '絶対的な主力',
+          role: tr('絶対的な主力', 'Guaranteed starter'),
           years: base.years,
           eligibility: base.eligibility,
           fee: base.fee,
@@ -1071,19 +1080,19 @@ class CareerEngine {
   /// 読めないので、`roleNoteFor` で添える。
   static String roleFor(int overall, Club club) {
     final gap = overall - club.strength;
-    if (gap >= 5) return '絶対的な主力';
-    if (gap >= -3) return '主力';
-    if (gap >= -10) return 'ローテーション';
-    return '控え';
+    if (gap >= 5) return tr('絶対的な主力', 'Guaranteed starter');
+    if (gap >= -3) return tr('主力', 'First choice');
+    if (gap >= -10) return tr('ローテーション', 'Rotation');
+    return tr('控え', 'Back-up');
   }
 
   /// その約束が、実際に何を意味するか。オファーを選ぶ材料。
   static String roleNoteFor(int overall, Club club) {
     final gap = overall - club.strength;
-    if (gap >= 5) return 'ほぼ全試合に先発できる';
-    if (gap >= -3) return '先発が基本。外れる試合もある';
-    if (gap >= -10) return '先発と控えを行き来する。出られない季もありうる';
-    return '出番を勝ち取るところから';
+    if (gap >= 5) return tr('ほぼ全試合に先発できる', 'You will start almost every match');
+    if (gap >= -3) return tr('先発が基本。外れる試合もある', 'A starter most weeks, left out now and then');
+    if (gap >= -10) return tr('先発と控えを行き来する。出られない季もありうる', 'In and out of the side. Some seasons you may not play');
+    return tr('出番を勝ち取るところから', 'Starting from the back of the queue');
   }
 
   /// 上乗せを要求する。
@@ -1526,14 +1535,14 @@ class CareerEngine {
     if (fame < 50) return null;
     final identity = state.development.identity;
     final base = switch (identity) {
-      AttributeKey.pace => '弾丸',
-      AttributeKey.shooting => '点取り屋',
-      AttributeKey.passing => '司令塔',
-      AttributeKey.dribbling => '仕掛け人',
-      AttributeKey.defending => '壁',
-      AttributeKey.physical => '猛牛',
-      AttributeKey.goalkeeping => '門番',
-      null => '${state.club.name}の心臓',
+      AttributeKey.pace => tr('弾丸', 'The Bullet'),
+      AttributeKey.shooting => tr('点取り屋', 'The Poacher'),
+      AttributeKey.passing => tr('司令塔', 'The Conductor'),
+      AttributeKey.dribbling => tr('仕掛け人', 'The Spark'),
+      AttributeKey.defending => tr('壁', 'The Wall'),
+      AttributeKey.physical => tr('猛牛', 'The Bull'),
+      AttributeKey.goalkeeping => tr('門番', 'The Gatekeeper'),
+      null => tr('${state.club.name}の心臓', 'The heart of ${state.club.name}'),
     };
     return base;
   }
@@ -1583,27 +1592,27 @@ class CareerEngine {
     return switch (path) {
       SecondCareer.manager =>
         !state.captain
-            ? '腕章を巻いたことが無い'
+            ? tr('腕章を巻いたことが無い', 'You have never worn the armband')
             : p.professionalism < Formulas.managerProfessionalism
-            ? 'プロ意識が${Formulas.managerProfessionalism}に届かない'
+            ? tr('プロ意識が${Formulas.managerProfessionalism}に届かない', 'Professionalism is short of ${Formulas.managerProfessionalism}')
             : null,
       SecondCareer.coach =>
         p.professionalism < Formulas.coachProfessionalism
-            ? 'プロ意識が${Formulas.coachProfessionalism}に届かない'
+            ? tr('プロ意識が${Formulas.coachProfessionalism}に届かない', 'Professionalism is short of ${Formulas.coachProfessionalism}')
             : null,
       SecondCareer.entrepreneur =>
         state.finances.savings < Formulas.entrepreneurSavings
-            ? '貯蓄が${Formulas.entrepreneurSavings ~/ 10000}億円に届かない'
+            ? tr('貯蓄が${Formulas.entrepreneurSavings ~/ 10000}億円に届かない', 'Savings are short of JPY ${Formulas.entrepreneurSavings ~/ 100}M')
             : p.ambition < Formulas.entrepreneurAmbition
-            ? '野心が${Formulas.entrepreneurAmbition}に届かない'
+            ? tr('野心が${Formulas.entrepreneurAmbition}に届かない', 'Ambition is short of ${Formulas.entrepreneurAmbition}')
             : null,
       SecondCareer.pundit =>
         state.reputation.fame < Formulas.punditFame
-            ? '知名度が${Formulas.punditFame}に届かない'
+            ? tr('知名度が${Formulas.punditFame}に届かない', 'Fame is short of ${Formulas.punditFame}')
             : null,
       SecondCareer.director =>
         totals.appearances < Formulas.directorAppearances
-            ? '通算出場が${Formulas.directorAppearances}試合に届かない'
+            ? tr('通算出場が${Formulas.directorAppearances}試合に届かない', 'Career appearances are short of ${Formulas.directorAppearances}')
             : null,
       // どのキャリアからでも選べる。
       SecondCareer.quiet => null,

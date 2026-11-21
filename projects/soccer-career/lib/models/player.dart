@@ -1,3 +1,4 @@
+import '../l10n/lang.dart';
 import '../game/formulas.dart';
 import 'aptitude.dart';
 import 'attributes.dart';
@@ -186,11 +187,11 @@ class Player {
   /// ポテンシャルの見せ方。数値そのものは隠す。
   String get potentialBand {
     final headroom = potential - overall;
-    if (potential >= 88) return '別格';
-    if (potential >= 80) return '高い';
-    if (headroom >= 15) return '伸びしろ大';
-    if (headroom >= 6) return '普通';
-    return '頭打ち';
+    if (potential >= 88) return tr('別格', 'Exceptional');
+    if (potential >= 80) return tr('高い', 'High');
+    if (headroom >= 15) return tr('伸びしろ大', 'Plenty to come');
+    if (headroom >= 6) return tr('普通', 'Normal');
+    return tr('頭打ち', 'Close to his limit');
   }
 
   Player copyWith({
