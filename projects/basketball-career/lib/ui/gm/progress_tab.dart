@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/potential_view.dart';
 import '../../gm/calendar.dart';
 import '../../gm/block_report.dart';
 import '../../gm/career.dart';
@@ -1407,7 +1408,7 @@ class ProgressTab extends StatelessWidget {
         title: Text('${vet.name}が教える若手'),
         children: [
           for (final p in youngs)
-            SimpleDialogOption(onPressed: () => Navigator.pop(ctx, p), child: Text('${p.name}(${p.pos.short}・${p.age}歳・OVR${shown(p.ovr)}・伸びしろ${p.grade})')),
+            SimpleDialogOption(onPressed: () => Navigator.pop(ctx, p), child: Text('${p.name}(${p.pos.short}・${p.age}歳・OVR${shown(p.ovr)}・伸びしろ${potentialShown(p).text})')),
         ],
       ),
     );

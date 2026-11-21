@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/potential_view.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
@@ -159,7 +160,7 @@ class _RosterTabState extends State<RosterTab> {
         col('選手', null, flex: 6, align: TextAlign.left),
         col('歳', RosterSort.age, width: 26),
         col('OVR', RosterSort.ovr, width: 40),
-        col('伸', null, width: 22),
+        col('伸', null, width: 40),
         col('点', null, width: 38),
         col('リ', null, width: 38),
         col('ア', null, width: 34),
@@ -173,7 +174,7 @@ class _RosterTabState extends State<RosterTab> {
           () {
             final s = p.stats.gp > 0 ? p.stats : p.prev;
             final last = p.stats.gp == 0 && p.prev.gp > 0;
-            final grade = p.grade;
+            final pv = potentialShown(p);
             final d = shownDelta(p.ovr, p.lastDelta);
             final off = slot != null && slot != p.pos;
             return GmRow(
@@ -198,7 +199,7 @@ class _RosterTabState extends State<RosterTab> {
                   numCell('${shown(p.ovr)}', bold: true, color: GmColors.ovr(p.ovr)),
                   if (d != 0) Text(d > 0 ? '+$d' : '$d', style: TextStyle(fontSize: 9, color: d > 0 ? GmColors.good : GmColors.bad)),
                 ]),
-                numCell(grade == '-' ? '' : grade, color: grade == 'S' || grade == 'A' ? GmColors.gold : GmColors.sub),
+                numCell(pv.worthShowing ? pv.text : '', color: pv.bright ? GmColors.gold : GmColors.sub),
                 numCell(s.gp == 0 ? '-' : one(s.ppg), color: last ? GmColors.sub : null),
                 numCell(s.gp == 0 ? '-' : one(s.rpg), color: last ? GmColors.sub : null),
                 numCell(s.gp == 0 ? '-' : one(s.apg), color: last ? GmColors.sub : null),
@@ -321,13 +322,7 @@ class _RosterTabState extends State<RosterTab> {
                   _line('疲れ', '${p.wear}(${p.wear > wearSlumpLine ? 'シュートが落ちている' : p.wear >= wearRestLine ? 'けがしやすい' : 'ふつう'})${car.restIds.contains(p.id) ? '・疲れたら休ませる(今季${p.restGames}試合)' : ''}'),
                 _line('年俸', '${money(p.salary)}(残り${p.years}年)'),
                 _line('力に見合う年俸', money(fairSalary(p.ovr, p.age))),
-                _line('伸びしろ', switch (p.grade) {
-                  'S' => 'S(大きく伸びる見込み)',
-                  'A' => 'A(まだ伸びる)',
-                  'B' => 'B(少し伸びる)',
-                  'C' => 'C(あまり伸びない)',
-                  _ => p.age >= 30 ? 'なし(これから落ちていく)' : 'なし',
-                }),
+                _line('伸びしろ', potentialLine(car, p)),
                 if (p.drafted != null) _line('ドラフト', p.drafted!),
                 RecentGames(car: car, p: p),
                 if (p.career.isNotEmpty) CareerTable(p: p),

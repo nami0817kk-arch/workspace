@@ -207,9 +207,11 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(btn);
       await t.pumpAndSettle();
-      await t.tap(find.text('タイムアウト'));
+      // 1Qの終わりで止まる(采配はクォーターの区切りとタイムアウトだけ)
+      await t.tap(find.text('外から打つ'));
       await t.pumpAndSettle();
-      await t.tap(find.textContaining('で前半終了まで'));
+      await t.dragUntilVisible(find.byKey(const Key('live-next')), find.byType(ListView).last, const Offset(0, -200));
+      await t.tap(find.byKey(const Key('live-next')));
       await t.pumpAndSettle();
       await t.tap(find.text('主力で押し切る'));
       await t.pumpAndSettle();

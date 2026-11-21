@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/potential_view.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
 import '../team_colors.dart';
@@ -137,7 +138,7 @@ class PlayerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final grade = p.grade;
+    final pv = potentialShown(p);
     return Material(
       color: selected ? GmColors.ball.withValues(alpha: 0.16) : GmColors.panel,
       borderRadius: BorderRadius.circular(8),
@@ -166,7 +167,7 @@ class PlayerRow extends StatelessWidget {
                   Text('${p.age}歳・${archetypeOf(p)}', style: const TextStyle(fontSize: 11, color: GmColors.sub)),
                   Text(salaryText ?? '${money(p.salary)}・${p.years <= 0 ? '契約切れ' : '残り${p.years}年'}',
                       style: const TextStyle(fontSize: 11, color: GmColors.sub)),
-                  if (grade != '-') Tag('伸びしろ$grade', color: grade == 'S' || grade == 'A' ? GmColors.gold : GmColors.sub),
+                  if (pv.worthShowing) Tag('伸びしろ${pv.text}', color: pv.bright ? GmColors.gold : GmColors.sub),
                   if (p.injured > 0) Tag(p.injuryText.isEmpty ? 'けが あと${p.injured}試合' : 'けが ${p.injuryText}', color: GmColors.bad),
                 ]),
                 if (p.stats.gp > 0 || p.prev.gp > 0)
