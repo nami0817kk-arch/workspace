@@ -112,7 +112,7 @@ class Eligibility {
       points += rule.capsRatioPoints;
       reasons.add(tr('代表での出場実績 +${rule.capsRatioPoints}', 'International appearances +${rule.capsRatioPoints}'));
     } else {
-      reasons.add(tr('代表での出場実績が足りない（$caps キャップ）', 'Not enough international appearances ($caps caps)'));
+      reasons.add(tr('代表での出場実績が足りない（$caps キャップ）', 'Not enough international appearances (${plural(caps, 'cap')})'));
     }
 
     if (origin.prestige >= rule.minLeaguePrestige) {

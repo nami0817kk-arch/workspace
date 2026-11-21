@@ -68,7 +68,7 @@ class CareerShareCard extends StatelessWidget {
       title: legend.name,
       subtitle:
           tr('${legend.positionLabel} ・ '
-          '${legend.seasons}年のキャリア ・ ${legend.retiredAge}歳で引退', '${legend.positionLabel} - ${legend.seasons} seasons - retired at ${legend.retiredAge}'),
+          '${legend.seasons}年のキャリア ・ ${legend.retiredAge}歳で引退', '${legend.positionLabel} - ${plural(legend.seasons, 'season')} - retired at ${legend.retiredAge}'),
       stats: [
         _Stat(tr('出場', 'Games'), '${legend.appearances}'),
         _Stat(tr('ゴール', 'Goals'), '${legend.goals}'),
@@ -89,7 +89,7 @@ class CareerShareCard extends StatelessWidget {
   String get text => ShareText.compose([
     tr('${legend.seasons}年のキャリアを終えました。', 'A ${legend.seasons}-season career is over.'),
     tr('通算 ${legend.appearances}試合 ${legend.goals}ゴール、'
-        '代表${legend.caps}キャップ。', '${legend.appearances} games, ${legend.goals} goals, ${legend.caps} caps.'),
+        '代表${legend.caps}キャップ。', '${plural(legend.appearances, 'game')}, ${plural(legend.goals, 'goal')}, ${plural(legend.caps, 'cap')}.'),
     if (legend.leagueTitles > 0) tr('リーグ優勝 ${legend.leagueTitles}回。', '${legend.leagueTitles} league titles.'),
   ]);
 }
@@ -172,7 +172,7 @@ class SeasonShareCard extends StatelessWidget {
         _Line(tr('順位', 'Finish'), tr('$tier部 $leaguePosition位', 'T$tier #$leaguePosition')),
         _Line(tr('得点に絡んだ数', 'Goal involvements'), '${stats.goals + stats.assists}'),
         if (objectiveMet != null) _Line(tr('監督の期待', 'Manager targets'), '$objectiveMet / 3'),
-        if (caps > 0) _Line(tr('今季の代表', 'Caps this season'), tr('$caps キャップ', '$caps caps')),
+        if (caps > 0) _Line(tr('今季の代表', 'Caps this season'), tr('$caps キャップ', plural(caps, 'cap'))),
       ],
       footnote: extra.isEmpty ? '' : extra.join(tr(' ・ ', ' - ')),
     );
@@ -182,7 +182,7 @@ class SeasonShareCard extends StatelessWidget {
     tr('$headline（${club.name}・$year年）', '$headline (${club.name}, $year)'),
     tr('${stats.appearances}試合 ${stats.goals}ゴール '
         '${stats.assists}アシスト、平均評価 '
-        '${stats.averageRating.toStringAsFixed(2)}。', '${stats.appearances} games, ${stats.goals} goals, ${stats.assists} assists, ${stats.averageRating.toStringAsFixed(2)} average.'),
+        '${stats.averageRating.toStringAsFixed(2)}。', '${plural(stats.appearances, 'game')}, ${plural(stats.goals, 'goal')}, ${plural(stats.assists, 'assist')}, ${stats.averageRating.toStringAsFixed(2)} average.'),
   ]);
 }
 

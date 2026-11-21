@@ -67,7 +67,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
       ..showSnackBar(
         SnackBar(
           content: Text(
-            found ? tr('代理人が${offers.length}件の話を取ってきた。', 'Your agent came back with ${offers.length} offers.') : tr('代理人は動いたが、今回は何も取れなかった。', 'Your agent worked the phones, but nothing came of it.'),
+            found ? tr('代理人が${offers.length}件の話を取ってきた。', 'Your agent came back with ${plural(offers.length, 'offer')}.') : tr('代理人は動いたが、今回は何も取れなかった。', 'Your agent worked the phones, but nothing came of it.'),
           ),
         ),
       );
@@ -335,7 +335,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                             ],
                             if (state.seasonCaps > 0) ...[
                               const SizedBox(height: 4),
-                              Text(tr('代表 ${state.seasonCaps}試合', 'National team ${state.seasonCaps} games'), style: muted),
+                              Text(tr('代表 ${state.seasonCaps}試合', 'National team ${plural(state.seasonCaps, 'game')}'), style: muted),
                             ],
                             if (state.cupStage.participated) ...[
                               const SizedBox(height: 6),
@@ -521,7 +521,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   if (_offers.length == 1)
                     Text(
                       state.contractYears > 1
-                          ? tr('契約はあと${state.contractYears}年残っている。今は動けない。', '${state.contractYears} years are left on your contract. You cannot move now.')
+                          ? tr('契約はあと${state.contractYears}年残っている。今は動けない。', '${plural(state.contractYears, 'year')} are left on your contract. You cannot move now.')
                           : tr('他クラブからのオファーは無かった。', 'No other club came in for you.'),
                       style: muted,
                     ),
@@ -806,7 +806,7 @@ class _BackupCard extends StatelessWidget {
             Text(
               everBackedUp
                   ? tr('前に控えてから$years年。$erasesと、'
-                        'そこから先のキャリアは戻せない。', '$years years since you last backed this up. If it comes to $erases, the career from that point on cannot be recovered.')
+                        'そこから先のキャリアは戻せない。', '${plural(years, 'year')} since you last backed this up. If it comes to $erases, the career from that point on cannot be recovered.')
                   : tr('この記録は、この端末の中にしか無い。'
                         '$erasesと消える。1度だけ控えておけば、'
                         '別の端末でも続きから遊べる。', 'This record lives only on this device, and $erases wipes it. Back it up once and you can carry on from another device.'),

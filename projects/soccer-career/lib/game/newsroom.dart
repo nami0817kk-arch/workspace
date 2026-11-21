@@ -290,7 +290,7 @@ class Newsroom {
         _club(
           state,
           tr('${state.club.name}がリーグ優勝', '${state.club.name} are champions'),
-          tr('$nameは${stats.appearances}試合${stats.goals}ゴールで貢献した。', '$name contributed ${stats.goals} goal(s) in ${stats.appearances} appearances.'),
+          tr('$nameは${stats.appearances}試合${stats.goals}ゴールで貢献した。', '$name contributed ${stats.goals} goal(s) in ${plural(stats.appearances, 'appearance')}.'),
         ),
       );
     }
@@ -308,7 +308,7 @@ class Newsroom {
           state,
           0,
           tr('$name、自己最高のシーズン', '$name has his best season yet'),
-          tr('${stats.appearances}試合で平均評価${stats.averageRating.toStringAsFixed(2)}。', 'An average rating of ${stats.averageRating.toStringAsFixed(2)} in ${stats.appearances} appearances.'),
+          tr('${stats.appearances}試合で平均評価${stats.averageRating.toStringAsFixed(2)}。', 'An average rating of ${stats.averageRating.toStringAsFixed(2)} in ${plural(stats.appearances, 'appearance')}.'),
         ),
       );
     }
@@ -503,7 +503,7 @@ class Newsroom {
                 state,
                 tr('$nameが${state.sponsor!.name}と契約', '$name signs with ${state.sponsor!.name}'),
                 tr('年${state.sponsor!.annual}万円。'
-                    '${state.sponsor!.years}年の契約になる。', 'JPY ${(state.sponsor!.annual / 100).toStringAsFixed(1)}M a year, over ${state.sponsor!.years} years.'),
+                    '${state.sponsor!.years}年の契約になる。', 'JPY ${(state.sponsor!.annual / 100).toStringAsFixed(1)}M a year, over ${plural(state.sponsor!.years, 'year')}.'),
               ),
       LifeSpecial.foundCharity => _life(
         state,

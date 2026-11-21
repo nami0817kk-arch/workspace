@@ -432,7 +432,7 @@ class _LegendCard extends StatelessWidget {
                 Text(legend.summary, style: muted),
                 if (legend.caps > 0)
                   Text(
-                    tr('代表 ${legend.caps}キャップ ${legend.internationalGoals}ゴール', 'National team ${legend.caps} caps, ${legend.internationalGoals} goals'),
+                    tr('代表 ${legend.caps}キャップ ${legend.internationalGoals}ゴール', 'National team ${plural(legend.caps, 'cap')}, ${plural(legend.internationalGoals, 'goal')}'),
                     style: muted,
                   ),
                 Text(tr('引退後: ${legend.secondCareer.label}', 'After football: ${legend.secondCareer.label}'), style: muted),
@@ -474,7 +474,7 @@ class _LegendCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 for (final spell in legend.spells)
                   Text(
-                    tr('${spell.clubName}（${spell.tier}部）  ${spell.seasons}季', '${spell.clubName} (tier ${spell.tier})  ${spell.seasons} seasons'),
+                    tr('${spell.clubName}（${spell.tier}部）  ${spell.seasons}季', '${spell.clubName} (tier ${spell.tier})  ${plural(spell.seasons, 'season')}'),
                     style: muted,
                   ),
                 if (legend.traits.isNotEmpty) ...[

@@ -247,7 +247,7 @@ class CupRun {
           : tr('${kind.label} ${round.label}敗退', '${kind.label}, out in the ${round.label}');
     }
     if (round == CupRound.group) {
-      return tr('${kind.label} グループ $groupPlayed/6試合・勝点$groupPoints', '${kind.label} group $groupPlayed/6 played, $groupPoints points');
+      return tr('${kind.label} グループ $groupPlayed/6試合・勝点$groupPoints', '${kind.label} group $groupPlayed/6 played, ${plural(groupPoints, 'point')}');
     }
     return '${kind.label} ${round.label}';
   }

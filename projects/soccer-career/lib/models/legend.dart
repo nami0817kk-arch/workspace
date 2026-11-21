@@ -167,7 +167,7 @@ class Legend {
   /// 一覧に出す一言。
   String get summary =>
       tr('$seasons季 ・ $appearances試合 ${goals}G ${assists}A ・ '
-      '平均 ${averageRating.toStringAsFixed(2)}', '$seasons seasons - $appearances apps ${goals}G ${assists}A - avg ${averageRating.toStringAsFixed(2)}');
+      '平均 ${averageRating.toStringAsFixed(2)}', '${plural(seasons, 'season')} - ${plural(appearances, 'app')} ${goals}G ${assists}A - avg ${averageRating.toStringAsFixed(2)}');
 
   /// 手にしたタイトルの数。0 なら出さない。
   int get titles => leagueTitles + cupTitles + continentalTitles;
@@ -452,8 +452,8 @@ class Hall {
     return [
       for (final r in [
         best(tr('通算ゴール', 'Career goals'), 'G', (l) => l.goals),
-        best(tr('通算出場', 'Career appearances'), tr('試合', 'apps'), (l) => l.appearances),
-        best(tr('タイトル', 'Titles'), tr('冠', 'titles'), (l) => l.titles),
+        best(tr('通算出場', 'Career appearances'), tr('試合', ' apps'), (l) => l.appearances),
+        best(tr('タイトル', 'Titles'), tr('冠', ' titles'), (l) => l.titles),
         best(tr('ピーク総合力', 'Peak overall'), '', (l) => l.peakOverall),
       ])
         ?r,

@@ -114,7 +114,7 @@ class WeekPlan {
             '${style.hardFor.label}の局面が ${penalty.toStringAsFixed(1)}% 通りにくい'
             '（${state.development.faced[style] ?? 0}回戦って慣れてきたぶんを含む）。'
             '${style.openFor.label}は +'
-            '${(Formulas.styleOpening * 100).toStringAsFixed(0)}%。', '${style.description}. ${style.hardFor.label} moves are ${penalty.toStringAsFixed(1)}% less likely to come off (including what you have got used to over ${state.development.faced[style] ?? 0} meetings). ${style.openFor.label} is +${(Formulas.styleOpening * 100).toStringAsFixed(0)}%.'),
+            '${(Formulas.styleOpening * 100).toStringAsFixed(0)}%。', '${style.description}. ${style.hardFor.label} moves are ${penalty.toStringAsFixed(1)}% less likely to come off (including what you have got used to over ${plural(state.development.faced[style] ?? 0, 'meeting')}). ${style.openFor.label} is +${(Formulas.styleOpening * 100).toStringAsFixed(0)}%.'),
         suggested: menu.availableFor(state.player.position) ? menu : null,
       );
     }
