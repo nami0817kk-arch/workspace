@@ -939,25 +939,33 @@ class CareerEngine {
     // 条件では選ばれない特別な話は、別に持っておく。年俸順に切ると
     // 「古巣からの薄給の誘い」が必ず消えてしまう。
     final special = <TransferOffer>[];
-    final formerNames = {
+    // **古巣は ID で覚える。** 名前は言語で変わるので、名前で探すと
+    // 言語を切り替えた人の履歴に当たらない（当たらないと、黙って
+    // 別のクラブからの話になっていた）。ID を持たせる前の保存データは
+    // 空なので、そのときは名前で探す。
+    final former = [
       for (final h in state.history)
-        if (h.clubName != state.club.name) h.clubName,
-    };
+        if (h.clubId.isNotEmpty
+            ? h.clubId != state.club.id
+            : h.clubName != state.club.name)
+          h,
+    ];
     if (state.player.age >= Formulas.lastDanceAge &&
-        formerNames.isNotEmpty &&
+        former.isNotEmpty &&
         _random.nextDouble() < 0.4) {
-      final name = formerNames.first;
-      final home = World.byId(
-        state.history.lastWhere((h) => h.clubName == name).countryId,
-      );
+      final record = former.first;
+      final home = World.byId(record.countryId);
       final league = World.buildLeague(
         home.id,
         min(home.tiers, state.club.tier + 1),
       );
       final club = league.firstWhere(
-        (c) => c.name == name,
+        (c) => record.clubId.isNotEmpty
+            ? c.id == record.clubId
+            : c.name == record.clubName,
         orElse: () => league.first,
       );
+      final name = club.name;
       special.add(
         TransferOffer(
           club: club,
@@ -1167,6 +1175,7 @@ class CareerEngine {
     final record = SeasonRecord(
       year: state.year,
       clubName: state.club.name,
+      clubId: state.club.id,
       tier: state.club.tier,
       leaguePosition: state.leaguePosition,
       stats: state.seasonStats,
@@ -1184,7 +1193,7 @@ class CareerEngine {
     );
 
     final league = _leagueContaining(accepted.club);
-    final resolved = league.firstWhere((c) => c.name == accepted.club.name);
+    final resolved = league.firstWhere((c) => c.id == accepted.club.id);
     // 同じ国に5年いると帰化できる。外国人枠から外れ、行ける先が広がる。
     final yearsHere =
         1 +
@@ -1655,23 +1664,21 @@ class CareerEngine {
   /// これで20クラブが保たれ、自分のクラブは必ずリーグに存在する。
   List<Club> _leagueContaining(Club club) {
     final league = World.buildLeague(club.countryId, club.tier);
-    if (league.any((c) => c.name == club.name)) return league;
+    if (league.any((c) => c.id == club.id)) return league;
 
     final replaced = club.tier == 1
         ? league.reduce((a, b) => a.strength <= b.strength ? a : b)
         : league.reduce((a, b) => a.strength >= b.strength ? a : b);
+    // **入れ替えるのは枠ではなくクラブそのもの。**
+    //
+    // 以前は「空いた枠の ID に、移ってきたクラブの名前を付けた」クラブを
+    // 作っていた。名前が保存の文字列だった頃はそれで動いたが、
+    // **名前を ID から作り直すようにした**ので、枠の ID を使うと
+    // 枠のほうの名前になり、移ってきたクラブが消えてしまう。
+    // ID は不変という決まりに合わせて、クラブはそのまま入れる。
     return [
       for (final c in league)
-        if (c.id == replaced.id)
-          Club(
-            id: replaced.id,
-            name: club.name,
-            strength: club.strength,
-            tier: club.tier,
-            countryId: club.countryId,
-          )
-        else
-          c,
+        if (c.id == replaced.id) club else c,
     ];
   }
 
@@ -1723,6 +1730,7 @@ class CareerEngine {
     final record = SeasonRecord(
       year: state.year,
       clubName: state.club.name,
+      clubId: state.club.id,
       tier: state.club.tier,
       leaguePosition: state.leaguePosition,
       stats: state.seasonStats,

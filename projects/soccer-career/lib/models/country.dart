@@ -1,23 +1,33 @@
+// 名前（`_name` ほか）は private だが、**`this._name` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
+
 /// 連盟。大陸カップと、外国人ルールの「連盟内自由移動」の単位。
 enum Confederation {
   // 実在の連盟の名前と略称は商標なので使わない。地域名で足りる。
-  vesta('欧州'),
-  oriens('アジア'),
-  austral('南米');
+  vesta(Say('欧州', 'Europe')),
+  oriens(Say('アジア', 'Asia')),
+  austral(Say('南米', 'South America'));
 
-  const Confederation(this.label);
+  const Confederation(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// リーグの暦。移籍の窓とシーズンの切れ目がずれる。
 enum LeagueCalendar {
-  autumnSpring('秋春制'),
-  springAutumn('春秋制');
+  autumnSpring(Say('秋春制', 'Autumn to spring')),
+  springAutumn(Say('春秋制', 'Spring to autumn'));
 
-  const LeagueCalendar(this.label);
+  const LeagueCalendar(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// 外国人枠の規則。国ごとに組み合わせが違う。
@@ -56,12 +66,12 @@ class ForeignRule {
 
   String get summary {
     final parts = <String>[];
-    if (confederationFree) parts.add('連盟内は自由');
-    if (squadLimit != null) parts.add('登録枠 $squadLimit');
-    if (pitchLimit != null) parts.add('同時出場 $pitchLimit');
-    if (homegrownRequired > 0) parts.add('自国育ち $homegrownRequired人以上');
-    if (partnerCountries.isNotEmpty) parts.add('提携国は枠外');
-    return parts.isEmpty ? '制限なし' : parts.join('・');
+    if (confederationFree) parts.add(tr('連盟内は自由', 'Free within the confederation'));
+    if (squadLimit != null) parts.add(tr('登録枠 $squadLimit', 'Squad places $squadLimit'));
+    if (pitchLimit != null) parts.add(tr('同時出場 $pitchLimit', 'On the pitch at once $pitchLimit'));
+    if (homegrownRequired > 0) parts.add(tr('自国育ち $homegrownRequired人以上', 'Homegrown $homegrownRequired or more'));
+    if (partnerCountries.isNotEmpty) parts.add(tr('提携国は枠外', 'Partner countries do not count'));
+    return parts.isEmpty ? tr('制限なし', 'No limit') : parts.join(tr('・', ' - '));
   }
 }
 
@@ -103,8 +113,8 @@ class PermitRule {
 class Country {
   const Country({
     required this.id,
-    required this.name,
-    required this.demonym,
+    required Say name,
+    required Say demonym,
     required this.confederation,
     required this.prestige,
     required this.calendar,
@@ -113,13 +123,20 @@ class Country {
     this.permitRule = PermitRule.none,
     required this.clubStems,
     required this.clubPatterns,
-  });
+  }) : _name = name,
+       _demonym = demonym;
 
   final String id;
-  final String name;
+
+  /// **名前は日本語と英語の2つを持つ**（[Say]）。この表は `static const`
+  /// なので `tr()` を直に書けない。外には `String` のまま見せる。
+  final Say _name;
 
   /// 「イングランド人」のような呼び方。
-  final String demonym;
+  final Say _demonym;
+
+  String get name => _name.t;
+  String get demonym => _demonym.t;
 
   final Confederation confederation;
 
@@ -134,14 +151,14 @@ class Country {
   final ForeignRule foreignRule;
   final PermitRule permitRule;
 
-  /// クラブ名の元になる地名。
-  final List<String> clubStems;
+  /// クラブ名の元になる地名。**日本語と英語の2つを持つ**。
+  final List<Say> clubStems;
 
   /// クラブ名の型。`{}` が地名に置き換わる。
   ///
   /// 国ごとの命名の癖（「〜シティ」「FC〜」「アル＝〜」）が、
   /// リーグの雰囲気をいちばん安く作る。
-  final List<String> clubPatterns;
+  final List<Say> clubPatterns;
 
   int get tiers => tierSizes.length;
 

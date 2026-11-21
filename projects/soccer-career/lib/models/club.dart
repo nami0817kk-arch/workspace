@@ -1,17 +1,30 @@
+// 名前（`_name`）は private だが、**`this._name` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。
+// ignore_for_file: prefer_initializing_formals
+
 import '../game/formulas.dart';
+import '../game/world.dart';
 
 /// クラブ。実在の名称は使わず、すべて架空。
 class Club {
   const Club({
     required this.id,
-    required this.name,
+    required String name,
     required this.strength,
     required this.tier,
     this.countryId = 'yamato',
-  });
+  }) : _name = name;
 
   final String id;
-  final String name;
+
+  final String _name;
+
+  /// **名前は ID から作り直す。**
+  ///
+  /// 保存データには文字列で乗っているが、言語を切り替えると古くなる。
+  /// ID は不変なので、そこから引き直す（`World.clubNameFor`）。
+  /// 知らない形の ID のときだけ、保存の文字列をそのまま使う。
+  String get name => World.clubNameFor(id) ?? _name;
 
   /// クラブの総合的な強さ（30〜90 程度）。試合結果と移籍先の判定に使う。
   final int strength;
@@ -42,10 +55,15 @@ class Club {
 
 /// リーグ順位表の1行。
 class TableRow {
-  TableRow({required this.clubId, required this.clubName});
+  TableRow({required this.clubId, required String clubName})
+    : _clubName = clubName;
 
   final String clubId;
-  final String clubName;
+
+  final String _clubName;
+
+  /// クラブ名は ID から作り直す（[Club.name] と同じ理由）。
+  String get clubName => World.clubNameFor(clubId) ?? _clubName;
   int played = 0;
   int won = 0;
   int drawn = 0;
