@@ -1,16 +1,28 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
+
 /// 自腹で雇うスタッフの種類。
 ///
 /// クラブが付けてくれるものとは別に、選手が自分の金で抱える専属。
 /// 稼いだ金の使い道を「豪遊するか、身体に投資するか」にするための仕組み。
 enum StaffKind {
-  coach('専属コーチ', '練習の質が上がる'),
-  trainer('専属トレーナー', '怪我をしにくく、戻りが早い'),
-  nutritionist('専属栄養士', '身体が整い、衰えが遅くなる');
+  coach(Say('専属コーチ', 'Personal coach'), Say('練習の質が上がる', 'Better quality of training')),
+  trainer(Say('専属トレーナー', 'Personal trainer'), Say('怪我をしにくく、戻りが早い', 'Fewer injuries and a quicker return')),
+  nutritionist(Say('専属栄養士', 'Personal nutritionist'), Say('身体が整い、衰えが遅くなる', 'The body holds together and declines later'));
 
-  const StaffKind(this.label, this.description);
+  const StaffKind(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 }
 
 /// 抱えているスタッフ。level 0 は雇っていない状態。
@@ -36,7 +48,11 @@ class StaffTeam {
   /// 伸び（コーチ）・怪我（トレーナー）・衰え（栄養士）のどれを取るかになる。
   static const List<int> costPerLevel = [0, 400, 1200, 3200];
 
-  static const List<String> levelLabels = ['無し', '駆け出し', '一流', '世界的'];
+  /// 読むたびに言語を選ぶ。
+  static List<String> get levelLabels =>
+      [for (final l in _levelLabels) l.t];
+
+  static const List<Say> _levelLabels = [Say('無し', 'None'), Say('駆け出し', 'Just starting out'), Say('一流', 'Top class'), Say('世界的', 'World class')];
 
   int operator [](StaffKind kind) => switch (kind) {
         StaffKind.coach => coach,
@@ -97,8 +113,14 @@ class Habits {
   /// 0=好きに食べる 1=普通 2=管理された食事
   final int diet;
 
-  static const List<String> sleepLabels = ['夜更かし', '普通', '徹底した睡眠'];
-  static const List<String> dietLabels = ['好きに食べる', '普通', '管理された食事'];
+  /// 読むたびに言語を選ぶ。
+  static List<String> get sleepLabels =>
+      [for (final l in _sleepLabels) l.t];
+
+  static List<String> get dietLabels => [for (final l in _dietLabels) l.t];
+
+  static const List<Say> _sleepLabels = [Say('夜更かし', 'Late nights'), Say('普通', 'Normal'), Say('徹底した睡眠', 'Strict sleep')];
+  static const List<Say> _dietLabels = [Say('好きに食べる', 'Eat what you like'), Say('普通', 'Normal'), Say('管理された食事', 'A managed diet')];
 
   String get sleepLabel => sleepLabels[sleep.clamp(0, 2)];
   String get dietLabel => dietLabels[diet.clamp(0, 2)];

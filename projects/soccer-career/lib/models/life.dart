@@ -1,6 +1,12 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 import 'dart:math';
 
 import '../game/formulas.dart';
+import '../l10n/lang.dart';
 import 'physique.dart';
 
 /// 心の状態。
@@ -24,12 +30,12 @@ class Morale {
   double get growthFactor => 0.85 + value * 0.0025;
 
   String get label => value >= 80
-      ? '充実している'
+      ? tr('充実している', 'Flying')
       : value >= 55
-      ? '悪くない'
+      ? tr('悪くない', 'Not bad')
       : value >= 30
-      ? '沈んでいる'
-      : '限界が近い';
+      ? tr('沈んでいる', 'Low')
+      : tr('限界が近い', 'Close to empty');
 
   /// 助けが要る水準か。ここに落ちたら休ませる判断が要る。
   /// これを割ると「気にかけたほうがいい」。**画面の線と同じ数字から出す**
@@ -77,10 +83,10 @@ class Fatigue {
   double get recoveryFactor => 1 - value * 0.003;
 
   String get label => value >= 70
-      ? '限界まで来ている'
+      ? tr('限界まで来ている', 'Running on empty')
       : value >= 40
-      ? '疲れが抜けない'
-      : '問題ない';
+      ? tr('疲れが抜けない', 'Tired and staying tired')
+      : tr('問題ない', 'No problem');
 
   Map<String, dynamic> toJson() => {'value': value};
 
@@ -94,13 +100,15 @@ class Fatigue {
 /// 実力とは別に、数試合だけ続く波。良いときは何をやっても入り、
 /// 悪いときは何をやっても外れる。シーズンに起伏を作るための仕組み。
 enum MomentumState {
-  zone('ゾーン', 0.07),
-  normal('平常', 0),
-  slump('スランプ', -0.06);
+  zone(Say('ゾーン', 'In the zone'), 0.07),
+  normal(Say('平常', 'Normal'), 0),
+  slump(Say('スランプ', 'In a slump'), -0.06);
 
-  const MomentumState(this.label, this.chanceModifier);
+  const MomentumState(Say label, this.chanceModifier) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
   final double chanceModifier;
 }
 
@@ -176,12 +184,15 @@ class Sponsor {
   /// 残り年数。
   final int years;
 
-  static const List<String> brands = [
-    'アストレア',
-    'ノルディカ',
-    'ヴェント',
-    'クロノス',
-    'ミラージュ',
+  /// 読むたびに言語を選ぶ。
+  static List<String> get brands => [for (final b in _brands) b.t];
+
+  static const List<Say> _brands = [
+    Say('アストレア', 'Astrea'),
+    Say('ノルディカ', 'Nordica'),
+    Say('ヴェント', 'Vento'),
+    Say('クロノス', 'Chronos'),
+    Say('ミラージュ', 'Mirage'),
   ];
 
   /// 知名度に見合うスポンサーを引く。付かないこともある。
@@ -225,7 +236,7 @@ class Sponsor {
   static Sponsor? fromJson(Map<String, dynamic>? json) => json == null
       ? null
       : Sponsor(
-          name: json['name'] as String? ?? 'スポンサー',
+          name: json['name'] as String? ?? tr('スポンサー', 'Sponsor'),
           annual: json['annual'] as int? ?? 0,
           years: json['years'] as int? ?? 1,
         );
@@ -236,17 +247,22 @@ class Sponsor {
 /// 同じ数字を見ていても、19歳の70と33歳の70では意味が違う。
 /// 画面の言葉をここで変える。
 enum CareerStage {
-  youth('育成年代', 'まだ何者でもない'),
-  prospect('若手', '伸びしろで見られている'),
-  established('中堅', '計算される立場になった'),
-  peak('全盛期', '数字がそのまま評価になる'),
-  veteran('ベテラン', '経験で埋める時期'),
-  twilight('晩年', '一試合ごとが最後になりうる');
+  youth(Say('育成年代', 'Academy years'), Say('まだ何者でもない', 'Nobody yet')),
+  prospect(Say('若手', 'Young prospect'), Say('伸びしろで見られている', 'Judged on potential')),
+  established(Say('中堅', 'Established'), Say('計算される立場になった', 'A player they count on')),
+  peak(Say('全盛期', 'At his peak'), Say('数字がそのまま評価になる', 'The numbers are the verdict')),
+  veteran(Say('ベテラン', 'Veteran'), Say('経験で埋める時期', 'Filling the gaps with experience')),
+  twilight(Say('晩年', 'Final years'), Say('一試合ごとが最後になりうる', 'Any match could be the last'));
 
-  const CareerStage(this.label, this.description);
+  const CareerStage(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 
   static CareerStage of(int age) {
     if (age <= 18) return CareerStage.youth;
@@ -263,17 +279,22 @@ enum CareerStage {
 /// 現役でやってきたことが、そのまま次の職業の適性になる。
 /// 数字だけ残して終わりにしないための締め。
 enum SecondCareer {
-  manager('監督', '戦術を語り、人を動かす'),
-  coach('育成コーチ', '次の世代を伸ばす'),
-  pundit('解説者', '見てきたものを言葉にする'),
-  director('スポーツディレクター', 'クラブを組み立てる'),
-  entrepreneur('実業家', '稼いだものを次に回す'),
-  quiet('静かな暮らし', 'footballから離れる');
+  manager(Say('監督', 'Manager'), Say('戦術を語り、人を動かす', 'Talks tactics and moves people')),
+  coach(Say('育成コーチ', 'Youth coach'), Say('次の世代を伸ばす', 'Brings on the next generation')),
+  pundit(Say('解説者', 'Pundit'), Say('見てきたものを言葉にする', 'Puts what he saw into words')),
+  director(Say('スポーツディレクター', 'Sporting director'), Say('クラブを組み立てる', 'Builds the club')),
+  entrepreneur(Say('実業家', 'Businessman'), Say('稼いだものを次に回す', 'Puts what he earned to work')),
+  quiet(Say('静かな暮らし', 'A quiet life'), Say('footballから離れる', 'Away from football'));
 
-  const SecondCareer(this.label, this.description);
+  const SecondCareer(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 }
 
 /// プレシーズンの過ごし方。
@@ -291,8 +312,8 @@ enum SecondCareer {
 /// 鍛えれば開幕は重く怪我も増え、休めば伸びない。名前を売れば疲れが残る。
 enum Offseason {
   build(
-    '鍛え込む',
-    '走り込んで身体を作る。開幕は重く、怪我も増えるが、一番伸びる',
+    Say('鍛え込む', 'Train hard'),
+    Say('走り込んで身体を作る。開幕は重く、怪我も増えるが、一番伸びる', 'Running and building the body. A heavy start and more injuries, but the biggest gains'),
     condition: 62,
     fatigue: 10,
     growthFactor: 1.18,
@@ -300,8 +321,8 @@ enum Offseason {
     body: BodyPlan.bulk,
   ),
   sharpen(
-    '絞る',
-    '体重を落としてキレを出す。無理はしないぶん、伸びは普通',
+    Say('絞る', 'Slim down'),
+    Say('体重を落としてキレを出す。無理はしないぶん、伸びは普通', 'Losing weight for sharpness. No overreaching, so the gains are average'),
     condition: 86,
     fatigue: -4,
     growthFactor: 1.0,
@@ -309,8 +330,8 @@ enum Offseason {
     body: BodyPlan.cut,
   ),
   recover(
-    '休む',
-    '何もしない。溜まった疲れが抜けて怪我が遠のくが、出遅れる',
+    Say('休む', 'Rest'),
+    Say('何もしない。溜まった疲れが抜けて怪我が遠のくが、出遅れる', 'Nothing at all. Built-up fatigue clears and injuries recede, but you start behind'),
     condition: 100,
     fatigue: -22,
     growthFactor: 0.82,
@@ -318,9 +339,9 @@ enum Offseason {
     body: BodyPlan.maintain,
   ),
   promote(
-    '名前を売る',
-    '興行に付き合う。名前が売れてスポンサー料が増え、引退後の道も広がるが、'
-        '伸びも出場も落ちる',
+    Say('名前を売る', 'Build your name'),
+    Say('興行に付き合う。名前が売れてスポンサー料が増え、引退後の道も広がるが、'
+        '伸びも出場も落ちる', 'Doing the circuit. Your name spreads, sponsors pay more and more doors open after retirement, but growth and appearances both suffer'),
     condition: 76,
     fatigue: 16,
     growthFactor: 0.94,
@@ -336,18 +357,22 @@ enum Offseason {
   );
 
   const Offseason(
-    this.label,
-    this.description, {
+    Say label,
+    Say description, {
     required this.condition,
     required this.fatigue,
     required this.growthFactor,
     required this.injuryFactor,
     this.fame = 0,
     required this.body,
-  });
+  }) : _label = label,
+       _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 
   /// 開幕時のコンディション。
   final int condition;

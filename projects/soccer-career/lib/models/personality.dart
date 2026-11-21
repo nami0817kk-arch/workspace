@@ -1,19 +1,31 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 import 'dart:math';
+
+import '../l10n/lang.dart';
 
 /// 性格の4軸。1〜20 で持つ。
 ///
 /// 能力値と違って伸ばすものではなく、**経験で少しずつ変わる**もの。
 /// 試合の判断、契約の交渉、監督との関係に効く。
 enum PersonalityAxis {
-  confidence('自信', '高いと難しい手でも成功率が落ちない。低いと失敗を引きずる'),
-  ambition('野心', '高いと格上への移籍を望み、出場機会に厳しい'),
-  professionalism('プロ意識', '高いと練習の効果が上がり、衰えが遅い'),
-  temper('気性', '高いと交渉で強気に出られるが、監督とぶつかりやすい');
+  confidence(Say('自信', 'Confidence'), Say('高いと難しい手でも成功率が落ちない。低いと失敗を引きずる', 'High, and hard moves do not slip. Low, and failures stay with him')),
+  ambition(Say('野心', 'Ambition'), Say('高いと格上への移籍を望み、出場機会に厳しい', 'High, and he wants a bigger club and is hard to please on game time')),
+  professionalism(Say('プロ意識', 'Professionalism'), Say('高いと練習の効果が上がり、衰えが遅い', 'High, and training pays off more and decline comes later')),
+  temper(Say('気性', 'Temper'), Say('高いと交渉で強気に出られるが、監督とぶつかりやすい', 'High, and he pushes hard in talks but clashes with the manager'));
 
-  const PersonalityAxis(this.label, this.description);
+  const PersonalityAxis(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 }
 
 /// 選手の性格。
@@ -166,12 +178,12 @@ class Personality {
       PersonalityAxis.temper: temper,
     };
     final top = entries.entries.reduce((a, b) => a.value >= b.value ? a : b);
-    if (top.value <= 12) return 'つかみどころがない';
+    if (top.value <= 12) return tr('つかみどころがない', 'Hard to read');
     return switch (top.key) {
-      PersonalityAxis.confidence => '自信家',
-      PersonalityAxis.ambition => '野心家',
-      PersonalityAxis.professionalism => '求道者',
-      PersonalityAxis.temper => '激情家',
+      PersonalityAxis.confidence => tr('自信家', 'Self-assured'),
+      PersonalityAxis.ambition => tr('野心家', 'Ambitious'),
+      PersonalityAxis.professionalism => tr('求道者', 'A perfectionist'),
+      PersonalityAxis.temper => tr('激情家', 'Hot-headed'),
     };
   }
 

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../l10n/lang.dart';
 import '../models/career.dart';
 import '../models/development.dart';
 import '../models/objective.dart';
@@ -58,18 +59,18 @@ class WeekPlan {
     if (state.suspended) {
       return WeekPlan(
         focus: WeekFocus.injured,
-        headline: '出場停止',
+        headline: tr('出場停止', 'Suspended'),
         reason:
-            'あと${state.suspension}試合は出られない。'
-            '練習はできるので、戻ったときのために積んでおく。',
+            tr('あと${state.suspension}試合は出られない。'
+            '練習はできるので、戻ったときのために積んでおく。', 'You cannot play for another ${state.suspension} match(es). You can still train, so build for when you are back.'),
       );
     }
     if (state.injured) {
       final injury = state.injury!;
       return WeekPlan(
         focus: WeekFocus.injured,
-        headline: '離脱中',
-        reason: '${injury.name}。あと${injury.matchesOut}試合は戻れない。',
+        headline: tr('離脱中', 'Out injured'),
+        reason: tr('${injury.name}。あと${injury.matchesOut}試合は戻れない。', '${injury.name}. ${injury.matchesOut} match(es) until you are back.'),
       );
     }
 
@@ -81,10 +82,10 @@ class WeekPlan {
           100;
       return WeekPlan(
         focus: WeekFocus.rest,
-        headline: '疲れが残っている',
+        headline: tr('疲れが残っている', 'Still carrying fatigue'),
         reason:
-            'コンディション$condition。'
-            'このまま出ると、どの手も ${loss.toStringAsFixed(1)}% 通りにくい。',
+            tr('コンディション$condition。'
+            'このまま出ると、どの手も ${loss.toStringAsFixed(1)}% 通りにくい。', 'Condition $condition. Play like this and every move is ${loss.toStringAsFixed(1)}% less likely to come off.'),
         suggested: TrainingMenu.lightWork,
       );
     }
@@ -107,13 +108,13 @@ class WeekPlan {
       final menu = TrainingMenu.forKey(style.hardFor);
       return WeekPlan(
         focus: WeekFocus.matchup,
-        headline: '${opponent.name}は${style.label}',
+        headline: tr('${opponent.name}は${style.label}', '${opponent.name} play ${style.label}'),
         reason:
-            '${style.description}。'
+            tr('${style.description}。'
             '${style.hardFor.label}の局面が ${penalty.toStringAsFixed(1)}% 通りにくい'
             '（${state.development.faced[style] ?? 0}回戦って慣れてきたぶんを含む）。'
             '${style.openFor.label}は +'
-            '${(Formulas.styleOpening * 100).toStringAsFixed(0)}%。',
+            '${(Formulas.styleOpening * 100).toStringAsFixed(0)}%。', '${style.description}. ${style.hardFor.label} moves are ${penalty.toStringAsFixed(1)}% less likely to come off (including what you have got used to over ${state.development.faced[style] ?? 0} meetings). ${style.openFor.label} is +${(Formulas.styleOpening * 100).toStringAsFixed(0)}%.'),
         suggested: menu.availableFor(state.player.position) ? menu : null,
       );
     }
@@ -124,33 +125,33 @@ class WeekPlan {
       if (!objective.achieved(stats)) {
         return WeekPlan(
           focus: WeekFocus.objective,
-          headline: '監督の期待に届いていない',
+          headline: tr('監督の期待に届いていない', 'Short of what the manager expects'),
           reason: _objectiveGap(objective, stats),
         );
       }
     }
 
-    return const WeekPlan(
+    return WeekPlan(
       focus: WeekFocus.steady,
-      headline: '積み上げる週',
-      reason: '急ぎの用は無い。伸ばしたい能力に時間を使える。',
+      headline: tr('積み上げる週', 'A week to build'),
+      reason: tr('急ぎの用は無い。伸ばしたい能力に時間を使える。', 'Nothing urgent. You can spend the time on what you want to improve.'),
     );
   }
 
   static String _objectiveGap(SeasonObjective objective, SeasonStats stats) {
     final parts = <String>[];
     if (stats.appearances < objective.appearances) {
-      parts.add('出場 あと${objective.appearances - stats.appearances}試合');
+      parts.add(tr('出場 あと${objective.appearances - stats.appearances}試合', 'Appearances ${objective.appearances - stats.appearances} to go'));
     }
     if (stats.goals + stats.assists < objective.contributions) {
       parts.add(
-        '得点関与 あと${objective.contributions - stats.goals - stats.assists}',
+        tr('得点関与 あと${objective.contributions - stats.goals - stats.assists}', 'Goals and assists ${objective.contributions - stats.goals - stats.assists} to go'),
       );
     }
     if (stats.averageRating < objective.rating) {
-      parts.add('平均評価 ${objective.rating.toStringAsFixed(2)} に届いていない');
+      parts.add(tr('平均評価 ${objective.rating.toStringAsFixed(2)} に届いていない', 'Average rating short of ${objective.rating.toStringAsFixed(2)}'));
     }
-    return '${parts.join('・')}。3つのうち2つで達成。';
+    return tr('${parts.join('・')}。3つのうち2つで達成。', '${parts.join(' - ')}. Two of the three is enough.');
   }
 }
 
@@ -267,39 +268,39 @@ class SelectionOutlook {
 
   /// 画面に出す一言。
   String get headline => frozenOut
-      ? '構想外'
+      ? tr('構想外', 'Frozen out')
       : switch (likely) {
-          Appearance.start => '先発の見込み',
-          Appearance.sub => '途中出場の見込み',
-          Appearance.benched => 'ベンチ外の見込み',
-          Appearance.injured => '出られない',
-          Appearance.suspended => '出場停止',
+          Appearance.start => tr('先発の見込み', 'Likely to start'),
+          Appearance.sub => tr('途中出場の見込み', 'Likely off the bench'),
+          Appearance.benched => tr('ベンチ外の見込み', 'Likely out of the squad'),
+          Appearance.injured => tr('出られない', 'Cannot play'),
+          Appearance.suspended => tr('出場停止', 'Suspended'),
         };
 
   /// なぜそうなるのか。数字で書く。
   String get reason {
-    if (likely == Appearance.suspended) return '出場停止が明けるまで出られない。';
-    if (likely == Appearance.injured) return '離脱中。治るまで出られない。';
-    if (outOfSquad) return '登録メンバーから外れている。評価点では戻せない。';
+    if (likely == Appearance.suspended) return tr('出場停止が明けるまで出られない。', 'You cannot play until the suspension is served.');
+    if (likely == Appearance.injured) return tr('離脱中。治るまで出られない。', 'Out injured. You cannot play until it heals.');
+    if (outOfSquad) return tr('登録メンバーから外れている。評価点では戻せない。', 'You are out of the registered squad. Ratings will not get you back.');
     if (frozenOut) {
-      return '監督の構想から外れている。出られないので評価点も付かない。'
-          '監督が代わるか、移籍するか、ピッチの外で歩み寄るしかない。';
+      return tr('監督の構想から外れている。出られないので評価点も付かない。'
+          '監督が代わるか、移籍するか、ピッチの外で歩み寄るしかない。', 'The manager has no plans for you. You cannot play, so no ratings either. Only a new manager, a transfer, or making peace off the pitch will change it.');
     }
-    if (debut) return 'まだ評価点が付いていない。デビュー戦は必ず先発する。';
+    if (debut) return tr('まだ評価点が付いていない。デビュー戦は必ず先発する。', 'No ratings yet. You always start your debut.');
     final parts = <String>[
-      '直近${Formulas.formWindow}試合の平均 ${average.toStringAsFixed(2)}',
+      tr('直近${Formulas.formWindow}試合の平均 ${average.toStringAsFixed(2)}', 'Last ${Formulas.formWindow} matches, average ${average.toStringAsFixed(2)}'),
     ];
     if (bonus.abs() >= 0.01) {
       parts.add(
-        '${bonus > 0 ? '信頼と序列で +' : '信頼と序列で '}'
-        '${bonus.toStringAsFixed(2)}',
+        tr('${bonus > 0 ? '信頼と序列で +' : '信頼と序列で '}'
+        '${bonus.toStringAsFixed(2)}', '${bonus > 0 ? 'Trust and pecking order +' : 'Trust and pecking order '}${bonus.toStringAsFixed(2)}'),
       );
     }
     if (forgiveness >= 0.01) {
-      parts.add('外れているぶん +${forgiveness.toStringAsFixed(2)}');
+      parts.add(tr('外れているぶん +${forgiveness.toStringAsFixed(2)}', 'Out of the side, so +${forgiveness.toStringAsFixed(2)}'));
     }
-    return '${parts.join('・')}。'
+    return tr('${parts.join('・')}。'
         '先発の線は ${Formulas.benchThreshold.toStringAsFixed(1)}、'
-        'ベンチ入りの線は ${Formulas.squadThreshold.toStringAsFixed(1)}。';
+        'ベンチ入りの線は ${Formulas.squadThreshold.toStringAsFixed(1)}。', '${parts.join(' - ')}. The line to start is ${Formulas.benchThreshold.toStringAsFixed(1)}, and to make the bench ${Formulas.squadThreshold.toStringAsFixed(1)}.');
   }
 }

@@ -1,16 +1,25 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
 import 'dart:math';
 
 import 'attributes.dart';
 
+import '../l10n/lang.dart';
+
 /// 利き足。
 enum Foot {
-  right('右足'),
-  left('左足'),
-  both('両利き');
+  right(Say('右足', 'Right')),
+  left(Say('左足', 'Left')),
+  both(Say('両利き', 'Both'));
 
-  const Foot(this.label);
+  const Foot(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// ピッチのどちら側に立つか。
@@ -19,13 +28,15 @@ enum Foot {
 /// 倍に増える。役割は8つのままにして、立つ側だけを別に持つ。
 /// 効くのは利き足との噛み合わせで、そこは実際のサッカーと同じ。
 enum Side {
-  center('中央', ''),
-  left('左', 'L'),
-  right('右', 'R');
+  center(Say('中央', 'Centre'), ''),
+  left(Say('左', 'Left'), 'L'),
+  right(Say('右', 'Right'), 'R');
 
-  const Side(this.label, this.mark);
+  const Side(Say label, this.mark) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   /// 表示の頭に付く記号。中央は付かない。
   final String mark;
@@ -47,14 +58,19 @@ enum Side {
 
 /// オフの肉体改造の方針。
 enum BodyPlan {
-  bulk('増量', '筋力は増すが、キレは落ちる'),
-  cut('減量', '動きは軽くなるが、当たりに弱くなる'),
-  maintain('維持', '無理をしない。疲れを残さずシーズンに入る');
+  bulk(Say('増量', 'Bulk up'), Say('筋力は増すが、キレは落ちる', 'More strength, less sharpness')),
+  cut(Say('減量', 'Slim down'), Say('動きは軽くなるが、当たりに弱くなる', 'Lighter on your feet, weaker in contact')),
+  maintain(Say('維持', 'Hold steady'), Say('無理をしない。疲れを残さずシーズンに入る', 'No overreaching. Start the season with no fatigue left'));
 
-  const BodyPlan(this.label, this.description);
+  const BodyPlan(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 }
 
 /// 身体データ。
@@ -120,9 +136,9 @@ class Physique {
   String get buildLabel {
     final expected = (heightCm - 100) * 0.86;
     final diff = weightKg - expected;
-    if (diff >= 5) return 'がっしり';
-    if (diff <= -5) return '細身';
-    return '標準';
+    if (diff >= 5) return tr('がっしり', 'Powerful');
+    if (diff <= -5) return tr('細身', 'Slight');
+    return tr('標準', 'Average');
   }
 
   /// 身体が詳細能力に与える増減。試合の判定に使う。
@@ -181,7 +197,7 @@ class Physique {
     weakFoot: (weakFoot ?? this.weakFoot).clamp(1, 5),
   );
 
-  String get label => '$heightCm cm ・ $weightKg kg ・ ${foot.label}';
+  String get label => tr('$heightCm cm ・ $weightKg kg ・ ${foot.label}', '$heightCm cm - $weightKg kg - ${foot.label} footed');
 
   Map<String, dynamic> toJson() => {
     'heightCm': heightCm,
