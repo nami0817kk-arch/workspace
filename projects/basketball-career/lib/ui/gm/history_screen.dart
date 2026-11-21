@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/trade_ledger.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
 import '../../gm/player.dart';
@@ -16,10 +17,16 @@ class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key, required this.c});
   final GmController c;
 
-  Widget _tradeRow(Career car, MyTrade t) {
-    final score = car.tradeScore(t);
-    final grade = tradeGradeOf(score);
-    final color = grade.startsWith('A') ? GmColors.good : grade == 'B' ? GmColors.ball : grade == 'C' ? GmColors.sub : GmColors.bad;
+  Widget _tradeRow(BuildContext context, Career car, int i) {
+    final t = car.myTrades[i];
+    final v = tradeVerdict(car, t);
+    final grade = switch (v) { null => 'まだ', 1 => '勝ち', 0 => '五分', _ => '負け' };
+    final color = switch (v) { null => GmColors.sub, 1 => GmColors.good, 0 => GmColors.gold, _ => GmColors.bad };
+    // 名前は描くたびに読み直す(付けたらすぐ出るように)
+    return StatefulBuilder(builder: (context, setRow) => _tradeRowBody(context, car, i, t, grade, color, car.tradeNames[i], setRow));
+  }
+
+  Widget _tradeRowBody(BuildContext context, Career car, int i, MyTrade t, String grade, Color color, String? name, StateSetter setRow) {
     String side(List<(int, String, int)> ps, int picks) => [
           for (final x in ps) '${x.$2}(${shown(x.$3)}→${car.ovrNow(x.$1) == null ? '引退' : shown(car.ovrNow(x.$1)!)})',
           if (picks > 0) '指名権$picks',
@@ -28,15 +35,40 @@ class HistoryScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(
-          width: 34,
-          child: Text(grade, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
+          width: 44,
+          child: Text(grade, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: color)),
         ),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            if (name != null) Text('「$name」', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GmColors.gold)),
             Text('${t.season}年目・${car.teams[t.partner].def.short}と', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
             Text('出: ${side(t.give, t.givePicks)}', style: const TextStyle(fontSize: 12.5)),
             Text('入: ${side(t.get, t.getPicks)}', style: const TextStyle(fontSize: 12.5)),
           ]),
+        ),
+        IconButton(
+          tooltip: '名前を付ける',
+          icon: const Icon(Icons.edit_rounded, size: 18, color: GmColors.sub),
+          onPressed: () async {
+            final ctl = TextEditingController(text: name ?? '');
+            final got = await showDialog<String>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('このトレードに名前を付ける'),
+                content: TextField(controller: ctl, maxLength: 20, autofocus: true),
+                actions: [
+                  TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('やめる')),
+                  FilledButton(onPressed: () => Navigator.pop(ctx, ctl.text), child: const Text('付ける')),
+                ],
+              ),
+            );
+            if (got != null) {
+              car.nameTrade(i, got);
+              // 保存して、この行を描き直す
+              c.touch();
+              setRow(() {});
+            }
+          },
         ),
       ]),
     );
@@ -81,11 +113,18 @@ class HistoryScreen extends StatelessWidget {
                   Text('GM の格 Lv${car.gmLevel}(通算${car.gmPoints}点)', style: const TextStyle(fontSize: 12, color: GmColors.sub)),
                 ]),
                 if (car.myTrades.isNotEmpty) ...[
-                  const SectionTitle('自分のトレードの答え合わせ'),
+                  const SectionTitle('トレードの記録帳'),
                   _card([
-                    const Text('出した選手ともらった選手の、今の力で比べる(力の高い選手ほど重い。指名権は1つ6点)。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+                    () {
+                      final (w, d, l) = car.tradeRecord;
+                      final (best, worst) = car.tradeBestWorst;
+                      String nm(int? i) => i == null ? '-' : car.tradeNames[i] ?? '${car.myTrades[i].season}年目・${car.teams[car.myTrades[i].partner].def.short}と';
+                      return Text('通算 $w勝$d分$l敗・いちばんの勝ち ${nm(best)}・いちばんの負け ${nm(worst)}',
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold));
+                    }(),
+                    const Text('出した選手ともらった選手の、今の値打ちで比べる(指名権は1本12)。1年たつまでは「まだ」。判定は年とともに変わる。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
                     const SizedBox(height: 4),
-                    for (final t in car.myTrades.reversed) _tradeRow(car, t),
+                    for (var i = car.myTrades.length - 1; i >= 0; i--) _tradeRow(context, car, i),
                   ]),
                 ],
                 const SectionTitle('歴代の優勝'),
