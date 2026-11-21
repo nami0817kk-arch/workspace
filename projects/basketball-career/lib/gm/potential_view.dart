@@ -1,6 +1,7 @@
 import 'career.dart';
 import 'league.dart';
 import 'personality.dart';
+import 'wishes.dart';
 import 'player.dart';
 
 /// 伸びしろの見立て(2026-11-21 の作り込み A-1、ユーザー「やり込みや発見がなく飽きがきそう」)。
@@ -181,4 +182,12 @@ String traitsText(Career? c, Player p) {
   final (shown, valueKnown, _) = traitsShown(c, p);
   final pers = personalityOf(p);
   return [if (valueKnown) pers.value.text, ...shown.map((t) => t.text)].map((x) => '$x。').join();
+}
+
+/// 選手の詳しい画面の「望み」の1行(C-2)。
+String wishLine(Career car, Player p) {
+  if (!car.wishIsKnown(p)) return '？(面談や契約の話し合い、しばらくチームにいると分かる)';
+  final w = wishOf(p);
+  final mine = car.me.roster.contains(p);
+  return '${w.label}(${w.text})${mine ? (wishMet(car, p, car.me) ? '・満たされている' : '・満たされていない') : ''}';
 }
