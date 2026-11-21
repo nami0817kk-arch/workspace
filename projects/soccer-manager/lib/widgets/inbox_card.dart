@@ -10,7 +10,9 @@ import '../state/game_state.dart';
 class InboxCard extends StatelessWidget {
   const InboxCard({super.key});
 
-  static const int _shown = 6;
+  /// 状況に出すのは、対応が要るものとお知らせを合わせて3件まで。
+  /// 6件出していたころは受信箱だけで1画面を超えていた(2026-11-21)。
+  static const int _shown = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,10 @@ class InboxCard extends StatelessWidget {
     if (all.isEmpty && actions.isEmpty) return const SizedBox.shrink();
     final unread = gs.unreadNewsCount;
     // newsLog は新しい順に積まれている。先頭から読む。
-    final recent = all.take(_shown).toList();
+    final shownActions = actions.take(_shown).toList();
+    final recent = all.take(_shown - shownActions.length).toList();
+    final hidden =
+        actions.length - shownActions.length + all.length - recent.length;
     final scheme = Theme.of(context).colorScheme;
     return Card(
       child: Padding(
@@ -32,17 +37,37 @@ class InboxCard extends StatelessWidget {
               children: [
                 const Icon(Icons.inbox_outlined, size: 18),
                 const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                      unread > 0
-                          ? Tr.pick('受信箱(未読 $unread)', 'Inbox ($unread unread)')
-                          : Tr.pick('受信箱', 'Inbox'),
+                // 未読の数は小さな丸に。「受信箱(未読 7)」は横画面の
+                // 左の欄で2行に折れていた。
+                // 狭い画面・大きい文字では見出しのほうを縮める(ボタンは残す)。
+                Flexible(
+                  child: Text(Tr.pick('受信箱', 'Inbox'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleSmall),
                 ),
                 if (unread > 0)
-                  TextButton(
+                  Container(
+                    margin: const EdgeInsets.only(left: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: scheme.primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text('$unread',
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: scheme.onPrimary)),
+                  ),
+                const Spacer(),
+                // 既読にするは印のボタンに(未読の丸を足した分の幅を空ける)。
+                if (unread > 0)
+                  IconButton(
                     onPressed: gs.markInboxRead,
-                    child: Text(Tr.pick('既読にする', 'Mark read')),
+                    tooltip: Tr.pick('既読にする', 'Mark read'),
+                    icon: const Icon(Icons.done_all, size: 20),
                   ),
                 TextButton(
                   // 受信箱の全部(対応が要るもの＋お知らせ)を開く。以前は
@@ -56,7 +81,7 @@ class InboxCard extends StatelessWidget {
               ],
             ),
             // 対応が要るもの(オーナーの答えを待っているもの)を先に。
-            for (final a in actions)
+            for (final a in shownActions)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                 child: Row(
@@ -108,6 +133,15 @@ class InboxCard extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+            if (hidden > 0)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 6),
+                child: Text(
+                  Tr.pick('ほか$hidden件は「すべて見る」から', '$hidden more in "See all"'),
+                  style:
+                      TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
                 ),
               ),
           ],
