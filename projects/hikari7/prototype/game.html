@@ -236,6 +236,15 @@ ul.log li{margin:3px 0}
 .pen i{width:6px;height:20px;border-radius:3px;animation:bob 1.1s ease-in-out infinite;opacity:.9}
 .noanim .beats p,.noanim .live div,.noanim .gauge i,.noanim .scorepop,.noanim .judge,.noanim .chips{animation-delay:0s!important;animation-duration:.01s!important}
 @keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.rklist{padding:6px 10px}
+.rkrow{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);animation:fadeup .45s both}
+.rkrow:last-child{border-bottom:0}
+.rkrow .rkn{min-width:44px;text-align:right;font-size:20px}
+.rkrow .rkn small{font-size:max(12px,.6em);margin-left:1px}
+.rkrow.rk1{background:linear-gradient(90deg,rgba(255,200,80,.22),transparent);border-radius:10px;padding-left:4px}
+.rkrow.rk1 .rkn{color:var(--gold);font-size:26px}
+.rkrow.rklow .rkn{color:var(--muted)}
+.rkup{color:var(--gold)}.rkdn{color:var(--bad)}
 @keyframes gfill{to{width:var(--w)}}
 @keyframes pop2{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
 @keyframes bob{50%{transform:translateY(-7px)}}
@@ -450,6 +459,7 @@ details.hall summary{display:flex;gap:8px;cursor:pointer;list-style:none}details
 .warnb{border-color:var(--bad)!important;color:var(--bad)!important}
 body.reduce *,body.reduce *::before,body.reduce *::after{animation:none!important;transition:none!important}
 body.reduce .confetti{display:none}
+body.reduce .chips{opacity:1}
 /* フェーズ34：押しやすさ（小さなボタンも高さ40px以上） */
 .btn-s{min-height:40px}.chip{min-height:40px}.tcon .chip{min-height:36px}.showctl .btn-s{min-height:38px}
 /* フェーズ35：iPad・横向き（広い画面では余白を取り、一覧を2列に） */
@@ -1241,6 +1251,11 @@ var FORMATS={
     concepts:[{n:'ミディアム',w:{e:.45,v:.2,d:.2,r:.15}},{n:'バラード',w:{v:.45,e:.45,d:.1}},{n:'ダンスナンバー',w:{d:.45,e:.35,v:.2}},{n:'ヒップホップ',w:{r:.4,d:.3,e:.3}}]}
 };
 var FMT_KEYS=['spec','vocal','dance','camp','team','pos','duo','live','orig'];
+/* 2026-11-21：12月だけ選べる審査。盛り上がりは最大で人気が大きく動くが、年末の特番の収録で全員が疲れる。
+   一覧に出るのは12月のあいだだけ（選んだシーズンは年をまたいでもそのまま遊べる） */
+FORMATS.xmas={t:'クリスマス公演',g:'xmas',kind:'solo',w:{v:.4,e:.4,d:.2},crit:true,hype:3,live:true,fat:12,song:'クリスマスの名曲メドレー',desc:'12月だけの特番。ツリーの下の舞台で、観客の前に一人ずつ立つ。歌と表現が問われる。',good:'視聴率と人気が大きく動き、歌と表現の力が分かる',bad:'年末の収録で全員がひどく疲れる。自信のない子は本来の力を出せない'};
+var XMAS_FORCE=false;
+function xmasOn(){try{return XMAS_FORCE||new Date().getMonth()===11;}catch(e){return false;}}
 var FINAL_FMT={t:'最終審査',g:'final',kind:'solo',w:'all',fin:true,hype:3,song:'最終課題曲「ひかりの席」',desc:'最後のステージ。ここでデビューメンバーを選ぶ。'};
 var DEFAULT_FMT=['spec','team','pos','orig'];
 var ROUNDS=[null];
@@ -1391,7 +1406,7 @@ function applyLesson(S){var LR=[];
     LR.push({id:t.id,k:k||null,sp:!!(S.lesson.sp&&S.lesson.sp[t.id]),great:great,b:b0,a:{v:t.st.v,d:t.st.d,r:t.st.r,e:t.st.e,s:t.st.s,fat:t.fat}});
   });
   alive(S).forEach(function(t){if(t.goal==='final'&&!t.goalDone&&weakKeys(t).every(function(k){return t.st[k]>=55;}))goalHit(S,t,'苦手だった'+STATN[weakest(t)]+'も、55を超えた');});
-  S.lres=LR;S.talked=[];S.talk=null;S.sub=null;S.ap=apMax(S);S.touch={};S.reqs=genReqs(S);S.phase='talk';
+  S.lres=LR;S.talked=[];S.talk=null;S.sub=null;S.ap=Math.max(1,apMax(S)-(S.apPen||0));S.apPen=0;S.touch={};S.reqs=genReqs(S);S.phase='talk';
 }
 function afterTalk(S){
   endTalk(S);S.talk=null;S.sub=null;
@@ -1837,6 +1852,18 @@ var FW_SHORT=['番組への信頼＋。番組で大きく伸びた子ほど効�
 function fwLeft(S){return S.call.failed.filter(function(id){return S.farewell[id]==null;}).length;}
 var FAREWELL=[['ここまでの成長を誇って','番組への信頼が上がる。大きく伸びた子ほど効く（人気の子のファンには物足りない）'],['足りなかった点を伝える','残った子の自信が上がる（1審査に2人まで）が、疲れる。「冷たい」と言う人も'],['また必ず会おう','人気の子ほど見ている人が救われる（そうでない子は「軽い」と言われる）。復活枠で戻すと約束どおり力を出す。次のシーズンに再挑戦してくることも']];
 function nextRound(S){applyFarewell(S);S.rnd++;startRound(S);}
+/* 2026-11-21：第2審査の合否のあとに、視聴者投票による人気の順位を発表する。合否を決めるのはプロデューサーのまま。
+   1位は自信+4、下から3人は自信-3。下の3人のうち1人に声をかけられる（信頼+8・自信+8）が、次の審査で関われる回数が1回減る */
+var RANK_AT=2;
+function rankDue(S){return S.rnd===RANK_AT&&!S.ranked&&ROUNDS[S.rnd+1]&&!ROUNDS[S.rnd].fin;}
+function openRank(S){applyFarewell(S);var A=alive(S),bp=A.slice().sort(function(a,b){return b.lastP-a.lastP||a.id-b.id;}),pr={};bp.forEach(function(t,i){pr[t.id]=i+1;});
+  var ord=A.slice().sort(function(a,b){return b.pop-a.pop||a.id-b.id;}).map(function(t){return t.id;});
+  S.rank={ord:ord,perf:pr,pick:null};S.ranked=1;
+  var top=S.tr[ord[0]];top.conf+=4;normT(top);ord.slice(-3).forEach(function(id){var t=S.tr[id];t.conf-=3;normT(t);});
+  S.phase='rank';}
+function rankLow(S){return S.rank.ord.slice(-3);}
+function closeRank(S){var R=S.rank;if(R.pick!=null&&rankLow(S).indexOf(R.pick)>=0){var t=S.tr[R.pick];t.trust+=8;t.conf+=8;normT(t);S.apPen=1;logT(S,t,'中間の順位発表のあと、声をかけてもらった');}
+  S.rnd++;startRound(S);}
 
 /* ---------- デビュー後 ---------- */
 function finalEval(S,Dopt){
@@ -2736,6 +2763,7 @@ var SHOW_IN={
   live:['観客の顔がはっきり見える距離。最前列の誰かが手を振った。','開場前から並んでいた人たちの前に、ゆっくり歩み出た。','知らない人ばかりの客席に、まず笑いかけた。'],
   orig:['初めての自分たちの曲。最初の一小節を、宝物のように歌い出した。','面談で話したことを思い出すように、一度だけ目を閉じた。','まだ誰も聴いたことのない曲。その最初の声になる。'],
   final:['最終課題曲のイントロ。ここまでのすべてが、この数分にかかっている。','最後のステージ。客席の灯りが、ひとつずつ消えていった。','「ひかりの席」の最初の一音を、静かに待った。','この舞台に立てるのは、今日が最後かもしれない。それでも足は止まらなかった。','最初の審査の日と同じ場所に立った。見える景色は、まるで違った。'],
+  xmas:['ツリーの電飾が一斉に灯り、鈴の音のイントロが流れた。','客席のサンタ帽が、いっせいに揺れた。','白い息のような照明の中、最初の一音を置いた。','雪を模した紙吹雪が、ゆっくり舞台に降りてくる。','年の終わりの特番。この一曲で、今年を締めくくる。'],
   busk:['商店街のざわめきの中、スピーカーから最初の音が流れた。','足を止めた人は、まだ数えるほど。それでも、いちばん奥の人に向けて歌い始めた。','買い物袋を下げた人が、ひとり、ふたりと足を止めた。','風で譜面がめくれた。笑って押さえてから、前を向いた。','通りの向こうまで届くように、最初の一声を張った。'],
   r1:['番組で初めてのステージ。まだ名前を知る人は少ない。','初めての審査の舞台。膝が少し震えていた。'],
   late:['ここまで残った顔ぶれの中で、名前が呼ばれた。','残りの人数が減るたびに、舞台が広く感じる。']};
@@ -3815,8 +3843,8 @@ var FSEEN_KEY='hikari7_fmtseen';
 function fmtSeen(){try{return JSON.parse(HStore.get(FSEEN_KEY)||'{}')||{};}catch(e){return {};}}
 function fmtNew(k){return !!(PACK_AUDITION[k]&&!fmtSeen()[k]);}
 function fmtMarkSeen(k){if(!PACK_AUDITION[k])return;try{var o=fmtSeen();o[k]=1;HStore.set(FSEEN_KEY,JSON.stringify(o));}catch(e){}}
-function newTag(k){return fmtNew(k)?'<span class="ftag">新</span>':'';}
-function fmtKeys(){return packDone.audition&&packOwned('audition')?FMT_KEYS.concat(Object.keys(PACK_AUDITION)):FMT_KEYS;}
+function newTag(k){return k==='xmas'?'<span class="ftag">12月だけ</span>':fmtNew(k)?'<span class="ftag">新</span>':'';}
+function fmtKeys(){var k=packDone.audition&&packOwned('audition')?FMT_KEYS.concat(Object.keys(PACK_AUDITION)):FMT_KEYS;return xmasOn()?k.concat(['xmas']):k;}
 
 function xText(s,A,B){return s.replace(/\{A\}/g,A.giv).replace(/\{B\}/g,B?B.giv:'');}
 function xP(c,A,B,S){var p=c[2];return typeof p==='function'?p(A,B,S):p;}
@@ -5073,7 +5101,7 @@ function renderErr(err){try{console.error(err);}catch(e){}var bk=loadBak();
 function render0(){
   var h;
   if(!S||S.phase==='title')h=vTitle();
-  else h=header()+({select:vSelect,plan:vPlan,lesson:vLesson,lres:vLres,talk:vTalk,show:vShow,format:vFormat,event:vEvent,interview:vInterview,stage:vStage,critique:vCritique,judge:vJudge,call:vCall,prep:vPrep,month:vMonth,night:vNight,result:vResult}[S.phase])();
+  else h=header()+({select:vSelect,plan:vPlan,lesson:vLesson,lres:vLres,talk:vTalk,show:vShow,format:vFormat,event:vEvent,interview:vInterview,stage:vStage,critique:vCritique,judge:vJudge,call:vCall,rank:vRank,prep:vPrep,month:vMonth,night:vNight,result:vResult}[S.phase])();
   if(S&&S.phase!=='title'){var hd=h.indexOf('<div class="dots">');if(hd>=0){var he=h.indexOf('</div>',hd)+6;h=h.slice(0,he)+tipBox()+h.slice(he);}}
   if(ui.gloss)h+=vGloss();
   else if(ui.settings)h+=vSettings();
@@ -5359,6 +5387,16 @@ function vJudge(){
   var mx=f.fin?S.caps.finMax:cap;h+='<div class="foot"><div class="in"><div class="cnt">'+(f.fin?'デビュー':'合格')+' <b>'+n+'</b>人<br><span class="muted">'+mn+'〜'+mx+'人</span><span class="jbar'+(n>mx?' over':n>=mn?' ok':'')+'"><i style="width:'+Math.min(100,Math.round(n/mx*100))+'%"></i><u style="left:'+Math.round(mn/mx*100)+'%"></u></span></div><button class="btn" data-a="judgeok" '+(ok?'':'disabled')+'>'+(n<mn?'あと'+(mn-n)+'人選ぶ':(f.fin?'この'+n+'人で決める':'発表へ'))+'</button></div></div>';
   return h;
 }
+function vRank(){var R=S.rank,N=R.ord.length,low=rankLow(S),h0=hon(S);
+  var h='<h2>中間の順位発表</h2><p class="small muted">第2審査までの放送を見た視聴者の投票で、いまの人気の順位が決まりました。下の順位から発表します。合否を決めるのは、これまでどおりあなたです。</p><div class="card rklist">';
+  R.ord.forEach(function(id,i){var t=S.tr[id],rk=i+1,pf=R.perf[id],gap=pf-rk,d=((N-rk)*.22).toFixed(2);
+    h+='<div class="rkrow'+(rk===1?' rk1':'')+(low.indexOf(id)>=0?' rklow':'')+'" style="animation-delay:'+d+'s"><b class="rkn">'+rk+'<small>位</small></b>'+face(t,'sm')+'<div class="mid"><div class="nm">'+esc(t.giv)+' '+tag(t.spec)+'</div><div class="small muted">本番の評価 '+pf+'位'+(gap>=4?'<span class="rkup">　評価より人気が高い</span>':gap<=-4?'<span class="rkdn">　評価ほど人気がない</span>':'')+'</div></div></div>';});
+  h+='</div>';
+  h+='<div class="card"><div class="mh">順位の低かった子に声をかける（1人まで）</div><p class="small muted">声をかけた子は信頼+8・自信+8。そのかわり、次の審査で関われる回数が1回減ります。誰にも声をかけずに進むこともできます。</p><div class="filters">';
+  low.forEach(function(id){var t=S.tr[id];h+='<button class="chip'+(R.pick===id?' on':'')+'" data-a="rankpick" data-id="'+id+'">'+esc(t.giv)+h0+'</button>';});
+  h+='</div></div>';
+  h+='<div class="foot"><div class="in"><div class="cnt">'+(R.pick!=null?'<b>'+esc(S.tr[R.pick].giv)+'</b>に声をかける':'声はかけない')+'</div><button class="btn" data-a="rankok">次の審査へ</button></div></div>';
+  return h;}
 function vCall(){
   var f=ROUNDS[S.rnd],c=S.call,o=c.order,n=c.n,h=(f.fin&&c.done?confetti():'')+'<h2>'+(f.fin?'デビューメンバー発表':'合格者発表')+'</h2>';
   if(n===0&&!c.done){h+='<div class="card hero callhero"><p>'+(o.length+c.failed.length)+'人のうち、'+(f.fin?'デビューするのは':'次に進むのは')+' <b>'+o.length+'人</b>。</p><p class="small muted">ひとりずつ名前を呼びます。</p></div><button class="btn" data-a="callstart">発表を始める</button><button class="btn sub" data-a="callskip">まとめて見る</button>';return h;}
@@ -6351,7 +6389,9 @@ document.addEventListener('click',function(ev){
     case 'fwall':go(function(){S.call.failed.forEach(function(x){S.farewell[x]=+v;});});break;
     case 'fwstar':go(function(){S.call.failed.forEach(function(x){var b=fwBest(S.tr[x]);if(b>=0)S.farewell[x]=b;});});toast('★の付いている子を、合う言葉にそろえた');break;
     case 'fwjump':try{var fu=document.querySelector('.call.out.un')||document.getElementById('fwsec');if(fu&&fu.scrollIntoView)fu.scrollIntoView({behavior:'smooth',block:fu.id?'start':'center'});}catch(e){}break;
-    case 'nextround':stopTimer();go(function(){nextRound(S);});window.scrollTo(0,0);break;
+    case 'nextround':stopTimer();go(function(){if(rankDue(S))openRank(S);else nextRound(S);});window.scrollTo(0,0);break;
+    case 'rankpick':if(!S.rank)break;S.rank.pick=S.rank.pick===id?null:id;render();break;
+    case 'rankok':if(!S.rank)break;go(function(){closeRank(S);});window.scrollTo(0,0);break;
     case 'toresult':go(function(){applyFarewell(S);S.phase='result';startEnding(S);});window.scrollTo(0,0);break;
     case 'again':if(!S)break;var ag={g:S.g,d:S.daily?'normal':(S.diff||'normal'),c:S.daily?null:(S.chal||null)};keepBak();stopTimer();ui.prof=null;ui.lastRoll=null;ui.g=ag.g;ui.diff=ag.d;ui.chal=ag.c;S=newGame(ag.g,ag.d,ag.c);ui.filter='all';save();render();window.scrollTo(0,0);break;
     case 'restart':ui.chal=null;try{HStore.set('hikari7_chal','');}catch(e){}stopTimer();clearSave();S=null;render();window.scrollTo(0,0);break;

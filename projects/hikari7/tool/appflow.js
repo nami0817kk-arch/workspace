@@ -78,7 +78,7 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   const FIN = `var B=alive(S),res=S.stage.res;B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,Math.min(6,S.caps.finMax,B.length)).forEach(function(t){S.pass[t.id]=true;});decide(S);`;
   const g = boot({ adFree: false, store: {}, owned: {} });
   g.run(START);
-  for (let r = 1; r <= 4; r++) { g.run(PLAY_ROUND); g.press('nextround'); }
+  for (let r = 1; r <= 4; r++) { g.run(PLAY_ROUND); g.press('nextround'); if (g.run('S.phase') === 'rank') g.press('rankok'); }
   ok(g.run('S.rnd') === 5 && !g.posts.some((p) => p.type === 'between' || p.type === 'prepInter'), '審査の間には全画面広告を出さず、読み込みも頼まない');
   g.run(PLAY_ROUND.replace(/var B=alive[\s\S]*$/, '') + FIN);
   g.press('toprep');
@@ -475,6 +475,40 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   d0.run("ui.g='f';");
   d0.press('daily');
   ok(d0.run('S.sel.length') === 0, '今日のオーディションは、はじめてでも自分で選ぶ');
+}
+
+// 中間の順位発表とクリスマス公演（2026-11-21）
+{
+  const r = boot({ adFree: false, store: {}, owned: {} });
+  r.run(START);
+  r.run("S.rnd=2;S.phase='call';S.call={order:alive(S).map(function(t){return t.id;}),failed:[],n:0,done:true};S.farewell={};");
+  ok(r.run('rankDue(S)') === true, '第2審査の合否のあと、順位発表に入る');
+  r.press('nextround');
+  ok(r.run("S.phase") === 'rank' && r.run('S.rnd') === 2, '次の審査へを押すと、まず中間の順位発表の画面になる');
+  const vr = r.run('vRank()');
+  ok(/中間の順位発表/.test(vr) && (vr.match(/class="rkrow/g) || []).length === r.run('alive(S).length') && /data-a="rankpick"/.test(vr), '残っている全員の順位が並び、下の3人に声をかけるボタンが出る');
+  ok(r.run('(function(){var o=S.rank.ord;for(var i=1;i<o.length;i++)if(S.tr[o[i-1]].pop<S.tr[o[i]].pop)return false;return true;})()'), '順位は人気の高い順');
+  const low = r.run('rankLow(S)[0]');
+  r.run('var tr0=S.tr[' + low + '].trust;');
+  r.press('rankpick', null); // id なしは何も起きない
+  r.run('S.rank.pick=' + low + ';');
+  r.press('rankok');
+  ok(r.run('S.rnd') === 3 && r.run('S.phase') === 'plan' && r.run('S.tr[' + low + '].trust>tr0') && r.run('S.apPen') === 1, '声をかけると信頼が上がり、次の審査へ進む（関われる回数の減りが予約される）');
+  r.run("applyPlan(S);applyLesson(S);");
+  ok(r.run('S.ap') === r.run('apMax(S)-1') && r.run('S.apPen') === 0, '声をかけた次の審査は、関われる回数が1回減る（減りは1回だけ）');
+  ok(r.run('rankDue(S)') === false, '順位発表は1シーズンに1回だけ');
+  const r2 = boot({ adFree: false, store: {}, owned: {} });
+  r2.run(START + "S.rnd=2;S.phase='call';S.call={order:alive(S).map(function(t){return t.id;}),failed:[],n:0,done:true};S.farewell={};");
+  r2.press('nextround');r2.press('rankok');
+  r2.run("applyPlan(S);applyLesson(S);");
+  ok(r2.run('S.ap') === r2.run('apMax(S)'), '声をかけなければ、関われる回数は減らない');
+  const x = boot({ adFree: false, store: {}, owned: {} });
+  x.run('XMAS_FORCE=false;');
+  const inDec = x.run('new Date().getMonth()===11');
+  ok(x.run("fmtKeys().indexOf('xmas')>=0") === inDec, '12月のほかは、クリスマス公演は一覧に出ない');
+  x.run('XMAS_FORCE=true;');
+  ok(x.run("fmtKeys().indexOf('xmas')>=0") && /12月だけ/.test(x.run("newTag('xmas')")), '12月はクリスマス公演が選べて、「12月だけ」の札が付く');
+  ok(x.run("FORMATS.xmas.fat>0&&FORMATS.xmas.hype===3&&SHOW_IN.xmas.length>=5"), 'クリスマス公演は盛り上がりが最大で、疲れる。本番の入りの文がある');
 }
 
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
