@@ -28,6 +28,7 @@ class SeasonRecord {
   const SeasonRecord({
     required this.year,
     required this.clubName,
+    this.clubId = '',
     required this.tier,
     required this.leaguePosition,
     required this.stats,
@@ -46,6 +47,13 @@ class SeasonRecord {
 
   final int year;
   final String clubName;
+
+  /// そのシーズンのクラブの ID。
+  ///
+  /// **名前は言語で変わる**ので、古巣を探すときは ID で見る。
+  /// ID を持たせる前の保存データは空なので、そのときは名前で探す。
+  final String clubId;
+
   final int tier;
   final int leaguePosition;
   final SeasonStats stats;
@@ -86,6 +94,7 @@ class SeasonRecord {
   Map<String, dynamic> toJson() => {
     'year': year,
     'clubName': clubName,
+    'clubId': clubId,
     'tier': tier,
     'leaguePosition': leaguePosition,
     'appearances': stats.appearances,
@@ -108,6 +117,7 @@ class SeasonRecord {
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
     year: json['year'] as int,
     clubName: json['clubName'] as String,
+    clubId: json['clubId'] as String? ?? '',
     tier: json['tier'] as int,
     leaguePosition: json['leaguePosition'] as int,
     stats: SeasonStats(
