@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/league_base.dart';
 import '../../gm/potential_view.dart';
 import '../../gm/calendar.dart';
 import '../../gm/block_report.dart';
@@ -633,6 +634,7 @@ class ProgressTab extends StatelessWidget {
         _kv('観客の入り', '${(car.attendance * 100).round()}%(1試合 入場 ${money(car.gatePerGame)}・売店 ${money(car.concessionPerGame)})'),
         _kv('人気', '${car.hype}'),
         _kv('市場の大きさ', '${car.market.toStringAsFixed(2)}倍(スポンサーとグッズに掛かる)'),
+        _kv('ファン', '${leagueBaseOf(car.seed, car.mine).fans.label}(${leagueBaseOf(car.seed, car.mine).fans.text})'),
         const SizedBox(height: 4),
         const Text('今季の収入', style: TextStyle(color: GmColors.sub, fontSize: 13)),
         for (final i in Income.values) _kv(i.label, money(car.incomeBy[i.index])),

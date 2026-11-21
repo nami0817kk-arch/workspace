@@ -39,14 +39,15 @@ class GmHomeScreen extends StatelessWidget {
       if (ok != true || !context.mounted) return;
     }
     final seed = c.newSeed();
-    final pick = await Navigator.of(context).push<(int, Difficulty)>(MaterialPageRoute(builder: (_) => TeamPickScreen(seed: seed)));
+    final pick = await Navigator.of(context).push<(int, Difficulty, int)>(MaterialPageRoute(builder: (_) => TeamPickScreen(seed: seed)));
     if (pick == null || !context.mounted) return;
-    final (team, difficulty) = pick;
+    // 選ぶ画面で別のリーグに作り直したなら、その種で始める(D-3)
+    final (team, difficulty, chosenSeed) = pick;
     if (!c.howtoSeen) {
       await Navigator.of(context).push(MaterialPageRoute<void>(builder: (ctx) => HowToScreen(onStart: () => Navigator.pop(ctx))));
       await c.markHowtoSeen();
     }
-    c.newCareer(team, seed: seed, difficulty: difficulty);
+    c.newCareer(team, seed: chosenSeed, difficulty: difficulty);
   }
 
   /// お題を選んで始める(チームはお題に合わせて決まる)。

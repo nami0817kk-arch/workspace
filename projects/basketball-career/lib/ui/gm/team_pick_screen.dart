@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
+import '../../gm/league_base.dart';
 import '../../gm/career.dart';
 import '../../gm/difficulty.dart';
 import '../../gm/league.dart';
@@ -20,7 +23,9 @@ class TeamPickScreen extends StatefulWidget {
 }
 
 class _TeamPickScreenState extends State<TeamPickScreen> {
-  late final Career _league = Career.start(seed: widget.seed);
+  // 始めるたびに違うリーグ(D-3)。気に入らなければ、別のリーグを作り直せる
+  late int _seed = widget.seed;
+  late Career _league = Career.start(seed: _seed);
   bool _east = true;
   Difficulty _diff = Difficulty.normal;
 
@@ -57,6 +62,28 @@ class _TeamPickScreenState extends State<TeamPickScreen> {
                       selected: {_diff},
                       onSelectionChanged: (v) => setState(() => _diff = v.first),
                     ),
+                  ),
+                ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 0, 14, 0),
+                child: Row(children: [
+                  Expanded(
+                    child: Text(
+                      'このリーグの始める前の10年: ${[for (final (ch, _) in _league.prehistory) _league.teams[ch].def.short].join('→')}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 11.5, color: GmColors.sub),
+                    ),
+                  ),
+                  TextButton.icon(
+                    key: const Key('reroll-league'),
+                    onPressed: () => setState(() {
+                      _seed = math.Random().nextInt(0x7fffffff);
+                      _league = Career.start(seed: _seed);
+                    }),
+                    icon: const Icon(Icons.casino_rounded, size: 16),
+                    label: const Text('別のリーグにする'),
                   ),
                 ]),
               ),
@@ -108,6 +135,23 @@ class _TeamPickScreenState extends State<TeamPickScreen> {
                 const SizedBox(height: 6),
                 Text('${Outlook.of(rank).label}(戦力 30チーム中${rank + 1}位)', style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.ball)),
                 Text(Outlook.of(rank).text, style: const TextStyle(color: GmColors.sub, height: 1.5)),
+                const SizedBox(height: 6),
+                // このリーグでのチームの土台と歴史(D-3)
+                () {
+                  final b = leagueBaseOf(_seed, t.index);
+                  final since = _league.yearsSinceTitle(t.index);
+                  final rivals = _league.rivalsOf(t.index);
+                  return Text(
+                    [
+                      '${marketLabel(b.market)}(収入${b.market.toStringAsFixed(2)}倍)',
+                      'ファンは${b.fans.label}',
+                      '施設は${b.facility >= 2 ? '新しい' : '古い'}',
+                      since == null ? '10年以上優勝なし' : '最後の優勝は$since年前',
+                      if (rivals.isNotEmpty) 'ライバル: ${rivals.map((x) => _league.teams[x].def.short).join('・')}',
+                    ].join('・'),
+                    style: const TextStyle(fontSize: 12.5, height: 1.5),
+                  );
+                }(),
                 const SizedBox(height: 8),
                 PayrollBar(payroll: t.payroll),
                 const SizedBox(height: 10),
@@ -130,7 +174,7 @@ class _TeamPickScreenState extends State<TeamPickScreen> {
         ]),
       ),
     );
-    if (ok == true && context.mounted) Navigator.pop(context, (t.index, _diff));
+    if (ok == true && context.mounted) Navigator.pop(context, (t.index, _diff, _seed));
   }
 }
 

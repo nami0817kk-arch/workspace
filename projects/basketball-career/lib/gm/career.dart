@@ -9,6 +9,7 @@ import 'gm_people.dart';
 import 'inbox.dart';
 import 'promise.dart';
 import 'league.dart';
+import 'league_base.dart';
 import 'league_plans.dart';
 import 'names.dart';
 import 'personality.dart';
@@ -441,6 +442,10 @@ class Career {
     ];
     c.coachPool = c._makeCoaches(0, start: false);
     c.startRank = c.strengthRank(c.mine);
+    // 始めるたびに違うリーグ(D-3): 施設の古さと、始める前の10年の歴史
+    c.facilities = List.filled(3, leagueBaseOf(seed, c.mine).facility);
+    final byStrength = [for (var t = 0; t < c.teams.length; t++) t]..sort((a, b) => c.strengthRank(a).compareTo(c.strengthRank(b)));
+    c.prehistory = makePrehistory(seed, byStrength);
     c.stints = [
       [c.mine, 1],
     ];
@@ -534,7 +539,8 @@ class Career {
     restIds = [];
     extAsked = [];
     h2h = {};
-    facilities = [1, 1, 1];
+    // 施設の古さは、このリーグでのそのチームの土台から(D-3)
+    facilities = List.filled(3, leagueBaseOf(seed, team).facility);
     facilityDebt = 0;
     staffDebt = 0;
     budgetLevel = 2;
@@ -2245,7 +2251,44 @@ class Career {
   int concessionLevel = 1;
 
   /// 自分のチームの市場の大きさ(スポンサーとグッズに掛かる)。
-  double get market => marketSizes[mine];
+  /// 街の大きさ(チームの市場の大きさに、このリーグでの土台の倍率を掛ける。D-3)。
+  double get market => marketSizes[mine] * leagueBaseOf(seed, mine).market;
+
+  /// 始める前の10年の歴史(古い順。(優勝チーム, ファイナルの相手))。D-3。
+  List<(int, int)> prehistory = [];
+
+  /// [t] が最後に優勝してから何年か(始める前の歴史と、このリーグの優勝から。無ければ null = 10年以上)。
+  int? yearsSinceTitle(int t) {
+    for (var i = champs.length - 1; i >= 0; i--) {
+      if (champs[i][1] == t) return season - champs[i][0];
+    }
+    for (var i = prehistory.length - 1; i >= 0; i--) {
+      if (prehistory[i].$1 == t) return season - 1 + (prehistory.length - i);
+    }
+    return null;
+  }
+
+  /// [t] のライバル(始める前の10年で、ファイナルで2回以上当たったチーム)。
+  List<int> rivalsOf(int t) {
+    final n = <int, int>{};
+    for (final (a, b) in prehistory) {
+      if (a == t) n[b] = (n[b] ?? 0) + 1;
+      if (b == t) n[a] = (n[a] ?? 0) + 1;
+    }
+    return [for (final e in n.entries) if (e.value >= 2) e.key];
+  }
+
+  /// 区切りの終わりの、ファンの気質による人気の動き(D-3)。
+  void _fanDrift() {
+    final f = leagueBaseOf(seed, mine).fans;
+    final pct = me.wins + me.losses == 0 ? 0.5 : me.wins / (me.wins + me.losses);
+    final d = switch (f) {
+      FanTemper.fair => pct >= 0.6 ? 1 : pct < 0.45 ? -1 : 0,
+      FanTemper.loyal => pct < 0.45 ? 1 : 0,
+      FanTemper.fickle => pct >= 0.6 ? 3 : pct < 0.45 ? -3 : 0,
+    };
+    hype = (hype + d).clamp(0, 100);
+  }
 
   /// 今シーズンの収入の内訳([Income] の順)。合計は [revenue]。
   List<int> incomeBy = List.filled(Income.values.length, 0);
@@ -3169,6 +3212,7 @@ class Career {
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    _fanDrift();
     _checkWishes();
     _aiPolicies();
     // 区切りごとに、どこかのチームの事情のうわさが1つ届く(T-2)
@@ -5922,6 +5966,7 @@ class Career {
         if (wishKnown.isNotEmpty) 'wk': [...wishKnown],
         if (wishUnmet.isNotEmpty) 'wu': [for (final e in wishUnmet.entries) [e.key, e.value]],
         'era': eraWeights,
+        if (prehistory.isNotEmpty) 'phs': [for (final x in prehistory) [x.$1, x.$2]],
         if (legendNames.isNotEmpty) 'lgn': legendNames,
         if (legendCoachDone) 'lgc': 1,
         if (eraHistory.isNotEmpty) 'erh': eraHistory,
@@ -6103,6 +6148,10 @@ class Career {
       ..eraWeights = j['era'] is List && (j['era'] as List).length == Era.values.length
           ? [for (final x in j['era'] as List) (x as num).toDouble()]
           : [for (var i = 0; i < Era.values.length; i++) i == (j['seed'] as int) % Era.values.length ? 0.4 : 0.2]
+      ..prehistory = [
+        for (final x in (j['phs'] as List? ?? const []))
+          if (x is List && x.length == 2) (x[0] as int, x[1] as int),
+      ]
       ..legendNames = [for (final x in (j['lgn'] as List? ?? const [])) '$x']
       ..legendCoachDone = j['lgc'] == 1
       ..eraHistory = [for (final x in (j['erh'] as List? ?? const [])) x as int]
