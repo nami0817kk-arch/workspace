@@ -1,0 +1,153 @@
+# 物語完結型ショート もしも江戸の長屋 s3（2026-11-20）。本編 scripts/nagaya-if-story.yaml（11/25 12:00 公開予定、https://youtu.be/bEaxpmLN3mw）から。11/26 13:30 に予約。
+# 形式は edo_sekai_s1〜s5・kiyomasa_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact: だけ（事実カード 江戸の長屋if_facts_20261119.yaml）。
+# 絵：本編の AI 絵（out/story/nagaya_if/main/）の切り出しだけ。新しい絵は作らない。
+# 切り口：長屋の共同便所に溜まったものは下肥として売られ、代金は店子ではなく大家に入った（本編 第3章、nagayaif-19・20）。
+#   下肥の値段は本編でも「確かめられなかった」ので言わない。1843年の訴えは本編どおり「とされる」。
+# hook＝トイレの中身は売り物（答えはこのショートの中：農家が下肥として買い、代金は大家の収入）。
+# tease＝店子が自分で払った湯銭はいくらか（答えは本編 第4章：大人10文ほど→天保の改革で8文、nagayaif-21）。
+# 計算：天保14年＝1843年（本編と同じ）。
+# 理解テスト：①江戸の長屋の共同便所の話 ②江戸の長屋の路地、近くの村の農家 ③溜まったものは下肥として売られ、代金は大家の収入、店子には入らない ④値が上がり、1843年に283か村が値が高すぎると訴えたとされる
+title: "江戸の長屋｜トイレの中身は売り物"
+yt_title: "江戸の長屋の共同トイレの中身は「売り物」だった　代金を受け取ったのは住人ではなく大家　1843年には283か村が値下げを訴えた"
+description: |-
+  江戸の長屋の路地の奥には、共同の井戸、便所、ごみ溜めが並んでいました。便所に溜まったものは、近くの村の農家が、畑の肥やし「下肥」として買っていきました。
+  磯田道史さん監修の『新版 江戸の家計簿』によると、その代金は大家の収入になっていたといいます。店子には入りません。
+  下肥は、汲み取る場所の取り合いで値が上がりました。1843年2月1日には、武蔵と下総の283か村の代表が、勘定奉行に、下肥の値が高すぎると訴えたとされます。
+  本編では、家賃・水・トイレ・お風呂・食べ物・灯りまで、江戸の長屋の1か月がいくらだったかを積み上げています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#江戸時代"
+- "#江戸の長屋"
+- "#江戸の暮らし"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。創作の台詞は入れていません。"
+art_dir: out/story/nagaya_if
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: nagaya_story_s3
+header:
+  tag: "江戸の長屋の共同便所"
+  title: "トイレの中身は、《売り物》だった"
+now:
+- {at: "長屋の路地", text: "江戸の裏長屋", point: 0}
+- {at: "1843年", text: "1843年2月1日　江戸", point: 1}
+timeline:
+- {label: "江戸"}
+- {label: "1843"}
+cards:
+  - type: year
+    from: 天保14年
+    until: 上水の届く
+    big: 1843年
+    sub: 283か村が値下げを訴える
+    text_y: 0.70
+shots:
+  B11_1:
+    kind: "ai"
+    file: "nagaya_if/main/B11.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "B11"
+  T01_2:
+    kind: "ai"
+    file: "nagaya_if/main/T01.jpg"
+    focus: [0.45, 0.55]
+    move: "right"
+    must: "T01"
+  B12_3:
+    kind: "ai"
+    file: "nagaya_if/main/B12.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "B12"
+  B04_4:
+    kind: "ai"
+    file: "nagaya_if/main/B04.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "B04"
+  B12_5:
+    kind: "ai"
+    file: "nagaya_if/main/B12.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "B12"
+  B05_6:
+    kind: "ai"
+    file: "nagaya_if/main/B05.jpg"
+    focus: [0.45, 0.6]
+    move: "in"
+    must: "B05"
+  B08_7:
+    kind: "ai"
+    file: "nagaya_if/main/B08.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "B08"
+  B07_8:
+    kind: "ai"
+    file: "nagaya_if/main/B07.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "B07"
+  B13_9:
+    kind: "ai"
+    file: "nagaya_if/main/B13.jpg"
+    focus: [0.45, 0.5]
+    move: "right"
+    must: "B13"
+lines:
+  # fact: nagayaif-19
+- 語り: "江戸の長屋の、共同便所に溜まったものは、《売り物》だった。"
+  shot: B11_1
+  tone: 強調
+  pause: 0.12
+  # fact: nagayaif-19
+- 語り: "長屋の路地の奥には、共同の井戸と、便所と、ごみ溜めが、並んでいた。"
+  shot: T01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-19
+- 語り: "便所に溜まったものは、近くの村の農家が、畑の肥やし、下肥として、買っていった。"
+  shot: B12_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-19
+- 語り: "磯田道史さん監修の本、江戸の家計簿によると、その代金は、大家の収入になっていた、という。店子には、入らない。"
+  shot: B04_4
+  tone: 重い
+  pause: 0.12
+  # fact: nagayaif-20
+- 語り: "下肥は、やがて、汲み取る場所の取り合いで、値が上がった。"
+  shot: B12_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-20
+- 語り: "堅田元喜さんの、2021年の報告によると、町奉行が値を抑えようとしたが、うまくいかなかった。"
+  shot: B05_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: nagayaif-20
+- 語り: "天保14年、1843年の2月1日には、武蔵と下総の、283か村の代表が、勘定奉行に、下肥の値が高すぎると、訴えたとされる。"
+  shot: B08_7
+  tone: 重い
+  pause: 0.12
+  # fact: nagayaif-19, nagayaif-14
+- 語り: "上水の届く町の店子は、水にも、トイレにも、自分では払わなかった。それでも、そのまわりでは、お金が動いていた。"
+  shot: B07_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第4章（nagayaif-21）
+- 語り: "では、店子が自分で払った、湯屋の湯銭は、いくらだったのか。"
+  shot: B13_9
+  tone: 疑問
+  pause: 0.15

@@ -1,0 +1,254 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：江戸の牢屋敷（scripts/rouyashiki-story.yaml）。chiso/storymain.py が読む。
+# 11-20 作成（11/26 12:00 公開）。nagaya_if_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini、11-20）。T01・B01〜B24 はこの回のために作った（out/story/rouyashiki/main/<名>.jpg）。サムネは TH1（明るい版）。
+#   1850年ごろの江戸。牢の格子は太い角材の木（鉄格子にしない）。実在の人物の顔は描かない（松陰は後ろ姿の B16）。血・傷・刑の場面は描かない。
+#   B07（役人の書院）は偽の紋とガラス窓が出たので使わない（作り直しは Gemini の上限で 11-20 にできなかった）。
+script: scripts/rouyashiki-story.yaml
+out: rouyashiki_story_main
+art_dir: out/story/rouyashiki/ph
+main_art_dir: out/story/rouyashiki/main
+ai_disclosure: この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 畳を積んだ牢名主, now: null, dates: {1: 1777年, 2: null, 6: 1854年, 7: null}}
+  1: {label: 第1章 誰がどの牢に入る？, now: null, dates: {17: 1775年, 18: 1854年, 23: null}}
+  2: {label: 第2章 牢屋奉行は誰？, now: null, dates: {29: 1615年, 31: 1657年, 33: null}}
+  3: {label: 第3章 新入りは何を持ち込んだ？, now: null, dates: {51: 1777年}}
+  4: {label: 第4章 畳1枚に何人？, now: null, dates: {65: 1777年, 66: null}}
+  5: {label: 第5章 何を食べた？, now: null, dates: {}}
+  6: {label: 第6章 牢で何人が死んだ？, now: null, dates: {93: 1719年, 94: null, 96: 1687年, 97: 1742年, 98: null}}
+  7: {label: 第7章 牢を出る道は？, now: null, dates: {108: 1720年, 109: null, 115: 1862年, 116: 1790年, 118: null, 119: 1844年, 122: 1839年, 123: 1844年, 124: 1846年, 125: null}}
+  8: {label: 第8章 最後の文はどこへ？, now: 1859年, dates: {127: 1859年7月9日, 133: 1859年10月, 139: 1876年, 142: null}}
+  9: {label: まとめ 牢の中の決まり, now: null, dates: {145: 1875年, 147: 1882年ごろ, 148: null}}
+no_tag_from: 154
+
+references:
+  - "吉田松陰『野山雑著』（『松陰先生遺著』第2巻、1909）・『江戸獄記』と書簡・『留魂録』（『吉田松陰全集』1934〜40）　https://dl.ndl.go.jp/pid/754749"
+  - "尾佐竹猛 述『牢獄秘録』（1939）　https://dl.ndl.go.jp/pid/1267010"
+  - "『古事類苑』法律部12 囚禁（1914。牢内掟書・『徳川禁令考』・『南撰要集』ほかを引く）　https://dl.ndl.go.jp/pid/897707"
+  - "『古事類苑』官位部（市尹秘録を引く）・『日本橋区史』（1916）・『東京市町名沿革史』（1938）・『東京案内』（1907）"
+  - "『徳川実紀』（国史大系本）・『高野長英伝』（1939）・『吉田松陰全集』の野村靖の跋"
+  - "中央区「伝馬町牢屋敷跡」（区内の文化財）　https://www.city.chuo.lg.jp/a0052/bunkakankou/rekishi/tokyobunkazai/royashiki.html"
+  - "世界大百科事典・日本大百科全書・日本国語大辞典・日本人名大辞典（コトバンク）：牢屋・揚屋・石出帯刀・石出常軒・吟味筋・牢問・敲・遠島・赦・切放"
+
+ai:
+  T01: {scene: 江戸の牢屋敷の大牢、積んだ畳の上の牢名主と、詰め込まれた囚人たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B01: {scene: 堀と練塀に囲まれた牢屋敷の表門（朝）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B02: {scene: 牢屋敷の全景（高い所から）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B03: {scene: 牢の格子の外の通路を、鍵と提灯を持って歩く同心の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B04: {scene: 大牢に詰め込まれて座る囚人たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B05: {scene: 揚座敷に1人で座る武士の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B06: {scene: 揚屋に離れて座る武士・僧・医者, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B08: {scene: くぐり戸から牢に入る白い単衣の新入り, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B09: {scene: 着物の襟の縫い目からのぞく小判（ツル）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B10: {scene: 物相の飯と汁の手桶、糠漬けの大根, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B11: {scene: 門の脇の窓口で差し入れを渡す家族, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B12: {scene: 夜の牢、座ったまま眠る囚人たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B13: {scene: 浅草の田のそばの溜の小屋（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B14: {scene: 町奉行所のお白洲（後ろ姿）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B15: {scene: 夜明けの海辺、流人を運ぶ小舟と船, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B16: {scene: 揚屋の窓辺で筆をとる若い武士の後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B17: {scene: 夜、燃える牢屋敷と表門から出る人々, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B18: {scene: 明治の初め、取り壊した跡の草原, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B19: {scene: 鍵の束と帳面と硯, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B20: {scene: 牢屋敷の庭で書状を聞く囚人たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B21: {scene: 夕暮れの牢屋敷の練塀と堀（終了画面。右半分が空と堀）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  B22: {scene: 大牢の奥の、積み重ねた畳の台, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B23: {scene: 格子越しに病人を見る医者, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B24: {scene: 明暦の大火の煙の下、町を離れていく人々（遠景）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+
+credits: {}
+
+shots:
+  - 0 ai:T01 wide
+  - 1 ai:B22 wide
+  - 2 ai:B04 wide
+  - 3 ai:T01 right
+  - 4 ai:B01 wide
+  - 5 ai:B16 wide
+  - 6 ai:B16 left
+  - 7 ai:B02 wide
+  - 8 ai:B05 wide
+  - 9 ai:B01 left
+  - 10 ai:B02 right
+  - 11 ai:B05 wide
+  - 12 ai:B06 wide
+  - 13 ai:B04 wide
+  - 14 ai:B03 wide
+  - 15 ai:B06 left
+  - 16 ai:B06 right
+  - 17 ai:B02 left
+  - 18 ai:B16 right
+  - 19 ai:B04 left
+  - 20 ai:B04 right
+  - 21 ai:B12 wide
+  - 22 ai:B03 right
+  - 23 ai:B22 right
+  - 24 ai:B01 right
+  - 25 ai:B02 left
+  - 26 ai:B19 wide
+  - 27 ai:B03 right
+  - 28 ai:B19 left
+  - 29 ai:B05 left
+  - 30 ai:B19 right
+  - 31 ai:B24 wide
+  - 32 ai:B24 left
+  - 33 ai:B03 left
+  - 34 ai:B19 wide
+  - 35 ai:B11 wide
+  - 36 ai:B11 left
+  - 37 ai:B09 wide
+  - 38 ai:B11 right
+  - 39 ai:B09 left
+  - 40 ai:B19 left
+  - 41 ai:B08 wide
+  - 42 ai:B08 left
+  - 43 ai:T01 left
+  - 44 ai:B08 right
+  - 45 ai:B09 wide
+  - 46 ai:B22 right
+  - 47 ai:B04 left
+  - 48 ai:B12 left
+  - 49 ai:B19 right
+  - 50 ai:B22 left
+  - 51 ai:B22 wide
+  - 52 ai:T01 wide
+  - 53 ai:B04 right
+  - 54 ai:T01 right
+  - 55 ai:B22 wide
+  - 56 ai:B06 right
+  - 57 ai:B10 wide
+  - 58 ai:B22 left
+  - 59 ai:B04 wide
+  - 60 ai:B11 left
+  - 61 ai:B04 right
+  - 62 ai:B04 left
+  - 63 ai:T01 wide
+  - 64 ai:B22 right
+  - 65 ai:B19 wide
+  - 66 ai:T01 left
+  - 67 ai:B22 wide
+  - 68 ai:B12 wide
+  - 69 ai:B10 left
+  - 70 ai:B11 right
+  - 71 ai:B10 wide
+  - 72 ai:B10 right
+  - 73 ai:B10 left
+  - 74 ai:B19 left
+  - 75 ai:B11 wide
+  - 76 ai:B11 left
+  - 77 ai:B11 right
+  - 78 ai:B10 wide
+  - 79 ai:B11 wide
+  - 80 ai:B03 right
+  - 81 ai:B03 wide
+  - 82 ai:B03 left
+  - 83 ai:B20 wide
+  - 84 ai:B20 left
+  - 85 ai:B20 right
+  - 86 ai:B12 wide
+  - 87 ai:B23 wide
+  - 88 ai:B23 left
+  - 89 ai:B12 left
+  - 90 ai:B23 right
+  - 91 ai:B04 wide
+  - 92 ai:B06 wide
+  - 93 ai:B19 wide
+  - 94 ai:B12 right
+  - 95 ai:B13 wide
+  - 96 ai:B13 left
+  - 97 ai:B13 right
+  - 98 ai:B03 wide
+  - 99 ai:B01 wide
+  - 100 ai:B03 wide
+  - 101 ai:B04 left
+  - 102 ai:B14 wide
+  - 103 ai:B14 left
+  - 104 ai:B14 right
+  - 105 ai:B19 wide
+  - 106 ai:B12 right
+  - 107 ai:B01 left
+  - 108 ai:B01 wide
+  - 109 ai:B15 wide
+  - 110 ai:B15 left
+  - 111 ai:B02 right
+  - 112 ai:B20 wide
+  - 113 ai:B20 left
+  - 114 ai:B20 right
+  - 115 ai:B19 left
+  - 116 ai:B02 wide
+  - 117 ai:B03 left
+  - 118 ai:B17 wide
+  - 119 ai:B17 left
+  - 120 ai:B17 right
+  - 121 ai:B17 wide
+  - 122 ai:B12 wide
+  - 123 ai:B14 wide
+  - 124 ai:B12 left
+  - 125 ai:B16 wide
+  - 126 ai:B16 left
+  - 127 ai:B14 left
+  - 128 ai:B16 right
+  - 129 ai:B17 left
+  - 130 ai:B06 wide
+  - 131 ai:B19 right
+  - 132 ai:B06 left
+  - 133 ai:B16 wide
+  - 134 ai:B16 left
+  - 135 ai:B21 left
+  - 136 ai:B15 wide
+  - 137 ai:B19 wide
+  - 138 ai:B15 left
+  - 139 ai:B19 left
+  - 140 ai:B19 wide
+  - 141 ai:B16 right
+  - 142 ai:B16 wide
+  - 143 ai:B18 wide
+  - 144 ai:B18 left
+  - 145 ai:B18 right
+  - 146 ai:B18 wide
+  - 147 ai:B18 left
+  - 148 ai:T01 wide
+  - 149 ai:B05 wide
+  - 150 ai:B22 wide
+  - 151 ai:B09 wide
+  - 152 ai:B10 wide
+  - 153 ai:B01 wide
+  - 154 ai:T01 right
+  - 155 ai:B21 left
+  - end ai:B21 wide
+
+figures: []
+
+focus: {}
+
+fx:
+  B03: {lamp: {region: [0.6, 0.4, 0.9, 0.8]}}
+  B08: {lamp: {region: [0.15, 0.5, 0.45, 0.85]}}
+  B12: {lamp: {region: [0.0, 0.2, 0.3, 0.7]}}
+  B17: {fire: {region: [0.0, 0.0, 1.0, 0.6]}}
+  B19: {lamp: {region: [0.0, 0.0, 0.4, 0.6]}}
+  B23: {lamp: {region: [0.45, 0.4, 0.75, 0.8]}}
+  B24: {smoke: {region: [0.0, 0.0, 1.0, 0.5]}}
+  B15: {mist: {region: [0.0, 0.3, 1.0, 0.8]}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 2, to: 2, label: 史料, text: 新入りの入牢者は、向こう通りとて／畳1枚に8人7人ほども置く, source: 『牢獄秘録』（『古事類苑』法律部 所引。今の字に）}
+  - {type: versus3, from: 61, to: 62, every: 4,
+     items: [[牢獄秘録（新入り）, 畳1枚に7〜8人], [松陰（無宿の牢）, 畳1枚に15〜18人], [世界大百科事典, 30畳に100人以上]]}
+  - {type: quote, from: 65, to: 65, label: 史料, text: 役の名を付けて畳の数・厚さ／居場所の広さを自由にしてきた, source: 牢内掟書（1777年12月、『古事類苑』所引。今の言葉に）}
+  - {type: quote, from: 128, to: 128, label: 史料, text: 殊の外安楽世界にて／大いに喜び申し候, source: 吉田松陰の手紙（1859年、『吉田松陰全集』）}
+  - {type: quote, from: 134, to: 134, label: 史料, text: 身はたとひ武蔵の野辺に朽ちぬとも／留め置かまし大和魂, source: 吉田松陰『留魂録』（1859年10月25日）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 2, note: 序章 牢獄秘録の引用}
+  - {line: 11, note: 第1章 身分の表}
+  - {line: 58, note: 第4章 畳の人数}
+  - {line: 61, note: 第4章 食い違い}
+  - {line: 80, note: 第5章 湯の回数}
+  - {line: 95, note: 第6章 溜の地図}
+  - {line: 134, note: 第8章 留魂録}
+  - {end: true, note: 終了画面の空き}

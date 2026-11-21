@@ -1,0 +1,155 @@
+# 物語完結型ショート 近藤勇 s3（2026-11-20）。本編 scripts/kondo-story.yaml（11/25 19:00 公開予定、https://youtu.be/yj1jX9IM9vA）から。11/26 15:30 に予約。
+# 形式は kiyomasa_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード 近藤勇_facts_20261119.yaml）。
+# 絵：本編の AI 絵（out/story/kondo/main/）の切り出しだけ。新しい絵は作らない。処刑の場面は描かない（一里塚の風景・空の高札だけ）。
+# 切り口：板橋の総督府で薩摩と土佐が割れ、斬首して京都へ送ると決まるまで（本編 第5章、kondo-24・26・27・28・29・102）。
+# hook＝近藤をかばったのは敵の薩摩（答えはこのショートの中：平田が拷問を止め、伊地知が迫り、薩摩の案は京都へ送る）。
+#   「兵を率いて帰る」は拷問の論を止める口論での伊地知の勢い（本編の注のとおり。処分の案をめぐる脅しにしない）。
+# tease＝処刑の場に立てられた札は、近藤を何と書いたのか（答えは本編 第6章：元来浮浪の者、kondo-54・55）。
+# 計算：生まれ 1834年11月9日 → 死 1868年5月17日（慶応4年4月25日）。数え 35（本編の計算どおり）。
+# 理解テスト：①近藤勇の処分の話 ②1868年4月、板橋の総督府で ③土佐は拷問を求め、薩摩はかばって京都へ送る案 ④大総督の宮に伺い、斬首して京都へ送ると決まり、4月25日に板橋で斬られた
+title: "近藤勇｜かばったのは、敵の薩摩だった"
+yt_title: "近藤勇をかばったのは、敵の薩摩だった　板橋の総督府で薩摩と土佐が割れ、斬首して京都へ送ると決まるまで"
+description: |-
+  1868年4月、板橋の総督府。正体が分かった新選組の局長、近藤勇の扱いをめぐって、官軍は割れました。
+  土佐の谷干城の『東征私記』によれば、谷たちは「ほとんど博徒の頭と同じだ」と言い、拷問してでも問い詰めたいと考えました。これを止めたのは、敵の薩摩です。薩摩の参謀、伊地知正治は、この論を採らないなら兵を率いて帰る、と言うほどの勢いで総督に迫りました。薩摩の案は、近藤をそのまま京都へ送るという、寛大なものでした。それでも、大総督の宮に伺って、「斬首して京都へ送る」と決まります。
+  本編では、処刑の場に立てられた札が近藤を何と書いたのか、なぜ切腹ではなく斬首だったのかを、当時の記録で並べています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#近藤勇"
+- "#新選組"
+- "#戊辰戦争"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/kondo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: kondo_story_s3
+header:
+  tag: "近藤勇（板橋の総督府）"
+  title: "かばったのは、《敵の薩摩》"
+now:
+- {at: "1868年4月", text: "1868年4月　板橋の総督府", point: 0}
+- {at: "4月25日", text: "1868年4月25日　板橋", point: 0}
+timeline:
+- {label: "1868"}
+shots:
+  D15_1:
+    kind: "ai"
+    file: "kondo/main/D15.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "D15"
+  D14_2:
+    kind: "ai"
+    file: "kondo/main/D14.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "D14"
+  D15_3:
+    kind: "ai"
+    file: "kondo/main/D15.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "D15"
+  D15_4:
+    kind: "ai"
+    file: "kondo/main/D15.jpg"
+    focus: [0.75, 0.5]
+    move: "left"
+    must: "D15"
+  D14_5:
+    kind: "ai"
+    file: "kondo/main/D14.jpg"
+    focus: [0.75, 0.55]
+    move: "right"
+    must: "D14"
+  D05_6:
+    kind: "ai"
+    file: "kondo/main/D05.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "D05"
+  D10_7:
+    kind: "ai"
+    file: "kondo/main/D10.jpg"
+    focus: [0.6, 0.45]
+    move: "in"
+    must: "D10"
+  D06_8:
+    kind: "ai"
+    file: "kondo/main/D06.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "D06"
+  D18_9:
+    kind: "ai"
+    file: "kondo/main/D18.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "D18"
+  D19_10:
+    kind: "ai"
+    file: "kondo/main/D19.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "D19"
+lines:
+  # fact: kondo-26, kondo-29
+- 語り: "近藤勇を、官軍の取り調べの場でかばったのは、敵の薩摩だった。"
+  shot: D15_1
+  tone: 強調
+  pause: 0.12
+  # fact: kondo-24
+- 語り: "1868年4月、板橋の総督府。谷干城の記録、『東征私記』は書く。近藤は、縁側の下に、むしろを敷いて、座らされた。"
+  shot: D14_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: kondo-26
+- 語り: "土佐の谷たちは、勝海舟たちとの関わりを吐かせるため、拷問してでも問い詰めたい、と考えた。"
+  shot: D15_3
+  tone: 重い
+  pause: 0.12
+  # fact: kondo-26
+- 語り: "同じ席にいた薩摩の平田が、これを止める。近藤も、卑しい者ではない。拷問は、よくない。"
+  shot: D15_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: kondo-27
+- 語り: "谷たちは言い返す。近藤には、位も無い。ほとんど、博徒の頭と同じだ。"
+  shot: D14_5
+  tone: 重い
+  pause: 0.12
+  # fact: kondo-28
+- 語り: "話は総督のもとへ。薩摩の参謀、伊地知正治は、この論を採らないなら、兵を率いて帰る、と言うほどの勢いで迫った。"
+  shot: D05_6
+  tone: 重い
+  pause: 0.12
+  # fact: kondo-29
+- 語り: "薩摩の案は、近藤を、そのまま京都へ送る。谷の言葉では、死さえ免れるかもしれないほど、寛大だった。"
+  shot: D10_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: kondo-29
+- 語り: "けれど、全軍の総大将、大総督の宮に伺って、こう決まった。斬首して、京都へ送る。"
+  shot: D06_8
+  tone: 重い
+  pause: 0.12
+  # fact: kondo-102
+- 語り: "4月25日。近藤勇は、板橋で斬られた。数えで35歳。"
+  shot: D18_9
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第6章（kondo-54・55）
+- 語り: "処刑の場に立てられた札は、近藤を、何と書いたのか。"
+  shot: D19_10
+  tone: 疑問
+  pause: 0.15
