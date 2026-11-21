@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/lang.dart';
 import '../models/career.dart';
 import 'club_identity.dart';
 import 'player_portrait.dart';
@@ -90,7 +91,7 @@ class PlayerBanner extends StatelessWidget {
                         const SizedBox(width: 6),
                         Flexible(
                           child: Text(
-                            '${player.positionLabel} ・ ${state.club.name}',
+                            tr('${player.positionLabel} ・ ${state.club.name}', '${player.positionLabel} - ${state.club.name}'),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: onKit.withValues(alpha: 0.9),
                             ),
@@ -116,7 +117,7 @@ class PlayerBanner extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '総合力',
+                    tr('総合力', 'Overall'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: onKit.withValues(alpha: 0.8),
                     ),

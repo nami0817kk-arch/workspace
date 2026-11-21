@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/lang.dart';
 import '../models/legend.dart';
 
 /// 額の格。
@@ -14,14 +15,21 @@ import '../models/legend.dart';
 /// （`ui/share_card.dart`）も同じ色分けを使うので、画面の中に置いたままだと
 /// 画面と部品が互いを読み合うことになる。
 enum HallPlaque {
-  gold('金', Color(0xFF8A6B1F)),
-  silver('銀', Color(0xFF4C555F)),
-  bronze('銅', Color(0xFF5C3F2C));
+  gold(Color(0xFF8A6B1F)),
+  silver(Color(0xFF4C555F)),
+  bronze(Color(0xFF5C3F2C));
 
-  const HallPlaque(this.label, this.color);
+  const HallPlaque(this.color);
 
-  final String label;
   final Color color;
+
+  /// 額に出す字。**`const` では持てない**——enum の引数は定数なので、
+  /// そこに入れると起動時の言語で固まり、切り替えても古い言葉が残る。
+  String get label => switch (this) {
+    HallPlaque.gold => tr('金', 'Gold'),
+    HallPlaque.silver => tr('銀', 'Silver'),
+    HallPlaque.bronze => tr('銅', 'Bronze'),
+  };
 
   static HallPlaque of(Legend legend) {
     if (legend.continentalTitles > 0) return HallPlaque.gold;

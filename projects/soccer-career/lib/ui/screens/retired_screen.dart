@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/lang.dart';
 import '../player_portrait.dart';
 import '../readable_width.dart';
 import '../share_card.dart';
@@ -25,17 +26,17 @@ class _RetiredScreenState extends State<RetiredScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('新しいキャリアを始めますか'),
+        title: Text(tr('新しいキャリアを始めますか', 'Start a new career?')),
         // 消えなくなった。ここは前の文言のままにしておくと嘘になる。
-        content: const Text('この選手は「これまでの選手」に残ります。'),
+        content: Text(tr('この選手は「これまでの選手」に残ります。', 'This player stays under Players so far.')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('やめる'),
+            child: Text(tr('やめる', 'Cancel')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('始める'),
+            child: Text(tr('始める', 'Start')),
           ),
         ],
       ),
@@ -64,7 +65,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
           );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('引退')),
+      appBar: AppBar(title: Text(tr('引退', 'Retired'))),
       body: SafeArea(
         child: ReadableWidth(
           child: ListView(
@@ -86,8 +87,8 @@ class _RetiredScreenState extends State<RetiredScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                '${state.player.positionLabel}  ${seasons.length}シーズン  '
-                '${state.player.age}歳で引退',
+                tr('${state.player.positionLabel}  ${seasons.length}シーズン  '
+                '${state.player.age}歳で引退', '${state.player.positionLabel}  ${seasons.length} seasons  retired at ${state.player.age}'),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -99,17 +100,17 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('通算', style: theme.textTheme.titleSmall),
+                      Text(tr('通算', 'Career totals'), style: theme.textTheme.titleSmall),
                       const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _stat(theme, '出場', '${totals.appearances}'),
-                          _stat(theme, 'ゴール', '${totals.goals}'),
-                          _stat(theme, 'アシスト', '${totals.assists}'),
+                          _stat(theme, tr('出場', 'Games'), '${totals.appearances}'),
+                          _stat(theme, tr('ゴール', 'Goals'), '${totals.goals}'),
+                          _stat(theme, tr('アシスト', 'Assists'), '${totals.assists}'),
                           _stat(
                             theme,
-                            '平均評価',
+                            tr('平均評価', 'Avg rating'),
                             totals.appearances == 0
                                 ? '—'
                                 : totals.averageRating.toStringAsFixed(2),
@@ -119,25 +120,25 @@ class _RetiredScreenState extends State<RetiredScreen> {
                       if (state.caps > 0) ...[
                         const SizedBox(height: 12),
                         Text(
-                          '代表 ${state.caps}キャップ  ${state.internationalGoals}ゴール',
+                          tr('代表 ${state.caps}キャップ  ${state.internationalGoals}ゴール', 'National team ${state.caps} caps  ${state.internationalGoals} goals'),
                           style: theme.textTheme.bodyMedium,
                         ),
                       ],
                       const SizedBox(height: 12),
                       Text(
-                        '生涯の貯蓄 ${state.finances.savingsLabel}',
+                        tr('生涯の貯蓄 ${state.finances.savingsLabel}', 'Savings at the end ${state.finances.savingsLabel}'),
                         style: theme.textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '通算年俸 ${state.totalEarnings >= 10000 ? '${(state.totalEarnings / 10000).toStringAsFixed(1)}億円' : '${state.totalEarnings}万円'}',
+                        tr('通算年俸 ${state.totalEarnings >= 10000 ? '${(state.totalEarnings / 10000).toStringAsFixed(1)}億円' : '${state.totalEarnings}万円'}', 'Career earnings ${state.totalEarnings >= 10000 ? 'JPY ${(state.totalEarnings / 100).round()}M' : 'JPY ${(state.totalEarnings / 100).toStringAsFixed(1)}M'}'),
                         style: theme.textTheme.bodyMedium,
                       ),
                       if (best != null) ...[
                         const SizedBox(height: 8),
                         Text(
-                          '最高成績: ${best.year}  ${best.clubName}  '
-                          '${best.tier}部 ${best.leaguePosition}位',
+                          tr('最高成績: ${best.year}  ${best.clubName}  '
+                          '${best.tier}部 ${best.leaguePosition}位', 'Best season: ${best.year}  ${best.clubName}  tier ${best.tier} #${best.leaguePosition}'),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -149,7 +150,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
               ),
               if (state.reputation.awards.isNotEmpty) ...[
                 const SizedBox(height: 24),
-                Text('称号', style: theme.textTheme.titleSmall),
+                Text(tr('称号', 'Honours'), style: theme.textTheme.titleSmall),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 6,
@@ -162,14 +163,14 @@ class _RetiredScreenState extends State<RetiredScreen> {
               ],
               // **次の選手に残るもの。** 引退が終わりではないと分かる場所。
               const SizedBox(height: 24),
-              Text('次の選手に残すもの', style: theme.textTheme.titleSmall),
+              Text(tr('次の選手に残すもの', 'What you leave the next player'), style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
               Text(
-                '${controller.lastLegacyPoints}pt を残した'
+                tr('${controller.lastLegacyPoints}pt を残した'
                 '（通算 ${controller.hall.legacyPoints}pt）。'
                 '${Formulas.legacyPerPotential}ptごとに、次の選手の伸びしろが'
                 '+1される（今は+${controller.hall.potentialBonus}、'
-                '上限+${Formulas.legacyPotentialCap}）。',
+                '上限+${Formulas.legacyPotentialCap}）。', '${controller.lastLegacyPoints}pt left behind (${controller.hall.legacyPoints}pt in all). Every ${Formulas.legacyPerPotential}pt adds +1 to the next player ceiling (now +${controller.hall.potentialBonus}, up to +${Formulas.legacyPotentialCap}).'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -178,9 +179,9 @@ class _RetiredScreenState extends State<RetiredScreen> {
                 const SizedBox(height: 4),
                 Text(
                   declared.clearedBy(controller.hall.legends.first)
-                      ? '宣言していた「${declared.label}」を達成した'
-                            '（+${declared.declaredBonus}pt）。'
-                      : '宣言していた「${declared.label}」には届かなかった。',
+                      ? tr('宣言していた「${declared.label}」を達成した'
+                            '（+${declared.declaredBonus}pt）。', 'You called ${declared.label}, and did it (+${declared.declaredBonus}pt).')
+                      : tr('宣言していた「${declared.label}」には届かなかった。', 'You called ${declared.label}, and fell short.'),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -188,7 +189,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
               ],
               if (controller.lastChallenges.isNotEmpty) ...[
                 const SizedBox(height: 24),
-                Text('初めて達成した挑戦', style: theme.textTheme.titleSmall),
+                Text(tr('初めて達成した挑戦', 'Challenges cleared for the first time'), style: theme.textTheme.titleSmall),
                 const SizedBox(height: 8),
                 for (final c in controller.lastChallenges)
                   Padding(
@@ -208,11 +209,11 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   ),
               ],
               const SizedBox(height: 24),
-              Text('この後どう生きるか', style: theme.textTheme.titleSmall),
+              Text(tr('この後どう生きるか', 'What comes next'), style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
               Text(
-                'やってきたことが、そのまま次の適性になる。'
-                '見立ては「${controller.suggestedSecondCareer.label}」。',
+                tr('やってきたことが、そのまま次の適性になる。'
+                '見立ては「${controller.suggestedSecondCareer.label}」。', 'What you did as a player is what you are suited to now. The reading: ${controller.suggestedSecondCareer.label}.'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -255,14 +256,14 @@ class _RetiredScreenState extends State<RetiredScreen> {
               if (state.charity) ...[
                 const SizedBox(height: 10),
                 Text(
-                  '自分の名前の付いたグラウンドが、育った街に残っている。',
+                  tr('自分の名前の付いたグラウンドが、育った街に残っている。', 'A pitch in your home town carries your name.'),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
                 ),
               ],
               const SizedBox(height: 24),
-              Text('歩み', style: theme.textTheme.titleSmall),
+              Text(tr('歩み', 'The road'), style: theme.textTheme.titleSmall),
               const SizedBox(height: 8),
               for (final record in seasons)
                 ListTile(
@@ -270,9 +271,9 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   contentPadding: EdgeInsets.zero,
                   title: Text('${record.year}  ${record.clubName}'),
                   subtitle: Text(
-                    '${record.tier}部 ${record.leaguePosition}位 ・ '
+                    tr('${record.tier}部 ${record.leaguePosition}位 ・ '
                     '${record.stats.appearances}試合 '
-                    '${record.stats.goals}G ${record.stats.assists}A',
+                    '${record.stats.goals}G ${record.stats.assists}A', 'Tier ${record.tier} #${record.leaguePosition} - ${record.stats.appearances} games ${record.stats.goals}G ${record.stats.assists}A'),
                   ),
                   trailing: Text(
                     record.stats.appearances == 0
@@ -295,9 +296,9 @@ class _RetiredScreenState extends State<RetiredScreen> {
                     showShareSheet(context, card: card, text: card.text);
                   },
                   icon: const Icon(Icons.ios_share, size: 18),
-                  label: const Padding(
+                  label: Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Text('このキャリアを送る'),
+                    child: Text(tr('このキャリアを送る', 'Share this career')),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -312,15 +313,15 @@ class _RetiredScreenState extends State<RetiredScreen> {
                 icon: const Icon(Icons.workspace_premium_outlined, size: 18),
                 label: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text('これまでの選手（${controller.hall.legends.length}人）'),
+                  child: Text(tr('これまでの選手（${controller.hall.legends.length}人）', 'Players so far (${controller.hall.legends.length})')),
                 ),
               ),
               const SizedBox(height: 12),
               FilledButton(
                 onPressed: () => _newCareer(context),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text('新しいキャリアを始める'),
+                  child: Text(tr('新しいキャリアを始める', 'Start a new career')),
                 ),
               ),
             ],

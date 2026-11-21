@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'feedback/review_prompt.dart';
+import 'l10n/lang.dart';
 import 'monetize/monetization.dart';
 import 'state/career_controller.dart';
 import 'ui/app_theme.dart';
@@ -34,6 +36,10 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
   final _monetization = Monetization();
   final _reviewPrompt = ReviewPrompt();
 
+  /// 画面の言葉。**ゲームの状態とは別に持つ**（広告と課金と同じ理屈）。
+  /// 何語で読むかは、どのキャリアを遊んでいるかとは関係がない。
+  final _language = Language();
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +48,8 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
     // 課金の導線も出ないだけで、遊ぶほうは先に進める。
     _monetization.initialize();
     _reviewPrompt.initialize();
+    // 端末の言語と、保存した設定で上書きする。終わるまでは日本語。
+    _language.initialize();
   }
 
   @override
@@ -49,6 +57,7 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
     _controller.dispose();
     _monetization.dispose();
     _reviewPrompt.dispose();
+    _language.dispose();
     super.dispose();
   }
 
@@ -63,7 +72,7 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
     // 色まで含めて作り直したいので、MaterialApp ごと購読する。
     // 中だけを購読すると、移籍しても色が変わらない。
     return AnimatedBuilder(
-      animation: Listenable.merge([_controller, _monetization]),
+      animation: Listenable.merge([_controller, _monetization, _language]),
       builder: (context, _) {
         // 所属クラブの色でアプリ全体を染める。移籍すれば色が変わるので、
         // 「どこに居るのか」が画面を開いた瞬間に分かる。
@@ -72,7 +81,16 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
             ? _defaultSeed
             : ClubIdentity.of(club).primary;
         return MaterialApp(
-          title: '選手キャリア',
+          // 言語で変わるので、作るときに決めない。
+          onGenerateTitle: (_) => tr('選手キャリア', 'Player Career'),
+          locale: _language.value.locale,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: Lang.values.map((l) => l.locale).toList(),
+
           debugShowCheckedModeBanner: false,
           theme: _themeFor(seed, Brightness.light),
           darkTheme: _themeFor(seed, Brightness.dark),
@@ -96,6 +114,7 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
       controller: _controller,
       monetization: _monetization,
       reviewPrompt: _reviewPrompt,
+      language: _language,
     );
   }
 }

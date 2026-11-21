@@ -14,6 +14,7 @@ import '../game/newsroom.dart';
 import '../game/scenarios.dart';
 import '../game/person.dart';
 import '../game/weekly_plan.dart';
+import '../l10n/lang.dart';
 import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/challenge.dart';
@@ -177,14 +178,19 @@ class SimReport {
 
 /// 自動進行が止まる理由。
 enum SimStop {
-  seasonEnd('シーズン終了'),
-  injury('負傷'),
-  callUp('代表ウィーク'),
-  limit('区切り');
+  seasonEnd,
+  injury,
+  callUp,
+  limit;
 
-  const SimStop(this.label);
-
-  final String label;
+  /// 止まった理由の字。**`const` では持てない**——enum の引数は定数なので、
+  /// そこに入れると起動時の言語で固まり、切り替えても古い言葉が残る。
+  String get label => switch (this) {
+    SimStop.seasonEnd => tr('シーズン終了', 'End of season'),
+    SimStop.injury => tr('負傷', 'Injury'),
+    SimStop.callUp => tr('代表ウィーク', 'International week'),
+    SimStop.limit => tr('区切り', 'A break'),
+  };
 }
 
 /// アプリ全体の状態。画面はこれを購読する。
@@ -732,13 +738,13 @@ class CareerController extends ChangeNotifier {
   /// 振れない理由。振れるなら null。
   String? reasonNotToSpend(Detail detail) {
     final state = _state;
-    if (state == null) return '記録が無い';
+    if (state == null) return tr('記録が無い', 'No record');
     final have = state.development.points[detail.category] ?? 0;
     final cost = costOf(detail);
-    if (have < cost) return '${detail.category.label}の経験点が足りない（$have / $cost）';
-    if (state.player.atPotential) return 'ポテンシャルに届いている';
+    if (have < cost) return tr('${detail.category.label}の経験点が足りない（$have / $cost）', 'Not enough ${detail.category.label} points ($have / $cost)');
+    if (state.player.atPotential) return tr('ポテンシャルに届いている', 'Already at the ceiling');
     final value = state.player.attributes.detail(detail);
-    if (value >= state.player.ceilingFor(detail)) return 'これ以上は上がらない';
+    if (value >= state.player.ceilingFor(detail)) return tr('これ以上は上がらない', 'This will not go any higher');
     return null;
   }
 
@@ -1676,48 +1682,48 @@ class CareerController extends ChangeNotifier {
     if (state == null) return '';
     final window = transferWindow;
     if (!window.isOpen) {
-      return '${window.label}。話が動くのはシーズンの終わり。';
+      return tr('${window.label}。話が動くのはシーズンの終わり。', '${window.label} Nothing moves until the season ends.');
     }
     if (!state.squadStatus.canPlay || state.frozenOut) {
-      return '${window.label}。使われていないので、契約が残っていても話が来る。';
+      return tr('${window.label}。使われていないので、契約が残っていても話が来る。', '${window.label} You are not being used, so offers come even with a contract left.');
     }
     if (_career.clauseTriggered(state)) {
-      return '${window.label}。違約金を追い越しているので、契約が残っていても話が来る。';
+      return tr('${window.label}。違約金を追い越しているので、契約が残っていても話が来る。', '${window.label} You have outgrown your release clause, so offers come even with a contract left.');
     }
     if (state.contractYears > 1) {
       final stats = state.seasonStats;
       final short = Formulas.transferOfferAppearances - stats.appearances;
       final need = short > 0
-          ? 'あと$short試合出て、平均評価'
-                '${Formulas.transferUnderContractRating}を超えれば'
+          ? tr('あと$short試合出て、平均評価'
+                '${Formulas.transferUnderContractRating}を超えれば', 'Play $short more games and finish above ${Formulas.transferUnderContractRating} on average, and ')
           : stats.averageRating < Formulas.transferUnderContractRating
-          ? '今季の平均評価が'
+          ? tr('今季の平均評価が'
                 '${stats.averageRating.toStringAsFixed(2)}——'
-                '${Formulas.transferUnderContractRating}を超えれば'
-          : '今季の出来なら';
-      return '${window.label}。契約があと${state.contractYears}年あるので、'
-          '動かせるのは移籍金を積む上のクラブだけ。$need話が来る。';
+                '${Formulas.transferUnderContractRating}を超えれば', 'Your average is ${stats.averageRating.toStringAsFixed(2)} this season — finish above ${Formulas.transferUnderContractRating}, and ')
+          : tr('今季の出来なら', 'The way this season is going, ');
+      return tr('${window.label}。契約があと${state.contractYears}年あるので、'
+          '動かせるのは移籍金を積む上のクラブだけ。$need話が来る。', '${window.label} ${state.contractYears} years are left on your contract, so only a stronger club paying a fee can move you. ${need}offers will come.');
     }
     final stats = state.seasonStats;
     // クラブの器を超えていれば、評価点の門は通る。
     final gap = state.player.overall - state.club.strength;
     if (gap >= Formulas.transferOutgrownGap &&
         stats.appearances >= Formulas.transferOfferAppearances) {
-      return '${window.label}。クラブの強さを$gap上回っているので、'
-          '今季の出来に関係なく話が来る。';
+      return tr('${window.label}。クラブの強さを$gap上回っているので、'
+          '今季の出来に関係なく話が来る。', '${window.label} You are $gap above the strength of this club, so offers come whatever this season looks like.');
     }
     final short = Formulas.transferOfferAppearances - stats.appearances;
     if (short > 0) {
-      return '${window.label}。契約は残り${state.contractYears}年だが、'
+      return tr('${window.label}。契約は残り${state.contractYears}年だが、'
           '今季の出場が${stats.appearances}試合——'
-          'あと$short試合出ないと話は来ない。';
+          'あと$short試合出ないと話は来ない。', '${window.label} ${state.contractYears} years are left on your contract, and you have ${stats.appearances} games this season — no offer comes until you play $short more.');
     }
     if (stats.averageRating < Formulas.transferOfferRating) {
-      return '${window.label}。契約は残り${state.contractYears}年だが、'
+      return tr('${window.label}。契約は残り${state.contractYears}年だが、'
           '今季の平均評価が${stats.averageRating.toStringAsFixed(2)}——'
-          '${Formulas.transferOfferRating}を超えないと話は来ない。';
+          '${Formulas.transferOfferRating}を超えないと話は来ない。', '${window.label} ${state.contractYears} years are left on your contract, and your average is ${stats.averageRating.toStringAsFixed(2)} this season — no offer comes until it is above ${Formulas.transferOfferRating}.');
     }
-    return '${window.label}。契約は残り${state.contractYears}年、話が来る。';
+    return tr('${window.label}。契約は残り${state.contractYears}年、話が来る。', '${window.label} ${state.contractYears} years are left on your contract, and offers will come.');
   }
 
   /// **どこまで声がかかるか。** 行ける国の格と、その先へ行くのに要るもの。
@@ -1736,21 +1742,21 @@ class CareerController extends ChangeNotifier {
         .toList();
     final worldTop = World.countries.map((c) => c.prestige).reduce(max);
     final reach = names.isEmpty
-        ? '今は同じ格の国までしか声がかからない。'
-        : '今の名前で声がかかるのは格$topの国まで（${names.join('・')}）。';
+        ? tr('今は同じ格の国までしか声がかからない。', 'For now only countries of the same standing will call.')
+        : tr('今の名前で声がかかるのは格$topの国まで（${names.join('・')}）。', 'With the name you have now, calls come from countries up to standing $top (${names.join(', ')}).');
     if (top >= worldTop) return reach;
     // 一段上へ行くのに何が足りないのか。
     final needs = <String>[];
-    if (state.caps < 10) needs.add('代表10キャップ');
-    if (state.player.overall < 73) needs.add('総合力73');
+    if (state.caps < 10) needs.add(tr('代表10キャップ', '10 national caps'));
+    if (state.player.overall < 73) needs.add(tr('総合力73', 'overall 73'));
     // 次の一段が最上位なら、その門（代表か知名度）もここで言う。
     // 今いる国の格で見ていたときは、格3の国に居るあいだ出てこなかった。
     if (top + 1 >= worldTop) {
-      needs.add('最上位の国は代表${Formulas.eliteCaps}キャップか知名度${Formulas.eliteFame}');
+      needs.add(tr('最上位の国は代表${Formulas.eliteCaps}キャップか知名度${Formulas.eliteFame}', 'the very top countries want ${Formulas.eliteCaps} caps or fame ${Formulas.eliteFame}'));
     }
     return needs.isEmpty
-        ? '$reach一段上の国へは、まずこの格の国で実績を積むことになる。'
-        : '$reachもう一段上げるには ${needs.join(' か ')}。';
+        ? tr('$reach一段上の国へは、まずこの格の国で実績を積むことになる。', '${reach}To reach a country one standing higher, you first have to build a record at this level.')
+        : tr('$reachもう一段上げるには ${needs.join(' か ')}。', '${reach}To climb one more step: ${needs.join(' or ')}.');
   }
 
   TransferWindow get transferWindow => _state == null

@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../l10n/lang.dart';
 import '../share/share_service.dart';
 import 'share_card.dart';
 
@@ -84,10 +85,10 @@ class _ShareSheetState extends State<_ShareSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('この1枚を送る', style: theme.textTheme.titleMedium),
+            Text(tr('この1枚を送る', 'Share this card'), style: theme.textTheme.titleMedium),
             const SizedBox(height: 4),
             Text(
-              'アプリの住所も一緒に付きます。',
+              tr('アプリの住所も一緒に付きます。', 'A link to the app comes with it.'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -105,7 +106,7 @@ class _ShareSheetState extends State<_ShareSheet> {
               child: FilledButton.icon(
                 onPressed: _sending ? null : _send,
                 icon: const Icon(Icons.ios_share),
-                label: Text(_sending ? '送っています…' : '送る'),
+                label: Text(_sending ? tr('送っています…', 'Sharing…') : tr('送る', 'Share')),
               ),
             ),
           ],
