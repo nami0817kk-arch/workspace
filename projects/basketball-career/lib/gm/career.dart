@@ -717,6 +717,13 @@ class Career {
   /// 伸びしろの見立ての幅を狭める(2026-11-21 の作り込み A-1。乱数は使わない)。
   Map<int, int> seenGames = {};
 
+  /// 伸び方の型が分かった選手(選手の id)。
+  Set<int> growthKnown = {};
+
+  /// [p] の伸び方の型が分かっているか(型らしい伸びを見せた、または自分のチームに段階3の育成コーチがいる)。
+  bool growthTypeKnown(Player p) =>
+      growthKnown.contains(p.id) || ((me.roster.contains(p) || me.twoWay.contains(p)) && me.staffLevel(Staff.development) == 3);
+
   /// 見立てが外れていたと分かって、知らせた選手(選手の id)。
   Set<int> potentialRevealed = {};
 
@@ -3551,7 +3558,12 @@ class Career {
         ];
         for (final (label, v) in extra) {
           p.ovr = (p.ovr + v).clamp(35, 99);
-          if (label == Trait.lateBloomer.label && v > 0 && p.pot < p.ovr + 1) p.pot = math.min(99, p.ovr + 1);
+          // 伸び方の型: 遅咲きと化けるは伸びしろも上がり、伸び悩むは下がる
+          if (label == GrowthType.late.label && v > 0 && p.pot < p.ovr + 1) p.pot = math.min(99, p.ovr + 1);
+          if (label == GrowthType.boom.label && v > 0) p.pot = math.min(99, math.max(p.pot + 2, p.ovr + 4));
+          if (label == GrowthType.bust.label) p.pot = math.max(p.ovr, p.pot - 1);
+          // 型らしい伸びを見せたら、自分のチームの選手の型が分かる
+          if (t.index == mine && GrowthType.values.any((x) => x.label == label)) growthKnown.add(p.id);
           if (p.pot < p.ovr) p.pot = p.ovr;
           p.lastDelta += v;
           d += v;
@@ -5218,6 +5230,7 @@ class Career {
         if (scoutFocus != null) 'sf': scoutFocus!.index,
         'sp': scoutPrep,
         if (potentialRevealed.isNotEmpty) 'pv': [...potentialRevealed],
+        if (growthKnown.isNotEmpty) 'gk': [...growthKnown],
         if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
         if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
@@ -5365,6 +5378,7 @@ class Career {
       ..scoutPrep = [for (var i = 0; i < ScoutFocus.values.length; i++) (j['sp'] is List && (j['sp'] as List).length > i) ? ((j['sp'] as List)[i] as int) : 0]
       ..prepScouted = (j['ps'] as int?) ?? 0
       ..potentialRevealed = {for (final x in (j['pv'] as List? ?? const [])) x as int}
+      ..growthKnown = {for (final x in (j['gk'] as List? ?? const [])) x as int}
       ..seenGames = {
         for (final x in (j['sg'] as List? ?? const []))
           if (x is List && x.length == 2) x[0] as int: x[1] as int,

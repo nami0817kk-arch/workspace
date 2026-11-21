@@ -41,11 +41,13 @@ class Personality {
 Personality personalityOf(Player p) {
   final h = (p.id * 2654435761 + 12345) & 0x7fffffff;
   final value = Value.values[h % Value.values.length];
-  final first = Trait.values[(h ~/ 3) % Trait.values.length];
+  // 「遅咲き」は伸び方の型([GrowthType])に移したので、特性には付けない(付く選手は次の特性に)
+  var first = Trait.values[(h ~/ 3) % Trait.values.length];
+  if (first == Trait.lateBloomer) first = Trait.values[((h ~/ 3) + 1) % Trait.values.length];
   final traits = [first];
   if ((h ~/ 101) % 10 < 4) {
     final second = Trait.values[(h ~/ 37) % Trait.values.length];
-    if (second != first && !_conflict(first, second)) traits.add(second);
+    if (second != first && second != Trait.lateBloomer && !_conflict(first, second)) traits.add(second);
   }
   return Personality(value, traits);
 }
@@ -75,7 +77,7 @@ const clutchBonus = 0.03;
 /// [p] は年を取ったあと(年齢と年数は+1済み)、[d] はここまでの伸び。[p.stats] は終わったシーズンの成績。
 /// - 出場時間: 23歳までで、20試合以上・平均30分以上出た選手は+1。2年目以上で、シーズンの出場が300分未満なら-1(試合に出ないと伸びない)
 /// - 練習の虫: 27歳までは伸びた年に+1、30歳からは落ちた年に+1(落ち幅が小さい)
-/// - 遅咲き: 22歳までは伸びた年に-1、24〜28歳は+1(伸びしろも1上がる)
+/// - 伸び方の型([GrowthType]。2026-11-21 の作り込み A-3): 早熟・遅咲き・化ける・伸び悩む
 List<(String, int)> extraGrowth(Player p, int d) {
   final parts = <(String, int)>[];
   var ovr = p.ovr;
@@ -96,14 +98,68 @@ List<(String, int)> extraGrowth(Player p, int d) {
       ovr++;
     }
   }
-  if (hasTrait(p, Trait.lateBloomer)) {
-    if (p.age <= 22 && d > 0) {
-      parts.add((Trait.lateBloomer.label, -1));
-      ovr--;
-    } else if (p.age >= 24 && p.age <= 28) {
-      parts.add((Trait.lateBloomer.label, 1));
-      ovr++;
-    }
+  switch (growthTypeOf(p)) {
+    case GrowthType.normal:
+      break;
+    case GrowthType.early:
+      // 早熟: 22歳までは伸びた年にもう1、25歳からは伸びた年に1減る(早く止まる)
+      if (p.age <= 22 && d >= 0 && room()) {
+        parts.add((GrowthType.early.label, 1));
+        ovr++;
+      } else if (p.age >= 25 && d > 0) {
+        parts.add((GrowthType.early.label, -1));
+        ovr--;
+      }
+    case GrowthType.late:
+      // 遅咲き: 22歳までは伸びた年に1減り、24〜28歳は+1(伸びしろも1上がる)
+      if (p.age <= 22 && d > 0) {
+        parts.add((GrowthType.late.label, -1));
+        ovr--;
+      } else if (p.age >= 24 && p.age <= 28) {
+        parts.add((GrowthType.late.label, 1));
+        ovr++;
+      }
+    case GrowthType.boom:
+      // 化ける: 21〜24歳のどこか1年で、いっきに+3(伸びしろも上がる)
+      if (p.age == boomAgeOf(p)) {
+        parts.add((GrowthType.boom.label, 3));
+        ovr += 3;
+      }
+    case GrowthType.bust:
+      // 伸び悩む: 25歳までは伸びた年に1減る(伸びしろも1ずつ下がる)
+      if (p.age <= 25 && d > 0) {
+        parts.add((GrowthType.bust.label, -1));
+        ovr--;
+      }
   }
   return parts;
 }
+
+/// 伸び方の型(隠れている。2026-11-21 の作り込み A-3)。選手ごとに決まる(乱数を使わない)。
+/// ふつう約半分・早熟15%・遅咲き15%・化ける10%・伸び悩む10%。型らしい伸びを見せるか、良い育成コーチ(段階3)がいると分かる。
+enum GrowthType {
+  normal('ふつう', '年齢どおりに伸びる'),
+  early('早熟', '若いうちに早く伸び、25歳ごろから止まりやすい'),
+  late('遅咲き', '22歳までは伸びが鈍く、24〜28歳でもう一段伸びる'),
+  boom('化ける', '21〜24歳のどこか1年で、いっきに大きく伸びる'),
+  bust('伸び悩む', '若いうちの伸びが小さく、伸びしろも下がっていく');
+
+  const GrowthType(this.label, this.text);
+  final String label, text;
+}
+
+GrowthType growthTypeOf(Player p) {
+  final h = ((p.id * 2246822519 + 3266489917) & 0x7fffffff) % 100;
+  return h < 50
+      ? GrowthType.normal
+      : h < 65
+          ? GrowthType.early
+          : h < 80
+              ? GrowthType.late
+              : h < 90
+                  ? GrowthType.boom
+                  : GrowthType.bust;
+}
+
+/// 化ける選手が化ける年齢(21〜24)。
+int boomAgeOf(Player p) => 21 + ((p.id * 40503) & 0xffff) % 4;
