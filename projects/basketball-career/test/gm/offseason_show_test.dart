@@ -19,7 +19,7 @@ void main() {
     expect(c.phase, Phase.contracts);
     expect(c.offStartIds, isNotEmpty);
     // 大物に申し込んでおく(取れる選手を上から)
-    final target = c.freeAgents.where((p) => c.isBigFa(p) && c.bidProblem(p) == null).firstOrNull;
+    final target = c.freeAgents.where((p) => c.isBigFa(p) && c.bidProblem(p, factor: 1.1) == null).firstOrNull;
     if (target != null) expect(c.bid(target.id, 2, 1.1), isTrue);
     var seen = false;
     while (c.faDay < faDays) {
