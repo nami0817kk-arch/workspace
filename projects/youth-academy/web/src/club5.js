@@ -48,7 +48,18 @@
           let line = list[YA.hash(rc.k + w.year + w.week) % list.length].replace('{n}', sur(d.name || ''));
           if (res2 === 'big') line = g.gf > g.ga ? POST.big[0].replace('{n}', sur(d.name || '')) : POST.big[1].replace('{n}', sur(d.name || ''));
           w.rivalRel[rc.k] = clamp((w.rivalRel[rc.k] || 0) + (res2 === 'big' && g.gf > g.ga ? -15 : res2 === 'win' ? -6 : res2 === 'lose' ? 4 : 2), -100, 100);
-          YA.noteTier(w, 2, `${line}（${d.name}との関係：${YA.rivalRelName(w.rivalRel[rc.k])}）`);
+          const post = `${line}（${d.name}との関係：${YA.rivalRelName(w.rivalRel[rc.k])}）`;
+          // 試合前のひとことと同じ1件に足す（2026-11-21「まとめる」：試合ごとに2件届いていた）
+          const pre = w.rivalPre && w.rivalPre.k === rc.k ? (w.inbox || []).find((x) => x.n === w.rivalPre.n) : null;
+          if (pre) {
+            w.inbox.splice(w.inbox.indexOf(pre), 1);
+            pre.text = pre.text.replace(/^今週の相手は/, '相手は') + ` → ${post}`;
+            pre.tier = 2;
+            pre.week = w.week;
+            pre.n = w.inboxN = (w.inboxN || 0) + 1;
+            w.inbox.push(pre);
+          } else YA.noteTier(w, 2, post);
+          w.rivalPre = null;
         }
       }
       // 試合の前：相手が名物監督なら一言
@@ -63,6 +74,7 @@
         const last = rc.last || null;
         const line = n === 0 || !last ? L.first : Math.abs(w.rivalRel[rc.k] || 0) >= 30 ? L.rivalry : last.gf > last.ga ? L.win : last.gf === last.ga ? L.draw || L.lose : L.lose;
         YA.noteTier(w, 1, `今週の相手は${d.name}（${d.title}）の${opp.name}。${line}（通算 ${rec.w}勝${rec.d}分${rec.l}敗）`);
+        w.rivalPre = { k: rc.k, n: w.inboxN };
       }
     } catch (er) { /* 日程の無い週 */ }
     YA.clubEventWeek(w);
