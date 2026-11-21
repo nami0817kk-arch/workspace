@@ -1,0 +1,144 @@
+# 物語完結型ショート 千姫 s4（2026-11-21）。本編 scripts/senhime-story.yaml（11/27 19:00 公開予定、https://youtu.be/kFCIQA38bMI）から。11/28 17:30 に予約。
+# 形式は pompeii_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞なし。事実は本編の # fact: だけ（事実カード 千姫_facts_20261121.yaml）。
+# 絵：本編の AI 絵（out/story/senhime/main/ の S・R）の切り出しだけ。新しい絵は作らない。過去回から写した R04（雪の江戸城の煙）は使わない。
+# 切り口：吉田御殿の千姫は後の世の講談。歌のもとは東海道の吉田の宿の歌（本編 第5章、senhime-50・47・49・51・29）。講談の話は「講談で語られた」とだけ言い、事実として言わない。
+# 計算（数え直した）：『平家女護島』1719年−千姫の死1666年＝53年（50年あまり）。
+# tease の答え：1666年の最期（本編 まとめ senhime-36〜38）。
+title: "千姫｜吉田御殿の話は、どこから来たのか"
+yt_title: "千姫の「吉田御殿」の話は、どこから来たのか　「吉田通れば二階から招く」の歌と後の世の講談"
+description: |-
+  千姫を、御殿の二階から若い男を招き入れた姫として語る「吉田御殿」の話。これは、後の世の講談で語られたものです。
+  昭和11年の本によれば、「吉田通れば、二階から招く」の歌は、もともと東海道の吉田の宿（いまの愛知県豊橋）の、宿場の女を歌ったもの。江戸時代の流行り歌の本『松の落葉』に「吉田小女郎」という題で載っていて、それがのちに千姫の話にかこつけられた、と書かれています。
+  吉田御殿がどこにあったのかも、明治の本は麹町の番町、大正の本は牛込の御門のあたりと、本によって違います。幕府の記録に出てくる天樹院（千姫）の住まいは、竹橋の御殿です。
+  本編では、本当の千姫が救い出されたあとの50年をたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#千姫"
+- "#吉田御殿"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/senhime
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: senhime_story_s4
+header:
+  tag: "千姫　吉田御殿の伝説"
+  title: "《吉田御殿》の千姫は、どこから来たか"
+now:
+- {at: "東海道の吉田の宿", text: "東海道　吉田の宿", point: 0}
+- {at: "50年あまり", text: "1719年ごろ", point: 1}
+- {at: "明治の本", text: "明治・大正の本", point: 2}
+timeline:
+- {label: "1666"}
+- {label: "1719"}
+- {label: "明治"}
+shots:
+  R03_1:
+    kind: "ai"
+    file: "senhime/main/R03.jpg"
+    focus: [0.45, 0.5]
+    move: "in"
+    must: "R03"
+  R10_2:
+    kind: "ai"
+    file: "senhime/main/R10.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "R10"
+  R08_3:
+    kind: "ai"
+    file: "senhime/main/R08.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "R08"
+  R11_4:
+    kind: "ai"
+    file: "senhime/main/R11.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "R11"
+  R14_5:
+    kind: "ai"
+    file: "senhime/main/R14.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "R14"
+  R05_6:
+    kind: "ai"
+    file: "senhime/main/R05.jpg"
+    focus: [0.4, 0.5]
+    move: "right"
+    must: "R05"
+  R02_7:
+    kind: "ai"
+    file: "senhime/main/R02.jpg"
+    focus: [0.4, 0.5]
+    move: "left"
+    must: "R02"
+  R01_8:
+    kind: "ai"
+    file: "senhime/main/R01.jpg"
+    focus: [0.65, 0.5]
+    move: "right"
+    must: "R01"
+  S14_9:
+    kind: "ai"
+    file: "senhime/main/S14.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "S14"
+lines:
+  # fact: senhime-50
+- 語り: "千姫が、御殿の二階から若い男を招き入れた、という吉田御殿の話は、どこから来たのか。"
+  shot: R03_1
+  tone: 強調
+  pause: 0.12
+  # fact: senhime-50
+- 語り: "後の世の講談で、千姫は、そういう姫として語られた。"
+  shot: R10_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-50
+- 語り: "その話とともに語られたのが、吉田通れば、二階から招く、という歌だ。"
+  shot: R08_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-47
+- 語り: "けれど、昭和11年の本によれば、この歌は、もともと、東海道の吉田の宿、今の愛知県豊橋の、宿場の女を歌ったものだった。"
+  shot: R11_4
+  tone: 強調
+  pause: 0.12
+  # fact: senhime-47
+- 語り: "『松の落葉』という江戸時代の流行り歌の本に、吉田小女郎という題で載っている。それが、のちに、千姫の話にかこつけられた、という。"
+  shot: R14_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-49
+- 語り: "近松の浄瑠璃にも、男を呼び入れる場面がある。研究者は、吉田御殿の噂をあてこんだもの、と見る。千姫の死から、50年あまりのころだ。"
+  shot: R05_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: senhime-51
+- 語り: "吉田御殿が、どこにあったのかも、本によって違う。明治の本は麹町の番町。大正の本は牛込の御門のあたり。"
+  shot: R02_7
+  tone: 強調
+  pause: 0.12
+  # fact: senhime-29
+- 語り: "幕府の記録に出てくる千姫の住まいは、竹橋の御殿。吉田という名の御殿に住んだ記録は、見つからない。"
+  shot: R01_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 まとめ（1666年の最期、senhime-36〜38）
+- 語り: "では、本当の千姫は、どんな最期を迎えたのか。"
+  shot: S14_9
+  tone: 疑問
+  pause: 0.15

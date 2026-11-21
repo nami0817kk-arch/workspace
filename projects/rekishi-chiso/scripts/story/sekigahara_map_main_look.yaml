@@ -1,0 +1,240 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：関ヶ原の前と後の大名の地図（scripts/sekigahara-map-story.yaml）。chiso/storymain.py が読む。
+# 11-21 作成（11/28 12:00 公開）。ise_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵。R01〜R25 は過去の回の AI 絵（Gemini）の使い回し（out/story/<回>/main からこの回の main へ写した。下の scene の括弧が元）。
+#   N01〜N06 はこの回のために Gemini で作った絵。1600年ごろの武家。字・紋・旗の字は描かない。実在の人物の顔は描かない（誰とも名指さない武士・後ろ姿・遠景）。
+script: scripts/sekigahara-map-story.yaml
+out: sekigahara_map_story_main
+art_dir: out/story/sekigahara-map/ph
+main_art_dir: out/story/sekigahara-map/main
+ai_disclosure: この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 日本の3分の1近く, now: 1600年, dates: {}}
+  1: {label: 第1章 何万石を取り上げた？, now: 1600年9月, dates: {16: null, 22: 1600年, 23: 1601年, 24: 1603年}}
+  2: {label: 第2章 いちばん増えたのは誰？, now: 1600年, dates: {38: 1634年, 39: 1600年, 43: null, 44: 1600年}}
+  3: {label: 第3章 東海道の城はどうなった？, now: 1590年, dates: {51: 1595年, 53: 1600年}}
+  4: {label: 第4章 毛利はどれだけ減った？, now: 1600年, dates: {71: 1604年, 72: 1610年, 75: 1623年, 76: 1601年, 77: 1602年}}
+  5: {label: 第5章 上杉と佐竹は？, now: 1601年, dates: {82: 1664年, 84: 1602年, 87: 1603年, 88: 1664年, 89: null}}
+  6: {label: 第6章 西軍なのに減らなかった家は？, now: 1602年, dates: {97: 1600年, 100: null, 101: 1606年, 103: null, 105: 1600年, 106: 1620年}}
+  7: {label: 第7章 勝った大名たちはその後どうなった？, now: 1602年, dates: {110: 1607年, 111: 1609年, 112: 1619年, 113: 1620年, 114: 1632年, 115: 1633年, 117: null, 120: 1601年, 122: 1603年, 123: 1609年, 125: null}}
+  8: {label: まとめ 大名の地図はどう変わったか, now: null, dates: {}}
+
+references:
+  - "藤野保（改訂新版 世界大百科事典「改易」「国替」「大名」）・高木昭作（同「関ヶ原の戦」）・日本大百科全書・山川 日本史小辞典・ブリタニカ国際大百科事典・旺文社日本史事典・日本人名大辞典（コトバンク）"
+  - "林千寿「慶長五年の戦争と戦後領国体制の創出」（熊本大学 博士論文 2011）・郡司健「江戸前期萩藩の会計報告システム」（大阪学院大学 商・経営学論集 2021）・徳山大学論叢の萩藩の検地の論文・四本健光「島津氏と関ケ原合戦」（鹿児島大学 研究紀要 1966）"
+  - "秋田県公文書館『古文書倶楽部』34号（2010）・秋田市・米沢市上杉博物館・山口県文書館・仙台市博物館・掛川市・大津市・岡山県・服部英雄（名古屋城調査研究センター）"
+no_tag_from: 134
+
+ai:
+  N01: {scene: 1604年、日本海に面した浜辺で城の石垣と堀を築く大勢の人足と武士（萩）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  N02: {scene: 南国の城の書院で、書状を前に考え込む年配の武将と控える家臣（島津・顔は横顔）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  N03: {scene: 海辺の城の門の前で槍を構えて立つ土佐の侍たち（浦戸・血や遺体なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  N04: {scene: 八丈島の岩の浜で海を見つめる老いた武士の後ろ姿と息子たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  N05: {scene: 京都の町家の座敷で、子どもたちに読み書きを教える浪人の師匠, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  N06: {scene: 城の広間で、床に広げた大きな日本の絵図を囲んで見下ろす武士たち（字なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R01: {scene: 霧の朝の関ヶ原の谷を高い所から見る（hideaki H04）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R02: {scene: 山の斜面に連なる陣幕と無地の旗の列（hideaki H12）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R03: {scene: 城の広い板の間で平伏する大名の後ろ姿（fukushima F05）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R04: {scene: 霧の城門の前に並ぶ家臣たち（fukushima F06）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R05: {scene: 秋の山道を進む移封の行列（fukushima F07）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R06: {scene: 蝋燭の下で帳簿に石高を書く手元（fukushima F14）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R07: {scene: 家老たちが灯の下で書状を読む（fukushima F19）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R08: {scene: 川の三角州に建つ大きな城（広島、fukushima F02）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R09: {scene: 城の石垣を大勢の人足が積む（fukushima F03）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R10: {scene: 1601年秋の米沢盆地、城下へ入る家臣と家族の長い列（uesugi U01）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R11: {scene: 秋の峠道を荷を背負って進む武士の家族の列（uesugi U02）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R12: {scene: 狭い町の通りにあふれる荷を抱えた武士の家族（uesugi U03）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R13: {scene: 雪の野を荷を背負って進む武士の家族（uesugi U11）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R14: {scene: 金の襖の大広間、遠くで頭を下げる武士（uesugi U06）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R15: {scene: 城下の外れの荒れ地を耕す下級の武士（uesugi U10）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R16: {scene: 白い天守の城と城下の田園（senhime S08）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R17: {scene: 富士を背に東海道を進む大名行列（shogun S08）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R18: {scene: 灯の下の文机の書状と筆（shogun S10）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R19: {scene: 川沿いに城が立つ城下の遠景（hideaki H05）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R20: {scene: 夕暮れの城の遠景と紅葉（hideaki H13）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R21: {scene: 夕暮れの山の稜線と谷（終了画面。右半分を空けた構図、hideaki H15）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  R22: {scene: にぎわう城下の川と橋（fukushima F18）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R23: {scene: 土塁と広い堀に囲まれた平城と櫓（uesugi U17）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R24: {scene: 書院の座敷で書状を前に話し合う年配の武士たち（senhime S05）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R25: {scene: 山の上から川と城下を見下ろす武士の後ろ姿（uesugi U12）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+
+credits: {}
+
+shots:
+  - 0 ai:R01 wide
+  - 1 ai:R02 wide
+  - 2 ai:N06 wide
+  - 3 ai:R03 wide
+  - 4 ai:N06 left
+  - 5 ai:N06 right
+  - 6 ai:R17 wide
+  - 7 ai:R06 wide
+  - 8 ai:R18 wide
+  - 9 ai:R06 left
+  - 10 ai:R02 left
+  - 11 ai:R06 right
+  - 12 ai:R24 wide
+  - 13 ai:R24 left
+  - 14 ai:R18 right
+  - 15 ai:N06 wide
+  - 16 ai:R07 wide
+  - 17 ai:R07 left
+  - 18 ai:R04 wide
+  - 19 ai:R04 left
+  - 20 ai:R25 wide
+  - 21 ai:R07 right
+  - 22 ai:R05 wide
+  - 23 ai:R10 wide
+  - 24 ai:R24 right
+  - 25 ai:N06 left
+  - 26 ai:N06 right
+  - 27 ai:R03 wide
+  - 28 ai:R03 left
+  - 29 ai:R03 right
+  - 30 ai:R24 wide
+  - 31 ai:R16 wide
+  - 32 ai:R02 right
+  - 33 ai:R22 wide
+  - 34 ai:R16 left
+  - 35 ai:N06 wide
+  - 36 ai:R07 wide
+  - 37 ai:R23 wide
+  - 38 ai:R22 left
+  - 39 ai:R04 right
+  - 40 ai:R25 left
+  - 41 ai:R05 right
+  - 42 ai:R23 right
+  - 43 ai:R18 wide
+  - 44 ai:R18 left
+  - 45 ai:R07 right
+  - 46 ai:R25 right
+  - 47 ai:R17 left
+  - 48 ai:R17 right
+  - 49 ai:R17 wide
+  - 50 ai:R17 wide
+  - 51 ai:R17 left
+  - 52 ai:R17 right
+  - 53 ai:R05 wide
+  - 54 ai:R05 left
+  - 55 ai:R05 right
+  - 56 ai:R06 wide
+  - 57 ai:R08 wide
+  - 58 ai:R23 wide
+  - 59 ai:R23 right
+  - 60 ai:R06 left
+  - 61 ai:R17 wide
+  - 62 ai:R08 left
+  - 63 ai:R08 right
+  - 64 ai:R22 left
+  - 65 ai:R07 wide
+  - 66 ai:R24 right
+  - 67 ai:R06 right
+  - 68 ai:R06 wide
+  - 69 ai:R18 left
+  - 70 ai:R15 wide
+  - 71 ai:N01 wide
+  - 72 ai:R15 right
+  - 73 ai:R06 left
+  - 74 ai:R18 right
+  - 75 ai:N01 right
+  - 76 ai:R11 wide
+  - 77 ai:R13 wide
+  - 78 ai:R10 wide
+  - 79 ai:R10 left
+  - 80 ai:R12 wide
+  - 81 ai:R10 right
+  - 82 ai:R15 left
+  - 83 ai:R13 left
+  - 84 ai:R18 wide
+  - 85 ai:R18 left
+  - 86 ai:R13 right
+  - 87 ai:R13 wide
+  - 88 ai:R06 right
+  - 89 ai:N02 wide
+  - 90 ai:R14 wide
+  - 91 ai:N02 left
+  - 92 ai:R24 left
+  - 93 ai:N02 wide
+  - 94 ai:R24 wide
+  - 95 ai:R03 right
+  - 96 ai:N02 left
+  - 97 ai:R14 left
+  - 98 ai:R14 right
+  - 99 ai:N03 wide
+  - 100 ai:N05 wide
+  - 101 ai:R04 left
+  - 102 ai:N04 wide
+  - 103 ai:N04 left
+  - 104 ai:R11 right
+  - 105 ai:R11 left
+  - 106 ai:R22 right
+  - 107 ai:R20 wide
+  - 108 ai:R20 left
+  - 109 ai:R19 wide
+  - 110 ai:R19 left
+  - 111 ai:R19 right
+  - 112 ai:R08 wide
+  - 113 ai:R12 right
+  - 114 ai:R06 wide
+  - 115 ai:R20 right
+  - 116 ai:R05 left
+  - 117 ai:R22 wide
+  - 118 ai:R07 left
+  - 119 ai:R07 right
+  - 120 ai:R09 wide
+  - 121 ai:R23 left
+  - 122 ai:R09 right
+  - 123 ai:R16 right
+  - 124 ai:R16 wide
+  - 125 ai:R17 wide
+  - 126 ai:N06 wide
+  - 127 ai:N06 left
+  - 128 ai:R03 wide
+  - 129 ai:R17 right
+  - 130 ai:R25 wide
+  - 131 ai:R08 right
+  - 132 ai:R10 right
+  - 133 ai:N06 right
+  - 134 ai:R01 wide
+  - 135 ai:R02 wide
+  - 136 ai:N06 wide
+  - 137 ai:R25 left
+  - 138 ai:R21 left
+  - 139 ai:R21 wide
+  - end ai:R21 wide
+
+figures: []
+
+focus: {}
+
+fx:
+  R01: {mist: {region: [0.0, 0.3, 1.0, 0.9]}}
+  R06: {lamp: {region: [0.35, 0.3, 0.6, 0.7]}}
+  R07: {lamp: {region: [0.5, 0.2, 0.8, 0.6]}}
+  R18: {lamp: {region: [0.45, 0.1, 0.75, 0.6]}}
+  R21: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+
+paint_fx: {}
+
+parts:
+  - {type: versus3, from: 12, to: 13, every: 4,
+     items: [[藤野保（世界大百科事典）, 取りつぶし88名], [高木昭作（同じ事典）, 取りつぶし90人], [ブリタニカ, 取りつぶし91家]]}
+  - {type: versus3, from: 67, to: 67, every: 4,
+     items: [[日本大百科全書ほか, 112万石], [ブリタニカほか, 120万石あまり]]}
+  - {type: versus3, from: 80, to: 80, every: 4,
+     items: [[日本大百科全書, 約6000人], [世界大百科事典, 約5000人]]}
+  - {type: quote, from: 85, to: 85, label: 史料, text: 出羽国之内／秋田・仙北両所進置候, source: 徳川家康の佐竹義宣あての判物（1602年。秋田県公文書館『古文書倶楽部』34号の紹介）}
+  - {type: quote, from: 130, to: 130, label: 要点, text: 領地を増やしながら／豊臣の大名を要の地から遠くへ, source: 掛川市「広報かけがわ」連載「かずとよ」その11}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 11, note: 第1章 藤野保の数}
+  - {line: 12, note: 第1章 数の食い違い}
+  - {line: 27, note: 第2章 加増の棒グラフ}
+  - {line: 51, note: 第3章 地図 東海道の城}
+  - {line: 55, note: 第3章 地図 7つの家の行き先}
+  - {line: 67, note: 第4章 毛利の食い違い}
+  - {line: 85, note: 第5章 判物}
+  - {line: 115, note: 第7章 失った年}
+  - {line: 127, note: まとめ}
+  - {end: true, note: 終了画面の空き}

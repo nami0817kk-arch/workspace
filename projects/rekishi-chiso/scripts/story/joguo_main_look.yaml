@@ -1,0 +1,237 @@
+# 物語型の本編の見た目と絵の割り当て：聖徳太子の一族（上宮王家）は、なぜ絶えたのか（scripts/joguo-story.yaml）。chiso/storymain.py が読む。
+# 11-21 作成（11/28 19:00 公開予定）。senhime_main_look.yaml を写した。絵は Gemini（Chrome、/u/0）で作った飛鳥時代の場面（G01〜G19・GEND）。
+# G18・G19 はサムネ用に作った2枚（THA・THB）を16:9に切り出したもの（THB は下の文字の帯を切った）。R01・R02 は神器の回（jingi J08・J09）の AI 絵の写し。
+# 家系図（台本の figure の people）の間は、絵を止めたままでよい（10-25 ユーザー「系図なら止まっても良い」）。
+script: scripts/joguo-story.yaml
+out: joguo_story_main
+art_dir: out/story/joguo/main
+main_art_dir: out/story/joguo/main
+ai_disclosure: この動画の情景と人物の画像は、画像生成AI（Google の Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+chapters:
+  0:
+    label: 序章 斑鳩の寺で、一族が消えた日
+    now: null
+    dates: {}
+  1:
+    label: 第1章 斑鳩の宮と、14人の子
+    now: 601年
+    dates:
+      14: null
+      22: 622年
+      27: null
+      31: null
+  2:
+    label: 第2章 空いた天皇の座と、「叔父の本心」
+    now: 628年
+    dates:
+      52: 629年正月
+      56: null
+  3:
+    label: 第3章 「天に二つの日なし」
+    now: 642年
+    dates:
+      67: 643年10月
+  4:
+    label: 第4章 643年11月、斑鳩の宮に火が放たれた
+    now: 643年11月
+    dates: {}
+  5:
+    label: 第5章 襲ったのは誰か、亡くなったのは何人か
+    now: null
+    dates: {}
+  6:
+    label: まとめ 聖徳太子の一族は、なぜ絶えたのか
+    now: 645年6月
+    dates:
+      120: 670年
+      121: null
+no_tag_from: 127
+references:
+- 『日本書紀』巻第二十二（推古紀）・巻第二十三（舒明即位前紀）・巻第二十四（皇極紀）
+- 『上宮聖徳法王帝説』（国立国会図書館デジタルコレクションの公開本）
+- 『上宮聖徳太子伝補闕記』（国立国会図書館デジタルコレクションの公開本）
+- 『藤氏家伝』（大織冠伝）
+- 法隆寺金堂釈迦三尊像光背銘・天寿国繍帳銘・法起寺塔露盤銘（国立国会図書館デジタルコレクションの公開本の翻刻）
+- 清武雄二「佐藤長門著『蘇我大臣家』」（國學院雜誌118巻6号、2017年）
+- 文化遺産オンライン「法隆寺東院夢殿」（文化庁）
+- 東京新聞 2006年6月28日（若草伽藍の壁画片）・奈良新聞／日本経済新聞 2024年（若草伽藍の溝）
+- 観光庁 地域観光資源の多言語解説文データベース（中宮寺・法輪寺・法起寺）
+credits: {}
+ai:
+  G01: {scene: 朝の斑鳩の里の遠景（寺と宮殿、奥に生駒の山並み）, pan: h, crops: &id001 {wide: [1.18, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.6, 0.5]}}
+  G02: {scene: 斑鳩宮の庭で遊ぶ子どもたちと貴婦人, pan: h, crops: *id001}
+  G03: {scene: 灯明の下の病床と、泣く女性たち, pan: h, crops: *id001}
+  G04: {scene: 刺繍の帳を縫う女性たち, pan: h, crops: *id001}
+  G05: {scene: 宮殿の前庭に並んで座る群臣, pan: h, crops: *id001}
+  G06: {scene: 夜、松明の兵に囲まれた館, pan: h, crops: *id001}
+  G07: {scene: 大きな墳丘を築く民と役人, pan: h, crops: *id001}
+  G08: {scene: 館の広間で命じる若い貴人（入鹿の想像）, pan: h, crops: *id001}
+  G09: {scene: 夜、宮殿の門に迫る松明の兵の列, pan: h, crops: *id001}
+  G10: {scene: 矢と直刀で防ぎ戦う舎人たち, pan: h, crops: *id001}
+  G11: {scene: 夜に燃え上がる宮殿（斑鳩宮の想像）, pan: h, crops: *id001}
+  G12: {scene: 冬の山の岩陰に身を寄せる一家, pan: h, crops: *id001}
+  G13: {scene: 山中でひざまずいて進言する家臣と首を振る貴人, pan: h, crops: *id001}
+  G14: {scene: 寺を取り囲む兵の遠景, pan: h, crops: *id001}
+  G15: {scene: 黒い雲を見上げる貴人の後ろ姿, pan: h, crops: *id001}
+  G16: {scene: 報せを聞いて怒る年配の大臣（蝦夷の想像）, pan: h, crops: *id001}
+  G17: {scene: 夜、炎に包まれる寺（670年の法隆寺の想像）, pan: h, crops: *id001}
+  G18: {scene: 山の中腹から燃える宮を振り返る貴人と妃・子（山背大兄王の想像）, pan: h, crops: *id001}
+  G19: {scene: 寺の上空に輝く五色の旗と天蓋、見上げて驚く兵, pan: h, crops: *id001}
+  R01: {scene: 机の上の古い巻物と本（jingi J08）, pan: h, crops: *id001}
+  R02: {scene: 杉の森の参道（jingi J09）, pan: v, crops: {wide: [1.18, 0.5, 0.5], top: [1.18, 0.5, 0.4], bottom: [1.18, 0.5, 0.6]}}
+  GEND: {scene: 夕暮れの斑鳩の里と塔（終了画面、右半分に余白）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}, lock: [1.0, 0.5, 0.5]}
+paint_fx: {}
+shots:
+- 0 ai:G14 wide
+- 1 ai:G08 wide
+- 2 ai:G13 wide
+- 3 ai:G18 wide
+- 4 ai:G14 right
+- 5 ai:G05 wide
+- 6 ai:G18 wide
+- 7 ai:G02 wide
+- 8 ai:G02 right
+- 9 ai:G19 wide
+- 10 ai:G01 left
+- 11 ai:G01 right
+- 12 ai:G02 left
+- 13 ai:G01 left
+- 14 ai:R01 wide
+- 15 ai:G02 wide            # 家系図：太子の妻と子
+- 16 ai:G02 wide
+- 17 ai:G02 wide
+- 18 ai:G02 wide
+- 19 ai:G02 right           # 家系図：山背大兄王の家族
+- 20 ai:G02 right
+- 21 ai:G02 left
+- 22 ai:G03 left
+- 23 ai:R01 right           # 史料の札（光背銘）
+- 24 ai:G03 wide
+- 25 ai:G03 right
+- 26 ai:R01 wide
+- 27 ai:R01 left            # 図：太子が亡くなった日
+- 28 ai:R01 left
+- 29 ai:G04 wide
+- 30 ai:G04 right
+- 31 ai:G01 wide
+- 32 ai:GEND left
+- 33 ai:GEND wide
+- 34 ai:G01 wide
+- 35 ai:G01 right
+- 36 ai:G18 left
+- 37 ai:G05 left
+- 38 ai:G05 wide
+- 39 ai:G05 right
+- 40 ai:G05 wide
+- 41 ai:G16 wide            # 家系図：蘇我と上宮王家
+- 42 ai:G16 wide
+- 43 ai:G16 right
+- 44 ai:G05 left
+- 45 ai:G18 right
+- 46 ai:G05 right
+- 47 ai:G06 left
+- 48 ai:G02 left
+- 49 ai:G03 left
+- 50 ai:G06 wide
+- 51 ai:R02 wide
+- 52 ai:G05 wide
+- 53 ai:R01 wide
+- 54 ai:G08 wide            # 史料の札（藤氏家伝）
+- 55 ai:G18 wide
+- 56 ai:G05 left
+- 57 ai:G07 wide
+- 58 ai:G07 right
+- 59 ai:G07 wide
+- 60 ai:G16 left
+- 61 ai:G07 left
+- 62 ai:G07 right
+- 63 ai:G02 right
+- 64 ai:G04 left
+- 65 ai:G04 right           # 史料の札（天に二つの日無く）
+- 66 ai:R01 right
+- 67 ai:G08 left
+- 68 ai:G08 right
+- 69 ai:G05 wide            # 家系図：天皇の座
+- 70 ai:G05 wide
+- 71 ai:G09 wide
+- 72 ai:G09 left
+- 73 ai:G10 wide
+- 74 ai:G10 right
+- 75 ai:G09 right
+- 76 ai:G12 wide
+- 77 ai:G11 wide
+- 78 ai:G11 left
+- 79 ai:G11 right
+- 80 ai:G12 right
+- 81 ai:G13 left
+- 82 ai:G13 wide
+- 83 ai:G18 wide
+- 84 ai:G13 right           # 史料の札（十年百姓を役わじ）
+- 85 ai:G08 wide
+- 86 ai:G15 left
+- 87 ai:G15 right
+- 88 ai:G01 wide
+- 89 ai:G14 left
+- 90 ai:G14 left
+- 91 ai:G14 wide
+- 92 ai:G13 left
+- 93 ai:G18 left
+- 94 ai:G14 right
+- 95 ai:G19 wide
+- 96 ai:G15 wide
+- 97 ai:G16 wide
+- 98 ai:G16 right
+- 99 ai:G08 wide
+- 100 ai:R01 wide            # 図：誰が襲ったのか
+- 101 ai:R01 wide
+- 102 ai:R01 left
+- 103 ai:G08 right
+- 104 ai:G05 wide            # 家系図：天皇の座（軽王）
+- 105 ai:R01 right
+- 106 ai:G16 left
+- 107 ai:G14 wide
+- 108 ai:R01 left           # 図：亡くなったのは何人か
+- 109 ai:R01 left
+- 110 ai:R01 left
+- 111 ai:G14 right
+- 112 ai:G14 right          # 系図：補闕記の23人
+- 113 ai:G04 wide
+- 114 ai:R01 right
+- 115 ai:G14 left
+- 116 ai:G05 left
+- 117 ai:G08 left
+- 118 ai:G15 wide
+- 119 ai:G05 wide
+- 120 ai:G17 wide
+- 121 ai:G17 left
+- 122 ai:G01 wide
+- 123 ai:G02 wide
+- 124 ai:G01 right
+- 125 ai:G02 left
+- 126 ai:GEND left
+- 127 ai:G18 wide
+- 128 ai:G16 left
+- 129 ai:G02 right
+- 130 ai:G13 wide
+- 131 ai:G15 left
+- 132 ai:G14 wide
+- 133 ai:GEND wide
+- end ai:GEND wide
+focus: {}
+fx:
+  G11: {fire: {region: [0.1, 0.2, 0.9, 0.75]}, sparks: {region: [0.1, 0.0, 0.9, 0.5]}}
+  G17: {fire: {region: [0.15, 0.25, 0.85, 0.8]}, sparks: {region: [0.15, 0.0, 0.85, 0.5]}}
+figures: []
+parts:
+- {type: quote, from: 23, to: 23, label: 史料, text: 二月廿一日癸酉王后即世／翌日法皇登遐, source: 法隆寺金堂 釈迦三尊像光背銘}
+- {type: quote, from: 54, to: 54, label: 史料, text: 舅甥有隙／亦依誅境部臣摩理勢, source: 『藤氏家伝』（大織冠伝）}
+- {type: quote, from: 65, to: 65, label: 史料, text: 天無二日　国無二王, source: 『日本書紀』皇極天皇元年是歳条}
+- {type: quote, from: 84, to: 84, label: 史料, text: 吾情冀十年不役百姓, source: 『日本書紀』皇極天皇2年11月条}
+stills:
+- {line: 0, note: 冒頭（0秒）}
+- {line: 15, note: 家系図 太子の妻と子}
+- {line: 42, note: 家系図 いとこ}
+- {line: 77, note: 燃える斑鳩宮}
+- {line: 95, note: 五色の旗}
+- {line: 109, note: 何人か}
+- {end: true, note: 終了画面}
