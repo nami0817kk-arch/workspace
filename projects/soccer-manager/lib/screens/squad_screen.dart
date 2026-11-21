@@ -1075,11 +1075,11 @@ class _SquadToolbarState extends State<_SquadToolbar> {
                   TextSpan(style: const TextStyle(fontSize: 12), children: [
                     TextSpan(text: Tr.pick('$count人', '$count players')),
                     TextSpan(
-                        text: Tr.pick('・平均$avg', ' · avg $avg'),
+                        text: Tr.pick('・平均$avg', ' • avg $avg'),
                         style: TextStyle(color: subtle)),
                     if (injured > 0)
                       TextSpan(
-                          text: Tr.pick('・負傷$injured', ' · injured $injured'),
+                          text: Tr.pick('・負傷$injured', ' • injured $injured'),
                           style: const TextStyle(color: Colors.redAccent)),
                   ]),
                 ),
