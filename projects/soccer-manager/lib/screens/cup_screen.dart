@@ -86,6 +86,7 @@ class _DomesticCupTab extends StatelessWidget {
       totalRounds++;
     }
     final nextMatch = cup.nextUnplayedMatch;
+    final inSeason = gameState.save!.league.nextUnplayedFixture != null;
     final userEliminated = cup.isEliminated(userId);
 
     return ListView(
@@ -120,7 +121,8 @@ class _DomesticCupTab extends StatelessWidget {
                   '他クラブの結果は引き続き更新されます', 'The other results keep coming in')),
             ),
           ),
-        if (nextMatch != null)
+        if (nextMatch != null && inSeason) const _CupByDateNote(),
+        if (nextMatch != null && !inSeason)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
@@ -217,6 +219,7 @@ class _ContinentalCupTab extends StatelessWidget {
     String nameOf(String id) =>
         teams.firstWhere((t) => t.id == id, orElse: () => teams.first).name;
     final userEliminated = cup.isEliminated(userId);
+    final inSeason = gameState.save!.league.nextUnplayedFixture != null;
     final groupStageDone = cup.isGroupStageComplete;
     final nextGroupMatch = ContinentalCupEngine.nextGroupMatch(cup);
     final knockoutPending = cup.knockoutRounds.isNotEmpty &&
@@ -253,7 +256,9 @@ class _ContinentalCupTab extends StatelessWidget {
                   '他クラブの結果は引き続き更新されます', 'The other results keep coming in')),
             ),
           ),
-        if (nextGroupMatch != null)
+        if ((nextGroupMatch != null || knockoutPending) && inSeason)
+          const _CupByDateNote()
+        else if (nextGroupMatch != null)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
@@ -690,4 +695,29 @@ class _LeagueCupCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 季の途中のカップ戦は、進むボタンがその日に止まって行う(2026-11-22)。
+class _CupByDateNote extends StatelessWidget {
+  const _CupByDateNote();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Icon(Icons.event,
+                size: 16, color: SemanticColors.subtleText(context)),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                Tr.pick('自クラブの試合の日が来ると、上の進むボタンがその日に止まって試合をします。',
+                    'When your tie comes round, the advance button stops on that day and plays it.'),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
+              ),
+            ),
+          ],
+        ),
+      );
 }

@@ -8336,7 +8336,7 @@ void main() {
     final owner = guideSections.firstWhere((s) => s.title == 'オーナーの仕事');
     final ownerTitles = owner.topics.map((t) => t.title).join();
     expect(ownerTitles, contains('2つの期待'));
-    expect(ownerTitles, contains('次の節へ'));
+    expect(ownerTitles, contains('進むボタン'));
     expect(ownerTitles, contains('今週の決断'));
     expect(ownerTitles, contains('売却と買い直し'));
 

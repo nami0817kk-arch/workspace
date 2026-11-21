@@ -83,7 +83,8 @@ void main() {
     expect(find.text('選手'), findsOneWidget);
     await tester.tap(find.text('選手'));
     await tester.pumpAndSettle();
-    expect(find.text('次の節へ'), findsOneWidget); // 上バーの進めるボタンは残る
+    // 上バーの進むボタン(行き先の日付が書いてある)は残る。
+    expect(find.byKey(const ValueKey('advance-button')), findsOneWidget);
 
     // ブラウザ/端末の戻る操作を発火する。
     await tester.binding.handlePopRoute();
@@ -156,7 +157,7 @@ void main() {
   });
 
   testWidgets(
-      'next matchday ("次の節へ") shows a result dialog with the score '
+      'the advance button shows a result dialog with the score '
       'instead of only a snackbar', (WidgetTester tester) async {
     // ホーム画面のListViewの遅延構築で次節カードが画面外にならないよう、
     // 十分縦長なビューポートにしておく。
@@ -178,8 +179,12 @@ void main() {
     await tester.pumpAndSettle();
 
     // 試合はいつも数秒のダイジェスト(結果のダイアログ)で見せる。
-    await tester.tap(find.text('次の節へ').first);
-    await tester.pumpAndSettle();
+    // 進むボタンは次の予定の日に止まる(給料日など)ので、試合の日まで押す。
+    for (var i = 0; i < 6; i++) {
+      await tester.tap(find.byKey(const ValueKey('advance-button')).first);
+      await tester.pumpAndSettle();
+      if (find.textContaining('結果: ').evaluate().isNotEmpty) break;
+    }
 
     expect(find.textContaining('結果: '), findsOneWidget);
     expect(find.text('閉じる'), findsOneWidget);

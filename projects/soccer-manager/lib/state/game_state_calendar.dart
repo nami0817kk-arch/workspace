@@ -1,0 +1,233 @@
+part of 'game_state.dart';
+
+/// 日付で進む。進むボタンは「次の予定がある日」まで進み、何もない日は
+/// 飛ばす(2026-11-22)。予定は、自クラブの試合(リーグ・カップ)と、
+/// 日付で決まっている出来事(給料日・放映権・移籍の窓・契約の期日)。
+///
+/// 練習・けが・成長は今まで通りリーグの節ごとに進む(日ごとにすると、
+/// 週に試合が2つある週に練習が二重になり、つり合いが崩れる)。
+extension GameStateCalendar on GameState {
+  /// [from]〜[to](両端を含む)の、自クラブに関わる出来事。日付順。
+  /// カレンダーの画面が使う。
+  List<DayEvent> calendarEventsBetween(DateTime from, DateTime to) {
+    final s = _save;
+    if (s == null) return const [];
+    final a = SeasonCalendar.dateOnly(from);
+    final b = SeasonCalendar.dateOnly(to);
+    bool inRange(DateTime d) => !d.isBefore(a) && !d.isAfter(b);
+    final cal = seasonCalendar;
+    final userId = s.userTeamId;
+    final league = s.league;
+    String nameOf(String id) => _teamById(id)?.name ?? Tr.pick('未定', 'TBC');
+    final out = <DayEvent>[];
+    for (final f in league.fixtures) {
+      if (f.homeTeamId != userId && f.awayTeamId != userId) continue;
+      final d = SeasonCalendar.dateOnly(cal.dateForMatchday(f.matchday));
+      if (!inRange(d)) continue;
+      final home = f.homeTeamId == userId;
+      final opp = nameOf(home ? f.awayTeamId : f.homeTeamId);
+      final r = f.result;
+      final score = r == null
+          ? ''
+          : ' ${home ? r.homeGoals : r.awayGoals}-${home ? r.awayGoals : r.homeGoals}';
+      out.add(DayEvent(
+        date: d,
+        kind: DayEventKind.leagueMatch,
+        matchday: f.matchday,
+        label: Tr.pick('第${f.matchday}節 vs $opp(${home ? 'H' : 'A'})$score',
+            'MD ${f.matchday} vs $opp (${home ? 'H' : 'A'})$score'),
+        shortLabel: Tr.pick('第${f.matchday}節', 'MD ${f.matchday}'),
+      ));
+    }
+    for (final c in _nextUserCupMatches()) {
+      if (inRange(c.date)) out.add(c);
+    }
+    final superCup = s.pendingSuperCup;
+    if (superCup != null) {
+      final d = SeasonCalendar.dateOnly(cal.superCupDate);
+      if (inRange(d)) {
+        final opp = superCup.homeTeamId == userId
+            ? superCup.awayTeamId
+            : superCup.homeTeamId;
+        out.add(DayEvent(
+          date: d,
+          kind: DayEventKind.superCup,
+          label: Tr.pick(
+              'スーパーカップ vs ${nameOf(opp)}', 'Super Cup vs ${nameOf(opp)}'),
+          shortLabel: Tr.pick('スーパーカップ', 'Super Cup'),
+        ));
+      }
+    }
+    for (var i = 0; i < s.friendlies.length; i++) {
+      final f = s.friendlies[i];
+      if (f.result != null) continue;
+      final d =
+          SeasonCalendar.dateOnly(cal.friendlyDate(i, s.friendlies.length));
+      if (!inRange(d)) continue;
+      final opp = f.homeTeamId == userId ? f.awayTeamId : f.homeTeamId;
+      out.add(DayEvent(
+        date: d,
+        kind: DayEventKind.friendly,
+        label: Tr.pick('親善試合 vs ${nameOf(opp)}', 'Friendly vs ${nameOf(opp)}'),
+        shortLabel: Tr.pick('親善試合', 'Friendly'),
+      ));
+    }
+    out.addAll(DayEvents.calendarEvents(
+        a.subtract(const Duration(days: 1)), b, currentLeagueTheme));
+    DayEvents.sortEvents(out);
+    return out;
+  }
+
+  /// リーグ・カップ戦のチームを id から引く(見つからなければ null)。
+  Team? _teamById(String id) {
+    for (final t in allTeamsForCups) {
+      if (t.id == id) return t;
+    }
+    return null;
+  }
+
+  /// 自クラブの、次のカップ戦(国内・大陸)。その試合が「次に消化する
+  /// 試合」になっているものだけ(他のクラブの試合が先に残っているときは、
+  /// いつ自分の番になるかまだ決まらない)。
+  List<DayEvent> _nextUserCupMatches() {
+    final s = _save!;
+    final userId = s.userTeamId;
+    final out = <DayEvent>[];
+    final dom = domesticCup;
+    final m = dom?.nextUnplayedMatch;
+    if (dom != null &&
+        m != null &&
+        !m.isBye &&
+        (m.homeTeamId == userId || m.awayTeamId == userId)) {
+      final opp = m.homeTeamId == userId ? m.awayTeamId : m.homeTeamId;
+      out.add(DayEvent(
+        date: _cupDate(dom.lastPlayedAtMatchday, continental: false),
+        kind: DayEventKind.cupMatch,
+        label: Tr.pick(
+            '${dom.name} vs ${_teamById(opp)?.name ?? '-'}(${m.homeTeamId == userId ? 'H' : 'A'})',
+            '${dom.name} vs ${_teamById(opp)?.name ?? '-'} (${m.homeTeamId == userId ? 'H' : 'A'})'),
+        shortLabel: Tr.pick('カップ戦', 'Cup tie'),
+      ));
+    }
+    final cont = continentalCup;
+    if (cont != null && _continentalHasNextMatch(cont)) {
+      String? home;
+      String? away;
+      if (!cont.isGroupStageComplete) {
+        final g = ContinentalCupEngine.nextGroupMatch(cont);
+        home = g?.homeTeamId;
+        away = g?.awayTeamId;
+      } else {
+        final leg = ContinentalCupEngine.nextKnockoutLeg(cont);
+        home = leg?.homeId;
+        away = leg?.awayId;
+      }
+      if (home != null && away != null && (home == userId || away == userId)) {
+        final opp = home == userId ? away : home;
+        out.add(DayEvent(
+          date: _cupDate(cont.lastPlayedAtMatchday, continental: true),
+          kind: DayEventKind.cupMatch,
+          label: Tr.pick(
+              '${cont.name} vs ${_teamById(opp)?.name ?? '-'}(${home == userId ? 'H' : 'A'})',
+              '${cont.name} vs ${_teamById(opp)?.name ?? '-'} (${home == userId ? 'H' : 'A'})'),
+          shortLabel: Tr.pick('大陸カップ', 'Continental'),
+        ));
+      }
+    }
+    return out;
+  }
+
+  /// カップ戦の次の試合の日。1節に1試合の決まり(_canAdvanceCup)で、
+  /// 次に消化できる節の前の平日。リーグ戦を終えた後は今日の次の平日。
+  DateTime _cupDate(int? lastPlayedAtMatchday, {required bool continental}) {
+    if (_save!.league.nextUnplayedFixture == null) {
+      return SeasonCalendar.dateOnly(
+          SeasonCalendar.nextCupWeekdayAfter(today, continental: continental));
+    }
+    final afterLast = (lastPlayedAtMatchday ?? 0) + 1;
+    final marker = _currentLeagueMatchdayMarker;
+    final eligible = afterLast > marker ? afterLast : marker;
+    final d = SeasonCalendar.dateOnly(
+        seasonCalendar.cupDateBefore(eligible, continental: continental));
+    return d.isBefore(today) ? today : d;
+  }
+
+  /// 進むボタンが次に止まる日の出来事。リーグ戦を終えた後(季の終わりの
+  /// 流れに入る)や、まだ始めていないときは null。
+  ///
+  /// 次のリーグ戦の日までにある、自クラブのカップ戦と、日付で決まって
+  /// いる出来事のうち、いちばん早いもの。
+  DayEvent? get nextStop {
+    final s = _save;
+    if (s == null) return null;
+    final next = s.league.nextUnplayedFixture;
+    if (next == null) return null;
+    final matchDate = SeasonCalendar.dateOnly(dateOfMatchday(next.matchday));
+    final events = calendarEventsBetween(today, matchDate).where((e) {
+      // 試合は今日でもよい(今日の試合がまだなら今日に止まる)。
+      // 試合以外は今日の分はもう済んでいるので、明日から。
+      if (e.kind.isMatch) {
+        if (e.kind == DayEventKind.leagueMatch) {
+          return e.matchday == next.matchday;
+        }
+        // 親善試合とスーパーカップは、今まで通り状況の画面の札から行う。
+        return e.kind == DayEventKind.cupMatch;
+      }
+      return e.date.isAfter(today);
+    }).toList();
+    return events.isEmpty ? null : events.first;
+  }
+
+  /// [stop] までに、自クラブの出ないカップ戦が消化できるなら先に進めて
+  /// おく(他のクラブ同士の試合で止まらないように)。
+  Future<void> playBackgroundCupMatchesBefore(DayEvent stop) async {
+    final s = _save;
+    if (s == null) return;
+    final userId = s.userTeamId;
+    final dom = domesticCup;
+    final m = dom?.nextUnplayedMatch;
+    if (dom != null &&
+        m != null &&
+        m.homeTeamId != userId &&
+        m.awayTeamId != userId &&
+        canPlayNextDomesticCupMatch &&
+        !_cupDate(dom.lastPlayedAtMatchday, continental: false)
+            .isAfter(stop.date)) {
+      await playNextCupMatch();
+    }
+    final cont = continentalCup;
+    if (cont != null && canPlayNextContinentalMatch) {
+      final bool userIn;
+      if (!cont.isGroupStageComplete) {
+        final g = ContinentalCupEngine.nextGroupMatch(cont);
+        userIn =
+            g != null && (g.homeTeamId == userId || g.awayTeamId == userId);
+      } else {
+        final leg = ContinentalCupEngine.nextKnockoutLeg(cont);
+        userIn = leg != null && (leg.homeId == userId || leg.awayId == userId);
+      }
+      if (!userIn &&
+          !_cupDate(cont.lastPlayedAtMatchday, continental: true)
+              .isAfter(stop.date)) {
+        if (cont.isGroupStageComplete) {
+          await playNextContinentalKnockoutLeg();
+        } else {
+          await playNextContinentalGroupMatch();
+        }
+      }
+    }
+  }
+
+  /// 試合のない出来事の日([stop])まで今日を進める。給料・放映権・窓の
+  /// 開閉は、今日を進めたときに走る処理(_setToday)がその日に行う。
+  /// 進めた間の資金の増減を返す。
+  Future<int> advanceToDateStop(DayEvent stop) async {
+    final s = _save;
+    if (s == null || stop.kind.isMatch) return 0;
+    final before = s.budget;
+    _advanceTodayTo(stop.date);
+    _notify();
+    await _persistNow();
+    return s.budget - before;
+  }
+}

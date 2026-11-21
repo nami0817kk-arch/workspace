@@ -112,10 +112,10 @@ List<GuideSection> get guideSections => [
                 'Fan expectation follows results and popularity; shareholder expectation follows the books. If either runs out, you must sell the club.'),
           ),
           GuideTopic(
-            title: Tr.pick('次の節へ', 'Next matchday'),
+            title: Tr.pick('進むボタン(日付で進む)', 'The advance button'),
             description: Tr.pick(
-                '試合には直接関わりません。押すと数秒のダイジェストで結果と、2つの期待の動きが出ます。先発や構えは監督が決めます。',
-                'You do not touch the match itself. Press it to see a short digest with the result and how both expectations moved. The manager picks the team.'),
+                '右上のボタンは、次に予定がある日まで進みます(試合・カップ戦・給料日・放映権の入金・移籍の窓の開閉と締切など。何もない日は飛ばします)。行き先はボタンに「9/5(土) 第8節」のように出ます。試合には直接関わらず、数秒のダイジェストで結果と2つの期待の動きが出ます。日付を押すとカレンダーが開きます。',
+                'The button at the top right moves to the next day with something on: a match, a cup tie, payday, TV money, a transfer window opening or closing. Empty days are skipped, and the button shows where it is going, such as "Sat 5 Sep MD 8". You do not touch the match itself; a short digest shows the result and how both expectations moved. Tap the date to open the calendar.'),
           ),
           GuideTopic(
             title: Tr.pick('監督からの報告・経営診断', "Manager's report and health check"),
@@ -144,7 +144,7 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('オーナー室', "Owner's office"),
             description: Tr.pick(
-                'オーナーの仕事(1シーズンに1回ずつ打てる手)、試合日のイベント、提携クラブ、年間予定、ニュースや記録をまとめています。',
+                'オーナーの仕事(1シーズンに1回ずつ打てる手)、試合日のイベント、提携クラブ、カレンダー、ニュースや記録をまとめています。',
                 "Moves you can make once a season, matchday events, a partner club, the club calendar, news and records."),
           ),
           GuideTopic(
