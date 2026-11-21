@@ -1,15 +1,23 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
+
 /// 見出しの種類。色分けと並べ替えに使う。
 enum NewsKind {
-  match('試合'),
-  milestone('節目'),
-  transfer('移籍'),
-  club('クラブ'),
-  national('代表'),
-  life('ピッチ外');
+  match(Say('試合', 'Match')),
+  milestone(Say('節目', 'Milestone')),
+  transfer(Say('移籍', 'Transfer')),
+  club(Say('クラブ', 'Club')),
+  national(Say('代表', 'International')),
+  life(Say('ピッチ外', 'Off the pitch'));
 
-  const NewsKind(this.label);
+  const NewsKind(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 }
 
 /// 世の中に出た1本の記事。
@@ -38,7 +46,7 @@ class NewsItem {
   /// 補足。無くてもよい。
   final String body;
 
-  String get dateLabel => matchday > 0 ? '$year 第$matchday節' : '$year';
+  String get dateLabel => matchday > 0 ? tr('$year 第$matchday節', '$year matchday $matchday') : '$year';
 
   Map<String, dynamic> toJson() => {
         'year': year,
@@ -64,17 +72,22 @@ class NewsItem {
 /// 同じ「第20節」でも、ダービーと消化試合では立ち上がりの空気が違う。
 /// 順位表とクラブの関係から決まるので、保存はしない。
 enum FixtureStake {
-  derby('ダービー', '街がひとつになる日。負けたら顔を上げて歩けない'),
-  titleRace('首位攻防', 'ここで勝てば、優勝が現実になる'),
-  survival('残留争い', '負ければ、来季は下の部で戦うことになる'),
-  promotion('昇格争い', '上に行けるかどうかが、この90分で決まる'),
-  formerClub('古巣との対戦', 'かつての仲間と、かつてのサポーターの前で'),
-  none('', '');
+  derby(Say('ダービー', 'Derby'), Say('街がひとつになる日。負けたら顔を上げて歩けない', 'The day the city is one. Lose and you cannot hold your head up')),
+  titleRace(Say('首位攻防', 'Top of the table'), Say('ここで勝てば、優勝が現実になる', 'Win this and the title becomes real')),
+  survival(Say('残留争い', 'Relegation six-pointer'), Say('負ければ、来季は下の部で戦うことになる', 'Lose and next season is in the tier below')),
+  promotion(Say('昇格争い', 'Promotion race'), Say('上に行けるかどうかが、この90分で決まる', 'Ninety minutes decide whether you go up')),
+  formerClub(Say('古巣との対戦', 'Against your old club'), Say('かつての仲間と、かつてのサポーターの前で', 'In front of former teammates and former supporters')),
+  none(Say('', ''), Say('', ''));
 
-  const FixtureStake(this.label, this.description);
+  const FixtureStake(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 
   bool get isSpecial => this != FixtureStake.none;
 }

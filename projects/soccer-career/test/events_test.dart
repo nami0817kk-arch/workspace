@@ -4,6 +4,7 @@ library;
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soccer_career/l10n/lang.dart';
 import 'package:soccer_career/game/life_events.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/development.dart';
@@ -102,12 +103,12 @@ void main() {
       final before = state.news.length;
       c.pendingEvent = LifeEvent(
         id: 'test-captain',
-        title: '腕章',
-        body: '任せたい',
+        title: Say('腕章', 'The armband'),
+        body: Say('任せたい', 'We want you to take it'),
         choices: const [
           LifeChoice(
-            label: '引き受ける',
-            outcome: '引き受けた',
+            label: Say('引き受ける', 'Accept'),
+            outcome: Say('引き受けた', 'You accepted'),
             effect: LifeEffect(special: LifeSpecial.takeCaptain),
           ),
         ],
