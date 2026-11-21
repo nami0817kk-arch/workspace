@@ -457,4 +457,24 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(!w.posts.some((p) => p.type === 'share') && /画像を保存しました/.test(w.run('ui.toast') || ''), 'Web のテスト版では画像の保存に代わる');
 }
 
+// はじめてのシーズンは、おすすめの24人を選んだ状態で始まる（2026-11-21）
+{
+  const CAR = (o) => ({ hikari7_career: JSON.stringify(Object.assign({ seasons: 0, points: 0, hall: [] }, o)) });
+  const f = boot({ adFree: false, store: CAR({ seasons: 0 }), owned: {} });
+  f.run("ui.g='f';ui.diff='normal';ui.chal=null;");
+  f.press('new');
+  ok(f.run('S.sel.length') === f.run('S.caps.sel') && f.run('S.preset') === 1, 'はじめてのシーズンは、おすすめの24人が選ばれた状態で始まる');
+  ok(/おすすめの24人を選んであります/.test(f.run('vSelect()')) && /この24人で構成会議へ/.test(f.run('vSelect()')), '書類審査の一番上に案内が出て、そのまま構成会議へ進める');
+  f.run('var sp=S.sel.slice();S.sel=[];autoSel(S);');
+  ok(f.run('JSON.stringify(S.sel)===JSON.stringify(sp)'), '選んである24人は「おまかせ」ボタンと同じ並べ方');
+  const s2 = boot({ adFree: false, store: CAR({ seasons: 1 }), owned: {} });
+  s2.run("ui.g='f';ui.diff='normal';ui.chal=null;");
+  s2.press('new');
+  ok(s2.run('S.sel.length') === 0 && !s2.run('S.preset') && !/おすすめの/.test(s2.run('vSelect()')), '2シーズン目からは、誰も選ばれていない状態で始まる');
+  const d0 = boot({ adFree: false, store: CAR({ seasons: 0 }), owned: {} });
+  d0.run("ui.g='f';");
+  d0.press('daily');
+  ok(d0.run('S.sel.length') === 0, '今日のオーディションは、はじめてでも自分で選ぶ');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
