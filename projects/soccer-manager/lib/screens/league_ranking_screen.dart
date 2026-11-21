@@ -11,6 +11,10 @@ import '../theme/semantic_colors.dart';
 /// リーグの個人ランキング(得点・アシスト)画面。シーズン終了を待たず、
 /// いつでも現時点の順位を確認できる(得点王・MVPの表彰自体は従来通り
 /// シーズン終了時に確定する)。
+///
+/// 得点とアシストは左右に並べた表にした(2026-11-21)。1人ずつ大きな札で
+/// タブを切り替えていたときは、20人で画面6つ分あり、両方を一度に
+/// 見られなかった。
 class LeagueRankingScreen extends StatelessWidget {
   const LeagueRankingScreen({super.key});
 
@@ -18,118 +22,136 @@ class LeagueRankingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
     final league = gameState.save?.league;
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(Tr.pick('リーグランキング', 'League rankings')),
-          leading: const BackButton(),
-          actions: const [QuickAccessMenuButton()],
-          bottom: TabBar(
-            tabs: [
-              Tab(text: Tr.pick('得点', 'Goals')),
-              Tab(text: Tr.pick('アシスト', 'Assists')),
-            ],
-          ),
-        ),
-        drawer: const QuickAccessDrawer(),
-        body: league == null
-            ? const Center(child: CircularProgressIndicator())
-            : TabBarView(
-                children: [
-                  _RankingList(
-                    entries: AwardsEngine.goalRanking(league),
-                    countLabel: Tr.pick('得点', 'Goals'),
-                    gameState: gameState,
-                  ),
-                  _RankingList(
-                    entries: AwardsEngine.assistRanking(league),
-                    countLabel: Tr.pick('アシスト', 'Assists'),
-                    gameState: gameState,
-                  ),
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(Tr.pick('リーグランキング', 'League rankings')),
+        leading: const BackButton(),
+        actions: const [QuickAccessMenuButton()],
       ),
+      drawer: const QuickAccessDrawer(),
+      body: league == null
+          ? const Center(child: CircularProgressIndicator())
+          : ResponsiveBody(
+              child: LayoutBuilder(builder: (context, c) {
+                final goals = _RankingTable(
+                  title: Tr.pick('得点', 'Goals'),
+                  entries: AwardsEngine.goalRanking(league),
+                  gameState: gameState,
+                );
+                final assists = _RankingTable(
+                  title: Tr.pick('アシスト', 'Assists'),
+                  entries: AwardsEngine.assistRanking(league),
+                  gameState: gameState,
+                );
+                final wide = c.maxWidth >= 560;
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.all(12),
+                  child: wide
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(child: goals),
+                            const SizedBox(width: 12),
+                            Expanded(child: assists),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            goals,
+                            const SizedBox(height: 12),
+                            assists
+                          ],
+                        ),
+                );
+              }),
+            ),
     );
   }
 }
 
-class _RankingList extends StatelessWidget {
+class _RankingTable extends StatelessWidget {
+  final String title;
   final List<PlayerRankingEntry> entries;
-  final String countLabel;
   final GameState gameState;
 
-  const _RankingList({
+  const _RankingTable({
+    required this.title,
     required this.entries,
-    required this.countLabel,
     required this.gameState,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (entries.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(
-            Tr.pick('まだ記録がありません。\n節を進めると現時点のランキングが表示されます。',
-                'Nothing recorded yet.\nPlay a few matchdays and the standings appear here.'),
-            textAlign: TextAlign.center,
-            style: TextStyle(color: SemanticColors.subtleText(context)),
-          ),
-        ),
-      );
-    }
+    final scheme = Theme.of(context).colorScheme;
+    final subtle = SemanticColors.subtleText(context);
     final league = gameState.save!.league;
     final userTeamId = gameState.userTeam.id;
-    String teamNameOf(String teamId) {
-      for (final t in league.teams) {
-        if (t.id == teamId) return t.name;
-      }
-      return '---';
-    }
-
-    return ResponsiveBody(
-      child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: entries.length,
-        itemBuilder: (context, index) {
-          final e = entries[index];
-          final isUser = e.teamId == userTeamId;
-          return Card(
-            margin: const EdgeInsets.only(bottom: 8),
-            color:
-                isUser ? Theme.of(context).colorScheme.primaryContainer : null,
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 16,
-                backgroundColor:
-                    index < 3 ? Colors.amber.shade700 : Colors.grey.shade400,
-                child: Text(
-                  '${index + 1}',
-                  style: const TextStyle(color: Colors.white, fontSize: 13),
-                ),
-              ),
-              title: Text(
-                e.name,
-                style: TextStyle(
-                  fontWeight: isUser ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-              subtitle: Text(
-                teamNameOf(e.teamId),
-                style: const TextStyle(fontSize: 12),
-              ),
-              trailing: Text(
-                '${e.count} $countLabel',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+    final names = {for (final t in league.teams) t.id: t.name};
+    const small = TextStyle(fontSize: 12);
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            color: scheme.surfaceContainerHighest,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child: Text(title,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          if (entries.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                Tr.pick('まだ記録がありません。節を進めると出ます。',
+                    'Nothing recorded yet. Play a few matchdays.'),
+                style: TextStyle(fontSize: 12, color: subtle),
               ),
             ),
-          );
-        },
+          for (final (i, e) in entries.indexed)
+            Container(
+              height: 32,
+              color: e.teamId == userTeamId
+                  ? scheme.primaryContainer
+                  : i.isOdd
+                      ? scheme.surfaceContainerLow
+                      : null,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 26,
+                    child: Text('${i + 1}',
+                        style: small.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: i < 3 ? Colors.amber.shade700 : subtle)),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(e.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: small.copyWith(fontWeight: FontWeight.w600)),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(names[e.teamId] ?? '---',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 11, color: subtle)),
+                  ),
+                  SizedBox(
+                    width: 28,
+                    child: Text('${e.count}',
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

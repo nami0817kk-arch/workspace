@@ -178,7 +178,10 @@ void main() {
             (t.widget as Text).data ?? '',
         for (final e in find.byType(Tab).hitTestable().evaluate())
           (e.widget as Tab).text ?? '',
-      ]..removeWhere((s) => s.isEmpty);
+      ]..removeWhere((s) =>
+          s.isEmpty ||
+          // リーグの順位表などの数字(押すと別の画面が開く)はタブではない。
+          RegExp(r'^[\d\-+]').hasMatch(s));
       if (labels.isEmpty) {
         await shoot(p);
         // 状況は全部を見たいので、左右の欄を下へ送りながら撮る。
@@ -215,7 +218,7 @@ void main() {
           }
         }
         // 経営・クラブは各タブが長いので、下へ送りながら撮る。
-        if (p == '経営' || p == 'クラブ' || p == 'オーナー室') {
+        if (const ['経営', 'クラブ', 'オーナー室', 'リーグ'].contains(p)) {
           // 座標は論理ピクセル(幅852)。左右2つの欄の両方を送る。
           for (var i = 1; i <= 6; i++) {
             await tester.dragFrom(

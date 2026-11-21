@@ -362,7 +362,7 @@ class FixturesScreen extends StatelessWidget {
   }
 }
 
-class _StandingsTab extends StatelessWidget {
+class _StandingsTab extends StatefulWidget {
   final League league;
   final String userTeamId;
   final int divisionTier;
@@ -374,7 +374,36 @@ class _StandingsTab extends StatelessWidget {
   });
 
   @override
+  State<_StandingsTab> createState() => _StandingsTabState();
+}
+
+class _StandingsTabState extends State<_StandingsTab> {
+  static const _rowHeight = 34.0;
+
+  /// 開いたときに自クラブの行が見える位置から始める。下位にいると
+  /// 3回スクロールしないと自クラブが見えなかった(2026-11-21)。
+  late final ScrollController _scroll;
+
+  @override
+  void initState() {
+    super.initState();
+    final i = widget.league.sortedStandings
+        .indexWhere((r) => r.teamId == widget.userTeamId);
+    _scroll = ScrollController(
+        initialScrollOffset: i <= 2 ? 0 : (i - 2) * _rowHeight);
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final league = widget.league;
+    final userTeamId = widget.userTeamId;
+    final divisionTier = widget.divisionTier;
     final rows = league.sortedStandings;
     final showContinental = divisionTier == 1;
     final showPromotion = divisionTier > 1;
@@ -467,8 +496,9 @@ class _StandingsTab extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
+            controller: _scroll,
             itemCount: rows.length,
-            itemExtent: 34,
+            itemExtent: _rowHeight,
             itemBuilder: (context, i) {
               final r = rows[i];
               final team = league.teams.firstWhere((t) => t.id == r.teamId);
