@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/club_culture.dart';
 import '../state/game_state.dart';
+import 'help_button.dart';
 import '../theme/semantic_colors.dart';
 
 /// クラブの文化を選ぶ(1季に1回まで)。
@@ -24,9 +25,12 @@ class ClubCultureCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('クラブの文化', 'Club identity'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
+            TitleWithHelp(
+              title: Tr.pick('クラブの文化', 'Club identity'),
+              help: Tr.pick(
+                  '文化に沿った試合のたびにサポーターの期待+1。変えられるのは1季に1回で、決めたものから変えると期待-${ClubCultureEngine.changePenalty}。',
+                  'Each match that fits the identity adds 1 to fan faith. You can change it once a season; switching away costs ${ClubCultureEngine.changePenalty}.'),
+            ),
             Text(current.description, style: small),
             const SizedBox(height: 8),
             Wrap(
@@ -41,13 +45,6 @@ class ClubCultureCard extends StatelessWidget {
                         : null,
                   ),
               ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick(
-                  '文化に沿った試合のたびにサポーターの期待+1。変えられるのは1季に1回で、決めたものから変えると期待-${ClubCultureEngine.changePenalty}。',
-                  'Each match that fits the identity adds 1 to fan faith. You can change it once a season; switching away costs ${ClubCultureEngine.changePenalty}.'),
-              style: small,
             ),
           ],
         ),

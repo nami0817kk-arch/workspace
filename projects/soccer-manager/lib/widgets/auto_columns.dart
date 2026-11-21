@@ -12,10 +12,14 @@ class AutoColumns extends StatelessWidget {
   /// 2列にする。1列だと札が縦に5〜7画面分続いていた。
   final double twoColumnWidth;
 
+  /// これより札が少なければ1列のまま。
+  final int minChildren;
+
   const AutoColumns({
     super.key,
     required this.children,
     this.twoColumnWidth = 640,
+    this.minChildren = 4,
   });
 
   /// 2列に分ける位置(後半の先頭)。真ん中から、カード以外(間隔・見出し)を
@@ -37,7 +41,7 @@ class AutoColumns extends StatelessWidget {
         // 文字を大きくしているときは、その分だけ幅が狭いものとして数える
         // (1.3倍で2列のままだと、札の中の行が横にはみ出していた)。
         final textScale = MediaQuery.textScalerOf(context).scale(1);
-        if (c.maxWidth / textScale < twoColumnWidth || children.length < 4) {
+        if (c.maxWidth / textScale < twoColumnWidth || children.length < minChildren) {
           return ListView(
               padding: const EdgeInsets.all(16), children: children);
         }
