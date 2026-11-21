@@ -212,7 +212,8 @@
     for (const p of Object.values(w.players)) if (before.sums[p.id] != null) gains.push([p, YA.abSum(p) - before.sums[p.id]]);
     gains.sort((a, b) => b[1] - a[1]);
     if (gains.length) lines.push({ k: 'grow', t: `能力の合計の伸び（平均）+${(gains.reduce((s, x) => s + x[1], 0) / gains.length).toFixed(1)}。上位：` + gains.slice(0, 3).map(([p, g]) => `${p.name.split(' ')[0]}+${g}`).join('・') });
-    const count = (re) => fresh.filter((n) => re.test(n.text)).length;
+    // 週ごとにまとめたお知らせ（noteMinor）は、まとめる前の1件ずつで数える
+    const count = (re) => fresh.reduce((s, n) => s + (n.parts ? n.parts.filter((x) => (x.y * 100 + x.wk) >= before.year * 100 + before.week && re.test(x.f)).length : re.test(n.text) ? 1 : 0), 0);
     lines.push({ k: 'misc', t: `怪我${count(/怪我/)}件／特性の習得${count(/身につけた/)}件／成長期${count(/成長期に入った/)}件／出来事${log.events.length}件／連帯貢献金など${count(/連帯貢献金/)}件` });
     if (log.events.length) {
       const c = {};

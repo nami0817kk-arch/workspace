@@ -203,7 +203,7 @@
           delete p.hbProg[hk];
           p.train.habit = null;
           if (p.hist) p.hist.unshift({ y: w.year, w: w.week, t: `癖「${hk}」が直った` });
-          if (YA.noteTier) YA.noteTier(w, 2, `${p.num}番 ${p.name}の癖「${hk}」が直った`, p.id);
+          if (YA.noteMinor) YA.noteMinor(w, p, `${p.num}番 ${String(p.name).split(' ')[0]}の癖が直った`, `${p.num}番 ${p.name}の癖「${hk}」が直った`);
         }
       } else if (hk) p.train.habit = null;
     }
