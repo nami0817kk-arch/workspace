@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../player_portrait.dart';
 import '../readable_width.dart';
+import '../share_card.dart';
+import '../share_sheet.dart';
 import 'hall_screen.dart';
 import '../../game/formulas.dart';
+import '../../models/legend.dart';
 import '../../models/life.dart';
 import '../../state/career_controller.dart';
 
@@ -47,6 +50,11 @@ class _RetiredScreenState extends State<RetiredScreen> {
     final state = controller.state!;
     final totals = state.careerTotals;
     final seasons = state.history;
+    // 殿堂に写したものと同じ記録。送る1枚はここから作る。
+    final legend = Legend.from(
+      state,
+      secondCareer: state.secondCareer ?? SecondCareer.quiet,
+    );
     final best = seasons.isEmpty
         ? null
         : seasons.reduce(
@@ -274,6 +282,26 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   ),
                 ),
               const SizedBox(height: 32),
+              // **20年を語りたい瞬間はここ。** 殿堂に写したものと同じ
+              // 記録から1枚を作って送れるようにする。
+              //
+              // **送るのは自分で歩いたキャリアだけ。** 管理画面で書き換えた
+              // 記録（`tampered`）は外に出さない——作った数字が本物として
+              // 広まるのは、記録として正しくない。印を殿堂に持ち込むのと同じ理屈。
+              if (!legend.tampered) ...[
+                OutlinedButton.icon(
+                  onPressed: () {
+                    final card = CareerShareCard(legend: legend);
+                    showShareSheet(context, card: card, text: card.text);
+                  },
+                  icon: const Icon(Icons.ios_share, size: 18),
+                  label: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Text('このキャリアを送る'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
               // 引退した時点で殿堂に入っている。ここから見に行ける。
               OutlinedButton.icon(
                 onPressed: () => Navigator.of(context).push(

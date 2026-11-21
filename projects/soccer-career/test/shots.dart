@@ -33,6 +33,13 @@ import 'package:soccer_career/ui/screens/hall_screen.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
 import 'package:soccer_career/ui/screens/season_end_screen.dart';
+import 'package:soccer_career/models/club.dart';
+import 'package:soccer_career/models/competition.dart';
+import 'package:soccer_career/models/legend.dart';
+import 'package:soccer_career/models/life.dart';
+import 'package:soccer_career/models/look.dart';
+import 'package:soccer_career/models/season.dart';
+import 'package:soccer_career/ui/share_card.dart';
 
 import 'ui_test.dart' as ui_test;
 
@@ -378,5 +385,136 @@ void main() {
       '12-dark-season-end',
       '16-guide',
     ]);
+  });
+  // 外に送る1枚。**ここは「送られた先で見られる絵」なので、
+  // 画面より厳しく見る必要がある**（アプリの外に出たあとは直せない）。
+  testWidgets('share cards', (tester) async {
+    await loadFont();
+    const club = Club(
+      id: 'albion-t1-c0',
+      name: 'トヨヴィエント',
+      strength: 78,
+      tier: 1,
+    );
+    final legend = Legend(
+      name: '結城 遼',
+      positionLabel: 'CM',
+      retiredYear: 2044,
+      retiredAge: 35,
+      seasons: 18,
+      appearances: 412,
+      goals: 136,
+      assists: 170,
+      averageRating: 7.24,
+      caps: 38,
+      internationalGoals: 12,
+      peakOverall: 82,
+      potential: 85,
+      spells: const [
+        LegendSpell(clubName: 'ゾンネ04', seasons: 6, tier: 2),
+        LegendSpell(clubName: 'トヨヴィエント', seasons: 12, tier: 1),
+      ],
+      awards: const [],
+      traits: const [],
+      leagueTitles: 4,
+      cupTitles: 2,
+      continentalTitles: 1,
+      worldCupBest: WorldCupStage.semi,
+      bestTier: 1,
+      clubId: club.id,
+      look: const PlayerLook(),
+      squadNumber: 10,
+      secondCareer: SecondCareer.manager,
+      tampered: false,
+      recordedAt: 0,
+    );
+    // 余白を取る。詰めると右上のデバッグの帯が1枚に重なって写る。
+    tester.view.physicalSize = const Size(900, 1200);
+    tester.view.devicePixelRatio = 2;
+    final theme = themeFor(club);
+
+    await pump(
+      tester,
+      Scaffold(
+        body: Center(child: CareerShareCard(legend: legend)),
+      ),
+      theme,
+    );
+    await dump(tester, '17-share-career');
+
+    await pump(
+      tester,
+      Scaffold(
+        body: Center(
+          child: SeasonShareCard(
+            club: club,
+            year: 2038,
+            tier: 1,
+            leaguePosition: 1,
+            stats: const SeasonStats(
+              appearances: 34,
+              goals: 12,
+              assists: 15,
+              averageRating: 7.38,
+            ),
+            look: const PlayerLook(),
+            squadNumber: 10,
+            playerName: '結城 遼',
+            headline: '1部 優勝',
+            caps: 6,
+            objectiveMet: 3,
+            cupWon: true,
+          ),
+        ),
+      ),
+      theme,
+    );
+    await dump(tester, '18-share-season');
+
+    // 無冠のキャリアも1枚になる（タイトルの行が空になるだけ）。
+    await pump(
+      tester,
+      Scaffold(
+        body: Center(
+          child: CareerShareCard(
+            legend: Legend(
+              name: '名もなき職人',
+              positionLabel: 'CB',
+              retiredYear: 2044,
+              retiredAge: 37,
+              seasons: 19,
+              appearances: 601,
+              goals: 18,
+              assists: 24,
+              averageRating: 7.02,
+              caps: 0,
+              internationalGoals: 0,
+              peakOverall: 74,
+              potential: 76,
+              spells: const [
+                LegendSpell(clubName: 'ゾンネ04', seasons: 19, tier: 2),
+              ],
+              awards: const [],
+              traits: const [],
+              leagueTitles: 0,
+              cupTitles: 0,
+              continentalTitles: 0,
+              worldCupBest: WorldCupStage.none,
+              bestTier: 2,
+              clubId: 'albion-t2-c3',
+              look: const PlayerLook(skin: 3),
+              squadNumber: 4,
+              secondCareer: SecondCareer.quiet,
+              tampered: false,
+              recordedAt: 0,
+            ),
+          ),
+        ),
+      ),
+      theme,
+    );
+    await dump(tester, '19-share-plain');
+
+    requireShots(['17-share-career', '18-share-season', '19-share-plain']);
   });
 }

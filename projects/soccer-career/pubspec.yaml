@@ -44,6 +44,11 @@ dependencies:
   in_app_purchase: ^3.3.0
   in_app_review: ^2.0.12
 
+  # キャリアの記録を外に送る（`lib/share/`）。Web とテストでは
+  # 何もしない実装に切り替わる。画像の置き場所は `Directory.systemTemp`
+  # なので、`path_provider` は足していない。
+  share_plus: ^13.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

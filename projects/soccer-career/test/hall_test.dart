@@ -24,6 +24,7 @@ import 'package:soccer_career/models/life.dart';
 import 'package:soccer_career/models/reputation.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/state/career_controller.dart';
+import 'package:soccer_career/ui/hall_plaque.dart';
 import 'package:soccer_career/ui/screens/hall_screen.dart';
 
 class _MemoryRepository implements SaveRepository {
