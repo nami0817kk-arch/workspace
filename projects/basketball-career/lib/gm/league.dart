@@ -776,7 +776,7 @@ void injuriesAfterGame(Team t, List<int> mins, Rng rng, {bool count = true, doub
 /// [injuryScale] は、[mine] のチームのけがの起きやすさの倍率(難しさと医療の施設)。[healScale] は治るまでの試合の倍率(医療の施設)。
 /// [liveSeed] があれば、自分が采配した試合([calls])をその乱数で進める(リーグの乱数の使い方は同じ)。
 GameResult playGame(Team home, Team away, Rng rng,
-    {int? mine, bool count = true, double injuryScale = 1.0, double healScale = 1.0, int? liveSeed, List<GameCall?> calls = const []}) {
+    {int? mine, bool count = true, double injuryScale = 1.0, double healScale = 1.0, int? liveSeed, List<LiveCall> calls = const []}) {
   final hStr = home.strength, aStr = away.strength;
   final p = winChance(hStr, aStr);
   final isMine = mine == home.index || mine == away.index;
@@ -912,7 +912,7 @@ class Series {
   }
 
   /// 次の1試合を戦う。[liveSeed] と [calls] は、自分の試合を采配したとき。
-  void playOne(List<Team> teams, Rng rng, int mine, {int? liveSeed, List<GameCall?> calls = const []}) {
+  void playOne(List<Team> teams, Rng rng, int mine, {int? liveSeed, List<LiveCall> calls = const []}) {
     if (over) return;
     final highHome = highHomeNext;
     final h = teams[highHome ? high : low], a = teams[highHome ? low : high];

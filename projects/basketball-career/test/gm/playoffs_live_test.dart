@@ -56,7 +56,7 @@ void main() {
       final c = _toPlayoffs(seed);
       if (c.confRank > playInSeeds) continue;
       c.startPlayoffs();
-      final calls = List<GameCall?>.filled(liveBreaks.length, null)..[0] = GameCall.fast;
+      final calls = breakCalls(const [GameCall.fast]);
       final preview = c.previewLive(calls, null)!;
       final g = c.nextMyGame!;
       c.playPlayoffGame(calls: calls);

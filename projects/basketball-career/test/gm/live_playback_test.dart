@@ -98,7 +98,7 @@ void main() {
   });
   test('攻めごとに、そのときの方針を残す(試合中の采配で変えたあとも)', () {
     final h = teams[8], a = teams[9];
-    final s = simulateGame(h, a, Rng(31), homeStr: h.strength, awayStr: a.strength, record: true, calls: const [GameCall.fast, GameCall.packPaint, null, null], side: 0);
+    final s = simulateGame(h, a, Rng(31), homeStr: h.strength, awayStr: a.strength, record: true, calls: breakCalls(const [GameCall.fast, GameCall.packPaint]), side: 0);
     final q1 = s.events.where((e) => e.period == 0 && e.side == 0);
     final q2 = s.events.where((e) => e.period == 1 && e.side == 0);
     final q3 = s.events.where((e) => e.period == 2 && e.side == 1);

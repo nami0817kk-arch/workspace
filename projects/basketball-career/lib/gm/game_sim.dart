@@ -264,20 +264,48 @@ class SimResult {
 
   int get overtimes => home.periods.length - 4;
 
-  /// 采配の区切りで止めたとき、その区切りの番号([liveBreaks] の順)。最後まで進めたら -1。
-  int stoppedAt = -1;
-  bool get finished => stoppedAt < 0;
+  /// 采配で止めたとき、止めた時刻(クォーターと残り秒)。最後まで進めたら null。
+  LiveStop? stop;
+  bool get finished => stop == null;
 }
 
-/// 采配できる区切り(1Q・前半・3Qの終わりと、4Q残り4分)。
-const liveBreaks = ['1Q終了', '前半終了', '3Q終了', '4Q残り4分'];
+/// 采配で止める時刻(クォーター 0〜3・延長は4から と、そのクォーターの残り秒)。その時刻より前の最後の攻めのあとで止まる。
+typedef LiveStop = (int, int);
 
-/// 1試合で取れるタイムアウトの数。
+/// クォーターの区切り(1Q・前半・3Qの終わり)。ここでは止まって指示と交代ができる(タイムアウトは使わない)。
+/// 2026-11-21、ユーザー「タイムアウトとQごとに指示できる」。前の「4Q残り4分」の止まりは無くし、タイムアウトで代えた。
+const liveBreaks = ['1Q終了', '前半終了', '3Q終了'];
+
+/// 区切り [k] で止める時刻(次のクォーターの始め)。
+LiveStop breakStop(int k) => (k + 1, 720);
+
+/// 1試合で取れるタイムアウトの数。試合の途中で押すと、そこで止まって指示と交代ができ、3分のあいだ少し強くなる。
 const liveTimeouts = 2;
 
-/// 試合の途中の采配(自分のチームだけ。区切りごとに1つ)。
+/// 采配の1つ(自分のチームだけ)。[period] の残り [clock] 秒の時刻から効く。
+/// [timeout] はタイムアウトを取って止めたとき。[call] は指示、[five] は交代で決めたコートの5人(order の番号)。
+class LiveCall {
+  const LiveCall({required this.period, required this.clock, this.call, this.timeout = false, this.five});
+  final int period, clock;
+  final GameCall? call;
+  final bool timeout;
+  final List<int>? five;
+
+  /// 区切り [k] での指示(タイムアウトは使わない)。
+  factory LiveCall.atBreak(int k, GameCall? call, {List<int>? five}) {
+    final s = breakStop(k);
+    return LiveCall(period: s.$1, clock: s.$2, call: call, five: five);
+  }
+}
+
+/// 区切りごとの指示のリストを、采配のリストにする(区切りの数より多い分は使わない)。
+List<LiveCall> breakCalls(List<GameCall?> perBreak) => [
+      for (var k = 0; k < perBreak.length && k < liveBreaks.length; k++)
+        if (perBreak[k] != null) LiveCall.atBreak(k, perBreak[k]),
+    ];
+
+/// 試合の途中の指示(自分のチームだけ)。
 enum GameCall {
-  timeout('タイムアウト', '流れを切る。3分のあいだ少し強くなる(1試合$liveTimeouts回まで)'),
   outside('外から打つ', '3ポイントを増やす(攻めの重点を外へ)'),
   inside('中で攻める', 'ゴール下を増やす(攻めの重点を中へ)'),
   fast('速く攻める', '攻めの回数を増やす(点の取り合いに)'),
@@ -329,10 +357,10 @@ String _clock(int period, int left) {
 }
 
 /// [home] と [away] の1試合を進める。チームの勝敗・個人成績・けがはここでは触らない(呼ぶ側で行う)。
-/// [calls] は区切り([liveBreaks])ごとの自分の采配([side] 0 ならホーム)。[stopAt] の区切りに着いたら、そこで止めて途中の結果を返す。
-/// どちらも無ければ、ふつうの試合(采配で増やした処理は何もしない)。
+/// [calls] は自分の采配([side] 0 ならホーム。時刻の順)。[stopAt] の時刻に着いたら、そこで止めて途中の結果を返す。
+/// どちらも無ければ、ふつうの試合(采配で増やした処理は何もしない)。止める確かめと采配は乱数を使わないので、同じ采配なら止める位置で試合は変わらない。
 SimResult simulateGame(Team home, Team away, Rng r,
-    {required double homeStr, required double awayStr, bool record = false, List<GameCall?> calls = const [], int? stopAt, int side = 0}) {
+    {required double homeStr, required double awayStr, bool record = false, List<LiveCall> calls = const [], LiveStop? stopAt, int side = 0}) {
   final h = SimTeam(home, homeStr + 1.0), a = SimTeam(away, awayStr);
   h.rollForm(r);
   a.rollForm(r);
@@ -375,22 +403,25 @@ SimResult simulateGame(Team home, Team away, Rng r,
   final me = side == 0 ? h : a;
   var timeoutsUsed = 0;
 
-  /// 区切り [k] に着いた。止めるなら false。
-  bool atBreak(int k) {
-    if (stopAt == k) {
-      res.stoppedAt = k;
-      return false;
+  // 時刻の順に並べた采配と、次に当てる番号
+  final pending = [...calls]..sort((x, y) => x.period != y.period ? x.period.compareTo(y.period) : y.clock.compareTo(x.clock));
+  var nextCall = 0;
+
+  /// 采配を1つ当てる。
+  void apply(LiveCall c) {
+    if (c.timeout && timeoutsUsed < liveTimeouts) {
+      timeoutsUsed++;
+      me.boost = 4;
+      me.boostLeft = 180;
     }
-    final call = k < calls.length ? calls[k] : null;
-    switch (call) {
+    // 交代(出られる選手だけの5人のときだけ)
+    final five = c.five;
+    if (five != null && five.length == 5 && five.toSet().length == 5 && five.every((i) => i >= 0 && i < me.order.length && me.mins[i] > 0)) {
+      me.courtOverride = [...five]..sort();
+    }
+    switch (c.call) {
       case null:
         break;
-      case GameCall.timeout:
-        if (timeoutsUsed < liveTimeouts) {
-          timeoutsUsed++;
-          me.boost = 4;
-          me.boostLeft = 180;
-        }
       case GameCall.outside:
         me.focus = 0;
       case GameCall.inside:
@@ -414,10 +445,24 @@ SimResult simulateGame(Team home, Team away, Rng r,
       case GameCall.plan:
         me.courtOverride = null;
     }
-    return true;
   }
 
-  var did4 = false;
+  /// いまの時刻で、止めるか(止めるなら true)。その前に、時刻の来た采配を当てる。
+  bool reach(int period, int clock) {
+    if (stopAt != null && (period > stopAt.$1 || (period == stopAt.$1 && clock <= stopAt.$2))) {
+      res.stop = (period, clock);
+      return true;
+    }
+    var any = false;
+    while (nextCall < pending.length) {
+      final c = pending[nextCall];
+      if (c.period > period || (c.period == period && c.clock < clock)) break;
+      apply(c);
+      nextCall++;
+      any = true;
+    }
+    return any;
+  }
 
   final teams = [h, a];
   var offense = r.nextInt(2); // ジャンプボール
@@ -435,7 +480,6 @@ SimResult simulateGame(Team home, Team away, Rng r,
     final len = period < 4 ? 720 : 300;
     // 各クォーターの最初の攻めは、交互に(2Qと3Qはジャンプボールで取らなかった側)
     if (period > 0 && period < 4) offense = (period == 1 || period == 2) ? 1 - firstBall : firstBall;
-    if (live && period > 0 && period < 4 && !atBreak(period - 1)) return res;
     var clock = len;
     final h0 = hScore, a0 = aScore;
     var nextMinute = len - 60;
@@ -452,10 +496,18 @@ SimResult simulateGame(Team home, Team away, Rng r,
 
     setCourt();
     while (clock > 0) {
-      if (live && period == 3 && clock <= 240 && !did4) {
-        did4 = true;
-        if (!atBreak(3)) return res;
-        setCourt();
+      if (live) {
+        final before = me.courtOverride;
+        final hit = reach(period, clock);
+        if (res.stop != null) {
+          // クォーターの途中で止めたら、そこまでの点も数えておく(画面の「1Q・2Q」の点)
+          if (clock < len) {
+            h.periods.add(hScore - h0);
+            a.periods.add(aScore - a0);
+          }
+          return res;
+        }
+        if (hit || !identical(before, me.courtOverride)) setCourt();
       }
       final o = teams[offense], d = teams[1 - offense];
       var used = (const [13, 10, 7][o.pace]) + r.nextInt(9);
