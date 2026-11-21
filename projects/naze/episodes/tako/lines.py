@@ -118,7 +118,7 @@ CH["ch1"] = [
     dict(id="1-3", text="正解は、ここです。", fx=[dict(k="spot", box=camo_spot(), on="ここ")]),
     dict(id="1-4", text="色だけでなく、模様まで岩に合わせています。", scene=V("camo1", 0.5)),
     dict(id="1-5", text="この生き物が宇宙から来た、と書いた論文があります。", scene=V("oct_eye", 1.0)),
-    dict(id="1-6", text="2018年。書いたのは、【33人】の科学者です。", say="にせんじゅうはちねん。かいたのは、さんじゅうさんにんの、かがくしゃです。",
+    dict(id="1-6", text="2018年。書いたのは、【33人】の科学者です。", say="にせんじゅうハチねん。かいたのは、さんじゅうさんにんの、かがくしゃです。",
          scene=dict(kind="card", title="Cause of Cambrian Explosion", sub="2018年", body="カンブリア爆発の原因は、地球か宇宙か。著者33人。",
                     src="Progress in Biophysics and Molecular Biology 136巻")),
     dict(id="1-7", text="学校の1クラスと、同じくらいの人数です。", scene=PH("classroom.jpg")),
@@ -189,7 +189,7 @@ CH["ch3"] = [
          scene=dict(kind="bars", items=[dict(name="使った酸素", value=83, unit="%")], max=100)),
     dict(id="3-17", text="余りが、ほとんどないのです。", fx=[dict(k="add", ratio=dict(text="残り17%", sub="余りがない"), on="余り")]),
     dict(id="3-18", text="タコを20分間、動かし続けた実験があります。", scene=V("oct_rock", 1.0)),
-    dict(id="3-19", text="酸素を使う量は、2.8倍に増えました。", say="さんそをつかうりょうは、にてんはちばいに、ふえました。",
+    dict(id="3-19", text="酸素を使う量は、2.8倍に増えました。", say="さんそをつかうりょうは、にてんハチばいに、ふえました。",
          scene=dict(kind="bars", items=[dict(name="休む", value=1.0, unit="倍")]), fx=[dict(k="add", item=dict(name="動く", value=2.8, unit="倍"), on="2.8")]),
     dict(id="3-20", text="それを支えたのは、心臓が送る血の量。", scene=dict(kind="custom", fn="hearts", credit="映像: JUN HO LEE / Pexels　図: 理の書"),
          fx=[dict(k="step", n=1, on="それを"), dict(k="step", n=2, on="それを"), dict(k="step", n=3, on="心臓")]),
@@ -302,7 +302,7 @@ MAPS = dict(ch5=dict(lat0=-2, bases=[((90, -15, 145, 10), 5)]), ch6=dict(lat0=45
 # ---- ショート(縦)--------------------------------------------------------------------------------------
 SH = {}
 SH["s1"] = [
-    dict(id="1", open="scene", text="2018年、33人の科学者が論文を出しました。", say="にせんじゅうはちねん、さんじゅうさんにんの、かがくしゃが、ろんぶんをだしました。",
+    dict(id="1", open="scene", text="2018年、33人の科学者が論文を出しました。", say="にせんじゅうハチねん、さんじゅうさんにんの、かがくしゃが、ろんぶんをだしました。",
          scene=dict(kind="card", title="Cause of Cambrian Explosion", sub="2018年・著者33人", body="カンブリア爆発の原因は、地球か宇宙か。", src="Progress in Biophysics and Molecular Biology")),
     dict(id="2", text="タコの卵は、凍ったまま【宇宙から】来たのかもしれない。", scene=PH("ai_comet1.jpg", "left")),
     dict(id="3", text="理由の1つは、遺伝子の数でした。", scene=V("dna", 0.0)),
