@@ -107,6 +107,18 @@ void main() {
     ));
     await tester.pump();
 
+    // はみ出しは場所(lib/ の行)を添えて出す。
+    final oldOnError = FlutterError.onError;
+    FlutterError.onError = (d) {
+      final at = RegExp(r'lib/[\w/]+\.dart:\d+')
+          .allMatches(d.toString())
+          .map((m) => m.group(0))
+          .toSet()
+          .join(', ');
+      // ignore: avoid_print
+      print('PROBLEM ${d.exceptionAsString().split('\n').first} [$at]');
+    };
+    addTearDown(() => FlutterError.onError = oldOnError);
     var n = 0;
     Future<void> shoot(String name) async {
       await tester.pump(const Duration(milliseconds: 400));
@@ -181,6 +193,36 @@ void main() {
         await tester.tap(f.first, warnIfMissed: false);
         await tester.pump(const Duration(milliseconds: 300));
         await shoot('$p-$l');
+        // 選手のスカッドは、表を下へ送ったところ・カード・選手の詳しい画面も撮る。
+        if (p == '選手' && l == 'スカッド') {
+          await tester.dragFrom(const Offset(940, 330), const Offset(0, -250));
+          await tester.pump(const Duration(milliseconds: 400));
+          await shoot('$p-$l-scroll');
+          await tester.dragFrom(const Offset(940, 200), const Offset(0, 3000));
+          await tester.pump(const Duration(milliseconds: 400));
+          final player = find.text(game.userTeam.players.first.name);
+          await tester.tap(find.byTooltip('カード').hitTestable().first);
+          await tester.pump(const Duration(milliseconds: 400));
+          await shoot('$p-$l-card');
+          await tester.tap(find.byTooltip('表').hitTestable().first);
+          await tester.pump(const Duration(milliseconds: 400));
+          if (player.hitTestable().evaluate().isNotEmpty) {
+            await tester.tap(player.hitTestable().first);
+            await tester.pump(const Duration(milliseconds: 600));
+            await shoot('$p-detail-open');
+            for (final t in ['概要', '能力', '契約', '人柄・経歴']) {
+              final tf = find.text(t).hitTestable();
+              if (tf.evaluate().isEmpty) continue;
+              await tester.tap(tf.first);
+              await tester.pump(const Duration(milliseconds: 400));
+              await shoot('$p-detail-$t');
+            }
+            await tester
+                .state<NavigatorState>(find.byType(Navigator).first)
+                .maybePop();
+            await tester.pump(const Duration(milliseconds: 600));
+          }
+        }
       }
     }
     tester.takeException();
