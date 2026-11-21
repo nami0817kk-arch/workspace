@@ -186,6 +186,7 @@ async function clearEvents() {
   rail('練習');
   // 練習は1枚（決定143）：7マス・チームの重点・疲れの高い子・見込みと「この週で行く」
   ok(['月', '火', '水', '木', '金', '土', '日'].every((x) => txt().includes(x)) && txt().includes('チームの重点') && txt().includes('この週の見込み') && !!btn('この週で行く'), '練習の1枚');
+  ok(!!d.querySelector('[data-int-legend]') && d.querySelector('[data-int-legend]').textContent.includes('強さ'), '練習の●の説明（2026-11-21 品質）');
   {
     const go = btn('この週で行く');
     ok(go.style.minHeight === '42px' && go.style.fontSize === '14px' && parseInt(go.style.marginLeft, 10) >= 12, '練習の「この週で行く」はホームと同じ大きさで、「選手ごとに細かく」と間がある');
@@ -291,6 +292,8 @@ async function clearEvents() {
     // 名前は詳しい画面の帯に出る（2026-11-18）
     const sp = A.w.players[A.pSel];
     ok(!!d.querySelector('#main .pname') && d.querySelector('#main .pname').textContent.includes(sp.name), '選手の帯に名前');
+    // A・Bの入れ替えは名前と同じ段（2026-11-21 品質）
+    { const nb = d.querySelector('#main .pname'), sb = btn('Bに回す') || btn('Aに上げる'); ok(!!sb && nb.parentNode === sb.parentNode && Math.abs(sb.getBoundingClientRect().top - nb.getBoundingClientRect().top) < 30, '選手の帯：Bに回すは名前の段'); }
   }
   btn('Bに回す') || btn('Aに上げる');
   rail('クラブ');
@@ -315,6 +318,8 @@ async function clearEvents() {
     if (k === '予算と施設') ok(txt().includes('今年の予算') && txt().includes('施設レベル'), '予算の画面');
     if (k === 'スタッフ') ok(txt().includes('技術コーチ') && txt().includes('スタッフ候補') && txt().includes('監督との関係') && txt().includes('得意は'), 'スタッフの画面（性格・得意・関係が出る）');
     if (k === 'スカウト') ok(txt().includes('来年の高1') && txt().includes('スカウトに出る'), 'スカウトの画面');
+    // 見出しと注記が横に並んで1文字ずつ縦に崩れない（2026-11-21 品質）
+    if (k === 'スカウト') { const tall = [...d.querySelectorAll('#main .sub, #main b')].filter((e) => /^(見えている度合い|ポジション別の人数)/.test(e.textContent) && e.getBoundingClientRect().height > 30); ok(!tall.length, 'スカウトの見出しが縦に崩れない ' + tall.map((e) => e.textContent.slice(0, 10)).join('/')); }
     if (k === '順位と日程') ok(txt().includes('プレミアリーグ') || txt().includes('プリンスリーグ') || txt().includes('県リーグ'), '順位表');
     if (k === '順位と日程') ok(/今年の日程（いま\d+月第\d+週）/.test(txt()) && txt().includes('セレクション') && txt().includes('卒業式') && [...d.querySelectorAll('#main .chip')].some((c) => c.textContent === '今'), '今年の日程は表で、今週の行に印（2026-11-16）');
     if (k === 'スタッフ') ok(/（いま .+・能力\d+）/.test(txt()) && /[+-]?\d+・給料[+−]/.test(txt()), 'スタッフ候補は役ごとに、いまのスタッフとの差を1行で（2026-11-18）');
@@ -526,6 +531,9 @@ async function clearEvents() {
   btn('結果まで進める').click();
   ok(w.YA._ui.store.get('ask.skipmatch', true) === false, '「次回から聞かない」を選ぶと覚える');
   ok(txt().includes('見どころ') && txt().includes('気づき') && txt().includes('採点'), '試合後の画面');
+  // 気づき：効いた特性は子ごとに1行（同じ子が2行に出ない）。不満などの指摘が先（2026-11-21 品質）
+  { const ip = [...d.querySelectorAll('[data-insight-player] b')].map((e) => e.textContent); ok(new Set(ip).size === ip.length && !/回効いた/.test(txt()), '気づきは子ごとに1行 ' + ip.join('/'));
+    const all = [...d.querySelectorAll('.insight')], fb = all.findIndex((e) => e.classList.contains('bad')), fp = all.findIndex((e) => e.hasAttribute('data-insight-player')); ok(fb < 0 || fp < 0 || fb < fp, '気づき：大事な指摘が上'); }
   ok(A.w.phase === 'after' && A.w.rec.w + A.w.rec.d + A.w.rec.l === 1, '試合の結果が名簿の世界に入る');
   btn('ホームへ（次の週へ）').click();
   ok(txt().includes('次の週へ') && txt().includes('試合が終わりました'), '試合後のホーム');

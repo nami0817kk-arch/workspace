@@ -294,7 +294,7 @@
     const wrap = h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' });
     const body = h('div', { style: 'flex:1;min-height:0;display:flex;gap:10px' });
     // 左：月〜日の7マス。押すとメニューと強さを選ぶ
-    const left = h('div', { style: 'width:330px;flex:none;display:flex;flex-direction:column;gap:4px;min-height:0;overflow-y:auto' }, h('div', { class: 'row' }, h('div', { class: 'h grow' }, '今週の練習'), sameAsLast(w), h('button', { class: 'btn sm', onclick: () => { YA.autoPlan(w); YA.saveWorld(); rerender(); } }, 'おまかせ')));
+    const left = h('div', { style: 'width:330px;flex:none;display:flex;flex-direction:column;gap:4px;min-height:0;overflow-y:auto' }, h('div', { class: 'row' }, h('div', { class: 'h grow' }, '今週の練習', h('span', { class: 'sub', 'data-int-legend': '', style: 'font-weight:600;margin-left:6px;font-size:11px' }, '●の数＝強さ')), sameAsLast(w), h('button', { class: 'btn sm', onclick: () => { YA.autoPlan(w); YA.saveWorld(); rerender(); } }, 'おまかせ')));
     const LOAD = { light: 1, normal: 2, hard: 3 };
     w.plan.days.forEach((d, i) => {
       const m = YA.MENUS[d.menu];
@@ -433,7 +433,7 @@
     if (!p.star && !p.aw) return h('div', {});
     const lv = YA.trustLv(p);
     const box = h('div', { class: 'card', style: 'padding:6px 9px;margin:2px 0 6px;background:#fffaf0;border-color:#f0cf55' },
-      h('div', { class: 'row', style: 'gap:8px;flex-wrap:wrap' }, h('b', {}, '覚醒の鍵'), h('span', { class: 'chip gray' }, `信頼 ${'●'.repeat(lv)}${'○'.repeat(5 - lv)} ${YA.TRUST_NAME[lv]}`), p.aw ? h('span', { class: 'chip trait', title: (p.aw.as || []).join('・') }, `${p.aw.form}・特性「${p.aw.trait}」`) : null, p.aw && (p.aw.as || []).length ? h('small', { class: 'sub', style: 'flex-basis:100%' }, `覚醒の特性「${p.aw.trait}」：${p.aw.as.join('・')}`) : null));
+      h('div', { class: 'row', style: 'gap:8px;flex-wrap:wrap' }, h('b', {}, '覚醒の鍵'), h('span', { class: 'chip gray' }, `信頼 ${'●'.repeat(lv)}${'○'.repeat(5 - lv)} ${YA.TRUST_NAME[lv]}`), p.aw ? h('span', { class: 'chip trait', title: (p.aw.as || []).join('・') }, `${p.aw.form}・特性「${p.aw.trait}」`) : null, p.aw && (p.aw.as || []).length ? h('small', { class: 'sub', style: 'flex-basis:100%;font-size:11px' }, `覚醒の特性「${p.aw.trait}」：${p.aw.as.join('・')}`) : null));
     const ks = p.star ? YA.keysOf(w, p) : [];
     if (ks.length) box.append(...ks.map((k) => h('div', { style: 'font-size:12px;' + (k.done ? 'color:#1e6b37;font-weight:700' : '') }, `［${k.sys}］ ` + YA.keyText(w, p, k))));
     else if (p.aw) box.append(h('div', { class: 'sub', style: 'font-size:12px' }, 'いまは次の鍵の気配はない'));
@@ -484,14 +484,15 @@
       posc(sel), h('b', { class: 'pname', style: 'font-size:15px;color:var(--navy);white-space:nowrap' }, `${sel.num} ${sel.name}`),
       h('span', { class: 'chip gray' }, `${gradeName(sel.grade)} / ${sel.team}チーム`), sel.fat >= 50 ? h('span', { class: 'fit bad' }, `疲れ ${Math.round(sel.fat)}`) : null,
       h('button', { class: 'btn sm', 'aria-label': 'ほかの操作', style: 'min-width:38px;padding:4px 8px', onclick: () => playerMenu(w, sel) }, '…'),
+      // A・Bの入れ替えは名前の段へ（2026-11-21 品質：帯が3段になり本文が狭かった）
+      h('button', { class: 'btn sm', onclick: () => swapTeam(sel) }, sel.team === 'A' ? 'Bに回す' : 'Aに上げる'),
       // 見出しを2行に収める（2026-11-16 3行あった）。将来の幅の水準名は押したときの説明へ
       // 水準名の説明は押すと下に出す（title の長押しは iPhone で見えない）。「将来」の字は11px（2026-11-17 点検）
       // 帯では数字を出さない（2026-11-19「能力値とかはいらない」）。将来の幅の数字は押したときの説明に残す
       (YA.ent && YA.ent.eye && YA.futurePoint) ? h('span', { class: 'chip trait', tip: '見抜く目：' + YA.futureRange(w, sel).text }, '将来 ' + YA.futurePoint(sel)) : h('span', { class: 'chip trait', tip: '伸びしろ：' + YA.futureRange(w, sel).text }, '伸びしろ ', YA.starsEl([YA.coachStars(w, sel), YA.coachStars(w, sel)])),...flags(sel).filter((e) => e && e.textContent !== '★注目'), // ★は右の印で出すので二重にしない
       YA.starOpen(w, sel)
         ? h('button', { class: 'btn sm', onclick: () => { const r = YA.setStar(w, sel, !sel.star); ui.starMsg = r.msg; YA.saveWorld(); rerender(); } }, sel.star ? '★ を外す' : `★ 注目の印（高${sel.grade} ${YA.starsIn(w, sel.grade).length}/${YA.STAR_MAX}）`)
-        : (sel.star ? h('span', { class: 'chip trait', title: '入団のときに決めた★です' }, '★ 入団時に決めた子') : h('button', { class: 'btn sm', disabled: true, why: YA.STAR_CLOSED, onclick: () => { ui.starMsg = YA.STAR_CLOSED; rerender(); } }, '★ は入団時に決める')), sel.star || sel.awake ? null : h('small', { class: 'sub', style: 'align-self:center' }, '覚醒するのは★の子だけ'),
-      h('button', { class: 'btn sm', onclick: () => swapTeam(sel) }, sel.team === 'A' ? 'Bに回す' : 'Aに上げる')));
+        : (sel.star ? h('span', { class: 'chip trait', title: '入団のときに決めた★です' }, '★ 入団時に決めた子') : h('button', { class: 'btn sm', disabled: true, why: YA.STAR_CLOSED, onclick: () => { ui.starMsg = YA.STAR_CLOSED; rerender(); } }, '★ は入団時に決める')), sel.star || sel.awake ? null : h('small', { class: 'sub', style: 'align-self:center' }, '覚醒するのは★の子だけ')));
     // 面談
     // 進路（決定142）：希望・トップへの近さ・選んだ道、そのあとに面談
     const talk = h('div', { style: 'margin-top:4px' });

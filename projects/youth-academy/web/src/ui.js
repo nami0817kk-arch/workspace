@@ -1371,10 +1371,13 @@
         if (sc.goal && sc.side === 'home') cnt[k].g++;
       }
     }
-    const ins = Object.values(cnt).sort((a, b) => b.g - a.g || b.n - a.n).slice(0, 5);
-    if (!ins.length) right.append(h('div', { class: 'note' }, 'この試合は、特性や性格が目立つ場面がありませんでした。'));
-    for (const c of ins) right.append(h('div', { class: 'insight' }, h('span', { class: 'chip ' + c.f.kind }, c.f.kind === 'trait' ? '特性' : c.f.kind === 'gold' ? '金特性' : c.f.kind === 'awake' ? '覚醒' : c.f.kind === 'pers' ? '性格' : c.f.kind === 'habit' ? '癖' : c.f.kind === 'combo' ? '組み合わせ' : '指示'), ` ${c.f.num}番 ${surname({ name: c.f.name })}の「${c.f.tag}」が${c.n}回効いた` + (c.g ? `（うち得点${c.g}）` : '')));
+    // 不満など大事な指摘を先に出し、効いた特性は子ごとに1行へまとめる（2026-11-21 品質：同じ子の行が並んで指摘が埋もれた）
     for (const n of summary.notes) right.append(h('div', { class: 'insight bad' }, n.text));
+    const byP = {};
+    for (const c of Object.values(cnt)) { const b = byP[c.f.pid] = byP[c.f.pid] || { f: c.f, list: [], n: 0, g: 0 }; b.list.push(c); b.n += c.n; b.g += c.g; }
+    const ins = Object.values(byP).sort((a, b) => b.g - a.g || b.n - a.n).slice(0, 5);
+    if (!ins.length) right.append(h('div', { class: 'note' }, 'この試合は、特性や性格が目立つ場面がありませんでした。'));
+    for (const b of ins) { b.list.sort((x, y) => y.g - x.g || y.n - x.n); right.append(h('div', { class: 'insight', 'data-insight-player': '' }, h('b', {}, `${b.f.num}番 ${surname({ name: b.f.name })}`), '：' + b.list.slice(0, 3).map((c) => `「${c.f.tag}」${c.n}回`).join('・') + (b.list.length > 3 ? ` ほか${b.list.length - 3}つ` : '') + 'が効いた' + (b.g ? `（得点に${b.g}回）` : ''))); }
     const sh = m.stats.home;
     const sa = m.stats.away;
     function cardLine() {

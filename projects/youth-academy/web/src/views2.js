@@ -242,7 +242,7 @@
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:5px;margin-top:3px' }, h('span', { class: 'chip trait' }, v.exact ? `総合力 ${YA.rate(v.ovr[0])}` : `総合力 ${YA.rate(v.ovr[0])}〜${YA.rate(v.ovr[1])}`), v.future != null ? h('span', { class: 'chip trait' }, `将来 ${v.future}`) : h('span', { class: 'chip gray' }, '伸びしろ ', YA.starsEl(v.stars)), h('span', { class: 'chip gray' }, `${v.height}cm`), v.traits ? (v.traits.length ? v.traits.map((t) => h('span', { class: 'chip trait' }, t)) : h('span', { class: 'sub' }, '特性なし')) : h('span', { class: 'sub' }, '特性：?'), v.pers ? Object.values(v.pers).filter((x) => x !== 'ふつう').slice(0, 4).map((x) => h('span', { class: 'chip pers' }, x)) : h('span', { class: 'sub' }, '性格：?')),
       v.hunch ? h('div', { class: 'note', style: 'margin-top:3px;color:#8a5a00;font-weight:800' }, 'スカウトの見立て：' + v.hunch.text + '（外れることもあります）') : null,
       (YA.boostButton && w.scouting && c.kind === 'scout') ? YA.boostButton(w, c, rerender) : null,
-      h('div', { class: 'row', style: 'margin-top:4px' }, h('span', { class: 'sub grow' }, '見えている度合い：' + '●'.repeat(c.seen) + '○'.repeat(3 - c.seen) + '（' + (v.rangeWord || '') + '）'), c.rival && (c.status === 'open' || c.status === 'offered') && !c.rivalBeat ? h('button', { class: 'btn sm', onclick: () => { const r = YA.rivalFight(w, c.id); if (r.ok) { save(); rerender(); } } }, '先に会う（' + YA.yen(15) + '）') : null, c.rivalBeat && c.status !== 'signed' ? h('span', { class: 'chip trait' }, '先に会った') : null, actions));
+      h('div', { class: 'row', style: 'margin-top:4px;flex-wrap:wrap;row-gap:4px' }, h('span', { class: 'sub grow', style: 'min-width:150px' }, '見えている度合い：' + '●'.repeat(c.seen) + '○'.repeat(3 - c.seen) + '（' + (v.rangeWord || '') + '）'), c.rival && (c.status === 'open' || c.status === 'offered') && !c.rivalBeat ? h('button', { class: 'btn sm', onclick: () => { const r = YA.rivalFight(w, c.id); if (r.ok) { save(); rerender(); } } }, '先に会う（' + YA.yen(15) + '）') : null, c.rivalBeat && c.status !== 'signed' ? h('span', { class: 'chip trait' }, '先に会った') : null, actions));
   }
   // 入団の暦：内部昇格は11月、スカウトは4〜11月に月3回まで（返事は12月）、セレクションは1月に決まる
   const SEASON = [
@@ -265,7 +265,7 @@
   function posCountGrid(w) {
     const rows = YA.posCounts(w);
     return h('div', { class: 'card', style: 'padding:5px 7px;margin-bottom:6px' },
-      h('div', { class: 'row' }, h('b', { class: 'grow' }, 'ポジション別の人数（登録）'), h('span', { class: 'sub' }, '上：今の人数　下：来年（高3の卒業と、決まった新入生を差し引き）')),
+      h('div', {}, h('b', {}, 'ポジション別の人数（登録）'), h('div', { class: 'sub' }, '上：今の人数　下：来年（高3の卒業と、決まった新入生を差し引き）')),
       h('div', { style: 'display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-top:4px' }, rows.map((r) => {
         // 足りない位置は色だけでなく「不足」の札も（2026-11-17 点検）。来年の人数は11px
         const short = r.next <= 0 && ['GK', 'CB', 'LB', 'RB', 'DM', 'CM', 'ST'].indexOf(r.pos) >= 0;
