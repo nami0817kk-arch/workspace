@@ -19,6 +19,7 @@ import 'skills.dart';
 import 'summer.dart';
 import 'rng.dart';
 import 'scenario.dart';
+import 'situation.dart';
 import 'trade.dart';
 
 /// 自動で遊ぶGM・点検が1回に進める年数。ゲームの任期に上限は無い(解任か、自分で終えるまで続く)。
@@ -2897,6 +2898,14 @@ class Career {
     block++;
     _updateMorale();
     _aiPolicies();
+    // 区切りごとに、どこかのチームの事情のうわさが1つ届く(T-2)
+    if (block < blocksPerSeason) {
+      final r = makeRumor(this);
+      if (r != null) {
+        rumors = [r, ...rumors].take(12).toList();
+        _mail(Sender.staff, 'うわさ: ${teams[r.team].def.short}', '${r.text}。(${r.situation.text})');
+      }
+    }
     for (final p in [...me.roster, ...me.twoWay]) {
       blocksWithMe[p.id] = math.min(99, (blocksWithMe[p.id] ?? 0) + 1);
     }
@@ -4841,7 +4850,7 @@ class Career {
     final bp = _tradeBudgetProblem(o);
     if (bp != null) return TradeVerdict(false, bp, 0);
     return judgeTrade(teams, picks, mine, o, season,
-        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner), needs: true, seen: _eyeFn(o.partner));
+        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner), needs: true, seen: _eyeFn(o.partner), cheap: _cheapOf(o.partner));
   }
 
   /// 入れ替え権を出し入れできる最初の年(今年のドラフトの順が決まったあとは、次の年から)。
@@ -5216,6 +5225,15 @@ class Career {
     };
   }
 
+  /// 届いたうわさ(新しい順に12まで。T-2)。
+  List<Rumor> rumors = [];
+
+  /// [team] について届いているうわさ(今季のもの)。
+  List<Rumor> rumorsOf(int team) => [for (final r in rumors) if (r.team == team && r.season == season) r];
+
+  /// [team] がもめていて安く出したい選手(T-2)。
+  Set<int> _cheapOf(int team) => {if (feudOf(teams[team]) case final p?) p.id};
+
   /// [team] の GM が [p] を見るずれ(画面とテスト用)。
   int eyeShift(int team, Player p) => _eyeFn(team)(p);
 
@@ -5384,6 +5402,7 @@ class Career {
         if (traitSeen.isNotEmpty) 'ts': [...traitSeen],
         if (comboSecs.any((x) => x > 0)) 'cb': comboSecs,
         if (policyGames > 0) 'pgm': policyGames,
+        if (rumors.isNotEmpty) 'rmr': [for (final r in rumors) r.toJson()],
         if (matchupSeen.any((x) => x > 0)) 'mtu': matchupSeen,
         if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
@@ -5540,6 +5559,10 @@ class Career {
       ..traitSeen = {for (final x in (j['ts'] as List? ?? const [])) x as int}
       ..comboSecs = [for (var i = 0; i < Combo.values.length; i++) (j['cb'] is List && (j['cb'] as List).length > i) ? ((j['cb'] as List)[i] as int) : 0]
       ..policyGames = (j['pgm'] as int?) ?? 0
+      ..rumors = [
+        for (final x in (j['rmr'] as List? ?? const []))
+          if (Rumor.fromJson(x) case final r?) r,
+      ]
       ..matchupSeen = [for (var i = 0; i < Matchup.values.length; i++) (j['mtu'] is List && (j['mtu'] as List).length > i) ? ((j['mtu'] as List)[i] as int) : 0]
       ..seenGames = {
         for (final x in (j['sg'] as List? ?? const []))

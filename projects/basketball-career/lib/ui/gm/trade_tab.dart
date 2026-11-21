@@ -239,6 +239,13 @@ class _TradeTabState extends State<TradeTab> {
                         ),
                       ],
                     ),
+                    // 相手の事情(届いたうわさ。T-2)
+                    if (car.rumorsOf(_partner).isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Text('うわさ: ${car.rumorsOf(_partner).map((r) => r.text).join('・')}',
+                            maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: GmColors.gold)),
+                      ),
                     _blockLine(context, car),
                     if (_give.length == 1) _suitorLine(context, car, suitors),
                     const SizedBox(height: 4),
