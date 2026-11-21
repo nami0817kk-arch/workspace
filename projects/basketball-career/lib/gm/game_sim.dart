@@ -177,6 +177,57 @@ const _blkPos = {Pos.pg: 0.25, Pos.sg: 0.35, Pos.sf: 0.7, Pos.pf: 1.3, Pos.c: 1.
 /// 強さの差1あたり、シュートが入る見込みがどれだけ動くか(勝つ見込みの式 [winChance] とほぼ合うように測った値)。
 const edgePerStrength = 0.0028;
 
+/// 1回の攻めの中の1つの出来事(見せる用)。番号は、そのチームの order の番号。
+enum PlayStepKind {
+  /// シュート(入った・外れた・ファウルをもらった)
+  shot,
+
+  /// 攻める側がリバウンドを取って、もう一度攻める
+  offRebound,
+
+  /// 守る側がリバウンドを取って、攻めが終わる
+  defRebound,
+
+  /// ボールを失った(スティールされたときは [PlayStep.steal] に守る側の番号)
+  turnover,
+}
+
+class PlayStep {
+  const PlayStep(this.kind, this.who, {this.three = false, this.made = false, this.fouled = false, this.ftMade = 0, this.ftTry = 0, this.assist = -1, this.block = -1, this.steal = -1});
+  final PlayStepKind kind;
+
+  /// 打った人・リバウンドを取った人・ボールを失った人(守る側のリバウンドなら守る側の番号)。
+  final int who;
+  final bool three, made, fouled;
+
+  /// フリースローの入った数と打った数。
+  final int ftMade, ftTry;
+
+  /// アシストした人(-1 は無し)。ブロックした守る側の人。スティールした守る側の人。
+  final int assist, block, steal;
+}
+
+/// 1回の攻め(見せる用。自分の試合で記録するときだけ作る。乱数は使わないので、結果は変わらない)。
+class PlayEvent {
+  PlayEvent({required this.period, required this.clockStart, required this.clockEnd, required this.side, required this.offCourt, required this.defCourt});
+
+  /// クォーター(0〜3、4から延長)と、攻めの始めと終わりの残り時間(秒)。
+  final int period, clockStart, clockEnd;
+
+  /// 攻めたチーム(0 ホーム・1 アウェー)。
+  final int side;
+
+  /// 攻める5人と守る5人(order の番号)。
+  final List<int> offCourt, defCourt;
+  final steps = <PlayStep>[];
+
+  /// 攻めのあとの点(ホーム・アウェー)。
+  int homePts = 0, awayPts = 0;
+
+  /// この攻めで入った点。
+  int get points => steps.fold(0, (s, x) => s + (x.kind == PlayStepKind.shot ? (x.made ? (x.three ? 3 : 2) : 0) + x.ftMade : 0));
+}
+
 /// 試合の中身(見せる用)。
 class SimResult {
   SimResult(this.home, this.away);
@@ -187,6 +238,9 @@ class SimResult {
 
   /// 見せ場(自分の試合だけ使う)。「4Q 0:42 名前の3ポイント 101-99」の形。
   final plays = <String>[];
+
+  /// 攻めごとの出来事(自分の試合だけ。コートで選手を動かして見せる)。
+  final events = <PlayEvent>[];
 
   /// リードが入れ替わった回数。
   int leadChanges = 0;
@@ -405,7 +459,8 @@ SimResult simulateGame(Team home, Team away, Rng r,
       }
       final before = o.pts;
       o.crunch = period >= 4 || (period == 3 && clock <= 300 && (hScore - aScore).abs() <= 8);
-      _possession(o, d, r, record ? (text) => addPlay(period, clock, text) : null);
+      final ev = record ? PlayEvent(period: period, clockStart: clock + used, clockEnd: clock, side: offense, offCourt: List.of(o.court), defCourt: List.of(d.court)) : null;
+      _possession(o, d, r, record ? (text) => addPlay(period, clock, text) : null, ev);
       final got = o.pts - before;
       if (got > 0) {
         for (final i in o.court) {
@@ -431,6 +486,12 @@ SimResult simulateGame(Team home, Team away, Rng r,
         if (nowLead != 0) lead = nowLead;
         res.homeMaxLead = math.max(res.homeMaxLead, hScore - aScore);
         res.awayMaxLead = math.max(res.awayMaxLead, aScore - hScore);
+      }
+      if (ev != null) {
+        ev
+          ..homePts = hScore
+          ..awayPts = aScore;
+        res.events.add(ev);
       }
       offense = 1 - offense;
       // 1分ごとに5人を入れ替え、点差を残す
@@ -463,7 +524,7 @@ void _trimPlays(SimResult res) {
 }
 
 /// 1回の攻め。点は o.pts に足す。オフェンスリバウンドを取れば続ける。[play] は見せ場を残すとき(自分の試合)だけ。
-void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
+void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play, [PlayEvent? ev]) {
   final oc = o.court, dc = d.court;
   if (oc.isEmpty || dc.isEmpty) return;
   // チームの強さの差と、いまコートにいる5人がチームの平均よりどれだけ強いか
@@ -480,9 +541,12 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
     if (r.nextInt(10000) < (toP * 10000).round()) {
       final who = _pick(r, oc, o.wTov);
       o.stat[who][_tov]++;
+      var stealer = -1;
       if (r.nextInt(100) < 55) {
-        d.stat[_pick(r, dc, d.wStl)][_stl]++;
+        stealer = _pick(r, dc, d.wStl);
+        d.stat[stealer][_stl]++;
       }
+      ev?.steps.add(PlayStep(PlayStepKind.turnover, who, steal: stealer));
       return;
     }
     // 打つ人(点を取る力の高い人ほど多く打つ。エース任せなら偏り、パス回しなら散る)
@@ -526,8 +590,10 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
     }
 
     final made = r.nextInt(1000) < ((fouled ? make * 0.45 : make) * 1000).round();
+    final ft0 = st[_ftm];
     if (fouled && !made) {
       freeThrows(three ? 3 : 2);
+      ev?.steps.add(PlayStep(PlayStepKind.shot, shooter, three: three, fouled: true, ftMade: st[_ftm] - ft0, ftTry: three ? 3 : 2));
       return;
     }
     st[_fga]++;
@@ -546,6 +612,7 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
         o.stat[by][_ast]++;
       }
       if (fouled) freeThrows(1);
+      ev?.steps.add(PlayStep(PlayStepKind.shot, shooter, three: three, made: true, fouled: fouled, ftMade: st[_ftm] - ft0, ftTry: fouled ? 1 : 0, assist: by));
       if (play != null) {
         final kind = three ? '3ポイント' : (fouled ? 'バスケットカウント' : 'シュート');
         play('${p.name}の$kind${by < 0 ? '' : '(アシスト ${o.order[by].name})'}');
@@ -553,18 +620,24 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play) {
       return;
     }
     // 外れた: ブロック
+    var blocker = -1;
     if (!three && r.nextInt(100) < 17) {
-      d.stat[_pick(r, dc, d.wBlk)][_blk]++;
+      blocker = _pick(r, dc, d.wBlk);
+      d.stat[blocker][_blk]++;
     }
+    ev?.steps.add(PlayStep(PlayStepKind.shot, shooter, three: three, block: blocker));
     // リバウンド
     final orebP = (0.24 + (o.cReb - d.cReb) / 250 + (press == 0 ? -0.02 : 0)).clamp(0.12, 0.36);
     if (r.nextInt(1000) < (orebP * 1000).round()) {
       final ri = _pick(r, oc, o.wOreb);
       o.stat[ri][_reb]++;
       o.stat[ri][_oreb]++;
+      ev?.steps.add(PlayStep(PlayStepKind.offRebound, ri));
       continue; // もう一度攻める
     }
-    d.stat[_pick(r, dc, d.wReb)][_reb]++;
+    final dr = _pick(r, dc, d.wReb);
+    d.stat[dr][_reb]++;
+    ev?.steps.add(PlayStep(PlayStepKind.defRebound, dr));
     return;
   }
 }
