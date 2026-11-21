@@ -774,9 +774,10 @@ void main() {
         while (c.me.payroll > salaryCap - 300 && c.me.roster.isNotEmpty) {
           c.release(c.me.roster.reduce((a, b) => a.salary >= b.salary ? a : b).id);
         }
-        if (c.freeAgents.any((p) => c.isBigFa(p) && c.bidProblem(p) == null) || seed > 20) break;
+        // 1.1倍でも申し込める大物がいる局面(上限で1.1倍が通らないと、0.9倍のまま比べることになる)
+        if (c.freeAgents.any((p) => c.isBigFa(p) && c.bidProblem(p, factor: 1.1) == null) || seed > 40) break;
       }
-      final p = bigOne(c);
+      final p = bigOne(c, 1.1);
       c.bids.putIfAbsent(p.id, () => []).add(FaBid((c.mine + 1) % 30, c.askOf(p, c.teams[(c.mine + 1) % 30]).salary, 2));
       c.bid(p.id, 2, 0.9);
       final low = c.winChanceOf(p);
