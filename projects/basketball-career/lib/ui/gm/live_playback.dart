@@ -25,8 +25,16 @@ Offset basketOf(int side) => side == 0 ? const Offset(1.6, courtWid / 2) : const
 /// 左のゴールを攻めるときの位置 [p] を、[side] の向きに直す。
 Offset _toSide(int side, Offset p) => side == 0 ? p : Offset(courtLen - p.dx, p.dy);
 
-/// 攻めの5つの持ち場(左のゴールを攻めるとき)。上から、トップ・右のウイング・左のウイング・ひじ・ゴール下。
-const _slots = [Offset(8.8, 7.5), Offset(6.6, 2.4), Offset(6.6, 12.6), Offset(4.6, 10.2), Offset(2.5, 5.6)];
+/// 攻めの5つの持ち場(左のゴールを攻めるとき)。ポジションの順に、トップ・右のウイング・左のウイング・ひじ・ゴール下。
+/// 攻めの重点で変わる: 外のシュートなら角(コーナー)まで広がり、中の得点なら大きい2人がゴール下に構える。
+const _slotsByFocus = [
+  // 外のシュート: トップ・両ウイングを広く、パワーフォワードは角、センターは高い位置(ゴール下を空ける)
+  [Offset(9.4, 7.5), Offset(7.4, 1.8), Offset(7.4, 13.2), Offset(1.2, 14.0), Offset(5.9, 3.6)],
+  // バランス
+  [Offset(8.8, 7.5), Offset(6.6, 2.4), Offset(6.6, 12.6), Offset(4.6, 10.2), Offset(2.5, 5.6)],
+  // 中の得点: 外の3人は近く、大きい2人はゴール下の両側
+  [Offset(8.0, 7.5), Offset(5.8, 3.0), Offset(5.8, 12.0), Offset(2.4, 9.6), Offset(2.4, 5.4)],
+];
 
 /// 見せ方の乱数(攻めの番号と、何回目に引くかから決める)。0〜1。
 double _hash(int a, int b) {
@@ -122,13 +130,17 @@ class PossessionScript {
   }
 }
 
-/// 攻めごとの動きを作る。[names] と [poss] は (チーム, 番号) の名前とポジション、[share] はチームのボールの回し方(0 エース任せ〜2 パス回し)。
+/// 攻めごとの動きを作る。[names] と [poss] は (チーム, 番号) の名前とポジション。
+/// 動きは、その攻めのときの方針([PlayEvent.pace] など。試合中の采配も入る)で変わる(2026-11-22、ユーザー「動きは戦術とかで変わる？」)。
+/// - 展開の速さ: 速攻はボールを速く運び、スティールやリバウンドからそのまま打つことが多い。じっくりは長く回す
+/// - 攻めの重点: 外なら角まで広がり、中なら大きい2人がゴール下に構えてボールを入れる
+/// - ボールの回し方: パスの本数(エース任せは少なく、パス回しは多く)
+/// - 守り方: 前から当たるなら自陣の外から2人でボールを挟みに行き、中を固めるならゴール下に寄る
 class PlaybackBuilder {
-  PlaybackBuilder({required this.events, required this.names, required this.poss, required this.share});
+  PlaybackBuilder({required this.events, required this.names, required this.poss});
   final List<PlayEvent> events;
   final String Function(Who) names;
   final Pos Function(Who) poss;
-  final int Function(int side) share;
 
   /// [i] 番目の攻めの動き。[start] は前の攻めの終わりの位置(はじめは null)。
   PossessionScript build(int i, Map<Who, Offset>? start) {
@@ -145,14 +157,27 @@ class PlaybackBuilder {
         final c = poss((off, a)).index.compareTo(poss((off, b)).index);
         return c != 0 ? c : a.compareTo(b);
       });
-    final spot = <int, Offset>{for (var k = 0; k < five.length && k < 5; k++) five[k]: _toSide(off, _slots[k])};
+    final slots = _slotsByFocus[e.focus.clamp(0, 2)];
+    final spot = <int, Offset>{for (var k = 0; k < five.length && k < 5; k++) five[k]: _toSide(off, slots[k])};
     // 守る5人は、同じ順の相手につく
     final dfive = [...e.defCourt]..sort((a, b) {
         final c = poss((def, a)).index.compareTo(poss((def, b)).index);
         return c != 0 ? c : a.compareTo(b);
       });
     final markOf = <int, int>{for (var k = 0; k < dfive.length && k < five.length; k++) dfive[k]: five[k]};
-    Offset guardSpot(Offset man) => man + (basket - man) * 0.3;
+    // 守る位置: ふつうは相手とゴールの間(相手寄り)。中を固めるとゴールへ下がる(外の相手からは離れる)。前から当たると相手に張りつく
+    Offset guardSpot(Offset man) {
+      switch (e.press) {
+        case 0:
+          final p = man + (basket - man) * 0.55;
+          final d = p - basket;
+          return d.distance > 4.6 ? basket + d / d.distance * 4.6 : p;
+        case 2:
+          return man + (basket - man) * 0.16;
+        default:
+          return man + (basket - man) * 0.3;
+      }
+    }
 
     final now = <Who, Offset>{};
     for (final x in five) {
@@ -191,14 +216,41 @@ class PlaybackBuilder {
       if (last.kind == PlayStepKind.defRebound && e.offCourt.contains(last.who)) holder = (off, last.who);
       if (last.kind == PlayStepKind.turnover && last.steal >= 0 && e.offCourt.contains(last.steal)) holder = (off, last.steal);
     }
-    final fastBreak = prev != null && prev.steps.isNotEmpty && prev.steps.last.kind == PlayStepKind.turnover && prev.steps.last.steal >= 0;
-    final up = start == null ? 500 : (fastBreak ? 650 : 950);
-    segs.add(_Seg(t, t + up, begin, target, carrier: holder, fade: leaving));
-    t += up;
+    // 速攻: スティールのあとは必ず。速く攻める方針なら、守りのリバウンドのあとも半分くらい
+    final stole = prev != null && prev.steps.isNotEmpty && prev.steps.last.kind == PlayStepKind.turnover && prev.steps.last.steal >= 0;
+    final rebound = prev != null && prev.steps.isNotEmpty && prev.steps.last.kind == PlayStepKind.defRebound;
+    final fastBreak = stole || (e.pace == 2 && rebound && rnd() < 0.5);
+    final up = start == null ? 500 : (fastBreak ? 600 : const [1300, 950, 750][e.pace.clamp(0, 2)]);
+    if (e.press == 2 && start != null && !fastBreak) {
+      // 前から当たる: 半分まで運んだところで、守り2人がボールを挟む(ほかの守りも相手に張りつく)
+      final mid = <Who, Offset>{for (final k in target.keys) k: Offset.lerp(begin[k] ?? target[k]!, target[k]!, 0.45)!};
+      final carry = mid[holder]!;
+      for (final d in dfive) {
+        final m = markOf[d];
+        if (m == null) continue;
+        mid[(def, d)] = mid[(off, m)]! + (basket - mid[(off, m)]!) / math.max(1, (basket - mid[(off, m)]!).distance) * 0.9;
+      }
+      // ボールを持つ人に、もう1人の守り(いちばん近い人)が寄る
+      final helpers = [
+        for (final d in dfive)
+          if (markOf[d] != holder.$2) d,
+      ]..sort((a, b) => (mid[(def, a)]! - carry).distance.compareTo((mid[(def, b)]! - carry).distance));
+      if (helpers.isNotEmpty) mid[(def, helpers.first)] = carry + const Offset(0, 1.0);
+      final first = (up * 0.55).round();
+      segs.add(_Seg(t, t + first, begin, mid, carrier: holder, fade: leaving));
+      t += first;
+      segs.add(_Seg(t, t + up - first + 150, mid, target, carrier: holder, fade: leaving));
+      t += up - first + 150;
+    } else {
+      segs.add(_Seg(t, t + up, begin, target, carrier: holder, fade: leaving));
+      t += up;
+    }
 
     // --- 2. 出来事を順に
-    final sh = share(off);
-    var passesLeft = [(0, 2), (1, 3), (2, 5)][sh.clamp(0, 2)];
+    final base = [(0, 2), (1, 3), (2, 5)][e.share.clamp(0, 2)];
+    // じっくりは1本多く、速攻は1本少なく回す
+    final extra = const [1, 0, -1][e.pace.clamp(0, 2)];
+    var passesLeft = (math.max(0, base.$1 + extra), math.max(0, base.$2 + extra));
     var score = prev == null ? (0, 0) : (prev.homePts, prev.awayPts);
     var line = '';
     var big = false;
@@ -302,7 +354,15 @@ class PlaybackBuilder {
                   for (final x in five)
                     if ((off, x) != holder && x != st.who) x,
                 ];
-                to = others.isEmpty ? st.who : others[(rnd() * others.length).floor().clamp(0, others.length - 1)];
+                final bigs = [
+                  for (final x in five.skip(3))
+                    if ((off, x) != holder && x != st.who) x,
+                ];
+                if (e.focus == 2 && bigs.isNotEmpty && rnd() < 0.6) {
+                  to = bigs[(rnd() * bigs.length).floor().clamp(0, bigs.length - 1)];
+                } else {
+                  to = others.isEmpty ? st.who : others[(rnd() * others.length).floor().clamp(0, others.length - 1)];
+                }
               }
               if ((off, to) != holder) pass(to);
             }

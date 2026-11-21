@@ -209,7 +209,21 @@ class PlayStep {
 
 /// 1回の攻め(見せる用。自分の試合で記録するときだけ作る。乱数は使わないので、結果は変わらない)。
 class PlayEvent {
-  PlayEvent({required this.period, required this.clockStart, required this.clockEnd, required this.side, required this.offCourt, required this.defCourt});
+  PlayEvent({
+    required this.period,
+    required this.clockStart,
+    required this.clockEnd,
+    required this.side,
+    required this.offCourt,
+    required this.defCourt,
+    this.pace = 1,
+    this.focus = 1,
+    this.share = 1,
+    this.press = 1,
+  });
+
+  /// その攻めのときの方針(試合中の采配で変わったあとの値)。攻める側の展開の速さ・攻めの重点・ボールの回し方と、守る側の守り方。
+  final int pace, focus, share, press;
 
   /// クォーター(0〜3、4から延長)と、攻めの始めと終わりの残り時間(秒)。
   final int period, clockStart, clockEnd;
@@ -459,7 +473,18 @@ SimResult simulateGame(Team home, Team away, Rng r,
       }
       final before = o.pts;
       o.crunch = period >= 4 || (period == 3 && clock <= 300 && (hScore - aScore).abs() <= 8);
-      final ev = record ? PlayEvent(period: period, clockStart: clock + used, clockEnd: clock, side: offense, offCourt: List.of(o.court), defCourt: List.of(d.court)) : null;
+      final ev = record ? PlayEvent(
+              period: period,
+              clockStart: clock + used,
+              clockEnd: clock,
+              side: offense,
+              offCourt: List.of(o.court),
+              defCourt: List.of(d.court),
+              pace: o.pace,
+              focus: o.focus,
+              share: o.share,
+              press: d.press,
+            ) : null;
       _possession(o, d, r, record ? (text) => addPlay(period, clock, text) : null, ev);
       final got = o.pts - before;
       if (got > 0) {
