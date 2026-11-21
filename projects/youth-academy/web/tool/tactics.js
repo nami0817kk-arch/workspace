@@ -95,7 +95,7 @@ ok(hi.deep > lo.deep * 1.25, '押している側は相手陣の奥にいる時�
   const top = {};
   const sp = {};
   const pass = { hi: [0, 0], lo: [0, 0] };
-  for (const seed of [3, 8, 21, 34]) {
+  for (const seed of [3, 8, 21, 34, 5, 13, 55, 77]) { // 2026-11-22：4試合ではパスが30本ほどで揺れが大きかった
     const w = lift(YA.newWorld(seed));
     const home = YA.teamFromWorld(w, 'A');
     const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
