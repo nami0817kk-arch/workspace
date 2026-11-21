@@ -20,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/l10n/lang.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
@@ -83,10 +84,11 @@ Future<void> dump(WidgetTester tester, String name) async {
         shotKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
     final image = await boundary.toImage(pixelRatio: 2.0);
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    final dir = Directory('shots')..createSync();
+    final dir = Directory(_lang == 'en' ? 'shots/en' : 'shots')
+      ..createSync(recursive: true);
     File('${dir.path}/$name.png').writeAsBytesSync(bytes!.buffer.asUint8List());
     written.add(name);
-    print('wrote shots/$name.png');
+    print('wrote ${dir.path}/$name.png');
   });
 }
 
@@ -132,7 +134,18 @@ void requireShots(Iterable<String> names) {
   }
 }
 
+/// 英語の画面を撮るとき:
+/// `flutter test test/shots.dart --dart-define=LANG=en`
+///
+/// **訳を入れたら、必ず英語でも撮って目で見る。** 字が伸びて帯や
+/// カードから溢れるのは、書き出して見るまで分からない
+/// （日本語の短い字で収まっていたところが、英語では2倍の幅になる）。
+const String _lang = String.fromEnvironment('LANG');
+
 void main() {
+  setUpAll(() {
+    if (_lang == 'en') Language.setForTest(Lang.en);
+  });
   testWidgets('screens', (tester) async {
     await loadFont();
     final controller = await ui_test.newCareer(
@@ -171,44 +184,58 @@ void main() {
 
     // 節に割ってあるタブは、札ごとに撮る。
     // 片方だけ撮っていると、もう片方の崩れは一生見えない。
-    const tabs = {
-      '選手': ['能力', '人となり'],
-      '育成': ['今週決める', '長い目で狙う'],
-      'クラブ': ['立ち位置', 'この国と、世界'],
-      '記録': ['今季', 'これまで'],
-    };
+    // (絵の名前, タブの字, [札の字...])。**名前は日本語のまま**——
+    // 画面の字で名付けると、日本語版と英語版を1枚ずつ突き合わせられない。
+    final tabs = [
+      ('選手', tr('選手', 'Player'), [
+        ('能力', tr('能力', 'Attributes')),
+        ('人となり', tr('人となり', 'The person')),
+      ]),
+      ('育成', tr('育成', 'Training'), [
+        ('今週決める', tr('今週決める', 'Decide this week')),
+        ('長い目で狙う', tr('長い目で狙う', 'The long game')),
+      ]),
+      ('クラブ', tr('クラブ', 'Club'), [
+        ('立ち位置', tr('立ち位置', 'Where you stand')),
+        ('この国と、世界', tr('この国と、世界', 'This country, and the world')),
+      ]),
+      ('記録', tr('記録', 'Record'), [
+        ('今季', tr('今季', 'This season')),
+        ('これまで', tr('これまで', 'So far')),
+      ]),
+    ];
     var n = 2;
-    for (final entry in tabs.entries) {
-      await tester.tap(find.widgetWithText(Tab, entry.key));
+    for (final (name, tab, sections) in tabs) {
+      await tester.tap(find.widgetWithText(Tab, tab));
       await tester.pumpAndSettle();
-      for (final section in entry.value) {
+      for (final (sectionName, section) in sections) {
         await tester.tap(find.text(section));
         await tester.pumpAndSettle();
-        await dump(tester, '0$n-${entry.key}-$section');
+        await dump(tester, '0$n-$name-$sectionName');
       }
       n++;
     }
 
     // 個人技を狙うカード。育成タブの下のほうにあるので、標準の高さでは
     // 一度も撮れていなかった。候補を開いた状態で撮る。
-    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.tap(find.widgetWithText(Tab, tr('育成', 'Training')));
     await tester.pumpAndSettle();
     await tester.dragUntilVisible(
-      find.text('狙う技を選ぶ'),
+      find.text(tr('狙う技を選ぶ', 'Choose a trick')),
       find.byType(ListView).first,
       const Offset(0, -300),
     );
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('狙う技を選ぶ'));
+    await tester.ensureVisible(find.text(tr('狙う技を選ぶ', 'Choose a trick')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('狙う技を選ぶ'));
+    await tester.tap(find.text(tr('狙う技を選ぶ', 'Choose a trick')));
     await tester.pumpAndSettle();
     await dump(tester, '10-aim');
 
     // 今週の練習のシート。毎週触る画面なので、必ず目で見る。
-    await tester.tap(find.widgetWithText(Tab, '今週'));
+    await tester.tap(find.widgetWithText(Tab, tr('今週', 'Week')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('変える'));
+    await tester.tap(find.text(tr('変える', 'Change')));
     await tester.pumpAndSettle();
     await dump(tester, '09-week');
     await tester.tapAt(const Offset(195, 40));
@@ -246,7 +273,7 @@ void main() {
     // 暗いほうで崩れていても、明るいほうの絵を見ている限り分からない。
     final dark = themeFor(controller.state!.club, brightness: Brightness.dark);
     await pump(tester, HubScreen(controller: controller), dark);
-    await tester.tap(find.widgetWithText(Tab, '記録'));
+    await tester.tap(find.widgetWithText(Tab, tr('記録', 'Record')));
     await tester.pumpAndSettle();
     await dump(tester, '12-dark-記録');
 
@@ -330,10 +357,14 @@ void main() {
       themeFor(controller.state!.club, brightness: Brightness.dark),
     );
     await dump(tester, '12-dark-hub');
-    for (final tab in ['選手', '育成', 'クラブ']) {
+    for (final (name, tab) in [
+      ('選手', tr('選手', 'Player')),
+      ('育成', tr('育成', 'Training')),
+      ('クラブ', tr('クラブ', 'Club')),
+    ]) {
       await tester.tap(find.widgetWithText(Tab, tab));
       await tester.pumpAndSettle();
-      await dump(tester, '12-dark-$tab');
+      await dump(tester, '12-dark-$name');
     }
 
     // 出来事が来るまで進める。
@@ -343,7 +374,7 @@ void main() {
     }
     await pump(tester, HubScreen(controller: controller), theme);
     // タブは前の撮影の位置が残るので、試合タブへ戻す。
-    await tester.tap(find.widgetWithText(Tab, '今週'));
+    await tester.tap(find.widgetWithText(Tab, tr('今週', 'Week')));
     await tester.pumpAndSettle();
     await dump(tester, '13-event');
 

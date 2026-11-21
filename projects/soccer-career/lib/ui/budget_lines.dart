@@ -14,8 +14,8 @@ class BudgetLines extends StatelessWidget {
   final CareerState state;
 
   static String _yen(int man) => man >= 10000
-      ? tr('${(man / 10000).toStringAsFixed(1)}億', '¥${(man / 100).round()}M')
-      : tr('$man万', '¥${(man / 100).toStringAsFixed(1)}M');
+      ? tr('${(man / 10000).toStringAsFixed(1)}億', 'JPY ${(man / 100).round()}M')
+      : tr('$man万', 'JPY ${(man / 100).toStringAsFixed(1)}M');
 
   @override
   Widget build(BuildContext context) {

@@ -91,7 +91,7 @@ class PlayerBanner extends StatelessWidget {
                         const SizedBox(width: 6),
                         Flexible(
                           child: Text(
-                            tr('${player.positionLabel} ・ ${state.club.name}', '${player.positionLabel} · ${state.club.name}'),
+                            tr('${player.positionLabel} ・ ${state.club.name}', '${player.positionLabel} - ${state.club.name}'),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: onKit.withValues(alpha: 0.9),
                             ),

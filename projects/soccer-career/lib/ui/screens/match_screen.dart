@@ -77,8 +77,8 @@ class _MatchScreenState extends State<MatchScreen> {
   String _streakNote(int streak) {
     if (streak < 1) return '';
     final toStep = MatchTarget.streakStep - (streak % MatchTarget.streakStep);
-    if (toStep == MatchTarget.streakStep) return tr(' ・ $streak連続', ' · $streak in a row');
-    return tr(' ・ $streak連続、あと$toStepで経験点', ' · $streak in a row, $toStep more for a point');
+    if (toStep == MatchTarget.streakStep) return tr(' ・ $streak連続', ' - $streak in a row');
+    return tr(' ・ $streak連続、あと$toStepで経験点', ' - $streak in a row, $toStep more for a point');
   }
 
   Widget _body(BuildContext context) {
@@ -124,7 +124,7 @@ class _MatchScreenState extends State<MatchScreen> {
           child: Text(
             tr('今節の的: ${MatchTarget.of(widget.controller.state!).label}'
             '（達成で${MatchTarget.reward}万円）'
-            '${_streakNote(widget.controller.state!.targetStreak)}', 'Target: ${MatchTarget.of(widget.controller.state!).label} (¥${MatchTarget.reward}0K if you hit it)${_streakNote(widget.controller.state!.targetStreak)}'),
+            '${_streakNote(widget.controller.state!.targetStreak)}', 'Target: ${MatchTarget.of(widget.controller.state!).label} (JPY ${MatchTarget.reward}0K if you hit it)${_streakNote(widget.controller.state!.targetStreak)}'),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -210,8 +210,8 @@ class _MatchHeader extends StatelessWidget {
             ),
           ),
           caption: match.home
-              ? tr('ホーム・${match.appearance.label}', 'Home · ${match.appearance.label}')
-              : tr('アウェイ・${match.appearance.label}', 'Away · ${match.appearance.label}'),
+              ? tr('ホーム・${match.appearance.label}', 'Home - ${match.appearance.label}')
+              : tr('アウェイ・${match.appearance.label}', 'Away - ${match.appearance.label}'),
         ),
         const SizedBox(height: 6),
         Row(
@@ -331,7 +331,7 @@ class _ScenarioView extends StatelessWidget {
                     children: [
                       Text(
                         tr('${MatchInProgress.minuteLabel(match.currentMinute)}'
-                        ' ・ ${match.scoreLine}', '${MatchInProgress.minuteLabel(match.currentMinute)} · ${match.scoreLine}'),
+                        ' ・ ${match.scoreLine}', '${MatchInProgress.minuteLabel(match.currentMinute)} - ${match.scoreLine}'),
                         style: theme.textTheme.labelMedium?.copyWith(
                           color: theme.colorScheme.primary,
                         ),
@@ -368,7 +368,7 @@ class _ScenarioView extends StatelessWidget {
                               match.stakesLabel == null
                                   ? match.situationLabel!
                                   : tr('${match.situationLabel!} ・ '
-                                        '${match.stakesLabel!}', '${match.situationLabel!} · ${match.stakesLabel!}'),
+                                        '${match.stakesLabel!}', '${match.situationLabel!} - ${match.stakesLabel!}'),
                               background: match.margin < 0
                                   ? theme.colorScheme.errorContainer
                                   : theme.colorScheme.secondaryContainer,
@@ -848,7 +848,7 @@ class _OptionButton extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
                   child: Text(
-                    setupReady ? tr('仕留め・布石あり', 'Finish · set-up ready') : tr('仕留め', 'Finish'),
+                    setupReady ? tr('仕留め・布石あり', 'Finish - set-up ready') : tr('仕留め', 'Finish'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: setupReady
                           ? theme.colorScheme.primary
@@ -1105,7 +1105,7 @@ class _MatchSummary extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(
                   tr('今節の的を達成　+${MatchTarget.reward}万円'
-                  '${streak > 1 ? '　$streak連続' : ''}', 'Target hit  +¥${MatchTarget.reward}0K${streak > 1 ? '  $streak in a row' : ''}'),
+                  '${streak > 1 ? '　$streak連続' : ''}', 'Target hit  +JPY ${MatchTarget.reward}0K${streak > 1 ? '  $streak in a row' : ''}'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: theme.colorScheme.primary,

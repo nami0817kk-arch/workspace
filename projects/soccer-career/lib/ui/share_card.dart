@@ -68,7 +68,7 @@ class CareerShareCard extends StatelessWidget {
       title: legend.name,
       subtitle:
           tr('${legend.positionLabel} ・ '
-          '${legend.seasons}年のキャリア ・ ${legend.retiredAge}歳で引退', '${legend.positionLabel} · ${legend.seasons} seasons · retired at ${legend.retiredAge}'),
+          '${legend.seasons}年のキャリア ・ ${legend.retiredAge}歳で引退', '${legend.positionLabel} - ${legend.seasons} seasons - retired at ${legend.retiredAge}'),
       stats: [
         _Stat(tr('出場', 'Games'), '${legend.appearances}'),
         _Stat(tr('ゴール', 'Goals'), '${legend.goals}'),
@@ -81,7 +81,7 @@ class CareerShareCard extends StatelessWidget {
         _Line(tr('一番上で戦った部', 'Highest tier reached'), tr('${legend.bestTier}部', 'Tier ${legend.bestTier}')),
         _Line(tr('渡り歩いたクラブ', 'Clubs played for'), '${legend.spells.length}'),
       ],
-      footnote: titles.isEmpty ? tr('無冠のキャリア', 'A career without a trophy') : titles.join(tr(' ・ ', ' · ')),
+      footnote: titles.isEmpty ? tr('無冠のキャリア', 'A career without a trophy') : titles.join(tr(' ・ ', ' - ')),
     );
   }
 
@@ -161,7 +161,7 @@ class SeasonShareCard extends StatelessWidget {
         backdrop: const Color(0xFFF2F0E6),
       ),
       title: headline,
-      subtitle: tr('${club.name} ・ $year年 ・ $playerName', '${club.name} · $year · $playerName'),
+      subtitle: tr('${club.name} ・ $year年 ・ $playerName', '${club.name} - $year - $playerName'),
       stats: [
         _Stat(tr('出場', 'Games'), '${stats.appearances}'),
         _Stat(tr('ゴール', 'Goals'), '${stats.goals}'),
@@ -174,7 +174,7 @@ class SeasonShareCard extends StatelessWidget {
         if (objectiveMet != null) _Line(tr('監督の期待', 'Manager targets'), '$objectiveMet / 3'),
         if (caps > 0) _Line(tr('今季の代表', 'Caps this season'), tr('$caps キャップ', '$caps caps')),
       ],
-      footnote: extra.isEmpty ? '' : extra.join(tr(' ・ ', ' · ')),
+      footnote: extra.isEmpty ? '' : extra.join(tr(' ・ ', ' - ')),
     );
   }
 

@@ -96,8 +96,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
             child: Text(
               savings < fee
-                  ? tr('違約金 $fee万円。貯蓄は$savings万円で、足りない。', 'The release clause is ¥${(fee / 100).toStringAsFixed(1)}M. You have ¥${(savings / 100).toStringAsFixed(1)}M saved, which is not enough.')
-                  : tr('違約金 $fee万円を貯蓄（$savings万円）から払う。', 'Pay the ¥${(fee / 100).toStringAsFixed(1)}M release clause out of your savings (¥${(savings / 100).toStringAsFixed(1)}M).'),
+                  ? tr('違約金 $fee万円。貯蓄は$savings万円で、足りない。', 'The release clause is JPY ${(fee / 100).toStringAsFixed(1)}M. You have JPY ${(savings / 100).toStringAsFixed(1)}M saved, which is not enough.')
+                  : tr('違約金 $fee万円を貯蓄（$savings万円）から払う。', 'Pay the JPY ${(fee / 100).toStringAsFixed(1)}M release clause out of your savings (JPY ${(savings / 100).toStringAsFixed(1)}M).'),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -150,7 +150,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     });
     final message = switch (result) {
       NegotiationResult.raised =>
-        tr('${before.club.name}が上乗せに応じた。${before.salary}万円 → ${after!.salary}万円', '${before.club.name} came up to meet you. ¥${(before.salary / 100).toStringAsFixed(1)}M → ¥${(after.salary / 100).toStringAsFixed(1)}M'),
+        tr('${before.club.name}が上乗せに応じた。${before.salary}万円 → ${after!.salary}万円', '${before.club.name} came up to meet you. JPY ${(before.salary / 100).toStringAsFixed(1)}M → JPY ${(after.salary / 100).toStringAsFixed(1)}M'),
       NegotiationResult.refused => tr('${before.club.name}は据え置きを譲らなかった。', '${before.club.name} would not move.'),
       NegotiationResult.withdrawn => tr('${before.club.name}がオファーを引き上げた。', '${before.club.name} pulled the offer.'),
     };
@@ -479,7 +479,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       onPressed: _busy ? null : () => _changeAgent(context),
                       child: Text(
                         tr('代理人を変える'
-                        '（違約金 ${widget.controller.agentSwitchFee}万）', 'Change agent (fee ¥${(widget.controller.agentSwitchFee / 100).toStringAsFixed(1)}M)'),
+                        '（違約金 ${widget.controller.agentSwitchFee}万）', 'Change agent (fee JPY ${(widget.controller.agentSwitchFee / 100).toStringAsFixed(1)}M)'),
                       ),
                     ),
                   ),
@@ -490,7 +490,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Text(
-                          tr('代理人に売り込ませる（前金 ${controller.solicitCost}万円）', 'Have your agent tout you around (¥${(controller.solicitCost / 100).toStringAsFixed(1)}M up front)'),
+                          tr('代理人に売り込ませる（前金 ${controller.solicitCost}万円）', 'Have your agent tout you around (JPY ${(controller.solicitCost / 100).toStringAsFixed(1)}M up front)'),
                         ),
                       ),
                     ),
@@ -605,7 +605,7 @@ class _OfferCard extends StatelessWidget {
     final top = rivals.isEmpty ? null : rivals.first;
     final head = ahead == 0 ? tr('あなたの枠では一番上', 'You are first in your slot') : tr('あなたの枠に上が $ahead 人', '$ahead ahead of you in your slot');
     final fate = ahead >= quota ? tr('（登録外になる）', ' (you would be left off the squad list)') : tr('（定員 $quota）', ' (quota $quota)');
-    final face = top == null ? '' : tr(' ・ 筆頭は ${top.name}（${top.overall}）', ' · the first of them is ${top.name} (${top.overall})');
+    final face = top == null ? '' : tr(' ・ 筆頭は ${top.name}（${top.overall}）', ' - the first of them is ${top.name} (${top.overall})');
     return '$head $fate$face';
   }
 
@@ -687,10 +687,10 @@ class _OfferCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        tr('年俸 ${offer.salary}万円 ・ ${offer.years}年契約', 'Wage ¥${(offer.salary / 100).toStringAsFixed(1)}M · ${offer.years}-year deal'),
+                        tr('年俸 ${offer.salary}万円 ・ ${offer.years}年契約', 'Wage JPY ${(offer.salary / 100).toStringAsFixed(1)}M - ${offer.years}-year deal'),
                         style: theme.textTheme.titleMedium,
                       ),
-                      Text(tr('手取り $takeHome万円（手数料差引後）', 'Take-home ¥${(takeHome / 100).toStringAsFixed(1)}M (after the fee)'), style: muted),
+                      Text(tr('手取り $takeHome万円（手数料差引後）', 'Take-home JPY ${(takeHome / 100).toStringAsFixed(1)}M (after the fee)'), style: muted),
                     ],
                   ),
                 ),
@@ -745,7 +745,7 @@ class _OfferCard extends StatelessWidget {
                   tr('出来高払いでサインする'
                   '（年俸 −${Formulas.incentiveCutOf(offer.salary)}万、'
                   '目標2つで全額・3つで'
-                  '${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull).round()}万）', 'Sign on performance terms (wage −¥${(Formulas.incentiveCutOf(offer.salary) / 100).toStringAsFixed(1)}M; two targets pays all of it back, three pays ¥${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull / 100).toStringAsFixed(1)}M)'),
+                  '${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull).round()}万）', 'Sign on performance terms (wage −JPY ${(Formulas.incentiveCutOf(offer.salary) / 100).toStringAsFixed(1)}M; two targets pays all of it back, three pays JPY ${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull / 100).toStringAsFixed(1)}M)'),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -906,7 +906,7 @@ class _SeasonBand extends StatelessWidget {
                   ),
                   Text(
                     tr('${World.byId(state.club.countryId).name} '
-                    '${state.club.tier}部 ・ ${state.year}シーズン', '${World.byId(state.club.countryId).name}, tier ${state.club.tier} · ${state.year}'),
+                    '${state.club.tier}部 ・ ${state.year}シーズン', '${World.byId(state.club.countryId).name}, tier ${state.club.tier} - ${state.year}'),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: on.withValues(alpha: 0.75),
                     ),

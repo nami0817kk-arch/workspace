@@ -131,7 +131,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        tr('通算年俸 ${state.totalEarnings >= 10000 ? '${(state.totalEarnings / 10000).toStringAsFixed(1)}億円' : '${state.totalEarnings}万円'}', 'Career earnings ${state.totalEarnings >= 10000 ? '¥${(state.totalEarnings / 100).round()}M' : '¥${(state.totalEarnings / 100).toStringAsFixed(1)}M'}'),
+                        tr('通算年俸 ${state.totalEarnings >= 10000 ? '${(state.totalEarnings / 10000).toStringAsFixed(1)}億円' : '${state.totalEarnings}万円'}', 'Career earnings ${state.totalEarnings >= 10000 ? 'JPY ${(state.totalEarnings / 100).round()}M' : 'JPY ${(state.totalEarnings / 100).toStringAsFixed(1)}M'}'),
                         style: theme.textTheme.bodyMedium,
                       ),
                       if (best != null) ...[
@@ -273,7 +273,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   subtitle: Text(
                     tr('${record.tier}部 ${record.leaguePosition}位 ・ '
                     '${record.stats.appearances}試合 '
-                    '${record.stats.goals}G ${record.stats.assists}A', 'Tier ${record.tier} #${record.leaguePosition} · ${record.stats.appearances} games ${record.stats.goals}G ${record.stats.assists}A'),
+                    '${record.stats.goals}G ${record.stats.assists}A', 'Tier ${record.tier} #${record.leaguePosition} - ${record.stats.appearances} games ${record.stats.goals}G ${record.stats.assists}A'),
                   ),
                   trailing: Text(
                     record.stats.appearances == 0

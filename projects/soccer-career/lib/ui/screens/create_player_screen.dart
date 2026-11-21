@@ -183,7 +183,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
             children: [
               if (!_busy && _missing.isNotEmpty) ...[
                 Text(
-                  tr('あと: ${_missing.join(' ・ ')}', 'Still to do: ${_missing.join(' · ')}'),
+                  tr('あと: ${_missing.join(' ・ ')}', 'Still to do: ${_missing.join(' - ')}'),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.error,
@@ -260,7 +260,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                           '（${widget.controller.hall.legends.length}人）'
                           ' ・ 挑戦 '
                           '${Challenge.values.where(widget.controller.hall.isCleared).length}'
-                          '/${Challenge.values.length}', 'Players so far (${widget.controller.hall.legends.length}) · challenges ${Challenge.values.where(widget.controller.hall.isCleared).length}/${Challenge.values.length}'),
+                          '/${Challenge.values.length}', 'Players so far (${widget.controller.hall.legends.length}) - challenges ${Challenge.values.where(widget.controller.hall.isCleared).length}/${Challenge.values.length}'),
                         ),
                       ),
                     ),
@@ -441,7 +441,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     Text(
                       tr('${World.byId(_countryId!).confederation.label}  ・  '
                       '${World.byId(_countryId!).tiers}部制  ・  '
-                      '外国人ルール ${World.byId(_countryId!).foreignRule.summary}', '${World.byId(_countryId!).confederation.label}  ·  ${World.byId(_countryId!).tiers} tiers  ·  foreigner rule ${World.byId(_countryId!).foreignRule.summary}'),
+                      '外国人ルール ${World.byId(_countryId!).foreignRule.summary}', '${World.byId(_countryId!).confederation.label}  -  ${World.byId(_countryId!).tiers} tiers  -  foreigner rule ${World.byId(_countryId!).foreignRule.summary}'),
                       style: muted,
                     ),
                   ],
@@ -509,7 +509,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       subtitle: Text(
                         tr('${_look.hair.label}  ・  '
                         '${PlayerLook.hairColorLabels[_look.hairColor]}  ・  '
-                        '背番号 $_number', '${_look.hair.label}  ·  ${PlayerLook.hairColorLabels[_look.hairColor]}  ·  no. $_number'),
+                        '背番号 $_number', '${_look.hair.label}  -  ${PlayerLook.hairColorLabels[_look.hairColor]}  -  no. $_number'),
                         style: muted,
                       ),
                       children: [
@@ -702,7 +702,7 @@ class _DeclareCard extends StatelessWidget {
           subtitle: Text(
             declared == null
                 ? tr('選ばなくてもいい（達成は宣言しなくても記録される）', 'You do not have to pick one — anything you clear is recorded either way')
-                : tr('${declared!.label} ・ 達成で +${declared!.declaredBonus}pt', '${declared!.label} · +${declared!.declaredBonus}pt if you do it'),
+                : tr('${declared!.label} ・ 達成で +${declared!.declaredBonus}pt', '${declared!.label} - +${declared!.declaredBonus}pt if you do it'),
             style: muted,
           ),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -900,7 +900,7 @@ class _AgentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      tr('${agent.name} ・ ${agent.style}', '${agent.name} · ${agent.style}'),
+                      tr('${agent.name} ・ ${agent.style}', '${agent.name} - ${agent.style}'),
                       style: theme.textTheme.titleSmall,
                     ),
                     const SizedBox(height: 2),

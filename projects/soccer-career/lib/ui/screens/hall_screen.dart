@@ -141,7 +141,7 @@ class _ChallengesCard extends StatelessWidget {
           title: Text(tr('挑戦', 'Challenges'), style: theme.textTheme.titleSmall),
           subtitle: Text(
             tr('$done / ${Challenge.values.length} 達成 ・'
-            ' どれも違う形のキャリアでしか届かない', '$done / ${Challenge.values.length} done · each one needs a differently shaped career'),
+            ' どれも違う形のキャリアでしか届かない', '$done / ${Challenge.values.length} done - each one needs a differently shaped career'),
             style: muted,
           ),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -357,7 +357,7 @@ class _LegendCard extends StatelessWidget {
                         ),
                         Text(
                           tr('${legend.positionLabel} ・ '
-                          '${legend.retiredYear}年に${legend.retiredAge}歳で引退', '${legend.positionLabel} · retired in ${legend.retiredYear}, aged ${legend.retiredAge}'),
+                          '${legend.retiredYear}年に${legend.retiredAge}歳で引退', '${legend.positionLabel} - retired in ${legend.retiredYear}, aged ${legend.retiredAge}'),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: onMuted,
                           ),
@@ -444,7 +444,7 @@ class _LegendCard extends StatelessWidget {
                     children: [
                       for (final r in records)
                         Chip(
-                          label: Text(tr('歴代1位 ${r.label}', 'All-time best · ${r.label}')),
+                          label: Text(tr('歴代1位 ${r.label}', 'All-time best - ${r.label}')),
                           backgroundColor: theme.colorScheme.tertiaryContainer,
                           visualDensity: VisualDensity.compact,
                         ),

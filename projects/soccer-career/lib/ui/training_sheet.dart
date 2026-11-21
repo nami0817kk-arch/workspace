@@ -97,7 +97,7 @@ class TrainingSheet {
                         // 「怪我 ×1.8」では、それが何%なのか分からない。
                         // 判定（`rollInjury`）と同じ式から引く。
                         ' ・ 怪我 ${(controller.injuryChanceNow * 100).toStringAsFixed(1)}%'
-                        '（×${state.effort.injury}）', '${state.effort.description}  Great week ${(odds.great * 100).round()}% · wasted ${(odds.flat * 100).round()}% · wear ×${state.effort.cost} · injury ${(controller.injuryChanceNow * 100).toStringAsFixed(1)}% (×${state.effort.injury})'),
+                        '（×${state.effort.injury}）', '${state.effort.description}  Great week ${(odds.great * 100).round()}% - wasted ${(odds.flat * 100).round()}% - wear ×${state.effort.cost} - injury ${(controller.injuryChanceNow * 100).toStringAsFixed(1)}% (×${state.effort.injury})'),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -309,7 +309,7 @@ class _MenuGroup extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               tr('${picked.description}'
-              '${picked.keys.isEmpty ? '' : ' ・ ${picked.keys.map((k) => k.label).join('・')}'}', '${picked.description}${picked.keys.isEmpty ? '' : ' · ${picked.keys.map((k) => k.label).join(', ')}'}'),
+              '${picked.keys.isEmpty ? '' : ' ・ ${picked.keys.map((k) => k.label).join('・')}'}', '${picked.description}${picked.keys.isEmpty ? '' : ' - ${picked.keys.map((k) => k.label).join(', ')}'}'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -428,7 +428,7 @@ class _StrainBar extends StatelessWidget {
               ? '（消耗が重いぶん $offset年）'
               : ''}'
           ' ・ 重傷の引きやすさ '
-          '×${Formulas.severeFactorForStrain(strain).toStringAsFixed(2)}', 'Decline starts at $declineAge${offset > 0 ? ' (+$offset yr, wear is light)' : offset < 0 ? ' ($offset yr, wear is heavy)' : ''} · serious-injury risk ×${Formulas.severeFactorForStrain(strain).toStringAsFixed(2)}'),
+          '×${Formulas.severeFactorForStrain(strain).toStringAsFixed(2)}', 'Decline starts at $declineAge${offset > 0 ? ' (+$offset yr, wear is light)' : offset < 0 ? ' ($offset yr, wear is heavy)' : ''} - serious-injury risk ×${Formulas.severeFactorForStrain(strain).toStringAsFixed(2)}'),
           style: muted,
         ),
       ],
