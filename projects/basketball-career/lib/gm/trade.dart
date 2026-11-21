@@ -206,8 +206,9 @@ double positionNeed(int count) => count <= 0 ? 1.2 : count == 1 ? 1.1 : 1.0;
 /// [slots] はチームごとの指名の見込みの順番(探す間は変わらないので、先に一度だけ計算して渡せる)。
 /// [seen] は、相手の GM の見立てのずれ(選手ごとの伸びきったときの力の±。T-1)。無ければ本当の値で見る。
 TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o, int nowSeason,
-    {Map<int, int>? slots, int rosterLimit = maxRoster, double hardness = 1.0, bool needs = false, int Function(Player)? seen}) {
-  double playerValue(Player p, TeamMode mode) => _pv(p, mode, potShift: seen?.call(p) ?? 0);
+    {Map<int, int>? slots, int rosterLimit = maxRoster, double hardness = 1.0, bool needs = false, int Function(Player)? seen, Set<int> cheap = const {}}) {
+  // [cheap] は、相手がもめていて安くても出したい選手(T-2)。値打ちを4分の3に見る
+  double playerValue(Player p, TeamMode mode) => _pv(p, mode, potShift: seen?.call(p) ?? 0) * (cheap.contains(p.id) ? 0.75 : 1.0);
   final me = teams[mine], them = teams[o.partner];
   final give = [for (final id in o.give) me.roster.firstWhere((p) => p.id == id)];
   final get = [for (final id in o.get) them.roster.firstWhere((p) => p.id == id)];
