@@ -385,8 +385,10 @@
       for (const id of Object.keys(f0.pos)) if (this.disp[id]) far = Math.max(far, dist(f0.pos[id], this.disp[id]) * 0.8);
       this.pre = null;
       this.capText = null;
-      if (far > 7 || !Object.keys(this.disp).length) {
-        const h0 = this.holderOf(f0);
+      const h0 = this.holderOf(f0);
+      // 相手が持っているのに場面がこちらのボールで始まるときは、近くても入りで奪ってから（2026-11-21「いきなり、こっちボールになる」）
+      const flip = !!(this.owner && h0 && this.teamOf(this.owner) && this.teamOf(this.owner) !== this.teamOf(h0));
+      if (far > 7 || flip || !Object.keys(this.disp).length) {
         // つなげるのは、受け手と主役が3秒ほどで最初の位置に着けるとき。ライン際の球（セットプレー）は置き直す
         const edge = f0.ball[0] < 1.5 || f0.ball[0] > W - 1.5 || f0.ball[1] < 1.5 || f0.ball[1] > L - 1.5 || sc.type === 'fk'; // 直接FK もボールを置いて始める（2026-11-17 ファウルからの FK が増えた）
         let eta = 0;
@@ -429,6 +431,35 @@
       p.t += dt;
       const fr = this.scene.frames;
       if (!p.kicked) {
+        // 相手が持っている：前は相手がこちらの主役へパスを出していて、急にこちらのボールになった。
+        // いちばん近い味方が寄せて奪い、その子が拾ってから場面へつなぐ（GK が持っているときは蹴り出しのまま）
+        if (this.owner && this.teamOf(this.owner) !== this.teamOf(p.h0) && this.base[this.owner] && this.base[this.owner][3] !== 0) {
+          if (!p.steal || !this.disp[p.steal]) {
+            const my = this.teamOf(p.h0);
+            let bd = 1e9;
+            for (const id of Object.keys(this.disp)) {
+              if (this.teamOf(id) !== my || !this.base[id] || this.base[id][3] === 0) continue;
+              const d = dist(this.disp[id], this.disp[this.owner]);
+              if (d < bd) { bd = d; p.steal = id; }
+            }
+          }
+          if (p.steal && dist(this.disp[p.steal], this.disp[this.owner]) < MOVE.tackle) {
+            const r = this.disp[p.steal];
+            const b = this.ball;
+            const d = Math.max(0.3, dist(r, b));
+            this.lock[this.owner] = 0.9;
+            this.owner = null;
+            this.idle = null;
+            this.bv = [((r[0] - b[0]) / d) * 3, ((r[1] - b[1]) / d) * 3];
+            this.expect = p.steal;
+            this.lastTouch = this.teamOf(p.steal);
+            const sp = this.teamOf(p.steal).players[p.steal];
+            if (sp) this.capText = { text: sp.num + '番 ' + String(sp.name).split(' ')[0].split('・').pop() + ' 奪った', t: 0 };
+            this.steals = (this.steals || 0) + 1; // 点検用
+            p.t = 0;
+          } else if (p.t > 7 || !p.steal) return this.endPre(true);
+          return;
+        }
         if (this.owner) {
           if (this.owner === p.h0) p.kicked = true; // もう持っている：そこまで運ぶ
           else if (!(this.lock[this.owner] > 0)) {
@@ -438,6 +469,7 @@
             const eta = dist(this.disp[p.h0], p.f0.ball) / (MOVE.sprint * 0.85);
             if (eta > tFly - 0.2 && p.t < 5) return; // 受け手が先に着いて待つ（届く球が転がり過ぎない）
             p.kicked = true;
+            if (this.teamOf(this.owner) !== this.teamOf(p.h0) && this.base[this.owner][3] !== 0) this.gifts = (this.gifts || 0) + 1; // 点検用：相手へ渡すつなぎ（GK の蹴り出しだけのはず）
             this.kick([p.f0.ball[0], p.f0.ball[1], 0], p.h0, this.owner);
           }
         } else if (p.t > 4) return this.endPre(true);
@@ -977,6 +1009,7 @@
         if (this.fl) return [[this.fl.to[0], this.fl.to[1]], MOVE.sprint];
         return [[ball[0], ball[1]], MOVE.sprint];
       }
+      if (this.pre && this.pre.steal === id && this.owner && this.disp[this.owner]) return [this.disp[this.owner], MOVE.sprint];
       if (this.scene && this.chaser === id) return [[ball[0], ball[1]], MOVE.sprint];
       if (this.scene) {
         if (this.stgt[id]) return [this.stgt[id], MOVE.sprint];
