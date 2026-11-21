@@ -2979,6 +2979,33 @@ class Career {
     scenario = s.index;
     scenarioTeamId = mine;
     scenarioResult = 0;
+    // 遊ぶうちに出てくるお題の、始めの形(D-2)
+    switch (s) {
+      case Scenario.noPicks:
+        // 先の指名権を、すべてほかのチームへ(順に配る)
+        var k = 0;
+        for (final p in picks.where((p) => p.owner == mine && p.season >= season)) {
+          p.owner = (mine + 1 + k++ % (teams.length - 1)) % teams.length;
+          if (p.owner == mine) p.owner = (mine + 1) % teams.length;
+        }
+      case Scenario.troubled:
+        for (final p in me.roster) {
+          if (hasTrait(p, Trait.troublemaker) || p.ovr >= 70) p.morale = math.min(p.morale, 35);
+        }
+        me.chem = math.min(me.chem, 35);
+      case Scenario.expansion:
+        // 主力の上から3人を、自由契約に(引き抜かれた)
+        final top = [...me.roster]..sort((a, b) => b.ovr.compareTo(a.ovr));
+        for (final p in top.take(3)) {
+          me.roster.remove(p);
+          freeAgents.add(p);
+        }
+        while (me.roster.length < minRoster) {
+          me.roster.add(_filler());
+        }
+      default:
+        break;
+    }
     _mail(Sender.owner, 'シナリオ: ${s.label}', '${s.goal}。期限は${s.years}年目のシーズンまで。');
   }
 
