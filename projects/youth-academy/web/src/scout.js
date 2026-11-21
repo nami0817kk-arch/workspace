@@ -461,11 +461,24 @@
     return { club: c[0], league: c[2] };
   }
   const abroadClub = (r, league) => r.pick(ABROAD_CLUBS[league] || ABROAD_CLUBS['プレミアリーグ'])[0];
+  // Jから海外へ（2026-11-21「選手が簡単に海外にいく」→「厳しく」：プロの37%が海外へ行き、19〜20歳で行く子も多かった）。
+  // 総合力140（J1の主力・海外挑戦）以上で、J1にいて、そのシーズンに25試合以上出た子だけ。確率も低く、21歳未満はさらに半分
+  YA.ABROAD_OVR = YA.unrate(140);
+  function jToAbroad(a, fromLg, r) {
+    if (a.ovr < YA.ABROAD_OVR || fromLg !== 'J1リーグ') return false;
+    const s = (a.seasons || [])[a.seasons.length - 1];
+    if (!s || s.league !== 'J1リーグ' || s.apps < 25) return false;
+    if (a.age >= 30) return r() < 0.06;
+    if (a.age > 27) return false;
+    return r() < clamp(0.12 + (a.ovr - 15) * 0.08, 0.12, 0.4) * (a.age < 21 ? 0.5 : 1);
+  }
+  YA.jToAbroad = jToAbroad;
   YA.alumniEntry = function (w, p, note) {
     const o = Math.round(YA.ovr(p) * 10) / 10;
     const r = YA.rngOf(w.seed + p.num * 7 + w.year);
     const status = p._path || (o >= 13.2 ? 'pro' : o >= 10.5 ? 'univ' : 'amateur');
-    const abroad = !!(p._sold && o >= 13);
+    // 卒業と同時の海外は「J1の主力・海外挑戦」（総合力140）に届く子だけ（2026-11-21「選手が簡単に海外にいく」）
+    const abroad = !!(p._sold && o >= YA.ABROAD_OVR);
     const ab = abroad ? abroadPick(r, o, false, true, 18) : null;
     // トップ昇格はこのクラブのトップへ。ほかへ売り込んだ子は、力に合う部のクラブへ
     const own = status === 'pro' && !p._sold && w.top && YA.rate(o) >= YA.topCutLine(w);
@@ -732,7 +745,7 @@
           // 海外にいる子は海外どうしでも動く（28〜29歳の海外組が必ず J に戻っていた）
           const abroad = fromAbroad
             ? a.ovr >= 13 && r() < (a.age <= 29 ? clamp(0.55 + (a.ovr - 14) * 0.1, 0.55, 0.9) : 0.5)
-            : (a.ovr >= 13.8 && a.age <= 27 && r() < clamp(0.35 + (a.ovr - 15) * 0.12, 0.35, 0.9)) || (a.age >= 30 && a.ovr >= 13 && r() < 0.25);
+            : jToAbroad(a, a.league, r);
           const from = a.club, fromLg = a.league;
           const ownTop = !!(w.top && from === w.top.name);
           // 移籍金（2026-11-17）：いまのリーグでの市場価値に、残りの契約年数の分の掛け目（0.3〜1.6倍）。Jから海外は×2.2。
