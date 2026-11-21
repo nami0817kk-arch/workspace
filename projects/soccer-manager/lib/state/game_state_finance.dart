@@ -530,7 +530,7 @@ extension GameStateFinance on GameState {
     // 新しいクラブは、そのクラブの元の見た目から。
     save.clubLook = null;
     save.clubLookChangedSeason = 0;
-    save.budget = (scaledMoney(GameState.initialBudgetTier5) *
+    save.budget = (GameState.initialBudgetFor(save.currentDivisionTier) *
             save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     save.infrastructure = ClubInfrastructure();
@@ -1131,7 +1131,8 @@ extension GameStateFinance on GameState {
       case StartScenario.standard:
         break;
       case StartScenario.debt:
-        save.budget = -(GameState.initialBudgetTier5 ~/ 4);
+        save.budget =
+            -(GameState.initialBudgetFor(save.currentDivisionTier) ~/ 4);
         save.shareholderExpectation = 45;
       case StartScenario.patron:
         save.budget = save.budget * 3;

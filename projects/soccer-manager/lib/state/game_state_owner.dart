@@ -23,8 +23,9 @@ extension GameStateOwner on GameState {
     final s = _save;
     if (s == null) return 0;
     if (s.ownerWealth < 0) {
-      s.ownerWealth = scaledMoney(GameState.initialBudgetTier5) *
-          startingWealthMultiple;
+      s.ownerWealth =
+          GameState.initialBudgetFor(s.currentDivisionTier) *
+              startingWealthMultiple;
     }
     return s.ownerWealth;
   }

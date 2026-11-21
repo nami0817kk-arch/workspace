@@ -27,14 +27,15 @@ void main() {
   test('決めると費用が引かれ、取り消すと全額戻る', () async {
     final game = await newGame();
     final save = game.save!;
-    save.budget = 5000;
+    save.budget = 500000;
 
+    // 費用は部の規模で掛かる(3部から始まる。2026-11-22)。
     expect(await game.setMatchdayPromo('light_up'), isTrue);
-    expect(save.budget, 5000 - 150);
+    expect(save.budget, 500000 - game.scaledMoney(150));
     expect(game.activeMatchdayPromo?.id, 'light_up');
 
     expect(await game.cancelMatchdayPromo(), isTrue);
-    expect(save.budget, 5000);
+    expect(save.budget, 500000);
     expect(game.activeMatchdayPromo, isNull);
   });
 

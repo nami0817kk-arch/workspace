@@ -34,21 +34,23 @@ void main() {
     final game = GameState();
     await game.startNewGame('仕事FC');
     final save = game.save!;
-    save.budget = 5000;
+    // 額は部の規模で掛かる(3部から始まる。2026-11-22)。
+    save.budget = 500000;
     save.confidence = 50;
     save.shareholderExpectation = 50;
     final work = ownerWorks.firstWhere((w) => w.id == 'fan_thanks');
 
     expect(game.canDoOwnerWork(work), isTrue);
     expect(await game.doOwnerWork(work.id), isTrue);
-    expect(save.budget, 5000 + work.funds);
+    expect(save.budget, 500000 + game.scaledMoney(work.funds));
     expect(save.confidence, 50 + work.supporters);
     expect(save.shareholderExpectation, 50 + work.shareholders);
 
     expect(game.ownerWorkDoneThisSeason(work), isTrue);
     expect(game.canDoOwnerWork(work), isFalse);
     expect(await game.doOwnerWork(work.id), isFalse);
-    expect(save.budget, 5000 + work.funds, reason: '二度目は何も起きない');
+    expect(save.budget, 500000 + game.scaledMoney(work.funds),
+        reason: '二度目は何も起きない');
   });
 
   test('資金が足りない手は打てない', () async {
@@ -65,7 +67,7 @@ void main() {
     final game = GameState();
     await game.startNewGame('仕事FC');
     final save = game.save!;
-    save.budget = 5000;
+    save.budget = 500000;
     save.confidence = 98;
     await game.doOwnerWork('fan_thanks');
     expect(save.confidence, 100);

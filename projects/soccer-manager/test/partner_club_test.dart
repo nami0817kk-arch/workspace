@@ -37,13 +37,14 @@ void main() {
     final game = await newGame();
     final save = game.save!;
     await game.setPartnerClub(game.partnerCandidates.first.id);
-    save.budget = 5000;
+    save.budget = 500000;
     save.confidence = 50;
     save.shareholderExpectation = 50;
 
     game.debugSettlePartnerClub();
 
-    expect(save.budget, 5000 - PartnerClubEngine.seasonCost);
+    // 提携費は部の規模で掛かる(3部から始まる。2026-11-22)。
+    expect(save.budget, 500000 - game.partnerSeasonCost);
     expect(save.confidence, 50 + PartnerClubEngine.supportersBonus);
     expect(save.shareholderExpectation, 50 + PartnerClubEngine.shareholdersBonus);
     expect(game.partnerClub, isNotNull);
