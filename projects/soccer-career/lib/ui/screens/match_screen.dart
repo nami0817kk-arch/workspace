@@ -770,92 +770,91 @@ class _OptionButton extends StatelessWidget {
                 ),
               ),
               Expanded(
+                flex: 2,
                 child: GaugeBar(value: chance, height: 6, color: color),
               ),
               const SizedBox(width: 10),
-              Text(
-                '${option.detail?.label ?? option.key.label} $attribute',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+              // **注記は折り返す。** 能力名・↑成長・重点・監督好み・
+              // 通れば1点防ぐ・受け身・布石／仕留めが重なると、390px の
+              // 実機幅では1行に入らない。**日本語でも入らない**が、
+              // 重なる組み合わせが稀だったので表に出ていなかった。英語は
+              // 1つ1つが長いので、よくある組み合わせで溢れた
+              // （`scroll_sim` を `--dart-define=LANG=en` で回して出た）。
+              // Row は折り返せないので、ここだけ Wrap にする。
+              Flexible(
+                flex: 3,
+                child: Wrap(
+                  alignment: WrapAlignment.end,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 6,
+                  runSpacing: 2,
+                  children: [
+                    Text(
+                      '${option.detail?.label ?? option.key.label} $attribute',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    if (growth > 0)
+                      Text(
+                        '↑$growth',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    if (focused)
+                      Text(
+                        tr('重点', 'Focus'),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.tertiary,
+                        ),
+                      ),
+                    if (favoured)
+                      Text(
+                        tr('監督好み', 'Manager likes'),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    // 通れば、この後に入るはずだった失点が1つ消える。
+                    // 危ない手を選ぶ理由は、ここにしか書いていない。
+                    if (option.preventsGoal)
+                      Text(
+                        tr('通れば1点防ぐ', 'Stops a goal'),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    // 受け身の手は、通っても攻撃が終わらない。易しさの
+                    // 代わりに払っているものを書かないと、いつも同じ手を
+                    // 押すことになる。
+                    if (option.lingering)
+                      Text(
+                        tr('通っても失点${(Formulas.concedeOnLinger * 100).round()}%', '${(Formulas.concedeOnLinger * 100).round()}% concede anyway'),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.error,
+                        ),
+                      ),
+                    // **布石は印が無いとただの無難な手に見える。**
+                    if (role == ComboRole.setup && !setupReady)
+                      Text(
+                        tr('布石', 'Set-up'),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.tertiary,
+                        ),
+                      ),
+                    if (role == ComboRole.finish)
+                      Text(
+                        setupReady ? tr('仕留め・布石あり', 'Finish - set up') : tr('仕留め', 'Finish'),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: setupReady
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                  ],
                 ),
               ),
-              if (growth > 0)
-                Padding(
-                  padding: const EdgeInsets.only(left: 4),
-                  child: Text(
-                    '↑$growth',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ),
-              if (focused)
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: Text(
-                    tr('重点', 'Focus'),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.tertiary,
-                    ),
-                  ),
-                ),
-              if (favoured)
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: Text(
-                    tr('監督好み', 'Manager likes'),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ),
-              // 通れば、この後に入るはずだった失点が1つ消える。
-              // 危ない手を選ぶ理由は、ここにしか書いていない。
-              if (option.preventsGoal)
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: Text(
-                    tr('通れば1点防ぐ', 'Stops a goal if it comes off'),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ),
-              // 受け身の手は、通っても攻撃が終わらない。易しさの代わりに
-              // 払っているものを書かないと、いつも同じ手を押すことになる。
-              if (option.lingering)
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: Text(
-                    tr('通っても失点${(Formulas.concedeOnLinger * 100).round()}%', '${(Formulas.concedeOnLinger * 100).round()}% concede even if it works'),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.error,
-                    ),
-                  ),
-                ),
-              // **布石は印が無いとただの無難な手に見える。**
-              if (role == ComboRole.setup && !setupReady)
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: Text(
-                    tr('布石', 'Set-up'),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.tertiary,
-                    ),
-                  ),
-                ),
-              if (role == ComboRole.finish)
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: Text(
-                    setupReady ? tr('仕留め・布石あり', 'Finish - set-up ready') : tr('仕留め', 'Finish'),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: setupReady
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
             ],
           ),
           if (shown.isNotEmpty) ...[

@@ -94,3 +94,27 @@ class Language extends ChangeNotifier {
   @visibleForTesting
   static void setForTest(Lang lang) => _lang = lang;
 }
+
+/// **日本語と英語を隣に置いたまま、`const` の表に入れる文。**
+///
+/// `tr()` は関数なので `const` の中には書けない（enum の引数・既定の
+/// 引数・`static const` と同じ壁）。局面74（`Scenarios`）と特性75
+/// （`Trait`）は `static const` の表なので、**文の側に2つ持たせて、
+/// 読むときに今の言語を選ぶ**。
+///
+/// 訳を別の表へ切り出さずに済むのが要——`tr('引退', 'Retire')` と
+/// 同じく2つが隣に並ぶので、片方だけ直したことが目で見て分かる。
+/// 使う側は `String get label => _label.t;` のように getter で包み、
+/// **外には `String` のまま見せる**（呼ぶ側を書き換えないため）。
+class Say {
+  const Say(this.ja, this.en);
+
+  final String ja;
+  final String en;
+
+  /// 今の言語の文。**読むたびに選ぶ**ので、切り替えに付いてくる。
+  String get t => tr(ja, en);
+
+  @override
+  String toString() => t;
+}
