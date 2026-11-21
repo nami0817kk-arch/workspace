@@ -59,8 +59,20 @@ def face_block():
             raw = open(os.path.join(FACES, it['file']), 'rb').read()
             img[g].append('data:image/jpeg;base64,' + base64.b64encode(raw).decode('ascii'))
             grp[g].append(it['group'])
+    # 表情の差分（prototype/faces/x/<cry|joy>/<同じファイル名>）。無い顔は空文字で、ゲームはいつもの絵を使う
+    xs = {}
+    for x in ('cry', 'joy'):
+        xs[x] = {}
+        for g in ('m', 'f'):
+            xs[x][g] = []
+            for gr in grp[g]:
+                fn = next(it['file'] for it in pool[g] if it['group'] == gr)
+                fp = os.path.join(FACES, 'x', x, fn)
+                xs[x][g].append('data:image/jpeg;base64,' + base64.b64encode(open(fp, 'rb').read()).decode('ascii')
+                                if os.path.exists(fp) else '')
     return ('/*FACEDATA-START*/var FACE_IMG=' + json.dumps(img, separators=(',', ':')) +
-            ';var FACE_GRP=' + json.dumps(grp, separators=(',', ':')) + ';/*FACEDATA-END*/'), len(img['m']), len(img['f'])
+            ';var FACE_GRP=' + json.dumps(grp, separators=(',', ':')) +
+            ';var FACE_X=' + json.dumps(xs, separators=(',', ':')) + ';/*FACEDATA-END*/'), len(img['m']), len(img['f'])
 
 
 def put_voice(s):

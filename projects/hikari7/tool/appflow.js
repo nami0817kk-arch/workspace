@@ -511,4 +511,17 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(x.run("FORMATS.xmas.fat>0&&FORMATS.xmas.hype===3&&SHOW_IN.xmas.length>=5"), 'クリスマス公演は盛り上がりが最大で、疲れる。本番の入りの文がある');
 }
 
+// 表情の差分（2026-11-21）
+{
+  const r = boot({ adFree: false, store: {}, owned: {} });
+  r.run(START);
+  r.run("FACE_X={cry:{m:[],f:[]},joy:{m:[],f:[]}};['m','f'].forEach(function(g){FACE_IMG[g].forEach(function(_,i){FACE_X.cry[g][i]='data:image/jpeg;base64,Q1JZ';FACE_X.joy[g][i]='data:image/jpeg;base64,Sk9Z';});});FACE_XURL={};FACE_URL={m:[],f:[]};var __n=0;URL.createObjectURL=function(){return 'blob:'+(++__n);};");
+  const t0 = r.run('alive(S)[0].img');
+  ok(r.run("faceURL(S.g," + t0 + ",'cry')") !== r.run("faceURL(S.g," + t0 + ")") && r.run("faceURL(S.g," + t0 + ",'joy')") !== r.run("faceURL(S.g," + t0 + ",'cry')"), '表情ごとに別の絵を返す');
+  r.run("FACE_X.cry[S.g][" + t0 + "]='';FACE_XURL={};");
+  ok(r.run("faceURL(S.g," + t0 + ",'cry')") === r.run("faceURL(S.g," + t0 + ")"), '表情の絵が無い顔は、いつもの絵になる');
+  r.run("FACE_X={};FACE_XURL={};");
+  ok(r.run("faceURL(S.g," + t0 + ",'joy')") === r.run("faceURL(S.g," + t0 + ")"), '表情の絵が1枚も無くても落ちない');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
