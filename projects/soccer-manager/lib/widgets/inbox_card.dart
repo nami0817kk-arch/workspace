@@ -39,8 +39,13 @@ class InboxCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 // 未読の数は小さな丸に。「受信箱(未読 7)」は横画面の
                 // 左の欄で2行に折れていた。
-                Text(Tr.pick('受信箱', 'Inbox'),
-                    style: Theme.of(context).textTheme.titleSmall),
+                // 狭い画面・大きい文字では見出しのほうを縮める(ボタンは残す)。
+                Flexible(
+                  child: Text(Tr.pick('受信箱', 'Inbox'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleSmall),
+                ),
                 if (unread > 0)
                   Container(
                     margin: const EdgeInsets.only(left: 6),
@@ -57,10 +62,12 @@ class InboxCard extends StatelessWidget {
                             color: scheme.onPrimary)),
                   ),
                 const Spacer(),
+                // 既読にするは印のボタンに(未読の丸を足した分の幅を空ける)。
                 if (unread > 0)
-                  TextButton(
+                  IconButton(
                     onPressed: gs.markInboxRead,
-                    child: Text(Tr.pick('既読にする', 'Mark read')),
+                    tooltip: Tr.pick('既読にする', 'Mark read'),
+                    icon: const Icon(Icons.done_all, size: 20),
                   ),
                 TextButton(
                   // 受信箱の全部(対応が要るもの＋お知らせ)を開く。以前は

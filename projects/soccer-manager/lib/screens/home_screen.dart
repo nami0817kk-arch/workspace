@@ -225,8 +225,11 @@ class HomeScreen extends StatelessWidget {
                                       const SizedBox(width: 6),
                                       // 上バーと同じ「第N季」に揃える(S1 と混ざっていた)。
                                       _BandPill(
-                                          text: Tr.pick('第${league.season}季',
-                                              'Season ${league.season}')),
+                                          text: Tr.pick(
+                                              '第${league.season}季',
+                                              // 英語は短い形のまま(Season 1 だと
+                                              // 狭い縦長で日付の札とはみ出す)。
+                                              'S${league.season}')),
                                     ],
                                   ],
                                 ),
