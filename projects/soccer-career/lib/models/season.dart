@@ -1,29 +1,43 @@
+// 名前（`_label` ほか）は private だが、**`this._label` には書けない**
+// ——Dart は名前付き引数を `_` で始められない。外に見せるのは `String` の
+// getter なので、持ち物は private のまま置く。
+// ignore_for_file: prefer_initializing_formals
+
+import '../l10n/lang.dart';
 import 'attributes.dart';
 import 'cup.dart';
 
 /// 試合を自動で進めるときの選び方。
 enum SimStyle {
-  safe('安全', '成功率が最も高い手を選ぶ'),
-  balanced('バランス', '評価点の期待値が最も高い手を選ぶ'),
-  aggressive('勝負', '得点に繋がる手の中で最も良い手を選ぶ');
+  safe(Say('安全', 'Safe'), Say('成功率が最も高い手を選ぶ', 'Takes the move with the best chance')),
+  balanced(Say('バランス', 'Balanced'), Say('評価点の期待値が最も高い手を選ぶ', 'Takes the move with the best expected rating')),
+  aggressive(Say('勝負', 'Attacking'), Say('得点に繋がる手の中で最も良い手を選ぶ', 'Takes the best of the moves that lead to goals'));
 
-  const SimStyle(this.label, this.description);
+  const SimStyle(Say label, Say description)
+    : _label = label,
+      _description = description;
 
-  final String label;
-  final String description;
+  /// **名前と説明は日本語と英語の2つを持つ**（[Say]）。
+  final Say _label;
+  final Say _description;
+
+  String get label => _label.t;
+  String get description => _description.t;
 }
 
 /// 出場の仕方。評価点が低いと先発から外れ、さらに落ちると招集外になる。
 enum Appearance {
-  start('先発'),
-  sub('途中出場'),
-  benched('ベンチ外'),
-  injured('負傷離脱'),
-  suspended('出場停止');
+  start(Say('先発', 'Started')),
+  sub(Say('途中出場', 'Off the bench')),
+  benched(Say('ベンチ外', 'Not in the squad')),
+  injured(Say('負傷離脱', 'Out injured')),
+  suspended(Say('出場停止', 'Suspended'));
 
-  const Appearance(this.label);
+  const Appearance(Say label) : _label = label;
 
-  final String label;
+  final Say _label;
+
+  String get label => _label.t;
 
   /// 実際にピッチに立ったか。
   bool get played => this == Appearance.start || this == Appearance.sub;

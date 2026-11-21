@@ -4189,9 +4189,9 @@ class _SignatureRow extends StatelessWidget {
       // 起きているのかが画面のどこにも出ない。
       condition = mastery <= 0
           ? tr('習得ずみ。伸びなくなった歳から、練習で磨かれていく', 'Learned. Once you stop growing, training polishes it')
-          : tr('習得ずみ・${Signature.masteryLabels[mastery]}'
+          : tr('習得ずみ・${Signature.masteryLabel(mastery)}'
                 '（$mastery / ${Signature.maxMastery}）'
-                '　噛み合う手に +${((Formulas.signatureOnDetail + Formulas.signaturePerMastery * mastery) * 100).round()}%', 'Learned - ${Signature.masteryLabels[mastery]} ($mastery / ${Signature.maxMastery})  +${((Formulas.signatureOnDetail + Formulas.signaturePerMastery * mastery) * 100).round()}% on a move it fits');
+                '　噛み合う手に +${((Formulas.signatureOnDetail + Formulas.signaturePerMastery * mastery) * 100).round()}%', 'Learned - ${Signature.masteryLabel(mastery)} ($mastery / ${Signature.maxMastery})  +${((Formulas.signatureOnDetail + Formulas.signaturePerMastery * mastery) * 100).round()}% on a move it fits');
     } else if (reached) {
       condition =
           tr('${signature.detail.label} $value。'

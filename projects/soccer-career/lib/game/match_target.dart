@@ -8,6 +8,7 @@
 /// （ゴール・アシスト・無失点・評価点）だけを見る。
 library;
 
+import '../l10n/lang.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/season.dart';
@@ -42,14 +43,14 @@ class MatchTarget {
     final turn = state.matchday % 3;
     if (family == ScenarioFamily.forward) {
       return switch (turn) {
-        0 => MatchTarget('1ゴール', AttributeKey.shooting, (r) => r.goals >= 1),
+        0 => MatchTarget(tr('1ゴール', '1 goal'), AttributeKey.shooting, (r) => r.goals >= 1),
         1 => MatchTarget(
-          '得点に絡む',
+          tr('得点に絡む', 'A goal or an assist'),
           AttributeKey.dribbling,
           (r) => r.goals + r.assists >= 1,
         ),
         _ => MatchTarget(
-          '評価 7.0',
+          tr('評価 7.0', 'Rating 7.0'),
           AttributeKey.physical,
           (r) => (r.rating ?? 0) >= 7.0,
         ),
@@ -57,27 +58,27 @@ class MatchTarget {
     }
     if (family == ScenarioFamily.midfield) {
       return switch (turn) {
-        0 => MatchTarget('1アシスト', AttributeKey.passing, (r) => r.assists >= 1),
+        0 => MatchTarget(tr('1アシスト', '1 assist'), AttributeKey.passing, (r) => r.assists >= 1),
         1 => MatchTarget(
-          '得点に絡む',
+          tr('得点に絡む', 'A goal or an assist'),
           AttributeKey.dribbling,
           (r) => r.goals + r.assists >= 1,
         ),
         _ => MatchTarget(
-          '評価 7.0',
+          tr('評価 7.0', 'Rating 7.0'),
           AttributeKey.physical,
           (r) => (r.rating ?? 0) >= 7.0,
         ),
       };
     }
     return switch (turn) {
-      0 => MatchTarget('無失点', AttributeKey.defending, (r) => r.conceded == 0),
+      0 => MatchTarget(tr('無失点', 'A clean sheet'), AttributeKey.defending, (r) => r.conceded == 0),
       1 => MatchTarget(
-        '評価 7.0',
+        tr('評価 7.0', 'Rating 7.0'),
         AttributeKey.physical,
         (r) => (r.rating ?? 0) >= 7.0,
       ),
-      _ => MatchTarget('失点1以内', AttributeKey.defending, (r) => r.conceded <= 1),
+      _ => MatchTarget(tr('失点1以内', 'Concede at most 1'), AttributeKey.defending, (r) => r.conceded <= 1),
     };
   }
 
