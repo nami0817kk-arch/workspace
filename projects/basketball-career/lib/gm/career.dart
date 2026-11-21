@@ -11,6 +11,7 @@ import 'names.dart';
 import 'personality.dart';
 import 'player.dart';
 import 'policy.dart';
+import 'potential_view.dart';
 import 'rating.dart';
 import 'records.dart';
 import 'skills.dart';
@@ -715,6 +716,28 @@ class Career {
   /// 試合で見たほかのチームの選手(選手の id → 対戦した試合の数。けがで出ていない選手は数えない)。
   /// 伸びしろの見立ての幅を狭める(2026-11-21 の作り込み A-1。乱数は使わない)。
   Map<int, int> seenGames = {};
+
+  /// 見立てが外れていたと分かって、知らせた選手(選手の id)。
+  Set<int> potentialRevealed = {};
+
+  /// 自分の選手で、外れていた見立てが正確に分かった選手を知らせる(「見立てを上回った/より伸びなかった」)。
+  void _potentialNews() {
+    for (final p in [...me.roster, ...me.twoWay]) {
+      if (potentialRevealed.contains(p.id)) continue;
+      final m = potentialMissOf(p);
+      if (m == 0 || !potentialOf(p).exact) continue;
+      potentialRevealed.add(p.id);
+      final was = potentialViewOf(p, 89, miss: m).text;
+      _mail(
+        Sender.staff,
+        m < 0 ? '${p.name}は見立てを上回った' : '${p.name}は見立てより伸びなかった',
+        m < 0
+            ? '長く見てきて分かった。${p.name}の伸びしろは${p.grade}だ。前の見立て($was)より上だった。'
+            : '長く見てきて分かった。${p.name}の伸びしろは${p.grade == '-' ? 'ほとんど無い' : p.grade}。前の見立て($was)ほどは伸びない。',
+        player: p.id,
+      );
+    }
+  }
 
   /// 自分の試合の相手 [t] の選手を、見たことにする。
   void _sawTeam(int t) {
@@ -2460,6 +2483,7 @@ class Career {
 
   void startSeason() {
     if (phase != Phase.preseason || startProblem != null) return;
+    _potentialNews();
     for (final t in teams) {
       t.wins = 0;
       t.losses = 0;
@@ -2754,6 +2778,7 @@ class Career {
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    _potentialNews();
     _updateChem();
     _giveMonthly();
     if (block == tradeDeadlineBlock) {
@@ -5192,6 +5217,7 @@ class Career {
         if (draftHistory.isNotEmpty) 'dhx': [for (final x in draftHistory) x.toJson()],
         if (scoutFocus != null) 'sf': scoutFocus!.index,
         'sp': scoutPrep,
+        if (potentialRevealed.isNotEmpty) 'pv': [...potentialRevealed],
         if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
         if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
@@ -5338,6 +5364,7 @@ class Career {
       ..scoutFocus = j['sf'] is int ? ScoutFocus.values[(j['sf'] as int).clamp(0, ScoutFocus.values.length - 1)] : null
       ..scoutPrep = [for (var i = 0; i < ScoutFocus.values.length; i++) (j['sp'] is List && (j['sp'] as List).length > i) ? ((j['sp'] as List)[i] as int) : 0]
       ..prepScouted = (j['ps'] as int?) ?? 0
+      ..potentialRevealed = {for (final x in (j['pv'] as List? ?? const [])) x as int}
       ..seenGames = {
         for (final x in (j['sg'] as List? ?? const []))
           if (x is List && x.length == 2) x[0] as int: x[1] as int,
