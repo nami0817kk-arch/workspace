@@ -131,9 +131,12 @@ void main() {
       expect(p.has(Achievement.fullTerm), isTrue);
       expect(p.has(Achievement.longHaul), isFalse);
       expect(p.has(Achievement.level5), c.gmLevel >= 5);
+      final had5 = p.has(Achievement.level5);
       c.gmPoints = ratingFloors[4];
       final got = p.recordSeason(c);
-      expect(got, contains(Achievement.level5));
+      // もう取っていれば、新しくは出ない
+      expect(got.contains(Achievement.level5), !had5);
+      expect(p.has(Achievement.level5), isTrue);
       expect(p.bestLevel, 5);
       c.gmPoints = ratingFloors[9];
       expect(p.recordSeason(c), contains(Achievement.level10));

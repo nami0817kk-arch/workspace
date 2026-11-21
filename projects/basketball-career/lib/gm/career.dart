@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'combos.dart';
 import 'difficulty.dart';
 import 'draft.dart';
 import 'game_sim.dart';
@@ -757,6 +758,28 @@ class Career {
     final known = started || phase != Phase.preseason;
     for (final p in picks) {
       p.classScale = known && p.season == season ? draftClassOf(seed, p.season).valueScale : 1.0;
+    }
+  }
+
+  /// 自分のチームで、組み合わせごとに一緒に出た秒([Combo] の順)。たまると組み合わせが分かる(B-1)。
+  List<int> comboSecs = List.filled(Combo.values.length, 0);
+
+  /// 分かった組み合わせ。
+  List<Combo> get combosFound => [for (final x in Combo.values) if (comboSecs[x.index] >= comboDiscoverSecs) x];
+
+  /// 自分の試合 [g] の組み合わせの時間を足し、新しく分かった組み合わせを知らせる。
+  void _noteCombos(GameResult g) {
+    if (g.comboSecs.length != Combo.values.length) return;
+    for (final x in Combo.values) {
+      final before = comboSecs[x.index];
+      comboSecs[x.index] = math.min(1 << 30, before + g.comboSecs[x.index]);
+      if (before < comboDiscoverSecs && comboSecs[x.index] >= comboDiscoverSecs) {
+        _mail(
+          Sender.staff,
+          x.good ? '新しい組み合わせを発見: ${x.label}' : '良くない組み合わせが分かった: ${x.label}',
+          '${x.label}が一緒にコートに立つと、${x.text}。${x.good ? '先発や出場時間で、この組み合わせを長く出したい。' : 'この組み合わせは、なるべく避けたい。'}',
+        );
+      }
     }
   }
 
@@ -2756,7 +2779,10 @@ class Career {
             healScale: medicalScale,
             liveSeed: live ? liveSeed : null,
             calls: live ? _liveCalls! : const []);
-        if (h == mine || a == mine) _sawTeam(h == mine ? a : h);
+        if (h == mine || a == mine) {
+          _sawTeam(h == mine ? a : h);
+          _noteCombos(g);
+        }
         for (final p in rested) {
           p.injured = 0;
           p.restGames++;
@@ -3202,6 +3228,7 @@ class Career {
           try {
             s.playOne(teams, rng, mine, liveSeed: seed, calls: live ?? const []);
             _sawTeam(s.high == mine ? s.low : s.high);
+            if (s.games.isNotEmpty) _noteCombos(s.games.last);
           } finally {
             for (final p in rested) {
               p.injured = 0;
@@ -3213,7 +3240,10 @@ class Career {
           final rested = mineIn ? _restBeforeGame() : const <Player>[];
           try {
             s.playOne(teams, rng, mine);
-            if (mineIn) _sawTeam(s.high == mine ? s.low : s.high);
+            if (mineIn) {
+              _sawTeam(s.high == mine ? s.low : s.high);
+              if (s.games.isNotEmpty) _noteCombos(s.games.last);
+            }
           } finally {
             for (final p in rested) {
               p.injured = 0;
@@ -5257,6 +5287,7 @@ class Career {
         if (growthKnown.isNotEmpty) 'gk': [...growthKnown],
         if (blocksWithMe.isNotEmpty) 'wb': [for (final e in blocksWithMe.entries) [e.key, e.value]],
         if (traitSeen.isNotEmpty) 'ts': [...traitSeen],
+        if (comboSecs.any((x) => x > 0)) 'cb': comboSecs,
         if (seenGames.isNotEmpty) 'sg': [for (final e in seenGames.entries) [e.key, e.value]],
         if (prepScouted > 0) 'ps': prepScouted,
         if (promises.isNotEmpty) 'pr': [for (final x in promises) x.toJson()],
@@ -5410,6 +5441,7 @@ class Career {
           if (x is List && x.length == 2) x[0] as int: x[1] as int,
       }
       ..traitSeen = {for (final x in (j['ts'] as List? ?? const [])) x as int}
+      ..comboSecs = [for (var i = 0; i < Combo.values.length; i++) (j['cb'] is List && (j['cb'] as List).length > i) ? ((j['cb'] as List)[i] as int) : 0]
       ..seenGames = {
         for (final x in (j['sg'] as List? ?? const []))
           if (x is List && x.length == 2) x[0] as int: x[1] as int,

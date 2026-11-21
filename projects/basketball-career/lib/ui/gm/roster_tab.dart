@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../gm/combos.dart';
 import '../../gm/potential_view.dart';
 import '../../gm/career.dart';
 import '../../gm/league.dart';
@@ -324,6 +325,7 @@ class _RosterTabState extends State<RosterTab> {
                 _line('力に見合う年俸', money(fairSalary(p.ovr, p.age))),
                 _line('伸びしろ', potentialLine(car, p)),
             if (p.age < 30) _line('伸び方', growthLine(car, p)),
+            _line('組み合わせの型', '${roleOf(p).label}(${roleOf(p).text})'),
                 if (p.drafted != null) _line('ドラフト', p.drafted!),
                 RecentGames(car: car, p: p),
                 if (p.career.isNotEmpty) CareerTable(p: p),
