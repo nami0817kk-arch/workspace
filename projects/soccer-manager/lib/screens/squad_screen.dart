@@ -392,6 +392,60 @@ class _SquadScreenState extends State<SquadScreen> {
         .lastPlayedFixtureFor(team.id)
         ?.result
         ?.playerRatings;
+    Widget cardFor(BuildContext context, int i) =>
+        _card(context, players, i, team, lastRatings);
+
+    final actions = <Widget>[
+      if (!_compareMode) ...[
+        // 横画面は細い段に収めるので、アイコンの意味と用語集を1つの「?」にまとめる。
+        if (wide)
+          PopupMenuButton<int>(
+            icon: const Icon(Icons.help_outline),
+            tooltip: Tr.pick('アイコンの意味・用語集', 'Icons and glossary'),
+            onSelected: (v) => v == 0
+                ? _showIconLegend(context)
+                : Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const GlossaryScreen())),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                  value: 0,
+                  child: Text(Tr.pick('アイコンの意味', 'What the icons mean'))),
+              PopupMenuItem(value: 1, child: Text(Tr.pick('用語集', 'Glossary'))),
+            ],
+          )
+        else ...[
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            tooltip: Tr.pick('アイコンの意味', 'What the icons mean'),
+            onPressed: () => _showIconLegend(context),
+          ),
+          IconButton(
+            icon: const Icon(Icons.help_outline),
+            tooltip: Tr.pick('用語集', 'Glossary'),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const GlossaryScreen())),
+          ),
+        ],
+        PopupMenuButton<SquadSortOption>(
+          icon: const Icon(Icons.sort),
+          tooltip: Tr.pick('並び替え', 'Sort'),
+          initialValue: _sort,
+          onSelected: (v) => setState(() => _sort = v),
+          itemBuilder: (context) => [
+            for (final option in SquadSortOption.values)
+              PopupMenuItem(value: option, child: Text(option.label)),
+          ],
+        ),
+      ],
+      IconButton(
+        icon: Icon(_compareMode ? Icons.close : Icons.compare_arrows),
+        tooltip: _compareMode
+            ? Tr.pick('比較モードを終了', 'Leave compare mode')
+            : Tr.pick('選手を比較', 'Compare players'),
+        onPressed: _toggleCompareMode,
+      ),
+    ];
 
     return Scaffold(
       appBar: screenBar(
@@ -402,39 +456,8 @@ class _SquadScreenState extends State<SquadScreen> {
         // 下タブの一員でもあり、ホームやガイドから直接開かれもする。
         // 開かれた場合は戻るボタンを出す(ドロワーがあると既定では出ない)。
         leading: Navigator.of(context).canPop() ? const BackButton() : null,
-        actions: [
-          if (!_compareMode) ...[
-            IconButton(
-              icon: const Icon(Icons.info_outline),
-              tooltip: Tr.pick('アイコンの意味', 'What the icons mean'),
-              onPressed: () => _showIconLegend(context),
-            ),
-            IconButton(
-              icon: const Icon(Icons.help_outline),
-              tooltip: Tr.pick('用語集', 'Glossary'),
-              onPressed: () => Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const GlossaryScreen())),
-            ),
-            PopupMenuButton<SquadSortOption>(
-              icon: const Icon(Icons.sort),
-              tooltip: Tr.pick('並び替え', 'Sort'),
-              initialValue: _sort,
-              onSelected: (v) => setState(() => _sort = v),
-              itemBuilder: (context) => [
-                for (final option in SquadSortOption.values)
-                  PopupMenuItem(value: option, child: Text(option.label)),
-              ],
-            ),
-          ],
-          IconButton(
-            icon: Icon(_compareMode ? Icons.close : Icons.compare_arrows),
-            tooltip: _compareMode
-                ? Tr.pick('比較モードを終了', 'Leave compare mode')
-                : Tr.pick('選手を比較', 'Compare players'),
-            onPressed: _toggleCompareMode,
-          ),
-        ],
+        // 横画面では印を表の上の細い段に置く(上の段を空にして縦を空ける)。
+        actions: wide ? const [] : actions,
       ),
       drawer: const QuickAccessDrawer(),
       floatingActionButton: _compareMode && _selected.length == 2
@@ -459,6 +482,27 @@ class _SquadScreenState extends State<SquadScreen> {
         maxWidth: wide ? 1100 : 720,
         child: _SquadLayout(
           wide: wide,
+          toolbar: _compareMode
+              ? Row(children: [
+                  const SizedBox(width: 12),
+                  Expanded(
+                      child: Text(Tr.pick('選手を2人選択', 'Pick two players'),
+                          style: Theme.of(context).textTheme.titleSmall)),
+                  ...actions,
+                ])
+              : _SquadToolbar(
+                  team: team,
+                  table: _table,
+                  onTable: (v) => setState(() => _table = v),
+                  group: _filterGroup,
+                  onGroup: (g) => setState(() => _filterGroup = g),
+                  status: _statusFilter,
+                  onStatus: (f) => setState(() => _statusFilter = f),
+                  searchController: _searchController,
+                  query: _query,
+                  onQuery: (v) => setState(() => _query = v),
+                  actions: actions,
+                ),
           header: [
             if (!_compareMode) _SquadSummaryCard(team: team),
             if (!_compareMode)
@@ -468,8 +512,8 @@ class _SquadScreenState extends State<SquadScreen> {
                   alignment: Alignment.centerLeft,
                   child: SegmentedButton<bool>(
                     showSelectedIcon: false,
-                    style: const ButtonStyle(
-                        visualDensity: VisualDensity.compact),
+                    style:
+                        const ButtonStyle(visualDensity: VisualDensity.compact),
                     segments: [
                       ButtonSegment(
                           value: true, label: Text(Tr.pick('表', 'Table'))),
@@ -477,8 +521,7 @@ class _SquadScreenState extends State<SquadScreen> {
                           value: false, label: Text(Tr.pick('カード', 'Cards'))),
                     ],
                     selected: {_table},
-                    onSelectionChanged: (s) =>
-                        setState(() => _table = s.first),
+                    onSelectionChanged: (s) => setState(() => _table = s.first),
                   ),
                 ),
               ),
@@ -508,8 +551,7 @@ class _SquadScreenState extends State<SquadScreen> {
                           style: const TextStyle(fontSize: 12),
                         ),
                         visualDensity: VisualDensity.compact,
-                        labelPadding:
-                            const EdgeInsets.symmetric(horizontal: 2),
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 2),
                         selected: _statusFilter == f,
                         onSelected: (_) => setState(() => _statusFilter = f),
                       ),
@@ -541,389 +583,387 @@ class _SquadScreenState extends State<SquadScreen> {
             ),
           ],
           list: players.isEmpty
-                  ? Center(
-                      child: Text(Tr.pick('該当する選手がいません', 'No players match')))
-                  : (_table && !_compareMode)
-                      ? SquadTable(
-                          players: players,
-                          startingIds: team.startingXI.toSet(),
-                          onTap: (p) => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  PlayerDetailScreen(playerId: p.id),
-                            ),
+              ? Center(child: Text(Tr.pick('該当する選手がいません', 'No players match')))
+              : (_table && !_compareMode)
+                  ? SquadTable(
+                      players: players,
+                      startingIds: team.startingXI.toSet(),
+                      onTap: (p) => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => PlayerDetailScreen(playerId: p.id),
+                        ),
+                      ),
+                    )
+                  : (wide
+                      // 横画面のカードは2列。1列だと幅が余り、文が詰まって見えた。
+                      ? ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          itemCount: (players.length + 1) ~/ 2,
+                          itemBuilder: (context, row) => Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (final i in [row * 2, row * 2 + 1])
+                                Expanded(
+                                  child: i < players.length
+                                      ? cardFor(context, i)
+                                      : const SizedBox.shrink(),
+                                ),
+                            ],
                           ),
                         )
                       : ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      itemCount: players.length,
-                      itemBuilder: (context, i) {
-                        final p = players[i];
-                        final isStarting = team.startingXI.contains(p.id);
-                        final isSelected = _selected.contains(p.id);
-                        return Card(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
-                          ),
-                          child: ListTile(
-                            // **既定の余白を詰める。** 左右16・顔との間16が
-                            // 既定で、そのぶん本文の幅が減って「役割 スイーパー
-                            // キーパー」が折り返していた。
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(12, 4, 8, 4),
-                            horizontalTitleGap: 10,
-                            minLeadingWidth: 40,
-                            tileColor: isSelected
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer
-                                : isStarting
-                                    ? Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer
-                                        .withValues(alpha: 0.3)
-                                    : null,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            leading: _compareMode
-                                ? Checkbox(
-                                    value: isSelected,
-                                    onChanged: (_) => _toggleSelected(p.id),
-                                  )
-                                : PlayerFaceAvatar(
-                                    playerId: p.id,
-                                    position: p.position,
-                                    size: 40,
-                                    highlighted: isStarting,
-                                  ),
-                            title: Row(
-                              children: [
-                                // 背番号。ユースから上げた選手と移籍加入の
-                                // 選手に付く。旧セーブでは未設定なので出さない。
-                                if (p.squadNumber != null) ...[
-                                  Text(
-                                    '${p.squadNumber}',
-                                    style: TextStyle(
-                                      fontFeatures: const [
-                                        FontFeature.tabularFigures()
-                                      ],
-                                      color:
-                                          SemanticColors.subtleText(context),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                ],
-                                Flexible(
-                                  child: Text(
-                                    p.name,
-                                    overflow: TextOverflow.ellipsis,
-                                    // 名前が主役。既定の太さだと、下に続く
-                                    // 細かい数字と同じ重さに見えていた。
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                                // 生え抜き(自クラブのユース出身)。買ってきた
-                                // 選手と育てた選手を見分けられるようにする。
-                                if (p.academyGraduate) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick('生え抜き(自クラブのユース出身)',
-                                        'Came through your academy'),
-                                    child: Icon(
-                                      Icons.eco,
-                                      size: 14,
-                                      color: SemanticColors.positive(context),
-                                    ),
-                                  ),
-                                ],
-                                if (team.captainId == p.id) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick('キャプテン', 'Captain'),
-                                    child: CircleAvatar(
-                                      radius: 8,
-                                      backgroundColor: Colors.amber.shade700,
-                                      child: const Text(
-                                        'C',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                if (team.viceCaptainId == p.id) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick('副キャプテン', 'Vice captain'),
-                                    child: const CircleAvatar(
-                                      radius: 8,
-                                      backgroundColor: Colors.blueGrey,
-                                      child: Text(
-                                        'VC',
-                                        style: TextStyle(
-                                          fontSize: 8,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                if (p.squadStatus != SquadStatus.regular) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick(
-                                        'スカッド・ステータス: ${p.squadStatus.label}',
-                                        'Squad status: ${p.squadStatus.label}'),
-                                    child: Text(
-                                      switch (p.squadStatus) {
-                                        SquadStatus.keyPlayer => 'KP',
-                                        SquadStatus.rotation => 'ROT',
-                                        SquadStatus.prospect =>
-                                          Tr.pick('育成', 'Prospect'),
-                                        SquadStatus.regular => '',
-                                      },
-                                      style: TextStyle(
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.bold,
-                                        color: switch (p.squadStatus) {
-                                          SquadStatus.keyPlayer =>
-                                            Colors.amber.shade800,
-                                          SquadStatus.rotation => Colors.teal,
-                                          _ =>
-                                            SemanticColors.subtleText(context),
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                if (p.isLoan) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick('ローン加入中', 'On loan here'),
-                                    child: const Icon(
-                                      Icons.swap_horiz,
-                                      size: 16,
-                                      color: Colors.indigo,
-                                    ),
-                                  ),
-                                ],
-                                if (p.wantsTransfer) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick(
-                                        '移籍を希望している', 'Wants a move away'),
-                                    child: const Icon(
-                                      Icons.sentiment_dissatisfied,
-                                      size: 16,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                ],
-                                if (p.isOnInternationalDuty) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: p.onTournamentLeave
-                                        ? Tr.pick('大会明けの休み',
-                                            'Post-tournament break')
-                                        : Tr.pick('代表召集中',
-                                            'On international duty'),
-                                    child: const Icon(
-                                      Icons.flag,
-                                      size: 16,
-                                      color: Colors.blueAccent,
-                                    ),
-                                  ),
-                                ],
-                                if (p.isSuspended) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick('出場停止中', 'Suspended'),
-                                    child: const Icon(
-                                      Icons.block,
-                                      size: 16,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                ],
-                                if (p.isLoanedOut) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick('ローンで放出中', 'Out on loan'),
-                                    child: const Icon(
-                                      Icons.flight_takeoff,
-                                      size: 16,
-                                      color: Colors.deepPurple,
-                                    ),
-                                  ),
-                                ],
-                                if (p.isTransferListed) ...[
-                                  const SizedBox(width: 6),
-                                  Tooltip(
-                                    message: Tr.pick(
-                                        '移籍リストに登録済み', 'On the transfer list'),
-                                    child: const Icon(
-                                      Icons.sell_outlined,
-                                      size: 16,
-                                      color: Colors.orange,
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  p.isInjured
-                                      ? Tr.pick('負傷中（あと${p.injuryWeeks}週）',
-                                          'Injured (${Tr.plural(p.injuryWeeks, 'week')})')
-                                      : p.isSuspended
-                                          ? Tr.pick(
-                                              '出場停止（あと${p.suspendedMatches}試合）',
-                                              'Suspended (${Tr.plural(p.suspendedMatches, 'match', 'matches')})')
-                                          : p.onTournamentLeave
-                                              ? Tr.pick('大会明けの休み（合流前）',
-                                                  'Post-tournament break (not back yet)')
-                                          : p.isOnInternationalDuty
-                                              ? Tr.pick(
-                                                  '代表召集中（あと${p.internationalDutyWeeksRemaining}週）',
-                                                  'On international duty (${Tr.plural(p.internationalDutyWeeksRemaining, 'week')})')
-                                              : p.isLoanedOut
-                                                  ? Tr.pick(
-                                                      '${p.loanedOutToClubName}へローン放出中（あと${p.loanedOutWeeksRemaining}週）',
-                                                      'On loan at ${p.loanedOutToClubName} (${Tr.plural(p.loanedOutWeeksRemaining, 'week')} left)')
-                                                  : p.notRegistered
-                                                  ? Tr.pick(
-                                                      '登録外（次の移籍の窓まで公式戦に出られない）',
-                                                      'Not registered (ineligible until the next window)')
-                                                  : Tr.pick(
-                                                      // 総合力は右端に大きく出している。ここに重ねて書くと、
-                                                      // 同じ数字が1行に2回並ぶうえ、行が長くなって
-                                                      // 「契約残り3年」が途中で折り返していた。
-                                                      '${p.age}歳 / ${p.position.label}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.contractLabel(p)}'}',
-                                                      "Age ${p.age} / ${p.position.label}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.contractLabel(p)}'}"),
-                                  style: (p.isInjured ||
-                                          p.isSuspended ||
-                                          p.isOnInternationalDuty ||
-                                          p.isLoanedOut ||
-                                          p.notRegistered)
-                                      ? const TextStyle(color: Colors.redAccent)
-                                      : (!p.isLoan &&
-                                              p.contractYearsRemaining <= 1)
-                                          ? const TextStyle(
-                                              color: Colors.orange)
-                                          : null,
-                                ),
-                                // 特性・役割・指示は選手詳細を開かないと
-                                // 見えなかった。25人ぶん開いて回らないと
-                                // 誰がどういう選手か分からない状態だったので、
-                                // 設定されているものだけ一覧にも出す。
-                                if (!_compareMode) _PlayerTagsLine(player: p),
-                                if (!_compareMode &&
-                                    !p.isInjured &&
-                                    !p.isSuspended &&
-                                    !p.isOnInternationalDuty &&
-                                    !p.isLoanedOut)
-                                  _ConditionLine(
-                                    player: p,
-                                    stats: gameState.seasonStatsFor(p.id),
-                                  ),
-                              ],
-                            ),
-                            trailing: _compareMode
-                                ? OverallBadge(overall: p.overall)
-                                : Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Builder(
-                                        builder: (context) {
-                                          // 成長トレンド: 直近5節前と比べた
-                                          // 総合力の変化(記録が浅ければ先頭と比較)。
-                                          final h = p.overallHistory;
-                                          final trend = h.length >= 2
-                                              ? h.last -
-                                                  h[h.length >= 6
-                                                      ? h.length - 6
-                                                      : 0]
-                                              : 0;
-                                          return Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              OverallBadge(
-                                                  overall: p.overall),
-                                              if (trend != 0)
-                                                Tooltip(
-                                                  message: Tr.pick(
-                                                      '直近5節の総合力の変化',
-                                                      'Change over the last 5 matchdays'),
-                                                  child: Text(
-                                                    trend > 0
-                                                        ? '▲$trend'
-                                                        : '▼${-trend}',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: trend > 0
-                                                          ? Colors.green
-                                                          : Colors.redAccent,
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                      if (!p.isLoan && !p.isLoanedOut) ...[
-                                        const SizedBox(width: 4),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.description_outlined,
-                                            size: 20,
-                                          ),
-                                          tooltip: Tr.pick(
-                                              '契約を操作', 'Contract actions'),
-                                          onPressed: () =>
-                                              _showContractSheet(context, p),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                            onTap: _compareMode
-                                ? () => _toggleSelected(p.id)
-                                : () => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            PlayerDetailScreen(playerId: p.id),
-                                      ),
-                                    ),
-                          ),
-                        );
-                      },
-                    ),
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          itemCount: players.length,
+                          itemBuilder: cardFor,
+                        )),
         ),
+      ),
+    );
+  }
+
+  /// 選手のカード1枚。
+  Widget _card(BuildContext context, List<Player> players, int i, Team team,
+      Map<String, double>? lastRatings) {
+    final gameState = context.read<GameState>();
+    final p = players[i];
+    final isStarting = team.startingXI.contains(p.id);
+    final isSelected = _selected.contains(p.id);
+    return Card(
+      margin: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 4,
+      ),
+      child: ListTile(
+        // **既定の余白を詰める。** 左右16・顔との間16が
+        // 既定で、そのぶん本文の幅が減って「役割 スイーパー
+        // キーパー」が折り返していた。
+        contentPadding: const EdgeInsets.fromLTRB(12, 4, 8, 4),
+        horizontalTitleGap: 10,
+        minLeadingWidth: 40,
+        tileColor: isSelected
+            ? Theme.of(context).colorScheme.secondaryContainer
+            : isStarting
+                ? Theme.of(context)
+                    .colorScheme
+                    .primaryContainer
+                    .withValues(alpha: 0.3)
+                : null,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        leading: _compareMode
+            ? Checkbox(
+                value: isSelected,
+                onChanged: (_) => _toggleSelected(p.id),
+              )
+            : PlayerFaceAvatar(
+                playerId: p.id,
+                position: p.position,
+                size: 40,
+                highlighted: isStarting,
+              ),
+        title: Row(
+          children: [
+            // 背番号。ユースから上げた選手と移籍加入の
+            // 選手に付く。旧セーブでは未設定なので出さない。
+            if (p.squadNumber != null) ...[
+              Text(
+                '${p.squadNumber}',
+                style: TextStyle(
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                  color: SemanticColors.subtleText(context),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            Flexible(
+              child: Text(
+                p.name,
+                overflow: TextOverflow.ellipsis,
+                // 名前が主役。既定の太さだと、下に続く
+                // 細かい数字と同じ重さに見えていた。
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+            ),
+            // 生え抜き(自クラブのユース出身)。買ってきた
+            // 選手と育てた選手を見分けられるようにする。
+            if (p.academyGraduate) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message:
+                    Tr.pick('生え抜き(自クラブのユース出身)', 'Came through your academy'),
+                child: Icon(
+                  Icons.eco,
+                  size: 14,
+                  color: SemanticColors.positive(context),
+                ),
+              ),
+            ],
+            if (team.captainId == p.id) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: Tr.pick('キャプテン', 'Captain'),
+                child: CircleAvatar(
+                  radius: 8,
+                  backgroundColor: Colors.amber.shade700,
+                  child: const Text(
+                    'C',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            if (team.viceCaptainId == p.id) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: Tr.pick('副キャプテン', 'Vice captain'),
+                child: const CircleAvatar(
+                  radius: 8,
+                  backgroundColor: Colors.blueGrey,
+                  child: Text(
+                    'VC',
+                    style: TextStyle(
+                      fontSize: 8,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            if (p.squadStatus != SquadStatus.regular) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: Tr.pick('スカッド・ステータス: ${p.squadStatus.label}',
+                    'Squad status: ${p.squadStatus.label}'),
+                child: Text(
+                  switch (p.squadStatus) {
+                    SquadStatus.keyPlayer => 'KP',
+                    SquadStatus.rotation => 'ROT',
+                    SquadStatus.prospect => Tr.pick('育成', 'Prospect'),
+                    SquadStatus.regular => '',
+                  },
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: switch (p.squadStatus) {
+                      SquadStatus.keyPlayer => Colors.amber.shade800,
+                      SquadStatus.rotation => Colors.teal,
+                      _ => SemanticColors.subtleText(context),
+                    },
+                  ),
+                ),
+              ),
+            ],
+            if (p.isLoan) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: Tr.pick('ローン加入中', 'On loan here'),
+                child: const Icon(
+                  Icons.swap_horiz,
+                  size: 16,
+                  color: Colors.indigo,
+                ),
+              ),
+            ],
+            if (p.wantsTransfer) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: Tr.pick('移籍を希望している', 'Wants a move away'),
+                child: const Icon(
+                  Icons.sentiment_dissatisfied,
+                  size: 16,
+                  color: Colors.redAccent,
+                ),
+              ),
+            ],
+            if (p.isOnInternationalDuty) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: p.onTournamentLeave
+                    ? Tr.pick('大会明けの休み', 'Post-tournament break')
+                    : Tr.pick('代表召集中', 'On international duty'),
+                child: const Icon(
+                  Icons.flag,
+                  size: 16,
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ],
+            if (p.isSuspended) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: Tr.pick('出場停止中', 'Suspended'),
+                child: const Icon(
+                  Icons.block,
+                  size: 16,
+                  color: Colors.redAccent,
+                ),
+              ),
+            ],
+            if (p.isLoanedOut) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: Tr.pick('ローンで放出中', 'Out on loan'),
+                child: const Icon(
+                  Icons.flight_takeoff,
+                  size: 16,
+                  color: Colors.deepPurple,
+                ),
+              ),
+            ],
+            if (p.isTransferListed) ...[
+              const SizedBox(width: 6),
+              Tooltip(
+                message: Tr.pick('移籍リストに登録済み', 'On the transfer list'),
+                child: const Icon(
+                  Icons.sell_outlined,
+                  size: 16,
+                  color: Colors.orange,
+                ),
+              ),
+            ],
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              p.isInjured
+                  ? Tr.pick('負傷中（あと${p.injuryWeeks}週）',
+                      'Injured (${Tr.plural(p.injuryWeeks, 'week')})')
+                  : p.isSuspended
+                      ? Tr.pick('出場停止（あと${p.suspendedMatches}試合）',
+                          'Suspended (${Tr.plural(p.suspendedMatches, 'match', 'matches')})')
+                      : p.onTournamentLeave
+                          ? Tr.pick('大会明けの休み（合流前）',
+                              'Post-tournament break (not back yet)')
+                          : p.isOnInternationalDuty
+                              ? Tr.pick(
+                                  '代表召集中（あと${p.internationalDutyWeeksRemaining}週）',
+                                  'On international duty (${Tr.plural(p.internationalDutyWeeksRemaining, 'week')})')
+                              : p.isLoanedOut
+                                  ? Tr.pick(
+                                      '${p.loanedOutToClubName}へローン放出中（あと${p.loanedOutWeeksRemaining}週）',
+                                      'On loan at ${p.loanedOutToClubName} (${Tr.plural(p.loanedOutWeeksRemaining, 'week')} left)')
+                                  : p.notRegistered
+                                      ? Tr.pick('登録外（次の移籍の窓まで公式戦に出られない）',
+                                          'Not registered (ineligible until the next window)')
+                                      : Tr.pick(
+                                          // 総合力は右端に大きく出している。ここに重ねて書くと、
+                                          // 同じ数字が1行に2回並ぶうえ、行が長くなって
+                                          // 「契約残り3年」が途中で折り返していた。
+                                          '${p.age}歳 / ${p.position.label}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.contractLabel(p)}'}',
+                                          "Age ${p.age} / ${p.position.label}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.contractLabel(p)}'}"),
+              style: (p.isInjured ||
+                      p.isSuspended ||
+                      p.isOnInternationalDuty ||
+                      p.isLoanedOut ||
+                      p.notRegistered)
+                  ? const TextStyle(color: Colors.redAccent)
+                  : (!p.isLoan && p.contractYearsRemaining <= 1)
+                      ? const TextStyle(color: Colors.orange)
+                      : null,
+            ),
+            // 特性・役割・指示は選手詳細を開かないと
+            // 見えなかった。25人ぶん開いて回らないと
+            // 誰がどういう選手か分からない状態だったので、
+            // 設定されているものだけ一覧にも出す。
+            if (!_compareMode) _PlayerTagsLine(player: p),
+            if (!_compareMode &&
+                !p.isInjured &&
+                !p.isSuspended &&
+                !p.isOnInternationalDuty &&
+                !p.isLoanedOut)
+              _ConditionLine(
+                player: p,
+                stats: gameState.seasonStatsFor(p.id),
+              ),
+          ],
+        ),
+        trailing: _compareMode
+            ? OverallBadge(overall: p.overall)
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Builder(
+                    builder: (context) {
+                      // 成長トレンド: 直近5節前と比べた
+                      // 総合力の変化(記録が浅ければ先頭と比較)。
+                      final h = p.overallHistory;
+                      final trend = h.length >= 2
+                          ? h.last - h[h.length >= 6 ? h.length - 6 : 0]
+                          : 0;
+                      // ListTile の右端は高さが決まっている。伸びの印を足すと
+                      // 2px はみ出していたので、収まらないときは縮める。
+                      return FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              OverallBadge(overall: p.overall),
+                              if (trend != 0)
+                                Tooltip(
+                                  message: Tr.pick('直近5節の総合力の変化',
+                                      'Change over the last 5 matchdays'),
+                                  child: Text(
+                                    trend > 0 ? '▲$trend' : '▼${-trend}',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: trend > 0
+                                          ? Colors.green
+                                          : Colors.redAccent,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ));
+                    },
+                  ),
+                  if (!p.isLoan && !p.isLoanedOut) ...[
+                    const SizedBox(width: 4),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.description_outlined,
+                        size: 20,
+                      ),
+                      tooltip: Tr.pick('契約を操作', 'Contract actions'),
+                      onPressed: () => _showContractSheet(context, p),
+                    ),
+                  ],
+                ],
+              ),
+        onTap: _compareMode
+            ? () => _toggleSelected(p.id)
+            : () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => PlayerDetailScreen(playerId: p.id),
+                  ),
+                ),
       ),
     );
   }
 }
 
-/// 絞り込みと一覧の並べ方。縦長の画面では上下に積み、横長の画面では
-/// 左に絞り込み・右に一覧を置く。横画面は高さが 400 ほどしかなく、上に
-/// 絞り込みを積むと選手が1人しか見えなくなる。
+/// 絞り込みと一覧の並べ方。縦長の画面では上下に積む。横長の画面では
+/// 細い段を1本だけ置き、一覧を幅いっぱいに出す。
+///
+/// 以前の横画面は左に幅340の絞り込みの欄を置いていて、表が画面の半分しか
+/// なく名前が「ウィリアム・ヒ…」で切れた(2026-11-21 に変更)。
 class _SquadLayout extends StatelessWidget {
   final bool wide;
+  final Widget toolbar;
   final List<Widget> header;
   final Widget list;
 
   const _SquadLayout({
     required this.wide,
+    required this.toolbar,
     required this.header,
     required this.list,
   });
@@ -933,12 +973,190 @@ class _SquadLayout extends StatelessWidget {
     if (!wide) {
       return Column(children: [...header, Expanded(child: list)]);
     }
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
-        SizedBox(width: 340, child: ListView(children: header)),
-        const VerticalDivider(width: 1),
+        SizedBox(height: 48, child: toolbar),
+        const Divider(height: 1),
         Expanded(child: list),
+      ],
+    );
+  }
+}
+
+/// 横画面の表の上の細い段。集計・表とカード・位置・状態・検索・印のボタン。
+class _SquadToolbar extends StatefulWidget {
+  const _SquadToolbar({
+    required this.team,
+    required this.table,
+    required this.onTable,
+    required this.group,
+    required this.onGroup,
+    required this.status,
+    required this.onStatus,
+    required this.searchController,
+    required this.query,
+    required this.onQuery,
+    required this.actions,
+  });
+
+  final Team team;
+  final bool table;
+  final ValueChanged<bool> onTable;
+  final PositionGroup? group;
+  final ValueChanged<PositionGroup?> onGroup;
+  final SquadStatusFilter status;
+  final ValueChanged<SquadStatusFilter> onStatus;
+  final TextEditingController searchController;
+  final String query;
+  final ValueChanged<String> onQuery;
+  final List<Widget> actions;
+
+  @override
+  State<_SquadToolbar> createState() => _SquadToolbarState();
+}
+
+class _SquadToolbarState extends State<_SquadToolbar> {
+  bool _searching = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final players = widget.team.players;
+    final count = players.length;
+    final avg = count == 0
+        ? 0
+        : (players.fold<int>(0, (s, p) => s + p.overall) / count).round();
+    final injured = players.where((p) => p.isInjured).length;
+    final attention = players.where(SquadScreen.needsAttention).length;
+    final subtle = SemanticColors.subtleText(context);
+    final searching = _searching || widget.query.isNotEmpty;
+
+    Widget menu<T>({
+      required String label,
+      required T value,
+      required List<T> options,
+      required String Function(T) name,
+      required ValueChanged<T> onSelected,
+    }) =>
+        PopupMenuButton<T>(
+          tooltip: label,
+          initialValue: value,
+          onSelected: onSelected,
+          itemBuilder: (_) => [
+            for (final o in options)
+              PopupMenuItem(value: o, child: Text(name(o))),
+          ],
+          child: Container(
+            height: 36,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).dividerColor),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text('$label: ', style: TextStyle(fontSize: 12, color: subtle)),
+              Text(name(value),
+                  style: const TextStyle(
+                      fontSize: 13, fontWeight: FontWeight.w600)),
+              const Icon(Icons.arrow_drop_down, size: 18),
+            ]),
+          ),
+        );
+
+    return Row(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                // 集計(人数・平均・負傷)。年俸の合計は「登録と契約」にある。
+                Text.rich(
+                  TextSpan(style: const TextStyle(fontSize: 12), children: [
+                    TextSpan(text: Tr.pick('$count人', '$count players')),
+                    TextSpan(
+                        text: Tr.pick('・平均$avg', ' • avg $avg'),
+                        style: TextStyle(color: subtle)),
+                    if (injured > 0)
+                      TextSpan(
+                          text: Tr.pick('・負傷$injured', ' • injured $injured'),
+                          style: const TextStyle(color: Colors.redAccent)),
+                  ]),
+                ),
+                const SizedBox(width: 12),
+                SegmentedButton<bool>(
+                  showSelectedIcon: false,
+                  style:
+                      const ButtonStyle(visualDensity: VisualDensity.compact),
+                  segments: [
+                    ButtonSegment(
+                        value: true,
+                        icon: const Icon(Icons.table_rows_outlined, size: 18),
+                        tooltip: Tr.pick('表', 'Table')),
+                    ButtonSegment(
+                        value: false,
+                        icon: const Icon(Icons.grid_view, size: 18),
+                        tooltip: Tr.pick('カード', 'Cards')),
+                  ],
+                  selected: {widget.table},
+                  onSelectionChanged: (s) => widget.onTable(s.first),
+                ),
+                const SizedBox(width: 8),
+                menu<PositionGroup?>(
+                  label: Tr.pick('位置', 'Position'),
+                  value: widget.group,
+                  options: [null, ...PositionGroup.values],
+                  name: PositionFilterBar.labelFor,
+                  onSelected: widget.onGroup,
+                ),
+                const SizedBox(width: 8),
+                menu<SquadStatusFilter>(
+                  label: Tr.pick('状態', 'Status'),
+                  value: widget.status,
+                  options: SquadStatusFilter.values,
+                  name: (f) => f == SquadStatusFilter.needsAttention
+                      ? '${f.label} $attention'
+                      : f.label,
+                  onSelected: widget.onStatus,
+                ),
+                const SizedBox(width: 8),
+                if (searching)
+                  SizedBox(
+                    width: 170,
+                    height: 36,
+                    child: TextField(
+                      controller: widget.searchController,
+                      autofocus: widget.query.isEmpty,
+                      onChanged: widget.onQuery,
+                      style: const TextStyle(fontSize: 13),
+                      decoration: InputDecoration(
+                        hintText: Tr.pick('選手名で検索', 'Search by name'),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          tooltip: Tr.pick('検索をクリア', 'Clear the search'),
+                          onPressed: () {
+                            widget.searchController.clear();
+                            widget.onQuery('');
+                            setState(() => _searching = false);
+                          },
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    tooltip: Tr.pick('選手名で検索', 'Search by name'),
+                    onPressed: () => setState(() => _searching = true),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        ...widget.actions,
       ],
     );
   }

@@ -9,7 +9,8 @@ import 'package:soccer_manager/screens/player_detail_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
 
-/// 選手の画面が5つのタブに分かれ、どのタブも開けるかの検査。
+/// 選手の画面が4つのタブに分かれ、どのタブも開けるかの検査
+/// (人柄と経歴は 2026-11-21 に1つのタブにまとめた)。
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
   tearDown(() => Tr.language = AppLanguage.system);
@@ -41,14 +42,14 @@ void main() {
       ),
     ));
     await tester.pumpAndSettle();
-    for (final t in ['概要', '能力', '契約', '人柄', '経歴']) {
+    for (final t in ['概要', '能力', '契約', '人柄・経歴']) {
       expect(find.text(t), findsOneWidget, reason: '$tのタブ');
     }
     await tester.tap(find.text('能力'));
     await tester.pumpAndSettle();
     expect(find.textContaining('色: 80以上'), findsOneWidget,
         reason: '能力のタブの頭に色分けの一覧');
-    for (final t in ['契約', '人柄', '経歴']) {
+    for (final t in ['契約', '人柄・経歴']) {
       await tester.tap(find.text(t));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull, reason: '$tのタブで例外');

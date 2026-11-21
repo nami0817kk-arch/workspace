@@ -6,7 +6,6 @@ import '../logic/contract_engine.dart';
 import '../logic/injury_care.dart';
 import '../logic/retirement_engine.dart';
 import '../logic/dynamics_engine.dart';
-import '../logic/lineup_utils.dart';
 import '../logic/match_engine.dart';
 import '../logic/transfer_window.dart';
 import '../models/attributes.dart';
@@ -53,8 +52,6 @@ class PlayerDetailScreen extends StatelessWidget {
     final isNegotiatingThisPlayer =
         negotiation != null && negotiation.playerId == p.id;
     final seasonStats = gameState.seasonStatsFor(p.id);
-    final assignedSlot =
-        LineupUtils.assignedSlotByPlayerId(team)[p.id] ?? p.position;
     PlayerGrowthSummary? latestGrowth;
     for (final r in gameState.lastTrainingResults) {
       if (r.playerId == p.id) {
@@ -82,21 +79,43 @@ class PlayerDetailScreen extends StatelessWidget {
       if (p.overallHistory.length >= 2) 1,
     ];
 
+    // 人柄と経歴はどちらも中身が少なく、画面の半分以上が空いていたので
+    // 1つのタブにまとめた(2026-11-21)。
+    final tabBar = TabBar(
+      isScrollable: true,
+      tabAlignment: TabAlignment.start,
+      dividerColor: Colors.transparent,
+      tabs: [
+        Tab(text: Tr.pick('概要', 'Overview')),
+        Tab(text: Tr.pick('能力', 'Attributes')),
+        Tab(text: Tr.pick('契約', 'Contract')),
+        Tab(text: Tr.pick('人柄・経歴', 'Character & history')),
+      ],
+    );
+    final screen = MediaQuery.sizeOf(context);
+    // 横画面は高さが 400 ほどしかない。名前とタブを1段に並べて縦を空ける。
+    final wide = screen.width > screen.height;
+
     return DefaultTabController(
-      length: 5,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(p.name),
-          bottom: TabBar(
-            isScrollable: true,
-            tabs: [
-              Tab(text: Tr.pick('概要', 'Overview')),
-              Tab(text: Tr.pick('能力', 'Attributes')),
-              Tab(text: Tr.pick('契約', 'Contract')),
-              Tab(text: Tr.pick('人柄', 'Character')),
-              Tab(text: Tr.pick('経歴', 'History')),
-            ],
-          ),
+          toolbarHeight: wide ? 52 : null,
+          titleSpacing: wide ? 0 : null,
+          title: wide
+              ? Row(
+                  children: [
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 220),
+                      child: Text(p.name,
+                          maxLines: 1, overflow: TextOverflow.ellipsis),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(child: tabBar),
+                  ],
+                )
+              : Text(p.name),
+          bottom: wide ? null : tabBar,
           actions: [
             IconButton(
               icon: const Icon(Icons.help_outline),
@@ -329,60 +348,91 @@ class PlayerDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ],
-                ),
-                Builder(
-                  builder: (context) {
-                    final potentialProgress = p.potential > 0
-                        ? (p.overall / p.potential * 100).clamp(0, 100)
-                        : 0.0;
-                    final seasonStart =
-                        gameState.save?.seasonStartOverallByPlayerId[p.id];
-                    final seasonDelta =
-                        seasonStart != null ? p.overall - seasonStart : null;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Row(
-                        children: [
-                          Text(
-                            Tr.pick(
-                                '潜在能力到達度: ${potentialProgress.toStringAsFixed(0)}%',
-                                'Potential reached: ${potentialProgress.toStringAsFixed(0)}%'),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.purple,
+                    // 伸びしろと今季の伸びは、総合力のすぐ横に(2026-11-21)。
+                    const SizedBox(width: 20),
+                    Flexible(
+                      child: Builder(
+                        builder: (context) {
+                          final potentialProgress = p.potential > 0
+                              ? (p.overall / p.potential * 100).clamp(0, 100)
+                              : 0.0;
+                          final seasonStart = gameState
+                              .save?.seasonStartOverallByPlayerId[p.id];
+                          final seasonDelta = seasonStart != null
+                              ? p.overall - seasonStart
+                              : null;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // 到達度の数字(97%)ではなく、伸びしろを言葉で出す。
+                                Text(
+                                  potentialProgress >= 95
+                                      ? Tr.pick('伸びしろ: ほぼ上限',
+                                          'Room to grow: almost none')
+                                      : potentialProgress >= 85
+                                          ? Tr.pick('伸びしろ: 少しある',
+                                              'Room to grow: a little')
+                                          : potentialProgress >= 70
+                                              ? Tr.pick('伸びしろ: まだ伸びる',
+                                                  'Room to grow: still improving')
+                                              : Tr.pick('伸びしろ: 大きい',
+                                                  'Room to grow: plenty'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: SemanticColors.subtleText(context),
+                                  ),
+                                ),
+                                if (seasonDelta != null) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    Tr.pick(
+                                        '今シーズンの成長: ${seasonDelta > 0 ? '+' : ''}$seasonDelta',
+                                        "Growth this season: ${seasonDelta > 0 ? '+' : ''}$seasonDelta"),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: seasonDelta > 0
+                                          ? Colors.green
+                                          : SemanticColors.subtleText(context),
+                                      fontWeight: seasonDelta > 0
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
-                          ),
-                          if (seasonDelta != null) ...[
-                            const SizedBox(width: 12),
-                            Text(
-                              Tr.pick(
-                                  '今シーズンの成長: ${seasonDelta > 0 ? '+' : ''}$seasonDelta',
-                                  "Growth this season: ${seasonDelta > 0 ? '+' : ''}$seasonDelta"),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: seasonDelta > 0
-                                    ? Colors.green
-                                    : SemanticColors.subtleText(context),
-                                fontWeight: seasonDelta > 0
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                              ),
-                            ),
-                          ],
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 Center(child: AttributeRadar(player: p)),
+                // 今季の成績と特性(人柄・経歴のタブを開かなくても分かるように)。
+                // 「試合への影響(定量)」は値がほぼ0%で言葉も分かりにくく、外した。
                 const SizedBox(height: 12),
-                _MatchImpactSummary(
-                  player: p,
-                  isStarting: isStarting,
-                  assignedSlot: assignedSlot,
+                Text(
+                  seasonStats.appearances > 0
+                      ? Tr.pick(
+                          '今季 ${seasonStats.appearances}試合 ${seasonStats.goals}得点・平均採点${seasonStats.averageRating!.toStringAsFixed(1)}',
+                          "This season: ${Tr.plural(seasonStats.appearances, 'app')}, ${Tr.plural(seasonStats.goals, 'goal')}, avg rating ${seasonStats.averageRating!.toStringAsFixed(1)}")
+                      : Tr.pick('今季はまだ出場なし', 'No appearances this season'),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
+                if (p.trait != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      Tr.pick('特性: ${p.trait!.label} — ${p.trait!.description}',
+                          'Trait: ${p.trait!.label} — ${p.trait!.description}'),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.subtleText(context)),
+                    ),
+                  ),
               ],
             ),
             // 能力の表は名前が切れないよう、横幅いっぱいの1列のまま。
@@ -478,18 +528,38 @@ class PlayerDetailScreen extends StatelessWidget {
             // 横画面では左右2列に分けて、横幅を使い切る(1列だと縦に長かった)。
             AutoColumns(
               children: [
-                Text(Tr.pick('市場価値: ${formatMoney(p.marketValue)}',
-                    'Value: ${formatMoney(p.marketValue)}')),
                 Builder(
                   builder: (context) {
                     final b = p.marketValueBreakdown;
-                    return Text(
-                      Tr.pick(
-                          '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ' 夏の大会の活躍×${b.tournamentFactor.toStringAsFixed(2)}' : ''}',
-                          'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ', summer tournament ${b.tournamentFactor.toStringAsFixed(2)}' : ''}'),
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: SemanticColors.subtleText(context)),
+                    final detail = Tr.pick(
+                        '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ' 夏の大会の活躍×${b.tournamentFactor.toStringAsFixed(2)}' : ''}',
+                        'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ', summer tournament ${b.tournamentFactor.toStringAsFixed(2)}' : ''}');
+                    // 計算式の内訳は「?」を押したときだけ出す。
+                    return Row(
+                      children: [
+                        Text(Tr.pick('市場価値: ${formatMoney(p.marketValue)}',
+                            'Value: ${formatMoney(p.marketValue)}')),
+                        IconButton(
+                          icon: const Icon(Icons.help_outline, size: 18),
+                          tooltip:
+                              Tr.pick('市場価値の内訳', 'How the value is worked out'),
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () => showDialog<void>(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: Text(Tr.pick(
+                                  '市場価値の内訳', 'How the value is worked out')),
+                              content: Text(detail),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(),
+                                  child: Text(Tr.pick('閉じる', 'Close')),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -902,22 +972,19 @@ class PlayerDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              ],
-            ),
-            // 横画面では左右2列に分けて、横幅を使い切る(1列だと縦に長かった)。
-            AutoColumns(
-              children: [
-                if (seasonStats.appearances > 0)
+                const SizedBox(height: 16),
+                Text(Tr.pick('経歴', 'History'),
+                    style: Theme.of(context).textTheme.titleSmall),
+                if (seasonStats.yellowCards > 0 || seasonStats.redCards > 0)
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       Tr.pick(
-                          '今シーズン: ${seasonStats.appearances}試合 ${seasonStats.goals}得点${seasonStats.yellowCards > 0 ? ' 警告${seasonStats.yellowCards}' : ''}${seasonStats.redCards > 0 ? ' 退場${seasonStats.redCards}' : ''} / 平均採点${seasonStats.averageRating!.toStringAsFixed(1)}',
-                          "This season: ${Tr.plural(seasonStats.appearances, 'app')}, ${Tr.plural(seasonStats.goals, 'goal')}${seasonStats.yellowCards > 0 ? ', ${seasonStats.yellowCards} yellow' : ''}${seasonStats.redCards > 0 ? ', ${seasonStats.redCards} red' : ''} / avg rating ${seasonStats.averageRating!.toStringAsFixed(1)}"),
-                      style: const TextStyle(
-                        color: Colors.teal,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          '今季の警告${seasonStats.yellowCards}・退場${seasonStats.redCards}',
+                          'This season: ${seasonStats.yellowCards} yellow, ${seasonStats.redCards} red'),
+                      style: TextStyle(
+                          color: SemanticColors.subtleText(context),
+                          fontSize: 12),
                     ),
                   ),
                 if (p.careerAppearances > 0)
@@ -948,7 +1015,8 @@ class PlayerDetailScreen extends StatelessWidget {
                           fontSize: 12),
                     ),
                   ),
-                if (p.overallHistory.length >= 2) ...[
+                if (p.overallHistory.length >= 2 &&
+                    p.overallHistory.toSet().length > 1) ...[
                   const SizedBox(height: 12),
                   Card(
                     child: Padding(
@@ -1426,78 +1494,6 @@ class PlayerDetailScreen extends StatelessWidget {
             },
             child: Text(Tr.pick('放出する', 'Release')),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-/// 選手の性格・ロール・デューティ・ポジション適性が、実際の試合でどれだけ
-/// 攻撃力・守備力に影響するかを定量的にまとめたカード。
-class _MatchImpactSummary extends StatelessWidget {
-  final Player player;
-  final bool isStarting;
-  final Position assignedSlot;
-
-  const _MatchImpactSummary({
-    required this.player,
-    required this.isStarting,
-    required this.assignedSlot,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    String pct(double multiplier) {
-      final delta = ((multiplier - 1) * 100).round();
-      return delta >= 0 ? '+$delta%' : '$delta%';
-    }
-
-    final roleAttack = MatchEngine.roleMultiplier(player, forAttack: true);
-    final roleDefense = MatchEngine.roleMultiplier(player, forAttack: false);
-    final dutyAttack = MatchEngine.dutyAttackMultiplier(player.duty);
-    final dutyDefense = MatchEngine.dutyDefenseMultiplier(player.duty);
-    final positionFit = isStarting
-        ? MatchEngine.positionFitMultiplier(player, assignedSlot)
-        : null;
-
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            Tr.pick('試合への影響(定量)', 'Effect on matches'),
-            style: Theme.of(context)
-                .textTheme
-                .labelMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            Tr.pick('ロール適性: 攻撃${pct(roleAttack)} / 守備${pct(roleDefense)}',
-                'Role fit: attack ${pct(roleAttack)} / defence ${pct(roleDefense)}'),
-            style: const TextStyle(fontSize: 12),
-          ),
-          Text(
-            Tr.pick(
-                'デューティ(${player.duty.label}): 攻撃${pct(dutyAttack)} / 守備${pct(dutyDefense)}',
-                'Duty (${player.duty.label}): attack ${pct(dutyAttack)} / defence ${pct(dutyDefense)}'),
-            style: const TextStyle(fontSize: 12),
-          ),
-          if (positionFit != null && positionFit != 1.0)
-            Text(
-              Tr.pick('ポジション適性(${assignedSlot.label}で起用中): ${pct(positionFit)}',
-                  'Position fit (playing at ${assignedSlot.label}): ${pct(positionFit)}'),
-              style: TextStyle(
-                fontSize: 12,
-                color: SemanticColors.negative(context),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
         ],
       ),
     );
