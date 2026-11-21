@@ -385,8 +385,10 @@
       for (const id of Object.keys(f0.pos)) if (this.disp[id]) far = Math.max(far, dist(f0.pos[id], this.disp[id]) * 0.8);
       this.pre = null;
       this.capText = null;
-      if (far > 7 || !Object.keys(this.disp).length) {
-        const h0 = this.holderOf(f0);
+      const h0 = this.holderOf(f0);
+      // 相手が持っているのに場面がこちらのボールで始まるときは、近くても入りで奪ってから（2026-11-21「いきなり、こっちボールになる」）
+      const flip = !!(this.owner && h0 && this.teamOf(this.owner) && this.teamOf(this.owner) !== this.teamOf(h0));
+      if (far > 7 || flip || !Object.keys(this.disp).length) {
         // つなげるのは、受け手と主役が3秒ほどで最初の位置に着けるとき。ライン際の球（セットプレー）は置き直す
         const edge = f0.ball[0] < 1.5 || f0.ball[0] > W - 1.5 || f0.ball[1] < 1.5 || f0.ball[1] > L - 1.5 || sc.type === 'fk'; // 直接FK もボールを置いて始める（2026-11-17 ファウルからの FK が増えた）
         let eta = 0;
@@ -429,6 +431,35 @@
       p.t += dt;
       const fr = this.scene.frames;
       if (!p.kicked) {
+        // 相手が持っている：前は相手がこちらの主役へパスを出していて、急にこちらのボールになった。
+        // いちばん近い味方が寄せて奪い、その子が拾ってから場面へつなぐ（GK が持っているときは蹴り出しのまま）
+        if (this.owner && this.teamOf(this.owner) !== this.teamOf(p.h0) && this.base[this.owner] && this.base[this.owner][3] !== 0) {
+          if (!p.steal || !this.disp[p.steal]) {
+            const my = this.teamOf(p.h0);
+            let bd = 1e9;
+            for (const id of Object.keys(this.disp)) {
+              if (this.teamOf(id) !== my || !this.base[id] || this.base[id][3] === 0) continue;
+              const d = dist(this.disp[id], this.disp[this.owner]);
+              if (d < bd) { bd = d; p.steal = id; }
+            }
+          }
+          if (p.steal && dist(this.disp[p.steal], this.disp[this.owner]) < MOVE.tackle) {
+            const r = this.disp[p.steal];
+            const b = this.ball;
+            const d = Math.max(0.3, dist(r, b));
+            this.lock[this.owner] = 0.9;
+            this.owner = null;
+            this.idle = null;
+            this.bv = [((r[0] - b[0]) / d) * 3, ((r[1] - b[1]) / d) * 3];
+            this.expect = p.steal;
+            this.lastTouch = this.teamOf(p.steal);
+            const sp = this.teamOf(p.steal).players[p.steal];
+            if (sp) this.capText = { text: sp.num + '番 ' + String(sp.name).split(' ')[0].split('・').pop() + ' 奪った', t: 0 };
+            this.steals = (this.steals || 0) + 1; // 点検用
+            p.t = 0;
+          } else if (p.t > 7 || !p.steal) return this.endPre(true);
+          return;
+        }
         if (this.owner) {
           if (this.owner === p.h0) p.kicked = true; // もう持っている：そこまで運ぶ
           else if (!(this.lock[this.owner] > 0)) {
@@ -438,6 +469,7 @@
             const eta = dist(this.disp[p.h0], p.f0.ball) / (MOVE.sprint * 0.85);
             if (eta > tFly - 0.2 && p.t < 5) return; // 受け手が先に着いて待つ（届く球が転がり過ぎない）
             p.kicked = true;
+            if (this.teamOf(this.owner) !== this.teamOf(p.h0) && this.base[this.owner][3] !== 0) this.gifts = (this.gifts || 0) + 1; // 点検用：相手へ渡すつなぎ（GK の蹴り出しだけのはず）
             this.kick([p.f0.ball[0], p.f0.ball[1], 0], p.h0, this.owner);
           }
         } else if (p.t > 4) return this.endPre(true);
@@ -977,6 +1009,7 @@
         if (this.fl) return [[this.fl.to[0], this.fl.to[1]], MOVE.sprint];
         return [[ball[0], ball[1]], MOVE.sprint];
       }
+      if (this.pre && this.pre.steal === id && this.owner && this.disp[this.owner]) return [this.disp[this.owner], MOVE.sprint];
       if (this.scene && this.chaser === id) return [[ball[0], ball[1]], MOVE.sprint];
       if (this.scene) {
         if (this.stgt[id]) return [this.stgt[id], MOVE.sprint];
@@ -1275,15 +1308,16 @@
         const R = Math.max(8.5, s * 2); // 2026-11-16 画面の点検：iPhone の横向きで丸と背番号が小さかった（7→8.5px以上）
         const order = Object.keys(this.base).sort((a, b) => (this.focus.includes(a) ? 1 : 0) - (this.focus.includes(b) ? 1 : 0));
         const labels = [];
+        const sq = this.spread(order, P, R);
+        this.sq = sq;
         for (const id of order) {
           const b = this.base[id];
           const t = b[2];
           const p = t.players[id];
-          const d = this.disp[id] || b;
           const gk = b[3] === 0;
           const kit = kits ? (t === m.home ? kits.home : kits.away) : { shirt: t.color || '#888', shorts: '#fff', gk: '#f39c12' };
           const fill = gk ? kit.gk : kit.shirt;
-          const q = P(d[0], d[1]);
+          const q = sq[id];
           const isF = this.focus.includes(id);
           const isD = this.defFocus && this.defFocus.includes(id);
           // 影
@@ -1338,16 +1372,17 @@
             ctx.arc(q[0], q[1], R + 3 + k * R * 1.6, 0, Math.PI * 2);
             ctx.stroke();
           }
-          if (((isF && this.scene) || cb) && p) labels.push({ q, text: (cb ? '⚽ ' : '') + p.num + ' ' + String(p.name).split(' ')[0].split('・').pop(), gold: cb }); // 外国籍の子は最後の部分
+          // 名字の札：場面の主役と、ボールを持っている子（2026-11-21「今の形を向上」：番号だけでは誰か分からなかった）
+          if (((isF && this.scene) || cb || id === this.owner) && p) labels.push({ q, text: (cb ? '⚽ ' : '') + p.num + ' ' + String(p.name).split(' ')[0].split('・').pop(), gold: cb }); // 外国籍の子は最後の部分
         }
         // ボール（高いほど影から離れて大きく見える）
         const b = this.ball;
         const z = Math.max(0, b[2] || 0);
         let g = P(b[0], b[1]);
-        const br = Math.max(4, s * 0.68) * (1 + z * 0.06);
+        const br = Math.max(5.5, s * 0.9) * (1 + z * 0.06); // 2026-11-21：4px では目で追いにくかった
         // 足元の球は丸の下に隠れるので、進む向きの丸の縁に見せる
         if (this.owner && this.disp[this.owner] && !this.fl) {
-          const oq = P(this.disp[this.owner][0], this.disp[this.owner][1]);
+          const oq = sq[this.owner] || P(this.disp[this.owner][0], this.disp[this.owner][1]);
           const ox = g[0] - oq[0];
           const oy = g[1] - oq[1];
           const od = Math.hypot(ox, oy);
@@ -1387,7 +1422,7 @@
         ctx.arc(bq[0], bq[1], br, 0, Math.PI * 2);
         ctx.fill();
         ctx.strokeStyle = '#111';
-        ctx.lineWidth = 1.6;
+        ctx.lineWidth = 2;
         ctx.stroke();
         // 黒い五角の模様（白い縁の丸と見分ける）
         ctx.fillStyle = '#1b1b1b';
@@ -1397,10 +1432,14 @@
         // 名前の札（主役）
         ctx.font = '800 11px system-ui, sans-serif';
         ctx.textBaseline = 'alphabetic';
+        const placed = [];
         for (const lb of labels) {
           const tw = ctx.measureText(lb.text).width + 10;
           const x = clamp(lb.q[0] - tw / 2, 2, w - tw - 2);
-          const y = clamp(lb.q[1] - R - 22, 2, h - 18);
+          let y = clamp(lb.q[1] - R - 22, 2, h - 18);
+          // 札どうしが重なるときは丸の下へ
+          if (placed.some((o) => x < o[0] + o[2] && o[0] < x + tw && Math.abs(o[1] - y) < 17)) y = clamp(lb.q[1] + R + 5, 2, h - 18);
+          placed.push([x, y, tw]);
           ctx.fillStyle = lb.gold ? 'rgba(255,214,60,.95)' : 'rgba(15,25,40,.85)';
           this.rr(ctx, x, y, tw, 16, 5);
           ctx.fill();
@@ -1426,25 +1465,30 @@
         ctx.globalAlpha = 1;
       }
       // 流れのバー（上の真ん中）：左がホーム、右がアウェイ。押している側が長い
+      // 2026-11-21：字が9pxで細く、読みにくかった。字はバーの左に置き、バーを太く
       if (kits && this.flow != null) {
-        const bw = Math.min(160, w * 0.3);
-        const bx = (w - bw) / 2;
+        const bw = Math.min(170, w * 0.3);
+        const bx = (w - bw) / 2 + 14;
         const by = 6;
+        const bh2 = 9;
         const fh = bw * this.flow;
-        ctx.fillStyle = 'rgba(10,18,30,.7)';
-        this.rr(ctx, bx - 3, by - 3, bw + 6, 12, 6);
+        ctx.fillStyle = 'rgba(10,18,30,.75)';
+        this.rr(ctx, bx - 36, by - 4, bw + 40, bh2 + 8, 8);
         ctx.fill();
-        ctx.fillStyle = kits.home.shirt;
-        ctx.fillRect(bx, by, fh, 6);
-        ctx.fillStyle = kits.away.shirt;
-        ctx.fillRect(bx + fh, by, bw - fh, 6);
+        ctx.font = '800 11px system-ui, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(bx + bw / 2 - 0.5, by - 2, 1, 10);
-        ctx.font = '700 9px system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillStyle = 'rgba(255,255,255,.85)';
-        ctx.fillText('流れ', w / 2, by + 17);
+        ctx.fillText('流れ', bx - 31, by + bh2 / 2 + 0.5);
+        ctx.fillStyle = kits.home.shirt;
+        ctx.fillRect(bx, by, fh, bh2);
+        ctx.fillStyle = kits.away.shirt;
+        ctx.fillRect(bx + fh, by, bw - fh, bh2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(bx + bw / 2 - 0.75, by - 2, 1.5, bh2 + 4);
+        ctx.textBaseline = 'alphabetic';
       }
+      if (m) this.drawSides(ctx, P, kits);
       // 早送りの印（場面の入り）
       if (this.ff) {
         ctx.font = '800 12px system-ui, sans-serif';
@@ -1466,6 +1510,107 @@
         ctx.fillStyle = 'rgba(8,12,20,' + clamp(this.cut / 0.3, 0, 1) + ')';
         ctx.fillRect(0, 0, w, h);
       }
+    }
+    // 重なった丸を描く位置だけずらす（動きと試合の結果は変えない。2026-11-21：真ん中で番号が隠れていた）
+    spread(ids, P, R) {
+      const q = {};
+      for (const id of ids) {
+        const d = this.disp[id] || this.base[id];
+        q[id] = P(d[0], d[1]);
+      }
+      const min = R * 1.75;
+      for (let it = 0; it < 3; it++) {
+        for (let i = 0; i < ids.length; i++) {
+          for (let j = i + 1; j < ids.length; j++) {
+            const a = q[ids[i]];
+            const b = q[ids[j]];
+            const dx = b[0] - a[0];
+            const dy = b[1] - a[1];
+            const dd = Math.hypot(dx, dy);
+            if (dd >= min) continue;
+            const k = (min - dd) / 2;
+            const ux = dd > 0.01 ? dx / dd : 0;
+            const uy = dd > 0.01 ? dy / dd : 1;
+            q[ids[i]] = [a[0] - ux * k, a[1] - uy * k];
+            q[ids[j]] = [b[0] + ux * k, b[1] + uy * k];
+          }
+        }
+      }
+      return q;
+    }
+    // ピッチの左右の空き：左にホーム、右にアウェイの出ている11人（番号・名字・疲れ）。場面の主役は黄色、持っている子は白の縁
+    drawSides(ctx, P, kits) {
+      const m = this.match;
+      const w = this.w;
+      const h = this.h;
+      const lx = Math.min(P(0, -3)[0], P(0, L + 3)[0]);
+      const rx = Math.max(P(0, -3)[0], P(0, L + 3)[0]);
+      const room = Math.min(lx, w - rx) - 10;
+      this.sideW = room >= 110 ? room : 0;
+      if (room < 110) return;
+      const pw = Math.min(170, room);
+      for (const [t, x0] of [[m.home, (lx - pw) / 2], [m.away, rx + (w - rx - pw) / 2]]) {
+        const kit = kits ? (t === m.home ? kits.home : kits.away) : { shirt: t.color || '#888', shorts: '#fff', gk: '#f39c12' };
+        const ids = Object.keys(this.base).filter((id) => this.base[id][2] === t).sort((a, b) => this.base[a][3] - this.base[b][3]);
+        const rowH = Math.min(21, (h - 40) / Math.max(11, ids.length));
+        const y0 = 6;
+        ctx.fillStyle = 'rgba(8,16,26,.55)';
+        this.rr(ctx, x0, y0, pw, 26 + rowH * ids.length + 4, 9);
+        ctx.fill();
+        ctx.fillStyle = kit.shirt;
+        ctx.beginPath();
+        ctx.arc(x0 + 13, y0 + 13, 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = '800 12px system-ui, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(String(t.short || t.name || '').slice(0, 10), x0 + 24, y0 + 13.5);
+        ids.forEach((id, i) => {
+          const p = t.players[id];
+          if (!p) return;
+          const y = y0 + 26 + i * rowH;
+          const cy2 = y + rowH / 2;
+          if (this.focus.includes(id)) {
+            ctx.fillStyle = 'rgba(255,225,74,.28)';
+            this.rr(ctx, x0 + 3, y + 1, pw - 6, rowH - 2, 5);
+            ctx.fill();
+          }
+          if (id === this.owner) {
+            ctx.strokeStyle = 'rgba(255,255,255,.9)';
+            ctx.lineWidth = 1.2;
+            this.rr(ctx, x0 + 3, y + 1, pw - 6, rowH - 2, 5);
+            ctx.stroke();
+          }
+          const gk = this.base[id][3] === 0;
+          const fill = gk ? kit.gk : kit.shirt;
+          ctx.fillStyle = fill;
+          ctx.beginPath();
+          ctx.arc(x0 + 15, cy2, Math.min(8.5, rowH / 2 - 1), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.font = '800 10.5px system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = YA.colorDist && YA.colorDist(fill, '#ffffff') < 140 ? '#1b2438' : '#ffffff';
+          ctx.fillText(String(p.num), x0 + 15, cy2 + 0.5);
+          ctx.textAlign = 'left';
+          ctx.font = '700 11.5px system-ui, sans-serif';
+          ctx.fillStyle = '#ffffff';
+          const nm = String(p.name).split(' ')[0].split('・').pop();
+          const sl = this.base[id][4];
+          const pk = sl && YA.pos15OfSlot ? YA.pos15OfSlot(sl, this.base[id][3]) : '';
+          const pos = pk ? ((YA.POS_LABEL && YA.POS_LABEL[pk]) || pk) + ' ' : '';
+          ctx.fillText(pos + nm, x0 + 28, cy2 + 0.5, pw - 70);
+          // 疲れ：残りの体力のバー
+          const st = clamp(p.stam == null ? 100 : p.stam, 0, 100);
+          const bw = 30;
+          const bx = x0 + pw - bw - 8;
+          ctx.fillStyle = 'rgba(255,255,255,.18)';
+          ctx.fillRect(bx, cy2 - 2.5, bw, 5);
+          ctx.fillStyle = st >= 70 ? '#5fd17a' : st >= 45 ? '#f2c94c' : '#eb5757';
+          ctx.fillRect(bx, cy2 - 2.5, bw * st / 100, 5);
+        });
+      }
+      ctx.textBaseline = 'alphabetic';
     }
     rr(ctx, x, y, w, h, r) {
       ctx.beginPath();

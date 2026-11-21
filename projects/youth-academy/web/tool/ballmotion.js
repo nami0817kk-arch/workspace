@@ -84,6 +84,8 @@ for (const seed of (process.env.YA_SEEDS ? process.env.YA_SEEDS.split(',').map(N
     for (let i = 0; i < 30; i++) step(); // 合間 0.5 秒
   }
   st.places += R.places || 0;
+  st.steals = (st.steals || 0) + (R.steals || 0);
+  st.gifts = (st.gifts || 0) + (R.gifts || 0);
   st.celebs = (st.celebs || 0) + (R.celebs || 0);
   st.dives = (st.dives || 0) + (R.dives || 0);
   st.saves = (st.saves || 0) + (R.saves || 0);
@@ -95,6 +97,8 @@ for (const seed of (process.env.YA_SEEDS ? process.env.YA_SEEDS.split(',').map(N
 }
 console.log(JSON.stringify(st));
 ok(st.scenes > 30, '場面が出る');
+ok(!st.gifts, '場面の入りで相手の選手がこちらへボールを渡さない ' + (st.gifts || 0));
+ok(st.steals > 0, '相手が持っているときは、寄せて奪ってから場面に入る ' + (st.steals || 0));
 ok(st.ballMax < 30, 'ボールが速すぎない（最大 ' + st.ballMax.toFixed(1) + 'm/s）');
 ok(st.jerk === 0, '誰も触らずにボールの向き・速さが変わったコマ ' + st.jerk);
 ok(st.farFoot <= st.frames * 0.001, '持っているボールが足元から離れたコマ ' + st.farFoot);

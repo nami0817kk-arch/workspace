@@ -1106,7 +1106,9 @@
     // 開始の文は実際に蹴る側（2026-11-17：前はいつもこちらの攻撃と出ていた）
     const koText = 'キックオフ。' + (m.kickoffSide === 'away' ? m.away.short : m.home.short) + 'のボールで試合が始まります';
     const commTx = h('span', { class: 'tx' }, koText);
-    const comm = h('div', { class: 'comm' }, commMin, commTx, h('span', { class: 'grow' }), h('span', { class: 'sub', style: 'font-size:11px' }, 'タップで経過'));
+    // 1つ前の実況も小さく残す（2026-11-21「今の形を向上」：最新の1行だけで、少し前が見返せなかった）
+    const commPrev = h('span', { class: 'prev' }, '');
+    const comm = h('div', { class: 'comm' }, commMin, h('div', { class: 'cl' }, commTx, commPrev), h('span', { class: 'sub', style: 'font-size:11px;flex:none' }, 'タップで経過'));
     wrap.append(top, stage, comm);
     main.append(wrap);
 
@@ -1138,7 +1140,13 @@
       refreshAuto();
     };
     refreshAuto();
-    const setComm = (min, tx) => { commMin.textContent = min + "'"; commTx.textContent = tx; };
+    let commLast = '';
+    const setComm = (min, tx) => {
+      if (tx !== commTx.textContent && commTx.textContent) commPrev.textContent = commLast + ' ' + commTx.textContent;
+      commLast = commMin.textContent;
+      commMin.textContent = min + "'";
+      commTx.textContent = tx;
+    };
     const logBox = () => {
       const ex = stage.querySelector('.logpop');
       if (ex) return ex.remove();
