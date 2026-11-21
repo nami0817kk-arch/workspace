@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../../gm/career.dart';
+import '../../gm/game_review.dart';
 import '../../gm/game_sim.dart';
 import '../../gm/player.dart';
+import 'box_score.dart';
 import 'common.dart';
 import 'live_court.dart';
 import 'live_playback.dart';
@@ -69,6 +71,9 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
   int _homePts = 0, _awayPts = 0;
   int _appliedCues = 0;
   Who? _selected;
+
+  /// ふりかえりの流れの線で押した印のひとこと。
+  String? _mark;
 
   Career get car => widget.car;
   bool get _playing => res != null && _cur < res!.events.length;
@@ -395,14 +400,19 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
                 key: ValueKey(_playing ? 'watch' : done ? 'done' : 'stop-${r.stop}'),
                 padding: const EdgeInsets.fromLTRB(6, 6, 12, 12),
                 children: [
-                  ...(_playing ? _watching() : (done ? _finish(diff) : _choices())),
+                  ...(_playing ? _watching() : (done ? _finish(r, diff, mineHome, homeId, awayId) : _choices())),
                   const SizedBox(height: 10),
                   if (!_playing && !done)
                     Text('${_stopName(r.stop!)}・${diff > 0 ? '$diff点リード' : diff < 0 ? '${-diff}点ビハインド' : '同点'}',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: diff > 0 ? GmColors.good : diff < 0 ? GmColors.bad : GmColors.text)),
                   const Text('試合の流れ(上が自分のリード)', style: TextStyle(fontSize: 11, color: GmColors.sub)),
                   const SizedBox(height: 2),
-                  MomentumBar(diff: flow),
+                  MomentumBar(
+                    diff: flow,
+                    marks: done ? flowMarksOf(r, calls, _callLine) : const [],
+                    onMark: (t) => setState(() => _mark = t),
+                  ),
+                  if (done && _mark != null) Text(_mark!, style: const TextStyle(fontSize: 12, color: GmColors.gold, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 6),
                   for (final l in _log.take(6))
                     Text(l.$1,
@@ -557,24 +567,45 @@ class _LiveGameScreenState extends State<LiveGameScreen> with SingleTickerProvid
     ];
   }
 
-  List<Widget> _finish(int diff) => [
-        Text(diff > 0 ? '勝った' : '負けた', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: diff > 0 ? GmColors.good : GmColors.bad)),
+  /// 試合のあとのふりかえり: 勝因・敗因、采配の効き目、両チームの主役(2026-11-21、試合画面の向上 4)。
+  List<Widget> _finish(SimResult r, int diff, bool mineHome, int homeId, int awayId) {
+    final side = mineHome ? 0 : 1;
+    final reasons = reasonsOf(r, side);
+    final effects = callEffectsOf(r, calls, side);
+    final stars = starsOf(r, side);
+    const head = TextStyle(fontSize: 12, color: GmColors.sub, fontWeight: FontWeight.bold);
+    String star((String, int, int, int) s) => '${s.$1}  ${s.$2}点・${s.$3}リバウンド・${s.$4}アシスト';
+    return [
+        Text('${diff > 0 ? '勝った' : '負けた'}  ${mineHome ? r.home.pts : r.away.pts}-${mineHome ? r.away.pts : r.home.pts}',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: diff > 0 ? GmColors.good : GmColors.bad)),
         const SizedBox(height: 6),
-        Text(
-          calls.map(_callLine).join('\n').ifEmpty('采配はしなかった'),
-          style: const TextStyle(fontSize: 13, height: 1.5),
+        Text(diff > 0 ? '勝因' : '敗因', style: head),
+        for (final x in reasons) Text('・${x.text}', style: const TextStyle(fontSize: 13, height: 1.5)),
+        if (reasons.isEmpty) const Text('・大きな差は無かった', style: TextStyle(fontSize: 13, height: 1.5)),
+        const SizedBox(height: 6),
+        const Text('采配の効き目(その後3分の点)', style: head),
+        if (effects.isEmpty) const Text('采配はしなかった', style: TextStyle(fontSize: 13, height: 1.5)),
+        for (final e in effects)
+          Text('${_callLine(e.call)}  ${e.mine}-${e.theirs}(${e.diff > 0 ? '+' : ''}${e.diff})',
+              style: TextStyle(fontSize: 13, height: 1.5, fontWeight: FontWeight.bold, color: e.diff > 0 ? GmColors.good : e.diff < 0 ? GmColors.bad : GmColors.text)),
+        const SizedBox(height: 6),
+        const Text('この試合の主役', style: head),
+        Text('自分: ${star(stars.$1)}', style: const TextStyle(fontSize: 13, height: 1.5)),
+        Text('相手: ${star(stars.$2)}', style: const TextStyle(fontSize: 13, height: 1.5, color: GmColors.sub)),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(
+          onPressed: () => showBoxScore(context, reviewResultOf(r, car.teams[homeId], car.teams[awayId], car.mine), car.mine),
+          icon: const Icon(Icons.table_chart_rounded),
+          label: const Text('ボックススコアを見る'),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 6),
         FilledButton.icon(
           onPressed: () => Navigator.of(context).pop(List<LiveCall>.of(calls)),
           icon: const Icon(Icons.check_rounded),
           label: const Text('この結果で進める'),
         ),
         const SizedBox(height: 4),
-        const Text('進めると、この節のほかの試合も終わる。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
+        const Text('進めると、この節のほかの試合も終わる。流れの線の印(金は采配・白は逆転)を押すと、その場面が出る。', style: TextStyle(fontSize: 12, color: GmColors.sub)),
       ];
-}
-
-extension on String {
-  String ifEmpty(String other) => isEmpty ? other : this;
+  }
 }

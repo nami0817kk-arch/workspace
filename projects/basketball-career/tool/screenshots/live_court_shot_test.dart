@@ -106,6 +106,16 @@ void main() {
     await t.tap(find.textContaining('まで飛ばす'));
     await t.pump(const Duration(milliseconds: 100));
     await _save(t, 'e_half');
+    // 最後まで進めて、ふりかえりを撮る
+    await t.dragUntilVisible(find.text('ここからは任せて最後まで'), find.byType(ListView).last, const Offset(0, -200));
+    await t.tap(find.text('ここからは任せて最後まで'));
+    await t.pump(const Duration(milliseconds: 100));
+    await t.tap(find.textContaining('まで飛ばす'));
+    await t.pump(const Duration(milliseconds: 100));
+    await _save(t, 'i_finish');
+    await t.drag(find.byType(ListView).last, const Offset(0, -400));
+    await t.pump(const Duration(milliseconds: 300));
+    await _save(t, 'j_finish_lower');
     expect(t.takeException(), isNull);
   });
   // 方針ごとの動きの違い(攻めの重点・ボールの回し方・展開の速さ・守り方を、両チームに同じく入れる)
