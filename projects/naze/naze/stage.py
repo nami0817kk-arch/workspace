@@ -466,6 +466,8 @@ def s_bars(c: Ctx, sc: dict) -> Image.Image:
         stext(d, (cx, base + 22), it["name"], fL, WHITE, anchor="ma", reg="fig")
         num = it["value"] * k
         s = (f"{num:,.0f}" if it["value"] >= 10 else f"{num:.1f}") + it.get("unit", "")
+        if "label" in it and k >= 1:   # 0.61 や「17〜25」のように、数え上げの形で書けない数字(数え終わったら差し替える)
+            s = it["label"]
         stext(d, (cx, base - h - 18), s, fN, WHITE, anchor="ms", reg="fig")
     for f in c.active("add"):
         if "ratio" in f:
@@ -793,7 +795,8 @@ def lint(ep: dict) -> Tuple[List[str], List[str]]:
         if sc:
             if sc.get("kind") not in SCENES and sc.get("kind") != "custom":
                 fails.append(f"{l['id']}: 場面の種類 {sc.get('kind')} は無い")
-            srcs = [sc.get("src")] + [sc.get(s, {}).get("src") for s in ("left", "right")]
+            # card の src は出典の文字(論文名など)で、素材のファイルではない
+            srcs = ([] if sc.get("kind") == "card" else [sc.get("src")]) + [sc.get(s, {}).get("src") for s in ("left", "right")]
         else:
             srcs = []
         srcs += [f.get("src") for f in fx]
