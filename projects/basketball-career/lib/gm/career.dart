@@ -10,6 +10,7 @@ import 'league.dart';
 import 'names.dart';
 import 'personality.dart';
 import 'player.dart';
+import 'policy.dart';
 import 'rating.dart';
 import 'records.dart';
 import 'skills.dart';
@@ -454,6 +455,9 @@ class Career {
   /// 2026-11-16、Basketball GM の GM History・2K26 の GM Legacy のように、任期をまたいだ足跡を残す。
   List<List<int>> stints = [];
 
+  /// 今の任期が始まったシーズン。
+  int get stintStart => stints.isEmpty ? 1 : stints.last[1];
+
   /// 経歴の行(チームごとのシーズン・勝敗・プレーオフ・優勝)。古い保存で経歴が無ければ、今のチームの1行。
   List<({int team, int from, int to, int wins, int losses, int playoffs, int titles})> gmCareer() {
     final st = stints.isEmpty
@@ -532,6 +536,18 @@ class Career {
     arenaName = '';
     camp = {};
     mentor = [];
+    teams[old]
+      ..rotation = []
+      ..minutes = {}
+      ..policy = defaultPolicy()
+      ..training = 1
+      ..coaches = [];
+    hype = 50;
+    priceLevel = 1;
+    concessionLevel = 1;
+    for (final m in inbox) {
+      if ((m.kind == MsgKind.offCamp || m.kind == MsgKind.offRetire || m.kind == MsgKind.press) && m.needsAnswer) m.answer = m.choices.length - 1;
+    }
     mine = team;
     ownerType = OwnerType.values[(seed * 7 + mine) % OwnerType.values.length];
     startRank = strengthRank(mine);
@@ -802,7 +818,12 @@ class Career {
           }
         case PromiseKind.trade:
           if (p == null) {
-            _settle(x, true);
+            // トレードで出したときだけ守ったことにする(放した・契約が切れた・引退したなら約束は無かったことに)
+            if (myTrades.any((t) => t.give.any((g) => g.$1 == x.player))) {
+              _settle(x, true);
+            } else {
+              x.state = PromiseState.voided;
+            }
           } else if (now >= x.due) {
             _settle(x, false);
           }
@@ -857,6 +878,7 @@ class Career {
     final m = inbox.where((x) => x.id == id).firstOrNull;
     if (m == null || !m.needsAnswer || choice < 0 || choice >= m.choices.length) return;
     if (m.kind == MsgKind.ownerGoal && (m.season != season || phase != Phase.season || block > 0)) return;
+    if (m.kind == MsgKind.press && (m.season != season || phase != Phase.season)) return;
     m
       ..answer = choice
       ..read = true;
@@ -962,7 +984,22 @@ class Career {
         if (choice == 0) {
           // 先発に入れる: いまの順の5番目に入れる。2区切りのあいだ先発から外すと約束を破ったことになる
           final order = [for (final x in me.order) x.id]..remove(p.id);
-          order.insert(4.clamp(0, order.length), p.id);
+          // 先発の5人のうち、先発の約束が無いいちばん下の選手と入れ替える(約束した選手を押し出さない)
+          final promised = {for (final x in promises) if (x.open && x.kind == PromiseKind.starter) x.player};
+          var at = -1;
+          for (var i = math.min(4, order.length - 1); i >= 0; i--) {
+            if (!promised.contains(order[i])) {
+              at = i;
+              break;
+            }
+          }
+          if (at < 0) {
+            order.insert(math.min(4, order.length), p.id);
+          } else {
+            final out = order.removeAt(at);
+            order.insert(at, p.id);
+            order.insert(math.min(5, order.length), out);
+          }
           me.rotation = order;
           p.morale = (p.morale + (15 * w).round()).clamp(0, 100);
           _promise(PromiseKind.starter, blockIndex + 2, p: p);
@@ -2039,15 +2076,29 @@ class Career {
 
   /// シーズンの終わりの収支の見込み(残りの試合を今の入りで数える)。
   int get _projectedProfit {
-    // シーズンを閉じたあと(税もプレーオフの収入も入ったあと)は、そのままの収支
-    if (finals != null) return profit;
-    final left = gamesPerSeason - roundAt;
-    final perGameCost = me.payroll / gamesPerSeason;
+    // シーズンを閉じたあと(税もプレーオフの収入も入ったあと)と、オフは、そのままの収支
+    if ((_booksClosed && phase == Phase.playoffs) || phase == Phase.seasonEnd || phase == Phase.draft || phase == Phase.contracts || phase == Phase.over) return profit;
+    // 支出は試合ごとに、年俸・コーチの給料・2ウェイの年俸を入れている(_playRounds と同じ)
+    final perGameCost = (me.payroll + me.staffCost + me.twoWay.length * twoWaySalary) / gamesPerSeason;
     final tax = me.payroll > taxLine ? ((me.payroll - taxLine) * 1.5).round() : 0;
     final base = baseIncomeParts.values.fold(0, (a, b) => a + b);
+    // シーズンの終わりに入ると決まっている分(スポンサーの決まった額と命名権)
+    final sure = (sponsorNow == 0 ? 0 : sponsorTerms(sponsorNow).$1) + (namingSold ? namingIncome : 0);
+    if (phase == Phase.preseason) {
+      // シーズン前は、開幕から数える今季の見込み(施設の費用・コーチの違約金・施設の維持費は開幕で支出に入る)
+      final all = (gamesPerSeason / 2 * (gatePerGame + concessionPerGame) + base - perGameCost * gamesPerSeason).round();
+      return all - facilityDebt - staffDebt - facilityUpkeepTotal - tax + sure;
+    }
+    final left = phase == Phase.season ? gamesPerSeason - roundAt : 0;
     final rest = (left / 2 * (gatePerGame + concessionPerGame) + base * left / gamesPerSeason - perGameCost * left).round();
-    return profit + rest - tax;
+    return profit + rest - tax + sure;
   }
+
+  /// 1試合ずつ進めたときの、収入と支出の端数(保存しない。開幕で空にする)。
+  List<double> _incomeCarry = List.filled(Income.values.length + 1, 0.0);
+
+  /// シーズンの収支を閉じたか(税とプレーオフの収入を入れたあと。開幕で戻す)。
+  bool _booksClosed = false;
 
   /// シーズンの終わりの収支の見込み(画面用)。
   int get projectedProfit => _projectedProfit;
@@ -2401,6 +2452,7 @@ class Career {
       t.wins = 0;
       t.losses = 0;
       t.streak = 0;
+      t.pointsFor = 0;
       for (final p in t.roster) {
         p.prev = p.stats;
         p.stats = Stats();
@@ -2439,6 +2491,10 @@ class Career {
     costs = facilityDebt + staffDebt + facilityUpkeepTotal;
     facilityDebt = 0;
     staffDebt = 0;
+    _booksClosed = false;
+    _incomeCarry = List.filled(Income.values.length + 1, 0.0);
+    // 予算の合意はその年だけ(面談しなかった年は、ふつうに戻す)
+    if (meetingSeason != season) budgetLevel = 2;
     final third = [GoalKind.playoffs, GoalKind.youth, GoalKind.noTax];
     // 強いチームにはプレーオフ、立て直しには若手、上限を大きく超えたチームには税を
     final kind = r < 12 ? GoalKind.playoffs : r >= 22 ? GoalKind.youth : me.payroll > taxLine - capScaled(50) ? GoalKind.noTax : third[rng.nextInt(third.length)];
@@ -2652,7 +2708,6 @@ class Career {
     }
     if (bestStreak > 0) _setRecord('s_streak', bestStreak.toDouble(), me.def.short);
     roundAt += n;
-    _tickTenDay(n);
     lastGames = [...lastGames, ...games];
     seasonLog = [
       ...seasonLog,
@@ -2664,10 +2719,21 @@ class Career {
     final homeGames = games.where((g) => g.home == mine).length;
     _earn(Income.gate, homeGames * gatePerGame);
     _earn(Income.concession, homeGames * concessionPerGame);
-    for (final e in baseIncomeParts.entries) {
-      _earn(e.key, (e.value * games.length / gamesPerSeason).round());
+    // 1試合ずつ進めると丸めの誤差がたまるので、端数を次へ持ち越す(区切りでまとめて進めるときは今までどおり)
+    int share(int i, double v) {
+      if (n != 1) return v.round();
+      final x = v + _incomeCarry[i];
+      final r = x.round();
+      _incomeCarry[i] = x - r;
+      return r;
     }
-    costs += ((me.payroll + me.staffCost + me.twoWay.length * twoWaySalary) * games.length / gamesPerSeason).round();
+
+    for (final e in baseIncomeParts.entries) {
+      _earn(e.key, share(e.key.index, e.value * games.length / gamesPerSeason));
+    }
+    costs += share(Income.values.length, (me.payroll + me.staffCost + me.twoWay.length * twoWaySalary) * games.length / gamesPerSeason);
+    // 10日契約が切れるのは、この節の支出を数えたあと
+    _tickTenDay(n);
     for (final (t, p) in injuries) {
       if (t == mine || p.ovr >= 76) _log('けが: ${p.name}(${teams[t].def.short})が${p.injured}試合欠場');
     }
@@ -2720,7 +2786,10 @@ class Career {
   /// 来季の強さ予想(今の強さの順。0が1位)。
   List<int> powerRanking() => [for (final t in [...teams]..sort((a, b) => b.strength.compareTo(a.strength))) t.index];
 
-  void setTraining(int level) => me.training = level.clamp(0, 2);
+  void setTraining(int level) {
+    if (phase == Phase.playoffs || phase == Phase.seasonEnd) return;
+    me.training = level.clamp(0, 2);
+  }
 
   /// チームの方針の [axis] 番目の軸を [choice](0・1・2)にする。
   void setPolicy(int axis, int choice) {
@@ -3226,6 +3295,7 @@ class Career {
     }
     final res = myResult;
     lastTax = luxuryTaxTrust(me.payroll);
+    _booksClosed = true;
     // ぜいたく税は、超えた分の1.5倍を払う。プレーオフのホームの試合も入場収入になる
     if (me.payroll > taxLine) costs += ((me.payroll - taxLine) * 1.5).round();
     final poHome = playoffs.where((s) => s.round >= 1 && (s.high == mine || s.low == mine)).fold(0, (n, s) => n + (s.games.where((g) => g.home == mine).length));
@@ -3284,7 +3354,9 @@ class Career {
   /// 前のシーズンの、オーナーの信頼の変わり方。
   int get lastTrustDelta {
     if (history.isEmpty) return 0;
-    final prev = history.length >= 2 ? history[history.length - 2].trustAfter : startTrust;
+    // 誘いを受けて移った最初のシーズンは、信頼40から始めている
+    final moved = stints.length > 1 && history.last.season == stintStart;
+    final prev = moved ? 40 : history.length >= 2 ? history[history.length - 2].trustAfter : startTrust;
     return history.last.trustAfter - prev;
   }
 
@@ -3377,7 +3449,7 @@ class Career {
     if (lastProfit > 0 && !goals.any((g) => g.kind == GoalKind.profit && g.met == true)) add('黒字', 5);
     if (goalStance == 2 && me.wins >= target) add('オーナーに約束した$target勝を果たした', 10);
     // オフにした約束は、期限の来るシーズン(次のシーズン)の評価で数える
-    final keptNow = promises.where((x) => x.due ~/ blocksPerSeason == season && x.state == PromiseState.kept).length;
+    final keptNow = promises.where((x) => (x.due - 1) ~/ blocksPerSeason == season && x.state == PromiseState.kept).length;
     if (keptNow > 0) add('選手や記者との約束を守った($keptNow件)', 3 * keptNow.clamp(0, 3));
     final before = gmLevel;
     final total = parts.fold(0, (n, x) => n + x.points);
@@ -3799,7 +3871,7 @@ class Career {
 
   /// 選手が求める年俸。弱いチームには高く、強いチームには少し安く言う。
   Ask askOf(Player p, Team t) {
-    final last = history.isEmpty ? null : history.last;
+    final last = history.isEmpty || history.last.season < stintStart ? null : history.last;
     var f = 1.0;
     if (t.index == mine && last != null) {
       if (last.champion) {
@@ -4017,6 +4089,8 @@ class Career {
       ..morale = 65;
     freeAgents.removeAt(i);
     me.roster.add(p);
+    // 画面に出す「${money(tenDaySalary)}」は、この契約で払う額
+    costs += tenDaySalary;
   }
 
   /// 10日契約の選手の残りの節を進める。切れたら自由契約に戻す。

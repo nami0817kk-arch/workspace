@@ -64,6 +64,8 @@ class _StatsScreenState extends State<StatsScreen> {
     }
     final games = car.me.wins + car.me.losses;
     total.gp = games;
+    // 得点はチームとして取った点(トレードで来た選手の、前のチームでの点を混ぜない)
+    total.pts = car.me.pointsFor;
     const headStyle = TextStyle(fontSize: 11, color: GmColors.sub);
     const style = TextStyle(fontSize: 13, fontWeight: FontWeight.bold, fontFeatures: [FontFeature.tabularFigures()]);
     double w(int i) => i >= 5 && i <= 7 ? 48 : 40;

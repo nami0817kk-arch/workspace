@@ -152,10 +152,7 @@ class _RankingsViewState extends State<RankingsView> {
 
   /// チームの順(戦力・平均得点・勝率・平均年齢・年俸)。見出しで並べ替える。
   Widget _teamTable(BuildContext context) {
-    double pts(Team t) {
-      final g = t.wins + t.losses;
-      return g == 0 ? 0 : t.roster.fold(0, (n, p) => n + p.stats.pts) / g;
-    }
+    double pts(Team t) => t.ppg;
 
     double age(Team t) => t.roster.isEmpty ? 0 : t.roster.fold(0, (n, p) => n + p.age) / t.roster.length;
     final keys = <double Function(Team)>[(t) => t.strength, (t) => t.winPct, pts, (t) => -age(t), (t) => t.payroll.toDouble()];

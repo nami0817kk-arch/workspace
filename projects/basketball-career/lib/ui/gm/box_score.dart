@@ -488,8 +488,10 @@ class GameFlowCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final sign = g.home == mine ? 1 : -1;
     final f = [0, for (final x in g.flow) x * sign];
-    final myMax = f.reduce((a, b) => a > b ? a : b);
-    final oppMax = -f.reduce((a, b) => a < b ? a : b);
+    // 試合の中で数えた最大リードがあればそれを使う(前の版の保存は1分ごとの点差から)
+    final exact = g.homeMaxLead + g.awayMaxLead > 0;
+    final myMax = exact ? (g.home == mine ? g.homeMaxLead : g.awayMaxLead) : f.reduce((a, b) => a > b ? a : b);
+    final oppMax = exact ? (g.home == mine ? g.awayMaxLead : g.homeMaxLead) : -f.reduce((a, b) => a < b ? a : b);
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(color: GmColors.panelHi, borderRadius: BorderRadius.circular(12)),
