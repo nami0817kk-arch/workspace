@@ -10,20 +10,38 @@ import '../logic/economy_scale.dart';
 enum Position { gk, dr, dc, dl, wbr, wbl, dm, mr, mc, ml, amr, amc, aml, st }
 
 /// 負傷の種類。種類ごとに典型的な療養期間が異なる。
-enum InjuryType { bruise, muscle, ligament }
+///
+/// 2026-11-22 に長期の怪我(骨折・前十字靭帯断裂・アキレス腱断裂)を足した。
+/// それまでは最長でも約12週で、実際のサッカーにある「シーズンの大半を
+/// 棒に振る怪我」が無かった。長期の怪我はまれ(1季に1クラブ0〜2人ほど)。
+/// 保存の名前は enum の名前なので、並びの最後に足す(古いセーブも読める)。
+enum InjuryType { bruise, muscle, ligament, fracture, acl, achilles }
 
 extension InjuryTypeInfo on InjuryType {
   String get label => switch (this) {
         InjuryType.bruise => Tr.pick('打撲', 'Bruise'),
         InjuryType.muscle => Tr.pick('肉離れ', 'Torn muscle'),
         InjuryType.ligament => Tr.pick('靭帯損傷', 'Ligament damage'),
+        InjuryType.fracture => Tr.pick('骨折', 'Fracture'),
+        InjuryType.acl => Tr.pick('前十字靭帯断裂', 'Ruptured cruciate ligament'),
+        InjuryType.achilles => Tr.pick('アキレス腱断裂', 'Ruptured Achilles tendon'),
       };
 
-  /// 典型的な療養期間(週)の範囲。
+  /// 典型的な療養期間(週)の範囲。長期の怪我は実際の復帰までの目安
+  /// (骨折 2〜3か月・前十字靭帯 6〜9か月・アキレス腱 6〜9か月)。
   (int min, int max) get durationRange => switch (this) {
         InjuryType.bruise => (1, 2),
         InjuryType.muscle => (2, 5),
         InjuryType.ligament => (4, 10),
+        InjuryType.fracture => (8, 13),
+        InjuryType.acl => (26, 39),
+        InjuryType.achilles => (26, 39),
+      };
+
+  /// 長期離脱(2か月以上)になる怪我か。
+  bool get isLongTerm => switch (this) {
+        InjuryType.fracture || InjuryType.acl || InjuryType.achilles => true,
+        _ => false,
       };
 }
 

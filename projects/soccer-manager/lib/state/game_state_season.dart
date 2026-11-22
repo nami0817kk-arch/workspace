@@ -579,6 +579,8 @@ extension GameStateSeason on GameState {
     _liveCupMatch = cupMatch;
     _liveCupTie = tie;
     _liveSubstitutionsUsed = 0;
+    _liveSubWindowsUsed = 0;
+    _liveSubWindowKey = null;
     lastCupPrizeNote = null;
     _liveWasInteractive = true; // カップのライブ観戦は常に決定機の判断あり
     _liveFirstHalfState = MatchEngine.beginInteractiveHalf(

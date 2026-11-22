@@ -19,9 +19,16 @@ import '../l10n/tr.dart';
 const int yellowCardSuspensionThreshold = 5;
 
 /// 1試合で使える交代枠。ライブ観戦の手動の交代
-/// ([GameState.maxSubstitutionsPerMatch])と、ハーフタイムの自動の交代
+/// ([GameState.maxSubstitutionsPerMatch])と、自動の交代
 /// ([MatchEngine.applyHalfTimeSubstitutions])で同じ数を使う。
-const int substitutionsPerMatch = 3;
+///
+/// 実際の決まり(IFAB の競技規則。2022 年から恒久)に合わせて5人。以前は
+/// 3人だった。
+const int substitutionsPerMatch = 5;
+
+/// 交代できる回数(ハーフタイムは数えない)。5人を3回までに分けて替える。
+/// ハーフタイムにいくら替えても、この回数は減らない(実際の決まりと同じ)。
+const int substitutionWindowsPerMatch = 3;
 
 /// ハーフタイムの自動の交代1件。
 class AutoSubstitution {
@@ -196,6 +203,10 @@ class InteractiveHalfState {
   final List<int> chanceMinutes;
   final List<MatchEvent> events;
 
+  /// この区間より前(後半なら前半)のイベント。退場した選手を交代で
+  /// 下げて11人に戻すことを防ぐのに使う。
+  final List<MatchEvent> priorEvents;
+
   // 決定機の中でカード(警告・退場)が出た場合に更新されるため、
   // 事前生成分と合わせて可変にしている。
   int? homeRedMinute;
@@ -247,6 +258,7 @@ class InteractiveHalfState {
     required this.awayRedMinute,
     required this.chanceMinutes,
     required this.events,
+    this.priorEvents = const [],
   });
 
   /// このハーフの進行が(判断待ちなく)完了したかどうか。
@@ -332,7 +344,12 @@ class MatchEngine {
   /// 約2.6〜2.9(現実のリーグ戦相当)、引き分け率が2割台前半〜半ばに
   /// 収まるよう調整した値。simulate系とインタラクティブ系の両方で
   /// 同じ値を使い、ライブ観戦と自動消化の結果が乖離しないようにする。
-  static const double _baseScoreProb = 0.22;
+  /// 2026-11-22 に PK・直接FK を実際の数まで減らしたぶん(約0.15点/試合)を
+  /// 戻すため 0.22 から上げた(1試合の得点 約2.6・引き分け約25%は変えない)。
+  static const double _baseScoreProb = 0.23;
+
+  /// 決定機のうちセットプレー(PK・直接FK・CK)から生まれる割合。
+  static const double _setPieceChanceShare = 0.25;
 
   /// ホームアドバンテージの既定倍率。実測でホーム勝率と平均得点差が
   /// 現実(勝率でホーム約45%対アウェイ約29%)に近づくよう調整した値。
@@ -1189,6 +1206,20 @@ class MatchEngine {
   /// 警告(70)より少し手前で替える。
   static const int autoSubTiredFatigue = 60;
 
+  /// 後半の途中(60〜75分)の自動の交代で「疲れた」とみなす疲労。疲労は
+  /// ハーフタイムと試合のあとにしか足さないので、ハーフタイムからの
+  /// 15〜30分ぶんを見込んで低めにする。
+  static const int lateAutoSubTiredFatigue = 50;
+
+  /// 後半の途中の自動の交代を行う分の幅(この間のどこか1回)。
+  static const int lateSubWindowEarliest = 60;
+  static const int lateSubWindowLatest = 75;
+
+  /// 後半の途中の交代の分を決める(60〜75分)。
+  static int rollLateSubMinute() =>
+      lateSubWindowEarliest +
+      _rng.nextInt(lateSubWindowLatest - lateSubWindowEarliest + 1);
+
   /// 負けているときに替える選手は、控えがこの割合以上の力なら替える
   /// (少し力が落ちても、流れを変えにいく)。
   static const double autoSubChasingRatio = 0.95;
@@ -1213,7 +1244,10 @@ class MatchEngine {
   /// 2. 負けていれば([goalDiff] < 0)、中盤・前線で今いちばん力の落ちている
   ///    選手を1人、[autoSubChasingRatio]以上の控えと替える。
   /// 控えは 主ポジション → 副ポジション → 同じ大分類 の順に探す(自動編成と同じ)。
-  /// [excludedIds]は替えてはいけない選手(退場した選手)。枠は[maxSubs]まで。
+  /// [excludedIds]は替えてはいけない選手(退場した選手)と、もう入れては
+  /// いけない選手(この試合で一度下がった選手)。枠は[maxSubs]まで。
+  /// [tiredFatigue]は「疲れた」とみなす疲労(後半の途中の交代では、ハーフ
+  /// タイムより走っているぶん低めにする)。
   /// 試合の中の怪我は無い(怪我は試合のあとに決まる)ので、怪我人の交代は無い。
   static List<AutoSubstitution> chooseHalfTimeSubstitutions(
     Team team,
@@ -1221,12 +1255,16 @@ class MatchEngine {
     required int goalDiff,
     int maxSubs = substitutionsPerMatch,
     Set<String> excludedIds = const {},
+    int tiredFatigue = autoSubTiredFatigue,
   }) {
     final swaps = <AutoSubstitution>[];
     if (maxSubs <= 0) return swaps;
     final onPitch = {for (final p in lineup) p.id};
     final bench = team.players
-        .where((p) => !onPitch.contains(p.id) && _canPlay(p))
+        .where((p) =>
+            !onPitch.contains(p.id) &&
+            !excludedIds.contains(p.id) &&
+            _canPlay(p))
         .toList();
     final usedBench = <String>{};
 
@@ -1264,7 +1302,7 @@ class MatchEngine {
           (p) =>
               p.position != Position.gk &&
               !excludedIds.contains(p.id) &&
-              p.fatigue >= autoSubTiredFatigue,
+              p.fatigue >= tiredFatigue,
         )
         .toList()
       ..sort((a, b) => b.fatigue.compareTo(a.fatigue));
@@ -1304,6 +1342,7 @@ class MatchEngine {
     required int goalDiff,
     int maxSubs = substitutionsPerMatch,
     Set<String> excludedIds = const {},
+    int tiredFatigue = autoSubTiredFatigue,
   }) {
     final original = List<String>.of(team.startingXI);
     final lineup = lineupOf(team);
@@ -1313,6 +1352,7 @@ class MatchEngine {
       goalDiff: goalDiff,
       maxSubs: maxSubs,
       excludedIds: excludedIds,
+      tiredFatigue: tiredFatigue,
     );
     if (swaps.isNotEmpty) {
       final byOut = {for (final s in swaps) s.out.id: s.incoming.id};
@@ -1344,6 +1384,19 @@ class MatchEngine {
     }
     if (plan.swaps.isNotEmpty) plan.team.startingXI = plan.originalXI;
   }
+
+  /// 続けて行った2つの区間([a]のあとに[b])の結果を1つにまとめる。
+  static HalfResult combineHalves(HalfResult a, HalfResult b) => HalfResult(
+        homeGoals: a.homeGoals + b.homeGoals,
+        awayGoals: a.awayGoals + b.awayGoals,
+        events: [...a.events, ...b.events],
+        homeShots: a.homeShots + b.homeShots,
+        awayShots: a.awayShots + b.awayShots,
+        homeShotsOnTarget: a.homeShotsOnTarget + b.homeShotsOnTarget,
+        awayShotsOnTarget: a.awayShotsOnTarget + b.awayShotsOnTarget,
+        possessionShareSum: a.possessionShareSum + b.possessionShareSum,
+        chanceCount: a.chanceCount + b.chanceCount,
+      );
 
   /// この試合で退場した選手(交代で下げてはいけない)。
   static Set<String> sentOffIds(Iterable<MatchEvent> events) => {
@@ -1412,6 +1465,11 @@ class MatchEngine {
       InjuryType.bruise: 3.0,
       InjuryType.muscle: 2.0,
       InjuryType.ligament: 1.0,
+      // 長期の怪我はまれ。試合での怪我の約3%で、1季に1クラブ0〜2人ほど
+      // (reality2_match_test で固定している)。
+      InjuryType.fracture: 0.10,
+      InjuryType.acl: 0.07,
+      InjuryType.achilles: 0.03,
     };
     for (final type in InjuryType.values) {
       final history = p.injuryHistoryCounts[type.name] ?? 0;
@@ -1481,9 +1539,230 @@ class MatchEngine {
     return (home: home, away: away);
   }
 
-  static Player? _pickCardTarget(List<Player> lineup) {
-    final candidates =
-        lineup.where((p) => p.position.group != PositionGroup.gk).toList();
+  /// 1分あたりにカードの場面(反則で審判が笛を吹き、カードを考える場面)が
+  /// 起きる確率。キャプテンの規律で見送られる分と、警告を受けている選手が
+  /// 自重する分を引いて、警告が両チーム合計で1試合4〜5枚(欧州5大リーグの
+  /// 実際の数)になるように合わせた(実測 約4.8枚)。以前は1試合に1〜4回
+  /// (平均2.5回)で、警告は約2.8枚/試合だった。
+  static const double _cardIncidentPerMinute = 0.062;
+
+  /// 既に警告を受けている選手が、もう一度カードの場面に絡んだときに
+  /// 自重して(反則を避けて)カードを免れる確率。実際には2枚目の警告での
+  /// 退場は1試合に0.1枚ほどしか無い。警告が4〜5枚に増えると、何もしない
+  /// ままでは同じ選手に2枚目が出る数が実際の3倍ほどになる(0.7でも退場は
+  /// 2枚目込みで約0.34枚/試合あった。0.85で約0.17枚)。
+  static const double _bookedPlayerCaution = 0.85;
+
+  /// 前の区間(前半など)で[teamId]の選手が退場していれば、この区間の
+  /// 始めから数的不利にするための分([startMinute]の1分前)。
+  static int? _priorRedMinute(
+    List<MatchEvent> priorEvents,
+    String teamId,
+    int startMinute,
+  ) {
+    for (final e in priorEvents) {
+      if (e.type == MatchEventType.redCard && e.teamId == teamId) {
+        return startMinute - 1;
+      }
+    }
+    return null;
+  }
+
+  static List<Player> _withoutIds(List<Player> lineup, Set<String> ids) =>
+      ids.isEmpty
+          ? lineup
+          : [
+              for (final p in lineup)
+                if (!ids.contains(p.id)) p,
+            ];
+
+  /// [minute]の時点でまだピッチにいる選手([events]でそれより前に退場した
+  /// 選手を除く)。退場した選手が同じ半のうちに得点・アシストしないように。
+  static List<Player> _stillOnPitch(
+    List<Player> lineup,
+    List<MatchEvent> events,
+    int minute,
+  ) {
+    Set<String>? gone;
+    for (final e in events) {
+      if (e.type == MatchEventType.redCard &&
+          e.scorerId != null &&
+          e.minute < minute) {
+        (gone ??= <String>{}).add(e.scorerId!);
+      }
+    }
+    if (gone == null) return lineup;
+    final left = _withoutIds(lineup, gone);
+    return left.isEmpty ? lineup : left;
+  }
+
+  /// この区間の警告・退場を決めて[events]へ入れ、両チームの退場の分を返す。
+  /// [homeRedMinute]/[awayRedMinute]は前の区間から続く数的不利(あれば)。
+  ///
+  /// カードの場面は分の順に処理する(以前は抽選した順で、2枚目の警告が
+  /// 1枚目より前の分に記録されることがあった)。退場した選手はその後の
+  /// カードの対象にしない。
+  static ({int? home, int? away}) _rollCards({
+    required Team home,
+    required Team away,
+    required List<Player> homeLineup,
+    required List<Player> awayLineup,
+    required int startMinute,
+    required int span,
+    required Set<int> minutesUsed,
+    required List<MatchEvent> events,
+    int? homeRedMinute,
+    int? awayRedMinute,
+    Set<String> excludedIds = const {},
+  }) {
+    // (分, 時間稼ぎで目を付けられたチーム)。時間稼ぎでないものは null。
+    final incidents = <(int, Team?)>[];
+    for (var m = startMinute; m < startMinute + span; m++) {
+      if (_rng.nextDouble() < _cardIncidentPerMinute) incidents.add((m, null));
+    }
+    // 時間稼ぎモードは疲労軽減の恩恵がある一方、遅延行為として審判の
+    // 目を引きやすくなるリスクを負う(追加の警告チャンスを1回だけ判定)。
+    for (final t in [home, away]) {
+      if (!t.timeWastingMode) continue;
+      if (_rng.nextDouble() >= 0.18 * span / 90) continue;
+      incidents.add((startMinute + _rng.nextInt(span), t));
+    }
+    incidents.sort((a, b) => a.$1.compareTo(b.$1));
+
+    final sentOff = <String>{...excludedIds};
+    for (final (minute, wastingTeam) in incidents) {
+      if (minutesUsed.contains(minute)) continue;
+      final isHomeTeam =
+          wastingTeam == null ? _rng.nextBool() : wastingTeam.id == home.id;
+      final lineup = isHomeTeam ? homeLineup : awayLineup;
+      final team = isHomeTeam ? home : away;
+      if (wastingTeam == null) {
+        // キャプテン(不在なら副キャプテン)が出場しているチームは規律が
+        // 保たれ、カードをやや受けにくい。効果の大きさはそのリーダーの
+        // leadership値で変わる。
+        final leader = _findCaptainOrVice(team, lineup);
+        if (leader != null &&
+            !sentOff.contains(leader.id) &&
+            _rng.nextDouble() <
+                (0.15 +
+                    leader.attributeValue(AttributeKeys.leadership) / 400)) {
+          continue;
+        }
+      }
+      final target = _pickCardTarget(lineup, exclude: sentOff);
+      if (target == null) continue;
+      // この試合で既に警告を受けている選手は自重することが多い。それでも
+      // カードを受けたら、実際のルール通り2枚目の警告は退場。
+      final isSecondYellow = target.yellowCardedThisMatch;
+      if (isSecondYellow && _rng.nextDouble() < _bookedPlayerCaution) continue;
+      final isRed = isSecondYellow ||
+          (wastingTeam == null && _rng.nextDouble() < _directRedChance);
+      minutesUsed.add(minute);
+      if (!isRed) target.yellowCardedThisMatch = true;
+      events.add(
+        MatchEvent(
+          minute: minute,
+          teamId: team.id,
+          scorerName: target.name,
+          scorerId: target.id,
+          type: isRed ? MatchEventType.redCard : MatchEventType.yellowCard,
+        ),
+      );
+      if (isRed) {
+        sentOff.add(target.id);
+        if (isHomeTeam) {
+          homeRedMinute =
+              homeRedMinute == null ? minute : min(homeRedMinute, minute);
+        } else {
+          awayRedMinute =
+              awayRedMinute == null ? minute : min(awayRedMinute, minute);
+        }
+      }
+      // 警告・退場の累積処理は試合終了後にapplyPostMatchEffectsでまとめて行う
+      // (出場停止の消化判定より後に反映しないと、今節退場した選手の出場停止が
+      // 同じ試合の後処理で即座に解除されてしまうため)。
+    }
+    return (home: homeRedMinute, away: awayRedMinute);
+  }
+
+  /// セットプレーのうち PK になる割合。決定機は1試合に約14回で、その25%が
+  /// セットプレーなので、PK は 約14×0.25×この値 ≒ 0.3本/試合(実際の欧州
+  /// 5大リーグは0.25〜0.3本)。以前は0.15で約0.5本/試合あった。
+  static const double _penaltyShare = 0.085;
+
+  /// セットプレーのうち直接フリーキックになる割合。以前は0.40(決まる確率も
+  /// 約16%)で、直接FKの得点が全得点の約9%を占めていた(実際は1〜2%)。
+  static const double _directFreeKickShare = 0.18;
+
+  /// セットプレー(PK・直接FK・CK)由来のチャンス。担当に指名された選手が
+  /// いれば優先的に関わり、専門の能力値でチャンスの質が変わる。
+  static ({
+    Player? scorer,
+    Player? forcedAssist,
+    double scoreProb,
+    SetPieceKind? kind,
+  }) _rollSetPiece({
+    required Team attackingTeam,
+    required List<Player> attackingLineup,
+    required Team defendingTeam,
+    required List<Player> defendingLineup,
+    required double baseProb,
+  }) {
+    final subRoll = _rng.nextDouble();
+    if (subRoll < _penaltyShare) {
+      final scorer = _pickSetPieceTaker(
+            attackingTeam.penaltyTakerId,
+            attackingLineup,
+          ) ??
+          _pickScorer(attackingLineup);
+      final penaltyAttr = scorer?.attributeValue(AttributeKeys.penalties) ?? 50;
+      // PK は実際には蹴った数の約75%が決まる。
+      return (
+        scorer: scorer,
+        forcedAssist: null,
+        scoreProb: (0.75 + (penaltyAttr - 50) / 300).clamp(0.6, 0.9),
+        kind: SetPieceKind.penalty,
+      );
+    }
+    if (subRoll < _penaltyShare + _directFreeKickShare) {
+      final scorer = _pickSetPieceTaker(
+            attackingTeam.freeKickTakerId,
+            attackingLineup,
+          ) ??
+          _pickScorer(attackingLineup);
+      final freeKickAttr = scorer?.attributeValue(AttributeKeys.freeKick) ?? 50;
+      // 直接FKが決まるのは実際には蹴った数の5〜7%ほど。
+      final prob = (0.06 + (freeKickAttr - 50) / 600).clamp(0.02, 0.15);
+      return (
+        scorer: scorer,
+        forcedAssist: null,
+        scoreProb: applySetPieceDefense(prob, defendingTeam, defendingLineup),
+        kind: SetPieceKind.directFreeKick,
+      );
+    }
+    final corner = resolveCorner(
+      attackingTeam: attackingTeam,
+      attackingLineup: attackingLineup,
+      defendingTeam: defendingTeam,
+      defendingLineup: defendingLineup,
+      baseProb: baseProb,
+    );
+    return (
+      scorer: corner.scorer,
+      forcedAssist: corner.taker,
+      scoreProb: corner.scoreProb,
+      kind: null,
+    );
+  }
+
+  static Player? _pickCardTarget(
+    List<Player> lineup, {
+    Set<String> exclude = const {},
+  }) {
+    final candidates = lineup
+        .where((p) =>
+            p.position.group != PositionGroup.gk && !exclude.contains(p.id))
+        .toList();
     if (candidates.isEmpty) return null;
     final weights = candidates
         .map(
@@ -1534,6 +1813,11 @@ class MatchEngine {
   /// ハーフタイムでの交代・戦術変更を反映できるよう、前半・後半を別々に
   /// 呼び出せるようにするための下位レベルAPI。疲労・負傷はここでは
   /// 適用しない([applyPostMatchEffects]を試合終了後に別途呼ぶこと)。
+  ///
+  /// [priorEvents]はこの試合でこの区間より前に起きたこと(後半なら前半の
+  /// イベント)。そこで退場した選手はこの区間に出さず、そのチームは区間の
+  /// 始めから数的不利のまま戦う。以前は渡す口が無く、前半に退場した選手が
+  /// 後半も出て、数的不利も消えていた。
   static HalfResult simulateMinutes({
     required Team home,
     required Team away,
@@ -1541,6 +1825,7 @@ class MatchEngine {
     required int endMinute,
     Weather weather = Weather.clear,
     double homeAdvantageFactor = defaultHomeAdvantageFactor,
+    List<MatchEvent> priorEvents = const [],
   }) {
     // 前半開始時に全選手のフラグをリセットして先発の倍率を算出する。
     // 後半開始時は、前半に出場せず後半で初めて起用された選手(途中出場の
@@ -1554,8 +1839,9 @@ class MatchEngine {
     // 始まり(前半の1分)だけで、ハーフタイムでは消さない。
     if (startMinute == 1) resetMatchCards(home, away);
 
-    final homeLineup = lineupOf(home);
-    final awayLineup = lineupOf(away);
+    final priorSentOff = sentOffIds(priorEvents);
+    final homeLineup = _withoutIds(lineupOf(home), priorSentOff);
+    final awayLineup = _withoutIds(lineupOf(away), priorSentOff);
 
     final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
     final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
@@ -1587,91 +1873,21 @@ class MatchEngine {
 
     // カードイベント(警告・退場)を先に生成し、退場が発生した分数を記録する。
     // ゴールチャンスの評価時にこの分数以降は数的不利として攻守力を下げる。
-    int? homeRedMinute;
-    int? awayRedMinute;
-    final cardChances = ((1 + _rng.nextInt(4)) * span / 90).round().clamp(0, 6);
-    for (int i = 0; i < cardChances; i++) {
-      final minute = startMinute + _rng.nextInt(span);
-      if (minutesUsed.contains(minute)) continue;
-      minutesUsed.add(minute);
-      final isHomeTeam = _rng.nextBool();
-      final lineup = isHomeTeam ? homeLineup : awayLineup;
-      final team = isHomeTeam ? home : away;
-      // キャプテン(不在なら副キャプテン)が出場しているチームは規律が保たれ、
-      // カードをやや受けにくい。効果の大きさはそのリーダーのleadership値で
-      // 変わる(値が高いほど効果的、というのはグロッサリーの説明にも合わせる)。
-      final leader = _findCaptainOrVice(team, lineup);
-      if (leader != null &&
-          _rng.nextDouble() <
-              (0.15 + leader.attributeValue(AttributeKeys.leadership) / 400)) {
-        continue;
-      }
-      final target = _pickCardTarget(lineup);
-      if (target == null) continue;
-      // この試合で既に警告を受けている選手が再びカード対象に選ばれた場合、
-      // 実際のルール通り2枚目の警告は退場(レッドカード)として扱う。
-      final isSecondYellow = target.yellowCardedThisMatch;
-      final isRed = isSecondYellow || _rng.nextDouble() < _directRedChance;
-      if (!isRed) target.yellowCardedThisMatch = true;
-      events.add(
-        MatchEvent(
-          minute: minute,
-          teamId: team.id,
-          scorerName: target.name,
-          scorerId: target.id,
-          type: isRed ? MatchEventType.redCard : MatchEventType.yellowCard,
-        ),
-      );
-      if (isRed) {
-        if (isHomeTeam) {
-          homeRedMinute =
-              homeRedMinute == null ? minute : min(homeRedMinute, minute);
-        } else {
-          awayRedMinute =
-              awayRedMinute == null ? minute : min(awayRedMinute, minute);
-        }
-      }
-      // 警告・退場の累積処理は試合終了後にapplyPostMatchEffectsでまとめて行う
-      // (出場停止の消化判定より後に反映しないと、今節退場した選手の出場停止が
-      // 同じ試合の後処理で即座に解除されてしまうため)。
-    }
-
-    // 時間稼ぎモードは疲労軽減の恩恵がある一方、遅延行為として審判の
-    // 目を引きやすくなるリスクを負う(追加の警告チャンスを1回だけ判定)。
-    for (final t in [home, away]) {
-      if (!t.timeWastingMode) continue;
-      if (_rng.nextDouble() >= 0.18 * span / 90) continue;
-      final minute = startMinute + _rng.nextInt(span);
-      if (minutesUsed.contains(minute)) continue;
-      final lineup = t.id == home.id ? homeLineup : awayLineup;
-      final target = _pickCardTarget(lineup);
-      if (target == null) continue;
-      minutesUsed.add(minute);
-      final isHomeTeam = t.id == home.id;
-      // ここもこの試合で既に警告済みの選手が対象になった場合は退場扱いにする。
-      final isSecondYellow = target.yellowCardedThisMatch;
-      if (!isSecondYellow) target.yellowCardedThisMatch = true;
-      events.add(
-        MatchEvent(
-          minute: minute,
-          teamId: t.id,
-          scorerName: target.name,
-          scorerId: target.id,
-          type: isSecondYellow
-              ? MatchEventType.redCard
-              : MatchEventType.yellowCard,
-        ),
-      );
-      if (isSecondYellow) {
-        if (isHomeTeam) {
-          homeRedMinute =
-              homeRedMinute == null ? minute : min(homeRedMinute, minute);
-        } else {
-          awayRedMinute =
-              awayRedMinute == null ? minute : min(awayRedMinute, minute);
-        }
-      }
-    }
+    // 前の区間(前半)で退場した選手がいれば、この区間の始めから数的不利。
+    final reds = _rollCards(
+      home: home,
+      away: away,
+      homeLineup: homeLineup,
+      awayLineup: awayLineup,
+      startMinute: startMinute,
+      span: span,
+      minutesUsed: minutesUsed,
+      events: events,
+      homeRedMinute: _priorRedMinute(priorEvents, home.id, startMinute),
+      awayRedMinute: _priorRedMinute(priorEvents, away.id, startMinute),
+    );
+    final homeRedMinute = reds.home;
+    final awayRedMinute = reds.away;
 
     // ゴールチャンスは時系列(分)順に評価し、退場による数的不利と
     // 直近の得点による「勢い」を反映する。
@@ -1715,8 +1931,11 @@ class MatchEngine {
       } else {
         awayShots++;
       }
-      final attackingLineup = isHomeChance ? homeLineup : awayLineup;
-      final defendingLineup = isHomeChance ? awayLineup : homeLineup;
+      // 同じ半のうちに退場した選手は、その分より後は数えない。
+      final attackingLineup =
+          _stillOnPitch(isHomeChance ? homeLineup : awayLineup, events, minute);
+      final defendingLineup =
+          _stillOnPitch(isHomeChance ? awayLineup : homeLineup, events, minute);
       final attackingTeam = isHomeChance ? home : away;
       final defendingTeam = isHomeChance ? away : home;
       final defendingDefense = isHomeChance ? awayDefense : homeDefense;
@@ -1728,49 +1947,19 @@ class MatchEngine {
           (_baseScoreProb + diff / 220 + momentum).clamp(0.05, 0.75);
       Player? scorer;
       Player? forcedAssist;
-      bool isPenalty = false;
-      bool isDirectFreeKick = false;
-      if (_rng.nextDouble() < 0.25) {
-        // セットプレー(PK・直接FK・CK)由来のチャンス。担当に指名された選手が
-        // いれば優先的に関わり、専門の能力値でチャンスの質が変わる。
-        final subRoll = _rng.nextDouble();
-        if (subRoll < 0.15) {
-          isPenalty = true;
-          scorer = _pickSetPieceTaker(
-                attackingTeam.penaltyTakerId,
-                attackingLineup,
-              ) ??
-              _pickScorer(attackingLineup);
-          final penaltyAttr =
-              scorer?.attributeValue(AttributeKeys.penalties) ?? 50;
-          scoreProb = (0.55 + (penaltyAttr - 50) / 200).clamp(0.5, 0.9);
-        } else if (subRoll < 0.55) {
-          isDirectFreeKick = true;
-          scorer = _pickSetPieceTaker(
-                attackingTeam.freeKickTakerId,
-                attackingLineup,
-              ) ??
-              _pickScorer(attackingLineup);
-          final freeKickAttr =
-              scorer?.attributeValue(AttributeKeys.freeKick) ?? 50;
-          scoreProb = (0.18 + (freeKickAttr - 50) / 300).clamp(0.05, 0.35);
-          scoreProb = applySetPieceDefense(
-            scoreProb,
-            defendingTeam,
-            defendingLineup,
-          );
-        } else {
-          final corner = resolveCorner(
-            attackingTeam: attackingTeam,
-            attackingLineup: attackingLineup,
-            defendingTeam: defendingTeam,
-            defendingLineup: defendingLineup,
-            baseProb: scoreProb,
-          );
-          scorer = corner.scorer;
-          forcedAssist = corner.taker;
-          scoreProb = corner.scoreProb;
-        }
+      SetPieceKind? setPiece;
+      if (_rng.nextDouble() < _setPieceChanceShare) {
+        final sp = _rollSetPiece(
+          attackingTeam: attackingTeam,
+          attackingLineup: attackingLineup,
+          defendingTeam: defendingTeam,
+          defendingLineup: defendingLineup,
+          baseProb: scoreProb,
+        );
+        scorer = sp.scorer;
+        forcedAssist = sp.forcedAssist;
+        scoreProb = sp.scoreProb;
+        setPiece = sp.kind;
       } else {
         // オープンプレー: まずサイドでの1対1を判定する。ワイドな選手が
         // いれば、対面の守備者とのデュエルに勝った場合のみクロス→空中戦の
@@ -1811,7 +2000,7 @@ class MatchEngine {
         }
       }
       if (_rng.nextDouble() < scoreProb) {
-        final assist = (isPenalty || isDirectFreeKick)
+        final assist = setPiece != null
             ? null
             : (forcedAssist ?? _pickAssist(attackingLineup, scorer));
         events.add(
@@ -1822,6 +2011,7 @@ class MatchEngine {
             scorerId: scorer?.id,
             assistName: assist?.name,
             assistId: assist?.id,
+            setPiece: setPiece,
           ),
         );
         if (isHomeChance) {
@@ -1835,6 +2025,23 @@ class MatchEngine {
           awayMomentum = (awayMomentum + 0.05).clamp(-0.08, 0.08);
           homeMomentum = (homeMomentum - 0.02).clamp(-0.08, 0.08);
         }
+      } else if (setPiece == SetPieceKind.penalty) {
+        // PK は外れても必ず記録する(PK の本数を数えられるように)。
+        if (isHomeChance) {
+          homeShotsOnTarget++;
+        } else {
+          awayShotsOnTarget++;
+        }
+        events.add(
+          MatchEvent(
+            minute: minute,
+            teamId: attackingTeam.id,
+            scorerName: scorer?.name,
+            scorerId: scorer?.id,
+            type: MatchEventType.chance,
+            setPiece: setPiece,
+          ),
+        );
       } else if (_rng.nextDouble() < 0.45) {
         // 得点には至らなかった惜しいチャンスを実況として記録する(枠内シュート)。
         final shooter = _pickScorer(attackingLineup);
@@ -2045,7 +2252,10 @@ class MatchEngine {
             ratings[id] = ratings[id]! + 1.0;
             break;
           case MatchEventType.chance:
-            ratings[id] = ratings[id]! + 0.3;
+            // 外した PK は「惜しい決定機」ではないので加点しない。
+            if (e.setPiece != SetPieceKind.penalty) {
+              ratings[id] = ratings[id]! + 0.3;
+            }
             break;
           case MatchEventType.yellowCard:
             ratings[id] = ratings[id]! - 0.5;
@@ -2154,13 +2364,13 @@ class MatchEngine {
     required Player? scorer,
     required Player? forcedAssist,
     required double scoreProb,
-    required bool isPenalty,
-    required bool isDirectFreeKick,
+    SetPieceKind? setPiece,
   }) {
-    final attackingLineup = isHomeChance ? s.homeLineup : s.awayLineup;
+    final attackingLineup = _stillOnPitch(
+        isHomeChance ? s.homeLineup : s.awayLineup, s.events, minute);
     MatchEvent? produced;
     if (_rng.nextDouble() < scoreProb) {
-      final assist = (isPenalty || isDirectFreeKick)
+      final assist = setPiece != null
           ? null
           : (forcedAssist ?? _pickAssist(attackingLineup, scorer));
       produced = MatchEvent(
@@ -2170,6 +2380,7 @@ class MatchEngine {
         scorerId: scorer?.id,
         assistName: assist?.name,
         assistId: assist?.id,
+        setPiece: setPiece,
       );
       s.events.add(produced);
       if (isHomeChance) {
@@ -2183,7 +2394,8 @@ class MatchEngine {
         s.awayMomentum = (s.awayMomentum + 0.05).clamp(-0.08, 0.08);
         s.homeMomentum = (s.homeMomentum - 0.02).clamp(-0.08, 0.08);
       }
-    } else if (_rng.nextDouble() < 0.45) {
+    } else if (setPiece == SetPieceKind.penalty || _rng.nextDouble() < 0.45) {
+      // PK は外れても必ず記録する(PK の本数を数えられるように)。
       if (isHomeChance) {
         s.homeShotsOnTarget++;
       } else {
@@ -2195,6 +2407,7 @@ class MatchEngine {
         scorerName: scorer?.name,
         scorerId: scorer?.id,
         type: MatchEventType.chance,
+        setPiece: setPiece,
       );
       s.events.add(produced);
     }
@@ -2299,6 +2512,11 @@ class MatchEngine {
           involvedIds.contains(inPlayerId)) {
         return false;
       }
+    }
+    // 退場した選手を下げて控えを入れると、11人に戻ってしまう。
+    if (sentOffIds([...state.priorEvents, ...state.events])
+        .contains(outPlayerId)) {
+      return false;
     }
     final team = isHome ? state.home : state.away;
     final lineup = isHome ? state.homeLineup : state.awayLineup;
@@ -2424,6 +2642,7 @@ class MatchEngine {
     Weather weather = Weather.clear,
     double homeAdvantageFactor = defaultHomeAdvantageFactor,
     HalfTally? carried,
+    List<MatchEvent> priorEvents = const [],
   }) {
     if (startMinute > endMinute) {
       // 再開した時点で、このハーフはもう終わっていた。
@@ -2450,8 +2669,10 @@ class MatchEngine {
       markYellowCardsFromEvents(home, away, carried.events);
     }
 
-    final homeLineup = lineupOf(home);
-    final awayLineup = lineupOf(away);
+    // 前の区間(前半)と、再開する前のこの区間で退場した選手は出さない。
+    final sentOffBefore = sentOffIds([...priorEvents, ...?carried?.events]);
+    final homeLineup = _withoutIds(lineupOf(home), sentOffBefore);
+    final awayLineup = _withoutIds(lineupOf(away), sentOffBefore);
     final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
     final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
 
@@ -2478,80 +2699,21 @@ class MatchEngine {
     final span = endMinute - startMinute + 1;
     final minutesUsed = <int>{};
 
-    int? homeRedMinute;
-    int? awayRedMinute;
-    final cardChances = ((1 + _rng.nextInt(4)) * span / 90).round().clamp(0, 6);
-    for (int i = 0; i < cardChances; i++) {
-      final minute = startMinute + _rng.nextInt(span);
-      if (minutesUsed.contains(minute)) continue;
-      minutesUsed.add(minute);
-      final isHomeTeam = _rng.nextBool();
-      final lineup = isHomeTeam ? homeLineup : awayLineup;
-      final team = isHomeTeam ? home : away;
-      final leader = _findCaptainOrVice(team, lineup);
-      if (leader != null &&
-          _rng.nextDouble() <
-              (0.15 + leader.attributeValue(AttributeKeys.leadership) / 400)) {
-        continue;
-      }
-      final target = _pickCardTarget(lineup);
-      if (target == null) continue;
-      final isSecondYellow = target.yellowCardedThisMatch;
-      final isRed = isSecondYellow || _rng.nextDouble() < _directRedChance;
-      if (!isRed) target.yellowCardedThisMatch = true;
-      events.add(
-        MatchEvent(
-          minute: minute,
-          teamId: team.id,
-          scorerName: target.name,
-          scorerId: target.id,
-          type: isRed ? MatchEventType.redCard : MatchEventType.yellowCard,
-        ),
-      );
-      if (isRed) {
-        if (isHomeTeam) {
-          homeRedMinute =
-              homeRedMinute == null ? minute : min(homeRedMinute, minute);
-        } else {
-          awayRedMinute =
-              awayRedMinute == null ? minute : min(awayRedMinute, minute);
-        }
-      }
-    }
-
-    for (final t in [home, away]) {
-      if (!t.timeWastingMode) continue;
-      if (_rng.nextDouble() >= 0.18 * span / 90) continue;
-      final minute = startMinute + _rng.nextInt(span);
-      if (minutesUsed.contains(minute)) continue;
-      final lineup = t.id == home.id ? homeLineup : awayLineup;
-      final target = _pickCardTarget(lineup);
-      if (target == null) continue;
-      minutesUsed.add(minute);
-      final isHomeTeam = t.id == home.id;
-      final isSecondYellow = target.yellowCardedThisMatch;
-      if (!isSecondYellow) target.yellowCardedThisMatch = true;
-      events.add(
-        MatchEvent(
-          minute: minute,
-          teamId: t.id,
-          scorerName: target.name,
-          scorerId: target.id,
-          type: isSecondYellow
-              ? MatchEventType.redCard
-              : MatchEventType.yellowCard,
-        ),
-      );
-      if (isSecondYellow) {
-        if (isHomeTeam) {
-          homeRedMinute =
-              homeRedMinute == null ? minute : min(homeRedMinute, minute);
-        } else {
-          awayRedMinute =
-              awayRedMinute == null ? minute : min(awayRedMinute, minute);
-        }
-      }
-    }
+    final reds = _rollCards(
+      home: home,
+      away: away,
+      homeLineup: homeLineup,
+      awayLineup: awayLineup,
+      startMinute: startMinute,
+      span: span,
+      minutesUsed: minutesUsed,
+      events: events,
+      homeRedMinute: _priorRedMinute(priorEvents, home.id, startMinute),
+      awayRedMinute: _priorRedMinute(priorEvents, away.id, startMinute),
+      excludedIds: sentOffBefore,
+    );
+    final homeRedMinute = reds.home;
+    final awayRedMinute = reds.away;
 
     final totalChances =
         ((9 + _rng.nextInt(8)) * span / 90 * weather.chanceCountMultiplier)
@@ -2586,6 +2748,7 @@ class MatchEngine {
       awayRedMinute: awayRedMinute,
       chanceMinutes: chanceMinutes,
       events: events,
+      priorEvents: priorEvents,
     );
     if (carried != null) state.applyCarried(carried);
     _advanceInteractiveHalf(state);
@@ -2643,8 +2806,11 @@ class MatchEngine {
       } else {
         s.awayShots++;
       }
-      final attackingLineup = isHomeChance ? s.homeLineup : s.awayLineup;
-      final defendingLineup = isHomeChance ? s.awayLineup : s.homeLineup;
+      // 同じ半のうちに退場した選手は、その分より後は数えない。
+      final attackingLineup = _stillOnPitch(
+          isHomeChance ? s.homeLineup : s.awayLineup, s.events, minute);
+      final defendingLineup = _stillOnPitch(
+          isHomeChance ? s.awayLineup : s.homeLineup, s.events, minute);
       final attackingTeam = isHomeChance ? s.home : s.away;
       final defendingTeam = isHomeChance ? s.away : s.home;
       final defendingDefense = isHomeChance ? awayDefense : homeDefense;
@@ -2656,51 +2822,23 @@ class MatchEngine {
           (_baseScoreProb + diff / 220 + momentum).clamp(0.05, 0.75);
       Player? scorer;
       Player? forcedAssist;
-      bool isPenalty = false;
-      bool isDirectFreeKick = false;
+      SetPieceKind? setPiece;
       bool isInteractiveOpenPlay = false;
 
-      if (_rng.nextDouble() < 0.25) {
+      if (_rng.nextDouble() < _setPieceChanceShare) {
         // セットプレー(PK・直接FK・CK): 従来通り即座に解決する
         // (シュート/パスの選択はオープンプレーの通常シュートに限定する)。
-        final subRoll = _rng.nextDouble();
-        if (subRoll < 0.15) {
-          isPenalty = true;
-          scorer = _pickSetPieceTaker(
-                attackingTeam.penaltyTakerId,
-                attackingLineup,
-              ) ??
-              _pickScorer(attackingLineup);
-          final penaltyAttr =
-              scorer?.attributeValue(AttributeKeys.penalties) ?? 50;
-          scoreProb = (0.55 + (penaltyAttr - 50) / 200).clamp(0.5, 0.9);
-        } else if (subRoll < 0.55) {
-          isDirectFreeKick = true;
-          scorer = _pickSetPieceTaker(
-                attackingTeam.freeKickTakerId,
-                attackingLineup,
-              ) ??
-              _pickScorer(attackingLineup);
-          final freeKickAttr =
-              scorer?.attributeValue(AttributeKeys.freeKick) ?? 50;
-          scoreProb = (0.18 + (freeKickAttr - 50) / 300).clamp(0.05, 0.35);
-          scoreProb = applySetPieceDefense(
-            scoreProb,
-            defendingTeam,
-            defendingLineup,
-          );
-        } else {
-          final corner = resolveCorner(
-            attackingTeam: attackingTeam,
-            attackingLineup: attackingLineup,
-            defendingTeam: defendingTeam,
-            defendingLineup: defendingLineup,
-            baseProb: scoreProb,
-          );
-          scorer = corner.scorer;
-          forcedAssist = corner.taker;
-          scoreProb = corner.scoreProb;
-        }
+        final sp = _rollSetPiece(
+          attackingTeam: attackingTeam,
+          attackingLineup: attackingLineup,
+          defendingTeam: defendingTeam,
+          defendingLineup: defendingLineup,
+          baseProb: scoreProb,
+        );
+        scorer = sp.scorer;
+        forcedAssist = sp.forcedAssist;
+        scoreProb = sp.scoreProb;
+        setPiece = sp.kind;
       } else {
         // オープンプレー: サイドでの1対1をまず判定する。
         final right = _rng.nextBool();
@@ -2812,8 +2950,7 @@ class MatchEngine {
         scorer: scorer,
         forcedAssist: forcedAssist,
         scoreProb: scoreProb,
-        isPenalty: isPenalty,
-        isDirectFreeKick: isDirectFreeKick,
+        setPiece: setPiece,
       );
       s.chanceIndex++;
     }
@@ -2866,8 +3003,6 @@ class MatchEngine {
         scorer: finalScorer,
         forcedAssist: forcedAssist,
         scoreProb: finalScoreProb,
-        isPenalty: false,
-        isDirectFreeKick: false,
       );
     } else {
       // 守備側の決定機: attackerは相手チームの選手で、選んだ対応に応じた
@@ -2884,11 +3019,11 @@ class MatchEngine {
         scorer: pending.attacker,
         forcedAssist: null,
         scoreProb: finalScoreProb,
-        isPenalty: false,
-        isDirectFreeKick: false,
       );
       if (aggressive && _rng.nextDouble() < _aggressiveTackleCardChance) {
-        final tackler = pending.defender ?? _pickCardTarget(defendingLineup);
+        final tackler = pending.defender ??
+            _pickCardTarget(defendingLineup,
+                exclude: sentOffIds([...state.priorEvents, ...state.events]));
         if (tackler != null) {
           final isSecondYellow = tackler.yellowCardedThisMatch;
           final isRed =
@@ -2957,14 +3092,53 @@ class MatchEngine {
       goalDiff: first.awayGoals - first.homeGoals,
       excludedIds: sentOff,
     );
-    final second = simulateMinutes(
+    // 後半は、60〜75分の交代(ハーフタイムとは別の1回)を挟んで2つに分けて
+    // 進める。前半に退場した選手は後半に出さず、数的不利も続ける。
+    final lateMinute = rollLateSubMinute();
+    final secondA = simulateMinutes(
       home: home,
       away: away,
       startMinute: 46,
+      endMinute: lateMinute,
+      weather: weather,
+      homeAdvantageFactor: homeAdvantageFactor,
+      priorEvents: first.events,
+    );
+    final beforeLate = [...first.events, ...secondA.events];
+    final lateExcluded = {
+      ...sentOffIds(beforeLate),
+      for (final s in [...homePlan.swaps, ...awayPlan.swaps]) s.out.id,
+    };
+    final homeLatePlan = applyHalfTimeSubstitutions(
+      home,
+      goalDiff: first.homeGoals +
+          secondA.homeGoals -
+          first.awayGoals -
+          secondA.awayGoals,
+      maxSubs: substitutionsPerMatch - homePlan.swaps.length,
+      excludedIds: lateExcluded,
+      tiredFatigue: lateAutoSubTiredFatigue,
+    );
+    final awayLatePlan = applyHalfTimeSubstitutions(
+      away,
+      goalDiff: first.awayGoals +
+          secondA.awayGoals -
+          first.homeGoals -
+          secondA.homeGoals,
+      maxSubs: substitutionsPerMatch - awayPlan.swaps.length,
+      excludedIds: lateExcluded,
+      tiredFatigue: lateAutoSubTiredFatigue,
+    );
+    final secondB = simulateMinutes(
+      home: home,
+      away: away,
+      startMinute: lateMinute + 1,
       endMinute: 90,
       weather: weather,
       homeAdvantageFactor: homeAdvantageFactor,
+      priorEvents: beforeLate,
     );
+    final second = combineHalves(secondA, secondB);
     final allEvents = [...first.events, ...second.events];
     final homeGoals = first.homeGoals + second.homeGoals;
     final awayGoals = first.awayGoals + second.awayGoals;
@@ -2992,7 +3166,12 @@ class MatchEngine {
       events: allEvents,
       homeGoals: homeGoals,
       awayGoals: awayGoals,
-      subbedOff: [...homePlan.subbedOff, ...awayPlan.subbedOff],
+      subbedOff: [
+        ...homePlan.subbedOff,
+        ...awayPlan.subbedOff,
+        ...homeLatePlan.subbedOff,
+        ...awayLatePlan.subbedOff,
+      ],
     );
     applyPostMatchEffects(
       home: home,
@@ -3002,6 +3181,9 @@ class MatchEngine {
       events: allEvents,
       weather: weather,
     );
+    // 後の交代から戻す(後半の途中の交代の「元」はハーフタイムの交代のあと)。
+    finishHalfTimeSubstitutions(homeLatePlan, events: allEvents);
+    finishHalfTimeSubstitutions(awayLatePlan, events: allEvents);
     finishHalfTimeSubstitutions(homePlan, events: allEvents);
     finishHalfTimeSubstitutions(awayPlan, events: allEvents);
 

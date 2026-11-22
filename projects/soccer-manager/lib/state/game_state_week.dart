@@ -76,6 +76,8 @@ extension GameStateWeek on GameState {
     }
     if (d.isAfter(cursor)) _recoverByDays(_daysBetween(cursor, d));
     s.today = d;
+    // 代表ウィークが終わっていれば、代表の選手はクラブに戻る。
+    _releaseInternationalDuty();
   }
 
   /// その季で最初に節を消化するとき(と、最後に週の処理をした日を持たない

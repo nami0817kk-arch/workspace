@@ -141,15 +141,60 @@ extension GameStateMatch on GameState {
 
   int get substitutionsUsed => _liveSubstitutionsUsed;
 
+  /// 残りの交代枠(人数)。
+  int get substitutionsRemaining =>
+      GameState.maxSubstitutionsPerMatch - _liveSubstitutionsUsed;
+
+  /// 使った交代の回数(ハーフタイムは数えない)。
+  int get substitutionWindowsUsed => _liveSubWindowsUsed;
+
+  /// 残りの交代の回数(ハーフタイムは数えない)。
+  int get substitutionWindowsRemaining =>
+      GameState.maxSubstitutionWindowsPerMatch - _liveSubWindowsUsed;
+
+  /// 「交代あと2人・あと1回」のような残りの表示。
+  String get substitutionsLeftLabel => Tr.pick(
+      '交代あと$substitutionsRemaining人(ハーフタイム以外はあと$substitutionWindowsRemaining回)',
+      '${Tr.plural(substitutionsRemaining, 'sub')} left '
+          '(${Tr.plural(substitutionWindowsRemaining, 'stoppage')} left outside half-time)');
+
+  /// 交代枠(人数)が残っているか。試合中の交代は、これに加えて回数も
+  /// 残っている(か、同じ止まった場面で続けて替える)必要がある。
   bool get canMakeSubstitution =>
       _liveSubstitutionsUsed < GameState.maxSubstitutionsPerMatch;
 
+  /// いまの止まった場面([_liveSubWindowKey])で試合中の交代ができるか。
+  /// 同じ場面で続けて替えるなら回数は増えない。
+  bool get canMakeLiveSubstitution {
+    if (!canMakeSubstitution) return false;
+    final key = _currentLiveSubWindowKey;
+    if (key == null) return false;
+    return key == _liveSubWindowKey ||
+        _liveSubWindowsUsed < GameState.maxSubstitutionWindowsPerMatch;
+  }
+
+  /// 試合中のいまの止まった場面を表す印(前半か後半かと、何番目の決定機か)。
+  String? get _currentLiveSubWindowKey {
+    final second = _liveSecondHalfState;
+    if (second != null) return 'h2:${second.chanceIndex}';
+    final first = _liveFirstHalfState;
+    if (first != null) return 'h1:${first.chanceIndex}';
+    return null;
+  }
+
   /// ハーフタイムの交代操作。通常のswapStartingPlayerに交代枠の消費を加える。
+  /// ハーフタイムの交代は回数に数えない(実際の決まりと同じ)。前半に退場した
+  /// 選手を下げて控えを入れることはできない(11人に戻ってしまう)。
   bool makeHalfTimeSubstitution({
     required String outPlayerId,
     required String inPlayerId,
   }) {
     if (!canMakeSubstitution) return false;
+    final first = _liveFirstHalfState;
+    if (first != null &&
+        MatchEngine.sentOffIds(first.events).contains(outPlayerId)) {
+      return false;
+    }
     swapStartingPlayer(outPlayerId: outPlayerId, inPlayerId: inPlayerId);
     _liveSubstitutionsUsed++;
     _notify();
@@ -165,9 +210,10 @@ extension GameStateMatch on GameState {
     required String outPlayerId,
     required String inPlayerId,
   }) {
-    if (!canMakeSubstitution) return false;
+    if (!canMakeLiveSubstitution) return false;
     final state = _liveSecondHalfState ?? _liveFirstHalfState;
     if (state == null || state.isFinished) return false;
+    final key = _currentLiveSubWindowKey;
     final applied = MatchEngine.applyInteractiveSubstitution(
       state,
       teamId: userTeam.id,
@@ -177,6 +223,11 @@ extension GameStateMatch on GameState {
     if (!applied) return false;
     swapStartingPlayer(outPlayerId: outPlayerId, inPlayerId: inPlayerId);
     _liveSubstitutionsUsed++;
+    // 同じ止まった場面で続けて替えるのは1回と数える(5人を3回まで)。
+    if (key != _liveSubWindowKey) {
+      _liveSubWindowsUsed++;
+      _liveSubWindowKey = key;
+    }
     _notify();
     return true;
   }
@@ -485,6 +536,8 @@ extension GameStateMatch on GameState {
     if (userFixture != null) {
       _liveFixture = userFixture;
       _liveSubstitutionsUsed = 0;
+      _liveSubWindowsUsed = 0;
+      _liveSubWindowKey = null;
     }
 
     // 試合前の処理を済ませた印と、試合の途中経過を同じ保存に載せる。
@@ -594,6 +647,8 @@ extension GameStateMatch on GameState {
     if (userFixture != null) {
       _liveFixture = userFixture;
       _liveSubstitutionsUsed = progress?.substitutionsUsed ?? 0;
+      _liveSubWindowsUsed = progress?.substitutionWindowsUsed ?? 0;
+      _liveSubWindowKey = null;
     }
     _recordLiveProgress();
 
@@ -639,6 +694,7 @@ extension GameStateMatch on GameState {
       matchday: f.matchday,
       resumeMinute: resume,
       substitutionsUsed: _liveSubstitutionsUsed,
+      substitutionWindowsUsed: _liveSubWindowsUsed,
       firstHalf: firstTally,
       secondHalf: secondTally,
     );
@@ -669,38 +725,126 @@ extension GameStateMatch on GameState {
     // あとでも、前半の途中経過から戻せるように毎回入れ直す)。
     final firstHalf = _liveFirstHalfState!;
     MatchEngine.markYellowCardsFromEvents(home, away, firstHalf.events);
-    // 結果だけ見る試合(判断を仰がない)では、ハーフタイムの交代を監督が
-    // 自動で行う。ライブ観戦の試合は利用者が交代するので触らない。
+    // 結果だけ見る試合(判断を仰がない)では、ハーフタイムと後半の途中
+    // (60〜75分)の交代を監督が自動で行う。ライブ観戦の試合は利用者が
+    // 交代するので触らない。
     _liveAutoSubPlans = [];
-    if (!interactive && !_liveWasInteractive && resume == null) {
-      final sentOff = MatchEngine.sentOffIds(firstHalf.events);
-      final userId = _save!.userTeamId;
+    final autoSubs = !interactive && !_liveWasInteractive && resume == null;
+    final userId = _save!.userTeamId;
+    // 自クラブがこの試合で使える残りの交代枠(人数)。
+    int userSubsLeft() =>
+        GameState.maxSubstitutionsPerMatch -
+        _liveSubstitutionsUsed -
+        [
+          for (final plan in _liveAutoSubPlans)
+            if (plan.team.id == userId) ...plan.swaps,
+        ].length;
+    void autoSubstitute({
+      required int homeGoalDiff,
+      required Set<String> excluded,
+      required int tiredFatigue,
+      required bool countsAsWindow,
+    }) {
       for (final team in [home, away]) {
-        final isHome = team.id == home.id;
-        final goalDiff = isHome
-            ? firstHalf.homeGoals - firstHalf.awayGoals
-            : firstHalf.awayGoals - firstHalf.homeGoals;
+        final isUser = team.id == userId;
+        if (isUser &&
+            countsAsWindow &&
+            _liveSubWindowsUsed >= GameState.maxSubstitutionWindowsPerMatch) {
+          continue;
+        }
+        final cpuUsed = [
+          for (final plan in _liveAutoSubPlans)
+            if (plan.team.id == team.id) ...plan.swaps,
+        ].length;
         final plan = MatchEngine.applyHalfTimeSubstitutions(
           team,
-          goalDiff: goalDiff,
-          maxSubs: team.id == userId
-              ? GameState.maxSubstitutionsPerMatch - _liveSubstitutionsUsed
-              : GameState.maxSubstitutionsPerMatch,
-          excludedIds: sentOff,
+          goalDiff: team.id == home.id ? homeGoalDiff : -homeGoalDiff,
+          maxSubs: isUser
+              ? userSubsLeft()
+              : GameState.maxSubstitutionsPerMatch - cpuUsed,
+          excludedIds: excluded,
+          tiredFatigue: tiredFatigue,
         );
-        if (plan.swaps.isNotEmpty) _liveAutoSubPlans.add(plan);
+        if (plan.swaps.isEmpty) continue;
+        _liveAutoSubPlans.add(plan);
+        if (isUser && countsAsWindow) _liveSubWindowsUsed++;
       }
     }
-    final state = MatchEngine.beginInteractiveHalf(
-      home: home,
-      away: away,
-      startMinute: resume?.resumeMinute ?? 46,
-      endMinute: 90,
-      interactiveTeamId: _save!.userTeamId,
-      weather: weather,
-      homeAdvantageFactor: _homeAdvantageFor(home.id),
-      carried: resume?.tally,
-    );
+
+    if (autoSubs) {
+      autoSubstitute(
+        homeGoalDiff: firstHalf.homeGoals - firstHalf.awayGoals,
+        excluded: MatchEngine.sentOffIds(firstHalf.events),
+        tiredFatigue: MatchEngine.autoSubTiredFatigue,
+        countsAsWindow: false,
+      );
+    }
+    // 前半に退場した選手は後半に出さず、数的不利も後半まで続ける。
+    final InteractiveHalfState state;
+    if (autoSubs) {
+      // 後半を60〜75分の交代の前後に分けて進める。
+      final lateMinute = MatchEngine.rollLateSubMinute();
+      final partA = MatchEngine.beginInteractiveHalf(
+        home: home,
+        away: away,
+        startMinute: 46,
+        endMinute: lateMinute,
+        interactiveTeamId: userId,
+        weather: weather,
+        homeAdvantageFactor: _homeAdvantageFor(home.id),
+        priorEvents: firstHalf.events,
+      );
+      while (!partA.isFinished) {
+        MatchEngine.resolvePendingChance(partA, ChanceDecision.shoot);
+      }
+      final a = partA.toHalfResult();
+      autoSubstitute(
+        homeGoalDiff: firstHalf.homeGoals +
+            a.homeGoals -
+            firstHalf.awayGoals -
+            a.awayGoals,
+        excluded: {
+          ...MatchEngine.sentOffIds([...firstHalf.events, ...a.events]),
+          for (final plan in _liveAutoSubPlans)
+            for (final sw in plan.swaps) sw.out.id,
+        },
+        tiredFatigue: MatchEngine.lateAutoSubTiredFatigue,
+        countsAsWindow: true,
+      );
+      state = MatchEngine.beginInteractiveHalf(
+        home: home,
+        away: away,
+        startMinute: lateMinute + 1,
+        endMinute: 90,
+        interactiveTeamId: userId,
+        weather: weather,
+        homeAdvantageFactor: _homeAdvantageFor(home.id),
+        priorEvents: firstHalf.events,
+        carried: HalfTally(
+          homeGoals: a.homeGoals,
+          awayGoals: a.awayGoals,
+          events: a.events,
+          homeShots: a.homeShots,
+          awayShots: a.awayShots,
+          homeShotsOnTarget: a.homeShotsOnTarget,
+          awayShotsOnTarget: a.awayShotsOnTarget,
+          possessionShareSum: a.possessionShareSum,
+          chanceCount: a.chanceCount,
+        ),
+      );
+    } else {
+      state = MatchEngine.beginInteractiveHalf(
+        home: home,
+        away: away,
+        startMinute: resume?.resumeMinute ?? 46,
+        endMinute: 90,
+        interactiveTeamId: userId,
+        weather: weather,
+        homeAdvantageFactor: _homeAdvantageFor(home.id),
+        carried: resume?.tally,
+        priorEvents: firstHalf.events,
+      );
+    }
     if (!interactive) {
       while (!state.isFinished) {
         MatchEngine.resolvePendingChance(state, ChanceDecision.shoot);
@@ -812,7 +956,9 @@ extension GameStateMatch on GameState {
       events: allEvents,
       weather: weather,
     );
-    for (final plan in _liveAutoSubPlans) {
+    // 後の交代から戻す(後半の途中の交代の「元」の先発は、ハーフタイムの
+    // 交代のあとのもの。前から戻すとハーフタイムの交代が先発に残る)。
+    for (final plan in _liveAutoSubPlans.reversed) {
       MatchEngine.finishHalfTimeSubstitutions(plan, events: allEvents);
     }
     _liveAutoSubPlans = [];
@@ -909,6 +1055,8 @@ extension GameStateMatch on GameState {
     _liveSecondHalfResume = null;
     _save!.liveMatchProgress = null;
     _liveSubstitutionsUsed = 0;
+    _liveSubWindowsUsed = 0;
+    _liveSubWindowKey = null;
     _liveWasInteractive = false;
 
     _notify();
