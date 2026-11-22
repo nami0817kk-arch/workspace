@@ -99,8 +99,14 @@ class Game extends ChangeNotifier {
   // ---------- 状態の更新 ----------
   void j(int n) => l.joy = clampInt(l.joy + n, 0, 100);
 
+  /// 前の選択肢が出てから、いまの選択肢が出るまでに起きたこと（画面で「前の選択の結果」として見せる）。
+  List<LogEntry> lastResults = [];
+  final List<LogEntry> _pending = [];
+
   void log(String txt, [String kind = '']) {
-    l.log.insert(0, LogEntry('$year$season', txt, kind));
+    final e = LogEntry('$year$season', txt, kind);
+    _pending.add(e);
+    l.log.insert(0, e);
     if (l.log.length > 140) l.log.removeLast();
   }
 
@@ -145,6 +151,8 @@ class Game extends ChangeNotifier {
     List<Choice> choices, {
     void Function()? after,
   }) {
+    lastResults = [..._pending];
+    _pending.clear();
     prompt = Prompt(title, text, choices, after ?? changed);
     notifyListeners();
   }
@@ -518,6 +526,8 @@ class Game extends ChangeNotifier {
       changed();
       return;
     }
+    // 子どものうちも世は動く（見聞録に【世】として残る）。
+    applyHistory(this, year, quietBefore: year);
     l.t = (a + 1) * 2;
     if (a + 1 >= 15) {
       comeOfAge();
@@ -801,7 +811,7 @@ class Game extends ChangeNotifier {
 
   // ---------- 表示用の計算 ----------
   String rankName() {
-    if (isChild) return '${l.clsName}の子';
+    if (isChild) return l.clsName.endsWith('の子') ? l.clsName : '${l.clsName}の子';
     if (l.rank == 0) {
       return l.ronin ? (l.female ? '尼・流浪' : '浪人') : '${l.clsName}（無役）';
     }

@@ -201,6 +201,25 @@ class _PromptCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (g.lastResults.isNotEmpty) ...[
+            for (final e in g.lastResults.take(4))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  e.txt,
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    height: 1.5,
+                    color: e.kind == 'bad'
+                        ? Pal.bad
+                        : (e.kind == 'good' || e.kind == 'big'
+                              ? Pal.gold
+                              : Pal.muted),
+                  ),
+                ),
+              ),
+            const Divider(color: Pal.line, height: 18),
+          ],
           Text(
             p.title,
             style: const TextStyle(

@@ -250,6 +250,17 @@
 - `test/app_smoke_test.dart`: タイトル→籤→幼少期の重点と岐路→元服→大人の重点→
   選択中のタブ切り替え。
 
+## 画面の確かめ方（Windows で iOS を動かせないため）
+
+リポジトリの外（作業用の一時フォルダ）に `lib/` と `pubspec.*` を写し、そこで
+`flutter create --platforms=web --project-name ranse .` → `flutter build web --release` → `build/web` を
+`python -m http.server` で配信して、ブラウザで幅390の縦長にして見る。**リポジトリに web/ は入れない**（iOS だけのアプリ）。
+Flutter の Web はキャンバス描画なので、押す位置は表示の座標どおりに。縮めて映すと押す位置がずれる。
+
+2026-11-23 に見て直したこと: タイトルと生まれの画面の文の1語だけの折り返し／子どもの身分名が「下級武士の子の子」になる／
+選んだ結果が画面に出ない（→ 選択肢カードの上に「前の選択の結果」を出す。`Game.lastResults`）／
+子どものうちに年表が進まず天下のタブが古い（→ 幼少期も毎年 `applyHistory`。その年より前の出来事は書かずに進める）。
+
 ## このPCで踏んだこと
 
 - **`flutter analyze` は、パスに日本語（Windows のユーザー名）が入っていると

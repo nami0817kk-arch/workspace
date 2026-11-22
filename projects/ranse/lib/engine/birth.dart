@@ -149,7 +149,7 @@ Birth rollBirth(Rng r) {
 }
 
 String rarityText(double n) {
-  if (n >= 8e9) return '世界の総人口（約80億）をも超える、唯一無二の巡り合わせ';
+  if (n >= 8e9) return '世界の総人口（約80億）をも超える、\n唯一無二の巡り合わせ';
   if (n >= 1e9) return '十億に一人の、天に選ばれし生まれ';
   if (n >= 1e8) return '億に一人。歴史に名を残す器かもしれない';
   if (n >= 1e7) return '千万に一人の、稀有な生まれ';
