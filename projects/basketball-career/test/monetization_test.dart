@@ -98,10 +98,11 @@ Future<(Monetization, FakeAds, FakeStore)> open(
 Future<GmController> gmController(Monetization m) async =>
     GmController(money: m, prefs: await SharedPreferences.getInstance(), seedSource: Random(1));
 
-/// シーズンの途中(1区切りも進めていない)まで進めたコントローラ。
+/// シーズンの途中(1区切りも進めていない)まで進めたコントローラ。全画面広告の出ない1年目を避け、2年目として始める。
 Future<GmController> inSeason(Monetization m) async {
   final c = await gmController(m);
   c.newCareer(teamAtRank(1, 15), seed: 1);
+  c.career!.season = 2;
   c.startSeason();
   return c;
 }
@@ -310,17 +311,52 @@ void main() {
   });
 
   group('コントローラ(GMの任期)', () {
-    test('試合の区切りを3回終えたら、次の区切りを進める前に全画面広告が1回出る。区切りの直後には出ない', () async {
+    test('自分の試合を30試合終えたら、次に進める前に全画面広告が1回出る。終えた直後には出ない', () async {
       final (m, ads, _) = await open();
       final c = await inSeason(m);
-      for (var i = 0; i < 3; i++) {
-        await c.playBlock();
-      }
-      expect(ads.interstitials, 0, reason: '3回目の区切りの直後には出ない');
+      await c.playBlock();
+      expect(m.interstitialDue, isFalse, reason: '20試合ではまだ');
+      await c.playBlock();
+      expect(ads.interstitials, 0, reason: '30試合を超えた直後には出ない');
       expect(m.interstitialDue, isTrue);
       await c.playBlock();
       expect(ads.interstitials, 1);
-      expect(c.career!.phase, Phase.playoffs, reason: '広告のあと、そのまま進む');
+      expect(m.interstitialDue, isFalse, reason: '出したら数え直す');
+      // 1試合ずつ進めても、30試合で1回
+      for (var i = 0; i < 40 && c.career!.phase == Phase.season; i++) {
+        await c.simRounds(1);
+      }
+      expect(ads.interstitials, 2);
+    });
+
+    test('任期の1年目は、シーズンを通して全画面広告を出さない', () async {
+      final (m, ads, _) = await open();
+      final c = await gmController(m);
+      c.newCareer(teamAtRank(1, 15), seed: 1);
+      c.startSeason();
+      while (c.career!.phase == Phase.season) {
+        await c.playBlock();
+      }
+      expect(ads.interstitials, 0);
+      expect(m.interstitialDue, isFalse, reason: '1年目の試合は数えない');
+    });
+
+    test('オフシーズンが終わって次のシーズンに入ると、全画面広告が1回出る', () async {
+      final (m, ads, _) = await open();
+      final c = await gmController(m);
+      c.newCareer(teamAtRank(1, 15), seed: 1);
+      final car = c.career!;
+      var guard = 0;
+      while (car.phase != Phase.contracts) {
+        botStep(car);
+        if (guard++ > 2000) fail('契約の段階に着かない');
+      }
+      expect(ads.interstitials, 0);
+      c.finishContracts();
+      await pumpEventQueue();
+      expect(car.season, 2);
+      expect(ads.interstitials, 1);
+      expect(m.interstitialDue, isFalse);
     });
 
     test('動画を見終えるとスカウトが2回増える(ドラフトごとに1回)。読み込めなければ増えない', () async {
