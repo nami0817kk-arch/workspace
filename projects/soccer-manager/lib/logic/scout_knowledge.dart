@@ -43,10 +43,16 @@ class ScoutKnowledge {
     if (knowledge <= 0) return null;
     final u = uncertainty(knowledge);
     if (u == 0) return (trueValue, trueValue);
-    final bias = _seed(id, salt) % (u + 1) - u ~/ 2;
-    final c = trueValue + bias;
+    final c = trueValue + centerOffset(id, salt, u);
     return ((c - u).clamp(1, 99), (c + u).clamp(1, 99));
   }
+
+  /// 幅±[u]の見立ての、真ん中のずれ(-u/2〜+u/2)。選手の[id]と[salt]で
+  /// 決まるので、見るたびに変わらない。ずれが幅の半分以下なので、本当の値は
+  /// 必ず幅の中に入る。ユースの見立て(ScoutingEngine
+  /// .estimatedPotentialRange)も同じずらし方を使う。
+  static int centerOffset(String id, int salt, int u) =>
+      _seed(id, salt) % (u + 1) - u ~/ 2;
 
   /// 幅の真ん中(並べ替えに使う)。見えていなければ -1。
   static int center((int, int)? r) => r == null ? -1 : (r.$1 + r.$2) ~/ 2;

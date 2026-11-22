@@ -220,10 +220,13 @@ class CupEngine {
   }
 
   /// カップの次の未消化試合を1試合消化する。試合結果を返す(BYE戦は既に消化済みなのでnullを返す)。
+  /// [month]は試合の日の月(1〜12)。天候をその季節のものにする(渡さないと
+  /// 1年をならした割合になり、12月に猛暑が出ることがある)。
   static MatchResult? playNextMatch(
     Cup cup,
     List<Team> allTeams, {
     int matchday = 0,
+    int? month,
   }) {
     final match = cup.nextUnplayedMatch;
     if (match == null || match.isBye) return null;
@@ -234,7 +237,7 @@ class CupEngine {
       home: home,
       away: away,
       matchday: matchday,
-      weather: WeatherEngine.roll(),
+      weather: WeatherEngine.roll(month: month),
     );
     applyMatchResult(cup, allTeams, match, result);
     return result;

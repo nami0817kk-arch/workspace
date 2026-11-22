@@ -396,10 +396,20 @@ class SaveGame {
   /// 分析部門を置いているか(年会費は季の切り替えで払う)。
   bool hasAnalytics;
 
-  /// 過密日程: 前の週の終わりまでに自クラブが戦った公式戦の数と、
-  /// 直近の週が過密だったか。
+  /// 過密日程: [userMatchesCounted]は旧版の数え方(週の間に戦った試合の数)
+  /// の名残で、いまは使っていない。[lastWeekCongested]は、直近の自クラブの
+  /// 試合が前の試合から間を空けずに組まれていた(過密だった)か。
   int userMatchesCounted;
   bool lastWeekCongested;
+
+  /// 自クラブが最後に公式戦を戦った日。過密日程は試合の日付の間隔で
+  /// 判定する。旧セーブは null(判定しない)。
+  DateTime? lastUserMatchDate;
+
+  /// 最後に週の処理(練習・不満・ユースなど)をした日。週の処理は、
+  /// この日から7日たつごとに1回走る。季の初めと旧セーブは null で、
+  /// その季で最初に節を消化する日に1回行い、その日を起点にする。
+  DateTime? lastWeeklyTickDate;
 
   /// 持っているほかのクラブ(クラブ id → 買った値段)。
   Map<String, int> groupClubs;
@@ -669,8 +679,8 @@ class SaveGame {
   /// シーズン終了時に、この時点からの成長を選手ごとに算出するために使う。
   Map<String, int> seasonStartOverallByPlayerId;
 
-  /// 週の処理(収入・週給・負傷回復・ローン・分割払い・ユース)を済ませた
-  /// 節。自クラブの試合の途中でアプリが終わり、同じ節を始め直すときに、
+  /// 試合前の処理(収入・出場手当・U21・約束の確認など、節ごとのもの)を
+  /// 済ませた節。週の処理は日付で回る([lastWeeklyTickDate])。自クラブの試合の途中でアプリが終わり、同じ節を始め直すときに、
   /// 週の処理を二度かけないための印。旧セーブは0(未処理)。
   int weekProcessedSeason;
   int weekProcessedMatchday;
@@ -749,6 +759,8 @@ class SaveGame {
     this.hasAnalytics = false,
     this.userMatchesCounted = 0,
     this.lastWeekCongested = false,
+    this.lastUserMatchDate,
+    this.lastWeeklyTickDate,
     Map<String, int>? groupClubs,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
@@ -1082,6 +1094,10 @@ class SaveGame {
         if (hasAnalytics) 'hasAnalytics': hasAnalytics,
         if (userMatchesCounted > 0) 'userMatchesCounted': userMatchesCounted,
         if (lastWeekCongested) 'lastWeekCongested': lastWeekCongested,
+        if (lastUserMatchDate != null)
+          'lastUserMatchDate': formatSaveDate(lastUserMatchDate!),
+        if (lastWeeklyTickDate != null)
+          'lastWeeklyTickDate': formatSaveDate(lastWeeklyTickDate!),
         if (groupClubs.isNotEmpty) 'groupClubs': groupClubs,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
@@ -1322,6 +1338,8 @@ class SaveGame {
         hasAnalytics: json['hasAnalytics'] as bool? ?? false,
         userMatchesCounted: json['userMatchesCounted'] as int? ?? 0,
         lastWeekCongested: json['lastWeekCongested'] as bool? ?? false,
+        lastUserMatchDate: parseSaveDate(json['lastUserMatchDate']),
+        lastWeeklyTickDate: parseSaveDate(json['lastWeeklyTickDate']),
         groupClubs: (json['groupClubs'] as Map?)
             ?.map((k, v) => MapEntry(k as String, v as int)),
         frontPageHeadline: json['frontPageHeadline'] as String?,

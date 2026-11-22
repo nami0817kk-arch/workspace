@@ -42,8 +42,14 @@ void main() {
           attributes: const {},
           wage: 10,
           contractYears: 2);
-      expect(s(StaffRole.manager).severance, 10 * 52 * 2);
-      expect(s(StaffRole.scout).severance, (10 * 52 * 2 * 0.2).round());
+      // 季の始め(7月1日)に解任すると、残りは2季ぶん(翌々年の6月30日まで
+      // 730日 = 105週、切り上げ)。
+      final july1 = DateTime(2026, 7, 1);
+      expect(s(StaffRole.manager).severanceOn(july1, 2027), 10 * 105);
+      expect(s(StaffRole.scout).severanceOn(july1, 2027),
+          (10 * 105 * 0.2).round());
+      expect(s(StaffRole.manager).severanceRate,
+          ManagerHrEngine.managerSeveranceRate);
       expect(ManagerHrEngine.compensation(weeklyWage: 10, contractYears: 2),
           520);
     });

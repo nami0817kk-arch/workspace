@@ -291,8 +291,9 @@ void main() {
     final beforeCount = gameState.userTeam.players.length;
     final target = legacyMarket(gameState).first;
     // 移籍金のほかに代理人手数料が掛かる。
-    gameState.save!.budget =
-        target.marketValue + TransferTermsEngine.agentFee(target.marketValue) + 100;
+    gameState.save!.budget = target.marketValue +
+        TransferTermsEngine.agentFee(target.marketValue) +
+        100;
     // 週給予算(BD3)に引っかかると獲得が拒否されるため、余裕を明示的に与える
     // (与えないと、市場の顔ぶれ次第でごく稀に失敗する不安定なテストになる)。
     gameState.save!.wageBudget = 999999;
@@ -845,8 +846,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     // 18歳未満は契約の上限が3年なので、上限に掛からない年齢の選手で見る。
-    final player =
-        gameState.userTeam.players.firstWhere((p) => p.age >= 18);
+    final player = gameState.userTeam.players.firstWhere((p) => p.age >= 18);
     player.contractYearsRemaining = 1;
     final cost = gameState.renewalCostFor(player.id) +
         gameState.signingBonusFor(player.id);
@@ -886,8 +886,8 @@ void main() {
           wage: 50,
         );
 
-    expect(scout(20, 1).effectiveLevel,
-        greaterThan(scout(1, 20).effectiveLevel),
+    expect(
+        scout(20, 1).effectiveLevel, greaterThan(scout(1, 20).effectiveLevel),
         reason: 'スカウトは見極めで決まるべき');
   });
 
@@ -1210,8 +1210,7 @@ void main() {
         gameState.userTeam.players.firstWhere((p) => p.id == target.id);
     expect(signed.isLoan, isTrue);
     // 既定は1年(シーズン末の6月30日まで)。
-    expect(signed.loanEndDate,
-        DateTime(gameState.today.year + 1, 6, 30));
+    expect(signed.loanEndDate, DateTime(gameState.today.year + 1, 6, 30));
   });
 
   test(
@@ -2460,19 +2459,21 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final lineup = MatchEngine.lineupOf(gameState.userTeam);
-    final fatigueBefore = {for (final p in lineup) p.id: p.fatigue};
-    final injuredBefore =
-        lineup.where((p) => p.isInjured).map((p) => p.id).toSet();
+    // 親善試合の日まで日付が進むと、そのあいだの日数ぶん疲れが抜け、怪我も
+    // 治る(2026-11-22 から日数で進む)。試合そのものが疲れと怪我を足さない
+    // ことを見るため、疲れ0・怪我なしから始める。
+    for (final p in lineup) {
+      p.fatigue = 0;
+      p.injuryWeeks = 0;
+    }
 
     final result = await gameState.playFriendly(0);
 
     expect(result, isNotNull);
     for (final p in lineup) {
-      expect(p.fatigue, fatigueBefore[p.id]);
+      expect(p.fatigue, 0);
     }
-    final injuredAfter =
-        lineup.where((p) => p.isInjured).map((p) => p.id).toSet();
-    expect(injuredAfter, injuredBefore);
+    expect(lineup.where((p) => p.isInjured), isEmpty);
   });
 
   test(
@@ -3231,7 +3232,8 @@ void main() {
     expect(player.internationalDutyWeeksRemaining, 1);
   });
 
-  test('GameState.playSecondHalf no longer raises a press conference (owner game)',
+  test(
+      'GameState.playSecondHalf no longer raises a press conference (owner game)',
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
@@ -3530,8 +3532,8 @@ void main() {
 
     // 登録の決まり(22歳以上の枠など)で取れない選手もいる。取れる選手で見る。
     gameState.save!.wageBudget = 99999999;
-    final target = gameState.freeAgents.firstWhere(
-        (p) => SquadRegistration.canAdd(gameState.userTeam, p));
+    final target = gameState.freeAgents
+        .firstWhere((p) => SquadRegistration.canAdd(gameState.userTeam, p));
     final budgetBefore = gameState.save!.budget;
     final squadSizeBefore = gameState.userTeam.players.length;
 
@@ -3721,8 +3723,16 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
 
-    await gameState.playNextMatchday();
-
+    // 観客動員はホームの試合でだけ控える(アウェイの節は書き換えない)。
+    // ホームの試合を1つ終えるまで進める。
+    final uid = gameState.save!.userTeamId;
+    for (var i = 0; i < 4 && gameState.lastMatchAttendance == null; i++) {
+      await gameState.playNextMatchdayQuickSim();
+    }
+    expect(
+        gameState.save!.league.fixtures
+            .any((f) => f.result != null && f.homeTeamId == uid),
+        isTrue);
     expect(gameState.lastMatchAttendance, isNotNull);
     expect(gameState.lastMatchAttendance, greaterThan(0));
     expect(gameState.lastMatchAttendance,
@@ -4483,8 +4493,8 @@ void main() {
 
     expect(result, ContractOfferResult.accepted);
     expect(player.wage, minAcceptable);
-    expect(
-        player.contractYearsRemaining, ContractEngine.negotiatedYears(player) + 1);
+    expect(player.contractYearsRemaining,
+        ContractEngine.negotiatedYears(player) + 1);
     expect(gameState.save!.budget, 0);
     expect(gameState.pendingContractNegotiation, isNull);
   });
@@ -5135,9 +5145,10 @@ void main() {
     await gameState.playNextMatchday();
 
     expect(injured.injuryWeeks, 0);
-    // 治った日に40へ戻り、その週の試合に出ると少し上がる(+8 で48になる回が
-    // あり、5回に2回ほど落ちていた)。90から下がったことを確かめる。
-    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 10));
+    // 治った日に40へ戻り、そのあとの週の練習と試合で少し上がる(週の処理が
+    // 日付で走るようになり、治った後に練習が入る回がある。54 が出た)。
+    // 90から大きく下がったことを確かめる。
+    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 20));
   });
 
   test(
@@ -6881,18 +6892,9 @@ void main() {
   });
 
   test(
-      'ContractEngine.releaseSeverance grows with wage and remaining contract '
-      'years, and GameState.sellPlayer can cost the club money for an '
-      'expensive long-contract player nobody would actually want to buy',
-      () async {
-    final cheapShortContract = Player(
-        id: 'cheap',
-        name: 'Cheap',
-        age: 30,
-        position: Position.mc,
-        potential: 40);
-    cheapShortContract.wage = 5;
-    cheapShortContract.contractYearsRemaining = 1;
+      'GameState.sellPlayer never charges the seller the remaining wages: '
+      'the buyer takes the contract on, so even an expensive long-contract '
+      'player sells for 70% of his value', () async {
     final expensiveLongContract = Player(
         id: 'p_release_target',
         name: 'Expensive',
@@ -6902,23 +6904,20 @@ void main() {
     expensiveLongContract.wage = 200;
     expensiveLongContract.contractYearsRemaining = 4;
 
-    expect(ContractEngine.releaseSeverance(expensiveLongContract),
-        greaterThan(ContractEngine.releaseSeverance(cheapShortContract)));
-
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final team = gameState.userTeam;
-    // marketValueは最低50万円のためsellPriceは常に正だが、週俸200万円・
-    // 残り4年の契約を放出すると違約金がそれを上回り、持ち出しになるはず。
+    // 以前は週俸200万円・残り4年の契約の違約金が売値を上回り、持ち出しに
+    // なっていた。売却では違約金は掛からない。
     team.players.add(expensiveLongContract);
     final net = gameState.netReleaseValueFor('p_release_target');
-    expect(net, lessThan(0));
+    expect(net, (expensiveLongContract.marketValue * 0.7).round());
+    expect(net, greaterThan(0));
 
     final budgetBefore = gameState.save!.budget;
     final ok = await gameState.sellPlayer('p_release_target');
     expect(ok, isTrue);
     expect(gameState.save!.budget, budgetBefore + net);
-    expect(gameState.save!.budget, lessThan(budgetBefore));
   });
 
   test(
@@ -8749,8 +8748,7 @@ void main() {
     final easyState = GameState();
     await easyState.startNewGame('イージーFC', difficulty: GameDifficulty.easy);
     expect(easyState.save!.difficulty, GameDifficulty.easy);
-    expect(
-        easyState.save!.budget,
+    expect(easyState.save!.budget,
         (GameState.initialBudgetFor(totalDivisionTiers) * 1.5).round(),
         reason: '初期資金(始まりの部の年収の半年分)の1.5倍');
     expect(
@@ -8762,7 +8760,8 @@ void main() {
 
     final hardState = GameState();
     await hardState.startNewGame('ハードFC', difficulty: GameDifficulty.hard);
-    expect(hardState.save!.budget, (GameState.initialBudgetFor(totalDivisionTiers) * 0.6).round(),
+    expect(hardState.save!.budget,
+        (GameState.initialBudgetFor(totalDivisionTiers) * 0.6).round(),
         reason: '初期資金(始まりの部の年収の半年分)の0.6倍');
     expect(
       hardState.save!.boardTargetRank,
@@ -9065,10 +9064,8 @@ void main() {
       final friendLoss = RelationsEngine.areFriends(leader, p)
           ? RelationsEngine.friendLeftPenalty
           : 0;
-      expect(
-          p.happiness,
-          (prev - DynamicsEngine.leaderSalePenalty - friendLoss)
-              .clamp(0, 100),
+      expect(p.happiness,
+          (prev - DynamicsEngine.leaderSalePenalty - friendLoss).clamp(0, 100),
           reason: 'リーダー放出で残った全員の不満度が下がる');
     }
   });
@@ -9592,8 +9589,7 @@ void main() {
         final clubNames = save.league.teams.map((t) => t.name).toList();
         expect(clubNames.toSet().length, clubNames.length,
             reason: '$label: リーグ内にクラブ名の重複がない');
-        final marketNames =
-            legacyMarket(gameState).map((p) => p.name).toList();
+        final marketNames = legacyMarket(gameState).map((p) => p.name).toList();
         expect(marketNames.toSet().length, marketNames.length,
             reason: '$label: 移籍市場に同姓同名が並ばない');
       }
@@ -9637,7 +9633,10 @@ void main() {
         reason: 'シュート${shotsPerMatch.toStringAsFixed(1)}本/試合は少なすぎる');
     expect(shotsPerMatch, lessThan(34.0),
         reason: 'シュート${shotsPerMatch.toStringAsFixed(1)}本/試合は多すぎる');
-    expect(redsPerMatch, lessThan(0.2),
+    // 2026-11-22 に2枚目の警告を1試合を通して数えるようにした(前は半ごとに
+    // 数え直していた)ので、2枚目での退場が増えて約0.2枚/試合になった。
+    // 実際の欧州5大リーグは2枚目を含めて0.1〜0.3枚/試合なので、上限は0.3。
+    expect(redsPerMatch, lessThan(0.3),
         reason: '退場${redsPerMatch.toStringAsFixed(3)}枚/試合は多すぎる');
     // 得点はシュート加算の影響を受けてはいけない(統計上の本数のみ増やす)。
     expect(goalsPerMatch, greaterThan(1.8),

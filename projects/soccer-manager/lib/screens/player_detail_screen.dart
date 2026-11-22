@@ -772,13 +772,10 @@ class PlayerDetailScreen extends StatelessWidget {
                             !gameState.isTransferWindowOpen)
                         ? null
                         : () => _confirmSell(context, netReleaseValue),
+                    // 売却では契約を買い手が引き継ぐので、違約金は掛からない。
                     child: Text(
-                      netReleaseValue >= 0
-                          ? Tr.pick('放出する（${formatMoney(netReleaseValue)} 獲得）',
-                              'Release him (you receive ${formatMoney(netReleaseValue)})')
-                          : Tr.pick(
-                              '放出する（違約金${formatMoney(-netReleaseValue)} 支払い）',
-                              'Release him (you pay ${formatMoney(-netReleaseValue)} in compensation)'),
+                      Tr.pick('放出する（${formatMoney(netReleaseValue)} 獲得）',
+                          'Release him (you receive ${formatMoney(netReleaseValue)})'),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -1364,6 +1361,8 @@ class PlayerDetailScreen extends StatelessWidget {
     LoanLength length = halfOk ? LoanLength.half : LoanLength.full;
     bool recallClause = false;
     bool guaranteePlayingTime = false;
+    final loanPlayer =
+        gameState.userTeam.players.where((p) => p.id == playerId).firstOrNull;
     showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -1376,6 +1375,20 @@ class PlayerDetailScreen extends StatelessWidget {
               Text(Tr.pick(
                   '${TransferWindowCalendar.formatMonthDay(TransferWindowCalendar.loanEndDate(today, theme, length))}まで他クラブへ貸し出します。期間中の給与は放出先が負担します。',
                   'He goes out on loan until ${TransferWindowCalendar.formatMonthDay(TransferWindowCalendar.loanEndDate(today, theme, length))}. The other club pays his wages while he is there.')),
+              if (loanPlayer != null) ...[
+                const SizedBox(height: 4),
+                Builder(builder: (_) {
+                  final fee = gameState.loanOutFeeFor(loanPlayer,
+                      guaranteePlayingTime: guaranteePlayingTime);
+                  return Text(
+                    fee > 0
+                        ? Tr.pick('レンタル料${formatMoney(fee)}を受け取ります。',
+                            'You receive a loan fee of ${formatMoney(fee)}.')
+                        : Tr.pick('レンタル料は受け取れません。', 'You receive no loan fee.'),
+                    style: const TextStyle(fontSize: 12),
+                  );
+                }),
+              ],
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -1461,12 +1474,8 @@ class PlayerDetailScreen extends StatelessWidget {
       builder: (ctx) => AlertDialog(
         title: Text(Tr.pick('この選手を放出しますか？', 'Release this player?')),
         content: Text(
-          netReleaseValue >= 0
-              ? Tr.pick('${formatMoney(netReleaseValue)}を獲得しますが、元には戻せません。',
-                  'You receive ${formatMoney(netReleaseValue)}, and this cannot be undone.')
-              : Tr.pick(
-                  '違約金として${formatMoney(-netReleaseValue)}を支払うことになりますが、元には戻せません。',
-                  'You pay ${formatMoney(-netReleaseValue)} in compensation, and this cannot be undone.'),
+          Tr.pick('${formatMoney(netReleaseValue)}を獲得しますが、元には戻せません。',
+              'You receive ${formatMoney(netReleaseValue)}, and this cannot be undone.'),
         ),
         actions: [
           TextButton(

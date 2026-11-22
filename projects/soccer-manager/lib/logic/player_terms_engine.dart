@@ -56,15 +56,14 @@ class PlayerTermsEngine {
     return max(minWeeklyWage, base.round());
   }
 
-  /// 約束する序列で、望む年俸がどれだけ変わるか。出番を約束するほど
-  /// 年俸は抑えられる(キープレイヤー -15%、ローテーション +10%、
-  /// 育成枠 +15%)。
-  static double promiseFactor(SquadStatus s) => switch (s) {
-        SquadStatus.keyPlayer => 0.85,
-        SquadStatus.regular => 1.0,
-        SquadStatus.rotation => 1.1,
-        SquadStatus.prospect => 1.15,
-      };
+  /// 約束する序列で、望む年俸がどれだけ変わるか。出番を保証される立場ほど
+  /// 高い年俸を求める(キープレイヤー +15%、ローテーション -8%、
+  /// 育成枠 -15%)。
+  ///
+  /// 以前は逆向き(キープレイヤーで -15%)で、更新の交渉
+  /// ([SquadStatus.wageFactor]: 立場が上ほど高い)と食い違っていた。
+  /// 移籍と更新で同じ倍率を使う。
+  static double promiseFactor(SquadStatus s) => s.wageFactor;
 
   /// 約束を破ったことになる、続けて先発から外れた節の数。
   static int promiseTolerance(SquadStatus s) =>

@@ -63,10 +63,10 @@ class _StaffCard extends StatelessWidget {
                 staff: current,
                 trailing: TextButton(
                   onPressed: () => gameState.dismissStaff(role),
-                  child: Text(current.severance > 0
+                  child: Text(gameState.staffSeveranceFor(current) > 0
                       ? Tr.pick(
-                          '解任(違約金${formatMoney(context.read<GameState>().scaledMoney(current.severance))})',
-                          'Dismiss (severance ${formatMoney(context.read<GameState>().scaledMoney(current.severance))})')
+                          '解任(違約金${formatMoney(gameState.staffSeveranceFor(current))})',
+                          'Dismiss (severance ${formatMoney(gameState.staffSeveranceFor(current))})')
                       : Tr.pick('解任', 'Dismiss')),
                 ),
               ),

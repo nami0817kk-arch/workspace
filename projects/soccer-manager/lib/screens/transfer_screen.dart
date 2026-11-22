@@ -859,8 +859,8 @@ class _TransferScreenState extends State<TransferScreen>
                   ),
                   Text(
                     Tr.pick(
-                        '出番を約束するほど望む年俸は下がります(キープレイヤー -15%・ローテーション +10%・育成枠 +15%)。キープレイヤーは3節、主力は5節続けて先発から外すと約束を破ったことになり、移籍を願い出ます。',
-                        'Promising minutes lowers his wage demand (Key Player -15%, Squad Rotation +10%, Prospect +15%). Leave a Key Player out for 3 straight matches, or a First Team player for 5, and you have broken your word: he will ask to leave.'),
+                        '出番を約束するほど望む年俸は上がります(キープレイヤー +15%・ローテーション -8%・育成枠 -15%)。あとで序列を上げると、選手は週俸の見直しを求めます。キープレイヤーは3節、主力は5節続けて先発から外すと約束を破ったことになり、移籍を願い出ます。',
+                        'The more minutes you promise, the more he asks for (Key Player +15%, Squad Rotation -8%, Prospect -15%). Raise his billing later and he will want his wage reviewed. Leave a Key Player out for 3 straight matches, or a First Team player for 5, and you have broken your word: he will ask to leave.'),
                     style: TextStyle(
                         fontSize: 11,
                         color: SemanticColors.subtleText(context)),

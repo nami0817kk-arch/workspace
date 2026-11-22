@@ -8,7 +8,7 @@ import 'player_generator.dart';
 class RetirementEngine {
   static final Random _rng = Random();
 
-  /// 31歳未満は引退しない。以降は年齢とともに引退確率が上がるが、
+  /// 32歳未満(31歳まで)は引退しない。32歳から年齢とともに引退確率が上がるが、
   /// 総合力が高い選手ほど現役を長く続けやすい。
   static double retirementChance(Player p) {
     if (p.age < 32) return 0.0;

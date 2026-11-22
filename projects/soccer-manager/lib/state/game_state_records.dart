@@ -79,6 +79,18 @@ extension GameStateRecords on GameState {
   List<ClubRecordRow> clubGoalsLeaders({int n = 5}) =>
       _save == null ? const [] : _top(_save!.clubGoals, n);
 
+  /// クラブを替えたとき: クラブの歴代記録(通算出場・得点・最大の勝ち試合)は
+  /// そのクラブのものなので、新しいクラブでは空から数え直す。オーナーの経歴
+  /// (殿堂・手放したクラブ・タイムライン)は別に持っているので残る。
+  void _resetClubRecords() {
+    final s = _save!;
+    s.clubApps.clear();
+    s.clubGoals.clear();
+    s.clubRecordNames.clear();
+    s.biggestWin = null;
+    s.biggestWinMargin = 0;
+  }
+
   /// テスト用: 試合1つぶんを記録に足す。
   @visibleForTesting
   void debugRecordClubMatch(MatchResult r, Fixture f) => _recordClubMatch(r, f);

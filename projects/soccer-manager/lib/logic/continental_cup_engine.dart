@@ -101,10 +101,12 @@ class ContinentalCupEngine {
 
   /// グループステージの次の1試合を消化する。全試合が終わると自動的に
   /// 決勝トーナメントの組み合わせが決定される。
+  /// [month]は試合の日の月。天候をその季節のものにする。
   static MatchResult? playNextGroupMatch(
     ContinentalCup cup,
-    List<Team> allTeams,
-  ) {
+    List<Team> allTeams, {
+    int? month,
+  }) {
     final match = nextGroupMatch(cup);
     if (match == null) return null;
     final home = allTeams.firstWhere((t) => t.id == match.homeTeamId);
@@ -113,7 +115,7 @@ class ContinentalCupEngine {
       home: home,
       away: away,
       matchday: match.round,
-      weather: WeatherEngine.roll(),
+      weather: WeatherEngine.roll(month: month),
     );
     applyGroupMatchResult(cup, allTeams, match, result);
     return result;
@@ -175,10 +177,12 @@ class ContinentalCupEngine {
 
   /// 決勝トーナメントの次の未消化レグを1試合消化する(2ndレグはホーム/
   /// アウェイを入れ替える)。合計スコアが同点の場合はPK戦で決着する。
+  /// [month]は試合の日の月。天候をその季節のものにする。
   static MatchResult? playNextKnockoutLeg(
     ContinentalCup cup,
-    List<Team> allTeams,
-  ) {
+    List<Team> allTeams, {
+    int? month,
+  }) {
     final leg = nextKnockoutLeg(cup);
     if (leg == null) return null;
     final home = allTeams.firstWhere((t) => t.id == leg.homeId);
@@ -187,7 +191,7 @@ class ContinentalCupEngine {
       home: home,
       away: away,
       matchday: 0,
-      weather: WeatherEngine.roll(),
+      weather: WeatherEngine.roll(month: month),
     );
     applyKnockoutLegResult(cup, allTeams, leg.tie, result);
     return result;

@@ -288,6 +288,20 @@ class PlayerGenerator {
     return shuffled.take(count).toList();
   }
 
+  /// クラブのある国の国籍の選手が国内育成になる割合。
+  static const double homegrownChanceNational = 2 / 3;
+
+  /// 他国籍の選手が国内育成になる割合(若いうちに移ってきた選手)。
+  static const double homegrownChanceForeign = 0.1;
+
+  /// id [id]の選手に国内育成の印を付けるか。[roll]は0〜1の乱数。国籍は
+  /// [Player.foreignNationalFromId]で決まる(国籍の見立てと同じ決まり)。
+  static bool homegrownRoll(String id, double roll) =>
+      roll <
+      (Player.foreignNationalFromId(id)
+          ? homegrownChanceForeign
+          : homegrownChanceNational);
+
   /// [avoidNames]を渡すと、その名前と衝突しない選手名を選ぶ。同じスカッドを
   /// まとめて生成するとき(generateSquad)に、同姓同名が並ばないようにする。
   static Player generate({
@@ -335,8 +349,10 @@ class PlayerGenerator {
 
     final player = Player(
       id: id,
-      // 登録の決まりの「国内で育った選手」。6割ほどを国内育成にする。
-      homegrown: _rng.nextInt(5) < 3,
+      // 登録の決まりの「国内で育った選手」。国籍を見て決める: クラブのある国の
+      // 国籍なら3人に2人、他国籍なら10人に1人(全体ではこれまでどおり6割ほど)。
+      // 以前は国籍と関係なく6割に付けていて、他国籍の国内育成が多すぎた。
+      homegrown: homegrownRoll(id, _rng.nextDouble()),
       name: NamePool.randomPlayerName(avoid: avoidNames),
       age: age,
       position: position,

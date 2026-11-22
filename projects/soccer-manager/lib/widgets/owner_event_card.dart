@@ -48,6 +48,10 @@ class OwnerEventCard extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 2, bottom: 8),
                 child: Text(
                   [
+                    // 答えが実際に起こすこと(エースの売却など)。
+                    if (gameState.ownerEventOptionEffect(kind, i)
+                        case final effect?)
+                      effect,
                     if (options[i].fundsDelta != 0)
                       Tr.pick(
                           '資金${formatMoneySigned(context.read<GameState>().scaledMoney(options[i].fundsDelta))}',

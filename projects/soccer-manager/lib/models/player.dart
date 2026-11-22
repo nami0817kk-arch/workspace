@@ -1013,6 +1013,11 @@ class Player {
   int morale;
   int injuryWeeks;
 
+  /// 負傷の今の1週のうち、もう過ぎた日数(0〜6)。怪我は日数で治る
+  /// (離脱「◯週」は7日×週)。7日たつごとに[injuryWeeks]が1つ減る。
+  /// 負傷していなければ0。
+  int injuryDays;
+
   /// 現在負傷している場合の負傷の種類(負傷していない場合はnull)。
   InjuryType? injuryType;
 
@@ -1133,6 +1138,12 @@ class Player {
   /// 外し続けたり序列を下げたりすると、約束を破ったことになる。
   SquadStatus? promisedStatus;
 
+  /// 今の週俸を、序列を条件に交渉して決めたとき(更新の交渉・移籍の条件)の
+  /// 序列。契約の途中でこれより上の序列へ上げると、選手は週俸の見直しを
+  /// 求める(上がる)。null は序列を条件にしていない週俸(獲得したまま・
+  /// 旧セーブ)で、標準の[SquadStatus.regular]として扱う。
+  SquadStatus? wageStatus;
+
   /// 約束した選手が、出られるのに先発から外れた節の数(続けて)。
   int promiseMisses;
 
@@ -1236,6 +1247,15 @@ class Player {
   static bool homegrownFromId(String id) =>
       id.codeUnits.fold<int>(0, (a, c) => a + c) % 5 < 3;
 
+  /// 国籍を決める id のハッシュ(GameState の国籍の見立てと共有する)。
+  static int nationalityHash(String id) =>
+      id.codeUnits.fold<int>(37, (a, c) => (a * 31 + c) % 1000003);
+
+  /// 所属クラブの国とは別の国籍になる選手か(1割)。国籍を覚えていない
+  /// 選手の国籍はこれで決まるので、生成のときに国内育成の印を付けるのにも使う。
+  static bool foreignNationalFromId(String id) =>
+      nationalityHash(id) % 10 == 0;
+
   /// 背番号。ユースから一軍へ昇格したとき、または移籍で加入したときに
   /// 割り当てる。旧セーブ・ユース在籍中は null。
   int? squadNumber;
@@ -1263,11 +1283,12 @@ class Player {
   /// [MatchEngine.lineupOf]に現れた場合のみ、この試合用に改めて算出する。
   bool matchFormRolledThisMatch = false;
 
-  /// この半(前半・後半)で既に警告(イエローカード)を受けているかどうか。
-  /// [MatchEngine.simulateMinutes]が半の開始時にリセットする一時的なフラグで、
-  /// セーブデータには保存しない。同じ半でもう一度カード対象に選ばれた際、
-  /// 2枚目の警告を退場(レッドカード)として扱うために使う。
-  bool yellowCardedThisHalf = false;
+  /// この試合で既に警告(イエローカード)を受けているかどうか。
+  /// [MatchEngine.simulateMinutes]が試合の開始時(前半の1分)にだけリセット
+  /// する一時的なフラグで、セーブデータには保存しない。ハーフタイムをまたいでも
+  /// 消さないので、前半に1枚・後半に1枚でも2枚目は退場(レッドカード)になる。
+  /// 以前は半ごとに消していて、前後半に1枚ずつでは退場にならなかった。
+  bool yellowCardedThisMatch = false;
 
   /// 成長タイプ(早熟/標準/大器晩成)。年齢による伸びやすさ・衰え始める
   /// 時期の傾向を左右する。
@@ -1289,6 +1310,7 @@ class Player {
     this.fatigue = 0,
     this.morale = 75,
     this.injuryWeeks = 0,
+    this.injuryDays = 0,
     this.injuryType,
     Map<String, int>? injuryHistoryCounts,
     this.yellowCards = 0,
@@ -1313,6 +1335,7 @@ class Player {
     this.duty = PlayerDuty.support,
     this.squadStatus = SquadStatus.regular,
     this.promisedStatus,
+    this.wageStatus,
     this.promiseMisses = 0,
     this.promiseBroken = false,
     this.isTransferListed = false,
@@ -1595,6 +1618,7 @@ class Player {
     put('fatigue', fatigue, 0);
     put('morale', morale, 75);
     put('injuryWeeks', injuryWeeks, 0);
+    put('injuryDays', injuryDays, 0);
     put('injuryType', injuryType?.name, null);
     put('injuryHistoryCounts', injuryHistoryCounts, null);
     put('yellowCards', yellowCards, 0);
@@ -1617,6 +1641,7 @@ class Player {
     put('duty', duty.name, PlayerDuty.support.name);
     put('squadStatus', squadStatus.name, SquadStatus.regular.name);
     put('promisedStatus', promisedStatus?.name, null);
+    put('wageStatus', wageStatus?.name, null);
     put('promiseMisses', promiseMisses, 0);
     put('promiseBroken', promiseBroken, false);
     put('isTransferListed', isTransferListed, false);
@@ -1703,6 +1728,7 @@ class Player {
       fatigue: json['fatigue'] as int? ?? 0,
       morale: json['morale'] as int? ?? 75,
       injuryWeeks: json['injuryWeeks'] as int? ?? 0,
+      injuryDays: json['injuryDays'] as int? ?? 0,
       injuryType: json['injuryType'] == null
           ? null
           : enumFromName(
@@ -1764,6 +1790,10 @@ class Player {
           ? null
           : enumFromName(SquadStatus.values,
               json['promisedStatus'] as String?, SquadStatus.regular),
+      wageStatus: json['wageStatus'] == null
+          ? null
+          : enumFromName(SquadStatus.values, json['wageStatus'] as String?,
+              SquadStatus.regular),
       promiseMisses: json['promiseMisses'] as int? ?? 0,
       promiseBroken: json['promiseBroken'] as bool? ?? false,
       isTransferListed: json['isTransferListed'] as bool? ?? false,

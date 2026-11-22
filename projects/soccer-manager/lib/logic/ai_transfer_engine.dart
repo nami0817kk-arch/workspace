@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../models/team.dart';
+import 'contract_engine.dart';
 import 'lineup_utils.dart';
 import '../l10n/tr.dart';
 
@@ -69,7 +70,8 @@ class AiTransferEngine {
       }
       if (wasStarter) LineupUtils.autoFill(fromTeam);
       toTeam.players.add(player);
-      player.contractYearsRemaining = 2 + random.nextInt(3);
+      // 新しいクラブとの契約(18歳未満は3年まで)。
+      ContractEngine.applyCpuClubContract(player, 2 + random.nextInt(3));
       // 移籍直後の不満度は、元クラブでの状態からの落差(環境変化)を軽く
       // 反映しつつ、より力のあるクラブへの移籍ならやや上向きにする。
       final moveUp = toTeam.overallRating >= fromTeam.overallRating;

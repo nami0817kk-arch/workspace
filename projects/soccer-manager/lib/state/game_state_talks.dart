@@ -392,6 +392,8 @@ extension GameStateTalks on GameState {
     _recordPlayerBook(player, fee);
     // 約束した序列と、加入したときの機嫌(順応の高い選手ほど良い)。
     player.squadStatus = promise;
+    // 週俸は約束した序列で決めた(のちに上げると見直しを求める)。
+    player.wageStatus = promise;
     player.promisedStatus =
         promise.index <= SquadStatus.regular.index ? promise : null;
     player.promiseMisses = 0;

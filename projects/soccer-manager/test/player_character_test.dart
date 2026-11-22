@@ -67,7 +67,7 @@ void main() {
   });
 
   group('序列の約束', () {
-    test('出番を約束するほど、望む年俸は下がる', () {
+    test('出番を約束するほど、望む年俸は上がる(更新と同じ向き)', () {
       int d(SquadStatus s) => PlayerTermsEngine.demand(
           currentWage: 100,
           marketValue: 0,
@@ -76,9 +76,9 @@ void main() {
           wasStarter: false,
           wouldStart: true,
           promise: s);
-      expect(d(SquadStatus.keyPlayer), lessThan(d(SquadStatus.regular)));
-      expect(d(SquadStatus.rotation), greaterThan(d(SquadStatus.regular)));
-      expect(d(SquadStatus.prospect), greaterThan(d(SquadStatus.rotation)));
+      expect(d(SquadStatus.keyPlayer), greaterThan(d(SquadStatus.regular)));
+      expect(d(SquadStatus.rotation), lessThan(d(SquadStatus.regular)));
+      expect(d(SquadStatus.prospect), lessThan(d(SquadStatus.rotation)));
     });
 
     /// クラブと合意し、キープレイヤーを約束して取る。

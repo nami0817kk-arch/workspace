@@ -23,6 +23,12 @@ class SeasonRecord {
   /// このシーズンに優勝したカップ戦名の一覧。
   final List<String> cupsWon;
 
+  /// このシーズンに国内カップ(リーグカップ・大陸大会ではない方)で
+  /// 優勝したか。オーナーの目標「国内カップ優勝」はこれだけを見る。
+  /// 名前の一覧([cupsWon])では大会の種類が分からず、リーグカップや大陸
+  /// 大会の優勝でも目標が達成になっていた。
+  final bool wonDomesticCup;
+
   SeasonRecord({
     required this.season,
     required this.clubName,
@@ -40,7 +46,11 @@ class SeasonRecord {
     this.promoted = false,
     this.relegated = false,
     List<String>? cupsWon,
-  }) : cupsWon = cupsWon ?? [];
+    bool? wonDomesticCup,
+  })  : cupsWon = cupsWon ?? [],
+        // 渡されなければ、優勝した大会の名前から見分ける(古い記録と同じ)。
+        wonDomesticCup =
+            wonDomesticCup ?? legacyWonDomesticCup(cupsWon ?? const []);
 
   int get points => won * 3 + draw;
   int get goalDiff => goalsFor - goalsAgainst;
@@ -62,6 +72,7 @@ class SeasonRecord {
         'promoted': promoted,
         'relegated': relegated,
         'cupsWon': cupsWon,
+        'wonDomesticCup': wonDomesticCup,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -82,5 +93,25 @@ class SeasonRecord {
         relegated: json['relegated'] as bool? ?? false,
         cupsWon:
             (json['cupsWon'] as List?)?.map((e) => e as String).toList() ?? [],
+        wonDomesticCup: json['wonDomesticCup'] as bool? ??
+            legacyWonDomesticCup(
+              (json['cupsWon'] as List?)?.map((e) => e as String) ?? const [],
+            ),
       );
+
+  /// 印の無い古い記録では、優勝した大会の名前から国内カップを見分ける。
+  /// リーグカップと大陸大会の名前(日英・前の名前)でないものを国内カップと
+  /// みなす(国内カップの名前は国ごとに違い、名前も変わってきたため)。
+  static bool legacyWonDomesticCup(Iterable<String> cupsWon) =>
+      cupsWon.any((name) => !_otherCupNames.contains(name));
+
+  // i18n-ignore: 古いセーブの大会名を見分けるためのデータ(画面には出さない)。
+  static const Set<String> _otherCupNames = {
+    'リーグカップ',
+    'League Cup',
+    'ヨーロピアン・チャンピオンズカップ',
+    'European Champions Cup',
+    '大陸チャンピオンズカップ',
+    'Continental Champions Cup',
+  };
 }
