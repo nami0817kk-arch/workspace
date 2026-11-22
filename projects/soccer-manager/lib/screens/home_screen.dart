@@ -2185,7 +2185,6 @@ class _SaleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
     final candidates = gameState.buyoutCandidates;
-    final supporters = reason == SaleReason.supporters;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -2213,11 +2212,17 @@ class _SaleScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  supporters
-                      ? Tr.pick('サポーターの期待が尽きました。成績不振で、オーナーの座に居られなくなりました。',
-                          'The supporters have lost faith after poor results.')
-                      : Tr.pick('株主の期待が尽きました。赤字が続き、株主に株を手放すよう迫られました。',
-                          'The shareholders have lost faith after repeated losses.'),
+                  switch (reason) {
+                    SaleReason.supporters => Tr.pick(
+                        'サポーターの不満が限界を超えました。成績不振で、オーナーの座に居られなくなりました。',
+                        'The supporters have turned against you after poor results.'),
+                    SaleReason.funds => Tr.pick(
+                        '資金が尽きました。借金が膨らみ、クラブを売って返すほかなくなりました。',
+                        'The money has run out. The debts have grown too large, and selling the club is the only way to pay them.'),
+                    SaleReason.shareholders => Tr.pick(
+                        '株主の期待が尽きました。赤字が続き、株主に株を手放すよう迫られました。',
+                        'The shareholders have lost faith after repeated losses.'),
+                  },
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),

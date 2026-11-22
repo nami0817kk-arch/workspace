@@ -891,8 +891,9 @@ void main() {
         reason: 'スカウトは見極めで決まるべき');
   });
 
-  test('GameState.upgradeFacility deducts budget and raises the level',
-      () async {
+  test(
+      'GameState.upgradeFacility deducts budget and starts the work '
+      '(the level rises when it is finished)', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final cost = gameState.facilityUpgradeCostFor(FacilityType.stadium);
@@ -901,8 +902,9 @@ void main() {
     final ok = await gameState.upgradeFacility(FacilityType.stadium);
 
     expect(ok, isTrue);
-    expect(
-        gameState.save!.infrastructure.facilityLevel(FacilityType.stadium), 2);
+    final infra = gameState.save!.infrastructure;
+    expect(infra.facilityLevel(FacilityType.stadium), 1);
+    expect(infra.isUnderConstruction(FacilityType.stadium), isTrue);
     expect(gameState.save!.budget, 0);
   });
 
@@ -9176,56 +9178,6 @@ void main() {
   });
 
   test(
-      'managerContractAfterSeason covers extension, warning, renewal and '
-      'dismissal', () {
-    // 目標達成で残りわずか→3年契約に延長。
-    var r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 2, targetMet: true, confidence: 60);
-    expect(r.years, 3);
-    expect(r.event, ManagerContractEvent.extended);
-
-    // 満了+信頼あり→単年の暫定契約で続投。
-    r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 1, targetMet: false, confidence: 60);
-    expect(r.years, 1);
-    expect(r.event, ManagerContractEvent.renewedOneYear);
-
-    // 満了+信頼なし→契約非更新(解任)。
-    r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 1, targetMet: false, confidence: 30);
-    expect(r.years, 0);
-    expect(r.event, ManagerContractEvent.dismissed);
-
-    // 残り1年になる→最終年の警告。
-    r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 2, targetMet: false, confidence: 60);
-    expect(r.years, 1);
-    expect(r.event, ManagerContractEvent.finalYearWarning);
-
-    // まだ余裕がある→何も起きない。
-    r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 3, targetMet: false, confidence: 60);
-    expect(r.years, 2);
-    expect(r.event, ManagerContractEvent.none);
-  });
-
-  test(
-      'managerContractYears starts at 3, survives json round trips and '
-      'defaults to 0 for old saves', () async {
-    SharedPreferences.setMockInitialValues({});
-    final gameState = GameState();
-    await gameState.startNewGame('契約FC');
-    expect(gameState.save!.managerContractYears, 3, reason: '新規ゲームは3年契約から始まる');
-
-    final restored = SaveGame.fromJson(gameState.save!.toJson());
-    expect(restored.managerContractYears, 3);
-
-    final legacy = gameState.save!.toJson()..remove('managerContractYears');
-    expect(SaveGame.fromJson(legacy).managerContractYears, 0,
-        reason: '旧セーブは0(未締結)として読み込み、次のシーズン開始時に締結する');
-  });
-
-  test(
       'StyleEngine suitability follows squad attributes, the matchup cycle '
       'is a clean 5-style loop, and styles round-trip through JSON', () {
     Team makeStyledTeam({required int high, required int low}) {
@@ -9624,8 +9576,6 @@ void main() {
         expect(
             save.boardTargetRank, inInclusiveRange(1, save.league.teams.length),
             reason: '$label: 理事会目標が順位の範囲内');
-        expect(save.managerContractYears, greaterThan(0),
-            reason: '$label: 監督契約が結ばれている');
         expect(legacyMarket(gameState), isNotEmpty,
             reason: '$label: 移籍市場に選手がいる');
 
@@ -9975,15 +9925,14 @@ void main() {
     gameState.save!.confidence = 30;
     await gameState.startNextSeason();
 
-    // 解任されず契約も残っているなら、開幕時の猶予が効いていなければならない。
-    if (!gameState.isDismissed && gameState.save!.managerContractYears > 0) {
+    // 期待が残っているなら、開幕時の猶予が効いていなければならない。
+    if (!gameState.isDismissed) {
       expect(gameState.save!.confidence,
           greaterThanOrEqualTo(BoardEngine.newSeasonConfidenceFloor),
           reason: '新シーズンの猶予(信頼度の下限)が効いていない');
     }
     // 信頼度が残っている限り、開幕直後に解任状態になってはいけない。
-    if (gameState.save!.managerContractYears > 0 &&
-        gameState.save!.confidence > 0) {
+    if (gameState.save!.confidence > 0) {
       expect(gameState.isDismissed, isFalse);
     }
   });

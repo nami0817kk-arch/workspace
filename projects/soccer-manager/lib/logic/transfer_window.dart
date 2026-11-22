@@ -201,6 +201,10 @@ class TransferWindowCalendar {
   static String formatMonthDay(DateTime d) => Tr.pick(
       '${d.month}月${d.day}日', '${d.day} ${_months[d.month - 1]}');
 
+  /// 「2027年7月」/ "Jul 2027"(日の要らない日付)。
+  static String formatYearMonth(DateTime d) =>
+      Tr.pick('${d.year}年${d.month}月', '${_months[d.month - 1]} ${d.year}');
+
   static const List<String> _months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',

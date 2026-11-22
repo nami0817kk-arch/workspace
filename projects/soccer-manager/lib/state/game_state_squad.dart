@@ -221,6 +221,8 @@ extension GameStateSquad on GameState {
   /// [role]に就いているスタッフ。空席なら null。
   StaffMember? staffFor(StaffRole role) => _save?.infrastructure.staffFor(role);
 
+  /// [type] を1段上げる工事費(万円)。部の倍率は掛けない(2026-11-23)。
+  /// 席や建物の値段はクラブのいる部では変わらないため。
   int facilityUpgradeCostFor(FacilityType type) {
     if (_save == null) return 0;
     final lvl = _save!.infrastructure.facilityLevel(type);
@@ -228,7 +230,7 @@ extension GameStateSquad on GameState {
     final subsidy = type == FacilityType.stadium
         ? (100 - _save!.stadiumSubsidyPct) / 100
         : 1.0;
-    return (scaledMoney(ClubInfrastructure.facilityUpgradeCost(lvl)) *
+    return (ClubInfrastructure.upgradeCostFor(type, lvl) *
             subsidy *
             BudgetEngine.facilityCostMultiplier(_save!.budgetPlan) *
             PolicyEngine.facilityCostMultiplier(_save!.clubPolicy) *
@@ -320,21 +322,62 @@ extension GameStateSquad on GameState {
     return true;
   }
 
+  /// [type] の工事が終わる日。スタジアムは次のシーズンの始まり(7月1日。
+  /// 開幕に間に合う)。季の途中でもオフでも、いまの季の次の季になる。
+  /// ほかの施設は[ClubInfrastructure.buildMonths]か月後。
+  DateTime facilityReadyDateFor(FacilityType type) {
+    if (type == FacilityType.stadium) {
+      return SeasonCalendar.preseasonDate(_save!.league.season + 1);
+    }
+    final t = today;
+    return DateTime(t.year, t.month + ClubInfrastructure.buildMonths, t.day);
+  }
+
+  /// 増築を着工する。費用は着工のときに払い、完成([facilityReadyDateFor])
+  /// までレベルは上がらない。工事中の施設は重ねて増築できない。
   Future<bool> upgradeFacility(FacilityType type) async {
     if (_save == null) return false;
     final infra = _save!.infrastructure;
     final lvl = infra.facilityLevel(type);
     if (lvl >= ClubInfrastructure.maxLevel) return false;
+    if (infra.isUnderConstruction(type)) return false;
     final cost = facilityUpgradeCostFor(type);
     if (_save!.budget < cost) return false;
+    final readyOn = facilityReadyDateFor(type);
+    if (!infra.startConstruction(type, readyOn)) return false;
     // 施設への投資は、財務の規則の判定で赤字に数えない(実際の収支規則と同じ)。
     _book(LedgerCategory.infrastructure, -(cost));
-    infra.upgradeFacility(type);
     // 補助は1回の増築で使い切る。
     if (type == FacilityType.stadium) _save!.stadiumSubsidyPct = 0;
+    final when = TransferWindowCalendar.formatYearMonth(readyOn);
+    _logNews(
+      Tr.pick('「${type.label}」の増築に着工しました(${formatMoney(cost)})。$whenに完成します。',
+          'Work has begun on the ${type.label} (${formatMoney(cost)}). It will be ready in $when.'),
+      context: Tr.pick('施設', 'Facilities'),
+    );
     _notify();
     await _persist();
     return true;
+  }
+
+  /// 今日までに完成した工事を終え、ニュースで知らせる。日付を進めるたびに
+  /// 呼ぶ([_setToday])。
+  void _completeFacilityConstruction() {
+    final s = _save;
+    if (s == null) return;
+    final done = s.infrastructure.completeConstructionDue(today);
+    for (final f in done) {
+      final lvl = s.infrastructure.facilityLevel(f);
+      _logNews(
+        f == FacilityType.stadium
+            ? Tr.pick(
+                '「${f.label}」の増築が完成しました(Lv$lvl・${ClubInfrastructure.stadiumCapacity(lvl)}席)。',
+                'The ${f.label} expansion is complete (level $lvl, ${ClubInfrastructure.stadiumCapacity(lvl)} seats).')
+            : Tr.pick('「${f.label}」の増築が完成しました(Lv$lvl)。',
+                'The ${f.label} upgrade is complete (level $lvl).'),
+        context: Tr.pick('施設', 'Facilities'),
+      );
+    }
   }
 
   /// チケット価格戦略を切り替える(観客動員率と1人あたり収入のトレードオフ)。

@@ -128,12 +128,23 @@ class ClubInfrastructure {
   final Map<StaffRole, StaffMember?> staff;
   final Map<FacilityType, int> facilityLevels;
 
+  /// 工事中の施設と、完成する日。完成するまでレベルは上がらない(効き目も
+  /// 出ない)。工事中の施設は重ねて増築できない。
+  final Map<FacilityType, DateTime> construction;
+
   ClubInfrastructure({
     Map<StaffRole, StaffMember?>? staff,
     Map<FacilityType, int>? facilityLevels,
+    Map<FacilityType, DateTime>? construction,
   })  : staff = staff ?? {for (final r in StaffRole.values) r: null},
         facilityLevels =
-            facilityLevels ?? {for (final f in FacilityType.values) f: 1};
+            facilityLevels ?? {for (final f in FacilityType.values) f: 1},
+        construction = construction ?? {};
+
+  /// [type] が工事中なら完成する日。工事中でなければ null。
+  DateTime? constructionReadyOn(FacilityType type) => construction[type];
+
+  bool isUnderConstruction(FacilityType type) => construction.containsKey(type);
 
   StaffMember? staffFor(StaffRole role) => staff[role];
 
@@ -154,11 +165,41 @@ class ClubInfrastructure {
   /// 役職を空けたまま置いたときの週俸(=0)との比較用に残している、
   /// 旧レベル制の週俸。セーブの移行でのみ使う。
   static int staffWeeklyWage(int level) => level * 20;
+
+  /// スタジアム以外の施設を [currentLevel] から1段上げる工事費(万円)。
+  ///
+  /// 以前は `500×レベル²` に今いる部の倍率を掛けていて、1部ではLv7→8が
+  /// 約510億円になった。いまは部でも国でも変えない、段ごとの固定の額
+  /// (1.5億×レベル²: Lv1→2 1.5億、Lv4→5 24億、Lv7→8 73.5億)。
   static int facilityUpgradeCost(int currentLevel) =>
-      500 * currentLevel * currentLevel;
+      15000 * currentLevel * currentLevel;
+
+  /// スタジアムの1段で増える席の数。
+  static const int stadiumSeatsPerLevel = 6000;
+
+  /// スタジアムを [currentLevel] から1段上げるときの、1席あたりの工事費
+  /// (万円)。大きなスタジアムほど上の層・屋根が要り、1席が高くつく
+  /// (Lv1→2 20万円、Lv7→8 140万円)。部や国では変えない。
+  static int stadiumSeatCost(int currentLevel) => 20 * currentLevel;
+
+  /// スタジアムを [currentLevel] から1段上げる工事費(万円)。
+  /// 増やす席の数 × 1席の値段(Lv1→2 12億、Lv4→5 48億、Lv7→8 84億)。
+  static int stadiumUpgradeCost(int currentLevel) =>
+      stadiumSeatsPerLevel * stadiumSeatCost(currentLevel);
+
+  /// [type] を [currentLevel] から1段上げる工事費(万円)。補助・予算の
+  /// 配分などの割引を掛ける前の額。
+  static int upgradeCostFor(FacilityType type, int currentLevel) =>
+      type == FacilityType.stadium
+          ? stadiumUpgradeCost(currentLevel)
+          : facilityUpgradeCost(currentLevel);
+
+  /// スタジアム以外の施設の工期(月)。
+  static const int buildMonths = 3;
 
   /// スタジアムのレベルに応じた収容人数。
-  static int stadiumCapacity(int level) => 12000 + (level - 1) * 6000;
+  static int stadiumCapacity(int level) =>
+      12000 + (level - 1) * stadiumSeatsPerLevel;
 
   /// ヘッドコーチ・トレーニング施設のレベルに応じたトレーニング成長効率の倍率。
   static double trainingGrowthMultiplier(
@@ -199,12 +240,38 @@ class ClubInfrastructure {
     return true;
   }
 
+  /// [type] の工事を始める。完成は [readyOn]。最大レベル・工事中なら false。
+  bool startConstruction(FacilityType type, DateTime readyOn) {
+    if (facilityLevel(type) >= maxLevel || isUnderConstruction(type)) {
+      return false;
+    }
+    construction[type] = readyOn;
+    return true;
+  }
+
+  /// [today] までに完成した工事を終え、レベルを1つ上げる。完成した施設を
+  /// 返す(FacilityType の並び順)。
+  List<FacilityType> completeConstructionDue(DateTime today) {
+    final done = [
+      for (final f in FacilityType.values)
+        if (construction[f] != null && !construction[f]!.isAfter(today)) f,
+    ];
+    for (final f in done) {
+      construction.remove(f);
+      upgradeFacility(f);
+    }
+    return done;
+  }
+
   Map<String, dynamic> toJson() => {
         'staff': {
           for (final e in staff.entries)
             if (e.value != null) e.key.name: e.value!.toJson(),
         },
         'facilityLevels': facilityLevels.map((k, v) => MapEntry(k.name, v)),
+        if (construction.isNotEmpty)
+          'construction':
+              construction.map((k, v) => MapEntry(k.name, v.toIso8601String())),
       };
 
   factory ClubInfrastructure.fromJson(Map<String, dynamic>? json) {
@@ -215,7 +282,14 @@ class ClubInfrastructure {
     // 人物を置いて続きから遊べるようにする(StaffMarket.fromLegacyLevel)。
     final legacyLevels = json['staffLevels'] as Map<String, dynamic>?;
     final facilityJson = json['facilityLevels'] as Map<String, dynamic>?;
+    // 工事中の施設(2026-11-23 から)。無い旧セーブは工事なし。
+    final constructionJson = json['construction'] as Map<String, dynamic>?;
     return ClubInfrastructure(
+      construction: {
+        for (final f in FacilityType.values)
+          if (constructionJson?[f.name] case final String iso)
+            if (DateTime.tryParse(iso) case final DateTime d) f: d,
+      },
       staff: {
         for (final r in StaffRole.values)
           r: switch ((staffJson?[r.name], legacyLevels?[r.name])) {

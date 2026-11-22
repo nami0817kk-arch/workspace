@@ -413,11 +413,12 @@ class GameState extends ChangeNotifier {
   Team get userTeam =>
       _save!.league.teams.firstWhere((t) => t.id == _save!.userTeamId);
 
-  /// 信頼度が0まで落ち、監督が解任された状態かどうか。
+  /// サポーターの期待(信頼度)が0まで落ち、クラブを手放すことになった
+  /// 状態かどうか(旧名のまま。オーナーが解任されるわけではない)。
   bool get isDismissed => _save != null && _save!.confidence <= 0;
 
-  /// 株主の期待が0まで落ちた状態かどうか。売却を迫られる条件になる予定で、
-  /// いまは判定だけを置いてある(解任の扱いは変えていない)。
+  /// 株主の期待が0まで落ちた状態かどうか。クラブを手放す理由にはならない
+  /// (手放すのは資金とサポーターの期待が尽きたときだけ。saleReason)。
   bool get isShareholderRevolt =>
       _save != null && _save!.shareholderExpectation <= 0;
 
@@ -1438,7 +1439,6 @@ class GameState extends ChangeNotifier {
       theme: theme,
     );
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
-    _save!.managerContractYears = 3;
     _applyScenario(scenario);
     final rival = cpuTeams[rng.nextInt(cpuTeams.length)];
     _save!.rivalTeamId = rival.id;
@@ -1749,7 +1749,7 @@ class GameState extends ChangeNotifier {
   /// UI側(シーズン開始処理後のSnackBar)が表示に使う。
   String? lastBoardBonusNote;
 
-  /// シーズン終了時の監督契約(任期)の去就の通知文。
+  /// シーズン終了時の、雇っている監督の任期の通知文(残り1年など)。
   String? lastManagerContractNote;
 
   /// 直近の昇格で理事会から支給された補強予算(万円)。昇格していなければ0。
