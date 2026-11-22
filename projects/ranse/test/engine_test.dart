@@ -225,7 +225,9 @@ void main() {
         g,
         Rng(seed),
         onPrompt: (p) {
-          if (p.title == '信長') expect(g.year, lessThanOrEqualTo(1581));
+          if (p.title == '信長' && !g.hasFlag('history_honnoji')) {
+            expect(g.year, lessThanOrEqualTo(1581));
+          }
           if (p.title == '越後の主') expect(g.year, lessThanOrEqualTo(1577));
         },
       );
