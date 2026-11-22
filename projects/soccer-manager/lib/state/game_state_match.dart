@@ -969,6 +969,32 @@ extension GameStateMatch on GameState {
     // 再起動前に後半の途中まで進んでいたら、その続きから。
     final resume = _liveSecondHalfResume;
     _liveSecondHalfResume = null;
+    // 警告は1試合を通して数える。前半の警告を後半へ引き継ぐ(再起動の
+    // あとでも、前半の途中経過から戻せるように毎回入れ直す)。
+    final firstHalf = _liveFirstHalfState!;
+    MatchEngine.markYellowCardsFromEvents(home, away, firstHalf.events);
+    // 結果だけ見る試合(判断を仰がない)では、ハーフタイムの交代を監督が
+    // 自動で行う。ライブ観戦の試合は利用者が交代するので触らない。
+    _liveAutoSubPlans = [];
+    if (!interactive && !_liveWasInteractive && resume == null) {
+      final sentOff = MatchEngine.sentOffIds(firstHalf.events);
+      final userId = _save!.userTeamId;
+      for (final team in [home, away]) {
+        final isHome = team.id == home.id;
+        final goalDiff = isHome
+            ? firstHalf.homeGoals - firstHalf.awayGoals
+            : firstHalf.awayGoals - firstHalf.homeGoals;
+        final plan = MatchEngine.applyHalfTimeSubstitutions(
+          team,
+          goalDiff: goalDiff,
+          maxSubs: team.id == userId
+              ? GameState.maxSubstitutionsPerMatch - _liveSubstitutionsUsed
+              : GameState.maxSubstitutionsPerMatch,
+          excludedIds: sentOff,
+        );
+        if (plan.swaps.isNotEmpty) _liveAutoSubPlans.add(plan);
+      }
+    }
     final state = MatchEngine.beginInteractiveHalf(
       home: home,
       away: away,
@@ -1074,6 +1100,9 @@ extension GameStateMatch on GameState {
       events: allEvents,
       homeGoals: homeGoals,
       awayGoals: awayGoals,
+      subbedOff: [
+        for (final plan in _liveAutoSubPlans) ...plan.subbedOff,
+      ],
     );
     final statsBefore = {
       for (final p in userTeam.players)
@@ -1087,6 +1116,10 @@ extension GameStateMatch on GameState {
       events: allEvents,
       weather: weather,
     );
+    for (final plan in _liveAutoSubPlans) {
+      MatchEngine.finishHalfTimeSubstitutions(plan, events: allEvents);
+    }
+    _liveAutoSubPlans = [];
     lastMilestones = _detectMilestones(userTeam, allEvents, statsBefore);
     for (final m in lastMilestones) {
       _save!.trophyHistory.add(

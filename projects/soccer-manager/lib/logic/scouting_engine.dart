@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../models/player.dart';
 import 'player_generator.dart';
+import 'scout_knowledge.dart';
 
 class ScoutingEngine {
   static final Random _rng = Random();
@@ -28,15 +29,26 @@ class ScoutingEngine {
   /// ウォー)。これにより、更新を繰り返して確実に当たりを引くという
   /// プレイが成立しなくなり、スカウトのレベル(=推定精度)そのものに
   /// 投資する価値が生まれる。
+  ///
+  /// 幅の真ん中は本当の値から選手ごとに決まった分だけずらす(スカウトの
+  /// 見立て[ScoutKnowledge.range]と同じ)。以前は本当の値を真ん中にして
+  /// いて、幅の中央を読めば答えが分かってしまった。
   static (int low, int high) estimatedPotentialRange(
     Player prospect, {
     int scoutLevel = 1,
   }) {
     final uncertainty = estimateUncertainty(scoutLevel);
-    final low = (prospect.potential - uncertainty).clamp(1, 99);
-    final high = (prospect.potential + uncertainty).clamp(1, 99);
+    final center = prospect.potential +
+        ScoutKnowledge.centerOffset(
+            prospect.id, youthEstimateSalt, uncertainty);
+    final low = (center - uncertainty).clamp(1, 99);
+    final high = (center + uncertainty).clamp(1, 99);
     return (low, high);
   }
+
+  /// ユースの見立てのずれの種。スカウトの見立て(総合力1・伸びしろ2)とは
+  /// 別の値にして、同じ選手でずれ方がそろわないようにする。
+  static const int youthEstimateSalt = 3;
 
   /// 見立ての振れ幅(±いくつ)。画面に「どれだけ正確に見えているか」を
   /// 出すために切り出してある。

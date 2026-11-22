@@ -171,7 +171,8 @@ extension GameStateFinance on GameState {
       wonTopLeague: recs.any((r) => r.wonLeague && r.divisionTier == 1),
       promotedOrTop: recs.any(
           (r) => r.divisionTier == 1 || (r.promoted && r.divisionTier == 2)),
-      wonCup: recs.any((r) => r.cupsWon.isNotEmpty),
+      // 国内カップの優勝だけ(リーグカップ・大陸大会の優勝は数えない)。
+      wonCup: recs.any((r) => r.wonDomesticCup),
       budget: save.budget,
       valueRatio: save.ownerGoalStartValue > 0
           ? clubValue.total / save.ownerGoalStartValue
