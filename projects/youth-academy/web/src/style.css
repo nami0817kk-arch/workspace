@@ -105,6 +105,9 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .stage{flex:1;min-height:0;position:relative;border-radius:12px;overflow:hidden;box-shadow:var(--shadow);background:#2b3d63}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%}
 .scene-head{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:4px;max-width:58%;pointer-events:none}
+.scene-head.right{left:auto;right:8px;align-items:flex-end}
+.scene-head.right .scene-title{align-self:flex-end}
+.scene-head.right .tagrow{align-items:flex-end}
 .scene-title{align-self:flex-start;background:var(--navy);color:#fff;font-weight:900;border-radius:9px;padding:4px 10px;font-size:13px;box-shadow:var(--shadow-s)}
 .scene-title b{color:var(--yellow);margin-right:6px}
 .tagrow{display:flex;flex-direction:column;gap:3px;align-items:flex-start}

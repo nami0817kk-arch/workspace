@@ -417,7 +417,8 @@
       const ab = (ns) => ns.reduce((a, n) => a + (p.ab[n] || 1), 0) / ns.length;
       let dutyOk = true;
       if (duty === 'att' && ab(['運動量', 'スタミナ', 'スピード']) < 8) dutyOk = false;
-      if (duty === 'def' && ab(['ポジショニング', 'タックル', 'マーク']) < 7.5) dutyOk = false;
+      // GK の位置はフィールドの任務の条件を見ない（2026-11-23：本職の GK もタックル・マークが低いので「役割が合わない」とされ、力が7% 下がり、試合後に不満の札が出ていた）
+      if (duty === 'def' && slotPos(i, s) !== 'GK' && ab(['ポジショニング', 'タックル', 'マーク']) < 7.5) dutyOk = false;
       if (!dutyOk) fit = fit > 0 ? 0 : -1;
       else if (fit === 0) {
         if (duty === 'att' && (pers(p, 'プレーの気質', '勇敢') || pers(p, 'プレーの気質', '自信家') || pers(p, '目指すもの', '野心家'))) fit = 1;

@@ -146,7 +146,33 @@ ok(hi.y - lo.y > 4, '押している側は相手陣の深くで戦う（ボー�
   const hiTop = avg(srt.slice(-qn).map((k) => top[k]));
   console.log('最高速の平均 スピード上位 ' + hiTop.toFixed(2) + 'm/秒 下位 ' + loTop.toFixed(2) + 'm/秒');
   ok(corr > 0.3 && hiTop > loTop + 0.6, 'スピードの高い子ほど速く走る');
-  ok(rHi > rLo + 0.04, 'パスのうまい子ほどパスが通る');
+  // パスのうまさ：同じ試合を、こちらの全員のパスを15にした場合と6にした場合で回し、こちらのパスが通る割合を比べる
+  // （2026-11-23：選手ごとに比べると、チームの状況の差が混ざったり組が少なかったりで、乱数の種しだいで −5〜+15 ポイントと揺れた）
+  const passRate = (v) => {
+    let n = 0, okN = 0;
+    for (const seed of [3, 8, 21, 34, 5, 13]) {
+      const w = YA.newWorld(seed);
+      Object.values(w.players).forEach((p) => { p.ab['パス'] = v; });
+      const home = YA.teamFromWorld(w, 'A');
+      const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
+      const m = new YA.Match({ seed, home, away, settings: { autoStop: false } });
+      m.homeShare = () => 0.5;
+      const R = new YA.Renderer(cv);
+      R.setMatch(m);
+      let lastFl = null, by = null;
+      for (let i = 0; i < 60 * 150; i++) {
+        R.update(1 / 60);
+        if (R.fl && R.fl !== lastFl && R.fl.by && R.teamOf(R.fl.by) === home) by = R.fl.by;
+        lastFl = R.fl;
+        if (by && R.owner && !R.fl) { n++; if (R.teamOf(R.owner) === home) okN++; by = null; }
+      }
+    }
+    return { r: okN / Math.max(1, n), n };
+  };
+  const pHi = passRate(15);
+  const pLo = passRate(6);
+  console.log('こちら全員のパス 15：通った ' + (pHi.r * 100).toFixed(0) + '%（' + pHi.n + '本）　6：' + (pLo.r * 100).toFixed(0) + '%（' + pLo.n + '本）');
+  ok(pHi.r > pLo.r + 0.06, 'パスのうまいチームほどパスが通る（' + ((pHi.r - pLo.r) * 100).toFixed(1) + 'ポイント）');
 }
 console.log(fails ? '失敗 ' + fails : '戦い方の動きの点検: すべて通過');
 process.exit(fails ? 1 : 0);
