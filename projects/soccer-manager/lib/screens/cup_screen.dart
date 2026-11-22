@@ -79,12 +79,11 @@ class _DomesticCupTab extends StatelessWidget {
     String nameOf(String id) => id == byeTeamId
         ? Tr.pick('(不戦勝)', '(bye)')
         : teams.where((t) => t.id == id).firstOrNull?.name ?? '-';
-    // 回戦の数は、できている回戦の数ではなく1回戦の組の数から出す
+    // 回戦の数は、できている回戦の数ではなく大会の形から出す
     // (1回戦しかできていないときに、1回戦が「決勝」と出ていた)。
-    var totalRounds = 0;
-    for (var n = (cup.rounds.firstOrNull?.length ?? 0) * 2; n > 1; n ~/= 2) {
-      totalRounds++;
-    }
+    // 1〜3部の全クラブが出るカップは、上の部が後の回戦から入るので、
+    // 作るときに決まった回戦の数を使う。
+    final totalRounds = cup.totalRounds;
     final nextMatch = cup.nextUnplayedMatch;
     final inSeason = gameState.save!.league.nextUnplayedFixture != null;
     final userEliminated = cup.isEliminated(userId);
@@ -193,33 +192,57 @@ class _DomesticCupTab extends StatelessWidget {
   }
 }
 
-class _ContinentalCupTab extends StatelessWidget {
+/// 出場のしかたの説明(チャンピオンズカップとヨーロッパカップ)。
+String _continentalQualifyText(GameState gameState) => Tr.pick(
+    '1部の上位${gameState.continentalSpots}クラブがチャンピオンズカップ、その下の1クラブと国内カップの優勝クラブがヨーロッパカップに出ます(チャンピオンズカップの枠は国の係数で3〜5に変わります)。',
+    'The top ${gameState.continentalSpots} of the top division go into the Champions Cup; the next club and the domestic cup winners go into the Europa Cup (the Champions Cup places, 3 to 5, depend on the country coefficient).');
+
+class _ContinentalCupTab extends StatefulWidget {
   const _ContinentalCupTab();
+
+  @override
+  State<_ContinentalCupTab> createState() => _ContinentalCupTabState();
+}
+
+class _ContinentalCupTabState extends State<_ContinentalCupTab> {
+  /// 見ている大会(null なら、自クラブの出ている大会か、チャンピオンズカップ)。
+  int? _selected;
 
   @override
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
-    final cup = gameState.continentalCup;
+    final cups = gameState.continentalCups;
 
-    if (cup == null) {
+    if (cups.isEmpty) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Text(
-            Tr.pick(
-                '前シーズンを1部の${gameState.continentalSpots}位以内で終えると、翌シーズンは大陸カップに出場できます(枠の数は国の係数で2〜4に変わります)。',
-                'Finish in the top ${gameState.continentalSpots} of the top division and you qualify for the Continental Cup next season (the number of places, 2 to 4, depends on the country coefficient).'),
+            _continentalQualifyText(gameState),
             textAlign: TextAlign.center,
           ),
         ),
       );
     }
 
+    final mine = gameState.continentalCup;
+    final idx = (_selected ?? (mine == null ? 0 : cups.indexOf(mine)))
+        .clamp(0, cups.length - 1);
+    final cup = cups[idx];
     final userId = gameState.userTeam.id;
+    final userInCup = cup.involvesTeam(userId);
     final teams = gameState.allTeamsForCups;
     String nameOf(String id) =>
-        teams.firstWhere((t) => t.id == id, orElse: () => teams.first).name;
-    final userEliminated = cup.isEliminated(userId);
+        teams.where((t) => t.id == id).firstOrNull?.name ?? '-';
+    // 決勝トーナメントの回戦の数(できている回戦の数ではなく組の数から)。
+    var knockoutTotal = 0;
+    for (var n = cup.groups.length * 2; n > 1; n ~/= 2) {
+      knockoutTotal++;
+    }
+    if (knockoutTotal < cup.knockoutRounds.length) {
+      knockoutTotal = cup.knockoutRounds.length;
+    }
+    final userEliminated = userInCup && cup.isEliminated(userId);
     final inSeason = gameState.save!.league.nextUnplayedFixture != null;
     final groupStageDone = cup.isGroupStageComplete;
     final nextGroupMatch = ContinentalCupEngine.nextGroupMatch(cup);
@@ -229,6 +252,27 @@ class _ContinentalCupTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (cups.length > 1)
+          Wrap(
+            spacing: 8,
+            children: [
+              for (var i = 0; i < cups.length; i++)
+                ChoiceChip(
+                  label: Text(cups[i].name),
+                  selected: i == idx,
+                  onSelected: (_) => setState(() => _selected = i),
+                ),
+            ],
+          ),
+        if (!userInCup)
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: Text(Tr.pick(
+                  '自クラブはこの大会に出ていません', 'Your club is not in this competition')),
+              subtitle: Text(_continentalQualifyText(gameState)),
+            ),
+          ),
         if (cup.isComplete)
           Card(
             color: cup.championId == userId
@@ -257,7 +301,9 @@ class _ContinentalCupTab extends StatelessWidget {
                   '他クラブの結果は引き続き更新されます', 'The other results keep coming in')),
             ),
           ),
-        if ((nextGroupMatch != null || knockoutPending) && inSeason)
+        if (!userInCup)
+          const SizedBox.shrink()
+        else if ((nextGroupMatch != null || knockoutPending) && inSeason)
           const _CupByDateNote()
         else if (nextGroupMatch != null)
           Padding(
@@ -337,7 +383,7 @@ class _ContinentalCupTab extends StatelessWidget {
             _RoundSection(
               title: ContinentalCupEngine.roundLabel(
                 round.first.round,
-                cup.knockoutRounds.length,
+                knockoutTotal,
               ),
               initiallyExpanded: round == cup.knockoutRounds.last,
               children: [
@@ -459,6 +505,11 @@ class _BracketMatchCard extends StatelessWidget {
                           'Shootout: ${nameOf(match.penaltyWinnerId!)} go through'),
                       style: TextStyle(
                           fontSize: 11,
+                          color: SemanticColors.subtleText(context)))
+                else if (match.extraTime)
+                  Text(Tr.pick('延長戦で決着', 'Decided after extra time'),
+                      style: TextStyle(
+                          fontSize: 11,
                           color: SemanticColors.subtleText(context))),
               ],
             ),
@@ -526,11 +577,10 @@ class _GroupTable extends StatelessWidget {
                   builder: (context) {
                     final isUserRow = standings[i].teamId == userId;
                     final teamName = teams
-                        .firstWhere(
-                          (t) => t.id == standings[i].teamId,
-                          orElse: () => teams.first,
-                        )
-                        .name;
+                            .where((t) => t.id == standings[i].teamId)
+                            .firstOrNull
+                            ?.name ??
+                        '-';
                     final row = Container(
                       color: isUserRow
                           ? Theme.of(context)
@@ -588,10 +638,15 @@ class _TieCard extends StatelessWidget {
         : Tr.pick(
             '合計スコア: ${tie.goalsFor(tie.teamAId)} - ${tie.goalsFor(tie.teamBId)} ($legsLabel)',
             'Aggregate: ${tie.goalsFor(tie.teamAId)} - ${tie.goalsFor(tie.teamBId)} ($legsLabel)');
+    final how = tie.penaltyWinnerId != null
+        ? Tr.pick('(PK戦)', ' (on penalties)')
+        : tie.extraTime
+            ? Tr.pick('(延長戦)', ' (after extra time)')
+            : '';
     final resultLabel = tie.winnerId == null
         ? Tr.pick('対戦中', 'In progress')
-        : Tr.pick('${nameOf(tie.winnerId!)}が勝利',
-            '${nameOf(tie.winnerId!)} go through');
+        : Tr.pick('${nameOf(tie.winnerId!)}が勝利$how',
+            '${nameOf(tie.winnerId!)} go through$how');
     final card = Card(
       margin: const EdgeInsets.only(bottom: 6),
       child: ListTile(
@@ -658,7 +713,8 @@ class _RoundSection extends StatelessWidget {
   }
 }
 
-/// リーグカップ(2つ目の国内カップ)の進み具合。4節ごとに1回戦ずつ自動で進む。
+/// リーグカップ(イングランドだけ。1〜3部のクラブ)の進み具合。回戦ごとに
+/// 決まった節で自動で進む。
 class _LeagueCupCard extends StatelessWidget {
   const _LeagueCupCard();
 
@@ -671,11 +727,8 @@ class _LeagueCupCard extends StatelessWidget {
     final teams = gs.allTeamsForCups;
     String nameOf(String id) =>
         teams.where((t) => t.id == id).firstOrNull?.name ?? '-';
-    // 1回戦の組の数から、決勝までの回戦の数を出す。
-    var total = 0;
-    for (var n = cup.rounds.first.length * 2; n > 1; n ~/= 2) {
-      total++;
-    }
+    // 決勝までの回戦の数(上の部が後から入る形では、作るときに決まる)。
+    final total = cup.totalRounds;
     final String status;
     if (cup.isComplete) {
       status = Tr.pick('優勝: ${nameOf(cup.championId!)}',
@@ -691,8 +744,9 @@ class _LeagueCupCard extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.emoji_events_outlined),
         title: Text(gs.leagueCupName),
-        subtitle: Text(Tr.pick('$status。4節ごとに1回戦ずつ自動で進みます(賞金は国内カップの半分)。',
-            '$status. A round is played automatically every four matchdays (half the domestic cup prize money).')),
+        subtitle: Text(Tr.pick(
+            '$status。1〜3部のクラブが出て、回戦ごとに決まった週に自動で進みます。決勝は2〜3月(賞金は国内カップの半分)。',
+            '$status. Clubs from all three tiers take part; each round is played automatically in its set week, with the final in February or March (half the domestic cup prize money).')),
       ),
     );
   }

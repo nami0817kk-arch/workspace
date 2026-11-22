@@ -56,16 +56,26 @@ void main() {
         reason: '自クラブのカップ戦が消化されていない');
   }, timeout: const Timeout(Duration(minutes: 5)));
 
-  test('カップが一気に進みすぎない（1節につき1試合まで）', () async {
+  // 2026-11-22: 国内カップは1〜3部の全クラブになり、回戦ごとに決まった
+  // 週にまとめて行う形にした(以前は1節に1試合ずつ)。進みすぎないことは
+  // 「回戦の週が来るまで次の回戦を消化しない」で確かめる。
+  test('カップが一気に進みすぎない（回戦は決まった週まで待つ）', () async {
     final game = GameState();
     await game.startNewGame('テストFC');
+    final cup = game.domesticCup!;
+    final due = cup.roundDue!;
 
-    await game.simulateAheadMatchdays(1);
-    final afterOne = game.domesticCup?.lastPlayedAtMatchday;
+    await game.simulateAheadMatchdays(due.first - 2);
+    expect(cup.rounds.first.every((m) => m.result == null), isTrue,
+        reason: '1回戦の週の前に消化されている');
 
-    expect(afterOne, isNotNull, reason: '1節でカップが消化されていない');
-    // 直後は次の試合を消化できない(リーグが進むまで待つ)。
+    await game.simulateAheadMatchdays(2);
+    expect(cup.rounds.first.every((m) => m.result != null), isTrue,
+        reason: '1回戦の週に1回戦がまとめて終わっていない');
+    // 直後は次の回戦を消化できない(その回戦の週が来るまで待つ)。
     expect(game.canPlayNextDomesticCupMatch, isFalse,
-        reason: 'リーグが進んでいないのにカップを続けて消化できてしまう');
+        reason: '次の回戦の週が来ていないのにカップを続けて消化できてしまう');
+    expect(cup.rounds.length, 2);
+    expect(cup.rounds[1].every((m) => m.result == null), isTrue);
   }, timeout: const Timeout(Duration(minutes: 5)));
 }

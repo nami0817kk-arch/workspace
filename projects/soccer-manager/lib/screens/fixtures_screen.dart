@@ -7,6 +7,7 @@ import '../models/match_result.dart';
 import '../models/team.dart';
 import '../services/feedback_service.dart';
 import '../logic/calendar_engine.dart';
+import '../logic/country_coefficient.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/chip_switcher.dart';
@@ -117,8 +118,14 @@ class FixturesScreen extends StatelessWidget {
                             league: foreignLeague,
                             userTeamId: userTeamId,
                             divisionTier: 1,
-                            continentalQualifyCount:
-                                GameStateCoefficient.foreignTopPerLeague,
+                            // その国のチャンピオンズカップの枠(係数の順位で
+                            // 3〜5)。その下の2クラブがヨーロッパカップ。
+                            continentalQualifyCount: context
+                                .read<GameState>()
+                                .championsSpotsFor(leagueThemeFromName(name) ??
+                                    LeagueTheme.england),
+                            europaQualifyCount:
+                                CountryCoefficientEngine.europaSpots,
                           ),
                     ),
                 ]),
@@ -366,15 +373,20 @@ class _StandingsTab extends StatefulWidget {
   final String userTeamId;
   final int divisionTier;
 
-  /// 大陸カップの出場圏の印を付ける数。null なら自国の枠
+  /// チャンピオンズカップの出場圏の印を付ける数。null なら自国の枠
   /// ([GameStateCoefficient.continentalSpots])。
   final int? continentalQualifyCount;
+
+  /// その下のヨーロッパカップの出場圏の印を付ける数。自国は1(もう1枠は
+  /// 国内カップの優勝クラブ)、他国は2。
+  final int europaQualifyCount;
 
   const _StandingsTab({
     required this.league,
     required this.userTeamId,
     required this.divisionTier,
     this.continentalQualifyCount,
+    this.europaQualifyCount = 1,
   });
 
   @override
@@ -414,11 +426,13 @@ class _StandingsTabState extends State<_StandingsTab> {
     final showRelegation = divisionTier < totalDivisionTiers;
     // 入れ替えの数は国ごとに違う(ドイツ・フランス風は入れ替え戦がある)。
     final theme = context.read<GameState>().currentLeagueTheme;
-    // 大陸カップの出場枠は国の係数で2〜4に変わる。季の締めの判定
-    // (startNextSeason の `finalRank <= continentalSpots`)と同じ数を使う。
-    // 他国の1部は、その国から出る数(GameStateCoefficient.foreignTopPerLeague)。
+    // チャンピオンズカップの出場枠は国の係数で3〜5に変わる(実在の数:
+    // イングランド・スペイン5、ドイツ・イタリア4、フランス3)。季の締めで
+    // 大会を組むとき(_setUpContinentalCups)と同じ数を使う。他国の1部は、
+    // その国の枠。その下がヨーロッパカップ。
     final continentalQualifyCount = widget.continentalQualifyCount ??
         context.read<GameState>().continentalSpots;
+    final europaEnd = continentalQualifyCount + widget.europaQualifyCount;
     final below = theme.rulesBelow(divisionTier);
     final above = theme.rulesBelow(divisionTier - 1);
     final relegationStart = rows.length - below.relegationZone;
@@ -434,10 +448,15 @@ class _StandingsTabState extends State<_StandingsTab> {
             spacing: 12,
             runSpacing: 4,
             children: [
-              if (showContinental)
+              if (showContinental) ...[
                 _ZoneLegend(
                     color: Colors.amber.shade700,
-                    label: Tr.pick('大陸カップ出場圏', 'Continental qualification')),
+                    label: Tr.pick(
+                        'チャンピオンズカップ出場圏', 'Champions Cup qualification')),
+                _ZoneLegend(
+                    color: Colors.lightBlue.shade400,
+                    label: Tr.pick('ヨーロッパカップ出場圏', 'Europa Cup qualification')),
+              ],
               if (showPromotion) ...[
                 _ZoneLegend(
                   color: SemanticColors.positive(context),
@@ -515,6 +534,8 @@ class _StandingsTabState extends State<_StandingsTab> {
               Color? zoneColor;
               if (showContinental && i < continentalQualifyCount) {
                 zoneColor = Colors.amber.shade700;
+              } else if (showContinental && i < europaEnd) {
+                zoneColor = Colors.lightBlue.shade400;
               } else if (showPromotion && i < autoPromotionEnd) {
                 zoneColor = SemanticColors.positive(context);
               } else if (showPromotion && i < playoffEnd) {

@@ -102,8 +102,11 @@ class CalendarEngine {
     if (cup == null) return null;
     final match = cup.nextUnplayedMatch;
     if (match == null) return null;
-    final date = calendar.cupDateBefore(
-        _eligibleMatchday(cup.lastPlayedAtMatchday, league, calendar));
+    final date = calendar.cupDateBefore(_eligibleMatchday(
+        cup.plannedRounds != null ? null : cup.lastPlayedAtMatchday,
+        league,
+        calendar,
+        due: cup.dueMatchdayFor(match.round)));
     final involvesUser =
         match.homeTeamId == userTeamId || match.awayTeamId == userTeamId;
     if (!involvesUser) {
@@ -150,7 +153,9 @@ class CalendarEngine {
       isHome = null;
     }
     final date = calendar.cupDateBefore(
-        _eligibleMatchday(cup.lastPlayedAtMatchday, league, calendar),
+        _eligibleMatchday(cup.stepDue != null ? null : cup.lastPlayedAtMatchday,
+            league, calendar,
+            due: ContinentalCupEngine.currentStepDue(cup)),
         continental: true);
     final involvesUser = homeId == userTeamId || awayId == userTeamId;
     if (!involvesUser) {
@@ -164,16 +169,22 @@ class CalendarEngine {
   }
 
   /// カップ戦の次の試合を消化できるようになる節。最後に消化した節の次と、
-  /// いまのリーグの節(次に消化する節)の遅い方。
+  /// いまのリーグの節(次に消化する節)と、回戦・段階の決まった節([due]。
+  /// 1〜3部の全クラブのカップと、2つの大陸大会)のいちばん遅いもの。
   static int _eligibleMatchday(
     int? lastPlayedAtMatchday,
     League league,
-    SeasonCalendar calendar,
-  ) {
+    SeasonCalendar calendar, {
+    int? due,
+  }) {
     final afterLast = (lastPlayedAtMatchday ?? 0) + 1;
     final current = league.nextUnplayedFixture?.matchday ??
         (calendar.totalMatchdays + 1);
-    return afterLast > current ? afterLast : current;
+    var md = afterLast > current ? afterLast : current;
+    if (due != null && due > md && league.nextUnplayedFixture != null) {
+      md = due;
+    }
+    return md;
   }
 
   /// [league]の節数から作る暦。国が分からないときはイングランドの暦。

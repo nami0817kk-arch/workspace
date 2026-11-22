@@ -26,12 +26,13 @@ class CountryCoefficientCard extends StatelessWidget {
             TitleWithHelp(
               title: Tr.pick('国の係数', 'Country coefficients'),
               help: Tr.pick(
-                  '大陸大会での各国のクラブの成績(5季の合計)です。順位が上の国ほど、1部から大陸大会に出られるクラブが多くなります。',
-                  'Each country\'s results in the continental cup over five seasons. Higher-ranked countries send more clubs.'),
+                  '大陸大会での各国のクラブの成績(1クラブあたりの点を5季足したもの)です。順位が1・2位の国は1部の上位5クラブ、3・4位は4クラブ、5位は3クラブがチャンピオンズカップに出ます。その下の1クラブと国内カップの優勝クラブはヨーロッパカップに出ます。',
+                  "Each country's results in the continental cups (points per club, added over five seasons). The top two countries send their top five clubs to the Champions Cup, the next two send four, and the fifth sends three. The next club and the domestic cup winners go into the Europa Cup."),
             ),
             Text(
-                Tr.pick('いま${home.label}は上位${gs.continentalSpots}クラブが大陸大会に出られます',
-                    '${home.label} currently sends its top ${gs.continentalSpots}'),
+                Tr.pick(
+                    'いま${home.label}は上位${gs.continentalSpots}クラブがチャンピオンズカップ、その下の1クラブと国内カップの優勝クラブがヨーロッパカップに出られます',
+                    '${home.label} currently sends its top ${gs.continentalSpots} to the Champions Cup, and the next club plus the domestic cup winners to the Europa Cup'),
                 style: const TextStyle(fontSize: 12)),
             const SizedBox(height: 6),
             for (var i = 0; i < rows.length; i++)

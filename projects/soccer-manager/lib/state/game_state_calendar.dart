@@ -101,7 +101,10 @@ extension GameStateCalendar on GameState {
         (m.homeTeamId == userId || m.awayTeamId == userId)) {
       final opp = m.homeTeamId == userId ? m.awayTeamId : m.homeTeamId;
       out.add(DayEvent(
-        date: _cupDate(dom.lastPlayedAtMatchday, continental: false),
+        date: _cupDate(
+            dom.plannedRounds != null ? null : dom.lastPlayedAtMatchday,
+            continental: false,
+            due: dom.dueMatchdayFor(m.round)),
         kind: DayEventKind.cupMatch,
         label: Tr.pick(
             '${dom.name} vs ${_teamById(opp)?.name ?? '-'}(${m.homeTeamId == userId ? 'H' : 'A'})',
@@ -125,7 +128,10 @@ extension GameStateCalendar on GameState {
       if (home != null && away != null && (home == userId || away == userId)) {
         final opp = home == userId ? away : home;
         out.add(DayEvent(
-          date: _cupDate(cont.lastPlayedAtMatchday, continental: true),
+          date: _cupDate(
+              cont.stepDue != null ? null : cont.lastPlayedAtMatchday,
+              continental: true,
+              due: ContinentalCupEngine.currentStepDue(cont)),
           kind: DayEventKind.cupMatch,
           label: Tr.pick(
               '${cont.name} vs ${_teamById(opp)?.name ?? '-'}(${home == userId ? 'H' : 'A'})',
@@ -139,14 +145,18 @@ extension GameStateCalendar on GameState {
 
   /// カップ戦の次の試合の日。1節に1試合の決まり(_canAdvanceCup)で、
   /// 次に消化できる節の前の平日。リーグ戦を終えた後は今日の次の平日。
-  DateTime _cupDate(int? lastPlayedAtMatchday, {required bool continental}) {
+  ///
+  /// [due]は回戦・段階を消化できるようになる節(新しい形のカップ)。
+  DateTime _cupDate(int? lastPlayedAtMatchday,
+      {required bool continental, int? due}) {
     if (_save!.league.nextUnplayedFixture == null) {
       return SeasonCalendar.dateOnly(
           SeasonCalendar.nextCupWeekdayAfter(today, continental: continental));
     }
     final afterLast = (lastPlayedAtMatchday ?? 0) + 1;
     final marker = _currentLeagueMatchdayMarker;
-    final eligible = afterLast > marker ? afterLast : marker;
+    var eligible = afterLast > marker ? afterLast : marker;
+    if (due != null && due > eligible) eligible = due;
     final d = SeasonCalendar.dateOnly(
         seasonCalendar.cupDateBefore(eligible, continental: continental));
     return d.isBefore(today) ? today : d;
@@ -183,10 +193,14 @@ extension GameStateCalendar on GameState {
   Future<void> playBackgroundCupMatchesBefore(DayEvent stop) async {
     final s = _save;
     if (s == null) return;
+    // 新しい形のカップ・大陸大会は、日が来た回戦の他のクラブの試合を
+    // まとめて決める。
+    _playDueCpuCupMatches();
     final userId = s.userTeamId;
     final dom = domesticCup;
     final m = dom?.nextUnplayedMatch;
     if (dom != null &&
+        dom.plannedRounds == null &&
         m != null &&
         m.homeTeamId != userId &&
         m.awayTeamId != userId &&
@@ -196,7 +210,7 @@ extension GameStateCalendar on GameState {
       await playNextCupMatch();
     }
     final cont = continentalCup;
-    if (cont != null && canPlayNextContinentalMatch) {
+    if (cont != null && cont.stepDue == null && canPlayNextContinentalMatch) {
       final bool userIn;
       if (!cont.isGroupStageComplete) {
         final g = ContinentalCupEngine.nextGroupMatch(cont);

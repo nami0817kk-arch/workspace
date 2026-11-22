@@ -3,6 +3,12 @@ import '../l10n/tr.dart';
 /// 新規クラブ作成時に選べる国(実在の5か国のリーグに寄せる)。
 enum LeagueTheme { england, spain, germany, italy, france }
 
+/// 大陸大会の名前。[level] 1 = チャンピオンズカップ(実在の CL にあたる)、
+/// 2 = ヨーロッパカップ(EL にあたる)。実在の名前から少し変えたもの。
+String continentalCupName(int level) => level <= 1
+    ? Tr.pick('ヨーロピアン・チャンピオンズカップ', 'European Champions Cup')
+    : Tr.pick('ヨーロッパ・カップ', 'Europa Cup');
+
 /// 保存されたリーグ名([LeagueThemeInfo.label])から国を引く。表示の言語や、
 /// 2026-11-22 に名前を実在へ寄せる前の名前(アルビオン・リーグなど)でも引ける。
 LeagueTheme? leagueThemeFromName(String? name) {
@@ -90,6 +96,25 @@ extension LeagueThemeInfo on LeagueTheme {
     }
   }
 
+  /// リーグカップがある国か。実在ではイングランドだけ(1〜3部のクラブが
+  /// 出る。2026-11-22)。
+  bool get hasLeagueCup => this == LeagueTheme.england;
+
+  /// リーグカップの名前(イングランドだけ)。実在の名前から少し変えたもの。
+  String get leagueCupName => Tr.pick('イングリッシュ・リーグカップ', 'English League Cup');
+
+  /// 勝ち点で並んだとき、得失点差を直接対決より先に見るか(イングランド・
+  /// ドイツ・フランス)。スペイン・イタリアは直接対決が先。
+  bool get goalDifferenceFirst =>
+      this == LeagueTheme.england ||
+      this == LeagueTheme.germany ||
+      this == LeagueTheme.france;
+
+  /// スーパーカップを4クラブで1月ごろに行う国か(スペイン・イタリア)。
+  /// ほかの国は、1部の王者とカップの王者の1試合を開幕前に行う。
+  bool get fourClubSuperCup =>
+      this == LeagueTheme.spain || this == LeagueTheme.italy;
+
   /// この国のリーグとして保存されたことのある名前(日英・前の名前)。
   Set<String> get _allNames {
     final (ja, en) = _divisionNames[this]![0];
@@ -105,6 +130,20 @@ extension LeagueThemeInfo on LeagueTheme {
   }
 }
 
+/// 昇格プレーオフの試合の形(国ごと。2026-11-22)。
+enum PlayoffFormat {
+  /// 準決勝も決勝も1試合(引き分けはPK戦)。それまでの形。
+  singleMatches,
+
+  /// イングランド: 準決勝は2試合合計(並べば延長・PK戦)、決勝は1試合
+  /// (並べば延長・PK戦)。
+  englishTwoLegSemis,
+
+  /// スペイン・イタリア: すべて2試合合計で、合計で並べば順位が上の
+  /// クラブが勝ち上がる。
+  twoLegsHigherSeed,
+}
+
 /// 上の部と下の部の入れ替えの決まり。
 class PromotionRules {
   /// 上の部から自動で落ちるクラブ数。
@@ -117,14 +156,28 @@ class PromotionRules {
   final int playoffPool;
 
   /// 入れ替え戦があるか。上の部の(下から autoDown+1 番目)と、下の部の
-  /// (autoUp+1 位)が1試合を戦い、勝った方が上の部に入る。
+  /// (autoUp+1 位)が戦い、勝った方が上の部に入る。
   final bool relegationPlayoff;
+
+  /// 昇格プレーオフの試合の形。
+  final PlayoffFormat playoffFormat;
+
+  /// 入れ替え戦を2試合合計で行うか(ドイツ。並べば延長・PK戦)。false なら
+  /// 1試合。
+  final bool relegationPlayoffTwoLegs;
+
+  /// プレーオフの最上位と次のクラブの勝ち点の差がこれ以上なら、プレーオフを
+  /// 行わず最上位が昇格する(イタリアの2部は14点。0なら無し)。
+  final int playoffSkipGap;
 
   const PromotionRules({
     required this.autoDown,
     required this.autoUp,
     this.playoffPool = 0,
     this.relegationPlayoff = false,
+    this.playoffFormat = PlayoffFormat.singleMatches,
+    this.relegationPlayoffTwoLegs = false,
+    this.playoffSkipGap = 0,
   });
 
   /// 降格圏(入れ替え戦の枠を含む)の広さ。
@@ -151,18 +204,47 @@ extension LeagueStructure on LeagueTheme {
       teamsByTier[(tier - 1).clamp(0, teamsByTier.length - 1)];
 
   /// [upperTier]部と、その1つ下の部の入れ替えの決まり(1部と2部、2部と3部)。
+  ///
+  /// プレーオフ・入れ替え戦の試合の形は国ごと(2026-11-22): イングランドは
+  /// 準決勝が2試合合計・決勝1試合、スペインは2試合合計で並べば上位、
+  /// イタリアの2部は3〜8位の6クラブ(5位対8位・6位対7位の1試合から。
+  /// 3位と4位の差が14点以上なら行わない)、ドイツの入れ替え戦は2試合合計。
   PromotionRules rulesBelow(int upperTier) {
-    const playoff = PromotionRules.standard;
     switch (this) {
       case LeagueTheme.england:
-        return playoff;
+        return const PromotionRules(
+          autoDown: 3,
+          autoUp: 2,
+          playoffPool: 4,
+          playoffFormat: PlayoffFormat.englishTwoLegSemis,
+        );
       case LeagueTheme.spain:
+        return switch (upperTier) {
+          2 => const PromotionRules(autoDown: 4, autoUp: 3, playoffPool: 4),
+          _ => const PromotionRules(
+              autoDown: 3,
+              autoUp: 2,
+              playoffPool: 4,
+              playoffFormat: PlayoffFormat.twoLegsHigherSeed,
+            ),
+        };
       case LeagueTheme.italy:
         return switch (upperTier) {
           2 => const PromotionRules(autoDown: 4, autoUp: 3, playoffPool: 4),
-          _ => playoff,
+          _ => const PromotionRules(
+              autoDown: 3,
+              autoUp: 2,
+              playoffPool: 6,
+              playoffFormat: PlayoffFormat.twoLegsHigherSeed,
+              playoffSkipGap: 14,
+            ),
         };
       case LeagueTheme.germany:
+        return const PromotionRules(
+            autoDown: 2,
+            autoUp: 2,
+            relegationPlayoff: true,
+            relegationPlayoffTwoLegs: true);
       case LeagueTheme.france:
         return const PromotionRules(
             autoDown: 2, autoUp: 2, relegationPlayoff: true);

@@ -9,8 +9,12 @@ enum CupType {
   domestic,
   continental,
 
-  /// 2つ目の国内カップ(リーグカップ)。同じ部のクラブだけで戦う短い大会。
+  /// 2つ目の国内カップ(リーグカップ)。イングランドだけにある(実在の
+  /// リーグカップに寄せる。1〜3部のクラブが出る。2026-11-22)。
   leagueCup,
+
+  /// 4クラブのスーパーカップ(スペイン・イタリア。1月に準決勝と決勝)。
+  superCup,
 }
 
 extension CupTypeInfo on CupType {
@@ -18,6 +22,7 @@ extension CupTypeInfo on CupType {
         CupType.domestic => Tr.pick('国内カップ', 'Domestic Cup'),
         CupType.continental => Tr.pick('大陸カップ', 'Continental Cup'),
         CupType.leagueCup => Tr.pick('リーグカップ', 'League Cup'),
+        CupType.superCup => Tr.pick('スーパーカップ', 'Super Cup'),
       };
 }
 
@@ -30,12 +35,16 @@ class CupMatch {
   /// PK戦で決着した場合の勝者チームID(引き分け時のみ使用)。
   String? penaltyWinnerId;
 
+  /// 延長戦(30分)まで戦ったか。[result]の得点は延長の分を含む。
+  bool extraTime;
+
   CupMatch({
     required this.round,
     required this.homeTeamId,
     required this.awayTeamId,
     this.result,
     this.penaltyWinnerId,
+    this.extraTime = false,
   });
 
   bool get isBye => homeTeamId == byeTeamId || awayTeamId == byeTeamId;
@@ -53,6 +62,7 @@ class CupMatch {
         'awayTeamId': awayTeamId,
         'result': result?.toJson(),
         'penaltyWinnerId': penaltyWinnerId,
+        if (extraTime) 'extraTime': true,
       };
 
   factory CupMatch.fromJson(Map<String, dynamic> json) => CupMatch(
@@ -63,6 +73,7 @@ class CupMatch {
             ? null
             : MatchResult.fromJson(json['result'] as Map<String, dynamic>),
         penaltyWinnerId: json['penaltyWinnerId'] as String?,
+        extraTime: json['extraTime'] as bool? ?? false,
       );
 }
 
@@ -79,18 +90,60 @@ class Cup {
   /// 1節以上進むまで消化できないようにする。
   int? lastPlayedAtMatchday;
 
+  /// 後の回戦から入るクラブ(回戦 → クラブID)。上の部ほど後から入る
+  /// (実在の国内カップの形。2026-11-22)。不戦勝で次へ進むクラブもここに
+  /// 足す。古い形(全クラブが1回戦から)のカップでは空。
+  final Map<int, List<String>> entrants;
+
+  /// 出場クラブの部(クラブID → 1〜3)。部の違うクラブが当たると下の部の
+  /// クラブがホームになる。古い形のカップでは空。
+  final Map<String, int> tiers;
+
+  /// 決勝までの回戦の数(作るときに決まる)。古い形のカップでは null
+  /// (1回戦の試合数から求める)。
+  final int? plannedRounds;
+
+  /// 各回戦を消化できるようになるリーグの節(回戦 r は [r - 1] 番目)。
+  /// 回戦はまとめて同じ週に行い、決勝は5月。古い形のカップでは null
+  /// (1節に1試合ずつ)。
+  final List<int>? roundDue;
+
   Cup({
     required this.type,
     required this.name,
     required this.rounds,
     this.rewardClaimed = false,
     this.lastPlayedAtMatchday,
-  });
+    Map<int, List<String>>? entrants,
+    Map<String, int>? tiers,
+    this.plannedRounds,
+    this.roundDue,
+  })  : entrants = entrants ?? {},
+        tiers = tiers ?? {};
+
+  /// 決勝までの回戦の数。
+  int get totalRounds {
+    if (plannedRounds != null) return plannedRounds!;
+    final first = rounds.isEmpty ? 0 : rounds.first.length;
+    var n = 0;
+    for (var size = first * 2; size > 1; size ~/= 2) {
+      n++;
+    }
+    return n;
+  }
+
+  /// 回戦 [round] を消化できるようになる節(決まっていなければ null)。
+  int? dueMatchdayFor(int round) {
+    final due = roundDue;
+    if (due == null || due.isEmpty) return null;
+    return due[(round - 1).clamp(0, due.length - 1)];
+  }
 
   bool get isComplete =>
       rounds.isNotEmpty &&
       rounds.last.length == 1 &&
-      rounds.last.first.winnerId != null;
+      rounds.last.first.winnerId != null &&
+      (plannedRounds == null || rounds.length >= plannedRounds!);
 
   String? get championId => isComplete ? rounds.last.first.winnerId : null;
 
@@ -105,10 +158,12 @@ class Cup {
     return null;
   }
 
-  bool involvesTeam(String teamId) => rounds.any(
+  bool involvesTeam(String teamId) =>
+      rounds.any(
         (round) =>
             round.any((m) => m.homeTeamId == teamId || m.awayTeamId == teamId),
-      );
+      ) ||
+      entrants.values.any((ids) => ids.contains(teamId));
 
   /// このカップにおけるチームの最終成績(敗退ラウンド、または優勝)。まだ参加/敗退していなければnull。
   bool isEliminated(String teamId) {
@@ -130,6 +185,13 @@ class Cup {
         'rounds': rounds.map((r) => r.map((m) => m.toJson()).toList()).toList(),
         'rewardClaimed': rewardClaimed,
         'lastPlayedAtMatchday': lastPlayedAtMatchday,
+        if (entrants.isNotEmpty)
+          'entrants': {
+            for (final e in entrants.entries) '${e.key}': e.value,
+          },
+        if (tiers.isNotEmpty) 'tiers': tiers,
+        if (plannedRounds != null) 'plannedRounds': plannedRounds,
+        if (roundDue != null) 'roundDue': roundDue,
       };
 
   factory Cup.fromJson(Map<String, dynamic> json) => Cup(
@@ -148,5 +210,15 @@ class Cup {
             .toList(),
         rewardClaimed: json['rewardClaimed'] as bool? ?? false,
         lastPlayedAtMatchday: json['lastPlayedAtMatchday'] as int?,
+        entrants: (json['entrants'] as Map?)?.map(
+          (k, v) => MapEntry(
+            int.parse(k as String),
+            (v as List).map((e) => e as String).toList(),
+          ),
+        ),
+        tiers: (json['tiers'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
+        plannedRounds: json['plannedRounds'] as int?,
+        roundDue: (json['roundDue'] as List?)?.map((e) => e as int).toList(),
       );
 }
