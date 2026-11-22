@@ -355,7 +355,14 @@ class _PersonTab extends StatelessWidget {
             child: Column(
               children: [
                 for (final p in l.people.values)
-                  KV(p.role, '${p.name}（絆 ${p.bond}）'),
+                  KV(
+                    p.role,
+                    personDied(g, p.name)
+                        ? '${p.name}（故人）'
+                        : (p.role == '伴侶' && !l.married
+                              ? '${p.name}（いまは共にいない）'
+                              : '${p.name}（絆 ${p.bond}）'),
+                  ),
               ],
             ),
           ),

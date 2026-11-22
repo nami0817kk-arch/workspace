@@ -942,6 +942,30 @@ List<SceneDef> buildAltScenes() => [
 /// 変わった世界線で、今いる世を知らせる一文（見聞録・結果に使える）。
 String lineName(Game g) => kLineNames[worldLine(g)]!;
 
+/// 主君などに登録しうる有名人の没年。世界線で変わるものは [personDied] で上書きする。
+const _deathYear = {
+  '織田信長': 1582,
+  '羽柴秀吉': 1598,
+  '長尾景虎': 1578,
+  '今川義元': 1560,
+  '斎藤道三': 1556,
+  '長宗我部元親': 1599,
+  '明智光秀': 1582,
+  '千宗易': 1591,
+  'ザビエル': 1552,
+};
+
+/// 縁のある人のうち、名の知れた人がもう亡くなっているか（世界線に合わせる）。最期の場の人選びと人物のタブで使う。
+bool personDied(Game g, String name) {
+  var y = _deathYear[name];
+  if (y == null) return false;
+  final line = worldLine(g);
+  if (name == '織田信長' && line == 'nobunaga') y = 1598;
+  if (name == '今川義元' && line == 'imagawa') y = 1575;
+  if (name == '明智光秀' && line == 'akechi') y = 1598;
+  return g.year > y;
+}
+
 /// 小さな分岐の呼び名。
 const kSmallBranchNames = {
   'history_nagashino': '長篠で武田の騎馬が崩れなかった',

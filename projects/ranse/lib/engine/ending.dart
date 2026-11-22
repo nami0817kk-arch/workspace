@@ -143,30 +143,6 @@ String _eraEpilogue(Game g, String way) {
 }
 
 /// 最期の場にいた人。絆の深い順に、伴侶・子・幼なじみ・弟子・主君・師。
-/// 主君などに登録しうる有名人の没年。世界線で変わるものは [_diedBy] で上書きする。
-const _deathYear = {
-  '織田信長': 1582,
-  '羽柴秀吉': 1598,
-  '長尾景虎': 1578,
-  '今川義元': 1560,
-  '斎藤道三': 1556,
-  '長宗我部元親': 1599,
-  '明智光秀': 1582,
-  '千宗易': 1591,
-  'ザビエル': 1552,
-};
-
-/// その人がもう亡くなっているか（世界線に合わせる）。
-bool _diedBy(Game g, String name) {
-  var y = _deathYear[name];
-  if (y == null) return false;
-  final line = worldLine(g);
-  if (name == '織田信長' && line == 'nobunaga') y = 1598;
-  if (name == '今川義元' && line == 'imagawa') y = 1575;
-  if (name == '明智光秀' && line == 'akechi') y = 1598;
-  return g.year > y;
-}
-
 Person? _witness(Game g) {
   final l = g.l;
   // 連れ合いがいれば、最期の場にいるのは連れ合い。
@@ -177,7 +153,7 @@ Person? _witness(Game g) {
   Person? best;
   for (final r in roles) {
     final p = l.people[r];
-    if (p == null || _diedBy(g, p.name)) continue;
+    if (p == null || personDied(g, p.name)) continue;
     if (best == null || p.bond > best.bond) best = p;
   }
   return best;

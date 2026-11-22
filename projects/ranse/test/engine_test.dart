@@ -1003,6 +1003,19 @@ void main() {
       expect(checked, greaterThan(5));
     });
 
+    test('有名人が亡くなっているかは、世界線に合わせて決まる', () {
+      final rng = Rng(1);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      g.l.t = (1590 - g.l.startYear) * 2; // 1590年にする
+      expect(g.year, 1590);
+      expect(personDied(g, '織田信長'), isTrue);
+      expect(personDied(g, '羽柴秀吉'), isFalse);
+      expect(personDied(g, '徳川家康'), isFalse); // 表にない人は亡くならない扱い
+      g.setFlag('history_honnoji');
+      expect(personDied(g, '織田信長'), isFalse); // 信長が生き延びた世
+    });
+
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
       final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
       path[6] = '20歳　信長に仕えた';
