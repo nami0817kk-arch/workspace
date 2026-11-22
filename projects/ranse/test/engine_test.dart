@@ -80,6 +80,22 @@ void main() {
     }
   });
 
+  test('300人生を最後まで流しても、時間がかからない（終わらない回り方がない）', () {
+    final sw = Stopwatch()..start();
+    for (var seed = 0; seed < 300; seed++) {
+      final rng = Rng(seed + 4242);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      final r = Rng(seed);
+      var c = 0;
+      while (!g.finished && c++ < 3000) {
+        g.choose(r.range(0, g.prompt!.choices.length - 1));
+      }
+      expect(g.finished, isTrue, reason: 'seed=$seed が3000回の選択で終わらない');
+    }
+    expect(sw.elapsed.inSeconds, lessThan(60));
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);

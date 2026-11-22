@@ -650,12 +650,16 @@ class Game extends ChangeNotifier {
       for (final s in adultScenes)
         if (!s.onlyForced && !isHistoryScene(s.id) && _sceneOk(s, a)) s,
     ];
-    if (cand.isEmpty || !rng.chance(.55)) {
+    if (cand.isEmpty || !rng.chance(sceneChance)) {
       _endAdultYear();
       return;
     }
     _runAdultScene(rng.wpick(cand, (e) => e.weight(this)), _endAdultYear);
   }
+
+  /// 大人の年に（重点で決まった岐路・史実の岐路がないとき）岐路が起きる確率。
+  /// 2026-11-23 に .55 → .7（岐路が約300に増え、1人生の長さが目標の半分だったため）。
+  static const sceneChance = .7;
 
   SceneDef? _nextHistoryScene() {
     for (final s in adultScenes) {
