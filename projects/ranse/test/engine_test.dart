@@ -96,6 +96,40 @@ void main() {
     expect(sw.elapsed.inSeconds, lessThan(60));
   });
 
+  test('実測（記録用）: 遊ぶ時間の目安と最高位の分布を CI の記録に出す', () {
+    for (final smart in [false, true]) {
+      final mins = <double>[];
+      final ranks = List.filled(10, 0);
+      for (var seed = 0; seed < 1000; seed++) {
+        final rng = Rng(seed + 4242);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        final r = Rng(seed);
+        var c = 0, s = 0;
+        while (!g.finished && c < 3000) {
+          final p = g.prompt!;
+          if (p.title != '今年の重点') s++;
+          c++;
+          g.choose(
+            smart ? pickAmbitious(g, p, r) : r.range(0, p.choices.length - 1),
+          );
+        }
+        // 重点1回=10秒、岐路1回=40秒の目安。
+        mins.add(((c - s) * 10 + s * 40) / 60);
+        if (g.age >= 15) ranks[g.l.maxRank]++;
+      }
+      mins.sort();
+      double q(double p) => mins[(mins.length * p).floor()];
+      // ignore: avoid_print
+      print(
+        '【実測】${smart ? '考えて選ぶ' : 'ランダム'}: 遊ぶ時間 中央${q(.5).toStringAsFixed(1)}分'
+        '・90%点${q(.9).toStringAsFixed(1)}分・最長${mins.last.toStringAsFixed(1)}分'
+        '／最高位 ${ranks.join(',')}',
+      );
+      expect(mins.last, greaterThan(0));
+    }
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);
