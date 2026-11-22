@@ -696,6 +696,25 @@ void main() {
       expect(womenUp / women, greaterThan(.3), reason: '女性の昇進 $womenUp/$women');
     });
 
+    test('明智の世では、1582年のあとに明智家が勢力として立ち、光秀に味方した人は明智家に仕える', () {
+      var checked = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        g.setFlag('history_yamazaki');
+        playOut(g, Rng(seed));
+        if (g.year <= 1583 || g.isChild) continue;
+        checked++;
+        expect(g.fa['明智'], isNotNull, reason: '${g.year}');
+        if (g.hasFlag('scene:h_x_hideyoshi_west')) {
+          expect(g.l.people['主君']?.name, isNotNull);
+        }
+      }
+      expect(checked, greaterThan(10));
+    });
+
     test('町人として桶狭間で歴史を変えた人には、義元からの礼の場面が来る', () {
       var shown = 0;
       for (var seed = 0; seed < 600 && shown < 3; seed++) {

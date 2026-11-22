@@ -228,6 +228,22 @@ bool _fall(Game g, String n, String by) {
   return true;
 }
 
+/// 明智の世: 織田の勢力の半ばを引き継いで、明智家が立つ。光秀に味方した織田の家臣は明智家に移る。
+void _riseAkechi(Game g) {
+  if (g.fa['明智'] != null) return;
+  final oda = _f(g, '織田');
+  final base = oda == null ? 25.0 : oda.power * .5;
+  if (oda != null && !_ruled(g, '織田')) {
+    oda.power = (oda.power * .5).clamp(3, 140).toDouble();
+  }
+  g.fa['明智'] = Faction('明智', base < 10 ? 10 : base);
+  final l = g.l;
+  if (l.lord == '織田' && l.rank < 8 && g.hasFlag('history_yamazaki')) {
+    l.lord = '明智';
+    g.meet('主君', '明智光秀', 55);
+  }
+}
+
 final kAltHistory = <HistEvent>[
   // ---- 今川の世 ----
   HistEvent('x_owari', 1561, only: 'imagawa', (g) {
@@ -310,11 +326,12 @@ final kAltHistory = <HistEvent>[
   // ---- 明智の世 ----
   HistEvent('x_honnoji_akechi', 1582, only: 'akechi', (g) {
     final t = _fall(g, '武田', '織田') ? '春、武田勝頼が天目山で自害し、武田家は滅んだ。' : '';
-    _cut(g, '織田', .7);
+    _riseAkechi(g);
     return '$t夏、明智光秀が本能寺で織田信長を討ち、山崎で羽柴秀吉を退けた。光秀の天下は、三日では終わらなかった。';
   }),
   HistEvent('x_akechi_rule', 1583, only: 'akechi', (g) {
     _cut(g, '織田', .6);
+    _grow(g, '明智', 8);
     return '明智光秀が京で政を整え始めた。敗れた羽柴秀吉は、播磨へ退いて機をうかがっている。';
   }),
   HistEvent('x_akechi_kinai', 1585, only: 'akechi', (g) {
@@ -688,10 +705,10 @@ List<SceneDef> buildAltScenes() => [
     (g, next) {
       final l = g.l;
       g.ask('光秀の礼', '明智光秀が、山崎の勝ちを助けた者を坂本城に招いた。「そなたのおかげで、わしは逆臣で終わらずに済んだ」', [
-        // 光秀の家は「織田」の勢力として動く。主家を替えるので、その家が残っていて、自分が当主でないときだけ。
-        if (_f(g, '織田') != null && l.rank < 8)
+        // 明智の世では、1582年に明智家が勢力として立つ（x_honnoji_akechi）。
+        if (_f(g, '明智') != null && l.rank < 8)
           Choice.h('光秀の重臣となる', '新しい天下の柱になる。敵も多い', () {
-            l.lord = '織田';
+            l.lord = '明智';
             l.rank = l.rank < 6 ? 6 : l.rank;
             if (l.rank > l.maxRank) l.maxRank = l.rank;
             l.fav = 70;
@@ -743,6 +760,7 @@ List<SceneDef> buildAltScenes() => [
     (g) => 20,
     (g) =>
         _inLine(g, 'akechi') &&
+        g.l.lord == '明智' &&
         g.l.rank >= 1 &&
         g.l.rank < 8 &&
         g.canFight &&
