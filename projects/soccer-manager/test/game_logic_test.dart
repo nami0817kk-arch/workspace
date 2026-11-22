@@ -9633,7 +9633,10 @@ void main() {
         reason: 'シュート${shotsPerMatch.toStringAsFixed(1)}本/試合は少なすぎる');
     expect(shotsPerMatch, lessThan(34.0),
         reason: 'シュート${shotsPerMatch.toStringAsFixed(1)}本/試合は多すぎる');
-    expect(redsPerMatch, lessThan(0.2),
+    // 2026-11-22 に2枚目の警告を1試合を通して数えるようにした(前は半ごとに
+    // 数え直していた)ので、2枚目での退場が増えて約0.2枚/試合になった。
+    // 実際の欧州5大リーグは2枚目を含めて0.1〜0.3枚/試合なので、上限は0.3。
+    expect(redsPerMatch, lessThan(0.3),
         reason: '退場${redsPerMatch.toStringAsFixed(3)}枚/試合は多すぎる');
     // 得点はシュート加算の影響を受けてはいけない(統計上の本数のみ増やす)。
     expect(goalsPerMatch, greaterThan(1.8),
