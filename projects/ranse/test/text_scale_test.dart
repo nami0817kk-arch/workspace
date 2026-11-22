@@ -53,6 +53,8 @@ void main() {
 
   testWidgets('文字を大きくしても、人生の終わりの画面がはみ出さない', (tester) async {
     await openAt(tester, seed: 9);
+    // 文字が大きいと結果カードが伸び、ボタンは画面の下に押し出される。見えるところまで動かす。
+    await tester.scrollUntilVisible(find.text('結果を写す'), 300);
     expect(find.text('結果を写す'), findsOneWidget);
     await tester.drag(find.byType(ListView).first, const Offset(0, -3000));
     await tester.pump();
