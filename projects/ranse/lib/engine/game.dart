@@ -4,6 +4,7 @@ import 'adult.dart';
 import 'birth.dart';
 import 'childhood.dart';
 import 'data.dart';
+import 'history.dart';
 import 'life.dart';
 import 'rng.dart';
 import 'ways.dart';
@@ -39,7 +40,11 @@ class Prompt {
 class Game extends ChangeNotifier {
   Game({Rng? rng, this.onCheckpoint}) : rng = rng ?? Rng() {
     childScenes = buildChildScenes();
-    adultScenes = [...buildAdultScenes(), ...buildWayScenes()];
+    adultScenes = [
+      ...buildAdultScenes(),
+      ...buildWayScenes(),
+      ...buildHistoryScenes(),
+    ];
   }
 
   final Rng rng;
@@ -226,9 +231,12 @@ class Game extends ChangeNotifier {
   }
 
   // ---------- 合戦 ----------
-  String battle(String role) {
+  String battle(String role, {String? enemy}) {
     final lf = fa[l.lord]!;
-    final e = rng.pick(alive.where((f) => f != lf).toList());
+    final named = enemy == null ? null : fa[enemy];
+    final e = (named != null && named.alive && named != lf)
+        ? named
+        : rng.pick(alive.where((f) => f != lf).toList());
     final w = clampD(lf.power / (lf.power + e.power), .15, .85);
     final win = rng.chance(w);
     final (d: danger, m: mult) = switch (role) {
@@ -371,9 +379,13 @@ class Game extends ChangeNotifier {
       : .3;
 
   void comeOfAge() {
+    // 幼いうちに起きた史実を、見聞録に書かずに進めておく。
+    applyHistory(this, year - 1, quietBefore: 9999);
     l.rank = l.birthRank;
     l.maxRank = l.rank;
-    final home = l.home;
+    final home = (fa[l.home]?.alive ?? false)
+        ? l.home
+        : (alive..sort((a, b) => b.power.compareTo(a.power))).first.name;
     if (l.rank >= 1) {
       l.lord = home;
       l.fav = l.rank >= 3 ? 35 : 25;
@@ -541,25 +553,47 @@ class Game extends ChangeNotifier {
     if (forcedId != null) {
       for (final s in adultScenes) {
         if (s.id == forcedId && _sceneOk(s, a)) {
-          _runAdultScene(s);
+          _runAdultScene(s, _historyScenes);
           return;
         }
       }
     }
+    // その年の史実の岐路があれば、それを（いくつでも順に）出す。
+    if (_nextHistoryScene() != null) {
+      _historyScenes();
+      return;
+    }
     final cand = [
       for (final s in adultScenes)
-        if (!s.onlyForced && _sceneOk(s, a)) s,
+        if (!s.onlyForced && !isHistoryScene(s.id) && _sceneOk(s, a)) s,
     ];
     if (cand.isEmpty || !rng.chance(.55)) {
       _endAdultYear();
       return;
     }
-    _runAdultScene(rng.wpick(cand, (e) => e.weight(this)));
+    _runAdultScene(rng.wpick(cand, (e) => e.weight(this)), _endAdultYear);
   }
 
-  void _runAdultScene(SceneDef s) {
+  SceneDef? _nextHistoryScene() {
+    for (final s in adultScenes) {
+      if (isHistoryScene(s.id) && !s.onlyForced && _sceneOk(s, age)) return s;
+    }
+    return null;
+  }
+
+  /// その年の史実の岐路を順に出し、終わったら年の終わりへ。
+  void _historyScenes() {
+    final s = l.dead == null ? _nextHistoryScene() : null;
+    if (s == null) {
+      _endAdultYear();
+      return;
+    }
+    _runAdultScene(s, _historyScenes);
+  }
+
+  void _runAdultScene(SceneDef s, void Function() then) {
     setFlag('scene:${s.id}');
-    s.run(this, _endAdultYear);
+    s.run(this, then);
   }
 
   /// 年の終わり。半年ぶんの暮らしを2回進め、次の年へ。
@@ -614,6 +648,7 @@ class Game extends ChangeNotifier {
       l.bu = l.bu - 1 < 5 ? 5 : l.bu - 1;
     }
     if (l.hp <= 0) starving ? die('飢えて死んだ', 'ue') : die('衰弱して死去');
+    applyHistory(this, year, quietBefore: l.startYear + 15);
     _simWorld();
     if (l.dead == null) {
       if (l.female && l.married && l.rank >= 1 && l.rank < 8) l.merit += 1;
@@ -691,28 +726,23 @@ class Game extends ChangeNotifier {
       f.power = f.power * (1 + rng.range(0, 6) / 1000);
       if (f.power > 120) f.power = 120;
     }
-    if (al.length > 2 && rng.chance(.4)) {
+    // 小競り合い。勢力は削り合うが、滅ぶのは史実の年表（history.dart）とプレイヤーの侵攻だけ。
+    if (al.length > 2 && rng.chance(.25)) {
       final a = rng.wpick(al, (f) => f.power);
       final d = rng.pick(al.where((f) => f != a).toList());
       if (rng.chance(clampD(a.power / (a.power + d.power), .15, .85))) {
-        a.power += d.power * .55;
-        if (d.power * .25 < 6 || rng.chance(.5)) {
-          d.alive = false;
-          d.power = 0;
-          log('【世】${a.name}家が${d.name}家を滅ぼした。');
-          _lordLost(d, a);
-        } else {
-          d.power *= .25;
-          log('【世】${a.name}家が${d.name}家を破った。');
-        }
+        final take = d.power * .12;
+        a.power += take;
+        d.power = d.power - take < 3 ? 3 : d.power - take;
+        if (rng.chance(.3)) log('【世】${a.name}家が${d.name}家の領地を切り取った。');
       } else {
-        a.power *= .9;
-        log('【世】${a.name}家が${d.name}家に攻め入るも、退けられた。');
+        a.power *= .95;
       }
     }
   }
 
-  void _lordLost(Faction d, Faction a) {
+  /// 主家 [d] が [a] に滅ぼされたときの、自分の身の振り方。
+  void lordLost(Faction d, Faction a) {
     if (l.lord != d.name || l.dead != null) return;
     if (l.rank >= 8) {
       l.rank = 0;

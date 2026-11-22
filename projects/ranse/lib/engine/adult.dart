@@ -13,9 +13,12 @@ import 'rng.dart';
 
 const _poor = ['farmer', 'fisher', 'beggar'];
 
-/// 故郷の主家。
-String homeLord(Game g) =>
-    g.rng.pick(kRegions.firstWhere((r) => r.n == g.l.region).f);
+/// 故郷の主家。史実で滅んでいれば、いま天下で最も強い家。
+String homeLord(Game g) {
+  final n = g.rng.pick(kRegions.firstWhere((r) => r.n == g.l.region).f);
+  if (g.fa[n]?.alive ?? false) return n;
+  return (g.alive..sort((a, b) => b.power.compareTo(a.power))).first.name;
+}
 
 void _heal(Life l, int n) => l.hp = l.hp + n > l.maxhp ? l.maxhp : l.hp + n;
 

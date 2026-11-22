@@ -473,6 +473,28 @@ void main() {
       );
     });
 
+    test('世の動きは史実の年表に沿う（主家を自分が継いでいなければ）', () {
+      var checked = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        if (g.isChild) continue;
+        final y = g.year;
+        bool alive(String n) => g.fa[n]!.alive;
+        bool ruled(String n) => g.l.lord == n && g.l.maxRank >= 8;
+        if (y > 1569 && !ruled('斎藤')) expect(alive('斎藤'), isFalse);
+        if (y > 1583 && !ruled('武田')) expect(alive('武田'), isFalse);
+        if (y > 1591 && !ruled('北条')) expect(alive('北条'), isFalse);
+        if (y > 1568 && y < 1600 && g.l.maxRank < 8) {
+          expect(alive('織田'), isTrue, reason: '$y');
+        }
+        checked++;
+      }
+      expect(checked, greaterThan(100));
+    });
+
     test('死に方は保存の往復で残る', () {
       for (var seed = 0; seed < 40; seed++) {
         final rng = Rng(seed);
@@ -484,8 +506,20 @@ void main() {
       }
     });
 
-    test('史実の出来事（桶狭間・本能寺・比叡山）は、その年にだけ起きる', () {
-      const years = {'桶狭間': 1560, '本能寺': 1582, '比叡山': 1571};
+    test('史実の岐路（桶狭間・本能寺・長篠・関ヶ原ほか）は、その年にだけ起きる', () {
+      const years = {
+        '桶狭間': 1560,
+        '本能寺': 1582,
+        '比叡山': 1571,
+        '川中島': 1561,
+        '姉川': 1570,
+        '三方ヶ原': 1572,
+        '長篠': 1575,
+        '山崎': 1582,
+        '賤ヶ岳': 1583,
+        '小田原評定': 1590,
+        '関ヶ原': 1600,
+      };
       for (var seed = 0; seed < 400; seed++) {
         final rng = Rng(seed);
         final g = Game(rng: rng);
