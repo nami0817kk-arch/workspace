@@ -116,6 +116,7 @@ String _facilityEffectLabel(
   FacilityType type,
   int level,
   int expectedAttendance,
+  int fanDemand,
 ) {
   const maxLevel = ClubInfrastructure.maxLevel;
   final hasNext = level < maxLevel;
@@ -136,8 +137,8 @@ String _facilityEffectLabel(
       final next =
           hasNext ? ClubInfrastructure.stadiumCapacity(level + 1) : cur;
       return Tr.pick(
-          'いま: $cur人入る(ふだんの入り$expectedAttendance人)${hasNext ? '\n次のLvで: $next人' : ''}',
-          "Now: holds $cur (usual crowd $expectedAttendance)${hasNext ? '\nNext level: $next' : ''}");
+          'いま: $cur人入る(ふだんの入り$expectedAttendance人・来たいファン$fanDemand人)${hasNext ? '\n次のLvで: $next人' : ''}',
+          "Now: holds $cur (usual crowd $expectedAttendance, fans wanting to come $fanDemand)${hasNext ? '\nNext level: $next' : ''}");
     case FacilityType.youthFacility:
       final cur = ScoutingEngine.maxProspectsFor(level);
       final next = hasNext ? ScoutingEngine.maxProspectsFor(level + 1) : cur;
@@ -286,6 +287,7 @@ class ClubScreen extends StatelessWidget {
                     type,
                     infra.facilityLevel(type),
                     gameState.expectedAttendance,
+                    gameState.fanDemand,
                   ),
                   canAfford:
                       save.budget >= gameState.facilityUpgradeCostFor(type),

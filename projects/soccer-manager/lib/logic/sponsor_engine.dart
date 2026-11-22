@@ -47,6 +47,17 @@ class SponsorEngine {
   static double stadiumFactor(int stadiumLevel) =>
       (1 + (stadiumLevel - 1) * 0.05).clamp(1.0, 1.35);
 
+  /// 昇格・降格の条項。部が [fromTier] から [toTier] へ変わったときに、
+  /// 結んでいるスポンサー・命名権の契約の額に掛ける倍率。1つ上がるごとに
+  /// 1.3倍、1つ下がるごとに0.7倍。
+  ///
+  /// 以前は契約の額が結んだときの部のまま、切れるまで変わらなかった。
+  /// 実際の契約は、露出が変わる昇格・降格で額が動く条項を持つのがふつう。
+  static double divisionChangeFactor(int fromTier, int toTier) =>
+      toTier < fromTier
+          ? pow(1.3, fromTier - toTier).toDouble()
+          : pow(0.7, toTier - fromTier).toDouble();
+
   /// クラブの規模に応じたスポンサー候補を3件生成する。
   /// 週間収入が高いほど契約期間(年単位)は短くなるトレードオフを持つ。
   ///
@@ -59,7 +70,8 @@ class SponsorEngine {
     int stadiumLevel = 1,
   }) {
     // 部の規模は incomeScale で掛ける(観客・グッズと同じ物差し)。契約の
-    // 額は結んだときの部で決まり、昇格しても切れるまではそのまま。
+    // 額は結んだときの部で決まり、昇格・降格では [divisionChangeFactor]
+    // の分だけ動く。
     final base = ((40 + overallRating.clamp(0, 99)) *
             incomeScale(tier) *
             reputationFactor(managerReputation) *

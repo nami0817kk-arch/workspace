@@ -1429,6 +1429,8 @@ extension GameStateSeason on GameState {
     final incomingTeams = <int, List<Team>>{
       for (int tier = 1; tier <= totalDivisionTiers; tier++) tier: <Team>[],
     };
+    // この季に降格したクラブ(全部の境界。降格の条項で年俸を下げる)。
+    final relegatedAll = <Team>[];
     var relevantPlayoffMatches = const <PromotionPlayoffMatch>[];
     // 昇格を決めたのに、上の部のライセンスが下りなかった部(無ければ null)。
     int? licenseDeniedTier;
@@ -1509,6 +1511,7 @@ extension GameStateSeason on GameState {
       outgoingIds[lowerTier]!.addAll(promoted.map((t) => t.id));
       incomingTeams[upperTier]!.addAll(promoted);
       incomingTeams[lowerTier]!.addAll(relegated);
+      relegatedAll.addAll(relegated);
 
       // 自クラブが出た試合(昇格プレーオフか入れ替え戦)があれば、それを見せる。
       // 無ければ、下の部として戦った側のプレーオフを見せる。
@@ -1590,9 +1593,9 @@ extension GameStateSeason on GameState {
           '降格が決まりました。来シーズンは$newTier部リーグでの再出発です。',
           'You are relegated. Next season starts again in tier $newTier.');
     } else if (newTier < playedTier) {
-      // 昇格ボーナス: 上のディビジョンで戦うための補強予算が理事会から
-      // 支給される(放映権料・スポンサー収入の増加分)。これがないと
-      // 戦力差を埋める資金がなく、昇格と降格を往復し続けることになる。
+      // 昇格ボーナス: 理事会からの補強予算。放映権の増加は、来季の最初の
+      // 入金(8月)から上の部の額で入るので、ここは夏の補強の手付けぶん
+      // だけ(BoardEngine.promotionBonusWeeks。2026-11-23 に6週→2週)。
       final promotionBonus =
           BoardEngine.promotionBonusFor(newTier, currentLeagueTheme);
       _book(LedgerCategory.prize, promotionBonus);
@@ -1621,6 +1624,15 @@ extension GameStateSeason on GameState {
         ? SeasonFinale.champion
         : (newTier < playedTier ? SeasonFinale.promoted : SeasonFinale.none);
     _save!.currentDivisionTier = newTier;
+    // 降格の条項(年俸を下げる。自クラブも CPU も)と、スポンサー・命名権の
+    // 昇格・降格の条項。ファンの需要も成績・昇格・降格で動かす。
+    _applyRelegationWageClause(relegatedAll);
+    _applySponsorDivisionClause(playedTier, newTier);
+    _advanceFanDemand(
+        playedTier: playedTier,
+        newTier: newTier,
+        finalRank: finalRank,
+        teamCount: league.teams.length);
     for (int tier = 1; tier <= totalDivisionTiers; tier++) {
       if (tier == newTier) {
         _save!.otherDivisionLeagues[tier - 1] = null;

@@ -6,7 +6,7 @@ import '../logic/media_deals_engine.dart';
 import '../state/game_state.dart';
 import '../logic/economy_scale.dart';
 
-/// スタジアムの命名権と、放映権の分配金の受け取り方。
+/// スタジアムの命名権と、放映権の配分(国のリーグの式。選ぶものは無い)。
 class MediaDealsCard extends StatelessWidget {
   const MediaDealsCard({super.key});
 
@@ -15,10 +15,11 @@ class MediaDealsCard extends StatelessWidget {
     final gs = context.watch<GameState>();
     final save = gs.save;
     if (save == null) return const SizedBox.shrink();
-    final tier = save.currentDivisionTier;
     final naming = save.namingDeal;
     final offers = save.pendingNamingOffers;
     final holiday = save.tvHolidaySeasons;
+    final shares = MediaDealsEngine.sharesFor(gs.currentLeagueTheme);
+    String pct(double v) => (v * 100).round().toString();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -56,37 +57,22 @@ class MediaDealsCard extends StatelessWidget {
                   ),
                 ),
             const Divider(height: 24),
-            Text(Tr.pick('放映権の分配金(基準 ${formatMoney(MediaDealsEngine.tvBase(tier, gs.currentLeagueTheme))}/季)',
-                'TV money (base ${formatMoney(MediaDealsEngine.tvBase(tier, gs.currentLeagueTheme))}/season)'),
+            Text(Tr.pick('放映権(リーグの配分)', 'TV money (league distribution)'),
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            SegmentedButton<TvDeal>(
-              segments: [
-                for (final d in TvDeal.values)
-                  ButtonSegment(value: d, label: Text(d.label)),
-              ],
-              selected: {save.tvDeal},
-              onSelectionChanged: gs.canChangeClubPolicy
-                  ? (s) => gs.setTvDeal(s.first)
-                  : null,
-            ),
-            const SizedBox(height: 4),
-            Text(save.tvDeal.summary, style: const TextStyle(fontSize: 12)),
-            if (!gs.canChangeClubPolicy)
-              Text(Tr.pick('受け取り方は開幕前にだけ変えられます',
-                  'You can only change this before the season starts'),
-                  style: const TextStyle(fontSize: 12)),
-            const SizedBox(height: 8),
+            Text(Tr.pick(
+                '均等割${pct(shares.equal)}%・順位${pct(shares.merit)}%・中継回数${pct(shares.facility)}%',
+                'Equal share ${pct(shares.equal)}%, merit ${pct(shares.merit)}%, facility fees ${pct(shares.facility)}%')),
+            Text(
+                Tr.pick(
+                    '季の間に4回で${formatMoney(gs.guaranteedBroadcastAnnual)}、順位と中継の分は季末。今の順位なら年${formatMoney(gs.projectedBroadcastTotal)}',
+                    '${formatMoney(gs.guaranteedBroadcastAnnual)} in four payments, the merit and facility part at season end. At the current position: ${formatMoney(gs.projectedBroadcastTotal)} a year'),
+                style: const TextStyle(fontSize: 12)),
             if (holiday > 0)
-              Text(Tr.pick('前払いの精算中: あと$holiday季は分配金が出ません',
-                  'Advance in repayment: no TV money for $holiday more season(s)'))
-            else
-              OutlinedButton(
-                onPressed: () => gs.takeTvAdvance(),
-                child: Text(Tr.pick(
-                    '前払いを受ける(${formatMoney(MediaDealsEngine.advanceAmount(tier))}・以後${MediaDealsEngine.advanceHolidaySeasons}季は分配金なし)',
-                    'Take an advance (${formatMoney(MediaDealsEngine.advanceAmount(tier))}; no TV money for ${MediaDealsEngine.advanceHolidaySeasons} seasons)')),
-              ),
+              Text(
+                  Tr.pick('前払いの精算中: あと$holiday季は季末の配分が出ません',
+                      'Advance in repayment: no season-end TV money for $holiday more season(s)'),
+                  style: const TextStyle(fontSize: 12)),
           ],
         ),
       ),

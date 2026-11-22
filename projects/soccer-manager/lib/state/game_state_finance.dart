@@ -109,6 +109,7 @@ extension GameStateFinance on GameState {
       BoardEngine.estimateTargetRank(_save!.league, newTeamId),
     );
     _save!.clubHistory.add(newTeamName);
+    _resetFanDemand(_save!);
     _notify();
     await _persist();
     return true;
@@ -751,6 +752,8 @@ extension GameStateFinance on GameState {
       theme: currentLeagueTheme,
     );
     save.clubHistory.add(team.name);
+    // ファンの需要も新しいクラブのもの。
+    _resetFanDemand(save);
     // クラブ価値は新しいクラブのものとして数え直す。
     save.clubValueHistory.clear();
     // クラブの歴代記録も新しいクラブのものとして数え直す。
@@ -912,6 +915,7 @@ extension GameStateFinance on GameState {
       theme: theme,
     );
     save.clubHistory.add(userTeam.name);
+    _resetFanDemand(save);
     save.clubValueHistory.clear();
     // クラブの歴代記録も新しいクラブのものとして数え直す(オーナーの経歴は残る)。
     _resetClubRecords();
@@ -999,7 +1003,10 @@ extension GameStateFinance on GameState {
         (f.homeTeamId == rivalId && f.awayTeamId == userId);
   }
 
-  /// 観客動員率(0.0-1.0)。監督への信頼度と現在の順位に連動する(強豪・高信頼ほど満員に近づく)。
+  /// 入場収入の係数(0.0-1.0)。監督への信頼度と現在の順位に連動する。
+  /// 収入の式(weeklyIncomeParts)の釣り合いはこの係数で合わせてある
+  /// (test/economy_scale_test.dart)。観客の人数は [expectedAttendance]
+  /// (ファンの需要×[userAttendanceRate])で数える。
   double get userAttendanceFactor {
     if (_save == null) return 0.0;
     final league = _save!.league;
@@ -1024,9 +1031,86 @@ extension GameStateFinance on GameState {
           _save!.infrastructure.facilityLevel(FacilityType.stadium),
         );
 
-  /// 通常開催時に見込まれる観客動員数(収容人数 x 動員率)。
+  /// スタジアムに来たいファンの数(需要、人)。季末に成績・昇格・降格で
+  /// 動く(FanDemandEngine)。
+  int get fanDemand {
+    final save = _save;
+    if (save == null) return 0;
+    if (save.fanDemand > 0) return save.fanDemand;
+    return FanDemandEngine.initial(
+        tier: save.currentDivisionTier,
+        reputation: save.managerReputation,
+        capacity: stadiumCapacity);
+  }
+
+  /// 需要を持たないセーブ(古いセーブ・新しいクラブ)に、部と規模から
+  /// 需要を作って持たせる。
+  void _ensureFanDemand(SaveGame save) {
+    if (save.fanDemand > 0) return;
+    save.fanDemand = FanDemandEngine.initial(
+        tier: save.currentDivisionTier,
+        reputation: save.managerReputation,
+        capacity: ClubInfrastructure.stadiumCapacity(
+            save.infrastructure.facilityLevel(FacilityType.stadium)));
+  }
+
+  /// 新しいクラブに移ったとき、そのクラブの需要を作り直す。
+  void _resetFanDemand(SaveGame save) {
+    save.fanDemand = 0;
+    _ensureFanDemand(save);
+  }
+
+  /// 季末に需要を動かす(成績・昇格・降格)。
+  void _advanceFanDemand(
+      {required int playedTier,
+      required int newTier,
+      required int finalRank,
+      required int teamCount}) {
+    final save = _save!;
+    save.fanDemand = FanDemandEngine.nextSeason(
+      demand: fanDemand,
+      playedTier: playedTier,
+      newTier: newTier,
+      finalRank: finalRank,
+      teamCount: teamCount,
+      reputation: save.managerReputation,
+    );
+  }
+
+  /// 動員率(需要のうち、実際に来る割合)。ふだんは9割ほど。順位で上下
+  /// 10%(年間シートが多いので大きくは動かない)、信頼度で上下5%、
+  /// 入場料・ファンの層の満足で変わる。
+  double get userAttendanceRate {
+    final save = _save;
+    if (save == null) return 0.0;
+    final league = save.league;
+    final rank = league.sortedStandings
+            .indexWhere((r) => r.teamId == save.userTeamId) +
+        1;
+    final rate = (0.92 +
+            FanDemandEngine.rankSwing(rank, league.teams.length) +
+            (save.confidence - 50) / 1000) *
+        save.ticketPricing.attendanceMultiplier *
+        fanAttendanceModifier;
+    return rate.clamp(0.3, 1.3);
+  }
+
+  /// 通常開催時に見込まれる観客動員数。需要×動員率と、収容人数の
+  /// 小さいほう(席を増やしても、来たい人より多くは入らない)。
   int get expectedAttendance =>
-      (stadiumCapacity * userAttendanceFactor).round();
+      min((fanDemand * userAttendanceRate).round(), stadiumCapacity);
+
+  /// 入場収入の式に入れるスタジアムの段(1〜)。席のうち、ファンの需要で
+  /// 埋まるぶんだけを数える。需要が収容人数以上なら今のLvのまま。
+  double get _filledStadiumLevel {
+    final level =
+        _save!.infrastructure.facilityLevel(FacilityType.stadium).toDouble();
+    final usable = min(stadiumCapacity, fanDemand);
+    final base = ClubInfrastructure.stadiumCapacity(1);
+    final step =
+        ClubInfrastructure.stadiumCapacity(2) - ClubInfrastructure.stadiumCapacity(1);
+    return min(level, max(1.0, 1 + (usable - base) / step));
+  }
 
   int weeklyIncomeFor(String teamId) {
     final p = weeklyIncomeParts(teamId);
@@ -1095,24 +1179,22 @@ extension GameStateFinance on GameState {
       if (isWage) {
         _book(LedgerCategory.staffWages, -monthlyStaffWageCost);
         _book(LedgerCategory.playerWages, -monthlyPlayerWageCost);
+        _book(LedgerCategory.operations, -monthlyRunningCost);
       } else {
         _book(LedgerCategory.broadcast, broadcastInstallmentOn(day));
       }
     }
   }
 
-  /// [day] の放映権の入金額(入金日でなければ0)。今いる部の年額の4分の1。
+  /// [day] の放映権の入金額(入金日でなければ0)。最下位でも受け取る年額
+  /// ([guaranteedBroadcastAnnual])の4分の1。順位と中継の上乗せは季末に入る。
   int broadcastInstallmentOn(DateTime day) {
     final i = MoneyCalendar.broadcastIndexOf(day);
     if (i == null) return 0;
     // 降格したクラブには、上の部との差の一部(パラシュート)が上乗せされる。
-    // 時代で放映権の額が変わる。
+    // 時代で放映権の額が変わる(guaranteedBroadcastAnnual に入っている)。
     return MoneyCalendar.broadcastInstallment(
-        (annualBroadcast(currentDivisionTier, currentLeagueTheme) *
-                    currentEra.tvFactor)
-                .round() +
-            parachuteAnnual,
-        i);
+        guaranteedBroadcastAnnual + parachuteAnnual, i);
   }
 
   /// 第[matchday]節が祝日なら、その祝日の名前。
@@ -1150,12 +1232,14 @@ extension GameStateFinance on GameState {
     if (save == null) return const [];
     final from = today;
     final horizon = DateTime(from.year + 1, from.month, from.day);
-    final wages = monthlyPlayerWageCost + monthlyStaffWageCost;
+    final wages =
+        monthlyPlayerWageCost + monthlyStaffWageCost + monthlyRunningCost;
     final out = <({DateTime date, String label, int amount})>[
       for (final d in MoneyCalendar.monthEndsBetween(from, horizon))
         (
           date: d,
-          label: Tr.pick('給与の支払い(選手・スタッフ)', 'Wages paid (players and staff)'),
+          label: Tr.pick('給与(選手・スタッフ)と運営費の支払い',
+              'Wages (players and staff) and running costs paid'),
           amount: -wages,
         ),
       for (final d in MoneyCalendar.broadcastDatesBetween(from, horizon))
@@ -1207,8 +1291,9 @@ extension GameStateFinance on GameState {
   /// 観客収入と放映権だけを持つ。
   ///
   /// 観客とグッズは今いる部の規模([incomeScale])を掛ける。スポンサーと
-  /// 命名権は、結んだときの部の規模で契約の額が決まっている(昇格しても
-  /// 契約が切れるまでは前の額のまま)ので、ここでは掛けない。
+  /// 命名権は、結んだときの部の規模で契約の額が決まっている(昇格・降格の
+  /// 条項で額は動く: SponsorEngine.divisionChangeFactor)ので、ここでは
+  /// 掛けない。
   ({int gate, int sponsor, int merchandise, int broadcast}) weeklyIncomeParts(
       String teamId) {
     if (_save == null) {
@@ -1231,9 +1316,9 @@ extension GameStateFinance on GameState {
       );
     }
 
-    final stadiumLevel = _save!.infrastructure.facilityLevel(
-      FacilityType.stadium,
-    );
+    // スタジアムの段は、ファンの需要で埋まる席のぶんだけ数える(来たい人
+    // より多い席は、建てても入場料を生まない)。
+    final stadiumLevel = _filledStadiumLevel;
     final commercialMultiplier = ClubInfrastructure.commercialRevenueMultiplier(
       _save!.infrastructure.facilityLevel(FacilityType.commercialFacility),
     );
@@ -1644,52 +1729,53 @@ extension GameStateFinance on GameState {
     return true;
   }
 
-  /// 放映権の受け取り方を変える。開幕前だけ。
-  Future<bool> setTvDeal(TvDeal deal) async {
-    if (_save == null || !canChangeClubPolicy) return false;
-    _save!.tvDeal = deal;
-    _notify();
-    await _persist();
-    return true;
-  }
+  /// 放映権の、最下位でも受け取る年額(季の間に4回に分けて入る)。
+  /// 国の配分式(MediaDealsEngine)の均等割と、順位・中継の最低の分。
+  int get guaranteedBroadcastAnnual => _save == null
+      ? 0
+      : MediaDealsEngine.guaranteedAnnual(
+          tier: currentDivisionTier,
+          teamCount: _save!.league.teams.length,
+          theme: currentLeagueTheme,
+          eraFactor: currentEra.tvFactor);
 
-  /// 放映権の前払いを受ける。以後の数季は分配金が出ない。
-  Future<bool> takeTvAdvance() async {
+  /// 今の順位で季を終えたときの、放映権の年額の見込み(4回の入金+季末の
+  /// 上乗せ。パラシュートは含めない)。
+  int get projectedBroadcastTotal {
     final save = _save;
-    if (save == null || save.tvHolidaySeasons > 0) return false;
-    final amount = MediaDealsEngine.advanceAmount(
-        save.currentDivisionTier, currentLeagueTheme);
-    _book(LedgerCategory.broadcast, amount);
-    save.tvHolidaySeasons = MediaDealsEngine.advanceHolidaySeasons;
-    _logNews(
-      Tr.pick(
-          '放映権の前払い${formatMoney(amount)}を受け取りました。あと${save.tvHolidaySeasons}季は分配金が出ません',
-          'Took a TV advance of ${formatMoney(amount)}. No TV money for ${save.tvHolidaySeasons} seasons'),
-      context: Tr.pick('放映権', 'TV rights'),
-    );
-    _notify();
-    await _persist();
-    return true;
+    if (save == null) return 0;
+    final rank = save.league.sortedStandings
+            .indexWhere((r) => r.teamId == save.userTeamId) +
+        1;
+    return MediaDealsEngine.seasonTotal(
+        tier: currentDivisionTier,
+        rank: rank <= 0 ? save.league.teams.length : rank,
+        teamCount: save.league.teams.length,
+        theme: currentLeagueTheme,
+        eraFactor: currentEra.tvFactor);
   }
 
-  /// シーズン末に放映権の分配金を受け取る(前払いの精算中は無い)。
+  /// シーズン末に、放映権の順位と中継の上乗せを受け取る(リーグの配分式)。
+  /// 2026-11-23 より前のセーブで前払いを受けていた場合は、その精算の間だけ
+  /// 上乗せが出ない。
   void _bookTvRights({required int finalRank, required int teamCount}) {
     final save = _save!;
     if (save.tvHolidaySeasons > 0) {
       save.tvHolidaySeasons -= 1;
       return;
     }
-    final pay = MediaDealsEngine.tvPayout(
-      deal: save.tvDeal,
+    final pay = MediaDealsEngine.seasonEndPayout(
       tier: save.currentDivisionTier,
       rank: finalRank,
       teamCount: teamCount,
       theme: currentLeagueTheme,
+      eraFactor: currentEra.tvFactor,
     );
+    if (pay <= 0) return;
     _book(LedgerCategory.broadcast, pay);
     _logNews(
-      Tr.pick('放映権の分配金${formatMoney(pay)}(${save.tvDeal.label})が入りました',
-          'TV money of ${formatMoney(pay)} (${save.tvDeal.label}) arrived'),
+      Tr.pick('放映権の順位と中継の配分${formatMoney(pay)}が入りました($finalRank位)',
+          'TV merit and facility money of ${formatMoney(pay)} arrived (finished $finalRank)'),
       context: Tr.pick('放映権', 'TV rights'),
     );
   }
@@ -1709,6 +1795,93 @@ extension GameStateFinance on GameState {
       );
     }
   }
+
+  /// 自クラブの選手の契約に付いている、降格したときの年俸の倍率
+  /// (RelegationClause。国で違う)。
+  double get relegationWageFactor =>
+      RelegationClause.wageFactor(currentLeagueTheme);
+
+  /// 降格したクラブ([teams]。自クラブも CPU も)の選手の年俸を、降格の
+  /// 条項で下げる。貸し出しで来ている選手は元のクラブとの契約なので除く。
+  void _applyRelegationWageClause(Iterable<Team> teams) {
+    final f = relegationWageFactor;
+    for (final t in teams) {
+      for (final p in t.players) {
+        if (p.isLoan) continue;
+        p.wage = max(minWeeklyWage, (p.wage * f).round());
+      }
+      if (t.id == _save!.userTeamId) {
+        _logNews(
+          Tr.pick(
+              '降格の条項で、選手の年俸が${((1 - f) * 100).round()}%下がりました',
+              'Relegation clauses cut player salaries by ${((1 - f) * 100).round()}%'),
+          context: Tr.pick('契約', 'Contracts'),
+        );
+      }
+    }
+  }
+
+  /// 昇格・降格の条項で、結んでいるスポンサー・命名権(と提示中の候補)の
+  /// 額を動かす(SponsorEngine.divisionChangeFactor)。
+  void _applySponsorDivisionClause(int fromTier, int toTier) {
+    if (fromTier == toTier) return;
+    final save = _save!;
+    final f = SponsorEngine.divisionChangeFactor(fromTier, toTier);
+    final deals = [
+      if (save.sponsorDeal != null) save.sponsorDeal!,
+      if (save.namingDeal != null) save.namingDeal!,
+      ...save.slotSponsors.values,
+      ...save.pendingSponsorOffers,
+      ...save.pendingNamingOffers,
+      ...save.slotSponsorOffers.values,
+    ];
+    if (deals.isEmpty) return;
+    for (final d in deals) {
+      d.weeklyIncome = max(1, (d.weeklyIncome * f).round());
+    }
+    _logNews(
+      toTier < fromTier
+          ? Tr.pick('昇格の条項で、スポンサーと命名権の額が${((f - 1) * 100).round()}%上がりました',
+              'Promotion clauses raise sponsorship and naming rights by ${((f - 1) * 100).round()}%')
+          : Tr.pick('降格の条項で、スポンサーと命名権の額が${((1 - f) * 100).round()}%下がりました',
+              'Relegation clauses cut sponsorship and naming rights by ${((1 - f) * 100).round()}%'),
+      context: Tr.pick('スポンサー', 'Sponsors'),
+    );
+  }
+
+  /// 1年の運営費(試合運営・遠征・事務・施設の維持)。部と施設のLvで決まる。
+  int get annualRunningCost {
+    final save = _save;
+    if (save == null) return 0;
+    return RunningCostEngine.annual(
+      tier: save.currentDivisionTier,
+      theme: currentLeagueTheme,
+      facilityLevels: [
+        for (final t in FacilityType.values) save.infrastructure.facilityLevel(t)
+      ],
+    );
+  }
+
+  /// 毎月末に払う運営費(1年の12分の1)。
+  int get monthlyRunningCost => (annualRunningCost / 12).round();
+
+  @visibleForTesting
+  void debugApplyRelegationWageClause(Iterable<Team> teams) =>
+      _applyRelegationWageClause(teams);
+  @visibleForTesting
+  void debugApplySponsorDivisionClause(int fromTier, int toTier) =>
+      _applySponsorDivisionClause(fromTier, toTier);
+  @visibleForTesting
+  void debugAdvanceFanDemand(
+          {required int playedTier,
+          required int newTier,
+          required int finalRank,
+          required int teamCount}) =>
+      _advanceFanDemand(
+          playedTier: playedTier,
+          newTier: newTier,
+          finalRank: finalRank,
+          teamCount: teamCount);
 
   /// 世界クラブ価値番付。自クラブは実際の価値、他クラブは見積もり。
   List<RankedClub> get worldClubRanking {
