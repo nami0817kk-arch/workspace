@@ -169,7 +169,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v19</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v20</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -472,13 +472,14 @@ function grow(){
  g.round++;g.wave=0;g.cd=120;g.spawnQ=[];g.done=false;g.trail={};
  var C=g.core;C.f=f;C.x=COREX;C.y=COREY;C.hx=C.hy=null;C.home=true;C.carrier=null;C.dropT=0;
  g.view=f;over=false;resetGo();setSpeed(0);buildTabs();
- var nl=landOf(f),pl=landOf(f-1),nj=jobsUnlocked(),add='';
- if(nl!=pl)add+=' 新しい土地「'+ENV[nl].n+'の層」が現れた！ '+ENV[nl].n+'の種が生まれる。';
- if(nj.length&&(g.round-2)<=NEWJOBS.length){var jk=nj[nj.length-1];add+=' 新しい職業「'+EN[jk].n+'」が来るようになった（'+JOBDESC[jk]+'）。';}
- add+=' '+nextDp();g.roundT0=g.t;g.armyStart=armyPower();sfx('grow');coreSay('grow',true);
+ var nl=landOf(f),pl=landOf(f-1),nj=jobsUnlocked(),add='',items=[];
+ if(nl!=pl){add+=' 新しい土地「'+ENV[nl].n+'の層」が現れた！ '+ENV[nl].n+'の種が生まれる。';items.push('新しい土地「'+ENV[nl].n+'の層」。'+ENV[nl].n+'の種が生まれる');}
+ if(nj.length&&(g.round-2)<=NEWJOBS.length){var jk=nj[nj.length-1];add+=' 新しい職業「'+EN[jk].n+'」が来るようになった（'+JOBDESC[jk]+'）。';items.push('新しい職業「'+EN[jk].n+'」：'+JOBDESC[jk]);}
+ var nd=nextDp();add+=' '+nd;items.unshift(nd.replace(/。$/,''));items.push('次の冒険者は前より強い（体力×'+emul().hp.toFixed(1)+'）');g.roundT0=g.t;g.armyStart=armyPower();sfx('grow');coreSay('grow',true);
  appPrep();
- say(F+'階ができた！ コアは新しい最上階へ移った。'+(F-1)+'階の天井も掘れるようになった。次の冒険者は前より強い(体力×'+emul().hp.toFixed(1)+')。'+add);
+ say(F+'階ができた！ 準備の時間です（時間は止まっています）。');
  ui();
+ var el=document.getElementById('title');el.innerHTML='<div class="tbox"><h2>'+F+'階ができた！<br><small>'+g.round+'周目</small></h2><p class="sub">コアは新しい最上階へ。掘った道も魔物もそのまま。'+(F-1)+'階の天井も掘れる。</p><ul class="sc">'+items.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul><button class="btn go" id="tgo">準備を始める</button></div>';el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
 }
 
 // ---------- 地形 ----------
@@ -1607,7 +1608,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v19 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v20 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
@@ -2099,6 +2100,7 @@ var NBUF=null;
 function noise(dur,vol,when,lp){var a=SND.ac;if(!a)return;if(!NBUF){var n=a.sampleRate,d;NBUF=a.createBuffer(1,n,n);d=NBUF.getChannelData(0);for(var i=0;i<n;i++)d[i]=Math.random()*2-1;}
  var t=a.currentTime+(when||0),s2=a.createBufferSource(),fl=a.createBiquadFilter(),gn=a.createGain();s2.buffer=NBUF;fl.type='lowpass';fl.frequency.value=lp||1200;gn.gain.setValueAtTime(vol||0.2,t);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);s2.connect(fl);fl.connect(gn);gn.connect(SND.master);s2.start(t);s2.stop(t+dur+0.02);}
 function sfx(k){
+ if(k=='alarm'||k=='yu')haptic('medium');else if(k=='promote'||k=='yukill')haptic('light');
  if(!SND.on||!SND.ac||SND.ac.state!='running'||document.hidden)return;
  var now=performance.now(),gap={hit:90,mdie:160,spawn:70,dig:60,ekill:80}[k]||0;if(gap&&now-(SND.last[k]||0)<gap)return;SND.last[k]=now;
  switch(k){
@@ -2124,7 +2126,7 @@ setInterval(function(){
  var a=SND.ac;if(!SND.on||!a||a.state!='running'||document.hidden||!g)return;
  var carry=!!(g.core&&g.core.carrier),tense=carry||!!(g.en&&g.en.length),beat=carry?0.18:tense?0.3:0.5;if(BG.next<a.currentTime)BG.next=a.currentTime+0.05;
  while(BG.next<a.currentTime+0.6){var w=BG.next-a.currentTime,i=BG.i++,n=MEL[i%16];
-  tone((carry?294:220)*Math.pow(2,n/12),beat*0.9,carry?'square':'triangle',carry?0.018:0.022,w);
+  tone((carry?294:({moss:220,water:196,rock:233,ice:262,lava:175}[landOf(g.view)]||220))*Math.pow(2,n/12),beat*0.9,carry?'square':'triangle',carry?0.018:0.022,w);
   if(i%4==0)tone((tense?55:110)*(i%16<8?1:0.89),beat*1.8,'sine',0.045,w);
   if(tense&&i%2==1)noise(0.03,0.035,w,4000);
   BG.next+=beat;}
