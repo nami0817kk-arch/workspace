@@ -173,7 +173,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v27</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v28</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1619,7 +1619,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v27 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v28 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2114,8 +2114,8 @@ var CLINES={
 var cLast=0;
 function coreSay(k,force){var now=performance.now();if(!force&&now-cLast<6000)return;var a=CLINES[k];if(!a||!g)return;var s2=a[rnd(a.length)];if(a.length>1&&s2==g.cline)s2=a[(a.indexOf(s2)+1)%a.length];g.cline=s2;g.clineRT=now;cLast=now;}
 // 音（その場で合成。最初に触れた時に鳴らせるようになる）
-var SND={on:true,ac:null,last:{}};
-try{SND.on=localStorage.getItem('tou-snd')!=='0';}catch(_){}
+var SND={on:true,bgm:true,ac:null,last:{}};
+try{var sv=localStorage.getItem('tou-snd');SND.on=sv!=='0';SND.bgm=sv!=='2'&&sv!=='0';}catch(_){}
 function sndInit(){if(SND.ac||!SND.on)return;try{var A=window.AudioContext||window.webkitAudioContext;if(!A)return;SND.ac=new A();SND.master=SND.ac.createGain();SND.master.gain.value=0.55;SND.master.connect(SND.ac.destination);}catch(_){SND.ac=null;}}
 function tone(fq,dur,type,vol,when,slide){var a=SND.ac;if(!a)return;var t=a.currentTime+(when||0),o=a.createOscillator(),gn=a.createGain();o.type=type||'square';o.frequency.setValueAtTime(fq,t);if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+dur);gn.gain.setValueAtTime(0.0001,t);gn.gain.exponentialRampToValueAtTime(vol||0.1,t+0.01);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(gn);gn.connect(SND.master);o.start(t);o.stop(t+dur+0.03);}
 var NBUF=null;
@@ -2145,7 +2145,7 @@ function sfx(k){
 // 曲: 準備の間はゆっくり、冒険者がいる間は速く低く
 var BG={next:0,i:0},MEL=[0,3,5,7,10,7,5,3,0,3,7,10,12,10,7,5];
 setInterval(function(){
- var a=SND.ac;if(!SND.on||!a||a.state!='running'||document.hidden||!g)return;
+ var a=SND.ac;if(!SND.on||!SND.bgm||!a||a.state!='running'||document.hidden||!g)return;
  var carry=!!(g.core&&g.core.carrier),tense=carry||!!(g.en&&g.en.length),beat=carry?0.18:tense?0.3:0.5;if(BG.next<a.currentTime)BG.next=a.currentTime+0.05;
  while(BG.next<a.currentTime+0.6){var w=BG.next-a.currentTime,i=BG.i++,n=MEL[i%16];
   tone((carry?294:({moss:220,water:196,rock:233,ice:262,lava:175}[landOf(g.view)]||220))*Math.pow(2,n/12),beat*0.9,carry?'square':'triangle',carry?0.018:0.022,w);
@@ -2153,9 +2153,11 @@ setInterval(function(){
   if(tense&&i%2==1)noise(0.03,0.035,w,4000);
   BG.next+=beat;}
 },200);
-function sndLabel(){document.getElementById('bsnd').textContent=SND.on?'音 ON':'音 OFF';}
+function sndLabel(){document.getElementById('bsnd').textContent=!SND.on?'音 OFF':SND.bgm?'音 ON':'曲なし';}
 document.addEventListener('pointerdown',function(){sndInit();if(SND.ac&&SND.on&&SND.ac.state=='suspended')SND.ac.resume();},true);
-document.getElementById('bsnd').onclick=function(){SND.on=!SND.on;try{localStorage.setItem('tou-snd',SND.on?'1':'0');}catch(_){}
+document.getElementById('bsnd').onclick=function(){
+ if(SND.on&&SND.bgm){SND.bgm=false;}else if(SND.on){SND.on=false;}else{SND.on=true;SND.bgm=true;}
+ try{localStorage.setItem('tou-snd',!SND.on?'0':SND.bgm?'1':'2');}catch(_){}
  if(SND.on){sndInit();if(SND.ac)SND.ac.resume();}else if(SND.ac)SND.ac.suspend();sndLabel();};
 sndLabel();
 document.addEventListener('visibilitychange',function(){if(!SND.ac)return;if(document.hidden)SND.ac.suspend();else if(SND.on)SND.ac.resume();});
