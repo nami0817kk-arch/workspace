@@ -3,6 +3,7 @@ import 'dart:math';
 
 import '../game/formulas.dart';
 
+import 'acquaintance.dart';
 import 'agent.dart';
 import 'attributes.dart';
 import 'club.dart';
@@ -223,6 +224,7 @@ class CareerState {
     this.autoRestBelow = defaultAutoRestBelow,
     this.focus = const [],
     this.signatureAim,
+    this.acquaintances = const [],
     this.yellowCards = 0,
     this.suspension = 0,
     this.momentAttempts = const {},
@@ -505,6 +507,11 @@ class CareerState {
   /// 狙えるのは「届いたときに、どれになるか」と「その速さ」だけ——
   /// ここを崩すと、積み上げずに技だけ買えることになる。
   Signature? signatureAim;
+
+  /// 関わった人（2026-11-22）。**続きを持つのはこの人たちだけ**。
+  /// 名簿（`Squad.of`）に渡すと、移籍した先・引退した後が名簿にも出る。
+  /// 渡し忘れると「△△へ移籍」と書いたのに△△の名簿に居ない、になる。
+  List<Acquaintance> acquaintances;
 
   /// そのカテゴリの中で、方向に入っている詳細。
   List<Detail> focusIn(AttributeKey key) => [
@@ -952,6 +959,7 @@ class CareerState {
     'autoRestBelow': autoRestBelow,
     'focus': focus.map((d) => d.name).toList(),
     'signatureAim': signatureAim?.name,
+    'acquaintances': [for (final a in acquaintances) a.toJson()],
     'yellowCards': yellowCards,
     'suspension': suspension,
     'tampered': tampered,
@@ -1111,6 +1119,12 @@ class CareerState {
       signatureAim: Signature.values
           .where((s) => s.name == json['signatureAim'])
           .firstOrNull,
+      // 知り合いを知らない保存データは「まだ誰とも知り合っていない」で読む。
+      // 1人が壊れていても、その人だけ捨ててキャリアは壊さない。
+      acquaintances: [
+        for (final raw in (json['acquaintances'] as List? ?? const []))
+          ?Acquaintance.fromJson(raw),
+      ],
       yellowCards: json['yellowCards'] as int? ?? 0,
       suspension: json['suspension'] as int? ?? 0,
       seasonStart: json['seasonStart'] is Map<String, dynamic>

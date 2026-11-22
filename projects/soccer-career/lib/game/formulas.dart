@@ -1493,4 +1493,29 @@ class Formulas {
   /// 目標を達成したときの年俸倍率。達成できなかったときの倍率。
   static const double objectiveMetSalaryFactor = 1.15;
   static const double objectiveMissedSalaryFactor = 0.9;
+
+  // ---------------------------------------------------------------
+  // 関わった人の続き（`Acquaintances` / 2026-11-22）
+  // ---------------------------------------------------------------
+
+  /// 覚えておく人数。超えたら引退した人から、古い順に忘れる。
+  /// 1季に最大3人覚えるので、19季で57人——全員は持たない。
+  static const int acquaintanceKeep = 30;
+
+  /// 1季に記事にする続きの数。**全部書くとどれも記事に見えなくなる**
+  /// （見出しの `sameKindGap` と同じ理屈）。
+  static const int acquaintanceNewsPerSeason = 3;
+
+  /// 引退を考え始める歳と、必ず引退する歳（自分と同じ線）。
+  static const int acquaintanceRetireFrom = 33;
+  static const int acquaintanceRetireAt = 37;
+
+  /// クラブの強さをこれだけ上回ると、上のクラブへ動き出す。
+  static const int acquaintanceMoveUpGap = 5;
+
+  /// これだけ下回ると、下のクラブへ出される。
+  static const int acquaintanceMoveDownGap = 12;
+
+  /// 得点王レースの相手を覚えるのは、自分がこれだけ点を取った季だけ。
+  static const int acquaintanceScorerGoals = 5;
 }

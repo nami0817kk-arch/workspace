@@ -44,6 +44,7 @@ void main() {
       '外すと失点',
       '通っても失点',
       '何を守るか',
+      '関わった人',
     ]) {
       expect(text, contains(name), reason: name);
     }

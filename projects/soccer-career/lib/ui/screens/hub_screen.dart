@@ -32,6 +32,7 @@ import '../../models/training.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
+import '../acquaintance_card.dart';
 import '../budget_lines.dart';
 import '../fixture_banner.dart';
 import '../stat_tile.dart';
@@ -2556,7 +2557,11 @@ class _ClubLifeCard extends StatelessWidget {
                     // 判定と同じ数え方（`Squad.aheadOf`）をそのまま出す。
                     Builder(
                       builder: (context) {
-                        final squad = Squad.of(state.club, year: state.year);
+                        final squad = Squad.of(
+                          state.club,
+                          year: state.year,
+                          known: state.acquaintances,
+                        );
                         final ahead = squad.aheadOf(
                           state.player.position,
                           state.player.overall,
@@ -5075,6 +5080,12 @@ class _CareerTab extends StatelessWidget {
             const SizedBox(height: 16),
             if (state.news.isNotEmpty) ...[
               _NewsCard(news: state.news, title: tr('これまでの話題', 'The story so far'), limit: 12),
+              const SizedBox(height: 16),
+            ],
+            // 関わった人のいま（2026-11-22）。見出しは毎季2〜3本しか
+            // 書かないので、全員の続きはここで見る。
+            if (state.acquaintances.isNotEmpty) ...[
+              AcquaintanceCard(state: state),
               const SizedBox(height: 16),
             ],
             if (state.history.length >= 2) ...[

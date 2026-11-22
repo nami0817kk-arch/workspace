@@ -131,6 +131,7 @@ class Competitions {
           state.club,
           country,
           year: state.year,
+          known: state.acquaintances,
         );
         // 自分の分が入らないなら登録外。
         if (used >= limit) return SquadStatus.outOfSquad;
@@ -143,7 +144,11 @@ class Competitions {
     // 当たってはいたが、**落ちた理由が「強さの差」という
     // 誰も見たことの無い数字だけ**で、誰に押し出されたのかが分からない。
     // いまは「同じ枠にあなたより上が何人居るか」で見る。
-    final squad = Squad.of(state.club, year: state.year);
+    final squad = Squad.of(
+      state.club,
+      year: state.year,
+      known: state.acquaintances,
+    );
     final ahead = squad.aheadOf(state.player.position, state.player.overall);
     if (ahead >= Squad.quotaFor(state.player.position.family)) {
       return SquadStatus.outOfSquad;

@@ -1,4 +1,5 @@
 import '../l10n/lang.dart';
+import '../models/acquaintance.dart';
 import '../models/club.dart';
 import 'squads.dart';
 import '../models/country.dart';
@@ -155,10 +156,22 @@ class Eligibility {
   /// **「枠の空いているクラブを探す」が成立しなかった。**
   /// いまは名簿（`Squad`）を数える。名簿は保存しないので
   /// 保存データは1バイトも増えない。
-  static int usedSlots(Club club, Country country, {required int year}) {
+  ///
+  /// 知り合い（[known]）が移ってきた・出て行ったクラブは、その人の
+  /// 国籍で数える（2026-11-22）。
+  static int usedSlots(
+    Club club,
+    Country country, {
+    required int year,
+    List<Acquaintance> known = const [],
+  }) {
     final limit = country.foreignRule.squadLimit;
     if (limit == null) return 0;
-    return Squad.of(club, year: year).foreignCount.clamp(0, limit);
+    return Squad.of(
+      club,
+      year: year,
+      known: known,
+    ).foreignCount.clamp(0, limit);
   }
 
   /// 加入できるかをまとめて判定する。
@@ -171,6 +184,7 @@ class Eligibility {
     required int marketValue,
     required bool continentalExperience,
     required int year,
+    List<Acquaintance> known = const [],
   }) {
     final country = World.byId(club.countryId);
     final foreign = isForeignIn(nationality, country);
@@ -185,7 +199,9 @@ class Eligibility {
         marketValue: marketValue,
         continentalExperience: continentalExperience,
       ),
-      slotUsed: foreign ? usedSlots(club, country, year: year) : 0,
+      slotUsed: foreign
+          ? usedSlots(club, country, year: year, known: known)
+          : 0,
       slotLimit: foreign ? country.foreignRule.squadLimit : null,
     );
   }

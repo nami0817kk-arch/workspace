@@ -11,7 +11,10 @@ enum NewsKind {
   transfer(Say('移籍', 'Transfer')),
   club(Say('クラブ', 'Club')),
   national(Say('代表', 'International')),
-  life(Say('ピッチ外', 'Off the pitch'));
+  life(Say('ピッチ外', 'Off the pitch')),
+
+  /// 関わった人の続き（移籍・引退・加入）。2026-11-22。
+  people(Say('知り合い', 'People you know'));
 
   const NewsKind(Say label) : _label = label;
 

@@ -1,6 +1,7 @@
 import '../l10n/lang.dart';
 import 'dart:math';
 
+import '../models/acquaintance.dart';
 import '../models/attributes.dart';
 import '../models/club.dart';
 import 'world.dart';
@@ -17,6 +18,8 @@ class SquadPlayer {
     required this.age,
     required this.overall,
     required this.countryId,
+    this.seat = '',
+    this.born = 0,
   });
 
   final String name;
@@ -28,6 +31,13 @@ class SquadPlayer {
 
   /// 国籍。外国人枠の判定に要る。
   final String countryId;
+
+  /// 名簿の席（`クラブID#枠#世代`）。知り合い（`Acquaintance.seat`）と
+  /// 突き合わせるための印。名前では見分けない。
+  final String seat;
+
+  /// 生まれ年。
+  final int born;
 
   /// 同じ枠を争う相手か。**ファミリーで見る**——SB と CB は同じ局面を引き、
   /// 先発の序列でも同じ列に並ぶ（`Attributes` の重みが違うだけ）。
@@ -86,11 +96,31 @@ class Squad {
   ///
   /// **年で引き直す**ので、歳を取った選手は抜けて若い選手が入る。
   /// 保存しないぶん、続きは持たない——同じ年なら必ず同じ顔ぶれになる。
-  static Squad of(Club club, {required int year}) {
-    final key = '${club.id}|$year';
+  ///
+  /// **知り合い（[known]）だけは続きを持つ**（2026-11-22）。
+  /// この席から出て行った人（移籍・引退）は別の人に入れ替わり、
+  /// 外から来た人は同じ枠で力の一番近い人と入れ替わる。
+  /// 渡し忘れると「△△へ移籍」と書いたのに△△の名簿に居ない、になる。
+  static Squad of(
+    Club club, {
+    required int year,
+    List<Acquaintance> known = const [],
+  }) {
+    final here = [
+      for (final k in known)
+        if (k.touches(club.id)) k,
+    ];
+    // 知り合いの今が変われば名簿も変わるので、鍵に入れる。
+    final sig = here
+        .map((k) => '${k.seat}@${k.clubId}:${k.overall}:${k.retiredYear ?? 0}')
+        .join(',');
+    final key = '${club.id}|$year|$sig';
     final hit = _cache[key];
     if (hit != null && hit.club.strength == club.strength) return hit;
-    final built = Squad._(club, _build(club, year));
+    final built = Squad._(
+      club,
+      _withKnown(club, year, _build(club, year), here),
+    );
     // 引き直しは重いので覚えておく。溜まりすぎたら捨てる
     // （1キャリア19季 × 20クラブ × 11国で、放っておくと数千件になる）。
     if (_cache.length > 600) _cache.clear();
@@ -140,6 +170,36 @@ class Squad {
     // **クラブは抱えている全員を登録できない**——枠ごとに1つ少なくする。
     final held = _shape.where((p) => p.family == family).length;
     return held <= 2 ? held : held - 1;
+  }
+
+  /// 同じ枠で、その総合力に一番近い相手。**実際に毎週競るのはこの人。**
+  ///
+  /// 一番強い人ではない——序列の上と下に並ぶ人と争う。
+  /// 同じ近さなら上の人を取る（超える相手のほうが目標になる）。
+  SquadPlayer? nearestRival(Position position, int overall) {
+    final list = rivalsFor(position);
+    if (list.isEmpty) return null;
+    list.sort((a, b) {
+      final d = (a.overall - overall).abs() - (b.overall - overall).abs();
+      return d != 0 ? d : b.overall - a.overall;
+    });
+    return list.first;
+  }
+
+  /// 一緒に点を作る相手。前線なら中盤、中盤なら前線、
+  /// 守備なら中盤、GK なら守備の、一番強い人。
+  SquadPlayer? partnerFor(Position position) {
+    final family = switch (position.family) {
+      ScenarioFamily.forward => ScenarioFamily.midfield,
+      ScenarioFamily.midfield => ScenarioFamily.forward,
+      ScenarioFamily.defence => ScenarioFamily.midfield,
+      ScenarioFamily.goalkeeper => ScenarioFamily.defence,
+    };
+    final list = [
+      for (final p in players)
+        if (p.position.family == family) p,
+    ]..sort((a, b) => b.overall.compareTo(a.overall));
+    return list.isEmpty ? null : list.first;
   }
 
   /// 同じ枠で一番強い相手。先発を争うのはこの人。
@@ -248,11 +308,95 @@ class Squad {
           countryId: i < foreigners && others.isNotEmpty
               ? others[(seed + i * 7 + generation) % others.length]
               : club.countryId,
+          seat: '${club.id}#$i#$generation',
+          born: born,
         ),
       );
     }
     return players;
   }
+
+  /// 知り合いを名簿に反映する。
+  ///
+  /// 1. この席の人が知り合いなら、**今の数字で**座らせる。出て行った
+  ///    （移籍・引退した）なら、同じ力の別の人に入れ替える——
+  ///    入れ替えないと、同じ人が2つのクラブに居ることになる。
+  /// 2. 外から来た知り合いは、同じ枠で力の一番近い人と入れ替える。
+  ///    **枠の人数は変えない**（登録の定員と名簿の形がずれないように）。
+  static List<SquadPlayer> _withKnown(
+    Club club,
+    int year,
+    List<SquadPlayer> base,
+    List<Acquaintance> here,
+  ) {
+    if (here.isEmpty) return base;
+    final out = [...base];
+    final staying = {
+      for (final k in here)
+        if (!k.retired && k.clubId == club.id) k.seat: k,
+    };
+    final bySeat = {for (final k in here) k.seat: k};
+    for (var i = 0; i < out.length; i++) {
+      final p = out[i];
+      if (!bySeat.containsKey(p.seat)) continue;
+      // 出て行った人の席に座った人（`席~`）が、また知り合いに
+      // なっていることがある。残っている人に当たるまで辿る。
+      var seat = p.seat;
+      while (bySeat.containsKey(seat) && !staying.containsKey(seat)) {
+        seat = '$seat~';
+      }
+      final k = staying[seat];
+      if (k != null) {
+        out[i] = _fromKnown(k, year);
+        continue;
+      }
+      var name = _nameFor(_hash(seat) ^ 104729);
+      for (var r = 1; out.any((q) => q.name == name); r++) {
+        name = _nameFor(_hash(seat) + r * 7919);
+      }
+      out[i] = SquadPlayer(
+        name: name,
+        position: p.position,
+        age: p.age,
+        overall: p.overall,
+        countryId: p.countryId,
+        seat: seat,
+        born: p.born,
+      );
+    }
+    for (final k in staying.values) {
+      if (out.any((p) => p.seat == k.seat)) continue;
+      final slots = [
+        for (var i = 0; i < out.length; i++)
+          if (out[i].position.family == k.position.family &&
+              !staying.containsKey(out[i].seat))
+            i,
+      ];
+      if (slots.isEmpty) continue;
+      slots.sort(
+        (a, b) => (out[a].overall - k.overall).abs().compareTo(
+          (out[b].overall - k.overall).abs(),
+        ),
+      );
+      out[slots.first] = _fromKnown(k, year);
+    }
+    return out;
+  }
+
+  /// 文字列の和。**`String.hashCode` は実行ごとに変わる**ので使わない
+  /// （クラブの見た目と同じ理屈）。
+  static int _hash(String s) =>
+      s.codeUnits.fold<int>(11, (a, b) => (a * 31 + b) & 0x3fffffff);
+
+  static SquadPlayer _fromKnown(Acquaintance k, int year) => SquadPlayer(
+    name: k.name,
+    position: k.position,
+    age: k.ageIn(year),
+    overall: k.overall,
+    countryId: k.countryId,
+    seat: k.seat,
+    born: k.born,
+  );
 
   /// 生まれ年を数えるための基準の年。この値自体に意味は無い——
   /// ずらしても、全クラブが同じだけずれる。

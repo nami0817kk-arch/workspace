@@ -881,6 +881,10 @@ final List<_GuideSection> _sections = [
         '気持ち・監督との関係・ロッカールームの空気・お金に残る。', 'Every few matches something happens off the pitch. You choose, and what you chose stays in your morale, your standing with the manager, the dressing room and your money.'),
     tr('監督・競争相手・相方・メンター・同期・代理人は、名前を持った他人として'
         '出来事に出てくる。誰が居るかで、起きることが変わる。', 'The manager, your rival, your partner, your mentor, your intake and your agent appear as people with names. Who is around changes what happens.'),
+    tr('競争相手・相方・得点王を争った相手は、関わった人として覚えておく。'
+        '別れたあとも続きがあり、伸びて上のクラブへ移ったり、早くに消えたり、'
+        'いつか自分のクラブに来て、また先発を争ったりする。'
+        '今どこに居るかは記録タブで見られる。', 'Your rivals, partners and scoring rivals are remembered as people you crossed paths with. Their story carries on after you part: they grow and move up, fade early, or one day join your club and fight you for a place again. The Record tab shows where they are now.'),
     tr('練習の中の出来事では、能力が伸びたり、個人技を閃いたりする。'
         'ただしポテンシャルを超えては伸びない。上限は上限のまま。', 'Events during training can raise an attribute or spark a trick. They never take you past your potential. The ceiling stays the ceiling.'),
     tr('どの選択肢も、1回でキャリアが決まる大きさにはしていない。'
