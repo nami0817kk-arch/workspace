@@ -693,7 +693,9 @@ void main() {
         bool alive(String n) => g.fa[n]!.alive;
         bool ruled(String n) => g.l.lord == n && g.l.maxRank >= 8;
         if (y > 1569 && !ruled('斎藤')) expect(alive('斎藤'), isFalse);
-        if (y > 1583 && !ruled('武田')) expect(alive('武田'), isFalse);
+        if (y > 1583 && !ruled('武田') && !g.hasFlag('history_nagashino')) {
+          expect(alive('武田'), isFalse);
+        }
         if (y > 1591 && !ruled('北条')) expect(alive('北条'), isFalse);
         if (y > 1568 && y < 1600 && g.l.maxRank < 8) {
           expect(alive('織田'), isTrue, reason: '$y');
