@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'game/bridge.dart';
@@ -25,6 +26,9 @@ import 'monetization/purchase_service.dart';
 
 /// 同梱したゲームの HTML の場所。テストからも参照する。
 const gameAsset = 'assets/game/index.html';
+
+/// WebView の中で開かず、外のブラウザに渡すリンクか（http/https。同梱の HTML は file: なので当たらない）。
+bool isExternalLink(String url) => url.startsWith('https://') || url.startsWith('http://');
 
 /// 裏に回る時にゲームへ送る JS（止めて保存。古いゲームなら保存だけ）。
 const pauseJs = 'window.__pause ? window.__pause() : (window.__saveNow && window.__saveNow())';
@@ -109,7 +113,17 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       ..setBackgroundColor(const Color(0xFFEFECE4))
       ..addJavaScriptChannel('TouStore', onMessageReceived: (msg) => _store(msg.message))
       ..addJavaScriptChannel('TouApp', onMessageReceived: (msg) => unawaited(_bridge.handle(msg.message)))
-      ..setNavigationDelegate(NavigationDelegate(onPageFinished: (_) => _boot()))
+      ..setNavigationDelegate(NavigationDelegate(
+        onPageFinished: (_) => _boot(),
+        // プライバシーポリシーなどのリンクは、ゲームの画面を離れずに外のブラウザで開く
+        onNavigationRequest: (req) {
+          if (isExternalLink(req.url)) {
+            unawaited(launchUrl(Uri.parse(req.url), mode: LaunchMode.externalApplication));
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ))
       ..loadFlutterAsset(gameAsset);
   }
 
