@@ -367,10 +367,15 @@ class GameState extends ChangeNotifier {
     return null;
   }
 
-  /// 直近のplayNextMatchdayでローン期間満了により契約元クラブへ復帰した選手名、
-  /// または直近のstartNextSeasonで契約(年単位)満了により退団した選手名
+  /// 直近のstartNextSeasonで契約(年単位)満了により退団した選手名
   /// （1回表示したら呼び出し側でクリアする想定）。
   List<String> lastContractExpirations = [];
+
+  /// 借りていた選手のうち、ローン期間満了で貸し元へ戻った選手名
+  /// （1回表示したら呼び出し側でクリアする想定）。以前は
+  /// [lastContractExpirations]に混ぜていたため、季の切り替えで
+  /// 「契約満了で退団」と出ていた(2026-11-23)。
+  List<String> lastLoanEndings = [];
 
   /// 直近のstartNextSeasonで契約の最終年に入った(事前警告)選手名
   /// (1回表示したら呼び出し側でクリアする想定)。
@@ -721,6 +726,7 @@ class GameState extends ChangeNotifier {
       _refreshScoutCandidates();
       // 戻す前の節の出来事を持ち越すと、戻した後にそれを知らせてしまう。
       lastContractExpirations = [];
+      lastLoanEndings = [];
       lastRetirements = [];
       lastLoanReturns = [];
       lastYouthDepartures = [];
@@ -1319,6 +1325,7 @@ class GameState extends ChangeNotifier {
       scoutCandidates = [];
     }
     lastContractExpirations = [];
+    lastLoanEndings = [];
     lastRetirements = [];
     _notify();
   }
@@ -1525,6 +1532,7 @@ class GameState extends ChangeNotifier {
     // 第1季の前の夏(2026年)はワールドカップ。出た選手は遅れて合流する。
     _startSummerTournament();
     lastContractExpirations = [];
+    lastLoanEndings = [];
     isBusy = false;
     _notify();
     await _persistNow();
@@ -1552,6 +1560,7 @@ class GameState extends ChangeNotifier {
     transferMarket = [];
     scoutCandidates = [];
     lastContractExpirations = [];
+    lastLoanEndings = [];
     _notify();
     await _persistNow();
   }

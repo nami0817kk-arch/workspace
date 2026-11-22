@@ -469,6 +469,12 @@ class SaveGame {
   /// その季で最初に節を消化する日に1回行い、その日を起点にする。
   DateTime? lastWeeklyTickDate;
 
+  /// オーナーの本業の収入(月ごと)と、選手の誕生日を済ませた日。
+  /// 季の途中で別の国のクラブを買い直すと今日がその季の7月1日に戻るので、
+  /// 戻した期間をもう一度進めるときに二重に入れないための印
+  /// (2026-11-23)。旧セーブは null(今日までは済んだものとして数える)。
+  DateTime? personalDatesThrough;
+
   /// 持っているほかのクラブ(クラブ id → 買った値段)。
   Map<String, int> groupClubs;
 
@@ -852,6 +858,7 @@ class SaveGame {
     this.lastWeekCongested = false,
     this.lastUserMatchDate,
     this.lastWeeklyTickDate,
+    this.personalDatesThrough,
     Map<String, int>? groupClubs,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
@@ -1233,6 +1240,8 @@ class SaveGame {
           'lastUserMatchDate': formatSaveDate(lastUserMatchDate!),
         if (lastWeeklyTickDate != null)
           'lastWeeklyTickDate': formatSaveDate(lastWeeklyTickDate!),
+        if (personalDatesThrough != null)
+          'personalDatesThrough': formatSaveDate(personalDatesThrough!),
         if (groupClubs.isNotEmpty) 'groupClubs': groupClubs,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
@@ -1506,6 +1515,7 @@ class SaveGame {
         lastWeekCongested: json['lastWeekCongested'] as bool? ?? false,
         lastUserMatchDate: parseSaveDate(json['lastUserMatchDate']),
         lastWeeklyTickDate: parseSaveDate(json['lastWeeklyTickDate']),
+        personalDatesThrough: parseSaveDate(json['personalDatesThrough']),
         groupClubs: (json['groupClubs'] as Map?)?.map(
           (k, v) => MapEntry(k as String, v as int),
         ),

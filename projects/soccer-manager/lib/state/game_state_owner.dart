@@ -101,13 +101,23 @@ extension GameStateOwner on GameState {
   }
 
   /// 月が替わったら: オーナーの本業の収入が入り、クラブは貸付の利息を払う。
-  void _advanceOwnerMoney(DateTime before, DateTime after) {
+  ///
+  /// 本業の収入はオーナー自身のもので、クラブを替えても続く。季の途中で
+  /// 別の国のクラブを買い直すと今日が戻るので、本業の収入は[incomeFrom]
+  /// (前に済ませた日)より後の月の分だけ入れる。利息は今のクラブの借りの
+  /// ものなので、[before]から数える。
+  void _advanceOwnerMoney(DateTime before, DateTime after,
+      {DateTime? incomeFrom}) {
     final s = _save;
     if (s == null) return;
-    if (before.year == after.year && before.month == after.month) return;
-    final months = (after.year - before.year) * 12 + after.month - before.month;
+    int monthsBetween(DateTime a, DateTime b) =>
+        max(0, (b.year - a.year) * 12 + b.month - a.month);
+    final months = monthsBetween(before, after);
+    if (months == 0) return;
     // 本業の収入は部に関係なく一定(クラブの規模の倍率を掛けない)。
-    s.ownerWealth = ownerWealth + monthlyIncome * months;
+    final incomeMonths =
+        incomeFrom == null ? months : monthsBetween(incomeFrom, after);
+    s.ownerWealth = ownerWealth + monthlyIncome * incomeMonths;
     final interest = ownerLoanMonthlyInterest * months;
     if (interest > 0) {
       // 利息は損益の支出(2026-11-22 から「その他」ではなく「利息」)。
