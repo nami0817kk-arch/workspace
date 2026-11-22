@@ -696,7 +696,9 @@ void main() {
         if (y > 1583 && !ruled('武田') && !g.hasFlag('history_nagashino')) {
           expect(alive('武田'), isFalse);
         }
-        if (y > 1591 && !ruled('北条')) expect(alive('北条'), isFalse);
+        if (y > 1591 && !ruled('北条') && !g.hasFlag('history_odawara')) {
+          expect(alive('北条'), isFalse);
+        }
         if (y > 1568 && y < 1600 && g.l.maxRank < 8) {
           expect(alive('織田'), isTrue, reason: '$y');
         }
@@ -1054,6 +1056,31 @@ void main() {
         }
       }
       expect(checked, greaterThan(10));
+    });
+
+    test('小田原で北条が早く降った人生では、1590年のあとも北条が残り、家康の関東移封が起きない', () {
+      var checked = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        g.setFlag('history_odawara');
+        playOut(g, Rng(seed));
+        expect(g.hasFlag('scene:h_e_edo'), isFalse);
+        if (g.year > 1591 &&
+            !g.isChild &&
+            g.l.maxRank < 8 &&
+            worldLine(g) == 'real') {
+          checked++;
+          expect(g.fa['北条']!.alive, isTrue, reason: '${g.year}');
+          expect(
+            g.hasFlag('h:edo') && g.l.log.any((e) => e.txt.contains('江戸に入った')),
+            isFalse,
+          );
+        }
+      }
+      expect(checked, greaterThan(5));
     });
 
     test('死に方は保存の往復で残る', () {

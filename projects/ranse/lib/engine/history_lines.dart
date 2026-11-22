@@ -200,11 +200,14 @@ const kFlagSkipScenes = <String, Set<String>>{
     'h_c_erinji',
     'h_e_tensho_jingo',
   },
+  'history_odawara': {'h_e_edo'},
 };
 
 /// 小さな分岐で起きない年表の出来事（旗 → 出来事の id）。
 const kFlagSkipEvents = <String, Set<String>>{
   'history_nagashino': {'tensho_jingo'},
+  // 小田原で北条が早く降って残った: 家康の関東移封（北条の旧領へ）は起きない。
+  'history_odawara': {'edo'},
 };
 
 bool sceneSkippedInLine(Game g, String id) {
