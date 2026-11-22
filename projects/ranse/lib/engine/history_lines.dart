@@ -177,6 +177,9 @@ const kSkipScenes = <String, Set<String>>{
     'h_r_hiei',
     'h_r_nagashino',
     'h_r_honnoji',
+    // 義元の死・今川の没落を前提にした岐路
+    'h_e_sunpu_1568',
+    'h_l_jukeini',
   },
   'nobunaga': {
     ..._hideyoshiScenes,
