@@ -120,6 +120,9 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 .vsm input[type=checkbox]{width:auto}
 .mini{display:none;margin-top:8px;gap:6px;flex-direction:column}.mini .panel{margin:0;padding:6px 9px}.mini .hrow{margin-bottom:4px}
 @media (min-height:700px){.mini{display:flex}}
+@keyframes tpulse{0%,100%{box-shadow:0 0 0 0 rgba(217,140,76,0)}50%{box-shadow:0 0 0 5px rgba(217,140,76,.45)}}
+.btn.pulse{animation:tpulse 1.4s ease-in-out infinite}
+#spane-help h3{margin:10px 0 2px;font-size:13.5px;color:var(--ink)}#spane-help h3:first-child{margin-top:0}#spane-help details{margin-top:6px}#spane-help summary{cursor:pointer;color:var(--accent);font-weight:600}
 .links{margin:2px 0 0;font-size:11.5px;color:var(--sub);text-align:center}.links a{color:var(--sub)}
 .tbox .btn small{display:block;font-size:10.5px;color:var(--sub);font-weight:400}
 .chl{display:flex;flex-direction:column;gap:6px}.chl .btn{text-align:left;padding:8px 10px}.chl .btn small{display:block;font-size:11px;color:var(--sub)}
@@ -134,35 +137,37 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
  <div class="panel"><h2>塔の軍 <span id="army"></span></h2><div id="lines"></div></div>
  <div class="panel"><h2>殿堂</h2><div id="hall"></div></div>
 </div>
-<div class="help" id="spane-help"><b>掘れる土</b>：掘ってあるマスの隣の土だけ掘れます。<br>
-・<b>スライム</b>は壁まで真っすぐ進み、隣の土から養分を吸っては（3まで）、養分のある別の土へ吐きます（1残す）。弱ると<b>ツボミ</b>になり、周りの養分を吸って<b>花</b>が咲きます。花は花粉の弾で冒険者を撃ってしびれさせ、枯れると新しいスライムを生みます。<br>
-・<b>ドラゴン</b>は横にしか動かず、横に炎を吐きます（味方も焼く）。傷つくと<b>卵に戻り</b>、養分が多ければブラック→カオスへ、少なければドラゴンもどきへ。<b>ふん</b>を踏んだ冒険者はしばらく動けません。<br>
-・<b>ハーピー</b>はフェロモンを置き、冒険者を止め、仲間を癒します。<b>リザード</b>は広い所に巣を作り、巣で卵を産みます。<br>
-・<b>魔法陣</b>：周りの8マスを掘ってから、養分か魔分が7以上の土を掘るとできます。タップでデーモン（養分が多い）かリッチ（魔分が多い）。魔法陣は上に立つ冒険者のMPを吸います。デーモンがいると冒険者の攻撃が弱まります。<br>
-・<b>冒険者</b>はMPで技（回復・炎・風・MP吸収・回転斬り・ウォークライ・HP吸収）を使い、やる気が下がると<b>たいまつ</b>を置きます。迷うと一度入口へ戻ります。運び手を倒しても、ほかの冒険者が足跡をたどってコアを取りに来ます。<br>
-・<b>つつく</b>：掘ってある所をタップすると、そこにいる魔物を少し削る（弱った魔物を間引く）、亡骸をスケルトンにする、宝箱を自分で開ける、ができます。<br>
-・<b>コアを動かす</b>：コアをタップしてから最上階の通路をタップすると、コアをそこへ置き直せます（最上階に冒険者がいない間だけ）。<br>
-・<b>魔法陣の種類</b>：養分が多くて魔分が少ない→デーモン、両方多い→ねむりデーモン、魔分が多い→あおデーモン、とても多い→おおあおデーモン。あおデーモンの魔法陣を冒険者に2回踏ませると、まがつかみの魔法陣に変わる。違う種のデーモンどうしは戦う。<br>
-・<b>物理と魔法</b>：魔法使い・僧侶などは魔法に強く、成虫のワームやビートルは魔法に強い。<br>
-・<b>塔が伸びると</b>、掘る力が「残り×0.2＋軍の増加＋早さ」だけ戻ります。「一覧」で<b>系統の強化</b>（冒険者がいない間だけ）。<br>
-・<b>掘る力</b>：1マス掘るごとに1減ります（ゆったり150・ふつう100・きびしい80から）。冒険者を倒すと1、勇者を倒し切ると20、塔が伸びると大きく戻ります。残った掘る力は1につき10点。<br>
-・<b>鍛える</b>：「一覧」の主役の横のボタンで、掘る力を使って主役を鍛えられます（5回まで。体力と攻撃が上がる）。<br>
-・<b>養分を運ぶ</b>：お腹のふくれたスライム（魔分はウィスプ）は、道の隣の土から養分を拾って運び、行き止まりの先の土へ吐き出します。行き止まりを作ると、そこに養分が集まります。<br>
-・<b>ピュア種</b>：同じ種が3匹以上いるまま、1匹も死なずに長く過ごすと、次に澄んだ「ピュア種」が生まれます（長生きで少し強い）。<br>
-・<b>塔の全体図</b>：上の階のボタンに、その階の縮図（緑=モンスター・赤=冒険者・金=コア）が出ます。<br>
-<b>あなたは姿の見えない塔の意志です。</b>モンスターには命令できません。できるのは<b>掘る</b>ことだけです。<br>
-・<b>土のマスをタップ</b>(なぞると印が付き、指を離すとまとめて掘れます。最初のマスまで指を戻すと取り消し。2本指で広げると拡大、2本指で動かせます)：掘ると、土の中の養分の量に応じたモンスターが生まれます。養分(光る点)が見えるのは<b>掘った道の隣のマスだけ</b>です。<br>
-・<b>モンスターは4段×2種×2系統</b>。掘った土の量(1〜8)で順に生まれます。養分(金)：スライム・マッシュ／ワーム・ビートル／リザード・バット／ドラゴン・ゴーレム（土の色で苔・水・岩）。<b>魔分(紫)</b>：ウィスプ・ピクシー／インプ・ゴースト／ガーゴイル・ハーピー／デーモン・リッチ。魔分は魔法使いや勇者が魔法を使ったり倒れたりすると近くの土にたまります。<br>・1つ下の段を食べます。魔分の系統は養分の系統の1つ下も食べ、デーモンとリッチは何でも食べます。増え方は種ごとに違います（分裂・胞子・さなぎ・卵・巣・群れ・石の像・亡骸に子を宿す）。<b>卵は冒険者に踏まれると壊れます</b>。<br>・<b>突然変異</b>：同じ種が4匹死ぬと、一番多い死に方で次の1匹が変わります（倒された→強化種・食べられた→異常種・餓死→巨大種）。<br>
-・<b>主役</b>：よく食べた・巨大種が生き延びた・冒険者を何人も倒した個体は、まれに<b>昇格</b>して名前と技を持ちます。技は自動で出て、体力が減ると一度だけ奥の手を出します。「一覧」の主役をタップすると、その階を見られます。<br>
-・<b>養分</b>は、冒険者やモンスターが倒れると、その場所の周りの土に戻ります。時間では湧きません。<br>
-・<b>勇者</b>は毎周の第6波に来ます。近くの主役を先に狙います。傷つくと逃げ帰り、技を覚えて強くなって戻ってきます。倒し切ると大量の養分が土に戻ります。<br>
-・<b>階の行き来</b>：各階の一番上の段を掘ると、すぐ上の階の一番下の段とつながります。青い矢印の所を掘ると、すぐつながります。<br>
-・冒険者は、<b>入った時に掘ってあった道</b>だけを<b>探索</b>します。まだ見ていない道が多い方へ進み、行き止まりでは戻ります。後から来た者は前の者が通らなかった道を選びます。<b>コアと上への梯子は、直線3マス以内に入って初めて見つけます</b>。枝道や行き止まりを掘って迷わせよう。たいまつの近くでは少しずつ回復します。コアを最下階の入口まで運ばれたら負けです。<br>
-・<b>宝箱</b>：土に埋まった宝箱（きらりと光る）を掘り出すと、冒険者が寄り道して開けます。中身はまれな魔物・養分（持ち去られる）・ミミックのどれか。<br>・<b>特殊タイプ</b>：亡骸の隣を掘る・3色が接する所・養分いっぱいの土・コアの下の周りを掘り抜く・主役のドラゴンの死、で現れます。見つけると図鑑に載ります。<br>・<b>新しい土地</b>：6階から氷の層、11階から溶岩の層。<b>新しい職業</b>は3周目から1周に1つずつ（騎士・罠師・占い師・鉱夫・錬金術師・忍者）。<br>・<b>第6波まで守り切ると、塔が1階伸びます</b>。時間は初め止まっています。準備ができたら ×1 を押します。
+<div class="help" id="spane-help">
+<h3>目的</h3>
+あなたは姿の見えない<b>塔の意志</b>。土を掘ると魔物が生まれ、魔物が冒険者から<b>コア</b>（最上階の金の玉）を守ります。コアを入口まで運び出されたら負け。6つの波を守り切ると塔が1階伸び、どこまで高く積めるかに挑みます。
+<h3>操作</h3>
+・<b>掘る</b>：掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。1マスに掘る力を1使う。<br>
+・<b>魔物をタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱った魔物を間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
+・<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる（最上階に冒険者がいない間）。<br>
+・2本指で拡大・移動。上の階のボタン（縮図つき）で階を切り替え。⏸ ×1 ×2 で時間。「今すぐ迎える」で波を早める（早いほど次の掘る力が増える）。
+<h3>魔物</h3>
+・土の<b>養分</b>（金の点）や<b>魔分</b>（紫の点）の量で生まれる種が決まる。白っぽい模様の土ほど濃い。量は掘った道の隣の土だけ見える。<br>
+・食べ合い、増え、死ぬと養分が周りの土に戻る。同じ種が死に続けると死に方で<b>変異</b>、誰も死なずに増えると<b>ピュア種</b>。<br>
+・よく食べた個体などはまれに<b>主役</b>に昇格し、名前と技を持つ。「一覧」で掘る力を使って鍛えられる。
+<details><summary>魔物ごとの癖</summary>
+・<b>スライム</b>：壁まで真っすぐ。隣の土から養分を吸っては（3まで）別の土へ吐く（1残す）。弱るとツボミ→花。花は花粉の弾で冒険者をしびれさせ、枯れるとスライムを生む。<br>
+・<b>ドラゴン</b>：横にしか動かず横に炎（味方も焼く）。傷つくと卵に戻り、養分しだいでブラック→カオス→しんりゅう、少なければドラゴンもどき。ふんを踏んだ冒険者は止まる。<br>
+・<b>ハーピー</b>：フェロモンで冒険者を止め、仲間を癒す。<b>リザード</b>：広い所に巣を作り、巣で卵を産む。<b>ウィスプ</b>：魔分を運び、冒険者の MP を削る。<br>
+・<b>魔法陣</b>：周り8マスを掘ってから養分か魔分が7以上の土を掘るとできる。タップでデーモン類（養分が多い→デーモン、両方多い→ねむりデーモン、魔分が多い→あおデーモン、とても多い→おおあおデーモン）。あおの陣を冒険者に2回踏ませるとまがつかみの陣に。デーモンがいると冒険者の攻撃が弱まる。違う種のデーモンどうしは戦う。<br>
+・<b>特殊</b>：亡骸の隣を掘る・3色が接する所・養分いっぱいの土・コアの下の周りを掘り抜く・主役のドラゴンの死、で現れる。成虫のワームやビートルは魔法に強い。
+</details>
+<h3>冒険者</h3>
+・入った時に<b>掘ってあった道だけ</b>を探す。まだ見ていない道が多い方へ進み、行き止まりで戻る。コアと梯子は直線3マス以内で見つける。枝道や行き止まりで迷わせよう。迷うと一度入口へ戻る。<br>
+・MP で技（回復・炎・風・MP吸収・回転斬り・ウォークライ・HP吸収）を使い、やる気が下がるとたいまつを置く（近くで回復）。魔法使い・僧侶などは魔法に強い。<br>
+・毎周の第6波に<b>勇者</b>が来る。主役を先に狙い、傷つくと逃げ帰って強くなって戻る。倒し切ると大量の養分。運び手を倒しても、ほかの冒険者が足跡をたどってコアを取りに来る。
+<h3>掘る力と得点</h3>
+・塔が伸びると、掘る力が「残り×0.2＋軍の増加＋早さ」だけ戻る。「一覧」の<b>系統の強化</b>で種そのものを強くできる（冒険者がいない間）。<br>
+・得点は 到達階×1000＋周×200＋倒した数×20＋主役×150＋勇者×500＋残りの掘る力×10＋軍。<br>
+・6階から氷、11階から溶岩の層。3周目から新しい職業。ストーリー（全8面）・チャレンジ・VS もある。
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v15</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v16</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1033,12 +1038,13 @@ function showResult(){
   '<button class="btn go" id="tback">タイトルへ</button></div>';
  el.hidden=false;document.getElementById('tback').onclick=showTitle;
 }
+function saveLabel(){try{var o=JSON.parse(kvGet('tou-save')),q=o.g;if(q.mode=='story'||q.mode=='ura')return (q.mode=='ura'?'裏ストーリー':'ストーリー')+' 第'+q.st+'面';if(q.mode=='vs')return 'VS';return (DIFF[q.diff||'normal'].n)+'の塔 · '+o.F+'階 · '+q.round+'周目';}catch(_){return '';}}
 function showTitle(){
  var el=document.getElementById('title'),has=!!kvGet('tou-save'),b=bests();
  el.innerHTML='<div class="tbox"><h2>塔の意志</h2><p class="sub">掘って、生まれた魔物に塔を守らせよう。</p>'+
-  (has?'<button class="btn go" id="tcont">続きから</button>':'')+
-  '<p class="lbl">新しい塔を始める</p><div class="drow">'+Object.keys(DIFF).map(function(k){return '<button class="btn" data-d="'+k+'">'+DIFF[k].n+'<small>最高 '+(b[k]||0).toLocaleString()+'</small></button>';}).join('')+'</div>'+
-  '<p class="lbl">ほかの遊び方</p><div class="row2"><button class="btn" id="tstory">ストーリー<small>全8面</small></button>'+(storyDone()?'<button class="btn" id="tura">裏ストーリー<small>手ごわい8面</small></button>':'<button class="btn" disabled>裏ストーリー<small>ストーリーを全部クリアで</small></button>')+'</div><div class="row3"><button class="btn" id="tvs">VS</button><button class="btn" id="tchal">チャレンジ</button><button class="btn" id="tdex">図鑑</button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><div class="tshop" id="tshop"></div></div>';
+  (has?'<button class="btn go" id="tcont">続きから<small style="color:inherit;opacity:.85">'+saveLabel()+'</small></button>':'')+
+  '<p class="lbl">新しい塔を始める</p><div class="drow">'+Object.keys(DIFF).map(function(k){return '<button class="btn" data-d="'+k+'">'+DIFF[k].n+'<small>'+(b[k]?'最高 '+b[k].toLocaleString():'記録なし')+'</small></button>';}).join('')+'</div>'+
+  (Object.keys(b).length?'':'<p class="sub" style="color:var(--accent)">はじめてなら「ストーリー」の第1面から。慣れたら「新しい塔」で、どこまで高く積めるか挑もう。</p>')+'<p class="lbl">ほかの遊び方</p><div class="row2"><button class="btn" id="tstory">ストーリー<small>全8面</small></button>'+(storyDone()?'<button class="btn" id="tura">裏ストーリー<small>手ごわい8面</small></button>':'<button class="btn" disabled>裏ストーリー<small>ストーリーを全部クリアで</small></button>')+'</div><div class="row3"><button class="btn" id="tvs">VS</button><button class="btn" id="tchal">チャレンジ</button><button class="btn" id="tdex">図鑑</button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><div class="tshop" id="tshop"></div></div>';
  el.hidden=false;renderShop();
  if(has)document.getElementById('tcont').onclick=function(){if(!loadGame())showTitle();};
  el.querySelectorAll('[data-d]').forEach(function(bt){bt.onclick=function(){if(has)kvSet('tou-save',null);newGame(bt.getAttribute('data-d'));hideTitle();};});
@@ -1554,6 +1560,8 @@ function draw(){
  });
  // 朝・昼・夕・夜（見た目だけ）
  var ph=phase();if(ph!='昼'){ctx.fillStyle=ph=='夜'?'rgba(20,30,90,.11)':ph=='夕'?'rgba(255,130,50,.1)':'rgba(255,235,190,.07)';ctx.fillRect(0,0,W,W);}
+ if(g.tut===0){var pa=0.35+0.3*Math.sin(now/260);ctx.lineWidth=1.2/ZM;ctx.strokeStyle='rgba(255,236,150,'+pa.toFixed(2)+')';
+  for(y=0;y<N;y++)for(x=0;x<N;x++){c=cellAt(f,x,y);if(c&&!c.open&&!bedrock(f,x,y)&&c.nut>0&&touchesOpen(f,x,y))ctx.strokeRect(x*CS+1,y*CS+1,CS-2,CS-2);}}
  drawFx(now);
  if(path&&path.f==f&&path.cells.length){
   ctx.lineWidth=1.5/ZM;
@@ -1585,11 +1593,12 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v15 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v16 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
  tutCheck();
+ document.getElementById('go').classList.toggle('pulse',g.tut===2);
  var tu=g.tut!=null&&TUT[g.tut],cm=document.getElementById('cmsg'),ct=tu?'ヒント：'+TUT[g.tut][0]+'（タップで閉じる）':g.cline?'コア「'+g.cline+'」':'';cm.classList.toggle('tut',!!tu);if(cm.textContent!=ct)cm.textContent=ct;cm.classList.toggle('old',performance.now()-(g.clineRT||0)>12000);
  drawMinis();
  var nh=0,yin=false;for(i=0;i<g.cr.length;i++)if(g.cr[i].hero)nh++;for(i=0;i<g.en.length;i++)if(g.en[i].yu)yin=true;
@@ -1664,7 +1673,8 @@ function tapOpen(f,x,y){
  for(var i=0;i<g.corpses.length;i++){var cp=g.corpses[i];if(cp.f==f&&cp.x==x&&cp.y==y){g.corpses.splice(i,1);var sk=mkCr('skeleton','sp',f,x,y,0,{hpk:1+cp.str/60});if(sk)say('亡骸をつつくと、骨が起き上がった。');return true;}}
  var ch=chestAt(f,x,y);if(ch){openChestMe(ch);return true;}
  var ms=crAt(f,x,y).filter(function(m){return !m.hero;});if(!ms.length)ms=crAt(f,x,y);
- if(ms.length){var m=ms[0],d=Math.max(1,Math.ceil(m.mhp*0.3));m.hp-=d;fxNum(f,x,y,d,'#ffd0a0');addFx({k:'chip',f:f,x:ccx(x),y:ccx(y),vx:0,vy:-40,life:300,c:'#ffe0b0'});haptic('light');
+ if(ms.length&&!(g.lastTap&&g.lastTap.id===ms[0].id&&performance.now()-g.lastTap.t<2500)){var mi=ms[0];g.lastTap={id:mi.id,t:performance.now()};say(spName(mi)+(mi.hero?'「'+fullName(mi)+'」':'')+' 体力'+Math.max(1,Math.round(mi.hp))+'/'+Math.round(mi.mhp)+'（もう一度タップでつつく）');addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:500,c:'255,236,150',r0:6,rad:6});return true;}
+ if(ms.length){g.lastTap=null;var m=ms[0],d=Math.max(1,Math.ceil(m.mhp*0.3));m.hp-=d;fxNum(f,x,y,d,'#ffd0a0');addFx({k:'chip',f:f,x:ccx(x),y:ccx(y),vx:0,vy:-40,life:300,c:'#ffe0b0'});haptic('light');
   if(m.hp<=0){killCr(m,'poke');say(spName(m)+'を間引いた。');}else say(spName(m)+'をつついた。');return true;}
  return false;
 }
