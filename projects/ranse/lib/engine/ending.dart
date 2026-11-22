@@ -152,28 +152,46 @@ String _joyLine(double aj) => aj >= 65
     ? '振り返れば、満ち足りた一生だった。'
     : (aj >= 42 ? '喜びも苦しみも、人並みに味わった一生だった。' : '苦しいことの多い一生だった。');
 
+// 行の重み: 史実の出来事・有名人(3) > 身分の大きな変化(2) > 人生の節目(1)。
+final _heavy = RegExp(
+  '信長|秀吉|家康|謙信|景虎|信玄|義元|光秀|政宗|利休|宗易|ザビエル|歴史|天下|'
+  '桶狭間|本能寺|比叡山|関ヶ原|長篠|川中島|小田原|山崎|賤ヶ岳|高野山|石山|一揆|朝鮮',
+);
+final _middle = RegExp('大名|城主|家老|下剋上|家督|取り立て|女城主|御用|後見');
+final _light = RegExp('出家|夫婦|輿入れ|仕え|商い|野盗|弟子|庄屋|工房');
+int _weight(String s) => _heavy.hasMatch(s)
+    ? 3
+    : _middle.hasMatch(s)
+    ? 2
+    : _light.hasMatch(s)
+    ? 1
+    : 0;
+
+/// 最期の文に入れる「思えば、〜こともあった。」。歩んだ道のうち、いちばん重い出来事（重み2以上）を一つ。
+String _memoryLine(Life l) {
+  if (l.path.length < 3) return '';
+  var best = -1, bw = 1;
+  for (var i = 0; i < l.path.length - 1; i++) {
+    final w = _weight(l.path[i]);
+    if (w > bw) {
+      bw = w;
+      best = i;
+    }
+  }
+  if (best < 0) return '';
+  final m = RegExp(r'^(\d+)歳\s*(.+)$').firstMatch(l.path[best]);
+  if (m == null) return '';
+  return '思えば、${m.group(1)}歳のとき、${m.group(2)}こともあった。';
+}
+
 /// 結果カードに載せる「選んだ道」を3〜4行に絞る（初め・終わり・有名人や歴史の絡む行を優先）。
 List<String> pickHighlights(List<String> path, {int max = 4}) {
   if (path.length <= max) return [...path];
-  // 行の重み: 史実の出来事・有名人 > 身分の大きな変化 > 人生の節目。重い行から選び、並びは年の順に戻す。
-  final heavy = RegExp(
-    '信長|秀吉|家康|謙信|景虎|信玄|義元|光秀|政宗|利休|宗易|ザビエル|歴史|天下|'
-    '桶狭間|本能寺|比叡山|関ヶ原|長篠|川中島|小田原|山崎|賤ヶ岳|高野山|石山|一揆|朝鮮',
-  );
-  final middle = RegExp('大名|城主|家老|下剋上|家督|取り立て|女城主|御用|後見');
-  final light = RegExp('出家|夫婦|輿入れ|仕え|商い|野盗|弟子|庄屋|工房');
-  int weight(String s) => heavy.hasMatch(s)
-      ? 3
-      : middle.hasMatch(s)
-      ? 2
-      : light.hasMatch(s)
-      ? 1
-      : 0;
   final picked = <int>{0, path.length - 1};
   final order = [for (var i = 1; i < path.length - 1; i++) i]
-    ..sort((a, b) => weight(path[b]).compareTo(weight(path[a])));
+    ..sort((a, b) => _weight(path[b]).compareTo(_weight(path[a])));
   for (final i in order) {
-    if (picked.length >= max || weight(path[i]) == 0) break;
+    if (picked.length >= max || _weight(path[i]) == 0) break;
     picked.add(i);
   }
   final step = (path.length ~/ max).clamp(1, 99);
@@ -209,7 +227,7 @@ Ending buildEnding(Game g) {
     };
     final line = worldLine(g);
     text =
-        '$head${_witnessLine(l, kind)}${_joyLine(aj)}'
+        '$head${_memoryLine(l)}${_witnessLine(l, kind)}${_joyLine(aj)}'
         '${line == 'real' ? '' : 'その世は、${kLineNames[line]}だった。'}';
   }
   return Ending(

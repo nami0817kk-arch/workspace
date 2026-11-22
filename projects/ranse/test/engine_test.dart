@@ -839,6 +839,30 @@ void main() {
       expect(chapters, resumed);
     });
 
+    test('大きな出来事のあった人生では、最期の文に「思えば、〜こともあった。」が入る', () {
+      var checked = 0;
+      for (var seed = 0; seed < 400 && checked < 30; seed++) {
+        final rng = Rng(seed + 4242);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        final r = Rng(seed);
+        var n = 0;
+        while (!g.finished && n++ < 3000) {
+          g.choose(pickAmbitious(g, g.prompt!, r));
+        }
+        if (g.age < 15) continue;
+        final heavy = g.l.path
+            .take(g.l.path.length - 1)
+            .any((p) => RegExp('信長|秀吉|家康|本能寺|桶狭間|城主|大名|家老').hasMatch(p));
+        if (!heavy) continue;
+        checked++;
+        final t = buildEnding(g).text;
+        expect(t, contains('思えば、'), reason: t);
+        expect(t, contains('こともあった。'));
+      }
+      expect(checked, greaterThan(5));
+    });
+
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
       final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
       path[6] = '20歳　信長に仕えた';
