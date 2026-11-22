@@ -6,6 +6,7 @@ import 'childhood.dart';
 import 'data.dart';
 import 'life.dart';
 import 'rng.dart';
+import 'ways.dart';
 
 /// 選択肢。[f] が返した文字列は見聞録に書かれる。
 class Choice {
@@ -38,7 +39,7 @@ class Prompt {
 class Game extends ChangeNotifier {
   Game({Rng? rng, this.onCheckpoint}) : rng = rng ?? Rng() {
     childScenes = buildChildScenes();
-    adultScenes = buildAdultScenes();
+    adultScenes = [...buildAdultScenes(), ...buildWayScenes()];
   }
 
   final Rng rng;
@@ -63,6 +64,9 @@ class Game extends ChangeNotifier {
   List<String> get rk => l.female ? kRanksF : kRanksM;
   bool has(String id) => l.has(id);
   bool get canFight => !l.female || has('onna') || l.rank == 8;
+
+  /// 隠居していない（家中の務めや合戦に関わる）。
+  bool get active => !hasFlag('retired');
 
   double get share {
     final a = alive;
@@ -92,7 +96,12 @@ class Game extends ChangeNotifier {
     );
   }
 
-  void die(String cause) => l.dead ??= cause;
+  /// 亡くなる。[kind] は死に方の種類（`kDeathKinds` のキー）。最初の一度だけ効く。
+  void die(String cause, [String kind = 'byo']) {
+    if (l.dead != null) return;
+    l.dead = cause;
+    l.deathKind = kind;
+  }
 
   /// 歩んだ道に一行足す（結果カードに載る）。
   void mark(String text) => l.path.add('$age歳　$text');
@@ -236,7 +245,7 @@ class Game extends ChangeNotifier {
     var dp = danger * (win ? .7 : 1.4) * (1 - clampD(skill / 150, 0, .7));
     if (l.hp < 40) dp *= 1.5;
     if (rng.chance(dp)) {
-      die('${e.name}との合戦で討死');
+      die('${e.name}との合戦で討死', 'senshi');
       return '${e.name}との合戦で、${role == 'van' ? '先陣にて' : ''}討死した。';
     }
     final merit =
@@ -269,7 +278,7 @@ class Game extends ChangeNotifier {
       txt += '深手を負った（体力-$dmg）。';
     }
     if (l.hp <= 0) {
-      die('戦傷が元で死去');
+      die('戦傷が元で死去', 'senshi');
       txt += '傷は癒えなかった。';
     }
     return txt;
@@ -302,7 +311,7 @@ class Game extends ChangeNotifier {
       return '下剋上成功！${l.lord}家を乗っ取り、ついに大名の座に就いた！';
     }
     if (rng.chance(.7)) {
-      die('謀反に失敗し、処刑された');
+      die('謀反に失敗し、処刑された', 'seppuku');
       return '謀反は露見し、捕らえられて処刑された…';
     }
     l.rank = 0;
@@ -340,7 +349,7 @@ class Game extends ChangeNotifier {
     l.fame -= 3;
     j(-5);
     if (rng.chance(.08 * (1 - l.un / 200))) {
-      die('${t.name}家との戦で討死');
+      die('${t.name}家との戦で討死', 'senshi');
       return '${t.name}家との戦に敗れ、討死した。';
     }
     return '${t.name}家との戦に敗れた。勢力が削られた。';
@@ -593,6 +602,7 @@ class Game extends ChangeNotifier {
       }
     }
     l.hp = l.hp + 4 > l.maxhp ? l.maxhp : l.hp + 4;
+    final starving = l.rank == 0 && l.gold == 0 && !hasFlag('priesthood');
     // 幸福の影響
     j((50 - l.joy).sign);
     if (l.joy < 20) {
@@ -603,7 +613,7 @@ class Game extends ChangeNotifier {
     if (l.t % 2 == 0 && age > 45 && rng.chance(.5)) {
       l.bu = l.bu - 1 < 5 ? 5 : l.bu - 1;
     }
-    if (l.hp <= 0) die('衰弱して死去');
+    if (l.hp <= 0) starving ? die('飢えて死んだ', 'ue') : die('衰弱して死去');
     _simWorld();
     if (l.dead == null) {
       if (l.female && l.married && l.rank >= 1 && l.rank < 8) l.merit += 1;
@@ -657,7 +667,9 @@ class Game extends ChangeNotifier {
         } else if (l.joy >= 70) {
           dp *= .9;
         }
-        if (a >= 85 || rng.chance(dp)) die(a >= 55 ? '天寿をまっとうした' : '病に倒れた');
+        if (a >= 85 || rng.chance(dp)) {
+          a >= 55 ? die('天寿をまっとうした', 'tenju') : die('病に倒れた');
+        }
       }
       // 天下・時代の終わり
       if (l.dead == null) {
@@ -711,7 +723,7 @@ class Game extends ChangeNotifier {
       l.ronin = true;
       j(-25);
       log('国は滅んだ…浪々の身となる。', 'bad');
-      if (rng.chance(.4)) die('国と共に滅んだ');
+      if (rng.chance(.4)) die('国と共に滅んだ', 'senshi');
     } else {
       l.lord = a.name;
       l.rank = l.rank - 1 < 1 ? 1 : l.rank - 1;

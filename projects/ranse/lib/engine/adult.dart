@@ -76,6 +76,70 @@ List<FocusDef> adultFocusOptions(Game g) {
     l.net += 1;
   }, forced: 'engagement');
 
+  // 隠居の身
+  if (g.hasFlag('retired')) {
+    return [
+      FocusDef('family', l.kids > 0 ? '子や孫と過ごす' : '静かに暮らす', '穏やかな日々。体も心も休まる', (
+        g,
+      ) {
+        _heal(l, 30);
+        g.j(8);
+      }),
+      FocusDef('write', '書をしたため、歌を詠む', '生きた証を残す。名は後に残るかもしれない', (g) {
+        l.chi = clampInt(l.chi + rng.range(0, 2), 0, 99);
+        l.fame += rng.range(1, 3);
+        g.j(4);
+      }),
+      FocusDef('visit', '旧知を訪ねて歩く', '懐かしい顔に会える。旅は老いた体にこたえる', (g) {
+        l.net += rng.range(1, 3);
+        l.hp -= 6;
+        g.j(6);
+      }),
+    ];
+  }
+
+  // 商いの道
+  if (g.hasFlag('way_merchant') && l.rank == 0) {
+    return [
+      FocusDef('trade', '商いを広げる', '蔵は膨らむ。損を出す年もある', (g) {
+        var gain =
+            rng.range(-4, 20) + l.sei ~/ 5 + (g.hasFlag('goyo') ? 10 : 0);
+        if (g.has('abacus')) gain = (gain * 1.5).round();
+        l.gold = l.gold + gain < 0 ? 0 : l.gold + gain;
+        l.hp -= 3;
+        if (l.sei < 90 && rng.chance(.4)) l.sei++;
+      }),
+      FocusDef('journey', '仕入れの旅に出る', '遠くの品は高く売れる。道中は物騒だ', (g) {
+        l.net += 1;
+      }, forced: 'trade_trip'),
+      social,
+      study,
+      rest,
+      if (!l.married && g.age >= 16 && g.age < 45) marry,
+    ];
+  }
+
+  // 野に生きる道（野盗・流れ者・抜け忍）
+  if (g.hasFlag('way_outlaw') && l.rank == 0) {
+    return [
+      FocusDef('prey', '獲物を狙う', '銭は手に入る。恨みも積もる', (g) {
+        l.gold += rng.range(2, 12);
+        l.fame -= 1;
+        l.hp -= 4;
+        if (rng.chance(.3)) l.bu = clampInt(l.bu + 1, 0, 99);
+      }, forced: 'raid'),
+      FocusDef('hide', '山に潜んで息をひそめる', '追手はかわせる。暮らしは痩せる', (g) {
+        _heal(l, 20);
+        l.gold = l.gold >= 2 ? l.gold - 2 : 0;
+      }),
+      train,
+      FocusDef('drift', '国をまたいで流れる', '新しい土地に出会う。帰る場所は遠くなる', (g) {
+        l.net += 1;
+        g.j(2);
+      }, forced: 'wander_road'),
+    ];
+  }
+
   // 仏門の道
   if (g.hasFlag('priesthood')) {
     return [
@@ -325,6 +389,7 @@ List<SceneDef> buildAdultScenes() {
           g.l.rank >= 1 &&
           g.l.rank < 8 &&
           g.canFight &&
+          g.active &&
           g.hasFlag('first_battle'),
       (g, next) {
         g.ask('出陣', '主命により、合戦に加わることになった。どの持ち場に就く？', [
@@ -395,7 +460,12 @@ List<SceneDef> buildAdultScenes() {
       20,
       70,
       (g) => .5 + (g.has('amb') ? .7 : 0) + (g.l.fav < 30 ? .6 : 0),
-      (g) => g.l.rank >= 5 && g.l.rank < 8 && g.l.lord != null && g.canFight,
+      (g) =>
+          g.l.rank >= 5 &&
+          g.l.rank < 8 &&
+          g.l.lord != null &&
+          g.canFight &&
+          g.active,
       (g, next) {
         final p = g.betrayChance();
         g.ask('下剋上の誘い', '家中の不満を抱える者たちが、あなたを担ごうとしている。主家を討つか。', [
@@ -422,6 +492,7 @@ List<SceneDef> buildAdultScenes() {
           g.l.rank >= 1 &&
           g.l.rank < 8 &&
           g.canFight &&
+          g.active &&
           !g.hasFlag('first_battle'),
       (g, next) {
         g.setFlag('first_battle');
@@ -725,7 +796,11 @@ List<SceneDef> buildAdultScenes() {
       (g) => g.l.rank == 0 && _poor.contains(g.l.cls.id) && notMonk(g),
       (g, next) {
         g.ask('凶作', '長雨で稲が実らない。年貢の取り立ては容赦ない。', [
-          Choice.h('蓄えを切り崩して食いつなぐ', '飢えはしのげる。蓄えは消える', () {
+          Choice.h('蓄えを切り崩して食いつなぐ', '蓄えがあれば、飢えはしのげる', () {
+            if (g.l.gold < 3 && g.rng.chance(.15)) {
+              g.die('凶作の冬、蓄えが尽きて飢え死にした', 'ue');
+              return '蓄えは、とうに尽きていた。春を待たずに力尽きた。';
+            }
             g.l.gold = g.l.gold >= 3 ? g.l.gold - 3 : 0;
             g.l.hp -= 8;
             g.j(-5);
@@ -914,7 +989,7 @@ List<SceneDef> buildAdultScenes() {
       15,
       60,
       (g) => 1.5,
-      (g) => g.l.cls.id == 'ninja' && g.l.rank < 8,
+      (g) => g.l.cls.id == 'ninja' && g.l.rank < 8 && !g.hasFlag('nukenin'),
       (g, next) {
         g.ask('忍びの務め', '里から、他国への潜入任務が届いた。', [
           Choice.h('引き受ける', '銭と情報が手に入る。しくじれば命が危うい', () {
@@ -943,7 +1018,7 @@ List<SceneDef> buildAdultScenes() {
       15,
       84,
       (g) => 1.5,
-      (g) => g.l.rank >= 2 && g.l.rank < 8,
+      (g) => g.l.rank >= 2 && g.l.rank < 8 && g.active,
       (g, next) {
         g.ask('同僚の讒言', '出世を妬む者が、主君に根も葉もない噂を吹き込んだ。', [
           Choice.h('銭10貫で口を封じる', '確実に収まる。銭は惜しい', () {
@@ -978,7 +1053,7 @@ List<SceneDef> buildAdultScenes() {
       15,
       84,
       (g) => 2,
-      (g) => g.l.rank >= 2 && g.l.rank < 8,
+      (g) => g.l.rank >= 2 && g.l.rank < 8 && g.active,
       (g, next) {
         g.ask('密命', '主君が、人目を忍んで重大な役目を命じた。', [
           Choice.h('引き受ける', '果たせば覚えがめでたい。危ない橋でもある', () {
@@ -1010,7 +1085,7 @@ List<SceneDef> buildAdultScenes() {
       20,
       84,
       (g) => 1.2,
-      (g) => g.l.rank >= 3 && g.l.rank < 8,
+      (g) => g.l.rank >= 3 && g.l.rank < 8 && g.active,
       (g, next) {
         final l = g.l;
         g.ask(
@@ -1046,7 +1121,7 @@ List<SceneDef> buildAdultScenes() {
       18,
       84,
       (g) => 1,
-      (g) => g.l.rank >= 3 && g.l.rank < 8,
+      (g) => g.l.rank >= 3 && g.l.rank < 8 && g.active,
       (g, next) {
         g.ask('主君の急死', '主君が急死した。後継をめぐり家中が割れている。', [
           Choice.h('嫡子を支持する', '筋は通る。大きな見返りはない', () {

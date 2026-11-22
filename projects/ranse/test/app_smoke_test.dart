@@ -66,8 +66,10 @@ void main() {
     // 選んでいる最中でも、ほかのタブに切り替えられる（選択肢が画面を覆わない）。
     await tester.tap(find.byIcon(Icons.person_outline));
     await tester.pump();
-    expect(find.text('縁のある人').evaluate().length + find.text('暮らし').evaluate().length,
-        greaterThan(0));
+    expect(
+      find.text('縁のある人').evaluate().length + find.text('暮らし').evaluate().length,
+      greaterThan(0),
+    );
     await tester.tap(find.byIcon(Icons.alt_route));
     await tester.pump();
     await tester.tap(find.text('学問に励む'));

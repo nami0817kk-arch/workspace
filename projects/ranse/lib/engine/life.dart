@@ -123,6 +123,9 @@ class Life {
   /// 過ごし方の選択の回数。次に出る岐路の種類に効く。
   final Map<String, int> focus = {};
   String? dead;
+
+  /// 死に方の種類（`kDeathKinds` のキー）。亡くなったときに決まる。
+  String? deathKind;
   String? end;
   bool victory = false;
 
@@ -171,6 +174,7 @@ class Life {
     'path': path,
     'focus': focus,
     'dead': dead,
+    'deathKind': deathKind,
     'end': end,
     'victory': victory,
   };
@@ -214,6 +218,7 @@ class Life {
     l.gun = j['gun'] as bool;
     l.ronin = j['ronin'] as bool;
     l.dead = j['dead'] as String?;
+    l.deathKind = j['deathKind'] as String?;
     l.end = j['end'] as String?;
     l.victory = j['victory'] as bool;
     l.log.addAll(

@@ -6,6 +6,7 @@ import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/game.dart';
 import 'package:ranse/engine/life.dart';
 import 'package:ranse/engine/rng.dart';
+import 'package:ranse/engine/ways.dart';
 
 /// 生き延びて元服まで進める生まれを探して始める。
 Game startSurvivor(int seed) {
@@ -21,7 +22,12 @@ Game startSurvivor(int seed) {
 
 /// 選択肢をランダムに選び、人生の終わりまで進める。
 /// どの年も、選択肢（今年の重点か岐路）が必ず出ていること。
-void playOut(Game g, Rng pickRng, {int limit = 1500, void Function(Prompt p)? onPrompt}) {
+void playOut(
+  Game g,
+  Rng pickRng, {
+  int limit = 1500,
+  void Function(Prompt p)? onPrompt,
+}) {
   var n = 0;
   while (!g.finished && n++ < limit) {
     final p = g.prompt;
@@ -43,9 +49,9 @@ void playChildhood(Game g, Rng pickRng, {void Function(Prompt p)? onPrompt}) {
 }
 
 String jsonOf(Game g) => jsonEncode({
-      'life': g.l.toJson(),
-      'world': g.fa.values.map((f) => f.toJson()).toList(),
-    });
+  'life': g.l.toJson(),
+  'world': g.fa.values.map((f) => f.toJson()).toList(),
+});
 
 (Life, Map<String, Faction>) fromJson(String s) {
   final back = jsonDecode(s) as Map<String, dynamic>;
@@ -100,15 +106,31 @@ void main() {
       final rng = Rng(seed);
       final g = Game(rng: rng);
       g.start(rollBirth(rng));
-      playOut(g, Rng(seed + 5), onPrompt: (p) {
-        if (p.title == '元服' || p.title == '裳着') return;
-        for (final c in p.choices) {
-          expect(c.hint, isNotNull, reason: '${p.title}/${c.label} に匂わせが無い');
-          expect(c.hint!, isNot(contains('%')), reason: '${p.title}/${c.label}');
-          expect(c.hint!, isNot(contains('成功率')), reason: '${p.title}/${c.label}');
-          expect(c.label, isNot(contains('%')), reason: '${p.title}/${c.label}');
-        }
-      });
+      playOut(
+        g,
+        Rng(seed + 5),
+        onPrompt: (p) {
+          if (p.title == '元服' || p.title == '裳着') return;
+          for (final c in p.choices) {
+            expect(c.hint, isNotNull, reason: '${p.title}/${c.label} に匂わせが無い');
+            expect(
+              c.hint!,
+              isNot(contains('%')),
+              reason: '${p.title}/${c.label}',
+            );
+            expect(
+              c.hint!,
+              isNot(contains('成功率')),
+              reason: '${p.title}/${c.label}',
+            );
+            expect(
+              c.label,
+              isNot(contains('%')),
+              reason: '${p.title}/${c.label}',
+            );
+          }
+        },
+      );
     }
   });
 
@@ -124,7 +146,11 @@ void main() {
         playChildhood(g, Rng(seed), onPrompt: (p) => titles.add(p.title));
         if (g.l.dead != null) continue;
         checked++;
-        expect(titles.where((t) => t == '今年の重点').length, 10, reason: 'seed=$seed');
+        expect(
+          titles.where((t) => t == '今年の重点').length,
+          10,
+          reason: 'seed=$seed',
+        );
         final n = titles.where((t) => t != '今年の重点').length;
         scenes += n;
         expect(n, inInclusiveRange(2, 9), reason: 'seed=$seed $titles');
@@ -147,7 +173,10 @@ void main() {
         total++;
         if (g.l.path.isNotEmpty) withPath++;
         if (g.l.people.isNotEmpty) withPeople++;
-        expect(g.l.flags.where((f) => f.startsWith('scene:')).length, lessThanOrEqualTo(10));
+        expect(
+          g.l.flags.where((f) => f.startsWith('scene:')).length,
+          lessThanOrEqualTo(10),
+        );
       }
       expect(withPath / total, greaterThan(.8));
       expect(withPeople / total, greaterThan(.3));
@@ -160,18 +189,22 @@ void main() {
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         if (g.finished) continue;
-        playChildhood(g, Rng(seed), onPrompt: (p) {
-          if (p.title == '城下の若殿') {
-            seen++;
-            expect(g.l.region, '尾張');
-            expect(g.year, inInclusiveRange(1542, 1546));
-          }
-          if (p.title == '寺の少年') {
-            seen++;
-            expect(g.l.region, '越後');
-            expect(g.year, inInclusiveRange(1537, 1543));
-          }
-        });
+        playChildhood(
+          g,
+          Rng(seed),
+          onPrompt: (p) {
+            if (p.title == '城下の若殿') {
+              seen++;
+              expect(g.l.region, '尾張');
+              expect(g.year, inInclusiveRange(1542, 1546));
+            }
+            if (p.title == '寺の少年') {
+              seen++;
+              expect(g.l.region, '越後');
+              expect(g.year, inInclusiveRange(1537, 1543));
+            }
+          },
+        );
       }
       expect(seen, greaterThan(0), reason: '2500人で一度も出会いが起きない');
     });
@@ -207,9 +240,13 @@ void main() {
         if (g.finished) continue;
         g.choose(0); // 元服
         final years = <int>[];
-        playOut(g, Rng(seed + 3), onPrompt: (p) {
-          if (p.title == '今年の重点') years.add(g.age);
-        });
+        playOut(
+          g,
+          Rng(seed + 3),
+          onPrompt: (p) {
+            if (p.title == '今年の重点') years.add(g.age);
+          },
+        );
         if (years.isEmpty) continue;
         checked++;
         // 同じ年に二度聞かれない。年は一つずつ進む。
@@ -249,7 +286,11 @@ void main() {
           }
           g.choose(labels.indexOf(hit.first));
           if (g.finished) break;
-          expect(g.prompt?.title, forced[hit.first], reason: 'seed=$seed ${hit.first}');
+          expect(
+            g.prompt?.title,
+            forced[hit.first],
+            reason: 'seed=$seed ${hit.first}',
+          );
           g.choose(0);
         }
       }
@@ -290,11 +331,23 @@ void main() {
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         if (!g.l.female || g.finished) continue;
-        playOut(g, Rng(seed), onPrompt: (p) {
-          if (g.has('onna') || g.l.rank == 8) return;
-          expect(p.title, isNot(anyOf('出陣', '初陣', '下剋上の誘い')), reason: 'seed=$seed');
-          expect(p.choices.map((c) => c.label), isNot(contains('戦に備える')), reason: 'seed=$seed');
-        });
+        playOut(
+          g,
+          Rng(seed),
+          onPrompt: (p) {
+            if (g.has('onna') || g.l.rank == 8) return;
+            expect(
+              p.title,
+              isNot(anyOf('出陣', '初陣', '下剋上の誘い')),
+              reason: 'seed=$seed',
+            );
+            expect(
+              p.choices.map((c) => c.label),
+              isNot(contains('戦に備える')),
+              reason: 'seed=$seed',
+            );
+          },
+        );
       }
     });
 
@@ -310,12 +363,17 @@ void main() {
         playChildhood(g, Rng(seed));
         if (g.finished || !g.hasFlag('met_nobunaga')) continue;
         g.choose(0);
-        playOut(g, Rng(seed), limit: 200, onPrompt: (p) {
-          if (p.title == '信長') {
-            reunions++;
-            expect(g.year, greaterThanOrEqualTo(1552));
-          }
-        });
+        playOut(
+          g,
+          Rng(seed),
+          limit: 200,
+          onPrompt: (p) {
+            if (p.title == '信長') {
+              reunions++;
+              expect(g.year, greaterThanOrEqualTo(1552));
+            }
+          },
+        );
       }
       expect(reunions, greaterThan(0), reason: '信長との再会が一度も起きない');
     });
@@ -381,5 +439,66 @@ void main() {
       }
       if (g.l.end == 'era') expect(g.year, greaterThan(1600));
     }
+  });
+
+  group('道と死に方（最期1000本の分け目）', () {
+    test('亡くなった人生には、必ず8種のどれかの死に方が付き、10の道のどれかに入る', () {
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed * 7 + 3);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        if (g.l.dead != null) {
+          expect(kDeathKinds.keys, contains(g.l.deathKind), reason: g.l.dead);
+        }
+        expect(kWays.keys, contains(lifeWay(g.l)));
+        if (g.age < 15) expect(lifeWay(g.l), 'young');
+      }
+    });
+
+    test('多くの人生を通すと、8種の死に方と、大名・天下人以外の道がどれも現れる', () {
+      final kinds = <String>{}, ways = <String>{};
+      for (var seed = 0; seed < 1500; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed + 1));
+        if (g.l.deathKind != null) kinds.add(g.l.deathKind!);
+        ways.add(lifeWay(g.l));
+      }
+      expect(kinds, containsAll(kDeathKinds.keys));
+      expect(
+        ways,
+        containsAll(kWays.keys.where((k) => k != 'tenka' && k != 'daimyo')),
+      );
+    });
+
+    test('死に方は保存の往復で残る', () {
+      for (var seed = 0; seed < 40; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        final (back, _) = fromJson(jsonOf(g));
+        expect(back.deathKind, g.l.deathKind);
+      }
+    });
+
+    test('史実の出来事（桶狭間・本能寺・比叡山）は、その年にだけ起きる', () {
+      const years = {'桶狭間': 1560, '本能寺': 1582, '比叡山': 1571};
+      for (var seed = 0; seed < 400; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(
+          g,
+          Rng(seed),
+          onPrompt: (p) {
+            final y = years[p.title];
+            if (y != null) expect(g.year, y, reason: p.title);
+          },
+        );
+      }
+    });
   });
 }
