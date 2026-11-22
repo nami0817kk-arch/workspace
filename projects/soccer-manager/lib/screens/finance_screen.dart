@@ -50,15 +50,19 @@ class FinanceScreen extends StatelessWidget {
     final gameState = context.watch<GameState>();
     final save = gameState.save!;
     final team = gameState.userTeam;
-    final income = gameState.weeklyIncomeFor(team.id);
-    // 毎節払う人件費(年俸を節の数で割った額)。給与の枠は週俸の合計で見る。
+    // 大きな数字は1年あたり(1節あたりの額 × 1季の節の数)で見せる
+    // (2026-11-22「週報ではなくて年報に」)。
+    final md = gameState.matchdaysPerSeason;
+    final income = gameState.weeklyIncomeFor(team.id) * md;
     final wageBill =
-        gameState.matchdayPlayerWageCost + gameState.matchdayStaffWageCost;
+        (gameState.matchdayPlayerWageCost + gameState.matchdayStaffWageCost) *
+            md;
     final weeklyBill = gameState.weeklyWageBill;
     final loanRepayment = gameState.bankLoans.fold<int>(
-      0,
-      (s, l) => s + l.weeklyRepayment,
-    );
+          0,
+          (s, l) => s + l.weeklyRepayment,
+        ) *
+        md;
     final net = income - wageBill - loanRepayment;
 
     final sortedByExpiry = team.players.where((p) => !p.isLoan).toList()
@@ -110,11 +114,11 @@ class FinanceScreen extends StatelessWidget {
                               ),
                             ),
                           TitleWithHelp(
-                            title: Tr.pick('1週あたりのお金', 'Money per week'),
+                            title: Tr.pick('1年あたりのお金(見込み)', 'Money per year (forecast)'),
                             style: Theme.of(context).textTheme.titleSmall,
                             help: Tr.pick(
-                                '収入は観客動員・スポンサー・グッズ・放映権を合わせた額、人件費は年俸を節の数で割った額(スタッフ込み)です。\n\n給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。ここの週の額は1節あたりに直した目安です。',
-                                'Income is gate, sponsorship, merchandise and broadcasting together. Wages are annual salaries spread over the matchdays, staff included.\n\nWages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The weekly figures here are per-matchday averages.'),
+                                '収入は観客動員・スポンサー・グッズ・放映権を合わせた額、人件費は年俸を節の数で割った額(スタッフ込み)です。\n\n給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。ここの額は、いまの1節あたりの額を1季の節の数($md節)だけ積んだ1年の見込みです。',
+                                'Income is gate, sponsorship, merchandise and broadcasting together. Wages are annual salaries spread over the matchdays, staff included.\n\nWages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The figures here are the current per-matchday amounts times the $md matchdays of a season.'),
                           ),
                           Row(
                             children: [
@@ -508,8 +512,9 @@ class _SponsorSection extends StatelessWidget {
           title: Text(deal.name),
           subtitle: Text(ContractEngine.yearsShortLabel(deal.yearsRemaining)),
           trailing: Text(
-            Tr.pick('+${formatMoney(deal.weeklyIncome)}/週',
-                '+${formatMoney(deal.weeklyIncome)} per week'),
+            Tr.pick(
+                '+${formatMoney(deal.weeklyIncome * gameState.matchdaysPerSeason)}/年',
+                '+${formatMoney(deal.weeklyIncome * gameState.matchdaysPerSeason)} a year'),
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -540,8 +545,9 @@ class _SponsorSection extends StatelessWidget {
               ),
               trailing: FilledButton(
                 onPressed: () => _choose(context, i),
-                child: Text(Tr.pick('+${formatMoney(offers[i].weeklyIncome)}/週',
-                    '+${formatMoney(offers[i].weeklyIncome)} per week')),
+                child: Text(Tr.pick(
+                    '+${formatMoney(offers[i].weeklyIncome * gameState.matchdaysPerSeason)}/年',
+                    '+${formatMoney(offers[i].weeklyIncome * gameState.matchdaysPerSeason)} a year')),
               ),
             ),
           ),

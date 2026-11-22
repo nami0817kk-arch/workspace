@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/contract_board_engine.dart';
 import '../logic/contract_engine.dart';
-import '../logic/pre_contract_engine.dart';
 import '../logic/squad_registration_engine.dart';
 import '../models/player.dart';
 import '../models/team.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
+import 'contract_offer_screen.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/responsive_body.dart';
 import '../logic/economy_scale.dart';
@@ -172,11 +172,11 @@ class ContractBoardScreen extends StatelessWidget {
                             FilledButton(
                               onPressed: game.save!.budget >= cost(p) &&
                                       game.renewalBlockReason(p) == null
-                                  ? () async {
+                                  ? () {
                                       FeedbackService.tap();
-                                      await context
-                                          .read<GameState>()
-                                          .renewContract(p.id);
+                                      openContractOffer(context,
+                                          player: p,
+                                          kind: ContractKind.renewal);
                                     }
                                   : null,
                               child: Text(Tr.pick('更新 ${formatMoney(cost(p))}',
@@ -271,7 +271,10 @@ class ContractBoardScreen extends StatelessWidget {
                       ),
                     ),
                     OutlinedButton(
-                      onPressed: () => _showSignDialog(context, t.player),
+                      onPressed: () => openContractOffer(context,
+                          player: t.player,
+                          kind: ContractKind.preContract,
+                          fromClubName: t.team.name),
                       child: Text(Tr.pick('仮契約', 'Pre-sign')),
                     ),
                   ],
@@ -282,80 +285,5 @@ class ContractBoardScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  /// 仮契約の条件(年数・延長オプション)を決めて結ぶ。年俸はその場の要求額。
-  Future<void> _showSignDialog(BuildContext context, Player p) async {
-    final game = context.read<GameState>();
-    final choices = PreContractEngine.endYearChoices(p);
-    if (choices.isEmpty) return;
-    var endYear = PreContractEngine.defaultEndYear(p);
-    var option = false;
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setState) {
-          final canOption = ContractEngine.canAttachOption(endYear, p.age,
-              nextSeasonStart: true);
-          if (!canOption) option = false;
-          final wage = PreContractEngine.wageDemand(p, option: option);
-          return AlertDialog(
-            title:
-                Text(Tr.pick('${p.name}と仮契約', 'Pre-contract with ${p.name}')),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(Tr.pick(
-                    '移籍金なし・7月1日に加入。求める年俸: ${formatMoney(annualFromWeekly(wage))}',
-                    'No fee, joins on 1 Jul. Salary he wants: ${formatMoney(annualFromWeekly(wage))}')),
-                DropdownButton<int>(
-                  value: endYear,
-                  isExpanded: true,
-                  items: [
-                    for (final y in choices)
-                      DropdownMenuItem(
-                          value: y, child: Text(ContractEngine.untilLabel(y))),
-                  ],
-                  onChanged: (y) => setState(() => endYear = y ?? endYear),
-                ),
-                CheckboxListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  value: option,
-                  onChanged: canOption
-                      ? (v) => setState(() => option = v ?? false)
-                      : null,
-                  title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
-                      'Add a 1-year club option (salary +5%)')),
-                  subtitle: canOption
-                      ? null
-                      : Text(Tr.pick('最長の契約年数なので付けられません。年数を1年短くすると付けられます。',
-                          'Not possible at the longest contract length. Shorten it by a year to add one.')),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: Text(Tr.pick('やめる', 'Cancel')),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: Text(Tr.pick('仮契約を結ぶ', 'Agree terms')),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-    if (ok != true) return;
-    final done =
-        await game.signPreContract(p.id, endYear: endYear, option: option);
-    done ? FeedbackService.success() : FeedbackService.error();
-    if (!done && context.mounted && game.lastSigningBlockReason != null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(game.lastSigningBlockReason!)));
-    }
   }
 }
