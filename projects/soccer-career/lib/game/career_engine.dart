@@ -25,11 +25,13 @@ import '../models/season.dart';
 import '../models/support.dart';
 import '../models/training.dart';
 import '../models/traits.dart';
+import 'acquaintances.dart';
 import 'career_engine_extras.dart';
 import 'competitions.dart';
 import 'eligibility.dart';
 import 'person.dart';
 import 'formulas.dart';
+import 'newsroom.dart';
 import 'world.dart';
 
 /// シーズン終了時に届くオファー。残留の契約更改もこの形で扱う。
@@ -219,7 +221,7 @@ class CareerEngine {
       aptitude: Aptitude.initial(position),
       traits: rolled,
     );
-    return CareerState(
+    final started = CareerState(
       player: player,
       club: club,
       league: league,
@@ -268,6 +270,22 @@ class CareerEngine {
         clubName: league[_random.nextInt(league.length)].name,
       ),
     );
+    // 競争相手と相方は、**名簿の実在の人から**（2026-11-22）。
+    // 乱数は上でこれまでどおり引いてある——並びを変えないため。
+    final mates = Acquaintances.seat(
+      club: club,
+      year: started.year,
+      position: position,
+      overall: overall,
+      known: const [],
+      competitor: started.competitor!,
+      partner: started.partner!,
+      movedClub: true,
+    );
+    started
+      ..competitor = mates.competitor
+      ..partner = mates.partner;
+    return started;
   }
 
   /// 国籍を決める。2割でルーツの国籍が付き、代表を選ぶ余地が生まれる。
@@ -904,6 +922,7 @@ class CareerEngine {
           marketValue: state.reputation.marketValue,
           continentalExperience: state.continentalExperience,
           year: state.year,
+          known: state.acquaintances,
         );
         // 枠が空いていない、または許可が下りない移籍は成立しない。
         if (!eligibility.canJoin) continue;
@@ -1321,6 +1340,26 @@ class CareerEngine {
                 ),
           );
 
+    // 関わった人の続き（2026-11-22）。今季の競争相手・相方・
+    // 得点王レースの相手を覚え、1年進め、次の季の同僚を名簿の
+    // 実在の人から据える。**ここで渡した `known` を名簿に渡し忘れると、
+    // 「△△へ移籍」と書いたのに△△の名簿に居ない、になる。**
+    final carried = Acquaintances.advance(
+      Acquaintances.remember(state),
+      year: state.year + 1,
+      nextClub: resolved,
+    );
+    final seated = Acquaintances.seat(
+      club: resolved,
+      year: state.year + 1,
+      position: nextPlayer.position,
+      overall: nextPlayer.overall,
+      known: carried.people,
+      competitor: mates.competitor,
+      partner: mates.partner,
+      movedClub: movedClub,
+    );
+
     // スポンサー・疲労・キャプテン・愛称・代表。シーズンの切れ目で動く。
     var sponsor = state.sponsor?.aged();
     if (sponsor != null && sponsor.expired) sponsor = null;
@@ -1371,8 +1410,10 @@ class CareerEngine {
       development: development,
       manager: manager,
       directive: state.directive,
-      competitor: mates.competitor,
-      partner: mates.partner,
+      competitor: seated.competitor,
+      partner: seated.partner,
+      // **渡し忘れると毎年オフに全員忘れる**（狙いで先に踏んだ形）。
+      acquaintances: carried.people,
       mentor: mates.mentor,
       rival: state.rival?.advanced(_random, clubName: state.rival!.clubName),
       rehab: state.rehab,
@@ -1422,7 +1463,11 @@ class CareerEngine {
       nationalTeamId: state.nationalTeamId,
       seenEvents: state.seenEvents,
       // 見出しはキャリアの記録。シーズンを跨いでも消さない。
-      news: state.news,
+      // 関わった人の続き（移籍・引退・加入）は、新しい季の頭に載せる。
+      news: [
+        ...carried.news,
+        ...state.news,
+      ].take(Newsroom.keep).toList(),
       backedUpYear: state.backedUpYear,
       autoRestBelow: state.autoRestBelow,
       focus: state.focus,
@@ -1810,6 +1855,7 @@ class CareerEngine {
       partner: state.partner,
       mentor: state.mentor,
       rival: state.rival,
+      acquaintances: state.acquaintances,
       retired: true,
     );
   }

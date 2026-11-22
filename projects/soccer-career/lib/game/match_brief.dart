@@ -112,6 +112,23 @@ class MatchBrief {
           tr('${style.label}（${style.description}）',
               '${style.label} (${style.description})')));
 
+      // 相手に知り合いが居るときだけ1行（2026-11-22）。**居ないときは出さない**
+      // ——次節カードには余白が無い（行を足して「今の状態」が何度も
+      // 画面の外に出た）。競った相手と、今度は敵として当たる。
+      final faces = [
+        for (final a in state.acquaintances)
+          if (!a.retired && a.clubId == opponent.id) a,
+      ];
+      if (faces.isNotEmpty) {
+        lines.add(BriefLine(
+          tr('知り合い', 'Familiar face'),
+          faces
+              .map((a) => tr('${a.bond.label} ${a.name}（${a.overall}）',
+                  '${a.bond.label} ${a.name} (${a.overall})'))
+              .join(tr('・', ', ')),
+        ));
+      }
+
       // 自分が出るぶん、クラブがどれだけ強くなるか。判定と同じ式を読む。
       // 1 未満なら出さない（「+0」は情報ではない）。
       final lift = MatchEngine.starLift(

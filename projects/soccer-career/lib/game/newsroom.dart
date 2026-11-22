@@ -688,7 +688,11 @@ class ScorerRace {
             // 以前は名前の一覧からIDで1つ引いていたので、
             // 得点王レースに出てくる相手と、移籍先に居る選手が
             // 別の世界の人だった。
-            name: Squad.of(club, year: state.year).topScorer.name,
+            name: Squad.of(
+              club,
+              year: state.year,
+              known: state.acquaintances,
+            ).topScorer.name,
             clubName: club.name,
             goals: _goalsFor(club, played),
           ),

@@ -283,6 +283,7 @@ class Teammate {
     required this.age,
     this.synergy = 0,
     this.fromLegend = false,
+    this.seat,
   });
 
   final String name;
@@ -292,6 +293,10 @@ class Teammate {
 
   /// 相方との呼吸 0〜100。一緒に試合を重ねると上がる。
   final int synergy;
+
+  /// 名簿の席（`SquadPlayer.seat`）。**名簿の実在の人なら持つ**。
+  /// 乱数で引いた人・殿堂の人・古いセーブは null。
+  final String? seat;
 
   static const List<Say> _names = [
     Say('カイル・ベネット', 'Kyle Bennett'),
@@ -326,12 +331,26 @@ class Teammate {
   /// 競争相手だけは**別の世界の人では困る**——同じクラブの
   /// 同じポジションで先発を争っているはずなのに、
   /// 名簿とは無関係に引いた人だった。
+  ///
+  /// **⚠ これは書いてあったのに、どこからも呼ばれていなかった**
+  /// （2026-11-22 に見つけた）。クラブタブの「同ポジション: ○○」は
+  /// 乱数で引いた名前で、すぐ下の「同じ枠: 3番目」は本物の名簿から
+  /// 数えていた——同じ画面に別々の「競争相手」が居た。
   factory Teammate.fromSquad({
     required String name,
     required TeammateKind kind,
     required int overall,
     required int age,
-  }) => Teammate(name: name, kind: kind, overall: overall, age: age);
+    String? seat,
+    int synergy = 0,
+  }) => Teammate(
+    name: name,
+    kind: kind,
+    overall: overall,
+    age: age,
+    seat: seat,
+    synergy: synergy,
+  );
 
   factory Teammate.roll(
     Random random, {
@@ -358,6 +377,7 @@ class Teammate {
     age: age,
     synergy: value.clamp(0, 100),
     fromLegend: fromLegend,
+    seat: seat,
   );
 
   /// 相方との呼吸が、味方を活かす手に与える上乗せ。
@@ -381,6 +401,7 @@ class Teammate {
     'age': age,
     'synergy': synergy,
     'fromLegend': fromLegend,
+    'seat': seat,
   };
 
   static Teammate? fromJson(Map<String, dynamic>? json) {
@@ -394,6 +415,7 @@ class Teammate {
       age: json['age'] as int? ?? 25,
       synergy: json['synergy'] as int? ?? 0,
       fromLegend: json['fromLegend'] as bool? ?? false,
+      seat: json['seat'] as String?,
     );
   }
 }

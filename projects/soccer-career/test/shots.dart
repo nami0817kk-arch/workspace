@@ -40,6 +40,7 @@ import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/models/life.dart';
 import 'package:soccer_career/models/look.dart';
 import 'package:soccer_career/models/season.dart';
+import 'package:soccer_career/ui/acquaintance_card.dart';
 import 'package:soccer_career/ui/share_card.dart';
 
 import 'ui_test.dart' as ui_test;
@@ -277,6 +278,38 @@ void main() {
     await tester.pumpAndSettle();
     await dump(tester, '12-dark-記録');
 
+    // **関わった人のカード**（2026-11-22）。1季目の途中では誰とも
+    // 知り合っていないので、**2季進めてから撮る**——ここを足す前は
+    // このカードが一度も写らなかった。
+    for (var season = 0; season < 2; season++) {
+      var guard = 0;
+      while (!controller.state!.seasonFinished && guard++ < 400) {
+        if (controller.pendingEvent != null) {
+          await controller.resolveEvent(
+            controller.pendingEvent!.choices.first,
+          );
+        }
+        await controller.simulateMatch();
+      }
+      final offers = [
+        if (controller.renewalOffer != null) controller.renewalOffer!,
+        ...controller.offers,
+      ];
+      await controller.advanceSeason(accepted: offers.first);
+    }
+    await pump(tester, HubScreen(controller: controller), theme);
+    await tester.tap(find.widgetWithText(Tab, tr('記録', 'Record')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(tr('これまで', 'So far')));
+    await tester.pumpAndSettle();
+    await tester.dragUntilVisible(
+      find.byType(AcquaintanceCard),
+      find.byType(ListView).first,
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
+    await dump(tester, '13-記録-関わった人');
+
     // 殿堂。引退させて、記録として残ったところを見る。
     await controller.retire();
     await pump(tester, HallScreen(controller: controller), theme);
@@ -330,6 +363,7 @@ void main() {
       '12-dark-記録',
       '12-dark-殿堂',
       '12-dark-create',
+      '13-記録-関わった人',
     ]);
   });
 

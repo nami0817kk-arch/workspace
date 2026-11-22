@@ -12,6 +12,7 @@ import '../../game/squads.dart';
 import '../../models/player.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
+import '../../models/acquaintance.dart';
 import '../../models/agent.dart';
 import '../../models/competition.dart';
 import '../../models/life.dart';
@@ -502,6 +503,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       offer: _offers[i],
                       player: controller.state!.player,
                       year: controller.state!.year,
+                      known: controller.state!.acquaintances,
                       roleNote: CareerEngine.roleNoteFor(
                         controller.state!.player.overall,
                         _offers[i].club,
@@ -574,8 +576,12 @@ class _OfferCard extends StatelessWidget {
     required this.onIncentive,
     required this.player,
     required this.year,
+    this.known = const [],
     this.roleNote,
   });
+
+  /// 知り合い。行き先の名簿に居れば、その人が筆頭に出る。
+  final List<Acquaintance> known;
 
   /// 名簿の中での位置を出すために要る。
   final Player player;
@@ -599,7 +605,7 @@ class _OfferCard extends StatelessWidget {
   /// **同じ数え方を読む**——別に書くと、画面の数字と
   /// 加入した後の扱いがずれる。
   String _squadLine() {
-    final squad = Squad.of(offer.club, year: year);
+    final squad = Squad.of(offer.club, year: year, known: known);
     final ahead = squad.aheadOf(player.position, player.overall);
     final quota = Squad.quotaFor(player.position.family);
     final rivals = squad.rivalsFor(player.position);
