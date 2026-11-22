@@ -146,12 +146,15 @@
     const info = { low: '信頼度が低いので、配分はクラブが決めています（要望を出せるだけ）', mid: '信頼度が中くらいなので、スカウトと遠征の配分だけ変えられます', high: '信頼度が高いので、配分を自分で決められます' }[lv];
     const left = h('div', { style: 'flex:1;min-width:0' });
     left.append(card(h('div', { class: 'row' }, h('b', { class: 'grow' }, `今年の予算 ${b.total}万円`), h('span', { class: 'chip gray' }, (c.saleIn ? `トップの売却 ${c.saleIn}万円を含む・` : '') + `育成基金へ ${c.solidarityLast || 0}万円（連帯貢献金の半分）`)),
-      h('div', { class: 'note' }, `スタッフの給料 ${YA.yen(b.salaries)} → 残り ${YA.yen(b.free)}を配分`), h('div', { class: 'note', style: 'color:var(--blue-d);margin-top:3px' }, info)));
+      h('div', { class: 'note' }, `スタッフの給料 ${YA.yen(b.salaries)} → 残り ${YA.yen(b.free)}を配分`),
+      // 2026-11-23：各欄にスカウト・合宿の「予備を足した使える上限」を出していて、合計が残りを超えて見えた。欄は配分した額だけにして、予備は分けて書く
+      h('div', { class: 'note' }, `配分しなかった ${YA.yen(b.reserve)} は予備（いま ${YA.yen(b.reserveLeft)}）。スカウトと合宿で足りないときに使われる`), h('div', { class: 'note', style: 'color:var(--blue-d);margin-top:3px' }, info)));
     for (const [k, n, note] of [['scout', 'スカウト', '候補の報告が増え、見に行ける'], ['camp', '合宿・遠征', '夏の合宿（16週・8月）に使う'], ['facility', '施設', '積み立てて回復力が上がる']]) {
       const can = YA.canAlloc(w, k);
       const inp = h('input', { type: 'range', min: 0, max: 60, value: c.alloc[k], disabled: !can, style: 'flex:1' });
-      const lab = h('b', { style: 'width:62px;text-align:right;white-space:nowrap' }, YA.yen(b[k]));
-      inp.addEventListener('input', () => { YA.setAlloc(w, k, +inp.value); lab.textContent = YA.yen(YA.budget(w)[k]); });
+      const baseOf = (bb) => (k === 'scout' ? bb.scoutBase : k === 'camp' ? bb.campBase : bb.facility);
+      const lab = h('b', { style: 'width:62px;text-align:right;white-space:nowrap' }, YA.yen(baseOf(b)));
+      inp.addEventListener('input', () => { YA.setAlloc(w, k, +inp.value); lab.textContent = YA.yen(baseOf(YA.budget(w))); });
       inp.addEventListener('change', () => { save(); rerender(); });
       left.append(card(h('div', { class: 'row' }, h('b', { style: 'width:72px' }, n), inp, h('span', { class: 'sub', style: 'width:34px' }, c.alloc[k] + '%'), lab), h('div', { class: 'note' }, note + (can ? '' : '（変更不可）'))));
     }
@@ -160,7 +163,7 @@
     const right = h('div', { style: 'flex:1;min-width:0' });
     right.append(card(title('施設'), h('div', { class: 'note' }, `施設レベル ${fl}（積み立て ${YA.yen(Math.round(c.facPts || 0))}／${YA.yen(600)}で次のレベル）`), meter(((c.facPts || 0) % 600) / 6, '#16a34a'),
       h('div', { class: 'note', style: 'margin-top:6px' }, `寮生 ${dorm}人。寮生は体を作りやすいがホームシックがある。自宅生は家庭の出来事と通学の疲れがある。`),
-      h('div', { class: 'note', style: 'margin-top:6px' }, `今年の合宿費：${YA.yen(c.spent.camp || 0)} / ${YA.yen(b.camp)}。スカウトの経費：${YA.yen(c.spent.scout || 0)} / ${YA.yen(b.scout)}`)));
+      h('div', { class: 'note', style: 'margin-top:6px' }, `今年の合宿費：${YA.yen(c.spent.camp || 0)}（予備込みの上限 ${YA.yen(b.camp)}）。スカウトの経費：${YA.yen(c.spent.scout || 0)}（予備込みの上限 ${YA.yen(b.scout)}）`)));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
   }
 
