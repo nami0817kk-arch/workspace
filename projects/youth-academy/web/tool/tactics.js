@@ -8,7 +8,7 @@
 // 試合は8つ（3つだと顔ぶれの違いだけで差が 7〜12m と揺れ、しきい値ぎりぎりだった。2026-11-15 特性を12個足したときに落ちて分かった）
 const SEEDS = [3, 8, 21, 34, 55, 1, 2, 4];
 // 合間の動きは Math.random を使うので、点検では毎回同じ乱数にして結果を揺らさない
-{ let r = 12345; Math.random = () => ((r = (r * 1103515245 + 12345) % 2147483648) / 2147483648); }
+{ let r = +(process.env.RSEED || 12345); Math.random = () => ((r = (r * 1103515245 + 12345) % 2147483648) / 2147483648); }
 for (const f of ['data', 'engine', 'world', 'league', 'club', 'scout', 'extra', 'more', 'render']) require('../src/' + f + '.js');
 const YA = globalThis.YA;
 // 入学時の水準を下げた（決定100）ので、パスの上手い子・下手な子の両方の標本が要る点検では、半分の子のパスを下げて昔の広がりに戻す
@@ -31,6 +31,7 @@ const measure = (type) => {
     const R = new YA.Renderer(cv);
     R.setMatch(m);
     let held = 0;
+    let homeT = 0;
     let prevOwner = null;
     for (let i = 0; i < 60 * 90; i++) {
       R.update(1 / 60);
@@ -42,7 +43,10 @@ const measure = (type) => {
         const q = R.disp[R.owner];
         out.press.push(Math.min(...ids.map((id) => Math.hypot(R.disp[id][0] - q[0], R.disp[id][1] - q[1]))));
       }
-      if (ownerHome && !R.fl) {
+      // 幅は攻めの形が整ってから（2秒以上持ち続けたあと）で測る。奪った直後は守りの詰まった形のままなので、
+      // そこを混ぜると守りの詰め方しだいで差が 3〜8m と揺れた（2026-11-23）
+      if (R.poss === 'home') homeT += 1 / 60; else homeT = 0;
+      if (ownerHome && !R.fl && homeT > 2) {
         const xs = ids.map((id) => R.disp[id][0]);
         out.width.push(Math.max(...xs) - Math.min(...xs));
       }
@@ -67,8 +71,8 @@ ok(r['堅守'].press - r['ハイプレス'].press > 1.2, 'ハイプレスは持�
 ok(r['ポゼッション'].hold > r['縦に速い'].hold * 1.4, 'ポゼッションは縦に速いより長く持つ（' + r['ポゼッション'].hold.toFixed(2) + '秒 / ' + r['縦に速い'].hold.toFixed(2) + '秒）');
 // 試合の流れ：押している側（homeShare が高い）ほどボールを持ち、相手陣にいる
 const flowOf = (share) => {
-  let poss = 0, n = 0, deep = 0, fr = 0;
-  for (const seed of SEEDS) {
+  let poss = 0, n = 0, deep = 0, fr = 0, sy = 0;
+  for (const seed of SEEDS.concat([5, 13, 21, 89])) { // 2026-11-23：乱数の種を変えると6回に1〜2回落ちたので12試合に
     const w = YA.newWorld(seed);
     const home = YA.teamFromWorld(w, 'A');
     const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
@@ -76,26 +80,29 @@ const flowOf = (share) => {
     m.homeShare = () => share;
     const R = new YA.Renderer(cv);
     R.setMatch(m);
-    for (let i = 0; i < 60 * 90; i++) {
+    for (let i = 0; i < 60 * 240; i++) { // 2026-11-23 90→240秒：攻める時間帯と攻められる時間帯が15〜60秒の波で来るので、短いと波の数が少なく、乱数の種しだいで合否が入れ替わった
       R.update(1 / 60);
       fr++;
       if (R.owner) { n++; if (R.base[R.owner][2] === home) poss++; }
       if (R.ball[1] > 70) deep++;
+      sy += R.ball[1];
     }
   }
-  return { poss: poss / n, deep: deep / fr };
+  return { poss: poss / n, deep: deep / fr, y: sy / fr };
 };
 const lo = flowOf(0.3);
 const hi = flowOf(0.7);
-console.log('流れ 0.3：保持 ' + (lo.poss * 100).toFixed(0) + '% 相手陣の奥 ' + (lo.deep * 100).toFixed(0) + '%　流れ 0.7：保持 ' + (hi.poss * 100).toFixed(0) + '% 相手陣の奥 ' + (hi.deep * 100).toFixed(0) + '%');
+console.log('流れ 0.3：保持 ' + (lo.poss * 100).toFixed(0) + '% 相手陣の奥 ' + (lo.deep * 100).toFixed(0) + '%　流れ 0.7：保持 ' + (hi.poss * 100).toFixed(0) + '% 相手陣の奥 ' + (hi.deep * 100).toFixed(0) + '%　ボールの平均の深さ ' + lo.y.toFixed(1) + '／' + hi.y.toFixed(1) + 'm');
 ok(hi.poss - lo.poss > 0.06, '押している側がボールを長く持つ');
-ok(hi.deep > lo.deep * 1.25, '押している側は相手陣の奥にいる時間が長い');
+// 押している側ほど前で戦う：ボールの平均の深さで見る（2026-11-23：「相手陣の奥（35m 以内）にいる割合」は出入りのたびに揺れて、
+// 12試合に増やすと直す前の master でも比が 1.10〜1.80 と揺れ、しきい値 1.25 を下回った。平均の深さの差は 7.5〜10.4m と安定）
+ok(hi.y - lo.y > 4, '押している側は相手陣の深くで戦う（ボールの平均の深さの差 ' + (hi.y - lo.y).toFixed(1) + 'm）');
 // 能力：速い子ほど速く走り、パスのうまい子ほどパスが通る
 {
   const top = {};
   const sp = {};
   const pass = { hi: [0, 0], lo: [0, 0] };
-  for (const seed of [3, 8, 21, 34, 5, 13, 55, 77]) { // 2026-11-22：4試合ではパスが30本ほどで揺れが大きかった
+  for (const seed of [3, 8, 21, 34, 5, 13, 55, 77, 1, 2, 4, 89]) { // 2026-11-22：4試合ではパスが30本ほどで揺れが大きかった。2026-11-23：8試合でも乱数の種しだいで落ちたので12試合に
     const w = lift(YA.newWorld(seed));
     const home = YA.teamFromWorld(w, 'A');
     const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
@@ -104,7 +111,7 @@ ok(hi.deep > lo.deep * 1.25, '押している側は相手陣の奥にいる時�
     R.setMatch(m);
     let lastFl = null;
     let by = null;
-    for (let i = 0; i < 60 * 120; i++) {
+    for (let i = 0; i < 60 * 180; i++) { // 2026-11-23 120→180秒：乱数の種を変えると、うまい子・下手な子の差が 5〜29 ポイントと揺れた（本数が少ない）
       R.update(1 / 60);
       for (const id of Object.keys(R.disp)) {
         const k = seed + ':' + id;

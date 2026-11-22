@@ -17,7 +17,7 @@ const avg = (a) => a.reduce((x, y) => x + y, 0) / Math.max(1, a.length);
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
 // 1. 試合を通して：止まっている子・早送り・守りの形
-const st = { sS: 0, nS: 0, sI: 0, nI: 0, long2: 0, ffT: 0, t: 0, dl: [], side: [], games: 0 };
+const st = { sS: 0, nS: 0, sI: 0, nI: 0, long2: 0, ffT: 0, t: 0, dl: [], side: [], wd: [], games: 0 };
 for (const seed of [3, 8, 21]) {
   const w = YA.newWorld(seed);
   const m = new YA.Match({ seed, home: YA.teamFromWorld(w, 'A'), away: YA.makeOpponent(YA.opponentOf(w), seed * 7), settings: { autoStop: false } });
@@ -51,6 +51,8 @@ for (const seed of [3, 8, 21]) {
       const D = Object.keys(R.base).filter((id) => R.base[id][3] !== 0 && R.teamOf(id) !== at);
       const ys = D.map((id) => dep(R.disp[id][1]));
       st.dl.push(Math.max(...ys) - Math.min(...ys));
+      const xs = D.map((id) => R.disp[id][0]);
+      st.wd.push(Math.max(...xs) - Math.min(...xs));
       const bx = R.ball[0] - 34;
       if (Math.abs(bx) > 8) st.side.push((avg(D.map((id) => R.disp[id][0])) - 34) / bx);
     }
@@ -62,15 +64,16 @@ for (const seed of [3, 8, 21]) {
     for (let i = 0; i < 48; i++) step(); // 合間は画面と同じ 0.8 秒ずつ（ui.js の need）
   }
 }
-const r1 = { scene: st.sS / st.nS, idle: st.sI / st.nI, long2: st.long2 / st.games, ff: st.ffT, len: med(st.dl), side: med(st.side) };
-console.log('止まっている子 場面 ' + (r1.scene * 100).toFixed(1) + '%・合間 ' + (r1.idle * 100).toFixed(1) + '%　2秒以上止まったまま 1試合 ' + r1.long2.toFixed(1) + '回　早送り ' + r1.ff.toFixed(1) + '秒　守りの縦 ' + r1.len.toFixed(1) + 'm　ボール側への寄り ' + r1.side.toFixed(2));
+const r1 = { scene: st.sS / st.nS, idle: st.sI / st.nI, long2: st.long2 / st.games, ff: st.ffT, len: med(st.dl), side: med(st.side), wd: med(st.wd) };
+console.log('止まっている子 場面 ' + (r1.scene * 100).toFixed(1) + '%・合間 ' + (r1.idle * 100).toFixed(1) + '%　2秒以上止まったまま 1試合 ' + r1.long2.toFixed(1) + '回　早送り ' + r1.ff.toFixed(1) + '秒　守りの縦 ' + r1.len.toFixed(1) + 'm　ボール側への寄り ' + r1.side.toFixed(2) + '　守りの横幅 ' + r1.wd.toFixed(1) + 'm');
 // 入れる前（2026-11-22）：場面 21%・合間 8%・2秒以上 63回/試合・早送り 23秒/試合・縦 39m・寄り 0.13（合間を0.8秒ずつで測った値）
 ok(r1.scene < 0.08, '場面のあいだ止まっている子が少ない');
 ok(r1.idle < 0.05, '合間に止まっている子が少ない');
 ok(r1.long2 < 10, '2秒以上止まったままの子がほとんどいない');
 ok(r1.ff < 0.5, '早送りが無い');
-ok(r1.len > 26 && r1.len < 38, '守りの縦の長さが現実に近い');
-ok(r1.side > 0.25, '守りがボール側へ寄る');
+ok(r1.len > 26 && r1.len < 35, '守りの縦の長さが現実に近い'); // 2026-11-23：パスの落ちる所を見て先にずれるようにして 35→31m
+ok(r1.side > 0.38, '守りがボール側へ寄る');
+ok(r1.wd > 30, '守りの横幅が詰まりすぎない'); // 2026-11-23：寄りを強めた式で横幅が縮み、ボールのそばに塊になっていた（画面で見て分かった）。本物は35〜40m // 2026-11-23：0.33→0.47 倍
 
 // 2. 能力で頭の選び方が変わる：試合の同じ瞬間に、1つの能力だけを高く（18）／低く（4）したと仮定して、頭が選ぶ場所を比べる
 //    （試合まるごとで比べると、選び方が変わるたびに展開がずれて、乱数の揺れに埋もれる）
