@@ -87,6 +87,24 @@ h1{margin:0 0 6px;font-size:15px}
 .shead b{font-size:15px}
 .shead .btn{min-height:38px;padding:4px 14px}
 .sbox .help{margin-top:0}
+/* v12 */
+.bar{grid-template-columns:repeat(4,1fr)}
+.stat b.low{color:#d9534f}
+.tabs{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;text-align:left}
+.tab .mm{width:36px;height:36px;image-rendering:pixelated;border-radius:4px;display:block;flex:0 0 auto}
+.tab .tl{display:block;line-height:1.25}
+#cmsg{margin-top:6px;font-size:12.5px;color:var(--accent);font-weight:600;min-height:1.5em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .6s}
+#cmsg.old{opacity:.45}
+#msg{margin-top:2px}
+h1{justify-content:space-between}
+h1 .snd{font:600 11.5px system-ui,sans-serif;padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--sub);cursor:pointer;min-height:28px}
+.hwrap{display:flex;gap:6px;margin-bottom:5px;align-items:stretch}
+.hwrap .hrow{flex:1;margin:0;min-width:0}
+.train{flex:0 0 78px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);font:600 12px system-ui,sans-serif;cursor:pointer;padding:4px 2px}
+.train small{display:block;font-size:10px;color:var(--sub);font-weight:400}
+.train:disabled{opacity:.45;cursor:default}
 </style>
 <div class="overlay" id="title" hidden></div>
 <div class="overlay sheet" id="sheet" hidden><div class="sbox">
@@ -97,7 +115,11 @@ h1{margin:0 0 6px;font-size:15px}
  <div class="panel"><h2>変異の気配</h2><div id="muts"></div></div>
  <div class="panel"><h2>殿堂</h2><div id="hall"></div></div>
 </div>
-<div class="help" id="spane-help">
+<div class="help" id="spane-help"><b>掘る力</b>：1マス掘るごとに1減ります（ゆったり150・ふつう100・きびしい80から）。冒険者を倒すと1、勇者を倒し切ると20、塔が伸びると大きく戻ります。残った掘る力は1につき10点。<br>
+・<b>鍛える</b>：「一覧」の主役の横のボタンで、掘る力を使って主役を鍛えられます（5回まで。体力と攻撃が上がる）。<br>
+・<b>養分を運ぶ</b>：お腹のふくれたスライム（魔分はウィスプ）は、道の隣の土から養分を拾って運び、行き止まりの先の土へ吐き出します。行き止まりを作ると、そこに養分が集まります。<br>
+・<b>ピュア種</b>：同じ種が3匹以上いるまま、1匹も死なずに長く過ごすと、次に澄んだ「ピュア種」が生まれます（長生きで少し強い）。<br>
+・<b>塔の全体図</b>：上の階のボタンに、その階の縮図（緑=モンスター・赤=冒険者・金=コア）が出ます。<br>
 <b>あなたは姿の見えない塔の意志です。</b>モンスターには命令できません。できるのは<b>掘る</b>ことだけです。<br>
 ・<b>土のマスをタップ</b>(なぞると印が付き、指を離すとまとめて掘れます。最初のマスまで指を戻すと取り消し。2本指で広げると拡大、2本指で動かせます)：掘ると、土の中の養分の量に応じたモンスターが生まれます。養分(光る点)が見えるのは<b>掘った道の隣のマスだけ</b>です。<br>
 ・<b>モンスターは4段×2種×2系統</b>。掘った土の量(1〜8)で順に生まれます。養分(金)：スライム・マッシュ／ワーム・ビートル／リザード・バット／ドラゴン・ゴーレム（土の色で苔・水・岩）。<b>魔分(紫)</b>：ウィスプ・ピクシー／インプ・ゴースト／ガーゴイル・ハーピー／デーモン・リッチ。魔分は魔法使いや勇者が魔法を使ったり倒れたりすると近くの土にたまります。<br>・1つ下の段を食べます。魔分の系統は養分の系統の1つ下も食べ、デーモンとリッチは何でも食べます。増え方は種ごとに違います（分裂・胞子・さなぎ・卵・巣・群れ・石の像・亡骸に子を宿す）。<b>卵は冒険者に踏まれると壊れます</b>。<br>・<b>突然変異</b>：同じ種が4匹死ぬと、一番多い死に方で次の1匹が変わります（倒された→強化種・食べられた→異常種・餓死→巨大種）。<br>
@@ -110,11 +132,12 @@ h1{margin:0 0 6px;font-size:15px}
 </div>
 </div></div>
 <div class="wrap">
-<h1>塔の意志 <small id="ver">試作 v11</small></h1>
+<h1><span>塔の意志 <small id="ver">試作 v12</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
- <div class="stat">次の冒険者<b id="cd">-</b></div>
+ <div class="stat">次の波<b id="cd">-</b></div>
  <div class="stat">コア<b id="core">最上階</b></div>
+ <div class="stat">掘る力<b id="dp">-</b></div>
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="stage">
@@ -127,7 +150,7 @@ h1{margin:0 0 6px;font-size:15px}
  <button class="btn" id="sp1">×1</button>
  <button class="btn" id="sp2">×2</button>
 </div>
-<div id="msg"></div>
+<div id="cmsg"></div><div id="msg"></div>
 <div class="nav">
  <button class="btn" id="blist">一覧</button>
  <button class="btn" id="bdex">図鑑</button>
@@ -382,10 +405,10 @@ function newGame(diff){
  g={t:0,wave:0,cd:120,spawnQ:[],pool:60,grid:grid,cr:[],en:[],seedT:[0,0,0],round:1,
   core:{f:F-1,x:COREX,y:COREY,carrier:null,home:true,dropT:0},mpool:10,eggs:[],dc:{},mutNext:{},seenSp:{},view:F-1,repelled:0,done:false,
   yu:null,promos:0,yuKilled:0,trail:{},bub:[],lastLine:'',diff:diff||'normal',kills:0,corpses:[],chests:[],traps:[],guardian:false,guardOn:false,title:false,
-  msg:'準備の時間です(時間は止まっています)。土を掘って、モンスターを生ませよう。'};
+  msg:'準備の時間です(時間は止まっています)。土を掘って、モンスターを生ませよう。',dp:DIFF[diff||'normal'].dp0,calm:{}};
  for(f=0;f<F;f++)carve(f,PATHS[f]);
  g.yu=newYu();
- over=false;resetGo();setSpeed(0);buildTabs();ui();
+ over=false;resetGo();setSpeed(0);buildTabs();coreSay('start',true);ui();
 }
 // 守り切ったら塔を1階伸ばす。今の階・掘った道・モンスターはそのまま
 function grow(){
@@ -400,6 +423,7 @@ function grow(){
  var nl=landOf(f),pl=landOf(f-1),nj=jobsUnlocked(),add='';
  if(nl!=pl)add+=' 新しい土地「'+ENV[nl].n+'の層」が現れた！ '+ENV[nl].n+'の種が生まれる。';
  if(nj.length&&(g.round-2)<=NEWJOBS.length){var jk=nj[nj.length-1];add+=' 新しい職業「'+EN[jk].n+'」が来るようになった（'+JOBDESC[jk]+'）。';}
+ var dg=DIFF[g.diff||'normal'].dpg;g.dp+=dg;add+=' 掘る力が'+dg+'戻った。';sfx('grow');coreSay('grow',true);
  appPrep();
  say(F+'階ができた！ コアは新しい最上階へ移った。'+(F-1)+'階の天井も掘れるようになった。次の冒険者は前より強い(体力×'+emul().hp.toFixed(1)+')。'+add);
  ui();
@@ -455,7 +479,7 @@ var SPEC={
  phoenix:{line:'sp',t:4,n:'フェニックス',hp:80,mv:0.6,hung:0,atk:16}
 };
 var ORDN=['slime','mush','worm','beetle','lizard','bat','dragon','golem'],ORDM=['wisp','pixie','imp','ghost','gargoyle','harpy','demon','lich'];
-var MUTN={kyo:'強化種',ijo:'異常種',kyodai:'巨大種'};
+var MUTN={kyo:'強化種',ijo:'異常種',kyodai:'巨大種',pure:'ピュア種'};
 var HUN=[0,3,6,7,9];
 function spName(m){var S=SPEC[m.sp];return (S.line=='nut'?ENV[m.env].n:'')+S.n+(m.mut?'（'+MUTN[m.mut]+'）':'');}
 function sp(m){return {n:spName(m)};}
@@ -465,7 +489,7 @@ function mkCr(spc,env,f,x,y,e,opt){
  if(g.cr.length>=CAP)return null;
  var S=SPEC[spc],key=skey(spc,env),mut=g.mutNext[key]||null;
  if(mut)delete g.mutNext[key];
- var k=mut=='kyodai'?1.8:mut=='kyo'?1.5:1;
+ var k=mut=='kyodai'?1.8:mut=='kyo'?1.5:mut=='pure'?1.3:1;
  var m={id:idc++,sp:spc,env:S.line=='nut'?env:S.line,t:S.t,f:f,x:x,y:y,e:e,mut:mut,mhp:S.hp*k*((opt&&opt.hpk)||1),atkk:(opt&&opt.atkk)||1,
   mt:Math.random()*0.5,ct:Math.random(),hu:0,born:g.t,ate:0,kills:0,ch:0,pt:0,bt:0};
  m.hp=m.mhp;g.cr.push(m);
@@ -476,7 +500,7 @@ function mkCr(spc,env,f,x,y,e,opt){
 }
 function fullName(m){return m.ep+m.name;}
 function crLabel(m){return fullName(m)+'（'+spName(m)+'）';}
-function atkOf(m){var S=SPEC[m.sp];return (S.atk*(m.mut=='kyodai'?1.5:m.mut=='kyo'?1.4:1)*(m.stage=='adult'?1.5:1)*m.atkk+(m.hero&&S.t==1?1.5:0))*(m.hero?1.6:1);}
+function atkOf(m){var S=SPEC[m.sp];return (S.atk*(m.mut=='kyodai'?1.5:m.mut=='kyo'?1.4:m.mut=='pure'?1.2:1)*(m.stage=='adult'?1.5:1)*m.atkk+(m.hero&&S.t==1?1.5:0))*(m.hero?1.6:1);}
 // 主役に昇格する(まれ)
 function promote(m,why){
  if(m.hero||g.cr.indexOf(m)<0)return;
@@ -486,7 +510,7 @@ function promote(m,why){
  m.mhp*=1.8;m.hp=m.mhp;m.sk=3+Math.random()*2;m.last=false;g.promos++;
  addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:700,c:'255,215,90',r0:4,rad:30});
  addFx({k:'num',f:m.f,x:ccx(m.x),y:ccx(m.y)-16,s:'昇格！',c:'#ffd45a',life:1400});
- say('「'+crLabel(m)+'」が生まれた！ 名前と技「'+SKN[m.env][m.t]+'」を得た。');
+ say('「'+crLabel(m)+'」が生まれた！ 名前と技「'+SKN[m.env][m.t]+'」を得た。');sfx('promote');coreSay('promo',true);
 }
 function toHall(m,cause){
  HALL.unshift({n:crLabel(m),k:m.kills||0,f:m.f+1,c:cause,tw:F});
@@ -520,22 +544,24 @@ function trampleEggs(e){
 // 死に方を種ごとに数え、4匹死ぬごとに一番多い死に方で次の変異が決まる
 function recordDeath(m,why){
  if(m.hero||SPEC[m.sp].line=='sp')return;
- var key=skey(m.sp,m.env),d=g.dc[key]||(g.dc[key]={enemy:0,eaten:0,starve:0,n:0});
+ var key=skey(m.sp,m.env),d=g.dc[key]||(g.dc[key]={enemy:0,eaten:0,starve:0,n:0});if(g.calm)g.calm[key]=0;
  var c=why=='eaten'?'eaten':why=='starve'?'starve':'enemy';d[c]++;d.n++;
  if(d.n>=4){
   var best='enemy';if(d.eaten>d[best])best='eaten';if(d.starve>d[best])best='starve';
   var mt={enemy:'kyo',eaten:'ijo',starve:'kyodai'}[best];g.mutNext[key]=mt;g.dc[key]={enemy:0,eaten:0,starve:0,n:0};
-  say(baseName(m.sp,m.env)+'の死に方から、次は'+MUTN[mt]+'が生まれる気配…');
+  say(baseName(m.sp,m.env)+'の死に方から、次は'+MUTN[mt]+'が生まれる気配…');coreSay('mut');
  }
 }
 function killCr(m,why,killer){
  if(m.sp=='phoenix'&&m.revive&&g.cr.indexOf(m)>=0){m.revive=0;m.hp=m.mhp;fxPuff(m.f,m.x,m.y,1.5);addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:700,c:'255,150,60',r0:4,rad:34});say('フェニックスが炎の中からよみがえった！');return;}
  var i=g.cr.indexOf(m);if(i<0)return;g.cr.splice(i,1);
  recordDeath(m,why);
+ // 運んでいた養分（魔分）は、倒れた所の土へ。食べられたら塔の自由な分へ
+ if(m.cg){if(why=='eaten'){if(m.env=='mag')g.mpool+=m.cg;else g.pool+=m.cg;}else if(m.env=='mag')depositM(m.f,m.x,m.y,m.cg);else deposit(m.f,m.x,m.y,m.cg);m.cg=0;}
  if(why!='eaten'){
   var back=Math.max(0,Math.floor(m.e)),soil=Math.ceil(back/2);
   if(m.env=='mag'){depositM(m.f,m.x,m.y,soil);g.mpool+=back-soil;}else{deposit(m.f,m.x,m.y,soil);g.pool+=back-soil;}
-  fxPuff(m.f,m.x,m.y,m.t>=3?1.4:1);
+  fxPuff(m.f,m.x,m.y,m.t>=3?1.4:1);if(m.t>=2)sfx('mdie');
   // ドラゴンは死ぬときに卵を1つ残す
   if(m.sp=='dragon'&&m.hero){var ph=mkCr('phoenix','sp',m.f,m.x,m.y,5);if(ph){ph.revive=1;say('主役のドラゴンが倒れ、その炎からフェニックスが生まれた！');}}
   else if(m.sp=='dragon')layEgg('dragon',m.env,m.f,m.x,m.y,40);
@@ -546,7 +572,7 @@ function killCr(m,why,killer){
  if(m.hero){
   var cause=why=='starve'?'飢え死に':why=='eaten'?'食べられた':why=='loss'?'塔と共に消えた':(killer&&killer.yu?yuName()+'に倒された':(killer?enName(killer)+'に倒された':'倒れた'));
   toHall(m,cause);
-  if(why!='loss')say('主役「'+crLabel(m)+'」が倒れた（'+cause+'）。殿堂に名が残る。');
+  if(why!='loss'){say('主役「'+crLabel(m)+'」が倒れた（'+cause+'）。殿堂に名が残る。');coreSay('herodie',true);}
   if(killer&&killer.yu)yuKillsHero(killer,m);
  }
 }
@@ -578,6 +604,7 @@ function moveCr(m,S){
  }
  if(S.t>=2&&m.e<HUN[S.t])tgt=bfs(m.f,m.x,m.y,function(f,x,y){return crAt(f,x,y).some(function(o){return canEat(m,o);});},S.t>=3?7:6);
  if(!tgt&&(S.t>=3||m.sp=='skeleton'))tgt=bfs(m.f,m.x,m.y,function(f,x,y){return enAt(f,x,y).length>0;},S.t>=3?7:8);
+ if(!tgt&&S.t==1&&(m.cg||0)>=2&&(m.sp=='slime'||m.sp=='wisp'))tgt=bfs(m.f,m.x,m.y,function(f,x,y){return openCount(f,x,y)==1&&!(f==m.f&&x==m.x&&y==m.y)&&!isEnt(f,x,y);},10);
  if(!tgt&&S.t==1){
   if(S.line=='mag'||onMyEnv(m)){if(Math.random()<0.25){var n0=nbrs(m.f,m.x,m.y);tgt=n0[rnd(n0.length)];}}
   else tgt=bfs(m.f,m.x,m.y,function(f,x,y){var c=cellAt(f,x,y);return !!(c&&c.open&&c.env==m.env);},5)||nbrs(m.f,m.x,m.y)[0];
@@ -635,7 +662,7 @@ function stepCr(m,dt){
  // さなぎ・石の像の間は動かず、食べない
  if(m.stage=='pupa'){if(g.t>=m.stT){m.stage='adult';m.mhp*=1.5;m.hp=m.mhp;say(spName(m)+'が羽化した。');}return;}
  if(m.stage=='stone'){if(g.t>=m.stT){m.stage=null;var half=Math.floor(m.e/2);m.e-=half;mkCr('gargoyle','mag',m.f,m.x,m.y,Math.max(1,half));fxPuff(m.f,m.x,m.y,1);say('ガーゴイルの石の像が割れて、2匹になった。');}return;}
- if(S.hung>0){m.hu+=dt;if(m.hu>=S.hung*(m.hero?1.5:1)){m.hu=0;m.e-=1;if(m.e<=0){killCr(m,'starve');return;}}}
+ if(S.hung>0){m.hu+=dt;if(m.hu>=S.hung*(m.hero?1.5:1)*(m.mut=='pure'?1.5:1)){m.hu=0;m.e-=1;if(m.e<=0){killCr(m,'starve');return;}}}
  if(m.mut=='kyodai'&&!m.hero&&g.t-m.born>=150)promote(m,'big');
  if(S.mv>0){m.mt+=dt;if(m.mt>=S.mv){m.mt=0;moveCr(m,S);
   for(var ti=0;ti<g.traps.length;ti++){var tp=g.traps[ti];if(tp.f==m.f&&tp.x==m.x&&tp.y==m.y){g.traps.splice(ti,1);m.hp-=15;fxNum(m.f,m.x,m.y,15,'#ff7a7a');fxPuff(m.f,m.x,m.y,0.6);if(m.hp<=0){killCr(m,'enemy',null);return;}break;}}}}
@@ -653,6 +680,7 @@ function stepCr(m,dt){
    if(m.mut=='ijo'&&g.en.indexOf(tg)>=0){tg.pdps=Math.max(tg.poi>g.t?tg.pdps:0,1.5);tg.poi=Math.max(tg.poi||0,g.t+3);tg.poiBy=m;}
    return;
   }
+  if((m.sp=='slime'||m.sp=='wisp')&&carryStep(m))return;
   if(S.t==1)feed1(m,S);else eat(m,S);
   if(g.cr.indexOf(m)>=0)breed(m,S);
  }
@@ -696,12 +724,12 @@ function yuKillsHero(e,m){
 function hitEn(e,dm,m,col){
  if(g.en.indexOf(e)<0)return;
  if(e.k!='kis'){var kn=g.en.filter(function(o){return o.k=='kis'&&o.f==e.f&&o.x==e.x&&o.y==e.y;})[0];if(kn){kn.hp-=dm/2;fxNum(kn.f,kn.x,kn.y,dm/2,'#d0d8ff');dm/=2;if(kn.hp<=0)killEn(kn,m&&g.cr.indexOf(m)>=0?m:null);if(g.en.indexOf(e)<0)return;}}
- e.hp-=dm;fxNum(e.f,e.x,e.y,dm,col||'#ffe08a');
+ e.hp-=dm;sfx('hit');fxNum(e.f,e.x,e.y,dm,col||'#ffe08a');
  if(e.hp<=0)killEn(e,m&&g.cr.indexOf(m)>=0?m:null);
 }
 function killEn(e,killer){
  var i=g.en.indexOf(e);if(i<0)return;g.en.splice(i,1);
- fxPuff(e.f,e.x,e.y,1.3);g.kills=(g.kills||0)+1;
+ fxPuff(e.f,e.x,e.y,1.3);g.kills=(g.kills||0)+1;g.dp+=e.yu?20:1;sfx(e.yu?'yukill':'ekill');if(e.yu)coreSay('yukill',true);
  if(e.yu){
   var Y=g.yu,amt=30+15*Y.lvl;deposit(e.f,e.x,e.y,amt);depositM(e.f,e.x,e.y,8+4*Y.lvl);g.yuKilled++;
   say(yuName()+'を倒し切った！ 養分'+amt+'が土に戻った。次の周からは新しい勇者が来る。');
@@ -739,7 +767,7 @@ function yuFled(e){
  var Y=g.yu;Y.lvl++;Y.fled++;g.repelled++;
  var nx=YSK.filter(function(s){return Y.skills.indexOf(s)<0;});
  var learned=nx.length?nx[0]:null;if(learned)Y.skills.push(learned);
- say(yuName()+'は逃げ帰った。次の周は強くなって戻ってくる'+(learned?'（新しい技「'+learned+'」を覚えた）':'')+'。');
+ say(yuName()+'は逃げ帰った。次の周は強くなって戻ってくる'+(learned?'（新しい技「'+learned+'」を覚えた）':'')+'。');coreSay('yuflee',true);
 }
 // ---------- 冒険者の探索(原作どおり) ----------
 // まだ見ていない掘ったマスが多い方へ進み、行き止まりは戻る。後から来た者は前の者が通らなかった道を選ぶ。
@@ -854,7 +882,7 @@ function stepEn(e,dt){
   if(fx1){e.f=fx1[0];e.x=fx1[1];e.y=fx1[2];}
   return;
  }
- if(!C.carrier&&e.f==C.f&&e.x==C.x&&e.y==C.y){C.carrier=e;C.home=false;shout(e,'carry',true);say(enName(e)+'がコアを奪った！ 入口へ運ぶ前に倒そう。');return;}
+ if(!C.carrier&&e.f==C.f&&e.x==C.x&&e.y==C.y){C.carrier=e;C.home=false;shout(e,'carry',true);say(enName(e)+'がコアを奪った！ 入口へ運ぶ前に倒そう。');sfx('alarm');coreSay('taken',true);return;}
  var nx=null;
  if(carrying)nx=atEnt?null:bfs(e.f,e.x,e.y,function(f,x,y){return f==0&&x==ENTX&&y==ENTY;},4000,e,true);
  else{
@@ -876,7 +904,7 @@ function stepEn(e,dt){
 }
 
 // ---------- 保存(アプリでは Flutter 側にも渡す)・難易度・スコア ----------
-var DIFF={easy:{n:'ゆったり',hp:0.75,cnt:0},normal:{n:'ふつう',hp:1,cnt:0},hard:{n:'きびしい',hp:1.3,cnt:1}};
+var DIFF={easy:{n:'ゆったり',hp:0.75,cnt:0,dp0:150,dpg:80},normal:{n:'ふつう',hp:1,cnt:0,dp0:100,dpg:60},hard:{n:'きびしい',hp:1.3,cnt:1,dp0:80,dpg:50}};
 function kvGet(k){try{return localStorage.getItem(k);}catch(_){return null;}}
 function kvSet(k,v){
  try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(_){}
@@ -906,7 +934,7 @@ function loadGame(){
  var s=kvGet('tou-save');if(!s)return false;
  try{
   var o=JSON.parse(s);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];
-  g.bub=[];
+  g.bub=[];if(g.dp===undefined)g.dp=100;g.calm=g.calm||{};
   g.en.forEach(function(e){if(e.poiBy)e.poiBy=g.cr.filter(function(m){return m.id===e.poiBy;})[0]||null;});
   var c=g.core.carrier;g.core.carrier=c&&c.__en?g.en.filter(function(e){return e.id===c.__en;})[0]||null:null;
   over=false;g.title=false;resetGo();if(g.done)showGrow();setSpeed(0);buildTabs();sideKey='';
@@ -916,9 +944,10 @@ function loadGame(){
 }
 setInterval(saveGame,5000);
 document.addEventListener('visibilitychange',function(){if(document.hidden){if(typeof pauseGame=='function')pauseGame();saveGame();}});
-function calcScore(){return F*1000+(g.round-1)*200+(g.kills||0)*20+g.promos*150+g.yuKilled*500;}
+function calcScore(){return F*1000+(g.round-1)*200+(g.kills||0)*20+g.promos*150+g.yuKilled*500+(g.dp||0)*10;}
 function bests(){try{return JSON.parse(kvGet('tou-best')||'{}')||{};}catch(_){return {};}}
 function finishTower(){
+ sfx('lose');
  var sc=calcScore(),b=bests(),d=g.diff||'normal',prev=b[d]||0,nb=sc>prev;
  if(nb){b[d]=sc;kvSet('tou-best',JSON.stringify(b));}
  kvSet('tou-save',null);
@@ -930,7 +959,7 @@ function showResult(){
  var r=g.result,el=document.getElementById('title');
  el.innerHTML='<div class="tbox"><h2>塔は落ちた</h2><p class="big">'+r.sc.toLocaleString()+' 点'+(r.nb?' <b class="nb">自己ベスト！</b>':'')+'</p>'+
   '<p class="sub">'+DIFF[g.diff||'normal'].n+'の自己ベスト：'+r.best.toLocaleString()+' 点</p>'+
-  '<ul class="sc"><li>到達：'+F+'階（'+F*1000+'）</li><li>周：'+(g.round-1)+'周を守った（'+(g.round-1)*200+'）</li><li>倒した冒険者：'+(g.kills||0)+'人（'+(g.kills||0)*20+'）</li><li>生まれた主役：'+g.promos+'匹（'+g.promos*150+'）</li><li>倒し切った勇者：'+g.yuKilled+'人（'+g.yuKilled*500+'）</li></ul>'+
+  '<ul class="sc"><li>到達：'+F+'階（'+F*1000+'）</li><li>周：'+(g.round-1)+'周を守った（'+(g.round-1)*200+'）</li><li>倒した冒険者：'+(g.kills||0)+'人（'+(g.kills||0)*20+'）</li><li>生まれた主役：'+g.promos+'匹（'+g.promos*150+'）</li><li>倒し切った勇者：'+g.yuKilled+'人（'+g.yuKilled*500+'）</li><li>残った掘る力：'+(g.dp||0)+'（'+(g.dp||0)*10+'）</li></ul>'+
   '<button class="btn go" id="tback">タイトルへ</button></div>';
  el.hidden=false;document.getElementById('tback').onclick=showTitle;
 }
@@ -1096,7 +1125,8 @@ function openCell(f,x,y,main){
 function digAt(f,x,y){
  var c=cellAt(f,x,y);if(!c||c.open)return false;
  if(bedrock(f,x,y)){say('ここは固くて掘れません。');return false;}
- openCell(f,x,y,true);return true;
+ if(g.dp<1){say('掘る力がありません。冒険者を倒すと1ずつ、塔が伸びると大きく戻ります。');coreSay('nodp',true);sfx('nodp');return false;}
+ g.dp--;openCell(f,x,y,true);if(g.dp==15)coreSay('lowdp',true);return true;
 }
 function tapCell(x,y,drag){
  if(over)return;
@@ -1112,7 +1142,7 @@ function launch(){
  if(g.wave==WAVES.length-1)w.push('yuu');
  for(i=0;i<w.length;i++)g.spawnQ.push({t:g.t+i*4,k:w[i]});
  g.wave++;g.cd=(g.wave<WAVES.length)?90:0;
- say(g.wave==WAVES.length?'第'+g.wave+'波。最後に「'+yuName()+'」が来る！':'第'+g.wave+'波、冒険者が入ってくる。');
+ say(g.wave==WAVES.length?'第'+g.wave+'波。最後に「'+yuName()+'」が来る！':'第'+g.wave+'波、冒険者が入ってくる。');var lastW=g.wave==WAVES.length;sfx(lastW?'yu':'wave');coreSay(lastW?'yu':'wave',lastW);
  if(speed==0)setSpeed(1);
 }
 function setSpeed(s){
@@ -1142,6 +1172,7 @@ function step(dt){
    }
   }
  }
+ g.calmAcc=(g.calmAcc||0)+dt;while(g.calmAcc>=1){g.calmAcc-=1;calmTick();}
  stepEggs();
  g.guardOn=guardOn();
  g.corpses=g.corpses.filter(function(c){return g.t-c.t<180;});
@@ -1151,7 +1182,7 @@ function step(dt){
  if(!C.carrier&&!C.home){
   var pk=enAt(C.f,C.x,C.y)[0];
   if(pk){C.carrier=pk;}
-  else{C.dropT+=dt;if(C.dropT>=5){C.home=true;C.f=F-1;C.x=COREX;C.y=COREY;say('コアが最上階に戻った。');}}
+  else{C.dropT+=dt;if(C.dropT>=5){C.home=true;C.f=F-1;C.x=COREX;C.y=COREY;say('コアが最上階に戻った。');coreSay('back',true);}}
  }
  if(C.carrier){C.f=C.carrier.f;C.x=C.carrier.x;C.y=C.carrier.y;}
  if(!over&&g.wave>=WAVES.length&&!g.spawnQ.length&&!g.en.length){over=true;g.done=true;setSpeed(0);say('全ての波を守り切った！ 塔を1階伸ばせる。掘った道もモンスターもそのまま残る。');showGrow();}
@@ -1370,6 +1401,7 @@ function draw(){
   else if(!isE&&(o.t==1||o.stage=='pupa')){var sq=Math.sin(now/170+id);sx*=1+0.09*sq;sy*=1-0.09*sq;}
   else hop+=Math.sin(now/380+id)*0.8;
   if(o.hero){var gl=ctx.createRadialGradient(px,by-size/2,2,px,by-size/2,size*0.8);gl.addColorStop(0,'rgba(255,215,90,.4)');gl.addColorStop(1,'rgba(255,215,90,0)');ctx.fillStyle=gl;ctx.fillRect(px-size,by-size*1.4,size*2,size*1.8);}
+  else if(!isE&&o.mut=='pure'){var gp=ctx.createRadialGradient(px,by-size/2,2,px,by-size/2,size*0.75);gp.addColorStop(0,'rgba(235,250,255,.45)');gp.addColorStop(1,'rgba(235,250,255,0)');ctx.fillStyle=gp;ctx.fillRect(px-size,by-size*1.4,size*2,size*1.8);}
   ctx.fillStyle='rgba(0,0,0,.3)';var sw=Math.round(size*0.55*(1+hop/30));ctx.fillRect(Math.round(px-sw/2),Math.round(by-2),sw,3);
   if(!isE&&o.sp=='ghost')ctx.globalAlpha=0.75;
   var nm=isE?o.k:sprName(o),w=Math.round(size*sx),h=Math.round(size*sy);
@@ -1377,6 +1409,7 @@ function draw(){
   ctx.drawImage(spc,Math.round(px-w/2),Math.round(by+hop-h),w,h);ctx.imageSmoothingEnabled=false;
   ctx.globalAlpha=1;
   var top=by+hop-h;
+  if(!isE&&o.cg){ctx.fillStyle=o.sp=='wisp'?'#d0a8ff':'#ffd45a';for(var q=0;q<o.cg;q++)ctx.fillRect(Math.round(px-4+q*3),Math.round(top-3),2,2);}
   if(isE){
    if(o.curse>g.t){ctx.fillStyle='#c080ff';ctx.fillRect(Math.round(px+w/2-4),Math.round(top+2),3,3);}
    if(o.confT>g.t)label('？',px,top-2,'#d0a0ff');
@@ -1415,9 +1448,10 @@ function draw(){
  }
 }
 function buildTabs(){
- var box=document.getElementById('tabs'),f;box.innerHTML='';box.style.gridTemplateColumns='repeat('+Math.min(F,4)+',1fr)';
+ var box=document.getElementById('tabs'),f;box.innerHTML='';mmT=0;mmView=-1;
  for(f=F-1;f>=0;f--)(function(f){
   var b=document.createElement('button');b.className='tab';b.id='tab'+f;
+  b.innerHTML='<canvas class="mm" width="40" height="40"></canvas><span class="tl"></span>';
   b.onclick=function(){g.view=f;ui();draw();};
   box.appendChild(b);
  })(f);
@@ -1430,15 +1464,18 @@ function ui(){
   for(i=0;i<g.en.length;i++)if(g.en[i].f==f)ne++;
   for(i=0;i<g.cr.length;i++)if(g.cr[i].f==f)nm++;
   for(i=0;i<N*N;i++)tot+=g.grid[f][i].nut;
-  if(t){t.className='tab'+(g.view==f?' on':'')+(ne?' alert':'');t.innerHTML=(f+1)+'階<small>敵'+ne+' 魔'+nm+'</small>';}
+  if(t){var cn='tab'+(g.view==f?' on':'')+(ne?' alert':'');if(t.className!=cn)t.className=cn;var tl=t.querySelector('.tl'),th=(f+1)+'階<small>敵'+ne+' 魔'+nm+'</small>';if(tl&&tl.innerHTML!=th)tl.innerHTML=th;}
  }
  document.getElementById('wave').textContent=Math.min(g.wave,WAVES.length)+' / '+WAVES.length;
  document.getElementById('cd').textContent=g.wave<WAVES.length?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent='試作 v11 · 塔'+F+'階 · '+g.round+'周目';
+ document.getElementById('ver').textContent='試作 v12 · 塔'+F+'階 · '+g.round+'周目';
+ var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
+ var cm=document.getElementById('cmsg'),ct=g.cline?'コア「'+g.cline+'」':'';if(cm.textContent!=ct)cm.textContent=ct;cm.classList.toggle('old',performance.now()-(g.clineRT||0)>12000);
+ drawMinis();
  var nh=0,yin=false;for(i=0;i<g.cr.length;i++)if(g.cr[i].hero)nh++;for(i=0;i<g.en.length;i++)if(g.en[i].yu)yin=true;
- var bl=document.getElementById('blist'),blt='一覧'+(nh?'（主役'+nh+'）':'');if(bl.textContent!=blt)bl.textContent=blt;bl.classList.toggle('alert',yin);
+ var bl=document.getElementById('blist'),blt='一覧'+(nh?' ★'+nh:'');if(bl.textContent!=blt)bl.textContent=blt;bl.classList.toggle('alert',yin);
  side();
 }
 // 横の一覧(主役・勇者・殿堂)。毎フレーム作り直さず、変わった時だけ
@@ -1448,22 +1485,131 @@ function side(){
  var now=performance.now();if(now-sideT<250)return;sideT=now;
  var hs2=g.cr.filter(function(m){return m.hero;}).sort(function(a,b){return b.t-a.t||b.kills-a.kills;});
  var Y=g.yu,yuOn=g.en.filter(function(e){return e.yu;})[0];
- var key=g.view+'|'+hs2.map(function(m){return m.id+':'+m.f+':'+Math.round(m.hp/m.mhp*20)+':'+m.ep+m.kills;}).join(',')+'|'+yuName()+Y.lvl+Y.skills.length+(yuOn?Math.round(yuOn.hp/yuOn.mhp*20)+':'+yuOn.f+(yuOn.flee?'f':''):'-')+'|'+HALL.length+'|'+g.yuKilled;
- key+='|'+JSON.stringify(g.mutNext)+JSON.stringify(g.dc);
+ var key=g.view+'|'+hs2.map(function(m){return m.id+':'+m.f+':'+Math.round(m.hp/m.mhp*20)+':'+m.ep+m.kills+'L'+(m.lv||0);}).join(',')+'|'+yuName()+Y.lvl+Y.skills.length+(yuOn?Math.round(yuOn.hp/yuOn.mhp*20)+':'+yuOn.f+(yuOn.flee?'f':''):'-')+'|'+HALL.length+'|'+g.yuKilled;
+ key+='|'+JSON.stringify(g.mutNext)+JSON.stringify(g.dc)+'|'+g.dp+JSON.stringify(g.calm||{});
  if(key==sideKey)return;sideKey=key;
  var mk=Object.keys(g.mutNext),dk=Object.keys(g.dc).filter(function(k){return g.dc[k].n>0;});
  function kname(k){var a=k.split('_');return baseName(a[0],a[1]||'mag');}
  document.getElementById('muts').innerHTML=(mk.length||dk.length)?mk.map(function(k){return '<div class="empty"><b style="color:var(--ink)">次の'+esc(kname(k))+'は'+MUTN[g.mutNext[k]]+'</b></div>';}).join('')+dk.slice(0,5).map(function(k){var c=g.dc[k];return '<div class="empty">'+esc(kname(k))+'：倒され'+c.enemy+'・食べられ'+c.eaten+'・餓死'+c.starve+'（あと'+(4-c.n)+'匹で変異）</div>';}).join(''):'<div class="empty">同じ種が4匹死ぬと、一番多い死に方で次の変異が決まります（倒された→強化種・食べられた→異常種・餓死→巨大種）。</div>';
+ var ck=Object.keys(g.calm||{}).filter(function(k){return g.calm[k]>=20&&!g.mutNext[k];});
+ if(ck.length)document.getElementById('muts').innerHTML+=ck.map(function(k){return '<div class="empty">'+esc(kname(k))+'：穏やかに'+g.calm[k]+'秒 / '+PURE_T+'（誰も死ななければピュア種）</div>';}).join('');
  document.getElementById('heroes').innerHTML=hs2.length?hs2.map(function(m){
-  return '<button class="hrow'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'"><b>'+esc(fullName(m))+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 技「'+esc(SKN[m.env][m.t])+'」'+(m.last?'(奥の手済み)':'')+' · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>';
+  return '<div class="hwrap"><button class="hrow'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'"><b>'+esc(fullName(m))+(m.lv?' Lv'+(m.lv+1):'')+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 技「'+esc(SKN[m.env][m.t])+'」'+(m.last?'(奥の手済み)':'')+' · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>'+trainBtn(m)+'</div>';
  }).join(''):'<div class="empty">まだいません。よく食べた個体・生き延びた大型・冒険者を何人も倒した個体が、まれに昇格します。</div>';
  var yh='<b style="font-size:12.5px">'+esc(yuName())+'</b><div class="empty">挑戦'+(Y.fled+1)+'度目 · 技：'+esc(Y.skills.join('・'))+'<br>'+(yuOn?(yuOn.flee?'逃げている！ '+(yuOn.f+1)+'階':'塔の中 · '+(yuOn.f+1)+'階 · 体力'+Math.max(0,Math.round(yuOn.hp))+'/'+Math.round(yuOn.mhp)):'第6波に来る')+(g.yuKilled?'<br>これまでに倒し切った勇者：'+g.yuKilled+'人':'')+'</div>';
  if(yuOn)yh='<button class="hrow" data-f="'+yuOn.f+'" style="border-color:#d9534f">'+yh+'</button>';
  document.getElementById('yuusha').innerHTML=yh;
  document.getElementById('hall').innerHTML=HALL.length?'<ol class="hall">'+HALL.slice(0,12).map(function(h){return '<li><b>'+esc(h.n)+'</b> 倒した'+h.k+' · '+h.f+'階 · '+esc(h.c)+'</li>';}).join('')+'</ol>':'<div class="empty">倒れた主役の名がここに残ります（強さは次の塔に持ち越しません）。</div>';
 }
-document.getElementById('spane-list').addEventListener('click',function(ev){var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');sideKey='';closeSheet();ui();draw();});
+document.getElementById('spane-list').addEventListener('click',function(ev){var tb=ev.target.closest('[data-train]');if(tb){train(+tb.getAttribute('data-train'));return;}var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');sideKey='';closeSheet();ui();draw();});
 function loop(ts){var dt=Math.min(0.1,(ts-last)/1000);last=ts;if(!over&&speed>0)step(dt*speed);draw();ui();requestAnimationFrame(loop);}
+// ---------- v12: 鍛える・運ぶ・ピュア種・全体図・コアの台詞・音 ----------
+// 主役を掘る力で鍛える（5回まで）
+function trainCost(m){return 10*((m.lv||0)+1);}
+function trainBtn(m){var lv=m.lv||0;if(lv>=5)return '<button class="train" disabled>鍛え上げた</button>';var c=trainCost(m);return '<button class="train" data-train="'+m.id+'"'+(g.dp<c?' disabled':'')+'>鍛える<small>掘る力'+c+'</small></button>';}
+function train(id){var m=g.cr.filter(function(o){return o.id===id&&o.hero;})[0];if(!m||(m.lv||0)>=5)return;var c=trainCost(m);if(g.dp<c){say('掘る力が足りません（'+c+'要る）。');return;}
+ g.dp-=c;m.lv=(m.lv||0)+1;var r=m.hp/m.mhp;m.mhp*=1.15;m.hp=Math.min(m.mhp,m.mhp*r+m.mhp*0.1);m.atkk*=1.15;
+ addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:600,c:'255,215,90',r0:4,rad:24});fxNum(m.f,m.x,m.y,'Lv'+(m.lv+1),'#ffd45a');
+ say(crLabel(m)+'を鍛えた（Lv'+(m.lv+1)+'・体力と攻撃が上がった）。');sfx('train');coreSay('train',true);sideKey='';side();}
+// スライム（魔分はウィスプ）が養分を運ぶ: 満腹なら道の隣の土から拾い、行き止まりで先の土へ吐く
+function carryStep(m){
+ var mg=m.sp=='wisp',fld=mg?'mag':'nut',cg=m.cg||0,i,c,cand=[],oc=openCount(m.f,m.x,m.y);
+ if(cg>0&&oc<=1){
+  for(i=0;i<4;i++){var x=m.x+D4[i][0],y=m.y+D4[i][1];c=cellAt(m.f,x,y);if(c&&!c.open&&!bedrock(m.f,x,y)&&(c[fld]||0)<9)cand.push(c);}
+  if(cand.length){c=cand[rnd(cand.length)];var pt=Math.min(cg,9-(c[fld]||0));c[fld]=(c[fld]||0)+pt;m.cg=cg-pt;
+   addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:420,c:mg?'200,150,255':'255,210,90',r0:2,rad:10});return true;}
+ }
+ if(cg<3&&oc>1&&m.e>=2&&Math.random()<0.3){
+  for(i=0;i<4;i++){c=cellAt(m.f,m.x+D4[i][0],m.y+D4[i][1]);if(c&&!c.open&&(c[fld]||0)>0){c[fld]--;m.cg=cg+1;return true;}}
+ }
+ return false;
+}
+// ピュア種: 同じ種が3匹以上いるまま、1匹も死なずに PURE_T 秒
+var PURE_T=150;
+function calmTick(){
+ g.calm=g.calm||{};var cnt={},i,m,k;
+ for(i=0;i<g.cr.length;i++){m=g.cr[i];if(m.hero||SPEC[m.sp].line=='sp')continue;k=skey(m.sp,m.env);cnt[k]=(cnt[k]||0)+1;}
+ for(k in cnt){if(cnt[k]<3||g.mutNext[k])continue;g.calm[k]=(g.calm[k]||0)+1;
+  if(g.calm[k]>=PURE_T){g.calm[k]=0;g.mutNext[k]='pure';var a=k.split('_');say(baseName(a[0],a[1]||'mag')+'が穏やかに増え続け、次はピュア種が生まれる気配…');coreSay('pure',true);}}
+}
+// 塔の全体図: 階のボタンに 2px/マスの縮図
+var MMC={moss:'#4f5d2e',water:'#2f4b68',rock:'#5d4832',ice:'#6d8ca2',lava:'#6e2f1d'},mmT=0,mmView=-1;
+function drawMinis(){
+ var now=performance.now();if(now-mmT<400)return;mmT=now;
+ for(var f=0;f<F;f++){var t=document.getElementById('tab'+f);if(!t)continue;var cv2=t.querySelector('canvas');if(!cv2)continue;var x2=cv2.getContext('2d'),x,y,cl;
+  for(y=0;y<N;y++)for(x=0;x<N;x++){cl=cellAt(f,x,y);x2.fillStyle=bedrock(f,x,y)?'#2b241c':cl.open?'#d8c8a0':(MMC[cl.env]||'#4a3a28');x2.fillRect(x*2,y*2,2,2);}
+  g.cr.forEach(function(m){if(m.f!=f)return;x2.fillStyle=m.hero?'#ffd45a':'#5fd06c';x2.fillRect(m.x*2,m.y*2,2,2);});
+  g.en.forEach(function(e){if(e.f!=f)return;var b=e.yu?4:2,o=e.yu?1:0;x2.fillStyle=e.yu?'#ff2f2f':'#ff6a4a';x2.fillRect(e.x*2-o,e.y*2-o,b,b);});
+  var C=g.core;if(C.f==f){x2.fillStyle='#ffe066';x2.fillRect(C.x*2-1,C.y*2-1,4,4);}
+ }
+ if(mmView!=g.view){mmView=g.view;var tv=document.getElementById('tab'+g.view),bx=document.getElementById('tabs');
+  if(tv&&bx){var l=tv.offsetLeft-bx.offsetLeft;if(l<bx.scrollLeft||l+tv.offsetWidth>bx.scrollLeft+bx.clientWidth)bx.scrollLeft=Math.max(0,l-8);}}
+}
+// コアの台詞（塔の意志＝あなたに話しかける）
+var CLINES={
+ start:['さあ意志、掘って。わたしは最上階でじっとしてるから。','準備の間は時間が止まってる。ゆっくり考えていいよ。','掘る力は大事に使ってね。わたし、掘れないから。'],
+ wave:['来た来た。足音が聞こえる。','また冒険者。お宝なんて無いのにね。','みんな、出番だよ。','入口のほうが騒がしい。'],
+ yu:['勇者が来た…！ あの顔、前にも見た気がする。','勇者のお出ましだ。主役のみんな、気をつけて。'],
+ taken:['ちょっと！ 持ち上げないで！','わ、わたし運ばれてる！ 誰か止めて！'],
+ back:['ふう、戻ってこれた。','床が冷たかった…ただいま。'],
+ promo:['名前持ちが生まれた。頼もしいね。','あの子、いい顔になってきた。'],
+ herodie:['あの子の名前、忘れないよ。','殿堂に刻んでおくね。'],
+ grow:['塔が伸びた！ 見晴らしがいい。','新しい最上階、ちょっと寒い。'],
+ lowdp:['掘る力、残り少ないよ。','そろそろ掘る場所を選ぼうか。'],
+ nodp:['もう掘れない。冒険者を倒せば少し戻るよ。'],
+ mut:['なんだか変わった子が生まれそう。'],
+ pure:['静かに増えた種から、澄んだ子が生まれそう。'],
+ yuflee:['逃げた！ でも、また来るんだろうな。'],
+ yukill:['やった！ 勇者を倒し切った！','これで、しばらく静かになるね。'],
+ train:['鍛えたね。強くなった顔してる。','掘る力の使い道、それもありだね。']
+};
+var cLast=0;
+function coreSay(k,force){var now=performance.now();if(!force&&now-cLast<6000)return;var a=CLINES[k];if(!a||!g)return;var s2=a[rnd(a.length)];if(a.length>1&&s2==g.cline)s2=a[(a.indexOf(s2)+1)%a.length];g.cline=s2;g.clineRT=now;cLast=now;}
+// 音（その場で合成。最初に触れた時に鳴らせるようになる）
+var SND={on:true,ac:null,last:{}};
+try{SND.on=localStorage.getItem('tou-snd')!=='0';}catch(_){}
+function sndInit(){if(SND.ac||!SND.on)return;try{var A=window.AudioContext||window.webkitAudioContext;if(!A)return;SND.ac=new A();SND.master=SND.ac.createGain();SND.master.gain.value=0.55;SND.master.connect(SND.ac.destination);}catch(_){SND.ac=null;}}
+function tone(fq,dur,type,vol,when,slide){var a=SND.ac;if(!a)return;var t=a.currentTime+(when||0),o=a.createOscillator(),gn=a.createGain();o.type=type||'square';o.frequency.setValueAtTime(fq,t);if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+dur);gn.gain.setValueAtTime(0.0001,t);gn.gain.exponentialRampToValueAtTime(vol||0.1,t+0.01);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(gn);gn.connect(SND.master);o.start(t);o.stop(t+dur+0.03);}
+var NBUF=null;
+function noise(dur,vol,when,lp){var a=SND.ac;if(!a)return;if(!NBUF){var n=a.sampleRate,d;NBUF=a.createBuffer(1,n,n);d=NBUF.getChannelData(0);for(var i=0;i<n;i++)d[i]=Math.random()*2-1;}
+ var t=a.currentTime+(when||0),s2=a.createBufferSource(),fl=a.createBiquadFilter(),gn=a.createGain();s2.buffer=NBUF;fl.type='lowpass';fl.frequency.value=lp||1200;gn.gain.setValueAtTime(vol||0.2,t);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);s2.connect(fl);fl.connect(gn);gn.connect(SND.master);s2.start(t);s2.stop(t+dur+0.02);}
+function sfx(k){
+ if(!SND.on||!SND.ac||SND.ac.state!='running'||document.hidden)return;
+ var now=performance.now(),gap={hit:90,mdie:160,spawn:70,dig:60,ekill:80}[k]||0;if(gap&&now-(SND.last[k]||0)<gap)return;SND.last[k]=now;
+ switch(k){
+ case 'dig':noise(0.13,0.35,0,900);tone(120,0.09,'triangle',0.12,0,70);break;
+ case 'spawn':tone(520,0.07,'square',0.045);tone(780,0.09,'square',0.045,0.06);break;
+ case 'hit':noise(0.05,0.14,0,2600);break;
+ case 'ekill':tone(330,0.08,'square',0.06);tone(247,0.14,'square',0.06,0.07);break;
+ case 'mdie':tone(210,0.16,'triangle',0.08,0,90);break;
+ case 'wave':tone(196,0.18,'sawtooth',0.05);tone(262,0.3,'sawtooth',0.05,0.18);break;
+ case 'yu':[196,233,294,392].forEach(function(f2,i){tone(f2,0.22,'sawtooth',0.05,i*0.16);});break;
+ case 'alarm':for(var i=0;i<3;i++){tone(880,0.12,'square',0.05,i*0.25);tone(660,0.12,'square',0.05,i*0.25+0.12);}break;
+ case 'promote':[523,659,784,1047].forEach(function(f2,i){tone(f2,0.14,'triangle',0.08,i*0.08);});break;
+ case 'grow':[392,523,659,784].forEach(function(f2,i){tone(f2,0.25,'triangle',0.08,i*0.12);});break;
+ case 'yukill':[523,659,784,659,1047].forEach(function(f2,i){tone(f2,0.2,'square',0.05,i*0.12);});break;
+ case 'lose':[392,330,262,196].forEach(function(f2,i){tone(f2,0.35,'triangle',0.08,i*0.28);});break;
+ case 'nodp':tone(150,0.12,'square',0.05);break;
+ case 'train':tone(440,0.06,'square',0.05);tone(660,0.12,'square',0.05,0.06);break;
+ }
+}
+// 曲: 準備の間はゆっくり、冒険者がいる間は速く低く
+var BG={next:0,i:0},MEL=[0,3,5,7,10,7,5,3,0,3,7,10,12,10,7,5];
+setInterval(function(){
+ var a=SND.ac;if(!SND.on||!a||a.state!='running'||document.hidden||!g)return;
+ var tense=!!(g.en&&g.en.length),beat=tense?0.3:0.5;if(BG.next<a.currentTime)BG.next=a.currentTime+0.05;
+ while(BG.next<a.currentTime+0.6){var w=BG.next-a.currentTime,i=BG.i++,n=MEL[i%16];
+  tone(220*Math.pow(2,n/12),beat*0.9,'triangle',0.022,w);
+  if(i%4==0)tone((tense?55:110)*(i%16<8?1:0.89),beat*1.8,'sine',0.045,w);
+  if(tense&&i%2==1)noise(0.03,0.035,w,4000);
+  BG.next+=beat;}
+},200);
+function sndLabel(){document.getElementById('bsnd').textContent=SND.on?'音 ON':'音 OFF';}
+document.addEventListener('pointerdown',function(){sndInit();if(SND.ac&&SND.on&&SND.ac.state=='suspended')SND.ac.resume();},true);
+document.getElementById('bsnd').onclick=function(){SND.on=!SND.on;try{localStorage.setItem('tou-snd',SND.on?'1':'0');}catch(_){}
+ if(SND.on){sndInit();if(SND.ac)SND.ac.resume();}else if(SND.ac)SND.ac.suspend();sndLabel();};
+sndLabel();
+document.addEventListener('visibilitychange',function(){if(!SND.ac)return;if(document.hidden)SND.ac.suspend();else if(SND.on)SND.ac.resume();});
 // ---- 盤面の操作（v11）----
 // 1本指: 触れた・なぞったマスに印 → 指を離すとまとめて掘る。最初のマスへ戻すと取り消し
 // 2本指: 広げて拡大・動かして移動。PC はホイールで拡大、Shift+ドラッグで移動
@@ -1480,7 +1626,7 @@ function addPath(p){
  if(k==path.first){if(path.left)path.cancel=true;return;}
  path.left=true;path.cancel=false;
  for(var i=0;i<path.cells.length;i++)if(path.cells[i][2]==k)return;
- if(canDig(path.f,p[0],p[1]))path.cells.push([p[0],p[1],k]);
+ if(canDig(path.f,p[0],p[1])){if(path.cells.length>=g.dp){if(!path.warn){path.warn=1;say('掘る力が足りません（残り'+g.dp+'）。');sfx('nodp');}return;}path.cells.push([p[0],p[1],k]);}
 }
 function twoPts(){var ids=Object.keys(ptrs);return [ptrs[ids[0]],ptrs[ids[1]]];}
 function startPinch(){var t=twoPts(),mx=(t[0].x+t[1].x)/2,my=(t[0].y+t[1].y)/2;
@@ -1511,7 +1657,7 @@ function endPtr(ev,cancel){
  if(!path)return;var P=path;path=null;
  if(cancel||P.cancel||over||P.f!=g.view){draw();return;}
  var dug=0;P.cells.forEach(function(p){if(digAt(P.f,p[0],p[1]))dug++;});
- if(dug)haptic(dug>3?'medium':'light');
+ if(dug){haptic(dug>3?'medium':'light');sfx('dig');}
  draw();ui();
 }
 cv.addEventListener('pointerup',function(ev){endPtr(ev,false);});
@@ -1538,7 +1684,7 @@ window.__pause=function(){pauseGame();saveGame();};
 document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
-window.__t={g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
+window.__t={g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},train:train,carry:carryStep,calm:calmTick,coreSay:coreSay,zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
 document.getElementById('bdex').onclick=showDex;document.getElementById('bmenu').onclick=function(){saveGame();showTitle();};
 newGame('normal');g.title=true;showTitle();draw();ui();requestAnimationFrame(function(t){last=t;requestAnimationFrame(loop);});
 })();
