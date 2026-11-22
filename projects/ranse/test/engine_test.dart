@@ -234,6 +234,29 @@ void main() {
     }
   });
 
+  test('足軽の暮らしの岐路（長屋・博打・乱取り・朋輩の死など）が出る', () {
+    final seen = <String>{};
+    for (var seed = 0; seed < 300; seed++) {
+      final rng = Rng(seed + 55);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      playChildhood(g, Rng(seed));
+      if (g.finished || g.l.female) continue;
+      g.l
+        ..rank = 1
+        ..maxRank = 1
+        ..lord = g.alive.first.name
+        ..fav = 20;
+      playOut(g, Rng(seed + 1));
+      seen.addAll(
+        g.l.flags
+            .where((f) => f.startsWith('scene:a_'))
+            .map((f) => f.substring(6)),
+      );
+    }
+    expect(seen.length, greaterThanOrEqualTo(6), reason: '$seen');
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);
