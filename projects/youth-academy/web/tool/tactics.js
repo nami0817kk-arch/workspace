@@ -28,6 +28,7 @@ const measure = (type) => {
     away.tactic = Object.assign({ type: 'ポゼッション' }, YA.TACTICS['ポゼッション']);
     const m = new YA.Match({ seed, home, away, settings: { autoStop: false } });
     m.homeShare = () => 0.5; // 力の差による「流れ」は切り離して、戦い方の差だけを見る
+    // 次の見どころの攻め手でボールを取り返しやすくする分も切り離す
     const R = new YA.Renderer(cv);
     R.setMatch(m);
     let held = 0;
@@ -74,6 +75,7 @@ const flowOf = (share) => {
     const away = YA.makeOpponent(YA.opponentOf(w), seed * 7);
     const m = new YA.Match({ seed, home, away, settings: { autoStop: false } });
     m.homeShare = () => share;
+   
     const R = new YA.Renderer(cv);
     R.setMatch(m);
     for (let i = 0; i < 60 * 90; i++) {

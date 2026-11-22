@@ -79,6 +79,7 @@ ok(r1.side > 0.25, '守りがボール側へ寄る');
   const home = YA.teamFromWorld(w, 'A');
   const m = new YA.Match({ seed: 8, home, away: YA.makeOpponent(YA.opponentOf(w), 56), settings: { autoStop: false } });
   m.homeShare = () => 0.5;
+ 
   const R = new YA.Renderer(cv);
   R.setMatch(m);
   const ab0 = R.ab01.bind(R);

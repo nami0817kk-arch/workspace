@@ -8,7 +8,7 @@ const YA = globalThis.YA; const cv = { getBoundingClientRect: () => ({ width: 84
 const L = 105, W = 68;
 const c = {}; const ex = {};
 const add = (k, e) => { c[k] = (c[k] || 0) + 1; if (e && (!ex[k] || ex[k].length < 2)) (ex[k] = ex[k] || []).push(e); };
-const SEEDS = (process.env.SEEDS || '3,8,21,5').split(',').map(Number);
+const SEEDS = (process.env.SEEDS || '3,8,21,5,13,34').split(',').map(Number); // 4試合では1回の差で上限をまたいだので6試合
 for (const seed of SEEDS) {
   const w = YA.newWorld(seed);
   const m = new YA.Match({ seed, home: YA.teamFromWorld(w, 'A'), away: YA.makeOpponent(YA.opponentOf(w), seed * 7), settings: { autoStop: false } });
@@ -31,7 +31,7 @@ for (const seed of SEEDS) {
       if (recv && this.teamOf(recv) === this.teamOf(by) && this.disp[recv]) {
         const dr = Math.hypot(to[0] - this.disp[recv][0], to[1] - this.disp[recv][1]);
         let dop = 99; for (const o of Object.keys(this.disp)) if (this.base[o] && this.teamOf(o) !== this.teamOf(by)) dop = Math.min(dop, Math.hypot(to[0] - this.disp[o][0], to[1] - this.disp[o][1]));
-        if (dop + 2 < dr) add('相手の方が先に着く所へのパス(' + src + ')', tag());
+        if (dop + 2 < dr && src === '合間') add('相手の方が先に着く所へのパス(合間)', tag()); // 場面・入りは届いた時に見る（下）
         // オフサイドの位置の味方へ（合間）
         if (src === '合間') {
           const opp = Object.keys(this.disp).filter((o) => this.base[o] && this.teamOf(o) !== this.teamOf(by));
@@ -46,8 +46,17 @@ for (const seed of SEEDS) {
     return k0(to, recv, by);
   };
   let prev = {}, prevOwner = null, prevBall = R.ball.slice(), holdT = 0, outT = 0, wasCut = false, prevScene = null, lastGoalSide = null, firstAfterGoal = false;
+  let prevFl = null;
   const step = () => {
     R.update(1 / 60); T += 1 / 60;
+    // 場面・入りの球が届いた時：受け手より相手がずっと近いのに、相手は触らない（台本では受け手しか触らない）
+    if (prevFl && !R.fl && R.scene && prevFl.recv && prevFl.by && R.base[prevFl.recv] && R.base[prevFl.by] && R.base[prevFl.recv][2] === R.base[prevFl.by][2] && R.disp[prevFl.recv] && R.cut <= 0.05) {
+      let dop = 99;
+      for (const o of Object.keys(R.disp)) if (R.base[o] && R.base[o][2] !== R.base[prevFl.by][2]) dop = Math.min(dop, Math.hypot(R.disp[o][0] - R.ball[0], R.disp[o][1] - R.ball[1]));
+      const dr = Math.hypot(R.disp[prevFl.recv][0] - R.ball[0], R.disp[prevFl.recv][1] - R.ball[1]);
+      if (dop < 1.2 && dr > 2.5) add('届いた球のそばの相手が触らない(' + (R.pre ? '入り' : '場面') + ')', tag());
+    }
+    prevFl = R.fl;
     const cut = R.cut > 0.05 || wasCut; wasCut = R.cut > 0.05;
     // 持ち主が相手に直接替わった（ボールが離れていないのに）
     if (R.owner && prevOwner && R.owner !== prevOwner && R.teamOf(R.owner) !== R.teamOf(prevOwner) && !cut) add('持ち主が相手へ直接替わった(' + (R.pre ? '入り' : R.scene ? '場面' : '合間') + ')', tag());
@@ -78,7 +87,7 @@ for (const seed of SEEDS) {
     const bs = Math.hypot(R.ball[0] - prevBall[0], R.ball[1] - prevBall[1]) * 60;
     if (!R.scene && !R.owner && !R.fl && !cut && !R.setup && bs < 0.3) { R._idleBall = (R._idleBall || 0) + 1 / 60; if (R._idleBall > 3) { add('誰も拾わない止まった球が3秒以上(合間)', tag()); R._idleBall = -99; } } else if (R.owner) R._idleBall = 0;
     // 地を這う球が相手の体を通り抜ける（0.5m 以内を通っても触らない）
-    if (!R.owner && R.fl && R.fl.kind === 'ground' && R.fl.by && !cut) { for (const o of Object.keys(R.disp)) { if (!R.base[o] || R.teamOf(o) === R.teamOf(R.fl.by) || R.fl.recv === o) continue; const d = Math.hypot(R.disp[o][0] - R.ball[0], R.disp[o][1] - R.ball[1]); if (d < 0.5 && Math.hypot(R.ball[0] - R.fl.from[0], R.ball[1] - R.fl.from[1]) > 2) { R.fl._thru = R.fl._thru || {}; if (!R.fl._thru[o]) { R.fl._thru[o] = 1; add('地を這う球が相手の体を通り抜ける(' + (R.scene ? '場面' : '合間') + ')', tag() + ' 誰' + o + (R.stgt && R.stgt[o] ? '台本' : '') + ' icpt' + R.fl.icpt + ' recv' + R.fl.recv + ' 蹴' + R.fl.by + ' 距離' + R.fl.d.toFixed(1) + ' t' + R.fl.t.toFixed(2)); } } } }
+    if (!R.owner && R.fl && R.fl.kind === 'ground' && R.fl.by && !cut) { for (const o of Object.keys(R.disp)) { if (!R.base[o] || R.teamOf(o) === R.teamOf(R.fl.by) || R.fl.recv === o) continue; const d = Math.hypot(R.disp[o][0] - R.ball[0], R.disp[o][1] - R.ball[1]); if (d < 0.5 && (R.ball[2] || 0) < 0.25 && Math.hypot(R.ball[0] - R.fl.from[0], R.ball[1] - R.fl.from[1]) > 2) { /* 浮いて足を越える球は数えない */ R.fl._thru = R.fl._thru || {}; if (!R.fl._thru[o]) { R.fl._thru[o] = 1; add('地を這う球が相手の体を通り抜ける(' + (R.scene ? '場面' : '合間') + ')', tag() + ' 誰' + o + (R.stgt && R.stgt[o] ? '台本' : '') + ' icpt' + R.fl.icpt + ' recv' + R.fl.recv + ' 蹴' + R.fl.by + ' 距離' + R.fl.d.toFixed(1) + ' t' + R.fl.t.toFixed(2)); } } } }
     // キックオフで相手陣に立つ
     if (R._koCheck) { R._koCheck = false; for (const id of Object.keys(R.disp)) { if (!R.base[id] || id === R.owner) continue; const dd = R.atkDir(id)[1] > 0 ? R.disp[id][1] : L - R.disp[id][1]; if (dd > L / 2 + 0.5) add('キックオフで相手陣に立つ', tag()); } }
     // 同じ2人の往復パス
@@ -129,6 +138,8 @@ const LIMIT = {
   '地を這う球が相手の体を通り抜ける(合間)': 0.8,
   '地を這う球が相手の体を通り抜ける(場面)': 2.5,
   '相手の方が先に着く所へのパス(合間)': 2,
+  '届いた球のそばの相手が触らない(入り)': 1,
+  '届いた球のそばの相手が触らない(場面)': 1,
   'オフサイドの位置の味方へのパス': 0.5,
   '誰も拾わない止まった球が3秒以上(合間)': 0.3,
   '同じ2人で2往復のパス(合間)': 0.5,

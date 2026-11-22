@@ -557,7 +557,7 @@
       // いまは同じ向きに少し先（味方のいる方）を狙って蹴り、相手が台本の位置で足を出して切る
       for (const e of ev) {
         if (e.kind !== 'kick' || !e.recv || !e.who || !this.base[e.recv] || !this.base[e.who]) continue;
-        if (this.base[e.recv][2] === this.base[e.who][2] || this.base[e.recv][3] === 0) continue;
+        if (this.base[e.recv][2] === this.base[e.who][2]) continue; // GK が取る球も、GK の足元へは蹴らない
         if ((e.b.ball[2] || 0) > 0.5 || e.b.ball[1] < 1 || e.b.ball[1] > L - 1) continue;
         const d = dist(e.a.ball, e.b.ball);
         if (d < 4) { e.tackle = true; continue; } // すぐ隣の相手へ渡る球は、パスではなく奪われた（相手が足で突いて奪う）
@@ -703,6 +703,7 @@
             this.idle = null;
             this.bv = [((r[0] - b[0]) / d) * 3, ((r[1] - b[1]) / d) * 3];
             this.expect = p.steal;
+            this.kicked = true; // 触った
             this.lastTouch = this.teamOf(p.steal);
             const sp = this.teamOf(p.steal).players[p.steal];
             if (sp) this.capText = { text: sp.num + '番 ' + String(sp.name).split(' ')[0].split('・').pop() + ' 奪った', t: 0 };
@@ -965,6 +966,16 @@
         } else s = fl.d * u;
         const z = fl.kind === 'ground' ? 0 : lerp(fl.z0, fl.to[2], u) + fl.h * 4 * u * (1 - u);
         this.ball = [fl.from[0] + dx * s, fl.from[1] + dy * s, Math.max(0, z)];
+        // 場面の台本の地を這う球（受け手のほかは触らない）：相手の足元を通る所だけ、少し浮いて足を越える（届く時間は変えない）
+        if (this.scene && fl.kind === 'ground' && fl.by && this.base[fl.by]) {
+          let hop = 0;
+          for (const o of Object.keys(this.disp)) {
+            if (o === fl.recv || o === fl.icpt || !this.base[o] || this.base[o][2] === this.base[fl.by][2]) continue;
+            const d = dist(this.disp[o], this.ball);
+            if (d < 1.1) hop = Math.max(hop, 0.6 * (1 - d / 1.1) + 0.15);
+          }
+          if (hop > 0) this.ball[2] = Math.max(this.ball[2], hop);
+        }
         // パスカット：決まった子（fl.icpt）が通り道に足を出して止める（場面の「奪われる」パス・合間の失敗・場面の入りで相手のパスを切る）
         if (fl.icpt && this.disp[fl.icpt] && this.ball[2] < (fl.kind === 'loft' ? 3 : 1.3) && dist(this.disp[fl.icpt], this.ball) < MOVE.reach * (fl.kind === 'loft' ? 1.4 : 1)) {
           const id = fl.icpt;
