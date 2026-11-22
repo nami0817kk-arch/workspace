@@ -1,12 +1,10 @@
 import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
-import 'rng.dart';
 
 /// 村の暮らし（身分のない百姓・漁民の大人）の岐路（2026-11-23）。
 /// 生まれの約4分の3は農民の子なのに、村で暮らし続ける大人の岐路が数えるほどだったため。id は `v_`。
 
-int _c(int v) => clampInt(v, 0, 100);
 bool _villager(Game g) =>
     g.l.rank == 0 &&
     const ['farmer', 'fisher', 'beggar'].contains(g.l.cls.id) &&
