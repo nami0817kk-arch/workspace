@@ -84,24 +84,28 @@ class _DexTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-      child: ExpansionTile(
-        tilePadding: EdgeInsets.zero,
-        childrenPadding: const EdgeInsets.only(bottom: 10),
-        iconColor: Pal.gold,
-        collapsedIconColor: Pal.muted,
-        title: Text(
-          e.title,
-          style: const TextStyle(color: Pal.gold, fontSize: 15, height: 1.4),
+    // 色付きの枠の中に置くので、押したときの波紋が見えるよう透明な Material で包む。
+    return Material(
+      type: MaterialType.transparency,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          childrenPadding: const EdgeInsets.only(bottom: 10),
+          iconColor: Pal.gold,
+          collapsedIconColor: Pal.muted,
+          title: Text(
+            e.title,
+            style: const TextStyle(color: Pal.gold, fontSize: 15, height: 1.4),
+          ),
+          subtitle: Text(
+            '${e.name}・${e.age}歳（${e.year}年）${e.count > 1 ? '　ほか${e.count - 1}回' : ''}',
+            style: const TextStyle(color: Pal.muted, fontSize: 12),
+          ),
+          children: [
+            Text(e.text, style: const TextStyle(fontSize: 14, height: 1.8)),
+          ],
         ),
-        subtitle: Text(
-          '${e.name}・${e.age}歳（${e.year}年）${e.count > 1 ? '　ほか${e.count - 1}回' : ''}',
-          style: const TextStyle(color: Pal.muted, fontSize: 12),
-        ),
-        children: [
-          Text(e.text, style: const TextStyle(fontSize: 14, height: 1.8)),
-        ],
       ),
     );
   }
