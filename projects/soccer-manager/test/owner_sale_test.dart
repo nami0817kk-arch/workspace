@@ -15,20 +15,43 @@ void main() {
     expect(gs.saleReason, isNull);
   });
 
-  test('サポーターが尽きるとサポーター、株主が尽きると株主が理由になる', () async {
+  test('手放す理由は、資金が尽きたときとサポーターの期待が尽きたときだけ', () async {
     final gs = GameState();
     await gs.startNewGame('テストFC');
-    gs.save!.shareholderExpectation = 0;
-    expect(gs.saleReason, SaleReason.shareholders);
-    gs.save!.confidence = 0;
+    final s = gs.save!;
+    // 株主の期待が尽きても手放さない。
+    s.shareholderExpectation = 0;
+    expect(gs.saleReason, isNull);
+    // 少しの借金では手放さない。
+    s.budget = gs.fundsExhaustedLine ~/ 2;
+    s.consecutiveNegativeBudgetWeeks = 10;
+    expect(gs.saleReason, isNull);
+    // 借金が線を超えても、週の締めでマイナスでなければ(一瞬の割り込み)数えない。
+    s.budget = gs.fundsExhaustedLine;
+    s.consecutiveNegativeBudgetWeeks = 0;
+    expect(gs.saleReason, isNull);
+    s.consecutiveNegativeBudgetWeeks = 1;
+    expect(gs.saleReason, SaleReason.funds);
+    // 両方ならサポーターを先に見る。
+    s.confidence = 0;
     expect(gs.saleReason, SaleReason.supporters);
+  });
+
+  test('資金が尽きる線は、その部の年収の目安の半分のマイナス', () async {
+    final gs = GameState();
+    await gs.startNewGame('テストFC');
+    expect(gs.fundsExhaustedLine, lessThan(0));
+    final half = GameState.initialBudgetFor(
+        gs.currentDivisionTier, gs.currentLeagueTheme);
+    expect(gs.fundsExhaustedLine, closeTo(-half, 1),
+        reason: '初期資金は年収の半分なので、同じ額のマイナス');
   });
 
   test('買い直すと、実績が殿堂に残り、期待と資金が初期に戻る', () async {
     final gs = GameState();
     await gs.startNewGame('テストFC');
-    gs.save!.shareholderExpectation = 0;
-    gs.save!.budget = -5000;
+    gs.save!.budget = gs.fundsExhaustedLine - 5000;
+    gs.save!.consecutiveNegativeBudgetWeeks = 12;
     final oldId = gs.save!.userTeamId;
 
     final candidates = gs.buyoutCandidates;
@@ -48,7 +71,18 @@ void main() {
     expect(gs.isSaleForced, isFalse);
     expect(save.ownerLegacies, hasLength(1));
     expect(save.ownerLegacies.single.clubName, 'テストFC');
-    expect(save.ownerLegacies.single.reason, SaleReason.shareholders);
+    expect(save.ownerLegacies.single.reason, SaleReason.funds);
+  });
+
+  test('旧セーブの殿堂の「株主」の理由はそのまま読める', () {
+    final legacy = OwnerLegacy.fromJson(const {
+      'clubName': 'A',
+      'reason': 'shareholders',
+    });
+    expect(legacy.reason, SaleReason.shareholders);
+    expect(
+        OwnerLegacy.fromJson(const {'clubName': 'B', 'reason': 'funds'}).reason,
+        SaleReason.funds);
   });
 
   test('売却を迫られていないときは買い直せない', () async {

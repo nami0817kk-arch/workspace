@@ -122,13 +122,38 @@ extension GameStateFinance on GameState {
     await _persist();
   }
 
+  /// 資金が尽きたとみなす線: 借金(資金のマイナス)がその部の年収の目安の
+  /// この割合を超えたら。他のクラブが破綻する線
+  /// ([GameStateClubFinance.collapseShare])と同じ。
+  static const double fundsExhaustedShare = 0.5;
+
+  /// これより資金が少なければ、資金が尽きている(万円。マイナスの額)。
+  int get fundsExhaustedLine => _save == null
+      ? 0
+      : -(typicalAnnualIncome(currentDivisionTier, currentLeagueTheme) *
+              fundsExhaustedShare)
+          .round();
+
+  /// 資金が尽きたか。借金が[fundsExhaustedLine]を超え、週の締めでも
+  /// マイナスだった(移籍金などで一瞬だけ割り込んだのでは数えない)。
+  bool get isFundsExhausted {
+    final save = _save;
+    if (save == null) return false;
+    return save.budget <= fundsExhaustedLine &&
+        save.consecutiveNegativeBudgetWeeks > 0;
+  }
+
   /// クラブを手放すことになった理由。迫られていなければ null。
-  /// 両方が尽きたときはサポーターを先に見る(成績の責任が重い)。
+  ///
+  /// 理由は2つだけ(2026-11-23): 資金が尽きたときと、サポーターの期待が
+  /// 尽きたとき。オーナーは雇われる立場ではないので、理事会との契約の満了
+  /// で辞めさせられることは無い。株主の期待が尽きても手放さない(株主総会
+  /// の要求などで重くなるだけ)。両方のときはサポーターを先に見る。
   SaleReason? get saleReason {
     final save = _save;
     if (save == null) return null;
     if (save.confidence <= 0) return SaleReason.supporters;
-    if (save.shareholderExpectation <= 0) return SaleReason.shareholders;
+    if (isFundsExhausted) return SaleReason.funds;
     return null;
   }
 
@@ -671,7 +696,7 @@ extension GameStateFinance on GameState {
   void debugEvaluateOwnerGoal({required int season}) =>
       _evaluateOwnerGoal(season: season);
 
-  /// サポーターか株主の期待が尽き、クラブを手放さなければならない状態か。
+  /// 資金かサポーターの期待が尽き、クラブを手放さなければならない状態か。
   bool get isSaleForced => saleReason != null;
 
   /// 手放したあとに買い直せるクラブの候補(最大3つ)。いまのリーグから、
@@ -727,6 +752,7 @@ extension GameStateFinance on GameState {
     save.wageFreezeSeasons = 0;
     save.wageFreezeCap = 0;
     save.adminRelegation = false;
+    save.licenseGraceTier = 0;
     save.pendingJobOfferTeamId = null;
     save.confidence = 60;
     save.shareholderExpectation = 60;
@@ -846,6 +872,7 @@ extension GameStateFinance on GameState {
     save.wageFreezeSeasons = 0;
     save.wageFreezeCap = 0;
     save.adminRelegation = false;
+    save.licenseGraceTier = 0;
     save.leagueName = theme.label;
     save.ruleSet = RuleSet.forTheme(theme);
     save.league = mine!;

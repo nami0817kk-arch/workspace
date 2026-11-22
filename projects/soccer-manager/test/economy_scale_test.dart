@@ -124,10 +124,9 @@ void main() {
       log.add('S$season tier=${s.currentDivisionTier} budget=${s.budget} '
           'income=${l.operatingIncome} wages=${l.wageCost} '
           'ratio=${(l.wageRatio * 100).round()}% sale=${game.saleReason}');
-      // 資金が理由で手放すこと(株主)は無い。サポーターの期待は成績で
+      // 資金が尽きて手放すことは無い。サポーターの期待は成績で
       // 決まるので、ここでは見ない(尽きたらそこで止める)。
-      expect(game.saleReason, isNot(SaleReason.shareholders),
-          reason: log.join('\n'));
+      expect(game.saleReason, isNot(SaleReason.funds), reason: log.join('\n'));
       expect(s.budget, greaterThan(-GameState.initialBudgetFor(3, theme)),
           reason: log.join('\n'));
       if (game.saleReason != null) break;

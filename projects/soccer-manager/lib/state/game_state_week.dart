@@ -333,8 +333,8 @@ extension GameStateWeek on GameState {
         budgetConfidenceDelta,
       );
       crisis = Tr.pick(
-          '資金マイナスが${s.consecutiveNegativeBudgetWeeks}週続いています。株主の期待が低下しました。',
-          "You have been in the red for ${Tr.plural(s.consecutiveNegativeBudgetWeeks, 'week')}. The shareholders' confidence has slipped.");
+          '資金マイナスが${s.consecutiveNegativeBudgetWeeks}週続いています。株主の期待が低下しました。借金が${formatMoney(-fundsExhaustedLine)}を超えると、クラブを手放すことになります。',
+          "You have been in the red for ${Tr.plural(s.consecutiveNegativeBudgetWeeks, 'week')}. The shareholders' confidence has slipped. If the debt passes ${formatMoney(-fundsExhaustedLine)}, you will have to sell the club.");
       lastBudgetCrisisWarning = crisis;
     }
 

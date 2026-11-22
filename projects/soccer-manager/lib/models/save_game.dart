@@ -496,6 +496,12 @@ class SaveGame {
   /// フランス式の降格処分。季の締めの昇格・降格で、1つ下の部へ落とす。
   bool adminRelegation;
 
+  /// ライセンスのスタジアムの猶予(2026-11-23)。スタジアムの段が足りない
+  /// まま昇格した部([licenseGraceTier]、0 は猶予なし)と、その猶予の季
+  /// ([licenseGraceSeason])。猶予の季の終わりまでに足りなければ降格処分。
+  int licenseGraceTier;
+  int licenseGraceSeason;
+
   /// 同じリーグで競う他のオーナー。
   List<RivalOwner> rivalOwners;
 
@@ -695,10 +701,6 @@ class SaveGame {
   /// 理事会が期待する国内カップの到達ラウンド(0は未設定=旧セーブ)。
   int boardCupTargetRound;
 
-  /// 監督契約の残り年数(0は未導入=旧セーブ。次のシーズン開始時に
-  /// 判定なしで2年契約が結ばれる)。
-  int managerContractYears;
-
   /// クラブニュース(お知らせ履歴)。新しいものが先頭。SnackBar等で
   /// 一度流れて消える通知を、あとから見返せるように保存する。件数は
   /// GameState側で上限管理する。旧セーブには存在しないため空で補完する。
@@ -853,6 +855,8 @@ class SaveGame {
     this.wageFreezeSeasons = 0,
     this.wageFreezeCap = 0,
     this.adminRelegation = false,
+    this.licenseGraceTier = 0,
+    this.licenseGraceSeason = 0,
     this.planStartSeason = 0,
     List<RivalOwner>? rivalOwners,
     this.newsTotal = 0,
@@ -970,7 +974,6 @@ class SaveGame {
     Map<String, String>? difficultyItems,
     this.wageBudget = 0,
     this.boardCupTargetRound = 0,
-    this.managerContractYears = 0,
     List<NewsItem>? newsLog,
     List<String>? trophyHistory,
     List<String>? clubHistory,
@@ -1179,6 +1182,10 @@ class SaveGame {
           'wageFreezeCap': wageFreezeCap,
         },
         if (adminRelegation) 'adminRelegation': true,
+        if (licenseGraceTier > 0) ...{
+          'licenseGraceTier': licenseGraceTier,
+          'licenseGraceSeason': licenseGraceSeason,
+        },
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (clubCash.isNotEmpty) 'clubCash': clubCash,
@@ -1364,7 +1371,6 @@ class SaveGame {
         if (difficultyItems.isNotEmpty) 'difficultyItems': difficultyItems,
         'wageBudget': wageBudget,
         'boardCupTargetRound': boardCupTargetRound,
-        'managerContractYears': managerContractYears,
         'newsLog': newsLog.map((n) => n.toJson()).toList(),
         'trophyHistory': trophyHistory,
         'clubHistory': clubHistory,
@@ -1504,6 +1510,9 @@ class SaveGame {
         wageFreezeSeasons: json['wageFreezeSeasons'] as int? ?? 0,
         wageFreezeCap: json['wageFreezeCap'] as int? ?? 0,
         adminRelegation: json['adminRelegation'] as bool? ?? false,
+        // 猶予の無い旧セーブは猶予なし。
+        licenseGraceTier: json['licenseGraceTier'] as int? ?? 0,
+        licenseGraceSeason: json['licenseGraceSeason'] as int? ?? 0,
         newsTotal: json['newsTotal'] as int? ?? 0,
         newsSeenTotal: json['newsSeenTotal'] as int? ?? 0,
         rivalOwners: (json['rivalOwners'] as List?)
@@ -1804,7 +1813,8 @@ class SaveGame {
         pkShootoutWins: json['pkShootoutWins'] as int? ?? 0,
         wageBudget: json['wageBudget'] as int? ?? 0,
         boardCupTargetRound: json['boardCupTargetRound'] as int? ?? 0,
-        managerContractYears: json['managerContractYears'] as int? ?? 0,
+        // 'managerContractYears'(理事会とオーナーの契約の残り年数)は
+        // 2026-11-23 に無くした。旧セーブに残っていても読まない。
         difficultyItems: (json['difficultyItems'] as Map?)?.map(
           (k, v) => MapEntry(k as String, v as String),
         ),

@@ -149,6 +149,8 @@ extension GameStateSeason on GameState {
     // 怪我の回復・疲れの抜け(日数)と、またいだ週の数だけの週の処理。
     // 終わると今日は d になっている。
     _advanceDaysAndWeeks(before, d);
+    // 完成の日が来た施設の工事を終える(スタジアムは次の季の7月1日)。
+    _completeFacilityConstruction();
     // 仮契約の解禁(1月1日)・延長オプションの期限(3月31日)。
     _onContractDatesAdvanced(before, d);
     // 給与の月末・放映権の入金日。
@@ -1279,38 +1281,10 @@ extension GameStateSeason on GameState {
     _scoreClubPolicy(finalRank: finalRank);
     _advanceEconomy();
 
-    // 監督契約(任期)の更新。旧セーブ(0=未導入)はまず2年契約を結ぶ。
+    // オーナーは雇われる立場ではないので、理事会との契約(満了で解任)は
+    // 持たない(2026-11-23)。任期の知らせは、雇っている監督の契約について
+    // 出す(下のスタッフの契約消化のところ)。
     lastManagerContractNote = null;
-    if (_save!.managerContractYears <= 0) {
-      _save!.managerContractYears = 2;
-      lastManagerContractNote = Tr.pick(
-          '理事会と2年の監督契約を結んだ', 'You signed a two-year contract with the board');
-    } else {
-      final outcome = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: _save!.managerContractYears,
-        targetMet: finalRank <= _save!.boardTargetRank,
-        confidence: _save!.confidence,
-      );
-      _save!.managerContractYears = outcome.years;
-      switch (outcome.event) {
-        case ManagerContractEvent.extended:
-          lastManagerContractNote = Tr.pick('目標達成が評価され、監督契約が3年に延長された!',
-              'They liked what they saw, and your contract has been extended to three years!');
-        case ManagerContractEvent.renewedOneYear:
-          lastManagerContractNote = Tr.pick('契約満了。理事会は単年契約での続投を提示し、受け入れた',
-              'Your contract expired. The board offered a one-year extension, and you took it');
-        case ManagerContractEvent.finalYearWarning:
-          lastManagerContractNote = Tr.pick('監督契約は残り1年。今シーズンの成績が去就を左右する',
-              'One year left on your contract. This season decides your future');
-        case ManagerContractEvent.dismissed:
-          // 契約非更新=解任。既存の解任フロー(信頼度0)に合流させる。
-          _save!.confidence = 0;
-          lastManagerContractNote = Tr.pick('成績不振により契約は更新されなかった(解任)',
-              'Results were not good enough, and your contract was not renewed (sacked)');
-        case ManagerContractEvent.none:
-          break;
-      }
-    }
 
     // ここから先は新しいシーズン(7月1日)として契約を数える。引退の補充で
     // 作る選手の満了の年も、新しいシーズンから数える。
@@ -1432,9 +1406,14 @@ extension GameStateSeason on GameState {
     // この季に降格したクラブ(全部の境界。降格の条項で年俸を下げる)。
     final relegatedAll = <Team>[];
     var relevantPlayoffMatches = const <PromotionPlayoffMatch>[];
+    // スタジアムの猶予の季が終わる。届いていなければ降格処分(下の
+    // adminRelegation の扱い)になる。
+    final graceFailed = _settleStadiumGrace();
     // 昇格を決めたのに、上の部のライセンスが下りなかった部(無ければ null)。
     int? licenseDeniedTier;
     var licenseUnmet = const <String>[];
+    // スタジアムの段だけが足りずに、猶予つきで上がる部(無ければ null)。
+    int? graceTier;
     for (int upperTier = 1; upperTier < totalDivisionTiers; upperTier++) {
       final lowerTier = upperTier + 1;
       final upperOrder = tierOrder[upperTier]!;
@@ -1470,7 +1449,12 @@ extension GameStateSeason on GameState {
       // 権利は、まだ上がっていないうちで一番上の順位のクラブに移る。
       final userIdx = promoted.indexWhere((t) => t.id == _save!.userTeamId);
       if (userIdx >= 0) {
-        final unmet = clubLicenseUnmet(upperTier);
+        // スタジアムの段だけが足りないなら、1年の猶予つきで上がれる
+        // (2026-11-23)。資金など、ほかの条件は今までどおり。
+        final unmet = clubLicenseUnmetExceptStadium(upperTier);
+        if (unmet.isEmpty && !stadiumMeetsLicense(upperTier)) {
+          graceTier = upperTier;
+        }
         if (unmet.isNotEmpty) {
           final promotedIds = {for (final t in promoted) t.id};
           final next = lowerOrder.where((t) => !promotedIds.contains(t.id));
@@ -1589,9 +1573,11 @@ extension GameStateSeason on GameState {
     userInvolvedInLastPromotionPlayoff = userInPromotionPlayoff;
     lastPromotionBonus = 0;
     if (newTier > playedTier) {
-      lastDivisionChangeMessage = Tr.pick(
-          '降格が決まりました。来シーズンは$newTier部リーグでの再出発です。',
-          'You are relegated. Next season starts again in tier $newTier.');
+      lastDivisionChangeMessage = graceFailed
+          ? Tr.pick('スタジアムがクラブライセンスの条件に届かず、降格になりました。来シーズンは$newTier部リーグでの再出発です。',
+              'Your stadium fell short of the club licence, and you are relegated. Next season starts again in tier $newTier.')
+          : Tr.pick('降格が決まりました。来シーズンは$newTier部リーグでの再出発です。',
+              'You are relegated. Next season starts again in tier $newTier.');
     } else if (newTier < playedTier) {
       // 昇格ボーナス: 理事会からの補強予算。放映権の増加は、来季の最初の
       // 入金(8月)から上の部の額で入るので、ここは夏の補強の手付けぶん
@@ -1607,6 +1593,19 @@ extension GameStateSeason on GameState {
           : Tr.pick(
               '昇格達成！来シーズンは$newTier部リーグに昇格します。理事会から補強予算${formatMoney(promotionBonus)}が支給されました。',
               'Promoted. You go up to tier $newTier next season, and the board has given you ${formatMoney(promotionBonus)} to strengthen.');
+      // スタジアムが足りないまま上がるなら、来季が猶予の季になる。
+      if (graceTier == newTier) {
+        final need = ClubLicenseEngine.stadiumLevelFor(newTier);
+        final deadline = TransferWindowCalendar.formatYearMonth(
+            MoneyCalendar.fiscalYearEnd(league.season + 1));
+        _save!.licenseGraceTier = newTier;
+        _save!.licenseGraceSeason = league.season + 1;
+        final note = Tr.pick(
+            'スタジアムは$newTier部のライセンスの条件(Lv$need)に届いていませんが、1年の猶予が付きました。$deadlineまでにLv$needにしないと(来季の開幕までに完成する工事中でも可)、1つ下の部へ降格になります。',
+            'Your stadium is below the tier $newTier licence requirement (level $need), but you have a year\'s grace. Reach level $need by $deadline (work due to finish before the next season counts), or you will be relegated one tier.');
+        lastDivisionChangeMessage = '${lastDivisionChangeMessage!}\n$note';
+        _logNews(note, context: Tr.pick('クラブライセンス', 'Club licence'));
+      }
     } else if (licenseDeniedTier != null) {
       lastDivisionChangeMessage = Tr.pick(
           '昇格の権利を得ましたが、$licenseDeniedTier部のクラブライセンスが下りず、来シーズンも$playedTier部で戦います。足りなかった条件: ${licenseUnmet.join('、')}。',
@@ -1667,9 +1666,9 @@ extension GameStateSeason on GameState {
     _save!.boardTargetRank = _difficultyAdjustedTarget(
       BoardEngine.estimateTargetRank(_save!.league, _save!.userTeamId),
     );
-    // 続投が決まった監督には、新シーズン開幕時に最低限の信頼度を戻す
-    // (解任が確定している場合は信頼度0のままにして解任フローを壊さない)。
-    if (_save!.confidence > 0 && _save!.managerContractYears > 0) {
+    // 新しい季を迎えたら、最低限の期待を戻す(サポーターの期待が尽きて
+    // 手放すことが決まっている場合は0のままにして、その流れを壊さない)。
+    if (_save!.confidence > 0) {
       _save!.confidence =
           max(_save!.confidence, BoardEngine.newSeasonConfidenceFloor);
     }
@@ -1725,6 +1724,18 @@ extension GameStateSeason on GameState {
               "${s.name}'s contract has expired, leaving the ${role.label} post vacant."),
           context: Tr.pick('スタッフ', 'Staff'),
         );
+      }
+      // 雇っている監督の任期。最後の年に入ったら知らせる(延長は引き抜きの
+      // 話に昇給で応えたときだけ。切れたら空席になる)。
+      if (role == StaffRole.manager) {
+        if (s.contractYears <= 0) {
+          lastManagerContractNote = Tr.pick(
+              '監督の${s.name}は契約が満了し、クラブを去りました。新しい監督を雇ってください。',
+              'Your manager ${s.name} has left at the end of his contract. Hire a new one.');
+        } else if (s.contractYears == 1) {
+          lastManagerContractNote = Tr.pick('監督の${s.name}の契約は残り1年です(今季かぎり)。',
+              'Your manager ${s.name} is into the last year of his contract.');
+        }
       }
     }
     _refreshStaffCandidates();
