@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ranse/engine/birth.dart';
 import 'package:ranse/engine/data.dart';
+import 'package:ranse/engine/ending.dart';
 import 'package:ranse/engine/game.dart';
 import 'package:ranse/engine/history.dart';
 import 'package:ranse/engine/history_lines.dart';
@@ -586,6 +587,42 @@ void main() {
         }
       }
       expect(lordScenes, greaterThan(100));
+    });
+
+    test('どの人生にも結末（称号・最期の文・選んだ道3〜4行）が付き、共有の文に載る', () {
+      final titles = <String>{};
+      for (var seed = 0; seed < 400; seed++) {
+        final rng = Rng(seed + 31);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        final e = buildEnding(g);
+        titles.add(e.title);
+        expect(e.title, isNotEmpty);
+        expect(e.text, isNot(contains('null')), reason: e.text);
+        expect(e.title, isNot(contains('null')));
+        expect(e.highlights.length, lessThanOrEqualTo(4));
+        if (g.l.path.isNotEmpty) expect(e.highlights, isNotEmpty);
+        for (final h in e.highlights) {
+          expect(g.l.path, contains(h));
+        }
+        final s = shareText(g, e);
+        expect(s, contains(e.title));
+        expect(s, contains('分の1'));
+      }
+      // 道 × 死に方 × 幸福で、称号はばらける。
+      expect(titles.length, greaterThan(40));
+    });
+
+    test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
+      final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
+      path[6] = '20歳　信長に仕えた';
+      final h = pickHighlights(path);
+      expect(h.length, 4);
+      expect(h.first, path.first);
+      expect(h.last, path.last);
+      expect(h, contains('20歳　信長に仕えた'));
+      expect(pickHighlights(path.take(3).toList()), path.take(3).toList());
     });
 
     test('死に方は保存の往復で残る', () {

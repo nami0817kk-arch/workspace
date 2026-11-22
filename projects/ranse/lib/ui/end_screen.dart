@@ -1,34 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../app/controller.dart';
+import '../engine/ending.dart';
+import '../engine/game.dart';
 import '../engine/rng.dart';
 import 'theme.dart';
 import 'widgets.dart';
-
-const _titlesM = [
-  '名もなき民として生きた',
-  '一兵卒として戦場を駆けた',
-  '足軽組頭として名を残した',
-  '馬廻として主君を支えた',
-  '侍大将として軍を率いた',
-  '一城の主となった',
-  '家老として家中を動かした',
-  '宿老として国を支えた',
-  '大名として一国を治めた',
-  '天下人となった',
-];
-const _titlesF = [
-  '名もなき女として生きた',
-  '下女として働き抜いた',
-  '女中頭として奥を支えた',
-  '奥女中として仕えた',
-  '上臈として家を支えた',
-  '御方として一城を守った',
-  '老女として家中を動かした',
-  '大局として奥を束ねた',
-  '正室として国を治めた',
-  '女大名として天下に名を残した',
-];
 
 /// 一生の終わり。人生の振り返りを見せる。
 class EndScreen extends StatelessWidget {
@@ -40,20 +18,12 @@ class EndScreen extends StatelessWidget {
     final g = c.game;
     final l = g.l;
     final child = g.age < 15;
-    final cause = l.victory
-        ? '天下を掌握した'
-        : (l.end == 'era' ? '乱世の終わりを見届けた' : l.dead ?? '');
+    final e = buildEnding(g);
     final aj = g.avgJoy;
     final jt = aj >= 65
         ? '満ち足りた一生だった'
         : (aj >= 42 ? '人並みに、喜びも苦しみもあった一生だった' : '苦難の多い一生だった');
     final head = child ? '幼き命' : (l.victory ? '天下統一' : '一生の終わり');
-    final rankText = child
-        ? '—'
-        : (l.victory ? (l.female ? '女大名・天下人' : '天下人') : g.rk[l.maxRank]);
-    final title = child
-        ? '幼くして世を去った。戦国の世では、五つ、十になる前に命を落とす子は珍しくなかった。'
-        : '${(l.female ? _titlesF : _titlesM)[l.maxRank]}。';
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -69,27 +39,19 @@ class EndScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            Text(
-              l.name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            Text(
-              '${g.year}年（${gengo(g.year)}）、${g.age}歳。$cause。',
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Pal.muted, fontSize: 13),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              rankText,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 22, color: Pal.gold),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(height: 1.7),
+            _ResultCard(g: g, e: e),
+            const SizedBox(height: 8),
+            Align(
+              child: TextButton.icon(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: shareText(g, e)));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('結果を写した。SNS に貼り付けられる。')),
+                  );
+                },
+                icon: const Icon(Icons.copy, size: 18, color: Pal.gold),
+                label: const Text('結果を写す', style: TextStyle(color: Pal.gold)),
+              ),
             ),
             const SizedBox(height: 16),
             Panel(
@@ -157,6 +119,70 @@ class EndScreen extends StatelessWidget {
             BigButton('タイトルへ', c.toTitle, secondary: true),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// 結果カード。生まれの稀少度・選んだ道・結末の称号（共有する一枚）。
+class _ResultCard extends StatelessWidget {
+  const _ResultCard({required this.g, required this.e});
+  final Game g;
+  final Ending e;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = g.l;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+      decoration: BoxDecoration(
+        color: Pal.panel,
+        border: Border.all(color: Pal.gold.withValues(alpha: .6)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Text(
+            '約 ${fmtN(l.rarity)} 分の 1 の生まれ',
+            style: const TextStyle(color: Pal.muted, fontSize: 12),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${l.region}国・${l.clsName}　${l.name}',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          ),
+          if (e.highlights.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            for (final h in e.highlights)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 3),
+                child: Text(
+                  h,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 13, height: 1.5),
+                ),
+              ),
+          ],
+          const SizedBox(height: 14),
+          Text(
+            e.title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 22,
+              color: Pal.gold,
+              fontWeight: FontWeight.w700,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${e.wayName}・${e.kindName}',
+            style: const TextStyle(color: Pal.muted, fontSize: 12),
+          ),
+          const SizedBox(height: 12),
+          Text(e.text, style: const TextStyle(fontSize: 14, height: 1.8)),
+        ],
       ),
     );
   }
