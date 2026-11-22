@@ -105,7 +105,11 @@ void main() {
     });
 
     test('値切ると対案が来て、のめば合意する', () async {
-      final (gs, p) = await start(0.8);
+      // 返事は2日後の言い値で決まる。そのあいだに誕生日が来ると、年齢で
+      // 価値と言い値が下がり、8割の提示がそのまま通ることがあった(CI で
+      // たまに落ちていた。2026-11-22)。7割なら、言い値が2割以上下がらない
+      // 限り対案になる(打ち切りの6割よりは上)。
+      final (gs, p) = await start(0.7);
       advance(gs, TransferTalkEngine.replyDays);
       final t = gs.talkFor(p.id)!;
       expect(t.stage, TransferTalkStage.countered);
