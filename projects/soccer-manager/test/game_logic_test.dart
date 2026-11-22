@@ -2459,19 +2459,21 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final lineup = MatchEngine.lineupOf(gameState.userTeam);
-    final fatigueBefore = {for (final p in lineup) p.id: p.fatigue};
-    final injuredBefore =
-        lineup.where((p) => p.isInjured).map((p) => p.id).toSet();
+    // 親善試合の日まで日付が進むと、そのあいだの日数ぶん疲れが抜け、怪我も
+    // 治る(2026-11-22 から日数で進む)。試合そのものが疲れと怪我を足さない
+    // ことを見るため、疲れ0・怪我なしから始める。
+    for (final p in lineup) {
+      p.fatigue = 0;
+      p.injuryWeeks = 0;
+    }
 
     final result = await gameState.playFriendly(0);
 
     expect(result, isNotNull);
     for (final p in lineup) {
-      expect(p.fatigue, fatigueBefore[p.id]);
+      expect(p.fatigue, 0);
     }
-    final injuredAfter =
-        lineup.where((p) => p.isInjured).map((p) => p.id).toSet();
-    expect(injuredAfter, injuredBefore);
+    expect(lineup.where((p) => p.isInjured), isEmpty);
   });
 
   test(
@@ -5143,9 +5145,10 @@ void main() {
     await gameState.playNextMatchday();
 
     expect(injured.injuryWeeks, 0);
-    // 治った日に40へ戻り、その週の試合に出ると少し上がる(+8 で48になる回が
-    // あり、5回に2回ほど落ちていた)。90から下がったことを確かめる。
-    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 10));
+    // 治った日に40へ戻り、そのあとの週の練習と試合で少し上がる(週の処理が
+    // 日付で走るようになり、治った後に練習が入る回がある。54 が出た)。
+    // 90から大きく下がったことを確かめる。
+    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 20));
   });
 
   test(
