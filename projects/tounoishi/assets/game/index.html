@@ -126,6 +126,9 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 .alertb{position:absolute;left:6px;top:6px;max-width:70%;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(20,16,10,.72);color:#ffe9c0;font:600 12.5px system-ui,sans-serif;padding:7px 10px;cursor:pointer;text-align:left}
 .alertb.hot{background:rgba(160,30,30,.88);color:#fff}
 .hrow.hp{padding-left:42px;min-height:40px}.himg{position:absolute;left:4px;top:50%;transform:translateY(-50%);width:32px;height:32px;object-fit:contain}
+html,body{overscroll-behavior:none}
+body,canvas,button,img{-webkit-touch-callout:none}
+canvas{-webkit-user-select:none;user-select:none}
 .links{margin:2px 0 0;font-size:11.5px;color:var(--sub);text-align:center}.links a{color:var(--sub)}
 .tbox .btn small{display:block;font-size:10.5px;color:var(--sub);font-weight:400}
 .chl{display:flex;flex-direction:column;gap:6px}.chl .btn{text-align:left;padding:8px 10px}.chl .btn small{display:block;font-size:11px;color:var(--sub)}
@@ -170,7 +173,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v25</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v26</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1062,7 +1065,7 @@ function showTitle(){
  el.innerHTML='<div class="tbox"><h2>塔の意志</h2><p class="sub">掘って、生まれた魔物に塔を守らせよう。</p>'+
   (has?'<button class="btn go" id="tcont">続きから<small style="color:inherit;opacity:.85">'+saveLabel()+'</small></button>':'')+
   '<p class="lbl">新しい塔を始める</p><div class="drow">'+Object.keys(DIFF).map(function(k){return '<button class="btn" data-d="'+k+'">'+DIFF[k].n+'<small>'+(b[k]?'最高 '+b[k].toLocaleString():'記録なし')+'</small></button>';}).join('')+'</div>'+
-  (Object.keys(b).length?'':'<p class="sub" style="color:var(--accent)">はじめてなら「ストーリー」の第1面から。慣れたら「新しい塔」で、どこまで高く積めるか挑もう。</p>')+'<p class="lbl">ほかの遊び方</p><div class="row2"><button class="btn" id="tstory">ストーリー<small>全8面</small></button>'+(storyDone()?'<button class="btn" id="tura">裏ストーリー<small>手ごわい8面</small></button>':'<button class="btn" disabled>裏ストーリー<small>ストーリーを全部クリアで</small></button>')+'</div><div class="row3"><button class="btn" id="tvs">VS</button><button class="btn" id="tchal">チャレンジ</button><button class="btn" id="tdex">図鑑</button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><div class="tshop" id="tshop"></div></div>';
+  (Object.keys(b).length?'':'<p class="sub" style="color:var(--accent)">はじめてなら「ストーリー」の第1面から。慣れたら「新しい塔」で、どこまで高く積めるか挑もう。</p>')+'<p class="lbl">ほかの遊び方</p><div class="row2"><button class="btn" id="tstory">ストーリー<small>全8面</small></button>'+(storyDone()?'<button class="btn" id="tura">裏ストーリー<small>手ごわい8面</small></button>':'<button class="btn" disabled>裏ストーリー<small>ストーリーを全部クリアで</small></button>')+'</div><div class="row3"><button class="btn" id="tvs">VS</button><button class="btn" id="tchal">チャレンジ</button><button class="btn" id="tdex">図鑑</button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><p class="links" style="margin-top:-4px;opacity:.75">© 2026 つるはし社</p><div class="tshop" id="tshop"></div></div>';
  el.hidden=false;renderShop();
  if(has)document.getElementById('tcont').onclick=function(){if(!loadGame())showTitle();};
  el.querySelectorAll('[data-d]').forEach(function(bt){bt.onclick=function(){if(has)kvSet('tou-save',null);newGame(bt.getAttribute('data-d'));hideTitle();};});
@@ -1616,7 +1619,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v25 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v26 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
