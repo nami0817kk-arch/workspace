@@ -11,6 +11,8 @@ import 'package:ranse/engine/life.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:ranse/engine/ways.dart';
 
+import 'bot.dart';
+
 /// 生き延びて元服まで進める生まれを探して始める。
 Game startSurvivor(int seed) {
   final rng = Rng(seed);
@@ -668,6 +670,30 @@ void main() {
       expect(h.last, path.last);
       expect(h, contains('20歳　信長に仕えた'));
       expect(pickHighlights(path.take(3).toList()), path.take(3).toList());
+    });
+
+    test('考えて選べば出世できる（城主以上に届く人生があり、女性も奥で位を上げられる）', () {
+      var adults = 0, castle = 0, women = 0, womenUp = 0;
+      for (var seed = 0; seed < 400; seed++) {
+        final rng = Rng(seed + 4242);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        final r = Rng(seed);
+        var n = 0;
+        while (!g.finished && n++ < 3000) {
+          g.choose(pickAmbitious(g, g.prompt!, r));
+        }
+        if (g.age < 15) continue;
+        adults++;
+        if (g.l.maxRank >= 5) castle++;
+        if (g.l.female && g.l.maxRank >= 1 && !g.has('onna')) {
+          women++;
+          if (g.l.maxRank >= 3) womenUp++;
+        }
+      }
+      expect(castle / adults, greaterThan(.1), reason: '城主以上 $castle/$adults');
+      expect(women, greaterThan(20));
+      expect(womenUp / women, greaterThan(.3), reason: '女性の昇進 $womenUp/$women');
     });
 
     test('死に方は保存の往復で残る', () {

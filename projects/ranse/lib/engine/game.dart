@@ -422,14 +422,16 @@ class Game extends ChangeNotifier {
   }
 
   // ---------- ターン進行 ----------
+  /// 年ごとの病死・老衰の割合（大人）。2026-11-23 に、若いうちの病死を4割ほど下げた
+  /// （選択と関係のない「病に倒れた」が成人の死の3分の1を占め、平均31歳で人生が切れていたため）。
   static double annualMort(int a) => a < 25
-      ? .012
+      ? .007
       : a < 35
-      ? .018
+      ? .010
       : a < 45
-      ? .025
+      ? .015
       : a < 55
-      ? .04
+      ? .03
       : a < 65
       ? .08
       : a < 75
@@ -736,7 +738,9 @@ class Game extends ChangeNotifier {
       // 昇進
       while (l.rank >= 1 && l.rank < 7) {
         final n = kPromo[l.rank + 1]!;
-        if (l.merit >= n.merit && l.fav >= n.fav && l.troops >= n.troops) {
+        if (l.merit >= n.merit &&
+            l.fav >= n.fav &&
+            (l.troops >= n.troops || !canFight)) {
           l.rank++;
           if (l.rank > l.maxRank) l.maxRank = l.rank;
           final bonus = l.rank * 10;
@@ -860,7 +864,8 @@ class Game extends ChangeNotifier {
     if (l.rank == 7) return l.female ? '好機を待つ（後見など）' : '下剋上か主君の死で大名へ';
     if (l.rank >= 8) return '天下まで：勢力占有率 ${(share * 100).round()}% / 50%';
     final n = kPromo[l.rank + 1]!;
-    return '功${l.merit}/${n.merit}　信頼${l.fav}/${n.fav}　兵${l.troops}/${n.troops}';
+    final troops = canFight ? '　兵${l.troops}/${n.troops}' : '';
+    return '功${l.merit}/${n.merit}　信頼${l.fav}/${n.fav}$troops';
   }
 
   double get avgJoy => l.hist.isEmpty
