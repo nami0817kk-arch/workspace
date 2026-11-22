@@ -989,8 +989,9 @@ void main() {
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         playOut(g, Rng(seed));
-        if (g.age < 15 || g.year <= 1582 || worldLine(g) == 'nobunaga')
+        if (g.age < 15 || g.year <= 1582 || worldLine(g) == 'nobunaga') {
           continue;
+        }
         g.l.married = false;
         g.l.people
           ..clear()
