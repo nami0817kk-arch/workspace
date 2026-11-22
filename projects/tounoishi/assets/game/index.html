@@ -145,17 +145,17 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 <div class="help" id="spane-help">
 <h3>目的</h3>
-あなたは姿の見えない<b>塔の意志</b>。土を掘ると魔物が生まれ、魔物が冒険者から<b>コア</b>（最上階の金の玉）を守ります。コアを入口まで運び出されたら負け。6つの波を守り切ると塔が1階伸び、どこまで高く積めるかに挑みます。
+あなたは姿の見えない<b>塔の意志</b>。土を掘るとモンスターが生まれ、モンスターが冒険者から<b>コア</b>（最上階の金の玉）を守ります。コアを入口まで運び出されたら負け。6つの波を守り切ると塔が1階伸び、どこまで高く積めるかに挑みます。
 <h3>操作</h3>
 ・<b>掘る</b>：掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。1マスに掘る力を1使う。<br>
-・<b>魔物をタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱った魔物を間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
+・<b>モンスターをタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱ったモンスターを間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
 ・<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる（最上階に冒険者がいない間）。<br>
 ・2本指で拡大・移動。上の階のボタン（縮図つき）で階を切り替え。⏸ ×1 ×2 で時間。「今すぐ迎える」で波を早める（早いほど次の掘る力が増える）。
-<h3>魔物</h3>
+<h3>モンスター</h3>
 ・土の<b>養分</b>（金の点）や<b>魔分</b>（紫の点）の量で生まれる種が決まる。白っぽい模様の土ほど濃い。量は掘った道の隣の土だけ見える。<br>
 ・食べ合い、増え、死ぬと養分が周りの土に戻る。同じ種が死に続けると死に方で<b>変異</b>、誰も死なずに増えると<b>ピュア種</b>。<br>
 ・よく食べた個体などはまれに<b>主役</b>に昇格し、名前と技を持つ。「一覧」で掘る力を使って鍛えられる。
-<details><summary>魔物ごとの癖</summary>
+<details><summary>モンスターごとの癖</summary>
 ・<b>スライム</b>：壁まで真っすぐ。隣の土から養分を吸っては（3まで）別の土へ吐く（1残す）。弱るとツボミ→花。花は花粉の弾で冒険者をしびれさせ、枯れるとスライムを生む。<br>
 ・<b>ドラゴン</b>：横にしか動かず横に炎（味方も焼く）。傷つくと卵に戻り、養分しだいでブラック→カオス→しんりゅう、少なければドラゴンもどき。ふんを踏んだ冒険者は止まる。<br>
 ・<b>ハーピー</b>：フェロモンで冒険者を止め、仲間を癒す。<b>リザード</b>：広い所に巣を作り、巣で卵を産む。<b>ウィスプ</b>：魔分を運び、冒険者の MP を削る。<br>
@@ -173,7 +173,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v30</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v31</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -483,7 +483,7 @@ function grow(){
  appPrep();
  say(F+'階ができた！ 準備の時間です（時間は止まっています）。');
  ui();
- var el=document.getElementById('title');el.innerHTML='<div class="tbox"><h2>'+F+'階ができた！<br><small>'+g.round+'周目</small></h2><p class="sub">コアは新しい最上階へ。掘った道も魔物もそのまま。'+(F-1)+'階の天井も掘れる。</p><ul class="sc">'+items.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul><button class="btn go" id="tgo">準備を始める</button></div>';el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
+ var el=document.getElementById('title');el.innerHTML='<div class="tbox"><h2>'+F+'階ができた！<br><small>'+g.round+'周目</small></h2><p class="sub">コアは新しい最上階へ。掘った道もモンスターもそのまま。'+(F-1)+'階の天井も掘れる。</p><ul class="sc">'+items.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul><button class="btn go" id="tgo">準備を始める</button></div>';el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
 }
 
 // ---------- 地形 ----------
@@ -1062,7 +1062,7 @@ document.getElementById('alertb').onclick=function(){var f=+this.dataset.f;if(f>
 function saveLabel(){try{var o=JSON.parse(kvGet('tou-save')),q=o.g;if(q.mode=='story'||q.mode=='ura')return (q.mode=='ura'?'裏ストーリー':'ストーリー')+' 第'+q.st+'面';if(q.mode=='vs')return 'VS';return (DIFF[q.diff||'normal'].n)+'の塔 · '+o.F+'階 · '+q.round+'周目';}catch(_){return '';}}
 function showTitle(){
  var el=document.getElementById('title'),has=!!kvGet('tou-save'),b=bests();
- el.innerHTML='<div class="tbox"><h2>塔の意志</h2><p class="sub">掘って、生まれた魔物に塔を守らせよう。</p>'+
+ el.innerHTML='<div class="tbox"><h2>塔の意志</h2><p class="sub">掘って、生まれたモンスターに塔を守らせよう。</p>'+
   (has?'<button class="btn go" id="tcont">続きから<small style="color:inherit;opacity:.85">'+saveLabel()+'</small></button>':'')+
   '<p class="lbl">新しい塔を始める</p><div class="drow">'+Object.keys(DIFF).map(function(k){return '<button class="btn" data-d="'+k+'">'+DIFF[k].n+'<small>'+(b[k]?'最高 '+b[k].toLocaleString():'記録なし')+'</small></button>';}).join('')+'</div>'+
   (Object.keys(b).length?'':'<p class="sub" style="color:var(--accent)">はじめてなら「ストーリー」の第1面から。慣れたら「新しい塔」で、どこまで高く積めるか挑もう。</p>')+'<p class="lbl">ほかの遊び方</p><div class="row2"><button class="btn" id="tstory">ストーリー<small>'+rankSummary('story')+'</small></button>'+(storyDone()?'<button class="btn" id="tura">裏ストーリー<small>手ごわい8面</small></button>':'<button class="btn" disabled>裏ストーリー<small>ストーリーを全部クリアで</small></button>')+'</div><div class="row3"><button class="btn" id="tvs">VS</button><button class="btn" id="tchal">チャレンジ</button><button class="btn" id="tdex">図鑑</button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><p class="links" style="margin-top:-4px;opacity:.75">© 2026 つるはし社</p><div class="tshop" id="tshop"></div></div>';
@@ -1163,7 +1163,7 @@ function checkGuardian(){
  if(g.guardian)return;
  var f=F-1,cx=COREX,cy=COREY+1,ok=true;
  for(var dy=-1;dy<=1&&ok;dy++)for(var dx=-1;dx<=1&&ok;dx++){if(!dx&&!dy)continue;var x=cx+dx,y=cy+dy,c=cellAt(f,x,y);if(!c||bedrock(f,x,y))continue;if(!c.open)ok=false;}
- if(ok){g.guardian=true;var m=mkCr('guardian','sp',f,cx,cy,0);if(m)say('コアの周りを掘り抜いた。守護獣ガーディアンが目を覚ました！（この塔の魔物が少し硬くなる）');}
+ if(ok){g.guardian=true;var m=mkCr('guardian','sp',f,cx,cy,0);if(m)say('コアの周りを掘り抜いた。守護獣ガーディアンが目を覚ました！（この塔のモンスターが少し硬くなる）');}
 }
 function guardOn(){return g.cr.some(function(m){return m.sp=='guardian';});}
 
@@ -1204,7 +1204,7 @@ function openCell(f,x,y,main){
  var c=cellAt(f,x,y);if(!c||c.open||bedrock(f,x,y))return;
  c.open=true;c.dt=g.t;
  var n=c.nut,mg=c.mag||0,born=0,spc=null,env=c.env,amt=0;c.nut=0;c.mag=0;
- if(main&&(n>=7||mg>=7)&&ringAround(f,x,y)){g.circles.push({f:f,x:x,y:y,nut:n,mag:mg,hp:350});say('魔法陣ができた！ 魔法陣をタップすると魔物を呼べる（養分が多いとデーモン、魔分が多いとリッチ）。');fxDig(f,x,y,c.env,0);addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:800,c:'200,120,255',r0:4,rad:26});sfx('promote');return;}
+ if(main&&(n>=7||mg>=7)&&ringAround(f,x,y)){g.circles.push({f:f,x:x,y:y,nut:n,mag:mg,hp:350});say('魔法陣ができた！ 魔法陣をタップするとモンスターを呼べる（養分が多いとデーモン、魔分が多いとリッチ）。');fxDig(f,x,y,c.env,0);addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:800,c:'200,120,255',r0:4,rad:26});sfx('promote');return;}
  var mino=0;if(mg>0&&mg>=n){amt=mg;spc=ORDM[Math.min(8,mg)-1];env='mag';mino=n;}
  else if(n>0){amt=n;spc=ORDN[Math.min(8,n)-1];mino=-mg;}
  // 特殊タイプ: 養分9の土からまれに金のスライム、3色が接する所からキメラ
@@ -1283,7 +1283,7 @@ function step(dt){
  if(g.chal&&!over){var CH=CHALS[g.chal.i];if(CH.ok())chalEnd(true);else if(g.t>=CH.lim)chalEnd(false);}
  stepEggs();
  g.guardOn=guardOn();
- if(g.waveOn&&!g.en.length&&!g.spawnQ.length&&!over){g.waveOn=0;var kk=(g.kills||0)-(g.wk0||0),ll=(g.lostN||0)-(g.wl0||0);saveGame();if(g.wave<nW())say('第'+g.wave+'波を守った（倒した'+kk+'人・失った魔物'+ll+'匹）。次の波まで'+Math.ceil(g.cd)+'秒。');}
+ if(g.waveOn&&!g.en.length&&!g.spawnQ.length&&!over){g.waveOn=0;var kk=(g.kills||0)-(g.wk0||0),ll=(g.lostN||0)-(g.wl0||0);saveGame();if(g.wave<nW())say('第'+g.wave+'波を守った（倒した'+kk+'人・失ったモンスター'+ll+'匹）。次の波まで'+Math.ceil(g.cd)+'秒。');}
  g.corpses=g.corpses.filter(function(c){return g.t-c.t<180;});
  var cs=g.cr.slice();for(i=0;i<cs.length;i++)if(g.cr.indexOf(cs[i])>=0)stepCr(cs[i],dt);
  var es=g.en.slice();for(i=0;i<es.length;i++)if(g.en.indexOf(es[i])>=0&&!over)stepEn(es[i],dt);
@@ -1619,7 +1619,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v30 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v31 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1665,7 +1665,7 @@ function loop(ts){var dt=Math.min(0.1,(ts-last)/1000);last=ts;if(!over&&speed>0)
 var RES={mah:0.3,sou:0.25,ura:0.3,ren:0.2,yuu:0.2},MAGJ={mah:1,sou:1,ura:1,ren:1};
 function isMagicCr(m){return SPEC[m.sp].line=='mag'&&m.sp!='demon'||m.stage=='flower'||m.sp=='d_blue'||m.sp=='d_bigblue'||m.sp=='lich';}
 function resOf(m,mag){if(m.sp=='gslime')return 0.3;if(mag){if(m.sp=='worm'&&m.stage=='adult')return 0.5;if(m.sp=='beetle')return 0.7;if(m.sp=='d_blue'||m.sp=='d_bigblue')return 0.7;return 1;}if(m.sp=='ghost')return 0.5;return 1;}
-// 炎は扇形（向きは近い魔物の方、2回当たる）
+// 炎は扇形（向きは近いモンスターの方、2回当たる）
 function fireCone(e,df){
  var tg=g.cr.filter(function(m){return m.f==e.f&&man(m,e)<=4;}).sort(function(a,b){return man(a,e)-man(b,e);})[0];if(!tg)return;
  var dx=tg.x-e.x,dy=tg.y-e.y,ax=Math.abs(dx)>=Math.abs(dy),sx=ax?Math.sign(dx):0,sy=ax?0:Math.sign(dy),cells={},k,w;
@@ -1686,7 +1686,7 @@ function windSpiral(e,df){
   if(!hit[x+','+y]){hit[x+','+y]=1;crAt(e.f,x,y).forEach(function(m){hurtCr(m,e.atk*1.2*df,e,'#b8e0ff',true);});addFx({k:'ring',f:e.f,x:ccx(x),y:ccx(y),life:300,dl:i*40,c:'184,224,255',r0:2,rad:8});}
  }
 }
-// 掘ってある所をタップした時: コアを選ぶ・動かす、魔法陣、亡骸、宝箱、魔物をつつく
+// 掘ってある所をタップした時: コアを選ぶ・動かす、魔法陣、亡骸、宝箱、モンスターをつつく
 function tapOpen(f,x,y){
  var C=g.core,c=cellAt(f,x,y);if(!c||!c.open)return false;
  if(g.moveCore){
@@ -1706,7 +1706,7 @@ function tapOpen(f,x,y){
   if(m.hp<=0){killCr(m,'poke');say(spName(m)+'を間引いた。');}else say(spName(m)+'をつついた。');return true;}
  return false;
 }
-// 自分で宝箱を開けると魔物が出る（初代の割合をもとに）
+// 自分で宝箱を開けるとモンスターが出る（初代の割合をもとに）
 function openChestMe(ch){
  g.chests.splice(g.chests.indexOf(ch),1);fxPuff(ch.f,ch.x,ch.y,0.8);var r=Math.random()*100,cell=cellAt(ch.f,ch.x,ch.y),m;
  if(r<41)m=mkCr('skeleton','sp',ch.f,ch.x,ch.y,0,{hpk:1.5});
@@ -2006,7 +2006,7 @@ function imgURL(k){if(BURL[k])return BURL[k];var src=GSRC[k];if(!src)return null
  try{var b=atob(src.split(',')[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);BURL[k]=URL.createObjectURL(new Blob([a],{type:'image/png'}));}catch(_){BURL[k]=src;}
  return BURL[k];}
 function dimg(k){k=DIMGK[k]||k;var u=imgURL(GSRC[k]?k:k+'_moss');return u?'<img class="dimg" alt="" src="'+u+'">':'';}
-var DDESC={slime:'壁まで真っすぐ進み、養分を運ぶ。弱るとツボミから花に',mush:'動かない。胞子で子株を植え、近くの冒険者を眠らせる',worm:'幼虫→さなぎ→成虫と育つ。成虫は卵を産む',beetle:'つがいで卵を産む。魔法に強い',lizard:'広い所に巣を作り、巣で卵を産む',bat:'土の天井の下に3匹集まると増える',dragon:'横にしか動かず横に炎。傷つくと卵に戻る',golem:'とても硬い。ゆっくり歩く',wisp:'魔分を運び、冒険者の MP を削る',pixie:'近くの仲間を癒す',imp:'冒険者を惑わせ、道に迷わせる',ghost:'壁をすり抜けて冒険者に向かう',gargoyle:'石の像になって2匹に分かれる',harpy:'遠くの冒険者に気づき、フェロモンで止める',demon:'冒険者の攻撃を弱める。何でも食べる頂点',lich:'近くで倒れた冒険者をスケルトンに変える',skeleton:'亡骸から起き上がる',mimic:'宝箱に化けている',chimera:'3つの土の力を持つ',gslime:'倒れると大量の養分をばらまく',guardian:'コアを守り、塔の魔物を硬くする',phoenix:'一度だけ炎の中からよみがえる',d_sleepy:'冒険者の攻撃を大きく弱める。よく眠る',d_blue:'離れて魔法で撃つ',d_bigblue:'大きく強い魔法の使い手',evilgod:'塔でいちばん強い力を持つ'};
+var DDESC={slime:'壁まで真っすぐ進み、養分を運ぶ。弱るとツボミから花に',mush:'動かない。胞子で子株を植え、近くの冒険者を眠らせる',worm:'幼虫→さなぎ→成虫と育つ。成虫は卵を産む',beetle:'つがいで卵を産む。魔法に強い',lizard:'広い所に巣を作り、巣で卵を産む',bat:'土の天井の下に3匹集まると増える',dragon:'横にしか動かず横に炎。傷つくと卵に戻る',golem:'とても硬い。ゆっくり歩く',wisp:'魔分を運び、冒険者の MP を削る',pixie:'近くの仲間を癒す',imp:'冒険者を惑わせ、道に迷わせる',ghost:'壁をすり抜けて冒険者に向かう',gargoyle:'石の像になって2匹に分かれる',harpy:'遠くの冒険者に気づき、フェロモンで止める',demon:'冒険者の攻撃を弱める。何でも食べる頂点',lich:'近くで倒れた冒険者をスケルトンに変える',skeleton:'亡骸から起き上がる',mimic:'宝箱に化けている',chimera:'3つの土の力を持つ',gslime:'倒れると大量の養分をばらまく',guardian:'コアを守り、塔のモンスターを硬くする',phoenix:'一度だけ炎の中からよみがえる',d_sleepy:'冒険者の攻撃を大きく弱める。よく眠る',d_blue:'離れて魔法で撃つ',d_bigblue:'大きく強い魔法の使い手',evilgod:'塔でいちばん強い力を持つ'};
 var DIMGK={d_sleepy:'demon_sleepy',d_blue:'demon_blue',d_bigblue:'demon_bigblue'};
 function enRows(){return Object.keys(EN).map(function(k){return DEX['en_'+k]?'<li>'+dimg(k)+'<b>'+EN[k].n+'</b><small>'+ENDESC[k]+'</small></li>':'<li class="un">'+dimg(k)+'<b>？？？</b><small>まだ来ていない</small></li>';}).join('');}
 // 負けた時のコアの助言
@@ -2014,10 +2014,10 @@ function partyAdvice(){
  var P=g.party||[],has=function(k){return P.some(function(p){return (p.skl||[]).indexOf(k)>=0;});};
  if(has('heal'))return '回復する者がいる。行き止まりで分断して、回復役から先に倒そう。';
  if(has('warcry'))return 'ウォークライで攻撃が何倍にもなる。長引かせず、魔法陣やふんで足止めしよう。';
- if(has('fire')||has('wind'))return '範囲の技で群れごとやられる。魔物を一か所に固めず、通路に散らそう。';
+ if(has('fire')||has('wind'))return '範囲の技で群れごとやられる。モンスターを一か所に固めず、通路に散らそう。';
  if(P.length>=3)return '3人組は分かれ道で散る。枝道を増やして1人ずつ迎え撃とう。';
  if(P.some(function(p){return p.boss;}))return '伝承の勇者はとても強い。主役を鍛え、ドラゴンを育てて挑もう。';
- return '入口からコアまでの道を長く、迷いやすく。強い魔物は最上階の近くに。';
+ return '入口からコアまでの道を長く、迷いやすく。強いモンスターは最上階の近くに。';
 }
 function advice(){
  var ar=armyPower(),nh=g.cr.filter(function(m){return m.hero;}).length;
