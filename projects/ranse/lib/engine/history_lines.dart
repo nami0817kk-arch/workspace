@@ -191,11 +191,37 @@ const kSkipScenes = <String, Set<String>>{
   'west': {},
 };
 
-bool sceneSkippedInLine(Game g, String id) =>
-    kSkipScenes[worldLine(g)]?.contains(id) ?? false;
+/// 小さな分岐: 世の中全体は史実のまま、一部の出来事だけが変わる（旗 → 出さない岐路）。
+/// 例: 長篠で武田が兵を退いた（`history_nagashino`）→ 1582年の武田の滅亡にまつわる岐路は出ない。
+const kFlagSkipScenes = <String, Set<String>>{
+  'history_nagashino': {
+    'h_tenmokuzan',
+    'h_e_erinji',
+    'h_c_erinji',
+    'h_e_tensho_jingo',
+  },
+};
 
-bool eventSkippedInLine(Game g, String id) =>
-    kSkipEvents[worldLine(g)]?.contains(id) ?? false;
+/// 小さな分岐で起きない年表の出来事（旗 → 出来事の id）。
+const kFlagSkipEvents = <String, Set<String>>{
+  'history_nagashino': {'tensho_jingo'},
+};
+
+bool sceneSkippedInLine(Game g, String id) {
+  if (kSkipScenes[worldLine(g)]?.contains(id) ?? false) return true;
+  for (final e in kFlagSkipScenes.entries) {
+    if (g.hasFlag(e.key) && e.value.contains(id)) return true;
+  }
+  return false;
+}
+
+bool eventSkippedInLine(Game g, String id) {
+  if (kSkipEvents[worldLine(g)]?.contains(id) ?? false) return true;
+  for (final e in kFlagSkipEvents.entries) {
+    if (g.hasFlag(e.key) && e.value.contains(id)) return true;
+  }
+  return false;
+}
 
 // ---------------------------------------------------------------------
 // 変わった世界線だけの出来事
@@ -328,7 +354,9 @@ final kAltHistory = <HistEvent>[
 
   // ---- 明智の世 ----
   HistEvent('x_honnoji_akechi', 1582, only: 'akechi', (g) {
-    final t = _fall(g, '武田', '織田') ? '春、武田勝頼が天目山で自害し、武田家は滅んだ。' : '';
+    final t = g.hasFlag('history_nagashino')
+        ? ''
+        : (_fall(g, '武田', '織田') ? '春、武田勝頼が天目山で自害し、武田家は滅んだ。' : '');
     _riseAkechi(g);
     return '$t夏、明智光秀が本能寺で織田信長を討ち、山崎で羽柴秀吉を退けた。光秀の天下は、三日では終わらなかった。';
   }),
@@ -904,9 +932,15 @@ List<SceneDef> buildAltScenes() => [
 String lineName(Game g) => kLineNames[worldLine(g)]!;
 
 /// テスト用: 出し分けの表に書いた id が、すべて実在するか。
-Set<String> skipTableIds() => {for (final v in kSkipScenes.values) ...v};
+Set<String> skipTableIds() => {
+  for (final v in kSkipScenes.values) ...v,
+  for (final v in kFlagSkipScenes.values) ...v,
+};
 
-Set<String> skipEventIds() => {for (final v in kSkipEvents.values) ...v};
+Set<String> skipEventIds() => {
+  for (final v in kSkipEvents.values) ...v,
+  for (final v in kFlagSkipEvents.values) ...v,
+};
 
 /// [Life] を受けて世界線名を返す（保存済みの人生を見るとき用）。
 String worldLineOfLife(Life l) {

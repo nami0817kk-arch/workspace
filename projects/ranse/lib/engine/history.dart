@@ -145,6 +145,9 @@ final kHistory = <HistEvent>[
     return '武田信玄が陣中で没した。織田信長は将軍を京から追い、${a || b ? '越前の朝倉、近江の浅井を滅ぼした' : '室町の世は終わった'}。';
   }),
   HistEvent('nagashino', 1575, (g) {
+    if (_h(g, 'history_nagashino')) {
+      return '三河の長篠で、武田勝頼は織田・徳川の鉄砲の陣を前に兵を退いた。武田の騎馬は無傷のまま甲斐へ戻った。';
+    }
     _cut(g, '武田', .6);
     _grow(g, '織田', 6);
     return '三河の長篠で、織田・徳川の鉄砲隊が武田勝頼の騎馬を打ち破った。';
@@ -158,7 +161,9 @@ final kHistory = <HistEvent>[
   }),
   HistEvent('ishiyama', 1580, (g) => '十年にわたって織田に抗った石山本願寺が、ついに大坂を明け渡した。'),
   HistEvent('honnoji', 1582, (g) {
-    final t = _fall(g, '武田', '織田') ? '春、武田勝頼が天目山で自害し、武田家は滅んだ。' : '';
+    final t = _h(g, 'history_nagashino')
+        ? '春、織田の甲州攻めは、長篠で力を残した武田の前に退けられた。'
+        : (_fall(g, '武田', '織田') ? '春、武田勝頼が天目山で自害し、武田家は滅んだ。' : '');
     if (_h(g, 'history_honnoji')) {
       _grow(g, '織田', 20);
       return '$t夏、本能寺で謀反を起こした明智光秀は、生き延びた信長に討たれた。織田の天下は、揺るがなかった。';
@@ -625,6 +630,15 @@ List<SceneDef> buildHistoryScenes() {
                     return '仲間の多くが倒れた。自分は、どうにか生き延びた。';
                   }),
                   Choice.h('撤退を進言する', '命は守れる。臆病者と言われる', () {
+                    // まれに勝頼が聞き入れ、武田は鉄砲の前で壊滅せずに残る（小さな分岐）。
+                    if (g.rng.chance(.08 + g.l.chi / 1500)) {
+                      g.setFlag('history_nagashino');
+                      g.l.fav = _c(g.l.fav + 30);
+                      g.l.merit += 30;
+                      g.l.fame += 25;
+                      g.mark('長篠で撤退を進言し、武田の騎馬を鉄砲の前から救った');
+                      return '勝頼は長い沈黙のあと、兵を退くと言った。武田の騎馬は、無傷で甲斐へ戻った――歴史が、変わった。';
+                    }
                     g.l.fav = _c(g.l.fav - 10);
                     return '進言は退けられた。退いた者だけが生き残った。';
                   }),

@@ -1031,6 +1031,29 @@ void main() {
       expect(seen.length, greaterThanOrEqualTo(12), reason: '$seen');
     });
 
+    test('長篠で武田が兵を退いた人生では、1582年に武田が滅ばず、武田の滅亡にまつわる岐路も出ない', () {
+      var checked = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        g.setFlag('history_nagashino');
+        playOut(g, Rng(seed));
+        for (final id in kFlagSkipScenes['history_nagashino']!) {
+          expect(g.hasFlag('scene:$id'), isFalse, reason: id);
+        }
+        if (g.year > 1583 &&
+            !g.isChild &&
+            g.l.maxRank < 8 &&
+            worldLine(g) == 'real') {
+          checked++;
+          expect(g.fa['武田']!.alive, isTrue, reason: '${g.year}');
+        }
+      }
+      expect(checked, greaterThan(10));
+    });
+
     test('死に方は保存の往復で残る', () {
       for (var seed = 0; seed < 40; seed++) {
         final rng = Rng(seed);

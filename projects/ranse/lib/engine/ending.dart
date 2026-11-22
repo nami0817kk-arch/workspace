@@ -109,6 +109,7 @@ String? _specialTitle(Game g, String way, String kind) {
     'history_okehazama': '桶狭間で義元を救い、歴史を変えた',
     'history_yamazaki': '三日天下を覆した',
     'history_sekigahara': '関ヶ原で天下を西へ傾けた',
+    'history_nagashino': '長篠で武田の騎馬を救った',
   };
   for (final e in changed.entries) {
     if (l.flags.contains(e.key)) return '${e.value}$n';
