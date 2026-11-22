@@ -112,6 +112,22 @@ extension GameStateCalendar on GameState {
         shortLabel: Tr.pick('カップ戦', 'Cup tie'),
       ));
     }
+    // 4クラブのスーパーカップ(スペイン・イタリア。1月ごろ)。
+    final sc = fourClubSuperCup;
+    final scm = userFourClubSuperCupMatch;
+    if (sc != null && scm != null) {
+      final home = scm.homeTeamId == userId;
+      final opp = home ? scm.awayTeamId : scm.homeTeamId;
+      out.add(DayEvent(
+        date: _cupDate(null,
+            continental: false, due: sc.dueMatchdayFor(scm.round)),
+        kind: DayEventKind.cupMatch,
+        label: Tr.pick(
+            '${sc.name} vs ${_teamById(opp)?.name ?? '-'}(${home ? 'H' : 'A'})',
+            '${sc.name} vs ${_teamById(opp)?.name ?? '-'} (${home ? 'H' : 'A'})'),
+        shortLabel: Tr.pick('スーパーカップ', 'Super Cup'),
+      ));
+    }
     final cont = continentalCup;
     if (cont != null && _continentalHasNextMatch(cont)) {
       String? home;

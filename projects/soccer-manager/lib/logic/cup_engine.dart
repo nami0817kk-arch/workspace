@@ -151,6 +151,9 @@ class CupEngine {
   /// 延長戦(30分)。引き分けの[result]に延長の得点を足したものを返す。
   /// 強さの差から得点を見積もる(90分の3分の1ほどの量)。得点者は
   /// 先発のフィールドプレーヤーからくじで選ぶ(選手のいないクラブは名前なし)。
+  /// アシストも、90分の試合と同じ割合(約8割)でほかの選手からくじで選ぶ。
+  /// 延長の得点は返した結果の events に新しく足したもので、選手の通算得点
+  /// には呼び出し側で数える([extraTimeGoals])。
   static MatchResult extraTime(MatchResult result, Team home, Team away,
       {Random? random}) {
     final rng = random ?? _rng;
@@ -167,11 +170,20 @@ class CupEngine {
       for (var i = 0; i < n; i++) {
         final p =
             shooters.isEmpty ? null : shooters[rng.nextInt(shooters.length)];
+        final others = [
+          for (final q in MatchEngine.lineupOf(t))
+            if (q.id != p?.id) q,
+        ];
+        final a = others.isEmpty || rng.nextDouble() < 0.22
+            ? null
+            : others[rng.nextInt(others.length)];
         events.add(MatchEvent(
           minute: 91 + rng.nextInt(30),
           teamId: t.id,
           scorerName: p?.name,
           scorerId: p?.id,
+          assistName: a?.name,
+          assistId: a?.id,
         ));
       }
     }
@@ -195,6 +207,34 @@ class CupEngine {
       homeShotsOnTarget: result.homeShotsOnTarget,
       awayShotsOnTarget: result.awayShotsOnTarget,
     );
+  }
+
+  /// [extraTime]が[before]に足した延長の得点([after]にだけある得点)。
+  static List<MatchEvent> extraTimeGoals(
+      MatchResult before, MatchResult after) {
+    final old = Set<MatchEvent>.identity()..addAll(before.events);
+    return [
+      for (final e in after.events)
+        if (e.type == MatchEventType.goal && !old.contains(e)) e,
+    ];
+  }
+
+  /// 延長の得点を、得点した選手の通算得点に足す([teams]の選手から引く)。
+  /// 90分までの得点は試合後の共通処理(MatchEngine.applyPostMatchEffects)
+  /// で数えるが、延長の得点はその後に足されるので、ここで足す。
+  static void creditExtraTimeGoals(
+      MatchResult before, MatchResult after, List<Team> teams) {
+    for (final e in extraTimeGoals(before, after)) {
+      final id = e.scorerId;
+      if (id == null) continue;
+      for (final t in teams) {
+        final p = t.players.where((x) => x.id == id).firstOrNull;
+        if (p != null) {
+          p.careerGoals += 1;
+          break;
+        }
+      }
+    }
   }
 
   static int _poisson(double lambda, Random rng) {

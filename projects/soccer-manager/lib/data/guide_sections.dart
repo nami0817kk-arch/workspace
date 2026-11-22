@@ -93,8 +93,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('スーパーカップ', 'Super Cup'),
             description: Tr.pick(
-                'リーグ優勝クラブとカップ優勝クラブが対戦する単発の一戦。開催条件を満たすとホーム画面に専用カードが表示される。',
-                'A single match between the league champions and the cup winners. When it is on, a card for it appears on the home screen.'),
+                'リーグ優勝クラブとカップ優勝クラブが開幕前に戦う単発の一戦。開催条件を満たすとホーム画面に専用カードが表示される。スペイン・イタリアは、リーグの1・2位とカップの優勝・準優勝の4クラブが1月ごろに準決勝と決勝を行い、カップ戦の画面に出る(延長は無く、並べばPK戦)。',
+                'A one-off match between the league champions and the cup winners before the season starts. When it is on, a card for it appears on the home screen. In Spain and Italy, the top two in the league and the two cup finalists play semi-finals and a final in January instead; it appears on the Cups screen (no extra time; level games go to penalties).'),
           ),
         ],
       ),
@@ -367,8 +367,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('昇格プレーオフ', 'Promotion play-offs'),
             description: Tr.pick(
-                '自動昇格枠を逃した中位クラブ同士で行われる、上位ディビジョンへの最後の昇格枠を懸けたノックアウト方式のトーナメント。',
-                'A knockout between the clubs that just missed automatic promotion, for the last place in the division above.'),
+                '自動昇格枠を逃した中位クラブ同士で行われる、上位ディビジョンへの昇格枠を懸けたノックアウト方式のトーナメント。形は国と部で違う(スペインの3部は2枠、ドイツ・フランスは入れ替え戦を2試合合計で行う)。順位表の下に、その部の決まりが出る。',
+                'A knockout between the clubs that just missed automatic promotion, for the remaining places in the division above. The format depends on the country and the tier (two places from the Spanish third tier; Germany and France play a two-legged relegation play-off instead). The rules for each division are shown under its table.'),
           ),
           GuideTopic(
             title: Tr.pick('国内カップ・大陸カップ', 'Domestic and continental cups'),
