@@ -170,6 +170,23 @@ void main() {
     expect(texts['出陣']?.length ?? 0, greaterThanOrEqualTo(5));
   });
 
+  test('女性の人生に固有の岐路（奥・お産・実家・再縁・娘の嫁ぎ先など）が出る', () {
+    final seen = <String>{};
+    for (var seed = 0; seed < 600; seed++) {
+      final rng = Rng(seed + 31);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      if (!g.l.female) continue;
+      playOut(g, Rng(seed));
+      seen.addAll(
+        g.l.flags
+            .where((f) => f.startsWith('scene:w_'))
+            .map((f) => f.substring(6)),
+      );
+    }
+    expect(seen.length, greaterThanOrEqualTo(7), reason: '$seen');
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);

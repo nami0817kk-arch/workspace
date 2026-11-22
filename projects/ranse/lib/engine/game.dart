@@ -15,6 +15,7 @@ import 'life.dart';
 import 'lords.dart';
 import 'rng.dart';
 import 'ways.dart';
+import 'women.dart';
 
 /// 選択肢。[f] が返した文字列は見聞録に書かれる。
 class Choice {
@@ -56,6 +57,7 @@ class Game extends ChangeNotifier {
       ...buildWayScenes(),
       ...buildLordScenes(),
       ...buildEchoScenes(),
+      ...buildWomenScenes(),
       ...buildHistoryScenes(),
       ...buildHistoryEastScenes(),
       ...buildHistoryWestScenes(),
@@ -768,7 +770,9 @@ class Game extends ChangeNotifier {
         j(8);
         log('子が生まれた（${l.kids}人目）。', 'good');
         final risk = clampD(
-          (l.hp < 40 ? .08 : .03) * (has('hardy') ? .7 : 1),
+          (l.hp < 40 ? .08 : .03) *
+              (has('hardy') ? .7 : 1) *
+              (hasFlag('good_midwife') ? .4 : 1),
           0,
           .2,
         );
