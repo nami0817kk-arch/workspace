@@ -218,7 +218,7 @@ List<SceneDef> buildLordScenes() {
       ], after: next);
     }),
 
-    SceneDef('l_young_blunder', 20, 84, (g) => 1.2, _castle, (g, next) {
+    SceneDef('l_young_blunder', 20, 84, (g) => 1.2, _keep, (g, next) {
       final name = _man(g);
       g.ask('若侍の失態', '目をかけていた若い家臣の$nameが、主家の使者に無礼を働いた。使者は顔を赤くして帰っていった。', [
         Choice.h('腹を切らせて詫びる', '家の面目は立つ。若い命が一つ消える', () {
@@ -242,7 +242,7 @@ List<SceneDef> buildLordScenes() {
       ], after: next);
     }),
 
-    SceneDef('l_elder_advice', 25, 84, (g) => 1.2, _castle, (g, next) {
+    SceneDef('l_elder_advice', 25, 84, (g) => 1.2, _keep, (g, next) {
       final l = g.l;
       final name = _man(g);
       g.ask('老臣の諫言', '先代から仕える老臣の$nameが、膝を詰めて言った。「近ごろは、耳に心地よい言葉ばかりお聞きになる」', [

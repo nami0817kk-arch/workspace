@@ -463,6 +463,52 @@ List<SceneDef> buildAltScenes() => [
   ),
 
   SceneDef(
+    'h_x_okehazama_thanks',
+    15,
+    84,
+    (g) => 20,
+    (g) =>
+        _inLine(g, 'imagawa') &&
+        g.hasFlag('scene:h_x_okehazama_warn') &&
+        g.l.rank <= 2 &&
+        (g.fa['今川']?.alive ?? false) &&
+        g.active,
+    (g, next) {
+      final l = g.l;
+      g.ask(
+        '義元の使い',
+        '今川の使いが、村を訪ねてきた。「桶狭間の雨の中、本陣へ急を知らせた者を探しておる。屋形さまが、礼をしたいと仰せだ」',
+        [
+          if (!l.female)
+            Choice.h('侍に取り立ててもらう', '身分が得られる。戦に出る身になる', () {
+              l.lord = '今川';
+              l.rank = 3;
+              if (l.maxRank < 3) l.maxRank = 3;
+              l.fav = 50;
+              l.ronin = false;
+              g.meet('主君', '今川義元', 60);
+              g.mark('桶狭間の知らせの功で、今川義元に侍として取り立てられた');
+              return '名字と刀を賜り、今川の侍となった。';
+            }),
+          Choice.h('田と銭を賜る', '暮らしは豊かになる。身分は変わらない', () {
+            l.gold += 40;
+            l.fame += 10;
+            g.mark('桶狭間の知らせの功で、今川義元から田と銭を賜った');
+            return '田を一枚と、銭四十貫を賜った。';
+          }),
+          Choice.h('名乗り出ない', '何も変わらない。それでいいと思える', () {
+            g.j(6);
+            g.setFlag('silent_hero');
+            return '自分のことだとは言わなかった。歴史を変えたのが誰なのか、誰も知らない。';
+          }),
+        ],
+        after: next,
+      );
+    },
+    ageOk: (g, a) => g.l.startYear + a >= 1561 && g.l.startYear + a <= 1563,
+  ),
+
+  SceneDef(
     'h_x_okehazama_hero',
     20,
     84,

@@ -696,6 +696,47 @@ void main() {
       expect(womenUp / women, greaterThan(.3), reason: '女性の昇進 $womenUp/$women');
     });
 
+    test('町人として桶狭間で歴史を変えた人には、義元からの礼の場面が来る', () {
+      var shown = 0;
+      for (var seed = 0; seed < 600 && shown < 3; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        final b = rollBirth(rng);
+        if (b.startYear > 1545) continue;
+        g.start(b);
+        if (g.finished) continue;
+        g
+          ..setFlag('history_okehazama')
+          ..setFlag('scene:h_x_okehazama_warn');
+        playOut(
+          g,
+          Rng(seed),
+          onPrompt: (p) {
+            if (p.title == '義元の使い') shown++;
+          },
+        );
+      }
+      expect(shown, greaterThan(0));
+    });
+
+    test('奥で仕える女性には、若侍の失態・老臣の諫言（侍の家の当主の場面）が出ない', () {
+      for (var seed = 0; seed < 150; seed++) {
+        final rng = Rng(seed * 7 + 1);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished || !g.l.female || g.has('onna')) continue;
+        g.l
+          ..rank = 6
+          ..maxRank = 6
+          ..lord = g.alive.first.name
+          ..fav = 50;
+        playOut(g, Rng(seed + 1));
+        expect(g.hasFlag('scene:l_young_blunder'), isFalse);
+        expect(g.hasFlag('scene:l_elder_advice'), isFalse);
+      }
+    });
+
     test('死に方は保存の往復で残る', () {
       for (var seed = 0; seed < 40; seed++) {
         final rng = Rng(seed);
