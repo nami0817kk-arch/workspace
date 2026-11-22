@@ -713,6 +713,7 @@ List<SceneDef> buildAltScenes() => [
             if (l.rank > l.maxRank) l.maxRank = l.rank;
             l.fav = 70;
             g.meet('主君', '明智光秀', 70);
+            g.setFlag('akechi_retainer');
             g.mark('山崎の功で、明智光秀の重臣となった');
             return '光秀の重臣に取り立てられた。';
           }),
