@@ -76,6 +76,8 @@ extension GameStateWeek on GameState {
     }
     if (d.isAfter(cursor)) _recoverByDays(_daysBetween(cursor, d));
     s.today = d;
+    // オフの6月の代表ウィークが始まっていれば呼ぶ(週の処理は止まっている)。
+    _callUpForJuneWindow(before, d);
     // 代表ウィークが終わっていれば、代表の選手はクラブに戻る。
     _releaseInternationalDuty();
   }

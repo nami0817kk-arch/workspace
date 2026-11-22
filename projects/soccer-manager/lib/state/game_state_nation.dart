@@ -44,6 +44,30 @@ extension GameStateNation on GameState {
     return others[Player.nationalityHash('$id#from') % others.length];
   }
 
+  /// アフリカの代表の数(名前は出さず、番号で分ける)。
+  static const int africanTeamCount = 12;
+
+  /// id [id]・国籍[nationality]の選手が、アフリカの国の代表を選んだ二重
+  /// 国籍の選手なら、その代表の番号(0〜[africanTeamCount]-1)。そうでなければ
+  /// null(2026-11-22)。
+  ///
+  /// このゲームの国籍は5か国([LeagueTheme])だけで、アフリカの国籍を持た
+  /// ない。実際の欧州のリーグには、アフリカの国の代表としてプレーする選手
+  /// (二重国籍を含む)が多いので、国籍と id から毎回同じ答えを出して、その
+  /// 選手を決める。フランス国籍は多く(12%)、ほかの国籍は4%。この選手は
+  /// 国籍の国の代表には呼ばれず、アフリカの代表に呼ばれる(代表ウィークと、
+  /// アフリカネイションズカップ)。
+  static int? africanTeamFor(String id, LeagueTheme nationality) {
+    final share = nationality == LeagueTheme.france ? 0.12 : 0.04;
+    final h = Player.nationalityHash('$id#afr');
+    if (h % 1000 >= (share * 1000).round()) return null;
+    return Player.nationalityHash('$id#afrteam') % africanTeamCount;
+  }
+
+  /// [p]がアフリカの国の代表の選手か([africanTeamFor])。
+  bool isAfricanInternational(Player p) =>
+      africanTeamFor(p.id, nationalityOf(p)) != null;
+
   /// [p]の国籍。移ったことのある選手は覚えている国籍、そうでなければ
   /// 今いるクラブの国と部から決める。自由契約と作り物の市場の選手は自国。
   LeagueTheme nationalityOf(Player p) {

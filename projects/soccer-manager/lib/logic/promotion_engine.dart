@@ -318,6 +318,7 @@ class PromotionEngine {
   /// PK戦)を行う形。入れ替え戦のある国では、上の部の降格圏のすぐ上と、
   /// 下の部の自動昇格のすぐ下が戦い、勝った方が上の部に入る。
   /// [tier2Points]は下の部の勝ち点(プレーオフを行わない決まりに使う)。
+  /// [tier1Points]は上の部の勝ち点(プレーアウトを行わない決まりに使う)。
   static PromotionResult resolve({
     required List<Team> tier1Teams,
     required List<Team> tier2Teams,
@@ -325,6 +326,7 @@ class PromotionEngine {
     List<Team>? tier2PlayedOrder,
     PromotionRules rules = PromotionRules.standard,
     Map<String, int>? tier2Points,
+    Map<String, int>? tier1Points,
   }) {
     final orderedTier1 = tier1PlayedOrder ?? _simulateSeason(tier1Teams);
     final orderedTier2 = tier2PlayedOrder ?? _simulateSeason(tier2Teams);
@@ -351,15 +353,66 @@ class PromotionEngine {
       promoted = orderedTier2.take(rules.autoUp).toList();
     }
 
+    // 降格プレーアウト(イタリアの2部): 自動降格のすぐ上の2クラブが2試合
+    // 合計で戦い、負けた方が落ちる。第1戦は順位が下のホーム、合計で並べば
+    // 順位が上が残る(延長なし)。勝ち点差が[PromotionRules.playoutSkipGap]
+    // 以上なら行わずに下のクラブが落ちる。
+    if (rules.relegationPlayout && remainingTier1.length >= 2) {
+      final higher = remainingTier1[remainingTier1.length - 2];
+      final lower = remainingTier1.last;
+      final a = tier1Points?[higher.id];
+      final b = tier1Points?[lower.id];
+      final skip = rules.playoutSkipGap > 0 &&
+          a != null &&
+          b != null &&
+          a - b >= rules.playoutSkipGap;
+      var loser = lower;
+      if (!skip) {
+        final (ms, w) = _playTwoLegs(
+          roundLabel: Tr.pick('降格プレーアウト', 'Relegation play-out'),
+          higher: higher,
+          lower: lower,
+          higherSeedOnTie: true,
+          extraTime: false,
+        );
+        playoffMatches = [...playoffMatches, ...ms];
+        loser = w.id == higher.id ? lower : higher;
+      }
+      remainingTier1 = remainingTier1.where((t) => t.id != loser.id).toList();
+      extraRelegated.add(loser);
+    }
+
     // 入れ替え戦: 上の部で降格圏のすぐ上のクラブと、下の部で昇格の枠の
     // すぐ下のクラブ。下の部が勝てば入れ替わる。ドイツは2試合合計(第2戦は
     // 上の部のホーム。並べば延長・PK戦)、ほかは1試合(上の部のホーム)。
+    // フランスの1部と2部の間は、下の部の側を3クラブのプレーオフで決める
+    // (4番手対5番手の勝者が3番手と戦う。どちらも順位が上のホームで1試合、
+    // 並べばPK戦)。
     if (rules.relegationPlayoff &&
         remainingTier1.isNotEmpty &&
         orderedTier2.length > promoted.length) {
       final upperSide = remainingTier1.last;
-      final lowerSide =
-          orderedTier2.firstWhere((t) => !promoted.any((p) => p.id == t.id));
+      final candidates = orderedTier2
+          .where((t) => !promoted.any((p) => p.id == t.id))
+          .toList();
+      var lowerSide = candidates.first;
+      if (rules.relegationPlayoffQualifiers >= 3 && candidates.length >= 3) {
+        final first = _playSingleMatch(
+          roundLabel: Tr.pick('昇格プレーオフ 1回戦', 'Play-off preliminary round'),
+          home: candidates[1],
+          away: candidates[2],
+        );
+        final firstWinner =
+            first.winnerId == candidates[1].id ? candidates[1] : candidates[2];
+        final second = _playSingleMatch(
+          roundLabel: Tr.pick('昇格プレーオフ 準決勝', 'Play-off semi-final'),
+          home: candidates[0],
+          away: firstWinner,
+        );
+        playoffMatches = [...playoffMatches, first, second];
+        lowerSide =
+            second.winnerId == candidates[0].id ? candidates[0] : firstWinner;
+      }
       final label = Tr.pick('入れ替え戦', 'Relegation play-off');
       final String winnerId;
       if (rules.relegationPlayoffTwoLegs) {

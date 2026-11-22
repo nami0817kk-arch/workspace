@@ -29,8 +29,9 @@ void main() {
         final r = theme.rulesBelow(upper);
         // プレーオフで上がる数は国で違う(スペインの3部は2枠。2026-11-22)
         // ので、プレーオフ1枠と決め打ちせず promotionPlaces で数える。
+        // 落ちる数はプレーアウト(イタリアの2部)の1つも数える。
         final up = r.promotionPlaces;
-        expect(up, r.autoDown, reason: '$theme $upper部');
+        expect(up, r.relegationPlaces, reason: '$theme $upper部');
       }
     }
   });

@@ -151,7 +151,15 @@ void main() {
               expect(d.isAfter(cal.dateForMatchday(md - 1)), isTrue,
                   reason: why);
               expect(d.isBefore(cal.dateForMatchday(md)), isTrue, reason: why);
-              expect(window.contains(d), isFalse, reason: why);
+              // 最終節の後(第[total]+1節は暦の外の仮の日)は6月の代表
+              // ウィークと重なることがある。リーグ戦の後のカップ戦は
+              // nextCupWeekdayAfter で日を決め、そちらが6月の代表ウィークを
+              // 避ける(2026-11-22)。
+              final june = md > total
+                  ? SeasonCalendar.juneWindowDays(season)
+                  : const <DateTime>{};
+              expect(window.contains(d) && !june.contains(d), isFalse,
+                  reason: why);
               expect(cal.matchdayDates.contains(d), isFalse, reason: why);
             }
           }
