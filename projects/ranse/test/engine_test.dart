@@ -153,7 +153,8 @@ void main() {
         );
         final n = titles.where((t) => t != '今年の重点').length;
         scenes += n;
-        expect(n, inInclusiveRange(2, 9), reason: 'seed=$seed $titles');
+        // 1年に1つまで。史実の岐路はその年に必ず出るので、10年すべてで出ることもある。
+        expect(n, inInclusiveRange(2, 10), reason: 'seed=$seed $titles');
         expect(g.prompt?.title, anyOf('元服', '裳着'), reason: 'seed=$seed');
         expect(g.age, 15);
       }
