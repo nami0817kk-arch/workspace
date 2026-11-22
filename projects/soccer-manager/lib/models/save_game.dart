@@ -422,8 +422,21 @@ class SaveGame {
   int parachuteFromTier;
   int parachuteSeasonsLeft;
 
-  /// 獲得した選手の簿価(選手 id → [移籍金, 獲得した季の終わりの年, 償却の年数])。
+  /// 獲得した選手の簿価(選手 id → [移籍金, 獲得した季の終わりの年,
+  /// 償却の年数, ここまでに費用にした額])。
+  ///
+  /// 4つ目の値は 2026-11-22 から(移籍金を払った季に全額費用にしていたのを、
+  /// 契約の年数で割って毎季費用にする形に変えた)。3つしかない旧セーブの
+  /// 行は、払った季に全額を費用にしてあるので、それ以上は償却しない。
   Map<String, List<int>> playerBook;
+
+  /// フランス式の人件費の上限が続く残りの季数と、その上限(週俸の総額、
+  /// 万円)。0 は上限なし。
+  int wageFreezeSeasons;
+  int wageFreezeCap;
+
+  /// フランス式の降格処分。季の締めの昇格・降格で、1つ下の部へ落とす。
+  bool adminRelegation;
 
   /// 同じリーグで競う他のオーナー。
   List<RivalOwner> rivalOwners;
@@ -768,6 +781,9 @@ class SaveGame {
     this.parachuteFromTier = 0,
     this.parachuteSeasonsLeft = 0,
     Map<String, List<int>>? playerBook,
+    this.wageFreezeSeasons = 0,
+    this.wageFreezeCap = 0,
+    this.adminRelegation = false,
     this.planStartSeason = 0,
     List<RivalOwner>? rivalOwners,
     this.newsTotal = 0,
@@ -1062,6 +1078,11 @@ class SaveGame {
           'parachuteSeasonsLeft': parachuteSeasonsLeft,
         },
         if (playerBook.isNotEmpty) 'playerBook': playerBook,
+        if (wageFreezeSeasons > 0) ...{
+          'wageFreezeSeasons': wageFreezeSeasons,
+          'wageFreezeCap': wageFreezeCap,
+        },
+        if (adminRelegation) 'adminRelegation': true,
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (clubCash.isNotEmpty) 'clubCash': clubCash,
@@ -1350,6 +1371,9 @@ class SaveGame {
         parachuteSeasonsLeft: json['parachuteSeasonsLeft'] as int? ?? 0,
         playerBook: (json['playerBook'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
+        wageFreezeSeasons: json['wageFreezeSeasons'] as int? ?? 0,
+        wageFreezeCap: json['wageFreezeCap'] as int? ?? 0,
+        adminRelegation: json['adminRelegation'] as bool? ?? false,
         newsTotal: json['newsTotal'] as int? ?? 0,
         newsSeenTotal: json['newsSeenTotal'] as int? ?? 0,
         rivalOwners: (json['rivalOwners'] as List?)
@@ -1376,9 +1400,9 @@ class SaveGame {
             .firstOrNull,
         ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
         marketingBoostWeeks: json['marketingBoostWeeks'] as int? ?? 0,
-        ruleSet: RuleSet.values
-            .where((r) => r.name == json['ruleSet'])
-            .firstOrNull ?? RuleSet.britain,
+        // 2026-11-22 より前の名前(japan・usa)も読める。
+        ruleSet:
+            RuleSet.fromName(json['ruleSet'] as String?) ?? RuleSet.britain,
         clubValueHistory: (json['clubValueHistory'] as Map?)
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,

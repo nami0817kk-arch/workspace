@@ -4,6 +4,10 @@ import '../l10n/tr.dart';
 ///
 /// 資金が動く場所はすべて、どれかの項目に入れて記録する。項目に入れずに
 /// 資金だけ動かすと、損益計算書の合計が実際の資金の増減と合わなくなる。
+///
+/// 移籍金は実際の会計に合わせて資産として扱う(2026-11-22)。払ったときは
+/// [transferFees](資金は減るが損益には入れない)、毎季の費用は
+/// [amortization](契約の年数で割った額。資金は動かない)。
 enum LedgerCategory {
   gate, // 観客収入
   sponsor, // スポンサー収入
@@ -16,6 +20,10 @@ enum LedgerCategory {
   appearanceFees, // 出場手当
   transfers, // 補強費(獲得・分割払い・ローン料・契約更新・ユース昇格)
   facilities, // 施設・合宿・スカウト
+  infrastructure, // 施設・アカデミーへの投資(規則の判定では赤字に数えない)
+  interest, // 融資・オーナーからの借入の利息(支出)と預金の利息(収入)
+  amortization, // 移籍金の償却(資金は動かない。売った・去った選手の残りの簿価も)
+  transferFees, // 移籍金の支払い(資産。損益には含めず、償却で費用にする)
   financing, // 融資・預金の元本(損益には含めない)
   other; // その他(事件・デバッグ・購入資金など)
 
@@ -31,6 +39,11 @@ enum LedgerCategory {
         appearanceFees => Tr.pick('出場手当', 'Appearance fees'),
         transfers => Tr.pick('補強費', 'Signings'),
         facilities => Tr.pick('施設・合宿・スカウト', 'Facilities & scouting'),
+        infrastructure =>
+          Tr.pick('施設・アカデミーへの投資', 'Facility & academy investment'),
+        interest => Tr.pick('利息', 'Interest'),
+        amortization => Tr.pick('移籍金の償却', 'Transfer fee amortisation'),
+        transferFees => Tr.pick('移籍金の支払い', 'Transfer fees paid'),
         financing => Tr.pick('融資・預金', 'Loans & deposits'),
         other => Tr.pick('その他', 'Other'),
       };
@@ -46,6 +59,12 @@ enum LedgerCategory {
   /// 人件費にあたる項目。
   bool get isWageCost =>
       this == playerWages || this == staffWages || this == appearanceFees;
+
+  /// 損益に入れない項目(元本の出入りと、資産になる移籍金の支払い)。
+  bool get isOutsideProfit => this == financing || this == transferFees;
+
+  /// 資金が動かない項目(償却)。資金の増減には数えない。
+  bool get isNonCash => this == amortization;
 }
 
 /// 1シーズン分の収支の記録。
@@ -74,14 +93,26 @@ class SeasonLedger {
       .where((e) => e.key.isWageCost)
       .fold(0, (s, e) => s + e.value);
 
-  /// 損益(融資・預金の元本は含めない)。資金の増減から借入と預金の出入りを
-  /// 除いた、そのシーズンの稼ぎ。
+  /// 損益(融資・預金の元本と、移籍金の支払いは含めない)。移籍金は
+  /// 償却([LedgerCategory.amortization])で費用になる。
   int get profit => amounts.entries
-      .where((e) => e.key != LedgerCategory.financing)
+      .where((e) => !e.key.isOutsideProfit)
       .fold(0, (s, e) => s + e.value);
 
-  /// 資金そのものの増減(融資・預金の元本を含む)。
-  int get cashChange => amounts.values.fold(0, (s, v) => s + v);
+  /// 規則の判定に使う損益。施設・アカデミーへの投資は赤字に数えない
+  /// (実際の収支規則と同じ)。借入・出資は、もともと損益に入らない。
+  int get ruleProfit => profit - of(LedgerCategory.infrastructure);
+
+  /// 選手の人件費(選手の給与・出場手当)と移籍金の償却の合計(正の数)。
+  /// スペインの上限と UEFA の比率で数える「選手にかかる費用」。
+  int get squadCost => -(of(LedgerCategory.playerWages) +
+      of(LedgerCategory.appearanceFees) +
+      of(LedgerCategory.amortization));
+
+  /// 資金そのものの増減(融資・預金の元本を含み、償却は含めない)。
+  int get cashChange => amounts.entries
+      .where((e) => !e.key.isNonCash)
+      .fold(0, (s, e) => s + e.value);
 
   /// 営業収入に対する人件費の割合(0〜)。営業収入が無ければ 0。
   double get wageRatio {

@@ -190,15 +190,17 @@ extension GameStateWeek on GameState {
     }
 
     // 分割払いの引き落とし・融資の返済・定期預金の経過(週単位)。
+    // 年に1回払う分割払い(2026-11-22 から)は、季の締めに払う。
     for (final inst in List<Installment>.from(s.pendingInstallments)) {
-      _book(LedgerCategory.transfers, -(inst.weeklyAmount));
+      if (inst.annual) continue;
+      _payInstallment(inst, inst.weeklyAmount);
       inst.weeksRemaining -= 1;
       if (inst.weeksRemaining <= 0) {
         s.pendingInstallments.remove(inst);
       }
     }
     for (final loan in List<BankLoan>.from(s.bankLoans)) {
-      _book(LedgerCategory.financing, -(loan.weeklyRepayment));
+      _repayLoanWeek(loan);
       loan.weeksRemaining -= 1;
       if (loan.weeksRemaining <= 0) {
         s.bankLoans.remove(loan);
@@ -208,7 +210,7 @@ extension GameStateWeek on GameState {
     for (final deposit in List<FixedDeposit>.from(s.fixedDeposits)) {
       deposit.weeksRemaining -= 1;
       if (deposit.weeksRemaining <= 0) {
-        _book(LedgerCategory.financing, deposit.maturityValue);
+        _settleDepositMaturity(deposit);
         s.fixedDeposits.remove(deposit);
         matured.add(deposit);
       }

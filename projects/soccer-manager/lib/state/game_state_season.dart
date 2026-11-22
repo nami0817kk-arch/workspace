@@ -1043,6 +1043,11 @@ extension GameStateSeason on GameState {
 
     _settlePartnerClub();
 
+    // 年に1回の分割払いを払い、移籍金の1年分を費用にする(償却)。規則の
+    // 判定は償却したあとの損益で行う。
+    _payAnnualInstallments();
+    _amortizeTransferFees();
+
     // 国の財務規則(収支規則・ライセンス)の判定。違反なら罰を科す。
     _enforceLeagueRules();
     _holdShareholdersMeeting();
@@ -1242,6 +1247,29 @@ extension GameStateSeason on GameState {
       }
       final relegated =
           result.tier2.where((t) => !lowerIds.contains(t.id)).toList();
+      // フランス式の降格処分: 自クラブを1つ下の部へ落とし、下の部で
+      // まだ上がっていないうちの一番上のクラブを代わりに上げる。
+      if (_save!.adminRelegation && upperTier == playedTier) {
+        final user =
+            upperOrder.where((t) => t.id == _save!.userTeamId).firstOrNull;
+        if (user != null && !relegated.any((t) => t.id == user.id)) {
+          final promotedIds = {for (final t in promoted) t.id};
+          final next = lowerOrder.where((t) => !promotedIds.contains(t.id));
+          if (next.isNotEmpty) {
+            relegated.add(user);
+            promoted.add(next.first);
+          }
+        }
+      }
+      if (_save!.adminRelegation && lowerTier == playedTier) {
+        // 上がる権利を得ていても、降格処分のクラブは上がれない。
+        final userIdx = promoted.indexWhere((t) => t.id == _save!.userTeamId);
+        if (userIdx >= 0) {
+          final promotedIds = {for (final t in promoted) t.id};
+          final next = lowerOrder.where((t) => !promotedIds.contains(t.id));
+          if (next.isNotEmpty) promoted[userIdx] = next.first;
+        }
+      }
 
       outgoingIds[upperTier]!.addAll(relegated.map((t) => t.id));
       outgoingIds[lowerTier]!.addAll(promoted.map((t) => t.id));
@@ -1303,6 +1331,8 @@ extension GameStateSeason on GameState {
         break;
       }
     }
+    // 降格処分は、この季の昇格・降格で使い切る。
+    _save!.adminRelegation = false;
     final newActiveTeams = newTeamsByTier[newTier]!;
     _ensureSquadsForActiveTier(newActiveTeams);
 
@@ -1326,7 +1356,8 @@ extension GameStateSeason on GameState {
       // 昇格ボーナス: 上のディビジョンで戦うための補強予算が理事会から
       // 支給される(放映権料・スポンサー収入の増加分)。これがないと
       // 戦力差を埋める資金がなく、昇格と降格を往復し続けることになる。
-      final promotionBonus = BoardEngine.promotionBonusFor(newTier);
+      final promotionBonus =
+          BoardEngine.promotionBonusFor(newTier, currentLeagueTheme);
       _book(LedgerCategory.prize, promotionBonus);
       lastPromotionBonus = promotionBonus;
       lastDivisionChangeMessage = userInPromotionPlayoff
@@ -1397,6 +1428,7 @@ extension GameStateSeason on GameState {
       tier: _save!.currentDivisionTier,
       currentWeeklyWageBill: weeklyWageBill,
       weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
+      theme: currentLeagueTheme,
     );
     transferMarket = [];
     _refreshScoutCandidates();

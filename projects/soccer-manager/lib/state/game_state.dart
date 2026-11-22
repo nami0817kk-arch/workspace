@@ -804,6 +804,7 @@ class GameState extends ChangeNotifier {
         currentWeeklyWageBill: ContractEngine.weeklyWageBill(userTeam) +
             scaleMoneyForTier(save.currentDivisionTier,
                 save.infrastructure.totalStaffWeeklyWage),
+        theme: leagueThemeFromName(save.leagueName) ?? LeagueTheme.england,
       );
     }
     save.economyVersion = SaveGame.currentEconomyVersion;
@@ -1255,13 +1256,14 @@ class GameState extends ChangeNotifier {
     _save!.economyNext =
         EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
     // 難易度による初期条件の補正(資金と理事会目標の厳しさ)。
-    _save!.budget = (initialBudgetFor(userStartTier) *
+    _save!.budget = (initialBudgetFor(userStartTier, theme) *
             _save!.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     _save!.boardTargetRank = _difficultyAdjustedTarget(_save!.boardTargetRank);
     _save!.wageBudget = BoardEngine.wageBudgetFor(
       tier: userStartTier,
       currentWeeklyWageBill: weeklyWageBill,
+      theme: theme,
     );
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
     _save!.managerContractYears = 3;
@@ -1513,7 +1515,10 @@ class GameState extends ChangeNotifier {
   /// [tier] 部から始めるときの初期資金。その部の年収の半年分
   /// (5部なら [initialBudgetTier5] と同じ 2億)。3部制にして3部から
   /// 始まるようになった(2026-11-22)。
-  static int initialBudgetFor(int tier) => typicalAnnualIncome(tier) ~/ 2;
+  /// 国で年収の目安が違う(放映権の差)ので、初期の資金も国で違う。
+  static int initialBudgetFor(int tier,
+          [LeagueTheme theme = LeagueTheme.england]) =>
+      typicalAnnualIncome(tier, theme) ~/ 2;
 
   /// [tier] 部から始めるときの自クラブの強さ。その部の真ん中
   /// (3部なら 72)。人件費率がその部の真ん中のクラブと同じくらいになる。

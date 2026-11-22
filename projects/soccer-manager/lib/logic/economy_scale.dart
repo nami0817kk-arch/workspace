@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../l10n/tr.dart';
+import '../models/league_theme.dart';
 
 /// お金の桁を部ごとに変える物差し。金額はすべて万円の int。
 ///
@@ -42,7 +43,7 @@ int scaleMoneyForTier(int tier, int base) => (base * moneyScale(tier)).round();
 ///
 /// そこから実測で合わせ込んだ(test/economy_scale_test.dart)。
 /// - 5部は3倍。もとの観客・グッズの式が小さく、年収が1億に届かなかった。
-/// - 1部は式の約0.6倍。放映権(250億)と合わせて年収330億前後、
+/// - 1部は式の約0.6倍。放映権(当時は250億)と合わせて年収330億前後、
 ///   人件費率は 40〜70%。
 /// - 2〜4部は式とほぼ同じか少し下(2部 約55億、3部 約13億、4部 約6.5億)。
 ///   人件費率は 2部 80〜100%、3部 100%前後、4部 45〜70%。
@@ -57,32 +58,71 @@ double incomeScale(int tier) => switch (tier.clamp(1, 5)) {
       _ => 3,
     };
 
-/// 部ごとの、真ん中くらいのクラブの年収の目安(万円)。理事会が給与の
-/// 枠を組むときの基準に使う。実測(放映権を含む営業収入)に合わせた。
-/// 4部・5部の行は5部制の名残で、いまの3部制では使われない。
-int typicalAnnualIncome(int tier) => switch (tier.clamp(1, 5)) {
-      1 => 3300000, // 330億
-      2 => 550000, // 55億
-      3 => 140000, // 14億
-      4 => 55000, // 5.5億
-      _ => 40000, // 4億
+/// 部ごとの、放映権を除いた年収(観客・スポンサー・グッズ・賞金)の目安
+/// (万円)。国では変えない。[typicalAnnualIncome] の土台。
+int _typicalNonBroadcastIncome(int tier) => switch (tier.clamp(1, 5)) {
+      1 => 800000, // 80億
+      2 => 250000, // 25億
+      3 => 100000, // 10億
+      4 => 45000, // 4.5億
+      _ => 38000, // 3.8億
     };
 
-/// 1シーズンの放映権料(万円)。上の部ほど大きく、1部では年収の半分を
-/// 超える。下の部は、ほとんど入らない。4部・5部の行は5部制の名残で、
-/// いまの3部制では使われない。
-int annualBroadcast(int tier) => switch (tier.clamp(1, 5)) {
-      1 => 2500000, // 250億
-      2 => 300000, // 30億
-      3 => 40000, // 4億
-      4 => 10000, // 1億
-      _ => 2000, // 2,000万
+/// 部ごとの、真ん中くらいのクラブの年収の目安(万円)。理事会が給与の
+/// 枠を組むとき・初期の資金の基準に使う。放映権を除いた分(国で同じ)に、
+/// その国の放映権([annualBroadcast])を足す。イングランドの1部で380億、
+/// フランスの1部で170億ほど。4部・5部の行は5部制の名残で、いまの3部制
+/// では使われない。
+int typicalAnnualIncome(int tier, [LeagueTheme theme = LeagueTheme.england]) =>
+    _typicalNonBroadcastIncome(tier) + annualBroadcast(tier, theme);
+
+/// 国ごとの放映権の大きさ(イングランド = 1)。2026-11-22 に実際に寄せた。
+///
+/// 以前は5か国とも同じ額だった。実際の1クラブあたりの国内放映権は、
+/// プレミアが飛び抜けて大きく(約300億円)、スペイン・ドイツ・イタリアが
+/// その半分ほど、フランスは3割ほど。2部はイングランドのチャンピオン
+/// シップが大きく、ドイツの2部が続く。3部は、どこもわずか。
+double broadcastCountryFactor(LeagueTheme theme, int tier) =>
+    switch ((theme, tier.clamp(1, 3))) {
+      (LeagueTheme.england, _) => 1.0,
+      (LeagueTheme.spain, 1) => 0.6,
+      (LeagueTheme.germany, 1) => 0.55,
+      (LeagueTheme.italy, 1) => 0.5,
+      (LeagueTheme.france, 1) => 0.3,
+      (LeagueTheme.germany, 2) => 0.55,
+      (LeagueTheme.spain, 2) => 0.45,
+      (LeagueTheme.italy, 2) => 0.4,
+      (LeagueTheme.france, 2) => 0.3,
+      (LeagueTheme.germany, _) => 0.7,
+      (LeagueTheme.spain, _) => 0.6,
+      (LeagueTheme.italy, _) => 0.55,
+      (LeagueTheme.france, _) => 0.45,
     };
+
+/// 1シーズンの放映権料(万円)。上の部ほど大きく、イングランドの1部では
+/// 年収の8割近くになる。国で額が違う([broadcastCountryFactor])。下の部は、
+/// ほとんど入らない。4部・5部の行は5部制の名残で、いまの3部制では
+/// 使われない。
+///
+/// イングランドの額: 1部 300億・2部 40億・3部 5億(以前は5か国とも
+/// 250億・30億・4億)。イングランドは上がり、ほかの4か国は下がった
+/// (5か国の平均は1部で177億)。
+int annualBroadcast(int tier, [LeagueTheme theme = LeagueTheme.england]) {
+  final england = switch (tier.clamp(1, 5)) {
+    1 => 3000000, // 300億
+    2 => 400000, // 40億
+    3 => 50000, // 5億
+    4 => 10000, // 1億
+    _ => 2000, // 2,000万
+  };
+  return (england * broadcastCountryFactor(theme, tier)).round();
+}
 
 /// 毎節入る放映権料(万円)。1シーズンの額を節の数で割る。
 /// 節の数は国(部のクラブ数)で違うので、渡せるようにしてある。
-int weeklyBroadcast(int tier, {int matchdays = 38}) =>
-    (annualBroadcast(tier) / max(1, matchdays)).round();
+int weeklyBroadcast(int tier,
+        {int matchdays = 38, LeagueTheme theme = LeagueTheme.england}) =>
+    (annualBroadcast(tier, theme) / max(1, matchdays)).round();
 
 /// 能力 [overall] から見た市場価値の基準(万円)。
 ///

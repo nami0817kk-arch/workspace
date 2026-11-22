@@ -270,7 +270,8 @@ extension GameStateSquad on GameState {
     // 週俸の総額が給与予算を食い潰さないよう、選手と同じ枠で見る。
     // 入れ替えなら前任者の週俸は出ていかなくなるので、差額で見る。
     if (!_wageBudgetAllowsSigning(
-        scaledMoney(hired.wage - (previous?.wage ?? 0)))) {
+        scaledMoney(hired.wage - (previous?.wage ?? 0)),
+        isPlayer: false)) {
       return false;
     }
 
@@ -326,7 +327,8 @@ extension GameStateSquad on GameState {
     if (lvl >= ClubInfrastructure.maxLevel) return false;
     final cost = facilityUpgradeCostFor(type);
     if (_save!.budget < cost) return false;
-    _book(LedgerCategory.facilities, -(cost));
+    // 施設への投資は、財務の規則の判定で赤字に数えない(実際の収支規則と同じ)。
+    _book(LedgerCategory.infrastructure, -(cost));
     infra.upgradeFacility(type);
     // 補助は1回の増築で使い切る。
     if (type == FacilityType.stadium) _save!.stadiumSubsidyPct = 0;

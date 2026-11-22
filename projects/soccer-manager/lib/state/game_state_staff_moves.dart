@@ -118,7 +118,8 @@ extension GameStateStaffMoves on GameState {
       return false;
     }
     final newWage = (st.wage * (100 + o.raisePercent) / 100).round();
-    if (!_wageBudgetAllowsSigning(scaledMoney(newWage - st.wage))) {
+    if (!_wageBudgetAllowsSigning(scaledMoney(newWage - st.wage),
+        isPlayer: false)) {
       _notify();
       return false;
     }

@@ -56,8 +56,8 @@ class MediaDealsCard extends StatelessWidget {
                   ),
                 ),
             const Divider(height: 24),
-            Text(Tr.pick('放映権の分配金(基準 ${formatMoney(MediaDealsEngine.tvBase(tier))}/季)',
-                'TV money (base ${formatMoney(MediaDealsEngine.tvBase(tier))}/season)'),
+            Text(Tr.pick('放映権の分配金(基準 ${formatMoney(MediaDealsEngine.tvBase(tier, gs.currentLeagueTheme))}/季)',
+                'TV money (base ${formatMoney(MediaDealsEngine.tvBase(tier, gs.currentLeagueTheme))}/season)'),
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             SegmentedButton<TvDeal>(

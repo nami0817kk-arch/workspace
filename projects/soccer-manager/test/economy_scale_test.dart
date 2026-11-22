@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_manager/models/league.dart';
+import 'package:soccer_manager/models/league_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/board_engine.dart';
@@ -108,10 +109,10 @@ void main() {
     }
   }
 
-  test('3部から始めて、スポンサーだけ結ぶオーナーでも4シーズン資金が破綻しない',
-      () async {
+  Future<void> fourSeasonsFromTier3(
+      [LeagueTheme theme = LeagueTheme.england]) async {
     final game = GameState();
-    await game.startNewGame('長期FC');
+    await game.startNewGame('長期FC', theme: theme);
     final log = <String>[];
     for (var season = 1; season <= 4; season++) {
       await playSeason(game);
@@ -124,19 +125,29 @@ void main() {
       // 決まるので、ここでは見ない(尽きたらそこで止める)。
       expect(game.saleReason, isNot(SaleReason.shareholders),
           reason: log.join('\n'));
-      expect(s.budget, greaterThan(-GameState.initialBudgetFor(3)),
+      expect(s.budget, greaterThan(-GameState.initialBudgetFor(3, theme)),
           reason: log.join('\n'));
       if (game.saleReason != null) break;
       await game.startNextSeason();
     }
     // ignore: avoid_print
-    print('3部からの4シーズン\n${log.join('\n')}');
-  }, timeout: const Timeout(Duration(minutes: 8)));
+    print('3部からの4シーズン(${theme.name})\n${log.join('\n')}');
+  }
+
+  test('3部から始めて、スポンサーだけ結ぶオーナーでも4シーズン資金が破綻しない',
+      () => fourSeasonsFromTier3(),
+      timeout: const Timeout(Duration(minutes: 8)));
+
+  // 2026-11-22 に放映権を国ごとにした。一番小さいフランスでも破綻しない。
+  test('放映権の一番小さいフランスでも、3部から4シーズン資金が破綻しない',
+      () => fourSeasonsFromTier3(LeagueTheme.france),
+      timeout: const Timeout(Duration(minutes: 8)));
 
   // 部ごとに、その部の真ん中くらいのクラブを自クラブにして1シーズン回す。
-  Future<SeasonLedger> runTier(int tier, List<String> log) async {
+  Future<SeasonLedger> runTier(int tier, List<String> log,
+      [LeagueTheme theme = LeagueTheme.england]) async {
     final game = GameState();
-    await game.startNewGame('計測FC');
+    await game.startNewGame('計測FC', theme: theme);
     final s = game.save!;
     if (tier != s.currentDivisionTier) {
       final target = s.otherDivisionLeagues[tier - 1]!;
@@ -151,12 +162,13 @@ void main() {
       s.clubName = mid.name;
       s.rivalTeamId = null;
       s.currentDivisionTier = tier;
-      s.budget = GameState.initialBudgetFor(tier);
+      s.budget = GameState.initialBudgetFor(tier, theme);
     }
     s.wageBudget = BoardEngine.wageBudgetFor(
         tier: tier,
         currentWeeklyWageBill: game.weeklyWageBill,
-        weeklyIncome: game.weeklyIncomeFor(s.userTeamId));
+        weeklyIncome: game.weeklyIncomeFor(s.userTeamId),
+        theme: theme);
     s.sponsorDeal = SponsorEngine.generateOffers(game.userTeam.overallRating,
         tier: tier)[1];
     s.pendingSponsorOffers = [];
@@ -168,7 +180,7 @@ void main() {
     game.debugAdvanceTodayTo(MoneyCalendar.fiscalYearEnd(s.league.season));
     final l = s.ledgerFor(s.league.season);
     Tr.language = AppLanguage.japanese;
-    log.add('$tier部: 年収${formatMoney(l.operatingIncome)}'
+    log.add('${theme.name} $tier部: 年収${formatMoney(l.operatingIncome)}'
         '(放映権${formatMoney(l.of(LedgerCategory.broadcast))})'
         ' 人件費${formatMoney(l.wageCost)} 人件費率${(l.wageRatio * 100).round()}%'
         ' 主力: ${stars.map((p) => '総合${p.overall} 価値${formatMoney(p.marketValue)} 年俸${formatMoney(annualFromWeekly(p.wage))}').join(' / ')}');
@@ -209,6 +221,25 @@ void main() {
     expect(incomes[2], inInclusiveRange(70000, 300000),
         reason: log.join('\n'));
   }, timeout: const Timeout(Duration(minutes: 10)));
+
+  // 2026-11-22: 放映権を国ごとにした(イングランド 1.0・フランス 0.3)。
+  // 1部の真ん中のクラブの年収は、イングランドがフランスより大きい。
+  // フランスの1部は年収が小さく、人件費率が高くなる(実際も同じ傾向)。
+  test('国ごとの1部の年収: イングランドが一番、フランスは小さい(実測をログに出す)',
+      () async {
+    final log = <String>[];
+    final en = await runTier(1, log, LeagueTheme.england);
+    final fr = await runTier(1, log, LeagueTheme.france);
+    // ignore: avoid_print
+    print(log.join('\n'));
+    expect(en.operatingIncome, greaterThan(fr.operatingIncome),
+        reason: log.join('\n'));
+    expect(en.of(LedgerCategory.broadcast),
+        greaterThan(fr.of(LedgerCategory.broadcast) * 3),
+        reason: log.join('\n'));
+    expect(fr.operatingIncome, inInclusiveRange(1000000, 3000000),
+        reason: log.join('\n'));
+  }, timeout: const Timeout(Duration(minutes: 5)));
 
   group('旧セーブの換算', () {
     test('版1のセーブは、読み込みで一度だけ新しい桁に直る', () async {

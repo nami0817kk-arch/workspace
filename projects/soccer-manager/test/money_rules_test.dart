@@ -12,7 +12,9 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   group('パラシュート', () {
-    test('降格すると2季、上の部との放映権の差の半分→4分の1。昇格で止まる', () async {
+    // 2026-11-22 に国ごとの形へ直した(以前はどの国も2季で、半分→4分の1)。
+    // イングランドは3季で 55% → 45% → 20%。国ごとの表は real_money_test。
+    test('イングランドは降格すると3季、差の55%→45%→20%。昇格で止まる', () async {
       final gs = GameState();
       await gs.startNewGame('降格FC');
       final s = gs.save!;
@@ -20,11 +22,13 @@ void main() {
       expect(gs.parachuteAnnual, 0);
       // 1つ上の部から落ちてきた形にする。
       s.parachuteFromTier = tier - 1;
-      s.parachuteSeasonsLeft = 2;
+      s.parachuteSeasonsLeft = 3;
       final diff = annualBroadcast(tier - 1) - annualBroadcast(tier);
-      expect(gs.parachuteAnnual, (diff * 0.5).round());
+      expect(gs.parachuteAnnual, (diff * 0.55).round());
+      s.parachuteSeasonsLeft = 2;
+      expect(gs.parachuteAnnual, (diff * 0.45).round());
       s.parachuteSeasonsLeft = 1;
-      expect(gs.parachuteAnnual, (diff * 0.25).round());
+      expect(gs.parachuteAnnual, (diff * 0.2).round());
       s.parachuteSeasonsLeft = 0;
       s.parachuteFromTier = 0;
       expect(gs.parachuteAnnual, 0);

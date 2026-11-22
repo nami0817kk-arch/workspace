@@ -5,57 +5,90 @@ import '../models/ledger.dart';
 import '../models/league_theme.dart';
 import 'economy_scale.dart';
 
-/// 国(リーグ)ごとの財務規則の式。実在のリーグ名は使わず「〜式」と呼ぶ。
-/// 名前(name)はセーブに残すので、変えない。
+/// 国(リーグ)ごとの財務規則。2026-11-22 に実際の制度へ寄せた。
+///
+/// 以前はイタリアに「3季連続の赤字で勝ち点-6」(日本のクラブライセンス)、
+/// フランスに「贅沢税」(米国のサラリーキャップ)を当てていて、実際の制度と
+/// 別物だった。いまは次の通り(実在の名前は使わず「〜式」と呼ぶ)。
+///
+/// | 国 | 実際の制度 | ここでの形 |
+/// |---|---|---|
+/// | イングランド | 収益性と持続性の規則(3季で損失の上限) | 3季の損失の合計が上限を超えると、勝ち点の減点 |
+/// | スペイン | 人件費の上限(squad cost limit) | 選手の人件費(年俸+移籍金の償却)が上限を超えると、新加入を登録できない |
+/// | ドイツ | ライセンスの審査(自己資本・流動性) | 季の終わりに満たさないと、条件付きで勝ち点の減点 |
+/// | イタリア | 流動性の指標 | 指標が基準を下回っている間は、移籍市場で獲得できない |
+/// | フランス | DNCG(財務の監督機関) | 赤字・債務が大きいと人件費の上限・補強禁止、ひどければ降格処分 |
+///
+/// どの国でも、大陸大会に出たクラブには UEFA の人件費比率(選手の人件費と
+/// 移籍金の償却 ÷ 収入 が70%まで)が掛かり、超えると罰金。
+///
+/// 判定に使う損益は [SeasonLedger.ruleProfit](移籍金は償却で数え、施設・
+/// アカデミーへの投資は赤字に数えない。借入・出資は損益に入らない)。
+///
+/// 名前(name)はセーブに残すので、変えない。2026-11-22 より前のセーブの
+/// `japan`(イタリアに当てていた)と `usa`(フランス)は、[fromName] で
+/// それぞれ [italy] と [france] に読み替える。
 enum RuleSet {
-  /// 直近3季の累積赤字に上限がある。超えると勝ち点を引かれる。
+  /// イングランド式(収支規則)。
   britain,
 
-  /// 債務超過と連続赤字を許さない。免許(ライセンス)の審査。
-  japan,
-
-  /// 人件費が収入の大半を占める赤字経営を許さない。補強禁止で止める。
+  /// ドイツ式(ライセンスの審査)。
+  ///
+  /// 50+1(クラブの会員が議決権の過半を持つ決まり)は、オーナーの持ち分に
+  /// 関わる。このゲームではオーナーが持ち分を売っても議決権は手放さない
+  /// 前提なので、規則としては扱わない。
   germany,
 
-  /// 人件費が収入に連動した上限を超えると、超過分の罰金と勝ち点の剥奪。
+  /// スペイン式(人件費の上限)。
   spain,
 
-  /// 人件費に天井があり、超えた分は贅沢税。勝ち点は引かれない。
-  usa;
+  /// イタリア式(流動性の指標)。
+  italy,
+
+  /// フランス式(DNCG)。
+  france;
 
   /// 国風のテーマから、その国の規則の式を引く。
   static RuleSet forTheme(LeagueTheme theme) => switch (theme) {
         LeagueTheme.england => RuleSet.britain,
         LeagueTheme.germany => RuleSet.germany,
         LeagueTheme.spain => RuleSet.spain,
-        LeagueTheme.italy => RuleSet.japan,
-        LeagueTheme.france => RuleSet.usa,
+        LeagueTheme.italy => RuleSet.italy,
+        LeagueTheme.france => RuleSet.france,
+      };
+
+  /// 保存された名前から引く。2026-11-22 より前の名前も読める。
+  static RuleSet? fromName(String? name) => switch (name) {
+        'japan' => RuleSet.italy,
+        'usa' => RuleSet.france,
+        _ => RuleSet.values.where((r) => r.name == name).firstOrNull,
       };
 
   String get label => switch (this) {
-        britain => Tr.pick('英国式(収支規則)', 'British style (profit rule)'),
-        japan => Tr.pick('日本式(クラブライセンス)', 'Japanese style (club licence)'),
-        germany => Tr.pick('ドイツ式(健全経営)', 'German style (sound finances)'),
-        spain => Tr.pick('スペイン式(人件費の上限)', 'Spanish style (wage limit)'),
-        usa => Tr.pick('米国式(サラリーキャップ)', 'American style (salary cap)'),
+        britain => Tr.pick('イングランド式(収支規則)', 'English style (profit rule)'),
+        germany => Tr.pick('ドイツ式(ライセンスの審査)', 'German style (licensing)'),
+        spain => Tr.pick('スペイン式(人件費の上限)', 'Spanish style (squad cost limit)'),
+        italy => Tr.pick('イタリア式(流動性の指標)', 'Italian style (liquidity index)'),
+        france =>
+          Tr.pick('フランス式(財務の監督機関)', 'French style (financial watchdog)'),
       };
 
   String get summary => switch (this) {
         britain => Tr.pick(
-            '直近3季の累積赤字が上限(営業収入の約25%)を超えると、罰金と勝ち点の剥奪を受けます。',
-            'If your losses over the last three seasons pass the limit (about 25% of income), you are fined and docked points.'),
-        japan => Tr.pick(
-            'シーズン終了時に債務超過だと補強が1季禁止になります。3季連続で赤字だと勝ち点を引かれます。',
-            'If you end a season in the red, signings are banned for a season. Three losing seasons in a row cost you points.'),
+            '直近3季の損失の合計に上限があります(部の規模で決まる額)。超えると勝ち点を引かれます。移籍金は契約の年数で割って毎季の費用に数え、施設・アカデミーへの投資は損失に数えません。',
+            'Your losses over the last three seasons have a ceiling set by your division. Go over it and you are docked points. Transfer fees count spread over the contract; spending on facilities and the academy does not count.'),
         germany => Tr.pick(
-            '人件費が収入の約75%を超え、しかも赤字だと、補強が1季禁止になります。',
-            'If wages pass about 75% of income and you also lose money, signings are banned for a season.'),
+            '季の終わりにライセンスの審査があります。資金(流動性)がマイナス、または自己資本(資金と選手の簿価から借りを引いた額)がマイナスだと、条件付きのライセンスになり勝ち点を引かれます。',
+            'Each season ends with a licence review. If your cash is negative, or your equity (cash and player book values minus debts) is negative, the licence comes with conditions and points are docked.'),
         spain => Tr.pick(
-            '人件費が収入の約70%を超えると、超えた分の一部が罰金になり、勝ち点も引かれます。',
-            'If wages pass about 70% of income, part of the excess is fined and you are docked points.'),
-        usa => Tr.pick(
-            '人件費が収入の約90%を超えると、超えた分の半分が贅沢税になります。勝ち点は引かれません。',
-            'If wages pass about 90% of income, half the excess is taxed. No points are docked.'),
+            '選手の人件費(年俸と移籍金の償却)に、見込みの収入から決まる上限があります。上限を超える補強は登録できません(獲得できません)。',
+            'Player costs (wages plus transfer amortisation) are capped by your projected income. You cannot register signings that would take you over the cap.'),
+        italy => Tr.pick(
+            '流動性の指標(手元の資金 ÷ 1年以内に払う給与4か月分・分割払い・返済)が${(RulesEngine.liquidityThreshold * 100).round()}%を下回っている間は、移籍市場で選手を獲得できません。売るか資金を入れて戻します。',
+            'While your liquidity index (cash divided by four months of wages plus instalments and loan repayments due) is below ${(RulesEngine.liquidityThreshold * 100).round()}%, you cannot sign players. Sell or add funds to get back above it.'),
+        france => Tr.pick(
+            '季の終わりに財務の監督機関が審査します。赤字や借りが大きいと人件費の上限(年俸の総額を増やせない)、資金がマイナスなら補強禁止、両方ひどければ降格処分です。',
+            'A financial watchdog reviews you at the end of each season. Big losses or debts bring a wage cap (no increase to the wage bill); negative cash brings a signing ban; both at once can mean administrative relegation.'),
       };
 }
 
@@ -66,6 +99,8 @@ class RulePenalty {
     this.trustLoss = 0,
     this.banSeasons = 0,
     this.pointsDeduction = 0,
+    this.wageFreezeSeasons = 0,
+    this.adminRelegation = false,
     required this.reason,
   });
 
@@ -81,6 +116,12 @@ class RulePenalty {
   /// 来季の勝ち点の剥奪。
   final int pointsDeduction;
 
+  /// 人件費の上限(季数)。この間は年俸の総額を増やす補強ができない。
+  final int wageFreezeSeasons;
+
+  /// 降格処分(フランス式)。今季の順位にかかわらず1つ下の部へ。
+  final bool adminRelegation;
+
   /// 理由(ニュースに出す)。
   final String reason;
 
@@ -90,6 +131,8 @@ class RulePenalty {
         trustLoss: trustLoss + other.trustLoss,
         banSeasons: max(banSeasons, other.banSeasons),
         pointsDeduction: pointsDeduction + other.pointsDeduction,
+        wageFreezeSeasons: max(wageFreezeSeasons, other.wageFreezeSeasons),
+        adminRelegation: adminRelegation || other.adminRelegation,
         reason: '$reason / ${other.reason}',
       );
 }
@@ -118,6 +161,36 @@ class RuleReport {
   final RulePenalty? penalty;
 }
 
+/// 規則の判定に使う、いまのクラブのお金の様子(帳簿の外の数字)。
+class ClubFinanceSnapshot {
+  const ClubFinanceSnapshot({
+    this.projectedIncome = 0,
+    this.squadCost = 0,
+    this.equity = 0,
+    this.liquidity = 99,
+    this.debt = 0,
+    this.inContinental = false,
+  });
+
+  /// 1年の収入の見込み(万円)。今の週の収入を1シーズン分。
+  final int projectedIncome;
+
+  /// いまの選手の人件費(年俸の合計 + 移籍金の1年分の償却。万円/年)。
+  final int squadCost;
+
+  /// 自己資本(資金・預金・基金・選手の簿価 − 融資・分割払い・オーナーからの借り)。
+  final int equity;
+
+  /// 流動性の指標(手元の資金 ÷ 1年以内に払う額)。
+  final double liquidity;
+
+  /// 借り(融資・分割払いの残り。万円)。
+  final int debt;
+
+  /// 今季、大陸大会に出ているか。
+  final bool inContinental;
+}
+
 /// 規則の判定。画面とシーズン終了の処理の両方がここを使う。
 class RulesEngine {
   const RulesEngine._();
@@ -127,198 +200,316 @@ class RulesEngine {
   /// しない1年目に英国式の上限を超えた)。この間は警告だけで罰は科さない。
   static const int graceSeasons = 1;
 
-  /// 累積赤字を数える季数。
+  /// 損失を数える季数(イングランド式)。
   static const int lossWindowSeasons = 3;
 
-  /// 累積赤字の上限の、営業収入(年平均)に対する割合。
-  static const double lossLimitShare = 0.25;
-
-  /// 上限の下限(万円)。収入が小さいクラブで 0 にならないように。
-  static const int lossLimitFloor = 300;
-
-  /// 部ごとの規則のゆるさ。1部は1.0、下の部ほど上限がゆるい(小さなクラブに
-  /// 1部と同じ審査を当てると、普通の経営でも違反になるため)。
-  static double looseness(int tier) => switch (tier) {
-        <= 1 => 1.0,
-        2 => 1.1,
-        3 => 1.2,
-        4 => 1.35,
-        _ => 1.5,
+  /// イングランド式の、3季の損失の合計の上限(万円)。プレミアの £105m
+  /// (約200億円)を1部に当て、下の部は規模に合わせて小さくする
+  /// (2部はチャンピオンシップの £39m 相当、3部はその規模に合わせた額)。
+  static int lossLimitForTier(int tier) => switch (tier.clamp(1, 3)) {
+        1 => 2000000, // 200億
+        2 => 750000, // 75億
+        _ => 100000, // 10億
       };
 
-  /// [ledgers]はシーズン順。最後が今季。[tier]は今いる部(1〜5)。
+  /// スペイン式の上限の、収入の見込みに対する割合(1部)。
+  static const double squadCostShare = 0.7;
+
+  /// 部ごとのスペイン式の上限のゆるさ。下の部は収入に対して人件費が
+  /// 重くなりやすい(選手の価値は能力で決まり、部の収入ほど下がらない)。
+  static double looseness(int tier) => switch (tier) {
+        <= 1 => 1.0,
+        2 => 1.3,
+        _ => 1.6,
+      };
+
+  /// イタリア式の流動性の指標の基準。実際のセリエAでは 0.7〜0.8。
+  static const double liquidityThreshold = 0.7;
+
+  /// UEFA の人件費比率の上限。
+  static const double uefaSquadCostRatio = 0.7;
+
+  /// UEFA で上限を超えた分のうち、罰金になる割合。
+  static const double uefaFineShare = 0.2;
+
+  /// フランス式: 赤字が収入のこの割合を超えると人件費の上限。
+  static const double dncgLossShare = 0.15;
+
+  /// フランス式: 借りが収入のこの割合を超えると人件費の上限。
+  static const double dncgDebtShare = 0.5;
+
+  /// フランス式: 赤字が収入のこの割合を超え、資金もマイナスなら降格処分。
+  static const double dncgSevereLossShare = 0.3;
+
+  /// [ledgers]はシーズン順。最後が今季。[tier]は今いる部(1〜3)。
+  /// [lowestTier] より下へは降格処分にできない(勝ち点の剥奪に替える)。
   static RuleReport evaluate({
     required RuleSet ruleSet,
     required List<SeasonLedger> ledgers,
     required int budget,
     int tier = 1,
-  }) =>
-      switch (ruleSet) {
-        RuleSet.britain => _britain(ledgers, tier),
-        RuleSet.japan => _japan(ledgers, budget),
-        RuleSet.germany => _germany(ledgers, tier),
-        RuleSet.spain => _spain(ledgers, tier),
-        RuleSet.usa => _usa(ledgers, tier),
-      };
-
-  static SeasonLedger? _thisSeason(List<SeasonLedger> ledgers) =>
-      ledgers.isEmpty ? null : ledgers.last;
-
-  /// 人件費の上限(万円)。営業収入の[share]を部のゆるさで広げた額。
-  static int wageLimit(SeasonLedger l, double share, int tier) =>
-      (l.operatingIncome * share * looseness(tier)).round();
-
-  static RuleReport _germany(List<SeasonLedger> ledgers, int tier) {
-    final l = _thisSeason(ledgers);
-    if (l == null) return const RuleReport(statuses: []);
-    final limit = wageLimit(l, 0.75, tier);
-    final over = l.wageCost > limit;
-    final red = l.profit < 0;
-    final status = RuleStatus(
-      label: Tr.pick('人件費と収支', 'Wages and result'),
-      detail: Tr.pick('人件費${formatMoney(l.wageCost)} / 目安${formatMoney(limit)}・収支${formatMoney(l.profit)}',
-          'Wages ${formatMoney(l.wageCost)} / guide ${formatMoney(limit)}, result ${formatMoney(l.profit)}'),
-      level: (over && red) ? 2 : (over || red ? 1 : 0),
-    );
-    if (!(over && red)) return RuleReport(statuses: [status]);
+    int lowestTier = 3,
+    ClubFinanceSnapshot snapshot = const ClubFinanceSnapshot(),
+  }) {
+    final national = switch (ruleSet) {
+      RuleSet.britain => _britain(ledgers, tier),
+      RuleSet.germany => _germany(budget, snapshot),
+      RuleSet.spain => _spain(tier, snapshot),
+      RuleSet.italy => _italy(snapshot),
+      RuleSet.france =>
+        _france(ledgers, budget, snapshot, canRelegate: tier < lowestTier),
+    };
+    if (!snapshot.inContinental) return national;
+    final uefa = _uefa(ledgers);
+    final p1 = national.penalty;
+    final p2 = uefa.penalty;
     return RuleReport(
-      statuses: [status],
-      penalty: RulePenalty(
-        trustLoss: 8,
-        banSeasons: 1,
-        reason: Tr.pick('人件費が収入に対して重く、赤字でした',
-            'Wages were too heavy for your income and you lost money'),
-      ),
+      statuses: [...national.statuses, ...uefa.statuses],
+      penalty: p1 == null ? p2 : (p2 == null ? p1 : p1.merge(p2)),
     );
   }
 
-  static RuleReport _spain(List<SeasonLedger> ledgers, int tier) {
-    final l = _thisSeason(ledgers);
-    if (l == null) return const RuleReport(statuses: []);
-    final limit = wageLimit(l, 0.70, tier);
-    final excess = max(0, l.wageCost - limit);
-    final status = RuleStatus(
-      label: Tr.pick('人件費の上限', 'Wage limit'),
-      detail: Tr.pick('${formatMoney(l.wageCost)} / 上限${formatMoney(limit)}', '${formatMoney(l.wageCost)} / limit ${formatMoney(limit)}'),
-      level: excess > 0 ? 2 : (l.wageCost > limit * 0.9 ? 1 : 0),
-    );
-    if (excess == 0) return RuleReport(statuses: [status]);
-    return RuleReport(
-      statuses: [status],
-      penalty: RulePenalty(
-        fine: (excess * 0.3).round(),
-        trustLoss: 6,
-        pointsDeduction: min(9, 3 + excess * 3 ~/ max(1, limit)),
-        reason: Tr.pick('人件費が上限を${formatMoney(excess)}超えました',
-            'Wages passed the limit by ${formatMoney(excess)}'),
-      ),
-    );
+  /// 補強を止める理由(止めなければ null)。スペイン式は人件費の上限、
+  /// イタリア式は流動性の指標。[addedSquadCost] は新加入の年俸と移籍金の
+  /// 1年分の償却の合計(万円/年)。
+  static String? signingBlock({
+    required RuleSet ruleSet,
+    required int tier,
+    required ClubFinanceSnapshot snapshot,
+    int addedSquadCost = 0,
+  }) {
+    switch (ruleSet) {
+      case RuleSet.spain:
+        final limit = squadCostLimit(snapshot.projectedIncome, tier);
+        final after = snapshot.squadCost + addedSquadCost;
+        if (after <= limit) return null;
+        return Tr.pick(
+            '人件費の上限を超えるので、この選手は登録できません(選手の人件費 年${formatMoney(after)} / 上限 年${formatMoney(limit)})。放出して枠を空けるか、収入を増やしてください。',
+            'You cannot register this player: player costs would be ${formatMoney(after)} a year against a limit of ${formatMoney(limit)}. Sell someone or raise your income.');
+      case RuleSet.italy:
+        if (snapshot.liquidity >= liquidityThreshold) return null;
+        return Tr.pick(
+            '流動性の指標が${(snapshot.liquidity * 100).round()}%で、基準の${(liquidityThreshold * 100).round()}%を下回っているため、移籍市場で選手を獲得できません。選手を売るか資金を入れて指標を戻してください。',
+            'Your liquidity index is ${(snapshot.liquidity * 100).round()}%, below the ${(liquidityThreshold * 100).round()}% threshold, so you cannot sign players. Sell someone or add funds to get it back up.');
+      case RuleSet.britain:
+      case RuleSet.germany:
+      case RuleSet.france:
+        return null;
+    }
   }
 
-  static RuleReport _usa(List<SeasonLedger> ledgers, int tier) {
-    final l = _thisSeason(ledgers);
-    if (l == null) return const RuleReport(statuses: []);
-    final limit = wageLimit(l, 0.90, tier);
-    final excess = max(0, l.wageCost - limit);
-    final status = RuleStatus(
-      label: Tr.pick('サラリーキャップ', 'Salary cap'),
-      detail: Tr.pick('${formatMoney(l.wageCost)} / 天井${formatMoney(limit)}', '${formatMoney(l.wageCost)} / cap ${formatMoney(limit)}'),
-      level: excess > 0 ? 2 : (l.wageCost > limit * 0.9 ? 1 : 0),
-    );
-    if (excess == 0) return RuleReport(statuses: [status]);
-    return RuleReport(
-      statuses: [status],
-      penalty: RulePenalty(
-        fine: (excess * 0.5).round(),
-        trustLoss: 4,
-        reason: Tr.pick('人件費が天井を${formatMoney(excess)}超え、贅沢税が課されました',
-            'Wages passed the cap by ${formatMoney(excess)} and a luxury tax applies'),
-      ),
-    );
-  }
+  /// スペイン式の選手の人件費の上限(万円/年)。
+  static int squadCostLimit(int projectedIncome, int tier) =>
+      (projectedIncome * squadCostShare * looseness(tier)).round();
 
   static List<SeasonLedger> _window(List<SeasonLedger> ledgers) =>
       ledgers.length <= lossWindowSeasons
           ? ledgers
           : ledgers.sublist(ledgers.length - lossWindowSeasons);
 
-  /// 直近の累積赤字の上限(万円)。
-  static int lossLimitFor(List<SeasonLedger> window, [int tier = 1]) {
-    final incomes =
-        window.map((l) => l.operatingIncome).where((v) => v > 0).toList();
-    if (incomes.isEmpty) return lossLimitFloor;
-    final avg = incomes.fold<int>(0, (s, v) => s + v) / incomes.length;
-    return max(lossLimitFloor, (avg * lossLimitShare * looseness(tier)).round());
-  }
-
   static RuleReport _britain(List<SeasonLedger> ledgers, int tier) {
     final window = _window(ledgers);
-    final cumulative = window.fold<int>(0, (s, l) => s + l.profit);
+    final cumulative = window.fold<int>(0, (s, l) => s + l.ruleProfit);
     final loss = max(0, -cumulative);
-    final limit = lossLimitFor(window, tier);
+    final limit = lossLimitForTier(tier);
     final level = loss > limit ? 2 : (loss > limit * 0.8 ? 1 : 0);
     final status = RuleStatus(
-      label: Tr.pick('直近${window.length}季の累積赤字', 'Losses over ${window.length} seasons'),
-      detail: Tr.pick('${formatMoney(loss)} / 上限${formatMoney(limit)}', '${formatMoney(loss)} / limit ${formatMoney(limit)}'),
+      label: Tr.pick(
+          '直近${window.length}季の損失の合計', 'Losses over ${window.length} seasons'),
+      detail: Tr.pick('${formatMoney(loss)} / 上限${formatMoney(limit)}',
+          '${formatMoney(loss)} / limit ${formatMoney(limit)}'),
       level: level,
     );
     if (level < 2) return RuleReport(statuses: [status]);
     final excess = loss - limit;
-    final points = min(12, 3 + 3 * (excess * 4 ~/ limit));
+    // 実際の減点は 4〜10(エヴァートン・フォレスト)。超えた幅で増やす。
+    final points = min(10, 4 + 2 * (excess * 4 ~/ max(1, limit)));
     return RuleReport(
       statuses: [status],
       penalty: RulePenalty(
-        fine: (excess * 0.1).round(),
         trustLoss: 10,
         pointsDeduction: points,
-        reason: Tr.pick('累積赤字が上限を${formatMoney(excess)}超えました',
-            'Cumulative losses passed the limit by ${formatMoney(excess)}'),
+        reason: Tr.pick('3季の損失の合計が上限を${formatMoney(excess)}超えました',
+            'Losses over three seasons passed the limit by ${formatMoney(excess)}'),
       ),
     );
   }
 
-  static RuleReport _japan(List<SeasonLedger> ledgers, int budget) {
-    var streak = 0;
-    for (final l in ledgers.reversed) {
-      if (l.profit < 0) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    final insolvent = budget < 0;
+  static RuleReport _spain(int tier, ClubFinanceSnapshot snap) {
+    final limit = squadCostLimit(snap.projectedIncome, tier);
+    final over = snap.squadCost > limit;
+    return RuleReport(statuses: [
+      RuleStatus(
+        label: Tr.pick('選手の人件費の上限', 'Squad cost limit'),
+        detail: Tr.pick(
+            '年${formatMoney(snap.squadCost)} / 上限 年${formatMoney(limit)}',
+            '${formatMoney(snap.squadCost)} a year / limit ${formatMoney(limit)}'),
+        level: over ? 2 : (snap.squadCost > limit * 0.9 ? 1 : 0),
+      ),
+    ]);
+  }
+
+  static RuleReport _italy(ClubFinanceSnapshot snap) {
+    final pct = (snap.liquidity * 100).round();
+    final level = snap.liquidity < liquidityThreshold
+        ? 2
+        : (snap.liquidity < liquidityThreshold + 0.2 ? 1 : 0);
+    return RuleReport(statuses: [
+      RuleStatus(
+        label: Tr.pick('流動性の指標', 'Liquidity index'),
+        detail: Tr.pick(
+            '${min(pct, 999)}% / 基準${(liquidityThreshold * 100).round()}%',
+            '${min(pct, 999)}% / threshold ${(liquidityThreshold * 100).round()}%'),
+        level: level,
+      ),
+    ]);
+  }
+
+  static RuleReport _germany(int budget, ClubFinanceSnapshot snap) {
+    final liquid = budget >= 0;
+    final equityOk = snap.equity >= 0;
     final statuses = [
       RuleStatus(
-        label: Tr.pick('債務超過', 'Insolvency'),
-        detail: insolvent
-            ? Tr.pick('資金が${formatMoney(budget)}(マイナス)', 'Funds are ${formatMoney(budget)} (negative)')
-            : Tr.pick('なし', 'None'),
-        level: insolvent ? 2 : 0,
+        label: Tr.pick('流動性(資金)', 'Liquidity (cash)'),
+        detail: formatMoney(budget),
+        level: liquid ? 0 : 2,
       ),
       RuleStatus(
-        label: Tr.pick('連続赤字', 'Consecutive losses'),
-        detail: Tr.pick('$streak季 / 3季で違反', '$streak seasons / 3 is a breach'),
-        level: streak >= 3 ? 2 : (streak == 2 ? 1 : 0),
+        label: Tr.pick('自己資本', 'Equity'),
+        detail: formatMoney(snap.equity),
+        level: equityOk ? 0 : 2,
       ),
     ];
-    RulePenalty? penalty;
-    if (insolvent) {
-      penalty = RulePenalty(
-        trustLoss: 10,
-        banSeasons: 1,
-        reason: Tr.pick('債務超過でライセンスの審査に通りませんでした',
-            'You failed the licence review because of insolvency'),
+    if (liquid && equityOk) return RuleReport(statuses: statuses);
+    final failed = (liquid ? 0 : 1) + (equityOk ? 0 : 1);
+    return RuleReport(
+      statuses: statuses,
+      penalty: RulePenalty(
+        trustLoss: 5 * failed,
+        pointsDeduction: 3 * failed,
+        reason: !liquid && !equityOk
+            ? Tr.pick('資金も自己資本もマイナスで、ライセンスに条件が付きました',
+                'Both cash and equity were negative, so the licence came with conditions')
+            : (!liquid
+                ? Tr.pick('資金がマイナスで、ライセンスに条件が付きました',
+                    'Cash was negative, so the licence came with conditions')
+                : Tr.pick('自己資本がマイナスで、ライセンスに条件が付きました',
+                    'Equity was negative, so the licence came with conditions')),
+      ),
+    );
+  }
+
+  static RuleReport _france(
+      List<SeasonLedger> ledgers, int budget, ClubFinanceSnapshot snap,
+      {required bool canRelegate}) {
+    final l = ledgers.isEmpty ? null : ledgers.last;
+    final ledgerIncome = l?.operatingIncome ?? 0;
+    final income =
+        max(1, ledgerIncome > 0 ? ledgerIncome : snap.projectedIncome);
+    final loss = max(0, -(l?.ruleProfit ?? 0));
+    final lossShare = loss / income;
+    final debtShare = snap.debt / income;
+    final negative = budget < 0;
+    final heavy = lossShare > dncgLossShare || debtShare > dncgDebtShare;
+    final severe = negative && lossShare > dncgSevereLossShare;
+    final statuses = [
+      RuleStatus(
+        label: Tr.pick('今季の赤字', 'Loss this season'),
+        detail: Tr.pick(
+            '${formatMoney(loss)}(収入の${(lossShare * 100).round()}%・目安${(dncgLossShare * 100).round()}%)',
+            '${formatMoney(loss)} (${(lossShare * 100).round()}% of income, guide ${(dncgLossShare * 100).round()}%)'),
+        level: lossShare > dncgLossShare ? 2 : (loss > 0 ? 1 : 0),
+      ),
+      RuleStatus(
+        label: Tr.pick('借り', 'Debt'),
+        detail: Tr.pick(
+            '${formatMoney(snap.debt)}(収入の${(debtShare * 100).round()}%・目安${(dncgDebtShare * 100).round()}%)',
+            '${formatMoney(snap.debt)} (${(debtShare * 100).round()}% of income, guide ${(dncgDebtShare * 100).round()}%)'),
+        level: debtShare > dncgDebtShare ? 2 : 0,
+      ),
+      RuleStatus(
+        label: Tr.pick('資金', 'Cash'),
+        detail: formatMoney(budget),
+        level: negative ? 2 : 0,
+      ),
+    ];
+    if (severe) {
+      return RuleReport(
+        statuses: statuses,
+        penalty: canRelegate
+            ? RulePenalty(
+                trustLoss: 15,
+                banSeasons: 1,
+                wageFreezeSeasons: 1,
+                adminRelegation: true,
+                reason: Tr.pick('大きな赤字で資金もマイナスのため、降格処分を受けました',
+                    'Heavy losses and negative cash brought administrative relegation'),
+              )
+            : RulePenalty(
+                trustLoss: 15,
+                banSeasons: 1,
+                wageFreezeSeasons: 1,
+                pointsDeduction: 6,
+                reason: Tr.pick('大きな赤字で資金もマイナスのため、補強禁止と勝ち点の剥奪を受けました',
+                    'Heavy losses and negative cash brought a signing ban and a points deduction'),
+              ),
       );
     }
-    if (streak >= 3) {
-      final p = RulePenalty(
-        trustLoss: 10,
-        pointsDeduction: 6,
-        reason: Tr.pick('3季連続の赤字でライセンスに条件が付きました',
-            'Three losing seasons in a row put conditions on your licence'),
+    if (negative) {
+      return RuleReport(
+        statuses: statuses,
+        penalty: RulePenalty(
+          trustLoss: 8,
+          banSeasons: 1,
+          wageFreezeSeasons: 1,
+          reason: Tr.pick(
+              '資金がマイナスのため、補強禁止を受けました', 'Negative cash brought a signing ban'),
+        ),
       );
-      penalty = penalty == null ? p : penalty.merge(p);
     }
-    return RuleReport(statuses: statuses, penalty: penalty);
+    if (heavy) {
+      return RuleReport(
+        statuses: statuses,
+        penalty: RulePenalty(
+          trustLoss: 4,
+          wageFreezeSeasons: 1,
+          reason: Tr.pick('赤字・借りが大きいため、人件費に上限が付きました',
+              'Big losses or debts brought a cap on the wage bill'),
+        ),
+      );
+    }
+    return RuleReport(statuses: statuses);
+  }
+
+  /// UEFA の人件費比率。選手の給与・出場手当・移籍金の償却 ÷ (営業収入 +
+  /// 選手の売却)。大陸大会に出たクラブだけ。
+  static RuleReport _uefa(List<SeasonLedger> ledgers) {
+    final l = ledgers.isEmpty ? null : ledgers.last;
+    if (l == null) return const RuleReport(statuses: []);
+    final revenue =
+        l.operatingIncome + max(0, l.of(LedgerCategory.playerSales));
+    final cost = l.squadCost;
+    final ratio = revenue <= 0 ? 0.0 : cost / revenue;
+    final level = ratio > uefaSquadCostRatio
+        ? 2
+        : (ratio > uefaSquadCostRatio - 0.1 ? 1 : 0);
+    final status = RuleStatus(
+      label: Tr.pick('大陸大会の人件費比率', 'Continental squad cost ratio'),
+      detail: Tr.pick(
+          '${(ratio * 100).round()}% / 上限${(uefaSquadCostRatio * 100).round()}%',
+          '${(ratio * 100).round()}% / limit ${(uefaSquadCostRatio * 100).round()}%'),
+      level: level,
+    );
+    if (level < 2) return RuleReport(statuses: [status]);
+    final excess = cost - (revenue * uefaSquadCostRatio).round();
+    return RuleReport(
+      statuses: [status],
+      penalty: RulePenalty(
+        fine: (excess * uefaFineShare).round(),
+        trustLoss: 3,
+        reason: Tr.pick('大陸大会の人件費比率が${(ratio * 100).round()}%で上限を超えました',
+            'The continental squad cost ratio was ${(ratio * 100).round()}%, over the limit'),
+      ),
+    );
   }
 }

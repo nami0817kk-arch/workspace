@@ -59,11 +59,12 @@ void main() {
     final interest = gs.ownerLoanMonthlyInterest;
     expect(interest, (30000 * 2 / 100 / 12).round());
     final wealth = gs.ownerWealth;
-    final other = gs.currentLedger.of(LedgerCategory.other);
+    // 利息は「利息」の項目に入る(2026-11-22 まで「その他」だった)。
+    final before = gs.currentLedger.of(LedgerCategory.interest);
     final d = gs.today;
     gs.debugAdvanceTodayTo(DateTime(d.year, d.month + 1, 2));
     expect(gs.ownerWealth, wealth + GameStateOwner.monthlyIncome + interest);
-    expect(gs.currentLedger.of(LedgerCategory.other), other - interest);
+    expect(gs.currentLedger.of(LedgerCategory.interest), before - interest);
   });
 
   test('財布と貸付は保存して読み戻せる', () async {

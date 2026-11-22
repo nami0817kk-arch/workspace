@@ -58,7 +58,7 @@ extension GameStateTalks on GameState {
   }
 
   /// 移籍金[bid]を提示する(新しく申し込む、または対案に出し直す)。
-  /// [installments]なら分割払い(頭金3割と、残りを4週で)を求める。
+  /// [installments]なら分割払い(頭金3割と、残りを契約の年数で毎年)を求める。
   /// 申し込めなければ false(理由は[lastSigningBlockReason])。
   Future<bool> openTransferTalk(String playerId, int bid,
       {bool installments = false}) async {
@@ -282,7 +282,10 @@ extension GameStateTalks on GameState {
           'You cannot afford it (fee, agent fee and signing bonus).'));
       return TermsOutcome.blocked;
     }
-    if (!_wageBudgetAllowsSigning(weeklyWage)) return TermsOutcome.blocked;
+    if (!_wageBudgetAllowsSigning(weeklyWage,
+        fee: fee, contractYears: endYear - Player.contractClockYear + 1)) {
+      return TermsOutcome.blocked;
+    }
 
     if (t == null) {
       t = TransferTalk(
@@ -360,16 +363,11 @@ extension GameStateTalks on GameState {
     if (fa != null) {
       _save!.freeAgents.remove(fa);
     } else {
-      _book(LedgerCategory.transfers, -upfront);
+      _payTransferFee(upfront);
       if (inst) {
-        const weeks = 4;
-        _save!.pendingInstallments.add(Installment(
-          description: Tr.pick('${player.name} 分割払い残金',
-              '${player.name} instalments outstanding'),
-          weeklyAmount: ((fee - upfront) / weeks).ceil(),
-          weeksRemaining: weeks,
-          playerId: player.id,
-        ));
+        // 残りは契約の年数(2〜5年)に合わせて、季の締めに毎年払う。
+        _addAnnualInstallment(
+            player, fee - upfront, endYear - Player.contractClockYear + 1);
       }
       _bookAgentFee(player, agentFee);
       if (t.sellOnPercent > 0) {

@@ -4,6 +4,7 @@ import '../models/club_infrastructure.dart';
 import '../models/club_vision.dart';
 import '../models/staff_member.dart';
 import '../models/league.dart';
+import '../models/league_theme.dart';
 import '../models/team.dart';
 import '../models/match_result.dart';
 import '../l10n/tr.dart';
@@ -50,8 +51,13 @@ class BoardEngine {
   /// [wageBudgetBaseIncomeShare] を、週あたりにした額。選手の給与は能力から
   /// 決まり、1部の主力は年俸で億の桁になるので、枠も同じ桁で持たないと
   /// 昇格した途端に誰も獲れなくなる。
-  static int wageBudgetBaseForTier(int tier) =>
-      (typicalAnnualIncome(tier) * wageBudgetBaseIncomeShare / 52).round();
+  ///
+  /// 年収の目安は国で違う(放映権の差。economy_scale の
+  /// broadcastCountryFactor)ので、枠の基準も国で違う。
+  static int wageBudgetBaseForTier(int tier,
+          [LeagueTheme theme = LeagueTheme.england]) =>
+      (typicalAnnualIncome(tier, theme) * wageBudgetBaseIncomeShare / 52)
+          .round();
 
   /// 給与予算の基準が年収に占める割合。
   static const double wageBudgetBaseIncomeShare = 0.55;
@@ -88,9 +94,10 @@ class BoardEngine {
     required int tier,
     required int currentWeeklyWageBill,
     int weeklyIncome = 0,
+    LeagueTheme theme = LeagueTheme.england,
   }) {
     final base = max(
-      wageBudgetBaseForTier(tier),
+      wageBudgetBaseForTier(tier, theme),
       (weeklyIncome * wageBudgetIncomeShare).round(),
     );
     final headroom = max(scaleMoneyForTier(tier, 60), (base * 0.4).round());
@@ -270,8 +277,9 @@ class BoardEngine {
   /// 資金がなく、昇格→即降格の往復から抜け出せない(長期実測で確認)。
   static const int promotionBonusWeeks = 6;
 
-  static int promotionBonusFor(int newTier) =>
-      wageBudgetBaseForTier(newTier) * promotionBonusWeeks;
+  static int promotionBonusFor(int newTier,
+          [LeagueTheme theme = LeagueTheme.england]) =>
+      wageBudgetBaseForTier(newTier, theme) * promotionBonusWeeks;
 
   static int seasonPrizeMoney({
     required int finalRank,

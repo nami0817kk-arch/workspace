@@ -13,10 +13,13 @@ extension GameStateTransfer on GameState {
     final fee = TransferTermsEngine.agentFee(player.marketValue);
     if (_save!.budget < player.marketValue + fee) return false;
     if (!_registrationAllows(player)) return false;
-    if (!_wageBudgetAllowsSigning(player.wage)) return false;
-    _book(LedgerCategory.transfers, -(player.marketValue));
+    if (!_wageBudgetAllowsSigning(player.wage, fee: player.marketValue)) {
+      return false;
+    }
+    _payTransferFee(player.marketValue);
     _bookAgentFee(player, fee);
     ContractEngine.applyTransferContract(player);
+    _recordPlayerBook(player, player.marketValue, announce: false);
     _takeFromSeller(target);
     userTeam.players.add(player);
     _notify();
@@ -391,7 +394,7 @@ extension GameStateTransfer on GameState {
     if (!_registrationAllows(player)) {
       return (attempted: false, accepted: false);
     }
-    if (!_wageBudgetAllowsSigning(player.wage)) {
+    if (!_wageBudgetAllowsSigning(player.wage, fee: offer)) {
       return (attempted: false, accepted: false);
     }
     final chance =
@@ -402,7 +405,7 @@ extension GameStateTransfer on GameState {
       _notify();
       return (attempted: true, accepted: false);
     }
-    _book(LedgerCategory.transfers, -(offer));
+    _payTransferFee(offer);
     _bookAgentFee(player, TransferTermsEngine.agentFee(offer));
     final clause = TransferTermsEngine.sellOnPercent(
         offer: offer, marketValue: player.marketValue);
@@ -414,6 +417,7 @@ extension GameStateTransfer on GameState {
           context: Tr.pick('移籍', 'Transfer'));
     }
     ContractEngine.applyTransferContract(player);
+    _recordPlayerBook(player, offer, announce: false);
     _takeFromSeller(target);
     userTeam.players.add(player);
     if (offer < player.marketValue) {
@@ -459,11 +463,12 @@ extension GameStateTransfer on GameState {
         .where((i) => i.playerId == playerId)
         .toList();
     if (rows.isEmpty) return;
-    final outstanding =
-        rows.fold<int>(0, (sum, i) => sum + i.weeklyAmount * i.weeksRemaining);
+    final outstanding = rows.fold<int>(0, (sum, i) => sum + i.outstanding);
     _save!.pendingInstallments.removeWhere((i) => i.playerId == playerId);
     if (outstanding <= 0) return;
-    _book(LedgerCategory.transfers, -(outstanding));
+    for (final i in rows) {
+      _payInstallment(i, i.outstanding);
+    }
     _logNews(Tr.pick('移籍に伴い、分割払いの残金${formatMoney(outstanding)}を一括で精算した。',
         'The remaining ${formatMoney(outstanding)} of the instalment plan was settled in full on his departure.'));
   }
@@ -782,7 +787,9 @@ extension GameStateTransfer on GameState {
     return true;
   }
 
-  /// 分割払い(頭金3割 + 残額を4週で均等払い)で移籍市場の選手を獲得する。
+  /// 分割払いで移籍市場の選手を獲得する。頭金3割、残りは契約の年数
+  /// (2〜5年)に合わせて、季の締めに毎年同じ額を払う(2026-11-22 から。
+  /// 以前は残りを4週で払っていた。実際の移籍金の分割は年単位)。
   Future<bool> buyPlayerOnInstallments(String playerId) async {
     if (_save == null) return false;
     if (!isTransferWindowOpen) return false;
@@ -792,26 +799,19 @@ extension GameStateTransfer on GameState {
     if (!_minorRuleAllows(player)) return false;
     if (!_registrationAllows(player)) return false;
     final total = player.marketValue;
-    final downPayment = (total * 0.3).round();
+    final downPayment =
+        (total * GameStateMoneyRules.installmentDownPercent / 100).round();
     final fee = TransferTermsEngine.agentFee(total);
     if (_save!.budget < downPayment + fee) return false;
     lastSigningBlockReason = null;
-    if (!_wageBudgetAllowsSigning(player.wage)) return false;
+    if (!_wageBudgetAllowsSigning(player.wage, fee: total)) return false;
 
-    _book(LedgerCategory.transfers, -(downPayment));
+    _payTransferFee(downPayment);
     _bookAgentFee(player, fee);
-    const weeks = 4;
-    final remaining = total - downPayment;
-    _save!.pendingInstallments.add(
-      Installment(
-        description: Tr.pick(
-            '${player.name} 分割払い残金', '${player.name} instalments outstanding'),
-        weeklyAmount: (remaining / weeks).ceil(),
-        weeksRemaining: weeks,
-        playerId: player.id,
-      ),
-    );
     ContractEngine.applyTransferContract(player);
+    _addAnnualInstallment(player, total - downPayment,
+        player.contractEndYear - Player.contractClockYear + 1);
+    _recordPlayerBook(player, total, announce: false);
     _takeFromSeller(target);
     userTeam.players.add(player);
     _notify();
@@ -880,7 +880,7 @@ extension GameStateTransfer on GameState {
     final fee = player.loanBuyOptionFee!;
     if (_save!.budget < fee) return false;
 
-    _book(LedgerCategory.transfers, -(fee));
+    _payTransferFee(fee);
     player.isLoan = false;
     player.loanWeeksRemaining = 0;
     player.loanEndDate = null;
@@ -894,6 +894,7 @@ extension GameStateTransfer on GameState {
     // 境界を迎えてその場で退団していた。獲得と同じ考え方で結ぶ。
     player.contractYearsRemaining = 0;
     ContractEngine.applyTransferContract(player);
+    _recordPlayerBook(player, fee, announce: false);
     _notify();
     await _persist();
     return true;
@@ -1010,7 +1011,8 @@ extension GameStateTransfer on GameState {
     );
     if (_save!.budget < cost) return false;
     if (_save!.youthProspects.length >= maxP) return false;
-    _book(LedgerCategory.facilities, -(cost));
+    // ユースの候補を迎える費用はアカデミーへの投資(規則の判定で赤字に数えない)。
+    _book(LedgerCategory.infrastructure, -(cost));
     if (_isInternationalMinor(scoutCandidates[idx])) return false;
     final signed = scoutCandidates.removeAt(idx);
     _save!.youthProspects.add(signed);

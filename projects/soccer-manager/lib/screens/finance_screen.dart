@@ -218,11 +218,16 @@ class FinanceScreen extends StatelessWidget {
                               ? null
                               : () => _openPlayer(context, inst.playerId!),
                           title: Text(inst.description),
-                          subtitle: Text(Tr.pick('残り${inst.weeksRemaining}週',
-                              '${Tr.plural(inst.weeksRemaining, 'week')} left')),
-                          trailing: Text(Tr.pick(
-                              '-${formatMoney(inst.weeklyAmount)}/週',
-                              '-${formatMoney(inst.weeklyAmount)} per week')),
+                          subtitle: Text(inst.annual
+                              ? Tr.pick('残り${inst.weeksRemaining}回(季の締めに払う)',
+                                  '${inst.weeksRemaining} payments left (at each season end)')
+                              : Tr.pick('残り${inst.weeksRemaining}週',
+                                  '${Tr.plural(inst.weeksRemaining, 'week')} left')),
+                          trailing: Text(inst.annual
+                              ? Tr.pick('-${formatMoney(inst.weeklyAmount)}/年',
+                                  '-${formatMoney(inst.weeklyAmount)} a year')
+                              : Tr.pick('-${formatMoney(inst.weeklyAmount)}/週',
+                                  '-${formatMoney(inst.weeklyAmount)} per week')),
                         ),
                       ),
                   ],
@@ -723,8 +728,8 @@ class _LoanRequestSheetState extends State<_LoanRequestSheet> {
                 ),
                 title: Text(
                   Tr.pick(
-                      '${term.label}（${term.weeks}週・利率${term.interestRatePercent.toStringAsFixed(0)}%）',
-                      '${term.label} (${Tr.plural(term.weeks, 'week')}, ${term.interestRatePercent.toStringAsFixed(0)}% interest)'),
+                      '${term.label}（${term.weeks}週・年利${term.annualRatePercent.toStringAsFixed(1)}%）',
+                      '${term.label} (${Tr.plural(term.weeks, 'week')}, ${term.annualRatePercent.toStringAsFixed(1)}% a year)'),
                 ),
                 subtitle: Text(
                   amount <= 0
@@ -894,8 +899,8 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
                 ),
                 title: Text(
                   Tr.pick(
-                      '${term.label}（${term.weeks}週・利回り${term.interestRatePercent.toStringAsFixed(0)}%）',
-                      '${term.label} (${Tr.plural(term.weeks, 'week')}, ${term.interestRatePercent.toStringAsFixed(0)}% return)'),
+                      '${term.label}（${term.weeks}週・年利${term.annualRatePercent.toStringAsFixed(1)}%）',
+                      '${term.label} (${Tr.plural(term.weeks, 'week')}, ${term.annualRatePercent.toStringAsFixed(1)}% a year)'),
                 ),
                 subtitle: Text(
                   amount <= 0

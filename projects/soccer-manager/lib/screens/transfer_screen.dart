@@ -820,8 +820,8 @@ class _TransferScreenState extends State<TransferScreen>
                   contentPadding: EdgeInsets.zero,
                   value: inst,
                   onChanged: (v) => setState(() => inst = v ?? false),
-                  title: Text(Tr.pick('分割払い(頭金3割、残りを4週で)',
-                      'Instalments (30% now, the rest over 4 weeks)')),
+                  title: Text(Tr.pick('分割払い(頭金3割、残りを契約の年数で毎年)',
+                      'Instalments (30% now, the rest yearly over the contract)')),
                 ),
                 Text(
                   Tr.pick(
