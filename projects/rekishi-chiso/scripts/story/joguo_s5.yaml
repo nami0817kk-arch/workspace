@@ -1,0 +1,144 @@
+# 物語完結型ショート 聖徳太子の一族 s5（2026-11-22）。本編 scripts/joguo-story.yaml（11/28 19:00 公開予定、https://youtu.be/9-eKrHmecaY）から。11/29 19:30 に予約。
+# 形式は senhime_s1〜s5・ise_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 上宮王家_facts_20261121.yaml）だけ。
+# 絵：本編の AI 絵（out/story/joguo/main/ の G・R）の切り出しだけ。新しい絵は作らない。
+# 切り口：生駒山で三輪文屋君に「東の国で兵を起こせば必ず勝つ」と勧められ、山背は「10年は民を使うまい」と断って、斑鳩の寺で一族と命を絶った（本編 第4章、joguo-06・07・10・11・12）。
+# hook＝逃げれば勝てた王は何を選んだか（答えはこのショートの中：民を戦に使わず、寺で一族とともに命を絶った）。
+# tease＝襲った側にのちの天皇の名を挙げる記録がある、それは誰か（答えは本編 第5章とまとめ：補闕記の挙げる軽王、のちの孝徳天皇。joguo-28・41）。
+# 字幕では読点が消えるので、「子や弟や妃たち」と「や」でつないだ。
+# 理解テスト：①聖徳太子の長男、山背大兄王の話 ②643年の冬、生駒山から斑鳩の寺へ ③逃げて兵を挙げれば勝てると勧められたが、10年は民を使わないと決めていると断った ④寺を囲まれ、子や弟や妃たちと一度に命を絶った
+title: "山背大兄王｜逃げれば勝てた王の答え"
+yt_title: "「逃げて兵を挙げれば必ず勝てる」　そう勧められた聖徳太子の長男・山背大兄王の答え　643年"
+description: |-
+  643年の冬、蘇我入鹿の兵に斑鳩の宮を焼かれた聖徳太子の長男、山背大兄王は、一族と生駒山に隠れていました。
+  家臣の三輪文屋君は、東の国へ移って兵を起こせば必ず勝てる、と勧めます。『日本書紀』によれば、山背の答えは「勝つだろう。けれど私は、これから10年は民を使うまいと決めている」。
+  山背たちは山を下りて斑鳩の寺に入り、兵に囲まれ、子や弟、妃たちとともに、一度に命を絶ちました。
+  本編では、襲った側の名や亡くなった人の数が、記録ごとにどう違うのかまでたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#聖徳太子"
+- "#山背大兄王"
+- "#法隆寺"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/joguo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: joguo_story_s5
+header:
+  tag: "山背大兄王（聖徳太子の長男）"
+  title: "逃げれば勝てた王は、《何を》選んだ？"
+now:
+- {at: "643年の冬", text: "643年11月　生駒山", point: 0}
+- {at: "斑鳩の寺に", text: "643年11月　斑鳩の寺", point: 0}
+timeline:
+- {label: "643"}
+shots:
+  G13_1:
+    kind: "ai"
+    file: "joguo/main/G13.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "G13"
+  G12_2:
+    kind: "ai"
+    file: "joguo/main/G12.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "G12"
+  G13_3:
+    kind: "ai"
+    file: "joguo/main/G13.jpg"
+    focus: [0.32, 0.5]
+    move: "right"
+    must: "G13"
+  R01_4:
+    kind: "ai"
+    file: "joguo/main/R01.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "R01"
+  G13_5:
+    kind: "ai"
+    file: "joguo/main/G13.jpg"
+    focus: [0.7, 0.5]
+    move: "left"
+    must: "G13"
+  G01_6:
+    kind: "ai"
+    file: "joguo/main/G01.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "G01"
+  G14_7:
+    kind: "ai"
+    file: "joguo/main/G14.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "G14"
+  GEND_8:
+    kind: "ai"
+    file: "joguo/main/GEND.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "GEND"
+  G05_9:
+    kind: "ai"
+    file: "joguo/main/G05.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "G05"
+lines:
+  # fact: joguo-06
+- 語り: "東の国へ逃げて、兵を挙げれば、必ず勝てる。643年の冬、聖徳太子の長男は、そう勧められた。"
+  shot: G13_1
+  tone: 強調
+  pause: 0.12
+  # fact: joguo-03, joguo-04
+- 語り: "長男の名は、山背大兄王。蘇我入鹿の兵に、斑鳩の宮を焼かれ、一族と、生駒山に隠れていた。"
+  shot: G12_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-06
+- 語り: "勧めたのは、家臣の三輪文屋君。一族の暮らしを支える乳部の民をもとに、兵を起こす策だった。"
+  shot: G13_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-07
+- 語り: "山背の答えは、『日本書紀』に、こう残っている。"
+  shot: R01_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-07
+- 語り: "お前の言うとおりにすれば、勝つだろう。けれど私は、これから10年は、民を使うまいと、心に決めている。"
+  shot: G13_5
+  tone: 強調
+  pause: 0.12
+  # fact: joguo-07
+- 語り: "自分ひとりのために、どうして、多くの民を苦しめられようか。"
+  shot: G01_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-10
+- 語り: "山背たちは、山を下りて、斑鳩の寺に入った。兵たちは、すぐに、寺を取り囲んだ。"
+  shot: G14_7
+  tone: 重い
+  pause: 0.12
+  # fact: joguo-11, joguo-12
+- 語り: "この身を、入鹿に与えよう。そう伝えさせた山背は、子や弟や妃たちとともに、一度に、自ら命を絶った。"
+  shot: GEND_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第5章・まとめ（joguo-28・41：補闕記が挙げる軽王、のちの孝徳天皇）
+- 語り: "襲った側に、のちの天皇の名を挙げる記録がある。その人とは、誰なのか。"
+  shot: G05_9
+  tone: 疑問
+  pause: 0.15

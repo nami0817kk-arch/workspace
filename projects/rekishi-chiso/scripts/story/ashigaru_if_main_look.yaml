@@ -1,0 +1,247 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：もしも現代人が戦国の足軽になったら（scripts/ashigaru-if-story.yaml）。chiso/storymain.py が読む。
+# 11-22 作成（11/29 12:00 公開）。nagaya_if_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini）。A01〜G03・END はこの回のために作る（out/story/ashigaru_if/main/<名>.jpg）。
+#   時代は戦国（1560年ごろ。第1章は1460年代の京都）。足軽は黒い陣笠・簡素な胴丸・脚絆と草鞋。旗・幟は無地（字・紋は描かない）。
+#   実在の人物の顔は描かない。血・傷口・死体・首は描かない。人の売り買いの場面は描かない（引き揚げる軍勢の遠景・南蛮船の港・禁制の札まで）。
+script: scripts/ashigaru-if-story.yaml
+out: ashigaru_if_story_main
+art_dir: out/story/ashigaru_if/ph
+main_art_dir: out/story/ashigaru_if/main
+ai_disclosure: この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 梅干は見るだけ, now: 戦国時代, dates: {5: 江戸時代の前半, 7: null}}
+  1: {label: 第1章 足軽は悪党だった？, now: 1467年, dates: {12: 1480年ごろ, 13: null, 15: 1468年3月, 17: 1468年秋, 18: 1470年ごろ, 19: 1550年, 20: null}}
+  2: {label: 第2章 雨なら来なくてよい？, now: 16世紀, dates: {31: 1559年ごろ, 32: 1562年10月, 34: null, 36: 1587年7月, 37: 1571年秋, 39: null}}
+  3: {label: 第3章 何を持たされる？, now: null, dates: {48: 1846年, 49: null}}
+  4: {label: 第4章 何を食べる？, now: null, dates: {62: 1585年, 63: null}}
+  5: {label: 第5章 何で傷を負う？, now: null, dates: {83: 1468年, 84: null, 90: 1526年, 91: 1593年, 93: 1597年, 94: null}}
+  6: {label: 第6章 手柄はどう数える？, now: null, dates: {104: 1575年, 106: null, 107: 1598年, 109: 1600年, 110: 1711年ごろ, 111: null}}
+  7: {label: 第7章 なぜ戦場へ行く？, now: null, dates: {113: 1585年, 114: null, 115: 1566年2月, 117: null, 119: 1587年, 120: null, 122: 1573年, 123: null, 124: 1590年, 125: null, 126: 1616年, 127: null}}
+  8: {label: まとめ もしも戦国の足軽になったら, now: null, dates: {}}
+
+references:
+  - "『雑兵物語』弘化3年（1846）刊本 上下2巻（国立国会図書館デジタルコレクション）・観光庁 地域観光資源の多言語解説・京都大学貴重資料デジタルアーカイブ"
+  - "一条兼良『樵談治要』（古事類苑）・『信長公記』・『北条五代記』・『おあむ物語』（国立公文書館の解説）・フロイス『日欧文化比較』『日本史』"
+  - "山口県文書館（三浦家文書）・立教大学大学院の論文（山科七郷）・坂本直紀ほか（都市文化研究27、2025）・湯本軍一（法政史学29、1977）・小和田哲男（静岡大学教育学部研究報告27、1977）"
+  - "藤木久志『雑兵たちの戦場』・南相馬市博物館（2019）・中原寛貴（史学研究314、2023）・日本国語大辞典「一人扶持」"
+  - "鈴木眞哉『「戦闘報告書」が語る日本中世の戦場』（2015）・漆原徹（武蔵野大学 The Basis 7、2017）・羅麗馨（國立政治大學歷史學報47、2017）・琉球大学附属図書館『金瘡一部之書』"
+  - "渡邊大門（2021）・ホムロ・ダ・シルバ・エハルト（東京外国語大学 博士論文、2018）・藤井讓治（福井県文書館研究紀要14、2017）・牧英正の研究"
+no_tag_from: 136
+
+ai:
+  A01: {scene: 野営地で陣笠の若い足軽が手のひらの梅干を見つめる（胸から上）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A02: {scene: 陣中で米俵から升で米を量り、並んだ足軽に分けて渡す, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A03: {scene: 焚き火で鍋の飯を炊く足軽（陣笠を鍋にする絵は Gemini の上限で作れなかったので、薪の行だけに使う）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A04: {scene: 夕暮れの山道を長い鑓をかついで行軍する足軽の列, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A05: {scene: 行灯の下の文机に開いた古い和綴じの本（字は読めない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A06: {scene: 縁側で腰の曲がった老人が古い陣笠を膝に若者へ語る, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A07: {scene: 1460年代の京都、遠くで寺が燃え、道を駆ける軽装の足軽たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A08: {scene: 公家が文机で巻紙に意見書を書く後ろ姿, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A09: {scene: 山あいの村の入り口を柵と竹槍で守る村人たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  A10: {scene: 寺の山門の前で足軽が書状を僧に突きつける, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B01: {scene: 村の広場に集められた百姓の男たちと人数を改める侍, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B02: {scene: 馬上の侍が鑓持ちと指物持ちを連れて出陣する3人の一行, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B03: {scene: 長い鑓を空に立てて並ぶ足軽の隊列（鑓の林）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B04: {scene: 城の蔵の棚にずらりと並ぶ同じ形の簡素な具足と陣笠, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  B05: {scene: 雨の村の道と茅葺きの農家, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C01: {scene: 首にかけた打飼袋の結び目をうなじへ回す鉄砲足軽, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C02: {scene: 一列に並んで火縄銃を撃つ鉄砲足軽と白い硝煙, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C03: {scene: 長い鑓の穂先をそろえて上から叩く足軽の列, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C04: {scene: 陣地で放れた馬が暴れ、足軽たちが逃げ散る, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  D01: {scene: 夜の焚き火のそばで縄を刻んで湯に入れる足軽, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  D02: {scene: 山城の蔵の米俵・水がめ・塩の壺・味噌の樽, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  D03: {scene: 霜の朝の畑で、そこだけ霜が溶けた所を掘る足軽, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  D04: {scene: 川岸で両手で水をすくって飲む足軽、後ろに古い井戸, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  E01: {scene: 夏の草むらに伏せる足軽たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  E02: {scene: 陣中の幕の内で横たわる足軽に仲間が飯を食べさせる, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  E03: {scene: 兵を乗せた和船の群れが冬の海を渡る遠景, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  F01: {scene: 本陣で床几の大将の前、家臣が巻紙の一覧を読み上げる, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  F02: {scene: 夜の陣の篝火のそばで合言葉を確かめる足軽と侍, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  F03: {scene: 城の天守の中の薄暗い板の間（人はいない）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  G01: {scene: 焼けた村から荷を背負い引き揚げる兵の一団の遠景, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  G02: {scene: 寺の山門の前に立つ無地の大きな木の札（禁制）と村人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  G03: {scene: 16世紀末の港、沖の南蛮船と小舟, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  END: {scene: 夕暮れの野原に置かれた陣笠と鑓（終了画面。右半分を空けた構図）, crops: {left: [1.12, 0.45, 0.5], wide: [1.12, 0.5, 0.5]}, lock: [1.0, 0.5, 0.5]}
+
+credits: {}
+
+shots:
+  - 0 ai:A01 wide
+  - 1 ai:A02 wide
+  - 2 ai:C01 left
+  - 3 ai:A01 right
+  - 4 ai:A04 wide
+  - 5 ai:A05 wide
+  - 6 ai:A04 left
+  - 7 ai:A06 wide
+  - 8 ai:A05 left
+  - 9 ai:A07 left
+  - 10 ai:A07 wide
+  - 11 ai:A07 right
+  - 12 ai:A08 wide
+  - 13 ai:A08 left
+  - 14 ai:A07 wide
+  - 15 ai:A07 left
+  - 16 ai:A05 left
+  - 17 ai:A09 wide
+  - 18 ai:A02 left
+  - 19 ai:A05 right
+  - 20 ai:A10 wide
+  - 21 ai:A08 right
+  - 22 ai:A05 wide
+  - 23 ai:A04 right
+  - 24 ai:B01 left
+  - 25 ai:B05 wide
+  - 26 ai:B03 wide
+  - 27 ai:B01 wide
+  - 28 ai:B01 right
+  - 29 ai:B02 left
+  - 30 ai:B02 wide
+  - 31 ai:A05 left
+  - 32 ai:B03 left
+  - 33 ai:B03 right
+  - 34 ai:B01 wide
+  - 35 ai:B05 right
+  - 36 ai:B01 left
+  - 37 ai:A09 left
+  - 38 ai:A09 right
+  - 39 ai:B01 right
+  - 40 ai:B04 wide
+  - 41 ai:B04 right
+  - 42 ai:C01 left
+  - 43 ai:C01 wide
+  - 44 ai:C02 left
+  - 45 ai:B03 wide
+  - 46 ai:A05 wide
+  - 47 ai:A08 left
+  - 48 ai:A05 left
+  - 49 ai:C01 right
+  - 50 ai:C01 wide
+  - 51 ai:C02 wide
+  - 52 ai:C03 right
+  - 53 ai:C02 left
+  - 54 ai:B03 left
+  - 55 ai:B03 right
+  - 56 ai:C03 left
+  - 57 ai:C03 wide
+  - 58 ai:C04 wide
+  - 59 ai:C04 right
+  - 60 ai:D01 left
+  - 61 ai:D01 wide
+  - 62 ai:A02 wide
+  - 63 ai:D02 left
+  - 64 ai:A02 right
+  - 65 ai:D02 wide
+  - 66 ai:D02 right
+  - 67 ai:A02 left
+  - 68 ai:D02 wide
+  - 69 ai:A02 right
+  - 70 ai:A04 wide
+  - 71 ai:D01 left
+  - 72 ai:D01 wide
+  - 73 ai:B04 wide
+  - 74 ai:C01 right
+  - 75 ai:A01 wide
+  - 76 ai:D04 right
+  - 77 ai:A01 right
+  - 78 ai:D04 wide
+  - 79 ai:D03 wide
+  - 80 ai:A03 right
+  - 81 ai:E01 left
+  - 82 ai:E01 wide
+  - 83 ai:A05 wide
+  - 84 ai:A08 wide
+  - 85 ai:A08 left
+  - 86 ai:E01 right
+  - 87 ai:E01 wide
+  - 88 ai:E02 wide
+  - 89 ai:E02 right
+  - 90 ai:A05 left
+  - 91 ai:E03 wide
+  - 92 ai:B03 right
+  - 93 ai:E03 left
+  - 94 ai:E02 left
+  - 95 ai:F01 wide
+  - 96 ai:F01 right
+  - 97 ai:F01 left
+  - 98 ai:C03 right
+  - 99 ai:F01 left
+  - 100 ai:F02 wide
+  - 101 ai:F02 right
+  - 102 ai:C04 left
+  - 103 ai:C04 wide
+  - 104 ai:F01 wide
+  - 105 ai:C02 wide
+  - 106 ai:A08 right
+  - 107 ai:E03 wide
+  - 108 ai:F01 right
+  - 109 ai:F03 wide
+  - 110 ai:A05 right
+  - 111 ai:G01 left
+  - 112 ai:G01 wide
+  - 113 ai:G01 right
+  - 114 ai:A04 right
+  - 115 ai:G01 wide
+  - 116 ai:G01 left
+  - 117 ai:G03 left
+  - 118 ai:A08 wide
+  - 119 ai:G03 wide
+  - 120 ai:B05 left
+  - 121 ai:G02 left
+  - 122 ai:G02 wide
+  - 123 ai:A05 right
+  - 124 ai:G02 right
+  - 125 ai:A09 left
+  - 126 ai:A05 wide
+  - 127 ai:A04 left
+  - 128 ai:A01 wide
+  - 129 ai:A04 wide
+  - 130 ai:C01 right
+  - 131 ai:A01 left
+  - 132 ai:C03 wide
+  - 133 ai:E02 wide
+  - 134 ai:A01 right
+  - 135 ai:A06 wide
+  - 136 ai:A01 wide
+  - 137 ai:END left
+  - end ai:END wide
+
+figures: []
+
+focus: {}
+
+fx:
+  A03: {fire: {region: [0.2, 0.55, 0.8, 1.0]}}
+  A05: {lamp: {region: [0.0, 0.0, 0.5, 0.6]}}
+  A07: {smoke: {region: [0.0, 0.0, 1.0, 0.45]}}
+  C02: {smoke: {region: [0.0, 0.1, 1.0, 0.7]}}
+  D01: {fire: {region: [0.0, 0.55, 0.6, 1.0]}}
+  F02: {fire: {region: [0.0, 0.3, 0.4, 0.9]}}
+  END: {mist: {region: [0.0, 0.55, 1.0, 1.0]}}
+
+paint_fx: {}
+
+parts:
+  - {type: quote, from: 13, to: 13, label: 史料, text: このたび初めて出てきた足軽は／度を超えた悪党である, source: 一条兼良『樵談治要』（1480年ごろ。今の言葉に）}
+  - {type: quote, from: 22, to: 22, label: 史料, text: 大和足軽五人　矢傷一か所ずつ／うち深手二人, source: 三浦家文書（山口県文書館の紹介）}
+  - {type: versus3, from: 46, to: 48, every: 4,
+     items: [[観光庁の解説, 確かではない], [図書館の目録, かっこ付きの名], [1846年の序, 書いた人の名は無い]]}
+  - {type: versus3, from: 62, to: 64, every: 4,
+     items: [[フロイス（1585年）, 自分の費用で食べる], [中原寛貴（2023年）, 毛利は兵糧を送った]]}
+  - {type: quote, from: 75, to: 75, label: 史料, text: 梅干をちょっと出して見ろ／なめてもいけない, source: 『雑兵物語』朝日出右衛門（今の言葉に）}
+  - {type: versus3, from: 107, to: 108, every: 4,
+     items: [[島津家の首注文 1, 3万8717], [島津家の首注文 2, 3万817]]}
+  - {type: quote, from: 135, to: 135, label: 史料, text: 関ヶ原・大坂の者は　もう死んだ／島原の者も　腰が曲がった, source: 『雑兵物語』の結び（今の言葉に）}
+
+stills:
+  - {line: 0, note: 冒頭（0秒）}
+  - {line: 13, note: 第1章 樵談治要の札}
+  - {line: 32, note: 第2章 武田の軍役の図}
+  - {line: 47, note: 第3章 作者の食い違い}
+  - {line: 63, note: 第4章 兵糧の食い違い}
+  - {line: 75, note: 第4章 梅干の札}
+  - {line: 108, note: 第6章 首の数の食い違い}
+  - {line: 124, note: 第7章 禁制の値段の図}
+  - {line: 135, note: まとめ 結びの札}
+  - {end: true, note: 終了画面の空き}
