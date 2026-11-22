@@ -147,7 +147,8 @@ Person? _witness(Life l) {
   // 連れ合いがいれば、最期の場にいるのは連れ合い。
   final sp = l.people['伴侶'];
   if (sp != null && l.married) return sp;
-  const roles = ['伴侶', '子', '幼なじみ', '弟子', '主君', '師', '好敵手'];
+  // 連れ合いを亡くした・別れた人では、伴侶は最期の場にいない（候補から外す）。
+  const roles = ['子', '娘', '幼なじみ', '弟妹', '弟子', '主君', '師', '好敵手'];
   Person? best;
   for (final r in roles) {
     final p = l.people[r];

@@ -963,6 +963,25 @@ void main() {
       expect(checked, greaterThan(5));
     });
 
+    test('連れ合いを亡くした人の最期の文に、亡き連れ合いは最期の場の人として出ない', () {
+      var checked = 0;
+      for (var seed = 0; seed < 400 && checked < 20; seed++) {
+        final rng = Rng(seed + 11);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        if (g.age < 15) continue;
+        // 夫婦だった相手を亡くした形にする。
+        g.meet('伴侶', '亡き連れ合い', 99);
+        g.l.married = false;
+        checked++;
+        final t = buildEnding(g).text;
+        expect(t, isNot(contains('亡き連れ合いが')), reason: t);
+        expect(t, isNot(contains('聞いた亡き連れ合い')), reason: t);
+      }
+      expect(checked, greaterThan(5));
+    });
+
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
       final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
       path[6] = '20歳　信長に仕えた';
