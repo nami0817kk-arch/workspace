@@ -1637,7 +1637,7 @@ extension GameStateFinance on GameState {
     save.projects[p.name] = p.buildSeasons;
     _logNews(
       Tr.pick('${p.label}に着手しました(${formatMoney(cost)}・完成まで${p.buildSeasons}季)',
-          'Started ${p.label} (${formatMoney(cost)}, ${p.buildSeasons} season(s) to build)'),
+          'Started ${p.label} (${formatMoney(cost)}, ${Tr.plural(p.buildSeasons, 'season')} to build)'),
       context: Tr.pick('投資案件', 'Projects'),
     );
     _notify();

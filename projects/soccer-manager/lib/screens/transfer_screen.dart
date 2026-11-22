@@ -13,6 +13,7 @@ import '../models/save_game.dart';
 import '../models/team.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
+import '../widgets/incoming_offers_card.dart';
 import '../widgets/player_face_avatar.dart';
 import 'contract_offer_screen.dart';
 import '../widgets/quick_access_drawer.dart';
@@ -26,10 +27,16 @@ import '../logic/economy_scale.dart';
 enum TransferSortOption { overall, potential, marketValue, age }
 
 class TransferScreen extends StatefulWidget {
-  const TransferScreen({super.key, this.embedded = false});
+  const TransferScreen({super.key, this.embedded = false, this.initialTab = 0});
 
   /// 下タブの一員として表示するか。true なら戻るボタンを出さない。
   final bool embedded;
+
+  /// 開いたときに出すタブ。
+  final int initialTab;
+
+  /// 「届いたオファー」のタブの位置。状況の判断カードからここへ飛ぶ。
+  static const offersTab = 3;
 
   /// フィルタ・検索・並び替えを適用した移籍市場選手リストを返す。UIから切り離してテスト可能にしてある。
   static List<Player> filterAndSort(
@@ -84,7 +91,8 @@ class _TransferScreenState extends State<TransferScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    _tabController = TabController(
+        length: 7, vsync: this, initialIndex: widget.initialTab.clamp(0, 6));
   }
 
   @override
@@ -116,6 +124,10 @@ class _TransferScreenState extends State<TransferScreen>
           Tr.pick('探す', 'Search'),
           Tr.pick('交渉 (${gameState.transferTalks.length})',
               'Talks (${gameState.transferTalks.length})'),
+          // 自分の選手に届いたオファーと、移籍リストに載せている選手。
+          // 左の「移籍」の印の件数と同じ数を出す。
+          Tr.pick('オファー (${gameState.incomingOffers.length})',
+              'Offers (${gameState.incomingOffers.length})'),
           Tr.pick('注目 (${save.watchlistPlayerIds.length})',
               'Watchlist (${save.watchlistPlayerIds.length})'),
           Tr.pick('フリーエージェント (${gameState.freeAgents.length})',
@@ -135,6 +147,7 @@ class _TransferScreenState extends State<TransferScreen>
                 context, gameState, save, squadFull, targets, same),
             _buildSearchTab(context, gameState, squadFull, targets, same),
             _buildTalksTab(context, gameState),
+            _buildOffersTab(context, gameState),
             _buildWatchTab(context, gameState, save, squadFull, targets, same),
             _buildFreeAgentTab(context, gameState, squadFull),
             _buildScoutTab(context, gameState, save),
@@ -893,6 +906,94 @@ class _TransferScreenState extends State<TransferScreen>
   }
 
   /// 交渉: クラブとの移籍金の交渉の一覧。
+  /// 自分の選手に届いたオファーと、移籍リストに載せている選手(2026-11-23)。
+  /// 以前はオファーが状況(ホーム)にしか出ず、移籍の画面を開いても見つからなかった。
+  Widget _buildOffersTab(BuildContext context, GameState gameState) {
+    final small =
+        TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
+    final listed = [
+      for (final p in gameState.userTeam.players)
+        if (p.isTransferListed) p,
+    ];
+    Widget heading(String text) => Padding(
+          padding: const EdgeInsets.fromLTRB(4, 8, 4, 4),
+          child: Text(text,
+              style: const TextStyle(
+                  fontSize: 13, fontWeight: FontWeight.w600)),
+        );
+    return ListView(
+      key: const ValueKey('transfer-offers-tab'),
+      padding: const EdgeInsets.all(12),
+      children: [
+        heading(Tr.pick('届いたオファー', 'Offers received')),
+        if (gameState.incomingOffers.isEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+            child: Text(
+              Tr.pick('いま届いているオファーはありません。選手を移籍リストに載せると、窓のあいだに買い手から届きます。',
+                  'No offers right now. Put a player on the transfer list and buyers may bid while the window is open.'),
+              style: small,
+            ),
+          )
+        else ...[
+          if (!gameState.isTransferWindowOpen)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
+              child: Text(
+                Tr.pick('移籍の窓が閉じているあいだは承諾できません。',
+                    'You cannot accept while the window is shut.'),
+                style: small,
+              ),
+            ),
+          const IncomingOffersCard(showTitle: false),
+        ],
+        heading(Tr.pick('移籍リストに載せている選手 (${listed.length})',
+            'On the transfer list (${listed.length})')),
+        if (listed.isEmpty)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+            child: Text(
+              Tr.pick('載せている選手はいません。選手の詳細の「契約」から載せられます。',
+                  'Nobody is listed. List a player from the Contract tab of his page.'),
+              style: small,
+            ),
+          )
+        else
+          Card(
+            child: Column(
+              children: [
+                for (final (i, p) in listed.indexed) ...[
+                  if (i > 0) const Divider(height: 1),
+                  ListTile(
+                    key: ValueKey('listed-${p.id}'),
+                    dense: true,
+                    leading: const Icon(Icons.sell_outlined, size: 18),
+                    title: Text(p.name,
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
+                    subtitle: Text(
+                      Tr.pick(
+                          '${p.position.label}・${p.age}歳・相場${formatMoney(p.marketValue)}・オファー${gameState.incomingOffers.where((o) => o.playerId == p.id).length}件',
+                          '${p.position.label}, ${p.age}, worth ${formatMoney(p.marketValue)}, ${Tr.plural(gameState.incomingOffers.where((o) => o.playerId == p.id).length, 'offer')}'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: TextButton(
+                      key: ValueKey('unlist-${p.id}'),
+                      onPressed: () {
+                        FeedbackService.tap();
+                        gameState.setTransferListed(p.id, false);
+                      },
+                      child: Text(Tr.pick('リストから外す', 'Take off')),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
   Widget _buildTalksTab(BuildContext context, GameState gameState) {
     final talks = gameState.transferTalks;
     final small =

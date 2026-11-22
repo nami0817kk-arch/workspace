@@ -66,6 +66,9 @@ class _Meter extends StatelessWidget {
             child: Text(label, maxLines: 1, style: TextStyle(fontSize: size)),
           ),
         ),
+        // 見出しとバーの間。英語の「Shareholders」は欄いっぱいに縮むので、
+        // バーにくっついていた(2026-11-23)。
+        SizedBox(width: compact ? 4 : 8),
         SizedBox(
           width: compact ? 70 : 140,
           child: ClipRRect(

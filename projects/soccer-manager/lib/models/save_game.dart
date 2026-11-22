@@ -104,11 +104,11 @@ extension DifficultyItemInfo on DifficultyItem {
             : d.boardTargetDelta > 0
                 ? Tr.pick(
                     '${d.boardTargetDelta}つ緩い',
-                    '${d.boardTargetDelta} place(s) softer',
+                    '${Tr.plural(d.boardTargetDelta, 'place')} softer',
                   )
                 : Tr.pick(
                     '${-d.boardTargetDelta}つ厳しい',
-                    '${-d.boardTargetDelta} place(s) harder',
+                    '${Tr.plural(-d.boardTargetDelta, 'place')} harder',
                   ),
         DifficultyItem.transferPrices => Tr.pick(
             '${d.transferPriceFactor}倍',

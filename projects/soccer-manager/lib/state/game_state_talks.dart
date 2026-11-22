@@ -461,7 +461,7 @@ extension GameStateTalks on GameState {
       if (open > 0) {
         _logNews(
             Tr.pick('移籍の窓が閉じ、まとまらなかった交渉$open件は流れた。',
-                'The window has shut. $open unfinished negotiation(s) fell through.'),
+                'The window has shut. ${Tr.plural(open, 'unfinished negotiation')} fell through.'),
             context: ctx);
       }
     }

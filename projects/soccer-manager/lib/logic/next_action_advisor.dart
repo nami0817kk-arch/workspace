@@ -24,7 +24,8 @@ class NextAction {
 }
 
 /// 行き先。画面そのものを持たせると、このファイルが UI に依存してしまう。
-enum NextActionTarget { squad, youth, finance, transfer }
+/// [transferOffers] は移籍の画面の「届いたオファー」のタブを開く。
+enum NextActionTarget { squad, youth, finance, transfer, transferOffers }
 
 /// いまのクラブの状態を見て、次にやることを1つだけ挙げる。
 ///
@@ -85,7 +86,7 @@ class NextActionAdvisor {
         message: Tr.pick(
             '${save.incomingOffers.first.playerName}に売却のオファーが届いています。承認するか断るかを決めてください。',
             'An offer for ${save.incomingOffers.first.playerName} has arrived. Accept or turn it down.'),
-        target: NextActionTarget.squad,
+        target: NextActionTarget.transferOffers,
       ));
     }
 

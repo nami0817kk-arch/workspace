@@ -385,6 +385,8 @@ String formatMoneySigned(int man) =>
 
 // i18n-ignore: 単位の字(億・万)。formatMoney の Tr.pick の日本語側でだけ使う。
 String _formatJa(int v) {
+  // 0 は「0万」ではなく「0円」(2026-11-23)。
+  if (v == 0) return '0円';
   if (v >= 10000) {
     return '${_oneDecimal(v / 10000)}億';
   }
@@ -392,6 +394,7 @@ String _formatJa(int v) {
 }
 
 String _formatEn(int v) {
+  if (v == 0) return '0 yen';
   // 1万円 = 10k yen。10億円 = 1bn yen。
   if (v >= 100000) return '${_oneDecimal(v / 100000)}bn yen';
   if (v >= 100) return '${_oneDecimal(v / 100)}m yen';
@@ -401,7 +404,10 @@ String _formatEn(int v) {
 String _oneDecimal(double x) {
   final r = (x * 10).round() / 10;
   if (r == r.roundToDouble()) return _grouped(r.round());
-  return r.toStringAsFixed(1);
+  // 小数ありの側も桁区切りを付ける(12345.6億 → 12,345.6億)。
+  final whole = r.truncate();
+  final tenth = ((r - whole) * 10).round();
+  return '${_grouped(whole)}.$tenth';
 }
 
 String _grouped(int v) {

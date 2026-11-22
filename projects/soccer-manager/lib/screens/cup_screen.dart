@@ -93,6 +93,15 @@ class _DomesticCupTab extends StatelessWidget {
       children: [
         const _LeagueCupCard(),
         const _FourClubSuperCupSection(),
+        // ここから下は国内カップ。上のリーグカップの「敗退しました」の札の
+        // すぐ下に、大会名なしで回戦表が続き、どの大会の表か分からなかった
+        // (2026-11-23)。大会名の見出しで区切る。
+        _CupHeading(
+          key: const ValueKey('domestic-cup-heading'),
+          title: cup.name,
+          divider: gameState.leagueCup != null ||
+              gameState.fourClubSuperCup != null,
+        ),
         if (cup.isComplete)
           Card(
             color: cup.championId == userId
@@ -683,6 +692,44 @@ class _TieCard extends StatelessWidget {
           '自クラブの対戦。${nameOf(tie.teamAId)} vs ${nameOf(tie.teamBId)}、$scoreLabel、$resultLabel',
           'Your tie. ${nameOf(tie.teamAId)} vs ${nameOf(tie.teamBId)}, $scoreLabel, $resultLabel'),
       child: ExcludeSemantics(child: card),
+    );
+  }
+}
+
+/// 1つの大会の始まりを示す見出し。上に別の大会があるときは線で区切る。
+class _CupHeading extends StatelessWidget {
+  const _CupHeading({super.key, required this.title, this.divider = false});
+
+  final String title;
+  final bool divider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: divider ? 8 : 0, bottom: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (divider) const Divider(height: 16),
+          Row(
+            children: [
+              const Icon(Icons.emoji_events_outlined, size: 18),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

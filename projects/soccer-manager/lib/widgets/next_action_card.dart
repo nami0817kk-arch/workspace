@@ -25,6 +25,8 @@ class NextActionCard extends StatelessWidget {
         NextActionTarget.youth => const YouthScreen(),
         NextActionTarget.finance => const FinanceScreen(),
         NextActionTarget.transfer => const TransferScreen(),
+        NextActionTarget.transferOffers =>
+          const TransferScreen(initialTab: TransferScreen.offersTab),
       };
 
   static String _labelFor(NextActionTarget target) => switch (target) {
@@ -32,6 +34,8 @@ class NextActionCard extends StatelessWidget {
         NextActionTarget.youth => Tr.pick('ユースへ', 'Open the academy'),
         NextActionTarget.finance => Tr.pick('財務へ', 'Open finances'),
         NextActionTarget.transfer => Tr.pick('移籍市場へ', 'Open transfers'),
+        NextActionTarget.transferOffers =>
+          Tr.pick('届いたオファーへ', 'Open the offers'),
       };
 
   @override

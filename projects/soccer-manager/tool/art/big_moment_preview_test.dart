@@ -43,7 +43,7 @@ void main() {
             key: key,
             child: BigMomentView(
               kind: kind,
-              tag: Tr.pick('第38節・3部', 'Matchday 38, tier 3'),
+              tag: Tr.pick('第38節・3部', 'Matchday 38, Tier 3'),
               body: Tr.pick('残り3節を残して、上位2位以内が決まった。',
                   'Sealed with three games to spare.'),
             ),

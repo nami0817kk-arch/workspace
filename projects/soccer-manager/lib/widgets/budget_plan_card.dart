@@ -86,7 +86,9 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ]),
-                maxLines: 1,
+                // 1行に切っていたときは、英語の効き目(「Shareholders'
+                // confidence +2 per year」)が「…」で切れていた(2026-11-23)。
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
               SizedBox(

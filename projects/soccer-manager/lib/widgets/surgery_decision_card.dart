@@ -33,7 +33,7 @@ class SurgeryDecisionCard extends StatelessWidget {
             for (final p in players) ...[
               const SizedBox(height: 8),
               Text(Tr.pick('${p.name}: ${InjuryCare.describe(p)}(あと${p.injuryWeeks}週)',
-                  '${p.name}: ${InjuryCare.describe(p)} (${p.injuryWeeks} weeks)')),
+                  '${p.name}: ${InjuryCare.describe(p)} (${Tr.plural(p.injuryWeeks, 'week')})')),
               Wrap(
                 spacing: 8,
                 children: [

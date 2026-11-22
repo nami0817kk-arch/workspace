@@ -71,7 +71,7 @@ class MediaDealsCard extends StatelessWidget {
             if (holiday > 0)
               Text(
                   Tr.pick('前払いの精算中: あと$holiday季は季末の配分が出ません',
-                      'Advance in repayment: no season-end TV money for $holiday more season(s)'),
+                      'Advance in repayment: no season-end TV money for $holiday more ${holiday == 1 ? 'season' : 'seasons'}'),
                   style: const TextStyle(fontSize: 12)),
           ],
         ),

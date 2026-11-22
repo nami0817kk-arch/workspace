@@ -27,7 +27,7 @@ extension GameStatePlan on GameState {
     _logNews(
         Tr.pick(
             '5か年計画(${a.label}): ${s.planTargetTier}部・クラブ価値${formatMoney(s.planTargetValue)}・スタジアム水準${s.planTargetStadium}。株主に約束した。',
-            'Five-year plan (${a.label}): tier ${s.planTargetTier}, club value ${formatMoney(s.planTargetValue)}, stadium level ${s.planTargetStadium}. The shareholders have your word.'),
+            'Five-year plan (${a.label}): Tier ${s.planTargetTier}, club value ${formatMoney(s.planTargetValue)}, stadium level ${s.planTargetStadium}. The shareholders have your word.'),
         context: Tr.pick('オーナー', 'Owner'));
     _notify();
     await _persist();

@@ -47,19 +47,19 @@ extension GameStateMoments on GameState {
               .length,
         ),
     ];
-    final tag = Tr.pick('第$matchday節・$tier部', 'Matchday $matchday, tier $tier');
+    final tag = Tr.pick('第$matchday節・$tier部', 'Matchday $matchday, Tier $tier');
     final season = league.season;
     final theme = currentLeagueTheme;
     if (ClinchEngine.clinchedTop(rows, userId, 1)) {
       _queueMoment(BigMomentKind.champion, 's$season:champion', tag,
-          Tr.pick('$tier部の優勝が決まった。', 'The tier $tier title is ours.'));
+          Tr.pick('$tier部の優勝が決まった。', 'The Tier $tier title is ours.'));
     }
     if (tier > 1) {
       final up = theme.rulesBelow(tier - 1).autoUp;
       if (ClinchEngine.clinchedTop(rows, userId, up)) {
         _queueMoment(BigMomentKind.promoted, 's$season:promoted', tag,
             Tr.pick('${tier - 1}部への昇格が決まった(上位$upクラブが自動昇格)。',
-                'Promotion to tier ${tier - 1} is sealed (top $up go up).'));
+                'Promotion to Tier ${tier - 1} is sealed (top $up go up).'));
       }
     }
     if (tier < totalDivisionTiers) {
@@ -67,7 +67,7 @@ extension GameStateMoments on GameState {
       if (ClinchEngine.doomedBottom(rows, userId, down)) {
         _queueMoment(BigMomentKind.relegated, 's$season:relegated', tag,
             Tr.pick('${tier + 1}部への降格が決まった。ここからが建て直しだ。',
-                'Relegation to tier ${tier + 1} is confirmed. The rebuild starts here.'));
+                'Relegation to Tier ${tier + 1} is confirmed. The rebuild starts here.'));
       }
     }
   }

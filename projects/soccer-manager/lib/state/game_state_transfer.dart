@@ -275,7 +275,7 @@ extension GameStateTransfer on GameState {
       for (var tier = 1; tier <= s.otherDivisionLeagues.length; tier++)
         (
           key: 'home:$tier',
-          label: Tr.pick('${home.label} $tier部', '${home.label} tier $tier'),
+          label: Tr.pick('${home.label} $tier部', '${home.label} Tier $tier'),
           teams: tier == s.currentDivisionTier
               ? s.league.teams
               : s.otherDivisionLeagues[tier - 1]?.teams ?? const <Team>[],

@@ -122,7 +122,10 @@ class FinanceScreen extends StatelessWidget {
                                 '収入は観客動員・スポンサー・グッズ・放映権を合わせた額、人件費は年俸を節の数で割った額(スタッフ込み)です。\n\n給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。ここの額は、いまの1節あたりの額を1季の節の数($md節)だけ積んだ1年の見込みです。',
                                 'Income is gate, sponsorship, merchandise and broadcasting together. Wages are annual salaries spread over the matchdays, staff included.\n\nWages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The figures here are the current per-matchday amounts times the $md matchdays of a season.'),
                           ),
+                          // 列の頭をそろえ、列の間をあける。英語では3つの
+                          // 金額がくっついて1つの数に見えていた(2026-11-23)。
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _BigFigure(
                                 label: Tr.pick('収入', 'Income'),
@@ -287,11 +290,18 @@ class FinanceScreen extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(fontSize: 12)),
                             ),
+                            // 英語の「1.2m yen」が2行に折れていた(2026-11-23)。
                             SizedBox(
-                              width: 56,
-                              child: Text(formatMoney(annualFromWeekly(p.wage)),
-                                  textAlign: TextAlign.right,
-                                  style: const TextStyle(fontSize: 12)),
+                              width: 84,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                    formatMoney(annualFromWeekly(p.wage)),
+                                    maxLines: 1,
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(fontSize: 12)),
+                              ),
                             ),
                             SizedBox(
                               width: 64,
@@ -396,20 +406,28 @@ class _BigFigure extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label,
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.subtleText(context))),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(value,
+        child: Padding(
+          // 列の間の余白。右端の列にも付くが、カードの内側なので目立たない。
+          padding: const EdgeInsets.only(right: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold, color: color)),
-            ),
-          ],
+                      fontSize: 12, color: SemanticColors.subtleText(context))),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(value,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: color)),
+              ),
+            ],
+          ),
         ),
       );
 }

@@ -373,13 +373,30 @@ class _FmTopBar extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      Tr.pick(
-                          '${CalendarEngine.formatDate(gameState.today)}  第${league.season}季 第$matchday節・${save.currentDivisionTier}部',
-                          '${CalendarEngine.formatDate(gameState.today)}  Season ${league.season} MD $matchday • Tier ${save.currentDivisionTier}'),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: sub,
+                    // 日付は年なしの短い形にし、節と部は切らずに残す。
+                    // 小さな端末で「第7節・3部」が「…」に切れていた
+                    // (2026-11-23)。切れるなら季のほうから。
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            Tr.pick(
+                                '${CalendarEngine.formatShortDate(gameState.today)}  第${league.season}季',
+                                '${CalendarEngine.formatShortDate(gameState.today)}  Season ${league.season}'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: sub,
+                          ),
+                        ),
+                        Text(
+                          Tr.pick(
+                              ' 第$matchday節・${save.currentDivisionTier}部',
+                              ' • MD $matchday • Tier ${save.currentDivisionTier}'),
+                          key: const ValueKey('topbar-division'),
+                          maxLines: 1,
+                          style: sub,
+                        ),
+                      ],
                     ),
                   ],
                 ),

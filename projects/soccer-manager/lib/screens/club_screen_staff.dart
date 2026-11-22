@@ -355,7 +355,7 @@ class _ManagerProfileLines extends StatelessWidget {
             Text(
               Tr.pick(
                   '経歴: ${recent.map((c) => '${season(c.season)} ${c.club}(${c.tier}部) ${c.rank}位').join('、')}',
-                  'Record: ${recent.map((c) => '${season(c.season)} ${c.club} (tier ${c.tier}) ${c.rank}/${c.teams}').join(', ')}'),
+                  'Record: ${recent.map((c) => '${season(c.season)} ${c.club} (Tier ${c.tier}) ${c.rank}/${c.teams}').join(', ')}'),
               style: small,
             ),
         ],

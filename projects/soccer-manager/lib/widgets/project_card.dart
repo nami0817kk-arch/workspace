@@ -24,24 +24,23 @@ class ProjectCard extends StatelessWidget {
             Text(Tr.pick('投資案件', 'Projects'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
+            // 説明は幅いっぱいに出し、ボタンはその下の右端に置く。横に
+            // 並べていたときは、英語の長いボタンに押されて説明が1語ずつ
+            // 縦に並んでいた(2026-11-23)。
             for (final p in ClubProject.values)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(p.label,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                          Text(p.summary, style: const TextStyle(fontSize: 12)),
-                        ],
-                      ),
+                    Text(p.label,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(p.summary, style: const TextStyle(fontSize: 12)),
+                    const SizedBox(height: 4),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: _action(gs, save.projects, p),
                     ),
-                    const SizedBox(width: 8),
-                    _action(gs, save.projects, p),
                   ],
                 ),
               ),
@@ -57,11 +56,11 @@ class ProjectCard extends StatelessWidget {
       return FilledButton.tonal(
         onPressed: () => gs.startProject(p),
         child: Text(Tr.pick('${formatMoney(gs.scaledMoney(p.cost))}で着手(${p.buildSeasons}季)',
-            'Start ${formatMoney(gs.scaledMoney(p.cost))} (${p.buildSeasons} season)')),
+            'Start for ${formatMoney(gs.scaledMoney(p.cost))} (${Tr.plural(p.buildSeasons, 'season')})')),
       );
     }
     return Text(left == 0
         ? Tr.pick('稼働中', 'Running')
-        : Tr.pick('建設中(あと$left季)', 'Building ($left left)'));
+        : Tr.pick('建設中(あと$left季)', 'Building (${Tr.plural(left, 'season')} left)'));
   }
 }
