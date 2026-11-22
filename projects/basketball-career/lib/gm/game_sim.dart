@@ -62,10 +62,11 @@ class SimTeam {
     wTov = [for (var i = 0; i < n; i++) (0.6 + sub(order[i], 'ボール運び') / 100 * (order[i].pos == Pos.pg ? 1.4 : 1.0)) * (1.5 - sSafe[i] / 100)];
     wStl = [for (var i = 0; i < n; i++) _pow(sStl[i] - 35, 1.3)];
     wBlk = [for (var i = 0; i < n; i++) _pow(sub(order[i], 'ブロック') - 35, 1.4) * _blkPos[order[i].pos]!];
-    wOreb = [for (var i = 0; i < n; i++) _pow(sub(order[i], '攻めのリバウンド') - 35, 1.3) * _rebPos[order[i].pos]! * (1 + 0.08 * (tier[i][Attr.rebound.index] + 1))];
+    // リバウンドの取りやすさ(2026-11-22: 一部の大型に集まりすぎて、リバウンド王が18本ほどになっていた。べき乗と位置の差を弱めた)
+    wOreb = [for (var i = 0; i < n; i++) _pow(sub(order[i], '攻めのリバウンド') - 35, 0.7) * _rebPos[order[i].pos]! * (1 + 0.05 * (tier[i][Attr.rebound.index] + 1))];
     wReb = [
       for (var i = 0; i < n; i++)
-        _pow((sub(order[i], '守りのリバウンド') + sub(order[i], 'ボックスアウト')) / 2 - 35, 1.3) * _rebPos[order[i].pos]! * (1 + 0.08 * (tier[i][Attr.rebound.index] + 1)),
+        _pow((sub(order[i], '守りのリバウンド') + sub(order[i], 'ボックスアウト')) / 2 - 35, 0.7) * _rebPos[order[i].pos]! * (1 + 0.05 * (tier[i][Attr.rebound.index] + 1)),
     ];
     wAst = [
       for (var i = 0; i < n; i++)
@@ -190,7 +191,7 @@ const _nStat = 13;
 const _pts = 0, _fgm = 1, _fga = 2, _tpm = 3, _tpa = 4, _ftm = 5, _fta = 6, _reb = 7, _ast = 8, _stl = 9, _blk = 10, _tov = 11, _oreb = 12;
 
 /// リバウンドとアシストの、ポジションごとの取りやすさ。
-const _rebPos = {Pos.pg: 0.5, Pos.sg: 0.6, Pos.sf: 0.9, Pos.pf: 1.2, Pos.c: 1.35};
+const _rebPos = {Pos.pg: 0.6, Pos.sg: 0.7, Pos.sf: 0.95, Pos.pf: 1.15, Pos.c: 1.3};
 const _astPos = {Pos.pg: 2.2, Pos.sg: 1.1, Pos.sf: 0.8, Pos.pf: 0.55, Pos.c: 0.45};
 const _blkPos = {Pos.pg: 0.25, Pos.sg: 0.35, Pos.sf: 0.7, Pos.pf: 1.3, Pos.c: 1.8};
 
@@ -727,7 +728,8 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play, [Play
     // ファウルのもらいやすさと、身体能力のバッジ
     final foulP = three ? 0.02 : (0.15 + (o.sFoul[shooter] - 70) / 500 + (press == 2 ? 0.02 : 0) + 0.005 * (tiers[Attr.athletic.index] + 1)).clamp(0.08, 0.26);
     final fouled = r.nextInt(1000) < (foulP * 1000).round();
-    final pft = (0.74 + (o.sFt[shooter] - 70) / 200).clamp(0.45, 0.93);
+    // フリースロー(2026-11-22: リーグ全体が73%で低かった。実際は78%ほど)
+    final pft = (0.79 + (o.sFt[shooter] - 70) / 200).clamp(0.5, 0.95);
     final st = o.stat[shooter];
     void freeThrows(int n) {
       for (var k = 0; k < n; k++) {
@@ -787,7 +789,8 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play, [Play
       continue; // もう一度攻める
     }
     final dr = _pick(r, dc, d.wReb);
-    d.stat[dr][_reb]++;
+    // 1割ほどは、ボールが外に出るなどして選手に付かない「チームのリバウンド」(実際の記録と同じ)
+    if (r.nextInt(100) >= 10) d.stat[dr][_reb]++;
     ev?.steps.add(PlayStep(PlayStepKind.defRebound, dr));
     return;
   }
