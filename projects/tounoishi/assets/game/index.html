@@ -169,7 +169,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v20</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v21</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -728,7 +728,7 @@ function stepCr(m,dt){
  if(m.stage=='pupa'){if(g.t>=m.stT){m.stage='adult';m.mhp*=1.5;m.hp=m.mhp;say(spName(m)+'が羽化した。');}return;}
  if(m.stage=='stone'){if(g.t>=m.stT){m.stage=null;var half=Math.floor(m.e/2);m.e-=half;mkCr('gargoyle','mag',m.f,m.x,m.y,Math.max(1,half));fxPuff(m.f,m.x,m.y,1);say('ガーゴイルの石の像が割れて、2匹になった。');}return;}
  if(m.stage=='bud'||m.stage=='flower'){plantStep(m,dt);return;}
- if(S.hung>0){m.hu+=dt;if(m.hu>=S.hung*(m.hero?1.5:1)*(m.mut=='pure'?1.5:1)){m.hu=0;m.e-=1;if(m.e<=0){if(m.sp=='dragon'&&!m.hero){rebirth(m,false);return;}killCr(m,'starve');return;}}}
+ if(S.hung>0){m.hu+=dt;if(m.hu>=S.hung*(m.hero?1.5:1)*(m.mut=='pure'?1.5:1)){m.hu=0;m.e-=1;if(m.env=='mag')g.mpool++;else g.pool++;if(m.e<=0){if(m.sp=='dragon'&&!m.hero){rebirth(m,false);return;}killCr(m,'starve');return;}}}
  if(m.mut=='kyodai'&&!m.hero&&g.t-m.born>=150)promote(m,'big');
  if(S.mv>0){m.mt+=dt;if(m.mt>=S.mv*(m.spdk||1)){m.mt=0;moveCr(m,S);
   for(var ti=0;ti<g.traps.length;ti++){var tp=g.traps[ti];if(tp.f==m.f&&tp.x==m.x&&tp.y==m.y){g.traps.splice(ti,1);m.hp-=15;fxNum(m.f,m.x,m.y,15,'#ff7a7a');fxPuff(m.f,m.x,m.y,0.6);if(m.hp<=0){killCr(m,'enemy',null);return;}break;}}}}
@@ -1608,7 +1608,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v20 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v21 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
