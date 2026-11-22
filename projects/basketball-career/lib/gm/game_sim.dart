@@ -95,6 +95,9 @@ class SimTeam {
   /// 組み合わせごとの、この試合で一緒に出た秒([Combo] の順)。
   final comboSecs = List<int>.filled(Combo.values.length, 0);
 
+  /// 守りのリバウンドの数(チームのリバウンドを10本に1本にするため)。
+  int drebs = 0;
+
   /// 方針どうしの相性が効いた攻めの数([Matchup] の順。攻めた側も守った側も数える)。
   final matchups = List<int>.filled(Matchup.values.length, 0);
 
@@ -789,8 +792,8 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play, [Play
       continue; // もう一度攻める
     }
     final dr = _pick(r, dc, d.wReb);
-    // 1割ほどは、ボールが外に出るなどして選手に付かない「チームのリバウンド」(実際の記録と同じ)
-    if (r.nextInt(100) >= 10) d.stat[dr][_reb]++;
+    // 10本に1本は、ボールが外に出るなどして選手に付かない「チームのリバウンド」(実際の記録と同じ)。乱数は使わない(試合の流れを変えない)
+    if (++d.drebs % 10 != 0) d.stat[dr][_reb]++;
     ev?.steps.add(PlayStep(PlayStepKind.defRebound, dr));
     return;
   }
