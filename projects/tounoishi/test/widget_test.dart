@@ -38,6 +38,21 @@ void main() {
     expect(parseStoreMessage('{"k":"tou-dex","v":3}'), isNull);
   });
 
+  test('原作との差を埋めた仕組みが入っている（0.5.0・試作 v12）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'dp0:100', // 掘る力
+      'function train(', // 主役を鍛える
+      'function carryStep(', // 養分を運ぶ
+      "pure:'ピュア種'", // 4つ目の変異
+      'function drawMinis(', // 塔の全体図
+      'var CLINES=', // コアの台詞
+      'function sfx(', // 音
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('pubspec の assets に HTML が登録されている', () {
     final pubspec = File('pubspec.yaml').readAsStringSync();
     expect(pubspec, contains(gameAsset));

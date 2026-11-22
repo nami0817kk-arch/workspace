@@ -4,7 +4,7 @@
 ゲーム本体は HTML の試作で、Flutter 側は全画面の WebView で開くだけ。
 
 - バンドルID: `com.namiki.tounoishi`（iPhone のみ・縦画面）
-- 試作の正: リポジトリの外の `game-assets/fukaana/prototype-v*.html`（0.4.0 は v11：縦画面1枚・2本指で拡大・なぞって印→離して掘る・一覧と遊び方は下のシート）。
+- 試作の正: リポジトリの外の `game-assets/fukaana/prototype-v*.html`（0.4.0 は v11：縦画面1枚・2本指で拡大・なぞって印→離して掘る・一覧と遊び方は下のシート。0.5.0 は v12：掘る力・主役を鍛える・養分を運ぶ・ピュア種・塔の全体図・コアの台詞・音）。
   更新したら `python tool/sync_game.py <試作>` で `assets/game/index.html` へ写す
 - 仕様書: Claude Docs「塔の意志 仕様書」
 - 保存: ゲームは `window.TouStore` 経由でアプリ側（shared_preferences）にも保存し、起動時に `window.__boot` で戻す（鍵は tou-save・tou-hall・tou-best・tou-dex）
