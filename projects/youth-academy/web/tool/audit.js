@@ -54,7 +54,8 @@ for (const seed of SEEDS) {
       let dop = 99;
       for (const o of Object.keys(R.disp)) if (R.base[o] && R.base[o][2] !== R.base[prevFl.by][2]) dop = Math.min(dop, Math.hypot(R.disp[o][0] - R.ball[0], R.disp[o][1] - R.ball[1]));
       const dr = Math.hypot(R.disp[prevFl.recv][0] - R.ball[0], R.disp[prevFl.recv][1] - R.ball[1]);
-      if (dop < 1.2 && dr > 2.5) add('届いた球のそばの相手が触らない(' + (R.pre ? '入り' : '場面') + ')', tag());
+      const cutBy = R.owner && R.base[R.owner] && R.base[R.owner][2] !== R.base[prevFl.by][2]; // 相手がそのまま切って持った（場面の入りのパスカット）は触っている（2026-11-23）
+      if (dop < 1.2 && dr > 2.5 && !cutBy) add('届いた球のそばの相手が触らない(' + (R.pre ? '入り' : '場面') + ')', tag());
     }
     prevFl = R.fl;
     const cut = R.cut > 0.05 || wasCut; wasCut = R.cut > 0.05;
