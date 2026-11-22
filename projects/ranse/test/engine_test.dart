@@ -629,6 +629,36 @@ void main() {
       expect(checked, greaterThan(5));
     });
 
+    test('再開すると前回までのあらすじが出て、章の区切りは一度だけ見聞録に残る', () {
+      var resumed = 0, chapters = 0;
+      for (var seed = 0; seed < 200; seed++) {
+        final rng = Rng(seed + 5);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        // 途中（31歳を過ぎた年の始まり）まで進める。
+        var n = 0;
+        while (!g.finished && n++ < 2000) {
+          if (g.age >= 31 && g.prompt?.title == '今年の重点') break;
+          g.choose(Rng(seed + n).range(0, g.prompt!.choices.length - 1));
+        }
+        if (g.finished) continue;
+        resumed++;
+        final heads = g.l.log.where((e) => e.txt.startsWith('【壮年の章】')).length;
+        expect(heads, 1);
+        chapters += heads;
+        final (life, world) = fromJson(jsonOf(g));
+        final g2 = Game(rng: Rng(seed));
+        g2.restore(life, world);
+        expect(g2.prompt?.title, '今年の重点');
+        expect(g2.lastResults.first.txt, contains('前回までのあらすじ'));
+        // あらすじは見聞録には残らず、章の区切りも増えない。
+        expect(g2.l.log.where((e) => e.txt.contains('あらすじ')), isEmpty);
+        expect(g2.l.log.where((e) => e.txt.startsWith('【壮年の章】')).length, 1);
+      }
+      expect(resumed, greaterThan(10));
+      expect(chapters, resumed);
+    });
+
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
       final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
       path[6] = '20歳　信長に仕えた';

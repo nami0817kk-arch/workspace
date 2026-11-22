@@ -247,10 +247,45 @@ class Game extends ChangeNotifier {
     prompt = null;
     // 年の始まりで保存している。その年を最初からやり直す。
     if (saved.dead == null && saved.end == null) {
+      _recap();
       isChild ? _beginYear() : _beginAdultYear();
       return;
     }
     notifyListeners();
+  }
+
+  /// 画面にだけ出す一行（見聞録には残さない）。
+  void _note(String txt, [String kind = '']) =>
+      _pending.add(LogEntry('$year$season', txt, kind));
+
+  /// 再開したときの「前回までのあらすじ」。
+  void _recap() {
+    _note('―― 前回までのあらすじ ――', 'big');
+    _note(
+      '${l.name}、$age歳。${rankName()}${l.lord != null ? '（${l.lord}家）' : ''}。',
+    );
+    for (final p in l.path.reversed.take(3).toList().reversed) {
+      _note(p);
+    }
+  }
+
+  static const _chapters = {
+    30: '【壮年の章】三十の坂を越えた。',
+    45: '【熟年の章】四十五。人生の秋が見えてきた。',
+    60: '【晩年の章】還暦を迎えた。',
+  };
+
+  /// 章の区切り（30・45・60歳）。ここまでを短く振り返る。
+  void _chapter() {
+    final head = _chapters[age];
+    if (head == null || hasFlag('chapter:$age')) return;
+    setFlag('chapter:$age');
+    final sp = l.married ? l.people['伴侶'] : null;
+    log(
+      '$headいまは${rankName()}${l.lord != null ? '（${l.lord}家）' : ''}。'
+          '${sp != null ? '連れ合いは${sp.name}。' : ''}${l.kids > 0 ? '子は${l.kids}人。' : ''}',
+      'big',
+    );
   }
 
   // ---------- 合戦 ----------
@@ -545,6 +580,7 @@ class Game extends ChangeNotifier {
   void _beginAdultYear() {
     prompt = null;
     l.t = age * 2;
+    _chapter();
     onCheckpoint?.call(this);
     final opts = adultFocusOptions(this);
     ask('今年の重点', adultYearText(this), [
