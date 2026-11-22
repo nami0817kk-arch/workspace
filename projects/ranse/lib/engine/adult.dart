@@ -207,7 +207,8 @@ List<FocusDef> adultFocusOptions(Game g) {
       },
     );
     final war = FocusDef('war', '戦に備える', '兵を集め、出陣に加わる。手柄も、討死もありうる', (g) {
-      final cap = kTroopCap[l.rank];
+      // 位が表の外（大名以上）になっていても落ちないよう、いちばん上の位の値を使う。
+      final cap = kTroopCap[l.rank.clamp(0, kTroopCap.length - 1)];
       var n = cap - l.troops;
       if (l.gold < n) n = l.gold;
       final lim = 15 + l.mi ~/ 8;

@@ -298,6 +298,9 @@ void main() {
         ..maxRank = 8
         ..lord = home
         ..gold = 100;
+      // 元服の年の選択肢は前の身分で作られているので、休んで次の年から大名として測る。
+      final rest = g.prompt!.choices.indexWhere((c) => c.label.contains('休'));
+      g.choose(rest < 0 ? g.prompt!.choices.length - 1 : rest);
       lives++;
       var best = 0.0, n = 0;
       final r = Rng(seed);
