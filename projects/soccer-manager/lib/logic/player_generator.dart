@@ -5,7 +5,6 @@ import '../models/player.dart';
 import '../models/team.dart';
 import '../data/name_pool.dart';
 import 'training_engine.dart';
-import 'economy_scale.dart';
 
 class PlayerGenerator {
   static Random _rng = Random();
@@ -393,8 +392,9 @@ class PlayerGenerator {
       // 全員同じだと補強で見るべき差にならない。
       injuryProneness: (6 + _rng.nextInt(5) + _rng.nextInt(5)).clamp(1, 20),
     );
-    // 週俸は市場価値から(年俸 = 2.4 × 価値^0.88 を 52 で割る)。上限は置かない。
-    player.wage = weeklyWageForValue(player.marketValue);
+    // 週俸は今の能力と経験(年齢)から(annualWageForAbility を 52 で割る)。
+    // 伸びしろは移籍金だけに効き、年俸には効かない。上限は置かない。
+    player.wage = player.fairWeeklyWage();
     player.contractYearsRemaining = 1 + _rng.nextInt(4);
     player.role = _pickRole(player);
     player.duty = _pickDuty(player);

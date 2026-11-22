@@ -1,7 +1,6 @@
 import '../models/player.dart';
 import '../models/team.dart';
 import 'contract_engine.dart';
-import 'economy_scale.dart';
 
 /// ユースから一軍へ上げるときの条件。画面に出してから決めさせるため、
 /// 実行前に計算できるようにしてある。
@@ -86,9 +85,9 @@ class YouthPromotionEngine {
     final cap = ContractEngine.capYears(player.age);
     final y = (years ?? ContractEngine.negotiatedYears(player)).clamp(1, cap);
     final withOption = option && y < cap;
-    // 週俸は市場価値に連動する(生成時と同じ式)。ユースの給与のまま
+    // 週俸は能力と経験(年齢)に見合う額(生成時と同じ式)。ユースの給与のまま
     // 一軍に置けると、安い戦力を作る抜け道になる。
-    final wage = weeklyWageForValue(player.marketValue);
+    final wage = player.fairWeeklyWage();
     return YouthPromotionTerms(
       weeklyWage: withOption
           ? (wage * ContractEngine.optionWageFactor).round()

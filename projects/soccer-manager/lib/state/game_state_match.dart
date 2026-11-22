@@ -522,7 +522,9 @@ extension GameStateMatch on GameState {
     // 試合日のイベントも、収入が入った節で使い切る。
     _consumeMatchdayPromo();
 
-    // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合・カップ戦は対象外)。
+    // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合は
+    // 対象外)。途中出場の半額は試合のあと、カップ戦は各試合のあとに払う
+    // ([AppearanceFeeEngine])。
     if (userFixture != null) {
       lastAppearanceFeesPaid = userTeam.players
           .where((p) => userTeam.startingXI.contains(p.id))
@@ -1041,6 +1043,13 @@ extension GameStateMatch on GameState {
       _publishFrontPage(merged, f, lastMilestones);
       // 出来高の契約の選手の得点に、出来高を払う。
       _payGoalBonuses(merged);
+      // 途中から出た選手に、出場手当の半額を払う(先発の分は試合の前)。
+      final subFees = AppearanceFeeEngine.feesFor(userTeam, merged,
+          includeStarters: false);
+      if (subFees > 0) {
+        _book(LedgerCategory.appearanceFees, -subFees);
+        lastAppearanceFeesPaid += subFees;
+      }
       // 優勝・昇格・降格が決まったか、カップの決勝を戦い終えたか。
       _checkClinchMoments(f.matchday);
       // 移籍の締切日なら知らせる。

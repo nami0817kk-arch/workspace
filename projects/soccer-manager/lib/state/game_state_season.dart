@@ -805,10 +805,20 @@ extension GameStateSeason on GameState {
         }
         _afterSuperCupApplied(match);
     }
+    _payCupAppearanceFees(merged);
     // 過密日程の判定(前の試合との日付の間隔)。
     _noteUserMatchDay();
     _evaluateAchievements();
     return merged;
+  }
+
+  /// カップ戦・大陸大会の試合[r]の出場手当を払う(先発は満額、途中出場は
+  /// 半額)。リーグ戦と違って試合の前には払っていないので、先発の分もここで。
+  void _payCupAppearanceFees(MatchResult r) {
+    final userId = _save!.userTeamId;
+    if (r.homeTeamId != userId && r.awayTeamId != userId) return;
+    final fees = AppearanceFeeEngine.feesFor(userTeam, r);
+    if (fees > 0) _book(LedgerCategory.appearanceFees, -fees);
   }
 
   /// ライブ観戦のカップ戦がPK戦にもつれた際、1本ずつのシュートアウトを
@@ -830,6 +840,7 @@ extension GameStateSeason on GameState {
     if (_save == null) return;
     final userId = _save!.userTeamId;
     if (result.homeTeamId != userId && result.awayTeamId != userId) return;
+    _payCupAppearanceFees(result);
     // 過密日程の判定(前の試合との日付の間隔)。
     _noteUserMatchDay();
     final home = teamById(result.homeTeamId);

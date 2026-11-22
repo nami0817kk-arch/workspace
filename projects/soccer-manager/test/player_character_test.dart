@@ -70,7 +70,7 @@ void main() {
     test('出番を約束するほど、望む年俸は上がる(更新と同じ向き)', () {
       int d(SquadStatus s) => PlayerTermsEngine.demand(
           currentWage: 100,
-          marketValue: 0,
+          fairWage: 0,
           fromTier: 3,
           toTier: 3,
           wasStarter: false,

@@ -4,7 +4,6 @@ import '../models/league_theme.dart';
 import '../models/player.dart';
 import '../models/team.dart';
 import '../l10n/tr.dart';
-import 'economy_scale.dart';
 
 class ContractEngine {
   /// 週俸総額。他クラブへローン放出中の選手は放出先が週俸を負担するため含めない。
@@ -349,7 +348,7 @@ class ContractEngine {
     } else if (p.happiness < 65) {
       chance += 0.10;
     }
-    if (p.wage * 4 < weeklyWageForValue(p.marketValue) * 3) chance += 0.10;
+    if (p.wage * 4 < p.fairWeeklyWage() * 3) chance += 0.10;
     return chance.clamp(0.0, 0.6);
   }
 

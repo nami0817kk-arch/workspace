@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/contract_engine.dart';
-import 'package:soccer_manager/logic/economy_scale.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/logic/pre_contract_engine.dart';
 import 'package:soccer_manager/logic/youth_promotion_engine.dart';
@@ -431,7 +430,7 @@ void main() {
         ..personality = PlayerPersonality.ambitious
         ..happiness = 30
         ..wage = 5;
-      expect(upset.wage * 4 < weeklyWageForValue(upset.marketValue) * 3, isTrue);
+      expect(upset.wage * 4 < upset.fairWeeklyWage() * 3, isTrue);
       expect(ContractEngine.refuseRenewalChance(calm), lessThan(0.1));
       // 8% + 野心家12% + 不満25% + 年俸の不満10%。
       expect(ContractEngine.refuseRenewalChance(upset), closeTo(0.55, 1e-9));

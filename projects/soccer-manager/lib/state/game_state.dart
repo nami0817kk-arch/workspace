@@ -58,6 +58,7 @@ import '../logic/front_page_engine.dart';
 import '../logic/club_culture.dart';
 import '../logic/academy_engine.dart';
 import '../logic/agm_engine.dart';
+import '../logic/appearance_fee_engine.dart';
 import '../logic/projection_engine.dart';
 import '../logic/owner_history_engine.dart';
 import '../models/league_theme.dart';
@@ -792,7 +793,7 @@ class GameState extends ChangeNotifier {
 
     for (final p in save.allPlayers) {
       final ratio = p.marketValue / max(1, GameState.legacyMarketValue(p));
-      p.wage = weeklyWageForValue(p.marketValue, playerLevels[p.id] ?? home);
+      p.wage = p.fairWeeklyWage(playerLevels[p.id] ?? home);
       if (p.releaseClause != null) {
         p.releaseClause = (p.releaseClause! * ratio).round();
       }

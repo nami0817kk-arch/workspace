@@ -1,7 +1,6 @@
 import '../models/player.dart';
 import 'dynamics_engine.dart';
 import '../models/team.dart';
-import 'economy_scale.dart';
 
 /// 選手の不満度(happiness)を週次で更新する。出場機会・待遇・チーム成績の
 /// 3要素を性格ごとの感度で重み付けする。
@@ -38,7 +37,8 @@ class HappinessEngine {
             .round();
       }
 
-      final fairWage = weeklyWageForValue(p.marketValue);
+      // 見合う年俸は今の能力と経験(年齢)から。伸びしろは見ない。
+      final fairWage = p.fairWeeklyWage();
       if (p.wage < fairWage * 0.7) {
         delta -= (2 * personality.wageSensitivity).round();
       } else if (p.wage >= fairWage) {

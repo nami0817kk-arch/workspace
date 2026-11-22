@@ -97,14 +97,14 @@ void main() {
       expect(fr.wage / en.wage, closeTo(0.45, 0.02));
     });
 
-    // 年俸の合計 ÷ 価値に見合う年俸(イングランドの水準)の合計。作った
+    // 年俸の合計 ÷ 能力と経験に見合う年俸(イングランドの水準)の合計。作った
     // あとで価値が少し動く選手がいるので、イングランドの1部との比で見る。
     double level(Iterable<Team> teams) {
       var wages = 0, base = 0;
       for (final t in teams) {
         for (final p in t.players) {
           wages += p.wage;
-          base += weeklyWageForValue(p.marketValue, 1.0);
+          base += p.fairWeeklyWage(1.0);
         }
       }
       return wages / base;
@@ -153,7 +153,7 @@ void main() {
       // 今の週俸(フランスの水準)を、行き先(スペイン)の水準に直して求める。
       final plain = PlayerTermsEngine.demand(
         currentWage: 1000,
-        marketValue: 10,
+        fairWage: 5,
         fromTier: 1,
         toTier: 1,
         wasStarter: false,
@@ -161,7 +161,7 @@ void main() {
       );
       final converted = PlayerTermsEngine.demand(
         currentWage: 1000,
-        marketValue: 10,
+        fairWage: 5,
         fromTier: 1,
         toTier: 1,
         wasStarter: false,
@@ -198,7 +198,7 @@ void main() {
       final game = GameState();
       await game.startNewGame('年俸FC', theme: LeagueTheme.france);
       final p = game.save!.foreignLeagues['england']!.teams.first.players
-          .firstWhere((p) => p.wage > weeklyWageForValue(p.marketValue) + 5);
+          .firstWhere((p) => p.wage > p.fairWeeklyWage() + 5);
       // イングランドの1部からフランスの3部へ: 今の週俸は水準の比の倍に直る。
       final scale = wageCountryFactor(LeagueTheme.france, 3) /
           wageCountryFactor(LeagueTheme.england, 1);

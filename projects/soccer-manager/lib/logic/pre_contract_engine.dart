@@ -54,13 +54,13 @@ class PreContractEngine {
   }
 
   /// 仮契約で選手が求める週俸。移籍金が要らないぶん、選手は今より
-  /// 高い週俸を求める(価値に見合う額と今の週俸の高い方の1割増し)。
+  /// 高い週俸を求める(能力と経験に見合う額と今の週俸の高い方の1割増し)。
   /// 延長オプションを付けるとさらに5%上がる。[currentWageScale]は、他国の
   /// 選手の今の週俸を、こちらの国の水準に直す倍率([wageScaleToHome])。
   static int wageDemand(Player p,
       {bool option = false, double currentWageScale = 1.0}) {
-    final base = max(
-        (p.wage * currentWageScale).round(), weeklyWageForValue(p.marketValue));
+    final base =
+        max((p.wage * currentWageScale).round(), p.fairWeeklyWage());
     final factor = 1.1 * (option ? ContractEngine.optionWageFactor : 1.0);
     return max(minWeeklyWage, (base * factor).round());
   }
