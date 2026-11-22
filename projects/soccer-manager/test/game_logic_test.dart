@@ -5155,8 +5155,9 @@ void main() {
     expect(injured.injuryWeeks, 0);
     // 治った日に40へ戻り、そのあとの週の練習と試合で少し上がる(週の処理が
     // 日付で走るようになり、治った後に練習が入る回がある。54 が出た)。
-    // 90から大きく下がったことを確かめる。
-    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 20));
+    // 90から大きく下がったことを確かめる(カップ戦の出場が数えられるように
+    // なり 62 も出た)。
+    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 30));
   });
 
   test(
