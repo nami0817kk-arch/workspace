@@ -370,32 +370,43 @@ void main() {
     });
 
     test('結果だけ見る自クラブの試合も、後半の途中に自動で交代する', () async {
-      final game = GameState();
-      await game.startNewGame('交代FC');
-      await game.playNextMatchday();
-      expect(game.isHalfTime, isTrue);
-      final team = game.userTeam;
-      final lineup = MatchEngine.lineupOf(team);
-      final onPitch = lineup.map((p) => p.id).toSet();
-      for (final p in team.players) {
-        p.fatigue = 0;
+      // 替える選手が試合の中で退場すると替えられない(退場した選手の交代は
+      // 無い)。そうなった試合は数えず、やり直す。
+      for (var tries = 0; tries < 5; tries++) {
+        final game = GameState();
+        await game.startNewGame('交代FC');
+        await game.playNextMatchday();
+        expect(game.isHalfTime, isTrue);
+        final team = game.userTeam;
+        final lineup = MatchEngine.lineupOf(team);
+        final onPitch = lineup.map((p) => p.id).toSet();
+        for (final p in team.players) {
+          p.fatigue = 0;
+        }
+        // ハーフタイムの線(60)には届かないが、後半の途中の線(50)は越える。
+        final tired = lineup.firstWhere((p) => p.position != Position.gk);
+        tired.fatigue = 55;
+        final bench = team.players
+            .firstWhere((p) => !onPitch.contains(p.id) && canPlay(p));
+        bench.position = tired.position;
+        bench.secondaryPositions = [];
+        bench.attributes = {for (final k in AttributeKeys.all) k: 99};
+        final benchApps = bench.careerAppearances;
+        final xi = List<String>.of(team.startingXI);
+
+        final result = await game.playSecondHalf();
+
+        expect(result, isNotNull);
+        if (result!.events.any((e) =>
+            e.type == MatchEventType.redCard && e.scorerId == tired.id)) {
+          continue;
+        }
+        expect(bench.careerAppearances, benchApps + 1,
+            reason: '後半の途中に控えが入っていない');
+        expect(team.startingXI, xi);
+        return;
       }
-      // ハーフタイムの線(60)には届かないが、後半の途中の線(50)は越える。
-      final tired = lineup.firstWhere((p) => p.position != Position.gk);
-      tired.fatigue = 55;
-      final bench =
-          team.players.firstWhere((p) => !onPitch.contains(p.id) && canPlay(p));
-      bench.position = tired.position;
-      bench.secondaryPositions = [];
-      bench.attributes = {for (final k in AttributeKeys.all) k: 99};
-      final benchApps = bench.careerAppearances;
-      final xi = List<String>.of(team.startingXI);
-
-      final result = await game.playSecondHalf();
-
-      expect(result, isNotNull);
-      expect(bench.careerAppearances, benchApps + 1, reason: '後半の途中に控えが入っていない');
-      expect(team.startingXI, xi);
+      fail('替える選手が退場しない試合が無かった');
     });
 
     test('ハーフタイムと後半の途中の両方で替えても、試合後の先発は元どおり', () async {

@@ -419,13 +419,18 @@ void main() {
     });
 
     test('スペインは EU 外3人まで・ドイツは自国籍12人以上で始まる', () async {
-      final es = GameState();
-      await es.startNewGame('国籍FC', theme: LeagueTheme.spain);
-      expect(es.nonEuPlayerCount, lessThanOrEqualTo(3));
-      expect(
-          es.userTeam.players
-              .where((p) => es.nationalityOf(p) != LeagueTheme.spain),
-          isNotEmpty);
+      // スペインの3部の外国籍は2割ほど。25人がたまたま全員自国籍になる
+      // こと(0.4%ほど)もあるので、3回始めて外国籍が混ざることを見る。
+      var foreigners = 0;
+      for (var i = 0; i < 3; i++) {
+        final es = GameState();
+        await es.startNewGame('国籍FC', theme: LeagueTheme.spain);
+        expect(es.nonEuPlayerCount, lessThanOrEqualTo(3));
+        foreigners += es.userTeam.players
+            .where((p) => es.nationalityOf(p) != LeagueTheme.spain)
+            .length;
+      }
+      expect(foreigners, greaterThan(0));
       final de = GameState();
       await de.startNewGame('国籍FC', theme: LeagueTheme.germany);
       expect(de.nationalPlayerCount, greaterThanOrEqualTo(12));

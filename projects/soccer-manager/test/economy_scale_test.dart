@@ -213,7 +213,8 @@ void main() {
     // 選手の作り方の運で 40〜90% ほど振れる(CI で 39.7%・30% が出た。
     // 2026-11-22 に手元で20回測り、直す前後で振れ幅は同じ)ので、下限は
     // 余らせる。見たいのは「人件費が年収の大きな割合を占める」こと。
-    expect(l.wageRatio, inInclusiveRange(0.25, 1.0), reason: log.join('\n'));
+    // 上も同じ運で振れる(2026-11-23 に手元で 100.003% が出た)ので 110% まで。
+    expect(l.wageRatio, inInclusiveRange(0.25, 1.1), reason: log.join('\n'));
     expect(l.of(LedgerCategory.broadcast), greaterThan(l.operatingIncome / 2),
         reason: log.join('\n'));
     expect(l.operatingIncome, inInclusiveRange(3000000, 8000000),
@@ -274,8 +275,11 @@ void main() {
       }
     }
 
+    // 年俸は能力に対して指数で伸びるので、部の強さのくじの運で真ん中が
+    // 大きく振れる(8ゲームでは、イタリア2部が 85〜119% と出た)。
+    // 24ゲームぶん集める。
     for (final theme in LeagueTheme.values) {
-      for (var n = 0; n < 8; n++) {
+      for (var n = 0; n < 24; n++) {
         final game = GameState();
         await game.startNewGame('計測FC', theme: theme);
         final s = game.save!;
@@ -309,8 +313,12 @@ void main() {
       // 2部の下限は 65%(実際のドイツ2部などは60〜70%。運で 68.9% が出た)。
       expect(median(ratios[(theme, 2)]!), inInclusiveRange(0.65, 1.1),
           reason: log.join('\n'));
+      // 3部は 110% 前後まで(運営費が入ったので、大きく超えると数季で資金が
+      // 尽きる)。24ゲームでも真ん中は ±8% ほど振れるので、上限は 125%。
+      expect(median(ratios[(theme, 3)]!), inInclusiveRange(0.75, 1.25),
+          reason: log.join('\n'));
     }
-  }, timeout: const Timeout(Duration(minutes: 5)));
+  }, timeout: const Timeout(Duration(minutes: 10)));
 
   group('旧セーブの換算', () {
     test('版1のセーブは、読み込みで一度だけ新しい桁に直る', () async {

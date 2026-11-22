@@ -1369,6 +1369,15 @@ class Player {
   static int nationalityHash(String id) =>
       id.codeUnits.fold<int>(37, (a, c) => (a * 31 + c) % 1000003);
 
+  /// [key]から決まる 0 以上 1 未満の値(国籍・国内育成のくじに使う)。
+  ///
+  /// [nationalityHash]の下の桁をそのまま使うと、続き番号の id(pl10, pl11,
+  /// …)でほぼ同じ値が続き、25人のクラブがそろって自国籍になったり外国籍に
+  /// なったりした(新しいゲームの自クラブの17%が外国籍0人。2026-11-23)。
+  /// 黄金比の乗数で散らす(Web でも整数の精度に収まる大きさ)。
+  static double spreadRoll(String key) =>
+      (nationalityHash(key) * 2654435761 % 4294967296) / 4294967296;
+
   /// 所属クラブの国とは別の国籍になる選手か(1割)。国籍を覚えていない
   /// 選手の国籍はこれで決まるので、生成のときに国内育成の印を付けるのにも使う。
   static bool foreignNationalFromId(String id) =>
