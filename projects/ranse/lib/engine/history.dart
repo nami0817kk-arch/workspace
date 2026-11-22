@@ -212,6 +212,125 @@ final kHistory = <HistEvent>[
     _cut(g, '毛利', .6);
     return '美濃の関ヶ原で、徳川家康の東軍が石田三成の西軍を破った。';
   }),
+  // ---- 2026-11-23 追加: 国ごとの出来事 ----
+  HistEvent('koriyama', 1541, (g) {
+    _grow(g, '毛利', 5);
+    _cut(g, '尼子', .85);
+    return '安芸の吉田郡山城を囲んだ尼子の大軍が、毛利元就の籠城の前に退いた。';
+  }),
+  HistEvent('tenbun', 1542, (g) {
+    _cut(g, '伊達', .85);
+    return '陸奥の伊達家で、稙宗と晴宗の父子が争い始めた。奥羽の諸家を巻き込む大乱になった。';
+  }),
+  HistEvent('kawagoe', 1546, (g) {
+    _grow(g, '北条', 10);
+    return '武蔵の河越で、北条氏康がわずかな兵の夜襲で上杉方の大軍を破った。';
+  }),
+  HistEvent('miyoshi', 1549, (g) {
+    _grow(g, '三好', 6);
+    return '三好長慶が主筋の細川晴元を破り、京の実権を握った。';
+  }),
+  HistEvent('taineiji', 1551, (g) {
+    return '周防の大内義隆が、家臣の陶晴賢の謀反で自害した。西国一の大名家が揺らいだ。';
+  }),
+  HistEvent('sankoku', 1554, (g) {
+    return '武田・北条・今川が、互いに娘を嫁がせて手を結んだ（甲相駿三国同盟）。';
+  }),
+  HistEvent('bouchou', 1557, (g) {
+    _grow(g, '毛利', 8);
+    return '毛利元就が周防・長門を平らげ、大内家は滅んだ。';
+  }),
+  HistEvent('kanto_shutsujin', 1561, (g) {
+    _cut(g, '北条', .9);
+    return '長尾景虎が関東の諸将を率いて小田原城を囲み、上杉の名跡と関東管領を継いで上杉政虎と名乗った。';
+  }),
+  HistEvent('mikawa_ikko', 1563, (g) {
+    _cut(g, '松平', .9);
+    return '三河で一向一揆が起こり、松平家の家臣の多くが門徒の側についた。';
+  }),
+  HistEvent('hanbei', 1564, (g) {
+    _cut(g, '斎藤', .85);
+    return '美濃の竹中半兵衛が、わずかな手勢で主家の稲葉山城を乗っ取り、のちに返した。';
+  }),
+  HistEvent('eiroku', 1565, (g) {
+    _cut(g, '三好', .9);
+    return '京で、将軍足利義輝が三好の軍勢に襲われ、自ら刀を振るって討たれた。';
+  }),
+  HistEvent('daibutsu', 1567, (g) {
+    return '奈良で三好と松永久秀の軍勢が争い、東大寺の大仏殿が焼け落ちた。';
+  }),
+  HistEvent('mimasetoge', 1569, (g) {
+    _cut(g, '北条', .9);
+    return '武田信玄が小田原城を囲んで引き揚げる途中、相模の三増峠で北条の追撃を打ち破った。';
+  }),
+  HistEvent('kanegasaki', 1570, (g) {
+    return '越前に攻め入った織田信長は、義弟・浅井長政の裏切りに遭い、金ヶ崎から命からがら京へ逃げ帰った。';
+  }),
+  HistEvent('motonari_death', 1571, (g) {
+    _cut(g, '毛利', .9);
+    return '毛利元就が、吉田郡山城で世を去った。「三本の矢」の教えが語り継がれた。';
+  }),
+  HistEvent('nagashima', 1574, (g) {
+    return '伊勢長島の一向一揆が、織田の大軍に囲まれ、焼き尽くされた。';
+  }),
+  HistEvent('hisahide', 1577, (g) {
+    _cut(g, '三好', .7);
+    return '大和の松永久秀が信長に背き、信貴山城で名物の茶釜とともに果てた。';
+  }),
+  HistEvent('otate', 1578, (g) {
+    _cut(g, '上杉', .85);
+    _grow(g, '武田', 3);
+    return '上杉家で、謙信の養子・景勝と景虎が跡目を争った（御館の乱）。景勝が勝った。';
+  }),
+  HistEvent('arioka', 1579, (g) {
+    return '摂津の荒木村重が信長に背いて有岡城に籠もり、城に残された一族は処刑された。';
+  }),
+  HistEvent(
+    'azuchi_shuron',
+    1579,
+    (g) => '安土城下で、浄土宗と法華宗の僧が信長の前で問答をさせられた（安土宗論）。',
+  ),
+  HistEvent('tottori', 1581, (g) {
+    _cut(g, '毛利', .9);
+    return '因幡の鳥取城が、羽柴秀吉の兵糧攻めで開城した。城中は、飢えで地獄のありさまだったという。';
+  }),
+  HistEvent('kenou', 1582, (g) {
+    return '九州のキリシタン大名が、四人の少年を使節としてローマへ送り出した（天正遣欧使節）。';
+  }),
+  HistEvent('takamatsu', 1582, (g) {
+    _cut(g, '毛利', .9);
+    return '羽柴秀吉は備中高松城を水攻めにしていたが、本能寺の知らせを受けると毛利と和を結び、京へ駆け戻った。';
+  }),
+  HistEvent('tensho_jingo', 1582, (g) {
+    _grow(g, '北条', 4);
+    _grow(g, '松平', 6);
+    return '主のいなくなった甲斐・信濃を、徳川・北条・上杉が奪い合った（天正壬午の乱）。';
+  }),
+  HistEvent('osakajo', 1583, (g) => '羽柴秀吉が、石山本願寺の跡に大坂城を築き始めた。'),
+  HistEvent('hitotoribashi', 1585, (g) {
+    _cut(g, '佐竹', .9);
+    _cut(g, '蘆名', .9);
+    return '奥州の人取橋で、伊達政宗が佐竹・蘆名らの連合軍の猛攻をしのいだ。';
+  }),
+  HistEvent('tensho_jishin', 1586, (g) {
+    return '中部から近畿にかけて大地震が起こり、多くの城や町が崩れた（天正地震）。';
+  }),
+  HistEvent('kitano', 1587, (g) {
+    return '京の北野天満宮で大茶会が開かれた。茶の心得があれば、身分を問わず誰でも加われるという触れが出た。';
+  }),
+  HistEvent('edo', 1590, (g) {
+    _grow(g, '松平', 10);
+    return '徳川家康が、北条の旧領の関東へ移され、江戸に入った。';
+  }),
+  HistEvent('hitobarai', 1591, (g) => '武士・百姓・町人の身分を改めて定める令が出た。'),
+  HistEvent('fushimi', 1594, (g) => '秀吉が、伏見に新しい城と城下町を築き始めた。'),
+  HistEvent('keicho_jishin', 1596, (g) {
+    return '畿内を大地震が襲い、伏見城の天守が崩れた。土佐には南蛮船サン・フェリペ号が流れ着いた。';
+  }),
+  HistEvent('keicho', 1597, (g) => '朝鮮との和議が破れ、大名たちは再び海を渡った（慶長の役）。'),
+  HistEvent('toshiie', 1599, (g) {
+    return '豊臣家を支えた前田利家が世を去った。徳川家康と石田三成の対立が、表に出始めた。';
+  }),
 ];
 
 /// [year] までにまだ起きていない史実を起こす。[quietBefore] より前の年のものは見聞録に書かない
@@ -229,6 +348,27 @@ void applyHistory(Game g, int year, {int? quietBefore}) {
 
 /// 史実の岐路（その年に必ず優先して出る）。
 const kHistoryScenes = {'okehazama', 'honnoji', 'hiei', 'earthquake'};
+
+/// 同じ出来事を別の目で描いた岐路の組。片方が出たら、もう片方は出さない。
+const _twinPairs = [
+  ('h_w_kitano', 'h_l_kitano'),
+  ('h_w_sakai', 'h_l_sakai'),
+  ('h_w_nagasaki', 'h_l_nagasaki'),
+  ('h_w_funai_hospital', 'h_l_funai'),
+  ('h_w_tensho_shisetsu', 'h_l_envoys'),
+  ('h_w_ishiyama', 'h_l_ishiyama'),
+  ('h_e_jukeini', 'h_l_jukeini'),
+  ('h_e_erinji', 'h_c_erinji'),
+];
+
+/// [id] と同じ出来事の別の岐路（なければ null）。
+String? twinScene(String id) {
+  for (final (a, b) in _twinPairs) {
+    if (a == id) return b;
+    if (b == id) return a;
+  }
+  return null;
+}
 
 bool isHistoryScene(String id) =>
     id.startsWith('h_') || kHistoryScenes.contains(id);

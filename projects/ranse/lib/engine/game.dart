@@ -5,6 +5,10 @@ import 'birth.dart';
 import 'childhood.dart';
 import 'data.dart';
 import 'history.dart';
+import 'history_east.dart';
+import 'history_life.dart';
+import 'history_rumor.dart';
+import 'history_west.dart';
 import 'life.dart';
 import 'rng.dart';
 import 'ways.dart';
@@ -39,11 +43,18 @@ class Prompt {
 
 class Game extends ChangeNotifier {
   Game({Rng? rng, this.onCheckpoint}) : rng = rng ?? Rng() {
-    childScenes = buildChildScenes();
+    childScenes = [
+      ...buildChildScenes(),
+      ...buildChildHistoryScenes(),
+      ...buildChildRumorScenes(),
+    ];
     adultScenes = [
       ...buildAdultScenes(),
       ...buildWayScenes(),
       ...buildHistoryScenes(),
+      ...buildHistoryEastScenes(),
+      ...buildHistoryWestScenes(),
+      ...buildLifeHistoryScenes(),
     ];
   }
 
@@ -449,13 +460,25 @@ class Game extends ChangeNotifier {
     final cand = [
       for (final s in childScenes)
         if (!hasFlag('scene:${s.id}') &&
+            !_twinDone(s.id) &&
             a >= s.minAge &&
             a <= s.maxAge &&
             (s.ageOk == null || s.ageOk!(this, a)) &&
             s.cond(this))
           s,
     ];
-    final done = l.flags.where((f) => f.startsWith('scene:')).length;
+    // その年の史実の岐路は、数の上限や確率に関係なく必ず出す。
+    final hist = cand.where((s) => isHistoryScene(s.id)).toList();
+    if (hist.isNotEmpty) {
+      final s = hist.first;
+      l.t = a * 2 + 1;
+      setFlag('scene:${s.id}');
+      s.run(this, _endYear);
+      return;
+    }
+    final done = l.flags
+        .where((f) => f.startsWith('scene:') && !isHistoryScene(f.substring(6)))
+        .length;
     // 幼少期の岐路は6つほどに収める。少なすぎれば出やすく、多すぎれば出にくくする。
     var p = .5;
     if (a >= 11 && done < 4) p = .9;
@@ -539,7 +562,13 @@ class Game extends ChangeNotifier {
       a <= s.maxAge &&
       (s.ageOk == null || s.ageOk!(this, a)) &&
       (s.repeat || !hasFlag('scene:${s.id}')) &&
+      !_twinDone(s.id) &&
       s.cond(this);
+
+  bool _twinDone(String id) {
+    final t = twinScene(id);
+    return t != null && hasFlag('scene:$t');
+  }
 
   /// 年の途中。重点で決まった岐路があればそれを、なければ確率で一つ出す。
   void _adultYearScene() {
