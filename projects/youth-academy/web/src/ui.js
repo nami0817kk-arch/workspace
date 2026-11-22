@@ -1203,6 +1203,8 @@
       R.startScene(sc);
       R.poss = sc.side;
       sceneHead.replaceChildren(h('div', { class: 'scene-title' }, h('b', {}, (sc.ml || sc.minute) + "'"), sc.typeName), h('div', { class: 'tagrow' }));
+      // 札は攻めているゴールと反対の隅へ（2026-11-23：左のゴールを攻める場面で、左上の札がシュートやセーブを隠していた）。ホームは右、アウェイは左へ攻める
+      sceneHead.classList.toggle('right', sc.side === 'away');
       const tags = fxToShow(sc);
       S.tags = tags;
       bannerBox.replaceChildren();
