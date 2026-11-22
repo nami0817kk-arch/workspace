@@ -85,7 +85,9 @@ class SaveStore {
 
   /// 終わった人生の結末を図鑑に記す。初めて見た最期なら true。
   Future<bool> recordEnding(Game g) async {
+    // 保存を読み込むあいだに次の人生が始まることがあるので、先にこの人生の値を控える。
     final e = buildEnding(g);
+    final name = g.l.name, age = g.age, year = g.year;
     final d = await dex();
     final old = d[e.key];
     final isNew = old == null;
@@ -98,9 +100,9 @@ class SaveStore {
         text: e.text,
         way: e.way,
         kind: e.kind,
-        name: g.l.name,
-        age: g.age,
-        year: g.year,
+        name: name,
+        age: age,
+        year: year,
       );
     }
     final p = await SharedPreferences.getInstance();

@@ -40,6 +40,20 @@ void main() {
     expect(key, isNot(contains(g.l.name)));
   });
 
+  test('記す途中で次の人生が始まっても、図鑑にはその人生の名前と歳が残る', () async {
+    final store = SaveStore();
+    final g = _finishedLife(3);
+    final name = g.l.name, age = g.age;
+    final key = buildEnding(g).key;
+    final pending = store.recordEnding(g);
+    // 記している途中で、同じ Game に次の人生を始める。
+    g.start(rollBirth(Rng(99)));
+    await pending;
+    final d = await store.dex();
+    expect(d[key]!.name, name);
+    expect(d[key]!.age, age);
+  });
+
   testWidgets('タイトルから図鑑を開くと、見た最期が道ごとに並ぶ', (tester) async {
     tester.view.physicalSize = const Size(390 * 3, 844 * 3);
     tester.view.devicePixelRatio = 3;

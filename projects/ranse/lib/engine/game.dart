@@ -168,7 +168,8 @@ class Game extends ChangeNotifier {
       return;
     }
     final res = c.f?.call();
-    if (res != null) log(res);
+    // 岐路の結果には場面の名前を付ける（「今年の重点」は文の中に「今年は…」とあるので付けない）。
+    if (res != null) log(p.title == '今年の重点' ? res : '【${p.title}】$res');
     p.after();
   }
 

@@ -155,12 +155,26 @@ String _joyLine(double aj) => aj >= 65
 /// 結果カードに載せる「選んだ道」を3〜4行に絞る（初め・終わり・有名人や歴史の絡む行を優先）。
 List<String> pickHighlights(List<String> path, {int max = 4}) {
   if (path.length <= max) return [...path];
-  bool notable(String s) => RegExp(
-    '信長|秀吉|家康|謙信|信玄|義元|光秀|政宗|歴史|天下|大名|城主|下剋上|出家|夫婦|輿入れ|仕え|取り立て|家督|商い|野盗',
-  ).hasMatch(s);
+  // 行の重み: 史実の出来事・有名人 > 身分の大きな変化 > 人生の節目。重い行から選び、並びは年の順に戻す。
+  final heavy = RegExp(
+    '信長|秀吉|家康|謙信|景虎|信玄|義元|光秀|政宗|利休|宗易|ザビエル|歴史|天下|'
+    '桶狭間|本能寺|比叡山|関ヶ原|長篠|川中島|小田原|山崎|賤ヶ岳|高野山|石山|一揆|朝鮮',
+  );
+  final middle = RegExp('大名|城主|家老|下剋上|家督|取り立て|女城主|御用|後見');
+  final light = RegExp('出家|夫婦|輿入れ|仕え|商い|野盗|弟子|庄屋|工房');
+  int weight(String s) => heavy.hasMatch(s)
+      ? 3
+      : middle.hasMatch(s)
+      ? 2
+      : light.hasMatch(s)
+      ? 1
+      : 0;
   final picked = <int>{0, path.length - 1};
-  for (var i = 1; i < path.length - 1 && picked.length < max; i++) {
-    if (notable(path[i])) picked.add(i);
+  final order = [for (var i = 1; i < path.length - 1; i++) i]
+    ..sort((a, b) => weight(path[b]).compareTo(weight(path[a])));
+  for (final i in order) {
+    if (picked.length >= max || weight(path[i]) == 0) break;
+    picked.add(i);
   }
   final step = (path.length ~/ max).clamp(1, 99);
   for (var i = step; i < path.length - 1 && picked.length < max; i += step) {
