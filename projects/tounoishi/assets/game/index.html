@@ -173,7 +173,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v28</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v29</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1619,7 +1619,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v28 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v29 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1994,7 +1994,12 @@ function upLine(s3){var S=SPEC[s3],lv=(g.slv||{})[s3]||0,c=LCOST[S.t][lv];if(c==
 // 図鑑の冒険者
 var ENDESC={yuu:'毎周の最後に来る宿敵。逃げては強くなって戻る',sen:'体力が高い前衛。突進する',tou:'足が速く、宝箱に目ざとい',mah:'離れて魔法を撃ち、魔分を残す',sou:'仲間を回復する',yumi:'遠くから矢を射る',kis:'仲間をかばう',wana:'通った道に罠を置く',ura:'コアの方向がうっすら分かる',kou:'土の壁を掘り抜く',ren:'養分を吸って石人形を呼ぶ',nin:'速く、凍結・眠り・しびれが効かない',doll:'錬金術師が呼ぶ石の人形'};
 function dexEn(k){if(DEX['en_'+k])return;DEX['en_'+k]={seen:1};kvSet('tou-dex',JSON.stringify(DEX));}
-function dimg(k){k=DIMGK[k]||k;var src=GSRC[k]||GSRC[k+'_moss'];return src?'<img class="dimg" alt="" src="'+src+'">':'';}
+// 絵は一度だけ Blob にして、短い blob: の参照で使い回す（一覧を描き直すたびに 30KB の文字を埋め込まない）
+var BURL={};
+function imgURL(k){if(BURL[k])return BURL[k];var src=GSRC[k];if(!src)return null;
+ try{var b=atob(src.split(',')[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);BURL[k]=URL.createObjectURL(new Blob([a],{type:'image/png'}));}catch(_){BURL[k]=src;}
+ return BURL[k];}
+function dimg(k){k=DIMGK[k]||k;var u=imgURL(GSRC[k]?k:k+'_moss');return u?'<img class="dimg" alt="" src="'+u+'">':'';}
 var DDESC={slime:'壁まで真っすぐ進み、養分を運ぶ。弱るとツボミから花に',mush:'動かない。胞子で子株を植え、近くの冒険者を眠らせる',worm:'幼虫→さなぎ→成虫と育つ。成虫は卵を産む',beetle:'つがいで卵を産む。魔法に強い',lizard:'広い所に巣を作り、巣で卵を産む',bat:'土の天井の下に3匹集まると増える',dragon:'横にしか動かず横に炎。傷つくと卵に戻る',golem:'とても硬い。ゆっくり歩く',wisp:'魔分を運び、冒険者の MP を削る',pixie:'近くの仲間を癒す',imp:'冒険者を惑わせ、道に迷わせる',ghost:'壁をすり抜けて冒険者に向かう',gargoyle:'石の像になって2匹に分かれる',harpy:'遠くの冒険者に気づき、フェロモンで止める',demon:'冒険者の攻撃を弱める。何でも食べる頂点',lich:'近くで倒れた冒険者をスケルトンに変える',skeleton:'亡骸から起き上がる',mimic:'宝箱に化けている',chimera:'3つの土の力を持つ',gslime:'倒れると大量の養分をばらまく',guardian:'コアを守り、塔の魔物を硬くする',phoenix:'一度だけ炎の中からよみがえる',d_sleepy:'冒険者の攻撃を大きく弱める。よく眠る',d_blue:'離れて魔法で撃つ',d_bigblue:'大きく強い魔法の使い手',evilgod:'塔でいちばん強い力を持つ'};
 var DIMGK={d_sleepy:'demon_sleepy',d_blue:'demon_blue',d_bigblue:'demon_bigblue'};
 function enRows(){return Object.keys(EN).map(function(k){return DEX['en_'+k]?'<li>'+dimg(k)+'<b>'+EN[k].n+'</b><small>'+ENDESC[k]+'</small></li>':'<li class="un">'+dimg(k)+'<b>？？？</b><small>まだ来ていない</small></li>';}).join('');}
