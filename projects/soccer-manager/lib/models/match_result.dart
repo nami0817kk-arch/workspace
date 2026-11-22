@@ -3,6 +3,11 @@ import 'weather.dart';
 
 enum MatchEventType { goal, chance, yellowCard, redCard }
 
+/// 得点・決定機がどのプレーから生まれたか。PK と直接フリーキックだけを
+/// 記録する(それ以外は null)。PK は外れても[MatchEventType.chance]として
+/// 必ず残すので、PK の本数を数えられる。
+enum SetPieceKind { penalty, directFreeKick }
+
 class MatchEvent {
   final int minute;
   final String teamId;
@@ -20,6 +25,9 @@ class MatchEvent {
   /// assistNameに対応する選手ID。
   final String? assistId;
 
+  /// PK・直接フリーキックから生まれた得点・決定機なら、その種類。
+  final SetPieceKind? setPiece;
+
   MatchEvent({
     required this.minute,
     required this.teamId,
@@ -28,6 +36,7 @@ class MatchEvent {
     this.type = MatchEventType.goal,
     this.assistName,
     this.assistId,
+    this.setPiece,
   });
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +47,7 @@ class MatchEvent {
         'type': type.name,
         'assistName': assistName,
         'assistId': assistId,
+        if (setPiece != null) 'setPiece': setPiece!.name,
       };
 
   factory MatchEvent.fromJson(Map<String, dynamic> json) => MatchEvent(
@@ -52,6 +62,13 @@ class MatchEvent {
         ),
         assistName: json['assistName'] as String?,
         assistId: json['assistId'] as String?,
+        setPiece: json['setPiece'] == null
+            ? null
+            : enumFromName(
+                SetPieceKind.values,
+                json['setPiece'] as String?,
+                SetPieceKind.penalty,
+              ),
       );
 }
 

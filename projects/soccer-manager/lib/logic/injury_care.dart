@@ -23,6 +23,15 @@ class InjuryCare {
   /// 手術か保存療法かを選ばせる、靭帯の怪我の長さ(週)。
   static const int decisionWeeks = 6;
 
+  /// 手術か保存療法かを選ばせる怪我か。長い靭帯の怪我と、長期の怪我
+  /// (骨折・前十字靭帯・アキレス腱)は長さによらず選ばせる。
+  static bool needsDecision(Player p) {
+    final type = p.injuryType;
+    if (type == null || p.injuryWeeks <= 0) return false;
+    if (type.isLongTerm) return true;
+    return type == InjuryType.ligament && p.injuryWeeks >= decisionWeeks;
+  }
+
   /// 手術の費用(5部の物差しの万円)。
   static const int surgeryCostTier5 = 300;
 
@@ -43,6 +52,13 @@ class InjuryCare {
         .fold<int>(31, (a, c) => (a * 31 + c) % 1000003);
     final pool = switch (type) {
       InjuryType.ligament => const [InjuryPart.knee, InjuryPart.ankle],
+      InjuryType.acl => const [InjuryPart.knee],
+      InjuryType.achilles => const [InjuryPart.ankle],
+      InjuryType.fracture => const [
+          InjuryPart.foot,
+          InjuryPart.ankle,
+          InjuryPart.shoulder
+        ],
       InjuryType.muscle => const [
           InjuryPart.thigh,
           InjuryPart.calf,
@@ -58,10 +74,14 @@ class InjuryCare {
     return pool[h % pool.length];
   }
 
-  /// 「膝の靭帯損傷」のような説明。
+  /// 「膝の靭帯損傷」のような説明。前十字靭帯・アキレス腱は名前に部位が
+  /// 入っているので、名前だけ。
   static String describe(Player p) {
     final type = p.injuryType;
     if (type == null) return '';
+    if (type == InjuryType.acl || type == InjuryType.achilles) {
+      return type.label;
+    }
     return Tr.pick('${partOf(p).label}の${type.label}',
         '${type.label} (${partOf(p).label})');
   }

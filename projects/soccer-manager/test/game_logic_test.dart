@@ -3223,8 +3223,8 @@ void main() {
   });
 
   test(
-      'GameState.playNextMatchday counts down a user player\'s international duty',
-      () async {
+      'GameState.playNextMatchday brings a player back from international duty '
+      'once the window is over', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final player = gameState.userTeam.players.first;
@@ -3232,7 +3232,11 @@ void main() {
 
     await gameState.playNextMatchday();
 
-    expect(player.internationalDutyWeeksRemaining, 1);
+    // 2026-11-22: 代表は FIFA の国際マッチウィークの間だけ抜ける形にした。
+    // 以前は「節ごとに残り週を1つ減らす」(2→1)を固定していたが、いまは
+    // 代表ウィークの外(第1節の日)に進めば、残りの週によらずクラブに戻る。
+    expect(player.internationalDutyWeeksRemaining, 0);
+    expect(player.isOnInternationalDuty, isFalse);
   });
 
   test(

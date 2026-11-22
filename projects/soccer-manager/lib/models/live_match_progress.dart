@@ -73,6 +73,9 @@ class LiveMatchProgress {
   /// 使った交代枠。再開で枠が戻らないようにする。
   final int substitutionsUsed;
 
+  /// 試合中に交代した回数(ハーフタイムは数えない)。再開で戻らないように。
+  final int substitutionWindowsUsed;
+
   /// 前半。[secondHalf]が null の間は、[resumeMinute]までの途中経過。
   final HalfTally firstHalf;
 
@@ -84,6 +87,7 @@ class LiveMatchProgress {
     required this.matchday,
     required this.resumeMinute,
     required this.substitutionsUsed,
+    this.substitutionWindowsUsed = 0,
     required this.firstHalf,
     this.secondHalf,
   });
@@ -93,6 +97,7 @@ class LiveMatchProgress {
         'matchday': matchday,
         'resumeMinute': resumeMinute,
         'substitutionsUsed': substitutionsUsed,
+        'substitutionWindowsUsed': substitutionWindowsUsed,
         'firstHalf': firstHalf.toJson(),
         'secondHalf': secondHalf?.toJson(),
       };
@@ -103,6 +108,7 @@ class LiveMatchProgress {
         matchday: json['matchday'] as int,
         resumeMinute: json['resumeMinute'] as int? ?? 1,
         substitutionsUsed: json['substitutionsUsed'] as int? ?? 0,
+        substitutionWindowsUsed: json['substitutionWindowsUsed'] as int? ?? 0,
         firstHalf: HalfTally.fromJson(
             (json['firstHalf'] as Map?)?.cast<String, dynamic>() ?? const {}),
         secondHalf: json['secondHalf'] == null

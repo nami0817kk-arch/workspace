@@ -1701,35 +1701,93 @@ extension GameStateTransfer on GameState {
     return autoSold;
   }
 
-  /// 代表召集の週次処理: 期間終了・新規招集抽選を行う(ユーザークラブのみ)。
-  /// スタメンから招集された場合は自動で欠員を埋める。招集された選手名を返す(UI通知用)。
+  /// 代表に呼ばれる力(総合力)。この国々はどれも強豪なので、同じ線にする。
+  static const int internationalCallUpMinOverall = 75;
+
+  /// 1つの代表がこのリーグから呼ぶ人数の上限。代表は23〜26人で、その国の
+  /// リーグにいる選手が多く、外国のリーグの選手は少ない。
+  static const int homeNationCallUpQuota = 18;
+  static const int foreignNationCallUpQuota = 5;
+
+  /// 代表召集の週次処理(2026-11-22 に作り直した)。
+  ///
+  /// 以前は一年中、自クラブの選手(総合力78以上)だけを週6%の抽選で1〜2週
+  /// 呼んでいて、リーグ戦の週にも抜けていた。いまは実際の FIFA の国際
+  /// マッチウィーク(9・10・11・3月。暦の[SeasonCalendar.isInternationalWindow]
+  /// で、リーグ戦を入れない週)に入った最初の週の処理で、リーグの全クラブ
+  /// から代表に入る力の選手を一斉に呼ぶ。選手の国籍ごとに総合力の高い順に、
+  /// その国の枠まで。代表ウィークが終われば戻る([_releaseInternationalDuty])。
+  /// 6月の代表ウィークはリーグ戦が終わった後(オフ)で、週の処理が止まって
+  /// いるので呼ばない。アフリカの国籍がいないので、冬のアフリカ・
+  /// ネイションズカップは無い。自クラブで呼ばれた選手の名前を返す(通知用)。
   List<String> _advanceInternationalDuty() {
-    final team = userTeam;
-    for (final p in team.players) {
-      if (p.internationalDutyWeeksRemaining > 0) {
-        p.internationalDutyWeeksRemaining -= 1;
+    final s = _save!;
+    final teams = s.league.teams;
+    for (final t in teams) {
+      for (final p in t.players) {
+        if (p.internationalDutyWeeksRemaining > 0) {
+          p.internationalDutyWeeksRemaining -= 1;
+        }
       }
+    }
+    final cal = seasonCalendar;
+    final day = today;
+    final weekBefore = DateTime(day.year, day.month, day.day - 7);
+    // 代表ウィークに入った最初の週の処理だけで呼ぶ(9日間の代表ウィークに
+    // 週の処理が2回入っても、二度呼ばない)。
+    if (!cal.isInternationalWindow(day) ||
+        cal.isInternationalWindow(weekBefore)) {
+      return const [];
     }
 
-    final called = <String>[];
-    var lineupChanged = false;
-    final eligible = team.players.where(
-      (p) =>
-          !p.isInjured &&
-          !p.isLoan &&
-          !p.isOnInternationalDuty &&
-          p.overall >= 78,
-    );
-    for (final p in eligible) {
-      if (GameState._dutyRng.nextDouble() < 0.06) {
-        p.internationalDutyWeeksRemaining = 1 + GameState._dutyRng.nextInt(2);
-        called.add(p.name);
-        if (team.startingXI.contains(p.id)) lineupChanged = true;
+    final foreign = _foreignTeamIds();
+    final byNation = <LeagueTheme, List<Player>>{};
+    final teamOf = <String, Team>{};
+    for (final t in teams) {
+      final club = t.id == s.userTeamId ? null : t;
+      for (final p in t.players) {
+        if (p.isInjured ||
+            p.isLoanedOut ||
+            p.isOnInternationalDuty ||
+            p.overall < internationalCallUpMinOverall) {
+          continue;
+        }
+        byNation.putIfAbsent(_nationalityAt(p, club, foreign), () => []).add(p);
+        teamOf[p.id] = t;
       }
     }
-    if (lineupChanged) {
-      LineupUtils.autoFill(team);
+    final home = currentLeagueTheme;
+    final called = <String>[];
+    for (final entry in byNation.entries) {
+      final quota =
+          entry.key == home ? homeNationCallUpQuota : foreignNationCallUpQuota;
+      final pool = entry.value..sort((a, b) => b.overall.compareTo(a.overall));
+      for (final p in pool.take(quota)) {
+        p.internationalDutyWeeksRemaining = 1;
+        if (teamOf[p.id]?.id == s.userTeamId) called.add(p.name);
+      }
     }
     return called;
   }
+
+  /// 代表ウィークが終わったら(今日が代表ウィークの外なら)、代表に行って
+  /// いる選手を戻す。週の処理の曜日と代表ウィークの終わりがずれても、
+  /// 次のリーグ戦の前に必ず戻るように、今日を進めるたびに見る。
+  void _releaseInternationalDuty() {
+    final s = _save!;
+    if (seasonCalendar.isInternationalWindow(today)) return;
+    for (final t in s.league.teams) {
+      for (final p in t.players) {
+        p.internationalDutyWeeksRemaining = 0;
+      }
+    }
+  }
+
+  /// テスト用: 代表召集の週次処理を、今日の日付で走らせる。
+  @visibleForTesting
+  List<String> debugAdvanceInternationalDuty() => _advanceInternationalDuty();
+
+  /// テスト用: 代表ウィークの外なら代表の選手を戻す。
+  @visibleForTesting
+  void debugReleaseInternationalDuty() => _releaseInternationalDuty();
 }

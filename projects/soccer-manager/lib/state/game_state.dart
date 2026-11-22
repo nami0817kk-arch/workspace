@@ -1455,7 +1455,6 @@ class GameState extends ChangeNotifier {
   /// 資金マイナスの長期化により理事会の信頼度が下がった場合の警告文。ない場合はnull。
   String? lastBudgetCrisisWarning;
 
-  static final Random _dutyRng = Random();
   static final Random _aiTransferRng = Random();
 
   /// ダービー戦は観客動員(収入)・監督への信頼度への影響がともに増幅される。
@@ -1495,12 +1494,19 @@ class GameState extends ChangeNotifier {
   InteractiveHalfState? _liveSecondHalfState;
   int _liveSubstitutionsUsed = 0;
 
+  /// 試合中に交代した回数(ハーフタイムは数えない)と、最後に交代した
+  /// 止まった場面の印(同じ場面の続けての交代は1回と数える)。
+  int _liveSubWindowsUsed = 0;
+  String? _liveSubWindowKey;
+
   /// 再起動後に後半の途中から再開するときの、後半の途中経過と再開する分。
   /// [GameStateMatch.playSecondHalf]が一度だけ使う。
   ({HalfTally tally, int resumeMinute})? _liveSecondHalfResume;
   static const int maxSubstitutionsPerMatch = substitutionsPerMatch;
+  static const int maxSubstitutionWindowsPerMatch = substitutionWindowsPerMatch;
 
-  /// 結果だけ見る自クラブの試合で、ハーフタイムに自動で行った交代。
+  /// 結果だけ見る自クラブの試合で、ハーフタイムと後半の途中(60〜75分)に
+  /// 自動で行った交代(行った順)。
   /// 試合の確定([GameStateMatch._finalizeSecondHalf])で出場を数え、先発の
   /// 指定を元に戻してから空にする。
   List<AutoSubstitutionPlan> _liveAutoSubPlans = [];
