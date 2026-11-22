@@ -53,6 +53,28 @@ void main() {
     }
   });
 
+  test('初代との差を埋めた仕組みが入っている（0.6.0・試作 v13）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'function touchesOpen(', // 掘ったマスの隣だけ掘れる
+      'function plantStep(', // コケのツボミと花
+      'function rebirth(', // ドラゴンの生まれ変わり
+      'function dragonFire(', // 横の炎
+      'function stepOn(', // ふん・フェロモン
+      'function ringAround(', // 魔法陣
+      'function heroSkill(', // 冒険者の MP と技・たいまつ
+      'function nextDp(', // 塔が伸びた時の掘る力
+      'function upLine(', // 系統の強化
+      'function armyPower(', // 軍パワー
+      'function advice(', // 負けた時の助言
+      'var CHALS=', // チャレンジ
+      'var TUT=', // ヒント
+      'function phase(', // 朝昼夜
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('pubspec の assets に HTML が登録されている', () {
     final pubspec = File('pubspec.yaml').readAsStringSync();
     expect(pubspec, contains(gameAsset));
