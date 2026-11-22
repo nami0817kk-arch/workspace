@@ -587,9 +587,9 @@ extension GameStateTransfer on GameState {
   List<String> _advanceAiTransfers() {
     final s = _save!;
     final window = currentTransferWindow;
-    if (window?.opens != _aiMovedWindowOpens) {
-      _aiMovedWindowOpens = window?.opens;
-      _aiMovedThisWindow.clear();
+    if (window?.opens != s.aiMovedWindowOpens) {
+      s.aiMovedWindowOpens = window?.opens;
+      s.aiMovedThisWindow.clear();
     }
     final foreign = _foreignTeamIds();
     final home = currentLeagueTheme;
@@ -604,7 +604,10 @@ extension GameStateTransfer on GameState {
       // 行き先のクラブも国の登録の決まりを守る(同じ国の中の移籍)。
       canRegister: (to, p) =>
           _cpuCanRegister(to, p, fromCountry: home, foreign: foreign),
-      recentlyMoved: _aiMovedThisWindow,
+      recentlyMoved: s.aiMovedThisWindow,
+      // 仮契約を結んだ選手は動かさない(動くと 7月1日に元のクラブに
+      // いないため、仮契約が黙って消えていた)。
+      reserved: {for (final c in s.preContracts) c.playerId},
     );
     if (moves.isEmpty) return const [];
     for (final m in moves) {
@@ -1896,7 +1899,11 @@ extension GameStateTransfer on GameState {
           _clearPlayerRoleReferences(team, chosen.id);
           _movePlayerToBuyer(chosen, buyer.name, fee: amount);
           _book(LedgerCategory.playerSales, amount);
+          // オファーを受けた売却と同じく、売却条項の支払いと、仲の良い
+          // 選手の気落ちも通す。
           _onPlayerSold(chosen, amount, buyerClubName: buyer.name);
+          _paySellOn(chosen, amount);
+          _friendsMissPlayer(chosen);
           autoSold.add(chosen.name);
         } else {
           // 相場(契約の残り年数の係数込み)より上を出してくることが多い。

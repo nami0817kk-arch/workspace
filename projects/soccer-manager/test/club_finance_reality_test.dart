@@ -181,15 +181,55 @@ void main() {
         for (final p in [...mine.players, ...cpu.players]) p.id: p.wage
       };
       final loanee = mine.players.first..isLoan = true;
-      gs.debugApplyRelegationWageClause([mine, cpu]);
+      gs.debugApplyRelegationWageClause([mine, cpu], fromTier: 1);
+      final f = RelegationClause.wageFactorFor(LeagueTheme.england,
+          fromTier: 1, toTier: 2);
+      expect(f, lessThan(1.0));
       for (final p in [...mine.players, ...cpu.players]) {
         if (p.id == loanee.id) {
           expect(p.wage, before[p.id]);
         } else {
-          expect(p.wage, max(minWeeklyWage, (before[p.id]! * 0.6).round()),
+          expect(p.wage, max(minWeeklyWage, (before[p.id]! * f).round()),
               reason: p.name);
         }
       }
+    });
+
+    // 2026-11-23: 条項の倍率だけで下げると、部の水準が変わって見合う額が
+    // 上がり、降格したクラブの全員が「年俸が安い」(見合う額の7割未満)に
+    // なっていた。下げるのは新しい部の水準までにする。
+    test('降格の条項で下げても、新しい部の見合う額の7割を割らない(全ての国・部)', () {
+      for (final theme in LeagueTheme.values) {
+        for (final from in [1, 2]) {
+          final to = from + 1;
+          final oldLevel = wageCountryFactor(theme, from);
+          final newLevel = wageCountryFactor(theme, to);
+          final f =
+              RelegationClause.wageFactorFor(theme, fromTier: from, toTier: to);
+          expect(f, lessThanOrEqualTo(1.0));
+          expect(f, greaterThanOrEqualTo(RelegationClause.wageFactor(theme)));
+          for (final age in [20, 27, 33]) {
+            // 降格する前の部で見合う額をもらっていた選手。
+            final wage = weeklyWageForAbility(75, age, oldLevel);
+            final after = (wage * f).round();
+            final fairNew = weeklyWageForAbility(75, age, newLevel);
+            expect(after, greaterThanOrEqualTo((fairNew * 0.7).floor()),
+                reason: '${theme.name} $from→$to age $age');
+          }
+        }
+      }
+      // 再現: 条項の倍率(0.7)だけだと、フランスの1→2部で見合う額の約0.57。
+      final w = weeklyWageForAbility(
+          75, 27, wageCountryFactor(LeagueTheme.france, 1));
+      final fair = weeklyWageForAbility(
+          75, 27, wageCountryFactor(LeagueTheme.france, 2));
+      expect(w * RelegationClause.wageFactor(LeagueTheme.france) / fair,
+          lessThan(0.7));
+      // 下の部の水準が上の部より高い国では、下げない(上げもしない)。
+      expect(
+          RelegationClause.wageFactorFor(LeagueTheme.france,
+              fromTier: 1, toTier: 2),
+          1.0);
     });
   });
 

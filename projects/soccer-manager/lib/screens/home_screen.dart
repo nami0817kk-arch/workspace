@@ -906,8 +906,10 @@ class HomeScreen extends StatelessWidget {
     final appearanceFees = team.players
         .where((p) => team.startingXI.contains(p.id))
         .fold<int>(0, (s, p) => s + p.appearanceFee);
-    return gameState.weeklyIncomeFor(team.id) -
+    // 放映権は今の順位での配分式の見込み、運営費も引く(記帳と同じ額)。
+    return gameState.projectedMatchdayIncome -
         gameState.weeklyWageBill -
+        gameState.matchdayRunningCost -
         loanRepayment -
         appearanceFees;
   }

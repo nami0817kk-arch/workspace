@@ -779,6 +779,13 @@ class SaveGame {
   /// 他のクラブとの移籍金の交渉(買う側)。窓が閉じると空になる。
   List<TransferTalk> transferTalks;
 
+  /// この窓で CPU どうしの移籍で動いた選手(同じ窓で二度は動かさない)。
+  /// [aiMovedWindowOpens] の窓のもの。旧セーブは空。
+  Set<String> aiMovedThisWindow;
+
+  /// [aiMovedThisWindow] がどの窓のものか(窓の開く日)。旧セーブは null。
+  DateTime? aiMovedWindowOpens;
+
   /// 1月1日の仮契約の解禁(他のクラブの更新と、AI の仮契約)を済ませた
   /// シーズン。旧セーブは0(そのシーズンの1月1日を過ぎていれば読み込み後に行う)。
   int preContractOpenedSeason;
@@ -996,11 +1003,14 @@ class SaveGame {
     this.today,
     List<PreContract>? preContracts,
     List<TransferTalk>? transferTalks,
+    Set<String>? aiMovedThisWindow,
+    this.aiMovedWindowOpens,
     this.preContractOpenedSeason = 0,
     this.optionDeadlineSeason = 0,
     this.unpaidWagesNoticeGiven = false,
   })  : preContracts = preContracts ?? [],
         transferTalks = transferTalks ?? [],
+        aiMovedThisWindow = aiMovedThisWindow ?? {},
         sdBrief = sdBrief ?? SdBrief(),
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
@@ -1395,6 +1405,10 @@ class SaveGame {
           'preContracts': preContracts.map((c) => c.toJson()).toList(),
         if (transferTalks.isNotEmpty)
           'transferTalks': transferTalks.map((t) => t.toJson()).toList(),
+        if (aiMovedThisWindow.isNotEmpty)
+          'aiMovedThisWindow': aiMovedThisWindow.toList(),
+        if (aiMovedWindowOpens != null)
+          'aiMovedWindowOpens': formatSaveDate(aiMovedWindowOpens!),
         'preContractOpenedSeason': preContractOpenedSeason,
         'optionDeadlineSeason': optionDeadlineSeason,
         if (unpaidWagesNoticeGiven) 'unpaidWagesNoticeGiven': true,
@@ -1883,7 +1897,12 @@ class SaveGame {
                 (json['liveMatchProgress'] as Map).cast<String, dynamic>(),
               ),
         today: parseSaveDate(json['today']),
-        preContracts: (json['preContracts'] as List?)
+        aiMovedThisWindow: {
+          for (final e in (json['aiMovedThisWindow'] as List?) ?? const [])
+            e as String,
+        },
+        aiMovedWindowOpens: parseSaveDate(json['aiMovedWindowOpens']),
+        preContracts:(json['preContracts'] as List?)
                 ?.map(
                   (e) =>
                       PreContract.fromJson((e as Map).cast<String, dynamic>()),

@@ -1404,7 +1404,8 @@ extension GameStateSeason on GameState {
       for (int tier = 1; tier <= totalDivisionTiers; tier++) tier: <Team>[],
     };
     // この季に降格したクラブ(全部の境界。降格の条項で年俸を下げる)。
-    final relegatedAll = <Team>[];
+    // 降格する前の部と組にする(条項で下げる幅は部の水準で決まる)。
+    final relegatedAll = <(Team, int)>[];
     var relevantPlayoffMatches = const <PromotionPlayoffMatch>[];
     // スタジアムの猶予の季が終わる。届いていなければ降格処分(下の
     // adminRelegation の扱い)になる。
@@ -1495,7 +1496,7 @@ extension GameStateSeason on GameState {
       outgoingIds[lowerTier]!.addAll(promoted.map((t) => t.id));
       incomingTeams[upperTier]!.addAll(promoted);
       incomingTeams[lowerTier]!.addAll(relegated);
-      relegatedAll.addAll(relegated);
+      relegatedAll.addAll([for (final t in relegated) (t, upperTier)]);
 
       // 自クラブが出た試合(昇格プレーオフか入れ替え戦)があれば、それを見せる。
       // 無ければ、下の部として戦った側のプレーオフを見せる。

@@ -1663,12 +1663,8 @@ class GameState extends ChangeNotifier {
   /// 直近のplayNextMatchdayで発生したCPUクラブ同士の移籍ニュース。ない場合はnull。
   String? lastAiTransferNews;
 
-  /// この窓で CPU どうしの移籍で動いた選手(同じ窓で二度は動かさない)。
-  /// 保存はしない(読み込み直したあとに稀に二度動いても困らない)。
-  final Set<String> _aiMovedThisWindow = {};
-
-  /// [_aiMovedThisWindow]がどの窓のものか(窓の開く日)。
-  DateTime? _aiMovedWindowOpens;
+  // この窓で CPU どうしの移籍で動いた選手は SaveGame.aiMovedThisWindow に
+  // 保存する(2026-11-23。以前は保存せず、読み込み直すと同じ窓で二度動いた)。
 
   /// 直近のplaySecondHalfでユーザーが月間最優秀監督賞を受賞した場合の対象節ラベル。ない場合はnull。
   String? lastMonthlyManagerAward;

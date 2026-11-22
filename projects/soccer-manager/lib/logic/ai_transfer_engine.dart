@@ -85,7 +85,8 @@ class AiTransferEngine {
   /// (SquadRegistration。国籍の枠・国内育成の枠・22歳以上の25人)で
   /// 加えられない選手は取らない。[intensity]は件数の倍率(冬の窓は少なめ)。
   /// [recentlyMoved]に入っている選手(この窓で既に動いた)は動かさず、
-  /// 動かした選手をそこへ足す。
+  /// 動かした選手をそこへ足す。[reserved]に入っている選手(ユーザーが
+  /// 仮契約を結んだ選手など)も動かさない(こちらには足さない)。
   static List<AiTransferMove> runWeek(
     List<Team> teams,
     String userTeamId,
@@ -95,6 +96,7 @@ class AiTransferEngine {
     bool Function(Team to, Player p)? canRegister,
     double intensity = 1.0,
     Set<String>? recentlyMoved,
+    Set<String> reserved = const {},
   }) {
     final moved = recentlyMoved ?? <String>{};
     final r = _Ratings();
@@ -141,6 +143,7 @@ class AiTransferEngine {
         topOf: topOf,
         canRegister: canRegister,
         moved: moved,
+        reserved: reserved,
         r: r,
       );
       if (pick == null) continue;
@@ -174,6 +177,7 @@ class AiTransferEngine {
           random: random,
           canRegister: canRegister,
           moved: moved,
+          reserved: reserved,
           r: r,
         );
         if (surplus != null) {
@@ -235,6 +239,7 @@ class AiTransferEngine {
     required Random random,
     required Set<String> Function(Team) topOf,
     required Set<String> moved,
+    required Set<String> reserved,
     required _Ratings r,
     bool Function(Team to, Player p)? canRegister,
   }) {
@@ -248,7 +253,7 @@ class AiTransferEngine {
       for (final p in seller.players) {
         if (p.position.group != group) continue;
         if (p.isLoan || p.isLoanedOut || p.isInjured) continue;
-        if (moved.contains(p.id)) continue;
+        if (moved.contains(p.id) || reserved.contains(p.id)) continue;
         final gain = r.ovr(p) - benchmark;
         if (gain < 1 || gain > maxUpgrade) continue;
         final fee = TransferTalkEngine.askingPrice(
@@ -291,6 +296,7 @@ class AiTransferEngine {
     required double seasonProgress,
     required Random random,
     required Set<String> moved,
+    required Set<String> reserved,
     required _Ratings r,
     bool Function(Team to, Player p)? canRegister,
   }) {
@@ -300,6 +306,7 @@ class AiTransferEngine {
             !p.isLoan &&
             !p.isLoanedOut &&
             !moved.contains(p.id) &&
+            !reserved.contains(p.id) &&
             _countIn(seller, p.position.group) >
                 _groupNeeds[p.position.group]!.$2)
         .toList()
