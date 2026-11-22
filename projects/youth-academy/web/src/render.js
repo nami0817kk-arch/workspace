@@ -11,6 +11,14 @@
   const lerp = (a, b, t) => a + (b - a) * t;
   const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
   // 点 p と線分 a→c の距離（パスの通り道に相手がいるか）
+  // 点 p から線分 a→c に下ろした、線分上のいちばん近い点
+  const segPt = (p, a, c) => {
+    const vx = c[0] - a[0];
+    const vy = c[1] - a[1];
+    const l2 = vx * vx + vy * vy || 1;
+    const t = clamp(((p[0] - a[0]) * vx + (p[1] - a[1]) * vy) / l2, 0, 1);
+    return [a[0] + vx * t, a[1] + vy * t];
+  };
   const segDist = (p, a, c) => {
     const vx = c[0] - a[0];
     const vy = c[1] - a[1];
@@ -485,6 +493,8 @@
           // 最終ラインの子は、ラインの高さから前後にずれない
           if (li.back[id] && li.lineD[key] != null) sc -= Math.abs(cd - li.lineD[key]) * (0.6 + kPos * 0.8);
         }
+        // 場面の台本のパスが転がっている間は、通り道に立たない（台本では切らない球を、体が通り抜けて見えていた）
+        if (this.scene && this.fl && this.fl.kind === 'ground' && this.fl.by && this.base[this.fl.by] && this.base[this.fl.by][2] !== my && this.fl.icpt !== id && segDist(c, this.ball, this.fl.to) < 1.8) sc -= 6;
         // 判断が低い子は、ときどき外れた所を選ぶ
         sc += Math.random() * (1 - kDec) * 1.4;
         if (sc > bs) { bs = sc; best = o; }
@@ -542,6 +552,22 @@
         if (d < 1.2) kind = 'wait';
         else if (ha && (hb === ha || (!hb && d < 10 && (b.ball[2] || 0) < 0.5))) kind = 'dribble';
         ev.push({ k, kind, a, b, who: ha, recv: hb && hb !== ha ? hb : null, to: b.ball, minDur: Math.max(0.35, b.t - a.t) });
+      }
+      // 奪われるパス（相手の選手が受け手の地を這う球）：前は相手の足元へ蹴っていて、相手へのパスに見えた（2026-11-22）。
+      // いまは同じ向きに少し先（味方のいる方）を狙って蹴り、相手が台本の位置で足を出して切る
+      for (const e of ev) {
+        if (e.kind !== 'kick' || !e.recv || !e.who || !this.base[e.recv] || !this.base[e.who]) continue;
+        if (this.base[e.recv][2] === this.base[e.who][2] || this.base[e.recv][3] === 0) continue;
+        if ((e.b.ball[2] || 0) > 0.5 || e.b.ball[1] < 1 || e.b.ball[1] > L - 1) continue;
+        const d = dist(e.a.ball, e.b.ball);
+        if (d < 4) { e.tackle = true; continue; } // すぐ隣の相手へ渡る球は、パスではなく奪われた（相手が足で突いて奪う）
+        const ext = Math.min(6, 51 - d);
+        if (ext < 2) continue;
+        const ux = (e.b.ball[0] - e.a.ball[0]) / d;
+        const uy = (e.b.ball[1] - e.a.ball[1]) / d;
+        e.ip = [e.b.ball[0], e.b.ball[1]];
+        e.to = [clamp(e.b.ball[0] + ux * ext, 1, W - 1), clamp(e.b.ball[1] + uy * ext, 1, L - 1), 0];
+        e.icpt = true;
       }
       this.ev = ev;
       this.evI = -1;
@@ -611,6 +637,53 @@
         // 相手が持っている：前は相手がこちらの主役へパスを出していて、急にこちらのボールになった。
         // いちばん近い味方が寄せて奪い、その子が拾ってから場面へつなぐ（GK が持っているときは蹴り出しのまま）
         if (this.owner && this.teamOf(this.owner) !== this.teamOf(p.h0) && this.base[this.owner] && this.base[this.owner][3] !== 0) {
+          // 2026-11-22：前は必ず近い子が走って奪っていて、急に奪ったように見えた。寄せられる子が近く（7m 以内）にいなければ、
+          // 相手が味方へ出すパスを、通り道の近くの子が読んで切る
+          if (!p.plan) {
+            p.plan = 'chase';
+            const my = this.teamOf(p.h0);
+            const o = this.owner;
+            const oq = this.disp[o];
+            const ours = Object.keys(this.disp).filter((id) => this.teamOf(id) === my && this.base[id] && this.base[id][3] !== 0);
+            const near = Math.min(...ours.map((id) => dist(this.disp[id], oq)));
+            if (near > 7) {
+              let bs = 5;
+              for (const mt of Object.keys(this.disp)) {
+                if (mt === o || this.teamOf(mt) !== this.teamOf(o) || !this.base[mt] || this.base[mt][3] === 0) continue;
+                const md = dist(this.disp[mt], oq);
+                if (md < 8 || md > 30) continue;
+                for (const u of ours) {
+                  const pt = segPt(this.disp[u], oq, this.disp[mt]);
+                  const du = dist(this.disp[u], pt);
+                  if (dist(pt, oq) > 5 && du < bs) { bs = du; p.plan = { mate: mt, u, pt }; }
+                }
+              }
+            }
+          }
+          if (p.plan !== 'chase') {
+            const pl = p.plan;
+            if (!pl.passed) {
+              if (p.t > 0.6 && !(this.lock[this.owner] > 0) && this.disp[pl.mate]) {
+                pl.passed = true;
+                const by = this.owner;
+                this.kick([this.disp[pl.mate][0], this.disp[pl.mate][1], 0], pl.mate, by);
+                if (this.fl) { this.fl.icpt = pl.u; this.fl.ip = pl.pt; }
+              }
+              return;
+            }
+            if (this.fl) return;
+            if (this.owner && this.teamOf(this.owner) === this.teamOf(p.h0)) {
+              const sp = this.teamOf(this.owner).players[this.owner];
+              if (sp) this.capText = { text: sp.num + '番 ' + String(sp.name).split(' ')[0].split('・').pop() + ' パスカット', t: 0 };
+              this.steals = (this.steals || 0) + 1; // 点検用
+              p.plan = null;
+              p.t = 0;
+              return;
+            }
+            p.plan = 'chase'; // 切れなかった：寄せて奪いに行く
+            p.t = 0;
+            return;
+          }
           if (!p.steal || !this.disp[p.steal]) {
             const my = this.teamOf(p.h0);
             let bd = 1e9;
@@ -647,7 +720,18 @@
             if (eta > tFly - 0.2 && p.t < 5) return; // 受け手が先に着いて待つ（届く球が転がり過ぎない）
             p.kicked = true;
             if (this.teamOf(this.owner) !== this.teamOf(p.h0) && this.base[this.owner][3] !== 0) this.gifts = (this.gifts || 0) + 1; // 点検用：相手へ渡すつなぎ（GK の蹴り出しだけのはず）
-            this.kick([p.f0.ball[0], p.f0.ball[1], 0], p.h0, this.owner);
+            if (this.teamOf(this.owner) !== this.teamOf(p.h0)) {
+              // 相手の GK の蹴り出し：前の味方へ大きく蹴った球を、こちらの主役が競り勝って拾う（2026-11-22：前はこちらの主役へまっすぐ蹴っていた）
+              const by = this.owner;
+              const d0 = Math.max(1, dist(this.ball, p.f0.ball));
+              const ux = (p.f0.ball[0] - this.ball[0]) / d0;
+              const uy = (p.f0.ball[1] - this.ball[1]) / d0;
+              let mate = null;
+              let md = 1e9;
+              for (const o of Object.keys(this.disp)) if (o !== by && this.teamOf(o) === this.teamOf(by) && this.base[o] && this.base[o][3] !== 0) { const dd = dist(this.disp[o], p.f0.ball); if (dd < md) { md = dd; mate = o; } }
+              this.kick([clamp(p.f0.ball[0] + ux * 5, 1, W - 1), clamp(p.f0.ball[1] + uy * 5, 1, L - 1), 0], mate, by);
+              if (this.fl) { this.fl.icpt = p.h0; this.fl.ip = [p.f0.ball[0], p.f0.ball[1]]; }
+            } else this.kick([p.f0.ball[0], p.f0.ball[1], 0], p.h0, this.owner);
           }
         } else if (p.t > 4) return this.endPre(true);
         return;
@@ -754,7 +838,21 @@
           if (e.kind === 'kick' && (!e.kicker || dist(this.disp[e.kicker] || [1e9, 1e9], this.ball) > MOVE.reach * 1.6)) { e.kind = 'wait'; e.t = 0; return; }
           e.phase = e.kind;
           e.t = 0;
-          if (e.kind === 'kick') this.kick(e.to, e.recv, e.kicker);
+          if (e.kind === 'kick' && e.tackle && this.disp[e.recv] && this.owner === e.kicker) {
+            // 奪われる：相手が足で突いて、ボールがその子の足元へ転がる
+            const r = this.disp[e.recv];
+            const b = this.ball;
+            const dd = Math.max(0.3, dist(r, b));
+            this.lock[e.kicker] = 0.9;
+            this.owner = null;
+            this.bv = [((r[0] - b[0]) / dd) * 3.5, ((r[1] - b[1]) / dd) * 3.5];
+            this.expect = e.recv;
+            this.lastTouch = this.teamOf(e.recv);
+            this.kicked = true;
+          } else if (e.kind === 'kick') {
+            this.kick(e.to, e.recv, e.kicker);
+            if (e.icpt && this.fl) { this.fl.icpt = e.recv; this.fl.ip = e.ip; }
+          }
         }
         return;
       }
@@ -818,7 +916,7 @@
         v0 = (d + 0.5 * MOVE.fric * T * T) / T;
         vEnd = Math.max(0, v0 - MOVE.fric * T);
       }
-      this.fl = { by, from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, vEnd, h, z0: from[2] || 0, save };
+      this.fl = { by, from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, vEnd, h, z0: from[2] || 0, save, recv: recv || null };
       if (by) this.lock[by] = 0.3;
       if (by && this.teamOf(by)) this.lastTouch = this.teamOf(by); // 最後に触ったチーム（外に出たときの再開に使う）
       // シュートには守る側の GK が飛ぶ：止める場面は落ちる所へ届き、決まる場面は手が届かない（6割まで）
@@ -839,6 +937,13 @@
       }
       this.owner = null;
       this.expect = recv || null;
+      // 場面の台本のパス：通り道の近くの相手（台本の子のほか）は、すぐに選び直して通り道から外れる（受け手のほかは触らないので、体を通り抜けて見えていた）
+      if (this.scene && kind === 'ground' && by && this.base[by] && this.brain) {
+        for (const o of Object.keys(this.disp)) {
+          if (o === recv || !this.base[o] || this.base[o][2] === this.base[by][2] || !this.brain[o]) continue;
+          if (segDist(this.disp[o], from, to) < 2) this.brain[o].next = 0;
+        }
+      }
       this.kicks++;
       this.kicked = true;
       this.trails.push({ from: from.slice(0, 2), to: [to[0], to[1]], life: 1, kind });
@@ -858,6 +963,20 @@
         } else s = fl.d * u;
         const z = fl.kind === 'ground' ? 0 : lerp(fl.z0, fl.to[2], u) + fl.h * 4 * u * (1 - u);
         this.ball = [fl.from[0] + dx * s, fl.from[1] + dy * s, Math.max(0, z)];
+        // パスカット：決まった子（fl.icpt）が通り道に足を出して止める（場面の「奪われる」パス・合間の失敗・場面の入りで相手のパスを切る）
+        if (fl.icpt && this.disp[fl.icpt] && this.ball[2] < (fl.kind === 'loft' ? 3 : 1.3) && dist(this.disp[fl.icpt], this.ball) < MOVE.reach * (fl.kind === 'loft' ? 1.4 : 1)) {
+          const id = fl.icpt;
+          this.fl = null;
+          this.bv = [0, 0];
+          this.owner = id;
+          this.lastTouch = this.teamOf(id);
+          this.poss = this.teamOf(id) === this.match.home ? 'home' : 'away';
+          this.expect = this.scene ? this.expect : null;
+          this.idle = null;
+          this.kicked = true;
+          if (!this.scene) this.cuts = (this.cuts || 0) + 1;
+          return;
+        }
         if (u >= 1) {
           // 届いた：そのまま少し転がる（シュートはネットか、ラインの外へ）
           // 浮き球は弾んで少し遅くなるだけ（急に止まらない）
@@ -891,11 +1010,19 @@
         const v = this.vel[this.owner] || [0, 0];
         const sp = Math.hypot(v[0], v[1]);
         const f = sp > 0.5 ? [v[0] / sp, v[1] / sp] : this.atkDir(this.owner);
-        const tgt = [p[0] + f[0] * 0.65, p[1] + f[1] * 0.65];
+        const tgt = [clamp(p[0] + f[0] * 0.65, Math.min(p[0], 0.3), Math.max(p[0], W - 0.3)), clamp(p[1] + f[1] * 0.65, Math.min(p[1], 0.3), Math.max(p[1], L - 0.3))]; // ライン際では球を外へ出さない
         const k = 1 - Math.exp(-dt * 12);
         const nb = [lerp(this.ball[0], tgt[0], k), lerp(this.ball[1], tgt[1], k), Math.max(0, (this.ball[2] || 0) - dt * 7)];
         this.bv = [(nb[0] - this.ball[0]) / Math.max(dt, 1e-3), (nb[1] - this.ball[1]) / Math.max(dt, 1e-3)];
         this.ball = nb;
+        return;
+      }
+      // 再開の置き直し：ボールを置く所までゆっくり戻す
+      if (this.setup && this.setup.spot) {
+        const g = this.setup.spot;
+        const d = dist(this.ball, g);
+        const v = Math.min(2.5, d / Math.max(dt, 1e-3));
+        if (d > 0.01) { this.bv = [((g[0] - this.ball[0]) / d) * v, ((g[1] - this.ball[1]) / d) * v]; this.ball = [this.ball[0] + this.bv[0] * dt, this.ball[1] + this.bv[1] * dt, 0]; } else this.bv = [0, 0];
         return;
       }
       this.roll(dt);
@@ -946,6 +1073,17 @@
       }
       if (!best) return;
       if (this.owner && !this.scene) return; // 合間は奪い合わない（相手に渡るのはパスの失敗だけ）
+      if (this.owner && this.teamOf(this.owner) !== this.teamOf(best)) {
+        // 場面で、持っている相手から奪う：足元から突いてこぼし、奪った子の足元へ転がってから持つ（前は持ち主がその場で入れ替わっていた）
+        const r = this.disp[best];
+        const d = Math.max(0.3, dist(r, b));
+        this.lock[this.owner] = 0.9;
+        this.owner = null;
+        this.bv = [((r[0] - b[0]) / d) * 3, ((r[1] - b[1]) / d) * 3];
+        this.lastTouch = this.teamOf(best);
+        this.kicked = true;
+        return;
+      }
       this.owner = best;
       this.lastTouch = this.teamOf(best);
       if (this.setup) this.setup = null;
@@ -972,16 +1110,33 @@
         const my = this.teamOf(fl.by);
         fl.tried = fl.tried || {};
         for (const id of ids) {
-          if (this.teamOf(id) === my || fl.tried[id] || this.base[id][3] === 0) continue;
-          if (dist(this.disp[id], b) > MOVE.reach) continue;
-          fl.tried[id] = true;
-          if (Math.random() < 0.4 * (0.4 + this.shareOf(id) * 1.2) * (0.5 + this.ab01(id, '予測') + this.ab01(fl.by, 'パス') * -1 + 0.5)) { // 読みのいい子ほど止め、うまいパスほど通る
-            this.lastTouch = this.teamOf(id);
+          if (this.teamOf(id) === my || this.base[id][3] === 0) continue;
+          const d = dist(this.disp[id], b);
+          if (d > MOVE.reach) continue;
+          if (!fl.tried[id]) {
+            fl.tried[id] = true;
+            if (Math.random() < 0.4 * (0.4 + this.shareOf(id) * 1.2) * (0.5 + this.ab01(id, '予測') + this.ab01(fl.by, 'パス') * -1 + 0.5)) { // 読みのいい子ほど止め、うまいパスほど通る
+              this.lastTouch = this.teamOf(id);
+              this.fl = null;
+              this.bv = [0, 0];
+              this.idle = null;
+              this.cuts = (this.cuts || 0) + 1;
+              this.kicked = true; // 触った
+              return;
+            }
+          }
+          // 止められなくても、体のすぐ近く（0.6m 以内）を通る球には当たる：向きが変わって弱まり、こぼれ球になる
+          // （2026-11-22：前は止め損ねると球が体を通り抜けていた）
+          if (d < 0.8) { // 1コマで球は 0.2m ほど進むので、少し手前で当てる
+            const sp = Math.max(3, fl.v0 ? fl.v0 - MOVE.fric * fl.t : MOVE.passEnd) * 0.45;
+            const a0 = Math.atan2(fl.to[1] - fl.from[1], fl.to[0] - fl.from[0]) + (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.7);
             this.fl = null;
-            this.bv = [0, 0];
+            this.bv = [Math.cos(a0) * sp, Math.sin(a0) * sp];
+            this.lastTouch = this.teamOf(id);
             this.idle = null;
-            this.cuts = (this.cuts || 0) + 1;
-            this.kicked = true; // 触った
+            this.lock[id] = 0.25;
+            this.kicked = true;
+            this.deflects = (this.deflects || 0) + 1; // 点検用
             return;
           }
         }
@@ -1024,12 +1179,11 @@
       const back = depth < 30 ? 2 : 4 + (1 - tc.tempo) * 16; // 後ろへ戻してよい距離（自陣の深くでは戻さない）
       const far = (depth < 30 ? 45 : 22 + tc.tempo * 14) + (this.ab01(me, '視野') - 0.5) * 16; // 速い攻めほど遠くへ蹴る。自陣の深くからは大きく蹴り出す。視野の広い子は遠くの味方を見つける
       let tgt = null;
-      // 相手の陣の深くほど、相手に引っかかる（守りが固まっていて通らない）
-      if (Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(1.9 - this.shareOf(me) * 1.8, 0.5, 1.6) * clamp(2.2 - this.ab01(me, 'パス') * 3, 0.25, 2)) { // パスのうまい子はミスが少ない（2026-11-22 効きを強めた：前はパス12以上と9以下で通る割合が同じだった） // 押している側はミスが少ない
-        // 相手に渡ってしまうパス
-        let bd = 30;
-        for (const id of ids) if (this.teamOf(id) !== my && this.base[id][3] !== 0) { const d = dist(this.disp[id], q); if (d < bd && d > 5) { bd = d; tgt = id; } }
-      } else {
+      // パスの失敗：相手の陣の深くほど引っかかる（守りが固まっていて通らない）。パスのうまい子・押している側はミスが少ない
+      // 2026-11-22「いきなり相手にパスする」：前は失敗のときに相手の選手を受け手にして足元へ蹴っていた。いまは必ず味方を狙い、
+      // 通り道の相手に切られるか、球がそれて相手に拾われる形で失う
+      const miss = Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(1.9 - this.shareOf(me) * 1.8, 0.5, 1.6) * clamp(2.2 - this.ab01(me, 'パス') * 3, 0.25, 2);
+      {
         const pick = (bk, fr) => ids.filter((id) => {
           if (id === me || this.teamOf(id) !== my) return false;
           const r = this.disp[id];
@@ -1050,7 +1204,11 @@
           let open = 10;
           let lane = 4;
           for (const o of opps) { open = Math.min(open, dist(this.disp[o], r)); lane = Math.min(lane, segDist(this.disp[o], q, r)); }
-          return fwd * Math.pow(Math.exp((open / 10) * (0.4 + kv * 0.8) + (lane / 4) * (0.4 + kv * 0.8)), 0.6 + kd * 1.4);
+          // 相手のほうが先に着く所への球は出さない（判断の低い子だけ、ときどき見落とす）
+          const at = [r[0] + (this.vel[id] || [0, 0])[0] * 0.6, r[1] + (this.vel[id] || [0, 0])[1] * 0.6];
+          let race = 1;
+          for (const o of opps) if (dist(this.disp[o], at) + 2 < dist(r, at) + 1) race = 0.03 + (1 - kd) * 0.25;
+          return race * fwd * Math.pow(Math.exp((open / 10) * (0.4 + kv * 0.8) + (lane / 4) * (0.4 + kv * 0.8)), 0.6 + kd * 1.4);
         });
         let r0 = Math.random() * wt.reduce((a, x) => a + x, 0);
         for (let i = 0; i < c.length && !tgt; i++) if ((r0 -= wt[i]) <= 0) tgt = c[i];
@@ -1074,7 +1232,28 @@
           this.throughs = (this.throughs || 0) + 1;
         }
       }
+      // 失敗のとき：通り道の近く（6m 以内）の相手が先回りして切る。いなければ球がそれる
+      let icpt = null;
+      if (miss && this.teamOf(tgt) === my) {
+        let bd = 6;
+        for (const o of ids) {
+          if (this.teamOf(o) === my || this.base[o][3] === 0) continue;
+          const pt = segPt(this.disp[o], q, to);
+          const d = dist(this.disp[o], pt);
+          if (d < bd && dist(pt, q) > 3) { bd = d; icpt = { id: o, ip: pt }; }
+        }
+        if (!icpt) {
+          // それる：狙いから横へ 25〜45 度、少し長く
+          const ang = (Math.random() < 0.5 ? -1 : 1) * (0.45 + Math.random() * 0.35);
+          const vx = to[0] - q[0];
+          const vy = to[1] - q[1];
+          const k = 1.1 + Math.random() * 0.25;
+          to = [clamp(q[0] + (vx * Math.cos(ang) - vy * Math.sin(ang)) * k, 1, W - 1), clamp(q[1] + (vx * Math.sin(ang) + vy * Math.cos(ang)) * k, 1, L - 1), 0];
+          this.astray = (this.astray || 0) + 1; // 点検用
+        }
+      }
       this.kick(to, tgt, me);
+      if (icpt && this.fl) { this.fl.icpt = icpt.id; this.fl.ip = icpt.ip; }
       this.idle = { recv: tgt, to };
     }
     // キックオフ：両チームとも自分の陣地に並び、team の最前の子が真ん中で持つ（試合の始め・後半・得点のあと）
@@ -1152,12 +1331,15 @@
       this.restarts = this.restarts || { gk: 0, ck: 0, throw: 0 };
       this.restarts[kind]++;
       this.lastRestart = { kind, team: who ? this.teamOf(who) : null };
-      if (dist(b, pos) > 3) this.cut = 0.25; // ゴールキックなど、ボールを離れた所に置くときは一瞬暗くする（等倍ではボールが飛んで見える）
-      this.ball = [pos[0], pos[1], 0];
+      const slide = kind === 'throw' && dist(b, pos) <= 3; // スローインの近い置き直しは、ボールを転がして戻す（ぱっと動かさない）
+      if (!slide) {
+        if (dist(b, pos) > 0.8) this.cut = 0.25; // ゴールキックなど、ボールを離れた所に置くときは一瞬暗くする（等倍ではボールが飛んで見える）
+        this.ball = [pos[0], pos[1], 0];
+      }
       if (who) {
         // ボールを置いて蹴る子が取りに走る（早送り）
         this.owner = null;
-        this.setup = { who, t: 0 };
+        this.setup = { who, t: 0, spot: slide ? pos : null };
         this.ff = true; // 点検用：ボールを置き直したコマ
       }
     }
@@ -1187,9 +1369,11 @@
       }
       // ボールを持っている子
       if (id === this.owner) {
-        if (this.pre && this.pre.kicked && id === this.pre.h0) return [[this.pre.f0.ball[0], this.pre.f0.ball[1]], MOVE.dribble];
-        if (e && (e.phase === 'dribble' || e.phase === 'reach') && e.kind === 'dribble' && e.kicker === id) return [e.to, MOVE.dribble, true];
-        if (e && this.stgt[id] && e.kind !== 'kick') return [this.stgt[id], MOVE.dribble];
+        // 運ぶ先はラインの内側 0.9m まで（足元の球は 0.65m 前にあるので、ライン際まで運ぶと球が外へ出ていた）
+        const inside = (q) => [clamp(q[0], 0.9, W - 0.9), clamp(q[1], 0.9, L - 0.9)];
+        if (this.pre && this.pre.kicked && id === this.pre.h0) return [inside(this.pre.f0.ball), MOVE.dribble];
+        if (e && (e.phase === 'dribble' || e.phase === 'reach') && e.kind === 'dribble' && e.kicker === id) return [inside(e.to), MOVE.dribble, true];
+        if (e && this.stgt[id] && e.kind !== 'kick') return [inside(this.stgt[id]), MOVE.dribble];
         if (!this.scene) {
           const q = this.disp[id];
           const atk = this.atkDir(id)[1];
@@ -1197,12 +1381,15 @@
         }
         return [this.disp[id], 0];
       }
-      // 次に触る子：ボールの行く先（飛んでいれば落ちる所、転がっていればボール）へ
+      // パスを切る子：通り道の切る所へ
+      if (this.fl && this.fl.icpt === id && this.fl.ip) return [this.fl.ip, MOVE.sprint];
+      // 次に触る子：ボールの行く先（飛んでいれば落ちる所、転がっていればボール）へ。ラインの外1m より先までは追わない
       if (this.expect === id) {
-        if (this.fl) return [[this.fl.to[0], this.fl.to[1]], MOVE.sprint];
-        return [[ball[0], ball[1]], MOVE.sprint];
+        if (this.fl) return [[clamp(this.fl.to[0], -1, W + 1), clamp(this.fl.to[1], -1, L + 1)], MOVE.sprint];
+        return [[clamp(ball[0], -1, W + 1), clamp(ball[1], -1, L + 1)], MOVE.sprint];
       }
       if (this.pre && this.pre.steal === id && this.owner && this.disp[this.owner]) return [this.disp[this.owner], MOVE.sprint];
+      if (this.pre && this.pre.plan && this.pre.plan.u === id && this.pre.plan.pt) return [this.pre.plan.pt, MOVE.sprint * 0.9]; // 相手のパスを読んで通り道へ
       if (this.scene && this.chaser === id) return [[ball[0], ball[1]], MOVE.sprint];
       if (this.scene) {
         // 台本の子：遠ければ台本の位置へ走り、着いたらそのまわりで頭を使って合わせる（前は着くと次に触るまで立ち止まっていた）
