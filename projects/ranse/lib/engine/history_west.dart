@@ -17,6 +17,12 @@ bool _in(Game g, List<String> rs) => rs.contains(g.l.region);
 bool _alive(Game g, String n) => g.fa[n]?.alive ?? false;
 bool _monk(Game g) => g.hasFlag('priesthood');
 
+/// 秀吉が天下を取った世（史実どおりか、関ヶ原だけが変わった世）。
+bool _hideyoshiWorld(Game g) =>
+    !g.hasFlag('history_okehazama') &&
+    !g.hasFlag('history_honnoji') &&
+    !g.hasFlag('history_yamazaki');
+
 /// [ns] のいずれかの家に仕える現役の家臣（大名本人は除く）。
 bool _serves(Game g, List<String> ns) =>
     ns.contains(g.l.lord) && g.l.rank >= 1 && g.l.rank < 8 && g.active;
@@ -140,7 +146,7 @@ List<SceneDef> buildHistoryWestScenes() {
               g.l.net += 2;
               g.setFlag('kiyosu_hideyoshi');
               g.mark('清洲会議で、秀吉の推す三法師を支えた');
-              return '秀吉が三法師を抱いて現れると、諸将は平伏した。';
+              return '秀吉が三法師を抱いて現れると、諸将は平伏したと語られる。';
             }),
             Choice.h('勝家の推す信孝を支える', '筋は通る。秀吉ににらまれる', () {
               g.setFlag('kiyosu_katsuie');
@@ -228,7 +234,7 @@ List<SceneDef> buildHistoryWestScenes() {
           '病弱で青白い若者、竹中半兵衛が、わずか十数人で稲葉山城を乗っ取った。遊び呆ける主君・龍興をいさめるためだという。',
           [
             Choice.h(
-              vassal ? '半兵衛に会いに行く' : '城下で半兵衛の噂を集める',
+              vassal ? '半兵衛に会いに行く' : '城へ半兵衛を訪ねる',
               '知恵者に近づく。龍興の側からは疑われる',
               () {
                 g.meet('知恵者', '竹中半兵衛', 35);
@@ -284,7 +290,7 @@ List<SceneDef> buildHistoryWestScenes() {
                 '数日のうちに、砦が川べりに立った。のちに「一夜城」と語られる砦だ。',
                 mark: '墨俣の砦づくりに加わった',
               );
-              g.l.gold += 3;
+              if (g.l.dead == null) g.l.gold += 3;
               return r;
             }),
             Choice.h('見送る', '危ない橋は渡らない', () => '川上から流れてくる材木を、土手から眺めた。'),
@@ -318,17 +324,18 @@ List<SceneDef> buildHistoryWestScenes() {
               g.mark('観音寺城の落城に、織田へ降った');
               return '織田の陣に降った。信長は旧六角の者を咎めなかった。';
             }),
-          Choice.h('城に残って一矢報いる', '武士の意地を見せる。生きて帰れるかは分からない', () {
-            return _risk(
-              g,
-              .3,
-              '観音寺城に残り、織田の軍勢に討たれた',
-              '石垣の上で、最後の矢を放った。',
-              12,
-              '一矢報いて城を落ち延びた。',
-              mark: '観音寺城に最後まで残り、織田に一矢報いた',
-            );
-          }),
+          if (g.canFight)
+            Choice.h('城に残って一矢報いる', '武士の意地を見せる。生きて帰れるかは分からない', () {
+              return _risk(
+                g,
+                .3,
+                '観音寺城に残り、織田の軍勢に討たれた',
+                '石垣の上で、最後の矢を放った。',
+                12,
+                '一矢報いて、城を落ち延びた。',
+                mark: '観音寺城に最後まで残り、織田に一矢報いた',
+              );
+            }),
         ],
         after: next,
       );
@@ -374,16 +381,21 @@ List<SceneDef> buildHistoryWestScenes() {
       (g) => 20,
       (g) => _in(g, ['近江']) && g.l.rank <= 1 && g.active,
       (g, next) {
-        g.ask('長浜', '羽柴秀吉が湖のほとりの今浜を「長浜」と改め、城と町をつくっている。町に住む者は地子（町の年貢）を免じるという。', [
-          Choice.h('長浜の町に移り住む', '新しい町で暮らしを立て直す。見知らぬ者ばかりだ', () {
-            g.l.gold += 6;
-            g.l.net += 1;
-            g.setFlag('nagahama');
-            g.mark('秀吉の開いた長浜の町に移り住んだ');
-            return '湖風の吹く新しい町で、暮らしを始めた。';
-          }),
-          Choice.h('先祖の地に留まる', '慣れた暮らしを守る', () => '湖の向こうに、新しい城の白壁が見えた。'),
-        ], after: next);
+        g.ask(
+          '長浜',
+          '羽柴秀吉が湖のほとりの今浜を「長浜」と改め、城と町をつくっている。町に住む者には、地子（町の年貢）を免じたという。',
+          [
+            Choice.h('長浜の町に移り住む', '新しい町で暮らしを立て直す。見知らぬ者ばかりだ', () {
+              g.l.gold += 6;
+              g.l.net += 1;
+              g.setFlag('nagahama');
+              g.mark('秀吉の開いた長浜の町に移り住んだ');
+              return '湖風の吹く新しい町で、暮らしを始めた。';
+            }),
+            Choice.h('先祖の地に留まる', '慣れた暮らしを守る', () => '湖の向こうに、新しい城の白壁が見えた。'),
+          ],
+          after: next,
+        );
       },
       ageOk: (g, a) => _span(g, a, 1574, 1577),
     ),
@@ -396,7 +408,7 @@ List<SceneDef> buildHistoryWestScenes() {
       (g) => 20,
       (g) => (_in(g, ['山城']) || g.l.lord == '三好') && g.active,
       (g, next) {
-        final miyoshi = _serves(g, ['三好']);
+        final miyoshi = _serves(g, ['三好']) && g.canFight;
         g.ask(
           '永禄の変',
           miyoshi
@@ -417,8 +429,8 @@ List<SceneDef> buildHistoryWestScenes() {
                 return _risk(
                   g,
                   .05,
-                  '永禄の変の騒ぎに巻き込まれ、斬られた',
-                  '逃げる兵と追う兵に挟まれた。',
+                  '永禄の変の騒ぎに巻き込まれ、流れ矢に倒れた',
+                  '逃げる兵と追う兵のあいだに、流れ矢が飛んできた。',
                   0,
                   '御所から黒い煙が上がっていた。将軍が討たれたという。',
                   kind: 'sai',
@@ -450,13 +462,13 @@ List<SceneDef> buildHistoryWestScenes() {
       (g, next) {
         g.ask(
           '北野大茶湯',
-          '関白秀吉が、北野の森で大茶会を開くという。高札には「茶の湯に心がけある者は、身分を問わず、釜ひとつ・茶碗ひとつで来い」とある。',
+          '関白秀吉が、北野の森で大茶会を開くという。高札には「茶の湯に心がけある者は、町人でも百姓でも、釜ひとつ、釣瓶ひとつ、呑み物ひとつを持って来い」とある。',
           [
-            Choice.h('茶碗ひとつ持って出かける', '天下人の茶会に連なる。身分の差を思い知るかもしれない', () {
+            Choice.h('釜ひとつ提げて出かける', '天下人の茶会に連なる。身分の差を思い知るかもしれない', () {
               g.setFlag('kitano_ochanoyu');
               g.j(6);
               g.l.net += 1;
-              g.mark('北野大茶湯に、茶碗ひとつ持って加わった');
+              g.mark('北野大茶湯に、釜ひとつ提げて加わった');
               return '松の下に筵を敷き、湯を沸かした。秀吉が、こちらの茶席をのぞいて笑った。';
             }),
             Choice.h('行かずに働く', '暮らしが第一だ', () {
@@ -475,7 +487,7 @@ List<SceneDef> buildHistoryWestScenes() {
       15,
       84,
       (g) => 20,
-      (g) => _in(g, ['山城', '摂津']) && g.active,
+      (g) => _hideyoshiWorld(g) && _in(g, ['山城', '摂津']) && g.active,
       (g, next) {
         g.ask(
           '伏見の大地震',
@@ -552,7 +564,7 @@ List<SceneDef> buildHistoryWestScenes() {
       15,
       84,
       (g) => 20,
-      (g) => _in(g, ['摂津']) && g.l.rank < 8 && g.active,
+      (g) => _in(g, ['摂津']) && g.l.rank < 8 && g.l.lord != '織田' && g.active,
       (g, next) {
         g.ask(
           '有岡城',
@@ -605,7 +617,7 @@ List<SceneDef> buildHistoryWestScenes() {
               g.l.net += 2;
               g.setFlag('sakai_submit');
               g.mark('堺の矢銭に、応じるべきだと説いた');
-              return '翌年、堺は矢銭を納めた。町は焼かれずに済んだ。';
+              return 'やがて堺は矢銭を納めた。町は焼かれずに済んだ。';
             }),
             Choice.h('自治の町を守れと、銭を出す', '町の誇りを守る。織田ににらまれる', () {
               _lose(g, 5);
@@ -697,12 +709,15 @@ List<SceneDef> buildHistoryWestScenes() {
       15,
       84,
       (g) => 20,
-      (g) => (_in(g, ['安芸']) || _serves(g, ['尼子'])) && g.active,
+      (g) =>
+          ((_in(g, ['安芸']) && g.l.lord != '尼子') ||
+              (_serves(g, ['尼子']) && g.canFight)) &&
+          g.active,
       (g, next) {
         if (_serves(g, ['尼子']) && g.canFight) {
           g.ask(
             '吉田郡山城',
-            '尼子の三万の大軍で、安芸の小領主・毛利元就の吉田郡山城を囲んだ。だが城は落ちず、大内の援軍が着いた。冬が来る。',
+            '尼子の大軍三万で、安芸の小領主・毛利元就の吉田郡山城を囲んだ。だが城は落ちず、大内の援軍が着いた。冬が来る。',
             [
               Choice.h('総攻めを進言する', '一気に決めたい。城方の備えは固い', () {
                 return _risk(
@@ -808,13 +823,13 @@ List<SceneDef> buildHistoryWestScenes() {
       (g, next) {
         g.ask(
           '高松城水攻め',
-          '備中高松城が、羽柴秀吉の築いた堤で湖に沈みかけている。急に和睦が結ばれ、城主の清水宗治は舟の上で舞い、腹を切った。数日後、京で信長が討たれていたと知れた。',
+          '備中高松城が、羽柴秀吉の築いた堤で湖に沈みかけている。急に和睦が結ばれ、城主の清水宗治は舟の上で舞い、腹を切った。ほどなく、京で信長が討たれていたと知れた。',
           [
             Choice.h('「秀吉を追え」と説く', '天下が変わるかもしれない。約定を破ることになる', () {
               g.l.fav = _c(g.l.fav - 5);
               g.setFlag('takamatsu_pursue');
               g.mark('高松城の和睦のあと、秀吉を追えと説いた');
-              return '吉川元春も追撃を説いたが、小早川隆景は誓紙を守った。秀吉の軍は、風のように東へ去った。';
+              return '吉川元春も追撃を説いたと伝わる。だが小早川隆景は誓紙を守った。秀吉の軍は、風のように東へ去った。';
             }),
             Choice.h('誓紙を守るべきだと説く', '信義を通す。毛利の家は残る', () {
               g.l.fav = _c(g.l.fav + 8);
@@ -835,7 +850,9 @@ List<SceneDef> buildHistoryWestScenes() {
       15,
       84,
       (g) => 20,
-      (g) => (_in(g, ['出雲']) || _serves(g, ['尼子'])) && g.active,
+      (g) =>
+          ((_in(g, ['出雲']) && g.l.lord != '毛利') || _serves(g, ['尼子'])) &&
+          g.active,
       (g, next) {
         g.ask(
           '月山富田城',
@@ -899,34 +916,29 @@ List<SceneDef> buildHistoryWestScenes() {
       );
     }, ageOk: (g, a) => _yr(g, a) == 1560),
 
-    SceneDef(
-      'h_w_shikoku',
-      15,
-      84,
-      (g) => 20,
-      (g) => _serves(g, ['長宗我部']) && (g.fa['長宗我部']?.alive ?? false),
-      (g, next) {
-        g.ask('四国攻め', '四国をほぼ手中にした元親のもとへ、秀吉の十万を超える大軍が、阿波・讃岐・伊予の三方から攻め寄せてきた。', [
-          Choice.h('徹底して戦うべしと説く', '土佐の意地を見せる。勝ち目は薄い', () {
-            return _risk(
-              g,
-              .15,
-              '四国攻めで、秀吉の大軍に討たれた',
-              '阿波の城で、押し寄せる大軍に呑まれた。',
-              10,
-              '戦ったが、元親はついに降った。',
-              mark: '秀吉の四国攻めに、最後まで抗った',
-            );
-          }),
-          Choice.h('和睦を説く', '土佐は残る。四国の夢は捨てる', () {
-            g.l.fav = _c(g.l.fav + 4);
-            g.l.net += 1;
-            return '元親は降り、土佐一国を安堵された。';
-          }),
-        ], after: next);
-      },
-      ageOk: (g, a) => _yr(g, a) == 1585,
-    ),
+    SceneDef('h_w_shikoku', 15, 84, (g) => 20, (g) => _soldier(g, ['長宗我部']), (
+      g,
+      next,
+    ) {
+      g.ask('四国攻め', '四国をほぼ手中にした元親のもとへ、秀吉の十万を超える大軍が、阿波・讃岐・伊予の三方から攻め寄せてきた。', [
+        Choice.h('あくまで戦うべしと説く', '土佐の意地を見せる。勝ち目は薄い', () {
+          return _risk(
+            g,
+            .15,
+            '四国攻めで、秀吉の大軍に討たれた',
+            '阿波の城で、押し寄せる大軍に呑まれた。',
+            10,
+            'よく戦った。だが元親は、ついに降った。',
+            mark: '秀吉の四国攻めに、最後まで抗った',
+          );
+        }),
+        Choice.h('和睦を説く', '土佐は残る。四国の夢は捨てる', () {
+          g.l.fav = _c(g.l.fav + 4);
+          g.l.net += 1;
+          return '元親は降り、土佐一国を安堵された。';
+        }),
+      ], after: next);
+    }, ageOk: (g, a) => _yr(g, a) == 1585),
 
     // ================= 薩摩 =================
     SceneDef('h_w_kizakibaru', 15, 70, (g) => 20, (g) => _soldier(g, ['島津']), (
@@ -1104,7 +1116,7 @@ List<SceneDef> buildHistoryWestScenes() {
       ageOk: (g, a) => _yr(g, a) == 1582,
     ),
 
-    SceneDef('h_w_yanagawa', 15, 84, (g) => 20, (g) => _serves(g, ['龍造寺']), (
+    SceneDef('h_w_yanagawa', 15, 84, (g) => 20, (g) => _soldier(g, ['龍造寺']), (
       g,
       next,
     ) {

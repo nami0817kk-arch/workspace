@@ -22,6 +22,12 @@ bool _soldier(Game g) =>
     g.canFight &&
     g.active;
 bool _priest(Game g) => g.hasFlag('priesthood');
+
+/// 秀吉が天下を取った世（史実どおりか、関ヶ原だけが変わった世）。
+bool _hideyoshiWorld(Game g) =>
+    !g.hasFlag('history_okehazama') &&
+    !g.hasFlag('history_honnoji') &&
+    !g.hasFlag('history_yamazaki');
 int _c(int v) => clampInt(v, 0, 100);
 
 void _heal(Game g, int n) =>
@@ -135,7 +141,7 @@ List<SceneDef> buildHistoryEastScenes() {
       (g, next) {
         g.ask(
           '越後勢、小田原へ',
-          '越後の長尾景虎（のちの上杉謙信）が、関東の諸将十万を率いて小田原を囲んだ。氏康は城に籠もり、城下は焼き払われるという。',
+          '越後の長尾景虎（のちの上杉謙信）が関東の諸将を従え、十万ともいわれる大軍で小田原を囲んだ。氏康は城に籠もり、城下は焼き払われるという。',
           [
             Choice.h('家財を背負って城に逃げ込む', '堅い城の中なら命は守れる。家は焼かれる', () {
               _pay(g, 3);
@@ -542,19 +548,27 @@ List<SceneDef> buildHistoryEastScenes() {
       15,
       84,
       (g) => 20,
-      (g) => _inRegion(g, ['信濃']) && g.l.rank <= 1 && g.active,
+      (g) =>
+          _inRegion(g, ['信濃']) && g.l.rank <= 1 && g.l.lord != '松平' && g.active,
       (g, next) {
-        g.ask('上田合戦', '真田昌幸の上田城に、徳川の大軍が攻め寄せる。昌幸は城下の町人や百姓にまで、戦に加われと触れを出した。', [
-          Choice.h('城下で敵を待ち伏せる', '真田の策に乗る。町は戦場になる', () {
-            if (g.rng.chance(.1)) {
-              g.die('上田合戦で、城下の辻に立ち討死した', 'senshi');
-              return '徳川の兵が、どっと辻になだれ込んできた。';
-            }
-            g.l.merit += 6;
-            g.l.fame += 6;
-            g.mark('上田合戦で、真田昌幸の城下の戦いに加わった');
-            return '城下に引き込んだ徳川勢に、四方から石と矢を浴びせた。逃げる敵は神川で溺れた。';
-          }),
+        g.ask('上田合戦', '真田昌幸の上田城に、徳川の大軍が攻め寄せる。昌幸は城下の町人や百姓にまで、戦に加われと触れを出したという。', [
+          if (g.canFight)
+            Choice.h('城下で敵を待ち伏せる', '真田の策に乗る。町は戦場になる', () {
+              if (g.rng.chance(.1)) {
+                g.die('上田合戦で、城下の辻に立ち討死した', 'senshi');
+                return '徳川の兵が、どっと辻になだれ込んできた。';
+              }
+              g.l.merit += 6;
+              g.l.fame += 6;
+              g.mark('上田合戦で、真田昌幸の城下の戦いに加わった');
+              return '城下に引き込んだ徳川勢に、四方から石と矢を浴びせた。逃げる敵は神川で溺れた。';
+            })
+          else
+            Choice.h('城の兵に握り飯を運ぶ', '戦を陰で支える。町は戦場になる', () {
+              g.l.net += 2;
+              g.mark('上田合戦で、真田の兵に握り飯を運んだ');
+              return '握り飯を運ぶ道すがら、徳川勢が城下で崩れていくのを見た。';
+            }),
           Choice.h('山へ逃げて戦をやり過ごす', '命は守れる。町の者に何か言われるかもしれない', () {
             return '山の上から、徳川の大軍が崩れていくのを見た。';
           }),
@@ -575,7 +589,7 @@ List<SceneDef> buildHistoryEastScenes() {
           '天文の乱',
           '伊達の当主・稙宗が、子の晴宗に捕らえられた。救い出された稙宗と晴宗が争い、奥羽の家々が二つに割れて戦っている。',
           [
-            Choice.h('嫡男・晴宗につく', '若い力につく。父に背くことになる', () {
+            Choice.h('嫡男・晴宗につく', '若い力につく。先代に弓を引くことになる', () {
               final r = g.battle('main');
               if (g.l.dead == null) {
                 g.l.fav = _c(g.l.fav + 8);
@@ -630,13 +644,13 @@ List<SceneDef> buildHistoryEastScenes() {
                   Choice.h('政宗の旗本で戦う', '主のそばで戦う。手柄はほどほど', () {
                     final r = g.battle('main', enemy: '佐竹');
                     if (g.l.dead == null) {
-                      return '$r その夜、連合軍は国元の騒ぎで引き揚げていった。';
+                      return '$r ほどなく、連合軍は国元の騒ぎで引き揚げていった。';
                     }
                     return r;
                   }),
                 ]
               : [
-                  Choice.h('伊達の本陣へ攻め込む', '政宗の首が見える。伊達の殿は死に物狂いだ', () {
+                  Choice.h('伊達の本陣へ攻め込む', '政宗の首が見える。伊達勢は死に物狂いだ', () {
                     final r = g.battle('van', enemy: '伊達');
                     if (g.l.dead == null) g.mark('人取橋で、伊達政宗をあと一歩まで追い詰めた');
                     return r;
@@ -658,7 +672,12 @@ List<SceneDef> buildHistoryEastScenes() {
       15,
       84,
       (g) => 20,
-      (g) => g.l.lord == '伊達' && g.l.rank >= 2 && g.l.rank < 8 && g.active,
+      (g) =>
+          g.l.lord == '伊達' &&
+          g.l.rank >= 2 &&
+          g.l.rank < 8 &&
+          g.canFight &&
+          g.active,
       (g, next) {
         g.ask(
           '死に装束',
@@ -666,13 +685,13 @@ List<SceneDef> buildHistoryEastScenes() {
           [
             Choice.h('政宗の供をして小田原へ行く', '主と命を共にする。天下人を間近に見られる', () {
               if (g.rng.chance(.05)) {
-                g.die('小田原へ向かう政宗の供の途中、山道で倒れた', 'byo');
+                g.die('政宗の供をして小田原へ向かう途中、山道で病に倒れた', 'byo');
                 return '急ぎの旅が、体にこたえた。';
               }
               g.l.fav = _c(g.l.fav + 15);
               g.l.net += 3;
               g.mark('白い死に装束の伊達政宗に供をし、秀吉の前に出た');
-              return '髪を切り、白装束で現れた政宗の首を、秀吉は杖で軽く叩いた。「もう少し遅ければ、ここが危うかったぞ」。';
+              return '髪を切り、白装束で現れた政宗の首筋を、秀吉は杖で軽く叩き、「もう少し遅ければ、ここが危うかったぞ」と言ったという。';
             }),
             Choice.h('国元に残って城を守る', '留守を預かる。何かあれば国が危うい', () {
               g.l.merit += 4;
@@ -713,7 +732,7 @@ List<SceneDef> buildHistoryEastScenes() {
             }),
             Choice.h('関わらず村に籠もる', '命は守れる。一揆の仲間には恨まれる', () {
               g.j(-3);
-              return '翌年、一揆は鎮められた。首謀の者は、ことごとく斬られたという。';
+              return 'やがて一揆は鎮められた。首謀の者は、ことごとく斬られたという。';
             }),
           ],
           after: next,
@@ -756,8 +775,9 @@ List<SceneDef> buildHistoryEastScenes() {
       84,
       (g) => 20,
       (g) =>
-          (_soldier(g) && _lordIs(g, ['最上', '上杉'])) ||
-          (_inRegion(g, ['出羽']) && g.l.rank == 0 && g.active),
+          _hideyoshiWorld(g) &&
+          ((_soldier(g) && _lordIs(g, ['最上', '上杉'])) ||
+              (_inRegion(g, ['出羽']) && g.l.rank == 0 && g.active)),
       (g, next) {
         if (_soldier(g) && _lordIs(g, ['最上', '上杉'])) {
           final mogami = g.l.lord == '最上';
@@ -775,7 +795,7 @@ List<SceneDef> buildHistoryEastScenes() {
                   final r = g.battle(mogami ? 'main' : 'van', enemy: foe);
                   if (g.l.dead == null) {
                     g.mark('長谷堂城の戦いで、最上と上杉の戦に加わった');
-                    return '$r やがて関ヶ原で西軍が敗れたと知らせが来た。上杉勢は兵を引いた。';
+                    return '$r やがて関ヶ原の知らせが届き、上杉勢は兵を引いた。';
                   }
                   return r;
                 },
@@ -801,7 +821,7 @@ List<SceneDef> buildHistoryEastScenes() {
               }
               g.l.net += 2;
               g.mark('長谷堂の戦で、最上の城へ兵糧を運んだ');
-              return '城の兵は、米俵を見て歓声を上げた。ひと月ののち、上杉勢は引き揚げた。';
+              return '城の兵は、米俵を見て歓声を上げた。やがて、上杉勢は引き揚げていった。';
             }),
             Choice.h('家族を連れて山へ逃げる', '命は守れる', () {
               _pay(g, 3);
@@ -916,7 +936,11 @@ List<SceneDef> buildHistoryEastScenes() {
       15,
       84,
       (g) => 20,
-      (g) => _inRegion(g, ['常陸']) && g.l.rank <= 1 && g.active,
+      (g) =>
+          _hideyoshiWorld(g) &&
+          _inRegion(g, ['常陸']) &&
+          g.l.rank <= 1 &&
+          g.active,
       (g, next) {
         g.ask('水戸の城下', '佐竹義宣が水戸城を奪い、太田から本拠を移すという。新しい城下に町を割り、商人や職人を集めている。', [
           Choice.h('水戸の新しい町に移る', '新しい町には商いの種がある。古い縁は遠くなる', () {
@@ -1019,11 +1043,15 @@ List<SceneDef> buildHistoryEastScenes() {
       15,
       84,
       (g) => 20,
-      (g) => _inRegion(g, ['会津']) && g.l.rank <= 1 && g.active,
+      (g) =>
+          _hideyoshiWorld(g) &&
+          _inRegion(g, ['会津']) &&
+          g.l.rank <= 1 &&
+          g.active,
       (g, next) {
         g.ask(
           '蒲生氏郷',
-          '会津に、近江から蒲生氏郷が新しい殿様としてやって来た。黒川の名を若松と改め、市を開き、近江から職人を呼んで漆の器を作らせているという。',
+          '会津に、伊勢の松坂から蒲生氏郷が新しい殿様としてやって来た。黒川の名を若松と改め、市を開き、近江から職人を呼んで漆の器を作らせているという。',
           [
             Choice.h('塗師の弟子になる', '手に職がつく。修業は長い', () {
               g.l.chi = _c(g.l.chi + 2);
@@ -1196,7 +1224,7 @@ List<SceneDef> buildHistoryEastScenes() {
       (g, next) {
         g.ask(
           '岡崎の若殿',
-          '桶狭間で義元が討たれ、今川の兵が岡崎城から逃げ去った。人質暮らしの長かった松平の若殿・元康が、十年ぶりに岡崎へ帰ってきた。大樹寺で腹を切りかけたが、和尚に止められたという。',
+          '桶狭間で義元が討たれ、今川の兵が岡崎城から逃げ去った。十年あまり人質として過ごした松平の若殿・元康が、岡崎へ帰ってきた。大樹寺で腹を切りかけたが、和尚に止められたという。',
           [
             Choice.h('城の門前で若殿を迎える', '三河の者の心は一つになる。若殿の行く末はまだわからない', () {
               g.l.net += 2;
@@ -1224,7 +1252,8 @@ List<SceneDef> buildHistoryEastScenes() {
           !g.hasFlag('history_okehazama') &&
           g.active,
       (g, next) {
-        final vassal = g.l.lord == '松平' && g.l.rank >= 1 && g.canFight;
+        final serving = g.l.lord == '松平' && g.l.rank >= 1;
+        final vassal = serving && g.canFight && _alive(g, '松平');
         g.ask(
           '三河一向一揆',
           vassal
@@ -1254,7 +1283,7 @@ List<SceneDef> buildHistoryEastScenes() {
                 return '寺の土塀の前で、松平の兵に討たれた。';
               }
               g.setFlag('ikko');
-              if (vassal) {
+              if (serving) {
                 g.l.rank = 0;
                 g.l.lord = null;
                 g.l.ronin = true;

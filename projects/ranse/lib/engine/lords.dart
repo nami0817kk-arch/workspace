@@ -13,6 +13,9 @@ import 'rng.dart';
 
 Faction _me(Game g) => g.fa[g.l.lord]!;
 
+/// 主家（自分の家）が生きている。
+bool _lordAlive(Game g) => g.l.lord != null && (g.fa[g.l.lord]?.alive ?? false);
+
 void _grow(Game g, num n) => _me(g).power += n;
 
 void _cut(Game g, double m) {
@@ -36,14 +39,13 @@ String _kid(Game g) => g.rng.pick(g.rng.chance(.5) ? kHeirNames : kHimeNames);
 
 /// 城を預かる身（城主・家老・宿老）。
 bool _castle(Game g) =>
-    g.l.rank >= 5 && g.l.rank < 8 && g.active && g.l.lord != null;
+    g.l.rank >= 5 && g.l.rank < 8 && g.active && _lordAlive(g);
 
 /// 城と兵を自ら差配する身（奥の道の女性は除く）。
 bool _keep(Game g) => _castle(g) && g.canFight;
 
 /// 一国の主。
-bool _daimyo(Game g) =>
-    g.l.rank == 8 && g.active && g.l.lord != null && g.fa[g.l.lord] != null;
+bool _daimyo(Game g) => g.l.rank == 8 && g.active && _lordAlive(g);
 
 /// 天下に手が届く者。
 bool _near(Game g, double s) => _daimyo(g) && g.share >= s;
@@ -207,7 +209,7 @@ List<SceneDef> buildLordScenes() {
         Choice.h('軍師として傍に置く', '知恵が借りられる。古株は嫌がる', () {
           g.meet('軍師', name, 55);
           l.chi = clampInt(l.chi + 2, 0, 99);
-          l.net -= 1;
+          l.net = l.net >= 1 ? l.net - 1 : 0;
           g.setFlag('gunshi');
           g.mark('$nameを軍師として傍に置いた');
           return '$nameの献策は、ときに古株の顔をしかめさせた。';
@@ -420,7 +422,7 @@ List<SceneDef> buildLordScenes() {
         if (e != null)
           Choice.h('誘いに乗る', '倍の所領。裏切り者の名がつく', () {
             if (g.rng.chance(.15)) {
-              g.die('寝返りの途上で、主家の追手に討たれた', 'ansatsu');
+              g.die('寝返りの途上で、主家の追手に討たれた', 'senshi');
               return '国境の峠で、追手に追いつかれた。';
             }
             l.lord = e.name;
@@ -449,7 +451,7 @@ List<SceneDef> buildLordScenes() {
             g.setFlag('heir');
             g.j(2);
             g.mark('心優しい嫡男$h1を跡継ぎと定めた');
-            return '$h1は、父の決めたことに涙ぐんだ。';
+            return '$h1は、${g.l.female ? '母' : '父'}の決めたことに涙ぐんだ。';
           }),
           Choice.h('$h2を立て、嫡男を廃する', '家は強くなる。兄弟に溝が残る', () {
             g.meet('嫡男', h2, 55);
@@ -616,7 +618,7 @@ List<SceneDef> buildLordScenes() {
           l.gold += g.rng.range(15, 25);
           if (g.rng.chance(.15)) {
             if (g.rng.chance(.3)) {
-              g.die('兵糧の尽きた城に囲まれ、飢えて死んだ', 'ue');
+              g.die('兵糧の尽きた城で敵に囲まれ、飢えて死んだ', 'ue');
               return '秋、敵の大軍が城を囲んだ。蔵は、とうに空だった。';
             }
             l.hp -= 25;
@@ -1129,7 +1131,7 @@ List<SceneDef> buildLordScenes() {
           Choice.h('生涯、当主の座にある', '国は一つの声で動く。跡継ぎは育たない', () {
             g.setFlag('never_retire');
             _grow(g, 1);
-            return '「わしの目が黒いうちは」と、家督の話を退けた。';
+            return '「${g.l.female ? 'わらわ' : 'わし'}の目が黒いうちは」と、家督の話を退けた。';
           }),
         ], after: next);
       },
@@ -1200,7 +1202,7 @@ List<SceneDef> buildLordScenes() {
           _grow(g, 1);
           g.setFlag('seek_truth');
           g.mark('身分を問わず異見を求め、$nameを得た');
-          return '名もない足軽上がりの$nameが、真っ向から策を否んだ。久しぶりに、胸がすいた。';
+          return '名もない足軽上がりの$nameが、真っ向から策に異を唱えた。久しぶりに、胸がすいた。';
         }),
         Choice.h('一人、忍びで城下を歩く', '民の声が聞ける。危うさもある', () {
           if (g.rng.chance(.05)) {

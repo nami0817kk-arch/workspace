@@ -43,6 +43,7 @@ const _hideyoshiEvents = {
   'kitano',
   'edo',
   'fushimi',
+  'keicho_jishin', // 伏見城の天守が崩れた、という文を含む
   'keicho',
   'toshiie',
   'sekigahara',
@@ -76,9 +77,18 @@ const kSkipEvents = <String, Set<String>>{
     'shingen_death',
     ..._hideyoshiEvents,
   },
-  'nobunaga': {..._hideyoshiEvents, 'takamatsu', 'tensho_jingo'},
+  'nobunaga': {
+    ..._hideyoshiEvents,
+    'takamatsu',
+    'tensho_jingo',
+    // 伴天連追放・安土での死は信長の世に合わないので、この世だけの出来事に置き換える
+    'kyushu',
+    'hideyoshi_death',
+  },
   'akechi': {
     ..._hideyoshiEvents,
+    // 「光秀は山崎で秀吉に敗れ」の文を含むので、この世だけの出来事に置き換える
+    'honnoji',
     'kanpaku',
     'kyushu',
     'odawara',
@@ -257,7 +267,7 @@ final kAltHistory = <HistEvent>[
   HistEvent('x_imagawa_split', 1580, only: 'imagawa', (g) {
     _cut(g, '今川', .8);
     _grow(g, '松平', 8);
-    return '三河の松平家康が今川から離れ、独り立ちした。今川の天下は、ゆっくりとほどけ始めた。';
+    return '三河の松平元康が今川から離れ、独り立ちした。今川の天下は、ゆっくりとほどけ始めた。';
   }),
   HistEvent('x_sengoku_goes_on', 1585, only: 'imagawa', (g) {
     return '天下はいまだ定まらず、今川・武田・北条・上杉・毛利が、それぞれの国を固めて睨み合っている。';
@@ -270,14 +280,19 @@ final kAltHistory = <HistEvent>[
   HistEvent('x_mori_kneel', 1583, only: 'nobunaga', (g) {
     _cut(g, '毛利', .6);
     _grow(g, '織田', 10);
-    return '本能寺を生き延びた信長は、明智光秀を討ち、毛利を膝下に降した。';
+    return '本能寺の変をしのいだ信長は、中国へ大軍を進め、毛利を膝下に降した。';
   }),
   HistEvent('x_osaka_nobunaga', 1584, only: 'nobunaga', (g) {
-    return '信長が、石山本願寺の跡に安土をしのぐ大城を築かせ、都を見下ろす大坂へ移った。';
+    return '信長が、石山本願寺の跡に安土をしのぐ大城を築かせ、安土から大坂へ移った。';
   }),
   HistEvent('x_nobutada', 1586, only: 'nobunaga', (g) {
     _cut(g, '島津', .7);
     return '織田信忠が大軍を率いて九州へ渡った。';
+  }),
+  HistEvent('x_kyushu_nobunaga', 1587, only: 'nobunaga', (g) {
+    _cut(g, '島津', .6);
+    _cut(g, '大友', .8);
+    return '九州の島津が、織田信忠の大軍の前に降った。';
   }),
   HistEvent('x_fleet', 1588, only: 'nobunaga', (g) {
     return '信長が、南蛮の国々と交わるため、堺と長崎から大きな船団を送り出した。';
@@ -285,11 +300,19 @@ final kAltHistory = <HistEvent>[
   HistEvent('x_ming', 1592, only: 'nobunaga', (g) {
     return '信長が、明国へ使者を送った。海の向こうと戦をするのではなく、商いをするつもりらしい。';
   }),
+  HistEvent('x_nobunaga_death', 1598, only: 'nobunaga', (g) {
+    return '老いた織田信長が、大坂の城で世を去った。「人間五十年」と謡った男は、六十を越えるまで生きた。';
+  }),
   HistEvent('x_nobunaga_1600', 1600, only: 'nobunaga', (g) {
     return '織田信忠のもとで、天下は静かに新しい世紀を迎えた。関ヶ原という地名を、知る者はほとんどいない。';
   }),
 
   // ---- 明智の世 ----
+  HistEvent('x_honnoji_akechi', 1582, only: 'akechi', (g) {
+    final t = _fall(g, '武田', '織田') ? '春、武田勝頼が天目山で自害し、武田家は滅んだ。' : '';
+    _cut(g, '織田', .7);
+    return '$t夏、明智光秀が本能寺で織田信長を討ち、山崎で羽柴秀吉を退けた。光秀の天下は、三日では終わらなかった。';
+  }),
   HistEvent('x_akechi_rule', 1583, only: 'akechi', (g) {
     _cut(g, '織田', .6);
     return '明智光秀が京で政を整え始めた。敗れた羽柴秀吉は、播磨へ退いて機をうかがっている。';
@@ -337,6 +360,7 @@ List<SceneDef> buildAltScenes() => [
     (g) => 20,
     (g) =>
         _inLine(g, 'imagawa') &&
+        _f(g, '織田') == null &&
         (_inRegion(g, ['尾張', '美濃']) ||
             g.l.lord == '織田' ||
             g.hasFlag('met_nobunaga')) &&
@@ -376,7 +400,8 @@ List<SceneDef> buildAltScenes() => [
     (g) => 20,
     (g) =>
         _inLine(g, 'imagawa') &&
-        _inRegion(g, ['尾張', '三河', '美濃']) &&
+        // 「昔の主」は織田。三河はもとから今川領、美濃が落ちるのは1567年
+        _inRegion(g, ['尾張']) &&
         g.l.rank <= 2 &&
         g.active,
     (g, next) {
@@ -387,7 +412,7 @@ List<SceneDef> buildAltScenes() => [
           return '掟に従った。村の争いは、目に見えて減った。';
         }),
         Choice.h('昔の主を懐かしむ', '心は織田に残る。役人ににらまれる', () {
-          g.l.fame -= 2;
+          g.l.fame = g.l.fame >= 2 ? g.l.fame - 2 : 0;
           g.setFlag('oda_loyal_heart');
           return '口には出さず、尾張の大うつけの殿さまを思い出した。';
         }),
@@ -411,8 +436,8 @@ List<SceneDef> buildAltScenes() => [
       g.ask(
         '義元の上洛',
         retainer
-            ? '主・今川義元が、将軍の弟を奉じて京へ上る。行列に加われという。'
-            : '駿河の今川義元が、公家のような装いで京へ上ってくる。お歯黒をつけた大名だという。',
+            ? '主・今川義元が、亡き将軍の弟・足利義昭を奉じて京へ上る。行列に加われという。'
+            : '駿河の今川義元が、公家のような装いで京へ上ってくる。お歯黒をつけた大名だと噂されている。',
         [
           Choice.h(
             retainer ? '行列の先頭を務める' : '行列を見に行く',
@@ -425,7 +450,7 @@ List<SceneDef> buildAltScenes() => [
               } else {
                 g.j(3);
               }
-              g.mark('今川義元の上洛を、この目で見た');
+              g.mark(retainer ? '今川義元の上洛で、行列の先頭を務めた' : '今川義元の上洛を、この目で見た');
               return '雅な行列だった。誰もが「海道一の弓取り」の天下が来たと思った。';
             },
           ),
@@ -445,7 +470,8 @@ List<SceneDef> buildAltScenes() => [
     (g) =>
         _inLine(g, 'imagawa') &&
         g.hasFlag('scene:okehazama') &&
-        g.l.lord == '今川',
+        g.l.lord == '今川' &&
+        g.active,
     (g, next) {
       final l = g.l;
       g.ask(
@@ -478,36 +504,49 @@ List<SceneDef> buildAltScenes() => [
     15,
     84,
     (g) => 20,
-    (g) => _inLine(g, 'nobunaga') && g.hasFlag('history_honnoji') && g.active,
+    (g) =>
+        _inLine(g, 'nobunaga') &&
+        g.hasFlag('history_honnoji') &&
+        _f(g, '織田') != null &&
+        g.l.rank < 8 &&
+        g.active,
     (g, next) {
       final l = g.l;
-      g.ask('信長の召し出し', '安土の天主で、信長が待っていた。「本能寺の火の中から、わしを引きずり出した者よ。望みを申せ」', [
-        Choice.h('国を一つ望む', '大名になれる。信長の家臣であることに変わりはない', () {
-          l.lord = '織田';
-          l.rank = 7;
-          if (l.maxRank < 7) l.maxRank = 7;
-          l.troops += 60;
-          l.fav = 80;
-          g.mark('本能寺の功で、信長から一国を任された');
-          return '信長は笑って、一国を任せると言った。';
-        }),
-        Choice.h('南蛮の船に乗りたいと願う', '海の向こうを見られる。帰れる保証はない', () {
-          g.setFlag('nanban_voyage');
-          g.mark('信長の許しを得て、南蛮の船で海を渡った');
-          if (g.rng.chance(.3)) {
-            g.die('信長の船で南蛮へ渡り、そのまま帰らなかった', 'yukue');
-            return '船は南へ、南へと進み、やがて見えなくなった。';
-          }
-          l.chi = _c(l.chi + 10);
-          return '海の向こうの国々を見て、帰ってきた。';
-        }),
-        Choice.h('何も望まない', '信長は不思議そうな顔をする', () {
-          l.fame += 15;
-          g.j(5);
-          g.mark('信長の命を救い、何も望まなかった');
-          return '「欲のない奴よ」。信長は、天下一の名物の茶碗を投げてよこした。';
-        }),
-      ], after: next);
+      final saved = !g.hasFlag('scene:h_x_honnoji_warn');
+      g.ask(
+        '信長の召し出し',
+        saved
+            ? '安土の天主で、信長が待っていた。「本能寺の火の中から、わしを引きずり出した者よ。望みを申せ」'
+            : '安土の天主で、信長が待っていた。「あの夜明け、本能寺へ急を知らせに走った者よ。望みを申せ」',
+        [
+          Choice.h('国を一つ望む', '一国を任される。信長の家臣であることに変わりはない', () {
+            l.lord = '織田';
+            if (l.rank < 7) l.rank = 7;
+            if (l.rank > l.maxRank) l.maxRank = l.rank;
+            if (g.canFight) l.troops += 60;
+            l.fav = 80;
+            g.mark('本能寺の功で、信長から一国を任された');
+            return '信長は笑って、一国を任せると言った。';
+          }),
+          Choice.h('南蛮の船に乗りたいと願う', '海の向こうを見られる。帰れる保証はない', () {
+            g.setFlag('nanban_voyage');
+            g.mark('信長の許しを得て、南蛮の船で海を渡った');
+            if (g.rng.chance(.3)) {
+              g.die('信長の船で南蛮へ渡り、そのまま帰らなかった', 'yukue');
+              return '船は南へ、南へと進み、やがて見えなくなった。';
+            }
+            l.chi = _c(l.chi + 10);
+            return '海の向こうの国々を見て、帰ってきた。';
+          }),
+          Choice.h('何も望まない', '信長は不思議そうな顔をする', () {
+            l.fame += 15;
+            g.j(5);
+            g.mark('信長の命を救い、何も望まなかった');
+            return '「欲のない奴よ」。信長は、天下一の名物の茶碗を投げてよこした。';
+          }),
+        ],
+        after: next,
+      );
     },
     ageOk: (g, a) => _yr(g, a) == 1583,
   ),
@@ -602,16 +641,18 @@ List<SceneDef> buildAltScenes() => [
     (g) => _inLine(g, 'akechi') && g.hasFlag('history_yamazaki') && g.active,
     (g, next) {
       final l = g.l;
-      g.ask('光秀の礼', '明智光秀が、山崎で踏みとどまった者を坂本城に招いた。「そなたのおかげで、わしは逆臣で終わらずに済んだ」', [
-        Choice.h('光秀の重臣となる', '新しい天下の柱になる。敵も多い', () {
-          l.lord = '織田';
-          l.rank = l.rank < 6 ? 6 : l.rank;
-          if (l.rank > l.maxRank) l.maxRank = l.rank;
-          l.fav = 70;
-          g.meet('主君', '明智光秀', 70);
-          g.mark('山崎の功で、明智光秀の重臣となった');
-          return '光秀の重臣に取り立てられた。';
-        }),
+      g.ask('光秀の礼', '明智光秀が、山崎の勝ちを助けた者を坂本城に招いた。「そなたのおかげで、わしは逆臣で終わらずに済んだ」', [
+        // 光秀の家は「織田」の勢力として動く。主家を替えるので、その家が残っていて、自分が当主でないときだけ。
+        if (_f(g, '織田') != null && l.rank < 8)
+          Choice.h('光秀の重臣となる', '新しい天下の柱になる。敵も多い', () {
+            l.lord = '織田';
+            l.rank = l.rank < 6 ? 6 : l.rank;
+            if (l.rank > l.maxRank) l.maxRank = l.rank;
+            l.fav = 70;
+            g.meet('主君', '明智光秀', 70);
+            g.mark('山崎の功で、明智光秀の重臣となった');
+            return '光秀の重臣に取り立てられた。';
+          }),
         Choice.h('褒美を辞して野に下る', '勝ち馬から降りる。命は守りやすい', () {
           l.gold += 30;
           g.j(5);

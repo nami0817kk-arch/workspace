@@ -133,7 +133,7 @@ List<SceneDef> buildChildHistoryScenes() {
         }),
         Choice.h('鬼だと思って逃げ帰る', '何も起きない。噂話の種にはなる', () {
           g.l.net++;
-          return '「天狗を見た」と言いふらし、しばらく村の子らの人気者になった。';
+          return '「赤い鬼を見た」と言いふらし、しばらく村の子らの人気者になった。';
         }),
       ], after: next);
     }, ageOk: (g, a) => _span(g, a, 1550, 1582)),
@@ -215,7 +215,7 @@ List<SceneDef> buildChildHistoryScenes() {
       g,
       next,
     ) {
-      g.ask('京に入る軍勢', '尾張の織田信長が、亡き将軍の弟・足利義昭を奉じて京に入ってくる。町じゅうが息をひそめている。', [
+      g.ask('京に入る軍勢', '岐阜の織田信長が、亡き将軍の弟・足利義昭を奉じて京に入ってくる。町じゅうが息をひそめている。', [
         Choice.h('通りの端で行列を見る', '世の中が変わる日を見られる。目立てば危うい', () {
           g.setFlag('saw_nobunaga');
           g.l.chi++;
@@ -260,7 +260,7 @@ List<SceneDef> buildChildHistoryScenes() {
         Choice.h('山から逃げてくる人に水を渡す', '誰かを救えるかもしれない。織田の兵に見られれば…', () {
           g.l.mi += 2;
           if (g.rng.chance(.02)) {
-            g.die('比叡山から逃げる人を助けようとして、兵に斬られた', 'sai');
+            g.die('比叡山から逃げる人を助けようとして、兵に斬られた', 'senshi');
             return '追ってきた兵は、子どもにも容赦しなかった。';
           }
           g.j(-6);
@@ -302,7 +302,7 @@ List<SceneDef> buildChildHistoryScenes() {
       g.ask('一揆の村', '一揆の国になった越前に、織田の大軍が攻め入った。一揆に加わった村は、次々に焼かれている。', [
         Choice.h('家族と山奥へ逃げる', '見つからなければ助かる。山は深い', () {
           if (g.rng.chance(.06)) {
-            g.die('越前の一向一揆が攻められたとき、山へ逃げる途中で討たれた', 'sai');
+            g.die('越前の一向一揆が攻められたとき、山へ逃げる途中で兵に斬られた', 'senshi');
             return '山狩りの兵に見つかった。';
           }
           g.l.hp -= 8;
@@ -394,7 +394,7 @@ List<SceneDef> buildChildHistoryScenes() {
         }),
         Choice.h('家で手を合わせる', '何も起きない', () {
           g.j(-3);
-          return '西の空が、夜まで赤かった。';
+          return '寺の方角の空が、夜まで赤かった。';
         }),
       ], after: next);
     }, ageOk: (g, a) => _span(g, a, 1582, 1582)),
@@ -407,7 +407,7 @@ List<SceneDef> buildChildHistoryScenes() {
         Choice.h('本能寺の方へ見に行く', '何が起きたか知れる。兵がうろついている', () {
           g.l.chi++;
           if (g.rng.chance(.02)) {
-            g.die('本能寺の変の朝、明智の兵に斬られた', 'sai');
+            g.die('本能寺の変の朝、明智の兵に斬られた', 'senshi');
             return '桔梗の旗の兵に、行く手をふさがれた。';
           }
           g.j(-5);
@@ -546,7 +546,7 @@ List<SceneDef> buildLifeHistoryScenes() {
             Choice.h('銀を出して、道案内に加わる', '恩を売れる。落ち武者狩りの山道は危うい', () {
               _pay(g, 5);
               if (g.rng.chance(.05)) {
-                g.die('家康の伊賀越えに加わり、山中で落ち武者狩りに討たれた', 'sai');
+                g.die('家康の伊賀越えに加わり、山中で落ち武者狩りに討たれた', 'senshi');
                 return '伊賀の山中で、竹槍が藪から突き出された。';
               }
               g.setFlag('iga_goe');
@@ -592,7 +592,7 @@ List<SceneDef> buildLifeHistoryScenes() {
                 return '松の下に席を構えると、関白その人がふらりと現れ、一服を飲んで笑った。';
               }
               g.mark('北野の大茶会に、釜を担いで加わった');
-              return '森じゅうに、八百を超える茶席が並んだ。大茶会は、一日で打ち切られた。';
+              return '森じゅうに、八百を超える茶席が並んだと伝わる。大茶会は、一日で打ち切られた。';
             }),
             Choice.h('見物だけに行く', '気楽に楽しめる', () {
               g.j(4);
@@ -769,7 +769,7 @@ List<SceneDef> buildLifeHistoryScenes() {
       (g) => g.l.female && _reg(g, ['越前', '近江']) && g.active,
       (g, next) {
         g.ask(
-          '北ノ庄の春',
+          '北ノ庄の落城',
           '柴田勝家に嫁いだお市の方と三人の姫が、北ノ庄の城にいる。賤ヶ岳で敗れた勝家を追って、秀吉の大軍が城を囲んだ。お市は、姫たちを城から出すと決めた。',
           [
             Choice.h('姫たちに付き従って城を出る', '生き延びられる。お市は城に残る', () {
