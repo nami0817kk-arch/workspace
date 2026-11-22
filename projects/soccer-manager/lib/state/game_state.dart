@@ -1177,6 +1177,9 @@ class GameState extends ChangeNotifier {
     NamePool.homeTheme = theme;
     // ピラミッドの最下層(3部制なので3部)からスタートする。
     const userStartTier = totalDivisionTiers;
+    // 年俸の水準は国・部で違う。自クラブの部の水準を基準にし、他の部の
+    // クラブはその部の水準で作る(economy_scale.dart の wageCountryFactor)。
+    setHomeWageLevel(theme, userStartTier);
     final userTeam = PlayerGenerator.generateSquad(
       id: 'user',
       name: clubName,
@@ -1219,14 +1222,17 @@ class GameState extends ChangeNotifier {
     final otherDivisionLeagues = List<League?>.filled(totalDivisionTiers, null);
     for (int tier = 1; tier <= totalDivisionTiers; tier++) {
       if (tier == userStartTier) continue;
-      final tierTeams = <Team>[
-        for (int i = 0; i < theme.teamsInTier(tier); i++)
-          PlayerGenerator.generateSquad(
-            id: 'div${tier}_$i',
-            name: nextName(tier),
-            strengthTier: strengthForTier(tier),
-          ),
-      ];
+      final tierTeams = withWageLevel(
+        wageCountryFactor(theme, tier),
+        () => <Team>[
+          for (int i = 0; i < theme.teamsInTier(tier); i++)
+            PlayerGenerator.generateSquad(
+              id: 'div${tier}_$i',
+              name: nextName(tier),
+              strengthTier: strengthForTier(tier),
+            ),
+        ],
+      );
       for (final t in tierTeams) {
         LineupUtils.autoFill(t);
       }
@@ -1517,6 +1523,10 @@ class GameState extends ChangeNotifier {
   /// 試合の確定([GameStateMatch._finalizeSecondHalf])で出場を数え、先発の
   /// 指定を元に戻してから空にする。
   List<AutoSubstitutionPlan> _liveAutoSubPlans = [];
+
+  /// ハーフタイムに利用者が行った交代の出来事(46分)。後半を始めるときに
+  /// 後半の出来事の頭に入れ、試合経過に「交代: A → B」と出す。
+  List<MatchEvent> _liveHalfTimeSubEvents = [];
 
   // ---- カップ戦のライブ観戦(リーグ戦と同じ進行を再利用する) ----
   LiveCupKind? _liveCupKind;

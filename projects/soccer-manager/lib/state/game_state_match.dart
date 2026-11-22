@@ -195,8 +195,16 @@ extension GameStateMatch on GameState {
         MatchEngine.sentOffIds(first.events).contains(outPlayerId)) {
       return false;
     }
+    final out = userTeam.players.where((p) => p.id == outPlayerId).firstOrNull;
+    final incoming =
+        userTeam.players.where((p) => p.id == inPlayerId).firstOrNull;
     swapStartingPlayer(outPlayerId: outPlayerId, inPlayerId: inPlayerId);
     _liveSubstitutionsUsed++;
+    // 試合経過に「46分 交代: A → B」と出す(後半を始めるときに入れる)。
+    if (out != null && incoming != null) {
+      _liveHalfTimeSubEvents.add(MatchEngine.substitutionEvent(
+          minute: 46, teamId: userTeam.id, out: out, incoming: incoming));
+    }
     _notify();
     return true;
   }
@@ -221,6 +229,17 @@ extension GameStateMatch on GameState {
       inPlayerId: inPlayerId,
     );
     if (!applied) return false;
+    final out = userTeam.players.where((p) => p.id == outPlayerId).firstOrNull;
+    final incoming =
+        userTeam.players.where((p) => p.id == inPlayerId).firstOrNull;
+    // 試合経過に「◯分 交代: A → B」と出す(このハーフの出来事に入れる)。
+    if (out != null && incoming != null) {
+      state.events.add(MatchEngine.substitutionEvent(
+          minute: MatchEngine.currentMinuteOf(state),
+          teamId: userTeam.id,
+          out: out,
+          incoming: incoming));
+    }
     swapStartingPlayer(outPlayerId: outPlayerId, inPlayerId: inPlayerId);
     _liveSubstitutionsUsed++;
     // 同じ止まった場面で続けて替えるのは1回と数える(5人を3回まで)。
@@ -435,6 +454,8 @@ extension GameStateMatch on GameState {
           away: away,
           matchday: md,
         );
+        // 警告・退場・交代の出場を選手に入れる(出場停止もここで消化)。
+        BackgroundMatchEngine.applyPlayerEffects(home: home, away: away);
       }
     }
 
@@ -540,6 +561,7 @@ extension GameStateMatch on GameState {
       _liveSubstitutionsUsed = 0;
       _liveSubWindowsUsed = 0;
       _liveSubWindowKey = null;
+      _liveHalfTimeSubEvents = [];
     }
 
     // 試合前の処理を済ませた印と、試合の途中経過を同じ保存に載せる。
@@ -651,6 +673,7 @@ extension GameStateMatch on GameState {
       _liveSubstitutionsUsed = progress?.substitutionsUsed ?? 0;
       _liveSubWindowsUsed = progress?.substitutionWindowsUsed ?? 0;
       _liveSubWindowKey = null;
+      _liveHalfTimeSubEvents = [];
     }
     _recordLiveProgress();
 
@@ -741,11 +764,15 @@ extension GameStateMatch on GameState {
           for (final plan in _liveAutoSubPlans)
             if (plan.team.id == userId) ...plan.swaps,
         ].length;
+    // 自動の交代の出来事(試合経過に出す)。ハーフタイムと後半の途中。
+    final halfTimeSubEvents = <MatchEvent>[];
+    final lateSubEvents = <MatchEvent>[];
     void autoSubstitute({
       required int homeGoalDiff,
       required Set<String> excluded,
       required int tiredFatigue,
       required bool countsAsWindow,
+      required int minute,
     }) {
       for (final team in [home, away]) {
         final isUser = team.id == userId;
@@ -769,6 +796,8 @@ extension GameStateMatch on GameState {
         );
         if (plan.swaps.isEmpty) continue;
         _liveAutoSubPlans.add(plan);
+        (countsAsWindow ? lateSubEvents : halfTimeSubEvents)
+            .addAll(MatchEngine.substitutionEventsOf(plan, minute));
         if (isUser && countsAsWindow) _liveSubWindowsUsed++;
       }
     }
@@ -779,6 +808,7 @@ extension GameStateMatch on GameState {
         excluded: MatchEngine.sentOffIds(firstHalf.events),
         tiredFatigue: MatchEngine.autoSubTiredFatigue,
         countsAsWindow: false,
+        minute: 46,
       );
     }
     // 前半に退場した選手は後半に出さず、数的不利も後半まで続ける。
@@ -812,6 +842,7 @@ extension GameStateMatch on GameState {
         },
         tiredFatigue: MatchEngine.lateAutoSubTiredFatigue,
         countsAsWindow: true,
+        minute: lateMinute,
       );
       state = MatchEngine.beginInteractiveHalf(
         home: home,
@@ -847,6 +878,16 @@ extension GameStateMatch on GameState {
         priorEvents: firstHalf.events,
       );
     }
+    // 交代の出来事を後半の出来事に入れる(画面は分の順に並べる)。ハーフ
+    // タイムの交代は頭に、後半の途中の交代は、それまでの出来事(引き継いだ
+    // 途中経過)のあとに。
+    final halfTime = [..._liveHalfTimeSubEvents, ...halfTimeSubEvents];
+    _liveHalfTimeSubEvents = [];
+    final carriedCount = state.carried?.events.length ?? 0;
+    state.events.insertAll(0, halfTime);
+    state.events.insertAll(
+        (halfTime.length + carriedCount).clamp(0, state.events.length),
+        lateSubEvents);
     if (!interactive) {
       while (!state.isFinished) {
         MatchEngine.resolvePendingChance(state, ChanceDecision.shoot);
@@ -1060,6 +1101,7 @@ extension GameStateMatch on GameState {
     _liveSubstitutionsUsed = 0;
     _liveSubWindowsUsed = 0;
     _liveSubWindowKey = null;
+    _liveHalfTimeSubEvents = [];
     _liveWasInteractive = false;
 
     _notify();

@@ -81,6 +81,10 @@ String matchCommentaryText(MatchEvent event, String teamName) {
 
   List<String> templates;
   switch (event.type) {
+    case MatchEventType.substitution:
+      // 交代は決まった形で出す(scorer が入った選手、assist が下がった選手)。
+      final out = assist ?? Tr.pick('選手', 'Player');
+      return Tr.pick('交代: $out → $scorer', 'Substitution: $out → $scorer');
     case MatchEventType.goal:
       if (assist != null) {
         templates = [
@@ -196,6 +200,7 @@ class CommentaryTile extends StatelessWidget {
       MatchEventType.chance => (Icons.flash_on, Colors.orange),
       MatchEventType.yellowCard => (Icons.warning_amber, Colors.amber),
       MatchEventType.redCard => (Icons.dangerous, Colors.redAccent),
+      MatchEventType.substitution => (Icons.swap_horiz, Colors.blueGrey),
     };
     final text = matchCommentaryText(event, teamName);
     String? playerId;

@@ -344,6 +344,10 @@ extension GameStateTalks on GameState {
       stepDownFactor: player.traits.stepDownFactor,
       promise: promise,
       agentFactor: agent.demandFactor,
+      // 他国のクラブの選手は、こちらの国の水準に直した今の週俸から求める。
+      currentWageScale: target?.club == null
+          ? 1.0
+          : wageScaleToHome(_foreignTeamIds()[target!.club!.id]),
     );
     // 他のクラブも誘っていれば、選手は年俸とクラブの格を比べる。
     if (t.hasRival) {
@@ -409,7 +413,7 @@ extension GameStateTalks on GameState {
     // 移籍金は契約の年数で償却する(簿価)。
     player.wage = weeklyWage;
     ContractEngine.renewContract(player, endYear: endYear);
-    _recordPlayerBook(player, fee);
+    _recordPlayerBook(player, fee, agentFee: agentFee);
     // 約束した序列と、加入したときの機嫌(順応の高い選手ほど良い)。
     player.squadStatus = promise;
     // 週俸は約束した序列で決めた(のちに上げると見直しを求める)。

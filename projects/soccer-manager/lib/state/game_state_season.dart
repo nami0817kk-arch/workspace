@@ -18,33 +18,38 @@ extension GameStateSeason on GameState {
   /// 読んだときは、その強さに合う選手をここで作る。他国の1部が無ければ作り、
   /// 今の国と同じものがあれば外す(別の国のクラブを買い直したとき)。
   void _ensureWorldSquads(SaveGame save) {
-    for (final l in save.otherDivisionLeagues) {
-      if (l == null) continue;
-      _ensureSquadsForActiveTier(l.teams);
-    }
     final current = leagueThemeFromName(save.leagueName) ?? LeagueTheme.england;
+    for (var i = 0; i < save.otherDivisionLeagues.length; i++) {
+      final l = save.otherDivisionLeagues[i];
+      if (l == null) continue;
+      _ensureSquadsForActiveTier(l.teams, wageCountryFactor(current, i + 1));
+    }
     save.foreignLeagues.remove(current.name);
     final rng = Random();
     for (final theme in LeagueTheme.values) {
       if (theme == current) continue;
       final existing = save.foreignLeagues[theme.name];
       if (existing != null) {
-        _ensureSquadsForActiveTier(existing.teams);
+        _ensureSquadsForActiveTier(existing.teams, wageCountryFactor(theme, 1));
         continue;
       }
       final count = theme.teamsInTier(1);
       final names = NamePool.themedClubNames(theme, count);
       // その国の選手はその国の名前で作る。
       NamePool.homeTheme = theme;
-      final teams = [
-        for (var i = 0; i < count; i++)
-          PlayerGenerator.generateSquad(
-            id: 'f_${theme.name}_$i',
-            name: names[i],
-            // 1部の上から下まで(強豪から残留争いまで)の幅を持たせる。
-            strengthTier: rollDivisionStrength(1, rng),
-          ),
-      ];
+      // 年俸はその国の1部の水準(wageCountryFactor)。
+      final teams = withWageLevel(
+        wageCountryFactor(theme, 1),
+        () => [
+          for (var i = 0; i < count; i++)
+            PlayerGenerator.generateSquad(
+              id: 'f_${theme.name}_$i',
+              name: names[i],
+              // 1部の上から下まで(強豪から残留争いまで)の幅を持たせる。
+              strengthTier: rollDivisionStrength(1, rng),
+            ),
+        ],
+      );
       for (final t in teams) {
         LineupUtils.autoFill(t);
       }
@@ -60,17 +65,21 @@ extension GameStateSeason on GameState {
     _localizeNames();
   }
 
-  void _ensureSquadsForActiveTier(List<Team> teams) {
+  void _ensureSquadsForActiveTier(List<Team> teams, [double? wageLevel]) {
     for (final t in teams) {
       if (t.players.isNotEmpty) continue;
       // 保持していた強度に合うスカッドを作る。strengthTier にそのまま
       // 渡すと出来上がりが1〜2割弱く、再起動のたびに昇降格で入ってくる
       // クラブが弱くなっていた。壊れたセーブで欠けていた場合に0の
       // スカッドを作らないよう、移行時と同じ範囲に収める。
-      final generated = PlayerGenerator.generateSquadWithOverall(
-        id: t.id,
-        name: t.name,
-        targetOverall: (t.retainedOverall ?? 50).clamp(15, 90),
+      // 年俸はそのクラブのいる国・部の水準([wageLevel])。
+      final generated = withWageLevel(
+        wageLevel ?? currentWageLevel,
+        () => PlayerGenerator.generateSquadWithOverall(
+          id: t.id,
+          name: t.name,
+          targetOverall: (t.retainedOverall ?? 50).clamp(15, 90),
+        ),
       );
       t.players = generated.players;
       t.retainedOverall = null;
@@ -690,6 +699,7 @@ extension GameStateSeason on GameState {
     _liveSubstitutionsUsed = 0;
     _liveSubWindowsUsed = 0;
     _liveSubWindowKey = null;
+    _liveHalfTimeSubEvents = [];
     lastCupPrizeNote = null;
     _liveWasInteractive = true; // カップのライブ観戦は常に決定機の判断あり
     _liveFirstHalfState = MatchEngine.beginInteractiveHalf(
@@ -1264,7 +1274,7 @@ extension GameStateSeason on GameState {
         for (final p in t.players) {
           OffscreenDevelopment.apply(p, offscreenRng);
         }
-        RetirementEngine.resolveAndReplaceForCpu(t);
+        _generatingFor(t, () => RetirementEngine.resolveAndReplaceForCpu(t));
       }
     }
     for (final t in _save!.allTeams) {
@@ -1277,7 +1287,8 @@ extension GameStateSeason on GameState {
       // を個別に呼ぶ)と違って移籍市場で世代交代しないため、ここで代わりに
       // 引退+若手補充を行う。行わないと選手が永遠に加齢し続けてしまう。
       if (t.id != _save!.userTeamId) {
-        RetirementEngine.resolveAndReplaceForCpu(t);
+        // 補充の若手の年俸は、そのクラブのいる部の水準。
+        _generatingFor(t, () => RetirementEngine.resolveAndReplaceForCpu(t));
       }
     }
     final infra = _save!.infrastructure;
@@ -1477,10 +1488,13 @@ extension GameStateSeason on GameState {
       theme.teamsByTier,
       protectedId: _save!.userTeamId,
       create: (tier, i) {
-        final t = PlayerGenerator.generateSquad(
-          id: 's${league.season + 1}_div${tier}_$i',
-          name: newClubNames[nameCursor++ % newClubNames.length],
-          strengthTier: rollDivisionStrength(tier, resizeRng),
+        final t = withWageLevel(
+          wageCountryFactor(theme, tier),
+          () => PlayerGenerator.generateSquad(
+            id: 's${league.season + 1}_div${tier}_$i',
+            name: newClubNames[nameCursor++ % newClubNames.length],
+            strengthTier: rollDivisionStrength(tier, resizeRng),
+          ),
         );
         LineupUtils.autoFill(t);
         return t;

@@ -13,13 +13,20 @@ extension GameStateTransfer on GameState {
     final fee = TransferTermsEngine.agentFee(player.marketValue);
     if (_save!.budget < player.marketValue + fee) return false;
     if (!_registrationAllows(player)) return false;
-    if (!_wageBudgetAllowsSigning(player.wage, fee: player.marketValue)) {
+    final wageHere = (player.wage *
+            (target.club == null
+                ? 1.0
+                : wageScaleToHome(_foreignTeamIds()[target.club!.id])))
+        .round();
+    if (!_wageBudgetAllowsSigning(wageHere, fee: player.marketValue)) {
       return false;
     }
+    _convertArrivingWage(target);
     _payTransferFee(player.marketValue);
     _bookAgentFee(player, fee);
     ContractEngine.applyTransferContract(player);
-    _recordPlayerBook(player, player.marketValue, announce: false);
+    _recordPlayerBook(player, player.marketValue,
+        announce: false, agentFee: fee);
     _takeFromSeller(target);
     userTeam.players.add(player);
     _notify();
@@ -49,10 +56,12 @@ extension GameStateTransfer on GameState {
     return false;
   }
 
-  /// 代理人手数料を払う(移籍金とは別の費用)。
+  /// 代理人手数料を払う。移籍金と同じく資産になる支払い(資金はいま減り、
+  /// 損益には償却で入る)。呼び出し元は、同じ額を [_recordPlayerBook] の
+  /// agentFee に渡して簿価に足すこと(2026-11-22。以前はその季の費用)。
   void _bookAgentFee(Player player, int fee) {
     if (fee <= 0) return;
-    _book(LedgerCategory.transfers, -fee);
+    _payTransferFee(fee);
     _logNews(
         Tr.pick('${player.name}の代理人に手数料${formatMoney(fee)}を支払った。',
             'Paid ${formatMoney(fee)} in agent fees for ${player.name}.'),
@@ -181,6 +190,17 @@ extension GameStateTransfer on GameState {
     player.originClubName = club.name;
     player.originLeague = _foreignTeamIds()[club.id] ?? currentLeagueTheme.name;
     return (player: player, club: club);
+  }
+
+  /// 他国のクラブから買う選手の週俸を、こちらの国の水準に直す
+  /// ([wageScaleToHome]。交渉を経ずに買う道で使う)。同じ国なら変えない。
+  void _convertArrivingWage(({Player player, Team? club}) target) {
+    final club = target.club;
+    if (club == null) return;
+    final scale = wageScaleToHome(_foreignTeamIds()[club.id]);
+    if (scale == 1.0) return;
+    final p = target.player;
+    p.wage = max(minWeeklyWage, (p.wage * scale).round());
   }
 
   /// 獲得した選手を、元のクラブ(または作り物の市場)から外す。
@@ -421,8 +441,10 @@ extension GameStateTransfer on GameState {
       _notify();
       return (attempted: true, accepted: false);
     }
+    _convertArrivingWage(target);
     _payTransferFee(offer);
-    _bookAgentFee(player, TransferTermsEngine.agentFee(offer));
+    final agentFee = TransferTermsEngine.agentFee(offer);
+    _bookAgentFee(player, agentFee);
     final clause = TransferTermsEngine.sellOnPercent(
         offer: offer, marketValue: player.marketValue);
     if (clause > 0) {
@@ -433,7 +455,7 @@ extension GameStateTransfer on GameState {
           context: Tr.pick('移籍', 'Transfer'));
     }
     ContractEngine.applyTransferContract(player);
-    _recordPlayerBook(player, offer, announce: false);
+    _recordPlayerBook(player, offer, announce: false, agentFee: agentFee);
     _takeFromSeller(target);
     userTeam.players.add(player);
     if (offer < player.marketValue) {
@@ -621,6 +643,7 @@ extension GameStateTransfer on GameState {
             redCards++;
             break;
           case MatchEventType.chance:
+          case MatchEventType.substitution:
             break;
         }
       }
@@ -825,12 +848,13 @@ extension GameStateTransfer on GameState {
     lastSigningBlockReason = null;
     if (!_wageBudgetAllowsSigning(player.wage, fee: total)) return false;
 
+    _convertArrivingWage(target);
     _payTransferFee(downPayment);
     _bookAgentFee(player, fee);
     ContractEngine.applyTransferContract(player);
     _addAnnualInstallment(player, total - downPayment,
         player.contractEndYear - Player.contractClockYear + 1);
-    _recordPlayerBook(player, total, announce: false);
+    _recordPlayerBook(player, total, announce: false, agentFee: fee);
     _takeFromSeller(target);
     userTeam.players.add(player);
     _notify();
@@ -1202,6 +1226,7 @@ extension GameStateTransfer on GameState {
     ContractEngine.renewContract(player, endYear: endYear, option: option);
     if (bonus > 0) _book(LedgerCategory.transfers, -bonus);
     _bookAgentFee(player, agentFee);
+    _recordPlayerBook(player, 0, announce: false, agentFee: agentFee);
     userTeam.players.add(player);
     _notify();
     await _persist();
@@ -1737,6 +1762,9 @@ extension GameStateTransfer on GameState {
       for (final p in t.players) {
         if (p.internationalDutyWeeksRemaining > 0) {
           p.internationalDutyWeeksRemaining -= 1;
+          if (p.internationalDutyWeeksRemaining == 0) {
+            _returnFromInternationalDuty(t, p);
+          }
         }
       }
     }
@@ -1780,17 +1808,61 @@ extension GameStateTransfer on GameState {
     return called;
   }
 
+  /// 代表から戻った選手に足す疲れの幅(この値〜+[internationalReturnFatigueSpread])。
+  /// 代表ウィークは約9日で2試合。移動と試合の疲れが少し残って戻る
+  /// (試合1つの疲れは12〜19。戻るまでに日数ぶん抜けるので、それより小さい)。
+  static const int internationalReturnFatigue = 8;
+  static const int internationalReturnFatigueSpread = 7;
+
+  /// 代表から軽い怪我を負って戻る確率(1回の代表ウィークで呼ばれた選手の
+  /// うち)。実際は2〜3%ほど。
+  static const double internationalInjuryChance = 0.025;
+
+  /// 代表から戻るときの疲れ・怪我の抽選(テストで差し替える)。
+  static Random internationalReturnRng = Random();
+
   /// 代表ウィークが終わったら(今日が代表ウィークの外なら)、代表に行って
   /// いる選手を戻す。週の処理の曜日と代表ウィークの終わりがずれても、
   /// 次のリーグ戦の前に必ず戻るように、今日を進めるたびに見る。
+  ///
+  /// 戻った選手には疲れを少し足し、まれに([internationalInjuryChance])
+  /// 軽い怪我(打撲・肉離れ、1〜2週)で戻る(2026-11-22)。自クラブの選手の
+  /// 怪我はニュースに出す。
   void _releaseInternationalDuty() {
     final s = _save!;
     if (seasonCalendar.isInternationalWindow(today)) return;
     for (final t in s.league.teams) {
       for (final p in t.players) {
+        if (p.internationalDutyWeeksRemaining <= 0) continue;
         p.internationalDutyWeeksRemaining = 0;
+        _returnFromInternationalDuty(t, p);
       }
     }
+  }
+
+  /// 代表から戻った[p]([t]の選手)に、疲れを足し、まれに軽い怪我を負わせる。
+  /// 代表ウィークの途中の週の処理で戻る選手と、代表ウィークが終わって
+  /// 戻る選手の両方で呼ぶ。
+  void _returnFromInternationalDuty(Team t, Player p) {
+    final rng = internationalReturnRng;
+    p.fatigue = (p.fatigue +
+            internationalReturnFatigue +
+            rng.nextInt(internationalReturnFatigueSpread + 1))
+        .clamp(0, 100);
+    if (p.isInjured || rng.nextDouble() >= internationalInjuryChance) return;
+    final type = rng.nextBool() ? InjuryType.bruise : InjuryType.muscle;
+    p.injuryWeeks = 1 + rng.nextInt(2);
+    p.injuryDays = 0;
+    p.injuryType = type;
+    p.injuryHistoryCounts[type.name] =
+        (p.injuryHistoryCounts[type.name] ?? 0) + 1;
+    if (t.id != _save!.userTeamId) return;
+    if (t.startingXI.remove(p.id)) LineupUtils.autoFill(t);
+    _logNews(
+        Tr.pick(
+            '${p.name}は代表で${type.label}を負って戻った(全治${p.injuryWeeks}週)。',
+            '${p.name} came back from international duty with a ${type.label.toLowerCase()} (out for ${Tr.plural(p.injuryWeeks, 'week')}).'),
+        context: Tr.pick('代表', 'International'));
   }
 
   /// テスト用: 代表召集の週次処理を、今日の日付で走らせる。

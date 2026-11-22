@@ -27,6 +27,7 @@ extension GameStateForeign on GameState {
         if (home == null || away == null) continue;
         f.result = BackgroundMatchEngine.simulate(
             home: home, away: away, matchday: md);
+        BackgroundMatchEngine.applyPlayerEffects(home: home, away: away);
       }
     }
   }
@@ -44,6 +45,7 @@ extension GameStateForeign on GameState {
         if (home == null || away == null) continue;
         f.result = BackgroundMatchEngine.simulate(
             home: home, away: away, matchday: f.matchday);
+        BackgroundMatchEngine.applyPlayerEffects(home: home, away: away);
       }
       final table = l.sortedStandings;
       if (table.isNotEmpty) {

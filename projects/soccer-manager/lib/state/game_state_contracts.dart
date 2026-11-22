@@ -10,10 +10,30 @@ extension GameStateContracts on GameState {
     final s = save ?? _save;
     if (s == null) return;
     Player.contractClockYear = Player.seasonEndYearOf(s.league.season);
+    final theme = leagueThemeFromName(s.leagueName) ?? LeagueTheme.england;
     // 契約の長さの上限は国で違う(スペインは5年を超えてよい)。
-    ContractEngine.adultContractYearsCap = ContractEngine.adultCapFor(
-        leagueThemeFromName(s.leagueName) ?? LeagueTheme.england);
+    ContractEngine.adultContractYearsCap = ContractEngine.adultCapFor(theme);
+    // 年俸の水準も国・部で違う(economy_scale.dart の wageCountryFactor)。
+    setHomeWageLevel(theme, s.currentDivisionTier);
   }
+
+  /// [t]のいる国・部の年俸の水準([wageCountryFactor])。他国のクラブは
+  /// その国の1部。
+  double _wageLevelOfTeam(Team t) {
+    final s = _save!;
+    for (final e in s.foreignLeagues.entries) {
+      if (!e.value.teams.any((x) => x.id == t.id)) continue;
+      final theme =
+          LeagueTheme.values.where((x) => x.name == e.key).firstOrNull;
+      return wageCountryFactor(theme ?? LeagueTheme.england, 1);
+    }
+    return wageCountryFactor(
+        currentLeagueTheme, _tierOfClub(t.id) ?? s.currentDivisionTier);
+  }
+
+  /// [t]のいる国・部の水準で選手を作る(他の部・他国のクラブの補充)。
+  T _generatingFor<T>(Team t, T Function() body) =>
+      withWageLevel(_wageLevelOfTeam(t), body);
 
   /// 選手を持つ全クラブ(自国の全部と他の4か国の1部)。
   List<Team> get _worldTeams => [
@@ -76,6 +96,22 @@ extension GameStateContracts on GameState {
     }
     list.sort((a, b) => b.player.overall.compareTo(a.player.overall));
     return list.length > limit ? list.sublist(0, limit) : list;
+  }
+
+  /// 仮契約で[p]が求める週俸。他国のクラブの選手は、こちらの国の水準に
+  /// 直した今の週俸から求める([wageScaleToHome])。
+  int preContractWageDemand(Player p, {bool option = false}) {
+    String? origin;
+    if (_save != null) {
+      for (final e in _save!.foreignLeagues.entries) {
+        if (e.value.teams.any((t) => t.players.any((q) => q.id == p.id))) {
+          origin = e.key;
+          break;
+        }
+      }
+    }
+    return PreContractEngine.wageDemand(p,
+        option: option, currentWageScale: wageScaleToHome(origin));
   }
 
   /// 他のクラブの選手と仮契約を結ぶ。年俸はその場の要求額
@@ -162,7 +198,7 @@ extension GameStateContracts on GameState {
       fromClubName: from.name,
       toClubId: _save!.userTeamId,
       toClubName: _save!.clubName,
-      wage: PreContractEngine.wageDemand(player, option: withOption),
+      wage: preContractWageDemand(player, option: withOption),
       endYear: end,
       option: withOption,
       signedOn: today,
@@ -419,7 +455,8 @@ extension GameStateContracts on GameState {
         LineupUtils.autoFill(to);
       }
       // 抜けたクラブは若手で埋める(人数を保つ)。
-      from.players.add(RetirementEngine.cpuRecruitFor(from, player.position));
+      from.players.add(_generatingFor(
+          from, () => RetirementEngine.cpuRecruitFor(from, player.position)));
     }
     lastPreContractArrivals = joined;
 
@@ -438,7 +475,8 @@ extension GameStateContracts on GameState {
             p.age < 34) {
           _save!.freeAgents.add(p);
         }
-        t.players.add(RetirementEngine.cpuRecruitFor(t, p.position));
+        t.players.add(_generatingFor(
+            t, () => RetirementEngine.cpuRecruitFor(t, p.position)));
       }
       LineupUtils.autoFill(t);
     }

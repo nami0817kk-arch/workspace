@@ -5,6 +5,7 @@ import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/logic/economy_scale.dart';
 import 'package:soccer_manager/logic/investment_engine.dart';
 import 'package:soccer_manager/logic/loan_engine.dart';
+import 'package:soccer_manager/logic/transfer_terms_engine.dart';
 import 'package:soccer_manager/models/incoming_offer.dart';
 import 'package:soccer_manager/models/installment.dart';
 import 'package:soccer_manager/models/league_theme.dart';
@@ -101,24 +102,28 @@ void main() {
   });
 
   group('移籍金の償却', () {
-    test('買った季は移籍金を資産として払い、損益には入れない', () async {
+    // 2026-11-22: 代理人手数料も移籍の資産(簿価)に入れる(実際の会計と同じ)。
+    // 以前は「代理人手数料だけが費用」で、簿価は移籍金だけだった。
+    test('買った季は移籍金と代理人手数料を資産として払い、損益には入れない', () async {
       final gs = await newGame();
       final cash = gs.save!.budget;
       final p = await buyOne(gs);
       final fee = p.marketValue;
+      final agent = TransferTermsEngine.agentFee(fee);
       final l = gs.currentLedger;
-      expect(l.of(LedgerCategory.transferFees), -fee);
+      expect(l.of(LedgerCategory.transferFees), -(fee + agent));
       expect(l.of(LedgerCategory.amortization), 0);
-      expect(l.profit, greaterThan(-fee), reason: '代理人手数料だけが費用');
+      expect(l.of(LedgerCategory.transfers), 0, reason: '代理人手数料を費用にした');
       expect(gs.save!.playerBook[p.id], hasLength(4));
-      expect(gs.bookValueOf(p.id), fee);
+      expect(gs.bookValueOf(p.id), fee + agent);
       expect(cash - gs.save!.budget, l.cashChange.abs(), reason: '資金は払ったときに減る');
     });
 
     test('季の締めに、残りの簿価を契約の残りの年数で割った額を費用にする。資金は動かない', () async {
       final gs = await newGame();
       final p = await buyOne(gs);
-      final fee = p.marketValue;
+      // 簿価は移籍金と代理人手数料の合計(2026-11-22)。
+      final fee = gs.bookValueOf(p.id);
       final years = p.contractEndYear - Player.contractClockYear + 1;
       final cash = gs.save!.budget;
       gs.debugAmortizeTransferFees();
@@ -200,8 +205,11 @@ void main() {
       expect(inst.capitalized, isTrue);
       expect(inst.weeksRemaining, years);
       expect(inst.weeklyAmount, ((total - down) / years).ceil());
-      expect(gs.bookValueOf(p.id), total, reason: '簿価は総額');
-      expect(gs.currentLedger.of(LedgerCategory.transferFees), -down);
+      // 簿価は総額と代理人手数料。資産の支払いは頭金と代理人手数料
+      // (2026-11-22 に代理人手数料を簿価に入れた)。
+      final agent = TransferTermsEngine.agentFee(total);
+      expect(gs.bookValueOf(p.id), total + agent, reason: '簿価は総額');
+      expect(gs.currentLedger.of(LedgerCategory.transferFees), -(down + agent));
       final afterBuy = gs.save!.budget;
       expect(cash - afterBuy, greaterThanOrEqualTo(down));
 
