@@ -241,7 +241,10 @@ class TrainingSheet {
     final kind = companion.needs;
     if (kind == null) return companion.label;
     final who = state.teammateOf(kind);
-    return who == null ? companion.label : '${companion.label}（${who.name}）';
+    return who == null
+        ? companion.label
+        : tr('${companion.label}（${who.name}）',
+            '${companion.label} (${who.name})');
   }
 }
 

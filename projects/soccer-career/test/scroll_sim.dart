@@ -70,7 +70,7 @@ void main() {
       '${tr('育成', 'Training')}|${tr('今週決める', 'Decide this week')}': 'tab-training',
       '${tr('育成', 'Training')}|${tr('長い目で狙う', 'The long game')}': 'tab-training-aim',
       '${tr('クラブ', 'Club')}|${tr('立ち位置', 'Where you stand')}': 'tab-club',
-      '${tr('クラブ', 'Club')}|${tr('この国と、世界', 'This country, and the world')}': 'tab-club-world',
+      '${tr('クラブ', 'Club')}|${tr('この国と、世界', 'Country and world')}': 'tab-club-world',
       '${tr('記録', 'Record')}|${tr('今季', 'This season')}': 'tab-career',
       '${tr('記録', 'Record')}|${tr('これまで', 'So far')}': 'tab-career-total',
     };

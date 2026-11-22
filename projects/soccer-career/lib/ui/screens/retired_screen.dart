@@ -74,7 +74,8 @@ class _RetiredScreenState extends State<RetiredScreen> {
               Text(
                 state.nickname == null
                     ? state.player.name
-                    : '${state.player.name}「${state.nickname}」',
+                    : tr('${state.player.name}「${state.nickname}」',
+                        '${state.player.name} "${state.nickname}"'),
                 style: theme.textTheme.headlineSmall,
               ),
               Center(

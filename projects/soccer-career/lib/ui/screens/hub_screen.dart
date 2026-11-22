@@ -1250,7 +1250,7 @@ class _ClubTab extends StatelessWidget {
   Widget build(BuildContext context) => _Sectioned(
     storageId: 'section-club',
     // 見出しで割っていた境目を、そのまま札にした。
-    labels: [tr('立ち位置', 'Where you stand'), tr('この国と、世界', 'This country, and the world')],
+    labels: [tr('立ち位置', 'Where you stand'), tr('この国と、世界', 'Country and world')],
     sections: [
       ListView(
         key: const PageStorageKey('tab-club'),
@@ -2141,7 +2141,8 @@ class _SupportCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '${kind.label}（${kind.description}）',
+                    tr('${kind.label}（${kind.description}）',
+                        '${kind.label} (${kind.description})'),
                     style: theme.textTheme.labelMedium,
                   ),
                 ),
@@ -3683,13 +3684,13 @@ class _LevelCard extends StatelessWidget {
               icon: Icons.groups,
               text:
                   tr('世界${grade.totalClubs}クラブのうち'
-                  '${grade.starterClubs}クラブの主力を上回っている', 'You are above the first choice at ${grade.starterClubs} of the world ${grade.totalClubs} clubs'),
+                  '${grade.starterClubs}クラブの主力を上回っている', 'Better than the first choice at ${grade.starterClubs} of the ${grade.totalClubs} clubs in the world'),
             ),
             _LevelLine(
               icon: Icons.badge,
               text:
                   tr('${state.club.name}（強さ ${state.club.strength}）では'
-                  '${Ranking.standingIn(player.overall, state.club)}', 'At ${state.club.name} (strength ${state.club.strength}) you are ${Ranking.standingIn(player.overall, state.club)}'),
+                  '${Ranking.standingIn(player.overall, state.club)}', 'At ${state.club.name} (strength ${state.club.strength}) - ${Ranking.standingIn(player.overall, state.club)}'),
             ),
             _LevelLine(
               icon: Icons.public,
@@ -5147,7 +5148,8 @@ class _InjuryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${injury.name}（${injury.severity.label}）',
+              tr('${injury.name}（${injury.severity.label}）',
+                  '${injury.name} (${injury.severity.label})'),
               style: theme.textTheme.titleSmall?.copyWith(
                 color: theme.colorScheme.onErrorContainer,
               ),

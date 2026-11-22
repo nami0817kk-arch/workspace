@@ -83,7 +83,7 @@ Map<String, String> get captions => {
   '01-match': tr('サッカー選手の人生を、1試合ずつ選ぶ',
       'A footballer\'s life, one match at a time'),
   '02-create': tr('自分の選手を、ひとりつくる', 'Make a player of your own'),
-  '03-week': tr('今週、何に時間を使うか', 'What you give this week to'),
+  '03-week': tr('今週、何に時間を使うか', 'What you give your week to'),
   '04-player': tr('伸びたところが、数字で残る',
       'What you grew shows up in the numbers'),
   '05-develop': tr('狙った技だけが、身につく',
@@ -475,7 +475,7 @@ Future<void> capture(WidgetTester tester, Device device) async {
     captions['06-world']!,
   );
   await openTab(tester, tr('クラブ', 'Club'),
-      tr('この国と、世界', 'This country, and the world'));
+      tr('この国と、世界', 'Country and world'));
   await dump(tester, device, '06-world');
 
   // シーズンの総括。

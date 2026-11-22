@@ -70,7 +70,11 @@ class MatchBrief {
       // 1枚に収める。長い注釈はクラブタブのカードに任せる。
       lines.add(BriefLine(
         tr('目標', 'Targets'),
-        parts.isEmpty ? tr('3つとも届いている', 'All three are within reach') : parts.join(' ／ '),
+        parts.isEmpty
+            ? tr('3つとも届いている', 'All three are within reach')
+            // **区切りの記号も訳す。** 全角の「／」を英語の画面に
+            // 出したままにしていた（2026-11-22、掲載画像で見つけた）。
+            : parts.join(tr(' ／ ', ' / ')),
         urgent: state.objectiveReach != null,
       ));
     }
@@ -82,7 +86,9 @@ class MatchBrief {
       final short = promise.shortfall(state.seasonStats);
       lines.add(BriefLine(
         tr('約束', 'Promise'),
-        short == null ? tr('${promise.label} — 果たした', '${promise.label} - kept') : '${promise.label}（$short）',
+        short == null
+            ? tr('${promise.label} — 果たした', '${promise.label} - kept')
+            : tr('${promise.label}（$short）', '${promise.label} ($short)'),
         urgent: state.promiseReach != null,
       ));
     }
@@ -102,7 +108,9 @@ class MatchBrief {
 
       final opponent = state.opponentFor(state.matchday);
       final style = ClubStyle.of(opponent);
-      lines.add(BriefLine(tr('相手', 'Opponent'), '${style.label}（${style.description}）'));
+      lines.add(BriefLine(tr('相手', 'Opponent'),
+          tr('${style.label}（${style.description}）',
+              '${style.label} (${style.description})')));
 
       // 自分が出るぶん、クラブがどれだけ強くなるか。判定と同じ式を読む。
       // 1 未満なら出さない（「+0」は情報ではない）。
