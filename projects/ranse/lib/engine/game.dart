@@ -4,6 +4,7 @@ import 'adult.dart';
 import 'birth.dart';
 import 'childhood.dart';
 import 'data.dart';
+import 'echoes.dart';
 import 'history.dart';
 import 'history_east.dart';
 import 'history_life.dart';
@@ -54,6 +55,7 @@ class Game extends ChangeNotifier {
       ...buildAdultScenes(),
       ...buildWayScenes(),
       ...buildLordScenes(),
+      ...buildEchoScenes(),
       ...buildHistoryScenes(),
       ...buildHistoryEastScenes(),
       ...buildHistoryWestScenes(),

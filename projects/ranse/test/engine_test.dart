@@ -806,6 +806,52 @@ void main() {
       }
     });
 
+    test('前に選んだことが、何年もあとに返ってくる（伏線の回収の岐路が出る）', () {
+      const flags = [
+        'hid_oda_heir',
+        'iga_goe',
+        'hid_sword',
+        'hid_gracia_maids',
+        'reformed',
+        'assassin',
+        'friend_ally',
+        'hostage',
+        'saw_namban',
+        'craftsman',
+        'new_field',
+        'shoya',
+        'saw_battle',
+        'family_head',
+        'silent_hero',
+      ];
+      final seen = <String>{};
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 900);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        for (final f in flags) {
+          g.setFlag(f);
+        }
+        g.meet('幼なじみ', '与一', 60);
+        playOut(
+          g,
+          Rng(seed),
+          onPrompt: (p) {
+            for (final c in p.choices) {
+              expect(c.hint, isNotNull, reason: '${p.title}/${c.label}');
+            }
+          },
+        );
+        seen.addAll(
+          g.l.flags
+              .where((f) => f.startsWith('scene:e_'))
+              .map((f) => f.substring(6)),
+        );
+      }
+      expect(seen.length, greaterThanOrEqualTo(12), reason: '$seen');
+    });
+
     test('死に方は保存の往復で残る', () {
       for (var seed = 0; seed < 40; seed++) {
         final rng = Rng(seed);
