@@ -1,0 +1,125 @@
+# 取材メモ（2026年11月17日）森保監督、ラストマッチ前日会見で大幅なメンバー変更を明言「私自身は、終わりかもしれないですけど」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-17。WebFetch と requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボールチャンネル 2026-11-16（発言の全文引用）https://www.footballchannel.jp/2026/11/16/post1057825/
+#           ゲキサカ 2026-11-16「森保監督、8年間のラストマッチも「これまで通り」大幅メンバー変更を明言」（取材・文 竹内達也）https://web.gekisaka.jp/news/japan/detail/?463324-463324-fl
+# 写真の出どころ（森保監督の写真。_pool.png を目で見て、別人の2枚・集合の1枚を外した）:
+#   https://web.gekisaka.jp/news/japan/detail/?463324-463324-fl
+#   https://www.footballchannel.jp/2026/11/16/post1057825/
+#   https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463198-463198-fl
+# 出典で確かめたこと:
+#   ・発言（フットボールチャンネル。字は変えない）:
+#       「明日も大幅に選手を入れ替えて、日本の総合力として戦いたいと思いますし、明日で私自身は、終わりかもしれないですけど」
+#       「日本サッカーの歴史は、過去から今、そして未来とつながっていく中の1試合なので、これまで通り、選手層を厚くするチームとして、より大きなパワーを持つために、明日も大幅にメンバーを入れ替えて戦いに挑みたいと思います」
+#     → 台本は、前半の「明日で私自身は、終わりかもしれないですけど」と、後半の「日本サッカーの歴史は、…1試合なので」を使う。「…」で切れた所は補っていない。
+#   ・ゲキサカ: 「勝利」と「強化」のどちらを重視するかの問いに「両方です」と即答。「誰が出ても勝つ、誰と組んでも機能する」を常々選手に言ってきた（W杯でもチャレンジしてきた）。
+#       「これまでの親善試合の中でも1試合目と2試合目は選手を入れ替えながら戦ってきた」。
+#       ブラジル戦で出番のなかった鈴木唯人・後藤啓介、途中出場で時間が限られた鈴木淳之介・佐野航大らに出場機会を与える見込み（記者の見立て＝報道）。
+#       2018年9月の初陣から113試合で78勝17分け18敗（PK戦は引き分け扱い。23年3月北朝鮮戦の不戦勝を含む）。日本代表史上最高の勝率。
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916337、11/14 日本 3-2 ブラジル）: 日本の登録26人のうち、先発11人・途中出場9人＝出場20人。
+#       出番なしは6人（渡辺剛・相馬勇紀・鈴木唯人・小久保玲央ブライアン・早川友基・後藤啓介）。鈴木唯人と後藤啓介が出番なしはゲキサカの記述と一致。
+#   ・ESPN scoreboard（fifa.friendly 20261117）: Paraguay at Japan（401916336）2026-11-17 13:10 UTC＝日本時間 22:10 キックオフ。まだ Scheduled。
+# 自分で数えたもの: 出場20人・出番なし6人（ESPN の名簿から）。78勝÷113試合＝約69%。勝てば79勝目（78+1。引き分け扱いの数え方はゲキサカのまま）。
+# 前の本との重なり: 20261114_moriyasu_best_worst_game／20261115_moriyasu_brazil_world_top（ブラジル戦の評価）。→ 今回の初出: 前日会見の発言・大幅入れ替えの方針・通算の数字。ブラジル戦の評価は繰り返さない。
+# 【言わないこと】先発の予想（未発表）／誰が何人入れ替わるか（未発表）／アジアカップ延期の話（別の話）。
+# 本人の言葉: あり（森保一。フットボールチャンネル）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [森保一]
+
+short_style: Y
+short_hook_quote: 明日で私自身は、終わりかもしれないですけど
+short_photos:
+  - assets/images/20261117_moriyasu_last_changes/02_v.jpg
+  - assets/images/20261117_moriyasu_last_changes/01_v.jpg
+  - assets/images/20261117_moriyasu_last_changes/04_v.jpg
+short_question: 森保監督のラストマッチ、パラグアイ戦で大幅に入れ替えた先発に、あなたは誰を見たいですか。
+short_telops: []
+
+theme:
+  id: moriyasu_last_changes
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 森保監督、ラストマッチの前日に語った「私自身は、終わりかもしれないですけど」
+  hook: ""
+  question: ラストマッチの前日、森保監督はメンバーの入れ替えについて何を語ったのか
+  takeaway: ブラジル戦に出たのは登録26人のうち20人で、出番がなかったのは6人。森保監督は通算113試合で78勝を挙げ、勝てばラストマッチが79勝目になる
+
+thumbnail:
+  layout: face
+  line1: 森保監督 ラスト前日
+  line2: 「終わりかもしれない」
+  tags: [森保一, 日本代表]
+  photo: assets/images/20261117_moriyasu_last_changes/02_w.jpg
+  short_photo: assets/images/20261117_moriyasu_last_changes/02_v.jpg
+
+answer: ラストマッチも、これまで通り大幅に選手を入れ替えて、誰が出ても勝つチームで戦う
+watch: 17日（日本時間22時10分）、パラグアイ戦
+
+sections:
+  - id: what
+    main: true
+    heading: ラストマッチの前日、森保監督は何を語ったのか
+    tier: 報道
+    telop: 森保一監督「終わりかもしれないですけど」
+    say:
+      - text: 森保ジャパンの8年半は、17日のパラグアイ戦で最後です。前日会見で、こう話しました。
+        image: assets/images/20261117_moriyasu_last_changes/02_w.jpg
+      - voice: 森保一
+        text: 明日で私自身は、終わりかもしれないですけど、
+        emph: true
+      - voice: 森保一
+        text: 日本サッカーの歴史は、過去から今、
+        cont: true
+      - voice: 森保一
+        text: そして未来とつながっていく中の1試合なので。
+        cont: true
+      - text: 森保一監督は、パラグアイ戦でも、ブラジル戦から大幅にメンバーを入れ替える方針を示しました。
+        image: assets/images/20261117_moriyasu_last_changes/04_w.jpg
+      - text: 勝利と強化のどちらを重視するのか。そう聞かれると、すぐに答えました。
+      - voice: 森保一
+        text: 両方です。
+        emph: true
+      - text: 選手たちには、常々こう伝えてきたといいます。
+        image: assets/images/20261117_moriyasu_last_changes/01_w.jpg
+      - voice: 森保一
+        text: 誰が出ても勝つ、誰と組んでも機能する。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/16/post1057825/
+      - https://web.gekisaka.jp/news/japan/detail/?463324-463324-fl
+  - id: game
+    heading: 「大幅に入れ替える」と言う理由は、どこにあるのか
+    tier: 報道
+    telop: ブラジル戦で出番がなかったのは6人
+    say:
+      - text: 森保一監督は、親善試合の1試合目と2試合目は、選手を入れ替えながら戦ってきたと話しています。
+      - text: 理由は、選手層を厚くして、チームのパワーを大きくするためだといいます。
+      - text: 14日のブラジル戦で、出番がなかったのは6人。ゴールキーパーの2人も含まれます。
+        card: {type: table, title: ブラジル戦（11/14）の日本代表, columns: [区分, 人数], rows: [[先発, 11人], [途中出場, 9人], [出番なし, 6人]], highlight_row: 2}
+      - text: そのうち鈴木唯人と後藤啓介らに、出場機会が与えられる見込みです。
+        card: none
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463324-463324-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: view
+    viewpoint: true
+    heading: 森保監督の通算113試合は、何勝で締めくくるのか
+    tier: 背景
+    telop: 113試合で78勝。勝てば79勝目
+    say:
+      - text: 見立てです。森保一監督は、2018年9月の初陣から113試合を戦って、78勝、17分け、18敗です。
+        card: {type: table, title: 森保一監督の通算（PK戦は引き分け扱い）, columns: [結果, 試合], rows: [[勝ち, 78], [引き分け, 17], [負け, 18]], highlight_row: 0}
+      - text: 勝率は、およそ69%です。
+        card: none
+      - text: 17日のパラグアイ戦に勝てば、ラストマッチが79勝目になります。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463324-463324-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336

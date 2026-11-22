@@ -1,0 +1,134 @@
+# 取材メモ（2026年11月20日）伊東純也、パラグアイ戦の左サイド起用。闘莉王「右のほうがプレーしやすい」（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。伊東本人の言葉は無し）
+# 取材: 2026-11-20。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボール・トライブ日本語版 2026-11-19 7:04pm「伊東純也は「プレーしにくくなる」起用法巡り森保監督に異論も！」（文 Shota。全文を requests で読んだ）
+#   https://football-tribe.com/japan/2026/11/19/361483/
+# 誰の発言か（元の出どころ）:
+#   ・「プレーしにくくなる」は伊東本人の言葉ではない。元日本代表の田中マルクス闘莉王氏が、11/19 に自分の YouTube チャンネルで、パラグアイ戦を採点して振り返った中での発言（トライブの記述）。
+#   ・元の動画そのものは確かめていない（ブラウザの道具を使わない決まり。YouTube の動画は見ていない）。したがって発言の言い回しはトライブの書き方どおりで、闘莉王の原文との一致は確かめられない。
+#     → 台本は直接の引用を使わず、「〜と指摘した」「〜と伝えられている」の伝聞にし、tier は 報道（1社）。声（voice）にしない。X。
+#   ・トライブの見出しの「森保監督に異論」は、闘莉王が起用法に疑問を示したという記事の要約。森保監督本人のコメントは記事に無い。
+# 出典で確かめたこと:
+#   ・トライブ（闘莉王の発言。トライブによる要約）: 伊東は17日のパラグアイ戦で途中出場し左サイド。闘莉王は「バックパスなどで珍しいミスが多かった」と指摘／ドリブルが長くなる傾向／
+#     「左サイドでカットインさせながら、というよりも、やっぱり右サイドで起用した方が縦に行けるので、プレーしやすい」／「右サイドの方が慣れているというのはある」としつつ「コンディションが上がってきてないのかなと思う」／
+#     「良い時の伊東純也ではない。でも、左サイドだとプレーしにくくなる」。記事は本職を右サイドと書く。
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary）:
+#       event=401916336（パラグアイ戦、2026-11-17）日本 1-2 パラグアイ。45分に 伊東純也が 相馬勇紀 と交代（Substitution, Japan. Junya Ito replaces Yuki Soma）。相馬の先発位置は AM-L（4-2-3-1 の左の攻撃的MF）。
+#       event=401916337（ブラジル戦、2026-11-14 10:15 UTC）日本 3-2 ブラジル。72分に 伊東純也が 中村敬斗 と交代（Junya Ito replaces Keito Nakamura）。中村の先発位置は AM-L（4-2-2-2 の左の攻撃的MF）。伊東は先発ではない（SUB）。
+#   → 記事の「左サイドでプレーした」と、交代で入った相手の位置（どちらも左）は一致。ブラジル戦で伊東が実際にどの位置でプレーしたかは、記事にも ESPN の記録にも無いので台本では言わない（「代わった相手の先発位置は左」とだけ言う）。
+# 食い違い・確かめられなかったこと:
+#   ・記事の末尾に「本人は2026年5月末のアイスランド戦で「左だからというよりも試合展開的に難しかった」などと分析」とあるが、出どころが書かれておらず確かめていない。→ 台本では使わない。
+#   ・「良い時の伊東純也ではない」は闘莉王の評価で、伊東を小さく見せる言い方になるので台本では使わない（起用法の話だけ）。
+# 自分で数えたもの: 伊東は直近の代表2試合（ブラジル戦・パラグアイ戦）とも途中出場。代わった相手の先発位置はどちらも左の攻撃的MF（ESPN の記録）。
+# 前の本との重なり: 11/16・11/18 の伊東の回（試合前の言葉・最多出場・初陣とラストマッチ）は伊東本人の言葉と記録の話。今回は「第三者（闘莉王）の起用法の見方」と「直近2試合の入った位置」で新しい。最多出場・出場数・初陣は繰り返さない。
+#   森保監督の題（11/17〜11/19 の5本）とも別（監督の発言・采配の振り返りではない）。posted.json・covered.yaml に闘莉王×伊東の題は無し。
+# 【言わないこと】「プレーしにくくなる」を伊東本人の言葉として扱う／「良い時の伊東純也ではない」／アイスランド戦の話（出どころ不明）／ブラジル戦で伊東が左でプレーしたという断定／出場数の数字／森保監督がどう考えたか（記事に無い）。
+# 写真の出どころ（目で見た）: 01・02・04＝ゲキサカ（463291・463112・463396、すべて伊東本人）／03＝サッカーキング 11/12（本人の練習の写真）。サッカーキング 11/18 の主写真は Getty 表記なので外した。トライブの主写真はアフロ表記なので使っていない。
+#   https://web.gekisaka.jp/news/japan/detail/?463396-463396-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463112-463112-fl
+#   https://www.soccer-king.jp/news/japan/national/20261112/2227141.html
+# 反応: 0件（実在の投稿を探していない／作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月20日"
+format: news
+no_main: true
+people: [伊東純也, 闘莉王, 森保一, 日本代表]
+
+short_style: X
+short_hook_word: 伊東は右か左か
+short_photos:
+  - assets/images/20261120_ito_usage_moriyasu/04_v.jpg
+  - assets/images/20261120_ito_usage_moriyasu/02_v.jpg
+  - assets/images/20261120_ito_usage_moriyasu/03_v.jpg
+  - assets/images/20261120_ito_usage_moriyasu/01_v.jpg
+short_question: 伊東純也は、右と左のどちらで使うのがいいと思いますか。
+short_telops: []
+
+theme:
+  id: ito_usage_moriyasu
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 伊東純也の左サイド起用に、闘莉王が示した見方
+  hook: ""
+  question: 左サイドに入った伊東純也を、闘莉王はどう見たのか
+  takeaway: 伊東は直近の代表2試合とも途中出場で、代わった相手はどちらも左の攻撃的MF。闘莉王の指摘は1人の元選手の見方で、森保監督の意図は今回の報道では分からない
+
+thumbnail:
+  layout: face
+  line1: 伊東純也 左サイド
+  line2: 闘莉王の見方
+  tags: [伊東純也, 日本代表]
+  photo: assets/images/20261120_ito_usage_moriyasu/03_w.jpg
+  short_photo: assets/images/20261120_ito_usage_moriyasu/04_v.jpg
+
+answer: 闘莉王は、右サイドのほうが縦に行けるのでプレーしやすい、と見た
+watch: 伊東が次の代表戦でどの位置に入るか
+
+sections:
+  - id: what
+    main: true
+    heading: 闘莉王が示した、伊東の左サイド起用への見方
+    tier: 報道
+    telop: 伊東純也、左サイド。闘莉王が起用法に見方
+    say:
+      - text: 元日本代表の闘莉王さんが、伊東純也の左サイド起用に見方を示しました。
+        image: assets/images/20261120_ito_usage_moriyasu/04_w.jpg
+      - text: 17日のパラグアイ戦。日本は1対2で敗れました。
+      - text: 後半の頭から出た伊東純也は、左サイドでプレーしました。
+        emph: true
+      - text: 闘莉王さんは19日、自分のユーチューブでこの試合を振り返りました。
+      - text: 伊東には、バックパスなどで珍しいミスが多かった、と指摘しています。
+        image: assets/images/20261120_ito_usage_moriyasu/03_w.jpg
+      - text: コンディションが上がっていないのでは、とも話しています。
+        image: assets/images/20261120_ito_usage_moriyasu/03_w.jpg
+      - text: 一方、ミスの原因は、右サイドが本職の伊東を、左で使った起用法にある、という見方です。
+        emph: true
+      - text: 右で使えば縦に行けるので、プレーしやすい、と話したといいます。
+        image: assets/images/20261120_ito_usage_moriyasu/01_w.jpg
+      - text: 右では、スペースへの飛び出しと速さで突破し、ゴール前へクロスを入れる形が多い、と報じられています。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/19/361483/
+      - https://www.espn.com/soccer/report/_/gameId/401916336
+  - id: game
+    heading: 伊東が直近2試合で代わった選手
+    tier: 報道
+    telop: ブラジル戦72分・パラグアイ戦45分、どちらも途中出場
+    say:
+      - text: 伊東は14日のブラジル戦でも、途中から入りました。72分に中村敬斗と交代です。
+        card: {type: table, title: 伊東純也の直近2試合, columns: [試合, 入った時間, 代わった選手], rows: [[ブラジル戦（11月14日）, 72分, 中村敬斗], [パラグアイ戦（11月17日）, 45分, 相馬勇紀]], highlight_row: 1}
+        image: assets/images/20261120_ito_usage_moriyasu/04_w.jpg
+      - text: パラグアイ戦は後半の頭、45分に相馬勇紀と交代しました。
+        card: none
+      - text: 試合の記録では、代わった2人の先発の位置は、どちらも左の攻撃的な中盤の選手です。
+        card: none
+        image: assets/images/20261120_ito_usage_moriyasu/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/report/_/gameId/401916336
+      - https://www.espn.com/soccer/report/_/gameId/401916337
+  - id: view
+    viewpoint: true
+    heading: 闘莉王の指摘が当てはまる範囲
+    tier: 背景
+    telop: 直近2試合は途中出場、代わったのはどちらも左の位置
+    say:
+      - text: 見立てです。闘莉王さんの指摘は、パラグアイ戦の伊東を見ての話です。
+        card: none
+        image: assets/images/20261120_ito_usage_moriyasu/04_w.jpg
+      - text: 直近2試合を並べても、闘莉王さんの指摘は、見方の1つにとどまります。
+        card: none
+        emph: true
+      - text: 森保監督が起用の狙いをどう話したかは、今回の報道では分かりません。
+        card: none
+      - text: 右で使われたときとの比べも、まだ材料がありません。
+        card: none
+      - text: 次の代表戦で、伊東がどの位置に入るかが見どころです。
+        card: none
+        image: assets/images/20261120_ito_usage_moriyasu/01_w.jpg
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/11/19/361483/
+      - https://www.espn.com/soccer/report/_/gameId/401916336
+      - https://www.espn.com/soccer/report/_/gameId/401916337

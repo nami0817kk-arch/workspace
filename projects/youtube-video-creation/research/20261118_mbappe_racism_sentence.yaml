@@ -1,0 +1,111 @@
+# 取材メモ（2026年11月18日）ムバッペへの人種差別の言葉。オビエドのファンに、執行猶予つきの禁錮11か月（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は取れなかった）
+# 取材: 2026-11-18。requests（ブラウザUA）と WebFetch で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: ESPN 2026-11-17「Kylian Mbappé racist abuse Oviedo fan」（WebFetch。要約の形で返ったので、数字・裁判所・条件は BBC・Foot Mercato の全文と突き合わせた）。
+# 出典で確かめたこと（BBC・ESPN・Foot Mercato の3社が一致した所だけ台本に使う）:
+#   ・BBC（全文を requests で読んだ）: 男がヘイトクライムで有罪。2025年のオビエド戦、カルロス・ティアルテ（Carlos Tartiere）での差別の言葉。
+#       アストゥリアス（オビエドのある北部州）の裁判所が有罪。禁錮11か月＋罰金＋いくつかの資格停止。禁錮は執行猶予つきで、条件は「2年間、公式の競技会が開かれるスタジアムに入らないこと」。
+#       レアル・マドリードは私的訴追人（private prosecutor）。クラブ声明 "Real Madrid reaffirms its commitment to combating racism and eradicating any racist behavior in football and sports"。
+#       クラブは、ヴィニシウスへの差別のメスタージャ・ホセ・ソリーリャでの有罪判決に続くものだと説明。
+#   ・Foot Mercato（全文を requests で読んだ。フランス語）: 「ce mardi」（火曜＝11/17）にレアルが発表。2025年8月24日のレアル・オビエド戦、カルロス・ティアルテ。
+#       アストゥリアス地方裁判所第2部（"la deuxième section de l'Audience provinciale des Asturies"）が、憎悪犯罪（délit de haine）で禁錮11か月、複数の資格停止と罰金。執行猶予は2年間の入場禁止が条件。
+#       クラブは、メスタージャ・ソン・モイシュ・バジェカス・ホセ・ソリーリャ（4つのスタジアム）での差別に出た判決に、今回が加わると説明。
+#   ・ESPN（WebFetch の要約）: 11か月・執行猶予・競技会スタジアムへの2年間の入場禁止・罰金・資格停止。第2部。2025-08-24、Real Oviedo 対 Real Madrid。発表はレアル・マドリードの声明。
+#       "The accused has been sentenced for a hate crime to 11 months in prison" "Real Madrid, which has acted as a private prosecutor in this case"。ムバッペ本人のコメントは記事に無い。
+#       試合後に LaLiga が警察に通報した（ESPN。台本には使わない。BBC・FM に無いため）。
+#   ・ESPN の試合データ（esp.1, event 748155、2025-08-24 19:30Z）: レアル・オビエド 0-3 レアル・マドリード。37分 ムバッペ（アシスト ギュレル）／83分 ムバッペ（アシスト ヴィニシウス）／90+3分 ヴィニシウス。
+# 食い違い・扱い:
+#   ①判決の日付: 3社とも判決日は書かない。「レアルが火曜に発表」（FM）まで。台本は「17日に伝えられた」と言う（発表の日であって、判決の日ではない）。
+#   ②被告の名前・年齢・どの席か: 3社とも書かない。台本に書かない。差別の言葉そのものも書かない。
+#   ③ご依頼文の「ムバッペ側の言葉の有無」: 3社の本文に無い。台本は「ムバッペ本人の言葉は、伝えられていません」。
+#   ④クラブ声明はBBCの英語から私が日本語にした。スペイン語の原文は読んでいない。
+# 重なり: ムバッペの scripts（11/5・11/7・11/8・11/12）はどれも差別・判決の話ではない。初出。
+# 本人の言葉: 無し。X。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月18日"
+format: news
+no_main: true
+people: [キリアン・ムバッペ, レアル・マドリード, レアル・オビエド]
+
+short_style: X
+short_hook_word: 禁錮11か月
+short_photos:
+  - assets/images/20261118_mbappe_racism_sentence/01_v.jpg
+  - assets/images/20261118_mbappe_racism_sentence/03_v.jpg
+  - assets/images/20261118_mbappe_racism_sentence/04_v.jpg
+short_question: スタジアムでの人種差別をなくすために、いちばん効くのは何だと思いますか。
+short_telops: []
+
+theme:
+  id: mbappe_racism_sentence
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: ムバッペへの人種差別、ファンに出た判決の中身
+  hook: ""
+  question: ムバッペに人種差別の言葉を浴びせたファンに、どんな判決が出たのか
+  takeaway: 禁錮11か月で、執行猶予つき。条件は2年間、公式戦のスタジアムに入らないこと。罰金などもある。レアルが17日に発表した
+
+thumbnail:
+  layout: face
+  line1: ムバッペへの人種差別
+  line2: ファンに禁錮11か月
+  tags: [ムバッペ, レアル・マドリード]
+  photo: assets/images/20261118_mbappe_racism_sentence/01_w.jpg
+  short_photo: assets/images/20261118_mbappe_racism_sentence/01_v.jpg
+
+answer: 禁錮11か月。ただし執行猶予つきで、条件は2年間、公式戦のスタジアムに入らないこと
+watch: ムバッペ本人のコメント
+
+sections:
+  - id: what
+    main: true
+    heading: ムバッペへの差別に出た、判決の中身
+    tier: 報道
+    telop: 禁錮11か月。ただし執行猶予つき
+    say:
+      - text: レアル・マドリードのムバッペに人種差別の言葉を浴びせたファンに、有罪判決が出ました。
+      - text: 禁錮11か月。ただし、執行猶予がついています。
+        emph: true
+      - text: 条件は、2年間、公式戦が開かれるスタジアムに入らないこと。
+        image: assets/images/20261118_mbappe_racism_sentence/03_w.jpg
+      - text: 罰金と、いくつかの資格停止も言い渡されました。
+        image: assets/images/20261118_mbappe_racism_sentence/03_w.jpg
+      - text: 裁かれたのは、憎悪犯罪、ヘイトクライムです。
+      - text: 判決を出したのは、スペイン北部、アストゥリアス地方の裁判所です。
+        image: assets/images/20261118_mbappe_racism_sentence/01_w.jpg
+      - text: 17日に、レアル・マドリードが発表しました。
+    official: false
+    sources:
+      - https://www.bbc.co.uk/sport/football/articles/cjn504vweneyo
+      - https://www.espn.com/soccer/story/_/id/50509888/kylian-mbappe-racist-abuse-oviedo-fan-real-madrid
+      - https://www.footmercato.net/a820447366769524325-real-madrid-lauteur-des-insultes-racistes-contre-kylian-mbappe-condamne-a-11-mois-de-prison
+  - id: match
+    heading: 差別があったのは、2025年8月のオビエド戦
+    tier: 報道
+    telop: 2025年8月24日、オビエド対レアル・マドリード
+    say:
+      - text: 問題の言葉があったのは、2025年8月24日、オビエドの本拠地での試合です。
+        image: assets/images/20261118_mbappe_racism_sentence/04_w.jpg
+      - text: この試合は、レアルが3対0で勝ちました。ムバッペは2得点です。
+      - text: レアルは、この裁判で私的訴追人を務めました。検察とは別に、訴える側に立ったのです。
+        image: assets/images/20261118_mbappe_racism_sentence/01_w.jpg
+      - text: クラブは声明で、人種差別をなくす姿勢をあらためて示しています。
+      - text: クラブによると、同じ差別で出た判決はこれまでにもあります。
+        image: assets/images/20261118_mbappe_racism_sentence/03_w.jpg
+      - text: バレンシアやバリャドリードなど、4つのスタジアムで。今回は、それに続く判決です。
+    official: false
+    sources:
+      - https://www.footmercato.net/a820447366769524325-real-madrid-lauteur-des-insultes-racistes-contre-kylian-mbappe-condamne-a-11-mois-de-prison
+      - https://www.bbc.co.uk/sport/football/articles/cjn504vweneyo
+      - https://www.espn.com/soccer/match/_/gameId/748155
+  - id: view
+    viewpoint: true
+    heading: 判決の中身と、残っている点
+    tier: 背景
+    telop: 禁錮11か月・執行猶予・2年間の入場禁止
+    say:
+      - text: 見立て。刑期は11か月、猶予の条件の入場禁止は2年間。条件のほうが、刑期の2倍以上長い判決です。
+        card: {type: table, title: 判決の中身（クラブ発表・報道）, columns: [項目, 内容], rows: [[刑期, 禁錮11か月], [執行, 猶予つき], [猶予の条件, 2年間 公式戦のスタジアムに入らない], [ほか, 罰金・資格停止]], highlight_row: 2}
+      - text: ムバッペ本人の言葉は、伝えられていません。
+        card: none

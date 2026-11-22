@@ -1,0 +1,882 @@
+# エデン・アザール（元ベルギー代表FW、チェルシー7シーズン）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-30 用。9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→現役の終わり→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt 不使用**。数字は英語版 Wikipedia（Eden Hazard の成績表・本文・Honours、2019 UEFA Europa League final、2018 FIFA World Cup knockout stage）と自分で足した・割った値だけ。
+# **私生活・法的な問題は入れない**（家族・兄弟の話・体重の話・監督との関係・「ハンバーガー」の件・ボールボーイの件・クラブ経営の件は台本に出さない）。レアル時代は「ケガ」と事実だけにし、選手を小さく見せる言い方をしない。
+# **重なりの確認（2026-11-21）**：scripts/・covered.yaml・posted.json・research/20261109〜20261127_picks.txt を「アザール／Hazard」で grep。主役の回は 20261012_transfer_single（レアル移籍の発表文と移籍金の回。49日前）だけで、選手紹介・レジェンドの回は無し。この回は移籍金に触れず、チェルシーの7年と2018年W杯の日本戦で組む。同じ日（11/30）の別シリーズはローマ・ポステコグルー監督など（20261127_picks.txt）で重ならない。自分の担当の 11/28 はベイル（重ならない）。
+# **引退の確認**：Wikipedia「On 10 October 2023, Hazard announced his decision to retire from professional football at age 32」→ 現役ではない（35歳）。代表は 2022-12-07 に引退。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：リール 194試合50ゴール、チェルシー 352試合110ゴール、レアル・マドリード 76試合7ゴール。ベルギー代表 126試合33ゴール。サムネの表：リール194/50＋チェルシー352/110＋ベルギー代表126/33＝672試合193点（自分で足した値。レアルは除く）。
+# - チェルシーのシーズン別ゴール（全大会）：12-13 13、13-14 17、14-15 19、15-16 6、16-17 17、17-18 17、18-19 21（合計110と一致）。最初の6季＝89点（÷6＝14.8）、最後の2018-19＝21点（7季で最多）。21÷14.8＝1.42→約1.4倍。2018-19のプレミアのアシスト15（本文「His tally of 15 assists ... Playmaker of the Season」）。2018-12-26 ワトフォード戦でチェルシー100点目（本文）。
+# - 2019-05-29 EL決勝（バクー、オリンピック・スタジアム、観客51,370）チェルシー4-1アーセナル。ジルー49分、ペドロ60分（アザールのパス）、アザール65分PK・72分（ジルーのパス）、イウォビ69分。アザールは最優秀選手、89分に交代。試合後にチェルシーを離れたい意向を話した（本文）→チェルシーでの最後の試合。
+# - 2018-07-02 W杯 決勝トーナメント1回戦（ロストフ・アリーナ、観客41,466）ベルギー3-2日本。原口48分、乾52分、フェルトンゲン69分、フェライニ74分（アザールのクロスから頭）、シャドリ90+4分。アザールはこの試合の最優秀選手（本文「For his second consecutive game, Hazard was once again voted man of the match」）。2点差を90分以内に逆転したのは1966年以来（knockout stage の本文）。ベルギーは3位、アザールは大会2番目の選手（シルバーボール）。
+# - ドリブル：プレミアの7年で試み1,441・成功909は、リーグで最多（本文）。909÷1,441＝63%。2018年W杯ブラジル戦でドリブル10回すべて成功（1966年以降のW杯の1試合の記録）。
+# - タイトル：リーグ・アン・フランス杯 2010-11（リール）、プレミア 2014-15・2016-17、FAカップ 2017-18（決勝のPKが決勝点）、リーグ杯 2014-15、EL 2012-13・2018-19、ラ・リーガ 2019-20・2021-22、CL 2021-22（ベンチ）。個人：2014-15 PFA年間最優秀選手・FWA年間最優秀選手・プレミア年間最優秀選手。チェルシーの年間最優秀選手 4回。リーグ・アン年間最優秀選手 2010-11・2011-12。
+# - マル秘話：2014年10月までPKを16本蹴って16本成功（本文、欧州で15本以上蹴って全部決めたのはただ1人）。2018年W杯ブラジル戦のドリブル10回すべて成功。2018-19にチェルシーのクラブ表彰をすべて受けた、クラブ史上ただ1人（本文）。
+# **本人の言葉**：取れていない（加入時の言葉はクラブ公式の引用だが、元の記事を開いて確かめていないので置かない）。声の行は置かない。
+# - 2012-12-16 クラブW杯決勝（横浜）コリンチャンス戦：Commons「File:Eden Hazard.jpg」（Eden Hazard in 2012、撮影日 2012-12-16、相手はコリンチャンスの白い服）と「Chelsea FC 2012 Club World Cup Final starting XI」に本人がいるので「決勝に立った」とだけ言う（得点・時間は言わない）。
+# **入れなかったもの**：私生活・家族・兄弟、体重の話、監督との関係、2011年の「ハンバーガー」の件、2013年のボールボーイの件、移籍金の額（10/12の回で扱った）、レアルでの出場の少なさの細部。
+# **読みで怪しいもの**：エデン・アザール、ラ・ルヴィエール、リール、リーグ・アン、チェルシー、ロストフ、原口元気、乾貴士、柴崎岳、フェルトンゲン、フェライニ、シャドリ、クルトワ、バクー、ジルー、ペドロ、イウォビ、ツェフ（チェフ）、ワトフォード、ラ・リーガ。
+title: アザールは、どんな選手だった？ チェルシー最後の1年に、何が起きたのか
+format: news
+short_title: アザールは、どんな選手だった？
+series: レジェンドの紹介
+topic: エデン・アザール
+date: 2026年11月21日
+slot: other_1
+people:
+- エデン・アザール
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: legend_hazard
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: エデン・アザール
+  title: アザールは、どんな選手だった？ チェルシー最後の1年に、何が起きたのか
+  question: チェルシーで7シーズンを過ごしたアザールは、最後の1年にどんな数字を残したのか
+  takeaway: チェルシー最後の2018-19に21ゴール。7季で最も多く、それまでの6季の平均（14.8点）の約1.4倍。プレミアのアシスト15と、EL決勝の2ゴールで締めた
+  nameplate: エデン・アザール｜元ベルギー代表 FW
+  opening_image: assets/images/20261130_hazard_legend/02_w.jpg
+  end_bg: assets/images/20261130_hazard_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: アザール、672試合193点
+  line2: チェルシー最後の年に21点
+  tags:
+  - チェルシー
+  photo: assets/images/20261130_hazard_legend/panel_01.jpg
+  board: assets/images/20261130_hazard_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261130_hazard_legend/01_v.jpg
+sections:
+- id: hook
+  heading: アザールは、チェルシーの最後に何を残したのか
+  tier: 報道
+  telop: 最後の1年に、7季で最多の21ゴール
+  say:
+  - text: チェルシーでの最後の1年に、7年でいちばん多くのゴールを決めた選手がいます。
+    card: none
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: エデン・アザール。チェルシーの7シーズンで、352試合に出ました。
+    card:
+      type: stats
+      title: エデン・アザール 元FW（35歳）
+      items:
+      - - '352'
+        - 試合
+        - チェルシーの公式戦
+      - - '110'
+        - ゴール
+        - チェルシーの公式戦
+      - - '21'
+        - ゴール
+        - 最後の2018-19（7季で最多）
+      focus: 0
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: ゴールは、110点。1シーズン平均で、およそ16点です。
+    card:
+      type: stats
+      title: エデン・アザール 元FW（35歳）
+      items:
+      - - '352'
+        - 試合
+        - チェルシーの公式戦
+      - - '110'
+        - ゴール
+        - チェルシーの公式戦
+      - - '21'
+        - ゴール
+        - 最後の2018-19（7季で最多）
+      focus: 1
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: そして最後の2018-19シーズンに、21ゴール。7シーズンで、最も多い数でした。
+    card:
+      type: stats
+      title: エデン・アザール 元FW（35歳）
+      items:
+      - - '352'
+        - 試合
+        - チェルシーの公式戦
+      - - '110'
+        - ゴール
+        - チェルシーの公式戦
+      - - '21'
+        - ゴール
+        - 最後の2018-19（7季で最多）
+      focus: 2
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+    emph: true
+    callword: 最後に21点
+  - text: 日本代表とも、ぶつかっています。舞台は、2018年のワールドカップ。
+    card: none
+    image: assets/images/20261130_hazard_legend/03_w.jpg
+  - text: アザールの歩みを、リールから順に見ていきます。
+    card: none
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard
+- id: data
+  heading: アザールは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: アザールの基礎DATA
+  say:
+  - text: アザールは1991年1月7日、ベルギーに生まれました。
+    card:
+      type: table
+      title: エデン・アザール
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1991年1月7日・ベルギー
+      - - ポジション
+        - 左ウイング、攻撃的MF
+      - - クラブ
+        - リール、チェルシー、レアル・マドリード
+      - - 代表
+        - ベルギー代表 126試合33ゴール
+      - - 現役を終えた
+        - 2023年・32歳
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: ポジションは、左のウイング。中央の攻撃的な位置もこなしました。
+    card:
+      type: table
+      title: エデン・アザール
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1991年1月7日・ベルギー
+      - - ポジション
+        - 左ウイング、攻撃的MF
+      - - クラブ
+        - リール、チェルシー、レアル・マドリード
+      - - 代表
+        - ベルギー代表 126試合33ゴール
+      - - 現役を終えた
+        - 2023年・32歳
+      highlight_row: 1
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: 所属は、フランスのリール、チェルシー、レアル・マドリード。
+    card:
+      type: table
+      title: エデン・アザール
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1991年1月7日・ベルギー
+      - - ポジション
+        - 左ウイング、攻撃的MF
+      - - クラブ
+        - リール、チェルシー、レアル・マドリード
+      - - 代表
+        - ベルギー代表 126試合33ゴール
+      - - 現役を終えた
+        - 2023年・32歳
+      highlight_row: 2
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: ベルギー代表では、126試合に出て、33ゴール。
+    card:
+      type: table
+      title: エデン・アザール
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1991年1月7日・ベルギー
+      - - ポジション
+        - 左ウイング、攻撃的MF
+      - - クラブ
+        - リール、チェルシー、レアル・マドリード
+      - - 代表
+        - ベルギー代表 126試合33ゴール
+      - - 現役を終えた
+        - 2023年・32歳
+      highlight_row: 3
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 2023年10月、32歳での引退でした。
+    card:
+      type: table
+      title: エデン・アザール
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1991年1月7日・ベルギー
+      - - ポジション
+        - 左ウイング、攻撃的MF
+      - - クラブ
+        - リール、チェルシー、レアル・マドリード
+      - - 代表
+        - ベルギー代表 126試合33ゴール
+      - - 現役を終えた
+        - 2023年・32歳
+      highlight_row: 4
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard
+- id: japan
+  heading: アザールと日本代表には、どんな縁があったのか
+  tier: 報道
+  telop: ロストフの逆転、同点ゴールを生んだクロス
+  say:
+  - text: 2018年7月2日、ロシアのロストフ。ワールドカップで、日本代表と戦いました。
+    card:
+      type: timeline
+      title: 2018年W杯 ベルギー対日本
+      rows:
+      - - 48分・52分
+        - 原口、乾のゴールで、日本が2点をリード
+      - - 69分
+        - フェルトンゲンの頭で、1点を返す
+      - - 74分
+        - アザールのクロスから、フェライニの頭で同点
+      - - 90+4分
+        - シャドリが決めて、ベルギーの逆転勝ち
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/03_w.jpg
+  - text: 決勝トーナメントの1回戦。ベルギーの主将が、アザールでした。
+    card: none
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+  - text: 後半に、原口元気と乾貴士が決めて、日本が2点をリードします。
+    card:
+      type: timeline
+      title: 2018年W杯 ベルギー対日本
+      rows:
+      - - 48分・52分
+        - 原口、乾のゴールで、日本が2点をリード
+      - - 69分
+        - フェルトンゲンの頭で、1点を返す
+      - - 74分
+        - アザールのクロスから、フェライニの頭で同点
+      - - 90+4分
+        - シャドリが決めて、ベルギーの逆転勝ち
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/03_w.jpg
+  - text: 69分に1点を返され、74分。左でアザールがかわして、クロス。
+    card:
+      type: timeline
+      title: 2018年W杯 ベルギー対日本
+      rows:
+      - - 48分・52分
+        - 原口、乾のゴールで、日本が2点をリード
+      - - 69分
+        - フェルトンゲンの頭で、1点を返す
+      - - 74分
+        - アザールのクロスから、フェライニの頭で同点
+      - - 90+4分
+        - シャドリが決めて、ベルギーの逆転勝ち
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+    emph: true
+  - text: フェライニの頭で同点。日本は、2点のリードを失います。
+    card: none
+    image: assets/images/20261130_hazard_legend/03_w.jpg
+  - text: そして後半のアディショナルタイム、シャドリが決めて、日本は2対3で敗れます。
+    card:
+      type: timeline
+      title: 2018年W杯 ベルギー対日本
+      rows:
+      - - 48分・52分
+        - 原口、乾のゴールで、日本が2点をリード
+      - - 69分
+        - フェルトンゲンの頭で、1点を返す
+      - - 74分
+        - アザールのクロスから、フェライニの頭で同点
+      - - 90+4分
+        - シャドリが決めて、ベルギーの逆転勝ち
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+  - text: 2点差を90分の中でひっくり返したのは、1966年以来のことでした。
+    card: none
+    image: assets/images/20261130_hazard_legend/03_w.jpg
+  - text: アザールは、この試合の最優秀選手。ベルギーは、過去最高の3位まで進みました。
+    card: none
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+  - text: 実はその6年前、2012年12月にも、日本に来ています。
+    card: none
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: チェルシーの一員として、横浜でクラブ世界一の決勝に立ちました。
+    card: none
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_knockout_stage
+- id: career
+  heading: アザールは、どこでプレーしてきたのか
+  tier: 報道
+  telop: リールで頭角、チェルシーで7年
+  say:
+  - text: アザールは、フランスのリールの下部組織で育ちます。
+    card: none
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: 2010-11シーズン、リールで、リーグとカップの2冠。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2007〜12
+        - リール。2010-11にリーグと国内カップの2冠
+      - - '2012'
+        - イングランドのチェルシーへ
+      - - '2015'
+        - プレミア優勝、年間最優秀選手に
+      - - '2017'
+        - 2度目のプレミア優勝
+      - - '2019'
+        - ヨーロッパリーグを制し、レアル・マドリードへ
+      - - '2023'
+        - 32歳で、現役を終える
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: フランスのリーグの年間最優秀選手には、2年続けて選ばれました。
+    card: none
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 2012年、イングランドのチェルシーへ。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2007〜12
+        - リール。2010-11にリーグと国内カップの2冠
+      - - '2012'
+        - イングランドのチェルシーへ
+      - - '2015'
+        - プレミア優勝、年間最優秀選手に
+      - - '2017'
+        - 2度目のプレミア優勝
+      - - '2019'
+        - ヨーロッパリーグを制し、レアル・マドリードへ
+      - - '2023'
+        - 32歳で、現役を終える
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: 2014-15シーズン、プレミア優勝。リーグの年間最優秀選手にも選ばれます。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2007〜12
+        - リール。2010-11にリーグと国内カップの2冠
+      - - '2012'
+        - イングランドのチェルシーへ
+      - - '2015'
+        - プレミア優勝、年間最優秀選手に
+      - - '2017'
+        - 2度目のプレミア優勝
+      - - '2019'
+        - ヨーロッパリーグを制し、レアル・マドリードへ
+      - - '2023'
+        - 32歳で、現役を終える
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: 2016-17シーズンに、2度目のプレミア優勝。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2007〜12
+        - リール。2010-11にリーグと国内カップの2冠
+      - - '2012'
+        - イングランドのチェルシーへ
+      - - '2015'
+        - プレミア優勝、年間最優秀選手に
+      - - '2017'
+        - 2度目のプレミア優勝
+      - - '2019'
+        - ヨーロッパリーグを制し、レアル・マドリードへ
+      - - '2023'
+        - 32歳で、現役を終える
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 2018年、イングランドのカップ戦、FAカップの決勝。
+    card: none
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 自分で得たPKを決め、これが決勝点になりました。
+    card: none
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: 2019年の夏、スペインへ渡ります。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - 2007〜12
+        - リール。2010-11にリーグと国内カップの2冠
+      - - '2012'
+        - イングランドのチェルシーへ
+      - - '2015'
+        - プレミア優勝、年間最優秀選手に
+      - - '2017'
+        - 2度目のプレミア優勝
+      - - '2019'
+        - ヨーロッパリーグを制し、レアル・マドリードへ
+      - - '2023'
+        - 32歳で、現役を終える
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard
+- id: style
+  heading: アザールは、何で相手を上回ったのか
+  tier: 報道
+  telop: 止められないドリブル
+  say:
+  - text: アザールの武器は、ドリブルでした。
+    card:
+      type: table
+      title: アザールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左ウイング（中央もこなす）
+      - - 武器1
+        - 低い重心のドリブル
+      - - 武器2
+        - 両足が使え、左から中へ切れ込む
+      - - 武器3
+        - チャンスを作るパス
+      - - 記録
+        - プレミアの7年で、ドリブル成功909回（リーグ最多）
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 身長は175センチ。重心が低く、体を寄せられても、ボールを失いません。
+    card:
+      type: table
+      title: アザールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左ウイング（中央もこなす）
+      - - 武器1
+        - 低い重心のドリブル
+      - - 武器2
+        - 両足が使え、左から中へ切れ込む
+      - - 武器3
+        - チャンスを作るパス
+      - - 記録
+        - プレミアの7年で、ドリブル成功909回（リーグ最多）
+      highlight_row: 1
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+  - text: 左のサイドから中へ切れ込み、利き足の右で打ちました。
+    card:
+      type: table
+      title: アザールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左ウイング（中央もこなす）
+      - - 武器1
+        - 低い重心のドリブル
+      - - 武器2
+        - 両足が使え、左から中へ切れ込む
+      - - 武器3
+        - チャンスを作るパス
+      - - 記録
+        - プレミアの7年で、ドリブル成功909回（リーグ最多）
+      highlight_row: 2
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: 相手を引きつけてからのパスで、味方のゴールも作りました。
+    card:
+      type: table
+      title: アザールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左ウイング（中央もこなす）
+      - - 武器1
+        - 低い重心のドリブル
+      - - 武器2
+        - 両足が使え、左から中へ切れ込む
+      - - 武器3
+        - チャンスを作るパス
+      - - 記録
+        - プレミアの7年で、ドリブル成功909回（リーグ最多）
+      highlight_row: 3
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: プレミアの7年で、ドリブルを1,441回しかけて、909回成功。
+    card:
+      type: table
+      title: アザールの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - 左ウイング（中央もこなす）
+      - - 武器1
+        - 低い重心のドリブル
+      - - 武器2
+        - 両足が使え、左から中へ切れ込む
+      - - 武器3
+        - チャンスを作るパス
+      - - 記録
+        - プレミアの7年で、ドリブル成功909回（リーグ最多）
+      highlight_row: 4
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+    emph: true
+  - text: 回数も成功も、その7年のリーグで最多です。成功の割合は、63%でした。
+    card: none
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard
+- id: match
+  heading: 2019年のEL決勝で、アザールは何を決めたのか
+  tier: 報道
+  telop: チェルシー最後の試合、2ゴール1アシスト
+  main: true
+  say:
+  - text: エデン・アザール。
+    card: none
+    short_only: true
+  - text: チェルシー最後の試合で、主役になった夜があります。
+    card: none
+    short_only: true
+  - text: 2019年5月29日、アゼルバイジャンのバクー。
+    card: none
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: ヨーロッパリーグの決勝。相手は、同じロンドンのアーセナルです。
+    card: none
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: 前半は、0対0。49分、ジルーの頭で、チェルシーが先制します。
+    card:
+      type: timeline
+      title: 2019年5月29日 EL決勝 アーセナル戦
+      rows:
+      - - 49分
+        - ジルーの頭で、チェルシーが先制
+      - - 60分
+        - アザールのパスから、ペドロ
+      - - 65分
+        - アザールがPKを決める
+      - - 72分
+        - アザールの2点目。4対1
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: 60分、アザールのパスから、ペドロが決めて2点目。
+    card:
+      type: timeline
+      title: 2019年5月29日 EL決勝 アーセナル戦
+      rows:
+      - - 49分
+        - ジルーの頭で、チェルシーが先制
+      - - 60分
+        - アザールのパスから、ペドロ
+      - - 65分
+        - アザールがPKを決める
+      - - 72分
+        - アザールの2点目。4対1
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 65分、PK。アザールが、キーパーの逆をついて決めます。
+    card:
+      type: timeline
+      title: 2019年5月29日 EL決勝 アーセナル戦
+      rows:
+      - - 49分
+        - ジルーの頭で、チェルシーが先制
+      - - 60分
+        - アザールのパスから、ペドロ
+      - - 65分
+        - アザールがPKを決める
+      - - 72分
+        - アザールの2点目。4対1
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: アーセナルも1点を返しますが、72分。ジルーのパスから、アザールの2点目。
+    card: none
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+    emph: true
+  - text: 4対1で、チェルシーの勝ち。アザールは、2ゴール1アシストで、最優秀選手に。
+    card: none
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 試合のあと、新しい挑戦をしたいと話し、チェルシーを去りました。
+    card: none
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard
+  - https://en.wikipedia.org/wiki/2019_UEFA_Europa_League_final
+- id: after
+  heading: アザールは、どんな形で現役を終えたのか
+  tier: 報道
+  telop: レアルでの4年、そして32歳の引退
+  say:
+  - text: 次の舞台は、子どものころから応援していたと話す、レアル・マドリード。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2019年
+        - レアル・マドリードへ
+      - - 2019〜22
+        - 足首のケガが続く
+      - - 2022年5月
+        - チャンピオンズリーグ優勝（ベンチ入り）
+      - - 2022年12月
+        - ベルギー代表を引退
+      - - 2023年10月
+        - 32歳で、現役の引退を発表
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: ただアザールは、1年目の11月に右の足首を痛め、ケガとの戦いが続きます。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2019年
+        - レアル・マドリードへ
+      - - 2019〜22
+        - 足首のケガが続く
+      - - 2022年5月
+        - チャンピオンズリーグ優勝（ベンチ入り）
+      - - 2022年12月
+        - ベルギー代表を引退
+      - - 2023年10月
+        - 32歳で、現役の引退を発表
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: レアルでは、ラ・リーガを2回、チャンピオンズリーグを1回、制しています。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2019年
+        - レアル・マドリードへ
+      - - 2019〜22
+        - 足首のケガが続く
+      - - 2022年5月
+        - チャンピオンズリーグ優勝（ベンチ入り）
+      - - 2022年12月
+        - ベルギー代表を引退
+      - - 2023年10月
+        - 32歳で、現役の引退を発表
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: 2022年12月、カタールのワールドカップのあと、ベルギー代表から退きます。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2019年
+        - レアル・マドリードへ
+      - - 2019〜22
+        - 足首のケガが続く
+      - - 2022年5月
+        - チャンピオンズリーグ優勝（ベンチ入り）
+      - - 2022年12月
+        - ベルギー代表を引退
+      - - 2023年10月
+        - 32歳で、現役の引退を発表
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: 14年の代表の歩みでした。
+    card: none
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: そして2023年10月、32歳で、現役生活に区切りをつけました。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2019年
+        - レアル・マドリードへ
+      - - 2019〜22
+        - 足首のケガが続く
+      - - 2022年5月
+        - チャンピオンズリーグ優勝（ベンチ入り）
+      - - 2022年12月
+        - ベルギー代表を引退
+      - - 2023年10月
+        - 32歳で、現役の引退を発表
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard
+- id: secret
+  heading: アザールには、どんな意外な話があるのか
+  tier: 報道
+  telop: PK16本連続、ドリブル10回成功、全部の賞
+  say:
+  - text: アザールには、こんな話もあります。3つ紹介します。
+    card: none
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: 1つ目。2014年10月まで、PKを16本蹴って、16本すべて成功。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2014年10月
+        - PKを16本蹴って、16本すべて成功
+      - - 2018年7月
+        - W杯のブラジル戦で、ドリブル10回すべて成功
+      - - 2019年5月
+        - チェルシーのクラブ表彰を、すべて受ける
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 15本以上蹴って全部決めていたのは、ヨーロッパで、アザールだけでした。
+    card: none
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+  - text: 2つ目。2018年のワールドカップ、準々決勝のブラジル戦。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2014年10月
+        - PKを16本蹴って、16本すべて成功
+      - - 2018年7月
+        - W杯のブラジル戦で、ドリブル10回すべて成功
+      - - 2019年5月
+        - チェルシーのクラブ表彰を、すべて受ける
+      highlight_row: 1
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  - text: ドリブルを10回しかけて、10回とも成功。
+    card: none
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+  - text: 1966年以降のワールドカップで、1試合の最多でした。
+    card: none
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 3つ目。2018-19シーズン、チェルシーのクラブ表彰を、すべて受けました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2014年10月
+        - PKを16本蹴って、16本すべて成功
+      - - 2018年7月
+        - W杯のブラジル戦で、ドリブル10回すべて成功
+      - - 2019年5月
+        - チェルシーのクラブ表彰を、すべて受ける
+      highlight_row: 2
+    image: assets/images/20261130_hazard_legend/04_w.jpg
+  - text: クラブの歴史で、ただ1人の記録です。
+    card: none
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard
+- id: view
+  heading: アザールは、最後の1年にどれだけ点を取ったのか
+  tier: 背景
+  telop: 最後の1年は、それまでの約1.4倍
+  viewpoint: true
+  say:
+  - text: 最後に、アザールのチェルシーの7年を、最後の1年と前の6年で比べます。
+    card:
+      type: table
+      title: チェルシーでのゴール（期間ごと）
+      columns:
+      - 期間
+      - 年数
+      - ゴール
+      - 1年あたり
+      rows:
+      - - 2012-13〜2017-18
+        - '6'
+        - 89点
+        - 14.8点
+      - - 2018-19
+        - '1'
+        - 21点
+        - 21点
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 2012-13から2017-18の6年間は、89ゴール。1年あたり14.8点です。
+    card:
+      type: table
+      title: チェルシーでのゴール（期間ごと）
+      columns:
+      - 期間
+      - 年数
+      - ゴール
+      - 1年あたり
+      rows:
+      - - 2012-13〜2017-18
+        - '6'
+        - 89点
+        - 14.8点
+      - - 2018-19
+        - '1'
+        - 21点
+        - 21点
+      highlight_row: 0
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  - text: 最後の2018-19は、21点。6年の平均の、約1.4倍でした。
+    card:
+      type: table
+      title: チェルシーでのゴール（期間ごと）
+      columns:
+      - 期間
+      - 年数
+      - ゴール
+      - 1年あたり
+      rows:
+      - - 2012-13〜2017-18
+        - '6'
+        - 89点
+        - 14.8点
+      - - 2018-19
+        - '1'
+        - 21点
+        - 21点
+      highlight_row: 1
+    image: assets/images/20261130_hazard_legend/01_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+  - text: この年はアシストも、プレミアで最多の15を記録しました。
+    card: none
+    image: assets/images/20261130_hazard_legend/02_w.jpg
+  - text: 決めて、作って、決勝でも2点。7年で最も多い21点を、最後の1年に積み上げました。
+    card: none
+    image: assets/images/20261130_hazard_legend/05_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Eden_Hazard

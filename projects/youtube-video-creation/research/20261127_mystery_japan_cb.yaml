@@ -1,0 +1,1274 @@
+# 取材メモ（11/27 金 15:30、シリーズ「サッカーの謎」の2本目、key: mystery_japan_cb）。情報の時点は 2026-11-22。
+# 題材：日本人のセンターバックは、なぜ欧州で通用するようになったのか（題材は決定済みで渡された）。
+#   取材: 2026-11-22。Wikipedia の API（wikitext）と requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。FotMob は使っていない。ブラウザの道具は使っていない。
+#   1本目（mystery_japan_germany）と重ならないように：遠藤航・長谷部・28人・EU外の枠・2部の入口・2022年W杯のドイツ戦は使わない。板倉はシャルケの2部の話をせず、伊藤は移籍金と位置だけ。
+# 使った数字と出どころ（確度）
+#   W杯の日本代表のDF（報道・en.wikipedia「20xx FIFA World Cup squads」の所属。2026年は JFA の 2026-05-15 発表が出典として付いている）:
+#     2010: DF7人（駒野・闘莉王・長友・内田・岩政・今野・中澤）全員Jリーグのクラブ。
+#     2014: 欧州のクラブのDF＝内田(シャルケ)・酒井高徳(シュトゥットガルト)・長友(インテル)・酒井宏樹(ハノーファー)・吉田(サウサンプトン)。森重・今野・伊野波はJ。
+#     2018: 欧州＝長友(ガラタサライ)・酒井宏樹(マルセイユ)・酒井高徳(ハンブルガーSV)・吉田(サウサンプトン)。植田・昌子・槙野・遠藤航はJ。
+#     2022: 欧州のCB＝吉田(シャルケ)・板倉(ボルシアMG)・冨安(アーセナル)・伊藤(シュトゥットガルト)。谷口・山根・長友・酒井はJ。
+#     2026: DF9人のうち長友(FC東京)以外の8人が欧州（JFA 公式 https://www.jfa.jp/eng/samuraiblue/news/00036338/ を 2026-11-22 に読んで、9人の所属が en.wikipedia と一致＝確定）。CB＝谷口(シント＝トロイデン)・板倉(アヤックス)・渡辺(フェイエノールト)・瀬古(ル・アーヴル)・伊藤(バイエルン)・冨安(アヤックス)・鈴木淳之介(コペンハーゲン)の7人、菅原(ブレーメン)は右SB。
+#     ※センターバックとサイドバックの分け方は、自分で分けた（各選手の en.wikipedia の位置の欄。内田・長友・酒井2人・菅原はSB）。だから「0人→1→1→4→7人」は自分で数えた数（背景）。
+#   最初の欧州のクラブ（en.wikipedia の経歴の欄）: 冨安 シント＝トロイデン(2018年1月、19歳)／渡辺 コルトレイク(2022)／谷口 アル・ラーヤン(カタール)のあとシント＝トロイデン(2024)／板倉 マンCと契約→フローニンゲンへ貸し出し(2019)／瀬古 グラスホッパー(2022)／鈴木 コペンハーゲン(2025)／伊藤 シュトゥットガルト(2021)。→ 7人中6人が5大リーグの外（自分で数えた）。
+#   吉田麻也（en.wikipedia）: 2009年12月にVVVフェンロ移籍の発表（2010年にオランダへ）、2012-08-30 サウサンプトン（移籍金は "thought to be in the region of £3 million"）、2017-04-29 ハル戦でプレミア100試合（"the first Japanese player to reach the milestone"）、サウサンプトン 2012–2020。
+#   冨安（en.wikipedia）: ボローニャ 2019（€9m の報道）、2021-08-31 アーセナル（"variously reported as £15.5 million, £16 million and £17 million"）。位置の欄 CB・SB。いまはクリスタル・パレス（2026–）。
+#   ディ・ヴァイオの言葉: Calciomercato 2020-05-27（Francesco Guerrieri）。肩書は capo scouting del Bologna。原文 "La prima relazione è stata fatta ad ottobre, un mese dopo io e Mattia eravamo già in Belgio. L'abbiamo seguito per tutto il campionato, visionandolo 4/5 volte dal vivo. Ci ha impressionato da subito perché è molto bravo con i piedi e si sa adattare in tutti i ruoli della difesa." を訳した（「io e Mattia」の名は省いた）。
+#   町田浩樹（en.wikipedia）: ユニオン・サンジロワーズへ2022年1月に貸し出し→完全移籍、2024-05-09 ベルギー杯決勝でアントワープに1-0の唯一の得点（"first title in competition after 110 years"）、2025-06-25 ホッフェンハイム。
+#   町田の言葉: ゲキサカ 2026-11-11（竹内達也）の原文のまま（20261112_machida_brazil_words の取材メモで読んだもの）。
+#   高井幸大（en.wikipedia）: 2025-07-08 トッテナム、2026-01-02 ボルシアMGへ貸し出し、2026-09-01 シント＝トロイデンへ貸し出し。
+#   伊藤洋輝（en.wikipedia）: 2024-06-13 バイエルン、"triggered his release clause of an estimated €30 million"。位置の欄 CB・LB・MF。
+#   板倉（en.wikipedia）: 位置の欄 CB・守備的MF。鈴木淳之介: CB・守備的MF。谷口・渡辺・瀬古: CB だけ。→ 7人中4人（自分で数えた）。
+#   自分で計算: 1600万÷300万＝5.33（ポンドどうし。伊藤はユーロなので比べない）。
+# 確かめきれなかったこと: 冨安の移籍金は報道で幅がある（1550万〜1700万ポンド）→ 語りで幅を言う。伊藤の額は「推定」。吉田のVVVのデビューは2010年10月（移籍の発表は2009年12月）→「2010年に移りました」とだけ言う。
+# 言わないこと: 身長（2010年のCBも185cm前後で、差として言えない）／2026年W杯の主将（出典で食い違う）／高井の移籍金（一次で確かめていない）。
+# 写真: 吉田＝Commons「Yoshida.jpg」CC BY-SA 2.0（@cfcunofficial、2017、サウサンプトン）／冨安＝Commons Hans Reefman CC BY-SA 4.0（アヤックス 2026）／板倉＝Commons Mtjonenfa CC BY-SA 4.0（アヤックス）／町田＝Commons Sidney.Cortez CC BY-SA 4.0（ユニオン 2024）／伊藤＝Commons Jeollo von VfB-exklusiv.de CC BY 3.0（シュトゥットガルト）。2枚並べは tools/pairphoto.py。
+slot: other_1
+date: 2026年11月22日
+format: news
+series: サッカーの謎
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- 日本人選手
+- 冨安健洋
+- 吉田麻也
+- 板倉滉
+- 伊藤洋輝
+- 町田浩樹
+- 高井幸大
+- 谷口彰悟
+- 渡辺剛
+- 瀬古歩夢
+- 鈴木淳之介
+theme:
+  end_bg: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  id: mystery_japan_cb
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 日本人選手
+  prefix: ''
+  hook: ''
+  title: 日本人センターバックは、なぜ欧州で通用するようになったのか
+  question: 2010年W杯の日本代表はディフェンダー7人が全員Jリーグのクラブ。2026年W杯はセンターバック7人が全員ヨーロッパのクラブ。日本人センターバックは、なぜ欧州で通用するようになったのか
+  lead: 2010年W杯の日本代表のディフェンダーは全員Jリーグ。2026年はセンターバック7人が全員欧州組。何が変わったのか。
+  opening_image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  takeaway: 日本人センターバックが欧州で通用するようになったのは、吉田麻也がプレミアで100試合に届いて扉を開け（2014・18年W杯の欧州組CBは吉田1人）、5大リーグの外で試合に出てから上がり（2026年W杯のCB7人のうち6人）、何役もこなし（7人中4人がほかの位置も持つ）、値段がつく選手になったから（冨安のアーセナル移籍は約1600万ポンドで、吉田の約300万ポンドの5倍超）。情報は11月22日時点。
+  short_title: 日本人センターバックは、なぜ欧州で通用するようになったのか
+thumbnail:
+  layout: versus
+  photos:
+  - assets/images/20261127_mystery_cb_yoshida2/01.jpg
+  - assets/images/20261127_mystery_cb_tomiyasu/01_v.jpg
+  short_photo: assets/images/20261127_mystery_cb_tomiyasu/01_v.jpg
+  names:
+  - 吉田麻也
+  - 冨安健洋
+  face_link: →
+  line1: 吉田→冨安 欧州組CB
+  line2: 1人→7人 なぜ通用？
+  callouts:
+  - 理由は4つ
+  tags:
+  - 日本人選手
+  - サッカーの謎
+  - 海外組
+  - 冨安健洋
+  - 吉田麻也
+  - 板倉滉
+sections:
+- id: hook
+  heading: 日本人センターバックは、なぜ欧州で通用するようになったのか
+  tier: 報道
+  narrator: 解説
+  telop: W杯の欧州組センターバック、0人から7人へ
+  card:
+    type: line
+    title: W杯の日本代表 欧州のクラブのセンターバック
+    x:
+    - '2010'
+    - '2014'
+    - '2018'
+    - '2022'
+    - '2026'
+    series:
+    - - 欧州組のCB
+      - - 0
+        - 1
+        - 1
+        - 4
+        - 7
+    unit: 人
+    focus: 欧州組のCB
+  say:
+  - text: 2010年のワールドカップ。日本代表のディフェンダーは7人。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 7人とも、所属はJリーグのクラブでした。
+    card:
+      type: line
+      title: W杯の日本代表 欧州のクラブのセンターバック
+      x:
+      - '2010'
+      - '2014'
+      - '2018'
+      - '2022'
+      - '2026'
+      series:
+      - - 欧州組のCB
+        - - 0
+          - 1
+          - 1
+          - 4
+          - 7
+      unit: 人
+      focus: 欧州組のCB
+      highlight: '2010'
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+    emph: true
+  - text: 中澤佑二や田中マルクス闘莉王。守りの真ん中は、国内組でした。
+    card:
+      type: line
+      title: W杯の日本代表 欧州のクラブのセンターバック
+      x:
+      - '2010'
+      - '2014'
+      - '2018'
+      - '2022'
+      - '2026'
+      series:
+      - - 欧州組のCB
+        - - 0
+          - 1
+          - 1
+          - 4
+          - 7
+      unit: 人
+      focus: 欧州組のCB
+      highlight: '2010'
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: それから16年。2026年のワールドカップ。
+    card:
+      type: line
+      title: W杯の日本代表 欧州のクラブのセンターバック
+      x:
+      - '2010'
+      - '2014'
+      - '2018'
+      - '2022'
+      - '2026'
+      series:
+      - - 欧州組のCB
+        - - 0
+          - 1
+          - 1
+          - 4
+          - 7
+      unit: 人
+      focus: 欧州組のCB
+      highlight: '2026'
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: センターバックの7人は、全員が欧州のクラブ。2010年の0人から7人へ。
+    card:
+      type: line
+      title: W杯の日本代表 欧州のクラブのセンターバック
+      x:
+      - '2010'
+      - '2014'
+      - '2018'
+      - '2022'
+      - '2026'
+      series:
+      - - 欧州組のCB
+        - - 0
+          - 1
+          - 1
+          - 4
+          - 7
+      unit: 人
+      focus: 欧州組のCB
+      highlight: '2026'
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+    emph: true
+  - text: センターバックは、守備の真ん中に立つ選手のことです。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 体の大きな相手と、毎週ぶつかる位置。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: この16年で、守備の真ん中に何が起きたのか。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 理由は4つ。11月22日時点の数字で、順番に確かめます。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  sources:
+  - https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_squads
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads
+  - https://www.jfa.jp/eng/samuraiblue/news/00036338/
+- id: history
+  heading: サイドバックが先に海を渡り、真ん中は残った
+  tier: 報道
+  narrator: 解説
+  telop: 2014年、欧州組のサイドバック4人・センターバック1人
+  card:
+    type: table
+    title: W杯の日本代表 欧州のクラブのDF
+    columns:
+    - 大会
+    - サイドバック
+    - センターバック
+    rows:
+    - - 2010年
+      - 0人
+      - 0人
+    - - 2014年
+      - 4人
+      - 1人（吉田）
+    - - 2018年
+      - 3人
+      - 1人（吉田）
+  say:
+  - text: まず、守備の日本人選手にも、欧州へ出ていく順番がありました。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 先に欧州へ出たのは、両端のサイドバックです。
+    card:
+      type: table
+      title: W杯の日本代表 欧州のクラブのDF
+      columns:
+      - 大会
+      - サイドバック
+      - センターバック
+      rows:
+      - - 2010年
+        - 0人
+        - 0人
+      - - 2014年
+        - 4人
+        - 1人（吉田）
+      - - 2018年
+        - 3人
+        - 1人（吉田）
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 2014年のワールドカップでは、内田篤人、長友佑都、
+    card:
+      type: table
+      title: W杯の日本代表 欧州のクラブのDF
+      columns:
+      - 大会
+      - サイドバック
+      - センターバック
+      rows:
+      - - 2010年
+        - 0人
+        - 0人
+      - - 2014年
+        - 4人
+        - 1人（吉田）
+      - - 2018年
+        - 3人
+        - 1人（吉田）
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 酒井宏樹、酒井高徳の4人が、欧州のクラブにいました。
+    card:
+      type: table
+      title: W杯の日本代表 欧州のクラブのDF
+      columns:
+      - 大会
+      - サイドバック
+      - センターバック
+      rows:
+      - - 2010年
+        - 0人
+        - 0人
+      - - 2014年
+        - 4人
+        - 1人（吉田）
+      - - 2018年
+        - 3人
+        - 1人（吉田）
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+    emph: true
+  - text: 一方、センターバックで欧州のクラブにいたのは、1人だけ。
+    card:
+      type: table
+      title: W杯の日本代表 欧州のクラブのDF
+      columns:
+      - 大会
+      - サイドバック
+      - センターバック
+      rows:
+      - - 2010年
+        - 0人
+        - 0人
+      - - 2014年
+        - 4人
+        - 1人（吉田）
+      - - 2018年
+        - 3人
+        - 1人（吉田）
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 2018年も同じです。真ん中の欧州組は、1人のままでした。
+    card:
+      type: table
+      title: W杯の日本代表 欧州のクラブのDF
+      columns:
+      - 大会
+      - サイドバック
+      - センターバック
+      rows:
+      - - 2010年
+        - 0人
+        - 0人
+      - - 2014年
+        - 4人
+        - 1人（吉田）
+      - - 2018年
+        - 3人
+        - 1人（吉田）
+      highlight_row: 2
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: その1人が、吉田麻也です。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_squads
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_squads
+- id: door
+  heading: 理由① 吉田麻也が、扉を開けた
+  tier: 報道
+  narrator: 解説
+  telop: 吉田麻也、プレミアで100試合に届いた最初の日本人
+  card:
+    type: timeline
+    title: 吉田麻也の歩み
+    rows:
+    - - 2010年
+      - 名古屋からオランダのフェンロへ
+    - - 2012年
+      - サウサンプトンへ。約300万ポンド
+    - - 2017年
+      - プレミア100試合。日本人で最初
+    - - 2020年
+      - サウサンプトンを離れる
+    focus: 0
+  say:
+  - text: 1つ目の理由は、扉を開けた先輩がいたことです。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 吉田麻也は、名古屋グランパスから、
+    card:
+      type: timeline
+      title: 吉田麻也の歩み
+      rows:
+      - - 2010年
+        - 名古屋からオランダのフェンロへ
+      - - 2012年
+        - サウサンプトンへ。約300万ポンド
+      - - 2017年
+        - プレミア100試合。日本人で最初
+      - - 2020年
+        - サウサンプトンを離れる
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: オランダのフェンロへ移りました。2010年のことです。
+    card:
+      type: timeline
+      title: 吉田麻也の歩み
+      rows:
+      - - 2010年
+        - 名古屋からオランダのフェンロへ
+      - - 2012年
+        - サウサンプトンへ。約300万ポンド
+      - - 2017年
+        - プレミア100試合。日本人で最初
+      - - 2020年
+        - サウサンプトンを離れる
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 2012年8月には、イングランドのサウサンプトンへ。
+    card:
+      type: timeline
+      title: 吉田麻也の歩み
+      rows:
+      - - 2010年
+        - 名古屋からオランダのフェンロへ
+      - - 2012年
+        - サウサンプトンへ。約300万ポンド
+      - - 2017年
+        - プレミア100試合。日本人で最初
+      - - 2020年
+        - サウサンプトンを離れる
+      focus: 0
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 移籍金は、約300万ポンドと伝えられました。
+    card:
+      type: timeline
+      title: 吉田麻也の歩み
+      rows:
+      - - 2010年
+        - 名古屋からオランダのフェンロへ
+      - - 2012年
+        - サウサンプトンへ。約300万ポンド
+      - - 2017年
+        - プレミア100試合。日本人で最初
+      - - 2020年
+        - サウサンプトンを離れる
+      focus: 0
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: そして2017年4月、プレミアリーグで100試合目。
+    card:
+      type: timeline
+      title: 吉田麻也の歩み
+      rows:
+      - - 2010年
+        - 名古屋からオランダのフェンロへ
+      - - 2012年
+        - サウサンプトンへ。約300万ポンド
+      - - 2017年
+        - プレミア100試合。日本人で最初
+      - - 2020年
+        - サウサンプトンを離れる
+      focus: 0
+      highlight_row: 2
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 100試合に届いたのは、日本人で吉田が最初でした。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+    emph: true
+  - text: サウサンプトンには、2020年まで、8シーズンいました。
+    card:
+      type: timeline
+      title: 吉田麻也の歩み
+      rows:
+      - - 2010年
+        - 名古屋からオランダのフェンロへ
+      - - 2012年
+        - サウサンプトンへ。約300万ポンド
+      - - 2017年
+        - プレミア100試合。日本人で最初
+      - - 2020年
+        - サウサンプトンを離れる
+      focus: 0
+      highlight_row: 3
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: プレミアリーグの守備の真ん中に、日本人が立ち続けた。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 日本人のセンターバックでも、欧州の1部で戦える。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: その前例を、吉田が数字で残したんです。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  sources:
+  - https://en.wikipedia.org/wiki/Maya_Yoshida
+  - https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_squads
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_squads
+- id: gate
+  main: true
+  heading: 理由② 最初の一歩は、5大リーグの外
+  tier: 報道
+  narrator: 解説
+  telop: W杯のセンターバック7人のうち6人が、5大リーグの外から
+  card:
+    type: table
+    title: 2026年W杯のセンターバック 最初の欧州
+    columns:
+    - 選手
+    - 最初の欧州
+    - 国
+    rows:
+    - - 冨安健洋
+      - シント＝トロイデン
+      - ベルギー
+    - - 渡辺剛
+      - コルトレイク
+      - ベルギー
+    - - 谷口彰悟
+      - シント＝トロイデン
+      - ベルギー
+    - - 板倉滉
+      - フローニンゲン
+      - オランダ
+    - - 瀬古歩夢
+      - グラスホッパー
+      - スイス
+    - - 鈴木淳之介
+      - コペンハーゲン
+      - デンマーク
+    - - 伊藤洋輝
+      - シュトゥットガルト
+      - ドイツ
+  say:
+  - text: 日本人選手のセンターバックが、いま欧州で次々に戦っています。
+    card: none
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+    short_only: true
+  - text: 2つ目の理由は、欧州で最初に入るクラブの選び方です。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 2026年のワールドカップの、センターバック7人。
+    card:
+      type: table
+      title: 2026年W杯のセンターバック 最初の欧州
+      columns:
+      - 選手
+      - 最初の欧州
+      - 国
+      rows:
+      - - 冨安健洋
+        - シント＝トロイデン
+        - ベルギー
+      - - 渡辺剛
+        - コルトレイク
+        - ベルギー
+      - - 谷口彰悟
+        - シント＝トロイデン
+        - ベルギー
+      - - 板倉滉
+        - フローニンゲン
+        - オランダ
+      - - 瀬古歩夢
+        - グラスホッパー
+        - スイス
+      - - 鈴木淳之介
+        - コペンハーゲン
+        - デンマーク
+      - - 伊藤洋輝
+        - シュトゥットガルト
+        - ドイツ
+      highlight_row: 0
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: それぞれが最初にプレーした欧州のクラブを数えました。
+    card:
+      type: table
+      title: 2026年W杯のセンターバック 最初の欧州
+      columns:
+      - 選手
+      - 最初の欧州
+      - 国
+      rows:
+      - - 冨安健洋
+        - シント＝トロイデン
+        - ベルギー
+      - - 渡辺剛
+        - コルトレイク
+        - ベルギー
+      - - 谷口彰悟
+        - シント＝トロイデン
+        - ベルギー
+      - - 板倉滉
+        - フローニンゲン
+        - オランダ
+      - - 瀬古歩夢
+        - グラスホッパー
+        - スイス
+      - - 鈴木淳之介
+        - コペンハーゲン
+        - デンマーク
+      - - 伊藤洋輝
+        - シュトゥットガルト
+        - ドイツ
+      highlight_row: 0
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: ベルギーが3人。オランダ、スイス、デンマークが1人ずつ。
+    card:
+      type: table
+      title: 2026年W杯のセンターバック 最初の欧州
+      columns:
+      - 選手
+      - 最初の欧州
+      - 国
+      rows:
+      - - 冨安健洋
+        - シント＝トロイデン
+        - ベルギー
+      - - 渡辺剛
+        - コルトレイク
+        - ベルギー
+      - - 谷口彰悟
+        - シント＝トロイデン
+        - ベルギー
+      - - 板倉滉
+        - フローニンゲン
+        - オランダ
+      - - 瀬古歩夢
+        - グラスホッパー
+        - スイス
+      - - 鈴木淳之介
+        - コペンハーゲン
+        - デンマーク
+      - - 伊藤洋輝
+        - シュトゥットガルト
+        - ドイツ
+      highlight_row: 3
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 7人のうち6人が、5大リーグの外から入っています。
+    card:
+      type: table
+      title: 2026年W杯のセンターバック 最初の欧州
+      columns:
+      - 選手
+      - 最初の欧州
+      - 国
+      rows:
+      - - 冨安健洋
+        - シント＝トロイデン
+        - ベルギー
+      - - 渡辺剛
+        - コルトレイク
+        - ベルギー
+      - - 谷口彰悟
+        - シント＝トロイデン
+        - ベルギー
+      - - 板倉滉
+        - フローニンゲン
+        - オランダ
+      - - 瀬古歩夢
+        - グラスホッパー
+        - スイス
+      - - 鈴木淳之介
+        - コペンハーゲン
+        - デンマーク
+      - - 伊藤洋輝
+        - シュトゥットガルト
+        - ドイツ
+      highlight_row: 5
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 6
+      col: 2
+  - text: 5大リーグとは、イングランド、スペイン、ドイツ、
+    card:
+      type: table
+      title: 2026年W杯のセンターバック 最初の欧州
+      columns:
+      - 選手
+      - 最初の欧州
+      - 国
+      rows:
+      - - 冨安健洋
+        - シント＝トロイデン
+        - ベルギー
+      - - 渡辺剛
+        - コルトレイク
+        - ベルギー
+      - - 谷口彰悟
+        - シント＝トロイデン
+        - ベルギー
+      - - 板倉滉
+        - フローニンゲン
+        - オランダ
+      - - 瀬古歩夢
+        - グラスホッパー
+        - スイス
+      - - 鈴木淳之介
+        - コペンハーゲン
+        - デンマーク
+      - - 伊藤洋輝
+        - シュトゥットガルト
+        - ドイツ
+      highlight_row: 6
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: イタリア、フランスの1部のこと。例外は、伊藤洋輝だけです。
+    card:
+      type: table
+      title: 2026年W杯のセンターバック 最初の欧州
+      columns:
+      - 選手
+      - 最初の欧州
+      - 国
+      rows:
+      - - 冨安健洋
+        - シント＝トロイデン
+        - ベルギー
+      - - 渡辺剛
+        - コルトレイク
+        - ベルギー
+      - - 谷口彰悟
+        - シント＝トロイデン
+        - ベルギー
+      - - 板倉滉
+        - フローニンゲン
+        - オランダ
+      - - 瀬古歩夢
+        - グラスホッパー
+        - スイス
+      - - 鈴木淳之介
+        - コペンハーゲン
+        - デンマーク
+      - - 伊藤洋輝
+        - シュトゥットガルト
+        - ドイツ
+      highlight_row: 6
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+  - text: その入口から、いちばん上まで行ったのが、冨安健洋です。
+    card: none
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: 2018年1月、19歳でベルギーのシント＝トロイデンへ。
+    card: none
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: 翌年、イタリアのボローニャが、冨安を取りました。
+    card: none
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: ボローニャのスカウト責任者、ディ・ヴァイオはこう話しています。
+    card: none
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: 最初の報告は10月。1か月後には、私たちはもうベルギーにいた。
+    voice: ディ・ヴァイオ
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+    card: none
+  - text: シーズンを通して追いかけ、4、5回は生で見た。
+    voice: ディ・ヴァイオ
+    cont: true
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+    card: none
+  - text: ベルギーでの2季目、冨安は公式戦40試合に出ていました。
+    card: none
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: そして2021年、冨安はアーセナルへ移りました。
+    card: none
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+    emph: true
+  - text: 町田浩樹も、ベルギーのユニオン・サンジロワーズから。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 2024年のベルギー杯の決勝で、決勝点を決めています。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: クラブにとって、110年ぶりのカップ優勝でした。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: トッテナムに入った高井幸大も、今季はシント＝トロイデンで経験を積んでいます。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  sources:
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads
+  - https://www.jfa.jp/eng/samuraiblue/news/00036338/
+  - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
+  - https://en.wikipedia.org/wiki/Tsuyoshi_Watanabe
+  - https://en.wikipedia.org/wiki/Sh%C5%8Dgo_Taniguchi
+  - https://en.wikipedia.org/wiki/Ko_Itakura
+  - https://en.wikipedia.org/wiki/Ayumu_Seko
+  - https://en.wikipedia.org/wiki/Junnosuke_Suzuki
+  - https://en.wikipedia.org/wiki/Hiroki_It%C5%8D_(footballer,_born_1999)
+  - https://www.calciomercato.com/news/di-vaio-racconta-il-progetto-bologna-a-cm-tomiyasu-e-gli-altri-c-18692
+  - https://en.wikipedia.org/wiki/Koki_Machida
+  - https://en.wikipedia.org/wiki/Kota_Takai
+- id: role
+  heading: 理由③ 1人で、いくつもの役をこなす
+  tier: 報道
+  narrator: 解説
+  telop: 7人のうち4人が、センターバック以外の位置も持つ
+  card:
+    type: verdict
+    title: センターバック以外の位置も持つか
+    columns:
+    - 選手
+    - 判定
+    - ほかの位置
+    rows:
+    - - 冨安健洋
+      - ○
+      - サイドバック
+    - - 伊藤洋輝
+      - ○
+      - 左サイドバック・中盤
+    - - 板倉滉
+      - ○
+      - 守備的な中盤
+    - - 鈴木淳之介
+      - ○
+      - 守備的な中盤
+  say:
+  - text: 3つ目の理由は、日本人選手が1人でいくつもの役をこなせることです。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+  - text: ディ・ヴァイオは、冨安を取った理由も話しています。
+    card: none
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: 足元がとてもうまく、守備のどの役にも合わせられる。
+    voice: ディ・ヴァイオ
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+    card: none
+  - text: 実際、冨安はアーセナルで、両方のサイドバックも務めました。
+    card:
+      type: verdict
+      title: センターバック以外の位置も持つか
+      columns:
+      - 選手
+      - 判定
+      - ほかの位置
+      rows:
+      - - 冨安健洋
+        - ○
+        - サイドバック
+      - - 伊藤洋輝
+        - ○
+        - 左サイドバック・中盤
+      - - 板倉滉
+        - ○
+        - 守備的な中盤
+      - - 鈴木淳之介
+        - ○
+        - 守備的な中盤
+      highlight_row: 0
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: さきほどの7人の、主な位置を調べると、
+    card:
+      type: verdict
+      title: センターバック以外の位置も持つか
+      columns:
+      - 選手
+      - 判定
+      - ほかの位置
+      rows:
+      - - 冨安健洋
+        - ○
+        - サイドバック
+      - - 伊藤洋輝
+        - ○
+        - 左サイドバック・中盤
+      - - 板倉滉
+        - ○
+        - 守備的な中盤
+      - - 鈴木淳之介
+        - ○
+        - 守備的な中盤
+      highlight_row: 0
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+  - text: 伊藤洋輝は、左サイドバックと中盤も。
+    card:
+      type: verdict
+      title: センターバック以外の位置も持つか
+      columns:
+      - 選手
+      - 判定
+      - ほかの位置
+      rows:
+      - - 冨安健洋
+        - ○
+        - サイドバック
+      - - 伊藤洋輝
+        - ○
+        - 左サイドバック・中盤
+      - - 板倉滉
+        - ○
+        - 守備的な中盤
+      - - 鈴木淳之介
+        - ○
+        - 守備的な中盤
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+  - text: 板倉滉と鈴木淳之介は、守備的な中盤も、主な位置に入っています。
+    card:
+      type: verdict
+      title: センターバック以外の位置も持つか
+      columns:
+      - 選手
+      - 判定
+      - ほかの位置
+      rows:
+      - - 冨安健洋
+        - ○
+        - サイドバック
+      - - 伊藤洋輝
+        - ○
+        - 左サイドバック・中盤
+      - - 板倉滉
+        - ○
+        - 守備的な中盤
+      - - 鈴木淳之介
+        - ○
+        - 守備的な中盤
+      highlight_row: 2
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 7人のうち4人が、真ん中以外も守れる選手です。
+    card:
+      type: verdict
+      title: センターバック以外の位置も持つか
+      columns:
+      - 選手
+      - 判定
+      - ほかの位置
+      rows:
+      - - 冨安健洋
+        - ○
+        - サイドバック
+      - - 伊藤洋輝
+        - ○
+        - 左サイドバック・中盤
+      - - 板倉滉
+        - ○
+        - 守備的な中盤
+      - - 鈴木淳之介
+        - ○
+        - 守備的な中盤
+      highlight_row: 3
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+    emph: true
+  - text: 試合の途中で並びを変えるとき、1人で穴を埋められる。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+  - text: 監督にとって、ベンチに置いても使い道が多い選手です。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+  sources:
+  - https://www.calciomercato.com/news/di-vaio-racconta-il-progetto-bologna-a-cm-tomiyasu-e-gli-altri-c-18692
+  - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
+  - https://en.wikipedia.org/wiki/Hiroki_It%C5%8D_(footballer,_born_1999)
+  - https://en.wikipedia.org/wiki/Ko_Itakura
+  - https://en.wikipedia.org/wiki/Junnosuke_Suzuki
+- id: fee
+  heading: 理由④ 値段がつく選手になった
+  tier: 報道
+  narrator: 解説
+  telop: アーセナルが払ったのは、約1600万ポンド
+  card:
+    type: table
+    title: 日本人センターバックの移籍金
+    columns:
+    - 年
+    - 選手
+    - 移籍先と金額
+    rows:
+    - - 2012年
+      - 吉田麻也
+      - サウサンプトン 約300万ポンド
+    - - 2021年
+      - 冨安健洋
+      - アーセナル 約1600万ポンド
+    - - 2024年
+      - 伊藤洋輝
+      - バイエルン 推定3000万ユーロ
+  say:
+  - text: 4つ目の理由は、日本人選手にクラブが払う額です。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 表の1行目は、さきほどの吉田麻也です。
+    card:
+      type: table
+      title: 日本人センターバックの移籍金
+      columns:
+      - 年
+      - 選手
+      - 移籍先と金額
+      rows:
+      - - 2012年
+        - 吉田麻也
+        - サウサンプトン 約300万ポンド
+      - - 2021年
+        - 冨安健洋
+        - アーセナル 約1600万ポンド
+      - - 2024年
+        - 伊藤洋輝
+        - バイエルン 推定3000万ユーロ
+      highlight_row: 0
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 2021年、冨安健洋がアーセナルへ移ったとき、
+    card:
+      type: table
+      title: 日本人センターバックの移籍金
+      columns:
+      - 年
+      - 選手
+      - 移籍先と金額
+      rows:
+      - - 2012年
+        - 吉田麻也
+        - サウサンプトン 約300万ポンド
+      - - 2021年
+        - 冨安健洋
+        - アーセナル 約1600万ポンド
+      - - 2024年
+        - 伊藤洋輝
+        - バイエルン 推定3000万ユーロ
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: 伝えられた額は、約1600万ポンド。
+    card:
+      type: table
+      title: 日本人センターバックの移籍金
+      columns:
+      - 年
+      - 選手
+      - 移籍先と金額
+      rows:
+      - - 2012年
+        - 吉田麻也
+        - サウサンプトン 約300万ポンド
+      - - 2021年
+        - 冨安健洋
+        - アーセナル 約1600万ポンド
+      - - 2024年
+        - 伊藤洋輝
+        - バイエルン 推定3000万ユーロ
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+    emph: true
+  - text: 報道によって、1550万から1700万ポンドまで幅があります。
+    card:
+      type: table
+      title: 日本人センターバックの移籍金
+      columns:
+      - 年
+      - 選手
+      - 移籍先と金額
+      rows:
+      - - 2012年
+        - 吉田麻也
+        - サウサンプトン 約300万ポンド
+      - - 2021年
+        - 冨安健洋
+        - アーセナル 約1600万ポンド
+      - - 2024年
+        - 伊藤洋輝
+        - バイエルン 推定3000万ユーロ
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: 同じポンドで比べると、吉田のときの5倍を超えます。
+    card:
+      type: calc
+      title: 吉田と冨安の移籍金
+      terms:
+      - - 1600万
+        - 冨安 2021年
+      - - 300万
+        - 吉田 2012年
+      - - 約5.3倍
+        - ポンドで比べた
+      ops:
+      - ÷
+      - ＝
+    image: assets/images/20261127_mystery_cb_tomiyasu/01_w.jpg
+  - text: そして2024年、伊藤洋輝はバイエルンへ。
+    card:
+      type: table
+      title: 日本人センターバックの移籍金
+      columns:
+      - 年
+      - 選手
+      - 移籍先と金額
+      rows:
+      - - 2012年
+        - 吉田麻也
+        - サウサンプトン 約300万ポンド
+      - - 2021年
+        - 冨安健洋
+        - アーセナル 約1600万ポンド
+      - - 2024年
+        - 伊藤洋輝
+        - バイエルン 推定3000万ユーロ
+      highlight_row: 2
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+  - text: 契約に書かれた移籍の額、推定3000万ユーロが払われたと報じられました。
+    card:
+      type: table
+      title: 日本人センターバックの移籍金
+      columns:
+      - 年
+      - 選手
+      - 移籍先と金額
+      rows:
+      - - 2012年
+        - 吉田麻也
+        - サウサンプトン 約300万ポンド
+      - - 2021年
+        - 冨安健洋
+        - アーセナル 約1600万ポンド
+      - - 2024年
+        - 伊藤洋輝
+        - バイエルン 推定3000万ユーロ
+      highlight_row: 2
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+    emph: true
+  - text: 額が上がるほど、上のクラブが日本人センターバックを取りに来るようになりました。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_ito_tomiyasu/01.jpg
+  sources:
+  - https://en.wikipedia.org/wiki/Maya_Yoshida
+  - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
+  - https://en.wikipedia.org/wiki/Hiroki_It%C5%8D_(footballer,_born_1999)
+- id: view
+  viewpoint: true
+  heading: 見立て・日本人センターバックを押し上げたのは、何だったのか
+  tier: 背景
+  narrator: 解説
+  telop: 扉、入口、役、値段。0人が7人になった4つの理由
+  card:
+    type: table
+    title: 4つの理由を数字で
+    columns:
+    - 理由
+    - いま
+    - 比べる相手
+    rows:
+    - - ① 扉
+      - 吉田がプレミア100試合
+      - 2014・18年の欧州組CBは1人
+    - - ② 入口
+      - 7人中6人が5大リーグの外から
+      - 例外は伊藤洋輝だけ
+    - - ③ 役
+      - 7人中4人がほかの位置も
+      - 冨安は両サイドも
+    - - ④ 値段
+      - 冨安 約1600万ポンド
+      - 吉田の5倍超
+  say:
+  - text: 見立てです。4つの理由を、表に並べて振り返ります。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 1つ目の扉。2014年と2018年、欧州組のセンターバックは吉田1人。
+    card:
+      type: table
+      title: 4つの理由を数字で
+      columns:
+      - 理由
+      - いま
+      - 比べる相手
+      rows:
+      - - ① 扉
+        - 吉田がプレミア100試合
+        - 2014・18年の欧州組CBは1人
+      - - ② 入口
+        - 7人中6人が5大リーグの外から
+        - 例外は伊藤洋輝だけ
+      - - ③ 役
+        - 7人中4人がほかの位置も
+        - 冨安は両サイドも
+      - - ④ 値段
+        - 冨安 約1600万ポンド
+        - 吉田の5倍超
+      highlight_row: 0
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 2つ目の入口。いまの7人で、5大リーグから入ったのは伊藤洋輝ひとり。
+    card:
+      type: table
+      title: 4つの理由を数字で
+      columns:
+      - 理由
+      - いま
+      - 比べる相手
+      rows:
+      - - ① 扉
+        - 吉田がプレミア100試合
+        - 2014・18年の欧州組CBは1人
+      - - ② 入口
+        - 7人中6人が5大リーグの外から
+        - 例外は伊藤洋輝だけ
+      - - ③ 役
+        - 7人中4人がほかの位置も
+        - 冨安は両サイドも
+      - - ④ 値段
+        - 冨安 約1600万ポンド
+        - 吉田の5倍超
+      highlight_row: 1
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 1
+  - text: 3つ目の役。サイドや中盤も守れる選手が、7人中4人。
+    card:
+      type: table
+      title: 4つの理由を数字で
+      columns:
+      - 理由
+      - いま
+      - 比べる相手
+      rows:
+      - - ① 扉
+        - 吉田がプレミア100試合
+        - 2014・18年の欧州組CBは1人
+      - - ② 入口
+        - 7人中6人が5大リーグの外から
+        - 例外は伊藤洋輝だけ
+      - - ③ 役
+        - 7人中4人がほかの位置も
+        - 冨安は両サイドも
+      - - ④ 値段
+        - 冨安 約1600万ポンド
+        - 吉田の5倍超
+      highlight_row: 2
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: 4つ目の値段。冨安の移籍金は、吉田の5倍を超えました。
+    card:
+      type: table
+      title: 4つの理由を数字で
+      columns:
+      - 理由
+      - いま
+      - 比べる相手
+      rows:
+      - - ① 扉
+        - 吉田がプレミア100試合
+        - 2014・18年の欧州組CBは1人
+      - - ② 入口
+        - 7人中6人が5大リーグの外から
+        - 例外は伊藤洋輝だけ
+      - - ③ 役
+        - 7人中4人がほかの位置も
+        - 冨安は両サイドも
+      - - ④ 値段
+        - 冨安 約1600万ポンド
+        - 吉田の5倍超
+      highlight_row: 3
+    image: assets/images/20261127_mystery_cb_pair_yoshida_tomiyasu/01.jpg
+  - text: では、最初の問いに答えます。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 日本人センターバックが欧州で戦えるようになったのは、
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 先輩が道を作り、小さめのリーグで試合に出て、何役もこなし、
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 値段がつく選手として、上のクラブへ上がっていったから。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+    emph: true
+  - text: ただ、次の壁もあります。町田浩樹は今月、こんな課題を口にしました。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: W杯で上を目指すためには同数で、
+    voice: 町田浩樹
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+    card: none
+  - text: 広いスペースも守り切れるCBが必要かなと思う。
+    voice: 町田浩樹
+    cont: true
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+    card: none
+  - text: 同数とは、相手の攻撃と同じ人数で守ることです。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 次の注目は、1月の移籍期間。7人の次に続く選手は誰か。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  - text: 扉、入口、役、値段。あなたが一番効いたと思うのは、どれですか。
+    card: none
+    image: assets/images/20261127_mystery_cb_pair_itakura_machida/01.jpg
+  sources:
+  - https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_squads
+  - https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_squads
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_squads
+  - https://en.wikipedia.org/wiki/Maya_Yoshida
+  - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
+  - https://en.wikipedia.org/wiki/Hiroki_It%C5%8D_(footballer,_born_1999)
+  - https://web.gekisaka.jp/news/japan/detail/?463010-463010-fl

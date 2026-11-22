@@ -1,0 +1,125 @@
+# 取材メモ（2026年11月17日）森保Jの最後の練習が雷雨で中止。森保監督「自然現象には勝てない」「私らしいなと」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-17。WebFetch と requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: サッカーキング 2026-11-16「森保一監督、雷雨での練習中止に「自然現象には勝てない」…」（全文。requests で発言を原文と照合） https://www.soccer-king.jp/news/japan/national/20261116/2228397.html
+#           ゲキサカ 2026-11-16「森保J「最後の練習」中止が決定…雷雨に見舞われた森保監督「私らしいなと」」 https://web.gekisaka.jp/news/japan/detail/?463332-463332-fl
+# 写真の出どころ（森保監督の写真。_pool.png を目で見て、伊東・別の選手・ウォーターマーク入りの1枚は外した）:
+#   https://www.soccer-king.jp/news/japan/national/20261116/2228397.html
+#   https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463120-463120-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463121-463121-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463110-463110-fl
+# 出典で確かめたこと:
+#   ・森保監督の発言（サッカーキング。字は変えない）:
+#       「どう見てもすぐに天候が変わる感じでもないですし、今日練習をやるのは難しいかなと。取りやめて、違う方向でコンディション作りした方がベストかなと思ったので、切り替えてやります」
+#       「ミーティングもしっかりとやれています。ピッチ上での練習もそうですけど、コミュニケーションを取っていて、基本的には予定としてスタメンは伝えているので、しっかりといい準備ができると思います」
+#       「選手たちも『今できることをしっかりやって、明日の試合につなげよう』と言ってくれました。自然現象には勝てないので、今できることをいつものようにしっかりやっていきたい」
+#   ・ゲキサカ: 16日夕、現地の練習施設で前日練習の予定。開始約1時間前に激しい雷雨。選手はいったん練習場に到着し、バスで待機したあと室内調整に変更。練習開始予定から30分が過ぎた午後5時半ごろ、
+#       監督が自ら報道陣に中止を説明。雷雨は1時間以上続くとみられ、「ケガのリスクを考えてしないほうがいいと判断した」。見出し・本文とも「私らしいなと」と苦笑い（本文は「私らしいなと」で引用）。
+#       過去のアクシデント（ゲキサカの整理）: 2018年9月の新体制初陣が北海道胆振東部地震で中止／新型コロナによる東京五輪延期／来年1〜2月のアジア杯延期。常々「想定外を想定内に」と口にしてきた。
+#   ・サッカーキング: 中2日のパラグアイ戦に向け、練習は15日の一回のみ。ブラジル戦に先発した選手・長い時間プレーした選手は、48時間はあまり上げない方針なので今日の休みは良い。
+#       （サッカーキング本文の冒頭に「11月17日に予定されていた…練習」と読める記述があったが、ゲキサカは16日夕の前日練習としており、16日が正しいと判断）
+#   ・ESPN の試合データ: ブラジル戦 fifa.friendly event=401916337 は 2026-11-14 10:15 UTC。パラグアイ戦 event=401916336 は 2026-11-17 13:10 UTC＝日本時間 22:10（Scheduled）。
+# 自分で数えたもの: ブラジル戦のキックオフからパラグアイ戦のキックオフまで 74時間55分（約75時間）。記事の「中2日」と一致。ゲキサカが挙げた過去のアクシデントは3つ。
+# 前の本との重なり: 20261115_moriyasu_brazil_world_top／20261114_moriyasu_best_worst_game（ブラジル戦の評価）。→ 今回の初出: 練習中止の経緯と「自然現象には勝てない」「私らしいな」。
+# 【言わないこと】大幅な入れ替えの話（別の回で扱う）／先発の予想／アジア杯延期の詳しい経緯。
+# 本人の言葉: あり（森保一。サッカーキング・ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月17日"
+format: news
+no_main: true
+people: [森保一]
+
+short_style: Y
+short_hook_quote: 自然現象には勝てないので、
+short_photos:
+  - assets/images/20261117_moriyasu_thunder_practice/08_v.jpg
+  - assets/images/20261117_moriyasu_thunder_practice/01_v.jpg
+  - assets/images/20261117_moriyasu_thunder_practice/06_v.jpg
+short_question: ラストマッチのパラグアイ戦、練習なしで臨む日本代表は勝てると思いますか。
+short_telops: []
+
+theme:
+  id: moriyasu_thunder_practice
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 森保監督、最後の練習が雷雨で中止。「私らしいなと」苦笑いの理由
+  hook: ""
+  question: ラストマッチ前日の練習が雷雨で中止になったとき、森保監督は何を語ったのか
+  takeaway: ブラジル戦からパラグアイ戦まではキックオフの間隔が約75時間で、揃って練習できたのは15日の1回だけ。16日の練習は中止になった。初陣の地震による中止、東京五輪の延期、アジアカップの延期に続く出来事になった
+
+thumbnail:
+  layout: face
+  line1: 森保監督 最後の練習
+  line2: 「自然現象には勝てない」
+  tags: [森保一, 日本代表]
+  photo: assets/images/20261117_moriyasu_thunder_practice/08_w.jpg
+  short_photo: assets/images/20261117_moriyasu_thunder_practice/08_v.jpg
+
+answer: 雷雨は避けられない。今できることをいつものようにやって、パラグアイ戦に臨む
+watch: 17日（日本時間22時10分）、パラグアイ戦
+
+sections:
+  - id: what
+    main: true
+    heading: 最後の練習が雷雨で中止になって、森保監督は何を語ったのか
+    tier: 報道
+    telop: 森保一監督「自然現象には勝てない」
+    say:
+      - text: 森保一監督にとって最後の指揮となるパラグアイ戦の前日、16日の練習が、雷雨で中止になりました。
+        image: assets/images/20261117_moriyasu_thunder_practice/08_w.jpg
+      - voice: 森保一
+        text: 自然現象には勝てないので、
+        emph: true
+      - voice: 森保一
+        text: 今できることを、いつものようにしっかりやっていきたい。
+        cont: true
+      - text: 監督は自ら報道陣の前に出て、中止を説明しました。
+        image: assets/images/20261117_moriyasu_thunder_practice/01_w.jpg
+      - text: 森保ジャパンは、2018年の初陣の中止や、アジアカップの延期にも見舞われてきました。
+      - text: 監督は、苦笑いを浮かべました。
+        image: assets/images/20261117_moriyasu_thunder_practice/06_w.jpg
+      - voice: 森保一
+        text: 私らしいなと。
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261116/2228397.html
+      - https://web.gekisaka.jp/news/japan/detail/?463332-463332-fl
+  - id: game
+    heading: 練習が中止になった16日夕、何が起きていたのか
+    tier: 報道
+    telop: 開始約1時間前に雷雨、午後5時半ごろに中止を説明
+    say:
+      - text: 始まる約1時間前に激しい雷雨が来て、1時間以上続く見込みでした。選手は、バスで待機していました。
+        card: {type: table, title: 16日夕の流れ, columns: [時間, 出来事], rows: [[開始の約1時間前, 激しい雷雨], [開始予定から30分後（午後5時半ごろ）, 森保監督が中止を説明], [中止のあと, 室内で調整]], highlight_row: 1}
+      - voice: 森保一
+        text: ケガのリスクを考えて、しないほうがいいと判断した。
+        card: none
+      - text: ピッチでの練習はせず、室内ジムなどで調整する形に切り替えました。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463332-463332-fl
+      - https://www.soccer-king.jp/news/japan/national/20261116/2228397.html
+  - id: view
+    viewpoint: true
+    heading: 練習が1回だけの森保監督は、パラグアイ戦をどう迎えるのか
+    tier: 背景
+    telop: ブラジル戦からキックオフまで約75時間。練習は15日の1回だけ
+    say:
+      - text: 見立てです。日程は、もともと厳しいものでした。
+      - text: 14日のブラジル戦から、17日のパラグアイ戦までは、1週間の半分にも満たない、およそ75時間です。
+      - text: 揃って練習できたのは、15日の1回だけでした。
+        card: {type: table, title: ブラジル戦からパラグアイ戦まで, columns: [項目, 中身], rows: [[間隔（キックオフ間）, 約75時間], [揃っての練習, 15日の1回], [16日の練習, 雷雨で中止]], highlight_row: 1}
+      - text: ミーティングはしっかり行えていて、スタメンも伝えてあるといいます。
+        card: none
+      - voice: 森保一
+        text: しっかりといい準備ができると思います。
+      - text: キックオフは、17日の日本時間22時10分です。
+        emph: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20261116/2228397.html
+      - https://web.gekisaka.jp/news/japan/detail/?463332-463332-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916336

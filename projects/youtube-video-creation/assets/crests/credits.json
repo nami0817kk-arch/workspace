@@ -592,5 +592,17 @@
     "file": "モロッコ.png",
     "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Morocco.svg?width=960",
     "note": "国旗（Flag_of_Morocco、パブリックドメイン）。権利を主張するだけ"
+  },
+  {
+    "club": "セネガル",
+    "file": "セネガル.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Senegal.svg?width=960",
+    "note": "国旗（Flag_of_Senegal、パブリックドメイン）。権利を主張するだけ"
+  },
+  {
+    "club": "エジプト",
+    "file": "エジプト.png",
+    "source": "https://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_Egypt.svg?width=960",
+    "note": "国旗（Flag_of_Egypt、パブリックドメイン）。権利を主張するだけ"
   }
 ]

@@ -1,0 +1,144 @@
+# 取材メモ（2026年11月19日）鈴木唯人、A代表で初めてのトップ下。「もうちょっと打開策はあった」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-19。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具・FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-18 12:05（取材・文 竹内達也）「A代表で初のトップ下起用も…鈴木唯人は前線の孤立に反省「もうちょっと打開策はあった」」（全文） https://web.gekisaka.jp/news/japan/detail/?463404-463404-fl
+# 出典で確かめたこと:
+#   ・ゲキサカ（地の文）: 鈴木唯人（フライブルク）はトップ下での初出場。パラグアイ戦は森保一監督のラストマッチ。14日のブラジル戦（3-2）は出場機会がなかった。次世代への継承役として、4バック導入後初めて起用された。
+#       任された役目は、これまでの3-4-2-1のシャドーではなく、本職と言える4-2-3-1のトップ下。1トップにはチームメートのFW後藤啓介。チームが前半早々にセットプレーから失点し、パラグアイの強固な守備ブロックに攻撃が停滞。
+#       鈴木唯は頻繁に中盤の低い位置まで下がり、MF佐野航大とのインサイドハーフのような関係でボールポゼッションを安定させようとしたが、後藤が孤立する結果になった。後半16分に途中交代。
+#   ・鈴木唯人の言葉（ゲキサカ。字は変えない。台本は読点で行に分けた）:
+#       「立ち上がりにすぐ失点して色々と難しかったけど、もう少し僕自身ができたこともあった。森保さんの最後の試合ですごく申し訳なかった」
+#       「もう少し後藤選手の近くに居られれば良かったけど、クラブでやっているのは降りてボールを受けて、さばいて、また出ていくというのが結構多い。ただ今日は相手が引き込んで中を絞る形だったので、もう少し工夫して片方のサイドになるとか、もうちょっと打開策はあったと思う」
+#       「うまく攻撃を活性化させながら、結局は最後のゴール前にも居ないといけないポジションだと思う」
+#       「僕自身も個人としてもっともっとチームのプラスになるようなことができないといけない。また(所属先の)チームに戻ってから頑張れれば」
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916336、2026-11-17 13:10 UTC）: Japan 1-2 Paraguay。2' Cáceres がコーナーからの流れで先制。Yuito Suzuki 先発、61' に Takefusa Kubo と交代（記事の「後半16分」＝45+16 で一致）。Keisuke Goto 先発・61' に Koki Ogawa と交代。Kodai Sano 先発・61' に Ao Tanaka と交代。
+# 依頼文との違い: 依頼文は「もうちょっと打開策はあった」の一言だけ。実際は1-2のパラグアイ戦。台本は1-2とだけ言う。交代は後半16分（ESPN 61分）。
+# 自分で数えたもの: 本人の言葉の中で、自分に向けた反省の言い方は3か所（「申し訳なかった」「打開策はあったと思う」「もっともっと…できないといけない」）。降りて受ける動きはクラブでも代表でも同じで、違ったのは相手の守り方、という言い方を本人がしている。
+#   後藤・唯人・佐野航大の3人は、ESPN の交代記録でどれも61分に交代（同時）。→ 台本では「3人とも」とは言わない（本の主役は唯人。他の2人の評価は入れない）。
+# 前の本との重なり: scripts/20261026_suzuki_yuito_bayern・20261111_suzuki_yui_freiburg・20261020_suzuki_yui_spurs_interest・20261106_goto_suzuki_freiburg と中身は別（今回はA代表のトップ下の言葉）。20261117_moriyasu_last_changes の「唯人と後藤に出場機会」は予告の1行だけ。同じ日の久保・堂安・田中・伊藤の本とは別の人の言葉。
+# 【言わないこと】試合の経過（失点の細部・福田のゴール）／後藤・佐野の評価／本人を小さく見せる言い方（「孤立させた」と決めつけない。記事の「後藤が孤立する結果に」は地の文として一度だけ使う）。
+# 本人の言葉: あり（鈴木唯人。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月19日"
+format: news
+no_main: true
+people: [鈴木唯人, 森保一, 後藤啓介]
+
+short_style: Y
+short_hook_quote: 森保さんの最後の試合ですごく申し訳なかった
+short_photos:
+  - assets/images/20261119_suzuki_yuito_trequartista/03_v.jpg
+  - assets/images/20261119_suzuki_yuito_trequartista/01_v.jpg
+  - assets/images/20261119_suzuki_yuito_trequartista/04_v.jpg
+short_question: 鈴木唯人は、大岩ジャパンでもトップ下で見たいですか。
+short_telops: []
+
+theme:
+  id: suzuki_yuito_trequartista
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 鈴木唯人、A代表で初のトップ下。何が足りなかったと話したのか
+  hook: ""
+  question: 初めてトップ下で先発した鈴木唯人は、パラグアイ戦のあと何を話したのか
+  takeaway: 鈴木唯人は、クラブでの降りて受ける動きは変えず、この日は相手が中を絞っていたと語った。足りなかったのは後藤啓介との距離。代表は来年3月から大岩監督の新体制になる
+
+thumbnail:
+  layout: face
+  line1: 鈴木唯人 初のトップ下
+  line2: 「打開策はあった」
+  tags: [鈴木唯人, 後藤啓介, 日本代表]
+  photo: assets/images/20261119_suzuki_yuito_trequartista/03_w.jpg
+  short_photo: assets/images/20261119_suzuki_yuito_trequartista/03_v.jpg
+
+answer: 後藤の近くに居られれば。もうちょっと打開策はあった
+watch: 来年3月、大岩剛監督の新体制
+
+sections:
+  - id: what
+    main: true
+    heading: 鈴木唯人は、初めてのトップ下で何を反省したのか
+    tier: 報道
+    telop: 鈴木唯人「森保さんの最後の試合ですごく申し訳なかった」
+    say:
+      - voice: 鈴木唯人
+        text: 森保さんの最後の試合ですごく申し訳なかった。
+        emph: true
+      - text: 森保監督のラストマッチで、鈴木唯人がトップ下で先発しました。
+        image: assets/images/20261119_suzuki_yuito_trequartista/01_w.jpg
+      - text: A代表では、初めてのトップ下です。
+      - text: 4バックになってからの先発も、初めてでした。
+      - text: 日本は、1対2で敗れました。
+      - voice: 鈴木唯人
+        text: 立ち上がりにすぐ失点して色々と難しかったけど、
+      - voice: 鈴木唯人
+        text: もう少し僕自身ができたこともあった。
+        cont: true
+        emph: true
+      - text: 1トップは、フライブルクのチームメート、後藤啓介です。
+        image: assets/images/20261119_suzuki_yuito_trequartista/03_w.jpg
+      - text: 鈴木唯人は中盤の低い位置まで下がって、佐野航大とボールを回しました。
+      - text: 結果として、後藤は前線で孤立しました。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463404-463404-fl
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.friendly/summary?event=401916336
+  - id: words
+    heading: 鈴木唯人は、打開策をどう考えたのか
+    tier: 報道
+    telop: 鈴木唯人「もうちょっと打開策はあったと思う」
+    say:
+      - voice: 鈴木唯人
+        text: もう少し後藤選手の近くに居られれば良かったけど、
+      - voice: 鈴木唯人
+        text: クラブでやっているのは降りてボールを受けて、
+        image: assets/images/20261119_suzuki_yuito_trequartista/04_w.jpg
+        cont: true
+      - voice: 鈴木唯人
+        text: さばいて、また出ていくというのが結構多い。
+        cont: true
+      - voice: 鈴木唯人
+        text: ただ今日は相手が引き込んで中を絞る形だったので、
+        image: assets/images/20261119_suzuki_yuito_trequartista/03_w.jpg
+      - voice: 鈴木唯人
+        text: もう少し工夫して片方のサイドになるとか、
+        cont: true
+      - voice: 鈴木唯人
+        text: もうちょっと打開策はあったと思う。
+        cont: true
+        emph: true
+      - text: 交代は、後半16分でした。
+        image: assets/images/20261119_suzuki_yuito_trequartista/01_w.jpg
+      - voice: 鈴木唯人
+        text: うまく攻撃を活性化させながら、
+      - voice: 鈴木唯人
+        text: 結局は最後のゴール前にも居ないといけないポジションだと思う。
+        cont: true
+        emph: true
+      - voice: 鈴木唯人
+        text: 僕自身も個人としてもっともっと
+      - voice: 鈴木唯人
+        text: チームのプラスになるようなことができないといけない。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463404-463404-fl
+  - id: view
+    viewpoint: true
+    heading: 鈴木唯人は、クラブと代表で何が違うと話したのか
+    tier: 背景
+    telop: 変わったのは動きではなく、相手の守り方
+    say:
+      - text: 見立てです。鈴木唯人の言葉を並べました。
+        card: none
+      - text: 降りて受ける動きは、クラブでも代表でも同じです。違ったのは相手でした。
+        card: {type: table, title: 鈴木唯人の言葉, columns: [場面, 本人の言葉], rows: [[クラブでは, 降りてボールを受けて、さばいて、また出ていく], [この日の相手は, 引き込んで中を絞る形], [トップ下というポジション, 最後のゴール前にも居ないといけない]], highlight_row: 1}
+      - text: 4バックでの先発は初めてで、交代は後半16分。出場は61分でした。
+        card: none
+      - text: 来年3月から、日本代表は大岩剛監督の新体制です。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463404-463404-fl
+      - https://web.gekisaka.jp/news/japan/detail/?463387-463387-fl
+      - https://web.gekisaka.jp/news/japan/detail/?463381-463381-fl

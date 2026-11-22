@@ -1,0 +1,126 @@
+# 取材メモ（2026年11月16日）伊東純也、森保ジャパン最多75試合でラストマッチへ「監督のためにも結果を出したい」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-16。requests（ブラウザUA）でゲキサカ本文を全文読み、site.api.espn.com で確かめた。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-15 22:37（取材・文 竹内達也）「森保J最多出場は伊東純也、ゴール関与数もダントツ最多でラストマッチへ「監督のためにも結果を出したい」」（全文） https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl
+# 写真の出どころ（本人の写真。サッカーキングの写真は説明に Getty とあれば使わない。photopool で主写真と名前入りだけ）:
+#   https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl
+#   https://web.gekisaka.jp/news/japan/detail/?463112-463112-fl
+#   https://www.soccer-king.jp/news/japan/national/20261112/2227141.html
+#   （463188 の主写真は坂元達裕だったので外した）
+# 出典で確かめたこと:
+#   ・ESPN の試合データ（site.api.espn.com fifa.friendly summary event=401916337、2026-11-14 10:15 UTC）: 日本 3-2 ブラジル。伊東純也は 72分に中村敬斗と交代で途中出場（記事の「後半27分」と一致）。72分に南野・坂元・小川も入る。75分にヴィニシウスの同点弾（日本 2-1 のところへ入った）。
+#   ・ESPN scoreboard 2026-11-17: Paraguay at Japan（event=401916336、シンガポール国立競技場、13:10 UTC）。記事は「森保監督が率いる最後の試合」と書く。
+#   ・ゲキサカ（記者の地の文）: 伊東は森保ジャパン発足時から継続招集、現体制での出場数は通算75試合＝堂安律74・南野拓実72を上回る単独最多。16ゴール29アシスト＝関与45で、南野（26ゴール11アシスト＝37）を大きく上回る単独最多。33歳。
+#   ・伊東の言葉（原文。ゲキサカ。字は変えていない。括弧は記者の補足。台本は読点で行に分けた）:
+#       「2-1で入って失点しないことがベストだったけど、追いつかれてしまって、でもそこから落ちることなく最後まで諦めずに戦った結果だと思う」
+#       「印象的な出来事……。まあ特にないって言ったらあれなんですけど(苦笑)、結構最近は途中から出ることが多くなって、気を遣ってもらっているなというのは。毎回話に来てくれているし、そういうところは監督の人の良さだなと思う」
+#       「右の選手が多いので必然的にどこでもできる俺が左になっているのかな」
+#       「ほとんどの試合で使ってもらってきたので、信頼されているありがたさはある。監督のためにも結果を出したい」
+#   ・「あそこで拓実が守備で粘って…タツがあそこにいて」の発言は南野・坂元の話なので使わない（南野の題と重なる）。
+# 自分で数えたもの: 関与数 伊東 16+29=45、南野 26+11=37 → 差は8（記事の数字から計算）。
+# 前の本との重なり: 20261113_ito_brazil_improve（試合前の「もっと主体的に」・W杯ブラジル戦の守備）。今回の初出: 試合後の言葉・最多75試合・関与45。W杯の守備の話は繰り返さない。
+# 【言わないこと】南野・坂元・佐野を称えた発言／ブラジルの失点の中身。
+# 本人の言葉: あり（伊東純也。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月16日"
+format: news
+no_main: true
+people: [伊東純也, 森保一, 日本代表, パラグアイ代表]
+
+short_style: Y
+short_hook_quote: ほとんどの試合で使ってもらってきたので、
+short_photos:
+  - assets/images/20261116_ito_last_match/03_v.jpg
+  - assets/images/20261116_ito_last_match/04_v.jpg
+  - assets/images/20261116_ito_last_match/01_v.jpg
+short_question: 森保監督のラストマッチ、17日のパラグアイ戦で、伊東純也は点に絡むと思いますか。
+short_telops: []
+
+theme:
+  id: ito_last_match
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 伊東純也、森保ジャパンのラストマッチへ。最多出場の33歳が語った思い
+  hook: ""
+  question: 森保ジャパンで最も多く出場した伊東純也は、ラストマッチを前に何を語ったのか
+  takeaway: 伊東純也の森保ジャパンでの出場は通算75試合で単独最多。16ゴール29アシストの関与数45も、南野拓実の37を8上回る。33歳は監督のために結果を出したいと語った
+
+thumbnail:
+  layout: face
+  line1: 伊東純也 森保J最多75試合
+  line2: 監督のために結果を
+  tags: [伊東純也, 日本代表, 森保J]
+  photo: assets/images/20261116_ito_last_match/01_w.jpg
+  short_photo: assets/images/20261116_ito_last_match/04_v.jpg
+
+answer: 伊東は信頼されているありがたさを語り、監督のためにも結果を出したいと話した。出場75試合・関与45は単独最多
+watch: 17日のパラグアイ戦（森保監督のラストマッチ）
+
+sections:
+  - id: what
+    main: true
+    heading: ラストマッチを前に、伊東純也は森保監督への思いをどう語ったか
+    tier: 報道
+    telop: 伊東純也「監督のためにも結果を出したい」
+    say:
+      - text: 森保ジャパン最多出場の伊東純也が、15日に森保監督への思いを語りました。
+        image: assets/images/20261116_ito_last_match/04_w.jpg
+      - voice: 伊東純也
+        text: ほとんどの試合で使ってもらってきたので、
+        emph: true
+      - voice: 伊東純也
+        text: 信頼されているありがたさはある。
+        cont: true
+      - voice: 伊東純也
+        text: 監督のためにも結果を出したい。
+        cont: true
+      - text: 17日のパラグアイ戦は、森保監督が日本代表を率いる最後の試合です。
+        image: assets/images/20261116_ito_last_match/01_w.jpg
+      - text: 監督との印象的な出来事を問われた伊東は、苦笑いしながらこう答えました。
+      - text: 最近は途中出場が多くなった伊東に、監督は毎回話に来てくれているそうです。
+      - voice: 伊東純也
+        text: そういうところは監督の人の良さだなと思う。
+      - text: ブラジル戦は、途中から出場しました。
+        image: assets/images/20261116_ito_last_match/03_w.jpg
+      - text: 途中出場した3分後に、ブラジルに同点にされました。伊東は、その試合をこう振り返りました。
+      - voice: 伊東純也
+        text: 追いつかれてしまって、でもそこから落ちることなく、
+      - voice: 伊東純也
+        text: 最後まで諦めずに戦った結果だと思う。
+        cont: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+      - https://www.espn.com/soccer/match/_/gameId/401916336
+  - id: game
+    heading: 森保ジャパンでの出場75試合は、単独で最多
+    tier: 報道
+    telop: 森保ジャパンでの出場 伊東75試合が単独最多
+    say:
+      - text: 伊東は森保ジャパンの発足時から呼ばれ続け、出場数は今や単独最多です。
+        card: {type: table, title: 森保ジャパンでの出場試合数, columns: [選手, 試合], rows: [[伊東純也, 75試合], [堂安律, 74試合], [南野拓実, 72試合]], highlight_row: 0}
+      - text: 通算75試合は、堂安律の74試合、南野拓実の72試合を上回ります。
+        card: none
+      - text: もう一つ、今回の活動での起用です。伊東は不慣れな左サイドを中心に練習しています。
+      - voice: 伊東純也
+        text: 右の選手が多いので、必然的にどこでもできる俺が左になっているのかな。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl
+  - id: view
+    viewpoint: true
+    heading: 出場数だけでなく、得点への関わりでも単独最多か
+    tier: 背景
+    telop: 得点への関わり 伊東45、南野37
+    say:
+      - text: 見立てです。伊東は出場数だけでなく、得点への関わりでも単独最多です。
+        card: {type: table, title: 森保ジャパンでの得点への関わり, columns: [選手, 得点, アシスト, 合計], rows: [[伊東純也, 16, 29, 45], [南野拓実, 26, 11, 37]], highlight_row: 0}
+      - text: ゴールとアシストを足した数は45。南野拓実の37を8上回ります。
+        card: none
+      - text: 33歳の伊東が、森保監督の最後の試合にどう関わるか。次は17日、パラグアイ戦です。
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463291-463291-fl

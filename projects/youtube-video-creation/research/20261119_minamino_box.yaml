@@ -1,0 +1,158 @@
+# 取材メモ（2026年11月19日）南野拓実「W杯の苦い記憶は箱にしまっている」。悪夢払拭の2030年へ（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-19。requests（ブラウザUA）で本文を全文読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: ゲキサカ 2026-11-18（取材・文 竹内達也）「不屈の南野拓実、W杯の苦い記憶は「箱にしまって置いている」悪夢払拭の2030年へ」（全文） https://web.gekisaka.jp/news/japan/detail/?463397-463397-fl
+# 出典で確かめたこと:
+#   ・南野拓実の言葉（ゲキサカ。字は変えない。台本は読点で行に分けた。記者の補足の（　）は声に出さず落とした）:
+#       「僕の中ではもう箱にしまって、サッカー人生とは別のところに置いている」（北中米W杯の半年前の左膝前十字靭帯断裂→W杯メンバーから落選、メンターとしてチームを支えた期間のこと。地の文は「この期間を〜と称する」）
+#       「あれはあれで難しい思いの中、いろんな葛藤があって、でも大人にはなれたかな、みたいな感じですね」
+#       「そっちも箱にしまって置いています。あれは人生の最悪の日でしたからね」（カタールW杯ラウンド16クロアチア戦のPK戦で1人目として蹴って止められた日）
+#       「正直、思い出したくもないというか、克服するために次のW杯を狙っていたけど、それもケガで行けなかったんで。なので、またそれを払拭できる場に次、立てるように頑張りたいなと思っています」
+#       「次の代表に選ばれるかどうかは別として目指すべき場所だと思うし、僕自身もヨーロッパのトップレベルで復帰したばかりなので、もう一度やれるんだというところをチームに帰って証明しないといけない」
+#   ・ゲキサカ（地の文）: 2015年10月、20歳でA代表に初招集（ハリルホジッチ監督）。森保ジャパン8年間で最多26ゴール。見据えるのは4年後、2030年のW杯。大岩ジャパン初陣の活動は5か月後。
+#   ・ESPN の試合データ（site.api.espn.com fifa.world summary event=633839）: 2022-12-05 日本1-1クロアチア（PK戦 日本1-3）。PK戦の日本の1人目は Takumi Minamino（didScore False）。→ 記事の「1人目として蹴ったPKを止められ」と一致。
+#   ・ESPN fifa.friendly summary event=401916336（2026-11-17）: 南野は71分に菅原由勢と交代で入る。→ 台本では使わない。
+# 依頼文との違い: 依頼文は「W杯の苦い記憶は箱にしまっている」とだけ。実際は2つの箱（①大ケガでW杯を逃した期間＝「僕の中ではもう箱にしまって、サッカー人生とは別のところに置いている」、②クロアチア戦のPK＝「そっちも箱にしまって置いています」）。台本は2つとも出す。
+# 自分で数えたもの: 2030年のW杯は、初招集（2015年10月）から15年後。クロアチア戦（2022年12月）から数えて7年以上先。「箱」は記事の発言の中で2つ。
+# 前の本との重なり: 20261117_minamino_thanks_moriyasu（森保監督との8年への感謝）／20261112_minamino_return_words・20261105_minamino_machida_return（ケガからの代表復帰）／20261116_minamino_tackle_machida。
+#   → 今回の初出: 試合後に語った「箱」の言葉・クロアチア戦のPKの言及・2030年の目標。ケガは「箱にしまった中身」の説明で1行だけ（復帰の話は繰り返さない）。森保監督への感謝（A代表イコール森保ジャパン）は入れない。
+# 【言わないこと】森保監督への感謝の言葉／ケガの詳しい経緯・復帰の話／記者の感想（「今も悔いが残っていることをうかがわせた」「無念は計り知れない」）／クロアチア戦のPKの責任論。
+# 本人の言葉: あり（南野拓実。ゲキサカ）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月19日"
+format: news
+no_main: true
+people: [南野拓実]
+
+short_style: Y
+short_hook_quote: 僕の中ではもう箱にしまって、サッカー人生とは別のところに置いている
+short_photos:
+  - assets/images/20261119_minamino_box/01_v.jpg
+  - assets/images/20261119_minamino_box/02_v.jpg
+short_question: 南野拓実は、2030年のW杯でもう一度ピッチに立てると思いますか。
+short_telops: []
+
+theme:
+  id: minamino_box
+  league: japan
+  league_name: 日本代表
+  prefix: ""
+  title: 南野拓実、W杯の苦い記憶は「箱にしまっている」。目指す2030年
+  hook: ""
+  question: 南野拓実が「箱にしまった」と語ったW杯の記憶は何で、どこで払拭しようとしているのか
+  takeaway: 南野が箱にしまったのは2つ。2022年のクロアチア戦のPKと、北中米W杯の半年前の大ケガだ。払拭の場に挙げた2030年のW杯は、初招集の2015年から15年後。代表は来年3月から大岩監督の新体制になる
+
+thumbnail:
+  layout: face
+  line1: 南野拓実 W杯の記憶
+  line2: 「箱にしまっている」
+  tags: [南野拓実, 日本代表]
+  photo: assets/images/20261119_minamino_box/01_w.jpg
+  short_photo: assets/images/20261119_minamino_box/01_v.jpg
+
+answer: 2つの苦い記憶は箱の中。開ける場所は2030年のW杯
+watch: 来年3月、大岩剛監督の新体制
+
+sections:
+  - id: what
+    main: true
+    heading: 南野拓実が「箱にしまっている」と語ったW杯の記憶は何か
+    tier: 報道
+    telop: 南野拓実「箱にしまって、サッカー人生とは別のところに置いている」
+    say:
+      - text: 南野拓実が、ワールドカップの苦い記憶を語りました。
+      - voice: 南野拓実
+        text: 僕の中ではもう箱にしまって、サッカー人生とは別のところに置いている。
+        emph: true
+      - text: 箱の中身は、左膝の前十字靭帯断裂という大ケガです。
+      - text: 今年夏の北中米W杯の、半年前に負いました。
+        image: assets/images/20261119_minamino_box/02_w.jpg
+      - text: 南野はW杯のメンバーから落選し、チームを支える側に回りました。
+      - voice: 南野拓実
+        text: あれはあれで難しい思いの中、
+      - voice: 南野拓実
+        text: いろんな葛藤があって、
+        cont: true
+      - voice: 南野拓実
+        text: でも大人にはなれたかな、みたいな感じですね。
+        cont: true
+        image: assets/images/20261119_minamino_box/01_w.jpg
+      - text: 箱は、もう1つあります。2022年のカタールW杯、クロアチア戦のPK戦です。
+      - text: 南野は1人目で蹴り、止められました。
+      - text: 日本はPK戦で、1対3で敗れています。
+        image: assets/images/20261119_minamino_box/02_w.jpg
+      - voice: 南野拓実
+        text: そっちも箱にしまって置いています。
+      - voice: 南野拓実
+        text: あれは人生の最悪の日でしたからね。
+        cont: true
+        emph: true
+        image: assets/images/20261119_minamino_box/01_w.jpg
+      - text: 南野が、この2つを払拭する場に挙げたのは、2030年のW杯です。
+        image: assets/images/20261119_minamino_box/01_w.jpg
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463397-463397-fl
+      - https://www.espn.com/soccer/match/_/gameId/633839
+  - id: words
+    heading: 南野拓実は、2つの箱を開ける場所をどこに見ているのか
+    tier: 報道
+    telop: 南野拓実「払拭できる場に次、立てるように」
+    say:
+      - text: 払拭したい理由と決意を、南野はこう続けました。
+        image: assets/images/20261119_minamino_box/02_w.jpg
+      - voice: 南野拓実
+        text: 思い出したくもないというか、
+      - voice: 南野拓実
+        text: 克服するために次のW杯を狙っていたけど、
+        cont: true
+      - voice: 南野拓実
+        text: それもケガで行けなかったんで。
+        cont: true
+      - voice: 南野拓実
+        text: なので、またそれを払拭できる場に次、
+      - voice: 南野拓実
+        text: 立てるように頑張りたいなと思っています。
+        cont: true
+        emph: true
+      - text: 4年後の2030年を見据えながらも、代表の座は約束されていません。
+        image: assets/images/20261119_minamino_box/02_w.jpg
+      - voice: 南野拓実
+        text: 次の代表に選ばれるかどうかは別として、
+      - voice: 南野拓実
+        text: 目指すべき場所だと思うし、
+        cont: true
+      - voice: 南野拓実
+        text: 僕自身もヨーロッパのトップレベルで復帰したばかりなので、
+      - voice: 南野拓実
+        text: もう一度やれるんだというところを
+        cont: true
+      - voice: 南野拓実
+        text: チームに帰って証明しないといけない。
+        image: assets/images/20261119_minamino_box/01_w.jpg
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463397-463397-fl
+  - id: view
+    viewpoint: true
+    heading: 南野拓実の「箱」は、2030年までどれだけ先の話なのか
+    tier: 背景
+    telop: 箱は2つ。開ける場所は2030年
+    say:
+      - text: 見立てです。南野の言葉から、箱の中身を数えました。
+        card: none
+      - text: 箱にしまったのは、2つです。
+        card: {type: table, title: 南野拓実が「箱にしまった」2つ, columns: [箱の中身, 本人の言葉], rows: [[2022年12月 クロアチア戦のPK, 人生の最悪の日], [北中米W杯の半年前の大ケガ, サッカー人生とは別のところ]], highlight_row: 0}
+      - text: 2030年のW杯は、2022年12月のクロアチア戦から7年以上先です。
+        card: none
+        image: assets/images/20261119_minamino_box/01_w.jpg
+      - text: 初招集の2015年10月からは、15年後になります。
+      - text: 次に日本代表が集まるのは5か月後。大岩剛新監督の初陣です。
+        image: assets/images/20261119_minamino_box/02_w.jpg
+        emph: true
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?463397-463397-fl
+      - https://www.espn.com/soccer/match/_/gameId/633839

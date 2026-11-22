@@ -1,0 +1,116 @@
+# 取材メモ（2026年11月22日）レアル・マドリード、セルタに2-1の逆転勝ち。エムバペがPKを外したあと、ベリンガムが同点、エスピが決勝点（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は見つからず）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 確かめたもの:
+#   ・ESPN の試合データ（site.api.espn.com summary event=401882798、esp.1、現地11/21 20:00 UTC＝日本時間11/22 5:00）: レアル・マドリード 2-1 セルタ。
+#       6分 パブロ・ドゥラン（セルタ）0-1／36分 エムバペが倒されてPK→39分 エムバペのPK失敗（右足「too high」＝バーの上）／66分 ベリンガム 1-1（アシスト エムバペ）／
+#       79分 カマビンガに代わってエスピが交代出場→85分 エスピ 2-1。シュート24本対8本（枠内7対4）、支配率63.4%対36.6%。
+#       順位（試合後の standings）: バルセロナ 12試合33点・レアル 13試合33点（バルサは22日にビジャレアルと対戦）。次: 11/28 20:00 UTC アラベス戦（ホーム。日本時間29日5:00）。
+#   ・ESPN 試合データを全12試合ぶん引いて数えた今季のエムバペのリーグ戦PK: 9/12 ラージョ戦14分 成功／9/4 ベティス戦90+4分 GKバジェスにセーブされ失敗（0-1の負け）／10/18 セビージャ戦63分 成功／11/1 ラシン戦11分 成功／11/21 セルタ戦39分 失敗（バーの上）。＝5本中3本成功・2本失敗。
+#   ・sport.es「¡Penalti a la grada de Mbappé!」（requests、スペイン語）: 「リーグ戦でエムバペが外したPKは2本目。1本目はベティス戦で、GKに止められた」「今回は枠を大きく外れてスタンドへ」。ESPN の数えと一致。
+#   ・sport.es 採点記事: 「66分、ヴィニシウスが引きつけ、エムバペがアシスト、ベリンガムが決めた」「85分、エスピ。ヴィニシウスの良いパスから」。ESPN の得点者・アシストと一致。
+# 食い違い（気をつけた点）:
+#   ・PKの分: ESPN は「36分にファウル判定、39分にエムバペが蹴って失敗」。Marca ラジオは「37分に主審がPKを指した」。→ 台本は「前半39分」（ESPN の蹴った分）だけ言う。判定の分は言わない。
+#   ・PKの判定そのもの: スペインの数社（ムンド・デポルティーボ・Marca ラジオの解説）は「接触は軽く、エムバペが誇張した」と書く。審判批判・判定の評価は題材の中心ではないので入れない（判定は「主審がPKを指した」と事実だけ）。
+#   ・依頼文の「防がれた/外れた」→ 防がれてはいない。バーの上へ外れた（ESPN「too high」、sport.es「スタンドへ」）。台本は「外れた」。
+#   ・エスピの決勝点のアシスト: ESPN の得点行にはアシストの表記が無い（同じ85分の直前のシュートのアシストはヴィニシウス）、sport.es は「ヴィニシウスのパス」。→ アシストは言わず「途中出場のエスピ」とだけ言う。
+# 前の本との重なり: 20261121_mbappe_other_madrid（別の話）・20261122_compare_ranking_nopk（PK除く得点ランキングの比べ）。ベリンガム・エムバペ・セルタの試合の話は初出（covered.yaml・posted.json に同じ題材なし）。
+# 【言わないこと】PKの判定の是非・審判・ヴィニシウス個人の評価・モウリーニョ監督の采配の評価（談話を取っていない）・エムバペの気持ち（取っていない）・人種差別の件。
+# 写真: Commons 5枚（02・05 エムバペ＝フランス代表 2026年6月、03・04 ベリンガム＝イングランド代表 2026年6月、いずれも CC BY-SA）。今回の試合の写真ではない。01（エムバペ＝レアルのユニフォーム、2026-08-30 マラガ戦）は元が小さくサムネ・ショートで1.9〜3.3倍に伸びるので台本では使わない（フォルダには残す）。_pool.png を目で見た: 本人、透かし無し、代理店表記無し。
+# 本人の言葉: 見つからず（試合後のエムバペ・ベリンガム・モウリーニョの談話は ESPN・sport.es・Marca・AS のどれにも未掲載。取材は11/22 朝の時点）。→ X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [キリアン・エムバペ, ジュード・ベリンガム, レアル・マドリード, セルタ]
+
+short_style: X
+short_hook_word: エムバペ、PK失敗
+short_photos:
+  - assets/images/20261122_real_celta_mbappe_pk/05_v.jpg
+  - assets/images/20261122_real_celta_mbappe_pk/03_v.jpg
+  - assets/images/20261122_real_celta_mbappe_pk/02_v.jpg
+  - assets/images/20261122_real_celta_mbappe_pk/04_v.jpg
+short_question: エムバペは、次のアラベス戦でPKを任されると思いますか。
+short_telops: []
+
+theme:
+  id: real_celta_mbappe_pk
+  league: spain
+  league_name: ラ・リーガ
+  prefix: ""
+  title: エムバペがPKを外したレアル。セルタ戦の後半に何が起きたのか
+  hook: ""
+  question: PKを外したレアルは、どうやってセルタに勝ったのか
+  takeaway: エムバペはリーグ戦のPKを5本中3本決め、外した2本はどちらも、先に失点していた試合。それでもレアルは66分と85分の2点で勝ち点33となり、1試合少ないバルセロナと並んだ
+
+thumbnail:
+  layout: face
+  line1: エムバペ PK失敗
+  line2: レアル 2-1 セルタ
+  tags: [キリアン・エムバペ, レアル・マドリード]
+  photo: assets/images/20261122_real_celta_mbappe_pk/05_w.jpg
+  short_photo: assets/images/20261122_real_celta_mbappe_pk/05_v.jpg
+
+answer: エムバペのPK失敗のあと、ベリンガムが66分に同点、エスピが85分に決勝点
+watch: 28日のアラベス戦（ホーム）
+
+sections:
+  - id: what
+    main: true
+    heading: エムバペはPKを外したあと、レアルはどうなったのか
+    tier: 報道
+    telop: レアル2-1セルタ。前半39分、エムバペのPKは枠の上へ
+    say:
+      - text: レアル・マドリードが、セルタに2対1で逆転勝ちしました。
+        image: assets/images/20261122_real_celta_mbappe_pk/05_w.jpg
+      - text: 先制されたレアルは、前半39分にPKを得ます。蹴ったのはエムバペ。
+        image: assets/images/20261122_real_celta_mbappe_pk/02_w.jpg
+      - text: ところがシュートはゴールの上へ外れ、同点のチャンスを逃しました。
+        emph: true
+      - text: 今季のリーグ戦で、エムバペのPK失敗はこれで2本目です。
+        image: assets/images/20261122_real_celta_mbappe_pk/05_w.jpg
+      - text: 1本目は9月のベティス戦。ゴールキーパーに防がれました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401882798
+      - https://www.sport.es/es/noticias/real-madrid/penalti-grada-mbappe-136707604
+  - id: game
+    heading: レアルは、どうやって2点を取り返したのか
+    tier: 報道
+    telop: 66分にベリンガムが同点。85分に途中出場のエスピが決勝点
+    say:
+      - text: レアルは後半の66分に追いつきます。決めたのはベリンガム。
+        card: {type: table, title: レアル 2-1 セルタ, columns: [分, 得点], rows: [[6分, ドゥラン（セルタ）], [66分, ベリンガム], [85分, エスピ]], highlight_row: 1}
+        image: assets/images/20261122_real_celta_mbappe_pk/03_w.jpg
+      - text: アシストしたのは、PKを外したエムバペでした。
+        card: none
+        image: assets/images/20261122_real_celta_mbappe_pk/05_w.jpg
+      - text: そして85分。79分に途中出場したエスピが、決勝点を決めました。
+        image: assets/images/20261122_real_celta_mbappe_pk/04_w.jpg
+      - text: シュートはレアルが24本、セルタは8本でした。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401882798
+      - https://www.sport.es/es/noticias/real-madrid/madrid-le-vuelve-aparecer-espi-136706938
+  - id: view
+    viewpoint: true
+    heading: PKを外したあとのレアルは、順位でどこにいるのか
+    tier: 背景
+    telop: エムバペのリーグ戦PKは5本中3本。レアルは勝ち点33でバルサと並ぶ
+    say:
+      - text: 見立てです。エムバペの今季のリーグ戦のPKは、5本のうち3本成功です。
+        card: {type: table, title: エムバペ 今季リーグ戦のPK, columns: [試合, 結果], rows: [[ラージョ戦, 成功], [ベティス戦, 失敗（止められた）], [セビージャ戦, 成功], [ラシン戦, 成功], [セルタ戦, 失敗（枠の上）]], highlight_row: 4}
+        image: assets/images/20261122_real_celta_mbappe_pk/05_w.jpg
+      - text: 外した2試合のうち、ベティス戦は0対1の負けでした。
+        card: none
+      - text: 今回のセルタ戦は、先制されていた試合を逆転で勝ち切りました。
+        image: assets/images/20261122_real_celta_mbappe_pk/03_w.jpg
+      - text: 13試合で、勝ち点33。
+        emph: true
+      - text: 12試合で勝ち点33のバルセロナと、並びました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401882798
+      - https://www.espn.com/soccer/match/_/gameId/401882894
+      - https://www.sport.es/es/noticias/real-madrid/penalti-grada-mbappe-136707604

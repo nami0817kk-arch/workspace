@@ -1,0 +1,157 @@
+# 取材メモ（2026年11月20日）ハリー・ケイン「ベンゼマの大ファンだった」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-20。requests（ブラウザUA）で Foot Mercato の本文を全文読んだ（フランス語の原文。台本の日本語は訳）。BBC Sport は写真と73ゴールの裏取りのみ。検索AI要約は事実に使っていない。ブラウザの道具・FotMob は使っていない。
+# 題材の元（本人の言葉の出どころ）:
+#   Foot Mercato 2026-11-19 20:00（パリ時間）「Harry Kane : « j’ai toujours été un grand admirateur de Karim Benzema »」（見出しの「Exclu FM」＝同媒体の独占インタビュー。聞き手 Santi Aouna・Alexandre Chaillol。質問と答えの全文形式）
+#   https://www.footmercato.net/a3738980010677301187-harry-kane-jai-toujours-ete-un-grand-admirateur-de-karim-benzema
+#   一覧の「a7267953775735263132 系」は別の記事（ストラスブールの話）だった。ケインの記事の ID は a3738980010677301187。
+#   BBC Sport 2026-09-04 https://www.bbc.co.uk/sport/articles/cx2z7rjn2p2o （昨シーズン73ゴール・下がって受ける役割の裏取り）
+# 出典で確かめたこと（Foot Mercato の原文）:
+#   ・質問「Karim Benzema a été Ballon d’Or en 2022, Harry Kane a été Ballon d’Or en 2026 … Trouvez-vous des similitudes entre vous et Karim Benzema ?」
+#   ・ケインの答え（原文）: "Karim est un joueur incroyable. J’ai toujours été un grand admirateur du joueur. Ce qu’il a accompli au Real Madrid en 2022 était vraiment impressionnant. Il a cette capacité à descendre au milieu de terrain et à jouer presque comme un numéro 10, à dicter le jeu, tout en arrivant dans la surface au moment idéal."
+#       "… en termes d’intelligence de jeu, de capacité à trouver des espaces et d’envie d’aider les joueurs autour de nous, je vois clairement beaucoup de similitudes dans notre football. Tous les deux, nous avons démontré qu’il n’est pas toujours nécessaire d’être dans la surface pour marquer des buts. En ce qui me concerne, j’ai plus d’occasions lorsque je descends plus bas, car je ne suis pas marqué de près."
+#       "… La saison dernière a été le meilleur exemple : j’ai marqué 73 buts …"
+#       「…つの目のバロンドールは？」への答え: "j’adorerais remporter un autre Ballon d’Or … il y a encore de nombreux trophées que j’aimerais remporter, comme la Ligue des champions avec le Bayern et, évidemment, un titre avec l’Angleterre."
+#   ・記事の前置き（Foot Mercato の地の文）: ケインは「le 26 octobre dernier à Londres」に70回目のバロンドールを受賞。→ 10/27 の kane_ballon_dor と重なるので受賞の話は入れない。
+#   ・BBC（9/4）: 昨シーズン73ゴール（クラブと代表）・深い位置まで下がる役割。ケイン本人の言葉とも一致。
+# 依頼文・見出しとの違い:
+#   ・見出しの「大ファン」は日本語の言い方。原文は "un grand admirateur"（admirateur＝称賛者・憧れ）で、"fan" とは言っていない。台本は「大ファンでした」と訳すが、「子どものころから」とは言わない（原文は J'ai toujours été＝ずっと、までで、いつからかは語っていない）。
+#   ・ベンゼマは「Ballon d'Or 2022」（質問の前提）。ケインのバロンドール受賞日などは Foot Mercato の地の文のみ。
+# 前の本との重なり: 20261027_kane_ballon_dor（受賞）・20260919_kane（昨シーズン73ゴール）・20261106_kane_bayern_2029・20261113_kane_126_caps。
+#   → 今回の初出: ベンゼマを「ずっと大ファン」と語った言葉と、2人の似ている点（下がって受けて、エリアの外からも点を取る）。73ゴールは本人が「下がった形の例」として出した一度だけ。受賞そのものの話・契約の話は入れない。
+# 【言わないこと】ケインが「子どものころから」ベンゼマを見ていた（原文に無い）／ベンゼマの2022年の数字（確かめていない）／受賞式の話・オリーズの話・PSGの話（質問の別の部分）／ケインの年齢を言う（記事の「33歳」は本人の言葉の一部）。
+# 写真の出どころ（目で見た）: 01・02・03・05＝Commons（Bryan Berlin、CC BY-SA 4.0、2026年6月の W杯 イングランド戦。今回の取材の写真ではない。イングランド代表のユニフォーム）。01 の横切りは顔のアップになりすぎるので使わない（縦のショートだけ）。BBC の主写真（優勝杯・「BBC SPORT」の透かし）と Foot Mercato の主写真（dpa・Maxppp 表記）は顔が切れる／透かしのため外した。
+# 本人の言葉: あり（Foot Mercato の独占インタビュー、2026-11-19）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月20日"
+format: news
+no_main: true
+people: [ハリー・ケイン, カリム・ベンゼマ, バイエルン]
+
+short_style: Y
+short_hook_quote: あの選手の大ファンでした
+short_photos:
+  - assets/images/20261120_kane_benzema_admirer/01_v.jpg
+  - assets/images/20261120_kane_benzema_admirer/05_v.jpg
+  - assets/images/20261120_kane_benzema_admirer/02_v.jpg
+  - assets/images/20261120_kane_benzema_admirer/03_v.jpg
+short_question: ケインとベンゼマ、プレースタイルが似ていると思いますか。
+short_telops: []
+
+theme:
+  id: kane_benzema_admirer
+  league: germany
+  league_name: ブンデスリーガ
+  prefix: ""
+  title: ハリー・ケイン、ベンゼマを「ずっと大ファンでした」。2人の似ている点とは
+  hook: ""
+  question: ケインは、ベンゼマのどこに自分との似ている点を見たのか
+  takeaway: ケインが挙げた共通点は、下がって受けても、ちょうどいい時にエリアへ入ること。ベンゼマのバロンドールは2022年、ケインは2026年で、昨シーズンの73ゴールを本人は下がった形の例に挙げた
+
+thumbnail:
+  layout: face
+  line1: ケイン、ベンゼマを語る
+  line2: 「大ファンでした」
+  tags: [ハリー・ケイン, ベンゼマ, バイエルン]
+  photo: assets/images/20261120_kane_benzema_admirer/05_w.jpg
+  short_photo: assets/images/20261120_kane_benzema_admirer/01_v.jpg
+
+answer: ずっと大ファンだった。下がって受けて、ちょうどいい時にエリアへ入る
+watch: ケインが次に挙げた、バイエルンでのチャンピオンズリーグ
+
+sections:
+  - id: what
+    main: true
+    heading: ケインは、ベンゼマについて何を語ったのか
+    tier: 報道
+    telop: ケイン「あの選手の大ファンでした」
+    say:
+      - text: バイエルンのケインが、フランスの媒体で、ベンゼマとの似ている点を聞かれました。
+        image: assets/images/20261120_kane_benzema_admirer/03_w.jpg
+      - voice: ハリー・ケイン
+        text: カリムは、信じられない選手です。
+        image: assets/images/20261120_kane_benzema_admirer/02_w.jpg
+      - voice: ハリー・ケイン
+        text: ずっと、あの選手の大ファンでした。
+        emph: true
+      - voice: ハリー・ケイン
+        text: 2022年にレアル・マドリードで成し遂げたことは、
+      - voice: ハリー・ケイン
+        text: 本当に印象的でした。
+        cont: true
+        image: assets/images/20261120_kane_benzema_admirer/03_w.jpg
+      - text: 共通点として挙げたのは、中盤まで下がって受けるプレーです。
+    official: false
+    sources:
+      - https://www.footmercato.net/a3738980010677301187-harry-kane-jai-toujours-ete-un-grand-admirateur-de-karim-benzema
+  - id: why
+    heading: ケインは、ベンゼマのどこが自分と似ていると言ったのか
+    tier: 報道
+    telop: 下がって受けて、ちょうどいい時にエリアへ入る
+    say:
+      - text: ベンゼマのすごさを、ケインはこう説明しました。
+      - voice: ハリー・ケイン
+        text: 中盤まで下がって、ほとんど10番のようにプレーする。
+        image: assets/images/20261120_kane_benzema_admirer/05_w.jpg
+      - voice: ハリー・ケイン
+        text: 試合を操りながら、ちょうどいい時にエリアへ入ってくる。
+        cont: true
+      - text: 10番とは、攻撃の司令塔のような役目のことです。
+      - text: 似ている点は、こう話しています。
+      - voice: ハリー・ケイン
+        text: ゲームの理解力、スペースを見つける力、
+        image: assets/images/20261120_kane_benzema_admirer/02_w.jpg
+      - voice: ハリー・ケイン
+        text: 周りの選手を助けたい気持ち。
+        cont: true
+      - voice: ハリー・ケイン
+        text: そこに、多くの似た点があると思います。
+        cont: true
+        emph: true
+      - voice: ハリー・ケイン
+        text: 2人とも、点を取るのに、
+      - voice: ハリー・ケイン
+        text: いつもエリアの中にいる必要はないと示しました。
+        cont: true
+        image: assets/images/20261120_kane_benzema_admirer/03_w.jpg
+    official: false
+    sources:
+      - https://www.footmercato.net/a3738980010677301187-harry-kane-jai-toujours-ete-un-grand-admirateur-de-karim-benzema
+  - id: own
+    heading: 自分は下がったほうが点が取れる、と言うのはなぜか
+    tier: 報道
+    telop: 下がったほうが、チャンスが多い
+    say:
+      - text: ケインは、自分のプレーについても語りました。
+      - voice: ハリー・ケイン
+        text: 下がったほうが、チャンスが多いんです。
+        image: assets/images/20261120_kane_benzema_admirer/05_w.jpg
+      - voice: ハリー・ケイン
+        text: 近くでマークされないからです。
+        cont: true
+      - text: 例に挙げたのは、昨シーズンの73ゴール。
+      - text: 深い位置まで下がる役割だったと、イギリスの放送局も伝えています。
+        image: assets/images/20261120_kane_benzema_admirer/03_w.jpg
+    official: false
+    sources:
+      - https://www.footmercato.net/a3738980010677301187-harry-kane-jai-toujours-ete-un-grand-admirateur-de-karim-benzema
+      - https://www.bbc.co.uk/sport/articles/cx2z7rjn2p2o
+  - id: view
+    viewpoint: true
+    heading: ベンゼマと同じ形でケインは次に何を狙うのか
+    tier: 背景
+    telop: ベンゼマの2022年から4年後の2026年に、ケインが受賞
+    say:
+      - text: 見立てです。ケインが話したのは、ベンゼマと自分の共通点でした。
+        card: {type: table, title: 下がって点を取る2人（ケイン本人の言葉）, columns: [選手, バロンドール, ケインが挙げた点], rows: [[ベンゼマ, 2022年, 中盤まで下がる・10番のよう], [ケイン, 2026年, 昨シーズン73ゴール・下がってチャンス増]], highlight_row: 1}
+        image: assets/images/20261120_kane_benzema_admirer/05_w.jpg
+      - text: 次に挙げたのは、バイエルンでのチャンピオンズリーグ。
+      - text: そして、イングランド代表での優勝です。
+        card: none
+        emph: true
+      - text: 年間最優秀選手賞のバロンドールを、もう一度とも語りました。
+      - text: ただ、本人が先に挙げたのは、チームのタイトルでした。
+        image: assets/images/20261120_kane_benzema_admirer/02_w.jpg
+    official: false
+    sources:
+      - https://www.footmercato.net/a3738980010677301187-harry-kane-jai-toujours-ete-un-grand-admirateur-de-karim-benzema

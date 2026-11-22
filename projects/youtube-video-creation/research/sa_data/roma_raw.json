@@ -1,0 +1,637 @@
+{
+ "club_title": "AS_Roma",
+ "season_title": "2026–27_AS_Roma_season",
+ "squad": [
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Devyne Rensch",
+   "page": "Devyne Rensch",
+   "dob": "2003-01-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "GRE",
+   "name": "Konstantinos Koulierakis",
+   "page": "Konstantinos Koulierakis",
+   "dob": "2003-11-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "4",
+   "pos": "MF",
+   "nat": "ITA",
+   "name": "Bryan Cristante",
+   "page": "Bryan Cristante",
+   "dob": "1995-03-03",
+   "captain": true,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "CIV",
+   "name": "Evan Ndicka",
+   "page": "Evan Ndicka",
+   "dob": "1999-08-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "ITA",
+   "name": "Lorenzo Pellegrini",
+   "page": "Lorenzo Pellegrini",
+   "dob": "1996-06-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "ARG",
+   "name": "Santiago Castro",
+   "page": "Santiago Castro (footballer, born 2004)",
+   "dob": "2004-09-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "NED",
+   "name": "Donyell Malen",
+   "page": "Donyell Malen",
+   "dob": "1999-01-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "15",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Marten de Roon",
+   "page": "Marten de Roon",
+   "dob": "1991-03-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Manu Koné",
+   "page": "Manu Koné",
+   "dob": "2001-05-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "18",
+   "pos": "FW",
+   "nat": "ARG",
+   "name": "Matías Soulé",
+   "page": "Matías Soulé",
+   "dob": "2003-04-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "ARG",
+   "name": "Nahuel Molina",
+   "page": "Nahuel Molina",
+   "dob": "1998-04-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "21",
+   "pos": "FW",
+   "nat": "ARG",
+   "name": "Paulo Dybala",
+   "page": "Paulo Dybala",
+   "dob": "1993-11-15",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Mario Hermoso",
+   "page": "Mario Hermoso",
+   "dob": "1995-06-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Gianluca Mancini",
+   "page": "Gianluca Mancini",
+   "dob": "1996-04-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "ARG",
+   "name": "Leonardo Balerdi",
+   "page": "Leonardo Balerdi",
+   "dob": "1999-01-26",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "32",
+   "pos": "GK",
+   "nat": "COL",
+   "name": "Devis Vásquez",
+   "page": "Devis Vásquez",
+   "dob": "1998-05-12",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "43",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Wesley",
+   "page": "Wesley França",
+   "dob": "2003-09-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "61",
+   "pos": "MF",
+   "nat": "ITA",
+   "name": "Niccolò Pisilli",
+   "page": "Niccolò Pisilli",
+   "dob": "2004-09-23",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "68",
+   "pos": "FW",
+   "nat": "ITA",
+   "name": "Antonio Arena",
+   "page": "Antonio Arena",
+   "dob": "2009-02-10",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "70",
+   "pos": "GK",
+   "nat": "USA",
+   "name": "Giorgio De Marzi",
+   "page": "Giorgio De Marzi",
+   "dob": "2007-04-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "77",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Emanuele Lulli",
+   "page": "Emanuele Lulli",
+   "dob": "2007-08-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "86",
+   "pos": "MF",
+   "nat": "POR",
+   "name": "Rodrigo Mora",
+   "page": "Rodrigo Mora (footballer, born 2007)",
+   "dob": "2007-05-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "87",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Daniele Ghilardi",
+   "page": "Daniele Ghilardi",
+   "dob": "2003-01-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "95",
+   "pos": "GK",
+   "nat": "ITA",
+   "name": "Pierluigi Gollini",
+   "page": "Pierluigi Gollini",
+   "dob": "1995-03-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "99",
+   "pos": "GK",
+   "nat": "SRB",
+   "name": "Mile Svilar",
+   "page": "Mile Svilar",
+   "dob": "1999-08-27",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  }
+ ],
+ "results": [
+  [
+   "24 August 2026",
+   "1",
+   "Roma",
+   "4–0",
+   "Fiorentina"
+  ],
+  [
+   "31 August 2026",
+   "2",
+   "Lecce",
+   "0–4",
+   "Roma"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Roma",
+   "2–1",
+   "Atalanta"
+  ],
+  [
+   "14 September 2026",
+   "4",
+   "Torino",
+   "0–2",
+   "Roma"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Roma",
+   "2–2",
+   "Internazionale"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "Como",
+   "0–0",
+   "Roma"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Roma",
+   "2–0",
+   "Genoa"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Napoli",
+   "3–3",
+   "Roma"
+  ],
+  [
+   "27 October 2026",
+   "9",
+   "Roma",
+   "4–2",
+   "Cagliari"
+  ],
+  [
+   "31 October 2026",
+   "10",
+   "Udinese",
+   "2–5",
+   "Roma"
+  ],
+  [
+   "7 November 2026",
+   "11",
+   "Roma",
+   "3–0",
+   "Sassuolo"
+  ],
+  [
+   "21 November 2026",
+   "12",
+   "Parma",
+   "",
+   "Roma"
+  ],
+  [
+   "29 November 2026",
+   "13",
+   "Roma",
+   "",
+   "Monza"
+  ],
+  [
+   "4 December 2026",
+   "14",
+   "Bologna",
+   "",
+   "Roma"
+  ],
+  [
+   "13 December 2026",
+   "15",
+   "Lazio",
+   "",
+   "Roma"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Roma",
+   "",
+   "Juventus"
+  ],
+  [
+   "2 January 2027",
+   "17",
+   "Roma",
+   "",
+   "Frosinone"
+  ],
+  [
+   "5 January 2027",
+   "18",
+   "Venezia",
+   "",
+   "Roma"
+  ],
+  [
+   "9 January 2027",
+   "19",
+   "Roma",
+   "",
+   "Milan"
+  ],
+  [
+   "16 January 2027",
+   "20",
+   "Atalanta",
+   "",
+   "Roma"
+  ],
+  [
+   "23 January 2027",
+   "21",
+   "Roma",
+   "",
+   "Udinese"
+  ],
+  [
+   "30 January 2027",
+   "22",
+   "Monza",
+   "",
+   "Roma"
+  ],
+  [
+   "6 February 2027",
+   "23",
+   "Roma",
+   "",
+   "Torino"
+  ],
+  [
+   "13 February 2027",
+   "24",
+   "Roma",
+   "",
+   "Parma"
+  ],
+  [
+   "20 February 2027",
+   "25",
+   "Sassuolo",
+   "",
+   "Roma"
+  ],
+  [
+   "27 February 2027",
+   "26",
+   "Roma",
+   "",
+   "Venezia"
+  ],
+  [
+   "6 March 2027",
+   "27",
+   "Juventus",
+   "",
+   "Roma"
+  ],
+  [
+   "13 March 2027",
+   "28",
+   "Genoa",
+   "",
+   "Roma"
+  ],
+  [
+   "20 March 2027",
+   "29",
+   "Roma",
+   "",
+   "Lecce"
+  ],
+  [
+   "3 April 2027",
+   "30",
+   "Roma",
+   "",
+   "Bologna"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Internazionale",
+   "",
+   "Roma"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Roma",
+   "",
+   "Lazio"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Frosinone",
+   "",
+   "Roma"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Roma",
+   "",
+   "Napoli"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Fiorentina",
+   "",
+   "Roma"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Milan",
+   "",
+   "Roma"
+  ],
+  [
+   "22 May 2027",
+   "37",
+   "Roma",
+   "",
+   "Como"
+  ],
+  [
+   "29 May 2027",
+   "38",
+   "Cagliari",
+   "",
+   "Roma"
+  ],
+  [
+   "12 January 2027",
+   "Round of 16",
+   "Roma",
+   "",
+   "Hellas Verona"
+  ],
+  [
+   "10 September 2026",
+   "1",
+   "Fenerbahçe",
+   "1–1",
+   "Roma"
+  ],
+  [
+   "14 October 2026",
+   "2",
+   "Roma",
+   "3–4",
+   "Real Madrid"
+  ],
+  [
+   "20 October 2026",
+   "3",
+   "Roma",
+   "4–0",
+   "Slovan Bratislava"
+  ],
+  [
+   "3 November 2026",
+   "4",
+   "Manchester United",
+   "3–2",
+   "Roma"
+  ],
+  [
+   "25 November 2026",
+   "5",
+   "Paris Saint-Germain",
+   "",
+   "Roma"
+  ],
+  [
+   "8 December 2026",
+   "6",
+   "Roma",
+   "",
+   "Sporting CP"
+  ],
+  [
+   "19 January 2027",
+   "7",
+   "AEK Athens",
+   "",
+   "Roma"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "Roma",
+   "",
+   "Lille"
+  ]
+ ]
+}

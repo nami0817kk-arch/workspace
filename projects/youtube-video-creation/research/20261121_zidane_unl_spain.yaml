@@ -1,0 +1,128 @@
+# 取材メモ（2026年11月21日）ジダン監督（フランス代表）「W杯準決勝のリベンジマッチではない」。UNL準々決勝で世界王者スペインと対戦（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-21。WebFetch と python requests（ブラウザUA）で本文を読んだ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。
+# 題材の元: サッカーキング 2026-11-20「UNL準々決勝で世界王者スペインと対戦…ジダン監督「W杯準決勝のリベンジマッチではない」」（全文。レキップ報道の引用）。
+# 出典で確かめたこと:
+#   ・組み合わせ: ゲキサカ 2026-11-20「UNL準々決勝の組合せが決定!!」（全文）。UEFAは20日に抽選。準々決勝は2027年3月25〜27日に第1戦・28〜30日に第2戦、準決勝は6月9・10日、決勝は6月13日。
+#       スペイン（A3の2位）対 フランス（A1の首位）。第1戦はスペイン、第2戦はフランスのホーム（サッカーキング・Marca 一致）。勝者は オランダ対ポルトガル の勝者と準決勝。
+#       UEFA公式（uefa.com）は読み込みがタイムアウトで当たれていない。→ 報道（2社一致）。
+#   ・ジダンの言葉: サッカーキング（レキップ経由、日本語）と Marca 2026-11-20「Zidane valora el duelo contra España y 'olvida' las semifinales del Mundial」（スペイン語、全文）が一致。
+#       "No se trata de una revancha de la semifinal del Mundial, sino de una competición diferente con un nuevo grupo. Y el objetivo sigue siendo el mismo: llegar a la Final Four y ganar la Nations League"
+#       "Sabíamos que nos iba a tocar un rival fuerte. Será España, la actual campeona del mundo. … Para llegar lejos en una competición hay que jugar y eliminar a los mejores equipos"
+#       → 台本の言葉は、フランス語→（日本語記事／スペイン語記事）→日本語の訳の連鎖。語順はなぞらず日本語として通るようにした。
+#   ・W杯準決勝: ESPN fifa.world scoreboard 2026-07-14（event 760514、AT&T Stadium）スペイン 2-0 フランス。22分 オヤルサバル（PK）、58分 ポロ（アシスト オルモ）。
+#   ・スペインが優勝: ESPN 2026-07-19 決勝 スペイン 1-0 アルゼンチン（延長）。フランスは3位決定戦でイングランドに 4-6（07-18）。
+#   ・スペインの直近: ESPN uefa.nations 2026-11-15 スペイン 2-3 イングランド（event 401861175）。サッカーキング 11/16 の見出し「スペインの無敗記録が「44」でストップ」。
+#   ・ジダンが代表監督になった時期: サッカーキング「同大会後に指揮官に就任」。
+#   ・選手時代の対スペイン: Foot Mercato（仏）2026-11-20「Zidane peut prolonger une incroyable série face à l'Espagne」全文。選手時代、スペイン相手に公式戦3試合で2勝1分、負けなし。→ 報道（1社。自分でも Euro2000 準々決勝・W杯2006 16強・Euro96 グループの3試合と記憶が合うが、一次の試合記録は当たっていない）。
+# 食い違い: 日付表記だけ。サッカーキング・ゲキサカは「3月25〜27日」、Marca は第1戦「3月25日20:45」・第2戦「3月28日」。台本は「3月末」とだけ言う。Marca の「Xavi のオランダ」は使わない。
+# 前の本との重なり: 20261107_zidane_mbappe_france（メンバー・起用位置）・20261120_manager_deschamps。今回の初出: 準々決勝の組み合わせ・「リベンジではない」発言・W杯準決勝の中身。
+# 本人の言葉: あり。Y。 反応: 0件（作らない）。
+# 写真: assets/images/20261121_zidane_unl_spain/（Marca の主写真＝EFE、Foot Mercato の主写真2枚。サッカーキング・ゲキサカは Getty の配信なので使わない）。03（ポルトガル優勝の合成画像）は別物なので外した。
+slot: other_2
+date: "2026年11月21日"
+format: news
+no_main: true
+people: [ジダン監督, フランス代表, スペイン代表]
+
+short_style: Y
+short_hook_quote: これはワールドカップ準決勝のリベンジマッチではない。
+short_photos:
+  - assets/images/20261121_zidane_unl_spain/01_v.jpg
+  - assets/images/20261121_zidane_unl_spain/02_v.jpg
+  - assets/images/20261121_zidane_unl_spain/04_v.jpg
+short_question: フランスは、準々決勝でスペインに勝てると思いますか。
+short_telops: []
+
+theme:
+  id: zidane_unl_spain
+  league: france
+  league_name: フランス代表
+  prefix: ""
+  title: ジダン監督、ネーションズリーグでスペインと対戦。「W杯準決勝のリベンジマッチではない」
+  hook: ""
+  question: 世界王者スペインと当たることになったジダン監督は、何と語ったのか
+  takeaway: フランスはW杯準決勝で0対2で負けた相手と、来年3月にまた当たる。ただしスペインは11月15日、44試合続いた無敗がイングランドに止められたばかり。ジダン監督は選手時代、スペイン相手に公式戦3試合で負けなしだった
+
+thumbnail:
+  layout: face
+  line1: ジダン監督 対スペイン
+  line2: リベンジではない
+  tags: [ジダン, フランス代表, スペイン代表]
+  photo: assets/images/20261121_zidane_unl_spain/01_w.jpg
+  short_photo: assets/images/20261121_zidane_unl_spain/01_v.jpg
+
+answer: 前回の借りを返す戦いではなく、別の大会。目標はベスト4に進み、優勝すること
+watch: 2027年3月末のUNL準々決勝（第1戦はスペイン）
+
+sections:
+  - id: what
+    main: true
+    heading: スペインと当たるジダン監督は、何と語ったのか
+    tier: 報道
+    telop: ジダン監督「リベンジマッチではない」
+    say:
+      - text: フランス代表のジダン監督が、ネーションズリーグの準々決勝でスペインと当たることになり、こう語りました。
+      - voice: ジダン監督
+        text: これはワールドカップ準決勝のリベンジマッチではない。
+        emph: true
+      - voice: ジダン監督
+        text: 全く別の大会で、新しいチームで臨みます。
+        cont: true
+      - text: 20日の抽選で、準々決勝の対戦が決まりました。
+        image: assets/images/20261121_zidane_unl_spain/02_w.jpg
+      - text: グループを首位で通ったフランスと、2位だったスペインです。
+      - voice: ジダン監督
+        text: 強い相手と当たることは分かっていました。
+      - voice: ジダン監督
+        text: それが、いまの世界王者のスペインだったということです。
+        cont: true
+      - text: ジダン監督が指揮を執ったのは、W杯のあとからです。
+        image: assets/images/20261121_zidane_unl_spain/04_w.jpg
+      - voice: ジダン監督
+        text: 勝ち進むには、最強のチームと対戦して、
+      - voice: ジダン監督
+        text: 打ち破らなければいけません。
+        cont: true
+      - voice: ジダン監督
+        text: 目標は変わりません。ベスト4に進んで、ネーションズリーグで優勝することです。
+        cont: true
+        image: assets/images/20261121_zidane_unl_spain/01_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/world_other/20261120/2229956.html
+      - https://www.marca.com/futbol/nations-league/2026/11/20/zidane-valora-duelo-espana-olvida-semifinales-mundial-revancha.html
+      - https://web.gekisaka.jp/news/world/detail/?463508-463508-fl
+  - id: game
+    heading: W杯準決勝の7月14日、前回の対戦は何対何だったのか
+    tier: 報道
+    telop: W杯準決勝 フランス 0-2 スペイン
+    say:
+      - text: 前回の対戦は、7月14日のW杯準決勝です。スペインが2対0で勝ちました。
+        card: {type: table, title: W杯準決勝（7月14日）フランス 0-2 スペイン, columns: [分, 得点], rows: [[22分, オヤルサバル（PK）], [58分, ポロ]], highlight_row: 0}
+      - text: スペインはそのまま優勝しています。
+        card: none
+      - text: そのスペインに、ジダン監督が3月、2試合で挑みます。第1戦はスペイン、第2戦はフランスのホームです。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260714
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=20260719
+      - https://web.gekisaka.jp/news/world/detail/?463508-463508-fl
+  - id: view
+    viewpoint: true
+    heading: 3月の2試合で、スペインとの差は縮まっているのか
+    tier: 背景
+    telop: スペインの無敗は44で止まった
+    say:
+      - text: 見立てです。そのスペインは11月15日、イングランドに2対3で負けました。
+        card: {type: table, title: スペインの直近（11月15日）, columns: [試合, 結果], rows: [[スペイン 対 イングランド, 2-3]], highlight_row: 0}
+      - text: 44試合続いた無敗が、止まっています。
+        card: none
+      - text: 一方のジダン監督は、選手時代にスペイン相手の公式戦3試合で2勝1分けと、負けていません。
+        card: none
+        emph: true
+      - text: 第1戦は3月末。フランスは、世界王者の本拠地に乗り込みます。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861175
+      - https://www.soccer-king.jp/news/world/world_other/20261120/2229956.html
+      - https://www.footmercato.net/a6940749734534512788-equipe-de-france-zidane-peut-prolonger-une-incroyable-serie-face-a-lespagne
