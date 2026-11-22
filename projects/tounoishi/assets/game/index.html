@@ -170,7 +170,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v23</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v24</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -977,7 +977,7 @@ function stepEn(e,dt){
  if(carrying&&e.f==0&&e.x==ENTX&&e.y==ENTY){
   over=true;g.done=true;
   g.cr.slice().forEach(function(m){if(m.hero)toHall(m,'塔と共に消えた（'+F+'階の塔）');});
-  say('コアを持ち去られた…。主役たちは殿堂に名を残した。');finishTower();
+  g.lossBy=enFull(e);g.lossWave=g.wave;say('コアを持ち去られた…。主役たちは殿堂に名を残した。');finishTower();
  }
 }
 
@@ -1043,7 +1043,7 @@ function showResult(){
  var r=g.result,el=document.getElementById('title');
  el.innerHTML='<div class="tbox"><h2>塔は落ちた</h2><p class="big">'+r.sc.toLocaleString()+' 点 <span class="rank">'+(r.rank||'')+'</span>'+(r.nb?' <b class="nb">自己ベスト！</b>':'')+'</p>'+
   '<p class="sub">'+DIFF[g.diff||'normal'].n+'の自己ベスト：'+r.best.toLocaleString()+' 点</p>'+
-  '<ul class="sc"><li>到達：'+F+'階（'+F*1000+'）</li><li>周：'+(g.round-1)+'周を守った（'+(g.round-1)*200+'）</li><li>倒した冒険者：'+(g.kills||0)+'人（'+(g.kills||0)*20+'）</li><li>生まれた主役：'+g.promos+'匹（'+g.promos*150+'）</li><li>倒し切った勇者：'+g.yuKilled+'人（'+g.yuKilled*500+'）</li><li>残った掘る力：'+(g.dp||0)+'（'+(g.dp||0)*10+'）</li><li>最後の軍：'+armyPower()+'</li></ul><p class="sub">コア「'+esc(r.adv||'')+'」</p>'+
+  (g.lossBy?'<p class="sub">'+g.round+'周目の第'+g.lossWave+'波で、'+esc(g.lossBy)+'がコアを運び出した。</p>':'')+'<ul class="sc"><li>到達：'+F+'階（'+F*1000+'）</li><li>周：'+(g.round-1)+'周を守った（'+(g.round-1)*200+'）</li><li>倒した冒険者：'+(g.kills||0)+'人（'+(g.kills||0)*20+'）</li><li>生まれた主役：'+g.promos+'匹（'+g.promos*150+'）</li><li>倒し切った勇者：'+g.yuKilled+'人（'+g.yuKilled*500+'）</li><li>残った掘る力：'+(g.dp||0)+'（'+(g.dp||0)*10+'）</li><li>最後の軍：'+armyPower()+'</li></ul><p class="sub">コア「'+esc(r.adv||'')+'」</p>'+
   '<div class="row2"><button class="btn go" id="tagain">もう一度（'+DIFF[g.diff||'normal'].n+'）</button><button class="btn" id="tback">タイトルへ</button></div></div>';
  el.hidden=false;document.getElementById('tback').onclick=showTitle;document.getElementById('tagain').onclick=function(){newGame(g.diff||'normal');hideTitle();};
 }
@@ -1129,7 +1129,7 @@ function showDex(){
   return '<li>'+dimg(k)+'<b>'+S.n+'</b><small>'+(DDESC[k]||'')+'</small><small>'+(envs?'土：'+envs+' ':'')+(muts?'変異：'+muts:'')+'</small></li>';
  }).join('');
  el.innerHTML='<div class="tbox wide"><h2>図鑑 <small>'+n+' / '+DEXORD.length+'</small></h2><ul class="dex">'+rows+'</ul><h3 class="dexh">冒険者</h3><ul class="dex">'+enRows()+'</ul><button class="btn go" id="tback">もどる</button></div>';
- el.hidden=false;document.getElementById('tback').onclick=function(){if(g&&!g.title&&!over)hideTitle();else showTitle();};
+ el.hidden=false;document.getElementById('tback').onclick=function(){if(g&&!g.title&&!over){hideTitle();resumeTime();}else showTitle();};
 }
 
 // ---------- 亡骸・宝箱・特殊タイプ ----------
@@ -1613,10 +1613,10 @@ function ui(){
   if(t){var cn='tab'+(g.view==f?' on':'')+(ne?' alert':'');if(t.className!=cn)t.className=cn;var tl=t.querySelector('.tl'),th=(f+1)+'階<small>敵'+ne+' 魔'+nm+'</small>';if(tl&&tl.innerHTML!=th)tl.innerHTML=th;}
  }
  document.getElementById('wave').textContent=Math.min(g.wave,nW())+' / '+nW();
- document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
+ document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v23 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v24 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
@@ -2213,8 +2213,9 @@ var lastHap=0;function haptic(kind){var t=performance.now();if(t-lastHap<60)retu
 // 一覧・遊び方のシート
 function openSheet(which){document.getElementById('stitle').textContent=which=='help'?'遊び方':'一覧';
  document.getElementById('spane-list').hidden=which=='help';document.getElementById('spane-help').hidden=which!='help';
- sideKey='';sideT=0;side();document.getElementById('sheet').hidden=false;}
-function closeSheet(){document.getElementById('sheet').hidden=true;}
+ sideKey='';sideT=0;side();document.getElementById('sheet').hidden=false;holdTime();}
+function closeSheet(){document.getElementById('sheet').hidden=true;resumeTime();}
+var heldSpeed=0;function holdTime(){if(speed>0&&!over){heldSpeed=speed;setSpeed(0);}}function resumeTime(){if(heldSpeed&&!over){setSpeed(heldSpeed);}heldSpeed=0;}
 document.getElementById('blist').onclick=function(){openSheet('list');};
 document.getElementById('bhelp').onclick=function(){openSheet('help');};
 document.getElementById('sclose').onclick=closeSheet;
@@ -2226,7 +2227,7 @@ document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
 window.__t={g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
-document.getElementById('bdex').onclick=showDex;document.getElementById('bmenu').onclick=function(){saveGame();showTitle();};
+document.getElementById('bdex').onclick=function(){holdTime();showDex();};document.getElementById('bmenu').onclick=function(){saveGame();showTitle();};
 newGame('normal');g.title=true;showTitle();draw();ui();requestAnimationFrame(function(t){last=t;requestAnimationFrame(loop);});
 })();
 </script>
