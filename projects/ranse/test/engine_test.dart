@@ -281,6 +281,59 @@ void main() {
     expect(seen.length, greaterThanOrEqualTo(6), reason: '$seen');
   });
 
+  test('実測（記録用）: 大名から始めて版図を広げ続けると、天下統一に届くか', () {
+    var lives = 0, victory = 0;
+    final maxShares = <double>[];
+    for (var seed = 0; seed < 200; seed++) {
+      final rng = Rng(seed + 31337);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      playChildhood(g, Rng(seed));
+      if (g.finished) continue;
+      g.choose(0); // 元服
+      if (g.finished) continue;
+      final home = g.fa[g.l.home]!.alive ? g.l.home : g.alive.first.name;
+      g.l
+        ..rank = 8
+        ..maxRank = 8
+        ..lord = home
+        ..gold = 100;
+      lives++;
+      var best = 0.0, n = 0;
+      final r = Rng(seed);
+      while (!g.finished && n++ < 3000) {
+        final p = g.prompt!;
+        if (g.l.rank == 8 && g.share > best) best = g.share;
+        var i = -1;
+        if (p.title == '今年の重点') {
+          i = p.choices.indexWhere((c) => c.label == '版図を広げる');
+          if (g.l.gold < 30 || r.chance(.25)) {
+            i = p.choices.indexWhere((c) => c.label == '軍備を整える');
+          }
+          if (g.l.hp < g.l.maxhp * .4) {
+            i = p.choices.indexWhere(
+              (c) => c.label.contains('休') || c.label.contains('家族'),
+            );
+          }
+        } else if (p.title == '侵攻') {
+          i = 0; // いちばん弱い相手
+        }
+        if (i < 0) i = pickAmbitious(g, p, r);
+        g.choose(i);
+      }
+      if (g.l.victory) victory++;
+      maxShares.add(best);
+    }
+    maxShares.sort();
+    double q(double p) => maxShares[(maxShares.length * p).floor()];
+    // ignore: avoid_print
+    print(
+      '【天下】大名から始めた$lives人生: 天下統一 $victory'
+      '・最大の占有率 中央${(q(.5) * 100).round()}%・90%点${(q(.9) * 100).round()}%・最高${(maxShares.last * 100).round()}%',
+    );
+    expect(lives, greaterThan(50));
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);
