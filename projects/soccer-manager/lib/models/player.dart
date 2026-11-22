@@ -1013,6 +1013,11 @@ class Player {
   int morale;
   int injuryWeeks;
 
+  /// 負傷の今の1週のうち、もう過ぎた日数(0〜6)。怪我は日数で治る
+  /// (離脱「◯週」は7日×週)。7日たつごとに[injuryWeeks]が1つ減る。
+  /// 負傷していなければ0。
+  int injuryDays;
+
   /// 現在負傷している場合の負傷の種類(負傷していない場合はnull)。
   InjuryType? injuryType;
 
@@ -1295,6 +1300,7 @@ class Player {
     this.fatigue = 0,
     this.morale = 75,
     this.injuryWeeks = 0,
+    this.injuryDays = 0,
     this.injuryType,
     Map<String, int>? injuryHistoryCounts,
     this.yellowCards = 0,
@@ -1602,6 +1608,7 @@ class Player {
     put('fatigue', fatigue, 0);
     put('morale', morale, 75);
     put('injuryWeeks', injuryWeeks, 0);
+    put('injuryDays', injuryDays, 0);
     put('injuryType', injuryType?.name, null);
     put('injuryHistoryCounts', injuryHistoryCounts, null);
     put('yellowCards', yellowCards, 0);
@@ -1711,6 +1718,7 @@ class Player {
       fatigue: json['fatigue'] as int? ?? 0,
       morale: json['morale'] as int? ?? 75,
       injuryWeeks: json['injuryWeeks'] as int? ?? 0,
+      injuryDays: json['injuryDays'] as int? ?? 0,
       injuryType: json['injuryType'] == null
           ? null
           : enumFromName(

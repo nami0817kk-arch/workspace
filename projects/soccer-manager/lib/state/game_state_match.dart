@@ -212,8 +212,8 @@ extension GameStateMatch on GameState {
       _notify();
     }
 
-    // この節の週の処理は済んでいる(試合の途中でアプリが終わった)。
-    // 週の処理を二度かけず、試合だけを途中から再開する。
+    // この節の試合前の処理は済んでいる(試合の途中でアプリが終わった)。
+    // 二度かけず、試合だけを途中から再開する。
     if (_save!.weekProcessedSeason == league.season &&
         _save!.weekProcessedMatchday == next.matchday) {
       return _resumeInterruptedMatchday(
@@ -223,8 +223,6 @@ extension GameStateMatch on GameState {
       );
     }
 
-    _save!.trainingDoneThisWeek = false;
-
     // 勝負の試合でなければ、先発と構えは監督が決める。
     _managerPreparesMatch(next);
     // 節の区切りで、オーナーの判断を迫る事件が起きる。
@@ -233,96 +231,30 @@ extension GameStateMatch on GameState {
     _maybeRaiseRumor();
     _refreshProposals();
 
-    // 練習はコーチ陣の仕事。オーナーは触れないので、この節の分をここで必ず実施する。
-    await runWeeklyTraining();
+    // 週の処理(練習・不満・ユース・ローン・分割払いなど)は日付で回る
+    // (7日ごと。今日を進めたときに _setToday が回す)。その季で最初の節と、
+    // 最後に週の処理をした日を持たない旧セーブは、ここで1回行って今日を
+    // 起点にする(以前の練習と同じ位置: 監督が先発を決めた後)。
+    _startWeeklyClockIfNeeded();
 
-    // リーグカップは4節ごとに1回戦をまとめて消化する。週の回復より前に
-    // 済ませる(復帰したばかりの選手の試合勘を、カップの試合で戻さない)。
+    // リーグカップは4節ごとに1回戦をまとめて消化する。
     _playLeagueCupIfDue();
 
-    // 週の経過による負傷回復と自然な疲労回復(休養日)。
-    // 疲労回復はトレーニング方針(休養)とは別に、全チーム・
-    // 全選手へ毎週一律で適用する。CPUクラブは練習メニューを設定できず、
-    // これを怠ると試合の疲労蓄積だけが積み重なって疲労が上限に張り付き
-    // 続けてしまうため。復帰直後は試合勘が鈍っているためマッチシャープ
-    // ネスを大きく下げる。
-    for (final t in league.teams) {
-      final mine = t.id == _save!.userTeamId;
-      for (final p in t.players) {
-        if (p.injuryWeeks > 0) {
-          p.injuryWeeks -= 1;
-          // 自クラブの選手が治ったら、保存療法の再発を振る。
-          if (p.injuryWeeks == 0 &&
-              mine &&
-              _onUserInjuryHealed(p, GameState._offerRng.nextDouble())) {
-            continue;
-          }
-          if (p.injuryWeeks == 0) {
-            p.matchSharpness = min(p.matchSharpness, 40);
-            p.injuryType = null;
-          }
-        }
-        p.fatigue = (p.fatigue - 14).clamp(0, 100);
-      }
-    }
-
-    // ユーザークラブのみローン期間(週単位)を処理する（CPUクラブは対象外）。
-    // 選手契約自体は年単位で結ばれ、シーズン開始時にまとめて消化する
-    // (startNextSeason参照)。
-    final loanEnded = ContractEngine.advanceLoanWeek(userTeam, today: today);
-    for (final p in loanEnded) {
-      _clearPlayerRoleReferences(userTeam, p.id);
-    }
-    lastContractExpirations = loanEnded.map((p) => p.name).toList();
-    lastContractWarnings = [];
-    // ローン満了により編成人数が最低人数を割り込んだ場合、フリーエージェントを
-    // 緊急補強してスカッドが組めなくなる事態を防ぐ(安全網)。
-    lastEmergencySignings = [];
-    while (userTeam.players.length < minSquadSize) {
-      final signing = FreeAgentEngine.generateEmergencySigning(
-          squadMedian: _squadMedianOverall);
-      ContractEngine.renewContract(signing);
-      userTeam.players.add(signing);
-      lastEmergencySignings.add(signing.name);
-    }
-    // ローン満了でスタメンから外れた枠を埋める。埋めないと10人で戦う。
-    if (loanEnded.isNotEmpty) {
-      LineupUtils.fillVacancies(userTeam);
-    }
-
-    // 選手の不満度を更新する。
     final preMatchRank = league.sortedStandings.indexWhere(
           (r) => r.teamId == _save!.userTeamId,
         ) +
         1;
-    HappinessEngine.applyWeekly(
-      userTeam,
-      leagueRank: preMatchRank,
-      boardTargetRank: _save!.boardTargetRank,
-    );
-    // 監督の立場(目標の順位との比べ)と、若手を使う監督の効き目。
-    _updateManagerWeekly(preMatchRank);
-    // 序列を約束した選手を、先発から外し続けていないか。
+    // 序列を約束した選手を、先発から外し続けていないか(節ごとに数える)。
     _checkPromisesWeekly();
     // 大きな怪我は、手術か保存療法かを選ばせる。
     _reviewInjuries();
-    // 前の週に2試合以上戦っていたら、先発に疲れが残る(過密日程)。
-    _applyCongestion();
+    // 前の試合から間を空けずに戦うなら、先発に疲れが残る(過密日程)。
+    // 判定は試合の日付の間隔で行う。
+    final userPlaysToday = league.fixturesForMatchday(next.matchday).any((f) =>
+        f.homeTeamId == _save!.userTeamId || f.awayTeamId == _save!.userTeamId);
+    if (userPlaysToday) _noteUserMatchDay();
     // 先発に入っていない21歳以下は、U21 の試合に出る。
     _playU21Matchday();
-    // 先発に仲の良い選手・仲の悪い選手がいるか。
-    RelationsEngine.applyWeekly(userTeam);
-    if (userTeam.tacticalMeetingCooldownWeeks > 0) {
-      userTeam.tacticalMeetingCooldownWeeks -= 1;
-    }
-    // CPUクラブにも同様に反映する(目標順位という概念がないため、自クラブの
-    // 順位をそのまま目標として扱い、出場機会・待遇の要素のみ効かせる)。
-    for (final t in league.teams) {
-      if (t.id == _save!.userTeamId) continue;
-      final rank =
-          league.sortedStandings.indexWhere((r) => r.teamId == t.id) + 1;
-      HappinessEngine.applyWeekly(t, leagueRank: rank, boardTargetRank: rank);
-    }
 
     // シーズン折り返し地点で、理事会が一度だけ中間レビューを行う。
     if (!_save!.boardReviewDoneThisSeason) {
@@ -357,7 +289,7 @@ extension GameStateMatch on GameState {
     }
 
     // スポンサー契約(年単位)の消化はシーズン開始時にまとめて処理する
-    // (startNextSeason参照)。分割払いの引き落としは引き続き週次で行う。
+    // (startNextSeason参照)。分割払いの引き落としは週の処理で行う。
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
       _save!.pendingSponsorOffers =
           _economyAdjusted(SponsorEngine.generateOffers(
@@ -366,192 +298,6 @@ extension GameStateMatch on GameState {
         managerReputation: _save!.managerReputation,
         stadiumLevel: _save!.infrastructure.facilityLevel(FacilityType.stadium),
       ));
-    }
-    for (final inst in List<Installment>.from(_save!.pendingInstallments)) {
-      _book(LedgerCategory.transfers, -(inst.weeklyAmount));
-      inst.weeksRemaining -= 1;
-      if (inst.weeksRemaining <= 0) {
-        _save!.pendingInstallments.remove(inst);
-      }
-    }
-
-    // 融資の週次返済。
-    for (final loan in List<BankLoan>.from(_save!.bankLoans)) {
-      _book(LedgerCategory.financing, -(loan.weeklyRepayment));
-      loan.weeksRemaining -= 1;
-      if (loan.weeksRemaining <= 0) {
-        _save!.bankLoans.remove(loan);
-      }
-    }
-
-    // 定期預金の週次経過。満期を迎えたものは利息込みで払い戻す。
-    lastMaturedDeposits = [];
-    for (final deposit in List<FixedDeposit>.from(_save!.fixedDeposits)) {
-      deposit.weeksRemaining -= 1;
-      if (deposit.weeksRemaining <= 0) {
-        _book(LedgerCategory.financing, deposit.maturityValue);
-        _save!.fixedDeposits.remove(deposit);
-        lastMaturedDeposits.add(deposit);
-      }
-    }
-
-    // 移籍オファーの週次処理(期限切れ削除・新規発生・リリース条項の自動成立)。
-    lastReleaseClauseSales = _advanceIncomingOffers();
-
-    // 代表召集の週次処理(期間終了・新規招集抽選。スタメン欠員は自動で埋める)。
-    lastInternationalCallUps = _advanceInternationalDuty();
-
-    // CPUクラブ同士の移籍市場の週次処理(ユーザーは関与しない)。
-    // 他のクラブも窓が開いている間しか移籍しない。
-    lastAiTransferNews = isTransferWindowOpen
-        ? AiTransferEngine.maybeGenerate(
-            league.teams,
-            _save!.userTeamId,
-            GameState._aiTransferRng,
-          )
-        : null;
-
-    // CPUクラブの簡易的な週次成長(施設・スタッフの上乗せは無いが、
-    // 何もしないとユーザーだけが伸び続けリーグ全体が停滞するため)。
-    // あわせてセットプレー担当も自動更新し、移籍で放出入りした穴を埋める。
-    for (final t in league.teams) {
-      if (t.id == _save!.userTeamId) continue;
-      TrainingEngine.applyPassiveCpuGrowth(t);
-      LineupUtils.autoAssignSetPieceRoles(t);
-    }
-
-    // 昇格候補(有望株)はユース施設で育成され続ける。施設レベルが高いほど
-    // 伸びが早く、じっくり育ててから昇格させる判断に意味を持たせる。
-    TrainingEngine.applyYouthAcademyGrowth(
-      _save!.youthProspects,
-      _save!.infrastructure.facilityLevel(FacilityType.youthFacility),
-      coachSpecialty:
-          _save!.infrastructure.staffFor(StaffRole.youthCoach)?.specialty ??
-              StaffSpecialty.balanced,
-      coachLevel: youthCoachCoachingLevel,
-    );
-
-    // 昇格の見込みが立たない有望株は、ユースを去る。置いておくほど育つので、
-    // 何も起きないと「とりあえず置いておく」が最善になり、上げる時期を
-    // 決める判断が消えてしまう。
-    lastYouthDepartures = YouthDepartureEngine.resolveWeekly(
-      _save!.youthProspects,
-      facilityLevel:
-          _save!.infrastructure.facilityLevel(FacilityType.youthFacility),
-    );
-    for (final d in lastYouthDepartures) {
-      _book(LedgerCategory.playerSales, d.compensation);
-      _logNews(
-        d.poached
-            ? Tr.pick(
-                'ユースの${d.player.name}が他クラブに引き抜かれました(育成補償金 ${formatMoney(d.compensation)})',
-                'Academy player ${d.player.name} was poached by another club (compensation ${formatMoney(d.compensation)})')
-            : Tr.pick(
-                'ユースの${d.player.name}が出場機会を求めてクラブを去りました(育成補償金 ${formatMoney(d.compensation)})',
-                'Academy player ${d.player.name} left in search of first-team football (compensation ${d.compensation})'),
-        context: Tr.pick('ユース', 'Youth'),
-      );
-    }
-
-    // ユースリーグ: 練習試合を年間の順位表にまとめる。勝敗が何にも残らないと、
-    // ユースで勝たせて育てるという選び方ができない。候補が居ない年は作らない。
-    if (_save!.youthProspects.isNotEmpty) {
-      _save!.youthLeague ??= YouthLeagueEngine.create(
-        prospectAverage:
-            YouthLeagueEngine.prospectAverage(_save!.youthProspects),
-      );
-    }
-    final youthLeague = _save!.youthLeague;
-    final leagueOpponent = youthLeague == null || youthLeague.isComplete
-        ? null
-        : YouthLeagueEngine.opponentStrengthFor(youthLeague);
-
-    // ユース練習試合: 昇格候補たちが毎週実戦を経験し、出場数・得点・評点を
-    // 積み重ねる。大活躍(複数得点・高評点)はクラブニュースに届く。
-    lastYouthMatchReport = YouthMatchEngine.playWeekly(
-      _save!.youthProspects,
-      opponentStrength: leagueOpponent,
-    );
-
-    // リーグ戦として記録する。全節終わったら、その年の結果を知らせる。
-    if (youthLeague != null &&
-        !youthLeague.isComplete &&
-        lastYouthMatchReport != null) {
-      final md = YouthLeagueEngine.recordUserResult(
-        youthLeague,
-        goalsFor: lastYouthMatchReport!.teamGoals,
-        goalsAgainst: lastYouthMatchReport!.opponentGoals,
-      );
-      if (md != null && youthLeague.isComplete) {
-        final rank = youthLeague.userRank;
-        _logNews(
-          rank == 1
-              ? Tr.pick('ユースリーグ優勝! 全${YouthLeague.matchdayCount}節を終えて1位',
-                  'Your academy won the youth league, top after ${YouthLeague.matchdayCount} rounds')
-              : Tr.pick(
-                  'ユースリーグが終了。$rank位(勝点${youthLeague.userStanding.points})',
-                  'The youth league finished. You came $rank (${youthLeague.userStanding.points} pts)'),
-          context: Tr.pick('ユース', 'Youth'),
-        );
-        final scorer = YouthLeagueEngine.topScorer(_save!.youthProspects);
-        if (scorer != null) {
-          _logNews(
-            Tr.pick('ユースの得点王は${scorer.name}(${scorer.youthMatchGoals}得点)',
-                'Academy top scorer: ${scorer.name} (${scorer.youthMatchGoals} goals)'),
-            context: Tr.pick('ユース', 'Youth'),
-          );
-        }
-      }
-    }
-    final youthReport = lastYouthMatchReport;
-    if (youthReport != null) {
-      for (final perf in youthReport.performances) {
-        if (perf.goals >= 2) {
-          _logNews(
-            Tr.pick(
-                'ユースの${perf.player.name}が練習試合で${perf.goals}得点の大活躍(評点${perf.rating.toStringAsFixed(1)})',
-                'Academy player ${perf.player.name} scored ${perf.goals} in the youth match (rated ${perf.rating.toStringAsFixed(1)})'),
-            context: Tr.pick('ユース', 'Youth'),
-          );
-        } else if (perf.rating >= 8.5) {
-          _logNews(
-            Tr.pick(
-                'ユースの${perf.player.name}が練習試合で圧巻のプレー(評点${perf.rating.toStringAsFixed(1)})',
-                'Academy player ${perf.player.name} was outstanding in the youth match (rated ${perf.rating.toStringAsFixed(1)})'),
-            context: Tr.pick('ユース', 'Youth'),
-          );
-        }
-      }
-    }
-
-    // ローン放出の週次処理(期間終了で自動的にチームへ復帰する)。
-    lastLoanReturns = [];
-    for (final p in userTeam.players.where((p) => p.isLoanedOut).toList()) {
-      // 武者修行: 貸出先で毎週実戦に出て成長する(若手ほど効果大)。
-      TrainingEngine.applyLoanDevelopment(p);
-      final until = p.loanedOutUntil;
-      if (until != null) {
-        // 日付で持つ貸し出しは、戻る日に届いたら戻す。
-        if (!today.isBefore(until)) {
-          _returnFromLoan(p);
-        } else {
-          final days = TransferWindowCalendar.daysBetween(today, until);
-          p.loanedOutWeeksRemaining = max(1, (days / 7).ceil());
-        }
-        continue;
-      }
-      // 日付の無い貸し出し(旧セーブを読む前に作った選手など)は週数で数える。
-      p.loanedOutWeeksRemaining -= 1;
-      if (p.loanedOutWeeksRemaining <= 0) _returnFromLoan(p);
-    }
-
-    // 成長推移の記録(自クラブの選手とユース昇格候補のみ)。選手詳細の
-    // 成長グラフと、ユースの昇格判断に使う。
-    for (final p in userTeam.players) {
-      TrainingEngine.recordOverallHistory(p);
-    }
-    for (final p in _save!.youthProspects) {
-      TrainingEngine.recordOverallHistory(p);
     }
 
     final md = next.matchday;
@@ -712,68 +458,9 @@ extension GameStateMatch on GameState {
       lastAppearanceFeesPaid = 0;
     }
 
-    if (_save!.budget < 0) {
-      _save!.consecutiveNegativeBudgetWeeks += 1;
-    } else {
-      _save!.consecutiveNegativeBudgetWeeks = 0;
-    }
-    // 給料が払えない状態が続くと、選手は催告のうえ契約を解除できる。
-    _checkUnpaidWages();
-    final budgetConfidenceDelta = BoardEngine.negativeBudgetConfidenceDelta(
-      _save!.consecutiveNegativeBudgetWeeks,
-    );
-    if (budgetConfidenceDelta != 0) {
-      // 資金のマイナスは、成績に由来する信頼度ではなく株主の期待を下げる。
-      _save!.shareholderExpectation = ShareholderEngine.applied(
-        _save!.shareholderExpectation,
-        budgetConfidenceDelta,
-      );
-      lastBudgetCrisisWarning = Tr.pick(
-          '資金マイナスが${_save!.consecutiveNegativeBudgetWeeks}週続いています。株主の期待が低下しました。',
-          "You have been in the red for ${Tr.plural(_save!.consecutiveNegativeBudgetWeeks, 'week')}. The shareholders' confidence has slipped.");
-    }
-
-    transferOffersRejectedThisWeek.clear();
     _refreshScoutCandidates();
 
-    // 今節発生した一過性の通知をクラブニュース履歴にも記録する
-    // (表示側のSnackBar/ダイアログは従来どおり別途フィールドをクリアする)。
     final newsWeek = Tr.pick('第$md節', 'Matchday $md');
-    if (lastReleaseClauseSales.isNotEmpty) {
-      _logNews(
-          Tr.pick('リリース条項が発動し移籍が成立: ${lastReleaseClauseSales.join('、')}',
-              "Release clauses triggered, transfers completed: ${lastReleaseClauseSales.join(', ')}"),
-          context: newsWeek);
-    }
-    if (lastInternationalCallUps.isNotEmpty) {
-      _logNews(
-          Tr.pick('代表召集: ${lastInternationalCallUps.join('、')}',
-              "Called up for international duty: ${lastInternationalCallUps.join(', ')}"),
-          context: newsWeek);
-    }
-    if (lastLoanReturns.isNotEmpty) {
-      _logNews(
-          Tr.pick('ローン放出から復帰: ${lastLoanReturns.join('、')}',
-              "Back from loan: ${lastLoanReturns.join(', ')}"),
-          context: newsWeek);
-    }
-    if (lastMaturedDeposits.isNotEmpty) {
-      final maturedTotal =
-          lastMaturedDeposits.fold<int>(0, (s, d) => s + d.maturityValue);
-      _logNews(
-          Tr.pick('定期預金が満期を迎え、${formatMoney(maturedTotal)}が払い戻されました',
-              'Your deposit matured and ${formatMoney(maturedTotal)} was paid back'),
-          context: newsWeek);
-    }
-    if (lastAiTransferNews != null) {
-      _logNews(
-          Tr.pick('移籍市場: $lastAiTransferNews',
-              'Transfer market: $lastAiTransferNews'),
-          context: newsWeek);
-    }
-    if (lastBudgetCrisisWarning != null) {
-      _logNews(lastBudgetCrisisWarning!, context: newsWeek);
-    }
     // ウォッチリストの選手が今節ゴールしたらニュースで知らせる
     // (スカウティングの追跡対象を見失わないようにするため)。
     if (_save!.watchlistPlayerIds.isNotEmpty) {
@@ -800,7 +487,7 @@ extension GameStateMatch on GameState {
       _liveSubstitutionsUsed = 0;
     }
 
-    // 週の処理を済ませた印と、試合の途中経過を同じ保存に載せる。
+    // 試合前の処理を済ませた印と、試合の途中経過を同じ保存に載せる。
     _save!.weekProcessedSeason = league.season;
     _save!.weekProcessedMatchday = md;
     _recordLiveProgress();

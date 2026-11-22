@@ -19,6 +19,9 @@ class TrainingEngine {
   /// [injuryFactor]はフィジオのレベルに応じた練習中の負傷リスク軽減係数。
   /// [careerGrowthBonus]はクラブの通算実績に応じた成長効率の
   /// 追加倍率(1.0でボーナスなし)。
+  /// [weekScale]は1季の成長・衰えの総量を合わせる倍率(1.0でそのまま)。
+  /// 週の処理は7日ごとに走るので、1季の回数は節の数と一致しない。
+  /// 呼ぶ側が「節の数÷週の数」を渡して、1季の総量を節ごとだった頃に揃える。
   static void applyWeeklyTraining(
     Team team, {
     int headCoachLevel = 1,
@@ -26,6 +29,7 @@ class TrainingEngine {
     int fitnessCoachLevel = 1,
     double injuryFactor = 1.0,
     double careerGrowthBonus = 1.0,
+    double weekScale = 1.0,
   }) {
     final growthMultiplier = ClubInfrastructure.trainingGrowthMultiplier(
           headCoachLevel,
@@ -46,7 +50,8 @@ class TrainingEngine {
       // ([loanHostGrowthMultiplier])で育つ。
       final isLoanedOut = p.isLoanedOut;
       final effectiveGrowthMultiplier =
-          isLoanedOut ? loanHostGrowthMultiplier : growthMultiplier;
+          (isLoanedOut ? loanHostGrowthMultiplier : growthMultiplier) *
+              weekScale;
       final effectiveFatigueRecoveryBonus =
           isLoanedOut ? 0 : fatigueRecoveryBonus;
 
@@ -57,6 +62,7 @@ class TrainingEngine {
         effectiveFatigueRecoveryBonus,
         team.trainingIntensity,
         injuryFactor,
+        weekScale,
       );
     }
   }
@@ -68,6 +74,7 @@ class TrainingEngine {
     int fatigueRecoveryBonus,
     TrainingIntensity intensity,
     double injuryFactor,
+    double weekScale,
   ) {
     final intensityFactor = intensity.factor;
     final effectiveGrowth = growthMultiplier * intensityFactor;
@@ -207,7 +214,7 @@ class TrainingEngine {
     }
 
     if (p.age >= declineStartAge(p) &&
-        _rng.nextDouble() < _declineChance(p.growthType)) {
+        _rng.nextDouble() < _declineChance(p.growthType) * weekScale) {
       _decline(p);
     }
   }
@@ -294,12 +301,14 @@ class TrainingEngine {
   /// (レンタル料が入らない)。
   static const double loanPlayingTimeFactor = 1.6;
 
-  static void applyLoanDevelopment(Player p) {
+  static void applyLoanDevelopment(Player p, {double weekScale = 1.0}) {
     p.matchSharpness =
         (p.matchSharpness + loanDevelopmentSharpnessGain).clamp(0, 100);
     growFromMatchExperience(p);
-    var factor =
-        p.age < 24 ? loanDevelopmentYoungFactor : loanDevelopmentVeteranFactor;
+    var factor = (p.age < 24
+            ? loanDevelopmentYoungFactor
+            : loanDevelopmentVeteranFactor) *
+        weekScale;
     if (p.loanedWithPlayingTime) factor *= loanPlayingTimeFactor;
     for (final k in _youthGrowthKeysFor(p)) {
       _grow(p, k, 0.5 * factor);
@@ -370,10 +379,10 @@ class TrainingEngine {
   /// 年々弱くなり、対戦相手として意味を失う。
   static const double cpuConditioningShare = 0.85;
 
-  static void applyPassiveCpuGrowth(Team team) {
+  static void applyPassiveCpuGrowth(Team team, {double weekScale = 1.0}) {
     for (final p in team.players) {
       if (p.isLoanedOut) continue;
-      final youthBonus = p.age < 24 ? cpuYouthGrowthBonus : 1.0;
+      final youthBonus = (p.age < 24 ? cpuYouthGrowthBonus : 1.0) * weekScale;
       if (p.position.group == PositionGroup.gk) {
         for (final k in AttributeKeys.goalkeeping) {
           _grow(p, k, 0.5 * passiveGrowthFactor * youthBonus);
@@ -414,7 +423,7 @@ class TrainingEngine {
         }
       }
       if (p.age >= declineStartAge(p) &&
-          _rng.nextDouble() < _declineChance(p.growthType)) {
+          _rng.nextDouble() < _declineChance(p.growthType) * weekScale) {
         _decline(p);
       }
     }
@@ -508,8 +517,11 @@ class TrainingEngine {
 
     /// ユースコーチの指導のレベル(1-8)。高いほど手の回る項目が増える。
     int coachLevel = 1,
+
+    /// 1季の総量を合わせる倍率([applyWeeklyTraining]の weekScale と同じ)。
+    double weekScale = 1.0,
   }) {
-    final factor = youthAcademyGrowthFactor(facilityLevel);
+    final factor = youthAcademyGrowthFactor(facilityLevel) * weekScale;
 
     for (final p in prospects) {
       for (final k in _youthGrowthKeysFor(p)) {

@@ -116,6 +116,15 @@ extension GameStateSquad on GameState {
       ManagerCareerEngine.growthBonusFor(managerCareerLevel);
 
   Future<bool> runWeeklyTraining() async {
+    if (!_runTrainingSession()) return false;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// その週の練習を行う(保存はしない)。週の処理([_runWeeklyTick])からも
+  /// 呼ぶ。もう行っていれば何もせず false。
+  bool _runTrainingSession() {
     if (_save == null) return false;
     if (_save!.trainingDoneThisWeek) return false;
     final infra = _save!.infrastructure;
@@ -131,6 +140,7 @@ extension GameStateSquad on GameState {
       fitnessCoachLevel: infra.staffLevel(StaffRole.fitnessCoach),
       injuryFactor: _userInjuryFactor,
       careerGrowthBonus: managerCareerGrowthBonus,
+      weekScale: _weeklyGrowthScale,
     );
     // 布陣の仕込み。良いヘッドコーチほど早く馴染む。使っていない布陣は
     // 少しずつ薄れるので、あれこれ試すほど何も身につかない。
@@ -152,8 +162,6 @@ extension GameStateSquad on GameState {
     _evaluateAchievements();
     _save!.trainingDoneThisWeek = true;
     lastTrainingResults = _diffTrainingResults(overallBefore, attrsBefore);
-    _notify();
-    await _persist();
     return true;
   }
 
@@ -211,8 +219,7 @@ extension GameStateSquad on GameState {
       _save?.staffCandidates.where((s) => s.role == role).toList() ?? [];
 
   /// [role]に就いているスタッフ。空席なら null。
-  StaffMember? staffFor(StaffRole role) =>
-      _save?.infrastructure.staffFor(role);
+  StaffMember? staffFor(StaffRole role) => _save?.infrastructure.staffFor(role);
 
   int facilityUpgradeCostFor(FacilityType type) {
     if (_save == null) return 0;
@@ -277,7 +284,8 @@ extension GameStateSquad on GameState {
     // 待っているのは不自然なため。
     if (previous != null) {
       _logNews(
-        Tr.pick('${previous.name}が${previous.role.label}を退任し、${hired.name}が就任しました。',
+        Tr.pick(
+            '${previous.name}が${previous.role.label}を退任し、${hired.name}が就任しました。',
             '${previous.name} leaves as ${previous.role.label}; ${hired.name} takes over.'),
         context: Tr.pick('スタッフ', 'Staff'),
       );
@@ -518,8 +526,7 @@ extension GameStateSquad on GameState {
 
     final team = userTeam;
     for (final p in team.players) {
-      p.matchSharpness =
-          (p.matchSharpness + camp.sharpnessGain).clamp(0, 100);
+      p.matchSharpness = (p.matchSharpness + camp.sharpnessGain).clamp(0, 100);
       p.fatigue = (p.fatigue + camp.fatigueCost).clamp(0, 100);
       if (p.age <= 23 && camp.youthGrowthChance > 0) {
         // 若手の遠征。出場経験と同じ経路で伸ばす。
@@ -535,10 +542,9 @@ extension GameStateSquad on GameState {
 
     _logNews(
       camp == PreseasonCamp.none
-          ? Tr.pick('今季はキャンプを張らずに開幕を迎えます。',
-              'You go into the season without a camp.')
-          : Tr.pick('${camp.label}のキャンプを行いました。',
-              'You held a ${camp.label}.'),
+          ? Tr.pick(
+              '今季はキャンプを張らずに開幕を迎えます。', 'You go into the season without a camp.')
+          : Tr.pick('${camp.label}のキャンプを行いました。', 'You held a ${camp.label}.'),
       context: Tr.pick('キャンプ', 'Pre-season'),
     );
     _notify();
