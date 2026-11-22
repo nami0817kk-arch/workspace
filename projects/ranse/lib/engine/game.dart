@@ -1,0 +1,618 @@
+import 'package:flutter/foundation.dart';
+
+import 'actions.dart';
+import 'birth.dart';
+import 'data.dart';
+import 'events.dart';
+import 'life.dart';
+import 'rng.dart';
+
+/// 選択肢。[f] が返した文字列は見聞録に書かれる。
+class Choice {
+  Choice(this.label, [this.f, this.cancel = false, this.danger = false]);
+  final String label;
+  final String? Function()? f;
+
+  /// true なら何も起こさず閉じる（手番も進まない）。
+  final bool cancel;
+  final bool danger;
+}
+
+class Prompt {
+  Prompt(this.title, this.text, this.choices, this.after);
+  final String title, text;
+  final List<Choice> choices;
+
+  /// 選んだあとに呼ぶ（手番を進める・画面を更新する、など）。
+  final void Function() after;
+}
+
+class ActionDef {
+  ActionDef(this.id, this.label, this.desc, this.run,
+      {this.labelF, this.ok, this.dis, this.danger = false});
+  final String id, label, desc;
+  final String? labelF;
+
+  /// 今この行動が選べるか。null なら常に可。
+  final bool Function()? ok;
+
+  /// 選べるが押せない理由（銭が足りない、など）。
+  final String? Function()? dis;
+  final bool danger;
+
+  /// 実行。文字列を返したら見聞録に書いて手番を進める。
+  /// null を返したときは、選択肢（Prompt）を出して手番の続きは選択後に進める。
+  final String? Function() run;
+}
+
+class Game extends ChangeNotifier {
+  Game({Rng? rng, this.onCheckpoint}) : rng = rng ?? Rng() {
+    actions = buildActions(this);
+    childActions = buildChildActions(this);
+    events = buildEvents(this);
+    childEvents = buildChildEvents(this);
+  }
+
+  final Rng rng;
+
+  /// 区切り（選択肢が出ていない状態）ごとに呼ばれる。保存用。
+  final void Function(Game g)? onCheckpoint;
+
+  late final List<ActionDef> actions, childActions;
+  late final List<EventDef> events, childEvents;
+
+  Life? life;
+  Map<String, Faction> fa = {};
+  Prompt? prompt;
+
+  Life get l => life!;
+  List<Faction> get alive => fa.values.where((f) => f.alive).toList();
+
+  // ---------- 時間 ----------
+  int get year => l.startYear + l.t ~/ 2;
+  int get age => l.t ~/ 2;
+  bool get isChild => age < 15;
+  String get season => l.t % 2 == 0 ? '春夏' : '秋冬';
+  List<String> get rk => l.female ? kRanksF : kRanksM;
+  bool has(String id) => l.has(id);
+  bool get canFight => !l.female || has('onna') || l.rank == 8;
+
+  double get share {
+    final a = alive;
+    final tot = a.fold<double>(0, (s, f) => s + f.power);
+    final lord = l.lord;
+    if (lord == null || fa[lord] == null || tot == 0) return 0;
+    return fa[lord]!.power / tot;
+  }
+
+  // ---------- 状態の更新 ----------
+  void j(int n) => l.joy = clampInt(l.joy + n, 0, 100);
+
+  void log(String txt, [String kind = '']) {
+    l.log.insert(0, LogEntry('$year$season', txt, kind));
+    if (l.log.length > 140) l.log.removeLast();
+  }
+
+  void rec() {
+    l.hist.add(HistPoint(l.t / 2, l.hp / l.maxhp * 100, l.joy.toDouble(),
+        l.chi.toDouble(), l.net > 100 ? 100 : l.net.toDouble()));
+  }
+
+  void die(String cause) => l.dead ??= cause;
+
+  /// 画面を更新する。選択肢が出ていない区切りでは保存も呼ぶ。
+  void changed() {
+    if (prompt == null && life != null) onCheckpoint?.call(this);
+    notifyListeners();
+  }
+
+  void ask(String title, String text, List<Choice> choices,
+      {void Function()? after}) {
+    prompt = Prompt(title, text, choices, after ?? changed);
+    notifyListeners();
+  }
+
+  void choose(int i) {
+    final p = prompt!;
+    prompt = null;
+    final c = p.choices[i];
+    if (c.cancel) {
+      changed();
+      return;
+    }
+    final res = c.f?.call();
+    if (res != null) log(res);
+    p.after();
+  }
+
+  // ---------- 人生の開始 ----------
+  void newWorld() {
+    fa = {
+      for (final e in kFactionBase.entries)
+        e.key: Faction(e.key, e.value * (0.75 + rng.next() * 0.5)),
+    };
+  }
+
+  static const _infant = [.12, .05, .03, .02, .02];
+
+  void start(Birth b) {
+    newWorld();
+    prompt = null;
+    final s = b.stats;
+    life = Life(
+      name: b.name,
+      cls: b.cls,
+      clsName: b.label,
+      female: b.female,
+      order: b.order,
+      region: b.region.n,
+      home: b.faction,
+      startYear: b.startYear,
+      bu: s.bu,
+      chi: s.chi,
+      sei: s.sei,
+      mi: s.mi,
+      un: s.un,
+      maxhp: s.maxhp,
+      joy: 50 + (b.cls.id == 'beggar' ? -10 : (b.cls.rank >= 3 ? 5 : 0)),
+      gold: b.cls.gold,
+      birthRank: b.birthRank,
+      traits: b.traits.map((t) => t.id).toList(),
+      rarity: b.rarity,
+      sameClass: b.sameClass,
+    );
+    log('$year年（${gengo(year)}）、${b.region.n}国の${b.cls.name}の家に'
+        '${ordLabel(b.female, b.order)}として生まれた。', 'big');
+    // 乳幼児期（0〜4歳）は自動で進む。
+    for (var a = 0; a < 5 && l.dead == null; a++) {
+      final m = _infant[a] *
+          l.cls.m *
+          (has('sickly') ? 1.5 : 1) *
+          (has('hardy') ? .7 : 1);
+      l.t = a * 2;
+      rec();
+      if (rng.chance(m)) {
+        l.t = a * 2 + 1;
+        die(a == 0 ? '生まれて間もなく亡くなった' : '幼くして病に倒れた');
+        log(
+            a == 0
+                ? '産声を上げて間もなく、息絶えた。この時代、生まれた子の五人に一人は五つまで生きられない。'
+                : '$a歳の冬、熱病で世を去った。',
+            'bad');
+      }
+    }
+    if (l.dead == null) {
+      l.t = 10;
+      log('五つの春を迎えた。幼い命は、どうにか生き延びた。');
+    }
+    changed();
+  }
+
+  /// 保存から復元する。
+  void restore(Life saved, Map<String, Faction> world) {
+    life = saved;
+    fa = world;
+    prompt = null;
+    notifyListeners();
+  }
+
+  // ---------- 行動 ----------
+  List<ActionDef> availableActions() => isChild
+      ? childActions
+      : actions.where((a) => a.ok == null || a.ok!()).toList();
+
+  void doAct(String id) {
+    final defs = isChild ? childActions : actions;
+    final a = defs.firstWhere((x) => x.id == id);
+    final r = a.run();
+    if (r != null) {
+      log(r);
+      endTurn();
+    }
+  }
+
+  // ---------- 合戦 ----------
+  String battle(String role) {
+    final lf = fa[l.lord]!;
+    final e = rng.pick(alive.where((f) => f != lf).toList());
+    final w = clampD(lf.power / (lf.power + e.power), .15, .85);
+    final win = rng.chance(w);
+    final (d: danger, m: mult) = switch (role) {
+      'van' => (d: .2, m: 2.0),
+      'main' => (d: .09, m: 1.2),
+      _ => (d: .03, m: .6),
+    };
+    final skill = l.bu * .6 +
+        l.chi * .15 +
+        l.un * .25 +
+        (l.gun ? 10 : 0) +
+        (l.troops * .3 > 30 ? 30 : l.troops * .3);
+    var dp = danger * (win ? .7 : 1.4) * (1 - clampD(skill / 150, 0, .7));
+    if (l.hp < 40) dp *= 1.5;
+    if (rng.chance(dp)) {
+      die('${e.name}との合戦で討死');
+      return '${e.name}との合戦で、${role == 'van' ? '先陣にて' : ''}討死した。';
+    }
+    final merit = (mult *
+            (skill / 12 + rng.range(0, 6)) *
+            (win ? 1.3 : .6) *
+            (1 + l.troops / 150))
+        .round();
+    l.merit += merit;
+    l.fame += merit ~/ 3;
+    l.fav = clampInt(l.fav + (win ? 3 : -1), 0, 100);
+    j(win ? 2 : -4);
+    var txt = '${e.name}家との合戦。${win ? '我が方の勝利！' : '我が方は敗れた。'}功$merit。';
+    if (win) {
+      final g = rng.range(1, 4) * mult.ceil();
+      l.gold += g;
+      txt += '恩賞と戦利で銭$g貫。';
+      lf.power += 1.5;
+      e.power = e.power - 1.5 < 3 ? 3 : e.power - 1.5;
+    } else {
+      final lost = (l.troops * .15).floor();
+      l.troops -= lost;
+      if (lost > 0) txt += '兵$lostを失う。';
+      lf.power = lf.power - 1.5 < 3 ? 3 : lf.power - 1.5;
+    }
+    if (rng.chance(danger * .8)) {
+      final dmg = rng.range(10, 30);
+      l.hp -= dmg;
+      j(-3);
+      txt += '深手を負った（体力-$dmg）。';
+    }
+    if (l.hp <= 0) {
+      die('戦傷が元で死去');
+      txt += '傷は癒えなかった。';
+    }
+    return txt;
+  }
+
+  double betrayChance() {
+    final lf = fa[l.lord]!;
+    return clampD(
+        .1 +
+            (l.troops / (l.troops + lf.power * 3)) * .6 +
+            (has('amb') ? .1 : 0) -
+            l.fav / 400 +
+            (l.chi + l.un) / 600 +
+            (has('loyal') ? -.1 : 0),
+        .05,
+        .8);
+  }
+
+  String doBetray(double p) {
+    final lf = fa[l.lord]!;
+    if (rng.chance(p)) {
+      l.rank = 8;
+      l.maxRank = l.maxRank > 8 ? l.maxRank : 8;
+      l.fame += 30;
+      lf.power = lf.power * .85 + l.troops * .3;
+      l.gold += 40;
+      l.troops = 0;
+      j(10);
+      return '下剋上成功！${l.lord}家を乗っ取り、ついに大名の座に就いた！';
+    }
+    if (rng.chance(.7)) {
+      die('謀反に失敗し、処刑された');
+      return '謀反は露見し、捕らえられて処刑された…';
+    }
+    l.rank = 0;
+    l.lord = null;
+    l.troops = 0;
+    l.fame -= 20;
+    l.fav = 0;
+    l.ronin = true;
+    l.gold = (l.gold * .3).floor();
+    j(-20);
+    return '謀反に敗れたが、命からがら国を逃れた。浪人となる。';
+  }
+
+  double invadeP(Faction me, Faction t, double sk) =>
+      clampD(me.power * sk / (me.power * sk + t.power), .05, .95);
+
+  String doInvade(Faction t, double sk) {
+    final me = fa[l.lord]!;
+    if (rng.chance(invadeP(me, t, sk))) {
+      final gain = t.power * .6;
+      me.power += gain;
+      l.fame += 10;
+      j(3);
+      if (t.power * .4 < 8 || rng.chance(.5)) {
+        t.alive = false;
+        t.power = 0;
+        l.conq++;
+        log('${t.name}家は滅んだ。', 'big');
+      } else {
+        t.power *= .4;
+      }
+      return '${t.name}家との戦に勝利！勢力が${gain.toStringAsFixed(1)}増した。';
+    }
+    me.power *= .8;
+    l.fame -= 3;
+    j(-5);
+    if (rng.chance(.08 * (1 - l.un / 200))) {
+      die('${t.name}家との戦で討死');
+      return '${t.name}家との戦に敗れ、討死した。';
+    }
+    return '${t.name}家との戦に敗れた。勢力が削られた。';
+  }
+
+  // ---------- ターン進行 ----------
+  static double annualMort(int a) => a < 25
+      ? .012
+      : a < 35
+          ? .018
+          : a < 45
+              ? .025
+              : a < 55
+                  ? .04
+                  : a < 65
+                      ? .08
+                      : a < 75
+                          ? .16
+                          : .3;
+
+  void comeOfAge() {
+    l.rank = l.birthRank;
+    l.maxRank = l.rank;
+    final home = l.home;
+    if (l.rank >= 1) {
+      l.lord = home;
+      l.fav = l.rank >= 3 ? 35 : 25;
+    }
+    if (l.rank >= 5) {
+      l.troops = 30;
+    } else if (l.rank == 3) {
+      l.troops = 5;
+    }
+    var txt = '十五になり、${l.female ? '裳着' : '元服'}を迎えた。ここから先は、自らの選択で生きる。';
+    if (l.female && l.cls.id == 'daimyo' && rng.chance(.12)) {
+      l.rank = 8;
+      l.maxRank = 8;
+      l.troops = 0;
+      fa[home]!.power *= .9;
+      txt += '\n父に男子がなく、あなたが家督を継ぐことになった！';
+    } else if (l.rank == 8) {
+      fa[home]!.power *= .9;
+      txt += '\n父が没し、あなたは家督を継いだ。若き当主の船出である。';
+    } else if (l.rank >= 1) {
+      txt += '\n$home家での身分は「${rk[l.rank]}」。';
+    } else {
+      txt += '\n身分はなく、己の力だけが頼りだ。';
+    }
+    log(txt.replaceFirst('\n', ' '), 'big');
+    ask(l.female ? '裳着' : '元服', txt, [Choice('乱世へ歩み出す')]);
+  }
+
+  void _childTurn() {
+    l.t += 2;
+    l.hp = l.hp + 4 > l.maxhp ? l.maxhp : l.hp + 4;
+    if (rng.chance(.008 * l.cls.m * (l.hp < 40 ? 2 : 1))) {
+      die('幼くして病に倒れた');
+      log('熱病に冒され、幼くして世を去った。', 'bad');
+    }
+    rec();
+    if (l.dead != null) {
+      changed();
+      return;
+    }
+    if (age >= 15) {
+      comeOfAge();
+      return;
+    }
+    if (rng.chance(.6)) {
+      final ok = childEvents.where((e) => e.c()).toList();
+      if (ok.isNotEmpty) {
+        rng.wpick(ok, (e) => e.w).run();
+        return;
+      }
+    }
+    changed();
+  }
+
+  void endTurn() {
+    if (l.dead != null) {
+      changed();
+      return;
+    }
+    if (isChild) {
+      _childTurn();
+      return;
+    }
+    l.t++;
+    // 収支
+    if (l.rank == 0) {
+      l.gold += ((l.cls.id == 'farmer' || l.cls.id == 'fisher') ? 2 : 0) - 2;
+    } else if (l.rank < 8) {
+      l.gold += kStipend[l.rank] - (l.troops * .15).ceil();
+    } else {
+      l.gold += (fa[l.lord]!.power * .4).round();
+    }
+    if (l.gold < 0) {
+      l.gold = 0;
+      if (l.rank == 0) {
+        l.hp -= 8;
+        j(-6);
+        log('飢えが身にこたえる…', 'bad');
+      } else if (l.troops > 0) {
+        final d = (l.troops * .15).ceil();
+        l.troops -= d;
+        log('給金が払えず、兵$d人が逃散した。', 'bad');
+      }
+    }
+    l.hp = l.hp + 4 > l.maxhp ? l.maxhp : l.hp + 4;
+    // 幸福の影響
+    j((50 - l.joy).sign);
+    if (l.joy < 20) {
+      l.hp -= 2;
+    } else if (l.joy >= 70) {
+      l.hp = l.hp + 1 > l.maxhp ? l.maxhp : l.hp + 1;
+    }
+    if (l.t % 2 == 0 && age > 45 && rng.chance(.5)) {
+      l.bu = l.bu - 1 < 5 ? 5 : l.bu - 1;
+    }
+    if (l.hp <= 0) die('衰弱して死去');
+    _simWorld();
+    if (l.dead == null) {
+      if (l.female && l.married && l.rank >= 1 && l.rank < 8) l.merit += 1;
+      // 昇進
+      while (l.rank >= 1 && l.rank < 7) {
+        final n = kPromo[l.rank + 1]!;
+        if (l.merit >= n.merit && l.fav >= n.fav && l.troops >= n.troops) {
+          l.rank++;
+          if (l.rank > l.maxRank) l.maxRank = l.rank;
+          final bonus = l.rank * 10;
+          l.gold += bonus;
+          j(6);
+          log('昇進！${rk[l.rank]}に取り立てられた。恩賞として銭$bonus貫。', 'big');
+        } else {
+          break;
+        }
+      }
+      // 家族
+      if (l.married &&
+          age >= 16 &&
+          age <= (l.female ? 40 : 60) &&
+          l.kids < 8 &&
+          rng.chance(l.female ? .10 : .06)) {
+        l.kids++;
+        j(8);
+        log('子が生まれた（${l.kids}人目）。', 'good');
+        final risk = clampD((l.hp < 40 ? .08 : .03) * (has('hardy') ? .7 : 1), 0, .2);
+        if (l.female && rng.chance(risk)) {
+          die('産褥で亡くなった');
+          log('お産が長引き、力尽きた。', 'bad');
+        }
+      }
+      if (l.dead == null && l.kids > 0 && rng.chance(.012 * l.kids)) {
+        l.kids--;
+        j(-25);
+        log('幼い我が子を病で失った。', 'bad');
+      }
+      // 天寿
+      if (l.dead == null) {
+        final a = age;
+        var dp = annualMort(a) / 2 * l.cls.m;
+        if (l.hp < 30) dp *= 2;
+        if (has('sickly')) dp *= 1.5;
+        if (has('hardy')) dp *= .7;
+        if (l.joy < 20) {
+          dp *= 1.3;
+        } else if (l.joy >= 70) {
+          dp *= .9;
+        }
+        if (a >= 85 || rng.chance(dp)) die(a >= 55 ? '天寿をまっとうした' : '病に倒れた');
+      }
+      // 天下・時代の終わり
+      if (l.dead == null) {
+        if (l.rank == 8 && share >= .5) {
+          l.victory = true;
+          l.rank = 9;
+          l.maxRank = 9;
+          l.end = 'victory';
+        } else if (year > 1600) {
+          l.end = 'era';
+        }
+      }
+    }
+    rec();
+    if (l.dead != null || l.end != null) {
+      changed();
+      return;
+    }
+    if (rng.chance(.65)) {
+      final ok = events.where((e) => e.c()).toList();
+      if (ok.isNotEmpty) {
+        rng.wpick(ok, (e) => e.w).run();
+        return;
+      }
+    }
+    changed();
+  }
+
+  void _simWorld() {
+    final al = alive;
+    for (final f in al) {
+      f.power = f.power * (1 + rng.range(0, 6) / 1000);
+      if (f.power > 120) f.power = 120;
+    }
+    if (al.length > 2 && rng.chance(.4)) {
+      final a = rng.wpick(al, (f) => f.power);
+      final d = rng.pick(al.where((f) => f != a).toList());
+      if (rng.chance(clampD(a.power / (a.power + d.power), .15, .85))) {
+        a.power += d.power * .55;
+        if (d.power * .25 < 6 || rng.chance(.5)) {
+          d.alive = false;
+          d.power = 0;
+          log('【世】${a.name}家が${d.name}家を滅ぼした。');
+          _lordLost(d, a);
+        } else {
+          d.power *= .25;
+          log('【世】${a.name}家が${d.name}家を破った。');
+        }
+      } else {
+        a.power *= .9;
+        log('【世】${a.name}家が${d.name}家に攻め入るも、退けられた。');
+      }
+    }
+  }
+
+  void _lordLost(Faction d, Faction a) {
+    if (l.lord != d.name || l.dead != null) return;
+    if (l.rank >= 8) {
+      l.rank = 0;
+      l.lord = null;
+      l.troops = 0;
+      l.gold = (l.gold * .3).floor();
+      l.fav = 0;
+      l.ronin = true;
+      j(-25);
+      log('国は滅んだ…浪々の身となる。', 'bad');
+      if (rng.chance(.4)) die('国と共に滅んだ');
+    } else {
+      l.lord = a.name;
+      l.rank = l.rank - 1 < 1 ? 1 : l.rank - 1;
+      l.fav = 10;
+      l.troops = (l.troops * .5).floor();
+      j(-8);
+      log('主家が滅び、${a.name}家に降った。位は${rk[l.rank]}に。', 'bad');
+    }
+  }
+
+  // ---------- 表示用の計算 ----------
+  String rankName() {
+    if (isChild) return '${l.clsName}の子';
+    if (l.rank == 0) {
+      return l.ronin ? (l.female ? '尼・流浪' : '浪人') : '${l.clsName}（無役）';
+    }
+    return rk[l.rank];
+  }
+
+  String nextPromo() {
+    if (isChild) return '${l.female ? '裳着' : '元服'}まであと${15 - age}年';
+    if (l.rank == 0) return '仕官して身分を得る';
+    if (l.rank == 7) return l.female ? '好機を待つ（後見など）' : '下剋上か主君の死で大名へ';
+    if (l.rank >= 8) return '天下まで：勢力占有率 ${(share * 100).round()}% / 50%';
+    final n = kPromo[l.rank + 1]!;
+    return '功${l.merit}/${n.merit}　信頼${l.fav}/${n.fav}　兵${l.troops}/${n.troops}';
+  }
+
+  double get avgJoy =>
+      l.hist.isEmpty ? 50 : l.hist.fold<double>(0, (s, p) => s + p.joy) / l.hist.length;
+
+  int get score {
+    final a = age;
+    if (a < 15) return a;
+    return l.maxRank * 120 +
+        l.merit +
+        l.fame +
+        l.conq * 60 +
+        (l.victory ? 1000 : 0) +
+        (a - 15) * 2 +
+        l.kids * 10 +
+        (avgJoy / 2).round();
+  }
+
+  bool get finished => life != null && (l.dead != null || l.end != null);
+}
