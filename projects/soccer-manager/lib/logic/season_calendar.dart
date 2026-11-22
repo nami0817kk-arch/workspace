@@ -10,6 +10,7 @@ import '../models/league_theme.dart';
 /// - シーズンは8月上旬(節が多い部は8月1日以降、それ以外は8日以降。
 ///   ドイツ・フランスは15日以降)の土曜に始まり、5月31日までに終える。
 /// - リーグ戦は土曜。代表ウィーク(9・10・11・3月の第2土曜の週)は入れない。
+///   シーズンの後の6月上旬にも代表ウィークがある([juneWindowDays])。
 /// - 年末年始: イングランドは12/26・12/29・1/1 に中2日で詰める。
 ///   ドイツは12/21〜1/14 がウィンターブレーク。他の国は12/24〜1/2 を休む。
 /// - 土曜が足りない部(46節など)は、ふつうの週の火曜にも節を入れる。
@@ -74,11 +75,35 @@ class SeasonCalendar {
     ];
   }
 
-  /// 代表ウィークとして空ける日(その土曜の5日前の月曜〜3日後の火曜)。
+  /// 代表ウィークとして空ける日(その土曜の5日前の月曜〜3日後の火曜)と、
+  /// シーズンが終わった後の6月の代表ウィーク([juneWindowDays])。
   static Set<DateTime> internationalWindowDays(int season) => {
         for (final sat in internationalSaturdays(season))
           for (var i = -5; i <= 3; i++) _addDays(sat, i),
+        ...juneWindowDays(season),
       };
+
+  /// シーズンが終わった後(翌年)の6月の代表ウィーク(2026-11-22)。6月1日
+  /// 以降の最初の月曜から9日間(翌週の火曜まで)。リーグ戦は5月31日までに
+  /// 終えるので、ぶつからない。オフなので週の処理は回っていないが、今日を
+  /// 進めたときに代表の選手を呼ぶ(GameState の代表召集)。
+  static Set<DateTime> juneWindowDays(int season) {
+    final june1 = DateTime(startYear(season) + 1, 6, 1);
+    final monday = _addDays(june1, (DateTime.monday - june1.weekday) % 7);
+    return {for (var i = 0; i < 9; i++) _addDays(monday, i)};
+  }
+
+  /// アフリカネイションズカップ(2年に1度、奇数年の1月〜2月上旬)の期間
+  /// (両端含む)。シーズンの後半の1月が奇数年の季だけ。1月8日以降の最初の
+  /// 月曜から4週間(28日)。リーグ戦は止まらず、アフリカの代表に入る選手が
+  /// クラブを離れる。無い季は null。
+  static (DateTime, DateTime)? africaCupOfNations(int season) {
+    final year = startYear(season) + 1;
+    if (year.isEven) return null;
+    final jan8 = DateTime(year, 1, 8);
+    final start = _addDays(jan8, (DateTime.monday - jan8.weekday) % 7);
+    return (start, _addDays(start, 27));
+  }
 
   /// 年末年始にリーグ戦を休む期間(両端含む)。イングランドは休まずに
   /// 詰めるので null。
@@ -200,6 +225,8 @@ class SeasonCalendar {
         var tail = slots.isEmpty ? start : slots.last;
         while (extra.length < deficit) {
           tail = _addDays(tail, 7);
+          // 6月の代表ウィークには入れない。
+          if (blackout.contains(tail)) continue;
           extra.add(tail);
         }
       }
@@ -268,17 +295,28 @@ class SeasonCalendar {
   }
 
   /// [after]より後の、最初のカップ戦向きの平日(国内は火曜、大陸は水曜)。
-  /// リーグ戦が終わった後(オフ)のカップ戦に使う。
+  /// リーグ戦が終わった後(オフ)のカップ戦に使う。6月の代表ウィークは
+  /// 避ける。
   static DateTime nextCupWeekdayAfter(DateTime after, {bool continental = false}) {
     final want = continental ? DateTime.wednesday : DateTime.tuesday;
     var d = _addDays(dateOnly(after), 1);
-    while (d.weekday != want) {
+    while (d.weekday != want || juneWindowDays(seasonOf(d)).contains(d)) {
       d = _addDays(d, 1);
     }
     return d;
   }
 
-  /// [day]がリーグ戦を入れない代表ウィークの中か。
+  /// [day]が入る季(7月1日から翌年6月30日まで)。
+  static int seasonOf(DateTime day) =>
+      (day.month >= 7 ? day.year : day.year - 1) - firstSeasonYear + 1;
+
+  /// [day]がリーグ戦を入れない代表ウィークの中か(6月の代表ウィークも含む)。
   bool isInternationalWindow(DateTime day) =>
       internationalWindowDays(season).contains(dateOnly(day));
+
+  /// [day]がアフリカネイションズカップの期間の中か(無い季は false)。
+  bool isAfricaCupOfNations(DateTime day) {
+    final r = africaCupOfNations(season);
+    return r != null && _inRange(dateOnly(day), r);
+  }
 }
