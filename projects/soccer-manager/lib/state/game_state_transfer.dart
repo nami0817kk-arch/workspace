@@ -1752,9 +1752,12 @@ extension GameStateTransfer on GameState {
   /// で、リーグ戦を入れない週)に入った最初の週の処理で、リーグの全クラブ
   /// から代表に入る力の選手を一斉に呼ぶ。選手の国籍ごとに総合力の高い順に、
   /// その国の枠まで。代表ウィークが終われば戻る([_releaseInternationalDuty])。
-  /// 6月の代表ウィークはリーグ戦が終わった後(オフ)で、週の処理が止まって
-  /// いるので呼ばない。アフリカの国籍がいないので、冬のアフリカ・
-  /// ネイションズカップは無い。自クラブで呼ばれた選手の名前を返す(通知用)。
+  /// 6月の代表ウィーク(リーグ戦が終わった後のオフ)は週の処理が止まって
+  /// いるので、今日を進めたときに[_callUpForJuneWindow]で呼ぶ(2026-11-22)。
+  /// 奇数年の1〜2月のアフリカネイションズカップには、アフリカの代表の選手
+  /// ([GameStateNation.africanTeamFor])が大会の間クラブを離れる
+  /// ([_callUpForAfricaCup]。リーグ戦は止まらない)。
+  /// 自クラブで呼ばれた選手の名前を返す(通知用)。
   List<String> _advanceInternationalDuty() {
     final s = _save!;
     final teams = s.league.teams;
@@ -1771,17 +1774,32 @@ extension GameStateTransfer on GameState {
     final cal = seasonCalendar;
     final day = today;
     final weekBefore = DateTime(day.year, day.month, day.day - 7);
+    final called = <String>[];
     // 代表ウィークに入った最初の週の処理だけで呼ぶ(9日間の代表ウィークに
     // 週の処理が2回入っても、二度呼ばない)。
-    if (!cal.isInternationalWindow(day) ||
-        cal.isInternationalWindow(weekBefore)) {
-      return const [];
+    if (cal.isInternationalWindow(day) &&
+        !cal.isInternationalWindow(weekBefore)) {
+      called.addAll(_callUpInternationals());
     }
+    // アフリカネイションズカップも、期間に入った最初の週の処理で呼ぶ。
+    if (cal.isAfricaCupOfNations(day) &&
+        !cal.isAfricaCupOfNations(weekBefore)) {
+      called.addAll(_callUpForAfricaCup());
+    }
+    return called;
+  }
 
+  /// 代表に入る力の選手を、リーグの全クラブから一斉に呼ぶ(代表ウィーク)。
+  /// 選手の代表ごと(国籍の国、アフリカの代表の選手はその代表)に総合力の
+  /// 高い順に、その代表の枠まで。[africaOnly]ならアフリカの代表だけ。
+  /// [weeks]は呼ぶ週数。自クラブで呼ばれた選手を返す。
+  List<Player> _selectInternationals({bool africaOnly = false, int weeks = 1}) {
+    final s = _save!;
     final foreign = _foreignTeamIds();
-    final byNation = <LeagueTheme, List<Player>>{};
+    final home = currentLeagueTheme;
+    final bySquad = <String, List<Player>>{};
     final teamOf = <String, Team>{};
-    for (final t in teams) {
+    for (final t in s.league.teams) {
       final club = t.id == s.userTeamId ? null : t;
       for (final p in t.players) {
         if (p.isInjured ||
@@ -1790,22 +1808,75 @@ extension GameStateTransfer on GameState {
             p.overall < internationalCallUpMinOverall) {
           continue;
         }
-        byNation.putIfAbsent(_nationalityAt(p, club, foreign), () => []).add(p);
+        final nation = _nationalityAt(p, club, foreign);
+        final african = GameStateNation.africanTeamFor(p.id, nation);
+        if (africaOnly && african == null) continue;
+        final key = african != null
+            ? 'africa$african'
+            : nation == home
+                ? 'home'
+                : nation.name;
+        bySquad.putIfAbsent(key, () => []).add(p);
         teamOf[p.id] = t;
       }
     }
-    final home = currentLeagueTheme;
-    final called = <String>[];
-    for (final entry in byNation.entries) {
-      final quota =
-          entry.key == home ? homeNationCallUpQuota : foreignNationCallUpQuota;
+    final mine = <Player>[];
+    for (final entry in bySquad.entries) {
+      final quota = entry.key == 'home'
+          ? homeNationCallUpQuota
+          : foreignNationCallUpQuota;
       final pool = entry.value..sort((a, b) => b.overall.compareTo(a.overall));
       for (final p in pool.take(quota)) {
-        p.internationalDutyWeeksRemaining = 1;
-        if (teamOf[p.id]?.id == s.userTeamId) called.add(p.name);
+        p.internationalDutyWeeksRemaining = weeks;
+        if (teamOf[p.id]?.id == s.userTeamId) mine.add(p);
       }
     }
-    return called;
+    return mine;
+  }
+
+  /// 代表ウィークの召集。自クラブで呼ばれた選手の名前を返す。
+  List<String> _callUpInternationals() =>
+      [for (final p in _selectInternationals()) p.name];
+
+  /// アフリカネイションズカップの召集。大会が終わるまで(週の処理で先に
+  /// 戻らないよう、残りの日数ぶんの週を入れる)クラブを離れる。ニュースで
+  /// 知らせ、自クラブで呼ばれた選手の名前を返す。
+  List<String> _callUpForAfricaCup() {
+    final range = SeasonCalendar.africaCupOfNations(_save!.league.season);
+    if (range == null) return const [];
+    final daysLeft = range.$2.difference(SeasonCalendar.dateOnly(today)).inDays;
+    final weeks = max(1, (daysLeft + 7) ~/ 7);
+    final mine = _selectInternationals(africaOnly: true, weeks: weeks);
+    final until = TransferWindowCalendar.formatMonthDay(range.$2);
+    if (mine.isEmpty) {
+      _logNews(
+          Tr.pick('アフリカネイションズカップが始まった($untilまで)。自クラブから呼ばれた選手はいない。',
+              'The Africa Cup of Nations has begun (until $until). None of our players were called up.'),
+          context: Tr.pick('代表', 'International'));
+      return const [];
+    }
+    LineupUtils.autoFill(userTeam);
+    final names = [for (final p in mine) p.name];
+    _logNews(
+        Tr.pick(
+            'アフリカネイションズカップ($untilまで)に${names.join('、')}が呼ばれた。期間中のリーグ戦には出られない。',
+            "${names.join(', ')} ${names.length == 1 ? 'has' : 'have'} been called up for the Africa Cup of Nations (until $until) and will miss league games in the meantime."),
+        context: Tr.pick('代表', 'International'));
+    return names;
+  }
+
+  /// シーズンが終わった後(オフ)の6月の代表ウィーク。オフは週の処理が
+  /// 止まっているので、今日が[before]から[after]へ進むあいだに6月の
+  /// 代表ウィークが始まったら、ここで呼ぶ。代表ウィークが終わった日まで
+  /// 一気に進んだときは、呼んですぐ戻す(疲れ・まれな怪我は残る)。
+  void _callUpForJuneWindow(DateTime before, DateTime after) {
+    final s = _save!;
+    if (s.league.nextUnplayedFixture != null) return;
+    final june = SeasonCalendar.juneWindowDays(s.league.season);
+    final start = june.reduce((a, b) => a.isBefore(b) ? a : b);
+    if (!before.isBefore(start) || after.isBefore(start)) return;
+    final called = _callUpInternationals();
+    lastInternationalCallUps = [...lastInternationalCallUps, ...called];
   }
 
   /// 代表から戻った選手に足す疲れの幅(この値〜+[internationalReturnFatigueSpread])。
@@ -1828,12 +1899,25 @@ extension GameStateTransfer on GameState {
   /// 戻った選手には疲れを少し足し、まれに([internationalInjuryChance])
   /// 軽い怪我(打撲・肉離れ、1〜2週)で戻る(2026-11-22)。自クラブの選手の
   /// 怪我はニュースに出す。
+  ///
+  /// アフリカネイションズカップの間は、アフリカの代表の選手は戻らない
+  /// (ほかの選手は戻る)。
   void _releaseInternationalDuty() {
     final s = _save!;
-    if (seasonCalendar.isInternationalWindow(today)) return;
+    final cal = seasonCalendar;
+    if (cal.isInternationalWindow(today)) return;
+    final afcon = cal.isAfricaCupOfNations(today);
+    final foreign = afcon ? _foreignTeamIds() : const <String, String>{};
     for (final t in s.league.teams) {
+      final club = t.id == s.userTeamId ? null : t;
       for (final p in t.players) {
         if (p.internationalDutyWeeksRemaining <= 0) continue;
+        if (afcon &&
+            GameStateNation.africanTeamFor(
+                    p.id, _nationalityAt(p, club, foreign)) !=
+                null) {
+          continue;
+        }
         p.internationalDutyWeeksRemaining = 0;
         _returnFromInternationalDuty(t, p);
       }
@@ -1868,6 +1952,12 @@ extension GameStateTransfer on GameState {
   /// テスト用: 代表召集の週次処理を、今日の日付で走らせる。
   @visibleForTesting
   List<String> debugAdvanceInternationalDuty() => _advanceInternationalDuty();
+
+  /// テスト用: 今日が[before]から[after]へ進んだとして、オフの6月の
+  /// 代表ウィークの召集を走らせる。
+  @visibleForTesting
+  void debugCallUpForJuneWindow(DateTime before, DateTime after) =>
+      _callUpForJuneWindow(before, after);
 
   /// テスト用: 代表ウィークの外なら代表の選手を戻す。
   @visibleForTesting

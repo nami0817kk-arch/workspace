@@ -1399,6 +1399,14 @@ extension GameStateSeason on GameState {
               : _save!.otherDivisionLeagues[lowerTier - 1]!.sortedStandings))
             r.teamId: r.points,
         },
+        // 上の部の勝ち点(イタリアの2部は、16位と17位の差が4点以上なら
+        // プレーアウトを行わずに17位が落ちる)。
+        tier1Points: {
+          for (final r in (upperTier == playedTier
+              ? standings
+              : _save!.otherDivisionLeagues[upperTier - 1]!.sortedStandings))
+            r.teamId: r.points,
+        },
       );
       final upperIds = upperOrder.map((t) => t.id).toSet();
       final lowerIds = lowerOrder.map((t) => t.id).toSet();

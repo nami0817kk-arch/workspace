@@ -187,14 +187,17 @@ void main() {
 
     test('イタリア: セリエCは自動3+4〜9位のプレーオフで1枠(1回戦は延長なし、決勝は2試合合計)', () {
       final rules = LeagueTheme.italy.rulesBelow(2);
-      expect(rules.autoDown, 4);
+      // 2部から落ちるのは自動3+プレーアウトの負け1(2026-11-22)。
+      expect(rules.autoDown, 3);
+      expect(rules.relegationPlayout, isTrue);
+      expect(rules.relegationPlaces, 4);
       expect(rules.autoUp, 3);
       expect(rules.playoffPool, 6);
       expect(rules.playoffFormat, PlayoffFormat.serieC);
       for (var i = 0; i < 6; i++) {
         final r = run(LeagueTheme.italy, 2);
-        expect(r.promotionPlayoff.length, 2 + 4 + 2,
-            reason: '1回戦2試合+準決勝2×2試合+決勝2試合');
+        expect(r.promotionPlayoff.length, 2 + 4 + 2 + 2,
+            reason: '1回戦2試合+準決勝2×2試合+決勝2試合+プレーアウト2試合');
         expect(r.promotedTeamNames.take(3), ['l0', 'l1', 'l2']);
         expect(r.promotedTeamNames.length, 4);
         expect(r.relegatedTeamNames.length, 4);
@@ -219,6 +222,8 @@ void main() {
 
   group('フランスの入れ替え戦は2試合合計', () {
     test('1部と2部の間も、2部と3部の間も', () {
+      // 1部と2部の間は、2部の3〜5位のプレーオフ(1試合ずつ)が前に付く
+      // (2026-11-22)。ここでは入れ替え戦の2試合だけを見る。
       for (final upper in [1, 2]) {
         final rules = LeagueTheme.france.rulesBelow(upper);
         expect(rules.relegationPlayoff, isTrue);
@@ -240,12 +245,127 @@ void main() {
           tier2PlayedOrder: low,
           rules: rules,
         );
-        expect(r.promotionPlayoff.length, 2);
-        expect(r.promotionPlayoff.first.homeId, 'l2', reason: '第1戦は下の部のホーム');
-        expect(r.promotionPlayoff.last.homeId, 'u3', reason: '第2戦は上の部のホーム');
-        expect(r.promotionPlayoff.first.winnerId,
-            r.promotionPlayoff.last.winnerId);
+        expect(r.promotionPlayoff.length, upper == 1 ? 4 : 2);
+        final barrage = r.promotionPlayoff.skip(r.promotionPlayoff.length - 2);
+        final lowerSide = upper == 1 ? r.promotionPlayoff[1].winnerId : 'l2';
+        expect(barrage.first.homeId, lowerSide, reason: '第1戦は下の部のホーム');
+        expect(barrage.last.homeId, 'u3', reason: '第2戦は上の部のホーム');
+        expect(barrage.first.winnerId, barrage.last.winnerId);
       }
+    });
+
+    test('1部と2部の間: 2部の3〜5位のプレーオフ(4位対5位→勝者対3位)の勝者が1部16位と戦う', () {
+      final rules = LeagueTheme.france.rulesBelow(1);
+      expect(rules.relegationPlayoffQualifiers, 3);
+      expect(LeagueTheme.france.rulesBelow(2).relegationPlayoffQualifiers, 1);
+      final up = [
+        for (var i = 0; i < 18; i++)
+          PlayerGenerator.generateSquad(
+              id: 'u$i', name: 'u$i', strengthTier: 70),
+      ];
+      final low = [
+        for (var i = 0; i < 18; i++)
+          PlayerGenerator.generateSquad(
+              id: 'l$i', name: 'l$i', strengthTier: 70),
+      ];
+      for (var k = 0; k < 6; k++) {
+        final r = PromotionEngine.resolve(
+          tier1Teams: up,
+          tier2Teams: low,
+          tier1PlayedOrder: up,
+          tier2PlayedOrder: low,
+          rules: rules,
+        );
+        final ms = r.promotionPlayoff;
+        expect(ms.length, 4, reason: '1回戦1+2回戦1+入れ替え戦2');
+        // 1回戦: 4位(ホーム)対5位。
+        expect(ms[0].homeId, 'l3');
+        expect(ms[0].awayId, 'l4');
+        // 2回戦: 3位(ホーム)対1回戦の勝者。
+        expect(ms[1].homeId, 'l2');
+        expect(ms[1].awayId, ms[0].winnerId);
+        // 入れ替え戦: 2回戦の勝者対1部16位(2試合合計)。
+        expect(ms[2].homeId, ms[1].winnerId);
+        expect(ms[2].awayId, 'u15');
+        expect(ms[3].homeId, 'u15');
+        // 上位2つは自動昇格。下位2つは自動降格。
+        expect(r.promotedTeamNames.take(2), ['l0', 'l1']);
+        expect(r.relegatedTeamNames.take(2), ['u16', 'u17']);
+        // 入れ替え戦の勝者が1部に入り、部の大きさは変わらない。
+        expect(r.tier1.any((t) => t.id == ms[3].winnerId), isTrue);
+        expect(r.tier1.length, 18);
+        expect(r.tier2.length, 18);
+        // 3〜5位のうち入れ替え戦に出なかったクラブは上がらない。
+        for (final id in ['l2', 'l3', 'l4']) {
+          if (id == ms[1].winnerId) continue;
+          expect(r.tier1.any((t) => t.id == id), isFalse);
+        }
+      }
+      expect(LeagueTheme.france.describeRules(1), contains('3'));
+    });
+  });
+
+  group('イタリアの2部の降格プレーアウト', () {
+    List<Team> squads(String p, int n) => [
+          for (var i = 0; i < n; i++)
+            PlayerGenerator.generateSquad(
+                id: '$p$i', name: '$p$i', strengthTier: 70),
+        ];
+
+    test('16位対17位を2試合合計で行い、負けた方が落ちる(18〜20位は自動)', () {
+      final up = squads('u', 20);
+      final low = squads('l', 20);
+      for (var k = 0; k < 6; k++) {
+        final r = PromotionEngine.resolve(
+          tier1Teams: up,
+          tier2Teams: low,
+          tier1PlayedOrder: up,
+          tier2PlayedOrder: low,
+          rules: LeagueTheme.italy.rulesBelow(2),
+          // 16位と17位の差は3点(行う)。
+          tier1Points: {for (var i = 0; i < 20; i++) 'u$i': 60 - i * 3},
+        );
+        final playout = r.promotionPlayoff
+            .where((m) => m.homeId == 'u15' || m.homeId == 'u16')
+            .toList();
+        expect(playout.length, 2);
+        expect(playout.first.homeId, 'u16', reason: '第1戦は17位のホーム');
+        expect(playout.last.homeId, 'u15', reason: '第2戦は16位のホーム');
+        expect(playout.where((m) => m.decidedByPenalties), isEmpty,
+            reason: '並べば順位が上が残る');
+        final stays = playout.last.winnerId;
+        final goes = stays == 'u15' ? 'u16' : 'u15';
+        expect(r.relegatedTeamNames, containsAll(['u17', 'u18', 'u19', goes]));
+        expect(r.relegatedTeamNames.length, 4);
+        expect(r.tier1.any((t) => t.id == stays), isTrue);
+        expect(r.tier1.length, 20);
+        expect(r.tier2.length, 20);
+      }
+    });
+
+    test('16位と17位の勝ち点差が4以上なら行わずに17位が落ちる', () {
+      final up = squads('u', 20);
+      final low = squads('l', 20);
+      final r = PromotionEngine.resolve(
+        tier1Teams: up,
+        tier2Teams: low,
+        tier1PlayedOrder: up,
+        tier2PlayedOrder: low,
+        rules: LeagueTheme.italy.rulesBelow(2),
+        tier1Points: {for (var i = 0; i < 20; i++) 'u$i': 80 - i * 4},
+      );
+      expect(
+          r.promotionPlayoff
+              .where((m) => m.homeId == 'u15' || m.homeId == 'u16'),
+          isEmpty);
+      expect(r.relegatedTeamNames, containsAll(['u16', 'u17', 'u18', 'u19']));
+      expect(r.relegatedTeamNames.length, 4);
+      expect(r.tier1.any((t) => t.id == 'u15'), isTrue);
+    });
+
+    test('1部と2部の間(セリエA→B)にはプレーアウトは無い', () {
+      expect(LeagueTheme.italy.rulesBelow(1).relegationPlayout, isFalse);
+      expect(LeagueTheme.italy.describeRules(2), contains('4'));
     });
   });
 

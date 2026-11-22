@@ -198,6 +198,21 @@ class PromotionRules {
   /// 当たる2つの対戦の勝者が上がり、決勝は行わない)。
   final int playoffSpots;
 
+  /// 入れ替え戦に出る下の部のクラブを決めるプレーオフに出るクラブ数
+  /// (自動昇格のすぐ下から)。1なら自動昇格のすぐ下がそのまま出る。3なら
+  /// 4番手対5番手(1試合)の勝者が3番手と戦い(1試合)、その勝者が出る
+  /// (フランスの1部と2部の間。2部の3〜5位。2026-11-22)。
+  final int relegationPlayoffQualifiers;
+
+  /// 上の部の降格プレーアウトがあるか(イタリアの2部。2026-11-22)。自動降格
+  /// ([autoDown])のすぐ上の2クラブ(セリエBの16位と17位)が2試合合計で
+  /// 戦い、負けた方が下の部へ落ちる。合計で並べば順位が上が残る。
+  final bool relegationPlayout;
+
+  /// プレーアウトの2クラブの勝ち点の差がこれ以上なら、行わずに下のクラブが
+  /// 落ちる(イタリアの2部は4点。0なら差を見ない)。
+  final int playoutSkipGap;
+
   const PromotionRules({
     required this.autoDown,
     required this.autoUp,
@@ -207,13 +222,21 @@ class PromotionRules {
     this.relegationPlayoffTwoLegs = false,
     this.playoffSkipGap = 0,
     this.playoffSpots = 1,
+    this.relegationPlayoffQualifiers = 1,
+    this.relegationPlayout = false,
+    this.playoutSkipGap = 0,
   });
 
   /// 下の部から上がるクラブ数(入れ替え戦の分は除く)。
   int get promotionPlaces => autoUp + (playoffPool >= 4 ? playoffSpots : 0);
 
-  /// 降格圏(入れ替え戦の枠を含む)の広さ。
-  int get relegationZone => autoDown + (relegationPlayoff ? 1 : 0);
+  /// 上の部から落ちるクラブ数(入れ替え戦の分は除き、プレーアウトで落ちる
+  /// 1クラブは含む)。
+  int get relegationPlaces => autoDown + (relegationPlayout ? 1 : 0);
+
+  /// 降格圏(入れ替え戦・プレーアウトの枠を含む)の広さ。
+  int get relegationZone =>
+      autoDown + (relegationPlayoff ? 1 : 0) + (relegationPlayout ? 2 : 0);
 
   /// これまでの決まり(3降格・2自動昇格+プレーオフ4チーム)。
   static const standard =
@@ -251,10 +274,13 @@ extension LeagueStructure on LeagueTheme {
   ///   3〜6位のプレーオフで2枠(2試合合計。並べば延長、それでも並べば順位が
   ///   上)。
   /// - ドイツ(3部→2部): 自動2+入れ替え戦(2試合合計)。1部と2部の間と同じ。
-  /// - イタリア(セリエC→B): 2部から4降格。自動3(3つの組の優勝)+
-  ///   4〜9位のプレーオフで1枠([PlayoffFormat.serieC])。
+  /// - イタリア(セリエC→B): 2部から4降格(18〜20位の自動3+16位対17位の
+  ///   プレーアウトの負け。勝ち点差4以上なら行わずに17位。2026-11-22)。
+  ///   自動3(3つの組の優勝)+4〜9位のプレーオフで1枠([PlayoffFormat.serieC])。
   /// - フランス(ナショナル→リーグ2): 自動2+入れ替え戦。入れ替え戦は
-  ///   1部と2部の間も含めて2試合合計。
+  ///   1部と2部の間も含めて2試合合計。1部と2部の間は、2部の3〜5位の
+  ///   プレーオフ(4位対5位→勝者対3位、どちらも1試合)の勝者が1部の16位と
+  ///   戦う(2026-11-22)。
   PromotionRules rulesBelow(int upperTier) {
     switch (this) {
       case LeagueTheme.england:
@@ -283,10 +309,12 @@ extension LeagueStructure on LeagueTheme {
       case LeagueTheme.italy:
         return switch (upperTier) {
           2 => const PromotionRules(
-              autoDown: 4,
+              autoDown: 3,
               autoUp: 3,
               playoffPool: 6,
               playoffFormat: PlayoffFormat.serieC,
+              relegationPlayout: true,
+              playoutSkipGap: 4,
             ),
           _ => const PromotionRules(
               autoDown: 3,
@@ -304,12 +332,14 @@ extension LeagueStructure on LeagueTheme {
             relegationPlayoffTwoLegs: true);
       case LeagueTheme.france:
         // 入れ替え戦(バラージュ)は2試合合計(第1戦は下の部のホーム。並べば
-        // 延長・PK戦)。2026-11-22 までは1試合だった。
-        return const PromotionRules(
+        // 延長・PK戦)。2026-11-22 までは1試合だった。1部と2部の間は、2部の
+        // 3〜5位のプレーオフの勝者が入れ替え戦に出る。
+        return PromotionRules(
             autoDown: 2,
             autoUp: 2,
             relegationPlayoff: true,
-            relegationPlayoffTwoLegs: true);
+            relegationPlayoffTwoLegs: true,
+            relegationPlayoffQualifiers: upperTier == 1 ? 3 : 1);
     }
   }
 
@@ -322,11 +352,20 @@ extension LeagueStructure on LeagueTheme {
             r.playoffSpots == 1
                 ? 'top ${r.autoUp} go up, the next ${r.playoffPool} play off for one more place'
                 : 'top ${r.autoUp} go up, the next ${r.playoffPool} play off for ${r.playoffSpots} more places')
-        : Tr.pick('上位${r.autoUp}クラブが自動昇格', 'top ${r.autoUp} go up');
+        : r.relegationPlayoff && r.relegationPlayoffQualifiers >= 3
+            ? Tr.pick(
+                '上位${r.autoUp}クラブが自動昇格、続く${r.relegationPlayoffQualifiers}クラブのプレーオフの勝者が入れ替え戦へ',
+                'top ${r.autoUp} go up, the next ${r.relegationPlayoffQualifiers} play off for a place in the relegation play-off')
+            : Tr.pick('上位${r.autoUp}クラブが自動昇格', 'top ${r.autoUp} go up');
     final down = r.relegationPlayoff
         ? Tr.pick('下位${r.autoDown}クラブが降格、その上の1クラブは入れ替え戦',
             'bottom ${r.autoDown} go down, the one above plays a relegation play-off')
-        : Tr.pick('下位${r.autoDown}クラブが降格', 'bottom ${r.autoDown} go down');
+        : r.relegationPlayout
+            ? Tr.pick(
+                '下位${r.autoDown}クラブが降格、その上の2クラブはプレーアウト(負けた方が降格。勝ち点差${r.playoutSkipGap}以上なら下が降格)',
+                'bottom ${r.autoDown} go down, the two above play a relegation play-out (the loser goes down; with a gap of ${r.playoutSkipGap} points or more, the lower club goes down)')
+            : Tr.pick(
+                '下位${r.autoDown}クラブが降格', 'bottom ${r.autoDown} go down');
     return Tr.pick('$upperTier部と${upperTier + 1}部: $down。$up。',
         'Tiers $upperTier and ${upperTier + 1}: $down; $up.');
   }

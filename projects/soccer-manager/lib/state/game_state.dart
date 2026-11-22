@@ -517,33 +517,43 @@ class GameState extends ChangeNotifier {
       final left = TransferWindowCalendar.daysBetween(today, w.closes);
       final deadline = TransferWindowCalendar.formatMonthDay(w.closes);
       if (left <= 0) {
-        return Tr.pick('${w.kind.label}: 今日が締切です($deadline)',
-            'Transfer window: deadline day today ($deadline)');
+        return Tr.pick(
+          '${w.kind.label}: 今日が締切です($deadline)',
+          'Transfer window: deadline day today ($deadline)',
+        );
       }
       if (isTransferDeadlineDay) {
-        return Tr.pick('${w.kind.label}: 締切まで残り$left日($deadline)。次の試合の前に閉まります',
-            'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline). It shuts before the next match');
+        return Tr.pick(
+          '${w.kind.label}: 締切まで残り$left日($deadline)。次の試合の前に閉まります',
+          'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline). It shuts before the next match',
+        );
       }
-      return Tr.pick('${w.kind.label}: 締切まで残り$left日($deadline)',
-          'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline)');
+      return Tr.pick(
+        '${w.kind.label}: 締切まで残り$left日($deadline)',
+        'Transfer window: ${Tr.plural(left, 'day')} to the deadline ($deadline)',
+      );
     }
     final next = TransferWindowCalendar.nextAfter(today, currentLeagueTheme);
     final opens = TransferWindowCalendar.formatMonthDay(next.opens);
-    return Tr.pick('移籍の窓: 閉じています。次の窓は$opensから',
-        'Transfer window: shut. The next one opens on $opens');
+    return Tr.pick(
+      '移籍の窓: 閉じています。次の窓は$opensから',
+      'Transfer window: shut. The next one opens on $opens',
+    );
   }
 
   /// 登録中の GK が全員出られない(怪我・出場停止・代表・貸し出し中・
   /// 名簿の外)か。窓の外でも GK を1人だけ取れる特例の条件。
   bool get isGoalkeeperEmergency {
     if (_save == null || isTransferWindowOpen) return false;
-    return !userTeam.players.any((p) =>
-        p.position == Position.gk &&
-        !p.isInjured &&
-        !p.isSuspended &&
-        !p.isOnInternationalDuty &&
-        !p.isLoanedOut &&
-        !p.notRegistered);
+    return !userTeam.players.any(
+      (p) =>
+          p.position == Position.gk &&
+          !p.isInjured &&
+          !p.isSuspended &&
+          !p.isOnInternationalDuty &&
+          !p.isLoanedOut &&
+          !p.notRegistered,
+    );
   }
 
   /// [player]を今とれるか(窓の開閉と GK の特例)。
@@ -618,8 +628,9 @@ class GameState extends ChangeNotifier {
     if (restored == null) return null;
 
     lastBackupRestoreNotice = Tr.pick(
-        'セーブデータが壊れていたため、直前の控えから復元しました。進行が少し戻っている場合があります。',
-        'Your save was damaged, so the last good copy was restored. You may be a little behind where you left off.');
+      'セーブデータが壊れていたため、直前の控えから復元しました。進行が少し戻っている場合があります。',
+      'Your save was damaged, so the last good copy was restored. You may be a little behind where you left off.',
+    );
     return restored;
   }
 
@@ -743,6 +754,9 @@ class GameState extends ChangeNotifier {
   void _repairLoadedSave(SaveGame save) {
     _syncContractClock(save);
     _reseedPlayerIdCounter(save);
+    // 足りないクラブの選手を作る(_ensureWorldSquads)より前に行う。新しく
+    // 作る選手は初めから今の水準なので、掛けてはいけない。
+    _migrateWageLevelIfNeeded(save);
     _ensureWorldSquads(save);
     save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
     _dropDanglingJobOffer(save);
@@ -765,10 +779,20 @@ class GameState extends ChangeNotifier {
     if (save.economyVersion >= SaveGame.currentEconomyVersion) return;
     final scale = incomeScale(save.currentDivisionTier);
     int up(int v) => (v * scale).round();
+    // 週俸は、選手のいるクラブの国・部の水準で作り直す(新しいゲームと同じ)。
+    final home = _homeWageLevelOf(save);
+    final teamLevels = _wageLevelsByTeamId(save);
+    final playerLevels = <String, double>{
+      for (final t in [
+        ...save.allTeams,
+        for (final l in save.foreignLeagues.values) ...l.teams,
+      ])
+        for (final p in t.players) p.id: teamLevels[t.id] ?? home,
+    };
 
     for (final p in save.allPlayers) {
       final ratio = p.marketValue / max(1, GameState.legacyMarketValue(p));
-      p.wage = weeklyWageForValue(p.marketValue);
+      p.wage = weeklyWageForValue(p.marketValue, playerLevels[p.id] ?? home);
       if (p.releaseClause != null) {
         p.releaseClause = (p.releaseClause! * ratio).round();
       }
@@ -818,12 +842,129 @@ class GameState extends ChangeNotifier {
       save.wageBudget = BoardEngine.wageBudgetFor(
         tier: save.currentDivisionTier,
         currentWeeklyWageBill: ContractEngine.weeklyWageBill(userTeam) +
-            scaleMoneyForTier(save.currentDivisionTier,
-                save.infrastructure.totalStaffWeeklyWage),
+            scaleMoneyForTier(
+              save.currentDivisionTier,
+              save.infrastructure.totalStaffWeeklyWage,
+            ),
         theme: leagueThemeFromName(save.leagueName) ?? LeagueTheme.england,
       );
     }
     save.economyVersion = SaveGame.currentEconomyVersion;
+  }
+
+  /// [save]の自クラブのいる国・部の年俸の水準([wageCountryFactor])。
+  static double _homeWageLevelOf(SaveGame save) => wageCountryFactor(
+        leagueThemeFromName(save.leagueName) ?? LeagueTheme.england,
+        save.currentDivisionTier,
+      );
+
+  /// [save]の選手を持つクラブ(自国の全部・他国の1部)の id → 年俸の水準。
+  /// 新しいゲームで選手を作るときと同じ係数(自国は今いる部、他国は1部)。
+  static Map<String, double> _wageLevelsByTeamId(SaveGame save) {
+    final home = leagueThemeFromName(save.leagueName) ?? LeagueTheme.england;
+    return {
+      for (final e in save.foreignLeagues.entries)
+        for (final t in e.value.teams)
+          t.id: wageCountryFactor(
+            LeagueTheme.values.where((x) => x.name == e.key).firstOrNull ??
+                LeagueTheme.england,
+            1,
+          ),
+      for (var i = 0; i < save.otherDivisionLeagues.length; i++)
+        for (final t in save.otherDivisionLeagues[i]?.teams ?? const <Team>[])
+          t.id: wageCountryFactor(home, i + 1),
+      for (final t in save.league.teams)
+        t.id: wageCountryFactor(home, save.currentDivisionTier),
+    };
+  }
+
+  /// 年俸が国・部によらなかった頃(版1)のセーブの週俸を、一度だけ今の
+  /// 水準に直す。
+  ///
+  /// 版1の年俸は、どこもイングランドの1部と同じ水準(係数1)で作られていた。
+  /// 新しいゲームは、選手のいるクラブの国・部の係数([wageCountryFactor])を
+  /// 掛けて作るので、同じ係数を掛ける。
+  /// - クラブの選手(自クラブ・自国の他の部・他国の1部・大陸大会の写し):
+  ///   そのクラブの係数。大陸大会の「その他の国」のクラブは、新しいゲーム
+  ///   と同じく自クラブの国・部の係数。
+  /// - 所属なし・ユース・移籍市場の選手: 自クラブの国・部の係数。
+  /// - ローン中の選手の元の週俸(戻るときの額)は、元のクラブの係数。
+  /// - 年俸と結びついた値も同じ向きにそろえる: 仮契約の週俸は加入先の
+  ///   係数、交渉中の週俸(移籍・契約更新)は自クラブの係数。理事会の給与の
+  ///   枠は、余裕(枠 − 人件費)が変わらないように選手の週俸が減った分だけ
+  ///   下げる。スペインの「最後に見た人件費」は、下がった分を「売った分」と
+  ///   数えないように見ていない(0)に戻す。フランスの人件費の上限は自クラブの
+  ///   係数を掛ける。
+  /// 係数は1以下なので週俸は下がるだけで、資金は動かさない(財政は悪く
+  /// ならない)。
+  void _migrateWageLevelIfNeeded(SaveGame save) {
+    if (save.wageLevelVersion >= SaveGame.currentWageLevelVersion) return;
+    final home = _homeWageLevelOf(save);
+    final levels = _wageLevelsByTeamId(save);
+    // 週俸の下限より下には下げない。もとから下限より低い額は上げない。
+    int scaled(int w, double f) =>
+        w <= 0 ? w : min(w, max(minWeeklyWage, (w * f).round()));
+    final done = Set<Player>.identity();
+    void scalePlayer(Player p, double f) {
+      if (!done.add(p)) return;
+      p.wage = scaled(p.wage, f);
+      if (p.loanBaseWage != null) {
+        p.loanBaseWage = scaled(p.loanBaseWage!, levels[p.loanFromClubId] ?? f);
+      }
+    }
+
+    final userTeam = _findTeam(save.league.teams, save.userTeamId);
+    final billBefore =
+        userTeam == null ? 0 : ContractEngine.weeklyWageBill(userTeam);
+    for (final t in [
+      ...save.allTeams,
+      for (final l in save.foreignLeagues.values) ...l.teams,
+      ...save.continentalTeams,
+    ]) {
+      final f = levels[t.id] ?? home;
+      for (final p in t.players) {
+        scalePlayer(p, f);
+      }
+    }
+    for (final p in [
+      ...save.youthProspects,
+      ...save.pendingYouthIntake,
+      ...save.freeAgents,
+      ...save.transferMarketPlayers,
+    ]) {
+      scalePlayer(p, home);
+    }
+
+    save.preContracts = [
+      for (final c in save.preContracts)
+        PreContract.fromJson({
+          ...c.toJson(),
+          'wage': scaled(c.wage, levels[c.toClubId] ?? home),
+        }),
+    ];
+    for (final talk in save.transferTalks) {
+      talk.demandWage = scaled(talk.demandWage, home);
+      talk.rivalWage = scaled(talk.rivalWage, home);
+    }
+    final n = save.pendingContractNegotiation;
+    if (n != null) {
+      save.pendingContractNegotiation = ContractNegotiation.fromJson({
+        ...n.toJson(),
+        'initialWage': scaled(n.initialWage, home),
+        'offeredWage': scaled(n.offeredWage, home),
+        'counterWage': scaled(n.counterWage, home),
+      });
+    }
+
+    if (userTeam != null && save.wageBudget > 0) {
+      final drop = billBefore - ContractEngine.weeklyWageBill(userTeam);
+      save.wageBudget = max(0, save.wageBudget - drop);
+    }
+    save.squadCostObserved = 0;
+    if (save.wageFreezeCap > 0) {
+      save.wageFreezeCap = max(1, (save.wageFreezeCap * home).round());
+    }
+    save.wageLevelVersion = SaveGame.currentWageLevelVersion;
   }
 
   /// 桁を変える前の市場価値(万円)。旧セーブの換算で、価値が何倍に
@@ -1048,12 +1189,16 @@ class GameState extends ChangeNotifier {
         await prefs.remove(_slotKey(target));
       } else {
         await prefs.setString(
-            _slotKey(target), await encodeSaveOffMain(_save!));
+          _slotKey(target),
+          await encodeSaveOffMain(_save!),
+        );
       }
       lastSaveError = null;
     } catch (e) {
-      lastSaveError = Tr.pick('セーブデータの保存に失敗しました。端末の空き容量を確認してください。',
-          'The game could not be saved. Check the free space on your device.');
+      lastSaveError = Tr.pick(
+        'セーブデータの保存に失敗しました。端末の空き容量を確認してください。',
+        'The game could not be saved. Check the free space on your device.',
+      );
       _notify();
     }
   }
@@ -1152,8 +1297,10 @@ class GameState extends ChangeNotifier {
   int _difficultyAdjustedTarget(int target) {
     final delta =
         _save?.difficultyOf(DifficultyItem.boardTarget).boardTargetDelta ?? 0;
-    return (target + delta)
-        .clamp(1, _save?.league.teams.length ?? teamsPerLeague);
+    return (target + delta).clamp(
+      1,
+      _save?.league.teams.length ?? teamsPerLeague,
+    );
   }
 
   Future<void> startNewGame(
@@ -1190,8 +1337,12 @@ class GameState extends ChangeNotifier {
     // (data/club_names.dart。2026-11-22)。自クラブと同じ名前は避ける。
     final namesByTier = {
       for (var t = 1; t <= totalDivisionTiers; t++)
-        t: NamePool.clubNamesForTier(theme, t, theme.teamsInTier(t),
-            avoid: {clubName}),
+        t: NamePool.clubNamesForTier(
+          theme,
+          t,
+          theme.teamsInTier(t),
+          avoid: {clubName},
+        ),
     };
     final nameCursor = <int, int>{};
     String nextName(int tier) {
@@ -1272,8 +1423,10 @@ class GameState extends ChangeNotifier {
     // 国内カップは1〜3部の全クラブ、リーグカップはイングランドだけ。
     _save!.cups = _newSeasonCups();
     // 最初のシーズンは平常。来季の予報だけ引いておく。
-    _save!.economyNext =
-        EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
+    _save!.economyNext = EconomyEngine.next(
+      EconomyPhase.normal,
+      Random().nextDouble(),
+    );
     // 難易度による初期条件の補正(資金と理事会目標の厳しさ)。
     _save!.budget = (initialBudgetFor(userStartTier, theme) *
             _save!.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
@@ -1565,8 +1718,10 @@ class GameState extends ChangeNotifier {
   /// (5部なら [initialBudgetTier5] と同じ 2億)。3部制にして3部から
   /// 始まるようになった(2026-11-22)。
   /// 国で年収の目安が違う(放映権の差)ので、初期の資金も国で違う。
-  static int initialBudgetFor(int tier,
-          [LeagueTheme theme = LeagueTheme.england]) =>
+  static int initialBudgetFor(
+    int tier, [
+    LeagueTheme theme = LeagueTheme.england,
+  ]) =>
       typicalAnnualIncome(tier, theme) ~/ 2;
 
   /// [tier] 部から始めるときの自クラブの強さ。その部の真ん中

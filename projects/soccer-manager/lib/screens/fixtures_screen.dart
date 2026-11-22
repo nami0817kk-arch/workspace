@@ -439,7 +439,7 @@ class _StandingsTabState extends State<_StandingsTab> {
     final autoPromotionEnd = above.autoUp;
     final playoffEnd = autoPromotionEnd +
         (above.playoffPool > 0 ? above.playoffPool : 0) +
-        (above.relegationPlayoff ? 1 : 0);
+        (above.relegationPlayoff ? above.relegationPlayoffQualifiers : 0);
     return Column(
       children: [
         Padding(

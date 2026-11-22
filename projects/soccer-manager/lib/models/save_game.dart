@@ -51,11 +51,15 @@ extension GameDifficultyInfo on GameDifficulty {
       };
 
   String get description => switch (this) {
-        GameDifficulty.easy => Tr.pick('初期資金1.5倍・理事会の目標が2つ緩い・移籍金が1割安い',
-            "1.5x starting funds, the board's target two places softer, transfer prices 10% lower"),
+        GameDifficulty.easy => Tr.pick(
+            '初期資金1.5倍・理事会の目標が2つ緩い・移籍金が1割安い',
+            "1.5x starting funds, the board's target two places softer, transfer prices 10% lower",
+          ),
         GameDifficulty.normal => Tr.pick('標準バランス', 'The standard balance'),
-        GameDifficulty.hard => Tr.pick('初期資金0.6倍・理事会の目標が1つ厳しい・移籍金が1割高い',
-            "0.6x starting funds, the board's target one place harder, transfer prices 10% higher"),
+        GameDifficulty.hard => Tr.pick(
+            '初期資金0.6倍・理事会の目標が1つ厳しい・移籍金が1割高い',
+            "0.6x starting funds, the board's target one place harder, transfer prices 10% higher",
+          ),
       };
 
   /// 初期資金に掛ける倍率。
@@ -92,17 +96,25 @@ extension DifficultyItemInfo on DifficultyItem {
 
   /// [d]を選んだときの、この項目の中身。
   String effect(GameDifficulty d) => switch (this) {
-        DifficultyItem.funds => Tr.pick('${d.initialBudgetFactor}倍',
-            '${d.initialBudgetFactor}x'),
+        DifficultyItem.funds => Tr.pick(
+            '${d.initialBudgetFactor}倍',
+            '${d.initialBudgetFactor}x',
+          ),
         DifficultyItem.boardTarget => d.boardTargetDelta == 0
             ? Tr.pick('標準', 'Standard')
             : d.boardTargetDelta > 0
-                ? Tr.pick('${d.boardTargetDelta}つ緩い',
-                    '${d.boardTargetDelta} place(s) softer')
-                : Tr.pick('${-d.boardTargetDelta}つ厳しい',
-                    '${-d.boardTargetDelta} place(s) harder'),
-        DifficultyItem.transferPrices => Tr.pick('${d.transferPriceFactor}倍',
-            '${d.transferPriceFactor}x'),
+                ? Tr.pick(
+                    '${d.boardTargetDelta}つ緩い',
+                    '${d.boardTargetDelta} place(s) softer',
+                  )
+                : Tr.pick(
+                    '${-d.boardTargetDelta}つ厳しい',
+                    '${-d.boardTargetDelta} place(s) harder',
+                  ),
+        DifficultyItem.transferPrices => Tr.pick(
+            '${d.transferPriceFactor}倍',
+            '${d.transferPriceFactor}x',
+          ),
       };
 }
 
@@ -167,6 +179,16 @@ class SaveGame {
 
   /// 今の国籍の決め方の版。新しいゲームはこの版で始まる。
   static const int currentNationRuleVersion = 2;
+
+  /// 選手の年俸の水準の版。1 は年俸が国・部によらなかった頃(どこも
+  /// イングランドの1部と同じ水準)。2 は国・部ごとの水準
+  /// (economy_scale.dart の wageCountryFactor。2026-11-22)を掛けた後。
+  /// 版1のセーブは、読み込んだときに一度だけ、選手のいるクラブの国・部の
+  /// 水準を掛けてから2にする。
+  int wageLevelVersion;
+
+  /// 今の年俸の水準の版。新しいゲームはこの版で始まる。
+  static const int currentWageLevelVersion = 2;
 
   /// イタリアの「EU 外の選手を他の国から取れるのは1季に2人まで」を数える
   /// ための、今季に取った人数と、その季。
@@ -370,8 +392,10 @@ class SaveGame {
 
   /// 大きな怪我の手当て(選手 id → 'pending' | 'surgery' | 'rest')。
   Map<String, String> injuryPlans;
+
   /// 育成の方針(YouthPolicy の name)。
   String youthPolicy;
+
   /// 買い戻し条項(選手 id → [買い戻しの額, 期限の年])。
   Map<String, List<int>> buyBacks;
 
@@ -380,6 +404,7 @@ class SaveGame {
 
   /// 今季、破綻して選手を投げ売りしているクラブ。
   List<String> distressedClubIds;
+
   /// クラブの文化(ClubCulture の name)と、最後に変えた季。
   String clubCulture;
   int clubCultureChangedSeason;
@@ -389,8 +414,10 @@ class SaveGame {
 
   /// 記者会見で「売らない」と言った選手と、その季(選手 id → 季)。
   Map<String, int> rumorDenied;
+
   /// 系列クラブ(提携先のクラブ id。無ければ null)。
   String? affiliateClubId;
+
   /// 自クラブでの公式戦の出場数・得点数(選手 id → 数)と、その名前。
   /// 出ていった選手も残す(クラブの歴代記録)。
   Map<String, int> clubApps;
@@ -400,6 +427,7 @@ class SaveGame {
   /// 最大の勝ち試合(「季・相手・スコア」の文と、得失点差)。
   String? biggestWin;
   int biggestWinMargin;
+
   /// 手放したクラブ(同じ国。クラブ id → 名前)と、最後に分かった
   /// その後(クラブ id → [季, 部, 順位])。
   Map<String, String> formerClubs;
@@ -412,6 +440,7 @@ class SaveGame {
   /// クラブ史上最高額の獲得・売却(万円)。
   int recordSigningFee;
   int recordSaleFee;
+
   /// オーナーが決めたクラブの見た目(無ければ自動の見た目)と、最後に変えた季。
   ClubLook? clubLook;
   int clubLookChangedSeason;
@@ -836,6 +865,7 @@ class SaveGame {
     this.ruleSet = RuleSet.britain,
     this.economyVersion = currentEconomyVersion,
     this.nationRuleVersion = currentNationRuleVersion,
+    this.wageLevelVersion = currentWageLevelVersion,
     this.nonEuSignings = 0,
     this.nonEuSigningsSeason = 0,
     Map<String, int>? cpuNonEuSignings,
@@ -1094,7 +1124,11 @@ class SaveGame {
       for (final p in retiredLegends) p.id,
     };
     var renumbered = 0;
-    for (final pool in [pendingYouthIntake, freeAgents, transferMarketPlayers]) {
+    for (final pool in [
+      pendingYouthIntake,
+      freeAgents,
+      transferMarketPlayers,
+    ]) {
       for (var i = 0; i < pool.length; i++) {
         final p = pool[i];
         if (seen.add(p.id)) continue;
@@ -1143,7 +1177,8 @@ class SaveGame {
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (clubCash.isNotEmpty) 'clubCash': clubCash,
-        if (distressedClubIds.isNotEmpty) 'distressedClubIds': distressedClubIds,
+        if (distressedClubIds.isNotEmpty)
+          'distressedClubIds': distressedClubIds,
         if (clubCulture != 'none') 'clubCulture': clubCulture,
         if (clubCultureChangedSeason > 0)
           'clubCultureChangedSeason': clubCultureChangedSeason,
@@ -1200,8 +1235,10 @@ class SaveGame {
         'ruleSet': ruleSet.name,
         'economyVersion': economyVersion,
         'nationRuleVersion': nationRuleVersion,
+        'wageLevelVersion': wageLevelVersion,
         if (nonEuSignings != 0) 'nonEuSignings': nonEuSignings,
-        if (nonEuSigningsSeason != 0) 'nonEuSigningsSeason': nonEuSigningsSeason,
+        if (nonEuSigningsSeason != 0)
+          'nonEuSigningsSeason': nonEuSigningsSeason,
         if (cpuNonEuSignings.isNotEmpty) 'cpuNonEuSignings': cpuNonEuSignings,
         if (cpuNonEuSigningsSeason != 0)
           'cpuNonEuSigningsSeason': cpuNonEuSigningsSeason,
@@ -1269,12 +1306,14 @@ class SaveGame {
             .toList(),
         'sponsorDeal': sponsorDeal?.toJson(),
         'namingDeal': namingDeal?.toJson(),
-        'pendingNamingOffers': pendingNamingOffers.map((s) => s.toJson()).toList(),
+        'pendingNamingOffers':
+            pendingNamingOffers.map((s) => s.toJson()).toList(),
         if (slotSponsors.isNotEmpty)
           'slotSponsors': slotSponsors.map((k, v) => MapEntry(k, v.toJson())),
         if (slotSponsorOffers.isNotEmpty)
-          'slotSponsorOffers':
-              slotSponsorOffers.map((k, v) => MapEntry(k, v.toJson())),
+          'slotSponsorOffers': slotSponsorOffers.map(
+            (k, v) => MapEntry(k, v.toJson()),
+          ),
         'tvDeal': tvDeal.name,
         if (seasonTicketSeason > 0) 'seasonTicketShare': seasonTicketShare,
         if (seasonTicketSeason > 0) 'seasonTicketSeason': seasonTicketSeason,
@@ -1291,8 +1330,7 @@ class SaveGame {
         'clubVision': clubVision.name,
         'visionCompliedMatchdays': visionCompliedMatchdays,
         'visionCheckedMatchdays': visionCheckedMatchdays,
-        'staffCandidates':
-            staffCandidates.map((s) => s.toJson()).toList(),
+        'staffCandidates': staffCandidates.map((s) => s.toJson()).toList(),
         'seasonAwards': seasonAwards.map((a) => a.toJson()).toList(),
         'lastReviewedSeason': lastReviewedSeason,
         'rivalTeamId': rivalTeamId,
@@ -1383,22 +1421,23 @@ class SaveGame {
         agmWageRatioPledge:
             (json['agmWageRatioPledge'] as num?)?.toDouble() ?? 0,
         taxLossCarry: json['taxLossCarry'] as int? ?? 0,
-        injuryPlans: (json['injuryPlans'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as String)),
+        injuryPlans: (json['injuryPlans'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as String),
+        ),
         youthPolicy: json['youthPolicy'] as String? ?? 'balanced',
-        clubCash: (json['clubCash'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
+        clubCash: (json['clubCash'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
         distressedClubIds: (json['distressedClubIds'] as List?)
             ?.map((e) => e as String)
             .toList(),
         clubCulture: json['clubCulture'] as String? ?? 'none',
-        clubCultureChangedSeason:
-            json['clubCultureChangedSeason'] as int? ?? 0,
-        pendingRumor: (json['pendingRumor'] as List?)
-            ?.map((e) => e as String)
-            .toList(),
-        rumorDenied: (json['rumorDenied'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
+        clubCultureChangedSeason: json['clubCultureChangedSeason'] as int? ?? 0,
+        pendingRumor:
+            (json['pendingRumor'] as List?)?.map((e) => e as String).toList(),
+        rumorDenied: (json['rumorDenied'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
         affiliateClubId: json['affiliateClubId'] as String?,
         pendingMoments: (json['pendingMoments'] as List?)
             ?.map((e) => (e as List).map((x) => x as String).toList())
@@ -1411,22 +1450,30 @@ class SaveGame {
             ? null
             : ClubLook.fromJson(json['clubLook'] as Map<String, dynamic>),
         clubLookChangedSeason: json['clubLookChangedSeason'] as int? ?? 0,
-        clubApps: (json['clubApps'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
-        clubGoals: (json['clubGoals'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
-        clubRecordNames: (json['clubRecordNames'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as String)),
+        clubApps: (json['clubApps'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
+        clubGoals: (json['clubGoals'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
+        clubRecordNames: (json['clubRecordNames'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as String),
+        ),
         biggestWin: json['biggestWin'] as String?,
         biggestWinMargin: json['biggestWinMargin'] as int? ?? 0,
-        formerClubs: (json['formerClubs'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as String)),
-        formerClubStatus: (json['formerClubStatus'] as Map?)?.map((k, v) =>
-            MapEntry(k as String,
-                (v as List).map((e) => e as int).toList())),
+        formerClubs: (json['formerClubs'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as String),
+        ),
+        formerClubStatus: (json['formerClubStatus'] as Map?)?.map(
+          (k, v) =>
+              MapEntry(k as String, (v as List).map((e) => e as int).toList()),
+        ),
         countryCoefficients: (json['countryCoefficients'] as Map?)?.map(
-            (k, v) => MapEntry(k as String,
-                (v as List).map((e) => (e as num).toDouble()).toList())),
+          (k, v) => MapEntry(
+            k as String,
+            (v as List).map((e) => (e as num).toDouble()).toList(),
+          ),
+        ),
         stadiumSubsidyPct: json['stadiumSubsidyPct'] as int? ?? 0,
         municipalityAskSeason: json['municipalityAskSeason'] as int? ?? 0,
         hasAnalytics: json['hasAnalytics'] as bool? ?? false,
@@ -1434,35 +1481,46 @@ class SaveGame {
         lastWeekCongested: json['lastWeekCongested'] as bool? ?? false,
         lastUserMatchDate: parseSaveDate(json['lastUserMatchDate']),
         lastWeeklyTickDate: parseSaveDate(json['lastWeeklyTickDate']),
-        groupClubs: (json['groupClubs'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
+        groupClubs: (json['groupClubs'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
         frontPageHeadline: json['frontPageHeadline'] as String?,
-        buyBacks: (json['buyBacks'] as Map?)?.map((k, v) => MapEntry(
-            k as String, [for (final e in (v as List)) e as int])),
+        buyBacks: (json['buyBacks'] as Map?)?.map(
+          (k, v) =>
+              MapEntry(k as String, [for (final e in (v as List)) e as int]),
+        ),
         frontPageQuote: json['frontPageQuote'] as String?,
         parachuteFromTier: json['parachuteFromTier'] as int? ?? 0,
         parachuteSeasonsLeft: json['parachuteSeasonsLeft'] as int? ?? 0,
-        playerBook: (json['playerBook'] as Map?)?.map((k, v) => MapEntry(
-            k as String, [for (final e in (v as List)) e as int])),
+        playerBook: (json['playerBook'] as Map?)?.map(
+          (k, v) =>
+              MapEntry(k as String, [for (final e in (v as List)) e as int]),
+        ),
         wageFreezeSeasons: json['wageFreezeSeasons'] as int? ?? 0,
         wageFreezeCap: json['wageFreezeCap'] as int? ?? 0,
         adminRelegation: json['adminRelegation'] as bool? ?? false,
         newsTotal: json['newsTotal'] as int? ?? 0,
         newsSeenTotal: json['newsSeenTotal'] as int? ?? 0,
         rivalOwners: (json['rivalOwners'] as List?)
-                ?.map((e) =>
-                    RivalOwner.fromJson((e as Map).cast<String, dynamic>()))
+                ?.map(
+                  (e) =>
+                      RivalOwner.fromJson((e as Map).cast<String, dynamic>()),
+                )
                 .toList() ??
             [],
         planStartSeason: json['planStartSeason'] as int? ?? 0,
         planTargetTier: json['planTargetTier'] as int? ?? 0,
         planTargetValue: json['planTargetValue'] as int? ?? 0,
         planTargetStadium: json['planTargetStadium'] as int? ?? 0,
-        lifeEvents: (json['lifeEvents'] as Map?)?.map((k, v) => MapEntry(
-            k as String, [for (final e in (v as List)) e as String])),
+        lifeEvents: (json['lifeEvents'] as Map?)?.map(
+          (k, v) =>
+              MapEntry(k as String, [for (final e in (v as List)) e as String]),
+        ),
         staffOffers: (json['staffOffers'] as List?)
-                ?.map((e) =>
-                    StaffOffer.fromJson((e as Map).cast<String, dynamic>()))
+                ?.map(
+                  (e) =>
+                      StaffOffer.fromJson((e as Map).cast<String, dynamic>()),
+                )
                 .toList() ??
             [],
         managerWarned: json['managerWarned'] as bool? ?? false,
@@ -1476,12 +1534,14 @@ class SaveGame {
         // 2026-11-22 より前の名前(japan・usa)も読める。
         ruleSet:
             RuleSet.fromName(json['ruleSet'] as String?) ?? RuleSet.britain,
-        clubValueHistory: (json['clubValueHistory'] as Map?)
-            ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
+        clubValueHistory: (json['clubValueHistory'] as Map?)?.map(
+          (k, v) => MapEntry(int.parse('$k'), v as int),
+        ),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
         ownerShare: json['ownerShare'] as int? ?? 100,
-        rivalPast: (json['rivalPast'] as List?)?.map((e) => e as int).toList() ??
-            [0, 0, 0],
+        rivalPast:
+            (json['rivalPast'] as List?)?.map((e) => e as int).toList() ??
+                [0, 0, 0],
         scenario: StartScenario.values
                 .where((s) => s.name == json['scenario'])
                 .firstOrNull ??
@@ -1491,7 +1551,8 @@ class SaveGame {
                 .toList() ??
             [],
         proposals: (json['proposals'] as List?)
-                ?.map((e) => ManagerProposal.fromJson(e as Map<String, dynamic>))
+                ?.map(
+                    (e) => ManagerProposal.fromJson(e as Map<String, dynamic>))
                 .whereType<ManagerProposal>()
                 .toList() ??
             [],
@@ -1510,39 +1571,46 @@ class SaveGame {
                 .toList() ??
             [],
         insured: json['insured'] as bool? ?? false,
-        ownerWorkDoneSeason: (json['ownerWorkDoneSeason'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
-        sellOnClauses: (json['sellOnClauses'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
+        ownerWorkDoneSeason: (json['ownerWorkDoneSeason'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
+        sellOnClauses: (json['sellOnClauses'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
         partnerClubId: json['partnerClubId'] as String?,
         youthMomentum: (json['youthMomentum'] as num?)?.toDouble() ?? 1.0,
-        facilityMomentum:
-            (json['facilityMomentum'] as num?)?.toDouble() ?? 1.0,
+        facilityMomentum: (json['facilityMomentum'] as num?)?.toDouble() ?? 1.0,
         matchdayPromoId: json['matchdayPromoId'] as String?,
         reserveFund: json['reserveFund'] as int? ?? 0,
         communityLevel: json['communityLevel'] as int? ?? 0,
         clubPolicy: ClubPolicy.values
-            .where((p) => p.name == json['clubPolicy'])
-            .firstOrNull ?? ClubPolicy.balanced,
+                .where((p) => p.name == json['clubPolicy'])
+                .firstOrNull ??
+            ClubPolicy.balanced,
         // 版が書かれていないのは、桁を変える前のセーブ。
         economyVersion: json['economyVersion'] as int? ?? 1,
         // 版が書かれていないのは、国籍を部で変える前のセーブ。
         nationRuleVersion: json['nationRuleVersion'] as int? ?? 1,
+        // 版が書かれていないのは、年俸に国・部の水準を掛ける前のセーブ。
+        wageLevelVersion: json['wageLevelVersion'] as int? ?? 1,
         nonEuSignings: json['nonEuSignings'] as int? ?? 0,
         nonEuSigningsSeason: json['nonEuSigningsSeason'] as int? ?? 0,
-        cpuNonEuSignings: (json['cpuNonEuSignings'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
+        cpuNonEuSignings: (json['cpuNonEuSignings'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
         cpuNonEuSigningsSeason: json['cpuNonEuSigningsSeason'] as int? ?? 0,
         squadCostAllowance: json['squadCostAllowance'] as int? ?? 0,
         squadCostAllowanceSeason: json['squadCostAllowanceSeason'] as int? ?? 0,
         squadCostObserved: json['squadCostObserved'] as int? ?? 0,
         marketIndex: json['marketIndex'] as int? ?? 100,
         economyPhase: EconomyPhase.values
-            .where((e) => e.name == json['economyPhase'])
-            .firstOrNull ?? EconomyPhase.normal,
+                .where((e) => e.name == json['economyPhase'])
+                .firstOrNull ??
+            EconomyPhase.normal,
         economyNext: EconomyPhase.values
-            .where((e) => e.name == json['economyNext'])
-            .firstOrNull ?? EconomyPhase.normal,
+                .where((e) => e.name == json['economyNext'])
+                .firstOrNull ??
+            EconomyPhase.normal,
         transferBanSeasons: json['transferBanSeasons'] as int? ?? 0,
         pendingPointsDeduction: json['pendingPointsDeduction'] as int? ?? 0,
         ledgers: (json['ledgers'] as List?)
@@ -1554,7 +1622,8 @@ class SaveGame {
             .firstOrNull,
         bigMatchSeason: json['bigMatchSeason'] as int? ?? 0,
         bigMatchesUsed: json['bigMatchesUsed'] as int? ?? 0,
-        bigMatchDeclaredMatchday: json['bigMatchDeclaredMatchday'] as int? ?? -1,
+        bigMatchDeclaredMatchday:
+            json['bigMatchDeclaredMatchday'] as int? ?? -1,
         achievedGoals: (json['achievedGoals'] as List?)
                 ?.map((e) => e as String)
                 .toList() ??
@@ -1563,8 +1632,9 @@ class SaveGame {
                 ?.map((e) => OwnerLegacy.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
-        budgetPlan:
-            BudgetPlan.fromJson(json['budgetPlan'] as Map<String, dynamic>?),
+        budgetPlan: BudgetPlan.fromJson(
+          json['budgetPlan'] as Map<String, dynamic>?,
+        ),
         managerReputation: json['managerReputation'] as int? ?? 50,
         pendingJobOfferTeamId: json['pendingJobOfferTeamId'] as String?,
         youthProspects: (json['youthProspects'] as List?)
@@ -1581,10 +1651,10 @@ class SaveGame {
             [],
         youthLeague: json['youthLeague'] == null
             ? null
-            : YouthLeague.fromJson(
-                json['youthLeague'] as Map<String, dynamic>),
-        scoutKnowledge: (json['scoutKnowledge'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as int)),
+            : YouthLeague.fromJson(json['youthLeague'] as Map<String, dynamic>),
+        scoutKnowledge: (json['scoutKnowledge'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
         scoutRegionKeys: (json['scoutRegionKeys'] as List?)
             ?.map((e) => e as String)
             .toList(),
@@ -1630,22 +1700,27 @@ class SaveGame {
         namingDeal: json['namingDeal'] == null
             ? null
             : SponsorDeal.fromJson(json['namingDeal'] as Map<String, dynamic>),
-        slotSponsors: (json['slotSponsors'] as Map?)?.map((k, v) =>
-            MapEntry(k as String,
-                SponsorDeal.fromJson(v as Map<String, dynamic>))),
-        slotSponsorOffers: (json['slotSponsorOffers'] as Map?)?.map((k, v) =>
-            MapEntry(k as String,
-                SponsorDeal.fromJson(v as Map<String, dynamic>))),
+        slotSponsors: (json['slotSponsors'] as Map?)?.map(
+          (k, v) => MapEntry(
+            k as String,
+            SponsorDeal.fromJson(v as Map<String, dynamic>),
+          ),
+        ),
+        slotSponsorOffers: (json['slotSponsorOffers'] as Map?)?.map(
+          (k, v) => MapEntry(
+            k as String,
+            SponsorDeal.fromJson(v as Map<String, dynamic>),
+          ),
+        ),
         pendingNamingOffers: (json['pendingNamingOffers'] as List?)
                 ?.map((e) => SponsorDeal.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
         seasonTicketShare: json['seasonTicketShare'] as int? ?? 0,
         seasonTicketSeason: json['seasonTicketSeason'] as int? ?? 0,
-        tvDeal: TvDeal.values
-                .where((d) => d.name == json['tvDeal'])
-                .firstOrNull ??
-            TvDeal.fixed,
+        tvDeal:
+            TvDeal.values.where((d) => d.name == json['tvDeal']).firstOrNull ??
+                TvDeal.fixed,
         tvHolidaySeasons: json['tvHolidaySeasons'] as int? ?? 0,
         sponsorDeal: json['sponsorDeal'] == null
             ? null
@@ -1685,8 +1760,7 @@ class SaveGame {
           (v) => v.name == json['clubVision'],
           orElse: () => ClubVision.none,
         ),
-        visionCompliedMatchdays:
-            json['visionCompliedMatchdays'] as int? ?? 0,
+        visionCompliedMatchdays: json['visionCompliedMatchdays'] as int? ?? 0,
         visionCheckedMatchdays: json['visionCheckedMatchdays'] as int? ?? 0,
         staffCandidates: (json['staffCandidates'] as List?)
                 ?.map((e) => StaffMember.fromJson(e as Map<String, dynamic>))
@@ -1726,8 +1800,9 @@ class SaveGame {
         wageBudget: json['wageBudget'] as int? ?? 0,
         boardCupTargetRound: json['boardCupTargetRound'] as int? ?? 0,
         managerContractYears: json['managerContractYears'] as int? ?? 0,
-        difficultyItems: (json['difficultyItems'] as Map?)
-            ?.map((k, v) => MapEntry(k as String, v as String)),
+        difficultyItems: (json['difficultyItems'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as String),
+        ),
         difficulty: GameDifficulty.values.firstWhere(
           (d) => d.name == json['difficulty'],
           orElse: () => GameDifficulty.normal,
@@ -1790,16 +1865,21 @@ class SaveGame {
         liveMatchProgress: json['liveMatchProgress'] == null
             ? null
             : LiveMatchProgress.fromJson(
-                (json['liveMatchProgress'] as Map).cast<String, dynamic>()),
+                (json['liveMatchProgress'] as Map).cast<String, dynamic>(),
+              ),
         today: parseSaveDate(json['today']),
         preContracts: (json['preContracts'] as List?)
-                ?.map((e) =>
-                    PreContract.fromJson((e as Map).cast<String, dynamic>()))
+                ?.map(
+                  (e) =>
+                      PreContract.fromJson((e as Map).cast<String, dynamic>()),
+                )
                 .toList() ??
             [],
         transferTalks: (json['transferTalks'] as List?)
-                ?.map((e) =>
-                    TransferTalk.fromJson((e as Map).cast<String, dynamic>()))
+                ?.map(
+                  (e) =>
+                      TransferTalk.fromJson((e as Map).cast<String, dynamic>()),
+                )
                 .toList() ??
             [],
         preContractOpenedSeason: json['preContractOpenedSeason'] as int? ?? 0,
