@@ -383,10 +383,12 @@ void main() {
     test('戻った選手は疲れが8〜15増え、呼ばれていない選手は変わらない', () async {
       final game = await gameOutsideWindow();
       final team = game.userTeam;
-      final called = team.players.first
+      // 始まりは W 杯の年なので、大会で抜けている選手は外して選ぶ。
+      final free = team.players.where((p) => !p.onTournamentLeave).toList();
+      final called = free.first
         ..internationalDutyWeeksRemaining = 1
         ..fatigue = 10;
-      final stayed = team.players.last..fatigue = 10;
+      final stayed = free.last..fatigue = 10;
       game.debugReleaseInternationalDuty();
       expect(called.isOnInternationalDuty, isFalse);
       expect(called.fatigue, inInclusiveRange(18, 25));
