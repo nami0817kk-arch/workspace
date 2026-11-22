@@ -123,6 +123,8 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 @keyframes tpulse{0%,100%{box-shadow:0 0 0 0 rgba(217,140,76,0)}50%{box-shadow:0 0 0 5px rgba(217,140,76,.45)}}
 .btn.pulse{animation:tpulse 1.4s ease-in-out infinite}
 #spane-help h3{margin:10px 0 2px;font-size:13.5px;color:var(--ink)}#spane-help h3:first-child{margin-top:0}#spane-help details{margin-top:6px}#spane-help summary{cursor:pointer;color:var(--accent);font-weight:600}
+.alertb{position:absolute;left:6px;top:6px;max-width:70%;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(20,16,10,.72);color:#ffe9c0;font:600 12.5px system-ui,sans-serif;padding:7px 10px;cursor:pointer;text-align:left}
+.alertb.hot{background:rgba(160,30,30,.88);color:#fff}
 .links{margin:2px 0 0;font-size:11.5px;color:var(--sub);text-align:center}.links a{color:var(--sub)}
 .tbox .btn small{display:block;font-size:10.5px;color:var(--sub);font-weight:400}
 .chl{display:flex;flex-direction:column;gap:6px}.chl .btn{text-align:left;padding:8px 10px}.chl .btn small{display:block;font-size:11px;color:var(--sub)}
@@ -167,7 +169,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v16</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v18</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -177,6 +179,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 <div class="tabs" id="tabs"></div>
 <div class="stage">
 <canvas id="c" aria-label="ダンジョンタワーの1フロア。20マス×20マスの土を掘る"></canvas>
+<button class="alertb" id="alertb" hidden></button>
 <div class="zoom"><button id="zfit" hidden>全体</button><button id="zout" hidden aria-label="縮小">－</button><button id="zin" aria-label="拡大">＋</button></div>
 </div>
 <div class="row">
@@ -612,7 +615,7 @@ function recordDeath(m,why){
 function killCr(m,why,killer){
  if(m.sp=='phoenix'&&m.revive&&g.cr.indexOf(m)>=0){m.revive=0;m.hp=m.mhp;fxPuff(m.f,m.x,m.y,1.5);addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:700,c:'255,150,60',r0:4,rad:34});say('フェニックスが炎の中からよみがえった！');return;}
  var i=g.cr.indexOf(m);if(i<0)return;g.cr.splice(i,1);
- recordDeath(m,why);
+ recordDeath(m,why);if(why=='enemy')g.lostN=(g.lostN||0)+1;
  if(m.mg&&why!='eaten')depositM(m.f,m.x,m.y,m.mg);
  // 運んでいた養分（魔分）は、倒れた所の土へ。食べられたら塔の自由な分へ
  if(m.cg){if(why=='eaten'){if(m.env=='mag')g.mpool+=m.cg;else g.pool+=m.cg;}else if(m.env=='mag')depositM(m.f,m.x,m.y,m.cg);else deposit(m.f,m.x,m.y,m.cg);m.cg=0;}
@@ -1038,6 +1041,15 @@ function showResult(){
   '<button class="btn go" id="tback">タイトルへ</button></div>';
  el.hidden=false;document.getElementById('tback').onclick=showTitle;
 }
+function alertBadge(){
+ var b=document.getElementById('alertb'),C=g.core,txt='',tf=-1,hot=false;
+ if(C.carrier&&C.carrier.f!=g.view){txt='コアが運ばれている！ '+(C.carrier.f+1)+'階へ ▶';tf=C.carrier.f;hot=true;}
+ else if(!C.carrier){var cnt={},best=-1,bn=0,i;for(i=0;i<g.en.length;i++){var e=g.en[i];cnt[e.f]=(cnt[e.f]||0)+1;}
+  if(!cnt[g.view]){for(var k in cnt){if(cnt[k]>bn||(cnt[k]==bn&&+k>best)){bn=cnt[k];best=+k;}}if(best>=0){var yu=g.en.some(function(e){return e.yu&&e.f==best;});txt=(yu?'勇者':'冒険者'+bn+'人')+'が '+(best+1)+'階に ▶';tf=best;hot=yu;}}}
+ if(!txt){if(!b.hidden)b.hidden=true;return;}
+ if(b.textContent!=txt)b.textContent=txt;b.hidden=false;b.classList.toggle('hot',hot);b.dataset.f=tf;
+}
+document.getElementById('alertb').onclick=function(){var f=+this.dataset.f;if(f>=0){g.view=f;ui();draw();}};
 function saveLabel(){try{var o=JSON.parse(kvGet('tou-save')),q=o.g;if(q.mode=='story'||q.mode=='ura')return (q.mode=='ura'?'裏ストーリー':'ストーリー')+' 第'+q.st+'面';if(q.mode=='vs')return 'VS';return (DIFF[q.diff||'normal'].n)+'の塔 · '+o.F+'階 · '+q.round+'周目';}catch(_){return '';}}
 function showTitle(){
  var el=document.getElementById('title'),has=!!kvGet('tou-save'),b=bests();
@@ -1216,6 +1228,7 @@ function tapCell(x,y,drag){
  if(!c.open)digAt(f,x,y);
 }
 function launch(){
+ if(g&&!over&&!g.done){g.waveOn=1;g.wk0=g.kills||0;g.wl0=g.lostN||0;}
  if(over||g.done||g.wave>=nW())return;
  var w=g.party?[]:WAVES[g.wave].slice(),i;
  if(g.party){g.party.forEach(function(p,j){g.spawnQ.push({t:g.t+j*(p.gap||6),k:p.k,p:p});});g.wave++;g.cd=0;say('「'+g.party.map(function(p){return p.nm;}).join('」「')+'」が攻めてきた！');sfx(g.party.length>1?'yu':'wave');coreSay('wave',true);if(speed==0)setSpeed(1);return;}
@@ -1261,6 +1274,7 @@ function step(dt){
  if(g.chal&&!over){var CH=CHALS[g.chal.i];if(CH.ok())chalEnd(true);else if(g.t>=CH.lim)chalEnd(false);}
  stepEggs();
  g.guardOn=guardOn();
+ if(g.waveOn&&!g.en.length&&!g.spawnQ.length&&!over){g.waveOn=0;var kk=(g.kills||0)-(g.wk0||0),ll=(g.lostN||0)-(g.wl0||0);if(g.wave<nW())say('第'+g.wave+'波を守った（倒した'+kk+'人・失った魔物'+ll+'匹）。次の波まで'+Math.ceil(g.cd)+'秒。');}
  g.corpses=g.corpses.filter(function(c){return g.t-c.t<180;});
  var cs=g.cr.slice();for(i=0;i<cs.length;i++)if(g.cr.indexOf(cs[i])>=0)stepCr(cs[i],dt);
  var es=g.en.slice();for(i=0;i<es.length;i++)if(g.en.indexOf(es[i])>=0&&!over)stepEn(es[i],dt);
@@ -1593,11 +1607,12 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v16 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v18 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
  tutCheck();
+ alertBadge();
  document.getElementById('go').classList.toggle('pulse',g.tut===2);
  var tu=g.tut!=null&&TUT[g.tut],cm=document.getElementById('cmsg'),ct=tu?'ヒント：'+TUT[g.tut][0]+'（タップで閉じる）':g.cline?'コア「'+g.cline+'」':'';cm.classList.toggle('tut',!!tu);if(cm.textContent!=ct)cm.textContent=ct;cm.classList.toggle('old',performance.now()-(g.clineRT||0)>12000);
  drawMinis();
@@ -1613,7 +1628,7 @@ function side(){
  var hs2=g.cr.filter(function(m){return m.hero;}).sort(function(a,b){return b.t-a.t||b.kills-a.kills;});
  var Y=g.yu,yuOn=g.en.filter(function(e){return e.yu;})[0];
  var key=g.view+'|'+hs2.map(function(m){return m.id+':'+m.f+':'+Math.round(m.hp/m.mhp*20)+':'+m.ep+m.kills+'L'+(m.lv||0);}).join(',')+'|'+yuName()+Y.lvl+Y.skills.length+(yuOn?Math.round(yuOn.hp/yuOn.mhp*20)+':'+yuOn.f+(yuOn.flee?'f':''):'-')+'|'+HALL.length+'|'+g.yuKilled;
- key+='|'+JSON.stringify(g.mutNext)+JSON.stringify(g.dc)+'|'+g.dp+JSON.stringify(g.calm||{});
+ key+='|'+JSON.stringify(g.mutNext)+JSON.stringify(g.dc)+'|'+g.dp+JSON.stringify(g.calm||{})+(g.party?'|'+Math.ceil(g.cd/5)+g.en.map(function(e){return e.f+':'+Math.round(e.hp/Math.max(1,e.mhp)*20);}).join(','):'');
  if(key==sideKey)return;sideKey=key;
  var mk=Object.keys(g.mutNext),dk=Object.keys(g.dc).filter(function(k){return g.dc[k].n>0;});
  function kname(k){var a=k.split('_');return baseName(a[0],a[1]||'mag');}
@@ -1626,7 +1641,7 @@ function side(){
  var yh='<b style="font-size:12.5px">'+esc(yuName())+'</b><div class="empty">挑戦'+(Y.fled+1)+'度目 · 技：'+esc(Y.skills.join('・'))+'<br>'+(yuOn?(yuOn.flee?'逃げている！ '+(yuOn.f+1)+'階':'塔の中 · '+(yuOn.f+1)+'階 · 体力'+Math.max(0,Math.round(yuOn.hp))+'/'+Math.round(yuOn.mhp)):'第6波に来る')+(g.yuKilled?'<br>これまでに倒し切った勇者：'+g.yuKilled+'人':'')+'</div>';
  if(yuOn)yh='<button class="hrow" data-f="'+yuOn.f+'" style="border-color:#d9534f">'+yh+'</button>';
  document.getElementById('yuusha').innerHTML=yh;
- document.getElementById('mini').innerHTML='<div class="panel"><h2>主役</h2>'+(hs2.length?hs2.slice(0,2).map(function(m){return '<button class="hrow'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'"><b>'+esc(fullName(m))+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>';}).join('')+(hs2.length>2?'<div class="empty">ほか'+(hs2.length-2)+'匹は「一覧」で</div>':''):'<div class="empty">まだいません。よく食べた個体などが、まれに昇格します。</div>')+'</div><div class="panel"><h2>宿敵の勇者</h2>'+yh+'</div>';
+ document.getElementById('mini').innerHTML='<div class="panel"><h2>主役</h2>'+(hs2.length?hs2.slice(0,2).map(function(m){return '<button class="hrow'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'"><b>'+esc(fullName(m))+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>';}).join('')+(hs2.length>2?'<div class="empty">ほか'+(hs2.length-2)+'匹は「一覧」で</div>':''):'<div class="empty">まだいません。よく食べた個体などが、まれに昇格します。</div>')+'</div><div class="panel"><h2>'+(g.party?'この面の勇者たち':'宿敵の勇者')+'</h2>'+(g.party?partyInfo():yh)+'</div>';
  document.getElementById('hall').innerHTML=HALL.length?'<ol class="hall">'+HALL.slice(0,12).map(function(h){return '<li><b>'+esc(h.n)+'</b> 倒した'+h.k+' · '+h.f+'階 · '+esc(h.c)+'</li>';}).join('')+'</ol>':'<div class="empty">倒れた主役の名がここに残ります（強さは次の塔に持ち越しません）。</div>';
 }
 document.getElementById('mini').addEventListener('click',function(ev){var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');ui();draw();});
@@ -1714,7 +1729,7 @@ function partyOf(st,mode){var P=STORY[st-1].party.map(function(p){var q=JSON.par
  if(mode=='ura')while(P.length<3)P.push({k:['tou','mah','sou'][P.length],nm:['ジル','ノア','キキ'][P.length],lv:P[0].lv,ti:'助っ人',skl:[]});return P;}
 function startStory(mode){
  newGame('normal');g.mode=mode;g.st=1;g.party=partyOf(1,mode);g.cd=STORY[0].t;g.dp=STORY[0].dp;g.stages=[];g.roundT0=g.t;g.armyStart=0;
- hideTitle();say((mode=='ura'?'裏ストーリー':'ストーリー')+' 第1面。'+STORY[0].t+'秒後に冒険者が来る（「今すぐ迎える」で早めると得点が増える）。');ui();
+ stageIntro();say((mode=='ura'?'裏ストーリー':'ストーリー')+' 第1面。'+STORY[0].t+'秒後に冒険者が来る（「今すぐ迎える」で早めると得点が増える）。');ui();
 }
 function applyParty(e,p){
  var M=p.boss?2.4:1,lk=1+p.lv/10,ak=1+p.lv/18;if(p.ura){lk*=1.5;ak*=1.3;}
@@ -1726,6 +1741,16 @@ function showBub(e,s2){g.bub.push({e:e,s:s2,until:performance.now()+3500});if(g.
 function stageScore(){var el=g.t-(g.roundT0||0),tb=Math.max(0,100*g.st+160-2*el);return Math.round(g.dp*10+armyPower()+tb*5);}
 function rankOf(sc,th){return sc>=th[0]?'S':sc>=th[1]?'A':sc>=th[2]?'B':sc>=th[3]?'C':'D';}
 function stageTh(st){return [1500+400*st,1000+300*st,600+200*st,300+100*st];}
+var STITLE=['はじまりの一歩','力くらべ','ふたり旅','いのしし兄弟','三つの剣と杖','老いと恋','もう一度だけ','伝承の勇者'];
+function partyInfo(){var es=g.en.filter(function(e){return e.title;});if(es.length)return es.map(function(e){return '<div class="empty"><b style="color:var(--ink)">'+esc(e.nm)+'</b> '+(e.f+1)+'階 · 体力'+Math.max(0,Math.round(e.hp))+'/'+Math.round(e.mhp)+'</div>';}).join('');return '<div class="empty">'+g.party.map(function(p){return esc(p.nm);}).join('・')+(g.wave?'':'が'+Math.ceil(g.cd)+'秒後に来る')+'</div>';}
+function stageIntro(){
+ var el=document.getElementById('title'),P=g.party;
+ el.innerHTML='<div class="tbox"><h2><small>'+(g.mode=='ura'?'裏ストーリー ':'')+'第'+g.st+'面</small><br>'+STITLE[g.st-1]+'</h2>'+
+  '<ul class="sc">'+P.map(function(p){return '<li><b>'+esc(p.nm)+'</b>（Lv'+(p.ura?Math.round(p.lv):p.lv)+'・'+esc(p.ti)+'）'+(p.skl&&p.skl.length?'<br><small>技：'+p.skl.map(function(k){return HSKN[k];}).join('・')+'</small>':'')+(p.line?'<br><small>「'+esc(p.line)+'」</small>':'')+'</li>';}).join('')+'</ul>'+
+  '<p class="sub">'+Math.ceil(g.cd)+'秒後に入口から来る。掘る力は'+g.dp+'。準備の間は時間が止まっている。</p>'+
+  '<button class="btn go" id="tgo">準備を始める</button></div>';
+ el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
+}
 function stageClear(){
  var sc=stageScore(),rk=g.mode=='vs'?'':rankOf(sc,stageTh(g.st)),el=document.getElementById('title');setSpeed(0);sfx('grow');
  if(g.mode=='vs'){el.innerHTML='<div class="tbox"><h2>防ぎ切った！</h2><p class="sub">「'+esc(g.vsName||'挑戦者')+'」の勇者たちを全員倒した。</p><p class="big">'+sc.toLocaleString()+' 点</p><button class="btn go" id="tback">タイトルへ</button></div>';el.hidden=false;document.getElementById('tback').onclick=showTitle;g.mode=null;return;}
@@ -1739,7 +1764,7 @@ function stageClear(){
  document.getElementById('tnext').onclick=function(){
   if(last){if(g.mode=='story')try{localStorage.setItem('tou-story','1');}catch(_){}g.mode=null;kvSet('tou-save',null);showTitle();return;}
   g.st++;g.party=partyOf(g.st,g.mode);g.wave=0;g.cd=STORY[g.st-1].t;g.dp=nx;g.done=false;over=false;g.spawnQ=[];g.roundT0=g.t;g.armyStart=armyPower();
-  resetGo();hideTitle();say('第'+g.st+'面。'+g.cd+'秒後に'+g.party.length+'人が来る。掘った道もモンスターもそのまま。');ui();
+  resetGo();stageIntro();say('第'+g.st+'面。'+g.cd+'秒後に'+g.party.length+'人が来る。掘った道もモンスターもそのまま。');ui();
  };
 }
 function totalRank(){var ss=g.stages||[];if(ss.length&&ss.every(function(x){return x.rk=='S';}))return 'S';var tot=ss.reduce(function(a,x){return a+x.sc;},0);return rankOf(tot,[1e18,8*(1000+300*4.5),8*(600+200*4.5),8*(300+100*4.5)]);}
