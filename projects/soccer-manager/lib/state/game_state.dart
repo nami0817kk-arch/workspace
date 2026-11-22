@@ -903,6 +903,53 @@ class GameState extends ChangeNotifier {
   /// ならない)。
   void _migrateWageLevelIfNeeded(SaveGame save) {
     if (save.wageLevelVersion >= SaveGame.currentWageLevelVersion) return;
+    if (save.wageLevelVersion < 2) _migrateWageLevelToV2(save);
+    _migrateWageToAbilityBased(save);
+    save.wageLevelVersion = SaveGame.currentWageLevelVersion;
+  }
+
+  /// 版2→3: 年俸の決め方を「市場価値から」から「今の能力×年齢の経験」に
+  /// 変えた([Player.fairWeeklyWage])。古いままだと、若手は高すぎ、
+  /// ベテランは見合う額の7割を下回って一斉に不満を持つ。
+  /// クラブの選手と所属なしの選手の週俸を新しい式で作り直す(全体の額は
+  /// 旧式とほぼ同じになるよう式の倍率を合わせてある)。理事会の給与の枠は、
+  /// 余裕(枠 − 人件費)が変わらないように人件費の増減ぶん動かす。
+  void _migrateWageToAbilityBased(SaveGame save) {
+    final home = _homeWageLevelOf(save);
+    final levels = _wageLevelsByTeamId(save);
+    final userTeam = _findTeam(save.league.teams, save.userTeamId);
+    final billBefore =
+        userTeam == null ? 0 : ContractEngine.weeklyWageBill(userTeam);
+    final done = Set<Player>.identity();
+    void redo(Player p, double level) {
+      if (!done.add(p) || p.wage <= 0) return;
+      p.wage = p.fairWeeklyWage(level);
+    }
+
+    for (final t in [
+      ...save.allTeams,
+      for (final l in save.foreignLeagues.values) ...l.teams,
+      ...save.continentalTeams,
+    ]) {
+      final f = levels[t.id] ?? home;
+      for (final p in t.players) {
+        // ローン中の選手は、元の契約の額(loanBaseWage)との釣り合いを
+        // 崩さないよう触らない。
+        if (p.isLoanedOut || p.loanBaseWage != null) continue;
+        redo(p, f);
+      }
+    }
+    for (final p in save.freeAgents) {
+      redo(p, home);
+    }
+    if (userTeam != null && save.wageBudget > 0) {
+      final delta = ContractEngine.weeklyWageBill(userTeam) - billBefore;
+      save.wageBudget = max(0, save.wageBudget + delta);
+    }
+    save.squadCostObserved = 0;
+  }
+
+  void _migrateWageLevelToV2(SaveGame save) {
     final home = _homeWageLevelOf(save);
     final levels = _wageLevelsByTeamId(save);
     // 週俸の下限より下には下げない。もとから下限より低い額は上げない。
@@ -968,7 +1015,6 @@ class GameState extends ChangeNotifier {
     if (save.wageFreezeCap > 0) {
       save.wageFreezeCap = max(1, (save.wageFreezeCap * home).round());
     }
-    save.wageLevelVersion = SaveGame.currentWageLevelVersion;
   }
 
   /// 桁を変える前の市場価値(万円)。旧セーブの換算で、価値が何倍に

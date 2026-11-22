@@ -61,28 +61,31 @@ void main() {
     // 自クラブはフランスの3部、1部のクラブはフランスの1部、他国はその国の1部。
     final home = wageCountryFactor(LeagueTheme.france, ls.currentDivisionTier);
     expect(home, 0.6);
+    // 版3で、週俸は「今の能力×年齢の経験×国・部の係数」で作り直す。
     final lUser = loaded.userTeam;
-    expect(
-      lUser.players.firstWhere((p) => p.id == userPlayer.id).wage,
-      (old * home).round(),
-    );
+    final lUserPlayer = lUser.players.firstWhere((p) => p.id == userPlayer.id);
+    expect(lUserPlayer.wage, lUserPlayer.fairWeeklyWage(home));
     final lTier1 = ls.otherDivisionLeagues[0]!.teams.firstWhere(
       (t) => t.id == tier1.id,
     );
+    final lTier1Player =
+        lTier1.players.firstWhere((p) => p.id == tier1Player.id);
     expect(
-      lTier1.players.firstWhere((p) => p.id == tier1Player.id).wage,
-      (old * wageCountryFactor(LeagueTheme.france, 1)).round(),
+      lTier1Player.wage,
+      lTier1Player.fairWeeklyWage(wageCountryFactor(LeagueTheme.france, 1)),
     );
     final lSpain = ls.foreignLeagues[LeagueTheme.spain.name]!.teams.firstWhere(
       (t) => t.id == spain.id,
     );
+    final lSpainPlayer =
+        lSpain.players.firstWhere((p) => p.id == spainPlayer.id);
     expect(
-      lSpain.players.firstWhere((p) => p.id == spainPlayer.id).wage,
-      (old * wageCountryFactor(LeagueTheme.spain, 1)).round(),
+      lSpainPlayer.wage,
+      lSpainPlayer.fairWeeklyWage(wageCountryFactor(LeagueTheme.spain, 1)),
     );
     if (freeAgentId != null) {
       final fa = ls.freeAgents.where((p) => p.id == freeAgentId).firstOrNull;
-      if (fa != null) expect(fa.wage, (old * home).round());
+      if (fa != null) expect(fa.wage, fa.fairWeeklyWage(home));
     }
 
     // 交渉中の週俸も自クラブの係数でそろえる。
@@ -102,7 +105,7 @@ void main() {
     expect(s2.wageLevelVersion, SaveGame.currentWageLevelVersion);
     expect(
       again.userTeam.players.firstWhere((p) => p.id == userPlayer.id).wage,
-      (old * home).round(),
+      lUserPlayer.wage,
     );
     expect(
       s2.foreignLeagues[LeagueTheme.spain.name]!.teams
@@ -110,13 +113,41 @@ void main() {
           .players
           .firstWhere((p) => p.id == spainPlayer.id)
           .wage,
-      (old * wageCountryFactor(LeagueTheme.spain, 1)).round(),
+      lSpainPlayer.wage,
     );
     expect(s2.wageBudget, ls.wageBudget);
     expect(s2.budget, budget);
   });
 
-  test('版2のセーブ(新しいゲーム)は、読み込んでも週俸が変わらない', () async {
+  test('版2のセーブは、週俸を今の能力×年齢の式で作り直し、給与の枠の余裕は保つ', () async {
+    final game = GameState();
+    await game.startNewGame('中FC', theme: LeagueTheme.england);
+    final s = game.save!;
+    final user = game.userTeam;
+    // 版2の頃の式では、ベテランは安く若手は高かった。
+    for (final p in user.players) {
+      p.wage = p.age >= 30 ? 50 : 900;
+    }
+    s.wageBudget = ContractEngine.weeklyWageBill(user) + 300;
+    final json = jsonDecode(game.exportSaveJson()!) as Map<String, dynamic>;
+    json['wageLevelVersion'] = 2;
+
+    final loaded = GameState();
+    expect(await loaded.importSaveJson(jsonEncode(json)), isTrue);
+    final ls = loaded.save!;
+    expect(ls.wageLevelVersion, SaveGame.currentWageLevelVersion);
+    final home = wageCountryFactor(LeagueTheme.england, ls.currentDivisionTier);
+    for (final p in loaded.userTeam.players) {
+      if (p.isLoanedOut || p.loanBaseWage != null) continue;
+      expect(p.wage, p.fairWeeklyWage(home), reason: p.id);
+    }
+    expect(
+      ls.wageBudget - ContractEngine.weeklyWageBill(loaded.userTeam),
+      300,
+    );
+  });
+
+  test('今の版のセーブ(新しいゲーム)は、読み込んでも週俸が変わらない', () async {
     final game = GameState();
     await game.startNewGame('新FC', theme: LeagueTheme.italy);
     final wages = {for (final p in game.userTeam.players) p.id: p.wage};

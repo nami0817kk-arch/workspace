@@ -188,7 +188,7 @@ class SaveGame {
   int wageLevelVersion;
 
   /// 今の年俸の水準の版。新しいゲームはこの版で始まる。
-  static const int currentWageLevelVersion = 2;
+  static const int currentWageLevelVersion = 3;
 
   /// イタリアの「EU 外の選手を他の国から取れるのは1季に2人まで」を数える
   /// ための、今季に取った人数と、その季。
