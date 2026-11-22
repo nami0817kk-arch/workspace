@@ -934,6 +934,19 @@ List<SceneDef> buildAltScenes() => [
 /// 変わった世界線で、今いる世を知らせる一文（見聞録・結果に使える）。
 String lineName(Game g) => kLineNames[worldLine(g)]!;
 
+/// 小さな分岐の呼び名。
+const kSmallBranchNames = {
+  'history_nagashino': '長篠で武田の騎馬が崩れなかった',
+  'history_odawara': '小田原で北条の家が残った',
+};
+
+/// あなたが変えた歴史（世界線と小さな分岐）を、短い文で並べる。史実どおりなら空。
+List<String> changedHistory(Game g) => [
+  if (worldLine(g) != 'real') lineName(g),
+  for (final e in kSmallBranchNames.entries)
+    if (g.hasFlag(e.key)) e.value,
+];
+
 /// テスト用: 出し分けの表に書いた id が、すべて実在するか。
 Set<String> skipTableIds() => {
   for (final v in kSkipScenes.values) ...v,

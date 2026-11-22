@@ -403,11 +403,11 @@ class _WorldTab extends StatelessWidget {
     return ListView(
       padding: _pad,
       children: [
-        if (worldLine(g) != 'real') ...[
+        if (changedHistory(g).isNotEmpty) ...[
           Panel(
             title: '今の世',
             child: Text(
-              '${lineName(g)}。あなたの選択で、歴史は史実と別の道を歩んでいる。',
+              '${changedHistory(g).join('。')}。あなたの選択で、歴史は史実と別の道を歩んでいる。',
               style: const TextStyle(color: Pal.gold, height: 1.6),
             ),
           ),

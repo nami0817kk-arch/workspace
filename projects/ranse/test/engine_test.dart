@@ -1083,6 +1083,25 @@ void main() {
       expect(checked, greaterThan(5));
     });
 
+    test('変えた歴史（世界線と小さな分岐）が、今の世と最期の文にまとめて出る', () {
+      for (var seed = 0; seed < 100; seed++) {
+        final rng = Rng(seed + 8);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        g
+          ..setFlag('history_nagashino')
+          ..setFlag('history_odawara');
+        expect(changedHistory(g), ['長篠で武田の騎馬が崩れなかった', '小田原で北条の家が残った']);
+        playOut(g, Rng(seed));
+        if (g.age < 15) continue;
+        final t = buildEnding(g).text;
+        expect(t, contains('その世は、長篠で武田の騎馬が崩れなかった、小田原で北条の家が残った世だった。'));
+        return;
+      }
+      fail('成人した人生が見つからない');
+    });
+
     test('死に方は保存の往復で残る', () {
       for (var seed = 0; seed < 40; seed++) {
         final rng = Rng(seed);

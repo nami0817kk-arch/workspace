@@ -227,10 +227,14 @@ Ending buildEnding(Game g) {
       'era' => '${g.year}年（${gengo(g.year)}）、${g.age}歳。長い乱世が終わるのを、その目で見届けた。',
       _ => '${g.year}年（${gengo(g.year)}）、${g.age}歳。${l.dead}。',
     };
-    final line = worldLine(g);
+    // 世界線の名は「〜世」で終わるので、小さな分岐（「〜た」）とそろえて最後に「世」を付ける。
+    final changed = [
+      for (final c in changedHistory(g))
+        c.endsWith('世') ? c.substring(0, c.length - 1) : c,
+    ];
     text =
         '$head${_memoryLine(l)}${_witnessLine(l, kind)}${_joyLine(aj)}'
-        '${line == 'real' ? '' : 'その世は、${kLineNames[line]}だった。'}';
+        '${changed.isEmpty ? '' : 'その世は、${changed.join('、')}世だった。'}';
   }
   return Ending(
     title: title,
