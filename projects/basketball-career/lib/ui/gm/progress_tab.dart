@@ -285,7 +285,7 @@ class ProgressTab extends StatelessWidget {
         _kv('トレード', deadline ? '${dateLabel(deadlineDate(car.season))}に締め切り(あと${blockStart(tradeDeadlineBlock) - played}試合)' : '締め切りを過ぎた', color: deadline ? null : GmColors.sub),
         _todo(_seasonTodo(car)),
         const SizedBox(height: 12),
-        // 進めるのは大きいボタン1つ。采配と、まとめて進める方法は横に寄せる
+        // 進めるのは大きいボタン1つ(1試合ずつ。2026-11-22)。采配と、まとめて進める方法は横に寄せる
         Row(children: [
           if (car.nextMyGame != null) ...[
             Expanded(
@@ -301,9 +301,10 @@ class ProgressTab extends StatelessWidget {
           Expanded(
             flex: 2,
             child: FilledButton.icon(
-              onPressed: c.busy ? null : () => _run(context, () => runSimTicker(context, c, next, '次の$next試合', stops: false)),
+              key: const Key('sim-one'),
+              onPressed: c.busy ? null : () => _runOne(context),
               icon: const Icon(Icons.play_arrow_rounded),
-              label: Text('次の$next試合へ'),
+              label: const Text('次の試合へ'),
             ),
           ),
           const SizedBox(width: 6),
@@ -314,8 +315,8 @@ class ProgressTab extends StatelessWidget {
             icon: const Icon(Icons.more_horiz_rounded, color: GmColors.sub),
             onSelected: (v) {
               switch (v) {
-                case 'one':
-                  _runOne(context);
+                case 'block':
+                  _run(context, () => runSimTicker(context, c, next, '次の$next試合', stops: false));
                 case 'week':
                   _run(context, () => runSimTicker(context, c, Career.daysPerWeek, '1週間'));
                 case 'month':
@@ -331,7 +332,7 @@ class ProgressTab extends StatelessWidget {
               }
             },
             itemBuilder: (_) => [
-              PopupMenuItem(key: const Key('sim-one'), value: 'one', child: _menuRow(Icons.looks_one_rounded, '1試合だけ進める(${dateShort(roundDate(car.season, played))})')),
+              if (next > 1) PopupMenuItem(key: const Key('sim-block'), value: 'block', child: _menuRow(Icons.fast_forward_rounded, '次の区切りまで($next試合)')),
               if (gamesPerSeason - played > Career.daysPerWeek)
                 PopupMenuItem(value: 'week', child: _menuRow(Icons.calendar_view_week_rounded, '1週間(${Career.daysPerWeek}試合)進める')),
               if (month > 1) PopupMenuItem(key: const Key('sim-month'), value: 'month', child: _menuRow(Icons.calendar_month_rounded, '${roundDate(car.season, played).month}月の終わりまで($month試合)')),
