@@ -105,10 +105,10 @@ def draw_twist(img: Image.Image, t: float, c) -> None:
             y0 = cy + (ry if not up else -ry)
             y1 = y0 + (seg * 0.35 if not up else -seg * 0.35)
             d.line([(fx, y0), (fx, y1)], fill=col + (255,), width=14)
-        sg.stext(d, (x, cy + seg * 0.75), name, f, col + (255,), anchor="mm")
+        sg.stext(d, (x, cy + seg * 1.0), name, f, col + (255,), anchor="mm")
     lab = "背中が下" if k1 < 0.5 else ("前が回った" if k2 < 0.5 else "足が下に")
     sg.stext(d, (cx, cy - seg * 0.85), lab, _font(48, 54), (255, 255, 255, 255), anchor="mm")
-    sg.stext(d, (W - 40, H * (0.86 if not P else 0.70)), "模式図", _font(30, 36), (120, 130, 150, 255), anchor="rm")
+    sg.stext(d, (W - 40, H * (0.86 if not P else 0.60)), "模式図", _font(30, 36), (120, 130, 150, 255), anchor="rm")
     img.alpha_composite(bg)
 
 
@@ -169,16 +169,16 @@ def draw_bias(img: Image.Image, t: float, c) -> None:
         sg.stext(d, (W / 2, y + r + 60), "その場で助からず、病院に来ない", f, (150, 155, 165, int(255 * k2)), anchor="mm")
     if k3 > 0:
         sg.stext(d, (W / 2, y + r + 140), "記録：1匹、軽いけが", _font(54, 60), (255, 214, 64, int(255 * k3)), anchor="mm")
-    sg.stext(d, (W - 40, H * (0.86 if not P else 0.70)), "たとえの図", _font(30, 36), (120, 130, 150, 255), anchor="rm")
+    sg.stext(d, (W - 40, H * (0.86 if not P else 0.60)), "たとえの図", _font(30, 36), (120, 130, 150, 255), anchor="rm")
     img.alpha_composite(bg)
 
 
 # ---- 本編(横)----------------------------------------------------------------------------------------
 BARS_V = dict(kind="bars", items=[dict(name="猫", value=100, unit="km/h", label="時速約100km"), dict(name="人", value=200, unit="km/h", label="時速約200km")])
 ZG = [("2階", 1.98), ("3階", 2.71), ("4階", 2.70), ("5階", 2.52), ("6階", 2.62), ("7階以上", 3.50)]
-BARS_ZG = dict(kind="bars", items=[dict(name=n, value=v, unit="点") for n, v in ZG])
+BARS_ZG = dict(kind="bars", items=[dict(name=n, value=v, unit="点", label=f"{v:.2f}") for n, v in ZG])
 # 5 章の 5-15〜5-17 だけは、言った順に柱が出る
-BARS_ZG_ON = dict(kind="bars", items=[dict(name=n, value=v, unit="点", **({} if n == "2階" else dict(on=("7階" if n == "7階以上" else ("6階" if n == "6階" else "3階"))))) for n, v in ZG])
+BARS_ZG_ON = dict(kind="bars", items=[dict(name=n, value=v, unit="点", label=f"{v:.2f}", **({} if n == "2階" else dict(on=("7階" if n == "7階以上" else ("6階" if n == "6階" else "3階"))))) for n, v in ZG])
 CARD_NY = dict(kind="card", title="ニューヨークの記録", sub="1987年", body="高い所から落ちて動物病院に運ばれた猫、5か月で132匹。治療した猫の9割が助かった。", src="Whitney & Mehlhaff 1987 JAVMA")
 CARD_ZG = dict(kind="card", title="ザグレブの記録", sub="2004年", body="4年間に運ばれた119匹。2〜16階、平均4階。96.5%が助かった。", src="Vnuk ほか 2004 J Feline Med Surg")
 CARD_HAL = dict(kind="card", title="ちょうどよい大きさ", sub="ホールデン 1926年", body="深さ約900mの穴にネズミを落とすと、少し驚くだけで歩いて去る。ラットは死に、人は骨が砕ける。", src="Haldane 1926 On Being the Right Size")
@@ -207,8 +207,8 @@ CH["ch1"] = [
 ]
 CH["ch2"] = [
     dict(id="2-1", text="1894年、フランスの生理学者マレーが、ある写真を発表しました。", say="せんはっぴゃくきゅうじゅうよねん、フランスの、せいりがくしゃ、マレーが、あるしゃしんを、はっぴょうしました。",
-         scene=PH("p14530962", place=("マレー", "フランスの生理学者"))),
-    dict(id="2-2", text="落ちる猫を、すばやく何枚も続けて撮った写真です。", scene=PH("marey", "in")),
+         scene=PH("marey", "in", place=("マレー", "フランスの生理学者"))),
+    dict(id="2-2", text="落ちる猫を、すばやく何枚も続けて撮った写真です。", fx=[NOTE(0.5, 0.48, "1894年の連続写真", "続けて")]),
     dict(id="2-3", text="背中を下にして、猫を落とします。", fx=[NOTE(0.20, 0.42, "背中が下", "背中")]),
     dict(id="2-4", text="すると猫は、空中でくるりと向きを変え、足から降りました。", fx=[NOTE(0.62, 0.88, "足から降りる", "足から")]),
     dict(id="2-5", text="この写真は、学者たちを悩ませました。", scene=PH("marey", "left")),
@@ -281,7 +281,7 @@ CH["ch5"] = [
     dict(id="5-1", text="ところが、この説明には、疑問の声が上がりました。", scene=V("c6816884", 12.0), fx=[Q("本当？", "疑問")]),
     dict(id="5-2", text="記録に残ったのは、動物病院に運ばれた猫だけです。", scene=V("c6816881", 5.0)),
     dict(id="5-3", text="落ちて、その場で死んでしまった猫は、病院に運ばれません。", scene=V("c4822079", 10.0), fx=[DIM("死んで")]),
-    dict(id="5-4", text="高い所から落ちた猫ほど、その場で死ぬことが多いはず。", scene=V("c9902442", 14.0)),
+    dict(id="5-4", text="高い所から落ちた猫ほど、その場で死ぬことが多いはず。", scene=V("c4467019", 7.0)),
     dict(id="5-5", text="すると、高い階の記録には、助かった猫だけが残ります。", scene=C("bias", "図: 理の書（たとえ）"), fx=[ST(1, "すると")]),
     dict(id="5-6", text="けがが軽い猫ばかりが、数えられることになるのです。", fx=[ST(1, "けが")]),
     dict(id="5-7", text="たとえば32階から10匹落ちても、病院に来たのが1匹なら、記録は「1匹、軽いけが」です。", say="たとえば、さんじゅうにかいから、じっぴき、おちても、びょういんにきたのが、いっぴきなら、きろくは、いっぴき、かるいけが、です。",
@@ -377,7 +377,7 @@ SH["s4"] = [
          fx=[ST(1, "たとえば"), ST(2, "病院"), ST(3, "記録")]),
     dict(id="7", text="2004年、クロアチアの動物病院の119匹の記録では、", say="にせんよねん、クロアチアの、どうぶつびょういんの、ひゃくじゅうきゅうひきの、きろくでは、", scene=V("c39190452", 1.0)),
     dict(id="8", text="7階以上のけがの点数は、2階の2倍近く。3〜6階よりも重くなっていました。", say="ななかいいじょうの、けがの、てんすうは、にかいの、にばいちかく。さんがいから、ろっかいよりも、おもくなっていました。", scene=BARS_ZG, fx=[dict(k="focus", name="7階以上", on="7階")]),
-    dict(id="9", answer=True, text="高い所ほど安全に見えたのは、数えられなかった猫がいたからかもしれないのです。", scene=WD("安全に見えたのは", "【数えられなかった猫がいたから】", "数え")),
+    dict(id="9", answer=True, text="高い所ほど安全に見えたのは、数えられなかった猫がいたからかもしれないのです。", scene=WD("数えられなかった猫が", "【いたからかも】", "数え")),
     dict(id="10", text="猫は、高い所から落ちても平気ではありません。", scene=V("c36095638", 2.0)),
 ]
 STITLES = dict(s1="猫が空中で回れるしくみ", s2="32階から落ちた猫は、なぜ助かった", s3="ネズミは900mの穴に落ちても歩いて去る", s4="死んだ猫は、病院に来ない")
