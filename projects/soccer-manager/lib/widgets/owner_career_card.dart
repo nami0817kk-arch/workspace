@@ -33,13 +33,13 @@ class FiveYearPlanCard extends StatelessWidget {
             const SizedBox(height: 4),
             if (gs.hasFiveYearPlan) ...[
               Text(Tr.pick('残り${gs.planSeasonsLeft}季',
-                  '${gs.planSeasonsLeft} seasons left')),
+                  '${Tr.plural(gs.planSeasonsLeft, 'season')} left')),
               () {
                 final (a, b, c) = gs.planProgress;
                 return Text(
                   Tr.pick(
                       '${mark(a)} ${save.planTargetTier}部まで上がる\n${mark(b)} クラブ価値 ${formatMoney(save.planTargetValue)}(いま ${formatMoney(gs.clubValue.total)})\n${mark(c)} スタジアム水準 ${save.planTargetStadium}',
-                      '${mark(a)} Reach tier ${save.planTargetTier}\n${mark(b)} Club value ${formatMoney(save.planTargetValue)} (now ${formatMoney(gs.clubValue.total)})\n${mark(c)} Stadium level ${save.planTargetStadium}'),
+                      '${mark(a)} Reach Tier ${save.planTargetTier}\n${mark(b)} Club value ${formatMoney(save.planTargetValue)} (now ${formatMoney(gs.clubValue.total)})\n${mark(c)} Stadium level ${save.planTargetStadium}'),
                 );
               }(),
               const SizedBox(height: 4),
@@ -111,7 +111,7 @@ class OwnerCareerCard extends StatelessWidget {
                 Text(
                   Tr.pick(
                       '${l.clubName}: ${l.seasons}季・リーグ優勝${l.leagueTitles}・カップ${l.cupTitles}・最高${l.bestRank > 0 ? '${l.bestRank}位' : '-'}(${OwnerHistoryEngine.score(l)}点)',
-                      '${l.clubName}: ${l.seasons} seasons, ${l.leagueTitles} titles, ${l.cupTitles} cups, best ${l.bestRank > 0 ? '${l.bestRank}' : '-'} (${OwnerHistoryEngine.score(l)} pts)'),
+                      '${l.clubName}: ${Tr.plural(l.seasons, 'season')}, ${Tr.plural(l.leagueTitles, 'title')}, ${Tr.plural(l.cupTitles, 'cup')}, best ${l.bestRank > 0 ? '${l.bestRank}' : '-'} (${OwnerHistoryEngine.score(l)} pts)'),
                   style: const TextStyle(fontSize: 12),
                 ),
             const Divider(height: 20),

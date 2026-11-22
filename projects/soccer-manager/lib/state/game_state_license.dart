@@ -73,7 +73,7 @@ extension GameStateLicense on GameState {
     _logNews(
       Tr.pick(
           '猶予の季のうちにスタジアムがLv${ClubLicenseEngine.stadiumLevelFor(tier)}に届かず、$tier部のクラブライセンスが下りませんでした。1つ下の部へ降格になります。',
-          'The stadium did not reach level ${ClubLicenseEngine.stadiumLevelFor(tier)} during the grace season, so the tier $tier licence was refused. You will be relegated one tier.'),
+          'The stadium did not reach level ${ClubLicenseEngine.stadiumLevelFor(tier)} during the grace season, so the Tier $tier licence was refused. You will be relegated one tier.'),
       context: Tr.pick('クラブライセンス', 'Club licence'),
     );
     return true;

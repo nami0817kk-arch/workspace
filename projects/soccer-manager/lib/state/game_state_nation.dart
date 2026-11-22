@@ -444,7 +444,7 @@ extension GameStateNation on GameState {
     if (p.overall >= need) return null;
     return Tr.pick(
         '${p.name}(${nationLabel(nation)}国籍)には労働許可が下りません。${_save!.currentDivisionTier}部では総合力$need以上が要ります。',
-        '${p.name} (${nationLabel(nation)}) would not get a work permit: tier ${_save!.currentDivisionTier} needs an overall of $need or more.');
+        '${p.name} (${nationLabel(nation)}) would not get a work permit: Tier ${_save!.currentDivisionTier} needs an overall of $need or more.');
   }
 }
 

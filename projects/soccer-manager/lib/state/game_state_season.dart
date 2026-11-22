@@ -950,13 +950,13 @@ extension GameStateSeason on GameState {
           _save!.confidence = (_save!.confidence + 2).clamp(0, 100);
           _logNews(
               Tr.pick('国内カップは理事会の期待($label進出)に応えた。敗退したが評価は上々だ',
-                  "You met the board's expectation in the domestic cup (reaching the $label). You are out, but they are pleased"),
+                  "You met the board's expectation in the domestic cup (reaching ${CupEngine.roundInSentence(label!)}). You are out, but they are pleased"),
               context: Tr.pick('カップ戦', 'Cup'));
         } else if (target > 0 && target - reached >= 2) {
           _save!.confidence = (_save!.confidence - 3).clamp(0, 100);
           _logNews(
               Tr.pick('国内カップで早期敗退。理事会の期待($label進出)を大きく裏切った',
-                  "An early exit from the domestic cup, well short of the board's expectation of the $label"),
+                  "An early exit from the domestic cup, well short of the board's expectation of ${CupEngine.roundInSentence(label!)}"),
               context: Tr.pick('カップ戦', 'Cup'));
         } else {
           _save!.confidence = (_save!.confidence - 1).clamp(0, 100);
@@ -1576,9 +1576,9 @@ extension GameStateSeason on GameState {
     if (newTier > playedTier) {
       lastDivisionChangeMessage = graceFailed
           ? Tr.pick('スタジアムがクラブライセンスの条件に届かず、降格になりました。来シーズンは$newTier部リーグでの再出発です。',
-              'Your stadium fell short of the club licence, and you are relegated. Next season starts again in tier $newTier.')
+              'Your stadium fell short of the club licence, and you are relegated. Next season starts again in Tier $newTier.')
           : Tr.pick('降格が決まりました。来シーズンは$newTier部リーグでの再出発です。',
-              'You are relegated. Next season starts again in tier $newTier.');
+              'You are relegated. Next season starts again in Tier $newTier.');
     } else if (newTier < playedTier) {
       // 昇格ボーナス: 理事会からの補強予算。放映権の増加は、来季の最初の
       // 入金(8月)から上の部の額で入るので、ここは夏の補強の手付けぶん
@@ -1590,10 +1590,10 @@ extension GameStateSeason on GameState {
       lastDivisionChangeMessage = userInPromotionPlayoff
           ? Tr.pick(
               '昇格プレーオフを勝ち抜き、来シーズンは$newTier部リーグに昇格します！理事会から補強予算${formatMoney(promotionBonus)}が支給されました。',
-              'You came through the play-offs and go up to tier $newTier next season. The board has given you ${formatMoney(promotionBonus)} to strengthen.')
+              'You came through the play-offs and go up to Tier $newTier next season. The board has given you ${formatMoney(promotionBonus)} to strengthen.')
           : Tr.pick(
               '昇格達成！来シーズンは$newTier部リーグに昇格します。理事会から補強予算${formatMoney(promotionBonus)}が支給されました。',
-              'Promoted. You go up to tier $newTier next season, and the board has given you ${formatMoney(promotionBonus)} to strengthen.');
+              'Promoted. You go up to Tier $newTier next season, and the board has given you ${formatMoney(promotionBonus)} to strengthen.');
       // スタジアムが足りないまま上がるなら、来季が猶予の季になる。
       if (graceTier == newTier) {
         final need = ClubLicenseEngine.stadiumLevelFor(newTier);
@@ -1603,20 +1603,20 @@ extension GameStateSeason on GameState {
         _save!.licenseGraceSeason = league.season + 1;
         final note = Tr.pick(
             'スタジアムは$newTier部のライセンスの条件(Lv$need)に届いていませんが、1年の猶予が付きました。$deadlineまでにLv$needにしないと(来季の開幕までに完成する工事中でも可)、1つ下の部へ降格になります。',
-            'Your stadium is below the tier $newTier licence requirement (level $need), but you have a year\'s grace. Reach level $need by $deadline (work due to finish before the next season counts), or you will be relegated one tier.');
+            'Your stadium is below the Tier $newTier licence requirement (level $need), but you have a year\'s grace. Reach level $need by $deadline (work due to finish before the next season counts), or you will be relegated one tier.');
         lastDivisionChangeMessage = '${lastDivisionChangeMessage!}\n$note';
         _logNews(note, context: Tr.pick('クラブライセンス', 'Club licence'));
       }
     } else if (licenseDeniedTier != null) {
       lastDivisionChangeMessage = Tr.pick(
           '昇格の権利を得ましたが、$licenseDeniedTier部のクラブライセンスが下りず、来シーズンも$playedTier部で戦います。足りなかった条件: ${licenseUnmet.join('、')}。',
-          'You earned promotion, but were refused a tier $licenseDeniedTier licence and stay in tier $playedTier. Missing: ${licenseUnmet.join('; ')}.');
+          'You earned promotion, but were refused a Tier $licenseDeniedTier licence and stay in Tier $playedTier. Missing: ${licenseUnmet.join('; ')}.');
       _logNews(lastDivisionChangeMessage!,
           context: Tr.pick('クラブライセンス', 'Club licence'));
     } else if (userInPromotionPlayoff) {
       lastDivisionChangeMessage = Tr.pick(
           '昇格プレーオフで敗れ、来シーズンも$playedTier部リーグで戦います。',
-          'You lost in the play-offs, and stay in tier $playedTier next season.');
+          'You lost in the play-offs, and stay in Tier $playedTier next season.');
     } else {
       lastDivisionChangeMessage = null;
     }
@@ -1816,13 +1816,13 @@ extension GameStateSeason on GameState {
     _closeRivalSeason();
     if (finalRank == 1) {
       _addTimeline(
-          Tr.pick('$playedTier部リーグで優勝', 'Won the tier $playedTier league'));
+          Tr.pick('$playedTier部リーグで優勝', 'Won the Tier $playedTier league'));
     }
     if (newTier < playedTier) {
-      _addTimeline(Tr.pick('$newTier部へ昇格', 'Promoted to tier $newTier'));
+      _addTimeline(Tr.pick('$newTier部へ昇格', 'Promoted to Tier $newTier'));
     }
     if (newTier > playedTier) {
-      _addTimeline(Tr.pick('$newTier部へ降格', 'Relegated to tier $newTier'));
+      _addTimeline(Tr.pick('$newTier部へ降格', 'Relegated to Tier $newTier'));
     }
     _updateParachute(playedTier: playedTier, newTier: newTier);
     for (final cup in cupsWonThisSeason) {

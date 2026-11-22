@@ -58,7 +58,7 @@ class OwnerGoalCard extends StatelessWidget {
             Text(
               Tr.pick(
                   '期限まで あと${gameState.ownerGoalSeasonsLeft}シーズン。達成は殿堂に残ります。',
-                  '${gameState.ownerGoalSeasonsLeft} seasons left. Achievements join the hall of fame.'),
+                  '${Tr.plural(gameState.ownerGoalSeasonsLeft, 'season')} left. Achievements join the hall of fame.'),
               style: theme.textTheme.bodySmall,
             ),
           ],
@@ -97,7 +97,7 @@ class OwnerGoalCard extends StatelessWidget {
                   leading: const Icon(Icons.flag_outlined),
                   title: Text(g.label),
                   trailing: Text(Tr.pick('期限${g.deadlineSeasons}年',
-                      '${g.deadlineSeasons} seasons')),
+                      Tr.plural(g.deadlineSeasons, 'season'))),
                   onTap: () => Navigator.of(ctx).pop(g),
                 ),
               const SizedBox(height: 8),

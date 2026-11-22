@@ -624,6 +624,12 @@ class CupEngine {
       _ => Tr.pick('第$round回戦', 'Round $round'),
     };
   }
+
+  /// 英語の文の中で使う回戦名。「the Final」「the Semi-final」には the を
+  /// 付け、「Round 2」には付けない(「reach the Round 2」になっていた)。
+  /// 日本語はそのまま。
+  static String roundInSentence(String label) =>
+      label.startsWith('Round') ? label : 'the $label';
 }
 
 /// PK戦の1本ぶんの記録(演出表示用)。

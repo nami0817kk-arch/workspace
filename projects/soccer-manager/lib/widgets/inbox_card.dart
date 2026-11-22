@@ -40,28 +40,35 @@ class InboxCard extends StatelessWidget {
                 // 未読の数は小さな丸に。「受信箱(未読 7)」は横画面の
                 // 左の欄で2行に折れていた。
                 // 狭い画面・大きい文字では見出しのほうを縮める(ボタンは残す)。
-                Flexible(
-                  child: Text(Tr.pick('受信箱', 'Inbox'),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleSmall),
-                ),
-                if (unread > 0)
-                  Container(
-                    margin: const EdgeInsets.only(left: 6),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: scheme.primary,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text('$unread',
-                        style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: scheme.onPrimary)),
+                // Flexible と Spacer が残りを半分ずつ取り合い、見出しが
+                // 「受…」に切れていた(2026-11-23)。見出しと丸を Expanded に。
+                Expanded(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(Tr.pick('受信箱', 'Inbox'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleSmall),
+                      ),
+                      if (unread > 0)
+                        Container(
+                          margin: const EdgeInsets.only(left: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: scheme.primary,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text('$unread',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: scheme.onPrimary)),
+                        ),
+                    ],
                   ),
-                const Spacer(),
+                ),
                 // 既読にするは印のボタンに(未読の丸を足した分の幅を空ける)。
                 if (unread > 0)
                   IconButton(

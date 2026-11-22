@@ -159,12 +159,12 @@ extension GameStateRivals on GameState {
         Tr.pick('株主の要求に答えていません', 'The shareholders want an answer'),
       if (s.incomingOffers.isNotEmpty)
         Tr.pick('自分の選手へのオファーが${s.incomingOffers.length}件',
-            '${s.incomingOffers.length} offer(s) for your players'),
+            '${Tr.plural(s.incomingOffers.length, 'offer')} for your players'),
       if (countered > 0)
-        Tr.pick('相手のクラブから対案が$countered件', '$countered counter-offer(s) from clubs'),
+        Tr.pick('相手のクラブから対案が$countered件', '${Tr.plural(countered, 'counter-offer')} from clubs'),
       if (agreed > 0)
         Tr.pick('クラブと合意し、選手と話す交渉が$agreed件',
-            '$agreed deal(s) agreed with clubs: talk to the player'),
+            '${Tr.plural(agreed, 'deal')} agreed with clubs: talk to the player'),
       if (s.staffOffers.isNotEmpty)
         Tr.pick('スタッフの引き抜きの話が${s.staffOffers.length}件',
             '${s.staffOffers.length} approach(es) for your staff'),

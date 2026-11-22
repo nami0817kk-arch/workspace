@@ -24,7 +24,7 @@ extension GameStateInjury on GameState {
         s.injuryPlans[p.id] = 'pending';
         _logNews(
             Tr.pick('${p.name}は${InjuryCare.describe(p)}(${p.injuryWeeks}週)。手術か保存療法かを決めてください。',
-                '${p.name} has ${InjuryCare.describe(p)} (${p.injuryWeeks} weeks). Decide between surgery and rest.'),
+                '${p.name} has ${InjuryCare.describe(p)} (${Tr.plural(p.injuryWeeks, 'week')}). Decide between surgery and rest.'),
             context: Tr.pick('医療', 'Medical'));
       }
     }
@@ -43,14 +43,14 @@ extension GameStateInjury on GameState {
       s.injuryPlans[playerId] = 'surgery';
       _logNews(
           Tr.pick('${p.name}の手術を決めた(${formatMoney(surgeryCost)})。復帰まで${p.injuryWeeks}週。',
-              'Surgery for ${p.name} (${formatMoney(surgeryCost)}). Back in ${p.injuryWeeks} weeks.'),
+              'Surgery for ${p.name} (${formatMoney(surgeryCost)}). Back in ${Tr.plural(p.injuryWeeks, 'week')}.'),
           context: Tr.pick('医療', 'Medical'));
     } else {
       p.injuryWeeks = max(1, p.injuryWeeks - InjuryCare.restSavedWeeks);
       s.injuryPlans[playerId] = 'rest';
       _logNews(
           Tr.pick('${p.name}は保存療法にした。復帰まで${p.injuryWeeks}週(再発することがある)。',
-              '${p.name} will rest the injury. Back in ${p.injuryWeeks} weeks, though it may flare up again.'),
+              '${p.name} will rest the injury. Back in ${Tr.plural(p.injuryWeeks, 'week')}, though it may flare up again.'),
           context: Tr.pick('医療', 'Medical'));
     }
     _notify();

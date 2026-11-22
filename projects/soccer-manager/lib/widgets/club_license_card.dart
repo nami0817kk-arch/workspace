@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/club_license.dart';
 import '../state/game_state.dart';
+import '../theme/semantic_colors.dart';
 
 /// 1つ上の部のクラブライセンスを満たしているか。満たさないと昇格できない。
 class ClubLicenseCard extends StatelessWidget {
@@ -19,15 +20,21 @@ class ClubLicenseCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
     final scheme = Theme.of(context).colorScheme;
+    // 猶予の季の条件。届いていれば「達成済み」と書き分ける(以前は届いても
+    // 赤くないだけで「必要(猶予中)」のままだった。2026-11-23)。
+    final graceMet = gs.stadiumMeetsLicense(gs.currentDivisionTier);
     final graceText = grace == null
         ? null
         : Text(
-            grace,
+            graceMet
+                ? Tr.pick(
+                    'スタジアムの条件: Lv${gs.stadiumGraceLevel} に届きました(猶予の条件は達成済み)',
+                    'Stadium requirement: level ${gs.stadiumGraceLevel} reached (grace condition met)')
+                : grace,
+            key: const ValueKey('license-grace'),
             style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: gs.stadiumMeetsLicense(gs.currentDivisionTier)
-                    ? null
-                    : scheme.error),
+                color: graceMet ? SemanticColors.positive(context) : scheme.error),
           );
     if (up == null) {
       return Card(
@@ -53,14 +60,16 @@ class ClubLicenseCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (graceText != null) ...[graceText, const SizedBox(height: 6)],
-            Text(Tr.pick('クラブライセンス($up部)', 'Club licence (tier $up)'),
+            Text(Tr.pick('クラブライセンス($up部)', 'Club licence (Tier $up)'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
+            // 猶予の行は見出しの下に(以前は見出しより上にあり、どの札の
+            // 話か分かりにくかった)。
+            if (graceText != null) ...[graceText, const SizedBox(height: 6)],
             Text(
                 Tr.pick(
                     '$up部に上がるには、スタジアム$need段階以上${ClubLicenseEngine.needsSolvency(up) ? 'と、季の終わりに資金がマイナスでないこと' : ''}が要ります。スタジアムだけが足りないなら1年の猶予つきで上がれますが、その季のうちに届かないと降格になります。ほかの条件を満たさないと、昇格を決めても権利は次の順位のクラブに移ります。',
-                    'To go up to tier $up you need a level $need stadium${ClubLicenseEngine.needsSolvency(up) ? ' and funds out of the red at the end of the season' : ''}. If only the stadium falls short you can go up with a year\'s grace, but you are relegated if it is not ready by the end of that season. Miss anything else and the promotion place passes to the next club.'),
+                    'To go up to Tier $up you need a level $need stadium${ClubLicenseEngine.needsSolvency(up) ? ' and funds out of the red at the end of the season' : ''}. If only the stadium falls short you can go up with a year\'s grace, but you are relegated if it is not ready by the end of that season. Miss anything else and the promotion place passes to the next club.'),
                 style: const TextStyle(fontSize: 12)),
             const SizedBox(height: 6),
             if (unmet.isEmpty)

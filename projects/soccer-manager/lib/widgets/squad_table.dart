@@ -124,10 +124,30 @@ class _SquadTableState extends State<SquadTable> {
                   style: small.copyWith(color: scheme.onSurfaceVariant)),
             ),
             Expanded(
-              child: Text(
-                p.name,
-                overflow: TextOverflow.ellipsis,
-                style: small.copyWith(fontWeight: FontWeight.w700, color: base),
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      p.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: small.copyWith(
+                          fontWeight: FontWeight.w700, color: base),
+                    ),
+                  ),
+                  // 移籍リストの印。縦画面の一覧(squad_screen)と同じ。
+                  if (p.isTransferListed) ...[
+                    const SizedBox(width: 4),
+                    Tooltip(
+                      message: Tr.pick('移籍リストに登録済み', 'On the transfer list'),
+                      child: const Icon(
+                        Icons.sell_outlined,
+                        key: ValueKey('squad-table-listed'),
+                        size: 14,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
             SizedBox(

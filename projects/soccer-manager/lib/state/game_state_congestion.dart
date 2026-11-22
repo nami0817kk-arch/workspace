@@ -37,6 +37,6 @@ extension GameStateCongestion on GameState {
         Tr.pick('${closes.month}月${closes.day}日に閉まる',
             'Closes ${closes.day}/${closes.month}'),
         Tr.pick('移籍の窓は、次の試合の前に閉まる。交渉中$open件・届いているオファー$offers件。決めるなら今だ。',
-            'The window shuts before the next match. $open deal(s) in progress, $offers offer(s) waiting. Now or never.'));
+            'The window shuts before the next match. ${Tr.plural(open, 'deal')} in progress, ${Tr.plural(offers, 'offer')} waiting. Now or never.'));
   }
 }

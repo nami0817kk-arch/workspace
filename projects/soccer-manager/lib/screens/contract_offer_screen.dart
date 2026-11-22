@@ -495,7 +495,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
             ],
           ),
           const SizedBox(height: 2),
-          Text(Tr.pick('あと$left回、条件を出せます', '$left offers left'),
+          Text(Tr.pick('あと$left回、条件を出せます', '${Tr.plural(left, 'offer')} left'),
               style: TextStyle(
                   fontSize: 11, color: SemanticColors.subtleText(context))),
         ],

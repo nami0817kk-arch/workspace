@@ -12,13 +12,13 @@ class RatingWords {
       final (lo, hi) = divisionStrengthRange(tier);
       final mid = (lo + hi) ~/ 2;
       if (overall >= mid) {
-        return Tr.pick('$tier部の主力級', 'Key player in tier $tier');
+        return Tr.pick('$tier部の主力級', 'Key player in Tier $tier');
       }
       if (overall >= lo) {
-        return Tr.pick('$tier部で通用する', 'Good enough for tier $tier');
+        return Tr.pick('$tier部で通用する', 'Good enough for Tier $tier');
       }
     }
     return Tr.pick('$totalDivisionTiers部でも控え',
-        'Squad player even in tier $totalDivisionTiers');
+        'Squad player even in Tier $totalDivisionTiers');
   }
 }

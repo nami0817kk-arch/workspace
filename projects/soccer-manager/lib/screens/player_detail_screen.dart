@@ -758,32 +758,40 @@ class PlayerDetailScreen extends StatelessWidget {
                   // 売るときは移籍リストに載せ、買い手からのオファーを待つ
                   // (2026-11-23。以前は相場の7割でその場で売れた)。
                   // 売却では契約を買い手が引き継ぐので、違約金は掛からない。
-                  OutlinedButton.icon(
-                    key: const ValueKey('transfer-list'),
-                    icon: const Icon(Icons.sell_outlined),
-                    onPressed: () {
-                      FeedbackService.tap();
-                      gameState.setTransferListed(
-                          playerId, !p.isTransferListed);
-                    },
-                    label: Text(p.isTransferListed
-                        ? Tr.pick('移籍リストから外す（売るのをやめる）',
-                            'Take off the transfer list (stop selling)')
-                        : Tr.pick(
-                            '移籍リストに載せて売りに出す（相場${formatMoney(netReleaseValue)}）',
-                            'Put him up for sale (worth about ${formatMoney(netReleaseValue)})')),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    p.isTransferListed
-                        ? Tr.pick(
-                            '買い手からオファーが届いたら、移籍の画面で受けるか断るかを決めます。人気のない選手には来ないこともあります。',
-                            'When a club makes an offer, accept or turn it down on the transfers screen. Players nobody wants may get no offers.')
-                        : Tr.pick('相場は契約の残り年数で変わります（残りが短いほど安い）。',
-                            'His price depends on how long is left on his contract: the shorter, the cheaper.'),
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: SemanticColors.subtleText(context)),
+                  // ボタンと説明は1つの塊にする。AutoColumns が2列に割るとき、
+                  // ボタンだけ左・説明だけ右に分かれていた(2026-11-23)。
+                  Column(
+                    key: const ValueKey('transfer-list-block'),
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      OutlinedButton.icon(
+                        key: const ValueKey('transfer-list'),
+                        icon: const Icon(Icons.sell_outlined),
+                        onPressed: () {
+                          FeedbackService.tap();
+                          gameState.setTransferListed(
+                              playerId, !p.isTransferListed);
+                        },
+                        label: Text(p.isTransferListed
+                            ? Tr.pick('移籍リストから外す（売るのをやめる）',
+                                'Take off the transfer list (stop selling)')
+                            : Tr.pick(
+                                '移籍リストに載せて売りに出す（相場${formatMoney(netReleaseValue)}）',
+                                'Put him up for sale (worth about ${formatMoney(netReleaseValue)})')),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        p.isTransferListed
+                            ? Tr.pick(
+                                '買い手からオファーが届いたら、移籍の画面の「オファー」のタブで受けるか断るかを決めます。人気のない選手には来ないこともあります。',
+                                'When a club makes an offer, accept or turn it down under "Offers" on the transfers screen. Players nobody wants may get no offers.')
+                            : Tr.pick('相場は契約の残り年数で変わります（残りが短いほど安い）。',
+                                'His price depends on how long is left on his contract: the shorter, the cheaper.'),
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.subtleText(context)),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   // 合意して契約を解除する(窓の外でもできる。選手は自由契約になる)。

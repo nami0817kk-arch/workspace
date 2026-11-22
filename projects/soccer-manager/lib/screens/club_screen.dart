@@ -347,9 +347,22 @@ class _TicketPricingCard extends StatelessWidget {
                   'Attendance and revenue per head pull against each other. Raise prices and fewer of your seats fill; lower them and you get closer to a full house.'),
             ),
             const SizedBox(height: 4),
+            // 選んだ側の印を外し、字は1行のまま縮める。英語の
+            // 「Standard」が「Standa/rd」に割れていた(2026-11-23)。
             SegmentedButton<TicketPricing>(
+              showSelectedIcon: false,
+              style: const ButtonStyle(
+                visualDensity: VisualDensity.compact,
+                padding: WidgetStatePropertyAll(
+                    EdgeInsets.symmetric(horizontal: 10)),
+              ),
               segments: TicketPricing.values
-                  .map((p) => ButtonSegment(value: p, label: Text(p.label)))
+                  .map((p) => ButtonSegment(
+                      value: p,
+                      label: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(p.label, maxLines: 1, softWrap: false),
+                      )))
                   .toList(),
               selected: {current},
               onSelectionChanged: (s) => onSelect(s.first),

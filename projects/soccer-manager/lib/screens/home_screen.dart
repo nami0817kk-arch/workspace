@@ -11,13 +11,12 @@ import '../widgets/front_page_card.dart';
 import '../widgets/owner_goal_card.dart';
 import '../widgets/two_pane.dart';
 import '../logic/calendar_engine.dart';
-import '../logic/sale_advice_engine.dart';
-import '../models/incoming_offer.dart';
+import '../logic/cup_engine.dart';
+import '../logic/day_events.dart';
 import '../models/league.dart';
 import '../models/league_theme.dart';
 import '../models/owner_legacy.dart';
 import '../models/match_result.dart';
-import '../models/player.dart';
 import '../models/team.dart';
 import '../monetization/monetization_controller.dart';
 import '../services/review_prompt.dart';
@@ -30,6 +29,7 @@ import '../widgets/busy_overlay.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/inbox_card.dart';
+import '../widgets/incoming_offers_card.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/next_action_card.dart';
@@ -50,26 +50,6 @@ import '../widgets/screen_bar.dart';
 import '../widgets/big_moment_overlay.dart';
 import '../widgets/rumor_card.dart';
 import '../logic/economy_scale.dart';
-
-/// 移籍オファーを選手ごとにグループ化し、各グループ内は金額の高い順に並べる
-/// (複数クラブが競合している場合、最高額が先頭に来る)。
-List<List<IncomingOffer>> _groupOffersByPlayer(GameState gameState) {
-  final byPlayer = <String, List<IncomingOffer>>{};
-  for (final o in gameState.incomingOffers) {
-    byPlayer.putIfAbsent(o.playerId, () => []).add(o);
-  }
-  for (final group in byPlayer.values) {
-    group.sort((a, b) => b.amount.compareTo(a.amount));
-  }
-  return byPlayer.values.toList();
-}
-
-Player? _playerOf(GameState gameState, IncomingOffer offer) {
-  for (final p in gameState.userTeam.players) {
-    if (p.id == offer.playerId) return p;
-  }
-  return null;
-}
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -96,7 +76,17 @@ class HomeScreen extends StatelessWidget {
     final standings = league.sortedStandings;
     final userRank = standings.indexWhere((r) => r.teamId == userTeam.id) + 1;
     final userRow = standings.firstWhere((r) => r.teamId == userTeam.id);
-    final next = league.nextUnplayedFixture;
+    // 自クラブの次のリーグ戦。リーグ全体の次の試合(nextUnplayedFixture)は
+    // 他のクラブ同士の試合のことがあり、次の試合の札に「ボルトン vs
+    // ブラックプール」と自クラブの出ない試合が出ていた(2026-11-23)。
+    final next = (league.fixtures
+            .where((f) =>
+                f.result == null &&
+                (f.homeTeamId == userTeam.id || f.awayTeamId == userTeam.id))
+            .toList()
+          ..sort((a, b) => a.matchday.compareTo(b.matchday)))
+        .firstOrNull ??
+        league.nextUnplayedFixture;
     final seasonComplete = league.isSeasonComplete;
     final net = _netWeekly(gameState);
     // 横画面は高さが 400 ほどしかない。帯と数字のタイルを左右に分ける。
@@ -278,7 +268,7 @@ class HomeScreen extends StatelessWidget {
                                 Text(
                                   Tr.pick(
                                       '目標: ${save.boardTargetRank}位以内${gameState.boardCupTargetLabel != null ? '・カップ${gameState.boardCupTargetLabel}進出' : ''}',
-                                      "Target: top ${save.boardTargetRank}${gameState.boardCupTargetLabel != null ? ' • reach the ${gameState.boardCupTargetLabel} in the cup' : ''}"),
+                                      "Target: top ${save.boardTargetRank}${gameState.boardCupTargetLabel != null ? ' • reach ${CupEngine.roundInSentence(gameState.boardCupTargetLabel!)} in the cup' : ''}"),
                                   style: TextStyle(
                                       color:
                                           Colors.white.withValues(alpha: 0.88)),
@@ -555,123 +545,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (gameState.incomingOffers.isNotEmpty)
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Tr.pick('移籍オファー', 'Transfer offer'),
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        for (final entry in _groupOffersByPlayer(gameState))
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (entry.length > 1)
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 2),
-                                    child: Text(
-                                      Tr.pick(
-                                          '${entry.first.playerName}に競合オファー',
-                                          'Rival bids for ${entry.first.playerName}'),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.orange.shade800,
-                                      ),
-                                    ),
-                                  ),
-                                for (int i = 0; i < entry.length; i++)
-                                  Row(
-                                    children: [
-                                      if (entry.length > 1 && i == 0)
-                                        const Padding(
-                                          padding: EdgeInsets.only(right: 4),
-                                          child: Icon(
-                                            Icons.star,
-                                            size: 14,
-                                            color: Colors.amber,
-                                          ),
-                                        ),
-                                      Expanded(
-                                        child: Text(
-                                          Tr.pick(
-                                              '${entry[i].buyerClubName}が${entry[i].playerName}に${formatMoney(entry[i].amount)}${entry[i].isFinal ? '(これ以上は出さない)' : ''}',
-                                              '${entry[i].buyerClubName} bid ${formatMoney(entry[i].amount)} for ${entry[i].playerName}${entry[i].isFinal ? ' (final)' : ''}'),
-                                        ),
-                                      ),
-                                      if (entry[i].askedAmount != null)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Text(
-                                            Tr.pick('返事待ち', 'Awaiting reply'),
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: SemanticColors.subtleText(
-                                                  context),
-                                            ),
-                                          ),
-                                        )
-                                      else if (gameState
-                                          .canCounterIncomingOffer(entry[i]))
-                                        TextButton(
-                                          onPressed: () => _showCounterDialog(
-                                              context, entry[i]),
-                                          child: Text(Tr.pick('対案', 'Counter')),
-                                        ),
-                                      TextButton(
-                                        onPressed: () {
-                                          FeedbackService.tap();
-                                          gameState.declineIncomingOffer(
-                                            entry[i].id,
-                                          );
-                                        },
-                                        child: Text(Tr.pick('拒否', 'Reject')),
-                                      ),
-                                      FilledButton(
-                                        onPressed:
-                                            !gameState.isTransferWindowOpen
-                                                ? null
-                                                : () => _confirmAcceptOffer(
-                                                      context,
-                                                      entry[i],
-                                                    ),
-                                        child: Text(Tr.pick('承諾', 'Accept')),
-                                      ),
-                                    ],
-                                  ),
-                                // 監督の見立て。買い手ごとに1行。
-                                for (int i = 0; i < entry.length; i++)
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 2),
-                                    child: Text(
-                                      Tr.pick('監督: ', 'Manager: ') +
-                                          SaleAdviceEngine.advise(
-                                            entry[i],
-                                            _playerOf(gameState, entry[i]),
-                                            gameState.userTeam,
-                                          ).comment,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant,
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
+              const IncomingOffersCard(),
               // スポンサー未契約のまま気づかず収入を取りこぼすことが多いため、
               // オファーが届いている間はホームに警告カードを常設する。
               if (save.sponsorDeal == null &&
@@ -684,7 +558,7 @@ class HomeScreen extends StatelessWidget {
                     subtitle: Text(
                       Tr.pick(
                           'スポンサーオファーが${save.pendingSponsorOffers.length}件届いています。契約すると1年の収入が増えます。',
-                          '${save.pendingSponsorOffers.length} sponsorship offers are waiting. Signing one raises your weekly income.'),
+                          'Waiting: ${Tr.plural(save.pendingSponsorOffers.length, 'sponsorship offer')}. Signing one raises your weekly income.'),
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => Navigator.of(context).push(
@@ -713,6 +587,33 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        // 進むボタンは日付の順に次の予定へ進む。リーグ戦の前に
+                        // 自クラブのカップ戦があると、ボタンはカップ戦の日付
+                        // なのに札はリーグ戦を出していて、食い違って見えた
+                        // (2026-11-23)。ボタンの側が正しいので、札にも先に
+                        // カップ戦があることを出す。
+                        if (gameState.nextStop?.kind == DayEventKind.cupMatch)
+                          Padding(
+                            key: const ValueKey('next-cup-before-league'),
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              children: [
+                                Icon(Icons.emoji_events_outlined,
+                                    size: 18, color: scheme.tertiary),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    Tr.pick(
+                                        '次の試合は${CalendarEngine.formatShortDate(gameState.nextStop!.date)}の${gameState.nextStop!.label}。下のリーグ戦はその後です。',
+                                        'Next up: ${gameState.nextStop!.label} on ${CalendarEngine.formatShortDate(gameState.nextStop!.date)}. The league match below comes after it.'),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         Row(
                           children: [
                             ClubEmblem(
@@ -965,7 +866,7 @@ class HomeScreen extends StatelessWidget {
                 'Stopped after ${GameStateRivals.advanceLimit} matchdays');
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(Tr.pick('${results.length}節進めました($w勝$d分$l敗)。$why',
-          'Played ${results.length} matchday(s) (W$w D$d L$l). $why')),
+          'Played ${Tr.plural(results.length, 'matchday')} (W$w D$d L$l). $why')),
       duration: const Duration(seconds: 6),
     ));
     _showMatchdayNotifications(context, gameState);
@@ -1403,102 +1304,6 @@ class HomeScreen extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(Tr.pick('閉じる', 'Close')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 来たオファーに、もっと高い額を求める。
-  Future<void> _showCounterDialog(
-      BuildContext context, IncomingOffer offer) async {
-    var ratio = 1.15;
-    final asked = await showDialog<int>(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setState) {
-          final amount = (offer.amount * ratio).round();
-          return AlertDialog(
-            title: Text(Tr.pick('${offer.buyerClubName}に対案を返す',
-                'Counter ${offer.buyerClubName}')),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(Tr.pick('今の提示: ${formatMoney(offer.amount)}',
-                    'Their bid: ${formatMoney(offer.amount)}')),
-                Text(Tr.pick(
-                    '求める額: ${formatMoney(amount)}(+${((ratio - 1) * 100).round()}%)',
-                    'You ask: ${formatMoney(amount)} (+${((ratio - 1) * 100).round()}%)')),
-                Slider(
-                  value: ratio,
-                  min: 1.05,
-                  max: 1.6,
-                  divisions: 11,
-                  onChanged: (v) => setState(() => ratio = v),
-                ),
-                Text(
-                  Tr.pick(
-                      '買い手が出せる額には上限があります。求めすぎると話を打ち切られます。返事は2日ほどで来ます。対案を返せるのは1回だけです。',
-                      'Every buyer has a limit. Ask too much and they walk away. They reply in about 2 days. You can only counter once.'),
-                  style: TextStyle(
-                      fontSize: 12, color: SemanticColors.subtleText(context)),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text(Tr.pick('やめる', 'Never mind')),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(ctx, amount),
-                child: Text(Tr.pick('対案を返す', 'Send counter')),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-    if (asked == null || !context.mounted) return;
-    FeedbackService.tap();
-    await context.read<GameState>().counterIncomingOffer(offer.id, asked);
-  }
-
-  void _confirmAcceptOffer(BuildContext context, IncomingOffer offer) {
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(Tr.pick('この移籍オファーを承諾しますか？', 'Accept this transfer offer?')),
-        content: Text(
-          Tr.pick(
-              '${offer.playerName}が${offer.buyerClubName}へ${formatMoney(offer.amount)}で移籍します。この操作は元に戻せません。',
-              '${offer.playerName} joins ${offer.buyerClubName} for ${formatMoney(offer.amount)}. This cannot be undone.'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(Tr.pick('キャンセル', 'Cancel')),
-          ),
-          if (!offer.viaReleaseClause)
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                FeedbackService.success();
-                context
-                    .read<GameState>()
-                    .acceptIncomingOfferWithBuyBack(offer.id);
-              },
-              child: Text(Tr.pick('買い戻し条項付きで承諾(売値-10%)',
-                  'Accept with a buy-back clause (-10%)')),
-            ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              FeedbackService.success();
-              context.read<GameState>().acceptIncomingOffer(offer.id);
-            },
-            child: Text(Tr.pick('承諾する', 'Accept')),
           ),
         ],
       ),
@@ -2253,7 +2058,7 @@ class _SaleScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   Tr.pick('別の国で新しいクラブを立ち上げる(3部から。その国の規則に従います)',
-                      'Or found a new club in another country (starts in tier 3, under that country\'s rules)'),
+                      'Or found a new club in another country (starts in Tier 3, under that country\'s rules)'),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
