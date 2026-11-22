@@ -39,10 +39,9 @@ void main() {
           .inDays;
 
   group('1〜3. 季の途中で別の国のクラブを買い直す', () {
-    test('前のクラブの週の処理・節の処理の記録が残らず、新しい国の節がふつうに進む', () async {
+    test('前のクラブの週の処理・節の処理の記録を片付ける', () async {
       final gs = await start();
-      final played = await gs.simulateAheadMatchdays(6);
-      expect(played.length, 6);
+      expect((await gs.simulateAheadMatchdays(6)).length, 6);
       final s0 = gs.save!;
       expect(s0.weekProcessedMatchday, 6);
       expect(s0.lastWeeklyTickDate, isNotNull);
@@ -59,23 +58,44 @@ void main() {
       expect(s.liveMatchProgress, isNull);
       expect(s.lastManagerOfMonthCheckpoint, 0);
       expect(s.personalDatesThrough, reached);
+    });
 
-      final again = await gs.simulateAheadMatchdays(6);
-      expect(again.length, 6);
-      // 1. 週の処理は止まらず、7日ごとに回っている。
+    test('1. 戻した期間も週の処理が7日ごとに回り、過密の判定も新しい試合の日から', () async {
+      final gs = await start();
+      expect((await gs.simulateAheadMatchdays(6)).length, 6);
+      final reached = gs.today;
+      gs.save!.confidence = 0;
+      expect(await gs.buyClubInCountry(otherTheme(gs)), isTrue);
+      final s = gs.save!;
+
+      // 前のクラブで進めた日より前の節を3つ。
+      expect((await gs.simulateAheadMatchdays(3)).length, 3);
+      expect(gs.today.isBefore(reached), isTrue);
       final tick = s.lastWeeklyTickDate;
       expect(tick, isNotNull);
       expect(tick!.isAfter(gs.today), isFalse,
-          reason: '前のクラブの季の途中の日付のまま残っていない');
+          reason: '前のクラブの季の途中の日付のまま、週の処理が止まっている');
       expect(daysBetween(tick, gs.today), lessThan(7));
-      // 2. 前のクラブで処理した節番号(6)の節も、他の部まで消化している。
+      expect(s.lastUserMatchDate, gs.today, reason: '自クラブの最後の試合の日が前のクラブのまま');
+    });
+
+    test('2. 前のクラブで処理した節番号の節を「途中で終わった試合」と取り違えない', () async {
+      // 第1節を終えた直後に手放すと、新しい国の第1節が同じ番号になる。
+      final gs = await start();
+      expect((await gs.simulateAheadMatchdays(1)).length, 1);
+      expect(gs.save!.weekProcessedMatchday, 1);
+      gs.save!.confidence = 0;
+      expect(await gs.buyClubInCountry(otherTheme(gs)), isTrue);
+      final s = gs.save!;
+
+      expect((await gs.simulateAheadMatchdays(1)).length, 1);
+      expect(s.lastWeeklyTickDate, isNotNull, reason: '週の処理の時計が起きていない');
       for (final l in s.otherDivisionLeagues) {
         if (l == null) continue;
-        for (final f in l.fixtures.where((f) => f.matchday <= 6)) {
-          expect(f.result, isNotNull, reason: '他の部の第${f.matchday}節が飛ばされた');
+        for (final f in l.fixtures.where((f) => f.matchday == 1)) {
+          expect(f.result, isNotNull, reason: '他の部の第1節が飛ばされた');
         }
       }
-      expect(s.weekProcessedMatchday, 6);
     });
 
     test('オーナーの本業の収入と誕生日は、戻した期間ぶん二重に入らない', () async {
