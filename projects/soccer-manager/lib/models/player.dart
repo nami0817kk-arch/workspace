@@ -2,6 +2,7 @@
 import 'player_instruction.dart';
 import 'player_traits.dart';
 import 'attributes.dart';
+import 'card_rules.dart';
 import 'enum_json.dart';
 import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
@@ -48,6 +49,47 @@ extension InjuryTypeInfo on InjuryType {
 /// 大分類（GK/DEF/MID/ATT）。試合シミュレーションの攻撃力・守備力算出や
 /// トレーニング成長率の判定など、粗い分類で十分な処理に用いる。
 enum PositionGroup { gk, def, mid, att }
+
+/// 市場価値の年齢の係数。若いほど高く(伸びしろへの期待)、28歳ごろから
+/// 下がり、30代前半で大きく下がる。年齢の間は線でつなぐ。
+///
+/// 以前は 21歳まで 1.4・27歳まで 1.1・30歳まで 0.8・31歳から 0.4 の階段で、
+/// 31歳の誕生日の一晩で価値が半分になった(2026-11-23 に曲線へ)。
+/// 全体の平均がほぼ変わらないように点を置いた。
+double marketValueAgeFactor(int age) =>
+    piecewiseLinear(_marketValueAgePoints, age);
+
+const List<(int, double)> _marketValueAgePoints = [
+  (19, 1.4),
+  (21, 1.36),
+  (23, 1.24),
+  (25, 1.12),
+  (27, 1.02),
+  (28, 0.94),
+  (29, 0.85),
+  (30, 0.75),
+  (31, 0.64),
+  (32, 0.54),
+  (33, 0.46),
+  (34, 0.4),
+  (36, 0.33),
+  (38, 0.28),
+];
+
+/// 市場価値のポジションの係数。同じ総合力でも、点を取る前の選手ほど高く、
+/// キーパー・センターバックは安い(実際の移籍金の傾向)。23人の標準の
+/// 編成で平均がほぼ1になるように置いた(2026-11-23 に足した)。
+double marketValuePositionFactor(Position pos) => switch (pos) {
+      Position.gk => 0.62,
+      Position.dc => 0.88,
+      Position.dr || Position.dl => 0.92,
+      Position.wbr || Position.wbl => 0.94,
+      Position.dm => 1.0,
+      Position.mc || Position.mr || Position.ml => 1.05,
+      Position.amc => 1.12,
+      Position.amr || Position.aml => 1.16,
+      Position.st => 1.22,
+    };
 
 extension PositionLabel on Position {
   String get label {
@@ -1042,13 +1084,70 @@ class Player {
   /// 過去に負ったことのある負傷の種類ごとの回数。再負傷のリスク判定に使う。
   Map<String, int> injuryHistoryCounts;
 
-  /// 現在の累積警告数(退場したリセットされる)。[yellowCardSuspensionThreshold]枚
-  /// 貯まると次節出場停止になり0にリセットされる。
+  /// 今季のリーグ戦の警告の数(季末に0に戻る。2026-11-23 から)。何枚目で
+  /// 何試合の出場停止になるかは国で違う([CardRules])。それまでは5枚で
+  /// 1試合の出場停止になり0に戻す数え方で、全大会の警告を数えていた
+  /// (古いセーブの値は、そのまま今季の枚数として読む)。
   int yellowCards;
 
-  /// 出場停止の残り試合数(0なら出場停止でない)。退場は即1試合、
-  /// 警告累積は[yellowCardSuspensionThreshold]枚で1試合の出場停止。
+  /// リーグ戦の出場停止の残り試合数(0なら出場停止でない)。リーグ戦で
+  /// 消化する。退場は1試合(暴力行為は3試合)、警告の累積は国の決まり。
   int suspendedMatches;
+
+  /// 今季の国内カップ戦(国内カップ・リーグカップ・スーパーカップ)の警告の数。
+  int cupYellowCards;
+
+  /// 国内カップ戦の出場停止の残り試合数(国内カップ戦で消化する)。
+  int cupSuspendedMatches;
+
+  /// 今季の大陸大会の警告の数。
+  int continentalYellowCards;
+
+  /// 大陸大会の出場停止の残り試合数(大陸大会で消化する)。
+  int continentalSuspendedMatches;
+
+  /// [c]の大会の今季の警告の数。
+  int yellowCardsIn(CardCompetition c) => switch (c) {
+        CardCompetition.league => yellowCards,
+        CardCompetition.cup => cupYellowCards,
+        CardCompetition.continental => continentalYellowCards,
+      };
+
+  void setYellowCardsIn(CardCompetition c, int value) {
+    switch (c) {
+      case CardCompetition.league:
+        yellowCards = value;
+      case CardCompetition.cup:
+        cupYellowCards = value;
+      case CardCompetition.continental:
+        continentalYellowCards = value;
+    }
+  }
+
+  /// [c]の大会の出場停止の残り試合数。
+  int suspendedIn(CardCompetition c) => switch (c) {
+        CardCompetition.league => suspendedMatches,
+        CardCompetition.cup => cupSuspendedMatches,
+        CardCompetition.continental => continentalSuspendedMatches,
+      };
+
+  void setSuspendedIn(CardCompetition c, int value) {
+    switch (c) {
+      case CardCompetition.league:
+        suspendedMatches = value;
+      case CardCompetition.cup:
+        cupSuspendedMatches = value;
+      case CardCompetition.continental:
+        continentalSuspendedMatches = value;
+    }
+  }
+
+  /// 季末に、全大会の警告の数を0に戻す(出場停止の残りは次の季へ持ち越す)。
+  void resetSeasonYellowCards() {
+    yellowCards = 0;
+    cupYellowCards = 0;
+    continentalYellowCards = 0;
+  }
 
   /// 通算出場試合数・通算得点数(公式戦・カップ戦。親善試合は含まない)。
   int careerAppearances;
@@ -1203,7 +1302,8 @@ class Player {
   /// (表示専用。自クラブの選手・フリーエージェントにはnull)。
   String? originClubName;
 
-  /// 出場手当(万円)。契約更新時に決定され、リーグ公式戦でスタメン出場するたびに支払われる。
+  /// 出場手当(万円)。契約更新時に決定され、公式戦(リーグ・カップ・大陸大会)に
+  /// 先発するたびに支払われる。途中出場は半額(logic/appearance_fee_engine.dart)。
   int appearanceFee;
 
   /// 出来高: リーグ戦で1点取るごとに払う額(万円。0なら無し)。
@@ -1269,6 +1369,15 @@ class Player {
   static int nationalityHash(String id) =>
       id.codeUnits.fold<int>(37, (a, c) => (a * 31 + c) % 1000003);
 
+  /// [key]から決まる 0 以上 1 未満の値(国籍・国内育成のくじに使う)。
+  ///
+  /// [nationalityHash]の下の桁をそのまま使うと、続き番号の id(pl10, pl11,
+  /// …)でほぼ同じ値が続き、25人のクラブがそろって自国籍になったり外国籍に
+  /// なったりした(新しいゲームの自クラブの17%が外国籍0人。2026-11-23)。
+  /// 黄金比の乗数で散らす(Web でも整数の精度に収まる大きさ)。
+  static double spreadRoll(String key) =>
+      (nationalityHash(key) * 2654435761 % 4294967296) / 4294967296;
+
   /// 所属クラブの国とは別の国籍になる選手か(1割)。国籍を覚えていない
   /// 選手の国籍はこれで決まるので、生成のときに国内育成の印を付けるのにも使う。
   static bool foreignNationalFromId(String id) =>
@@ -1333,6 +1442,10 @@ class Player {
     Map<String, int>? injuryHistoryCounts,
     this.yellowCards = 0,
     this.suspendedMatches = 0,
+    this.cupYellowCards = 0,
+    this.cupSuspendedMatches = 0,
+    this.continentalYellowCards = 0,
+    this.continentalSuspendedMatches = 0,
     this.careerAppearances = 0,
     this.careerGoals = 0,
     this.wage = 20,
@@ -1514,7 +1627,9 @@ class Player {
 
   bool get isInjured => injuryWeeks > 0;
 
-  bool get isSuspended => suspendedMatches > 0;
+  /// いま行っている試合の大会([CardRules.current])で出場停止か。試合の外
+  /// (画面)ではリーグ戦の出場停止。
+  bool get isSuspended => suspendedIn(CardRules.current.competition) > 0;
 
   bool get isOnInternationalDuty =>
       internationalDutyWeeksRemaining > 0 || onTournamentLeave;
@@ -1560,22 +1675,16 @@ class Player {
     double personalityFactor,
     double leadershipFactor,
     double tournamentFactor,
+    double positionFactor,
   }) get marketValueBreakdown {
     // 能力に対して指数で伸びる(総合78で約5億、85で約17億、95で約100億)。
     final base = marketValueBase(overall);
     // 伸びしろ1あたり、基礎の3%を上乗せする。以前は1あたり15万円の
     // 足し算だったが、基礎が億の桁になると伸びしろが無いのと同じになる。
     final potentialBonus = base * (potential - overall).clamp(0, 40) * 0.03;
-    double ageFactor;
-    if (age <= 21) {
-      ageFactor = 1.4;
-    } else if (age <= 27) {
-      ageFactor = 1.1;
-    } else if (age <= 30) {
-      ageFactor = 0.8;
-    } else {
-      ageFactor = 0.4;
-    }
+    // 年齢の係数は線でつないだ曲線(誕生日で一晩に大きく落ちない)。
+    // 以前は 1.4→1.1→0.8→0.4 の階段で、31歳の誕生日に価値が半分になった。
+    final ageFactor = marketValueAgeFactor(age);
     // リーダーシップが高い選手は主将候補として、低い選手はロッカールームへの
     // 悪影響を懸念されてわずかに評価が振れる(±10%)。
     final leadershipFactor = 1 +
@@ -1587,8 +1696,14 @@ class Player {
       personalityFactor: personality.marketValueFactor,
       leadershipFactor: leadershipFactor,
       tournamentFactor: 1 + tournamentBoostPct / 100,
+      positionFactor: marketValuePositionFactor(position),
     );
   }
+
+  /// 今の能力と経験(年齢)に見合う週俸(万円)。[level] は年俸の水準
+  /// ([currentWageLevel])。伸びしろは見ない(移籍金だけに効く)。
+  int fairWeeklyWage([double? level]) =>
+      weeklyWageForAbility(overall, age, level);
 
   /// 想定移籍金（万円）。年齢・現在能力・伸びしろから概算する。
   int get marketValue {
@@ -1597,7 +1712,8 @@ class Player {
         b.ageFactor *
         b.personalityFactor *
         b.leadershipFactor *
-        b.tournamentFactor;
+        b.tournamentFactor *
+        b.positionFactor;
     return value.round().clamp(minMarketValue, maxMarketValue);
   }
 
@@ -1641,6 +1757,10 @@ class Player {
     put('injuryHistoryCounts', injuryHistoryCounts, null);
     put('yellowCards', yellowCards, 0);
     put('suspendedMatches', suspendedMatches, 0);
+    put('cupYellowCards', cupYellowCards, 0);
+    put('cupSuspendedMatches', cupSuspendedMatches, 0);
+    put('continentalYellowCards', continentalYellowCards, 0);
+    put('continentalSuspendedMatches', continentalSuspendedMatches, 0);
     put('careerAppearances', careerAppearances, 0);
     put('careerGoals', careerGoals, 0);
     put('wage', wage, 20);
@@ -1760,6 +1880,11 @@ class Player {
           {},
       yellowCards: json['yellowCards'] as int? ?? 0,
       suspendedMatches: json['suspendedMatches'] as int? ?? 0,
+      cupYellowCards: json['cupYellowCards'] as int? ?? 0,
+      cupSuspendedMatches: json['cupSuspendedMatches'] as int? ?? 0,
+      continentalYellowCards: json['continentalYellowCards'] as int? ?? 0,
+      continentalSuspendedMatches:
+          json['continentalSuspendedMatches'] as int? ?? 0,
       careerAppearances: json['careerAppearances'] as int? ?? 0,
       careerGoals: json['careerGoals'] as int? ?? 0,
       wage: json['wage'] as int? ?? 20,

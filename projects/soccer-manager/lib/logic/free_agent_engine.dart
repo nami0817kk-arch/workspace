@@ -41,11 +41,14 @@ class FreeAgentEngine {
     var leave = (surplus * weeklySigningShare).floor();
     if (leave == 0 && r.nextDouble() < surplus * weeklySigningShare) leave = 1;
     if (leave <= 0) return const [];
-    final candidates = [
+    // 比べるたびに乱数を引くと並べ方の前提(同じ2人は毎回同じ順)が崩れ、
+    // sort が RangeError で落ちることがある。乱数は先に1人1回だけ引く。
+    final score = <Player, int>{
       for (final p in pool)
-        if (!keep.contains(p.id)) p,
-    ]..sort((a, b) =>
-        (b.overall + r.nextInt(10)).compareTo(a.overall + r.nextInt(10)));
+        if (!keep.contains(p.id)) p: p.overall + r.nextInt(10),
+    };
+    final candidates = score.keys.toList()
+      ..sort((a, b) => score[b]!.compareTo(score[a]!));
     final gone = candidates.take(leave).toList();
     pool.removeWhere(gone.contains);
     return gone;

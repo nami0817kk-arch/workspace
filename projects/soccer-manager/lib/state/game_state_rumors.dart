@@ -83,7 +83,8 @@ extension GameStateRumors on GameState {
               playerId: p.id,
               playerName: p.name,
               buyerClubName: r[2],
-              amount: (p.marketValue * 1.2).round(),
+              // 相場(契約の残り年数の係数込み)の2割増し。
+              amount: (TransferValue.worth(p, seasonProgress) * 1.2).round(),
             ));
           }
       }

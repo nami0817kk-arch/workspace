@@ -273,8 +273,8 @@ List<GlossaryEntry> get glossaryEntries => [
       GlossaryEntry(
         term: Tr.pick('出場手当', 'Appearance fee'),
         category: GlossaryCategory.contractTransfer,
-        description: Tr.pick('契約更新時に決定される手当(万円)。リーグ公式戦でスタメン出場するたびに支払われる。',
-            'Agreed when you renew, and paid every time he starts a league match.'),
+        description: Tr.pick('契約更新時に決定される手当(万円)。リーグ戦・カップ戦・大陸大会に先発するたびに支払われ、途中出場なら半額。',
+            'Agreed when you renew, and paid every time he starts a league, cup or continental match. Half if he comes off the bench.'),
       ),
       GlossaryEntry(
         term: Tr.pick('サインボーナス', 'Signing bonus'),
@@ -320,8 +320,8 @@ List<GlossaryEntry> get glossaryEntries => [
       GlossaryEntry(
         term: Tr.pick('監督への信頼度', 'Board confidence'),
         category: GlossaryCategory.club,
-        description: Tr.pick('理事会からの信頼度(0-100)。目標順位を下回る成績が続くと下がり、0になると解任される。',
-            'How much the board trusts you (0-100). Sustained results below their target push it down, and at zero you are sacked.'),
+        description: Tr.pick('サポーターの期待(0-100)。目標順位を下回る成績が続くと下がり、0になる(不満が限界を超える)とクラブを手放すことになる。',
+            'What the supporters expect of you (0-100). Sustained results below the target push it down, and at zero their anger forces you to sell the club.'),
       ),
       GlossaryEntry(
         term: Tr.pick('監督としての評価', 'Reputation'),
@@ -559,11 +559,11 @@ List<GlossaryEntry> get glossaryEntries => [
             "Your prospects play a nearby club's academy each week. Appearances, goals and ratings are recorded for all of them, and those who play well improve faster. The youth screen shows the record, which helps you judge when to promote someone. A standout performance makes the club news."),
       ),
       GlossaryEntry(
-        term: Tr.pick('監督契約', 'Your contract'),
+        term: Tr.pick('監督の契約', "The manager's contract"),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            '理事会と結ぶ監督(あなた)の契約。毎シーズン残り年数が1年ずつ減り、目標達成で3年契約に延長される。契約が切れた時に理事会の信頼が低いと解任、信頼があれば1年の暫定契約で続投となる。残り年数は監督キャリア画面で確認できる。',
-            'The deal you hold with the board. It loses a year each season, and meeting their target extends it to three. If it runs out while their confidence is low you are sacked; if they still back you, they offer a one-year extension. Your career page shows what is left.'),
+            'あなたが雇っている監督の任期。シーズンが変わるたびに残りが1年ずつ減り、残り1年になると知らせが届く。切れると監督は去るので、新しい監督を雇う。残りはスタッフの画面で確かめられる。オーナーのあなたは理事会と契約していないので、任期で辞めさせられることはない。',
+            'How long the manager you hired is signed for. It loses a year each season, you are told when he enters his last year, and when it runs out he leaves and you hire someone new. The staff screen shows what is left. As the owner you have no contract with a board, so no term can end your time at the club.'),
       ),
       GlossaryEntry(
         term: Tr.pick('ウォッチリスト', 'Watchlist'),

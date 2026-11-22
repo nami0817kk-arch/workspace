@@ -70,7 +70,7 @@ void main() {
     test('出番を約束するほど、望む年俸は上がる(更新と同じ向き)', () {
       int d(SquadStatus s) => PlayerTermsEngine.demand(
           currentWage: 100,
-          marketValue: 0,
+          fairWage: 0,
           fromTier: 3,
           toTier: 3,
           wasStarter: false,
@@ -123,7 +123,12 @@ void main() {
     test('出られるのに先発から外し続けると、約束を破ったことになる', () async {
       final (gs, p) = await signedWithPromise();
       gs.userTeam.startingXI.remove(p.id);
-      p.injuryWeeks = 0;
+      // 出られる状態にする。夏の国際大会(W杯など)の年は、取った選手が
+      // 大会で抜けていることがあり、その間は約束の数に入らない。
+      p
+        ..injuryWeeks = 0
+        ..onTournamentLeave = false
+        ..internationalDutyWeeksRemaining = 0;
       for (var i = 0;
           i < PlayerTermsEngine.promiseTolerance(SquadStatus.keyPlayer) - 1;
           i++) {

@@ -16,12 +16,16 @@ import '../models/league_theme.dart';
 /// - 土曜が足りない部(46節など)は、ふつうの週の火曜にも節を入れる。
 ///   土曜が余る部は、開幕を最大2週遅らせ、残りは間を均等に空ける。
 /// - 国内カップ・大陸大会は、前後の節のあいだの平日(火・水)に置く。
+/// - イングランドの3部(League One 相当)は代表ウィークにも節を置く
+///   ([playsInInternationalWindows]。実在の EFL は代表ウィークも試合を
+///   する。招集された選手はいないまま戦う)。
 class SeasonCalendar {
   SeasonCalendar._({
     required this.season,
     required this.theme,
     required this.matchdayDates,
     required Set<DateTime> blackout,
+    this.playsInInternationalWindows = false,
   }) : _blackout = blackout;
 
   /// 第1季が始まる年(第1季は 2026/27 シーズン)。
@@ -29,6 +33,15 @@ class SeasonCalendar {
 
   final int season;
   final LeagueTheme theme;
+
+  /// 代表ウィークにもリーグ戦の節を置く暦か(イングランドの3部)。
+  final bool playsInInternationalWindows;
+
+  /// [theme]の[tier]部が代表ウィークにも節を置くか。実在では
+  /// イングランドの3部(League One)と4部は代表ウィークも試合をする。
+  /// このゲームは3部まで。
+  static bool playsThroughInternationalWindows(LeagueTheme theme, int tier) =>
+      theme == LeagueTheme.england && tier >= 3;
 
   /// 節ごとの日付。[0] が第1節。
   final List<DateTime> matchdayDates;
@@ -48,15 +61,20 @@ class SeasonCalendar {
   static DateTime dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
   /// [season]・[theme]・[totalMatchdays]の暦を作る(同じ入力は使い回す)。
+  /// [playsInInternationalWindows]なら代表ウィークにも節を置く
+  /// ([playsThroughInternationalWindows])。
   factory SeasonCalendar.build({
     required int season,
     required LeagueTheme theme,
     required int totalMatchdays,
+    bool playsInInternationalWindows = false,
   }) {
-    final key = '$season/${theme.name}/$totalMatchdays';
+    final key = '$season/${theme.name}/$totalMatchdays'
+        '${playsInInternationalWindows ? '/intl' : ''}';
     return _cache.putIfAbsent(
       key,
-      () => _generate(season, theme, totalMatchdays),
+      () =>
+          _generate(season, theme, totalMatchdays, playsInInternationalWindows),
     );
   }
 
@@ -129,6 +147,7 @@ class SeasonCalendar {
     int season,
     LeagueTheme theme,
     int total,
+    bool playsInWindows,
   ) {
     final y = startYear(season);
     final intl = internationalWindowDays(season);
@@ -139,12 +158,20 @@ class SeasonCalendar {
         blackout.add(d);
       }
     }
+    // リーグ戦を置かない日。代表ウィークにも試合をする部は、代表ウィークを
+    // 外す(カップ戦は今まで通り代表ウィークを避ける)。
+    final leagueOff = <DateTime>{...blackout};
+    if (playsInWindows) {
+      final june = juneWindowDays(season);
+      leagueOff.removeAll(intl.where((d) => !june.contains(d)));
+    }
     if (total <= 0) {
       return SeasonCalendar._(
         season: season,
         theme: theme,
         matchdayDates: const [],
         blackout: blackout,
+        playsInInternationalWindows: playsInWindows,
       );
     }
 
@@ -160,7 +187,7 @@ class SeasonCalendar {
     // 1) 週末の枠(土曜)。
     final slots = <DateTime>[];
     for (var d = start; !d.isAfter(endLimit); d = _addDays(d, 7)) {
-      if (blackout.contains(d)) continue;
+      if (leagueOff.contains(d)) continue;
       if (theme == LeagueTheme.england && _inRange(d, festiveWindow)) continue;
       slots.add(d);
     }
@@ -207,7 +234,7 @@ class SeasonCalendar {
               if (slots[i].weekday == DateTime.saturday &&
                   slots[i + 1].difference(slots[i]).inDays == 7)
                 _addDays(slots[i], offset),
-          ]..removeWhere((d) => blackout.contains(d) || _inRange(d, holiday));
+          ]..removeWhere((d) => leagueOff.contains(d) || _inRange(d, holiday));
       final tuesdays = midweeks(3);
       final extra = <DateTime>[];
       if (tuesdays.length >= deficit) {
@@ -226,7 +253,7 @@ class SeasonCalendar {
         while (extra.length < deficit) {
           tail = _addDays(tail, 7);
           // 6月の代表ウィークには入れない。
-          if (blackout.contains(tail)) continue;
+          if (leagueOff.contains(tail)) continue;
           extra.add(tail);
         }
       }
@@ -238,6 +265,7 @@ class SeasonCalendar {
       theme: theme,
       matchdayDates: List.unmodifiable(chosen),
       blackout: blackout,
+      playsInInternationalWindows: playsInWindows,
     );
   }
 

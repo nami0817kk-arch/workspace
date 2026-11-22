@@ -75,6 +75,8 @@ import 'package:soccer_manager/models/ledger.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/widgets/formation_layout.dart';
 import 'support/legacy_market.dart';
+import 'support/sell_via_offer.dart';
+import 'package:soccer_manager/logic/transfer_value.dart';
 import 'package:soccer_manager/widgets/match_widgets.dart'
     show matchCommentaryText;
 
@@ -317,17 +319,19 @@ void main() {
     expect(ok, isFalse);
   });
 
-  test('GameState.sellPlayer refuses to drop below the minimum squad size',
-      () async {
+  test(
+      'GameState.acceptIncomingOffer refuses to drop below the minimum squad '
+      'size', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    while (gameState.userTeam.players.length > minSquadSize) {
-      final id = gameState.userTeam.players.first.id;
-      await gameState.sellPlayer(id);
-    }
-    final lastId = gameState.userTeam.players.first.id;
-    final ok = await gameState.sellPlayer(lastId);
+    final players = gameState.userTeam.players;
+    players.removeRange(minSquadSize, players.length);
+    final lastId = players.first.id;
+    final o = gameState.debugOfferFor(lastId);
+    expect(o, isNotNull);
+    final ok = await gameState.acceptIncomingOffer(o!.id);
     expect(ok, isFalse);
+    expect(players.any((p) => p.id == lastId), isTrue);
   });
 
   test(
@@ -445,6 +449,8 @@ void main() {
     benched.suspendedMatches = 2;
     // 今節に退場処分を受けるスタメン選手: 今節はまだ出場するので、退場の
     // 出場停止は今節では消化されず、次節から適用されるはず(据え置きで1)。
+    // 一発退場は一部が暴力行為で3試合になる(くじ)ので、停止が必ず1試合の
+    // 「2枚目の警告での退場」にする。
     final justSentOff =
         home.players.firstWhere((p) => home.startingXI.contains(p.id));
 
@@ -452,6 +458,13 @@ void main() {
       home: home,
       away: away,
       events: [
+        MatchEvent(
+          minute: 5,
+          teamId: home.id,
+          scorerName: justSentOff.name,
+          scorerId: justSentOff.id,
+          type: MatchEventType.yellowCard,
+        ),
         MatchEvent(
           minute: 10,
           teamId: home.id,
@@ -494,7 +507,8 @@ void main() {
       ],
     );
 
-    expect(player.yellowCards, 0);
+    // 警告は今季の枚数として残る(季末に0へ。2026-11-23)。
+    expect(player.yellowCards, yellowCardSuspensionThreshold);
     expect(player.suspendedMatches, 1);
   });
 
@@ -891,8 +905,9 @@ void main() {
         reason: 'スカウトは見極めで決まるべき');
   });
 
-  test('GameState.upgradeFacility deducts budget and raises the level',
-      () async {
+  test(
+      'GameState.upgradeFacility deducts budget and starts the work '
+      '(the level rises when it is finished)', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final cost = gameState.facilityUpgradeCostFor(FacilityType.stadium);
@@ -901,8 +916,9 @@ void main() {
     final ok = await gameState.upgradeFacility(FacilityType.stadium);
 
     expect(ok, isTrue);
-    expect(
-        gameState.save!.infrastructure.facilityLevel(FacilityType.stadium), 2);
+    final infra = gameState.save!.infrastructure;
+    expect(infra.facilityLevel(FacilityType.stadium), 1);
+    expect(infra.isUnderConstruction(FacilityType.stadium), isTrue);
     expect(gameState.save!.budget, 0);
   });
 
@@ -3758,7 +3774,7 @@ void main() {
   });
 
   test(
-      'AiTransferEngine.maybeGenerate never touches the user team and preserves total player count',
+      'AiTransferEngine.runWeek never touches the user team and preserves total player count',
       () {
     final rng = Random(7);
     final user = PlayerGenerator.generateSquad(
@@ -3772,51 +3788,12 @@ void main() {
     final userCountBefore = user.players.length;
 
     for (int i = 0; i < 30; i++) {
-      AiTransferEngine.maybeGenerate(teams, 'user', rng);
+      AiTransferEngine.runWeek(teams, 'user', rng);
     }
 
     final totalAfter = teams.fold<int>(0, (s, t) => s + t.players.length);
     expect(totalAfter, totalBefore);
     expect(user.players.length, userCountBefore);
-  });
-
-  test(
-      'AiTransferEngine.maybeGenerate biases the destination toward a club '
-      "whose strength fits the departing player's overall", () {
-    // 標本は100件取る。20件で打ち切ると、たまたま弱いクラブに5件流れた
-    // だけで movesToWeak * 3 の境界にちょうど乗って落ちる(実際にCIで
-    // 15対5になって落ちた)。実測すると行き先の偏りは95%(強い側1902/弱い側98)
-    // あり、実装は充分に偏っている。足りなかったのは標本数の方。
-    final rng = Random(11);
-    var movesToStrong = 0;
-    var movesToWeak = 0;
-    var trials = 0;
-    while (movesToStrong + movesToWeak < 100 && trials < 2000) {
-      trials++;
-      final fromTeam = PlayerGenerator.generateSquad(
-          id: 'from', name: 'From FC', strengthTier: 60);
-      final strongTeam = PlayerGenerator.generateSquad(
-          id: 'strong', name: 'Strong FC', strengthTier: 95);
-      final weakTeam = PlayerGenerator.generateSquad(
-          id: 'weak', name: 'Weak FC', strengthTier: 5);
-      // strong/weakは選手層を16人ちょうどに抑え、移籍元候補から除外する
-      // (fromTeamの選手だけが必ず動くようにして、行き先の偏りだけを検証する)。
-      for (final t in [strongTeam, weakTeam]) {
-        while (t.players.length > 16) {
-          t.players.removeLast();
-        }
-      }
-      final teams = [fromTeam, strongTeam, weakTeam];
-
-      final news = AiTransferEngine.maybeGenerate(teams, 'user', rng);
-      if (news == null) continue;
-      if (strongTeam.players.length > 16) movesToStrong++;
-      if (weakTeam.players.length > 16) movesToWeak++;
-    }
-
-    expect(movesToStrong + movesToWeak, greaterThanOrEqualTo(100),
-        reason: '標本が集まらなかった(移籍がほとんど発生していない)');
-    expect(movesToStrong, greaterThan(movesToWeak * 3));
   });
 
   test(
@@ -5178,8 +5155,9 @@ void main() {
     expect(injured.injuryWeeks, 0);
     // 治った日に40へ戻り、そのあとの週の練習と試合で少し上がる(週の処理が
     // 日付で走るようになり、治った後に練習が入る回がある。54 が出た)。
-    // 90から大きく下がったことを確かめる。
-    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 20));
+    // 90から大きく下がったことを確かめる(カップ戦の出場が数えられるように
+    // なり 62 も出た)。
+    expect(injured.matchSharpness, lessThanOrEqualTo(40 + 30));
   });
 
   test(
@@ -6413,7 +6391,7 @@ void main() {
   });
 
   test(
-      'GameState.sellPlayer clears the departing player\'s captain/set-piece '
+      'Selling a player clears the departing player\'s captain/set-piece '
       'role references instead of leaving dangling IDs', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
@@ -6423,7 +6401,7 @@ void main() {
     team.penaltyTakerId = captain.id;
     team.freeKickTakerId = captain.id;
 
-    final ok = await gameState.sellPlayer(captain.id);
+    final ok = await sellViaOffer(gameState, captain.id) != null;
 
     expect(ok, isTrue);
     expect(team.captainId, isNull);
@@ -6505,7 +6483,7 @@ void main() {
   });
 
   test(
-      'GameState.sellPlayer cancels that player\'s pending installment plan '
+      'Selling a player cancels that player\'s pending installment plan '
       'instead of continuing to charge the club for a player it no longer '
       'owns', () async {
     final gameState = GameState();
@@ -6522,7 +6500,7 @@ void main() {
     expect(gameState.save!.pendingInstallments, isNotEmpty);
     gameState.save!.budget = 999999;
 
-    final sold = await gameState.sellPlayer(target.id);
+    final sold = await sellViaOffer(gameState, target.id) != null;
 
     expect(sold, isTrue);
     expect(
@@ -6620,7 +6598,7 @@ void main() {
     team.penaltyTakerId = taker.id;
     gameState.saveTacticPreset('セット専用');
 
-    final sold = await gameState.sellPlayer(taker.id);
+    final sold = await sellViaOffer(gameState, taker.id) != null;
     expect(sold, isTrue);
     expect(team.penaltyTakerId, isNull);
 
@@ -6933,9 +6911,9 @@ void main() {
   });
 
   test(
-      'GameState.sellPlayer never charges the seller the remaining wages: '
-      'the buyer takes the contract on, so even an expensive long-contract '
-      'player sells for 70% of his value', () async {
+      'Selling never charges the seller the remaining wages: the buyer '
+      'takes the contract on, so an expensive long-contract player brings '
+      'in the full offer', () async {
     final expensiveLongContract = Player(
         id: 'p_release_target',
         name: 'Expensive',
@@ -6951,14 +6929,21 @@ void main() {
     // 以前は週俸200万円・残り4年の契約の違約金が売値を上回り、持ち出しに
     // なっていた。売却では違約金は掛からない。
     team.players.add(expensiveLongContract);
+    // 相場は市場価値×契約の残りの係数(残り4年は1.1倍)。
     final net = gameState.netReleaseValueFor('p_release_target');
-    expect(net, (expensiveLongContract.marketValue * 0.7).round());
+    expect(net, (expensiveLongContract.marketValue * 1.1).round());
     expect(net, greaterThan(0));
 
     final budgetBefore = gameState.save!.budget;
-    final ok = await gameState.sellPlayer('p_release_target');
-    expect(ok, isTrue);
-    expect(gameState.save!.budget, budgetBefore + net);
+    final o = await sellViaOffer(gameState, 'p_release_target');
+    expect(o, isNotNull);
+    // 他の国のクラブへ売ったときだけ、連帯貢献金が引かれる。
+    final solidarity =
+        gameState.solidarityFor(expensiveLongContract, o!.amount);
+    expect(
+        gameState.save!.budget,
+        anyOf(equals(budgetBefore + o.amount),
+            equals(budgetBefore + o.amount - solidarity)));
   });
 
   test(
@@ -7710,8 +7695,8 @@ void main() {
   });
 
   test(
-      'GameState.sellPlayer and acceptIncomingOffer refuse to dispose of a '
-      'player who is currently loaned out to another club', () async {
+      'A loaned-out player cannot be put on the transfer list, and '
+      'acceptIncomingOffer refuses to dispose of him', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final team = gameState.userTeam;
@@ -7720,8 +7705,8 @@ void main() {
     target.loanedOutToClubName = 'よそのクラブ';
     target.loanedOutWeeksRemaining = 4;
 
-    final soldOk = await gameState.sellPlayer(target.id);
-    expect(soldOk, isFalse);
+    await gameState.setTransferListed(target.id, true);
+    expect(target.isTransferListed, isFalse);
     expect(team.players.any((p) => p.id == target.id), isTrue);
 
     gameState.save!.incomingOffers.add(IncomingOffer(
@@ -7858,6 +7843,7 @@ void main() {
     final b = p.marketValueBreakdown;
     final recombined = ((b.base + b.potentialBonus) *
             b.ageFactor *
+            b.positionFactor *
             b.personalityFactor *
             b.leadershipFactor)
         .round()
@@ -8271,9 +8257,10 @@ void main() {
   });
 
   test(
-      'GameState.makeTransferOffer always accepts a full-price offer, always '
-      'rejects offers at or below 55% of market value, and locks that player '
-      'out of further negotiation for the week after a rejection', () async {
+      'GameState.makeTransferOffer always accepts an offer at the contract-'
+      'adjusted price, always rejects offers at or below 55% of it, and locks '
+      'that player out of further negotiation for the week after a '
+      'rejection', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     gameState.save!.budget = 1000000;
@@ -8281,15 +8268,18 @@ void main() {
     // よう広げる(予算ブロック自体は専用テストで検証している)。
     gameState.save!.wageBudget = 999999;
 
+    // 相手が比べるのは、市場価値に契約の残り年数の係数を掛けた相場。
+    int worth(Player p) =>
+        (p.marketValue * TransferValue.factorFor(p, gameState.seasonProgress))
+            .round();
     final target = legacyMarket(gameState).first;
-    final res =
-        await gameState.makeTransferOffer(target.id, target.marketValue);
+    final res = await gameState.makeTransferOffer(target.id, worth(target));
     expect(res.attempted, isTrue);
-    expect(res.accepted, isTrue, reason: '満額オファーは必ず成立する');
+    expect(res.accepted, isTrue, reason: '相場の満額オファーは必ず成立する');
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isTrue);
 
     final target2 = legacyMarket(gameState).first;
-    final low = (target2.marketValue * 0.5).floor();
+    final low = (worth(target2) * 0.5).floor();
     final res2 = await gameState.makeTransferOffer(target2.id, low);
     expect(res2.attempted, isTrue);
     expect(res2.accepted, isFalse, reason: '55%以下のオファーは必ず断られる');
@@ -8309,22 +8299,25 @@ void main() {
   });
 
   test(
-      'GameState.sellPlayer moves the sold player to another club in the '
-      'league instead of deleting them, reporting the destination via '
-      'lastSaleNews', () async {
+      'Selling moves the sold player to the buying club (another division '
+      'or country included) instead of deleting them', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final team = gameState.userTeam;
     final player = team.players.firstWhere((p) => !p.isLoan && !p.isLoanedOut);
 
-    expect(await gameState.sellPlayer(player.id), isTrue);
+    final o = await sellViaOffer(gameState, player.id);
+    expect(o, isNotNull);
     expect(team.players.any((p) => p.id == player.id), isFalse);
 
-    final newClub = gameState.save!.league.teams
-        .firstWhere((t) => t.players.any((p) => p.id == player.id));
+    final everyone = [
+      ...gameState.save!.allTeams,
+      for (final l in gameState.save!.foreignLeagues.values) ...l.teams,
+    ];
+    final newClub =
+        everyone.firstWhere((t) => t.players.any((p) => p.id == player.id));
     expect(newClub.id, isNot(team.id), reason: '放出選手は消滅せず他クラブへ移籍する');
-    expect(gameState.lastSaleNews, isNotNull);
-    expect(gameState.lastSaleNews, contains(newClub.name));
+    expect(newClub.name, o!.buyerClubName);
   });
 
   test(
@@ -9096,7 +9089,7 @@ void main() {
         if (p.id != leader.id) p.id: p.happiness,
     };
 
-    final sold = await gameState.sellPlayer(leader.id);
+    final sold = await sellViaOffer(gameState, leader.id) != null;
     expect(sold, isTrue);
     for (final p in team.players) {
       final prev = before[p.id];
@@ -9173,56 +9166,6 @@ void main() {
         reason: '空のウォッチリストなら結果も空');
     expect(PlayerSearch.search([team]).length, players.length,
         reason: 'restrictToIds未指定なら全員が対象');
-  });
-
-  test(
-      'managerContractAfterSeason covers extension, warning, renewal and '
-      'dismissal', () {
-    // 目標達成で残りわずか→3年契約に延長。
-    var r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 2, targetMet: true, confidence: 60);
-    expect(r.years, 3);
-    expect(r.event, ManagerContractEvent.extended);
-
-    // 満了+信頼あり→単年の暫定契約で続投。
-    r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 1, targetMet: false, confidence: 60);
-    expect(r.years, 1);
-    expect(r.event, ManagerContractEvent.renewedOneYear);
-
-    // 満了+信頼なし→契約非更新(解任)。
-    r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 1, targetMet: false, confidence: 30);
-    expect(r.years, 0);
-    expect(r.event, ManagerContractEvent.dismissed);
-
-    // 残り1年になる→最終年の警告。
-    r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 2, targetMet: false, confidence: 60);
-    expect(r.years, 1);
-    expect(r.event, ManagerContractEvent.finalYearWarning);
-
-    // まだ余裕がある→何も起きない。
-    r = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: 3, targetMet: false, confidence: 60);
-    expect(r.years, 2);
-    expect(r.event, ManagerContractEvent.none);
-  });
-
-  test(
-      'managerContractYears starts at 3, survives json round trips and '
-      'defaults to 0 for old saves', () async {
-    SharedPreferences.setMockInitialValues({});
-    final gameState = GameState();
-    await gameState.startNewGame('契約FC');
-    expect(gameState.save!.managerContractYears, 3, reason: '新規ゲームは3年契約から始まる');
-
-    final restored = SaveGame.fromJson(gameState.save!.toJson());
-    expect(restored.managerContractYears, 3);
-
-    final legacy = gameState.save!.toJson()..remove('managerContractYears');
-    expect(SaveGame.fromJson(legacy).managerContractYears, 0,
-        reason: '旧セーブは0(未締結)として読み込み、次のシーズン開始時に締結する');
   });
 
   test(
@@ -9624,8 +9567,6 @@ void main() {
         expect(
             save.boardTargetRank, inInclusiveRange(1, save.league.teams.length),
             reason: '$label: 理事会目標が順位の範囲内');
-        expect(save.managerContractYears, greaterThan(0),
-            reason: '$label: 監督契約が結ばれている');
         expect(legacyMarket(gameState), isNotEmpty,
             reason: '$label: 移籍市場に選手がいる');
 
@@ -9975,15 +9916,14 @@ void main() {
     gameState.save!.confidence = 30;
     await gameState.startNextSeason();
 
-    // 解任されず契約も残っているなら、開幕時の猶予が効いていなければならない。
-    if (!gameState.isDismissed && gameState.save!.managerContractYears > 0) {
+    // 期待が残っているなら、開幕時の猶予が効いていなければならない。
+    if (!gameState.isDismissed) {
       expect(gameState.save!.confidence,
           greaterThanOrEqualTo(BoardEngine.newSeasonConfidenceFloor),
           reason: '新シーズンの猶予(信頼度の下限)が効いていない');
     }
     // 信頼度が残っている限り、開幕直後に解任状態になってはいけない。
-    if (gameState.save!.managerContractYears > 0 &&
-        gameState.save!.confidence > 0) {
+    if (gameState.save!.confidence > 0) {
       expect(gameState.isDismissed, isFalse);
     }
   });

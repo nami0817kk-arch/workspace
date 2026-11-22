@@ -53,17 +53,19 @@ class FinanceScreen extends StatelessWidget {
     // 大きな数字は1年あたり(1節あたりの額 × 1季の節の数)で見せる
     // (2026-11-22「週報ではなくて年報に」)。
     final md = gameState.matchdaysPerSeason;
-    final income = gameState.weeklyIncomeFor(team.id) * md;
+    // 放映権は今の順位での配分式の見込み、運営費も引く(記帳と同じ額)。
+    final income = gameState.projectedMatchdayIncome * md;
     final wageBill =
         (gameState.matchdayPlayerWageCost + gameState.matchdayStaffWageCost) *
             md;
+    final runningCost = gameState.matchdayRunningCost * md;
     final weeklyBill = gameState.weeklyWageBill;
     final loanRepayment = gameState.bankLoans.fold<int>(
           0,
           (s, l) => s + l.weeklyRepayment,
         ) *
         md;
-    final net = income - wageBill - loanRepayment;
+    final net = income - wageBill - runningCost - loanRepayment;
 
     final sortedByExpiry = team.players.where((p) => !p.isLoan).toList()
       ..sort(

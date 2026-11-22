@@ -18,7 +18,13 @@ extension GameStateMatch on GameState {
   /// ホームアドバンテージ係数。自クラブが主催する試合は実際の観客動員率
   /// (収容人数に対する割合)に応じて変動する(満員に近いほど大きい)。
   /// 他クラブの主催試合は観客動員を管理していないため既定値のまま。
+  ///
+  /// ライブ観戦中のカップ戦が中立の会場(決勝・スーパーカップ)なら、どちらの
+  /// クラブにもホームの利は無い(ライブ観戦の間は、ほかの試合は進まない)。
   double _homeAdvantageFor(String homeTeamId) {
+    if (_liveCupKind != null && _liveCupNeutral) {
+      return MatchEngine.neutralHomeAdvantageFactor;
+    }
     if (_save == null || homeTeamId != _save!.userTeamId) {
       return MatchEngine.defaultHomeAdvantageFactor;
     }
@@ -375,6 +381,8 @@ extension GameStateMatch on GameState {
     final md = next.matchday;
     Fixture? userFixture;
     HalfResult? userFirstHalf;
+    // この節のリーグ戦の警告は、国と節の決まりで数える(他の部も同じ国)。
+    CardRules.current = _leagueCardRules(md);
     for (final f in league.fixturesForMatchday(md)) {
       if (f.result != null) continue;
       final home = _findTeam(league.teams, f.homeTeamId);
@@ -461,6 +469,7 @@ extension GameStateMatch on GameState {
 
     // 他国の1部も同じ節を裏で進める。
     _playForeignMatchday(md);
+    CardRules.current = CardRules.generic;
 
     // 試合の日に入るのは観客・スポンサー・グッズ。放映権は年4回の入金日に、
     // 給与は毎月末に払う(MoneyCalendar)。
@@ -522,7 +531,9 @@ extension GameStateMatch on GameState {
     // 試合日のイベントも、収入が入った節で使い切る。
     _consumeMatchdayPromo();
 
-    // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合・カップ戦は対象外)。
+    // リーグ公式戦にスタメン出場した選手には出場手当を支払う(親善試合は
+    // 対象外)。途中出場の半額は試合のあと、カップ戦は各試合のあとに払う
+    // ([AppearanceFeeEngine])。
     if (userFixture != null) {
       lastAppearanceFeesPaid = userTeam.players
           .where((p) => userTeam.startingXI.contains(p.id))
@@ -597,6 +608,7 @@ extension GameStateMatch on GameState {
     Fixture? userFixture;
     HalfResult? userFirstHalf;
     _liveSecondHalfResume = null;
+    CardRules.current = _leagueCardRules(md);
     for (final f in league.fixturesForMatchday(md)) {
       if (f.result != null) continue;
       final home = _findTeam(league.teams, f.homeTeamId);
@@ -668,6 +680,7 @@ extension GameStateMatch on GameState {
       }
       userFirstHalf = _liveFirstHalfState!.toHalfResult();
     }
+    CardRules.current = CardRules.generic;
     if (userFixture != null) {
       _liveFixture = userFixture;
       _liveSubstitutionsUsed = progress?.substitutionsUsed ?? 0;
@@ -742,6 +755,9 @@ extension GameStateMatch on GameState {
     final away = _liveAwayTeam!;
     final weather = _liveWeatherNow;
     if (interactive) _liveWasInteractive = true;
+    // カップ戦なら、その大会の出場停止で出られる選手を決める(試合が
+    // 終わるまで。_finalizeSecondHalf で戻す)。
+    CardRules.current = _liveCardRules;
 
     // 再起動前に後半の途中まで進んでいたら、その続きから。
     final resume = _liveSecondHalfResume;
@@ -991,13 +1007,17 @@ extension GameStateMatch on GameState {
       for (final p in userTeam.players)
         p.id: (goals: p.careerGoals, apps: p.careerAppearances),
     };
-    MatchEngine.applyPostMatchEffects(
-      home: home,
-      away: away,
-      homeInjuryFactor: _injuryFactorFor(home.id),
-      awayInjuryFactor: _injuryFactorFor(away.id),
-      events: allEvents,
-      weather: weather,
+    // 警告と出場停止は、この試合の大会(リーグ戦は国と節)の決まりで数える。
+    CardRules.run(
+      _liveCardRules,
+      () => MatchEngine.applyPostMatchEffects(
+        home: home,
+        away: away,
+        homeInjuryFactor: _injuryFactorFor(home.id),
+        awayInjuryFactor: _injuryFactorFor(away.id),
+        events: allEvents,
+        weather: weather,
+      ),
     );
     // 後の交代から戻す(後半の途中の交代の「元」の先発は、ハーフタイムの
     // 交代のあとのもの。前から戻すとハーフタイムの交代が先発に残る)。
@@ -1041,6 +1061,13 @@ extension GameStateMatch on GameState {
       _publishFrontPage(merged, f, lastMilestones);
       // 出来高の契約の選手の得点に、出来高を払う。
       _payGoalBonuses(merged);
+      // 途中から出た選手に、出場手当の半額を払う(先発の分は試合の前)。
+      final subFees = AppearanceFeeEngine.feesFor(userTeam, merged,
+          includeStarters: false);
+      if (subFees > 0) {
+        _book(LedgerCategory.appearanceFees, -subFees);
+        lastAppearanceFeesPaid += subFees;
+      }
       // 優勝・昇格・降格が決まったか、カップの決勝を戦い終えたか。
       _checkClinchMoments(f.matchday);
       // 移籍の締切日なら知らせる。
@@ -1103,6 +1130,7 @@ extension GameStateMatch on GameState {
     _liveSubWindowKey = null;
     _liveHalfTimeSubEvents = [];
     _liveWasInteractive = false;
+    CardRules.current = CardRules.generic;
 
     _notify();
     await _persistNow();

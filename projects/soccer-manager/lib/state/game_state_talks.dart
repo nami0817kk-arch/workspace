@@ -336,7 +336,7 @@ extension GameStateTalks on GameState {
     }
     var demand = PlayerTermsEngine.demand(
       currentWage: player.wage,
-      marketValue: player.marketValue,
+      fairWage: player.fairWeeklyWage(),
       fromTier: fromTier,
       toTier: toTier,
       wasStarter: target?.club?.startingXI.contains(player.id) ?? false,
@@ -632,7 +632,7 @@ extension GameStateTalks on GameState {
     final rivalTier = _tierOfClub(rival.id) ?? sellerTier;
     final base = PlayerTermsEngine.demand(
       currentWage: player.wage,
-      marketValue: player.marketValue,
+      fairWage: player.fairWeeklyWage(),
       fromTier: t.freeAgent ? null : sellerTier,
       toTier: rivalTier,
       wasStarter: false,

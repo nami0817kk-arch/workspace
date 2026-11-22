@@ -32,7 +32,6 @@ import 'club_vision.dart';
 import 'ledger.dart';
 import '../logic/economy_engine.dart';
 import '../logic/league_rules.dart';
-import '../logic/media_deals_engine.dart';
 import '../logic/proposal_engine.dart';
 import '../logic/policy_engine.dart';
 import 'staff_member.dart';
@@ -188,7 +187,7 @@ class SaveGame {
   int wageLevelVersion;
 
   /// 今の年俸の水準の版。新しいゲームはこの版で始まる。
-  static const int currentWageLevelVersion = 2;
+  static const int currentWageLevelVersion = 3;
 
   /// イタリアの「EU 外の選手を他の国から取れるのは1季に2人まで」を数える
   /// ための、今季に取った人数と、その季。
@@ -497,6 +496,12 @@ class SaveGame {
   /// フランス式の降格処分。季の締めの昇格・降格で、1つ下の部へ落とす。
   bool adminRelegation;
 
+  /// ライセンスのスタジアムの猶予(2026-11-23)。スタジアムの段が足りない
+  /// まま昇格した部([licenseGraceTier]、0 は猶予なし)と、その猶予の季
+  /// ([licenseGraceSeason])。猶予の季の終わりまでに足りなければ降格処分。
+  int licenseGraceTier;
+  int licenseGraceSeason;
+
   /// 同じリーグで競う他のオーナー。
   List<RivalOwner> rivalOwners;
 
@@ -558,13 +563,19 @@ class SaveGame {
   Map<String, SponsorDeal> slotSponsors;
   Map<String, SponsorDeal> slotSponsorOffers;
 
-  /// 放映権の分配金の受け取り方と、前払いの精算で分配金が出ない残りの季数。
-  TvDeal tvDeal;
-
   /// 年間シートとして先に売った入場券の割合(%)と、売った季(0 は未販売)。
   int seasonTicketShare;
   int seasonTicketSeason;
+
+  /// 放映権の前払いの精算で、季末の上乗せが出ない残りの季数。前払いは
+  /// 2026-11-23 に無くした(放映権はリーグの配分式だけ)。それより前の
+  /// セーブで受け取っていた前払いの精算だけが残る。
   int tvHolidaySeasons;
+
+  /// スタジアムに来たいファンの数(需要、人)。観客数はこれ×動員率と
+  /// 収容人数の小さいほう。0 は未設定(古いセーブ・新しいクラブ)で、
+  /// 部と規模から作る(FanDemandEngine.initial)。
+  int fanDemand;
 
   /// 分割払いで獲得した選手の残金支払い予定。
   List<Installment> pendingInstallments;
@@ -690,10 +701,6 @@ class SaveGame {
   /// 理事会が期待する国内カップの到達ラウンド(0は未設定=旧セーブ)。
   int boardCupTargetRound;
 
-  /// 監督契約の残り年数(0は未導入=旧セーブ。次のシーズン開始時に
-  /// 判定なしで2年契約が結ばれる)。
-  int managerContractYears;
-
   /// クラブニュース(お知らせ履歴)。新しいものが先頭。SnackBar等で
   /// 一度流れて消える通知を、あとから見返せるように保存する。件数は
   /// GameState側で上限管理する。旧セーブには存在しないため空で補完する。
@@ -772,6 +779,13 @@ class SaveGame {
   /// 他のクラブとの移籍金の交渉(買う側)。窓が閉じると空になる。
   List<TransferTalk> transferTalks;
 
+  /// この窓で CPU どうしの移籍で動いた選手(同じ窓で二度は動かさない)。
+  /// [aiMovedWindowOpens] の窓のもの。旧セーブは空。
+  Set<String> aiMovedThisWindow;
+
+  /// [aiMovedThisWindow] がどの窓のものか(窓の開く日)。旧セーブは null。
+  DateTime? aiMovedWindowOpens;
+
   /// 1月1日の仮契約の解禁(他のクラブの更新と、AI の仮契約)を済ませた
   /// シーズン。旧セーブは0(そのシーズンの1月1日を過ぎていれば読み込み後に行う)。
   int preContractOpenedSeason;
@@ -848,6 +862,8 @@ class SaveGame {
     this.wageFreezeSeasons = 0,
     this.wageFreezeCap = 0,
     this.adminRelegation = false,
+    this.licenseGraceTier = 0,
+    this.licenseGraceSeason = 0,
     this.planStartSeason = 0,
     List<RivalOwner>? rivalOwners,
     this.newsTotal = 0,
@@ -929,10 +945,10 @@ class SaveGame {
     List<SponsorDeal>? pendingNamingOffers,
     Map<String, SponsorDeal>? slotSponsors,
     Map<String, SponsorDeal>? slotSponsorOffers,
-    this.tvDeal = TvDeal.fixed,
     this.seasonTicketShare = 0,
     this.seasonTicketSeason = 0,
     this.tvHolidaySeasons = 0,
+    this.fanDemand = 0,
     List<SponsorDeal>? pendingSponsorOffers,
     List<Installment>? pendingInstallments,
     List<Fixture>? friendlies,
@@ -965,7 +981,6 @@ class SaveGame {
     Map<String, String>? difficultyItems,
     this.wageBudget = 0,
     this.boardCupTargetRound = 0,
-    this.managerContractYears = 0,
     List<NewsItem>? newsLog,
     List<String>? trophyHistory,
     List<String>? clubHistory,
@@ -988,11 +1003,14 @@ class SaveGame {
     this.today,
     List<PreContract>? preContracts,
     List<TransferTalk>? transferTalks,
+    Set<String>? aiMovedThisWindow,
+    this.aiMovedWindowOpens,
     this.preContractOpenedSeason = 0,
     this.optionDeadlineSeason = 0,
     this.unpaidWagesNoticeGiven = false,
   })  : preContracts = preContracts ?? [],
         transferTalks = transferTalks ?? [],
+        aiMovedThisWindow = aiMovedThisWindow ?? {},
         sdBrief = sdBrief ?? SdBrief(),
         staffOffers = staffOffers ?? [],
         lifeEvents = lifeEvents ?? {},
@@ -1174,6 +1192,10 @@ class SaveGame {
           'wageFreezeCap': wageFreezeCap,
         },
         if (adminRelegation) 'adminRelegation': true,
+        if (licenseGraceTier > 0) ...{
+          'licenseGraceTier': licenseGraceTier,
+          'licenseGraceSeason': licenseGraceSeason,
+        },
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (clubCash.isNotEmpty) 'clubCash': clubCash,
@@ -1314,10 +1336,10 @@ class SaveGame {
           'slotSponsorOffers': slotSponsorOffers.map(
             (k, v) => MapEntry(k, v.toJson()),
           ),
-        'tvDeal': tvDeal.name,
         if (seasonTicketSeason > 0) 'seasonTicketShare': seasonTicketShare,
         if (seasonTicketSeason > 0) 'seasonTicketSeason': seasonTicketSeason,
         'tvHolidaySeasons': tvHolidaySeasons,
+        if (fanDemand > 0) 'fanDemand': fanDemand,
         'pendingSponsorOffers':
             pendingSponsorOffers.map((s) => s.toJson()).toList(),
         'pendingInstallments':
@@ -1359,7 +1381,6 @@ class SaveGame {
         if (difficultyItems.isNotEmpty) 'difficultyItems': difficultyItems,
         'wageBudget': wageBudget,
         'boardCupTargetRound': boardCupTargetRound,
-        'managerContractYears': managerContractYears,
         'newsLog': newsLog.map((n) => n.toJson()).toList(),
         'trophyHistory': trophyHistory,
         'clubHistory': clubHistory,
@@ -1384,6 +1405,10 @@ class SaveGame {
           'preContracts': preContracts.map((c) => c.toJson()).toList(),
         if (transferTalks.isNotEmpty)
           'transferTalks': transferTalks.map((t) => t.toJson()).toList(),
+        if (aiMovedThisWindow.isNotEmpty)
+          'aiMovedThisWindow': aiMovedThisWindow.toList(),
+        if (aiMovedWindowOpens != null)
+          'aiMovedWindowOpens': formatSaveDate(aiMovedWindowOpens!),
         'preContractOpenedSeason': preContractOpenedSeason,
         'optionDeadlineSeason': optionDeadlineSeason,
         if (unpaidWagesNoticeGiven) 'unpaidWagesNoticeGiven': true,
@@ -1499,6 +1524,9 @@ class SaveGame {
         wageFreezeSeasons: json['wageFreezeSeasons'] as int? ?? 0,
         wageFreezeCap: json['wageFreezeCap'] as int? ?? 0,
         adminRelegation: json['adminRelegation'] as bool? ?? false,
+        // 猶予の無い旧セーブは猶予なし。
+        licenseGraceTier: json['licenseGraceTier'] as int? ?? 0,
+        licenseGraceSeason: json['licenseGraceSeason'] as int? ?? 0,
         newsTotal: json['newsTotal'] as int? ?? 0,
         newsSeenTotal: json['newsSeenTotal'] as int? ?? 0,
         rivalOwners: (json['rivalOwners'] as List?)
@@ -1718,10 +1746,10 @@ class SaveGame {
             [],
         seasonTicketShare: json['seasonTicketShare'] as int? ?? 0,
         seasonTicketSeason: json['seasonTicketSeason'] as int? ?? 0,
-        tvDeal:
-            TvDeal.values.where((d) => d.name == json['tvDeal']).firstOrNull ??
-                TvDeal.fixed,
+        // 旧セーブの 'tvDeal'(固定/成績連動)は読まない。放映権は国の
+        // 配分式だけになった(2026-11-23)。
         tvHolidaySeasons: json['tvHolidaySeasons'] as int? ?? 0,
+        fanDemand: json['fanDemand'] as int? ?? 0,
         sponsorDeal: json['sponsorDeal'] == null
             ? null
             : SponsorDeal.fromJson(json['sponsorDeal'] as Map<String, dynamic>),
@@ -1799,7 +1827,8 @@ class SaveGame {
         pkShootoutWins: json['pkShootoutWins'] as int? ?? 0,
         wageBudget: json['wageBudget'] as int? ?? 0,
         boardCupTargetRound: json['boardCupTargetRound'] as int? ?? 0,
-        managerContractYears: json['managerContractYears'] as int? ?? 0,
+        // 'managerContractYears'(理事会とオーナーの契約の残り年数)は
+        // 2026-11-23 に無くした。旧セーブに残っていても読まない。
         difficultyItems: (json['difficultyItems'] as Map?)?.map(
           (k, v) => MapEntry(k as String, v as String),
         ),
@@ -1868,7 +1897,12 @@ class SaveGame {
                 (json['liveMatchProgress'] as Map).cast<String, dynamic>(),
               ),
         today: parseSaveDate(json['today']),
-        preContracts: (json['preContracts'] as List?)
+        aiMovedThisWindow: {
+          for (final e in (json['aiMovedThisWindow'] as List?) ?? const [])
+            e as String,
+        },
+        aiMovedWindowOpens: parseSaveDate(json['aiMovedWindowOpens']),
+        preContracts:(json['preContracts'] as List?)
                 ?.map(
                   (e) =>
                       PreContract.fromJson((e as Map).cast<String, dynamic>()),

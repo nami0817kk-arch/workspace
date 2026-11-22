@@ -29,6 +29,9 @@ import '../logic/advisor_engine.dart';
 import '../logic/club_ranking_engine.dart';
 import '../logic/equity_engine.dart';
 import '../logic/media_deals_engine.dart';
+import '../logic/fan_demand_engine.dart';
+import '../logic/relegation_clause.dart';
+import '../logic/running_cost_engine.dart';
 import '../logic/project_engine.dart';
 import '../models/start_scenario.dart';
 import '../logic/proposal_engine.dart';
@@ -40,6 +43,7 @@ import '../models/best_eleven.dart';
 import '../models/club_infrastructure.dart';
 import '../models/continental_cup.dart';
 import '../models/contract_negotiation.dart';
+import '../models/card_rules.dart';
 import '../models/cup.dart';
 import '../models/formation.dart';
 import '../models/incoming_offer.dart';
@@ -51,6 +55,7 @@ import '../models/rival_owner.dart';
 import '../models/manager_profile.dart';
 import '../logic/manager_hr_engine.dart';
 import '../logic/transfer_talk_engine.dart';
+import '../logic/transfer_value.dart';
 import '../logic/player_terms_engine.dart';
 import '../logic/relations_engine.dart';
 import '../logic/injury_care.dart';
@@ -58,6 +63,7 @@ import '../logic/front_page_engine.dart';
 import '../logic/club_culture.dart';
 import '../logic/academy_engine.dart';
 import '../logic/agm_engine.dart';
+import '../logic/appearance_fee_engine.dart';
 import '../logic/projection_engine.dart';
 import '../logic/owner_history_engine.dart';
 import '../models/league_theme.dart';
@@ -205,6 +211,7 @@ part 'game_state_season_tickets.dart';
 part 'game_state_calendar.dart';
 part 'game_state_club_names.dart';
 part 'game_state_cups.dart';
+part 'game_state_cup_days.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -413,11 +420,12 @@ class GameState extends ChangeNotifier {
   Team get userTeam =>
       _save!.league.teams.firstWhere((t) => t.id == _save!.userTeamId);
 
-  /// 信頼度が0まで落ち、監督が解任された状態かどうか。
+  /// サポーターの期待(信頼度)が0まで落ち、クラブを手放すことになった
+  /// 状態かどうか(旧名のまま。オーナーが解任されるわけではない)。
   bool get isDismissed => _save != null && _save!.confidence <= 0;
 
-  /// 株主の期待が0まで落ちた状態かどうか。売却を迫られる条件になる予定で、
-  /// いまは判定だけを置いてある(解任の扱いは変えていない)。
+  /// 株主の期待が0まで落ちた状態かどうか。クラブを手放す理由にはならない
+  /// (手放すのは資金とサポーターの期待が尽きたときだけ。saleReason)。
   bool get isShareholderRevolt =>
       _save != null && _save!.shareholderExpectation <= 0;
 
@@ -761,6 +769,8 @@ class GameState extends ChangeNotifier {
     save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
     _dropDanglingJobOffer(save);
     _migrateEconomyIfNeeded(save);
+    // ファンの需要を持たない旧セーブは、部と規模から作る。
+    _ensureFanDemand(save);
     // 今日の日付を持たない旧セーブは、ここで日付を作る。
     save.today ??= _rebuiltToday();
     _migrateLoanDates(save);
@@ -792,7 +802,7 @@ class GameState extends ChangeNotifier {
 
     for (final p in save.allPlayers) {
       final ratio = p.marketValue / max(1, GameState.legacyMarketValue(p));
-      p.wage = weeklyWageForValue(p.marketValue, playerLevels[p.id] ?? home);
+      p.wage = p.fairWeeklyWage(playerLevels[p.id] ?? home);
       if (p.releaseClause != null) {
         p.releaseClause = (p.releaseClause! * ratio).round();
       }
@@ -899,6 +909,53 @@ class GameState extends ChangeNotifier {
   /// ならない)。
   void _migrateWageLevelIfNeeded(SaveGame save) {
     if (save.wageLevelVersion >= SaveGame.currentWageLevelVersion) return;
+    if (save.wageLevelVersion < 2) _migrateWageLevelToV2(save);
+    _migrateWageToAbilityBased(save);
+    save.wageLevelVersion = SaveGame.currentWageLevelVersion;
+  }
+
+  /// 版2→3: 年俸の決め方を「市場価値から」から「今の能力×年齢の経験」に
+  /// 変えた([Player.fairWeeklyWage])。古いままだと、若手は高すぎ、
+  /// ベテランは見合う額の7割を下回って一斉に不満を持つ。
+  /// クラブの選手と所属なしの選手の週俸を新しい式で作り直す(全体の額は
+  /// 旧式とほぼ同じになるよう式の倍率を合わせてある)。理事会の給与の枠は、
+  /// 余裕(枠 − 人件費)が変わらないように人件費の増減ぶん動かす。
+  void _migrateWageToAbilityBased(SaveGame save) {
+    final home = _homeWageLevelOf(save);
+    final levels = _wageLevelsByTeamId(save);
+    final userTeam = _findTeam(save.league.teams, save.userTeamId);
+    final billBefore =
+        userTeam == null ? 0 : ContractEngine.weeklyWageBill(userTeam);
+    final done = Set<Player>.identity();
+    void redo(Player p, double level) {
+      if (!done.add(p) || p.wage <= 0) return;
+      p.wage = p.fairWeeklyWage(level);
+    }
+
+    for (final t in [
+      ...save.allTeams,
+      for (final l in save.foreignLeagues.values) ...l.teams,
+      ...save.continentalTeams,
+    ]) {
+      final f = levels[t.id] ?? home;
+      for (final p in t.players) {
+        // ローン中の選手は、元の契約の額(loanBaseWage)との釣り合いを
+        // 崩さないよう触らない。
+        if (p.isLoanedOut || p.loanBaseWage != null) continue;
+        redo(p, f);
+      }
+    }
+    for (final p in save.freeAgents) {
+      redo(p, home);
+    }
+    if (userTeam != null && save.wageBudget > 0) {
+      final delta = ContractEngine.weeklyWageBill(userTeam) - billBefore;
+      save.wageBudget = max(0, save.wageBudget + delta);
+    }
+    save.squadCostObserved = 0;
+  }
+
+  void _migrateWageLevelToV2(SaveGame save) {
     final home = _homeWageLevelOf(save);
     final levels = _wageLevelsByTeamId(save);
     // 週俸の下限より下には下げない。もとから下限より低い額は上げない。
@@ -964,7 +1021,6 @@ class GameState extends ChangeNotifier {
     if (save.wageFreezeCap > 0) {
       save.wageFreezeCap = max(1, (save.wageFreezeCap * home).round());
     }
-    save.wageLevelVersion = SaveGame.currentWageLevelVersion;
   }
 
   /// 桁を変える前の市場価値(万円)。旧セーブの換算で、価値が何倍に
@@ -1438,8 +1494,9 @@ class GameState extends ChangeNotifier {
       theme: theme,
     );
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
-    _save!.managerContractYears = 3;
     _applyScenario(scenario);
+    // スタジアムに来たいファンの数(部と評判から)。
+    _ensureFanDemand(_save!);
     final rival = cpuTeams[rng.nextInt(cpuTeams.length)];
     _save!.rivalTeamId = rival.id;
     _save!.rivalTeamName = rival.name;
@@ -1563,9 +1620,6 @@ class GameState extends ChangeNotifier {
   /// (セーブデータの肥大化を防ぎつつ、2〜3シーズン分は見返せる量)。
   static const int newsLogLimit = 120;
 
-  /// 直近の[sellPlayer]で選手が移籍した行き先のニュース文言(表示用)。
-  String? lastSaleNews;
-
   /// 戦術ミーティングの再実施までのクールダウン週数。
   static const int tacticalMeetingCooldownWeeks = 3;
 
@@ -1608,6 +1662,9 @@ class GameState extends ChangeNotifier {
 
   /// 直近のplayNextMatchdayで発生したCPUクラブ同士の移籍ニュース。ない場合はnull。
   String? lastAiTransferNews;
+
+  // この窓で CPU どうしの移籍で動いた選手は SaveGame.aiMovedThisWindow に
+  // 保存する(2026-11-23。以前は保存せず、読み込み直すと同じ窓で二度動いた)。
 
   /// 直近のplaySecondHalfでユーザーが月間最優秀監督賞を受賞した場合の対象節ラベル。ない場合はnull。
   String? lastMonthlyManagerAward;
@@ -1749,7 +1806,7 @@ class GameState extends ChangeNotifier {
   /// UI側(シーズン開始処理後のSnackBar)が表示に使う。
   String? lastBoardBonusNote;
 
-  /// シーズン終了時の監督契約(任期)の去就の通知文。
+  /// シーズン終了時の、雇っている監督の任期の通知文(残り1年など)。
   String? lastManagerContractNote;
 
   /// 直近の昇格で理事会から支給された補強予算(万円)。昇格していなければ0。

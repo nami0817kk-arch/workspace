@@ -83,8 +83,13 @@ void main() {
     Tr.language = AppLanguage.japanese;
     final game = await newGame(tester);
     final nav = await pumpHost(tester, game, const Size(852, 393));
-    final p = game.userTeam.players
-        .firstWhere((p) => game.renewalBlockReason(p) == null);
+    // 契約の残りがいちばん短い選手で確かめる(残りが長い選手だと、既定の
+    // 年数で結び直しても満了の年が変わらないことがある)。
+    final candidates = game.userTeam.players
+        .where((p) => game.renewalBlockReason(p) == null)
+        .toList()
+      ..sort((a, b) => a.contractEndYear.compareTo(b.contractEndYear));
+    final p = candidates.first;
     final before = p.wage;
     final endBefore = p.contractEndYear;
     openContractOffer(nav.context, player: p, kind: ContractKind.renewal);

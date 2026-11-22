@@ -200,11 +200,13 @@ class ContinentalCupEngine {
       final home = _find(allTeams, firstLeg ? tie.teamAId : tie.teamBId);
       final away = _find(allTeams, firstLeg ? tie.teamBId : tie.teamAId);
       if (home == null || away == null) continue;
+      // 1試合制の決勝は中立の会場。
       applyKnockoutLegResult(
         cup,
         allTeams,
         tie,
-        BackgroundMatchEngine.simulate(home: home, away: away, matchday: 0),
+        BackgroundMatchEngine.simulate(
+            home: home, away: away, matchday: 0, neutral: tie.singleLeg),
       );
     }
   }
@@ -371,7 +373,8 @@ class ContinentalCupEngine {
 
   /// 決勝トーナメントの次の未消化レグを1試合消化する(2ndレグはホーム/
   /// アウェイを入れ替える)。合計スコアが同点の場合はPK戦で決着する。
-  /// [month]は試合の日の月。天候をその季節のものにする。
+  /// [month]は試合の日の月。天候をその季節のものにする。1試合制の決勝は
+  /// 中立の会場(ホームの利が無い)。
   static MatchResult? playNextKnockoutLeg(
     ContinentalCup cup,
     List<Team> allTeams, {
@@ -386,10 +389,13 @@ class ContinentalCupEngine {
       away: away,
       matchday: 0,
       weather: WeatherEngine.roll(month: month),
+      homeAdvantageFactor: leg.tie.singleLeg
+          ? MatchEngine.neutralHomeAdvantageFactor
+          : MatchEngine.defaultHomeAdvantageFactor,
     );
     applyKnockoutLegResult(cup, allTeams, leg.tie, result);
-    // 延長戦の得点を含めた結果を返す(呼び出し側が選手の成績に数える。
-    // 延長前の結果を返していたので、延長の得点が成績に入っていなかった)。
+    // 延長戦の得点を含めた結果を返す(延長の得点は applyKnockoutLegResult
+    // が選手の通算得点に数える)。
     return leg.tie.legs.last;
   }
 
@@ -413,6 +419,8 @@ class ContinentalCupEngine {
       if (!tie.extraTime && tie.penaltyWinnerId == null) {
         tie.legs[tie.legs.length - 1] = CupEngine.extraTime(result, home, away);
         tie.extraTime = true;
+        // 延長の得点を選手の通算得点に数える(90分までは試合後の共通処理)。
+        CupEngine.creditExtraTimeGoals(result, tie.legs.last, [home, away]);
       }
       if (tie.goalsFor(tie.teamAId) == tie.goalsFor(tie.teamBId)) {
         // ライブ観戦側で1本ずつのPK戦を先に実施済みの場合はその勝者を尊重する。

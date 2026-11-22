@@ -95,10 +95,14 @@ extension GameStateSeason on GameState {
   }
 
   /// 今シーズンの暦(国・シーズン・節数から決まる。保存しない)。
+  /// イングランドの3部は代表ウィークにも節を置く。
   SeasonCalendar get seasonCalendar => SeasonCalendar.build(
         season: _save!.league.season,
         theme: currentLeagueTheme,
         totalMatchdays: _totalMatchdaysThisSeason,
+        playsInInternationalWindows:
+            SeasonCalendar.playsThroughInternationalWindows(
+                currentLeagueTheme, currentDivisionTier),
       );
 
   /// ゲームの中の今日。試合を消化するとその試合の日に進む。シーズンの
@@ -145,6 +149,8 @@ extension GameStateSeason on GameState {
     // 怪我の回復・疲れの抜け(日数)と、またいだ週の数だけの週の処理。
     // 終わると今日は d になっている。
     _advanceDaysAndWeeks(before, d);
+    // 完成の日が来た施設の工事を終える(スタジアムは次の季の7月1日)。
+    _completeFacilityConstruction();
     // 仮契約の解禁(1月1日)・延長オプションの期限(3月31日)。
     _onContractDatesAdvanced(before, d);
     // 給与の月末・放映権の入金日。
@@ -368,7 +374,7 @@ extension GameStateSeason on GameState {
     final next = cup?.nextUnplayedMatch;
     if (cup == null || next == null) return false;
     if (cup.plannedRounds != null) {
-      return _cupDue(cup.dueMatchdayFor(next.round));
+      return _cupDue(cup.dueMatchdayForMatch(next));
     }
     return _canAdvanceCup(cup.lastPlayedAtMatchday);
   }
@@ -385,7 +391,7 @@ extension GameStateSeason on GameState {
       final m = cup.nextUnplayedMatch;
       if (m == null ||
           !_isUserMatch(m) ||
-          !_cupDue(cup.dueMatchdayFor(m.round))) {
+          !_cupDue(cup.dueMatchdayForMatch(m))) {
         _notify();
         await _persistNow();
         return null;
@@ -394,13 +400,16 @@ extension GameStateSeason on GameState {
 
     final match = cup.nextUnplayedMatch!;
     if (!match.isBye) {
-      final home = allTeamsForCups.firstWhere((t) => t.id == match.homeTeamId);
-      final away = allTeamsForCups.firstWhere((t) => t.id == match.awayTeamId);
+      final home = allTeamsForCups.firstWhere((t) => t.id == match.nextHomeId);
+      final away = allTeamsForCups.firstWhere((t) => t.id == match.nextAwayId);
       _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
-    final result = CupEngine.playNextMatch(cup, allTeamsForCups,
-        month: _cupDate(continental: false).month);
+    // 警告と出場停止は国内のカップ戦の決まりで数える。
+    final result = CardRules.run(
+        _cupCardRules,
+        () => CupEngine.playNextMatch(cup, allTeamsForCups,
+            month: _cupDate(continental: false).month));
     _advanceTodayForCup(continental: false);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
     if (result != null) {
@@ -469,10 +478,13 @@ extension GameStateSeason on GameState {
       _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
-    final result = ContinentalCupEngine.playNextGroupMatch(
-      cup,
-      allTeamsForCups,
-      month: _cupDate(continental: true).month,
+    final result = CardRules.run(
+      const CardRules.continental(),
+      () => ContinentalCupEngine.playNextGroupMatch(
+        cup,
+        allTeamsForCups,
+        month: _cupDate(continental: true).month,
+      ),
     );
     _advanceTodayForCup(continental: true);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
@@ -503,10 +515,13 @@ extension GameStateSeason on GameState {
       _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
-    final result = ContinentalCupEngine.playNextKnockoutLeg(
-      cup,
-      allTeamsForCups,
-      month: _cupDate(continental: true).month,
+    final result = CardRules.run(
+      const CardRules.continental(),
+      () => ContinentalCupEngine.playNextKnockoutLeg(
+        cup,
+        allTeamsForCups,
+        month: _cupDate(continental: true).month,
+      ),
     );
     _advanceTodayForCup(continental: true);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
@@ -531,11 +546,16 @@ extension GameStateSeason on GameState {
     final away = teams.firstWhere((t) => t.id == match.awayTeamId);
     // 相手が別ディビジョンのクラブだと、再起動後は選手を持っていない。
     _ensureSquadsForActiveTier([home, away]);
-    final result = MatchEngine.simulate(
-      home: home,
-      away: away,
-      matchday: 0,
-      weather: WeatherEngine.roll(month: today.month),
+    // スーパーカップは中立の会場。警告は国内のカップ戦の決まりで数える。
+    final result = CardRules.run(
+      _cupCardRules,
+      () => MatchEngine.simulate(
+        home: home,
+        away: away,
+        matchday: 0,
+        weather: WeatherEngine.roll(month: today.month),
+        homeAdvantageFactor: MatchEngine.neutralHomeAdvantageFactor,
+      ),
     );
     match.result = result;
     if (result.homeGoals == result.awayGoals) {
@@ -566,11 +586,16 @@ extension GameStateSeason on GameState {
     if (home == null || away == null) return null;
     _ensureSquadsForActiveTier([home, away]);
     CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
-    final result = MatchEngine.simulate(
-      home: home,
-      away: away,
-      matchday: 0,
-      weather: WeatherEngine.roll(month: _cupDate(continental: false).month),
+    // 中立の会場。警告は国内のカップ戦の決まりで数える。
+    final result = CardRules.run(
+      _cupCardRules,
+      () => MatchEngine.simulate(
+        home: home,
+        away: away,
+        matchday: 0,
+        weather: WeatherEngine.roll(month: _cupDate(continental: false).month),
+        homeAdvantageFactor: MatchEngine.neutralHomeAdvantageFactor,
+      ),
     );
     CupEngine.applyMatchResult(
         cup, [...allTeamsForCups, home, away], match, result);
@@ -644,8 +669,9 @@ extension GameStateSeason on GameState {
         _playCpuCupRound(domesticCup!);
         if (!canPlayNextDomesticCupMatchLive) return false;
         cupMatch = domesticCup!.nextUnplayedMatch;
-        home = teamById(cupMatch!.homeTeamId);
-        away = teamById(cupMatch.awayTeamId);
+        // 2試合制の第1戦は相手のホーム。
+        home = teamById(cupMatch!.nextHomeId);
+        away = teamById(cupMatch.nextAwayId);
       case LiveCupKind.continentalGroup:
       case LiveCupKind.continentalKnockout:
         if (!canPlayNextContinentalMatchLive) return false;
@@ -696,6 +722,8 @@ extension GameStateSeason on GameState {
     _liveCupWeather = weather;
     _liveCupMatch = cupMatch;
     _liveCupTie = tie;
+    // この大会の出場停止で出られる選手を決める(試合の終わりで戻す)。
+    CardRules.current = _liveCardRules;
     _liveSubstitutionsUsed = 0;
     _liveSubWindowsUsed = 0;
     _liveSubWindowKey = null;
@@ -726,7 +754,8 @@ extension GameStateSeason on GameState {
         final cup = domesticCup;
         final match = _liveCupMatch;
         if (cup == null || match == null) return merged;
-        if (merged.homeGoals == merged.awayGoals) {
+        // 2試合制の第1戦は延長もPK戦も無い(第2戦の後に合計で見る)。
+        if (!match.awaitingFirstLeg && match.levelAfter(merged)) {
           // 90分で並べば延長戦(30分)。それでも並べばPK戦。延長の得点は
           // 試合後の共通処理の後に足されるので、選手の通算得点にここで足す
           // (画面には出るのに成績に入っていなかった。2026-11-22)。
@@ -735,7 +764,7 @@ extension GameStateSeason on GameState {
           CupEngine.creditExtraTimeGoals(
               before, merged, [_liveCupHome!, _liveCupAway!]);
           match.extraTime = true;
-          if (merged.homeGoals == merged.awayGoals) {
+          if (match.levelAfter(merged)) {
             match.penaltyWinnerId = _runLiveShootout().winnerId;
           }
         }
@@ -805,10 +834,20 @@ extension GameStateSeason on GameState {
         }
         _afterSuperCupApplied(match);
     }
+    _payCupAppearanceFees(merged);
     // 過密日程の判定(前の試合との日付の間隔)。
     _noteUserMatchDay();
     _evaluateAchievements();
     return merged;
+  }
+
+  /// カップ戦・大陸大会の試合[r]の出場手当を払う(先発は満額、途中出場は
+  /// 半額)。リーグ戦と違って試合の前には払っていないので、先発の分もここで。
+  void _payCupAppearanceFees(MatchResult r) {
+    final userId = _save!.userTeamId;
+    if (r.homeTeamId != userId && r.awayTeamId != userId) return;
+    final fees = AppearanceFeeEngine.feesFor(userTeam, r);
+    if (fees > 0) _book(LedgerCategory.appearanceFees, -fees);
   }
 
   /// ライブ観戦のカップ戦がPK戦にもつれた際、1本ずつのシュートアウトを
@@ -822,27 +861,17 @@ extension GameStateSeason on GameState {
     return shootout;
   }
 
-  /// 自クラブが関わるカップ試合に、リーグ戦と同じ試合後効果(疲労・負傷・
-  /// 警告累積・通算出場/得点の記録など)を適用する。カップ戦でも
-  /// ローテーションが意味を持つようにするための共通処理で、自動消化の
-  /// 経路から呼ぶ(ライブ観戦の経路では確定処理側で適用済み)。
+  /// 自クラブが関わるカップ試合の、自動消化の経路の後の処理(過密日程の
+  /// 判定)。疲労・負傷・警告累積・通算出場/得点などの試合後効果は、
+  /// MatchEngine.simulate の中で1回だけ入る(2026-11-23 まではここでも
+  /// もう一度入れていて、警告・疲労・出場数が2倍に数えられていた)。
   void _applyUserCupPostMatchEffects(MatchResult result) {
     if (_save == null) return;
     final userId = _save!.userTeamId;
     if (result.homeTeamId != userId && result.awayTeamId != userId) return;
+    _payCupAppearanceFees(result);
     // 過密日程の判定(前の試合との日付の間隔)。
     _noteUserMatchDay();
-    final home = teamById(result.homeTeamId);
-    final away = teamById(result.awayTeamId);
-    if (home == null || away == null) return;
-    MatchEngine.applyPostMatchEffects(
-      home: home,
-      away: away,
-      homeInjuryFactor: _injuryFactorFor(home.id),
-      awayInjuryFactor: _injuryFactorFor(away.id),
-      events: result.events,
-      weather: result.weather,
-    );
   }
 
   /// 国内カップのブラケット全ラウンド数(1回戦から決勝まで)。
@@ -895,6 +924,14 @@ extension GameStateSeason on GameState {
     final userId = _save!.userTeamId;
     final userInvolved =
         match.homeTeamId == userId || match.awayTeamId == userId;
+    // 入場収入(両クラブで折半。決勝などの中立の会場も折半)。
+    if (userInvolved) _bookDomesticCupGate(cup, match);
+    // 2試合制の第1戦の後は、勝ち負けはまだ決まらない(同じ週の残りの
+    // 第1戦だけ決める)。
+    if (userInvolved && match.result == null) {
+      _playCpuCupRound(cup);
+      return;
+    }
     if (userInvolved) {
       if (match.winnerId == userId) {
         final prize =
@@ -949,6 +986,11 @@ extension GameStateSeason on GameState {
         match.homeTeamId == userId || match.awayTeamId == userId;
     if (!userInvolved) return;
     final r = match.result;
+    // 入場収入はホームの試合だけ(リーグ戦より高い単価)。
+    _bookCupGate(r,
+        neutral: false,
+        split: false,
+        priceMultiplier: GameStateCupDays.continentalGateMultiplier(cup.level));
     final userWon = r != null &&
         ((r.homeTeamId == userId && r.homeGoals > r.awayGoals) ||
             (r.awayTeamId == userId && r.awayGoals > r.homeGoals));
@@ -988,6 +1030,14 @@ extension GameStateSeason on GameState {
     if (cup == null) return;
     final userId = _save!.userTeamId;
     final userInTie = tie.teamAId == userId || tie.teamBId == userId;
+    // 入場収入: ホームのレグだけ(高い単価)。1試合制の決勝は中立の会場で折半。
+    if (userInTie && tie.legs.isNotEmpty) {
+      _bookCupGate(tie.legs.last,
+          neutral: tie.singleLeg,
+          split: false,
+          priceMultiplier:
+              GameStateCupDays.continentalGateMultiplier(cup.level));
+    }
     if (cup.stepDue != null) {
       // 新しい形: 回戦に進んだ賞金・優勝は _settleContinentalPrizes が払う。
       if (userInTie) _playCpuContinental(cup);
@@ -1026,6 +1076,8 @@ extension GameStateSeason on GameState {
   void _afterSuperCupApplied(CupMatch match) {
     if (_save == null) return;
     _advanceTodayTo(seasonCalendar.superCupDate);
+    // 中立の会場。入場収入は折半。
+    _bookCupGate(match.result, neutral: true, split: true);
     if (match.winnerId == _save!.userTeamId) {
       _save!.trophyHistory.add(Tr.pick('シーズン${_save!.league.season} スーパーカップ優勝',
           'Season ${_save!.league.season} Super Cup winners'));
@@ -1112,6 +1164,8 @@ extension GameStateSeason on GameState {
     _save!.bestElevenHistory.add(
       BestElevenEngine.compute(league, league.season),
     );
+    // 警告の累積は季ごと(全大会)。出場停止の残りは次の季へ持ち越す。
+    _resetSeasonCards();
 
     // 監督としての通算成績を更新する。
     final userRow = standings.firstWhere((r) => r.teamId == _save!.userTeamId);
@@ -1227,38 +1281,10 @@ extension GameStateSeason on GameState {
     _scoreClubPolicy(finalRank: finalRank);
     _advanceEconomy();
 
-    // 監督契約(任期)の更新。旧セーブ(0=未導入)はまず2年契約を結ぶ。
+    // オーナーは雇われる立場ではないので、理事会との契約(満了で解任)は
+    // 持たない(2026-11-23)。任期の知らせは、雇っている監督の契約について
+    // 出す(下のスタッフの契約消化のところ)。
     lastManagerContractNote = null;
-    if (_save!.managerContractYears <= 0) {
-      _save!.managerContractYears = 2;
-      lastManagerContractNote = Tr.pick(
-          '理事会と2年の監督契約を結んだ', 'You signed a two-year contract with the board');
-    } else {
-      final outcome = BoardEngine.managerContractAfterSeason(
-        yearsRemaining: _save!.managerContractYears,
-        targetMet: finalRank <= _save!.boardTargetRank,
-        confidence: _save!.confidence,
-      );
-      _save!.managerContractYears = outcome.years;
-      switch (outcome.event) {
-        case ManagerContractEvent.extended:
-          lastManagerContractNote = Tr.pick('目標達成が評価され、監督契約が3年に延長された!',
-              'They liked what they saw, and your contract has been extended to three years!');
-        case ManagerContractEvent.renewedOneYear:
-          lastManagerContractNote = Tr.pick('契約満了。理事会は単年契約での続投を提示し、受け入れた',
-              'Your contract expired. The board offered a one-year extension, and you took it');
-        case ManagerContractEvent.finalYearWarning:
-          lastManagerContractNote = Tr.pick('監督契約は残り1年。今シーズンの成績が去就を左右する',
-              'One year left on your contract. This season decides your future');
-        case ManagerContractEvent.dismissed:
-          // 契約非更新=解任。既存の解任フロー(信頼度0)に合流させる。
-          _save!.confidence = 0;
-          lastManagerContractNote = Tr.pick('成績不振により契約は更新されなかった(解任)',
-              'Results were not good enough, and your contract was not renewed (sacked)');
-        case ManagerContractEvent.none:
-          break;
-      }
-    }
 
     // ここから先は新しいシーズン(7月1日)として契約を数える。引退の補充で
     // 作る選手の満了の年も、新しいシーズンから数える。
@@ -1377,10 +1403,18 @@ extension GameStateSeason on GameState {
     final incomingTeams = <int, List<Team>>{
       for (int tier = 1; tier <= totalDivisionTiers; tier++) tier: <Team>[],
     };
+    // この季に降格したクラブ(全部の境界。降格の条項で年俸を下げる)。
+    // 降格する前の部と組にする(条項で下げる幅は部の水準で決まる)。
+    final relegatedAll = <(Team, int)>[];
     var relevantPlayoffMatches = const <PromotionPlayoffMatch>[];
+    // スタジアムの猶予の季が終わる。届いていなければ降格処分(下の
+    // adminRelegation の扱い)になる。
+    final graceFailed = _settleStadiumGrace();
     // 昇格を決めたのに、上の部のライセンスが下りなかった部(無ければ null)。
     int? licenseDeniedTier;
     var licenseUnmet = const <String>[];
+    // スタジアムの段だけが足りずに、猶予つきで上がる部(無ければ null)。
+    int? graceTier;
     for (int upperTier = 1; upperTier < totalDivisionTiers; upperTier++) {
       final lowerTier = upperTier + 1;
       final upperOrder = tierOrder[upperTier]!;
@@ -1416,7 +1450,12 @@ extension GameStateSeason on GameState {
       // 権利は、まだ上がっていないうちで一番上の順位のクラブに移る。
       final userIdx = promoted.indexWhere((t) => t.id == _save!.userTeamId);
       if (userIdx >= 0) {
-        final unmet = clubLicenseUnmet(upperTier);
+        // スタジアムの段だけが足りないなら、1年の猶予つきで上がれる
+        // (2026-11-23)。資金など、ほかの条件は今までどおり。
+        final unmet = clubLicenseUnmetExceptStadium(upperTier);
+        if (unmet.isEmpty && !stadiumMeetsLicense(upperTier)) {
+          graceTier = upperTier;
+        }
         if (unmet.isNotEmpty) {
           final promotedIds = {for (final t in promoted) t.id};
           final next = lowerOrder.where((t) => !promotedIds.contains(t.id));
@@ -1457,6 +1496,7 @@ extension GameStateSeason on GameState {
       outgoingIds[lowerTier]!.addAll(promoted.map((t) => t.id));
       incomingTeams[upperTier]!.addAll(promoted);
       incomingTeams[lowerTier]!.addAll(relegated);
+      relegatedAll.addAll([for (final t in relegated) (t, upperTier)]);
 
       // 自クラブが出た試合(昇格プレーオフか入れ替え戦)があれば、それを見せる。
       // 無ければ、下の部として戦った側のプレーオフを見せる。
@@ -1534,13 +1574,15 @@ extension GameStateSeason on GameState {
     userInvolvedInLastPromotionPlayoff = userInPromotionPlayoff;
     lastPromotionBonus = 0;
     if (newTier > playedTier) {
-      lastDivisionChangeMessage = Tr.pick(
-          '降格が決まりました。来シーズンは$newTier部リーグでの再出発です。',
-          'You are relegated. Next season starts again in tier $newTier.');
+      lastDivisionChangeMessage = graceFailed
+          ? Tr.pick('スタジアムがクラブライセンスの条件に届かず、降格になりました。来シーズンは$newTier部リーグでの再出発です。',
+              'Your stadium fell short of the club licence, and you are relegated. Next season starts again in tier $newTier.')
+          : Tr.pick('降格が決まりました。来シーズンは$newTier部リーグでの再出発です。',
+              'You are relegated. Next season starts again in tier $newTier.');
     } else if (newTier < playedTier) {
-      // 昇格ボーナス: 上のディビジョンで戦うための補強予算が理事会から
-      // 支給される(放映権料・スポンサー収入の増加分)。これがないと
-      // 戦力差を埋める資金がなく、昇格と降格を往復し続けることになる。
+      // 昇格ボーナス: 理事会からの補強予算。放映権の増加は、来季の最初の
+      // 入金(8月)から上の部の額で入るので、ここは夏の補強の手付けぶん
+      // だけ(BoardEngine.promotionBonusWeeks。2026-11-23 に6週→2週)。
       final promotionBonus =
           BoardEngine.promotionBonusFor(newTier, currentLeagueTheme);
       _book(LedgerCategory.prize, promotionBonus);
@@ -1552,6 +1594,19 @@ extension GameStateSeason on GameState {
           : Tr.pick(
               '昇格達成！来シーズンは$newTier部リーグに昇格します。理事会から補強予算${formatMoney(promotionBonus)}が支給されました。',
               'Promoted. You go up to tier $newTier next season, and the board has given you ${formatMoney(promotionBonus)} to strengthen.');
+      // スタジアムが足りないまま上がるなら、来季が猶予の季になる。
+      if (graceTier == newTier) {
+        final need = ClubLicenseEngine.stadiumLevelFor(newTier);
+        final deadline = TransferWindowCalendar.formatYearMonth(
+            MoneyCalendar.fiscalYearEnd(league.season + 1));
+        _save!.licenseGraceTier = newTier;
+        _save!.licenseGraceSeason = league.season + 1;
+        final note = Tr.pick(
+            'スタジアムは$newTier部のライセンスの条件(Lv$need)に届いていませんが、1年の猶予が付きました。$deadlineまでにLv$needにしないと(来季の開幕までに完成する工事中でも可)、1つ下の部へ降格になります。',
+            'Your stadium is below the tier $newTier licence requirement (level $need), but you have a year\'s grace. Reach level $need by $deadline (work due to finish before the next season counts), or you will be relegated one tier.');
+        lastDivisionChangeMessage = '${lastDivisionChangeMessage!}\n$note';
+        _logNews(note, context: Tr.pick('クラブライセンス', 'Club licence'));
+      }
     } else if (licenseDeniedTier != null) {
       lastDivisionChangeMessage = Tr.pick(
           '昇格の権利を得ましたが、$licenseDeniedTier部のクラブライセンスが下りず、来シーズンも$playedTier部で戦います。足りなかった条件: ${licenseUnmet.join('、')}。',
@@ -1569,6 +1624,15 @@ extension GameStateSeason on GameState {
         ? SeasonFinale.champion
         : (newTier < playedTier ? SeasonFinale.promoted : SeasonFinale.none);
     _save!.currentDivisionTier = newTier;
+    // 降格の条項(年俸を下げる。自クラブも CPU も)と、スポンサー・命名権の
+    // 昇格・降格の条項。ファンの需要も成績・昇格・降格で動かす。
+    _applyRelegationWageClause(relegatedAll);
+    _applySponsorDivisionClause(playedTier, newTier);
+    _advanceFanDemand(
+        playedTier: playedTier,
+        newTier: newTier,
+        finalRank: finalRank,
+        teamCount: league.teams.length);
     for (int tier = 1; tier <= totalDivisionTiers; tier++) {
       if (tier == newTier) {
         _save!.otherDivisionLeagues[tier - 1] = null;
@@ -1603,9 +1667,9 @@ extension GameStateSeason on GameState {
     _save!.boardTargetRank = _difficultyAdjustedTarget(
       BoardEngine.estimateTargetRank(_save!.league, _save!.userTeamId),
     );
-    // 続投が決まった監督には、新シーズン開幕時に最低限の信頼度を戻す
-    // (解任が確定している場合は信頼度0のままにして解任フローを壊さない)。
-    if (_save!.confidence > 0 && _save!.managerContractYears > 0) {
+    // 新しい季を迎えたら、最低限の期待を戻す(サポーターの期待が尽きて
+    // 手放すことが決まっている場合は0のままにして、その流れを壊さない)。
+    if (_save!.confidence > 0) {
       _save!.confidence =
           max(_save!.confidence, BoardEngine.newSeasonConfidenceFloor);
     }
@@ -1661,6 +1725,18 @@ extension GameStateSeason on GameState {
               "${s.name}'s contract has expired, leaving the ${role.label} post vacant."),
           context: Tr.pick('スタッフ', 'Staff'),
         );
+      }
+      // 雇っている監督の任期。最後の年に入ったら知らせる(延長は引き抜きの
+      // 話に昇給で応えたときだけ。切れたら空席になる)。
+      if (role == StaffRole.manager) {
+        if (s.contractYears <= 0) {
+          lastManagerContractNote = Tr.pick(
+              '監督の${s.name}は契約が満了し、クラブを去りました。新しい監督を雇ってください。',
+              'Your manager ${s.name} has left at the end of his contract. Hire a new one.');
+        } else if (s.contractYears == 1) {
+          lastManagerContractNote = Tr.pick('監督の${s.name}の契約は残り1年です(今季かぎり)。',
+              'Your manager ${s.name} is into the last year of his contract.');
+        }
       }
     }
     _refreshStaffCandidates();

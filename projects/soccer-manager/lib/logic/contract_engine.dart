@@ -4,7 +4,7 @@ import '../models/league_theme.dart';
 import '../models/player.dart';
 import '../models/team.dart';
 import '../l10n/tr.dart';
-import 'economy_scale.dart';
+import 'transfer_value.dart';
 
 class ContractEngine {
   /// 週俸総額。他クラブへローン放出中の選手は放出先が週俸を負担するため含めない。
@@ -214,13 +214,20 @@ class ContractEngine {
   /// 代理人手数料が市場価値に対して占めてよい上限。
   static const double maxRenewalShareOfValue = 0.15;
 
-  /// 放出(売却)で手に入る額(万円)。市場価値の7割。
+  /// 売りに出したときの移籍金の相場(万円)。市場価値に契約の残り年数の
+  /// 係数([TransferValue.contractFactor])を掛けた額。実際の額は、届く
+  /// オファーごとにこの前後でばらつく。[seasonProgress]は今のシーズンが
+  /// どこまで進んだか(0〜1)。
+  ///
+  /// 2026-11-23 まではその場で売れる額で、年数に関係なく市場価値の7割
+  /// だった(契約が残り半年の選手も、5年残っている選手も同じ値)。
   ///
   /// 以前はここから「残りの契約の違約金」を差し引いていた。売却では契約を
   /// 買い手が引き継ぐので、売り手が残りの年俸を払うのはつじつまが合わない
   /// (高年俸の長期契約の選手を売ると持ち出しになっていた)。残りの年俸を
   /// 払うのは、合意して契約を解除するとき([mutualTerminationCost])だけ。
-  static int salePrice(Player p) => (p.marketValue * 0.7).round();
+  static int salePrice(Player p, {double seasonProgress = 0}) =>
+      TransferValue.worth(p, seasonProgress);
 
   /// 新しい契約を結んだときに、契約の型を「固定」へ戻す(出来高・段階昇給の
   /// 取り決めは、その契約かぎり)。
@@ -349,7 +356,7 @@ class ContractEngine {
     } else if (p.happiness < 65) {
       chance += 0.10;
     }
-    if (p.wage * 4 < weeklyWageForValue(p.marketValue) * 3) chance += 0.10;
+    if (p.wage * 4 < p.fairWeeklyWage() * 3) chance += 0.10;
     return chance.clamp(0.0, 0.6);
   }
 

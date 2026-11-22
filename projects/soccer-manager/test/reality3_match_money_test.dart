@@ -97,14 +97,14 @@ void main() {
       expect(fr.wage / en.wage, closeTo(0.45, 0.02));
     });
 
-    // 年俸の合計 ÷ 価値に見合う年俸(イングランドの水準)の合計。作った
+    // 年俸の合計 ÷ 能力と経験に見合う年俸(イングランドの水準)の合計。作った
     // あとで価値が少し動く選手がいるので、イングランドの1部との比で見る。
     double level(Iterable<Team> teams) {
       var wages = 0, base = 0;
       for (final t in teams) {
         for (final p in t.players) {
           wages += p.wage;
-          base += weeklyWageForValue(p.marketValue, 1.0);
+          base += p.fairWeeklyWage(1.0);
         }
       }
       return wages / base;
@@ -153,7 +153,7 @@ void main() {
       // 今の週俸(フランスの水準)を、行き先(スペイン)の水準に直して求める。
       final plain = PlayerTermsEngine.demand(
         currentWage: 1000,
-        marketValue: 10,
+        fairWage: 5,
         fromTier: 1,
         toTier: 1,
         wasStarter: false,
@@ -161,7 +161,7 @@ void main() {
       );
       final converted = PlayerTermsEngine.demand(
         currentWage: 1000,
-        marketValue: 10,
+        fairWage: 5,
         fromTier: 1,
         toTier: 1,
         wasStarter: false,
@@ -198,7 +198,7 @@ void main() {
       final game = GameState();
       await game.startNewGame('年俸FC', theme: LeagueTheme.france);
       final p = game.save!.foreignLeagues['england']!.teams.first.players
-          .firstWhere((p) => p.wage > weeklyWageForValue(p.marketValue) + 5);
+          .firstWhere((p) => p.wage > p.fairWeeklyWage() + 5);
       // イングランドの1部からフランスの3部へ: 今の週俸は水準の比の倍に直る。
       final scale = wageCountryFactor(LeagueTheme.france, 3) /
           wageCountryFactor(LeagueTheme.england, 1);
@@ -219,9 +219,14 @@ void main() {
       return gs;
     }
 
+    // 市場の選手。新しいゲームの自クラブは、22歳以上の登録枠(25人)や国外で
+    // 育った選手の枠が埋まって始まることがあるので、枠の外の21歳にして買う
+    // (確かめたいのは簿価で、登録の枠ではない)。
+    Player marketPlayer(GameState gs) => legacyMarket(gs).first..age = 21;
+
     test('買うと、移籍金と代理人手数料の合計が簿価になり、その季の費用にはならない', () async {
       final gs = await newGame();
-      final p = legacyMarket(gs).first;
+      final p = marketPlayer(gs);
       final fee = p.marketValue;
       final agent = TransferTermsEngine.agentFee(fee);
       expect(await gs.buyPlayer(p.id), isTrue,
@@ -235,7 +240,7 @@ void main() {
 
     test('契約の年数で、代理人手数料も含めてちょうど全額を償却する', () async {
       final gs = await newGame();
-      final p = legacyMarket(gs).first;
+      final p = marketPlayer(gs);
       final cost = p.marketValue + TransferTermsEngine.agentFee(p.marketValue);
       expect(await gs.buyPlayer(p.id), isTrue);
       final bought = gs.userTeam.players.firstWhere((x) => x.id == p.id);
@@ -254,7 +259,7 @@ void main() {
 
     test('分割払いでも、移籍金の総額と代理人手数料が簿価になる', () async {
       final gs = await newGame();
-      final p = legacyMarket(gs).first;
+      final p = marketPlayer(gs);
       final fee = p.marketValue;
       expect(await gs.buyPlayerOnInstallments(p.id), isTrue);
       expect(gs.bookValueOf(p.id), fee + TransferTermsEngine.agentFee(fee));
@@ -327,7 +332,8 @@ void main() {
         }
         BackgroundMatchEngine.applyPlayerEffects(
             home: home, away: away, random: rng);
-        final hit = lineup.where((p) => p.yellowCards == 0).toList();
+        // 警告は今季の枚数として数え続ける(5枚目で出場停止。2026-11-23)。
+        final hit = lineup.where((p) => p.yellowCards == 5).toList();
         if (hit.isEmpty) continue;
         for (final p in hit) {
           expect(p.suspendedMatches, greaterThanOrEqualTo(1));
@@ -377,10 +383,12 @@ void main() {
     test('戻った選手は疲れが8〜15増え、呼ばれていない選手は変わらない', () async {
       final game = await gameOutsideWindow();
       final team = game.userTeam;
-      final called = team.players.first
+      // 始まりは W 杯の年なので、大会で抜けている選手は外して選ぶ。
+      final free = team.players.where((p) => !p.onTournamentLeave).toList();
+      final called = free.first
         ..internationalDutyWeeksRemaining = 1
         ..fatigue = 10;
-      final stayed = team.players.last..fatigue = 10;
+      final stayed = free.last..fatigue = 10;
       game.debugReleaseInternationalDuty();
       expect(called.isOnInternationalDuty, isFalse);
       expect(called.fatigue, inInclusiveRange(18, 25));

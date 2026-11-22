@@ -10,39 +10,10 @@ import '../models/match_result.dart';
 import '../l10n/tr.dart';
 import 'economy_scale.dart';
 
-/// シーズン終了時の監督契約の去就。
-enum ManagerContractEvent {
-  none,
-  finalYearWarning,
-  extended,
-  renewedOneYear,
-  dismissed,
-}
-
 class BoardEngine {
-  /// シーズン終了時に監督契約(残り年数)を1年消化し、去就を決める。
-  /// 目標達成で残りが少なければ3年へ延長。満了時は信頼度次第で
-  /// 単年契約の続投か、契約非更新(解任)となる。
-  static ({int years, ManagerContractEvent event}) managerContractAfterSeason({
-    required int yearsRemaining,
-    required bool targetMet,
-    required int confidence,
-  }) {
-    final years = yearsRemaining - 1;
-    if (targetMet && years <= 1) {
-      return (years: 3, event: ManagerContractEvent.extended);
-    }
-    if (years <= 0) {
-      if (confidence >= 45) {
-        return (years: 1, event: ManagerContractEvent.renewedOneYear);
-      }
-      return (years: 0, event: ManagerContractEvent.dismissed);
-    }
-    if (years == 1) {
-      return (years: 1, event: ManagerContractEvent.finalYearWarning);
-    }
-    return (years: years, event: ManagerContractEvent.none);
-  }
+  // 理事会とオーナーの契約(managerContractAfterSeason: 満了時に信頼度が
+  // 低いと解任)は 2026-11-23 に無くした。オーナーは雇われる立場ではなく、
+  // クラブを手放すのは資金が尽きたときとサポーターの期待が尽きたときだけ。
 
   /// ディビジョンごとの給与予算の基準値(万円/週)。下位リーグほど
   /// 人件費に厳しく、昇格すると理事会が予算を引き上げる。
@@ -267,15 +238,20 @@ class BoardEngine {
     return -8;
   }
 
-  /// 最終順位に応じた賞金（万円）。
-  /// 昇格時の理事会からの補強予算(万円)。昇格したクラブは放映権料・
-  /// スポンサー収入が跳ね上がるため、新しいディビジョンで戦うための
-  /// 資金が渡される。金額は新ティアの週給予算基準の[promotionBonusWeeks]
-  /// 週分で、上のディビジョンほど大きい。
+  /// 昇格時の理事会からの補強予算(万円)。金額は新ティアの週給予算基準の
+  /// [promotionBonusWeeks]週分で、上のディビジョンほど大きい。
   ///
   /// これがないと、昇格しても戦力差(ティアあたり総合力で約10)を埋める
   /// 資金がなく、昇格→即降格の往復から抜け出せない(長期実測で確認)。
-  static const int promotionBonusWeeks = 6;
+  ///
+  /// 2026-11-23 に6週→2週。以前は「放映権料・スポンサー収入の増加分」と
+  /// して6週分(新しい部の年収の目安の約6%)を渡していたが、放映権は昇格
+  /// した季の最初の入金(8月)から上の部の額で入り、スポンサーも昇格の
+  /// 条項で上がる。同じ増加を二重に渡していたので、理事会のぶんは夏の
+  /// 補強の手付け(最初の入金までのつなぎ)に絞った。
+  static const int promotionBonusWeeks = 2;
+
+  /// 最終順位に応じた賞金（万円）。
 
   static int promotionBonusFor(int newTier,
           [LeagueTheme theme = LeagueTheme.england]) =>

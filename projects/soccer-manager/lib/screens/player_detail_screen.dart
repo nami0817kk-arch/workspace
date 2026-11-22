@@ -9,6 +9,7 @@ import '../logic/dynamics_engine.dart';
 import '../logic/match_engine.dart';
 import '../logic/transfer_window.dart';
 import '../models/attributes.dart';
+import '../models/card_rules.dart';
 import '../models/player.dart';
 import '../models/player_traits.dart';
 import '../models/training_result.dart';
@@ -260,22 +261,33 @@ class PlayerDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (p.yellowCards > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      Tr.pick(
-                          '警告累積: ${p.yellowCards}/$yellowCardSuspensionThreshold(あと${yellowCardSuspensionThreshold - p.yellowCards}枚で出場停止)',
-                          'Yellow cards: ${p.yellowCards}/$yellowCardSuspensionThreshold (${yellowCardSuspensionThreshold - p.yellowCards} more brings a ban)'),
-                      style: TextStyle(
-                        color:
-                            p.yellowCards >= yellowCardSuspensionThreshold - 1
-                                ? Colors.redAccent
-                                : SemanticColors.subtleText(context),
-                        fontSize: 12,
+                // 国内カップ戦・大陸大会の出場停止は、その大会で消化する
+                // (リーグ戦には出られる)。
+                for (final (left, label) in [
+                  (
+                    p.cupSuspendedMatches,
+                    Tr.pick('国内カップ戦', 'domestic cups'),
+                  ),
+                  (
+                    p.continentalSuspendedMatches,
+                    Tr.pick('大陸大会', 'European competition'),
+                  ),
+                ])
+                  if (left > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        Tr.pick('$labelは出場停止中（あと$left試合）',
+                            'Suspended in $label (${Tr.plural(left, 'match', 'matches')} left)'),
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
-                  ),
+                if (p.yellowCards > 0)
+                  _leagueYellowLine(
+                      context, p, context.read<GameState>().leagueCardRulesNow),
                 if (p.isOnInternationalDuty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
@@ -527,8 +539,8 @@ class PlayerDetailScreen extends StatelessWidget {
                   builder: (context) {
                     final b = p.marketValueBreakdown;
                     final detail = Tr.pick(
-                        '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ' 夏の大会の活躍×${b.tournamentFactor.toStringAsFixed(2)}' : ''}',
-                        'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ', summer tournament ${b.tournamentFactor.toStringAsFixed(2)}' : ''}');
+                        '内訳: 基礎${formatMoney(b.base.round())} + 伸びしろ${formatMoney(b.potentialBonus.round())} を年齢×${b.ageFactor.toStringAsFixed(2)} ポジション×${b.positionFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ' 夏の大会の活躍×${b.tournamentFactor.toStringAsFixed(2)}' : ''}',
+                        'Breakdown: base ${formatMoney(b.base.round())} + potential ${formatMoney(b.potentialBonus.round())}, times age ${b.ageFactor.toStringAsFixed(2)}, position ${b.positionFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}${b.tournamentFactor != 1 ? ', summer tournament ${b.tournamentFactor.toStringAsFixed(2)}' : ''}');
                     // 計算式の内訳は「?」を押したときだけ出す。
                     return Row(
                       children: [
@@ -576,6 +588,15 @@ class PlayerDetailScreen extends StatelessWidget {
                     Tr.pick('リリース条項: ${formatMoney(gameState.releaseClauseOf(p)!)}',
                         'Release clause: ${formatMoney(gameState.releaseClauseOf(p)!)}'),
                     style: const TextStyle(color: Colors.deepPurple),
+                  ),
+                if (!p.isLoan)
+                  Text(
+                    Tr.pick(
+                        '降格の条項: 降格したら年俸は${(gameState.relegationWageFactor * 100).round()}%に',
+                        'Relegation clause: salary drops to ${(gameState.relegationWageFactor * 100).round()}% on relegation'),
+                    style: TextStyle(
+                        color: SemanticColors.subtleText(context),
+                        fontSize: 12),
                   ),
                 const SizedBox(height: 16),
                 Text(Tr.pick('選手を操作', 'Player actions'),
@@ -734,19 +755,11 @@ class PlayerDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  OutlinedButton(
-                    onPressed: (team.players.length <= minSquadSize ||
-                            !gameState.isTransferWindowOpen)
-                        ? null
-                        : () => _confirmSell(context, netReleaseValue),
-                    // 売却では契約を買い手が引き継ぐので、違約金は掛からない。
-                    child: Text(
-                      Tr.pick('放出する（${formatMoney(netReleaseValue)} 獲得）',
-                          'Release him (you receive ${formatMoney(netReleaseValue)})'),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+                  // 売るときは移籍リストに載せ、買い手からのオファーを待つ
+                  // (2026-11-23。以前は相場の7割でその場で売れた)。
+                  // 売却では契約を買い手が引き継ぐので、違約金は掛からない。
                   OutlinedButton.icon(
+                    key: const ValueKey('transfer-list'),
                     icon: const Icon(Icons.sell_outlined),
                     onPressed: () {
                       FeedbackService.tap();
@@ -754,8 +767,23 @@ class PlayerDetailScreen extends StatelessWidget {
                           playerId, !p.isTransferListed);
                     },
                     label: Text(p.isTransferListed
-                        ? Tr.pick('移籍リストから外す', 'Take off the transfer list')
-                        : Tr.pick('移籍リストに登録する', 'Put on the transfer list')),
+                        ? Tr.pick('移籍リストから外す（売るのをやめる）',
+                            'Take off the transfer list (stop selling)')
+                        : Tr.pick(
+                            '移籍リストに載せて売りに出す（相場${formatMoney(netReleaseValue)}）',
+                            'Put him up for sale (worth about ${formatMoney(netReleaseValue)})')),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    p.isTransferListed
+                        ? Tr.pick(
+                            '買い手からオファーが届いたら、移籍の画面で受けるか断るかを決めます。人気のない選手には来ないこともあります。',
+                            'When a club makes an offer, accept or turn it down on the transfers screen. Players nobody wants may get no offers.')
+                        : Tr.pick('相場は契約の残り年数で変わります（残りが短いほど安い）。',
+                            'His price depends on how long is left on his contract: the shorter, the cheaper.'),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.subtleText(context)),
                   ),
                   const SizedBox(height: 8),
                   // 合意して契約を解除する(窓の外でもできる。選手は自由契約になる)。
@@ -1253,46 +1281,6 @@ class PlayerDetailScreen extends StatelessWidget {
       ),
     );
   }
-
-  void _confirmSell(BuildContext context, int netReleaseValue) {
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(Tr.pick('この選手を放出しますか？', 'Release this player?')),
-        content: Text(
-          Tr.pick('${formatMoney(netReleaseValue)}を獲得しますが、元には戻せません。',
-              'You receive ${formatMoney(netReleaseValue)}, and this cannot be undone.'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(Tr.pick('キャンセル', 'Cancel')),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              final gameState = context.read<GameState>();
-              final messenger = ScaffoldMessenger.of(context);
-              final ok = await gameState.sellPlayer(playerId);
-              ok ? FeedbackService.success() : FeedbackService.error();
-              if (ok) {
-                messenger.showSnackBar(
-                  SnackBar(
-                    content: Text(gameState.lastSaleNews ??
-                        Tr.pick('選手を放出しました', 'Player released')),
-                  ),
-                );
-              }
-              if (context.mounted && ok) {
-                Navigator.pop(context);
-              }
-            },
-            child: Text(Tr.pick('放出する', 'Release')),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 /// この選手で効いている能力を、理由つきで並べるカード。
@@ -1484,4 +1472,26 @@ class _AttributeGrid extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 今季のリーグ戦の警告の数と、あと何枚で出場停止か(国の決まりで数える。
+/// 2026-11-23)。
+Widget _leagueYellowLine(BuildContext context, Player p, CardRules rules) {
+  final next = rules.nextBanAt(p.yellowCards);
+  final left = next == null ? null : next - p.yellowCards;
+  return Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: Text(
+      left == null
+          ? Tr.pick('今季リーグ戦の警告: ${p.yellowCards}枚',
+              'League yellow cards this season: ${p.yellowCards}')
+          : Tr.pick('今季リーグ戦の警告: ${p.yellowCards}枚(あと$left枚で出場停止)',
+              'League yellow cards this season: ${p.yellowCards} ($left more brings a ban)'),
+      style: TextStyle(
+        color:
+            left == 1 ? Colors.redAccent : SemanticColors.subtleText(context),
+        fontSize: 12,
+      ),
+    ),
+  );
 }

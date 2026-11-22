@@ -20,6 +20,7 @@ enum LedgerCategory {
   appearanceFees, // 出場手当
   transfers, // 補強費(獲得・分割払い・ローン料・契約更新・ユース昇格)
   facilities, // 施設・合宿・スカウト
+  operations, // 運営費(試合運営・遠征・事務・施設の維持。毎月末)
   infrastructure, // 施設・アカデミーへの投資(規則の判定では赤字に数えない)
   interest, // 融資・オーナーからの借入の利息(支出)と預金の利息(収入)
   amortization, // 移籍金の償却(資金は動かない。売った・去った選手の残りの簿価も)
@@ -39,6 +40,7 @@ enum LedgerCategory {
         appearanceFees => Tr.pick('出場手当', 'Appearance fees'),
         transfers => Tr.pick('補強費', 'Signings'),
         facilities => Tr.pick('施設・合宿・スカウト', 'Facilities & scouting'),
+        operations => Tr.pick('運営費', 'Running costs'),
         infrastructure =>
           Tr.pick('施設・アカデミーへの投資', 'Facility & academy investment'),
         interest => Tr.pick('利息', 'Interest'),

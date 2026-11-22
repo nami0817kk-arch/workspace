@@ -34,14 +34,16 @@ extension GameStateNation on GameState {
   static LeagueTheme? foreignNationalityFor(
       String id, LeagueTheme country, int tier) {
     // id そのもののハッシュは、続き番号の id で下の桁がほぼ並んでしまう
-    // (同じクラブの選手がそろって外国籍になる)。後ろに文字を足して散らす。
-    final h = Player.nationalityHash('$id#nat');
-    if (h % 1000 >= (foreignShare(country, tier) * 1000).round()) return null;
+    // (同じクラブの選手がそろって外国籍・自国籍になる)。散らした値で引く
+    // ([Player.spreadRoll])。
+    if (Player.spreadRoll('$id#nat') >= foreignShare(country, tier)) {
+      return null;
+    }
     final others = [
       for (final t in LeagueTheme.values)
         if (t != country) t,
     ];
-    return others[Player.nationalityHash('$id#from') % others.length];
+    return others[(Player.spreadRoll('$id#from') * others.length).floor()];
   }
 
   /// アフリカの代表の数(名前は出さず、番号で分ける)。
@@ -145,7 +147,7 @@ extension GameStateNation on GameState {
             orElse: () => currentLeagueTheme);
         p.homegrown = PlayerGenerator.homegrownRollFor(
             national: nation == country,
-            roll: (Player.nationalityHash('${p.id}#hg') % 1000) / 1000);
+            roll: Player.spreadRoll('${p.id}#hg'));
       }
     }
     s.nationRuleVersion = SaveGame.currentNationRuleVersion;
@@ -163,6 +165,9 @@ extension GameStateNation on GameState {
   ///
   /// 古いセーブの自クラブの選手は国籍を覚えていないので、今までどおり
   /// 自国籍のまま(名前も印も変わらない)。ユースから上がった選手も同じ。
+  /// 新しいゲームの自クラブで、22歳以上の登録枠に残しておく空きの人数。
+  static const int startSeniorRoom = 2;
+
   void _assignUserNationalitiesAtStart(int tier) {
     if (_save == null) return;
     final home = currentLeagueTheme;
@@ -173,7 +178,7 @@ extension GameStateNation on GameState {
     bool homegrownFor(Player p, {required bool national}) =>
         PlayerGenerator.homegrownRollFor(
             national: national,
-            roll: (Player.nationalityHash('${p.id}#hg') % 1000) / 1000);
+            roll: Player.spreadRoll('${p.id}#hg'));
     void makeNational(Player p, {bool forceHomegrown = false}) {
       p.nation = home.name;
       p.homegrown = forceHomegrown || homegrownFor(p, national: true);
@@ -205,6 +210,18 @@ extension GameStateNation on GameState {
       for (final p in foreigners.skip(room)) {
         makeNational(p);
       }
+    }
+    // 22歳以上の登録枠も、始めた時点で2人分はあけておく。25人の選手を
+    // 年齢のくじで作るので、22歳以上がちょうど25人そろうことがあり、
+    // 22歳以上を1人も取れずに始まった(2026-11-23)。超える分は、22歳以上の
+    // うち若い順に21歳(枠の外)にし、年俸も年齢に合わせて引き直す。
+    final seniors = team.players.where(SquadRegistration.isSenior).toList()
+      ..sort((a, b) => a.age.compareTo(b.age));
+    final seniorRoom = SquadRegistration.seniorLimit - startSeniorRoom;
+    for (final p in seniors.take(max(0, seniors.length - seniorRoom))) {
+      p
+        ..age = SquadRegistration.underAge
+        ..wage = p.fairWeeklyWage();
     }
     final notHomegrown = [
       for (final p in team.players)

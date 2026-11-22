@@ -3,6 +3,7 @@ import 'dart:math';
 import '../models/player.dart';
 import '../models/team.dart';
 import 'player_generator.dart';
+import 'training_engine.dart';
 
 /// シーズン終了時の高齢選手の引退判定。
 class RetirementEngine {
@@ -10,9 +11,16 @@ class RetirementEngine {
 
   /// 32歳未満(31歳まで)は引退しない。32歳から年齢とともに引退確率が上がるが、
   /// 総合力が高い選手ほど現役を長く続けやすい。
+  ///
+  /// 衰えと同じポジションのずれ([TrainingEngine.positionPeakShift])で年齢を
+  /// ずらして見る。キーパーは3年遅く(35歳から)、センターバックは1年遅く、
+  /// 走力で勝負するサイドの選手は1年早く引退を考え始める。以前は全員同じで、
+  /// 30代後半まで続けるのが普通のキーパーも32歳から引退していった
+  /// (2026-11-23)。
   static double retirementChance(Player p) {
     if (p.age < 32) return 0.0;
-    final ageFactor = (p.age - 31) * 0.12;
+    final age = p.age - TrainingEngine.positionPeakShift(p.position);
+    final ageFactor = (age - 31) * 0.12;
     final skillRelief = (p.overall - 50).clamp(0, 40) * 0.005;
     return (ageFactor - skillRelief).clamp(0.0, 0.9);
   }

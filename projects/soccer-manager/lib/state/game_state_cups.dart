@@ -12,6 +12,9 @@ part of 'game_state.dart';
 ///   クラブも、他国の1部の上位も出る。
 /// - スーパーカップ: 1部の王者とカップの王者。スペイン・イタリアは4クラブで
 ///   1月ごろ。2部・3部には無い。
+/// - 決勝は中立の会場(2026-11-23)。FA カップは準決勝も中立(ウェンブリー)。
+///   スペイン(コパ・デル・レイ)・イタリア(コッパ・イタリア)の国内カップと、
+///   イングランドのリーグカップの準決勝は2試合合計。
 extension GameStateCups on GameState {
   /// チャンピオンズカップのクラブ数(4クラブ×8組)。
   static const int championsCupClubs = 32;
@@ -106,6 +109,9 @@ extension GameStateCups on GameState {
       },
       roundDue: (total) => domesticRoundDue(total, m),
       focusTeamId: _save!.userTeamId,
+      neutralSemiFinal: theme == LeagueTheme.england,
+      twoLeggedSemiFinal:
+          theme == LeagueTheme.spain || theme == LeagueTheme.italy,
     );
   }
 
@@ -125,6 +131,7 @@ extension GameStateCups on GameState {
       entryRound: const {3: 1, 2: 1, 1: 2},
       roundDue: (total) => leagueCupRoundDue(total, m),
       focusTeamId: _save!.userTeamId,
+      twoLeggedSemiFinal: true,
     );
   }
 
@@ -190,9 +197,13 @@ extension GameStateCups on GameState {
     var played = false;
     for (var guard = 0; guard < 16; guard++) {
       final next = cup.nextUnplayedMatch;
-      if (next == null || !_cupDue(cup.dueMatchdayFor(next.round))) break;
+      if (next == null || !_cupDue(cup.dueMatchdayForMatch(next))) break;
+      // 2試合制の組は、第1戦・第2戦それぞれの日が来たものだけ。
       final cpu = cup.rounds.last
-          .where((m) => m.result == null && !_isUserMatch(m))
+          .where((m) =>
+              m.result == null &&
+              !_isUserMatch(m) &&
+              _cupDue(cup.dueMatchdayForMatch(m)))
           .toList();
       if (cpu.isEmpty) break;
       final teams = allTeamsForCups;
@@ -523,6 +534,9 @@ extension GameStateCups on GameState {
       season: _save!.league.season,
       theme: currentLeagueTheme,
       totalMatchdays: m,
+      playsInInternationalWindows:
+          SeasonCalendar.playsThroughInternationalWindows(
+              currentLeagueTheme, currentDivisionTier),
     );
     for (var md = 1; md <= m; md++) {
       if (cal.dateForMatchday(md).month == 1) return md;
@@ -580,6 +594,8 @@ extension GameStateCups on GameState {
     if (cup == null || r == null) return;
     final u = _save!.userTeamId;
     if (_isUserMatch(m)) {
+      // 中立の会場。入場収入は折半。
+      _bookCupGate(r, neutral: true, split: true);
       final oppId = m.homeTeamId == u ? m.awayTeamId : m.homeTeamId;
       final opp = teamById(oppId)?.name ?? '-';
       final mine = m.homeTeamId == u ? r.homeGoals : r.awayGoals;

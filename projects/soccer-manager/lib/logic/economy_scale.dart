@@ -221,19 +221,25 @@ double wageCountryFactor(LeagueTheme theme, int tier) =>
       (LeagueTheme.england, 2) => 0.9,
       // 3部は収入に比べて年俸が重く、どの国も人件費率が115〜140%になって
       // いた(実際のリーグ1などは80〜100%)。3部だけ2割ほど下げる(2026-11-22)。
-      (LeagueTheme.england, 3) => 0.8,
+      // 年俸を能力×年齢の式にしたあと(2026-11-23)、32ゲームぶん集めた
+      // 真ん中が 104〜112% と重かったので 0.8 から下げた。
+      (LeagueTheme.england, 3) => 0.74,
       (LeagueTheme.england, _) => 1.0,
       (LeagueTheme.spain, 1) => 0.7,
       (LeagueTheme.germany, 1) => 0.65,
       (LeagueTheme.italy, 1) => 0.65,
       (LeagueTheme.france, 1) => 0.45,
       (LeagueTheme.spain, 2) => 0.65,
-      (LeagueTheme.germany, 2) => 0.8,
+      // 32ゲームぶんの真ん中が 100% と2部の中で重かったので 0.8 から下げた
+      // (2026-11-23)。
+      (LeagueTheme.germany, 2) => 0.75,
       (LeagueTheme.italy, 2) => 0.65,
       (LeagueTheme.france, 2) => 0.55,
       (LeagueTheme.spain, _) => 0.65,
       (LeagueTheme.germany, _) => 0.7,
-      (LeagueTheme.italy, _) => 0.7,
+      // 年俸を能力×年齢の式にしたあと、3部の真ん中が 106〜119% と重かった
+      // ので 0.7 から下げた(2026-11-23)。
+      (LeagueTheme.italy, _) => 0.65,
       (LeagueTheme.france, _) => 0.6,
     };
 
@@ -282,10 +288,69 @@ double wageScaleToHome(String? originLeague) {
   return currentWageLevel / wageCountryFactor(from, 1);
 }
 
-/// 市場価値 [value] の選手が求める年俸(万円)。2.4 × 価値^0.88 に、
+/// 市場価値 [value] から見た年俸(万円)。2.4 × 価値^0.88 に、
 /// 年俸の水準 [level](省略時は [currentWageLevel]。イングランド = 1)を掛ける。
+/// 2026-11-23 から選手の年俸の基準は [annualWageForAbility](能力と経験)。
+/// これは人件費の水準を合わせるときの比べる元として残している。
 int annualWageForValue(int value, [double? level]) =>
     (2.4 * pow(max(0, value), 0.88) * (level ?? currentWageLevel)).round();
+
+/// 年俸の年齢の係数(経験)。若手は安め、20代後半〜30代前半が高く、
+/// 30代半ばからやや下がる。年齢の間は線でつなぐ(誕生日で大きく跳ねない)。
+///
+/// 年俸は「今の能力 × 経験」で決まる。伸びしろ(若さ)の分は移籍金
+/// (市場価値)だけに効く。以前は年俸を市場価値から出していたため、
+/// 総合60の19歳が32歳の約4.6倍の年俸を求めていた(2026-11-23 に変更)。
+double wageExperienceFactor(int age) =>
+    piecewiseLinear(_wageExperiencePoints, age);
+
+const List<(int, double)> _wageExperiencePoints = [
+  (17, 0.45),
+  (20, 0.62),
+  (23, 0.82),
+  (26, 0.97),
+  (28, 1.05),
+  (32, 1.08),
+  (34, 1.0),
+  (36, 0.9),
+  (39, 0.82),
+];
+
+/// [points](年齢の昇順)を線でつないだ値。範囲の外は端の値。
+double piecewiseLinear(List<(int, double)> points, num x) {
+  if (x <= points.first.$1) return points.first.$2;
+  for (var i = 1; i < points.length; i++) {
+    final (x1, y1) = points[i];
+    if (x <= x1) {
+      final (x0, y0) = points[i - 1];
+      return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
+    }
+  }
+  return points.last.$2;
+}
+
+/// 総合力・年齢から年俸を出す倍率。選手全体の人件費の水準が、市場価値
+/// から出していた頃([annualWageForValue])と同じくらいになるように合わせた
+/// (作ったばかりのリーグの全選手の年俸の合計で比べる)。
+const double wageAbilityScale = 2.79;
+
+/// 総合力 [overall]・年齢 [age] の選手が求める年俸(万円)。
+/// [wageAbilityScale] × 市場価値の基準([marketValueBase])^0.88 ×
+/// 経験の係数([wageExperienceFactor])に、年俸の水準 [level](省略時は
+/// [currentWageLevel]。イングランド = 1)を掛ける。伸びしろ・性格は見ない。
+int annualWageForAbility(int overall, int age, [double? level]) =>
+    (wageAbilityScale *
+            pow(marketValueBase(overall), 0.88) *
+            wageExperienceFactor(age) *
+            (level ?? currentWageLevel))
+        .round();
+
+/// 総合力 [overall]・年齢 [age] の選手の週俸(万円)。年俸 ÷ 52、最低
+/// [minWeeklyWage]。選手が「見合う」と考える額で、契約・満足度・移籍の
+/// 要求の基準になる。
+int weeklyWageForAbility(int overall, int age, [double? level]) =>
+    max(minWeeklyWage,
+        (annualWageForAbility(overall, age, level) / 52).round());
 
 /// 給与の下限(万円/週)。
 const int minWeeklyWage = 5;

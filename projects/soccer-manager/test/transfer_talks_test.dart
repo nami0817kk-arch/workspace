@@ -13,7 +13,7 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   group('言い値と返事の決まり', () {
-    int ask({bool key = false, bool starter = false, int years = 3,
+    int ask({bool key = false, bool starter = false, num years = 3,
             int age = 27, int gap = 0}) =>
         TransferTalkEngine.askingPrice(
             marketValue: 1000,
@@ -27,8 +27,12 @@ void main() {
       expect(ask(), 1000);
       expect(ask(key: true), 1300);
       expect(ask(starter: true), 1150);
-      expect(ask(years: 1), 800);
-      expect(ask(years: 2), 950);
+      // 契約の残り年数の係数(半年0.2・1年0.5・2年0.8・3年1.0・4年以上1.1)。
+      expect(ask(years: 0.5), 200);
+      expect(ask(years: 1), 500);
+      expect(ask(years: 2), 800);
+      expect(ask(years: 4), 1100);
+      expect(ask(years: 6), 1100);
       expect(ask(age: 19, gap: 10), 1150);
     });
 

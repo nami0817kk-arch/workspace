@@ -81,8 +81,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('理事会の目標順位', "The board's target"),
             description: Tr.pick(
-                'シーズン開始時に理事会から示される目標順位。これを下回る成績が続くと監督への信頼度が下がり、0になると解任される。ホーム画面の順位表示と見比べて、順位が目標に届いているか確認する。',
-                'The finishing position the board asks for at the start of the season. Sitting below it for long costs you their confidence, and at zero you are sacked. Check it against the position shown on the home screen.'),
+                'シーズン開始時に理事会から示される目標順位。これを下回る成績が続くとサポーターの期待が下がり、0になるとクラブを手放すことになる。ホーム画面の順位表示と見比べて、順位が目標に届いているか確認する。',
+                'The finishing position the board asks for at the start of the season. Sitting below it for long wears down the supporters, and if their faith hits zero you have to sell the club. Check it against the position shown on the home screen.'),
           ),
           GuideTopic(
             title: Tr.pick('通知バッジ', 'Notification badges'),
@@ -108,8 +108,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('2つの期待', 'Two expectations'),
             description: Tr.pick(
-                'サポーターの期待は成績と人気で、株主の期待は収支で動きます。どちらかが尽きると、クラブを手放すことになります。',
-                'Fan expectation follows results and popularity; shareholder expectation follows the books. If either runs out, you must sell the club.'),
+                'サポーターの期待は成績と人気で、株主の期待は収支で動きます。クラブを手放すことになるのは、サポーターの期待が尽きたときと、資金が尽きたとき(借金がその部の年収の半分を超えたとき)の2つだけです。オーナーは雇われる立場ではないので、契約の満了で辞めさせられることはありません。',
+                'Fan expectation follows results and popularity; shareholder expectation follows the books. Only two things can force you to sell the club: the fans losing all faith, or the money running out (debts above half a season\'s typical income for your division). You own the club, so no contract can run out on you.'),
           ),
           GuideTopic(
             title: Tr.pick('進むボタン(日付で進む)', 'The advance button'),
@@ -419,8 +419,8 @@ List<GuideSection> get guideSections => [
             title:
                 Tr.pick('監督への信頼度・監督としての評価', 'Board confidence and reputation'),
             description: Tr.pick(
-                '信頼度は理事会からの評価で、目標順位を下回る成績が続くと下がり0で解任される。評価は世間からの監督評価で、解任・移籍後も引き継がれ、他クラブからの就任オファーの受けやすさに影響する。',
-                'Confidence is what your board thinks: results below their target push it down, and at zero you are sacked. Reputation is what the wider game thinks, and unlike confidence it follows you through sackings and moves, shaping the offers you receive.'),
+                '信頼度はサポーターの期待で、目標順位を下回る成績が続くと下がり、0でクラブを手放すことになる。評価は世間からの評価で、クラブを移っても引き継がれ、他クラブからの話の来やすさに影響する。',
+                'Confidence is what the supporters expect: results below the target push it down, and at zero you have to sell the club. Reputation is what the wider game thinks, and unlike confidence it follows you from club to club, shaping the offers you receive.'),
           ),
         ],
       ),

@@ -116,6 +116,7 @@ String _facilityEffectLabel(
   FacilityType type,
   int level,
   int expectedAttendance,
+  int fanDemand,
 ) {
   const maxLevel = ClubInfrastructure.maxLevel;
   final hasNext = level < maxLevel;
@@ -136,8 +137,8 @@ String _facilityEffectLabel(
       final next =
           hasNext ? ClubInfrastructure.stadiumCapacity(level + 1) : cur;
       return Tr.pick(
-          'いま: $cur人入る(ふだんの入り$expectedAttendance人)${hasNext ? '\n次のLvで: $next人' : ''}',
-          "Now: holds $cur (usual crowd $expectedAttendance)${hasNext ? '\nNext level: $next' : ''}");
+          'いま: $cur人入る(ふだんの入り$expectedAttendance人・来たいファン$fanDemand人)${hasNext ? '\n次のLvで: $next人' : ''}',
+          "Now: holds $cur (usual crowd $expectedAttendance, fans wanting to come $fanDemand)${hasNext ? '\nNext level: $next' : ''}");
     case FacilityType.youthFacility:
       final cur = ScoutingEngine.maxProspectsFor(level);
       final next = hasNext ? ScoutingEngine.maxProspectsFor(level + 1) : cur;
@@ -286,9 +287,18 @@ class ClubScreen extends StatelessWidget {
                     type,
                     infra.facilityLevel(type),
                     gameState.expectedAttendance,
+                    gameState.fanDemand,
                   ),
                   canAfford:
                       save.budget >= gameState.facilityUpgradeCostFor(type),
+                  readyOn: infra.constructionReadyOn(type),
+                  buildNote: type == FacilityType.stadium
+                      ? Tr.pick(
+                          '${ClubInfrastructure.stadiumSeatsPerLevel}席 × 1席${formatMoney(ClubInfrastructure.stadiumSeatCost(infra.facilityLevel(type)))}。来季の開幕に完成します',
+                          '${ClubInfrastructure.stadiumSeatsPerLevel} seats at ${formatMoney(ClubInfrastructure.stadiumSeatCost(infra.facilityLevel(type)))} each. Ready for the start of next season')
+                      : Tr.pick(
+                          '工期${ClubInfrastructure.buildMonths}か月。完成までは効き目が出ません',
+                          'Takes ${ClubInfrastructure.buildMonths} months. No effect until it is finished'),
                   onUpgrade: () => gameState.upgradeFacility(type),
                 ),
               const SizedBox(height: 8),
@@ -365,6 +375,12 @@ class _UpgradeCard extends StatelessWidget {
   final String costLabel;
   final String? extraLabel;
   final bool canAfford;
+
+  /// 工事中なら完成する日。工事中は重ねて増築できない。
+  final DateTime? readyOn;
+
+  /// 工事費の内訳と工期(1行)。
+  final String? buildNote;
   final Future<bool> Function() onUpgrade;
 
   const _UpgradeCard({
@@ -375,6 +391,8 @@ class _UpgradeCard extends StatelessWidget {
     required this.costLabel,
     this.extraLabel,
     required this.canAfford,
+    this.readyOn,
+    this.buildNote,
     required this.onUpgrade,
   });
 
@@ -382,6 +400,7 @@ class _UpgradeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const maxLevel = ClubInfrastructure.maxLevel;
     final isMax = level >= maxLevel;
+    final building = readyOn != null;
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
@@ -426,26 +445,39 @@ class _UpgradeCard extends StatelessWidget {
                     fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ],
+            if (!isMax && !building && buildNote != null) ...[
+              const SizedBox(height: 2),
+              Text(
+                buildNote!,
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
+              ),
+            ],
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: isMax || !canAfford
+                onPressed: isMax || building || !canAfford
                     ? null
                     : () async {
                         final ok = await runUndoable(
                           context,
                           action: onUpgrade,
-                          done: Tr.pick('「$title」を増築しました', 'Upgraded: $title'),
+                          done: Tr.pick(
+                              '「$title」の増築に着工しました', 'Work has begun: $title'),
                         );
                         ok
                             ? FeedbackService.success()
                             : FeedbackService.error();
                       },
-                child: Text(isMax
-                    ? Tr.pick('最大レベル', 'Fully upgraded')
-                    : Tr.pick('$costLabel ${formatMoney(cost)}でアップグレード',
-                        'Upgrade for ${formatMoney(cost)} ($costLabel)')),
+                child: Text(building
+                    ? Tr.pick(
+                        '工事中(${TransferWindowCalendar.formatYearMonth(readyOn!)}完成)',
+                        'Under construction (ready ${TransferWindowCalendar.formatYearMonth(readyOn!)})')
+                    : isMax
+                        ? Tr.pick('最大レベル', 'Fully upgraded')
+                        : Tr.pick('$costLabel ${formatMoney(cost)}で増築',
+                            'Upgrade for ${formatMoney(cost)} ($costLabel)')),
               ),
             ),
           ],

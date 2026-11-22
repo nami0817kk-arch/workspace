@@ -500,6 +500,19 @@ class _BracketMatchCard extends StatelessWidget {
                       fontWeight:
                           isUserMatch ? FontWeight.bold : FontWeight.normal),
                 ),
+                // 2試合合計の組(準決勝): 第1戦の得点と、終われば合計。
+                if (match.twoLegged && match.firstLeg != null)
+                  Text(
+                      match.result == null
+                          ? Tr.pick(
+                              '第1戦 ${match.firstLeg!.awayGoals} - ${match.firstLeg!.homeGoals}(2試合合計で勝ち抜け)',
+                              'First leg ${match.firstLeg!.awayGoals} - ${match.firstLeg!.homeGoals} (decided on aggregate)')
+                          : Tr.pick(
+                              '2試合合計 ${match.goalsFor(match.homeTeamId)} - ${match.goalsFor(match.awayTeamId)}',
+                              'Aggregate ${match.goalsFor(match.homeTeamId)} - ${match.goalsFor(match.awayTeamId)}'),
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: SemanticColors.subtleText(context))),
                 if (match.penaltyWinnerId != null)
                   Text(
                       Tr.pick('PK戦: ${nameOf(match.penaltyWinnerId!)}が勝利',

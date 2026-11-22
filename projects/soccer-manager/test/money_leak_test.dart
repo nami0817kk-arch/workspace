@@ -7,12 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
+import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/widgets/reward_funds_card.dart';
 
 import 'support/stub_purchase_service.dart';
 import 'support/legacy_market.dart';
+import 'support/sell_via_offer.dart';
 
 /// お金が湧く道・消える道の検査。
 ///
@@ -42,7 +44,7 @@ void main() {
         }
       }
       expect(targetId, isNotNull, reason: '分割で買える選手がいない');
-      expect(await game.sellPlayer(targetId!), isTrue);
+      expect(await sellViaOffer(game, targetId!), isNotNull);
 
       expect(game.save!.budget, lessThanOrEqualTo(before),
           reason: '買って売るだけで資金が増えている');
@@ -68,7 +70,7 @@ void main() {
         }
       }
       expect(targetId, isNotNull, reason: '分割で買える選手がいない');
-      await game.sellPlayer(targetId!);
+      await sellViaOffer(game, targetId!);
 
       expect(game.save!.newsLog.any((n) => n.text.contains('分割払いの残金')), isTrue,
           reason: '残金の精算が記録されていない');
@@ -82,13 +84,27 @@ void main() {
       // 1割ほどの確率で枠を超える)。ここで見たいのは資金の出入りだけ。
       game.save!.wageBudget = 1000000;
 
-      final target = legacyMarket(game).first;
-      expect(await game.buyPlayer(target.id), isTrue);
+      // 登録の枠(国籍・年齢)で買えない選手もいるので、買えるまで市場を順に試す。
+      Player? bought;
+      for (final c in legacyMarket(game).take(15)) {
+        if (await game.buyPlayer(c.id)) {
+          bought = c;
+          break;
+        }
+      }
+      expect(bought, isNotNull);
+      final target = bought!;
       final afterBuy = game.save!.budget;
-      final net = game.netReleaseValueFor(target.id);
-      expect(await game.sellPlayer(target.id), isTrue);
+      final o = await sellViaOffer(game, target.id);
+      expect(o, isNotNull);
 
-      expect(game.save!.budget, afterBuy + net);
+      // 入るのはオファーの額。他の国のクラブへ売ったときだけ、連帯貢献金が
+      // 引かれる。
+      final solidarity = game.solidarityFor(target, o!.amount);
+      expect(
+          game.save!.budget,
+          inInclusiveRange(
+              afterBuy + o.amount - solidarity, afterBuy + o.amount));
     });
   });
 

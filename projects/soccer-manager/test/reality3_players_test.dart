@@ -13,6 +13,7 @@ import 'package:soccer_manager/logic/league_rules.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/logic/pre_contract_engine.dart';
 import 'package:soccer_manager/logic/squad_registration_engine.dart';
+import 'package:soccer_manager/models/incoming_offer.dart';
 import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/pre_contract.dart';
@@ -21,6 +22,8 @@ import 'package:soccer_manager/models/team.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
 import 'package:soccer_manager/widgets/rules_card.dart';
+
+import 'support/sell_via_offer.dart';
 
 /// 選手と移籍を実際のサッカーに近づけた決まりの続き(2026-11-22)。
 ///
@@ -221,7 +224,7 @@ void main() {
       for (var seed = 0; seed < 40; seed++) {
         final teams = squads();
         final before = {for (final t in teams) t.id: t.players.length};
-        AiTransferEngine.maybeGenerate(teams, 'user', Random(seed),
+        AiTransferEngine.runWeek(teams, 'user', Random(seed),
             canRegister: (t, _) => t.id != 'c1');
         expect(teams.firstWhere((t) => t.id == 'c1').players.length,
             lessThanOrEqualTo(before['c1']!),
@@ -230,9 +233,9 @@ void main() {
       for (var seed = 0; seed < 20; seed++) {
         final teams = squads();
         expect(
-            AiTransferEngine.maybeGenerate(teams, 'user', Random(seed),
+            AiTransferEngine.runWeek(teams, 'user', Random(seed),
                 canRegister: (_, __) => false),
-            isNull);
+            isEmpty);
       }
     });
 
@@ -246,7 +249,14 @@ void main() {
           p.nation = LeagueTheme.england.name;
         }
       }
-      final english = gs.userTeam.players.firstWhere((p) => !p.isLoan)
+      // 買い手は力の合うクラブだけ(オファーの作り直し)。力の低い選手だと
+      // 合うのが同じ部(上で枠を埋めたクラブ)だけになり、オファー自体が
+      // 来ないので、成人でいちばん力のある選手を売る。
+      final english = (gs.userTeam.players
+              .where((p) => !p.isLoan && p.age >= 18)
+              .toList()
+            ..sort((a, b) => b.overall.compareTo(a.overall)))
+          .first
         ..nation = LeagueTheme.england.name;
       final french =
           gs.userTeam.players.firstWhere((p) => !p.isLoan && p.id != english.id)
@@ -263,7 +273,14 @@ void main() {
           reason: 'EU の国籍なら枠の外');
       // 放出しても、枠の埋まったクラブへは移らない。
       expect(gs.isTransferWindowOpen, isTrue);
-      expect(await gs.sellPlayer(english.id), isTrue);
+      // 買い手は候補から数クラブだけ選んで登録を確かめるので、枠の埋まった
+      // クラブばかり引いた週はオファーが来ない。何週か待つ。
+      IncomingOffer? sold;
+      for (var week = 0; week < 5 && sold == null; week++) {
+        sold = await sellViaOffer(gs, english.id);
+      }
+      expect(sold, isNotNull);
+      expect(cpus.map((t) => t.name), isNot(contains(sold!.buyerClubName)));
       expect(
           cpus.any((t) => t.players.any((p) => p.id == english.id)), isFalse);
     });
@@ -402,13 +419,18 @@ void main() {
     });
 
     test('スペインは EU 外3人まで・ドイツは自国籍12人以上で始まる', () async {
-      final es = GameState();
-      await es.startNewGame('国籍FC', theme: LeagueTheme.spain);
-      expect(es.nonEuPlayerCount, lessThanOrEqualTo(3));
-      expect(
-          es.userTeam.players
-              .where((p) => es.nationalityOf(p) != LeagueTheme.spain),
-          isNotEmpty);
+      // スペインの3部の外国籍は2割ほど。25人がたまたま全員自国籍になる
+      // こと(0.4%ほど)もあるので、3回始めて外国籍が混ざることを見る。
+      var foreigners = 0;
+      for (var i = 0; i < 3; i++) {
+        final es = GameState();
+        await es.startNewGame('国籍FC', theme: LeagueTheme.spain);
+        expect(es.nonEuPlayerCount, lessThanOrEqualTo(3));
+        foreigners += es.userTeam.players
+            .where((p) => es.nationalityOf(p) != LeagueTheme.spain)
+            .length;
+      }
+      expect(foreigners, greaterThan(0));
       final de = GameState();
       await de.startNewGame('国籍FC', theme: LeagueTheme.germany);
       expect(de.nationalPlayerCount, greaterThanOrEqualTo(12));
@@ -501,7 +523,7 @@ void main() {
           .where((p) => !p.isLoan && !p.isLoanedOut)
           .reduce((a, b) => a.wage <= b.wage ? a : b);
       final before = gs.annualSquadCost;
-      expect(await gs.sellPlayer(cheapest.id), isTrue);
+      expect(await sellViaOffer(gs, cheapest.id), isNotNull);
       final drop = before - gs.annualSquadCost;
       expect(drop, greaterThan(0));
       expect(gs.annualSquadCost, greaterThan(limit), reason: 'まだ上限の上');

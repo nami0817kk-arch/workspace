@@ -4,6 +4,7 @@ import '../models/corner_routine.dart';
 import '../models/opposition_plan.dart';
 import '../models/player_instruction.dart';
 import '../models/attributes.dart';
+import '../models/card_rules.dart';
 import '../models/formation.dart';
 import '../models/player.dart';
 import '../models/team.dart';
@@ -15,7 +16,8 @@ import 'style_engine.dart';
 import 'training_engine.dart';
 import '../l10n/tr.dart';
 
-/// この枚数の警告が貯まると次節出場停止になる(退場は即1試合出場停止)。
+/// 国の分からないリーグ戦で、この枚数ごとに1試合の出場停止になる。
+/// 実際の決まりは大会と国ごとに[CardRules]で数える(2026-11-23)。
 const int yellowCardSuspensionThreshold = 5;
 
 /// 1試合で使える交代枠。ライブ観戦の手動の交代
@@ -354,6 +356,10 @@ class MatchEngine {
   /// ホームアドバンテージの既定倍率。実測でホーム勝率と平均得点差が
   /// 現実(勝率でホーム約45%対アウェイ約29%)に近づくよう調整した値。
   static const double defaultHomeAdvantageFactor = 1.10;
+
+  /// 中立の会場(カップ戦の決勝・スーパーカップなど)のホームの利の係数。
+  /// ホームの攻撃力に掛ける係数なので、1.0 で利が無い。
+  static const double neutralHomeAdvantageFactor = 1.0;
 
   static double _condition(Player p) =>
       (1 - p.fatigue / 250) *
@@ -2222,25 +2228,43 @@ class MatchEngine {
   /// 出場停止選手のうち、今節の対象外だった(実際に1試合を消化した)選手だけ
   /// 出場停止試合数を1減らす。今節新たに出場停止となった選手(今節は出場して
   /// カードを受けた側)は対象外で、次節から出場停止が適用される。
+  /// 消化するのは、この試合の大会([CardRules.current])の出場停止だけ。
   static void _advanceSuspensions(Team t, List<Player> lineup) {
+    final c = CardRules.current.competition;
     final lineupIds = lineup.map((p) => p.id).toSet();
     for (final p in t.players) {
-      if (p.suspendedMatches > 0 && !lineupIds.contains(p.id)) {
-        p.suspendedMatches -= 1;
+      final left = p.suspendedIn(c);
+      if (left > 0 && !lineupIds.contains(p.id)) {
+        p.setSuspendedIn(c, left - 1);
       }
     }
   }
 
-  /// 今節発生した警告・退場イベントを選手の累積数に反映する。
+  /// 退場の出場停止の試合数を決めるくじ(テストで差し替える)。
+  static Random cardRng = Random();
+
+  /// 今節発生した警告・退場イベントを、この試合の大会([CardRules.current])
+  /// の累積数と出場停止に反映する。警告は大会ごとに今季の枚数を数え、
+  /// 国と大会の決まり([CardRules.banForYellow])で出場停止にする。
+  /// 退場は1試合(一発退場の一部は暴力行為として3試合)。2枚目の警告で
+  /// 退場した試合の1枚目の警告は、累積に数えない(実際の決まり)。
   static void _applyCardAccumulation(
     Team home,
     Team away,
     List<MatchEvent> events,
   ) {
+    final rules = CardRules.current;
+    final c = rules.competition;
     final byId = {
       for (final p in [...home.players, ...away.players]) p.id: p,
     };
-    for (final e in events) {
+    final sentOff = {
+      for (final e in events)
+        if (e.type == MatchEventType.redCard && e.scorerId != null) e.scorerId,
+    };
+    final cautioned = <String>{};
+    final ordered = [...events]..sort((a, b) => a.minute.compareTo(b.minute));
+    for (final e in ordered) {
       if (e.type != MatchEventType.yellowCard &&
           e.type != MatchEventType.redCard) {
         continue;
@@ -2248,13 +2272,16 @@ class MatchEngine {
       final target = byId[e.scorerId];
       if (target == null) continue;
       if (e.type == MatchEventType.redCard) {
-        target.suspendedMatches += 1;
+        final ban = CardRules.redCardBan(
+            secondYellow: cautioned.contains(target.id), random: cardRng);
+        target.setSuspendedIn(c, target.suspendedIn(c) + ban);
       } else {
-        target.yellowCards += 1;
-        if (target.yellowCards >= yellowCardSuspensionThreshold) {
-          target.yellowCards = 0;
-          target.suspendedMatches += 1;
-        }
+        cautioned.add(target.id);
+        if (sentOff.contains(target.id)) continue;
+        final count = target.yellowCardsIn(c) + 1;
+        target.setYellowCardsIn(c, count);
+        final ban = rules.banForYellow(count);
+        if (ban > 0) target.setSuspendedIn(c, target.suspendedIn(c) + ban);
       }
     }
   }
