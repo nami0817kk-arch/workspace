@@ -2006,9 +2006,12 @@ void main() {
     await gameState.playNextMatchday(interactive: true);
     gameState.setMatchInstruction(MatchInstruction.aggressive);
     // 前半が判断待ちを1度も出さずに終わることが稀にあり、その場合は
-    // 進行中のハーフが残らないため既定値のままになる(仕様通り)。
-    // 進行中のハーフがある場合にのみ、指示が反映されることを確認する。
-    if (gameState.isHalfTime || gameState.pendingChanceDecision != null) {
+    // ハーフタイム(前半は終わっている)で止まるため、指示は変えられず
+    // 既定値のままになる(仕様通り)。判断待ちで止まっている = 前半が
+    // 進行中のときにだけ、指示が反映されることを確かめる。
+    // 以前は「ハーフタイムでも反映される」と見ていて、CI でたまに
+    // 落ちていた(2026-11-22)。
+    if (!gameState.isHalfTime && gameState.pendingChanceDecision != null) {
       expect(gameState.currentMatchInstruction, MatchInstruction.aggressive);
     }
 
