@@ -69,7 +69,13 @@ def DIM(on, a=0.4):
 
 
 def _steps(c):
-    return {f["n"]: c.when(f) for f in c.seg["fx"] if f["k"] == "step"}
+    """同じ番号が何度あっても、いちばん早い時刻で出す(続く行で同じ図を保つため、step を重ねて書く)。"""
+    st = {}
+    for f in c.seg["fx"]:
+        if f["k"] == "step":
+            w = c.when(f)
+            st[f["n"]] = min(st.get(f["n"], w), w)
+    return st
 
 
 def _k(t, steps, n, dd=0.6):
@@ -140,7 +146,7 @@ def draw_survey(img: Image.Image, t: float, c) -> None:
             sg.stext(d, (X(80), Y(0.95)), "予想", fL, (220, 220, 230, a), anchor="mm")
     if k2 > 0:
         a = int(255 * k2)
-        for v, name in ((0.42, "1年"), (0.36, "1か月"), (0.30, "1週間")):
+        for v, name in ((0.40, "1年"), (0.29, "1か月"), (0.18, "1週間")):
             w = X(14) + (X(94) - X(14)) * min(1, k2 * 1.2)
             d.line([(X(14), Y(v)), (w, Y(v))], fill=(150, 210, 255, a), width=6)
             sg.stext(d, (X(94) + 10, Y(v)), name, fS, (150, 210, 255, a), anchor="lm")
@@ -151,11 +157,11 @@ def draw_survey(img: Image.Image, t: float, c) -> None:
             age = 14 + 80 * i / 40
             if age > 14 + 80 * k3:
                 break
-            v = 0.40 + 0.45 * (min(age, 59) - 14) / 45
+            v = 0.50 + 0.40 * (min(age, 59) - 14) / 45
             pts.append((X(age), Y(v)))
         if len(pts) > 1:
             d.line(pts, fill=(255, 214, 64, a), width=8)
-        sg.stext(d, (X(94) + 10, Y(0.85)), "10年", fL, (255, 214, 64, a), anchor="lm")
+        sg.stext(d, (X(94) + 10, Y(0.90)), "10年", fL, (255, 214, 64, a), anchor="lm")
     sg.stext(d, (r, bot + 70), "模式図（形だけを示す）", fS, (120, 130, 150, 255), anchor="rm")
     img.alpha_composite(bg)
 
@@ -232,8 +238,8 @@ def draw_fall(img: Image.Image, t: float, c) -> None:
         d.line([(tx - 40, top), (tx + 40, top)], fill=(255, 214, 64, a), width=4)
         d.line([(tx - 40, bot), (tx + 40, bot)], fill=(255, 214, 64, a), width=4)
         sg.stext(d, (tx + 60, (top + bot) / 2), "31m", f, (255, 214, 64, a), anchor="lm")
-    if 2 in st:
-        u = min(max((t - st[2]) / 2.52, 0.0), 1.0)
+    if 2 in st and t >= st[2]:
+        u =min(max((t - st[2]) / 2.52, 0.0), 1.0)
         y = top + (bot - top - 30) * u * u
         d.line([(tx - 110, bot - 10), (tx - 10, bot - 10)], fill=(220, 220, 230, 255), width=5)
         d.ellipse([tx - 82, y - 22, tx - 38, y + 22], fill=(255, 140, 90, 255))
@@ -266,7 +272,7 @@ def draw_memory(img: Image.Image, t: float, c) -> None:
             x1 = l + (r - l) * (i + 1) / n - 2
             col = (255, 214, 64, 230) if 10 <= age < 30 else (110, 140, 190, 230)
             d.rectangle([x0, bot - v * (bot - top), x1, bot], fill=col)
-        sg.stext(d, (l + (r - l) * 20 / 70, top - 30 + 70), "10〜30歳", _font(42, 48), (255, 214, 64, int(255 * k)), anchor="mm")
+        sg.stext(d, (l + (r - l) * 20 / 70, top - 75), "10〜30歳", _font(42, 48), (255, 214, 64, int(255 * k)), anchor="mm")
     sg.stext(d, (r, bot + 75), "模式図（形だけを示す）", fS, (120, 130, 150, 255), anchor="rm")
     img.alpha_composite(bg)
 
@@ -404,7 +410,7 @@ CH["ch5"] = [
     dict(id="5-16", text="ところが、落ちたあとに聞くと、", scene=V("c28639844", 1.0)),
     dict(id="5-17", text="自分の落下は、他の人の落下より【36%長かった】と答えました。", say="じぶんのらっかは、ほかのひとのらっかより、さんじゅうろくパーセント、ながかったと、こたえました。", scene=BARS_FALL),
     dict(id="5-18", text="長く感じたのは、落ちている最中ではなく、思い出したときでした。", scene=V("c10302167", 18.0)),
-    dict(id="5-19", text="研究者は、こう考えました。", scene=V("c7103445", 1.0)),
+    dict(id="5-19", text="研究者は、こう考えました。", scene=V("c8060739", 4.0)),
     dict(id="5-20", text="怖い出来事は、細かいところまで記憶に残る。", scene=V("c11988849", 8.0), fx=[NOTE(0.5, 0.35, "細かく残る", "細かい")]),
     dict(id="5-21", text="記憶が多いほど、あとで長く感じるのだと。", scene=WD("記憶が多いほど", "【あとで長く感じる】", "長く")),
     dict(id="5-22", text="同じことは、旅行でも起きます。", scene=V("c34918624", 1.0)),
