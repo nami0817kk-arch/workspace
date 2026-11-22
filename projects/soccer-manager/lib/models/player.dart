@@ -50,6 +50,47 @@ extension InjuryTypeInfo on InjuryType {
 /// トレーニング成長率の判定など、粗い分類で十分な処理に用いる。
 enum PositionGroup { gk, def, mid, att }
 
+/// 市場価値の年齢の係数。若いほど高く(伸びしろへの期待)、28歳ごろから
+/// 下がり、30代前半で大きく下がる。年齢の間は線でつなぐ。
+///
+/// 以前は 21歳まで 1.4・27歳まで 1.1・30歳まで 0.8・31歳から 0.4 の階段で、
+/// 31歳の誕生日の一晩で価値が半分になった(2026-11-23 に曲線へ)。
+/// 全体の平均がほぼ変わらないように点を置いた。
+double marketValueAgeFactor(int age) =>
+    piecewiseLinear(_marketValueAgePoints, age);
+
+const List<(int, double)> _marketValueAgePoints = [
+  (19, 1.4),
+  (21, 1.36),
+  (23, 1.24),
+  (25, 1.12),
+  (27, 1.02),
+  (28, 0.94),
+  (29, 0.85),
+  (30, 0.75),
+  (31, 0.64),
+  (32, 0.54),
+  (33, 0.46),
+  (34, 0.4),
+  (36, 0.33),
+  (38, 0.28),
+];
+
+/// 市場価値のポジションの係数。同じ総合力でも、点を取る前の選手ほど高く、
+/// キーパー・センターバックは安い(実際の移籍金の傾向)。23人の標準の
+/// 編成で平均がほぼ1になるように置いた(2026-11-23 に足した)。
+double marketValuePositionFactor(Position pos) => switch (pos) {
+      Position.gk => 0.62,
+      Position.dc => 0.88,
+      Position.dr || Position.dl => 0.92,
+      Position.wbr || Position.wbl => 0.94,
+      Position.dm => 1.0,
+      Position.mc || Position.mr || Position.ml => 1.05,
+      Position.amc => 1.12,
+      Position.amr || Position.aml => 1.16,
+      Position.st => 1.22,
+    };
+
 extension PositionLabel on Position {
   String get label {
     switch (this) {
@@ -1261,7 +1302,8 @@ class Player {
   /// (表示専用。自クラブの選手・フリーエージェントにはnull)。
   String? originClubName;
 
-  /// 出場手当(万円)。契約更新時に決定され、リーグ公式戦でスタメン出場するたびに支払われる。
+  /// 出場手当(万円)。契約更新時に決定され、公式戦(リーグ・カップ・大陸大会)に
+  /// 先発するたびに支払われる。途中出場は半額(logic/appearance_fee_engine.dart)。
   int appearanceFee;
 
   /// 出来高: リーグ戦で1点取るごとに払う額(万円。0なら無し)。
@@ -1624,22 +1666,16 @@ class Player {
     double personalityFactor,
     double leadershipFactor,
     double tournamentFactor,
+    double positionFactor,
   }) get marketValueBreakdown {
     // 能力に対して指数で伸びる(総合78で約5億、85で約17億、95で約100億)。
     final base = marketValueBase(overall);
     // 伸びしろ1あたり、基礎の3%を上乗せする。以前は1あたり15万円の
     // 足し算だったが、基礎が億の桁になると伸びしろが無いのと同じになる。
     final potentialBonus = base * (potential - overall).clamp(0, 40) * 0.03;
-    double ageFactor;
-    if (age <= 21) {
-      ageFactor = 1.4;
-    } else if (age <= 27) {
-      ageFactor = 1.1;
-    } else if (age <= 30) {
-      ageFactor = 0.8;
-    } else {
-      ageFactor = 0.4;
-    }
+    // 年齢の係数は線でつないだ曲線(誕生日で一晩に大きく落ちない)。
+    // 以前は 1.4→1.1→0.8→0.4 の階段で、31歳の誕生日に価値が半分になった。
+    final ageFactor = marketValueAgeFactor(age);
     // リーダーシップが高い選手は主将候補として、低い選手はロッカールームへの
     // 悪影響を懸念されてわずかに評価が振れる(±10%)。
     final leadershipFactor = 1 +
@@ -1651,8 +1687,14 @@ class Player {
       personalityFactor: personality.marketValueFactor,
       leadershipFactor: leadershipFactor,
       tournamentFactor: 1 + tournamentBoostPct / 100,
+      positionFactor: marketValuePositionFactor(position),
     );
   }
+
+  /// 今の能力と経験(年齢)に見合う週俸(万円)。[level] は年俸の水準
+  /// ([currentWageLevel])。伸びしろは見ない(移籍金だけに効く)。
+  int fairWeeklyWage([double? level]) =>
+      weeklyWageForAbility(overall, age, level);
 
   /// 想定移籍金（万円）。年齢・現在能力・伸びしろから概算する。
   int get marketValue {
@@ -1661,7 +1703,8 @@ class Player {
         b.ageFactor *
         b.personalityFactor *
         b.leadershipFactor *
-        b.tournamentFactor;
+        b.tournamentFactor *
+        b.positionFactor;
     return value.round().clamp(minMarketValue, maxMarketValue);
   }
 

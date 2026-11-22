@@ -16,7 +16,7 @@ void main() {
     int demand({int? from = 3, int to = 3, bool was = false, bool would = true}) =>
         PlayerTermsEngine.demand(
             currentWage: 100,
-            marketValue: 0,
+            fairWage: 0,
             fromTier: from,
             toTier: to,
             wasStarter: was,

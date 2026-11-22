@@ -76,7 +76,7 @@ void main() {
 
       int demand(SquadStatus s) => PlayerTermsEngine.demand(
         currentWage: 100,
-        marketValue: 0,
+        fairWage: 0,
         fromTier: 3,
         toTier: 3,
         wasStarter: false,

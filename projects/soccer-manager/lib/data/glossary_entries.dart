@@ -273,8 +273,8 @@ List<GlossaryEntry> get glossaryEntries => [
       GlossaryEntry(
         term: Tr.pick('出場手当', 'Appearance fee'),
         category: GlossaryCategory.contractTransfer,
-        description: Tr.pick('契約更新時に決定される手当(万円)。リーグ公式戦でスタメン出場するたびに支払われる。',
-            'Agreed when you renew, and paid every time he starts a league match.'),
+        description: Tr.pick('契約更新時に決定される手当(万円)。リーグ戦・カップ戦・大陸大会に先発するたびに支払われ、途中出場なら半額。',
+            'Agreed when you renew, and paid every time he starts a league, cup or continental match. Half if he comes off the bench.'),
       ),
       GlossaryEntry(
         term: Tr.pick('サインボーナス', 'Signing bonus'),

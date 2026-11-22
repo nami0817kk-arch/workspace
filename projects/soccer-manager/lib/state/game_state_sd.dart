@@ -111,7 +111,7 @@ extension GameStateSd on GameState {
           }
           final wage = t.demandWage > 0
               ? t.demandWage
-              : (max(p.wage, weeklyWageForValue(p.marketValue)) * 1.1).round();
+              : (max(p.wage, p.fairWeeklyWage()) * 1.1).round();
           final choices = ContractEngine.endYearChoicesNow(p.age);
           final end = choices.isEmpty
               ? Player.contractClockYear + 1

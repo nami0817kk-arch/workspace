@@ -357,7 +357,7 @@ class ContractEngine {
     } else if (p.happiness < 65) {
       chance += 0.10;
     }
-    if (p.wage * 4 < weeklyWageForValue(p.marketValue) * 3) chance += 0.10;
+    if (p.wage * 4 < p.fairWeeklyWage() * 3) chance += 0.10;
     return chance.clamp(0.0, 0.6);
   }
 

@@ -7831,6 +7831,7 @@ void main() {
     final b = p.marketValueBreakdown;
     final recombined = ((b.base + b.potentialBonus) *
             b.ageFactor *
+            b.positionFactor *
             b.personalityFactor *
             b.leadershipFactor)
         .round()

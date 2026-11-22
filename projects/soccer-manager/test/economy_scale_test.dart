@@ -332,7 +332,7 @@ void main() {
       expect(ls.budget, (5000 * scale).round());
       expect(ls.reserveFund, (100 * scale).round());
       final p = loaded.userTeam.players.firstWhere((x) => x.id == player.id);
-      expect(p.wage, weeklyWageForValue(p.marketValue));
+      expect(p.wage, p.fairWeeklyWage());
 
       // もう一度読み込んでも、二重には掛からない。
       final again = GameState();

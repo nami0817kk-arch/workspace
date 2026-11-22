@@ -23,15 +23,16 @@ class PlayerTermsEngine {
 
   /// 選手が望む週俸(万円)。
   ///
-  /// - 移籍する選手は、今の週俸と価値に見合う週俸の高いほうに1割を上乗せ
-  ///   して望む(フリーエージェントは今の週俸のまま)。価値に見合う週俸は
-  ///   行き先の国の水準([currentWageLevel])。国をまたぐときは、今の週俸も
+  /// - 移籍する選手は、今の週俸と見合う週俸[fairWage]の高いほうに1割を
+  ///   上乗せして望む(フリーエージェントは今の週俸のまま)。見合う週俸は
+  ///   能力と経験から([Player.fairWeeklyWage])、行き先の国の水準
+  ///   ([currentWageLevel])。国をまたぐときは、今の週俸も
   ///   [currentWageScale]で行き先の国の水準に直す([wageScaleToHome])
   /// - 下の部へ移るなら1部下がるごとに2割増し。上の部へなら少し下げてよい
   /// - 今のクラブで先発なのに、こちらでは控えになりそうなら2割増し
   static int demand({
     required int currentWage,
-    required int marketValue,
+    required int fairWage,
     required int? fromTier,
     required int toTier,
     required bool wasStarter,
@@ -44,7 +45,7 @@ class PlayerTermsEngine {
     final current = currentWage * currentWageScale;
     var base = current;
     if (fromTier != null) {
-      base = max(current, weeklyWageForValue(marketValue).toDouble()) * 1.1;
+      base = max(current, fairWage.toDouble()) * 1.1;
       final diff = toTier - fromTier;
       if (diff > 0) {
         // 野心の強い選手ほど、下の部へ移ることを嫌う。
