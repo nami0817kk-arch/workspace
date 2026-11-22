@@ -199,9 +199,11 @@ void main() {
       await game.startNewGame('年俸FC', theme: LeagueTheme.france);
       final p = game.save!.foreignLeagues['england']!.teams.first.players
           .firstWhere((p) => p.wage > weeklyWageForValue(p.marketValue) + 5);
-      // イングランド(1.0)からフランス(3部 0.75)へ: 今の週俸は 0.75 倍に直る。
+      // イングランドの1部からフランスの3部へ: 今の週俸は水準の比の倍に直る。
+      final scale = wageCountryFactor(LeagueTheme.france, 3) /
+          wageCountryFactor(LeagueTheme.england, 1);
       expect(game.preContractWageDemand(p),
-          PreContractEngine.wageDemand(p, currentWageScale: 0.75));
+          PreContractEngine.wageDemand(p, currentWageScale: scale));
       expect(game.preContractWageDemand(p),
           lessThan(PreContractEngine.wageDemand(p)));
     });

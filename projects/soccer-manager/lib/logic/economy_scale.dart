@@ -219,6 +219,9 @@ const int minMarketValue = 50;
 double wageCountryFactor(LeagueTheme theme, int tier) =>
     switch ((theme, tier.clamp(1, 3))) {
       (LeagueTheme.england, 2) => 0.9,
+      // 3部は収入に比べて年俸が重く、どの国も人件費率が115〜140%になって
+      // いた(実際のリーグ1などは80〜100%)。3部だけ2割ほど下げる(2026-11-22)。
+      (LeagueTheme.england, 3) => 0.8,
       (LeagueTheme.england, _) => 1.0,
       (LeagueTheme.spain, 1) => 0.7,
       (LeagueTheme.germany, 1) => 0.65,
@@ -228,10 +231,10 @@ double wageCountryFactor(LeagueTheme theme, int tier) =>
       (LeagueTheme.germany, 2) => 0.8,
       (LeagueTheme.italy, 2) => 0.65,
       (LeagueTheme.france, 2) => 0.55,
-      (LeagueTheme.spain, _) => 0.8,
-      (LeagueTheme.germany, _) => 0.85,
-      (LeagueTheme.italy, _) => 0.85,
-      (LeagueTheme.france, _) => 0.75,
+      (LeagueTheme.spain, _) => 0.65,
+      (LeagueTheme.germany, _) => 0.7,
+      (LeagueTheme.italy, _) => 0.7,
+      (LeagueTheme.france, _) => 0.6,
     };
 
 /// 自クラブのいる国と部。年俸の水準([currentWageLevel])を決める。
