@@ -138,7 +138,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <div class="shead"><b id="stitle">一覧</b><button class="btn" id="sclose">閉じる</button></div>
 <div id="spane-list">
  <div class="panel"><h2>主役</h2><div id="heroes"></div></div>
- <div class="panel"><h2>宿敵の勇者</h2><div id="yuusha"></div></div>
+ <div class="panel"><h2 id="yuh">宿敵の勇者</h2><div id="yuusha"></div></div>
  <div class="panel"><h2>変異の気配</h2><div id="muts"></div></div>
  <div class="panel"><h2>塔の軍 <span id="army"></span></h2><div id="lines"></div></div>
  <div class="panel"><h2>殿堂</h2><div id="hall"></div></div>
@@ -173,7 +173,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v26</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v27</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1619,9 +1619,10 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v26 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v27 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
- if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
+ if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
+ var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
  tutCheck();
  alertBadge();
@@ -1652,7 +1653,7 @@ function side(){
  }).join(''):'<div class="empty">まだいません。よく食べた個体・生き延びた大型・冒険者を何人も倒した個体が、まれに昇格します。</div>';
  var yh='<b style="font-size:12.5px">'+esc(yuName())+'</b><div class="empty">挑戦'+(Y.fled+1)+'度目 · 技：'+esc(Y.skills.join('・'))+'<br>'+(yuOn?(yuOn.flee?'逃げている！ '+(yuOn.f+1)+'階':'塔の中 · '+(yuOn.f+1)+'階 · 体力'+Math.max(0,Math.round(yuOn.hp))+'/'+Math.round(yuOn.mhp)):'第6波に来る')+(g.yuKilled?'<br>これまでに倒し切った勇者：'+g.yuKilled+'人':'')+'</div>';
  if(yuOn)yh='<button class="hrow" data-f="'+yuOn.f+'" style="border-color:#d9534f">'+yh+'</button>';
- document.getElementById('yuusha').innerHTML=yh;
+ document.getElementById('yuusha').innerHTML=g.party?partyInfo():yh;document.getElementById('yuh').textContent=g.party?'この面の勇者たち':'宿敵の勇者';
  document.getElementById('mini').innerHTML='<div class="panel"><h2>主役</h2>'+(hs2.length?hs2.slice(0,2).map(function(m){return '<button class="hrow hp'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'">'+dimg(m.sp).replace('class="dimg"','class="himg"')+'<b>'+esc(fullName(m))+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>';}).join('')+(hs2.length>2?'<div class="empty">ほか'+(hs2.length-2)+'匹は「一覧」で</div>':''):'<div class="empty">まだいません。よく食べた個体などが、まれに昇格します。</div>')+'</div><div class="panel"><h2>'+(g.party?'この面の勇者たち':'宿敵の勇者')+'</h2>'+(g.party?partyInfo():yh)+'</div>';
  document.getElementById('hall').innerHTML=HALL.length?'<ol class="hall">'+HALL.slice(0,12).map(function(h){return '<li><b>'+esc(h.n)+'</b> 倒した'+h.k+' · '+h.f+'階 · '+esc(h.c)+'</li>';}).join('')+'</ol>':'<div class="empty">倒れた主役の名がここに残ります（強さは次の塔に持ち越しません）。</div>';
 }
@@ -2032,11 +2033,11 @@ function tutCheck(){if(g.tut==null||g.title)return;var t=TUT[g.tut];if(!t){tutEn
 document.getElementById('cmsg').addEventListener('click',function(){if(g&&g.tut!=null){tutEnd();ui();}});
 // チャレンジ
 var CHALS=[
- {n:'スライムの群れ',d:'3分以内に、スライムを15匹にする',lim:180,setup:function(){},ok:function(){return g.cr.filter(function(m){return m.sp=='slime'&&!m.stage;}).length>=15;}},
- {n:'掘る力30',d:'掘る力30だけで、冒険者を3人倒す（5分）',lim:300,setup:function(){g.dp=30;},ok:function(){return (g.kills||0)>=3;}},
- {n:'竜の巣',d:'5分以内に、ドラゴンを2匹にする',lim:300,setup:function(){},ok:function(){return g.cr.filter(function(m){return m.sp=='dragon';}).length>=2;}},
- {n:'花の守り',d:'5分以内に、スライムの花を3つ咲かせる',lim:300,setup:function(){},ok:function(){return g.cr.filter(function(m){return m.stage=='flower';}).length>=3;}},
- {n:'第3波',d:'コアを取られずに、第3波の冒険者を全員倒す',lim:900,setup:function(){},ok:function(){return g.wave>=3&&!g.en.length&&!g.spawnQ.length;}}
+ {n:'スライムの群れ',d:'3分以内に、スライムを15匹にする',lim:180,setup:function(){},ok:function(){return g.cr.filter(function(m){return m.sp=='slime'&&!m.stage;}).length>=15;},pg:function(){return 'スライム '+g.cr.filter(function(m){return m.sp=='slime'&&!m.stage;}).length+'/15';}},
+ {n:'掘る力30',d:'掘る力30だけで、冒険者を3人倒す（5分）',lim:300,setup:function(){g.dp=30;},ok:function(){return (g.kills||0)>=3;},pg:function(){return '倒した '+(g.kills||0)+'/3';}},
+ {n:'竜の巣',d:'5分以内に、ドラゴンを2匹にする',lim:300,setup:function(){},ok:function(){return g.cr.filter(function(m){return m.sp=='dragon';}).length>=2;},pg:function(){return 'ドラゴン '+g.cr.filter(function(m){return m.sp=='dragon';}).length+'/2';}},
+ {n:'花の守り',d:'5分以内に、スライムの花を3つ咲かせる',lim:300,setup:function(){},ok:function(){return g.cr.filter(function(m){return m.stage=='flower';}).length>=3;},pg:function(){return '花 '+g.cr.filter(function(m){return m.stage=='flower';}).length+'/3';}},
+ {n:'第3波',d:'コアを取られずに、第3波の冒険者を全員倒す',lim:900,setup:function(){},ok:function(){return g.wave>=3&&!g.en.length&&!g.spawnQ.length;},pg:function(){return '第'+Math.min(3,g.wave)+'/3波';}}
 ];
 function chalDone(){try{return JSON.parse(localStorage.getItem('tou-chal')||'{}')||{};}catch(_){return {};}}
 function showChals(){
