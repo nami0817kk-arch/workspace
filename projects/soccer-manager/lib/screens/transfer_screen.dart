@@ -7,9 +7,6 @@ import '../logic/squad_registration_engine.dart';
 import '../logic/transfer_window.dart';
 import '../logic/transfer_terms_engine.dart';
 import '../logic/transfer_talk_engine.dart';
-import '../logic/player_terms_engine.dart';
-import '../logic/relations_engine.dart';
-import '../logic/contract_engine.dart';
 import '../models/transfer_talk.dart';
 import '../models/player.dart';
 import '../models/save_game.dart';
@@ -17,6 +14,7 @@ import '../models/team.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
+import 'contract_offer_screen.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
@@ -185,8 +183,8 @@ class _TransferScreenState extends State<TransferScreen>
           trailing: squadFull
               ? Tr.pick('スカッド $count/$maxSquadSize(上限)',
                   'Squad $count/$maxSquadSize (full)')
-              : Tr.pick('スカッド $count/$maxSquadSize',
-                  'Squad $count/$maxSquadSize'),
+              : Tr.pick(
+                  'スカッド $count/$maxSquadSize', 'Squad $count/$maxSquadSize'),
         ),
         if (gameState.isGoalkeeperEmergency)
           _NoticeLine(
@@ -311,7 +309,8 @@ class _TransferScreenState extends State<TransferScreen>
             if (wide) ...[
               value(Tr.pick('総合力', 'Overall'), ovr),
               value(Tr.pick('移籍金', 'Fee'), fee,
-                  color: affordable ? null : Theme.of(context).colorScheme.error),
+                  color:
+                      affordable ? null : Theme.of(context).colorScheme.error),
             ],
             _WatchButton(playerId: p.id),
             TextButton(
@@ -497,8 +496,10 @@ class _TransferScreenState extends State<TransferScreen>
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
                     children: [
-                      for (final g
-                          in <PositionGroup?>[null, ...PositionGroup.values])
+                      for (final g in <PositionGroup?>[
+                        null,
+                        ...PositionGroup.values
+                      ])
                         Padding(
                           padding: const EdgeInsets.only(right: 4),
                           child: ChoiceChip(
@@ -506,8 +507,7 @@ class _TransferScreenState extends State<TransferScreen>
                             selected: _searchGroup == g,
                             showCheckmark: false,
                             visualDensity: VisualDensity.compact,
-                            onSelected: (_) =>
-                                setState(() => _searchGroup = g),
+                            onSelected: (_) => setState(() => _searchGroup = g),
                           ),
                         ),
                       const SizedBox(width: 8),
@@ -615,8 +615,7 @@ class _TransferScreenState extends State<TransferScreen>
             ),
           ),
         Expanded(
-            child:
-                _targetTable(context, gameState, watched, squadFull, same)),
+            child: _targetTable(context, gameState, watched, squadFull, same)),
       ],
     );
   }
@@ -630,10 +629,11 @@ class _TransferScreenState extends State<TransferScreen>
     final regions = gameState.scoutRegions;
     final used = save.scoutRegionKeys.length;
     final slots = gameState.scoutSlots;
-    final cost = gameState.scoutTripCostPerWeek;
+    // 出張費は1年あたりで見せる(1節ごとに払う額 × 1季の節の数)。
+    final cost = gameState.scoutTripCostPerWeek * gameState.matchdaysPerSeason;
     final help = Tr.pick(
-              '送った地域の選手は、毎週${gameState.scoutWeeklyGain}%ずつ見えてきます(出張費は1か所 毎週${formatMoney(cost)})。見えているほど、総合力と伸びしろの幅が狭くなります。同じ部の選手は試合で見ているので最初から${ScoutKnowledge.sameLeagueBase}%、注目リストの選手はどこにいても毎週${ScoutKnowledge.watchWeeklyGain}%ずつ見えてきます。送れる場所の数と見えてくる速さは、スカウトの見極めの力で決まります。',
-              'Players in the regions you cover become ${gameState.scoutWeeklyGain}% clearer each week (travel costs ${formatMoney(cost)} a week per region). The clearer they are, the narrower the overall and potential ranges. Players in your own division start at ${ScoutKnowledge.sameLeagueBase}% because you see them in matches, and watchlisted players anywhere gain ${ScoutKnowledge.watchWeeklyGain}% a week. Your scout\'s judging decides how many regions you can cover and how fast.');
+        '送った地域の選手は、毎週${gameState.scoutWeeklyGain}%ずつ見えてきます(出張費は1か所 年${formatMoney(cost)})。見えているほど、総合力と伸びしろの幅が狭くなります。同じ部の選手は試合で見ているので最初から${ScoutKnowledge.sameLeagueBase}%、注目リストの選手はどこにいても毎週${ScoutKnowledge.watchWeeklyGain}%ずつ見えてきます。送れる場所の数と見えてくる速さは、スカウトの見極めの力で決まります。',
+        'Players in the regions you cover become ${gameState.scoutWeeklyGain}% clearer each week (travel costs ${formatMoney(cost)} a year per region). The clearer they are, the narrower the overall and potential ranges. Players in your own division start at ${ScoutKnowledge.sameLeagueBase}% because you see them in matches, and watchlisted players anywhere gain ${ScoutKnowledge.watchWeeklyGain}% a week. Your scout\'s judging decides how many regions you can cover and how fast.');
     Widget region(({String key, String label, List<Team> teams}) r) => Card(
           margin: const EdgeInsets.all(3),
           child: SwitchListTile(
@@ -664,14 +664,13 @@ class _TransferScreenState extends State<TransferScreen>
               Expanded(
                 child: Text(
                   Tr.pick(
-                      '送っている場所 $used / $slots か所・出張費は1か所 毎週${formatMoney(cost)}',
-                      'Regions covered: $used of $slots • ${formatMoney(cost)} a week per region'),
+                      '送っている場所 $used / $slots か所・出張費は1か所 年${formatMoney(cost)}',
+                      'Regions covered: $used of $slots • ${formatMoney(cost)} a year per region'),
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
               ),
               _HelpButton(
-                  title: Tr.pick('スカウトの送り先', 'Scouting regions'),
-                  text: help),
+                  title: Tr.pick('スカウトの送り先', 'Scouting regions'), text: help),
             ],
           ),
           for (var i = 0; i < regions.length; i += cols)
@@ -770,164 +769,10 @@ class _TransferScreenState extends State<TransferScreen>
 
   /// 選手(代理人)に年俸・契約の満了の年・サイン料を出す。他のクラブの
   /// 選手はクラブと合意したあと、フリーエージェントはいつでも。
+  /// 選手と条件を話す(FM 風の契約の画面)。
   Future<void> _showTermsDialog(BuildContext context, Player player) async {
-    final gameState = context.read<GameState>();
-    final talk = gameState.talkFor(player.id);
-    final demand = talk?.demandWage ?? 0;
-    final current = player.wage;
-    final top = [current * 3, demand * 2, 20].reduce((a, b) => a > b ? a : b);
-    final low = (current ~/ 2).clamp(minWeeklyWage, top - 1);
-    var wage = (demand > 0 ? demand : current).clamp(low, top).toDouble();
-    final choices = ContractEngine.endYearChoicesNow(player.age);
-    var endYear = choices.isEmpty
-        ? Player.contractClockYear + 1
-        : choices[(choices.length - 1).clamp(0, 2)];
-    final bonusMax = [annualFromWeekly(top), (talk?.fee ?? 0) ~/ 10, 10]
-        .reduce((a, b) => a > b ? a : b);
-    var bonus = 0.0;
-    var promise = SquadStatus.regular;
-    final submitted = await showDialog<(int, int, int, SquadStatus)>(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setState) {
-          final w = wage.round();
-          final years = endYear - Player.contractClockYear + 1;
-          final effective = PlayerTermsEngine.effectiveWeekly(
-              weeklyWage: w, years: years, signingBonus: bonus.round());
-          return AlertDialog(
-            title: Text(Tr.pick(
-                '${player.name}に条件を出す', 'Offer terms to ${player.name}')),
-            content: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(Tr.pick(
-                      '今の年俸: ${formatMoney(annualFromWeekly(current))}',
-                      'Current salary: ${formatMoney(annualFromWeekly(current))}')),
-                  Text(
-                    Tr.pick(
-                        '代理人: ${RelationsEngine.agentOf(player).label}(${RelationsEngine.agentOf(player).description})',
-                        'Agent: ${RelationsEngine.agentOf(player).label} (${RelationsEngine.agentOf(player).description})'),
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: SemanticColors.subtleText(context)),
-                  ),
-                  if (talk != null && talk.hasRival)
-                    Text(
-                      Tr.pick(
-                          '${talk.rivalClubName}も年俸${formatMoney(annualFromWeekly(talk.rivalWage))}で誘っています。選手は年俸とクラブの格を比べて選びます。',
-                          '${talk.rivalClubName} offer ${formatMoney(annualFromWeekly(talk.rivalWage))} a year too. He compares money and the size of the club.'),
-                      style: TextStyle(color: Colors.orange.shade800),
-                    ),
-                  if (demand > 0)
-                    Text(
-                      Tr.pick(
-                          '望む年俸: ${formatMoney(annualFromWeekly(demand))}(サイン料を含めて)',
-                          'He wants: ${formatMoney(annualFromWeekly(demand))} a year (signing bonus included)'),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  const SizedBox(height: 8),
-                  Text(Tr.pick('年俸: ${formatMoney(annualFromWeekly(w))}',
-                      'Salary: ${formatMoney(annualFromWeekly(w))} a year')),
-                  Slider(
-                    value: wage,
-                    min: low.toDouble(),
-                    max: top.toDouble(),
-                    divisions: 60,
-                    onChanged: (v) => setState(() => wage = v),
-                  ),
-                  Text(Tr.pick('サイン料: ${formatMoney(bonus.round())}',
-                      'Signing bonus: ${formatMoney(bonus.round())}')),
-                  Slider(
-                    value: bonus,
-                    max: bonusMax.toDouble(),
-                    divisions: 40,
-                    onChanged: (v) => setState(() => bonus = v),
-                  ),
-                  Text(Tr.pick('約束する序列', 'Promised billing')),
-                  Wrap(
-                    spacing: 6,
-                    children: [
-                      for (final st in SquadStatus.values)
-                        ChoiceChip(
-                          label: Text(st.label),
-                          selected: promise == st,
-                          onSelected: (_) => setState(() => promise = st),
-                        ),
-                    ],
-                  ),
-                  Text(
-                    Tr.pick(
-                        '出番を約束するほど望む年俸は下がります(キープレイヤー -15%・ローテーション +10%・育成枠 +15%)。キープレイヤーは3節、主力は5節続けて先発から外すと約束を破ったことになり、移籍を願い出ます。',
-                        'Promising minutes lowers his wage demand (Key Player -15%, Squad Rotation +10%, Prospect +15%). Leave a Key Player out for 3 straight matches, or a First Team player for 5, and you have broken your word: he will ask to leave.'),
-                    style: TextStyle(
-                        fontSize: 11,
-                        color: SemanticColors.subtleText(context)),
-                  ),
-                  const SizedBox(height: 6),
-                  if (choices.length > 1)
-                    Wrap(
-                      spacing: 6,
-                      children: [
-                        for (final y in choices)
-                          ChoiceChip(
-                            label: Text(Tr.pick('$y年6月まで', 'To June $y')),
-                            selected: endYear == y,
-                            onSelected: (_) => setState(() => endYear = y),
-                          ),
-                      ],
-                    ),
-                  const SizedBox(height: 6),
-                  Text(
-                    Tr.pick(
-                        'サイン料は契約の年数でならして年俸に足して見られます(実質 ${formatMoney(annualFromWeekly(effective))})。下の部へ移る選手や、こちらで控えになりそうな選手は多く望みます。条件を出せるのは${PlayerTermsEngine.maxRounds}回まで。離れすぎた額だと席を立たれます。',
-                        'The bonus is spread over the contract and added to the salary (about ${formatMoney(annualFromWeekly(effective))} a year in all). Players dropping a division, or likely to be on your bench, want more. You get ${PlayerTermsEngine.maxRounds} offers; a lowball makes him walk away.'),
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: SemanticColors.subtleText(context)),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: Text(Tr.pick('やめる', 'Never mind')),
-              ),
-              FilledButton(
-                onPressed: () =>
-                    Navigator.pop(ctx, (w, endYear, bonus.round(), promise)),
-                child: Text(Tr.pick('条件を出す', 'Make the offer')),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-    if (submitted == null || !context.mounted) return;
-    final outcome = await gameState.offerPersonalTerms(player.id,
-        weeklyWage: submitted.$1,
-        endYear: submitted.$2,
-        signingBonus: submitted.$3,
-        promise: submitted.$4);
-    if (!context.mounted) return;
-    outcome == TermsOutcome.signed
-        ? FeedbackService.success()
-        : FeedbackService.error();
-    final want = gameState.talkFor(player.id)?.demandWage ?? 0;
-    final text = switch (outcome) {
-      TermsOutcome.signed =>
-        Tr.pick('${player.name}と契約しました', 'You signed ${player.name}'),
-      TermsOutcome.counter => Tr.pick(
-          '${player.name}はもっと欲しいそうです(年俸${formatMoney(annualFromWeekly(want))}ほど)。',
-          '${player.name} wants more (about ${formatMoney(annualFromWeekly(want))} a year).'),
-      _ => gameState.lastSigningBlockReason ??
-          Tr.pick('契約できませんでした', 'The signing did not go through'),
-    };
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(text), duration: const Duration(seconds: 6)),
-    );
+    await openContractOffer(context,
+        player: player, kind: ContractKind.signing);
   }
 
   /// 移籍金を提示する(新しく申し込む、または相手の対案に出し直す)。

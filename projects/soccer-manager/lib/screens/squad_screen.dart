@@ -5,8 +5,8 @@ import '../logic/contract_engine.dart';
 import '../models/player.dart';
 import '../models/player_season_stats.dart';
 import '../models/team.dart';
-import '../services/feedback_service.dart';
 import '../state/game_state.dart';
+import 'contract_offer_screen.dart';
 import '../widgets/player_face_avatar.dart';
 import '../widgets/player_stat_chips.dart';
 import '../widgets/position_filter_bar.dart';
@@ -202,7 +202,6 @@ class _SquadScreenState extends State<SquadScreen> {
       builder: (sheetContext) {
         final renewalCost = gameState.renewalCostFor(p.id);
         final signingBonus = gameState.signingBonusFor(p.id);
-        final newAppearanceFee = gameState.appearanceFeeFor(p.id);
         final totalCost = renewalCost + signingBonus;
         return SafeArea(
           child: Padding(
@@ -247,30 +246,15 @@ class _SquadScreenState extends State<SquadScreen> {
                     onPressed: gameState.save!.budget < totalCost ||
                             gameState.renewalBlockReason(p) != null
                         ? null
-                        : () async {
+                        : () {
                             Navigator.pop(sheetContext);
-                            final ok = await gameState.renewContract(p.id);
-                            ok
-                                ? FeedbackService.success()
-                                : FeedbackService.error();
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    ok
-                                        ? Tr.pick(
-                                            '契約を更新しました', 'Contract renewed')
-                                        : Tr.pick('契約を更新できませんでした',
-                                            'Could not renew the contract'),
-                                  ),
-                                ),
-                              );
-                            }
+                            openContractOffer(context,
+                                player: p, kind: ContractKind.renewal);
                           },
                     child: Text(
                       Tr.pick(
-                          '契約更新する（基本${formatMoney(renewalCost)} + サインボーナス${formatMoney(signingBonus)} / 新契約${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / 新出場手当${formatMoney(newAppearanceFee)}）',
-                          'Renew (base ${formatMoney(renewalCost)} + signing bonus ${formatMoney(signingBonus)} / ${ContractEngine.untilLabel(ContractEngine.defaultRenewalEndYear(p))} / new appearance fee ${formatMoney(newAppearanceFee)})'),
+                          '契約の更新を話し合う（手数料${formatMoney(renewalCost)} + サイン料${formatMoney(signingBonus)}）',
+                          'Discuss a new contract (fee ${formatMoney(renewalCost)} + bonus ${formatMoney(signingBonus)})'),
                       textAlign: TextAlign.center,
                     ),
                   ),

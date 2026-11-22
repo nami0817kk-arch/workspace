@@ -23,15 +23,16 @@ class ContractStyleCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('契約の中身: ${current.label}',
-                'Contract type: ${current.label}'),
+            Text(
+                Tr.pick('契約の中身: ${current.label}',
+                    'Contract type: ${current.label}'),
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             if (player.goalBonus > 0)
               Text(Tr.pick('出来高: 1点ごとに${formatMoney(player.goalBonus)}',
                   'Goal bonus: ${formatMoney(player.goalBonus)} per goal')),
             if (player.raisePct > 0)
-              Text(Tr.pick('段階昇給: 季が変わるたびに週給+${player.raisePct}%',
-                  'Stepped rises: wage +${player.raisePct}% every season')),
+              Text(Tr.pick('段階昇給: 季が変わるたびに年俸+${player.raisePct}%',
+                  'Stepped rises: salary +${player.raisePct}% every season')),
             if (gs.canChangeContractStyle(player)) ...[
               const SizedBox(height: 6),
               for (final s in [ContractStyle.goalBonus, ContractStyle.stepped])
@@ -44,8 +45,7 @@ class ContractStyleCard extends StatelessWidget {
                               style: const TextStyle(fontSize: 12))),
                       const SizedBox(width: 8),
                       OutlinedButton(
-                        onPressed: () =>
-                            gs.changeContractStyle(player.id, s),
+                        onPressed: () => gs.changeContractStyle(player.id, s),
                         child: Text(Tr.pick('${s.label}にする', 'Use ${s.label}')),
                       ),
                     ],

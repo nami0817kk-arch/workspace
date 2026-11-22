@@ -683,7 +683,7 @@ class HomeScreen extends StatelessWidget {
                     title: Text(Tr.pick('スポンサー未契約', 'No sponsor')),
                     subtitle: Text(
                       Tr.pick(
-                          'スポンサーオファーが${save.pendingSponsorOffers.length}件届いています。契約すると毎週の収入が増えます。',
+                          'スポンサーオファーが${save.pendingSponsorOffers.length}件届いています。契約すると1年の収入が増えます。',
                           '${save.pendingSponsorOffers.length} sponsorship offers are waiting. Signing one raises your weekly income.'),
                     ),
                     trailing: const Icon(Icons.chevron_right),
