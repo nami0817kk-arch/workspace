@@ -1,7 +1,8 @@
 # 塔の意志（仮題）の iOS リリースビルド（goso-boat-ios-release.yml を写したもの）。
 #
-# 今は TestFlight で手触りを確かめる段階なので、広告（AdMob）・法務ページ・フォントの検査は外してある。
-# 広告や課金を入れて App Store に出すときは、goso-boat-ios-release.yml の該当ステップを写し戻す。
+# 広告（AdMob の全画面広告）の本番IDの検査と差し替えは入れてある（2026-11-22）。
+# 法務ページ（privacy / support）と app-ads.txt の検査はまだ無い（サイトが無いので）。
+# App Store に出す前に goso-boat-ios-release.yml の該当部分（LEGAL_BASE_URL・check-app-site.sh）を写す。
 # 証明書・チームID・API キーは他のアプリと共用。アプリごとに違うのはプロビジョニングプロファイルだけ。
 name: Build 塔の意志 (iOS Release)
 
@@ -73,6 +74,41 @@ jobs:
             echo "::error::登録手順は projects/tounoishi/CLAUDE.md を参照してください。"
             exit 1
           fi
+
+      - name: Verify AdMob production IDs and apply them
+        env:
+          ADMOB_APP_ID: ${{ secrets.TOUNOISHI_ADMOB_APP_ID_IOS }}
+          ADMOB_INTERSTITIAL: ${{ secrets.TOUNOISHI_ADMOB_INTERSTITIAL_IOS }}
+        run: |
+          set -euo pipefail
+          missing=""
+          [ -n "$ADMOB_APP_ID" ]       || missing="$missing TOUNOISHI_ADMOB_APP_ID_IOS"
+          [ -n "$ADMOB_INTERSTITIAL" ] || missing="$missing TOUNOISHI_ADMOB_INTERSTITIAL_IOS"
+          if [ -n "$missing" ]; then
+            echo "::error::次の GitHub Secrets が未設定です:$missing"
+            echo "::error::未設定のままだと Google のテスト用IDで公開され、広告収益が発生しません。"
+            exit 1
+          fi
+          case "$ADMOB_APP_ID$ADMOB_INTERSTITIAL" in
+            *ca-app-pub-3940256099942544*)
+              echo "::error::Google のテスト用IDが登録されています。自分の AdMob のIDに置き換えてください。"
+              exit 1 ;;
+          esac
+          # アプリIDは「~」、広告ユニットIDは「/」で区切る。取り違えると広告が1本も出ない
+          echo "$ADMOB_APP_ID" | grep -Eq '^ca-app-pub-[0-9]{16}~[0-9]{10}$'             || { echo "::error::TOUNOISHI_ADMOB_APP_ID_IOS がアプリIDの形（ca-app-pub-…~…）ではありません。"; exit 1; }
+          echo "$ADMOB_INTERSTITIAL" | grep -Eq '^ca-app-pub-[0-9]{16}/[0-9]{10}$'             || { echo "::error::TOUNOISHI_ADMOB_INTERSTITIAL_IOS が広告ユニットIDの形（ca-app-pub-…/…）ではありません。"; exit 1; }
+          pub() { echo "$1" | sed -E 's/^ca-app-pub-([0-9]{16}).*/\1/'; }
+          [ "$(pub "$ADMOB_APP_ID")" = "$(pub "$ADMOB_INTERSTITIAL")" ]             || { echo "::error::アプリIDと広告ユニットIDが別の AdMob アカウントのものです。"; exit 1; }
+          plutil -replace GADApplicationIdentifier -string "$ADMOB_APP_ID" ios/Runner/Info.plist
+          # 置換できたことを確かめる。見逃すとテスト用IDのまま出る。
+          if grep -q "ca-app-pub-3940256099942544" ios/Runner/Info.plist; then
+            echo "::error::Info.plist にテスト用IDが残っています。置換に失敗しました。"
+            exit 1
+          fi
+          [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ]             || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
+          echo "Info.plist の GADApplicationIdentifier を本番IDに置き換えました。"
+          # 法務ページ（privacy / support）と app-ads.txt の検査は、サイトができたら
+          # App Store に出す前に goso-boat-ios-release.yml から写す（LEGAL_BASE_URL・scripts/check-app-site.sh）。
 
       - name: Import signing certificate into a temporary keychain
         env:
@@ -193,6 +229,7 @@ jobs:
       - name: Build IPA
         env:
           BUILD_NUMBER: ${{ github.event.inputs.build_number }}
+          ADMOB_INTERSTITIAL: ${{ secrets.TOUNOISHI_ADMOB_INTERSTITIAL_IOS }}
         run: |
           set -euo pipefail
           EXTRA=""
@@ -202,7 +239,8 @@ jobs:
             EXTRA="--build-number=$BUILD_NUMBER"
           fi
           flutter build ipa --release \
-            --export-options-plist=ios/ExportOptions.plist $EXTRA
+            --export-options-plist=ios/ExportOptions.plist $EXTRA \
+            --dart-define=ADMOB_INTERSTITIAL_IOS="$ADMOB_INTERSTITIAL"
           ls -la build/ios/ipa/
 
       - name: Upload to TestFlight
