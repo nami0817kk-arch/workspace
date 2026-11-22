@@ -1470,7 +1470,12 @@ class GameState extends ChangeNotifier {
   /// 再起動後に後半の途中から再開するときの、後半の途中経過と再開する分。
   /// [GameStateMatch.playSecondHalf]が一度だけ使う。
   ({HalfTally tally, int resumeMinute})? _liveSecondHalfResume;
-  static const int maxSubstitutionsPerMatch = 3;
+  static const int maxSubstitutionsPerMatch = substitutionsPerMatch;
+
+  /// 結果だけ見る自クラブの試合で、ハーフタイムに自動で行った交代。
+  /// 試合の確定([GameStateMatch._finalizeSecondHalf])で出場を数え、先発の
+  /// 指定を元に戻してから空にする。
+  List<AutoSubstitutionPlan> _liveAutoSubPlans = [];
 
   // ---- カップ戦のライブ観戦(リーグ戦と同じ進行を再利用する) ----
   LiveCupKind? _liveCupKind;

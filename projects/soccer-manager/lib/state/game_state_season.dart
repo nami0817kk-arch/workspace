@@ -294,13 +294,18 @@ extension GameStateSeason on GameState {
   /// いま消化するカップ戦の日付へ今日を進める。リーグ戦の途中なら次の
   /// 節の前の平日、リーグ戦を終えた後(オフ)なら今日の次の平日。
   void _advanceTodayForCup({required bool continental}) {
+    _advanceTodayTo(_cupDate(continental: continental));
+  }
+
+  /// 次のカップの試合の日([_advanceTodayForCup]が進める先)。試合の前に
+  /// 天候の季節を決めるのに使う(日付は試合のあとに進めるため)。
+  DateTime _cupDate({required bool continental}) {
     if (_save!.league.nextUnplayedFixture == null) {
-      _advanceTodayTo(
-          SeasonCalendar.nextCupWeekdayAfter(today, continental: continental));
-      return;
+      return SeasonCalendar.nextCupWeekdayAfter(today,
+          continental: continental);
     }
-    _advanceTodayTo(seasonCalendar.cupDateBefore(_currentLeagueMatchdayMarker,
-        continental: continental));
+    return seasonCalendar.cupDateBefore(_currentLeagueMatchdayMarker,
+        continental: continental);
   }
 
   Cup? get domesticCup => _save == null ? null : _cupOfType(CupType.domestic);
@@ -358,7 +363,8 @@ extension GameStateSeason on GameState {
       final away = allTeamsForCups.firstWhere((t) => t.id == match.awayTeamId);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
-    final result = CupEngine.playNextMatch(cup, allTeamsForCups);
+    final result = CupEngine.playNextMatch(cup, allTeamsForCups,
+        month: _cupDate(continental: false).month);
     _advanceTodayForCup(continental: false);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
     if (result != null) {
@@ -404,6 +410,7 @@ extension GameStateSeason on GameState {
     final result = ContinentalCupEngine.playNextGroupMatch(
       cup,
       allTeamsForCups,
+      month: _cupDate(continental: true).month,
     );
     _advanceTodayForCup(continental: true);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
@@ -431,6 +438,7 @@ extension GameStateSeason on GameState {
     final result = ContinentalCupEngine.playNextKnockoutLeg(
       cup,
       allTeamsForCups,
+      month: _cupDate(continental: true).month,
     );
     _advanceTodayForCup(continental: true);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
@@ -459,7 +467,7 @@ extension GameStateSeason on GameState {
       home: home,
       away: away,
       matchday: 0,
-      weather: WeatherEngine.roll(),
+      weather: WeatherEngine.roll(month: today.month),
     );
     match.result = result;
     if (result.homeGoals == result.awayGoals) {
@@ -558,7 +566,12 @@ extension GameStateSeason on GameState {
     // スーパーカップの相手は別ディビジョンのことがあり、そのクラブは
     // 再起動後に選手を持っていない(保存しないため)。0人では試合にならない。
     _ensureSquadsForActiveTier([home, away]);
-    final weather = WeatherEngine.roll(month: today.month);
+    // 天候は試合の日の季節に合わせる(日付は試合のあとに進めるので、
+    // 国内・大陸カップは進める先の日の月を見る)。
+    final matchDay = resolvedKind == LiveCupKind.superCup
+        ? today
+        : _cupDate(continental: resolvedKind != LiveCupKind.domestic);
+    final weather = WeatherEngine.roll(month: matchDay.month);
     _liveCupKind = resolvedKind;
     _liveCupHome = home;
     _liveCupAway = away;
@@ -1502,6 +1515,8 @@ extension GameStateSeason on GameState {
         promoted: newTier < playedTier,
         relegated: newTier > playedTier,
         cupsWon: cupsWonThisSeason,
+        wonDomesticCup: _save!.cups.any((c) =>
+            c.type == CupType.domestic && c.championId == _save!.userTeamId),
       ),
     );
     _closeRivalSeason();
@@ -1562,7 +1577,7 @@ extension GameStateSeason on GameState {
             home: champion,
             away: opponent,
             matchday: 0,
-            weather: WeatherEngine.roll(),
+            weather: WeatherEngine.roll(month: today.month),
           );
           superCup.result = result;
           if (result.homeGoals == result.awayGoals) {

@@ -1247,6 +1247,15 @@ class Player {
   static bool homegrownFromId(String id) =>
       id.codeUnits.fold<int>(0, (a, c) => a + c) % 5 < 3;
 
+  /// 国籍を決める id のハッシュ(GameState の国籍の見立てと共有する)。
+  static int nationalityHash(String id) =>
+      id.codeUnits.fold<int>(37, (a, c) => (a * 31 + c) % 1000003);
+
+  /// 所属クラブの国とは別の国籍になる選手か(1割)。国籍を覚えていない
+  /// 選手の国籍はこれで決まるので、生成のときに国内育成の印を付けるのにも使う。
+  static bool foreignNationalFromId(String id) =>
+      nationalityHash(id) % 10 == 0;
+
   /// 背番号。ユースから一軍へ昇格したとき、または移籍で加入したときに
   /// 割り当てる。旧セーブ・ユース在籍中は null。
   int? squadNumber;
@@ -1274,11 +1283,12 @@ class Player {
   /// [MatchEngine.lineupOf]に現れた場合のみ、この試合用に改めて算出する。
   bool matchFormRolledThisMatch = false;
 
-  /// この半(前半・後半)で既に警告(イエローカード)を受けているかどうか。
-  /// [MatchEngine.simulateMinutes]が半の開始時にリセットする一時的なフラグで、
-  /// セーブデータには保存しない。同じ半でもう一度カード対象に選ばれた際、
-  /// 2枚目の警告を退場(レッドカード)として扱うために使う。
-  bool yellowCardedThisHalf = false;
+  /// この試合で既に警告(イエローカード)を受けているかどうか。
+  /// [MatchEngine.simulateMinutes]が試合の開始時(前半の1分)にだけリセット
+  /// する一時的なフラグで、セーブデータには保存しない。ハーフタイムをまたいでも
+  /// 消さないので、前半に1枚・後半に1枚でも2枚目は退場(レッドカード)になる。
+  /// 以前は半ごとに消していて、前後半に1枚ずつでは退場にならなかった。
+  bool yellowCardedThisMatch = false;
 
   /// 成長タイプ(早熟/標準/大器晩成)。年齢による伸びやすさ・衰え始める
   /// 時期の傾向を左右する。

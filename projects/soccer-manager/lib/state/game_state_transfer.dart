@@ -1308,7 +1308,7 @@ extension GameStateTransfer on GameState {
     // MatchEngine.simulate()は内部でapplyPostMatchEffects()を呼び疲労蓄積・
     // 負傷判定を行ってしまうため、プレシーズン親善試合では使わない。前半・後半を
     // simulateMinutesで直接シミュレートし、疲労・負傷への影響を与えないようにする。
-    final weather = WeatherEngine.roll();
+    final weather = WeatherEngine.roll(month: today.month);
     f.weather = weather;
     final first = MatchEngine.simulateMinutes(
       home: home,

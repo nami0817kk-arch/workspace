@@ -40,8 +40,8 @@ extension GameStateNation on GameState {
         ? home
         : LeagueTheme.values
             .firstWhere((t) => t.name == foreignName, orElse: () => home);
-    final h = p.id.codeUnits.fold<int>(37, (a, c) => (a * 31 + c) % 1000003);
-    if (h % 10 != 0) return base;
+    final h = Player.nationalityHash(p.id);
+    if (!Player.foreignNationalFromId(p.id)) return base;
     final others = [
       for (final t in LeagueTheme.values)
         if (t != base) t,

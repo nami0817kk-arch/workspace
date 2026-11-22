@@ -18,6 +18,44 @@ import '../l10n/tr.dart';
 /// この枚数の警告が貯まると次節出場停止になる(退場は即1試合出場停止)。
 const int yellowCardSuspensionThreshold = 5;
 
+/// 1試合で使える交代枠。ライブ観戦の手動の交代
+/// ([GameState.maxSubstitutionsPerMatch])と、ハーフタイムの自動の交代
+/// ([MatchEngine.applyHalfTimeSubstitutions])で同じ数を使う。
+const int substitutionsPerMatch = 3;
+
+/// ハーフタイムの自動の交代1件。
+class AutoSubstitution {
+  final Player out;
+  final Player incoming;
+
+  /// 下がる選手の、試合の前の試合勘。下がった選手も前半は出ているので、
+  /// 試合のあとに「出た」ぶんの試合勘に戻すのに使う。
+  final int outSharpnessBefore;
+
+  const AutoSubstitution({
+    required this.out,
+    required this.incoming,
+    required this.outSharpnessBefore,
+  });
+}
+
+/// あるチームのハーフタイムの自動の交代。試合が終わったら
+/// [MatchEngine.finishHalfTimeSubstitutions]に渡し、下がった選手の出場を
+/// 数えて、先発の指定を試合の前に戻す(交代は試合の中だけのこと)。
+class AutoSubstitutionPlan {
+  final Team team;
+  final List<String> originalXI;
+  final List<AutoSubstitution> swaps;
+
+  const AutoSubstitutionPlan({
+    required this.team,
+    required this.originalXI,
+    required this.swaps,
+  });
+
+  List<Player> get subbedOff => [for (final s in swaps) s.out];
+}
+
 /// 分単位区間([MatchEngine.simulateMinutes])1回分のスコア・イベント。
 class HalfResult {
   final int homeGoals;
@@ -1147,6 +1185,173 @@ class MatchEngine {
     );
   }
 
+  /// ハーフタイムの自動の交代で「疲れた」とみなす疲労。試合前の疲労の
+  /// 警告(70)より少し手前で替える。
+  static const int autoSubTiredFatigue = 60;
+
+  /// 負けているときに替える選手は、控えがこの割合以上の力なら替える
+  /// (少し力が落ちても、流れを変えにいく)。
+  static const double autoSubChasingRatio = 0.95;
+
+  /// 疲れを差し引いた、その時点での力。
+  static double _freshStrength(Player p) => p.overall * (1 - p.fatigue / 250);
+
+  static bool _canPlay(Player p) =>
+      !p.isInjured &&
+      !p.isOnInternationalDuty &&
+      !p.isLoanedOut &&
+      !p.isSuspended &&
+      !p.notRegistered;
+
+  /// ハーフタイムの自動の交代を選ぶ(選ぶだけで、先発には触れない)。
+  ///
+  /// ライブ観戦では利用者が自分で交代するが、結果だけ見る試合と CPU 同士の
+  /// 試合には交代が一切無かった。そこで監督が替えるときの考え方を、
+  /// 乱数を使わない決まりにした:
+  /// 1. 疲労が[autoSubTiredFatigue]以上の選手(GK は替えない)を、疲れている
+  ///    順に、疲れを差し引いた力で上回る控えと替える。
+  /// 2. 負けていれば([goalDiff] < 0)、中盤・前線で今いちばん力の落ちている
+  ///    選手を1人、[autoSubChasingRatio]以上の控えと替える。
+  /// 控えは 主ポジション → 副ポジション → 同じ大分類 の順に探す(自動編成と同じ)。
+  /// [excludedIds]は替えてはいけない選手(退場した選手)。枠は[maxSubs]まで。
+  /// 試合の中の怪我は無い(怪我は試合のあとに決まる)ので、怪我人の交代は無い。
+  static List<AutoSubstitution> chooseHalfTimeSubstitutions(
+    Team team,
+    List<Player> lineup, {
+    required int goalDiff,
+    int maxSubs = substitutionsPerMatch,
+    Set<String> excludedIds = const {},
+  }) {
+    final swaps = <AutoSubstitution>[];
+    if (maxSubs <= 0) return swaps;
+    final onPitch = {for (final p in lineup) p.id};
+    final bench = team.players
+        .where((p) => !onPitch.contains(p.id) && _canPlay(p))
+        .toList();
+    final usedBench = <String>{};
+
+    Player? replacementFor(Player out, double minStrength) {
+      final tiers = <bool Function(Player)>[
+        (p) => p.position == out.position,
+        (p) => p.secondaryPositions.contains(out.position),
+        (p) => p.position.group == out.position.group,
+      ];
+      for (final fits in tiers) {
+        Player? best;
+        for (final p in bench) {
+          if (usedBench.contains(p.id) || !fits(p)) continue;
+          if (_freshStrength(p) < minStrength) continue;
+          if (best == null || _freshStrength(p) > _freshStrength(best)) {
+            best = p;
+          }
+        }
+        if (best != null) return best;
+      }
+      return null;
+    }
+
+    void swap(Player out, Player incoming) {
+      usedBench.add(incoming.id);
+      swaps.add(AutoSubstitution(
+        out: out,
+        incoming: incoming,
+        outSharpnessBefore: out.matchSharpness,
+      ));
+    }
+
+    final tired = lineup
+        .where(
+          (p) =>
+              p.position != Position.gk &&
+              !excludedIds.contains(p.id) &&
+              p.fatigue >= autoSubTiredFatigue,
+        )
+        .toList()
+      ..sort((a, b) => b.fatigue.compareTo(a.fatigue));
+    for (final out in tired) {
+      if (swaps.length >= maxSubs) break;
+      final incoming = replacementFor(out, _freshStrength(out));
+      if (incoming != null) swap(out, incoming);
+    }
+
+    if (goalDiff < 0 && swaps.length < maxSubs) {
+      final replaced = {for (final s in swaps) s.out.id};
+      final attackers = lineup
+          .where(
+            (p) =>
+                (p.position.group == PositionGroup.mid ||
+                    p.position.group == PositionGroup.att) &&
+                !excludedIds.contains(p.id) &&
+                !replaced.contains(p.id),
+          )
+          .toList()
+        ..sort((a, b) => _freshStrength(a).compareTo(_freshStrength(b)));
+      for (final out in attackers) {
+        final incoming =
+            replacementFor(out, _freshStrength(out) * autoSubChasingRatio);
+        if (incoming == null) continue;
+        swap(out, incoming);
+        break;
+      }
+    }
+    return swaps;
+  }
+
+  /// ハーフタイムの自動の交代を選び、後半の先発([Team.startingXI])に
+  /// 入れる。試合が終わったら[finishHalfTimeSubstitutions]で戻すこと。
+  static AutoSubstitutionPlan applyHalfTimeSubstitutions(
+    Team team, {
+    required int goalDiff,
+    int maxSubs = substitutionsPerMatch,
+    Set<String> excludedIds = const {},
+  }) {
+    final original = List<String>.of(team.startingXI);
+    final lineup = lineupOf(team);
+    final swaps = chooseHalfTimeSubstitutions(
+      team,
+      lineup,
+      goalDiff: goalDiff,
+      maxSubs: maxSubs,
+      excludedIds: excludedIds,
+    );
+    if (swaps.isNotEmpty) {
+      final byOut = {for (final s in swaps) s.out.id: s.incoming.id};
+      team.startingXI = [for (final p in lineup) byOut[p.id] ?? p.id];
+    }
+    return AutoSubstitutionPlan(
+      team: team,
+      originalXI: original,
+      swaps: swaps,
+    );
+  }
+
+  /// 試合のあと([applyPostMatchEffects]のあと)に呼ぶ。下がった選手も前半は
+  /// 出ているので出場1・得点([events]から)・試合勘・試合の経験を数え、
+  /// 先発の指定を試合の前に戻す。
+  static void finishHalfTimeSubstitutions(
+    AutoSubstitutionPlan plan, {
+    List<MatchEvent> events = const [],
+  }) {
+    for (final s in plan.swaps) {
+      s.out.careerAppearances += 1;
+      for (final e in events) {
+        if (e.type == MatchEventType.goal && e.scorerId == s.out.id) {
+          s.out.careerGoals += 1;
+        }
+      }
+      s.out.matchSharpness = (s.outSharpnessBefore + 6).clamp(0, 100);
+      TrainingEngine.growFromMatchExperience(s.out);
+    }
+    if (plan.swaps.isNotEmpty) plan.team.startingXI = plan.originalXI;
+  }
+
+  /// この試合で退場した選手(交代で下げてはいけない)。
+  static Set<String> sentOffIds(Iterable<MatchEvent> events) => {
+        for (final e in events)
+          if (e.type == MatchEventType.redCard && e.scorerId != null)
+            e.scorerId!,
+      };
+
   /// 本職外のスロットで出場した選手のポジション慣れ度を積み増す。
   static void _growPositionFamiliarity(Team t, List<Player> lineup) {
     final slotById = LineupUtils.assignedSlotByPlayerId(t);
@@ -1298,6 +1503,33 @@ class MatchEngine {
     return candidates.last;
   }
 
+  /// 試合の始まりに、前の試合から残っている警告の印を消す。
+  static void resetMatchCards(Team home, Team away) {
+    for (final p in home.players) {
+      p.yellowCardedThisMatch = false;
+    }
+    for (final p in away.players) {
+      p.yellowCardedThisMatch = false;
+    }
+  }
+
+  /// この試合でもう出た警告を、選手の印に戻す。何度呼んでも同じ結果になる。
+  /// 再起動して試合を途中から再開したとき、保存しない印をイベントから
+  /// 復元するのに使う(前半の警告を後半へ引き継ぐため)。
+  static void markYellowCardsFromEvents(
+    Team home,
+    Team away,
+    Iterable<MatchEvent> events,
+  ) {
+    final byId = {
+      for (final p in [...home.players, ...away.players]) p.id: p,
+    };
+    for (final e in events) {
+      if (e.type != MatchEventType.yellowCard) continue;
+      byId[e.scorerId]?.yellowCardedThisMatch = true;
+    }
+  }
+
   /// [startMinute]〜[endMinute](両端含む)の区間だけをシミュレートする。
   /// ハーフタイムでの交代・戦術変更を反映できるよう、前半・後半を別々に
   /// 呼び出せるようにするための下位レベルAPI。疲労・負傷はここでは
@@ -1318,15 +1550,9 @@ class MatchEngine {
     } else {
       _rollMatchFormForCurrentLineup(home, away, weather);
     }
-    // この半で誰がまだ警告を受けていないかを判定するため、半の開始ごとに
-    // リセットする(2枚目の警告=退場という判定に使う。前半・後半は
-    // それぞれ独立してカウントする)。
-    for (final p in home.players) {
-      p.yellowCardedThisHalf = false;
-    }
-    for (final p in away.players) {
-      p.yellowCardedThisHalf = false;
-    }
+    // 警告の数は1試合を通して数える(2枚目の警告=退場)。消すのは試合の
+    // 始まり(前半の1分)だけで、ハーフタイムでは消さない。
+    if (startMinute == 1) resetMatchCards(home, away);
 
     final homeLineup = lineupOf(home);
     final awayLineup = lineupOf(away);
@@ -1382,11 +1608,11 @@ class MatchEngine {
       }
       final target = _pickCardTarget(lineup);
       if (target == null) continue;
-      // 同じ半で既に警告を受けている選手が再びカード対象に選ばれた場合、
+      // この試合で既に警告を受けている選手が再びカード対象に選ばれた場合、
       // 実際のルール通り2枚目の警告は退場(レッドカード)として扱う。
-      final isSecondYellow = target.yellowCardedThisHalf;
+      final isSecondYellow = target.yellowCardedThisMatch;
       final isRed = isSecondYellow || _rng.nextDouble() < _directRedChance;
-      if (!isRed) target.yellowCardedThisHalf = true;
+      if (!isRed) target.yellowCardedThisMatch = true;
       events.add(
         MatchEvent(
           minute: minute,
@@ -1422,9 +1648,9 @@ class MatchEngine {
       if (target == null) continue;
       minutesUsed.add(minute);
       final isHomeTeam = t.id == home.id;
-      // ここも同じ半で既に警告済みの選手が対象になった場合は退場扱いにする。
-      final isSecondYellow = target.yellowCardedThisHalf;
-      if (!isSecondYellow) target.yellowCardedThisHalf = true;
+      // ここもこの試合で既に警告済みの選手が対象になった場合は退場扱いにする。
+      final isSecondYellow = target.yellowCardedThisMatch;
+      if (!isSecondYellow) target.yellowCardedThisMatch = true;
       events.add(
         MatchEvent(
           minute: minute,
@@ -1794,9 +2020,18 @@ class MatchEngine {
     required List<MatchEvent> events,
     required int homeGoals,
     required int awayGoals,
+    List<Player> subbedOff = const [],
   }) {
-    final homeLineup = lineupOf(home);
-    final awayLineup = lineupOf(away);
+    // 自動の交代で下がった選手も、前半は出ているので採点する。
+    final homeIds = {for (final p in home.players) p.id};
+    final homeLineup = [
+      ...lineupOf(home),
+      ...subbedOff.where((p) => homeIds.contains(p.id)),
+    ];
+    final awayLineup = [
+      ...lineupOf(away),
+      ...subbedOff.where((p) => !homeIds.contains(p.id)),
+    ];
     final ratings = <String, double>{};
     for (final p in [...homeLineup, ...awayLineup]) {
       ratings[p.id] = 6.0;
@@ -2206,11 +2441,13 @@ class MatchEngine {
     } else {
       _rollMatchFormForCurrentLineup(home, away, weather);
     }
-    for (final p in home.players) {
-      p.yellowCardedThisHalf = false;
-    }
-    for (final p in away.players) {
-      p.yellowCardedThisHalf = false;
+    // 警告は1試合を通して数える。試合の始まりでだけ消し、途中から
+    // 再開するときは、それまでの警告を引き継いだ途中経過から戻す
+    // (フラグは保存しないので、再起動するとここでしか戻らない)。
+    if (startMinute == 1) {
+      resetMatchCards(home, away);
+    } else if (carried != null) {
+      markYellowCardsFromEvents(home, away, carried.events);
     }
 
     final homeLineup = lineupOf(home);
@@ -2259,9 +2496,9 @@ class MatchEngine {
       }
       final target = _pickCardTarget(lineup);
       if (target == null) continue;
-      final isSecondYellow = target.yellowCardedThisHalf;
+      final isSecondYellow = target.yellowCardedThisMatch;
       final isRed = isSecondYellow || _rng.nextDouble() < _directRedChance;
-      if (!isRed) target.yellowCardedThisHalf = true;
+      if (!isRed) target.yellowCardedThisMatch = true;
       events.add(
         MatchEvent(
           minute: minute,
@@ -2292,8 +2529,8 @@ class MatchEngine {
       if (target == null) continue;
       minutesUsed.add(minute);
       final isHomeTeam = t.id == home.id;
-      final isSecondYellow = target.yellowCardedThisHalf;
-      if (!isSecondYellow) target.yellowCardedThisHalf = true;
+      final isSecondYellow = target.yellowCardedThisMatch;
+      if (!isSecondYellow) target.yellowCardedThisMatch = true;
       events.add(
         MatchEvent(
           minute: minute,
@@ -2653,10 +2890,10 @@ class MatchEngine {
       if (aggressive && _rng.nextDouble() < _aggressiveTackleCardChance) {
         final tackler = pending.defender ?? _pickCardTarget(defendingLineup);
         if (tackler != null) {
-          final isSecondYellow = tackler.yellowCardedThisHalf;
+          final isSecondYellow = tackler.yellowCardedThisMatch;
           final isRed =
               isSecondYellow || _rng.nextDouble() < _aggressiveTackleRedChance;
-          if (!isRed) tackler.yellowCardedThisHalf = true;
+          if (!isRed) tackler.yellowCardedThisMatch = true;
           final cardEvent = MatchEvent(
             minute: pending.minute,
             teamId: defendingTeam.id,
@@ -2708,6 +2945,18 @@ class MatchEngine {
       homeAdvantageFactor: homeAdvantageFactor,
     );
     applyHalfTimeFatigue(home: home, away: away, weather: weather);
+    // ハーフタイムに、疲れた選手・負けているときの交代を監督が自動で行う。
+    final sentOff = sentOffIds(first.events);
+    final homePlan = applyHalfTimeSubstitutions(
+      home,
+      goalDiff: first.homeGoals - first.awayGoals,
+      excludedIds: sentOff,
+    );
+    final awayPlan = applyHalfTimeSubstitutions(
+      away,
+      goalDiff: first.awayGoals - first.homeGoals,
+      excludedIds: sentOff,
+    );
     final second = simulateMinutes(
       home: home,
       away: away,
@@ -2743,6 +2992,7 @@ class MatchEngine {
       events: allEvents,
       homeGoals: homeGoals,
       awayGoals: awayGoals,
+      subbedOff: [...homePlan.subbedOff, ...awayPlan.subbedOff],
     );
     applyPostMatchEffects(
       home: home,
@@ -2752,6 +3002,8 @@ class MatchEngine {
       events: allEvents,
       weather: weather,
     );
+    finishHalfTimeSubstitutions(homePlan, events: allEvents);
+    finishHalfTimeSubstitutions(awayPlan, events: allEvents);
 
     return MatchResult(
       matchday: matchday,
