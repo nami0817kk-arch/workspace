@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:soccer_manager/logic/economy_scale.dart';
 import 'package:soccer_manager/logic/money_calendar.dart';
 import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/ledger.dart';
@@ -72,11 +71,14 @@ void main() {
   });
 
   group('ゲームの中のお金の日', () {
-    test('月末に給与を払い、8月1日に放映権の1回目が入る', () async {
+    test('月末に給与と運営費を払い、8月1日に放映権の1回目が入る', () async {
       final gs = GameState();
       await gs.startNewGame('暦FC');
       expect(gs.today, DateTime(2026, 7, 1));
-      final wages = gs.monthlyPlayerWageCost + gs.monthlyStaffWageCost;
+      expect(gs.monthlyRunningCost, greaterThan(0));
+      final wages = gs.monthlyPlayerWageCost +
+          gs.monthlyStaffWageCost +
+          gs.monthlyRunningCost;
       expect(wages, greaterThan(0));
 
       final budget = gs.save!.budget;
@@ -87,10 +89,14 @@ void main() {
       expect(gs.save!.budget, budget - wages);
       expect(-gs.currentLedger.of(LedgerCategory.playerWages),
           gs.monthlyPlayerWageCost);
+      expect(-gs.currentLedger.of(LedgerCategory.operations),
+          gs.monthlyRunningCost);
 
       gs.debugAdvanceTodayTo(DateTime(2026, 8, 1));
-      final first = MoneyCalendar.broadcastInstallment(
-          annualBroadcast(gs.currentDivisionTier), 0);
+      // 4回の入金は、リーグの配分式で最下位でも受け取る額(順位と中継の
+      // 上乗せは季末)。
+      final first =
+          MoneyCalendar.broadcastInstallment(gs.guaranteedBroadcastAnnual, 0);
       expect(first, greaterThan(0));
       expect(gs.save!.budget, budget - wages + first);
       expect(gs.currentLedger.of(LedgerCategory.broadcast), first);

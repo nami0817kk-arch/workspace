@@ -54,6 +54,7 @@ class LedgerCard extends StatelessWidget {
       LedgerCategory.transfers,
       LedgerCategory.amortization,
       LedgerCategory.facilities,
+      LedgerCategory.operations,
       LedgerCategory.infrastructure,
       LedgerCategory.interest,
       LedgerCategory.other,

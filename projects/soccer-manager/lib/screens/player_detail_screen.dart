@@ -577,6 +577,15 @@ class PlayerDetailScreen extends StatelessWidget {
                         'Release clause: ${formatMoney(gameState.releaseClauseOf(p)!)}'),
                     style: const TextStyle(color: Colors.deepPurple),
                   ),
+                if (!p.isLoan)
+                  Text(
+                    Tr.pick(
+                        '降格の条項: 降格したら年俸は${(gameState.relegationWageFactor * 100).round()}%に',
+                        'Relegation clause: salary drops to ${(gameState.relegationWageFactor * 100).round()}% on relegation'),
+                    style: TextStyle(
+                        color: SemanticColors.subtleText(context),
+                        fontSize: 12),
+                  ),
                 const SizedBox(height: 16),
                 Text(Tr.pick('選手を操作', 'Player actions'),
                     style: Theme.of(context).textTheme.titleMedium),

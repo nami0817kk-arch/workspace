@@ -32,7 +32,6 @@ import 'club_vision.dart';
 import 'ledger.dart';
 import '../logic/economy_engine.dart';
 import '../logic/league_rules.dart';
-import '../logic/media_deals_engine.dart';
 import '../logic/proposal_engine.dart';
 import '../logic/policy_engine.dart';
 import 'staff_member.dart';
@@ -558,13 +557,19 @@ class SaveGame {
   Map<String, SponsorDeal> slotSponsors;
   Map<String, SponsorDeal> slotSponsorOffers;
 
-  /// 放映権の分配金の受け取り方と、前払いの精算で分配金が出ない残りの季数。
-  TvDeal tvDeal;
-
   /// 年間シートとして先に売った入場券の割合(%)と、売った季(0 は未販売)。
   int seasonTicketShare;
   int seasonTicketSeason;
+
+  /// 放映権の前払いの精算で、季末の上乗せが出ない残りの季数。前払いは
+  /// 2026-11-23 に無くした(放映権はリーグの配分式だけ)。それより前の
+  /// セーブで受け取っていた前払いの精算だけが残る。
   int tvHolidaySeasons;
+
+  /// スタジアムに来たいファンの数(需要、人)。観客数はこれ×動員率と
+  /// 収容人数の小さいほう。0 は未設定(古いセーブ・新しいクラブ)で、
+  /// 部と規模から作る(FanDemandEngine.initial)。
+  int fanDemand;
 
   /// 分割払いで獲得した選手の残金支払い予定。
   List<Installment> pendingInstallments;
@@ -929,10 +934,10 @@ class SaveGame {
     List<SponsorDeal>? pendingNamingOffers,
     Map<String, SponsorDeal>? slotSponsors,
     Map<String, SponsorDeal>? slotSponsorOffers,
-    this.tvDeal = TvDeal.fixed,
     this.seasonTicketShare = 0,
     this.seasonTicketSeason = 0,
     this.tvHolidaySeasons = 0,
+    this.fanDemand = 0,
     List<SponsorDeal>? pendingSponsorOffers,
     List<Installment>? pendingInstallments,
     List<Fixture>? friendlies,
@@ -1314,10 +1319,10 @@ class SaveGame {
           'slotSponsorOffers': slotSponsorOffers.map(
             (k, v) => MapEntry(k, v.toJson()),
           ),
-        'tvDeal': tvDeal.name,
         if (seasonTicketSeason > 0) 'seasonTicketShare': seasonTicketShare,
         if (seasonTicketSeason > 0) 'seasonTicketSeason': seasonTicketSeason,
         'tvHolidaySeasons': tvHolidaySeasons,
+        if (fanDemand > 0) 'fanDemand': fanDemand,
         'pendingSponsorOffers':
             pendingSponsorOffers.map((s) => s.toJson()).toList(),
         'pendingInstallments':
@@ -1718,10 +1723,10 @@ class SaveGame {
             [],
         seasonTicketShare: json['seasonTicketShare'] as int? ?? 0,
         seasonTicketSeason: json['seasonTicketSeason'] as int? ?? 0,
-        tvDeal:
-            TvDeal.values.where((d) => d.name == json['tvDeal']).firstOrNull ??
-                TvDeal.fixed,
+        // 旧セーブの 'tvDeal'(固定/成績連動)は読まない。放映権は国の
+        // 配分式だけになった(2026-11-23)。
         tvHolidaySeasons: json['tvHolidaySeasons'] as int? ?? 0,
+        fanDemand: json['fanDemand'] as int? ?? 0,
         sponsorDeal: json['sponsorDeal'] == null
             ? null
             : SponsorDeal.fromJson(json['sponsorDeal'] as Map<String, dynamic>),

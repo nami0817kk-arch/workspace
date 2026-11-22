@@ -29,6 +29,9 @@ import '../logic/advisor_engine.dart';
 import '../logic/club_ranking_engine.dart';
 import '../logic/equity_engine.dart';
 import '../logic/media_deals_engine.dart';
+import '../logic/fan_demand_engine.dart';
+import '../logic/relegation_clause.dart';
+import '../logic/running_cost_engine.dart';
 import '../logic/project_engine.dart';
 import '../models/start_scenario.dart';
 import '../logic/proposal_engine.dart';
@@ -761,6 +764,8 @@ class GameState extends ChangeNotifier {
     save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
     _dropDanglingJobOffer(save);
     _migrateEconomyIfNeeded(save);
+    // ファンの需要を持たない旧セーブは、部と規模から作る。
+    _ensureFanDemand(save);
     // 今日の日付を持たない旧セーブは、ここで日付を作る。
     save.today ??= _rebuiltToday();
     _migrateLoanDates(save);
@@ -1440,6 +1445,8 @@ class GameState extends ChangeNotifier {
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
     _save!.managerContractYears = 3;
     _applyScenario(scenario);
+    // スタジアムに来たいファンの数(部と評判から)。
+    _ensureFanDemand(_save!);
     final rival = cpuTeams[rng.nextInt(cpuTeams.length)];
     _save!.rivalTeamId = rival.id;
     _save!.rivalTeamName = rival.name;
