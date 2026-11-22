@@ -52,6 +52,10 @@ class TitleScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 BigButton('続きから', c.resume, secondary: true),
               ],
+              if (c.dexCount > 0) ...[
+                const SizedBox(height: 12),
+                BigButton('最期の図鑑（${c.dexCount}種）', c.openDex, secondary: true),
+              ],
               if (c.best > 0) ...[
                 const SizedBox(height: 18),
                 Text(

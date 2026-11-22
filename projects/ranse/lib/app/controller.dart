@@ -8,7 +8,7 @@ import '../engine/game.dart';
 import '../engine/rng.dart';
 import 'save.dart';
 
-enum AppScreen { title, birth, play }
+enum AppScreen { title, birth, play, dex }
 
 /// 画面の切り替えと、保存・最高点の管理。
 class AppController extends ChangeNotifier {
@@ -31,12 +31,21 @@ class AppController extends ChangeNotifier {
   bool hasSave = false;
   int best = 0;
   bool newBest = false;
+
+  /// この人生の最期が、図鑑に初めて載ったか。
+  bool newEnding = false;
+
+  /// 図鑑に載っている最期の数。
+  int dexCount = 0;
+  Map<String, DexEntry> dexEntries = {};
   bool _scored = false;
   Timer? _timer;
 
   Future<void> init() async {
     hasSave = await store.hasSave();
     best = await store.best();
+    dexEntries = await store.dex();
+    dexCount = dexEntries.length;
     notifyListeners();
   }
 
@@ -66,6 +75,7 @@ class AppController extends ChangeNotifier {
     if (b == null) return;
     _scored = false;
     newBest = false;
+    newEnding = false;
     screen = AppScreen.play;
     game.start(b);
     notifyListeners();
@@ -82,6 +92,13 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> openDex() async {
+    dexEntries = await store.dex();
+    dexCount = dexEntries.length;
+    screen = AppScreen.dex;
+    notifyListeners();
+  }
+
   void toTitle() {
     _timer?.cancel();
     screen = AppScreen.title;
@@ -93,6 +110,13 @@ class AppController extends ChangeNotifier {
     unawaited(store.save(g));
     if (g.finished && !_scored) {
       _scored = true;
+      unawaited(
+        store.recordEnding(g).then((isNew) {
+          newEnding = isNew;
+          if (isNew) dexCount++;
+          notifyListeners();
+        }),
+      );
       unawaited(
         store.submitScore(g.score).then((isBest) {
           newBest = isBest;

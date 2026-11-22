@@ -16,7 +16,15 @@ class Ending {
     required this.way,
     required this.kind,
     required this.highlights,
+    this.witness,
   });
+
+  /// 最期の場にいた人の役割（伴侶・子・幼なじみ…）。いなければ null。
+  final String? witness;
+
+  /// 図鑑で同じ結末かを見分けるための鍵（名前は含めない）。
+  /// 最期1000本を書いたら、手書きの最期の id に置き換える。
+  String get key => '$way/$kind/${witness ?? '-'}';
 
   /// 結末の称号（例「戦場に散った侍」）。
   final String title;
@@ -196,6 +204,7 @@ Ending buildEnding(Game g) {
     way: way,
     kind: kind,
     highlights: pickHighlights(l.path),
+    witness: way == 'young' ? null : _witness(l)?.role,
   );
 }
 

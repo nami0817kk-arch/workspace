@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../engine/ending.dart';
 import '../engine/game.dart';
 import '../engine/life.dart';
 
@@ -64,6 +65,52 @@ class SaveStore {
     return p.getInt(_kBest) ?? 0;
   }
 
+  static const _kDex = 'ranse.dex.v1';
+
+  /// 図鑑（見た最期）。鍵 → 1件。
+  Future<Map<String, DexEntry>> dex() async {
+    final p = await SharedPreferences.getInstance();
+    final raw = p.getString(_kDex);
+    if (raw == null) return {};
+    try {
+      final j = jsonDecode(raw) as Map<String, dynamic>;
+      return {
+        for (final e in j.entries)
+          e.key: DexEntry.fromJson(e.value as Map<String, dynamic>),
+      };
+    } catch (_) {
+      return {};
+    }
+  }
+
+  /// 終わった人生の結末を図鑑に記す。初めて見た最期なら true。
+  Future<bool> recordEnding(Game g) async {
+    final e = buildEnding(g);
+    final d = await dex();
+    final old = d[e.key];
+    final isNew = old == null;
+    if (old != null) {
+      old.count++;
+    } else {
+      d[e.key] = DexEntry(
+        key: e.key,
+        title: e.title,
+        text: e.text,
+        way: e.way,
+        kind: e.kind,
+        name: g.l.name,
+        age: g.age,
+        year: g.year,
+      );
+    }
+    final p = await SharedPreferences.getInstance();
+    await p.setString(
+      _kDex,
+      jsonEncode({for (final x in d.values) x.key: x.toJson()}),
+    );
+    return isNew;
+  }
+
   /// 最高点を更新したら true。
   Future<bool> submitScore(int score) async {
     final p = await SharedPreferences.getInstance();
@@ -73,4 +120,47 @@ class SaveStore {
     }
     return false;
   }
+}
+
+/// 図鑑の1件。初めて見たときの称号・最期の文と、見た回数。
+class DexEntry {
+  DexEntry({
+    required this.key,
+    required this.title,
+    required this.text,
+    required this.way,
+    required this.kind,
+    required this.name,
+    required this.age,
+    required this.year,
+    this.count = 1,
+  });
+
+  final String key, title, text, way, kind, name;
+  final int age, year;
+  int count;
+
+  Map<String, dynamic> toJson() => {
+    'k': key,
+    't': title,
+    'x': text,
+    'w': way,
+    'd': kind,
+    'n': name,
+    'a': age,
+    'y': year,
+    'c': count,
+  };
+
+  factory DexEntry.fromJson(Map<String, dynamic> j) => DexEntry(
+    key: j['k'] as String,
+    title: j['t'] as String,
+    text: j['x'] as String,
+    way: j['w'] as String,
+    kind: j['d'] as String,
+    name: j['n'] as String,
+    age: j['a'] as int,
+    year: j['y'] as int,
+    count: j['c'] as int,
+  );
 }

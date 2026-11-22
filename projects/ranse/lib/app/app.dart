@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../ui/dex_screen.dart';
 import '../ui/play_screen.dart';
 import '../ui/theme.dart';
 import '../ui/title_birth_screens.dart';
@@ -55,6 +56,7 @@ class _RanseAppState extends State<RanseApp> {
           AppScreen.title => Scaffold(body: TitleScreen(c)),
           AppScreen.birth => Scaffold(body: BirthScreen(c)),
           AppScreen.play => PlayScreen(c),
+          AppScreen.dex => Scaffold(body: DexScreen(c)),
         },
       ),
     );
