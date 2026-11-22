@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'adult.dart';
 import 'birth.dart';
 import 'childhood.dart';
+import 'childhood_more.dart';
 import 'data.dart';
 import 'echoes.dart';
 import 'history.dart';
@@ -49,6 +50,7 @@ class Game extends ChangeNotifier {
   Game({Rng? rng, this.onCheckpoint}) : rng = rng ?? Rng() {
     childScenes = [
       ...buildChildScenes(),
+      ...buildMoreChildScenes(),
       ...buildChildHistoryScenes(),
       ...buildChildRumorScenes(),
     ];

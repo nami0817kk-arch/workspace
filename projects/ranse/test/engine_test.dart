@@ -187,6 +187,32 @@ void main() {
     expect(seen.length, greaterThanOrEqualTo(7), reason: '$seen');
   });
 
+  test('子ども時代の岐路は、生まれによって顔ぶれが変わる（同じ場面ばかりにならない）', () {
+    final seen = <String>{};
+    var pairsSame = 0, pairs = 0;
+    List<String>? prev;
+    for (var seed = 0; seed < 300; seed++) {
+      final rng = Rng(seed + 77);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      if (g.finished) continue;
+      playChildhood(g, Rng(seed));
+      final mine =
+          g.l.flags
+              .where((f) => f.startsWith('scene:') && !f.startsWith('scene:h_'))
+              .toList()
+            ..sort();
+      seen.addAll(mine);
+      if (prev != null) {
+        pairs++;
+        if (prev.join() == mine.join()) pairsSame++;
+      }
+      prev = mine;
+    }
+    expect(seen.length, greaterThanOrEqualTo(22), reason: '$seen');
+    expect(pairsSame / pairs, lessThan(.05));
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);
