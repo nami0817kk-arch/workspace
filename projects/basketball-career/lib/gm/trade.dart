@@ -206,9 +206,16 @@ double positionNeed(int count) => count <= 0 ? 1.2 : count == 1 ? 1.1 : 1.0;
 /// [slots] はチームごとの指名の見込みの順番(探す間は変わらないので、先に一度だけ計算して渡せる)。
 /// [seen] は、相手の GM の見立てのずれ(選手ごとの伸びきったときの力の±。T-1)。無ければ本当の値で見る。
 TradeVerdict judgeTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o, int nowSeason,
-    {Map<int, int>? slots, int rosterLimit = maxRoster, double hardness = 1.0, bool needs = false, int Function(Player)? seen, Set<int> cheap = const {}}) {
-  // [cheap] は、相手がもめていて安くても出したい選手(T-2)。値打ちを4分の3に見る
-  double playerValue(Player p, TeamMode mode) => _pv(p, mode, potShift: seen?.call(p) ?? 0) * (cheap.contains(p.id) ? 0.75 : 1.0);
+    {Map<int, int>? slots,
+    int rosterLimit = maxRoster,
+    double hardness = 1.0,
+    bool needs = false,
+    int Function(Player)? seen,
+    Set<int> cheap = const {},
+    double Function(Player)? fashion}) {
+  // [cheap] は、相手がもめていて安くても出したい選手(T-2)。値打ちを4分の3に見る。[fashion] は時代の流行での値打ちの倍率(C-3)
+  double playerValue(Player p, TeamMode mode) =>
+      _pv(p, mode, potShift: seen?.call(p) ?? 0) * (cheap.contains(p.id) ? 0.75 : 1.0) * (fashion?.call(p) ?? 1.0);
   final me = teams[mine], them = teams[o.partner];
   final give = [for (final id in o.give) me.roster.firstWhere((p) => p.id == id)];
   final get = [for (final id in o.get) them.roster.firstWhere((p) => p.id == id)];
@@ -302,7 +309,8 @@ void applyTrade(List<Team> teams, List<DraftPick> picks, int mine, TradeOffer o,
 }
 
 /// 相手から届く申し込みを作る。相手が欲しい選手を1人選び、相手の見方で少し得になる組み合わせを返す。作れなければ null。
-TradeOffer? makeIncomingOffer(List<Team> teams, List<DraftPick> picks, int mine, int partner, int nowSeason, {double hardness = 1.0, int Function(Player)? seen}) {
+TradeOffer? makeIncomingOffer(List<Team> teams, List<DraftPick> picks, int mine, int partner, int nowSeason,
+    {double hardness = 1.0, int Function(Player)? seen, double Function(Player)? fashion}) {
   final me = teams[mine], them = teams[partner];
   final mode = them.mode;
   final wanted = [...me.roster]..sort((a, b) => playerValue(b, mode).compareTo(playerValue(a, mode)));
@@ -316,7 +324,7 @@ TradeOffer? makeIncomingOffer(List<Team> teams, List<DraftPick> picks, int mine,
       final cv = playerValue(cand, mode);
       if (cv > tv * 0.92 || cv < tv * 0.55) continue;
       final o = TradeOffer(partner: partner, give: [target.id], get: [cand.id]);
-      final v = judgeTrade(teams, picks, mine, o, nowSeason, hardness: hardness, seen: seen);
+      final v = judgeTrade(teams, picks, mine, o, nowSeason, hardness: hardness, seen: seen, fashion: fashion);
       if (v.ok) return o;
     }
   }
@@ -325,7 +333,8 @@ TradeOffer? makeIncomingOffer(List<Team> teams, List<DraftPick> picks, int mine,
 
 /// トレードブロックの選手([id])に、[partner] が出してくれるもの。選手1人か、指名権1つ(見つからなければ null)。
 /// 相手が受け、年俸の決まりも満たすものの中で、こちらに値打ちの高いものを選ぶ。
-TradeOffer? blockOfferFrom(List<Team> teams, List<DraftPick> picks, int mine, int partner, int id, int nowSeason, {double hardness = 1.0, int Function(Player)? seen}) {
+TradeOffer? blockOfferFrom(List<Team> teams, List<DraftPick> picks, int mine, int partner, int id, int nowSeason,
+    {double hardness = 1.0, int Function(Player)? seen, double Function(Player)? fashion}) {
   final me = teams[mine], them = teams[partner];
   final target = me.roster.where((p) => p.id == id).firstOrNull;
   if (target == null) return null;
@@ -336,14 +345,14 @@ TradeOffer? blockOfferFrom(List<Team> teams, List<DraftPick> picks, int mine, in
     final cv = playerValue(cand, them.mode);
     if (cv > tv * 0.95 || cv < tv * 0.35) continue;
     final o = TradeOffer(partner: partner, give: [id], get: [cand.id]);
-    if (judgeTrade(teams, picks, mine, o, nowSeason, hardness: hardness, seen: seen).ok) return o;
+    if (judgeTrade(teams, picks, mine, o, nowSeason, hardness: hardness, seen: seen, fashion: fashion).ok) return o;
   }
   // 選手が合わなければ、指名権(近い年の1巡目から)
   final own = [for (var i = 0; i < picks.length; i++) if (picks[i].owner == partner) i]
     ..sort((a, b) => picks[a].round != picks[b].round ? picks[a].round - picks[b].round : picks[a].season - picks[b].season);
   for (final i in own) {
     final o = TradeOffer(partner: partner, give: [id], getPicks: [i]);
-    if (judgeTrade(teams, picks, mine, o, nowSeason, hardness: hardness, seen: seen).ok) return o;
+    if (judgeTrade(teams, picks, mine, o, nowSeason, hardness: hardness, seen: seen, fashion: fashion).ok) return o;
   }
   return null;
 }
@@ -359,7 +368,7 @@ double _cost(List<Team> teams, List<DraftPick> picks, int from, Object asset, in
 /// 相手([partner])から [get] と [getPicks] を受け取るのに、[from] が出せばよい組み合わせを探す(「相手に聞く」)。
 /// 出すものは、[from] から見て惜しくない順に、1つ・2つ・3つの組み合わせを試す。[exclude] の選手は出さない。見つからなければ null。
 TradeOffer? findPackage(List<Team> teams, List<DraftPick> picks, int from, int partner,
-    {required List<int> get, List<int> getPicks = const [], List<int> exclude = const [], required int nowSeason, double hardness = 1.0, int Function(Player)? seen}) {
+    {required List<int> get, List<int> getPicks = const [], List<int> exclude = const [], required int nowSeason, double hardness = 1.0, int Function(Player)? seen, double Function(Player)? fashion}) {
   final me = teams[from];
   final assets = <Object>[
     ...me.roster.where((p) => !exclude.contains(p.id)),
@@ -384,7 +393,7 @@ TradeOffer? findPackage(List<Team> teams, List<DraftPick> picks, int from, int p
     final c = give.fold(0.0, (s, a) => s + cost[a]!);
     if (c >= bestCost) return;
     final o = offerOf(give);
-    if (judgeTrade(teams, picks, from, o, nowSeason, slots: slots, hardness: hardness, seen: seen).ok) {
+    if (judgeTrade(teams, picks, from, o, nowSeason, slots: slots, hardness: hardness, seen: seen, fashion: fashion).ok) {
       best = o;
       bestCost = c;
     }

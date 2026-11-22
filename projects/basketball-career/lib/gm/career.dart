@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'combos.dart';
 import 'difficulty.dart';
+import 'eras.dart';
 import 'draft.dart';
 import 'game_sim.dart';
 import 'gm_people.dart';
@@ -763,7 +764,7 @@ class Career {
   void refreshPickScales({bool started = false}) {
     final known = started || phase != Phase.preseason;
     for (final p in picks) {
-      p.classScale = known && p.season == season ? draftClassOf(seed, p.season).valueScale : 1.0;
+      p.classScale = known && p.season == season ? draftClassFor(p.season).valueScale : 1.0;
     }
   }
 
@@ -1502,7 +1503,7 @@ class Career {
     for (final id in tradeBlock.where((id) => me.roster.any((p) => p.id == id))) {
       for (final t in others) {
         if (used.contains(t)) continue;
-        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t));
+        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t), fashion: fashion);
         if (o != null && judge(o).ok) {
           calls.add(o);
           used.add(t);
@@ -1514,7 +1515,7 @@ class Career {
     for (final t in others) {
       if (calls.length >= 2) break;
       if (used.contains(t)) continue;
-      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t), seen: _eyeFn(t));
+      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t), seen: _eyeFn(t), fashion: fashion);
       // 同じ選手への申し込みは重ねない
       // 契約の話し合い中の選手など、今は成り立たない申し込みは掛けてこない
       if (o == null || calls.any((c) => c.give.any(o.give.contains)) || !judge(o).ok) continue;
@@ -1871,7 +1872,7 @@ class Career {
       if (expiring.contains(p.id) || optionPending.contains(p.id)) continue;
       final n = [
         for (var t = 0; t < teams.length; t++)
-          if (t != mine && blockOfferFrom(teams, picks, mine, t, p.id, season, hardness: _hard(t), seen: _eyeFn(t)) != null) t,
+          if (t != mine && blockOfferFrom(teams, picks, mine, t, p.id, season, hardness: _hard(t), seen: _eyeFn(t), fashion: fashion) != null) t,
       ].length;
       if (n >= 3) {
         _mail(Sender.staff, '目玉: ${p.name}に$nチームが関心',
@@ -2662,6 +2663,44 @@ class Career {
     return Player(id: nextId(), name: _uniqueName(), pos: pos ?? r, age: age, ovr: ovr, pot: ovr + (age < 26 ? rng.nextInt(5) : 0), salary: minSalary, years: 1, exp: age - 21);
   }
 
+  // --- 時代の流行(2026-11-21 の作り込み C-3) ---
+
+  /// 4つの時代の重み(合わせて1)。はじめはリーグの種で決まる時代が少し強い。
+  late List<double> eraWeights = [for (var i = 0; i < Era.values.length; i++) i == seed % Era.values.length ? 0.4 : 0.2];
+
+  /// 年ごとの流行(シーズンの順。時代の番号)。
+  List<int> eraHistory = [];
+
+  Era get era => currentEra(eraWeights);
+
+  /// 次に来そうな時代(いまの次に重いもの)。
+  Era get nextEra {
+    final order = [for (var i = 0; i < eraWeights.length; i++) i]..sort((a, b) => eraWeights[b].compareTo(eraWeights[a]));
+    return Era.values[order[1]];
+  }
+
+  /// 流行で変わる選手の値打ちの倍率(流行に合う型は高く、外れた型は安い)。
+  double fashion(Player p) => fashionScale(eraWeights, p);
+
+  /// [s] 年目のドラフトの顔ぶれ。得意なポジションの無い豊作の年は、その年の流行のポジションが豊作になる(C-3)。
+  DraftClass draftClassFor(int s) {
+    final d = draftClassOf(seed, s);
+    if (d.strongPos != null || d.quality < 1) return d;
+    final e = s - 1 < eraHistory.length && s >= 1 ? Era.values[eraHistory[s - 1]] : era;
+    return DraftClass(d.quality, e.pos, d.star);
+  }
+
+  /// 季の終わりに、優勝チームの先発の型で流行を動かす。時代が移ったら知らせる。
+  void _moveEra(int champion) {
+    final before = era;
+    final five = [for (final p in teams[champion].order.take(5)) roleOf(p)];
+    eraWeights = nextWeights(eraWeights, five);
+    eraHistory = [...eraHistory, era.index];
+    if (era != before) {
+      _mail(Sender.league, '時代が移った: ${era.label}', '優勝した${teams[champion].def.short}のやり方を、ほかのチームが真似している。${era.text}。流行から外れた型の選手は、安く手に入る。');
+    }
+  }
+
   /// AI のチームの計画(チームの番号 → (計画, 始めたシーズン))。C-1。
   Map<int, (TeamPlan, int)> teamPlans = {};
 
@@ -2776,10 +2815,11 @@ class Career {
     if (phase != Phase.preseason || startProblem != null) return;
     _potentialNews();
     _planRumor();
+    if (season > 1) _mail(Sender.league, 'リーグの流行', '今は「${era.label}」。${era.text}。次は「${nextEra.label}」が来るといううわさもある。');
     _settleTrust();
     _tradeAnswers();
     // 今季のあとのドラフトのうわさ(A-5)。指名権の値打ちもその年の顔ぶれで変わる
-    _mail(Sender.staff, 'ドラフトのうわさ', '${draftClassOf(seed, season).rumor}。');
+    _mail(Sender.staff, 'ドラフトのうわさ', '${draftClassFor(season).rumor}。');
     _aiPolicies();
     refreshPickScales(started: true);
     for (final t in teams) {
@@ -3254,7 +3294,7 @@ class Career {
     if (onBlock.isNotEmpty) {
       final id = onBlock[rng.nextInt(onBlock.length)];
       for (final t in others.take(8)) {
-        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t));
+        final o = blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t), fashion: fashion);
         if (o != null) {
           incoming = o;
           final name = me.roster.firstWhere((p) => p.id == id).name;
@@ -3264,7 +3304,7 @@ class Career {
       }
     }
     for (final t in others.take(4)) {
-      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t), seen: _eyeFn(t));
+      final o = makeIncomingOffer(teams, picks, mine, t, season, hardness: _hard(t), seen: _eyeFn(t), fashion: fashion);
       if (o != null) {
         incoming = o;
         _mail(Sender.league, '${teams[t].def.short}からトレードの申し込み', '進行の画面で、出す選手と受け取る選手を見て返事できる。');
@@ -3280,7 +3320,7 @@ class Career {
     incoming = null;
     // 届いたあとで出す選手を放した・指名権が動いた、なら成り立たない。オーナーとの予算の約束も守る
     if (!callValid(o) || _tradeBudgetProblem(o) != null) return false;
-    if (!judgeTrade(teams, picks, mine, o, season, hardness: _hard(o.partner), seen: _eyeFn(o.partner)).ok) return false;
+    if (!judgeTrade(teams, picks, mine, o, season, hardness: _hard(o.partner), seen: _eyeFn(o.partner), fashion: fashion).ok) return false;
     _logTrade(mine, o);
     _fanTrade(o);
     _keepTrade(o);
@@ -3369,7 +3409,7 @@ class Career {
     if (!canTrade) return const [];
     final out = [
       for (var t = 0; t < teams.length; t++)
-        if (t != mine) blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t)),
+        if (t != mine) blockOfferFrom(teams, picks, mine, t, id, season, hardness: _hard(t), seen: _eyeFn(t), fashion: fashion),
     ].whereType<TradeOffer>().toList();
     double value(TradeOffer o) =>
         o.get.fold(0.0, (n, pid) => n + playerValue(teams[o.partner].roster.firstWhere((p) => p.id == pid), me.mode)) +
@@ -3722,7 +3762,10 @@ class Career {
     if (trust <= 0) fired = true;
     jobOffers = fired ? _makeOffers() : [];
     _awardRating(res);
-    if (finals != null) champs.add([season, champion, finals!.loser]);
+    if (finals != null) {
+      champs.add([season, champion, finals!.loser]);
+      _moveEra(champion);
+    }
     // 選手の年ごとの成績を残す(シーズンの終わりにいたチームで)
     for (final t in teams) {
       for (final p in t.roster) {
@@ -3993,7 +4036,7 @@ class Career {
     for (final i in conveyedBack) {
       _log('保護: ${teams[picks[i].from].def.short}の1巡目は上位${picks[i].protect}位に入ったので、${teams[picks[i].from].def.short}に戻った');
     }
-    final main = makeProspects(rng, nextId, order.length + 8, name: _uniqueName, cls: draftClassOf(seed, season));
+    final main = makeProspects(rng, nextId, order.length + 8, name: _uniqueName, cls: draftClassFor(season));
     // 層を厚くする(2巡目の後半にも選ぶ余地を残す)。リーグの続きをずらさないよう、別の乱数で作る
     final deepRng = Rng(seed * 104723 + season * 613 + 29);
     final used = {..._usedNames, for (final p in main) p.player.name};
@@ -4272,6 +4315,8 @@ class Career {
     // 望みを満たしてきた選手は、再契約で値引きに応じる(C-2)
     // (自分のチームで1季以上すごした選手だけ。入ったばかりの選手には効かない)
     if (t.index == mine && t.roster.contains(p) && (blocksWithMe[p.id] ?? 0) >= blocksPerSeason && wishMet(this, p, t)) f *= 0.93;
+    // 流行(C-3): 流行に合う型は高く、外れた型は安く求める
+    f *= fashion(p);
     final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalaryFor(p.exp));
     final own = t.index == mine && t.roster.contains(p);
     final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : own ? ownMaxYears : 4;
@@ -4749,6 +4794,8 @@ class Career {
         final ask = askOf(p, t);
         if (t.roster.length + _bidsOf(t.index).length >= maxRoster) continue;
         if (t.payroll + _bidTotal(t.index) + ask.salary > salaryCap) continue;
+        // そのポジションがもう3人以上いるチームは申し込まない(先発が偏らないように。流行で同じ型に寄りやすいため)
+        if (t.roster.where((x) => x.pos == p.pos).length >= 3) continue;
         if (!rng.chance(t.mode == TeamMode.contend ? 0.45 : 0.3)) continue;
         final salary = (ask.salary * (0.95 + rng.nextInt(4) * 0.05)).round().clamp(minSalary, maxSalaryFor(p.exp));
         bids.putIfAbsent(p.id, () => []).add(FaBid(t.index, salary, 1 + rng.nextInt(ask.maxYears)));
@@ -5055,7 +5102,7 @@ class Career {
     // 強く警戒している相手は、話に応じない(T-4)
     if (trustOf(o.partner) <= -60) return TradeVerdict(false, '${teams[o.partner].def.short}は警戒していて、話に応じない', 0);
     return judgeTrade(teams, picks, mine, o, season,
-        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner) * (keenFor(o) ? 0.93 : 1.0), needs: true, seen: _eyeFn(o.partner), cheap: _cheapOf(o.partner));
+        rosterLimit: phase == Phase.season ? maxRoster : offseasonRoster, hardness: _hard(o.partner) * (keenFor(o) ? 0.93 : 1.0), needs: true, seen: _eyeFn(o.partner), cheap: _cheapOf(o.partner), fashion: fashion);
   }
 
   /// 入れ替え権を出し入れできる最初の年(今年のドラフトの順が決まったあとは、次の年から)。
@@ -5669,7 +5716,7 @@ class Career {
   TradeOffer? askPartner(int partner, {List<int> get = const [], List<int> getPicks = const []}) {
     if (!canTrade || (get.isEmpty && getPicks.isEmpty)) return null;
     final o = findPackage(teams, picks, mine, partner,
-        get: get, getPicks: getPicks, exclude: [...expiring, ...optionPending], nowSeason: season, hardness: _hard(partner), seen: _eyeFn(partner));
+        get: get, getPicks: getPicks, exclude: [...expiring, ...optionPending], nowSeason: season, hardness: _hard(partner), seen: _eyeFn(partner), fashion: fashion);
     return o != null && judge(o).ok ? o : null;
   }
 
@@ -5832,6 +5879,8 @@ class Career {
         if (planNews.isNotEmpty) 'apn': planNews,
         if (wishKnown.isNotEmpty) 'wk': [...wishKnown],
         if (wishUnmet.isNotEmpty) 'wu': [for (final e in wishUnmet.entries) [e.key, e.value]],
+        'era': eraWeights,
+        if (eraHistory.isNotEmpty) 'erh': eraHistory,
         if (teamPlans.isNotEmpty) 'apl': [for (final e in teamPlans.entries) [e.key, e.value.$1.index, e.value.$2]],
         if (gmTrust.isNotEmpty) 'gtr': [for (final e in gmTrust.entries) [e.key, e.value]],
         if (tradeLastVerdict.isNotEmpty) 'tlv': tradeLastVerdict,
@@ -6007,6 +6056,10 @@ class Career {
         for (final x in (j['wu'] as List? ?? const []))
           if (x is List && x.length == 2) x[0] as int: x[1] as int,
       }
+      ..eraWeights = j['era'] is List && (j['era'] as List).length == Era.values.length
+          ? [for (final x in j['era'] as List) (x as num).toDouble()]
+          : [for (var i = 0; i < Era.values.length; i++) i == (j['seed'] as int) % Era.values.length ? 0.4 : 0.2]
+      ..eraHistory = [for (final x in (j['erh'] as List? ?? const [])) x as int]
       ..teamPlans = {
         for (final x in (j['apl'] as List? ?? const []))
           if (x is List && x.length == 3) x[0] as int: (TeamPlan.values[(x[1] as int).clamp(0, TeamPlan.values.length - 1)], x[2] as int),
