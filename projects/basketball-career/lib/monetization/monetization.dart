@@ -19,7 +19,8 @@ enum RecoverGate {
 /// 広告と「広告を消す」の決まり（2026-10-19 ユーザー決定: 無料＋広告＋広告を消す 370円。
 /// 護送ボート・サカマネと同じ形）。
 ///
-/// - 全画面広告: 試合を [interstitialEvery] 回終えた次の行き先を選ぶときに1回。
+/// - 全画面広告: 自分の試合を [interstitialEvery] 試合終えた次に試合を進めるときに1回(2026-11-22 ユーザー指示)。
+///   任期の1年目は出さない。オフシーズンが終わったとき([markDue])にも1回。数えと番の判断は GmController。
 ///   広告を消した人には出さない。出せなければ進行を止めない。
 /// - 動画広告: 勝ったあとのカードの候補を引き直す・決勝をやり直す(どちらも押したときだけ)。読み込めていなければ何もしない。
 /// - 広告を消す: 全画面広告が出なくなり、スカウトの追加とオーナーの説得も動画なしで使える(回数は同じ)。
@@ -30,8 +31,8 @@ class Monetization extends ChangeNotifier {
       : ads = ads ?? NoOpAdService(),
         store = store ?? NoOpPurchaseService();
 
-  /// 何回の試合ごとに全画面広告を出すか。
-  static const interstitialEvery = 3;
+  /// 自分の試合を何試合終えるごとに全画面広告を出すか(2026-11-22 ユーザー指示: 30試合に1度)。
+  static const interstitialEvery = 30;
 
   final SharedPreferences _prefs;
   final AdService ads;
@@ -104,13 +105,23 @@ class Monetization extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 試合が1つ終わったときに呼ぶ。次の行き先を選ぶときに全画面広告を出す番を数える。
+  /// 自分の試合を1つ終えたときに呼ぶ。
+  Future<void> tournamentPlayed() => gamesPlayed(1);
+
+  /// 自分の試合を [n] 試合終えたときに呼ぶ。全画面広告を出す番を数える(保存の名前は昔のまま)。
   /// 次が広告の番なら、結果を見ている間に読み込んでおく。
-  Future<void> tournamentPlayed() async {
+  Future<void> gamesPlayed(int n) async {
+    if (adFree || n <= 0) return;
+    final total = (_prefs.getInt('tournamentsSinceAd') ?? 0) + n;
+    await _prefs.setInt('tournamentsSinceAd', total);
+    if (total >= interstitialEvery && !ads.isInterstitialReady) ads.ensureLoaded();
+  }
+
+  /// 試合の数に関わらず、次の操作で全画面広告を出す番にする(オフシーズンの終わり)。
+  Future<void> markDue() async {
     if (adFree) return;
-    final n = (_prefs.getInt('tournamentsSinceAd') ?? 0) + 1;
-    await _prefs.setInt('tournamentsSinceAd', n);
-    if (n >= interstitialEvery && !ads.isInterstitialReady) ads.ensureLoaded();
+    await _prefs.setInt('tournamentsSinceAd', interstitialEvery);
+    if (!ads.isInterstitialReady) ads.ensureLoaded();
   }
 
   /// 全画面広告を出す番か。

@@ -164,8 +164,42 @@ class GmController extends ChangeNotifier {
     _changed();
   }
 
-  /// 試合を進める前に、全画面広告の番なら出す。
+  // 全画面広告の数え(2026-11-22 ユーザー指示): 自分の試合30試合ごと・任期の1年目は出さない・オフシーズンの終わりに1回。
+  Career? _seenCareer;
+  int _seenSeason = 0, _seenGames = 0;
+
+  /// 前に見たときから増えた自分の試合を、広告の数えに足す(1年目は数えない)。
+  /// 別の任期・新しいシーズンに変わったら、そこを起点にするだけ。
+  void _countGames(Career c) {
+    final g = c.me.wins + c.me.losses;
+    if (!identical(c, _seenCareer) || c.season != _seenSeason) {
+      _seenCareer = c;
+      _seenSeason = c.season;
+      _seenGames = g;
+      return;
+    }
+    final d = g >= _seenGames ? g - _seenGames : g;
+    _seenGames = g;
+    final m = money;
+    if (m != null && d > 0 && c.season > 1) unawaited(m.gamesPlayed(d));
+  }
+
+  /// オフシーズンが終わった(次のシーズンに入った)ら、全画面広告を1回出す。
+  Future<void> _offseasonAd() async {
+    final m = money;
+    if (m == null || m.adFree) return;
+    await m.markDue();
+    await _maybeInterstitial();
+    notifyListeners();
+  }
+
+  /// 試合を進める前に、全画面広告の番なら出す。任期の1年目は出さない。
   Future<void> _maybeInterstitial() async {
+    final c = career;
+    if (c != null) {
+      _countGames(c);
+      if (c.season <= 1) return;
+    }
     final m = money;
     if (m == null || !m.interstitialDue) return;
     busy = true;
@@ -192,7 +226,6 @@ class GmController extends ChangeNotifier {
     final snap = _blockSnapOf(c);
     c.playBlock();
     unawaited(Sfx.play(SoundEffect.buzzer));
-    await money?.tournamentPlayed();
     _record(c);
     _changed();
     return BlockReport.make(c, snap);
@@ -219,7 +252,6 @@ class GmController extends ChangeNotifier {
       };
       c.playBlock();
       games.addAll(fromStart ? c.lastGames : c.lastGames.sublist(before));
-      await money?.tournamentPlayed();
       if (c.phase != Phase.season) break;
       final reason = _stopReason(c, asked);
       if (reason != null) {
@@ -261,10 +293,9 @@ class GmController extends ChangeNotifier {
         final tired = c.me.roster.any((p) => p.wear > wearSlumpLine);
         final before = c.lastGames.length;
         final fromStart = c.roundAt == blockStart(c.block);
-        final ended = c.playDays(1);
+        c.playDays(1);
         final got = fromStart ? [...c.lastGames] : c.lastGames.sublist(before);
         games.addAll(got);
-        if (ended) await money?.tournamentPlayed();
         // 1節ごとは画面を描き直すだけ(保存は最後に1回。毎節すべてを保存すると「一気に」で固まる)
         notifyListeners();
         if (onRound != null) await onRound(got);
@@ -387,7 +418,6 @@ class GmController extends ChangeNotifier {
     final starters = _healthyStarters(c);
     final ended = c.playWeek();
     injuryStop = c.phase == Phase.season ? _newlyHurt(c, starters) : null;
-    if (ended) await money?.tournamentPlayed();
     _record(c);
     _changed();
     // 区切りの全部の試合でまとめる(週ごとの分ではなく)
@@ -402,7 +432,6 @@ class GmController extends ChangeNotifier {
     final starters = _healthyStarters(c);
     final ended = c.playLiveDay(calls);
     injuryStop = c.phase == Phase.season ? _newlyHurt(c, starters) : null;
-    if (ended) await money?.tournamentPlayed();
     _record(c);
     _changed();
     return ended ? BlockReport.make(c, snap, c.lastGames) : null;
@@ -446,7 +475,6 @@ class GmController extends ChangeNotifier {
   Future<void> _afterPlayoffStep(Career c) async {
     if (c.phase == Phase.seasonEnd) {
       unawaited(Sfx.play(c.myResult >= 5 ? SoundEffect.fanfare : SoundEffect.buzzer));
-      await money?.tournamentPlayed();
       pending.addAll(profile.recordSeason(c));
     }
     _record(c);
@@ -596,14 +624,20 @@ class GmController extends ChangeNotifier {
     return ok;
   }
 
-  void _record(Career c) => pending.addAll(profile.recordProgress(c));
+  void _record(Career c) {
+    _countGames(c);
+    pending.addAll(profile.recordProgress(c));
+  }
 
   void _act(void Function(Career c) f) {
     final c = career;
     if (c == null || busy) return;
+    final season = c.season;
     f(c);
     _record(c);
     _changed();
+    // オフシーズンが終わった(契約を終えて次のシーズンへ)
+    if (c.season > season && c.season >= 2) unawaited(_offseasonAd());
   }
 
   /// 広告を消した人は、動画なしで受け取れる。
