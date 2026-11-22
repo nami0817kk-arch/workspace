@@ -255,13 +255,9 @@ class Acquaintances {
       fits = (c) => (c.strength - here.strength).abs() <= 3;
     }
     if (r.nextDouble() >= chance) return null;
-    final confed = World.byId(here.countryId).confederation;
     final options = [
-      for (final c in _allClubs)
-        if (c.id != here.id &&
-            World.byId(c.countryId).confederation == confed &&
-            fits(c))
-          c,
+      for (final c in _clubsIn(World.byId(here.countryId).confederation))
+        if (c.id != here.id && fits(c)) c,
     ];
     if (options.isEmpty) return null;
     return options[r.nextInt(options.length)];
@@ -310,12 +306,20 @@ class Acquaintances {
       for (var t = 1; t <= c.tiers; t++) ...World.buildLeague(c.id, t),
   ];
 
-  static Club? _club(String id) {
-    for (final c in _allClubs) {
-      if (c.id == id) return c;
-    }
-    return null;
-  }
+  static Map<String, Club>? _byId;
+
+  static Club? _club(String id) =>
+      (_byId ??= {for (final c in _allClubs) c.id: c})[id];
+
+  static final Map<Object, List<Club>> _byConfed = {};
+
+  /// 連盟ごとのクラブ。**国を1クラブずつ引き直さない**——
+  /// 約600クラブを知り合いの数だけ回るので、毎回引くと重い。
+  static List<Club> _clubsIn(Object confederation) =>
+      _byConfed[confederation] ??= [
+        for (final c in _allClubs)
+          if (World.byId(c.countryId).confederation == confederation) c,
+      ];
 
   /// 文字列の和。`String.hashCode` は実行ごとに変わるので使わない。
   static int _hash(String s) =>

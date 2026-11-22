@@ -3,15 +3,23 @@ import 'attributes.dart';
 
 /// どういう縁で知り合ったか。
 enum Bond {
-  rival(Say('元競争相手', 'Former rival')),
-  partner(Say('元相方', 'Former partner')),
-  scorer(Say('得点王を争った', 'Scoring rival'));
+  rival(Say('元競争相手', 'Former rival'), Say('競争相手', 'Rival')),
+  partner(Say('元相方', 'Former partner'), Say('相方', 'Partner')),
+  scorer(Say('得点王を争った', 'Scoring rival'), Say('得点王を争った', 'Scoring rival'));
 
-  const Bond(Say label) : _label = label;
+  const Bond(Say label, Say together) : _label = label, _together = together;
 
   final Say _label;
+  final Say _together;
 
+  /// 離れたあとの呼び名（「元相方」）。見出しは離れる・戻るときにしか
+  /// 書かないので、こちらを使う。
   String get label => _label.t;
+
+  /// 呼び名。**まだ同じクラブに居るなら「元」を付けない**——
+  /// 書き出した絵で、隣のロッカーに居る人が「元競争相手」になっていた。
+  String labelFor({required bool together}) =>
+      together ? _together.t : _label.t;
 }
 
 /// 関わった人。**続きを持たせるのは、この人たちだけ**（2026-11-22）。

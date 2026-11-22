@@ -56,7 +56,11 @@ class AcquaintanceCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             for (final a in rows) ...[
-              _Row(person: a, year: state.year),
+              _Row(
+                person: a,
+                year: state.year,
+                together: !a.retired && a.clubId == state.club.id,
+              ),
               const SizedBox(height: 8),
             ],
           ],
@@ -67,10 +71,17 @@ class AcquaintanceCard extends StatelessWidget {
 }
 
 class _Row extends StatelessWidget {
-  const _Row({required this.person, required this.year});
+  const _Row({
+    required this.person,
+    required this.year,
+    required this.together,
+  });
 
   final Acquaintance person;
   final int year;
+
+  /// 今も同じクラブに居るか。居れば「元」を付けない。
+  final bool together;
 
   static final RegExp _id = RegExp(r'^(.+)-t(\d+)-c(\d+)$');
 
@@ -107,8 +118,8 @@ class _Row extends StatelessWidget {
               ),
               Text(
                 tr(
-                  '${a.bond.label} ・ ${a.position.label} ・ $now',
-                  '${a.bond.label} - ${a.position.label} - $now',
+                  '${a.bond.labelFor(together: together)} ・ ${a.position.label} ・ $now',
+                  '${a.bond.labelFor(together: together)} - ${a.position.label} - $now',
                 ),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
