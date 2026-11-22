@@ -698,6 +698,7 @@
             const b = this.ball;
             const d = Math.max(0.3, dist(r, b));
             this.lock[this.owner] = 0.9;
+            this.lock[p.steal] = 0.18; // 突いた球が足元へ転がってから持つ（その場で持ち主が入れ替わって見えないように）
             this.owner = null;
             this.idle = null;
             this.bv = [((r[0] - b[0]) / d) * 3, ((r[1] - b[1]) / d) * 3];
@@ -844,6 +845,7 @@
             const b = this.ball;
             const dd = Math.max(0.3, dist(r, b));
             this.lock[e.kicker] = 0.9;
+            this.lock[e.recv] = 0.18;
             this.owner = null;
             this.bv = [((r[0] - b[0]) / dd) * 3.5, ((r[1] - b[1]) / dd) * 3.5];
             this.expect = e.recv;
@@ -1078,6 +1080,7 @@
         const r = this.disp[best];
         const d = Math.max(0.3, dist(r, b));
         this.lock[this.owner] = 0.9;
+        this.lock[best] = 0.18;
         this.owner = null;
         this.bv = [((r[0] - b[0]) / d) * 3, ((r[1] - b[1]) / d) * 3];
         this.lastTouch = this.teamOf(best);
@@ -1127,7 +1130,7 @@
           }
           // 止められなくても、体のすぐ近く（0.6m 以内）を通る球には当たる：向きが変わって弱まり、こぼれ球になる
           // （2026-11-22：前は止め損ねると球が体を通り抜けていた）
-          if (d < 0.8) { // 1コマで球は 0.2m ほど進むので、少し手前で当てる
+          if (d < (fl.thread ? 0.5 : 0.8)) { // 1コマで球は 0.2m ほど進むので、少し手前で当てる
             const sp = Math.max(3, fl.v0 ? fl.v0 - MOVE.fric * fl.t : MOVE.passEnd) * 0.45;
             const a0 = Math.atan2(fl.to[1] - fl.from[1], fl.to[0] - fl.from[0]) + (Math.random() < 0.5 ? -1 : 1) * (0.6 + Math.random() * 0.7);
             this.fl = null;
@@ -1155,6 +1158,7 @@
             this.lastTouch = this.teamOf(near);
             const d = Math.max(0.3, dist(r, b));
             this.lock[this.owner] = 0.9;
+            this.lock[near] = 0.18; // 突いた球が足元へ転がってから持つ
             this.owner = null;
             this.idle = null;
             this.bv = [((r[0] - b[0]) / d) * 4.5, ((r[1] - b[1]) / d) * 4.5];
@@ -1182,7 +1186,7 @@
       // パスの失敗：相手の陣の深くほど引っかかる（守りが固まっていて通らない）。パスのうまい子・押している側はミスが少ない
       // 2026-11-22「いきなり相手にパスする」：前は失敗のときに相手の選手を受け手にして足元へ蹴っていた。いまは必ず味方を狙い、
       // 通り道の相手に切られるか、球がそれて相手に拾われる形で失う
-      const miss = Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(1.9 - this.shareOf(me) * 1.8, 0.5, 1.6) * clamp(2.2 - this.ab01(me, 'パス') * 3, 0.25, 2);
+      const miss = Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(2.4 - this.shareOf(me) * 2.8, 0.35, 2) * clamp(2.2 - this.ab01(me, 'パス') * 3, 0.25, 2); // 押している側はミスが少ない（2026-11-22 失い方を切る・それるに変えて流れの差が縮んだので強めた）
       {
         const pick = (bk, fr) => ids.filter((id) => {
           if (id === me || this.teamOf(id) !== my) return false;
@@ -1200,7 +1204,7 @@
         const opps = ids.filter((id) => this.teamOf(id) !== my && this.base[id][3] !== 0);
         const wt = c.map((id) => {
           const r = this.disp[id];
-          const fwd = 1 + Math.max(0, (r[1] - q[1]) * atk) * Math.max(tc.tempo + (this.surgeOf(me) ? 0.6 : 0), depth < 30 ? 0.9 : 0) * 0.2; // 自陣の深くからは前へ逃がす。見どころの前は前へ
+          const fwd = 1 + Math.max(0, (r[1] - q[1]) * atk) * Math.max(tc.tempo + (this.surgeOf(me) ? 0.6 : 0) + Math.max(0, this.shareOf(me) - 0.5) * 1.5, depth < 30 ? 0.9 : 0) * 0.2; // 押している側は前へつなぐ // 自陣の深くからは前へ逃がす。見どころの前は前へ
           let open = 10;
           let lane = 4;
           for (const o of opps) { open = Math.min(open, dist(this.disp[o], r)); lane = Math.min(lane, segDist(this.disp[o], q, r)); }
@@ -1235,7 +1239,7 @@
       // 失敗のとき：通り道の近く（6m 以内）の相手が先回りして切る。いなければ球がそれる
       let icpt = null;
       if (miss && this.teamOf(tgt) === my) {
-        let bd = 6;
+        let bd = 7;
         for (const o of ids) {
           if (this.teamOf(o) === my || this.base[o][3] === 0) continue;
           const pt = segPt(this.disp[o], q, to);
@@ -1254,6 +1258,7 @@
       }
       this.kick(to, tgt, me);
       if (icpt && this.fl) { this.fl.icpt = icpt.id; this.fl.ip = icpt.ip; }
+      else if (this.fl && Math.random() < this.ab01(me, 'パス') * 0.7) this.fl.thread = true; // うまい子の球は足の間を通す（体に当たらない）
       this.idle = { recv: tgt, to };
     }
     // キックオフ：両チームとも自分の陣地に並び、team の最前の子が真ん中で持つ（試合の始め・後半・得点のあと）
