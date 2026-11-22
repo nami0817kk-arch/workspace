@@ -10,6 +10,10 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  errors:
+    # Flutter 3.50 で material.dart の読み込みが非推奨(info)になった。CI の analyze は info でも落ちるので、
+    # material_ui への移行までは非推奨の指摘だけ外す(ほかの指摘は残す。tounoishi と同じ)
+    deprecated_member_use: ignore
   exclude:
     - build/**
     - ios/**
