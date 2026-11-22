@@ -21,9 +21,8 @@ void main() {
       expect(same / players.length, inInclusiveRange(0.28, 0.65),
           reason: e.key);
     }
-    // 自クラブと自由契約は自国。
-    expect(gs.userTeam.players.every((p) =>
-        gs.nationalityOf(p) == gs.currentLeagueTheme), isTrue);
+    // 自由契約は自国。自クラブは 2026-11-22 から CPU と同じ割合で外国籍が
+    // 混ざる(reality3_players_test.dart で見る)。
     expect(gs.freeAgents.every((p) =>
         gs.nationalityOf(p) == gs.currentLeagueTheme), isTrue);
   });
@@ -53,7 +52,10 @@ void main() {
     if (weak != null) expect(gs.workPermitBlock(weak), isNotNull);
     if (strong != null) expect(gs.workPermitBlock(strong), isNull);
     expect(gs.workPermitMinimum(1), greaterThan(gs.workPermitMinimum(5)));
-    // 自国の選手には要らない。
-    expect(gs.workPermitBlock(gs.userTeam.players.first), isNull);
+    // 自国の選手には要らない(自クラブにも外国籍が混ざるので、自国籍を選ぶ)。
+    expect(
+        gs.workPermitBlock(gs.userTeam.players
+            .firstWhere((p) => gs.nationalityOf(p) == gs.currentLeagueTheme)),
+        isNull);
   });
 }

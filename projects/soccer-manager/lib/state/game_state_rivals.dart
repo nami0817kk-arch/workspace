@@ -72,6 +72,11 @@ extension GameStateRivals on GameState {
       final added = <String>[];
       for (final p in pool.take(r.ambition)) {
         if (club.players.length >= maxSquadSize) break;
+        // 国の登録の決まりで加えられない選手は取らない(所属なしの選手は、
+        // イタリアの「EU 外は1季2人まで」では他の国から来たのと同じ)。
+        if (!_cpuCanRegister(club, p, fromCountry: null)) continue;
+        _noteCpuSigning(club, p, fromCountry: null);
+        _fixNationality(p);
         s.freeAgents.remove(p);
         ContractEngine.renewContract(p);
         club.players.add(p);

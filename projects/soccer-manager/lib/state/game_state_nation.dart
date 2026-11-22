@@ -127,6 +127,69 @@ extension GameStateNation on GameState {
     s.nationRuleVersion = SaveGame.currentNationRuleVersion;
   }
 
+  /// 新しいゲームの自クラブの選手に国籍と国内育成の印を付ける
+  /// ([startNewGame]で、名前を国籍に合わせる前に1回だけ呼ぶ)。
+  ///
+  /// 以前は自クラブの選手が全員自国籍で、CPU のクラブ(3部で2〜3割が
+  /// 外国籍)と食い違っていた(2026-11-22)。CPU と同じ国・部の割合
+  /// ([foreignShare])で外国籍を混ぜ、国内育成の印も国籍で引き直す(自国籍は
+  /// 3人に2人、外国籍は10人に1人)。ただし始めた時点で国の登録の決まり
+  /// (EU 外の枠・国外で育った選手の枠)を破らないように、超える分は
+  /// 自国籍で国内育成の選手に戻す。
+  ///
+  /// 古いセーブの自クラブの選手は国籍を覚えていないので、今までどおり
+  /// 自国籍のまま(名前も印も変わらない)。ユースから上がった選手も同じ。
+  void _assignUserNationalitiesAtStart(int tier) {
+    if (_save == null) return;
+    final home = currentLeagueTheme;
+    final rules = registrationRules;
+    final team = userTeam;
+    LeagueTheme nationOf(Player p) => LeagueTheme.values
+        .firstWhere((t) => t.name == p.nation, orElse: () => home);
+    bool homegrownFor(Player p, {required bool national}) =>
+        PlayerGenerator.homegrownRollFor(
+            national: national,
+            roll: (Player.nationalityHash('${p.id}#hg') % 1000) / 1000);
+    void makeNational(Player p, {bool forceHomegrown = false}) {
+      p.nation = home.name;
+      p.homegrown = forceHomegrown || homegrownFor(p, national: true);
+    }
+
+    for (final p in team.players) {
+      final nation = foreignNationalityFor(p.id, home, tier) ?? home;
+      p.nation = nation.name;
+      p.homegrown = homegrownFor(p, national: nation == home);
+    }
+    final nonEuLimit = rules.nonEuLimit;
+    if (nonEuLimit != null) {
+      final nonEu = [
+        for (final p in team.players)
+          if (!isEuNation(nationOf(p))) p,
+      ];
+      for (final p in nonEu.skip(nonEuLimit)) {
+        makeNational(p);
+      }
+    }
+    final minNationals = rules.minNationals;
+    if (minNationals != null) {
+      final foreigners = [
+        for (final p in team.players)
+          if (nationOf(p) != home) p,
+      ];
+      final room = SquadRegistration.totalLimit - minNationals;
+      for (final p in foreigners.skip(room)) {
+        makeNational(p);
+      }
+    }
+    final notHomegrown = [
+      for (final p in team.players)
+        if (SquadRegistration.isSenior(p) && !p.homegrown) p,
+    ];
+    for (final p in notHomegrown.skip(rules.nonHomegrownLimit)) {
+      makeNational(p, forceHomegrown: true);
+    }
+  }
+
   /// 選手の名前を国籍に合わせる(読み込み・新しいゲーム・季の切り替えで呼ぶ)。
   ///
   /// 以前は日本語の表示で全員に日本の姓名を付けていて、欧州を模したリーグ
@@ -211,7 +274,12 @@ extension GameStateNation on GameState {
           .length;
 
   /// [p]が他の国のクラブから来るか(イタリアの EU 外の獲得の数え方)。
+  ///
+  /// 所属なしの選手も数える(2026-11-22。実際のイタリアの決まりは「国外から
+  /// 新しく登録する EU 外の選手」で、所属なしで来る選手もその枠を使う)。
+  /// ローンで借りる選手も、他の国のクラブからなら数える。
   bool _comesFromAbroad(Player p) {
+    if (_save!.freeAgents.any((q) => q.id == p.id)) return true;
     final club = _sellingClubOf(p.id);
     if (club != null) return _foreignTeamIds().containsKey(club.id);
     final origin = p.originLeague;
@@ -219,7 +287,9 @@ extension GameStateNation on GameState {
   }
 
   /// 自クラブが他の国から EU 外の国籍の選手を取ったら数える(獲得のたび、
-  /// 元のクラブから外す前に呼ぶ)。
+  /// 元のクラブから外す前に呼ぶ)。所属なしの選手も数える
+  /// ([_comesFromAbroad])。ローンで借りるときも、元のクラブから外す
+  /// ([_takeFromSeller])ときに数える。
   void _noteSigningFromAbroad(Player p) {
     final s = _save;
     if (s == null) return;
@@ -229,6 +299,89 @@ extension GameStateNation on GameState {
       s.nonEuSignings = 0;
     }
     s.nonEuSignings++;
+  }
+
+  // ---- CPU のクラブの選手登録(2026-11-22) ----
+  //
+  // 以前は登録の決まりが自クラブの補強にしか効かず、CPU のクラブは人数の
+  // 上限(26人)だけを見て取っていた。いまは CPU のクラブも、そのクラブの
+  // 国の決まり([RegistrationRules.forCountry])で加えられない選手は取らない
+  // (AI 同士の移籍・自クラブからの買い取り・放出の行き先・横取り・他の
+  // オーナーの補強・AI 同士の仮契約)。
+
+  /// クラブ[clubId]の国(自国のクラブは今の国、他国の1部はその国)。
+  LeagueTheme _countryOfClub(String clubId, [Map<String, String>? foreign]) {
+    final name = (foreign ?? _foreignTeamIds())[clubId];
+    if (name == null) return currentLeagueTheme;
+    return LeagueTheme.values
+        .firstWhere((t) => t.name == name, orElse: () => currentLeagueTheme);
+  }
+
+  /// CPU のクラブ[clubId]が今季、他の国(と所属なし)から取った EU 外の
+  /// 国籍の選手の数(イタリアの決まり)。
+  int _cpuNonEuSignedThisSeason(String clubId) {
+    final s = _save!;
+    if (s.cpuNonEuSigningsSeason != s.league.season) return 0;
+    return s.cpuNonEuSignings[clubId] ?? 0;
+  }
+
+  /// CPU のクラブ[club]が[p]を加えられるか(そのクラブの国の登録の決まり)。
+  ///
+  /// [fromCountry]は選手が今いるクラブの国。null は所属なしの選手(イタリア
+  /// の「EU 外は1季2人まで」では、他の国から来たのと同じに数える)。
+  bool _cpuCanRegister(Team club, Player p,
+      {required LeagueTheme? fromCountry, Map<String, String>? foreign}) {
+    if (_save == null) return true;
+    final f = foreign ?? _foreignTeamIds();
+    final country = _countryOfClub(club.id, f);
+    final tier = _tierOfClub(club.id) ?? 1;
+    // クラブの選手の国籍は、そのクラブを分かっている形で引く(全クラブを
+    // 探し直さない)。加える選手はいまの所属で決まる国籍。
+    LeagueTheme nationOf(Player q) => q.id == p.id
+        ? nationalityOf(p)
+        : _nationalityAt(q, club, f, tier: tier);
+    return SquadRegistration.blockReason(
+          club,
+          p,
+          rules: RegistrationRules.forCountry(country),
+          nationOf: nationOf,
+          nonEuSignedThisSeason: _cpuNonEuSignedThisSeason(club.id),
+          incomingFromAbroad: fromCountry != country,
+        ) ==
+        null;
+  }
+
+  /// テスト用: CPU のクラブ[club]が[p]を加えられるか([_cpuCanRegister])。
+  @visibleForTesting
+  bool debugCpuCanRegister(Team club, Player p, {LeagueTheme? fromCountry}) =>
+      _cpuCanRegister(club, p, fromCountry: fromCountry);
+
+  /// [clubs]のうち、[p]を登録の決まりで加えられる CPU のクラブ。
+  List<Team> _cpuClubsThatCanRegister(Iterable<Team> clubs, Player p,
+      {required LeagueTheme? fromCountry}) {
+    final f = _foreignTeamIds();
+    return [
+      for (final c in clubs)
+        if (_cpuCanRegister(c, p, fromCountry: fromCountry, foreign: f)) c,
+    ];
+  }
+
+  /// CPU のクラブ[club]が[p]を取ったら、イタリアの「EU 外は1季2人まで」を
+  /// 数える(他の国・所属なしから来た EU 外の選手だけ)。
+  void _noteCpuSigning(Team club, Player p,
+      {required LeagueTheme? fromCountry}) {
+    final s = _save;
+    if (s == null) return;
+    final country = _countryOfClub(club.id);
+    if (RegistrationRules.forCountry(country).nonEuSigningsPerSeason == null) {
+      return;
+    }
+    if (fromCountry == country || isEuNation(nationalityOf(p))) return;
+    if (s.cpuNonEuSigningsSeason != s.league.season) {
+      s.cpuNonEuSigningsSeason = s.league.season;
+      s.cpuNonEuSignings.clear();
+    }
+    s.cpuNonEuSignings[club.id] = (s.cpuNonEuSignings[club.id] ?? 0) + 1;
   }
 
   /// 労働許可が要るリーグか(アルビオン式だけ)。

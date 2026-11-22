@@ -314,6 +314,55 @@ extension GameStateMoneyRules on GameState {
     return assets / liabilities;
   }
 
+  // ---- スペイン式: 上限を超えている間は、売った分の一部だけ使える ----
+
+  /// スペイン式の選手の人件費の上限(万円/年。今の部と収入の見込みで)。
+  int get squadCostLimitNow => _save == null
+      ? 0
+      : RulesEngine.squadCostLimit(
+          projectedAnnualIncome, _save!.currentDivisionTier);
+
+  /// 今季、上限を超えている間に売った・外した分から新加入に使える額
+  /// (万円/年。[RulesEngine.trackSaleAllowance])。最後に見た人件費からの
+  /// 動きまで入れた値(見るだけで保存はしない)。スペイン以外は0。
+  int get squadCostSaleAllowance {
+    final s = _save;
+    if (s == null || ruleSet != RuleSet.spain) return 0;
+    final base = s.squadCostAllowanceSeason == s.league.season
+        ? s.squadCostAllowance
+        : 0;
+    return RulesEngine.trackSaleAllowance(
+      allowance: base,
+      previousCost: s.squadCostObserved,
+      cost: annualSquadCost,
+      limit: squadCostLimitNow,
+    );
+  }
+
+  /// スペイン式で、いま新加入に使える人件費(万円/年): 上限までの空きと、
+  /// 売った分から使える額の合計。規則の画面に出す。
+  int get squadCostSpendable => RulesEngine.spendableSquadCost(
+        limit: squadCostLimitNow,
+        cost: annualSquadCost,
+        allowance: squadCostSaleAllowance,
+      );
+
+  /// 人件費の動きを見て、売った分から使える額を覚える(スペインだけ)。
+  /// 画面を描き直すたび([_notify])に呼ぶので、売る・取るの順に追える。
+  void _observeSquadCost() {
+    final s = _save;
+    if (s == null || ruleSet != RuleSet.spain) return;
+    if (!s.league.teams.any((t) => t.id == s.userTeamId)) return;
+    final allowance = squadCostSaleAllowance;
+    s.squadCostAllowance = allowance;
+    s.squadCostAllowanceSeason = s.league.season;
+    s.squadCostObserved = annualSquadCost;
+  }
+
+  /// テスト用: 人件費の動きを今すぐ見る([_observeSquadCost])。
+  @visibleForTesting
+  void debugObserveSquadCost() => _observeSquadCost();
+
   /// 規則の判定に渡す、いまのお金の様子。
   ClubFinanceSnapshot get financeSnapshot => ClubFinanceSnapshot(
         projectedIncome: projectedAnnualIncome,

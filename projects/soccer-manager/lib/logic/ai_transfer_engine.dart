@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../models/player.dart';
 import '../models/team.dart';
 import 'contract_engine.dart';
 import 'lineup_utils.dart';
@@ -23,11 +24,17 @@ class AiTransferEngine {
   /// 移籍先は完全ランダムではなく、選手の実力に見合う(平均総合力が近い、
   /// または上回る)クラブを優先的に選ぶ。該当クラブがなければ全候補から選ぶ
   /// (格下クラブへの放出も一定割合で起こり得るようにする)。
+  ///
+  /// [canRegister]を渡すと、行き先のクラブの国の登録の決まり
+  /// (SquadRegistration。国籍の枠・国内育成の枠・22歳以上の25人)で
+  /// 加えられないクラブは行き先にしない(2026-11-22。以前は人数の上限
+  /// だけを見ていた)。
   static String? maybeGenerate(
     List<Team> teams,
     String userTeamId,
-    Random random,
-  ) {
+    Random random, {
+    bool Function(Team to, Player p)? canRegister,
+  }) {
     if (random.nextDouble() > weeklyProbability) return null;
 
     final cpuTeams = teams.where((t) => t.id != userTeamId).toList()
@@ -46,7 +53,10 @@ class AiTransferEngine {
       final player = eligible.first;
 
       final toCandidates = cpuTeams
-          .where((t) => t.id != fromTeam.id && t.players.length < maxSquadSize)
+          .where((t) =>
+              t.id != fromTeam.id &&
+              t.players.length < maxSquadSize &&
+              (canRegister?.call(t, player) ?? true))
           .toList();
       if (toCandidates.isEmpty) continue;
       final fittingClubs = toCandidates

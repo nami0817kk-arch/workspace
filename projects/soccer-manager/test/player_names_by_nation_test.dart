@@ -30,10 +30,11 @@ void main() {
       }
     }
     expect(checked, greaterThan(500));
-    // 自クラブはリーグの国の名前。
+    // 自クラブも国籍の名前(以前は全員リーグの国の名前だったが、
+    // 2026-11-22 から自クラブにも外国籍が混ざる)。
     for (final p in gs.userTeam.players) {
-      expect(NationNames.fits(p.name, LeagueTheme.spain), isTrue,
-          reason: p.name);
+      expect(NationNames.fits(p.name, gs.nationalityOf(p)), isTrue,
+          reason: '${p.name} / ${gs.nationalityOf(p).name}');
     }
   });
 

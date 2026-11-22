@@ -240,6 +240,9 @@ extension GameStateWeek on GameState {
             league.teams,
             s.userTeamId,
             GameState._aiTransferRng,
+            // 行き先のクラブも国の登録の決まりを守る(同じ国の中の移籍)。
+            canRegister: (to, p) =>
+                _cpuCanRegister(to, p, fromCountry: currentLeagueTheme),
           )
         : null;
     if (aiNews != null) lastAiTransferNews = aiNews;
