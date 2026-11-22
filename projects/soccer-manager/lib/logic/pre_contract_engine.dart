@@ -106,6 +106,8 @@ class PreContractEngine {
     p.isTransferListed = false;
     p.releaseClause = null;
     p.appearanceFee = ContractEngine.appearanceFeeFor(p);
+    p.wageStatus = null;
+    ContractEngine.resetContractStyle(p);
   }
 
   /// 1月1日の解禁で、他のクラブ(AI)の満了の年の選手をどうするか決める。

@@ -1133,6 +1133,12 @@ class Player {
   /// 外し続けたり序列を下げたりすると、約束を破ったことになる。
   SquadStatus? promisedStatus;
 
+  /// 今の週俸を、序列を条件に交渉して決めたとき(更新の交渉・移籍の条件)の
+  /// 序列。契約の途中でこれより上の序列へ上げると、選手は週俸の見直しを
+  /// 求める(上がる)。null は序列を条件にしていない週俸(獲得したまま・
+  /// 旧セーブ)で、標準の[SquadStatus.regular]として扱う。
+  SquadStatus? wageStatus;
+
   /// 約束した選手が、出られるのに先発から外れた節の数(続けて)。
   int promiseMisses;
 
@@ -1313,6 +1319,7 @@ class Player {
     this.duty = PlayerDuty.support,
     this.squadStatus = SquadStatus.regular,
     this.promisedStatus,
+    this.wageStatus,
     this.promiseMisses = 0,
     this.promiseBroken = false,
     this.isTransferListed = false,
@@ -1617,6 +1624,7 @@ class Player {
     put('duty', duty.name, PlayerDuty.support.name);
     put('squadStatus', squadStatus.name, SquadStatus.regular.name);
     put('promisedStatus', promisedStatus?.name, null);
+    put('wageStatus', wageStatus?.name, null);
     put('promiseMisses', promiseMisses, 0);
     put('promiseBroken', promiseBroken, false);
     put('isTransferListed', isTransferListed, false);
@@ -1764,6 +1772,10 @@ class Player {
           ? null
           : enumFromName(SquadStatus.values,
               json['promisedStatus'] as String?, SquadStatus.regular),
+      wageStatus: json['wageStatus'] == null
+          ? null
+          : enumFromName(SquadStatus.values, json['wageStatus'] as String?,
+              SquadStatus.regular),
       promiseMisses: json['promiseMisses'] as int? ?? 0,
       promiseBroken: json['promiseBroken'] as bool? ?? false,
       isTransferListed: json['isTransferListed'] as bool? ?? false,

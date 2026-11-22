@@ -469,12 +469,11 @@ extension GameStateTransfer on GameState {
         'The remaining ${formatMoney(outstanding)} of the instalment plan was settled in full on his departure.'));
   }
 
-  /// 放出により実際に得られる(あるいは支払う)純額。移籍金収入から
-  /// 契約解除の違約金を差し引いたもので、負の値になり得る。
+  /// 放出(売却)により実際に得られる額。売却では契約を買い手が引き継ぐので、
+  /// 売り手は残りの年俸の違約金を払わない(払うのは合意解除のときだけ)。
   int netReleaseValueFor(String playerId) {
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    final sellPrice = (player.marketValue * 0.7).round();
-    return sellPrice - ContractEngine.releaseSeverance(player);
+    return ContractEngine.salePrice(player);
   }
 
   /// クラブニュース履歴に1件追加する(先頭が最新)。SnackBarやダイアログで
@@ -546,9 +545,8 @@ extension GameStateTransfer on GameState {
         .toList();
     final pool = fitting.isNotEmpty ? fitting : destinations;
     final dest = pool[GameState._transferOfferRng.nextInt(pool.length)];
-    player.contractYearsRemaining = 2 + GameState._transferOfferRng.nextInt(3);
-    player.contractOption = false;
-    player.refusesRenewal = false;
+    ContractEngine.applyCpuClubContract(
+        player, 2 + GameState._transferOfferRng.nextInt(3));
     player.happiness = (player.happiness + 5).clamp(40, 90);
     dest.players.add(player);
     lastSaleNews = Tr.pick('${player.name}は${dest.name}へ移籍した。',
@@ -740,6 +738,8 @@ extension GameStateTransfer on GameState {
         endYear: negotiation.endYear,
         option: negotiation.option,
       );
+      // この週俸は今の序列で求められた額(のちに上げると見直しを求める)。
+      player.wageStatus = player.squadStatus;
       _save!.pendingContractNegotiation = null;
       _notify();
       await _persist();

@@ -230,6 +230,12 @@ extension GameStateSquad on GameState {
         .round();
   }
 
+  /// 今日[s]を解任したときに払う違約金(今の部の物差しの万円)。残りの
+  /// 契約の日数(週数)に応じた額。
+  int staffSeveranceFor(StaffMember? s) => s == null
+      ? 0
+      : scaledMoney(s.severanceOn(today, Player.contractClockYear));
+
   /// 候補[staffId]を雇う。既にその役職に人がいれば入れ替わる。
   ///
   /// 費用は掛からない。掛かるのは週俸で、以後ずっと出ていく。一度の出費で
@@ -241,7 +247,7 @@ extension GameStateSquad on GameState {
     if (idx < 0) return false;
     final hired = _save!.staffCandidates[idx];
     final previous = _save!.infrastructure.staffFor(hired.role);
-    final severance = scaledMoney(previous?.severance ?? 0);
+    final severance = staffSeveranceFor(previous);
     // 他のクラブの監督を引き抜くなら、そのクラブへ補償金を払う。
     final profile = hired.manager;
     final compensation = scaledMoney(profile?.compensation ?? 0);
@@ -293,7 +299,7 @@ extension GameStateSquad on GameState {
     final current = _save!.infrastructure.staffFor(role);
     if (current == null) return false;
     _save!.infrastructure.staff[role] = null;
-    final severance = scaledMoney(current.severance);
+    final severance = staffSeveranceFor(current);
     if (severance > 0) _book(LedgerCategory.staffWages, -severance);
     _logNews(
       Tr.pick('${current.name}が${role.label}を退任しました。',
@@ -359,6 +365,23 @@ extension GameStateSquad on GameState {
     if (idx < 0) return;
     final p = userTeam.players[idx];
     p.squadStatus = status;
+    // 契約の途中で、週俸を決めたときより上の序列へ上げると、選手は立場に
+    // 見合う週俸への見直しを求める(育成枠で安く更新してすぐキープレイヤーに
+    // 戻す抜け道をふさぐ)。下げても週俸は下がらない(契約は契約)。
+    final signedAt = p.wageStatus ?? SquadStatus.regular;
+    if (!p.isLoan && status.index < signedAt.index) {
+      final before = p.wage;
+      p.wage =
+          ContractEngine.reviewedWageForPromotion(p.wage, signedAt, status);
+      p.wageStatus = status;
+      if (p.wage != before) {
+        _logNews(
+            Tr.pick(
+                '${p.name}は${status.label}に上がったのに合わせて週俸の見直しを求め、${formatMoney(before)}から${formatMoney(p.wage)}に上がった。',
+                '${p.name} asked for a wage review to match his new ${status.label} billing: up from ${formatMoney(before)} to ${formatMoney(p.wage)} a week.'),
+            context: Tr.pick('契約', 'Contracts'));
+      }
+    }
     // 加入のときに約束した序列より下げれば、約束を破ったことになる。
     final promised = p.promisedStatus;
     if (promised != null && !p.promiseBroken && status.index > promised.index) {

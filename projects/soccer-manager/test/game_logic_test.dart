@@ -6881,18 +6881,9 @@ void main() {
   });
 
   test(
-      'ContractEngine.releaseSeverance grows with wage and remaining contract '
-      'years, and GameState.sellPlayer can cost the club money for an '
-      'expensive long-contract player nobody would actually want to buy',
-      () async {
-    final cheapShortContract = Player(
-        id: 'cheap',
-        name: 'Cheap',
-        age: 30,
-        position: Position.mc,
-        potential: 40);
-    cheapShortContract.wage = 5;
-    cheapShortContract.contractYearsRemaining = 1;
+      'GameState.sellPlayer never charges the seller the remaining wages: '
+      'the buyer takes the contract on, so even an expensive long-contract '
+      'player sells for 70% of his value', () async {
     final expensiveLongContract = Player(
         id: 'p_release_target',
         name: 'Expensive',
@@ -6902,23 +6893,20 @@ void main() {
     expensiveLongContract.wage = 200;
     expensiveLongContract.contractYearsRemaining = 4;
 
-    expect(ContractEngine.releaseSeverance(expensiveLongContract),
-        greaterThan(ContractEngine.releaseSeverance(cheapShortContract)));
-
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final team = gameState.userTeam;
-    // marketValueは最低50万円のためsellPriceは常に正だが、週俸200万円・
-    // 残り4年の契約を放出すると違約金がそれを上回り、持ち出しになるはず。
+    // 以前は週俸200万円・残り4年の契約の違約金が売値を上回り、持ち出しに
+    // なっていた。売却では違約金は掛からない。
     team.players.add(expensiveLongContract);
     final net = gameState.netReleaseValueFor('p_release_target');
-    expect(net, lessThan(0));
+    expect(net, (expensiveLongContract.marketValue * 0.7).round());
+    expect(net, greaterThan(0));
 
     final budgetBefore = gameState.save!.budget;
     final ok = await gameState.sellPlayer('p_release_target');
     expect(ok, isTrue);
     expect(gameState.save!.budget, budgetBefore + net);
-    expect(gameState.save!.budget, lessThan(budgetBefore));
   });
 
   test(

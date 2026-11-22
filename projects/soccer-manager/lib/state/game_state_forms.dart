@@ -24,6 +24,10 @@ extension GameStateForms on GameState {
     p.wage = p.loanBaseWage ?? p.wage;
     p.loanFromClubId = null;
     p.loanBaseWage = null;
+    // 完全移籍になった時点で、こちらとの契約を結ぶ(年齢に応じた年数。
+    // 18歳未満は3年まで)。以前は元のクラブとの契約のまま残り、それが
+    // 切れていると「契約なし」の選手になっていた。
+    ContractEngine.applyTransferContract(p);
     _recordPlayerBook(p, fee);
     _logNews(
         Tr.pick('${p.name}のローンが満了し、買取義務により${formatMoney(fee)}で完全移籍になった。',
