@@ -1,0 +1,154 @@
+# 物語完結型ショート 関ヶ原の戦後処理 s1（2026-11-22）。本編 scripts/sekigahara-map-story.yaml（11/28 12:00 公開予定、https://youtu.be/djY0ZyjTAKM）から。11/29 9:00 に予約。
+# 形式は ise_s1〜s5・senhime_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 関ヶ原の戦後処理_facts_20261121.yaml）だけ。
+# 絵：本編の AI 絵（out/story/sekigahara-map/main/ の N・R）の切り出しだけ。新しい絵は作らない。サムネ用の TA〜TD は使わない。
+# 切り口：東海道の城にいた豊臣の7つの家は、そろって西へ（本編 第3章・まとめ、sekimap-82〜88・94・31・95〜102・93）。
+# hook＝東海道の7つの家はどこへ行ったか（答えはこのショートの中：7つとも西へ、石高は約2.5倍）。
+# tease＝西へ移った7つの家は、そのあとどうなったか（答えは本編 第7章：中村・福島・田中・堀尾の4つが33年のうちに大きな領地を失う、sekimap-94 ほか）。
+# 計算（数え直した）：前 14.5＋12＋5＋3＋15.2＋5.74＋24＝79.44。後 17.5＋24＋20.26＋6＋52＋32.5＋49.8＝202.06。202.06÷79.44＝2.54→2.5倍。
+#   清洲を除く 79.44−24＝55.44→およそ55万、後 78−52＝26。26÷55.44＝0.47→半分以下。松平家清 3÷15.2＝0.197→およそ5分の1。
+# 理解テスト：①東海道の城にいた豊臣の大名7家の話 ②1600年の関ヶ原のあと、東海道（駿府・浜松・掛川・横須賀・吉田・岡崎・清洲） ③7家とも西へ移され、石高は約2.5倍 ④空いた城には小さな家康の家臣・親類（清洲だけ家康の四男）
+title: "関ヶ原のあと｜東海道の7つの家"
+yt_title: "関ヶ原のあと、東海道に城を持っていた豊臣の7つの家は、そろって西へ　石高はおよそ2.5倍、空いた城には家康の家臣"
+description: |-
+  1600年の関ヶ原のころ、江戸から京へ向かう東海道の城は、豊臣の大名たちが握っていました。駿府の中村家、浜松の堀尾家、掛川の山内一豊、横須賀の有馬豊氏、吉田の池田輝政、岡崎の田中吉政、清洲の福島正則です。
+  関ヶ原のあと、7つの家はそろって西へ移されました。石高を足すと、前のおよそ79万石から、後はおよそ202万石。2.5倍です。空いた城には家康の家臣や親類が入り、清洲を除く6つの城は、およそ55万石から26万石になりました。
+  本編では、取り上げた石高の総量から、毛利・上杉・佐竹・島津のその後まで、関ヶ原の前と後の大名の地図を数字で積み上げています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#関ヶ原の戦い"
+- "#東海道"
+- "#戦国時代"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/sekigahara-map
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: sekimap_story_s1
+header:
+  tag: "関ヶ原のあと（1600年）"
+  title: "東海道の7つの家は、《どこへ》？"
+now:
+- {at: "1600年の関ヶ原", text: "1600年　東海道の城", point: 0}
+- {at: "駿府の中村家は", text: "1600年　関ヶ原のあと", point: 0}
+timeline:
+- {label: "1600"}
+cards:
+  - type: table
+    title: 東海道の7つの家の石高
+    from: 前はおよそ79万石
+    until: 掛川市は
+    items:
+      - {at: "前はおよそ79万石", text: "前の7家　約79万石"}
+      - {at: "後はおよそ202万石", text: "後の7家　約202万石"}
+      - {at: "26万石へ", text: "清洲を除く城　約55万→26万石"}
+    text_y: 0.70
+shots:
+  R17_1:
+    kind: "ai"
+    file: "sekigahara-map/main/R17.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "R17"
+  R19_2:
+    kind: "ai"
+    file: "sekigahara-map/main/R19.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "R19"
+  N06_3:
+    kind: "ai"
+    file: "sekigahara-map/main/N06.jpg"
+    focus: [0.4, 0.6]
+    move: "right"
+    must: "N06"
+  R05_4:
+    kind: "ai"
+    file: "sekigahara-map/main/R05.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "R05"
+  R06_5:
+    kind: "ai"
+    file: "sekigahara-map/main/R06.jpg"
+    focus: [0.6, 0.55]
+    move: "in"
+    must: "R06"
+  R23_6:
+    kind: "ai"
+    file: "sekigahara-map/main/R23.jpg"
+    focus: [0.55, 0.5]
+    move: "right"
+    must: "R23"
+  R20_7:
+    kind: "ai"
+    file: "sekigahara-map/main/R20.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "R20"
+  R25_8:
+    kind: "ai"
+    file: "sekigahara-map/main/R25.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "R25"
+  R17_9:
+    kind: "ai"
+    file: "sekigahara-map/main/R17.jpg"
+    focus: [0.35, 0.55]
+    move: "left"
+    must: "R17"
+lines:
+  # fact: sekimap-94
+- 語り: "東海道に城を持っていた、豊臣の7つの大名。関ヶ原のあと、そこに残れた家は、1つもなかった。"
+  shot: R17_1
+  tone: 強調
+  pause: 0.12
+  # fact: sekimap-82, sekimap-85, sekimap-88（本編 第3章「江戸から京へ向かう道の城を、豊臣の大名たちが、ずらりと握っていた」）
+- 語り: "1600年の関ヶ原のころ、江戸から京へ向かう東海道の城は、豊臣の大名たちが握っていた。"
+  shot: R19_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: sekimap-94, sekimap-31
+- 語り: "駿府の中村家は、米子へ。浜松の堀尾家は、出雲へ。掛川の山内一豊は、土佐へ。"
+  shot: N06_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: sekimap-94, sekimap-32, sekimap-22
+- 語り: "横須賀の有馬豊氏は、福知山へ。吉田の池田輝政は、姫路へ。岡崎の田中吉政は、筑後へ。清洲の福島正則は、広島へ。"
+  shot: R05_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: sekimap-94
+- 語り: "7つの家の石高を足すと、前はおよそ79万石。後はおよそ202万石。2.5倍になった。"
+  shot: R06_5
+  tone: 重い
+  pause: 0.12
+  # fact: sekimap-95, sekimap-96, sekimap-97, sekimap-98, sekimap-99, sekimap-100
+- 語り: "空いた城には、3万石から6万石の、家康の家臣や親類が入った。"
+  shot: R23_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: sekimap-101, sekimap-102
+- 語り: "清洲を除く6つの城は、前のおよそ55万石から、26万石へ。半分以下の小さな大名ばかりになった。"
+  shot: R20_7
+  tone: 重い
+  pause: 0.12
+  # fact: sekimap-93
+- 語り: "掛川市は、この配置を、領地を増やしながら、豊臣の大名を、大事な土地から遠くへ追いやるもの、と説明している。"
+  shot: R25_8
+  tone: しみじみ
+  pause: 0.12
+  # tease：答えは本編 第7章（中村・福島・田中・堀尾の4つが33年のうちに大きな領地を失う）
+- 語り: "では、西へ移った7つの家は、そのあと、どうなったのか。"
+  shot: R17_9
+  tone: 疑問
+  pause: 0.15

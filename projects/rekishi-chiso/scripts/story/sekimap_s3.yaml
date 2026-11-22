@@ -1,0 +1,147 @@
+# 物語完結型ショート 関ヶ原の戦後処理 s3（2026-11-22）。本編 scripts/sekigahara-map-story.yaml（11/28 12:00 公開予定、https://youtu.be/djY0ZyjTAKM）から。11/29 13:30 に予約。
+# 形式は ise_s1〜s5・senhime_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 関ヶ原の戦後処理_facts_20261121.yaml）だけ。
+# 絵：本編の AI 絵（out/story/sekigahara-map/main/ の N・R）の切り出しだけ。新しい絵は作らない。サムネ用の TA〜TD は使わない。
+# 切り口：石高の書かれていない判物1枚で秋田へ移された佐竹家（本編 第5章、sekimap-62・63・64・79）。
+# hook＝石高の書かれていない文書で国を移された大名は誰か（答えはこのショートの中：常陸の佐竹家）。
+# tease＝その前の年に北へ移された上杉家は、誰の領地に家ごと移ったか（答えは本編 第5章：家老の直江兼続の領地、sekimap-60）。
+# 計算（数え直した）：20万5800÷54万＝38.1%→4割に満たない。1602→1664＝62年→60年あまり。上杉 1601 は佐竹 1602 の前の年。
+# 理解テスト：①常陸の佐竹家の国替えの話 ②1602年、常陸から出羽の秋田へ ③石高の書かれていない判物を受け、久保田城を築く ④石高が書かれたのは1664年、20万5800石あまり（54万石の4割に満たない）
+title: "関ヶ原のあと｜石高の書かれていない文書"
+yt_title: "石高の書かれていない文書1枚で、佐竹家は常陸から秋田へ　石高が文書に書かれたのは60年あまり後だった"
+description: |-
+  常陸で54万石の大名だった佐竹家。1602年、家康が佐竹義宣に与えた判物には、出羽の国のうち秋田と仙北の2つを与える、とあるだけで、石高が書かれていませんでした（秋田県公文書館が2010年に紹介した文書）。
+  義宣は秋田の湊の城でひと冬を越し、1603年の5月に久保田城を築き始めます。今の秋田市の千秋公園です。佐竹の石高が文書に書かれたのは、60年あまり後の1664年。4代将軍の家綱が出した判物で、20万5800石あまりでした。
+  本編では、取り上げた石高の総量から、東海道の大名の行き先、毛利・上杉・島津のその後まで、関ヶ原の前と後の大名の地図を数字で積み上げています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#関ヶ原の戦い"
+- "#佐竹義宣"
+- "#秋田"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。絵の人物は本人の姿ではありません。創作の台詞は入れていません。"
+art_dir: out/story/sekigahara-map
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: sekimap_story_s3
+header:
+  tag: "佐竹家（常陸の大名）"
+  title: "《石高のない》文書で、国を移された"
+now:
+- {at: "常陸の佐竹家", text: "1600年　常陸", point: 0}
+- {at: "1602年", text: "1602年　出羽の秋田", point: 1}
+- {at: "1603年の5月", text: "1603年　久保田", point: 1}
+- {at: "1664年", text: "1664年　秋田", point: 2}
+timeline:
+- {label: "1600"}
+- {label: "1602"}
+- {label: "1664"}
+shots:
+  R18_1:
+    kind: "ai"
+    file: "sekigahara-map/main/R18.jpg"
+    focus: [0.55, 0.5]
+    move: "in"
+    must: "R18"
+  R23_2:
+    kind: "ai"
+    file: "sekigahara-map/main/R23.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "R23"
+  R06_3:
+    kind: "ai"
+    file: "sekigahara-map/main/R06.jpg"
+    focus: [0.6, 0.55]
+    move: "right"
+    must: "R06"
+  R18_4:
+    kind: "ai"
+    file: "sekigahara-map/main/R18.jpg"
+    focus: [0.7, 0.55]
+    move: "in"
+    must: "R18"
+  R05_5:
+    kind: "ai"
+    file: "sekigahara-map/main/R05.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "R05"
+  R13_6:
+    kind: "ai"
+    file: "sekigahara-map/main/R13.jpg"
+    focus: [0.45, 0.55]
+    move: "right"
+    must: "R13"
+  R14_7:
+    kind: "ai"
+    file: "sekigahara-map/main/R14.jpg"
+    focus: [0.5, 0.55]
+    move: "in"
+    must: "R14"
+  R11_8:
+    kind: "ai"
+    file: "sekigahara-map/main/R11.jpg"
+    focus: [0.5, 0.55]
+    move: "left"
+    must: "R11"
+  R10_9:
+    kind: "ai"
+    file: "sekigahara-map/main/R10.jpg"
+    focus: [0.5, 0.55]
+    move: "right"
+    must: "R10"
+lines:
+  # fact: sekimap-62
+- 語り: "1枚の文書で、国を移された大名がいる。その文書には、石高が書かれていなかった。"
+  shot: R18_1
+  tone: 強調
+  pause: 0.12
+  # fact: sekimap-63
+- 語り: "常陸の佐竹家だ。百科事典によると、常陸で、54万石の大名だった。"
+  shot: R23_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: sekimap-62
+- 語り: "1602年、家康は佐竹義宣に、領地を与える判物を出した。秋田県公文書館が、2010年に紹介した文書だ。"
+  shot: R06_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: sekimap-62
+- 語り: "そこには、出羽の国のうち、秋田と仙北の2つを与える、とあるだけだった。"
+  shot: R18_4
+  tone: 重い
+  pause: 0.12
+  # fact: sekimap-79
+- 語り: "秋田にいた、もとの領主の秋田実季は、同じ年に、常陸の宍戸の5万石へ移された。"
+  shot: R05_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: sekimap-64
+- 語り: "義宣は、秋田の湊の城でひと冬を越し、1603年の5月に、久保田城を築き始めた。いまの秋田市の、千秋公園だ。"
+  shot: R13_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: sekimap-62, sekimap-63
+- 語り: "佐竹の石高が文書に書かれたのは、60年あまり後の1664年。4代将軍の家綱が出した判物で、20万5800石あまりだった。"
+  shot: R14_7
+  tone: 重い
+  pause: 0.12
+  # fact: sekimap-63
+- 語り: "常陸の54万石の、4割に満たない数字だ。"
+  shot: R11_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第5章（上杉家は家老の直江兼続の領地の米沢30万石へ、sekimap-60）
+- 語り: "では、その前の年に北へ移された上杉家は、誰の領地に、家ごと移ったのか。"
+  shot: R10_9
+  tone: 疑問
+  pause: 0.15

@@ -1,0 +1,156 @@
+# 物語完結型ショート 聖徳太子の一族 s1（2026-11-22）。本編 scripts/joguo-story.yaml（11/28 19:00 公開予定、https://youtu.be/9-eKrHmecaY）から。11/29 9:30 に予約。
+# 形式は senhime_s1〜s5・ise_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 上宮王家_facts_20261121.yaml）だけ。
+# 絵：本編の AI 絵（out/story/joguo/main/ の G・R）の切り出しだけ。新しい絵は作らない。
+# 切り口：帝説の家系図。太子の14人の子、山背大兄王と舂米女王（母の違う兄妹）の夫婦と7人の子（本編 第1章、joguo-24・25、序章 joguo-12）。
+# hook＝7人の子の2人の祖父は誰か（答えはこのショートの中：父方も母方も聖徳太子）。
+# tease＝攻めた蘇我入鹿は、山背の何にあたるか（答えは本編 序章・第2章：同じ祖父 蘇我馬子を持つ、いとこ。joguo-24・30）。
+# 数え直し：刀自古郎女4＋菩岐々美郎女8＋橘大郎女2＝14。山背と舂米女王の子は帝説の列挙で7人。
+# 字幕では読点が消えるので、並べる語は「と」でつなぐ。
+# 理解テスト：①聖徳太子の子と孫（上宮王家）の話 ②飛鳥時代の斑鳩、帝説に残る家系図 ③太子の長男 山背大兄王は、母の違う妹の舂米女王を妻にした ④7人の子は、父方も母方も祖父が太子。643年の冬、一族は斑鳩の寺で命を絶った
+title: "聖徳太子の一族｜祖父が父方も母方も同じ7人"
+yt_title: "聖徳太子の孫7人は、父方の祖父も母方の祖父も聖徳太子　古い書『帝説』に残る一族の家系図"
+description: |-
+  聖徳太子の妻と子は、『上宮聖徳法王帝説』という古い書に、一人ずつ書き残されています。妻は3人、子は合わせて14人。
+  長男の山背大兄王が妻に迎えたのは、母の違う妹、舂米女王でした。2人の間の7人の子にとって、聖徳太子は、父方の祖父でもあり、母方の祖父でもありました。
+  643年の冬、この一族は、斑鳩の寺で、一度に命を絶ちます。
+  本編では、攻めた蘇我入鹿と山背大兄王のつながりから、一族が絶えるまでを家系図でたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#聖徳太子"
+- "#山背大兄王"
+- "#家系図"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/joguo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: joguo_story_s1
+header:
+  tag: "上宮王家（聖徳太子の一族）"
+  title: "7人の子の、《2人の祖父》は誰？"
+now:
+- {at: "奈良の斑鳩", text: "飛鳥時代　斑鳩（今の奈良県）", point: 0}
+- {at: "643年の冬", text: "643年　斑鳩の寺", point: 1}
+timeline:
+- {label: "622"}
+- {label: "643"}
+cards:
+  - type: table
+    title: 太子の妻と子（帝説）
+    from: 1人目の妻は
+    until: 山背大兄王が妻に
+    items:
+      - {at: "1人目の妻は", text: "刀自古郎女　子4人"}
+      - {at: "2人目の妻は", text: "菩岐々美郎女　子8人"}
+      - {at: "3人目の妻の", text: "橘大郎女　子2人"}
+    text_y: 0.70
+shots:
+  G02_1:
+    kind: "ai"
+    file: "joguo/main/G02.jpg"
+    focus: [0.35, 0.5]
+    move: "in"
+    must: "G02"
+  R01_2:
+    kind: "ai"
+    file: "joguo/main/R01.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "R01"
+  G02_3:
+    kind: "ai"
+    file: "joguo/main/G02.jpg"
+    focus: [0.8, 0.5]
+    move: "right"
+    must: "G02"
+  G04_4:
+    kind: "ai"
+    file: "joguo/main/G04.jpg"
+    focus: [0.35, 0.5]
+    move: "left"
+    must: "G04"
+  G04_5:
+    kind: "ai"
+    file: "joguo/main/G04.jpg"
+    focus: [0.85, 0.5]
+    move: "in"
+    must: "G04"
+  R01_6:
+    kind: "ai"
+    file: "joguo/main/R01.jpg"
+    focus: [0.35, 0.5]
+    move: "right"
+    must: "R01"
+  G02_7:
+    kind: "ai"
+    file: "joguo/main/G02.jpg"
+    focus: [0.3, 0.5]
+    move: "left"
+    must: "G02"
+  G14_8:
+    kind: "ai"
+    file: "joguo/main/G14.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "G14"
+  G08_9:
+    kind: "ai"
+    file: "joguo/main/G08.jpg"
+    focus: [0.65, 0.5]
+    move: "right"
+    must: "G08"
+lines:
+  # fact: joguo-25
+- 語り: "父方の祖父と、母方の祖父が、同じ1人。そんな7人の子が、奈良の斑鳩にいた。"
+  shot: G02_1
+  tone: 強調
+  pause: 0.12
+  # fact: joguo-24
+- 語り: "聖徳太子の妻と子は、上宮聖徳法王帝説という古い書に、一人ずつ書き残されている。"
+  shot: R01_2
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-24
+- 語り: "1人目の妻は、蘇我馬子の娘の刀自古郎女で、子は4人。その長男が、山背大兄王だ。"
+  shot: G02_3
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-24
+- 語り: "2人目の妻は、菩岐々美郎女で、子は8人。3人目の妻の橘大郎女にも、子が2人。合わせて14人だ。"
+  shot: G04_4
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-25
+- 語り: "山背大兄王が妻に迎えたのは、菩岐々美郎女の娘の、舂米女王。父は同じ聖徳太子で、母の違う妹だった。"
+  shot: G04_5
+  tone: 強調
+  pause: 0.12
+  # fact: joguo-25
+- 語り: "2人の間の、7人の子の名が、帝説に並んでいる。"
+  shot: R01_6
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-25
+- 語り: "この7人にとって、聖徳太子は、父方の祖父でもあり、母方の祖父でもあった。"
+  shot: G02_7
+  tone: 重い
+  pause: 0.12
+  # fact: joguo-12
+- 語り: "643年の冬。この一族は、斑鳩の寺で、一度に、命を絶つ。"
+  shot: G14_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 序章・第2章（joguo-24・30：入鹿と山背は、同じ祖父 蘇我馬子を持つ、いとこ）
+- 語り: "攻めた側にいた蘇我入鹿は、山背大兄王の、何にあたるのか。"
+  shot: G08_9
+  tone: 疑問
+  pause: 0.15
