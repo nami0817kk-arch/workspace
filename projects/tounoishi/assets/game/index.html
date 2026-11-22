@@ -125,6 +125,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 #spane-help h3{margin:10px 0 2px;font-size:13.5px;color:var(--ink)}#spane-help h3:first-child{margin-top:0}#spane-help details{margin-top:6px}#spane-help summary{cursor:pointer;color:var(--accent);font-weight:600}
 .alertb{position:absolute;left:6px;top:6px;max-width:70%;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(20,16,10,.72);color:#ffe9c0;font:600 12.5px system-ui,sans-serif;padding:7px 10px;cursor:pointer;text-align:left}
 .alertb.hot{background:rgba(160,30,30,.88);color:#fff}
+.hrow.hp{padding-left:42px;min-height:40px}.himg{position:absolute;left:4px;top:50%;transform:translateY(-50%);width:32px;height:32px;object-fit:contain}
 .links{margin:2px 0 0;font-size:11.5px;color:var(--sub);text-align:center}.links a{color:var(--sub)}
 .tbox .btn small{display:block;font-size:10.5px;color:var(--sub);font-weight:400}
 .chl{display:flex;flex-direction:column;gap:6px}.chl .btn{text-align:left;padding:8px 10px}.chl .btn small{display:block;font-size:11px;color:var(--sub)}
@@ -169,7 +170,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v22</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v23</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1205,7 +1206,7 @@ function openCell(f,x,y,main){
  else if(n>0){amt=n;spc=ORDN[Math.min(8,n)-1];mino=-mg;}
  // 特殊タイプ: 養分9の土からまれに金のスライム、3色が接する所からキメラ
  if(spc&&n>=9&&Math.random()<0.4){spc='gslime';env='sp';}
- else if(spc&&distinctEnvs(f,x,y)>=3&&Math.random()<0.5){spc='chimera';env='sp';}
+ else if(spc&&distinctEnvs(f,x,y)>=3&&Math.random()<0.15&&g.cr.filter(function(o){return o.sp=='chimera'&&o.f==f;}).length<2){spc='chimera';env='sp';}
  if(spc){
   var m=mkCr(spc,env,f,x,y,amt);
   if(m&&mino<0)m.mg=-mino;else if(m&&mino>0)g.pool+=mino;else if(!m&&mino){if(mino>0)g.pool+=mino;else g.mpool-=mino;}
@@ -1588,6 +1589,8 @@ function draw(){
   path.cells.forEach(function(p){var px=p[0]*CS,py=p[1]*CS;
    ctx.fillStyle=path.cancel?'rgba(160,160,160,.35)':'rgba(255,214,110,.42)';ctx.fillRect(px,py,CS,CS);
    ctx.strokeStyle=path.cancel?'rgba(220,220,220,.8)':'rgba(255,236,170,.95)';ctx.strokeRect(px+0.75/ZM,py+0.75/ZM,CS-1.5/ZM,CS-1.5/ZM);});
+  var lp=path.cells[path.cells.length-1],ly=lp[1]*CS-4/ZM;if(ly<10/ZM)ly=(lp[1]+1)*CS+10/ZM;
+  label(path.cancel?'取りやめ':'掘る力 -'+path.cells.length+'（残り'+Math.max(0,g.dp-path.cells.length)+'）',Math.min(N*CS-40/ZM,Math.max(40/ZM,lp[0]*CS+CS/2)),ly,path.cancel?'#dddddd':'#ffe9a0');
  }
 }
 function buildTabs(){
@@ -1613,7 +1616,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v22 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v23 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
@@ -1642,12 +1645,12 @@ function side(){
  var ck=Object.keys(g.calm||{}).filter(function(k){return g.calm[k]>=20&&!g.mutNext[k];});
  if(ck.length)document.getElementById('muts').innerHTML+=ck.map(function(k){return '<div class="empty">'+esc(kname(k))+'：穏やかに'+g.calm[k]+'秒 / '+PURE_T+'（誰も死ななければピュア種）</div>';}).join('');
  document.getElementById('heroes').innerHTML=hs2.length?hs2.map(function(m){
-  return '<div class="hwrap"><button class="hrow'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'"><b>'+esc(fullName(m))+(m.lv?' Lv'+(m.lv+1):'')+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 技「'+esc(SKN[m.env][m.t])+'」'+(m.last?'(奥の手済み)':'')+' · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>'+trainBtn(m)+'</div>';
+  return '<div class="hwrap"><button class="hrow hp'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'">'+dimg(m.sp).replace('class="dimg"','class="himg"')+'<b>'+esc(fullName(m))+(m.lv?' Lv'+(m.lv+1):'')+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 技「'+esc(SKN[m.env][m.t])+'」'+(m.last?'(奥の手済み)':'')+' · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>'+trainBtn(m)+'</div>';
  }).join(''):'<div class="empty">まだいません。よく食べた個体・生き延びた大型・冒険者を何人も倒した個体が、まれに昇格します。</div>';
  var yh='<b style="font-size:12.5px">'+esc(yuName())+'</b><div class="empty">挑戦'+(Y.fled+1)+'度目 · 技：'+esc(Y.skills.join('・'))+'<br>'+(yuOn?(yuOn.flee?'逃げている！ '+(yuOn.f+1)+'階':'塔の中 · '+(yuOn.f+1)+'階 · 体力'+Math.max(0,Math.round(yuOn.hp))+'/'+Math.round(yuOn.mhp)):'第6波に来る')+(g.yuKilled?'<br>これまでに倒し切った勇者：'+g.yuKilled+'人':'')+'</div>';
  if(yuOn)yh='<button class="hrow" data-f="'+yuOn.f+'" style="border-color:#d9534f">'+yh+'</button>';
  document.getElementById('yuusha').innerHTML=yh;
- document.getElementById('mini').innerHTML='<div class="panel"><h2>主役</h2>'+(hs2.length?hs2.slice(0,2).map(function(m){return '<button class="hrow'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'"><b>'+esc(fullName(m))+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>';}).join('')+(hs2.length>2?'<div class="empty">ほか'+(hs2.length-2)+'匹は「一覧」で</div>':''):'<div class="empty">まだいません。よく食べた個体などが、まれに昇格します。</div>')+'</div><div class="panel"><h2>'+(g.party?'この面の勇者たち':'宿敵の勇者')+'</h2>'+(g.party?partyInfo():yh)+'</div>';
+ document.getElementById('mini').innerHTML='<div class="panel"><h2>主役</h2>'+(hs2.length?hs2.slice(0,2).map(function(m){return '<button class="hrow hp'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'">'+dimg(m.sp).replace('class="dimg"','class="himg"')+'<b>'+esc(fullName(m))+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>';}).join('')+(hs2.length>2?'<div class="empty">ほか'+(hs2.length-2)+'匹は「一覧」で</div>':''):'<div class="empty">まだいません。よく食べた個体などが、まれに昇格します。</div>')+'</div><div class="panel"><h2>'+(g.party?'この面の勇者たち':'宿敵の勇者')+'</h2>'+(g.party?partyInfo():yh)+'</div>';
  document.getElementById('hall').innerHTML=HALL.length?'<ol class="hall">'+HALL.slice(0,12).map(function(h){return '<li><b>'+esc(h.n)+'</b> 倒した'+h.k+' · '+h.f+'階 · '+esc(h.c)+'</li>';}).join('')+'</ol>':'<div class="empty">倒れた主役の名がここに残ります（強さは次の塔に持ち越しません）。</div>';
 }
 document.getElementById('mini').addEventListener('click',function(ev){var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');ui();draw();});
