@@ -380,6 +380,8 @@ extension GameStateTalks on GameState {
     }
 
     if (fa != null) {
+      // イタリアの「EU 外は1季2人まで」は所属なしの選手も数える(外す前に)。
+      _noteSigningFromAbroad(fa);
       _save!.freeAgents.remove(fa);
       _bookAgentFee(player, agentFee);
     } else {
@@ -576,6 +578,12 @@ extension GameStateTalks on GameState {
         _worldTeams.where((x) => x.id == t.rivalClubId).firstOrNull;
     _save!.transferTalks.remove(t);
     if (player == null || rival == null) return true;
+    // イタリアのクラブなら「EU 外は1季2人まで」を数える(外す前に)。
+    final seller = t.freeAgent ? null : _sellingClubOf(player.id);
+    _noteCpuSigning(rival, player,
+        fromCountry: seller == null
+            ? (t.freeAgent ? null : currentLeagueTheme)
+            : _countryOfClub(seller.id));
     if (t.freeAgent) {
       _save!.freeAgents.removeWhere((p) => p.id == player.id);
     } else {
@@ -598,19 +606,25 @@ extension GameStateTalks on GameState {
     final seller = _sellingClubOf(player.id);
     final sellerTier =
         seller == null ? _save!.currentDivisionTier : (_tierOfClub(seller.id) ?? 1);
-    final candidates = [
+    // 横取りに来るクラブも、国の登録の決まりで加えられるクラブだけ。
+    final fromCountry =
+        t.freeAgent || seller == null ? null : _countryOfClub(seller.id);
+    final candidates = _cpuClubsThatCanRegister([
       for (final c in _worldTeams)
         if (c.id != _save!.userTeamId &&
             c.id != seller?.id &&
             c.players.length < maxSquadSize &&
             (_tierOfClub(c.id) ?? 99) <= sellerTier)
           c,
-    ];
+    ], player, fromCountry: fromCountry);
     if (candidates.isEmpty) return;
     // 競うオーナーのクラブが、まず横取りしに来る。
-    final rival = _rivalOwnerClubFor(
-            sellerTier, seller?.id, GameState._transferOfferRng) ??
-        candidates[GameState._transferOfferRng.nextInt(candidates.length)];
+    final owned =
+        _rivalOwnerClubFor(sellerTier, seller?.id, GameState._transferOfferRng);
+    final rival = owned != null &&
+            _cpuCanRegister(owned, player, fromCountry: fromCountry)
+        ? owned
+        : candidates[GameState._transferOfferRng.nextInt(candidates.length)];
     final rivalTier = _tierOfClub(rival.id) ?? sellerTier;
     final base = PlayerTermsEngine.demand(
       currentWage: player.wage,

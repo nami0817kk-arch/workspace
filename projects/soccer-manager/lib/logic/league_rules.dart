@@ -269,23 +269,70 @@ class RulesEngine {
     );
   }
 
+  /// スペイン式: 上限を超えている間に人件費が減ったとき(売却・放出・満了・
+  /// 減俸)、減った分のうち新加入に使える割合。実際の LaLiga は時期で
+  /// 1:4〜1:1(減らした4のうち1〜全部)。ゲームでは 1:2(半分)にする
+  /// (2026-11-22。以前は上限の下に戻るまで1人も登録できなかった)。
+  static const double saleSpendShare = 0.5;
+
+  /// スペイン式の「売った分の一部だけ使える額」(万円/年)を、人件費の動きで
+  /// 更新する。[previousCost]は前に見た人件費、[cost]は今の人件費、
+  /// [limit]は今の上限。
+  ///
+  /// - 人件費が減ったら、減った分のうち上限を上回っていた部分の
+  ///   [saleSpendShare]を足す(上限の下まで減った分は、そのまま上限の
+  ///   空きとして使える)
+  /// - 人件費が増えて上限を上回る分が増えたら、その分を使ったとして引く
+  ///
+  /// [previousCost]が0(まだ見ていない)なら何もしない。
+  static int trackSaleAllowance({
+    required int allowance,
+    required int previousCost,
+    required int cost,
+    required int limit,
+  }) {
+    if (previousCost <= 0 || cost == previousCost) return allowance;
+    if (cost < previousCost) {
+      final overPart = max(0, previousCost - max(limit, cost));
+      return allowance + (overPart * saleSpendShare).round();
+    }
+    final int used = max(0, cost - limit) - max(0, previousCost - limit);
+    return max(0, allowance - max(0, used));
+  }
+
+  /// スペイン式で、いま新加入に使える人件費(万円/年): 上限までの空きと、
+  /// 売った分から使える額([trackSaleAllowance])の合計。
+  static int spendableSquadCost({
+    required int limit,
+    required int cost,
+    required int allowance,
+  }) =>
+      max(0, limit - cost) + allowance;
+
   /// 補強を止める理由(止めなければ null)。スペイン式は人件費の上限、
   /// イタリア式は流動性の指標。[addedSquadCost] は新加入の年俸と移籍金の
-  /// 1年分の償却の合計(万円/年)。
+  /// 1年分の償却の合計(万円/年)。[saleAllowance]はスペイン式で、上限を
+  /// 超えている間に売った分から使える額([trackSaleAllowance])。
   static String? signingBlock({
     required RuleSet ruleSet,
     required int tier,
     required ClubFinanceSnapshot snapshot,
     int addedSquadCost = 0,
+    int saleAllowance = 0,
   }) {
     switch (ruleSet) {
       case RuleSet.spain:
         final limit = squadCostLimit(snapshot.projectedIncome, tier);
         final after = snapshot.squadCost + addedSquadCost;
         if (after <= limit) return null;
+        // 上限を上回る分が増える額が、売った分から使える額に収まれば登録できる。
+        final extra = (after - limit) - max(0, snapshot.squadCost - limit);
+        if (extra <= saleAllowance) return null;
+        final spendable = spendableSquadCost(
+            limit: limit, cost: snapshot.squadCost, allowance: saleAllowance);
         return Tr.pick(
-            '人件費の上限を超えるので、この選手は登録できません(選手の人件費 年${formatMoney(after)} / 上限 年${formatMoney(limit)})。放出して枠を空けるか、収入を増やしてください。',
-            'You cannot register this player: player costs would be ${formatMoney(after)} a year against a limit of ${formatMoney(limit)}. Sell someone or raise your income.');
+            '人件費の上限を超えるので、この選手は登録できません(選手の人件費 年${formatMoney(after)} / 上限 年${formatMoney(limit)}・いま使える額 年${formatMoney(spendable)})。上限を超えている間は、売って空いた人件費の${(saleSpendShare * 100).round()}%だけ新加入に使えます。',
+            'You cannot register this player: player costs would be ${formatMoney(after)} a year against a limit of ${formatMoney(limit)} (you can add ${formatMoney(spendable)} a year now). While over the limit, only ${(saleSpendShare * 100).round()}% of the costs you shed can go on new signings.');
       case RuleSet.italy:
         if (snapshot.liquidity >= liquidityThreshold) return null;
         return Tr.pick(

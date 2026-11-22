@@ -941,6 +941,8 @@ class GameState extends ChangeNotifier {
   /// のため、クラス外(part ファイルの extension)から直接呼ぶと解析警告になる。
   /// 通知はすべてこの委譲を経由させる。
   void _notify() {
+    // スペイン式の「売った分の一部だけ使える額」を、人件費の動きで更新する。
+    _observeSquadCost();
     // エンブレムとユニフォームの色の出どころを、今のクラブの見た目に合わせる。
     ClubLookRegistry.teamId = _save?.userTeamId;
     ClubLookRegistry.look = _save?.clubLook;
@@ -1293,6 +1295,9 @@ class GameState extends ChangeNotifier {
     _refreshStaffCandidates();
     _assignRivalOwners();
     FreeAgentEngine.topUp(_save!.freeAgents);
+    // 自クラブの選手にも、CPU と同じ国・部の割合で外国籍を混ぜる
+    // (名前を国籍に合わせる前に)。
+    _assignUserNationalitiesAtStart(userStartTier);
     _ensureWorldSquads(_save!);
     _applyTieBreakRules();
     // 第1季から大陸大会がある(自国の1部の強い順と、他国の1部の強い順)。

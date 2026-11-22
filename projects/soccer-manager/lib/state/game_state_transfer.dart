@@ -556,9 +556,12 @@ extension GameStateTransfer on GameState {
     // 自クラブの選手は自国の扱い。他のクラブへ移る前に国籍を確定させる
     // (確定させないと、移った先のクラブの選手として国籍を引き直してしまう)。
     _fixNationality(player);
-    final destinations = _save!.league.teams
-        .where((t) => t.id != _save!.userTeamId && t.players.length < 26)
-        .toList();
+    // 行き先も国の登録の決まりを守る(加えられないクラブへは移さない)。
+    final destinations = _cpuClubsThatCanRegister(
+        _save!.league.teams
+            .where((t) => t.id != _save!.userTeamId && t.players.length < 26),
+        player,
+        fromCountry: currentLeagueTheme);
     if (destinations.isEmpty) return;
     final fitting = destinations
         .where((t) => t.overallRating >= player.overall - 5)
@@ -1192,6 +1195,8 @@ extension GameStateTransfer on GameState {
       _notify();
       return false;
     }
+    // イタリアの「EU 外は1季2人まで」は所属なしの選手も数える(外す前に)。
+    _noteSigningFromAbroad(candidate);
     final player = _save!.freeAgents.removeAt(idx);
     player.wage = wage;
     ContractEngine.renewContract(player, endYear: endYear, option: option);
@@ -1512,8 +1517,10 @@ extension GameStateTransfer on GameState {
     final target = eligible[
         GameState._offerRng.nextInt(eligible.length < 5 ? eligible.length : 5)];
 
-    final rivals =
-        _save!.league.teams.where((t) => t.id != _save!.userTeamId).toList();
+    // 登録の決まりで加えられないクラブは買いに来ない。
+    final rivals = _cpuClubsThatCanRegister(
+        _save!.league.teams.where((t) => t.id != _save!.userTeamId), target,
+        fromCountry: currentLeagueTheme);
     if (rivals.isEmpty) return null;
     final buyer = rivals[GameState._offerRng.nextInt(rivals.length)];
 
@@ -1584,12 +1591,13 @@ extension GameStateTransfer on GameState {
             GameState._offerRng.nextInt(biddablePlayerIds.length)];
         final target = team.players.firstWhere((p) => p.id == targetId);
         final existing = offersByPlayer[targetId]!.first;
-        final rivalCandidates = _save!.league.teams
-            .where(
+        final rivalCandidates = _cpuClubsThatCanRegister(
+            _save!.league.teams.where(
               (t) =>
                   t.id != _save!.userTeamId && t.name != existing.buyerClubName,
-            )
-            .toList();
+            ),
+            target,
+            fromCountry: currentLeagueTheme);
         if (rivalCandidates.isNotEmpty) {
           final rival = rivalCandidates[
               GameState._offerRng.nextInt(rivalCandidates.length)];
@@ -1642,9 +1650,11 @@ extension GameStateTransfer on GameState {
           r -= weights[i];
         }
 
-        final buyerCandidates = _save!.league.teams
-            .where((t) => t.id != _save!.userTeamId)
-            .toList();
+        // 登録の決まりで加えられないクラブは買いに来ない。
+        final buyerCandidates = _cpuClubsThatCanRegister(
+            _save!.league.teams.where((t) => t.id != _save!.userTeamId), chosen,
+            fromCountry: currentLeagueTheme);
+        if (buyerCandidates.isEmpty) return autoSold;
         final buyer = buyerCandidates[
             GameState._offerRng.nextInt(buyerCandidates.length)];
 

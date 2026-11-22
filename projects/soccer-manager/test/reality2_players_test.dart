@@ -168,6 +168,11 @@ void main() {
       final gs = GameState();
       await gs.startNewGame('登録FC', theme: LeagueTheme.spain);
       expect(gs.registrationRules.nonEuLimit, 3);
+      // 自クラブにも外国籍が混ざる(2026-11-22)ので、数えやすいように全員を
+      // 自国籍にしてから英国籍を3人足す。
+      for (final p in gs.userTeam.players) {
+        p.nation = LeagueTheme.spain.name;
+      }
       final english = gs.save!.foreignLeagues[LeagueTheme.england.name]!.teams
           .expand((t) => t.players)
           .where((p) => p.age >= 18)
@@ -282,11 +287,8 @@ void main() {
           inInclusiveRange(0.25, 0.5));
       expect(foreignShareOf(gs, t3, LeagueTheme.england),
           inInclusiveRange(0.18, 0.4));
-      // 自クラブは自国。
-      expect(
-          gs.userTeam.players
-              .every((p) => gs.nationalityOf(p) == LeagueTheme.england),
-          isTrue);
+      // 自クラブは 2026-11-22 から3部と同じ割合で外国籍が混ざる
+      // (reality3_players_test.dart。以前は全員自国籍だった)。
     });
 
     test('他の国の1部: 外国籍はイタリア約6割・ドイツ約55%・スペインとフランス約45%', () async {

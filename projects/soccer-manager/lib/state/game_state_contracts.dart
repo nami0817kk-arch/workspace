@@ -194,6 +194,16 @@ extension GameStateContracts on GameState {
     if (after.isAfter(deadline) && _save!.optionDeadlineSeason != season) {
       _lapseUnusedOptions();
     }
+    // イングランド(6月1日)・イタリア(2月1日)は、その日に国内のクラブ同士の
+    // 仮契約が始まる(AI 同士の国内の話はそこで決める)。
+    if (_save!.preContractOpenedSeason == season) {
+      for (final country in PreContractEngine.lateDomesticCountries) {
+        final opens = PreContractEngine.domesticOpensOn(country);
+        if (before.isBefore(opens) && !after.isBefore(opens)) {
+          _openDomesticPreContractsForAi(country);
+        }
+      }
+    }
     // 仮契約の時期は、他のクラブが自クラブの満了の年の選手に声をかける。
     if (_save!.preContractOpenedSeason == season &&
         PreContractEngine.isOpen(after)) {
@@ -210,12 +220,15 @@ extension GameStateContracts on GameState {
   /// 知らせる。
   void _openPreContractSeason() {
     _save!.preContractOpenedSeason = _save!.league.season;
+    final foreign = _foreignTeamIds();
     final made = PreContractEngine.openSeasonForAi(
       _worldTeams,
       _save!.userTeamId,
       contractRng,
       today: today,
       alreadyTaken: {for (final c in preContracts) c.playerId},
+      countryOf: (t) => _countryOfClub(t.id, foreign),
+      canRegister: _aiPreContractRegistrable(foreign),
     );
     _save!.preContracts.addAll(made);
     final mine = userTeam.players
@@ -237,6 +250,41 @@ extension GameStateContracts on GameState {
             ),
       context: Tr.pick('仮契約', 'Pre-contract'),
     );
+  }
+
+  /// AI 同士の仮契約の行き先が、登録の決まりで[p]を加えられるか。
+  /// 選手の今のクラブの国は、選手のいるクラブから引く。
+  bool Function(Team, Player) _aiPreContractRegistrable(
+      Map<String, String> foreign) {
+    // 選手ごとに全クラブを探すと重いので、選手の国は1回だけ引く。
+    final fromOf = <String, LeagueTheme>{};
+    return (to, p) {
+      final fromCountry = fromOf.putIfAbsent(p.id, () {
+        final from = _sellingClubOf(p.id);
+        return from == null
+            ? currentLeagueTheme
+            : _countryOfClub(from.id, foreign);
+      });
+      return _cpuCanRegister(to, p, fromCountry: fromCountry, foreign: foreign);
+    };
+  }
+
+  /// 国[country]の国内のクラブ同士の仮契約の開始日([PreContractEngine
+  /// .domesticOpensOn])に、AI 同士の国内の仮契約を決める。
+  void _openDomesticPreContractsForAi(LeagueTheme country) {
+    final foreign = _foreignTeamIds();
+    final made = PreContractEngine.openDomesticForAi(
+      _worldTeams,
+      _save!.userTeamId,
+      contractRng,
+      country: country,
+      countryOf: (t) => _countryOfClub(t.id, foreign),
+      today: today,
+      alreadyTaken: {for (final c in preContracts) c.playerId},
+      canRegister: (to, p) =>
+          _cpuCanRegister(to, p, fromCountry: country, foreign: foreign),
+    );
+    _save!.preContracts.addAll(made);
   }
 
   /// 3月31日までに行使しなかった延長オプションを消す。
@@ -263,6 +311,7 @@ extension GameStateContracts on GameState {
   void _rollPoachingOfUserPlayers(double weeks) {
     final cpuTeams =
         _save!.league.teams.where((t) => t.id != _save!.userTeamId).toList();
+    final foreign = _foreignTeamIds();
     final made = PreContractEngine.poachFromUser(
       userTeam,
       cpuTeams,
@@ -270,6 +319,14 @@ extension GameStateContracts on GameState {
       today: today,
       weeks: weeks,
       alreadyTaken: {for (final c in preContracts) c.playerId},
+      // 国内のクラブが声をかけられるのは国の開始日から(イングランドは
+      // 6月1日・イタリアは2月1日)。それまでは他の国のクラブだけ。
+      foreignTeams: [
+        for (final l in _save!.foreignLeagues.values) ...l.teams,
+      ],
+      domesticOpensOn: PreContractEngine.domesticOpensOn(currentLeagueTheme),
+      canRegister: (to, p) => _cpuCanRegister(to, p,
+          fromCountry: currentLeagueTheme, foreign: foreign),
     );
     for (final c in made) {
       _save!.preContracts.add(c);
@@ -343,6 +400,14 @@ extension GameStateContracts on GameState {
       if (from == null || player == null) continue; // 引退・消滅したクラブ
       final to = c.toClubId == userId ? userTeam : _worldTeamById(c.toClubId);
       if (to == null) continue;
+      // イタリアの「EU 外は1季2人まで」は、仮契約で国外から来る選手も
+      // 数える(加入の季に。元のクラブから外す前に)。
+      if (to.id == userId) {
+        _noteSigningFromAbroad(player);
+      } else {
+        _noteCpuSigning(to, player, fromCountry: _countryOfClub(from.id));
+      }
+      _fixNationality(player);
       _removeFromCpuTeam(from, player);
       PreContractEngine.applyOnJoin(player, c);
       player.originLeague = null;

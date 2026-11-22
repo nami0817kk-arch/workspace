@@ -173,6 +173,21 @@ class SaveGame {
   int nonEuSignings;
   int nonEuSigningsSeason;
 
+  /// 同じ決まりの、CPU のクラブごとの人数(クラブの id → 人数)と、その季
+  /// (2026-11-22)。季が変わったら数え直す。
+  Map<String, int> cpuNonEuSignings;
+  int cpuNonEuSigningsSeason;
+
+  /// スペイン式の人件費の上限を超えている間に、売った・外した分の人件費
+  /// から使えるようになった額(万円/年)と、その季。以前は上限を超えると、
+  /// 売っても上限の下に戻るまで1人も取れなかった(2026-11-22)。
+  int squadCostAllowance;
+  int squadCostAllowanceSeason;
+
+  /// 最後に見た選手の人件費(万円/年)。増減から、売った分・使った分を出す。
+  /// 0 はまだ見ていない(旧セーブ)。
+  int squadCostObserved;
+
   /// 今シーズンの景気と、来シーズンの景気(予報)。
   EconomyPhase economyPhase;
 
@@ -823,6 +838,11 @@ class SaveGame {
     this.nationRuleVersion = currentNationRuleVersion,
     this.nonEuSignings = 0,
     this.nonEuSigningsSeason = 0,
+    Map<String, int>? cpuNonEuSignings,
+    this.cpuNonEuSigningsSeason = 0,
+    this.squadCostAllowance = 0,
+    this.squadCostAllowanceSeason = 0,
+    this.squadCostObserved = 0,
     this.economyPhase = EconomyPhase.normal,
     this.marketIndex = 100,
     this.economyNext = EconomyPhase.normal,
@@ -1000,6 +1020,7 @@ class SaveGame {
         declinedProposalIds = declinedProposalIds ?? [],
         ownerWorkDoneSeason = ownerWorkDoneSeason ?? {},
         sellOnClauses = sellOnClauses ?? {},
+        cpuNonEuSignings = cpuNonEuSignings ?? {},
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -1169,6 +1190,13 @@ class SaveGame {
         'nationRuleVersion': nationRuleVersion,
         if (nonEuSignings != 0) 'nonEuSignings': nonEuSignings,
         if (nonEuSigningsSeason != 0) 'nonEuSigningsSeason': nonEuSigningsSeason,
+        if (cpuNonEuSignings.isNotEmpty) 'cpuNonEuSignings': cpuNonEuSignings,
+        if (cpuNonEuSigningsSeason != 0)
+          'cpuNonEuSigningsSeason': cpuNonEuSigningsSeason,
+        if (squadCostAllowance != 0) 'squadCostAllowance': squadCostAllowance,
+        if (squadCostAllowanceSeason != 0)
+          'squadCostAllowanceSeason': squadCostAllowanceSeason,
+        if (squadCostObserved != 0) 'squadCostObserved': squadCostObserved,
         'economyPhase': economyPhase.name,
         if (marketIndex != 100) 'marketIndex': marketIndex,
         'economyNext': economyNext.name,
@@ -1490,6 +1518,12 @@ class SaveGame {
         nationRuleVersion: json['nationRuleVersion'] as int? ?? 1,
         nonEuSignings: json['nonEuSignings'] as int? ?? 0,
         nonEuSigningsSeason: json['nonEuSigningsSeason'] as int? ?? 0,
+        cpuNonEuSignings: (json['cpuNonEuSignings'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
+        cpuNonEuSigningsSeason: json['cpuNonEuSigningsSeason'] as int? ?? 0,
+        squadCostAllowance: json['squadCostAllowance'] as int? ?? 0,
+        squadCostAllowanceSeason: json['squadCostAllowanceSeason'] as int? ?? 0,
+        squadCostObserved: json['squadCostObserved'] as int? ?? 0,
         marketIndex: json['marketIndex'] as int? ?? 100,
         economyPhase: EconomyPhase.values
             .where((e) => e.name == json['economyPhase'])

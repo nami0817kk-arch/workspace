@@ -2037,6 +2037,8 @@ extension GameStateFinance on GameState {
               snapshot: financeSnapshot,
               addedSquadCost: annualFromWeekly(addedWeeklyWage) +
                   (fee <= 0 ? 0 : fee ~/ max(1, contractYears)),
+              // スペイン式: 上限を超えていても、売った分の一部は使える。
+              saleAllowance: squadCostSaleAllowance,
             );
       if (block != null) {
         lastSigningBlockReason = block;
