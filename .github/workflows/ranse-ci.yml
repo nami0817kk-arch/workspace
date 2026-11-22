@@ -20,6 +20,10 @@ on:
         description: "iOS の署名なしビルドも回す（Xcode の設定を触ったとき用。macOS なので手動のときだけ）"
         type: boolean
         default: false
+      web_preview:
+        description: "画面確認用の Web 版を作って成果物に残す（リポジトリには web/ を入れない。写しで作る）"
+        type: boolean
+        default: false
 
 # 同じブランチで新しい実行が始まったら、古い方は打ち切る。
 concurrency:
@@ -60,3 +64,28 @@ jobs:
           channel: stable
       - run: flutter pub get
       - run: flutter build ios --release --no-codesign
+
+  # 画面確認用の Web 版（Windows では iOS を動かせないため）。写しに web を足し、
+  # lib/main.dart を tool/preview_main.dart（?auto=<種> で自動プレイ）に差し替えて作る。
+  web-preview:
+    if: ${{ inputs.web_preview == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Build web preview from a copy
+        run: |
+          mkdir -p /tmp/prev
+          cp -r projects/ranse/lib projects/ranse/pubspec.yaml projects/ranse/pubspec.lock /tmp/prev/
+          cp projects/ranse/tool/preview_main.dart /tmp/prev/lib/main.dart
+          cd /tmp/prev
+          flutter create --platforms=web --project-name ranse .
+          flutter build web --release
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ranse-web-preview
+          path: /tmp/prev/build/web
+          retention-days: 3
