@@ -213,6 +213,25 @@ void main() {
     expect(pairsSame / pairs, lessThan(.05));
   });
 
+  test('信長・謙信との再会は、本人が生きている年にだけ起きる', () {
+    for (var seed = 0; seed < 400; seed++) {
+      final rng = Rng(seed + 3);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      if (g.finished) continue;
+      g.setFlag('met_nobunaga');
+      g.setFlag('met_kenshin');
+      playOut(
+        g,
+        Rng(seed),
+        onPrompt: (p) {
+          if (p.title == '信長') expect(g.year, lessThanOrEqualTo(1581));
+          if (p.title == '越後の主') expect(g.year, lessThanOrEqualTo(1577));
+        },
+      );
+    }
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);

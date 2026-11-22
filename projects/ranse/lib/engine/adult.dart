@@ -647,7 +647,11 @@ List<SceneDef> buildAdultScenes() {
           }),
         ], after: next);
       },
-      ageOk: (g, a) => g.l.startYear + a >= 1552,
+      // 信長が生きている年だけ（本能寺の変は1582年。信長が生き延びた世では1598年まで）。
+      ageOk: (g, a) {
+        final y = g.l.startYear + a;
+        return y >= 1552 && y <= (g.hasFlag('history_honnoji') ? 1597 : 1581);
+      },
     ),
 
     SceneDef(
@@ -680,7 +684,11 @@ List<SceneDef> buildAdultScenes() {
           Choice.h('今の道を行く', '縁はここで途切れる', () => '越後の主の噂は、遠くに聞くだけにした。'),
         ], after: next);
       },
-      ageOk: (g, a) => g.l.startYear + a >= 1548,
+      // 謙信が生きている年だけ（1578年に没）。
+      ageOk: (g, a) {
+        final y = g.l.startYear + a;
+        return y >= 1548 && y <= 1577;
+      },
     ),
 
     // ------------------------------------------------------------------
