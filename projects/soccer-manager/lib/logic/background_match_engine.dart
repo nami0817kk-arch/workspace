@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../models/attributes.dart';
+import '../models/card_rules.dart';
 import '../models/match_result.dart';
 import '../models/player.dart';
 import '../models/team.dart';
@@ -27,13 +28,18 @@ class BackgroundMatchEngine {
   /// 1試合の退場の平均(両チームの合計)。主要リーグで 0.1〜0.2。
   static const double redsPerMatch = 0.15;
 
+  /// 裏の試合の退場のうち、暴力行為などで3試合の出場停止になる割合。
+  static const double redViolentShare = 0.3;
+
   /// 1チームが後半に入れる控えの人数(この値〜+2)。交代は5人まで使えるが、
   /// 実際は1試合に3〜5人ほど。
   static const int minSubsPerTeam = 3;
 
   /// 他の部・他国の試合の、選手への影響(出場停止の消化・出場の数・警告と
   /// 退場・後半から出た控えの出場)を入れる。[MatchEngine]の試合と同じ
-  /// 決まり(警告[yellowCardSuspensionThreshold]枚・退場で1試合の出場停止)。
+  /// 決まり(いまの大会と国の[CardRules.current]で警告を数え、退場は1試合。
+  /// 一発退場の一部は3試合)。ここで扱うのはリーグ戦なので、出場停止も
+  /// リーグ戦のものを消化する。
   ///
   /// 警告の数は1試合ごとにポアソン分布でくじ引きし、先発に割り当てる
   /// (積極性の高い選手ほど当たりやすい。GK はまれ)。交代は、出られる控えの
@@ -44,6 +50,8 @@ class BackgroundMatchEngine {
     Random? random,
   }) {
     final rng = random ?? _rng;
+    final rules = CardRules.current;
+    final c = rules.competition;
     for (final team in [home, away]) {
       if (team.players.isEmpty) continue;
       final lineup = MatchEngine.lineupOf(team);
@@ -51,8 +59,9 @@ class BackgroundMatchEngine {
       // 前の試合までに受けた出場停止を1試合ぶん消化する(この試合に出て
       // いない選手だけ。MatchEngine と同じ)。
       for (final p in team.players) {
-        if (p.suspendedMatches > 0 && !lineupIds.contains(p.id)) {
-          p.suspendedMatches -= 1;
+        final left = p.suspendedIn(c);
+        if (left > 0 && !lineupIds.contains(p.id)) {
+          p.setSuspendedIn(c, left - 1);
         }
       }
       for (final p in lineup) {
@@ -85,14 +94,18 @@ class BackgroundMatchEngine {
         if (p == null) break;
         booked.add(p.id);
         if (i >= yellows) {
-          p.suspendedMatches += 1;
+          // 裏の試合は2枚目の警告と一発退場を分けないので、退場の3割ほどを
+          // 暴力行為(3試合)にする。
+          final ban = rng.nextDouble() < redViolentShare
+              ? CardRules.violentConductBan
+              : 1;
+          p.setSuspendedIn(c, p.suspendedIn(c) + ban);
           continue;
         }
-        p.yellowCards += 1;
-        if (p.yellowCards >= yellowCardSuspensionThreshold) {
-          p.yellowCards = 0;
-          p.suspendedMatches += 1;
-        }
+        final count = p.yellowCardsIn(c) + 1;
+        p.setYellowCardsIn(c, count);
+        final ban = rules.banForYellow(count);
+        if (ban > 0) p.setSuspendedIn(c, p.suspendedIn(c) + ban);
       }
     }
   }
@@ -118,16 +131,21 @@ class BackgroundMatchEngine {
     return pool.last;
   }
 
+  /// [neutral]なら中立の会場(カップの決勝など)で、ホームの利が無い。
   static MatchResult simulate({
     required Team home,
     required Team away,
     required int matchday,
+    bool neutral = false,
     Random? random,
   }) {
     final rng = random ?? _rng;
     final ratingDiff = (home.overallRating - away.overallRating).toDouble();
-    final homeExpected = (1.35 + ratingDiff / 90 + 0.25).clamp(0.3, 3.6);
-    final awayExpected = (1.15 - ratingDiff / 90).clamp(0.2, 3.3);
+    // ホームの利(得点の見込みの差 0.45)。中立なら両方とも間の 1.375。
+    final homeBase = neutral ? 1.375 : 1.6;
+    final awayBase = neutral ? 1.375 : 1.15;
+    final homeExpected = (homeBase + ratingDiff / 90).clamp(0.3, 3.6);
+    final awayExpected = (awayBase - ratingDiff / 90).clamp(0.2, 3.3);
     return MatchResult(
       matchday: matchday,
       homeTeamId: home.id,

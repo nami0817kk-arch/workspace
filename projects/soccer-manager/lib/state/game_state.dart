@@ -40,6 +40,7 @@ import '../models/best_eleven.dart';
 import '../models/club_infrastructure.dart';
 import '../models/continental_cup.dart';
 import '../models/contract_negotiation.dart';
+import '../models/card_rules.dart';
 import '../models/cup.dart';
 import '../models/formation.dart';
 import '../models/incoming_offer.dart';
@@ -205,6 +206,7 @@ part 'game_state_season_tickets.dart';
 part 'game_state_calendar.dart';
 part 'game_state_club_names.dart';
 part 'game_state_cups.dart';
+part 'game_state_cup_days.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }

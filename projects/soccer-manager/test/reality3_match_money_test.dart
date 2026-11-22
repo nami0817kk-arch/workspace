@@ -327,7 +327,8 @@ void main() {
         }
         BackgroundMatchEngine.applyPlayerEffects(
             home: home, away: away, random: rng);
-        final hit = lineup.where((p) => p.yellowCards == 0).toList();
+        // 警告は今季の枚数として数え続ける(5枚目で出場停止。2026-11-23)。
+        final hit = lineup.where((p) => p.yellowCards == 5).toList();
         if (hit.isEmpty) continue;
         for (final p in hit) {
           expect(p.suspendedMatches, greaterThanOrEqualTo(1));

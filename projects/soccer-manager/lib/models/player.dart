@@ -2,6 +2,7 @@
 import 'player_instruction.dart';
 import 'player_traits.dart';
 import 'attributes.dart';
+import 'card_rules.dart';
 import 'enum_json.dart';
 import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
@@ -1042,13 +1043,70 @@ class Player {
   /// 過去に負ったことのある負傷の種類ごとの回数。再負傷のリスク判定に使う。
   Map<String, int> injuryHistoryCounts;
 
-  /// 現在の累積警告数(退場したリセットされる)。[yellowCardSuspensionThreshold]枚
-  /// 貯まると次節出場停止になり0にリセットされる。
+  /// 今季のリーグ戦の警告の数(季末に0に戻る。2026-11-23 から)。何枚目で
+  /// 何試合の出場停止になるかは国で違う([CardRules])。それまでは5枚で
+  /// 1試合の出場停止になり0に戻す数え方で、全大会の警告を数えていた
+  /// (古いセーブの値は、そのまま今季の枚数として読む)。
   int yellowCards;
 
-  /// 出場停止の残り試合数(0なら出場停止でない)。退場は即1試合、
-  /// 警告累積は[yellowCardSuspensionThreshold]枚で1試合の出場停止。
+  /// リーグ戦の出場停止の残り試合数(0なら出場停止でない)。リーグ戦で
+  /// 消化する。退場は1試合(暴力行為は3試合)、警告の累積は国の決まり。
   int suspendedMatches;
+
+  /// 今季の国内カップ戦(国内カップ・リーグカップ・スーパーカップ)の警告の数。
+  int cupYellowCards;
+
+  /// 国内カップ戦の出場停止の残り試合数(国内カップ戦で消化する)。
+  int cupSuspendedMatches;
+
+  /// 今季の大陸大会の警告の数。
+  int continentalYellowCards;
+
+  /// 大陸大会の出場停止の残り試合数(大陸大会で消化する)。
+  int continentalSuspendedMatches;
+
+  /// [c]の大会の今季の警告の数。
+  int yellowCardsIn(CardCompetition c) => switch (c) {
+        CardCompetition.league => yellowCards,
+        CardCompetition.cup => cupYellowCards,
+        CardCompetition.continental => continentalYellowCards,
+      };
+
+  void setYellowCardsIn(CardCompetition c, int value) {
+    switch (c) {
+      case CardCompetition.league:
+        yellowCards = value;
+      case CardCompetition.cup:
+        cupYellowCards = value;
+      case CardCompetition.continental:
+        continentalYellowCards = value;
+    }
+  }
+
+  /// [c]の大会の出場停止の残り試合数。
+  int suspendedIn(CardCompetition c) => switch (c) {
+        CardCompetition.league => suspendedMatches,
+        CardCompetition.cup => cupSuspendedMatches,
+        CardCompetition.continental => continentalSuspendedMatches,
+      };
+
+  void setSuspendedIn(CardCompetition c, int value) {
+    switch (c) {
+      case CardCompetition.league:
+        suspendedMatches = value;
+      case CardCompetition.cup:
+        cupSuspendedMatches = value;
+      case CardCompetition.continental:
+        continentalSuspendedMatches = value;
+    }
+  }
+
+  /// 季末に、全大会の警告の数を0に戻す(出場停止の残りは次の季へ持ち越す)。
+  void resetSeasonYellowCards() {
+    yellowCards = 0;
+    cupYellowCards = 0;
+    continentalYellowCards = 0;
+  }
 
   /// 通算出場試合数・通算得点数(公式戦・カップ戦。親善試合は含まない)。
   int careerAppearances;
@@ -1333,6 +1391,10 @@ class Player {
     Map<String, int>? injuryHistoryCounts,
     this.yellowCards = 0,
     this.suspendedMatches = 0,
+    this.cupYellowCards = 0,
+    this.cupSuspendedMatches = 0,
+    this.continentalYellowCards = 0,
+    this.continentalSuspendedMatches = 0,
     this.careerAppearances = 0,
     this.careerGoals = 0,
     this.wage = 20,
@@ -1514,7 +1576,9 @@ class Player {
 
   bool get isInjured => injuryWeeks > 0;
 
-  bool get isSuspended => suspendedMatches > 0;
+  /// いま行っている試合の大会([CardRules.current])で出場停止か。試合の外
+  /// (画面)ではリーグ戦の出場停止。
+  bool get isSuspended => suspendedIn(CardRules.current.competition) > 0;
 
   bool get isOnInternationalDuty =>
       internationalDutyWeeksRemaining > 0 || onTournamentLeave;
@@ -1641,6 +1705,10 @@ class Player {
     put('injuryHistoryCounts', injuryHistoryCounts, null);
     put('yellowCards', yellowCards, 0);
     put('suspendedMatches', suspendedMatches, 0);
+    put('cupYellowCards', cupYellowCards, 0);
+    put('cupSuspendedMatches', cupSuspendedMatches, 0);
+    put('continentalYellowCards', continentalYellowCards, 0);
+    put('continentalSuspendedMatches', continentalSuspendedMatches, 0);
     put('careerAppearances', careerAppearances, 0);
     put('careerGoals', careerGoals, 0);
     put('wage', wage, 20);
@@ -1760,6 +1828,11 @@ class Player {
           {},
       yellowCards: json['yellowCards'] as int? ?? 0,
       suspendedMatches: json['suspendedMatches'] as int? ?? 0,
+      cupYellowCards: json['cupYellowCards'] as int? ?? 0,
+      cupSuspendedMatches: json['cupSuspendedMatches'] as int? ?? 0,
+      continentalYellowCards: json['continentalYellowCards'] as int? ?? 0,
+      continentalSuspendedMatches:
+          json['continentalSuspendedMatches'] as int? ?? 0,
       careerAppearances: json['careerAppearances'] as int? ?? 0,
       careerGoals: json['careerGoals'] as int? ?? 0,
       wage: json['wage'] as int? ?? 20,

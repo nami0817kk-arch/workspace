@@ -17,18 +17,28 @@ extension GameStateForeign on GameState {
   }
 
   /// [md]節の他国の試合を進める。
+  /// 警告はその国のリーグ戦の決まりで数える。
   void _playForeignMatchday(int md) {
     final s = _save!;
-    for (final l in s.foreignLeagues.values) {
-      for (final f in l.fixturesForMatchday(md)) {
-        if (f.result != null) continue;
-        final home = _findTeam(l.teams, f.homeTeamId);
-        final away = _findTeam(l.teams, f.awayTeamId);
-        if (home == null || away == null) continue;
-        f.result = BackgroundMatchEngine.simulate(
-            home: home, away: away, matchday: md);
-        BackgroundMatchEngine.applyPlayerEffects(home: home, away: away);
-      }
+    for (final e in s.foreignLeagues.entries) {
+      final l = e.value;
+      final rules = CardRules.league(
+        theme: LeagueTheme.values.where((t) => t.name == e.key).firstOrNull,
+        matchday: md,
+        totalMatchdays:
+            l.fixtures.fold<int>(0, (m, f) => f.matchday > m ? f.matchday : m),
+      );
+      CardRules.run(rules, () {
+        for (final f in l.fixturesForMatchday(md)) {
+          if (f.result != null) continue;
+          final home = _findTeam(l.teams, f.homeTeamId);
+          final away = _findTeam(l.teams, f.awayTeamId);
+          if (home == null || away == null) continue;
+          f.result = BackgroundMatchEngine.simulate(
+              home: home, away: away, matchday: md);
+          BackgroundMatchEngine.applyPlayerEffects(home: home, away: away);
+        }
+      });
     }
   }
 

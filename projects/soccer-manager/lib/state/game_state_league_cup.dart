@@ -6,7 +6,8 @@ part of 'game_state.dart';
 ///
 /// 国内カップ(ライブで観られる)と違い、リーグカップは回戦ごとに決まった
 /// 節でまとめて消化する(オーナーは結果を受け取るだけ)。決勝は2〜3月。
-/// 賞金は国内カップの半分。
+/// 賞金は国内カップの半分。準決勝は2試合合計、決勝は中立の会場
+/// (ウェンブリー)。入場収入は両クラブで折半する(2026-11-23)。
 extension GameStateLeagueCup on GameState {
   /// 古い形のリーグカップ(回戦の節を持たない)を何節ごとに1回戦消化するか。
   static const int leagueCupInterval = 4;
@@ -45,7 +46,8 @@ extension GameStateLeagueCup on GameState {
           !teams.any((t) => t.id == m.awayTeamId)) {
         break;
       }
-      CupEngine.playNextMatch(cup, teams, month: today.month);
+      CardRules.run(_cupCardRules,
+          () => CupEngine.playNextMatch(cup, teams, month: today.month));
       _afterLeagueCupMatch(m);
     }
     cup.lastPlayedAtMatchday = marker;
@@ -56,24 +58,31 @@ extension GameStateLeagueCup on GameState {
     final u = _save!.userTeamId;
     for (var guard = 0; guard < 12; guard++) {
       final next = cup.nextUnplayedMatch;
-      if (next == null || !_cupDue(cup.dueMatchdayFor(next.round))) break;
+      if (next == null || !_cupDue(cup.dueMatchdayForMatch(next))) break;
       final round = cup.rounds.last;
       for (final m in [...round]) {
         if (m.result != null) continue;
+        // 2試合制の組は、第1戦・第2戦それぞれの日が来たものだけ。
+        if (!_cupDue(cup.dueMatchdayForMatch(m))) continue;
         final teams = allTeamsForCups;
         if (m.homeTeamId == u || m.awayTeamId == u) {
-          final home = teamById(m.homeTeamId);
-          final away = teamById(m.awayTeamId);
+          final home = teamById(m.nextHomeId);
+          final away = teamById(m.nextAwayId);
           if (home == null || away == null) continue;
           _ensureSquadsForActiveTier([home, away]);
-          final r = MatchEngine.simulate(
-            home: home,
-            away: away,
-            matchday: 0,
-            weather: WeatherEngine.roll(month: today.month),
+          final r = CardRules.run(
+            _cupCardRules,
+            () => MatchEngine.simulate(
+              home: home,
+              away: away,
+              matchday: 0,
+              weather: WeatherEngine.roll(month: today.month),
+              homeAdvantageFactor: CupEngine.homeAdvantageFor(cup, m,
+                  home: _homeAdvantageFor(home.id)),
+            ),
           );
           CupEngine.applyMatchResult(cup, teams, m, r);
-          _applyUserCupPostMatchEffects(m.result!);
+          _applyUserCupPostMatchEffects(r);
         } else {
           CupEngine.playInBackground(cup, teams, m);
         }
@@ -85,22 +94,34 @@ extension GameStateLeagueCup on GameState {
     }
   }
 
-  /// リーグカップの1試合のあと: 自クラブの勝ち・優勝に賞金(国内カップの半分)。
+  /// リーグカップの1試合のあと: 入場収入(折半)と、自クラブの勝ち・優勝に
+  /// 賞金(国内カップの半分)。
   void _afterLeagueCupMatch(CupMatch m) {
     final s = _save!;
     final cup = leagueCup!;
     final userId = s.userTeamId;
     final mine = m.homeTeamId == userId || m.awayTeamId == userId;
     if (!mine) return;
+    _bookDomesticCupGate(cup, m);
     final opp = m.homeTeamId == userId ? m.awayTeamId : m.homeTeamId;
     final oppName =
         allTeamsForCups.where((t) => t.id == opp).firstOrNull?.name ?? '-';
-    final r = m.result;
-    final score = r == null
-        ? ''
-        : (m.homeTeamId == userId
-            ? '${r.homeGoals}-${r.awayGoals}'
-            : '${r.awayGoals}-${r.homeGoals}');
+    final first = m.result == null ? m.firstLeg : null;
+    if (first != null) {
+      // 2試合制の第1戦(相手のホーム)。勝ち抜けは第2戦の後に決まる。
+      final mineGoals =
+          first.homeTeamId == userId ? first.homeGoals : first.awayGoals;
+      final theirs =
+          first.homeTeamId == userId ? first.awayGoals : first.homeGoals;
+      _logNews(
+          Tr.pick('$leagueCupName準決勝第1戦: $oppNameと$mineGoals-$theirs。',
+              '$leagueCupName semi-final first leg: $mineGoals-$theirs against $oppName.'),
+          context: leagueCupName);
+      return;
+    }
+    // 2試合制の組は2試合の合計。
+    final score =
+        m.result == null ? '' : '${m.goalsFor(userId)}-${m.goalsFor(opp)}';
     if (m.winnerId == userId) {
       final prize = scaledMoney(GameState.domesticCupWinPrizeFor(m.round) ~/ 2);
       _book(LedgerCategory.prize, prize);

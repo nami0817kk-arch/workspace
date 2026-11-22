@@ -7,6 +7,7 @@ import 'package:soccer_manager/logic/match_engine.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/logic/season_calendar.dart';
 import 'package:soccer_manager/models/attributes.dart';
+import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/match_result.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/team.dart';
@@ -525,7 +526,9 @@ void main() {
   group('4. 代表は国際マッチウィークに、全クラブから一斉に', () {
     Future<(GameState, Player, Player, Player)> setUpGame() async {
       final game = GameState();
-      await game.startNewGame('代表FC');
+      // イングランドの3部(始めの部)は代表ウィークにも試合をする
+      // (2026-11-23)ので、代表ウィークに節を置かない国で確かめる。
+      await game.startNewGame('代表FC', theme: LeagueTheme.spain);
       final s = game.save!;
       final star = game.userTeam.players
           .firstWhere((p) => p.position != Position.gk)

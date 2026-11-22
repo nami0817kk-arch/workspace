@@ -38,6 +38,15 @@ class CupMatch {
   /// 延長戦(30分)まで戦ったか。[result]の得点は延長の分を含む。
   bool extraTime;
 
+  /// 2試合合計で決める組か(スペイン・イタリアの国内カップと、イングランドの
+  /// リーグカップの準決勝。2026-11-23)。第1戦は[awayTeamId]のホームで
+  /// [firstLeg]に、第2戦は[homeTeamId]のホームで[result]に入る。延長・PK戦は
+  /// 第2戦の後に合計で並んだときだけ(アウェイゴールは数えない)。
+  final bool twoLegged;
+
+  /// 2試合制の第1戦の結果([awayTeamId]のホーム)。まだなら null。
+  MatchResult? firstLeg;
+
   CupMatch({
     required this.round,
     required this.homeTeamId,
@@ -45,12 +54,53 @@ class CupMatch {
     this.result,
     this.penaltyWinnerId,
     this.extraTime = false,
+    this.twoLegged = false,
+    this.firstLeg,
   });
 
   bool get isBye => homeTeamId == byeTeamId || awayTeamId == byeTeamId;
 
+  /// 2試合制で、まだ第1戦をしていないか。
+  bool get awaitingFirstLeg => twoLegged && firstLeg == null && result == null;
+
+  /// 次に行う試合のホームのクラブ(2試合制の第1戦は[awayTeamId])。
+  String get nextHomeId => awaitingFirstLeg ? awayTeamId : homeTeamId;
+
+  /// 次に行う試合のアウェイのクラブ。
+  String get nextAwayId => awaitingFirstLeg ? homeTeamId : awayTeamId;
+
+  /// [teamId]の得点の合計(2試合制は2試合の合計。1試合制はその試合)。
+  int goalsFor(String teamId) {
+    var g = 0;
+    for (final r in [if (twoLegged) firstLeg, result]) {
+      if (r == null) continue;
+      if (r.homeTeamId == teamId) g += r.homeGoals;
+      if (r.awayTeamId == teamId) g += r.awayGoals;
+    }
+    return g;
+  }
+
+  /// 最後の試合を[last]で終えたとき、合計(1試合制はその試合)で並ぶか。
+  bool levelAfter(MatchResult last) {
+    int of(String id, MatchResult? r) => r == null
+        ? 0
+        : (r.homeTeamId == id
+            ? r.homeGoals
+            : (r.awayTeamId == id ? r.awayGoals : 0));
+    final prior = twoLegged ? firstLeg : null;
+    return of(homeTeamId, prior) + of(homeTeamId, last) ==
+        of(awayTeamId, prior) + of(awayTeamId, last);
+  }
+
   String? get winnerId {
     if (result == null) return null;
+    if (twoLegged) {
+      final h = goalsFor(homeTeamId);
+      final a = goalsFor(awayTeamId);
+      if (h > a) return homeTeamId;
+      if (h < a) return awayTeamId;
+      return penaltyWinnerId;
+    }
     if (result!.homeGoals > result!.awayGoals) return homeTeamId;
     if (result!.homeGoals < result!.awayGoals) return awayTeamId;
     return penaltyWinnerId;
@@ -63,6 +113,8 @@ class CupMatch {
         'result': result?.toJson(),
         'penaltyWinnerId': penaltyWinnerId,
         if (extraTime) 'extraTime': true,
+        if (twoLegged) 'twoLegged': true,
+        if (firstLeg != null) 'firstLeg': firstLeg!.toJson(),
       };
 
   factory CupMatch.fromJson(Map<String, dynamic> json) => CupMatch(
@@ -74,6 +126,10 @@ class CupMatch {
             : MatchResult.fromJson(json['result'] as Map<String, dynamic>),
         penaltyWinnerId: json['penaltyWinnerId'] as String?,
         extraTime: json['extraTime'] as bool? ?? false,
+        twoLegged: json['twoLegged'] as bool? ?? false,
+        firstLeg: json['firstLeg'] == null
+            ? null
+            : MatchResult.fromJson(json['firstLeg'] as Map<String, dynamic>),
       );
 }
 
@@ -108,6 +164,18 @@ class Cup {
   /// (1節に1試合ずつ)。
   final List<int>? roundDue;
 
+  /// この回戦から後は中立の会場(ホームの利が無く、入場収入は折半)。
+  /// 決勝は中立(古いセーブで null のときも決勝は中立)。FA カップは準決勝から
+  /// (ウェンブリー)。スーパーカップは全試合が中立。
+  final int? neutralFromRound;
+
+  /// 2試合合計で決める回戦(スペイン・イタリアの国内カップと、イングランドの
+  /// リーグカップの準決勝)。古いセーブでは空(1試合で決める)。
+  final List<int> twoLeggedRounds;
+
+  /// 2試合制の第2戦を、第1戦の何節あとに行うか。
+  static const int secondLegGap = 2;
+
   Cup({
     required this.type,
     required this.name,
@@ -118,8 +186,23 @@ class Cup {
     Map<String, int>? tiers,
     this.plannedRounds,
     this.roundDue,
+    this.neutralFromRound,
+    List<int>? twoLeggedRounds,
   })  : entrants = entrants ?? {},
-        tiers = tiers ?? {};
+        tiers = tiers ?? {},
+        twoLeggedRounds = twoLeggedRounds ?? const [];
+
+  /// [m]が中立の会場の試合か(ホームの利を消し、入場収入は折半)。
+  bool isNeutral(CupMatch m) =>
+      type == CupType.superCup || m.round >= (neutralFromRound ?? totalRounds);
+
+  /// [m]の次の試合を消化できるようになる節(2試合制の第2戦は第1戦の
+  /// [secondLegGap]節あと)。決まっていなければ null。
+  int? dueMatchdayForMatch(CupMatch m) {
+    final base = dueMatchdayFor(m.round);
+    if (base == null) return null;
+    return m.twoLegged && m.firstLeg != null ? base + secondLegGap : base;
+  }
 
   /// 決勝までの回戦の数。
   int get totalRounds {
@@ -192,6 +275,8 @@ class Cup {
         if (tiers.isNotEmpty) 'tiers': tiers,
         if (plannedRounds != null) 'plannedRounds': plannedRounds,
         if (roundDue != null) 'roundDue': roundDue,
+        if (neutralFromRound != null) 'neutralFromRound': neutralFromRound,
+        if (twoLeggedRounds.isNotEmpty) 'twoLeggedRounds': twoLeggedRounds,
       };
 
   factory Cup.fromJson(Map<String, dynamic> json) => Cup(
@@ -220,5 +305,8 @@ class Cup {
             ?.map((k, v) => MapEntry(k as String, v as int)),
         plannedRounds: json['plannedRounds'] as int?,
         roundDue: (json['roundDue'] as List?)?.map((e) => e as int).toList(),
+        neutralFromRound: json['neutralFromRound'] as int?,
+        twoLeggedRounds:
+            (json['twoLeggedRounds'] as List?)?.map((e) => e as int).toList(),
       );
 }

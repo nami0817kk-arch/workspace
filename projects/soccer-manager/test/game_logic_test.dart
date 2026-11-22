@@ -494,7 +494,8 @@ void main() {
       ],
     );
 
-    expect(player.yellowCards, 0);
+    // 警告は今季の枚数として残る(季末に0へ。2026-11-23)。
+    expect(player.yellowCards, yellowCardSuspensionThreshold);
     expect(player.suspendedMatches, 1);
   });
 

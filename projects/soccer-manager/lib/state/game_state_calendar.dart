@@ -104,11 +104,11 @@ extension GameStateCalendar on GameState {
         date: _cupDate(
             dom.plannedRounds != null ? null : dom.lastPlayedAtMatchday,
             continental: false,
-            due: dom.dueMatchdayFor(m.round)),
+            due: dom.dueMatchdayForMatch(m)),
         kind: DayEventKind.cupMatch,
         label: Tr.pick(
-            '${dom.name} vs ${_teamById(opp)?.name ?? '-'}(${m.homeTeamId == userId ? 'H' : 'A'})',
-            '${dom.name} vs ${_teamById(opp)?.name ?? '-'} (${m.homeTeamId == userId ? 'H' : 'A'})'),
+            '${dom.name} vs ${_teamById(opp)?.name ?? '-'}(${m.nextHomeId == userId ? 'H' : 'A'})',
+            '${dom.name} vs ${_teamById(opp)?.name ?? '-'} (${m.nextHomeId == userId ? 'H' : 'A'})'),
         shortLabel: Tr.pick('カップ戦', 'Cup tie'),
       ));
     }

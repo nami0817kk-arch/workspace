@@ -9,6 +9,7 @@ import '../logic/dynamics_engine.dart';
 import '../logic/match_engine.dart';
 import '../logic/transfer_window.dart';
 import '../models/attributes.dart';
+import '../models/card_rules.dart';
 import '../models/player.dart';
 import '../models/player_traits.dart';
 import '../models/training_result.dart';
@@ -260,22 +261,33 @@ class PlayerDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (p.yellowCards > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      Tr.pick(
-                          '警告累積: ${p.yellowCards}/$yellowCardSuspensionThreshold(あと${yellowCardSuspensionThreshold - p.yellowCards}枚で出場停止)',
-                          'Yellow cards: ${p.yellowCards}/$yellowCardSuspensionThreshold (${yellowCardSuspensionThreshold - p.yellowCards} more brings a ban)'),
-                      style: TextStyle(
-                        color:
-                            p.yellowCards >= yellowCardSuspensionThreshold - 1
-                                ? Colors.redAccent
-                                : SemanticColors.subtleText(context),
-                        fontSize: 12,
+                // 国内カップ戦・大陸大会の出場停止は、その大会で消化する
+                // (リーグ戦には出られる)。
+                for (final (left, label) in [
+                  (
+                    p.cupSuspendedMatches,
+                    Tr.pick('国内カップ戦', 'domestic cups'),
+                  ),
+                  (
+                    p.continentalSuspendedMatches,
+                    Tr.pick('大陸大会', 'European competition'),
+                  ),
+                ])
+                  if (left > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        Tr.pick('$labelは出場停止中（あと$left試合）',
+                            'Suspended in $label (${Tr.plural(left, 'match', 'matches')} left)'),
+                        style: const TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
-                  ),
+                if (p.yellowCards > 0)
+                  _leagueYellowLine(
+                      context, p, context.read<GameState>().leagueCardRulesNow),
                 if (p.isOnInternationalDuty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
@@ -1484,4 +1496,26 @@ class _AttributeGrid extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 今季のリーグ戦の警告の数と、あと何枚で出場停止か(国の決まりで数える。
+/// 2026-11-23)。
+Widget _leagueYellowLine(BuildContext context, Player p, CardRules rules) {
+  final next = rules.nextBanAt(p.yellowCards);
+  final left = next == null ? null : next - p.yellowCards;
+  return Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: Text(
+      left == null
+          ? Tr.pick('今季リーグ戦の警告: ${p.yellowCards}枚',
+              'League yellow cards this season: ${p.yellowCards}')
+          : Tr.pick('今季リーグ戦の警告: ${p.yellowCards}枚(あと$left枚で出場停止)',
+              'League yellow cards this season: ${p.yellowCards} ($left more brings a ban)'),
+      style: TextStyle(
+        color:
+            left == 1 ? Colors.redAccent : SemanticColors.subtleText(context),
+        fontSize: 12,
+      ),
+    ),
+  );
 }

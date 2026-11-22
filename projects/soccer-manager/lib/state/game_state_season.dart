@@ -95,10 +95,14 @@ extension GameStateSeason on GameState {
   }
 
   /// 今シーズンの暦(国・シーズン・節数から決まる。保存しない)。
+  /// イングランドの3部は代表ウィークにも節を置く。
   SeasonCalendar get seasonCalendar => SeasonCalendar.build(
         season: _save!.league.season,
         theme: currentLeagueTheme,
         totalMatchdays: _totalMatchdaysThisSeason,
+        playsInInternationalWindows:
+            SeasonCalendar.playsThroughInternationalWindows(
+                currentLeagueTheme, currentDivisionTier),
       );
 
   /// ゲームの中の今日。試合を消化するとその試合の日に進む。シーズンの
@@ -368,7 +372,7 @@ extension GameStateSeason on GameState {
     final next = cup?.nextUnplayedMatch;
     if (cup == null || next == null) return false;
     if (cup.plannedRounds != null) {
-      return _cupDue(cup.dueMatchdayFor(next.round));
+      return _cupDue(cup.dueMatchdayForMatch(next));
     }
     return _canAdvanceCup(cup.lastPlayedAtMatchday);
   }
@@ -385,7 +389,7 @@ extension GameStateSeason on GameState {
       final m = cup.nextUnplayedMatch;
       if (m == null ||
           !_isUserMatch(m) ||
-          !_cupDue(cup.dueMatchdayFor(m.round))) {
+          !_cupDue(cup.dueMatchdayForMatch(m))) {
         _notify();
         await _persistNow();
         return null;
@@ -394,13 +398,16 @@ extension GameStateSeason on GameState {
 
     final match = cup.nextUnplayedMatch!;
     if (!match.isBye) {
-      final home = allTeamsForCups.firstWhere((t) => t.id == match.homeTeamId);
-      final away = allTeamsForCups.firstWhere((t) => t.id == match.awayTeamId);
+      final home = allTeamsForCups.firstWhere((t) => t.id == match.nextHomeId);
+      final away = allTeamsForCups.firstWhere((t) => t.id == match.nextAwayId);
       _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
-    final result = CupEngine.playNextMatch(cup, allTeamsForCups,
-        month: _cupDate(continental: false).month);
+    // 警告と出場停止は国内のカップ戦の決まりで数える。
+    final result = CardRules.run(
+        _cupCardRules,
+        () => CupEngine.playNextMatch(cup, allTeamsForCups,
+            month: _cupDate(continental: false).month));
     _advanceTodayForCup(continental: false);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
     if (result != null) {
@@ -469,10 +476,13 @@ extension GameStateSeason on GameState {
       _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
-    final result = ContinentalCupEngine.playNextGroupMatch(
-      cup,
-      allTeamsForCups,
-      month: _cupDate(continental: true).month,
+    final result = CardRules.run(
+      const CardRules.continental(),
+      () => ContinentalCupEngine.playNextGroupMatch(
+        cup,
+        allTeamsForCups,
+        month: _cupDate(continental: true).month,
+      ),
     );
     _advanceTodayForCup(continental: true);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
@@ -503,10 +513,13 @@ extension GameStateSeason on GameState {
       _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
-    final result = ContinentalCupEngine.playNextKnockoutLeg(
-      cup,
-      allTeamsForCups,
-      month: _cupDate(continental: true).month,
+    final result = CardRules.run(
+      const CardRules.continental(),
+      () => ContinentalCupEngine.playNextKnockoutLeg(
+        cup,
+        allTeamsForCups,
+        month: _cupDate(continental: true).month,
+      ),
     );
     _advanceTodayForCup(continental: true);
     cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
@@ -531,11 +544,16 @@ extension GameStateSeason on GameState {
     final away = teams.firstWhere((t) => t.id == match.awayTeamId);
     // 相手が別ディビジョンのクラブだと、再起動後は選手を持っていない。
     _ensureSquadsForActiveTier([home, away]);
-    final result = MatchEngine.simulate(
-      home: home,
-      away: away,
-      matchday: 0,
-      weather: WeatherEngine.roll(month: today.month),
+    // スーパーカップは中立の会場。警告は国内のカップ戦の決まりで数える。
+    final result = CardRules.run(
+      _cupCardRules,
+      () => MatchEngine.simulate(
+        home: home,
+        away: away,
+        matchday: 0,
+        weather: WeatherEngine.roll(month: today.month),
+        homeAdvantageFactor: MatchEngine.neutralHomeAdvantageFactor,
+      ),
     );
     match.result = result;
     if (result.homeGoals == result.awayGoals) {
@@ -566,11 +584,16 @@ extension GameStateSeason on GameState {
     if (home == null || away == null) return null;
     _ensureSquadsForActiveTier([home, away]);
     CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
-    final result = MatchEngine.simulate(
-      home: home,
-      away: away,
-      matchday: 0,
-      weather: WeatherEngine.roll(month: _cupDate(continental: false).month),
+    // 中立の会場。警告は国内のカップ戦の決まりで数える。
+    final result = CardRules.run(
+      _cupCardRules,
+      () => MatchEngine.simulate(
+        home: home,
+        away: away,
+        matchday: 0,
+        weather: WeatherEngine.roll(month: _cupDate(continental: false).month),
+        homeAdvantageFactor: MatchEngine.neutralHomeAdvantageFactor,
+      ),
     );
     CupEngine.applyMatchResult(
         cup, [...allTeamsForCups, home, away], match, result);
@@ -644,8 +667,9 @@ extension GameStateSeason on GameState {
         _playCpuCupRound(domesticCup!);
         if (!canPlayNextDomesticCupMatchLive) return false;
         cupMatch = domesticCup!.nextUnplayedMatch;
-        home = teamById(cupMatch!.homeTeamId);
-        away = teamById(cupMatch.awayTeamId);
+        // 2試合制の第1戦は相手のホーム。
+        home = teamById(cupMatch!.nextHomeId);
+        away = teamById(cupMatch.nextAwayId);
       case LiveCupKind.continentalGroup:
       case LiveCupKind.continentalKnockout:
         if (!canPlayNextContinentalMatchLive) return false;
@@ -696,6 +720,8 @@ extension GameStateSeason on GameState {
     _liveCupWeather = weather;
     _liveCupMatch = cupMatch;
     _liveCupTie = tie;
+    // この大会の出場停止で出られる選手を決める(試合の終わりで戻す)。
+    CardRules.current = _liveCardRules;
     _liveSubstitutionsUsed = 0;
     _liveSubWindowsUsed = 0;
     _liveSubWindowKey = null;
@@ -726,7 +752,8 @@ extension GameStateSeason on GameState {
         final cup = domesticCup;
         final match = _liveCupMatch;
         if (cup == null || match == null) return merged;
-        if (merged.homeGoals == merged.awayGoals) {
+        // 2試合制の第1戦は延長もPK戦も無い(第2戦の後に合計で見る)。
+        if (!match.awaitingFirstLeg && match.levelAfter(merged)) {
           // 90分で並べば延長戦(30分)。それでも並べばPK戦。延長の得点は
           // 試合後の共通処理の後に足されるので、選手の通算得点にここで足す
           // (画面には出るのに成績に入っていなかった。2026-11-22)。
@@ -735,7 +762,7 @@ extension GameStateSeason on GameState {
           CupEngine.creditExtraTimeGoals(
               before, merged, [_liveCupHome!, _liveCupAway!]);
           match.extraTime = true;
-          if (merged.homeGoals == merged.awayGoals) {
+          if (match.levelAfter(merged)) {
             match.penaltyWinnerId = _runLiveShootout().winnerId;
           }
         }
@@ -822,27 +849,16 @@ extension GameStateSeason on GameState {
     return shootout;
   }
 
-  /// 自クラブが関わるカップ試合に、リーグ戦と同じ試合後効果(疲労・負傷・
-  /// 警告累積・通算出場/得点の記録など)を適用する。カップ戦でも
-  /// ローテーションが意味を持つようにするための共通処理で、自動消化の
-  /// 経路から呼ぶ(ライブ観戦の経路では確定処理側で適用済み)。
+  /// 自クラブが関わるカップ試合の、自動消化の経路の後の処理(過密日程の
+  /// 判定)。疲労・負傷・警告累積・通算出場/得点などの試合後効果は、
+  /// MatchEngine.simulate の中で1回だけ入る(2026-11-23 まではここでも
+  /// もう一度入れていて、警告・疲労・出場数が2倍に数えられていた)。
   void _applyUserCupPostMatchEffects(MatchResult result) {
     if (_save == null) return;
     final userId = _save!.userTeamId;
     if (result.homeTeamId != userId && result.awayTeamId != userId) return;
     // 過密日程の判定(前の試合との日付の間隔)。
     _noteUserMatchDay();
-    final home = teamById(result.homeTeamId);
-    final away = teamById(result.awayTeamId);
-    if (home == null || away == null) return;
-    MatchEngine.applyPostMatchEffects(
-      home: home,
-      away: away,
-      homeInjuryFactor: _injuryFactorFor(home.id),
-      awayInjuryFactor: _injuryFactorFor(away.id),
-      events: result.events,
-      weather: result.weather,
-    );
   }
 
   /// 国内カップのブラケット全ラウンド数(1回戦から決勝まで)。
@@ -895,6 +911,14 @@ extension GameStateSeason on GameState {
     final userId = _save!.userTeamId;
     final userInvolved =
         match.homeTeamId == userId || match.awayTeamId == userId;
+    // 入場収入(両クラブで折半。決勝などの中立の会場も折半)。
+    if (userInvolved) _bookDomesticCupGate(cup, match);
+    // 2試合制の第1戦の後は、勝ち負けはまだ決まらない(同じ週の残りの
+    // 第1戦だけ決める)。
+    if (userInvolved && match.result == null) {
+      _playCpuCupRound(cup);
+      return;
+    }
     if (userInvolved) {
       if (match.winnerId == userId) {
         final prize =
@@ -949,6 +973,11 @@ extension GameStateSeason on GameState {
         match.homeTeamId == userId || match.awayTeamId == userId;
     if (!userInvolved) return;
     final r = match.result;
+    // 入場収入はホームの試合だけ(リーグ戦より高い単価)。
+    _bookCupGate(r,
+        neutral: false,
+        split: false,
+        priceMultiplier: GameStateCupDays.continentalGateMultiplier(cup.level));
     final userWon = r != null &&
         ((r.homeTeamId == userId && r.homeGoals > r.awayGoals) ||
             (r.awayTeamId == userId && r.awayGoals > r.homeGoals));
@@ -988,6 +1017,14 @@ extension GameStateSeason on GameState {
     if (cup == null) return;
     final userId = _save!.userTeamId;
     final userInTie = tie.teamAId == userId || tie.teamBId == userId;
+    // 入場収入: ホームのレグだけ(高い単価)。1試合制の決勝は中立の会場で折半。
+    if (userInTie && tie.legs.isNotEmpty) {
+      _bookCupGate(tie.legs.last,
+          neutral: tie.singleLeg,
+          split: false,
+          priceMultiplier:
+              GameStateCupDays.continentalGateMultiplier(cup.level));
+    }
     if (cup.stepDue != null) {
       // 新しい形: 回戦に進んだ賞金・優勝は _settleContinentalPrizes が払う。
       if (userInTie) _playCpuContinental(cup);
@@ -1026,6 +1063,8 @@ extension GameStateSeason on GameState {
   void _afterSuperCupApplied(CupMatch match) {
     if (_save == null) return;
     _advanceTodayTo(seasonCalendar.superCupDate);
+    // 中立の会場。入場収入は折半。
+    _bookCupGate(match.result, neutral: true, split: true);
     if (match.winnerId == _save!.userTeamId) {
       _save!.trophyHistory.add(Tr.pick('シーズン${_save!.league.season} スーパーカップ優勝',
           'Season ${_save!.league.season} Super Cup winners'));
@@ -1112,6 +1151,8 @@ extension GameStateSeason on GameState {
     _save!.bestElevenHistory.add(
       BestElevenEngine.compute(league, league.season),
     );
+    // 警告の累積は季ごと(全大会)。出場停止の残りは次の季へ持ち越す。
+    _resetSeasonCards();
 
     // 監督としての通算成績を更新する。
     final userRow = standings.firstWhere((r) => r.teamId == _save!.userTeamId);

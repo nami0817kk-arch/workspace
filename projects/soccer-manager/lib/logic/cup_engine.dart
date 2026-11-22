@@ -21,6 +21,9 @@ class CupEngine {
   /// クラブがホームになる。回戦の人数が2の累乗に合わないときは、上の部の
   /// クラブから不戦勝で次の回戦へ回す(不戦勝の試合は作らない)。
   /// [roundDue]は決勝までの回戦の数から、各回戦を消化できるようになる節を返す。
+  /// 決勝は中立の会場。[neutralSemiFinal]なら準決勝も中立(FA カップ)。
+  /// [twoLeggedSemiFinal]なら準決勝は2試合合計(スペイン・イタリアの国内
+  /// カップ、イングランドのリーグカップ)。
   static Cup createTiered({
     required CupType type,
     required String name,
@@ -28,6 +31,8 @@ class CupEngine {
     Map<int, int>? entryRound,
     List<int> Function(int totalRounds)? roundDue,
     String? focusTeamId,
+    bool neutralSemiFinal = false,
+    bool twoLeggedSemiFinal = false,
     Random? random,
   }) {
     final rng = random ?? _rng;
@@ -64,6 +69,8 @@ class CupEngine {
       tiers: tiers,
       plannedRounds: total,
       roundDue: roundDue?.call(total),
+      neutralFromRound: neutralSemiFinal && total >= 2 ? total - 1 : total,
+      twoLeggedRounds: twoLeggedSemiFinal && total >= 2 ? [total - 1] : null,
     );
     _buildPlannedRound(cup, 1, const [], rng);
     if (focusTeamId != null) putTeamFirst(cup, focusTeamId);
@@ -133,7 +140,12 @@ class CupEngine {
         home = away;
         away = t;
       }
-      matches.add(CupMatch(round: round, homeTeamId: home, awayTeamId: away));
+      matches.add(CupMatch(
+        round: round,
+        homeTeamId: home,
+        awayTeamId: away,
+        twoLegged: cup.twoLeggedRounds.contains(round),
+      ));
     }
     cup.rounds.add(matches);
   }
@@ -249,11 +261,13 @@ class CupEngine {
   }
 
   /// 自クラブの出ない試合を、裏の試合(他の部の試合と同じ軽い計算)で
-  /// 決める。延長・PK戦まで決着させ、回戦が終われば次を組む。
+  /// 決める。延長・PK戦まで決着させ、回戦が終われば次を組む。2試合制の
+  /// 組は、次の1試合(第1戦か第2戦)だけを行う。中立の会場ではホームの利が
+  /// 無い。
   static void playInBackground(Cup cup, List<Team> allTeams, CupMatch match) {
     if (match.result != null || match.isBye) return;
-    final home = allTeams.where((t) => t.id == match.homeTeamId).firstOrNull;
-    final away = allTeams.where((t) => t.id == match.awayTeamId).firstOrNull;
+    final home = allTeams.where((t) => t.id == match.nextHomeId).firstOrNull;
+    final away = allTeams.where((t) => t.id == match.nextAwayId).firstOrNull;
     if (home == null || away == null) {
       // 相手のいない試合(壊れたセーブ)は、いる側の勝ちにする。
       match.result = MatchResult(
@@ -267,10 +281,16 @@ class CupEngine {
       _advanceRoundIfComplete(cup);
       return;
     }
-    final r =
-        BackgroundMatchEngine.simulate(home: home, away: away, matchday: 0);
+    final r = BackgroundMatchEngine.simulate(
+        home: home, away: away, matchday: 0, neutral: cup.isNeutral(match));
     applyMatchResult(cup, allTeams, match, r);
   }
+
+  /// [match]の次の試合のホームの利の係数(中立の会場なら利なし)。
+  /// [home]は中立でないときの係数(既定はCPUの既定値)。
+  static double homeAdvantageFor(Cup cup, CupMatch match,
+          {double home = MatchEngine.defaultHomeAdvantageFactor}) =>
+      cup.isNeutral(match) ? MatchEngine.neutralHomeAdvantageFactor : home;
 
   /// チームIDのリストからノックアウト方式のカップを作成する。
   /// 参加数が2の累乗でない場合は不戦勝(BYE)で埋める。BYE同士が対戦して
@@ -482,6 +502,8 @@ class CupEngine {
   /// カップの次の未消化試合を1試合消化する。試合結果を返す(BYE戦は既に消化済みなのでnullを返す)。
   /// [month]は試合の日の月(1〜12)。天候をその季節のものにする(渡さないと
   /// 1年をならした割合になり、12月に猛暑が出ることがある)。
+  /// 2試合制の組は次の1試合(第1戦か第2戦)だけを行い、第1戦ならその
+  /// 結果を返す。中立の会場ではホームの利が無い。
   static MatchResult? playNextMatch(
     Cup cup,
     List<Team> allTeams, {
@@ -491,17 +513,19 @@ class CupEngine {
     final match = cup.nextUnplayedMatch;
     if (match == null || match.isBye) return null;
 
-    final home = allTeams.firstWhere((t) => t.id == match.homeTeamId);
-    final away = allTeams.firstWhere((t) => t.id == match.awayTeamId);
+    final firstLeg = match.awaitingFirstLeg;
+    final home = allTeams.firstWhere((t) => t.id == match.nextHomeId);
+    final away = allTeams.firstWhere((t) => t.id == match.nextAwayId);
     final result = MatchEngine.simulate(
       home: home,
       away: away,
       matchday: matchday,
       weather: WeatherEngine.roll(month: month),
+      homeAdvantageFactor: homeAdvantageFor(cup, match),
     );
     applyMatchResult(cup, allTeams, match, result);
     // 延長戦の得点を含めた結果を返す。
-    return match.result;
+    return firstLeg ? match.firstLeg : match.result;
   }
 
   /// 外部(ライブ観戦)で確定した[result]を[match]に適用し、引き分けなら
@@ -514,8 +538,13 @@ class CupEngine {
     CupMatch match,
     MatchResult result,
   ) {
+    // 2試合制の第1戦: 結果を控えるだけ(延長・PK戦は第2戦の後)。
+    if (match.awaitingFirstLeg) {
+      match.firstLeg = result;
+      return;
+    }
     match.result = result;
-    if (result.homeGoals == result.awayGoals) {
+    if (match.levelAfter(result)) {
       final home = allTeams.firstWhere((t) => t.id == match.homeTeamId);
       final away = allTeams.firstWhere((t) => t.id == match.awayTeamId);
       // 90分で引き分けなら延長戦(30分)。ライブ観戦側で延長やPK戦を済ませて
@@ -526,9 +555,12 @@ class CupEngine {
           cup.type != CupType.superCup) {
         match.result = extraTime(result, home, away);
         match.extraTime = true;
+        // 延長の得点は試合後の共通処理(MatchEngine.simulate の中)の後に
+        // 足されるので、ここで選手の通算得点に数える。
+        creditExtraTimeGoals(result, match.result!, [home, away]);
       }
       final r = match.result!;
-      if (r.homeGoals == r.awayGoals) {
+      if (match.levelAfter(r)) {
         // ライブ観戦側で1本ずつのPK戦を先に実施済みの場合はその勝者を尊重する。
         match.penaltyWinnerId ??= decidePenaltyWinner(home, away);
       }

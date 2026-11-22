@@ -106,7 +106,7 @@ class CalendarEngine {
         cup.plannedRounds != null ? null : cup.lastPlayedAtMatchday,
         league,
         calendar,
-        due: cup.dueMatchdayFor(match.round)));
+        due: cup.dueMatchdayForMatch(match)));
     final involvesUser =
         match.homeTeamId == userTeamId || match.awayTeamId == userTeamId;
     if (!involvesUser) {
