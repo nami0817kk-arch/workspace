@@ -626,7 +626,10 @@ void main() {
         star
           ..injuryWeeks = 0
           ..injuryType = null;
-        if (game.lastInternationalCallUps.contains(star.name)) {
+        // 知らせの一覧は節ごとに作り直されるので、節を終えた時点でまだ
+        // 代表に出ている印でも数える。
+        if (game.lastInternationalCallUps.contains(star.name) ||
+            star.isOnInternationalDuty) {
           calledSeen = true;
         }
         if (game.today.isAfter(sat)) break;
