@@ -110,6 +110,8 @@ List<String> momentsOf(Career c) {
     if (a.team != c.mine) continue;
     if (a.kind == AwardKind.mvp || a.kind == AwardKind.finalsMvp) out.add('${a.season}年目 ${a.name}が${a.kind.label}');
   }
+  final sc = c.scenarioOf;
+  if (sc != null && c.scenarioResult == 1) out.add('お題「${sc.label}」を果たした');
   final (best, _) = c.tradeBestWorst;
   if (best != null) {
     final t = c.myTrades[best];

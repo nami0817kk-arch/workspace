@@ -2,6 +2,7 @@ import 'career.dart';
 import 'codex.dart';
 import 'legacy.dart';
 import 'player.dart';
+import 'scenario.dart';
 
 /// 実績。任期をまたいで端末に残る。
 enum Achievement {
@@ -62,11 +63,25 @@ class Profile {
   /// [c] の名鑑を書き直す(同じキャリアは上書き)。
   void recordLegacy(Career c) {
     legacy[c.seed] = (tenures: tenuresOf(c), legends: legendsOf(c), moments: momentsOf(c));
+    tradeWins[c.seed] = c.tradeRecord.$1;
     // 古いものから消す(多くなりすぎないように)
     while (legacy.length > 20) {
       legacy.remove(legacy.keys.first);
     }
   }
+
+  /// キャリアごとのトレードの勝ち数(リーグの種 → 勝ち)。お題の解放に使う(D-2)。
+  final Map<int, int> tradeWins = {};
+
+  /// お題 [s] が出ているか(D-2)。
+  bool scenarioOpen(Scenario s) => switch (s) {
+        Scenario.rebuild || Scenario.dynasty || Scenario.taxHell => true,
+        Scenario.legacyMess => titles >= 1,
+        Scenario.noPicks => tradeWins.values.fold(0, (a, b) => a + b) >= 10,
+        Scenario.outdated => legacy.values.any((l) => l.tenures.any((t) => t.to - t.from + 1 >= 5)),
+        Scenario.troubled => codex.containsKey('trait:troublemaker'),
+        Scenario.expansion => bestWins >= 55,
+      };
 
   /// これまでの殿堂の選手の名前(新しいリーグの伝説にする)。
   List<String> get legendNames => [for (final l in legacy.values) ...l.legends.map((x) => x.name)].take(12).toList();
@@ -174,6 +189,7 @@ class Profile {
         'bl': bestLevel,
         'bp': bestFirst10,
         if (codex.isNotEmpty) 'cx': codex,
+        if (tradeWins.isNotEmpty) 'tw': [for (final e in tradeWins.entries) [e.key, e.value]],
         if (legacy.isNotEmpty)
           'lg': [
             for (final e in legacy.entries)
@@ -200,6 +216,10 @@ class Profile {
         bestFirst10: (j['bp'] as int?) ?? 0,
       )
         ..codex.addAll({for (final e in (j['cx'] as Map? ?? const {}).entries) '${e.key}': '${e.value}'})
+        ..tradeWins.addAll({
+          for (final x in (j['tw'] as List? ?? const []))
+            if (x is List && x.length == 2) x[0] as int: x[1] as int,
+        })
         ..legacy.addAll({
           for (final x in (j['lg'] as List? ?? const []))
             if (x is Map)

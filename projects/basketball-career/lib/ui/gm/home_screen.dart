@@ -60,13 +60,23 @@ class GmHomeScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               for (final s in Scenario.values)
-                Card(
-                  child: ListTile(
-                    title: Text(s.label, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('${s.goal}(期限 ${s.years}年)', style: const TextStyle(fontSize: 12.5)),
-                    onTap: () => Navigator.pop(ctx, s),
+                // 遊ぶうちに出てくるお題(D-2): 出ていないものは「？？？」と、出る条件
+                if (c.profile.scenarioOpen(s))
+                  Card(
+                    child: ListTile(
+                      title: Text(s.label, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text('${s.goal}(期限 ${s.years}年)', style: const TextStyle(fontSize: 12.5)),
+                      onTap: () => Navigator.pop(ctx, s),
+                    ),
+                  )
+                else
+                  Card(
+                    child: ListTile(
+                      enabled: false,
+                      title: const Text('？？？', style: TextStyle(fontWeight: FontWeight.bold)),
+                      subtitle: Text('(${scenarioLock(s) ?? ''})', style: const TextStyle(fontSize: 12.5)),
+                    ),
                   ),
-                ),
               if (c.career != null) const Text('始めると、いまの任期の続きは消える。', style: TextStyle(fontSize: 12, color: GmColors.bad)),
             ]),
           ),
