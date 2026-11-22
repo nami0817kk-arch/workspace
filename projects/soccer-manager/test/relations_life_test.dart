@@ -8,6 +8,8 @@ import 'package:soccer_manager/logic/relations_engine.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
+import 'support/sell_via_offer.dart';
+
 /// 選手同士の関係・私生活の出来事・代理人の個性の検査。
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -71,7 +73,7 @@ void main() {
       final friend =
           team.players.firstWhere((b) => RelationsEngine.areFriends(seller, b));
       friend.happiness = 60;
-      expect(await gs.sellPlayer(seller.id), isTrue);
+      expect(await sellViaOffer(gs, seller.id), isNotNull);
       expect(friend.happiness, 60 - RelationsEngine.friendLeftPenalty);
       expect(gs.save!.newsLog.any((n) => n.text.contains('寂しがっている')),
           isTrue);

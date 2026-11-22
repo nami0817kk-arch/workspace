@@ -16,6 +16,8 @@ import 'package:soccer_manager/models/pre_contract.dart';
 import 'package:soccer_manager/models/staff_member.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
+import 'support/sell_via_offer.dart';
+
 /// 契約まわりの「ゲームの中でつじつまが合わない」所を直した検査。
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -25,21 +27,26 @@ void main() {
       Player(id: id, name: id, age: age, position: Position.mc, potential: 60);
 
   group('1. 売却では売り手が違約金を払わない', () {
-    test('高年俸・長期契約でも、売値は市場価値の7割のまま', () async {
+    test('高年俸・長期契約でも、入るのはオファーの額(違約金は引かれない)', () async {
       final gs = GameState();
       await gs.startNewGame('売却FC');
       final p = make('rb_sale')
         ..wage = 500
         ..contractYearsRemaining = 5;
       gs.userTeam.players.add(p);
+      // 相場は市場価値×契約の残りの係数(4年以上は1.1倍)。
       final net = gs.netReleaseValueFor(p.id);
       expect(net, ContractEngine.salePrice(p));
-      expect(net, (p.marketValue * 0.7).round());
+      expect(net, (p.marketValue * 1.1).round());
       expect(net, greaterThan(0));
 
       final before = gs.save!.budget;
-      expect(await gs.sellPlayer(p.id), isTrue);
-      expect(gs.save!.budget, before + net, reason: '違約金は引かれない');
+      final o = await sellViaOffer(gs, p.id);
+      expect(o, isNotNull);
+      final solidarity = gs.solidarityFor(p, o!.amount);
+      expect(gs.save!.budget,
+          inInclusiveRange(before + o.amount - solidarity, before + o.amount),
+          reason: '違約金は引かれない');
     });
 
     test('合意解除では、今まで通り残りの年俸の一部を払う', () async {
@@ -203,8 +210,12 @@ void main() {
         await gs.startNewGame('若手FC$i');
         final p = make('rb_sold_$i', age: 16);
         gs.userTeam.players.add(p);
-        expect(await gs.sellPlayer(p.id), isTrue);
-        final moved = gs.save!.league.teams
+        expect(await sellViaOffer(gs, p.id), isNotNull);
+        final everyone = [
+          ...gs.save!.allTeams,
+          for (final l in gs.save!.foreignLeagues.values) ...l.teams,
+        ];
+        final moved = everyone
             .expand((t) => t.players)
             .where((x) => x.id == p.id)
             .firstOrNull;
@@ -229,12 +240,8 @@ void main() {
         }
       }
       var moves = 0;
-      for (var seed = 0; seed < 200 && moves < 10; seed++) {
-        if (AiTransferEngine.maybeGenerate(teams, userId, Random(seed)) ==
-            null) {
-          continue;
-        }
-        moves++;
+      for (var seed = 0; seed < 20 && moves < 10; seed++) {
+        moves += AiTransferEngine.runWeek(teams, userId, Random(seed)).length;
       }
       expect(moves, greaterThan(0));
       final moved = teams

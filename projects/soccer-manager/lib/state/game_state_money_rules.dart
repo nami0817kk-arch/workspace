@@ -92,7 +92,7 @@ extension GameStateMoneyRules on GameState {
           : (salePrice * solidarityPercent / 100).round();
 
   /// 移籍金を受け取って売るとき(来たオファー・リリース条項)に呼ぶ。
-  /// 市場価値の7割で手放す「放出」には、連帯貢献金はかからない。
+  /// 売るのはこの形だけ(2026-11-23 にその場で売れる「放出」をやめた)。
   /// [buyerClubName]が他の国のクラブなら国をまたぐ移籍(連帯貢献金がかかる)。
   void _onPlayerSold(Player player, int salePrice, {String? buyerClubName}) {
     final s = _save!;

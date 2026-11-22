@@ -236,18 +236,11 @@ extension GameStateWeek on GameState {
     lastInternationalCallUps = [...lastInternationalCallUps, ...calledUp];
 
     // CPUクラブ同士の移籍市場の週次処理(ユーザーは関与しない)。
-    // 他のクラブも窓が開いている間しか移籍しない。
-    final aiNews = isTransferWindowOpen
-        ? AiTransferEngine.maybeGenerate(
-            league.teams,
-            s.userTeamId,
-            GameState._aiTransferRng,
-            // 行き先のクラブも国の登録の決まりを守る(同じ国の中の移籍)。
-            canRegister: (to, p) =>
-                _cpuCanRegister(to, p, fromCountry: currentLeagueTheme),
-          )
-        : null;
-    if (aiNews != null) lastAiTransferNews = aiNews;
+    // 他のクラブも窓が開いている間しか移籍しない。窓の間は毎週、
+    // 移籍金付きで何件も動く(_advanceAiTransfers)。返るのはニュースに
+    // 出す主力の移籍。
+    final aiNews =
+        isTransferWindowOpen ? _advanceAiTransfers() : const <String>[];
 
     // CPUクラブの簡易的な週次成長(施設・スタッフの上乗せは無いが、
     // 何もしないとユーザーだけが伸び続けリーグ全体が停滞するため)。
@@ -373,9 +366,8 @@ extension GameStateWeek on GameState {
               'Your deposit matured and ${formatMoney(maturedTotal)} was paid back'),
           context: newsWeek);
     }
-    if (aiNews != null) {
-      _logNews(Tr.pick('移籍市場: $aiNews', 'Transfer market: $aiNews'),
-          context: newsWeek);
+    for (final n in aiNews) {
+      _logNews(Tr.pick('移籍市場: $n', 'Transfer market: $n'), context: newsWeek);
     }
     if (crisis != null) {
       _logNews(crisis, context: newsWeek);
