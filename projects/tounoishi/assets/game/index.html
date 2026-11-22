@@ -58,7 +58,7 @@ canvas{display:block;width:100%;height:auto;image-rendering:pixelated;border:1px
 .drow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.drow .btn small{display:block;font-size:10.5px;color:var(--sub)}
 .sc{margin:0;padding-left:1.2em;font-size:13px;line-height:1.7}
 .dex{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
-.dex li{border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:12.5px}.dex li small{display:block;color:var(--sub);font-size:10.5px;line-height:1.45}.dex li.un{opacity:.7}
+.dex li{border:1px solid var(--line);border-radius:6px;padding:6px 8px 6px 52px;font-size:12.5px;position:relative;min-height:52px}.dex .dimg{position:absolute;left:5px;top:5px;width:42px;height:42px;image-rendering:auto;object-fit:contain}.dex li.un .dimg{filter:brightness(0);opacity:.28}.dex li small{display:block;color:var(--sub);font-size:10.5px;line-height:1.45}.dex li.un{opacity:.7}
 
 /* v11: スマホの縦画面1枚に収める */
 [hidden]{display:none!important}
@@ -169,7 +169,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v18</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v19</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1038,8 +1038,8 @@ function showResult(){
  el.innerHTML='<div class="tbox"><h2>塔は落ちた</h2><p class="big">'+r.sc.toLocaleString()+' 点 <span class="rank">'+(r.rank||'')+'</span>'+(r.nb?' <b class="nb">自己ベスト！</b>':'')+'</p>'+
   '<p class="sub">'+DIFF[g.diff||'normal'].n+'の自己ベスト：'+r.best.toLocaleString()+' 点</p>'+
   '<ul class="sc"><li>到達：'+F+'階（'+F*1000+'）</li><li>周：'+(g.round-1)+'周を守った（'+(g.round-1)*200+'）</li><li>倒した冒険者：'+(g.kills||0)+'人（'+(g.kills||0)*20+'）</li><li>生まれた主役：'+g.promos+'匹（'+g.promos*150+'）</li><li>倒し切った勇者：'+g.yuKilled+'人（'+g.yuKilled*500+'）</li><li>残った掘る力：'+(g.dp||0)+'（'+(g.dp||0)*10+'）</li><li>最後の軍：'+armyPower()+'</li></ul><p class="sub">コア「'+esc(r.adv||'')+'」</p>'+
-  '<button class="btn go" id="tback">タイトルへ</button></div>';
- el.hidden=false;document.getElementById('tback').onclick=showTitle;
+  '<div class="row2"><button class="btn go" id="tagain">もう一度（'+DIFF[g.diff||'normal'].n+'）</button><button class="btn" id="tback">タイトルへ</button></div></div>';
+ el.hidden=false;document.getElementById('tback').onclick=showTitle;document.getElementById('tagain').onclick=function(){newGame(g.diff||'normal');hideTitle();};
 }
 function alertBadge(){
  var b=document.getElementById('alertb'),C=g.core,txt='',tf=-1,hot=false;
@@ -1117,10 +1117,10 @@ function showDex(){
  var el=document.getElementById('title'),n=0;
  var rows=DEXORD.map(function(k){
   var d=DEX[k],S=SPEC[k];if(d&&d.seen)n++;
-  if(!d||!d.seen)return '<li class="un"><b>？？？</b>'+(HINT[k]?'<small>ヒント：'+HINT[k]+'</small>':'<small>'+(S.line=='mag'?'魔分':'養分')+'の土から生まれる</small>')+'</li>';
+  if(!d||!d.seen)return '<li class="un">'+dimg(k)+'<b>？？？</b>'+(HINT[k]?'<small>ヒント：'+HINT[k]+'</small>':'<small>'+(S.line=='mag'?'魔分':'養分')+'の土から生まれる</small>')+'</li>';
   var envs=Object.keys(d.e).filter(function(e){return ENV[e];}).map(function(e){return ENV[e].n;}).join('・');
   var muts=Object.keys(d.m).map(function(m){return MUTN[m];}).join('・');
-  return '<li><b>'+S.n+'</b><small>'+(envs?'土：'+envs+' ':'')+(muts?'変異：'+muts:'')+'</small></li>';
+  return '<li>'+dimg(k)+'<b>'+S.n+'</b><small>'+(DDESC[k]||'')+'</small><small>'+(envs?'土：'+envs+' ':'')+(muts?'変異：'+muts:'')+'</small></li>';
  }).join('');
  el.innerHTML='<div class="tbox wide"><h2>図鑑 <small>'+n+' / '+DEXORD.length+'</small></h2><ul class="dex">'+rows+'</ul><h3 class="dexh">冒険者</h3><ul class="dex">'+enRows()+'</ul><button class="btn go" id="tback">もどる</button></div>';
  el.hidden=false;document.getElementById('tback').onclick=function(){if(g&&!g.title&&!over)hideTitle();else showTitle();};
@@ -1607,7 +1607,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v18 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v19 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
@@ -1981,7 +1981,10 @@ function upLine(s3){var S=SPEC[s3],lv=(g.slv||{})[s3]||0,c=LCOST[S.t][lv];if(c==
 // 図鑑の冒険者
 var ENDESC={yuu:'毎周の最後に来る宿敵。逃げては強くなって戻る',sen:'体力が高い前衛。突進する',tou:'足が速く、宝箱に目ざとい',mah:'離れて魔法を撃ち、魔分を残す',sou:'仲間を回復する',yumi:'遠くから矢を射る',kis:'仲間をかばう',wana:'通った道に罠を置く',ura:'コアの方向がうっすら分かる',kou:'土の壁を掘り抜く',ren:'養分を吸って石人形を呼ぶ',nin:'速く、凍結・眠り・しびれが効かない',doll:'錬金術師が呼ぶ石の人形'};
 function dexEn(k){if(DEX['en_'+k])return;DEX['en_'+k]={seen:1};kvSet('tou-dex',JSON.stringify(DEX));}
-function enRows(){return Object.keys(EN).map(function(k){return DEX['en_'+k]?'<li><b>'+EN[k].n+'</b><small>'+ENDESC[k]+'</small></li>':'<li class="un"><b>？？？</b><small>まだ来ていない</small></li>';}).join('');}
+function dimg(k){k=DIMGK[k]||k;var src=GSRC[k]||GSRC[k+'_moss'];return src?'<img class="dimg" alt="" src="'+src+'">':'';}
+var DDESC={slime:'壁まで真っすぐ進み、養分を運ぶ。弱るとツボミから花に',mush:'動かない。胞子で子株を植え、近くの冒険者を眠らせる',worm:'幼虫→さなぎ→成虫と育つ。成虫は卵を産む',beetle:'つがいで卵を産む。魔法に強い',lizard:'広い所に巣を作り、巣で卵を産む',bat:'土の天井の下に3匹集まると増える',dragon:'横にしか動かず横に炎。傷つくと卵に戻る',golem:'とても硬い。ゆっくり歩く',wisp:'魔分を運び、冒険者の MP を削る',pixie:'近くの仲間を癒す',imp:'冒険者を惑わせ、道に迷わせる',ghost:'壁をすり抜けて冒険者に向かう',gargoyle:'石の像になって2匹に分かれる',harpy:'遠くの冒険者に気づき、フェロモンで止める',demon:'冒険者の攻撃を弱める。何でも食べる頂点',lich:'近くで倒れた冒険者をスケルトンに変える',skeleton:'亡骸から起き上がる',mimic:'宝箱に化けている',chimera:'3つの土の力を持つ',gslime:'倒れると大量の養分をばらまく',guardian:'コアを守り、塔の魔物を硬くする',phoenix:'一度だけ炎の中からよみがえる',d_sleepy:'冒険者の攻撃を大きく弱める。よく眠る',d_blue:'離れて魔法で撃つ',d_bigblue:'大きく強い魔法の使い手',evilgod:'塔でいちばん強い力を持つ'};
+var DIMGK={d_sleepy:'demon_sleepy',d_blue:'demon_blue',d_bigblue:'demon_bigblue'};
+function enRows(){return Object.keys(EN).map(function(k){return DEX['en_'+k]?'<li>'+dimg(k)+'<b>'+EN[k].n+'</b><small>'+ENDESC[k]+'</small></li>':'<li class="un">'+dimg(k)+'<b>？？？</b><small>まだ来ていない</small></li>';}).join('');}
 // 負けた時のコアの助言
 function advice(){
  var ar=armyPower(),nh=g.cr.filter(function(m){return m.hero;}).length;
