@@ -25,7 +25,8 @@ for (const seed of [3, 8, 21, 5, 13, 34]) { // 2026-11-22：3試合では乱数�
       if (dep(R.disp[a][1]) > last + 1 && dep(R.disp[a][1]) > 52.5 && !(R.fl && R.expect === a)) st.off++;
       st.n++;
     }
-    for (const d of D) st.mark.push(Math.min(...A.map((a) => dd(a, d))));
+    // マークはボールの近く（25m 以内）の守り手で見る。遠いサイドの子はマークせずボール側を固める（2026-11-22「現実に近いポジショニング」）
+    for (const d of D) if (Math.hypot(R.disp[d][0] - R.ball[0], R.disp[d][1] - R.ball[1]) < 25) st.mark.push(Math.min(...A.map((a) => dd(a, d))));
     // 守る側の最終ライン（深い4人）の深さのばらつき
     const ds = D.map((id) => dep(R.disp[id][1])).sort((x, y) => y - x).slice(0, 4);
     const mu = ds.reduce((x, y) => x + y, 0) / 4;
