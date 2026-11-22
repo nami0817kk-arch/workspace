@@ -92,6 +92,11 @@ final kHistory = <HistEvent>[
     return '桶狭間で、今川義元が織田信長の奇襲に討たれた。三河の松平元康（のちの徳川家康）は独り立ちした。';
   }),
   HistEvent('kawanakajima4', 1561, (g) {
+    if (_h(g, 'history_kawanakajima')) {
+      _cut(g, '武田', .5);
+      _grow(g, '上杉', 8);
+      return '川中島で、上杉謙信が武田の本陣に斬り込み、武田信玄を討ち取った。甲斐の虎を失った武田家は、大きく揺らいだ。';
+    }
     _cut(g, '武田', .9);
     _cut(g, '上杉', .9);
     return '川中島で、武田信玄と上杉謙信が激しくぶつかった。両軍とも多くの将を失った。';
@@ -139,10 +144,11 @@ final kHistory = <HistEvent>[
     return '遠江の三方ヶ原で、武田信玄が徳川家康を打ち破った。';
   }),
   HistEvent('shingen_death', 1573, (g) {
-    _cut(g, '武田', .8);
+    final dead = _h(g, 'history_kawanakajima'); // 信玄はすでに川中島で討たれている
+    if (!dead) _cut(g, '武田', .8);
     final a = _fall(g, '朝倉', '織田');
     final b = _fall(g, '浅井', '織田');
-    return '武田信玄が陣中で没した。織田信長は将軍を京から追い、${a || b ? '越前の朝倉、近江の浅井を滅ぼした' : '室町の世は終わった'}。';
+    return '${dead ? '' : '武田信玄が陣中で没した。'}織田信長は将軍を京から追い、${a || b ? '越前の朝倉、近江の浅井を滅ぼした' : '室町の世は終わった'}。';
   }),
   HistEvent('nagashino', 1575, (g) {
     if (_h(g, 'history_nagashino')) {
@@ -509,6 +515,14 @@ List<SceneDef> buildHistoryScenes() {
                 if (g.rng.chance(.12)) {
                   g.die('川中島の霧の中で討死した', 'senshi');
                   return '霧の中から、敵の槍がのびてきた。';
+                }
+                // 上杉方として斬り込むと、ごくまれに謙信の太刀が信玄に届く（小さな分岐）。
+                if (!takeda && g.rng.chance(.04 + l.un / 2500)) {
+                  g.setFlag('history_kawanakajima');
+                  l.merit += 50;
+                  l.fame += 40;
+                  g.mark('川中島で謙信とともに本陣へ斬り込み、信玄を討った');
+                  return '霧の中、謙信の太刀が床几の信玄に振り下ろされた。今度は、軍配では受けきれなかった――歴史が、変わった。';
                 }
                 l.merit += 20;
                 l.fame += 10;

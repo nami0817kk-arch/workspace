@@ -1102,6 +1102,21 @@ void main() {
       fail('成人した人生が見つからない');
     });
 
+    test('川中島で信玄が討たれた人生では、三方ヶ原や信玄の陣没が起きない', () {
+      for (var seed = 0; seed < 200; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        g.setFlag('history_kawanakajima');
+        playOut(g, Rng(seed));
+        for (final id in kFlagSkipScenes['history_kawanakajima']!) {
+          expect(g.hasFlag('scene:$id'), isFalse, reason: id);
+        }
+        expect(g.l.log.any((e) => e.txt.contains('武田信玄が陣中で没した')), isFalse);
+      }
+    });
+
     test('死に方は保存の往復で残る', () {
       for (var seed = 0; seed < 40; seed++) {
         final rng = Rng(seed);

@@ -111,6 +111,7 @@ String? _specialTitle(Game g, String way, String kind) {
     'history_sekigahara': '関ヶ原で天下を西へ傾けた',
     'history_nagashino': '長篠で武田の騎馬を救った',
     'history_odawara': '小田原で北条の家を残した',
+    'history_kawanakajima': '川中島で信玄を討った',
   };
   for (final e in changed.entries) {
     if (l.flags.contains(e.key)) return '${e.value}$n';

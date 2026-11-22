@@ -201,6 +201,13 @@ const kFlagSkipScenes = <String, Set<String>>{
     'h_e_tensho_jingo',
   },
   'history_odawara': {'h_e_edo'},
+  // 川中島で信玄が討たれた: 信玄が生きていることを前提にした岐路は出ない。
+  'history_kawanakajima': {
+    'h_mikatagahara',
+    'h_e_mimase',
+    'h_e_sunpu_1568',
+    'h_r_shingen',
+  },
 };
 
 /// 小さな分岐で起きない年表の出来事（旗 → 出来事の id）。
@@ -208,6 +215,7 @@ const kFlagSkipEvents = <String, Set<String>>{
   'history_nagashino': {'tensho_jingo'},
   // 小田原で北条が早く降って残った: 家康の関東移封（北条の旧領へ）は起きない。
   'history_odawara': {'edo'},
+  'history_kawanakajima': {'mimasetoge', 'mikatagahara'},
 };
 
 bool sceneSkippedInLine(Game g, String id) {
@@ -938,6 +946,7 @@ String lineName(Game g) => kLineNames[worldLine(g)]!;
 const kSmallBranchNames = {
   'history_nagashino': '長篠で武田の騎馬が崩れなかった',
   'history_odawara': '小田原で北条の家が残った',
+  'history_kawanakajima': '川中島で武田信玄が討たれた',
 };
 
 /// あなたが変えた歴史（世界線と小さな分岐）を、短い文で並べる。史実どおりなら空。
