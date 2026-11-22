@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tounoishi/game/bridge.dart';
-import 'package:tounoishi/main.dart' show gameAsset;
+import 'package:tounoishi/main.dart' show gameAsset, pauseJs;
 import 'package:tounoishi/monetization/ad_service.dart';
 import 'package:tounoishi/monetization/monetization.dart';
 import 'package:tounoishi/monetization/purchase_service.dart';
@@ -384,6 +384,33 @@ void main() {
       expect(html, contains('window.TouStore'));
       expect(html, contains('window.__boot'));
       expect(html, contains('window.__saveNow'));
+    });
+  });
+
+  group('スマホの遊びやすさ（0.4.0）', () {
+    test('掘った時の振動の頼みを受けて、強さを渡す', () async {
+      final (_, money, _, _, _) = await setup();
+      final kinds = <String>[];
+      final b = GameBridge(money: money, runJs: (s) async {}, haptic: kinds.add);
+      await b.handle('{"type":"haptic","kind":"light"}');
+      await b.handle('{"type":"haptic","kind":"medium"}');
+      await b.handle('{"type":"haptic"}');
+      await b.handle('{"type":"haptic","kind":"ありえない"}');
+      expect(kinds, ['light', 'medium', 'light', 'light']);
+    });
+
+    test('ゲームが振動を頼み、裏に回る時の停止の口を持っている', () {
+      final html = File(gameAsset).readAsStringSync();
+      // ゲーム側とアプリ側の名前がずれると、黙って振動しない・止まらない
+      expect(html, contains("appPost({type:'haptic'"));
+      expect(html, contains('window.__pause=function'));
+      expect(pauseJs, contains('window.__pause'));
+      // hidden の部品が表示されたままにならない（アプリの HTML には Artifact の既定の CSS が無い）
+      expect(html, contains('[hidden]{display:none!important}'));
+      // 一覧・遊び方は下から出るシートの中にある
+      for (final id in ['id="sheet"', 'id="blist"', 'id="bhelp"', 'id="zin"', 'id="heroes"', 'id="spane-help"']) {
+        expect(html, contains(id), reason: id);
+      }
     });
   });
 }

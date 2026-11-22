@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
+
 import '../monetization/monetization.dart';
 import '../monetization/purchase_service.dart';
 
@@ -13,14 +15,23 @@ import '../monetization/purchase_service.dart';
 /// - `prepInter`: この先で出しそうなので読み込み始める（塔を始めた・続きから・次の階が始まった）。
 /// - `buy` / `restore`: 「広告を消す」を買う・購入を復元する。
 /// - `refresh`: 値段と広告なしかを送り直す。
+/// - `haptic`（`kind` は `light` / `medium`）: 掘った時に指へ小さな振動を返す。
 ///
 /// 返事は JS の関数で返す（`touSetApp({adFree, price, canBuy, storeOk, msg?})`）。
 /// 保存の窓口 `TouStore`・`window.__boot`・`window.__saveNow` は別（lib/main.dart）。
 class GameBridge {
-  GameBridge({required this.money, required this.runJs});
+  GameBridge({required this.money, required this.runJs, void Function(String kind)? haptic})
+      : haptic = haptic ?? defaultHaptic;
 
   final Monetization money;
   final Future<void> Function(String js) runJs;
+
+  /// 掘った時の小さな振動（`{"type":"haptic","kind":"light"|"medium"}`）。テストでは差し替える。
+  final void Function(String kind) haptic;
+
+  static void defaultHaptic(String kind) {
+    unawaited(kind == 'medium' ? HapticFeedback.mediumImpact() : HapticFeedback.lightImpact());
+  }
 
   /// 全画面広告を扱っている最中か（2度届いても重ねて出さない）。
   bool _interBusy = false;
@@ -43,6 +54,8 @@ class GameBridge {
         await _buy();
       case 'restore':
         await _restore();
+      case 'haptic':
+        haptic(m['kind'] == 'medium' ? 'medium' : 'light');
     }
   }
 

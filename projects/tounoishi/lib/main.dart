@@ -26,6 +26,9 @@ import 'monetization/purchase_service.dart';
 /// 同梱したゲームの HTML の場所。テストからも参照する。
 const gameAsset = 'assets/game/index.html';
 
+/// 裏に回る時にゲームへ送る JS（止めて保存。古いゲームなら保存だけ）。
+const pauseJs = 'window.__pause ? window.__pause() : (window.__saveNow && window.__saveNow())';
+
 /// ゲームが保存する値の名前（塔の途中経過・殿堂・自己ベスト・図鑑）。
 const storeKeys = ['tou-save', 'tou-hall', 'tou-best', 'tou-dex'];
 
@@ -117,11 +120,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // 裏に回るときに、ゲームにその場で保存してもらう
+  // 裏に回るときに、ゲームを止めてその場で保存してもらう（戻っても止めたまま）
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
-      _controller.runJavaScript('window.__saveNow && window.__saveNow()');
+      _controller.runJavaScript(pauseJs);
     }
   }
 

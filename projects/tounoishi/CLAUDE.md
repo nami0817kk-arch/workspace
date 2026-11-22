@@ -4,7 +4,7 @@
 ゲーム本体は HTML の試作で、Flutter 側は全画面の WebView で開くだけ。
 
 - バンドルID: `com.namiki.tounoishi`（iPhone のみ・縦画面）
-- 試作の正: リポジトリの外の `game-assets/fukaana/prototype-v*.html`。
+- 試作の正: リポジトリの外の `game-assets/fukaana/prototype-v*.html`（0.4.0 は v11：縦画面1枚・2本指で拡大・なぞって印→離して掘る・一覧と遊び方は下のシート）。
   更新したら `python tool/sync_game.py <試作>` で `assets/game/index.html` へ写す
 - 仕様書: Claude Docs「塔の意志 仕様書」
 - 保存: ゲームは `window.TouStore` 経由でアプリ側（shared_preferences）にも保存し、起動時に `window.__boot` で戻す（鍵は tou-save・tou-hall・tou-best・tou-dex）
@@ -12,7 +12,7 @@
   - 全画面広告だけ。ゲームが頼んだときに出す: 負けて結果画面を出す前（`finishTower()`）と、塔が1階伸びる前（`grow()`）。リワード広告と ATT は入れない
   - 課金は非消耗型1つ「広告を消す」（370円、`com.namiki.tounoishi.removeads`）。買うと全画面広告が出ない。タイトルに「広告を消す（値段）」「購入を復元」、買った後は「広告なし」
   - Dart 側: `lib/monetization/`（ad_service・purchase_service・monetization）と `lib/game/bridge.dart`。購入の受け取りは `onDelivered` の1か所、受け取り後に completePurchase。広告は55分で捨て、読み込みと表示は Completer で待つ
-  - ゲームとの約束: 窓口は JS チャンネル `TouApp`（無ければブラウザとみなし何もしない）。ゲームから `{type:'inter',at:'lose'|'grow'}`・`prepInter`・`buy`・`restore`・`refresh`。アプリから `touSetApp({adFree,price,canBuy,storeOk,msg?})`・`touAdShowing()`・`touInterDone()`。ゲーム側は `appInter(at,next)`（5秒で表示が始まらなければ進める）・`appPrep()`・`renderShop()`
+  - ゲームとの約束: 窓口は JS チャンネル `TouApp`（無ければブラウザとみなし何もしない）。ゲームから `{type:'inter',at:'lose'|'grow'}`・`prepInter`・`buy`・`restore`・`refresh`。ゲームから `{type:'haptic',kind}` で掘った時の振動。裏に回る時はアプリが `window.__pause()`（止めて保存）を呼ぶ。アプリから `touSetApp({adFree,price,canBuy,storeOk,msg?})`・`touAdShowing()`・`touInterDone()`。ゲーム側は `appInter(at,next)`（5秒で表示が始まらなければ進める）・`appPrep()`・`renderShop()`
   - AdMob の ID は既定で Google のテスト用。本番は CI が Secrets `TOUNOISHI_ADMOB_APP_ID_IOS`・`TOUNOISHI_ADMOB_INTERSTITIAL_IOS` で差し替える（未設定ならビルドは止まる）
   - 検査は `test/monetization_test.dart`
 
