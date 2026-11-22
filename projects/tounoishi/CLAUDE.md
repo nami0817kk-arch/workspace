@@ -7,6 +7,7 @@
 - 試作の正: リポジトリの外の `game-assets/fukaana/prototype-v*.html`。
   更新したら `python tool/sync_game.py <試作>` で `assets/game/index.html` へ写す
 - 仕様書: Claude Docs「塔の意志 仕様書」
+- 保存: ゲームは `window.TouStore` 経由でアプリ側（shared_preferences）にも保存し、起動時に `window.__boot` で戻す（鍵は tou-save・tou-hall・tou-best・tou-dex）
 - 広告・課金はまだ入れていない（TestFlight で手触りを確かめる段階）。入れるときは `docs/app-pitfalls.md` を先に読む
 
 ## ビルドと TestFlight
