@@ -92,6 +92,7 @@ class _DomesticCupTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         const _LeagueCupCard(),
+        const _FourClubSuperCupSection(),
         if (cup.isComplete)
           Card(
             color: cup.championId == userId
@@ -747,6 +748,94 @@ class _LeagueCupCard extends StatelessWidget {
         subtitle: Text(Tr.pick(
             '$status。1〜3部のクラブが出て、回戦ごとに決まった週に自動で進みます。決勝は2〜3月(賞金は国内カップの半分)。',
             '$status. Clubs from all three tiers take part; each round is played automatically in its set week, with the final in February or March (half the domestic cup prize money).')),
+      ),
+    );
+  }
+}
+
+/// 4クラブのスーパーカップ(スペイン・イタリア。1月ごろ。準決勝と決勝)。
+/// 自クラブの試合は、ほかのカップ戦と同じく進むボタンがその日に止まって
+/// 行う。日が来ていれば、ここからクイック消化もできる(開幕前の1試合の
+/// スーパーカップと同じ)。延長は無く、並べばPK戦。
+class _FourClubSuperCupSection extends StatelessWidget {
+  const _FourClubSuperCupSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final cup = gs.fourClubSuperCup;
+    if (cup == null) return const SizedBox.shrink();
+    final userId = gs.userTeam.id;
+    final teams = gs.allTeamsForCups;
+    String nameOf(String id) =>
+        teams.where((t) => t.id == id).firstOrNull?.name ?? '-';
+    final involved = cup.involvesTeam(userId);
+    final String status;
+    if (cup.isComplete) {
+      status = Tr.pick('優勝: ${nameOf(cup.championId!)}',
+          'Winners: ${nameOf(cup.championId!)}');
+    } else if (!involved) {
+      status = Tr.pick('自クラブは出ていません', 'Your club is not taking part');
+    } else if (cup.isEliminated(userId)) {
+      status = Tr.pick('自クラブは敗退しました', 'You are out');
+    } else {
+      final round = cup.nextUnplayedMatch?.round ?? cup.currentRoundNumber;
+      status = Tr.pick('次は${CupEngine.roundLabel(round, 2)}',
+          'Next: ${CupEngine.roundLabel(round, 2)}');
+    }
+    final canPlay = gs.canPlayNextFourClubSuperCupMatch;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.emoji_events),
+              title: Text(cup.name),
+              subtitle: Text(Tr.pick(
+                  '$status。リーグの1・2位とカップの優勝・準優勝の4クラブで、1月ごろに準決勝と決勝を行います(延長は無く、並べばPK戦)。',
+                  '$status. The top two in the league and the two cup finalists meet in January: semi-finals, then the final (no extra time; level games go to penalties).')),
+            ),
+            if (involved && !cup.isComplete && !cup.isEliminated(userId)) ...[
+              if (gs.save!.league.nextUnplayedFixture != null)
+                const _CupByDateNote(),
+              if (canPlay)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: OutlinedButton(
+                    onPressed: () => _play(context),
+                    child: Text(Tr.pick('クイック消化', 'Sim it')),
+                  ),
+                ),
+            ],
+            for (final round in cup.rounds)
+              _RoundSection(
+                title: CupEngine.roundLabel(round.first.round, 2),
+                initiallyExpanded: round == cup.rounds.last,
+                children: [
+                  for (final m in round)
+                    _BracketMatchCard(match: m, nameOf: nameOf, userId: userId),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _play(BuildContext context) async {
+    final gs = context.read<GameState>();
+    final List<Team> teams = gs.allTeamsForCups;
+    final result = await gs.playNextFourClubSuperCupMatch();
+    if (!context.mounted || result == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MatchScreen(
+            result: result,
+            teams: teams,
+            title: Tr.pick('スーパーカップ', 'Super Cup')),
       ),
     );
   }

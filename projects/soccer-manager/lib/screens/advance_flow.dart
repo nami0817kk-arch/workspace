@@ -93,19 +93,25 @@ Future<void> _playUserCupMatch(BuildContext context, GameState gs) async {
   final domesticIsUser = dom != null &&
       gs.canPlayNextDomesticCupMatch &&
       (dom.homeTeamId == userId || dom.awayTeamId == userId);
+  // 4クラブのスーパーカップ(スペイン・イタリア)も同じように止まって行う。
+  final superCup = !domesticIsUser && gs.canPlayNextFourClubSuperCupMatch;
   final cont = gs.continentalCup;
   final title = domesticIsUser
       ? Tr.pick('国内カップ', 'Domestic Cup')
-      : (cont?.isGroupStageComplete ?? false)
-          ? Tr.pick('大陸カップ 決勝トーナメント', 'Continental Cup knockout stage')
-          : Tr.pick('大陸カップ グループステージ', 'Continental Cup group stage');
+      : superCup
+          ? Tr.pick('スーパーカップ', 'Super Cup')
+          : (cont?.isGroupStageComplete ?? false)
+              ? Tr.pick('大陸カップ 決勝トーナメント', 'Continental Cup knockout stage')
+              : Tr.pick('大陸カップ グループステージ', 'Continental Cup group stage');
   final result = domesticIsUser
       ? await gs.playNextCupMatch()
-      : cont == null
-          ? null
-          : cont.isGroupStageComplete
-              ? await gs.playNextContinentalKnockoutLeg()
-              : await gs.playNextContinentalGroupMatch();
+      : superCup
+          ? await gs.playNextFourClubSuperCupMatch()
+          : cont == null
+              ? null
+              : cont.isGroupStageComplete
+                  ? await gs.playNextContinentalKnockoutLeg()
+                  : await gs.playNextContinentalGroupMatch();
   if (!context.mounted) return;
   showCupPrizeSnackBar(context, gs);
   if (result != null) {

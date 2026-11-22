@@ -1195,6 +1195,10 @@ extension GameStateMatch on GameState {
     if (pendingSuperCup != null) {
       await playSuperCup();
     }
+    // 4クラブのスーパーカップ(スペイン・イタリア)の自クラブの試合。
+    if (canPlayNextFourClubSuperCupMatch) {
+      await playNextFourClubSuperCupMatch();
+    }
   }
 
   /// 現在の順位表を起点に、残り試合をチーム総合力ベースで簡易シミュレー

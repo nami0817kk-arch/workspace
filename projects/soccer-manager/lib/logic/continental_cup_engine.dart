@@ -388,7 +388,9 @@ class ContinentalCupEngine {
       weather: WeatherEngine.roll(month: month),
     );
     applyKnockoutLegResult(cup, allTeams, leg.tie, result);
-    return result;
+    // 延長戦の得点を含めた結果を返す(呼び出し側が選手の成績に数える。
+    // 延長前の結果を返していたので、延長の得点が成績に入っていなかった)。
+    return leg.tie.legs.last;
   }
 
   /// 外部(ライブ観戦)で確定した[result]を決勝トーナメントの[tie]に

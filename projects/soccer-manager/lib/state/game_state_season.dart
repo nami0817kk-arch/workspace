@@ -539,6 +539,40 @@ extension GameStateSeason on GameState {
     return result;
   }
 
+  /// 4クラブのスーパーカップ(スペイン・イタリア)の自クラブの次の試合を、
+  /// 自動で戦う。同じ週のほかの試合は先に裏で決める。延長は無く、
+  /// 並べばPK戦。戦えないときは null。
+  Future<MatchResult?> playNextFourClubSuperCupMatch() async {
+    if (_save == null || !canPlayNextFourClubSuperCupMatch) return null;
+    final cup = fourClubSuperCup!;
+    _playCpuCupRound(cup);
+    if (!canPlayNextFourClubSuperCupMatch) {
+      _notify();
+      await _persistNow();
+      return null;
+    }
+    final match = userFourClubSuperCupMatch!;
+    final home = teamById(match.homeTeamId);
+    final away = teamById(match.awayTeamId);
+    if (home == null || away == null) return null;
+    _ensureSquadsForActiveTier([home, away]);
+    CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
+    final result = MatchEngine.simulate(
+      home: home,
+      away: away,
+      matchday: 0,
+      weather: WeatherEngine.roll(month: _cupDate(continental: false).month),
+    );
+    CupEngine.applyMatchResult(
+        cup, [...allTeamsForCups, home, away], match, result);
+    _advanceTodayForCup(continental: false);
+    _applyUserCupPostMatchEffects(match.result!);
+    _afterFourClubSuperCupMatchApplied(match);
+    _notify();
+    await _persistNow();
+    return match.result;
+  }
+
   bool get _isLiveMatchInProgress =>
       _liveFixture != null || _liveCupKind != null;
 
@@ -621,8 +655,16 @@ extension GameStateSeason on GameState {
           away = teamById(leg.awayId);
         }
       case LiveCupKind.superCup:
-        if (!canPlaySuperCupLive) return false;
-        cupMatch = _save!.pendingSuperCup;
+        // 開幕前の1試合(英・独・仏)か、4クラブのスーパーカップ(西・伊)。
+        if (canPlaySuperCupLive) {
+          cupMatch = _save!.pendingSuperCup;
+        } else if (canPlayNextFourClubSuperCupMatchLive) {
+          _playCpuCupRound(fourClubSuperCup!);
+          if (!canPlayNextFourClubSuperCupMatchLive) return false;
+          cupMatch = userFourClubSuperCupMatch;
+        } else {
+          return false;
+        }
         home = teamById(cupMatch!.homeTeamId);
         away = teamById(cupMatch.awayTeamId);
     }
@@ -632,9 +674,12 @@ extension GameStateSeason on GameState {
     _ensureSquadsForActiveTier([home, away]);
     // 天候は試合の日の季節に合わせる(日付は試合のあとに進めるので、
     // 国内・大陸カップは進める先の日の月を見る)。
-    final matchDay = resolvedKind == LiveCupKind.superCup
+    final matchDay = resolvedKind == LiveCupKind.superCup &&
+            cupMatch == _save!.pendingSuperCup
         ? today
-        : _cupDate(continental: resolvedKind != LiveCupKind.domestic);
+        : _cupDate(
+            continental: resolvedKind == LiveCupKind.continentalGroup ||
+                resolvedKind == LiveCupKind.continentalKnockout);
     final weather = WeatherEngine.roll(month: matchDay.month);
     _liveCupKind = resolvedKind;
     _liveCupHome = home;
@@ -672,8 +717,13 @@ extension GameStateSeason on GameState {
         final match = _liveCupMatch;
         if (cup == null || match == null) return merged;
         if (merged.homeGoals == merged.awayGoals) {
-          // 90分で並べば延長戦(30分)。それでも並べばPK戦。
+          // 90分で並べば延長戦(30分)。それでも並べばPK戦。延長の得点は
+          // 試合後の共通処理の後に足されるので、選手の通算得点にここで足す
+          // (画面には出るのに成績に入っていなかった。2026-11-22)。
+          final before = merged;
           merged = CupEngine.extraTime(merged, _liveCupHome!, _liveCupAway!);
+          CupEngine.creditExtraTimeGoals(
+              before, merged, [_liveCupHome!, _liveCupAway!]);
           match.extraTime = true;
           if (merged.homeGoals == merged.awayGoals) {
             match.penaltyWinnerId = _runLiveShootout().winnerId;
@@ -707,7 +757,10 @@ extension GameStateSeason on GameState {
           }
 
           if (level(merged)) {
+            final before = merged;
             merged = CupEngine.extraTime(merged, _liveCupHome!, _liveCupAway!);
+            CupEngine.creditExtraTimeGoals(
+                before, merged, [_liveCupHome!, _liveCupAway!]);
             tie.extraTime = true;
             if (level(merged)) {
               tie.penaltyWinnerId = _runLiveShootout().winnerId;
@@ -722,6 +775,20 @@ extension GameStateSeason on GameState {
       case LiveCupKind.superCup:
         final match = _liveCupMatch;
         if (match == null) return merged;
+        if (_isFourClubSuperCupMatch(match)) {
+          // 4クラブのスーパーカップ: 延長は無く、並べばPK戦(1本ずつ)。
+          if (merged.homeGoals == merged.awayGoals) {
+            match.penaltyWinnerId = _runLiveShootout().winnerId;
+          }
+          CupEngine.applyMatchResult(
+              fourClubSuperCup!,
+              [...allTeamsForCups, _liveCupHome!, _liveCupAway!],
+              match,
+              merged);
+          _advanceTodayForCup(continental: false);
+          _afterFourClubSuperCupMatchApplied(match);
+          break;
+        }
         match.result = merged;
         if (merged.homeGoals == merged.awayGoals) {
           match.penaltyWinnerId = _runLiveShootout().winnerId;

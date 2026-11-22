@@ -530,53 +530,81 @@ extension GameStateCups on GameState {
     return m ~/ 2;
   }
 
-  /// 4クラブのスーパーカップの、日が来た試合を決める。自クラブの試合も
-  /// その場で戦う(観戦はしない。結果はニュースで伝える)。延長は無く、
-  /// 引き分けはPK戦。
+  /// 4クラブのスーパーカップの、日が来た試合のうち自クラブの出ない試合を
+  /// 決める。自クラブの試合は、ほかのカップ戦と同じく進むボタンがその日に
+  /// 止まって行う(自動かライブ観戦。2026-11-22 まではここでその場で
+  /// 決めてニュースで伝えるだけだった)。延長は無く、引き分けはPK戦。
   void _playFourClubSuperCup() {
     final cup = fourClubSuperCup;
     if (cup == null || cup.isComplete) return;
+    _playCpuCupRound(cup);
+    _settleFourClubSuperCup(cup);
+  }
+
+  /// 4クラブのスーパーカップの次の試合が自クラブの試合で、日が来ていて
+  /// 戦えるか(もう1つの準決勝が残っていても、先に裏で決めてから戦う)。
+  bool get canPlayNextFourClubSuperCupMatch {
+    final cup = fourClubSuperCup;
+    final m = userFourClubSuperCupMatch;
+    if (cup == null || m == null) return false;
+    return _cupDue(cup.dueMatchdayFor(m.round));
+  }
+
+  /// 4クラブのスーパーカップの、今の回戦の自クラブのまだ戦っていない試合
+  /// (無ければ null。日が来ているかは見ない)。
+  CupMatch? get userFourClubSuperCupMatch {
+    final cup = fourClubSuperCup;
+    if (cup == null || cup.isComplete || cup.rounds.isEmpty) return null;
+    return cup.rounds.last
+        .where((m) => m.result == null && !m.isBye && _isUserMatch(m))
+        .firstOrNull;
+  }
+
+  /// [canPlayNextFourClubSuperCupMatch]に加えて、ほかのライブ観戦の試合が
+  /// 進んでいないか。
+  bool get canPlayNextFourClubSuperCupMatchLive =>
+      _liveFixture == null &&
+      _liveCupKind == null &&
+      canPlayNextFourClubSuperCupMatch;
+
+  /// [match]が4クラブのスーパーカップの試合か。
+  bool _isFourClubSuperCupMatch(CupMatch match) =>
+      fourClubSuperCup?.rounds.any((r) => r.contains(match)) ?? false;
+
+  /// 4クラブのスーパーカップで自クラブの試合が決まった後の共通処理(自動・
+  /// ライブ共通)。結果をニュースに残し、同じ週の残りを裏で決めて、
+  /// 大会が終わっていれば締める。
+  void _afterFourClubSuperCupMatchApplied(CupMatch m) {
+    final cup = fourClubSuperCup;
+    final r = m.result;
+    if (cup == null || r == null) return;
+    final u = _save!.userTeamId;
+    if (_isUserMatch(m)) {
+      final oppId = m.homeTeamId == u ? m.awayTeamId : m.homeTeamId;
+      final opp = teamById(oppId)?.name ?? '-';
+      final mine = m.homeTeamId == u ? r.homeGoals : r.awayGoals;
+      final theirs = m.homeTeamId == u ? r.awayGoals : r.homeGoals;
+      final pens =
+          m.penaltyWinnerId != null ? Tr.pick('(PK戦)', ' on penalties') : '';
+      final stage =
+          m.round == 1 ? Tr.pick('準決勝', 'semi-final') : Tr.pick('決勝', 'final');
+      _logNews(
+          m.winnerId == u
+              ? Tr.pick('スーパーカップ$stage: $oppに$mine-$theirs$pensで勝った。',
+                  'Super Cup $stage: beat $opp $mine-$theirs$pens.')
+              : Tr.pick('スーパーカップ$stage: $oppに$mine-$theirs$pensで敗れた。',
+                  'Super Cup $stage: lost $mine-$theirs$pens to $opp.'),
+          context: cup.name);
+      _playCpuCupRound(cup);
+    }
+    _settleFourClubSuperCup(cup);
+  }
+
+  /// 4クラブのスーパーカップが終わっていれば、優勝を記録して伝える
+  /// (何度呼んでも1回だけ)。
+  void _settleFourClubSuperCup(Cup cup) {
     final s = _save!;
     final u = s.userTeamId;
-    for (var guard = 0; guard < 4; guard++) {
-      final next = cup.nextUnplayedMatch;
-      if (next == null || !_cupDue(cup.dueMatchdayFor(next.round))) break;
-      final teams = allTeamsForCups;
-      for (final m in [...cup.rounds.last]) {
-        if (m.result != null) continue;
-        if (_isUserMatch(m)) {
-          final home = teamById(m.homeTeamId);
-          final away = teamById(m.awayTeamId);
-          if (home == null || away == null) continue;
-          _ensureSquadsForActiveTier([home, away]);
-          final r = MatchEngine.simulate(
-            home: home,
-            away: away,
-            matchday: 0,
-            weather: WeatherEngine.roll(month: today.month),
-          );
-          CupEngine.applyMatchResult(cup, [...teams, home, away], m, r);
-          _applyUserCupPostMatchEffects(m.result!);
-          final opp = m.homeTeamId == u ? away.name : home.name;
-          final mine = m.homeTeamId == u ? r.homeGoals : r.awayGoals;
-          final theirs = m.homeTeamId == u ? r.awayGoals : r.homeGoals;
-          final won = m.winnerId == u;
-          final stage = m.round == 1
-              ? Tr.pick('準決勝', 'semi-final')
-              : Tr.pick('決勝', 'final');
-          _logNews(
-              won
-                  ? Tr.pick('スーパーカップ$stage: $oppに$mine-$theirsで勝った。',
-                      'Super Cup $stage: beat $opp $mine-$theirs.')
-                  : Tr.pick('スーパーカップ$stage: $oppに$mine-$theirsで敗れた。',
-                      'Super Cup $stage: lost $mine-$theirs to $opp.'),
-              context: cup.name);
-        } else {
-          CupEngine.playInBackground(cup, teams, m);
-        }
-      }
-      CupEngine.putTeamFirst(cup, u);
-    }
     if (cup.isComplete && !cup.rewardClaimed) {
       cup.rewardClaimed = true;
       final champ = teamById(cup.championId!)?.name ?? '-';
