@@ -16,6 +16,7 @@ import 'history_west.dart';
 import 'life.dart';
 import 'lords.dart';
 import 'rng.dart';
+import 'village.dart';
 import 'ways.dart';
 import 'women.dart';
 
@@ -62,6 +63,7 @@ class Game extends ChangeNotifier {
       ...buildEchoScenes(),
       ...buildWomenScenes(),
       ...buildAshigaruScenes(),
+      ...buildVillageScenes(),
       ...buildHistoryScenes(),
       ...buildHistoryEastScenes(),
       ...buildHistoryWestScenes(),

@@ -257,6 +257,30 @@ void main() {
     expect(seen.length, greaterThanOrEqualTo(6), reason: '$seen');
   });
 
+  test('村の暮らしの岐路（田植え・寄合・牛・祭り・子の熱など）が出る', () {
+    final seen = <String>{};
+    for (var seed = 0; seed < 400; seed++) {
+      final rng = Rng(seed + 66);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      if (g.finished || g.l.cls.id != 'farmer') continue;
+      // 仕官などせず、村で働き続ける選び方。
+      var n = 0;
+      while (!g.finished && n++ < 3000) {
+        final p = g.prompt!;
+        var i = p.choices.indexWhere((c) => c.label == '働いて稼ぐ');
+        if (i < 0) i = p.choices.length - 1;
+        g.choose(i);
+      }
+      seen.addAll(
+        g.l.flags
+            .where((f) => f.startsWith('scene:v_'))
+            .map((f) => f.substring(6)),
+      );
+    }
+    expect(seen.length, greaterThanOrEqualTo(6), reason: '$seen');
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);
