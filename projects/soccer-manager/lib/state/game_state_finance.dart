@@ -955,6 +955,10 @@ extension GameStateFinance on GameState {
     save.boardReviewDoneThisSeason = false;
     save.pendingBoardReviewMessage = null;
     save.trainingDoneThisWeek = false;
+    // 1月1日の仮契約の解禁と3月31日の延長オプションの締めも、前のクラブで
+    // 済ませた印のままだと新しい国の季で走らない。
+    save.preContractOpenedSeason = 0;
+    save.optionDeadlineSeason = 0;
     final rival = cpuInMine[rng.nextInt(cpuInMine.length)];
     save.rivalTeamId = rival.id;
     save.rivalTeamName = rival.name;
