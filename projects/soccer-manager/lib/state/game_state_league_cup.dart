@@ -42,7 +42,7 @@ extension GameStateLeagueCup on GameState {
           !teams.any((t) => t.id == m.awayTeamId)) {
         break;
       }
-      CupEngine.playNextMatch(cup, teams);
+      CupEngine.playNextMatch(cup, teams, month: today.month);
       _afterLeagueCupMatch(m);
     }
     cup.lastPlayedAtMatchday = marker;

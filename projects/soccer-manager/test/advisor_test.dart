@@ -61,8 +61,9 @@ void main() {
           wage: 10,
           contractYears: years,
         );
-    expect(s(StaffRole.scout, 0).severance, 0);
-    expect(s(StaffRole.manager, 2).severance,
-        greaterThan(s(StaffRole.scout, 2).severance));
+    final today = DateTime(2026, 9, 1);
+    expect(s(StaffRole.scout, 0).severanceOn(today, 2027), 0);
+    expect(s(StaffRole.manager, 2).severanceOn(today, 2027),
+        greaterThan(s(StaffRole.scout, 2).severanceOn(today, 2027)));
   });
 }

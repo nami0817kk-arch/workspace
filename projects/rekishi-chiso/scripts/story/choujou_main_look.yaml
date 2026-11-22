@@ -1,0 +1,222 @@
+# 物語型の本編（横 16:9）の見た目と絵の割り当て：万里の長城を守った兵の暮らし（scripts/choujou-story.yaml）。chiso/storymain.py が読む。
+# 11-22 作成（11/29 19:00 公開予定）。ise_main_look.yaml・joguo_main_look.yaml を写した。台本には手を入れない（承認のあと）。
+# 絵の方針：AI 絵（Gemini、/u/0、11-22）。C01〜C21・CEND はこの回のために作った（out/story/choujou/main/<名>.jpg）。R01・R02 は曹操の回（sosou S02・S04）の AI 絵の写し。
+#   漢の時代（前1世紀）の河西・居延の辺境。土の見張り台・葦と土の壁・ゴビの砂。字・旗の字は描かない。実在の人物の顔は描かない（名指さない兵・役人）。
+script: scripts/choujou-story.yaml
+out: choujou_story_main
+art_dir: out/story/choujou/main
+main_art_dir: out/story/choujou/main
+ai_disclosure: この動画の情景と人物の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面の右上に「AI生成画像」と出しています）。
+
+chapters:
+  0: {label: 序章 29日のあいだ、越えた跡なし, now: null, dates: {}}
+  1: {label: 第1章 兵はどこから来たのか, now: 前102年, dates: {13: null}}
+  2: {label: 第2章 毎朝、何をしていたのか, now: null, dates: {40: 前28年, 41: null}}
+  3: {label: 第3章 敵が来たら、どう知らせたのか, now: null, dates: {57: 建武5年12月, 64: null}}
+  4: {label: 第4章 何を食べていたのか, now: null, dates: {81: 前85年, 82: null}}
+  5: {label: 第5章 毎日の仕事と、秋の試験は？, now: null, dates: {93: 前37年, 94: null}}
+  6: {label: 第6章 着る物とお金は？, now: null, dates: {105: 前13年, 106: null}}
+  7: {label: 第7章 病気になったら、死んだら？, now: null, dates: {115: 前42年, 116: 前54年, 118: null}}
+  8: {label: まとめ 長城の兵は、どう暮らしたのか, now: 1930年, dates: {127: 1940年, 128: null}}
+no_tag_from: 132
+
+references:
+  - "高村武幸「前漢西北辺境と関東の戍卒」（駿台史学110号、2000）"
+  - "高震寰「史語所居延漢簡整理簡介」（中央研究院 歴史語言研究所、2024）・邢義田（集刊66本3分、1995）"
+  - "侯旭東（人民論壇、2024）・黄永美（中国辺疆史地研究、2021）・特日格楽（内蒙古大学）・鲁西奇（史学集刊、2020）・張俊民（簡帛網、2018・2019）"
+  - "王子今・馬彪・丘光明（1992）・黄浩波（簡帛網、2012）・黎明釗・馬增榮（中國文化研究所學報53期、2011）・唐俊峰（同59期、2014）"
+  - "于振波（2005）・魏永康（2025）・劉金華（2005）・鄭伊凡（史語所集刊94本2分、2023）・馬怡（2008）・姚磊（中国社会科学報、2026）・郭永秉（文匯報、2018）・Charles Sanft（Renditions 79、2013）"
+  - "スタイン『Serindia』（1921）・『漢書』武帝紀・『史記』匈奴列伝・中央研究院 歴史語言研究所 文物陳列館・新華社と甘粛簡牘博物館（2024）・澎湃新聞（2023）"
+
+credits: {}
+ai:
+  C01: {scene: 夜明けの砂漠の土の見張り台と、葦と土を重ねた低い長城の壁（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C02: {scene: ならした砂の帯にしゃがみ、足跡を見つめる若い兵, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C03: {scene: 見張り台の前、枝の束のそばを歩く兵3人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C04: {scene: 黄土の道を、兵を乗せた牛車の列が西へ進む, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C05: {scene: 葦の束と砂利まじりの粘土が層になった壁の断面（人物なし）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C06: {scene: 村の門の前で、年上の男から銭を受け取る若者, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C07: {scene: 見張り台の中の土の部屋。隧長と兵たちと番犬, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C08: {scene: 見張り台の脇の砂に木の印を挿す兵, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C09: {scene: 夕暮れの見張り台。煙と大きな旗、燃える柴の山, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C10: {scene: 夜、地平線まで並ぶ見張り台に火の合図がつながる, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C11: {scene: 夕暮れの砂丘の陰に伏せる騎馬の遊牧の兵, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C12: {scene: 夕暮れ、煙の上がる台へ馬で駆ける役人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C13: {scene: 倉の前で、升で量ったアワと塩を受け取る兵, pan: h, crops: {wide: [1.15, 0.55, 0.45], left: [1.2, 0.48, 0.45], right: [1.2, 0.65, 0.45]}}
+  C14: {scene: 土の家のかまどで煮炊きする若い妻と、帰ってきた兵, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C15: {scene: 畑と用水路を掘る大勢の兵, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C16: {scene: 木の型で日干し煉瓦をつくる兵たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C17: {scene: 秋の野で弩を構える長と、矢の当たりを数える役人, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C18: {scene: 灯の下で絹に手紙を書く下級の役人。脇にすり切れた靴, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C19: {scene: 土の部屋で寝込む兵と、薬の椀を差し出す仲間, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C20: {scene: 小さな木の棺を載せた牛車を、見送って頭を下げる兵たち, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  C21: {scene: 風の吹く見張り台の上で、遠くを見る兵の顔, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  CEND: {scene: 終了画面。夕暮れの砂漠と見張り台（右半分に余白）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5]}, lock: [1.0, 0.5, 0.5]}
+  R01: {scene: 竹簡の棚が並ぶ書庫（sosou S02 の写し）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+  R02: {scene: 灯の下で竹簡に筆を走らせる手もと（sosou S04 の写し）, pan: h, crops: {wide: [1.12, 0.5, 0.5], left: [1.18, 0.4, 0.5], right: [1.18, 0.62, 0.5]}}
+paint_fx: {}
+shots:
+- 0 ai:C02 wide
+- 1 ai:C03 wide
+- 2 ai:R02 wide
+- 3 ai:C01 wide
+- 4 ai:R01 wide
+- 5 ai:R02 left
+- 6 ai:C04 wide
+- 7 ai:C04 right
+- 8 ai:C01 left
+- 9 ai:C01 right
+- 10 ai:C05 wide
+- 11 ai:C05 left
+- 12 ai:C05 right
+- 13 ai:C04 left
+- 14 ai:C04 wide
+- 15 ai:R01 right
+- 16 ai:R01 right
+- 17 ai:R01 left
+- 18 ai:C04 right
+- 19 ai:C04 wide
+- 20 ai:C06 wide
+- 21 ai:C06 left
+- 22 ai:R01 left
+- 23 ai:C06 wide
+- 24 ai:C01 wide
+- 25 ai:C03 left
+- 26 ai:C07 wide
+- 27 ai:C10 left
+- 28 ai:C01 left
+- 29 ai:C03 wide
+- 30 ai:C03 right
+- 31 ai:C02 left
+- 32 ai:C02 right
+- 33 ai:R02 wide
+- 34 ai:C08 wide
+- 35 ai:C08 right
+- 36 ai:R01 wide
+- 37 ai:C02 wide
+- 38 ai:C08 left
+- 39 ai:R01 wide
+- 40 ai:C07 right
+- 41 ai:C07 wide
+- 42 ai:C01 wide
+- 43 ai:C11 wide
+- 44 ai:C09 wide
+- 45 ai:C09 left
+- 46 ai:C11 left
+- 47 ai:C02 wide
+- 48 ai:C09 right
+- 49 ai:C10 wide
+- 50 ai:C10 left
+- 51 ai:C10 right
+- 52 ai:C10 wide
+- 53 ai:C10 left
+- 54 ai:C12 wide
+- 55 ai:C07 left
+- 56 ai:C07 right
+- 57 ai:C11 wide
+- 58 ai:C09 wide
+- 59 ai:C09 right
+- 60 ai:C12 left
+- 61 ai:R02 wide
+- 62 ai:C11 right
+- 63 ai:R01 wide
+- 64 ai:C13 wide
+- 65 ai:C14 wide
+- 66 ai:C13 left
+- 67 ai:R02 wide
+- 68 ai:C13 wide
+- 69 ai:R01 right
+- 70 ai:C13 left
+- 71 ai:C13 left
+- 72 ai:R01 wide
+- 73 ai:C13 right
+- 74 ai:C13 wide
+- 75 ai:C14 left
+- 76 ai:C13 right
+- 77 ai:C14 wide
+- 78 ai:C14 left
+- 79 ai:C15 wide
+- 80 ai:R01 left
+- 81 ai:C15 right
+- 82 ai:C16 left
+- 83 ai:C17 wide
+- 84 ai:C16 wide
+- 85 ai:C16 right
+- 86 ai:C15 wide
+- 87 ai:C17 left
+- 88 ai:C17 wide
+- 89 ai:C17 right
+- 90 ai:C17 left
+- 91 ai:C17 wide
+- 92 ai:R02 wide
+- 93 ai:C17 right
+- 94 ai:C18 left
+- 95 ai:C18 wide
+- 96 ai:C07 wide
+- 97 ai:C07 right
+- 98 ai:R01 right
+- 99 ai:C18 left
+- 100 ai:C18 right
+- 101 ai:R02 left
+- 102 ai:C13 left
+- 103 ai:R01 wide
+- 104 ai:C07 left
+- 105 ai:R02 wide
+- 106 ai:R01 left
+- 107 ai:C06 left
+- 108 ai:C06 right
+- 109 ai:C19 left
+- 110 ai:C20 wide
+- 111 ai:C19 wide
+- 112 ai:R02 wide
+- 113 ai:R01 left
+- 114 ai:C19 left
+- 115 ai:C01 wide
+- 116 ai:C20 wide
+- 117 ai:C20 left
+- 118 ai:R01 left
+- 119 ai:C20 right
+- 120 ai:C04 wide
+- 121 ai:C18 left
+- 122 ai:R02 wide
+- 123 ai:C18 right
+- 124 ai:C21 left
+- 125 ai:R01 wide
+- 126 ai:C01 wide
+- 127 ai:R01 right
+- 128 ai:C21 right
+- 129 ai:C04 wide
+- 130 ai:C13 wide
+- 131 ai:C02 wide
+- 132 ai:C02 left
+- 133 ai:C21 wide
+- 134 ai:CEND left
+- end ai:CEND wide
+focus: {}
+fx:
+  C09: {fire: {region: [0.7, 0.55, 0.9, 0.95]}, smoke: {region: [0.78, 0.0, 1.0, 0.3]}}
+  C10: {fire: {region: [0.7, 0.62, 0.78, 0.75]}}
+  C18: {lamp: {region: [0.82, 0.2, 0.95, 0.55]}}
+figures:
+- {from: 8, to: 9, spec: {type: map, title: 漢の西北の長城と居延, bounds: [93.0, 116.0, 33.0, 43.5], places: [[居延, 101.0, 41.8], [張掖, 100.4, 38.9], [敦煌, 94.7, 40.1]], reveal: true}}
+- {from: 10, to: 13, spec: null}
+- {from: 14, to: 14, spec: {type: map, title: 兵の故郷から居延へ, bounds: [93.0, 116.0, 33.0, 43.5], places: [[魏郡, 114.4, 36.3], [長安, 108.9, 34.3], [姑臧, 102.6, 37.9], [張掖, 100.4, 38.9], [居延, 101.0, 41.8], [敦煌, 94.7, 40.1]], route: [魏郡, 長安, 姑臧, 張掖, 居延]}}
+- {from: 18, to: 18, spec: {type: map, title: 兵の故郷から居延へ, bounds: [93.0, 116.0, 33.0, 43.5], places: [[魏郡, 114.4, 36.3], [長安, 108.9, 34.3], [姑臧, 102.6, 37.9], [張掖, 100.4, 38.9], [居延, 101.0, 41.8], [敦煌, 94.7, 40.1]], route: [魏郡, 長安, 姑臧, 張掖, 居延]}}
+parts:
+- {type: quote, from: 2, to: 2, label: 史料, text: 凡迹廿九日／毋人馬蘭越塞天田出入迹, source: 居延漢簡 18.8}
+- {type: quote, from: 66, to: 66, label: 史料, text: 鹽三升／十二月食三石三斗三升少, source: 居延漢簡 203.14}
+- {type: quote, from: 87, to: 87, label: 史料, text: 以六為程／過六賜勞矢十五日, source: 居延漢簡 285.17（功令第四十五）}
+- {type: quote, from: 100, to: 100, label: 史料, text: 願子方幸為元買沓一兩／絹韋長尺二寸, source: 懸泉置出土の帛書（元が子方に宛てた手紙）}
+- {type: quote, from: 123, to: 123, label: 史料, text: 甚苦塞上／暑時願幼孫少婦足衣強食, source: 居延漢簡 10.16（宣の手紙）}
+stills:
+- {line: 0, note: 冒頭（0秒）}
+- {line: 2, note: 史料の札 29日}
+- {line: 14, note: 地図}
+- {line: 17, note: 出身の棒グラフ}
+- {line: 49, note: のろしの夜}
+- {line: 52, note: のろしの遅れの棒グラフ}
+- {line: 70, note: アワの量}
+- {line: 88, note: 秋射}
+- {line: 100, note: 元の手紙}
+- {line: 116, note: 小さな棺}
+- {end: true, note: 終了画面}

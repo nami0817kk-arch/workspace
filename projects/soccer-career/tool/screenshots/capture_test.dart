@@ -59,8 +59,15 @@ import 'package:soccer_career/ui/screens/season_end_screen.dart';
 /// 必要があります」で提出できない（`soccer-manager` で実際に止まった）。
 typedef Device = ({String dir, Size logical, double ratio});
 
-/// iPhone 6.7インチ = 1290x2796。
-const phone = (dir: 'screenshots', logical: Size(430, 932), ratio: 3.0);
+/// iPhone 6.3インチ = 1206x2622。
+///
+/// **1290x2796（6.9インチ）は、もう受け付けられない**（2026-11-22、
+/// 実際に上げて「サイズが無効です」で弾かれた）。App Store Connect の
+/// iPhone の枠は「Dynamic Island搭載iPhone（中型ディスプレイ）」1つに
+/// なっていて、通るのは 1179x2556 と 1206x2622 だけ。大きいほうを撮る。
+/// **1.1.1 までに上げた 1290x2796 はそのまま残る**ので、日本語の
+/// 掲載ページは触らなくても動く。
+const phone = (dir: 'screenshots', logical: Size(402, 874), ratio: 3.0);
 
 /// iPad 13インチ = 2064x2752。
 const tablet = (

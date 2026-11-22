@@ -20,9 +20,6 @@ import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
 import 'club_detail_screen.dart';
 
-/// 大陸カップ出場資格が得られる順位(GameState.startNextSeasonの`finalRank <= 2`と一致)。
-const int _continentalQualifyCount = 2;
-
 class FixturesScreen extends StatelessWidget {
   const FixturesScreen({super.key});
 
@@ -120,6 +117,8 @@ class FixturesScreen extends StatelessWidget {
                             league: foreignLeague,
                             userTeamId: userTeamId,
                             divisionTier: 1,
+                            continentalQualifyCount:
+                                GameStateCoefficient.foreignTopPerLeague,
                           ),
                     ),
                 ]),
@@ -367,10 +366,15 @@ class _StandingsTab extends StatefulWidget {
   final String userTeamId;
   final int divisionTier;
 
+  /// 大陸カップの出場圏の印を付ける数。null なら自国の枠
+  /// ([GameStateCoefficient.continentalSpots])。
+  final int? continentalQualifyCount;
+
   const _StandingsTab({
     required this.league,
     required this.userTeamId,
     required this.divisionTier,
+    this.continentalQualifyCount,
   });
 
   @override
@@ -410,6 +414,11 @@ class _StandingsTabState extends State<_StandingsTab> {
     final showRelegation = divisionTier < totalDivisionTiers;
     // 入れ替えの数は国ごとに違う(ドイツ・フランス風は入れ替え戦がある)。
     final theme = context.read<GameState>().currentLeagueTheme;
+    // 大陸カップの出場枠は国の係数で2〜4に変わる。季の締めの判定
+    // (startNextSeason の `finalRank <= continentalSpots`)と同じ数を使う。
+    // 他国の1部は、その国から出る数(GameStateCoefficient.foreignTopPerLeague)。
+    final continentalQualifyCount = widget.continentalQualifyCount ??
+        context.read<GameState>().continentalSpots;
     final below = theme.rulesBelow(divisionTier);
     final above = theme.rulesBelow(divisionTier - 1);
     final relegationStart = rows.length - below.relegationZone;
@@ -504,7 +513,7 @@ class _StandingsTabState extends State<_StandingsTab> {
               final team = league.teams.firstWhere((t) => t.id == r.teamId);
               final isUser = r.teamId == userTeamId;
               Color? zoneColor;
-              if (showContinental && i < _continentalQualifyCount) {
+              if (showContinental && i < continentalQualifyCount) {
                 zoneColor = Colors.amber.shade700;
               } else if (showPromotion && i < autoPromotionEnd) {
                 zoneColor = SemanticColors.positive(context);

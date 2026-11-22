@@ -200,12 +200,34 @@ class ContractEngine {
   /// 代理人手数料が市場価値に対して占めてよい上限。
   static const double maxRenewalShareOfValue = 0.15;
 
-  /// 放出(契約解除)にかかる違約金相当額（万円）。週俸が高く契約が長く
-  /// 残っている選手ほど高額になり、移籍先が見つからない場合でもクラブが
-  /// 残り契約分の負担を負う現実の慣行を反映する。移籍金収入(marketValue×0.7)
-  /// から差し引かれ、高年俸の長期契約選手を放出すると持ち出しになり得る。
-  static int releaseSeverance(Player p) =>
-      (p.wage * 26 * p.contractYearsRemaining * 0.3).round();
+  /// 放出(売却)で手に入る額(万円)。市場価値の7割。
+  ///
+  /// 以前はここから「残りの契約の違約金」を差し引いていた。売却では契約を
+  /// 買い手が引き継ぐので、売り手が残りの年俸を払うのはつじつまが合わない
+  /// (高年俸の長期契約の選手を売ると持ち出しになっていた)。残りの年俸を
+  /// 払うのは、合意して契約を解除するとき([mutualTerminationCost])だけ。
+  static int salePrice(Player p) => (p.marketValue * 0.7).round();
+
+  /// 新しい契約を結んだときに、契約の型を「固定」へ戻す(出来高・段階昇給の
+  /// 取り決めは、その契約かぎり)。
+  ///
+  /// 以前は更新・移籍のあとも残り、段階昇給は新しい契約の週俸からさらに
+  /// 毎季上がり続けていた。
+  static void resetContractStyle(Player p) {
+    p.goalBonus = 0;
+    p.raisePct = 0;
+  }
+
+  /// 他のクラブ(AI)へ移った選手に、新しいクラブとの契約を結ばせる。
+  /// [years]は今のシーズンを含めた年数で、18歳未満は3年までに収める
+  /// ([capYears])。売却先・AI 同士の移籍のどちらにも使う。
+  static void applyCpuClubContract(Player p, int years) {
+    p.contractYearsRemaining = max(1, min(years, capYears(p.age)));
+    p.contractOption = false;
+    p.refusesRenewal = false;
+    p.wageStatus = null;
+    resetContractStyle(p);
+  }
 
   /// 契約更新時に一括で要求されるサインボーナス（万円）。野心家など要求水準が
   /// 高い性格ほど高額になる。
@@ -254,6 +276,7 @@ class ContractEngine {
     p.contractOption = option && canAttachOption(end, p.age);
     p.refusesRenewal = false;
     p.appearanceFee = appearanceFeeFor(p);
+    resetContractStyle(p);
   }
 
   /// 年数を選ばずに更新したときの満了の年([renewContract]の既定)。
@@ -281,6 +304,9 @@ class ContractEngine {
     p.contractEndYear = end;
     p.contractOption = option && canAttachOption(end, p.age);
     p.refusesRenewal = false;
+    // 週俸は元のクラブのまま(序列で決めた額ではない)。
+    p.wageStatus = null;
+    resetContractStyle(p);
   }
 
   // ---- 113. 「延長しない」と言い出す選手 ----
@@ -391,6 +417,18 @@ class ContractEngine {
           (1.05 + p.personality.wageSensitivity * 0.15) *
           p.squadStatus.wageFactor)
       .round();
+
+  /// 契約の途中で序列を[from](今の週俸を決めたときの序列)より上の[to]へ
+  /// 上げたときに、選手が求める見直し後の週俸(万円)。上げた立場に見合う
+  /// 分だけ週俸が上がる([SquadStatus.wageFactor]の比)。上げていなければ
+  /// そのまま。
+  ///
+  /// これが無いと、育成枠で安く更新してすぐキープレイヤーに戻せた。
+  static int reviewedWageForPromotion(
+          int wage, SquadStatus from, SquadStatus to) =>
+      to.index < from.index
+          ? (wage * to.wageFactor / from.wageFactor).round()
+          : wage;
 
   /// 交渉開始時に選手側がまず提示する要求額(万円)。本当の最低希望額を
   /// 開始直後にそのまま見せてしまうと駆け引きが成立しなくなるため、

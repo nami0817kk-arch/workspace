@@ -9,8 +9,15 @@ extension GameStateOwner on GameState {
   /// 始めたときのオーナーの個人資産は、クラブの初期資金の何倍か。
   static const int startingWealthMultiple = 3;
 
-  /// オーナーの本業から毎月入る額(5部の物差しの万円)。
+  /// オーナーの本業から毎月入る額の元(旧5部の物差しの万円)。
   static const int monthlyIncomeTier5 = 1000;
+
+  /// オーナーの本業から毎月入る額(万円)。本業はクラブとは別の商売なので、
+  /// クラブのいる部では変わらない。以前は今いる部の倍率を掛けていたため、
+  /// 昇格すると本業の収入まで約4倍・14倍に増えていた。始めたときの部
+  /// (いちばん下の部)の額に固定する(始めたときの額は以前と同じ)。
+  static int get monthlyIncome =>
+      scaleMoneyForTier(totalDivisionTiers, monthlyIncomeTier5);
 
   /// オーナーからの貸付の年利(%)。月ごとにクラブが払う。
   static const int loanRatePercent = 2;
@@ -23,9 +30,8 @@ extension GameStateOwner on GameState {
     final s = _save;
     if (s == null) return 0;
     if (s.ownerWealth < 0) {
-      s.ownerWealth =
-          GameState.initialBudgetFor(s.currentDivisionTier) *
-              startingWealthMultiple;
+      s.ownerWealth = GameState.initialBudgetFor(s.currentDivisionTier) *
+          startingWealthMultiple;
     }
     return s.ownerWealth;
   }
@@ -85,7 +91,8 @@ extension GameStateOwner on GameState {
     s.ownerWealth = ownerWealth + pay;
     _book(LedgerCategory.financing, -pay);
     _logNews(
-        Tr.pick('クラブがオーナーへ${formatMoney(pay)}を返した(残り${formatMoney(s.ownerLoanBalance)})。',
+        Tr.pick(
+            'クラブがオーナーへ${formatMoney(pay)}を返した(残り${formatMoney(s.ownerLoanBalance)})。',
             'The club repaid you ${formatMoney(pay)} (${formatMoney(s.ownerLoanBalance)} still owed).'),
         context: Tr.pick('オーナー', 'Owner'));
     _notify();
@@ -98,9 +105,9 @@ extension GameStateOwner on GameState {
     final s = _save;
     if (s == null) return;
     if (before.year == after.year && before.month == after.month) return;
-    final months =
-        (after.year - before.year) * 12 + after.month - before.month;
-    s.ownerWealth = ownerWealth + scaledMoney(monthlyIncomeTier5) * months;
+    final months = (after.year - before.year) * 12 + after.month - before.month;
+    // 本業の収入は部に関係なく一定(クラブの規模の倍率を掛けない)。
+    s.ownerWealth = ownerWealth + monthlyIncome * months;
     final interest = ownerLoanMonthlyInterest * months;
     if (interest > 0) {
       _book(LedgerCategory.other, -interest);
@@ -133,9 +140,9 @@ extension GameStateOwner on GameState {
   /// アカデミーのカテゴリー(1〜4。1が最上)。
   int get academyCategory => AcademyEngine.category(academyScore);
 
-  YouthPolicy get youthPolicy => YouthPolicy.values.firstWhere(
-      (p) => p.name == _save?.youthPolicy,
-      orElse: () => YouthPolicy.balanced);
+  YouthPolicy get youthPolicy =>
+      YouthPolicy.values.firstWhere((p) => p.name == _save?.youthPolicy,
+          orElse: () => YouthPolicy.balanced);
 
   /// 育成の方針を変える(次の入団から効く)。
   Future<void> setYouthPolicy(YouthPolicy p) async {

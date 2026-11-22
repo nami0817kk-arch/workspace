@@ -683,11 +683,11 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         ),
         note: switch (_promise) {
           SquadStatus.keyPlayer => Tr.pick(
-              '要求 -15%・3節外すと怒る', 'Wants 15% less; 3 games out and he is upset'),
+              '要求 +15%・3節外すと怒る', 'Wants 15% more; 3 games out and he is upset'),
           SquadStatus.regular =>
             Tr.pick('5節外すと怒る', '5 games out and he is upset'),
-          SquadStatus.rotation => Tr.pick('要求 +10%', 'Wants 10% more'),
-          SquadStatus.prospect => Tr.pick('要求 +15%', 'Wants 15% more'),
+          SquadStatus.rotation => Tr.pick('要求 -8%', 'Wants 8% less'),
+          SquadStatus.prospect => Tr.pick('要求 -15%', 'Wants 15% less'),
         },
       );
     }

@@ -59,7 +59,7 @@ enum OwnerEventKind {
 
 /// 事件への1つの答え。期待の増減と、資金の増減(万円)。
 ///
-/// 資金の増減は5部の規模の額で、実際には今いる部の規模に直して動く
+/// 資金の増減は元の額(旧5部の規模。economy_scale.dart)で、実際には今いる部の規模に直して動く
 /// (GameState.scaledMoney)。だから見出しには額を書かず、画面で添える。
 class OwnerEventOption {
   final String label;
@@ -99,8 +99,7 @@ extension OwnerEventInfo on OwnerEventKind {
           Tr.pick('命名権の高額オファー', 'A big naming-rights offer'),
         OwnerEventKind.youthPoach =>
           Tr.pick('ユースの逸材に引き抜き', 'A youth gem is being poached'),
-        OwnerEventKind.fanProtest =>
-          Tr.pick('サポーターが抗議', 'Fans protest'),
+        OwnerEventKind.fanProtest => Tr.pick('サポーターが抗議', 'Fans protest'),
         OwnerEventKind.sponsorProposal =>
           Tr.pick('新スポンサーの提案', 'A new sponsor\'s proposal'),
         OwnerEventKind.staffDispute =>
@@ -109,8 +108,7 @@ extension OwnerEventInfo on OwnerEventKind {
           Tr.pick('主力が長期離脱', 'A key man is out long-term'),
         OwnerEventKind.broadcastTalks =>
           Tr.pick('放映権の再交渉', 'Broadcast talks reopen'),
-        OwnerEventKind.taxChange =>
-          Tr.pick('税制の変更', 'A tax change'),
+        OwnerEventKind.taxChange => Tr.pick('税制の変更', 'A tax change'),
         OwnerEventKind.execScandal =>
           Tr.pick('経営陣の不祥事', 'An executive scandal'),
       };
@@ -119,8 +117,7 @@ extension OwnerEventInfo on OwnerEventKind {
         OwnerEventKind.transferDemand => Tr.pick(
             '他クラブの誘いを受けたエースが、移籍を求めています。残すか、手放すか。',
             'Courted by another club, your ace wants out. Keep him or cash in?'),
-        OwnerEventKind.sponsorExit => Tr.pick(
-            '成績への不満から、主要スポンサーが契約の見直しを求めています。',
+        OwnerEventKind.sponsorExit => Tr.pick('成績への不満から、主要スポンサーが契約の見直しを求めています。',
             'Unhappy with results, a main sponsor wants to renegotiate.'),
         OwnerEventKind.managerClash => Tr.pick(
             '起用をめぐって、監督と主力選手が衝突しました。どちらの肩を持ちますか。',
@@ -146,8 +143,7 @@ extension OwnerEventInfo on OwnerEventKind {
         OwnerEventKind.namingOffer => Tr.pick(
             '企業が、スタジアムの命名権に高額を提示しています。長年の呼び名が変わります。',
             'A company is bidding big for the stadium name. The long-used name would change.'),
-        OwnerEventKind.youthPoach => Tr.pick(
-            '他クラブが、ユースの逸材に違約金つきで声をかけています。',
+        OwnerEventKind.youthPoach => Tr.pick('他クラブが、ユースの逸材に違約金つきで声をかけています。',
             'Another club is moving for your best youth prospect, with a release fee.'),
         OwnerEventKind.fanProtest => Tr.pick(
             '補強の少なさに不満を持つサポーターが、スタジアムの外で抗議しています。',
@@ -164,11 +160,9 @@ extension OwnerEventInfo on OwnerEventKind {
         OwnerEventKind.broadcastTalks => Tr.pick(
             '放映権の再交渉が始まりました。強気に出るか、安定を取るか。',
             'Broadcast talks have reopened. Push hard or take security?'),
-        OwnerEventKind.taxChange => Tr.pick(
-            '自治体の税制が変わり、スタジアムの負担が増えます。',
+        OwnerEventKind.taxChange => Tr.pick('自治体の税制が変わり、スタジアムの負担が増えます。',
             'A tax change raises the stadium\'s burden.'),
-        OwnerEventKind.execScandal => Tr.pick(
-            '経営陣の1人に不祥事が報じられました。処分するか、擁護するか。',
+        OwnerEventKind.execScandal => Tr.pick('経営陣の1人に不祥事が報じられました。処分するか、擁護するか。',
             'One of your executives is caught in a scandal. Punish or defend?'),
       };
 
@@ -178,11 +172,13 @@ extension OwnerEventInfo on OwnerEventKind {
                 label: Tr.pick('慰留して残す(昇給を約束)', 'Keep him with a raise'),
                 supportersDelta: 4,
                 shareholdersDelta: -5),
+            // 資金は、エースの移籍金(市場価値)が入る。売るのは GameState 側
+            // (resolveOwnerEvent)。決まった額をここに書くと、選手が残った
+            // まま移籍金だけ入ってしまう。
             OwnerEventOption(
                 label: Tr.pick('売却を認める', 'Let him go'),
                 supportersDelta: -6,
-                shareholdersDelta: 4,
-                fundsDelta: 800),
+                shareholdersDelta: 4),
           ],
         OwnerEventKind.sponsorExit => [
             OwnerEventOption(

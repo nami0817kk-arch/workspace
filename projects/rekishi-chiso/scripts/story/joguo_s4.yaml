@@ -1,0 +1,144 @@
+# 物語完結型ショート 聖徳太子の一族 s4（2026-11-22）。本編 scripts/joguo-story.yaml（11/28 19:00 公開予定、https://youtu.be/9-eKrHmecaY）から。11/29 17:30 に予約。
+# 形式は senhime_s1〜s5・ise_s1〜s5 を写した。決まりは docs/story-shorts.md。想像の台詞・作った筋なし。事実は本編の # fact:（事実カード 上宮王家_facts_20261121.yaml）だけ。
+# 絵：本編の AI 絵（out/story/joguo/main/ の G・R）の切り出しだけ。新しい絵は作らない。
+# 切り口：643年11月、斑鳩宮の襲撃。馬の骨を寝所に投げ入れて生駒山へ逃れ、焼け跡の骨で兵は王が死んだと思い込んだ（本編 第4章、joguo-01〜05）。
+#   灰の中の骨が馬の骨だったとは書紀に書かれていないので、本編と同じく「おそらく」と言う。
+# hook＝燃えた宮で兵が見つけた骨は何か（答えはこのショートの中：おそらく、山背が寝所に投げ入れた馬の骨）。
+# tease＝逃げれば勝てると勧められた山背は、そのあとどうしたか（答えは本編 第4章：民を使うまいと断り、斑鳩の寺へ戻った。joguo-06・07・10）。
+# 理解テスト：①聖徳太子の長男、山背大兄王の話 ②643年11月、斑鳩の宮 ③入鹿の兵に襲われ、馬の骨を寝所に投げ入れて、妃と子を連れて生駒山へ逃れた ④兵は宮を焼き、灰の中の骨を見て王は死んだと思い込んで引き上げた。一族は山に4〜5日、食べるものが無かった
+title: "山背大兄王｜燃えた宮に残された骨"
+yt_title: "燃え落ちた斑鳩宮の灰の中に骨　兵は「王は死んだ」と引き上げた　643年、聖徳太子の長男が逃げのびた方法"
+description: |-
+  643年11月、『日本書紀』によれば、蘇我入鹿は兵を送り、奈良の斑鳩の宮にいた聖徳太子の長男、山背大兄王たちを襲わせました。
+  一人の奴と数十人の舎人が矢で防ぐ間に、山背は馬の骨を寝所に投げ入れ、妃と子どもたちを連れて、生駒山へ逃れます。宮に火を放った兵たちは、灰の中の骨を見て、王は死んだと思い込み、引き上げていきました。
+  本編では、山の中で「逃げれば勝てる」と勧められた山背が、そのあと何を選んだのかまでたどっています。本編は概要欄のリンクからどうぞ。
+hashtags:
+- "#聖徳太子"
+- "#山背大兄王"
+- "#蘇我入鹿"
+- "#日本史"
+ai_images: true
+ai_disclosure: "この動画の情景の画像は、Google の画像生成AI（Gemini）で作った想像上のイメージで、記録映像・実在の写真や肖像ではありません（画面に「AI生成画像」と出しています）。人物の姿も、特定の人を写したものではありません。創作の台詞は入れていません。"
+art_dir: out/story/joguo
+header_style: B
+cta: 本編は概要欄から
+bgm: true
+sfx: false
+bgm_diff_lu: 11
+max_shots: 14
+max_ai: 14
+hook_clear: 0
+min_block: 1.2
+tone_speed: {しみじみ: 1.45, 重い: 1.47, 強調: 1.43, 疑問: 1.28}
+voice: {speed: 1.38, intonation: 1.1, tone_strength: 0.75, max_intonation: 1.3, max_speed: 1.5}
+out: joguo_story_s4
+header:
+  tag: "山背大兄王（聖徳太子の長男）"
+  title: "燃えた宮で、兵が見つけた《骨》は？"
+now:
+- {at: "643年11月", text: "643年11月　斑鳩の宮", point: 0}
+- {at: "逃れた先は", text: "643年11月　生駒山", point: 0}
+- {at: "攻め手は", text: "643年11月　斑鳩の宮", point: 0}
+- {at: "山の中には", text: "643年11月　生駒山", point: 0}
+timeline:
+- {label: "643"}
+shots:
+  G11_1:
+    kind: "ai"
+    file: "joguo/main/G11.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "G11"
+  G09_2:
+    kind: "ai"
+    file: "joguo/main/G09.jpg"
+    focus: [0.45, 0.5]
+    move: "left"
+    must: "G09"
+  G10_3:
+    kind: "ai"
+    file: "joguo/main/G10.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "G10"
+  G06_4:
+    kind: "ai"
+    file: "joguo/main/G06.jpg"
+    focus: [0.5, 0.5]
+    move: "in"
+    must: "G06"
+  G18_5:
+    kind: "ai"
+    file: "joguo/main/G18.jpg"
+    focus: [0.3, 0.5]
+    move: "left"
+    must: "G18"
+  G11_6:
+    kind: "ai"
+    file: "joguo/main/G11.jpg"
+    focus: [0.3, 0.5]
+    move: "right"
+    must: "G11"
+  G18_7:
+    kind: "ai"
+    file: "joguo/main/G18.jpg"
+    focus: [0.75, 0.5]
+    move: "in"
+    must: "G18"
+  G12_8:
+    kind: "ai"
+    file: "joguo/main/G12.jpg"
+    focus: [0.5, 0.5]
+    move: "left"
+    must: "G12"
+  G13_9:
+    kind: "ai"
+    file: "joguo/main/G13.jpg"
+    focus: [0.5, 0.5]
+    move: "right"
+    must: "G13"
+lines:
+  # fact: joguo-04
+- 語り: "燃え落ちた宮の灰の中に、骨があった。兵たちは、王は死んだ、と思い込んだ。"
+  shot: G11_1
+  tone: 強調
+  pause: 0.12
+  # fact: joguo-01
+- 語り: "643年11月の1日。『日本書紀』によれば、蘇我入鹿は兵を送り、斑鳩の宮の山背大兄王たちを襲わせた。"
+  shot: G09_2
+  tone: 重い
+  pause: 0.12
+  # fact: joguo-02
+- 語り: "宮を守ったのは、一人の奴と、数十人の舎人。矢を放って防ぎ、攻め手の将の一人は、その矢に当たって死んだ。"
+  shot: G10_3
+  tone: 強調
+  pause: 0.12
+  # fact: joguo-03
+- 語り: "その間に、山背は、馬の骨を、寝所に投げ入れておいた。"
+  shot: G06_4
+  tone: 強調
+  pause: 0.12
+  # fact: joguo-03
+- 語り: "そして、妃と子どもたちを連れて、すきを見て、宮を抜け出す。逃れた先は、生駒山。"
+  shot: G18_5
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-04
+- 語り: "攻め手は、宮に火を放った。焼け跡の骨を見て、兵たちは、囲みを解いて、引き上げていった。"
+  shot: G11_6
+  tone: 重い
+  pause: 0.12
+- 語り: "灰の中の骨は、おそらく、山背が投げ入れた、あの馬の骨だった。"
+  shot: G18_7
+  tone: しみじみ
+  pause: 0.12
+  # fact: joguo-05
+- 語り: "けれど、山の中には、食べるものが無い。一族は、4日か5日、山にとどまった。"
+  shot: G12_8
+  tone: 重い
+  pause: 0.12
+  # tease：答えは本編 第4章（joguo-06・07・10：民を使うまいと断り、山を下りて斑鳩の寺へ）
+- 語り: "逃げれば勝てる、と勧められた山背は、このあと、どうしたのか。"
+  shot: G13_9
+  tone: 疑問
+  pause: 0.15

@@ -660,7 +660,7 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('契約解除の違約金', 'Release compensation'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '契約が残っている選手を放出する際に支払う違約金。売却額から差し引かれ、残り契約が長いほど高額になるため、受け取り額がマイナスになることもある。放出のタイミングを見極める材料になる。',
-            'What you owe for tearing up a contract that still has time to run. It comes off the fee, and the longer the deal has left the more it costs — enough that you can end up paying to let someone go. Worth weighing when you choose the moment.'),
+            '契約が残っている選手と合意して契約を解除するときに払う額。残りの年俸の半分〜全額で、残りが長く年俸が高いほど高い。他のクラブへ売る(放出する)ときは契約を買い手が引き継ぐので掛からない。',
+            'What you pay to tear up, by mutual consent, a contract that still has time to run: half to all of the wages left, so long, expensive deals cost the most. Selling him to another club costs nothing of the sort, because the buyer takes the contract on.'),
       ),
     ];

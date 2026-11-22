@@ -1,3 +1,4 @@
+import '../logic/manager_hr_engine.dart';
 import 'club_infrastructure.dart';
 import 'manager_profile.dart';
 import '../l10n/tr.dart';
@@ -140,12 +141,37 @@ class StaffMember {
 
   int attribute(StaffAttribute a) => attributes[a] ?? 1;
 
-  /// 契約の途中で解任するときの違約金(万円)。残りの契約の週俸の一部。
-  /// 監督は残りの契約の年俸を全額払う(実在のクラブと同じ)。他の役職は2割。
-  /// 契約が切れていれば掛からない。
-  int get severance =>
-      (wage * 52 * contractYears * (role == StaffRole.manager ? 1.0 : 0.2))
-          .round();
+  /// 監督以外の役職の、解任の違約金の率(残りの契約の週俸に対して)。
+  static const double staffSeveranceRate = 0.2;
+
+  /// 解任の違約金の率。監督は[ManagerHrEngine.managerSeveranceRate]
+  /// (全額。実在のクラブと同じ)、他の役職は[staffSeveranceRate]。
+  double get severanceRate => role == StaffRole.manager
+      ? ManagerHrEngine.managerSeveranceRate
+      : staffSeveranceRate;
+
+  /// 契約が満了する日(最後の季の6月30日)。[seasonEndYear]は今の季が
+  /// 終わる年。[contractYears]は季の切り替わりで1つ減り、0で去るので、
+  /// 残り1なら今の季の終わりで満了する。
+  DateTime contractEndDate(int seasonEndYear) =>
+      DateTime.utc(seasonEndYear + contractYears - 1, 6, 30);
+
+  /// 今日[today]から満了日までの週数(切り上げ)。
+  int weeksLeftOn(DateTime today, int seasonEndYear) {
+    if (contractYears <= 0) return 0;
+    final from = DateTime.utc(today.year, today.month, today.day);
+    final days = contractEndDate(seasonEndYear).difference(from).inDays;
+    if (days <= 0) return 0;
+    return (days / 7).ceil();
+  }
+
+  /// 今日[today]に契約の途中で解任するときの違約金(万円)。残りの契約の
+  /// 週俸(満了までの週数ぶん)に[severanceRate]を掛けたもの。契約が
+  /// 切れていれば掛からない。
+  ///
+  /// 以前は残りを年単位で数えていて、5月に解任しても1年分払っていた。
+  int severanceOn(DateTime today, int seasonEndYear) =>
+      (wage * weeksLeftOn(today, seasonEndYear) * severanceRate).round();
 
   /// この役職での仕事の質(1-20)。役職に関係ある能力だけの加重平均。
   ///
