@@ -24,6 +24,9 @@
 gh workflow run tounoishi-ios-release.yml --repo nami0817kk-arch/workspace --ref <branch> -f upload_to_testflight=true
 ```
 
+- ビルドの前に法務ページ（https://tounoishi.pages.dev の privacy・support・terms）と app-ads.txt を確かめる。サイトを公開する前の TestFlight だけ `-f skip_site_check=true`（App Store に出すビルドでは使わない）
+- 掲載画像は `python tool/screenshots/capture.py`、課金の審査用は `--iap`（画面なしの Edge で 1206×2622）
+
 - ビルド番号は `pubspec.yaml` の `+N`。同じ番号は二度上げられない
 - 要る Secrets: 共通の `IOS_DIST_CERT_*`・`IOS_TEAM_ID`・`APPSTORE_API_*` と、このアプリの `TOUNOISHI_IOS_PROVISIONING_PROFILE_BASE64`・`TOUNOISHI_ADMOB_APP_ID_IOS`・`TOUNOISHI_ADMOB_INTERSTITIAL_IOS`
 - App Store Connect にアプリが無いと、アップロードが `Cannot determine the Apple ID from Bundle ID` で落ちる
