@@ -170,7 +170,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v24</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v25</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1616,7 +1616,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v24 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v25 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
@@ -1995,9 +1995,19 @@ var DDESC={slime:'壁まで真っすぐ進み、養分を運ぶ。弱るとツ�
 var DIMGK={d_sleepy:'demon_sleepy',d_blue:'demon_blue',d_bigblue:'demon_bigblue'};
 function enRows(){return Object.keys(EN).map(function(k){return DEX['en_'+k]?'<li>'+dimg(k)+'<b>'+EN[k].n+'</b><small>'+ENDESC[k]+'</small></li>':'<li class="un">'+dimg(k)+'<b>？？？</b><small>まだ来ていない</small></li>';}).join('');}
 // 負けた時のコアの助言
+function partyAdvice(){
+ var P=g.party||[],has=function(k){return P.some(function(p){return (p.skl||[]).indexOf(k)>=0;});};
+ if(has('heal'))return '回復する者がいる。行き止まりで分断して、回復役から先に倒そう。';
+ if(has('warcry'))return 'ウォークライで攻撃が何倍にもなる。長引かせず、魔法陣やふんで足止めしよう。';
+ if(has('fire')||has('wind'))return '範囲の技で群れごとやられる。魔物を一か所に固めず、通路に散らそう。';
+ if(P.length>=3)return '3人組は分かれ道で散る。枝道を増やして1人ずつ迎え撃とう。';
+ if(P.some(function(p){return p.boss;}))return '伝承の勇者はとても強い。主役を鍛え、ドラゴンを育てて挑もう。';
+ return '入口からコアまでの道を長く、迷いやすく。強い魔物は最上階の近くに。';
+}
 function advice(){
  var ar=armyPower(),nh=g.cr.filter(function(m){return m.hero;}).length;
  if(ar<60)return 'モンスターが少なかったね。養分の濃い土（白っぽい模様）を探して掘ろう。';
+ if(g.party)return partyAdvice();
  if(g.round==1&&g.wave<=3)return '早いうちに取られた。最上階までの道を長く、枝分かれさせて迷わせよう。';
  if((g.dp||0)>60)return '掘る力が余ってたよ。行き止まりや枝道をもっと作ってもよかった。';
  if(!nh&&!g.promos)return '主役がいなかったね。餌の多い所で育てると、昇格しやすいよ。';
