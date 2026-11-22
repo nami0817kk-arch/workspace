@@ -54,6 +54,7 @@ canvas{display:block;width:100%;height:auto;image-rendering:pixelated;border:1px
 .tbox h2{margin:0;font-size:22px;letter-spacing:.06em}.tbox h2 small{font-size:13px;color:var(--sub);font-weight:400}
 .tbox .sub{margin:0;color:var(--sub);font-size:13px}.tbox .lbl{margin:6px 0 0;font-size:12px;color:var(--sub)}
 .tbox .big{margin:0;font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}.tbox .nb{color:#c0392b;font-size:14px}
+.tshop{display:flex;flex-direction:column;gap:6px;margin-top:4px}.tshop .row{display:grid;grid-template-columns:1fr 1fr;gap:6px}.tshop .note{margin:0;font-size:12px;color:var(--sub);text-align:center}
 .drow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.drow .btn small{display:block;font-size:10.5px;color:var(--sub)}
 .sc{margin:0;padding-left:1.2em;font-size:13px;line-height:1.7}
 .dex{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
@@ -350,6 +351,9 @@ function newGame(diff){
 }
 // 守り切ったら塔を1階伸ばす。今の階・掘った道・モンスターはそのまま
 function grow(){
+ // 伸ばす前に全画面広告を頼む（アプリの中だけ。閉じたらもう一度ここへ来て、そのまま伸ばす）
+ if(!growPass){appInter('grow',function(){growPass=true;grow();});return;}
+ growPass=false;
  F++;CAP=30*F;var f=F-1;
  g.grid.push(genFloor(f));carve(f,GROW[g.round%2]);g.seedT.push(0);
  g.round++;g.wave=0;g.cd=120;g.spawnQ=[];g.done=false;g.trail={};
@@ -358,6 +362,7 @@ function grow(){
  var nl=landOf(f),pl=landOf(f-1),nj=jobsUnlocked(),add='';
  if(nl!=pl)add+=' 新しい土地「'+ENV[nl].n+'の層」が現れた！ '+ENV[nl].n+'の種が生まれる。';
  if(nj.length&&(g.round-2)<=NEWJOBS.length){var jk=nj[nj.length-1];add+=' 新しい職業「'+EN[jk].n+'」が来るようになった（'+JOBDESC[jk]+'）。';}
+ appPrep();
  say(F+'階ができた！ コアは新しい最上階へ移った。'+(F-1)+'階の天井も掘れるようになった。次の冒険者は前より強い(体力×'+emul().hp.toFixed(1)+')。'+add);
  ui();
 }
@@ -880,7 +885,8 @@ function finishTower(){
  if(nb){b[d]=sc;kvSet('tou-best',JSON.stringify(b));}
  kvSet('tou-save',null);
  g.result={sc:sc,best:Math.max(sc,prev),nb:nb};
- showResult();
+ // 結果画面を出す前に全画面広告を頼む（アプリの中だけ。閉じたら結果画面）
+ appInter('lose',showResult);
 }
 function showResult(){
  var r=g.result,el=document.getElementById('title');
@@ -895,13 +901,51 @@ function showTitle(){
  el.innerHTML='<div class="tbox"><h2>塔の意志</h2><p class="sub">掘って、生まれた魔物に塔を守らせよう。</p>'+
   (has?'<button class="btn go" id="tcont">続きから</button>':'')+
   '<p class="lbl">新しい塔を始める</p><div class="drow">'+Object.keys(DIFF).map(function(k){return '<button class="btn" data-d="'+k+'">'+DIFF[k].n+'<small>最高 '+(b[k]||0).toLocaleString()+'</small></button>';}).join('')+'</div>'+
-  '<button class="btn" id="tdex">図鑑</button></div>';
- el.hidden=false;
+  '<button class="btn" id="tdex">図鑑</button><div class="tshop" id="tshop"></div></div>';
+ el.hidden=false;renderShop();
  if(has)document.getElementById('tcont').onclick=function(){if(!loadGame())showTitle();};
  el.querySelectorAll('[data-d]').forEach(function(bt){bt.onclick=function(){if(has)kvSet('tou-save',null);newGame(bt.getAttribute('data-d'));hideTitle();};});
  document.getElementById('tdex').onclick=showDex;
 }
-function hideTitle(){document.getElementById('title').hidden=true;}
+function hideTitle(){document.getElementById('title').hidden=true;appPrep();}
+
+// ---------- アプリ(Flutter)の広告・課金の窓口 ----------
+// 窓口は TouApp（アプリの中でだけある）。ブラウザで開いたときは何もしない。
+// アプリからの返事: touSetApp(状態) / touAdShowing() / touInterDone()。lib/game/bridge.dart と同じ約束。
+var APP=null,growPass=false,interNext=null,interT=0,shopMsg='';
+function inApp(){try{return !!window.TouApp;}catch(_){return false;}}
+function appPost(o){try{if(window.TouApp)window.TouApp.postMessage(JSON.stringify(o));}catch(_){}}
+// この先で全画面広告を出しそう（塔を始めた・続きから・次の階）。アプリが読み込み始める
+function appPrep(){if(inApp()&&!(APP&&APP.adFree))appPost({type:'prepInter'});}
+// 全画面広告を頼み、閉じたら next。アプリの外・広告を消した人はすぐ next
+function appInter(at,next){
+ if(!inApp()||(APP&&APP.adFree)){next();return;}
+ if(interNext)return; // 頼んでいる最中の2度押し
+ interNext=next;appPost({type:'inter',at:at});
+ // 表示が始まらないまま返事が無ければ、待たずに進める
+ interT=setTimeout(interFinish,5000);
+}
+function interFinish(){clearTimeout(interT);var n=interNext;interNext=null;if(n)n();}
+window.touAdShowing=function(){clearTimeout(interT);};
+window.touInterDone=interFinish;
+window.touSetApp=function(o){
+ if(!o)return;APP=APP||{};
+ for(var k in o)if(k!=='msg')APP[k]=o[k];
+ if(o.msg)shopMsg=o.msg;
+ renderShop();
+};
+// タイトルの「広告を消す」「購入を復元」。値段はストアが返した文字列をそのまま出す
+function renderShop(){
+ var el=document.getElementById('tshop');if(!el)return;
+ if(!inApp()){el.innerHTML='';return;}
+ var h='';
+ if(APP&&APP.adFree)h='<p class="note">広告なし</p>';
+ else h='<div class="row"><button class="btn" id="tbuy"'+(APP&&APP.canBuy===false?' disabled':'')+'>広告を消す'+(APP&&APP.price?'（'+esc(APP.price)+'）':'')+'</button><button class="btn" id="trestore">購入を復元</button></div>';
+ if(shopMsg)h+='<p class="note">'+esc(shopMsg)+'</p>';
+ el.innerHTML=h;
+ var b=document.getElementById('tbuy');if(b)b.onclick=function(){shopMsg='';b.disabled=true;appPost({type:'buy'});};
+ var r=document.getElementById('trestore');if(r)r.onclick=function(){shopMsg='';r.disabled=true;appPost({type:'restore'});};
+}
 
 // ---------- 図鑑 ----------
 var DEX=loadDex();

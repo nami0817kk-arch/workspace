@@ -7,6 +7,10 @@
 // 保存: ゲームは localStorage にも書くが、WebView のファイル読み込みでは消えることが
 // あるので、TouStore という窓口で同じ値をアプリ側（shared_preferences）にも渡してもらう。
 // 起動したらアプリ側の値を window.__boot へ渡して戻す。
+//
+// 広告と課金: 全画面広告と「広告を消す」（lib/monetization/）。ゲームからの頼みは
+// TouApp という窓口で受ける（lib/game/bridge.dart）。
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -14,20 +18,32 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'game/bridge.dart';
+import 'monetization/ad_service.dart';
+import 'monetization/monetization.dart';
+import 'monetization/purchase_service.dart';
+
 /// 同梱したゲームの HTML の場所。テストからも参照する。
 const gameAsset = 'assets/game/index.html';
 
 /// ゲームが保存する値の名前（塔の途中経過・殿堂・自己ベスト・図鑑）。
 const storeKeys = ['tou-save', 'tou-hall', 'tou-best', 'tou-dex'];
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const TouNoIshiApp());
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  final prefs = await SharedPreferences.getInstance();
+  final money = Monetization(prefs, ads: createAdService(), store: createPurchaseService());
+  // 広告SDKとストアの準備は待たずに画面を出す（読み込みは裏で続く）
+  unawaited(money.start());
+  // 長く裏にいた後は手元の広告が期限切れになっている。戻ったら読み直す
+  AppLifecycleListener(onResume: money.refreshAds);
+  runApp(TouNoIshiApp(money: money));
 }
 
 class TouNoIshiApp extends StatelessWidget {
-  const TouNoIshiApp({super.key});
+  const TouNoIshiApp({super.key, required this.money});
+  final Monetization money;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +51,7 @@ class TouNoIshiApp extends StatelessWidget {
       title: '塔の意志',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8A4B1C))),
-      home: const GameScreen(),
+      home: GameScreen(money: money),
     );
   }
 }
@@ -57,7 +73,8 @@ class TouNoIshiApp extends StatelessWidget {
 }
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  const GameScreen({super.key, required this.money});
+  final Monetization money;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -65,22 +82,37 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   late final WebViewController _controller;
+  late final GameBridge _bridge;
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _bridge = GameBridge(
+      money: widget.money,
+      runJs: (js) async {
+        try {
+          await _controller.runJavaScript(js);
+        } catch (_) {
+          // ページの読み込み前など。次の pushApp で追いつく
+        }
+      },
+    );
+    // 購入が後から届いた（家族の承認・別の端末・返金）ときも、ゲーム本体に伝える
+    widget.money.addListener(_onMoney);
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0xFFEFECE4))
       ..addJavaScriptChannel('TouStore', onMessageReceived: (msg) => _store(msg.message))
+      ..addJavaScriptChannel('TouApp', onMessageReceived: (msg) => unawaited(_bridge.handle(msg.message)))
       ..setNavigationDelegate(NavigationDelegate(onPageFinished: (_) => _boot()))
       ..loadFlutterAsset(gameAsset);
   }
 
   @override
   void dispose() {
+    widget.money.removeListener(_onMoney);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -92,6 +124,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       _controller.runJavaScript('window.__saveNow && window.__saveNow()');
     }
   }
+
+  void _onMoney() => unawaited(_bridge.pushApp());
 
   Future<void> _store(String message) async {
     final r = parseStoreMessage(message);
@@ -113,6 +147,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     }
     await _controller.runJavaScript('window.__boot && window.__boot(${jsonEncode(data)})');
     if (mounted) setState(() => _loading = false);
+    // 値段と広告なしかを渡す（タイトルの「広告を消す」のボタン）
+    await _bridge.pushApp();
   }
 
   @override
