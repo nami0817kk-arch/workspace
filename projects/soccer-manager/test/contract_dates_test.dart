@@ -10,6 +10,7 @@ import 'package:soccer_manager/logic/economy_scale.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/logic/pre_contract_engine.dart';
 import 'package:soccer_manager/logic/youth_promotion_engine.dart';
+import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/player_stub.dart';
 import 'package:soccer_manager/models/pre_contract.dart';
@@ -196,9 +197,11 @@ void main() {
           'minor');
     });
 
+    // 国内のクラブの選手と1月から仮契約を結べるのはドイツ・スペイン・
+    // フランス(イングランドは6月1日から。2026-11-22)。ドイツで見る。
     test('1月1日に結び、7月1日に移籍金なしで加入する', () async {
       final game = GameState();
-      await game.startNewGame('仮契約FC');
+      await game.startNewGame('仮契約FC', theme: LeagueTheme.germany);
       final clock = Player.contractClockYear;
       final cpu = game.save!.league.teams.firstWhere((t) => t.id != 'user');
       // 相手のクラブが季末に経営破綻すると、主力を自由契約に出してしまう。

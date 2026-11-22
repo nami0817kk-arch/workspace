@@ -44,7 +44,9 @@ void main() {
   });
 
   group('連帯貢献金', () {
-    test('来たオファーで売ると5%を引く。アカデミー出身は引かない', () async {
+    // 連帯貢献金は国をまたぐ移籍だけにかかる(FIFA の決まり。2026-11-22 に
+    // 国内の売却からは外した)。
+    test('他の国のクラブへ売ると5%を引く。アカデミー出身と国内の売却は引かない', () async {
       final gs = GameState();
       await gs.startNewGame('売却FC');
       final s = gs.save!;
@@ -54,6 +56,7 @@ void main() {
       p.academyGraduate = true;
       expect(gs.solidarityFor(p, 1000), 0);
       p.academyGraduate = false;
+      expect(gs.solidarityFor(p, 1000, international: false), 0);
       s.budget = 0;
       s.incomingOffers.add(IncomingOffer(
           id: 'x',
@@ -64,7 +67,18 @@ void main() {
               .name,
           amount: 1000));
       expect(await gs.acceptIncomingOffer('x'), isTrue);
-      expect(s.budget, 950);
+      expect(s.budget, 1000, reason: '国内のクラブへの売却には連帯貢献金がかからない');
+      final q = gs.userTeam.players.firstWhere((q) => !q.isLoan && q.age >= 18)
+        ..academyGraduate = false;
+      s.budget = 0;
+      s.incomingOffers.add(IncomingOffer(
+          id: 'y',
+          playerId: q.id,
+          playerName: q.name,
+          buyerClubName: s.foreignLeagues.values.first.teams.first.name,
+          amount: 1000));
+      expect(await gs.acceptIncomingOffer('y'), isTrue);
+      expect(s.budget, 950, reason: '他の国のクラブへの売却は5%を引く');
     });
   });
 

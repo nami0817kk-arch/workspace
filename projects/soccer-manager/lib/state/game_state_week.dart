@@ -150,6 +150,12 @@ extension GameStateWeek on GameState {
       ];
     }
     lastContractWarnings = [];
+    // 所属なしの選手は、季が進むにつれて他のクラブと契約して減っていく
+    // (話を進めている選手は残す)。
+    FreeAgentEngine.weeklyDrift(s.freeAgents, today, keep: {
+      for (final t in s.transferTalks)
+        if (t.freeAgent) t.playerId,
+    });
     // ローン満了により編成人数が最低人数を割り込んだ場合、フリーエージェントを
     // 緊急補強してスカッドが組めなくなる事態を防ぐ(安全網)。
     while (userTeam.players.length < minSquadSize) {

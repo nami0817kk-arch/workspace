@@ -211,6 +211,16 @@ extension GameStateTalks on GameState {
     return p.overall > starters.reduce(min);
   }
 
+  /// 所属なしの[p]と契約するときに必ず払う契約金(サイン料)の最低額。
+  /// 選手が求める年俸(今の週俸)の年額から決まる。
+  int freeAgentSigningFeeFor(Player p) =>
+      TransferTermsEngine.freeAgentSigningFee(annualFromWeekly(p.wage));
+
+  /// 所属なしの[p]を週俸[weeklyWage]で取るときの代理人手数料(年俸の1割前後)。
+  int freeAgentAgentFeeFor(Player p, int weeklyWage) =>
+      TransferTermsEngine.freeAgentAgentFee(annualFromWeekly(weeklyWage),
+          percent: RelationsEngine.agentOf(p).feePercent);
+
   /// 選手に年俸・契約の満了の年・サイン料を出す。
   ///
   /// 他のクラブの選手は、クラブと移籍金で合意してから(窓のあいだだけ)。
@@ -273,11 +283,18 @@ extension GameStateTalks on GameState {
     final inst = t != null && t.installments && t.installmentsOk;
     final fee = fa != null ? 0 : t!.fee;
     final upfront = inst ? (fee * 0.3).round() : fee;
-    // 代理人の手数料は、代理人の個性で率が違う。
+    // 代理人の手数料は、代理人の個性で率が違う。所属なしの選手は移籍金が
+    // 無いので、年俸に対する割合で払う(以前は移籍金0に掛けて0になっていた)。
     final agent = RelationsEngine.agentOf(player);
-    final agentFee = (fee * agent.feePercent / 100).round();
+    final agentFee = fa != null
+        ? freeAgentAgentFeeFor(player, weeklyWage)
+        : (fee * agent.feePercent / 100).round();
     if (weeklyWage <= 0 || signingBonus < 0) return TermsOutcome.blocked;
-    if (_save!.budget < upfront + agentFee + signingBonus) {
+    // 所属なしの選手は、移籍金の代わりに契約金(サイン料)を必ず求める。
+    // 足りない分はこちらで上乗せして払う(最低額までは条件の見比べに数えない)。
+    final requiredBonus = fa != null ? freeAgentSigningFeeFor(player) : 0;
+    final bonusPaid = max(signingBonus, requiredBonus);
+    if (_save!.budget < upfront + agentFee + bonusPaid) {
       _blockTalk(Tr.pick('資金が足りません(移籍金・代理人手数料・サイン料)。',
           'You cannot afford it (fee, agent fee and signing bonus).'));
       return TermsOutcome.blocked;
@@ -336,7 +353,9 @@ extension GameStateTalks on GameState {
     }
     final years = max(1, endYear - Player.contractClockYear + 1);
     final effective = PlayerTermsEngine.effectiveWeekly(
-        weeklyWage: weeklyWage, years: years, signingBonus: signingBonus);
+        weeklyWage: weeklyWage,
+        years: years,
+        signingBonus: max(0, signingBonus - requiredBonus));
     t.termsRound += 1;
     switch (PlayerTermsEngine.judge(
         effective: effective,
@@ -359,6 +378,7 @@ extension GameStateTalks on GameState {
 
     if (fa != null) {
       _save!.freeAgents.remove(fa);
+      _bookAgentFee(player, agentFee);
     } else {
       _book(LedgerCategory.transfers, -upfront);
       if (inst) {
@@ -385,7 +405,7 @@ extension GameStateTalks on GameState {
         _evaluateAchievements();
       }
     }
-    if (signingBonus > 0) _book(LedgerCategory.transfers, -signingBonus);
+    if (bonusPaid > 0) _book(LedgerCategory.transfers, -bonusPaid);
     // 移籍金は契約の年数で償却する(簿価)。
     player.wage = weeklyWage;
     ContractEngine.renewContract(player, endYear: endYear);
@@ -404,8 +424,8 @@ extension GameStateTalks on GameState {
     _logNews(
         fa != null
             ? Tr.pick(
-                '${player.name}と契約した(年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${signingBonus > 0 ? '・サイン料${formatMoney(signingBonus)}' : ''})。',
-                'Signed ${player.name} (${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${signingBonus > 0 ? ', ${formatMoney(signingBonus)} signing bonus' : ''}).')
+                '${player.name}と契約した(年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${bonusPaid > 0 ? '・サイン料${formatMoney(bonusPaid)}' : ''})。',
+                'Signed ${player.name} (${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${bonusPaid > 0 ? ', ${formatMoney(bonusPaid)} signing bonus' : ''}).')
             : Tr.pick(
                 '${player.name}が${t.clubName}から加入した(移籍金${formatMoney(fee)}・年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${signingBonus > 0 ? '・サイン料${formatMoney(signingBonus)}' : ''})。',
                 '${player.name} joined from ${t.clubName} (fee ${formatMoney(fee)}, ${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${signingBonus > 0 ? ', ${formatMoney(signingBonus)} signing bonus' : ''}).'),
@@ -563,7 +583,7 @@ extension GameStateTalks on GameState {
     } else {
       final target = _acquisitionTarget(player.id);
       if (target == null) return true;
-      _takeFromSeller(target);
+      _takeFromSeller(target, toUser: false);
     }
     player.wage = t.rivalWage;
     ContractEngine.applyTransferContract(player);

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../models/league_theme.dart';
 import '../models/player.dart';
 import '../models/team.dart';
 import '../l10n/tr.dart';
@@ -47,13 +48,26 @@ class ContractEngine {
   static const int maxContractYears = 5;
   static const int maxMinorContractYears = 3;
 
+  /// スペインの契約の上限(年)。スペインでは法律で5年を超える契約を結べる
+  /// (リリース条項と組み合わせて長い契約が多い)。ゲームでは8年まで。
+  static const int maxSpanishContractYears = 8;
+
+  /// いま遊んでいる国の、18歳以上の契約の上限(年)。選手は国を知らないので、
+  /// ゲームの側が読み込み・新規開始・季の切り替えのたびに合わせる
+  /// ([Player.contractClockYear]と同じ。GameState._syncContractClock)。
+  static int adultContractYearsCap = maxContractYears;
+
+  /// [country]の18歳以上の契約の上限(年)。スペインだけ長い。
+  static int adultCapFor(LeagueTheme country) =>
+      country == LeagueTheme.spain ? maxSpanishContractYears : maxContractYears;
+
   /// プロ契約を結べる年齢。ユースの選手はこの年齢になるまで一軍の契約を
   /// 結べない。
   static const int minProfessionalAge = 16;
 
   /// [age]歳の選手と結べる契約の長さの上限(年)。
   static int capYears(int age) =>
-      age < 18 ? maxMinorContractYears : maxContractYears;
+      age < 18 ? maxMinorContractYears : adultContractYearsCap;
 
   /// 今日結ぶ契約で選べる最も遅い満了の年。契約は結んだ日から数えて上限の
   /// 年数以内に終わる。シーズン中(7/1〜翌6/30)のどの日に結んでも、

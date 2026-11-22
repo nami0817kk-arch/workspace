@@ -213,10 +213,47 @@ class TrainingEngine {
       _rollBreakthrough(p, focus, effectiveGrowth);
     }
 
-    if (p.age >= declineStartAge(p) &&
-        _rng.nextDouble() < _declineChance(p.growthType) * weekScale) {
+    _rollWeeklyDecline(p, weekScale);
+  }
+
+  /// 週ごとの衰え。衰えの始まる年齢を過ぎると、確率で能力が落ちる。
+  /// 確率は[declineSeverity]倍(1を超えると1週に2回以上落ちることがある)。
+  static void _rollWeeklyDecline(Player p, double weekScale) {
+    if (p.age < declineStartAge(p)) return;
+    final expected =
+        _declineChance(p.growthType) * declineSeverity(p) * weekScale;
+    var events = expected.floor();
+    if (_rng.nextDouble() < expected - events) events++;
+    for (var i = 0; i < events; i++) {
       _decline(p);
     }
+  }
+
+  /// 衰えが速まる年齢(衰えの始まる年齢の翌年。標準の型の真ん中の選手なら32歳)。
+  static int declineAccelerationAge(Player p) => declineStartAge(p) + 1;
+
+  /// 衰えの強さの倍率。衰えの始まった年は1倍で、速まる年齢
+  /// ([declineAccelerationAge])から1年ごとに0.8倍ずつ足す(上限4.5倍)。
+  ///
+  /// 以前は衰えの始まりから何歳になっても同じ速さ(年1〜1.5)で、35歳を
+  /// 過ぎても主力のまま残っていた。実在の選手は32〜33歳から落ち方が
+  /// はっきり速くなる(2026-11-22)。
+  static double declineSeverity(Player p) {
+    final over = p.age - declineAccelerationAge(p) + 1;
+    if (over <= 0) return 1.0;
+    return min(4.5, 1.0 + 0.8 * over);
+  }
+
+  /// 画面に出ない選手([OffscreenDevelopment])の1年ぶんの衰えの目安
+  /// (総合力)。画面に出る他のクラブの選手が1年の練習([applyPassiveCpuGrowth]。
+  /// 底上げで少し戻る分を含む)で落ちる量に合わせてある(実測で
+  /// 倍率1倍あたり約0.95、底上げの戻りが約0.25)。
+  static double yearlyDeclineEstimate(Player p) {
+    if (p.age < declineStartAge(p)) return 0;
+    final net = max(0.0, 0.95 * declineSeverity(p) - 0.25);
+    return net *
+        _declineChance(p.growthType) /
+        _declineChance(PlayerGrowthType.balanced);
   }
 
   /// 高強度の練習メニューによる軽度の負傷判定。基礎体力(naturalFitness)が
@@ -422,10 +459,7 @@ class TrainingEngine {
           );
         }
       }
-      if (p.age >= declineStartAge(p) &&
-          _rng.nextDouble() < _declineChance(p.growthType) * weekScale) {
-        _decline(p);
-      }
+      _rollWeeklyDecline(p, weekScale);
     }
   }
 

@@ -1,4 +1,5 @@
 import '../logic/player_generator.dart';
+import 'league_theme.dart';
 import 'player.dart';
 
 /// 自クラブがいない部や他国のクラブの選手を、軽い形で保存する。
@@ -10,8 +11,9 @@ import 'player.dart';
 ///
 /// 並び: [id, 名前, 年齢, ポジション, 潜在, 総合力, 週俸, 満了の年(旧セーブは契約年数),
 ///        印(1=国内育成, 2=ユース出身), 性格, 成長の型, 特性(-1=無し),
-///        怪我のしやすさ, 通算出場, 通算得点, 大会で上がった価値(%), 大会明けの休み(1/0)]
-/// 最後の2つは後から足した。無いセーブは0として読む。
+///        怪我のしやすさ, 通算出場, 通算得点, 大会で上がった価値(%), 大会明けの休み(1/0),
+///        国籍(LeagueTheme の添字。-1=覚えていない)]
+/// 最後の3つは後から足した。無いセーブは0(国籍は覚えていない)として読む。
 class PlayerStub {
   static List<Object> encode(Player p) => [
         p.id,
@@ -31,7 +33,13 @@ class PlayerStub {
         p.careerGoals,
         p.tournamentBoostPct,
         p.onTournamentLeave ? 1 : 0,
+        _nationIndex(p.nation),
       ];
+
+  static int _nationIndex(String? nation) {
+    if (nation == null) return -1;
+    return LeagueTheme.values.indexWhere((t) => t.name == nation);
+  }
 
   /// 8番目(添字7)の値を満了の年に直す。旧セーブは残り年数(0〜10)を
   /// 入れていたので、年に見えない小さな値は年数として換算する
@@ -89,6 +97,10 @@ class PlayerStub {
       ..['careerGoals'] = s[14] as int
       ..['tournamentBoostPct'] = s.length > 15 ? s[15] as int : 0
       ..['onTournamentLeave'] = s.length > 16 && s[16] == 1;
+    final nationIndex = s.length > 17 ? s[17] as int : -1;
+    json['nation'] = nationIndex < 0 || nationIndex >= LeagueTheme.values.length
+        ? null
+        : LeagueTheme.values[nationIndex].name;
     final player = Player.fromJson(json);
     matchOverall(player, targetOverall);
     return player;

@@ -2319,8 +2319,10 @@ void main() {
     final ok = await gameState.acceptIncomingOffer('o1');
 
     expect(ok, isTrue);
-    // 移籍金から連帯貢献金(5%、アカデミー出身は0)が引かれる。
-    expect(gameState.save!.budget, 500 - gameState.solidarityFor(target, 500));
+    // 連帯貢献金は国をまたぐ移籍だけ(2026-11-22)。国内のクラブへの売却なので
+    // 移籍金がそのまま入る。
+    expect(gameState.save!.budget,
+        500 - gameState.solidarityFor(target, 500, international: false));
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isFalse);
     expect(gameState.incomingOffers, isEmpty);
   });
@@ -2352,7 +2354,8 @@ void main() {
     final ok = await gameState.acceptIncomingOffer('o2');
 
     expect(ok, isTrue);
-    expect(gameState.save!.budget, 650 - gameState.solidarityFor(target, 650));
+    expect(gameState.save!.budget,
+        650 - gameState.solidarityFor(target, 650, international: false));
     expect(gameState.incomingOffers, isEmpty);
   });
 
@@ -3540,7 +3543,15 @@ void main() {
     final ok = await gameState.signFreeAgent(target.id);
 
     expect(ok, isTrue);
-    expect(gameState.save!.budget, budgetBefore);
+    // 移籍金はかからないが、契約金と代理人手数料はかかる(2026-11-22。
+    // それまでは所属なしの選手を取る費用がゼロだった)。
+    final signed =
+        gameState.userTeam.players.firstWhere((p) => p.id == target.id);
+    expect(
+        gameState.save!.budget,
+        budgetBefore -
+            gameState.freeAgentSigningFeeFor(signed) -
+            gameState.freeAgentAgentFeeFor(signed, signed.wage));
     expect(gameState.userTeam.players.length, squadSizeBefore + 1);
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isTrue);
     expect(gameState.freeAgents.any((p) => p.id == target.id), isFalse);
@@ -9502,10 +9513,16 @@ void main() {
           reason: '総合の真ん中が50のクラブの緊急補強は、主力より上にならない');
     }
 
-    // 通常のFA市場は従来通りベテラン中心のまま(役割が違う)。
-    for (var i = 0; i < 50; i++) {
-      expect(FreeAgentEngine.generateVeteran().age, greaterThanOrEqualTo(27));
+    // 通常のFA市場はベテラン中心のまま(役割が違う)。2026-11-22 に夏の
+    // 所属なしを数十人に増やしたとき、契約の切れた20代半ばも混ぜた
+    // (24〜34歳。平均は29歳前後)。
+    var ageSum = 0;
+    for (var i = 0; i < 200; i++) {
+      final age = FreeAgentEngine.generateVeteran().age;
+      expect(age, inInclusiveRange(24, 34));
+      ageSum += age;
     }
+    expect(ageSum / 200, greaterThanOrEqualTo(28));
 
     expect(seasonStartSquadSize, greaterThan(minSquadSize),
         reason: 'シーズン開始時は最低人数より余裕を持たせる');

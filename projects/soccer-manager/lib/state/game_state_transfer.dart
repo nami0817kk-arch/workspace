@@ -28,8 +28,9 @@ extension GameStateTransfer on GameState {
   /// [lastSigningBlockReason]に入れる。
   bool _minorRuleAllows(Player player) {
     if (!_isInternationalMinor(player)) return true;
-    lastSigningBlockReason = Tr.pick('18歳未満の選手は国をまたいで移籍できません。',
-        'Players under 18 cannot move between countries.');
+    lastSigningBlockReason = Tr.pick(
+        '18歳未満の選手は国をまたいで移籍できません(EU の中の16〜17歳は除く)。',
+        'Players under 18 cannot move between countries (16 and 17-year-olds may move within the EU).');
     _notify();
     return false;
   }
@@ -38,8 +39,7 @@ extension GameStateTransfer on GameState {
   /// 理由を[lastSigningBlockReason]に入れる(押しても何も起きない状態にしない)。
   bool _registrationAllows(Player player) {
     // アルビオン式のリーグでは、外国籍の選手に労働許可が要る。
-    final reason = SquadRegistration.blockReason(userTeam, player) ??
-        workPermitBlock(player);
+    final reason = registrationBlockFor(player) ?? workPermitBlock(player);
     if (reason == null) return true;
     lastSigningBlockReason = reason;
     _notify();
@@ -120,9 +120,21 @@ extension GameStateTransfer on GameState {
         if (t.id != _save!.userTeamId && t.players.length > minSquadToSell)
           for (final p in t.players)
             if (_isTransferTarget(p, taken) &&
-                !(p.age < 18 && (foreign[t.id] ?? home) != home))
+                !(p.age < 18 &&
+                    (foreign[t.id] ?? home) != home &&
+                    _minorBlockedFromClub(p, t.id)))
               p,
     ];
+  }
+
+  /// 他の国のクラブの名前から、その国を引く(自国のクラブなら null)。
+  LeagueTheme? _foreignLeagueOfClubName(String clubName) {
+    for (final e in _save!.foreignLeagues.entries) {
+      if (e.value.teams.any((t) => t.name == clubName)) {
+        return LeagueTheme.values.where((t) => t.name == e.key).firstOrNull;
+      }
+    }
+    return null;
   }
 
   /// 他の国のクラブの id → その国([LeagueTheme]の name)。
@@ -169,9 +181,13 @@ extension GameStateTransfer on GameState {
   }
 
   /// 獲得した選手を、元のクラブ(または作り物の市場)から外す。
-  void _takeFromSeller(({Player player, Team? club}) target) {
+  /// [toUser]は自クラブが取るとき true(他のクラブが横取りしたときは false)。
+  void _takeFromSeller(({Player player, Team? club}) target,
+      {bool toUser = true}) {
     final p = target.player;
     final club = target.club;
+    // イタリアの「EU 外の選手は1季に2人まで」を数える(国籍を覚える前に)。
+    if (toUser) _noteSigningFromAbroad(p);
     // 国をまたいで移ることがあるので、先に国籍を覚えさせる。
     _fixNationality(p);
     if (club == null) {
@@ -837,6 +853,14 @@ extension GameStateTransfer on GameState {
     final player = target.player;
     if (!_windowAllowsSigning(player, permanent: false)) return false;
     if (!_minorRuleAllows(player)) return false;
+    if (userTeam.players.where((p) => p.isLoan).length >=
+        GameState.maxLoansIn) {
+      lastSigningBlockReason = Tr.pick(
+          '借りていられるのは同時に${GameState.maxLoansIn}人までです。',
+          'You can only have ${GameState.maxLoansIn} players in on loan at once.');
+      _notify();
+      return false;
+    }
     if (!_registrationAllows(player)) return false;
     // 買取義務付きは、借り賃が半分(満了したら必ず買い取る)。
     // 貸し出すときに受け取るレンタル料([standardLoanFeePercent])と同じ決まり。
@@ -1133,7 +1157,8 @@ extension GameStateTransfer on GameState {
   /// で獲得できるフリーエージェントのプール。
   List<Player> get freeAgents => _save?.freeAgents ?? [];
 
-  /// フリーエージェントを新規契約で獲得する(移籍金は発生しない)。
+  /// フリーエージェントを新規契約で獲得する(移籍金は発生しない。契約金と
+  /// 代理人手数料は払う)。
   ///
   /// 所属の無い選手は移籍ではないので、窓の外でも取れる(実在の決まりと
   /// 同じ)。登録の枠と年俸の枠は窓の中と同じに見る。
@@ -1155,9 +1180,21 @@ extension GameStateTransfer on GameState {
         ? (candidate.wage * ContractEngine.optionWageFactor).round()
         : candidate.wage;
     if (!_wageBudgetAllowsSigning(wage)) return false;
+    // 移籍金は要らないが、契約金(サイン料)と代理人手数料は払う。
+    final bonus = freeAgentSigningFeeFor(candidate);
+    final agentFee = freeAgentAgentFeeFor(candidate, wage);
+    if (_save!.budget < bonus + agentFee) {
+      lastSigningBlockReason = Tr.pick(
+          '資金が足りません(契約金${formatMoney(bonus)}と代理人手数料${formatMoney(agentFee)}が要ります)。',
+          'You cannot afford it: the signing bonus (${formatMoney(bonus)}) and agent fee (${formatMoney(agentFee)}) are paid up front.');
+      _notify();
+      return false;
+    }
     final player = _save!.freeAgents.removeAt(idx);
     player.wage = wage;
     ContractEngine.renewContract(player, endYear: endYear, option: option);
+    if (bonus > 0) _book(LedgerCategory.transfers, -bonus);
+    _bookAgentFee(player, agentFee);
     userTeam.players.add(player);
     _notify();
     await _persist();
@@ -1165,6 +1202,7 @@ extension GameStateTransfer on GameState {
   }
 
   /// 選手のリリース条項(解放金額)を設定・解除する。nullで解除。
+  /// スペインでは条項が必ず付くので、解除すると既定の額(市場価値の数倍)に戻る。
   Future<void> setReleaseClause(String playerId, int? amount) async {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
@@ -1242,6 +1280,14 @@ extension GameStateTransfer on GameState {
     if (available <= minSquadSize) return false;
     final player = team.players.firstWhere((p) => p.id == playerId);
     if (player.isLoan || player.isLoanedOut) return false;
+    if (team.players.where((p) => p.isLoanedOut).length >=
+        GameState.maxLoansOut) {
+      lastSigningBlockReason = Tr.pick(
+          '貸し出していられるのは同時に${GameState.maxLoansOut}人までです。',
+          'You can only have ${GameState.maxLoansOut} players out on loan at once.');
+      _notify();
+      return false;
+    }
 
     final candidates =
         _save!.league.teams.where((t) => t.id != _save!.userTeamId).toList();
@@ -1377,8 +1423,15 @@ extension GameStateTransfer on GameState {
     }
     if (team.players.length <= minSquadSize) return false;
     final player = team.players.firstWhere((p) => p.id == offer.playerId);
-    // 18歳未満は国をまたいで移れない。他の国のクラブには売れない。
-    if (player.age < 18 && _isForeignClub(offer.buyerClubName)) return false;
+    // 18歳未満は国をまたいで移れない。他の国のクラブには売れない
+    // (EU の中の16〜17歳は例外)。
+    if (player.age < 18 && _isForeignClub(offer.buyerClubName)) {
+      final to = _foreignLeagueOfClubName(offer.buyerClubName);
+      if (to == null ||
+          !minorMayMoveBetween(player.age, currentLeagueTheme, to)) {
+        return false;
+      }
+    }
     if (player.isLoanedOut) {
       // ローン放出中の選手は貸出先クラブが保有しているため、その間はオファーを
       // 承諾できない(貸出期間が終われば復帰するので、オファー自体は保持する)。
@@ -1396,7 +1449,7 @@ extension GameStateTransfer on GameState {
     _friendsMissPlayer(player);
     _book(LedgerCategory.playerSales, offer.amount);
     // 移籍金を受け取る売却: 連帯貢献金と、簿価との差(売却益)。
-    _onPlayerSold(player, offer.amount);
+    _onPlayerSold(player, offer.amount, buyerClubName: offer.buyerClubName);
     _paySellOn(player, offer.amount);
     _notify();
     await _persist();
@@ -1593,9 +1646,26 @@ extension GameStateTransfer on GameState {
         final buyer = buyerCandidates[
             GameState._offerRng.nextInt(buyerCandidates.length)];
 
-        if (chosen.releaseClause != null) {
-          // リリース条項がある場合は交渉なしで即成立する。
-          final amount = chosen.releaseClause!;
+        // リリース条項(スペインでは必ず付く)。条項の額が市場価値に比べて
+        // 高すぎれば払いに来ない。払っても、移るかは選手が決める
+        // (2026-11-22。以前は額を問わず、選手の同意なしにその場で売れていた)。
+        final clause = releaseClauseOf(chosen);
+        final paysClause = clause != null &&
+            GameState._offerRng.nextDouble() <
+                GameStateReleaseClause.aiClausePayChance(
+                    clause, chosen.marketValue);
+        final consents = paysClause &&
+            GameState._offerRng.nextDouble() <
+                GameStateReleaseClause.releaseClauseConsentChance(chosen);
+        if (paysClause && !consents) {
+          _logNews(
+              Tr.pick(
+                  '${buyer.name}が${chosen.name}のリリース条項(${formatMoney(clause)})を払うと言ってきたが、${chosen.name}は残ることを選んだ。',
+                  '${buyer.name} offered to pay the release clause for ${chosen.name} (${formatMoney(clause)}), but he chose to stay.'),
+              context: Tr.pick('移籍', 'Transfer'));
+        } else if (consents) {
+          // 条項の額を払われ、選手も同意したので、交渉なしで成立する。
+          final amount = clause;
           team.players.removeWhere((p) => p.id == chosen.id);
           final wasStarter = team.startingXI.remove(chosen.id);
           if (wasStarter) {
@@ -1606,7 +1676,7 @@ extension GameStateTransfer on GameState {
           _clearPlayerRoleReferences(team, chosen.id);
           _movePlayerToBuyer(chosen, buyer.name);
           _book(LedgerCategory.playerSales, amount);
-          _onPlayerSold(chosen, amount);
+          _onPlayerSold(chosen, amount, buyerClubName: buyer.name);
           autoSold.add(chosen.name);
         } else {
           final amount = MarketTrendEngine.apply(
