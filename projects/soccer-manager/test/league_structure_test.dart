@@ -61,10 +61,12 @@ void main() {
       tier2PlayedOrder: b,
       rules: LeagueTheme.germany.rulesBelow(1),
     );
-    expect(r.promotionPlayoff.length, 1);
-    final m = r.promotionPlayoff.single;
-    expect(m.homeId, a[15].id);
-    expect(m.awayId, b[2].id);
+    // ドイツの入れ替え戦は2試合合計(2026-11-22 に実際の形へ。前は1試合)。
+    expect(r.promotionPlayoff.length, 2);
+    for (final m in r.promotionPlayoff) {
+      expect({m.homeId, m.awayId}, {a[15].id, b[2].id});
+    }
+    final m = r.promotionPlayoff.last;
     expect(r.tier1.any((t) => t.id == m.winnerId), isTrue);
     // 自動の2つずつは必ず入れ替わる
     expect(r.tier1.any((t) => t.id == b[0].id), isTrue);

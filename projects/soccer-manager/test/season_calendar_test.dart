@@ -194,10 +194,9 @@ void main() {
     test('カップ戦は平日、リーグ戦はその節の日に今日が進む', () async {
       final gs = GameState();
       await gs.startNewGame('テストFC');
-      expect(await gs.playNextCupMatch(), isNotNull);
-      final cupDay = gs.today;
-      expect(_isWeekday(cupDay), isTrue, reason: '$cupDay');
-      expect(cupDay.isBefore(gs.dateOfMatchday(1)), isTrue);
+      // 国内カップの1回戦は第3節の前の週にまとめて行う(2026-11-22 に実際の
+      // 形へ。前は開幕前から1節に1試合)。開幕前にはまだ無い。
+      expect(await gs.playNextCupMatch(), isNull);
 
       await gs.playNextMatchdayQuickSim();
       expect(gs.today, gs.dateOfMatchday(1));

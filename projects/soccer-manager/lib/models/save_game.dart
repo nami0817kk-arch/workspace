@@ -1034,8 +1034,20 @@ class SaveGame {
     for (final t in allTeams) {
       yield* t.players;
     }
+    // 大陸大会に出る他国のクラブは、他国のリーグ(foreignLeagues)のクラブの
+    // 写し(同じクラブID・同じ選手ID)。同じ選手を二度数えないよう、他国の
+    // リーグ・国内の部にすでにいる選手は飛ばす(2026-11-22)。
+    final seen = <String>{
+      for (final l in foreignLeagues.values)
+        for (final t in l.teams)
+          for (final p in t.players) p.id,
+      for (final t in allTeams)
+        for (final p in t.players) p.id,
+    };
     for (final t in continentalTeams) {
-      yield* t.players;
+      for (final p in t.players) {
+        if (!seen.contains(p.id)) yield p;
+      }
     }
     yield* youthProspects;
     yield* retiredLegends;
