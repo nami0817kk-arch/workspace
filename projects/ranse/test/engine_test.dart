@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ranse/engine/birth.dart';
 import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/game.dart';
+import 'package:ranse/engine/history.dart';
+import 'package:ranse/engine/history_lines.dart';
 import 'package:ranse/engine/life.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:ranse/engine/ways.dart';
@@ -494,6 +496,96 @@ void main() {
         checked++;
       }
       expect(checked, greaterThan(100));
+    });
+
+    test('世界線の出し分けの表に書いた岐路・出来事は、すべて実在する', () {
+      final g = Game();
+      final ids = {
+        for (final s in [...g.childScenes, ...g.adultScenes]) s.id,
+      };
+      for (final id in skipTableIds()) {
+        expect(ids, contains(id), reason: id);
+      }
+      final ev = {for (final e in kHistory) e.id};
+      for (final id in skipEventIds()) {
+        expect(ev, contains(id), reason: id);
+      }
+    });
+
+    test('歴史が変わった世では、その世に合わない史実は起きず、その世だけの出来事が起きる', () {
+      const cases = {
+        'history_okehazama': ('imagawa', 1569, 'x_imagawa_jouraku'),
+        'history_honnoji': ('nobunaga', 1585, 'x_osaka_nobunaga'),
+        'history_yamazaki': ('akechi', 1584, 'x_akechi_rule'),
+      };
+      cases.forEach((flag, c) {
+        final (line, byYear, altEvent) = c;
+        var reached = 0;
+        for (var seed = 0; seed < 300; seed++) {
+          final rng = Rng(seed);
+          final g = Game(rng: rng);
+          g.start(rollBirth(rng));
+          if (g.finished) continue;
+          g.setFlag(flag);
+          expect(worldLine(g), line);
+          playOut(g, Rng(seed));
+          for (final id in kSkipScenes[line]!) {
+            expect(g.hasFlag('scene:$id'), isFalse, reason: '$line で $id が出た');
+          }
+          if (g.year > byYear && !g.isChild) {
+            reached++;
+            expect(g.hasFlag('h:$altEvent'), isTrue, reason: '$line $altEvent');
+          }
+        }
+        expect(reached, greaterThan(10), reason: line);
+      });
+      // 今川の世では、織田は1561年に滅ぶ（自分が織田の当主でなければ）。
+      for (var seed = 0; seed < 200; seed++) {
+        final rng = Rng(seed);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        g.setFlag('history_okehazama');
+        playOut(g, Rng(seed));
+        if (g.year > 1562 && !g.isChild && g.l.maxRank < 8) {
+          expect(g.fa['織田']!.alive, isFalse);
+        }
+      }
+    });
+
+    test('城主・家老・大名の人生も最後まで進み、岐路は匂わせだけで数字を出さない', () {
+      var lordScenes = 0;
+      for (final rank in [6, 8]) {
+        for (var seed = 0; seed < 150; seed++) {
+          final rng = Rng(seed * 13 + rank);
+          final g = Game(rng: rng);
+          g.start(rollBirth(rng));
+          playChildhood(g, Rng(seed));
+          if (g.finished) continue;
+          final home = g.fa[g.l.home]!.alive ? g.l.home : g.alive.first.name;
+          g.l
+            ..rank = rank
+            ..maxRank = rank
+            ..lord = home
+            ..fav = 50
+            ..troops = 40
+            ..gold = 80;
+          playOut(
+            g,
+            Rng(seed + 1),
+            onPrompt: (p) {
+              if (p.title == '元服' || p.title == '裳着') return;
+              for (final c in p.choices) {
+                expect(c.hint, isNotNull, reason: '${p.title}/${c.label}');
+                expect(c.hint!, isNot(contains('%')), reason: p.title);
+                expect(c.hint!, isNot(contains('成功率')), reason: p.title);
+              }
+            },
+          );
+          lordScenes += g.l.flags.where((f) => f.startsWith('scene:l_')).length;
+        }
+      }
+      expect(lordScenes, greaterThan(100));
     });
 
     test('死に方は保存の往復で残る', () {

@@ -7,9 +7,11 @@ import 'data.dart';
 import 'history.dart';
 import 'history_east.dart';
 import 'history_life.dart';
+import 'history_lines.dart';
 import 'history_rumor.dart';
 import 'history_west.dart';
 import 'life.dart';
+import 'lords.dart';
 import 'rng.dart';
 import 'ways.dart';
 
@@ -51,10 +53,12 @@ class Game extends ChangeNotifier {
     adultScenes = [
       ...buildAdultScenes(),
       ...buildWayScenes(),
+      ...buildLordScenes(),
       ...buildHistoryScenes(),
       ...buildHistoryEastScenes(),
       ...buildHistoryWestScenes(),
       ...buildLifeHistoryScenes(),
+      ...buildAltScenes(),
     ];
   }
 
@@ -461,6 +465,7 @@ class Game extends ChangeNotifier {
       for (final s in childScenes)
         if (!hasFlag('scene:${s.id}') &&
             !_twinDone(s.id) &&
+            !sceneSkippedInLine(this, s.id) &&
             a >= s.minAge &&
             a <= s.maxAge &&
             (s.ageOk == null || s.ageOk!(this, a)) &&
@@ -563,6 +568,7 @@ class Game extends ChangeNotifier {
       (s.ageOk == null || s.ageOk!(this, a)) &&
       (s.repeat || !hasFlag('scene:${s.id}')) &&
       !_twinDone(s.id) &&
+      !sceneSkippedInLine(this, s.id) &&
       s.cond(this);
 
   bool _twinDone(String id) {

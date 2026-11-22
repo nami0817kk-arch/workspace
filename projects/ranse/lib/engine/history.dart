@@ -1,5 +1,6 @@
 import 'childhood.dart';
 import 'game.dart';
+import 'history_lines.dart';
 import 'life.dart';
 import 'rng.dart';
 
@@ -11,9 +12,12 @@ import 'rng.dart';
 /// プレイヤー自身が当主の家は、年表で滅ぼされない（あなたが歴史を変えている）。
 
 class HistEvent {
-  const HistEvent(this.id, this.year, this.apply);
+  const HistEvent(this.id, this.year, this.apply, {this.only});
   final String id;
   final int year;
+
+  /// この世界線（`history_lines.dart` の `worldLine`）でだけ起きる。null なら史実の出来事。
+  final String? only;
 
   /// 起きたことを返す（見聞録に【世】として書く）。起きなければ null。
   final String? Function(Game g) apply;
@@ -170,7 +174,9 @@ final kHistory = <HistEvent>[
   HistEvent('okitanawate', 1584, (g) {
     _cut(g, '龍造寺', .5);
     _grow(g, '島津', 5);
-    return '肥前の沖田畷で、龍造寺隆信が島津に討たれた。尾張の小牧・長久手では、秀吉と家康がにらみ合った。';
+    return worldLine(g) == 'real'
+        ? '肥前の沖田畷で、龍造寺隆信が島津に討たれた。尾張の小牧・長久手では、秀吉と家康がにらみ合った。'
+        : '肥前の沖田畷で、龍造寺隆信が島津に討たれた。';
   }),
   HistEvent('kanpaku', 1585, (g) {
     _cut(g, '長宗我部', .6);
@@ -336,8 +342,14 @@ final kHistory = <HistEvent>[
 /// [year] までにまだ起きていない史実を起こす。[quietBefore] より前の年のものは見聞録に書かない
 /// （幼いうちに起きたこと）。
 void applyHistory(Game g, int year, {int? quietBefore}) {
-  for (final e in kHistory) {
+  for (final e in [...kHistory, ...kAltHistory]) {
     if (e.year > year || g.hasFlag('h:${e.id}')) continue;
+    // 世界線に合わない出来事は起こさない。変わった世界線だけの出来事は、その世界線でだけ起こす。
+    if (e.only != null && e.only != worldLine(g)) continue;
+    if (e.only == null && eventSkippedInLine(g, e.id)) {
+      g.setFlag('h:${e.id}');
+      continue;
+    }
     g.setFlag('h:${e.id}');
     final txt = e.apply(g);
     if (txt != null && (quietBefore == null || e.year >= quietBefore)) {

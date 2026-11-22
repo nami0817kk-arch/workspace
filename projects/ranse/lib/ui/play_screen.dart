@@ -5,6 +5,7 @@ import '../app/controller.dart';
 import '../engine/birth.dart';
 import '../engine/data.dart';
 import '../engine/game.dart';
+import '../engine/history_lines.dart';
 import '../engine/rng.dart';
 import 'end_screen.dart';
 import 'theme.dart';
@@ -383,6 +384,16 @@ class _WorldTab extends StatelessWidget {
     return ListView(
       padding: _pad,
       children: [
+        if (worldLine(g) != 'real') ...[
+          Panel(
+            title: '今の世',
+            child: Text(
+              '${lineName(g)}。あなたの選択で、歴史は史実と別の道を歩んでいる。',
+              style: const TextStyle(color: Pal.gold, height: 1.6),
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
         Panel(
           title: '天下の勢力',
           child: Column(
