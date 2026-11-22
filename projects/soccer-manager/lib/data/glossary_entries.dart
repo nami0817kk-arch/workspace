@@ -318,24 +318,27 @@ List<GlossaryEntry> get glossaryEntries => [
             'He is away with his country for a spell and unavailable to you. He rejoins normally once it is over.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('監督への信頼度', 'Board confidence'),
+        term: Tr.pick('サポーターの期待', 'Supporter expectation'),
         category: GlossaryCategory.club,
-        description: Tr.pick('サポーターの期待(0-100)。目標順位を下回る成績が続くと下がり、0になる(不満が限界を超える)とクラブを手放すことになる。',
-            'What the supporters expect of you (0-100). Sustained results below the target push it down, and at zero their anger forces you to sell the club.'),
+        // 実際の動きに合わせる(2026-11-23)。以前は「目標順位を下回る成績が
+        // 続くと下がる」とだけあり、何で上下するのか分からなかった。
+        description: Tr.pick(
+            'サポーターの期待(0-100)。リーグ戦の勝ちで+3・負けで-3(ダービーは1.5倍)。季の折り返しの理事会レビューで、目標以内なら+8・目標より4つ以上下なら-12。季末は目標以内で+15・目標より3つ以上下で-20。0になるとクラブを手放す。季を越えれば最低40から始まる。オーナー室の広報・ファン向けの手や試合日のイベントでも上げられる。',
+            'What the supporters expect (0-100). A league win is +3 and a defeat -3 (derbies count 1.5 times). At the halfway mark the board review gives +8 within the target, or -12 if you are four or more places below it. At the end of the season it is +15 within the target, or -20 three or more places below. At zero you have to sell the club. A new season starts from at least 40. PR, fan moves and matchday events in the owner\'s office also raise it.'),
       ),
       GlossaryEntry(
         term: Tr.pick('監督としての評価', 'Reputation'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            '世間からの監督としての評価(0-100)。信頼度と異なり解任されてもクラブを移っても引き継がれ、他クラブからの就任オファーの受けやすさに影響する。',
-            'How the wider game rates you (0-100). Unlike board confidence it follows you through sackings and moves, and shapes the offers you receive.'),
+            '世間からのオーナーとしての評価(0-100)。サポーターの期待と異なり、クラブを手放しても別のクラブへ移っても引き継がれ、スポンサーや人の集まりやすさに影響する。',
+            'How the wider game rates you as an owner (0-100). Unlike supporter expectation it follows you when you sell and move to another club, and shapes how sponsors and people respond to you.'),
       ),
       GlossaryEntry(
         term: Tr.pick('理事会の目標順位', 'Board target'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            'シーズン開始時に理事会から示される目標順位(1が最高位)。これを下回る成績が続くと信頼度が低下する。',
-            'The finishing position the board asks for at the start of the season. Staying below it costs you their confidence.'),
+            'シーズン開始時に理事会から示される目標順位(1が最高位)。季の途中のレビューと季末に、これと比べてサポーターの期待が上下する。',
+            'The finishing position the board asks for at the start of the season. Supporter expectation moves against it at the mid-season review and at the end of the season.'),
       ),
       GlossaryEntry(
         term: Tr.pick('プレッシング', 'Pressing'),
@@ -492,8 +495,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('観客動員', 'Attendance'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '試合に足を運んだ人数。スタジアムの収容人数に動員率を掛けたもので、動員率は順位・監督への信頼度・チケット価格で上下する。下部ディビジョンほど低い。試合日の収入はここから決まるため、勝てないと資金も細る。',
-            'How many came to the match: your stadium capacity times a turnout rate that moves with your league position, the board\'s confidence and your ticket prices, and which is lower the further down the pyramid you are. Matchday income follows from it, so a bad run thins the bank balance too.'),
+            '試合に足を運んだ人数。スタジアムの収容人数に動員率を掛けたもので、動員率は順位・サポーターの期待・チケット価格で上下する。下部ディビジョンほど低い。試合日の収入はここから決まるため、勝てないと資金も細る。',
+            'How many came to the match: your stadium capacity times a turnout rate that moves with your league position, supporter expectation and your ticket prices, and which is lower the further down the pyramid you are. Matchday income follows from it, so a bad run thins the bank balance too.'),
       ),
       GlossaryEntry(
         term: Tr.pick('給与予算', 'Wage budget'),
@@ -513,8 +516,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('カップ目標', 'Cup target'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            '理事会が期待する国内カップの到達ラウンド。リーグ内の戦力が高いクラブほど深いラウンドまで期待され、達成すれば信頼度が上がり、大きく届かないと下がる。',
-            'How far the board expects you to go in the domestic cup. Stronger clubs are expected deeper; meeting it raises their confidence, falling well short lowers it.'),
+            '理事会が期待する国内カップの到達ラウンド。リーグ内の戦力が高いクラブほど深いラウンドまで期待され、勝ち進めばサポーターの期待が上がり、敗退すると少し下がる。',
+            'How far the board expects you to go in the domestic cup. Stronger clubs are expected deeper; cup runs lift supporter expectation, and going out lowers it a little.'),
       ),
       GlossaryEntry(
         term: Tr.pick('選手検索', 'Player search'),

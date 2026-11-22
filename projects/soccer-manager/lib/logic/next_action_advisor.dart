@@ -1,8 +1,10 @@
+import '../models/club_infrastructure.dart';
 import '../models/player.dart';
 import '../models/save_game.dart';
 import '../models/team.dart';
 import '../l10n/tr.dart';
 import 'contract_engine.dart';
+import 'economy_scale.dart';
 import 'youth_departure_engine.dart';
 
 /// 「次にやること」1件。
@@ -25,7 +27,18 @@ class NextAction {
 
 /// 行き先。画面そのものを持たせると、このファイルが UI に依存してしまう。
 /// [transferOffers] は移籍の画面の「届いたオファー」のタブを開く。
-enum NextActionTarget { squad, youth, finance, transfer, transferOffers }
+/// [ownerWork] はオーナー室(広報・試合日のイベント)、[staff] はスタッフ、
+/// [ownerGoal] はオーナーの目標を選ぶ一覧。
+enum NextActionTarget {
+  squad,
+  youth,
+  finance,
+  transfer,
+  transferOffers,
+  ownerWork,
+  staff,
+  ownerGoal,
+}
 
 /// いまのクラブの状態を見て、次にやることを1つだけ挙げる。
 ///
@@ -46,14 +59,80 @@ class NextActionAdvisor {
   /// (閉じているときは null)。[transferDeadlineBeforeNextMatch] は次の試合の
   /// 前に窓が閉まるか(この節のあいだが最後の機会)。締切は移籍画面を
   /// 開かないと見えないので、ホームからも知らせる。
+  ///
+  /// [includeSetup] は、始めたばかりのクラブの用意(スタッフ・スポンサー・
+  /// オーナーの目標)も挙げるか。状況の画面のカードは true で呼ぶ。
+  /// [supporterTrend] は直近の節でのサポーターの期待の増減、
+  /// [rolloverShortfall] は季の切り替えの給与で資金が足りなくなる額。
   static List<NextAction> all(
     SaveGame save,
     Team team, {
     int? transferDeadlineDaysLeft,
     bool transferDeadlineBeforeNextMatch = false,
     bool hasSigningProposals = false,
+    bool includeSetup = false,
+    int? supporterTrend,
+    int? rolloverShortfall,
   }) {
     final actions = <NextAction>[];
+
+    // 開幕前は、まずクラブの用意。何から手を付けるか分からないまま
+    // 第1節へ進めてしまうと、空席のスタッフとスポンサー無しで季を戦う。
+    final preseason = !save.league.fixtures.any((f) =>
+        f.result != null &&
+        (f.homeTeamId == save.userTeamId || f.awayTeamId == save.userTeamId));
+    if (includeSetup) {
+      final roles = StaffRole.values.length;
+      final hired = StaffRole.values
+          .where((r) => save.infrastructure.staffFor(r) != null)
+          .length;
+      if (hired == 0 || (preseason && hired < roles)) {
+        actions.add(NextAction(
+          message: Tr.pick('スタッフが空席です($roles役中$hired人)。まず監督とコーチを雇いましょう。',
+              'Staff posts are empty ($hired of $roles filled). Start by hiring a manager and coaches.'),
+          target: NextActionTarget.staff,
+        ));
+      }
+      if (save.sponsorDeal == null && save.pendingSponsorOffers.isNotEmpty) {
+        actions.add(NextAction(
+          message: Tr.pick('スポンサーが未契約です。結ぶと毎週の収入が増えます。',
+              'You have no sponsor. Signing one adds weekly income.'),
+          target: NextActionTarget.finance,
+        ));
+      }
+      if (save.ownerGoal == null && preseason) {
+        actions.add(NextAction(
+          message: Tr.pick('オーナーの目標が未設定です。決めると達成が殿堂に残ります。',
+              'You have not set an owner goal. Achieving one puts it in the hall of fame.'),
+          target: NextActionTarget.ownerGoal,
+        ));
+      }
+    }
+
+    // 季の切り替えで、6月までの給与がまとめて引かれる。7月の初めに赤字に
+    // なるなら先に知らせる(説明なしに2億減って見えた)。
+    final shortfall = rolloverShortfall;
+    if (shortfall != null && shortfall > 0) {
+      actions.add(NextAction(
+        message: Tr.pick('季の切り替えで6月までの給与が引かれ、資金が${formatMoney(shortfall)}足りなくなります。売却や借入で備えてください。',
+            'Wages up to the end of June will leave you ${formatMoney(shortfall)} short at the changeover. Sell or borrow to cover it.'),
+        target: NextActionTarget.finance,
+        urgent: true,
+      ));
+    }
+
+    // サポーターの期待が下がり続けている。0で手放すので、契約の知らせ
+    // より先に、打てる手(広報・試合日のイベント)を示す。
+    final trend = supporterTrend;
+    if (trend != null && trend <= -supporterDropAlert) {
+      actions.add(NextAction(
+        message: Tr.pick(
+            'サポーターの期待が下がっています(直近で$trend、いま${save.confidence})。オーナー室の広報・ファン向けの手や、試合日のイベントで支えましょう。',
+            'Supporter expectation is falling ($trend lately, now ${save.confidence}). Use PR and fan moves or a matchday event in the owner\'s office.'),
+        target: NextActionTarget.ownerWork,
+        urgent: save.confidence <= supporterUrgentLine,
+      ));
+    }
 
     // 移籍の締切。過ぎると次の窓まで動けない。
     final left = transferDeadlineDaysLeft;
@@ -90,11 +169,11 @@ class NextActionAdvisor {
       ));
     }
 
-    // 資金がマイナス。放置すると理事会の信頼度が毎週削られる。
+    // 資金がマイナス。放置すると株主の期待が削られていく。
     if (save.budget < 0) {
       actions.add(NextAction(
-        message: Tr.pick('資金がマイナスです。放っておくと理事会の信頼を失います。',
-            'You are in the red. The board will lose patience if it stays that way.'),
+        message: Tr.pick('資金がマイナスです。放っておくと株主の期待が下がります。',
+            'You are in the red. Shareholder expectation will fall if it stays that way.'),
         target: NextActionTarget.finance,
         urgent: true,
       ));
@@ -130,6 +209,12 @@ class NextActionAdvisor {
   /// (およそ2節ぶん)。
   static const int deadlineWarningDays = 14;
 
+  /// 直近の節でこれ以上サポーターの期待が下がったら知らせる。
+  static const int supporterDropAlert = 10;
+
+  /// サポーターの期待がこの値以下なら、下がっている知らせを急ぎにする。
+  static const int supporterUrgentLine = 35;
+
   /// いま出すべき1件。何も無ければ null。
   static NextAction? top(
     SaveGame save,
@@ -137,11 +222,17 @@ class NextActionAdvisor {
     int? transferDeadlineDaysLeft,
     bool transferDeadlineBeforeNextMatch = false,
     bool hasSigningProposals = false,
+    bool includeSetup = false,
+    int? supporterTrend,
+    int? rolloverShortfall,
   }) {
     final actions = all(save, team,
         transferDeadlineDaysLeft: transferDeadlineDaysLeft,
         transferDeadlineBeforeNextMatch: transferDeadlineBeforeNextMatch,
-        hasSigningProposals: hasSigningProposals);
+        hasSigningProposals: hasSigningProposals,
+        includeSetup: includeSetup,
+        supporterTrend: supporterTrend,
+        rolloverShortfall: rolloverShortfall);
     if (actions.isEmpty) return null;
     // 損が確定しているものを先に出す。
     final urgent = actions.where((a) => a.urgent);

@@ -104,6 +104,7 @@ extension GameStateFinance on GameState {
     _save!.playerBook.clear();
     _save!.pendingJobOfferTeamId = null;
     _save!.confidence = 60;
+    _resetSupporterRecords();
     _save!.shareholderExpectation = 60;
     _save!.boardTargetRank = _difficultyAdjustedTarget(
       BoardEngine.estimateTargetRank(_save!.league, newTeamId),
@@ -783,6 +784,7 @@ extension GameStateFinance on GameState {
     save.licenseGraceTier = 0;
     save.pendingJobOfferTeamId = null;
     save.confidence = 60;
+    _resetSupporterRecords();
     save.shareholderExpectation = 60;
     _settleOwnerLoanOnClubChange();
     save.ownerShare = 100;
@@ -937,6 +939,7 @@ extension GameStateFinance on GameState {
     save.proposals = [];
     save.declinedProposalIds = [];
     save.confidence = 60;
+    _resetSupporterRecords();
     save.shareholderExpectation = 60;
     _settleOwnerLoanOnClubChange();
     save.ownerShare = 100;
@@ -1489,6 +1492,10 @@ extension GameStateFinance on GameState {
         .round();
     if (fine > 0) _book(LedgerCategory.other, -fine);
     save.confidence = (save.confidence - penalty.trustLoss).clamp(0, 100);
+    _noteSupporterMove(
+        -penalty.trustLoss,
+        Tr.pick('リーグの規則違反(${penalty.reason})',
+            'League rules breach (${penalty.reason})'));
     save.transferBanSeasons = max(save.transferBanSeasons, penalty.banSeasons);
     save.pendingPointsDeduction += penalty.pointsDeduction;
     if (penalty.wageFreezeSeasons > 0) {
@@ -1750,6 +1757,7 @@ extension GameStateFinance on GameState {
     save.reserveFund = cover.fundAfter;
     if (cover.byClub > 0) _book(LedgerCategory.other, -cover.byClub);
     save.confidence = (save.confidence - incident.trustLoss).clamp(0, 100);
+    _noteSupporterMove(-incident.trustLoss, incident.kind.label);
     _logNews(
       Tr.pick(
           '${incident.kind.label}が起きました。損失${formatMoney(incident.loss)}(保険${formatMoney(cover.byInsurance)}・基金${formatMoney(cover.byFund)}・クラブ負担${formatMoney(cover.byClub)})',

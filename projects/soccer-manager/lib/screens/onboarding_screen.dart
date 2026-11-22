@@ -20,39 +20,44 @@ class _OnboardingSlide {
 // const にできないのは、各スライドの文言が表示時の言語で決まるため。
 // final にすると最初のアクセスで言語が固定され、設定で切り替えても
 // 反映されなくなるので、参照のたびに組み立てるゲッターにしている。
+//
+// 2026-11-23 にオーナー型の遊び方へ書き直した。以前は「戦術を作り込む」
+// 「試合をライブで采配」と監督のゲームの説明で、遊び始めると話が違った。
 List<_OnboardingSlide> get _slides => [
       _OnboardingSlide(
         art: OnboardingArtKind.climb,
-        title: Tr.pick('クラブを率いて頂点へ', 'Take a club to the top'),
-        description: Tr.pick('クラブを創設し、オーナーとしてリーグ優勝・カップ制覇・昇格を目指しましょう。',
-            'Found a club and manage it towards the title, the cup and promotion.'),
-      ),
-      _OnboardingSlide(
-        art: OnboardingArtKind.squad,
-        title: Tr.pick('スカッドと戦術を作り込む', 'Build your squad and your tactics'),
-        description: Tr.pick('選手の役割・デューティ、フォーメーション、幅とテンポを調整して自分だけの戦術を組み立てられます。',
-            "Set each player's role and duty, choose a formation, and tune width and tempo into a shape of your own."),
-      ),
-      _OnboardingSlide(
-        art: OnboardingArtKind.market,
-        title:
-            Tr.pick('移籍市場とクラブ経営', 'The transfer market and the balance sheet'),
-        description: Tr.pick('選手の獲得・放出、契約交渉、スタッフ・施設への投資でクラブを長期的に強化していきます。',
-            'Sign and sell, negotiate contracts, and invest in staff and facilities to build the club for the long run.'),
+        title: Tr.pick('あなたはクラブのオーナー', 'You own the club'),
+        description: Tr.pick(
+            '3部のクラブから上の部を目指します。決めるのはお金・人・方針。補強・スタッフ・スポンサー・施設はオーナーの仕事です。',
+            'You start with a Tier 3 club and aim for the top. You decide the money, the people and the direction: signings, staff, sponsors and facilities are yours.'),
       ),
       _OnboardingSlide(
         art: OnboardingArtKind.live,
-        title: Tr.pick('試合をライブで観戦・采配', 'Watch matches live and manage them'),
+        title: Tr.pick('試合は監督に任せる', 'The manager runs the matches'),
         description: Tr.pick(
-            'ライブ観戦では決定機の判断・交代・試合中の指示を自分で下せます。カップ戦のPK戦も1本ずつ見届けられます。おまかせのクイック消化も選べます。',
-            'Watching live, you decide what happens at each big chance, make the changes and give the instructions. You can follow a cup shootout kick by kick, or just let the game settle the result for you.'),
+            '先発も戦い方も、雇った監督が決めます。あなたは結果を見て、スタッフや補強で監督を支えます。',
+            'The manager you hire picks the team and the tactics. You watch the results and back him with staff and signings.'),
+      ),
+      _OnboardingSlide(
+        art: OnboardingArtKind.squad,
+        title: Tr.pick('2つの期待を保つ', 'Keep two groups happy'),
+        description: Tr.pick(
+            'サポーターは成績と順位を、株主は収支を見ています。サポーターの期待は勝ち負け・季の途中の理事会レビュー・季末の順位で上下します。',
+            'Supporters watch results and the table; shareholders watch the books. Supporter expectation moves with wins and losses, the mid-season review and the final position.'),
+      ),
+      _OnboardingSlide(
+        art: OnboardingArtKind.market,
+        title: Tr.pick('期待が尽きると手放す', 'Run out and you must sell'),
+        description: Tr.pick(
+            'サポーターの期待が0になるか、資金や株主の期待が尽きると、クラブを手放します。下がり始めたら、オーナー室の広報やファン向けの催しで支えましょう。',
+            "If supporter expectation hits zero, or the money or the shareholders run out, you have to sell. When it starts to slip, use PR and fan events in the owner's office."),
       ),
       _OnboardingSlide(
         art: OnboardingArtKind.career,
-        title: Tr.pick('通算成績を積み重ねよう', 'Build a career record'),
+        title: Tr.pick('手放しても続きがある', 'Selling is not the end'),
         description: Tr.pick(
-            '監督キャリア画面で通算成績やトロフィーを確認できます。この設定はいつでも「設定」からもう一度見返せます。',
-            'Your career page keeps your record and your trophies. You can watch this again any time from Settings.'),
+            '手放しても実績は殿堂に残り、別のクラブを買い直して続けられます。この説明は「設定」からいつでも見返せます。',
+            'Your record stays in the hall of fame, and you can buy another club and carry on. You can see this again any time from Settings.'),
       ),
     ];
 
@@ -76,9 +81,47 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
+  void _next() {
+    if (_index == _slides.length - 1) {
+      widget.onDone();
+    } else {
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLast = _index == _slides.length - 1;
+    final size = MediaQuery.sizeOf(context);
+    // 横画面(852x393 など)は縦が短い。絵を左・文を右に並べ、下の点と
+    // ボタンを1行にまとめる。縦に積むと本文とボタンがはみ出した。
+    final wide = size.width > size.height;
+    final scheme = Theme.of(context).colorScheme;
+    final dots = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(
+        _slides.length,
+        (i) => AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: i == _index ? 20 : 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: i == _index ? scheme.primary : scheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      ),
+    );
+    final button = FilledButton(
+      onPressed: _next,
+      child: Text(isLast
+          ? context.l10n.onboardingStart
+          : context.l10n.onboardingNext),
+    );
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -97,75 +140,87 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPageChanged: (i) => setState(() => _index = i),
                 itemBuilder: (context, i) {
                   final slide = _slides[i];
+                  final align = wide ? TextAlign.start : TextAlign.center;
+                  final text = Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: wide
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        slide.title,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                        textAlign: align,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        slide.description,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: align,
+                      ),
+                    ],
+                  );
+                  if (wide) {
+                    return LayoutBuilder(builder: (context, c) {
+                      // 絵の高さは幅の2/3。欄の高さに収まる幅まで縮める。
+                      final artWidth = min(260.0, c.maxHeight * 1.4);
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Row(
+                          children: [
+                            OnboardingArt(kind: slide.art, width: artWidth),
+                            const SizedBox(width: 32),
+                            Expanded(
+                              child: Center(
+                                child: SingleChildScrollView(child: text),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+                  }
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // アイコン1つだと画面の大半が余白だった。
-                        // 幅は画面に合わせて縮める(小型端末で溢れさせない)。
-                        OnboardingArt(
-                          kind: slide.art,
-                          width: min(
-                              260.0, MediaQuery.of(context).size.width * 0.68),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // アイコン1つだと画面の大半が余白だった。
+                            // 幅は画面に合わせて縮める(小型端末で溢れさせない)。
+                            OnboardingArt(
+                              kind: slide.art,
+                              width: min(260.0, size.width * 0.68),
+                            ),
+                            const SizedBox(height: 28),
+                            text,
+                          ],
                         ),
-                        const SizedBox(height: 28),
-                        Text(
-                          slide.title,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          slide.description,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                      ),
                     ),
                   );
                 },
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                _slides.length,
-                (i) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: i == _index ? 20 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: i == _index
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
+            if (wide)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(40, 4, 40, 12),
+                child: Row(
+                  children: [
+                    dots,
+                    const Spacer(),
+                    SizedBox(width: 220, child: button),
+                  ],
                 ),
+              )
+            else ...[
+              dots,
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: SizedBox(width: double.infinity, child: button),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    if (isLast) {
-                      widget.onDone();
-                    } else {
-                      _controller.nextPage(
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.easeOut,
-                      );
-                    }
-                  },
-                  child: Text(isLast
-                      ? context.l10n.onboardingStart
-                      : context.l10n.onboardingNext),
-                ),
-              ),
-            ),
+            ],
           ],
         ),
       ),

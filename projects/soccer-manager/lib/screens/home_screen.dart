@@ -88,6 +88,7 @@ class HomeScreen extends StatelessWidget {
         .firstOrNull ??
         league.nextUnplayedFixture;
     final seasonComplete = league.isSeasonComplete;
+    final preseason = gameState.isPreseason;
     final net = _netWeekly(gameState);
     // 横画面は高さが 400 ほどしかない。帯と数字のタイルを左右に分ける。
     final screen = MediaQuery.sizeOf(context);
@@ -194,9 +195,15 @@ class HomeScreen extends StatelessWidget {
                                 // 分けないと「…5部 シー／ズン1」と折り返す。
                                 Row(
                                   children: [
+                                    // 上のバーは「3部」と数で書く。帯は
+                                    // 部の名前だけで、同じ部だと分からな
+                                    // かったので、数を前に付ける(2026-11-23)。
                                     Expanded(
                                       child: Text(
-                                        gameState.leagueDisplayName,
+                                        Tr.pick(
+                                            '${save.currentDivisionTier}部・${gameState.leagueDisplayName}',
+                                            'Tier ${save.currentDivisionTier} • ${gameState.leagueDisplayName}'),
+                                        key: const ValueKey('band-league-name'),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
@@ -233,8 +240,11 @@ class HomeScreen extends StatelessWidget {
                                       CrossAxisAlignment.baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
+                                    // 開幕前は全クラブ勝点0で並ぶだけ。
+                                    // 「1位」と出すと勝っているように見える。
                                     Text(
-                                      '$userRank',
+                                      preseason ? '—' : '$userRank',
+                                      key: const ValueKey('band-rank'),
                                       style: const TextStyle(
                                         fontFamily: 'NotoSansJP',
                                         fontSize: 46,
@@ -249,8 +259,12 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      Tr.pick('位 / ${standings.length}クラブ',
-                                          ' of ${standings.length}'),
+                                      preseason
+                                          ? Tr.pick(
+                                              ' 開幕前・${standings.length}クラブ',
+                                              ' pre-season, ${standings.length} clubs')
+                                          : Tr.pick('位 / ${standings.length}クラブ',
+                                              ' of ${standings.length}'),
                                       style: TextStyle(
                                         fontSize: 13,
                                         color: Colors.white
@@ -273,7 +287,9 @@ class HomeScreen extends StatelessWidget {
                                       color:
                                           Colors.white.withValues(alpha: 0.88)),
                                 ),
-                                if (progress != null)
+                                // 開幕前は「目標圏内(差0点)」と出ても意味が
+                                // 無いので出さない。
+                                if (progress != null && !preseason)
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
@@ -310,6 +326,11 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               ),
+              // 終わったばかりのシーズンの振り返り。閉じるまで出る。帯の
+              // すぐ下に置く。左の欄の一番下だと、季の切り替え直後に出る
+              // 実績解除の知らせ(画面下の帯)に「閉じる」ごと隠れた
+              // (2026-11-23)。
+              const SeasonReviewCard(),
               // 監督からの週次報告(ひとことと経営診断)。
               ManagerReportCard(weeklyNet: net),
               // いま手を付けるべきこと。画面が30以上あり、どこから見れば
@@ -319,10 +340,123 @@ class HomeScreen extends StatelessWidget {
               const InboxCard(),
               // オーナーの目標。決めるまで選択肢を出し、決めたら残りを見せる。
               const OwnerGoalCard(),
-              // 終わったばかりのシーズンの振り返り。閉じるまで出る。
-              const SeasonReviewCard(),
               // 横画面では、ここまでが左、これ以降が右。縦長では何も出ない。
               const PaneBreak(divider: false),
+              // 右の欄の先頭は「決めること」。以前は数字のタイルや今週の予定の
+              // 下にばらばらに並び、溜まっていくのに気づけなかった(2026-11-23)。
+              if (gameState.openDecisionCount > 0)
+                Padding(
+                  key: const ValueKey('decisions-header'),
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    children: [
+                      Icon(Icons.how_to_vote_outlined,
+                          size: 18, color: scheme.primary),
+                      const SizedBox(width: 6),
+                      Text(
+                        Tr.pick('決めること ${gameState.openDecisionCount}件',
+                            'To decide: ${gameState.openDecisionCount}'),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              if (gameState.pendingBoardReviewMessage != null)
+                // 地と文字はテーマの組で塗る。以前は地が indigo.shade50 の
+                // 固定で、暗い見た目では白い文字が薄い地に載って読めなかった。
+                Card(
+                  key: const ValueKey('board-review-card'),
+                  color: scheme.secondaryContainer,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.gavel,
+                                color: scheme.onSecondaryContainer),
+                            const SizedBox(width: 8),
+                            Text(
+                              Tr.pick(
+                                  'シーズン中盤 理事会レビュー', 'Mid-season board review'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                      color: scheme.onSecondaryContainer),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(gameState.pendingBoardReviewMessage!,
+                            style: TextStyle(
+                                color: scheme.onSecondaryContainer)),
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              FeedbackService.tap();
+                              gameState.dismissBoardReview();
+                            },
+                            child: Text(Tr.pick('了解した', 'Understood')),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (gameState.pendingOwnerEvent != null) const OwnerEventCard(),
+              if (gameState.agmDemand != null) const AgmDemandCard(),
+              if (gameState.save?.pendingRumor != null) const RumorCard(),
+              if (gameState.playersAwaitingSurgeryDecision.isNotEmpty)
+                const SurgeryDecisionCard(),
+              const IncomingOffersCard(),
+              // スポンサー未契約のまま気づかず収入を取りこぼすことが多いため、
+              // オファーが届いている間はホームに警告カードを常設する。
+              if (save.sponsorDeal == null &&
+                  save.pendingSponsorOffers.isNotEmpty)
+                Card(
+                  color: scheme.tertiaryContainer,
+                  child: ListTile(
+                    leading: const Icon(Icons.handshake),
+                    title: Text(Tr.pick('スポンサー未契約', 'No sponsor')),
+                    subtitle: Text(
+                      Tr.pick(
+                          'スポンサーオファーが${save.pendingSponsorOffers.length}件届いています。契約すると毎週の収入が増えます。${gameState.isPreseason ? '' : 'あと${gameState.decisionMatchdaysLeft('sponsor')}節選ばないと、週の収入がいちばん多い話を自動で結びます。'}',
+                          'Waiting: ${Tr.plural(save.pendingSponsorOffers.length, 'sponsorship offer')}. Signing one raises your weekly income.${gameState.isPreseason ? '' : ' If you have not chosen within ${Tr.plural(gameState.decisionMatchdaysLeft('sponsor'), 'matchday')}, the best-paying one is signed for you.'}'),
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const FinanceScreen()),
+                    ),
+                  ),
+                ),
+              if (gameState.pendingYouthIntake.isNotEmpty)
+                Card(
+                  color: scheme.secondaryContainer,
+                  child: ListTile(
+                    leading: const Icon(Icons.emoji_people),
+                    title: Text(Tr.pick('ユースインテーク', 'Youth intake')),
+                    subtitle: Text(
+                      Tr.pick(
+                          '${gameState.pendingYouthIntake.length}名の新人候補が加入を待っています',
+                          '${gameState.pendingYouthIntake.length} young hopefuls are waiting to join'),
+                    ),
+                    trailing: FilledButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const YouthIntakeScreen(),
+                        ),
+                      ),
+                      child: Text(Tr.pick('選抜する', 'Pick them')),
+                    ),
+                  ),
+                ),
               const SizedBox(height: 4),
               LayoutBuilder(
                 builder: (context, constraints) => GridView.count(
@@ -362,11 +496,11 @@ class HomeScreen extends StatelessWidget {
                             : SemanticColors.negative(context),
                       ),
                       // 2つの期待。成績・順位はサポーター、収支は株主が見ている。
-                      // 用語集の項目は「監督への信頼度」のまま引く。
                       _StatTile(
                         icon: Icons.shield,
                         label: Tr.pick('サポーターの期待', 'Supporter expectation'),
-                        glossaryTerm: Tr.pick('監督への信頼度', 'Board confidence'),
+                        glossaryTerm:
+                            Tr.pick('サポーターの期待', 'Supporter expectation'),
                         value: '${save.confidence}',
                         sub: Tr.pick('成績・順位', 'Results'),
                         progress: save.confidence / 100,
@@ -418,67 +552,27 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 12),
               _ThisWeekCard(gameState: gameState, next: next, league: league),
               const SizedBox(height: 12),
-              if (gameState.pendingBoardReviewMessage != null)
-                Card(
-                  color: Colors.indigo.shade50,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.gavel, color: Colors.indigo.shade700),
-                            const SizedBox(width: 8),
-                            Text(
-                              Tr.pick(
-                                  'シーズン中盤 理事会レビュー', 'Mid-season board review'),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall
-                                  ?.copyWith(color: Colors.indigo.shade900),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(gameState.pendingBoardReviewMessage!),
-                        const SizedBox(height: 8),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {
-                              FeedbackService.tap();
-                              gameState.dismissBoardReview();
-                            },
-                            child: Text(Tr.pick('了解した', 'Understood')),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               // まだ見せていない大事な場面があれば、画面いっぱいの1枚で出す。
               const BigMomentPresenter(),
-              if (gameState.pendingOwnerEvent != null) const OwnerEventCard(),
-              if (gameState.agmDemand != null) const AgmDemandCard(),
-              if (gameState.save?.pendingRumor != null) const RumorCard(),
               if (PreseasonTourCard.visible(gameState))
                 const PreseasonTourCard(),
-              if (gameState.playersAwaitingSurgeryDecision.isNotEmpty)
-                const SurgeryDecisionCard(),
               if (gameState.save?.frontPageHeadline != null)
                 const FrontPageCard(),
               if (gameState.pendingSuperCup != null)
                 _SuperCupCard(gameState: gameState),
-              if (gameState.isUserDomesticCupMatchUpNext)
+              // 試合の日が近いときだけ出す。以前は7月から「カップ戦へ」が
+              // 出ていて、押しても何週も先の試合だった(2026-11-23)。
+              if (gameState.isUserDomesticCupMatchSoon)
                 Card(
+                  key: const ValueKey('domestic-cup-soon'),
                   color: scheme.tertiaryContainer,
                   child: ListTile(
                     leading: const Icon(Icons.emoji_events_outlined),
                     title: Text(Tr.pick(
                         '国内カップ戦の出番です', 'You are up in the domestic cup')),
-                    subtitle: Text(Tr.pick('ブラケットの次の試合が自クラブの対戦になっています',
-                        'The next tie in the bracket is yours')),
+                    subtitle: Text(Tr.pick(
+                        '${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}に自クラブの試合があります',
+                        'Your tie is on ${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}')),
                     trailing: FilledButton(
                       onPressed: () {
                         FeedbackService.tap();
@@ -524,56 +618,18 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (gameState.pendingYouthIntake.isNotEmpty)
-                Card(
-                  color: scheme.secondaryContainer,
-                  child: ListTile(
-                    leading: const Icon(Icons.emoji_people),
-                    title: Text(Tr.pick('ユースインテーク', 'Youth intake')),
-                    subtitle: Text(
-                      Tr.pick(
-                          '${gameState.pendingYouthIntake.length}名の新人候補が加入を待っています',
-                          '${gameState.pendingYouthIntake.length} young hopefuls are waiting to join'),
-                    ),
-                    trailing: FilledButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const YouthIntakeScreen(),
-                        ),
-                      ),
-                      child: Text(Tr.pick('選抜する', 'Pick them')),
-                    ),
-                  ),
-                ),
-              const IncomingOffersCard(),
-              // スポンサー未契約のまま気づかず収入を取りこぼすことが多いため、
-              // オファーが届いている間はホームに警告カードを常設する。
-              if (save.sponsorDeal == null &&
-                  save.pendingSponsorOffers.isNotEmpty)
-                Card(
-                  color: scheme.tertiaryContainer,
-                  child: ListTile(
-                    leading: const Icon(Icons.handshake),
-                    title: Text(Tr.pick('スポンサー未契約', 'No sponsor')),
-                    subtitle: Text(
-                      Tr.pick(
-                          'スポンサーオファーが${save.pendingSponsorOffers.length}件届いています。契約すると1年の収入が増えます。',
-                          'Waiting: ${Tr.plural(save.pendingSponsorOffers.length, 'sponsorship offer')}. Signing one raises your weekly income.'),
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const FinanceScreen()),
-                    ),
-                  ),
-                ),
               if (seasonComplete)
                 Card(
+                  key: const ValueKey('season-over-card'),
                   color: scheme.primaryContainer,
                   child: ListTile(
                     leading: const Icon(Icons.flag),
                     title: Text(Tr.pick('シーズン終了！', 'Season over.')),
+                    // 季を締めたときに来る増減を、押す前に見せる
+                    // (2026-11-23。押した後に初めて -20 を知った)。
                     subtitle: Text(Tr.pick(
-                        '最終順位: $userRank位', 'Final position: $userRank')),
+                        '最終順位: $userRank位。${gameState.seasonEndPreviewLine}',
+                        'Final position: $userRank. ${gameState.seasonEndPreviewLine}')),
                     trailing: FilledButton(
                       onPressed: () => _startNextSeason(context),
                       child: Text(Tr.pick('次のシーズンへ', 'On to next season')),
@@ -592,6 +648,33 @@ class HomeScreen extends StatelessWidget {
                         // なのに札はリーグ戦を出していて、食い違って見えた
                         // (2026-11-23)。ボタンの側が正しいので、札にも先に
                         // カップ戦があることを出す。
+                        //
+                        // 給料日・放映権などの日付の予定も同じ。最初の進む
+                        // ボタンは「7/31 給料日」なのに札は「第1節 vs …」で、
+                        // どちらが次なのか分からなかった(2026-11-23)。
+                        if (gameState.nextStop != null &&
+                            !gameState.nextStop!.kind.isMatch)
+                          Padding(
+                            key: const ValueKey('next-stop-before-league'),
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Row(
+                              children: [
+                                Icon(Icons.event,
+                                    size: 18, color: scheme.primary),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    Tr.pick(
+                                        '進むボタンは${CalendarEngine.formatShortDate(gameState.nextStop!.date)}の${gameState.nextStop!.label}まで。第${next.matchday}節(${CalendarEngine.formatShortDate(gameState.dateOfMatchday(next.matchday))})はその後です。',
+                                        'The button takes you to ${CalendarEngine.formatShortDate(gameState.nextStop!.date)} (${gameState.nextStop!.label}). Matchday ${next.matchday} (${CalendarEngine.formatShortDate(gameState.dateOfMatchday(next.matchday))}) comes after.'),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         if (gameState.nextStop?.kind == DayEventKind.cupMatch)
                           Padding(
                             key: const ValueKey('next-cup-before-league'),
@@ -1247,6 +1330,13 @@ class HomeScreen extends StatelessWidget {
       gameState.lastYouthDepartures = [];
     }
 
+    // 締切を過ぎて既定の答えで片付けた決めごと。勝手に決まったことは
+    // 必ず画面で知らせる(受信箱に積むだけだと気づかない)。
+    for (final note in gameState.lastAutoDecisions) {
+      messages.add((note, true));
+    }
+    gameState.lastAutoDecisions = [];
+
     final budgetCrisis = gameState.lastBudgetCrisisWarning;
     if (budgetCrisis != null) {
       messages.add((budgetCrisis, true));
@@ -1346,6 +1436,10 @@ class HomeScreen extends StatelessWidget {
       SeasonFinale.none => null,
     };
 
+    // 先頭は自クラブの結果(順位・2つの期待・お金・来季)。以前は出来事
+    // だけで、自分がどう終わったのかが分からなかった(2026-11-23)。
+    final resultLines = gameState.lastSeasonResultLines;
+    gameState.lastSeasonResultLines = null;
     final message = gameState.lastDivisionChangeMessage;
     if (message != null) {
       messages.add((message, true));
@@ -1410,9 +1504,10 @@ class HomeScreen extends StatelessWidget {
       gameState.lastEmergencySignings = [];
     }
 
-    if (messages.isEmpty && art == null) return;
+    final summary = resultLines ?? const <String>[];
+    if (messages.isEmpty && art == null && summary.isEmpty) return;
     // 絵があるときは必ずダイアログで出す。スナックバーには絵が入らない。
-    if (messages.length == 1 && art == null) {
+    if (messages.length == 1 && art == null && summary.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(messages.first.$1),
@@ -1443,6 +1538,31 @@ class HomeScreen extends StatelessWidget {
                       aspectRatio: 4 / 3,
                       child: Image.asset(art, fit: BoxFit.cover),
                     ),
+                  ),
+                ),
+              if (summary.isNotEmpty)
+                Container(
+                  key: const ValueKey('season-result-summary'),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(dialogContext)
+                        .colorScheme
+                        .surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(summary.first,
+                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      for (final line in summary.skip(1))
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: Text(line,
+                              style: const TextStyle(fontSize: 13)),
+                        ),
+                    ],
                   ),
                 ),
               for (final (text, isHighlight) in messages)
@@ -1722,7 +1842,7 @@ class _ThisWeekCard extends StatelessWidget {
                 Expanded(child: Text(matchLine)),
               ],
             ),
-            if (gameState.isUserDomesticCupMatchUpNext) ...[
+            if (gameState.isUserDomesticCupMatchSoon) ...[
               const SizedBox(height: 6),
               Row(
                 children: [
@@ -2000,17 +2120,10 @@ class _SaleScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(24),
               shrinkWrap: true,
+              // **理由を上に置く。** 以前は 4:3 の絵が先頭で、横画面では
+              // 開いた瞬間に絵しか見えず、なぜ手放すのかが分からなかった
+              // (2026-11-23)。絵は理由の下に細い帯で出す。
               children: [
-                // 手放す夜の絵(大事な場面の1枚と同じ作風)。
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AspectRatio(
-                    aspectRatio: 4 / 3,
-                    child: Image.asset('assets/art/forced_sale.jpg',
-                        fit: BoxFit.cover),
-                  ),
-                ),
-                const SizedBox(height: 12),
                 Text(
                   Tr.pick(
                       '$clubName を手放すことになりました', 'You have to sell $clubName'),
@@ -2031,6 +2144,58 @@ class _SaleScreen extends StatelessWidget {
                         'The shareholders have lost faith after repeated losses.'),
                   },
                   textAlign: TextAlign.center,
+                ),
+                // 期待がどう落ちてきたか。直近の推移と、大きな増減の3件。
+                if (reason == SaleReason.supporters) ...[
+                  if (gameState.supporterTrailLine != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        gameState.supporterTrailLine!,
+                        key: const ValueKey('sale-trend'),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  for (final (delta, why) in gameState.recentSupporterMoves())
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        '${delta > 0 ? '+$delta' : '$delta'}  $why',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: delta < 0
+                                ? SemanticColors.negative(context)
+                                : SemanticColors.positive(context)),
+                      ),
+                    ),
+                ],
+                const SizedBox(height: 8),
+                Text(
+                  switch (reason) {
+                    SaleReason.supporters => Tr.pick(
+                        '次は: 目標順位に届く戦力を早めにそろえ、期待が下がり始めたらオーナー室の広報や試合日のイベントで支えると良いでしょう。',
+                        'Next time: build a squad that can reach the target early, and when expectation starts to slip, use PR and matchday events from the owner\'s office.'),
+                    SaleReason.funds => Tr.pick(
+                        '次は: 人件費を収入の6割ほどに抑え、季の切り替え(6月までの給与)に備えて資金を残すと良いでしょう。',
+                        'Next time: keep wages to about 60% of income, and keep cash back for the wages due before the season changes over.'),
+                    SaleReason.shareholders => Tr.pick(
+                        '次は: スポンサーを結び、人件費を抑えて、黒字の季を作ると株主の期待が戻ります。',
+                        'Next time: sign sponsors and keep wages down; a season in profit wins the shareholders back.'),
+                  },
+                  key: const ValueKey('sale-advice'),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 12),
+                // 手放す夜の絵(大事な場面の1枚と同じ作風)。細い帯で。
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: SizedBox(
+                    height: 96,
+                    child: Image.asset('assets/art/forced_sale.jpg',
+                        fit: BoxFit.cover),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(

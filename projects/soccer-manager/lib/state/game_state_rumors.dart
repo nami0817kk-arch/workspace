@@ -104,6 +104,10 @@ extension GameStateRumors on GameState {
     final season = s.rumorDenied.remove(p.id);
     if (season == null || season != s.league.season) return;
     s.confidence = (s.confidence - brokenPromisePenalty).clamp(0, 100);
+    _noteSupporterMove(
+        -brokenPromisePenalty,
+        Tr.pick('「売らない」と言った${p.name}を売った',
+            'Sold ${p.name} after saying he was not for sale'));
     _logNews(
         Tr.pick('「売らない」と言った${p.name}を同じ季に売り、サポーターが怒っている。',
             'You sold ${p.name} in the same season you said he was not for sale. The supporters are angry.'),

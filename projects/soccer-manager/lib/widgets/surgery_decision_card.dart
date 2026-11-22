@@ -34,6 +34,16 @@ class SurgeryDecisionCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(Tr.pick('${p.name}: ${InjuryCare.describe(p)}(あと${p.injuryWeeks}週)',
                   '${p.name}: ${InjuryCare.describe(p)} (${Tr.plural(p.injuryWeeks, 'week')})')),
+              // 医療スタッフのおすすめと締切。過ぎたらおすすめで片付く
+              // (2026-11-23。決めないまま何節でも残っていた)。
+              Text(
+                Tr.pick(
+                    '医療スタッフのおすすめ: ${gs.recommendsSurgery(p) ? '手術' : '保存療法'}。あと${gs.decisionMatchdaysLeft('surgery:${p.id}')}節決めないと、おすすめで決まります。',
+                    "Medical staff advise: ${gs.recommendsSurgery(p) ? 'surgery' : 'rest'}. Undecided after ${Tr.plural(gs.decisionMatchdaysLeft('surgery:${p.id}'), 'matchday')}, their advice is followed."),
+                style: TextStyle(
+                    fontSize: 11,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
               Wrap(
                 spacing: 8,
                 children: [

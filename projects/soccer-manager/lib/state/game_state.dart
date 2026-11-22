@@ -212,6 +212,7 @@ part 'game_state_calendar.dart';
 part 'game_state_club_names.dart';
 part 'game_state_cups.dart';
 part 'game_state_cup_days.dart';
+part 'game_state_decisions.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -1826,4 +1827,12 @@ class GameState extends ChangeNotifier {
 
   /// 直近のプレーオフにユーザークラブが出場していたかどうか。
   bool userInvolvedInLastPromotionPlayoff = false;
+
+  /// 直近に終えた季の、自クラブの結果のまとめ(シーズン開始レポートの
+  /// 先頭に出す)。出したら null に戻す。
+  List<String>? lastSeasonResultLines;
+
+  /// 締切を過ぎて既定の答えで片付けた決めごとの知らせ(1件1行)。
+  /// 節の知らせに出したら空に戻す。
+  List<String> lastAutoDecisions = [];
 }

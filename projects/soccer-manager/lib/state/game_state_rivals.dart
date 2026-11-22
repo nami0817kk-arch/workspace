@@ -155,6 +155,11 @@ extension GameStateRivals on GameState {
       if (s.pendingRumor != null)
         Tr.pick('${s.pendingRumor![1]}の噂に、記者会見で答えていません',
             'Answer the ${s.pendingRumor![1]} rumour at the press conference'),
+      // 手術か保存療法かも、答えを待つもの(以前は数えておらず、決めずに
+      // 何節でも進められた)。
+      for (final p in playersAwaitingSurgeryDecision)
+        Tr.pick('${p.name}の治療(手術か保存療法か)を決めていません',
+            "Decide ${p.name}'s treatment: surgery or rest"),
       if (s.agmDemand != null)
         Tr.pick('株主の要求に答えていません', 'The shareholders want an answer'),
       if (s.incomingOffers.isNotEmpty)

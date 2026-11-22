@@ -201,8 +201,9 @@ class AchievementEngine {
         Achievement(
           id: 'trusted_manager',
           category: AchievementCategory.management,
-          name: Tr.pick('理事会からの絶大な信頼', "The Board's Trust"),
-          description: Tr.pick('理事会の信頼度が90に到達する', 'Reach 90 board confidence'),
+          name: Tr.pick('サポーターの絶大な期待', "The Supporters' Faith"),
+          description: Tr.pick(
+              'サポーターの期待が90に到達する', 'Reach 90 supporter expectation'),
           isUnlocked: (save, team) => save.confidence >= 90,
           progress: (save, team) => (save.confidence, 90),
         ),
