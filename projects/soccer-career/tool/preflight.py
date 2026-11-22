@@ -83,7 +83,8 @@ def main():
 
     print("== 掲載する絵 ==")
     for folder, size in (
-        ("marketing/screenshots", (1290, 2796)),
+        # 1290x2796（6.9インチ）は受け付けられない（2026-11-22）。
+        ("marketing/screenshots", (1206, 2622)),
         ("marketing/screenshots_ipad", (2064, 2752)),
     ):
         files = sorted(glob.glob(os.path.join(ROOT, folder, "*.png")))
@@ -103,6 +104,8 @@ def main():
     if os.path.exists(review):
         width, height, _ = png_info(review)
         check(
+            # 課金の審査用は 1.0 のときに登録したものがそのまま
+            # 残っているので、差し替えるまで寸法は 1290x2796 のまま。
             "審査用スクリーンショットが 1290x2796",
             (width, height) == (1290, 2796),
             f"{width}x{height}",
