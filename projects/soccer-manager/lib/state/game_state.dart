@@ -554,11 +554,26 @@ class GameState extends ChangeNotifier {
   }
 
   /// 18歳未満で、他の国から来る選手か(国をまたいで移れない)。
+  /// EU の中の16〜17歳は例外で移れる([minorMayMoveBetween])。
   bool _isInternationalMinor(Player player) {
     if (player.age >= 18) return false;
     final origin = player.originLeague;
     if (origin == null) return false;
-    return origin != currentLeagueTheme.name;
+    if (origin == currentLeagueTheme.name) return false;
+    final from = LeagueTheme.values.where((t) => t.name == origin).firstOrNull;
+    if (from == null) return true;
+    return !minorMayMoveBetween(player.age, from, currentLeagueTheme);
+  }
+
+  /// 他の国のクラブ[clubId]にいる[p]が、18歳未満の国際移籍の禁止に当たるか
+  /// (自国のクラブなら当たらない)。
+  bool _minorBlockedFromClub(Player p, String clubId) {
+    if (p.age >= 18) return false;
+    final name = _foreignTeamIds()[clubId];
+    if (name == null) return false;
+    final from = LeagueTheme.values.where((t) => t.name == name).firstOrNull;
+    if (from == null) return true;
+    return !minorMayMoveBetween(p.age, from, currentLeagueTheme);
   }
 
   /// [clubName]が他の国のクラブか。
@@ -1152,6 +1167,7 @@ class GameState extends ChangeNotifier {
     // 契約の満了の年は第1季から数える(前に遊んでいたセーブの年のままに
     // しない)。
     Player.contractClockYear = Player.seasonEndYearOf(1);
+    ContractEngine.adultContractYearsCap = ContractEngine.adultCapFor(theme);
     // 選手の名前はリーグの国の名前で作る(他国の選手は後で国籍に合わせる)。
     NamePool.homeTheme = theme;
     // ピラミッドの最下層(3部制なので3部)からスタートする。
@@ -1393,7 +1409,17 @@ class GameState extends ChangeNotifier {
   static const int loanFeeRatioPercent = 20;
 
   /// 買取オプション付きローンの場合の買取金額(移籍金に対する割合)。
-  static const double loanBuyOptionRatio = 0.6;
+  ///
+  /// 以前は0.6で、借りてすぐ買い取れば完全移籍より4割安い抜け道だった。
+  /// 実際の買取額は相場と同じか少し上(貸す側は先に借り賃も受け取る)なので、
+  /// 市場価値の1.05倍にした(2026-11-22)。
+  static const double loanBuyOptionRatio = 1.05;
+
+  /// 同時に借りていられる人数と、同時に貸し出していられる人数の上限。
+  /// FIFA の決まり(国外へ・国外から各6人まで)を、ゲームでは国内外を
+  /// 合わせた人数で数える(2026-11-22)。
+  static const int maxLoansIn = 6;
+  static const int maxLoansOut = 6;
 
   int _incomingOfferSeq = 0;
 

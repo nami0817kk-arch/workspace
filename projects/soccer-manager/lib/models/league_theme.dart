@@ -3,6 +3,20 @@ import '../l10n/tr.dart';
 /// 新規クラブ作成時に選べる国(実在の5か国のリーグに寄せる)。
 enum LeagueTheme { england, spain, germany, italy, france }
 
+/// 国籍が EU の国か(5か国のうちイングランドだけが EU の外)。
+/// 登録の決まり(スペイン・イタリア・フランスの「EU 外の選手」の枠)と、
+/// 18歳未満の国際移籍の例外(EU の中の16〜17歳)に使う。英国籍の選手は
+/// EU 外として数える(実在の決まり)。
+bool isEuNation(LeagueTheme t) => t != LeagueTheme.england;
+
+/// [age]歳の選手が国[from]から国[to]へ移れるか(18歳未満の国際移籍の禁止)。
+/// 同じ国の中・18歳以上なら移れる。FIFA の例外: EU の中の移籍なら16〜17歳も
+/// 移れる(2026-11-22 に入れた。それまでは18歳未満は一律に不可)。
+bool minorMayMoveBetween(int age, LeagueTheme from, LeagueTheme to) {
+  if (age >= 18 || from == to) return true;
+  return age >= 16 && isEuNation(from) && isEuNation(to);
+}
+
 /// 保存されたリーグ名([LeagueThemeInfo.label])から国を引く。表示の言語や、
 /// 2026-11-22 に名前を実在へ寄せる前の名前(アルビオン・リーグなど)でも引ける。
 LeagueTheme? leagueThemeFromName(String? name) {

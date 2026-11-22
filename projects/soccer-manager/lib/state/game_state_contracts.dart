@@ -10,17 +10,20 @@ extension GameStateContracts on GameState {
     final s = save ?? _save;
     if (s == null) return;
     Player.contractClockYear = Player.seasonEndYearOf(s.league.season);
+    // 契約の長さの上限は国で違う(スペインは5年を超えてよい)。
+    ContractEngine.adultContractYearsCap = ContractEngine.adultCapFor(
+        leagueThemeFromName(s.leagueName) ?? LeagueTheme.england);
   }
 
   /// 選手を持つ全クラブ(自国の全部と他の4か国の1部)。
   List<Team> get _worldTeams => [
-    ..._save!.allTeams,
-    for (final l in _save!.foreignLeagues.values) ...l.teams,
-  ];
+        ..._save!.allTeams,
+        for (final l in _save!.foreignLeagues.values) ...l.teams,
+      ];
 
   bool _isForeignTeamId(String teamId) => _save!.foreignLeagues.values.any(
-    (l) => l.teams.any((t) => t.id == teamId),
-  );
+        (l) => l.teams.any((t) => t.id == teamId),
+      );
 
   Team? _worldTeamById(String id) {
     for (final t in _worldTeams) {
@@ -34,15 +37,15 @@ extension GameStateContracts on GameState {
 
   /// 自クラブが結んだ仮契約(7月1日に加入する選手)。
   List<PreContract> get incomingPreContracts => [
-    for (final c in preContracts)
-      if (c.toClubId == _save!.userTeamId) c,
-  ];
+        for (final c in preContracts)
+          if (c.toClubId == _save!.userTeamId) c,
+      ];
 
   /// 自クラブの選手が他のクラブと結んだ仮契約(7月1日に出ていく選手)。
   List<PreContract> get outgoingPreContracts => [
-    for (final c in preContracts)
-      if (c.fromClubId == _save!.userTeamId) c,
-  ];
+        for (final c in preContracts)
+          if (c.fromClubId == _save!.userTeamId) c,
+      ];
 
   /// 選手が他のクラブと仮契約を結んでいれば、その仮契約。
   PreContract? outgoingPreContractFor(String playerId) {
@@ -64,11 +67,10 @@ extension GameStateContracts on GameState {
     final list = <({Player player, Team team})>[];
     for (final t in _worldTeams) {
       if (t.id == _save!.userTeamId) continue;
-      final foreign = _isForeignTeamId(t.id);
       for (final p in t.players) {
         if (!PreContractEngine.inFinalYear(p)) continue;
         if (taken.contains(p.id)) continue;
-        if (foreign && p.age < 18) continue;
+        if (_minorBlockedFromClub(p, t.id)) continue;
         list.add((player: p, team: t));
       }
     }
@@ -103,26 +105,32 @@ extension GameStateContracts on GameState {
       player,
       today: today,
       fromForeignLeague: _isForeignTeamId(from.id),
+      minorBlocked: _minorBlockedFromClub(player, from.id),
+      domesticOpensOn: PreContractEngine.domesticOpensOn(currentLeagueTheme),
       alreadyPreContracted: preContracts.any((c) => c.playerId == playerId),
     );
     if (reason != null) {
       lastSigningBlockReason = switch (reason) {
         'closed' => Tr.pick(
-          '仮契約は満了の年の1月1日から6月30日までに結べます。',
-          'Pre-contracts can be signed from 1 Jan to 30 Jun of the final year.',
-        ),
+            '仮契約は満了の年の1月1日から6月30日までに結べます。',
+            'Pre-contracts can be signed from 1 Jan to 30 Jun of the final year.',
+          ),
         'notFinalYear' => Tr.pick(
-          'この選手の契約は今シーズン末では切れません。',
-          "This player's contract does not run out at the end of this season.",
-        ),
+            'この選手の契約は今シーズン末では切れません。',
+            "This player's contract does not run out at the end of this season.",
+          ),
         'taken' => Tr.pick(
-          'この選手はもう他のクラブと仮契約を結んでいます。',
-          'This player has already agreed a pre-contract elsewhere.',
-        ),
+            'この選手はもう他のクラブと仮契約を結んでいます。',
+            'This player has already agreed a pre-contract elsewhere.',
+          ),
+        'domesticNotYet' => Tr.pick(
+            '国内のクラブの選手とは、${TransferWindowCalendar.formatMonthDay(PreContractEngine.domesticOpensOn(currentLeagueTheme))}まで仮契約を結べません(他の国のクラブの選手は1月1日から)。',
+            'You cannot pre-sign a player from a domestic club until ${TransferWindowCalendar.formatMonthDay(PreContractEngine.domesticOpensOn(currentLeagueTheme))} (players at foreign clubs from 1 Jan).',
+          ),
         _ => Tr.pick(
-          '18歳未満の選手は国をまたいで移籍できません。',
-          'Players under 18 cannot move between countries.',
-        ),
+            '18歳未満の選手は国をまたいで移籍できません(EU の中の16〜17歳は除く)。',
+            'Players under 18 cannot move between countries (16 and 17-year-olds may move within the EU).',
+          ),
       };
       _notify();
       return false;
@@ -145,8 +153,7 @@ extension GameStateContracts on GameState {
     if (choices.isEmpty) return false;
     if (end < choices.first) end = choices.first;
     if (end > choices.last) end = choices.last;
-    final withOption =
-        option &&
+    final withOption = option &&
         ContractEngine.canAttachOption(end, player.age, nextSeasonStart: true);
     final contract = PreContract(
       playerId: player.id,
@@ -254,9 +261,8 @@ extension GameStateContracts on GameState {
 
   /// 自クラブの満了の年の選手に、他のクラブが仮契約を持ちかける。
   void _rollPoachingOfUserPlayers(double weeks) {
-    final cpuTeams = _save!.league.teams
-        .where((t) => t.id != _save!.userTeamId)
-        .toList();
+    final cpuTeams =
+        _save!.league.teams.where((t) => t.id != _save!.userTeamId).toList();
     final made = PreContractEngine.poachFromUser(
       userTeam,
       cpuTeams,
@@ -296,9 +302,8 @@ extension GameStateContracts on GameState {
 
     // 1. 自クラブ。
     final contractResult = ContractEngine.advanceSeason(userTeam);
-    lastContractExpirations = contractResult.expired
-        .map((p) => p.name)
-        .toList();
+    lastContractExpirations =
+        contractResult.expired.map((p) => p.name).toList();
     for (final p in contractResult.expired) {
       _clearPlayerRoleReferences(userTeam, p.id);
       userTeam.players.remove(p);
@@ -317,9 +322,8 @@ extension GameStateContracts on GameState {
         _save!.freeAgents.add(p);
       }
     }
-    lastContractWarnings = contractResult.nearingExpiry
-        .map((p) => p.name)
-        .toList();
+    lastContractWarnings =
+        contractResult.nearingExpiry.map((p) => p.name).toList();
     final refusing = <String>[];
     for (final p in contractResult.nearingExpiry) {
       if (p.contractOption || p.refusesRenewal) continue;

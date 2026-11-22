@@ -37,6 +37,8 @@ class ContractBoardScreen extends StatelessWidget {
         SquadRegistration.seniorLimit - SquadRegistration.seniorCount(team);
     final homegrown = SquadRegistration.homegrownSeniorCount(team);
     final nonHomegrown = SquadRegistration.nonHomegrownSeniorCount(team);
+    // 登録の決まりは国ごとに違う(2026-11-22)。
+    final rules = game.registrationRules;
     final byYears = ContractBoardEngine.byYearsRemaining(team);
     final expiring = ContractBoardEngine.expiring(team);
     final theme = Theme.of(context);
@@ -57,18 +59,54 @@ class ContractBoardScreen extends StatelessWidget {
                 valueColor: room < 0 ? theme.colorScheme.error : null,
               ),
               FmRow(
-                label: Tr.pick('うち国内育成', 'Homegrown'),
-                value: Tr.pick(
-                    '$homegrown人(${SquadRegistration.homegrownQuota}人を入れる)',
-                    '$homegrown (quota ${SquadRegistration.homegrownQuota})'),
+                label: Tr.pick('登録の決まり', 'Rules'),
+                value: Tr.pick('${rules.countryLabel}式', '${rules.countryLabel} rules'),
               ),
-              FmRow(
-                label: Tr.pick('うち国外育成', 'Trained abroad'),
-                value: '$nonHomegrown/${SquadRegistration.nonHomegrownLimit}',
-                valueColor: nonHomegrown > SquadRegistration.nonHomegrownLimit
-                    ? theme.colorScheme.error
-                    : null,
-              ),
+              if (rules.homegrownQuota > 0) ...[
+                FmRow(
+                  label: Tr.pick('うち国内育成', 'Homegrown'),
+                  value: Tr.pick(
+                      '$homegrown人(${rules.homegrownQuota}人を入れる)',
+                      '$homegrown (quota ${rules.homegrownQuota})'),
+                ),
+                FmRow(
+                  label: Tr.pick('うち国外育成', 'Trained abroad'),
+                  value: '$nonHomegrown/${rules.nonHomegrownLimit}',
+                  valueColor: nonHomegrown > rules.nonHomegrownLimit
+                      ? theme.colorScheme.error
+                      : null,
+                ),
+              ],
+              if (rules.clubTrainedQuota > 0)
+                FmRow(
+                  label: Tr.pick('うちクラブ育成(ユース出身)', 'Club-trained'),
+                  value: Tr.pick(
+                      '${SquadRegistration.clubTrainedSeniorCount(team)}人(${rules.clubTrainedQuota}人を入れる)',
+                      '${SquadRegistration.clubTrainedSeniorCount(team)} (quota ${rules.clubTrainedQuota})'),
+                ),
+              if (rules.nonEuLimit != null)
+                FmRow(
+                  label: Tr.pick('EU 外の国籍(年齢を問わない)', 'Non-EU players (any age)'),
+                  value: '${game.nonEuPlayerCount}/${rules.nonEuLimit}',
+                  valueColor: game.nonEuPlayerCount > rules.nonEuLimit!
+                      ? theme.colorScheme.error
+                      : null,
+                ),
+              if (rules.nonEuSigningsPerSeason != null)
+                FmRow(
+                  label: Tr.pick('今季、他国から取った EU 外の選手', 'Non-EU signings from abroad this season'),
+                  value: '${game.nonEuSignedThisSeason}/${rules.nonEuSigningsPerSeason}',
+                ),
+              if (rules.minNationals != null)
+                FmRow(
+                  label: Tr.pick('${rules.countryLabel}国籍の選手', '${rules.countryLabel} nationals'),
+                  value: Tr.pick(
+                      '${game.nationalPlayerCount}人(${rules.minNationals}人以上)',
+                      '${game.nationalPlayerCount} (at least ${rules.minNationals})'),
+                  valueColor: game.nationalPlayerCount < rules.minNationals!
+                      ? theme.colorScheme.error
+                      : null,
+                ),
               FmRow(
                 label: Tr.pick('在籍の総数(21歳以下を含む)', 'Whole squad (incl. U21)'),
                 value: '${team.players.length}/$maxSquadSize',

@@ -35,11 +35,13 @@ extension AgentStyleInfo on AgentStyle {
         AgentStyle.calm => 0.6,
       };
 
-  /// 代理人の手数料(移籍金に対する%)。
+  /// 代理人の手数料(移籍金に対する%。所属なしの選手は年俸に対する%)。
+  /// 実際の代理人の手数料は1割前後なので、10%を真ん中に置く(2026-11-22。
+  /// それまでは5%前後で安すぎた)。
   int get feePercent => switch (this) {
-        AgentStyle.hardball => 8,
-        AgentStyle.standard => 5,
-        AgentStyle.calm => 4,
+        AgentStyle.hardball => 12,
+        AgentStyle.standard => 10,
+        AgentStyle.calm => 8,
       };
 }
 

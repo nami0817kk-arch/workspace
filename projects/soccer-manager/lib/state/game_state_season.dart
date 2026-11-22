@@ -172,7 +172,8 @@ extension GameStateSeason on GameState {
   /// 外れた選手は次の窓が開くまで公式戦に出られない。
   void _closeRegistration() {
     final team = userTeam;
-    final excluded = SquadRegistration.plannedExclusions(team);
+    final excluded = SquadRegistration.plannedExclusions(team,
+        rules: registrationRules, nationOf: nationalityOf);
     if (excluded.isEmpty) return;
     for (final p in excluded) {
       p.notRegistered = true;
@@ -207,7 +208,10 @@ extension GameStateSeason on GameState {
 
   /// 締切で名簿から外れる予定の選手(枠を超えていなければ空)。
   List<Player> get plannedRegistrationExclusions =>
-      _save == null ? const [] : SquadRegistration.plannedExclusions(userTeam);
+      _save == null
+          ? const []
+          : SquadRegistration.plannedExclusions(userTeam,
+              rules: registrationRules, nationOf: nationalityOf);
 
   /// 日付で終わるローンを片付ける(借りている選手は戻し、貸している選手は
   /// 呼び戻す)。シーズンの切り替わり(7月1日)でも呼ぶ。
@@ -1432,6 +1436,7 @@ extension GameStateSeason on GameState {
     );
     transferMarket = [];
     _refreshScoutCandidates();
+    // 夏は契約の切れた選手が数十人単位で所属なしになる。
     FreeAgentEngine.topUp(_save!.freeAgents);
 
     _rollNamingRights();

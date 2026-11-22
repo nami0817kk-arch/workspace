@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../models/league_theme.dart';
 import '../models/player.dart';
 import '../models/pre_contract.dart';
 import '../models/team.dart';
@@ -64,36 +65,56 @@ class PreContractEngine {
   /// 仮契約で選べる満了の年(短い順)。7月1日から数えて1年〜上限
   /// (5年、18歳未満は3年)。
   static List<int> endYearChoices(Player p) => [
-    for (
-      var y = Player.contractClockYear + 1;
-      y <= ContractEngine.maxEndYearFromNextSeason(p.age);
-      y++
-    )
-      y,
-  ];
+        for (var y = Player.contractClockYear + 1;
+            y <= ContractEngine.maxEndYearFromNextSeason(p.age);
+            y++)
+          y,
+      ];
 
   /// 既定の満了の年(年齢に応じた年数。上限に収める)。
   static int defaultEndYear(Player p) => min(
-    Player.contractClockYear + ContractEngine.negotiatedYears(p),
-    ContractEngine.maxEndYearFromNextSeason(p.age),
-  );
+        Player.contractClockYear + ContractEngine.negotiatedYears(p),
+        ContractEngine.maxEndYearFromNextSeason(p.age),
+      );
+
+  /// 国内のクラブの選手と仮契約を結べるようになる日(今のシーズン)。
+  ///
+  /// 契約の最後の6か月に他のクラブと話せる決まり(ボスマン)は、国をまたぐ
+  /// 移籍のためのもので、国内のクラブ同士の扱いは国で違う(2026-11-22)。
+  /// - イングランド: 国内のクラブの選手には、シーズンが終わるまで声を
+  ///   かけられない(6月1日から)。
+  /// - イタリア: 国内の選手とも2月1日から結べる。
+  /// - スペイン・ドイツ・フランス: 国内の選手とも1月1日から結べる。
+  static DateTime domesticOpensOn(LeagueTheme country) => switch (country) {
+        LeagueTheme.england => DateTime(Player.contractClockYear, 6, 1),
+        LeagueTheme.italy => DateTime(Player.contractClockYear, 2, 1),
+        _ => opensOn(),
+      };
 
   /// 自クラブが仮契約を結べる相手か。
   ///
   /// [fromForeignLeague]は選手が他国のクラブにいるとき true。18歳未満は
-  /// 国をまたいで移れない(移籍の窓と同じ決まり)。
+  /// 国をまたいで移れない(移籍の窓と同じ決まり)。[minorBlocked]を渡すと、
+  /// その判定(EU の中の16〜17歳の例外を含む)を使う。国内のクラブの選手は
+  /// [domesticOpensOn]より前には結べない。
   static String? blockReason(
     Player p, {
     required DateTime today,
     required bool fromForeignLeague,
     required bool alreadyPreContracted,
+    bool? minorBlocked,
+    DateTime? domesticOpensOn,
   }) {
     if (!isOpen(today)) {
       return 'closed';
     }
     if (!inFinalYear(p)) return 'notFinalYear';
     if (alreadyPreContracted) return 'taken';
-    if (fromForeignLeague && p.age < 18) return 'minor';
+    if (minorBlocked ?? (fromForeignLeague && p.age < 18)) return 'minor';
+    if (!fromForeignLeague && domesticOpensOn != null) {
+      final d = DateTime(today.year, today.month, today.day);
+      if (d.isBefore(domesticOpensOn)) return 'domesticNotYet';
+    }
     return null;
   }
 
@@ -179,9 +200,8 @@ class PreContractEngine {
       final chance = 1 - pow(1 - userPlayerPoachChance(p), weeks).toDouble();
       if (rng.nextDouble() >= chance) continue;
       // 実力に見合うクラブ(平均総合力が近いか上)を優先する。
-      final fitting = cpuTeams
-          .where((t) => t.overallRating >= p.overall - 5)
-          .toList();
+      final fitting =
+          cpuTeams.where((t) => t.overallRating >= p.overall - 5).toList();
       final pool = fitting.isNotEmpty ? fitting : cpuTeams;
       final to = pool[rng.nextInt(pool.length)];
       made.add(

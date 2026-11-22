@@ -83,21 +83,27 @@ extension GameStateMoneyRules on GameState {
   /// 選手を売ったとき: 連帯貢献金を差し引き、簿価との差(売却益)を伝える。
   /// 自前で育てた選手(アカデミー出身)には連帯貢献金がかからない。
   /// [player]を[salePrice]で売るときの連帯貢献金(アカデミー出身なら0)。
-  int solidarityFor(Player player, int salePrice) =>
-      salePrice <= 0 || player.academyGraduate
+  ///
+  /// 連帯貢献金は FIFA の決まりで、国をまたぐ移籍にだけかかる
+  /// ([international]が false なら0。2026-11-22 までは国内の売却にもかけていた)。
+  int solidarityFor(Player player, int salePrice, {bool international = true}) =>
+      salePrice <= 0 || player.academyGraduate || !international
           ? 0
           : (salePrice * solidarityPercent / 100).round();
 
   /// 移籍金を受け取って売るとき(来たオファー・リリース条項)に呼ぶ。
   /// 市場価値の7割で手放す「放出」には、連帯貢献金はかからない。
-  void _onPlayerSold(Player player, int salePrice) {
+  /// [buyerClubName]が他の国のクラブなら国をまたぐ移籍(連帯貢献金がかかる)。
+  void _onPlayerSold(Player player, int salePrice, {String? buyerClubName}) {
     final s = _save!;
     // クラブ史上最高額の売却なら、画面いっぱいの1枚で見せる。
     _checkRecordSale(player, salePrice);
     // 記者会見で「売らない」と言った季に売ると、サポーターが怒る。
     _checkBrokenRumorPromise(player);
     {
-      final pay = solidarityFor(player, salePrice);
+      final pay = solidarityFor(player, salePrice,
+          international:
+              buyerClubName != null && _isForeignClub(buyerClubName));
       if (pay > 0) {
         _book(LedgerCategory.transfers, -pay);
         _logNews(

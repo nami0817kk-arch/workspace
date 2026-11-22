@@ -158,6 +158,21 @@ class SaveGame {
   /// 今のお金の桁の版。新しいゲームはこの版で始まる。
   static const int currentEconomyVersion = 2;
 
+  /// 他のクラブの選手の国籍の決め方の版。1 はどの部も1割だけ外国籍
+  /// (国籍を覚えていない選手は id から毎回決める)。2 は国と部で外国籍の
+  /// 割合を変え、決めた国籍を選手に覚えさせる(2026-11-22)。版1のセーブは、
+  /// 読み込んだときに今の国籍をそのまま覚えさせてから2にする(名前が
+  /// 付け替わらないように)。
+  int nationRuleVersion;
+
+  /// 今の国籍の決め方の版。新しいゲームはこの版で始まる。
+  static const int currentNationRuleVersion = 2;
+
+  /// イタリアの「EU 外の選手を他の国から取れるのは1季に2人まで」を数える
+  /// ための、今季に取った人数と、その季。
+  int nonEuSignings;
+  int nonEuSigningsSeason;
+
   /// 今シーズンの景気と、来シーズンの景気(予報)。
   EconomyPhase economyPhase;
 
@@ -800,6 +815,9 @@ class SaveGame {
     List<SeasonLedger>? ledgers,
     this.ruleSet = RuleSet.britain,
     this.economyVersion = currentEconomyVersion,
+    this.nationRuleVersion = currentNationRuleVersion,
+    this.nonEuSignings = 0,
+    this.nonEuSigningsSeason = 0,
     this.economyPhase = EconomyPhase.normal,
     this.marketIndex = 100,
     this.economyNext = EconomyPhase.normal,
@@ -1142,6 +1160,9 @@ class SaveGame {
         'ledgers': ledgers.map((l) => l.toJson()).toList(),
         'ruleSet': ruleSet.name,
         'economyVersion': economyVersion,
+        'nationRuleVersion': nationRuleVersion,
+        if (nonEuSignings != 0) 'nonEuSignings': nonEuSignings,
+        if (nonEuSigningsSeason != 0) 'nonEuSigningsSeason': nonEuSigningsSeason,
         'economyPhase': economyPhase.name,
         if (marketIndex != 100) 'marketIndex': marketIndex,
         'economyNext': economyNext.name,
@@ -1453,6 +1474,10 @@ class SaveGame {
             .firstOrNull ?? ClubPolicy.balanced,
         // 版が書かれていないのは、桁を変える前のセーブ。
         economyVersion: json['economyVersion'] as int? ?? 1,
+        // 版が書かれていないのは、国籍を部で変える前のセーブ。
+        nationRuleVersion: json['nationRuleVersion'] as int? ?? 1,
+        nonEuSignings: json['nonEuSignings'] as int? ?? 0,
+        nonEuSigningsSeason: json['nonEuSigningsSeason'] as int? ?? 0,
         marketIndex: json['marketIndex'] as int? ?? 100,
         economyPhase: EconomyPhase.values
             .where((e) => e.name == json['economyPhase'])
