@@ -75,6 +75,31 @@ void main() {
     }
   });
 
+  test('初代の残り・ストーリー・VS が入っている（0.7.0・試作 v14）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'function tapOpen(', // つつく・コアの置き直し
+      'function openChestMe(', // 自分で宝箱を開ける
+      'var DEMONS=', // デーモン5種
+      'function fireCone(', // 扇形の炎
+      'function windSpiral(', // 渦の風
+      'var STORY=', // ストーリー8面
+      'function startVs(', // VS
+      'function rankOf(', // ランク
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
+  test('法務ページへのリンクがあり、外のブラウザで開く', () {
+    final html = File(gameAsset).readAsStringSync();
+    // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
+    expect(html, contains('https://tounoishi.pages.dev/privacy.html'));
+    expect(html, contains('https://tounoishi.pages.dev/support.html'));
+    expect(isExternalLink('https://tounoishi.pages.dev/privacy.html'), isTrue);
+    expect(isExternalLink('file:///android_asset/flutter_assets/assets/game/index.html'), isFalse);
+  });
+
   test('pubspec の assets に HTML が登録されている', () {
     final pubspec = File('pubspec.yaml').readAsStringSync();
     expect(pubspec, contains(gameAsset));
