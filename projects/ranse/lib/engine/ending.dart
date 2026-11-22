@@ -122,6 +122,26 @@ String? _specialTitle(Game g, String way, String kind) {
   return null;
 }
 
+/// 乱世を生き抜いた人生の結び。どんな身分で新しい世を迎え、子らにどんな世が来るか。
+String _eraEpilogue(Game g, String way) {
+  final l = g.l;
+  final alive = l.lord != null && (g.fa[l.lord]?.alive ?? false);
+  final String who;
+  if (l.rank >= 8 && alive) {
+    who = '${l.lord}家の当主として、新しい世の始まりに立った。';
+  } else if (l.rank >= 1 && alive) {
+    who = '${l.lord}家の${g.rk[l.rank]}として、泰平の世を迎えた。';
+  } else if (way == 'priest') {
+    who = '寺の鐘を撞きながら、静かに新しい世を迎えた。';
+  } else if (way == 'merchant') {
+    who = '戦のない世の商いに、もう一度胸を躍らせた。';
+  } else {
+    who = '名もなき${_wayNoun(l, way)}として、静かに泰平の世を迎えた。';
+  }
+  final kids = l.kids > 0 ? '子らは、戦を知らない世を生きていくだろう。' : '';
+  return '$who$kids';
+}
+
 /// 最期の場にいた人。絆の深い順に、伴侶・子・幼なじみ・弟子・主君・師。
 Person? _witness(Life l) {
   // 連れ合いがいれば、最期の場にいるのは連れ合い。
@@ -225,7 +245,8 @@ Ending buildEnding(Game g) {
   } else {
     final head = switch (kind) {
       'victory' => '${g.year}年（${gengo(g.year)}）、${g.age}歳。天下の過半を、その手に収めた。',
-      'era' => '${g.year}年（${gengo(g.year)}）、${g.age}歳。長い乱世が終わるのを、その目で見届けた。',
+      'era' =>
+        '${g.year}年（${gengo(g.year)}）、${g.age}歳。長い乱世が終わるのを、その目で見届けた。${_eraEpilogue(g, way)}',
       _ => '${g.year}年（${gengo(g.year)}）、${g.age}歳。${l.dead}。',
     };
     // 世界線の名は「〜世」で終わるので、小さな分岐（「〜た」）とそろえて最後に「世」を付ける。

@@ -947,6 +947,22 @@ void main() {
       expect(checked, greaterThan(5));
     });
 
+    test('乱世を生き抜いた人生の最期の文には、新しい世の迎え方の結びが入る', () {
+      var checked = 0;
+      for (var seed = 0; seed < 600 && checked < 20; seed++) {
+        final rng = Rng(seed + 5);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        if (g.l.end != 'era') continue;
+        checked++;
+        final t = buildEnding(g).text;
+        expect(t, matches(RegExp('世を迎えた|世の始まりに立った|胸を躍らせた')), reason: t);
+        expect(t, isNot(contains('null')));
+      }
+      expect(checked, greaterThan(5));
+    });
+
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
       final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
       path[6] = '20歳　信長に仕えた';
