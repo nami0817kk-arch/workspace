@@ -17,7 +17,9 @@
 | サブタイトル（30字以内） | 移籍も代表も戦術も、ひとりの選手として |
 | バンドルID | `com.namiki.soccercareer` |
 | カテゴリ | ゲーム（主: シミュレーション / 副: スポーツ） |
-| 対応言語 | 日本語のみ（`CFBundleLocalizations` = `[ja]`） |
+| App 名（英語・30字以内） | Player Career: Football Sim |
+| サブタイトル（英語・30字以内） | A soccer RPG about one player |
+| 対応言語 | 日本語と英語（`CFBundleLocalizations` = `[ja, en]`。`ja.lproj` と `en.lproj` の両方を置く） |
 | 対応端末 | iPhone と iPad（`TARGETED_DEVICE_FAMILY` = "1,2"） |
 | 対象年齢 | 4+ 想定。暴力表現・性的表現・ギャンブルなし。移籍金も年俸も架空のゲーム内通貨 |
 | 価格 | 無料（シーズンの切れ目の全画面広告 + 買い切り1件 ¥400） |
@@ -29,33 +31,105 @@
 > 取っている）。Cloudflare が後ろに `-49p` を足したのはそのためで、
 > こちらの正しい住所は上の3つ。短いほうに直してはいけない。
 
-## 掲載は日本語だけ（2026-10-01）
+## 掲載は日英（2026-11-22。2026-10-01 の「日本語だけ」を外した）
 
-**App Store Connect で英語のローカライズを足さない。** 右上の言語は「日本語」のまま。
+**外す条件は最初から書いてあった**——「英語の掲載が要るようになるのは、
+アプリを英語に対応させたとき」。2026-11-21 に段階1〜3が終わり、
+**訳さないと決めたもの以外は中身が全部英語**になったので、ここで外す。
 
-サカマネと護送ボートは日英の掲載を持っているが、**あの2本はアプリ自体が
-英語に対応している**（サカマネはアプリ内で切替、護送ボートは 2026-09-26 に
-英語版を作った）。こちらは `CFBundleLocalizations` が `[ja]` だけで、
-局面74・特性75・出来事48・遊び方ガイドが全部日本語。
-**掲載だけ英語にすると「英語のページを見て入れたら中身が日本語だった」になる。**
+外すときに**3つを揃える**（どれか1つだけ直すと食い違う）:
 
-`ios/Runner/ja.lproj/InfoPlist.strings` を入れたのは、ストアの「言語」欄が
-英語のままになるのを直すため。そこと食い違わせない。
+| 揃えるもの | 中身 |
+|---|---|
+| `ios/Runner/Info.plist` | `CFBundleLocalizations` に `en` を足す |
+| `ios/Runner/en.lproj/InfoPlist.strings` | 置く。**これが無いと App Store は言語として認めない**（`ja.lproj` を置いた経緯と同じ） |
+| この表の「対応言語」 | `[ja, en]` |
 
-- **課金アイテムの英語は別**（B-2 の「App Store のローカリゼーション」）。
-  あれは掲載ページではなく **OS の購入シートと審査員が見るもの**で、
-  英語が1つも無いと何を売っているのか伝わらない。日英とも入れる。
-- 英語の掲載が要るようになるのは、**アプリを英語に対応させたとき**。
-  その順番を逆にしない。
-- **2026-11-21 に英語対応を始めた（段階1）。** 画面の枠・殿堂・引退・
-  選手作成・試合・季末・広告は英語になったが、**局面74・特性75・出来事48・
-  遊び方ガイド・世界の国とクラブはまだ日本語**。
-  **英語の掲載を足すのは、そこまで終わってから**（CLAUDE.md の
-  「画面を英語にする」を見る）。ここを先に外さない。
-- **⚠ 配信は約140か国に出ているのに、ストアの「言語」欄には前から
-  英語も出ていた**（`knownRegions` に `en` があり、既定の言語が英語のため）。
-  英語で探した人には「英語対応」に見えていた。これは英語対応が
-  終わった時点で嘘でなくなる。
+- **⚠ 配信は約140か国に出ていて、ストアの「言語」欄には前から英語も
+  出ていた**（`knownRegions` に `en` があり、既定の言語が英語のため）。
+  実際 `itunes.apple.com/lookup` は 1.1.1 の時点で `['EN','JA']` を返していた。
+  **英語で探した人には「英語対応」に見えていて、中身だけが日本語だった。**
+  これが英語化を始めた理由そのもので、ここで嘘でなくなる。
+- **掲載画像も英語で撮る**（`--dart-define=LANG=en` →
+  `marketing/screenshots/en/` と `marketing/screenshots_ipad/en/`）。
+  日本語の絵を英語のページに貼ると、同じ嘘の見た目版になる。
+- **課金アイテムの英語は前から入れてある**（B-2 の「App Store の
+  ローカリゼーション」）。あれは掲載ページではなく OS の購入シートと
+  審査員が見るもので、掲載の言語とは別の話。
+
+## 英語の掲載（貼る文面）
+
+> **`test/distribution_test.dart` が長さと記号を見張っている。**
+> 日本語の文面と同じ検査を英語にも掛けてある
+> （**英語は空白も1字として数える**ので、日本語より厳しい）。
+> 見出しは日本語が【】、**英語は [ ]**（`ios-app-release` スキルの実地の記録）。
+
+### プロモーションテキスト（英語）
+
+```
+One player, from the second tier up. The moves you pick in a match become your rating, and your rating brings the transfer calls. There is nothing to idle through.
+```
+
+### 説明（英語）
+
+```
+You make one footballer and live his life, from an unknown second-tier club to the day he retires. Only the moves you pick during a match become your rating, and that rating is what brings the transfer calls. There is nothing to idle through and no numbers to tidy up.
+
+[It starts near the bottom of the second tier]
+Your first club is one of the weaker sides in some country's second division. You are eighteen, up from the academy, and you cannot even get on the bench. Whether you climb is decided only by what you choose inside the ninety minutes, week after week.
+
+[The heart of it is choosing in the match]
+You play all 38 games of a season, but they do not all carry the same weight. A big one gives you six situations, an ordinary one gives you two. Each situation offers three moves, and each move shows the odds of it coming off as a percentage. Play safe and build your rating, or take the move that pays if it lands. Some moves are heavy when they come off and cheap when they miss, and some are the other way round. There are 18 to 19 situations per position and 74 in all, and the moves on offer change when you are chasing a game or holding on to one.
+
+[You decide which way he grows]
+Name a trick you are going for and that is the one you get. There are 22 of them, and once one is learned you can hold it back as a trump card in a match. The training for the week, the rest, the condition. Push on in a week below 40 and the odds of an injury climb.
+
+[Eleven countries and a pyramid of leagues]
+Leagues stand at different heights, and every country has its own foreigner quota and work permit rules. The higher the division, the higher the standard asked of you. The line for a call-up, the domestic cup, the continental cup. Where you rank in the world is always visible.
+
+[A transfer is whether anyone calls]
+When a season ends, offers come according to what you did. Take the wages, take the minutes, or take the standing. You can also extend where you are. You pick your own agent, and you can have him put your name about.
+
+[75 traits, and 48 things that happen off the pitch]
+Character and habits arrive as traits, and they change how you grow and what comes your way. A transfer rumour, a change of manager, family, coming back from an injury. What you answered stays on the record.
+
+[What is left after you retire]
+Career appearances, goals, titles, the overall you peaked at. You choose what to do next as well. Your player takes his place among the names who came before, and that record is still there in your next career.
+
+[About saving]
+The record lives on this device only. There is no account and no sign-in. Show the transfer code and you can carry on from another device.
+
+[About ads and the one purchase]
+A full-screen ad appears only at the break between seasons. Nothing interrupts a match or a menu, and there are no banners. The one purchase, Remove ads, stops them. It is the only thing on sale. Nothing that makes you stronger is sold: the growth, the money and the minutes were all balanced by measurement, and selling them would make that balance meaningless.
+
+Club names, league names and competition names are all fictional. Only the country names are real.
+```
+
+### キーワード（英語）
+
+**App 名とサブタイトルに入れた語は書かない**（日本語側と同じ理屈）。
+`Player Career: Football Sim` と `A soccer RPG about one player` で
+player / career / football / sim / soccer / RPG を取ってある。
+
+```
+transfer,manager,club,league,youth,academy,contract,striker,goalkeeper,tactics,offline,simulation
+```
+
+## 新機能（1.2.0 のリリースノート）
+
+日本語:
+
+```
+英語に対応しました。画面の枠だけでなく、試合の局面74・特性75・出来事48・
+遊び方ガイド・世界の国とクラブまで、中身をすべて英語で読めます。
+拠点の右上の ⋮ から、いつでも切り替えられます。
+```
+
+英語:
+
+```
+The game is now in English. Not just the frame of the screens: the 74 match situations, the 75 traits, the 48 things that happen off the pitch, the how-to-play guide and the countries and clubs of the world all read in English. Switch at any time from the menu at the top right.
+```
 
 ## プロモーションテキスト（170字以内・審査なしで差し替えられる）
 

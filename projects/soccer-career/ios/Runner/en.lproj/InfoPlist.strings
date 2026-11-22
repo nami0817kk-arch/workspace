@@ -1,0 +1,7 @@
+/* 英語に対応していることを実体として示すためのファイル。
+   Info.plist の CFBundleLocalizations だけでは App Store が言語として
+   認めない（ja.lproj を置いた経緯と同じ）。
+
+   ホーム画面の名前は、アプリの中の呼び名（ShareText.appName）と揃える。 */
+"CFBundleDisplayName" = "Player Career";
+"CFBundleName" = "Player Career";

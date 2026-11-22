@@ -3,6 +3,8 @@
    認めず、掲載ページの「言語」が英語のままになる
    (soccer-manager で実際にそうなり、1.1.1 で直した)。
 
-   このアプリは日本語だけなので en.lproj は置かない。 */
+   2026-11-21 に英語対応が終わったので en.lproj も置いた。
+   **片方だけ足さない**——ここと CFBundleLocalizations と
+   STORE_LISTING.md の「対応言語」は、3つで1つ。 */
 "CFBundleDisplayName" = "選手キャリア";
 "CFBundleName" = "選手キャリア";
