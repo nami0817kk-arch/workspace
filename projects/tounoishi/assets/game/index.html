@@ -169,7 +169,7 @@ h3.dexh{margin:6px 0 0;font-size:13px;color:var(--sub)}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v21</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v22</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -993,11 +993,14 @@ window.__boot=function(obj){
  try{HALL=JSON.parse(kvGet('tou-hall')||'[]')||[];}catch(_){}
  DEX=loadDex();sideKey='';showTitle();
 };
+var ENVS=['moss','water','rock','ice','lava'];
 function saveGame(){
  if(!g||over||g.title||g.chal)return;
  try{
   var s=JSON.stringify({v:1,F:F,CAP:CAP,idc:idc,g:g},function(k,v){
    if(k=='bub')return [];
+   if(k=='grid')return v.map(function(fl){return fl.map(function(c){return [ENVS.indexOf(c.env),c.nut||0,c.mag||0,c.open?1:0,c.dt==null?-1:Math.round(c.dt*10)/10,c.chest?1:0,c.spore?ENVS.indexOf(c.spore):-1];});});
+   if(k=='seen'||k=='trail')return {};
    if(k=='poiBy')return v&&v.id?v.id:null;
    if(k=='carrier')return v&&v.id?{__en:v.id}:null;
    if(k=='rx'||k=='ry'||k=='rf'||k=='mv'||k=='fl'||k=='pv'||k=='lg')return undefined;
@@ -1011,6 +1014,7 @@ function loadGame(){
  var s=kvGet('tou-save');if(!s)return false;
  try{
   var o=JSON.parse(s);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];
+  if(g.grid&&g.grid[0]&&Array.isArray(g.grid[0][0]))g.grid=g.grid.map(function(fl){return fl.map(function(a){var c={env:ENVS[a[0]],nut:a[1],mag:a[2],open:!!a[3],dt:a[4],chest:!!a[5]};if(a[6]>=0)c.spore=ENVS[a[6]];return c;});});
   g.bub=[];if(g.dp===undefined)g.dp=100;g.calm=g.calm||{};['dung','pher','nests','circles','torches'].forEach(function(k){g[k]=g[k]||[];});g.slv=g.slv||{};if(g.roundT0===undefined){g.roundT0=g.t;g.armyStart=0;}g.chal=null;
   g.en.forEach(function(e){if(e.poiBy)e.poiBy=g.cr.filter(function(m){return m.id===e.poiBy;})[0]||null;});
   var c=g.core.carrier;g.core.carrier=c&&c.__en?g.en.filter(function(e){return e.id===c.__en;})[0]||null:null;
@@ -1019,7 +1023,7 @@ function loadGame(){
   hideTitle();return true;
  }catch(_){kvSet('tou-save',null);return false;}
 }
-setInterval(saveGame,5000);
+setInterval(saveGame,15000);
 document.addEventListener('visibilitychange',function(){if(document.hidden){if(typeof pauseGame=='function')pauseGame();saveGame();}});
 function calcScore(){return F*1000+(g.round-1)*200+(g.kills||0)*20+g.promos*150+g.yuKilled*500+(g.dp||0)*10+armyPower();}
 function bests(){try{return JSON.parse(kvGet('tou-best')||'{}')||{};}catch(_){return {};}}
@@ -1252,7 +1256,7 @@ function step(dt){
  g.t+=dt;var i,f;
  if(g.wave<nW()){g.cd-=dt;if(g.cd<=0)launch();}
  for(i=g.spawnQ.length-1;i>=0;i--){if(g.t>=g.spawnQ[i].t){
-  var k=g.spawnQ[i].k,M=emul(),Y=g.yu,yb=k=='yuu'?(1+0.45*Y.lvl)*Y.bonus:0.8,ya=k=='yuu'?(1+0.25*Y.lvl)*Y.bonus:1;if(k!='yuu'){var ne=spawnEn(k,0,ENTX,ENTY);if(g.spawnQ[i].p)applyParty(ne,g.spawnQ[i].p);if(Math.random()<0.5)shout(ne,'enter');if(!g.msgLock)say(enFull(ne)+'が入ってきた。');g.spawnQ.splice(i,1);continue;}
+  var k=g.spawnQ[i].k,M=emul(),Y=g.yu,yb=k=='yuu'?(1+0.45*Y.lvl)*Y.bonus:0.8,ya=k=='yuu'?(1+0.25*Y.lvl)*Y.bonus:1;if(k!='yuu'){var ne=spawnEn(k,0,ENTX,ENTY);if(g.spawnQ[i].p)applyParty(ne,g.spawnQ[i].p);if(!(g.spawnQ[i].p&&g.spawnQ[i].p.line)&&Math.random()<0.5)shout(ne,'enter');if(!g.msgLock)say(enFull(ne)+'が入ってきた。');g.spawnQ.splice(i,1);continue;}
   g.en.push({k:k,f:0,x:ENTX,y:ENTY,hp:EN[k].hp*yb*M.hp,mhp:EN[k].hp*yb*M.hp,atk:EN[k].atk*ya*M.atk,mt:0,at:0,ht:0,stuck:0,spawnT:g.t,id:idc++,yu:k=='yuu',skT:4,skI:0,nm:ENAMES[rnd(ENAMES.length)],seen:{},stk:[],steps:0,pri:shuffle([0,1,2,3])});
   initEn(g.en[g.en.length-1]);dexEn(k);
   if(Math.random()<0.5||k=='yuu')shout(g.en[g.en.length-1],'enter');
@@ -1275,7 +1279,7 @@ function step(dt){
  if(g.chal&&!over){var CH=CHALS[g.chal.i];if(CH.ok())chalEnd(true);else if(g.t>=CH.lim)chalEnd(false);}
  stepEggs();
  g.guardOn=guardOn();
- if(g.waveOn&&!g.en.length&&!g.spawnQ.length&&!over){g.waveOn=0;var kk=(g.kills||0)-(g.wk0||0),ll=(g.lostN||0)-(g.wl0||0);if(g.wave<nW())say('第'+g.wave+'波を守った（倒した'+kk+'人・失った魔物'+ll+'匹）。次の波まで'+Math.ceil(g.cd)+'秒。');}
+ if(g.waveOn&&!g.en.length&&!g.spawnQ.length&&!over){g.waveOn=0;var kk=(g.kills||0)-(g.wk0||0),ll=(g.lostN||0)-(g.wl0||0);saveGame();if(g.wave<nW())say('第'+g.wave+'波を守った（倒した'+kk+'人・失った魔物'+ll+'匹）。次の波まで'+Math.ceil(g.cd)+'秒。');}
  g.corpses=g.corpses.filter(function(c){return g.t-c.t<180;});
  var cs=g.cr.slice();for(i=0;i<cs.length;i++)if(g.cr.indexOf(cs[i])>=0)stepCr(cs[i],dt);
  var es=g.en.slice();for(i=0;i<es.length;i++)if(g.en.indexOf(es[i])>=0&&!over)stepEn(es[i],dt);
@@ -1525,9 +1529,9 @@ function draw(){
  chars.forEach(function(o){
   var isE=!!o.k,id=o.id||1;
   var ox=((id*37)%9-4)*1.2,oy=((id*53)%5-2);
-  if(o.hero||o.yu){ox=0;oy=0;}
+  if(o.hero||o.yu||o.boss){ox=0;oy=0;}
   var px=o.rx*CS+CS/2+ox,by=o.ry*CS+CS+1+oy;
-  var size=isE?(o.yu?38:31):([0,28,33,38,44][o.t]+(o.mut=='kyodai'?6:0)+(o.hero?4:0)+(o.stage=='adult'?3:0));
+  var size=isE?(o.yu||o.boss?38:31):([0,28,33,38,44][o.t]+(o.mut=='kyodai'?6:0)+(o.hero?4:0)+(o.stage=='adult'?3:0));
   var fl=flashOf([o],now),lp=(now-(o.lg||0))/230,hop=0,sx=1,sy=1;
   if(lp>=0&&lp<1){hop=-6*Math.sin(Math.PI*lp);sx=1+0.08*Math.sin(Math.PI*lp);sy=sx;}
   if(o.mv)hop-=Math.abs(Math.sin(now/85+id))*2.5;
@@ -1537,7 +1541,7 @@ function draw(){
   else if(!isE&&o.mut=='pure'){var gp=ctx.createRadialGradient(px,by-size/2,2,px,by-size/2,size*0.75);gp.addColorStop(0,'rgba(235,250,255,.45)');gp.addColorStop(1,'rgba(235,250,255,0)');ctx.fillStyle=gp;ctx.fillRect(px-size,by-size*1.4,size*2,size*1.8);}
   ctx.fillStyle='rgba(0,0,0,.3)';var sw=Math.round(size*0.55*(1+hop/30));ctx.fillRect(Math.round(px-sw/2),Math.round(by-2),sw,3);
   if(!isE&&o.sp=='ghost')ctx.globalAlpha=0.75;
-  var nm=isE?o.k:sprName(o),w=Math.round(size*sx),h=Math.round(size*sy);
+  var nm=isE?(o.spr||o.k):sprName(o),w=Math.round(size*sx),h=Math.round(size*sy);
   var spc=sprite(nm,fl?'flash':(isE?'n':mutVar(o)));if(spc.g){ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';}
   if(!isE&&(o.stage=='bud'||o.stage=='flower'))drawPlant(o,px,by,now);else ctx.drawImage(spc,Math.round(px-w/2),Math.round(by+hop-h),w,h);ctx.imageSmoothingEnabled=false;
   ctx.globalAlpha=1;
@@ -1551,6 +1555,7 @@ function draw(){
    ctx.fillStyle='#000';ctx.fillRect(px-10,top-3,20,4);ctx.fillStyle='#e04b4b';ctx.fillRect(px-9,top-2,18*Math.max(0,o.hp/o.mhp),1);if(o.mmp){ctx.fillStyle='#5aa0ff';ctx.fillRect(px-9,top,18*Math.max(0,Math.min(1,o.mp/o.mmp)),1);}
    if(o.par>g.t){ctx.fillStyle='#ffe45a';for(var q3=0;q3<3;q3++)ctx.fillRect(Math.round(px-6+q3*5),Math.round(top-4-((now/70+q3*5)%5)),1,3);}
    if(o.yu)label((o.flee?'逃':'')+'勇者'+g.yu.name,px,Math.max(8,top-9),'#ff9a7a');
+   else if(o.boss)label(o.nm,px,Math.max(8,top-9),'#ff9a7a');
    if(g.core.carrier===o)put('core','n',px+9,by-2+hop,13);
   }else if(o.hero){
    var ty=Math.max(8,top-8);
@@ -1608,7 +1613,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒':(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v21 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v22 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal)document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';
  var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
@@ -1734,7 +1739,7 @@ function startStory(mode){
 }
 function applyParty(e,p){
  var M=p.boss?2.4:1,lk=1+p.lv/10,ak=1+p.lv/18;if(p.ura){lk*=1.5;ak*=1.3;}
- e.nm=p.nm;e.lv=p.lv;e.title=p.ti;e.mhp=e.hp=EN[e.k].hp*lk*M;e.atk=EN[e.k].atk*ak*M;e.skl=(p.skl||[]).slice();e.mmp=e.mp=Math.round((MMP[e.k]||10)*(1+p.lv/15)*M);
+ e.nm=p.nm;e.lv=p.lv;e.title=p.ti;if(p.boss){e.spr='yuu';e.boss=1;}e.mhp=e.hp=EN[e.k].hp*lk*M;e.atk=EN[e.k].atk*ak*M;e.skl=(p.skl||[]).slice();e.mmp=e.mp=Math.round((MMP[e.k]||10)*(1+p.lv/15)*M);
  if(p.line)showBub(e,p.line);
  if(!g.msgLock)say(enFull(e)+'が入ってきた。');
 }
