@@ -13,6 +13,7 @@ import 'package:soccer_manager/widgets/reward_funds_card.dart';
 
 import 'support/stub_purchase_service.dart';
 import 'support/legacy_market.dart';
+import 'support/sell_via_offer.dart';
 
 /// お金が湧く道・消える道の検査。
 ///
@@ -42,7 +43,7 @@ void main() {
         }
       }
       expect(targetId, isNotNull, reason: '分割で買える選手がいない');
-      expect(await game.sellPlayer(targetId!), isTrue);
+      expect(await sellViaOffer(game, targetId!), isNotNull);
 
       expect(game.save!.budget, lessThanOrEqualTo(before),
           reason: '買って売るだけで資金が増えている');
@@ -68,7 +69,7 @@ void main() {
         }
       }
       expect(targetId, isNotNull, reason: '分割で買える選手がいない');
-      await game.sellPlayer(targetId!);
+      await sellViaOffer(game, targetId!);
 
       expect(game.save!.newsLog.any((n) => n.text.contains('分割払いの残金')), isTrue,
           reason: '残金の精算が記録されていない');
@@ -85,10 +86,16 @@ void main() {
       final target = legacyMarket(game).first;
       expect(await game.buyPlayer(target.id), isTrue);
       final afterBuy = game.save!.budget;
-      final net = game.netReleaseValueFor(target.id);
-      expect(await game.sellPlayer(target.id), isTrue);
+      final o = await sellViaOffer(game, target.id);
+      expect(o, isNotNull);
 
-      expect(game.save!.budget, afterBuy + net);
+      // 入るのはオファーの額。他の国のクラブへ売ったときだけ、連帯貢献金が
+      // 引かれる。
+      final solidarity = game.solidarityFor(target, o!.amount);
+      expect(
+          game.save!.budget,
+          inInclusiveRange(
+              afterBuy + o.amount - solidarity, afterBuy + o.amount));
     });
   });
 

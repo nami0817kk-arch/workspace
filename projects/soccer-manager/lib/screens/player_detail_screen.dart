@@ -746,19 +746,11 @@ class PlayerDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  OutlinedButton(
-                    onPressed: (team.players.length <= minSquadSize ||
-                            !gameState.isTransferWindowOpen)
-                        ? null
-                        : () => _confirmSell(context, netReleaseValue),
-                    // 売却では契約を買い手が引き継ぐので、違約金は掛からない。
-                    child: Text(
-                      Tr.pick('放出する（${formatMoney(netReleaseValue)} 獲得）',
-                          'Release him (you receive ${formatMoney(netReleaseValue)})'),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+                  // 売るときは移籍リストに載せ、買い手からのオファーを待つ
+                  // (2026-11-23。以前は相場の7割でその場で売れた)。
+                  // 売却では契約を買い手が引き継ぐので、違約金は掛からない。
                   OutlinedButton.icon(
+                    key: const ValueKey('transfer-list'),
                     icon: const Icon(Icons.sell_outlined),
                     onPressed: () {
                       FeedbackService.tap();
@@ -766,8 +758,23 @@ class PlayerDetailScreen extends StatelessWidget {
                           playerId, !p.isTransferListed);
                     },
                     label: Text(p.isTransferListed
-                        ? Tr.pick('移籍リストから外す', 'Take off the transfer list')
-                        : Tr.pick('移籍リストに登録する', 'Put on the transfer list')),
+                        ? Tr.pick('移籍リストから外す（売るのをやめる）',
+                            'Take off the transfer list (stop selling)')
+                        : Tr.pick(
+                            '移籍リストに載せて売りに出す（相場${formatMoney(netReleaseValue)}）',
+                            'Put him up for sale (worth about ${formatMoney(netReleaseValue)})')),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    p.isTransferListed
+                        ? Tr.pick(
+                            '買い手からオファーが届いたら、移籍の画面で受けるか断るかを決めます。人気のない選手には来ないこともあります。',
+                            'When a club makes an offer, accept or turn it down on the transfers screen. Players nobody wants may get no offers.')
+                        : Tr.pick('相場は契約の残り年数で変わります（残りが短いほど安い）。',
+                            'His price depends on how long is left on his contract: the shorter, the cheaper.'),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.subtleText(context)),
                   ),
                   const SizedBox(height: 8),
                   // 合意して契約を解除する(窓の外でもできる。選手は自由契約になる)。
@@ -1262,46 +1269,6 @@ class PlayerDetailScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _confirmSell(BuildContext context, int netReleaseValue) {
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(Tr.pick('この選手を放出しますか？', 'Release this player?')),
-        content: Text(
-          Tr.pick('${formatMoney(netReleaseValue)}を獲得しますが、元には戻せません。',
-              'You receive ${formatMoney(netReleaseValue)}, and this cannot be undone.'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(Tr.pick('キャンセル', 'Cancel')),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              final gameState = context.read<GameState>();
-              final messenger = ScaffoldMessenger.of(context);
-              final ok = await gameState.sellPlayer(playerId);
-              ok ? FeedbackService.success() : FeedbackService.error();
-              if (ok) {
-                messenger.showSnackBar(
-                  SnackBar(
-                    content: Text(gameState.lastSaleNews ??
-                        Tr.pick('選手を放出しました', 'Player released')),
-                  ),
-                );
-              }
-              if (context.mounted && ok) {
-                Navigator.pop(context);
-              }
-            },
-            child: Text(Tr.pick('放出する', 'Release')),
-          ),
-        ],
       ),
     );
   }

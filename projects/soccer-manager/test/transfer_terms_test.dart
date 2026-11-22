@@ -5,6 +5,8 @@ import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'support/legacy_market.dart';
 
+import 'support/sell_via_offer.dart';
+
 /// 移籍の現実的な条件: 代理人手数料と売却条項。
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -107,12 +109,18 @@ void main() {
       game.save!.budget = 100000;
       final player = game.userTeam.players.firstWhere((p) => !p.isLoan);
       game.save!.sellOnClauses[player.id] = 10;
-      final net = game.netReleaseValueFor(player.id);
       final before = game.save!.budget;
 
-      expect(await game.sellPlayer(player.id), isTrue);
+      final o = await sellViaOffer(game, player.id);
+      expect(o, isNotNull);
+      final net = o!.amount;
       final pay = TransferTermsEngine.sellOnPayment(salePrice: net, percent: 10);
-      expect(game.save!.budget, before + net - pay);
+      // 他の国のクラブへ売ったときだけ、連帯貢献金も引かれる。
+      final solidarity = game.solidarityFor(player, net);
+      expect(
+          game.save!.budget,
+          anyOf(equals(before + net - pay),
+              equals(before + net - pay - solidarity)));
       expect(game.save!.sellOnClauses.containsKey(player.id), isFalse,
           reason: '払ったら条項は消える');
     });
@@ -122,11 +130,14 @@ void main() {
       await game.startNewGame('条項FC');
       game.save!.budget = 100000;
       final player = game.userTeam.players.firstWhere((p) => !p.isLoan);
-      final net = game.netReleaseValueFor(player.id);
       final before = game.save!.budget;
 
-      expect(await game.sellPlayer(player.id), isTrue);
-      expect(game.save!.budget, before + net);
+      final o = await sellViaOffer(game, player.id);
+      expect(o, isNotNull);
+      final net = o!.amount;
+      final solidarity = game.solidarityFor(player, net);
+      expect(game.save!.budget,
+          anyOf(equals(before + net), equals(before + net - solidarity)));
     });
   });
 

@@ -52,6 +52,7 @@ import '../models/rival_owner.dart';
 import '../models/manager_profile.dart';
 import '../logic/manager_hr_engine.dart';
 import '../logic/transfer_talk_engine.dart';
+import '../logic/transfer_value.dart';
 import '../logic/player_terms_engine.dart';
 import '../logic/relations_engine.dart';
 import '../logic/injury_care.dart';
@@ -1565,9 +1566,6 @@ class GameState extends ChangeNotifier {
   /// (セーブデータの肥大化を防ぎつつ、2〜3シーズン分は見返せる量)。
   static const int newsLogLimit = 120;
 
-  /// 直近の[sellPlayer]で選手が移籍した行き先のニュース文言(表示用)。
-  String? lastSaleNews;
-
   /// 戦術ミーティングの再実施までのクールダウン週数。
   static const int tacticalMeetingCooldownWeeks = 3;
 
@@ -1610,6 +1608,13 @@ class GameState extends ChangeNotifier {
 
   /// 直近のplayNextMatchdayで発生したCPUクラブ同士の移籍ニュース。ない場合はnull。
   String? lastAiTransferNews;
+
+  /// この窓で CPU どうしの移籍で動いた選手(同じ窓で二度は動かさない)。
+  /// 保存はしない(読み込み直したあとに稀に二度動いても困らない)。
+  final Set<String> _aiMovedThisWindow = {};
+
+  /// [_aiMovedThisWindow]がどの窓のものか(窓の開く日)。
+  DateTime? _aiMovedWindowOpens;
 
   /// 直近のplaySecondHalfでユーザーが月間最優秀監督賞を受賞した場合の対象節ラベル。ない場合はnull。
   String? lastMonthlyManagerAward;

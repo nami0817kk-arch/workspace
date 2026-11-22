@@ -22,6 +22,8 @@ import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
 import 'package:soccer_manager/widgets/rules_card.dart';
 
+import 'support/sell_via_offer.dart';
+
 /// 選手と移籍を実際のサッカーに近づけた決まりの続き(2026-11-22)。
 ///
 /// reality2_players_test.dart で入れた決まりのうち、自クラブにしか効いて
@@ -221,7 +223,7 @@ void main() {
       for (var seed = 0; seed < 40; seed++) {
         final teams = squads();
         final before = {for (final t in teams) t.id: t.players.length};
-        AiTransferEngine.maybeGenerate(teams, 'user', Random(seed),
+        AiTransferEngine.runWeek(teams, 'user', Random(seed),
             canRegister: (t, _) => t.id != 'c1');
         expect(teams.firstWhere((t) => t.id == 'c1').players.length,
             lessThanOrEqualTo(before['c1']!),
@@ -230,9 +232,9 @@ void main() {
       for (var seed = 0; seed < 20; seed++) {
         final teams = squads();
         expect(
-            AiTransferEngine.maybeGenerate(teams, 'user', Random(seed),
+            AiTransferEngine.runWeek(teams, 'user', Random(seed),
                 canRegister: (_, __) => false),
-            isNull);
+            isEmpty);
       }
     });
 
@@ -263,7 +265,7 @@ void main() {
           reason: 'EU の国籍なら枠の外');
       // 放出しても、枠の埋まったクラブへは移らない。
       expect(gs.isTransferWindowOpen, isTrue);
-      expect(await gs.sellPlayer(english.id), isTrue);
+      expect(await sellViaOffer(gs, english.id), isNotNull);
       expect(
           cpus.any((t) => t.players.any((p) => p.id == english.id)), isFalse);
     });
@@ -501,7 +503,7 @@ void main() {
           .where((p) => !p.isLoan && !p.isLoanedOut)
           .reduce((a, b) => a.wage <= b.wage ? a : b);
       final before = gs.annualSquadCost;
-      expect(await gs.sellPlayer(cheapest.id), isTrue);
+      expect(await sellViaOffer(gs, cheapest.id), isNotNull);
       final drop = before - gs.annualSquadCost;
       expect(drop, greaterThan(0));
       expect(gs.annualSquadCost, greaterThan(limit), reason: 'まだ上限の上');

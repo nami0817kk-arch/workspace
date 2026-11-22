@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'transfer_value.dart';
+
 /// 相手のクラブの返事の種類。
 enum TalkReplyKind { agree, counter, collapse }
 
@@ -33,13 +35,15 @@ class TransferTalkEngine {
   /// 相手のクラブの言い値(万円)。市場価値に、そのクラブの事情を掛ける。
   ///
   /// - 主力(クラブで総合力の上位3人)は手放したくない(×1.3)。先発なら ×1.15
-  /// - 契約が残り1年以内なら、今のうちに売りたい(×0.8)。2年なら ×0.95
+  /// - 契約の残り[contractYearsLeft](年。半端も可)の係数
+  ///   ([TransferValue.contractFactor]。残り半年 ×0.2〜4年以上 ×1.1)。
+  ///   以前は残り1年以内でも ×0.8 までで、契約切れ間近の選手も高かった
   /// - 21歳以下で伸びしろが大きい(潜在が総合力より8以上高い)なら ×1.15
   static int askingPrice({
     required int marketValue,
     required bool keyPlayer,
     required bool starter,
-    required int contractYearsLeft,
+    required num contractYearsLeft,
     required int age,
     required int potentialGap,
   }) {
@@ -49,11 +53,7 @@ class TransferTalkEngine {
     } else if (starter) {
       f *= 1.15;
     }
-    if (contractYearsLeft <= 1) {
-      f *= 0.8;
-    } else if (contractYearsLeft == 2) {
-      f *= 0.95;
-    }
+    f *= TransferValue.contractFactor(contractYearsLeft.toDouble());
     if (age <= 21 && potentialGap >= 8) f *= 1.15;
     return (marketValue * f).round();
   }

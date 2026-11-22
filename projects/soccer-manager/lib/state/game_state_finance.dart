@@ -411,7 +411,9 @@ extension GameStateFinance on GameState {
         save.incomingOffers.removeWhere((o) => o.playerId == ace.id);
         _book(LedgerCategory.playerSales, fee);
         _paySellOn(ace, fee);
-        _placeSoldPlayerAtCpuClub(ace);
+        // 買い手(他の部・他の国も)へ移す。見つからなければどこにも移さない。
+        final buyer = _buyerFor(ace, fee, GameState._offerRng);
+        if (buyer != null) _movePlayerToBuyer(ace, buyer.name, fee: fee);
         _friendsMissPlayer(ace);
         _logNews(
             Tr.pick('移籍を求めた${ace.name}の売却を認めた。移籍金${formatMoney(fee)}が入った。',

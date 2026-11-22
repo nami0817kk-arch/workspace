@@ -85,24 +85,39 @@ extension GameStateTransfer on GameState {
   /// 値切りオファーが受け入れられる確率(0.0〜1.0)。市場価値の満額なら
   /// 必ず成立し、55%以下なら必ず拒否される。UIで交渉前に提示する。
   ///
-  /// 他のクラブの選手([player])なら、そのクラブの事情も少し効く。先発の
-  /// 選手は安くは手放さず(-15%)、契約が今季で切れる選手は今のうちに
-  /// 売りたい(+15%)。
+  /// 選手([player])が分かれば、相手が比べるのは市場価値ではなく、契約の
+  /// 残り年数の係数を掛けた相場([TransferValue.worth]。言い値と同じ係数)。
+  /// 契約が残り半年なら市場価値の2割で応じ、4年以上残っていれば1割増しを
+  /// 求める。他のクラブの先発の選手は安くは手放さない(-15%)。
   double transferOfferAcceptChance(int marketValue, int offer,
       {Player? player}) {
-    if (marketValue <= 0) return 1.0;
-    final ratio = offer / marketValue;
+    final worth = player == null
+        ? marketValue
+        : (marketValue * TransferValue.factorFor(player, seasonProgress))
+            .round();
+    if (worth <= 0) return 1.0;
+    final ratio = offer / worth;
     if (ratio >= 1.0) return 1.0;
     var chance = (ratio - 0.55) / 0.45;
     if (ratio > 0.55 && player != null) {
       final club = _sellingClubOf(player.id);
-      if (club != null) {
-        if (club.startingXI.contains(player.id)) chance -= 0.15;
-        if (player.contractYearsRemaining <= 1) chance += 0.15;
-      }
+      if (club != null && club.startingXI.contains(player.id)) chance -= 0.15;
     }
     return chance.clamp(0.0, 1.0);
   }
+
+  /// 今のシーズンがどこまで進んだか(0=開幕前・日程なし、1=全節を終えた)。
+  /// 契約の残り(半端な年数)を出すのに使う。冬の窓のころは約0.5。
+  double get seasonProgress {
+    if (_save == null) return 0;
+    final total = _totalMatchdaysThisSeason;
+    if (total == 0) return 0;
+    return ((total - remainingMatchdaysThisSeason) / total).clamp(0.0, 1.0);
+  }
+
+  /// [p]の契約の残り(年。今のシーズンの進みを引いた半端な年数)。
+  double contractYearsLeftOf(Player p) =>
+      TransferValue.yearsLeft(p.contractYearsRemaining, seasonProgress);
 
   /// 監督が補強の案に挙げられる選手(ある程度見えている選手だけ)。
   List<Player> get proposalTargets {
@@ -511,11 +526,12 @@ extension GameStateTransfer on GameState {
         'The remaining ${formatMoney(outstanding)} of the instalment plan was settled in full on his departure.'));
   }
 
-  /// 放出(売却)により実際に得られる額。売却では契約を買い手が引き継ぐので、
-  /// 売り手は残りの年俸の違約金を払わない(払うのは合意解除のときだけ)。
+  /// 売りに出したときの移籍金の相場(市場価値×契約の残り年数の係数)。
+  /// 実際の額は届くオファーごとにばらつく。売却では契約を買い手が引き継ぐ
+  /// ので、売り手は残りの年俸の違約金を払わない(払うのは合意解除のときだけ)。
   int netReleaseValueFor(String playerId) {
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
-    return ContractEngine.salePrice(player);
+    return ContractEngine.salePrice(player, seasonProgress: seasonProgress);
   }
 
   /// クラブニュース履歴に1件追加する(先頭が最新)。SnackBarやダイアログで
@@ -538,65 +554,80 @@ extension GameStateTransfer on GameState {
     }
   }
 
-  Future<bool> sellPlayer(String playerId) async {
-    if (_save == null) return false;
-    if (!isTransferWindowOpen) return false;
-    final team = userTeam;
-    if (team.players.length <= minSquadSize) return false;
-    final player = team.players.firstWhere((p) => p.id == playerId);
-    if (player.isLoan) return false; // ローン選手は他クラブの所有物のため放出できない
-    if (player.isLoanedOut) return false; // ローン放出中の選手は貸出先が保有しているため放出できない
-    final net = netReleaseValueFor(playerId);
-    final wasTeamLeader = DynamicsEngine.isTeamLeader(team, playerId);
-    team.players.removeWhere((p) => p.id == playerId);
-    team.startingXI.remove(playerId);
-    _clearPlayerRoleReferences(team, playerId);
-    _book(LedgerCategory.playerSales, net);
-    _paySellOn(player, net);
-    _placeSoldPlayerAtCpuClub(player);
-    _friendsMissPlayer(player);
-    // ダイナミクス: チームリーダーの放出はロッカールーム全体を動揺させる。
-    if (wasTeamLeader) {
-      for (final p in team.players) {
-        p.happiness =
-            (p.happiness - DynamicsEngine.leaderSalePenalty).clamp(0, 100);
-      }
-      _logNews(
-          Tr.pick('チームリーダーの${player.name}を放出。ロッカールームに動揺が走っている',
-              "You sold ${player.name}, one of the dressing room's leaders, and it has unsettled the squad"),
-          context: Tr.pick('移籍', 'Transfer'));
-    }
-    _notify();
-    await _persist();
-    return true;
+  // 2026-11-23: その場で売れる sellPlayer をやめた。買い手の有無を見ずに
+  // 相場の7割で即成立し、行き先は同じリーグの CPU だけだった。いまは
+  // 移籍リストに載せ([setTransferListed])、他の部・他の国を含む買い手から
+  // 届いたオファー([_offerFor])を受ける([acceptIncomingOffer])形だけにした。
+
+  /// CPU のクラブ[t]が、今の窓の補強に使える資金(万円)。資金の分かる
+  /// 自国のクラブは手元の資金の6割、分からないクラブ(他の国・まだ季を
+  /// 締めていない)は年俸総額から見積もる([AiTransferEngine.defaultBudget])。
+  int _aiTransferBudget(Team t) {
+    final cash = _save!.clubCash[t.id];
+    if (cash == null) return AiTransferEngine.defaultBudget(t);
+    return cash <= 0 ? 0 : (cash * 0.6).round();
   }
 
-  /// 放出した選手を消滅させず、実力に見合うリーグ内のCPUクラブへ移籍させる
-  /// (受け入れ余地のあるクラブがなければやむなく引退扱い=移動なし)。
-  void _placeSoldPlayerAtCpuClub(Player player) {
-    lastSaleNews = null;
-    // 自クラブの選手は自国の扱い。他のクラブへ移る前に国籍を確定させる
-    // (確定させないと、移った先のクラブの選手として国籍を引き直してしまう)。
-    _fixNationality(player);
-    // 行き先も国の登録の決まりを守る(加えられないクラブへは移さない)。
-    final destinations = _cpuClubsThatCanRegister(
-        _save!.league.teams
-            .where((t) => t.id != _save!.userTeamId && t.players.length < 26),
-        player,
-        fromCountry: currentLeagueTheme);
-    if (destinations.isEmpty) return;
-    final fitting = destinations
-        .where((t) => t.overallRating >= player.overall - 5)
-        .toList();
-    final pool = fitting.isNotEmpty ? fitting : destinations;
-    final dest = pool[GameState._transferOfferRng.nextInt(pool.length)];
-    ContractEngine.applyCpuClubContract(
-        player, 2 + GameState._transferOfferRng.nextInt(3));
-    player.happiness = (player.happiness + 5).clamp(40, 90);
-    dest.players.add(player);
-    lastSaleNews = Tr.pick('${player.name}は${dest.name}へ移籍した。',
-        '${player.name} has joined ${dest.name}.');
-    _logNews(lastSaleNews!, context: Tr.pick('移籍', 'Transfer'));
+  /// 移籍金のやり取りを、資金の分かるクラブ(自国)の手元に入れる。
+  void _moveAiClubCash(Team t, int delta) {
+    final s = _save!;
+    final isHome = s.allTeams.any((x) => x.id == t.id);
+    if (!isHome) return;
+    final cash = s.clubCash[t.id] ??
+        (ContractEngine.weeklyWageBill(t) * 52 / 0.6 * 0.5).round();
+    s.clubCash[t.id] = cash + delta;
+  }
+
+  /// 1週に、リーグのニュースに出す CPU どうしの移籍の上限(多すぎると
+  /// 自クラブの出来事が流れてしまう)。
+  static const int aiTransferHeadlinesPerWeek = 3;
+
+  /// 窓の1週ぶんの CPU どうしの移籍を動かす。移籍金は両クラブの資金に
+  /// 入れる。返すのは、ニュースに出す主力の移籍の文言。
+  List<String> _advanceAiTransfers() {
+    final s = _save!;
+    final window = currentTransferWindow;
+    if (window?.opens != _aiMovedWindowOpens) {
+      _aiMovedWindowOpens = window?.opens;
+      _aiMovedThisWindow.clear();
+    }
+    final foreign = _foreignTeamIds();
+    final home = currentLeagueTheme;
+    final moves = AiTransferEngine.runWeek(
+      s.league.teams,
+      s.userTeamId,
+      GameState._aiTransferRng,
+      seasonProgress: seasonProgress,
+      budgetOf: _aiTransferBudget,
+      // 冬の窓は夏より動きが少ない。
+      intensity: window?.kind == TransferWindowKind.winter ? 0.6 : 1.0,
+      // 行き先のクラブも国の登録の決まりを守る(同じ国の中の移籍)。
+      canRegister: (to, p) =>
+          _cpuCanRegister(to, p, fromCountry: home, foreign: foreign),
+      recentlyMoved: _aiMovedThisWindow,
+    );
+    if (moves.isEmpty) return const [];
+    for (final m in moves) {
+      _moveAiClubCash(m.to, -m.fee);
+      _moveAiClubCash(m.from, m.fee);
+    }
+    final headlines = moves.where((m) => m.headline).toList()
+      ..sort((a, b) => b.fee.compareTo(a.fee));
+    final news = [
+      for (final m in headlines.take(aiTransferHeadlinesPerWeek))
+        m.newsWith(formatMoney(m.fee)),
+    ];
+    // ホームの知らせには、いちばん大きな移籍と件数を出す。
+    final top = headlines.isNotEmpty
+        ? headlines.first
+        : ([...moves]..sort((a, b) => b.fee.compareTo(a.fee))).first;
+    final others = moves.length - 1;
+    lastAiTransferNews = others <= 0
+        ? top.newsWith(formatMoney(top.fee))
+        : Tr.pick(
+            '${top.newsWith(formatMoney(top.fee))}ほか、今週は$others件の移籍が成立した。',
+            '${top.newsWith(formatMoney(top.fee))} ${Tr.plural(others, 'other deal')} went through this week.');
+    return news;
   }
 
   int renewalCostFor(String playerId) {
@@ -1243,10 +1274,14 @@ extension GameStateTransfer on GameState {
     await _persist();
   }
 
-  /// 選手の移籍リスト登録状態を切り替える。登録中は他クラブからのオファーが来やすくなる。
+  /// 選手の移籍リスト登録状態を切り替える。選手を売るのはこの形だけで、
+  /// 登録中は窓のあいだ、人気に応じて他のクラブ(他の部・他の国も)から
+  /// オファーが届く([_rollListedOffers])。借りている・貸している選手は
+  /// 載せられない。
   Future<void> setTransferListed(String playerId, bool listed) async {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
+    if (listed && (player.isLoan || player.isLoanedOut)) return;
     player.isTransferListed = listed;
     _notify();
     await _persist();
@@ -1471,18 +1506,31 @@ extension GameStateTransfer on GameState {
     }
     // 同じ選手への他クラブからの対抗オファーは、選手が既に売却されるため無効になる。
     _save!.incomingOffers.removeWhere((o) => o.playerId == offer.playerId);
+    final wasTeamLeader = DynamicsEngine.isTeamLeader(team, offer.playerId);
     team.players.removeWhere((p) => p.id == offer.playerId);
     final wasStarter = team.startingXI.remove(offer.playerId);
     _clearPlayerRoleReferences(team, offer.playerId);
     if (wasStarter) {
       LineupUtils.autoFill(team);
     }
-    _movePlayerToBuyer(player, offer.buyerClubName);
+    _movePlayerToBuyer(player, offer.buyerClubName, fee: offer.amount);
     _friendsMissPlayer(player);
     _book(LedgerCategory.playerSales, offer.amount);
     // 移籍金を受け取る売却: 連帯貢献金と、簿価との差(売却益)。
     _onPlayerSold(player, offer.amount, buyerClubName: offer.buyerClubName);
     _paySellOn(player, offer.amount);
+    // ダイナミクス: チームリーダーの放出はロッカールーム全体を動揺させる
+    // (その場で売れる形をやめたので、オファーを受けた売却で見る)。
+    if (wasTeamLeader) {
+      for (final p in team.players) {
+        p.happiness =
+            (p.happiness - DynamicsEngine.leaderSalePenalty).clamp(0, 100);
+      }
+      _logNews(
+          Tr.pick('チームリーダーの${player.name}を放出。ロッカールームに動揺が走っている',
+              "You sold ${player.name}, one of the dressing room's leaders, and it has unsettled the squad"),
+          context: Tr.pick('移籍', 'Transfer'));
+    }
     _notify();
     await _persist();
     return true;
@@ -1500,14 +1548,16 @@ extension GameStateTransfer on GameState {
   /// 以前は自クラブから外すだけで、選手はゲームから消えていた。売った選手が
   /// 相手のクラブで戦い、対戦で顔を合わせるほうが自然で、相手の戦力も
   /// 移籍金に見合って上がる。買い手が見つからない(既にリーグを去った等)
-  /// ときは、従来どおりどこにも移さない。
-  void _movePlayerToBuyer(Player player, String buyerClubName) {
+  /// ときは、従来どおりどこにも移さない。[fee]は買い手が払った移籍金で、
+  /// 資金の分かるクラブ(自国)の手元から引く。
+  void _movePlayerToBuyer(Player player, String buyerClubName, {int fee = 0}) {
     if (_save == null) return;
     // 自クラブの選手は自国の扱い。他のクラブへ移る前に国籍を確定させる
     // (確定させないと、移った先のクラブの選手として国籍を引き直してしまう)。
     _fixNationality(player);
     Team? buyer;
-    for (final t in _save!.allTeams) {
+    // 他の国のクラブも買いに来る(2026-11-23)。
+    for (final t in _worldTeams) {
       if (t.id == _save!.userTeamId || t.name != buyerClubName) continue;
       buyer = t;
       break;
@@ -1519,6 +1569,7 @@ extension GameStateTransfer on GameState {
     player.releaseClause = null;
     ContractEngine.applyTransferContract(player);
     buyer.players.add(player);
+    if (fee > 0) _moveAiClubCash(buyer, -fee);
   }
 
   /// 締切の節に入る駆け込みオファー。
@@ -1554,8 +1605,11 @@ extension GameStateTransfer on GameState {
       playerId: target.id,
       playerName: target.name,
       buyerClubName: buyer.name,
+      // 相場は契約の残り年数の係数込み([TransferValue.worth])。
       amount: MarketTrendEngine.apply(
-          (target.marketValue * deadlineDayPremium).round(), marketIndex),
+          (TransferValue.worth(target, seasonProgress) * deadlineDayPremium)
+              .round(),
+          marketIndex),
       weeksRemaining: 1,
     );
   }
@@ -1565,6 +1619,135 @@ extension GameStateTransfer on GameState {
 
   /// 駆け込みオファーの上乗せ率。相場より高いから迷う。
   static const double deadlineDayPremium = 1.35;
+
+  /// 売りに出していない選手に、1週のうちに引き抜きのオファーが来る確率。
+  static const double unsolicitedOfferChance = 0.12;
+
+  /// 移籍リストの選手に、1週に新しく届くオファーの上限。
+  static const int maxListedOffersPerWeek = 2;
+
+  /// 移籍リストに載せた選手に、人気に応じてオファーを届ける
+  /// ([TransferValue.listedInterestChance])。人気のない選手には、窓の
+  /// あいだ一度も来ないこともある。
+  void _rollListedOffers(Team team) {
+    final s = _save!;
+    final listed = team.players
+        .where((p) =>
+            p.isTransferListed &&
+            !p.isLoan &&
+            !p.isLoanedOut &&
+            !s.incomingOffers.any((o) => o.playerId == p.id))
+        .toList();
+    if (listed.isEmpty) return;
+    final median = _squadMedianOverall ?? 0;
+    var added = 0;
+    for (final p in listed) {
+      if (added >= maxListedOffersPerWeek) break;
+      final chance = TransferValue.listedInterestChance(p, median);
+      if (GameState._offerRng.nextDouble() >= chance) continue;
+      final o = _offerFor(p, listed: true);
+      if (o == null) continue;
+      s.incomingOffers.add(o);
+      added++;
+      _logNews(
+          Tr.pick(
+              '${o.buyerClubName}が移籍リストの${p.name}に${formatMoney(o.amount)}を提示した。',
+              '${o.buyerClubName} bid ${formatMoney(o.amount)} for ${p.name}, who is on the transfer list.'),
+          context: Tr.pick('移籍', 'Transfer'));
+    }
+  }
+
+  /// [p]へのオファーを作る(買い手が見つからなければ null)。額は相場
+  /// (市場価値×契約の残り年数の係数)にばらつきと移籍の相場を掛けたもの。
+  /// 買い手は他の部・他の国のクラブも含めて、力の合う・払えるクラブから選ぶ。
+  IncomingOffer? _offerFor(Player p, {required bool listed}) {
+    final rng = GameState._offerRng;
+    final spread = listed
+        ? TransferValue.listedOfferSpread(rng.nextDouble())
+        : TransferValue.unsolicitedOfferSpread(rng.nextDouble());
+    final amount = MarketTrendEngine.apply(
+        (TransferValue.worth(p, seasonProgress) * spread).round(), marketIndex);
+    if (amount <= 0) return null;
+    final buyer = _buyerFor(p, amount, rng);
+    if (buyer == null) return null;
+    return IncomingOffer(
+      id: 'offer${_incomingOfferSeq++}',
+      playerId: p.id,
+      playerName: p.name,
+      buyerClubName: buyer.name,
+      amount: amount,
+    );
+  }
+
+  /// 自クラブの[p]を[amount]で買いに来るクラブ。自国の各部と他の国の
+  /// クラブのうち、選手を持ち、人数に空きがあり、力が合い(その選手が
+  /// 戦力になる・格上すぎない)、資金が足り、国の登録の決まりで加えられる
+  /// クラブ。18歳未満は国をまたげない(EU の中の16〜17歳は除く)。
+  Team? _buyerFor(Player p, int amount, Random rng) {
+    final s = _save!;
+    final home = currentLeagueTheme;
+    final foreign = _foreignTeamIds();
+    final pool = <Team>[];
+    for (final t in _worldTeams) {
+      if (t.id == s.userTeamId || t.players.isEmpty) continue;
+      if (t.players.length >= AiTransferEngine.maxSquadSize) continue;
+      final level = t.overallRating;
+      if (p.overall < level - 4 || p.overall > level + 12) continue;
+      final country = foreign[t.id];
+      if (p.age < 18 && country != null && country != home.name) {
+        final to =
+            LeagueTheme.values.where((x) => x.name == country).firstOrNull;
+        if (to == null || !minorMayMoveBetween(p.age, home, to)) continue;
+      }
+      if (_aiTransferBudget(t) < amount) continue;
+      pool.add(t);
+    }
+    pool.shuffle(rng);
+    // 登録の判定は重いので、選んだ数クラブにだけ掛ける。
+    for (final t in pool.take(6)) {
+      if (_cpuCanRegister(t, p, fromCountry: home, foreign: foreign)) return t;
+    }
+    return null;
+  }
+
+  /// テスト用: 来たオファーの週の処理だけを走らせる。
+  @visibleForTesting
+  List<String> debugAdvanceIncomingOffers() => _advanceIncomingOffers();
+
+  /// テスト用: CPU どうしの移籍の1週ぶんだけを走らせる。
+  @visibleForTesting
+  List<String> debugAdvanceAiTransfers() => _advanceAiTransfers();
+
+  /// テスト用: [playerId]の選手に、今すぐオファーを1件届ける(人気の抽選を
+  /// 飛ばす)。力の合う買い手がいなければ、登録できる同じ部のクラブが
+  /// 買い手になる(テストで作った選手は力が極端なことがあるため)。
+  /// それもいなければ null。
+  @visibleForTesting
+  IncomingOffer? debugOfferFor(String playerId) {
+    if (_save == null) return null;
+    final p = userTeam.players.where((x) => x.id == playerId).firstOrNull;
+    if (p == null) return null;
+    var o = _offerFor(p, listed: p.isTransferListed);
+    if (o == null) {
+      final clubs = _cpuClubsThatCanRegister(
+          _save!.league.teams.where((t) =>
+              t.id != _save!.userTeamId &&
+              t.players.isNotEmpty &&
+              t.players.length < AiTransferEngine.maxSquadSize),
+          p,
+          fromCountry: currentLeagueTheme);
+      if (clubs.isEmpty) return null;
+      o = IncomingOffer(
+        id: 'offer${_incomingOfferSeq++}',
+        playerId: p.id,
+        playerName: p.name,
+        buyerClubName: clubs.first.name,
+        amount: max(1, (TransferValue.worth(p, seasonProgress) * 0.9).round()),
+      );
+    }
+    _save!.incomingOffers.add(o);
+    return o;
+  }
 
   List<String> _advanceIncomingOffers() {
     final autoSold = <String>[];
@@ -1578,6 +1761,10 @@ extension GameStateTransfer on GameState {
     }
 
     final team = userTeam;
+
+    // 移籍リストに載せた選手には、人気に応じて買い手からオファーが届く
+    // (売るのはこの形だけ。2026-11-23)。
+    if (isTransferWindowOpen) _rollListedOffers(team);
 
     // 締切の節には、相場より高い駆け込みのオファーが入ることがある。
     // 期限があるだけでは判断が変わらない。締切間際に「今なら高く売れる」
@@ -1645,25 +1832,21 @@ extension GameStateTransfer on GameState {
     if (isTransferWindowOpen &&
         team.players.length > minSquadSize + 2 &&
         _save!.incomingOffers.length < 3) {
+      // 売りに出していない選手への引き抜き。移籍リストの選手には
+      // [_rollListedOffers]で別に届く。
       final eligible = team.players
           .where(
             (p) =>
                 !p.isLoan &&
                 !p.isLoanedOut &&
+                !p.isTransferListed &&
                 !_save!.incomingOffers.any((o) => o.playerId == p.id),
           )
           .toList();
-      // 移籍リストに登録している選手がいるとオファーが来やすくなる。
-      final hasListed = eligible.any((p) => p.isTransferListed);
-      final triggerChance = hasListed ? 0.30 : 0.12;
       if (eligible.isNotEmpty &&
-          GameState._offerRng.nextDouble() < triggerChance) {
-        final weights = eligible
-            .map(
-              (p) =>
-                  (p.overall - 30).clamp(1, 99) * (p.isTransferListed ? 3 : 1),
-            )
-            .toList();
+          GameState._offerRng.nextDouble() < unsolicitedOfferChance) {
+        final weights =
+            eligible.map((p) => (p.overall - 30).clamp(1, 99)).toList();
         final totalWeight = weights.fold<int>(0, (s, w) => s + w);
         var r = GameState._offerRng.nextInt(totalWeight);
         var chosen = eligible.last;
@@ -1711,14 +1894,16 @@ extension GameStateTransfer on GameState {
             LineupUtils.autoFill(team);
           }
           _clearPlayerRoleReferences(team, chosen.id);
-          _movePlayerToBuyer(chosen, buyer.name);
+          _movePlayerToBuyer(chosen, buyer.name, fee: amount);
           _book(LedgerCategory.playerSales, amount);
           _onPlayerSold(chosen, amount, buyerClubName: buyer.name);
           autoSold.add(chosen.name);
         } else {
+          // 相場(契約の残り年数の係数込み)より上を出してくることが多い。
           final amount = MarketTrendEngine.apply(
-              (chosen.marketValue *
-                      (0.9 + GameState._offerRng.nextDouble() * 0.4))
+              (TransferValue.worth(chosen, seasonProgress) *
+                      TransferValue.unsolicitedOfferSpread(
+                          GameState._offerRng.nextDouble()))
                   .round(),
               marketIndex);
           _save!.incomingOffers.add(
