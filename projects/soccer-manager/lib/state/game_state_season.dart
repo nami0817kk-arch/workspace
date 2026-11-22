@@ -314,13 +314,13 @@ extension GameStateSeason on GameState {
 
   Cup? get domesticCup => _save == null ? null : _cupOfType(CupType.domestic);
 
-  /// 大陸カップ(グループステージ+決勝トーナメント)。出場資格がない間はnull。
-  ContinentalCup? get continentalCup => _save?.continentalCup;
+  /// 自クラブが出ている大陸大会(チャンピオンズカップかヨーロッパカップ)。
+  /// 出ていない季は null。大会そのものは自クラブが出なくても行われる
+  /// ([continentalCups])。
+  ContinentalCup? get continentalCup => _userContinentalCup;
 
-  /// 前シーズンの最終順位に基づき、来季の大陸カップ出場資格があるか。
-  /// 枠の数は国の係数で2〜4に変わる(季の締めの判定と同じ continentalSpots)。
-  bool get qualifiedForContinentalCup =>
-      (_save?.lastSeasonRank ?? 99) <= continentalSpots;
+  /// 今季、自クラブが大陸大会に出ているか。
+  bool get qualifiedForContinentalCup => _userContinentalCup != null;
 
   /// 国内カップ戦で、ブラケット全体の中で次に消化されるべき試合が自クラブの
   /// 試合であるかどうか。日程画面・ホーム画面から「カップ戦の順番が来ている」
@@ -351,20 +351,43 @@ extension GameStateSeason on GameState {
 
   /// 国内カップ戦の次の試合を消化できるか。直前の消化からリーグが1節も
   /// 進んでいない場合は、現実の試合間隔を再現するためfalseになる。
-  bool get canPlayNextDomesticCupMatch =>
-      domesticCup?.nextUnplayedMatch != null &&
-      _canAdvanceCup(domesticCup!.lastPlayedAtMatchday);
+  ///
+  /// 新しい形のカップ(1〜3部の全クラブ)は、回戦ごとに決まった節に
+  /// なれば消化できる(回戦はまとめて同じ週に行う)。
+  bool get canPlayNextDomesticCupMatch {
+    final cup = domesticCup;
+    final next = cup?.nextUnplayedMatch;
+    if (cup == null || next == null) return false;
+    if (cup.plannedRounds != null) {
+      return _cupDue(cup.dueMatchdayFor(next.round));
+    }
+    return _canAdvanceCup(cup.lastPlayedAtMatchday);
+  }
 
   Future<MatchResult?> playNextCupMatch() async {
     if (_save == null) return null;
     final cup = domesticCup;
     if (cup == null || cup.nextUnplayedMatch == null) return null;
-    if (!_canAdvanceCup(cup.lastPlayedAtMatchday)) return null;
+    if (!canPlayNextDomesticCupMatch) return null;
+    if (cup.plannedRounds != null) {
+      // 同じ週の他のクラブの試合を先に決める。自クラブの試合が無い回戦
+      // なら、それで回戦が終わる。
+      _playCpuCupRound(cup);
+      final m = cup.nextUnplayedMatch;
+      if (m == null ||
+          !_isUserMatch(m) ||
+          !_cupDue(cup.dueMatchdayFor(m.round))) {
+        _notify();
+        await _persistNow();
+        return null;
+      }
+    }
 
     final match = cup.nextUnplayedMatch!;
     if (!match.isBye) {
       final home = allTeamsForCups.firstWhere((t) => t.id == match.homeTeamId);
       final away = allTeamsForCups.firstWhere((t) => t.id == match.awayTeamId);
+      _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
     final result = CupEngine.playNextMatch(cup, allTeamsForCups,
@@ -392,23 +415,49 @@ extension GameStateSeason on GameState {
 
   /// 大陸カップの次の試合を消化できるか。直前の消化からリーグが1節も
   /// 進んでいない場合は、現実の試合間隔を再現するためfalseになる。
+  /// 新しい形の大会は、段階ごとに決まった節になれば消化できる。
   bool get canPlayNextContinentalMatch {
-    final cup = _save?.continentalCup;
+    final cup = _userContinentalCup;
     if (cup == null || !_continentalHasNextMatch(cup)) return false;
+    if (cup.stepDue != null) {
+      return _cupDue(ContinentalCupEngine.currentStepDue(cup));
+    }
     return _canAdvanceCup(cup.lastPlayedAtMatchday);
+  }
+
+  /// 新しい形の大陸大会で、同じ週の他のクラブの試合を先に決め、次の試合が
+  /// 自クラブの試合で、もう戦えるか。古い形の大会は常に true。
+  bool _prepareUserContinentalMatch(ContinentalCup cup) {
+    if (cup.stepDue == null) return true;
+    _playCpuContinental(cup);
+    if (!_continentalHasNextMatch(cup)) return false;
+    if (!_cupDue(ContinentalCupEngine.currentStepDue(cup))) return false;
+    final u = _save!.userTeamId;
+    if (!cup.isGroupStageComplete) {
+      final m = ContinentalCupEngine.nextGroupMatch(cup);
+      return m != null && (m.homeTeamId == u || m.awayTeamId == u);
+    }
+    final leg = ContinentalCupEngine.nextKnockoutLeg(cup);
+    return leg != null && (leg.homeId == u || leg.awayId == u);
   }
 
   /// 大陸カップのグループステージ次の1試合を消化する。全組が終わると
   /// 自動的に決勝トーナメントの組み合わせが決定される。
   Future<MatchResult?> playNextContinentalGroupMatch() async {
-    if (_save == null || _save!.continentalCup == null) return null;
-    final cup = _save!.continentalCup!;
+    if (_save == null || _userContinentalCup == null) return null;
+    final cup = _userContinentalCup!;
     if (!_continentalHasNextMatch(cup)) return null;
-    if (!_canAdvanceCup(cup.lastPlayedAtMatchday)) return null;
+    if (!canPlayNextContinentalMatch) return null;
+    if (!_prepareUserContinentalMatch(cup) || cup.isGroupStageComplete) {
+      _notify();
+      await _persistNow();
+      return null;
+    }
     final match = ContinentalCupEngine.nextGroupMatch(cup);
     if (match != null) {
       final home = allTeamsForCups.firstWhere((t) => t.id == match.homeTeamId);
       final away = allTeamsForCups.firstWhere((t) => t.id == match.awayTeamId);
+      _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
     final result = ContinentalCupEngine.playNextGroupMatch(
@@ -429,14 +478,20 @@ extension GameStateSeason on GameState {
 
   /// 大陸カップの決勝トーナメント次の1レグを消化する。
   Future<MatchResult?> playNextContinentalKnockoutLeg() async {
-    if (_save == null || _save!.continentalCup == null) return null;
-    final cup = _save!.continentalCup!;
+    if (_save == null || _userContinentalCup == null) return null;
+    final cup = _userContinentalCup!;
     if (!_continentalHasNextMatch(cup)) return null;
-    if (!_canAdvanceCup(cup.lastPlayedAtMatchday)) return null;
+    if (!canPlayNextContinentalMatch) return null;
+    if (!_prepareUserContinentalMatch(cup) || !cup.isGroupStageComplete) {
+      _notify();
+      await _persistNow();
+      return null;
+    }
     final leg = ContinentalCupEngine.nextKnockoutLeg(cup);
     if (leg != null) {
       final home = allTeamsForCups.firstWhere((t) => t.id == leg.homeId);
       final away = allTeamsForCups.firstWhere((t) => t.id == leg.awayId);
+      _ensureSquadsForActiveTier([home, away]);
       CpuTacticsAI.applyPreMatch(home, away, _save!.userTeamId);
     }
     final result = ContinentalCupEngine.playNextKnockoutLeg(
@@ -503,7 +558,7 @@ extension GameStateSeason on GameState {
   bool get canPlayNextContinentalMatchLive {
     if (_save == null || _isLiveMatchInProgress) return false;
     if (!canPlayNextContinentalMatch) return false;
-    final cup = _save!.continentalCup!;
+    final cup = _userContinentalCup!;
     final userId = _save!.userTeamId;
     if (!cup.isGroupStageComplete) {
       final match = ContinentalCupEngine.nextGroupMatch(cup);
@@ -541,13 +596,18 @@ extension GameStateSeason on GameState {
     switch (kind) {
       case LiveCupKind.domestic:
         if (!canPlayNextDomesticCupMatchLive) return false;
+        // 同じ週の他のクラブの試合を先に決める(自クラブの試合は回戦の
+        // 先頭にあるので、そのまま次の試合になる)。
+        _playCpuCupRound(domesticCup!);
+        if (!canPlayNextDomesticCupMatchLive) return false;
         cupMatch = domesticCup!.nextUnplayedMatch;
         home = teamById(cupMatch!.homeTeamId);
         away = teamById(cupMatch.awayTeamId);
       case LiveCupKind.continentalGroup:
       case LiveCupKind.continentalKnockout:
         if (!canPlayNextContinentalMatchLive) return false;
-        final cup = _save!.continentalCup!;
+        final cup = _userContinentalCup!;
+        if (!_prepareUserContinentalMatch(cup)) return false;
         if (!cup.isGroupStageComplete) {
           resolvedKind = LiveCupKind.continentalGroup;
           cupMatch = ContinentalCupEngine.nextGroupMatch(cup);
@@ -603,45 +663,55 @@ extension GameStateSeason on GameState {
 
   /// ライブ観戦で確定したカップ試合の結果を、該当大会へ適用する
   /// (試合後効果は_finalizeSecondHalfの共通処理で適用済みのため行わない)。
-  void _applyLiveCupResult(MatchResult merged) {
+  MatchResult _applyLiveCupResult(MatchResult merged) {
     final kind = _liveCupKind;
-    if (kind == null || _save == null) return;
+    if (kind == null || _save == null) return merged;
     switch (kind) {
       case LiveCupKind.domestic:
         final cup = domesticCup;
         final match = _liveCupMatch;
-        if (cup == null || match == null) return;
+        if (cup == null || match == null) return merged;
         if (merged.homeGoals == merged.awayGoals) {
-          match.penaltyWinnerId = _runLiveShootout().winnerId;
+          // 90分で並べば延長戦(30分)。それでも並べばPK戦。
+          merged = CupEngine.extraTime(merged, _liveCupHome!, _liveCupAway!);
+          match.extraTime = true;
+          if (merged.homeGoals == merged.awayGoals) {
+            match.penaltyWinnerId = _runLiveShootout().winnerId;
+          }
         }
         CupEngine.applyMatchResult(cup, allTeamsForCups, match, merged);
         _advanceTodayForCup(continental: false);
         cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
         _afterDomesticCupMatchApplied(match);
       case LiveCupKind.continentalGroup:
-        final cup = _save!.continentalCup;
+        final cup = _userContinentalCup;
         final match = _liveCupMatch;
-        if (cup == null || match == null) return;
+        if (cup == null || match == null) return merged;
         ContinentalCupEngine.applyGroupMatchResult(
             cup, allTeamsForCups, match, merged);
         _advanceTodayForCup(continental: true);
         cup.lastPlayedAtMatchday = _currentLeagueMatchdayMarker;
         _afterContinentalGroupMatchApplied(match);
       case LiveCupKind.continentalKnockout:
-        final cup = _save!.continentalCup;
+        final cup = _userContinentalCup;
         final tie = _liveCupTie;
-        if (cup == null || tie == null) return;
-        // このレグでタイが完了し、合計スコアが同点になる場合のみPK戦。
+        if (cup == null || tie == null) return merged;
+        // このレグでタイが完了し、合計スコアが同点になる場合は延長戦、
+        // それでも並べばPK戦。
         if (tie.legs.length + 1 >= tie.totalLegs) {
-          final mergedForA = merged.homeTeamId == tie.teamAId
-              ? merged.homeGoals
-              : merged.awayGoals;
-          final mergedForB = merged.homeTeamId == tie.teamBId
-              ? merged.homeGoals
-              : merged.awayGoals;
-          if (tie.goalsFor(tie.teamAId) + mergedForA ==
-              tie.goalsFor(tie.teamBId) + mergedForB) {
-            tie.penaltyWinnerId = _runLiveShootout().winnerId;
+          bool level(MatchResult r) {
+            final a = r.homeTeamId == tie.teamAId ? r.homeGoals : r.awayGoals;
+            final b = r.homeTeamId == tie.teamBId ? r.homeGoals : r.awayGoals;
+            return tie.goalsFor(tie.teamAId) + a ==
+                tie.goalsFor(tie.teamBId) + b;
+          }
+
+          if (level(merged)) {
+            merged = CupEngine.extraTime(merged, _liveCupHome!, _liveCupAway!);
+            tie.extraTime = true;
+            if (level(merged)) {
+              tie.penaltyWinnerId = _runLiveShootout().winnerId;
+            }
           }
         }
         ContinentalCupEngine.applyKnockoutLegResult(
@@ -651,7 +721,7 @@ extension GameStateSeason on GameState {
         _afterContinentalKnockoutLegApplied(tie);
       case LiveCupKind.superCup:
         final match = _liveCupMatch;
-        if (match == null) return;
+        if (match == null) return merged;
         match.result = merged;
         if (merged.homeGoals == merged.awayGoals) {
           match.penaltyWinnerId = _runLiveShootout().winnerId;
@@ -661,6 +731,7 @@ extension GameStateSeason on GameState {
     // 過密日程の判定(前の試合との日付の間隔)。
     _noteUserMatchDay();
     _evaluateAchievements();
+    return merged;
   }
 
   /// ライブ観戦のカップ戦がPK戦にもつれた際、1本ずつのシュートアウトを
@@ -698,25 +769,36 @@ extension GameStateSeason on GameState {
   }
 
   /// 国内カップのブラケット全ラウンド数(1回戦から決勝まで)。
-  int _domesticCupTotalRounds(Cup cup) {
-    final firstRoundMatches = cup.rounds.first.length;
-    if (firstRoundMatches <= 0) return 0;
-    return (log(firstRoundMatches * 2) / ln2).round();
-  }
+  int _domesticCupTotalRounds(Cup cup) => cup.totalRounds;
 
   /// 理事会が期待する国内カップの到達ラウンドを、リーグ内の戦力順位から
   /// 見積もる(国内カップが未生成なら0=期待なし)。
+  ///
+  /// 1〜3部の全クラブが出るカップでは、出る全クラブの中の戦力順位で見る
+  /// (3部のクラブに1部のクラブと同じ深さを求めない)。下位なら、入った
+  /// 回戦で1つ勝つこと。
   int _estimateDomesticCupTarget() {
     final cup = domesticCup;
     if (cup == null || _save == null) return 0;
-    final teams = [..._save!.league.teams]
-      ..sort((a, b) => b.overallRating.compareTo(a.overallRating));
-    final rank = teams.indexWhere((t) => t.id == _save!.userTeamId) + 1;
+    final userId = _save!.userTeamId;
+    final field = cup.tiers.isEmpty
+        ? [..._save!.league.teams]
+        : allTeamsForCups.where((t) => cup.tiers.containsKey(t.id)).toList();
+    field.sort((a, b) => b.overallRating.compareTo(a.overallRating));
+    final rank = field.indexWhere((t) => t.id == userId) + 1;
     if (rank <= 0) return 0;
+    final total = _domesticCupTotalRounds(cup);
+    if (cup.tiers.isNotEmpty && rank / field.length > 0.6) {
+      var entry = 1;
+      for (final e in cup.entrants.entries) {
+        if (e.value.contains(userId)) entry = e.key;
+      }
+      return min(total, entry + 1);
+    }
     return BoardEngine.estimateCupTargetRound(
       strengthRank: rank,
-      teamCount: teams.length,
-      totalRounds: _domesticCupTotalRounds(cup),
+      teamCount: field.length,
+      totalRounds: total,
     );
   }
 
@@ -777,11 +859,13 @@ extension GameStateSeason on GameState {
           'シーズン${_save!.league.season}: ${cup.name} 優勝',
           'Season ${_save!.league.season}: ${cup.name} winners'));
     }
+    // 同じ週の残りの試合(自クラブの出ない試合)を決め、回戦を締める。
+    if (userInvolved) _playCpuCupRound(cup);
   }
 
   /// 大陸カップのグループステージ1試合が適用された後の共通処理。
   void _afterContinentalGroupMatchApplied(CupMatch match) {
-    final cup = _save?.continentalCup;
+    final cup = _userContinentalCup;
     if (cup == null) return;
     final userId = _save!.userTeamId;
     final userInvolved =
@@ -791,13 +875,26 @@ extension GameStateSeason on GameState {
     final userWon = r != null &&
         ((r.homeTeamId == userId && r.homeGoals > r.awayGoals) ||
             (r.awayTeamId == userId && r.awayGoals > r.homeGoals));
-    if (userWon) {
-      final prize = scaledMoney(GameState.continentalGroupWinPrize);
+    final drew = r != null && r.homeGoals == r.awayGoals;
+    final newFormat = cup.stepDue != null;
+    if (userWon || (newFormat && drew)) {
+      // 新しい形の大会は実額(勝ち2.8億・引き分け9,000万。EL は3分の1)。
+      final prize = newFormat
+          ? continentalPrize(cup.level,
+              userWon ? championsCupGroupWinPrize : championsCupGroupDrawPrize)
+          : scaledMoney(GameState.continentalGroupWinPrize);
       _book(LedgerCategory.prize, prize);
       _save!.careerCupPrize += prize;
-      lastCupPrizeNote = Tr.pick('勝利賞金として${formatMoney(prize)}を獲得!',
-          'You collected ${formatMoney(prize)} in prize money!');
+      lastCupPrizeNote = userWon
+          ? Tr.pick('勝利賞金として${formatMoney(prize)}を獲得!',
+              'You collected ${formatMoney(prize)} in prize money!')
+          : Tr.pick('引き分けの賞金として${formatMoney(prize)}を獲得。',
+              'You collected ${formatMoney(prize)} for the draw.');
       _logNews(lastCupPrizeNote!, context: Tr.pick('カップ戦', 'Cup'));
+    }
+    if (newFormat) {
+      _playCpuContinental(cup);
+      _settleContinentalPrizes(cup);
     }
     if (cup.isEliminated(userId)) {
       _save!.confidence = (_save!.confidence - 3).clamp(0, 100);
@@ -806,10 +903,23 @@ extension GameStateSeason on GameState {
 
   /// 大陸カップの決勝トーナメント1レグが適用された後の共通処理。
   void _afterContinentalKnockoutLegApplied(CupTie tie) {
-    final cup = _save?.continentalCup;
+    final cup = _userContinentalCup ??
+        [_save?.continentalCup, _save?.secondContinentalCup]
+            .whereType<ContinentalCup>()
+            .where((c) => c.knockoutRounds.any((r) => r.contains(tie)))
+            .firstOrNull;
     if (cup == null) return;
     final userId = _save!.userTeamId;
     final userInTie = tie.teamAId == userId || tie.teamBId == userId;
+    if (cup.stepDue != null) {
+      // 新しい形: 回戦に進んだ賞金・優勝は _settleContinentalPrizes が払う。
+      if (userInTie) _playCpuContinental(cup);
+      _settleContinentalPrizes(cup);
+      if (userInTie && cup.isEliminated(userId)) {
+        _save!.confidence = (_save!.confidence - 3).clamp(0, 100);
+      }
+      return;
+    }
     if (userInTie) {
       if (tie.isComplete && tie.winnerId == userId) {
         final prize = scaledMoney(GameState.continentalTieWinPrize);
@@ -844,34 +954,6 @@ extension GameStateSeason on GameState {
           'Season ${_save!.league.season} Super Cup winners'));
     }
     _save!.pendingSuperCup = null;
-  }
-
-  /// 大陸カップに参加する海外クラブ名を生成する。5つの国風テーマから
-  /// バランスよく取り混ぜることで、実際の大陸カップのように様々な国風の
-  /// クラブが顔をそろえるようにする(自国リーグと同じ命名規則を流用しつつ、
-  /// テーマを散らして「他国のクラブ」らしさを出す)。
-  List<Team> _generateContinentalTeams() {
-    final rng = Random();
-    const totalTeams = 7;
-    final themes = List<LeagueTheme>.from(LeagueTheme.values)..shuffle(rng);
-    final names = <String>[];
-    var remaining = totalTeams;
-    for (int i = 0; i < themes.length && remaining > 0; i++) {
-      final take = (remaining / (themes.length - i)).ceil();
-      names.addAll(NamePool.themedClubNames(themes[i], take));
-      remaining -= take;
-    }
-    final teams = <Team>[];
-    for (int i = 0; i < totalTeams; i++) {
-      final t = PlayerGenerator.generateSquad(
-        id: 'continental$i',
-        name: names[i],
-        strengthTier: 65 + rng.nextInt(20),
-      );
-      LineupUtils.autoFill(t);
-      teams.add(t);
-    }
-    return teams;
   }
 
   /// シーズンの振り返りを見せ終えたことを覚える。閉じたら二度と出さない。
@@ -1231,6 +1313,14 @@ extension GameStateSeason on GameState {
         tier1PlayedOrder: upperOrder,
         tier2PlayedOrder: lowerOrder,
         rules: currentLeagueTheme.rulesBelow(upperTier),
+        // 下の部の勝ち点(イタリアの2部は、3位が4位を14点以上離せば
+        // プレーオフを行わない)。
+        tier2Points: {
+          for (final r in (lowerTier == playedTier
+              ? standings
+              : _save!.otherDivisionLeagues[lowerTier - 1]!.sortedStandings))
+            r.teamId: r.points,
+        },
       );
       final upperIds = upperOrder.map((t) => t.id).toSet();
       final lowerIds = lowerOrder.map((t) => t.id).toSet();
@@ -1533,8 +1623,8 @@ extension GameStateSeason on GameState {
       ..._save!.cups
           .where((c) => c.championId == _save!.userTeamId)
           .map((c) => c.name),
-      if (_save!.continentalCup?.championId == _save!.userTeamId)
-        _save!.continentalCup!.name,
+      for (final c in continentalCups)
+        if (c.championId == _save!.userTeamId) c.name,
     ];
     _save!.seasonHistory.add(
       SeasonRecord(
@@ -1576,9 +1666,12 @@ extension GameStateSeason on GameState {
     _evaluateAchievements(season: league.season);
     _evaluateOwnerGoal(season: league.season);
 
-    // スーパーカップ: 前シーズンのリーグ王者と国内カップ王者(同一クラブが両方
-    // 制した場合はカップ準優勝クラブ)が新シーズン開幕前に対戦する。カップが
-    // 未消化のままシーズンが終わった場合は開催しない。
+    // スーパーカップ: 1部の王者と国内カップの王者(同じクラブなら、カップの
+    // 準優勝クラブ)。2部・3部にはスーパーカップは無い(実在の形。それまでは
+    // 自クラブのいる部の優勝クラブで組んでいた)。国内カップは1〜3部の
+    // 全クラブが出るので、カップの王者は下の部のクラブのこともある。
+    // スペイン・イタリアは4クラブで1月ごろ(下の _newFourClubSuperCup)。
+    // カップが未消化のままシーズンが終わった場合は開催しない。
     lastSuperCupNews = null;
     Cup? previousDomesticCup;
     for (final c in _save!.cups) {
@@ -1587,9 +1680,13 @@ extension GameStateSeason on GameState {
         break;
       }
     }
-    if (previousDomesticCup != null) {
+    final tier1FinalOrder = tierOrder[1]!;
+    final tier1Ids = tier1FinalOrder.map((t) => t.id).toList();
+    if (previousDomesticCup != null &&
+        !currentLeagueTheme.fourClubSuperCup &&
+        tier1Ids.isNotEmpty) {
       final pairing = SuperCupEngine.pairing(
-        leagueChampionId: standings.first.teamId,
+        leagueChampionId: tier1Ids.first,
         domesticCup: previousDomesticCup,
       );
       final teamsThisSeason = newTeamsByTier.values.expand((t) => t).toList();
@@ -1612,11 +1709,11 @@ extension GameStateSeason on GameState {
             opponent.id == _save!.userTeamId) {
           _save!.pendingSuperCup = superCup;
         } else {
-          final result = MatchEngine.simulate(
+          // 自クラブの出ない試合は、裏の試合と同じ軽い計算で決める。
+          final result = BackgroundMatchEngine.simulate(
             home: champion,
             away: opponent,
             matchday: 0,
-            weather: WeatherEngine.roll(month: today.month),
           );
           superCup.result = result;
           if (result.homeGoals == result.awayGoals) {
@@ -1633,29 +1730,19 @@ extension GameStateSeason on GameState {
       }
     }
 
-    _save!.cups = [
-      CupEngine.createKnockout(
-        type: CupType.domestic,
-        name: currentLeagueTheme.domesticCupName,
-        teamIds: newActiveTeams.map((t) => t.id).toList(),
-      ),
-      _newLeagueCup(newActiveTeams.map((t) => t.id).toList()),
-    ];
+    // 国内カップは1〜3部の全クラブ、リーグカップはイングランドだけ。
+    _save!.cups = _newSeasonCups();
+    final fourClub = _newFourClubSuperCup(tier1Ids, previousDomesticCup);
+    if (fourClub != null) _save!.cups.add(fourClub);
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
-    // 出場枠は国の係数の順位で決まる(2〜4クラブ)。相手は他国の1部の上位。
-    if (playedTier == 1 && finalRank <= continentalSpots) {
-      final real = _realContinentalOpponents();
-      final continentalTeams =
-          real.length >= 7 ? real : _generateContinentalTeams();
-      _save!.continentalTeams = continentalTeams;
-      _save!.continentalCup = ContinentalCupEngine.create(
-        name: Tr.pick('ヨーロピアン・チャンピオンズカップ', 'European Champions Cup'),
-        teamIds: [_save!.userTeamId, ...continentalTeams.map((t) => t.id)],
-      );
-    } else {
-      _save!.continentalTeams = [];
-      _save!.continentalCup = null;
-    }
+    // 大陸大会: 自国の1部の上位(CL 5/4/3枠、その下と国内カップの優勝が
+    // EL)と、他国の1部の上位。自クラブが出ない季も大会は行われる。
+    _save!.continentalCup = null;
+    _save!.secondContinentalCup = null;
+    _setUpContinentalCups(
+      tier1Order: tier1FinalOrder,
+      domesticCupWinnerId: previousDomesticCup?.championId,
+    );
     _save!.friendlies = _generateFriendlies(newActiveTeams, _save!.userTeamId);
     // 新しいシーズンはオフ(7月1日)から始まる。夏の窓が開くので名簿の外
     // だった選手も戻り、シーズン末までのローンはここで終わる。

@@ -15,9 +15,10 @@ void main() {
     }
     expect(h, [2, 3, 4, 5, 6]);
     expect(CountryCoefficientEngine.total(h), 20);
-    expect(CountryCoefficientEngine.spotsForRank(1), 4);
-    expect(CountryCoefficientEngine.spotsForRank(3), 3);
-    expect(CountryCoefficientEngine.spotsForRank(5), 2);
+    // 2026-11-22 に実在の数へ(1・2位5、3・4位4、5位3)。
+    expect(CountryCoefficientEngine.spotsForRank(1), 5);
+    expect(CountryCoefficientEngine.spotsForRank(3), 4);
+    expect(CountryCoefficientEngine.spotsForRank(5), 3);
     expect(
         CountryCoefficientEngine.seasonPoints(wins: 3, draws: 1, roundsWon: 2),
         9);
@@ -29,7 +30,7 @@ void main() {
     final s = gs.save!;
     gs.debugUpdateCountryCoefficients();
     expect(s.countryCoefficients.length, gs.countryCoefficientRanking.length);
-    expect(gs.continentalSpots, inInclusiveRange(2, 4));
+    expect(gs.continentalSpots, inInclusiveRange(3, 5));
 
     final opp = gs.debugContinentalOpponents();
     expect(opp.length, 7);

@@ -204,6 +204,7 @@ part 'game_state_license.dart';
 part 'game_state_season_tickets.dart';
 part 'game_state_calendar.dart';
 part 'game_state_club_names.dart';
+part 'game_state_cups.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -931,6 +932,8 @@ class GameState extends ChangeNotifier {
         season: _save!.league.season,
       );
     }
+    // 順位の決め方を国ごとにし、イングランド以外のリーグカップを捨てる。
+    _migrateCupsAndRules();
   }
 
   /// 状態変更を購読側へ通知する。
@@ -1241,18 +1244,8 @@ class GameState extends ChangeNotifier {
       leagueName: theme.label,
       ruleSet: RuleSet.forTheme(theme),
       boardTargetRank: BoardEngine.estimateTargetRank(league, 'user'),
-      cups: [
-        CupEngine.createKnockout(
-          type: CupType.domestic,
-          name: theme.domesticCupName,
-          teamIds: teams.map((t) => t.id).toList(),
-        ),
-        CupEngine.createKnockout(
-          type: CupType.leagueCup,
-          name: Tr.pick('リーグカップ', 'League Cup'),
-          teamIds: teams.map((t) => t.id).toList(),
-        ),
-      ],
+      // カップは下で組む(1〜3部の全クラブが出るので、セーブが要る)。
+      cups: [],
       pendingSponsorOffers: SponsorEngine.generateOffers(
         userTeam.overallRating,
         tier: userStartTier,
@@ -1268,6 +1261,8 @@ class GameState extends ChangeNotifier {
       },
       scenario: scenario,
     );
+    // 国内カップは1〜3部の全クラブ、リーグカップはイングランドだけ。
+    _save!.cups = _newSeasonCups();
     // 最初のシーズンは平常。来季の予報だけ引いておく。
     _save!.economyNext =
         EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
@@ -1299,6 +1294,13 @@ class GameState extends ChangeNotifier {
     _assignRivalOwners();
     FreeAgentEngine.topUp(_save!.freeAgents);
     _ensureWorldSquads(_save!);
+    _applyTieBreakRules();
+    // 第1季から大陸大会がある(自国の1部の強い順と、他国の1部の強い順)。
+    _rememberForeignTop();
+    _setUpContinentalCups(
+      tier1Order: [...?_teamsByTierNow()[1]]
+        ..sort((a, b) => b.overallRating.compareTo(a.overallRating)),
+    );
     // 第1季の前の夏(2026年)はワールドカップ。出た選手は遅れて合流する。
     _startSummerTournament();
     lastContractExpirations = [];
@@ -1538,7 +1540,7 @@ class GameState extends ChangeNotifier {
   /// 国内カップ優勝の報酬(5部の額)。
   static const int domesticCupChampionPrize = 700;
 
-  /// 大陸カップ優勝の報酬(5部の額)。
+  /// 古い形の大陸カップ優勝の報酬(5部の額)。
   static const int continentalChampionPrize = 1500;
 
   /// 新しいゲームの初期資金(5部の額)。5部の年収の半年分ほど。
@@ -1559,10 +1561,12 @@ class GameState extends ChangeNotifier {
     return (lo + hi) ~/ 2;
   }
 
-  /// 大陸カップのグループステージで1勝するごとの賞金。
+  /// 古い形の大陸カップ(2026-11-22 より前のセーブ)のグループの1勝の
+  /// 賞金(5部の額)。今の大会の賞金は economy_scale.dart の
+  /// championsCup* と continentalPrize。
   static const int continentalGroupWinPrize = 40;
 
-  /// 大陸カップの決勝トーナメントで1タイ勝ち上がるごとの賞金。
+  /// 古い形の大陸カップの決勝トーナメントで1タイ勝ち上がるごとの賞金。
   static const int continentalTieWinPrize = 150;
 
   /// 直近のカップ戦で自クラブが獲得した賞金の通知文。賞金は従来budgetへ

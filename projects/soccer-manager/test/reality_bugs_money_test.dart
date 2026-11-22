@@ -20,25 +20,39 @@ void main() {
     return gs;
   }
 
-  /// 自国の係数を他国より大きくして、出場枠を4にする。
+  /// 自国の係数を他国より大きくして、出場枠を最大(5)にする。
   void topCoefficient(GameState gs) {
     gs.save!.countryCoefficients[gs.currentLeagueTheme.name] =
         List<double>.filled(5, 1000);
   }
 
   group('1. 大陸大会の出場枠は、印・文言・予想も判定と同じ数', () {
-    test('係数で枠が4になると、前季4位でも出場資格がある', () async {
+    // 2026-11-22: CL の枠を実在の数(1・2位5、3・4位4、5位3)にした。
+    // 出場は季の締めで大会を組むときに決まる(qualifiedForContinentalCup は
+    // 「今季、大陸大会に出ているか」)。前季の順位を入れて組み直して確かめる。
+    test('係数で枠が5になると、前季5位でも出場資格がある', () async {
       final gs = await start();
       topCoefficient(gs);
       expect(gs.continentalSpots, CountryCoefficientEngine.spotsForRank(1));
-      expect(gs.continentalSpots, 4);
-      gs.save!.lastSeasonRank = 4;
+      expect(gs.continentalSpots, 5);
+      final s = gs.save!;
+      final me = s.league.teams.firstWhere((t) => t.id == s.userTeamId);
+      void finishAt(int rank) {
+        final order = [...s.otherDivisionLeagues[0]!.teams]
+          ..insert(rank - 1, me);
+        gs.debugSetUpContinentalCups(order);
+      }
+
+      finishAt(5);
       expect(gs.qualifiedForContinentalCup, isTrue);
-      gs.save!.lastSeasonRank = 5;
+      expect(gs.continentalCup!.level, 1, reason: '5位はチャンピオンズカップ');
+      finishAt(6);
+      expect(gs.continentalCup!.level, 2, reason: '6位はヨーロッパカップ');
+      finishAt(8);
       expect(gs.qualifiedForContinentalCup, isFalse);
     });
 
-    test('順位予想の「大陸カップ出場」は、枠の数(4)だけのクラブに配られる', () async {
+    test('順位予想の「大陸カップ出場」は、枠の数(5)だけのクラブに配られる', () async {
       final gs = await start();
       topCoefficient(gs);
       gs.save!.currentDivisionTier = 1;

@@ -840,16 +840,18 @@ extension GameStateFinance on GameState {
     save.otherDivisionLeagues = others;
     save.currentDivisionTier = startTier;
     _ensureWorldSquads(save);
-    save.cups = [
-      CupEngine.createKnockout(
-        type: CupType.domestic,
-        name: theme.domesticCupName,
-        teamIds: mine.teams.map((t) => t.id).toList(),
-      ),
-      _newLeagueCup(mine.teams.map((t) => t.id).toList()),
-    ];
+    _applyTieBreakRules();
+    // 国内カップは1〜3部の全クラブ、リーグカップはイングランドだけ。
+    save.cups = _newSeasonCups();
+    // 新しい国の大陸大会(自国の1部の強い順と、他国の1部の上位)。
     save.continentalCup = null;
+    save.secondContinentalCup = null;
     save.continentalTeams = [];
+    _rememberForeignTop();
+    _setUpContinentalCups(
+      tier1Order: [...?_teamsByTierNow()[1]]
+        ..sort((a, b) => b.overallRating.compareTo(a.overallRating)),
+    );
     save.friendlies = _generateFriendlies(mine.teams, 'user');
     // 新しい国のリーグは開幕前から始まる。日付もそのシーズンのオフに戻す。
     save.today = SeasonCalendar.preseasonDate(save.league.season);

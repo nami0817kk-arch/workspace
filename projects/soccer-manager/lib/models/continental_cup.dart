@@ -15,6 +15,10 @@ class CupTie {
   /// 決勝(1試合のみ)かどうか。
   final bool singleLeg;
 
+  /// 合計スコアが並び、最後の試合で延長戦(30分)まで戦ったか。
+  /// 最後の試合の得点は延長の分を含む。
+  bool extraTime;
+
   CupTie({
     required this.round,
     required this.teamAId,
@@ -22,6 +26,7 @@ class CupTie {
     List<MatchResult>? legs,
     this.penaltyWinnerId,
     this.singleLeg = false,
+    this.extraTime = false,
   }) : legs = legs ?? [];
 
   int get totalLegs => singleLeg ? 1 : 2;
@@ -49,6 +54,7 @@ class CupTie {
         'legs': legs.map((m) => m.toJson()).toList(),
         'penaltyWinnerId': penaltyWinnerId,
         'singleLeg': singleLeg,
+        if (extraTime) 'extraTime': true,
       };
 
   factory CupTie.fromJson(Map<String, dynamic> json) => CupTie(
@@ -60,6 +66,7 @@ class CupTie {
             .toList(),
         penaltyWinnerId: json['penaltyWinnerId'] as String?,
         singleLeg: json['singleLeg'] as bool? ?? false,
+        extraTime: json['extraTime'] as bool? ?? false,
       );
 }
 
@@ -79,6 +86,26 @@ class ContinentalCup {
   /// 1節以上進むまで消化できないようにする。
   int? lastPlayedAtMatchday;
 
+  /// 大会の格。1 = チャンピオンズカップ(実在の CL にあたる)、
+  /// 2 = ヨーロッパカップ(EL にあたる)。賞金の出し分けに使う。
+  final int level;
+
+  /// 出場クラブの国(クラブID → LeagueTheme の name)。国の係数を、その国の
+  /// クラブの実際の成績から数えるのに使う。その他の国のクラブは載せない。
+  final Map<String, String> countries;
+
+  /// 各段階(グループの節、決勝トーナメントの各試合)を消化できるように
+  /// なるリーグの節。段階の数え方は ContinentalCupEngine.currentStep。
+  /// 古い形の大会では null(1節に1試合ずつ)。
+  final List<int>? stepDue;
+
+  /// 出場給(グループステージに出るだけで入る額)を払ったか。
+  bool participationPaid;
+
+  /// 自クラブに払った「決勝トーナメントの回戦に進んだ賞金」の数
+  /// (1なら最初の回戦の分まで払った)。二重払いを防ぐ。
+  int knockoutPrizesPaid;
+
   ContinentalCup({
     required this.name,
     required this.groups,
@@ -86,8 +113,14 @@ class ContinentalCup {
     List<List<CupTie>>? knockoutRounds,
     this.rewardClaimed = false,
     this.lastPlayedAtMatchday,
+    this.level = 1,
+    Map<String, String>? countries,
+    this.stepDue,
+    this.participationPaid = false,
+    this.knockoutPrizesPaid = 0,
   })  : groupMatches = groupMatches ?? [],
-        knockoutRounds = knockoutRounds ?? [];
+        knockoutRounds = knockoutRounds ?? [],
+        countries = countries ?? {};
 
   bool get isGroupStageComplete =>
       groupMatches.isNotEmpty && groupMatches.every((m) => m.result != null);
@@ -133,6 +166,11 @@ class ContinentalCup {
             .toList(),
         'rewardClaimed': rewardClaimed,
         'lastPlayedAtMatchday': lastPlayedAtMatchday,
+        if (level != 1) 'level': level,
+        if (countries.isNotEmpty) 'countries': countries,
+        if (stepDue != null) 'stepDue': stepDue,
+        if (participationPaid) 'participationPaid': true,
+        if (knockoutPrizesPaid > 0) 'knockoutPrizesPaid': knockoutPrizesPaid,
       };
 
   factory ContinentalCup.fromJson(Map<String, dynamic> json) => ContinentalCup(
@@ -152,5 +190,11 @@ class ContinentalCup {
             .toList(),
         rewardClaimed: json['rewardClaimed'] as bool? ?? false,
         lastPlayedAtMatchday: json['lastPlayedAtMatchday'] as int?,
+        level: json['level'] as int? ?? 1,
+        countries: (json['countries'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as String)),
+        stepDue: (json['stepDue'] as List?)?.map((e) => e as int).toList(),
+        participationPaid: json['participationPaid'] as bool? ?? false,
+        knockoutPrizesPaid: json['knockoutPrizesPaid'] as int? ?? 0,
       );
 }

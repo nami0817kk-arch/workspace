@@ -489,6 +489,11 @@ class SaveGame {
   /// 出場資格がない間はnull。
   ContinentalCup? continentalCup;
 
+  /// 2つ目の大陸大会(実在の EL にあたる。2026-11-22)。[continentalCup]は
+  /// CL にあたる大会。どちらも自国の他のクラブと他国のクラブが出る
+  /// (自クラブが出ない季もある)。古いセーブでは null。
+  ContinentalCup? secondContinentalCup;
+
   /// 前シーズン終了時の最終順位(大陸カップ出場資格判定に使用)。未経験の場合はnull。
   int? lastSeasonRank;
 
@@ -866,6 +871,7 @@ class SaveGame {
     ClubInfrastructure? infrastructure,
     List<Cup>? cups,
     this.continentalCup,
+    this.secondContinentalCup,
     this.lastSeasonRank,
     List<Team>? continentalTeams,
     this.sponsorDeal,
@@ -1213,8 +1219,14 @@ class SaveGame {
         'infrastructure': infrastructure.toJson(),
         'cups': cups.map((c) => c.toJson()).toList(),
         'continentalCup': continentalCup?.toJson(),
+        if (secondContinentalCup != null)
+          'secondContinentalCup': secondContinentalCup!.toJson(),
         'lastSeasonRank': lastSeasonRank,
-        'continentalTeams': continentalTeams.map((t) => t.toJson()).toList(),
+        // 大陸大会のクラブは他国の1部の写しか、その他の国のクラブ。選手は
+        // 軽い形で残す(2026-11-22 に大会が2つ・48クラブになったため)。
+        'continentalTeams': continentalTeams
+            .map((t) => t.toJson(includePlayers: false))
+            .toList(),
         'sponsorDeal': sponsorDeal?.toJson(),
         'namingDeal': namingDeal?.toJson(),
         'pendingNamingOffers': pendingNamingOffers.map((s) => s.toJson()).toList(),
@@ -1558,6 +1570,11 @@ class SaveGame {
             ? null
             : ContinentalCup.fromJson(
                 json['continentalCup'] as Map<String, dynamic>,
+              ),
+        secondContinentalCup: json['secondContinentalCup'] == null
+            ? null
+            : ContinentalCup.fromJson(
+                json['secondContinentalCup'] as Map<String, dynamic>,
               ),
         lastSeasonRank: json['lastSeasonRank'] as int?,
         continentalTeams: (json['continentalTeams'] as List?)

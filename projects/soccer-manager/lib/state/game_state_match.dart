@@ -50,7 +50,7 @@ extension GameStateMatch on GameState {
           domesticCup?.name ?? Tr.pick('国内カップ', 'Domestic Cup'),
         LiveCupKind.continentalGroup ||
         LiveCupKind.continentalKnockout =>
-          _save?.continentalCup?.name ?? Tr.pick('大陸カップ', 'Continental Cup'),
+          _userContinentalCup?.name ?? Tr.pick('大陸カップ', 'Continental Cup'),
         LiveCupKind.superCup => Tr.pick('スーパーカップ', 'Super Cup'),
       },
     );
@@ -288,8 +288,10 @@ extension GameStateMatch on GameState {
     // 起点にする(以前の練習と同じ位置: 監督が先発を決めた後)。
     _startWeeklyClockIfNeeded();
 
-    // リーグカップは4節ごとに1回戦をまとめて消化する。
+    // リーグカップ(イングランドだけ)と、日が来たカップ戦・大陸大会の
+    // 自クラブの出ない試合を、この節の前の週にまとめて消化する。
     _playLeagueCupIfDue();
+    _playDueCpuCupMatches();
 
     final preMatchRank = league.sortedStandings.indexWhere(
           (r) => r.teamId == _save!.userTeamId,
@@ -977,7 +979,7 @@ extension GameStateMatch on GameState {
     }
     _evaluateAchievements();
 
-    final merged = MatchResult(
+    var merged = MatchResult(
       matchday: f?.matchday ?? 0,
       homeTeamId: home.id,
       awayTeamId: away.id,
@@ -1040,7 +1042,8 @@ extension GameStateMatch on GameState {
     } else {
       // カップ戦のライブ観戦: 結果を該当大会のブラケット/グループへ適用する
       // (引き分け時のPK戦・敗退時の信頼度低下・賞金・優勝処理を含む)。
-      _applyLiveCupResult(merged);
+      // 延長戦の得点を含めた結果を、フルタイムの画面に返す。
+      merged = _applyLiveCupResult(merged);
     }
     // 記者会見は出さない(オーナーの仕事ではない)。
     _liveFixture = null;
@@ -1177,8 +1180,9 @@ extension GameStateMatch on GameState {
       await playNextCupMatch();
     }
 
+    _playDueCpuCupMatches();
     if (canPlayNextContinentalMatch) {
-      final cup = _save?.continentalCup;
+      final cup = _userContinentalCup;
       if (cup != null) {
         if (cup.isGroupStageComplete) {
           await playNextContinentalKnockoutLeg();
@@ -1203,14 +1207,20 @@ extension GameStateMatch on GameState {
                 .rulesBelow(_save!.currentDivisionTier)
                 .relegationZone
             : 0,
-        // 大陸カップ出場枠は1部の上位のみ(2部は対象外)。枠の数は国の係数で
-        // 2〜4に変わるので、季の締めの判定と同じ continentalSpots を使う。
+        // 大陸カップ(チャンピオンズカップ)の出場枠は1部の上位のみ(2部は
+        // 対象外)。枠の数は国の係数で3〜5に変わるので、季の締めの判定と
+        // 同じ continentalSpots を使う。
         continentalQualifyCount:
             _save!.currentDivisionTier == 1 ? continentalSpots : 0,
       );
 
+  /// カップ戦・大陸大会に出るクラブ(自国の1〜3部の全部と、大陸大会の
+  /// 他国・その他の国のクラブ)。国内カップは1〜3部の全クラブが出る
+  /// (2026-11-22)。
   List<Team> get allTeamsForCups => [
         ..._save!.league.teams,
+        for (final l in _save!.otherDivisionLeagues)
+          if (l != null) ...l.teams,
         ..._save!.continentalTeams,
       ];
 

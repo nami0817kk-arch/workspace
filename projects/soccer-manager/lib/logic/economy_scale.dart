@@ -68,6 +68,63 @@ int _typicalNonBroadcastIncome(int tier) => switch (tier.clamp(1, 5)) {
       _ => 38000, // 3.8億
     };
 
+/// 大陸大会の賞金(万円。2026-11-22 に実額へ寄せた)。大陸大会に出るのは
+/// 1部のクラブだけなので、部の倍率は掛けない。
+///
+/// チャンピオンズカップ(実在の CL にあたる)は、出るだけで約30億、グループの
+/// 勝ち・引き分けごとに加算、決勝トーナメントの回戦に進むたびに加算、
+/// 優勝でさらに加算。優勝したクラブの総額は150億を超える(グループ4勝1分で
+/// 約167億)。ヨーロッパカップ(EL にあたる)はその3分の1。
+///
+/// **賞金は年収の目安([typicalAnnualIncome])に入れていない。** 目安は
+/// 1部の真ん中のクラブ(大陸大会に出ない)の営業収入で、賞金は大会に出た
+/// クラブだけに上乗せで入る(出場だけで1部の年収の約9%)。
+const int championsCupParticipationPrize = 300000; // 30億
+
+/// チャンピオンズカップのグループの1勝の賞金(2.8億)。
+const int championsCupGroupWinPrize = 28000;
+
+/// チャンピオンズカップのグループの1引き分けの賞金(9,000万)。
+const int championsCupGroupDrawPrize = 9000;
+
+/// チャンピオンズカップの決勝トーナメントの回戦に進んだときの賞金。
+/// 決勝から数えて [0]=決勝、[1]=準決勝、[2]=準々決勝、[3]=ベスト16。
+const List<int> championsCupReachPrize = [300000, 220000, 180000, 150000];
+
+/// チャンピオンズカップの優勝の上乗せ(40億)。
+const int championsCupWinnerPrize = 400000;
+
+/// ヨーロッパカップの賞金は、チャンピオンズカップの何分の1か。
+const int europaCupPrizeDivisor = 3;
+
+/// 大会の格[level](1=チャンピオンズカップ、2=ヨーロッパカップ)に合わせた額。
+int continentalPrize(int level, int championsCupAmount) => level <= 1
+    ? championsCupAmount
+    : championsCupAmount ~/ europaCupPrizeDivisor;
+
+/// 決勝トーナメントの回戦に進んだ賞金。[fromFinal]は決勝から数えた位置
+/// (0=決勝)。表より手前の回戦は、表のいちばん安い額。
+int continentalReachPrize(int level, int fromFinal) {
+  final i = fromFinal.clamp(0, championsCupReachPrize.length - 1);
+  return continentalPrize(level, championsCupReachPrize[i]);
+}
+
+/// 優勝したクラブの賞金の総額。[groupWins]・[groupDraws]はグループの成績、
+/// [knockoutRounds]は決勝トーナメントの回戦の数(決勝を含む)。
+int continentalChampionTotal(int level,
+    {required int groupWins,
+    required int groupDraws,
+    required int knockoutRounds}) {
+  var total = continentalPrize(level, championsCupParticipationPrize) +
+      groupWins * continentalPrize(level, championsCupGroupWinPrize) +
+      groupDraws * continentalPrize(level, championsCupGroupDrawPrize) +
+      continentalPrize(level, championsCupWinnerPrize);
+  for (var k = 0; k < knockoutRounds; k++) {
+    total += continentalReachPrize(level, k);
+  }
+  return total;
+}
+
 /// 部ごとの、真ん中くらいのクラブの年収の目安(万円)。理事会が給与の
 /// 枠を組むとき・初期の資金の基準に使う。放映権を除いた分(国で同じ)に、
 /// その国の放映権([annualBroadcast])を足す。イングランドの1部で380億、
