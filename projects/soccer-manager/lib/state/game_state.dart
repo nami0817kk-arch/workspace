@@ -204,6 +204,7 @@ part 'game_state_license.dart';
 part 'game_state_season_tickets.dart';
 part 'game_state_calendar.dart';
 part 'game_state_club_names.dart';
+part 'game_state_cups.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -554,11 +555,26 @@ class GameState extends ChangeNotifier {
   }
 
   /// 18歳未満で、他の国から来る選手か(国をまたいで移れない)。
+  /// EU の中の16〜17歳は例外で移れる([minorMayMoveBetween])。
   bool _isInternationalMinor(Player player) {
     if (player.age >= 18) return false;
     final origin = player.originLeague;
     if (origin == null) return false;
-    return origin != currentLeagueTheme.name;
+    if (origin == currentLeagueTheme.name) return false;
+    final from = LeagueTheme.values.where((t) => t.name == origin).firstOrNull;
+    if (from == null) return true;
+    return !minorMayMoveBetween(player.age, from, currentLeagueTheme);
+  }
+
+  /// 他の国のクラブ[clubId]にいる[p]が、18歳未満の国際移籍の禁止に当たるか
+  /// (自国のクラブなら当たらない)。
+  bool _minorBlockedFromClub(Player p, String clubId) {
+    if (p.age >= 18) return false;
+    final name = _foreignTeamIds()[clubId];
+    if (name == null) return false;
+    final from = LeagueTheme.values.where((t) => t.name == name).firstOrNull;
+    if (from == null) return true;
+    return !minorMayMoveBetween(p.age, from, currentLeagueTheme);
   }
 
   /// [clubName]が他の国のクラブか。
@@ -804,6 +820,7 @@ class GameState extends ChangeNotifier {
         currentWeeklyWageBill: ContractEngine.weeklyWageBill(userTeam) +
             scaleMoneyForTier(save.currentDivisionTier,
                 save.infrastructure.totalStaffWeeklyWage),
+        theme: leagueThemeFromName(save.leagueName) ?? LeagueTheme.england,
       );
     }
     save.economyVersion = SaveGame.currentEconomyVersion;
@@ -915,6 +932,8 @@ class GameState extends ChangeNotifier {
         season: _save!.league.season,
       );
     }
+    // 順位の決め方を国ごとにし、イングランド以外のリーグカップを捨てる。
+    _migrateCupsAndRules();
   }
 
   /// 状態変更を購読側へ通知する。
@@ -922,6 +941,8 @@ class GameState extends ChangeNotifier {
   /// のため、クラス外(part ファイルの extension)から直接呼ぶと解析警告になる。
   /// 通知はすべてこの委譲を経由させる。
   void _notify() {
+    // スペイン式の「売った分の一部だけ使える額」を、人件費の動きで更新する。
+    _observeSquadCost();
     // エンブレムとユニフォームの色の出どころを、今のクラブの見た目に合わせる。
     ClubLookRegistry.teamId = _save?.userTeamId;
     ClubLookRegistry.look = _save?.clubLook;
@@ -1151,10 +1172,14 @@ class GameState extends ChangeNotifier {
     // 契約の満了の年は第1季から数える(前に遊んでいたセーブの年のままに
     // しない)。
     Player.contractClockYear = Player.seasonEndYearOf(1);
+    ContractEngine.adultContractYearsCap = ContractEngine.adultCapFor(theme);
     // 選手の名前はリーグの国の名前で作る(他国の選手は後で国籍に合わせる)。
     NamePool.homeTheme = theme;
     // ピラミッドの最下層(3部制なので3部)からスタートする。
     const userStartTier = totalDivisionTiers;
+    // 年俸の水準は国・部で違う。自クラブの部の水準を基準にし、他の部の
+    // クラブはその部の水準で作る(economy_scale.dart の wageCountryFactor)。
+    setHomeWageLevel(theme, userStartTier);
     final userTeam = PlayerGenerator.generateSquad(
       id: 'user',
       name: clubName,
@@ -1197,14 +1222,17 @@ class GameState extends ChangeNotifier {
     final otherDivisionLeagues = List<League?>.filled(totalDivisionTiers, null);
     for (int tier = 1; tier <= totalDivisionTiers; tier++) {
       if (tier == userStartTier) continue;
-      final tierTeams = <Team>[
-        for (int i = 0; i < theme.teamsInTier(tier); i++)
-          PlayerGenerator.generateSquad(
-            id: 'div${tier}_$i',
-            name: nextName(tier),
-            strengthTier: strengthForTier(tier),
-          ),
-      ];
+      final tierTeams = withWageLevel(
+        wageCountryFactor(theme, tier),
+        () => <Team>[
+          for (int i = 0; i < theme.teamsInTier(tier); i++)
+            PlayerGenerator.generateSquad(
+              id: 'div${tier}_$i',
+              name: nextName(tier),
+              strengthTier: strengthForTier(tier),
+            ),
+        ],
+      );
       for (final t in tierTeams) {
         LineupUtils.autoFill(t);
       }
@@ -1224,18 +1252,8 @@ class GameState extends ChangeNotifier {
       leagueName: theme.label,
       ruleSet: RuleSet.forTheme(theme),
       boardTargetRank: BoardEngine.estimateTargetRank(league, 'user'),
-      cups: [
-        CupEngine.createKnockout(
-          type: CupType.domestic,
-          name: theme.domesticCupName,
-          teamIds: teams.map((t) => t.id).toList(),
-        ),
-        CupEngine.createKnockout(
-          type: CupType.leagueCup,
-          name: Tr.pick('リーグカップ', 'League Cup'),
-          teamIds: teams.map((t) => t.id).toList(),
-        ),
-      ],
+      // カップは下で組む(1〜3部の全クラブが出るので、セーブが要る)。
+      cups: [],
       pendingSponsorOffers: SponsorEngine.generateOffers(
         userTeam.overallRating,
         tier: userStartTier,
@@ -1251,17 +1269,20 @@ class GameState extends ChangeNotifier {
       },
       scenario: scenario,
     );
+    // 国内カップは1〜3部の全クラブ、リーグカップはイングランドだけ。
+    _save!.cups = _newSeasonCups();
     // 最初のシーズンは平常。来季の予報だけ引いておく。
     _save!.economyNext =
         EconomyEngine.next(EconomyPhase.normal, Random().nextDouble());
     // 難易度による初期条件の補正(資金と理事会目標の厳しさ)。
-    _save!.budget = (initialBudgetFor(userStartTier) *
+    _save!.budget = (initialBudgetFor(userStartTier, theme) *
             _save!.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     _save!.boardTargetRank = _difficultyAdjustedTarget(_save!.boardTargetRank);
     _save!.wageBudget = BoardEngine.wageBudgetFor(
       tier: userStartTier,
       currentWeeklyWageBill: weeklyWageBill,
+      theme: theme,
     );
     _save!.boardCupTargetRound = _estimateDomesticCupTarget();
     _save!.managerContractYears = 3;
@@ -1280,7 +1301,17 @@ class GameState extends ChangeNotifier {
     _refreshStaffCandidates();
     _assignRivalOwners();
     FreeAgentEngine.topUp(_save!.freeAgents);
+    // 自クラブの選手にも、CPU と同じ国・部の割合で外国籍を混ぜる
+    // (名前を国籍に合わせる前に)。
+    _assignUserNationalitiesAtStart(userStartTier);
     _ensureWorldSquads(_save!);
+    _applyTieBreakRules();
+    // 第1季から大陸大会がある(自国の1部の強い順と、他国の1部の強い順)。
+    _rememberForeignTop();
+    _setUpContinentalCups(
+      tier1Order: [...?_teamsByTierNow()[1]]
+        ..sort((a, b) => b.overallRating.compareTo(a.overallRating)),
+    );
     // 第1季の前の夏(2026年)はワールドカップ。出た選手は遅れて合流する。
     _startSummerTournament();
     lastContractExpirations = [];
@@ -1391,7 +1422,17 @@ class GameState extends ChangeNotifier {
   static const int loanFeeRatioPercent = 20;
 
   /// 買取オプション付きローンの場合の買取金額(移籍金に対する割合)。
-  static const double loanBuyOptionRatio = 0.6;
+  ///
+  /// 以前は0.6で、借りてすぐ買い取れば完全移籍より4割安い抜け道だった。
+  /// 実際の買取額は相場と同じか少し上(貸す側は先に借り賃も受け取る)なので、
+  /// 市場価値の1.05倍にした(2026-11-22)。
+  static const double loanBuyOptionRatio = 1.05;
+
+  /// 同時に借りていられる人数と、同時に貸し出していられる人数の上限。
+  /// FIFA の決まり(国外へ・国外から各6人まで)を、ゲームでは国内外を
+  /// 合わせた人数で数える(2026-11-22)。
+  static const int maxLoansIn = 6;
+  static const int maxLoansOut = 6;
 
   int _incomingOfferSeq = 0;
 
@@ -1427,7 +1468,6 @@ class GameState extends ChangeNotifier {
   /// 資金マイナスの長期化により理事会の信頼度が下がった場合の警告文。ない場合はnull。
   String? lastBudgetCrisisWarning;
 
-  static final Random _dutyRng = Random();
   static final Random _aiTransferRng = Random();
 
   /// ダービー戦は観客動員(収入)・監督への信頼度への影響がともに増幅される。
@@ -1467,15 +1507,26 @@ class GameState extends ChangeNotifier {
   InteractiveHalfState? _liveSecondHalfState;
   int _liveSubstitutionsUsed = 0;
 
+  /// 試合中に交代した回数(ハーフタイムは数えない)と、最後に交代した
+  /// 止まった場面の印(同じ場面の続けての交代は1回と数える)。
+  int _liveSubWindowsUsed = 0;
+  String? _liveSubWindowKey;
+
   /// 再起動後に後半の途中から再開するときの、後半の途中経過と再開する分。
   /// [GameStateMatch.playSecondHalf]が一度だけ使う。
   ({HalfTally tally, int resumeMinute})? _liveSecondHalfResume;
   static const int maxSubstitutionsPerMatch = substitutionsPerMatch;
+  static const int maxSubstitutionWindowsPerMatch = substitutionWindowsPerMatch;
 
-  /// 結果だけ見る自クラブの試合で、ハーフタイムに自動で行った交代。
+  /// 結果だけ見る自クラブの試合で、ハーフタイムと後半の途中(60〜75分)に
+  /// 自動で行った交代(行った順)。
   /// 試合の確定([GameStateMatch._finalizeSecondHalf])で出場を数え、先発の
   /// 指定を元に戻してから空にする。
   List<AutoSubstitutionPlan> _liveAutoSubPlans = [];
+
+  /// ハーフタイムに利用者が行った交代の出来事(46分)。後半を始めるときに
+  /// 後半の出来事の頭に入れ、試合経過に「交代: A → B」と出す。
+  List<MatchEvent> _liveHalfTimeSubEvents = [];
 
   // ---- カップ戦のライブ観戦(リーグ戦と同じ進行を再利用する) ----
   LiveCupKind? _liveCupKind;
@@ -1504,7 +1555,7 @@ class GameState extends ChangeNotifier {
   /// 国内カップ優勝の報酬(5部の額)。
   static const int domesticCupChampionPrize = 700;
 
-  /// 大陸カップ優勝の報酬(5部の額)。
+  /// 古い形の大陸カップ優勝の報酬(5部の額)。
   static const int continentalChampionPrize = 1500;
 
   /// 新しいゲームの初期資金(5部の額)。5部の年収の半年分ほど。
@@ -1513,7 +1564,10 @@ class GameState extends ChangeNotifier {
   /// [tier] 部から始めるときの初期資金。その部の年収の半年分
   /// (5部なら [initialBudgetTier5] と同じ 2億)。3部制にして3部から
   /// 始まるようになった(2026-11-22)。
-  static int initialBudgetFor(int tier) => typicalAnnualIncome(tier) ~/ 2;
+  /// 国で年収の目安が違う(放映権の差)ので、初期の資金も国で違う。
+  static int initialBudgetFor(int tier,
+          [LeagueTheme theme = LeagueTheme.england]) =>
+      typicalAnnualIncome(tier, theme) ~/ 2;
 
   /// [tier] 部から始めるときの自クラブの強さ。その部の真ん中
   /// (3部なら 72)。人件費率がその部の真ん中のクラブと同じくらいになる。
@@ -1522,10 +1576,12 @@ class GameState extends ChangeNotifier {
     return (lo + hi) ~/ 2;
   }
 
-  /// 大陸カップのグループステージで1勝するごとの賞金。
+  /// 古い形の大陸カップ(2026-11-22 より前のセーブ)のグループの1勝の
+  /// 賞金(5部の額)。今の大会の賞金は economy_scale.dart の
+  /// championsCup* と continentalPrize。
   static const int continentalGroupWinPrize = 40;
 
-  /// 大陸カップの決勝トーナメントで1タイ勝ち上がるごとの賞金。
+  /// 古い形の大陸カップの決勝トーナメントで1タイ勝ち上がるごとの賞金。
   static const int continentalTieWinPrize = 150;
 
   /// 直近のカップ戦で自クラブが獲得した賞金の通知文。賞金は従来budgetへ

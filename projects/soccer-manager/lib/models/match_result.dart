@@ -1,13 +1,21 @@
 import 'enum_json.dart';
 import 'weather.dart';
 
-enum MatchEventType { goal, chance, yellowCard, redCard }
+/// 試合の出来事の種類。[substitution](交代)は 2026-11-22 に足した。
+/// 保存は名前([Enum.name])なので、末尾に足しても古いセーブは読める。
+enum MatchEventType { goal, chance, yellowCard, redCard, substitution }
+
+/// 得点・決定機がどのプレーから生まれたか。PK と直接フリーキックだけを
+/// 記録する(それ以外は null)。PK は外れても[MatchEventType.chance]として
+/// 必ず残すので、PK の本数を数えられる。
+enum SetPieceKind { penalty, directFreeKick }
 
 class MatchEvent {
   final int minute;
   final String teamId;
 
   /// 得点者・警告/退場対象者・チャンスを迎えた選手名など、イベント種別に応じた選手名。
+  /// 交代([MatchEventType.substitution])では、入った選手。
   final String? scorerName;
 
   /// scorerNameに対応する選手ID(得点イベントの場合、シーズン集計に使う)。
@@ -15,10 +23,14 @@ class MatchEvent {
   final MatchEventType type;
 
   /// 得点イベントの場合のアシスト選手名(該当者がいない場合はnull)。
+  /// 交代では、下がった選手。
   final String? assistName;
 
   /// assistNameに対応する選手ID。
   final String? assistId;
+
+  /// PK・直接フリーキックから生まれた得点・決定機なら、その種類。
+  final SetPieceKind? setPiece;
 
   MatchEvent({
     required this.minute,
@@ -28,6 +40,7 @@ class MatchEvent {
     this.type = MatchEventType.goal,
     this.assistName,
     this.assistId,
+    this.setPiece,
   });
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +51,7 @@ class MatchEvent {
         'type': type.name,
         'assistName': assistName,
         'assistId': assistId,
+        if (setPiece != null) 'setPiece': setPiece!.name,
       };
 
   factory MatchEvent.fromJson(Map<String, dynamic> json) => MatchEvent(
@@ -52,6 +66,13 @@ class MatchEvent {
         ),
         assistName: json['assistName'] as String?,
         assistId: json['assistId'] as String?,
+        setPiece: json['setPiece'] == null
+            ? null
+            : enumFromName(
+                SetPieceKind.values,
+                json['setPiece'] as String?,
+                SetPieceKind.penalty,
+              ),
       );
 }
 

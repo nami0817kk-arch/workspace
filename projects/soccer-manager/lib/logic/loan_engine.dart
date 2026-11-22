@@ -4,19 +4,35 @@ import '../l10n/tr.dart';
 /// 週あたりの返済額は抑えられる。
 class LoanTerm {
   final int weeks;
+
+  /// 期間全体でかかる利息の、元本に対する割合(%)。年利ではない。
   final double interestRatePercent;
 
   const LoanTerm({required this.weeks, required this.interestRatePercent});
+
+  /// 年利(%)。期間の利息を1年(52週)あたりに直した値。画面にはこちらを出す。
+  double get annualRatePercent => interestRatePercent * 52 / weeks;
 
   String get label =>
       weeks <= 12 ? Tr.pick('短期', 'Short term') : Tr.pick('長期', 'Long term');
 }
 
 class LoanEngine {
+  /// 2026-11-22 に実際の利率へ寄せた。以前は12週で8%・26週で18%
+  /// (年利に直すと35%前後)で、実際のクラブの借入(年5〜8%)の5倍だった。
+  /// いまは年利 約6.5%(12週)・約7%(26週)。
   static const List<LoanTerm> terms = [
-    LoanTerm(weeks: 12, interestRatePercent: 8),
-    LoanTerm(weeks: 26, interestRatePercent: 18),
+    LoanTerm(weeks: 12, interestRatePercent: 1.5),
+    LoanTerm(weeks: 26, interestRatePercent: 3.5),
   ];
+
+  /// 返済の[weekIndex]週目(0から)に返す元本の額。週の返済額から
+  /// これを引いた残りが利息。全週を足すと、元本ちょうどになる。
+  static int principalPartOfWeek(int principal, int termWeeks, int weekIndex) {
+    if (termWeeks <= 0) return principal;
+    final i = weekIndex.clamp(0, termWeeks - 1);
+    return principal * (i + 1) ~/ termWeeks - principal * i ~/ termWeeks;
+  }
 
   /// スタジアムのレベルと監督への世間の評価が高いほど、銀行からの信用が高く借入上限が上がる。
   /// 既存の融資残高はその分だけ借入余力から差し引かれる。

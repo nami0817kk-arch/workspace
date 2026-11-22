@@ -158,6 +158,36 @@ class SaveGame {
   /// 今のお金の桁の版。新しいゲームはこの版で始まる。
   static const int currentEconomyVersion = 2;
 
+  /// 他のクラブの選手の国籍の決め方の版。1 はどの部も1割だけ外国籍
+  /// (国籍を覚えていない選手は id から毎回決める)。2 は国と部で外国籍の
+  /// 割合を変え、決めた国籍を選手に覚えさせる(2026-11-22)。版1のセーブは、
+  /// 読み込んだときに今の国籍をそのまま覚えさせてから2にする(名前が
+  /// 付け替わらないように)。
+  int nationRuleVersion;
+
+  /// 今の国籍の決め方の版。新しいゲームはこの版で始まる。
+  static const int currentNationRuleVersion = 2;
+
+  /// イタリアの「EU 外の選手を他の国から取れるのは1季に2人まで」を数える
+  /// ための、今季に取った人数と、その季。
+  int nonEuSignings;
+  int nonEuSigningsSeason;
+
+  /// 同じ決まりの、CPU のクラブごとの人数(クラブの id → 人数)と、その季
+  /// (2026-11-22)。季が変わったら数え直す。
+  Map<String, int> cpuNonEuSignings;
+  int cpuNonEuSigningsSeason;
+
+  /// スペイン式の人件費の上限を超えている間に、売った・外した分の人件費
+  /// から使えるようになった額(万円/年)と、その季。以前は上限を超えると、
+  /// 売っても上限の下に戻るまで1人も取れなかった(2026-11-22)。
+  int squadCostAllowance;
+  int squadCostAllowanceSeason;
+
+  /// 最後に見た選手の人件費(万円/年)。増減から、売った分・使った分を出す。
+  /// 0 はまだ見ていない(旧セーブ)。
+  int squadCostObserved;
+
   /// 今シーズンの景気と、来シーズンの景気(予報)。
   EconomyPhase economyPhase;
 
@@ -422,8 +452,21 @@ class SaveGame {
   int parachuteFromTier;
   int parachuteSeasonsLeft;
 
-  /// 獲得した選手の簿価(選手 id → [移籍金, 獲得した季の終わりの年, 償却の年数])。
+  /// 獲得した選手の簿価(選手 id → [移籍金, 獲得した季の終わりの年,
+  /// 償却の年数, ここまでに費用にした額])。
+  ///
+  /// 4つ目の値は 2026-11-22 から(移籍金を払った季に全額費用にしていたのを、
+  /// 契約の年数で割って毎季費用にする形に変えた)。3つしかない旧セーブの
+  /// 行は、払った季に全額を費用にしてあるので、それ以上は償却しない。
   Map<String, List<int>> playerBook;
+
+  /// フランス式の人件費の上限が続く残りの季数と、その上限(週俸の総額、
+  /// 万円)。0 は上限なし。
+  int wageFreezeSeasons;
+  int wageFreezeCap;
+
+  /// フランス式の降格処分。季の締めの昇格・降格で、1つ下の部へ落とす。
+  bool adminRelegation;
 
   /// 同じリーグで競う他のオーナー。
   List<RivalOwner> rivalOwners;
@@ -460,6 +503,11 @@ class SaveGame {
   /// 今シーズン進行中の大陸カップ(グループステージ+決勝トーナメント)。
   /// 出場資格がない間はnull。
   ContinentalCup? continentalCup;
+
+  /// 2つ目の大陸大会(実在の EL にあたる。2026-11-22)。[continentalCup]は
+  /// CL にあたる大会。どちらも自国の他のクラブと他国のクラブが出る
+  /// (自クラブが出ない季もある)。古いセーブでは null。
+  ContinentalCup? secondContinentalCup;
 
   /// 前シーズン終了時の最終順位(大陸カップ出場資格判定に使用)。未経験の場合はnull。
   int? lastSeasonRank;
@@ -768,6 +816,9 @@ class SaveGame {
     this.parachuteFromTier = 0,
     this.parachuteSeasonsLeft = 0,
     Map<String, List<int>>? playerBook,
+    this.wageFreezeSeasons = 0,
+    this.wageFreezeCap = 0,
+    this.adminRelegation = false,
     this.planStartSeason = 0,
     List<RivalOwner>? rivalOwners,
     this.newsTotal = 0,
@@ -784,6 +835,14 @@ class SaveGame {
     List<SeasonLedger>? ledgers,
     this.ruleSet = RuleSet.britain,
     this.economyVersion = currentEconomyVersion,
+    this.nationRuleVersion = currentNationRuleVersion,
+    this.nonEuSignings = 0,
+    this.nonEuSigningsSeason = 0,
+    Map<String, int>? cpuNonEuSignings,
+    this.cpuNonEuSigningsSeason = 0,
+    this.squadCostAllowance = 0,
+    this.squadCostAllowanceSeason = 0,
+    this.squadCostObserved = 0,
     this.economyPhase = EconomyPhase.normal,
     this.marketIndex = 100,
     this.economyNext = EconomyPhase.normal,
@@ -832,6 +891,7 @@ class SaveGame {
     ClubInfrastructure? infrastructure,
     List<Cup>? cups,
     this.continentalCup,
+    this.secondContinentalCup,
     this.lastSeasonRank,
     List<Team>? continentalTeams,
     this.sponsorDeal,
@@ -960,6 +1020,7 @@ class SaveGame {
         declinedProposalIds = declinedProposalIds ?? [],
         ownerWorkDoneSeason = ownerWorkDoneSeason ?? {},
         sellOnClauses = sellOnClauses ?? {},
+        cpuNonEuSignings = cpuNonEuSignings ?? {},
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
         incomingOffers = incomingOffers ?? [],
@@ -994,8 +1055,20 @@ class SaveGame {
     for (final t in allTeams) {
       yield* t.players;
     }
+    // 大陸大会に出る他国のクラブは、他国のリーグ(foreignLeagues)のクラブの
+    // 写し(同じクラブID・同じ選手ID)。同じ選手を二度数えないよう、他国の
+    // リーグ・国内の部にすでにいる選手は飛ばす(2026-11-22)。
+    final seen = <String>{
+      for (final l in foreignLeagues.values)
+        for (final t in l.teams)
+          for (final p in t.players) p.id,
+      for (final t in allTeams)
+        for (final p in t.players) p.id,
+    };
     for (final t in continentalTeams) {
-      yield* t.players;
+      for (final p in t.players) {
+        if (!seen.contains(p.id)) yield p;
+      }
     }
     yield* youthProspects;
     yield* retiredLegends;
@@ -1062,6 +1135,11 @@ class SaveGame {
           'parachuteSeasonsLeft': parachuteSeasonsLeft,
         },
         if (playerBook.isNotEmpty) 'playerBook': playerBook,
+        if (wageFreezeSeasons > 0) ...{
+          'wageFreezeSeasons': wageFreezeSeasons,
+          'wageFreezeCap': wageFreezeCap,
+        },
+        if (adminRelegation) 'adminRelegation': true,
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (clubCash.isNotEmpty) 'clubCash': clubCash,
@@ -1121,6 +1199,16 @@ class SaveGame {
         'ledgers': ledgers.map((l) => l.toJson()).toList(),
         'ruleSet': ruleSet.name,
         'economyVersion': economyVersion,
+        'nationRuleVersion': nationRuleVersion,
+        if (nonEuSignings != 0) 'nonEuSignings': nonEuSignings,
+        if (nonEuSigningsSeason != 0) 'nonEuSigningsSeason': nonEuSigningsSeason,
+        if (cpuNonEuSignings.isNotEmpty) 'cpuNonEuSignings': cpuNonEuSignings,
+        if (cpuNonEuSigningsSeason != 0)
+          'cpuNonEuSigningsSeason': cpuNonEuSigningsSeason,
+        if (squadCostAllowance != 0) 'squadCostAllowance': squadCostAllowance,
+        if (squadCostAllowanceSeason != 0)
+          'squadCostAllowanceSeason': squadCostAllowanceSeason,
+        if (squadCostObserved != 0) 'squadCostObserved': squadCostObserved,
         'economyPhase': economyPhase.name,
         if (marketIndex != 100) 'marketIndex': marketIndex,
         'economyNext': economyNext.name,
@@ -1171,8 +1259,14 @@ class SaveGame {
         'infrastructure': infrastructure.toJson(),
         'cups': cups.map((c) => c.toJson()).toList(),
         'continentalCup': continentalCup?.toJson(),
+        if (secondContinentalCup != null)
+          'secondContinentalCup': secondContinentalCup!.toJson(),
         'lastSeasonRank': lastSeasonRank,
-        'continentalTeams': continentalTeams.map((t) => t.toJson()).toList(),
+        // 大陸大会のクラブは他国の1部の写しか、その他の国のクラブ。選手は
+        // 軽い形で残す(2026-11-22 に大会が2つ・48クラブになったため)。
+        'continentalTeams': continentalTeams
+            .map((t) => t.toJson(includePlayers: false))
+            .toList(),
         'sponsorDeal': sponsorDeal?.toJson(),
         'namingDeal': namingDeal?.toJson(),
         'pendingNamingOffers': pendingNamingOffers.map((s) => s.toJson()).toList(),
@@ -1350,6 +1444,9 @@ class SaveGame {
         parachuteSeasonsLeft: json['parachuteSeasonsLeft'] as int? ?? 0,
         playerBook: (json['playerBook'] as Map?)?.map((k, v) => MapEntry(
             k as String, [for (final e in (v as List)) e as int])),
+        wageFreezeSeasons: json['wageFreezeSeasons'] as int? ?? 0,
+        wageFreezeCap: json['wageFreezeCap'] as int? ?? 0,
+        adminRelegation: json['adminRelegation'] as bool? ?? false,
         newsTotal: json['newsTotal'] as int? ?? 0,
         newsSeenTotal: json['newsSeenTotal'] as int? ?? 0,
         rivalOwners: (json['rivalOwners'] as List?)
@@ -1376,9 +1473,9 @@ class SaveGame {
             .firstOrNull,
         ownerGoalStartSeason: json['ownerGoalStartSeason'] as int? ?? 1,
         marketingBoostWeeks: json['marketingBoostWeeks'] as int? ?? 0,
-        ruleSet: RuleSet.values
-            .where((r) => r.name == json['ruleSet'])
-            .firstOrNull ?? RuleSet.britain,
+        // 2026-11-22 より前の名前(japan・usa)も読める。
+        ruleSet:
+            RuleSet.fromName(json['ruleSet'] as String?) ?? RuleSet.britain,
         clubValueHistory: (json['clubValueHistory'] as Map?)
             ?.map((k, v) => MapEntry(int.parse('$k'), v as int)),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
@@ -1429,6 +1526,16 @@ class SaveGame {
             .firstOrNull ?? ClubPolicy.balanced,
         // 版が書かれていないのは、桁を変える前のセーブ。
         economyVersion: json['economyVersion'] as int? ?? 1,
+        // 版が書かれていないのは、国籍を部で変える前のセーブ。
+        nationRuleVersion: json['nationRuleVersion'] as int? ?? 1,
+        nonEuSignings: json['nonEuSignings'] as int? ?? 0,
+        nonEuSigningsSeason: json['nonEuSigningsSeason'] as int? ?? 0,
+        cpuNonEuSignings: (json['cpuNonEuSignings'] as Map?)
+            ?.map((k, v) => MapEntry(k as String, v as int)),
+        cpuNonEuSigningsSeason: json['cpuNonEuSigningsSeason'] as int? ?? 0,
+        squadCostAllowance: json['squadCostAllowance'] as int? ?? 0,
+        squadCostAllowanceSeason: json['squadCostAllowanceSeason'] as int? ?? 0,
+        squadCostObserved: json['squadCostObserved'] as int? ?? 0,
         marketIndex: json['marketIndex'] as int? ?? 100,
         economyPhase: EconomyPhase.values
             .where((e) => e.name == json['economyPhase'])
@@ -1509,6 +1616,11 @@ class SaveGame {
             ? null
             : ContinentalCup.fromJson(
                 json['continentalCup'] as Map<String, dynamic>,
+              ),
+        secondContinentalCup: json['secondContinentalCup'] == null
+            ? null
+            : ContinentalCup.fromJson(
+                json['secondContinentalCup'] as Map<String, dynamic>,
               ),
         lastSeasonRank: json['lastSeasonRank'] as int?,
         continentalTeams: (json['continentalTeams'] as List?)

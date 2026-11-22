@@ -583,8 +583,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('ライブ交代', 'Live substitution'),
         category: GlossaryCategory.liveMatch,
         description: Tr.pick(
-            'ライブ観戦中、ハーフタイムを待たずに決定機の合間で交代枠を使って行う選手交代。目前の決定機に関わっている選手は、その決定機が解決するまで交代できない。',
-            'Changing a player mid-half rather than waiting for the break, using one of your subs between chances. Anyone caught up in the chance in front of you cannot come off until it resolves.'),
+            'ライブ観戦中、ハーフタイムを待たずに決定機の合間で交代枠を使って行う選手交代。交代は1試合5人まで、ハーフタイム以外では3回まで(同じ場面で続けて替えるのは1回、ハーフタイムの交代は回数に数えない)。目前の決定機に関わっている選手は、その決定機が解決するまで交代できない。退場した選手は下げられない。',
+            'Changing a player mid-half rather than waiting for the break, using one of your subs between chances. You get five subs a match, made in no more than three stoppages outside half-time (changes at the same stoppage count once; half-time changes do not count). Anyone caught up in the chance in front of you cannot come off until it resolves, and a sent-off player cannot be replaced.'),
       ),
       GlossaryEntry(
         term: Tr.pick('モメンタム(試合の流れ)', 'Momentum'),

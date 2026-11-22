@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../l10n/tr.dart';
+import '../models/league_theme.dart';
 
 /// お金の桁を部ごとに変える物差し。金額はすべて万円の int。
 ///
@@ -42,7 +43,7 @@ int scaleMoneyForTier(int tier, int base) => (base * moneyScale(tier)).round();
 ///
 /// そこから実測で合わせ込んだ(test/economy_scale_test.dart)。
 /// - 5部は3倍。もとの観客・グッズの式が小さく、年収が1億に届かなかった。
-/// - 1部は式の約0.6倍。放映権(250億)と合わせて年収330億前後、
+/// - 1部は式の約0.6倍。放映権(当時は250億)と合わせて年収330億前後、
 ///   人件費率は 40〜70%。
 /// - 2〜4部は式とほぼ同じか少し下(2部 約55億、3部 約13億、4部 約6.5億)。
 ///   人件費率は 2部 80〜100%、3部 100%前後、4部 45〜70%。
@@ -57,32 +58,128 @@ double incomeScale(int tier) => switch (tier.clamp(1, 5)) {
       _ => 3,
     };
 
-/// 部ごとの、真ん中くらいのクラブの年収の目安(万円)。理事会が給与の
-/// 枠を組むときの基準に使う。実測(放映権を含む営業収入)に合わせた。
-/// 4部・5部の行は5部制の名残で、いまの3部制では使われない。
-int typicalAnnualIncome(int tier) => switch (tier.clamp(1, 5)) {
-      1 => 3300000, // 330億
-      2 => 550000, // 55億
-      3 => 140000, // 14億
-      4 => 55000, // 5.5億
-      _ => 40000, // 4億
+/// 部ごとの、放映権を除いた年収(観客・スポンサー・グッズ・賞金)の目安
+/// (万円)。国では変えない。[typicalAnnualIncome] の土台。
+int _typicalNonBroadcastIncome(int tier) => switch (tier.clamp(1, 5)) {
+      1 => 800000, // 80億
+      2 => 250000, // 25億
+      3 => 100000, // 10億
+      4 => 45000, // 4.5億
+      _ => 38000, // 3.8億
     };
 
-/// 1シーズンの放映権料(万円)。上の部ほど大きく、1部では年収の半分を
-/// 超える。下の部は、ほとんど入らない。4部・5部の行は5部制の名残で、
-/// いまの3部制では使われない。
-int annualBroadcast(int tier) => switch (tier.clamp(1, 5)) {
-      1 => 2500000, // 250億
-      2 => 300000, // 30億
-      3 => 40000, // 4億
-      4 => 10000, // 1億
-      _ => 2000, // 2,000万
+/// 大陸大会の賞金(万円。2026-11-22 に実額へ寄せた)。大陸大会に出るのは
+/// 1部のクラブだけなので、部の倍率は掛けない。
+///
+/// チャンピオンズカップ(実在の CL にあたる)は、出るだけで約30億、グループの
+/// 勝ち・引き分けごとに加算、決勝トーナメントの回戦に進むたびに加算、
+/// 優勝でさらに加算。優勝したクラブの総額は150億を超える(グループ4勝1分で
+/// 約167億)。ヨーロッパカップ(EL にあたる)はその3分の1。
+///
+/// **賞金は年収の目安([typicalAnnualIncome])に入れていない。** 目安は
+/// 1部の真ん中のクラブ(大陸大会に出ない)の営業収入で、賞金は大会に出た
+/// クラブだけに上乗せで入る(出場だけで1部の年収の約9%)。
+const int championsCupParticipationPrize = 300000; // 30億
+
+/// チャンピオンズカップのグループの1勝の賞金(2.8億)。
+const int championsCupGroupWinPrize = 28000;
+
+/// チャンピオンズカップのグループの1引き分けの賞金(9,000万)。
+const int championsCupGroupDrawPrize = 9000;
+
+/// チャンピオンズカップの決勝トーナメントの回戦に進んだときの賞金。
+/// 決勝から数えて [0]=決勝、[1]=準決勝、[2]=準々決勝、[3]=ベスト16。
+const List<int> championsCupReachPrize = [300000, 220000, 180000, 150000];
+
+/// チャンピオンズカップの優勝の上乗せ(40億)。
+const int championsCupWinnerPrize = 400000;
+
+/// ヨーロッパカップの賞金は、チャンピオンズカップの何分の1か。
+const int europaCupPrizeDivisor = 3;
+
+/// 大会の格[level](1=チャンピオンズカップ、2=ヨーロッパカップ)に合わせた額。
+int continentalPrize(int level, int championsCupAmount) => level <= 1
+    ? championsCupAmount
+    : championsCupAmount ~/ europaCupPrizeDivisor;
+
+/// 決勝トーナメントの回戦に進んだ賞金。[fromFinal]は決勝から数えた位置
+/// (0=決勝)。表より手前の回戦は、表のいちばん安い額。
+int continentalReachPrize(int level, int fromFinal) {
+  final i = fromFinal.clamp(0, championsCupReachPrize.length - 1);
+  return continentalPrize(level, championsCupReachPrize[i]);
+}
+
+/// 優勝したクラブの賞金の総額。[groupWins]・[groupDraws]はグループの成績、
+/// [knockoutRounds]は決勝トーナメントの回戦の数(決勝を含む)。
+int continentalChampionTotal(int level,
+    {required int groupWins,
+    required int groupDraws,
+    required int knockoutRounds}) {
+  var total = continentalPrize(level, championsCupParticipationPrize) +
+      groupWins * continentalPrize(level, championsCupGroupWinPrize) +
+      groupDraws * continentalPrize(level, championsCupGroupDrawPrize) +
+      continentalPrize(level, championsCupWinnerPrize);
+  for (var k = 0; k < knockoutRounds; k++) {
+    total += continentalReachPrize(level, k);
+  }
+  return total;
+}
+
+/// 部ごとの、真ん中くらいのクラブの年収の目安(万円)。理事会が給与の
+/// 枠を組むとき・初期の資金の基準に使う。放映権を除いた分(国で同じ)に、
+/// その国の放映権([annualBroadcast])を足す。イングランドの1部で380億、
+/// フランスの1部で170億ほど。4部・5部の行は5部制の名残で、いまの3部制
+/// では使われない。
+int typicalAnnualIncome(int tier, [LeagueTheme theme = LeagueTheme.england]) =>
+    _typicalNonBroadcastIncome(tier) + annualBroadcast(tier, theme);
+
+/// 国ごとの放映権の大きさ(イングランド = 1)。2026-11-22 に実際に寄せた。
+///
+/// 以前は5か国とも同じ額だった。実際の1クラブあたりの国内放映権は、
+/// プレミアが飛び抜けて大きく(約300億円)、スペイン・ドイツ・イタリアが
+/// その半分ほど、フランスは3割ほど。2部はイングランドのチャンピオン
+/// シップが大きく、ドイツの2部が続く。3部は、どこもわずか。
+double broadcastCountryFactor(LeagueTheme theme, int tier) =>
+    switch ((theme, tier.clamp(1, 3))) {
+      (LeagueTheme.england, _) => 1.0,
+      (LeagueTheme.spain, 1) => 0.6,
+      (LeagueTheme.germany, 1) => 0.55,
+      (LeagueTheme.italy, 1) => 0.5,
+      (LeagueTheme.france, 1) => 0.3,
+      (LeagueTheme.germany, 2) => 0.55,
+      (LeagueTheme.spain, 2) => 0.45,
+      (LeagueTheme.italy, 2) => 0.4,
+      (LeagueTheme.france, 2) => 0.3,
+      (LeagueTheme.germany, _) => 0.7,
+      (LeagueTheme.spain, _) => 0.6,
+      (LeagueTheme.italy, _) => 0.55,
+      (LeagueTheme.france, _) => 0.45,
     };
+
+/// 1シーズンの放映権料(万円)。上の部ほど大きく、イングランドの1部では
+/// 年収の8割近くになる。国で額が違う([broadcastCountryFactor])。下の部は、
+/// ほとんど入らない。4部・5部の行は5部制の名残で、いまの3部制では
+/// 使われない。
+///
+/// イングランドの額: 1部 300億・2部 40億・3部 5億(以前は5か国とも
+/// 250億・30億・4億)。イングランドは上がり、ほかの4か国は下がった
+/// (5か国の平均は1部で177億)。
+int annualBroadcast(int tier, [LeagueTheme theme = LeagueTheme.england]) {
+  final england = switch (tier.clamp(1, 5)) {
+    1 => 3000000, // 300億
+    2 => 400000, // 40億
+    3 => 50000, // 5億
+    4 => 10000, // 1億
+    _ => 2000, // 2,000万
+  };
+  return (england * broadcastCountryFactor(theme, tier)).round();
+}
 
 /// 毎節入る放映権料(万円)。1シーズンの額を節の数で割る。
 /// 節の数は国(部のクラブ数)で違うので、渡せるようにしてある。
-int weeklyBroadcast(int tier, {int matchdays = 38}) =>
-    (annualBroadcast(tier) / max(1, matchdays)).round();
+int weeklyBroadcast(int tier,
+        {int matchdays = 38, LeagueTheme theme = LeagueTheme.england}) =>
+    (annualBroadcast(tier, theme) / max(1, matchdays)).round();
 
 /// 能力 [overall] から見た市場価値の基準(万円)。
 ///
@@ -97,15 +194,106 @@ const int maxMarketValue = 1500000;
 /// 市場価値の下限(万円)。
 const int minMarketValue = 50;
 
-/// 市場価値 [value] の選手が求める年俸(万円)。2.4 × 価値^0.88。
-int annualWageForValue(int value) => (2.4 * pow(max(0, value), 0.88)).round();
+/// 国・部ごとの年俸の水準(イングランド = 1)。2026-11-22 に入れた。
+///
+/// 以前は年俸が国によらず、放映権を国ごとにした([broadcastCountryFactor])
+/// ことで、放映権の小さい国の1部は人件費率が100%を超えていた(年俸の
+/// 合計 ÷ 年収の目安。クラブ全体の真ん中で、スペイン・ドイツ 約105%・
+/// イタリア 約115%・フランス 約155%。イングランドは約70%)。実際も、同じ
+/// 力の選手でプレミアの年俸が最も高く、フランスは低い。市場価値(移籍金)は
+/// 国で変えない。
+///
+/// 放映権の差よりゆるめ(1部: 放映権はスペイン 0.6・フランス 0.3、年俸は
+/// 0.7・0.45)。放映権を除いた年収(観客・スポンサーなど)は国で同じなので、
+/// 年収の差は放映権の差より小さい。真ん中のクラブの人件費率が 1部
+/// 50〜80%・2部 70〜110% に入るように、部ごとに合わせた
+/// (test/economy_scale_test.dart)。2部はイングランドのチャンピオンシップの
+/// 放映権が飛び抜けているので、国の差が1部より大きい。ドイツの2部は
+/// クラブが少し弱く(年俸の合計が小さい)、高めの水準で釣り合う。
+/// イングランドの2部は水準1だと 90〜110% と範囲の上の端に寄ったので
+/// 0.9(それでも2部で一番高い)。3部は年収に占める放映権が小さく、国の差も
+/// 小さい(3部は人件費率の目安を決めていない。4季で破綻しないことだけ
+/// test/long_run_balance_test.dart などで見る)。1部を
+/// もっとゆるめ(西0.8・独0.75・伊0.75・仏0.6)にすると、4か国とも 80% を
+/// 超えた(82〜94%)。
+double wageCountryFactor(LeagueTheme theme, int tier) =>
+    switch ((theme, tier.clamp(1, 3))) {
+      (LeagueTheme.england, 2) => 0.9,
+      // 3部は収入に比べて年俸が重く、どの国も人件費率が115〜140%になって
+      // いた(実際のリーグ1などは80〜100%)。3部だけ2割ほど下げる(2026-11-22)。
+      (LeagueTheme.england, 3) => 0.8,
+      (LeagueTheme.england, _) => 1.0,
+      (LeagueTheme.spain, 1) => 0.7,
+      (LeagueTheme.germany, 1) => 0.65,
+      (LeagueTheme.italy, 1) => 0.65,
+      (LeagueTheme.france, 1) => 0.45,
+      (LeagueTheme.spain, 2) => 0.65,
+      (LeagueTheme.germany, 2) => 0.8,
+      (LeagueTheme.italy, 2) => 0.65,
+      (LeagueTheme.france, 2) => 0.55,
+      (LeagueTheme.spain, _) => 0.65,
+      (LeagueTheme.germany, _) => 0.7,
+      (LeagueTheme.italy, _) => 0.7,
+      (LeagueTheme.france, _) => 0.6,
+    };
+
+/// 自クラブのいる国と部。年俸の水準([currentWageLevel])を決める。
+/// GameState が、始めたとき・読み込んだとき・新しい季・クラブを買い替えた
+/// ときに合わせる([setHomeWageLevel])。
+LeagueTheme _wageHomeTheme = LeagueTheme.england;
+int _wageHomeTier = 1;
+
+/// 他の国・部のクラブの選手を作っている間だけ、その水準に差し替える。
+double? _wageLevelOverride;
+
+/// 自クラブのいる国・部を、年俸の水準の基準にする。
+void setHomeWageLevel(LeagueTheme theme, int tier) {
+  _wageHomeTheme = theme;
+  _wageHomeTier = tier;
+}
+
+/// 自クラブのいる国(年俸の水準の基準)。
+LeagueTheme get wageHomeTheme => _wageHomeTheme;
+
+/// いまの年俸の水準。ふだんは自クラブのいる国・部の [wageCountryFactor]。
+/// [withWageLevel] の中では、その水準。
+double get currentWageLevel =>
+    _wageLevelOverride ?? wageCountryFactor(_wageHomeTheme, _wageHomeTier);
+
+/// [level] の水準で [body] を行う(他の国・部のクラブの選手を作るとき)。
+T withWageLevel<T>(double level, T Function() body) {
+  final prev = _wageLevelOverride;
+  _wageLevelOverride = level;
+  try {
+    return body();
+  } finally {
+    _wageLevelOverride = prev;
+  }
+}
+
+/// [originLeague](国の名前 [LeagueTheme.name]。他国の1部のクラブの選手)
+/// の年俸を、自クラブの国の水準に直す倍率。同じ国・分からないときは 1。
+/// 国をまたいで移る選手は、行き先の国の水準で年俸を求める。
+double wageScaleToHome(String? originLeague) {
+  if (originLeague == null || originLeague == _wageHomeTheme.name) return 1.0;
+  final from =
+      LeagueTheme.values.where((t) => t.name == originLeague).firstOrNull;
+  if (from == null) return 1.0;
+  return currentWageLevel / wageCountryFactor(from, 1);
+}
+
+/// 市場価値 [value] の選手が求める年俸(万円)。2.4 × 価値^0.88 に、
+/// 年俸の水準 [level](省略時は [currentWageLevel]。イングランド = 1)を掛ける。
+int annualWageForValue(int value, [double? level]) =>
+    (2.4 * pow(max(0, value), 0.88) * (level ?? currentWageLevel)).round();
 
 /// 給与の下限(万円/週)。
 const int minWeeklyWage = 5;
 
 /// 市場価値 [value] の選手の週俸(万円)。年俸 ÷ 52、最低 [minWeeklyWage]。
-int weeklyWageForValue(int value) =>
-    max(minWeeklyWage, (annualWageForValue(value) / 52).round());
+/// [level] は [annualWageForValue] と同じ。
+int weeklyWageForValue(int value, [double? level]) =>
+    max(minWeeklyWage, (annualWageForValue(value, level) / 52).round());
 
 /// 週俸を年俸に直す(表示用)。
 int annualFromWeekly(int weekly) => weekly * 52;

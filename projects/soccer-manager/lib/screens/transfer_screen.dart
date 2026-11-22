@@ -788,6 +788,9 @@ class _TransferScreenState extends State<TransferScreen>
         .reduce((a, b) => a > b ? a : b);
     var bid = (talk?.fee ?? value).clamp(minBid, maxBid).toDouble();
     var inst = talk?.installments ?? false;
+    // スペインのクラブの選手には必ずリリース条項が付く。額を払えばクラブとの
+    // 交渉は要らない(移るかは選手が決める)。
+    final clause = gameState.releaseClauseOf(player);
     final submitted = await showDialog<(int, bool)>(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -803,6 +806,10 @@ class _TransferScreenState extends State<TransferScreen>
               children: [
                 Text(Tr.pick('市場価値: ${formatMoney(value)}',
                     'Value: ${formatMoney(value)}')),
+                if (clause != null)
+                  Text(Tr.pick(
+                      'リリース条項: ${formatMoney(clause)}(払えばクラブとの交渉は要らない。移るかは選手次第)',
+                      'Release clause: ${formatMoney(clause)} (pay it and the club cannot refuse; the player decides)')),
                 if (talk != null)
                   Text(Tr.pick(
                       '相手の対案: ${formatMoney(talk.fee)}・前の提示: ${formatMoney(talk.bid)}',
@@ -820,8 +827,8 @@ class _TransferScreenState extends State<TransferScreen>
                   contentPadding: EdgeInsets.zero,
                   value: inst,
                   onChanged: (v) => setState(() => inst = v ?? false),
-                  title: Text(Tr.pick('分割払い(頭金3割、残りを4週で)',
-                      'Instalments (30% now, the rest over 4 weeks)')),
+                  title: Text(Tr.pick('分割払い(頭金3割、残りを契約の年数で毎年)',
+                      'Instalments (30% now, the rest yearly over the contract)')),
                 ),
                 Text(
                   Tr.pick(
@@ -837,6 +844,14 @@ class _TransferScreenState extends State<TransferScreen>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(Tr.pick('やめる', 'Never mind')),
               ),
+              if (clause != null)
+                OutlinedButton(
+                  key: const ValueKey('pay-release-clause'),
+                  // -1 は「条項の額を払う」。
+                  onPressed: () => Navigator.pop(ctx, (-1, false)),
+                  child: Text(Tr.pick('条項の額${formatMoney(clause)}を払う',
+                      'Pay the ${formatMoney(clause)} clause')),
+                ),
               FilledButton(
                 onPressed: () => Navigator.pop(ctx, (amount, inst)),
                 child: Text(Tr.pick('提示する', 'Make the bid')),
@@ -847,6 +862,20 @@ class _TransferScreenState extends State<TransferScreen>
       ),
     );
     if (submitted == null || !context.mounted) return;
+    if (submitted.$1 < 0) {
+      final paid = await gameState.triggerReleaseClause(player.id);
+      if (!context.mounted) return;
+      paid ? FeedbackService.tap() : FeedbackService.error();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(paid
+            ? Tr.pick('条項の額を払うと伝えました。「交渉」のタブから選手と条件を話してください。',
+                'Clause triggered. Agree personal terms with the player on the Talks tab.')
+            : (gameState.lastSigningBlockReason ??
+                Tr.pick('条項の額を払えませんでした', 'The clause could not be paid'))),
+        duration: const Duration(seconds: 5),
+      ));
+      return;
+    }
     final ok = await gameState.openTransferTalk(player.id, submitted.$1,
         installments: submitted.$2);
     if (!context.mounted) return;
@@ -1366,7 +1395,7 @@ class _RegistrationCard extends StatelessWidget {
             'Not registered (ineligible until the next window): ${unregistered.map((p) => p.name).join(', ')}'),
       );
     }
-    if (!SquadRegistration.isOverLimit(team)) return const SizedBox.shrink();
+    if (!gameState.registrationOverLimit) return const SizedBox.shrink();
     final planned = gameState.plannedRegistrationExclusions;
     final deadline = gameState.transferDeadline;
     return Card(
@@ -1383,10 +1412,10 @@ class _RegistrationCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               Tr.pick(
-                  '22歳以上は${SquadRegistration.seniorLimit}人まで(国外で育った選手は${SquadRegistration.nonHomegrownLimit}人まで)です。'
+                  '22歳以上は${SquadRegistration.seniorLimit}人まで(国外で育った選手は${gameState.registrationRules.nonHomegrownLimit}人まで${gameState.registrationRules.nonEuLimit == null ? '' : '・EU 外の国籍は${gameState.registrationRules.nonEuLimit}人まで'})です。'
                       '${deadline == null ? '締切' : TransferWindowCalendar.formatMonthDay(deadline)}に次の選手が名簿から外れ、次の窓まで公式戦に出られません: '
                       '${planned.map((p) => p.name).join('、')}',
-                  'Only ${SquadRegistration.seniorLimit} players aged 22 or over may be registered (${SquadRegistration.nonHomegrownLimit} trained abroad). '
+                  'Only ${SquadRegistration.seniorLimit} players aged 22 or over may be registered (${gameState.registrationRules.nonHomegrownLimit} trained abroad${gameState.registrationRules.nonEuLimit == null ? '' : ', ${gameState.registrationRules.nonEuLimit} non-EU'}). '
                       'At the deadline${deadline == null ? '' : ' (${TransferWindowCalendar.formatMonthDay(deadline)})'} these players drop off the list and cannot play until the next window: '
                       '${planned.map((p) => p.name).join(', ')}'),
               style: const TextStyle(fontSize: 12),

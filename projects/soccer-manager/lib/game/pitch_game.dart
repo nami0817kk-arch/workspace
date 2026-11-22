@@ -131,6 +131,8 @@ class PitchGame extends FlameGame {
   double _attackBiasX() {
     if (_eventIndex >= events.length) return 0.5;
     final next = events[_eventIndex];
+    // 交代は攻める向きと関係ない。
+    if (next.type == MatchEventType.substitution) return 0.5;
     if (homeTeamId != null && next.teamId == homeTeamId) return _homeAttackX;
     if (awayTeamId != null && next.teamId == awayTeamId) return _awayAttackX;
     return 0.5;

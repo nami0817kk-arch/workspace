@@ -15,13 +15,12 @@ extension GameStateInjury on GameState {
   /// 手術の費用(今の部の物差し)。
   int get surgeryCost => scaledMoney(InjuryCare.surgeryCostTier5);
 
-  /// 節ごと: 新しく大きな靭帯の怪我をした選手を、判断待ちにする。
+  /// 節ごと: 新しく大きな怪我(長い靭帯の怪我・骨折・前十字靭帯・
+  /// アキレス腱)をした選手を、判断待ちにする。
   void _reviewInjuries() {
     final s = _save!;
     for (final p in userTeam.players) {
-      if (p.injuryType == InjuryType.ligament &&
-          p.injuryWeeks >= InjuryCare.decisionWeeks &&
-          !s.injuryPlans.containsKey(p.id)) {
+      if (InjuryCare.needsDecision(p) && !s.injuryPlans.containsKey(p.id)) {
         s.injuryPlans[p.id] = 'pending';
         _logNews(
             Tr.pick('${p.name}は${InjuryCare.describe(p)}(${p.injuryWeeks}週)。手術か保存療法かを決めてください。',
@@ -66,7 +65,8 @@ extension GameStateInjury on GameState {
     final plan = s.injuryPlans.remove(p.id);
     if (plan == 'rest' && roll < InjuryCare.setbackChance) {
       p.injuryWeeks = InjuryCare.setbackWeeks;
-      p.injuryType = InjuryType.ligament;
+      // 再発は元の怪我と同じ種類(種類が消えていたら靭帯損傷)。
+      p.injuryType ??= InjuryType.ligament;
       s.injuryPlans[p.id] = 'surgery'; // 再発の後は、もう選ばせない
       _logNews(
           Tr.pick('${p.name}の怪我が再発した。あと${InjuryCare.setbackWeeks}週休む。',

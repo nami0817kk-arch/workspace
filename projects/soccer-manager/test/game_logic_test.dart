@@ -1127,9 +1127,12 @@ void main() {
 
     await gameState.startNextSeason();
 
+    // 2026-11-22: 大陸大会を実在に寄せ、チャンピオンズカップは32クラブ
+    // (4クラブ×8組)にした(それまでは自クラブと海外7クラブの2組)。
     expect(gameState.continentalCup, isNotNull);
     final cup = gameState.continentalCup!;
-    expect(cup.groups.length, 2);
+    expect(cup.level, 1);
+    expect(cup.groups.length, 8);
     expect(cup.groups.expand((g) => g), contains(userId));
   });
 
@@ -2319,8 +2322,10 @@ void main() {
     final ok = await gameState.acceptIncomingOffer('o1');
 
     expect(ok, isTrue);
-    // 移籍金から連帯貢献金(5%、アカデミー出身は0)が引かれる。
-    expect(gameState.save!.budget, 500 - gameState.solidarityFor(target, 500));
+    // 連帯貢献金は国をまたぐ移籍だけ(2026-11-22)。国内のクラブへの売却なので
+    // 移籍金がそのまま入る。
+    expect(gameState.save!.budget,
+        500 - gameState.solidarityFor(target, 500, international: false));
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isFalse);
     expect(gameState.incomingOffers, isEmpty);
   });
@@ -2352,7 +2357,8 @@ void main() {
     final ok = await gameState.acceptIncomingOffer('o2');
 
     expect(ok, isTrue);
-    expect(gameState.save!.budget, 650 - gameState.solidarityFor(target, 650));
+    expect(gameState.save!.budget,
+        650 - gameState.solidarityFor(target, 650, international: false));
     expect(gameState.incomingOffers, isEmpty);
   });
 
@@ -3220,8 +3226,8 @@ void main() {
   });
 
   test(
-      'GameState.playNextMatchday counts down a user player\'s international duty',
-      () async {
+      'GameState.playNextMatchday brings a player back from international duty '
+      'once the window is over', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final player = gameState.userTeam.players.first;
@@ -3229,7 +3235,11 @@ void main() {
 
     await gameState.playNextMatchday();
 
-    expect(player.internationalDutyWeeksRemaining, 1);
+    // 2026-11-22: 代表は FIFA の国際マッチウィークの間だけ抜ける形にした。
+    // 以前は「節ごとに残り週を1つ減らす」(2→1)を固定していたが、いまは
+    // 代表ウィークの外(第1節の日)に進めば、残りの週によらずクラブに戻る。
+    expect(player.internationalDutyWeeksRemaining, 0);
+    expect(player.isOnInternationalDuty, isFalse);
   });
 
   test(
@@ -3540,7 +3550,15 @@ void main() {
     final ok = await gameState.signFreeAgent(target.id);
 
     expect(ok, isTrue);
-    expect(gameState.save!.budget, budgetBefore);
+    // 移籍金はかからないが、契約金と代理人手数料はかかる(2026-11-22。
+    // それまでは所属なしの選手を取る費用がゼロだった)。
+    final signed =
+        gameState.userTeam.players.firstWhere((p) => p.id == target.id);
+    expect(
+        gameState.save!.budget,
+        budgetBefore -
+            gameState.freeAgentSigningFeeFor(signed) -
+            gameState.freeAgentAgentFeeFor(signed, signed.wage));
     expect(gameState.userTeam.players.length, squadSizeBefore + 1);
     expect(gameState.userTeam.players.any((p) => p.id == target.id), isTrue);
     expect(gameState.freeAgents.any((p) => p.id == target.id), isFalse);
@@ -3941,8 +3959,10 @@ void main() {
 
     await gameState.startNextSeason();
 
-    // 2部の昇格プレーオフ(準決勝2試合+決勝)は毎シーズン必ず行われる。
-    expect(gameState.lastPromotionPlayoffResults.length, 3);
+    // 2部の昇格プレーオフは毎シーズン必ず行われる。2026-11-22 から
+    // イングランドの準決勝は2試合合計(2×2試合)、決勝は1試合で、記録は5つ
+    // (それまでは準決勝2試合+決勝の3つ)。
+    expect(gameState.lastPromotionPlayoffResults.length, 5);
     // ユーザーは1部で優勝しているため、2部のプレーオフには関与していない。
     expect(gameState.userInvolvedInLastPromotionPlayoff, isFalse);
   });
@@ -4034,12 +4054,23 @@ void main() {
     while (gameState.domesticCup?.nextUnplayedMatch != null) {
       await gameState.playNextCupMatch();
     }
+    final cupChampion = gameState.domesticCup!.championId;
+    expect(cupChampion, isNotNull);
 
     await gameState.startNextSeason();
 
-    expect(gameState.pendingSuperCup, isNotNull);
-    final match = gameState.pendingSuperCup!;
-    expect(match.homeTeamId == userId || match.awayTeamId == userId, isTrue);
+    // 2026-11-22: スーパーカップは1部の王者とカップの王者(実在の形)。
+    // 自クラブは3部で優勝しても出ない(それまでは自クラブの部の優勝クラブで
+    // 組んでいた)。自クラブがカップを勝っていれば出る。
+    if (cupChampion == userId) {
+      expect(gameState.pendingSuperCup, isNotNull);
+      final match = gameState.pendingSuperCup!;
+      expect(match.homeTeamId == userId || match.awayTeamId == userId, isTrue);
+    } else {
+      expect(gameState.pendingSuperCup, isNull);
+      expect(gameState.lastSuperCupNews, isNotNull,
+          reason: '1部の王者とカップの王者の試合は裏で行われる');
+    }
   });
 
   test(
@@ -6836,30 +6867,40 @@ void main() {
     expect(otherDays.every((d) => !d.isCupMatchDay), isTrue);
   });
 
+  // 2026-11-22: 国内カップは1〜3部の全クラブになり、回戦ごとに決まった
+  // 週にまとめて行う形にした(それまでは「リーグが1節進むごとに次の
+  // 1試合」)。回戦の週の前は消化できず、週が来ると自クラブの試合ができ、
+  // 終わると次の回戦の週まで待つ。
   test(
-      'GameState blocks a second domestic cup match until the league '
-      'advances at least one matchday, then allows it', () async {
+      'GameState plays a domestic cup round only in its set week, then waits '
+      "for the next round's week", () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
+    final cup = gameState.domesticCup!;
+    final due = cup.roundDue!;
 
+    // 1回戦の週の前は消化できない。
+    expect(gameState.canPlayNextDomesticCupMatch, isFalse);
+    expect(await gameState.playNextCupMatch(), isNull);
+    expect(cup.rounds.first.every((m) => m.result == null), isTrue);
+
+    // 1回戦の週まで進めると、自クラブの試合ができる。
+    for (var i = 0; i < due.first - 1; i++) {
+      await gameState.playNextMatchdayQuickSim();
+    }
     expect(gameState.canPlayNextDomesticCupMatch, isTrue);
-    final firstMatchBefore = gameState.domesticCup!.nextUnplayedMatch;
+    expect(gameState.isUserDomesticCupMatchUpNext, isTrue);
     final firstResult = await gameState.playNextCupMatch();
     expect(firstResult, isNotNull);
-    expect(gameState.domesticCup!.nextUnplayedMatch, isNot(firstMatchBefore));
+    // 同じ週に1回戦がまとめて終わり、2回戦が組まれる。
+    expect(cup.rounds.first.every((m) => m.result != null), isTrue);
+    expect(cup.rounds.length, 2);
 
-    // リーグ戦を1節も進めていないので、次のカップ戦は消化できない。
+    // 2回戦の週が来るまで、次のカップ戦は消化できない。
     expect(gameState.canPlayNextDomesticCupMatch, isFalse);
-    final blockedMatch = gameState.domesticCup!.nextUnplayedMatch;
-    final blockedResult = await gameState.playNextCupMatch();
-    expect(blockedResult, isNull);
-    expect(gameState.domesticCup!.nextUnplayedMatch, blockedMatch);
-
-    // リーグを1節進めると、次のカップ戦を消化できるようになる。
-    await gameState.playNextMatchdayQuickSim();
-    expect(gameState.canPlayNextDomesticCupMatch, isTrue);
-    final secondResult = await gameState.playNextCupMatch();
-    expect(secondResult, isNotNull);
+    final blockedMatch = cup.nextUnplayedMatch;
+    expect(await gameState.playNextCupMatch(), isNull);
+    expect(cup.nextUnplayedMatch, blockedMatch);
   });
 
   test(
@@ -9502,10 +9543,16 @@ void main() {
           reason: '総合の真ん中が50のクラブの緊急補強は、主力より上にならない');
     }
 
-    // 通常のFA市場は従来通りベテラン中心のまま(役割が違う)。
-    for (var i = 0; i < 50; i++) {
-      expect(FreeAgentEngine.generateVeteran().age, greaterThanOrEqualTo(27));
+    // 通常のFA市場はベテラン中心のまま(役割が違う)。2026-11-22 に夏の
+    // 所属なしを数十人に増やしたとき、契約の切れた20代半ばも混ぜた
+    // (24〜34歳。平均は29歳前後)。
+    var ageSum = 0;
+    for (var i = 0; i < 200; i++) {
+      final age = FreeAgentEngine.generateVeteran().age;
+      expect(age, inInclusiveRange(24, 34));
+      ageSum += age;
     }
+    expect(ageSum / 200, greaterThanOrEqualTo(28));
 
     expect(seasonStartSquadSize, greaterThan(minSquadSize),
         reason: 'シーズン開始時は最低人数より余裕を持たせる');

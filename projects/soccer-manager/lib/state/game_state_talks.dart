@@ -58,7 +58,7 @@ extension GameStateTalks on GameState {
   }
 
   /// 移籍金[bid]を提示する(新しく申し込む、または対案に出し直す)。
-  /// [installments]なら分割払い(頭金3割と、残りを4週で)を求める。
+  /// [installments]なら分割払い(頭金3割と、残りを契約の年数で毎年)を求める。
   /// 申し込めなければ false(理由は[lastSigningBlockReason])。
   Future<bool> openTransferTalk(String playerId, int bid,
       {bool installments = false}) async {
@@ -211,6 +211,16 @@ extension GameStateTalks on GameState {
     return p.overall > starters.reduce(min);
   }
 
+  /// 所属なしの[p]と契約するときに必ず払う契約金(サイン料)の最低額。
+  /// 選手が求める年俸(今の週俸)の年額から決まる。
+  int freeAgentSigningFeeFor(Player p) =>
+      TransferTermsEngine.freeAgentSigningFee(annualFromWeekly(p.wage));
+
+  /// 所属なしの[p]を週俸[weeklyWage]で取るときの代理人手数料(年俸の1割前後)。
+  int freeAgentAgentFeeFor(Player p, int weeklyWage) =>
+      TransferTermsEngine.freeAgentAgentFee(annualFromWeekly(weeklyWage),
+          percent: RelationsEngine.agentOf(p).feePercent);
+
   /// 選手に年俸・契約の満了の年・サイン料を出す。
   ///
   /// 他のクラブの選手は、クラブと移籍金で合意してから(窓のあいだだけ)。
@@ -273,16 +283,26 @@ extension GameStateTalks on GameState {
     final inst = t != null && t.installments && t.installmentsOk;
     final fee = fa != null ? 0 : t!.fee;
     final upfront = inst ? (fee * 0.3).round() : fee;
-    // 代理人の手数料は、代理人の個性で率が違う。
+    // 代理人の手数料は、代理人の個性で率が違う。所属なしの選手は移籍金が
+    // 無いので、年俸に対する割合で払う(以前は移籍金0に掛けて0になっていた)。
     final agent = RelationsEngine.agentOf(player);
-    final agentFee = (fee * agent.feePercent / 100).round();
+    final agentFee = fa != null
+        ? freeAgentAgentFeeFor(player, weeklyWage)
+        : (fee * agent.feePercent / 100).round();
     if (weeklyWage <= 0 || signingBonus < 0) return TermsOutcome.blocked;
-    if (_save!.budget < upfront + agentFee + signingBonus) {
+    // 所属なしの選手は、移籍金の代わりに契約金(サイン料)を必ず求める。
+    // 足りない分はこちらで上乗せして払う(最低額までは条件の見比べに数えない)。
+    final requiredBonus = fa != null ? freeAgentSigningFeeFor(player) : 0;
+    final bonusPaid = max(signingBonus, requiredBonus);
+    if (_save!.budget < upfront + agentFee + bonusPaid) {
       _blockTalk(Tr.pick('資金が足りません(移籍金・代理人手数料・サイン料)。',
           'You cannot afford it (fee, agent fee and signing bonus).'));
       return TermsOutcome.blocked;
     }
-    if (!_wageBudgetAllowsSigning(weeklyWage)) return TermsOutcome.blocked;
+    if (!_wageBudgetAllowsSigning(weeklyWage,
+        fee: fee, contractYears: endYear - Player.contractClockYear + 1)) {
+      return TermsOutcome.blocked;
+    }
 
     if (t == null) {
       t = TransferTalk(
@@ -324,6 +344,10 @@ extension GameStateTalks on GameState {
       stepDownFactor: player.traits.stepDownFactor,
       promise: promise,
       agentFactor: agent.demandFactor,
+      // 他国のクラブの選手は、こちらの国の水準に直した今の週俸から求める。
+      currentWageScale: target?.club == null
+          ? 1.0
+          : wageScaleToHome(_foreignTeamIds()[target!.club!.id]),
     );
     // 他のクラブも誘っていれば、選手は年俸とクラブの格を比べる。
     if (t.hasRival) {
@@ -336,7 +360,9 @@ extension GameStateTalks on GameState {
     }
     final years = max(1, endYear - Player.contractClockYear + 1);
     final effective = PlayerTermsEngine.effectiveWeekly(
-        weeklyWage: weeklyWage, years: years, signingBonus: signingBonus);
+        weeklyWage: weeklyWage,
+        years: years,
+        signingBonus: max(0, signingBonus - requiredBonus));
     t.termsRound += 1;
     switch (PlayerTermsEngine.judge(
         effective: effective,
@@ -358,18 +384,16 @@ extension GameStateTalks on GameState {
     }
 
     if (fa != null) {
+      // イタリアの「EU 外は1季2人まで」は所属なしの選手も数える(外す前に)。
+      _noteSigningFromAbroad(fa);
       _save!.freeAgents.remove(fa);
+      _bookAgentFee(player, agentFee);
     } else {
-      _book(LedgerCategory.transfers, -upfront);
+      _payTransferFee(upfront);
       if (inst) {
-        const weeks = 4;
-        _save!.pendingInstallments.add(Installment(
-          description: Tr.pick('${player.name} 分割払い残金',
-              '${player.name} instalments outstanding'),
-          weeklyAmount: ((fee - upfront) / weeks).ceil(),
-          weeksRemaining: weeks,
-          playerId: player.id,
-        ));
+        // 残りは契約の年数(2〜5年)に合わせて、季の締めに毎年払う。
+        _addAnnualInstallment(
+            player, fee - upfront, endYear - Player.contractClockYear + 1);
       }
       _bookAgentFee(player, agentFee);
       if (t.sellOnPercent > 0) {
@@ -385,11 +409,11 @@ extension GameStateTalks on GameState {
         _evaluateAchievements();
       }
     }
-    if (signingBonus > 0) _book(LedgerCategory.transfers, -signingBonus);
+    if (bonusPaid > 0) _book(LedgerCategory.transfers, -bonusPaid);
     // 移籍金は契約の年数で償却する(簿価)。
     player.wage = weeklyWage;
     ContractEngine.renewContract(player, endYear: endYear);
-    _recordPlayerBook(player, fee);
+    _recordPlayerBook(player, fee, agentFee: agentFee);
     // 約束した序列と、加入したときの機嫌(順応の高い選手ほど良い)。
     player.squadStatus = promise;
     // 週俸は約束した序列で決めた(のちに上げると見直しを求める)。
@@ -404,8 +428,8 @@ extension GameStateTalks on GameState {
     _logNews(
         fa != null
             ? Tr.pick(
-                '${player.name}と契約した(年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${signingBonus > 0 ? '・サイン料${formatMoney(signingBonus)}' : ''})。',
-                'Signed ${player.name} (${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${signingBonus > 0 ? ', ${formatMoney(signingBonus)} signing bonus' : ''}).')
+                '${player.name}と契約した(年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${bonusPaid > 0 ? '・サイン料${formatMoney(bonusPaid)}' : ''})。',
+                'Signed ${player.name} (${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${bonusPaid > 0 ? ', ${formatMoney(bonusPaid)} signing bonus' : ''}).')
             : Tr.pick(
                 '${player.name}が${t.clubName}から加入した(移籍金${formatMoney(fee)}・年俸${formatMoney(annualFromWeekly(weeklyWage))}・${player.contractEndYear}年6月まで${signingBonus > 0 ? '・サイン料${formatMoney(signingBonus)}' : ''})。',
                 '${player.name} joined from ${t.clubName} (fee ${formatMoney(fee)}, ${formatMoney(annualFromWeekly(weeklyWage))} a year to June ${player.contractEndYear}${signingBonus > 0 ? ', ${formatMoney(signingBonus)} signing bonus' : ''}).'),
@@ -558,12 +582,18 @@ extension GameStateTalks on GameState {
         _worldTeams.where((x) => x.id == t.rivalClubId).firstOrNull;
     _save!.transferTalks.remove(t);
     if (player == null || rival == null) return true;
+    // イタリアのクラブなら「EU 外は1季2人まで」を数える(外す前に)。
+    final seller = t.freeAgent ? null : _sellingClubOf(player.id);
+    _noteCpuSigning(rival, player,
+        fromCountry: seller == null
+            ? (t.freeAgent ? null : currentLeagueTheme)
+            : _countryOfClub(seller.id));
     if (t.freeAgent) {
       _save!.freeAgents.removeWhere((p) => p.id == player.id);
     } else {
       final target = _acquisitionTarget(player.id);
       if (target == null) return true;
-      _takeFromSeller(target);
+      _takeFromSeller(target, toUser: false);
     }
     player.wage = t.rivalWage;
     ContractEngine.applyTransferContract(player);
@@ -580,19 +610,25 @@ extension GameStateTalks on GameState {
     final seller = _sellingClubOf(player.id);
     final sellerTier =
         seller == null ? _save!.currentDivisionTier : (_tierOfClub(seller.id) ?? 1);
-    final candidates = [
+    // 横取りに来るクラブも、国の登録の決まりで加えられるクラブだけ。
+    final fromCountry =
+        t.freeAgent || seller == null ? null : _countryOfClub(seller.id);
+    final candidates = _cpuClubsThatCanRegister([
       for (final c in _worldTeams)
         if (c.id != _save!.userTeamId &&
             c.id != seller?.id &&
             c.players.length < maxSquadSize &&
             (_tierOfClub(c.id) ?? 99) <= sellerTier)
           c,
-    ];
+    ], player, fromCountry: fromCountry);
     if (candidates.isEmpty) return;
     // 競うオーナーのクラブが、まず横取りしに来る。
-    final rival = _rivalOwnerClubFor(
-            sellerTier, seller?.id, GameState._transferOfferRng) ??
-        candidates[GameState._transferOfferRng.nextInt(candidates.length)];
+    final owned =
+        _rivalOwnerClubFor(sellerTier, seller?.id, GameState._transferOfferRng);
+    final rival = owned != null &&
+            _cpuCanRegister(owned, player, fromCountry: fromCountry)
+        ? owned
+        : candidates[GameState._transferOfferRng.nextInt(candidates.length)];
     final rivalTier = _tierOfClub(rival.id) ?? sellerTier;
     final base = PlayerTermsEngine.demand(
       currentWage: player.wage,

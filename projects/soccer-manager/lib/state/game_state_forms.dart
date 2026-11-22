@@ -16,7 +16,7 @@ extension GameStateForms on GameState {
   bool _completeObligationIfAny(Player p) {
     if (!p.loanObligation || p.loanBuyOptionFee == null) return false;
     final fee = p.loanBuyOptionFee!;
-    _book(LedgerCategory.transfers, -fee);
+    _payTransferFee(fee);
     p.isLoan = false;
     p.loanEndDate = null;
     p.loanBuyOptionFee = null;
@@ -94,7 +94,7 @@ extension GameStateForms on GameState {
       _notify();
       return false;
     }
-    _book(LedgerCategory.transfers, -c[0]);
+    _payTransferFee(c[0]);
     _takeFromSeller(target);
     ContractEngine.applyTransferContract(p);
     userTeam.players.add(p);

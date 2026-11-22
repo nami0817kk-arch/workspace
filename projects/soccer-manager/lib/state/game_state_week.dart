@@ -76,6 +76,8 @@ extension GameStateWeek on GameState {
     }
     if (d.isAfter(cursor)) _recoverByDays(_daysBetween(cursor, d));
     s.today = d;
+    // 代表ウィークが終わっていれば、代表の選手はクラブに戻る。
+    _releaseInternationalDuty();
   }
 
   /// その季で最初に節を消化するとき(と、最後に週の処理をした日を持たない
@@ -150,6 +152,12 @@ extension GameStateWeek on GameState {
       ];
     }
     lastContractWarnings = [];
+    // 所属なしの選手は、季が進むにつれて他のクラブと契約して減っていく
+    // (話を進めている選手は残す)。
+    FreeAgentEngine.weeklyDrift(s.freeAgents, today, keep: {
+      for (final t in s.transferTalks)
+        if (t.freeAgent) t.playerId,
+    });
     // ローン満了により編成人数が最低人数を割り込んだ場合、フリーエージェントを
     // 緊急補強してスカッドが組めなくなる事態を防ぐ(安全網)。
     while (userTeam.players.length < minSquadSize) {
@@ -190,15 +198,17 @@ extension GameStateWeek on GameState {
     }
 
     // 分割払いの引き落とし・融資の返済・定期預金の経過(週単位)。
+    // 年に1回払う分割払い(2026-11-22 から)は、季の締めに払う。
     for (final inst in List<Installment>.from(s.pendingInstallments)) {
-      _book(LedgerCategory.transfers, -(inst.weeklyAmount));
+      if (inst.annual) continue;
+      _payInstallment(inst, inst.weeklyAmount);
       inst.weeksRemaining -= 1;
       if (inst.weeksRemaining <= 0) {
         s.pendingInstallments.remove(inst);
       }
     }
     for (final loan in List<BankLoan>.from(s.bankLoans)) {
-      _book(LedgerCategory.financing, -(loan.weeklyRepayment));
+      _repayLoanWeek(loan);
       loan.weeksRemaining -= 1;
       if (loan.weeksRemaining <= 0) {
         s.bankLoans.remove(loan);
@@ -208,7 +218,7 @@ extension GameStateWeek on GameState {
     for (final deposit in List<FixedDeposit>.from(s.fixedDeposits)) {
       deposit.weeksRemaining -= 1;
       if (deposit.weeksRemaining <= 0) {
-        _book(LedgerCategory.financing, deposit.maturityValue);
+        _settleDepositMaturity(deposit);
         s.fixedDeposits.remove(deposit);
         matured.add(deposit);
       }
@@ -230,6 +240,9 @@ extension GameStateWeek on GameState {
             league.teams,
             s.userTeamId,
             GameState._aiTransferRng,
+            // 行き先のクラブも国の登録の決まりを守る(同じ国の中の移籍)。
+            canRegister: (to, p) =>
+                _cpuCanRegister(to, p, fromCountry: currentLeagueTheme),
           )
         : null;
     if (aiNews != null) lastAiTransferNews = aiNews;

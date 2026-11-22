@@ -571,10 +571,10 @@ class PlayerDetailScreen extends StatelessWidget {
                           '年俸: ${formatMoney(annualFromWeekly(p.wage))} / ${ContractEngine.contractLabel(p)}',
                           'Salary: ${formatMoney(annualFromWeekly(p.wage))} a year / ${ContractEngine.contractLabel(p)}'),
                 ),
-                if (p.releaseClause != null)
+                if (gameState.releaseClauseOf(p) != null)
                   Text(
-                    Tr.pick('リリース条項: ${formatMoney(p.releaseClause!)}',
-                        'Release clause: ${formatMoney(p.releaseClause!)}'),
+                    Tr.pick('リリース条項: ${formatMoney(gameState.releaseClauseOf(p)!)}',
+                        'Release clause: ${formatMoney(gameState.releaseClauseOf(p)!)}'),
                     style: const TextStyle(color: Colors.deepPurple),
                   ),
                 const SizedBox(height: 16),
@@ -795,7 +795,7 @@ class PlayerDetailScreen extends StatelessWidget {
                     onPressed: () => _editReleaseClause(
                         context, p.releaseClause, p.marketValue),
                     label: Text(
-                      p.releaseClause == null
+                      gameState.releaseClauseOf(p) == null
                           ? Tr.pick('リリース条項を設定する', 'Set a release clause')
                           : Tr.pick('リリース条項を変更する', 'Change the release clause'),
                     ),
@@ -1114,7 +1114,10 @@ class PlayerDetailScreen extends StatelessWidget {
                     Navigator.pop(ctx);
                     gameState.setReleaseClause(playerId, null);
                   },
-                  child: Text(Tr.pick('解除する', 'Remove')),
+                  // スペインでは条項が必ず付くので、外すと既定の額に戻る。
+                  child: Text(gameState.releaseClausesRequired
+                      ? Tr.pick('既定の額に戻す', 'Back to the default')
+                      : Tr.pick('解除する', 'Remove')),
                 ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx),

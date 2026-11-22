@@ -123,10 +123,15 @@ void main() {
     final target = legacyMarket(game).first;
     target.contractYearsRemaining = 1;
     target.age = 33;
+    // 自クラブにも外国籍の選手が混ざるようになり(2026-11-22)、まれに
+    // 「国外で育った選手は17人まで」の枠が埋まって買えない回があった。
+    // 見たいのは契約の年数なので、登録の枠に掛からない国内育成にする。
+    target.homegrown = true;
     game.save!.budget = target.marketValue * 2;
     game.save!.wageBudget = 999999;
 
-    expect(await game.buyPlayer(target.id), isTrue);
+    expect(await game.buyPlayer(target.id), isTrue,
+        reason: game.lastSigningBlockReason);
     expect(target.contractYearsRemaining, greaterThanOrEqualTo(2),
         reason: '買ったシーズンの終わりに契約が切れる');
   });

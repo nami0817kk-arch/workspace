@@ -97,6 +97,8 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         _endYear = choices.isEmpty
             ? Player.contractClockYear + 1
             : choices[(choices.length - 1).clamp(0, 2)];
+        // 所属なしの選手は契約金を必ず求めるので、最低額から始める。
+        if (_isFreeAgent(game)) _bonus = game.freeAgentSigningFeeFor(p);
       case ContractKind.renewal:
         final pending = game.pendingContractNegotiation;
         final started = pending?.playerId == p.id ? pending : null;
@@ -110,7 +112,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         }
       case ContractKind.preContract:
         _endYear = PreContractEngine.defaultEndYear(p);
-        _wage = PreContractEngine.wageDemand(p);
+        _wage = game.preContractWageDemand(p);
     }
     _reply ??= _openingLine();
   }
@@ -156,7 +158,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         ContractKind.renewal =>
           game.pendingContractNegotiation?.counterWage ?? 0,
         ContractKind.preContract =>
-          PreContractEngine.wageDemand(p, option: _option),
+          game.preContractWageDemand(p, option: _option),
       };
 
   int _roundsUsed(GameState game) => switch (kind) {
@@ -172,6 +174,14 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         ContractKind.preContract => 1,
       };
 
+  /// 所属なしの選手との話か(移籍金の代わりに契約金がかかる)。
+  bool _isFreeAgent(GameState game) =>
+      kind == ContractKind.signing && game.freeAgents.any((q) => q.id == p.id);
+
+  /// 所属なしの選手が必ず求める契約金の最低額(それ以外は0)。
+  int _requiredBonus(GameState game) =>
+      _isFreeAgent(game) ? game.freeAgentSigningFeeFor(p) : 0;
+
   int _transferFee(GameState game) {
     if (kind != ContractKind.signing) return 0;
     final t = game.talkFor(p.id);
@@ -180,16 +190,19 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
   }
 
   int _agentFee(GameState game) => switch (kind) {
-        ContractKind.signing =>
-          (_transferFee(game) * RelationsEngine.agentOf(p).feePercent / 100)
-              .round(),
+        // 所属なしの選手は移籍金が無いので、年俸に対する割合で払う。
+        ContractKind.signing => _isFreeAgent(game)
+            ? game.freeAgentAgentFeeFor(p, _wage)
+            : (_transferFee(game) * RelationsEngine.agentOf(p).feePercent / 100)
+                .round(),
         ContractKind.renewal => ContractEngine.renewalCost(p),
         ContractKind.preContract => 0,
       };
 
-  /// 更新で払う一時金。移籍では提示したサイン料。
-  int _signingBonus() => switch (kind) {
-        ContractKind.signing => _bonus,
+  /// 更新で払う一時金。移籍では提示したサイン料(所属なしの選手は最低額以上)。
+  int _signingBonus([GameState? game]) => switch (kind) {
+        ContractKind.signing =>
+          game == null ? _bonus : max(_bonus, _requiredBonus(game)),
         ContractKind.renewal => ContractEngine.signingBonusFor(p),
         ContractKind.preContract => 0,
       };
@@ -694,21 +707,25 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
 
     // サイン料
     if (kind == ContractKind.signing) {
-      final maxB = _bonusMax(game);
+      final required = _requiredBonus(game);
+      final maxB = max(_bonusMax(game), required * 3);
       final step = max(1, maxB ~/ 20);
       row(
         Tr.pick('サイン料', 'Signing bonus'),
-        t('—'),
+        t(required > 0 ? formatMoney(required) : '—'),
         _Stepper(
           label: formatMoney(_bonus),
-          onMinus: _bonus > 0 && !_closed
-              ? () => setState(() => _bonus = max(0, _bonus - step))
+          onMinus: _bonus > required && !_closed
+              ? () => setState(() => _bonus = max(required, _bonus - step))
               : null,
           onPlus: _bonus < maxB && !_closed
               ? () => setState(() => _bonus = min(maxB, _bonus + step))
               : null,
         ),
-        note: Tr.pick('年数でならして年俸に足して見られる', 'Spread over the deal'),
+        note: required > 0
+            ? Tr.pick('所属なしの選手は契約金を必ず求める。超えた分は年数でならして見られる',
+                'Free agents insist on a signing fee; anything above it is spread over the deal')
+            : Tr.pick('年数でならして年俸に足して見られる', 'Spread over the deal'),
       );
     } else if (kind == ContractKind.renewal) {
       row(Tr.pick('サイン料', 'Signing bonus'),
@@ -750,8 +767,11 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         t(formatMoney(_agentFee(game)), style: bold),
         t(fixed),
         note: kind == ContractKind.signing
-            ? Tr.pick('移籍金の${RelationsEngine.agentOf(p).feePercent}%',
-                '${RelationsEngine.agentOf(p).feePercent}% of the fee')
+            ? (_isFreeAgent(game)
+                ? Tr.pick('年俸の${RelationsEngine.agentOf(p).feePercent}%',
+                    '${RelationsEngine.agentOf(p).feePercent}% of the salary')
+                : Tr.pick('移籍金の${RelationsEngine.agentOf(p).feePercent}%',
+                    '${RelationsEngine.agentOf(p).feePercent}% of the fee'))
             : null,
       );
     }
@@ -791,7 +811,8 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
     final theme = Theme.of(context);
     final years = _years();
     final annual = annualFromWeekly(_wage);
-    final upfront = _signingBonus() + _agentFee(game) + _transferFee(game);
+    final upfront =
+        _signingBonus(game) + _agentFee(game) + _transferFee(game);
     final total = annual * years + upfront;
     // 給与の枠: 更新は今の年俸を差し替える。
     final bill = game.weeklyWageBill -

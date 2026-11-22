@@ -81,7 +81,8 @@ class OwnerGoalRules {
   static const int richTarget = typicalAnnualIncome3 ~/ 2 * 5;
 
   /// 3部の年収の目安(economy_scale の typicalAnnualIncome(3))。const で
-  /// 使うので数で持つ。
+  /// 使うので数で持つ。2026-11-22 から年収の目安は国で違う(放映権の差。
+  /// 3部はイングランド15億・フランス12億ほど)が、目標額は国で変えない。
   static const int typicalAnnualIncome3 = 140000;
 
   /// 「クラブ価値を増やす」の倍率。

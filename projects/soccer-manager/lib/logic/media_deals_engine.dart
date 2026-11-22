@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../l10n/tr.dart';
+import '../models/league_theme.dart';
 import '../models/sponsor.dart';
 import 'sponsor_engine.dart';
 import 'economy_scale.dart';
@@ -33,7 +34,9 @@ class MediaDealsEngine {
   /// 季末の分配金の基準額(万円/季)。上の部ほど大きい。毎節入る放映権料
   /// (weeklyBroadcast)とは別に、季末に成績に応じて配られるぶん。
   /// 1シーズンの放映権料の4分の1を基準にする。
-  static int tvBase(int tier) => (annualBroadcast(tier) * 0.25).round();
+  /// 国([theme])で放映権の額が違うので、分配金も国で違う。
+  static int tvBase(int tier, [LeagueTheme theme = LeagueTheme.england]) =>
+      (annualBroadcast(tier, theme) * 0.25).round();
 
   /// その季に受け取る分配金。[rank]は最終順位(1が最上位)。
   static int tvPayout({
@@ -41,8 +44,9 @@ class MediaDealsEngine {
     required int tier,
     required int rank,
     required int teamCount,
+    LeagueTheme theme = LeagueTheme.england,
   }) {
-    final base = tvBase(tier);
+    final base = tvBase(tier, theme);
     switch (deal) {
       case TvDeal.fixed:
         return (base * 0.95).round();
@@ -54,7 +58,9 @@ class MediaDealsEngine {
   }
 
   /// 前払いで受け取る額と、そのあと分配金が出ない季数。
-  static int advanceAmount(int tier) => (tvBase(tier) * 1.4).round();
+  static int advanceAmount(int tier,
+          [LeagueTheme theme = LeagueTheme.england]) =>
+      (tvBase(tier, theme) * 1.4).round();
   static const int advanceHolidaySeasons = 2;
 
   /// 命名権の候補を3件。スタジアムが大きいほど、上の部ほど高い。

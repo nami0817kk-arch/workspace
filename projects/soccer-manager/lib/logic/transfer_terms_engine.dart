@@ -6,12 +6,30 @@
 class TransferTermsEngine {
   const TransferTermsEngine._();
 
-  /// 代理人手数料の率(移籍金に対する%)。
-  static const int agentFeePercent = 5;
+  /// 代理人手数料の率(移籍金に対する%)。実際の手数料は1割前後
+  /// (2026-11-22 に5%から上げた)。
+  static const int agentFeePercent = 10;
 
   /// 買うときに別に払う代理人手数料(万円)。移籍金が0以下なら0。
   static int agentFee(int price) =>
       price <= 0 ? 0 : (price * agentFeePercent / 100).round();
+
+  /// 所属なしの選手と契約するときの契約金(サイン料)の最低額(年俸に対する%)。
+  ///
+  /// 移籍金が要らない選手は、その分を契約金として求める。以前は所属なしの
+  /// 選手を取る費用がゼロで、移籍で取るより極端に安かった(2026-11-22)。
+  static const int freeAgentSigningPercent = 20;
+
+  /// 所属なしの選手が求める契約金の最低額(万円)。[annualWage]は年俸。
+  static int freeAgentSigningFee(int annualWage) => annualWage <= 0
+      ? 0
+      : (annualWage * freeAgentSigningPercent / 100).round();
+
+  /// 所属なしの選手の代理人手数料(万円)。移籍金が無いので年俸に対する
+  /// 割合で払う(1割前後。[percent]は代理人の個性で変わる)。
+  static int freeAgentAgentFee(int annualWage,
+          {int percent = agentFeePercent}) =>
+      annualWage <= 0 ? 0 : (annualWage * percent / 100).round();
 
   /// 満額に近い額で買えば条項は付かない。大きく値切るほど、売り手は
   /// 将来の取り分を求める。[offer] が市場価値 [marketValue] のどのくらいか

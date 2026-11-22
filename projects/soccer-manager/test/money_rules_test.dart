@@ -12,7 +12,9 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   group('パラシュート', () {
-    test('降格すると2季、上の部との放映権の差の半分→4分の1。昇格で止まる', () async {
+    // 2026-11-22 に国ごとの形へ直した(以前はどの国も2季で、半分→4分の1)。
+    // イングランドは3季で 55% → 45% → 20%。国ごとの表は real_money_test。
+    test('イングランドは降格すると3季、差の55%→45%→20%。昇格で止まる', () async {
       final gs = GameState();
       await gs.startNewGame('降格FC');
       final s = gs.save!;
@@ -20,11 +22,13 @@ void main() {
       expect(gs.parachuteAnnual, 0);
       // 1つ上の部から落ちてきた形にする。
       s.parachuteFromTier = tier - 1;
-      s.parachuteSeasonsLeft = 2;
+      s.parachuteSeasonsLeft = 3;
       final diff = annualBroadcast(tier - 1) - annualBroadcast(tier);
-      expect(gs.parachuteAnnual, (diff * 0.5).round());
+      expect(gs.parachuteAnnual, (diff * 0.55).round());
+      s.parachuteSeasonsLeft = 2;
+      expect(gs.parachuteAnnual, (diff * 0.45).round());
       s.parachuteSeasonsLeft = 1;
-      expect(gs.parachuteAnnual, (diff * 0.25).round());
+      expect(gs.parachuteAnnual, (diff * 0.2).round());
       s.parachuteSeasonsLeft = 0;
       s.parachuteFromTier = 0;
       expect(gs.parachuteAnnual, 0);
@@ -44,7 +48,9 @@ void main() {
   });
 
   group('連帯貢献金', () {
-    test('来たオファーで売ると5%を引く。アカデミー出身は引かない', () async {
+    // 連帯貢献金は国をまたぐ移籍だけにかかる(FIFA の決まり。2026-11-22 に
+    // 国内の売却からは外した)。
+    test('他の国のクラブへ売ると5%を引く。アカデミー出身と国内の売却は引かない', () async {
       final gs = GameState();
       await gs.startNewGame('売却FC');
       final s = gs.save!;
@@ -54,6 +60,7 @@ void main() {
       p.academyGraduate = true;
       expect(gs.solidarityFor(p, 1000), 0);
       p.academyGraduate = false;
+      expect(gs.solidarityFor(p, 1000, international: false), 0);
       s.budget = 0;
       s.incomingOffers.add(IncomingOffer(
           id: 'x',
@@ -64,7 +71,18 @@ void main() {
               .name,
           amount: 1000));
       expect(await gs.acceptIncomingOffer('x'), isTrue);
-      expect(s.budget, 950);
+      expect(s.budget, 1000, reason: '国内のクラブへの売却には連帯貢献金がかからない');
+      final q = gs.userTeam.players.firstWhere((q) => !q.isLoan && q.age >= 18)
+        ..academyGraduate = false;
+      s.budget = 0;
+      s.incomingOffers.add(IncomingOffer(
+          id: 'y',
+          playerId: q.id,
+          playerName: q.name,
+          buyerClubName: s.foreignLeagues.values.first.teams.first.name,
+          amount: 1000));
+      expect(await gs.acceptIncomingOffer('y'), isTrue);
+      expect(s.budget, 950, reason: '他の国のクラブへの売却は5%を引く');
     });
   });
 

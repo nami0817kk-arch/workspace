@@ -93,8 +93,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('スーパーカップ', 'Super Cup'),
             description: Tr.pick(
-                'リーグ優勝クラブとカップ優勝クラブが対戦する単発の一戦。開催条件を満たすとホーム画面に専用カードが表示される。',
-                'A single match between the league champions and the cup winners. When it is on, a card for it appears on the home screen.'),
+                'リーグ優勝クラブとカップ優勝クラブが開幕前に戦う単発の一戦。開催条件を満たすとホーム画面に専用カードが表示される。スペイン・イタリアは、リーグの1・2位とカップの優勝・準優勝の4クラブが1月ごろに準決勝と決勝を行い、カップ戦の画面に出る(延長は無く、並べばPK戦)。',
+                'A one-off match between the league champions and the cup winners before the season starts. When it is on, a card for it appears on the home screen. In Spain and Italy, the top two in the league and the two cup finalists play semi-finals and a final in January instead; it appears on the Cups screen (no extra time; level games go to penalties).'),
           ),
         ],
       ),
@@ -367,14 +367,14 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('昇格プレーオフ', 'Promotion play-offs'),
             description: Tr.pick(
-                '自動昇格枠を逃した中位クラブ同士で行われる、上位ディビジョンへの最後の昇格枠を懸けたノックアウト方式のトーナメント。',
-                'A knockout between the clubs that just missed automatic promotion, for the last place in the division above.'),
+                '自動昇格枠を逃した中位クラブ同士で行われる、上位ディビジョンへの昇格枠を懸けたノックアウト方式のトーナメント。形は国と部で違う(スペインの3部は2枠、ドイツ・フランスは入れ替え戦を2試合合計で行う)。順位表の下に、その部の決まりが出る。',
+                'A knockout between the clubs that just missed automatic promotion, for the remaining places in the division above. The format depends on the country and the tier (two places from the Spanish third tier; Germany and France play a two-legged relegation play-off instead). The rules for each division are shown under its table.'),
           ),
           GuideTopic(
             title: Tr.pick('国内カップ・大陸カップ', 'Domestic and continental cups'),
             description: Tr.pick(
-                '国内カップは同ディビジョン内外を問わないノックアウト方式。大陸カップは上位成績クラブのみが参加し、グループステージの後にノックアウトで優勝を争う。自クラブの試合はライブ観戦でもクイック消化でも進められる。',
-                'The domestic cup is a straight knockout, open across divisions. The continental cup takes only the clubs that finished high enough, with a group stage before the knockout rounds. Your own ties can be watched live or simmed.'),
+                '国内カップは1〜3部の全クラブが出るノックアウト方式(下の部から先に戦い、上の部は後の回戦から入る。90分で並べば延長戦、それでも並べばPK戦)。リーグカップはイングランドだけ。大陸カップはチャンピオンズカップとヨーロッパカップの2つで、1部の上位のクラブが国ごとの枠で出て、グループステージ(ホームとアウェイ)の後に2試合合計のノックアウトで優勝を争う。自クラブの試合はライブ観戦でもクイック消化でも進められる。',
+                'The domestic cup is a straight knockout for every club in tiers 1 to 3 (the lower tiers start first and the top clubs join in later rounds; a draw after 90 minutes goes to extra time, then penalties). Only England has a league cup. There are two continental cups, the Champions Cup and the Europa Cup: the top clubs of each top division qualify by country quota, play a home-and-away group stage, then two-legged knockout ties. Your own ties can be watched live or simmed.'),
           ),
           GuideTopic(
             title: Tr.pick('勝ち上がり賞金', 'Progression prize money'),

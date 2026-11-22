@@ -27,7 +27,9 @@ void main() {
     for (final theme in LeagueTheme.values) {
       for (var upper = 1; upper < totalDivisionTiers; upper++) {
         final r = theme.rulesBelow(upper);
-        final up = r.autoUp + (r.playoffPool > 0 ? 1 : 0);
+        // プレーオフで上がる数は国で違う(スペインの3部は2枠。2026-11-22)
+        // ので、プレーオフ1枠と決め打ちせず promotionPlaces で数える。
+        final up = r.promotionPlaces;
         expect(up, r.autoDown, reason: '$theme $upper部');
       }
     }
@@ -51,7 +53,7 @@ void main() {
     }
   });
 
-  test('入れ替え戦のある国では、試合が1つ足され、勝った側が上の部に入る', () {
+  test('入れ替え戦のある国では、入れ替え戦が足され、勝った側が上の部に入る', () {
     final a = _teams('a', 18);
     final b = _teams('b', 18);
     final r = PromotionEngine.resolve(
@@ -61,10 +63,13 @@ void main() {
       tier2PlayedOrder: b,
       rules: LeagueTheme.germany.rulesBelow(1),
     );
-    expect(r.promotionPlayoff.length, 1);
-    final m = r.promotionPlayoff.single;
+    // 入れ替え戦はドイツ・フランスとも2試合合計(2026-11-22。以前は1試合で、
+    // 上の部のホームだった)。第1戦は下の部のホーム、第2戦は上の部のホーム。
+    expect(r.promotionPlayoff.length, 2);
+    final m = r.promotionPlayoff.last;
     expect(m.homeId, a[15].id);
     expect(m.awayId, b[2].id);
+    expect(r.promotionPlayoff.first.homeId, b[2].id);
     expect(r.tier1.any((t) => t.id == m.winnerId), isTrue);
     // 自動の2つずつは必ず入れ替わる
     expect(r.tier1.any((t) => t.id == b[0].id), isTrue);

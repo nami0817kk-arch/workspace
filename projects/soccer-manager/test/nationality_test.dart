@@ -9,18 +9,20 @@ import 'package:soccer_manager/state/game_state.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('他の国の1部の選手は、ほとんどがその国の国籍', () async {
+  // 以前は「9割がその国の国籍」だった。実在の1部は外国籍が5〜7割
+  // (スペイン・フランスは約45%)なので、自国籍は3〜6割になる(2026-11-22)。
+  test('他の国の1部の選手は、自国籍が3〜6割', () async {
     final gs = GameState();
     await gs.startNewGame('国籍FC');
     for (final e in gs.save!.foreignLeagues.entries) {
       final players = e.value.teams.expand((t) => t.players).toList();
       final same =
           players.where((p) => gs.nationalityOf(p).name == e.key).length;
-      expect(same / players.length, greaterThan(0.8), reason: e.key);
+      expect(same / players.length, inInclusiveRange(0.28, 0.65),
+          reason: e.key);
     }
-    // 自クラブと自由契約は自国。
-    expect(gs.userTeam.players.every((p) =>
-        gs.nationalityOf(p) == gs.currentLeagueTheme), isTrue);
+    // 自由契約は自国。自クラブは 2026-11-22 から CPU と同じ割合で外国籍が
+    // 混ざる(reality3_players_test.dart で見る)。
     expect(gs.freeAgents.every((p) =>
         gs.nationalityOf(p) == gs.currentLeagueTheme), isTrue);
   });
@@ -50,7 +52,10 @@ void main() {
     if (weak != null) expect(gs.workPermitBlock(weak), isNotNull);
     if (strong != null) expect(gs.workPermitBlock(strong), isNull);
     expect(gs.workPermitMinimum(1), greaterThan(gs.workPermitMinimum(5)));
-    // 自国の選手には要らない。
-    expect(gs.workPermitBlock(gs.userTeam.players.first), isNull);
+    // 自国の選手には要らない(自クラブにも外国籍が混ざるので、自国籍を選ぶ)。
+    expect(
+        gs.workPermitBlock(gs.userTeam.players
+            .firstWhere((p) => gs.nationalityOf(p) == gs.currentLeagueTheme)),
+        isNull);
   });
 }

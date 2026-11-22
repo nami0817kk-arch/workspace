@@ -110,7 +110,8 @@ extension GameStateOwner on GameState {
     s.ownerWealth = ownerWealth + monthlyIncome * months;
     final interest = ownerLoanMonthlyInterest * months;
     if (interest > 0) {
-      _book(LedgerCategory.other, -interest);
+      // 利息は損益の支出(2026-11-22 から「その他」ではなく「利息」)。
+      _book(LedgerCategory.interest, -interest);
       s.ownerWealth += interest;
     }
   }

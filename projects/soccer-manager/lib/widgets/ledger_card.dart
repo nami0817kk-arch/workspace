@@ -52,11 +52,16 @@ class LedgerCard extends StatelessWidget {
       LedgerCategory.staffWages,
       LedgerCategory.appearanceFees,
       LedgerCategory.transfers,
+      LedgerCategory.amortization,
       LedgerCategory.facilities,
-    ]);
-    final otherRows = rows(const [
-      LedgerCategory.financing,
+      LedgerCategory.infrastructure,
+      LedgerCategory.interest,
       LedgerCategory.other,
+    ]);
+    // 移籍金の支払いは資産(損益には償却で入る)、融資・預金は元本の出入り。
+    final otherRows = rows(const [
+      LedgerCategory.transferFees,
+      LedgerCategory.financing,
     ]);
 
     return Card(
@@ -115,7 +120,7 @@ class LedgerCard extends StatelessWidget {
               ),
               if (otherRows.isNotEmpty) ...[
                 const SizedBox(height: 6),
-                _Heading(Tr.pick('損益に含めないもの・その他', 'Not in profit / other')),
+                _Heading(Tr.pick('損益に含めないもの(資金だけが動く)', 'Not in profit (cash only)')),
                 ...otherRows,
               ],
               const Divider(height: 20),

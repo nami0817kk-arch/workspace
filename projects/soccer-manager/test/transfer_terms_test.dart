@@ -10,8 +10,9 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   group('TransferTermsEngine', () {
-    test('代理人手数料は移籍金の5%で、0以下なら0', () {
-      expect(TransferTermsEngine.agentFee(1000), 50);
+    // 実際の代理人手数料は1割前後なので、5%から10%に上げた(2026-11-22)。
+    test('代理人手数料は移籍金の10%で、0以下なら0', () {
+      expect(TransferTermsEngine.agentFee(1000), 100);
       expect(TransferTermsEngine.agentFee(0), 0);
       expect(TransferTermsEngine.agentFee(-10), 0);
     });

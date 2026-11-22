@@ -75,11 +75,18 @@ class League {
   /// チームごとの勝ち点の増減(規則違反の剥奪)。順位表にだけ効く。
   final Map<String, int> pointsAdjustments;
 
+  /// 勝ち点で並んだときに、得失点差を直接対決より先に見るか。
+  /// イングランド・ドイツ・フランスは得失点差が先、スペイン・イタリアは
+  /// 直接対決が先(実在のリーグの決まり。2026-11-22)。false が直接対決先
+  /// (それまでの形。大陸大会のグループもこちら)。
+  bool goalDiffFirst;
+
   League({
     required this.teams,
     required this.fixtures,
     this.season = 1,
     Map<String, int>? pointsAdjustments,
+    this.goalDiffFirst = false,
   }) : pointsAdjustments = pointsAdjustments ?? {};
 
   Fixture? get nextUnplayedFixture {
@@ -184,6 +191,18 @@ class League {
     sorted.sort((a, b) {
       final ah = h2h[a.teamId]!;
       final bh = h2h[b.teamId]!;
+      if (goalDiffFirst) {
+        // 得失点差 → 総得点 → 直接対決(勝点→得失点差→得点数)。
+        final gd = b.goalDiff.compareTo(a.goalDiff);
+        if (gd != 0) return gd;
+        final gf = b.goalsFor.compareTo(a.goalsFor);
+        if (gf != 0) return gf;
+        final hp = bh.points.compareTo(ah.points);
+        if (hp != 0) return hp;
+        final hgd = bh.goalDiff.compareTo(ah.goalDiff);
+        if (hgd != 0) return hgd;
+        return bh.goalsFor.compareTo(ah.goalsFor);
+      }
       final hp = bh.points.compareTo(ah.points);
       if (hp != 0) return hp;
       final hgd = bh.goalDiff.compareTo(ah.goalDiff);
@@ -224,6 +243,7 @@ class League {
         'fixtures': fixtures.map((f) => f.toJson()).toList(),
         'season': season,
         if (pointsAdjustments.isNotEmpty) 'pointsAdjustments': pointsAdjustments,
+        if (goalDiffFirst) 'goalDiffFirst': true,
       };
 
   factory League.fromJson(Map<String, dynamic> json) => League(
@@ -236,5 +256,6 @@ class League {
         season: json['season'] as int? ?? 1,
         pointsAdjustments: (json['pointsAdjustments'] as Map?)
             ?.map((k, v) => MapEntry(k as String, v as int)),
+        goalDiffFirst: json['goalDiffFirst'] as bool? ?? false,
       );
 }

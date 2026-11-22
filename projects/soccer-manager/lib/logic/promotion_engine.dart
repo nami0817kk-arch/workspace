@@ -88,19 +88,27 @@ class PromotionEngine {
         .toList();
   }
 
-  /// 昇格プレーオフの1試合を決着させる(引き分けの場合はPK戦)。
+  /// 昇格プレーオフの1試合を決着させる。引き分けは、[extraTime]なら延長戦
+  /// (30分)を行い、それでも並べば[drawWinner](順位が上のクラブ。いなければ
+  /// PK戦)。
   static PromotionPlayoffMatch _playSingleMatch({
     required String roundLabel,
     required Team home,
     required Team away,
+    bool extraTime = false,
+    Team? drawWinner,
   }) {
-    final result = MatchEngine.simulate(home: home, away: away, matchday: 0);
-    final decidedByPenalties = result.homeGoals == result.awayGoals;
+    var result = MatchEngine.simulate(home: home, away: away, matchday: 0);
+    if (extraTime && result.homeGoals == result.awayGoals) {
+      result = CupEngine.extraTime(result, home, away);
+    }
+    final level = result.homeGoals == result.awayGoals;
+    final decidedByPenalties = level && drawWinner == null;
     final winnerId = result.homeGoals > result.awayGoals
         ? home.id
         : result.homeGoals < result.awayGoals
             ? away.id
-            : CupEngine.decidePenaltyWinner(home, away);
+            : (drawWinner?.id ?? CupEngine.decidePenaltyWinner(home, away));
     return PromotionPlayoffMatch(
       roundLabel: roundLabel,
       homeId: home.id,
@@ -114,20 +122,209 @@ class PromotionEngine {
     );
   }
 
+  /// 2試合合計の対戦。第1戦は[lower](順位が下)のホーム、第2戦は[higher]の
+  /// ホーム。合計で並べば、[extraTime](省略時は[higherSeedOnTie]の逆)なら
+  /// 第2戦を延長戦まで戦う。それでも並べば、[higherSeedOnTie]なら[higher]が
+  /// 勝ち上がり、そうでなければPK戦。
+  /// 2試合の記録(どちらも winnerId は勝ち上がったクラブ)と勝者を返す。
+  static (List<PromotionPlayoffMatch>, Team) _playTwoLegs({
+    required String roundLabel,
+    required Team higher,
+    required Team lower,
+    required bool higherSeedOnTie,
+    bool? extraTime,
+  }) {
+    final leg1 = MatchEngine.simulate(home: lower, away: higher, matchday: 0);
+    var leg2 = MatchEngine.simulate(home: higher, away: lower, matchday: 0);
+    int aggHigher() => leg1.awayGoals + leg2.homeGoals;
+    int aggLower() => leg1.homeGoals + leg2.awayGoals;
+    var pens = false;
+    Team winner;
+    if (aggHigher() == aggLower() && (extraTime ?? !higherSeedOnTie)) {
+      leg2 = CupEngine.extraTime(leg2, higher, lower);
+    }
+    if (aggHigher() > aggLower()) {
+      winner = higher;
+    } else if (aggHigher() < aggLower()) {
+      winner = lower;
+    } else if (higherSeedOnTie) {
+      winner = higher;
+    } else {
+      pens = true;
+      winner = CupEngine.decidePenaltyWinner(higher, lower) == higher.id
+          ? higher
+          : lower;
+    }
+    final aggLabel = Tr.pick(
+        '(合計 ${higher.name} ${aggHigher()}-${aggLower()} ${lower.name})',
+        ' (aggregate ${higher.name} ${aggHigher()}-${aggLower()} ${lower.name})');
+    return (
+      [
+        PromotionPlayoffMatch(
+          roundLabel: Tr.pick('$roundLabel 第1戦', '$roundLabel, 1st leg'),
+          homeId: lower.id,
+          homeName: lower.name,
+          awayId: higher.id,
+          awayName: higher.name,
+          homeGoals: leg1.homeGoals,
+          awayGoals: leg1.awayGoals,
+          decidedByPenalties: false,
+          winnerId: winner.id,
+        ),
+        PromotionPlayoffMatch(
+          roundLabel: Tr.pick(
+              '$roundLabel 第2戦$aggLabel', '$roundLabel, 2nd leg$aggLabel'),
+          homeId: higher.id,
+          homeName: higher.name,
+          awayId: lower.id,
+          awayName: lower.name,
+          homeGoals: leg2.homeGoals,
+          awayGoals: leg2.awayGoals,
+          decidedByPenalties: pens,
+          winnerId: winner.id,
+        ),
+      ],
+      winner,
+    );
+  }
+
+  /// 昇格プレーオフ([pool]は順位の順)を国の形で行い、試合の記録と
+  /// 上がるクラブ([PromotionRules.playoffSpots]の数)を返す。[points]は
+  /// 下の部の勝ち点(差でプレーオフを行わない決まりに使う)。
+  static (List<PromotionPlayoffMatch>, List<Team>) _runPlayoff(
+    List<Team> pool,
+    PromotionRules rules,
+    Map<String, int>? points,
+  ) {
+    final twoSpots = rules.playoffSpots >= 2;
+    final semiLabel = twoSpots
+        ? Tr.pick('昇格プレーオフ', 'Promotion play-off')
+        : Tr.pick('昇格プレーオフ 準決勝', 'Play-off semi-final');
+    final finalLabel = Tr.pick('昇格プレーオフ 決勝', 'Play-off final');
+    // 最上位が次のクラブを大きく離していれば、プレーオフを行わない。
+    if (rules.playoffSkipGap > 0 && points != null && pool.length >= 2) {
+      final a = points[pool[0].id];
+      final b = points[pool[1].id];
+      if (a != null && b != null && a - b >= rules.playoffSkipGap) {
+        return (const <PromotionPlayoffMatch>[], [pool[0]]);
+      }
+    }
+    int seed(Team t) => pool.indexOf(t);
+    final matches = <PromotionPlayoffMatch>[];
+    var semiPool = pool;
+    if (pool.length >= 6) {
+      // 予備の回戦: 5位対8位・6位対7位(順位が上のホーム、1試合。並べば
+      // 延長戦、それでも並べば順位が上。セリエCは延長なしで順位が上)。
+      final prelimLabel =
+          Tr.pick('昇格プレーオフ 1回戦', 'Play-off preliminary round');
+      final prelimExtraTime = rules.playoffFormat != PlayoffFormat.serieC;
+      final p1 = _playSingleMatch(
+          roundLabel: prelimLabel,
+          home: pool[2],
+          away: pool[5],
+          extraTime: prelimExtraTime,
+          drawWinner: pool[2]);
+      final p2 = _playSingleMatch(
+          roundLabel: prelimLabel,
+          home: pool[3],
+          away: pool[4],
+          extraTime: prelimExtraTime,
+          drawWinner: pool[3]);
+      matches.addAll([p1, p2]);
+      final w1 = pool.firstWhere((t) => t.id == p1.winnerId);
+      final w2 = pool.firstWhere((t) => t.id == p2.winnerId);
+      semiPool = [
+        pool[0],
+        pool[1],
+        ...([w1, w2]..sort((a, b) => seed(a) - seed(b)))
+      ];
+    }
+    // 準決勝: 1番手対4番手、2番手対3番手。
+    final pairs = [
+      (semiPool[0], semiPool[3]),
+      (semiPool[1], semiPool[2]),
+    ];
+    final winners = <Team>[];
+    for (final (hi, lo) in pairs) {
+      switch (rules.playoffFormat) {
+        case PlayoffFormat.singleMatches:
+          final m = _playSingleMatch(roundLabel: semiLabel, home: hi, away: lo);
+          matches.add(m);
+          winners.add(m.winnerId == hi.id ? hi : lo);
+        case PlayoffFormat.englishTwoLegSemis:
+        case PlayoffFormat.twoLegsHigherSeed:
+        case PlayoffFormat.twoLegsExtraTimeHigherSeed:
+        case PlayoffFormat.serieC:
+          final (ms, w) = _playTwoLegs(
+            roundLabel: semiLabel,
+            higher: hi,
+            lower: lo,
+            higherSeedOnTie:
+                rules.playoffFormat != PlayoffFormat.englishTwoLegSemis,
+            extraTime: rules.playoffFormat ==
+                    PlayoffFormat.englishTwoLegSemis ||
+                rules.playoffFormat == PlayoffFormat.twoLegsExtraTimeHigherSeed,
+          );
+          matches.addAll(ms);
+          winners.add(w);
+      }
+    }
+    // 2枠なら、準決勝に当たる2つの対戦の勝者がどちらも上がる(決勝なし)。
+    if (twoSpots) return (matches, winners);
+    // 決勝。順位が上だった側を上位(ホーム)にする。
+    winners.sort((a, b) => seed(a) - seed(b));
+    final hi = winners[0];
+    final lo = winners[1];
+    switch (rules.playoffFormat) {
+      case PlayoffFormat.singleMatches:
+        final m = _playSingleMatch(roundLabel: finalLabel, home: hi, away: lo);
+        matches.add(m);
+        return (matches, [m.winnerId == hi.id ? hi : lo]);
+      case PlayoffFormat.englishTwoLegSemis:
+        // 決勝は1試合。並べば延長戦、それでも並べばPK戦。
+        final m = _playSingleMatch(
+            roundLabel: finalLabel, home: hi, away: lo, extraTime: true);
+        matches.add(m);
+        return (matches, [m.winnerId == hi.id ? hi : lo]);
+      case PlayoffFormat.twoLegsHigherSeed:
+      case PlayoffFormat.twoLegsExtraTimeHigherSeed:
+        final (ms, w) = _playTwoLegs(
+            roundLabel: finalLabel,
+            higher: hi,
+            lower: lo,
+            higherSeedOnTie: true,
+            extraTime: rules.playoffFormat ==
+                PlayoffFormat.twoLegsExtraTimeHigherSeed);
+        matches.addAll(ms);
+        return (matches, [w]);
+      case PlayoffFormat.serieC:
+        // セリエCの決勝は2試合合計で、並べば延長戦、それでも並べばPK戦。
+        final (ms, w) = _playTwoLegs(
+            roundLabel: finalLabel,
+            higher: hi,
+            lower: lo,
+            higherSeedOnTie: false);
+        matches.addAll(ms);
+        return (matches, [w]);
+    }
+  }
+
   /// [tier1Teams]/[tier2Teams]は今シーズンの各ディビジョンの全チーム。実際に
   /// プレイされた側は[tier1PlayedOrder]/[tier2PlayedOrder]に最終順位順のチーム
   /// リストを渡す(片方のみ非null)。渡されなかった側はその場でシミュレートする。
   ///
-  /// 入れ替えの数は[rules]で国ごとに変わる。既定は、上位2チームが自動昇格し、
-  /// 続く4チームが昇格プレーオフ(準決勝2試合+決勝、引き分けはPK戦)を行う形。
-  /// 入れ替え戦のある国では、上の部の降格圏のすぐ上と、下の部の自動昇格の
-  /// すぐ下が1試合を戦い、勝った方が上の部に入る。
+  /// 入れ替えの数と試合の形は[rules]で国ごとに変わる。既定は、上位2チームが
+  /// 自動昇格し、続く4チームが昇格プレーオフ(準決勝2試合+決勝、引き分けは
+  /// PK戦)を行う形。入れ替え戦のある国では、上の部の降格圏のすぐ上と、
+  /// 下の部の自動昇格のすぐ下が戦い、勝った方が上の部に入る。
+  /// [tier2Points]は下の部の勝ち点(プレーオフを行わない決まりに使う)。
   static PromotionResult resolve({
     required List<Team> tier1Teams,
     required List<Team> tier2Teams,
     List<Team>? tier1PlayedOrder,
     List<Team>? tier2PlayedOrder,
     PromotionRules rules = PromotionRules.standard,
+    Map<String, int>? tier2Points,
   }) {
     final orderedTier1 = tier1PlayedOrder ?? _simulateSeason(tier1Teams);
     final orderedTier2 = tier2PlayedOrder ?? _simulateSeason(tier2Teams);
@@ -147,63 +344,52 @@ class PromotionEngine {
       final autoPromoted = orderedTier2.take(rules.autoUp).toList();
       final pool =
           orderedTier2.skip(rules.autoUp).take(rules.playoffPool).toList();
-
-      final semiA = _playSingleMatch(
-        roundLabel: Tr.pick('昇格プレーオフ 準決勝', 'Play-off semi-final'),
-        home: pool[0],
-        away: pool[3],
-      );
-      final semiB = _playSingleMatch(
-        roundLabel: Tr.pick('昇格プレーオフ 準決勝', 'Play-off semi-final'),
-        home: pool[1],
-        away: pool[2],
-      );
-      // 決勝のホームは、順位が上だった側。準決勝は上位がホーム
-      // (1位vs4位 / 2位vs3位)なので、決勝だけ順位が効かないのは筋が通らない。
-      final winnerA = pool.firstWhere((t) => t.id == semiA.winnerId);
-      final winnerB = pool.firstWhere((t) => t.id == semiB.winnerId);
-      final finalHome =
-          pool.indexOf(winnerA) <= pool.indexOf(winnerB) ? winnerA : winnerB;
-      final finalAway = identical(finalHome, winnerA) ? winnerB : winnerA;
-      final finalMatch = _playSingleMatch(
-        roundLabel: Tr.pick('昇格プレーオフ 決勝', 'Play-off final'),
-        home: finalHome,
-        away: finalAway,
-      );
-      playoffMatches = [semiA, semiB, finalMatch];
-
-      final playoffWinner = orderedTier2.firstWhere(
-        (t) => t.id == finalMatch.winnerId,
-      );
-      promoted = [...autoPromoted, playoffWinner];
+      final (matches, playoffWinners) = _runPlayoff(pool, rules, tier2Points);
+      playoffMatches = matches;
+      promoted = [...autoPromoted, ...playoffWinners];
     } else {
       promoted = orderedTier2.take(rules.autoUp).toList();
     }
 
-    // 入れ替え戦: 上の部で降格圏のすぐ上のクラブ(ホーム)と、下の部で
-    // 昇格の枠のすぐ下のクラブ。下の部が勝てば入れ替わる。
+    // 入れ替え戦: 上の部で降格圏のすぐ上のクラブと、下の部で昇格の枠の
+    // すぐ下のクラブ。下の部が勝てば入れ替わる。ドイツは2試合合計(第2戦は
+    // 上の部のホーム。並べば延長・PK戦)、ほかは1試合(上の部のホーム)。
     if (rules.relegationPlayoff &&
         remainingTier1.isNotEmpty &&
         orderedTier2.length > promoted.length) {
       final upperSide = remainingTier1.last;
-      final lowerSide = orderedTier2
-          .firstWhere((t) => !promoted.any((p) => p.id == t.id));
-      final match = _playSingleMatch(
-        roundLabel: Tr.pick('入れ替え戦', 'Relegation play-off'),
-        home: upperSide,
-        away: lowerSide,
-      );
-      playoffMatches = [...playoffMatches, match];
-      if (match.winnerId == lowerSide.id) {
+      final lowerSide =
+          orderedTier2.firstWhere((t) => !promoted.any((p) => p.id == t.id));
+      final label = Tr.pick('入れ替え戦', 'Relegation play-off');
+      final String winnerId;
+      if (rules.relegationPlayoffTwoLegs) {
+        final (ms, w) = _playTwoLegs(
+          roundLabel: label,
+          higher: upperSide,
+          lower: lowerSide,
+          higherSeedOnTie: false,
+        );
+        playoffMatches = [...playoffMatches, ...ms];
+        winnerId = w.id;
+      } else {
+        final match = _playSingleMatch(
+          roundLabel: label,
+          home: upperSide,
+          away: lowerSide,
+        );
+        playoffMatches = [...playoffMatches, match];
+        winnerId = match.winnerId;
+      }
+      if (winnerId == lowerSide.id) {
         promoted = [...promoted, lowerSide];
-        remainingTier1 = remainingTier1.take(remainingTier1.length - 1).toList();
+        remainingTier1 =
+            remainingTier1.take(remainingTier1.length - 1).toList();
         extraRelegated.add(upperSide);
       }
     }
 
-    tier2Remainder = orderedTier2
-        .where((t) => !promoted.any((p) => p.id == t.id))
-        .toList();
+    tier2Remainder =
+        orderedTier2.where((t) => !promoted.any((p) => p.id == t.id)).toList();
     final allRelegated = [...relegated, ...extraRelegated];
 
     final newTier1 = [...remainingTier1, ...promoted];
@@ -234,9 +420,8 @@ class PromotionEngine {
       for (final e in byTier.entries) e.key: [...e.value],
     };
     final bottom = targetSizes.length;
-    int strength(Team t) => t.players.isEmpty
-        ? (t.retainedOverall ?? 50)
-        : t.overallRating;
+    int strength(Team t) =>
+        t.players.isEmpty ? (t.retainedOverall ?? 50) : t.overallRating;
     for (var tier = 1; tier <= bottom; tier++) {
       final teams = out[tier] ??= [];
       final target = targetSizes[tier - 1];

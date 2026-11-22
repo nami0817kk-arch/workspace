@@ -5,12 +5,272 @@ import '../models/cup.dart';
 import '../models/match_result.dart';
 import '../models/player.dart';
 import '../models/team.dart';
+import 'background_match_engine.dart';
 import 'match_engine.dart';
 import 'weather_engine.dart';
 import '../l10n/tr.dart';
 
 class CupEngine {
   static final Random _rng = Random();
+
+  /// 1〜3部の全クラブが出る国内カップ(実在の形。2026-11-22)。
+  ///
+  /// [byTier]は部(1〜3)ごとのクラブ。[entryRound]は部ごとに何回戦から
+  /// 入るか(既定は3部が1回戦、2部が2回戦、1部が3回戦。下の部のクラブが
+  /// 先に戦い、上の部は後から入る)。部の違うクラブが当たると下の部の
+  /// クラブがホームになる。回戦の人数が2の累乗に合わないときは、上の部の
+  /// クラブから不戦勝で次の回戦へ回す(不戦勝の試合は作らない)。
+  /// [roundDue]は決勝までの回戦の数から、各回戦を消化できるようになる節を返す。
+  static Cup createTiered({
+    required CupType type,
+    required String name,
+    required Map<int, List<String>> byTier,
+    Map<int, int>? entryRound,
+    List<int> Function(int totalRounds)? roundDue,
+    String? focusTeamId,
+    Random? random,
+  }) {
+    final rng = random ?? _rng;
+    final entry = entryRound ?? defaultEntryRound;
+    final tiers = <String, int>{};
+    final entrants = <int, List<String>>{};
+    for (final e in byTier.entries) {
+      final r = entry[e.key] ?? 1;
+      for (final id in e.value) {
+        tiers[id] = e.key;
+        (entrants[r] ??= []).add(id);
+      }
+    }
+    if (tiers.length < 2) {
+      throw ArgumentError.value(
+          byTier,
+          'byTier',
+          Tr.pick('ノックアウト方式のカップには最低2チーム必要です',
+              'A knockout cup needs at least two teams'));
+    }
+    // 1回戦に誰もいなければ、いちばん早く入る回戦を1回戦にずらす。
+    final firstEntry = entrants.keys.reduce(min);
+    final shifted = <int, List<String>>{
+      for (final e in entrants.entries) e.key - firstEntry + 1: e.value,
+    };
+    final total = plannedRoundsFor({
+      for (final e in shifted.entries) e.key: e.value.length,
+    });
+    final cup = Cup(
+      type: type,
+      name: name,
+      rounds: [],
+      entrants: shifted,
+      tiers: tiers,
+      plannedRounds: total,
+      roundDue: roundDue?.call(total),
+    );
+    _buildPlannedRound(cup, 1, const [], rng);
+    if (focusTeamId != null) putTeamFirst(cup, focusTeamId);
+    return cup;
+  }
+
+  /// 部ごとの入る回戦の既定(3部 → 1回戦、2部 → 2回戦、1部 → 3回戦)。
+  static const Map<int, int> defaultEntryRound = {3: 1, 2: 2, 1: 3};
+
+  /// 回戦ごとの新しく入るクラブの数から、決勝までの回戦の数を求める。
+  static int plannedRoundsFor(Map<int, int> entrantsPerRound) {
+    if (entrantsPerRound.isEmpty) return 0;
+    final lastEntry = entrantsPerRound.keys.reduce(max);
+    var carry = 0;
+    for (var r = 1; r < 64; r++) {
+      final p = carry + (entrantsPerRound[r] ?? 0);
+      final future = r < lastEntry;
+      if (!future && p <= 2) return p == 2 ? r : r - 1;
+      final (m, byes) = _matchesFor(p, future);
+      carry = m + byes;
+    }
+    return 0;
+  }
+
+  /// [p]クラブの回戦の試合数と不戦勝の数。後の回戦から入るクラブが
+  /// まだいるなら、できるだけ全員が戦う(奇数なら1つ不戦勝)。もう入る
+  /// クラブがいなければ、次の回戦が2の累乗になるように数を合わせる。
+  static (int, int) _matchesFor(int p, bool future) {
+    if (p < 2) return (0, p);
+    final pow2 = (p & (p - 1)) == 0;
+    if (future || pow2) {
+      final m = p ~/ 2;
+      return (m, p - 2 * m);
+    }
+    var big = 1;
+    while (big * 2 < p) {
+      big *= 2;
+    }
+    final m = p - big;
+    return (m, p - 2 * m);
+  }
+
+  /// 回戦[round]を組む。[winners]は前の回戦の勝者。
+  static void _buildPlannedRound(
+      Cup cup, int round, List<String> winners, Random rng) {
+    final pool = [...winners, ...?cup.entrants[round]];
+    final future =
+        cup.entrants.entries.any((e) => e.key > round && e.value.isNotEmpty);
+    final (m, byeCount) = _matchesFor(pool.length, future);
+    if (m == 0) return;
+    int tierOf(String id) => cup.tiers[id] ?? 99;
+    // 不戦勝は上の部のクラブから(同じ部の中はくじ)。
+    final order = [...pool]..shuffle(rng);
+    order.sort((a, b) => tierOf(a).compareTo(tierOf(b)));
+    final byes = order.take(byeCount).toList();
+    if (byes.isNotEmpty) {
+      (cup.entrants[round + 1] ??= []).addAll(byes);
+    }
+    final playing = order.skip(byeCount).toList()..shuffle(rng);
+    final matches = <CupMatch>[];
+    for (var i = 0; i + 1 < playing.length; i += 2) {
+      var home = playing[i];
+      var away = playing[i + 1];
+      // 部の違うクラブが当たると、下の部のクラブのホームで戦う。
+      if (tierOf(away) > tierOf(home) && tierOf(away) != 99) {
+        final t = home;
+        home = away;
+        away = t;
+      }
+      matches.add(CupMatch(round: round, homeTeamId: home, awayTeamId: away));
+    }
+    cup.rounds.add(matches);
+  }
+
+  /// いまの回戦で[teamId]の試合を先頭にする(自クラブの試合を「次の試合」
+  /// にするため。回戦の残りは自クラブの試合のあとにまとめて決まる)。
+  static void putTeamFirst(Cup cup, String teamId) {
+    if (cup.rounds.isEmpty) return;
+    final round = cup.rounds.last;
+    final i = round
+        .indexWhere((m) => m.homeTeamId == teamId || m.awayTeamId == teamId);
+    if (i > 0) round.insert(0, round.removeAt(i));
+  }
+
+  /// 延長戦(30分)。引き分けの[result]に延長の得点を足したものを返す。
+  /// 強さの差から得点を見積もる(90分の3分の1ほどの量)。得点者は
+  /// 先発のフィールドプレーヤーからくじで選ぶ(選手のいないクラブは名前なし)。
+  /// アシストも、90分の試合と同じ割合(約8割)でほかの選手からくじで選ぶ。
+  /// 延長の得点は返した結果の events に新しく足したもので、選手の通算得点
+  /// には呼び出し側で数える([extraTimeGoals])。
+  static MatchResult extraTime(MatchResult result, Team home, Team away,
+      {Random? random}) {
+    final rng = random ?? _rng;
+    final diff = (home.overallRating - away.overallRating).toDouble();
+    final hl = (1.35 + diff / 90 + 0.1).clamp(0.3, 3.6) / 3;
+    final al = (1.2 - diff / 90).clamp(0.2, 3.3) / 3;
+    final hg = _poisson(hl, rng);
+    final ag = _poisson(al, rng);
+    final events = [...result.events];
+    void addGoals(Team t, int n) {
+      final shooters = MatchEngine.lineupOf(t)
+          .where((p) => p.position.group != PositionGroup.gk)
+          .toList();
+      for (var i = 0; i < n; i++) {
+        final p =
+            shooters.isEmpty ? null : shooters[rng.nextInt(shooters.length)];
+        final others = [
+          for (final q in MatchEngine.lineupOf(t))
+            if (q.id != p?.id) q,
+        ];
+        final a = others.isEmpty || rng.nextDouble() < 0.22
+            ? null
+            : others[rng.nextInt(others.length)];
+        events.add(MatchEvent(
+          minute: 91 + rng.nextInt(30),
+          teamId: t.id,
+          scorerName: p?.name,
+          scorerId: p?.id,
+          assistName: a?.name,
+          assistId: a?.id,
+        ));
+      }
+    }
+
+    addGoals(home, hg);
+    addGoals(away, ag);
+    events.sort((a, b) => a.minute.compareTo(b.minute));
+    return MatchResult(
+      matchday: result.matchday,
+      homeTeamId: result.homeTeamId,
+      awayTeamId: result.awayTeamId,
+      homeGoals: result.homeGoals + hg,
+      awayGoals: result.awayGoals + ag,
+      events: events,
+      playerRatings: result.playerRatings,
+      weather: result.weather,
+      homePossession: result.homePossession,
+      awayPossession: result.awayPossession,
+      homeShots: result.homeShots,
+      awayShots: result.awayShots,
+      homeShotsOnTarget: result.homeShotsOnTarget,
+      awayShotsOnTarget: result.awayShotsOnTarget,
+    );
+  }
+
+  /// [extraTime]が[before]に足した延長の得点([after]にだけある得点)。
+  static List<MatchEvent> extraTimeGoals(
+      MatchResult before, MatchResult after) {
+    final old = Set<MatchEvent>.identity()..addAll(before.events);
+    return [
+      for (final e in after.events)
+        if (e.type == MatchEventType.goal && !old.contains(e)) e,
+    ];
+  }
+
+  /// 延長の得点を、得点した選手の通算得点に足す([teams]の選手から引く)。
+  /// 90分までの得点は試合後の共通処理(MatchEngine.applyPostMatchEffects)
+  /// で数えるが、延長の得点はその後に足されるので、ここで足す。
+  static void creditExtraTimeGoals(
+      MatchResult before, MatchResult after, List<Team> teams) {
+    for (final e in extraTimeGoals(before, after)) {
+      final id = e.scorerId;
+      if (id == null) continue;
+      for (final t in teams) {
+        final p = t.players.where((x) => x.id == id).firstOrNull;
+        if (p != null) {
+          p.careerGoals += 1;
+          break;
+        }
+      }
+    }
+  }
+
+  static int _poisson(double lambda, Random rng) {
+    final l = exp(-lambda);
+    var k = 0;
+    var p = 1.0;
+    do {
+      k++;
+      p *= rng.nextDouble();
+    } while (p > l);
+    return k - 1;
+  }
+
+  /// 自クラブの出ない試合を、裏の試合(他の部の試合と同じ軽い計算)で
+  /// 決める。延長・PK戦まで決着させ、回戦が終われば次を組む。
+  static void playInBackground(Cup cup, List<Team> allTeams, CupMatch match) {
+    if (match.result != null || match.isBye) return;
+    final home = allTeams.where((t) => t.id == match.homeTeamId).firstOrNull;
+    final away = allTeams.where((t) => t.id == match.awayTeamId).firstOrNull;
+    if (home == null || away == null) {
+      // 相手のいない試合(壊れたセーブ)は、いる側の勝ちにする。
+      match.result = MatchResult(
+        matchday: 0,
+        homeTeamId: match.homeTeamId,
+        awayTeamId: match.awayTeamId,
+        homeGoals: home == null ? 0 : 3,
+        awayGoals: home == null ? 3 : 0,
+        events: [],
+      );
+      _advanceRoundIfComplete(cup);
+      return;
+    }
+    final r =
+        BackgroundMatchEngine.simulate(home: home, away: away, matchday: 0);
+    applyMatchResult(cup, allTeams, match, r);
+  }
 
   /// チームIDのリストからノックアウト方式のカップを作成する。
   /// 参加数が2の累乗でない場合は不戦勝(BYE)で埋める。BYE同士が対戦して
@@ -240,7 +500,8 @@ class CupEngine {
       weather: WeatherEngine.roll(month: month),
     );
     applyMatchResult(cup, allTeams, match, result);
-    return result;
+    // 延長戦の得点を含めた結果を返す。
+    return match.result;
   }
 
   /// 外部(ライブ観戦)で確定した[result]を[match]に適用し、引き分けなら
@@ -257,13 +518,38 @@ class CupEngine {
     if (result.homeGoals == result.awayGoals) {
       final home = allTeams.firstWhere((t) => t.id == match.homeTeamId);
       final away = allTeams.firstWhere((t) => t.id == match.awayTeamId);
-      // ライブ観戦側で1本ずつのPK戦を先に実施済みの場合はその勝者を尊重する。
-      match.penaltyWinnerId ??= decidePenaltyWinner(home, away);
+      // 90分で引き分けなら延長戦(30分)。ライブ観戦側で延長やPK戦を済ませて
+      // いれば([CupMatch.extraTime]・決まっている penaltyWinnerId)、
+      // もう一度は行わない。スーパーカップは延長なしでPK戦(実在の形)。
+      if (!match.extraTime &&
+          match.penaltyWinnerId == null &&
+          cup.type != CupType.superCup) {
+        match.result = extraTime(result, home, away);
+        match.extraTime = true;
+      }
+      final r = match.result!;
+      if (r.homeGoals == r.awayGoals) {
+        // ライブ観戦側で1本ずつのPK戦を先に実施済みの場合はその勝者を尊重する。
+        match.penaltyWinnerId ??= decidePenaltyWinner(home, away);
+      }
     }
     _advanceRoundIfComplete(cup);
   }
 
   static bool _advanceRoundIfComplete(Cup cup) {
+    if (cup.plannedRounds != null) {
+      var advanced = false;
+      while (cup.rounds.isNotEmpty &&
+          cup.rounds.length < cup.plannedRounds! &&
+          cup.rounds.last.every((m) => m.winnerId != null)) {
+        final before = cup.rounds.length;
+        final winners = cup.rounds.last.map((m) => m.winnerId!).toList();
+        _buildPlannedRound(cup, before + 1, winners, _rng);
+        if (cup.rounds.length == before) break;
+        advanced = true;
+      }
+      return advanced;
+    }
     bool advancedAny = false;
     while (true) {
       final lastRound = cup.rounds.last;

@@ -296,11 +296,37 @@ class PlayerGenerator {
 
   /// id [id]の選手に国内育成の印を付けるか。[roll]は0〜1の乱数。国籍は
   /// [Player.foreignNationalFromId]で決まる(国籍の見立てと同じ決まり)。
+  /// 他のクラブの選手は、のちに国籍を決めたときに[homegrownRollFor]で
+  /// 引き直す(GameState の国籍の割り当て)。
   static bool homegrownRoll(String id, double roll) =>
-      roll <
-      (Player.foreignNationalFromId(id)
-          ? homegrownChanceForeign
-          : homegrownChanceNational);
+      homegrownRollFor(national: !Player.foreignNationalFromId(id), roll: roll);
+
+  /// クラブのある国の国籍([national])かどうかで、国内育成の印を付けるか。
+  static bool homegrownRollFor({required bool national, required double roll}) =>
+      roll < (national ? homegrownChanceNational : homegrownChanceForeign);
+
+  /// 生成する選手の年齢の重み(17歳〜35歳)。
+  ///
+  /// 以前は17〜34歳が均等で、10代と30代前半が実在のリーグより多すぎた。
+  /// 実在の1部の選手は24〜28歳が山になる(平均26歳前後)ので、その形に
+  /// 寄せた(2026-11-22)。24〜28歳がおよそ4割、21歳以下と32歳以上は少ない。
+  static const List<int> ageWeights = [
+    2, 3, 4, 5, 6, 7, 8, // 17〜23歳
+    9, 10, 10, 10, 9, // 24〜28歳
+    8, 7, 6, 4, 3, 2, 1, // 29〜35歳
+  ];
+  static const int youngestGeneratedAge = 17;
+
+  /// [ageWeights]の重みで年齢を1つ引く。
+  static int rollAge(Random rng) {
+    final total = ageWeights.fold<int>(0, (s, w) => s + w);
+    var r = rng.nextInt(total);
+    for (var i = 0; i < ageWeights.length; i++) {
+      r -= ageWeights[i];
+      if (r < 0) return youngestGeneratedAge + i;
+    }
+    return youngestGeneratedAge + ageWeights.length - 1;
+  }
 
   /// [avoidNames]を渡すと、その名前と衝突しない選手名を選ぶ。同じスカッドを
   /// まとめて生成するとき(generateSquad)に、同姓同名が並ばないようにする。
@@ -311,7 +337,7 @@ class PlayerGenerator {
     Set<String>? avoidNames,
   }) {
     final id = nextPlayerId();
-    final age = ageOverride ?? (17 + _rng.nextInt(18));
+    final age = ageOverride ?? rollAge(_rng);
     final potential = (strengthTier + _rng.nextInt(21) - 10).clamp(40, 99);
 
     double ageFactor;

@@ -100,6 +100,8 @@ extension GameStateFinance on GameState {
     }
     final newTeamName = newTeam.name;
     _save!.userTeamId = newTeamId;
+    // 移籍金の簿価は前のクラブのもの。新しいクラブには持ち込まない。
+    _save!.playerBook.clear();
     _save!.pendingJobOfferTeamId = null;
     _save!.confidence = 60;
     _save!.shareholderExpectation = 60;
@@ -640,6 +642,19 @@ extension GameStateFinance on GameState {
   @visibleForTesting
   void debugEnforceLeagueRules() => _enforceLeagueRules();
 
+  /// テスト用: 季の締めの償却(移籍金の1年分を費用にする)だけを走らせる。
+  @visibleForTesting
+  void debugAmortizeTransferFees() => _amortizeTransferFees();
+
+  /// テスト用: 季の締めの、年に1回の分割払いだけを走らせる。
+  @visibleForTesting
+  void debugPayAnnualInstallments() => _payAnnualInstallments();
+
+  /// テスト用: 季の締めのパラシュートの更新だけを走らせる。
+  @visibleForTesting
+  void debugUpdateParachute({required int playedTier, required int newTier}) =>
+      _updateParachute(playedTier: playedTier, newTier: newTier);
+
   /// テスト用: 週給の予算と補強禁止を見る判定だけを走らせる。
   @visibleForTesting
   bool debugAllowsSigning(int wage) => _wageBudgetAllowsSigning(wage);
@@ -704,6 +719,11 @@ extension GameStateFinance on GameState {
     save.formerClubStatus.remove(team.id);
     save.userTeamId = team.id;
     save.clubName = team.name;
+    // 移籍金の簿価・規則の罰は前のクラブのもの。
+    save.playerBook.clear();
+    save.wageFreezeSeasons = 0;
+    save.wageFreezeCap = 0;
+    save.adminRelegation = false;
     save.pendingJobOfferTeamId = null;
     save.confidence = 60;
     save.shareholderExpectation = 60;
@@ -712,7 +732,8 @@ extension GameStateFinance on GameState {
     // 新しいクラブは、そのクラブの元の見た目から。
     save.clubLook = null;
     save.clubLookChangedSeason = 0;
-    save.budget = (GameState.initialBudgetFor(save.currentDivisionTier) *
+    save.budget = (GameState.initialBudgetFor(
+                save.currentDivisionTier, currentLeagueTheme) *
             save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     save.infrastructure = ClubInfrastructure();
@@ -725,6 +746,7 @@ extension GameStateFinance on GameState {
     save.wageBudget = BoardEngine.wageBudgetFor(
       tier: save.currentDivisionTier,
       currentWeeklyWageBill: weeklyWageBill,
+      theme: currentLeagueTheme,
     );
     save.clubHistory.add(team.name);
     // クラブ価値は新しいクラブのものとして数え直す。
@@ -767,6 +789,8 @@ extension GameStateFinance on GameState {
 
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
 
+    // 年俸の水準は新しい国・部のもの(他の部のクラブはその部の水準)。
+    setHomeWageLevel(theme, startTier);
     final userTeam = PlayerGenerator.generateSquad(
         id: 'user',
         name: nextName(),
@@ -777,17 +801,22 @@ extension GameStateFinance on GameState {
     for (var tier = 1; tier <= totalDivisionTiers; tier++) {
       final teams = <Team>[
         if (tier == startTier) userTeam,
-        for (var i = 0;
-            i <
-                (tier == startTier
-                    ? theme.teamsInTier(tier) - 1
-                    : theme.teamsInTier(tier));
-            i++)
-          PlayerGenerator.generateSquad(
-            id: tier == startTier ? 'cpu$i' : 'div${tier}_$i',
-            name: nextName(tier),
-            strengthTier: strengthForTier(tier),
-          ),
+        ...withWageLevel(
+          wageCountryFactor(theme, tier),
+          () => [
+            for (var i = 0;
+                i <
+                    (tier == startTier
+                        ? theme.teamsInTier(tier) - 1
+                        : theme.teamsInTier(tier));
+                i++)
+              PlayerGenerator.generateSquad(
+                id: tier == startTier ? 'cpu$i' : 'div${tier}_$i',
+                name: nextName(tier),
+                strengthTier: strengthForTier(tier),
+              ),
+          ],
+        ),
       ];
       for (final t in teams) {
         LineupUtils.autoFill(t);
@@ -807,22 +836,29 @@ extension GameStateFinance on GameState {
 
     save.userTeamId = 'user';
     save.clubName = userTeam.name;
+    // 移籍金の簿価・規則の罰は前のクラブのもの。
+    save.playerBook.clear();
+    save.wageFreezeSeasons = 0;
+    save.wageFreezeCap = 0;
+    save.adminRelegation = false;
     save.leagueName = theme.label;
     save.ruleSet = RuleSet.forTheme(theme);
     save.league = mine!;
     save.otherDivisionLeagues = others;
     save.currentDivisionTier = startTier;
     _ensureWorldSquads(save);
-    save.cups = [
-      CupEngine.createKnockout(
-        type: CupType.domestic,
-        name: theme.domesticCupName,
-        teamIds: mine.teams.map((t) => t.id).toList(),
-      ),
-      _newLeagueCup(mine.teams.map((t) => t.id).toList()),
-    ];
+    _applyTieBreakRules();
+    // 国内カップは1〜3部の全クラブ、リーグカップはイングランドだけ。
+    save.cups = _newSeasonCups();
+    // 新しい国の大陸大会(自国の1部の強い順と、他国の1部の上位)。
     save.continentalCup = null;
+    save.secondContinentalCup = null;
     save.continentalTeams = [];
+    _rememberForeignTop();
+    _setUpContinentalCups(
+      tier1Order: [...?_teamsByTierNow()[1]]
+        ..sort((a, b) => b.overallRating.compareTo(a.overallRating)),
+    );
     save.friendlies = _generateFriendlies(mine.teams, 'user');
     // 新しい国のリーグは開幕前から始まる。日付もそのシーズンのオフに戻す。
     save.today = SeasonCalendar.preseasonDate(save.league.season);
@@ -844,7 +880,7 @@ extension GameStateFinance on GameState {
     // 新しいクラブは、そのクラブの元の見た目から。
     save.clubLook = null;
     save.clubLookChangedSeason = 0;
-    save.budget = (GameState.initialBudgetFor(startTier) *
+    save.budget = (GameState.initialBudgetFor(startTier, theme) *
             save.difficultyOf(DifficultyItem.funds).initialBudgetFactor)
         .round();
     save.infrastructure = ClubInfrastructure();
@@ -871,6 +907,7 @@ extension GameStateFinance on GameState {
     save.wageBudget = BoardEngine.wageBudgetFor(
       tier: startTier,
       currentWeeklyWageBill: weeklyWageBill,
+      theme: theme,
     );
     save.clubHistory.add(userTeam.name);
     save.clubValueHistory.clear();
@@ -1013,10 +1050,10 @@ extension GameStateFinance on GameState {
   }
 
   /// 毎節入る放映権料(万円)。部で決まり、順位や施設では変わらない。
-  int get weeklyBroadcastIncome =>
-      (weeklyBroadcast(currentDivisionTier, matchdays: matchdaysPerSeason) *
-              currentEra.tvFactor)
-          .round();
+  int get weeklyBroadcastIncome => (weeklyBroadcast(currentDivisionTier,
+              matchdays: matchdaysPerSeason, theme: currentLeagueTheme) *
+          currentEra.tvFactor)
+      .round();
 
   /// 選手の給与を毎節いくら払うか。表示の年俸(週俸×52)と1年に払う
   /// 総額が一致するよう、52週ぶんをその年の節の数で割る。
@@ -1069,7 +1106,9 @@ extension GameStateFinance on GameState {
     // 降格したクラブには、上の部との差の一部(パラシュート)が上乗せされる。
     // 時代で放映権の額が変わる。
     return MoneyCalendar.broadcastInstallment(
-        (annualBroadcast(currentDivisionTier) * currentEra.tvFactor).round() +
+        (annualBroadcast(currentDivisionTier, currentLeagueTheme) *
+                    currentEra.tvFactor)
+                .round() +
             parachuteAnnual,
         i);
   }
@@ -1152,9 +1191,12 @@ extension GameStateFinance on GameState {
   /// 資金が動く唯一の入口。資金を増減させ、同じ額をそのシーズンの収支の
   /// 記録に残す。ここを通さずに資金だけ動かすと、損益計算書の合計が実際の
   /// 資金とずれる。収入は正、支出は負で渡す。
+  ///
+  /// 移籍金の償却([LedgerCategory.isNonCash])だけは資金を動かさず、記録に
+  /// だけ残す(払ったときに資金は減っている)。
   void _book(LedgerCategory category, int delta) {
     final save = _save!;
-    save.budget += delta;
+    if (!category.isNonCash) save.budget += delta;
     save.ledgerFor(save.league.season).add(category, delta);
   }
 
@@ -1269,11 +1311,13 @@ extension GameStateFinance on GameState {
       : RulesEngine.evaluate(
           ruleSet: ruleSet,
           tier: _save!.currentDivisionTier,
+          lowestTier: totalDivisionTiers,
           ledgers: [
             for (final l in _save!.ledgers)
               if (l.season <= _save!.league.season) l,
           ],
           budget: _save!.budget,
+          snapshot: financeSnapshot,
         );
 
   /// 規則違反の罰で補強が禁止されているか。
@@ -1284,6 +1328,8 @@ extension GameStateFinance on GameState {
     final save = _save!;
     // 前の罰の期間を1季進める。
     if (save.transferBanSeasons > 0) save.transferBanSeasons -= 1;
+    if (save.wageFreezeSeasons > 0) save.wageFreezeSeasons -= 1;
+    if (save.wageFreezeSeasons == 0) save.wageFreezeCap = 0;
     final penalty = ruleReport.penalty;
     if (penalty == null) return;
     if (save.league.season <= RulesEngine.graceSeasons) {
@@ -1303,6 +1349,13 @@ extension GameStateFinance on GameState {
     save.confidence = (save.confidence - penalty.trustLoss).clamp(0, 100);
     save.transferBanSeasons = max(save.transferBanSeasons, penalty.banSeasons);
     save.pendingPointsDeduction += penalty.pointsDeduction;
+    if (penalty.wageFreezeSeasons > 0) {
+      // 人件費の上限: いまの選手の年俸の総額を超える補強はできない。
+      save.wageFreezeSeasons =
+          max(save.wageFreezeSeasons, penalty.wageFreezeSeasons);
+      save.wageFreezeCap = ContractEngine.weeklyWageBill(userTeam);
+    }
+    if (penalty.adminRelegation) save.adminRelegation = true;
     final parts = <String>[
       if (fine > 0)
         Tr.pick('罰金${formatMoney(fine)}', 'fine of ${formatMoney(fine)}'),
@@ -1311,6 +1364,11 @@ extension GameStateFinance on GameState {
             '${penalty.pointsDeduction} points docked next season'),
       if (penalty.banSeasons > 0)
         Tr.pick('補強禁止${penalty.banSeasons}季', 'signing ban'),
+      if (penalty.wageFreezeSeasons > 0)
+        Tr.pick('人件費の上限${penalty.wageFreezeSeasons}季',
+            'wage cap for ${Tr.plural(penalty.wageFreezeSeasons, 'season')}'),
+      if (penalty.adminRelegation)
+        Tr.pick('1つ下の部へ降格処分', 'relegated one division'),
     ];
     _logNews(
       Tr.pick('${ruleSet.label}の規則違反: ${penalty.reason}。${parts.join('、')}。',
@@ -1335,8 +1393,9 @@ extension GameStateFinance on GameState {
       case StartScenario.standard:
         break;
       case StartScenario.debt:
-        save.budget =
-            -(GameState.initialBudgetFor(save.currentDivisionTier) ~/ 4);
+        save.budget = -(GameState.initialBudgetFor(
+                save.currentDivisionTier, currentLeagueTheme) ~/
+            4);
         save.shareholderExpectation = 45;
       case StartScenario.patron:
         save.budget = save.budget * 3;
@@ -1596,7 +1655,8 @@ extension GameStateFinance on GameState {
   Future<bool> takeTvAdvance() async {
     final save = _save;
     if (save == null || save.tvHolidaySeasons > 0) return false;
-    final amount = MediaDealsEngine.advanceAmount(save.currentDivisionTier);
+    final amount = MediaDealsEngine.advanceAmount(
+        save.currentDivisionTier, currentLeagueTheme);
     _book(LedgerCategory.broadcast, amount);
     save.tvHolidaySeasons = MediaDealsEngine.advanceHolidaySeasons;
     _logNews(
@@ -1622,6 +1682,7 @@ extension GameStateFinance on GameState {
       tier: save.currentDivisionTier,
       rank: finalRank,
       teamCount: teamCount,
+      theme: currentLeagueTheme,
     );
     _book(LedgerCategory.broadcast, pay);
     _logNews(
@@ -1908,7 +1969,10 @@ extension GameStateFinance on GameState {
       income: weeklyIncomeFor(_save!.userTeamId),
       wageBill: matchdayPlayerWageCost + matchdayStaffWageCost,
       installments:
-          _save!.pendingInstallments.fold<int>(0, (s, i) => s + i.weeklyAmount),
+          // 年に1回払う分割払い(2026-11-22 から)は、毎節の収支に入れない。
+          _save!.pendingInstallments
+              .where((i) => !i.annual)
+              .fold<int>(0, (s, i) => s + i.weeklyAmount),
       loanRepayment: bankLoans.fold<int>(0, (s, l) => s + l.weeklyRepayment),
     );
   }
@@ -1936,6 +2000,7 @@ extension GameStateFinance on GameState {
             tier: _save!.currentDivisionTier,
             currentWeeklyWageBill: weeklyWageBill,
             weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
+            theme: currentLeagueTheme,
           );
     // 補強の配分を厚くすると上限が広がり、削ると狭まる(初期の配分で1倍)。
     return (base *
@@ -1946,12 +2011,46 @@ extension GameStateFinance on GameState {
 
   /// 週給[addedWeeklyWage]万円の選手を加えても週給予算に収まるか。
   /// 収まらない場合は[lastSigningBlockReason]に理由をセットしてfalseを返す。
-  bool _wageBudgetAllowsSigning(int addedWeeklyWage) {
+  ///
+  /// 選手の補強([isPlayer])では、国の財務規則も見る: スペイン式の人件費の
+  /// 上限([fee] は移籍金。契約の年数で割った1年分を人件費に足す)、
+  /// イタリア式の流動性の指標、フランス式の人件費の上限。
+  bool _wageBudgetAllowsSigning(int addedWeeklyWage,
+      {int fee = 0, int contractYears = 3, bool isPlayer = true}) {
     if (isTransferBanned) {
       lastSigningBlockReason = Tr.pick(
           'リーグの規則違反で、今は補強が禁止されています(あと${_save!.transferBanSeasons}季)。',
           'Signings are banned for a rule breach (${_save!.transferBanSeasons} more seasons).');
       return false;
+    }
+    if (isPlayer) {
+      final save = _save!;
+      if (save.wageFreezeSeasons > 0 &&
+          addedWeeklyWage > 0 &&
+          ContractEngine.weeklyWageBill(userTeam) + addedWeeklyWage >
+              save.wageFreezeCap) {
+        lastSigningBlockReason = Tr.pick(
+            '財務の監督機関の決定で、人件費に上限があります(年${formatMoney(annualFromWeekly(save.wageFreezeCap))}まで・あと${save.wageFreezeSeasons}季)。放出して枠を空ければ獲得できます。',
+            'The financial watchdog has capped your wage bill at ${formatMoney(annualFromWeekly(save.wageFreezeCap))} a year (${Tr.plural(save.wageFreezeSeasons, 'season')} left). Sell someone to make room.');
+        return false;
+      }
+      // 最初のシーズンは、罰と同じく猶予する(引き継いだ人件費で、何も
+      // しないうちから上限を超えていることがある)。画面には状況が出る。
+      final block = save.league.season <= RulesEngine.graceSeasons
+          ? null
+          : RulesEngine.signingBlock(
+              ruleSet: ruleSet,
+              tier: save.currentDivisionTier,
+              snapshot: financeSnapshot,
+              addedSquadCost: annualFromWeekly(addedWeeklyWage) +
+                  (fee <= 0 ? 0 : fee ~/ max(1, contractYears)),
+              // スペイン式: 上限を超えていても、売った分の一部は使える。
+              saleAllowance: squadCostSaleAllowance,
+            );
+      if (block != null) {
+        lastSigningBlockReason = block;
+        return false;
+      }
     }
     final cap = wageBudgetCap;
     if (weeklyWageBill + addedWeeklyWage <= cap) return true;
@@ -1999,6 +2098,23 @@ extension GameStateFinance on GameState {
     _notify();
     await _persist();
     return true;
+  }
+
+  /// 融資の週の返済: 元本の分は融資・預金(損益に入れない)、残りは利息
+  /// (損益の支出)として記録する。
+  void _repayLoanWeek(BankLoan loan) {
+    final principalPart = LoanEngine.principalPartOfWeek(
+        loan.principal, loan.termWeeks, loan.termWeeks - loan.weeksRemaining);
+    final interest = max(0, loan.weeklyRepayment - principalPart);
+    _book(LedgerCategory.financing, -(loan.weeklyRepayment - interest));
+    if (interest > 0) _book(LedgerCategory.interest, -interest);
+  }
+
+  /// 定期預金の満期: 元本は融資・預金、利息は損益の収入として記録する。
+  void _settleDepositMaturity(FixedDeposit deposit) {
+    _book(LedgerCategory.financing, deposit.principal);
+    final interest = deposit.maturityValue - deposit.principal;
+    if (interest != 0) _book(LedgerCategory.interest, interest);
   }
 
   /// 預け入れ中の定期預金一覧。
