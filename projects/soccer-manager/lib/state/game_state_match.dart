@@ -359,12 +359,12 @@ extension GameStateMatch on GameState {
     // スポンサー契約(年単位)の消化はシーズン開始時にまとめて処理する
     // (startNextSeason参照)。分割払いの引き落としは引き続き週次で行う。
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
-      _save!.pendingSponsorOffers = _economyAdjusted(SponsorEngine.generateOffers(
+      _save!.pendingSponsorOffers =
+          _economyAdjusted(SponsorEngine.generateOffers(
         userTeam.overallRating,
         tier: _save!.currentDivisionTier,
         managerReputation: _save!.managerReputation,
-        stadiumLevel:
-            _save!.infrastructure.facilityLevel(FacilityType.stadium),
+        stadiumLevel: _save!.infrastructure.facilityLevel(FacilityType.stadium),
       ));
     }
     for (final inst in List<Installment>.from(_save!.pendingInstallments)) {
@@ -425,10 +425,9 @@ extension GameStateMatch on GameState {
     TrainingEngine.applyYouthAcademyGrowth(
       _save!.youthProspects,
       _save!.infrastructure.facilityLevel(FacilityType.youthFacility),
-      coachSpecialty: _save!.infrastructure
-              .staffFor(StaffRole.youthCoach)
-              ?.specialty ??
-          StaffSpecialty.balanced,
+      coachSpecialty:
+          _save!.infrastructure.staffFor(StaffRole.youthCoach)?.specialty ??
+              StaffSpecialty.balanced,
       coachLevel: youthCoachCoachingLevel,
     );
 
@@ -497,8 +496,7 @@ extension GameStateMatch on GameState {
         final scorer = YouthLeagueEngine.topScorer(_save!.youthProspects);
         if (scorer != null) {
           _logNews(
-            Tr.pick(
-                'ユースの得点王は${scorer.name}(${scorer.youthMatchGoals}得点)',
+            Tr.pick('ユースの得点王は${scorer.name}(${scorer.youthMatchGoals}得点)',
                 'Academy top scorer: ${scorer.name} (${scorer.youthMatchGoals} goals)'),
             context: Tr.pick('ユース', 'Youth'),
           );
@@ -646,6 +644,14 @@ extension GameStateMatch on GameState {
 
     // 試合の日に入るのは観客・スポンサー・グッズ。放映権は年4回の入金日に、
     // 給与は毎月末に払う(MoneyCalendar)。
+    //
+    // 観客収入はアウェイの節にも入る。これは「この試合の入場料」ではなく、
+    // ホームの試合の入場料を1季ぶん均して、毎節「平均」として入れる作り
+    // (節の数×この額で年額になるように、部ごとの年収の目安
+    // typicalAnnualIncome と economy_scale_test で合わせてある)。ホームの節
+    // だけに入れると年額が半分になり、経済の釣り合いが崩れるので、そのままに
+    // する。ただし画面に出す「観客動員」は、ホームの試合の実際の人数だけを
+    // 控える(アウェイの節に自分のスタジアムの人数を出さない)。
     final incomeParts = weeklyIncomeParts(_save!.userTeamId);
     final partsTotal =
         incomeParts.gate + incomeParts.sponsor + incomeParts.merchandise;
@@ -664,15 +670,18 @@ extension GameStateMatch on GameState {
     final baseAttendance = expectedAttendance;
     var attendance = baseAttendance;
     if (isDerby) {
-      attendance =
-          (attendance * GameState.derbyAttendanceMultiplier).round();
+      attendance = (attendance * GameState.derbyAttendanceMultiplier).round();
     }
     if (holiday != null) {
       attendance =
           (attendance * MoneyCalendar.holidayAttendanceMultiplier).round();
     }
     final actualAttendance = attendance.clamp(0, stadiumCapacity);
-    lastMatchAttendance = actualAttendance;
+    // 観客動員の表示は、自分のスタジアムで試合があった節(ホーム)だけ
+    // 書き換える。アウェイの節は前のホームの試合の人数のまま。
+    if (userFixture != null && userFixture.homeTeamId == _save!.userTeamId) {
+      lastMatchAttendance = actualAttendance;
+    }
     if (isDerby || holiday != null) {
       income = GameState.derbyAdjustedIncome(
         income,
@@ -1326,8 +1335,10 @@ extension GameStateMatch on GameState {
                 .rulesBelow(_save!.currentDivisionTier)
                 .relegationZone
             : 0,
-        // 大陸カップ出場枠は1部の上位2チームのみ(2部は対象外)。
-        continentalQualifyCount: _save!.currentDivisionTier == 1 ? 2 : 0,
+        // 大陸カップ出場枠は1部の上位のみ(2部は対象外)。枠の数は国の係数で
+        // 2〜4に変わるので、季の締めの判定と同じ continentalSpots を使う。
+        continentalQualifyCount:
+            _save!.currentDivisionTier == 1 ? continentalSpots : 0,
       );
 
   List<Team> get allTeamsForCups => [
@@ -1336,8 +1347,7 @@ extension GameStateMatch on GameState {
       ];
 
   /// 新聞の一面と監督の試合後の一言を作る(自クラブのリーグ戦のあと)。
-  void _publishFrontPage(
-      MatchResult r, Fixture f, List<String> milestones) {
+  void _publishFrontPage(MatchResult r, Fixture f, List<String> milestones) {
     final s = _save!;
     final userId = s.userTeamId;
     if (r.homeTeamId != userId && r.awayTeamId != userId) return;
@@ -1346,9 +1356,8 @@ extension GameStateMatch on GameState {
     final opp = s.league.teams.where((t) => t.id == oppId).firstOrNull;
     final gf = home ? r.homeGoals : r.awayGoals;
     final ga = home ? r.awayGoals : r.homeGoals;
-    final rank = s.league.sortedStandings
-            .indexWhere((x) => x.teamId == userId) +
-        1;
+    final rank =
+        s.league.sortedStandings.indexWhere((x) => x.teamId == userId) + 1;
     s.frontPageHeadline = FrontPageEngine.headline(
       club: s.clubName,
       opponent: opp?.name ?? '-',
@@ -1358,19 +1367,17 @@ extension GameStateMatch on GameState {
       rank: rank,
       milestones: milestones,
     );
-    final style = s.infrastructure
-            .staffFor(StaffRole.manager)
-            ?.manager
-            ?.style ??
-        ManagerStyle.pragmatic;
+    final style =
+        s.infrastructure.staffFor(StaffRole.manager)?.manager?.style ??
+            ManagerStyle.pragmatic;
     s.frontPageQuote = FrontPageEngine.managerQuote(
         goalsFor: gf, goalsAgainst: ga, style: style);
   }
 
   /// クラブの文化。
-  ClubCulture get clubCulture => ClubCulture.values.firstWhere(
-      (c) => c.name == _save?.clubCulture,
-      orElse: () => ClubCulture.none);
+  ClubCulture get clubCulture =>
+      ClubCulture.values.firstWhere((c) => c.name == _save?.clubCulture,
+          orElse: () => ClubCulture.none);
 
   /// 文化を変えられるか(1季に1回まで)。
   bool get canChangeClubCulture =>
@@ -1386,8 +1393,8 @@ extension GameStateMatch on GameState {
     }
     s.clubCulture = c.name;
     s.clubCultureChangedSeason = s.league.season;
-    _addTimeline(Tr.pick('クラブの文化を「${c.label}」にした',
-        'Set the club identity to "${c.label}"'));
+    _addTimeline(Tr.pick(
+        'クラブの文化を「${c.label}」にした', 'Set the club identity to "${c.label}"'));
     _notify();
     await _persist();
     return true;

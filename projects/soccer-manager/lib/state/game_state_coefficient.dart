@@ -24,7 +24,12 @@ extension GameStateCoefficient on GameState {
     return rows;
   }
 
-  /// 他国の1部の、今季の上位2クラブを控える(日程を作り直す前に呼ぶ)。
+  /// 他国の1部から大陸大会の相手の候補にするクラブの数(各国の上位)。
+  /// 日程画面の他国の順位表の印も、この数に揃える。
+  static const int foreignTopPerLeague = 2;
+
+  /// 他国の1部の、今季の上位[foreignTopPerLeague]クラブを控える
+  /// (日程を作り直す前に呼ぶ)。
   void _rememberForeignTop() {
     final s = _save!;
     _lastForeignTop = [];
@@ -37,7 +42,7 @@ extension GameStateCoefficient on GameState {
             ]
           : ([...l.teams]
             ..sort((a, b) => b.overallRating.compareTo(a.overallRating)));
-      _lastForeignTop.addAll(order.take(2));
+      _lastForeignTop.addAll(order.take(foreignTopPerLeague));
     }
   }
 
@@ -80,9 +85,9 @@ extension GameStateCoefficient on GameState {
         final top = l == null
             ? 75
             : ([...l.teams.map((x) => x.overallRating)]
-                  ..sort((a, b) => b.compareTo(a)))
-                .take(4)
-                .fold<int>(0, (a, b) => a + b) /
+                      ..sort((a, b) => b.compareTo(a)))
+                    .take(4)
+                    .fold<int>(0, (a, b) => a + b) /
                 4;
         // 1部の上位が強い国ほど点を取る(4〜14点のあたり)。
         pts = ((top - 78) * 0.6 + 6 + rng.nextDouble() * 4).clamp(0, 20);

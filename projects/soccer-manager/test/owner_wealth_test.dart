@@ -17,7 +17,8 @@ void main() {
 
   test('始めたときの個人資産は、クラブの初期資金の3倍', () async {
     final gs = await start();
-    expect(gs.ownerWealth,
+    expect(
+        gs.ownerWealth,
         GameState.initialBudgetFor(gs.currentDivisionTier) *
             GameStateOwner.startingWealthMultiple);
   });
@@ -61,8 +62,7 @@ void main() {
     final other = gs.currentLedger.of(LedgerCategory.other);
     final d = gs.today;
     gs.debugAdvanceTodayTo(DateTime(d.year, d.month + 1, 2));
-    expect(gs.ownerWealth,
-        wealth + gs.scaledMoney(GameStateOwner.monthlyIncomeTier5) + interest);
+    expect(gs.ownerWealth, wealth + GameStateOwner.monthlyIncome + interest);
     expect(gs.currentLedger.of(LedgerCategory.other), other - interest);
   });
 

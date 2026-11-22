@@ -43,17 +43,19 @@ void main() {
     final gs = GameState();
     await gs.startNewGame('テストFC');
     final save = gs.save!;
-    save.pendingOwnerEvent = OwnerEventKind.transferDemand;
+    // エースの売却(transferDemand)は移籍金が市場価値で入るので、決まった
+    // 額の動く事件で確かめる(reality_bugs_money_test.dart に売却の検査)。
+    save.pendingOwnerEvent = OwnerEventKind.namingOffer;
     save.confidence = 50;
     save.shareholderExpectation = 50;
     final funds = save.budget;
 
-    // 2つ目: 売却を認める(サポーター-6・株主+4・資金+800)
-    expect(await gs.resolveOwnerEvent(1), isTrue);
-    expect(save.confidence, 44);
-    expect(save.shareholderExpectation, 54);
+    // 1つ目: 受ける(サポーター-5・株主+3・資金+900)
+    expect(await gs.resolveOwnerEvent(0), isTrue);
+    expect(save.confidence, 45);
+    expect(save.shareholderExpectation, 53);
     // 額は部の規模で掛かる(3部から始まる。2026-11-22)。
-    expect(save.budget, funds + gs.scaledMoney(800));
+    expect(save.budget, funds + gs.scaledMoney(900));
     expect(gs.pendingOwnerEvent, isNull);
   });
 
@@ -76,7 +78,8 @@ void main() {
     await gs.startNewGame('テストFC');
     gs.save!.pendingOwnerEvent = OwnerEventKind.sponsorExit;
     final json = gs.save!.toJson();
-    expect(SaveGame.fromJson(json).pendingOwnerEvent, OwnerEventKind.sponsorExit);
+    expect(
+        SaveGame.fromJson(json).pendingOwnerEvent, OwnerEventKind.sponsorExit);
     json.remove('pendingOwnerEvent');
     expect(SaveGame.fromJson(json).pendingOwnerEvent, isNull);
   });

@@ -42,6 +42,12 @@ extension GameStateFinance on GameState {
   }
 
   /// 回答待ちの記者会見の質問。ない場合はnull。
+  ///
+  /// 監督としての試合後の記者会見は、オーナー型への作り替え(#1009)で
+  /// 質問を作る仕組みと画面ごと外した(試合後の会見はオーナーの仕事では
+  /// ない)。いまは旧セーブの読み書きのために残してあり、新しく積まれる
+  /// ことは無い。オーナーとして答える記者会見は、移籍の噂への答え
+  /// (game_state_rumors.dart・ホーム画面の RumorCard)が受け持つ。
   PressQuestion? get pendingPressConference => _save?.pendingPressConference;
 
   /// 記者会見の質問に回答する。信頼度・選手全体の士気に選んだ選択肢の効果を反映する。
@@ -253,16 +259,184 @@ extension GameStateFinance on GameState {
 
   /// その節に事件が起きるなら、判断待ちに積む。すでに待っている事件があれば
   /// 積まない(判断を溜めさせない)。
+  ///
+  /// 事件は、いまの状況で起こりうるものから選ぶ([ownerEventCanHappen])。
+  /// 首位なのに「成績への不満でスポンサーが撤退」のような、本文と状況が
+  /// 食い違う事件は起こさない。
   void _maybeRaiseOwnerEvent(int matchday) {
     final save = _save;
     if (save == null || save.pendingOwnerEvent != null) return;
     if (!GameStateFinance.isOwnerEventMatchday(matchday)) return;
-    final kinds = OwnerEventKind.values;
-    save.pendingOwnerEvent = kinds[
+    final kinds = OwnerEventKind.values.where(ownerEventCanHappen).toList();
+    if (kinds.isEmpty) return;
+    final kind = kinds[
         Random(save.league.season * 1000 + matchday).nextInt(kinds.length)];
+    save.pendingOwnerEvent = kind;
+    // 「主力が長期離脱します」は、答えを待つ前に起きている出来事。
+    if (kind == OwnerEventKind.injuryCrisis) _injureKeyPlayerForEvent();
   }
 
-  /// 事件に答える。選んだ答えの期待と資金の増減を反映する。
+  /// [kind] の事件が、いまの状況で起こりうるか(本文が言っていることと
+  /// 状況が合うか)。
+  bool ownerEventCanHappen(OwnerEventKind kind) {
+    final save = _save;
+    if (save == null) return false;
+    switch (kind) {
+      case OwnerEventKind.sponsorExit:
+        // 「成績への不満から」なので、順位が下半分のときだけ。
+        final rows = save.league.sortedStandings;
+        final rank = rows.indexWhere((r) => r.teamId == save.userTeamId) + 1;
+        return rank > 0 && rank > rows.length / 2;
+      case OwnerEventKind.transferDemand:
+        // 売れるエースがいて、売っても人数が足りるときだけ。
+        return _ownerEventAce != null && userTeam.players.length > minSquadSize;
+      case OwnerEventKind.injuryCrisis:
+        return _ownerEventKeyPlayer != null;
+      case OwnerEventKind.youthPoach:
+        return save.youthProspects.isNotEmpty;
+      case OwnerEventKind.managerPoach:
+      case OwnerEventKind.managerClash:
+        return save.infrastructure.staffFor(StaffRole.manager) != null;
+      case OwnerEventKind.rivalProvocation:
+        return rivalTeam != null;
+      default:
+        return true;
+    }
+  }
+
+  /// 事件の「エース」: 自クラブで市場価値がいちばん高い選手(借りている・
+  /// 貸し出している選手は除く)。
+  Player? get _ownerEventAce {
+    final list = [
+      for (final p in userTeam.players)
+        if (!p.isLoan && !p.isLoanedOut) p
+    ]..sort((a, b) => b.marketValue.compareTo(a.marketValue));
+    return list.firstOrNull;
+  }
+
+  /// 事件の「主力」: いま出られる選手のうち、総合力がいちばん高い選手。
+  Player? get _ownerEventKeyPlayer {
+    final list = [
+      for (final p in userTeam.players)
+        if (!p.isLoanedOut && !p.isInjured) p
+    ]..sort((a, b) => b.overall.compareTo(a.overall));
+    return list.firstOrNull;
+  }
+
+  /// 事件の「ユースの逸材」: 伸びしろがいちばん大きいユースの選手。
+  Player? get _ownerEventYouth {
+    final list = [..._save!.youthProspects]
+      ..sort((a, b) => b.potential.compareTo(a.potential));
+    return list.firstOrNull;
+  }
+
+  /// 事件で長期離脱する週数(靭帯損傷のいちばん長い療養期間)。
+  static int get ownerEventInjuryWeeks => InjuryType.ligament.durationRange.$2;
+
+  /// 慰留したエースに約束する昇給の倍率。
+  static const double ownerEventAceRaise = 1.2;
+
+  /// 「主力が長期離脱」: 主力を実際に長期の怪我にする。
+  void _injureKeyPlayerForEvent() {
+    final p = _ownerEventKeyPlayer;
+    if (p == null) return;
+    final weeks = ownerEventInjuryWeeks;
+    p.injuryWeeks = weeks;
+    p.injuryType = InjuryType.ligament;
+    p.injuryHistoryCounts[InjuryType.ligament.name] =
+        (p.injuryHistoryCounts[InjuryType.ligament.name] ?? 0) + 1;
+    final team = userTeam;
+    if (team.startingXI.remove(p.id)) LineupUtils.fillVacancies(team);
+    _logNews(
+        Tr.pick('${p.name}が靭帯を痛め、約$weeks週離脱する。',
+            '${p.name} has damaged a ligament and is out for about ${Tr.plural(weeks, 'week')}.'),
+        context: Tr.pick('負傷', 'Injury'));
+  }
+
+  /// 事件の答えが、期待と資金のほかに起こすこと(画面に添える一文)。
+  /// 無ければ null。
+  String? ownerEventOptionEffect(OwnerEventKind kind, int optionIndex) {
+    final save = _save;
+    if (save == null) return null;
+    final raisePct = ((ownerEventAceRaise - 1) * 100).round();
+    switch ((kind, optionIndex)) {
+      case (OwnerEventKind.transferDemand, 0):
+        final ace = _ownerEventAce;
+        if (ace == null) return null;
+        return Tr.pick('${ace.name}の給与を$raisePct%上げる',
+            'Wages for ${ace.name} go up $raisePct%');
+      case (OwnerEventKind.transferDemand, 1):
+        final ace = _ownerEventAce;
+        if (ace == null) return null;
+        return Tr.pick('${ace.name}が移籍(移籍金${formatMoney(ace.marketValue)})',
+            '${ace.name} leaves (fee ${formatMoney(ace.marketValue)})');
+      case (OwnerEventKind.youthPoach, 0):
+        final y = _ownerEventYouth;
+        if (y == null) return null;
+        return Tr.pick('ユースの${y.name}が移る', 'Academy player ${y.name} leaves');
+      case (OwnerEventKind.managerPoach, 1):
+        final m = save.infrastructure.staffFor(StaffRole.manager);
+        if (m == null) return null;
+        return Tr.pick('${m.name}監督が去る', 'Manager ${m.name} leaves');
+      default:
+        return null;
+    }
+  }
+
+  /// 事件の答えが言っていることを、実際に起こす(エースの売却・昇給、
+  /// ユースの引き抜き、監督の退任)。
+  void _applyOwnerEventOption(OwnerEventKind kind, int optionIndex) {
+    final save = _save!;
+    switch ((kind, optionIndex)) {
+      case (OwnerEventKind.transferDemand, 0):
+        final ace = _ownerEventAce;
+        if (ace == null) return;
+        ace.wage = (ace.wage * ownerEventAceRaise).round();
+        _logNews(
+            Tr.pick('${ace.name}を昇給で慰留した。',
+                'You kept ${ace.name} with a pay rise.'),
+            context: Tr.pick('オーナー', 'Owner'));
+      case (OwnerEventKind.transferDemand, 1):
+        final ace = _ownerEventAce;
+        final team = userTeam;
+        if (ace == null || team.players.length <= minSquadSize) return;
+        final fee = ace.marketValue;
+        team.players.removeWhere((p) => p.id == ace.id);
+        final wasStarter = team.startingXI.remove(ace.id);
+        _clearPlayerRoleReferences(team, ace.id);
+        if (wasStarter) LineupUtils.autoFill(team);
+        save.incomingOffers.removeWhere((o) => o.playerId == ace.id);
+        _book(LedgerCategory.playerSales, fee);
+        _paySellOn(ace, fee);
+        _placeSoldPlayerAtCpuClub(ace);
+        _friendsMissPlayer(ace);
+        _logNews(
+            Tr.pick('移籍を求めた${ace.name}の売却を認めた。移籍金${formatMoney(fee)}が入った。',
+                'You let ${ace.name} go as he asked. The ${formatMoney(fee)} fee is in.'),
+            context: Tr.pick('移籍', 'Transfer'));
+      case (OwnerEventKind.youthPoach, 0):
+        final y = _ownerEventYouth;
+        if (y == null) return;
+        save.youthProspects.removeWhere((p) => p.id == y.id);
+        _logNews(
+            Tr.pick('ユースの${y.name}が、違約金を残して他クラブへ移った。',
+                'Academy player ${y.name} has left for another club, with a release fee paid.'),
+            context: Tr.pick('ユース', 'Youth'));
+      case (OwnerEventKind.managerPoach, 1):
+        final m = save.infrastructure.staffFor(StaffRole.manager);
+        if (m == null) return;
+        save.infrastructure.staff[StaffRole.manager] = null;
+        _logNews(
+            Tr.pick('${m.name}監督が、違約金を残して他クラブへ移った。後任を探す必要がある。',
+                'Manager ${m.name} has left for another club, with compensation paid. You need a replacement.'),
+            context: Tr.pick('スタッフ', 'Staff'));
+      default:
+        return;
+    }
+  }
+
+  /// 事件に答える。選んだ答えの期待と資金の増減を反映し、答えが言っている
+  /// こと(エースの売却など)を実際に起こす。
   Future<bool> resolveOwnerEvent(int optionIndex) async {
     final save = _save;
     final kind = save?.pendingOwnerEvent;
@@ -273,7 +447,10 @@ extension GameStateFinance on GameState {
     save.confidence = (save.confidence + o.supportersDelta).clamp(0, 100);
     save.shareholderExpectation =
         (save.shareholderExpectation + o.shareholdersDelta).clamp(0, 100);
-    _book(LedgerCategory.other, scaledMoney(o.fundsDelta));
+    if (o.fundsDelta != 0) {
+      _book(LedgerCategory.other, scaledMoney(o.fundsDelta));
+    }
+    _applyOwnerEventOption(kind, optionIndex);
     save.pendingOwnerEvent = null;
     _notify();
     await _persist();
@@ -551,6 +728,8 @@ extension GameStateFinance on GameState {
     save.clubHistory.add(team.name);
     // クラブ価値は新しいクラブのものとして数え直す。
     save.clubValueHistory.clear();
+    // クラブの歴代記録も新しいクラブのものとして数え直す。
+    _resetClubRecords();
     if (save.ownerGoal == OwnerGoal.clubValue) {
       save.ownerGoalStartValue = clubValue.total;
     }
@@ -694,6 +873,8 @@ extension GameStateFinance on GameState {
     );
     save.clubHistory.add(userTeam.name);
     save.clubValueHistory.clear();
+    // クラブの歴代記録も新しいクラブのものとして数え直す(オーナーの経歴は残る)。
+    _resetClubRecords();
     if (save.ownerGoal == OwnerGoal.clubValue) {
       save.ownerGoalStartValue = clubValue.total;
     }
@@ -898,17 +1079,25 @@ extension GameStateFinance on GameState {
 
   /// 第[matchday]節の試合の日に入る見込みの収入(観客・スポンサー・グッズ。
   /// 祝日なら客が増える。放映権は入金日に別に入る)。
+  ///
+  /// 年間シートを売った季は、先に受け取ったぶん([seasonTicketShareNow]%)の
+  /// 入場収入を除く。試合の日の実際の入金(game_state_match の節の処理)と
+  /// 同じ計算: 祝日で増えた分は当日券なのでそのまま入る。
   int expectedMatchdayIncome(int matchday) {
     if (_save == null) return 0;
     final p = weeklyIncomeParts(_save!.userTeamId);
     final income = p.gate + p.sponsor + p.merchandise;
-    if (holidayOfMatchday(matchday) == null) return income;
+    final soldAhead =
+        p.gate - SeasonTicketEngine.remainingGate(p.gate, seasonTicketShareNow);
+    if (holidayOfMatchday(matchday) == null) return income - soldAhead;
     final base = expectedAttendance;
     return GameState.derbyAdjustedIncome(
-      income,
-      baseAttendance: base,
-      actualAttendance: MoneyCalendar.holidayAttendance(base, stadiumCapacity),
-    );
+          income,
+          baseAttendance: base,
+          actualAttendance:
+              MoneyCalendar.holidayAttendance(base, stadiumCapacity),
+        ) -
+        soldAhead;
   }
 
   /// 今日より後のお金の予定(給与日・放映権の入金日・リーグ戦の日)を
