@@ -127,6 +127,16 @@ class HistoryScreen extends StatelessWidget {
                     for (var i = car.myTrades.length - 1; i >= 0; i--) _tradeRow(context, car, i),
                   ]),
                 ],
+                if (car.prehistory.isNotEmpty) ...[
+                  const SectionTitle('始める前の10年(このリーグの歴史)'),
+                  _card([
+                    for (final (i, (ch, lo)) in car.prehistory.indexed)
+                      Text('${i - car.prehistory.length + 1}年目  優勝 ${car.teams[ch].def.short}(ファイナルの相手 ${car.teams[lo].def.short})',
+                          style: const TextStyle(fontSize: 12.5, height: 1.5)),
+                    if (car.legendNames.isNotEmpty)
+                      Text('伝説の選手: ${car.legendNames.join('・')}', style: const TextStyle(fontSize: 12.5, height: 1.5, color: GmColors.gold)),
+                  ]),
+                ],
                 const SectionTitle('歴代の優勝'),
                 _card([
                   if (car.champs.isEmpty) const Text('まだ優勝したチームはない。', style: TextStyle(color: GmColors.sub)),
