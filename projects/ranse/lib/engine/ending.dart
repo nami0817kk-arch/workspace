@@ -1,3 +1,5 @@
+import 'endings_catalog.dart';
+import 'endings_young.dart';
 import 'game.dart';
 import 'history_lines.dart';
 import 'life.dart';
@@ -17,14 +19,23 @@ class Ending {
     required this.kind,
     required this.highlights,
     this.witness,
+    this.handId,
+    this.tier,
   });
+
+  /// 手書きの最期なら、その id（`endings_*.dart`）と希少度。組み立ての最期なら null。
+  final String? handId;
+  final Tier? tier;
+
+  String? get tierName => tier == null ? null : kTierNames[tier];
 
   /// 最期の場にいた人の役割（伴侶・子・幼なじみ…）。いなければ null。
   final String? witness;
 
   /// 図鑑で同じ結末かを見分けるための鍵（名前は含めない）。
   /// 最期1000本を書いたら、手書きの最期の id に置き換える。
-  String get key => '$way/$kind/${witness ?? '-'}';
+  String get key =>
+      handId != null ? 'hand:$handId' : '$way/$kind/${witness ?? '-'}';
 
   /// 結末の称号（例「戦場に散った侍」）。
   final String title;
@@ -227,12 +238,27 @@ List<String> pickHighlights(List<String> path, {int max = 4}) {
   return [for (final i in idx) path[i]];
 }
 
+/// 手書きの最期（道ごとのファイルを足していく）。
+final kHandEndings = <EndingDef>[...kYoungEndings];
+
 Ending buildEnding(Game g) {
   final l = g.l;
   final way = lifeWay(l);
   final kind = l.victory
       ? 'victory'
       : (l.end == 'era' ? 'era' : (l.deathKind ?? 'byo'));
+  final hand = findHandEnding(g, way, kind, kHandEndings);
+  if (hand != null) {
+    return Ending(
+      title: hand.title,
+      text: fillEnding(g, hand.text),
+      way: way,
+      kind: kind,
+      highlights: pickHighlights(l.path),
+      handId: hand.id,
+      tier: hand.tier,
+    );
+  }
   final aj = g.avgJoy;
   final title =
       _specialTitle(g, way, kind) ??

@@ -183,7 +183,7 @@ class _ResultCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${e.wayName}・${e.kindName}',
+            '${e.wayName}・${e.kindName}${e.tierName == null ? '' : '　${e.tierName}'}',
             style: const TextStyle(color: Pal.muted, fontSize: 12),
           ),
           const SizedBox(height: 12),

@@ -1042,6 +1042,29 @@ void main() {
       expect(personDied(g, '織田信長'), isFalse); // 信長が生き延びた世
     });
 
+    test('手書きの最期: 幼くして亡くなる人生には必ず付き、差し込みが残らず、いろいろな最期が出る', () {
+      final ids = kHandEndings.map((e) => e.id).toList();
+      expect(ids.toSet().length, ids.length, reason: '最期の id が重複している');
+      final seen = <String>{};
+      var young = 0;
+      for (var seed = 0; seed < 2000; seed++) {
+        final rng = Rng(seed + 400);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        if (g.age >= 15) continue;
+        young++;
+        final e = buildEnding(g);
+        expect(e.handId, isNotNull, reason: '${g.age}歳 ${g.l.dead}');
+        expect(e.tier, isNotNull);
+        expect(e.text, isNot(contains('{')), reason: e.text);
+        expect(e.key, startsWith('hand:y_'));
+        seen.add(e.handId!);
+      }
+      expect(young, greaterThan(300));
+      expect(seen.length, greaterThanOrEqualTo(15), reason: '$seen');
+    });
+
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
       final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
       path[6] = '20歳　信長に仕えた';
