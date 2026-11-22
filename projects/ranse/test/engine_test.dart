@@ -337,6 +337,32 @@ void main() {
     expect(lives, greaterThan(50));
   });
 
+  test('身分の名前は、仏門・商い・野の道・隠居を書き分ける', () {
+    final rng = Rng(3);
+    final g = Game(rng: rng);
+    var b = rollBirth(rng);
+    g.start(b);
+    while (g.finished) {
+      b = rollBirth(rng);
+      g.start(b);
+    }
+    g.l.t = 40; // 20歳
+    g.l.rank = 0;
+    expect(g.rankName(), contains('無役'));
+    g.setFlag('priesthood');
+    expect(g.rankName(), g.l.female ? '尼' : '僧');
+    expect(g.nextPromo(), '仏の道を歩む');
+    g.l.flags.remove('priesthood');
+    g.setFlag('way_merchant');
+    expect(g.rankName(), '商人');
+    g.l.flags.remove('way_merchant');
+    g.l.ronin = true;
+    expect(g.rankName(), g.l.female ? '流浪の身' : '浪人');
+    g.l.rank = 3;
+    g.setFlag('retired');
+    expect(g.rankName(), startsWith('隠居（元'));
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);

@@ -869,15 +869,34 @@ class Game extends ChangeNotifier {
   // ---------- 表示用の計算 ----------
   String rankName() {
     if (isChild) return l.clsName.endsWith('の子') ? l.clsName : '${l.clsName}の子';
+    final retired = hasFlag('retired');
     if (l.rank == 0) {
-      return l.ronin ? (l.female ? '尼・流浪' : '浪人') : '${l.clsName}（無役）';
+      if (hasFlag('priesthood')) {
+        return l.female ? '尼' : (hasFlag('abbot') ? '住持' : '僧');
+      }
+      if (hasFlag('way_merchant')) {
+        return '${hasFlag('goyo') ? '御用商人' : '商人'}${retired ? '（隠居）' : ''}';
+      }
+      if (hasFlag('way_outlaw')) {
+        return hasFlag('nukenin')
+            ? '抜け忍'
+            : (hasFlag('wanderer') ? '流れ者' : '野に生きる者');
+      }
+      if (retired) return '隠居';
+      return l.ronin ? (l.female ? '流浪の身' : '浪人') : '${l.clsName}（無役）';
     }
-    return rk[l.rank];
+    return retired ? '隠居（元${rk[l.rank]}）' : rk[l.rank];
   }
 
   String nextPromo() {
     if (isChild) return '${l.female ? '裳着' : '元服'}まであと${15 - age}年';
-    if (l.rank == 0) return '仕官して身分を得る';
+    if (hasFlag('retired')) return '静かな余生を送る';
+    if (l.rank == 0) {
+      if (hasFlag('priesthood')) return '仏の道を歩む';
+      if (hasFlag('way_merchant')) return '商いを広げる';
+      if (hasFlag('way_outlaw')) return '野に生きる';
+      return l.female ? '奉公先を得る' : '仕官して身分を得る';
+    }
     if (l.rank == 7) return l.female ? '好機を待つ（後見など）' : '下剋上か主君の死で大名へ';
     if (l.rank >= 8) return '天下まで：勢力占有率 ${(share * 100).round()}% / 50%';
     final n = kPromo[l.rank + 1]!;
