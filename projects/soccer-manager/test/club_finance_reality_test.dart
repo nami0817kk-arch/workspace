@@ -218,18 +218,46 @@ void main() {
           }
         }
       }
-      // 再現: 条項の倍率(0.7)だけだと、フランスの1→2部で見合う額の約0.57。
-      final w = weeklyWageForAbility(
-          75, 27, wageCountryFactor(LeagueTheme.france, 1));
-      final fair = weeklyWageForAbility(
-          75, 27, wageCountryFactor(LeagueTheme.france, 2));
-      expect(w * RelegationClause.wageFactor(LeagueTheme.france) / fair,
-          lessThan(0.7));
-      // 下の部の水準が上の部より高い国では、下げない(上げもしない)。
+    });
+
+    // 2026-11-23: 国・部の水準が下の部ほど高い国(フランス・ドイツなど)では、
+    // 降格しても年俸が下がらなかった。水準を部が下がるほど同じか低い形に
+    // 直したので、どの国でも降格で下がり、条項の倍率より下がりすぎない。
+    test('年俸の水準は、どの国も部が下がるほど同じか低い', () {
+      for (final theme in LeagueTheme.values) {
+        for (final tier in [1, 2]) {
+          expect(wageCountryFactor(theme, tier + 1),
+              lessThanOrEqualTo(wageCountryFactor(theme, tier)),
+              reason: '${theme.name} $tier部→${tier + 1}部');
+        }
+        // 同じ選手は、1部より下の部で高くは求めない。
+        expect(weeklyWageForAbility(75, 27, wageCountryFactor(theme, 2)),
+            lessThanOrEqualTo(
+                weeklyWageForAbility(75, 27, wageCountryFactor(theme, 1))),
+            reason: theme.name);
+      }
+    });
+
+    test('降格すると、どの国・部でも年俸が下がる(条項の倍率までで止まる)', () {
+      for (final theme in LeagueTheme.values) {
+        for (final from in [1, 2]) {
+          final f = RelegationClause.wageFactorFor(theme,
+              fromTier: from, toTier: from + 1);
+          expect(f, lessThan(1.0), reason: '${theme.name} $from部');
+          expect(f, greaterThanOrEqualTo(RelegationClause.wageFactor(theme)),
+              reason: '${theme.name} $from部');
+          // 水準の比のとおりに下がる(条項の倍率より下がるときだけ止める)。
+          final ratio = wageCountryFactor(theme, from + 1) /
+              wageCountryFactor(theme, from);
+          expect(f,
+              closeTo(max(RelegationClause.wageFactor(theme), ratio), 1e-9));
+        }
+      }
+      // 1部から3部へ2つ下がるときも同じ形。
       expect(
           RelegationClause.wageFactorFor(LeagueTheme.france,
-              fromTier: 1, toTier: 2),
-          1.0);
+              fromTier: 1, toTier: 3),
+          lessThan(1.0));
     });
   });
 
