@@ -3,6 +3,7 @@ import 'data.dart';
 import 'game.dart';
 import 'life.dart';
 import 'rng.dart';
+import 'variety.dart';
 
 /// 大人（15歳〜）。幼少期と同じく、1年ごとに「今年の重点」を選び、
 /// その年の途中で岐路が起きることがある。
@@ -395,7 +396,7 @@ List<SceneDef> buildAdultScenes() {
           g.active &&
           g.hasFlag('first_battle'),
       (g, next) {
-        g.ask('出陣', '主命により、合戦に加わることになった。どの持ち場に就く？', [
+        g.ask('出陣', battleIntro(g), [
           Choice.h('先陣を駆ける', '大きな手柄か、討死か', () => g.battle('van')),
           Choice.h('本陣に控える', '手柄も危うさも、ほどほど', () => g.battle('main')),
           Choice.h('後詰めにまわる', '命は守りやすい。手柄は小さい', () => g.battle('rear')),
@@ -421,7 +422,7 @@ List<SceneDef> buildAdultScenes() {
         final tg = g.alive.where((x) => x != me).toList()
           ..sort((a, b) => a.power.compareTo(b.power));
         final sk = 1 + (l.bu + l.chi + l.un) / 600;
-        g.ask('侵攻', 'どの国に兵を向ける？', [
+        g.ask('侵攻', invadeIntro(g), [
           for (final t in tg.take(5))
             Choice.h(
               '${t.name}家',

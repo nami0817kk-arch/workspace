@@ -151,6 +151,25 @@ void main() {
     }
   });
 
+  test('何度も起きる岐路（出陣・侵攻）は、書き出しが回を重ねると変わる', () {
+    final texts = <String, Set<String>>{};
+    for (var seed = 0; seed < 300; seed++) {
+      final rng = Rng(seed + 4242);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      final r = Rng(seed);
+      var c = 0;
+      while (!g.finished && c++ < 3000) {
+        final p = g.prompt!;
+        if (p.title == '出陣' || p.title == '侵攻') {
+          texts.putIfAbsent(p.title, () => {}).add(p.text);
+        }
+        g.choose(pickAmbitious(g, p, r));
+      }
+    }
+    expect(texts['出陣']?.length ?? 0, greaterThanOrEqualTo(5));
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);

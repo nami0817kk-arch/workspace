@@ -4,6 +4,7 @@ import 'data.dart';
 import 'game.dart';
 import 'life.dart';
 import 'rng.dart';
+import 'variety.dart';
 
 /// 歩んだ道と死に方。最期の場面（1000本）は「道 × 死に方 × 縁のある人」で選ぶ
 /// （2026-11-23 決定、CLAUDE.md）。ここには、その分け目になる
@@ -190,7 +191,7 @@ List<SceneDef> buildWayScenes() {
       merchant,
       (g, next) {
         final l = g.l;
-        g.ask('仕入れの旅', 'どこへ仕入れに出る？', [
+        g.ask('仕入れの旅', tradeIntro(g), [
           Choice.h('近くの市へ', '儲けは小さい。危うさも小さい', () {
             l.gold += g.rng.range(3, 8);
             return '近くの市で手堅く仕入れ、売り切った。';
@@ -373,7 +374,7 @@ List<SceneDef> buildWayScenes() {
       outlaw,
       (g, next) {
         final l = g.l;
-        g.ask('獲物', '街道に、獲物が通りかかった。', [
+        g.ask('獲物', raidIntro(g), [
           Choice.h('荷を運ぶ商人の列を襲う', '実入りは大きい。護衛がつくこともある', () {
             if (g.rng.chance(.08 - l.bu / 2000)) {
               g.die('商人の護衛に斬られて死んだ', 'senshi');
@@ -524,7 +525,7 @@ List<SceneDef> buildWayScenes() {
       outlaw,
       (g, next) {
         final l = g.l;
-        g.ask('旅路', 'どこへ流れていく？', [
+        g.ask('旅路', wanderIntro(g), [
           Choice.h('街道を西へ', '人の多い道。稼ぎ口もある', () {
             l.gold += g.rng.range(2, 6);
             l.net += 1;
