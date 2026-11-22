@@ -109,7 +109,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${a.name}（${a.style}）'),
+                  Text(tr('${a.name}（${a.style}）',
+                      '${a.name} (${a.style})')),
                   Text(
                     a.description,
                     style: Theme.of(context).textTheme.bodySmall,

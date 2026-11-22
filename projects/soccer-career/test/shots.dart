@@ -197,7 +197,7 @@ void main() {
       ]),
       ('クラブ', tr('クラブ', 'Club'), [
         ('立ち位置', tr('立ち位置', 'Where you stand')),
-        ('この国と、世界', tr('この国と、世界', 'This country, and the world')),
+        ('この国と、世界', tr('この国と、世界', 'Country and world')),
       ]),
       ('記録', tr('記録', 'Record'), [
         ('今季', tr('今季', 'This season')),

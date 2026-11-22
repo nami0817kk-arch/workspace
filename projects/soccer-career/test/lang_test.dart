@@ -434,4 +434,41 @@ void main() {
       );
     });
   });
+
+  group('英語に全角の記号を混ぜない', () {
+    // **区切りの記号も訳す。** `parts.join(' ／ ')` のように文字列を
+    // つないだところは tr() を通らないので、**英語の画面に全角のまま出る**。
+    // `_ja` はかな・漢字しか見ないので、記号だけの文字列は素通りしていた
+    // ——「目標 20 to go ／ Goals 10 to go」「Physical（...）」が
+    // **英語の掲載画像に写っていて、そこで初めて見つかった**（2026-11-22）。
+    //
+    // `、` `。` `／` `（` `）` は `_ja` の範囲（U+3040〜U+30FF、漢字）の
+    // 外にある。日本語の文の中なら正しいので、**かな・漢字を含む文は見ない**。
+    final zenkaku = RegExp(r'[（）／、。「」〜：；！？％]');
+
+    test('訳し終えたファイルに、英語側の全角記号が無い', () {
+      final leaks = <String>[];
+      for (final path in translated) {
+        final s = File(path).readAsStringSync();
+        for (final run in _runs(s)) {
+          final lit = s.substring(run.$1, run.$2);
+          if (!zenkaku.hasMatch(lit)) continue;
+          // かな・漢字があるなら日本語の文。全角で正しい。
+          if (_ja.hasMatch(lit)) continue;
+          // tr( / Say( の直後は日本語側の引数。
+          final before = s.substring(0, run.$1).trimRight();
+          if (before.endsWith('tr(') || before.endsWith('Say(')) continue;
+          final line = s.substring(0, run.$1).split('\n').length;
+          leaks.add('$path:$line  ${lit.replaceAll('\n', ' ')}');
+        }
+      }
+      expect(
+        leaks,
+        isEmpty,
+        reason:
+            '英語の画面に全角の記号が出る:\n${leaks.join('\n')}\n'
+            "区切りも tr(' ／ ', ' / ') のように訳すこと。",
+      );
+    });
+  });
 }

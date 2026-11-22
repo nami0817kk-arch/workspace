@@ -49,7 +49,7 @@ class Agent {
 
   /// 全員架空。
   static const List<Agent> pool = [
-    Agent(name: Say('柏木 誠', 'Kashiwagi Makoto'), style: Say('堅実', 'Steady'), negotiation: 3, reach: 2, feePercent: 5),
+    Agent(name: Say('柏木 誠', 'Makoto Kashiwagi'), style: Say('堅実', 'Steady'), negotiation: 3, reach: 2, feePercent: 5),
     Agent(
       name: Say('ヴィクトル・ラング', 'Viktor Lang'),
       style: Say('強気', 'Pushy'),
@@ -57,7 +57,7 @@ class Agent {
       reach: 4,
       feePercent: 12,
     ),
-    Agent(name: Say('長谷 由紀', 'Hase Yuki'), style: Say('人脈', 'Contacts'), negotiation: 2, reach: 8, feePercent: 8),
+    Agent(name: Say('長谷 由紀', 'Yuki Hase'), style: Say('人脈', 'Contacts'), negotiation: 2, reach: 8, feePercent: 8),
     Agent(
       name: Say('マルコ・ペレス', 'Marco Perez'),
       style: Say('新人', 'New to it'),
@@ -65,7 +65,7 @@ class Agent {
       reach: 1,
       feePercent: 3,
     ),
-    Agent(name: Say('大塚 玲', 'Otsuka Rei'), style: Say('バランス', 'Balanced'), negotiation: 4, reach: 4, feePercent: 9),
+    Agent(name: Say('大塚 玲', 'Rei Otsuka'), style: Say('バランス', 'Balanced'), negotiation: 4, reach: 4, feePercent: 9),
     Agent(
       name: Say('エレナ・コスタ', 'Elena Costa'),
       style: Say('交渉', 'Negotiating'),

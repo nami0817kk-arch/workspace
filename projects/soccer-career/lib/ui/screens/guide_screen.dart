@@ -928,7 +928,8 @@ Widget _traitList(BuildContext context) {
       const SizedBox(height: 8),
       _list(context, [
         for (final trait in Trait.strengths)
-          (trait.label, '${trait.description}（${trait.effects.join('、')}）'),
+          (trait.label, tr('${trait.description}（${trait.effects.join('、')}）',
+              '${trait.description} (${trait.effects.join(', ')})')),
       ]),
       const SizedBox(height: 8),
       Text(
@@ -940,7 +941,8 @@ Widget _traitList(BuildContext context) {
       const SizedBox(height: 8),
       _list(context, [
         for (final trait in Trait.flaws)
-          (trait.label, '${trait.description}（${trait.effects.join('、')}）'),
+          (trait.label, tr('${trait.description}（${trait.effects.join('、')}）',
+              '${trait.description} (${trait.effects.join(', ')})')),
       ]),
       const SizedBox(height: 8),
       Text(tr('稀（${Trait.rares.length}種）', 'Rare (${Trait.rares.length})'), style: theme.textTheme.labelLarge),
@@ -958,7 +960,8 @@ Widget _traitList(BuildContext context) {
         for (final trait in Trait.rares)
           (
             trait.flaw ? tr('${trait.label}（欠点）', '${trait.label} (flaw)') : trait.label,
-            '${trait.description}（${trait.effects.join('、')}）',
+            tr('${trait.description}（${trait.effects.join('、')}）',
+                '${trait.description} (${trait.effects.join(', ')})'),
           ),
       ]),
     ],

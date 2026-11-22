@@ -79,7 +79,8 @@ class PlayerBanner extends StatelessWidget {
                     ),
                     if (state.nickname != null)
                       Text(
-                        '「${state.nickname}」',
+                        // 括弧も訳す。英語の画面に「」は出さない。
+                        tr('「${state.nickname}」', '"${state.nickname}"'),
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: onKit.withValues(alpha: 0.8),
                         ),
