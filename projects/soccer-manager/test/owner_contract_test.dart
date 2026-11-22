@@ -41,8 +41,14 @@ void main() {
 
     expect(gs.saleReason, isNull, reason: '期待は残っているので手放さない');
     expect(s.confidence, greaterThan(0));
-    expect(s.newsLog.any((n) => n.text.contains('解任')), isFalse);
-    expect(s.newsLog.any((n) => n.text.contains('理事会と2年')), isFalse);
+    expect(
+        s.newsLog
+            .any((n) => n.text.contains('解任') || n.text.contains('sacked')),
+        isFalse);
+    expect(
+        s.newsLog.any((n) =>
+            n.text.contains('理事会と2年') || n.text.contains('two-year contract')),
+        isFalse);
   });
 
   test('雇っている監督が最後の年に入ると、名前つきで知らせる', () async {

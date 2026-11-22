@@ -497,6 +497,12 @@ class SaveGame {
   /// フランス式の降格処分。季の締めの昇格・降格で、1つ下の部へ落とす。
   bool adminRelegation;
 
+  /// ライセンスのスタジアムの猶予(2026-11-23)。スタジアムの段が足りない
+  /// まま昇格した部([licenseGraceTier]、0 は猶予なし)と、その猶予の季
+  /// ([licenseGraceSeason])。猶予の季の終わりまでに足りなければ降格処分。
+  int licenseGraceTier;
+  int licenseGraceSeason;
+
   /// 同じリーグで競う他のオーナー。
   List<RivalOwner> rivalOwners;
 
@@ -844,6 +850,8 @@ class SaveGame {
     this.wageFreezeSeasons = 0,
     this.wageFreezeCap = 0,
     this.adminRelegation = false,
+    this.licenseGraceTier = 0,
+    this.licenseGraceSeason = 0,
     this.planStartSeason = 0,
     List<RivalOwner>? rivalOwners,
     this.newsTotal = 0,
@@ -1169,6 +1177,10 @@ class SaveGame {
           'wageFreezeCap': wageFreezeCap,
         },
         if (adminRelegation) 'adminRelegation': true,
+        if (licenseGraceTier > 0) ...{
+          'licenseGraceTier': licenseGraceTier,
+          'licenseGraceSeason': licenseGraceSeason,
+        },
         if (injuryPlans.isNotEmpty) 'injuryPlans': injuryPlans,
         if (youthPolicy != 'balanced') 'youthPolicy': youthPolicy,
         if (clubCash.isNotEmpty) 'clubCash': clubCash,
@@ -1493,6 +1505,9 @@ class SaveGame {
         wageFreezeSeasons: json['wageFreezeSeasons'] as int? ?? 0,
         wageFreezeCap: json['wageFreezeCap'] as int? ?? 0,
         adminRelegation: json['adminRelegation'] as bool? ?? false,
+        // 猶予の無い旧セーブは猶予なし。
+        licenseGraceTier: json['licenseGraceTier'] as int? ?? 0,
+        licenseGraceSeason: json['licenseGraceSeason'] as int? ?? 0,
         newsTotal: json['newsTotal'] as int? ?? 0,
         newsSeenTotal: json['newsSeenTotal'] as int? ?? 0,
         rivalOwners: (json['rivalOwners'] as List?)

@@ -1352,9 +1352,14 @@ extension GameStateSeason on GameState {
       for (int tier = 1; tier <= totalDivisionTiers; tier++) tier: <Team>[],
     };
     var relevantPlayoffMatches = const <PromotionPlayoffMatch>[];
+    // スタジアムの猶予の季が終わる。届いていなければ降格処分(下の
+    // adminRelegation の扱い)になる。
+    final graceFailed = _settleStadiumGrace();
     // 昇格を決めたのに、上の部のライセンスが下りなかった部(無ければ null)。
     int? licenseDeniedTier;
     var licenseUnmet = const <String>[];
+    // スタジアムの段だけが足りずに、猶予つきで上がる部(無ければ null)。
+    int? graceTier;
     for (int upperTier = 1; upperTier < totalDivisionTiers; upperTier++) {
       final lowerTier = upperTier + 1;
       final upperOrder = tierOrder[upperTier]!;
@@ -1390,7 +1395,12 @@ extension GameStateSeason on GameState {
       // 権利は、まだ上がっていないうちで一番上の順位のクラブに移る。
       final userIdx = promoted.indexWhere((t) => t.id == _save!.userTeamId);
       if (userIdx >= 0) {
-        final unmet = clubLicenseUnmet(upperTier);
+        // スタジアムの段だけが足りないなら、1年の猶予つきで上がれる
+        // (2026-11-23)。資金など、ほかの条件は今までどおり。
+        final unmet = clubLicenseUnmetExceptStadium(upperTier);
+        if (unmet.isEmpty && !stadiumMeetsLicense(upperTier)) {
+          graceTier = upperTier;
+        }
         if (unmet.isNotEmpty) {
           final promotedIds = {for (final t in promoted) t.id};
           final next = lowerOrder.where((t) => !promotedIds.contains(t.id));
@@ -1508,9 +1518,11 @@ extension GameStateSeason on GameState {
     userInvolvedInLastPromotionPlayoff = userInPromotionPlayoff;
     lastPromotionBonus = 0;
     if (newTier > playedTier) {
-      lastDivisionChangeMessage = Tr.pick(
-          '降格が決まりました。来シーズンは$newTier部リーグでの再出発です。',
-          'You are relegated. Next season starts again in tier $newTier.');
+      lastDivisionChangeMessage = graceFailed
+          ? Tr.pick('スタジアムがクラブライセンスの条件に届かず、降格になりました。来シーズンは$newTier部リーグでの再出発です。',
+              'Your stadium fell short of the club licence, and you are relegated. Next season starts again in tier $newTier.')
+          : Tr.pick('降格が決まりました。来シーズンは$newTier部リーグでの再出発です。',
+              'You are relegated. Next season starts again in tier $newTier.');
     } else if (newTier < playedTier) {
       // 昇格ボーナス: 上のディビジョンで戦うための補強予算が理事会から
       // 支給される(放映権料・スポンサー収入の増加分)。これがないと
@@ -1526,6 +1538,19 @@ extension GameStateSeason on GameState {
           : Tr.pick(
               '昇格達成！来シーズンは$newTier部リーグに昇格します。理事会から補強予算${formatMoney(promotionBonus)}が支給されました。',
               'Promoted. You go up to tier $newTier next season, and the board has given you ${formatMoney(promotionBonus)} to strengthen.');
+      // スタジアムが足りないまま上がるなら、来季が猶予の季になる。
+      if (graceTier == newTier) {
+        final need = ClubLicenseEngine.stadiumLevelFor(newTier);
+        final deadline = TransferWindowCalendar.formatYearMonth(
+            MoneyCalendar.fiscalYearEnd(league.season + 1));
+        _save!.licenseGraceTier = newTier;
+        _save!.licenseGraceSeason = league.season + 1;
+        final note = Tr.pick(
+            'スタジアムは$newTier部のライセンスの条件(Lv$need)に届いていませんが、1年の猶予が付きました。$deadlineまでにLv$needにしないと(来季の開幕までに完成する工事中でも可)、1つ下の部へ降格になります。',
+            'Your stadium is below the tier $newTier licence requirement (level $need), but you have a year\'s grace. Reach level $need by $deadline (work due to finish before the next season counts), or you will be relegated one tier.');
+        lastDivisionChangeMessage = '${lastDivisionChangeMessage!}\n$note';
+        _logNews(note, context: Tr.pick('クラブライセンス', 'Club licence'));
+      }
     } else if (licenseDeniedTier != null) {
       lastDivisionChangeMessage = Tr.pick(
           '昇格の権利を得ましたが、$licenseDeniedTier部のクラブライセンスが下りず、来シーズンも$playedTier部で戦います。足りなかった条件: ${licenseUnmet.join('、')}。',

@@ -749,6 +749,7 @@ extension GameStateFinance on GameState {
     save.wageFreezeSeasons = 0;
     save.wageFreezeCap = 0;
     save.adminRelegation = false;
+    save.licenseGraceTier = 0;
     save.pendingJobOfferTeamId = null;
     save.confidence = 60;
     save.shareholderExpectation = 60;
@@ -866,6 +867,7 @@ extension GameStateFinance on GameState {
     save.wageFreezeSeasons = 0;
     save.wageFreezeCap = 0;
     save.adminRelegation = false;
+    save.licenseGraceTier = 0;
     save.leagueName = theme.label;
     save.ruleSet = RuleSet.forTheme(theme);
     save.league = mine!;
