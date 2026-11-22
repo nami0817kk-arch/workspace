@@ -100,15 +100,21 @@ void main() {
     for (final smart in [false, true]) {
       final mins = <double>[];
       final ranks = List.filled(10, 0);
+      // 場面ごとの「1人生での最多回数」の合計と、出た人生の数（繰り返しの多さを見る）。
+      final maxPerLife = <String, int>{}, lives = <String, int>{};
       for (var seed = 0; seed < 1000; seed++) {
         final rng = Rng(seed + 4242);
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         final r = Rng(seed);
         var c = 0, s = 0;
+        final perLife = <String, int>{};
         while (!g.finished && c < 3000) {
           final p = g.prompt!;
-          if (p.title != '今年の重点') s++;
+          if (p.title != '今年の重点') {
+            s++;
+            perLife[p.title] = (perLife[p.title] ?? 0) + 1;
+          }
           c++;
           g.choose(
             smart ? pickAmbitious(g, p, r) : r.range(0, p.choices.length - 1),
@@ -117,7 +123,22 @@ void main() {
         // 重点1回=10秒、岐路1回=40秒の目安。
         mins.add(((c - s) * 10 + s * 40) / 60);
         if (g.age >= 15) ranks[g.l.maxRank]++;
+        perLife.forEach((t, n) {
+          maxPerLife[t] = (maxPerLife[t] ?? 0) + n;
+          lives[t] = (lives[t] ?? 0) + 1;
+        });
       }
+      final rep = maxPerLife.keys.toList()
+        ..sort(
+          (a, b) => (maxPerLife[b]! / lives[b]!).compareTo(
+            maxPerLife[a]! / lives[a]!,
+          ),
+        );
+      // ignore: avoid_print
+      print(
+        '【繰り返し】${smart ? '考えて選ぶ' : 'ランダム'}: '
+        '${rep.take(8).map((t) => '$t ${(maxPerLife[t]! / lives[t]!).toStringAsFixed(1)}回/人生（${lives[t]}人生）').join('・')}',
+      );
       mins.sort();
       double q(double p) => mins[(mins.length * p).floor()];
       // ignore: avoid_print
