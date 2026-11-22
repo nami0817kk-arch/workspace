@@ -75,7 +75,7 @@ for (const seed of SEEDS) {
     const out = R.ball[0] < -1 || R.ball[0] > W + 1 || R.ball[1] < -1 || R.ball[1] > L + 1;
     if (out && R.owner && !(R._outOwn)) add('外に出たボールを持っている(回)', tag() + ' 球' + R.ball.slice(0, 2).map((x) => x.toFixed(1)).join(',') + (R.scene ? ' ' + R.scene.type : ''));
     R._outOwn = out && R.owner;
-    if (out && !R.scene && !cut) outT += 1 / 60; else outT = 0; if (outT > 1.5) { add('外に出たボールが1.5秒以上そのまま(合間)', tag()); outT = -99; }
+    if (out && !R.scene && !cut && !R.celeb) outT += 1 / 60; // 得点を喜んでいるあいだは網の中の球でよい（2026-11-23） else outT = 0; if (outT > 1.5) { add('外に出たボールが1.5秒以上そのまま(合間)', tag()); outT = -99; }
     // 長く持ちすぎ（合間）
     if (!R.scene && R.owner && R.owner === prevOwner) { holdT += 1 / 60; if (holdT > 6) { add('合間に6秒以上持ち続ける', tag()); holdT = -99; } } else if (R.owner !== prevOwner) holdT = 0;
     // 得点のあとのキックオフは決められた側
@@ -86,7 +86,7 @@ for (const seed of SEEDS) {
     if (!R.scene && !cut && Math.abs(R.ball[0] - 34) < 3.66 && (R.ball[1] < -0.3 || R.ball[1] > L + 0.3) && !R._gIdle && !R.celeb) { add('合間にボールがゴールの中へ', tag()); R._gIdle = true; } else if (Math.abs(R.ball[1] - L / 2) < 40) R._gIdle = false;
     // 誰も拾わない止まった球（合間）
     const bs = Math.hypot(R.ball[0] - prevBall[0], R.ball[1] - prevBall[1]) * 60;
-    if (!R.scene && !R.owner && !R.fl && !cut && !R.setup && bs < 0.3) { R._idleBall = (R._idleBall || 0) + 1 / 60; if (R._idleBall > 3) { add('誰も拾わない止まった球が3秒以上(合間)', tag()); R._idleBall = -99; } } else if (R.owner) R._idleBall = 0;
+    if (!R.scene && !R.owner && !R.fl && !cut && !R.setup && !R.celeb && bs < 0.3) { R._idleBall = (R._idleBall || 0) + 1 / 60; if (R._idleBall > 3) { add('誰も拾わない止まった球が3秒以上(合間)', tag()); R._idleBall = -99; } } else if (R.owner) R._idleBall = 0;
     // 地を這う球が相手の体を通り抜ける（0.5m 以内を通っても触らない）
     if (!R.owner && R.fl && R.fl.kind === 'ground' && R.fl.by && !cut) { for (const o of Object.keys(R.disp)) { if (!R.base[o] || R.teamOf(o) === R.teamOf(R.fl.by) || R.fl.recv === o) continue; const d = Math.hypot(R.disp[o][0] - R.ball[0], R.disp[o][1] - R.ball[1]); if (d < 0.5 && (R.ball[2] || 0) < 0.25 && Math.hypot(R.ball[0] - R.fl.from[0], R.ball[1] - R.fl.from[1]) > 2) { /* 浮いて足を越える球は数えない */ R.fl._thru = R.fl._thru || {}; if (!R.fl._thru[o]) { R.fl._thru[o] = 1; add('地を這う球が相手の体を通り抜ける(' + (R.scene ? '場面' : '合間') + ')', tag() + ' 誰' + o + (R.stgt && R.stgt[o] ? '台本' : '') + ' icpt' + R.fl.icpt + ' recv' + R.fl.recv + ' 蹴' + R.fl.by + ' 距離' + R.fl.d.toFixed(1) + ' t' + R.fl.t.toFixed(2)); } } } }
     // キックオフで相手陣に立つ
@@ -102,8 +102,11 @@ for (const seed of SEEDS) {
       const sc = e.scene; const side = sc.side;
       const ot = R.owner ? R.teamOf(R.owner) : null;
       if (ot && ((side === 'home') !== (ot === m.home))) add('場面の入りで攻める側と持っている側が逆', 's' + seed + ' ' + T.toFixed(1));
+      firstAfterGoal = false; // 得点のあと、キックオフが見える前に次の場面が来たら、その後の持ち主は得点と関係ない（2026-11-23）
+      const celeb0 = R.celebs || 0;
       R.startScene(sc); let n = 0; while (R.t < sc.dur && n++ < 1200) step();
       for (let i = 0; i < 40; i++) step();
+      if (sc.outcome === 'goal' && (R.celebs || 0) === celeb0) add('得点の場面でボールが網に入らない', tag() + ' ' + sc.type); // 2026-11-23：PK でキッカーがいず、打たないまま「得点」で終わっていた
       if (sc.outcome === 'goal') { lastGoalSide = side; firstAfterGoal = true; }
       if (sc.outcome === 'saved' || sc.outcome === 'missed' || sc.outcome === 'lost' || sc.outcome === 'cleared') { const ot2 = R.owner ? R.teamOf(R.owner) : null; if (ot2 && ((side === 'home') === (ot2 === m.home)) && sc.outcome === 'saved') add('GK が止めたのに攻めた側が持っている', tag()); }
       if (sc.outcome === 'intercepted' || sc.outcome === 'stopped') { const ot3 = R.owner ? R.teamOf(R.owner) : null; if (ot3 && ((side === 'home') === (ot3 === m.home))) add('奪われた場面のあと攻めた側が持っている(' + sc.outcome + ')', tag()); }
@@ -130,6 +133,7 @@ const LIMIT = {
   'キックオフで相手陣に立つ': 0,
   '合間にボールがゴールの中へ': 0,
   '得点した側がキックオフ': 0,
+  '得点の場面でボールが網に入らない': 0,
   'ボールの瞬間移動(1コマ0.8m超)': 0.3,
   'GK がエリアの外でボールを持つ(回)': 0.3,
   '外に出たボールを持っている(回)': 0.6,

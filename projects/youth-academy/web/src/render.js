@@ -567,6 +567,27 @@
         else if (ha && (hb === ha || (!hb && d < 10 && (b.ball[2] || 0) < 0.5))) kind = 'dribble';
         ev.push({ k, kind, a, b, who: ha, recv: hb && hb !== ha ? hb : null, to: b.ball, minDur: Math.max(0.35, b.t - a.t) });
       }
+      // 蹴る子が決まらない蹴り（PK など、ボールが置かれてから蹴る）：攻める側でボールにいちばん近い子（6m 以内）が蹴る。
+      // その前の球の受け手にもして、持ってから蹴る（2026-11-23：PK の場面でキッカーがいず、シュートが「待つ」になって打たれないまま「得点」で終わっていた）
+      {
+        const atkTeam = sc.side === 'away' ? this.match && this.match.away : this.match && this.match.home;
+        for (let i = 0; i < ev.length; i++) {
+          const e = ev[i];
+          if (e.kind !== 'kick' || e.who || !atkTeam) continue;
+          let best = null;
+          let bd = 6;
+          for (const id of Object.keys(e.a.pos || {})) {
+            if (!this.base[id] || this.base[id][2] !== atkTeam) continue;
+            const dd = dist(e.a.pos[id], e.a.ball);
+            if (dd < bd) { bd = dd; best = id; }
+          }
+          if (!best) continue;
+          e.who = best;
+          if (e.recv === best) e.recv = null;
+          const pv = ev[i - 1];
+          if (pv && pv.kind === 'kick' && !pv.recv) pv.recv = best; // 同じ子なら「自分へのパス」＝運ぶ動きになる
+        }
+      }
       // 奪われるパス（相手の選手が受け手の地を這う球）：前は相手の足元へ蹴っていて、相手へのパスに見えた（2026-11-22）。
       // いまは同じ向きに少し先（味方のいる方）を狙って蹴り、相手が台本の位置で足を出して切る
       for (const e of ev) {
@@ -845,7 +866,26 @@
       if (this.t > 16) { this.stuck++; this.ev.length = this.evI; return; } // 念のため（動きが詰まったとき）
       const has = e.kicker && this.owner === e.kicker;
       if (e.kind === 'wait') {
-        if (e.t >= e.minDur || e.t > 2.5) this.nextEvent();
+        // 台本の「待つ」の受け手が持ち主の相手なら、その子が奪う（2026-11-23：最後の2コマでボールが少ししか動かない奪われ方は
+        // 「待つ」になっていて、相手が取らないまま場面が終わり、攻めた側が持ち続けていた）
+        const holder = this.owner || e.who;
+        if (!e.taken && e.recv && holder && this.disp[e.recv] && this.teamOf(e.recv) !== this.teamOf(holder)) {
+          const r = this.disp[e.recv];
+          const b = this.ball;
+          if (this.owner && dist(r, b) < MOVE.tackle * 1.5) {
+            e.taken = true;
+            const dd = Math.max(0.3, dist(r, b));
+            this.lock[this.owner] = 0.9;
+            this.lock[e.recv] = 0.18;
+            this.owner = null;
+            this.bv = [((r[0] - b[0]) / dd) * 3.5, ((r[1] - b[1]) / dd) * 3.5];
+            this.lastTouch = this.teamOf(e.recv);
+            this.kicked = true;
+          } else this.stgt[e.recv] = [b[0], b[1]];
+          this.expect = e.recv;
+          e.turn = true;
+        }
+        if ((e.t >= e.minDur && (!e.turn || e.taken || this.owner === e.recv)) || e.t > (e.turn ? 3.5 : 2.5)) this.nextEvent(); // 相手が奪う「待つ」は、奪うまで（3.5秒まで）
         return;
       }
       if (e.phase === 'reach') {
@@ -854,7 +894,14 @@
           // 自分への「パス」は、受けて運ぶだけ
           if (e.kind === 'kick' && e.recv && e.recv === e.kicker) { e.kind = 'dribble'; e.phase = 'dribble'; e.t = 0; return; }
           // 誰も触れていないボールは蹴れない（外へ出た球・こぼれ球）：そのまま転がして待つ
-          if (e.kind === 'kick' && (!e.kicker || dist(this.disp[e.kicker] || [1e9, 1e9], this.ball) > MOVE.reach * 1.6)) { e.kind = 'wait'; e.t = 0; return; }
+          if (e.kind === 'kick' && (!e.kicker || dist(this.disp[e.kicker] || [1e9, 1e9], this.ball) > MOVE.reach * 1.6)) {
+            e.kind = 'wait';
+            e.t = 0;
+            // 相手に渡るはずの球（奪われる・切られる）なら、受け手の相手がこぼれ球を取りに行く（2026-11-23：取りに行かないまま場面が終わり、
+            // 「奪われた」のに攻めた側が持ち続けていた）
+            if (e.recv && this.disp[e.recv] && this.teamOf(e.recv) !== this.teamOf(e.kicker || this.owner || e.recv)) { this.expect = e.recv; this.stgt[e.recv] = [this.ball[0], this.ball[1]]; e.minDur = Math.max(e.minDur || 0, 1.2); }
+            return;
+          }
           e.phase = e.kind;
           e.t = 0;
           if (e.kind === 'kick' && e.tackle && this.disp[e.recv] && this.owner === e.kicker) {
