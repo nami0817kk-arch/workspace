@@ -137,12 +137,20 @@ extension GameStateMoneyRules on GameState {
   /// 分割払いなら、頭金だけでなく総額を渡す。
   /// [announce] が false なら、クラブ史上最高額の獲得の1枚は出さない
   /// (簿価だけ付ける。以前から簿価を付けていなかった獲得の道)。
-  void _recordPlayerBook(Player p, int fee, {bool announce = true}) {
-    if (fee <= 0) return;
-    // クラブ史上最高額の獲得なら、画面いっぱいの1枚で見せる。
-    if (announce) _checkRecordSigning(p, fee);
+  ///
+  /// [agentFee] は獲得で払った代理人手数料。実際の会計では、移籍に伴う
+  /// 代理人手数料も選手の登録権の取得原価に入れ、移籍金と一緒に契約の
+  /// 年数で償却する(2026-11-22。以前はその季の費用にしていた)。所属なしの
+  /// 選手(移籍金0)の手数料も同じ扱い。サイン料は選手への支払いなので
+  /// 費用のまま([_bookAgentFee] の呼び出し元で費用にする)。
+  void _recordPlayerBook(Player p, int fee,
+      {bool announce = true, int agentFee = 0}) {
+    final cost = (fee > 0 ? fee : 0) + (agentFee > 0 ? agentFee : 0);
+    if (cost <= 0) return;
+    // クラブ史上最高額の獲得なら、画面いっぱいの1枚で見せる(移籍金で比べる)。
+    if (announce && fee > 0) _checkRecordSigning(p, fee);
     final years = max(1, p.contractEndYear - Player.contractClockYear + 1);
-    _save!.playerBook[p.id] = [fee, Player.contractClockYear, years, 0];
+    _save!.playerBook[p.id] = [cost, Player.contractClockYear, years, 0];
   }
 
   /// 選手の今の簿価(万円)。獲得していない選手は0。

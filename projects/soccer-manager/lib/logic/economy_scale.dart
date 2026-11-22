@@ -194,15 +194,103 @@ const int maxMarketValue = 1500000;
 /// 市場価値の下限(万円)。
 const int minMarketValue = 50;
 
-/// 市場価値 [value] の選手が求める年俸(万円)。2.4 × 価値^0.88。
-int annualWageForValue(int value) => (2.4 * pow(max(0, value), 0.88)).round();
+/// 国・部ごとの年俸の水準(イングランド = 1)。2026-11-22 に入れた。
+///
+/// 以前は年俸が国によらず、放映権を国ごとにした([broadcastCountryFactor])
+/// ことで、放映権の小さい国の1部は人件費率が100%を超えていた(年俸の
+/// 合計 ÷ 年収の目安。クラブ全体の真ん中で、スペイン・ドイツ 約105%・
+/// イタリア 約115%・フランス 約155%。イングランドは約70%)。実際も、同じ
+/// 力の選手でプレミアの年俸が最も高く、フランスは低い。市場価値(移籍金)は
+/// 国で変えない。
+///
+/// 放映権の差よりゆるめ(1部: 放映権はスペイン 0.6・フランス 0.3、年俸は
+/// 0.7・0.45)。放映権を除いた年収(観客・スポンサーなど)は国で同じなので、
+/// 年収の差は放映権の差より小さい。真ん中のクラブの人件費率が 1部
+/// 50〜80%・2部 70〜110% に入るように、部ごとに合わせた
+/// (test/economy_scale_test.dart)。2部はイングランドのチャンピオンシップの
+/// 放映権が飛び抜けているので、国の差が1部より大きい。ドイツの2部は
+/// クラブが少し弱く(年俸の合計が小さい)、高めの水準で釣り合う。
+/// イングランドの2部は水準1だと 90〜110% と範囲の上の端に寄ったので
+/// 0.9(それでも2部で一番高い)。3部は年収に占める放映権が小さく、国の差も
+/// 小さい(3部は人件費率の目安を決めていない。4季で破綻しないことだけ
+/// test/long_run_balance_test.dart などで見る)。1部を
+/// もっとゆるめ(西0.8・独0.75・伊0.75・仏0.6)にすると、4か国とも 80% を
+/// 超えた(82〜94%)。
+double wageCountryFactor(LeagueTheme theme, int tier) =>
+    switch ((theme, tier.clamp(1, 3))) {
+      (LeagueTheme.england, 2) => 0.9,
+      (LeagueTheme.england, _) => 1.0,
+      (LeagueTheme.spain, 1) => 0.7,
+      (LeagueTheme.germany, 1) => 0.65,
+      (LeagueTheme.italy, 1) => 0.65,
+      (LeagueTheme.france, 1) => 0.45,
+      (LeagueTheme.spain, 2) => 0.65,
+      (LeagueTheme.germany, 2) => 0.8,
+      (LeagueTheme.italy, 2) => 0.65,
+      (LeagueTheme.france, 2) => 0.55,
+      (LeagueTheme.spain, _) => 0.8,
+      (LeagueTheme.germany, _) => 0.85,
+      (LeagueTheme.italy, _) => 0.85,
+      (LeagueTheme.france, _) => 0.75,
+    };
+
+/// 自クラブのいる国と部。年俸の水準([currentWageLevel])を決める。
+/// GameState が、始めたとき・読み込んだとき・新しい季・クラブを買い替えた
+/// ときに合わせる([setHomeWageLevel])。
+LeagueTheme _wageHomeTheme = LeagueTheme.england;
+int _wageHomeTier = 1;
+
+/// 他の国・部のクラブの選手を作っている間だけ、その水準に差し替える。
+double? _wageLevelOverride;
+
+/// 自クラブのいる国・部を、年俸の水準の基準にする。
+void setHomeWageLevel(LeagueTheme theme, int tier) {
+  _wageHomeTheme = theme;
+  _wageHomeTier = tier;
+}
+
+/// 自クラブのいる国(年俸の水準の基準)。
+LeagueTheme get wageHomeTheme => _wageHomeTheme;
+
+/// いまの年俸の水準。ふだんは自クラブのいる国・部の [wageCountryFactor]。
+/// [withWageLevel] の中では、その水準。
+double get currentWageLevel =>
+    _wageLevelOverride ?? wageCountryFactor(_wageHomeTheme, _wageHomeTier);
+
+/// [level] の水準で [body] を行う(他の国・部のクラブの選手を作るとき)。
+T withWageLevel<T>(double level, T Function() body) {
+  final prev = _wageLevelOverride;
+  _wageLevelOverride = level;
+  try {
+    return body();
+  } finally {
+    _wageLevelOverride = prev;
+  }
+}
+
+/// [originLeague](国の名前 [LeagueTheme.name]。他国の1部のクラブの選手)
+/// の年俸を、自クラブの国の水準に直す倍率。同じ国・分からないときは 1。
+/// 国をまたいで移る選手は、行き先の国の水準で年俸を求める。
+double wageScaleToHome(String? originLeague) {
+  if (originLeague == null || originLeague == _wageHomeTheme.name) return 1.0;
+  final from =
+      LeagueTheme.values.where((t) => t.name == originLeague).firstOrNull;
+  if (from == null) return 1.0;
+  return currentWageLevel / wageCountryFactor(from, 1);
+}
+
+/// 市場価値 [value] の選手が求める年俸(万円)。2.4 × 価値^0.88 に、
+/// 年俸の水準 [level](省略時は [currentWageLevel]。イングランド = 1)を掛ける。
+int annualWageForValue(int value, [double? level]) =>
+    (2.4 * pow(max(0, value), 0.88) * (level ?? currentWageLevel)).round();
 
 /// 給与の下限(万円/週)。
 const int minWeeklyWage = 5;
 
 /// 市場価値 [value] の選手の週俸(万円)。年俸 ÷ 52、最低 [minWeeklyWage]。
-int weeklyWageForValue(int value) =>
-    max(minWeeklyWage, (annualWageForValue(value) / 52).round());
+/// [level] は [annualWageForValue] と同じ。
+int weeklyWageForValue(int value, [double? level]) =>
+    max(minWeeklyWage, (annualWageForValue(value, level) / 52).round());
 
 /// 週俸を年俸に直す(表示用)。
 int annualFromWeekly(int weekly) => weekly * 52;

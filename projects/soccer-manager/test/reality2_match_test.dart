@@ -630,7 +630,9 @@ void main() {
               reds++;
             case MatchEventType.goal:
               if (e.setPiece == SetPieceKind.directFreeKick) fkGoals++;
+            // 交代(2026-11-22 に足した出来事)は数えない。
             case MatchEventType.chance:
+            case MatchEventType.substitution:
               break;
           }
           // PK は決まっても外れても、必ず1件の出来事になる。

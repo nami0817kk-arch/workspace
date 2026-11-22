@@ -789,6 +789,8 @@ extension GameStateFinance on GameState {
 
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
 
+    // 年俸の水準は新しい国・部のもの(他の部のクラブはその部の水準)。
+    setHomeWageLevel(theme, startTier);
     final userTeam = PlayerGenerator.generateSquad(
         id: 'user',
         name: nextName(),
@@ -799,17 +801,22 @@ extension GameStateFinance on GameState {
     for (var tier = 1; tier <= totalDivisionTiers; tier++) {
       final teams = <Team>[
         if (tier == startTier) userTeam,
-        for (var i = 0;
-            i <
-                (tier == startTier
-                    ? theme.teamsInTier(tier) - 1
-                    : theme.teamsInTier(tier));
-            i++)
-          PlayerGenerator.generateSquad(
-            id: tier == startTier ? 'cpu$i' : 'div${tier}_$i',
-            name: nextName(tier),
-            strengthTier: strengthForTier(tier),
-          ),
+        ...withWageLevel(
+          wageCountryFactor(theme, tier),
+          () => [
+            for (var i = 0;
+                i <
+                    (tier == startTier
+                        ? theme.teamsInTier(tier) - 1
+                        : theme.teamsInTier(tier));
+                i++)
+              PlayerGenerator.generateSquad(
+                id: tier == startTier ? 'cpu$i' : 'div${tier}_$i',
+                name: nextName(tier),
+                strengthTier: strengthForTier(tier),
+              ),
+          ],
+        ),
       ];
       for (final t in teams) {
         LineupUtils.autoFill(t);

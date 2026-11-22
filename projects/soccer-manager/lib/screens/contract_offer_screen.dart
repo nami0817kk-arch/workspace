@@ -112,7 +112,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         }
       case ContractKind.preContract:
         _endYear = PreContractEngine.defaultEndYear(p);
-        _wage = PreContractEngine.wageDemand(p);
+        _wage = game.preContractWageDemand(p);
     }
     _reply ??= _openingLine();
   }
@@ -158,7 +158,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         ContractKind.renewal =>
           game.pendingContractNegotiation?.counterWage ?? 0,
         ContractKind.preContract =>
-          PreContractEngine.wageDemand(p, option: _option),
+          game.preContractWageDemand(p, option: _option),
       };
 
   int _roundsUsed(GameState game) => switch (kind) {

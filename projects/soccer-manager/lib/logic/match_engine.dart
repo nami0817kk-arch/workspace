@@ -1385,6 +1385,46 @@ class MatchEngine {
     if (plan.swaps.isNotEmpty) plan.team.startingXI = plan.originalXI;
   }
 
+  /// 交代の出来事([MatchEventType.substitution])。入った選手を scorer、
+  /// 下がった選手を assist に入れる(試合経過に「交代: 下がった → 入った」)。
+  static MatchEvent substitutionEvent({
+    required int minute,
+    required String teamId,
+    required Player out,
+    required Player incoming,
+  }) =>
+      MatchEvent(
+        minute: minute,
+        teamId: teamId,
+        type: MatchEventType.substitution,
+        scorerName: incoming.name,
+        scorerId: incoming.id,
+        assistName: out.name,
+        assistId: out.id,
+      );
+
+  /// 自動の交代[plan]を、[minute]分の交代の出来事にする。
+  static List<MatchEvent> substitutionEventsOf(
+          AutoSubstitutionPlan plan, int minute) =>
+      [
+        for (final s in plan.swaps)
+          substitutionEvent(
+            minute: minute,
+            teamId: plan.team.id,
+            out: s.out,
+            incoming: s.incoming,
+          ),
+      ];
+
+  /// 進行中のハーフ[s]のいまの分(試合中の交代の出来事に付ける)。
+  static int currentMinuteOf(InteractiveHalfState s) {
+    final p = s.pending;
+    if (p != null) return p.minute;
+    if (s.chanceMinutes.isEmpty) return s.priorEvents.isEmpty ? 1 : 46;
+    final i = (s.chanceIndex - 1).clamp(0, s.chanceMinutes.length - 1);
+    return s.chanceMinutes[i];
+  }
+
   /// 続けて行った2つの区間([a]のあとに[b])の結果を1つにまとめる。
   static HalfResult combineHalves(HalfResult a, HalfResult b) => HalfResult(
         homeGoals: a.homeGoals + b.homeGoals,
@@ -2256,6 +2296,9 @@ class MatchEngine {
             if (e.setPiece != SetPieceKind.penalty) {
               ratings[id] = ratings[id]! + 0.3;
             }
+            break;
+          case MatchEventType.substitution:
+            // 交代は採点に関係しない。
             break;
           case MatchEventType.yellowCard:
             ratings[id] = ratings[id]! - 0.5;
@@ -3139,7 +3182,16 @@ class MatchEngine {
       priorEvents: beforeLate,
     );
     final second = combineHalves(secondA, secondB);
-    final allEvents = [...first.events, ...second.events];
+    // 交代も試合経過に出す(ハーフタイムは46分、後半の途中は交代した分)。
+    final allEvents = [
+      ...first.events,
+      ...substitutionEventsOf(homePlan, 46),
+      ...substitutionEventsOf(awayPlan, 46),
+      ...secondA.events,
+      ...substitutionEventsOf(homeLatePlan, lateMinute),
+      ...substitutionEventsOf(awayLatePlan, lateMinute),
+      ...secondB.events,
+    ];
     final homeGoals = first.homeGoals + second.homeGoals;
     final awayGoals = first.awayGoals + second.awayGoals;
     final homeShots = first.homeShots + second.homeShots;

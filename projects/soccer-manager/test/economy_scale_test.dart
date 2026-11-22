@@ -13,6 +13,7 @@ import 'package:soccer_manager/logic/sponsor_engine.dart';
 import 'package:soccer_manager/models/ledger.dart';
 import 'package:soccer_manager/models/owner_legacy.dart';
 import 'package:soccer_manager/models/save_game.dart';
+import 'package:soccer_manager/models/team.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
 /// お金の桁を部ごとに変えた物差し(economy_scale.dart)の検査。
@@ -52,6 +53,8 @@ void main() {
     });
 
     test('年俸は 2.4 × 価値^0.88、週俸はその52分の1で最低5', () {
+      // イングランドの水準(1)で見る(国・部の水準は wageCountryFactor)。
+      setHomeWageLevel(LeagueTheme.england, 1);
       expect(annualWageForValue(50000), closeTo(2.4 * 13650, 300));
       expect(weeklyWageForValue(100), minWeeklyWage);
       expect(weeklyWageForValue(1000000),
@@ -143,6 +146,17 @@ void main() {
       () => fourSeasonsFromTier3(LeagueTheme.france),
       timeout: const Timeout(Duration(minutes: 8)));
 
+  // 2026-11-22: 年俸に国・部の水準を掛けた。残りの3か国でも破綻しない。
+  for (final theme in [
+    LeagueTheme.spain,
+    LeagueTheme.germany,
+    LeagueTheme.italy,
+  ]) {
+    test('${theme.name}でも、3部から4シーズン資金が破綻しない',
+        () => fourSeasonsFromTier3(theme),
+        timeout: const Timeout(Duration(minutes: 8)));
+  }
+
   // 部ごとに、その部の真ん中くらいのクラブを自クラブにして1シーズン回す。
   Future<SeasonLedger> runTier(int tier, List<String> log,
       [LeagueTheme theme = LeagueTheme.england]) async {
@@ -163,6 +177,8 @@ void main() {
       s.rivalTeamId = null;
       s.currentDivisionTier = tier;
       s.budget = GameState.initialBudgetFor(tier, theme);
+      // 年俸の水準(移籍・更新の要求)も、移った部のものにする。
+      setHomeWageLevel(theme, tier);
     }
     s.wageBudget = BoardEngine.wageBudgetFor(
         tier: tier,
@@ -239,6 +255,58 @@ void main() {
         reason: log.join('\n'));
     expect(fr.operatingIncome, inInclusiveRange(1000000, 3000000),
         reason: log.join('\n'));
+  }, timeout: const Timeout(Duration(minutes: 5)));
+
+  // 2026-11-22: 年俸に国・部の水準(wageCountryFactor)を掛けた。真ん中の
+  // クラブの人件費率(年俸の合計 ÷ 年収の目安)が、どの国でも 1部 50〜80%・
+  // 2部 70〜110% に入る。1季を回すと選手の作り方の運で大きく振れる
+  // (1クラブで 40〜110%)ので、作ったばかりのリーグの全クラブを何ゲーム
+  // ぶんか集めて、その真ん中で見る。変更前は、1部の真ん中がスペイン・
+  // ドイツ 約105%・イタリア 約115%・フランス 約155%(イングランド 約70%)。
+  test('国ごと・部ごとの真ん中のクラブの人件費率が、実際に近い範囲に入る(実測をログに出す)',
+      () async {
+    final ratios = <(LeagueTheme, int), List<double>>{};
+    void addLeague(List<Team> teams, LeagueTheme theme, int tier) {
+      final income = typicalAnnualIncome(tier, theme);
+      for (final t in teams) {
+        ratios.putIfAbsent((theme, tier), () => []).add(
+            annualFromWeekly(ContractEngine.weeklyWageBill(t)) / income);
+      }
+    }
+
+    for (final theme in LeagueTheme.values) {
+      for (var n = 0; n < 8; n++) {
+        final game = GameState();
+        await game.startNewGame('計測FC', theme: theme);
+        final s = game.save!;
+        for (var tier = 1; tier <= totalDivisionTiers; tier++) {
+          addLeague(
+              tier == s.currentDivisionTier
+                  ? s.league.teams
+                  : s.otherDivisionLeagues[tier - 1]!.teams,
+              theme,
+              tier);
+        }
+        for (final e in s.foreignLeagues.entries) {
+          addLeague(e.value.teams,
+              LeagueTheme.values.firstWhere((t) => t.name == e.key), 1);
+        }
+      }
+    }
+    double median(List<double> v) => ([...v]..sort())[v.length ~/ 2];
+    final log = <String>[
+      for (final e in ratios.entries)
+        '${e.key.$1.name} ${e.key.$2}部: 人件費率の真ん中 '
+            '${(median(e.value) * 100).round()}% (${e.value.length}クラブ)',
+    ]..sort();
+    // ignore: avoid_print
+    print(log.join('\n'));
+    for (final theme in LeagueTheme.values) {
+      expect(median(ratios[(theme, 1)]!), inInclusiveRange(0.5, 0.8),
+          reason: log.join('\n'));
+      expect(median(ratios[(theme, 2)]!), inInclusiveRange(0.7, 1.1),
+          reason: log.join('\n'));
+    }
   }, timeout: const Timeout(Duration(minutes: 5)));
 
   group('旧セーブの換算', () {
