@@ -216,8 +216,11 @@ void main() {
   });
 
   test('掲載する絵が、App Store の寸法で揃っている', () {
+    // **1290x2796（6.9インチ）は、もう App Store Connect が
+    // 受け付けない**（2026-11-22 に実際に弾かれた）。iPhone の枠は
+    // 「中型ディスプレイ」1つで、通るのは 1179x2556 と 1206x2622。
     const sizes = {
-      'marketing/screenshots': [1290, 2796],
+      'marketing/screenshots': [1206, 2622],
       'marketing/screenshots_ipad': [2064, 2752],
     };
     sizes.forEach((dir, size) {
