@@ -173,7 +173,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v29</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v30</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1065,7 +1065,7 @@ function showTitle(){
  el.innerHTML='<div class="tbox"><h2>塔の意志</h2><p class="sub">掘って、生まれた魔物に塔を守らせよう。</p>'+
   (has?'<button class="btn go" id="tcont">続きから<small style="color:inherit;opacity:.85">'+saveLabel()+'</small></button>':'')+
   '<p class="lbl">新しい塔を始める</p><div class="drow">'+Object.keys(DIFF).map(function(k){return '<button class="btn" data-d="'+k+'">'+DIFF[k].n+'<small>'+(b[k]?'最高 '+b[k].toLocaleString():'記録なし')+'</small></button>';}).join('')+'</div>'+
-  (Object.keys(b).length?'':'<p class="sub" style="color:var(--accent)">はじめてなら「ストーリー」の第1面から。慣れたら「新しい塔」で、どこまで高く積めるか挑もう。</p>')+'<p class="lbl">ほかの遊び方</p><div class="row2"><button class="btn" id="tstory">ストーリー<small>全8面</small></button>'+(storyDone()?'<button class="btn" id="tura">裏ストーリー<small>手ごわい8面</small></button>':'<button class="btn" disabled>裏ストーリー<small>ストーリーを全部クリアで</small></button>')+'</div><div class="row3"><button class="btn" id="tvs">VS</button><button class="btn" id="tchal">チャレンジ</button><button class="btn" id="tdex">図鑑</button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><p class="links" style="margin-top:-4px;opacity:.75">© 2026 つるはし社</p><div class="tshop" id="tshop"></div></div>';
+  (Object.keys(b).length?'':'<p class="sub" style="color:var(--accent)">はじめてなら「ストーリー」の第1面から。慣れたら「新しい塔」で、どこまで高く積めるか挑もう。</p>')+'<p class="lbl">ほかの遊び方</p><div class="row2"><button class="btn" id="tstory">ストーリー<small>'+rankSummary('story')+'</small></button>'+(storyDone()?'<button class="btn" id="tura">裏ストーリー<small>手ごわい8面</small></button>':'<button class="btn" disabled>裏ストーリー<small>ストーリーを全部クリアで</small></button>')+'</div><div class="row3"><button class="btn" id="tvs">VS</button><button class="btn" id="tchal">チャレンジ</button><button class="btn" id="tdex">図鑑</button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><p class="links" style="margin-top:-4px;opacity:.75">© 2026 つるはし社</p><div class="tshop" id="tshop"></div></div>';
  el.hidden=false;renderShop();
  if(has)document.getElementById('tcont').onclick=function(){if(!loadGame())showTitle();};
  el.querySelectorAll('[data-d]').forEach(function(bt){bt.onclick=function(){if(has)kvSet('tou-save',null);newGame(bt.getAttribute('data-d'));hideTitle();};});
@@ -1619,7 +1619,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v29 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v30 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1756,11 +1756,16 @@ function rankOf(sc,th){return sc>=th[0]?'S':sc>=th[1]?'A':sc>=th[2]?'B':sc>=th[3
 function stageTh(st){return [1500+400*st,1000+300*st,600+200*st,300+100*st];}
 var STITLE=['はじまりの一歩','力くらべ','ふたり旅','いのしし兄弟','三つの剣と杖','老いと恋','もう一度だけ','伝承の勇者'];
 function partyInfo(){var es=g.en.filter(function(e){return e.title;});if(es.length)return es.map(function(e){return '<div class="empty"><b style="color:var(--ink)">'+esc(e.nm)+'</b> '+(e.f+1)+'階 · 体力'+Math.max(0,Math.round(e.hp))+'/'+Math.round(e.mhp)+'</div>';}).join('');return '<div class="empty">'+g.party.map(function(p){return esc(p.nm);}).join('・')+(g.wave?'':'が'+Math.ceil(g.cd)+'秒後に来る')+'</div>';}
+var RORD='DCBAS';
+function ranks(){try{return JSON.parse(localStorage.getItem('tou-srank')||'{}')||{};}catch(_){return {};}}
+function bestRank(m,st){var r=ranks()[m];return r&&r[st]||'';}
+function saveRank(m,st,rk){if(!rk||(m!='story'&&m!='ura'))return;var r=ranks();r[m]=r[m]||{};if(RORD.indexOf(rk)>RORD.indexOf(r[m][st]||'')){r[m][st]=rk;try{localStorage.setItem('tou-srank',JSON.stringify(r));}catch(_){}}}
+function rankSummary(m){var r=ranks()[m]||{},ks=Object.keys(r);if(!ks.length)return '全8面';var top=Math.max.apply(null,ks.map(Number)),ns=ks.filter(function(k){return r[k]=='S';}).length;return '第'+top+'面まで · S×'+ns;}
 function stageIntro(){
  var el=document.getElementById('title'),P=g.party;
  el.innerHTML='<div class="tbox"><h2><small>'+(g.mode=='ura'?'裏ストーリー ':'')+'第'+g.st+'面</small><br>'+STITLE[g.st-1]+'</h2>'+
   '<ul class="sc">'+P.map(function(p){return '<li><b>'+esc(p.nm)+'</b>（Lv'+(p.ura?Math.round(p.lv):p.lv)+'・'+esc(p.ti)+'）'+(p.skl&&p.skl.length?'<br><small>技：'+p.skl.map(function(k){return HSKN[k];}).join('・')+'</small>':'')+(p.line?'<br><small>「'+esc(p.line)+'」</small>':'')+'</li>';}).join('')+'</ul>'+
-  '<p class="sub">'+Math.ceil(g.cd)+'秒後に入口から来る。掘る力は'+g.dp+'。準備の間は時間が止まっている。</p>'+
+  (bestRank(g.mode,g.st)?'<p class="sub">この面の最高ランク：<span class="rank">'+bestRank(g.mode,g.st)+'</span></p>':'')+'<p class="sub">'+Math.ceil(g.cd)+'秒後に入口から来る。掘る力は'+g.dp+'。準備の間は時間が止まっている。</p>'+
   '<button class="btn go" id="tgo">準備を始める</button></div>';
  el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
 }
@@ -1768,6 +1773,7 @@ function stageClear(){
  var sc=stageScore(),rk=g.mode=='vs'?'':rankOf(sc,stageTh(g.st)),el=document.getElementById('title');setSpeed(0);sfx('grow');
  if(g.mode=='vs'){el.innerHTML='<div class="tbox"><h2>防ぎ切った！</h2><p class="sub">「'+esc(g.vsName||'挑戦者')+'」の勇者たちを全員倒した。</p><p class="big">'+sc.toLocaleString()+' 点</p><button class="btn go" id="tback">タイトルへ</button></div>';el.hidden=false;document.getElementById('tback').onclick=showTitle;g.mode=null;return;}
  if(g.stages.length<g.st)g.stages.push({sc:sc,rk:rk});
+ saveRank(g.mode,g.st,rk);
  var D=DIFF.normal,dig=Math.floor(g.dp*0.2),ab=Math.min(60,Math.max(0,Math.round((armyPower()-(g.armyStart||0))*0.03))),tb=Math.max(0,Math.round(60-(g.t-(g.roundT0||0))/6)),nx=(STORY[g.st]?STORY[g.st].dp:0)+dig+ab+tb;
  var last=g.st>=8;
  el.innerHTML='<div class="tbox"><h2>第'+g.st+'面 クリア <span class="rank">'+rk+'</span></h2><p class="big">'+sc.toLocaleString()+' 点</p>'+
