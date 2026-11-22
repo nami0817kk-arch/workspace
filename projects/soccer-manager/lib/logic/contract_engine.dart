@@ -4,7 +4,6 @@ import '../models/league_theme.dart';
 import '../models/player.dart';
 import '../models/team.dart';
 import '../l10n/tr.dart';
-import 'economy_scale.dart';
 import 'transfer_value.dart';
 
 class ContractEngine {
