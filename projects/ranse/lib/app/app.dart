@@ -36,6 +36,19 @@ class _RanseAppState extends State<RanseApp> {
       title: '乱世下剋上',
       debugShowCheckedModeBanner: false,
       theme: buildTheme(),
+      // iPhone の「文字を大きく」は効かせるが、横棒や選択肢カードが崩れないよう1.3倍までにする。
+      builder: (context, child) {
+        final mq = MediaQuery.of(context);
+        return MediaQuery(
+          data: mq.copyWith(
+            textScaler: mq.textScaler.clamp(
+              minScaleFactor: 1,
+              maxScaleFactor: 1.3,
+            ),
+          ),
+          child: child!,
+        );
+      },
       home: ListenableBuilder(
         listenable: c,
         builder: (context, _) => switch (c.screen) {
