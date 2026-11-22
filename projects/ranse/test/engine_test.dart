@@ -914,7 +914,9 @@ void main() {
         final sp = g.l.people['伴侶'];
         if (sp == null || !g.l.married || g.age < 15) continue;
         checked++;
-        expect(buildEnding(g).text, contains(sp.name));
+        final e = buildEnding(g);
+        if (e.handId != null) continue; // 手書きの最期は、それぞれの文で書く
+        expect(e.text, contains(sp.name));
       }
       expect(checked, greaterThan(5));
     });
@@ -966,7 +968,9 @@ void main() {
             .any((p) => RegExp('信長|秀吉|家康|本能寺|桶狭間|城主|大名|家老').hasMatch(p));
         if (!heavy) continue;
         checked++;
-        final t = buildEnding(g).text;
+        final e0 = buildEnding(g);
+        if (e0.handId != null) continue; // 手書きの最期は、それぞれの文で書く
+        final t = e0.text;
         expect(t, contains('思えば、'), reason: t);
         expect(t, contains('こともあった。'));
       }
@@ -982,7 +986,9 @@ void main() {
         playOut(g, Rng(seed));
         if (g.l.end != 'era') continue;
         checked++;
-        final t = buildEnding(g).text;
+        final e0 = buildEnding(g);
+        if (e0.handId != null) continue; // 手書きの最期は、それぞれの文で書く
+        final t = e0.text;
         expect(t, matches(RegExp('世を迎えた|世の始まりに立った|胸を躍らせた')), reason: t);
         expect(t, isNot(contains('null')));
       }
