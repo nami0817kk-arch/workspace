@@ -614,6 +614,21 @@ void main() {
       expect(titles.length, greaterThan(40));
     });
 
+    test('連れ合いのいる人生では、最期の文に連れ合いが出る', () {
+      var checked = 0;
+      for (var seed = 0; seed < 400 && checked < 20; seed++) {
+        final rng = Rng(seed + 77);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        final sp = g.l.people['伴侶'];
+        if (sp == null || !g.l.married || g.age < 15) continue;
+        checked++;
+        expect(buildEnding(g).text, contains(sp.name));
+      }
+      expect(checked, greaterThan(5));
+    });
+
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
       final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
       path[6] = '20歳　信長に仕えた';

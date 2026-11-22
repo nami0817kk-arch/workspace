@@ -113,6 +113,9 @@ String? _specialTitle(Game g, String way, String kind) {
 
 /// 最期の場にいた人。絆の深い順に、伴侶・子・幼なじみ・弟子・主君・師。
 Person? _witness(Life l) {
+  // 連れ合いがいれば、最期の場にいるのは連れ合い。
+  final sp = l.people['伴侶'];
+  if (sp != null && l.married) return sp;
   const roles = ['伴侶', '子', '幼なじみ', '弟子', '主君', '師', '好敵手'];
   Person? best;
   for (final r in roles) {
@@ -144,8 +147,9 @@ String _joyLine(double aj) => aj >= 65
 /// 結果カードに載せる「選んだ道」を3〜4行に絞る（初め・終わり・有名人や歴史の絡む行を優先）。
 List<String> pickHighlights(List<String> path, {int max = 4}) {
   if (path.length <= max) return [...path];
-  bool notable(String s) =>
-      RegExp('信長|秀吉|家康|謙信|信玄|義元|光秀|政宗|歴史|天下|大名|城主|下剋上|出家|夫婦|輿入れ').hasMatch(s);
+  bool notable(String s) => RegExp(
+    '信長|秀吉|家康|謙信|信玄|義元|光秀|政宗|歴史|天下|大名|城主|下剋上|出家|夫婦|輿入れ|仕え|取り立て|家督|商い|野盗',
+  ).hasMatch(s);
   final picked = <int>{0, path.length - 1};
   for (var i = 1; i < path.length - 1 && picked.length < max; i++) {
     if (notable(path[i])) picked.add(i);

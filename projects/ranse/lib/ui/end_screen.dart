@@ -20,9 +20,6 @@ class EndScreen extends StatelessWidget {
     final child = g.age < 15;
     final e = buildEnding(g);
     final aj = g.avgJoy;
-    final jt = aj >= 65
-        ? '満ち足りた一生だった'
-        : (aj >= 42 ? '人並みに、喜びも苦しみもあった一生だった' : '苦難の多い一生だった');
     final head = child ? '幼き命' : (l.victory ? '天下統一' : '一生の終わり');
     return Scaffold(
       body: SafeArea(
@@ -62,7 +59,7 @@ class EndScreen extends StatelessWidget {
                   LifeChart(l.hist),
                   const SizedBox(height: 10),
                   Text(
-                    '平均の幸福度は${aj.round()}。$jt。',
+                    '平均の幸福度は${aj.round()}。',
                     style: const TextStyle(color: Pal.muted, fontSize: 13),
                   ),
                   const SizedBox(height: 8),
