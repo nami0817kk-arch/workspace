@@ -849,14 +849,14 @@ extension GameStateFinance on GameState {
 
     int strengthForTier(int tier) => rollDivisionStrength(tier, rng);
 
+    // 前のクラブで進めた今日(リーグを入れ替える前に控える)。
+    final reachedDay = today;
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
 
     // 年俸の水準は新しい国・部のもの(他の部のクラブはその部の水準)。
     setHomeWageLevel(theme, startTier);
-    final userTeam = PlayerGenerator.generateSquad(
-        id: 'user',
-        name: nextName(),
-        strengthTier: GameState.userStartStrength(startTier));
+    final userTeam = GameState.generateUserStartSquad(
+        name: nextName(), tier: startTier, theme: theme);
     final others = List<League?>.filled(totalDivisionTiers, null);
     League? mine;
     final cpuInMine = <Team>[];
@@ -924,7 +924,39 @@ extension GameStateFinance on GameState {
     );
     save.friendlies = _generateFriendlies(mine.teams, 'user');
     // 新しい国のリーグは開幕前から始まる。日付もそのシーズンのオフに戻す。
+    //
+    // 日付を戻さずに季の途中から入る形は取らない。新しいリーグ・カップ・
+    // 大陸大会は第1節から組み直すので、日付を残すと過ぎた節がみな今日に
+    // 詰まって消化され(休養日なし・毎試合が過密)、窓や入金日とも合わない。
+    // 代わりに、戻した期間をもう一度進めても二重にならないよう、前の
+    // クラブで進めた記録をここで片付ける(2026-11-23):
+    // - オーナーの本業の収入と誕生日は、済ませた日を控えて、その日より後
+    //   の分だけ入れる([SaveGame.personalDatesThrough])。
+    // - 週の処理の時計・自クラブの最後の試合の日は、前のクラブの季の途中の
+    //   日付のまま残ると、その日まで週の処理が止まる・過密の判定がずれる。
+    // - 試合前の処理を済ませた節と試合の途中経過は前のリーグのもの。残すと
+    //   同じ番号の節が「途中で終わった試合の再開」と取り違えられる。
+    // - 月間最優秀監督の集計済みの節・中間レビューも前のリーグの節で数えた
+    //   もの。
+    final through = save.personalDatesThrough;
+    if (through == null || reachedDay.isAfter(through)) {
+      save.personalDatesThrough = reachedDay;
+    }
     save.today = SeasonCalendar.preseasonDate(save.league.season);
+    save.lastWeeklyTickDate = null;
+    save.lastUserMatchDate = null;
+    save.lastWeekCongested = false;
+    save.weekProcessedSeason = 0;
+    save.weekProcessedMatchday = 0;
+    save.liveMatchProgress = null;
+    save.lastManagerOfMonthCheckpoint = 0;
+    save.boardReviewDoneThisSeason = false;
+    save.pendingBoardReviewMessage = null;
+    save.trainingDoneThisWeek = false;
+    // 1月1日の仮契約の解禁と3月31日の延長オプションの締めも、前のクラブで
+    // 済ませた印のままだと新しい国の季で走らない。
+    save.preContractOpenedSeason = 0;
+    save.optionDeadlineSeason = 0;
     final rival = cpuInMine[rng.nextInt(cpuInMine.length)];
     save.rivalTeamId = rival.id;
     save.rivalTeamName = rival.name;
@@ -2130,7 +2162,7 @@ extension GameStateFinance on GameState {
     if (save == null) {
       return ClubValueEngine.compute(
         playersValue: 0,
-        facilityLevels: const [],
+        facilityLevels: const {},
         staffLevels: const [],
         leagueTitles: 0,
         cupTitles: 0,
@@ -2152,10 +2184,10 @@ extension GameStateFinance on GameState {
         : weeklyIncomeFor(save.userTeamId) * matchdays;
     return ClubValueEngine.compute(
       playersValue: userTeam.players.fold<int>(0, (s, p) => s + p.marketValue),
-      facilityLevels: [
+      facilityLevels: {
         for (final f in FacilityType.values)
-          save.infrastructure.facilityLevel(f),
-      ],
+          f: save.infrastructure.facilityLevel(f),
+      },
       staffLevels: [
         for (final r in StaffRole.values)
           save.infrastructure.staffFor(r)?.effectiveLevel ?? 0,

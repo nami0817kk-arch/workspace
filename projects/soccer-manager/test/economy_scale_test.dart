@@ -314,10 +314,36 @@ void main() {
           reason: log.join('\n'));
       // 3部は 110% 前後まで(運営費が入ったので、大きく超えると数季で資金が
       // 尽きる)。24ゲームでも真ん中は ±8% ほど振れるので、上限は 125%。
-      expect(median(ratios[(theme, 3)]!), inInclusiveRange(0.75, 1.25),
+      // 2026-11-23: 水準を部が下がるほど同じか低い形にした。フランスは部の
+      // 間がほぼ平らで3部の真ん中が 82% ほど(80ゲーム)なので、振れても
+      // 落ちないよう下限は 70%。
+      expect(median(ratios[(theme, 3)]!), inInclusiveRange(0.7, 1.25),
           reason: log.join('\n'));
+      // 同じ選手が下の部で高く求めることはない(水準が部で単調)。
+      expect(wageCountryFactor(theme, 2),
+          lessThanOrEqualTo(wageCountryFactor(theme, 1)));
+      expect(wageCountryFactor(theme, 3),
+          lessThanOrEqualTo(wageCountryFactor(theme, 2)));
     }
   }, timeout: const Timeout(Duration(minutes: 10)));
+
+  // 2026-11-23: 自クラブの初めの人件費率は、主力の引きで 65〜177% と振れ、
+  // 3部から始めると1〜3割の回で 110% を超えていた。幅に入る組を選ぶ。
+  test('新しいゲームの自クラブ(3部)の人件費率は、どの国でも 110% を超えない',
+      () async {
+    for (final theme in LeagueTheme.values) {
+      for (var n = 0; n < 8; n++) {
+        final game = GameState();
+        await game.startNewGame('計測FC', theme: theme);
+        final s = game.save!;
+        final ratio =
+            annualFromWeekly(ContractEngine.weeklyWageBill(game.userTeam)) /
+                typicalAnnualIncome(s.currentDivisionTier, theme);
+        expect(ratio, lessThanOrEqualTo(1.1), reason: '${theme.name} $n');
+        expect(ratio, greaterThanOrEqualTo(0.6), reason: '${theme.name} $n');
+      }
+    }
+  }, timeout: const Timeout(Duration(minutes: 5)));
 
   group('旧セーブの換算', () {
     test('版1のセーブは、読み込みで一度だけ新しい桁に直る', () async {

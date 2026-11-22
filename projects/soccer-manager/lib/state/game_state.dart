@@ -367,10 +367,15 @@ class GameState extends ChangeNotifier {
     return null;
   }
 
-  /// 直近のplayNextMatchdayでローン期間満了により契約元クラブへ復帰した選手名、
-  /// または直近のstartNextSeasonで契約(年単位)満了により退団した選手名
+  /// 直近のstartNextSeasonで契約(年単位)満了により退団した選手名
   /// （1回表示したら呼び出し側でクリアする想定）。
   List<String> lastContractExpirations = [];
+
+  /// 借りていた選手のうち、ローン期間満了で貸し元へ戻った選手名
+  /// （1回表示したら呼び出し側でクリアする想定）。以前は
+  /// [lastContractExpirations]に混ぜていたため、季の切り替えで
+  /// 「契約満了で退団」と出ていた(2026-11-23)。
+  List<String> lastLoanEndings = [];
 
   /// 直近のstartNextSeasonで契約の最終年に入った(事前警告)選手名
   /// (1回表示したら呼び出し側でクリアする想定)。
@@ -721,6 +726,7 @@ class GameState extends ChangeNotifier {
       _refreshScoutCandidates();
       // 戻す前の節の出来事を持ち越すと、戻した後にそれを知らせてしまう。
       lastContractExpirations = [];
+      lastLoanEndings = [];
       lastRetirements = [];
       lastLoanReturns = [];
       lastYouthDepartures = [];
@@ -769,6 +775,7 @@ class GameState extends ChangeNotifier {
     save.renumberDuplicatePlayerIds(PlayerGenerator.nextPlayerId);
     _dropDanglingJobOffer(save);
     _migrateEconomyIfNeeded(save);
+    _migrateClubValueIfNeeded(save);
     // ファンの需要を持たない旧セーブは、部と規模から作る。
     _ensureFanDemand(save);
     // 今日の日付を持たない旧セーブは、ここで日付を作る。
@@ -862,6 +869,33 @@ class GameState extends ChangeNotifier {
     save.economyVersion = SaveGame.currentEconomyVersion;
   }
 
+  /// 施設のレベル1を0円にしていた頃(版1)のセーブの、覚えているクラブ
+  /// 価値の基準を一度だけ直す(2026-11-23)。
+  ///
+  /// 施設を建て直す額で数えるようにして、同じクラブの価値が施設のぶん
+  /// 上がった。目標「クラブ価値を2倍に」の開始時の価値と、5か年計画の
+  /// 目標の価値が古い数え方のままだと、読み込んだだけで目標に近づく。
+  /// 今の施設のレベルで、新旧の数え方の差を足す(目標を立てたあとに増築
+  /// していれば、そのぶんは正確ではないが、差の大半はレベル1の値)。
+  void _migrateClubValueIfNeeded(SaveGame save) {
+    if (save.clubValueVersion >= SaveGame.currentClubValueVersion) return;
+    final levels = {
+      for (final f in FacilityType.values)
+        f: save.infrastructure.facilityLevel(f),
+    };
+    final now = levels.entries.fold<int>(
+        0, (s, e) => s + ClubValueEngine.facilityValue(e.key, e.value));
+    // 版1の数え方: レベル1つぶん300万 × 今の部の規模、レベル1は0。
+    final before = (levels.values.fold<int>(0, (s, l) => s + max(0, l - 1)) *
+            300 *
+            moneyScale(save.currentDivisionTier))
+        .round();
+    final delta = max(0, now - before);
+    if (save.ownerGoalStartValue > 0) save.ownerGoalStartValue += delta;
+    if (save.planTargetValue > 0) save.planTargetValue += delta;
+    save.clubValueVersion = SaveGame.currentClubValueVersion;
+  }
+
   /// [save]の自クラブのいる国・部の年俸の水準([wageCountryFactor])。
   static double _homeWageLevelOf(SaveGame save) => wageCountryFactor(
         leagueThemeFromName(save.leagueName) ?? LeagueTheme.england,
@@ -907,6 +941,12 @@ class GameState extends ChangeNotifier {
   ///   係数を掛ける。
   /// 係数は1以下なので週俸は下がるだけで、資金は動かさない(財政は悪く
   /// ならない)。
+  ///
+  /// 版3→4: 国・部の水準を、部が下がるほど同じか低い形に直した
+  /// (economy_scale.dart の wageCountryFactor。2026-11-23)。版2→3 と同じ
+  /// 形で、クラブの選手と所属なしの選手の週俸を新しい水準で一度だけ作り
+  /// 直す(版3より前のセーブは、版3への作り直しが新しい水準で行われるので、
+  /// 二度は行わない)。
   void _migrateWageLevelIfNeeded(SaveGame save) {
     if (save.wageLevelVersion >= SaveGame.currentWageLevelVersion) return;
     if (save.wageLevelVersion < 2) _migrateWageLevelToV2(save);
@@ -1319,6 +1359,7 @@ class GameState extends ChangeNotifier {
       scoutCandidates = [];
     }
     lastContractExpirations = [];
+    lastLoanEndings = [];
     lastRetirements = [];
     _notify();
   }
@@ -1383,10 +1424,10 @@ class GameState extends ChangeNotifier {
     // 年俸の水準は国・部で違う。自クラブの部の水準を基準にし、他の部の
     // クラブはその部の水準で作る(economy_scale.dart の wageCountryFactor)。
     setHomeWageLevel(theme, userStartTier);
-    final userTeam = PlayerGenerator.generateSquad(
-      id: 'user',
+    final userTeam = generateUserStartSquad(
       name: clubName,
-      strengthTier: userStartStrength(userStartTier),
+      tier: userStartTier,
+      theme: theme,
     );
     final rng = Random();
     // クラブ名は実在の今季の顔ぶれに寄せて、部ごとに決まっている
@@ -1525,6 +1566,7 @@ class GameState extends ChangeNotifier {
     // 第1季の前の夏(2026年)はワールドカップ。出た選手は遅れて合流する。
     _startSummerTournament();
     lastContractExpirations = [];
+    lastLoanEndings = [];
     isBusy = false;
     _notify();
     await _persistNow();
@@ -1552,6 +1594,7 @@ class GameState extends ChangeNotifier {
     transferMarket = [];
     scoutCandidates = [];
     lastContractExpirations = [];
+    lastLoanEndings = [];
     _notify();
     await _persistNow();
   }
@@ -1786,6 +1829,52 @@ class GameState extends ChangeNotifier {
   static int userStartStrength(int tier) {
     final (lo, hi) = divisionStrengthRange(tier);
     return (lo + hi) ~/ 2;
+  }
+
+  /// 自クラブの初めの人件費率(年俸の合計 ÷ 年収の目安)の幅。
+  static const double userStartWageRatioMin = 0.7;
+  static const double userStartWageRatioMax = 1.0;
+
+  /// 人件費率が幅に入るまで作り直す回数の上限。
+  static const int userStartSquadTries = 12;
+
+  /// 自クラブの初めの選手を作る(年俸の水準は [setHomeWageLevel] で今の
+  /// 国・部に合わせてから呼ぶ)。
+  ///
+  /// 強さは部の真ん中([userStartStrength])でも、年俸は能力に対して指数で
+  /// 伸びるので、数人の主力の引きで人件費率が大きく振れる。3部から始めると
+  /// 60ゲームのうち1〜3割で 110% を超え(最大 177%)、運営費もあって数季で
+  /// 資金が尽きる回があった(2026-11-23)。人件費率が [userStartWageRatioMin]〜
+  /// [userStartWageRatioMax] に入る選手の組を選ぶ(入らなければ、いちばん
+  /// 近いもの)。部の真ん中のクラブを買う、という前提に合わせる。
+  static Team generateUserStartSquad({
+    required String name,
+    required int tier,
+    required LeagueTheme theme,
+  }) {
+    final income = typicalAnnualIncome(tier, theme);
+    Team? best;
+    var bestGap = double.infinity;
+    for (var i = 0; i < userStartSquadTries; i++) {
+      final team = PlayerGenerator.generateSquad(
+        id: 'user',
+        name: name,
+        strengthTier: userStartStrength(tier),
+      );
+      final ratio =
+          annualFromWeekly(ContractEngine.weeklyWageBill(team)) / income;
+      if (ratio >= userStartWageRatioMin && ratio <= userStartWageRatioMax) {
+        return team;
+      }
+      final gap = ratio < userStartWageRatioMin
+          ? userStartWageRatioMin - ratio
+          : ratio - userStartWageRatioMax;
+      if (gap < bestGap) {
+        best = team;
+        bestGap = gap;
+      }
+    }
+    return best!;
   }
 
   /// 古い形の大陸カップ(2026-11-22 より前のセーブ)のグループの1勝の

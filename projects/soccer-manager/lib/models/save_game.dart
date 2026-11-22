@@ -183,11 +183,14 @@ class SaveGame {
   /// イングランドの1部と同じ水準)。2 は国・部ごとの水準
   /// (economy_scale.dart の wageCountryFactor。2026-11-22)を掛けた後。
   /// 版1のセーブは、読み込んだときに一度だけ、選手のいるクラブの国・部の
-  /// 水準を掛けてから2にする。
+  /// 水準を掛けてから2にする。3 は年俸を「能力×年齢の経験」の式にした後
+  /// (2026-11-23)。4 は国・部の水準を、部が下がるほど同じか低い形に
+  /// 直した後(2026-11-23)。版3以前のセーブは、読み込んだときに一度だけ
+  /// 選手の週俸を今の式と水準で作り直す。
   int wageLevelVersion;
 
   /// 今の年俸の水準の版。新しいゲームはこの版で始まる。
-  static const int currentWageLevelVersion = 3;
+  static const int currentWageLevelVersion = 4;
 
   /// イタリアの「EU 外の選手を他の国から取れるのは1季に2人まで」を数える
   /// ための、今季に取った人数と、その季。
@@ -224,6 +227,15 @@ class SaveGame {
 
   /// 目標「クラブ価値を2倍に」を選んだときのクラブ価値。選ぶまでは 0。
   int ownerGoalStartValue;
+
+  /// クラブ価値の数え方の版。1 は施設を「レベル1つぶん300万 × 部の規模」で
+  /// 数え、レベル1を0円にしていた頃。2 は施設を建て直す額で数える
+  /// (ClubValueEngine.facilityValue。2026-11-23)。版1のセーブは、読み込んだ
+  /// ときに一度だけ、覚えているクラブ価値の基準(目標・5か年計画)を直す。
+  int clubValueVersion;
+
+  /// 今のクラブ価値の数え方の版。新しいゲームはこの版で始まる。
+  static const int currentClubValueVersion = 2;
 
   /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
   int ownerShare;
@@ -468,6 +480,12 @@ class SaveGame {
   /// この日から7日たつごとに1回走る。季の初めと旧セーブは null で、
   /// その季で最初に節を消化する日に1回行い、その日を起点にする。
   DateTime? lastWeeklyTickDate;
+
+  /// オーナーの本業の収入(月ごと)と、選手の誕生日を済ませた日。
+  /// 季の途中で別の国のクラブを買い直すと今日がその季の7月1日に戻るので、
+  /// 戻した期間をもう一度進めるときに二重に入れないための印
+  /// (2026-11-23)。旧セーブは null(今日までは済んだものとして数える)。
+  DateTime? personalDatesThrough;
 
   /// 持っているほかのクラブ(クラブ id → 買った値段)。
   Map<String, int> groupClubs;
@@ -852,6 +870,7 @@ class SaveGame {
     this.lastWeekCongested = false,
     this.lastUserMatchDate,
     this.lastWeeklyTickDate,
+    this.personalDatesThrough,
     Map<String, int>? groupClubs,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
@@ -895,6 +914,7 @@ class SaveGame {
     this.clubPolicy = ClubPolicy.balanced,
     Map<int, int>? clubValueHistory,
     this.ownerGoalStartValue = 0,
+    this.clubValueVersion = currentClubValueVersion,
     this.ownerShare = 100,
     List<String>? retiredNumberIds,
     Map<String, int>? projects,
@@ -1233,6 +1253,8 @@ class SaveGame {
           'lastUserMatchDate': formatSaveDate(lastUserMatchDate!),
         if (lastWeeklyTickDate != null)
           'lastWeeklyTickDate': formatSaveDate(lastWeeklyTickDate!),
+        if (personalDatesThrough != null)
+          'personalDatesThrough': formatSaveDate(personalDatesThrough!),
         if (groupClubs.isNotEmpty) 'groupClubs': groupClubs,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
@@ -1274,6 +1296,7 @@ class SaveGame {
         'clubPolicy': clubPolicy.name,
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
         'ownerGoalStartValue': ownerGoalStartValue,
+        'clubValueVersion': clubValueVersion,
         'ownerShare': ownerShare,
         'retiredNumberIds': retiredNumberIds,
         'projects': projects,
@@ -1506,6 +1529,7 @@ class SaveGame {
         lastWeekCongested: json['lastWeekCongested'] as bool? ?? false,
         lastUserMatchDate: parseSaveDate(json['lastUserMatchDate']),
         lastWeeklyTickDate: parseSaveDate(json['lastWeeklyTickDate']),
+        personalDatesThrough: parseSaveDate(json['personalDatesThrough']),
         groupClubs: (json['groupClubs'] as Map?)?.map(
           (k, v) => MapEntry(k as String, v as int),
         ),
@@ -1566,6 +1590,8 @@ class SaveGame {
           (k, v) => MapEntry(int.parse('$k'), v as int),
         ),
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
+        // 版が書かれていないのは、施設のレベル1を0円にしていた頃のセーブ。
+        clubValueVersion: json['clubValueVersion'] as int? ?? 1,
         ownerShare: json['ownerShare'] as int? ?? 100,
         rivalPast:
             (json['rivalPast'] as List?)?.map((e) => e as int).toList() ??

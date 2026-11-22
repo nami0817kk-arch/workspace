@@ -1,4 +1,5 @@
 import '../l10n/tr.dart';
+import '../models/club_infrastructure.dart';
 
 /// クラブ価値(万円)の内訳。
 ///
@@ -48,8 +49,33 @@ class ClubValue {
 class ClubValueEngine {
   const ClubValueEngine._();
 
-  /// 施設1つのレベル1つぶんの価値(万円)。レベル1は初期値なので数えない。
-  static const int facilityPerLevel = 300;
+  /// 施設 [type] がレベル [level] のときの価値(万円)。建て直すときに
+  /// かかる額で数える(工事費は部でも国でも変わらないので、価値も変えない)。
+  ///
+  /// 以前は「レベル1つぶん300万 × 部の規模」で、レベル1は数えなかった。
+  /// 1万2,000席のスタジアムが0円で、増築に12億かけても価値は3部で4,300万
+  /// しか増えなかった(2026-11-23 に直した)。
+  ///
+  /// - スタジアム: レベル1の席(1万2,000席)を、最初の増築と同じ1席の値段
+  ///   (20万円)で数えて24億。増築した席は、増築の工事費
+  ///   ([ClubInfrastructure.stadiumUpgradeCost])をそのまま足す
+  ///   (Lv2 36億、Lv5 144億、Lv6 4万2,000席で204億)。
+  /// - ほかの施設: レベル1を最初の増築と同じ1.5億で数え、増築の工事費
+  ///   ([ClubInfrastructure.facilityUpgradeCost])を足す。
+  ///
+  /// 増築すると、払った工事費(割引の前)と同じだけ価値が増える。
+  static int facilityValue(FacilityType type, int level) {
+    final lv = level.clamp(1, ClubInfrastructure.maxLevel);
+    final base = type == FacilityType.stadium
+        ? ClubInfrastructure.stadiumCapacity(1) *
+            ClubInfrastructure.stadiumSeatCost(1)
+        : ClubInfrastructure.facilityUpgradeCost(1);
+    var total = base;
+    for (var k = 1; k < lv; k++) {
+      total += ClubInfrastructure.upgradeCostFor(type, k);
+    }
+    return total;
+  }
 
   /// スタッフ1人のレベル1つぶんの価値(万円)。
   static const int staffPerLevel = 100;
@@ -66,7 +92,7 @@ class ClubValueEngine {
 
   static ClubValue compute({
     required int playersValue,
-    required Iterable<int> facilityLevels,
+    required Map<FacilityType, int> facilityLevels,
     required Iterable<int> staffLevels,
     required int leagueTitles,
     required int cupTitles,
@@ -76,15 +102,15 @@ class ClubValueEngine {
     required int debt,
     double scale = 1,
   }) {
-    // 施設・スタッフ・ブランドの額は5部の規模で書いてある。[scale] は今の
-    // 部の規模(moneyScale)。
-    final facilities = ((facilityLevels.fold<int>(
-                    0, (s, l) => s + (l - 1).clamp(0, 99)) *
-                facilityPerLevel +
-            staffLevels.fold<int>(0, (s, l) => s + l.clamp(0, 99)) *
-                staffPerLevel) *
-        scale)
-        .round();
+    // 施設は建て直す額で、部の規模は掛けない([facilityValue])。スタッフ・
+    // ブランドの額は5部の規模で書いてある。[scale] は今の部の規模
+    // (moneyScale)。
+    final facilities = facilityLevels.entries
+            .fold<int>(0, (s, e) => s + facilityValue(e.key, e.value)) +
+        (staffLevels.fold<int>(0, (s, l) => s + l.clamp(0, 99)) *
+                staffPerLevel *
+                scale)
+            .round();
     return ClubValue(
       players: playersValue,
       facilities: facilities,

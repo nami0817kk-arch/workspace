@@ -84,8 +84,10 @@ void main() {
       final full = market[0];
       final cheap = market[1];
 
-      // 満額は必ず成立し、条項は付かない。
-      final r1 = await game.makeTransferOffer(full.id, full.marketValue);
+      // 満額は必ず成立し、条項は付かない。相場は契約の残り年数で市場価値の
+      // 1.1倍まで上がる(TransferValue)ので、それを超える額で出す。
+      final r1 =
+          await game.makeTransferOffer(full.id, (full.marketValue * 1.2).round());
       expect(r1.accepted, isTrue);
       expect(game.save!.sellOnClauses.containsKey(full.id), isFalse);
 
