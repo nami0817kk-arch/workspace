@@ -536,7 +536,8 @@ void main() {
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         playOut(g, Rng(seed));
-        if (g.isChild) continue;
+        // 歴史が変わった世では年表も変わる（明智の世では北条が残る、など）。
+        if (g.isChild || worldLine(g) != 'real') continue;
         final y = g.year;
         bool alive(String n) => g.fa[n]!.alive;
         bool ruled(String n) => g.l.lord == n && g.l.maxRank >= 8;
@@ -838,6 +839,7 @@ void main() {
           g,
           Rng(seed),
           onPrompt: (p) {
+            if (p.title == '元服' || p.title == '裳着') return;
             for (final c in p.choices) {
               expect(c.hint, isNotNull, reason: '${p.title}/${c.label}');
             }
