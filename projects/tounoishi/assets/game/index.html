@@ -173,7 +173,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v31</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v32</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1069,7 +1069,7 @@ function showTitle(){
  el.hidden=false;renderShop();
  if(has)document.getElementById('tcont').onclick=function(){if(!loadGame())showTitle();};
  el.querySelectorAll('[data-d]').forEach(function(bt){bt.onclick=function(){if(has)kvSet('tou-save',null);newGame(bt.getAttribute('data-d'));hideTitle();};});
- document.getElementById('tdex').onclick=showDex;document.getElementById('tchal').onclick=showChals;document.getElementById('tstory').onclick=function(){startStory('story');};var tu2=document.getElementById('tura');if(tu2)tu2.onclick=function(){startStory('ura');};document.getElementById('tvs').onclick=showVs;
+ document.getElementById('tdex').onclick=showDex;document.getElementById('tchal').onclick=showChals;document.getElementById('tstory').onclick=function(){storyMenu('story');};var tu2=document.getElementById('tura');if(tu2)tu2.onclick=function(){storyMenu('ura');};document.getElementById('tvs').onclick=showVs;
 }
 function hideTitle(){document.getElementById('title').hidden=true;appPrep();}
 
@@ -1619,7 +1619,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v31 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v32 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1740,9 +1740,18 @@ var STORY=[
 function storyDone(){try{return localStorage.getItem('tou-story')=='1';}catch(_){return false;}}
 function partyOf(st,mode){var P=STORY[st-1].party.map(function(p){var q=JSON.parse(JSON.stringify(p));if(mode=='ura'){q.lv=Math.round(q.lv*1.3)+4;q.ura=1;}return q;});
  if(mode=='ura')while(P.length<3)P.push({k:['tou','mah','sou'][P.length],nm:['ジル','ノア','キキ'][P.length],lv:P[0].lv,ti:'助っ人',skl:[]});return P;}
-function startStory(mode){
- newGame('normal');g.mode=mode;g.st=1;g.party=partyOf(1,mode);g.cd=STORY[0].t;g.dp=STORY[0].dp;g.stages=[];g.roundT0=g.t;g.armyStart=0;
- stageIntro();say((mode=='ura'?'裏ストーリー':'ストーリー')+' 第1面。'+STORY[0].t+'秒後に冒険者が来る（「今すぐ迎える」で早めると得点が増える）。');ui();
+function startStory(mode,st){
+ st=st||1;newGame('normal');g.mode=mode;g.st=st;g.party=partyOf(st,mode);g.cd=STORY[st-1].t;g.dp=STORY[st-1].dp+60*(st-1);g.stages=[];g.roundT0=g.t;g.armyStart=0;
+ stageIntro();say((mode=='ura'?'裏ストーリー':'ストーリー')+' 第'+st+'面。'+STORY[st-1].t+'秒後に冒険者が来る（「今すぐ迎える」で早めると得点が増える）。');ui();
+}
+// クリアした面の次までを選べる（途中の面から始めるときは、掘る力を多めに渡す）
+function storyMenu(mode){
+ var r=ranks()[mode]||{},top=Object.keys(r).length?Math.max.apply(null,Object.keys(r).map(Number)):0;
+ if(!top){startStory(mode,1);return;}
+ var el=document.getElementById('title'),n=Math.min(8,top+1),h='';
+ for(var i=1;i<=n;i++)h+='<button class="btn" data-st="'+i+'">第'+i+'面 '+STITLE[i-1]+(r[i]?' <span class="rank">'+r[i]+'</span>':'')+'</button>';
+ el.innerHTML='<div class="tbox"><h2>'+(mode=='ura'?'裏ストーリー':'ストーリー')+'</h2><p class="sub">クリアした面の次まで選べます。途中の面から始めると、塔は新しく掘り直し、掘る力を多めに渡します。</p><div class="chl">'+h+'</div><button class="btn go" id="tback">もどる</button></div>';
+ el.hidden=false;el.querySelectorAll('[data-st]').forEach(function(b){b.onclick=function(){startStory(mode,+b.getAttribute('data-st'));};});document.getElementById('tback').onclick=showTitle;
 }
 function applyParty(e,p){
  var M=p.boss?2.4:1,lk=1+p.lv/10,ak=1+p.lv/18;if(p.ura){lk*=1.5;ak*=1.3;}
