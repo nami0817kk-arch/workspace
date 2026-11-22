@@ -186,6 +186,7 @@ part 'game_state_forms.dart';
 part 'game_state_league_cup.dart';
 part 'game_state_era_group.dart';
 part 'game_state_congestion.dart';
+part 'game_state_week.dart';
 part 'game_state_youth_analytics.dart';
 part 'game_state_fans.dart';
 part 'game_state_contract_style.dart';

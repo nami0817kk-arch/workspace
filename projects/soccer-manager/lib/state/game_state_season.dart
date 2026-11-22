@@ -129,8 +129,13 @@ extension GameStateSeason on GameState {
   void _setToday(DateTime day) {
     final before = today;
     final d = SeasonCalendar.dateOnly(day);
-    _save!.today = d;
-    if (!d.isAfter(before)) return;
+    if (!d.isAfter(before)) {
+      _save!.today = d;
+      return;
+    }
+    // 怪我の回復・疲れの抜け(日数)と、またいだ週の数だけの週の処理。
+    // 終わると今日は d になっている。
+    _advanceDaysAndWeeks(before, d);
     // 仮契約の解禁(1月1日)・延長オプションの期限(3月31日)。
     _onContractDatesAdvanced(before, d);
     // 給与の月末・放映権の入金日。
@@ -632,6 +637,8 @@ extension GameStateSeason on GameState {
         }
         _afterSuperCupApplied(match);
     }
+    // 過密日程の判定(前の試合との日付の間隔)。
+    _noteUserMatchDay();
     _evaluateAchievements();
   }
 
@@ -654,6 +661,8 @@ extension GameStateSeason on GameState {
     if (_save == null) return;
     final userId = _save!.userTeamId;
     if (result.homeTeamId != userId && result.awayTeamId != userId) return;
+    // 過密日程の判定(前の試合との日付の間隔)。
+    _noteUserMatchDay();
     final home = teamById(result.homeTeamId);
     final away = teamById(result.awayTeamId);
     if (home == null || away == null) return;
@@ -1594,6 +1603,8 @@ extension GameStateSeason on GameState {
     _save!.friendlies = _generateFriendlies(newActiveTeams, _save!.userTeamId);
     // 新しいシーズンはオフ(7月1日)から始まる。夏の窓が開くので名簿の外
     // だった選手も戻り、シーズン末までのローンはここで終わる。
+    // 週の処理の時計は、新しい季の最初の節で起こし直す(オフには回さない)。
+    _save!.lastWeeklyTickDate = null;
     _setToday(SeasonCalendar.preseasonDate(_save!.league.season));
     _settleLoansByDate();
     _startSummerTournament();

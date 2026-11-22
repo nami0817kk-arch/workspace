@@ -40,12 +40,16 @@ void main() {
       final game = await newGame();
       final injured = game.userTeam.players
           .firstWhere((p) => !game.userTeam.startingXI.contains(p.id));
-      injured.injuryWeeks = 5;
+      // 怪我は日数で治る(2026-11-22)。開幕までの日数ぶん治るので、
+      // 開幕の後も残る長さにしておく。
+      injured.injuryWeeks = 20;
 
       final first = await game.playNextMatchday(interactive: true);
       expect(first, isNotNull, reason: '自クラブの試合が始まっていない');
       final budgetAfterWeek = game.save!.budget;
-      expect(injured.injuryWeeks, 4);
+      final injuryAfterWeek = injured.injuryWeeks;
+      expect(injuryAfterWeek, inExclusiveRange(0, 20),
+          reason: '開幕までの日数ぶん治っていない');
       await game.flushPendingSave();
 
       // 試合の途中でアプリが終わった。
@@ -57,7 +61,7 @@ void main() {
           reason: '週の処理(収入・週給など)が二重にかかっている');
       final reloadedInjured =
           again.userTeam.players.firstWhere((p) => p.id == injured.id);
-      expect(reloadedInjured.injuryWeeks, 4,
+      expect(reloadedInjured.injuryWeeks, injuryAfterWeek,
           reason: '負傷回復が二重にかかっている');
 
       // 試合を終えれば、次の節は普通に週の処理がかかる。
@@ -147,8 +151,8 @@ void main() {
   });
 
   test('6a. fillVacancies は残っている先発を動かさない', () async {
-    final team = PlayerGenerator.generateSquad(
-        id: 't', name: 'T', strengthTier: 60);
+    final team =
+        PlayerGenerator.generateSquad(id: 't', name: 'T', strengthTier: 60);
     LineupUtils.autoFill(team);
     final removed = team.startingXI.removeAt(0);
     final kept = [...team.startingXI];
@@ -194,8 +198,7 @@ void main() {
     final opponent = other.teams.first;
     // 全クラブが選手を持つようになった(軽い形で保存して作り直す)ので、
     // 再起動後も別ディビジョンの相手に選手が居る。
-    expect(opponent.players, isNotEmpty,
-        reason: '別ディビジョンも再起動後に選手を持つ');
+    expect(opponent.players, isNotEmpty, reason: '別ディビジョンも再起動後に選手を持つ');
     save.pendingSuperCup = CupMatch(
       round: 1,
       homeTeamId: again.userTeam.id,
@@ -256,8 +259,8 @@ void main() {
     final game = await newGame();
     final target = game.userTeam.players
         .firstWhere((p) => !game.userTeam.startingXI.contains(p.id));
-    final buyer = game.save!.league.teams
-        .firstWhere((t) => t.id != game.userTeam.id);
+    final buyer =
+        game.save!.league.teams.firstWhere((t) => t.id != game.userTeam.id);
     game.save!.incomingOffers.add(IncomingOffer(
       id: 'o1',
       playerId: target.id,
@@ -299,8 +302,7 @@ void main() {
         run = home == prevHome ? run + 1 : 1;
         if (run > longest) longest = run;
       }
-      expect(longest, lessThanOrEqualTo(3),
-          reason: '${t.id} は同じ側が$longest節続く');
+      expect(longest, lessThanOrEqualTo(3), reason: '${t.id} は同じ側が$longest節続く');
     }
   });
 
