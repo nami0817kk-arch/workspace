@@ -49,7 +49,7 @@ for (const seed of (process.env.YA_SEEDS ? process.env.YA_SEEDS.split(',').map(N
       if (dv > 6 && !touched && !afterCut && !inNet) st.jerk++;
       if (R.owner && R.disp[R.owner] && Math.hypot(R.disp[R.owner][0] - R.ball[0], R.disp[R.owner][1] - R.ball[1]) > 1.8 && R.owner === prevOwner) st.farFoot++;
       const ids0 = Object.keys(R.disp);
-      for (let i = 0; i < ids0.length; i++) for (let j = i + 1; j < ids0.length; j++) if (Math.hypot(R.disp[ids0[i]][0] - R.disp[ids0[j]][0], R.disp[ids0[i]][1] - R.disp[ids0[j]][1]) < 1.0) { st.overlap++; if (R.scene) st.ovScene++; }
+      for (let i = 0; i < ids0.length; i++) for (let j = i + 1; j < ids0.length; j++) if (Math.hypot(R.disp[ids0[i]][0] - R.disp[ids0[j]][0], R.disp[ids0[i]][1] - R.disp[ids0[j]][1]) < 1.0) { st.overlap++; if (R.scene) st.ovScene++; if (R.teamOf(ids0[i]) === R.teamOf(ids0[j])) st.ovSame = (st.ovSame || 0) + 1; }
       st.measured++;
       for (const id of Object.keys(R.disp)) {
         const p = R.disp[id];
@@ -111,8 +111,10 @@ ok(st.stuck <= st.scenes * 0.08, '受け手が届かず進めた回数 ' + st.st
 ok(st.long <= st.scenes * 0.05, '長すぎる場面 ' + st.long);
 // セットプレー（ライン際から始まる場面）と、誰も持っていない球から始まる場面は置き直してよい。残りはボールをつないで入る
 ok(st.places <= st.scenes * 0.2, '場面の入りで暗転して置き直した回数 ' + st.places + '／場面 ' + st.scenes);
-// 離れる動きを入れる前は 0.109
-ok(st.overlap / st.measured < 0.07, '選手どうしが1m未満に重なった組（1コマあたり ' + (st.overlap / st.measured).toFixed(3) + '）');
+// 離れる動きを入れる前は 0.109。2026-11-22 選手の頭を入れて、止まらずに動き続け、相手に付いて守るようになり、早送りしていた場面の入りも等倍で測るようになったので、
+// 相手どうしの1m 未満（競り合い・マーク）は増えた（0.049→0.098）。味方どうしの重なりは不自然なので別に厳しく見る（絵では重なった丸は描く位置をずらす）
+ok(st.overlap / st.measured < 0.11, '選手どうしが1m未満に重なった組（1コマあたり ' + (st.overlap / st.measured).toFixed(3) + '）');
+ok((st.ovSame || 0) / st.measured < 0.035, '味方どうしが1m未満に重なった組（1コマあたり ' + ((st.ovSame || 0) / st.measured).toFixed(3) + '）');
 ok(st.tackles + st.cuts > 4, '合間のタックル・パスカット ' + st.tackles + '・' + st.cuts);
 ok(st.ffT / st.scenes < 3, '場面の入りの早送りは1場面あたり3秒未満（' + (st.ffT / st.scenes).toFixed(2) + '秒）');
 ok(st.goals > 0 && st.goalIn === st.goals, '得点の場面でボールが網に入る ' + st.goalIn + '／' + st.goals);
