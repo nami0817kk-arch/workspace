@@ -22,6 +22,7 @@ import 'rng.dart';
 import 'scenario.dart';
 import 'situation.dart';
 import 'trade_ledger.dart';
+import 'wishes.dart';
 import 'trade.dart';
 
 /// 自動で遊ぶGM・点検が1回に進める年数。ゲームの任期に上限は無い(解任か、自分で終えるまで続く)。
@@ -2374,7 +2375,38 @@ class Career {
   List<List<Object>> retirees = [];
 
   void _noteRetiree(Player p) {
-    if (p.ovr >= 62 && retirees.length < 4) retirees.add([p.name, p.ovr]);
+    // 望みを満たして長くいた自分の選手は、力が落ちていてもコーチ候補に戻ってくる(C-2)
+    final mineLong = me.roster.contains(p) && p.tenure >= 3 && wishMet(this, p, me);
+    if ((p.ovr >= 62 || mineLong) && retirees.length < 4) retirees.add([p.name, math.max(p.ovr, 62)]);
+  }
+
+  /// 望みが分かっている選手(面談・契約の話し合い・自分のチームにしばらくいる。C-2)。
+  Set<int> wishKnown = {};
+
+  bool wishIsKnown(Player p) => wishKnown.contains(p.id) || ((me.roster.contains(p) || me.twoWay.contains(p)) && ((blocksWithMe[p.id] ?? 0) >= 2 || p.tenure >= 1));
+
+  /// 望みが満たされない区切りが続いた数(選手の id → 区切り)。
+  Map<int, int> wishUnmet = {};
+
+  /// 区切りの終わりに、望みが満たされない主力の気持ちを下げる(どのチームも)。自分の主力は、続くとトレードを申し出る(C-2)。
+  void _checkWishes() {
+    for (final t in teams) {
+      final top = [...t.roster]..sort((a, b) => b.ovr.compareTo(a.ovr));
+      for (final p in top.take(6)) {
+        if (wishMet(this, p, t)) {
+          wishUnmet.remove(p.id);
+          continue;
+        }
+        final n = (wishUnmet[p.id] ?? 0) + 1;
+        wishUnmet[p.id] = n;
+        if (n >= 2) p.morale = (p.morale - 8).clamp(0, 100);
+        if (t.index == mine && n == 3) {
+          wishKnown.add(p.id);
+          _mail(Sender.player, '${p.name}がトレードを望んでいる', '${p.name}は「${wishOf(p).label}」を望んでいる(${wishOf(p).text})。満たされないままなら、契約が切れたら出ていくといううわさもある。',
+              player: p.id);
+        }
+      }
+    }
   }
 
   /// テスト用: 引退した選手の殿堂入りと永久欠番の判定をそのまま行う。
@@ -3055,6 +3087,7 @@ class Career {
     if (roundAt < blockStart(block + 1)) return;
     block++;
     _updateMorale();
+    _checkWishes();
     _aiPolicies();
     // 区切りごとに、どこかのチームの事情のうわさが1つ届く(T-2)
     if (block < blocksPerSeason) {
@@ -4236,6 +4269,9 @@ class Career {
     // 気持ちが低い選手は、残るなら高く求める
     if (t.index == mine) f *= 1 + (60 - p.morale).clamp(0, 60) / 250;
     if (t.index == mine && t.roster.contains(p) && p.tenure >= 1 && hasTrait(p, Trait.hometown)) f *= 0.9;
+    // 望みを満たしてきた選手は、再契約で値引きに応じる(C-2)
+    // (自分のチームで1季以上すごした選手だけ。入ったばかりの選手には効かない)
+    if (t.index == mine && t.roster.contains(p) && (blocksWithMe[p.id] ?? 0) >= blocksPerSeason && wishMet(this, p, t)) f *= 0.93;
     final sal = p.ovr < 58 ? minSalary : (fairSalary(p.ovr, p.age) * f).round().clamp(minSalary, maxSalaryFor(p.exp));
     final own = t.index == mine && t.roster.contains(p);
     final maxYears = p.age >= 33 ? 1 : p.age >= 30 ? 2 : own ? ownMaxYears : 4;
@@ -4547,6 +4583,8 @@ class Career {
       if (pers.value == Value.loyal) v += 10;
       if (pers.traits.contains(Trait.hometown)) v += 12;
     }
+    // 望み(C-2): 優勝したい選手は強いチームを、出番が欲しい選手は出られるチームを選ぶ
+    v += wishInterest(this, p, team);
     return v.round().clamp(0, 100);
   }
 
@@ -4616,6 +4654,7 @@ class Career {
     final sal = _offerSalary(p, factor);
     final base = me.payroll + _bidTotal(mine, except: id);
     final ex = sal > minSalary && base + sal > salaryCap ? exceptionFor(sal, base: base) : null;
+    wishKnown.add(id);
     final list = bids.putIfAbsent(id, () => [])..removeWhere((b) => b.team == mine);
     list.add(FaBid(mine, sal, years.clamp(1, math.min(askOf(p, me).maxYears, ex?.maxYears ?? 9))));
     return true;
@@ -5791,6 +5830,8 @@ class Career {
         if (rumors.isNotEmpty) 'rmr': [for (final r in rumors) r.toJson()],
         if (hotTargets.isNotEmpty) 'hot': [for (final e in hotTargets.entries) [e.key, e.value.$1, e.value.$2]],
         if (planNews.isNotEmpty) 'apn': planNews,
+        if (wishKnown.isNotEmpty) 'wk': [...wishKnown],
+        if (wishUnmet.isNotEmpty) 'wu': [for (final e in wishUnmet.entries) [e.key, e.value]],
         if (teamPlans.isNotEmpty) 'apl': [for (final e in teamPlans.entries) [e.key, e.value.$1.index, e.value.$2]],
         if (gmTrust.isNotEmpty) 'gtr': [for (final e in gmTrust.entries) [e.key, e.value]],
         if (tradeLastVerdict.isNotEmpty) 'tlv': tradeLastVerdict,
@@ -5961,6 +6002,11 @@ class Career {
           if (x is List && x.length == 2) x[0] as int: x[1] as String,
       }
       ..planNews = [for (final x in (j['apn'] as List? ?? const [])) x as int]
+      ..wishKnown = {for (final x in (j['wk'] as List? ?? const [])) x as int}
+      ..wishUnmet = {
+        for (final x in (j['wu'] as List? ?? const []))
+          if (x is List && x.length == 2) x[0] as int: x[1] as int,
+      }
       ..teamPlans = {
         for (final x in (j['apl'] as List? ?? const []))
           if (x is List && x.length == 3) x[0] as int: (TeamPlan.values[(x[1] as int).clamp(0, TeamPlan.values.length - 1)], x[2] as int),

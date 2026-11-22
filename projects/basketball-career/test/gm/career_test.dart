@@ -744,6 +744,8 @@ void main() {
       expect(c.signProblem(p), isNotNull, reason: '大物はそのまま契約できない');
       expect(c.bid(p.id, 2, 1.1), isTrue);
       expect(c.myBid(p.id)!.years, 2);
+      // 申し込んだときの額(契約すると気持ちが上がり、そのあとの求めは下がることがある)
+      final offered = c.myBid(p.id)!.salary;
       expect(c.winChanceOf(p), greaterThan(0));
       final rosterBefore = c.me.roster.length;
       for (var d = 0; d < faDays; d++) {
@@ -755,7 +757,7 @@ void main() {
       final joined = c.me.roster.any((x) => x.id == p.id);
       if (joined) {
         expect(c.me.roster.length, rosterBefore + 1);
-        expect(p.salary, (c.askOf(p, c.me).salary * 1.1).round().clamp(minSalary, maxSalary));
+        expect(p.salary, offered);
       } else {
         expect(c.teams.any((t) => t.roster.contains(p)), isTrue, reason: 'ほかのチームに行った');
         expect(c.inbox.any((m) => m.title.contains(p.name)), isTrue);
