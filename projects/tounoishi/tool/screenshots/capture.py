@@ -46,6 +46,7 @@ BOOT = r"""
 (function(){
  var s=20261123;Math.random=function(){s=(s*1664525+1013904223)>>>0;return s/4294967296;};
  try{
+  window.__shot=true;
   localStorage.setItem('tou-tut','1');
   localStorage.removeItem('tou-save');
   localStorage.setItem('tou-best',JSON.stringify({easy:18420,normal:12960,hard:7350}));
@@ -129,6 +130,15 @@ T.view(0);__fin(73);
 
 # 写ってはいけない文字（値段・読み込み中・差し込みの漏れ・課金の売り場）
 NG = ['¥', '円', '読み込', 'undefined', 'NaN', 'null', '広告を消す', '購入を復元', 'Error']
+
+# 課金アイテムの審査用（--iap）: アプリの中と同じく「広告を消す（¥370）」の売り場が写ったタイトル。
+# アプリの窓口 TouApp を置いた形にして、値段はストアの表示と同じ文字を渡す。
+if '--iap' in sys.argv:
+    sys.argv.remove('--iap')
+    OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.home() / 'Downloads' / '塔の意志_掲載画像' / '課金の審査用'
+    BOOT = BOOT + "window.TouApp={postMessage:function(){}};"
+    SCENES = [('iap_review', '', "touSetApp({adFree:false,price:'¥370',canBuy:true,storeOk:true});")]
+    NG = ['読み込', 'undefined', 'NaN', 'Error']
 
 
 def serve():

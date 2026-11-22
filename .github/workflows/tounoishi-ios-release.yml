@@ -21,6 +21,11 @@ on:
         type: boolean
         required: false
         default: false
+      skip_site_check:
+        description: "法務ページと app-ads.txt の検査を飛ばす（サイトを公開する前の TestFlight 用。App Store に出すビルドでは使わない）"
+        type: boolean
+        required: false
+        default: false
 
 # 途中で止めると害がある（公開・リリース・通知）。重複は避けるが打ち切らない。
 concurrency:
@@ -41,6 +46,9 @@ jobs:
     defaults:
       run:
         working-directory: projects/tounoishi
+    env:
+      # ゲームのタイトルにあるリンク先（assets/game/index.html）と同じ
+      LEGAL_BASE_URL: https://tounoishi.pages.dev
 
     steps:
       - name: Checkout
@@ -107,8 +115,16 @@ jobs:
           fi
           [ "$(plutil -extract GADApplicationIdentifier raw -o - ios/Runner/Info.plist)" = "$ADMOB_APP_ID" ]             || { echo "::error::Info.plist の GADApplicationIdentifier が Secret と一致しません。"; exit 1; }
           echo "Info.plist の GADApplicationIdentifier を本番IDに置き換えました。"
-          # 法務ページ（privacy / support）と app-ads.txt の検査は、サイトができたら
-          # App Store に出す前に goso-boat-ios-release.yml から写す（LEGAL_BASE_URL・scripts/check-app-site.sh）。
+      - name: Verify legal pages and app-ads.txt
+        if: ${{ github.event.inputs.skip_site_check != 'true' }}
+        run: |
+          # タイトルのリンク先が開けて、中身が本物か（404 や別のページのまま出すと審査で却下される。Apple 5.1.1）
+          for page in privacy support terms; do
+            body=$(curl -fsSL "$LEGAL_BASE_URL/$page.html")               || { echo "::error::$LEGAL_BASE_URL/$page.html が開けません。法務ページを公開してから出してください（サイト公開前の TestFlight なら skip_site_check）。"; exit 1; }
+            grep -q "塔の意志" <<<"$body"               || { echo "::error::$LEGAL_BASE_URL/$page.html の中身が塔の意志のページではありません。"; exit 1; }
+          done
+          # AdMob が app-ads.txt を確かめられる状態か（robots.txt が HTML だと「アプリを確認」が通らない。2026-10-02）
+          bash ../../scripts/check-app-site.sh "${LEGAL_BASE_URL#https://}" pub-6409014819339195
 
       - name: Import signing certificate into a temporary keychain
         env:
