@@ -842,8 +842,10 @@ void main() {
         if (g.year <= 1583 || g.isChild) continue;
         checked++;
         expect(g.fa['明智'], isNotNull, reason: '${g.year}');
-        if (g.hasFlag('scene:h_x_hideyoshi_west')) {
-          expect(g.l.people['主君']?.name, isNotNull);
+        // 光秀に味方した織田の家臣は、明智家に移り主君が光秀になる。
+        // （仕官や徴募で明智家に入っただけの人は、光秀との縁がないので主君の登録はない）
+        if (g.hasFlag('scene:h_x_akechi_reward') && g.l.lord == '明智') {
+          expect(g.l.people['主君']?.name, '明智光秀');
         }
       }
       expect(checked, greaterThan(10));
