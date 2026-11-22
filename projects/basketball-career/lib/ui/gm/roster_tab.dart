@@ -326,6 +326,7 @@ class _RosterTabState extends State<RosterTab> {
                 _line('伸びしろ', potentialLine(car, p)),
             if (p.age < 30) _line('伸び方', growthLine(car, p)),
             _line('望み', wishLine(car, p)),
+            if (car.idolOf(p) case final idol?) _line('憧れ', '$idol(このリーグの伝説の選手)'),
             _line('組み合わせの型', '${roleOf(p).label}(${roleOf(p).text})'),
                 if (p.drafted != null) _line('ドラフト', p.drafted!),
                 RecentGames(car: car, p: p),

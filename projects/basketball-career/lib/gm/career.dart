@@ -2665,6 +2665,15 @@ class Career {
 
   // --- 時代の流行(2026-11-21 の作り込み C-3) ---
 
+  /// 前の任期で育てた名選手の名前(このリーグの歴史に「伝説の選手」として残る。D-1)。始めるときに入れる。
+  List<String> legendNames = [];
+
+  /// 伝説の選手を、コーチ候補として出したか。
+  bool legendCoachDone = false;
+
+  /// [p] の憧れの選手(若手だけ。伝説の選手から決まる)。
+  String? idolOf(Player p) => legendNames.isEmpty || p.age > 23 ? null : legendNames[p.id % legendNames.length];
+
   /// 4つの時代の重み(合わせて1)。はじめはリーグの種で決まる時代が少し強い。
   late List<double> eraWeights = [for (var i = 0; i < Era.values.length; i++) i == seed % Era.values.length ? 0.4 : 0.2];
 
@@ -2814,6 +2823,12 @@ class Career {
   void startSeason() {
     if (phase != Phase.preseason || startProblem != null) return;
     _potentialNews();
+    // 伝説の選手が、コーチ候補として現れる(D-1。1度だけ)
+    if (!legendCoachDone && legendNames.isNotEmpty && retirees.length < 4) {
+      retirees.add([legendNames.first, 74]);
+      legendCoachDone = true;
+      _mail(Sender.league, '伝説の選手がコーチに', '${legendNames.first}がコーチとして現場に戻ってきた。前の時代を知る人だ。コーチ陣の候補に入っている。');
+    }
     _planRumor();
     if (season > 1) _mail(Sender.league, 'リーグの流行', '今は「${era.label}」。${era.text}。次は「${nextEra.label}」が来るといううわさもある。');
     _settleTrust();
@@ -5880,6 +5895,8 @@ class Career {
         if (wishKnown.isNotEmpty) 'wk': [...wishKnown],
         if (wishUnmet.isNotEmpty) 'wu': [for (final e in wishUnmet.entries) [e.key, e.value]],
         'era': eraWeights,
+        if (legendNames.isNotEmpty) 'lgn': legendNames,
+        if (legendCoachDone) 'lgc': 1,
         if (eraHistory.isNotEmpty) 'erh': eraHistory,
         if (teamPlans.isNotEmpty) 'apl': [for (final e in teamPlans.entries) [e.key, e.value.$1.index, e.value.$2]],
         if (gmTrust.isNotEmpty) 'gtr': [for (final e in gmTrust.entries) [e.key, e.value]],
@@ -6059,6 +6076,8 @@ class Career {
       ..eraWeights = j['era'] is List && (j['era'] as List).length == Era.values.length
           ? [for (final x in j['era'] as List) (x as num).toDouble()]
           : [for (var i = 0; i < Era.values.length; i++) i == (j['seed'] as int) % Era.values.length ? 0.4 : 0.2]
+      ..legendNames = [for (final x in (j['lgn'] as List? ?? const [])) '$x']
+      ..legendCoachDone = j['lgc'] == 1
       ..eraHistory = [for (final x in (j['erh'] as List? ?? const [])) x as int]
       ..teamPlans = {
         for (final x in (j['apl'] as List? ?? const []))

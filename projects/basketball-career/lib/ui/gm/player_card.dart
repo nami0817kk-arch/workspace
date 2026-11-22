@@ -210,6 +210,7 @@ Future<void> showPlayerCard(BuildContext context, Career car, Player p, int team
             _line('伸びしろ', potentialLine(car, p)),
             if (p.age < 30) _line('伸び方', growthLine(car, p)),
             _line('望み', wishLine(car, p)),
+            if (car.idolOf(p) case final idol?) _line('憧れ', '$idol(このリーグの伝説の選手)'),
             _line('組み合わせの型', '${roleOf(p).label}(${roleOf(p).text})'),
             if (p.injured > 0) _line('けが', p.injuryText.isEmpty ? 'あと${p.injured}試合' : p.injuryText),
             if (p.injCount >= 3) _line('けがの歴', '${p.injCount}回(繰り返している)'),

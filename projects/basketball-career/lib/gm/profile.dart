@@ -1,5 +1,6 @@
 import 'career.dart';
 import 'codex.dart';
+import 'legacy.dart';
 import 'player.dart';
 
 /// 実績。任期をまたいで端末に残る。
@@ -55,6 +56,21 @@ class Profile {
 
   bool has(Achievement a) => done.contains(a);
 
+  /// GM の名鑑(D-1)。キャリア(リーグの種)ごとの、任期の札・殿堂の選手・名場面。任期をまたいで残る。
+  final Map<int, ({List<TenureCard> tenures, List<LegendCard> legends, List<String> moments})> legacy = {};
+
+  /// [c] の名鑑を書き直す(同じキャリアは上書き)。
+  void recordLegacy(Career c) {
+    legacy[c.seed] = (tenures: tenuresOf(c), legends: legendsOf(c), moments: momentsOf(c));
+    // 古いものから消す(多くなりすぎないように)
+    while (legacy.length > 20) {
+      legacy.remove(legacy.keys.first);
+    }
+  }
+
+  /// これまでの殿堂の選手の名前(新しいリーグの伝説にする)。
+  List<String> get legendNames => [for (final l in legacy.values) ...l.legends.map((x) => x.name)].take(12).toList();
+
   /// 図鑑で見つけたもの(項目の key → いつ・何で見つけたか)。任期をまたいで残る(B-3)。
   final Map<String, String> codex = {};
 
@@ -81,6 +97,7 @@ class Profile {
   /// シーズンを終えたとき(プレーオフのあと)に呼ぶ。新しく達成した実績を返す。
   List<Achievement> recordSeason(Career c) {
     syncCodex(c);
+    recordLegacy(c);
     final h = c.history.last;
     if (h.wins > bestWins) bestWins = h.wins;
     if (h.champion) titles++;
@@ -142,6 +159,7 @@ class Profile {
   /// 任期を閉じるときに呼ぶ。
   List<Achievement> recordCareerEnd(Career c) {
     syncCodex(c);
+    recordLegacy(c);
     careers++;
     if (c.titles > bestTitles) bestTitles = c.titles;
     return const [];
@@ -156,6 +174,16 @@ class Profile {
         'bl': bestLevel,
         'bp': bestFirst10,
         if (codex.isNotEmpty) 'cx': codex,
+        if (legacy.isNotEmpty)
+          'lg': [
+            for (final e in legacy.entries)
+              {
+                's': e.key,
+                't': [for (final x in e.value.tenures) x.toJson()],
+                'l': [for (final x in e.value.legends) x.toJson()],
+                'm': e.value.moments,
+              },
+          ],
       };
 
   static Profile fromJson(Map<String, dynamic> j) => Profile(
@@ -170,5 +198,15 @@ class Profile {
         bestTitles: (j['bt'] as int?) ?? 0,
         bestLevel: (j['bl'] as int?) ?? 0,
         bestFirst10: (j['bp'] as int?) ?? 0,
-      )..codex.addAll({for (final e in (j['cx'] as Map? ?? const {}).entries) '${e.key}': '${e.value}'});
+      )
+        ..codex.addAll({for (final e in (j['cx'] as Map? ?? const {}).entries) '${e.key}': '${e.value}'})
+        ..legacy.addAll({
+          for (final x in (j['lg'] as List? ?? const []))
+            if (x is Map)
+              x['s'] as int: (
+                tenures: [for (final t in (x['t'] as List? ?? const [])) TenureCard.fromJson(Map<String, dynamic>.from(t as Map))],
+                legends: [for (final t in (x['l'] as List? ?? const [])) LegendCard.fromJson(Map<String, dynamic>.from(t as Map))],
+                moments: [for (final t in (x['m'] as List? ?? const [])) '$t'],
+              ),
+        });
 }
