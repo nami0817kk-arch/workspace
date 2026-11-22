@@ -855,10 +855,8 @@ extension GameStateFinance on GameState {
 
     // 年俸の水準は新しい国・部のもの(他の部のクラブはその部の水準)。
     setHomeWageLevel(theme, startTier);
-    final userTeam = PlayerGenerator.generateSquad(
-        id: 'user',
-        name: nextName(),
-        strengthTier: GameState.userStartStrength(startTier));
+    final userTeam = GameState.generateUserStartSquad(
+        name: nextName(), tier: startTier, theme: theme);
     final others = List<League?>.filled(totalDivisionTiers, null);
     League? mine;
     final cpuInMine = <Team>[];
@@ -2164,7 +2162,7 @@ extension GameStateFinance on GameState {
     if (save == null) {
       return ClubValueEngine.compute(
         playersValue: 0,
-        facilityLevels: const [],
+        facilityLevels: const {},
         staffLevels: const [],
         leagueTitles: 0,
         cupTitles: 0,
@@ -2186,10 +2184,10 @@ extension GameStateFinance on GameState {
         : weeklyIncomeFor(save.userTeamId) * matchdays;
     return ClubValueEngine.compute(
       playersValue: userTeam.players.fold<int>(0, (s, p) => s + p.marketValue),
-      facilityLevels: [
+      facilityLevels: {
         for (final f in FacilityType.values)
-          save.infrastructure.facilityLevel(f),
-      ],
+          f: save.infrastructure.facilityLevel(f),
+      },
       staffLevels: [
         for (final r in StaffRole.values)
           save.infrastructure.staffFor(r)?.effectiveLevel ?? 0,

@@ -76,7 +76,8 @@ void main() {
       expect(annualWageForValue(100000, 0.45), closeTo(en * 0.45, 2));
       setHomeWageLevel(LeagueTheme.france, 1);
       expect(currentWageLevel, wageCountryFactor(LeagueTheme.france, 1));
-      expect(annualWageForValue(100000), closeTo(en * 0.45, 2));
+      expect(annualWageForValue(100000),
+          closeTo(en * wageCountryFactor(LeagueTheme.france, 1), 2));
       expect(weeklyWageForValue(100), minWeeklyWage);
       // 他の国・部の選手を作る間だけ差し替え、戻す。
       final inner = withWageLevel(0.62, () => currentWageLevel);
@@ -94,7 +95,8 @@ void main() {
       final en = make(1.0);
       final fr = make(wageCountryFactor(LeagueTheme.france, 1));
       expect(fr.marketValue, en.marketValue);
-      expect(fr.wage / en.wage, closeTo(0.45, 0.02));
+      expect(fr.wage / en.wage,
+          closeTo(wageCountryFactor(LeagueTheme.france, 1), 0.02));
     });
 
     // 年俸の合計 ÷ 能力と経験に見合う年俸(イングランドの水準)の合計。作った
@@ -147,7 +149,12 @@ void main() {
     test('国をまたいで移るときは、行き先の国の水準で求める', () {
       setHomeWageLevel(LeagueTheme.spain, 1);
       final scale = wageScaleToHome('france');
-      expect(scale, closeTo(0.7 / 0.45, 1e-9));
+      expect(
+          scale,
+          closeTo(
+              wageCountryFactor(LeagueTheme.spain, 1) /
+                  wageCountryFactor(LeagueTheme.france, 1),
+              1e-9));
       expect(wageScaleToHome('spain'), 1.0);
       expect(wageScaleToHome(null), 1.0);
       // 今の週俸(フランスの水準)を、行き先(スペイン)の水準に直して求める。
