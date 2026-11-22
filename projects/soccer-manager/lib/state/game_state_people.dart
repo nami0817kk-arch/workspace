@@ -157,11 +157,13 @@ extension GameStatePeople on GameState {
         p.promiseMisses = 0;
         continue;
       }
-      // 出られない事情(負傷・出場停止・代表・貸し出し)があれば数えない。
+      // 出られない事情(負傷・出場停止・代表・貸し出し・登録の名簿の外)が
+      // あれば数えない。名簿の外の選手は公式戦に出られない(2026-11-23)。
       if (p.isInjured ||
           p.isSuspended ||
           p.isOnInternationalDuty ||
-          p.isLoanedOut) {
+          p.isLoanedOut ||
+          p.notRegistered) {
         continue;
       }
       p.promiseMisses++;

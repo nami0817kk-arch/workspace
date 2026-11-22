@@ -155,8 +155,13 @@ extension GameStateSeason on GameState {
     _onContractDatesAdvanced(before, d);
     // 給与の月末・放映権の入金日。
     _settleMoneyDates(before, d);
+    // 誕生日とオーナーの本業の収入は、前に済ませた日より後の分だけ
+    // (季の途中で別の国のクラブを買い直すと今日が戻る。二重に入れない)。
+    final through = _save!.personalDatesThrough;
+    final personalFrom =
+        through != null && through.isAfter(before) ? through : before;
     // 誕生日が来た選手は1つ歳を取る。
-    _ageByBirthdays(before, d);
+    if (d.isAfter(personalFrom)) _ageByBirthdays(personalFrom, d);
     // 夏の大会に出た選手の合流。
     _endTournamentLeaveIfDue(before, d);
     // スカウトを送った地域・注目の選手が見えてくる。
@@ -168,7 +173,8 @@ extension GameStateSeason on GameState {
     // 選手の私生活の出来事(月ごと)。
     _rollLifeEvents(before, d);
     // オーナーの本業の収入と、貸付の利息(月ごと)。
-    _advanceOwnerMoney(before, d);
+    _advanceOwnerMoney(before, d, incomeFrom: personalFrom);
+    if (d.isAfter(personalFrom)) _save!.personalDatesThrough = d;
     final theme = currentLeagueTheme;
     // 窓が開いたら、名簿の外だった選手もまた登録できる。
     if (TransferWindowCalendar.openedBetween(before, d, theme)) {
@@ -246,8 +252,9 @@ extension GameStateSeason on GameState {
       _returnLoanToParent(p);
     }
     if (ended.isNotEmpty) {
-      lastContractExpirations = [
-        ...lastContractExpirations,
+      // 契約満了の退団とは分けて控える(「契約満了で退団」と出していた)。
+      lastLoanEndings = [
+        ...lastLoanEndings,
         ...ended.map((p) => p.name),
       ];
       LineupUtils.fillVacancies(team);
@@ -1681,6 +1688,12 @@ extension GameStateSeason on GameState {
     );
     transferMarket = [];
     _refreshScoutCandidates();
+    // 所属なしの選手も、クラブの選手と同じように歳で引退する(話を進めて
+    // いる選手は残す)。
+    RetirementEngine.retireFreeAgents(_save!.freeAgents, keep: {
+      for (final t in _save!.transferTalks)
+        if (t.freeAgent) t.playerId,
+    });
     // 夏は契約の切れた選手が数十人単位で所属なしになる。
     FreeAgentEngine.topUp(_save!.freeAgents);
 
@@ -1958,6 +1971,12 @@ extension GameStateSeason on GameState {
       _logNews(
           Tr.pick('契約満了で退団: ${lastContractExpirations.join('、')}',
               "Left on a free: ${lastContractExpirations.join(', ')}"),
+          context: newsCtx);
+    }
+    if (lastLoanEndings.isNotEmpty) {
+      _logNews(
+          Tr.pick('ローン期間満了で貸し元へ復帰: ${lastLoanEndings.join('、')}',
+              "Loan spells ended, returned to their parent clubs: ${lastLoanEndings.join(', ')}"),
           context: newsCtx);
     }
     if (lastContractWarnings.isNotEmpty) {

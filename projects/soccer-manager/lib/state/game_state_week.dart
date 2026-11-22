@@ -92,37 +92,72 @@ extension GameStateWeek on GameState {
     _runWeeklyTick();
   }
 
-  /// [days]日ぶんの怪我の回復と疲れの抜け(リーグの全クラブ)。
+  /// [days]日ぶんの怪我の回復と疲れの抜け(自クラブの部・他の部・他国の
+  /// リーグ・大陸大会の他国のクラブの全員)。
   /// 離脱「◯週」は7日×週で治る。休養日ぶんの疲れの抜けは、練習の方針と
   /// 別に全員へかける(CPUクラブは練習を選べず、これが無いと試合の疲れ
   /// だけが積もる)。治った直後は試合勘が鈍っている。
+  ///
+  /// 以前は自クラブの部だけを回していたため、他の部・他国の選手は怪我も
+  /// 疲れも治らないままだった(2026-11-23)。保存療法の再発を振るのは
+  /// 今どおり自クラブの選手だけ。大陸大会の他国のクラブは他国のリーグの
+  /// 写しのことがあるので、同じ選手(id)は1回しか回さない。
   void _recoverByDays(int days) {
     if (days <= 0) return;
     final s = _save!;
+    // 大陸大会の他国のクラブは選手を持たない写しのことが多い。そのときは
+    // 重なりを数えない(全員の id を集める手間を省く)。
+    final seen =
+        s.continentalTeams.any((t) => t.players.isNotEmpty) ? <String>{} : null;
     for (final t in s.league.teams) {
-      final mine = t.id == s.userTeamId;
-      for (final p in t.players) {
-        if (p.injuryWeeks > 0) {
-          p.injuryDays += days;
-          while (p.injuryWeeks > 0 && p.injuryDays >= 7) {
-            p.injuryDays -= 7;
-            p.injuryWeeks -= 1;
-            if (p.injuryWeeks > 0) continue;
-            // 自クラブの選手が治ったら、保存療法の再発を振る。
-            if (mine &&
-                _onUserInjuryHealed(p, GameState._offerRng.nextDouble())) {
-              p.injuryDays = 0;
-              break;
-            }
-            p.matchSharpness = min(p.matchSharpness, 40);
-            p.injuryType = null;
-          }
-          if (p.injuryWeeks == 0) p.injuryDays = 0;
-        } else {
-          p.injuryDays = 0;
-        }
-        p.fatigue = (p.fatigue - fatigueRecoveryPerDay * days).clamp(0, 100);
+      _recoverTeamByDays(t, days, mine: t.id == s.userTeamId, seen: seen);
+    }
+    for (final l in s.otherDivisionLeagues) {
+      if (l == null) continue;
+      for (final t in l.teams) {
+        _recoverTeamByDays(t, days, seen: seen);
       }
+    }
+    for (final l in s.foreignLeagues.values) {
+      for (final t in l.teams) {
+        _recoverTeamByDays(t, days, seen: seen);
+      }
+    }
+    if (seen == null) return;
+    for (final t in s.continentalTeams) {
+      _recoverTeamByDays(t, days, seen: seen, skipSeen: true);
+    }
+  }
+
+  /// 1クラブぶんの[_recoverByDays]。回した選手の id を[seen]に控え、
+  /// [skipSeen]なら、すでに回した選手(同じ id)を飛ばす。
+  void _recoverTeamByDays(Team t, int days,
+      {bool mine = false, Set<String>? seen, bool skipSeen = false}) {
+    for (final p in t.players) {
+      if (seen != null) {
+        final fresh = seen.add(p.id);
+        if (skipSeen && !fresh) continue;
+      }
+      if (p.injuryWeeks > 0) {
+        p.injuryDays += days;
+        while (p.injuryWeeks > 0 && p.injuryDays >= 7) {
+          p.injuryDays -= 7;
+          p.injuryWeeks -= 1;
+          if (p.injuryWeeks > 0) continue;
+          // 自クラブの選手が治ったら、保存療法の再発を振る。
+          if (mine &&
+              _onUserInjuryHealed(p, GameState._offerRng.nextDouble())) {
+            p.injuryDays = 0;
+            break;
+          }
+          p.matchSharpness = min(p.matchSharpness, 40);
+          p.injuryType = null;
+        }
+        if (p.injuryWeeks == 0) p.injuryDays = 0;
+      } else {
+        p.injuryDays = 0;
+      }
+      p.fatigue = (p.fatigue - fatigueRecoveryPerDay * days).clamp(0, 100);
     }
   }
 
@@ -148,8 +183,9 @@ extension GameStateWeek on GameState {
       _clearPlayerRoleReferences(userTeam, p.id);
     }
     if (loanEnded.isNotEmpty) {
-      lastContractExpirations = [
-        ...lastContractExpirations,
+      // 契約満了の退団とは分けて控える(貸し元へ戻るだけ)。
+      lastLoanEndings = [
+        ...lastLoanEndings,
         ...loanEnded.map((p) => p.name),
       ];
     }

@@ -27,10 +27,16 @@ class RetirementEngine {
 
   /// チームの引退対象者を判定し、スカッドから除外して返す(呼び出し側で
   /// 殿堂入りの記録などに使う)。
-  static List<Player> resolveRetirements(Team team) {
+  ///
+  /// 借りている選手(ローンで加入)は対象にしない。籍は貸し元にあり、
+  /// 季の切り替えで貸し元へ戻る。以前は借りた先で引退し、そのクラブの
+  /// 殿堂に入っていた(2026-11-23)。
+  static List<Player> resolveRetirements(Team team, {Random? rng}) {
+    final r = rng ?? _rng;
     final retirees = <Player>[];
     for (final p in List<Player>.from(team.players)) {
-      if (_rng.nextDouble() < retirementChance(p)) {
+      if (p.isLoan) continue;
+      if (r.nextDouble() < retirementChance(p)) {
         retirees.add(p);
       }
     }
@@ -38,6 +44,22 @@ class RetirementEngine {
       team.players.remove(p);
       team.startingXI.remove(p.id);
     }
+    return retirees;
+  }
+
+  /// 所属なし(フリーエージェント)の選手の引退。クラブの選手と同じ確率で
+  /// 振り、引退した選手を[pool]から外して返す。[keep]の選手(移籍の話を
+  /// 進めている選手)は残す。以前は所属なしの選手は引退せず、何歳になっても
+  /// 名簿に残っていた(2026-11-23)。
+  static List<Player> retireFreeAgents(List<Player> pool,
+      {Random? rng, Set<String> keep = const {}}) {
+    final r = rng ?? _rng;
+    final retirees = <Player>[
+      for (final p in pool)
+        if (!keep.contains(p.id) && r.nextDouble() < retirementChance(p)) p,
+    ];
+    final gone = retirees.toSet();
+    pool.removeWhere(gone.contains);
     return retirees;
   }
 

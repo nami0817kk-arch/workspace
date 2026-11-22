@@ -13,10 +13,12 @@ class HappinessEngine {
     for (final p in team.players) {
       // ローン放出中・出場停止中・代表召集中の選手は、そもそも自クラブの
       // スタメンに入りようがないため「ベンチ扱いの不満」を適用しない。
+      // 登録の名簿から外れた選手も、次の窓まで公式戦に出られない。
       if (p.isInjured ||
           p.isLoanedOut ||
           p.isSuspended ||
-          p.isOnInternationalDuty) {
+          p.isOnInternationalDuty ||
+          p.notRegistered) {
         continue;
       }
       final personality = p.personality;

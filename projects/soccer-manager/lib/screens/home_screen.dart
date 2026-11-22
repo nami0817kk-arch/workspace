@@ -40,6 +40,7 @@ import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'glossary_screen.dart';
 import 'match_screen.dart';
+import 'matchday_notices.dart';
 import 'player_detail_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
@@ -1162,104 +1163,11 @@ class HomeScreen extends StatelessWidget {
   /// なら従来通りSnackBarで、複数同時に発生した場合はスナックバーの
   /// 連続表示で見落とさないよう1つの要約ダイアログにまとめる。
   void _showMatchdayNotifications(BuildContext context, GameState gameState) {
-    final messages = <(String text, bool isWarning)>[];
-
-    final expired = gameState.lastContractExpirations;
-    if (expired.isNotEmpty) {
-      messages.add((
-        Tr.pick('ローン期間満了で契約元クラブへ復帰: ${expired.join('、')}',
-            "Loan spells ended, returned to their parent clubs: ${expired.join(', ')}"),
-        false
-      ));
-      gameState.lastContractExpirations = [];
-    }
-    final autoSold = gameState.lastReleaseClauseSales;
-    if (autoSold.isNotEmpty) {
-      messages.add((
-        Tr.pick('リリース条項が発動し移籍が成立: ${autoSold.join('、')}',
-            "Release clauses triggered, transfers completed: ${autoSold.join(', ')}"),
-        false
-      ));
-      gameState.lastReleaseClauseSales = [];
-    }
-    final calledUp = gameState.lastInternationalCallUps;
-    if (calledUp.isNotEmpty) {
-      messages.add((
-        Tr.pick('代表召集: ${calledUp.join('、')}',
-            "Called up for international duty: ${calledUp.join(', ')}"),
-        false
-      ));
-      gameState.lastInternationalCallUps = [];
-    }
-    final loanReturns = gameState.lastLoanReturns;
-    if (loanReturns.isNotEmpty) {
-      messages.add((
-        Tr.pick('ローン放出から復帰: ${loanReturns.join('、')}',
-            "Back from loan: ${loanReturns.join(', ')}"),
-        false
-      ));
-      gameState.lastLoanReturns = [];
-    }
-    final maturedDeposits = gameState.lastMaturedDeposits;
-    if (maturedDeposits.isNotEmpty) {
-      final total = maturedDeposits.fold<int>(0, (s, d) => s + d.maturityValue);
-      messages.add((
-        Tr.pick('定期預金が満期を迎え、${formatMoney(total)}が払い戻されました',
-            'Your deposit matured and ${formatMoney(total)} was paid back'),
-        false
-      ));
-      gameState.lastMaturedDeposits = [];
-    }
-    final feesPaid = gameState.lastAppearanceFeesPaid;
-    if (feesPaid > 0) {
-      // 出場給は資金から自動で引かれる。週次収支の見込みには出ているが、
-      // 実際に引かれた額を知らせないと、資金だけが理由なく減ったように
-      // 見える。
-      messages.add((
-        Tr.pick('出場給として${formatMoney(feesPaid)}を支払いました',
-            'You paid ${formatMoney(feesPaid)} in appearance fees'),
-        false
-      ));
-      gameState.lastAppearanceFeesPaid = 0;
-    }
-    final aiTransferNews = gameState.lastAiTransferNews;
-    if (aiTransferNews != null) {
-      messages.add((
-        Tr.pick('移籍市場: $aiTransferNews', 'Transfer market: $aiTransferNews'),
-        false
-      ));
-      gameState.lastAiTransferNews = null;
-    }
-    // ユースを去った有望株。ユース画面にも出るが、そこを開かない週に
-    // 起きると、名簿から静かに消えるだけになる。育てていた選手が去った
-    // ことは、その節のうちに知らせる。
-    final departures = gameState.lastYouthDepartures;
-    if (departures.isNotEmpty) {
-      final names =
-          departures.map((d) => d.player.name).join(Tr.pick('、', ', '));
-      final compensation =
-          departures.fold<int>(0, (sum, d) => sum + d.compensation);
-      messages.add((
-        Tr.pick('ユースを去りました: $names(育成補償金 ${formatMoney(compensation)})',
-            'Left the academy: $names (development fee ${formatMoney(compensation)})'),
-        true
-      ));
-      gameState.lastYouthDepartures = [];
-    }
-
-    final budgetCrisis = gameState.lastBudgetCrisisWarning;
-    if (budgetCrisis != null) {
-      messages.add((budgetCrisis, true));
-      gameState.lastBudgetCrisisWarning = null;
-    }
-
-    // 通知を減らす: 注意でないもの(代表召集・出場給・満期など)は受信箱に
-    // 積むだけにして、画面には出さない。毎節ダイアログが出ると、本当に
-    // 見るべき注意が埋もれる。
-    for (final (text, isWarning) in messages) {
-      if (!isWarning) gameState.addInboxNote(text);
-    }
-    messages.removeWhere((m) => !m.$2);
+    // 受信箱への振り分けは matchday_notices.dart。週の処理がすでにクラブ
+    // ニュースに書いた知らせは、ここで積み直さない(2通になっていた)。
+    final messages = <(String text, bool isWarning)>[
+      for (final n in routeMatchdayNotices(gameState)) (n.text, n.isWarning),
+    ];
 
     if (messages.isEmpty) return;
     if (messages.length == 1) {
@@ -1390,6 +1298,16 @@ class HomeScreen extends StatelessWidget {
         false
       ));
       gameState.lastContractExpirations = [];
+    }
+    // 借りていた選手は契約満了ではなく、ローン期間満了で貸し元へ戻る。
+    final loanEndings = gameState.lastLoanEndings;
+    if (loanEndings.isNotEmpty) {
+      messages.add((
+        Tr.pick('ローン期間満了で貸し元へ復帰: ${loanEndings.join('、')}',
+            "Loan spells ended, returned to their parent clubs: ${loanEndings.join(', ')}"),
+        false
+      ));
+      gameState.lastLoanEndings = [];
     }
     final contractWarnings = gameState.lastContractWarnings;
     if (contractWarnings.isNotEmpty) {
