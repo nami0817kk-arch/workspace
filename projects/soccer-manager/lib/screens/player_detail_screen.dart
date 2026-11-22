@@ -1361,6 +1361,8 @@ class PlayerDetailScreen extends StatelessWidget {
     LoanLength length = halfOk ? LoanLength.half : LoanLength.full;
     bool recallClause = false;
     bool guaranteePlayingTime = false;
+    final loanPlayer =
+        gameState.userTeam.players.where((p) => p.id == playerId).firstOrNull;
     showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -1373,6 +1375,20 @@ class PlayerDetailScreen extends StatelessWidget {
               Text(Tr.pick(
                   '${TransferWindowCalendar.formatMonthDay(TransferWindowCalendar.loanEndDate(today, theme, length))}まで他クラブへ貸し出します。期間中の給与は放出先が負担します。',
                   'He goes out on loan until ${TransferWindowCalendar.formatMonthDay(TransferWindowCalendar.loanEndDate(today, theme, length))}. The other club pays his wages while he is there.')),
+              if (loanPlayer != null) ...[
+                const SizedBox(height: 4),
+                Builder(builder: (_) {
+                  final fee = gameState.loanOutFeeFor(loanPlayer,
+                      guaranteePlayingTime: guaranteePlayingTime);
+                  return Text(
+                    fee > 0
+                        ? Tr.pick('レンタル料${formatMoney(fee)}を受け取ります。',
+                            'You receive a loan fee of ${formatMoney(fee)}.')
+                        : Tr.pick('レンタル料は受け取れません。', 'You receive no loan fee.'),
+                    style: const TextStyle(fontSize: 12),
+                  );
+                }),
+              ],
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,

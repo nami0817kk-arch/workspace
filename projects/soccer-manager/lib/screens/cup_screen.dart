@@ -206,8 +206,9 @@ class _ContinentalCupTab extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Text(
-            Tr.pick('前シーズンをリーグ2位以内で終えると、翌シーズンは大陸カップに出場できます。',
-                'Finish in the top two and you qualify for the Continental Cup next season.'),
+            Tr.pick(
+                '前シーズンを1部の${gameState.continentalSpots}位以内で終えると、翌シーズンは大陸カップに出場できます(枠の数は国の係数で2〜4に変わります)。',
+                'Finish in the top ${gameState.continentalSpots} of the top division and you qualify for the Continental Cup next season (the number of places, 2 to 4, depends on the country coefficient).'),
             textAlign: TextAlign.center,
           ),
         ),

@@ -304,7 +304,9 @@ extension GameStateSeason on GameState {
   ContinentalCup? get continentalCup => _save?.continentalCup;
 
   /// 前シーズンの最終順位に基づき、来季の大陸カップ出場資格があるか。
-  bool get qualifiedForContinentalCup => (_save?.lastSeasonRank ?? 99) <= 2;
+  /// 枠の数は国の係数で2〜4に変わる(季の締めの判定と同じ continentalSpots)。
+  bool get qualifiedForContinentalCup =>
+      (_save?.lastSeasonRank ?? 99) <= continentalSpots;
 
   /// 国内カップ戦で、ブラケット全体の中で次に消化されるべき試合が自クラブの
   /// 試合であるかどうか。日程画面・ホーム画面から「カップ戦の順番が来ている」

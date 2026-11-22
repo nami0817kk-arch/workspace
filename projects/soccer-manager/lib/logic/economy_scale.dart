@@ -8,26 +8,29 @@ import '../l10n/tr.dart';
 /// (1つ下がるごとに0.8倍)だけだった。1部に上がっても主力の週俸が
 /// 数百万円、移籍金が最大2億円と、実在のサッカーとは桁が2つ違った。
 ///
-/// ここでは、5部の額を基準(倍率1)として、上の部ほど大きくする。
-/// 目安は次の通り(クラブの年収)。
+/// ここでは、上の部ほど額を大きくする。目安は次の通り(クラブの年収)。
 ///
 /// | 部 | 年収 | 主力の年俸 |
 /// |---|---|---|
 /// | 1部 | 300〜800億 | 5〜30億 |
 /// | 2部 | 40〜80億 | |
 /// | 3部 | 10〜20億 | |
-/// | 4部 | 5〜10億 | |
-/// | 5部 | 2〜5億 | 500〜1500万 |
+///
+/// **いまは3部制**(league.dart の totalDivisionTiers = 3)。5部制だった頃の
+/// 名残で、額の元(base)は「旧5部の規模」で書いてあり(倍率1)、下の表にも
+/// 4部・5部の値が残っている。いまの部(1〜3)では4部・5部の値は使われない。
+/// 元の額と倍率の組で今の額が決まっているので、値は動かさずに残してある
+/// (元の額を3部基準に書き直すと、すべての呼び出し元の数字を直す必要がある)。
 ///
 /// 選手の価値と給与は部ではなく能力から決まる(1部の選手は能力が高い
 /// ので、結果として桁が上がる)。部で決まるのは、クラブの規模で決まる額
 /// (費用・賞金・収入)だけ。
 
 /// 費用・賞金など「クラブの規模で決まる額」にかける倍率。
-/// 5部=1、4部 3.8、3部 14.4、2部 55、1部 209。
+/// 3部 14.4、2部 55、1部 209(旧5部=1 を元にした値。4部 3.8 は使われない)。
 double moneyScale(int tier) => pow(3.8, 5 - tier.clamp(1, 5)).toDouble();
 
-/// 5部の額 [base] を、[tier] 部の規模に直す。
+/// 元の額 [base](旧5部の規模で書いた額)を、[tier] 部の規模に直す。
 int scaleMoneyForTier(int tier, int base) => (base * moneyScale(tier)).round();
 
 /// 観客・グッズ・スポンサーの収入にかける倍率。
@@ -45,6 +48,7 @@ int scaleMoneyForTier(int tier, int base) => (base * moneyScale(tier)).round();
 ///   人件費率は 2部 80〜100%、3部 100%前後、4部 45〜70%。
 /// 部ごとのクラブの強さの幅(division_strength.dart)と組で合わせてある。
 /// 片方だけ変えると人件費率が大きくずれる。
+/// (4部・5部の値は5部制だった頃のもの。いまの3部制では使われない。)
 double incomeScale(int tier) => switch (tier.clamp(1, 5)) {
       1 => 50,
       2 => 16,
@@ -55,6 +59,7 @@ double incomeScale(int tier) => switch (tier.clamp(1, 5)) {
 
 /// 部ごとの、真ん中くらいのクラブの年収の目安(万円)。理事会が給与の
 /// 枠を組むときの基準に使う。実測(放映権を含む営業収入)に合わせた。
+/// 4部・5部の行は5部制の名残で、いまの3部制では使われない。
 int typicalAnnualIncome(int tier) => switch (tier.clamp(1, 5)) {
       1 => 3300000, // 330億
       2 => 550000, // 55億
@@ -64,7 +69,8 @@ int typicalAnnualIncome(int tier) => switch (tier.clamp(1, 5)) {
     };
 
 /// 1シーズンの放映権料(万円)。上の部ほど大きく、1部では年収の半分を
-/// 超える。下の部は、ほとんど入らない。
+/// 超える。下の部は、ほとんど入らない。4部・5部の行は5部制の名残で、
+/// いまの3部制では使われない。
 int annualBroadcast(int tier) => switch (tier.clamp(1, 5)) {
       1 => 2500000, // 250億
       2 => 300000, // 30億
@@ -83,8 +89,7 @@ int weeklyBroadcast(int tier, {int matchdays = 38}) =>
 /// 60 × e^(0.1768 × (総合 − 40))。総合45で約145万、78で約5億、
 /// 85で約17億、90で約41億、95で約100億。年齢・潜在・性格・リーダー
 /// シップの係数は、ここに掛ける。
-double marketValueBase(int overall) =>
-    60 * exp(0.1768 * (overall - 40));
+double marketValueBase(int overall) => 60 * exp(0.1768 * (overall - 40));
 
 /// 市場価値の上限(万円)。150億。
 const int maxMarketValue = 1500000;
@@ -93,8 +98,7 @@ const int maxMarketValue = 1500000;
 const int minMarketValue = 50;
 
 /// 市場価値 [value] の選手が求める年俸(万円)。2.4 × 価値^0.88。
-int annualWageForValue(int value) =>
-    (2.4 * pow(max(0, value), 0.88)).round();
+int annualWageForValue(int value) => (2.4 * pow(max(0, value), 0.88)).round();
 
 /// 給与の下限(万円/週)。
 const int minWeeklyWage = 5;

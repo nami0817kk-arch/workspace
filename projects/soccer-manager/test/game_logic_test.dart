@@ -291,8 +291,9 @@ void main() {
     final beforeCount = gameState.userTeam.players.length;
     final target = legacyMarket(gameState).first;
     // 移籍金のほかに代理人手数料が掛かる。
-    gameState.save!.budget =
-        target.marketValue + TransferTermsEngine.agentFee(target.marketValue) + 100;
+    gameState.save!.budget = target.marketValue +
+        TransferTermsEngine.agentFee(target.marketValue) +
+        100;
     // 週給予算(BD3)に引っかかると獲得が拒否されるため、余裕を明示的に与える
     // (与えないと、市場の顔ぶれ次第でごく稀に失敗する不安定なテストになる)。
     gameState.save!.wageBudget = 999999;
@@ -845,8 +846,7 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     // 18歳未満は契約の上限が3年なので、上限に掛からない年齢の選手で見る。
-    final player =
-        gameState.userTeam.players.firstWhere((p) => p.age >= 18);
+    final player = gameState.userTeam.players.firstWhere((p) => p.age >= 18);
     player.contractYearsRemaining = 1;
     final cost = gameState.renewalCostFor(player.id) +
         gameState.signingBonusFor(player.id);
@@ -886,8 +886,8 @@ void main() {
           wage: 50,
         );
 
-    expect(scout(20, 1).effectiveLevel,
-        greaterThan(scout(1, 20).effectiveLevel),
+    expect(
+        scout(20, 1).effectiveLevel, greaterThan(scout(1, 20).effectiveLevel),
         reason: 'スカウトは見極めで決まるべき');
   });
 
@@ -1210,8 +1210,7 @@ void main() {
         gameState.userTeam.players.firstWhere((p) => p.id == target.id);
     expect(signed.isLoan, isTrue);
     // 既定は1年(シーズン末の6月30日まで)。
-    expect(signed.loanEndDate,
-        DateTime(gameState.today.year + 1, 6, 30));
+    expect(signed.loanEndDate, DateTime(gameState.today.year + 1, 6, 30));
   });
 
   test(
@@ -3231,7 +3230,8 @@ void main() {
     expect(player.internationalDutyWeeksRemaining, 1);
   });
 
-  test('GameState.playSecondHalf no longer raises a press conference (owner game)',
+  test(
+      'GameState.playSecondHalf no longer raises a press conference (owner game)',
       () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
@@ -3530,8 +3530,8 @@ void main() {
 
     // 登録の決まり(22歳以上の枠など)で取れない選手もいる。取れる選手で見る。
     gameState.save!.wageBudget = 99999999;
-    final target = gameState.freeAgents.firstWhere(
-        (p) => SquadRegistration.canAdd(gameState.userTeam, p));
+    final target = gameState.freeAgents
+        .firstWhere((p) => SquadRegistration.canAdd(gameState.userTeam, p));
     final budgetBefore = gameState.save!.budget;
     final squadSizeBefore = gameState.userTeam.players.length;
 
@@ -3721,8 +3721,16 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
 
-    await gameState.playNextMatchday();
-
+    // 観客動員はホームの試合でだけ控える(アウェイの節は書き換えない)。
+    // ホームの試合を1つ終えるまで進める。
+    final uid = gameState.save!.userTeamId;
+    for (var i = 0; i < 4 && gameState.lastMatchAttendance == null; i++) {
+      await gameState.playNextMatchdayQuickSim();
+    }
+    expect(
+        gameState.save!.league.fixtures
+            .any((f) => f.result != null && f.homeTeamId == uid),
+        isTrue);
     expect(gameState.lastMatchAttendance, isNotNull);
     expect(gameState.lastMatchAttendance, greaterThan(0));
     expect(gameState.lastMatchAttendance,
@@ -4483,8 +4491,8 @@ void main() {
 
     expect(result, ContractOfferResult.accepted);
     expect(player.wage, minAcceptable);
-    expect(
-        player.contractYearsRemaining, ContractEngine.negotiatedYears(player) + 1);
+    expect(player.contractYearsRemaining,
+        ContractEngine.negotiatedYears(player) + 1);
     expect(gameState.save!.budget, 0);
     expect(gameState.pendingContractNegotiation, isNull);
   });
@@ -8737,8 +8745,7 @@ void main() {
     final easyState = GameState();
     await easyState.startNewGame('イージーFC', difficulty: GameDifficulty.easy);
     expect(easyState.save!.difficulty, GameDifficulty.easy);
-    expect(
-        easyState.save!.budget,
+    expect(easyState.save!.budget,
         (GameState.initialBudgetFor(totalDivisionTiers) * 1.5).round(),
         reason: '初期資金(始まりの部の年収の半年分)の1.5倍');
     expect(
@@ -8750,7 +8757,8 @@ void main() {
 
     final hardState = GameState();
     await hardState.startNewGame('ハードFC', difficulty: GameDifficulty.hard);
-    expect(hardState.save!.budget, (GameState.initialBudgetFor(totalDivisionTiers) * 0.6).round(),
+    expect(hardState.save!.budget,
+        (GameState.initialBudgetFor(totalDivisionTiers) * 0.6).round(),
         reason: '初期資金(始まりの部の年収の半年分)の0.6倍');
     expect(
       hardState.save!.boardTargetRank,
@@ -9053,10 +9061,8 @@ void main() {
       final friendLoss = RelationsEngine.areFriends(leader, p)
           ? RelationsEngine.friendLeftPenalty
           : 0;
-      expect(
-          p.happiness,
-          (prev - DynamicsEngine.leaderSalePenalty - friendLoss)
-              .clamp(0, 100),
+      expect(p.happiness,
+          (prev - DynamicsEngine.leaderSalePenalty - friendLoss).clamp(0, 100),
           reason: 'リーダー放出で残った全員の不満度が下がる');
     }
   });
@@ -9580,8 +9586,7 @@ void main() {
         final clubNames = save.league.teams.map((t) => t.name).toList();
         expect(clubNames.toSet().length, clubNames.length,
             reason: '$label: リーグ内にクラブ名の重複がない');
-        final marketNames =
-            legacyMarket(gameState).map((p) => p.name).toList();
+        final marketNames = legacyMarket(gameState).map((p) => p.name).toList();
         expect(marketNames.toSet().length, marketNames.length,
             reason: '$label: 移籍市場に同姓同名が並ばない');
       }

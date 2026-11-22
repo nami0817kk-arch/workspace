@@ -28,8 +28,7 @@ extension GameStateTransfer on GameState {
   /// [lastSigningBlockReason]に入れる。
   bool _minorRuleAllows(Player player) {
     if (!_isInternationalMinor(player)) return true;
-    lastSigningBlockReason = Tr.pick(
-        '18歳未満の選手は国をまたいで移籍できません。',
+    lastSigningBlockReason = Tr.pick('18歳未満の選手は国をまたいで移籍できません。',
         'Players under 18 cannot move between countries.');
     _notify();
     return false;
@@ -121,8 +120,7 @@ extension GameStateTransfer on GameState {
         if (t.id != _save!.userTeamId && t.players.length > minSquadToSell)
           for (final p in t.players)
             if (_isTransferTarget(p, taken) &&
-                !(p.age < 18 &&
-                    (foreign[t.id] ?? home) != home))
+                !(p.age < 18 && (foreign[t.id] ?? home) != home))
               p,
     ];
   }
@@ -279,8 +277,9 @@ extension GameStateTransfer on GameState {
       _save == null ? 0 : ScoutKnowledge.slotsFor(_scoutJudging);
 
   /// 1か所あたりの1週の出張費。
-  int get scoutTripCostPerWeek =>
-      _save == null ? 0 : ScoutKnowledge.weeklyTripCost(_save!.currentDivisionTier);
+  int get scoutTripCostPerWeek => _save == null
+      ? 0
+      : ScoutKnowledge.weeklyTripCost(_save!.currentDivisionTier);
 
   /// 送った地域で1週に見えてくる量(%)。
   int get scoutWeeklyGain =>
@@ -334,8 +333,7 @@ extension GameStateTransfer on GameState {
     }
 
     final regions = {for (final r in scoutRegions) r.key: r};
-    final active =
-        _save!.scoutRegionKeys.where(regions.containsKey).toList();
+    final active = _save!.scoutRegionKeys.where(regions.containsKey).toList();
     final gain = (scoutWeeklyGain * weeks).round();
     if (active.isNotEmpty && gain > 0) {
       for (final key in active) {
@@ -442,8 +440,8 @@ extension GameStateTransfer on GameState {
       _save!.pendingContractNegotiation = null;
     }
     // 7月1日より前に出ていった(売った・解除した)選手の仮契約は無くなる。
-    _save?.preContracts.removeWhere(
-        (c) => c.playerId == playerId && c.fromClubId == team.id);
+    _save?.preContracts
+        .removeWhere((c) => c.playerId == playerId && c.fromClubId == team.id);
     _settleInstallmentsFor(playerId);
   }
 
@@ -457,11 +455,12 @@ extension GameStateTransfer on GameState {
   /// 売った相手が誰であれ、買ったときの残金は元のクラブに支払う。
   void _settleInstallmentsFor(String playerId) {
     if (_save == null) return;
-    final rows =
-        _save!.pendingInstallments.where((i) => i.playerId == playerId).toList();
+    final rows = _save!.pendingInstallments
+        .where((i) => i.playerId == playerId)
+        .toList();
     if (rows.isEmpty) return;
-    final outstanding = rows.fold<int>(
-        0, (sum, i) => sum + i.weeklyAmount * i.weeksRemaining);
+    final outstanding =
+        rows.fold<int>(0, (sum, i) => sum + i.weeklyAmount * i.weeksRemaining);
     _save!.pendingInstallments.removeWhere((i) => i.playerId == playerId);
     if (outstanding <= 0) return;
     _book(LedgerCategory.transfers, -(outstanding));
@@ -776,7 +775,8 @@ extension GameStateTransfer on GameState {
     if (_save == null) return false;
     if (userTeam.tacticalMeetingCooldownWeeks > 0) return false;
     TrainingEngine.applyTacticalMeeting(userTeam.players);
-    userTeam.tacticalMeetingCooldownWeeks = GameState.tacticalMeetingCooldownWeeks;
+    userTeam.tacticalMeetingCooldownWeeks =
+        GameState.tacticalMeetingCooldownWeeks;
     _notify();
     await _persist();
     return true;
@@ -839,6 +839,7 @@ extension GameStateTransfer on GameState {
     if (!_minorRuleAllows(player)) return false;
     if (!_registrationAllows(player)) return false;
     // 買取義務付きは、借り賃が半分(満了したら必ず買い取る)。
+    // 貸し出すときに受け取るレンタル料([standardLoanFeePercent])と同じ決まり。
     final fee = (player.marketValue *
             GameState.loanFeeRatioPercent /
             100 *
@@ -1031,9 +1032,8 @@ extension GameStateTransfer on GameState {
     bool option = false,
   }) {
     if (_save == null) return null;
-    final player = _save!.youthProspects
-        .where((p) => p.id == playerId)
-        .firstOrNull;
+    final player =
+        _save!.youthProspects.where((p) => p.id == playerId).firstOrNull;
     if (player == null) return null;
     return YouthPromotionEngine.termsFor(userTeam, player,
         years: years, option: option);
@@ -1053,8 +1053,7 @@ extension GameStateTransfer on GameState {
     if (_save == null) return false;
     lastSigningBlockReason = null;
     if (userTeam.players.length >= maxSquadSize) {
-      lastSigningBlockReason = Tr.pick(
-          'スカッドが上限です。誰かを放出してから昇格させてください。',
+      lastSigningBlockReason = Tr.pick('スカッドが上限です。誰かを放出してから昇格させてください。',
           'Your squad is full. Release someone before promoting him.');
       _notify();
       return false;
@@ -1198,16 +1197,32 @@ extension GameStateTransfer on GameState {
     await _persist();
   }
 
-  /// 自クラブの選手を期限付きで他クラブへローン放出する。放出中は週俸を放出先が
-  /// 負担し、自クラブの試合には出場できない。スタメンだった場合は自動で欠員を埋める。
   /// 出場機会を約束させた貸出でクラブが受け取るレンタル料の割合。
   ///
   /// 0 は「受け取らない」。約束させるぶん、貸出先はこちらに払わない。
   static const int developmentLoanFeePercent = 0;
 
-  /// 通常の貸出で受け取る週次のレンタル料の割合(市場価値に対する百分率)。
-  static const int standardLoanFeePercent = 2;
+  /// 通常の貸出で受け取るレンタル料の割合(市場価値に対する百分率)。
+  ///
+  /// 貸し出したときに一度だけ受け取る。借りる側(自クラブが借りる
+  /// [signLoanPlayer])が払う契約金と同じ決まり([GameState.loanFeeRatioPercent])。
+  /// 以前は「週次 2%」と書かれていたが一度も使われておらず、そのまま週次で
+  /// 入れると1年の貸し出しで市場価値とほぼ同じ額が入り、借りる側の2割と
+  /// 釣り合わないため、借りる側に揃えた。
+  static const int standardLoanFeePercent = GameState.loanFeeRatioPercent;
 
+  /// [p]を貸し出したときに受け取るレンタル料。出場機会を約束させると0。
+  /// 系列クラブへの貸し出しは必ず約束付きになる([loanOutPlayer])。
+  int loanOutFeeFor(Player p, {bool guaranteePlayingTime = false}) {
+    final percent = guaranteePlayingTime || affiliateClub != null
+        ? developmentLoanFeePercent
+        : standardLoanFeePercent;
+    return (p.marketValue * percent / 100).round();
+  }
+
+  /// 自クラブの選手を期限付きで他クラブへローン放出する。放出中は週俸を放出先が
+  /// 負担し、自クラブの試合には出場できない。スタメンだった場合は自動で欠員を埋める。
+  /// 通常の貸出(出場機会の約束なし)では、レンタル料([loanOutFeeFor])が入る。
   ///
   /// [length]が半年なら冬の窓が開く日、1年ならシーズン末に戻る。
   /// [recallClause]を付けると、冬の窓のあいだに呼び戻せる
@@ -1240,12 +1255,17 @@ extension GameStateTransfer on GameState {
     final until =
         TransferWindowCalendar.loanEndDate(today, currentLeagueTheme, length);
     player.loanedOutUntil = until;
-    player.loanedOutWeeksRemaining = max(
-        1, (TransferWindowCalendar.daysBetween(today, until) / 7).ceil());
+    player.loanedOutWeeksRemaining =
+        max(1, (TransferWindowCalendar.daysBetween(today, until) / 7).ceil());
     player.loanRecallClause = recallClause;
     player.loanedOutToClubName = destination.name;
     // 育成型かどうか。約束させると成長は大きいが、レンタル料は入らない。
     player.loanedWithPlayingTime = guaranteePlayingTime;
+    // レンタル料。選手から入るお金なので、売却と同じ区分に入れる
+    // (借りるときの契約金は「補強費」に入れているのと対になる)。
+    final loanFee =
+        loanOutFeeFor(player, guaranteePlayingTime: guaranteePlayingTime);
+    if (loanFee > 0) _book(LedgerCategory.playerSales, loanFee);
     // 復帰時の成長レポートのために放出時点の総合力を記録しておく。
     player.loanStartOverall = player.overall;
     final wasStarter = team.startingXI.remove(player.id);
@@ -1434,12 +1454,11 @@ extension GameStateTransfer on GameState {
 
     // 狙われるのは主力。控えを高値で買いに来るのは不自然。
     eligible.sort((a, b) => b.overall.compareTo(a.overall));
-    final target = eligible[GameState._offerRng.nextInt(
-        eligible.length < 5 ? eligible.length : 5)];
+    final target = eligible[
+        GameState._offerRng.nextInt(eligible.length < 5 ? eligible.length : 5)];
 
-    final rivals = _save!.league.teams
-        .where((t) => t.id != _save!.userTeamId)
-        .toList();
+    final rivals =
+        _save!.league.teams.where((t) => t.id != _save!.userTeamId).toList();
     if (rivals.isEmpty) return null;
     final buyer = rivals[GameState._offerRng.nextInt(rivals.length)];
 
@@ -1504,9 +1523,10 @@ extension GameStateTransfer on GameState {
           .map((e) => e.key)
           .where((id) => team.players.any((p) => p.id == id))
           .toList();
-      if (biddablePlayerIds.isNotEmpty && GameState._offerRng.nextDouble() < 0.20) {
-        final targetId =
-            biddablePlayerIds[GameState._offerRng.nextInt(biddablePlayerIds.length)];
+      if (biddablePlayerIds.isNotEmpty &&
+          GameState._offerRng.nextDouble() < 0.20) {
+        final targetId = biddablePlayerIds[
+            GameState._offerRng.nextInt(biddablePlayerIds.length)];
         final target = team.players.firstWhere((p) => p.id == targetId);
         final existing = offersByPlayer[targetId]!.first;
         final rivalCandidates = _save!.league.teams
@@ -1516,10 +1536,11 @@ extension GameStateTransfer on GameState {
             )
             .toList();
         if (rivalCandidates.isNotEmpty) {
-          final rival =
-              rivalCandidates[GameState._offerRng.nextInt(rivalCandidates.length)];
+          final rival = rivalCandidates[
+              GameState._offerRng.nextInt(rivalCandidates.length)];
           final outbid =
-              (existing.amount * (1.1 + GameState._offerRng.nextDouble() * 0.2)).round();
+              (existing.amount * (1.1 + GameState._offerRng.nextDouble() * 0.2))
+                  .round();
           _save!.incomingOffers.add(
             IncomingOffer(
               id: 'offer${_incomingOfferSeq++}',
@@ -1547,7 +1568,8 @@ extension GameStateTransfer on GameState {
       // 移籍リストに登録している選手がいるとオファーが来やすくなる。
       final hasListed = eligible.any((p) => p.isTransferListed);
       final triggerChance = hasListed ? 0.30 : 0.12;
-      if (eligible.isNotEmpty && GameState._offerRng.nextDouble() < triggerChance) {
+      if (eligible.isNotEmpty &&
+          GameState._offerRng.nextDouble() < triggerChance) {
         final weights = eligible
             .map(
               (p) =>
@@ -1568,8 +1590,8 @@ extension GameStateTransfer on GameState {
         final buyerCandidates = _save!.league.teams
             .where((t) => t.id != _save!.userTeamId)
             .toList();
-        final buyer =
-            buyerCandidates[GameState._offerRng.nextInt(buyerCandidates.length)];
+        final buyer = buyerCandidates[
+            GameState._offerRng.nextInt(buyerCandidates.length)];
 
         if (chosen.releaseClause != null) {
           // リリース条項がある場合は交渉なしで即成立する。
