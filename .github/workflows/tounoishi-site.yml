@@ -1,0 +1,79 @@
+# 塔の意志の公開ページ（法務ページ・app-ads.txt・紹介）を Cloudflare Pages の tounoishi に出す（goso-boat-site.yml を写したもの）。
+# ストアの「マーケティング URL」・プライバシーポリシー URL・サポート URL は https://tounoishi.pages.dev/ を指す。
+# AdMob は直下の app-ads.txt を読みに来る。
+#
+# 今は手で動かすとき（workflow_dispatch）だけ動く。push では動かない。
+# 理由: 公開（サイトを出すこと）はユーザーの OK を取ってから行う決まりで、
+#       このファイルや legal/・site/ を master に入れただけで勝手に公開されないようにするため。
+# 公開の OK が出たら、goso-boat-site.yml と同じ次の trigger を on: に足す
+# （以後、master で legal/・site/ を直すたびに出し直される）:
+#   push:
+#     branches: [master]
+#     paths:
+#       - "projects/tounoishi/legal/**"
+#       - "projects/tounoishi/site/**"
+#       - "scripts/check-app-site.sh"
+#       - ".github/workflows/tounoishi-site.yml"
+#
+# 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（goso-boat-site.yml と同じ値）
+name: 塔の意志の公開ページ
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tounoishi-site
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: projects/tounoishi
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Assemble site
+        run: |
+          mkdir -p dist
+          cp site/* dist/
+          cp legal/*.html dist/
+          ls -la dist
+
+      # 無ければ作る。既にあれば重複エラーが返るだけ。production_branch を master に固定する
+      # （デプロイの --branch とずれると、本番ではなくプレビューの別URLに出て法務リンクが404になる）
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"tounoishi","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/tounoishi
+          command: pages deploy dist --project-name=tounoishi --branch=master
+
+      # ストアに載せる URL で本当に見えるか（プロジェクト名が取られていて別の URL になった場合もここで分かる）
+      - name: Check the public URLs
+        run: |
+          sleep 20
+          for p in privacy.html support.html terms.html app-ads.txt; do
+            curl -fsSL "https://tounoishi.pages.dev/$p" -o /tmp/page || { echo "::error::https://tounoishi.pages.dev/$p が開けません"; exit 1; }
+          done
+          grep -q "塔の意志" <(curl -fsSL https://tounoishi.pages.dev/privacy.html) || { echo "::error::tounoishi.pages.dev が塔の意志のページではありません"; exit 1; }
+          curl -fsSL https://tounoishi.pages.dev/app-ads.txt
+
+      # AdMob が app-ads.txt を確かめられる状態か（robots.txt がテキスト・app-ads.txt の行・無いパスは 404）。
+      # 2026-10-02 に護送ボートで robots.txt が HTML を返していて「アプリを確認」が通らなかった
+      - name: Check the site for AdMob (robots.txt / app-ads.txt)
+        run: bash ../../scripts/check-app-site.sh tounoishi.pages.dev pub-6409014819339195
