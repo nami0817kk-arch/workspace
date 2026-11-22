@@ -449,6 +449,8 @@ void main() {
     benched.suspendedMatches = 2;
     // 今節に退場処分を受けるスタメン選手: 今節はまだ出場するので、退場の
     // 出場停止は今節では消化されず、次節から適用されるはず(据え置きで1)。
+    // 一発退場は一部が暴力行為で3試合になる(くじ)ので、停止が必ず1試合の
+    // 「2枚目の警告での退場」にする。
     final justSentOff =
         home.players.firstWhere((p) => home.startingXI.contains(p.id));
 
@@ -456,6 +458,13 @@ void main() {
       home: home,
       away: away,
       events: [
+        MatchEvent(
+          minute: 5,
+          teamId: home.id,
+          scorerName: justSentOff.name,
+          scorerId: justSentOff.id,
+          type: MatchEventType.yellowCard,
+        ),
         MatchEvent(
           minute: 10,
           teamId: home.id,

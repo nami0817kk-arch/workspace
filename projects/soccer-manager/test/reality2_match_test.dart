@@ -399,40 +399,51 @@ void main() {
     });
 
     test('ハーフタイムと後半の途中の両方で替えても、試合後の先発は元どおり', () async {
-      final game = GameState();
-      await game.startNewGame('交代FC');
-      await game.playNextMatchday();
-      expect(game.isHalfTime, isTrue);
-      final team = game.userTeam;
-      final lineup = MatchEngine.lineupOf(team);
-      final onPitch = lineup.map((p) => p.id).toSet();
-      for (final p in team.players) {
-        p.fatigue = 0;
-      }
-      final htOut =
-          lineup.firstWhere((p) => p.position.group == PositionGroup.def);
-      final lateOut =
-          lineup.firstWhere((p) => p.position.group == PositionGroup.att);
-      htOut.fatigue = 95; // ハーフタイムに替わる
-      lateOut.fatigue = 55; // 後半の途中に替わる
-      final benches = team.players
-          .where((p) => !onPitch.contains(p.id) && canPlay(p))
-          .take(2)
-          .toList();
-      for (final (b, like) in [(benches[0], htOut), (benches[1], lateOut)]) {
-        b.position = like.position;
-        b.secondaryPositions = [];
-        b.attributes = {for (final k in AttributeKeys.all) k: 99};
-      }
-      final apps = [for (final b in benches) b.careerAppearances];
-      final xi = List<String>.of(team.startingXI);
+      // 替える2人が試合の中で退場すると替えられない(退場した選手の交代は
+      // 無い)。そうなった試合は数えず、やり直す。
+      for (var tries = 0; tries < 5; tries++) {
+        final game = GameState();
+        await game.startNewGame('交代FC');
+        await game.playNextMatchday();
+        expect(game.isHalfTime, isTrue);
+        final team = game.userTeam;
+        final lineup = MatchEngine.lineupOf(team);
+        final onPitch = lineup.map((p) => p.id).toSet();
+        for (final p in team.players) {
+          p.fatigue = 0;
+        }
+        final htOut =
+            lineup.firstWhere((p) => p.position.group == PositionGroup.def);
+        final lateOut =
+            lineup.firstWhere((p) => p.position.group == PositionGroup.att);
+        htOut.fatigue = 95; // ハーフタイムに替わる
+        lateOut.fatigue = 55; // 後半の途中に替わる
+        final benches = team.players
+            .where((p) => !onPitch.contains(p.id) && canPlay(p))
+            .take(2)
+            .toList();
+        for (final (b, like) in [(benches[0], htOut), (benches[1], lateOut)]) {
+          b.position = like.position;
+          b.secondaryPositions = [];
+          b.attributes = {for (final k in AttributeKeys.all) k: 99};
+        }
+        final apps = [for (final b in benches) b.careerAppearances];
+        final xi = List<String>.of(team.startingXI);
 
-      final result = await game.playSecondHalf();
+        final result = await game.playSecondHalf();
 
-      expect(result, isNotNull);
-      expect(benches[0].careerAppearances, apps[0] + 1);
-      expect(benches[1].careerAppearances, apps[1] + 1);
-      expect(team.startingXI, xi, reason: '自動の交代が先発の指定に残った');
+        expect(result, isNotNull);
+        if (result!.events.any((e) =>
+            e.type == MatchEventType.redCard &&
+            (e.scorerId == htOut.id || e.scorerId == lateOut.id))) {
+          continue;
+        }
+        expect(benches[0].careerAppearances, apps[0] + 1);
+        expect(benches[1].careerAppearances, apps[1] + 1);
+        expect(team.startingXI, xi, reason: '自動の交代が先発の指定に残った');
+        return;
+      }
+      fail('替える選手が退場しない試合が無かった');
     });
   });
 

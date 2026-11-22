@@ -219,9 +219,14 @@ void main() {
       return gs;
     }
 
+    // 市場の選手。新しいゲームの自クラブは、22歳以上の登録枠(25人)や国外で
+    // 育った選手の枠が埋まって始まることがあるので、枠の外の21歳にして買う
+    // (確かめたいのは簿価で、登録の枠ではない)。
+    Player marketPlayer(GameState gs) => legacyMarket(gs).first..age = 21;
+
     test('買うと、移籍金と代理人手数料の合計が簿価になり、その季の費用にはならない', () async {
       final gs = await newGame();
-      final p = legacyMarket(gs).first;
+      final p = marketPlayer(gs);
       final fee = p.marketValue;
       final agent = TransferTermsEngine.agentFee(fee);
       expect(await gs.buyPlayer(p.id), isTrue,
@@ -235,7 +240,7 @@ void main() {
 
     test('契約の年数で、代理人手数料も含めてちょうど全額を償却する', () async {
       final gs = await newGame();
-      final p = legacyMarket(gs).first;
+      final p = marketPlayer(gs);
       final cost = p.marketValue + TransferTermsEngine.agentFee(p.marketValue);
       expect(await gs.buyPlayer(p.id), isTrue);
       final bought = gs.userTeam.players.firstWhere((x) => x.id == p.id);
@@ -254,7 +259,7 @@ void main() {
 
     test('分割払いでも、移籍金の総額と代理人手数料が簿価になる', () async {
       final gs = await newGame();
-      final p = legacyMarket(gs).first;
+      final p = marketPlayer(gs);
       final fee = p.marketValue;
       expect(await gs.buyPlayerOnInstallments(p.id), isTrue);
       expect(gs.bookValueOf(p.id), fee + TransferTermsEngine.agentFee(fee));

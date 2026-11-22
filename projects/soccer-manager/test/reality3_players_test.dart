@@ -13,6 +13,7 @@ import 'package:soccer_manager/logic/league_rules.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/logic/pre_contract_engine.dart';
 import 'package:soccer_manager/logic/squad_registration_engine.dart';
+import 'package:soccer_manager/models/incoming_offer.dart';
 import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/pre_contract.dart';
@@ -248,7 +249,14 @@ void main() {
           p.nation = LeagueTheme.england.name;
         }
       }
-      final english = gs.userTeam.players.firstWhere((p) => !p.isLoan)
+      // 買い手は力の合うクラブだけ(オファーの作り直し)。力の低い選手だと
+      // 合うのが同じ部(上で枠を埋めたクラブ)だけになり、オファー自体が
+      // 来ないので、成人でいちばん力のある選手を売る。
+      final english = (gs.userTeam.players
+              .where((p) => !p.isLoan && p.age >= 18)
+              .toList()
+            ..sort((a, b) => b.overall.compareTo(a.overall)))
+          .first
         ..nation = LeagueTheme.england.name;
       final french =
           gs.userTeam.players.firstWhere((p) => !p.isLoan && p.id != english.id)
@@ -265,7 +273,14 @@ void main() {
           reason: 'EU の国籍なら枠の外');
       // 放出しても、枠の埋まったクラブへは移らない。
       expect(gs.isTransferWindowOpen, isTrue);
-      expect(await sellViaOffer(gs, english.id), isNotNull);
+      // 買い手は候補から数クラブだけ選んで登録を確かめるので、枠の埋まった
+      // クラブばかり引いた週はオファーが来ない。何週か待つ。
+      IncomingOffer? sold;
+      for (var week = 0; week < 5 && sold == null; week++) {
+        sold = await sellViaOffer(gs, english.id);
+      }
+      expect(sold, isNotNull);
+      expect(cpus.map((t) => t.name), isNot(contains(sold!.buyerClubName)));
       expect(
           cpus.any((t) => t.players.any((p) => p.id == english.id)), isFalse);
     });
