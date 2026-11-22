@@ -166,7 +166,8 @@ extension GameStateNation on GameState {
         for (final p in team.players)
           if (!isEuNation(nationOf(p))) p,
       ];
-      for (final p in nonEu.skip(nonEuLimit)) {
+      // 始めた時点で枠ちょうどだと、すぐには誰も取れない。1人分あける。
+      for (final p in nonEu.skip(max(0, nonEuLimit - 1))) {
         makeNational(p);
       }
     }
@@ -185,7 +186,10 @@ extension GameStateNation on GameState {
       for (final p in team.players)
         if (SquadRegistration.isSenior(p) && !p.homegrown) p,
     ];
-    for (final p in notHomegrown.skip(rules.nonHomegrownLimit)) {
+    // 国外で育った選手の枠も、始めた時点で3人分はあけておく(枠ちょうどで
+    // 始まると、国外育成の選手を1人も取れなかった。2026-11-22)。
+    for (final p
+        in notHomegrown.skip(max(0, rules.nonHomegrownLimit - 3))) {
       makeNational(p, forceHomegrown: true);
     }
   }
