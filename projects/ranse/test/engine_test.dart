@@ -1052,17 +1052,68 @@ void main() {
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         playOut(g, Rng(seed));
+        final e = buildEnding(g);
+        if (kHandWays.contains(e.way)) {
+          expect(
+            e.handId,
+            isNotNull,
+            reason: '${e.way} ${e.kind} ${g.age}歳 ${g.l.dead}',
+          );
+          expect(e.tier, isNotNull);
+          expect(e.text, isNot(contains('{')), reason: e.text);
+          expect(e.text, isNot(contains('null')), reason: e.text);
+        }
         if (g.age >= 15) continue;
         young++;
-        final e = buildEnding(g);
-        expect(e.handId, isNotNull, reason: '${g.age}歳 ${g.l.dead}');
-        expect(e.tier, isNotNull);
-        expect(e.text, isNot(contains('{')), reason: e.text);
         expect(e.key, startsWith('hand:y_'));
         seen.add(e.handId!);
       }
       expect(young, greaterThan(300));
       expect(seen.length, greaterThanOrEqualTo(15), reason: '$seen');
+    });
+
+    test('手書きの最期: 村・商い・仏門・忍びの道の人生にも必ず付き、道ごとにいろいろな最期が出る', () {
+      final seen = <String, Set<String>>{};
+      // 道に入りやすい選び方も混ぜる（仕官せず働く／商いの誘いに乗る／出家する／野に出る）。
+      for (var seed = 0; seed < 3000; seed++) {
+        final rng = Rng(seed + 9100);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        final r = Rng(seed);
+        final lean = seed % 4;
+        var n = 0;
+        while (!g.finished && n++ < 3000) {
+          final p = g.prompt!;
+          var i = -1;
+          const pref = [
+            ['働いて稼ぐ', '人の倍の田を植える'],
+            ['店を構える', '商いを広げる'],
+            ['髪を下ろす', '出家して仏門に入る', '修行に打ち込む'],
+            ['仲間に加わる', 'あてのない旅に出る', '獲物を狙う'],
+          ];
+          for (final w in pref[lean]) {
+            final k = p.choices.indexWhere((c) => c.label == w);
+            if (k >= 0) i = k;
+          }
+          if (i < 0) i = r.range(0, p.choices.length - 1);
+          g.choose(i);
+        }
+        if (g.age < 15) continue;
+        final e = buildEnding(g);
+        if (!kHandWays.contains(e.way)) continue;
+        expect(e.handId, isNotNull, reason: '${e.way} ${e.kind} ${g.l.dead}');
+        expect(e.text, isNot(contains('{')), reason: e.text);
+        seen.putIfAbsent(e.way, () => {}).add(e.handId!);
+      }
+      for (final w in ['village', 'merchant', 'priest', 'shadow']) {
+        expect(
+          seen[w]?.length ?? 0,
+          greaterThanOrEqualTo(8),
+          reason: '$w ${seen[w]}',
+        );
+      }
+      final ids = kHandEndings.map((e) => e.id).toList();
+      expect(ids.toSet().length, ids.length);
     });
 
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {

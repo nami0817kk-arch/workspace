@@ -1,4 +1,8 @@
 import 'endings_catalog.dart';
+import 'endings_merchant.dart';
+import 'endings_priest.dart';
+import 'endings_shadow.dart';
+import 'endings_village.dart';
 import 'endings_young.dart';
 import 'game.dart';
 import 'history_lines.dart';
@@ -239,7 +243,16 @@ List<String> pickHighlights(List<String> path, {int max = 4}) {
 }
 
 /// 手書きの最期（道ごとのファイルを足していく）。
-final kHandEndings = <EndingDef>[...kYoungEndings];
+final kHandEndings = <EndingDef>[
+  ...kYoungEndings,
+  ...kVillageEndings,
+  ...kMerchantEndings,
+  ...kPriestEndings,
+  ...kShadowEndings,
+];
+
+/// 手書きの最期がそろっている道（この道の人生には必ず手書きの最期が付く）。
+const kHandWays = {'young', 'village', 'merchant', 'priest', 'shadow'};
 
 Ending buildEnding(Game g) {
   final l = g.l;
