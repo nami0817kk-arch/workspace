@@ -866,6 +866,9 @@ List<SceneDef> buildWayScenes() {
       (g) => g.l.people.containsKey('幼なじみ') || g.l.people.containsKey('好敵手'),
       (g, next) {
         final p = g.l.people['幼なじみ'] ?? g.l.people['好敵手']!;
+        // 亡くなったので、縁のある人からは外す（最期の場にはいない）。
+        g.l.people.remove(p.role);
+        g.setFlag('friend_dead');
         g.ask('旧友の死', '${p.name}が死んだと、風の便りに聞いた。', [
           Choice.h('弔いに駆けつける', '最後の別れができる', () {
             g.setFlag('mourned_friend');

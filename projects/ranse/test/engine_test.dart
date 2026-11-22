@@ -982,6 +982,26 @@ void main() {
       expect(checked, greaterThan(5));
     });
 
+    test('亡くなった有名人（本能寺のあとの信長など）は、最期の場の人として出ない', () {
+      var checked = 0;
+      for (var seed = 0; seed < 600 && checked < 15; seed++) {
+        final rng = Rng(seed + 13);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playOut(g, Rng(seed));
+        if (g.age < 15 || g.year <= 1582 || worldLine(g) == 'nobunaga')
+          continue;
+        g.l.married = false;
+        g.l.people
+          ..clear()
+          ..['主君'] = Person('主君', '織田信長', 99);
+        checked++;
+        expect(buildEnding(g).text, isNot(contains('織田信長が')));
+        expect(buildEnding(g).text, isNot(contains('聞いた織田信長')));
+      }
+      expect(checked, greaterThan(5));
+    });
+
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {
       final path = [for (var i = 0; i < 12; i++) '$i歳　出来事$i'];
       path[6] = '20歳　信長に仕えた';

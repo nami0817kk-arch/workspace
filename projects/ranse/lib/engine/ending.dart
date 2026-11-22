@@ -143,7 +143,32 @@ String _eraEpilogue(Game g, String way) {
 }
 
 /// 最期の場にいた人。絆の深い順に、伴侶・子・幼なじみ・弟子・主君・師。
-Person? _witness(Life l) {
+/// 主君などに登録しうる有名人の没年。世界線で変わるものは [_diedBy] で上書きする。
+const _deathYear = {
+  '織田信長': 1582,
+  '羽柴秀吉': 1598,
+  '長尾景虎': 1578,
+  '今川義元': 1560,
+  '斎藤道三': 1556,
+  '長宗我部元親': 1599,
+  '明智光秀': 1582,
+  '千宗易': 1591,
+  'ザビエル': 1552,
+};
+
+/// その人がもう亡くなっているか（世界線に合わせる）。
+bool _diedBy(Game g, String name) {
+  var y = _deathYear[name];
+  if (y == null) return false;
+  final line = worldLine(g);
+  if (name == '織田信長' && line == 'nobunaga') y = 1598;
+  if (name == '今川義元' && line == 'imagawa') y = 1575;
+  if (name == '明智光秀' && line == 'akechi') y = 1598;
+  return g.year > y;
+}
+
+Person? _witness(Game g) {
+  final l = g.l;
   // 連れ合いがいれば、最期の場にいるのは連れ合い。
   final sp = l.people['伴侶'];
   if (sp != null && l.married) return sp;
@@ -152,14 +177,14 @@ Person? _witness(Life l) {
   Person? best;
   for (final r in roles) {
     final p = l.people[r];
-    if (p == null) continue;
+    if (p == null || _diedBy(g, p.name)) continue;
     if (best == null || p.bond > best.bond) best = p;
   }
   return best;
 }
 
-String _witnessLine(Life l, String kind) {
-  final p = _witness(l);
+String _witnessLine(Game g, String kind) {
+  final p = _witness(g);
   final calm = const {'tenju', 'byo', 'era', 'victory'}.contains(kind);
   if (p == null) {
     return calm ? '看取る者は、いなかった。' : 'その最期を、知る者はいない。';
@@ -256,7 +281,7 @@ Ending buildEnding(Game g) {
         c.endsWith('世') ? c.substring(0, c.length - 1) : c,
     ];
     text =
-        '$head${_memoryLine(l)}${_witnessLine(l, kind)}${_joyLine(aj)}'
+        '$head${_memoryLine(l)}${_witnessLine(g, kind)}${_joyLine(aj)}'
         '${changed.isEmpty ? '' : 'その世は、${changed.join('、')}世だった。'}';
   }
   return Ending(
@@ -265,7 +290,7 @@ Ending buildEnding(Game g) {
     way: way,
     kind: kind,
     highlights: pickHighlights(l.path),
-    witness: way == 'young' ? null : _witness(l)?.role,
+    witness: way == 'young' ? null : _witness(g)?.role,
   );
 }
 
