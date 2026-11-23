@@ -527,14 +527,32 @@ extension GameStateFinance on GameState {
     return save.ownerWorkDoneSeason[work.id] == save.league.season;
   }
 
+  /// [work]をいま打ったときのサポーターの期待の増減。資金0の会見
+  /// ([OwnerWork.wearsOff])は、同じ季に打った回数だけ1ずつ減る(下限0)。
+  int ownerWorkSupporters(OwnerWork work) {
+    final save = _save;
+    if (save == null || !work.wearsOff) return work.supporters;
+    final uses =
+        save.visionPressSeason == save.league.season ? save.visionPressUses : 0;
+    return max(0, work.supporters - uses);
+  }
+
   /// オーナーの仕事を打つ。資金と2つの期待に反映し、打ち止めにする。
   Future<bool> doOwnerWork(String id) async {
     final save = _save;
     if (save == null) return false;
     final work = ownerWorks.where((w) => w.id == id).firstOrNull;
     if (work == null || !canDoOwnerWork(work)) return false;
+    final supporters = ownerWorkSupporters(work);
+    if (work.wearsOff) {
+      if (save.visionPressSeason != save.league.season) {
+        save.visionPressSeason = save.league.season;
+        save.visionPressUses = 0;
+      }
+      save.visionPressUses++;
+    }
     _changeSupporters(
-        work.supporters,
+        supporters,
         switch (work.category) {
           OwnerWorkCategory.fans => SupporterReason.pr,
           OwnerWorkCategory.community => SupporterReason.community,
@@ -1401,6 +1419,30 @@ extension GameStateFinance on GameState {
     save.ledgerFor(save.league.season).add(category, delta);
   }
 
+  /// 観客収入の順位の上乗せ(1つ上の順位ごと)と土台。
+  static const int gateRankStep = 6;
+  static const int gateBase = 280;
+
+  /// 1節あたりの観客収入の上限(万円)。1年で「入る人数([expectedAttendance])
+  /// × ホームの試合の数 × 1人の単価([gateRevenuePerFan])× 値段の倍率」に
+  /// なるよう、節の数で均す(観客収入は毎節、平均として入れているため)。
+  int get gateCapPerMatchday {
+    final save = _save;
+    if (save == null) return 0;
+    final md = matchdaysPerSeason;
+    if (md <= 0) return 0;
+    final homeGames = save.league.fixtures
+        .where((f) => f.homeTeamId == save.userTeamId)
+        .length;
+    final home = homeGames > 0 ? homeGames : md ~/ 2;
+    return (expectedAttendance *
+            home /
+            md *
+            gateRevenuePerFan(currentDivisionTier) *
+            save.ticketPricing.revenueMultiplier)
+        .round();
+  }
+
   /// 週の収入の内訳(観客・スポンサー・グッズ・放映権)。合計は
   /// [weeklyIncomeFor] と必ず一致する(端数はグッズに寄せる)。他クラブは
   /// 観客収入と放映権だけを持つ。
@@ -1420,8 +1462,11 @@ extension GameStateFinance on GameState {
     final standings = league.sortedStandings;
     final rank = standings.indexWhere((r) => r.teamId == teamId) + 1;
     final teamCount = league.teams.length;
-    final rankBonus = ((teamCount - rank) * 20).clamp(0, 999);
-    final base = 150 + rankBonus;
+    // 順位の上乗せは1つにつき6(以前は20で、上位ほど観客収入が倍近く
+    // なり、1部の上位が資金を雪だるま式に増やした)。真ん中のクラブの
+    // 額が変わらないよう、土台を上げてある(2026-11-23)。
+    final rankBonus = ((teamCount - rank) * gateRankStep).clamp(0, 999);
+    final base = gateBase + rankBonus;
     if (teamId != _save!.userTeamId) {
       return (
         gate: (base * scale).round(),
@@ -1445,6 +1490,9 @@ extension GameStateFinance on GameState {
             commercialMultiplier *
             scale)
         .round();
+    // 入る人数 × 1人の単価で頭打ちにする(席とファンの需要より多くは
+    // 払われない)。
+    matchdayIncome = min(matchdayIncome, gateCapPerMatchday);
     // 2部リーグは1部より観客動員が少ない(userAttendanceFactorに反映済み)。
     final sponsorIncome = (((_save!.sponsorDeal?.weeklyIncome ?? 0) +
                 (_save!.namingDeal?.weeklyIncome ?? 0) +

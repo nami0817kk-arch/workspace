@@ -5410,7 +5410,9 @@ void main() {
       'TrainingIntensity changes fatigue gain deterministically: intense > '
       'normal > light', () {
     int fatigueAfter(TrainingIntensity intensity) {
-      final p = makeFreshPlayer();
+      // 練習の疲れを軽くし、週の抜け(-6)を超えなくなった(2026-11-23)。
+      // 0から始めると全部0に収まって差が見えないので、途中の疲れから測る。
+      final p = makeFreshPlayer()..fatigue = 50;
       final team = Team(
           id: 't',
           name: 'T',

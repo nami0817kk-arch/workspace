@@ -81,16 +81,22 @@ void main() {
       expect(gs.saleReason, SaleReason.supporters);
     });
 
-    test('最後通告の猶予中なら、季の切り替えで40へ戻り通告は取り下げ', () async {
+    // 2026-11-23: 以前は季の切り替えで40へ戻り通告も取り下げていたため、
+    // 何もしないオーナーが毎季最下位でも生き残った。いまは10を割ったまま
+    // 季を越えると底上げせず、通告は続く(期限が来るまでは手放さない)。
+    test('最後通告の猶予中に季を越えても、底上げせず通告は続く', () async {
       final gs = await newGame();
       loseEverything(gs);
       final s = gs.save!;
       s.clubVision = ClubVision.none;
       s.confidence = 5;
-      s.supporterUltimatumUntil = gs.today.add(const Duration(days: 300));
+      // 期限は新しい季の8月末(季の途中で期限が来れば、そこで手放す)。
+      final until = DateTime(gs.today.year + 1, 8, 31);
+      s.supporterUltimatumUntil = until;
       await gs.startNextSeason();
-      expect(s.confidence, BoardEngine.newSeasonConfidenceFloor);
-      expect(s.supporterUltimatumUntil, isNull);
+      expect(s.confidence, lessThan(GameStateSupporters.ultimatumLine));
+      expect(s.supporterUltimatumUntil, until);
+      expect(gs.isUnderSupporterUltimatum, isTrue);
       expect(gs.saleReason, isNull);
     });
 

@@ -233,10 +233,18 @@ extension GameStateDecisions on GameState {
     final floor = BoardEngine.newSeasonConfidenceFloor;
     final after = (s.confidence + delta).clamp(0, 100);
     // 最後通告の期限を過ぎて手放すことが決まっていれば、底上げは無い。
-    final floorNote = after < floor && !supporterUltimatumExpired
-        ? Tr.pick('新しい季は最低$floorから始まります。',
-            'The new season starts from at least $floor.')
-        : '';
+    // 季末に最後通告の線を割っていれば、底上げせず、新しい季の初日に
+    // 最後通告が出る(2026-11-23)。
+    final line = GameStateSupporters.ultimatumLine;
+    final floorNote = supporterUltimatumExpired
+        ? ''
+        : after < line
+            ? Tr.pick('$lineを割ったまま季を終えると、新しい季の初日に最後通告が出ます。',
+                'Finish the season below $line and the supporters will issue a final warning on day one of the new season.')
+            : after < floor
+                ? Tr.pick('新しい季は最低$floorから始まります。',
+                    'The new season starts from at least $floor.')
+                : '';
     return Tr.pick(
         'この順位なら、サポーターの期待 $sign(目標${s.boardTargetRank}位以内)。$floorNote',
         'This finish means supporter expectation $sign (target: ${Tr.topTarget(s.boardTargetRank)}). $floorNote');

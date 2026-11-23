@@ -44,8 +44,9 @@ void main() {
 
   test('良いスタッフほど狙われる(水準3以下は狙われない)', () {
     expect(GameStateStaffMoves.poachChance(3), 0);
-    expect(GameStateStaffMoves.poachChance(4), closeTo(0.08, 1e-9));
-    expect(GameStateStaffMoves.poachChance(8), closeTo(0.16, 1e-9));
+    // 2026-11-23 に 8%+2%/段 から 2%+1%/段 へ下げた(引き抜きが多すぎた)。
+    expect(GameStateStaffMoves.poachChance(4), closeTo(0.02, 1e-9));
+    expect(GameStateStaffMoves.poachChance(8), closeTo(0.06, 1e-9));
   });
 
   test('昇給して残すと、週俸が上がり契約が1年延びる', () async {

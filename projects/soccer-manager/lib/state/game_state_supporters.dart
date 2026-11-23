@@ -165,6 +165,12 @@ extension GameStateSupporters on GameState {
     final games = s.supporterMonthGames;
     final result = monthlyResultDeltaNow;
     if (result != 0) _changeSupporters(result, SupporterReason.results);
+    // 結果が悪い月は、広報の効き目が半分になる(負け続けているのに会見と
+    // 催しだけで期待が満点に張り付いていた。2026-11-23)。
+    final pr = s.supporterMonth[SupporterReason.pr.name] ?? 0;
+    if (result < 0 && pr > 0) {
+      _changeSupporters(-((pr + 1) ~/ 2), SupporterReason.pr);
+    }
     // チケットはリーグ戦のあった月だけ(試合の無い夏に安くしても意味が無い)。
     if (games > 0) {
       final t = BoardEngine.ticketMonthlyDelta(s.ticketPricing);
