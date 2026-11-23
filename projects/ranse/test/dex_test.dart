@@ -5,6 +5,7 @@ import 'package:ranse/app/controller.dart';
 import 'package:ranse/app/save.dart';
 import 'package:ranse/engine/birth.dart';
 import 'package:ranse/engine/ending.dart';
+import 'package:ranse/engine/endings_catalog.dart';
 import 'package:ranse/engine/game.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,8 +71,17 @@ void main() {
     await tester.tap(find.text('最期の図鑑（1種）'));
     await tester.pumpAndSettle();
     expect(find.textContaining('見た最期 1 ／ '), findsOneWidget);
+    // 希少度ごとの数: 見た1本の希少度だけが 1、ほかは 0。合わせて 1001 本。
+    final def = kHandEndings.firstWhere((d) => 'hand:${d.id}' == e.key);
+    for (final t in Tier.values) {
+      final all = kHandEndings.where((d) => d.tier == t).length;
+      final seen = t == def.tier ? 1 : 0;
+      final w = tester.widget<Text>(find.byKey(ValueKey('dex-tier-${t.name}')));
+      expect(w.data, endsWith('$seen ／ $all'));
+    }
     await tester.scrollUntilVisible(find.text(e.title), 200);
     expect(find.text(e.title), findsOneWidget);
+    expect(find.textContaining(kTierNames[def.tier]!), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 }
