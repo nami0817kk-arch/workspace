@@ -1,0 +1,1096 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0;-webkit-touch-callout:none}</style>
+<script>
+// アプリの保存窓口: 決まった名前の値を localStorage に書いたら、アプリ（ShokanStore）にも渡す
+(function(){var K=["shokan-yamafuda-v2","shokan-mute"];try{var o=Storage.prototype.setItem,r=Storage.prototype.removeItem;
+function send(k,v){try{if(K.indexOf(k)>=0&&window.ShokanStore)window.ShokanStore.postMessage(JSON.stringify({k:k,v:v}))}catch(e){}}
+Storage.prototype.setItem=function(k,v){o.call(this,k,v);if(this===window.localStorage)send(k,String(v))};
+Storage.prototype.removeItem=function(k){r.call(this,k);if(this===window.localStorage)send(k,null)};}catch(e){}})();
+</script>
+</head><body>
+<title>召喚の山札</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
+<style>
+/* 夜の草原を見下ろす1画面のゲーム。上に状態、下に山札と組み合わせ、真ん中に羊皮紙のカード */
+:root{
+  --field:#0f1a14; --ink:#f1ead6; --muted:#9fb0a2; --gold:#e8c25a;
+  --panel:rgba(10,16,13,.86); --parch:#efe2c2; --parch-ink:#2b2216; --danger:#e0566a; --will:#3a3346; --will-ink:#efe6ff;
+  --display:"DotGothic16","Hiragino Sans",sans-serif;
+  --body:"DotGothic16",system-ui,-apple-system,"Hiragino Sans","Yu Gothic UI",sans-serif;
+  color-scheme:dark;
+}
+html{height:100%;box-sizing:border-box;background:var(--field)}
+body{height:100%;margin:0;overflow:hidden;background:var(--field);color:var(--ink);font-family:var(--body);-webkit-user-select:none;user-select:none}
+#app{position:relative;height:100%;width:100%;overflow:hidden}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+.hud{position:absolute;left:0;right:0;pointer-events:none;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+.top{top:0;padding-top:10px;display:flex;flex-direction:column;gap:6px}
+.row{display:flex;gap:10px;align-items:center}
+.bar{flex:1;height:10px;border-radius:5px;background:rgba(255,255,255,.12);overflow:hidden}
+.bar>i{display:block;height:100%;width:0}
+#hpb>i{background:var(--danger)} #xpb>i{background:#6fb8ff}
+.stat{font-variant-numeric:tabular-nums;font-size:13px;min-width:64px;text-shadow:0 1px 2px #000}
+.lv{font-family:var(--display);font-size:18px;color:var(--gold);min-width:52px}
+#pause,#mute{pointer-events:auto;background:var(--panel);color:var(--ink);border:1px solid rgba(255,255,255,.2);border-radius:8px;font-size:13px;padding:5px 10px;cursor:pointer}
+.bottom{bottom:0;padding-bottom:10px;display:flex;flex-direction:column;gap:6px}
+.deck{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;font-variant-numeric:tabular-nums}
+.deck span{background:var(--panel);border-radius:6px;padding:4px 8px}
+.deck b{color:var(--gold)}
+#syn{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--panel);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--muted)}
+.chip.on{color:var(--parch-ink);background:var(--gold);border-color:var(--gold);font-weight:700}
+.chip.near{color:var(--ink);border-color:var(--gold);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 3px rgba(232,194,90,.35)}}
+@media (prefers-reduced-motion:reduce){.chip.near{animation:none}}
+.card .badge{font-size:11px;font-weight:700;background:var(--gold);color:var(--parch-ink);border-radius:4px;padding:2px 6px;align-self:flex-start}
+.chip.buff{color:var(--will-ink);background:var(--will);border-color:#8d7bb0}
+.chip i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:0}
+#toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;width:min(92vw,420px)}
+#toast div{background:var(--panel);padding:4px 12px;border-radius:6px;font-size:13px;animation:fade 2.6s forwards;text-align:center}
+@keyframes fade{0%,70%{opacity:1}100%{opacity:0}}
+#drawn{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:72px;transform:translateX(30px) rotate(3deg) scale(.78);transform-origin:top right;opacity:0;transition:opacity .2s,transform .25s;pointer-events:none}
+#drawn.show{opacity:1;transform:translateX(0) rotate(3deg) scale(.78)}
+#drawn .d,#drawn .t{display:none}
+.card{width:136px;background:var(--parch);color:var(--parch-ink);border-radius:10px;padding:10px 10px 12px;box-shadow:0 6px 18px rgba(0,0,0,.5);border:3px solid var(--jc,#999);display:flex;flex-direction:column;gap:4px;text-align:left}
+.card .k{font-size:11px;letter-spacing:.04em;color:#6b5a3c}
+.card .k em{font-style:normal;color:#b8860b}
+.card .n{font-family:var(--display);font-size:20px;line-height:1.2}
+.card .g.pic{background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--jc) 55%,#fff) 0,var(--jc) 70%);overflow:visible;width:46px;height:46px}
+.card .g.pic img{width:72px;height:72px;margin:-13px;image-rendering:pixelated;pointer-events:none}
+.card .g{height:40px;border-radius:50%;background:var(--jc);display:grid;place-items:center;font-family:var(--display);font-size:20px;color:#1a140c;align-self:center;margin:4px 0}
+.card .d{font-size:12px;line-height:1.45}
+.card .t{font-size:11px;line-height:1.4;color:#5a4a30}
+.card .j{font-size:11px;font-weight:700;color:#1a140c;background:var(--jc);border-radius:4px;padding:1px 6px;align-self:flex-start}
+.card.will{background:var(--will);color:var(--will-ink);border-color:#8d7bb0}
+.card.will .k,.card.will .t{color:#bfb2da}
+.card.will .g{background:#8d7bb0}
+.overlay{position:absolute;inset:0;background:rgba(6,10,8,.9);display:flex;align-items:flex-start;justify-content:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px;overflow-y:auto}
+.box{max-width:760px;width:100%;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center;margin:auto 0}
+.box h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,9vw,52px);margin:0;color:var(--gold);letter-spacing:.06em}
+.box h2{font-family:var(--display);font-weight:400;font-size:26px;margin:0;color:var(--gold)}
+.box h3{font-family:var(--display);font-weight:400;font-size:18px;margin:6px 0 0;color:var(--gold)}
+.box p{margin:0;line-height:1.7;color:var(--ink);font-size:14px;max-width:36em}
+.box .small{color:var(--muted);font-size:12px;line-height:1.6}
+.cards{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.cards.mini .card{width:104px;padding:8px}
+.cards.mini .card .n{font-size:16px}
+.cards.mini .card .d,.cards.mini .card .t{display:none}
+button.card{cursor:pointer;font:inherit;transition:transform .15s,opacity .15s}
+button.card:hover,button.card:focus-visible{transform:translateY(-4px);outline:2px solid var(--gold);outline-offset:2px}
+#roster button.card:not(.sel){opacity:.45}
+#roster button.card.sel{outline:3px solid var(--gold);outline-offset:2px}
+.go{font-family:var(--display);font-size:22px;background:var(--gold);color:var(--parch-ink);border:0;border-radius:10px;padding:10px 36px;cursor:pointer}
+.go:disabled{opacity:.4;cursor:default}
+.go:focus-visible,.sub:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.sub{background:none;border:1px solid rgba(255,255,255,.25);color:var(--muted);border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer}
+.res{display:grid;grid-template-columns:auto auto;gap:4px 18px;font-variant-numeric:tabular-nums;font-size:15px}
+.res dt{color:var(--muted);text-align:right}.res dd{margin:0;text-align:left}
+.names{font-size:14px;line-height:1.7}
+#start{position:sticky;bottom:8px;z-index:2;box-shadow:0 4px 18px rgba(0,0,0,.6)}
+.chip em{font-style:normal}
+@media (max-width:560px){
+  #xpb{position:absolute;left:0;right:0;top:0;height:5px;border-radius:0}
+  .chip .cd{display:none}
+  #toast{left:max(12px,env(safe-area-inset-left,0px));transform:none;align-items:flex-start;width:56vw}
+  #toast div{text-align:left;font-size:12px}
+  #roster .card{width:104px;padding:8px}
+  #roster .card .n{font-size:16px}
+  #roster .card .d{display:none}
+  #roster .card .g{width:32px;height:32px;font-size:16px}
+  #roster .card .g.pic img{width:54px;height:54px;margin:-11px}
+}
+.form{display:flex;flex-direction:column;gap:4px;width:100%;max-width:560px}
+.frow{display:grid;grid-template-columns:22px 40px 1fr auto;align-items:center;gap:8px;background:var(--panel);border:1px solid rgba(232,194,90,.25);border-radius:8px;padding:4px 8px;text-align:left}
+.frow .no{font-family:var(--display);color:var(--gold);text-align:center}
+.frow img{width:36px;height:36px;margin:0 2px;image-rendering:pixelated}
+.frow b{font-size:13px}.frow small{display:block;font-size:11px;color:var(--muted)}.frow small.pos{color:var(--gold)}
+.frow .mv{display:flex;gap:4px}.frow .mv button{width:34px;height:30px;border-radius:6px;border:1px solid rgba(232,194,90,.4);background:transparent;color:var(--ink);font-size:15px;cursor:pointer}
+.frow .mv button:disabled{opacity:.25;cursor:default}
+.frow.pick{cursor:pointer;font:inherit;color:var(--ink);width:100%}.frow.pick:disabled{opacity:.4;cursor:default}
+.forms{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;width:100%;max-width:560px}
+.forms button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--panel);color:var(--ink);border:1px solid rgba(232,194,90,.3);border-radius:8px;padding:6px 8px;font:inherit;cursor:pointer}
+.forms button[aria-pressed="true"]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset;background:rgba(232,194,90,.14)}
+.forms b{font-size:13px;color:var(--gold)}.forms span{font-size:11px;color:var(--muted);line-height:1.35}
+.forms svg{width:44px;height:30px}
+.formwrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px}
+.back{background:transparent;border:1px solid var(--muted);color:var(--ink);border-radius:8px;padding:6px 18px;font:inherit;cursor:pointer}
+.card .sk{color:#7a4a10;font-weight:700}
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;width:100%}
+.shop button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--panel);color:var(--ink);border:1px solid rgba(232,194,90,.35);border-radius:8px;padding:8px 10px;font:inherit;cursor:pointer;min-width:0}
+.shop button:disabled{opacity:.45;cursor:default}
+.shop button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.shop b{font-size:13px}.shop span{font-size:12px;color:var(--muted)}.shop em{font-style:normal;color:var(--gold);font-size:12px;font-variant-numeric:tabular-nums}
+.coins{font-family:var(--display);color:var(--gold);font-size:18px}
+</style>
+
+<div id="app">
+  <canvas id="cv"></canvas>
+  <div class="hud top">
+    <div class="row"><span class="lv" id="lv">Lv 1</span><div class="bar" id="xpb"><i></i></div><span class="stat" id="time">0:00</span><button id="mute" type="button">音 オン</button><button id="pause" type="button">一時停止</button></div>
+    <div class="row"><span class="stat" id="hpt">HP 100</span><div class="bar" id="hpb"><i></i></div><span class="stat" id="kills">撃破 0</span></div>
+  </div>
+  <div id="toast"></div>
+  <div id="drawn"></div>
+  <div class="hud bottom">
+    <div id="syn"></div>
+    <div class="deck"><span>山札 <b id="nd">0</b></span><span>捨て札 <b id="ns">0</b></span><span>隊列 <b id="na">0</b></span><span><span id="nbl">次の中ボス</span> <b id="nb">1:00</b></span></div>
+  </div>
+  <div class="overlay" id="title">
+    <div class="box">
+      <h1>召喚の山札</h1>
+      <p>主人公は弱い。戦うのは山札から呼ぶ仲間たち。レベルが上がるたびに、山札から呼ぶ仲間を選ぶか、仲間を鍛えるか、武器を渡すかを選ぶ。仲間はそれぞれ自分だけの技を持ち、時間がたつと自動で使う。並び順と陣形（縦一列・横陣・円陣・楔・密集）は自分で決める。</p>
+      <p class="small">金色に光る敵や中ボスを倒すと、その敵が仲間のカードになる。倒れた仲間は「遺志のカード」に変わり、引くと一度だけ強い力を残して消える。そして二度と兵舎には戻らない。</p>
+      <h3 id="rosterHead">兵舎：出撃する仲間を選ぶ（定員15人）</h3>
+      <div class="cards" id="roster"></div>
+      <button class="go" id="start" type="button">出撃</button>
+      <p class="small" id="memorial"></p>
+      <h3>カードの解放</h3>
+      <div class="shop" id="locks"></div>
+      <h3>工房：コインで基礎を上げる</h3>
+      <div class="coins" id="coins"></div>
+      <div class="shop" id="shop"></div>
+      <p class="small">移動：画面をドラッグ（スマホ）／ WASD・矢印キー（PC）<br>隊列で敵をぐるっと囲むと、輪の中の敵をまとめて吹き飛ばせる。10分生き残ると魔王が現れ、倒せば勝利。</p>
+      <button class="sub" id="reset" type="button">兵舎の記録を消す</button>
+    </div>
+  </div>
+  <div class="overlay" id="chest" hidden>
+    <div class="box">
+      <h2>宝箱</h2>
+      <p>デッキに加える仲間を1人選ぶ（素質は★2で分かる）</p>
+      <div class="cards" id="chestCards"></div>
+    </div>
+  </div>
+  <div class="overlay" id="lvup" hidden>
+    <div class="box">
+      <h2 id="lvTitle">レベルアップ</h2>
+      <p id="lvSub">ひとつ選ぶ</p>
+      <div class="shop" id="lvOpts"></div>
+      <div class="cards" id="lvCards"></div>
+      <div class="formwrap" id="fwrap"><h3>陣形と並び（何度でも変えられる）</h3><div class="forms" id="formsLv"></div><div class="form" id="formLv"></div></div>
+    </div>
+  </div>
+  <div class="overlay" id="shrine" hidden>
+    <div class="box">
+      <h2 id="shrineName">祭壇</h2>
+      <p>ひとつだけ選べる</p>
+      <div class="shop" id="shrineOpts"></div>
+    </div>
+  </div>
+  <div class="overlay" id="paused" hidden>
+    <div class="box"><h2>一時停止中</h2><h3>陣形と並び</h3><div class="forms" id="formsPause"></div><div class="form" id="formPause"></div><div class="small">呼べるカード（山札）</div><div class="cards mini" id="deckView"></div><button class="go" id="resume" type="button">再開</button></div>
+  </div>
+  <div class="overlay" id="over" hidden>
+    <div class="box">
+      <h2 id="overTitle">主人公が倒れた</h2>
+      <dl class="res" id="res"></dl>
+      <div id="runlog"></div>
+      <button class="go" id="again" type="button">兵舎へ戻る</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(()=>{
+const JOBS={
+  '騎士':{color:'#8fb3e8',glyph:'騎',need:3,desc:'受けるダメージ -40%'},
+  '弓兵':{color:'#8fd18a',glyph:'弓',need:3,desc:'攻撃の速さ +50%'},
+  '魔法使い':{color:'#c58cf0',glyph:'魔',need:3,desc:'爆発の範囲 +50%'},
+  '僧侶':{color:'#f4b6c8',glyph:'僧',need:2,desc:'回復量 2倍'},
+  '魔物':{color:'#e0a24f',glyph:'獣',need:3,desc:'攻撃 +30%'},
+  '盗賊':{color:'#7ad1c8',glyph:'盗',need:2,desc:'会心率 +25%'},
+};
+const CARDS={
+  knight:{name:'騎士',job:'騎士',hp:130,dmg:18,rate:.8,range:26,kind:'melee',r:12,desc:'触れた敵を斬る。体力が多い'},
+  heavy:{name:'重騎士',job:'騎士',hp:240,dmg:22,rate:1.25,range:28,kind:'melee',r:15,desc:'とても硬い盾役'},
+  archer:{name:'弓兵',job:'弓兵',hp:60,dmg:12,rate:.9,range:190,kind:'ranged',r:10,desc:'離れた敵に矢を射る'},
+  hunter:{name:'狩人',job:'弓兵',hp:70,dmg:6,rate:.4,range:160,kind:'ranged',r:10,desc:'弱い矢を素早く連射'},
+  mage:{name:'魔法使い',job:'魔法使い',hp:55,dmg:18,rate:2.2,range:170,kind:'aoe',aoe:55,r:10,desc:'敵の群れに爆発を落とす'},
+  witch:{name:'炎の魔女',job:'魔法使い',hp:60,dmg:28,rate:3.2,range:190,kind:'aoe',aoe:85,r:11,desc:'大きな炎。撃つのは遅い'},
+  paladin:{name:'聖騎士',job:'騎士',hp:180,dmg:20,rate:.85,range:28,kind:'melee',r:13,desc:'硬くて強い。騎士の上位'},
+  bard:{name:'吟遊詩人',job:'僧侶',hp:70,heal:7,rate:1,range:190,kind:'heal',r:10,desc:'広い範囲を少しずつ何度も癒やす'},
+  lancer:{name:'槍兵',job:'騎士',hp:120,dmg:16,rate:.9,range:46,kind:'melee',r:12,desc:'長い槍で少し離れた敵も突く'},
+  arbalest:{name:'弩兵',job:'弓兵',hp:70,dmg:26,rate:1.6,range:220,kind:'ranged',pierce:3,r:11,desc:'重い矢が敵を何体も貫く'},
+  icemage:{name:'氷の術師',job:'魔法使い',hp:55,dmg:12,rate:2,range:170,kind:'aoe',aoe:60,slow:1,r:10,desc:'氷の爆発で敵の足を遅くする'},
+  thunder:{name:'雷の術師',job:'魔法使い',hp:55,dmg:16,rate:1.5,range:180,kind:'chain',chain:3,r:10,desc:'雷が敵から敵へ4体まで渡る'},
+  nun:{name:'修道女',job:'僧侶',hp:80,heal:8,rate:2.6,range:120,kind:'heal',areaHeal:1,r:10,desc:'周りの全員を同時に癒やす'},
+  thief:{name:'盗賊',job:'盗賊',hp:70,dmg:9,rate:.35,range:24,kind:'melee',crit:.25,r:10,desc:'素早く刺す。ときどき会心で2倍'},
+  assassin:{name:'暗殺者',job:'盗賊',hp:65,dmg:22,rate:.9,range:26,kind:'melee',crit:.5,poison:.6,r:10,desc:'毒の刃。半分は会心の一撃'},
+  cleric:{name:'僧侶',job:'僧侶',hp:75,heal:14,rate:2,range:140,kind:'heal',r:10,desc:'近くの仲間と主人公を回復'},
+  slime:{name:'スライム',job:'魔物',hp:80,dmg:10,rate:.7,range:24,kind:'melee',r:11,desc:'元は敵。柔らかいが数を揃えやすい',monster:1},
+  goblin:{name:'ゴブリン',job:'魔物',hp:60,dmg:9,rate:.4,range:24,kind:'melee',r:9,desc:'元は敵。素早く何度も殴る',monster:1},
+  orc:{name:'オーク',job:'魔物',hp:200,dmg:20,rate:1,range:28,kind:'melee',r:14,desc:'元は敵。硬くて力が強い',monster:1},
+  ogre:{name:'オーガ',job:'魔物',hp:420,dmg:45,rate:1.4,range:34,kind:'melee',r:19,desc:'元は中ボス。列の壁になる巨人',monster:1},
+  skel:{name:'骸骨弓兵',job:'魔物',hp:70,dmg:14,rate:1.1,range:200,kind:'ranged',r:10,desc:'元は敵。遠くから骨の矢を射る',monster:1},
+  boar:{name:'イノシシ',job:'魔物',hp:160,dmg:22,rate:.9,range:26,kind:'melee',r:13,desc:'元は敵。硬い牙で殴る',monster:1},
+  bat:{name:'コウモリ',job:'魔物',hp:45,dmg:7,rate:.3,range:24,kind:'melee',ls:.15,r:8,desc:'元は敵。素早く噛みつき、体力を吸う',monster:1},
+  golem:{name:'ゴーレム',job:'魔物',hp:520,dmg:16,rate:1.3,range:28,kind:'melee',r:17,desc:'元は敵。とても硬い岩の巨体',monster:1},
+  lich:{name:'リッチ',job:'魔物',hp:200,dmg:22,rate:1.8,range:200,kind:'chain',chain:4,r:15,desc:'元は中ボス。雷を何体にも渡らせる',monster:1},
+  dragon:{name:'ドラゴン',job:'魔物',hp:300,dmg:40,rate:2.4,range:210,kind:'aoe',aoe:80,r:18,desc:'元は中ボス。遠くの群れを焼き払う',monster:1},
+};
+const BASE_HUMANS=['knight','archer','mage','cleric','lancer','thief'];
+const LOCKS={
+  heavy:{cond:'騎士の仲間で合計100体倒す',ok:st=>st.knightKills>=100},
+  hunter:{cond:'1回の出撃で弓兵を3人そろえる',ok:st=>st.archer3},
+  witch:{cond:'隊列の輪で合計30体を巻き込む',ok:st=>st.loopVictims>=30},
+  paladin:{cond:'5分生き残る',ok:st=>st.best>=300},
+  bard:{cond:'祭壇を合計5回使う',ok:st=>st.shrines>=5},
+  arbalest:{cond:'仲間に武器を合計10回渡す',ok:st=>st.weapons>=10},
+  icemage:{cond:'仲間を合計10回鍛える',ok:st=>st.trains>=10},
+  thunder:{cond:'7分生き残る',ok:st=>st.best>=420},
+  nun:{cond:'1回の出撃でレベル25に届く',ok:st=>st.maxLv>=25},
+  assassin:{cond:'1回の出撃で盗賊を2人そろえる',ok:st=>st.thief2},
+};
+const humans=()=>BASE_HUMANS.concat(Object.keys(LOCKS).filter(k=>SAVE.unlocked.includes(k)));
+const BASIC=['knight','archer','mage','cleric'];
+const START=['knight','knight','archer','mage','cleric'];
+const WILLS={
+  '騎士':{name:'騎士の誓い',desc:'20秒間、全員の受けるダメージ -50%'},
+  '弓兵':{name:'最後の一斉射',desc:'全方位に矢を32本放つ'},
+  '魔法使い':{name:'残り火',desc:'周りの敵すべてを大きな炎で焼く'},
+  '僧侶':{name:'祈り',desc:'主人公と隊列の全員を全回復'},
+  '魔物':{name:'魔物の咆哮',desc:'20秒間、全員の攻撃 +50%'},
+  '盗賊':{name:'影の刃',desc:'20秒間、全員の会心率 +50%'},
+};
+const TRAITS={
+  '剛力':'攻撃 +30%','頑丈':'体力 +40%','早業':'攻撃の間隔 -25%','不屈':'1回だけ倒れても立ち上がる',
+  '守護':'隊列にいる間、主人公の受けるダメージ -15%','吸収':'敵を倒すと体力を少し回復','強運':'倒した敵の経験値が2倍',
+};
+const HNAMES=['ガレス','リナ','ボルド','ミラ','カイン','セラ','トール','エルナ','ロウ','フィン','ノア','イリス','ダリオ','ユナ','グレン','サラ','オルド','ティア','レオ','マーヤ','バルト','ニナ','コレット','ハンス','ルカ','アデル','ジーナ','モルト','エド','シグ'];
+const MNAMES=['ぷるる','ごろう','ぐらん','ばくお','ねむ','がじ','もっち','ずんだ','どすこ','ぺけ','ぼるぼ','ちゃぐ','むにゅ','ごんた','ばりぼ','ぬし','ぽてと','じゃむ','がらん','どんぐり','ぺろ','ぐずり','もふ','ざくろ'];
+const ROSTER_MAX=15;
+const ENEMY={
+  slime:{hp:18,spd:55,dmg:5,r:11,xp:1,color:'#c0566a'},
+  goblin:{hp:12,spd:95,dmg:4,r:9,xp:1,color:'#d98b4a'},
+  orc:{hp:70,spd:50,dmg:12,r:15,xp:3,color:'#9a6a4c'},
+  skel:{hp:22,spd:60,dmg:4,r:10,xp:2,color:'#cfc6b0',ranged:true},
+  boar:{hp:45,spd:65,dmg:14,r:13,xp:2,color:'#7a5232',charge:true},
+  ogre:{hp:520,spd:45,dmg:25,r:30,xp:12,color:'#b23a3a',boss:true},
+  bat:{hp:8,spd:140,dmg:3,r:8,xp:1,color:'#5a4a6a'},
+  golem:{hp:260,spd:32,dmg:18,r:20,xp:6,color:'#8a8478'},
+  lich:{hp:700,spd:40,dmg:20,r:28,xp:16,color:'#4a6a5a',boss:true},
+  dragon:{hp:900,spd:55,dmg:30,r:32,xp:20,color:'#7a3fa0',boss:true},
+  maou:{hp:9000,spd:48,dmg:45,r:42,xp:0,color:'#3a1f4f',boss:true,final:true},
+};
+const $=id=>document.getElementById(id);
+const cv=$('cv');let ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1,Z=1;const WP=1.6;let PX=3,BUF=null,BCTX=null;
+function resize(){const r=cv.getBoundingClientRect();DPR=Math.min(2,window.devicePixelRatio||1);W=r.width;H=r.height;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);{const z0=Math.max(1,Math.min(1.6,Math.min(W,H)/480));PX=Math.max(2,Math.round(z0*WP*DPR+.15));Z=PX/(WP*DPR)}}
+addEventListener('resize',resize);resize();
+
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.random()*a.length|0];
+const dist2=(a,b)=>{const dx=a.x-b.x,dy=a.y-b.y;return dx*dx+dy*dy};
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// 効果音（出撃を押してから鳴る）
+let AC=null,muted=false;const lastSfx={};
+try{muted=localStorage.getItem('shokan-mute')==='1'}catch(e){}
+function initAudio(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){AC=null}}
+const SFX={hit:[[220,.03,'square',.03]],kill:[[520,.05,'triangle',.05],[780,.04,'triangle',.03,.03]],
+  level:[[523,.1,'triangle',.08],[659,.1,'triangle',.08,.08],[784,.18,'triangle',.08,.16]],draw:[[880,.06,'sine',.06],[1320,.08,'sine',.05,.05]],
+  loop:[[110,.35,'sawtooth',.12],[440,.2,'triangle',.1,.04],[660,.25,'triangle',.08,.1]],boss:[[90,.6,'sawtooth',.1],[70,.7,'sawtooth',.1,.2]],
+  fall:[[330,.25,'sine',.08],[220,.35,'sine',.08,.18]],chest:[[660,.1,'triangle',.08],[990,.16,'triangle',.08,.1]],
+  win:[[523,.2,'triangle',.1],[659,.2,'triangle',.1,.2],[784,.2,'triangle',.1,.4],[1046,.6,'triangle',.1,.6]],
+  will:[[392,.3,'sine',.09],[587,.4,'sine',.08,.12]],hurt:[[140,.12,'square',.06]]};
+const GAP={hit:.05,kill:.045,hurt:.25};
+function sfx(kind){if(!AC||muted)return;const now=AC.currentTime;if(lastSfx[kind]!==undefined&&now-lastSfx[kind]<(GAP[kind]||.02))return;lastSfx[kind]=now;
+  for(const [f,d,type,vol,delay=0] of SFX[kind]||[]){const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,now+delay);
+    if(kind==='hit'||kind==='boss'||kind==='fall'||kind==='hurt')o.frequency.exponentialRampToValueAtTime(f*.6,now+delay+d);
+    g.gain.setValueAtTime(vol,now+delay);g.gain.exponentialRampToValueAtTime(.0001,now+delay+d);o.connect(g);g.connect(AC.destination);o.start(now+delay);o.stop(now+delay+d+.02);}}
+function setMuteLabel(){$('mute').textContent=muted?'音 オフ':'音 オン'}
+
+// 兵舎（ブラウザに保存）
+const KEY='shokan-yamafuda-v2';
+let uidSeq=Date.now();
+let SAVE=null;
+function freeName(list,extra){const used=new Set([...(SAVE?SAVE.roster:[]),...(extra||[])].map(u=>u.name));const f=list.filter(n=>!used.has(n));if(f.length)return pick(f);const b=pick(list);for(const sfx of ['二世','三世','四世','五世']){if(!used.has(b+sfx))return b+sfx}return b+'の子'}
+function makeUnit(type,extra){const c=CARDS[type];return{uid:String(uidSeq++),type,name:freeName(c.monster?MNAMES:HNAMES,extra),kills:0,star:1,trait:pick(Object.keys(TRAITS)),known:false};}
+function freshSave(){const r=[];for(const t of START)r.push(makeUnit(t,r));return{roster:r,fallen:[],runs:0,best:0,clears:0,coins:0,up:{},unlocked:[],st:{knightKills:0,loopVictims:0,archer3:false,shrines:0,best:0,weapons:0,trains:0,maxLv:0,thief2:false}}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.roster)){s.up=s.up||{};s.coins=s.coins||0;s.unlocked=s.unlocked||[];s.st=Object.assign({knightKills:0,loopVictims:0,archer3:false,shrines:0,best:0,weapons:0,trains:0,maxLv:0,thief2:false},s.st||{});return s}}catch(e){}return freshSave();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(SAVE))}catch(e){}}
+SAVE=load();
+const UPGRADES=[
+  {id:'hp',name:'主人公の体力',desc:'最大体力 +15',max:8,cost:l=>20+l*20},
+  {id:'atk',name:'仲間の攻撃',desc:'全員の攻撃 +8%',max:8,cost:l=>30+l*25},
+  {id:'ahp',name:'仲間の体力',desc:'全員の体力 +10%',max:8,cost:l=>30+l*25},
+  {id:'mag',name:'経験値の吸い寄せ',desc:'拾える範囲 +20%',max:5,cost:l=>25+l*20},
+  {id:'start',name:'出撃の人数',desc:'選べる仲間 +1人',max:2,cost:l=>120+l*120},
+  {id:'pick',name:'宝箱の目利き',desc:'宝箱の選択肢 +1枚',max:1,cost:()=>200},
+];
+const up=id=>(SAVE.up&&SAVE.up[id])||0;
+const maxSel=()=>5+up('start');
+function renderLocks(){
+  $('locks').innerHTML=Object.entries(LOCKS).map(([k,l])=>{const got=SAVE.unlocked.includes(k);
+    return `<button type="button" disabled style="opacity:${got?1:.7}"><b>${got?'✓ ':''}${CARDS[k].name}（${CARDS[k].job}）</b><span>${got?CARDS[k].desc:'条件：'+l.cond}</span></button>`}).join('');
+}
+function renderShop(){renderLocks();
+  $('coins').textContent=`コイン ${SAVE.coins}枚`;
+  $('shop').innerHTML=UPGRADES.map(u=>{const l=up(u.id),done=l>=u.max,c=done?0:u.cost(l);
+    return `<button type="button" data-u="${u.id}" ${done||SAVE.coins<c?'disabled':''}><b>${u.name}　Lv ${l}/${u.max}</b><span>${u.desc}</span><em>${done?'最大':`${c}枚`}</em></button>`}).join('');
+}
+$('shop').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const u=UPGRADES.find(x=>x.id===b.dataset.u);
+  const l=up(u.id);if(l>=u.max)return;const c=u.cost(l);if(SAVE.coins<c)return;SAVE.coins-=c;SAVE.up[u.id]=l+1;save();renderShop();renderRoster();});
+function ensureRoster(){const added=[];while(SAVE.roster.length<5){const u=makeUnit(pick(BASIC));SAVE.roster.push(u);added.push(u)}return added}
+
+function unitCard(u,tag='div',extra=''){
+  const c=CARDS[u.type],j=JOBS[c.job];
+  return `<${tag} class="card" style="--jc:${j.color}" ${extra}><span class="k">${c.name} <em>${'★'.repeat(u.star)}</em></span><span class="n">${esc(u.name)}</span>${cardFace(u.type,j.glyph)}<span class="j">${c.job}</span><span class="d">${c.desc}</span><span class="t sk">技「${SKILLS[u.type].name}」${SKILLS[u.type].desc}</span><span class="t">素質：${u.known?`${u.trait}（${TRAITS[u.trait]}）`:'？？？（★2で分かる）'}</span><span class="t">倒した数 ${u.kills}</span></${tag}>`;
+}
+function willCard(en){const w=WILLS[en.w];return `<div class="card will"><span class="k">遺志のカード</span><span class="n">${w.name}</span><span class="g">${JOBS[en.w].glyph}</span><span class="d">${esc(en.from)}が遺した力。${w.desc}。</span><span class="t">使うとなくなる</span></div>`}
+function entryCard(en){return en.w?willCard(en):unitCard(en.u)}
+
+// 出撃前の画面
+let selected=new Set();
+function showTitle(){
+  const added=ensureRoster();save();
+  const ids=SAVE.roster.map(u=>u.uid);selected=new Set([...selected].filter(id=>ids.includes(id)));
+  for(const u of SAVE.roster){if(selected.size>=maxSel())break;selected.add(u.uid)}
+  renderShop();
+  renderRoster();
+  const f=SAVE.fallen;
+  $('memorial').textContent=(SAVE.runs?`出撃 ${SAVE.runs}回・最長 ${fmt(SAVE.best)}・勝利 ${SAVE.clears||0}回。`:'')+(f.length?`これまでに倒れた仲間 ${f.length}人：${f.slice(-8).map(x=>x.name).join('、')}${f.length>8?' ほか':''}`:'')+(added.length&&SAVE.runs?`　兵舎が足りないので新兵が${added.length}人入った。`:'');
+  $('title').hidden=false;$('over').hidden=true;
+}
+function renderRoster(){
+  $('roster').innerHTML=SAVE.roster.map(u=>unitCard(u,'button',`type="button" data-id="${u.uid}" aria-pressed="${selected.has(u.uid)}"`)).join('');
+  $('roster').querySelectorAll('button').forEach(b=>b.classList.toggle('sel',selected.has(b.dataset.id)));
+  $('start').textContent=`出撃（${selected.size}/${maxSel()}人）`;$('start').disabled=!selected.size;
+}
+$('roster').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const id=b.dataset.id;
+  if(selected.has(id))selected.delete(id);else if(selected.size<maxSel())selected.add(id);renderRoster();});
+let resetArmed=false;
+$('reset').addEventListener('click',()=>{if(!resetArmed){resetArmed=true;$('reset').textContent='もう一度押すと全員の記録が消える';return}
+  resetArmed=false;$('reset').textContent='兵舎の記録を消す';SAVE=freshSave();selected=new Set();save();showTitle();});
+
+// 入力
+const keys=new Set();let joy=null;
+addEventListener('keydown',e=>{keys.add(e.key.toLowerCase());if(e.key==='Escape'||e.key==='p')togglePause();});
+addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);joy={id:e.pointerId,ox:e.offsetX,oy:e.offsetY,x:e.offsetX,y:e.offsetY}});
+cv.addEventListener('pointermove',e=>{if(joy&&joy.id===e.pointerId){joy.x=e.offsetX;joy.y=e.offsetY}});
+const endJoy=e=>{if(joy&&joy.id===e.pointerId)joy=null};
+cv.addEventListener('pointerup',endJoy);cv.addEventListener('pointercancel',endJoy);
+function moveDir(){
+  let x=0,y=0;
+  if(keys.has('a')||keys.has('arrowleft'))x--; if(keys.has('d')||keys.has('arrowright'))x++;
+  if(keys.has('w')||keys.has('arrowup'))y--; if(keys.has('s')||keys.has('arrowdown'))y++;
+  if(x||y){const l=Math.hypot(x,y);return{x:x/l,y:y/l}}
+  if(joy){const dx=joy.x-joy.ox,dy=joy.y-joy.oy,l=Math.hypot(dx,dy);if(l>8){const m=Math.min(1,l/50);return{x:dx/l*m,y:dy/l*m}}}
+  return{x:0,y:0};
+}
+
+let G=null;
+function newGame(units){
+  const php=100+15*up('hp');
+  G={t:0,state:'play',player:{x:0,y:0,r:13,hp:php,maxHp:php,speed:150,cd:0},mag:110*(1+.2*up('mag')),
+    enemies:[],allies:[],shots:[],eshots:[],gems:[],fx:[],chests:[],pickups:[],trail:[{x:0,y:0}],
+    draw:shuffle(units.map(u=>({u}))),discard:[],level:1,xp:0,kills:0,called:0,
+    nextBoss:60,bossCount:0,spawnAcc:0,hudAcc:0,syn:{},cnt:{},buff:{guard:0,atk:0,crit:0,song:0},
+    fallen:[],joined:[],stars:[],shrines:[],nextShrine:45,bonusAtk:0,bonusCoins:0,curse:false,pending:[],zones:[],traps:[],taunt:null,form:'snake',hd:0,lvq:0,heroLv:0,shake:0,morale:0,loopCd:0,loops:0,loopHint:false,maou:false,won:false};
+}
+function need(){return 2+G.level*2}
+
+function toast(msg){const d=document.createElement('div');d.textContent=msg;$('toast').appendChild(d);setTimeout(()=>d.remove(),2600);while($('toast').children.length>4)$('toast').firstChild.remove();}
+let drawnTimer=0;
+function showDrawn(html){const el=$('drawn');el.innerHTML=html;el.classList.add('show');clearTimeout(drawnTimer);drawnTimer=setTimeout(()=>el.classList.remove('show'),1500);}
+
+function drawCard(){
+  if(!G.draw.length){
+    if(G.discard.length){G.draw=shuffle(G.discard);G.discard=[];toast('捨て札を混ぜて山札に戻した');}
+    else{for(const a of G.allies)a.hp=Math.min(a.maxHp,a.hp+a.maxHp*.2);G.player.hp=Math.min(G.player.maxHp,G.player.hp+10);G.morale++;toast(`山札が空：士気が上がった（全員の攻撃 +${G.morale*6}%）`);return;}
+  }
+  const en=G.draw.pop();showDrawn(entryCard(en));sfx(en.w?'will':'draw');
+  if(en.w)fireWill(en);else spawnAlly(en.u);
+}
+function fireWill(en){
+  const p=G.player;toast(`${en.from}の遺志「${WILLS[en.w].name}」`);G.shake=Math.max(G.shake,6);
+  if(en.w==='騎士')G.buff.guard=20;
+  else if(en.w==='魔物')G.buff.atk=20;
+  else if(en.w==='盗賊')G.buff.crit=20;
+  else if(en.w==='僧侶'){p.hp=p.maxHp;for(const a of G.allies)a.hp=a.maxHp;G.fx.push({type:'ring',x:p.x,y:p.y,r:10,max:200,life:.7,t:0,color:'#9ff0a8'});}
+  else if(en.w==='弓兵'){for(let i=0;i<32;i++){const a=i/32*Math.PI*2;G.shots.push({x:p.x,y:p.y,vx:Math.cos(a)*480,vy:Math.sin(a)*480,dmg:30,life:.9,color:'#cfe9b4',src:null})}}
+  else if(en.w==='魔法使い'){const R=260;for(const e of G.enemies)if(dist2(e,p)<R*R)hurt(e,80,null);G.fx.push({type:'boom',x:p.x,y:p.y,max:R,life:.6,t:0});}
+}
+const WEAPONS={
+  sword:{name:'鋼の剣',desc:'攻撃 +40%',kinds:['melee'],f:s=>{s.dmg*=1.4}},
+  spear:{name:'長槍',desc:'届く距離 +60%・攻撃 +15%',kinds:['melee'],f:s=>{s.range*=1.6;s.dmg*=1.15}},
+  shield:{name:'大盾',desc:'体力 +50%・受けるダメージ -25%',kinds:['melee','ranged','aoe','heal','chain'],f:s=>{s.hp*=1.5;s.armor*=.75}},
+  fang:{name:'吸血の牙',desc:'与えたダメージの10%だけ体力が戻る',kinds:['melee','ranged','aoe','chain'],f:s=>{s.ls+=.1}},
+  longbow:{name:'長弓',desc:'射程 +40%・攻撃 +25%',kinds:['ranged'],f:s=>{s.range*=1.4;s.dmg*=1.25}},
+  crossbow:{name:'連弩',desc:'撃つ速さ +50%',kinds:['ranged'],f:s=>{s.rate*=.66}},
+  staff:{name:'魔石の杖',desc:'爆発の範囲 +40%・攻撃 +20%',kinds:['aoe'],f:s=>{s.aoe*=1.4;s.dmg*=1.2}},
+  axe:{name:'戦斧',desc:'攻撃 +60%・振りが少し遅い',kinds:['melee'],f:s=>{s.dmg*=1.6;s.rate*=1.25}},
+  poison:{name:'毒の短剣',desc:'当てた敵が3秒かけて毒で削れる（与えたダメージの60%）',kinds:['melee'],f:s=>{s.poison+=.6}},
+  frost:{name:'氷の矢',desc:'当てた敵の足を2秒遅くする',kinds:['ranged'],f:s=>{s.slow=1}},
+  piercer:{name:'貫きの矢',desc:'矢が敵を2体多く貫く',kinds:['ranged'],f:s=>{s.pierce+=2}},
+  critring:{name:'会心の指輪',desc:'会心率 +20%（会心は2倍）',kinds:['melee','ranged','aoe','chain'],f:s=>{s.crit+=.2}},
+  boots:{name:'疾風の靴',desc:'攻撃の間隔 -20%',kinds:['melee','ranged','aoe','chain','heal'],f:s=>{s.rate*=.8}},
+  bell:{name:'癒やしの鈴',desc:'周りの全員を同時に癒やす',kinds:['heal'],f:s=>{s.areaHeal=true}},
+  grimoire:{name:'魔導書',desc:'爆発の間隔 -30%',kinds:['aoe'],f:s=>{s.rate*=.7}},
+  rod:{name:'雷の杖',desc:'雷が2体多く渡る・攻撃 +15%',kinds:['chain'],f:s=>{s.chain+=2;s.dmg*=1.15}},
+  holy:{name:'聖印',desc:'回復量 +60%・届く範囲 +30%',kinds:['heal'],f:s=>{s.heal*=1.6;s.range*=1.3}},
+};
+function allyStats(a){const s=unitStats(a.u),c=a.c,m=1+.25*(a.tr||0);s.hp*=m;s.dmg*=m;s.heal*=m;s.range=c.range;s.aoe=c.aoe||0;s.ls=c.ls||0;s.armor=1;s.crit=c.crit||0;s.pierce=c.pierce||0;s.slow=c.slow||0;s.poison=c.poison||0;s.chain=c.chain||0;s.areaHeal=!!c.areaHeal;
+  const w=a.wp&&WEAPONS[a.wp];if(w)w.f(s);return s}
+function refreshAlly(a){const ratio=a.hp/a.maxHp;a.s=allyStats(a);a.maxHp=a.s.hp;a.hp=Math.max(1,a.s.hp*ratio)}
+const isFront=a=>G.form==='snake'&&a===G.allies[0],isRear=a=>G.form==='snake'&&G.allies.length>1&&a===G.allies[G.allies.length-1];
+const armorOf=a=>a.s.armor*(isFront(a)?.7:1)*(G.form==='box'?.75:1)*(a.tauntT>0?.5:1)*(a.invT>0?0:1)*(inSanct(a)?.4:1);
+function unitStats(u){const c=CARDS[u.type],sm=1+.25*(u.star-1);
+  return{hp:c.hp*sm*(u.trait==='頑丈'?1.4:1)*(1+.1*up('ahp')),dmg:(c.dmg||0)*sm*(u.trait==='剛力'?1.3:1)*(1+.08*up('atk')),rate:c.rate*(u.trait==='早業'?.75:1),heal:(c.heal||0)*sm};}
+function spawnAlly(u){
+  const c=CARDS[u.type],s=unitStats(u),p=G.player,last=G.allies[G.allies.length-1]||p;
+  const a={u,c,job:c.job,x:last.x+rnd(-6,6),y:last.y+rnd(-6,6),sx:last.x,sy:last.y,r:c.r,hp:s.hp,maxHp:s.hp,s,cd:rnd(0,.5),flash:0,revived:false,tr:0,wp:null};
+  a.s=allyStats(a);a.hp=a.maxHp=a.s.hp;G.allies.push(a);G.called++;
+  G.fx.push({type:'ring',x:a.x,y:a.y,r:4,max:46,life:.5,t:0,color:JOBS[c.job].color});
+}
+function spawnEnemy(kind){
+  const d=ENEMY[kind],p=G.player,ang=rnd(0,Math.PI*2),R=Math.hypot(W,H)/2/Z+40;
+  const elite=!d.boss&&G.t>20&&Math.random()<.012, s=d.boss?1+G.t/180:1+G.t/160;
+  const hp=d.hp*s*(elite?4:1)*(G.curse&&!d.final?1.25:1);
+  G.enemies.push({kind,d,x:p.x+Math.cos(ang)*R,y:p.y+Math.sin(ang)*R,r:d.r*(elite?1.25:1),hp,maxHp:hp,spd:d.spd*rnd(.9,1.1)*(elite?.85:1),flash:0,boss:!!d.boss,elite});
+}
+function hurt(e,dmg,src,quiet){
+  if(e.dead)return;e.hp-=dmg;e.flash=.08;
+  if(!quiet&&src&&src.s){if(src.s.slow)e.slowT=2;if(src.s.poison){e.psT=3;e.psD=dmg*src.s.poison/3;e.psSrc=src}}if(src&&src.s&&src.s.ls&&src.hp>0)src.hp=Math.min(src.maxHp,src.hp+dmg*src.s.ls);
+  if(!quiet){if(G.fx.length<380)G.fx.push({type:'num',x:e.x+rnd(-6,6),y:e.y-e.r,v:Math.max(1,Math.round(dmg)),life:.6,t:0,big:dmg>=60||G.critNow});
+  sfx('hit');}
+  if(e.hp>0)return;
+  e.dead=true;G.kills++;sfx('kill');
+  if(G.fx.length<420)G.fx.push({type:'burst',x:e.x,y:e.y,color:e.d.color,life:.45,t:0,r:e.r,parts:Array.from({length:e.boss?18:6},()=>[rnd(0,7),rnd(40,e.boss?220:120)])});
+  if(e.d.final){G.won=true;G.shake=20;return;}
+  const u=src&&src.u;let mul=e.elite?3:1;
+  if(u){u.kills++;if(CARDS[u.type].job==='騎士')SAVE.st.knightKills++;checkStar(src);if(u.trait==='吸収')src.hp=Math.min(src.maxHp,src.hp+src.maxHp*.05);if(u.trait==='強運')mul*=2;}
+  if(e.boss){G.chests.push({x:e.x,y:e.y,t:0,type:e.kind});toast(`${CARDS[e.kind].name}を倒した！宝箱を拾おう`);G.nextBoss=Math.max(G.nextBoss,G.t+20);G.shake=Math.max(G.shake,12);}
+  if(e.elite){G.pickups.push({x:e.x,y:e.y,t:0,type:e.kind});toast(`光る${CARDS[e.kind].name}がカードを落とした`);}
+  G.gems.push({x:e.x,y:e.y,v:e.d.xp*mul*(G.curse?2:1)});
+}
+function checkStar(a){const u=a.u,st=u.kills>=80?3:u.kills>=25?2:1;if(st<=u.star)return;
+  u.star=st;G.stars.push(`${u.name}★${st}`);toast(`${u.name}が★${st}になった`);
+  if(!u.known){u.known=true;toast(`${u.name}の素質が分かった：${u.trait}（${TRAITS[u.trait]}）`)}
+  refreshAlly(a);}
+function addUnit(u,how){SAVE.roster.push(u);G.joined.push(u.name);G.draw.splice(Math.random()*(G.draw.length+1)|0,0,{u});toast(`${CARDS[u.type].name}の${u.name}が${how}`);}
+
+// キャラごとの技（時間がたつと自動で出る）
+const near=(o,R)=>G.enemies.filter(e=>!e.dead&&dist2(e,o)<R*R);
+function nearest(o,R){let b=null,bd=R*R;for(const e of G.enemies){if(e.dead)continue;const d=dist2(e,o);if(d<bd){bd=d;b=e}}return b}
+const ang=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x);
+const sd=a=>Math.max(a.s.dmg||0,a.s.heal||0,10)*(G.atkMul||1)*(a.atkT>0?1.5:1);
+function ring(o,R,color){G.fx.push({type:'ring',x:o.x,y:o.y,r:8,max:R,life:.45,t:0,color})}
+function push(e,o,d){if(e.boss)d*=.2;const dx=e.x-o.x,dy=e.y-o.y,l=Math.hypot(dx,dy)||1;e.x+=dx/l*d;e.y+=dy/l*d}
+function shoot(a,an,dmg,color,pierce=0,spd=520){G.shots.push({x:a.x,y:a.y,vx:Math.cos(an)*spd,vy:Math.sin(an)*spd,dmg,life:.9,color,src:a,pierce})}
+function line(a,an,L,w,fn){const x2=a.x+Math.cos(an)*L,y2=a.y+Math.sin(an)*L;
+  for(const e of near(a,L+30)){const t=Math.max(0,Math.min(1,((e.x-a.x)*(x2-a.x)+(e.y-a.y)*(y2-a.y))/(L*L))),qx=a.x+(x2-a.x)*t,qy=a.y+(y2-a.y)*t;if((e.x-qx)**2+(e.y-qy)**2<(e.r+w)**2)fn(e)}
+  G.fx.push({type:'dash',x:a.x,y:a.y,x2,y2,w,life:.3,t:0});a.x+=(x2-a.x)*.6;a.y+=(y2-a.y)*.6}
+const SKILLS={
+  knight:{name:'盾打ち',cd:8,desc:'周りの敵を押し返して2倍のダメージ',f:a=>{const es=near(a,70);if(!es.length)return false;for(const e of es){hurt(e,sd(a)*2,a);push(e,a,60)}ring(a,70,'#8fb3e8');return true}},
+  heavy:{name:'挑発',cd:12,desc:'周りの敵を引きつけ、5秒間受けるダメージ -50%',f:a=>{if(near(a,200).length<3)return false;a.tauntT=5;G.taunt=a;ring(a,200,'#e8c25a');return true}},
+  paladin:{name:'聖なる光',cd:15,desc:'仲間全員の体力を30%回復し、周りの敵を焼く',f:a=>{if(!near(a,120).length&&G.allies.every(b=>b.hp>b.maxHp*.7))return false;for(const b of G.allies)b.hp=Math.min(b.maxHp,b.hp+b.maxHp*.3);const p=G.player;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.15);for(const e of near(a,120))hurt(e,sd(a)*1.5,a);ring(a,120,'#fff1c1');return true}},
+  lancer:{name:'突撃',cd:9,desc:'一直線に突き進み、通り道の敵すべてに2倍のダメージ',f:a=>{const t=nearest(a,160);if(!t)return false;line(a,ang(a,t),150,18,e=>hurt(e,sd(a)*2,a));return true}},
+  archer:{name:'三連射',cd:6,desc:'扇の形に3本の矢を放つ（1.5倍）',f:a=>{const t=nearest(a,a.s.range);if(!t)return false;const b=ang(a,t);for(let k=-1;k<=1;k++)shoot(a,b+k*.18,sd(a)*1.5,'#cfe9b4');return true}},
+  hunter:{name:'罠',cd:10,desc:'足元に罠を置く。踏んだ敵は2秒止まる（4回まで）',f:a=>{if(!near(a,250).length)return false;G.traps.push({x:a.x,y:a.y,r:34,n:4,t:15,src:a});return true}},
+  arbalest:{name:'狙撃',cd:10,desc:'一番体力の多い敵に、すべてを貫く5倍の矢',f:a=>{let t=null;for(const e of near(a,420))if(!t||e.hp>t.hp)t=e;if(!t)return false;shoot(a,ang(a,t),sd(a)*5,'#ffd36f',99,760);return true}},
+  mage:{name:'隕石',cd:12,desc:'大きな隕石を落とす（3倍・範囲2倍）',f:a=>{const t=nearest(a,a.s.range+60);if(!t)return false;const R=(a.s.aoe||55)*2;for(const e of near(t,R))hurt(e,sd(a)*3,a);G.fx.push({type:'boom',x:t.x,y:t.y,max:R,life:.5,t:0});G.shake=Math.max(G.shake,8);return true}},
+  witch:{name:'火の海',cd:14,desc:'敵の足元を4秒間燃やし続ける',f:a=>{const t=nearest(a,a.s.range);if(!t)return false;G.zones.push({type:'fire',x:t.x,y:t.y,r:90,t:4,max:4,dps:sd(a)*1.2,src:a});return true}},
+  icemage:{name:'凍結',cd:14,desc:'周りの敵を3秒間凍らせる（中ボスは1秒）',f:a=>{const es=near(a,150);if(es.length<3)return false;for(const e of es)e.frzT=e.boss?1:3;ring(a,150,'#bfe3ff');return true}},
+  thunder:{name:'落雷',cd:11,desc:'近くの敵6体に雷を落とす（2.2倍）',f:a=>{const es=shuffle(near(a,320)).slice(0,6);if(!es.length)return false;for(const e of es){hurt(e,sd(a)*2.2,a);G.fx.push({type:'bolt',pts:[{x:e.x+rnd(-20,20),y:e.y-170},{x:e.x+rnd(-10,10),y:e.y-80},{x:e.x,y:e.y}],life:.25,t:0})}return true}},
+  cleric:{name:'祝福',cd:18,desc:'一番弱った仲間を全回復し、3秒間ダメージを受けない',f:a=>{let low=null,lr=.6;for(const b of G.allies){const r=b.hp/b.maxHp;if(r<lr){lr=r;low=b}}if(!low)return false;low.hp=low.maxHp;low.invT=3;ring(low,40,'#fff1c1');return true}},
+  bard:{name:'鼓舞の歌',cd:16,desc:'8秒間、全員の攻撃の速さ +30%',f:a=>{if(!near(a,300).length)return false;G.buff.song=8;ring(a,160,'#f4b6c8');return true}},
+  nun:{name:'聖域',cd:20,desc:'5秒間、周りにいる仲間の受けるダメージ -60%',f:a=>{if(near(a,200).length<3)return false;G.zones.push({type:'sanct',x:a.x,y:a.y,r:130,t:5,max:5,follow:a});return true}},
+  thief:{name:'早業の連撃',cd:12,desc:'近くの敵に会心の4連撃。倒すと宝石を落とす',f:a=>{const t=nearest(a,60);if(!t)return false;for(let k=0;k<4;k++)hurt(t,sd(a)*2,a);if(t.dead)G.gems.push({x:t.x,y:t.y,v:3});return true}},
+  assassin:{name:'影討ち',cd:10,desc:'一番強い敵の背後に回り、6倍の一撃',f:a=>{let t=null;for(const e of near(a,300))if(!t||e.maxHp>t.maxHp)t=e;if(!t)return false;ring(a,20,'#7ad1c8');a.x=t.x+rnd(-8,8);a.y=t.y+rnd(-8,8);hurt(t,sd(a)*6,a);ring(t,30,'#7ad1c8');return true}},
+  slime:{name:'粘液',cd:12,desc:'周りの敵の足を3秒遅くする',f:a=>{const es=near(a,100);if(es.length<2)return false;for(const e of es)e.slowT=3;ring(a,100,'#c0566a');return true}},
+  goblin:{name:'乱れ打ち',cd:9,desc:'3秒間、攻撃の速さ3倍',f:a=>{if(!nearest(a,50))return false;a.frenzyT=3;return true}},
+  orc:{name:'雄叫び',cd:14,desc:'周りの敵を2秒すくませ、6秒間自分の攻撃 +50%',f:a=>{const es=near(a,120);if(!es.length)return false;for(const e of es)if(!e.boss)e.frzT=2;a.atkT=6;ring(a,120,'#e0a24f');return true}},
+  ogre:{name:'地割れ',cd:12,desc:'周りの敵に3倍のダメージ',f:a=>{const es=near(a,110);if(es.length<2)return false;for(const e of es)hurt(e,sd(a)*3,a);ring(a,110,'#ff6a5a');G.shake=Math.max(G.shake,8);return true}},
+  skel:{name:'骨の雨',cd:10,desc:'近くの敵5体に骨の矢を放つ（1.5倍）',f:a=>{const es=near(a,260).slice(0,5);if(!es.length)return false;for(const e of es)shoot(a,ang(a,e),sd(a)*1.5,'#e9dcc0');return true}},
+  boar:{name:'猪突',cd:8,desc:'敵の群れに突っ込み、3倍のダメージで吹き飛ばす',f:a=>{const t=nearest(a,180);if(!t)return false;line(a,ang(a,t),170,22,e=>{hurt(e,sd(a)*3,a);push(e,a,70)});return true}},
+  dragon:{name:'火炎の息',cd:10,desc:'前方を扇の形に焼き払う（2倍）',f:a=>{const t=nearest(a,220);if(!t)return false;const b=ang(a,t);for(const e of near(a,220)){let d=ang(a,e)-b;d=Math.atan2(Math.sin(d),Math.cos(d));if(Math.abs(d)<.55)hurt(e,sd(a)*2,a)}G.fx.push({type:'cone',x:a.x,y:a.y,a:b,len:220,life:.4,t:0});return true}},
+  bat:{name:'吸血',cd:10,desc:'近くの敵3体から体力を吸い、自分と主人公が回復',f:a=>{const es=near(a,120).slice(0,3);if(!es.length)return false;let tot=0;for(const e of es){const d=sd(a)*2;hurt(e,d,a);tot+=d}a.hp=Math.min(a.maxHp,a.hp+tot*.5);const p=G.player;p.hp=Math.min(p.maxHp,p.hp+tot*.2);ring(a,120,'#a83a5a');return true}},
+  golem:{name:'地震',cd:16,desc:'周りの敵すべての足を3秒遅くしてダメージ',f:a=>{const es=near(a,170);if(es.length<3)return false;for(const e of es){e.slowT=3;hurt(e,sd(a)*1.5,a)}ring(a,170,'#8a8478');G.shake=Math.max(G.shake,6);return true}},
+  lich:{name:'魂の刈り取り',cd:15,desc:'周りの敵すべての体力を15%削る（中ボスは3%）',f:a=>{const es=near(a,260);if(es.length<3)return false;for(const e of es)hurt(e,e.maxHp*(e.boss?.03:.15),a);ring(a,260,'#8affb8');return true}},
+};
+function tickSkill(a,dt){a.tauntT=Math.max(0,(a.tauntT||0)-dt);a.invT=Math.max(0,(a.invT||0)-dt);a.frenzyT=Math.max(0,(a.frenzyT||0)-dt);a.atkT=Math.max(0,(a.atkT||0)-dt);
+  const sk=SKILLS[a.u.type];if(!sk)return;a.sk=(a.sk??rnd(2,sk.cd*.6))-dt;if(a.sk>0)return;G.critNow=false;
+  if(sk.f(a)){a.sk=sk.cd;G.skills=(G.skills||0)+1;G.fx.push({type:'skill',x:a.x,y:a.y,v:sk.name,life:1.1,t:0,color:JOBS[a.job].color});sfx('draw')}else a.sk=.5}
+const inSanct=a=>G.zones.some(z=>z.type==='sanct'&&dist2(a,z)<z.r*z.r);
+function inPoly(pt,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];
+  if((a.y>pt.y)!==(b.y>pt.y)&&pt.x<(b.x-a.x)*(pt.y-a.y)/(b.y-a.y)+a.x)c=!c}return c}
+// 隊列の先頭（主人公）が列の後ろ側に触れたら、輪の中の敵をまとめて吹き飛ばす
+function checkLoop(){
+  const p=G.player;if(G.form!=='snake'||G.loopCd>0||G.allies.length<4)return;
+  for(let i=G.allies.length-1;i>=3;i--){const a=G.allies[i];
+    if(dist2(a,p)>(p.r+a.r+16)**2)continue;
+    const poly=[p,...G.allies.slice(0,i+1)].map(o=>({x:o.x,y:o.y}));
+    let area=0;for(let k=0;k<poly.length;k++){const q=poly[k],r=poly[(k+1)%poly.length];area+=q.x*r.y-r.x*q.y}
+    if(Math.abs(area)/2<3500)return;
+    let cx=0,cy=0;for(const q of poly){cx+=q.x;cy+=q.y}cx/=poly.length;cy/=poly.length;
+    const dmg=(30+12*(i+1))*(1+G.t/180)*Math.min(2,Math.abs(area)/2/8000+.6);let n=0;
+    for(const e of G.enemies){if(!inPoly(e,poly))continue;n++;SAVE.st.loopVictims++;hurt(e,e.boss?dmg*1.5:dmg,null);
+      const dx=e.x-cx,dy=e.y-cy,l=Math.hypot(dx,dy)||1;e.x+=dx/l*40;e.y+=dy/l*40;}
+    G.fx.push({type:'loop',poly,life:.6,t:0});G.loopCd=4;G.loops++;G.shake=Math.max(G.shake,n?10:4);sfx('loop');
+    toast(n?`隊列で囲んだ！ ${n}体を巻き込んだ`:'輪ができた（中に敵がいなかった）');
+    return;}
+}
+
+const FORMS={
+  snake:{name:'縦一列',desc:'主人公の通った道をたどる。輪を作って敵を囲める。先頭は守りが固く、しんがりは攻撃が強い'},
+  line:{name:'横陣',desc:'進む向きの前に横に並ぶ。全員の攻撃 +20%'},
+  ring:{name:'円陣',desc:'主人公の周りを回る輪。主人公の受けるダメージ -50%・仲間の攻撃 -10%'},
+  wedge:{name:'楔',desc:'V字の先頭で切り込む。近くで戦う仲間の攻撃 +15%・主人公の移動 +8%'},
+  box:{name:'密集',desc:'主人公を囲む塊。仲間の受けるダメージ -25%・主人公の移動 -15%'},
+};
+function formSlots(n){const sp=28,out=[];
+  if(G.form==='line'){const per=7;for(let i=0;i<n;i++){const row=i/per|0,inRow=Math.min(per,n-row*per),c=i%per;out.push([34+row*sp,(c-(inRow-1)/2)*sp])}}
+  else if(G.form==='ring'){let i=0,ring=0;while(i<n){const R=46+ring*32,cap=Math.max(6,Math.floor(2*Math.PI*R/sp)),m=Math.min(cap,n-i);
+    for(let k=0;k<m;k++){const a=k/m*Math.PI*2+G.t*(ring%2?-.5:.6);out.push([Math.cos(a)*R,Math.sin(a)*R]);i++}ring++}}
+  else if(G.form==='wedge'){out.push([46,0]);for(let i=1;i<n;i++){const k=(i+1)>>1,sd=i%2?1:-1;out.push([46-k*20,sd*k*22])}}
+  else{const pts=[];for(let gx=-4;gx<=4;gx++)for(let gy=-4;gy<=4;gy++){if(!gx&&!gy)continue;pts.push([gx*sp*.9,gy*sp*.9,Math.hypot(gx,gy)+(gx<0?.01:0)])}
+    pts.sort((a,b)=>a[2]-b[2]);for(let i=0;i<n;i++)out.push(pts[i])}
+  return out}
+function placeForm(){const p=G.player,sl=formSlots(G.allies.length),c=Math.cos(G.hd),sn=Math.sin(G.hd);
+  G.allies.forEach((a,i)=>{const [fx,fy]=sl[i];a.sx=p.x+fx*c-fy*sn;a.sy=p.y+fx*sn+fy*c;});
+  const tr=G.trail;tr.length=0;tr.push({x:p.x,y:p.y});}
+function setForm(k){if(!FORMS[k]||G.form===k)return;G.form=k;
+  if(k==='snake'){const p=G.player,tr=G.trail;tr.length=0;for(let d=900;d>=0;d-=3)tr.push({x:p.x-Math.cos(G.hd)*d,y:p.y-Math.sin(G.hd)*d});}toast(`陣形を「${FORMS[k].name}」にした`);}
+function updateTrail(){
+  if(G.form!=='snake'){placeForm();return}
+  const p=G.player,tr=G.trail,lastPt=tr[tr.length-1];
+  if(Math.hypot(p.x-lastPt.x,p.y-lastPt.y)>=3){tr.push({x:p.x,y:p.y});if(tr.length>1500)tr.splice(0,tr.length-1500);}
+  // 隊列：主人公が通った道に沿って、引いた順に並ぶ
+  let idx=tr.length-1,px=p.x,py=p.y,acc=0,want=0,prevR=p.r;
+  for(const a of G.allies){
+    want+=prevR+a.r+4;prevR=a.r;
+    while(idx>=0){const q=tr[idx],seg=Math.hypot(px-q.x,py-q.y);if(acc+seg>=want){const k=(want-acc)/(seg||1);px=px+(q.x-px)*k;py=py+(q.y-py)*k;acc=want;break}acc+=seg;px=q.x;py=q.y;idx--;}
+    a.sx=px;a.sy=py;
+  }
+}
+
+function update(dt){
+  G.t+=dt;const p=G.player;
+  G.shake=Math.max(0,G.shake-dt*30);G.loopCd=Math.max(0,G.loopCd-dt);
+  if(!G.loopHint&&G.form==='snake'&&G.allies.length>=4){G.loopHint=true;toast('仲間が4人揃った。隊列で敵を囲んでみよう');}
+  const m=moveDir(),spdF=G.form==='wedge'?1.08:G.form==='box'?.85:1;p.x+=m.x*p.speed*spdF*dt;p.y+=m.y*p.speed*spdF*dt;
+  if(Math.hypot(m.x,m.y)>.15){const ta=Math.atan2(m.y,m.x);let d=ta-G.hd;d=Math.atan2(Math.sin(d),Math.cos(d));G.hd+=d*Math.min(1,dt*6);}
+  updateTrail();
+  G.buff.guard=Math.max(0,G.buff.guard-dt);G.buff.atk=Math.max(0,G.buff.atk-dt);G.buff.crit=Math.max(0,G.buff.crit-dt);G.buff.song=Math.max(0,G.buff.song-dt);
+  p.cd-=dt;
+  if(p.cd<=0){let best=null,bd=200*200;for(const e of G.enemies){const d=dist2(e,p);if(d<bd){bd=d;best=e}}
+    if(best){const l=Math.sqrt(bd)||1;G.shots.push({x:p.x,y:p.y,vx:(best.x-p.x)/l*380,vy:(best.y-p.y)/l*380,dmg:8*(1+.35*G.heroLv),life:.8,color:'#fff1c1',src:null});p.cd=.8/(1+.12*G.heroLv);}}
+  const cnt={};let warden=false;for(const a of G.allies){cnt[a.job]=(cnt[a.job]||0)+1;if(a.u.trait==='守護')warden=true;}
+  G.cnt=cnt;for(const j in JOBS)G.syn[j]=(cnt[j]||0)>=JOBS[j].need;
+  if((cnt['弓兵']||0)>=3)SAVE.st.archer3=true;if((cnt['盗賊']||0)>=2)SAVE.st.thief2=true;
+  const rateMul=G.syn['弓兵']?1/1.5:1, aoeMul=G.syn['魔法使い']?1.5:1, healMul=G.syn['僧侶']?2:1;
+  const atkMul=(G.syn['魔物']?1.3:1)*(G.buff.atk>0?1.5:1)*(1+.06*G.morale)*(1+G.bonusAtk);
+  G.atkMul=atkMul;
+  const guard=(G.syn['騎士']?.6:1)*(G.buff.guard>0?.5:1);
+  const pguard=guard*(warden?.85:1)*(G.form==='ring'?.5:1);
+  const rate=Math.min(7,.6+G.t/50);G.spawnAcc+=rate*dt;
+  while(G.spawnAcc>=1&&G.enemies.length<260){G.spawnAcc--;const r=Math.random();
+    let kind='slime';if(G.t>30&&r<.5)kind='goblin';
+    if(G.t>90&&r<.16)kind='orc';else if(G.t>120&&r>=.16&&r<.24)kind='skel';else if(G.t>150&&r>=.24&&r<.31)kind='boar';
+    else if(G.t>60&&r>=.31&&r<.42)kind='bat';else if(G.t>240&&r>=.42&&r<.46)kind='golem';
+    spawnEnemy(kind);}
+  const bossAlive=G.enemies.some(e=>e.boss&&!e.d.final);
+  if(G.t>=G.nextBoss&&G.nextBoss<600&&!bossAlive){const kind=['ogre','lich','dragon'][G.bossCount%3];G.bossCount++;spawnEnemy(kind);G.nextBoss+=60;toast(`中ボス（${CARDS[kind].name}）が現れた`);sfx('boss');G.shake=Math.max(G.shake,8);}
+  if(G.t>=600&&!G.maou){G.maou=true;spawnEnemy('maou');toast('魔王が現れた！倒せば勝利');sfx('boss');G.shake=16;}
+  for(const a of G.allies){
+    const c=a.c,k=Math.min(1,dt*12);a.x+=(a.sx-a.x)*k;a.y+=(a.sy-a.y)*k;
+    a.cd-=dt*(a.frenzyT>0?3:1)*(G.buff.song>0?1.3:1);a.flash=Math.max(0,a.flash-dt);tickSkill(a,dt);
+    if(a.cd>0)continue;
+    if(c.kind==='heal'){
+      let low=null,lr=.95;for(const t of [p,...G.allies]){if(dist2(t,a)>a.s.range*a.s.range)continue;const r=t.hp/t.maxHp;if(r<lr){lr=r;low=t}}
+      if(low&&a.s.areaHeal){for(const t of [p,...G.allies]){if(dist2(t,a)>a.s.range*a.s.range||t.hp>=t.maxHp)continue;t.hp=Math.min(t.maxHp,t.hp+a.s.heal*healMul*.7);G.fx.push({type:'heal',x:t.x,y:t.y,life:.6,t:0})}
+        G.fx.push({type:'ring',x:a.x,y:a.y,r:10,max:a.s.range,life:.4,t:0,color:'#9ff0a8'});a.cd=a.s.rate;}
+      else if(low){low.hp=Math.min(low.maxHp,low.hp+a.s.heal*healMul);G.fx.push({type:'heal',x:low.x,y:low.y,life:.6,t:0});a.cd=a.s.rate;}
+      continue;}
+    let tgt=null,bd=Infinity;for(const e of G.enemies){const d=dist2(e,a);if(d<bd){bd=d;tgt=e}}
+    if(!tgt)continue;const d=Math.sqrt(bd);
+    if(d>a.s.range+tgt.r)continue;
+    G.critNow=Math.random()<a.s.crit+(G.syn['盗賊']?.25:0)+(G.buff.crit>0?.5:0);
+    const dmg=(G.critNow?2:1)*(a.atkT>0?1.5:1)*a.s.dmg*atkMul*(isRear(a)?1.3:1)*(G.form==='line'?1.2:G.form==='ring'?.9:G.form==='wedge'&&c.kind==='melee'?1.15:1);
+    if(c.kind==='melee'){hurt(tgt,dmg,a);G.fx.push({type:'slash',x:tgt.x,y:tgt.y,a:Math.atan2(tgt.y-a.y,tgt.x-a.x),life:.18,t:0});a.cd=a.s.rate;}
+    else if(c.kind==='ranged'){const l2=d||1;G.shots.push({x:a.x,y:a.y,vx:(tgt.x-a.x)/l2*460,vy:(tgt.y-a.y)/l2*460,dmg,life:.7,color:a.s.slow?'#bfe3ff':'#cfe9b4',src:a,pierce:a.s.pierce});a.cd=a.s.rate*rateMul;}
+    else if(c.kind==='chain'){let cur=tgt,d0=dmg;const hit=new Set(),pts=[{x:a.x,y:a.y}];
+      for(let j=0;j<=a.s.chain;j++){hurt(cur,d0,a);hit.add(cur);pts.push({x:cur.x,y:cur.y});d0*=.8;let nx=null,nd=120*120;
+        for(const e of G.enemies){if(e.dead||hit.has(e))continue;const dd=dist2(e,cur);if(dd<nd){nd=dd;nx=e}}if(!nx)break;cur=nx}
+      G.fx.push({type:'bolt',pts,life:.22,t:0});a.cd=a.s.rate;}
+    else if(c.kind==='aoe'){const R=a.s.aoe*aoeMul;for(const e of G.enemies)if(dist2(e,tgt)<(R+e.r)*(R+e.r))hurt(e,dmg,a);
+      G.fx.push({type:'boom',x:tgt.x,y:tgt.y,max:R,life:.35,t:0});a.cd=a.s.rate;}
+  }
+  checkLoop();
+  for(let i=0;i<G.enemies.length;i++){const e=G.enemies[i];e.flash=Math.max(0,e.flash-dt);
+    e.slowT=Math.max(0,(e.slowT||0)-dt);const es=e.spd*(e.slowT>0?.5:1);
+    if(e.psT>0){e.psT-=dt;hurt(e,e.psD*dt,e.psSrc,true);if(e.dead)continue;}
+    if(e.frzT>0){e.frzT-=dt;continue;}
+    if(e.kind==='ogre'){e.sl=(e.sl??4)-dt;if(e.sl<=0&&dist2(e,p)<220*220){e.sl=5;G.pending.push({x:e.x,y:e.y,r:95,t:.9,life:.9,dmg:22*(1+G.t/300)});}}
+    if(e.kind==='dragon'){e.fb=(e.fb??3)-dt;if(e.fb<=0&&dist2(e,p)<380*380){e.fb=4;const ba=Math.atan2(p.y-e.y,p.x-e.x);
+      for(let k=-2;k<=2;k++){const a=ba+k*.18;G.eshots.push({x:e.x,y:e.y,vx:Math.cos(a)*230,vy:Math.sin(a)*230,dmg:12*(1+G.t/300),life:2,fire:true});}}}
+    if(e.kind==='lich'){e.sm=(e.sm??3)-dt;if(e.sm<=0){e.sm=6;for(let k=0;k<3;k++){const a=rnd(0,7),sk=ENEMY.skel,hp=sk.hp*(1+G.t/160);G.enemies.push({kind:'skel',d:sk,x:e.x+Math.cos(a)*50,y:e.y+Math.sin(a)*50,r:sk.r,hp,maxHp:hp,spd:sk.spd,flash:0,boss:false,elite:false});}}
+      e.rg=(e.rg??2)-dt;if(e.rg<=0&&dist2(e,p)<420*420){e.rg=4.5;for(let k=0;k<10;k++){const a=k/10*Math.PI*2+G.t;G.eshots.push({x:e.x,y:e.y,vx:Math.cos(a)*120,vy:Math.sin(a)*120,dmg:9*(1+G.t/300),life:3.2,soul:true});}}}
+    if(e.d.final){e.sc=(e.sc??4)-dt;if(e.sc<=0){e.sc=4;for(let k=0;k<6;k++){const a=k/6*Math.PI*2;const s=ENEMY.slime,hp=s.hp*(1+G.t/120);G.enemies.push({kind:'slime',d:s,x:e.x+Math.cos(a)*60,y:e.y+Math.sin(a)*60,r:s.r,hp,maxHp:hp,spd:s.spd,flash:0,boss:false,elite:false});}}}
+    let t=p,bd=dist2(e,p);for(const a of G.allies){const d=dist2(e,a);if(d<bd&&d<110*110){bd=d;t=a}}
+    if(G.taunt&&G.taunt.tauntT>0&&G.taunt.hp>0&&!e.d.ranged&&dist2(e,G.taunt)<240*240)t=G.taunt;
+    const dx=t.x-e.x,dy=t.y-e.y,l=Math.hypot(dx,dy)||1,touch=l<e.r+t.r;
+    let mult=1;
+    if(e.d.ranged){const px=p.x-e.x,py=p.y-e.y,pl=Math.hypot(px,py)||1;
+      if(pl>230){e.x+=px/pl*es*dt;e.y+=py/pl*es*dt}else if(pl<170){e.x-=px/pl*es*dt;e.y-=py/pl*es*dt}
+      e.sc=(e.sc??rnd(1,2.5))-dt;
+      if(e.sc<=0&&pl<330){e.sc=3.2;G.eshots.push({x:e.x,y:e.y,vx:px/pl*240,vy:py/pl*240,dmg:6*(1+G.t/400)*(e.elite?1.5:1),life:1.7});}
+    }else if(e.d.charge&&e.cht>0){e.cht-=dt;e.x+=e.cvx*dt;e.y+=e.cvy*dt;mult=3;}
+    else if(e.d.charge&&(e.ccd=(e.ccd??2)-dt)<=0&&l<260){e.ccd=3.5;e.cht=.9;e.cvx=dx/l*300;e.cvy=dy/l*300;e.flash=.12;}
+    else if(!touch){e.x+=dx/l*es*dt;e.y+=dy/l*es*dt}
+    if(!touch){}
+    else if(t===p){p.hp-=e.d.dmg*mult*(e.elite?1.5:1)*pguard*dt;sfx('hurt');p.hurtT=.15;}
+    else{t.hp-=e.d.dmg*mult*(e.elite?1.5:1)*guard*.6*armorOf(t)*dt;t.flash=.1}
+    for(let k=i+1;k<G.enemies.length;k++){const b=G.enemies[k],ox=b.x-e.x,oy=b.y-e.y;if(Math.abs(ox)>40||Math.abs(oy)>40)continue;const dd=Math.hypot(ox,oy),mn=e.r+b.r;if(dd>0&&dd<mn){const push=(mn-dd)/2;e.x-=ox/dd*push;e.y-=oy/dd*push;b.x+=ox/dd*push;b.y+=oy/dd*push}}
+  }
+  for(const s of G.shots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
+    for(const e of G.enemies){if(e.dead||(s.hit&&s.hit.has(e)))continue;if(dist2(s,e)<(e.r+4)*(e.r+4)){G.critNow=false;hurt(e,s.dmg,s.src);if(s.pierce>0){s.pierce--;(s.hit||(s.hit=new Set())).add(e)}else{s.life=0;break}}}}
+  G.shots=G.shots.filter(s=>s.life>0);
+  for(const s of G.eshots){s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;
+    for(const a of G.allies){if(dist2(s,a)<(a.r+(s.fire?5:3))**2){a.hp-=s.dmg*guard*.6*armorOf(a);a.flash=.1;s.life=0;break}}
+    if(s.life>0&&dist2(s,p)<(p.r+3)**2){p.hp-=s.dmg*pguard;p.hurtT=.15;sfx('hurt');s.life=0;}}
+  G.eshots=G.eshots.filter(s=>s.life>0);
+  for(const w of G.pending){w.t-=dt;if(w.t>0)continue;w.done=true;G.shake=Math.max(G.shake,8);
+    for(const a of G.allies)if(dist2(a,w)<(w.r+a.r)**2){a.hp-=w.dmg*guard*.6*armorOf(a);a.flash=.15;}
+    if(dist2(p,w)<(w.r+p.r)**2){p.hp-=w.dmg*pguard;p.hurtT=.2;sfx('hurt');}
+    G.fx.push({type:'ring',x:w.x,y:w.y,r:20,max:w.r,life:.35,t:0,color:'#ff6a5a'});}
+  G.pending=G.pending.filter(w=>!w.done);
+  for(const z of G.zones){z.t-=dt;if(z.follow){z.x=z.follow.x;z.y=z.follow.y}
+    if(z.type==='fire')for(const e of G.enemies)if(!e.dead&&dist2(e,z)<z.r*z.r)hurt(e,z.dps*dt,z.src,true);}
+  G.zones=G.zones.filter(z=>z.t>0);
+  for(const tr of G.traps){tr.t-=dt;for(const e of G.enemies){if(e.dead||tr.n<=0||e.frzT>0)continue;if(dist2(e,tr)<(tr.r+e.r)**2){tr.n--;e.frzT=e.boss?.6:2;hurt(e,20*(1+G.t/180),tr.src)}}}
+  G.traps=G.traps.filter(tr=>tr.t>0&&tr.n>0);
+  G.enemies=G.enemies.filter(e=>!e.dead);
+  // 倒れた仲間は遺志のカードになり、兵舎から消える
+  G.allies=G.allies.filter(a=>{if(a.hp>0&&!a.sacrificed)return true;const u=a.u;
+    if(u.trait==='不屈'&&!a.revived&&!a.sacrificed){a.revived=true;a.hp=a.maxHp*.5;u.known=true;toast(`${u.name}は「不屈」で立ち上がった`);return true;}
+    G.discard.push({w:a.job,from:u.name});G.fallen.push(u.name);
+    SAVE.roster=SAVE.roster.filter(x=>x.uid!==u.uid);SAVE.fallen.push({name:u.name,type:u.type,kills:u.kills,star:u.star});
+    toast(a.sacrificed?`${u.name}を捧げた…遺志のカードが捨て札へ`:`${u.name}が倒れた…遺志のカードが捨て札へ`);sfx('fall');
+    G.fx.push({type:'ring',x:a.x,y:a.y,r:a.r,max:a.r+24,life:.5,t:0,color:'#8d7bb0'});return false;});
+  for(const g of G.gems){const d=Math.sqrt(dist2(g,p));if(d<G.mag){const s=Math.min(d,420*dt);g.x+=(p.x-g.x)/(d||1)*s;g.y+=(p.y-g.y)/(d||1)*s}
+    if(d<p.r+6){g.got=true;G.xp+=g.v}}
+  G.gems=G.gems.filter(g=>!g.got);
+  if(G.gems.length>400)G.gems.splice(0,G.gems.length-400);
+  while(G.xp>=need()){G.xp-=need();G.level++;sfx('level');G.fx.push({type:'ring',x:p.x,y:p.y,r:10,max:70,life:.5,t:0,color:'#e8c25a'});G.lvq++;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.1);for(const a of G.allies)a.hp=Math.min(a.maxHp,a.hp+a.maxHp*.1);}
+  if(G.lvq>0&&G.state==='play')openLevel();
+  for(const pk of G.pickups){pk.t+=dt;if(dist2(pk,p)<30*30){pk.got=true;addUnit(makeUnit(pk.type),'仲間になった');}}
+  G.pickups=G.pickups.filter(x=>!x.got);
+  if(G.t>=G.nextShrine&&G.t<590){G.nextShrine+=75;const a=rnd(0,Math.PI*2),d=rnd(260,360);G.shrines.push({x:p.x+Math.cos(a)*d,y:p.y+Math.sin(a)*d,t:0});toast('どこかに祭壇が現れた（紫の矢印）');}
+  for(const sr of G.shrines){sr.t+=dt;if(G.state==='play'&&dist2(sr,p)<32*32){sr.got=true;openShrine();}}
+  G.shrines=G.shrines.filter(x=>!x.got);
+  for(const ch of G.chests){ch.t+=dt;if(G.state==='play'&&dist2(ch,p)<34*34){ch.got=true;openChest(ch.type);}}
+  G.chests=G.chests.filter(c=>!c.got);
+  for(const f of G.fx)f.t+=dt;G.fx=G.fx.filter(f=>f.t<f.life);
+  p.hurtT=Math.max(0,(p.hurtT||0)-dt);
+  if(G.won){gameOver(true);return;}
+  if(p.hp<=0){p.hp=0;gameOver(false);}
+}
+
+const SHRINE={
+  heal:{name:'癒やしの泉',desc:'主人公と隊列の全員を全回復'},
+  sacrifice:{name:'生贄の祭壇',desc:'隊列の最後尾の仲間を捧げる（二度と戻らない）。残り全員の攻撃 +25%（この回）'},
+  train:{name:'訓練所',desc:'隊列の先頭の仲間が、倒した数 +25（★が上がりやすい）'},
+  recruit:{name:'酒場',desc:'新しい仲間を1人、山札に加える'},
+  gold:{name:'宝の山',desc:'この回の終わりにコイン +40'},
+  curse:{name:'呪いの鏡',desc:'この回のあいだ、敵の体力 +25%・経験値 2倍'},
+};
+// レベルアップ：呼ぶ・鍛える・武器・主人公から選ぶ
+const pile=()=>[...G.draw,...G.discard];
+function resumePlay(){if(G.lvq>0){openLevel();return}G.state='play';last=performance.now();}
+function lvClose(){$('lvup').hidden=true;resumePlay();}
+function openLevel(first){
+  G.state='level';G.lvFirst=!!first;G.lvStep='menu';fw(true);
+  if(first){lvSummon();$('lvup').hidden=false;return}
+  const opts=[];
+  if(pile().length)opts.push({k:'summon',name:'仲間を呼ぶ',desc:`山札（${pile().length}枚）から、呼ぶ1枚を自分で選ぶ`});
+  const ws=shuffle(Object.keys(WEAPONS).filter(w=>G.allies.some(a=>WEAPONS[w].kinds.includes(a.c.kind)))).slice(0,2);
+  for(const w of ws)opts.push({k:'weapon',w,name:`武器を渡す：${WEAPONS[w].name}`,desc:WEAPONS[w].desc+'（渡す相手を選ぶ。持っていた武器とは入れ替え）'});
+  if(G.allies.length)opts.push({k:'train',name:'仲間を鍛える',desc:'選んだ1人の攻撃・体力・回復 +25%、体力も全回復'});
+  opts.push({k:'hero',name:'主人公を鍛える',desc:'最大体力 +15・全回復・光の弾が強く速くなる'});
+  if(G.allies.length)opts.push({k:'mend',name:'隊列の手当て',desc:'主人公と仲間全員の体力を半分回復'});
+  const head=opts.filter(o=>o.k==='summon'),rest=shuffle(opts.filter(o=>o.k!=='summon'));
+  G.lvOpts=[...head,...rest].slice(0,4);
+  $('lvTitle').textContent=`レベル ${G.level}`;$('lvSub').textContent='ひとつ選ぶ'+(G.lvq>1?`（あと${G.lvq-1}回）`:'');
+  $('lvOpts').innerHTML=G.lvOpts.map((o,i)=>`<button type="button" data-i="${i}"><b>${o.name}</b><span>${o.desc}</span></button>`).join('');
+  $('lvCards').innerHTML='';renderForm('formLv');$('lvup').hidden=false;$('lvOpts').querySelector('button').focus();
+}
+const fw=v=>{$('fwrap').style.display=v?'':'none'};
+function lvSummon(){G.lvStep='summon';fw(true);
+  $('lvTitle').textContent=G.lvFirst?'最初に呼ぶ仲間を選ぶ':'呼ぶ仲間を選ぶ';$('lvSub').textContent='呼んだ仲間は隊列の最後尾に付く。並びはあとで変えられる';
+  $('lvOpts').innerHTML=G.lvFirst?'':'<button type="button" class="back" data-back="1"><b>戻る</b><span>ほかを選ぶ</span></button>';
+  $('lvCards').innerHTML=pile().map((en,i)=>{const h=entryCard(en);return h.replace(/^<div class="card/,'<button type="button" data-p="'+i+'" class="card').replace(/<\/div>$/,'</button>').replace(/^<div /,'<button ')}).join('');
+  renderForm('formLv');
+}
+function lvTarget(o){
+  const w=o.k==='weapon'?WEAPONS[o.w]:null;G.lvStep='target';fw(false);
+  $('lvTitle').textContent=w?`${w.name}を渡す相手`:'鍛える仲間を選ぶ';$('lvSub').textContent=w?w.desc:'攻撃・体力・回復 +25%';
+  $('lvOpts').innerHTML='<button type="button" class="back" data-back="1"><b>戻る</b><span>ほかを選ぶ</span></button>';
+  $('lvCards').innerHTML='<div class="form">'+G.allies.map((a,i)=>{const ok=!w||w.kinds.includes(a.c.kind);
+    return `<button type="button" class="frow pick" data-t="${i}" ${ok?'':'disabled'}>${formCells(a,i)}<span>${ok?'':'<small>使えない</small>'}</span></button>`}).join('')+'</div>';
+  G.lvSel=o;
+}
+function pickPile(i){const all=pile(),en=all[i];if(!en)return;
+  const di=G.draw.indexOf(en);if(di>=0)G.draw.splice(di,1);else G.discard.splice(G.discard.indexOf(en),1);
+  showDrawn(entryCard(en));sfx(en.w?'will':'draw');if(en.w)fireWill(en);else spawnAlly(en.u);lvDone();}
+function lvDone(){G.lvq=Math.max(0,G.lvq-(G.lvFirst?0:1));G.lvFirst=false;$('lvup').hidden=true;resumePlay();hud();}
+function lvChoose(i){const o=G.lvOpts[i],p=G.player;if(!o)return;
+  if(o.k==='summon')lvSummon();
+  else if(o.k==='weapon'||o.k==='train')lvTarget(o);
+  else if(o.k==='hero'){G.heroLv++;p.maxHp+=15;p.hp=p.maxHp;toast('主人公を鍛えた');lvDone();}
+  else if(o.k==='mend'){p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.5);for(const a of G.allies)a.hp=Math.min(a.maxHp,a.hp+a.maxHp*.5);toast('隊列を手当てした');lvDone();}
+}
+function lvApply(t){const a=G.allies[t],o=G.lvSel;if(!a||!o)return;
+  if(o.k==='weapon'){a.wp=o.w;refreshAlly(a);SAVE.st.weapons++;toast(`${a.u.name}に${WEAPONS[o.w].name}を渡した`);}
+  else{a.tr++;SAVE.st.trains++;refreshAlly(a);a.hp=a.maxHp;toast(`${a.u.name}を鍛えた（${a.tr}回目）`);}
+  G.fx.push({type:'ring',x:a.x,y:a.y,r:4,max:40,life:.5,t:0,color:'#e8c25a'});lvDone();}
+$('lvOpts').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.back){openLevel();return}lvChoose(+b.dataset.i);});
+$('lvCards').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.p!==undefined)pickPile(+b.dataset.p);else if(b.dataset.t!==undefined)lvApply(+b.dataset.t);});
+// 自動の試走用：呼べるなら呼び、なければ武器→鍛える
+function simForm(k){G.form=k}
+function lvAuto(){if(G.lvFirst||G.lvStep==='summon'){pickPile(pile().length-1);return}
+  const o=G.lvOpts.find(o=>o.k==='summon')||G.lvOpts.find(o=>o.k==='weapon')||G.lvOpts.find(o=>o.k==='train')||G.lvOpts[0];
+  if(o.k==='summon'){pickPile(pile().length-1);return}
+  if(o.k==='weapon'||o.k==='train'){G.lvSel=o;const t=G.allies.findIndex(a=>o.k!=='weapon'||WEAPONS[o.w].kinds.includes(a.c.kind));lvApply(Math.max(0,t));return}
+  lvChoose(G.lvOpts.indexOf(o));}
+// 隊列の並べ替え
+function formCells(a,i){const c=a.c,col=c.monster?ENEMY[a.u.type].color:JOBS[c.job].color,u=portrait(a.u.type,col);
+  const pos=isFront(a)?'先頭：受けるダメージ -30%':isRear(a)?'しんがり：攻撃 +30%':'';
+  return `<span class="no">${i+1}</span>${u?`<img src="${u}" alt="">`:'<span></span>'}<span><b>${esc(a.u.name)}</b> <small style="display:inline">${c.name}${'★'.repeat(a.u.star)}${a.tr?` 鍛${a.tr}`:''}</small><small>技「${SKILLS[a.u.type].name}」・${a.wp?WEAPONS[a.wp].name+'・':''}体力 ${Math.ceil(a.hp)}/${Math.ceil(a.maxHp)}</small>${pos?`<small class="pos">${pos}</small>`:''}</span>`}
+function formIcon(k){const pts={snake:[[30,15],[22,15],[14,15],[6,15]],line:[[32,3],[32,11],[32,19],[32,27]],ring:[[22,3],[33,15],[22,27],[11,15]],wedge:[[34,15],[26,8],[26,22],[18,3],[18,27]],box:[[30,8],[30,22],[14,8],[14,22]]}[k];
+  return `<svg viewBox="0 0 44 30" aria-hidden="true"><circle cx="22" cy="15" r="4" fill="#e8c25a"/>${pts.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.2" fill="#8fb3e8"/>`).join('')}<path d="M40 15l-4-3v6z" fill="#efe2c2"/></svg>`}
+function renderForms(id){$(id).innerHTML=Object.entries(FORMS).map(([k,f])=>`<button type="button" data-form="${k}" aria-pressed="${G.form===k}">${formIcon(k)}<b>${f.name}</b><span>${f.desc}</span></button>`).join('');}
+for(const id of ['formsLv','formsPause'])$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;setForm(b.dataset.form);renderForms(id);renderForm(id==='formsLv'?'formLv':'formPause');});
+function renderForm(id){renderForms(id==='formLv'?'formsLv':'formsPause');const el=$(id);if(!G.allies.length){el.innerHTML='<div class="small">まだ仲間がいない</div>';return}
+  el.innerHTML=G.allies.map((a,i)=>`<div class="frow">${formCells(a,i)}<span class="mv"><button type="button" data-f="${id}" data-up="${i}" ${i?'':'disabled'} aria-label="前へ">↑</button><button type="button" data-f="${id}" data-dn="${i}" ${i<G.allies.length-1?'':'disabled'} aria-label="後ろへ">↓</button></span></div>`).join('');}
+function moveAlly(i,d){const j=i+d;if(j<0||j>=G.allies.length)return;const A=G.allies;[A[i],A[j]]=[A[j],A[i]];}
+for(const id of ['formLv','formPause'])$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;
+  if(b.dataset.up!==undefined)moveAlly(+b.dataset.up,-1);else moveAlly(+b.dataset.dn,1);renderForm(id);
+  const k=b.dataset.up!==undefined?Math.max(0,+b.dataset.up-1):Math.min(G.allies.length-1,+b.dataset.dn+1);const nb=$(id).querySelectorAll('.frow')[k];nb&&nb.querySelector('button:not(:disabled)')&&nb.querySelector('button:not(:disabled)').focus();});
+
+function openShrine(){
+  G.state='shrine';sfx('chest');
+  const pool=Object.keys(SHRINE).filter(k=>!(k==='sacrifice'&&G.allies.length<2)&&!(k==='train'&&!G.allies.length)&&!(k==='curse'&&G.curse));
+  G.shrineOpts=shuffle(pool).slice(0,3);
+  $('shrineOpts').innerHTML=G.shrineOpts.map(k=>{let d=SHRINE[k].desc;
+    if(k==='sacrifice'){const a=G.allies[G.allies.length-1];d=`最後尾の${a.u.name}（${a.c.name}）を捧げる。二度と戻らない。残り全員の攻撃 +25%（この回）`}
+    if(k==='train'){const a=G.allies[0];d=`先頭の${a.u.name}（${a.c.name}）が倒した数 +25`}
+    return `<button type="button" data-k="${k}"><b>${SHRINE[k].name}</b><span>${d}</span></button>`}).join('')+`<button type="button" data-k="none"><b>立ち去る</b><span>何もしない</span></button>`;
+  $('shrine').hidden=false;$('shrineOpts').querySelector('button').focus();
+}
+function useShrine(k){
+  const p=G.player;
+  if(k==='heal'){p.hp=p.maxHp;for(const a of G.allies)a.hp=a.maxHp;}
+  else if(k==='sacrifice'){const a=G.allies[G.allies.length-1];a.hp=0;a.sacrificed=true;G.bonusAtk+=.25;}
+  else if(k==='train'){const a=G.allies[0];a.u.kills+=25;checkStar(a);}
+  else if(k==='recruit')addUnit(makeUnit(pick(humans())),'酒場で仲間になった');
+  else if(k==='gold')G.bonusCoins+=40;
+  else if(k==='curse')G.curse=true;
+  if(k!=='none'){toast(`${SHRINE[k].name}を選んだ`);SAVE.st.shrines++;}
+  $('shrine').hidden=true;resumePlay();
+}
+$('shrineOpts').addEventListener('click',e=>{const b=e.target.closest('button');if(b)useShrine(b.dataset.k);});
+
+function openChest(bossType){
+  G.state='chest';sfx('chest');
+  const hs=shuffle(humans());G.offer=[];for(const t of [bossType,hs[0],hs[1],...(up('pick')?[hs[2]]:[])])G.offer.push(makeUnit(t,G.offer));
+  $('chestCards').innerHTML=G.offer.map((u,i)=>{const j=CARDS[u.type].job,c=G.cnt[j]||0;
+    const badge=!G.syn[j]&&c+1>=JOBS[j].need?`<span class="badge">隊列に出れば${j}が揃う</span>`:'';
+    return unitCard(u,'button',`type="button" data-i="${i}"`).replace('<span class="k">',badge+'<span class="k">');}).join('');
+  $('chest').hidden=false;$('chestCards').querySelector('button').focus();
+}
+function pickOffer(i){addUnit(G.offer[i],'デッキに加わった');$('chest').hidden=true;resumePlay();}
+$('chestCards').addEventListener('click',e=>{const b=e.target.closest('button');if(b)pickOffer(+b.dataset.i);});
+
+function togglePause(){
+  if(!G)return;
+  if(G.state==='play'){G.state='pause';
+    renderForm('formPause');$('deckView').innerHTML=pile().map(entryCard).join('')||'<div class="small">山札は空</div>';$('paused').hidden=false;}
+  else if(G.state==='pause'){$('paused').hidden=true;resumePlay();}
+}
+$('pause').addEventListener('click',togglePause);$('resume').addEventListener('click',togglePause);
+
+function fmt(t){t=Math.max(0,t)|0;return `${t/60|0}:${String(t%60).padStart(2,'0')}`}
+function gameOver(win){G.state='over';
+  const coins=Math.floor(G.kills/6)+Math.floor(G.t/4)+(win?150:0)+G.bonusCoins;SAVE.coins=(SAVE.coins||0)+coins;G.coins=coins;
+  SAVE.runs++;SAVE.best=Math.max(SAVE.best,G.t);SAVE.st.best=SAVE.best;SAVE.st.maxLv=Math.max(SAVE.st.maxLv||0,G.level);
+  G.left=[];if(SAVE.roster.length>ROSTER_MAX){const keep=SAVE.roster.slice().sort((a,b)=>b.star-a.star||b.kills-a.kills).slice(0,ROSTER_MAX);const ks=new Set(keep.map(u=>u.uid));G.left=SAVE.roster.filter(u=>!ks.has(u.uid)).map(u=>u.name);SAVE.roster=SAVE.roster.filter(u=>ks.has(u.uid));}
+  const newly=Object.keys(LOCKS).filter(k=>!SAVE.unlocked.includes(k)&&LOCKS[k].ok(SAVE.st));SAVE.unlocked.push(...newly);if(win)SAVE.clears=(SAVE.clears||0)+1;save();
+  $('overTitle').textContent=win?'魔王を倒した！ 勝利':'主人公が倒れた';if(win)sfx('win');
+  $('res').innerHTML=`<dt>生き残った時間</dt><dd>${fmt(G.t)}</dd><dt>レベル</dt><dd>${G.level}</dd><dt>倒した敵</dt><dd>${G.kills}</dd><dt>呼んだ回数</dt><dd>${G.called}回</dd><dt>隊列で囲んだ</dt><dd>${G.loops}回</dd><dt>手に入れたコイン</dt><dd>${G.coins}枚（工房で使える）</dd>`;
+  const sec=(h,list,empty)=>`<h3>${h}</h3><p class="names">${list.length?list.map(esc).join('、'):empty}</p>`;
+  $('runlog').innerHTML=sec('新しく仲間になった',G.joined,'なし')+sec('★が上がった',G.stars,'なし')+sec('倒れた仲間（もう戻らない）',G.fallen,'いない。全員が兵舎へ戻った')+(G.left.length?sec(`兵舎が満員（${ROSTER_MAX}人）で去った`,G.left,''):'')+(newly.length?sec('新しいカードが宝箱と酒場に出るようになった',newly.map(k=>CARDS[k].name),''):'');
+  $('over').hidden=false;}
+
+function hud(){
+  const p=G.player;
+  $('lv').textContent='Lv '+G.level;$('time').textContent=fmt(G.t);
+  $('xpb').firstElementChild.style.width=(G.xp/need()*100)+'%';
+  $('hpb').firstElementChild.style.width=(p.hp/p.maxHp*100)+'%';
+  $('hpt').textContent='HP '+Math.ceil(p.hp);$('kills').textContent='撃破 '+G.kills;
+  $('nd').textContent=G.draw.length;$('ns').textContent=G.discard.length;$('na').textContent=G.allies.length;const toMaou=G.nextBoss>=600;const bAlive=G.enemies.some(e=>e.boss&&!e.d.final);$('nbl').textContent=G.maou?'魔王':bAlive?'中ボス':toMaou?'魔王まで':'次の中ボス';$('nb').textContent=G.maou||bAlive?'出現中':fmt((toMaou?600:G.nextBoss)-G.t);
+  const cnt=G.cnt;
+  let html=Object.entries(JOBS).filter(([j])=>j!=='魔物'||cnt[j]).map(([j,d])=>`<span class="chip${G.syn[j]?' on':(cnt[j]||0)===d.need-1?' near':''}"><i style="background:${d.color}"></i>${j} ${cnt[j]||0}/${d.need}<em class="cd">・${d.desc}</em></span>`).join('');
+  if(G.morale)html+=`<span class="chip buff">士気 +${G.morale*6}%</span>`;
+  if(G.buff.guard>0)html+=`<span class="chip buff">騎士の誓い ${Math.ceil(G.buff.guard)}秒</span>`;
+  html+=`<span class="chip buff">陣形 ${FORMS[G.form].name}</span>`;
+  if(G.bonusAtk)html+=`<span class="chip buff">生贄 攻撃 +${Math.round(G.bonusAtk*100)}%</span>`;
+  if(G.curse)html+=`<span class="chip buff">呪い 経験値2倍</span>`;
+  if(G.buff.song>0)html+=`<span class="chip buff">鼓舞の歌 ${Math.ceil(G.buff.song)}秒</span>`;
+  if(G.buff.crit>0)html+=`<span class="chip buff">影の刃 ${Math.ceil(G.buff.crit)}秒</span>`;
+  if(G.buff.atk>0)html+=`<span class="chip buff">魔物の咆哮 ${Math.ceil(G.buff.atk)}秒</span>`;
+  $('syn').innerHTML=html;
+}
+
+function shade(h,a){const n=parseInt(h.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const t=a<0?0:255,k=Math.abs(a);r=Math.round(r+(t-r)*k);g=Math.round(g+(t-g)*k);b=Math.round(b+(t-b)*k);return'#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1)}
+function blob(x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();}
+function eyes(x,y,r,c){ctx.fillStyle=c||'#1a0e0e';const ex=r*.35,er=r*.13+1;ctx.beginPath();ctx.arc(x-ex,y-r*.15,er,0,7);ctx.arc(x+ex,y-r*.15,er,0,7);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.85)';ctx.beginPath();ctx.arc(x-ex+er*.35,y-r*.15-er*.35,er*.38,0,7);ctx.arc(x+ex+er*.35,y-r*.15-er*.35,er*.38,0,7);ctx.fill();}
+function tri(a,b,c,d,e,f,col){ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.lineTo(e,f);ctx.closePath();ctx.fill();}
+// ===== ドット絵 =====
+// 1文字が1点。'.' は透明。輪郭線は自動で付ける。小文字・大文字は色の明暗
+const PAL0={k:'#120c0a',e:'#120c0a',w:'#ffffff',s:'#ecc39c',S:'#b8865e',q:'#ee9a86',h:'#5a3620',H:'#341c0e',m:'#c8d0da',M:'#7e8898',n:'#f4f8fb',b:'#9a6630',B:'#5e3a1a',g:'#f0c850',G:'#a9812a',r:'#d0453a',R:'#7c2420',c:'#efe8d8',C:'#b9ae98',d:'#5a3e2a',D:'#36241a',y:'#fff2a0',z:'#5aa04a',Z:'#2f6a2e',u:'#6fb8ff',U:'#3a6ab0',t:'#2e2a3a',T:'#18141f',o:'#e0c890',p:'#6b8a4a',P:'#3f5a2e',x:'#c58cf0',f:'#ff8a3c'};
+function pgrid(w,h){return Array.from({length:h},()=>Array(w).fill('.'))}
+function put(g,x,y,rows){rows.forEach((row,j)=>{for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='.')continue;const yy=y+j,xx=x+i;if(yy>=0&&yy<g.length&&xx>=0&&xx<g[0].length)g[yy][xx]=ch==='_'?'.':ch}})}
+// 人の素体（12×20、3頭身近く）。22×26 の枠の (5,6) に置く
+const HB=["....hhhh....","...hhhhhhH..","..hhhhhhhH..","..hhhssshH..","..hsSssSsh..","..hsessesh..","..hssssssh..","...sssssS...","....SSSS....","..AaaaaaaA..",".AaaLaaaaaA.","AaAaLaaaaAaA","aAAaaaaaaAAa","aA.aaaaaa.Aa","s..AAggAA..s","...aaaaaa..."];
+const HL=[["...dd..dd...","...dd..dd...","...dD..dD...","..DDD..DDD.."],["...dd...dd..","..dd....dd..","..dD....dD..",".DDD....DDD."]];
+function hum(o){const fr=[0,1].map(f=>{const g=pgrid(22,26);for(const p of o.back||[])put(g,...p);put(g,5,6,HB.concat(HL[f]));for(const p of o.front||[])put(g,...p);return g});return{fr,pal:o.pal||{},R:6.5,ax:11,ay:18,dark:1}}
+const col1=n=>Array(n).fill('.b.');
+const PT={
+  helm:[6,5,["...mmmm...","..mnmmmM..",".mnmmmmmM.",".mmmmmmmM.",".MMMMMMMM.",".M..mm..M.",".M......M.",".M......M."]],
+  sword:[16,6,[".n.",".n.",".n.",".n.",".m.",".m.",".m.",".m.",".m.",".M.",".M.",".M.","GgG",".B.",".B.",".g."]],
+  bow:[17,10,["cb.","c.b","c.b","c.b","c.b","c.b","c.b","c.b","c.b","c.b","c.b","c.b","cb."]],
+  staff:[16,6,[".x.","xyx",".x."].concat(col1(17))],
+  hood:[6,5,["...pppp...","..pppppPP.",".pppppppPP","pppppppppP","pPPPPPPPPP","pp......PP","pp......PP","pp......PP",".pp....PP.","..pPPPPp.."]],
+  dagger:[16,15,[".n.",".n.",".m.","GgG",".B.",".B."]],
+  wiz:[5,0,["........pP..",".......ppP..","......pppP..",".....ppppP..","....pppppP..","....ppppppP.","...pppppppP.","...ggggggGG.","PpppppppppPP"]],
+  robe:[8,21,["aaaaaa","aAaaAa","AaAAaA"]],
+};
+const capeBack=(c,C)=>[4,15,['.'+C.repeat(12)+'.',C+c.repeat(12)+C,C+c.repeat(12)+C,C+c.repeat(12)+C,C+c.repeat(12)+C,C+c.repeat(12)+C,C+c.repeat(12)+C,C+c.repeat(12)+C,C+c.repeat(12)+C,'.'+C+'.'+C+c+C+'..'+C+c+C+'.'+C+'.']];
+const DEF={
+  hero:hum({pal:{a:'#3a5aa8',A:'#22386a',L:'#6a8ad8',h:'#e0b050',H:'#a07a30'},back:[capeBack('r','R')],front:[[7,4,["g..gg..g","gggggggg","GgrggrgG"]],PT.sword]}),
+  knight:hum({back:[capeBack('A','k')],front:[PT.helm,[2,16,["MmmmmM","maagaM","mggggM","maagaM","maagaM",".maaM.","..mM.."]],PT.sword]}),
+  heavy:hum({front:[[6,5,["...mmmm...","..mnmmmM..",".mnmmmmmM.",".mmmmmmmM.",".mmmmmmmM.",".mmmmmmmM.",".MkkkkkkM.",".mmmmmmmM.",".MmkmmkmM.","..MMMMMM.."]],
+    [16,13,["mnm","mmm","MmM",".B.",".B.",".B.",".B.",".B."]],[1,15,["GgggggG","gLaagAg","ggggggg","gLaagAg","gaaagAg","gaaagAg","gaaagAg",".gaagg.","..ggg.."]]]}),
+  paladin:hum({pal:{a:'#e9e4d4',A:'#a8a08a',L:'#ffffff'},back:[capeBack('u','U')],
+    front:[[6,4,["g........g","gg.gggg.gg",".gyggggggG",".ggggggggG",".ggggggggG",".GGGGGGGGG",".G......G.",".G......G."]],[16,3,[".n.",".n.",".n.",".n.",".n.",".n.",".n.",".m.",".m.",".m.",".m.",".m.",".M.",".M.","GgG","gGg",".B.",".B.",".g."]],[10,17,["uu"]]]}),
+  lancer:hum({back:[capeBack('A','k')],front:[PT.helm,[10,2,["rr","rR","Rr"]],[16,0,[".n.",".n.","nmn",".M."].concat(col1(21))]]}),
+  archer:hum({pal:{p:'#3f7a3a',P:'#24502a'},back:[capeBack('p','P')],front:[[6,4,[".........c","...pppp.c.","..pppppPc.",".ppppppppP","pPPPPPPPPP"]],PT.bow]}),
+  hunter:hum({pal:{p:'#6a4a2a',P:'#3e2a16',o:'#c8b898',h:'#2a1e14',H:'#160e08'},back:[[15,13,["bB","bB","BB","BB"]]],front:[[7,6,["..pppp..",".poppopP","ppppppPP","oooooooo"]],PT.bow]}),
+  arbalest:hum({pal:{p:'#5a3a22',P:'#30200e',o:'#8a6a3a'},front:[[5,6,["...pppppp...","...poppppP..","..ppppppppP.","PPPPPPPPPPPP"]],[14,17,["....mM.",".....m.","bbbbbmb","BBBBBm.",".....m.","....mM."]]]}),
+  mage:hum({pal:{p:'#5a2f90',P:'#321a5a',x:'#c58cf0'},front:[PT.wiz,PT.robe,PT.staff]}),
+  witch:hum({pal:{p:'#7a1e3a',P:'#460e20',x:'#ff8a3c',h:'#c83a2a',H:'#7a1e14'},front:[[5,0,["..Pp........","..PPp.......","...pppp.....","...ppppp....","...pppppP...","...ppppppP..","...pppppppP.","...rrrrrrRR.","PppppppppppP"]],PT.robe,PT.staff]}),
+  icemage:hum({pal:{p:'#6fb8d8',P:'#2f6890',x:'#e8f8ff',y:'#9fe0ff',h:'#d8e8f0',H:'#98b0c0'},front:[PT.hood,PT.robe,[16,5,["x.x",".y.","x.x"].concat(col1(18))]]}),
+  thunder:hum({pal:{p:'#b8982a',P:'#6a5418',x:'#fff27a',y:'#ffffff'},front:[[5,0,["........pP..",".......ppP..","......pppP..",".....ppppP..","....pppppP..","....ppppppP.","...pppppppP.","...yGyGyGyG.","PpppppppppPP"]],PT.robe,[16,4,[".x.","xx.",".xx",".x."].concat(col1(18))]]}),
+  cleric:hum({front:[[8,1,["..cC..",".ccgC.",".cgggC",".ccgcC","cccgcC","cccccC","CCCCCC"]],PT.robe,[16,7,[".g.","ggg",".g."].concat(col1(16))]]}),
+  bard:hum({pal:{p:'#a8322a',P:'#6a1a14'},back:[capeBack('p','P')],front:[[6,5,["..pppppp..","pppppppppP",".PPPPPPPP."]],[14,2,["..c",".c.","c.."]],[13,17,["....B","...B.",".bb..","bbBb.","bBbb.",".bb.."]]]}),
+  nun:hum({pal:{a:'#2e2a3a',A:'#1a1622',L:'#4a4458'},front:[[5,5,["....tttt....","...tttttt...","..tttttttt..","..tccccccT..","............",".tt......TT.",".tt......TT.",".tt......TT.","tt........TT","tT........TT","tT........TT","T..........T"]],[8,15,["cccccc"]],PT.robe,[15,19,["Rrr","Rcr"]]]}),
+  thief:hum({pal:{p:'#34504a',P:'#1c302a',r:'#7a4a2a',R:'#4a2a18'},back:[capeBack('p','P')],front:[PT.hood,[6,15,["rrrrrrrrrr"]],[5,16,["r","R","r"]],PT.dagger]}),
+  assassin:hum({pal:{p:'#241f30',P:'#120e18',e:'#ff3a4a'},back:[capeBack('p','P')],front:[PT.hood,[8,12,["pppppp","PPPPPP"]],[6,15,["rrrrrrrrrr"]],[5,16,["r","R","r"]],PT.dagger,[3,15,[".n.",".n.",".m.","GgG",".B."]]]}),
+};
+function mon(fr,R,ay,o){return Object.assign({fr,R,ax:fr[0][0].length/2,ay},o||{})}
+const legs=(g,rows)=>g.slice(0,g.length-rows.length).concat(rows);
+{
+const sl=["......aaaa......","....aaLLaaaa....","...aLwLaaaaaa...","..aaLLaaaaaaaa..","..aLAAaaaaAAaa..",".aaaaeaaaaeaaaa.",".aaaaeaaaaeaaaa.",".aaaaaaaaaaaaaA.","aaaaaawAAwaaaaaA","aaaaaaaaaaaaaaAA","AaaaaaaaaaaaaaAA",".AAAAAAAAAAAAAA."];
+const sl2=["................","......aaaa......","...aaaLLaaaaa...","..aaLwLaaaaaaa..",".aaLAAaaaaAAaaa.",".aaaaeaaaaeaaaa.","aaaaaeaaaaeaaaaA","aaaaaawAAwaaaaaA","aaaaaaaaaaaaaaAA","AaaaaaaaaaaaaaAA","AAaaaaaaaaaaaAAA",".AAAAAAAAAAAAAA."];
+DEF.slime=mon([sl,sl2],7,7,{always:1});
+const gb=["................",".....aaaaaa.....","aa..aaaaaaaa..aa",".aaaaLaaaaaaaaa.","..aaLaaaaaaaaa..","...aaaaaaaaaa...","...ayeaaaayea...","....aaaAAaaa....","....aAwAAwAa....",".....aaaaaa.....","....dddddddd..n.","...adddddddda.m.","...addddddddaGgG","....BBBBBBBB.B..",".....aa..aa.....",".....AA..AA....."];
+DEF.goblin=mon([gb,legs(gb,["....aa....aa....","....AA....AA...."])],6,9,{pal:{y:'#fff3a0'}});
+const oc=["......aaaaaaa.......",".....aaLLaaaaa......","....aaLaaaaaaaa.....","...AaAAAAAAAAAaA....","...aayeaaaaayeaa....","....aaaaaAaaaaa.....","....acaAAAAAaca.....","....acaaaaaaaca..bb.",".....aaaaaaaaa..bBbb","...aadddddddddaabBbb","..aaadLdddddddaaaBb.","..aaaddddddddddaaB..","..aa.dddddddddd.aB..","..aa.BBBBgBBBBB..B..","..LA.ddddddddd......",".....ddd...ddd......",".....aaa...aaa......",".....DDD...DDD......"];
+DEF.orc=mon([oc,legs(oc,["....ddd.....ddd.....","....aaa.....aaa.....","....DDD.....DDD....."])],9,10,{pal:{a:'#6f9a4a',A:'#41602a',L:'#9cc46a',d:'#6b4a2a',y:'#ffcf4a'}});
+const sk=[".....aaaaaa.....","....aLLaaaaa....","...aLaaaaaaaa...","...aeeaaaaeea...","...aerAaaarea...","....aaaeeaaa....",".....aAaAaA.....","......aaaa......","..b...AaaA......",".b..aaaaaaaaa...",".b...AaAaAaA.a..",".b..aaaaaaaa.a..",".b...AaAaAaA....",".b....aaaa......","..b...a..a......","......a..a......",".....AA..AA....."];
+DEF.skel=mon([sk,legs(sk,["......a...a.....",".....AA...AA...."])],6,9,{pal:{r:'#ff6a4a'}});
+const bo=["....................","......AAAAAA........","....AAAAAAAAAA......","...AAaaaaaaaaAAA....","..Aaaaaaaaaaaaaaa.a.",".Aaaaaaaaaaaaaaaaaaa",".aaaaaaaaaaaaaaawea.","Aaaaaaaaaaaaaaaaaaoo","AaaaaaaaaaaaaaaaaaoD",".aLLLLLLLLLLaaaacaoo",".AaLLLLLLLLaaaaAc...","..AAAAAAAAAAAAAA....","..DD.DD.....DD.DD...","..D..D......D..D...."];
+DEF.boar=mon([bo,legs(bo,["...DD.DD...DD.DD....","...D...D...D...D...."])],8,7,{pal:{o:'#e0a088',w:'#ffffff'}});
+const bt1=["A..................A","AA................AA",".AaA....a..a....AaA.",".AaaA..aaaaaa..AaaA.","..AaaAaayaayaaAaaA..","..AaaaaaaaaaaaaaaA..","...AaA.aawwaa.AaA...","....A...aaaa...A....","...................."];
+const bt2=["....................","........a..a........",".......aaaaaa.......","...AAAaayaayaaAAA...",".AAaaaaaaaaaaaaaaAA.","AaaaaA.aawwaa.AaaaaA","AaaA....aaaa....AaaA","AaA..............AaA","A..................A"];
+DEF.bat=mon([bt1,bt2],5,4,{always:1,pal:{y:'#ff4a5a'}});
+const go=["........aaaaaaaa........",".......aLLaaaaaaA.......",".......aLaaaazaaA.......",".......auuuuuuuuA.......",".......aaaaaaaaaA.......","...aaaaAAAAAAAAAAaaaa...","..aLLaaaaaaaaaaaaaaaaA..",".aLaaaaaaaaaaaaaaaaaaaA.",".aaaAaaaaaaaazaaaaaAaaA.",".aaaaAaaaaAaaaaaaaAaaaA.",".aaaaAaaaaaAaaaaaaAaaaA.",".AaaaAaaaaaaaaaaaaAaaaA.",".AaaAA.aaaaaaaaaa.AAaaA.",".AAAA..AAAAAAAAAA..AAAA.",".......aaaaa..aaaaa.....",".......aaaaA..aaaaA.....",".......AAAAA..AAAAA....."];
+DEF.golem=mon([go,legs(go,["......aaaaa....aaaaa....","......aaaaA....aaaaA....","......AAAAA....AAAAA...."])],12,9,{pal:{z:'#6a8a5a',u:'#7fe8ff'}});
+const og=["......c........c......","......cc.aaaa.cc......",".......caaLLaaac......","........aLaaaaaa..bb..",".......AAAAAAAAAA.bBbb",".......ayeaaaayea.bBbb","........aaaAAaaa...bb.","........aAwAAwAa...B..","....aaaaaaaaaaaaaa.B..","...aaLaaaaLLaaaaaaaB..","..aaLaaaaaaaaaaaaaaB..","..aaaaaaaaaaaaaaaaaa..","..aaa.aaaaaaaaaa.aaa..","..aaa.dddddddddd.aaa..","..LLA.ddddgddddd.LLA..","......dddddddddd......","......aaaa..aaaa......","......aaaa..aaaa......","......AAAA..AAAA......"];
+DEF.ogre=mon([og,legs(og,[".....aaaa....aaaa.....",".....aaaa....aaaa.....",".....AAAA....AAAA....."])],10,11,{pal:{y:'#ffe08a',d:'#6b4a2a'}});
+const li=[".x.....g.g.g.g......","xyx....ggggggg......",".x....AAAAAAAAA.....",".b...AAccccccAA.....",".b...AcxeccexcA.....",".b...AcccCCcccA.....",".b...AAcCcCcCAA.....",".b..AAAAccccAAAA....",".bLaaaaaaaaaaaaaa...",".b.aaaaaagaaaaaaa...",".b.aaaaaagaaaaaaa...",".b..aaaaagaaaaaa....",".b..aaaaagaaaaaa....",".b..aaaaagaaaaaaA...",".b.aaaaaagaaaaaaA...",".b.aaaaaagaaaaaaaA..",".baaaaaaaaaaaaaaaA..",".bAaAAaAAaAAaAAaA...",".b.A..A..A..A..A...."];
+DEF.lich=mon([li,legs(li,[".bAAaAAaAAaAAaAAa...",".b..A..A..A..A..A..."])],9,10,{always:1,pal:{x:'#8affb8',y:'#e8fff0',c:'#e6e0cc',C:'#a8a290',g:'#c8b060'}});
+const dr=[".............c..c.............","..A..........caac..........A..",".AAA........aaLaaa........AAA.",".AAAA.......ayaaya.......AAAA.",".AAvAA......aaaaaa......AAvAA.",".AvvvAA.....aAeeAa.....AAvvvA.","AvvvvvAA....aaaaaa....AAvvvvvA","AvvvvvvAA.aaaaaaaaaa.AAvvvvvvA","AvvvvvvvAaaaaooooaaaaAvvvvvvvA","AvvvvvvAaaaaooooooaaaaAvvvvvvA","AvvvvvA.aaaooooooooaaa.AvvvvvA","AvvvA...aaaaooooooaaaa...AvvvA","AvA.....aaaaaooooaaaaa.....AvA","A.......aaaaaaaaaaaaaa.......A",".........aaa......aaa.........",".........ccc......ccc........."];
+const dr2=[".............c..c.............","AAA..........caac..........AAA","AvvA........aaLaaa........AvvA","AvvvA.......ayaaya.......AvvvA",".AvvvA......aaaaaa......AvvvA.",".AvvvvAA....aAeeAa....AAvvvvA.","..AvvvvAA...aaaaaa...AAvvvvA..","..AvvvvvAaaaaaaaaaaaaAvvvvvA..","...AvvvAaaaaooooaaaaaAvvvA....","....AvvAaaaaooooooaaaaAvvA....","....AAA.aaaooooooooaaa.AAA....","........aaaaooooooaaaa........","........aaaaaooooaaaaa........","........aaaaaaaaaaaaaa........",".........aaa......aaa.........",".........ccc......ccc........."];
+DEF.dragon=mon([dr,dr2],10,9,{always:1,pal:{o:'#e8c88a',c:'#e9dcc0',y:'#ffcf4a',v:null}});
+const mo=["....v.....g.g.g.....v..x..","....vv....ggggg....vv.xyx.",".....vv..TTTTTTT..vv...x..","......vvTTTTTTTTTvv....b..",".......TTrrTTTrrTT.....b..",".......TTTTTTTTTTT.....b..","........TTTwwwTTT......b..",".....aaaaTTTTTTTaaaa...b..","...aaaLLaaaaaaaaaaaaaa.b..","..aaaLaaaarrrrrraaaaaaab..","..aaLaaaarrggrrraaaaaaaB..","..aaaaaaarrrrrrraaaaaaaB..","..aaaaaaarrrrrrraaaaaaaB..","..aaaaaaarrrrrrraaaaaaaB..","..AaaaaaarrrrrrraaaaaaAB..",".AaaaaaaarrrrrrraaaaaaaAB.",".AaaaaaaarrrrrrraaaaaaaAB.","AaaaaaaaarrrrrrraaaaaaaaAB","AAaAAaAAaAAaAAaAAaAAaAAaAB"];
+DEF.maou=mon([mo,legs(mo,["AaAAaAAaAAaAAaAAaAAaAAaAAB"])],13,12,{always:1,pal:{v:'#c58cf0',x:'#c58cf0',y:'#ffe0ff',T:'#2a1a3a',r:'#ff3a5a',w:'#f3ead0',g:'#e8c25a'}});
+DEF.slime.pal={w:'#ffffff'};
+}
+// 小物
+const ITEM={
+  gemB:mon([["..u..",".uuU.","uyuuU","uuuuU",".uuU.","..U.."]],2,3,{pal:{u:'#6fb8ff',U:'#2e5ab0',y:'#e8f6ff'}}),
+  gemG:mon([["..g..",".ggG.","gyggG","ggggG",".ggG.","..G.."]],2,3),
+  chest:mon([[".BBBBBBBBBBBB.","BbbbbbbbbbbbbB","BbbbbbbbbbbbbB","BggggggggggggB","BbbbbbGGbbbbbB","BbbbbbgybbbbbB","BbbbbbGGbbbbbB","BbbbbbbbbbbbbB","BggggggggggggB",".BBBBBBBBBBBB."]],7,5),
+  shrine:mon([["............","....x..x....",".....xx.....","....xyyx....","....xyyx....",".....xx.....",".cccccccccc.",".CCCCCCCCCC.","..cccccccC..","..ccCcccCC..","..cccccccC..","..cCccccCC..","..cccccccC..",".cccccccccC.","CCCCCCCCCCCC"]],6,9,{pal:{c:'#b0a690',C:'#7a7262'}}),
+  card:mon([["oooooooooo","occcccccCo","occcccccCo","occBccBcCo","occBBBBcCo","ocBeBBeBCo","ocBBBBBBCo","occBwwBcCo","occcBBccCo","occcccccCo","oCCCCCCCCo","oooooooooo"]],5,6,{pal:{o:'#e0a24f',c:'#efe2c2',C:'#c8b890'}}),
+  crown:mon([["g...g...g","gg.ggg.gg","ggggggggg","gggrgrggg","GGGGGGGGG"]],4,2),
+};
+function palOf(d,col){const P=Object.assign({},PAL0,d.dark?{a:shade(col,-.3),A:shade(col,-.62),L:shade(col,.05)}:{a:col,A:shade(col,-.35),L:shade(col,.35),v:shade(col,-.2),V:shade(col,-.5)});for(const[k,v]of Object.entries(d.pal||{}))if(v)P[k]=v;return P}
+const SPR=new Map();
+function sprite(type,col,fl){const k=type+'|'+col+'|'+(fl?1:0);let sp=SPR.get(k);if(sp)return sp;
+  const d=DEF[type]||ITEM[type]||DEF.slime,P=palOf(d,col||'#888888');
+  const fr=d.fr.map(g=>{const h=g.length,w=g[0].length,c=document.createElement('canvas');c.width=w+2;c.height=h+2;const x=c.getContext('2d');
+    const op=(i,j)=>j>=0&&j<h&&i>=0&&i<w&&g[j][i]!=='.';
+    for(let j=-1;j<=h;j++)for(let i=-1;i<=w;i++){let cc=null;if(op(i,j))cc=fl?'#ffffff':(P[g[j][i]]||'#ff00ff');else if(op(i-1,j)||op(i+1,j)||op(i,j-1)||op(i,j+1))cc=P.k;
+      if(cc){x.fillStyle=cc;x.fillRect(i+1,j+1,1,1)}}
+    return c});
+  sp={fr,ax:Math.round(d.ax)+1,ay:Math.round(d.ay)+1,R:d.R,w:d.fr[0][0].length+2,h:d.fr[0].length+2,always:d.always};SPR.set(k,sp);return sp}
+let OX=0,OY=0;
+// 世界の座標 (x,y) に、点を崩さずに貼る
+function blitPix(sp,img,x,y,sc,flip){const bx=Math.round((x+OX)/WP)-sp.ax*sc,by=Math.round((y+OY)/WP)-sp.ay*sc;
+  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;
+  if(flip){ctx.translate(bx+sp.w*sc,by);ctx.scale(-1,1);ctx.drawImage(img,0,0,sp.w*sc,sp.h*sc)}else ctx.drawImage(img,bx,by,sp.w*sc,sp.h*sc);
+  ctx.restore()}
+function drawItem(type,x,y,sc,col){const sp=sprite(type,col);blitPix(sp,sp.fr[0],x,y,sc||1,false)}
+function drawSprite(ent,type,x,y,r,col,fl){const sp=sprite(type,col,fl);
+  if(ent._px!==undefined){const dx=x-ent._px,dy=y-ent._py;if(Math.abs(dx)>.25)ent._face=dx<0?-1:1;ent._mv=(ent._mv||0)*.85+Math.hypot(dx,dy)*.15}
+  ent._px=x;ent._py=y;if(ent._ph===undefined)ent._ph=Math.random()*7;
+  const t=G?G.t:0,walk=(ent._mv||0)>.3||sp.always,f=walk?Math.floor(t*(sp.always?5:8)+ent._ph)%2:0;
+  const sc=Math.max(1,Math.round(r/(sp.R*WP)));
+  blitPix(sp,sp.fr[Math.min(f,sp.fr.length-1)],x,y-(walk&&f&&!sp.always?WP*sc:0),sc,(ent._face||1)<0)}
+// カードの顔の絵（36×36 の点を2倍で）
+const PORT=new Map();
+function portrait(type,col){const k=type+col;if(PORT.has(k))return PORT.get(k);let u='';
+  try{const sp=sprite(type,col,false),c=document.createElement('canvas');c.width=c.height=72;const x=c.getContext('2d');x.imageSmoothingEnabled=false;
+    x.drawImage(sp.fr[0],Math.round((36-sp.w)/2)*2,Math.round((36-sp.h)/2)*2,sp.w*2,sp.h*2);u=c.toDataURL()}catch(e){}
+  PORT.set(k,u);return u}
+function cardFace(type,fallback){const c=CARDS[type],col=c.monster?ENEMY[type].color:JOBS[c.job].color,u=portrait(type,col);return u?`<span class="g pic"><img src="${u}" alt=""></span>`:`<span class="g">${fallback}</span>`}
+// 地面：256点の草地を一度だけ描いて敷きつめる
+let GROUND=null;
+function ground(){if(GROUND)return GROUND;const S=256,c=document.createElement('canvas');c.width=c.height=S;const g=c.getContext('2d');
+  let seed=11;const rr=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+  const px=(x,y,cl)=>{g.fillStyle=cl;g.fillRect(((Math.round(x)%S)+S)%S,((Math.round(y)%S)+S)%S,1,1)};
+  g.fillStyle='#1c3123';g.fillRect(0,0,S,S);
+  // 濃淡のまだら（ふちは市松で混ぜる）
+  for(let i=0;i<22;i++){const cx=rr()*S,cy=rr()*S,rx=12+rr()*26,ry=8+rr()*16,cl=i%2?'#1f3726':'#192c1f';
+    for(let y=-ry;y<=ry;y++)for(let x=-rx;x<=rx;x++){const q=(x*x)/(rx*rx)+(y*y)/(ry*ry);if(q<.55||(q<1&&((Math.round(cx+x)+Math.round(cy+y))&1)===0))px(cx+x,cy+y,cl)}}
+  // 土
+  for(let i=0;i<3;i++){const cx=rr()*S,cy=rr()*S,rx=7+rr()*7,ry=3+rr()*3;
+    for(let y=-ry;y<=ry;y++)for(let x=-rx;x<=rx;x++){const q=(x*x)/(rx*rx)+(y*y)/(ry*ry);if(q<.5)px(cx+x,cy+y,'#2f3022');else if(q<1&&((Math.round(cx+x)+Math.round(cy+y))&1)===0)px(cx+x,cy+y,'#263222')}}
+  for(let i=0;i<500;i++)px(rr()*S,rr()*S,rr()<.5?'#22392a':'#172a1d');
+  // 草の房
+  for(let i=0;i<70;i++){const x=Math.floor(rr()*S),y=Math.floor(rr()*S),cl=rr()<.6?'#2a4a31':'#335a39',hi='#3f6a43';
+    px(x,y,cl);px(x+2,y,cl);px(x+4,y,cl);px(x+1,y-1,cl);px(x+3,y-1,cl);px(x+2,y-2,hi);px(x+1,y+1,'#142519');px(x+3,y+1,'#142519')}
+  // 花（少しだけ）
+  const fc=['#c9b86a','#b8b2c8','#a77ac8','#c88a7a'];
+  for(let i=0;i<9;i++){const x=Math.floor(rr()*S),y=Math.floor(rr()*S),cl=fc[i%4];px(x,y-1,cl);px(x-1,y,cl);px(x+1,y,cl);px(x,y+1,cl);px(x,y,'#e8dca0');px(x,y+2,'#2a4a31')}
+  // 石
+  for(let i=0;i<5;i++){const x=Math.floor(rr()*S),y=Math.floor(rr()*S);
+    for(const[a,b,cl]of[[0,0,'#5d6258'],[1,0,'#5d6258'],[2,0,'#43473f'],[-1,1,'#43473f'],[0,1,'#43473f'],[1,1,'#43473f'],[2,1,'#33362f'],[3,1,'#33362f'],[0,-1,'#787e72'],[1,-1,'#5d6258'],[-1,2,'#101a12'],[0,2,'#101a12'],[1,2,'#101a12'],[2,2,'#101a12'],[3,2,'#101a12']])px(x+a,y+b,cl)}
+  GROUND={c,S};return GROUND}
+let VIG=null,VIGK='';
+function vignette(){const k=W+'x'+H;if(VIGK!==k){VIGK=k;VIG=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.hypot(W,H)*.6);VIG.addColorStop(0,'rgba(0,0,0,0)');VIG.addColorStop(1,'rgba(0,0,0,.55)')}
+  ctx.fillStyle=VIG;ctx.fillRect(0,0,W,H)}
+function hash(x,y){let h=x*374761393+y*668265263;h=(h^(h>>13))*1274126177;return((h^(h>>16))>>>0)/4294967295}
+function edgeArrow(x,y,ox,oy,color){const sx=(x+ox)*Z,sy=(y+oy)*Z;if(sx>0&&sx<W&&sy>0&&sy<H)return;
+  const a=Math.atan2(sy-H/2,sx-W/2),m=40,cx=Math.max(m,Math.min(W-m,W/2+Math.cos(a)*W)),cy=Math.max(m+60,Math.min(H-m-60,H/2+Math.sin(a)*H));
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(a);ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(-8,-9);ctx.lineTo(-8,9);ctx.fill();ctx.restore();}
+function pixAt(x,y,n){n=n||1;ctx.fillRect(Math.round(x/WP)*WP,Math.round(y/WP)*WP,WP*n,WP*n)}
+// 小さい画面を点のまま拡大して貼り、字だけはくっきり重ねる
+function present(M,bw,bh,ox,oy){ctx=M;ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;ctx.drawImage(BUF,0,0,bw*PX,bh*PX);
+  if(G){const S=PX/WP;ctx.setTransform(S,0,0,S,ox*S,oy*S);ctx.textAlign='center';ctx.textBaseline='middle';
+    for(const a of G.allies)if(a.u.star>1){ctx.fillStyle='#e8c25a';ctx.font='9px "DotGothic16",sans-serif';ctx.fillText('★'.repeat(a.u.star),a.x,a.y-36);}
+    for(const f of G.fx){const k=f.t/f.life;
+      if(f.type==='num'){ctx.globalAlpha=1-k*k;ctx.font=`${f.big?16:11}px "DotGothic16",sans-serif`;ctx.lineWidth=3;ctx.strokeStyle='rgba(10,8,6,.8)';ctx.strokeText(f.v,f.x,f.y-k*22);ctx.fillStyle=f.big?'#ffd36f':'#ffffff';ctx.fillText(f.v,f.x,f.y-k*22);}
+      else if(f.type==='skill'){ctx.globalAlpha=Math.min(1,(1-k)*2);ctx.font='13px "DotGothic16",sans-serif';ctx.lineWidth=3;ctx.strokeStyle='rgba(10,8,6,.85)';ctx.strokeText(f.v,f.x,f.y-40-k*14);ctx.fillStyle=f.color;ctx.fillText(f.v,f.x,f.y-40-k*14);}
+      else if(f.type==='heal'){ctx.globalAlpha=1-k;ctx.fillStyle='#9ff0a8';ctx.font='16px "DotGothic16",sans-serif';ctx.fillText('+',f.x,f.y-14-k*14);}
+      ctx.globalAlpha=1;}}
+  ctx.setTransform(DPR,0,0,DPR,0,0);vignette()}
+function render(){
+  const p=G?G.player:{x:0,y:0},MAIN=ctx;
+  const bw=Math.ceil(cv.width/PX),bh=Math.ceil(cv.height/PX);
+  if(!BUF){BUF=document.createElement('canvas');BCTX=BUF.getContext('2d')}
+  if(BUF.width!==bw||BUF.height!==bh){BUF.width=bw;BUF.height=bh}
+  ctx=BCTX;ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;
+  const VW=bw*WP,VH=bh*WP,sh=G?G.shake:0,ox=Math.round((VW/2-p.x+rnd(-sh,sh))/WP)*WP,oy=Math.round((VH/2-p.y+rnd(-sh,sh))/WP)*WP;OX=ox;OY=oy;
+  {const gr=ground(),S=gr.S,bx=Math.round(ox/WP),by=Math.round(oy/WP),sx=((bx%S)+S)%S-S,sy=((by%S)+S)%S-S;
+    for(let tx=sx;tx<bw;tx+=S)for(let ty=sy;ty<bh;ty+=S)ctx.drawImage(gr.c,tx,ty);}
+  ctx.setTransform(1/WP,0,0,1/WP,0,0);
+  if(!G){present(MAIN,bw,bh,ox,oy);return}
+  ctx.save();ctx.translate(ox,oy);
+  ctx.globalCompositeOperation='lighter';for(const g of G.gems){ctx.fillStyle=g.v>2?'rgba(255,200,90,.22)':'rgba(90,160,255,.22)';ctx.beginPath();ctx.arc(g.x,g.y,9,0,7);ctx.fill();}ctx.globalCompositeOperation='source-over';
+  for(const g of G.gems)drawItem(g.v>2?'gemG':'gemB',g.x,g.y);
+  for(const ch of G.chests){ctx.fillStyle='rgba(232,194,90,.18)';ctx.beginPath();ctx.arc(ch.x,ch.y,22,0,7);ctx.fill();drawItem('chest',ch.x,ch.y-(Math.sin(ch.t*5)>0?WP:0),2)}
+  for(const pk of G.pickups){ctx.fillStyle='rgba(224,162,79,.2)';ctx.beginPath();ctx.arc(pk.x,pk.y,18,0,7);ctx.fill();drawItem('card',pk.x,pk.y-(Math.sin(pk.t*5)>0?WP*2:0),2)}
+  for(const e of G.enemies){
+    if(e.elite){ctx.fillStyle='rgba(232,194,90,.25)';ctx.beginPath();ctx.arc(e.x,e.y,e.r+6,0,7);ctx.fill();}
+    ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(e.x,e.y+e.r*.85,e.r,e.r*.35,0,0,7);ctx.fill();
+    drawSprite(e,e.kind,e.x,e.y,e.r,e.d.color,e.flash>0);
+    if(e.frzT>0){ctx.fillStyle='rgba(190,230,255,.55)';ctx.beginPath();ctx.arc(e.x,e.y,e.r+3,0,7);ctx.fill();ctx.strokeStyle='#e8f6ff';ctx.lineWidth=1.5;ctx.stroke();}
+    if(e.slowT>0){ctx.fillStyle='rgba(150,210,255,.28)';ctx.beginPath();ctx.arc(e.x,e.y,e.r+2,0,7);ctx.fill();}
+    if(e.psT>0){ctx.fillStyle='rgba(140,230,90,.7)';ctx.beginPath();ctx.arc(e.x+Math.sin(G.t*5+e.x)*e.r*.6,e.y-e.r*.9-((G.t*20+e.y)%8),2,0,7);ctx.fill();}
+    if(e.elite){ctx.strokeStyle='#e8c25a';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(e.x,e.y,e.r+2,0,7);ctx.stroke();}
+    if(e.d.charge&&e.cht>0){ctx.strokeStyle='rgba(255,180,120,.6)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(e.x,e.y);ctx.lineTo(e.x-e.cvx*.12,e.y-e.cvy*.12);ctx.stroke();}
+    if(e.d.final){ctx.strokeStyle='#c58cf0';ctx.lineWidth=4;ctx.beginPath();ctx.arc(e.x,e.y,e.r+5+Math.sin(G.t*6)*3,0,7);ctx.stroke();}
+    if(e.boss){drawItem('crown',e.x,e.y-e.r*1.3-6,2);
+      ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillRect(e.x-30,e.y+e.r+6,60,5);ctx.fillStyle='#e0566a';ctx.fillRect(e.x-30,e.y+e.r+6,60*e.hp/e.maxHp,5);}
+  }
+  if(G.allies.length&&G.form==='snake'){ctx.strokeStyle='rgba(239,226,194,.18)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(p.x,p.y);for(const a of G.allies)ctx.lineTo(a.x,a.y);ctx.stroke();}
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let i=G.allies.length-1;i>=0;i--){const a=G.allies[i],j=JOBS[a.job];
+    ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(a.x,a.y+a.r*.85,a.r*1.05,a.r*.4,0,0,7);ctx.fill();
+    ctx.strokeStyle=j.color;ctx.lineWidth=2.5;ctx.beginPath();ctx.ellipse(a.x,a.y+a.r*.85,a.r*1.15,a.r*.45,0,0,7);ctx.stroke();
+    drawSprite(a,a.u.type,a.x,a.y,a.r,a.c.monster?ENEMY[a.u.type].color:j.color,a.flash>0);
+    if(a.tauntT>0){ctx.strokeStyle='rgba(232,194,90,.7)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a.x,a.y,a.r+6+Math.sin(G.t*8)*2,0,7);ctx.stroke();}
+    if(a.invT>0){ctx.fillStyle='rgba(255,241,193,.3)';ctx.beginPath();ctx.arc(a.x,a.y,a.r+5,0,7);ctx.fill();}
+    if(a.c.monster){ctx.strokeStyle='#e0a24f';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a.x,a.y,a.r+1.5,0,7);ctx.stroke();}
+    if(a.hp<a.maxHp){ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillRect(a.x-a.r,a.y-31,a.r*2,3);ctx.fillStyle='#8fd18a';ctx.fillRect(a.x-a.r,a.y-31,a.r*2*a.hp/a.maxHp,3);}
+  }
+  ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(p.x,p.y+11,13,5,0,0,7);ctx.fill();
+  if(G.buff.guard>0){ctx.strokeStyle='#8d7bb0';ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,p.y,p.r+6,0,7);ctx.stroke();}
+  drawSprite(p,'hero',p.x,p.y,p.r,'#e8c25a',p.hurtT>0);
+  for(const z of G.zones){const k=Math.min(1,z.t/.4,(z.max-z.t)/.2+.2);
+    if(z.type==='fire'){ctx.fillStyle=`rgba(255,110,40,${.22*k+.05*Math.sin(G.t*20)})`;ctx.beginPath();ctx.arc(z.x,z.y,z.r,0,7);ctx.fill();ctx.fillStyle=`rgba(255,200,80,${.18*k})`;for(let i=0;i<6;i++){const an=i+G.t*2;ctx.beginPath();ctx.arc(z.x+Math.cos(an)*z.r*.55,z.y+Math.sin(an*1.3)*z.r*.5,6+3*Math.sin(G.t*9+i),0,7);ctx.fill()}}
+    else{ctx.strokeStyle=`rgba(255,241,193,${.6*k})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(z.x,z.y,z.r,0,7);ctx.stroke();ctx.fillStyle=`rgba(255,241,193,${.08*k})`;ctx.fill();}}
+  for(const tr of G.traps){ctx.strokeStyle='#b89a6a';ctx.lineWidth=2;ctx.beginPath();ctx.arc(tr.x,tr.y,tr.r*.6,0,7);ctx.stroke();ctx.fillStyle='#d8d2c0';for(let i=0;i<8;i++){const an=i/8*Math.PI*2;tri(tr.x+Math.cos(an)*tr.r*.45,tr.y+Math.sin(an)*tr.r*.45,tr.x+Math.cos(an+.2)*tr.r*.75,tr.y+Math.sin(an+.2)*tr.r*.75,tr.x+Math.cos(an-.2)*tr.r*.75,tr.y+Math.sin(an-.2)*tr.r*.75,'#d8d2c0')}}
+  for(const w of G.pending){const k=1-w.t/w.life;ctx.fillStyle=`rgba(255,80,60,${.12+.2*k})`;ctx.beginPath();ctx.arc(w.x,w.y,w.r,0,7);ctx.fill();ctx.strokeStyle='rgba(255,120,100,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(w.x,w.y,w.r*k,0,7);ctx.stroke();}
+  for(const sr of G.shrines){const g=.5+.5*Math.sin(sr.t*3);ctx.fillStyle=`rgba(197,140,240,${.15+.15*g})`;ctx.beginPath();ctx.arc(sr.x,sr.y,30,0,7);ctx.fill();drawItem('shrine',sr.x,sr.y,2);}
+  for(const s of G.eshots){if(s.soul){ctx.fillStyle='rgba(120,230,170,.3)';pixAt(s.x-WP*2.5,s.y-WP*2.5,5);ctx.fillStyle='#8affb8';pixAt(s.x-WP,s.y-WP,3);ctx.fillStyle='#e8fff0';pixAt(s.x,s.y);continue}
+    if(s.fire){ctx.fillStyle='rgba(255,120,40,.35)';pixAt(s.x-WP*3,s.y-WP*3,6);ctx.fillStyle='#ff6a2a';pixAt(s.x-WP*1.5,s.y-WP*1.5,4);ctx.fillStyle='#ffd25a';pixAt(s.x-WP*.5,s.y-WP*.5,2);continue}
+    const l=Math.hypot(s.vx,s.vy)||1,ux=s.vx/l*WP,uy=s.vy/l*WP;ctx.fillStyle='#ff8a7a';for(let i=0;i<4;i++)pixAt(s.x-ux*i,s.y-uy*i);}
+  for(const s of G.shots){const l=Math.hypot(s.vx,s.vy)||1,ux=s.vx/l*WP,uy=s.vy/l*WP;ctx.fillStyle=s.color;ctx.globalAlpha=.4;for(let i=3;i<6;i++)pixAt(s.x-ux*i,s.y-uy*i);ctx.globalAlpha=1;pixAt(s.x-ux,s.y-uy);pixAt(s.x-ux*2,s.y-uy*2);ctx.fillStyle='#fff';pixAt(s.x,s.y);}
+  for(const f of G.fx){const k=f.t/f.life;
+    if(f.type==='ring'){ctx.strokeStyle=f.color;ctx.globalAlpha=1-k;ctx.lineWidth=3;ctx.beginPath();ctx.arc(f.x,f.y,f.r+(f.max-f.r)*k,0,7);ctx.stroke();}
+    else if(f.type==='boom'){ctx.globalAlpha=(1-k)*.55;ctx.fillStyle='#c58cf0';ctx.beginPath();ctx.arc(f.x,f.y,f.max*(.6+.4*k),0,7);ctx.fill();ctx.globalAlpha=1-k;ctx.strokeStyle='#f0dcff';ctx.lineWidth=2;ctx.stroke();}
+    else if(f.type==='slash'){ctx.globalAlpha=1-k;ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(f.x,f.y,14,f.a-1,f.a+1);ctx.stroke();}
+    else if(f.type==='burst'){ctx.globalAlpha=1-k;ctx.fillStyle=f.color;const n=k<.5?(f.r>20?3:2):1;for(const [a,s] of f.parts)pixAt(f.x+Math.cos(a)*s*k,f.y+Math.sin(a)*s*k,n);}
+    else if(f.type==='loop'){ctx.globalAlpha=(1-k)*.45;ctx.fillStyle='#e8c25a';ctx.beginPath();f.poly.forEach((q,i)=>i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y));ctx.closePath();ctx.fill();ctx.globalAlpha=1-k;ctx.strokeStyle='#fff1c1';ctx.lineWidth=4;ctx.stroke();}
+    else if(f.type==='bolt'){ctx.globalAlpha=1-k;ctx.strokeStyle='#cfeaff';ctx.lineWidth=2.5;ctx.shadowColor='#7fc8ff';ctx.shadowBlur=8;ctx.beginPath();
+      f.pts.forEach((q,i)=>{if(!i){ctx.moveTo(q.x,q.y);return}const pq=f.pts[i-1];ctx.lineTo((pq.x+q.x)/2+rnd(-7,7),(pq.y+q.y)/2+rnd(-7,7));ctx.lineTo(q.x,q.y)});ctx.stroke();ctx.shadowBlur=0;}
+    else if(f.type==='dash'){ctx.globalAlpha=(1-k)*.7;ctx.strokeStyle='#fff1c1';ctx.lineCap='round';ctx.lineWidth=f.w*1.4;ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(f.x2,f.y2);ctx.stroke();ctx.lineCap='butt';}
+    else if(f.type==='cone'){ctx.globalAlpha=(1-k)*.6;const g=ctx.createRadialGradient(f.x,f.y,10,f.x,f.y,f.len);g.addColorStop(0,'#fff0a0');g.addColorStop(.5,'#ff8a3c');g.addColorStop(1,'rgba(255,60,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.arc(f.x,f.y,f.len*(.6+.4*k),f.a-.55,f.a+.55);ctx.closePath();ctx.fill();}
+    ctx.globalAlpha=1;}
+  ctx.restore();present(MAIN,bw,bh,ox,oy);
+  for(const ch of G.chests)edgeArrow(ch.x,ch.y,ox,oy,'#e8c25a');
+  for(const pk of G.pickups)edgeArrow(pk.x,pk.y,ox,oy,'#e0a24f');
+  for(const sr of G.shrines)edgeArrow(sr.x,sr.y,ox,oy,'#c58cf0');
+  if(joy&&G.state==='play'){ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(joy.ox,joy.oy,50,0,7);ctx.stroke();
+    const dx=joy.x-joy.ox,dy=joy.y-joy.oy,l=Math.hypot(dx,dy),k=l>50?50/l:1;ctx.fillStyle='rgba(255,255,255,.3)';ctx.beginPath();ctx.arc(joy.ox+dx*k,joy.oy+dy*k,18,0,7);ctx.fill();}
+}
+
+let last=performance.now();
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  if(G&&G.state==='play'){update(dt);G.hudAcc+=dt;if(G.hudAcc>.1){G.hudAcc=0;hud();}}
+  render();requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+function start(){
+  initAudio();
+  const units=SAVE.roster.filter(u=>selected.has(u.uid));if(!units.length)return;
+  newGame(units);$('title').hidden=true;$('over').hidden=true;resize();hud();last=performance.now();openLevel(true);
+}
+$('start').addEventListener('click',start);
+$('mute').addEventListener('click',()=>{muted=!muted;try{localStorage.setItem('shokan-mute',muted?'1':'0')}catch(e){}setMuteLabel();if(!muted)initAudio();});setMuteLabel();$('again').addEventListener('click',showTitle);
+showTitle();
+})();
+</script>
+
+</body></html>

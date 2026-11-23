@@ -1,0 +1,25 @@
+name: shokan
+description: "召喚の山札（仮題） — ヴァンサバ×デッキの試作を WebView で動かす入れ物"
+publish_to: 'none'
+
+# ビルド番号（+N）は TestFlight に上げるたびに1つ上げる。同じ番号は二度上げられない
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  webview_flutter: ^4.13.0
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/game/index.html

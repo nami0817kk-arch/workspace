@@ -1,0 +1,36 @@
+# 召喚の山札（仮題）の CI。projects/shokan を触ったときだけ動く。
+name: shokan CI
+
+on:
+  push:
+    paths:
+      - "projects/shokan/**"
+      - ".github/workflows/shokan-ci.yml"
+  pull_request:
+    paths:
+      - "projects/shokan/**"
+      - ".github/workflows/shokan-ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: projects/shokan
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
