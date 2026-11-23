@@ -6,12 +6,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/academy_engine.dart';
+import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/logic/division_strength.dart';
 import 'package:soccer_manager/logic/offscreen_development.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/logic/scouting_engine.dart';
 import 'package:soccer_manager/logic/training_engine.dart';
 import 'package:soccer_manager/models/club_infrastructure.dart';
+import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/staff_member.dart';
 import 'package:soccer_manager/models/team.dart';
@@ -146,6 +148,24 @@ void main() {
           .map((p) => p.potential - p.overall)
           .reduce((a, b) => a + b);
       expect(userRoom, greaterThan(0), reason: '自クラブは変えない');
+    });
+  });
+
+  group('1c 昇格の手付け', () {
+    test('ドイツとスペインだけ4週、ほかは2週のまま(6週には戻さない)', () {
+      expect(BoardEngine.promotionBonusWeeksFor(LeagueTheme.germany), 4);
+      expect(BoardEngine.promotionBonusWeeksFor(LeagueTheme.spain), 4);
+      for (final t in [
+        LeagueTheme.england,
+        LeagueTheme.italy,
+        LeagueTheme.france,
+      ]) {
+        expect(BoardEngine.promotionBonusWeeksFor(t),
+            BoardEngine.promotionBonusWeeks);
+      }
+      for (final t in LeagueTheme.values) {
+        expect(BoardEngine.promotionBonusWeeksFor(t), lessThan(6));
+      }
     });
   });
 
