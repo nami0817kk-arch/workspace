@@ -236,15 +236,24 @@ extension GameStateDecisions on GameState {
     // 季末に最後通告の線を割っていれば、底上げせず、新しい季の初日に
     // 最後通告が出る(2026-11-23)。
     final line = GameStateSupporters.ultimatumLine;
-    final floorNote = supporterUltimatumExpired
-        ? ''
-        : after < line
-            ? Tr.pick('$lineを割ったまま季を終えると、新しい季の初日に最後通告が出ます。',
-                'Finish the season below $line and the supporters will issue a final warning on day one of the new season.')
-            : after < floor
-                ? Tr.pick('新しい季は最低$floorから始まります。',
-                    'The new season starts from at least $floor.')
-                : '';
+    // すでに最後通告が出ていれば、新しく出るのではなく、その期限のまま
+    // 続く(以前は「新しい季の初日に最後通告が出ます」と出ていた。
+    // 2026-11-23)。
+    final until = s.supporterUltimatumUntil;
+    var floorNote = '';
+    if (supporterUltimatumExpired) {
+      floorNote = '';
+    } else if (after < line && until != null) {
+      floorNote = Tr.pick(
+          '最後通告は季をまたいでも続きます。${CalendarEngine.formatDate(until)}までに$line以上へ戻せなければ、クラブを手放します。',
+          'The final warning carries over into the new season. Get back to $line or more by ${CalendarEngine.formatDate(until)}, or you will have to sell the club.');
+    } else if (after < line) {
+      floorNote = Tr.pick('$lineを割ったまま季を終えると、新しい季の初日に最後通告が出ます。',
+          'Finish the season below $line and the supporters will issue a final warning on day one of the new season.');
+    } else if (after < floor) {
+      floorNote = Tr.pick(
+          '新しい季は最低$floorから始まります。', 'The new season starts from at least $floor.');
+    }
     return Tr.pick(
         'この順位なら、サポーターの期待 $sign(目標${s.boardTargetRank}位以内)。$floorNote',
         'This finish means supporter expectation $sign (target: ${Tr.topTarget(s.boardTargetRank)}). $floorNote');

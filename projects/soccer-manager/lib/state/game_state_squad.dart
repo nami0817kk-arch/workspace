@@ -271,6 +271,15 @@ extension GameStateSquad on GameState {
         .round();
   }
 
+  /// スタジアムの増築の、いま払う1席あたりの額(万円)。補助・予算の
+  /// 配分などの割引を掛けた後の建設費を席の数で割る。画面の「6000席 ×
+  /// 1席○円」が建設費と合うように(以前は割引前の値段を出していて、
+  /// 補助が下りると掛け算が建設費と合わなかった。2026-11-23)。
+  int get stadiumSeatCostNow =>
+      (facilityUpgradeCostFor(FacilityType.stadium) /
+              ClubInfrastructure.stadiumSeatsPerLevel)
+          .round();
+
   /// 今日[s]を解任したときに払う違約金(今の部の物差しの万円)。残りの
   /// 契約の日数(週数)に応じた額。
   int staffSeveranceFor(StaffMember? s) => s == null
@@ -312,6 +321,7 @@ extension GameStateSquad on GameState {
     hired.hiredOn = SeasonCalendar.dateOnly(today);
     _save!.infrastructure.staff[hired.role] = hired;
     _save!.staffCandidates.removeAt(idx);
+    _dropStaleStaffOffers();
     if (severance > 0) _book(LedgerCategory.staffWages, -severance);
     if (hired.role == StaffRole.manager) {
       _onManagerHired(hired, compensation);
@@ -343,6 +353,7 @@ extension GameStateSquad on GameState {
     final current = _save!.infrastructure.staffFor(role);
     if (current == null) return false;
     _save!.infrastructure.staff[role] = null;
+    _dropStaleStaffOffers();
     final severance = staffSeveranceFor(current);
     if (severance > 0) _book(LedgerCategory.staffWages, -severance);
     _logNews(
@@ -363,7 +374,13 @@ extension GameStateSquad on GameState {
       return SeasonCalendar.preseasonDate(_save!.league.season + 1);
     }
     final t = today;
-    return DateTime(t.year, t.month + ClubInfrastructure.buildMonths, t.day);
+    // 月末の着工は、3か月後の月の末日に完成する(11月30日 → 2月28日)。
+    // 日をそのまま入れると2月30日が3月2日に繰り越し、「工期3か月」の
+    // 表示より月が1つ遅れていた(2026-11-23)。
+    final lastDay =
+        DateTime(t.year, t.month + ClubInfrastructure.buildMonths + 1, 0).day;
+    return DateTime(t.year, t.month + ClubInfrastructure.buildMonths,
+        min(t.day, lastDay));
   }
 
   /// 増築を着工する。費用は着工のときに払い、完成([facilityReadyDateFor])

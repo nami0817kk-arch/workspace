@@ -302,7 +302,33 @@ extension GameStateFinance on GameState {
   }
 
   /// 判断待ちの事件。無ければ null。
-  OwnerEventKind? get pendingOwnerEvent => _save?.pendingOwnerEvent;
+  ///
+  /// 事件の相手がもういなければ(監督の事件なのに監督を解任した・去った、
+  /// ユースの引き抜きなのにユースがいない)、事件ごと消す。以前は残った
+  /// まま答えられ、いない監督を「送り出して」違約金が入り、いない監督を
+  /// 「引き止めて」お金だけが出ていった(2026-11-23)。
+  OwnerEventKind? get pendingOwnerEvent {
+    final save = _save;
+    final kind = save?.pendingOwnerEvent;
+    if (save == null || kind == null) return null;
+    if (_ownerEventSubjectGone(kind)) {
+      save.pendingOwnerEvent = null;
+      return null;
+    }
+    return kind;
+  }
+
+  /// [kind] の事件の相手(監督・ユース・エース・ライバル)がもういないか。
+  /// 順位で起きる事件(スポンサーの撤退)は、起きた後の順位では消さない。
+  bool _ownerEventSubjectGone(OwnerEventKind kind) => switch (kind) {
+        OwnerEventKind.managerPoach ||
+        OwnerEventKind.managerClash ||
+        OwnerEventKind.youthPoach ||
+        OwnerEventKind.rivalProvocation =>
+          !ownerEventCanHappen(kind),
+        OwnerEventKind.transferDemand => _ownerEventAce == null,
+        _ => false,
+      };
 
   /// 事件が起きる節。1シーズンに3回(12節ごと、6・18・30節)。
   static bool isOwnerEventMatchday(int matchday) =>
@@ -316,7 +342,7 @@ extension GameStateFinance on GameState {
   /// 食い違う事件は起こさない。
   void _maybeRaiseOwnerEvent(int matchday) {
     final save = _save;
-    if (save == null || save.pendingOwnerEvent != null) return;
+    if (save == null || pendingOwnerEvent != null) return;
     if (!GameStateFinance.isOwnerEventMatchday(matchday)) return;
     final kinds = OwnerEventKind.values.where(ownerEventCanHappen).toList();
     if (kinds.isEmpty) return;
@@ -484,6 +510,7 @@ extension GameStateFinance on GameState {
         final m = save.infrastructure.staffFor(StaffRole.manager);
         if (m == null) return;
         save.infrastructure.staff[StaffRole.manager] = null;
+        _dropStaleStaffOffers();
         _logNews(
             Tr.pick('${m.name}監督が、違約金を残して他クラブへ移った。後任を探す必要がある。',
                 'Manager ${m.name} has left for another club, with compensation paid. You need a replacement.'),
@@ -497,8 +524,11 @@ extension GameStateFinance on GameState {
   /// こと(エースの売却など)を実際に起こす。
   Future<bool> resolveOwnerEvent(int optionIndex) async {
     final save = _save;
-    final kind = save?.pendingOwnerEvent;
-    if (save == null || kind == null) return false;
+    final kind = pendingOwnerEvent;
+    if (save == null || kind == null) {
+      _notify();
+      return false;
+    }
     final options = kind.options;
     if (optionIndex < 0 || optionIndex >= options.length) return false;
     final o = options[optionIndex];
@@ -824,6 +854,12 @@ extension GameStateFinance on GameState {
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
     // 手放したクラブの貸し借りを清算する(自クラブを替える前に)。
     _settleLoansOfFormerClub(userTeam);
+    // 手放したクラブは CPU に戻る。逃げ切りの采配は自クラブの監督だけの
+    // もので、CPU は持たない(残すと、手放したクラブだけが CPU の中で
+    // 終盤に守りを固め続けた。2026-11-23)。
+    userTeam
+      ..holdLeadLate = false
+      ..timeWastingMode = false;
     // 手放したクラブを覚えておく(季の終わりにその後を知らせる)。
     save.formerClubs[save.userTeamId] = save.clubName;
     save.formerClubs.remove(team.id);
@@ -856,10 +892,21 @@ extension GameStateFinance on GameState {
         tier: save.currentDivisionTier));
     save.bankLoans = [];
     save.youthProspects = [];
+    // 前のクラブの事件・監督の提案・スタッフへの引き抜きの話・地域活動も
+    // 持ち越さない(2026-11-23。以前は、前のクラブのエースの移籍騒動に
+    // 新しいクラブで答えると新しいクラブのエースが売られ、地域活動は
+    // 何も払わずに毎月サポーターの期待を上げ続けた)。別の国での
+    // 買い直し([buyClubInCountry])と同じ。
+    save.pendingOwnerEvent = null;
+    save.proposals = [];
+    save.declinedProposalIds = [];
+    save.staffOffers = [];
+    save.communityLevel = 0;
     save.boardTargetRank = _difficultyAdjustedTarget(
       BoardEngine.estimateTargetRank(save.league, team.id,
           relegationZone: ownRelegationZone),
     );
+    save.boardCupTargetRound = _estimateDomesticCupTarget();
     save.wageBudget = BoardEngine.wageBudgetFor(
       tier: save.currentDivisionTier,
       currentWeeklyWageBill: weeklyWageBill,
@@ -1062,6 +1109,7 @@ extension GameStateFinance on GameState {
     save.incomingOffers = [];
     save.proposals = [];
     save.declinedProposalIds = [];
+    save.staffOffers = [];
     save.confidence = 60;
     _resetSupporterRecords();
     save.shareholderExpectation = 60;
@@ -1397,14 +1445,14 @@ extension GameStateFinance on GameState {
     final soldAhead =
         p.gate - SeasonTicketEngine.remainingGate(p.gate, seasonTicketShareNow);
     if (holidayOfMatchday(matchday) == null) return income - soldAhead;
+    // 客が増えて伸びるのは入場収入だけ(試合の日の入金と同じ)。
     final base = expectedAttendance;
-    return GameState.derbyAdjustedIncome(
-          income,
-          baseAttendance: base,
-          actualAttendance:
-              MoneyCalendar.holidayAttendance(base, stadiumCapacity),
-        ) -
-        soldAhead;
+    final gate = GameState.derbyAdjustedIncome(
+      p.gate,
+      baseAttendance: base,
+      actualAttendance: MoneyCalendar.holidayAttendance(base, stadiumCapacity),
+    );
+    return income - p.gate + gate - soldAhead;
   }
 
   /// 今日より後のお金の予定(給与日・放映権の入金日・リーグ戦の日)を

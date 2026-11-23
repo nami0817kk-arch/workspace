@@ -578,12 +578,18 @@ extension GameStateMatch on GameState {
     if (userFixture != null && userFixture.homeTeamId == _save!.userTeamId) {
       lastMatchAttendance = actualAttendance;
     }
+    // 人が増えて伸びるのは入場収入だけ。以前はスポンサー・グッズを含めた
+    // 合計に人数の比を掛けていて、スポンサー収入の大きいクラブほど
+    // ダービー・祝日の「観客収入」が膨らみ、観客収入の上限
+    // ([GameStateFinance.gateCapPerMatchday])も素通りしていた(2026-11-23)。
     if (isDerby || holiday != null) {
-      income = GameState.derbyAdjustedIncome(
-        income,
-        baseAttendance: baseAttendance,
-        actualAttendance: actualAttendance,
-      );
+      income = partsTotal +
+          GameState.derbyAdjustedIncome(
+            incomeParts.gate,
+            baseAttendance: baseAttendance,
+            actualAttendance: actualAttendance,
+          ) -
+          incomeParts.gate;
     }
     // 収入は内訳ごとに記録する。ダービー・祝日で増えた分は観客収入に入れる。
     // 年間シートで先に売った分は、節ごとの入場収入から除く(ダービー・祝日で
