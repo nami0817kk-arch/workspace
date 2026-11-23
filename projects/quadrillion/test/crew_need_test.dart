@@ -3,8 +3,8 @@ import 'package:quadrillion/game/game.dart';
 
 import 'support/bot.dart';
 
-/// 1.0.0+11: 「現場の人を増やす」が現金の2割で、会社が大きくなるほど高くなっていた。
-/// 足りない分だけを、その分の値段で補えるようにした。
+/// 1.0.0+11: 「現場の人を増やす」が現金の2割で、会社が大きくなるほど高くなっていた。足りない分だけを補えるようにした。
+/// 1.0.0+12: 足りない分を人数（N人）に直し、1人の年の人件費から値段を決めるようにした。
 void main() {
   Game grown() {
     final s = Game.newGame(SetupConfig(mode: 'endless', year: 1990, traits: ['charm', 'noble']), rng: ParkMiller(5));
@@ -14,30 +14,39 @@ void main() {
     return s;
   }
 
-  test('足りない分を補うと、現場の力が事業の力に届き、値段は現金の2割より安い', () {
+  test('足りない分（N人）を雇うと、現場の力が事業の力に届き、1人少なければ届かない', () {
     final s = grown();
     final b = s.biz.firstWhere((x) => x.model != 'fc');
     // わざと人手不足にする
     b.crew = s.crewOf(b) * .5;
     s.calcAll();
     s.cash = 1e15;
-    final need = s.crewNeedCost(b);
+    final need = s.crewNeedPeople(b);
     expect(need, greaterThan(0));
-    expect(need, lessThan(s.cash * .2));
+    // 1人少ない人数では足りない
+    expect(s.crewEff(b) + (need - 1) * s.crewPerHead(b) * s.crewMult(b), lessThan(b.power));
     s.ap = 3;
-    final before = s.cash;
+    final before = s.cash, up0 = b.upkeep;
     s.addCrewNeeded(b);
-    expect(before - s.cash, closeTo(need, need * 1e-9));
+    expect(before - s.cash, closeTo(s.hireCost(b, need), 1));
+    expect(b.upkeep - up0, closeTo(s.payPerMonth(b, need), 1));
     expect(s.crewEff(b), greaterThanOrEqualTo(b.power * .999));
-    expect(s.crewNeedCost(b), lessThan(need * 1e-6));
+    expect(s.crewNeedPeople(b), 0);
   });
 
-  test('足りていれば 0 で、押しても何も起きない', () {
+  test('crewMult は crewEff の倍と同じ', () {
+    final s = grown();
+    for (final b in s.biz) {
+      expect(s.crewOf(b) * s.crewMult(b), closeTo(s.crewEff(b), s.crewEff(b) * 1e-12));
+    }
+  });
+
+  test('足りていれば 0 人で、押しても何も起きない', () {
     final s = grown();
     final b = s.biz.firstWhere((x) => x.model != 'fc');
     b.crew = s.crewOf(b) * 10;
     s.calcAll();
-    expect(s.crewNeedCost(b), 0);
+    expect(s.crewNeedPeople(b), 0);
     final c = s.cash;
     s.ap = 3;
     s.addCrewNeeded(b);
@@ -50,10 +59,10 @@ void main() {
     final b = s.biz.firstWhere((x) => x.model != 'fc');
     b.crew = s.crewOf(b) * .5;
     s.calcAll();
-    s.cash = s.crewNeedCost(b) * .5;
+    s.cash = s.hireCost(b, s.crewNeedPeople(b)) * .5;
     final c = s.cash;
     s.ap = 3;
-    s.addCrewNeeded(b);
+    expect(tx(s.addCrewNeeded(b)), 'お金が足りません');
     expect(s.cash, c);
   });
 }

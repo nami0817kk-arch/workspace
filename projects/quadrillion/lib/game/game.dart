@@ -31,6 +31,30 @@ final Map<String, Industry> indm = {for (final i in IND) i.id: i};
 final Map<String, Country> cm = {for (final x in CTRY) x.c: x};
 const Set<String> eastPools = {'zh', 'ko', 'vi'};
 
+// ===== 1単位の値段（1.0.0+12。extras のときの画面と提案で使う） =====
+/// 店・工場を一度に増やせる数
+const List<int> buildUnits = [1, 3, 10];
+
+/// 商品の大きさ（0 小さな改良・1 新商品・2 大型開発）ごとの、元手の何倍か・できるまでの月・当たったときの伸びの倍
+const List<int> devMults = [1, 3, 10];
+const List<(int, int)> devMonths = [(2, 3), (3, 6), (6, 10)];
+const List<double> devHitMul = [.75, 1, 1.5];
+
+/// 一度に雇える現場の人の数（足りない分は別に数える）
+const List<int> crewUnits = [10, 50];
+
+/// 現場の人1人の年の人件費（2020年の円）。業種の分類ごと
+const Map<String, double> wageByCat = {'food': 3e6, 'live': 3e6, 'make': 5e6, 'ene': 5e6, 'link': 4.5e6, 'money': 6.5e6, 'net': 6.5e6, 'med': 6.5e6, 'fun': 4e6, 'fut': 8e6};
+
+/// 採用の費用（年の人件費の何割か）
+const double hireFee = .3;
+
+/// 割合の手（addCrew）の、3年分の総額1円あたりの現場の力（1円で4、維持費は毎月0.8%）。人の数え方をこれに合わせる
+const double crewPerYen3y = 4 / (1 + .008 * 36);
+
+/// 裏の手の1回の値段（2020年の円）
+const Map<String, double> dirtyPrice = {'poach': 5e7, 'spy': 1e8, 'lobby': 5e8, 'cook': 2e7, 'cartel': 3e7};
+
 /// 社史に残す世界ランキングの節目（小さい順。一度に越えたら一番上の節目だけ残す）
 const List<int> rankMarks = [1, 3, 10, 50, 100, 200, 500];
 
@@ -116,11 +140,19 @@ class Proposal {
   String l, d;
   String? ind;
   int by = 0, bid = 0;
+
+  /// 単位の提案（extras のとき）の数：店・工場の数、現場の人の人数。0 は割合の提案
+  int n = 0;
+
+  /// 単位の商品の提案の大きさ（0 小さな改良・1 新商品・2 大型開発）
+  int? sz;
   Proposal({required this.k, required this.w, required this.cost, required this.l, required this.d});
   Proposal copy() => Proposal(k: k, w: w, cost: cost, l: l, d: d)
     ..ind = ind
     ..by = by
-    ..bid = bid;
+    ..bid = bid
+    ..n = n
+    ..sz = sz;
 }
 
 class Game {
@@ -596,6 +628,14 @@ class Game {
   }
 
   double crewOf(Biz b) => b.crew ?? b.power * 1.2;
+
+  /// 現場の人1単位が生む現場の力の倍（crewEff と同じ掛け算。crewEff は試作と同じ順で掛けるので別に持つ）
+  double crewMult(Biz b) {
+    final p = staffById(b.mgr);
+    final tou = p != null ? p.ab['tou']! : pres.ab['tou']!;
+    return (.8 + tou / 250) * (b.model == 'fc' ? 3 : 1) * (culture == 'sports' ? 1.25 : 1) * (culture == 'sports' && hasT('oneman') ? 1.1 : 1);
+  }
+
   double crewEff(Biz b) {
     final p = staffById(b.mgr);
     final tou = p != null ? p.ab['tou']! : pres.ab['tou']!;

@@ -266,7 +266,10 @@ class Btn extends StatelessWidget {
 
   /// 幅が足りないときは字だけを縮める（押せる範囲は縮めない）
   final bool shrink;
-  const Btn(this.label, this.onTap, {super.key, this.primary = false, this.small = false, this.enabled = true, this.shrink = false});
+
+  /// 押すと選ぶ小窓が開くボタン（後ろに「›」の印を付ける）
+  final bool more;
+  const Btn(this.label, this.onTap, {super.key, this.primary = false, this.small = false, this.enabled = true, this.shrink = false, this.more = false});
   @override
   Widget build(BuildContext context) {
     final on = enabled && onTap != null;
@@ -282,8 +285,13 @@ class Btn extends StatelessWidget {
           onTap: on ? onTap : null,
           child: Padding(
             padding: small ? const EdgeInsets.symmetric(horizontal: 8, vertical: 5) : const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: _fit(Text(tx(label),
-                maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink))),
+            child: _fit(more
+                ? Row(mainAxisSize: MainAxisSize.min, children: [
+                    Flexible(child: Text(tx(label), style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink))),
+                    Icon(Icons.chevron_right, size: small ? 16 : 18, color: Pal.mute),
+                  ])
+                : Text(tx(label),
+                    maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink))),
           ),
         ),
       ),
@@ -321,12 +329,15 @@ class ChoiceBtn extends StatelessWidget {
   final List<String> subs;
   final VoidCallback? onTap;
   final bool enabled, primary, on;
-  const ChoiceBtn(this.label, this.onTap, {super.key, this.subs = const [], this.enabled = true, this.primary = false, this.on = false});
+
+  /// 薄く見せるが押せる（押すと「お金が足りません」などを出す）
+  final bool dim;
+  const ChoiceBtn(this.label, this.onTap, {super.key, this.subs = const [], this.enabled = true, this.primary = false, this.on = false, this.dim = false});
   @override
   Widget build(BuildContext context) {
     final ok = enabled && onTap != null;
     return Opacity(
-      opacity: ok ? 1 : .4,
+      opacity: ok && !dim ? 1 : .4,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Material(

@@ -29,8 +29,9 @@ void resolveEvents(Game s) {
   }
 }
 
-/// tool/trace.js の1か月ぶんの手（試作の sim.js の素直な版）
-void botMonth(Game s) {
+/// tool/trace.js の1か月ぶんの手（試作の sim.js の素直な版）。
+/// [units] を立てると、打ち手を現金の割合ではなく1単位の手（店をn個・商品の大きさ・人をn人）で打つ（1.0.0+12 の画面と同じ遊び方）
+void botMonth(Game s, {bool units = false}) {
   int tot(Person p) => Game.totOf(p);
   resolveEvents(s);
   if (s.biz.isEmpty) {
@@ -69,6 +70,10 @@ void botMonth(Game s) {
     double score(Biz y) => (y.profit / (y.rev + 1)) * (1 - y.share);
     final b = (s.biz.toList()..ssort((x, y) => score(y).compareTo(score(x)))).firstOrNull;
     if (b == null) break;
+    if (units) {
+      if (!_unitMove(s, b, k)) break;
+      continue;
+    }
     if (s.cash > s.capexOf(indm[b.ind]!) * .3) {
       if (s.crewEff(b) < b.power * 1.05) {
         s.addCrew(b, .2);
@@ -92,6 +97,27 @@ void botMonth(Game s) {
   }
   if (s.sh.rivMax > 20 && s.ap > 0) s.doWhiteKnight();
   s.nextQuarter();
+}
+
+/// 1単位の手を1つ打つ（打てなければ false）。割合の版と同じ考え方で、
+/// 人が足りなければ足りない分を雇い、1手目は店・工場を（現金の4割まで）、2手目からは商品を（現金の2割まで）、払える一番大きな単位で打つ
+bool _unitMove(Game s, Biz b, int k) {
+  final need = s.crewNeedPeople(b);
+  if (need > 0) {
+    if (s.hireCost(b, need) > s.cash) return false;
+    s.hireN(b, need);
+    return true;
+  }
+  if (k == 0) {
+    final n = buildUnits.reversed.where((n) => s.buildCost(b, n) <= s.cash * .4).firstOrNull;
+    if (n == null) return false;
+    s.buildN(b, n);
+    return true;
+  }
+  final sz = [2, 1, 0].where((i) => s.devCost(b, i) <= s.cash * .2).firstOrNull;
+  if (sz == null) return false;
+  s.developN(b, sz);
+  return true;
 }
 
 /// 記録する数字（tool/trace.js の rows と同じ並び）

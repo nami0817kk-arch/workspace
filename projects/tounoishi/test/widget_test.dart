@@ -364,6 +364,17 @@ void main() {
     }
   });
 
+  test('長押しのヒントが今のメニューに合っている（0.7.40・試作 v57）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains('モンスター＝食べさせる・進化・掛け合わせ'));
+    expect(html, isNot(contains('肥料・埋め戻す・ここに集まれ・主役への命令のメニューが開く')));
+    // 掲載画像の道具がメニューを開けるように
+    expect(html, contains('window.__t={pop:openPop,'));
+    // 掲載画像の道具は 28×28 の座標に引き伸ばす
+    final cap = File('tool/screenshots/capture.py').readAsStringSync();
+    expect(cap, contains('function __s(v){return Math.round(v*(__N()-1)/19);}'));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること

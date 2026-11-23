@@ -40,8 +40,9 @@ void main() {
         final ranks = <int>[];
         for (var seed = 1; seed <= 6; seed++) {
           final s = _g(seed: seed * 7919, diff: d, year: 2000);
+          // 1.0.0+12 から画面の打ち手は1単位の手なので、自動プレイもそれで遊ぶ
           for (var t = 0; t < 360 && s.over == null; t++) {
-            botMonth(s);
+            botMonth(s, units: true);
           }
           ranks.add(s.rank);
         }

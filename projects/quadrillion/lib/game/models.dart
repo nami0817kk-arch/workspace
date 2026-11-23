@@ -124,8 +124,11 @@ class Pipe {
   double? pw;
   int left;
   int? by;
-  Pipe({required this.k, this.c, this.mode, required this.cost, this.pw, required this.left, this.by});
-  Map<String, dynamic> toJson() => {'k': k, 'c': c, 'mode': mode, 'cost': cost, 'pw': pw, 'left': left, 'by': by};
+
+  /// 商品の大きさ（0 小さな改良・1 新商品・2 大型開発）。単位で始めた開発だけが持つ（割合の開発は null）
+  int? sz;
+  Pipe({required this.k, this.c, this.mode, required this.cost, this.pw, required this.left, this.by, this.sz});
+  Map<String, dynamic> toJson() => {'k': k, 'c': c, 'mode': mode, 'cost': cost, 'pw': pw, 'left': left, 'by': by, if (sz != null) 'sz': sz};
   factory Pipe.fromJson(Map<String, dynamic> j) => Pipe(
       k: j['k'] as String,
       c: j['c'] as String?,
@@ -133,7 +136,8 @@ class Pipe {
       cost: _d(j['cost']),
       pw: _dn(j['pw']),
       left: _i(j['left']),
-      by: _in(j['by']));
+      by: _in(j['by']),
+      sz: _in(j['sz']));
 }
 
 /// 自社の事業
