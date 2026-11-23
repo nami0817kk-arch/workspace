@@ -257,7 +257,9 @@ class ProgressTab extends StatelessWidget {
   Widget _kv(String k, String v, {Color? color}) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(children: [
-          SizedBox(width: 100, child: Text(k, style: const TextStyle(fontSize: 12.5, color: GmColors.sub))),
+          // 項目名は1行に収める(「収支を黒字にする」が2行に割れていた)
+          SizedBox(width: 112, child: fitText(k, style: const TextStyle(fontSize: 12.5, color: GmColors.sub))),
+          const SizedBox(width: 6),
           Expanded(child: Text(v, style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: color))),
         ]),
       );
