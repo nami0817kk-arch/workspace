@@ -88,8 +88,12 @@ int _pick(List<int> weights, int r) {
   return weights.length - 1;
 }
 
+/// 日本人の名前か(names.dart の日本人の名前は「姓 名」、それ以外は「名・姓」)。
+bool isJapaneseName(String name) => !name.contains('・') && name.contains(' ');
+
 FaceSpec faceOf(Player p) {
-  final type = faceTypes[_pick([for (final t in faceTypes) t.weight], _h(p, 1))];
+  // 日本人の名前(「姓 名」の形で「・」が無い)には、アジア系の顔を付ける
+  final type = isJapaneseName(p.name) ? faceTypes.firstWhere((t) => t.name == 'asian') : faceTypes[_pick([for (final t in faceTypes) t.weight], _h(p, 1))];
   final hair = _pick(type.black ? _hairWeightsBlack : _hairWeightsOther, _h(p, 2)) - 1;
   // 白髪は33歳から。年ごとに見込みが上がり、同じ選手は一度白髪になったら戻らない
   final gray = hair >= 0 && _h(p, 3) % 100 < (p.age - 32) * 12;

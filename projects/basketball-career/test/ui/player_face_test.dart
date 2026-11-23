@@ -20,7 +20,12 @@ void main() {
       expect(a.type.tones, contains(a.tone));
       if (p.age < 22) expect(a.beard, 0, reason: '${p.name}(${p.age}歳)');
       if (p.age < 33) expect(a.gray, isFalse, reason: '${p.name}(${p.age}歳)');
+      // 日本人の名前にはアジア系の顔(2026-11-23 篠宮に肌の濃い顔が付いていた)
+      expect(a.type.name == 'asian', isJapaneseName(p.name) ? isTrue : anything, reason: p.name);
     }
+    expect(all.where((p) => isJapaneseName(p.name)), isNotEmpty);
+    expect(isJapaneseName('篠宮 悠真'), isTrue);
+    expect(isJapaneseName('イグナス・クロウリー'), isFalse);
     expect(types.length, greaterThanOrEqualTo(10));
     expect(hairs.length, greaterThanOrEqualTo(9));
     expect(beards.length, 4);
