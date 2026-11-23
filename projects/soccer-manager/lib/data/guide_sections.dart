@@ -109,7 +109,7 @@ List<GuideSection> get guideSections => [
             title: Tr.pick('2つの期待', 'Two expectations'),
             description: Tr.pick(
                 'サポーターの期待は毎月の結果とオーナーの手(チケットの値段・広報・地域活動・補強と売却)で、株主の期待は収支で動きます。クラブを手放すことになるのは、サポーターの期待が10を割って最後通告が出てから3か月のうちに戻せなかったときと、資金が尽きたとき(借金がその部の年収の半分を超えたとき)の2つだけです。オーナーは雇われる立場ではないので、契約の満了で辞めさせられることはありません。',
-                'Fan expectation follows each month\'s results and your own moves (ticket prices, PR, community work, signings and sales); shareholder expectation follows the books. Only two things can force you to sell the club: fan expectation staying below 10 for three months after their final warning, or the money running out (debts above half a season\'s typical income for your division). You own the club, so no contract can run out on you.'),
+                'Supporter expectation follows each month\'s results and your own moves (ticket prices, PR, community work, signings and sales); shareholder expectation follows the books. Only two things can force you to sell the club: supporter expectation staying below 10 for three months after the final warning, or the money running out (debts above half a season\'s typical income for your division). You own the club, so no contract can run out on you.'),
           ),
           GuideTopic(
             title: Tr.pick('進むボタン(日付で進む)', 'The advance button'),

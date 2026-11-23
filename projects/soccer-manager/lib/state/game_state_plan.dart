@@ -68,7 +68,7 @@ extension GameStatePlan on GameState {
         'Five-year plan finished ($met of 3 targets)'));
     _logNews(
         Tr.pick('5か年計画が終わった: 目標3つのうち$met つを果たした。株主の期待${delta >= 0 ? '+' : ''}$delta。',
-            'Five-year plan over: $met of 3 targets met. Shareholder faith ${delta >= 0 ? '+' : ''}$delta.'),
+            'Five-year plan over: $met of 3 targets met. Shareholder expectation ${delta >= 0 ? '+' : ''}$delta.'),
         context: Tr.pick('オーナー', 'Owner'));
   }
 

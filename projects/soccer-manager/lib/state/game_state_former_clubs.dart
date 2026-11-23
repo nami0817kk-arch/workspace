@@ -24,7 +24,7 @@ extension GameStateFormerClubs on GameState {
         s.formerClubStatus[e.key] = [l.season, tier, rank + 1];
         _logNews(
             Tr.pick('手放した${e.value}は、今季$tier部の${rank + 1}位だった。',
-                'Your former club ${e.value} finished ${rank + 1}th in Tier $tier this season.'),
+                'Your former club ${e.value} finished ${Tr.ordinal(rank + 1)} in Tier $tier this season.'),
             context: Tr.pick('手放したクラブ', 'Former clubs'));
         break;
       }

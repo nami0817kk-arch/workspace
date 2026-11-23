@@ -29,7 +29,7 @@ class YouthLeagueTable extends StatelessWidget {
               Text(
                 league.isComplete
                     ? Tr.pick('ユースリーグ 最終順位 (${league.userRank}位)',
-                        'Youth league, final table (${league.userRank})')
+                        'Youth league, final table (${Tr.ordinal(league.userRank)})')
                     : Tr.pick(
                         'ユースリーグ 第${league.matchday + 1}節 / 全${YouthLeague.matchdayCount}節',
                         'Youth league, round ${league.matchday + 1} of ${YouthLeague.matchdayCount}'),

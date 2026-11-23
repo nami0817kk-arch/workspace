@@ -724,7 +724,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         ),
         note: required > 0
             ? Tr.pick('所属なしの選手は契約金を必ず求める。超えた分は年数でならして見られる',
-                'Free agents insist on a signing fee; anything above it is spread over the deal')
+                'Free agents insist on a signing bonus; anything above it is spread over the deal')
             : Tr.pick('年数でならして年俸に足して見られる', 'Spread over the deal'),
       );
     } else if (kind == ContractKind.renewal) {

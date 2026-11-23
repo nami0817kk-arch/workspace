@@ -41,7 +41,7 @@ Map<String, (String, String)> get matchdayPromoTexts => {
             'Cheaper tickets as a thank-you. Less income, more goodwill.')
       ),
       'light_up': (
-        Tr.pick('ナイトゲーム演出', 'Night-game show'),
+        Tr.pick('ナイトゲーム演出', 'Floodlit show'),
         Tr.pick('照明と演出で盛り上げる。観客が増える。',
             'Lights and a show. Bigger crowd.')
       ),

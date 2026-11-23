@@ -98,7 +98,7 @@ class _SeasonRecordCard extends StatelessWidget {
                       label: Tr.pick('優勝', 'Champions'), color: Colors.amber),
                 if (record.promoted)
                   _Badge(
-                      label: Tr.pick('昇格', 'Promote'),
+                      label: Tr.pick('昇格', 'Promoted'),
                       color: SemanticColors.positive(context)),
                 if (record.relegated)
                   _Badge(
@@ -110,7 +110,7 @@ class _SeasonRecordCard extends StatelessWidget {
             Text(
               Tr.pick(
                   '${record.leagueName}${record.divisionTier != 1 ? '(${record.divisionTier}部)' : ''} ${record.finalRank}位 / ${record.teamCount}クラブ中',
-                  "${record.leagueName}${record.divisionTier != 1 ? ' (Tier ${record.divisionTier})' : ''} — ${record.finalRank} of ${record.teamCount}"),
+                  "${record.leagueName}${record.divisionTier != 1 ? ' (Tier ${record.divisionTier})' : ''} — ${Tr.ordinal(record.finalRank)} of ${record.teamCount}"),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 8),

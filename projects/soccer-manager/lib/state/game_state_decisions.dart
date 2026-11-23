@@ -232,13 +232,14 @@ extension GameStateDecisions on GameState {
     final sign = delta > 0 ? '+$delta' : '$delta';
     final floor = BoardEngine.newSeasonConfidenceFloor;
     final after = (s.confidence + delta).clamp(0, 100);
-    final floorNote = after < floor && s.confidence > 0
+    // 最後通告の期限を過ぎて手放すことが決まっていれば、底上げは無い。
+    final floorNote = after < floor && !supporterUltimatumExpired
         ? Tr.pick('新しい季は最低$floorから始まります。',
             'The new season starts from at least $floor.')
         : '';
     return Tr.pick(
         'この順位なら、サポーターの期待 $sign(目標${s.boardTargetRank}位以内)。$floorNote',
-        'This finish means supporter expectation $sign (target: top ${s.boardTargetRank}). $floorNote');
+        'This finish means supporter expectation $sign (target: ${Tr.topTarget(s.boardTargetRank)}). $floorNote');
   }
 
   /// 終えた季の、自クラブの結果のまとめ(シーズン開始レポートの先頭)。
@@ -267,7 +268,7 @@ extension GameStateDecisions on GameState {
     return [
       Tr.pick(
           '第$season季の結果: $finalRank位/$teamCountクラブ(目標$targetRank位以内・${met ? '達成' : '未達'})',
-          'Season $season: finished $finalRank of $teamCount (target: top $targetRank, ${met ? 'met' : 'missed'})'),
+          'Season $season: finished ${Tr.ordinal(finalRank)} of $teamCount (target: ${Tr.topTarget(targetRank)},${met ? 'met' : 'missed'})'),
       Tr.pick('サポーターの期待 $supporterBefore→$supporterAfter$floorNote',
           'Supporter expectation $supporterBefore→$supporterAfter$floorNote'),
       Tr.pick('株主の期待 $shareholderBefore→${s.shareholderExpectation}',
@@ -279,7 +280,7 @@ extension GameStateDecisions on GameState {
         Tr.pick('季の切り替えまで(〜6月分)の給与 ${formatMoneySigned(-rolloverWages)}',
             'Wages up to the end of June ${formatMoneySigned(-rolloverWages)}'),
       Tr.pick('来季: $newTier部・目標${s.boardTargetRank}位以内',
-          'Next season: Tier $newTier, target top ${s.boardTargetRank}'),
+          'Next season: Tier $newTier, target: ${Tr.topTarget(s.boardTargetRank)}'),
       // 一番下の部は降格が無い。最下位で「落ちるのか」と心配させない。
       if (playedTier == totalDivisionTiers &&
           newTier == playedTier &&

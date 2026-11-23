@@ -8,7 +8,7 @@ extension OwnerWorkCategoryInfo on OwnerWorkCategory {
         OwnerWorkCategory.sales => Tr.pick('営業・収入', 'Sales & revenue'),
         OwnerWorkCategory.finance => Tr.pick('財務・資本', 'Finance & capital'),
         OwnerWorkCategory.fans => Tr.pick('広報・ファン', 'Fans & PR'),
-        OwnerWorkCategory.org => Tr.pick('組織・人事', 'Organization'),
+        OwnerWorkCategory.org => Tr.pick('組織・人事', 'People & organisation'),
         OwnerWorkCategory.community => Tr.pick('地域・社会', 'Community'),
       };
 }
@@ -80,7 +80,7 @@ Map<String, (String, String)> get ownerWorkTexts => {
       'asia_tour': (
         Tr.pick('アジアツアー', 'Asia tour'),
         Tr.pick('遠征で海外のファンと市場を開く。費用は大きい。',
-            'Open overseas fans and markets. Expensive.')
+            'Win fans and open markets abroad. Expensive.')
       ),
       'naming_survey': (
         Tr.pick('命名権の打診', 'Sound out naming rights'),

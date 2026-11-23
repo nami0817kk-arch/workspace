@@ -45,7 +45,7 @@ class FiveYearPlanCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                   Tr.pick('5季たつと採点します。3つ果たせば株主の期待+15、2つ+5、1つ-5、0は-12。',
-                      'Marked after five seasons: all 3 met +15 shareholder faith, 2 +5, 1 -5, none -12.'),
+                      'Marked after five seasons: all 3 met +15 shareholder expectation, 2 +5, 1 -5, none -12.'),
                   style: small),
             ] else ...[
               Text(
@@ -111,7 +111,7 @@ class OwnerCareerCard extends StatelessWidget {
                 Text(
                   Tr.pick(
                       '${l.clubName}: ${l.seasons}季・リーグ優勝${l.leagueTitles}・カップ${l.cupTitles}・最高${l.bestRank > 0 ? '${l.bestRank}位' : '-'}(${OwnerHistoryEngine.score(l)}点)',
-                      '${l.clubName}: ${Tr.plural(l.seasons, 'season')}, ${Tr.plural(l.leagueTitles, 'title')}, ${Tr.plural(l.cupTitles, 'cup')}, best ${l.bestRank > 0 ? '${l.bestRank}' : '-'} (${OwnerHistoryEngine.score(l)} pts)'),
+                      '${l.clubName}: ${Tr.plural(l.seasons, 'season')}, ${Tr.plural(l.leagueTitles, 'title')}, ${Tr.plural(l.cupTitles, 'cup')}, best ${l.bestRank > 0 ? Tr.ordinal(l.bestRank) : '-'} (${OwnerHistoryEngine.score(l)} pts)'),
                   style: const TextStyle(fontSize: 12),
                 ),
             const Divider(height: 20),
@@ -120,7 +120,7 @@ class OwnerCareerCard extends StatelessWidget {
                     'All-time owners (you have no points yet)')
                 : Tr.pick(
                     '歴代オーナーの順位: $myRank位 / ${table.length}人(${gs.ownerScore}点)',
-                    'All-time owners: ${myRank}th of ${table.length} (${gs.ownerScore} pts)')),
+                    'All-time owners: ${Tr.ordinal(myRank)} of ${table.length} (${gs.ownerScore} pts)')),
             const SizedBox(height: 4),
             for (var i = 0; i < table.length; i++)
               Text(

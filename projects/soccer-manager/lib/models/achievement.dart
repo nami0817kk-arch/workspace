@@ -11,7 +11,7 @@ extension AchievementCategoryInfo on AchievementCategory {
         AchievementCategory.record => Tr.pick('通算記録', 'Career Records'),
         AchievementCategory.management => Tr.pick('クラブ経営', 'Club Management'),
         AchievementCategory.squad => Tr.pick('選手・育成', 'Players & Development'),
-        AchievementCategory.career => Tr.pick('監督キャリア', 'Managerial Career'),
+        AchievementCategory.career => Tr.pick('オーナー歴', 'Owner Career'),
       };
 }
 

@@ -48,7 +48,7 @@ class YouthAnalyticsCard extends StatelessWidget {
               child: save.hasAnalytics
                   ? TextButton(
                       onPressed: () => gs.setAnalytics(false),
-                      child: Text(Tr.pick('分析部門をやめる', 'Close it')))
+                      child: Text(Tr.pick('分析部門をやめる', 'Shut it down')))
                   : FilledButton.tonal(
                       onPressed: save.budget >= fee
                           ? () => gs.setAnalytics(true)

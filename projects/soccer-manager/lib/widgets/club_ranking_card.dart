@@ -30,7 +30,7 @@ class ClubRankingCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               Tr.pick('全${ranked.length}クラブのうち、あなたのクラブは$mine位です。他クラブの価値は見積もりです。',
-                  'Your club is $mine of ${ranked.length}. Other clubs are estimates.'),
+                  'Your club is ${Tr.ordinal(mine)} of ${ranked.length}. Other clubs are estimates.'),
               style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 8),

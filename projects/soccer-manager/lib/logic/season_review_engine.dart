@@ -69,7 +69,7 @@ class SeasonReviewEngine {
   static List<String> _linesFor(SeasonRecord r, SeasonAward? award) {
     final lines = <String>[
       Tr.pick('${r.divisionTier}部 ${r.finalRank}位 / ${r.teamCount}クラブ',
-          'Tier ${r.divisionTier}, finished ${r.finalRank} of ${r.teamCount}'),
+          'Tier ${r.divisionTier}, finished ${Tr.ordinal(r.finalRank)} of ${r.teamCount}'),
       Tr.pick('${r.won}勝${r.draw}分${r.lost}敗 (${r.played}試合)',
           '${r.won}W ${r.draw}D ${r.lost}L in ${r.played}'),
       Tr.pick(

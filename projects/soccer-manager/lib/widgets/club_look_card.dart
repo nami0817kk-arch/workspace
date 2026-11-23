@@ -38,7 +38,7 @@ class ClubLookCard extends StatelessWidget {
                     gs.clubLookChangeCosts
                         ? Tr.pick(
                             '1季に1回まで(変えると期待-${GameStateClubLook.changePenalty})',
-                            'Once a season (support -${GameStateClubLook.changePenalty})')
+                            'Once a season (supporter expectation -${GameStateClubLook.changePenalty})')
                         : Tr.pick('最初の季は何度でも変えられます',
                             'Free to change in your first season'),
                     style: const TextStyle(fontSize: 12),
@@ -157,7 +157,7 @@ class _ClubLookEditorState extends State<ClubLookEditor> {
                 gs.clubLookChangeCosts
                     ? Tr.pick(
                         '色とエンブレムを決めます。2季目からは1季に1回までで、変えると古いサポーターが戸惑います(期待-${GameStateClubLook.changePenalty})。',
-                        'Choose colours and crest. From your second season you can change it once a season, and long-time fans will be unsettled (support -${GameStateClubLook.changePenalty}).')
+                        'Choose colours and crest. From your second season you can change it once a season, and long-time fans will be unsettled (supporter expectation -${GameStateClubLook.changePenalty}).')
                     : Tr.pick('色とエンブレムを決めます。最初の季のうちは何度でも変えられます。',
                         'Choose colours and crest. You can change them freely during your first season.'),
                 style: const TextStyle(fontSize: 12)),

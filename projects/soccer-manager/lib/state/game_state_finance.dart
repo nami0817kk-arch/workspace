@@ -1879,7 +1879,7 @@ extension GameStateFinance on GameState {
     _book(LedgerCategory.broadcast, pay);
     _logNews(
       Tr.pick('放映権の順位と中継の配分${formatMoney(pay)}が入りました($finalRank位)',
-          'TV merit and facility money of ${formatMoney(pay)} arrived (finished $finalRank)'),
+          'TV merit and facility money of ${formatMoney(pay)} arrived (finished ${Tr.ordinal(finalRank)})'),
       context: Tr.pick('放映権', 'TV rights'),
     );
   }
@@ -2340,7 +2340,7 @@ extension GameStateFinance on GameState {
     if (isTransferBanned) {
       lastSigningBlockReason = Tr.pick(
           'リーグの規則違反で、今は補強が禁止されています(あと${_save!.transferBanSeasons}季)。',
-          'Signings are banned for a rule breach (${_save!.transferBanSeasons} more seasons).');
+          'Signings are banned for a rule breach (${Tr.plural(_save!.transferBanSeasons, 'more season')}).');
       return false;
     }
     if (isPlayer) {

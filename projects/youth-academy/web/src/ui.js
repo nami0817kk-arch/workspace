@@ -1125,7 +1125,7 @@
     refreshSpeeds();
     // 自動停止は3段：切る／失点と節目だけ（既定）／得点でも止める（2026-11-17：前は自分の得点でも必ず止まった）
     function refreshAuto() {
-      autoBtn.textContent = '自動停止 ' + (!m.settings.autoStop ? '切' : m.settings.stopOnScore ? '得点も' : '失点時');
+      autoBtn.replaceChildren(h('span', { class: 'auto-lbl' }, '自動停止 '), !m.settings.autoStop ? '切' : m.settings.stopOnScore ? '得点も' : '失点時'); // 小さい画面では「自動停止」の字を隠す
       autoBtn.classList.toggle('on', m.settings.autoStop);
     }
     autoBtn.onclick = () => {

@@ -170,7 +170,7 @@ class LedgerCard extends StatelessWidget {
                       'Outlook: at the current rate your funds do not run out.')
                   : Tr.pick(
                       '資金の見通し: 今の収支のままだと約$runway節で資金が尽きます。',
-                      'Outlook: at the current rate your funds run out in about $runway matchdays.'),
+                      'Outlook: at the current rate your funds run out in about ${Tr.plural(runway, 'matchday')}.'),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: runway == null

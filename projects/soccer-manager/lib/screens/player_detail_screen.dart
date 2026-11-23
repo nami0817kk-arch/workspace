@@ -858,7 +858,7 @@ class PlayerDetailScreen extends StatelessWidget {
                             'Says you broke the promise made when he joined (${p.promisedStatus!.label}) and wants to leave')
                         : Tr.pick(
                             '加入のときに${p.promisedStatus!.label}を約束した(続けて先発から外れた節: ${p.promiseMisses})',
-                            'Promised ${p.promisedStatus!.label} billing when he joined (straight matches left out: ${p.promiseMisses})'),
+                            'Promised ${p.promisedStatus!.label} billing when he joined (consecutive matches left out: ${p.promiseMisses})'),
                     style: TextStyle(
                       fontSize: 11,
                       color: p.promiseBroken

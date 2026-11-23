@@ -36,7 +36,7 @@ extension TicketPricingInfo on TicketPricing {
       };
 }
 
-/// [manager] はオーナーが雇う監督。ふだんの試合の先発と構えを決める。
+/// [manager] はオーナーが雇う監督。毎試合の先発と構えを決める。
 enum StaffRole {
   headCoach,
   scout,
@@ -51,14 +51,14 @@ enum StaffRole {
 
 extension StaffRoleInfo on StaffRole {
   String get label => switch (this) {
-        StaffRole.headCoach => Tr.pick('ヘッドコーチ', 'Head Coach'),
+        StaffRole.headCoach => Tr.pick('ヘッドコーチ', 'First-Team Coach'),
         StaffRole.scout => Tr.pick('スカウト', 'Scout'),
         StaffRole.physio => Tr.pick('フィジオ', 'Physio'),
         StaffRole.youthCoach => Tr.pick('ユースコーチ', 'Youth Coach'),
         StaffRole.fitnessCoach => Tr.pick('フィットネスコーチ', 'Fitness Coach'),
         StaffRole.manager => Tr.pick('監督', 'Manager'),
         StaffRole.sportingDirector =>
-          Tr.pick('スポーツディレクター', 'Sporting Director'),
+          Tr.pick('スポーツディレクター', 'Director of Football'),
       };
 
   String get description => switch (this) {
@@ -74,8 +74,8 @@ extension StaffRoleInfo on StaffRole {
         StaffRole.fitnessCoach => Tr.pick('週次トレーニングでの疲労回復量をさらに高める',
             'Further increases how much fatigue the weekly training recovers'),
         StaffRole.manager => Tr.pick(
-            'ふだんの試合の先発と構えを決める。勝負の試合では自分で決める',
-            'Picks the XI and approach for ordinary matches; you take over for big ones'),
+            '毎試合の先発と構えを決める。試合はすべて監督に任せる',
+            'Picks the XI and approach for every match; the matches are his to run'),
         StaffRole.sportingDirector => Tr.pick(
             '補強の交渉を任せられる(クラブとも選手とも)。見極めが高いほど言い値を安くまとめる',
             'Can run your transfer negotiations, with clubs and players. Better judging means lower prices'),

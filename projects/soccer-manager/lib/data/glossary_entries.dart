@@ -21,7 +21,7 @@ extension GlossaryCategoryInfo on GlossaryCategory {
         GlossaryCategory.contractTransfer =>
           Tr.pick('契約・移籍', 'Contracts & transfers'),
         GlossaryCategory.tactics => Tr.pick('戦術', 'Tactics'),
-        GlossaryCategory.liveMatch => Tr.pick('ライブ観戦', 'Watching live'),
+        GlossaryCategory.liveMatch => Tr.pick('試合', 'Matches'),
         GlossaryCategory.club => Tr.pick('クラブ経営', 'Club finances'),
       };
 }
@@ -381,13 +381,6 @@ List<GlossaryEntry> get glossaryEntries => [
             'The summary that appears on the home screen when a season ends: where you finished, your record, the goals, any trophies, the top scorer and a verdict on the year. Close it and it will not come back; past seasons stay in the season history screen.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('試合前の確認', 'Pre-match check'),
-        category: GlossaryCategory.liveMatch,
-        description: Tr.pick(
-            '試合を始める前に、スタメンの取りこぼしを拾って知らせる。出られない選手(負傷・出場停止・代表召集・ローン放出中)がスタメンにいる、11人そろっていない、疲労や実戦感覚が足りない、本職外の配置、控えが3人未満、の5点を見る。問題が無い週は何も出ない。',
-            "Before kick-off, anything left undone in your XI is put in front of you: a man who cannot play (injured, suspended, on international duty, out on loan), fewer than eleven, tired or rusty starters, players out of position, and a bench of fewer than three. On a clean week nothing appears."),
-      ),
-      GlossaryEntry(
         term: Tr.pick('次にやること', 'What to do next'),
         category: GlossaryCategory.club,
         description: Tr.pick(
@@ -413,7 +406,7 @@ List<GlossaryEntry> get glossaryEntries => [
         category: GlossaryCategory.condition,
         description: Tr.pick(
             'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う年俸と契約金(一括)が発生する。契約金が払えない、または給与予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
-            "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing fee. Without the fee or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
+            "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing bonus. Without the bonus or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
       ),
       GlossaryEntry(
         term: Tr.pick('有望株の流出', 'Losing a prospect'),
@@ -435,13 +428,6 @@ List<GlossaryEntry> get glossaryEntries => [
         description: Tr.pick(
             '軽め/通常/追い込みの3段階。強くするほど成長速度が上がる代わりに、疲労の蓄積と練習中の怪我リスクが増す。',
             'Light, normal or intense. Harder means faster growth, at the cost of more fatigue and more injuries on the training ground.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('チームトーク', 'Team talk'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '試合前・ハーフタイムに監督が飛ばす檄。鼓舞する/冷静に指示する/叱咤するの3トーンがあり、先発イレブンの士気を変動させる。効果の大きさは選手の性格による結果感応度で変わる。',
-            "What you say before the match and at half time. Three tones — inspire, talk them through it, tear into them — each moving the starting XI's morale. How far it moves depends on each player's personality."),
       ),
       GlossaryEntry(
         term: Tr.pick('マンマーク', 'Man-marking'),
@@ -475,8 +461,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('決定機', 'Big chance'),
         category: GlossaryCategory.liveMatch,
         description: Tr.pick(
-            'ライブ観戦中に訪れる得点/失点のチャンス。自クラブの攻撃側ではシュート/パス/ロングシュートを、守備側では積極的にタックル/カバーリングに専念を選ぶ。成功率は関わる選手の能力値の勝負(シューター対GKなど)から算出され、選択前に表示される。',
-            'The moments in a live match where a goal is on. Attacking, you choose to shoot, pass or try one from distance; defending, you choose to go in hard or hold your shape. The odds come from the attributes of the players involved — shooter against keeper, for instance — and are shown before you decide.'),
+            '試合の中で、得点か失点かが懸かる場面。判断は監督と選手に任され、決まるかどうかは関わる選手の能力値の勝負(シューター対GKなど)で決まる。試合の記録には両チームの決定機の数が並ぶ。',
+            'The moments in a match where a goal is on. The manager and players make the call, and whether it goes in comes down to the attributes of the players involved, shooter against keeper for instance. The match stats show how many each side had.'),
       ),
       GlossaryEntry(
         term: Tr.pick('メンタリティ', 'Mentality'),
@@ -577,32 +563,25 @@ List<GlossaryEntry> get glossaryEntries => [
             'Star a player to keep an eye on him. Add and remove from the search screen, and use the watchlist filter to see them all. When one of them scores, it reaches your club news.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('采配方針', 'In-match approach'),
+        term: Tr.pick('試合中の交代', 'Substitutions'),
         category: GlossaryCategory.liveMatch,
         description: Tr.pick(
-            'ライブ観戦中にいつでも切り替えられる試合中の指示。通常/リスクを取る/安全に下がるの3方針があり、以降の決定機の成功率に攻守それぞれへ補正がかかる。',
-            'An instruction you can switch at any point while watching live: normal, take risks, or sit back. It shifts the odds on the big chances that follow, both ways.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('ライブ交代', 'Live substitution'),
-        category: GlossaryCategory.liveMatch,
-        description: Tr.pick(
-            'ライブ観戦中、ハーフタイムを待たずに決定機の合間で交代枠を使って行う選手交代。交代は1試合5人まで、ハーフタイム以外では3回まで(同じ場面で続けて替えるのは1回、ハーフタイムの交代は回数に数えない)。目前の決定機に関わっている選手は、その決定機が解決するまで交代できない。退場した選手は下げられない。',
-            'Changing a player mid-half rather than waiting for the break, using one of your subs between chances. You get five subs a match, made in no more than three stoppages outside half-time (changes at the same stoppage count once; half-time changes do not count). Anyone caught up in the chance in front of you cannot come off until it resolves, and a sent-off player cannot be replaced.'),
+            '試合中の選手交代は監督が行う。1試合5人まで、ハーフタイム以外では3回まで(同じ場面で続けて替えるのは1回、ハーフタイムの交代は回数に数えない)。退場した選手の代わりは入れられない。',
+            'The manager makes the changes during a match: five at most, in no more than three stoppages outside half-time (changes at the same stoppage count once; half-time changes do not count). A sent-off player cannot be replaced.'),
       ),
       GlossaryEntry(
         term: Tr.pick('モメンタム(試合の流れ)', 'Momentum'),
         category: GlossaryCategory.liveMatch,
         description: Tr.pick(
-            'ライブ観戦画面のスコア下に表示される綱引きバー。ゴールなどで勢いづいた側に傾き、傾いている間はその側の決定機がわずかに決まりやすくなる。',
-            'The tug-of-war bar under the scoreline while you watch live. It swings towards whoever has just had a moment, and while it leans their way their chances go in a little more often.'),
+            '試合の流れ。ゴールなどで勢いづいた側に傾き、傾いている間はその側の決定機がわずかに決まりやすくなる。',
+            'Which way a match is flowing. It swings towards whoever has just had a moment, and while it leans their way their chances go in a little more often.'),
       ),
       GlossaryEntry(
         term: Tr.pick('クイック消化', 'Simming a match'),
         category: GlossaryCategory.liveMatch,
         description: Tr.pick(
-            'ライブ観戦せず、試合結果だけを即座に確定させる進め方。カップ戦を含め、疲労・負傷・警告累積・出場記録などの試合後効果はライブ観戦と同じように適用される。',
-            'Settling the result without watching. Everything that follows a match — fatigue, injuries, cards, appearances — applies exactly as it would live, cup ties included.'),
+            '試合の進め方。オーナーは試合の中に手を出さず、監督に任せて結果だけを確定させる。リーグ戦は短いまとめで、カップ戦は試合の出来事を順に見せる。疲労・負傷・警告の累積・出場記録などの試合後の効果は、どの大会でも同じように付く。',
+            'How every match is played: the manager takes charge and the result is settled without you stepping in. League matches end in a short digest; cup ties play back the moments of the match. Fatigue, injuries, cards and appearances follow in every competition.'),
       ),
       GlossaryEntry(
         term: Tr.pick('値切り交渉', 'Haggling'),

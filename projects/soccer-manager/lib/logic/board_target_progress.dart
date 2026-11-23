@@ -34,18 +34,18 @@ class BoardTargetProgress {
     if (matchdaysLeft <= 0) {
       return onTrack
           ? Tr.pick('目標達成。$rank位で終えました。',
-              'Target met. You finished $rank.')
+              'Target met. You finished ${Tr.ordinal(rank)}.')
           : Tr.pick('目標未達。$rank位で終えました。',
-              'Target missed. You finished $rank.');
+              'Target missed. You finished ${Tr.ordinal(rank)}.');
     }
     if (onTrack) {
       return Tr.pick(
           '現在$rank位。目標圏内(下位クラブとの差 $pointsGap点 / 残り$matchdaysLeft節)',
-          'Currently $rank, inside the target ($pointsGap pts clear, $matchdaysLeft to play)');
+          'Currently ${Tr.ordinal(rank)}, inside the target ($pointsGap pts clear, $matchdaysLeft to play)');
     }
     return Tr.pick(
         '現在$rank位。目標$targetRank位まで勝点$pointsGap差(残り$matchdaysLeft節)',
-        'Currently $rank. $pointsGap pts from $targetRank ($matchdaysLeft to play)');
+        'Currently ${Tr.ordinal(rank)}. $pointsGap pts from ${Tr.ordinal(targetRank)} ($matchdaysLeft to play)');
   }
 
   /// 追う側か追われる側かに関係なく、差が縮まっているほど緊張が高い。
