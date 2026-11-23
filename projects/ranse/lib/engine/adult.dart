@@ -3,6 +3,7 @@ import 'data.dart';
 import 'game.dart';
 import 'history_lines.dart';
 import 'life.dart';
+import 'pastimes.dart';
 import 'rng.dart';
 import 'variety.dart';
 
@@ -28,7 +29,14 @@ void _heal(Life l, int n) => l.hp = l.hp + n > l.maxhp ? l.maxhp : l.hp + n;
 // 今年の重点
 // ======================================================================
 
-List<FocusDef> adultFocusOptions(Game g) {
+/// 今年の重点。身分・道ごとのいつもの重点に、暮らしと嗜みの重点（`pastimes.dart`）を
+/// [kPastimesPerYear] まで足す（増えすぎると選ぶのが重くなるため）。
+List<FocusDef> adultFocusOptions(Game g) => [
+  ..._baseFocusOptions(g),
+  ...pastimeFocusOptions(g),
+];
+
+List<FocusDef> _baseFocusOptions(Game g) {
   final l = g.l;
   final rng = g.rng;
 

@@ -9,6 +9,7 @@ import 'package:ranse/engine/game.dart';
 import 'package:ranse/engine/history.dart';
 import 'package:ranse/engine/history_lines.dart';
 import 'package:ranse/engine/life.dart';
+import 'package:ranse/engine/pastimes.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:ranse/engine/talents.dart';
 import 'package:ranse/engine/ways.dart';
@@ -1806,6 +1807,191 @@ void main() {
         expect(got.length, lessThanOrEqualTo(15));
         expect(got.toSet().length, got.length, reason: '$got');
       }
+    });
+  });
+
+  group('大人の重点の選択肢（暮らしと嗜み）', () {
+    final digits = RegExp(r'[0-9０-９%]');
+    // 重点の名 → (tag, はじめて選んだ年の岐路の題)
+    const labels = <String, (String, Set<String>)>{
+      '寺社に参り、願をかける': ('ps_shrine', {'願掛け'}),
+      '茶の湯を学ぶ': ('ps_tea', {'茶の湯の席'}),
+      '連歌の会に出る': ('ps_renga', {'連歌の会'}),
+      '鷹狩りに出る': ('ps_hawk', {'鷹狩り'}),
+      '主君の鷹狩りの供をする': ('ps_hawk', {'鷹狩り'}),
+      '湯治に行く': ('ps_onsen', {'湯治場'}),
+      '槍の稽古に励む': ('ps_arms', {'槍合わせ'}),
+      '弓・馬の稽古に励む': ('ps_arms', {'弓始め'}),
+      '網を繕い、沖へ出る': ('ps_land', {'網と沖'}),
+      '荒れ野を拓いて田を広げる': ('ps_land', {'荒れ野を拓く'}),
+      '子に手習いをさせる': ('ps_kid', {'子の手習い'}),
+      '奥の務めの合間に、琴や香を学ぶ': ('ps_koto', {'琴と香'}),
+      '書物を写す': ('ps_book', {'写本'}),
+      '経や書物を写す': ('ps_book', {'写本'}),
+    };
+    const titles = {
+      '願掛け', '参詣', '茶の湯の席', '連歌の会', '鷹狩り', '湯治場', '槍合わせ', '弓始め', //
+      '稽古場', '網と沖', '沖の群れ', '荒れ野を拓く', '新しい田', '子の手習い', '琴と香', '香合わせ', '写本',
+    };
+
+    /// 生まれの身分で大人の年頃の人を作る（重点の出し分けを見るだけなので、遊ばずに歳と身分を置く）。
+    Game adultOf(String cls, {bool? female, int seedBase = 0}) {
+      for (var seed = 0; seed < 20000; seed++) {
+        final rng = Rng(seed + seedBase);
+        final b = rollBirth(rng);
+        if (b.cls.id != cls) continue;
+        final g = Game(rng: rng);
+        g.start(b);
+        if (female != null && g.l.female != female) continue;
+        if (g.has('onna')) continue;
+        g.l.t = 40 * 2;
+        return g;
+      }
+      fail('$cls の生まれが見つからない');
+    }
+
+    test('身分・道ごとに合う重点が出る（商人に茶の湯、百姓に新田、城主に鷹狩り）', () {
+      final m = adultOf('merchant');
+      expect(pastimeTags(m), contains('ps_tea'));
+      expect(pastimeTags(m), isNot(contains('ps_land')));
+
+      final f = adultOf('farmer');
+      expect(pastimeTags(f), containsAll(['ps_land', 'ps_shrine', 'ps_onsen']));
+      expect(pastimeTags(f), isNot(contains('ps_tea')));
+      expect(pastimeTags(f), isNot(contains('ps_hawk')));
+
+      final s = adultOf('farmer', female: false, seedBase: 1);
+      s.l
+        ..rank = 5
+        ..maxRank = 5
+        ..lord = s.alive.first.name;
+      expect(pastimeTags(s), containsAll(['ps_hawk', 'ps_arms', 'ps_tea']));
+      expect(pastimeTags(s), isNot(contains('ps_land')));
+
+      // 仏門の人に鷹狩り・寺社参り・茶の湯は出ない。
+      final p = adultOf('priest', female: false);
+      p.setFlag('priesthood');
+      p.l.chi = 70;
+      expect(pastimeTags(p), containsAll(['ps_renga', 'ps_book']));
+      expect(pastimeTags(p), isNot(contains('ps_hawk')));
+      expect(pastimeTags(p), isNot(contains('ps_shrine')));
+
+      // 奥で仕える女性（戦えない）には琴と香。稽古・鷹狩りは出ない。
+      final w = adultOf('farmer', female: true, seedBase: 2);
+      w.l
+        ..rank = 5
+        ..maxRank = 5
+        ..lord = w.alive.first.name;
+      expect(w.canFight, isFalse);
+      expect(pastimeTags(w), contains('ps_koto'));
+      expect(pastimeTags(w), isNot(contains('ps_arms')));
+      expect(pastimeTags(w), isNot(contains('ps_hawk')));
+
+      // 子のいる人には子の手習い。若い人に湯治は出ない。
+      f.l.kids = 2;
+      expect(pastimeTags(f), contains('ps_kid'));
+      f.l.t = 20 * 2;
+      expect(pastimeTags(f), isNot(contains('ps_onsen')));
+    });
+
+    test('選んだ年にその岐路が起き、1年に足す重点は上限まで、匂わせがあり数字が無い', () {
+      final firsts = <String>{};
+      final again = <String>{};
+      var capped = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 6100);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished) continue;
+        g.choose(0); // 元服・裳着
+        if (g.finished) continue;
+        g.l.chi = 60;
+        // 身分を散らして、いろいろな重点を見る。
+        if (seed % 3 == 1 && g.l.rank == 0 && !g.hasFlag('priesthood')) {
+          g.l
+            ..rank = seed % 2 == 0 ? 5 : 2
+            ..maxRank = 5
+            ..lord = g.alive.first.name
+            ..fav = 30;
+        }
+        if (seed % 4 == 0) g.l.kids = 1;
+        final r = Rng(seed + 1);
+        var n = 0;
+        String? expectTitle;
+        Set<String>? expectTitles;
+        // 元服の直後の重点は、上で身分を置き直す前に作られているので、数の突き合わせから外す。
+        var fresh = true;
+        while (!g.finished && n++ < 3000) {
+          final p = g.prompt!;
+          if (expectTitles != null) {
+            expect(
+              p.title,
+              isIn(expectTitles),
+              reason: 'seed=$seed $expectTitle',
+            );
+            expectTitles = null;
+          }
+          if (titles.contains(p.title)) {
+            for (final c in p.choices) {
+              expect(c.hint, isNotNull, reason: '${p.title}/${c.label}');
+              expect(
+                c.hint!,
+                isNot(contains(digits)),
+                reason: '${p.title}/${c.hint}',
+              );
+              expect(
+                c.label,
+                isNot(contains(digits)),
+                reason: '${p.title}/${c.label}',
+              );
+            }
+          }
+          if (p.title == '今年の重点' && !g.isChild) {
+            final mine = [
+              for (var i = 0; i < p.choices.length; i++)
+                if (labels.containsKey(p.choices[i].label)) i,
+            ];
+            final tags = pastimeTags(g);
+            expect(mine.length, lessThanOrEqualTo(kPastimesPerYear));
+            if (!fresh) {
+              expect(
+                mine.length,
+                tags.length < kPastimesPerYear ? tags.length : kPastimesPerYear,
+                reason: 'seed=$seed $tags',
+              );
+              if (tags.length > kPastimesPerYear) capped++;
+            }
+            fresh = false;
+            for (final i in mine) {
+              final c = p.choices[i];
+              expect(c.hint, isNotNull);
+              expect(c.hint!, isNot(contains(digits)), reason: c.hint);
+              expect(c.label, isNot(contains(digits)), reason: c.label);
+            }
+            if (mine.isNotEmpty && r.chance(.7)) {
+              final i = mine[r.range(0, mine.length - 1)];
+              final (tag, first) = labels[p.choices[i].label]!;
+              if (!g.hasFlag('scene:$tag')) {
+                expectTitle = p.choices[i].label;
+                expectTitles = first;
+                firsts.add(tag);
+              }
+              g.choose(i);
+              continue;
+            }
+          }
+          g.choose(r.range(0, p.choices.length - 1));
+        }
+        again.addAll(
+          g.l.flags
+              .where((f) => f.startsWith('scene:ps_') && f.endsWith('_again'))
+              .map((f) => f.substring(6)),
+        );
+      }
+      expect(firsts.length, greaterThanOrEqualTo(8), reason: '$firsts');
+      expect(again.length, greaterThanOrEqualTo(5), reason: '$again');
+      expect(capped, greaterThan(0));
     });
   });
 }

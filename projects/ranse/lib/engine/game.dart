@@ -15,6 +15,7 @@ import 'history_rumor.dart';
 import 'history_west.dart';
 import 'life.dart';
 import 'lords.dart';
+import 'pastimes.dart';
 import 'rng.dart';
 import 'talents.dart';
 import 'village.dart';
@@ -67,6 +68,7 @@ class Game extends ChangeNotifier {
       ...buildAshigaruScenes(),
       ...buildVillageScenes(),
       ...buildTalentScenes(),
+      ...buildPastimeScenes(),
       ...buildHistoryScenes(),
       ...buildHistoryEastScenes(),
       ...buildHistoryWestScenes(),
