@@ -58,6 +58,21 @@ double incomeScale(int tier) => switch (tier.clamp(1, 5)) {
       _ => 3,
     };
 
+/// 1人の観客が1試合で払う額の目安(万円。チケットと場内の売上)。
+/// 観客収入の上限([GameState] の入場収入の頭打ち)に使う。年間の観客収入は
+/// 「入る人数 × ホームの試合の数 × この額」を超えない。
+///
+/// 以前は観客収入が席の数と関係なく、順位・施設・部の倍率の掛け算で
+/// 決まっていて、1部では1季488億(4万人が19試合で払うと1人6万円超)に
+/// なっていた(2026-11-23)。
+double gateRevenuePerFan(int tier) => switch (tier.clamp(1, 5)) {
+      1 => 1.0,
+      2 => 0.4,
+      3 => 0.2,
+      4 => 0.12,
+      _ => 0.08,
+    };
+
 /// 部ごとの、放映権を除いた年収(観客・スポンサー・グッズ・賞金)の目安
 /// (万円)。国では変えない。[typicalAnnualIncome] の土台。
 int _typicalNonBroadcastIncome(int tier) => switch (tier.clamp(1, 5)) {

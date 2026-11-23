@@ -501,6 +501,12 @@ extension GameStateTransfer on GameState {
     // 7月1日より前に出ていった(売った・解除した)選手の仮契約は無くなる。
     _save?.preContracts
         .removeWhere((c) => c.playerId == playerId && c.fromClubId == team.id);
+    // 自クラブから抜けた選手の、監督の更新の提案は消す(残すと承認したとき
+    // 更新する相手がいない)。
+    if (team.id == _save?.userTeamId) {
+      _save!.proposals.removeWhere(
+          (p) => p.kind == ProposalKind.renew && p.playerId == playerId);
+    }
     _settleInstallmentsFor(playerId);
   }
 
@@ -703,7 +709,10 @@ extension GameStateTransfer on GameState {
   }) async {
     if (_save == null) return false;
     lastSigningBlockReason = null;
-    final player = userTeam.players.firstWhere((p) => p.id == playerId);
+    // もう手放した選手(提案が残っていた・画面が古い)は更新できない。
+    final player =
+        userTeam.players.where((p) => p.id == playerId).firstOrNull;
+    if (player == null) return false;
     final blocked = renewalBlockReason(player);
     if (blocked != null) {
       lastSigningBlockReason = blocked;

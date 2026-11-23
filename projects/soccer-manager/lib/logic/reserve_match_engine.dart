@@ -52,8 +52,9 @@ class ReserveMatchEngine {
   /// 実戦感覚の回復量。紅白戦(+6想定)より大きい。公式戦に近いため。
   static const int sharpnessGain = 14;
 
-  /// 試合による疲労。
-  static const int fatigueCost = 10;
+  /// 試合による疲労。控えの若手が出る短い試合なので、公式戦より軽い
+  /// (以前の10では、控えが週ごとに疲れを溜めていた。2026-11-23)。
+  static const int fatigueCost = 4;
 
   /// 経験による成長が起きる確率。紅白戦より高い。
   static const double experienceChance = 0.22;

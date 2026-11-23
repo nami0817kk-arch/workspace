@@ -11,9 +11,27 @@ extension GameStateStaffMoves on GameState {
       staffOffers.where((o) => o.role == role).firstOrNull;
 
   /// 引き抜きの話が来る、1か月あたりの確率。水準4以上のスタッフだけ狙われ、
-  /// 水準が1つ上がるごとに2%ずつ上がる(水準8で16%)。
+  /// 水準4で2%、1つ上がるごとに1%ずつ上がる(水準8で6%)。
+  ///
+  /// 以前は 8%+2%/段で、10季で監督を11〜19回雇い直していた。補償金
+  /// (週俸×26以上)が入り、候補はただで雇えるので、引き抜かれるほど
+  /// 稼げてしまい、新しい監督が来るたびに布陣が変わって習熟が落ちた
+  /// (2026-11-23 の実測)。あわせて1季に1回まで、着任から1年は来ない。
   static double poachChance(int level) =>
-      level < 4 ? 0 : 0.08 + 0.02 * (level - 4);
+      level < 4 ? 0 : 0.02 + 0.01 * (level - 4);
+
+  /// 着任からこの日数のあいだは、引き抜きの話が来ない。
+  static const int poachProtectionDays = 365;
+
+  /// [st]が今日、引き抜きの話の対象になるか。今季まだ話が来ていなくて、
+  /// 着任から1年たっていること(確率は別に[poachChance])。
+  bool staffPoachable(StaffMember st) {
+    final s = _save;
+    if (s == null || s.staffPoachSeason == s.league.season) return false;
+    final on = st.hiredOn;
+    if (on == null) return true;
+    return GameStateWeek._daysBetween(on, today) >= poachProtectionDays;
+  }
 
   /// 返事を待つ日数。過ぎると、スタッフは移っていく。
   static const int staffOfferDays = 14;
@@ -40,6 +58,7 @@ extension GameStateStaffMoves on GameState {
     for (final role in StaffRole.values) {
       final st = s.infrastructure.staffFor(role);
       if (st == null || st.contractYears <= 0) continue;
+      if (!staffPoachable(st)) continue;
       if (rng.nextDouble() >= poachChance(st.effectiveLevel)) continue;
       final club = _poachingClub(rng);
       if (club == null) return;
@@ -56,6 +75,7 @@ extension GameStateStaffMoves on GameState {
         raisePercent: staffKeepRaisePercent,
         expiresOn: after.add(const Duration(days: staffOfferDays)),
       ));
+      s.staffPoachSeason = s.league.season;
       _logNews(
           Tr.pick(
               '${club.name}が、${role.label}の${st.name}を引き抜きに来た。補償金を取って手放すか、昇給して残すかを${TransferWindowCalendar.formatMonthDay(after.add(const Duration(days: staffOfferDays)))}までに決めてください(決めなければ移っていく)。',

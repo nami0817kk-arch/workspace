@@ -1264,14 +1264,19 @@ extension GameStateSeason on GameState {
     }
 
     // 株主の期待: 黒字でシーズンを終えれば上がり、赤字なら下がる。
+    // 順位と目標の差も3割混ぜる(黒字なら最下位が続いても満点に張り
+    // 付いていた。2026-11-23)。
     _save!.shareholderExpectation = ShareholderEngine.applied(
       _save!.shareholderExpectation,
-      ShareholderEngine.deltaForSeasonEnd(
-            budget: _save!.budget,
-            profit: _save!.ledgerFor(_save!.league.season).profit,
-            operatingIncome:
-                _save!.ledgerFor(_save!.league.season).operatingIncome,
-            wageRatio: _save!.ledgerFor(_save!.league.season).wageRatio,
+      ShareholderEngine.mixedWithResults(
+            financial: ShareholderEngine.deltaForSeasonEnd(
+              budget: _save!.budget,
+              profit: _save!.ledgerFor(_save!.league.season).profit,
+              operatingIncome:
+                  _save!.ledgerFor(_save!.league.season).operatingIncome,
+              wageRatio: _save!.ledgerFor(_save!.league.season).wageRatio,
+            ),
+            results: confidenceDelta,
           ) +
           BudgetEngine.dividendExpectationDelta(_save!.budgetPlan),
     );
@@ -1703,8 +1708,16 @@ extension GameStateSeason on GameState {
     // 前に行う(上の supportersGone)。最後通告の期限を過ぎて手放すことが
     // 決まっている場合だけ、そのままにしてその流れを壊さない。底上げで
     // 10以上に戻れば、最後通告も取り下げられる。
+    //
+    // ただし季末に最後通告の線([GameStateSupporters.ultimatumLine])を
+    // 割っていたら底上げしない。新しい季の初日に最後通告を出す
+    // (以前は季を終えると最後通告が出ず、新しい季に40へ戻ったので、
+    // 何もしないオーナーが毎季最下位でも10季生き残った。2026-11-23)。
     final supporterAfterSeason = _save!.confidence;
+    final belowUltimatumLine =
+        supporterAfterSeason < GameStateSupporters.ultimatumLine;
     if (!supportersGone &&
+        !belowUltimatumLine &&
         _save!.confidence < BoardEngine.newSeasonConfidenceFloor) {
       _setSupportersTo(
           BoardEngine.newSeasonConfidenceFloor, SupporterReason.events,
@@ -1975,6 +1988,8 @@ extension GameStateSeason on GameState {
     // 週の処理の時計は、新しい季の最初の節で起こし直す(オフには回さない)。
     _save!.lastWeeklyTickDate = null;
     _setToday(SeasonCalendar.preseasonDate(_save!.league.season));
+    // 季末に最後通告の線を割っていたら、新しい季の初日に最後通告を出す。
+    if (!supportersGone && belowUltimatumLine) _checkSupporterUltimatum();
     _settleLoansByDate();
     _startSummerTournament();
     _pruneScoutKnowledge();

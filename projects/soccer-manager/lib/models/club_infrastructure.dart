@@ -164,7 +164,8 @@ class ClubInfrastructure {
 
   /// 役職を空けたまま置いたときの週俸(=0)との比較用に残している、
   /// 旧レベル制の週俸。セーブの移行でのみ使う。
-  static int staffWeeklyWage(int level) => level * 20;
+  /// 週俸の相場を15%にした(StaffMember.staffWageFactor)のに合わせて 20→3。
+  static int staffWeeklyWage(int level) => level * 3;
 
   /// スタジアム以外の施設を [currentLevel] から1段上げる工事費(万円)。
   ///
@@ -228,7 +229,13 @@ class ClubInfrastructure {
       (1 - (medicalCenterLevel - 1) * 0.06).clamp(0.6, 1.0);
 
   /// 商業施設のレベルに応じた、観客収入・スポンサー収入への倍率。
-  static double commercialRevenueMultiplier(int level) => 1 + (level - 1) * 0.1;
+  ///
+  /// 1段 +4%(Lv8 で 1.28 倍)。以前は1段 +10%(Lv8 で 1.7 倍)で、観客・
+  /// スポンサー・グッズの全部に掛かり、工事費が部で変わらないため1部では
+  /// 1季で元が取れて、資金が雪だるま式に増えた(2026-11-23 の実測)。
+  static const double commercialStep = 0.04;
+  static double commercialRevenueMultiplier(int level) =>
+      1 + (level - 1) * commercialStep;
 
   int get totalStaffWeeklyWage =>
       staff.values.fold<int>(0, (s, m) => s + (m?.wage ?? 0));
