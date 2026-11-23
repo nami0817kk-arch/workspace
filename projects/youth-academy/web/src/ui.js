@@ -1052,9 +1052,11 @@
     }
     app.last = { m, summary };
   }
+  // 一続きの試合（2026-11-23。live.js）。端末の store 'liveMatch' を false にすると前の作り（見どころを確率で作る）に戻る
+  YA.liveOn = () => !!YA.Live && store.get('liveMatch', true) !== false;
   function startMatch(t, oppTeam, opp, sched) {
     app.seed = (app.seed * 1103515245 + 12345) % 2147483647;
-    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: app.autoStop, stopOnScore: !!app.stopOnScore } });
+    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: app.autoStop, stopOnScore: !!app.stopOnScore, live: YA.liveOn(), record: true } });
     m.opp = opp;
     m.scheduled = !!sched;
     app.match = m;
@@ -1065,7 +1067,7 @@
   // 見ずに最後まで回す。止まる節目は無視し、交代・指示はしない（布陣と戦い方は試合前のまま）
   function simulateAll(t, oppTeam, opp, sched) {
     app.seed = (app.seed * 1103515245 + 12345) % 2147483647;
-    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: false } });
+    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: false, live: YA.liveOn() } });
     m.opp = opp;
     m.scheduled = !!sched;
     let e;

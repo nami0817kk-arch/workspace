@@ -153,6 +153,15 @@
       // 見どころの前に攻める側がボールを持つ流れを作るため。本来の乱数は今までどおり1つ引くので、ほかの中身はずれない）
       { const sr = YA.rngOf((opts.seed | 0) * 311 + 71); this.sideRolls = this.keyIdx.map(() => sr()); }
       this._refreshPen();
+      // 一続きの試合（2026-11-23。live.js）：見どころを確率で決めず、22人とボールの動きから得点・シュートが生まれる。
+      // 見どころは実際に起きた危ない場面を拾う。乱数の流れを変えないよう、上の見どころの時刻などは今までどおり作ってから外す
+      if (this.settings.live && YA.Live) {
+        this.keyIdx = [];
+        this.keyMinutes = [];
+        this.sideRolls = [];
+        this.live = new YA.Live(this, { record: !!this.settings.record });
+        this._lvI = 0;
+      }
     }
     // 時刻の表示（「45+2」「90+3」）
     minLabel(min, extra) {
@@ -1468,6 +1477,7 @@
     step() {
       if (this.finished) return { type: 'full' };
       this._flushSendOff();
+      if (this.live) this.live.sync(); // 交代・退場・並びの変更を動きに映す
       if (this.pendingStop) {
         const reason = this.pendingStop;
         this.pendingStop = null;
@@ -1489,7 +1499,7 @@
       }
       if (this.ti >= tl.length - 1) {
         this.finished = true;
-        this.addBackgroundShots();
+        if (!this.live) this.addBackgroundShots();
         return { type: 'full', summary: this.summary() };
       }
       this.ti++;
@@ -1499,16 +1509,24 @@
       if (this.ti === 45 + this.add1) {
         // 後半のキックオフ（前半に蹴らなかった側）
         const ks = this.kickoffSide === 'home' ? 'away' : 'home';
+        if (this.live) { this.live.secondHalf(ks); this._liveMinute(); }
         const tx = '後半開始。' + (ks === 'home' ? this.home.short : this.away.short) + 'のキックオフ';
         this.log.push({ minute: 46, ml, text: tx, kind: 'info' });
         return { type: 'tick', minute: 46, ml, text: tx, key: true, kickoff: ks };
+      }
+      // 一続きの試合：この1分を動かし、得点・大きな場面があれば見どころとして返す
+      if (this.live) {
+        const sc = this._liveMinute();
+        if (sc) {
+          return { type: 'scene', scene: sc, minute: this.min, ml };
+        }
       }
       if (this.extra === 1 && this.keyIdx.indexOf(this.ti) < 0) {
         const tx = (this.min === 45 ? '前半' : '後半') + 'の追加時間は' + (this.min === 45 ? this.add1 : this.add2) + '分';
         this.log.push({ minute: this.min, ml, text: tx, kind: 'info' });
         return { type: 'tick', minute: this.min, ml, text: tx };
       }
-      if (this.min === 75 && !this.extra && !this.lateDone) {
+      if ((this.live ? this.min >= 75 : this.min === 75) && !this.extra && !this.lateDone) {
         this.lateDone = true;
         if (this.settings.autoStop) this.pendingStop = 'late';
         return { type: 'tick', minute: 75, ml, text: '残り15分。', key: true };
@@ -1543,7 +1561,7 @@
         this._afterScene(sc, att, def);
         return { type: 'scene', scene: sc, minute: this.min, ml };
       }
-      const foul = this._bgFoul();
+      const foul = this.live ? null : this._bgFoul();
       if (foul) {
         this._flushSendOff();
         this.log.push({ minute: this.min, ml, text: foul, kind: 'card' });

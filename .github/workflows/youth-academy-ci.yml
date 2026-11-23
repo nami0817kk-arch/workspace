@@ -41,6 +41,7 @@ jobs:
           node tool/offball.js
           node tool/brain.js
           node tool/audit.js
+          N=12 NB=10 node tool/live.js
           node tool/world.js
           node tool/balance.js
 
