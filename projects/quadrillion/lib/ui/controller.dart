@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/game.dart';
+import 'guide.dart';
 import 'widgets.dart';
 
 /// 試作の localStorage の鍵と同じ名前で保存する
@@ -12,7 +13,7 @@ const saveKey = 'quad-save-m';
 
 /// 画面の状態（どのタブか・小窓・はじめの画面の選択）と、保存・読み込み。
 /// 試作の render / act / toast / showSheet / save / load にあたる。
-class GameController extends ChangeNotifier {
+class GameController extends ChangeNotifier with WidgetsBindingObserver {
   SharedPreferences? prefs;
   final math.Random Function() newRandom;
   GameController({this.prefs, math.Random Function()? newRandom}) : newRandom = newRandom ?? (() => math.Random());
@@ -59,10 +60,12 @@ class GameController extends ChangeNotifier {
     showSheet((_) => ToastBody(msg: msg, onOk: then ?? closeSheet));
   }
 
-  /// 手を打つ（結果の文があれば見せる）
-  void act(String? Function() fn) {
+  /// 手を打つ（結果の文があれば見せる）。[mark] を渡すと、手を使えたときに案内のその段を済みにする
+  void act(String? Function() fn, {String? mark}) {
     hideSheet();
+    final apBefore = game?.ap;
     final m = fn();
+    if (mark != null && apBefore != null && game != null && game!.ap < apBefore) markGuide(game, mark);
     save();
     if (m != null) {
       toast(m);
@@ -94,6 +97,14 @@ class GameController extends ChangeNotifier {
     }
   }
 
+  /// アプリが裏に回る・閉じられるときに保存する
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive || state == AppLifecycleState.detached) {
+      save();
+    }
+  }
+
   void clearSave() {
     prefs?.remove(saveKey);
   }
@@ -101,6 +112,7 @@ class GameController extends ChangeNotifier {
   // ===== はじめる =====
   void startNew() {
     game = Game.newGame(setup, rng: newRandom());
+    startGuide(game!);
     tab = 'town';
     save();
   }

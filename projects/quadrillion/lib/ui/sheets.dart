@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
+import 'guide.dart';
 import 'widgets.dart';
 
 /// 小窓（試作の openXxx / showReport / nextEvent / showHelp）
@@ -47,6 +48,7 @@ void openSeek(GameController ctl) {
               ctl.toast(m);
               return;
             }
+            markGuide(s, 'partner');
             ctl.save();
             openMeet(ctl);
           }, subs: [pl.s]),
@@ -343,6 +345,10 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
         text: line);
   }).toList();
   final head = '${s.year}年 ${s.q}月 ${s.q % 3 == 1 ? 'の経営会議' : 'の報告'}';
+  if (s.q % 3 == 1) {
+    markGuide(s, 'meet');
+    ctl.save();
+  }
   final pre = s.pre;
   final cap = s.cap;
   ctl.showSheet((_) => _col([

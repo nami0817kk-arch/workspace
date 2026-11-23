@@ -6,9 +6,38 @@ import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
 
-class QuadrillionApp extends StatelessWidget {
+class QuadrillionApp extends StatefulWidget {
   final GameController controller;
   const QuadrillionApp({super.key, required this.controller});
+
+  @override
+  State<QuadrillionApp> createState() => _QuadrillionAppState();
+}
+
+class _QuadrillionAppState extends State<QuadrillionApp> {
+  GameController get controller => widget.controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // アプリが裏に回る・閉じられるときに自動で保存する
+    WidgetsBinding.instance.addObserver(controller);
+  }
+
+  @override
+  void didUpdateWidget(QuadrillionApp old) {
+    super.didUpdateWidget(old);
+    if (old.controller != controller) {
+      WidgetsBinding.instance.removeObserver(old.controller);
+      WidgetsBinding.instance.addObserver(controller);
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(controller);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,11 +227,11 @@ class MainScreen extends StatelessWidget {
         ]),
         const SizedBox(height: 4),
         Wrap(spacing: 14, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
-          _stat('現金 ', yen(s.cash)),
+          FlashStat('現金 ', yen(s.cash), value: s.cash, turn: s.turn),
           if (s.debt > 0) _stat('借金 ', yen(s.debt), Pal.down),
-          _stat('時価総額 ', yen(s.cap), Pal.goldtx),
+          FlashStat('時価総額 ', yen(s.cap), value: s.cap, turn: s.turn, color: Pal.goldtx),
           if (s.wealth > 0) _stat('財産 ', yen(s.wealth)),
-          _stat('世界 ', '$rk位'),
+          FlashStat('世界 ', '$rk位', value: rk.toDouble(), turn: s.turn, higherIsBetter: false),
           Row(mainAxisSize: MainAxisSize.min, children: [
             Text('手 ', style: ts(size: 12.5, color: Pal.mute)),
             for (var i = 0; i < s.apMax; i++)

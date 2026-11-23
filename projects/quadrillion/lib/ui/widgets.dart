@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 /// 試作の :root の配色（明るい紙色）
@@ -24,6 +26,29 @@ Color hexColor(String h) {
   var s = h.replaceAll('#', '');
   if (s.length == 3) s = s.split('').map((c) => '$c$c').join();
   return Color(int.parse('FF$s', radix: 16));
+}
+
+/// WCAG の相対輝度
+double relLuminance(Color c) {
+  double ch(double v) => v <= .03928 ? v / 12.92 : math.pow((v + .055) / 1.055, 2.4).toDouble();
+  return .2126 * ch(c.r) + .7152 * ch(c.g) + .0722 * ch(c.b);
+}
+
+/// WCAG のコントラスト比（1〜21）
+double contrastRatio(Color a, Color b) {
+  final la = relLuminance(a), lb = relLuminance(b);
+  return (math.max(la, lb) + .05) / (math.min(la, lb) + .05);
+}
+
+/// 宿敵の色を、白いカードと紙色の背景のどちらの上でも文字として読める濃さ（コントラスト比 4.5 以上）まで暗くする。
+/// 色味（色相・彩度）は変えない。顔の丸の塗りは元の色のまま使う
+Color rivalInk(String col) {
+  var hsl = HSLColor.fromColor(hexColor(col));
+  bool ok(Color c) => contrastRatio(c, Pal.panel) >= 4.5 && contrastRatio(c, Pal.sky) >= 4.5;
+  while (!ok(hsl.toColor()) && hsl.lightness > 0) {
+    hsl = hsl.withLightness(math.max(0, hsl.lightness - .01));
+  }
+  return hsl.toColor();
 }
 
 const fontFamily = 'NotoSansJP';
@@ -314,3 +339,61 @@ class Pick<T> extends StatelessWidget {
 
 /// 金額などに色を付けて出す
 Text colored(String s, Color c, {double size = 13, bool bold = false}) => Text(s, style: ts(size: size, color: c, bold: bold));
+
+/// 上の帯の数字。月を進めて値が変わったとき、0.6秒ほど緑（よくなった）か赤（悪くなった）にふわっと光る
+class FlashStat extends StatefulWidget {
+  final String label, text;
+  final Color color;
+  final double value;
+  final int turn;
+  final bool higherIsBetter;
+  const FlashStat(this.label, this.text,
+      {super.key, required this.value, required this.turn, this.color = Pal.ink, this.higherIsBetter = true});
+  @override
+  State<FlashStat> createState() => _FlashStatState();
+}
+
+class _FlashStatState extends State<FlashStat> with SingleTickerProviderStateMixin {
+  late final AnimationController _a = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+  bool _good = true;
+
+  @override
+  void didUpdateWidget(FlashStat old) {
+    super.didUpdateWidget(old);
+    if (old.turn != widget.turn && old.value != widget.value) {
+      _good = (widget.value > old.value) == widget.higherIsBetter;
+      _a.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _a.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Text.rich(TextSpan(children: [
+      TextSpan(text: widget.label, style: ts(size: 12.5, color: Pal.mute)),
+      TextSpan(text: widget.text, style: ts(size: 12.5, color: widget.color, bold: true)),
+    ]));
+    return AnimatedBuilder(
+      animation: _a,
+      child: text,
+      builder: (context, child) {
+        // 上がって下がる山形（はじめ速く光り、ゆっくり消える）
+        final t = _a.value;
+        final glow = _a.isAnimating ? math.sin(math.pi * math.pow(t, .6)) : 0.0;
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: (_good ? Pal.up : Pal.down).withValues(alpha: .22 * glow),
+            borderRadius: BorderRadius.circular(4),
+            boxShadow: glow > 0 ? [BoxShadow(color: (_good ? Pal.up : Pal.down).withValues(alpha: .25 * glow), blurRadius: 6 * glow)] : null,
+          ),
+          child: child,
+        );
+      },
+    );
+  }
+}
