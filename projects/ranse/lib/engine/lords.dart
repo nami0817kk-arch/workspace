@@ -57,7 +57,15 @@ Faction? _rival(Game g, {bool strongest = false}) {
     others.sort((a, b) => b.power.compareTo(a.power));
     return others.first;
   }
-  return g.rng.pick(others);
+  // 好敵手は近い家から。
+  return g.rng.pick(
+    nearest<Faction>(
+      others,
+      (f) => f.name,
+      faction: g.l.lord ?? '',
+      region: g.l.lord == null ? g.l.region : null,
+    ),
+  );
 }
 
 List<SceneDef> buildLordScenes() {

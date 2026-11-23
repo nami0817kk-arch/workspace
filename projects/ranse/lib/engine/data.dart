@@ -181,6 +181,33 @@ double factionDistance(String region, String faction) {
   return homes.map(d).reduce((a, b) => a < b ? a : b);
 }
 
+/// 家と家の隔たり（[a] の家の国のうち、[b] に最も近いものから測る）。
+double factionGap(String a, String b) {
+  final homes = [
+    for (final r in kRegions)
+      if (r.f.contains(a)) r.n,
+  ];
+  if (homes.isEmpty) return factionDistance('山城', b);
+  return homes
+      .map((r) => factionDistance(r, b))
+      .reduce((x, y) => x < y ? x : y);
+}
+
+/// [from]（国、または家）から近い順に並べ替えた候補の、先頭 [n] 件。
+List<T> nearest<T>(
+  Iterable<T> candidates,
+  String Function(T) nameOf, {
+  String? region,
+  String? faction,
+  int n = 3,
+}) {
+  double d(T x) => region != null
+      ? factionDistance(region, nameOf(x))
+      : factionGap(faction!, nameOf(x));
+  final l = candidates.toList()..sort((a, b) => d(a).compareTo(d(b)));
+  return l.take(n).toList();
+}
+
 const kFactionBase = <String, double>{
   '織田': 28,
   '斎藤': 22,

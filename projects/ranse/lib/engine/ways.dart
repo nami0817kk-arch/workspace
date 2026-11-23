@@ -1126,8 +1126,15 @@ List<SceneDef> buildWayScenes() {
           !g.l.married &&
           g.alive.length >= 2,
       (g, next) {
+        // 人質に出されるのは、近くの同盟相手の家。
         final other = g.rng
-            .pick(g.alive.where((x) => x.name != g.l.lord).toList())
+            .pick(
+              nearest(
+                g.alive.where((x) => x.name != g.l.lord),
+                (f) => f.name,
+                region: g.l.region,
+              ),
+            )
             .name;
         g.ask('人質', '同盟の証として、$other家へ人質に出されることになった。', [
           Choice.h('家のために行く', '家は守られる。帰れる日が来るとは限らない', () {

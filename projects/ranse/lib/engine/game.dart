@@ -831,7 +831,10 @@ class Game extends ChangeNotifier {
     // 小競り合い。勢力は削り合うが、滅ぶのは史実の年表（history.dart）とプレイヤーの侵攻だけ。
     if (al.length > 2 && rng.chance(.25)) {
       final a = rng.wpick(al, (f) => f.power);
-      final d = rng.pick(al.where((f) => f != a).toList());
+      // 領地を削り合うのは隣り合う家どうし。
+      final d = rng.pick(
+        nearest(al.where((f) => f != a), (f) => f.name, faction: a.name),
+      );
       if (rng.chance(clampD(a.power / (a.power + d.power), .15, .85))) {
         final take = d.power * .12;
         a.power += take;

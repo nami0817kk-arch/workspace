@@ -110,6 +110,15 @@ void main() {
     );
     expect(factionDistance('土佐', '毛利'), lessThan(factionDistance('土佐', '伊達')));
     expect(factionDistance('近江', '浅井'), 0);
+    // 家どうしでも、近い順に並ぶ（侵攻先・好敵手・人質先・小競り合いの相手に使う）。
+    final names = kFactionBase.keys.where((n) => n != '伊達');
+    final near = nearest(names, (n) => n, faction: '伊達', n: 3);
+    expect(near, containsAll(['蘆名', '最上']));
+    expect(near, isNot(contains('島津')));
+    expect(
+      nearest(names, (n) => n, region: '薩摩', n: 2),
+      everyElement(isIn(['大友', '龍造寺', '島津'])),
+    );
   });
 
   test('仕官・奉公の先に、遠国の家は出ない（会津から四国・九州へは行かない）', () {

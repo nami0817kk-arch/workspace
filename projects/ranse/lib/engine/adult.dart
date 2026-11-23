@@ -428,8 +428,13 @@ List<SceneDef> buildAdultScenes() {
       (g, next) {
         final l = g.l;
         final me = g.fa[l.lord]!;
-        final tg = g.alive.where((x) => x != me).toList()
-          ..sort((a, b) => a.power.compareTo(b.power));
+        // 攻め込めるのは近い家（遠国の家は、近くの家が滅んでから届く）。その中を弱い順に。
+        final tg = nearest(
+          g.alive.where((x) => x != me),
+          (f) => f.name,
+          faction: me.name,
+          n: 6,
+        )..sort((a, b) => a.power.compareTo(b.power));
         final sk = 1 + (l.bu + l.chi + l.un) / 600;
         g.ask('侵攻', invadeIntro(g), [
           for (final t in tg.take(5))
