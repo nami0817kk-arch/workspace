@@ -558,14 +558,14 @@ void openPipes(GameController ctl, Biz b, String k) {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 2),
             decoration: Ui.rowLine,
-            child: Row(children: [
-              Expanded(child: Text(pipeText(s, b, b.pipe[i]), style: ts(size: 13))),
-              Btn(tr('取り下げる（半分戻る）'), () {
+            child: TextBtnRow(
+              text: Text(pipeText(s, b, b.pipe[i]), style: ts(size: 13)),
+              btn: Btn(tr('取り下げる（半分戻る）'), () {
                 final m = s.cancelPipe(b, i);
                 ctl.save();
                 ctl.toast(m, then: () => openPipes(ctl, b, k));
               }, small: true),
-            ]),
+            ),
           ),
         _cancel(ctl, '閉じる'),
       ]));
@@ -657,7 +657,8 @@ class ReportTable extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget cell(String t, TextStyle st) =>
         Align(alignment: Alignment.centerRight, child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerRight, child: Text(t, maxLines: 1, softWrap: false, style: st)));
-    const labelW = 68.0, iconW = 18.0;
+    final labelW = Ui.sw(68);
+    const iconW = 18.0;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -666,7 +667,7 @@ class ReportTable extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 2),
           child: Row(children: [
-            const SizedBox(width: labelW),
+            SizedBox(width: labelW),
             Expanded(child: cell(beforeHead, ts(size: 11.5, color: Pal.mute))),
             const SizedBox(width: iconW + 4),
             Expanded(child: cell(nowHead, ts(size: 11.5, color: Pal.mute))),

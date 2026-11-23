@@ -51,6 +51,12 @@ class _QuadrillionAppState extends State<QuadrillionApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Pal.gold, surface: Pal.panel, brightness: Brightness.light),
         textTheme: const TextTheme().apply(bodyColor: Pal.ink, displayColor: Pal.ink),
       ),
+      // 端末の「文字を大きく」に従う。ただし大きすぎると表や帯が崩れるので、[Ui.maxTextScale] 倍までに抑える
+      builder: (context, child) {
+        final scale = (MediaQuery.textScalerOf(context).scale(100) / 100).clamp(1.0, Ui.maxTextScale).toDouble();
+        Ui.textScale = scale;
+        return MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)), child: child!);
+      },
       home: ListenableBuilder(listenable: controller, builder: (context, _) => RootScreen(ctl: controller)),
     );
   }
@@ -161,7 +167,7 @@ class SheetHostState extends State<SheetHost> with SingleTickerProviderStateMixi
                 return Align(
                   alignment: c.maxWidth >= 700 ? Alignment.center : Alignment.bottomCenter,
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 620, maxHeight: c.maxHeight * .94),
+                    constraints: BoxConstraints(maxWidth: Ui.maxSheet, maxHeight: c.maxHeight * .94),
                     // 小窓の高さのぶんだけ下から上がってくる（沈むときは逆）
                     child: SlideTransition(
                       position: _slide,
@@ -209,7 +215,7 @@ class SetupScreen extends StatelessWidget {
     final y = st.year.toDouble();
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 620),
+        constraints: const BoxConstraints(maxWidth: Ui.maxBody),
         child: ListView(padding: const EdgeInsets.fromLTRB(12, 24, 12, 40), children: [
           Text('QUADRILLION', style: ts(size: 34, color: Pal.goldtx, bold: true)),
           Padding(padding: const EdgeInsets.only(bottom: 18), child: Muted(tr('クアドリリオンゲーム ― 屋台から1000兆円へ'), size: 14)),
@@ -302,7 +308,7 @@ class SetupScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: last ? null : Ui.rowLine,
         child: Row(children: [
-          SizedBox(width: 56, child: Text(tr('枠{0}', [i]), style: ts(bold: true, color: Pal.goldtx))),
+          SizedBox(width: Ui.sw(56), child: Text(tr('枠{0}', [i]), style: ts(bold: true, color: Pal.goldtx))),
           Expanded(
             child: info == null
                 ? Muted(tr('空き'), size: 13)
@@ -340,6 +346,9 @@ class MainScreen extends StatelessWidget {
 
   static const tabs = [('town', '街@@tab'), ('biz', '事業@@tab'), ('people', '人@@tab'), ('stock', '株@@tab'), ('num', '数字@@tab'), ('zukan', '図鑑@@tab')];
 
+  /// 「次の月へ」のボタンに残りの手の数まで書く、ボタンの欄の最小の幅（字の倍率で割った幅。これより狭いと「次の月へ」だけ）
+  static const nextLongMin = 160.0;
+
   /// 下のタブのアイコン
   static const tabIcons = <String, IconData>{
     'town': Icons.location_city,
@@ -364,6 +373,8 @@ class MainScreen extends StatelessWidget {
     };
     final header = Container(
       decoration: const BoxDecoration(color: Pal.sky, border: Border(bottom: BorderSide(color: Pal.line))),
+      child: Wide(
+          child: Padding(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
@@ -385,7 +396,13 @@ class MainScreen extends StatelessWidget {
             ]),
           ),
           const SizedBox(width: 8),
-          Semantics(label: tr('遊び方'), child: Btn(tr('？'), () => showHelp(ctl), small: true)),
+          // 読み上げでは「？」ではなく「遊び方」と読む
+          Semantics(
+              label: tr('遊び方'),
+              button: true,
+              excludeSemantics: true,
+              onTap: () => showHelp(ctl),
+              child: Btn(tr('？'), () => showHelp(ctl), key: const ValueKey('help'), small: true)),
           const SizedBox(width: 6),
           Semantics(
             label: tr('設定'),
@@ -431,6 +448,7 @@ class MainScreen extends StatelessWidget {
           ),
         ]),
       ]),
+      )),
     );
     final result = s.won != null || s.over != null
         ? Panel(
@@ -453,18 +471,24 @@ class MainScreen extends StatelessWidget {
     return Column(children: [
       header,
       Expanded(
-        child: ListView(
-          key: PageStorageKey('tab-${ctl.tab}'),
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-          children: [?result, ...body],
-        ),
+        // 幅の広い画面では、一覧は端から端まで動かせるまま、中身だけを中央の幅に収める（左右は余白）
+        child: LayoutBuilder(builder: (context, box) {
+          final side = 12 + Ui.sideGap(box.maxWidth);
+          return ListView(
+            key: PageStorageKey('tab-${ctl.tab}'),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: EdgeInsets.fromLTRB(side, 0, side, 16),
+            children: [?result, ...body],
+          );
+        }),
       ),
       if (s.over == null)
         Container(
           color: Pal.sky,
-          padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
           // 出来事が起きたらそこで止まる
+          child: Wide(
+              child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
           child: Row(children: [
             // まとめて進めるのは1つのボタンにまとめ、押すと長さ（何か起きるまで・3か月・1年）を選ぶ小窓が開く
             Btn(tr('まとめて進める'), () => openAdvance(ctl), key: const ValueKey('advance-menu'), small: true, more: true),
@@ -473,16 +497,22 @@ class MainScreen extends StatelessWidget {
               // 幅が足りないときは字だけ縮める（押せる高さは 44pt のまま）
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Btn(s.ap > 0 ? tr('次の月へ（手が{0}残っています）', [s.ap]) : tr('次の月へ'), () => doNext(ctl), primary: true, shrink: true),
+                // 幅が狭い・字が大きいときは、残りの手の数を省く（上の帯の「手」に出ている。入れると字が豆粒になる）
+                child: LayoutBuilder(
+                    builder: (context, c) => Btn(
+                        s.ap > 0 && c.maxWidth / Ui.textScale >= nextLongMin ? tr('次の月へ（手が{0}残っています）', [s.ap]) : tr('次の月へ'), () => doNext(ctl),
+                        key: const ValueKey('next'), primary: true, shrink: true)),
               ),
             ),
           ]),
+          )),
         ),
       Container(
         decoration: const BoxDecoration(color: Pal.panel, border: Border(top: BorderSide(color: Pal.line))),
         child: SafeArea(
           top: false,
-          child: Padding(
+          child: Wide(
+              child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child: Row(children: [
               for (final t in tabs)
@@ -521,7 +551,7 @@ class MainScreen extends StatelessWidget {
                   ),
                 ),
             ]),
-          ),
+          )),
         ),
       ),
     ]);
@@ -567,7 +597,7 @@ class EndScreen extends StatelessWidget {
       child: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 620),
+            constraints: const BoxConstraints(maxWidth: Ui.maxBody),
             child: ListView(padding: const EdgeInsets.fromLTRB(16, 28, 16, 32), children: [
               Text(tr(win ? '達成！' : 'ゲームオーバー'), style: ts(size: 30, bold: true, color: accent)),
               const SizedBox(height: 6),
@@ -592,7 +622,7 @@ class EndScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          SizedBox(width: 84, child: Text(ym(e.y, e.q), style: ts(size: 12.5, color: Pal.mute))),
+                          SizedBox(width: Ui.sw(84), child: Text(ym(e.y, e.q), style: ts(size: 12.5, color: Pal.mute))),
                           Expanded(child: Text(tx(e.m), style: ts(size: 13.5, height: 1.45))),
                         ]),
                       ),
