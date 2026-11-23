@@ -10,6 +10,7 @@ import 'childhood.dart';
 import 'childhood_focus.dart';
 import 'childhood_more.dart';
 import 'craft_life.dart';
+import 'daimyo_life.dart';
 import 'data.dart';
 import 'echoes.dart';
 import 'echoes_more.dart';
@@ -99,6 +100,7 @@ class Game extends ChangeNotifier {
       ...buildOkuLifeScenes(),
       ...buildCastleLifeScenes(),
       ...buildCraftLifeScenes(),
+      ...buildDaimyoLifeScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
