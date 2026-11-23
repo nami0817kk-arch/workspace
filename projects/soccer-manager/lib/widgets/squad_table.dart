@@ -84,7 +84,9 @@ class _SquadTableState extends State<SquadTable> {
               head(Tr.pick('年', 'Age'), width: 26, key: 'age'),
               head(Tr.pick('総合', 'OVR'), width: 34, key: 'ovr'),
               head(Tr.pick('疲', 'Fatigue'), width: _fatigueWidth, key: 'fat'),
-              head(Tr.pick('契約', 'Term'), width: 34, key: 'term'),
+              // 列の中身は満了の年(2030 なら 2030年6月まで)。「契約」だと
+              // 年数に読めるので「満了」にする(2026-11-23)。
+              head(Tr.pick('満了', 'Ends'), width: 34, key: 'term'),
               head(Tr.pick('年俸', 'Salary'), width: 52, key: 'wage'),
             ],
           ),
@@ -177,14 +179,19 @@ class _SquadTableState extends State<SquadTable> {
             ),
             SizedBox(
               width: 34,
-              child: Text(
-                  p.isLoan
-                      ? Tr.pick('借', 'Loan')
-                      : ContractEngine.untilTinyLabel(p.contractEndYear),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style:
-                      small.copyWith(color: expiring ? Colors.orange : base)),
+              // 4桁の年が切れないよう、入りきらなければ縮める。
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                    p.isLoan
+                        ? Tr.pick('借', 'Loan')
+                        : ContractEngine.untilTinyLabel(p.contractEndYear),
+                    key: ValueKey('squad-table-term-${p.id}'),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    style: small.copyWith(
+                        color: expiring ? Colors.orange : base)),
+              ),
             ),
             SizedBox(
               width: 52,

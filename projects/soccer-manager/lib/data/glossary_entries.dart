@@ -361,8 +361,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('スタッフの得意分野', 'Staff specialty'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            'スタッフが持つ専門(攻撃・守備・GK・フィジカル・万能)。能力値は「どれだけ上手いか」しか表さないため、得意分野が「何を伸ばせるか」を決める。ユースコーチの得意分野は有望株の伸びる能力に直接効き、担当が違う分野(GK専門とフィールドプレーヤーなど)には効かない。候補の半数は万能。',
-            "What a member of staff is specialised in: attacking, defending, goalkeeping, physical or all-round. His attributes say how good he is; the specialty says what he can improve. A youth coach's specialty steers which attributes your prospects gain, and does nothing outside its remit — a goalkeeping coach adds nothing to an outfield player. About half the candidates are all-round."),
+            'ユースコーチが持つ専門(攻撃・守備・GK・フィジカル・万能)。能力値は「どれだけ上手いか」しか表さないため、得意分野が「何を伸ばせるか」を決める。有望株の伸びる能力に直接効き、担当が違う分野(GK専門とフィールドプレーヤーなど)には効かない。ほかの役職では効かないので、札はユースコーチにだけ出る。候補の半数は万能。',
+            "What a youth coach is specialised in: attacking, defending, goalkeeping, physical or all-round. His attributes say how good he is; the specialty says what he can improve. It steers which attributes your prospects gain, and does nothing outside its remit: a goalkeeping coach adds nothing to an outfield player. It has no effect in other roles, so only youth coaches show one. About half the candidates are all-round."),
       ),
       GlossaryEntry(
         term: Tr.pick('ユースリーグ', 'Youth league'),
@@ -389,8 +389,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('全体練習', 'General training'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '週の練習。毎週自動で行われ、ポジションに応じて攻守をバランス良く伸ばす。伸び方はトレーニング施設の水準と、雇っているコーチの水準・得意分野で大きくなる。',
-            'The weekly session. It runs itself every week and develops attack and defence evenly by position. How much players gain grows with your training facilities and with the level and specialty of the coaches you hire.'),
+            '週の練習。毎週自動で行われ、ポジションに応じて攻守をバランス良く伸ばす。伸び方はトレーニング施設の水準と、雇っているコーチの水準で大きくなる。',
+            'The weekly session. It runs itself every week and develops attack and defence evenly by position. How much players gain grows with your training facilities and with the level of the coaches you hire.'),
       ),
       GlossaryEntry(
         term: Tr.pick('マンマーク', 'Man-marking'),
@@ -516,7 +516,7 @@ List<GlossaryEntry> get glossaryEntries => [
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
             '気になる選手に星印をつけて追いかけるリスト。移籍の画面の監督の案や「探す」で星を押すと入り、「注目」タブで一覧できる。注目している選手は、どの地域でもスカウトの見え方が毎週少しずつ上がる。注目している選手が得点するとクラブニュースに届く。',
-            'Star a player to keep an eye on him. Tap the star in Proposals or Search on the transfer screen, and the Watchlist tab shows them all. Your scouts get a little clearer on a watched player every week, wherever he plays, and when one of them scores it reaches your club news.'),
+            'Star a player to keep an eye on him. Tap the star in Manager\'s picks or Search on the transfer screen, and the Watchlist tab shows them all. Your scouts get a little clearer on a watched player every week, wherever he plays, and when one of them scores it reaches your club news.'),
       ),
       GlossaryEntry(
         term: Tr.pick('試合中の交代', 'Substitutions'),

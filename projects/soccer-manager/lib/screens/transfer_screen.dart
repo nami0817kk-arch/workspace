@@ -118,9 +118,11 @@ class _TransferScreenState extends State<TransferScreen>
         leading: widget.embedded ? null : const BackButton(),
         controller: _tabController,
         tabs: [
-          gameState.currentSd != null
-              ? Tr.pick('SDの案', 'DoF shortlist')
-              : Tr.pick('監督の案', 'Proposals'),
+          // 候補を挙げるのは SD がいてもいなくても監督(SigningProposalEngine)。
+          // SD がいるときだけ「SDの案」と出していたが、中身は同じ監督の
+          // 候補で、状況ページの「監督から補強の候補」と食い違っていた
+          // (2026-11-23)。SD は下の方針のカードで任せる別の役目。
+          Tr.pick('監督の案', "Manager's picks"),
           Tr.pick('探す', 'Search'),
           Tr.pick('交渉 (${gameState.transferTalks.length})',
               'Talks (${gameState.transferTalks.length})'),
@@ -209,12 +211,18 @@ class _TransferScreenState extends State<TransferScreen>
         Expanded(
           child: proposals.isEmpty
               ? Center(
-                  child: Padding(
+                  child: SingleChildScrollView(
                     padding: const EdgeInsets.all(24),
-                    child: Text(
-                      Tr.pick('いまは監督から候補がありません。次の節のあとにまた挙がります。',
-                          'No candidates right now. Your manager will suggest more after the next matchday.'),
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          Tr.pick('いまは監督から候補がありません。次の節のあとにまた挙がります。',
+                              'No candidates right now. Your manager will suggest more after the next matchday.'),
+                          textAlign: TextAlign.center,
+                        ),
+                        _moreTargetsHint(context, save),
+                      ],
                     ),
                   ),
                 )
@@ -245,10 +253,52 @@ class _TransferScreenState extends State<TransferScreen>
                         ),
                       ),
                     ],
+                    _moreTargetsHint(context, save),
                   ],
                 ),
         ),
       ],
+    );
+  }
+
+  /// 監督の案の下に置く、ほかの選手の探し方。候補は最大
+  /// [SigningProposalEngine.count] 人なので、iPad では下半分が空いていた
+  /// (2026-11-23)。空いた所に「探す」「注目」への入り口を置く。
+  Widget _moreTargetsHint(BuildContext context, SaveGame save) {
+    final watching = save.watchlistPlayerIds.length;
+    return Padding(
+      key: const ValueKey('transfer-more-targets'),
+      padding: const EdgeInsets.fromLTRB(4, 20, 4, 8),
+      child: Column(
+        children: [
+          Text(
+            Tr.pick(
+                '監督が挙げるのは、層の薄い位置を中心に${SigningProposalEngine.count}人までです。ほかの選手は「探す」で位置や年齢を絞って探せます。',
+                'Your manager puts forward up to ${SigningProposalEngine.count} players, mostly where the squad is thin. Use Search to look for anyone else by position or age.'),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 12, color: SemanticColors.subtleText(context)),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () => _tabController.animateTo(1),
+                icon: const Icon(Icons.search, size: 18),
+                label: Text(Tr.pick('探す', 'Search')),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => _tabController.animateTo(4),
+                icon: const Icon(Icons.star_border, size: 18),
+                label: Text(Tr.pick('注目 ($watching)', 'Watchlist ($watching)')),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -608,7 +658,7 @@ class _TransferScreenState extends State<TransferScreen>
           padding: const EdgeInsets.all(24),
           child: Text(
             Tr.pick('注目している選手はいません。監督の案や「探す」で星を押すと入ります。',
-                'You are not watching anyone. Tap the star in Proposals or Search to add one.'),
+                "You are not watching anyone. Tap the star in Manager's picks or Search to add one."),
             textAlign: TextAlign.center,
           ),
         ),
@@ -1713,8 +1763,8 @@ class _SdBriefCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             Tr.pick(
-                'SDは、見えている選手のうち方針に合い、今の先発より上の選手を探して、クラブとも選手とも交渉します。上限を超える値なら降ります。位置を選ばなければ全部の位置から探します。',
-                'Your DoF looks for players you have scouted who fit the brief and beat your current starters, then negotiates with the club and the player. He walks away if the price passes your limit. Pick no position to search them all.'),
+                'SDは、見えている選手のうち方針に合い、今の先発より上の選手を探して、クラブとも選手とも交渉します。上限を超える値なら降ります。位置を選ばなければ全部の位置から探します。下の候補は監督が挙げたもので、任せていても変わらずに出ます。',
+                'Your DoF looks for players you have scouted who fit the brief and beat your current starters, then negotiates with the club and the player. He walks away if the price passes your limit. Pick no position to search them all. The candidates below come from your manager and stay there either way.'),
             style: small,
           ),
         ],
