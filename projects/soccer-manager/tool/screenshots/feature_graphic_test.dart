@@ -115,7 +115,7 @@ void main() {
                     ),
                     const SizedBox(height: 22),
                     const Text(
-                      '5部リーグの弱小クラブを率いて、頂点へ。',
+                      '3部の弱小クラブを買い取って、頂点へ。',
                       style: TextStyle(
                         fontFamily: 'NotoSansJP',
                         fontSize: 21,
@@ -124,7 +124,7 @@ void main() {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      '育成・移籍・戦術・経営',
+                      '予算・補強・施設・2つの期待',
                       style: TextStyle(
                         fontFamily: 'NotoSansJP',
                         fontSize: 17,
