@@ -639,17 +639,44 @@ class GameState extends ChangeNotifier {
       return loaded;
     }
 
-    final backup = prefs.getString(_backupKey);
-    final backupSlot = prefs.getInt(_backupSlotKey);
-    if (backup == null || backupSlot != slot) return null;
-    final restored = _decodeSave(backup);
+    final fallback = _fallbackSaveRaw(prefs, slot);
+    if (fallback == null) return null;
+    final restored = _decodeSave(fallback);
     if (restored == null) return null;
+    // 戻した内容を本体にも書く。壊れたまま残すと、スロットの一覧で空きに
+    // 見え(listSaveSlots)、そこへ新しいクラブを作ると控えごと上書きされる。
+    await prefs.setString(_slotKey(slot), fallback);
 
     lastBackupRestoreNotice = Tr.pick(
       'セーブデータが壊れていたため、直前の控えから復元しました。進行が少し戻っている場合があります。',
       'Your save was damaged, so the last good copy was restored. You may be a little behind where you left off.',
     );
     return restored;
+  }
+
+  /// 本体が壊れたスロット[slot]の代わりに読める保存文字列。
+  ///
+  /// 自動の控え([_backupKey])は最後に開いたスロットのものしか持たない。
+  /// 別のスロットを開いた後でこのスロットが壊れると戻す先が無くなるので、
+  /// そのときは手で取った控え([saveRestorePoint])を使う。
+  String? _fallbackSaveRaw(SharedPreferences prefs, int slot) {
+    final backup = prefs.getString(_backupKey);
+    if (backup != null &&
+        prefs.getInt(_backupSlotKey) == slot &&
+        _decodeSave(backup) != null) {
+      return backup;
+    }
+    final point = prefs.getString(_restorePointKey(slot));
+    if (point == null) return null;
+    try {
+      final json = jsonDecode(point) as Map<String, dynamic>;
+      final save = json['save'];
+      if (save is! Map<String, dynamic>) return null;
+      SaveGame.fromJson(save);
+      return jsonEncode(save);
+    } catch (_) {
+      return null;
+    }
   }
 
   /// いまのセーブを控えとして書き出す。シーズンの切り替わりで呼ぶ。
@@ -730,11 +757,7 @@ class GameState extends ChangeNotifier {
       _migrateDivisionPyramidIfNeeded();
       _refreshScoutCandidates();
       // 戻す前の節の出来事を持ち越すと、戻した後にそれを知らせてしまう。
-      lastContractExpirations = [];
-      lastLoanEndings = [];
-      lastRetirements = [];
-      lastLoanReturns = [];
-      lastYouthDepartures = [];
+      _clearCarriedNotices();
       await _persistNow();
       _notify();
       return true;
@@ -1325,6 +1348,20 @@ class GameState extends ChangeNotifier {
   /// 上書きする形で CI が落ちた。
   static int _saveGeneration = 0;
 
+  /// 書き出しの順番札。書き出しを始めた順に増える。
+  ///
+  /// JSON にするのは別の処理で行う([encodeSaveOffMain])ので、先に始めた
+  /// 書き出しが後から終わることがある。そのまま書くと、新しい内容を古い
+  /// 内容で上書きする(消したセーブが戻ることもある)。スロットごとに最後に
+  /// 書いた札を覚え、それより古い札の書き出しは捨てる。static なのは
+  /// [_saveGeneration]と同じ理由。
+  static int _writeTicket = 0;
+  static final Map<int, int> _writtenTicket = {};
+
+  /// テスト用: JSON にする処理を差し替える(終わる順番を入れ替えるため)。
+  @visibleForTesting
+  static Future<String> Function(SaveGame save)? debugEncodeOverride;
+
   /// 保存を予約する。呼び出しが続く間は書き出さず、止まってからまとめて1回。
   ///
   /// セーブは1MBを超える(大半は他ディビジョンの選手データ)。設定を1つ変える
@@ -1361,6 +1398,10 @@ class GameState extends ChangeNotifier {
     await _persistNow();
   }
 
+  /// テスト用: 今の内容をすぐに書き出す([_persistNow])。
+  @visibleForTesting
+  Future<void> debugPersistNow() => _persistNow();
+
   /// 待たずに書き出す。予約されている保存はこれで置き換わるので取り消す。
   /// 取り消さないと、この書き出しの後から古い内容が上書きしにいく。
   Future<void> _persistNow({int? slot}) async {
@@ -1373,15 +1414,23 @@ class GameState extends ChangeNotifier {
     }
     _saveWriteCount++;
     final target = slot ?? currentSlot;
+    // 書く中身は今の時点で決める。待っている間にスロットを切り替えられると、
+    // 切り替え先のセーブを前のスロットへ書いてしまう。
+    final save = _save;
+    final ticket = ++_writeTicket;
+    bool stale() => (_writtenTicket[target] ?? 0) > ticket;
     try {
       final prefs = await SharedPreferences.getInstance();
-      if (_save == null) {
+      if (save == null) {
+        if (stale()) return;
+        _writtenTicket[target] = ticket;
         await prefs.remove(_slotKey(target));
       } else {
-        await prefs.setString(
-          _slotKey(target),
-          await encodeSaveOffMain(_save!),
-        );
+        final encoded = await (debugEncodeOverride ?? encodeSaveOffMain)(save);
+        // 後から始めた書き出しが先に済んでいれば、こちらは古い。
+        if (stale()) return;
+        _writtenTicket[target] = ticket;
+        await prefs.setString(_slotKey(target), encoded);
       }
       lastSaveError = null;
     } catch (e) {
@@ -1413,7 +1462,16 @@ class GameState extends ChangeNotifier {
         continue;
       }
       try {
-        final json = jsonDecode(raw) as Map<String, dynamic>;
+        Map<String, dynamic> json;
+        try {
+          json = jsonDecode(raw) as Map<String, dynamic>;
+        } catch (_) {
+          // 本体が書きかけで壊れていても、控えから戻せるなら「続きから」に
+          // 見せる(空きに見えると、新しいクラブで控えごと上書きされる)。
+          final fallback = _fallbackSaveRaw(prefs, i);
+          if (fallback == null) rethrow;
+          json = jsonDecode(fallback) as Map<String, dynamic>;
+        }
         final league = json['league'] as Map<String, dynamic>?;
         result.add(
           SaveSlotSummary(
@@ -1452,10 +1510,52 @@ class GameState extends ChangeNotifier {
       transferMarket = [];
       scoutCandidates = [];
     }
+    _clearCarriedNotices();
+    _notify();
+  }
+
+  /// 前のセーブで起きた出来事の知らせを捨てる。セーブを切り替える・読み直す
+  /// ときに呼ぶ。
+  ///
+  /// 以前は満了・ローン終了・引退の3つだけを消していて、スロットを替えると
+  /// 前のスロットの季の終わり(優勝・昇格の知らせ)・ローンの戻り・ユースの
+  /// 退団・自動で決めたことなどが、開いたクラブの出来事として出た。
+  void _clearCarriedNotices() {
     lastContractExpirations = [];
     lastLoanEndings = [];
+    lastContractWarnings = [];
+    lastRenewalRefusals = [];
+    lastPreContractArrivals = [];
+    lastEmergencySignings = [];
+    lastTrainingResults = [];
+    lastYouthMatchReport = null;
+    lastYouthDepartures = [];
     lastRetirements = [];
-    _notify();
+    lastMilestones = [];
+    lastUnlockedAchievements = [];
+    lastSeasonGrowthSummary = [];
+    lastReleaseClauseSales = [];
+    lastInternationalCallUps = [];
+    lastLoanReturns = [];
+    lastMaturedDeposits = [];
+    lastAiTransferNews = null;
+    lastMonthlyManagerAward = null;
+    lastSeasonManagerAwardWon = false;
+    lastSeasonManagerAwardName = null;
+    lastAppearanceFeesPaid = 0;
+    lastBudgetCrisisWarning = null;
+    lastMatchAttendance = null;
+    lastSigningBlockReason = null;
+    lastSuperCupNews = null;
+    lastCupPrizeNote = null;
+    lastBoardBonusNote = null;
+    lastManagerContractNote = null;
+    lastPromotionBonus = 0;
+    lastDivisionChangeMessage = null;
+    lastSeasonFinale = SeasonFinale.none;
+    lastPromotionPlayoffResults = [];
+    lastSeasonResultLines = null;
+    lastAutoDecisions = [];
   }
 
   /// 指定スロットのセーブデータを完全に削除する。カレントスロットの場合は
@@ -1687,10 +1787,22 @@ class GameState extends ChangeNotifier {
     _save = null;
     transferMarket = [];
     scoutCandidates = [];
-    lastContractExpirations = [];
-    lastLoanEndings = [];
+    _clearCarriedNotices();
     _notify();
     await _persistNow();
+    // 控えも消す([deleteSlot]と同じ)。設定やクラブを手放した後の「セーブを
+    // 消す」は控えを残していたため、同じ枠で始めた新しいクラブから「控えに
+    // 戻す」で消したはずのクラブに戻れ、壊れたときも消したクラブが戻った。
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_restorePointKey(currentSlot));
+      if (prefs.getInt(_backupSlotKey) == currentSlot) {
+        await prefs.remove(_backupKey);
+        await prefs.remove(_backupSlotKey);
+      }
+    } catch (_) {
+      // 本体は消えている。控えが消せなくても進める。
+    }
   }
 
   /// バックアップ用にセーブデータ全体をJSON文字列として書き出す。
@@ -1714,6 +1826,7 @@ class GameState extends ChangeNotifier {
     _migrateDivisionPyramidIfNeeded();
     transferMarket = [];
     _refreshScoutCandidates();
+    _clearCarriedNotices();
     _notify();
     await _persistNow();
     return true;

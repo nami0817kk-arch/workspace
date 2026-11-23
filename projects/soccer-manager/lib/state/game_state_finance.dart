@@ -902,6 +902,10 @@ extension GameStateFinance on GameState {
     save.declinedProposalIds = [];
     save.staffOffers = [];
     save.communityLevel = 0;
+    // 途中で止まった試合の経過は前のクラブの試合のもの。節と季だけで
+    // 照らし合わせるので、残すと同じ節の新しいクラブの試合が前のクラブの
+    // 得点・交代の数から始まった(2026-11-23)。
+    save.liveMatchProgress = null;
     save.boardTargetRank = _difficultyAdjustedTarget(
       BoardEngine.estimateTargetRank(save.league, team.id,
           relegationZone: ownRelegationZone),
@@ -925,7 +929,9 @@ extension GameStateFinance on GameState {
     _refreshStaffCandidates();
     _assignRivalOwners();
     _notify();
-    await _persist();
+    // クラブが替わる区切り。まとめずにすぐ書く(待つ間に閉じられると、
+    // 次の起動で手放したはずのクラブのまま始まる)。
+    await _persistNow();
     return true;
   }
 
@@ -1161,7 +1167,8 @@ extension GameStateFinance on GameState {
         '${theme.label}(${theme.flavorLabel})で新しいクラブ${userTeam.name}を立ち上げた',
         'Founded ${userTeam.name} in the ${theme.label}'));
     _notify();
-    await _persist();
+    // 国ごと作り替える区切り。まとめずにすぐ書く([buyClub]と同じ)。
+    await _persistNow();
     return true;
   }
 
