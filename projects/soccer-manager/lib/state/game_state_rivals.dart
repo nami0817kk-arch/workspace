@@ -179,17 +179,20 @@ extension GameStateRivals on GameState {
   /// オーナーが決めることが出るまで(受信箱に答えを待つものが出るか、
   /// 季が終わるか、[advanceLimit]節まで)、節を続けて進める。
   /// 返すのは、進めた試合の結果(自クラブの試合)。
-  Future<List<MatchResult>> advanceToNextDecision() async {
-    final out = <MatchResult>[];
-    final s = _save;
-    if (s == null) return out;
-    for (var i = 0; i < advanceLimit; i++) {
-      if (s.league.isSeasonComplete || saleReason != null) break;
-      if (inboxActions.isNotEmpty || s.pendingBoardReviewMessage != null) break;
-      final r = await playNextMatchdayQuickSim();
-      if (r == null) break;
-      out.add(r);
-    }
-    return out;
-  }
+  /// 保存は終わったときに1回だけ([_inBulkSave])。
+  Future<List<MatchResult>> advanceToNextDecision() => _inBulkSave(() async {
+        final out = <MatchResult>[];
+        final s = _save;
+        if (s == null) return out;
+        for (var i = 0; i < advanceLimit; i++) {
+          if (s.league.isSeasonComplete || saleReason != null) break;
+          if (inboxActions.isNotEmpty || s.pendingBoardReviewMessage != null) {
+            break;
+          }
+          final r = await playNextMatchdayQuickSim();
+          if (r == null) break;
+          out.add(r);
+        }
+        return out;
+      });
 }

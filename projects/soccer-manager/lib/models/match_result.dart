@@ -43,14 +43,15 @@ class MatchEvent {
     this.setPiece,
   });
 
+  /// 無い項目(null)は書かない(読むときは無ければ null。2026-11-23)。
   Map<String, dynamic> toJson() => {
         'minute': minute,
         'teamId': teamId,
-        'scorerName': scorerName,
-        'scorerId': scorerId,
+        if (scorerName != null) 'scorerName': scorerName,
+        if (scorerId != null) 'scorerId': scorerId,
         'type': type.name,
-        'assistName': assistName,
-        'assistId': assistId,
+        if (assistName != null) 'assistName': assistName,
+        if (assistId != null) 'assistId': assistId,
         if (setPiece != null) 'setPiece': setPiece!.name,
       };
 
@@ -125,6 +126,49 @@ class MatchResult {
         .key;
   }
 
+  /// 自クラブ以外の試合を残すときに、残す出来事の種類。
+  ///
+  /// 他のクラブの試合の出来事を読むのは、結果の一覧の得点者(得点・
+  /// アシスト・時間)、得点・アシストのランキングと得点王
+  /// ([AwardsEngine])、選手の今季の成績(得点・警告・退場)、時間帯ごとの
+  /// 得点・先制して負けた試合の数、ウォッチ中の選手の得点の知らせ。決定機と
+  /// 交代は、自クラブの試合の画面(途中経過・出場手当・試合の再生)でしか
+  /// 使わない。スコア・支配率・シュート・採点(最優秀選手・ベストイレブン・
+  /// 無失点の GK・平均採点に使う)は出来事ではないので全部残る。
+  static bool keptInArchive(MatchEventType t) =>
+      t == MatchEventType.goal ||
+      t == MatchEventType.yellowCard ||
+      t == MatchEventType.redCard;
+
+  /// 自クラブ以外の試合として残す形(決定機・交代の出来事を捨てる)。
+  /// 捨てるものが無ければ自分を返す。
+  ///
+  /// 今季の全試合の出来事がセーブの3分の1を占めていた(2026-11-23)。
+  MatchResult archived() {
+    if (events.every((e) => keptInArchive(e.type))) return this;
+    return MatchResult(
+      matchday: matchday,
+      homeTeamId: homeTeamId,
+      awayTeamId: awayTeamId,
+      homeGoals: homeGoals,
+      awayGoals: awayGoals,
+      events: [
+        for (final e in events)
+          if (keptInArchive(e.type)) e,
+      ],
+      playerRatings: playerRatings,
+      weather: weather,
+      homePossession: homePossession,
+      awayPossession: awayPossession,
+      homeShots: homeShots,
+      awayShots: awayShots,
+      homeShotsOnTarget: homeShotsOnTarget,
+      awayShotsOnTarget: awayShotsOnTarget,
+    );
+  }
+
+  /// 無い項目(null・空)は書かない(読むときは無ければ null・空。
+  /// 2026-11-23)。
   Map<String, dynamic> toJson() => {
         'matchday': matchday,
         'homeTeamId': homeTeamId,
@@ -132,14 +176,14 @@ class MatchResult {
         'homeGoals': homeGoals,
         'awayGoals': awayGoals,
         'events': events.map((e) => e.toJson()).toList(),
-        'playerRatings': playerRatings,
+        if (playerRatings.isNotEmpty) 'playerRatings': playerRatings,
         'weather': weather.name,
-        'homePossession': homePossession,
-        'awayPossession': awayPossession,
-        'homeShots': homeShots,
-        'awayShots': awayShots,
-        'homeShotsOnTarget': homeShotsOnTarget,
-        'awayShotsOnTarget': awayShotsOnTarget,
+        if (homePossession != null) 'homePossession': homePossession,
+        if (awayPossession != null) 'awayPossession': awayPossession,
+        if (homeShots != null) 'homeShots': homeShots,
+        if (awayShots != null) 'awayShots': awayShots,
+        if (homeShotsOnTarget != null) 'homeShotsOnTarget': homeShotsOnTarget,
+        if (awayShotsOnTarget != null) 'awayShotsOnTarget': awayShotsOnTarget,
       };
 
   factory MatchResult.fromJson(Map<String, dynamic> json) => MatchResult(
@@ -148,7 +192,7 @@ class MatchResult {
         awayTeamId: json['awayTeamId'] as String,
         homeGoals: json['homeGoals'] as int,
         awayGoals: json['awayGoals'] as int,
-        events: (json['events'] as List)
+        events: ((json['events'] as List?) ?? const [])
             .map((e) => MatchEvent.fromJson(e as Map<String, dynamic>))
             .toList(),
         playerRatings: (json['playerRatings'] as Map?)?.map(

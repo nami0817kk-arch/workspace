@@ -54,16 +54,21 @@ extension GameStateClubFinance on GameState {
         return w.isEmpty ? 0 : w[w.length ~/ 2];
       });
     }
+    // 部ごとの順位(まだ試合が無ければ、戦力の順)。順位表は全試合から
+    // 作り直すので、部ごとに1回だけ作る(以前はクラブごとに2回作っていた)。
+    final orders = <League, List<String>>{};
     for (final (t, _, league) in _homeClubs) {
-      // 順位(まだ試合が無ければ、戦力の順)。
-      final played = league.sortedStandings.any((r) => r.played > 0);
-      final order = played
-          ? [for (final r in league.sortedStandings) r.teamId]
-          : [
-              for (final x in ([...league.teams]
-                ..sort((a, b) => b.overallRating.compareTo(a.overallRating))))
-                x.id
-            ];
+      final order = orders.putIfAbsent(league, () {
+        final rows = league.sortedStandings;
+        return rows.any((r) => r.played > 0)
+            ? [for (final r in rows) r.teamId]
+            : [
+                for (final x in ([
+                  ...league.teams
+                ]..sort((a, b) => b.overallRating.compareTo(a.overallRating))))
+                  x.id
+              ];
+      });
       final idx = order.indexOf(t.id);
       final n = max(1, order.length - 1);
       final rankFactor = idx < 0 ? 0.5 : 1 - idx / n;

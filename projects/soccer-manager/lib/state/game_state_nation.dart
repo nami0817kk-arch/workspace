@@ -414,10 +414,10 @@ extension GameStateNation on GameState {
   /// CPU のクラブ[club]が[p]を取ったら、イタリアの「EU 外は1季2人まで」を
   /// 数える(他の国・所属なしから来た EU 外の選手だけ)。
   void _noteCpuSigning(Team club, Player p,
-      {required LeagueTheme? fromCountry}) {
+      {required LeagueTheme? fromCountry, Map<String, String>? foreign}) {
     final s = _save;
     if (s == null) return;
-    final country = _countryOfClub(club.id);
+    final country = _countryOfClub(club.id, foreign);
     if (RegistrationRules.forCountry(country).nonEuSigningsPerSeason == null) {
       return;
     }
