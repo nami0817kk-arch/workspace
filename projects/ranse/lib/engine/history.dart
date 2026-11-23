@@ -12,9 +12,12 @@ import 'rng.dart';
 /// プレイヤー自身が当主の家は、年表で滅ぼされない（あなたが歴史を変えている）。
 
 class HistEvent {
-  const HistEvent(this.id, this.year, this.apply, {this.only});
+  const HistEvent(this.id, this.year, this.apply, {this.only, this.month = 6});
   final String id;
   final int year;
+
+  /// 同じ年の出来事を起きた順に並べるための月（だいたいでよい。決めていなければ 6）。
+  final int month;
 
   /// この世界線（`history_lines.dart` の `worldLine`）でだけ起きる。null なら史実の出来事。
   final String? only;
@@ -62,7 +65,7 @@ final kHistory = <HistEvent>[
     return '甲斐の武田晴信（のちの信玄）が、父を駿河へ追い、家督を握った。';
   }),
   HistEvent('teppo', 1543, (g) => '種子島に南蛮の船が流れ着き、鉄砲が伝わった。'),
-  HistEvent('xavier', 1549, (g) {
+  HistEvent('xavier', 1549, month: 8, (g) {
     return '南蛮の僧ザビエルが薩摩に上陸し、デウスの教えを説き始めた。';
   }),
   HistEvent('nagao', 1548, (g) {
@@ -91,7 +94,7 @@ final kHistory = <HistEvent>[
     _grow(g, '松平', 8);
     return '桶狭間で、今川義元が織田信長の奇襲に討たれた。三河の松平元康（のちの徳川家康）は独り立ちした。';
   }),
-  HistEvent('kawanakajima4', 1561, (g) {
+  HistEvent('kawanakajima4', 1561, month: 9, (g) {
     if (_h(g, 'history_kawanakajima')) {
       _cut(g, '武田', .5);
       _grow(g, '上杉', 8);
@@ -137,7 +140,7 @@ final kHistory = <HistEvent>[
     _cut(g, '朝倉', .85);
     return '近江の姉川で、織田・徳川と浅井・朝倉が戦った。';
   }),
-  HistEvent('hiei', 1571, (g) => '織田信長が比叡山延暦寺を焼き討ちにした。'),
+  HistEvent('hiei', 1571, month: 9, (g) => '織田信長が比叡山延暦寺を焼き討ちにした。'),
   HistEvent('mikatagahara', 1572, (g) {
     _cut(g, '松平', .8);
     _grow(g, '武田', 6);
@@ -175,7 +178,7 @@ final kHistory = <HistEvent>[
       return '$t夏、本能寺で謀反を起こした明智光秀は、生き延びた信長に討たれた。織田の天下は、揺るがなかった。';
     }
     _cut(g, '織田', .7);
-    return '$t夏、明智光秀が本能寺で織田信長を討った。光秀は山崎で羽柴秀吉に敗れ、天下は秀吉の手に移り始めた。';
+    return '$t夏、明智光秀が本能寺で織田信長を討った。備中から毛利と和を結んで駆け戻った羽柴秀吉に、光秀は山崎で敗れ、天下は秀吉の手に移り始めた。';
   }),
   HistEvent('shizugatake', 1583, (g) {
     if (_h(g, 'history_honnoji')) return null;
@@ -235,7 +238,7 @@ final kHistory = <HistEvent>[
     return '美濃の関ヶ原で、徳川家康の東軍が石田三成の西軍を破った。';
   }),
   // ---- 2026-11-23 追加: 国ごとの出来事 ----
-  HistEvent('koriyama', 1541, (g) {
+  HistEvent('koriyama', 1541, month: 1, (g) {
     _grow(g, '毛利', 5);
     _cut(g, '尼子', .85);
     return '安芸の吉田郡山城を囲んだ尼子の大軍が、毛利元就の籠城の前に退いた。';
@@ -262,7 +265,7 @@ final kHistory = <HistEvent>[
     _grow(g, '毛利', 8);
     return '毛利元就が周防・長門を平らげ、大内家は滅んだ。';
   }),
-  HistEvent('kanto_shutsujin', 1561, (g) {
+  HistEvent('kanto_shutsujin', 1561, month: 3, (g) {
     _cut(g, '北条', .9);
     return '長尾景虎が関東の諸将を率いて小田原城を囲み、上杉の名跡と関東管領を継いで上杉政虎と名乗った。';
   }),
@@ -285,7 +288,7 @@ final kHistory = <HistEvent>[
     _cut(g, '北条', .9);
     return '武田信玄が小田原城を囲んで引き揚げる途中、相模の三増峠で北条の追撃を打ち破った。';
   }),
-  HistEvent('kanegasaki', 1570, (g) {
+  HistEvent('kanegasaki', 1570, month: 4, (g) {
     return '越前に攻め入った織田信長は、義弟・浅井長政の裏切りに遭い、金ヶ崎から命からがら京へ逃げ帰った。';
   }),
   HistEvent('motonari_death', 1571, (g) {
@@ -304,26 +307,27 @@ final kHistory = <HistEvent>[
     _grow(g, '武田', 3);
     return '上杉家で、謙信の養子・景勝と景虎が跡目を争った（御館の乱）。景勝が勝った。';
   }),
-  HistEvent('arioka', 1579, (g) {
+  HistEvent('arioka', 1579, month: 11, (g) {
     return '摂津の荒木村重が信長に背いて有岡城に籠もり、城に残された一族は処刑された。';
   }),
   HistEvent(
     'azuchi_shuron',
     1579,
+    month: 5,
     (g) => '安土城下で、浄土宗と法華宗の僧が信長の前で問答をさせられた（安土宗論）。',
   ),
   HistEvent('tottori', 1581, (g) {
     _cut(g, '毛利', .9);
     return '因幡の鳥取城が、羽柴秀吉の兵糧攻めで開城した。城中は、飢えで地獄のありさまだったという。';
   }),
-  HistEvent('kenou', 1582, (g) {
+  HistEvent('kenou', 1582, month: 2, (g) {
     return '九州のキリシタン大名が、四人の少年を使節としてローマへ送り出した（天正遣欧使節）。';
   }),
-  HistEvent('takamatsu', 1582, (g) {
+  HistEvent('takamatsu', 1582, month: 5, (g) {
     _cut(g, '毛利', .9);
-    return '羽柴秀吉は備中高松城を水攻めにしていたが、本能寺の知らせを受けると毛利と和を結び、京へ駆け戻った。';
+    return '羽柴秀吉が備中高松城を堤で囲み、水攻めにした。城は湖に浮かぶ孤島となった。';
   }),
-  HistEvent('tensho_jingo', 1582, (g) {
+  HistEvent('tensho_jingo', 1582, month: 7, (g) {
     _grow(g, '北条', 4);
     _grow(g, '松平', 6);
     return '主のいなくなった甲斐・信濃を、徳川・北条・上杉が奪い合った（天正壬午の乱）。';
@@ -357,8 +361,21 @@ final kHistory = <HistEvent>[
 
 /// [year] までにまだ起きていない史実を起こす。[quietBefore] より前の年のものは見聞録に書かない
 /// （幼いうちに起きたこと）。
+/// 史実と変わった世の出来事を、年と月の順に並べたもの（同じ年月なら表に書いた順）。
+final List<HistEvent> kHistoryInOrder = () {
+  final all = [...kHistory, ...kAltHistory];
+  final idx = {for (var i = 0; i < all.length; i++) all[i]: i};
+  return all..sort(
+    (a, b) => a.year != b.year
+        ? a.year - b.year
+        : a.month != b.month
+        ? a.month - b.month
+        : idx[a]! - idx[b]!,
+  );
+}();
+
 void applyHistory(Game g, int year, {int? quietBefore}) {
-  for (final e in [...kHistory, ...kAltHistory]) {
+  for (final e in kHistoryInOrder) {
     if (e.year > year || g.hasFlag('h:${e.id}')) continue;
     // 世界線に合わない出来事は起こさない。変わった世界線だけの出来事は、その世界線でだけ起こす。
     if (e.only != null && e.only != worldLine(g)) continue;

@@ -70,6 +70,23 @@ String jsonOf(Game g) => jsonEncode({
 }
 
 void main() {
+  test('年表の出来事は、年と月の順に起きる（同じ年の中でも前後しない）', () {
+    final ids = kHistoryInOrder.map((e) => e.id).toList();
+    for (var i = 1; i < kHistoryInOrder.length; i++) {
+      final a = kHistoryInOrder[i - 1], b = kHistoryInOrder[i];
+      expect(a.year * 100 + a.month <= b.year * 100 + b.month, isTrue);
+    }
+    bool before(String a, String b) => ids.indexOf(a) < ids.indexOf(b);
+    expect(before('kenou', 'takamatsu'), isTrue);
+    expect(before('takamatsu', 'honnoji'), isTrue);
+    expect(before('honnoji', 'tensho_jingo'), isTrue);
+    expect(before('tottori', 'kenou'), isTrue);
+    expect(before('kanegasaki', 'anegawa'), isTrue);
+    expect(before('motonari_death', 'hiei'), isTrue);
+    expect(before('azuchi_shuron', 'arioka'), isTrue);
+    expect(before('koriyama', 'shingen'), isTrue);
+  });
+
   test('どんな生まれでも最後まで進み、例外を出さない', () {
     for (var seed = 0; seed < 300; seed++) {
       final rng = Rng(seed);
