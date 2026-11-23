@@ -62,7 +62,7 @@ void main() {
     while (c.game.isChild && !c.game.finished && guard++ < 60) {
       expect(c.game.prompt, isNotNull);
       // 場面の絵が上にあるので、選択肢が画面の下に隠れることがある。
-      await tester.ensureVisible(find.byType(OutlinedButton).first);
+      await _center(tester, find.byType(OutlinedButton).first);
       await tester.tap(find.byType(OutlinedButton).first);
       await tester.pump();
     }
@@ -74,7 +74,7 @@ void main() {
 
     // 元服（裳着）の画面を閉じると、大人も毎年の重点を選ぶ。
     expect(find.text('乱世へ歩み出す'), findsOneWidget);
-    await tester.ensureVisible(find.text('乱世へ歩み出す'));
+    await _center(tester, find.text('乱世へ歩み出す'));
     await tester.tap(find.text('乱世へ歩み出す'));
     await tester.pump();
     expect(find.text('今年の重点'), findsOneWidget);
@@ -90,7 +90,7 @@ void main() {
     );
     await tester.tap(find.byIcon(Icons.alt_route));
     await tester.pump();
-    await tester.ensureVisible(find.text('学問に励む'));
+    await _center(tester, find.text('学問に励む'));
     await tester.tap(find.text('学問に励む'));
     await tester.pump();
     expect(c.game.prompt, isNotNull); // 次の岐路か、翌年の重点
@@ -101,4 +101,10 @@ void main() {
     await tester.pump();
     expect(find.text('見聞録'), findsNWidgets(2)); // 画面の見出しが加わる
   });
+}
+
+/// 押す前に、その選択肢を画面のまん中へ送る（端に寄せると上の帯の下に隠れて押せない）。
+Future<void> _center(WidgetTester tester, Finder f) async {
+  await Scrollable.ensureVisible(tester.element(f.first), alignment: .5);
+  await tester.pump();
 }
