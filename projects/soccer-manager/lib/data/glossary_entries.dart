@@ -555,6 +555,13 @@ List<GlossaryEntry> get glossaryEntries => [
             'How long the manager you hired is signed for. It loses a year each season, you are told when he enters his last year, and when it runs out he leaves and you hire someone new. The staff screen shows what is left. As the owner you have no contract with a board, so no term can end your time at the club.'),
       ),
       GlossaryEntry(
+        term: Tr.pick('監督が決める戦い方', 'How the manager sets up'),
+        category: GlossaryCategory.tactics,
+        description: Tr.pick(
+            '試合の戦い方は、雇っている監督が考え方に沿って毎節決める。オーナーは選べないので、どんな戦い方をさせたいかは監督を選ぶことで決まる。決めるのは、プレッシング(寄せの強さ。強いほど守りが固くなるが疲れやすい)、ラインの高さ(高いほど攻めに厚いが裏を取られやすい)、攻撃の幅(広いほど攻めに厚いが中央が薄くなる)、テンポ(速いほど攻めに厚いが疲れやすい)、戦術スタイル(選手に合う型ほど効く)、リードした終盤に逃げ切るかどうか、キャプテン(統率力・年齢・経験で選び、季の初めと監督が替わったときに選び直す)。攻撃的な監督は高いライン・強いプレス・速いテンポで攻め続け、堅守の監督は低いラインで守って奪ったら速く出て、リードした終盤は逃げ切る。水準の高い監督ほど、相手の強さや戦術に合わせてラインと型を変える。監督の考え方と戦い方は、スタッフの画面(雇う前の候補にも)に出る。',
+            'Your manager decides how the side plays every week, following his own philosophy. You cannot pick it yourself, so the way you want to play is decided by who you hire. He sets the pressing (harder makes you tighter but tires the side), the defensive line (higher adds to the attack but leaves space behind), the width (wider adds to the attack but thins the middle), the tempo (quicker adds to the attack but tires the side), the tactical style (it works best when it suits the players), whether to shut up shop when ahead late on, and the captain (chosen for leadership, age and experience, and picked again at the start of each season and when the manager changes). An attacking manager plays a high line, presses hard and goes quickly, and keeps going when ahead; a defensive one sits deep, breaks quickly when he wins the ball and sees games out. The better the manager, the more he adjusts the line and style to the opponent. The staff screen shows the philosophy and approach of every manager, candidates included.'),
+      ),
+      GlossaryEntry(
         term: Tr.pick('ウォッチリスト', 'Watchlist'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(

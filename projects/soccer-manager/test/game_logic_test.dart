@@ -7641,8 +7641,10 @@ void main() {
     }
 
     expect(team.players.any((p) => p.id == loanPlayer.id), isFalse);
-    expect(team.captainId, isNull);
-    expect(team.freeKickTakerId, isNull);
+    // 試合前に監督がキャプテンとセットプレーの担当を決め直すので、空には
+    // ならないことがある。去った選手を指したまま残らなければよい。
+    expect(team.captainId, isNot(loanPlayer.id));
+    expect(team.freeKickTakerId, isNot(loanPlayer.id));
   });
 
   test(
