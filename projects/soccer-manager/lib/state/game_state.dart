@@ -1703,6 +1703,11 @@ class GameState extends ChangeNotifier {
         ),
       );
     }
+    // 自クラブと同じ部の CPU は、開幕から毎週の練習で伸びる。24歳以上の
+    // 伸びしろは小さく作る(PlayerGenerator.capStartingRoom)。
+    for (final t in cpuTeams) {
+      PlayerGenerator.capStartingRoom(t);
+    }
     final teams = [userTeam, ...cpuTeams];
     for (final t in teams) {
       LineupUtils.autoFill(t);
