@@ -37,8 +37,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _device = Platform.environment['DEVICE'] ?? 'iphone';
-final _size = _device == 'ipad' ? const Size(1376, 1032) : const Size(844, 390);
-final _ratio = _device == 'ipad' ? 1.0 : 2.0;
+
+/// `STORE=1` で、App Store の掲載画像の大きさで撮る(iPhone 2622x1206・iPad 13インチ 2752x2064)。
+/// 出力は `build/store_landscape/<端末>/`。この中から選んで `marketing/screenshots/` に置く。
+final _store = Platform.environment['STORE'] == '1';
+final _size = _device == 'ipad'
+    ? const Size(1376, 1032)
+    : _store
+        ? const Size(874, 402)
+        : const Size(844, 390);
+final _ratio = _device == 'ipad' ? (_store ? 2.0 : 1.0) : (_store ? 3.0 : 2.0);
+final _outDir = _store ? 'build/store_landscape' : 'build/review_landscape';
 final _key = GlobalKey();
 
 Future<void> _loadFonts() async {
@@ -82,7 +91,7 @@ Future<void> _shoot(WidgetTester t, String name, GmController c, {Future<void> F
     final b = _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
     final img = await b.toImage(pixelRatio: _ratio);
     final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    final dir = Directory('build/review_landscape/$_device')..createSync(recursive: true);
+    final dir = Directory('$_outDir/$_device')..createSync(recursive: true);
     File('${dir.path}/$name.png').writeAsBytesSync(data!.buffer.asUint8List());
   });
 }
