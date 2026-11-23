@@ -31,7 +31,7 @@ for (const seed of SEEDS) {
       if (recv && this.teamOf(recv) === this.teamOf(by) && this.disp[recv]) {
         const dr = Math.hypot(to[0] - this.disp[recv][0], to[1] - this.disp[recv][1]);
         let dop = 99; for (const o of Object.keys(this.disp)) if (this.base[o] && this.teamOf(o) !== this.teamOf(by)) dop = Math.min(dop, Math.hypot(to[0] - this.disp[o][0], to[1] - this.disp[o][1]));
-        if (dop + 2 < dr && src === '合間') add('相手の方が先に着く所へのパス(合間)', tag()); // 場面・入りは届いた時に見る（下）
+        if (dop + 2 < dr && src === '合間' && !this._astrayKick && !(this.fl && this.fl.icpt)) add('相手の方が先に着く所へのパス(合間)', tag()); // わざとそれた・切られる失敗の球は数えない（2026-11-23） // 場面・入りは届いた時に見る（下）
         // オフサイドの位置の味方へ（合間）
         if (src === '合間') {
           const opp = Object.keys(this.disp).filter((o) => this.base[o] && this.teamOf(o) !== this.teamOf(by));
