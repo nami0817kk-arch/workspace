@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v46</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v47</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1807,7 +1807,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v46 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v47 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1921,18 +1921,24 @@ function demonSec(m){
 var STORY=[
  {t:25,dp:60,party:[{k:'sen',nm:'ペペ',lv:2,ti:'かけだし勇者',line:'よし、ひと山あてるぞ！'}]},
  {t:90,dp:30,party:[{k:'sen',nm:'ゴドー',lv:8,ti:'ちから自慢',skl:['kaiten']}]},
- {t:120,dp:40,party:[{k:'sen',nm:'ペペ',lv:10,ti:'みならい勇者',skl:['hpget']},{k:'sou',nm:'ミレイ',lv:12,ti:'ひかえめな僧侶',skl:['heal']}]},
+ {t:120,dp:40,land:{f:1,env:'ice'},party:[{k:'sen',nm:'ペペ',lv:10,ti:'みならい勇者',skl:['hpget']},{k:'sou',nm:'ミレイ',lv:12,ti:'ひかえめな僧侶',skl:['heal']}]},
  {t:110,dp:55,party:[{k:'sen',nm:'バルド',lv:14,ti:'いのしし戦士',skl:['kaiten','warcry'],gap:20},{k:'sen',nm:'グスタ',lv:13,ti:'いのしし戦士',skl:['hpget']}]},
- {t:135,dp:50,party:[{k:'kis',nm:'レイン',lv:21,ti:'銀の騎士',skl:['kaiten']},{k:'sen',nm:'ヨハン',lv:20,ti:'赤い剣士',skl:['hpget']},{k:'mah',nm:'セラ',lv:24,ti:'青い魔女',skl:['fire','mpget']}]},
+ {t:135,dp:50,land:{f:0,env:'lava'},party:[{k:'kis',nm:'レイン',lv:21,ti:'銀の騎士',skl:['kaiten']},{k:'sen',nm:'ヨハン',lv:20,ti:'赤い剣士',skl:['hpget']},{k:'mah',nm:'セラ',lv:24,ti:'青い魔女',skl:['fire','mpget']}]},
  {t:90,dp:50,party:[{k:'sen',nm:'テツ',lv:34,ti:'老いた達人',skl:['kaiten','warcry']},{k:'mah',nm:'ルル',lv:26,ti:'恋する魔法使い',skl:['wind','heal']}]},
  {t:135,dp:60,party:[{k:'sen',nm:'ペペ',lv:40,ti:'永遠の新人',skl:['hpget','warcry']},{k:'sou',nm:'ミレイ',lv:38,ti:'聖なる僧侶',skl:['heal','mpget']},{k:'mah',nm:'セラ',lv:38,ti:'氷の魔女',skl:['fire','wind']}]},
  {t:75,dp:60,party:[{k:'kis',nm:'エルド',lv:46,ti:'伝承の勇者',skl:['fire','warcry','hpget'],boss:1,line:'この塔、見せてもらおう'}]}
 ];
+// 面が始まるときに、ある階のまだ掘っていない土の一部が別の層の土に変わる
+function applyLand(st){var L=STORY[st-1]&&STORY[st-1].land;if(!L||L.f>=F)return 0;var n=0;
+ for(var y=0;y<N;y++)for(var x=0;x<N;x++){var c=cellAt(L.f,x,y);if(!c||c.open||bedrock(L.f,x,y))continue;if(hs(x>>1,y>>1,st*7+L.f)<0.55){c.env=L.env;n++;if(!c.nut&&!c.mag&&Math.random()<0.15)c.nut=1+rnd(6);}}
+ TK.key='';return n;}
+function landNote(st){var L=STORY[st-1]&&STORY[st-1].land;if(!L||L.f>=F)return '';return (L.f+1)+'階のまだ掘っていない土の一部が、'+ENV[L.env].n+'の層に変わった。'+ENV[L.env].n+'の層では、ほかでは生まれない種が生まれる。';}
 function storyDone(){return kvGet('tou-story')=='1';}
 function partyOf(st,mode){var P=STORY[st-1].party.map(function(p){var q=JSON.parse(JSON.stringify(p));if(mode=='ura'){q.lv=Math.round(q.lv*1.3)+4;q.ura=1;}return q;});
  if(mode=='ura')while(P.length<3)P.push({k:['tou','mah','sou'][P.length],nm:['ジル','ノア','キキ'][P.length],lv:P[0].lv,ti:'助っ人',skl:[]});return P;}
 function startStory(mode,st){
  st=st||1;newGame('normal');g.mode=mode;g.st=st;g.st0=st;g.party=partyOf(st,mode);g.cd=STORY[st-1].t;g.dp=STORY[st-1].dp+60*(st-1);g.stages=[];g.roundT0=g.t;g.armyStart=0;
+ for(var ls=1;ls<=st;ls++)applyLand(ls);
  stageIntro();say((mode=='ura'?'裏ストーリー':'ストーリー')+' 第'+st+'面。'+STORY[st-1].t+'秒後に冒険者が来る（「今すぐ迎える」で早めると得点が増える）。');ui();
 }
 // クリアした面の次までを選べる（途中の面から始めるときは、掘る力を多めに渡す）
@@ -1965,7 +1971,7 @@ function stageIntro(){
  var el=document.getElementById('title'),P=g.party;
  el.innerHTML='<div class="tbox"><h2><small>'+(g.mode=='ura'?'裏ストーリー ':'')+'第'+g.st+'面</small><br>'+STITLE[g.st-1]+'</h2>'+
   '<ul class="sc">'+P.map(function(p){return '<li><b>'+esc(p.nm)+'</b>（Lv'+(p.ura?Math.round(p.lv):p.lv)+'・'+esc(p.ti)+'）'+(p.skl&&p.skl.length?'<br><small>技：'+p.skl.map(function(k){return HSKN[k];}).join('・')+'</small>':'')+(p.line?'<br><small>「'+esc(p.line)+'」</small>':'')+'</li>';}).join('')+'</ul>'+
-  (bestRank(g.mode,g.st)?'<p class="sub">この面の最高ランク：<span class="rank">'+bestRank(g.mode,g.st)+'</span></p>':'')+'<p class="sub">'+Math.ceil(g.cd)+'秒後に入口から来る。掘る力は'+g.dp+'。準備の間は時間が止まっている。</p>'+
+  (bestRank(g.mode,g.st)?'<p class="sub">この面の最高ランク：<span class="rank">'+bestRank(g.mode,g.st)+'</span></p>':'')+(landNote(g.st)?'<p class="sub"><b>'+landNote(g.st)+'</b></p>':'')+'<p class="sub">'+Math.ceil(g.cd)+'秒後に入口から来る。掘る力は'+g.dp+'。準備の間は時間が止まっている。</p>'+
   '<button class="btn go" id="tgo">準備を始める</button></div>';
  el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
 }
@@ -1982,7 +1988,7 @@ function stageClear(){
  el.hidden=false;
  document.getElementById('tnext').onclick=function(){
   if(last){if(g.mode=='story')kvSet('tou-story','1');kvSet('tou-save-m',null);g.mode=null;g.winSave=0;showTitle();return;}
-  g.st++;g.party=partyOf(g.st,g.mode);g.wave=0;g.cd=STORY[g.st-1].t;g.dp=nx;g.done=false;g.winSave=0;over=false;g.spawnQ=[];var C=g.core;if(C.carrier||!C.home){C.carrier=null;C.home=true;C.dropT=0;C.f=F-1;C.x=C.hx==null?COREX:C.hx;C.y=C.hy==null?COREY:C.hy;}g.roundT0=g.t;g.armyStart=armyPower();
+  g.st++;g.party=partyOf(g.st,g.mode);g.wave=0;g.cd=STORY[g.st-1].t;g.dp=nx;g.done=false;g.winSave=0;over=false;g.spawnQ=[];var C=g.core;if(C.carrier||!C.home){C.carrier=null;C.home=true;C.dropT=0;C.f=F-1;C.x=C.hx==null?COREX:C.hx;C.y=C.hy==null?COREY:C.hy;}g.roundT0=g.t;g.armyStart=armyPower();applyLand(g.st);
   resetGo();stageIntro();say('第'+g.st+'面。'+g.cd+'秒後に'+g.party.length+'人が来る。掘った道もモンスターもそのまま。');ui();
  };
 }
