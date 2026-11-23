@@ -861,6 +861,19 @@ class Pilot {
     where = 'ひと回り（事業）';
     await tab('biz');
     await sweep();
+    // 事業が多い会社：自社の事業の並べ替えと、見出しでたたむ・開く
+    if (s.biz.length >= bizManyMin) {
+      for (final o in myBizSorts) {
+        await pressKey('mysort-${o.$1}');
+        if (ctl.myBizSort != o.$1) note('自社の事業の並びが${o.$1}に替わらない');
+      }
+      await pressKey('mysort-rev');
+      final head = find.descendant(of: find.byKey(const ValueKey('fold-mybiz')), matching: find.byType(InkWell));
+      await press(head, '自社の事業の見出し');
+      if (_has(find.byKey(ValueKey('biz-row-${s.biz.first.id}')))) note('自社の事業がたためない');
+      await press(head, '自社の事業の見出し');
+      mark('事業の一覧をたたむ');
+    }
     for (final o in bizSorts) {
       await pressKey('sort-${o.$1}');
     }
@@ -964,6 +977,18 @@ class Pilot {
     await sweep();
     await _peek(find.byKey(const ValueKey('info-own-cap')), '用語（持ち株）');
     if (s.ap > 0 && s.biz.isNotEmpty && s.buyers().isNotEmpty) await _peek(find.text(tr('会社を丸ごと売る')), '会社を丸ごと売る');
+    // 会社を2つに割る（小窓で分類を選ぶ。開いて、やめる）
+    if (s.ap > 0 && s.listed && s.biz.length >= 2) {
+      final n = s.biz.length;
+      await _peek(find.text(tr('会社を2つに割る')), '会社を2つに割る');
+      if (s.biz.length != n) note('割るのをやめたのに事業が減った');
+    }
+    // 子会社を手放すのは確認が出て、やめられる
+    final sub = s.subs().where((c) => s.pctOf(c) > 0).firstOrNull;
+    if (sub != null && await reveal(find.byKey(ValueKey('co-sell-${sub.id}')))) {
+      await _peek(find.descendant(of: find.byKey(ValueKey('co-sell-${sub.id}')), matching: find.byType(Btn)), '子会社を全部売る');
+      if (sub.parent != 'player') note('売るのをやめたのに子会社でなくなった');
+    }
     where = 'ひと回り（数字）';
     await tab('num');
     await sweep();

@@ -993,7 +993,8 @@ extension GameTurn on Game {
       if (hasT('gambler') && rnd() < .2) eff *= .3;
       b.power += x.cost * eff;
       b.upkeep = b.upkeep + x.cost * .006;
-      N(M('「{0}」の新しい{1}が開きました', [name, uw(b)]), 'good');
+      // 広げたぶんは「新しい店が開いた」とは言わない（増やしたのと区別がつかなかった。1.0.0+18）
+      N(M(x.ext ? '「{0}」の{1}を広げ終わりました' : '「{0}」の新しい{1}が開きました', [name, uw(b)]), 'good');
       return;
     }
     final p = staffById(b.mgr);
@@ -1148,6 +1149,12 @@ extension GameTurn on Game {
     }
     if (t == 'frugal' && b.upkeep > 0) opts.add(Proposal(k: 'trim', w: 3, cost: 0, l: M('「{0}」の維持費を削りたい', [I(ind.id)]), d: M('維持費が2割減ります。現場は少し弱ります')));
     if (p.partner) opts.add(Proposal(k: 'newbiz', w: 2, cost: 0, l: M('新しい事業を始めたい'), d: M('自分で立ち上げて、責任者をやります')));
+    // 提案の種類は増やしていない（1.0.0+18 で試して見送った）。中盤の経営会議は提案の半分が「店・工場を増やしたい」
+    // （10〜30年目・3本で 51件中25件）なので、画面にある手から「広告を打ちたい」「海外に出したい」を足す形を試したが、
+    // ・海外（どの国にも）: 単位の手の自動プレイで、30年後の事業の力の中央値が 7.3兆→18〜19.9兆 に跳ねる
+    // ・海外（自国だけの事業の最初の1か国だけ）・広告: 単位の手の力は変わらない（7.0〜9.0兆）が、乱数の流れが変わって、
+    //   自動プレイの中央値で測っている線（test/fixed_price_test.dart「自動プレイの比べ」・test/polish3_test.dart「難しさ」）のどちらかを外れる
+    // ので、線を引き直す判断が要る。ここは前のまま
     if (opts.isEmpty) return null;
     final tot = opts.fold(0, (s, o) => s + o.w);
     var r = rnd() * tot;

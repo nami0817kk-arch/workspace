@@ -584,7 +584,8 @@ class EndScreen extends StatelessWidget {
     final win = s.won != null && s.over == null;
     final accent = win ? Pal.goldtx : Pal.down;
     final years = s.year - s.startYear;
-    final marks = s.highlights();
+    // 20年を超えて遊んだ会社は、節目を7つまで出す（5つだと、後半の出来事が入りきらない。それ以上は長くしない。1.0.0+18）
+    final marks = s.highlights(years >= 20 ? 7 : 5);
     Widget stat(String k, String v) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Row(children: [

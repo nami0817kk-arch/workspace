@@ -226,14 +226,16 @@ void main() {
     for (final lang in ['ja', 'en']) {
       testWidgets('検索の欄と札で絞れる。合うものが無いときの文も出る（$lang）', (tester) async {
         final s = _midGame();
-        final ctl = await _pump(tester, game: s, lang: lang, size: const Size(390, 12000));
+        // 一覧を全部いちどに描ける高さにする（1.0.0+18 で自社の事業の上に「まとめての手」と並べ替えの札が入り、12000 では英語の一覧の末尾が入りきらなくなった）
+        final ctl = await _pump(tester, game: s, lang: lang, size: const Size(390, 16000));
         ctl.setTab('biz');
         await tester.pump();
         // 前の選ぶ欄（絞り込み）は札に置き換わった
         expect(find.byType(SearchBox), findsOneWidget);
         expect(find.byKey(const ValueKey('sort-cost')), findsOneWidget);
         // 分類の10個は「分類」の札1つにまとめた（1.0.0+14）
-        expect(find.byType(PickChip), findsNWidgets(bizSorts.length + bizFilters.length + 1));
+        // 事業が多い会社では、自社の事業の並べ替えの札も出る（1.0.0+18）
+        expect(find.byType(PickChip), findsNWidgets(bizSorts.length + bizFilters.length + 1 + (s.biz.length >= bizManyMin ? myBizSorts.length : 0)));
         for (final o in bizSorts) {
           expect(find.descendant(of: find.byKey(ValueKey('sort-${o.$1}')), matching: find.text(tr(o.$2))), findsOneWidget);
         }

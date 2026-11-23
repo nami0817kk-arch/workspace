@@ -237,8 +237,13 @@ void main() {
       s.pres.age = 65;
       s.succ = null;
       final all = s.adviceAll().map(tx).toList();
-      expect(s.advice().map(tx).toList(), all.take(3).toList());
-      expect(s.advice().length, lessThanOrEqualTo(3));
+      // 1.0.0+18: 先頭はいちばん大事な1つ。候補が4つ以上あるときは、2つ目と3つ目を月ごとに順ぐりに回す
+      final top = s.advice().map(tx).toList();
+      expect(top.first, all.first);
+      expect(top.length, lessThanOrEqualTo(3));
+      expect(top.toSet().length, top.length);
+      expect(all, containsAll(top));
+      if (all.length <= 3) expect(top, all);
       expect(all.indexWhere((m) => m.contains('60歳')), lessThan(all.indexWhere((m) => m.contains('持株会社'))));
       expect(all.any((m) => RegExp('粉飾|談合|汚い|裏金|スパイ').hasMatch(m)), isFalse);
     });

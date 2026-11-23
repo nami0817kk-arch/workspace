@@ -1107,7 +1107,10 @@ class Progress extends StatelessWidget {
 class AmountBar extends StatelessWidget {
   final double frac;
   final bool minus;
-  const AmountBar(this.frac, {super.key, required this.minus});
+
+  /// 目盛りの数（2以上なら、欄をこの数に等分する細い線を引く。桁の目盛りの棒で、1目盛り＝10倍を見せる）
+  final int ticks;
+  const AmountBar(this.frac, {super.key, required this.minus, this.ticks = 0});
 
   /// 額が0でなければ、棒はこの幅より短くしない（費用が利益の1%でも、赤い棒として見える。1.0.0+17）
   static const minFill = 12.0;
@@ -1125,10 +1128,35 @@ class AmountBar extends StatelessWidget {
             builder: (context, c) => Container(
                   height: 8,
                   color: Pal.panel2,
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(width: fillWidth(c.maxWidth), child: ColoredBox(color: minus ? Pal.down : Pal.up, child: const SizedBox.expand())),
+                  child: Stack(fit: StackFit.expand, children: [
+                    Positioned(
+                        left: 0, top: 0, bottom: 0, width: fillWidth(c.maxWidth), child: ColoredBox(color: minus ? Pal.down : Pal.up, child: const SizedBox.expand())),
+                    // 目盛りの線（塗りの上にも下地の上にも見える、白っぽい細い線）
+                    for (var i = 1; i < ticks; i++)
+                      Positioned(
+                          left: c.maxWidth * i / ticks - .5,
+                          top: 0,
+                          bottom: 0,
+                          child: const SizedBox(width: 1, child: DecoratedBox(decoration: BoxDecoration(color: Color(0xCCFFFFFF))))),
+                  ]),
                 )),
       );
+}
+
+/// 決算の棒の目盛りの数（桁）。いちばん大きい額と、0でないいちばん小さい額のあいだの桁数＋1（少なくとも2）
+int plDecades(Iterable<double> vals) {
+  final a = vals.map((v) => v.abs()).where((v) => v > 0 && v.isFinite).toList();
+  if (a.isEmpty) return 2;
+  final top = a.reduce(math.max), low = a.reduce(math.min);
+  return math.max(2, (math.log(top / low) / math.ln10).ceil() + 1);
+}
+
+/// 決算の棒の長さ（0〜1）。桁の目盛り：いちばん大きい額 [top] を端まで、額が10分の1になるごとに欄の 1/[decades] ずつ短くする。
+/// 額そのままの比で引くと、利益の0.01%の費用も0.1%の費用も同じ最小の幅になって、大小が分からなかった（1.0.0+18）
+double plFrac(double v, double top, int decades) {
+  final a = v.abs();
+  if (a <= 0 || top <= 0 || !a.isFinite) return 0;
+  return (1 - math.log(top / a) / math.ln10 / decades).clamp(0.0, 1.0);
 }
 
 const _mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

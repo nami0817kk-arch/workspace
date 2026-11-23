@@ -97,6 +97,9 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 新しい事業の一覧の並べ替え（cost 元手の安い順・market 市場の大きい順・new 生まれたばかり順・margin 利益率の高い順）
   String bizSort = 'cost';
 
+  /// 自社の事業の並べ替え（事業が多いときだけ出る。rev 売上の大きい順・warn 注意があるものを先に・low 利益の少ない順・share シェアの低い順）
+  String myBizSort = 'rev';
+
   /// 新しい事業の一覧の検索の欄（名前で絞る）
   final TextEditingController bizSearch = TextEditingController();
 

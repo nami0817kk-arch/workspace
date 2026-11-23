@@ -68,25 +68,48 @@ extension GameView on Game {
           : '創業期');
 
   /// 終わったときのまとめに出す社史の節目（大きいものから[n]個選び、古い順に並べる。勝ち負けそのものと時代の出来事は除く）
+  ///
+  /// 30年を超えて遊ぶと、同じ種類の記録（順位の節目・現地法人の上場・合併）だけで枠が埋まり、宿敵との決着や解任が出てこなかった（1.0.0+18）:
+  /// ・同じ種類は2つまで（順位は、いちばん上まで行った節目から。ほかは古いものから）。枠が余れば、残りを大きい順に足す
+  /// ・同じ10年（創業から数えて）からは半分まで。後半の節目も入る
+  /// ・宿敵との決着・取締役会での解任・現地法人も節目に数える。現地法人の上場は、自社の上場より小さく数える
   List<Chron> highlights([int n = 5]) {
     int score(Chron e) => switch (e.k) {
           'rank' => msgKey(e.m).contains('1位になった') ? 10 : 7,
           'found' => 9,
-          'ipo' => 8,
+          'ipo' => msgKey(e.m).startsWith('現地法人') ? 4 : 8,
           'sold' => 7,
-          'swap' || 'merge' || 'first_biz' => 6,
-          'buy' || 'abroad' => 5,
+          'swap' || 'merge' || 'first_biz' || 'rival' => 6,
+          'buy' || 'abroad' || 'board' => 5,
           'pres' || 'partner' || 'rebirth' => 4,
+          'local' => 3,
           'partner_out' => 2,
           _ => 0,
         };
     final idx = [for (var i = 0; i < history.length; i++) if (score(history[i]) > 0) i];
     idx.sort((a, b) {
       final c = score(history[b]) - score(history[a]);
-      return c != 0 ? c : a - b;
+      if (c != 0) return c;
+      // 順位の節目は新しいもの（＝上の順位）から。ほかは古いものから
+      return history[a].k == 'rank' && history[b].k == 'rank' ? b - a : a - b;
     });
-    final pick = idx.take(n).toList()..sort();
-    return [for (final i in pick) history[i]];
+    // 同じ10年からは半分まで（少なくとも2つ）。古いものから選ぶと、創業してすぐの出来事だけで枠が埋まり、後半の節目が出なかった
+    final perDecade = math.max(2, n ~/ 2);
+    final per = <String, int>{}, dec = <int, int>{};
+    final pick = <int>[], rest = <int>[];
+    for (final i in idx) {
+      final k = history[i].k;
+      final d = (history[i].y - startYear) ~/ 10;
+      if ((per[k] ?? 0) < 2 && (dec[d] ?? 0) < perDecade) {
+        per[k] = (per[k] ?? 0) + 1;
+        dec[d] = (dec[d] ?? 0) + 1;
+        pick.add(i);
+      } else {
+        rest.add(i);
+      }
+    }
+    final out = [...pick.take(n), if (pick.length < n) ...rest.take(n - pick.length)]..sort();
+    return [for (final i in out) history[i]];
   }
 
   /// 勝ち負けが決まったか
@@ -109,8 +132,56 @@ extension GameView on Game {
     return M('終わりなし：好きなだけ育てる');
   }
 
+  /// 中盤からの勧め（1.0.0+18）。育った会社で使える仕組み（現地法人・子会社の上場・相性の分かった組み合わせ）と、
+  /// 放っておくと痛い目にあうこと（忠誠・現地法人の株の買い集め）を、今ある仕組みのまま言葉にする。数字は何も動かさない
+  void _midAdvice(void Function(int, String, [List<Object?>]) add) {
+    // 現地法人の株を宿敵が買い集めている（10%で場面が出る。その手前から知らせる）
+    final hit = (locals().where((c) => c.locRivPct >= 5 && coById(c.locRiv) != null).toList()..ssort((a, b) => b.locRivPct.compareTo(a.locRivPct))).firstOrNull;
+    if (hit != null) {
+      // 25%（口を出される線）が近づいたら急ぎ。その手前と、越えたあとは、ほかの勧めと同じ並びに置く
+      add(hit.locRivPct >= 15 && hit.locRivPct < 25 ? 88 : 55, hit.locRivPct >= 25 ? '現地法人{0}の株を、{1}が{2}握っています。「株」で買い戻せます（{3}）' : '現地法人{0}の株を、{1}が{2}まで買い集めています。25%で経営に口を出されます。「株」で買い戻せます（{3}）',
+          [Nm(hit.name), Nm(coById(hit.locRiv)!.name), pct(hit.locRivPct), Y(localBuybackCost(hit))]);
+    }
+    // 忠誠が引き抜きの線（野心60超・忠誠55未満）を割った部下
+    final low = (staff.where((p) => p.loy < 55 && (!p.ambKnown || p.amb > 60)).toList()..ssort((a, b) => a.loy.compareTo(b.loy))).firstOrNull;
+    if (low != null) add(78, '{0}の忠誠が下がっています。宿敵の引き抜きの的になります。経営会議で{0}の提案を通すと、忠誠が上がります', [Nm(low.name)]);
+    // 相性がよさそうと分かっている組み合わせの、片方だけを持っている（事業の種探しで分かったもの）
+    final own = <String>{for (final b in biz) b.ind, for (final c in subs()) for (final b in c.biz) b.ind};
+    final live = <String>{for (final i in liveInds()) i.id};
+    final half = syns.where((s) => found[s.k] == null && hint[s.k] != null && (own.contains(s.a) != own.contains(s.b)) && live.contains(s.a) && live.contains(s.b)).toList();
+    if (half.isNotEmpty) {
+      final s = half[(turn ~/ 3) % half.length];
+      final (have, need) = own.contains(s.a) ? (s.a, s.b) : (s.b, s.a);
+      add(58, '「{0}」と「{1}」は相性がよさそうだと分かっています。「{1}」も始めれば、シナジーが見つかるかもしれません', [I(have), I(need)]);
+    }
+    // 子会社の上場（まだ1社も上場させていないとき）
+    final sb = subs();
+    if (!sb.any((c) => c.listed)) {
+      final c = (sb.where((c) => pctOf(c) >= 60).toList()..ssort((a, b) => b.cap.compareTo(a.cap))).firstOrNull;
+      if (c != null && c.cap * .3 * .95 >= 1e8 * nom()) {
+        add(48, '子会社の{0}は上場させられます。株を30%売って約{1}が入り、70%は持ったままです（「株」の子会社のカードから）', [Nm(c.name), Y(c.cap * .3 * .95)]);
+      }
+    }
+    // 現地法人（まだ1つも作っていないとき。海外の分がいちばん大きい事業）
+    if (locals().isEmpty && biz.length + sb.length >= 5) {
+      final b = (biz.where((b) => localCountries(b).isNotEmpty && b.profit > 0).toList()..ssort((a, b) => b.rev.compareTo(a.rev))).firstOrNull;
+      if (b != null) {
+        add(46, '「{0}」は{1}に出ています。「分社・独立」からその国の分を現地法人に分けると、地元の規制が少し緩み、現地の社長が自分で動かします', [I(b.ind), C(localCountries(b).first)]);
+      }
+    }
+  }
+
   /// 番頭のひとこと（大事な順に最大3行）。まだ使っていない仕組みは、使いどきに勧める。汚い手は勧めない
-  List<String> advice() => adviceAll().take(3).toList();
+  ///
+  /// 候補が4つ以上あるときは、いちばん大事な1つを先頭に置いたまま、2つ目と3つ目を月ごとに順ぐりに回す（1.0.0+18）。
+  /// 画面の「今月やること」に出るのは3つまでなので、上の3つが片付かないかぎり下の候補はいつまでも出ず、毎月同じ3つの文が並んでいた
+  /// （10〜30年目の自動プレイで、先月と同じ文の月が 99.6%）。全部を大事な順に読むのは [adviceAll]（小窓「番頭のひとこと」）
+  List<String> advice() {
+    final all = adviceAll();
+    if (!extras || all.length <= 3) return all.take(3).toList();
+    final n = all.length - 1;
+    return [all[0], all[1 + turn % n], all[1 + (turn + 1) % n]];
+  }
 
   /// 番頭のひとことの候補を、大事な順にすべて並べる
   List<String> adviceAll() {
@@ -122,18 +193,53 @@ extension GameView on Game {
     if (riv >= 20) add(95, '宿敵にあなたの株を{0}握られています。「株」でホワイトナイトや自社株買いを考えましょう', [pct(riv)]);
     final run = biz.where((b) => b.mgr == null).length;
     if (run > presCap()) add(90, '社長が直接見られる事業は{0}つまでです。{1}つの事業が放置されて弱っています。「人」で採用して責任者に置きましょう', [presCap(), run - presCap()]);
-    final short = biz.where((b) => b.model != 'fc' && b.power > 0 && crewEff(b) < b.power * .9).firstOrNull;
-    if (short != null) add(85, '「{0}」は現場の人が足りず、{1}の一部が止まっています。「現場の人を増やす」か、統率の強い責任者を置きましょう', [I(short.ind), uw(short)]);
+    // 同じ文が何か月も出続けないようにする（1.0.0+18。育った会社では「沈み始めています」「人が足りず」が毎月同じ事業の名前で出ていた）:
+    // ・名前を挙げる事業は、いちばん困っているもの（人手）か、月ごとに順番に（沈む市場・新しい市場）
+    // ・急がない勧めは、起きてすぐ（1〜2年）は毎月、そのあとは数か月に1度だけ出す
+    final shorts = biz.where((b) => b.model != 'fc' && b.power > 0 && crewEff(b) < b.power * .9).toList()
+      ..ssort((p, q) => (crewEff(p) / p.power).compareTo(crewEff(q) / q.power));
+    if (shorts.length >= 2 && extras) {
+      add(
+          85,
+          biz.length >= bizManyMin
+              ? '「{0}」など{1}つの事業で現場の人が足りず、{2}の一部が止まっています。「事業」の「まとめての手」から、まとめて雇えます'
+              : '「{0}」など{1}つの事業で現場の人が足りず、{2}の一部が止まっています。「事業」の「現場の人を増やす」で雇いましょう',
+          [I(shorts[0].ind), shorts.length, uw(shorts[0])]);
+    } else if (shorts.isNotEmpty) {
+      add(85, '「{0}」は現場の人が足りず、{1}の一部が止まっています。「現場の人を増やす」か、統率の強い責任者を置きましょう', [I(shorts[0].ind), uw(shorts[0])]);
+    }
     if (pres.age >= 60 && succ == null) add(80, '社長が60歳を超えました。「人」で後継ぎを決めておかないと、急死したとき会社が混乱します');
     if (canIPO()) add(75, '上場の条件を満たしました。大金が入りますが、宿敵があなたの株を買えるようになります');
-    final dec = biz.where((b) {
+    final decs = biz.where((b) {
       final i = indm[b.ind]!;
       return i.f != 0 && y > i.f;
-    }).firstOrNull;
-    if (dec != null) add(70, '「{0}」は市場が沈み始めています。売るなら早めに', [I(dec.ind)]);
+    }).toList();
+    if (!extras) {
+      if (decs.isNotEmpty) add(70, '「{0}」は市場が沈み始めています。売るなら早めに', [I(decs[0].ind)]);
+    } else {
+      // 沈み始めて1年以内のものは毎月。それより古いものは半年に1度、順番に名前を挙げる
+      final fresh = decs.where((b) => y - indm[b.ind]!.f < 1).firstOrNull;
+      if (fresh != null) {
+        add(70, '「{0}」は市場が沈み始めています。売るなら早めに', [I(fresh.ind)]);
+      } else if (decs.isNotEmpty && turn % 6 == 0) {
+        final b = decs[(turn ~/ 6) % decs.length];
+        add(70, pivotTargets(b).isNotEmpty ? '「{0}」は沈む市場に残ったままです。売るか、「業態を変える」で近い業種に移れます' : '「{0}」は沈む市場に残ったままです。売れるうちに売るのも手です', [I(b.ind)]);
+      }
+    }
     final hots = inds.where((i) => y - i.b >= 0 && y - i.b < 6 && i.size >= 1.5e12 && !biz.any((b) => b.ind == i.id)).toList()
       ..ssort((p, q) => q.size.compareTo(p.size));
-    if (hots.isNotEmpty) add(65, '生まれたばかりの「{0}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります', [I(hots[0].id)]);
+    if (!extras) {
+      if (hots.isNotEmpty) add(65, '生まれたばかりの「{0}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります', [I(hots[0].id)]);
+    } else if (hots.isNotEmpty) {
+      // 生まれて2年以内は毎月。そのあとは4か月に1度、順番に
+      final fresh = hots.where((i) => y - i.b < 2).firstOrNull;
+      if (fresh != null) {
+        add(65, '生まれたばかりの「{0}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります', [I(fresh.id)]);
+      } else if (turn % 4 == 1) {
+        add(65, '「{0}」は生まれて{1}年、まだ伸びている市場です。入るなら、大きな会社が固まる前に', [I(hots[(turn ~/ 4) % hots.length].id), (y - hots[(turn ~/ 4) % hots.length].b).floor()]);
+      }
+    }
+    if (extras) _midAdvice(add);
     // あと1か国で規模の利益（5か国から利益率が上がる）
     bool entering(Biz b) => b.pipe.any((x) => x.k == 'enter');
     final four = biz.where((b) => ctryOf(b).length == 4 && !entering(b)).firstOrNull;
