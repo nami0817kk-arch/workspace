@@ -1,0 +1,1212 @@
+// ignore_for_file: non_constant_identifier_names
+part of 'game.dart';
+
+/// プレイヤーの手（どれも結果の文を返す）
+extension GameActions on Game {
+  // ===== 手 =====
+  bool canAP(int n) => ap >= n;
+  void useAP(int n) => ap -= n;
+
+  String startBiz(String id, [String? model]) {
+    final ind = indm[id]!;
+    final c = capexOf(ind);
+    final free = biz.isEmpty && !everBiz;
+    if (cash < c) return '元手が足りません';
+    if (!free && !canAP(1)) return '今月の手が残っていません';
+    if (biz.any((b) => b.ind == id)) return 'すでにその業種にいます';
+    if (noncomp != null && turn < noncomp!.until && noncomp!.inds.contains(id) && !noncomp!.broken) {
+      return '会社を売ったときの約束で、この業種にはまだ入れません（「株」の画面で約束を破ることもできます）';
+    }
+    cash -= c;
+    if (!free) useAP(1);
+    everBiz = true;
+    var p = c * newPow;
+    if (hasT('genius')) p *= .5 + rnd() * 1.7;
+    final early = yr() - ind.b < 3;
+    biz.add(Biz(id: uid(), ind: id, early: early ? turn + 60 : 0, model: model ?? 'direct', power: p, crew: p * 1.2));
+    calcAll();
+    return '「${ind.name}」を${MODELN[model ?? 'direct']}で始めました（元手 ${yen(c)}）';
+  }
+
+  double invBase(Biz b) => math.max(capexOf(indm[b.ind]!), b.rev * 3);
+
+  String invest(Biz b, double frac) {
+    final cost = math.max(0.0, cash * frac);
+    if (cost <= 0) return 'お金がありません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    cash -= cost;
+    useAP(1);
+    final rel = cost / math.max(b.rev + capexOf(indm[b.ind]!), 1);
+    var eff = invEff * math.pow(1 - b.share, 2) * clampD(math.pow(rel, -.12).toDouble(), .55, 1.3) * smallBonus(b);
+    if (hasT('genius')) eff *= .4 + rnd() * 1.8;
+    if (hasT('gambler')) {
+      if (rnd() < .2) {
+        eff = 0;
+      } else if (frac >= .5) {
+        eff *= 1.3;
+      }
+    }
+    final p = staffById(b.mgr);
+    final kai = p != null ? p.ab['kai']! : pres.ab['kai']!;
+    eff *= .7 + kai / 100 * .6;
+    final s0 = b.share, r0 = b.rev;
+    b.power += cost * eff;
+    calcAll();
+    return eff == 0 ? '投資は空振りに終わりました…' : '${yen(cost)}を投資しました。シェア ${pct(s0 * 100)} → ${pct(b.share * 100)}、売上の見込み ${yen(r0)} → ${yen(b.rev)}';
+  }
+
+  // ===== 国 =====
+  List<String> entryModes(Biz b, String c) {
+    final cat = indm[b.ind]!.cat;
+    if (c == 'cn' && (cat == 'net' || cat == 'money')) return ['jv'];
+    if (c == 'ru' && yr() >= 2022.5) return [];
+    return ['solo', 'jv', 'buy'];
+  }
+
+  double entryCost(Biz b, String c, String mode) {
+    final base = math.max(capexOf(indm[b.ind]!), b.rev * 6) * cw(c, yr()) / math.max(cw(home, yr()), .3) * .8;
+    return base *
+        (mode == 'jv'
+            ? .5
+            : mode == 'buy'
+                ? 2.5
+                : 1);
+  }
+
+  void addCtry(Biz b, String c, String mode, double pw) {
+    b.ctry = ctryOf(b).toList();
+    if (!b.ctry!.contains(c)) b.ctry!.add(c);
+    if (mode == 'jv') {
+      b.jv ??= [];
+      if (!b.jv!.contains(c)) b.jv!.add(c);
+    }
+    b.power += pw;
+    b.crew = crewOf(b) + pw;
+  }
+
+  String enterCountry(Biz b, String c, String mode) {
+    if (!canAP(1)) return '今月の手が残っていません';
+    if (ctryOf(b).contains(c)) return 'すでに出ています';
+    if (!entryModes(b, c).contains(mode)) return 'その出方はできません';
+    if (b.pipe.any((x) => x.k == 'enter' && x.c == c)) return 'すでに準備中です';
+    final cost = entryCost(b, c, mode);
+    if (cash < cost) return 'お金が足りません';
+    cash -= cost;
+    useAP(1);
+    final pw = cost * 1.1 + b.power * cw(c, yr()) / reachOf(b) * .5;
+    if (mode == 'buy') {
+      addCtry(b, c, mode, pw);
+      calcAll();
+      return '${cm[c]!.n}の地元の会社を買い、すぐに「${indm[b.ind]!.name}」を始めました';
+    }
+    final left = mode == 'jv' ? 3 : 6;
+    b.pipe.add(Pipe(k: 'enter', c: c, mode: mode, cost: cost, pw: pw, left: left));
+    calcAll();
+    return '${cm[c]!.n}に出る準備を始めました（${ENTRYN[mode]}）。$leftか月後に始まります';
+  }
+
+  // ===== 稼ぎ方 =====
+  List<String> modelsFor(String id) => ['direct', ...['fc', 'sub', 'plat'].where((k) => MODELS_BY[k]!.contains(id))];
+  double modelMg(Biz b) {
+    final m = b.model;
+    return m == 'fc'
+        ? .45
+        : m == 'sub'
+            ? .6
+            : m == 'plat'
+                ? clampD(-.15 + b.share * 10, -.15, 2.2)
+                : 1;
+  }
+
+  String uw(Biz b) {
+    final c = indm[b.ind]!.cat;
+    return c == 'food' || c == 'live' || c == 'fun'
+        ? '店'
+        : c == 'make' || c == 'ene'
+            ? '工場'
+            : c == 'link'
+                ? '拠点'
+                : '設備';
+  }
+
+  String changeModel(Biz b, String m) {
+    if (!canAP(1)) return '今月の手が残っていません';
+    if (b.model == m) return 'すでにその稼ぎ方です';
+    useAP(1);
+    b.model = m;
+    b.power *= .85;
+    calcAll();
+    return '「${indm[b.ind]!.name}」を${MODELN[m]}に切り替えました。切り替えの混乱で、力が少し落ちます';
+  }
+
+  // ===== 打ち手 =====
+  double pipeEff(Biz b, double cost) {
+    final rel = cost / math.max(b.rev * 3 + capexOf(indm[b.ind]!), 1);
+    return (b.early > turn ? 1.6 : 1) * invEff * math.pow(1 - b.share, 2) * clampD(math.pow(rel, -.12).toDouble(), .55, 1.3) * smallBonus(b);
+  }
+
+  String develop(Biz b, double frac) {
+    final cost = cash * frac;
+    if (cost <= 0) return 'お金がありません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    cash -= cost;
+    useAP(1);
+    final left = ri(3, 6);
+    b.pipe.add(Pipe(k: 'dev', cost: cost, left: left));
+    calcAll();
+    return '新しい商品の開発を始めました（${yen(cost)}）。出来上がるのは$leftか月後。当たるかどうかは出てみるまで分かりません';
+  }
+
+  String build(Biz b, double frac) {
+    final cost = cash * frac;
+    if (cost <= 0) return 'お金がありません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    cash -= cost;
+    useAP(1);
+    final left = b.model == 'fc' ? 1 : ri(1, 2);
+    b.pipe.add(Pipe(k: 'build', cost: cost, left: left));
+    calcAll();
+    return '${uw(b)}を増やし始めました（${yen(cost)}）。$leftか月後に開きます。${b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります'}';
+  }
+
+  String addCrew(Biz b, double frac) {
+    final cost = cash * frac;
+    if (cost <= 0) return 'お金がありません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    cash -= cost;
+    useAP(1);
+    b.crew = crewOf(b) + cost * 4;
+    b.upkeep = b.upkeep + cost * .008;
+    calcAll();
+    return '現場の人を増やしました（${yen(cost)}）。毎月の人件費が${yen(cost * .008)}増えます';
+  }
+
+  String cancelPipe(Biz b, int i) {
+    if (i < 0 || i >= b.pipe.length) return '取り下げるものがありません';
+    final x = b.pipe.removeAt(i);
+    cash += x.cost * .5;
+    return '取り下げて、${yen(x.cost * .5)}を取り戻しました';
+  }
+
+  String adv(Biz b) {
+    final cost = invBase(b) * .25;
+    if (cash < cost) return 'お金が足りません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    cash -= cost;
+    useAP(1);
+    b.ad = 6;
+    b.adCost = 0;
+    calcAll();
+    return '6か月のあいだ広告を打ちます';
+  }
+
+  List<({Company c, double share})> competitors(Biz b) {
+    final T = lastT;
+    if (T == null || T[b.ind] == null) return [];
+    final tot = poolT(b, T) * (reachOf(b) / rEff(b));
+    final L = <({Company c, double share})>[];
+    final tb = tierOf(b);
+    for (final c in cos) {
+      if (!c.alive || c.parent == 'player' || c.tier > tb) continue;
+      final x = c.biz.where((y) => y.ind == b.ind).firstOrNull;
+      if (x != null) L.add((c: c, share: x.power / tot));
+    }
+    L.ssort((a, b) => b.share.compareTo(a.share));
+    return L.take(3).toList();
+  }
+
+  String priceWar(Biz b) {
+    final cs = competitors(b);
+    if (cs.isEmpty) return '相手がいません';
+    final top = cs[0];
+    if (!canAP(1)) return '今月の手が残っていません';
+    if (b.attack > 0) return 'すでに値下げ合戦の最中です';
+    useAP(1);
+    b.attack = 9;
+    b.target = top.c.id;
+    top.c.rel -= 15;
+    if (inAssoc(b.ind)) {
+      deals = deals.where((d) => !(d.type == 'assoc' && d.ind == b.ind)).toList();
+      for (final c in cos) {
+        if (c.alive && c.biz.any((x) => x.ind == b.ind)) c.rel -= 20;
+      }
+      log.add(LogEntry('抜け駆けの値下げで、「${indm[b.ind]!.name}」の業界団体から追い出されました', 'bad', year, q));
+    }
+    calcAll();
+    return '${top.c.name}に値下げ合戦を仕掛けました。9か月のあいだ、こちらの利益は3割減り、相手の力は毎月3%ずつ削れます';
+  }
+
+  List<Industry> pivotTargets(Biz b) {
+    final ind = indm[b.ind]!;
+    return liveInds().where((i) => i.cat == ind.cat && i.id != ind.id && !biz.any((x) => x.ind == i.id)).toList();
+  }
+
+  String pivot(Biz b, String id) {
+    final to = indm[id]!;
+    final c = capexOf(to);
+    if (cash < c) return '元手が足りません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    cash -= c;
+    useAP(1);
+    final from = indm[b.ind]!.name;
+    final keep = b.power * .5 * (mkt(to) > 0 ? math.min(1, mkt(to) / math.max(mkt(indm[b.ind]!), 1)) : 1) + c * newPow;
+    b.crew = crewOf(b) * .5;
+    b.pipe = [];
+    b.ind = id;
+    b.power = keep;
+    b.age = 0;
+    b.price = 'normal';
+    b.war = 0;
+    b.attack = 0;
+    b.prevRev = 0;
+    calcAll();
+    return '「$from」を「${to.name}」に業態転換しました。客と人の半分を引き継ぎます';
+  }
+
+  List<Synergy> knownSynFor(String id) {
+    final own = <String>{for (final b in biz) b.ind};
+    return SYN.where((s) => (found[s.k] != null || hint[s.k] != null) && ((s.a == id && own.contains(s.b)) || (s.b == id && own.contains(s.a)))).toList();
+  }
+
+  String sellBiz(Biz b) {
+    final need = hasT('charm') ? 2 : 1;
+    if (!canAP(need)) return '今月の手が足りません';
+    final v = sellValue(b);
+    cash += v;
+    useAP(need);
+    biz.remove(b);
+    calcAll();
+    return '「${indm[b.ind]!.name}」を${yen(v)}で売りました';
+  }
+
+  String hire(Person p) {
+    if (!canAP(1)) return '今月の手が残っていません';
+    final sign = p.salary * 2;
+    if (cash < sign) return '支度金が足りません';
+    cash -= sign;
+    useAP(1);
+    cands.remove(p);
+    staff.add(p);
+    return '${p.name}を雇いました';
+  }
+
+  /// 責任者を決める（手は使わない）
+  void setManager(Biz b, int? id) {
+    b.mgr = id;
+    calcAll();
+  }
+
+  /// 値付けを決める（手は使わない）
+  void setPrice(Biz b, String price) {
+    b.price = price;
+    calcAll();
+  }
+
+  String dismiss(Person p) {
+    if (p.partner) return partnerOut(p);
+    fire(p);
+    return '${p.name}を解雇しました';
+  }
+
+  String kidJoin(Person k) {
+    kids.remove(k);
+    k.kid = false;
+    k.tenure = 0;
+    k.salary = jsRound(3e6 * nom() / 12);
+    staff.add(k);
+    return '${k.name}が入社しました。能力は働かせると見えてきます';
+  }
+
+  // ===== 社長の行動 =====
+  String placeName(String id) => id == 'net' ? (yr() < 2008 ? 'ネットの掲示板' : 'SNS') : PLACES.firstWhere((x) => x.id == id).n;
+
+  Person mkPartner(String pl) {
+    final p = mkPerson(0);
+    void add(String k, int v) => p.ab[k] = clampI(p.ab[k]! + v, 5, 99);
+    if (pl == 'lab') {
+      p.age = ri(22, 27);
+      add('kai', 20);
+      add('ei', -10);
+      p.trait = pick(const ['tech', 'genius', 'careful']);
+    } else if (pl == 'club') {
+      p.age = ri(22, 23);
+      for (final k in abKeys) {
+        add(k, -8);
+      }
+      p.loy = ri(75, 95).toDouble();
+      p.amb = ri(10, 60);
+      p.trait = pick(STRAITS).id;
+    } else if (pl == 'baito') {
+      p.age = ri(24, 31);
+      add('ei', 15);
+      add('tou', 10);
+      p.trait = pick(const ['grit', 'stamina', 'charm']);
+    } else if (pl == 'meet') {
+      p.age = ri(30, 45);
+      add('zai', 20);
+      p.amb = ri(60, 95);
+      p.loy = ri(20, 60).toDouble();
+      p.trait = pick(const ['gambler', 'careful', 'charm', 'liar']);
+      p.money = ri(2, 5) * 1e7 * nom();
+    } else {
+      p.age = ri(20, 35);
+      final sw = rnd() < .25 ? 18 : -10;
+      for (final k in abKeys) {
+        add(k, sw + ri(-8, 8));
+      }
+      p.trait = pick(const ['genius', 'liar', 'gambler', 'oneman', 'tech']);
+    }
+    if (p.trait == 'tech' && pl != 'lab') {
+      add('kai', 25);
+      add('ei', -20);
+    }
+    if (p.trait == 'grit' && pl != 'baito') add('zai', -15);
+    p.salary = jsRound(3e6 * nom() / 12);
+    p.place = pl;
+    return p;
+  }
+
+  List<Person> partners() => staff.where((p) => p.partner).toList();
+
+  double partnerChance(Person p, int x) {
+    var c = .1 + x * .025;
+    if (hasT('charm')) c += .15;
+    if (biz.isNotEmpty) c += .1;
+    if (rev > 0) c += math.min(.15, rev / (1e9 * nom()) * .15);
+    if (p.amb > 70) c -= .1;
+    if (p.place == 'club') c += .15;
+    if (p.place == 'meet') c -= .1;
+    return clampD(c, .05, .95);
+  }
+
+  String recruitPartner(Person p, int x) {
+    meet = null;
+    if (sh.own - x < 40) return '持ち株がこれ以上減ると、経営権が危うくなります';
+    if (rnd() < partnerChance(p, x)) {
+      p.partner = true;
+      p.stake = x.toDouble();
+      p.w = math.min(p.w, 14);
+      sh.own -= x;
+      sh.pt = sh.pt + x;
+      staff.add(p);
+      var m = '${p.name}が相棒になりました。株を$x%渡しました';
+      if (p.money != null && p.money != 0) {
+        cash += p.money!;
+        m += '。${yen(p.money!)}を出資してくれました';
+      }
+      return '$m。相棒が責任者の事業は力が1割5分上がります';
+    }
+    return '${p.name}は「もう少し考えたい」と言って去っていきました';
+  }
+
+  double workIncome() => (3.3e5 + (pres.ab['ei']! + pres.ab['kai']!) * 3.3e3) * nom();
+  int trainGain() => pres.age < 35 ? 2 : 1;
+
+  String scout() {
+    final y = yr();
+    final up = IND.where((i) => i.b > y && i.b <= y + 8 && seen[i.id] == null).toList();
+    if (up.isNotEmpty && rnd() < .45) {
+      final i = pick(up);
+      seen[i.id] = 1;
+      return '調べてみると、${i.b}年ごろに「${i.name}」の市場が生まれそうです。「事業」の下に書き留めました';
+    }
+    final own = <String>{for (final b in biz) b.ind};
+    final live = <String>{for (final i in liveInds()) i.id};
+    final c = SYN.where((s) => found[s.k] == null && hint[s.k] == null && live.contains(s.a) && live.contains(s.b)).toList();
+    final touch = c.where((s) => own.contains(s.a) || own.contains(s.b)).toList();
+    final cheap = c.where((s) => capexOf(indm[s.a]!) <= cash * 3 && capexOf(indm[s.b]!) <= cash * 3).toList();
+    if (c.isNotEmpty) {
+      final s = touch.isNotEmpty
+          ? pick(touch)
+          : cheap.isNotEmpty
+              ? pick(cheap)
+              : pick(c);
+      hint[s.k] = 1;
+      return '「${indm[s.a]!.name}」と「${indm[s.b]!.name}」は相性がよさそうです。図鑑に書き留めました';
+    }
+    return '今回は目ぼしい話がありませんでした';
+  }
+
+  /// 社長の行動。seek は成功すると null（出会いの小窓へ）
+  String? presAct(String kind, [String? arg]) {
+    if (!canAP(1)) return '今月の手が残っていません';
+    if (kind == 'seek') {
+      if (partners().length >= 2) return '相棒は2人までです';
+      useAP(1);
+      meet = mkPartner(arg!);
+      return null;
+    }
+    if (kind == 'work') {
+      useAP(1);
+      final v = workIncome();
+      cash += v;
+      calcAll();
+      return '受託の仕事を片付け、${yen(v)}を稼ぎました';
+    }
+    if (kind == 'train') {
+      useAP(1);
+      final gn = trainGain();
+      pres.ab[arg!] = math.min(99, pres.ab[arg]! + gn);
+      return '${ABN[arg]}を磨きました（${pres.ab[arg]! - gn} → ${pres.ab[arg]}）';
+    }
+    if (kind == 'net') {
+      if (net >= 5) return '人脈はもう十分に広がっています';
+      useAP(1);
+      net++;
+      return NETMSG[net - 1];
+    }
+    if (kind == 'scout') {
+      useAP(1);
+      return scout();
+    }
+    return null;
+  }
+
+  String borrow(double a) {
+    if (a > borrowLimit() - debt) return '銀行がこれ以上は貸してくれません';
+    debt += a;
+    cash += a;
+    return '${yen(a)}を借りました';
+  }
+
+  String sellLand() {
+    final v = land;
+    if (v <= 0) return '土地を持っていません';
+    cash += v;
+    land = 0;
+    calcAll();
+    return '土地を${yen(v)}で売りました';
+  }
+
+  String repay(double a) {
+    a = math.min(a, math.min(debt, cash));
+    debt -= a;
+    cash -= a;
+    return '${yen(a)}を返しました';
+  }
+
+  String vcRaise() {
+    if (listed) return '上場後は使えません';
+    if (turn - (lastOffer ?? -99) < 12) return '投資家から集めるのは1年に1回までです';
+    lastOffer = turn;
+    if (!canAP(1)) return '今月の手が残っていません';
+    if (sh.own <= 40) return 'これ以上持ち株を減らすと経営権が危うくなります';
+    final money = cap * .1;
+    cash += money;
+    sh.own -= 10;
+    sh.vc += 10;
+    useAP(1);
+    final first = vcDeadline == 0;
+    if (first) vcDeadline = turn + 36;
+    calcAll();
+    return '投資家から${yen(money)}を集めました。持ち株は${pct(sh.own)}に。${first ? '条件は「3年以内に上場すること」です' : '上場の約束は${year + ((vcDeadline - turn + q - 1) / 12).floor()}年まで'}';
+  }
+
+  // ===== お金 =====
+  bool canBond() => rev * 12 >= 5e9 * nom() && econ >= .95 && !(bond > 0);
+  String issueBond() {
+    if (!canBond()) return '今は社債を出せません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    final a = math.max(borrowLimit() * .6, 1e8 * nom());
+    bond = a;
+    bondDue = turn + 60;
+    cash += a;
+    useAP(1);
+    calcAll();
+    return '社債を出して${yen(a)}を集めました。5年後に全額返します。利息は毎月0.25%';
+  }
+
+  // ===== 他社と組む =====
+  List<Deal> dealWith(Company c) => deals.where((d) => d.co == c.id).toList();
+  bool hasDeal(String type, [String? cat]) => deals.any((d) {
+        if (d.type != type) return false;
+        final c = coById(d.co);
+        return c != null && c.alive && (cat == null || c.biz.any((b) => indm[b.ind]!.cat == cat));
+      });
+  bool inAssoc(String ind) => deals.any((d) => d.type == 'assoc' && d.ind == ind);
+  String dealOk(Company c, String type) {
+    if (c.parent == 'player') return 'その会社はもう子会社です';
+    if (c.rel < -20) return '${c.name}はあなたを警戒していて、話に乗りません';
+    if (dealWith(c).any((d) => d.type == type)) return 'すでに組んでいます';
+    return '';
+  }
+
+  String makeDeal(Company c, String type, [String? ind]) {
+    final ng = dealOk(c, type);
+    if (ng.isNotEmpty) return ng;
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    deals.add(Deal(co: c.id, type: type, ind: ind, since: year));
+    c.rel += 10;
+    calcAll();
+    return '${c.name}と「${DEALN[type]}」で組みました';
+  }
+
+  /// 事業の画面の「業界団体に入る」
+  String joinAssoc(Biz b) {
+    final cs = competitors(b);
+    if (cs.isEmpty) return '相手がいません';
+    final c = cs[0].c;
+    final ng = dealOk(c, 'assoc');
+    if (ng.isNotEmpty) return ng;
+    return makeDeal(c, 'assoc', b.ind);
+  }
+
+  String endDeal(Deal d) {
+    deals.remove(d);
+    final c = coById(d.co);
+    if (c != null) c.rel -= 5;
+    calcAll();
+    return '${c != null ? c.name : '相手'}との「${DEALN[d.type]}」を解消しました';
+  }
+
+  String betray(Deal d) {
+    final c = coById(d.co);
+    deals.remove(d);
+    if (c == null) return '相手がいません';
+    final inds = <String>{for (final b in c.biz) b.ind};
+    for (final b in biz) {
+      if (inds.contains(b.ind)) b.power *= 1.1;
+    }
+    for (final b in c.biz) {
+      if (biz.any((x) => x.ind == b.ind)) b.power *= .9;
+    }
+    c.rel -= 50;
+    for (final o in cos) {
+      if (o.alive && o != c) o.rel -= 5;
+    }
+    rep = rep - 10;
+    calcAll();
+    return '${c.name}を裏切り、組んでいた間に知った客を奪いました。${c.name}は激怒し、業界中の評判も落ちました';
+  }
+
+  // ===== 会社の形 =====
+  static String _cultOfTrait(String? t) => t == 'oneman'
+      ? 'sports'
+      : t == 'careful'
+          ? 'steady'
+          : t == 'charm'
+              ? 'family'
+              : t == 'genius'
+                  ? 'free'
+                  : 'merit';
+
+  String spinOff(Biz b) {
+    final p = staffById(b.mgr);
+    if (p == null) return '先に責任者を置いてください。その人が子会社の社長になります';
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    final ind = indm[b.ind]!;
+    final c = mkCo(tierOf(b), ind.cat, presName: p.name, fam: 0);
+    c.presAge = p.age.toDouble();
+    c.parent = 'player';
+    c.stakePlayer = 100;
+    c.biz.add(CoBiz(ind: b.ind, power: b.power));
+    c.g = .008;
+    c.rel = 30;
+    c.culture = _cultOfTrait(p.trait);
+    c.fromStaff = p.trait;
+    staff.remove(p);
+    biz.remove(b);
+    calcAll();
+    return '「${ind.name}」を分社し、${c.name}を作りました。社長は${p.name}。これからは${p.name}が自分の判断で動かします';
+  }
+
+  String releaseBiz(Biz b) {
+    final p = staffById(b.mgr);
+    if (p == null) return '先に責任者を置いてください。その人に事業を渡します';
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    final ind = indm[b.ind]!;
+    final c = mkCo(tierOf(b), ind.cat, presName: p.name, fam: 60);
+    c.presAge = p.age.toDouble();
+    c.biz.add(CoBiz(ind: b.ind, power: b.power));
+    c.stakePlayer = 10;
+    c.rel = 60;
+    c.g = .01;
+    fire(p);
+    biz.remove(b);
+    calcAll();
+    return '「${ind.name}」を${p.name}に渡し、独立させました。${c.name}の株を10%持ちます。${p.name}は恩を忘れないでしょう';
+  }
+
+  String subIPO(Company c) {
+    if (c.parent != 'player' || pctOf(c) < 60) return '株を60%以上持つ子会社だけです';
+    if (c.listed) return 'すでに上場しています';
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    final v = c.cap * .3 * .95;
+    c.stakePlayer -= 30;
+    c.listed = true;
+    cash += v;
+    calcAll();
+    return '${c.name}を上場させ、株を30%売って${yen(v)}を得ました。まだ${pct(pctOf(c))}持っています';
+  }
+
+  String makeHolding() {
+    if (holding) return 'すでに持株会社です';
+    if (biz.length + subs().length < 5) return '事業と子会社が合わせて5つ以上になってからです';
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    holding = true;
+    calcAll();
+    return '持株会社になりました。社長が直接見られる事業の上限がなくなります。本社の経費は5割増えます';
+  }
+
+  String splitCompany(String cat) {
+    final bs = biz.where((b) => indm[b.ind]!.cat == cat).toList();
+    if (bs.isEmpty) return 'その分類の事業がありません';
+    if (bs.length == biz.length) return '全部を切り離すことはできません';
+    if (!listed) return '上場してからです';
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    final c = mkCo(bs.map(tierOf).reduce(math.max), cat, fam: 0);
+    c.biz = bs.map((b) => CoBiz(ind: b.ind, power: b.power * 1.1)).toList();
+    c.stakePlayer = jsRound(sh.own);
+    c.listed = true;
+    c.g = .008;
+    c.rel = 20;
+    c.culture = culture;
+    biz = biz.where((b) => !bs.contains(b)).toList();
+    for (final b in biz) {
+      b.power *= 1.1;
+    }
+    calcAll();
+    return '「${CATN[cat]}」の事業を${c.name}として切り離し、別に上場させました。あなたは新しい会社の株を${pct(pctOf(c))}持ちます。身軽になって、両方の評価が上がりました';
+  }
+
+  // ===== 汚い手 =====
+  double dirtyRisk(String kind, Company? c) {
+    var r = const {'poach': .2, 'spy': .25, 'lobby': .2, 'cook': .3, 'cartel': .25}[kind]! * (1 + .15 * dirty);
+    if (culture == 'steady') r *= .7;
+    if (culture == 'sports') r *= 1.3;
+    if (staff.any((p) => p.trait == 'liar')) r *= 1.3;
+    if (hasT('liar')) r *= .8;
+    if (c != null && c.rel < -30) r *= 1.3;
+    return clampD(r, .05, .9);
+  }
+
+  double dirtyCost(String kind) =>
+      math.max(3e6 * nom(), cap * const {'poach': .005, 'spy': .008, 'lobby': .015, 'cook': .002, 'cartel': .004}[kind]!);
+
+  Biz? cartelBiz(Company c) {
+    final a = biz.where((b) => c.biz.any((x) => x.ind == b.ind)).toList()..ssort((a, b) => b.rev.compareTo(a.rev));
+    if (a.isNotEmpty) return a[0];
+    final all = biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev));
+    return all.firstOrNull;
+  }
+
+  String doDirty(String kind, Company c) {
+    if (!canAP(1)) return '今月の手が残っていません';
+    final cost = dirtyCost(kind);
+    if (cash < cost) return 'お金が足りません';
+    cash -= cost;
+    useAP(1);
+    final caught = rnd() < dirtyRisk(kind, c);
+    dirty++;
+    var m = '';
+    if (kind == 'poach') {
+      final p = mkPerson(1.3);
+      p.salary *= 1.8;
+      staff.add(p);
+      for (final x in c.biz) {
+        x.power *= .93;
+      }
+      c.rel -= 20;
+      m = '${c.name}の腕利き、${p.name}を引き抜きました';
+      if (caught) {
+        final pay = math.max(c.cap * .005, cost * 2);
+        cash -= pay;
+        scandal = math.max(scandal, 6);
+        m += '。しかし訴えられ、賠償金${yen(pay)}を払いました';
+      }
+    }
+    if (kind == 'spy') {
+      final inds = <String>{for (final x in c.biz) x.ind};
+      for (final x in biz) {
+        if (inds.contains(x.ind)) x.power *= 1.12;
+      }
+      for (final x in c.biz) {
+        if (biz.any((y) => y.ind == x.ind)) x.power *= .95;
+      }
+      m = '${c.name}の開発の中身を盗み出しました';
+      if (caught) {
+        scandal = 12;
+        for (final k in abKeys) {
+          pres.ab[k] = math.max(5, pres.ab[k]! - 8);
+        }
+        rest = 1;
+        c.rel -= 40;
+        m += '。ところが発覚して刑事事件になり、社長は取り調べを受けました。信用も能力も落ちました';
+      }
+    }
+    if (kind == 'lobby') {
+      for (final x in c.biz) {
+        x.power *= .9;
+      }
+      m = '政治家を動かし、${c.name}の業種に規制がかかりました';
+      if (caught) {
+        scandal = 12;
+        for (final x in biz) {
+          x.power *= .92;
+        }
+        m += '。しかし汚職事件として報じられ、株価が暴落しました';
+      }
+    }
+    if (kind == 'cook') {
+      cooked = 12;
+      m = '決算の数字を飾りました。1年のあいだ、会社は実際より良く見えます';
+      if (caught) {
+        cooked = 0;
+        scandal = 24;
+        final wl = listed;
+        if (wl) {
+          listed = false;
+          sh.vc += sh.float;
+          sh.float = 0;
+        }
+        m = '粉飾がすぐに発覚しました。${wl ? '上場廃止となり、' : ''}信用は地に落ちました';
+      }
+    }
+    if (kind == 'cartel') {
+      final b = cartelBiz(c);
+      if (b == null) return '事業がありません';
+      b.cartel = 24;
+      m = '「${indm[b.ind]!.name}」で、同業者と値段を決め合いました。2年のあいだ利益が増えます';
+      if (caught) {
+        b.cartel = 0;
+        final fine = b.rev * 12 * .15;
+        cash -= fine;
+        scandal = math.max(scandal, 12);
+        m += '。しかし当局に見つかり、罰金${yen(fine)}を払いました';
+      }
+    }
+    calcAll();
+    return m;
+  }
+
+  // ===== 売り抜け =====
+  List<Company> buyers() {
+    final l = cos.where((c) => c.alive && c.parent != 'player' && c.cap > cap * 1.2).toList()..ssort((a, b) => b.cap.compareTo(a.cap));
+    return l.take(4).toList();
+  }
+
+  double salePrice(bool nc) => cap * (nc ? 1.3 : 1.05) * sh.own / 100;
+
+  String sellCompany(Company c, bool nc) {
+    if (!canAP(1)) return '今月の手が残っていません';
+    if (biz.isEmpty) return '売る事業がありません';
+    final price = salePrice(nc);
+    final old = mkCo(0, 'link', name: '${Game.famOf(pres.name)}グループ', presName: nm(), fam: 0);
+    old.biz = biz.map((b) => CoBiz(ind: b.ind, power: b.power)).toList();
+    old.rel = nc ? 20 : -20;
+    old.g = .006;
+    old.cash = cash * .5;
+    old.formerMine = true;
+    c.rel += 10;
+    final inds = biz.map((b) => b.ind).toList();
+    noncomp = nc ? Noncomp(inds: inds, until: turn + ri(36, 120), buyer: c.id, price: price) : null;
+    final keep = staff.where((p) => p.partner && p.loy >= 60).toList();
+    for (final p in keep) {
+      p.stake = math.min(p.stake, 10);
+    }
+    final pt = keep.fold(0.0, (s, p) => s + p.stake);
+    for (final x in cos) {
+      x.stakePlayer = 0;
+      if (x.parent == 'player') x.parent = null;
+    }
+    biz = [];
+    staff = keep;
+    sh = Shares(own: 100 - pt, pt: pt);
+    listed = false;
+    debt = 0;
+    bond = 0;
+    vcDeadline = 0;
+    tie = null;
+    deals = [];
+    holding = false;
+    cooked = 0;
+    everBiz = false;
+    serial++;
+    wealth = wealth + price * .5;
+    cash = price * .5;
+    calcAll();
+    return '会社を${c.name}に${yen(price)}で売りました。半分を自分の財産に、半分を元手に、新しい会社を立ち上げます${nc ? '。${jsNum(jsRound((noncomp!.until - turn) / 12))}年間は同じ業種に入らない約束です' : ''}${keep.isNotEmpty ? '。相棒の${keep.map((p) => p.name).join('・')}がついてきてくれました' : ''}。前の会社は「${old.name}」として残ります';
+  }
+
+  String breakNoncomp() {
+    if (noncomp == null) return '約束はありません';
+    noncomp!.broken = true;
+    suits.add(Suit(at: turn + 24, against: true, amt: noncomp!.price * .2));
+    scandal = math.max(scandal, 6);
+    return '約束を破ることにしました。2年後に裁判で賠償を求められます';
+  }
+
+  String sellOwn(double x) {
+    if (!listed) return '上場してからです';
+    x = math.min(x, sh.own - 1);
+    if (x <= 0) return '売れる株がありません';
+    final v = cap * x / 100 * .9;
+    wealth = wealth + v;
+    sh.own -= x;
+    sh.float += x;
+    calcAll();
+    return '持ち株を${pct(x)}売り、${yen(v)}を自分の財産にしました';
+  }
+
+  String goPrivate() {
+    if (!listed) return '上場していません';
+    final out = sh.float + sh.rivSum;
+    final cost = cap * out / 100 * 1.3;
+    if (cash < cost) return 'お金が足りません（${yen(cost)} 必要）';
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    cash -= cost;
+    sh.own += out;
+    sh.float = 0;
+    for (final i in sh.riv.keys.toList()) {
+      final c = coById(i);
+      if (c != null) c.cash += cap * sh.riv[i]! / 100 * 1.3;
+      sh.riv[i] = 0;
+    }
+    listed = false;
+    calcAll();
+    return '市場の株をすべて買い戻し、非上場に戻しました。乗っ取られる心配はなくなります';
+  }
+
+  void rivalDefeated(Company c) {
+    if (c.rival == null || c.rival!.gone) return;
+    c.rival!.gone = true;
+    ret.add(Return(at: turn + ri(24, 72), fam: Game.famOf(c.presName), west: c.presName.contains('・'), col: c.rival!.col, from: c.name));
+  }
+
+  // ===== 社風 =====
+  String changeCulture(String x) {
+    if (cultLeft > 0) return '社風を切り替えている途中です';
+    if (culture == x) return 'すでにその社風です';
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    cultNext = x;
+    cultLeft = 24;
+    return '社風を「${CULT[x]!.n}」に切り替え始めました。変わるまで2年かかり、その間は人が辞めやすくなります';
+  }
+
+  String cultureOf(Company c) {
+    c.culture ??= pick(CULT.keys.toList());
+    return c.culture!;
+  }
+
+  // ===== 上場・増資 =====
+  void _dilute(double k) {
+    sh.own *= k;
+    sh.vc *= k;
+    sh.ally *= k;
+    sh.pt = sh.pt * k;
+    for (final i in sh.riv.keys.toList()) {
+      sh.riv[i] = sh.riv[i]! * k;
+    }
+  }
+
+  String publicOffer() {
+    if (!listed) return '上場してから使えます';
+    if (turn - (lastOffer ?? -99) < 12) return '増資は1年に1回までです';
+    if (!canAP(1)) return '今月の手が残っていません';
+    lastOffer = turn;
+    final money = cap * .1 * .95;
+    const k = 100 / 110;
+    _dilute(k);
+    sh.float = sh.float * k + 10 * k;
+    cash += money;
+    useAP(1);
+    calcAll();
+    return '新しい株を市場に出し、${yen(money)}を集めました。持ち株は${pct(sh.own)}に下がりました';
+  }
+
+  bool canIPO() => !listed && pre * 12 >= 3e8 * nom() && turn >= 24;
+  String ipo() {
+    if (!canIPO()) return '上場の条件を満たしていません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    final money = cap * .25;
+    cash += money;
+    const k = 100 / 120;
+    _dilute(k);
+    sh.float = sh.float * k + 20 * k;
+    sh.float += sh.vc;
+    sh.vc = 0;
+    listed = true;
+    vcDeadline = 0;
+    useAP(1);
+    calcAll();
+    return '上場しました！${yen(money)}が入り、ここからは誰でもあなたの株を買えます';
+  }
+
+  void normSh() {
+    final t = sh.own + sh.vc + sh.ally + sh.pt + sh.float + sh.rivSum;
+    final k = 100 / t;
+    sh.own *= k;
+    sh.pt = sh.pt * k;
+    sh.vc *= k;
+    sh.ally *= k;
+    sh.float *= k;
+    for (final i in sh.riv.keys.toList()) {
+      sh.riv[i] = sh.riv[i]! * k;
+    }
+  }
+
+  String doBuyback(double x) {
+    x = math.min(x, sh.float);
+    final cost = cap * x / 100 * 1.15;
+    if (cash < cost) return 'お金が足りません';
+    cash -= cost;
+    sh.float -= x;
+    normSh();
+    liarCheck();
+    return '自社株を${pct(x)}買い戻しました';
+  }
+
+  /// 株の画面の「自社株買い 5%」（手を1つ使う）
+  String buybackAct() {
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    return doBuyback(math.min(sh.float, 5));
+  }
+
+  /// 株の画面の「ホワイトナイトを頼む」（手を1つ使う）
+  String whiteKnightAct() {
+    if (!canAP(1)) return '今月の手が残っていません';
+    useAP(1);
+    return doWhiteKnight();
+  }
+
+  String doWhiteKnight() {
+    final l = cos.where((c) => c.alive && c.rival == null && c.parent != 'player' && c.tier == 0).toList()..ssort((a, b) => b.cap.compareTo(a.cap));
+    final ally = l.firstOrNull;
+    if (ally == null) return '頼める相手がいません';
+    final cost = ally.cap * .05;
+    if (cash < cost) return '${ally.name}の株を買うお金が足りません';
+    cash -= cost;
+    ally.stakePlayer = ally.stakePlayer + 5;
+    final x = math.min(10.0, sh.float);
+    sh.float -= x;
+    sh.ally += x;
+    liarCheck();
+    return '${ally.name}がホワイトナイトになり、株を${pct(x)}持ってくれました';
+  }
+
+  String doDilute() {
+    cash += cap * .15 * .9;
+    sh.ally += 15;
+    normSh();
+    liarCheck();
+    calcAll();
+    return '新しい株を味方に渡し、相手の割合を薄めました';
+  }
+
+  void liarCheck() {
+    if (hasT('liar') && rnd() < .15) {
+      scandal = 12;
+      sh.ally = math.max(0, sh.ally - 5);
+      sh.float += 5;
+      log.add(LogEntry('株の裏工作がばれ、信用を失いました', 'bad', year, q));
+    }
+  }
+
+  // 地域ごとの進出（試作では画面から外してある。仕組みだけ残す）
+  double expandCost() => region == 0 ? 2e10 * nom() : 5e11 * nom();
+  double expandNeed() => (region == 0 ? 1e11 : 2e12) * nom();
+  bool canExpand() => region < 2 && rev * 12 >= expandNeed();
+  String expand() {
+    if (!canExpand()) return 'まだ売上が足りません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    final c = expandCost();
+    if (cash < c) return 'お金が足りません';
+    cash -= c;
+    region++;
+    for (final b in biz) {
+      b.power *= 1.2;
+    }
+    useAP(1);
+    calcAll();
+    return '${REGN[region]}に進出しました！市場が大きくなり、海外の会社とも競います';
+  }
+
+  // ===== 株の攻め =====
+  double floatOf(Company c) => math.max(0, 100 - c.fam - c.stakePlayer);
+
+  String buyStake(Company c, double x) {
+    if (!canAP(1)) return '今月の手が残っていません';
+    x = math.min(x, floatOf(c));
+    if (x <= 0) return '市場に株が残っていません';
+    final cost = c.cap * x / 100 * 1.05;
+    if (cash < cost) return 'お金が足りません';
+    final before = pctOf(c);
+    cash -= cost;
+    c.stakePlayer = before + x;
+    useAP(1);
+    liarCheck();
+    var msg = '${c.name}の株を${pct(x)}買いました（${yen(cost)}）。持ち株は${pct(c.stakePlayer)}';
+    if (before < 5 && c.stakePlayer >= 5) {
+      msg += '。相手に気づかれました';
+      c.rel -= 20;
+      if (c.rival != null && (c.rival!.type == 'zaibatsu' || c.rival!.type == 'state')) {
+        c.fam = math.min(70, c.fam + 8);
+        msg += '。${c.rival!.pres}は守りを固めています';
+      }
+    }
+    afterStake(c);
+    return msg;
+  }
+
+  double tobChance(Company c, double target) {
+    var p = .55 + (pres.ab['zai']! - 50) / 200;
+    if (hasT('charm')) p += .15;
+    if (hasT('gambler')) p += .2;
+    if (c.rival != null) {
+      p -= c.rival!.type == 'state'
+          ? .35
+          : c.rival!.type == 'zaibatsu'
+              ? .2
+              : .1;
+    }
+    if (c.fam > 50) p -= .3;
+    if (target > 60) p -= .1;
+    return clampD(p, .05, .95);
+  }
+
+  double tobCost(Company c, double target) => c.cap * math.max(0, target - pctOf(c)) / 100 * 1.3;
+
+  String tob(Company c, double target) {
+    if (!canAP(1)) return '今月の手が残っていません';
+    final cost = tobCost(c, target);
+    if (cash < cost) return 'お金が足りません（${yen(cost)} 必要）';
+    useAP(1);
+    liarCheck();
+    if (rnd() < tobChance(c, target)) {
+      cash -= cost;
+      final need = target - pctOf(c);
+      final fromFloat = math.min(need, floatOf(c));
+      c.fam -= math.max(0, need - fromFloat);
+      c.stakePlayer = target;
+      c.rel -= 30;
+      afterStake(c);
+      return 'TOB成功！${c.name}の株を${pct(target)}まで買い取りました';
+    }
+    cash -= cost * .03;
+    c.rel -= 20;
+    return 'TOBは失敗しました。株主が応じてくれませんでした（手数料 ${yen(cost * .03)}）';
+  }
+
+  void afterStake(Company c) {
+    if (pctOf(c) > 50 && c.parent != 'player') {
+      c.parent = 'player';
+      rivalDefeated(c);
+      log.add(LogEntry('${c.name}を子会社にしました', 'big', year, q));
+    }
+    calcAll();
+  }
+
+  String sellStake(Company c) {
+    final x = pctOf(c);
+    final v = c.cap * x / 100 * .95;
+    cash += v;
+    c.stakePlayer = 0;
+    if (c.parent == 'player') c.parent = null;
+    calcAll();
+    return '${c.name}の株を手放し、${yen(v)}を得ました';
+  }
+
+  bool canMerge(Company c) => pctOf(c) >= 66.7 && sh.rivMax < 33.4;
+
+  String merge(Company c) {
+    if (!canMerge(c)) return '合併の条件を満たしていません';
+    if (!canAP(1)) return '今月の手が残っていません';
+    final rest0 = c.cap * (100 - pctOf(c)) / 100;
+    final n = rest0 / (cap + rest0);
+    if (listed) {
+      final k = 1 - n;
+      _dilute(k);
+      sh.float = sh.float * k + n * 100;
+    } else {
+      sh.own *= 1 - n;
+      sh.pt = sh.pt * (1 - n);
+      sh.vc += n * 100;
+    }
+    useAP(1);
+    for (final b in c.biz) {
+      final ex = biz.where((x) => x.ind == b.ind).firstOrNull;
+      if (ex != null) {
+        ex.power += b.power;
+        ex.crew = crewOf(ex) + b.power * 1.2;
+      } else {
+        biz.add(Biz(id: uid(), ind: b.ind, power: b.power, crew: b.power * 1.2));
+      }
+    }
+    if (cultureOf(c) != culture) {
+      for (final qq in staff) {
+        qq.loy -= 10;
+      }
+      for (final b in biz) {
+        if (c.biz.any((x) => x.ind == b.ind)) b.power *= .92;
+      }
+      log.add(LogEntry('${c.name}は「${CULT[cultureOf(c)]!.n}」の会社でした。社風がぶつかり、社内が揺れています', 'bad', year, q));
+    }
+    rivalDefeated(c);
+    cash += c.cash;
+    c.alive = false;
+    final p = mkPerson(.4);
+    p.name = c.presName;
+    p.age = jsRound(c.presAge).toInt();
+    staff.add(p);
+    if (sh.riv.containsKey(c.id)) {
+      sh.float += sh.riv[c.id]!;
+      sh.riv.remove(c.id);
+    }
+    calcAll();
+    return '${c.name}を合併しました。事業はすべてあなたのものです。${p.name}が部下に加わりました';
+  }
+
+  double swapChance(Company c) => clampD(tobChance(c, 100) + (c.rel > 20 ? .15 : 0) - (c.cap > cap * .5 ? .15 : 0), .05, .9);
+
+  String shareSwap(Company c) {
+    if (!listed) return '上場してからです';
+    if (c.parent == 'player' && pctOf(c) >= 66.7) return 'そのまま合併できます';
+    if (c.cap > cap) return '自分より大きな会社は、株式交換では買えません';
+    if (sh.rivMax >= 33.4) return '宿敵に株を33.4%以上握られていて、株式交換を止められます';
+    if (!canAP(1)) return '今月の手が残っていません';
+    if (rnd() > swapChance(c)) {
+      useAP(1);
+      c.rel -= 15;
+      return '${c.name}の経営陣が反対し、株式交換は流れました';
+    }
+    final rest0 = c.cap * (100 - pctOf(c)) / 100;
+    final n = rest0 / (cap + rest0);
+    final k = 1 - n;
+    _dilute(k);
+    sh.float = sh.float * k + n * 100;
+    c.stakePlayer = 100;
+    final m = merge(c);
+    return '株式交換で${c.name}を丸ごと買いました。あなたの持ち株は${pct(sh.own)}に下がりました。$m';
+  }
+
+  List<RankRow> rankList() {
+    final L = cos.where((c) => c.alive && c.parent != 'player').map((c) => RankRow(c.name, c.cap, c: c)).toList();
+    L.add(RankRow('あなたのグループ', cap + wealth, me: true));
+    L.ssort((a, b) => b.cap.compareTo(a.cap));
+    return L;
+  }
+
+  String choosePresSucc(int? id) {
+    succ = id;
+    return '後継ぎを決めました';
+  }
+
+  String retire() {
+    Person? s;
+    if (succ != null) s = staffById(succ) ?? kids.where((k) => k.id == succ).firstOrNull;
+    if (s == null) return '先に後継ぎを決めてください';
+    final old = pres.name;
+    takeOver(s);
+    calcAll();
+    return '$oldが引退し、${s.name}が社長になりました';
+  }
+}
