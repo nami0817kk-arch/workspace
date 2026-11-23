@@ -24,6 +24,7 @@ extension GameActions on Game {
     if (hasT('genius')) p *= .5 + rnd() * 1.7;
     final early = yr() - ind.b < 3;
     biz.add(Biz(id: uid(), ind: id, early: early ? turn + 60 : 0, model: model ?? 'direct', power: p, crew: p * 1.2));
+    if (free) chron('first_biz', '${serial > 0 ? '新しい会社で' : '最初の事業として'}「${ind.name}」を始めた');
     calcAll();
     return '「${ind.name}」を${MODELN[model ?? 'direct']}で始めました（元手 ${yen(c)}）';
   }
@@ -74,6 +75,9 @@ extension GameActions on Game {
   }
 
   void addCtry(Biz b, String c, String mode, double pw) {
+    if (c != home && !biz.any((x) => ctryOf(x).contains(c))) {
+      chron('abroad', '${cm[c]!.n}に進出した（「${indm[b.ind]!.name}」・${ENTRYN[mode]}）');
+    }
     b.ctry = ctryOf(b).toList();
     if (!b.ctry!.contains(c)) b.ctry!.add(c);
     if (mode == 'jv') {
@@ -389,6 +393,7 @@ extension GameActions on Game {
       sh.own -= x;
       sh.pt = sh.pt + x;
       staff.add(p);
+      chron('partner', '${p.name}（${p.age}歳）が相棒になった。株を$x%渡した');
       var m = '${p.name}が相棒になりました。株を$x%渡しました';
       if (p.money != null && p.money != 0) {
         cash += p.money!;
@@ -805,6 +810,7 @@ extension GameActions on Game {
     old.formerMine = true;
     c.rel += 10;
     final inds = biz.map((b) => b.ind).toList();
+    chron('sold', '会社を${c.name}に${yen(price)}で売った。前の会社は「${old.name}」として残る');
     noncomp = nc ? Noncomp(inds: inds, until: turn + ri(36, 120), buyer: c.id, price: price) : null;
     final keep = staff.where((p) => p.partner && p.loy >= 60).toList();
     for (final p in keep) {
@@ -937,6 +943,7 @@ extension GameActions on Game {
     vcDeadline = 0;
     useAP(1);
     calcAll();
+    chron('ipo', '株式を上場した。${yen(money)}が入った（時価総額 ${yen(cap)}）');
     return '上場しました！${yen(money)}が入り、ここからは誰でもあなたの株を買えます';
   }
 
@@ -1027,6 +1034,7 @@ extension GameActions on Game {
     }
     useAP(1);
     calcAll();
+    chron('abroad', '${REGN[region]}に進出した');
     return '${REGN[region]}に進出しました！市場が大きくなり、海外の会社とも競います';
   }
 
@@ -1101,6 +1109,7 @@ extension GameActions on Game {
       c.parent = 'player';
       rivalDefeated(c);
       log.add(LogEntry('${c.name}を子会社にしました', 'big', year, q));
+      chron('buy', '${c.name}${c.rival != null ? '（宿敵）' : ''}の株を${pct(pctOf(c))}握り、子会社にした');
     }
     calcAll();
   }
@@ -1117,7 +1126,7 @@ extension GameActions on Game {
 
   bool canMerge(Company c) => pctOf(c) >= 66.7 && sh.rivMax < 33.4;
 
-  String merge(Company c) {
+  String merge(Company c, {bool viaSwap = false}) {
     if (!canMerge(c)) return '合併の条件を満たしていません';
     if (!canAP(1)) return '今月の手が残っていません';
     final rest0 = c.cap * (100 - pctOf(c)) / 100;
@@ -1162,6 +1171,11 @@ extension GameActions on Game {
       sh.riv.remove(c.id);
     }
     calcAll();
+    if (viaSwap) {
+      chron('swap', '株式交換で${c.name}${c.rival != null ? '（宿敵）' : ''}を丸ごと買い、合併した。持ち株は${pct(sh.own)}に');
+    } else {
+      chron('merge', '${c.name}${c.rival != null ? '（宿敵）' : ''}を合併した');
+    }
     return '${c.name}を合併しました。事業はすべてあなたのものです。${p.name}が部下に加わりました';
   }
 
@@ -1184,7 +1198,7 @@ extension GameActions on Game {
     _dilute(k);
     sh.float = sh.float * k + n * 100;
     c.stakePlayer = 100;
-    final m = merge(c);
+    final m = merge(c, viaSwap: true);
     return '株式交換で${c.name}を丸ごと買いました。あなたの持ち株は${pct(sh.own)}に下がりました。$m';
   }
 

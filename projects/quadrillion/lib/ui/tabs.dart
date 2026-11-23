@@ -389,7 +389,9 @@ Widget _bizCard(GameController ctl, Biz b) {
         if (!s.inAssoc(b.ind) && cs.isNotEmpty) Btn('業界団体に入る', () => ctl.act(() => s.joinAssoc(b), mark: 'act'), small: true),
         if (s.modelsFor(b.ind).length > 1) Btn('稼ぎ方を変える', () => openModel(ctl, b.ind, b), small: true),
         if (s.pivotTargets(b).isNotEmpty) Btn('業態を変える', () => openPivot(ctl, b), small: true),
-        Btn('売る（約${yen(s.sellValue(b))}）', () => ctl.act(() => s.sellBiz(b)), small: true),
+        Btn('売る（約${yen(s.sellValue(b))}）',
+            () => actConfirmed(ctl, '「${ind.name}」を売る', '「${ind.name}」を約${yen(s.sellValue(b))}で手放します。育てた力は戻りません。', '売る', () => s.sellBiz(b)),
+            small: true),
       ]),
     ]),
   );
@@ -514,7 +516,12 @@ List<Widget> peopleTab(GameController ctl) {
               ctl.save();
               ctl.render();
             }, small: true),
-          Btn(p.partner ? '相棒と別れる' : '解雇', () => ctl.act(() => s.dismiss(p)), small: true),
+          Btn(
+              p.partner ? '相棒と別れる' : '解雇',
+              () => p.partner
+                  ? actConfirmed(ctl, '相棒と別れる', '${p.name}は会社を去り、持っている株${pct(p.stake)}は${s.listed ? '市場で売られます' : '投資家の手に渡ります'}。', '別れる', () => s.dismiss(p))
+                  : actConfirmed(ctl, '解雇', '${p.name}を解雇します。もう呼び戻せません。', '解雇する', () => s.dismiss(p)),
+              small: true),
         ]),
       ])),
     ])));
@@ -759,6 +766,38 @@ List<Widget> numTab(GameController ctl) {
   }
   out.add(Panel(child: Column(children: lines)));
   out.add(const Muted('★ は宿敵', size: 12));
+  out.addAll(chronSection(s));
+  return out;
+}
+
+/// 社史の色（種類ごと）
+Color chronColor(String k) => switch (k) {
+      'found' || 'ipo' || 'rank' || 'won' || 'swap' || 'merge' || 'buy' || 'sold' => Pal.gold,
+      'over' || 'rebirth' || 'partner_out' => Pal.down,
+      'era' => Pal.line,
+      _ => Pal.up,
+    };
+
+/// 「数字」の下の社史（新しい順）
+List<Widget> chronSection(Game s) {
+  final out = <Widget>[const H2('社史')];
+  if (s.history.isEmpty) {
+    out.add(const Muted('まだ記録がありません。上場・買収・海外進出などの節目がここに残ります。'));
+    return out;
+  }
+  out.add(Panel(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+    for (final e in s.history.reversed)
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Pal.line))),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(width: 84, child: Text('${e.y}年${e.q}月', style: ts(size: 12.5, color: Pal.mute))),
+          Container(width: 3, height: 16, margin: const EdgeInsets.only(right: 8, top: 2), color: chronColor(e.k)),
+          Expanded(child: Text(e.m, style: ts(size: 13, height: 1.45))),
+        ]),
+      ),
+  ])));
   return out;
 }
 

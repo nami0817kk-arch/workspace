@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../game/game.dart';
+import '../version.dart';
 import 'controller.dart';
 import 'guide.dart';
 import 'widgets.dart';
@@ -11,6 +12,27 @@ Widget _col(List<Widget> c) => Column(crossAxisAlignment: CrossAxisAlignment.str
 Widget _note(String s) => Padding(padding: const EdgeInsets.only(bottom: 8), child: Muted(s));
 Widget _cancel(GameController ctl, [String label = 'やめる']) =>
     Padding(padding: const EdgeInsets.only(top: 10), child: Align(alignment: Alignment.centerLeft, child: Btn(label, ctl.closeSheet)));
+
+/// 取り返しのつかない操作の前に「本当によいか」を1回聞く小窓。[onYes] は「する」を押したときだけ動く
+void confirmThen(GameController ctl, {required String title, required String text, required String yes, required VoidCallback onYes}) {
+  ctl.showSheet((_) => _col([
+        H2(title, top: true),
+        Padding(padding: const EdgeInsets.only(bottom: 6), child: Text(text, style: ts(height: 1.5))),
+        const Padding(padding: EdgeInsets.only(bottom: 12), child: Muted('この操作は取り消せません。本当によいですか？')),
+        Wrap(spacing: 8, runSpacing: 8, children: [
+          Btn('やめる', ctl.closeSheet),
+          DangerBtn(yes, onYes),
+        ]),
+      ]));
+}
+
+/// 確認してから手を打つ（売る・解雇など）
+void actConfirmed(GameController ctl, String title, String text, String yes, String? Function() fn) =>
+    confirmThen(ctl, title: title, text: text, yes: yes, onYes: () => ctl.act(fn));
+
+/// 確認してから、はじめの画面に戻る（セーブは消える）
+void confirmRestart(GameController ctl) =>
+    confirmThen(ctl, title: 'はじめから', text: '今の会社の続きは消え、はじめの画面に戻ります。', yes: 'はじめからにする', onYes: ctl.backToSetup);
 
 void openIntro(GameController ctl) {
   final s = ctl.game!;
@@ -176,7 +198,12 @@ void openDirty(GameController ctl, Company c) {
         H2('${c.name}への裏の手', top: true),
         _note('手を1つ使います。使うほど、ばれやすくなります。'),
         for (final k in DIRTYN.keys)
-          ChoiceBtn('${DIRTYN[k]}（${yen(s.dirtyCost(k))}・ばれる見込み ${jsNum(jsRound(s.dirtyRisk(k, c) * 100))}%）', () => ctl.act(() => s.doDirty(k, c)),
+          ChoiceBtn(
+              '${DIRTYN[k]}（${yen(s.dirtyCost(k))}・ばれる見込み ${jsNum(jsRound(s.dirtyRisk(k, c) * 100))}%）',
+              () => k == 'cook'
+                  ? actConfirmed(ctl, '粉飾決算', '決算の数字を飾ります。ばれる見込みは${jsNum(jsRound(s.dirtyRisk(k, c) * 100))}%。ばれると${s.listed ? '上場廃止になり、' : ''}信用は2年のあいだ地に落ちます。',
+                      '粉飾する', () => s.doDirty(k, c))
+                  : ctl.act(() => s.doDirty(k, c)),
               enabled: !(s.cash < s.dirtyCost(k) || s.ap < 1),
               subs: ['${DIRTYD[k]}${k == 'cartel' && s.cartelBiz(c) != null ? '。対象は「${indm[s.cartelBiz(c)!.ind]!.name}」' : ''}']),
         _cancel(ctl),
@@ -197,8 +224,16 @@ void openSell(GameController ctl) {
               Muted('時価総額 ${yen(c.cap)}'),
               const SizedBox(height: 4),
               Wrap(spacing: 6, runSpacing: 6, children: [
-                Btn('約束を付けて売る ${yen(s.salePrice(true))}', () => ctl.act(() => s.sellCompany(c, true)), small: true),
-                Btn('約束なしで売る ${yen(s.salePrice(false))}', () => ctl.act(() => s.sellCompany(c, false)), small: true),
+                for (final nc in const [true, false])
+                  Btn(
+                      '${nc ? '約束を付けて' : '約束なしで'}売る ${yen(s.salePrice(nc))}',
+                      () => actConfirmed(
+                          ctl,
+                          '会社を丸ごと売る',
+                          '${c.name}に、今の会社を${yen(s.salePrice(nc))}で売ります。事業と部下は手放し、新しい会社をゼロから始めます。${nc ? '何年かは同じ業種に入れません。' : ''}',
+                          '売る',
+                          () => s.sellCompany(c, nc)),
+                      small: true),
               ]),
             ]),
           ),
@@ -297,6 +332,22 @@ void showHelp(GameController ctl) {
       ]));
 }
 
+// ===== 設定 =====
+void openSettings(GameController ctl) {
+  ctl.showSheet((context) => _col([
+        const H2('設定', top: true),
+        ChoiceBtn('遊び方', () => showHelp(ctl), subs: const ['手・事業・人・株のしくみ']),
+        ChoiceBtn('はじめから', () => confirmRestart(ctl), subs: const ['今の会社の続きを消して、はじめの画面に戻る（確認があります）']),
+        ChoiceBtn('フォントのライセンス', () {
+          // 小窓を閉じる前に開く（閉じると context が外れる）
+          showLicensePage(context: context, applicationName: 'クアドリリオン', applicationVersion: appVersion);
+          ctl.closeSheet();
+        }, subs: const ['Noto Sans JP（SIL Open Font License）ほか']),
+        Padding(padding: const EdgeInsets.symmetric(vertical: 6), child: Kv('版', appVersion)),
+        _cancel(ctl, '閉じる'),
+      ]));
+}
+
 // ===== 月を進める =====
 class ReportBase {
   final double cap, cash;
@@ -307,7 +358,9 @@ class ReportBase {
 void doNext(GameController ctl) {
   final s = ctl.game!;
   final before = ReportBase(s.cap, s.cash);
+  final snap = ctl.snap();
   final news = s.nextQuarter();
+  ctl.buzzAfter(snap, news);
   ctl.save();
   if (news.isEmpty && s.q % 3 != 1 && s.events.isEmpty && s.over == null && s.won == null) {
     ctl.render();
@@ -320,10 +373,12 @@ void doYear(GameController ctl, [int n = 12]) {
   final s = ctl.game!;
   final before = ReportBase(s.cap, s.cash, '${s.year}年 ${s.q}月から');
   final all = <LogEntry>[];
+  final snap = ctl.snap();
   for (var i = 0; i < n; i++) {
     all.addAll(s.nextQuarter());
     if (s.events.isNotEmpty || s.over != null || s.won != null) break;
   }
+  ctl.buzzAfter(snap, all);
   ctl.save();
   showReport(ctl, all, before);
 }
@@ -403,7 +458,9 @@ void nextEvent(GameController ctl) {
         const SizedBox(height: 8),
         for (final c in e.choices)
           ChoiceBtn(c.l, () {
+            final snap = ctl.snap();
             final m = c.f();
+            ctl.buzzAfter(snap, [LogEntry(m)]);
             ctl.save();
             ctl.showSheet((_) => ToastBody(msg: m, onOk: () => nextEvent(ctl)));
           }, subs: [c.s]),

@@ -27,6 +27,9 @@ final Map<String, Industry> indm = {for (final i in IND) i.id: i};
 final Map<String, Country> cm = {for (final x in CTRY) x.c: x};
 const Set<String> eastPools = {'zh', 'ko', 'vi'};
 
+/// 社史に残す世界ランキングの節目（小さい順。一度に越えたら一番上の節目だけ残す）
+const List<int> rankMarks = [1, 3, 10, 50, 100];
+
 /// JS の sort と同じく、同じ値の並びを崩さない並べ替え
 extension StableSort<T> on List<T> {
   void ssort(int Function(T a, T b) cmp) {
@@ -179,6 +182,24 @@ class Game {
 
   /// 初めて遊ぶ人への案内の進み（仕組みの数字には使わない）。'start' があれば案内を出す
   Map<String, int> guide = {};
+
+  /// 社史（古い順に積む。乱数は使わず、記録だけ足す）
+  List<Chron> history = [];
+
+  /// これまでの時価総額と財産の最大（終わったときのまとめに使う）
+  double maxCap = 0, maxWealth = 0;
+
+  /// 社史に1行足す（乱数を使わない）
+  void chron(String k, String m) {
+    history.add(Chron(year, q, k, m));
+    if (history.length > 400) history.removeAt(0);
+  }
+
+  /// 時価総額・財産の最大を更新する
+  void trackPeaks() {
+    if (cap > maxCap) maxCap = cap;
+    if (wealth > maxWealth) maxWealth = wealth;
+  }
 
   double yr() => year + (q - 1) / 12;
   double nom() => nomOf(yr());
@@ -424,6 +445,9 @@ class Game {
     reg = regFor(yr());
     calcAll();
     log.add(LogEntry('$year年、${pres.name}は${hasT('noble') ? '親の援助を受けて' : 'わずかな元手で'}会社を立ち上げた。手元の資金は${yen(cash)}。', 'big'));
+    history = [];
+    chron('found', '${pres.name}（${pres.age}歳）が${cm[home]!.n}で会社を立ち上げた。元手は${yen(cash)}');
+    trackPeaks();
   }
 
   void normalizeAll(bool init) {
@@ -765,6 +789,9 @@ class Game {
         // 試作は保存せず読み込みで作り直していた（月の途中の値になり、続きが少しずれる）。ずれないように持つ
         'indM': indM,
         'guide': guide,
+        'history': history.map((e) => e.toJson()).toList(),
+        'maxCap': maxCap,
+        'maxWealth': maxWealth,
       };
 
   static Game fromJson(Map<String, dynamic> j, {math.Random? rng}) {
@@ -838,12 +865,21 @@ class Game {
       ..deals = l('deals', Deal.fromJson)
       ..tie = j['tie'] == null ? null : Tie.fromJson(j['tie'] as Map<String, dynamic>)
       ..noncomp = j['noncomp'] == null ? null : Noncomp.fromJson(j['noncomp'] as Map<String, dynamic>)
-      ..guide = mi('guide');
+      ..guide = mi('guide')
+      // 社史と最大値は 1.0.0+3 から。古いセーブでは空から始める
+      ..history = l('history', Chron.fromJson)
+      ..maxCap = d('maxCap')
+      ..maxWealth = d('maxWealth');
     s.events = [];
     s.reg = regFor(s.yr());
     final saved = j['indM'] as Map?;
     s.indM = {for (final ind in IND) ind.id: saved != null && saved[ind.id] != null ? (saved[ind.id] as num).toDouble() : s.mkt(ind)};
     s.calcAll();
+    // 古いセーブには最大値がないので、残っている推移から埋める
+    for (final h in s.hist) {
+      if (h.cap > s.maxCap) s.maxCap = h.cap;
+    }
+    s.trackPeaks();
     return s;
   }
 }
