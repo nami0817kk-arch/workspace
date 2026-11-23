@@ -40,6 +40,11 @@ void main() {
     ('ja', false, 1.0),
     ('en', true, 1.0),
     ('ja_big', false, 1.3),
+    // 文字1.5倍・英語の大きい文字でも崩れないこと(2026-11-23 に、最後通告の
+    // 札・季の終わりの札・左のメニュー・上の帯などを直した)。
+    ('ja_huge', false, 1.5),
+    ('en_big', true, 1.3),
+    ('en_huge', true, 1.5),
   ]) {
     testWidgets('landscape usability $mode', (tester) async {
       addTearDown(tester.view.reset);

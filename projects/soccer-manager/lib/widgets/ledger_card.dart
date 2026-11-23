@@ -153,7 +153,9 @@ class LedgerCard extends StatelessWidget {
                 value: ratio.clamp(0.0, 1.0),
                 minHeight: 6,
                 color: levelColor(),
-                backgroundColor: Colors.grey.shade300,
+                // 暗い表示でほぼ白の帯が浮いていたので、テーマの色にする。
+                backgroundColor:
+                    Theme.of(context).colorScheme.surfaceContainerHighest,
               ),
             ),
             const SizedBox(height: 4),

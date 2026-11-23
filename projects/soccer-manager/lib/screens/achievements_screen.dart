@@ -84,7 +84,9 @@ class AchievementsScreen extends StatelessWidget {
                               value:
                                   all.isEmpty ? 0 : unlockedCount / all.length,
                               strokeWidth: 4,
-                              backgroundColor: Colors.grey.shade300,
+                              // 暗い表示でほぼ白の帯が浮いていたので、テーマの色にする。
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.surfaceContainerHighest,
                             ),
                             Text(
                               all.isEmpty
@@ -265,7 +267,9 @@ class _AchievementTile extends StatelessWidget {
                             ? 0
                             : (progress.$1 / progress.$2).clamp(0.0, 1.0),
                         minHeight: 6,
-                        backgroundColor: Colors.grey.shade300,
+                        // 暗い表示でほぼ白の帯が浮いていたので、テーマの色にする。
+                        backgroundColor:
+                            Theme.of(context).colorScheme.surfaceContainerHighest,
                       ),
                     ),
                   ),

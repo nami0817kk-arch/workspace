@@ -382,7 +382,9 @@ class _FmTopBar extends StatelessWidget {
                           child: Text(
                             Tr.pick(
                                 '${CalendarEngine.formatShortDate(gameState.today)}  第${league.season}季',
-                                '${CalendarEngine.formatShortDate(gameState.today)}  Season ${league.season}'),
+                                // 英語は短い形(「Season 1」は文字1.3倍で
+                                // 「…」に切れていた)。ホームの帯と同じ S1。
+                                '${CalendarEngine.formatShortDate(gameState.today)}  S${league.season}'),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: sub,
@@ -536,6 +538,8 @@ class _FmSidebar extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: on ? FontWeight.bold : FontWeight.normal,
@@ -547,37 +551,44 @@ class _FmSidebar extends StatelessWidget {
           ),
         );
 
-    return Container(
-      width: 88,
-      color: scheme.surfaceContainerLow,
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (final (p, icon, selectedIcon, label) in entries)
-                    item(
-                      on: page == p,
-                      label: label,
-                      onTap: () => onSelect(p),
-                      icon: () {
-                        final i = Icon(
-                          page == p ? selectedIcon : icon,
-                          size: 22,
-                          color: page == p
-                              ? scheme.primary
-                              : scheme.onSurfaceVariant,
-                        );
-                        final n = badges[p] ?? 0;
-                        return n > 0 ? Badge(label: Text('$n'), child: i) : i;
-                      }(),
-                    ),
-                ],
+    // 文字の大きさの設定は少しだけ効かせる。1.5倍では7項目が詰まり、
+    // 件数の印がアイコンを隠していた(上の帯と同じ作り)。
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: 1.2,
+      child: Container(
+        width: 88,
+        color: scheme.surfaceContainerLow,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (final (p, icon, selectedIcon, label) in entries)
+                      item(
+                        on: page == p,
+                        label: label,
+                        onTap: () => onSelect(p),
+                        icon: () {
+                          final i = Icon(
+                            page == p ? selectedIcon : icon,
+                            size: 22,
+                            color: page == p
+                                ? scheme.primary
+                                : scheme.onSurfaceVariant,
+                          );
+                          final n = badges[p] ?? 0;
+                          return n > 0
+                              ? Badge(label: Text('$n'), child: i)
+                              : i;
+                        }(),
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
