@@ -1521,6 +1521,71 @@ void main() {
       expect(seen.length, greaterThanOrEqualTo(12), reason: '$seen');
     });
 
+    test('能力・暮らしと嗜み・寺の手習いの旗や縁が、何年もあとに返ってくる（伏線の回収 その2）', () {
+      const flags = [
+        'tera_friends',
+        'tera_diligent',
+        'ps_renga_praised',
+        'ps_renga_report',
+        'ps_onsen_friend',
+        'ps_meibutsu',
+        'ps_book_med',
+        'ps_book_war',
+        'ps_field_border',
+        'ps_kid_tera',
+        'ps_hawk_kind',
+        'tal_left_lord',
+        'tal_tenka_ichi',
+        'tal_ikki_head',
+        'tal_taught_youth',
+      ];
+      final digits = RegExp(r'[0-9０-９%]');
+      final seen = <String>{};
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 5200);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished) continue;
+        for (final f in flags) {
+          g.setFlag(f);
+        }
+        g.meet('師', '手習いの和尚', 50);
+        g.meet('連歌の友', '旅の連歌師', 40);
+        g.meet('湯治場の縁', '湯治場で会った隠居', 40);
+        // 三人に一人は主家に仕える身にして、家中の岐路も見る。
+        if (seed % 3 == 0 && g.l.rank == 0 && !g.hasFlag('priesthood')) {
+          g.l
+            ..rank = 3
+            ..maxRank = 3
+            ..lord = g.alive.first.name
+            ..fav = 40;
+        }
+        var count = g.l.flags.where((f) => f.startsWith('scene:e2_')).length;
+        playOut(
+          g,
+          Rng(seed + 1),
+          onPrompt: (p) {
+            final now = g.l.flags.where((f) => f.startsWith('scene:e2_')).length;
+            if (now == count) return;
+            count = now;
+            for (final c in p.choices) {
+              expect(c.hint, isNotNull, reason: '${p.title}/${c.label} に匂わせが無い');
+              expect(c.hint!, isNot(contains(digits)), reason: '${p.title}/${c.hint}');
+              expect(c.label, isNot(contains(digits)), reason: '${p.title}/${c.label}');
+            }
+          },
+        );
+        seen.addAll(
+          g.l.flags
+              .where((f) => f.startsWith('scene:e2_'))
+              .map((f) => f.substring(6)),
+        );
+      }
+      // 16 のうち 10 以上。
+      expect(seen.length, greaterThanOrEqualTo(10), reason: '$seen');
+    });
+
     test('長篠で武田が兵を退いた人生では、1582年に武田が滅ばず、武田の滅亡にまつわる岐路も出ない', () {
       var checked = 0;
       for (var seed = 0; seed < 300; seed++) {

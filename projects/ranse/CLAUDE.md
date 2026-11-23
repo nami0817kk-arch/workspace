@@ -120,6 +120,7 @@
 | `lib/engine/ways.dart` | **道と死に方**（`kWays`・`kDeathKinds`・`lifeWay`）と、道ごとの岐路（`buildWayScenes`、約45） |
 | `lib/engine/talents.dart` | **能力で起きる岐路**（大人35・子ども6、`tal_`）と、能力が段を越えた年の【才】の一行（`talentMilestones`） |
 | `lib/engine/pastimes.dart` | **大人の暮らしと嗜みの重点**（寺社・茶の湯・連歌・鷹狩り・湯治 ほか10）と、選んだ年の岐路（`ps_`、20） |
+| `lib/engine/echoes.dart` `echoes_more.dart` | **伏線の回収**（`e_` 15・その2 `e2_` 16）。前の選択の旗や縁のある人が、何年もあとに返ってくる岐路 |
 | `lib/app/` | 画面遷移（`controller.dart`）と保存（`save.dart`） |
 | `lib/ui/` | 画面（タイトル／生まれ／遊ぶ／終わり） |
 
@@ -319,6 +320,28 @@
   名乗り出なかった桶狭間の英雄の昔語り。
 - テスト: 旗を立てた人生で、15のうち12以上が出る。
 - 「世の動きが年表に沿う」テストは、史実どおりの世だけを見る（明智の世では北条が残るなど、変わった世では年表も変わるため。ランダムな人生がまれに変わった世に入って落ちた）。
+
+## 伏線の回収 その2（2026-11-23）
+
+ユーザー「このような作り込みをストップというまで続けて」。能力の岐路（`tal_`）・暮らしと嗜み（`ps_`）・寺の手習い（`tera_`）で立てた旗と縁のある人を、
+何年もあとに返す岐路を16足した（`lib/engine/echoes_more.dart`、id・新しい旗は `e2_`。`game.dart` の大人の場面に登録。どれも一生に一度、重み5〜6）。
+- 回収した旗・縁: `tera_friends`（机を並べた仲間が仕官の口／店の相棒／銭の無心。縁の役割「手習いの仲間」を足す）／`tera_diligent`＋師「手習いの和尚」（臨終に呼ばれ、
+  寺の跡を継ぐと仏門へ。どの選択でも師は人物から外れる）／`ps_renga_praised`＋「連歌の友」（大名には敵方との和の一座、家臣には向こうの重臣の寝返りの取り次ぎ、
+  商人には重臣の屋敷の御用）／`ps_renga_report`（遠ざけた座の者の讒言）／`ps_onsen_friend`＋「湯治場の縁」（隠居の遺言で形見の脇差か孫娘を託される。
+  縁の役割「預かった子」を足す。どの選択でも隠居は人物から外れる）／`ps_meibutsu`（主君か最も強い家が茶碗を所望。差し出せば取り立て、拒めば稀に切腹）／
+  `ps_book_med`（疫病の村で薬を煎じる。稀に病死）／`ps_book_war`（写した陣立てで伏兵を見破る。稀に戦死）／`ps_field_*`（検地で隠し田にするか。稀に処罰）／
+  `ps_field_border`・`ps_field_river`（隣村との水争い。堰を切りに行くのは戦える人だけ）／`ps_kid_*`（成長した子が家を助ける。子がいる38歳から）／
+  `tal_left_lord`（捨てた元の主家の刺客。待ち受けるのは戦える人だけ、稀に暗殺）／`tal_tenka_ichi`（弟子入り志願。縁の役割「武芸の弟子」）／
+  `tal_ikki_head`（仕官していれば主家と村の板挟み、村にいれば二度目の一揆。稀に処刑）／`tal_taught_youth`（野盗の年に教えた若い衆が集まる）／
+  `ps_hawk_kind`（詫びの銭を置いた麦畑の百姓が不意打ちを知らせる）。
+- `mark()` の文はすべて新しく足しただけ。死ぬ結果は9つで、どれも数%（主家に仕えながら一揆の段取りを授けるのは1割、二度目の一揆の頭に立つのは2割）、匂わせに危うさを書いてある。
+- テスト（`engine_test.dart` の「伏線の回収 その2」）: 15の旗と3人の縁を立てた300人生（3人に1人は主家に仕える身）で、16のうち10以上が出て、
+  出た岐路の選択肢に匂わせがあり数字が無い。手元で engine だけを Dart で流した写しでは16すべてが出て、engine_test 全体も通った（CI は未確認）。
+- **まだ回収していない旗**: `ps_tea_praise`・`ps_tea_honest`・`ps_wish_home`・`ps_wish_rise`・`ps_koto_played`・`ps_sea_luck`／
+  `tal_` の多く（`tal_karo_grudge`・`tal_envied`・`tal_favorite`・`tal_gozen_win`・`tal_shinan`・`tal_ikki`・`tal_strategy`・`tal_saw_forgery`・`tal_wrote_book`・
+  `tal_gunshi`・`tal_exposed_fraud`・`tal_bribe`・`tal_judge`・`tal_bugyo`・`tal_kenchi`・`tal_chorayaku`・`tal_followers`・`tal_gamble_debt`・`tal_nursed`・
+  `tal_monk_warrior`・`tal_mondo_win`・`tal_alliance`・`tal_beloved_captain`・`tal_night_raid`・`tal_machiwari` ほか）と、子どもの `tal_c_*` 6つ。
+  `tal_meibutsu` は掘り出した茶碗を売っているので、名物を持つ旗ではない。
 
 ## 最期の図鑑（2026-11-23、品質改善ループ12回目）
 
