@@ -537,12 +537,12 @@ class _TradeTabState extends State<TradeTab> {
     return GmTable(
       title: title,
       trailing: Text('${chosen.length}人を選択', style: TextStyle(fontSize: 11, color: chosen.isEmpty ? GmColors.sub : color)),
-      rowHeight: 28,
+      // 横画面では表が左右に2つ並ぶので、名前の欄が狭くなっていた(2026-11-23「名前が見えない」)。
+      // 型と位置は名前の下の小さな字に移し、名前の欄を広げる
+      rowHeight: 38,
       cols: [
         const GmCol('', width: 22),
-        const GmCol('選手', flex: 1, align: TextAlign.left),
-        col('型', 5, width: 30),
-        const GmCol('位', width: 26),
+        col('選手・型', 5, flex: 1, align: TextAlign.left),
         col('歳', 2, width: 24),
         col('OVR', 1, width: 32),
         const GmCol('伸', width: 34),
@@ -553,18 +553,30 @@ class _TradeTabState extends State<TradeTab> {
         for (final p in players)
           GmRow(
             [
-              Icon(chosen.contains(p.id) ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded, size: 16, color: chosen.contains(p.id) ? color : GmColors.sub),
-              Row(
+              Icon(chosen.contains(p.id) ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+                  key: Key('trade-pick-${p.id}'), size: 16, color: chosen.contains(p.id) ? color : GmColors.sub),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: fitText(p.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Row(
+                    children: [
+                      // 名前を押すと選手のカードを開く(行のほかの所は選ぶ・外す)
+                      Flexible(
+                        child: GestureDetector(
+                          key: Key('trade-name-${p.id}'),
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => showPlayerCard(context, car, p, team),
+                          child: fitText(p.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, decoration: TextDecoration.underline, decorationColor: GmColors.sub)),
+                        ),
+                      ),
+                      if (p.injured > 0) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.healing_rounded, size: 12, color: GmColors.bad)),
+                      if (car.tradeBlock.contains(p.id)) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.campaign_rounded, size: 12, color: GmColors.ball)),
+                    ],
                   ),
-                  if (p.injured > 0) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.healing_rounded, size: 12, color: GmColors.bad)),
-                  if (car.tradeBlock.contains(p.id)) const Padding(padding: EdgeInsets.only(left: 3), child: Icon(Icons.campaign_rounded, size: 12, color: GmColors.ball)),
+                  Text('${p.pos.short}・${roleOf(p).label}', maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10, color: GmColors.sub, height: 1.2)),
                 ],
               ),
-              Text(roleOf(p).label.substring(0, 2), style: const TextStyle(fontSize: 9.5, color: GmColors.sub)),
-              Text(p.pos.short, style: const TextStyle(fontSize: 10, color: GmColors.sub)),
               numCell('${p.age}'),
               numCell('${shown(p.ovr)}', color: GmColors.ovr(p.ovr), bold: true),
               () {
@@ -971,7 +983,7 @@ class _Reaction extends StatelessWidget {
   Widget build(BuildContext context) {
     final v = verdict;
     if (v == null) {
-      return const Text('欲しい選手と出す選手をタップ。相手の反応が出る', style: TextStyle(fontSize: 13, color: GmColors.sub));
+      return const Text('欲しい選手と出す選手の行をタップ(名前を押すと詳しく見られる)。相手の反応が出る', style: TextStyle(fontSize: 13, color: GmColors.sub));
     }
     if (v.ratio <= 0) {
       return Text(v.reason, style: const TextStyle(fontWeight: FontWeight.bold, color: GmColors.bad, fontSize: 13));
