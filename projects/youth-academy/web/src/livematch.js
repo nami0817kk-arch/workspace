@@ -37,7 +37,9 @@
       if (c && (!best || c.score > best.score)) best = c;
     }
     if (!best) return null;
-    if (!best.goal && (this.scenes.length >= 18 || best.score < 0.09)) return null;
+    // 見どころは1試合15前後。時間に合わせて配る（前半で上限に届き、終盤の場面が出なかった）。得点はいつも出す
+    const quota = 2 + Math.floor((13 * this.min) / 90);
+    if (!best.goal && (this.scenes.length >= quota || best.score < 0.11)) return null;
     return this._lvScene(best);
   };
   // 出来事を1つ反映する。見どころの候補なら { score, ... } を返す
