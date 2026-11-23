@@ -24,8 +24,8 @@ void main() {
     expect(types.length, greaterThanOrEqualTo(10));
     expect(hairs.length, greaterThanOrEqualTo(9));
     expect(beards.length, 4);
-    // ほとんどの選手は別の顔になる
-    expect(faces.length, greaterThan(all.length * 0.8));
+    // 半分を超える選手は、リーグの中で自分だけの顔になる(部品の組み合わせは約3,900通り)
+    expect(faces.length, greaterThan(all.length * 0.55));
     // 同じ選手でも、年を取ると白髪が増え、一度なったら戻らない
     final withHair = all.where((p) => faceOf(p).hair >= 0).toList();
     var grayAt40 = 0;

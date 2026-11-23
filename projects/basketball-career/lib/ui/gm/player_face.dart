@@ -26,12 +26,12 @@ class FaceType {
 }
 
 const faceTypes = [
-  FaceType('base', 5, [2, 3, 4, 5], eyes: 5, black: true),
+  FaceType('base', 3, [2, 3, 4, 5], eyes: 5, black: true),
   FaceType('round', 2, [3, 4, 5], black: true),
   FaceType('longface', 2, [3, 4, 5], black: true),
   FaceType('westafrica', 2, [3, 4, 5], black: true),
-  FaceType('veteran', 1, [3, 4, 5], black: true),
-  FaceType('babyface', 1, [3, 4, 5], black: true, lightBeard: true),
+  FaceType('veteran', 2, [3, 4, 5], black: true),
+  FaceType('babyface', 2, [3, 4, 5], black: true, lightBeard: true),
   FaceType('asian', 1, [0, 1, 2]),
   FaceType('latino', 1, [1, 2, 3]),
   FaceType('southeu', 1, [1, 2, 3]),
@@ -48,8 +48,8 @@ const faceHairCount = 9;
 const faceBeardCount = 4;
 
 // 髪型の出やすさ(-1 は坊主=髪なし、続けて 0〜8)。
-const _hairWeightsBlack = [2, 5, 1, 2, 1, 1, 2, 1, 0, 1];
-const _hairWeightsOther = [1, 3, 0, 0, 0, 1, 0, 4, 2, 3];
+const _hairWeightsBlack = [2, 3, 2, 2, 2, 2, 2, 1, 0, 2];
+const _hairWeightsOther = [1, 3, 0, 0, 0, 1, 0, 3, 2, 3];
 
 /// 顔の決まり。選手の id から決まり、年を取ると白髪とひげが増える(一度付いたら消えない)。
 class FaceSpec {
