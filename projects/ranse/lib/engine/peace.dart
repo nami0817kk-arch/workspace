@@ -201,7 +201,7 @@ bool _west(Game g) => _p(g, '関ヶ原で西軍に加わり');
 bool _east(Game g) => _p(g, '関ヶ原で東軍に加わった');
 bool _toyotomi(Game g) => g.l.lord == '織田';
 
-double _w(Game g) => 40;
+double _w(Game g) => 70; // pl_（80）に押しのけられないよう 40 から上げた
 
 List<SceneDef> buildPeaceScenes() => [
   // =====================================================================

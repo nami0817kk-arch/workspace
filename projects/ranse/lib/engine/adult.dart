@@ -7,6 +7,7 @@ import 'life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
 import 'peace.dart';
+import 'peace_life.dart';
 import 'rng.dart';
 import 'spending.dart';
 import 'temple.dart';
@@ -46,6 +47,8 @@ List<FocusDef> adultFocusOptions(Game g) => [
   ...oldAgeFocusOptions(g),
   ...templeFocusOptions(g),
   ...womanLifeFocusOptions(g),
+  // 泰平の世の暮らしの重点（`peace_life.dart`。一六〇一年からの、戦の絶えた世にだけ出る）。
+  ...peaceLifeFocusOptions(g),
   // 銭と功の使い道の入り口（`spending.dart`。たまったときだけ出る）。
   ...spendingFocusOptions(g),
 ];

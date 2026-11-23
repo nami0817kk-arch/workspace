@@ -28,6 +28,7 @@ import 'oku_life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
 import 'peace.dart';
+import 'peace_life.dart';
 import 'regions.dart';
 import 'retainer_life.dart';
 import 'rng.dart';
@@ -162,6 +163,7 @@ class Game extends ChangeNotifier {
       ...buildPastimeScenes(),
       ...buildOldAgeScenes(),
       ...buildPeaceScenes(),
+      ...buildPeaceLifeScenes(),
       ...buildTempleScenes(),
       ...buildRegionScenes(),
       ...buildHistoryScenes(),
