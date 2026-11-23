@@ -157,9 +157,13 @@ class ScoutingEngine {
       ageOverride: age,
     );
     p.potential = potential;
-    PlayerStub.matchOverall(p, targetOverall.clamp(25, potential));
-    for (final k in p.attributes.keys.toList()) {
-      p.attributes[k] = p.attributes[k]!.clamp(1, potential);
+    // 総合力を狙いに合わせ、潜在を超えた能力は潜在までに切る。切ると
+    // 総合力が少し下がるので、何度か繰り返して寄せる。
+    for (var i = 0; i < 4; i++) {
+      PlayerStub.matchOverall(p, targetOverall.clamp(25, potential));
+      for (final k in p.attributes.keys.toList()) {
+        p.attributes[k] = p.attributes[k]!.clamp(1, potential);
+      }
     }
     p.wage = p.fairWeeklyWage();
     return p;

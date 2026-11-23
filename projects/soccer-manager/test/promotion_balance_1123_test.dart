@@ -113,6 +113,42 @@ void main() {
     });
   });
 
+  group('1b 開幕の CPU の伸びしろ', () {
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+      Tr.language = AppLanguage.japanese;
+    });
+    tearDown(() => Tr.language = AppLanguage.system);
+
+    test('自クラブと同じ部の CPU の24歳以上は、伸びしろが1まで(若手と自クラブは残す)', () async {
+      final gs = GameState();
+      await gs.startNewGame('伸びしろFC');
+      final s = gs.save!;
+      var young = 0;
+      var youngRoom = 0;
+      for (final t in s.league.teams) {
+        if (t.id == s.userTeamId) continue;
+        for (final p in t.players) {
+          if (p.age >= 24) {
+            expect(p.potential - p.overall,
+                lessThanOrEqualTo(PlayerGenerator.cpuStartMaxRoom),
+                reason: '${t.name} ${p.name} ${p.age}歳');
+          } else {
+            young++;
+            youngRoom += p.potential - p.overall;
+          }
+        }
+      }
+      expect(young, greaterThan(0));
+      expect(youngRoom / young, greaterThan(5), reason: '若手の伸びしろは残す');
+      final userRoom = gs.userTeam.players
+          .where((p) => p.age >= 24)
+          .map((p) => p.potential - p.overall)
+          .reduce((a, b) => a + b);
+      expect(userRoom, greaterThan(0), reason: '自クラブは変えない');
+    });
+  });
+
   group('2 アカデミーの子', () {
     test('ユース施設 Lv5 の子は Lv1 より総合力がはっきり伸びる', () {
       double gain(int level) {
