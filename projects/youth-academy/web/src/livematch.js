@@ -104,7 +104,7 @@
       const t = this._lvTeam(e.sd);
       if (p && t) {
         const pk = !!e.pk;
-        const res = this._foul(t, p, pk ? 0.3 : 0.1, pk ? 0.03 : 0.003);
+        const res = this._foul(t, p, pk ? 0.3 : p.yellow ? 0.04 : 0.13, pk ? 0.03 : 0.002); // 1枚もらった子は気をつける（2枚目の退場が多かった）
         const v = e.vs ? this._lvP(e.vs) : null;
         if (pk) this.log.push({ minute: this.min, ml: this.minLabel(), text: nm(p) + 'がエリアの中で倒した。PK' + (res.txt || ''), kind: 'scene' });
         else if (res.card && v) this.log.push({ minute: this.min, ml: this.minLabel(), text: nm(p) + 'が' + nm(v) + 'を倒した', kind: 'flow' });
