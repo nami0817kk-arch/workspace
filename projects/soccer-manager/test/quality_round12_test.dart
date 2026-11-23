@@ -263,8 +263,46 @@ void main() {
           s.pending?.attacker?.id,
         };
 
-    test('交代のあとも、対策指示の攻守力が残る', () {
+    test('交代で入った選手は、先発の指定でも下がった選手の位置に入る', () {
+      // CI で一度だけ守備力がずれた(2026-11-23)原因。入った選手を先発の
+      // 指定の末尾に足していたので、ピッチの並びと先発の指定の並びが
+      // 食い違い、本職でない枠への割り当て(=守備力)が並びで変わった。
       for (var i = 0; i < 50; i++) {
+        final home = squad('ord$i');
+        final away = squad('ordA$i');
+        final s = MatchEngine.beginInteractiveHalf(
+          home: home,
+          away: away,
+          startMinute: 46,
+          endMinute: 90,
+          interactiveTeamId: home.id,
+        );
+        if (s.isFinished) continue;
+        final involved = involvedIn(s);
+        // 先頭に近いフィールドの選手(末尾でない)を、ポジションの違う
+        // 控えと替える。
+        final out = s.homeLineup.firstWhere(
+            (p) => p.position != Position.gk && !involved.contains(p.id));
+        final incoming = home.players.firstWhere((p) =>
+            !s.homeLineup.contains(p) &&
+            p.position != Position.gk &&
+            p.position != out.position &&
+            !p.isInjured);
+        final at = home.startingXI.indexOf(out.id);
+        expect(
+            MatchEngine.applyInteractiveSubstitution(s,
+                teamId: home.id, outPlayerId: out.id, inPlayerId: incoming.id),
+            isTrue);
+        expect(home.startingXI.indexOf(incoming.id), at);
+        expect(home.startingXI, [for (final p in s.homeLineup) p.id]);
+        return;
+      }
+      fail('判断待ちの後半を作れなかった');
+    });
+
+    test('交代のあとも、対策指示の攻守力が残る', () {
+      var checked = 0;
+      for (var i = 0; i < 300; i++) {
         final home = squad('ph$i');
         final away = squad('pa$i');
         home.oppositionPlan = OppositionPlan.stayCompact;
@@ -285,7 +323,8 @@ void main() {
             MatchEngine.applyInteractiveSubstitution(s,
                 teamId: home.id, outPlayerId: out.id, inPlayerId: incoming.id),
             isTrue);
-        // 交代のあとの顔ぶれで区間を始め直したときと同じ攻守力になる。
+        // 交代のあとの顔ぶれ(ピッチの並びのまま)で区間を始め直したときと
+        // 同じ攻守力になる。
         home.startingXI = [for (final p in s.homeLineup) p.id];
         final fresh = MatchEngine.beginInteractiveHalf(
           home: home,
@@ -298,9 +337,9 @@ void main() {
         expect(s.awayAttackBase, closeTo(fresh.awayAttackBase, 1e-9));
         expect(s.homeDefenseBase, closeTo(fresh.homeDefenseBase, 1e-9));
         expect(s.awayDefenseBase, closeTo(fresh.awayDefenseBase, 1e-9));
-        return;
+        checked++;
       }
-      fail('判断待ちの後半を作れなかった');
+      expect(checked, greaterThan(100));
     });
 
     test('下がった選手に、この先の警告・退場が付かない', () {

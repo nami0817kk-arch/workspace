@@ -2739,12 +2739,21 @@ class MatchEngine {
     }
 
     lineup[outIndex] = incoming;
-    // 先発の指定も入れ替える(呼び出し側の swapStartingPlayer と同じ形)。
-    // 攻守力の「どの枠で出ているか」は先発の指定から決まるので、先に
-    // 入れ替えないと、入った選手は枠の無いまま、残りの選手は下がった
-    // 選手のいる並びのまま計算し直していた(2026-11-23)。
-    team.startingXI.remove(outPlayerId);
-    if (!team.startingXI.contains(inPlayerId)) team.startingXI.add(inPlayerId);
+    // 先発の指定も入れ替える。攻守力の「どの枠で出ているか」は先発の指定
+    // から決まるので、先に入れ替えないと、入った選手は枠の無いまま、残りの
+    // 選手は下がった選手のいる並びのまま計算し直していた(2026-11-23)。
+    // 入った選手は下がった選手のいた位置に置く(ピッチの並び[lineup]と
+    // 同じ順)。末尾に足すと、本職でない枠への割り当てが並びで変わり、
+    // 同じ顔ぶれで区間を始め直したときと守備力がずれた。後から呼ばれる
+    // swapStartingPlayer は、これで何もしなくなる。
+    final xiIndex = team.startingXI.indexOf(outPlayerId);
+    if (team.startingXI.contains(inPlayerId)) {
+      team.startingXI.remove(outPlayerId);
+    } else if (xiIndex >= 0) {
+      team.startingXI[xiIndex] = inPlayerId;
+    } else {
+      team.startingXI.add(inPlayerId);
+    }
     // 下がった選手に、この先の分に決めてあった警告・退場を消す。残すと、
     // ベンチの選手が警告・退場を受け、退場ならピッチの11人のまま数的
     // 不利にもなっていた(2026-11-23)。
