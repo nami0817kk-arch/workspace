@@ -56,17 +56,44 @@ void main() {
       // (スタッフは「強化」から「雇用」に変わった)。
       final storeListing = File('STORE_LISTING.md').readAsStringSync();
 
-      // 掲載文が謳っている機能は、実装側に対応する語がある。
-      const claims = {
-        'メンター': 'lib/logic/training_engine.dart',
-        'スカウティングレポート': 'lib/logic/scout_report_engine.dart',
-        'リザーブ': 'lib/logic/reserve_match_engine.dart',
-        '育成型レンタル': 'lib/logic/training_engine.dart',
-      };
-      for (final entry in claims.entries) {
-        if (!storeListing.contains(entry.key)) continue;
-        expect(File(entry.value).existsSync(), isTrue,
-            reason: '掲載文の「${entry.key}」に対応する実装が見当たらない');
+      // 掲載文(ストアに出す本文)が、今は遊べない機能を謳っていない。
+      // 以前はファイルの有無だけを見ていたが、メンターやスカウティング
+      // レポートは処理が残っていても画面から触れず(2026-11-16 のオーナー型
+      // への作り替え)、ファイルがあることは遊べることの証拠にならなかった。
+      // 版ごとの新機能の記録(過去の版)は当時の事実なので対象外。
+      final published = [
+        for (final heading in const [
+          '## 短い説明文',
+          '## 長い説明文',
+          '## プロモーション用テキスト',
+          '## サブタイトル',
+          '### サブタイトル',
+          '### プロモーション用テキスト',
+          '### 説明文',
+        ])
+          _publishedBlock(storeListing, heading),
+      ].join('\n');
+      expect(published, contains('監督に任せ'),
+          reason: '本文を取り出せていない(見出しが変わった?)');
+      for (final word in const [
+        'メンター',
+        'スカウティングレポート',
+        'リザーブ',
+        '育成型レンタル',
+        'ハーフタイム',
+        '采配',
+        'デューティ',
+        '戦術を組',
+        '5部',
+        'mentor',
+        'half time',
+        'scout report',
+        'fifth-tier',
+        'Five divisions',
+        'pick your tactics',
+      ]) {
+        expect(published, isNot(contains(word)),
+            reason: '掲載文が今は無い機能「$word」を謳っている');
       }
 
       // 古い呼び名が残っていないか。
@@ -491,4 +518,27 @@ void main() {
       expect(plist, contains('cstr6suwn9.skadnetwork'));
     });
   });
+}
+
+/// STORE_LISTING.md の [heading] で始まる節から、ストアに出す本文だけを
+/// 取り出す。本文は ``` で囲んである(短い説明文だけは `> ` の引用)。
+/// 囲みの外は書き手向けのメモなので含めない。
+String _publishedBlock(String listing, String heading) {
+  final lines = listing.split(RegExp(r'\r?\n'));
+  final start = lines.indexWhere((l) => l.startsWith(heading));
+  expect(start, isNot(-1), reason: '「$heading」の節が無い');
+  final section = <String>[];
+  for (final l in lines.skip(start + 1)) {
+    if (l.startsWith('#')) break;
+    section.add(l);
+  }
+  final open = section.indexWhere((l) => l.startsWith('```'));
+  if (open == -1) {
+    return section
+        .where((l) => l.startsWith('> '))
+        .map((l) => l.substring(2))
+        .join('\n');
+  }
+  final close = section.indexWhere((l) => l.startsWith('```'), open + 1);
+  return section.sublist(open + 1, close).join('\n');
 }

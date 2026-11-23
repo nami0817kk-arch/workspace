@@ -173,6 +173,9 @@ void main() {
       final finance =
           File('lib/screens/finance_screen.dart').readAsStringSync();
       expect(finance, isNot(contains('FundsPackCard')));
+      // 買う画面の部品そのものも消した(2026-11-23)。どこからも使われず、
+      // 残すと誰かが置き直す余地になる。
+      expect(File('lib/widgets/funds_pack_card.dart').existsSync(), isFalse);
     });
   });
 }

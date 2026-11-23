@@ -14,7 +14,7 @@ void main() {
   tearDown(() => Tr.language = AppLanguage.system);
 
   /// ホームのタイルから引く語。ここを増やしたら、対応する項目も足すこと。
-  const linkedTerms = ['総合力', 'サポーターの期待', '監督としての評価', '観客動員'];
+  const linkedTerms = ['総合力', 'サポーターの期待', 'オーナーの評判', '観客動員'];
 
   test('タイルから引く語は、すべて用語集に実在する', () {
     final terms = glossaryEntries.map((e) => e.term).toSet();

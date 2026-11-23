@@ -21,7 +21,9 @@ extension GlossaryCategoryInfo on GlossaryCategory {
         GlossaryCategory.contractTransfer =>
           Tr.pick('契約・移籍', 'Contracts & transfers'),
         GlossaryCategory.tactics => Tr.pick('戦術', 'Tactics'),
-        GlossaryCategory.liveMatch => Tr.pick('ライブ観戦', 'Watching live'),
+        // 名前は旧来のまま。ライブ観戦は無くなり(試合は一括で計算する)、
+        // 残るのは試合の進め方の項目だけなので、見出しは「試合」にした。
+        GlossaryCategory.liveMatch => Tr.pick('試合', 'Matches'),
         GlossaryCategory.club => Tr.pick('クラブ経営', 'Club finances'),
       };
 }
@@ -42,8 +44,8 @@ class GlossaryEntry {
 // const にできないのは、説明文が表示時の言語で決まるため。
 Map<String, String> get _attributeDescriptions => {
       AttributeKeys.corners: Tr.pick(
-          'コーナーキックの精度。コーナー担当に指名された選手の値が高いほどチャンスの質が上がる。',
-          'Accuracy from corners. The higher this is on your nominated taker, the better the chances that come from them.'),
+          'コーナーキックの精度。蹴る選手の値が高いほどチャンスの質が上がる。',
+          'Accuracy from corners. The higher this is on the man taking them, the better the chances that come from them.'),
       AttributeKeys.crossing: Tr.pick('サイドからのクロスの正確さ。攻撃力の複合値(技術)に反映される。',
           'Accuracy of crosses from wide. Feeds into the attack and technical ratings.'),
       AttributeKeys.dribbling: Tr.pick('ボールを持って相手を抜く能力。攻撃力の複合値に反映される。',
@@ -53,8 +55,8 @@ Map<String, String> get _attributeDescriptions => {
       AttributeKeys.firstTouch: Tr.pick('ボールを受けた際の落ち着き。技術の複合値に反映される。',
           'How cleanly he takes the ball. Feeds into the technical rating.'),
       AttributeKeys.freeKick: Tr.pick(
-          '直接フリーキックの精度。FK担当に指名された選手の値が高いほどチャンスの質が上がる。',
-          'Accuracy from direct free kicks. The higher this is on your nominated taker, the better the chances.'),
+          '直接フリーキックの精度。蹴る選手の値が高いほどチャンスの質が上がる。',
+          'Accuracy from direct free kicks. The higher this is on the man taking them, the better the chances.'),
       AttributeKeys.heading: Tr.pick(
           '空中戦での競り合い・ヘディングシュートの精度。', 'Winning headers, and finishing them.'),
       AttributeKeys.longShots: Tr.pick('中距離・遠距離からのシュート精度。攻撃力の複合値に反映される。',
@@ -65,8 +67,8 @@ Map<String, String> get _attributeDescriptions => {
           'How well he sticks to an opponent. The heaviest single item in the defence rating.'),
       AttributeKeys.passing: Tr.pick('パスの正確さ。技術の複合値で最も重みが大きい項目。',
           'Accuracy of his passing. The heaviest single item in the technical rating.'),
-      AttributeKeys.penalties: Tr.pick('PKの成功率。PK担当に指名された選手の値が高いほど成功率が上がる。',
-          'His success rate from the spot. The higher this is on your nominated taker, the better the odds.'),
+      AttributeKeys.penalties: Tr.pick('PKの成功率。蹴る選手の値が高いほど成功率が上がる。',
+          'His success rate from the spot. The higher this is on the man taking it, the better the odds.'),
       AttributeKeys.tackling: Tr.pick('相手からボールを奪う能力。守備力の複合値に反映される。',
           'Winning the ball back. Feeds into the defence rating.'),
       AttributeKeys.technique: Tr.pick('ボールコントロール全般の巧みさ。技術の複合値に反映される。',
@@ -89,8 +91,8 @@ Map<String, String> get _attributeDescriptions => {
           'Refusing to give in. Affects how readily he grows towards his potential.'),
       AttributeKeys.flair:
           Tr.pick('独創的なプレーを生み出すひらめき。', 'The spark to do something unexpected.'),
-      AttributeKeys.leadership: Tr.pick('チームを鼓舞する統率力。値が高い選手をキャプテンに指名すると効果的。',
-          'How he lifts those around him. Worth naming a high-leadership player as captain.'),
+      AttributeKeys.leadership: Tr.pick('チームを鼓舞する統率力。値が高い選手ほどチームリーダーになりやすい。',
+          'How he lifts those around him. The higher it is, the likelier he is to be one of the team leaders.'),
       AttributeKeys.offTheBall: Tr.pick('ボールを持たない時の動き出し。攻撃力の複合値に反映される。',
           'His movement without the ball. Feeds into the attack rating.'),
       AttributeKeys.positioning: Tr.pick('守備時の立ち位置の的確さ。守備力の複合値に反映される。',
@@ -185,15 +187,15 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('疲労', 'Fatigue'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '試合出場・厳しいプレッシングで蓄積し、休養やトレーニング施設で回復する。高いほど試合でのコンディション(パフォーマンス)が下がる。',
-            'Builds up through matches and hard pressing, and comes down with rest and good facilities. The higher it is, the worse his condition on the day.'),
+            '試合出場で蓄積し、休養やトレーニング施設で回復する。高いほど試合でのコンディション(パフォーマンス)が下がる。',
+            'Builds up through matches, and comes down with rest and good facilities. The higher it is, the worse his condition on the day.'),
       ),
       GlossaryEntry(
         term: Tr.pick('士気(モラール)', 'Morale'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            'チームの勢い・選手の意気込みを表す値。高いほど試合でのコンディションが上がる。連勝や記者会見での受け答えで変動する。',
-            'How the side and the player feel about things. Higher means a better condition on the day. Winning runs and your press answers move it.'),
+            'チームの勢い・選手の意気込みを表す値。高いほど試合でのコンディションが上がる。試合の結果で上下する。',
+            'How the side and the player feel about things. Higher means a better condition on the day. Results move it up and down.'),
       ),
       GlossaryEntry(
         term: Tr.pick('マッチシャープネス', 'Match sharpness'),
@@ -220,22 +222,22 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('性格', 'Personality'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '選手の気質(全20種類)。不満度の変動しやすさ・移籍希望の出やすさのほか、チームトークや声かけへの感応度、賃金要求の強さにも影響する。各性格の詳しい説明はガイドの「スカッド・選手詳細画面」を参照。',
-            "His temperament, one of twenty. It governs how easily he becomes unsettled, how readily he asks for a move, how he responds to team talks and quiet words, and how hard he pushes on wages. The guide's squad section describes each one."),
+            '選手の気質(全20種類)。不満度の変動しやすさ・移籍希望の出やすさのほか、賃金要求の強さにも影響する。各性格の詳しい説明はガイドの「スカッド・選手詳細画面」を参照。',
+            "His temperament, one of twenty. It governs how easily he becomes unsettled, how readily he asks for a move, and how hard he pushes on wages. The guide's squad section describes each one."),
       ),
       GlossaryEntry(
         term: Tr.pick('デューティ', 'Duty'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '選手の戦術上の役割の重心(守備的/バランス/攻撃的)。攻撃的にするほど攻撃力に、守備的にするほど守備力にボーナスが付く代わりに、もう一方が手薄になる。',
-            'Where his role sits between defend, support and attack. Pushing towards attack adds attacking output at the cost of defensive cover, and the other way round.'),
+            '選手の戦術上の役割の重心(守備的/バランス/攻撃的)。ポジションとロールから選手ごとに決まっていて、変えることはできない。攻撃的な選手ほど攻撃力に、守備的な選手ほど守備力にボーナスが付く代わりに、もう一方が手薄になる。',
+            'Where his role sits between defend, support and attack. It comes with the player, from his position and role, and cannot be changed. An attacking duty adds attacking output at the cost of defensive cover, and a defensive one the other way round.'),
       ),
       GlossaryEntry(
         term: Tr.pick('ロール(プレースタイル)', 'Role'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            'どの能力値を活かしたプレーを得意とするかを表す設定(プレーメイカー・ポーチャーなど)。ロールが重視する能力値が高い選手に割り当てるとボーナスが、低い選手に割り当てるとペナルティが付く。',
-            'What kind of player he is asked to be (playmaker, poacher and so on). Give a role to someone strong in the attributes it values and he gains; give it to someone weak in them and he suffers.'),
+            'どの能力値を活かしたプレーを得意とするか(プレーメイカー・ポーチャーなど)。選手の能力値から選手ごとに決まっていて、変えることはできない。特に得意な能力が無い選手には付かない。ロールが重視する能力値が高いほど試合でボーナスが付く。',
+            'What kind of player he is (playmaker, poacher and so on). It comes with the player, from his attributes, and cannot be changed; players with no standout strength have none. The stronger he is in the attributes it values, the more it adds in matches.'),
       ),
       GlossaryEntry(
         term: Tr.pick('ポジション適性・慣れ', 'Position familiarity'),
@@ -283,13 +285,6 @@ List<GlossaryEntry> get glossaryEntries => [
             'A lump sum paid on renewal. How often it is demanded depends on his personality.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('キャプテン/副キャプテン', 'Captain and vice captain'),
-        category: GlossaryCategory.tactics,
-        description: Tr.pick(
-            'チームの主将・副将。キャプテンが出場している試合では規律が保たれ、カード(警告・退場)をやや受けにくくなる。統率力(リーダーシップ)が高い選手の指名が効果的。',
-            'Your on-field leaders. With the captain playing the side keeps its discipline and picks up slightly fewer cards. Name someone with high leadership.'),
-      ),
-      GlossaryEntry(
         term: Tr.pick('出場停止', 'Suspension'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
@@ -327,7 +322,7 @@ List<GlossaryEntry> get glossaryEntries => [
             'What the supporters expect (0-100). A league win is +3 and a defeat -3 (derbies count 1.5 times). At the halfway mark the board review gives +8 within the target, or -12 if you are four or more places below it. At the end of the season it is +15 within the target, or -20 three or more places below. At zero you have to sell the club. A new season starts from at least 40. PR, fan moves and matchday events in the owner\'s office also raise it.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('監督としての評価', 'Reputation'),
+        term: Tr.pick('オーナーの評判', 'Reputation'),
         category: GlossaryCategory.club,
         description: Tr.pick(
             '世間からのオーナーとしての評価(0-100)。サポーターの期待と異なり、クラブを手放しても別のクラブへ移っても引き継がれ、スポンサーや人の集まりやすさに影響する。',
@@ -339,31 +334,6 @@ List<GlossaryEntry> get glossaryEntries => [
         description: Tr.pick(
             'シーズン開始時に理事会から示される目標順位(1が最高位)。季の途中のレビューと季末に、これと比べてサポーターの期待が上下する。',
             'The finishing position the board asks for at the start of the season. Supporter expectation moves against it at the mid-season review and at the end of the season.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('プレッシング', 'Pressing'),
-        category: GlossaryCategory.tactics,
-        description: Tr.pick(
-            '守備時の寄せの強度(0-100)。高いほど相手の攻撃力を抑えられるが、選手の疲労が増えやすくなる。',
-            'How hard you close down (0-100). Higher blunts their attack, but tires your side faster.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('ラインの高さ', 'Defensive line'),
-        category: GlossaryCategory.tactics,
-        description: Tr.pick('守備ラインの高さ(0-100)。高いほど攻撃力にプラスに働くが、裏を突かれるリスクが高まる。',
-            'How high the back line sits (0-100). Higher helps the attack, but leaves more space behind.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('攻撃の幅', 'Attacking width'),
-        category: GlossaryCategory.tactics,
-        description: Tr.pick('サイドをどれだけ広く使うか(0-100)。高いほど攻撃力が上がるが、中央の守備が薄くなる。',
-            'How much of the pitch you use across (0-100). Wider adds attacking threat, but thins the middle.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('テンポ', 'Tempo'),
-        category: GlossaryCategory.tactics,
-        description: Tr.pick('プレーの速さ(0-100)。高いほど攻撃力が上がるが、疲労が溜まりやすくなる。',
-            'How quickly you play (0-100). Quicker adds attacking threat, but tires the side.'),
       ),
       GlossaryEntry(
         term: Tr.pick('生え抜き', 'Academy graduate'),
@@ -380,18 +350,11 @@ List<GlossaryEntry> get glossaryEntries => [
             'The summary that appears on the home screen when a season ends: where you finished, your record, the goals, any trophies, the top scorer and a verdict on the year. Close it and it will not come back; past seasons stay in the season history screen.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('試合前の確認', 'Pre-match check'),
-        category: GlossaryCategory.liveMatch,
-        description: Tr.pick(
-            '試合を始める前に、スタメンの取りこぼしを拾って知らせる。出られない選手(負傷・出場停止・代表召集・ローン放出中)がスタメンにいる、11人そろっていない、疲労や実戦感覚が足りない、本職外の配置、控えが3人未満、の5点を見る。問題が無い週は何も出ない。',
-            "Before kick-off, anything left undone in your XI is put in front of you: a man who cannot play (injured, suspended, on international duty, out on loan), fewer than eleven, tired or rusty starters, players out of position, and a bench of fewer than three. On a clean week nothing appears."),
-      ),
-      GlossaryEntry(
         term: Tr.pick('次にやること', 'What to do next'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            'ホームの先頭に出る提案。資金マイナス・スタメン不足・トレーニング未実施・ユースの流出候補・主力の契約切れ間近を見て、いま手を付けるべきことを1件だけ出す。損が確定しているものが先に来る。',
-            "The prompt at the top of the home screen. It watches for a negative balance, an incomplete XI, untouched training, a prospect about to walk and a key contract running down, and names the single thing worth doing now. Whatever is already costing you comes first."),
+            '状況ページの監督の報告の下に出る提案。始めたばかりのクラブなら空いたスタッフ・スポンサー・オーナーの目標を、ほかに季の切り替えでの資金不足・サポーターの期待の下落・移籍の締切・監督からの補強の候補・届いた売却のオファー・資金のマイナス・ユースの流出候補・主力の契約切れ間近を見て、いま手を付けるべきことを1件だけ出す。損が確定しているものが先に来る。',
+            "The prompt under the manager's report on the status page. For a new club it looks at empty staff posts, a missing sponsor and an unset owner goal; after that it watches for a cash shortfall at the season changeover, falling supporter expectation, the transfer deadline, signing candidates from the manager, offers for your players, a negative balance, a prospect about to walk and a key contract running down, and names the single thing worth doing now. Whatever is already costing you comes first."),
       ),
       GlossaryEntry(
         term: Tr.pick('スタッフの得意分野', 'Staff specialty'),
@@ -425,29 +388,15 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('全体練習', 'General training'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            'トレーニング方針の既定値。ポジションに応じて攻守をバランス良く伸ばす。攻撃強化などの特化練習より1項目あたりの伸びは緩やかだが、どのポジションの選手も自分の主戦場の能力を伸ばせる。休養と違い、方針を変えなくても選手は育つ。',
-            'The default focus. It develops attack and defence evenly by position. Any one attribute moves more slowly than under a specialised session, but every player improves at what his position asks of him. Unlike rest, it grows the squad without you touching anything.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('練習強度', 'Training intensity'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '軽め/通常/追い込みの3段階。強くするほど成長速度が上がる代わりに、疲労の蓄積と練習中の怪我リスクが増す。',
-            'Light, normal or intense. Harder means faster growth, at the cost of more fatigue and more injuries on the training ground.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('チームトーク', 'Team talk'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '試合前・ハーフタイムに監督が飛ばす檄。鼓舞する/冷静に指示する/叱咤するの3トーンがあり、先発イレブンの士気を変動させる。効果の大きさは選手の性格による結果感応度で変わる。',
-            "What you say before the match and at half time. Three tones — inspire, talk them through it, tear into them — each moving the starting XI's morale. How far it moves depends on each player's personality."),
+            '週の練習。毎週自動で行われ、ポジションに応じて攻守をバランス良く伸ばす。伸び方はトレーニング施設の水準と、雇っているコーチの水準・得意分野で大きくなる。',
+            'The weekly session. It runs itself every week and develops attack and defence evenly by position. How much players gain grows with your training facilities and with the level and specialty of the coaches you hire.'),
       ),
       GlossaryEntry(
         term: Tr.pick('マンマーク', 'Man-marking'),
         category: GlossaryCategory.tactics,
         description: Tr.pick(
-            'スカウティングレポートで判明した相手のキープレイヤーに、自チームの選手(DF・MF)を専任でマークさせる指示。マーカーが出場している間、相手キープレイヤーの攻撃力への貢献を抑えられる。',
-            "Assigning one of your defenders or midfielders to the opponent's key player, as identified in the scout report. While your marker is on the pitch, their man contributes less going forward."),
+            '相手に飛び抜けた選手がいると、監督が守備の強い選手を自動でその選手に付ける。マーカーが出場している間、相手のキープレイヤーの攻撃力への貢献を抑えられる。',
+            'When the opponent has a player well above the rest, the manager puts your best defender on him automatically. While the marker is on the pitch, their man contributes less going forward.'),
       ),
       GlossaryEntry(
         term: Tr.pick('守備セットプレー担当', 'Defensive set piece duty'),
@@ -457,13 +406,6 @@ List<GlossaryEntry> get glossaryEntries => [
             'Who takes charge of defending their corners and free kicks. The better his heading and jumping reach, the less dangerous their set pieces become.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('逃げ切りモード', 'Seeing out the game'),
-        category: GlossaryCategory.tactics,
-        description: Tr.pick(
-            '有効にすると自チームの攻撃力がやや下がる代わりに守備が安定し、疲労の蓄積も抑えられる。リードした終盤の時間の使い方として使う。',
-            'Trades a little attacking threat for a steadier defence and less fatigue. What you turn on to protect a lead late.'),
-      ),
-      GlossaryEntry(
         term: Tr.pick('負傷の種類', 'Types of injury'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
@@ -471,25 +413,18 @@ List<GlossaryEntry> get glossaryEntries => [
             'Three kinds, each with its own lay-off: a bruise (1-2 weeks), a torn muscle (2-5) and ligament damage (4-10). Better natural fitness means fewer injuries, and repeating the same one makes it more likely again.'),
       ),
       GlossaryEntry(
-        term: Tr.pick('決定機', 'Big chance'),
-        category: GlossaryCategory.liveMatch,
-        description: Tr.pick(
-            'ライブ観戦中に訪れる得点/失点のチャンス。自クラブの攻撃側ではシュート/パス/ロングシュートを、守備側では積極的にタックル/カバーリングに専念を選ぶ。成功率は関わる選手の能力値の勝負(シューター対GKなど)から算出され、選択前に表示される。',
-            'The moments in a live match where a goal is on. Attacking, you choose to shoot, pass or try one from distance; defending, you choose to go in hard or hold your shape. The odds come from the attributes of the players involved — shooter against keeper, for instance — and are shown before you decide.'),
-      ),
-      GlossaryEntry(
         term: Tr.pick('メンタリティ', 'Mentality'),
         category: GlossaryCategory.tactics,
         description: Tr.pick(
-            'チーム全体の姿勢。超守備的〜超攻撃的の5段階から選び、攻撃的なほど攻撃力が上がる代わりに守備のリスクが増える(その逆も同様)。スタメン・戦術画面の戦術タブで設定でき、ライブ観戦・クイック消化の両方に効く。',
-            'How the side approaches the match, across five steps from very defensive to very attacking. The more positive it is, the more attacking threat and the more defensive risk, and the reverse. Set it on the tactics tab; it applies whether you watch live or sim the match.'),
+            'チーム全体の姿勢。超守備的〜超攻撃的の5段階で、攻撃的なほど攻撃力が上がる代わりに守備のリスクが増える(その逆も同様)。監督が毎節、相手との力関係と自分の考え方から決める。監督の水準が低いと変えずに前のまま戦う。',
+            'How the side approaches the match, across five steps from very defensive to very attacking. The more positive it is, the more attacking threat and the more defensive risk, and the reverse. The manager sets it every matchday from the balance of strength and his own outlook; a manager of low standing leaves it as it was.'),
       ),
       GlossaryEntry(
         term: Tr.pick('スカッド・ステータス', 'Squad status'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '選手に約束する出場機会の立場(キープレイヤー/主力/ローテーション/育成枠)。上の立場ほどベンチに置いたときの不満が大きく、契約交渉で求める給与も高くなる。選手詳細画面で設定する。',
-            'What you promise a player about his minutes: key player, first team, rotation or prospect. The higher the billing, the more he resents the bench and the more he asks for in wages. Set from his own page.'),
+            '選手に約束する出場機会の立場(キープレイヤー/主力/ローテーション/育成枠)。獲得や契約更新の交渉で約束する。上の立場ほどベンチに置いたときの不満が大きく、求める給与も高くなる。',
+            'What you promise a player about his minutes: key player, first team, rotation or prospect. You agree it in the talks when you sign or renew him. The higher the billing, the more he resents the bench and the more he asks for in wages.'),
       ),
       GlossaryEntry(
         term: Tr.pick('観客動員', 'Attendance'),
@@ -509,8 +444,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('チームリーダー', 'Team leaders'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            'リーダーシップ・実力・年齢(とキャプテンの肩書)から決まるロッカールームの中心選手(上位3人)。リーダー陣が不機嫌だとチーム全体の士気が下がり、上機嫌だと上がる。リーダーを放出するとチームに動揺が走る。',
-            "The three players the dressing room looks to, decided by leadership, ability, age and the captaincy. When they are unhappy the whole squad's morale sags; when they are content it lifts. Selling one unsettles everybody."),
+            'リーダーシップ・実力・年齢から決まるロッカールームの中心選手(上位3人)。リーダー陣が不機嫌だとチーム全体の士気が下がり、上機嫌だと上がる。リーダーを放出するとチームに動揺が走る。',
+            "The three players the dressing room looks to, decided by leadership, ability and age. When they are unhappy the whole squad's morale sags; when they are content it lifts. Selling one unsettles everybody."),
       ),
       GlossaryEntry(
         term: Tr.pick('カップ目標', 'Cup target'),
@@ -523,8 +458,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('選手検索', 'Player search'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '全ディビジョンの全選手を名前・ポジション・年齢・総合力で絞り込めるスカウティングツール。補強ターゲットの調査に使い、実際の獲得は移籍市場・フリーエージェント経由で行う。',
-            'A scouting tool that filters every player in every division by name, position, age and overall. Use it to find targets; you still sign them through the transfer market or as free agents.'),
+            '移籍の画面の「探す」タブ。自国の全部と、他の4か国の1部のクラブの選手を、ポジション・年齢の上限で絞り、総合力・伸びしろ・安さ・若さの順に並べられる。総合力と伸びしろはスカウトの見立ての幅で出る。気になる選手は星で注目に入れ、申し込みは同じ画面から行う。',
+            "The Search tab on the transfer screen. It covers every club at home and the top flights of the other four countries; filter by position and an age limit, and sort by overall, potential, price or age. Overall and potential are your scouts' estimated ranges. Star a player to watch him, and bid for him from the same screen."),
       ),
       GlossaryEntry(
         term: Tr.pick('武者修行(ローン育成)', 'Development loans'),
@@ -539,13 +474,6 @@ List<GlossaryEntry> get glossaryEntries => [
         description: Tr.pick(
             '選手の総合力を節送りごとに記録した週次の推移。選手詳細画面に折れ線グラフで表示され、伸びている選手・停滞している選手が一目で分かる。自クラブの選手とユース昇格候補が対象で、概ね1シーズン分を保持する。',
             "A weekly record of a player's overall, matchday by matchday. His page draws it as a line, so you can see at a glance who is climbing and who has stalled. Kept for your own players and academy prospects, roughly a season's worth."),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('戦術スタイル', 'Style of play'),
-        category: GlossaryCategory.tactics,
-        description: Tr.pick(
-            'チームの攻撃の組み立て方の型(柔軟/ポゼッション/ゲーゲンプレス/カウンター/ロングボール/ウイングプレー)。スカッドの関連能力値が高いほど攻守の補正が大きく、向いていないスタイルは逆効果になる。スタイル間には相性(有利・不利の循環)があり、スカウティングレポートで相手の予想スタイルと対策を確認できる。柔軟は補正も弱点もない中立。',
-            "How your side builds its attacks: flexible, possession, gegenpress, counter attack, direct or wing play. The better your squad's relevant attributes, the bigger the bonus; a style that does not suit them works against you. The styles also counter each other in a cycle, and the scout report tells you what the opponent is likely to play and what beats it. Flexible is neutral, with neither bonus nor weakness."),
       ),
       GlossaryEntry(
         term: Tr.pick('紅白戦', 'Practice match'),
@@ -572,36 +500,15 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('ウォッチリスト', 'Watchlist'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '気になる選手に星印をつけて追いかけるリスト。選手検索画面の星ボタンで登録・解除でき、「ウォッチ中」フィルタで一覧できる。ウォッチ中の選手が得点するとクラブニュースに届く。',
-            'Star a player to keep an eye on him. Add and remove from the search screen, and use the watchlist filter to see them all. When one of them scores, it reaches your club news.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('采配方針', 'In-match approach'),
-        category: GlossaryCategory.liveMatch,
-        description: Tr.pick(
-            'ライブ観戦中にいつでも切り替えられる試合中の指示。通常/リスクを取る/安全に下がるの3方針があり、以降の決定機の成功率に攻守それぞれへ補正がかかる。',
-            'An instruction you can switch at any point while watching live: normal, take risks, or sit back. It shifts the odds on the big chances that follow, both ways.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('ライブ交代', 'Live substitution'),
-        category: GlossaryCategory.liveMatch,
-        description: Tr.pick(
-            'ライブ観戦中、ハーフタイムを待たずに決定機の合間で交代枠を使って行う選手交代。交代は1試合5人まで、ハーフタイム以外では3回まで(同じ場面で続けて替えるのは1回、ハーフタイムの交代は回数に数えない)。目前の決定機に関わっている選手は、その決定機が解決するまで交代できない。退場した選手は下げられない。',
-            'Changing a player mid-half rather than waiting for the break, using one of your subs between chances. You get five subs a match, made in no more than three stoppages outside half-time (changes at the same stoppage count once; half-time changes do not count). Anyone caught up in the chance in front of you cannot come off until it resolves, and a sent-off player cannot be replaced.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('モメンタム(試合の流れ)', 'Momentum'),
-        category: GlossaryCategory.liveMatch,
-        description: Tr.pick(
-            'ライブ観戦画面のスコア下に表示される綱引きバー。ゴールなどで勢いづいた側に傾き、傾いている間はその側の決定機がわずかに決まりやすくなる。',
-            'The tug-of-war bar under the scoreline while you watch live. It swings towards whoever has just had a moment, and while it leans their way their chances go in a little more often.'),
+            '気になる選手に星印をつけて追いかけるリスト。移籍の画面の監督の案や「探す」で星を押すと入り、「注目」タブで一覧できる。注目している選手は、どの地域でもスカウトの見え方が毎週少しずつ上がる。注目している選手が得点するとクラブニュースに届く。',
+            'Star a player to keep an eye on him. Tap the star in Proposals or Search on the transfer screen, and the Watchlist tab shows them all. Your scouts get a little clearer on a watched player every week, wherever he plays, and when one of them scores it reaches your club news.'),
       ),
       GlossaryEntry(
         term: Tr.pick('クイック消化', 'Simming a match'),
         category: GlossaryCategory.liveMatch,
         description: Tr.pick(
-            'ライブ観戦せず、試合結果だけを即座に確定させる進め方。カップ戦を含め、疲労・負傷・警告累積・出場記録などの試合後効果はライブ観戦と同じように適用される。',
-            'Settling the result without watching. Everything that follows a match — fatigue, injuries, cards, appearances — applies exactly as it would live, cup ties included.'),
+            '試合を一括で計算して結果を確定させる進め方。試合には直接関わらず、先発と構えは監督が決める。疲労・負傷・警告累積・出場記録などの試合後効果は、カップ戦を含めすべてに適用される。',
+            'How matches are played: the whole match is worked out at once and the result settled. You do not take part; the manager picks the side and the approach. Everything that follows a match, such as fatigue, injuries, cards and appearances, applies as normal, cup ties included.'),
       ),
       GlossaryEntry(
         term: Tr.pick('値切り交渉', 'Haggling'),
@@ -635,29 +542,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('記者会見', 'Press conference'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
-            '試合後に記者から受ける質問への受け答え。回答の選択によってチームの士気が上下するため、試合結果に合ったコメントを選ぶことが監督業の一部になる。',
-            "Answering the press after a match. What you say moves the squad's morale, so picking a line that fits the result is part of the job."),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('スカウティングレポート(試合プレビュー)', 'Scout report'),
-        category: GlossaryCategory.tactics,
-        description: Tr.pick(
-            '次の対戦相手の戦力・キープレイヤー・直近のフォームをまとめた事前情報。ここで判明したキープレイヤーにマンマークを付けるなど、試合前の準備に使う。',
-            'What you know about the next opponent: their strength, their key player and their recent form. Use it to prepare, for instance by putting a man-marker on the player it names.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('戦術ミーティング', 'Tactical meeting'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            'チーム全体で戦術理解を深めるミーティング。判断力・ポジショニング・チームワークといったメンタル系能力値がわずかに成長する。連発はできず、数週間のクールダウンがある。',
-            'Working through the tactics with the whole squad. Decisions, positioning and teamwork all improve a little. You cannot hold them back to back; there is a cooldown of a few weeks.'),
-      ),
-      GlossaryEntry(
-        term: Tr.pick('自動トレーニング', 'Automatic training'),
-        category: GlossaryCategory.condition,
-        description: Tr.pick(
-            '有効にすると、節を進めた際に週次トレーニングが自動で実施される。細かく管理したい週だけ無効に戻して手動で行うこともできる。',
-            'With this on, the weekly session runs itself as you play through the matchdays. Turn it off for any week you want to handle yourself.'),
+            '他のクラブが自クラブの選手に関心と報じられると開かれる、移籍の噂に答える会見。「売らないと明言する」と本人は落ち着くが、その季のうちに売るとサポーターの期待が下がる。「条件しだいと話す」と本人は浮き足立つが、そのクラブから話が来る。「コメントしない」と本人は少し落ち着かなくなる。数節答えないと「コメントしない」になる。',
+            'Held when another club is reported to want one of your players, to answer the transfer rumour. Saying he is not for sale settles him, but selling him that season lowers supporter expectation. Saying the price is right unsettles him, but brings an offer from that club. No comment leaves him a little restless. Leave it unanswered for a few matchdays and the club gives no comment.'),
       ),
       GlossaryEntry(
         term: Tr.pick('契約解除の違約金', 'Release compensation'),

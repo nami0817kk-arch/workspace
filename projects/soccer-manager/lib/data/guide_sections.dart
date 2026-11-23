@@ -165,8 +165,8 @@ List<GuideSection> get guideSections => [
         icon: Icons.groups,
         title: Tr.pick('スカッド・選手詳細画面', 'Squad and player pages'),
         overview: Tr.pick(
-            '保有選手の一覧と、選手1人ごとの詳細なステータス・契約・個性を確認する画面。誰をスタメンに据えるか、誰を鍛えるか、誰を放出するかを判断する材料がここに集まっている。',
-            "Your full squad, and each player's attributes, contract and character. Everything you need to decide who starts, who you develop and who you let go."),
+            '保有選手の一覧と、選手1人ごとの詳細なステータス・契約・個性を確認する画面。誰を残し、誰を売り、誰と契約を延ばすかを判断する材料がここに集まっている。',
+            "Your full squad, and each player's attributes, contract and character. Everything you need to decide who stays, who you sell and who gets a new contract."),
         topics: [
           GuideTopic(
             title: Tr.pick('総合力・潜在能力', 'Overall and potential'),
@@ -182,15 +182,16 @@ List<GuideSection> get guideSections => [
           ..._personalityTopics(),
           GuideTopic(
             title: Tr.pick('デューティ(攻守の重心)', 'Duty'),
-            description: Tr.pick('スタメン・戦術画面で選手ごとに設定する、攻撃/守備どちらに比重を置くかの指定。',
-                'Set per player on the tactics screen: whether he leans towards attacking or defending.'),
+            description: Tr.pick(
+                '攻撃/守備どちらに比重を置くか。ポジションとロールから選手ごとに決まっていて、変えることはできない。以下の3つがある。',
+                'Whether he leans towards attacking or defending. It comes with the player, from his position and role, and cannot be changed. There are three.'),
           ),
           ..._dutyTopics(),
           GuideTopic(
             title: Tr.pick('ロール(プレースタイル)', 'Role'),
             description: Tr.pick(
-                'どの能力値を活かしたプレーを得意とするかという設定。ロールが重視する能力値が高い選手に割り当てるとボーナスが、低い選手に割り当てるとペナルティが付くため、選手の得意な能力に合わせて選ぶ。',
-                'What kind of player he is asked to be. Give a role to someone strong in the attributes it values and he gains; give it to someone weak in them and he suffers. Pick it to match his strengths.'),
+                'どの能力値を活かしたプレーを得意とするか。選手の能力値から選手ごとに決まっていて、変えることはできない。特に得意な能力が無い選手には付かない。ロールが重視する能力値が高いほど試合でボーナスが付く。',
+                'What kind of player he is. It comes with the player, from his attributes, and cannot be changed; players with no standout strength have none. The stronger he is in the attributes it values, the more it adds in matches.'),
           ),
           ..._roleTopics(),
           GuideTopic(
@@ -210,8 +211,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('才能開花(ブレイクスルー)', 'Breakthroughs'),
             description: Tr.pick(
-                '週次トレーニングの際、まれに複数の能力値が一気に伸びる特別な瞬間が起きることがある。発生した週はトレーニング結果ダイアログと選手詳細画面に「★ 才能開花」と表示される。闘志(determination)が高い選手や、成長タイプの伸び盛りの年齢に該当する選手ほど起きやすい。',
-                "Now and then a weekly session produces a moment where several attributes jump at once. In that week the training report and the player's page both show a breakthrough. It happens more often to players with high determination, and to those at the age their growth type favours."),
+                '週次トレーニングの際、まれに複数の能力値が一気に伸びる特別な瞬間が起きることがある。発生した週は選手詳細画面に「★ 才能開花」と表示される。闘志(determination)が高い選手や、成長タイプの伸び盛りの年齢に該当する選手ほど起きやすい。',
+                "Now and then a weekly session produces a moment where several attributes jump at once. In that week the player's page shows a breakthrough. It happens more often to players with high determination, and to those at the age their growth type favours."),
           ),
         ],
       ),
@@ -373,8 +374,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('国内カップ・大陸カップ', 'Domestic and continental cups'),
             description: Tr.pick(
-                '国内カップは1〜3部の全クラブが出るノックアウト方式(下の部から先に戦い、上の部は後の回戦から入る。90分で並べば延長戦、それでも並べばPK戦)。リーグカップはイングランドだけ。大陸カップはチャンピオンズカップとヨーロッパカップの2つで、1部の上位のクラブが国ごとの枠で出て、グループステージ(ホームとアウェイ)の後に2試合合計のノックアウトで優勝を争う。自クラブの試合はライブ観戦でもクイック消化でも進められる。',
-                'The domestic cup is a straight knockout for every club in tiers 1 to 3 (the lower tiers start first and the top clubs join in later rounds; a draw after 90 minutes goes to extra time, then penalties). Only England has a league cup. There are two continental cups, the Champions Cup and the Europa Cup: the top clubs of each top division qualify by country quota, play a home-and-away group stage, then two-legged knockout ties. Your own ties can be watched live or simmed.'),
+                '国内カップは1〜3部の全クラブが出るノックアウト方式(下の部から先に戦い、上の部は後の回戦から入る。90分で並べば延長戦、それでも並べばPK戦)。リーグカップはイングランドだけ。大陸カップはチャンピオンズカップとヨーロッパカップの2つで、1部の上位のクラブが国ごとの枠で出て、グループステージ(ホームとアウェイ)の後に2試合合計のノックアウトで優勝を争う。自クラブの試合もリーグ戦と同じく監督に任せ、カップ戦の画面で勝ち上がりを順に見られる。',
+                'The domestic cup is a straight knockout for every club in tiers 1 to 3 (the lower tiers start first and the top clubs join in later rounds; a draw after 90 minutes goes to extra time, then penalties). Only England has a league cup. There are two continental cups, the Champions Cup and the Europa Cup: the top clubs of each top division qualify by country quota, play a home-and-away group stage, then two-legged knockout ties. Your own ties are left to the manager, as in the league, and the Cups screen shows each round in turn.'),
           ),
           GuideTopic(
             title: Tr.pick('勝ち上がり賞金', 'Progression prize money'),
@@ -385,15 +386,16 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('カレンダー', 'Calendar'),
             description: Tr.pick(
-                'リーグ戦・カップ戦の実際の日付と、週の重点トレーニング日を一覧できる。試合が詰まる週の見通しを立てるのに使う。',
-                'The actual dates of league and cup matches, plus your main training day each week. Use it to see a congested run coming.'),
+                'リーグ戦・カップ戦の実際の日付を一覧できる。試合が詰まる週の見通しを立てるのに使う。',
+                'The actual dates of league and cup matches. Use it to see a congested run coming.'),
           ),
         ],
       ),
       GuideSection(
         icon: Icons.workspace_premium,
-        title:
-            Tr.pick('シーズン成績・実績・監督キャリア画面', 'Records, achievements and career'),
+        // 画面の見出し(オーナー室の「オーナーの経歴」)に揃える。
+        title: Tr.pick('シーズン成績・実績・オーナーの経歴',
+            'Records, achievements and your career as owner'),
         overview: Tr.pick(
             '過去の記録を振り返るための画面群。うまくいった/いかなかったシーズンを見返し、次のシーズンの方針決めに活かす。',
             'Where you look back. Review the seasons that went well and the ones that did not, and decide how to approach the next one.'),

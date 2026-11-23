@@ -8391,18 +8391,15 @@ void main() {
 
     final glossaryTerms = glossaryEntries.map((e) => e.term).toSet();
     for (final term in [
-      '決定機',
-      '采配方針',
-      'ライブ交代',
-      'モメンタム(試合の流れ)',
       'クイック消化',
       '値切り交渉',
       '勝ち上がり賞金',
       '天候',
       '記者会見',
-      'スカウティングレポート(試合プレビュー)',
-      '戦術ミーティング',
-      '自動トレーニング',
+      'メンタリティ',
+      'マンマーク',
+      '全体練習',
+      'オーナーの評判',
       '契約解除の違約金',
       // 契約は年単位(AB1)のため、旧「契約残り週数」は年数表記へ更新済み。
       '契約残り年数',
@@ -8411,12 +8408,34 @@ void main() {
     }
     expect(glossaryTerms, isNot(contains('契約残り週数')),
         reason: '週数ベースの契約は年単位へ移行済みで、用語集も追随している');
-    expect(
-      glossaryEntries
-          .where((e) => e.category == GlossaryCategory.liveMatch)
-          .length,
-      greaterThanOrEqualTo(5),
-    );
+    // オーナー型(2026-11-16)では画面からも監督からも触れない機能。
+    // 用語集に残っていると、無い操作を探させることになる(2026-11-23 に外した)。
+    for (final term in [
+      'キャプテン/副キャプテン',
+      'プレッシング',
+      'ラインの高さ',
+      '攻撃の幅',
+      'テンポ',
+      '練習強度',
+      '逃げ切りモード',
+      '戦術スタイル',
+      'スカウティングレポート(試合プレビュー)',
+      '戦術ミーティング',
+      '自動トレーニング',
+      '試合前の確認',
+      'チームトーク',
+      '決定機',
+      '采配方針',
+      'ライブ交代',
+      'モメンタム(試合の流れ)',
+      '監督としての評価',
+    ]) {
+      expect(glossaryTerms, isNot(contains(term)), reason: '$term は今は無い機能');
+    }
+    // 記者会見は移籍の噂に答えるものだけ。試合後の会見は無い。
+    final press = glossaryEntries.firstWhere((e) => e.term == '記者会見');
+    expect(press.description, contains('移籍の噂'));
+    expect(press.description, isNot(contains('試合後')));
   });
 
   test(
