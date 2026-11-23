@@ -455,13 +455,9 @@ class _PersonTab extends StatelessWidget {
               Gauge('魅', l.mi.toDouble()),
               Gauge('運', l.un.toDouble()),
               const SizedBox(height: 10),
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: [
-                  for (final t in l.traits) Tag(traitName(t)),
-                  if (l.gun) const Tag('鉄砲'),
-                ],
+              TraitList(
+                [for (final t in l.traits) traitOf(t)],
+                extra: [if (l.gun) ('鉄砲', '撃ち方を覚えている。合戦で有利になる')],
               ),
             ],
           ),

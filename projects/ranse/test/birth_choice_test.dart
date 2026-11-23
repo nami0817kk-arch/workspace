@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ranse/engine/birth.dart';
+import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/rng.dart';
 
 /// 生まれる性別を選べる（2026-11-23 ユーザー「男か女は選べるように」）。
@@ -29,5 +30,12 @@ void main() {
       if (rollBirth(Rng(5000 + i)).female) f++;
     }
     expect(f, inInclusiveRange(150, 250));
+  });
+
+  test('特性にはどれも一言の説明があり、数字を出さない', () {
+    for (final t in [...kTraits, kTraitOnna]) {
+      expect(t.desc, isNotEmpty, reason: t.name);
+      expect(RegExp(r'[0-9０-９%]').hasMatch(t.desc), isFalse, reason: t.desc);
+    }
   });
 }

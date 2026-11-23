@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../engine/data.dart';
 import '../engine/life.dart';
 import 'theme.dart';
 
@@ -421,4 +422,53 @@ class _ChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _ChartPainter old) => old.h.length != h.length;
+}
+
+/// 特性の一覧。名前の札と一言の説明を並べる（2026-11-23 ユーザー「特性の説明がない」）。
+class TraitList extends StatelessWidget {
+  const TraitList(this.traits, {super.key, this.extra = const []});
+  final List<Trait> traits;
+
+  /// 特性のほかに並べる札（鉄砲を覚えた、など）。名前と説明。
+  final List<(String, String)> extra;
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = [for (final t in traits) (t.name, t.desc), ...extra];
+    if (rows.isEmpty) {
+      return const Text(
+        '特性なし',
+        style: TextStyle(color: Pal.muted, fontSize: 13),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final (name, desc) in rows)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Tag(name),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      desc,
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        color: Pal.ink,
+                        height: 1.45,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
 }

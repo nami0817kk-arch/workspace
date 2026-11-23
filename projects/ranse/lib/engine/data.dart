@@ -239,29 +239,40 @@ class Abil {
 }
 
 class Trait {
-  const Trait(this.id, this.name, this.fx);
+  const Trait(this.id, this.name, this.fx, [this.desc = '']);
   final String id, name;
+
+  /// 画面に出す一言の説明（数字は出さない。2026-11-23 ユーザー「特性の説明がない」）。
+  final String desc;
   final void Function(Abil) fx;
 }
 
 final kTraits = <Trait>[
-  Trait('power', '剛力', (a) => a.bu += 15),
-  Trait('prodigy', '神童', (a) => a.chi += 15),
-  Trait('beauty', '人好きのする顔', (a) => a.mi += 15),
-  Trait('lucky', '強運', (a) => a.un += 20),
-  Trait('sickly', '病弱', (a) => a.maxhp -= 30),
-  Trait('hardy', '頑健', (a) => a.maxhp += 20),
-  Trait('amb', '野心家', (a) {}),
-  Trait('loyal', '義理堅い', (a) {}),
-  Trait('gunner', '鉄砲の才', (a) {}),
-  Trait('rider', '馬術の達人', (a) => a.bu += 8),
-  Trait('abacus', '算盤上手', (a) => a.sei += 15),
+  Trait('power', '剛力', (a) => a.bu += 15, '生まれつき腕っぷしが強い。武に秀でる'),
+  Trait('prodigy', '神童', (a) => a.chi += 15, '幼いころから物覚えが早い。知に秀でる'),
+  Trait('beauty', '人好きのする顔', (a) => a.mi += 15, '誰にでも好かれやすい。魅に秀でる'),
+  Trait('lucky', '強運', (a) => a.un += 20, '天に味方されている。運に大きく恵まれる'),
+  Trait('sickly', '病弱', (a) => a.maxhp -= 30, '体が弱い。病にかかりやすく、重くなりやすい'),
+  Trait('hardy', '頑健', (a) => a.maxhp += 20, '体が丈夫。病にも深手にも強い'),
+  Trait('amb', '野心家', (a) {}, '上を狙う気性。下剋上の誘いが来やすく、成し遂げやすい'),
+  Trait('loyal', '義理堅い', (a) {}, '恩を忘れない。主君の信頼を得やすいが、主家を裏切りにくい'),
+  Trait('gunner', '鉄砲の才', (a) {}, '鉄砲を手にすれば、すぐに腕を上げる'),
+  Trait('rider', '馬術の達人', (a) => a.bu += 8, '馬を自在に操る。武に少し秀でる'),
+  Trait('abacus', '算盤上手', (a) => a.sei += 15, '勘定に明るい。政に秀で、稼ぎも増える'),
   Trait('tongue', '弁舌巧み', (a) {
     a.mi += 8;
     a.chi += 5;
-  }),
+  }, '口が立つ。魅と知に少し秀でる'),
 ];
-final kTraitOnna = Trait('onna', '女武者', (a) => a.bu += 12);
+final kTraitOnna = Trait(
+  'onna',
+  '女武者',
+  (a) => a.bu += 12,
+  '女の身で武芸に生きる。戦に出られ、武に秀でる',
+);
+
+Trait traitOf(String id) =>
+    id == kTraitOnna.id ? kTraitOnna : kTraits.firstWhere((t) => t.id == id);
 
 String traitName(String id) {
   if (id == kTraitOnna.id) return kTraitOnna.name;

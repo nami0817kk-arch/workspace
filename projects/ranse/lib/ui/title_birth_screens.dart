@@ -166,19 +166,7 @@ class BirthScreen extends StatelessWidget {
                   Gauge('魅', s.mi.toDouble(), labelWidth: 36),
                   Gauge('運', s.un.toDouble(), labelWidth: 36),
                   const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: [
-                      if (b.traits.isEmpty)
-                        const Text(
-                          '特性なし',
-                          style: TextStyle(color: Pal.muted, fontSize: 13),
-                        )
-                      else
-                        for (final t in b.traits) Tag(t.name),
-                    ],
-                  ),
+                  TraitList(b.traits),
                 ],
               ),
             ),
