@@ -461,9 +461,10 @@ List<SceneDef> _spring() => [
     20,
     65,
     3,
-    (g) => g.l.kids > 0 && g.l.hasKidAged(g.year, 2, 12),
+    (g) => g.l.kidAged(g.year, 2, 12) != null,
     (g, next) {
-      final k = _kidName(g);
+      // 家にいる二つから十二の子のうち、いちばん下の子。
+      final k = g.l.kidsAged(g.year, 2, 12).lastOrNull?.name;
       final kid = k ?? '幼い子';
       g.ask('節分の鬼', '年越しの夜（節分）、家の戸口に柊と鰯の頭を挿し、豆を打って鬼を追う。$kidは、鬼が来ると聞いてから、夕方より柱の陰に隠れて出てこない。', [
         Choice.h('自ら鬼の面をかぶり、追われ役になる', '子は笑って豆を打つ。少し痛い', () {
@@ -492,9 +493,9 @@ List<SceneDef> _spring() => [
     18,
     55,
     3,
-    (g) => g.l.kids > 0 && g.l.hasKidAged(g.year, 0, 9) && !g.hasFlag('priesthood'),
+    (g) => g.l.kidAged(g.year, 0, 9) != null && !g.hasFlag('priesthood'),
     (g, next) {
-      final k = _kidName(g) ?? '子';
+      final k = g.l.kidsAged(g.year, 0, 9).lastOrNull?.name ?? '子';
       g.ask('上巳の祓え', '三月三日、紙で人の形（ひとがた）を作り、子の体をなでて穢れを移し、川へ流す。$kの分のひとがたを、自分の手で作ることにした。', [
         Choice.h('子の無事だけを祈って、川へ流す', '心は静まる。祈りは川とともに去る', () {
           g.j(4);

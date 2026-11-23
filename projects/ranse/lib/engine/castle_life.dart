@@ -194,10 +194,35 @@ bool _lordWeak(Game g) {
 /// 連れ合いの名（いなければ「奥方」「夫」）。
 String _spouse(Game g) => g.l.people['伴侶']?.name ?? (g.l.female ? '夫' : '奥方');
 
-/// 嫡男の名（家族の岐路で決まっていればその名、なければこの筋で一度決めて残す）。
+/// 跡取りの子（子の記録）。家族の岐路の「嫡男」がいればその子、この筋で決めた子が生きていればその子、
+/// なければ家にいる息子のいちばん上。
+Kid? _heirKid(Game g) {
+  final l = g.l;
+  final byRole = l.kidOfRole('嫡男');
+  if (byRole != null && byRole.alive) return byRole;
+  final n = _named(g, 'cl_heir_name:', '');
+  final kept = n.isEmpty ? null : l.kidNamed(n);
+  if (kept != null && kept.alive) return kept;
+  return l.sonAged(g.year, 0);
+}
+
+/// 跡取りの子が家にいて、歳が [lo]〜[hi] か（年の分からない子は真）。
+bool _heirAged(Game g, int lo, int hi) {
+  final k = _heirKid(g);
+  if (k == null || !k.home) return false;
+  final a = k.ageAt(g.year);
+  return a == null || (a >= lo && a <= hi);
+}
+
+/// 嫡男の名（家族の岐路で決まっていればその名、なければ跡取りの子の名をこの筋に残す）。
 String _heir(Game g) {
   final p = g.l.people['嫡男'];
   if (p != null) return p.name;
+  final k = _heirKid(g);
+  if (k != null) {
+    _keepName(g, 'cl_heir_name:', k.name);
+    return k.name;
+  }
   final n = _named(g, 'cl_heir_name:', '');
   if (n.isNotEmpty) return n;
   final pick = g.rng.pick(kHeirNames);
@@ -1219,7 +1244,7 @@ List<SceneDef> _houseScenes() => [
     28,
     70,
     (g) => _w1,
-    (g) => clLord(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 8, 14),
+    (g) => clLord(g) && _heirAged(g, 8, 14),
     (g, next) {
       final h = _heir(g);
       g.ask('跡取りの育て方', '跡取りの$hが、そろそろ手元を離れてもよい年頃になった。主君の城へ小姓として上げれば、主家の内を知る。寺へ預ければ、学問が身につく。城に置けば、家臣たちと共に育つ。', [
@@ -1246,7 +1271,7 @@ List<SceneDef> _houseScenes() => [
     },
   ),
 
-  _chain('cl_atotori_after', 32, 76, _w2, (g) => clLord(g) && g.l.kids >= 1, (g, next) {
+  _chain('cl_atotori_after', 32, 76, _w2, (g) => clLord(g) && _heirKid(g) != null, (g, next) {
     final l = g.l;
     final h = _heir(g);
     if (g.hasFlag('cl_heir_kosho')) {
@@ -1323,7 +1348,7 @@ List<SceneDef> _houseScenes() => [
     34,
     76,
     (g) => g.l.female ? _wWife : _w1,
-    (g) => clLife(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 15, 28),
+    (g) => clLife(g) && _heirAged(g, 15, 28),
     (g, next) {
       final h = _heir(g);
       final n = '${g.rng.pick(kSurnames)}家';

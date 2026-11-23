@@ -585,6 +585,19 @@ class _PersonTab extends StatelessWidget {
             ],
           ),
         ),
+        // 家族（連れ合いと子を一行ずつ。亡くなった子は薄く）。
+        if (l.familyRows(g.year).isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Panel(
+            title: '家族',
+            child: Column(
+              children: [
+                for (final r in l.familyRows(g.year))
+                  _FamilyRow(r.$1, r.$2, faded: r.$3),
+              ],
+            ),
+          ),
+        ],
         if (l.people.isNotEmpty) ...[
           const SizedBox(height: 12),
           Panel(
@@ -723,5 +736,37 @@ class _LogTab extends StatelessWidget {
   Widget build(BuildContext context) => ListView(
     padding: _pad,
     children: [Panel(title: '見聞録', child: LogList(g.l.log.take(80).toList()))],
+  );
+}
+
+/// 家族の欄の一行（呼び名を左に、名・歳・行き先を右に。長ければ折り返す）。
+class _FamilyRow extends StatelessWidget {
+  const _FamilyRow(this.label, this.text, {this.faded = false});
+  final String label, text;
+  final bool faded;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(vertical: 3),
+    decoration: const BoxDecoration(
+      border: Border(bottom: BorderSide(color: Pal.line)),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(color: Pal.muted, fontSize: 13.5)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            text,
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontSize: 13.5,
+              color: faded ? Pal.muted.withValues(alpha: .7) : null,
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }

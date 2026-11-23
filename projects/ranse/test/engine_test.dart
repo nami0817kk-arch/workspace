@@ -2297,9 +2297,11 @@ void main() {
       expect(back.kidYears, [1550, 1553]);
       expect(back.eldestKidAge(1565), 15);
       expect(back.youngestKidAge(1565), 12);
-      // 古い保存: kidYears が無い。子は「年の分からない子」になる。
+      // 古い保存: kidYears も子の記録（children）も無い。子は「年の分からない子」になる。
       final m = jsonDecode(jsonOf(g)) as Map<String, dynamic>;
-      (m['life'] as Map<String, dynamic>).remove('kidYears');
+      (m['life'] as Map<String, dynamic>)
+        ..remove('kidYears')
+        ..remove('children');
       final (old, _) = fromJson(jsonEncode(m));
       expect(old.kids, 2);
       expect(old.kidYears, isEmpty);
@@ -2346,12 +2348,13 @@ void main() {
         checked++;
         final l = g.l;
         final y = g.year;
-        void kidsBorn(List<int> ages) {
+        // 子は息子（[girls] に入れた順番の子だけ娘）。元服・初陣・跡目は息子、裳着は娘の場面。
+        void kidsBorn(List<int> ages, [Set<int> girls = const {}]) {
           l
             ..kids = 0
             ..kidYears.clear();
-          for (final a in ages) {
-            l.addKid(y - a);
+          for (var i = 0; i < ages.length; i++) {
+            l.addKid(y - ages[i], female: girls.contains(i));
           }
         }
 
@@ -2368,8 +2371,8 @@ void main() {
         expect(ok(g, 'fa_shuppon'), isFalse);
         expect(ok(g, 'fa_tameshi'), isFalse);
 
-        // 十四と十二の子。
-        kidsBorn([14, 12]);
+        // 十四の息子と十二の娘。
+        kidsBorn([14, 12], {1});
         l.people.remove('嫡男');
         expect(ok(g, 'fa_genpuku'), isTrue);
         expect(ok(g, 'fa_mogi'), isTrue);
@@ -2379,8 +2382,10 @@ void main() {
         expect(ok(g, 'fa_tameshi'), isFalse);
         expect(ok(g, 'fa_atome'), isFalse, reason: '弟がまだ幼い');
 
-        // 二十二と十八の子。
-        kidsBorn([22, 18]);
+        // 二十と十八の息子（嫡男は上の子。初陣は嫡男その人が二十までのあいだ）。
+        kidsBorn([20, 18]);
+        g.meet('嫡男', '太郎', 60);
+        expect(g.l.kidOfRole('嫡男')!.ageAt(y), 20);
         expect(ok(g, 'fa_genpuku'), isFalse, reason: '嫡男がいる');
         expect(ok(g, 'fa_uijin'), isTrue);
         expect(ok(g, 'fa_shuppon'), isTrue);

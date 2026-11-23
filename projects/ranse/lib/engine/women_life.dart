@@ -1089,11 +1089,13 @@ List<SceneDef> _lifeScenes() => [
     (g) => 2,
     (g) =>
         (_is(g, WomanKind.village) || _is(g, WomanKind.merchant)) &&
-        g.l.kids >= 1 &&
-        g.l.hasKidAged(g.year, 10, 16),
+        g.l.daughterAged(g.year, 10, 16) != null,
     (g, next) {
       final l = g.l;
-      final girl = l.people['娘']?.name ?? _girl(g);
+      // 名のある娘がその歳ならその娘、でなければ家にいる十から十六の娘。
+      final girl =
+          (roleKid(g, '娘', 10, 16, true) ?? l.daughterAged(g.year, 10, 16)!)
+              .name;
       g.ask('娘の奉公', '城下の武家の屋敷から、娘の$girlを下女に上げないかという話が来た。口減らしにもなるが、娘はまだ幼い。', [
         Choice.h('奉公に出す', '娘は行儀を覚え、家の口も減る。会える日は限られる', () {
           l.gold += 3;

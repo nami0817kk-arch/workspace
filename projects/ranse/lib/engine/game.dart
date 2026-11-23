@@ -107,6 +107,20 @@ class Prompt {
   final void Function() after;
 }
 
+/// 縁の役割（嫡男・子・娘 など）の指す子が、家にいて歳が [lo]〜[hi]（[female] があれば性別も）ならその子。
+/// 年の分からない子は歳が合うとみなす。
+Kid? roleKid(Game g, String role, int lo, [int hi = 999, bool? female]) {
+  final k = g.l.kidOfRole(role);
+  if (k == null || !k.home) return null;
+  if (female != null && k.female != female) return null;
+  final a = k.ageAt(g.year);
+  return a == null || (a >= lo && a <= hi) ? k : null;
+}
+
+/// 縁談の年頃（十三から二十五）の家にいる娘。名のある娘（裳着・祝い）がその歳ならその娘。
+Kid? marriageableDaughter(Game g) =>
+    roleKid(g, '娘', 13, 25, true) ?? g.l.daughterAged(g.year, 13, 25);
+
 class Game extends ChangeNotifier {
   Game({Rng? rng, this.onCheckpoint}) : rng = rng ?? Rng() {
     childScenes = [
@@ -241,8 +255,11 @@ class Game extends ChangeNotifier {
   bool hasFlag(String f) => l.flags.contains(f);
 
   /// 縁のある人と出会う。同じ役割なら置き換わる。
-  void meet(String role, String name, int bond) =>
-      l.people[role] = Person(role, name, bond);
+  /// 子を指す役割（嫡男・娘・子 など、`kKidRoles`）は、同じ名の子の記録と結ぶ。
+  void meet(String role, String name, int bond) {
+    l.people[role] = Person(role, name, bond);
+    if (kKidRoles.contains(role)) l.bindKidRole(role, year);
+  }
 
   /// 画面を更新する。選択肢が出ていない区切りでは保存も呼ぶ。
   void changed() {
@@ -980,9 +997,9 @@ class Game extends ChangeNotifier {
           age <= (l.female ? 40 : 60) &&
           l.kids < 8 &&
           rng.chance(l.female ? .10 : .06)) {
-        l.addKid(year);
+        final born = l.addKid(year);
         j(8);
-        log('子が生まれた（${l.kids}人目）。', 'good');
+        log('${born.female ? '娘' : '息子'}の${born.name}が生まれた（${l.kids}人目）。', 'good');
         final risk = clampD(
           (l.hp < 40 ? .08 : .03) *
               (has('hardy') ? .7 : 1) *
@@ -995,7 +1012,9 @@ class Game extends ChangeNotifier {
           log('お産が長引き、力尽きた。', 'bad');
         }
       }
-      if (l.dead == null && l.kids > 0 && rng.chance(.012 * l.kids)) {
+      // 幼い子（家にいる十までの子。年の分からない子も数える）がいるときだけ。
+      final young = l.kidsAged(year, 0, 10).length;
+      if (l.dead == null && young > 0 && rng.chance(.012 * young)) {
         l.loseKid(year, 0, 10);
         j(-25);
         setFlag('fa_lost_child');

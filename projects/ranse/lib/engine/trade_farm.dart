@@ -1176,7 +1176,9 @@ List<SceneDef> _farmerScenes() => [
     tfFarmer,
     (g, next) {
       final l = g.l;
-      final son = l.kids > 0 && l.hasKidAged(g.year, 15, 25);
+      // 家にいる十五から二十五の息子（いちばん上）。
+      final sonKid = l.sonAged(g.year, 15, 25);
+      final son = sonKid != null;
       final lord = _nearHouse(g);
       g.ask('陣触れの村', son
           ? '$lordの陣触れで、村から足軽を出せと言ってきた。寄合では、年頃の子のいるあなたの家に目が集まっている。'
@@ -1184,7 +1186,7 @@ List<SceneDef> _farmerScenes() => [
         if (son)
           Choice.h('子を出す', '手柄を立てれば家の誉れ。戻らないこともある', () {
             if (g.rng.chance(.12)) {
-              l.loseKid(g.year, 15, 25);
+              l.kidDied(sonKid, g.year);
               g.setFlag('fa_lost_child');
               g.j(-25);
               g.mark('陣触れで足軽に出した子を、戦で失った');

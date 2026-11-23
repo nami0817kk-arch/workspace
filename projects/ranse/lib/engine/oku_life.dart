@@ -236,9 +236,13 @@ String? _other(Game g) {
 
 String _otherName(Game g, String? f) => f == null ? '隣国の家' : '${houseName(g, f)}家';
 
-/// 嫡男（いなければ子）の名。
+/// 手習いを始める年頃（六つから十二）の息子の名。嫡男・子の役割の子がその歳ならその子、でなければ家にいる息子。
 String _sonName(Game g) =>
-    g.l.people['嫡男']?.name ?? g.l.people['子']?.name ?? g.rng.pick(kGivenM);
+    (roleKid(g, '嫡男', 6, 12, false) ??
+            roleKid(g, '子', 6, 12, false) ??
+            g.l.sonAged(g.year, 6, 12))
+        ?.name ??
+    g.rng.pick(kGivenM);
 
 /// 重み。筋の始まり・ひとつきりは、奥で仕える年が [_wServe]（嫁ぐまでの年は短いので重め）、
 /// 嫁いだ年が [_wWife]。前の段を踏んだ人だけに出る後段は [_w2]、晩年は [_wOld]。
@@ -858,11 +862,11 @@ List<SceneDef> _wifeScenes() => [
   _chain('ok_sobame_child', 24, 52, _w2, okWife, (g, next) {
     final l = g.l;
     final who = _husband(g);
-    final child = g.rng.pick(kGivenM);
+    final child = g.rng.pick(l.freeNames(kGivenM));
     g.ask('囲い女の子', '城下の女が、$whoの男子を産んだ。$whoは、あなたの顔色ばかりうかがっている。', [
       Choice.h('屋敷に引き取り、己の子として育てる', '家の跡取りが増える。女の恨みを買うかもしれない', () {
         _stamp(g, 'sobame');
-        l.addKid(g.year);
+        l.addKid(g.year, female: false, name: child);
         _spouse(g, 10);
         l.fame += 2;
         g.j(-2);
@@ -887,7 +891,7 @@ List<SceneDef> _wifeScenes() => [
         Choice.h('女と話をつけ、母子ともに屋敷の離れに迎える', '人柄が通じれば家は一つになる。家中の口はうるさい', () {
           _stamp(g, 'sobame');
           if (g.rng.chance(clampD(.5 + l.mi / 300, .5, .85))) {
-            l.addKid(g.year);
+            l.addKid(g.year, female: false, name: child);
             _spouse(g, 12);
             _net(g, 2);
             g.meet('引き取った子', child, 60);
@@ -1029,7 +1033,7 @@ List<SceneDef> _wifeScenes() => [
   }),
 
   // ============================================ 筋: 嫡男の手習い → 育った子
-  SceneDef('ok_kyoiku', 25, 50, (g) => _wWife, (g) => okWife(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 6, 12), (g, next) {
+  SceneDef('ok_kyoiku', 25, 50, (g) => _wWife, (g) => okWife(g) && g.l.sonAged(g.year, 6, 12) != null, (g, next) {
     final k = _sonName(g);
     _keepName(g, 'ok_kyoiku_name:', k);
     final who = _husband(g);
@@ -1290,7 +1294,7 @@ List<SceneDef> _lateScenes() => [
   }),
 
   // ============================================ 孫娘の嫁ぎ先
-  SceneDef('ok_mago_yome', 50, 85, (g) => _wOld, (g) => okElder(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 32), (g, next) {
+  SceneDef('ok_mago_yome', 50, 85, (g) => _wOld, (g) => okElder(g) && g.l.hasLivingKidAged(g.year, 32), (g, next) {
     final l = g.l;
     final m = g.rng.pick(kGivenF);
     g.ask('孫娘の嫁ぎ先', '孫娘の$mに縁談が来た。先方は格の高い家だが、婿は気性が荒いと噂される。子らは、祖母のあなたの考えを聞きに来た。', [

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'data.dart';
 
 class LogEntry {
@@ -63,6 +65,155 @@ class Faction {
       Faction(j['n'] as String, (j['p'] as num).toDouble(), j['a'] as bool);
 }
 
+/// 子の行き先（`Kid.fate`）。
+class KidFate {
+  static const home = 'home'; // 家にいる
+  static const wed = 'wed'; // 嫁いだ
+  static const adoptedOut = 'adopted_out'; // 養子に出た
+  static const temple = 'temple'; // 寺に入った
+  static const hostage = 'hostage'; // 人質に出ている
+  static const disowned = 'disowned'; // 勘当した
+  static const fled = 'fled'; // 出奔した
+  static const away = 'away'; // 旅立った・家を出た
+  static const service = 'service'; // 奉公に出た
+  static const dead = 'dead'; // 亡くなった
+
+  /// 画面に出す言い方（家にいる子は空）。
+  static const label = {
+    home: '',
+    wed: '嫁いだ',
+    adoptedOut: '養子に出た',
+    temple: '寺に入った',
+    hostage: '人質に出ている',
+    disowned: '勘当した',
+    fled: '出奔した',
+    away: '家を出た',
+    service: '奉公に出た',
+    dead: '亡くなった',
+  };
+}
+
+/// 子を指す縁の役割。名は子の記録（`Kid.name`）と同じものを指す。
+const kKidRoles = [
+  '嫡男',
+  '娘',
+  '子',
+  '養子',
+  '人質に出した子',
+  '旅立った子',
+  '勘当した子',
+  '出奔した子',
+  '寺に入った子',
+  '奉公に出た娘',
+  '引き取った子',
+  '人質の子',
+];
+
+/// 子ひとりの記録。
+class Kid {
+  Kid({
+    required this.born,
+    required this.female,
+    required this.name,
+    this.childName,
+    this.fate = KidFate.home,
+    this.endYear,
+    this.adopted = false,
+  });
+
+  /// 生まれた年。分からない子（古い保存・数だけ入れた子）は null。
+  int? born;
+  final bool female;
+
+  /// いまの名（元服で改めたら元服の名。幼名は [childName] に残す）。
+  String name;
+  String? childName;
+
+  /// 行き先（`KidFate`）。
+  String fate;
+
+  /// 家を出た年・亡くなった年。
+  int? endYear;
+
+  /// 養子として迎えた子。
+  final bool adopted;
+
+  bool get alive => fate != KidFate.dead;
+  bool get home => fate == KidFate.home;
+
+  /// その年の歳（年の分からない子は null）。亡くなった子は享年。
+  int? ageAt(int year) {
+    if (born == null) return null;
+    final y = alive ? year : (endYear ?? year);
+    return y - born! < 0 ? 0 : y - born!;
+  }
+
+  /// 元服などで名を改める（前の名を幼名として残す）。
+  void rename(String n) {
+    if (n == name) return;
+    childName ??= name;
+    name = n;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'b': born,
+    'f': female,
+    'n': name,
+    if (childName != null) 'c': childName,
+    's': fate,
+    if (endYear != null) 'e': endYear,
+    if (adopted) 'a': true,
+  };
+  factory Kid.fromJson(Map<String, dynamic> j) => Kid(
+    born: j['b'] as int?,
+    female: j['f'] as bool,
+    name: j['n'] as String,
+    childName: j['c'] as String?,
+    fate: (j['s'] as String?) ?? KidFate.home,
+    endYear: j['e'] as int?,
+    adopted: (j['a'] as bool?) ?? false,
+  );
+}
+
+/// 前の持ち方（生まれた年の一覧）の写し。歳の分かる生きている子の年を、記録の順に見せる。
+class _KidYears extends ListBase<int> {
+  _KidYears(this._l);
+  final Life _l;
+
+  List<Kid> get _known =>
+      _l.children.where((k) => k.alive && k.born != null).toList();
+
+  @override
+  int get length => _known.length;
+
+  /// 短くすると、うしろの子から年を忘れる（子は減らない）。
+  @override
+  set length(int n) {
+    final ks = _known;
+    for (var i = ks.length - 1; i >= n && i >= 0; i--) {
+      ks[i].born = null;
+    }
+  }
+
+  @override
+  int operator [](int i) => _known[i].born!;
+
+  @override
+  void operator []=(int i, int v) => _known[i].born = v;
+
+  /// 年の分からない子に年を入れる（いなければ何もしない）。
+  @override
+  void add(int element) {
+    final k = _l.children
+        .where((k) => k.alive && k.born == null)
+        .firstOrNull;
+    if (k != null) k.born = element;
+  }
+
+  @override
+  void clear() => length = 0;
+}
+
 /// 一人の人生の状態。
 class Life {
   Life({
@@ -107,70 +258,407 @@ class Life {
   /// 十五歳で得る身分。幼少期の出来事で変わることがある。
   int birthRank;
   String? lord;
-  int fav = 0, merit = 0, troops = 0, fame = 0, net = 0, kids = 0, conq = 0;
+  int fav = 0, merit = 0, troops = 0, fame = 0, net = 0, conq = 0;
   bool married = false, gun = false, ronin = false;
   final List<String> traits;
   final double rarity, sameClass;
 
-  /// 子の生まれた年（古い順）。`kids` より短いときは、足りない分が年の分からない子
-  /// （この持ち方より前の保存や、数だけを入れた子）で、その子らはいちばん上の側にいるとみなす。
-  /// 子の歳で出し分ける岐路は、年の分からない子がいれば今までどおり親の歳で見る。
-  final List<int> kidYears = [];
+  /// 子の記録（生まれた順に足す。亡くなった子・家を出た子も残す）。子についての正はここ。
+  /// 年の分からない子（`born == null`。この持ち方より前の保存や、数だけを入れた子）は
+  /// いちばん上の側にいるとみなし、子の歳で出し分ける岐路は今までどおり親の歳で見る。
+  final List<Kid> children = [];
+
+  /// 生きている子（家を出た子も含む）。
+  Iterable<Kid> get livingKids => children.where((k) => k.alive);
+
+  /// 生きている子の数（嫁いだ・寺に入ったなど、家を出た子も数える。亡くなった子は数えない）。
+  /// 子の記録から数えるので、記録と食い違わない。
+  int get kids => livingKids.length;
+
+  /// 数だけを置く（テストと古い呼び出しのため）。増やす分は年の分からない子を足し、
+  /// 減らす分は上の子から記録ごと外す（その子を指す縁の役割も外す）。
+  set kids(int n) {
+    var cur = kids;
+    while (cur > n) {
+      final k = livingKids.first;
+      children.remove(k);
+      _dropKidRoles(k.name);
+      cur--;
+    }
+    while (cur < n) {
+      _newKid(null);
+      cur++;
+    }
+  }
+
+  /// 生きて家にいる子の数。
+  int get kidsHome => children.where((k) => k.home).length;
+
+  /// 歳の分かる生きている子の生まれた年（記録の順）。前の持ち方（年の一覧）の写しで、
+  /// `clear()` は年を忘れさせ、`add(年)` は年の分からない子に年を入れる。
+  late final List<int> kidYears = _KidYears(this);
+
+  /// 名と生年と順から決まる数（子の性別と名に使う。人生の乱数は動かさない）。
+  int _kidSeed(int i, int? born) {
+    var h = 7;
+    for (final c in name.codeUnits) {
+      h = (h * 31 + c) & 0x3fffffff;
+    }
+    h = (h * 31 + startYear) & 0x3fffffff;
+    h = (h * 31 + i * 7 + 3) & 0x3fffffff;
+    h = (h * 31 + (born ?? 0)) & 0x3fffffff;
+    for (var n = 0; n < 3; n++) {
+      h = (h * 1103 + 12345) & 0x3fffffff;
+    }
+    return h >> 4;
+  }
+
+  /// まだ使っていない名を選ぶ（兄弟姉妹・縁のある人・自分の名と重ねない）。
+  String _kidName(bool girl, int seed) {
+    final used = {
+      for (final k in children) k.name,
+      for (final k in children)
+        if (k.childName != null) k.childName!,
+      for (final p in people.values) p.name,
+    };
+    bool free(String n) => !used.contains(n) && !name.endsWith(n);
+    final high = rank >= 5;
+    final pools = girl
+        ? [if (high) kHimeNames, kGivenF]
+        : [if (high) kHeirNames, kGivenM];
+    for (final pool in pools) {
+      final ok = pool.where(free).toList();
+      if (ok.isNotEmpty) return ok[seed % ok.length];
+    }
+    final last = pools.last;
+    return last[seed % last.length];
+  }
+
+  Kid _newKid(int? born, {bool? female, String? name, bool adopted = false}) {
+    final i = children.length;
+    final seed = _kidSeed(i, born);
+    // 年の分からない子は、上から交互に（男の子と女の子のどちらもいる家になりやすい）。
+    final unknownBefore = children.where((k) => k.born == null).length;
+    final girl =
+        female ??
+        (born == null
+            ? (_kidSeed(0, null) + unknownBefore).isOdd
+            : seed % 100 < 49);
+    final k = Kid(
+      born: born,
+      female: girl,
+      name: name ?? _kidName(girl, seed ~/ 100),
+      adopted: adopted,
+    );
+    if (born == null) {
+      children.insert(unknownBefore, k);
+    } else {
+      children.add(k);
+    }
+    return k;
+  }
 
   /// 子が生まれた（養子を迎えたときは、その子の生まれた年を入れる）。
-  void addKid(int year) {
-    kids++;
-    kidYears.add(year);
+  /// 性別と名は、決めて渡さなければ名と生年から決まる。
+  Kid addKid(int year, {bool? female, String? name, bool adopted = false}) =>
+      _newKid(year, female: female, name: name, adopted: adopted);
+
+  /// 子の役割（縁のある人）のうち、その名を指しているものを外す。
+  void _dropKidRoles(String kidName) {
+    people.removeWhere((r, p) => kKidRoles.contains(r) && p.name == kidName);
   }
 
-  /// 子を一人亡くす（数を減らす）。`year` があれば、歳が [lo]〜[hi] の子のうち下の子から外す。
-  /// 当てはまる子がいなければ、年の分からない子がいればその子を、いなければいちばん下の子を外す。
-  void loseKid([int? year, int lo = 0, int hi = 999]) {
-    if (kids <= 0) return;
-    while (kidYears.length > kids) {
-      kidYears.removeAt(0);
-    }
-    kids--;
+  /// その子が亡くなった（記録に残し、その子を指す縁の役割を外す）。
+  void kidDied(Kid k, [int? year]) {
+    k.fate = KidFate.dead;
+    k.endYear = year;
+    _dropKidRoles(k.name);
+  }
+
+  /// その子が家を出た（嫁いだ・寺に入った・人質・勘当・出奔・旅立ち など）。
+  void kidLeft(Kid k, String fate, [int? year]) {
+    if (!k.alive) return;
+    k.fate = fate;
+    k.endYear = year;
+  }
+
+  /// その子が家に戻った。
+  void kidBack(Kid k) {
+    if (!k.alive) return;
+    k.fate = KidFate.home;
+    k.endYear = null;
+  }
+
+  /// 子を一人亡くす。`year` があれば、歳が [lo]〜[hi] の子のうち下の子から
+  /// （家にいる子を先に）。当てはまる子がいなければ、年の分からない子を、いなければいちばん下の子を。
+  /// 亡くした子を返す（子がいなければ null）。
+  Kid? loseKid([int? year, int lo = 0, int hi = 999]) {
+    final alive = livingKids.toList();
+    if (alive.isEmpty) return null;
+    Kid? hit;
     if (year != null) {
-      for (var i = kidYears.length - 1; i >= 0; i--) {
-        final a = year - kidYears[i];
-        if (a >= lo && a <= hi) {
-          kidYears.removeAt(i);
-          return;
+      for (final homeOnly in const [true, false]) {
+        for (final k in alive.reversed) {
+          if (k.born == null || (homeOnly && !k.home)) continue;
+          final a = year - k.born!;
+          if (a >= lo && a <= hi && (hit == null || k.born! > hit.born!)) {
+            hit = k;
+          }
         }
+        if (hit != null) break;
       }
     }
-    if (kidYears.length > kids) kidYears.removeLast();
+    hit ??= alive.where((k) => k.born == null && k.home).firstOrNull;
+    hit ??= alive.where((k) => k.born == null).firstOrNull;
+    hit ??= _sorted(alive.where((k) => k.home)).lastOrNull;
+    hit ??= _sorted(alive).last;
+    kidDied(hit, year);
+    return hit;
   }
 
-  /// 歳の分かる子の生まれた年（古い順。数の合わない分は古いほうから捨てる）。
-  List<int> get _knownKidYears => kidYears.length > kids
-      ? kidYears.sublist(kidYears.length - kids)
-      : kidYears;
+  /// 上の子から（年の分からない子がいちばん上）。同じ年なら記録の順。
+  List<Kid> _sorted(Iterable<Kid> ks) {
+    final l = ks.toList();
+    final at = {for (var i = 0; i < children.length; i++) children[i]: i};
+    l.sort((a, b) {
+      final c = (a.born ?? -99999).compareTo(b.born ?? -99999);
+      return c != 0 ? c : at[a]!.compareTo(at[b]!);
+    });
+    return l;
+  }
+
+  /// すべての子を上から（亡くなった子・家を出た子も）。画面の家族の欄に使う。
+  List<Kid> get kidsInOrder => _sorted(children);
+
+  /// 歳が [lo]〜[hi] の生きている子を上から。年の分からない子は当てはまるとみなす。
+  /// [female] で性別を、[home]（既定は真）で家にいる子だけに絞る。
+  List<Kid> kidsAged(
+    int year,
+    int lo, [
+    int hi = 999,
+    bool? female,
+    bool home = true,
+  ]) => _sorted(
+    livingKids.where(
+      (k) =>
+          (!home || k.home) &&
+          (female == null || k.female == female) &&
+          (k.born == null || (year - k.born! >= lo && year - k.born! <= hi)),
+    ),
+  );
+
+  /// 歳が [lo]〜[hi] で家にいる息子（いちばん上）。
+  Kid? sonAged(int year, int lo, [int hi = 999]) =>
+      kidsAged(year, lo, hi, false).firstOrNull;
+
+  /// 歳が [lo]〜[hi] で家にいる娘（いちばん上）。
+  Kid? daughterAged(int year, int lo, [int hi = 999]) =>
+      kidsAged(year, lo, hi, true).firstOrNull;
+
+  /// 歳が [lo]〜[hi] で家にいる子（いちばん上。性別を問わない）。
+  Kid? kidAged(int year, int lo, [int hi = 999]) =>
+      kidsAged(year, lo, hi).firstOrNull;
+
+  /// その名の子（生きている子を先に）。
+  Kid? kidNamed(String? n) {
+    if (n == null) return null;
+    return livingKids.where((k) => k.name == n).firstOrNull ??
+        children.where((k) => k.name == n).firstOrNull;
+  }
+
+  /// 縁の役割（嫡男・娘・子 など）が指している子。
+  Kid? kidOfRole(String role) => kidNamed(people[role]?.name);
 
   /// 年の分からない子がいるか。
-  bool get kidAgeUnknown => kids > 0 && kidYears.length < kids;
+  bool get kidAgeUnknown => livingKids.any((k) => k.born == null);
 
   /// いちばん上の子の歳。子がいないか、年の分からない子がいれば null。
-  int? eldestKidAge(int year) =>
-      kids <= 0 || kidAgeUnknown ? null : year - _knownKidYears.first;
+  int? eldestKidAge(int year) {
+    if (kids <= 0 || kidAgeUnknown) return null;
+    return year - _sorted(livingKids).first.born!;
+  }
 
   /// いちばん下の子の歳。歳の分かる子がいなければ null。
   int? youngestKidAge(int year) {
-    final ys = _knownKidYears;
-    return kids <= 0 || ys.isEmpty ? null : year - ys.last;
+    final ks = _sorted(livingKids.where((k) => k.born != null));
+    return ks.isEmpty ? null : year - ks.last.born!;
   }
 
-  /// 歳が [lo]〜[hi] の子がいるか。年の分からない子がいれば真とみなす（親の歳で見る）。
+  /// 歳が [lo]〜[hi] の家にいる子がいるか。年の分からない子がいれば真とみなす（親の歳で見る）。
   bool hasKidAged(int year, int lo, [int hi = 999]) =>
-      kids > 0 &&
-      (kidAgeUnknown ||
-          _knownKidYears.any((y) => year - y >= lo && year - y <= hi));
+      kidsAged(year, lo, hi).isNotEmpty;
 
-  /// [min] 歳以上の子の数。年の分からない子は数に入れる。
-  int kidsAtLeast(int year, int min) =>
-      (kids - _knownKidYears.length).clamp(0, kids) +
-      _knownKidYears.where((y) => year - y >= min).length;
+  /// 歳が [lo]〜[hi] の生きている子がいるか（嫁いだ子・家を出た子も含む。孫の話などに）。
+  bool hasLivingKidAged(int year, int lo, [int hi = 999]) =>
+      kidsAged(year, lo, hi, null, false).isNotEmpty;
+
+  /// [min] 歳以上の家にいる子の数。年の分からない子は数に入れる。
+  int kidsAtLeast(int year, int min) => kidsAged(year, min).length;
+
+  /// 「長男」「次女」など（同じ性別の子のうち何番目か。亡くなった子も数える）。
+  String kidOrdinal(Kid k) {
+    const ord = ['長', '次', '三', '四', '五', '六', '七', '八', '九', '十'];
+    final i = kidsInOrder.where((x) => x.female == k.female).toList().indexOf(k);
+    final o = i >= 0 && i < ord.length ? ord[i] : '末';
+    return '$o${k.female ? '女' : '男'}';
+  }
+
+  /// 家族の欄の呼び名。嫡男（縁の役割が指す子）・養子・長男・次女 など。
+  String kidLabel(Kid k) {
+    if (k.alive && people['嫡男']?.name == k.name) return '嫡男';
+    if (k.adopted) return k.female ? '養女' : '養子';
+    return kidOrdinal(k);
+  }
+
+  /// 人物のタブの「家族」の欄。連れ合いと子を一行ずつ（呼び名・中身・薄く出すか）。
+  /// 子は上から。亡くなった子は「（◯歳で亡くなった）」と薄く。
+  List<(String, String, bool)> familyRows(int year) {
+    final rows = <(String, String, bool)>[];
+    final sp = people['伴侶'];
+    if (sp != null) {
+      rows.add((
+        '連れ合い',
+        married ? sp.name : '${sp.name}（いまは共にいない）',
+        !married,
+      ));
+    }
+    for (final k in kidsInOrder) {
+      final a = k.ageAt(year);
+      if (!k.alive) {
+        rows.add((
+          kidLabel(k),
+          '${k.name}（${a == null ? '' : '$a歳で'}亡くなった）',
+          true,
+        ));
+        continue;
+      }
+      final where = KidFate.label[k.fate] ?? '';
+      rows.add((
+        kidLabel(k),
+        [k.name, if (a != null) '$a歳', if (where.isNotEmpty) where].join('・'),
+        false,
+      ));
+    }
+    return rows;
+  }
+
+  /// [pool] のうち、子・縁のある人・自分の名と重ならない名（すべて重なるなら [pool] のまま）。
+  List<String> freeNames(List<String> pool) {
+    final used = {
+      for (final k in children) k.name,
+      for (final k in children)
+        if (k.childName != null) k.childName!,
+      for (final p in people.values) p.name,
+    };
+    final ok = pool
+        .where((n) => !used.contains(n) && !name.endsWith(n))
+        .toList();
+    return ok.isEmpty ? pool : ok;
+  }
+
+  /// 子の名を改める（元服など）。その子を指す縁の役割の名も合わせる。
+  void renameKid(Kid k, String n) {
+    if (n == k.name) return;
+    for (final r in kKidRoles) {
+      final p = people[r];
+      if (p != null && p.name == k.name) people[r] = Person(r, n, p.bond);
+    }
+    k.rename(n);
+  }
+
+  /// 家を出たことを表す縁の役割 → 行き先。
+  static const _roleFate = {
+    '人質に出した子': KidFate.hostage,
+    '人質の子': KidFate.hostage,
+    '旅立った子': KidFate.away,
+    '勘当した子': KidFate.disowned,
+    '出奔した子': KidFate.fled,
+    '寺に入った子': KidFate.temple,
+    '奉公に出た娘': KidFate.service,
+  };
+
+  /// 子を指す縁の役割が付いたとき（`Game.meet`）、その名の子の記録と結ぶ。
+  /// 同じ名の子がいなければ、合う子（役割の性別・家にいる子・上の子の順）の名をその名に改める。
+  /// 家を出る役割（人質・旅立ち・勘当・出奔・寺・奉公）なら、行き先も記す。
+  void bindKidRole(String role, [int? year]) {
+    final p = people[role];
+    if (p == null || !kKidRoles.contains(role)) return;
+    var k = livingKids.where((x) => x.name == p.name).firstOrNull;
+    if (k == null) {
+      final bool? girl = role == '嫡男'
+          ? false
+          : (role == '娘' || role == '奉公に出た娘')
+          ? true
+          : (kGivenF.contains(p.name) || kHimeNames.contains(p.name))
+          ? true
+          : (kGivenM.contains(p.name) || kHeirNames.contains(p.name))
+          ? false
+          : null;
+      final bound = {
+        for (final r in kKidRoles)
+          if (r != role && people[r] != null) people[r]!.name,
+      };
+      final cands = _sorted(
+        livingKids.where(
+          (x) => !bound.contains(x.name) && (girl == null || x.female == girl),
+        ),
+      );
+      k = cands.where((x) => x.home).firstOrNull ?? cands.firstOrNull;
+      if (k == null) return;
+      k.rename(p.name);
+    }
+    final fate = _roleFate[role];
+    if (fate != null && k.home) kidLeft(k, fate, year);
+  }
+
+  /// 古い保存（子の数と生まれた年だけ）から子の記録を作る。縁の役割に名のある子は、その名で。
+  void _kidsFromOldSave(int n, List<int> years) {
+    final ys = years.length > n ? years.sublist(years.length - n) : years;
+    final slots = <int?>[for (var i = ys.length; i < n; i++) null, ...ys];
+    final wed = path.any(
+      (p) => p.contains('嫁がせた') || p.contains('縁組に出した'),
+    );
+    bool girlName(String s) => kGivenF.contains(s) || kHimeNames.contains(s);
+    // 役割 → （性別〔null は名で見る〕, 行き先）
+    final roles = <String, (bool?, String)>{
+      '嫡男': (false, KidFate.home),
+      '養子': (null, KidFate.home),
+      '子': (null, KidFate.home),
+      '娘': (true, wed ? KidFate.wed : KidFate.home),
+      '人質に出した子': (null, KidFate.hostage),
+      '人質の子': (null, KidFate.hostage),
+      '旅立った子': (null, KidFate.away),
+      '勘当した子': (null, KidFate.disowned),
+      '出奔した子': (null, KidFate.fled),
+      '寺に入った子': (null, KidFate.temple),
+      '奉公に出た娘': (true, KidFate.service),
+      '引き取った子': (null, KidFate.home),
+    };
+    var i = 0;
+    final seen = <String>{};
+    for (final e in roles.entries) {
+      final p = people[e.key];
+      if (p == null) continue;
+      if (seen.contains(p.name)) continue;
+      if (i >= slots.length) {
+        // 子の数より多い役割は、亡くした子を指したまま残っていたもの。
+        people.remove(e.key);
+        continue;
+      }
+      seen.add(p.name);
+      final k = _newKid(
+        slots[i++],
+        female: e.value.$1 ?? girlName(p.name),
+        name: p.name,
+        adopted: e.key == '養子',
+      );
+      k.fate = e.value.$2;
+    }
+    for (; i < slots.length; i++) {
+      _newKid(slots[i]);
+    }
+  }
+
   final List<LogEntry> log = [];
   final List<HistPoint> hist = [];
 
@@ -223,7 +711,8 @@ class Life {
     'fame': fame,
     'net': net,
     'kids': kids,
-    'kidYears': kidYears,
+    'kidYears': kidYears.toList(),
+    'children': children.map((e) => e.toJson()).toList(),
     'conq': conq,
     'married': married,
     'gun': gun,
@@ -276,9 +765,6 @@ class Life {
     l.troops = j['troops'] as int;
     l.fame = j['fame'] as int;
     l.net = j['net'] as int;
-    l.kids = j['kids'] as int;
-    // 古い保存には無い（年の分からない子として扱う）。
-    l.kidYears.addAll(((j['kidYears'] as List?) ?? const []).cast<int>());
     l.conq = j['conq'] as int;
     l.married = j['married'] as bool;
     l.gun = j['gun'] as bool;
@@ -306,6 +792,16 @@ class Life {
     (j['focus'] as Map<String, dynamic>).forEach(
       (k, v) => l.focus[k] = v as int,
     );
+    // 子の記録。無い古い保存（数と生まれた年だけ）は、縁のある人の名と合わせて補う。
+    final cs = j['children'] as List?;
+    if (cs != null) {
+      l.children.addAll(cs.map((e) => Kid.fromJson(e as Map<String, dynamic>)));
+    } else {
+      l._kidsFromOldSave(
+        j['kids'] as int,
+        ((j['kidYears'] as List?) ?? const []).cast<int>(),
+      );
+    }
     return l;
   }
 }

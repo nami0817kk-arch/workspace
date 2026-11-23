@@ -2,6 +2,7 @@ import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
 import 'history_lines.dart';
+import 'life.dart';
 import 'rng.dart';
 
 /// 女性の人生に固有の岐路（2026-11-23）。生まれの半分は女性で、全人生の約2割が「女の道」に進むのに、
@@ -156,18 +157,19 @@ List<SceneDef> buildWomenScenes() => [
     (g) => 2,
     (g) =>
         g.l.female &&
-        g.l.kids >= 1 &&
-        g.l.hasKidAged(g.year, 13, 25) &&
+        marriageableDaughter(g) != null &&
         g.l.rank >= 1 &&
         g.active,
     (g, next) {
-      // 裳着・祝い（family.dart）で名のある娘がいれば、その娘の縁談。
-      final hime = g.l.people['娘']?.name ?? g.rng.pick<String>(kGivenF);
+      // 裳着・祝い（family.dart）で名のある娘がその歳ならその娘、でなければ家にいる年頃の娘。
+      final kid = marriageableDaughter(g)!;
+      final hime = kid.name;
       g.ask('娘の嫁ぎ先', '娘の$himeに、二つの縁談が来ている。家のためになる縁と、娘が慕う若侍との縁だ。', [
         Choice.h('家のためになる縁を選ぶ', '家は強くなる。娘は泣くかもしれない', () {
           g.l.fav = _c(g.l.fav + 8);
           g.j(-4);
           g.meet('娘', hime, 45);
+          g.l.kidLeft(kid, KidFate.wed, g.year);
           g.mark('娘の$himeを、家のための縁組に出した');
           return '$himeは、黙って嫁いでいった。';
         }),
@@ -175,6 +177,7 @@ List<SceneDef> buildWomenScenes() => [
           g.l.fav = _c(g.l.fav - 5);
           g.j(8);
           g.meet('娘', hime, 80);
+          g.l.kidLeft(kid, KidFate.wed, g.year);
           g.mark('娘の$himeを、慕う相手に嫁がせた');
           return '$himeは、泣きながら笑って嫁いでいった。';
         }),

@@ -64,8 +64,6 @@ int _yr(Game g, int a) => g.l.startYear + a;
 void _heal(Life l, int n) => l.hp = l.hp + n > l.maxhp ? l.maxhp : l.hp + n;
 int _c(int v) => clampInt(v, 0, 100);
 
-String _childName(Game g) => g.rng.pick(g.rng.chance(.5) ? kGivenM : kGivenF);
-
 List<SceneDef> buildWayScenes() {
   int f(Game g, String tag) => g.l.focus[tag] ?? 0;
   bool free(Game g) =>
@@ -378,9 +376,9 @@ List<SceneDef> buildWayScenes() {
     SceneDef('shop_heir', 45, 80, (g) => 3, (g) => merchant(g), (g, next) {
       final l = g.l;
       g.ask('店の跡目', '店を誰に任せるか、決める時が来た。', [
-        if (l.kids > 0 && l.hasKidAged(g.year, 15))
+        if (l.kidAged(g.year, 15) != null)
           Choice.h('我が子に継がせる', '家は続く。子の器量しだいでもある', () {
-            final n = _childName(g);
+            final n = (roleKid(g, '子', 15) ?? l.kidAged(g.year, 15)!).name;
             g.meet('子', n, 60);
             g.setFlag('retired');
             g.j(6);
@@ -897,11 +895,12 @@ List<SceneDef> buildWayScenes() {
       (g) => 2.5,
       // 一人前の歳（14〜24）の子がいるとき。年の分からない子は親の歳で見る。
       (g) =>
-          g.l.kids > 0 &&
-          g.l.hasKidAged(g.year, 14, 24) &&
+          g.l.kidAged(g.year, 14, 24) != null &&
           !g.l.people.containsKey('子'),
       (g, next) {
-        final n = _childName(g);
+        // 家にいる十四から二十四の子（いちばん上）。
+        final kid = g.l.kidAged(g.year, 14, 24)!;
+        final n = kid.name;
         g.ask('子の門出', '子の$nが、一人前になる歳を迎えた。', [
           Choice.h('自分の道を継がせる', '家は続く。子の望みとは違うかもしれない', () {
             g.meet('子', n, 55);
@@ -911,6 +910,7 @@ List<SceneDef> buildWayScenes() {
           }),
           Choice.h('好きな道を行かせる', '子は喜ぶ。家は誰が継ぐ', () {
             g.meet('子', n, 75);
+            g.l.kidLeft(kid, KidFate.away, g.year);
             g.j(4);
             return '$nは、目を輝かせて家を出ていった。';
           }),

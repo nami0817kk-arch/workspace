@@ -1859,7 +1859,7 @@ List<SceneDef> _womanScenes() => [
   }),
 
   // ============================================ ひとつきり: 後見してきた当主の元服
-  SceneDef('dm_w_genpuku', 25, 84, (g) => _wF * 2, (g) => dmRegent(g) && g.l.hasKidAged(g.year, 14, 20), (g, next) {
+  SceneDef('dm_w_genpuku', 25, 84, (g) => _wF * 2, (g) => dmRegent(g) && g.l.sonAged(g.year, 14, 20) != null, (g, next) {
     final l = g.l;
     g.ask('当主の元服', '後見してきた幼い当主が、元服の年を迎えた。烏帽子をつけた姿は、まだ細い。家臣たちは、政をいつ当主に返すのかと、そっと様子をうかがっている。', [
       Choice.h('元服の日に、政を当主に返す', '当主は早く育つ。若い当主の過ちは止められない', () {

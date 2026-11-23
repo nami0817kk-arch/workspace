@@ -639,7 +639,11 @@ List<SceneDef> buildEchoMoreScenes() => [
         g.l.kids > 0 &&
         g.l.hasKidAged(g.year, 15),
     (g, next) {
-      final n = g.l.people['子']?.name ?? g.l.people['娘']?.name ?? '子';
+      final n =
+          g.l.people['子']?.name ??
+          g.l.people['娘']?.name ??
+          g.l.kidAged(g.year, 15)?.name ??
+          '子';
       void bond(int v) {
         final k = g.l.people['子'] ?? g.l.people['娘'];
         if (k != null) k.bond = _c(k.bond + v);

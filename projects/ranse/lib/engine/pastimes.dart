@@ -52,7 +52,10 @@ String _house(Game g) => g.l.lord == null ? '主' : houseName(g, g.l.lord);
 
 /// 子（縁のある子がいればその名）。
 String _kidName(Game g) =>
-    g.l.people['子']?.name ?? g.l.people['娘']?.name ?? '子';
+    g.l.people['子']?.name ??
+    g.l.people['娘']?.name ??
+    g.l.kidAged(g.year, 6, 15)?.name ??
+    '子';
 
 void _kidBond(Game g, int n) {
   final k = g.l.people['子'] ?? g.l.people['娘'];

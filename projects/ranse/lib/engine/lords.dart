@@ -35,8 +35,6 @@ void _heal(Life l, int n) => l.hp = l.hp + n > l.maxhp ? l.maxhp : l.hp + n;
 
 String _man(Game g) => '${g.rng.pick(kSurnames)}${g.rng.pick(kGivenM)}';
 
-String _kid(Game g) => g.rng.pick(g.rng.chance(.5) ? kHeirNames : kHimeNames);
-
 /// 城を預かる身（城主・家老・宿老）。
 bool _castle(Game g) =>
     g.l.rank >= 5 && g.l.rank < 8 && g.active && _lordAlive(g);
@@ -287,9 +285,10 @@ List<SceneDef> buildLordScenes() {
       25,
       70,
       (g) => 1.5,
-      (g) => _castle(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 5, 18),
+      (g) => _castle(g) && g.l.kidAged(g.year, 5, 18) != null,
       (g, next) {
-        final n = _kid(g);
+        // 家にいる五つから十八の子（いちばん上）。役割「人質の子」が付くと、子の記録も人質になる。
+        final n = g.l.kidAged(g.year, 5, 18)!.name;
         g.ask('人質の差し出し', '主家が、忠誠の証として子を一人差し出せと求めてきた。行き先は、主家の城の奥深くだ。', [
           Choice.h('$nを差し出す', '主家の信は厚くなる。子とは離れて暮らす', () {
             _fav(g, 12);
@@ -473,10 +472,12 @@ List<SceneDef> buildLordScenes() {
       35,
       75,
       (g) => 1.5,
-      (g) => _castle(g) && g.l.kids >= 2 && g.l.kidsAtLeast(g.year, 10) >= 2,
+      (g) => _castle(g) && g.l.kidsAged(g.year, 10, 999, false).length >= 2,
       (g, next) {
-        final h1 = g.rng.pick(kHeirNames);
-        final h2 = g.rng.pick(kHeirNames.where((n) => n != h1).toList());
+        // 家にいる十より上の息子のうち、上の二人。
+        final sons = g.l.kidsAged(g.year, 10, 999, false);
+        final h1 = sons[0].name;
+        final h2 = sons[1].name;
         g.ask('嫡男の器', '嫡男の$h1は心優しいが、武芸も学問も振るわない。家臣たちは、利発な次男の$h2を推す声を上げ始めた。', [
           Choice.h('$h1に継がせる', '筋目は守れる。家の行く末は案じられる', () {
             g.meet('嫡男', h1, 70);
@@ -490,6 +491,7 @@ List<SceneDef> buildLordScenes() {
             g.setFlag('heir');
             g.setFlag('disinherit');
             g.j(-5);
+            g.l.kidLeft(sons[0], KidFate.temple, g.year);
             g.mark('嫡男を廃し、次男の$h2を跡継ぎとした');
             return '$h1は寺へ入った。兄弟が口をきくことは、もうなかった。';
           }),
@@ -507,16 +509,18 @@ List<SceneDef> buildLordScenes() {
       35,
       75,
       (g) => 1.5,
-      (g) => _castle(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 13, 25),
+      (g) => _castle(g) && marriageableDaughter(g) != null,
       (g, next) {
         final l = g.l;
-        final hime = g.l.people['娘']?.name ?? g.rng.pick<String>(kHimeNames);
+        final kid = marriageableDaughter(g)!;
+        final hime = kid.name;
         g.ask('娘の縁組', '年頃になった娘の$himeに、主家の重臣から縁組の話が来た。相手は娘より二十も年上の後添えだ。', [
           Choice.h('縁組を受ける', '家の後ろ盾は厚くなる。娘の涙は見ないふり', () {
             _fav(g, 6);
             l.net += 5;
             g.j(-6);
             g.meet('娘', hime, 40);
+            l.kidLeft(kid, KidFate.wed, g.year);
             g.mark('娘の$himeを、主家の重臣に嫁がせた');
             return '$himeは、輿の中で一度も顔を上げなかった。';
           }),
@@ -524,6 +528,7 @@ List<SceneDef> buildLordScenes() {
             _fav(g, -6);
             g.j(6);
             g.meet('娘', hime, 85);
+            l.kidLeft(kid, KidFate.wed, g.year);
             g.setFlag('love_match');
             return '$himeは、小さな家の若侍に嫁いでいった。よく笑う娘になった。';
           }),
@@ -1108,10 +1113,12 @@ List<SceneDef> buildLordScenes() {
       40,
       84,
       (g) => 1.5,
-      (g) => _daimyo(g) && g.l.kids >= 2 && g.l.kidsAtLeast(g.year, 10) >= 2,
+      (g) => _daimyo(g) && g.l.kidsAged(g.year, 10, 999, false).length >= 2,
       (g, next) {
-        final h1 = g.rng.pick(kHeirNames);
-        final h2 = g.rng.pick(kHeirNames.where((n) => n != h1).toList());
+        // 家にいる十より上の息子のうち、上の二人。
+        final sons = g.l.kidsAged(g.year, 10, 999, false);
+        final h1 = sons[0].name;
+        final h2 = sons[1].name;
         g.ask('世継ぎ', '家臣たちが、世継ぎを定めてほしいと願い出た。嫡子の$h1は温和で、庶子の$h2は戦上手だ。', [
           Choice.h('$h1を世継ぎに定める', '筋目は守れる。家は穏やかに続く', () {
             g.meet('嫡男', h1, 70);
