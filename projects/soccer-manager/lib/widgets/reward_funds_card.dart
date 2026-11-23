@@ -38,6 +38,15 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
     final scheme = Theme.of(context).colorScheme;
     final left = gameState.marketingBoostWeeks;
     final soldOut = money.remainingToday <= 0;
+    // 上限まで貯まっているときは、見ても入らない。広告を出す前に止める。
+    const cap = GameStateSquad.marketingBoostCap;
+    final full = !soldOut && gameState.marketingBoostFull;
+    final untilRoom = gameState.marketingBoostWeeksUntilRoom;
+    final fullNote = money.requiresAd
+        ? Tr.pick('貯められるのは$cap節まで（あと$untilRoom節ぶん使うと見られます）',
+            'You can bank up to $cap matchdays (play $untilRoom more to watch again).')
+        : Tr.pick('貯められるのは$cap節まで（あと$untilRoom節ぶん使うと受け取れます）',
+            'You can bank up to $cap matchdays (play $untilRoom more to take another).');
 
     return Card(
       child: Padding(
@@ -67,12 +76,14 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
               soldOut
                   ? Tr.pick('本日分は受け取り済みです。日付が変わるとまた受け取れます。',
                       "You have taken today's allowance. It resets tomorrow.")
-                  : money.requiresAd
-                      ? Tr.pick(
-                          '短い動画広告を最後まで見ると、次の1節だけ収入が増えます(貯めた分: $left節)。見なくてもゲームは最後まで遊べます。',
-                          'Watch a short video to the end and income rises for the next matchday ($left banked). You can finish the game without ever watching one.')
-                      : Tr.pick('サポーターとして、広告なしで次の1節の収入を増やせます(貯めた分: $left節)。',
-                          'As a supporter, boost the next matchday\'s income with no ad ($left banked).'),
+                  : full
+                      ? fullNote
+                      : money.requiresAd
+                          ? Tr.pick(
+                              '短い動画広告を最後まで見ると、次の1節だけ収入が増えます(貯めた分: $left節)。見なくてもゲームは最後まで遊べます。',
+                              'Watch a short video to the end and income rises for the next matchday ($left banked). You can finish the game without ever watching one.')
+                          : Tr.pick('サポーターとして、広告なしで次の1節の収入を増やせます(貯めた分: $left節)。',
+                              'As a supporter, boost the next matchday\'s income with no ad ($left banked).'),
               style: TextStyle(color: scheme.onSurfaceVariant),
             ),
             const SizedBox(height: 12),
@@ -91,11 +102,15 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
                 label: Text(
                   soldOut
                       ? Tr.pick('本日分は受け取り済み', 'Already taken today')
-                      : money.requiresAd
-                          ? Tr.pick('動画を見て営業を強化', 'Watch a video to push marketing')
-                          : Tr.pick('営業を強化する', 'Push marketing'),
+                      : full
+                          ? Tr.pick('貯められるのは$cap節まで',
+                              'Bank is full ($cap max)')
+                          : money.requiresAd
+                              ? Tr.pick('動画を見て営業を強化',
+                                  'Watch a video to push marketing')
+                              : Tr.pick('営業を強化する', 'Push marketing'),
                 ),
-                onPressed: _busy || soldOut ? null : _claim,
+                onPressed: _busy || soldOut || full ? null : _claim,
               ),
             ),
           ],
@@ -110,7 +125,9 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
     final money = context.read<MonetizationController>();
     final gameState = context.read<GameState>();
 
-    final result = await money.claimReward();
+    // 上限まで貯まっていたら、広告を出す前に断らせる(回数も減らさない)。
+    final result =
+        await money.claimReward(bankFull: gameState.marketingBoostFull);
 
     // **受け取りは mounted を見ない。** 広告を見終えた後に画面を離れると
     // State が捨てられる。ここで返していた頃は、回数だけ消費して資金が
@@ -135,6 +152,9 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
           'The ad did not finish, so nothing was paid'),
       ClaimResult.unavailable => Tr.pick('いま表示できる広告がありません。時間をおいてお試しください',
           'No ad is available right now. Please try again later'),
+      ClaimResult.bankFull => Tr.pick(
+          '貯められるのは${GameStateSquad.marketingBoostCap}節までです。1節使うとまた受け取れます',
+          'You can bank up to ${GameStateSquad.marketingBoostCap} matchdays. Play one to take another'),
     };
     if (!mounted) return;
     ScaffoldMessenger.of(context)

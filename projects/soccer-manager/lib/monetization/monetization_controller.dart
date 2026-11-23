@@ -17,6 +17,10 @@ enum ClaimResult {
   /// 広告を最後まで見なかった、または表示できなかった。
   adNotCompleted,
 
+  /// 営業ブーストが上限まで貯まっていて、これ以上入らない。
+  /// 広告は出さず、回数も減らさない(見ても入らないものを見せない)。
+  bankFull,
+
   /// この端末では広告も課金も使えない (Web版など)。
   unavailable,
 }
@@ -27,9 +31,16 @@ enum ClaimResult {
 /// 購入はストアのアカウントに紐づくもので、どのセーブスロットで
 /// 遊んでいるかとは関係がないため。
 class MonetizationController extends ChangeNotifier {
-  MonetizationController({AdService? adService, PurchaseService? purchases})
-      : _ads = adService ?? createAdService(),
-        _purchases = purchases ?? createPurchaseService();
+  /// [prefs] はテスト用。書き込みの途中で落ちる場面を作るために差し替える。
+  MonetizationController({
+    AdService? adService,
+    PurchaseService? purchases,
+    @visibleForTesting Future<SharedPreferences> Function()? prefs,
+  })  : _ads = adService ?? createAdService(),
+        _purchases = purchases ?? createPurchaseService(),
+        _prefs = prefs ?? SharedPreferences.getInstance;
+
+  final Future<SharedPreferences> Function() _prefs;
 
   static const _supporterKey = 'monetization.supporter';
 
@@ -72,10 +83,28 @@ class MonetizationController extends ChangeNotifier {
   bool storeAvailable = false;
 
   /// 届いたが、まだクラブ資金に移していない資金パック。
-  List<FundsPack> undeliveredFundsPacks = const [];
+  List<FundsPack> get undeliveredFundsPacks =>
+      [for (final q in _queue) q.pack];
+
+  /// 預かりの中身(取引の識別子つき)。端末側の保存と同じ順。
+  List<_QueuedPack> _queue = const [];
+
+  /// 渡し終えた取引の識別子(端末側の保存の写し)。
+  List<String> _deliveredIds = const [];
 
   /// 表示用の価格。取得できていなければ null。
+  /// 「¥」は全角に置き換えてある([displayPrice])。
   String? priceLabel;
+
+  /// ストアの価格を、同梱フォントで必ず描ける形にする。
+  ///
+  /// App Store は日本の価格を半角の「¥」(U+00A5)で返すが、同梱の
+  /// NotoSansJP にも ShipporiMincho にもこの字が無い(全角の U+FFE5 はある)。
+  /// 端末のフォントで補われる見込みはあるが、Web 版では補えずに豆腐のまま
+  /// 出た前例がある(docs/app-pitfalls.md の6)。補われるかに賭けず、
+  /// 持っている字に置き換える。
+  static String displayPrice(String price) =>
+      price.replaceAll('\u00A5', '\uFFE5');
 
   int get dailyLimit => isSupporter
       ? RewardOffer.dailyLimitSupporter
@@ -103,13 +132,14 @@ class MonetizationController extends ChangeNotifier {
   }
 
   Future<void> initialize() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _prefs();
     isSupporter = prefs.getBool(_supporterKey) ?? false;
     _claimDay = prefs.getString(_claimDayKey) ?? '';
     claimedToday = prefs.getInt(_claimCountKey) ?? 0;
     _rolloverIfNewDay();
 
-    undeliveredFundsPacks = _readUndelivered(prefs);
+    _queue = _readQueue(prefs);
+    _deliveredIds = prefs.getStringList(_deliveredIdsKey) ?? const [];
 
     await _ads.initialize();
     // **受け取りはここ1か所。** 買った瞬間に呼び出し側で渡していた頃、
@@ -119,10 +149,11 @@ class MonetizationController extends ChangeNotifier {
     await _purchases.initialize();
     storeAvailable = await _purchases.isAvailable();
     if (storeAvailable) {
-      priceLabel = await _purchases.priceLabel();
+      final supporterPrice = await _purchases.priceLabel();
+      priceLabel = supporterPrice == null ? null : displayPrice(supporterPrice);
       for (final pack in FundsPack.values) {
         final price = await _purchases.priceLabelFor(pack);
-        if (price != null) fundsPackPrices[pack] = price;
+        if (price != null) fundsPackPrices[pack] = displayPrice(price);
       }
     }
 
@@ -144,7 +175,7 @@ class MonetizationController extends ChangeNotifier {
   }
 
   Future<void> _persistClaims() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _prefs();
     await prefs.setString(_claimDayKey, _claimDay);
     await prefs.setInt(_claimCountKey, claimedToday);
   }
@@ -153,9 +184,15 @@ class MonetizationController extends ChangeNotifier {
   ///
   /// 資金の加算はここでは行わない。ゲームの状態を触るのは GameState の
   /// 責務で、この層はストアと広告だけを見る。
-  Future<ClaimResult> claimReward() async {
+  ///
+  /// [bankFull] は「いま受け取っても入らない」(営業ブーストが上限まで
+  /// 貯まっている)ときに true。**広告を出す前に断る。** 以前は上限でも
+  /// 広告を出し、見終えると回数だけ減って何も入らなかった
+  /// (docs/app-pitfalls.md の2と同じ「見たのに入らない」形)。
+  Future<ClaimResult> claimReward({bool bankFull = false}) async {
     _rolloverIfNewDay();
     if (remainingToday <= 0) return ClaimResult.limitReached;
+    if (bankFull) return ClaimResult.bankFull;
 
     if (!isSupporter) {
       if (!_ads.isRewardedAdReady) return ClaimResult.unavailable;
@@ -207,69 +244,104 @@ class MonetizationController extends ChangeNotifier {
   /// 決済が通ったぶんも、復元したぶんも、全部ここを通る。
   ///
   /// ここで失敗すると窓口は完了通知を返さないので、次の起動でまた届く。
+  ///
+  /// **渡してから「渡した」と記録する。** 以前は記録を先に書いていたので、
+  /// その後で落ちると、ストアが送り直してきても「渡し済み」として弾き、
+  /// 払ったぶんが届かなかった(消費型は復元でも戻らない)。
+  /// 資金パックは、預かりの1件に取引の識別子を添えて**1回の書き込み**で
+  /// 預ける。預かりに入った時点で記録も済んでいるので、どこで落ちても
+  /// 「届かない」と「二重に渡る」のどちらにもならない。
   Future<void> _grant(String productId, String? purchaseId) async {
     // 同じ取引を二度渡さない。識別子が無いストアもあるので、その場合は
     // 弾かずに渡す(渡しすぎより、渡し損ねのほうが害が大きい)。
-    if (purchaseId != null) {
-      final prefs = await SharedPreferences.getInstance();
-      final seen = prefs.getStringList(_deliveredIdsKey) ?? const [];
-      if (seen.contains(purchaseId)) return;
-      final kept = [...seen, purchaseId];
-      await prefs.setStringList(
-        _deliveredIdsKey,
-        kept.length <= _deliveredIdsKept
-            ? kept
-            : kept.sublist(kept.length - _deliveredIdsKept),
-      );
-    }
+    // 判定は手元の写しで、待たずに行う(同時に届いた2通が両方すり抜けない)。
+    if (purchaseId != null && _alreadyReceived(purchaseId)) return;
 
     if (productId == PurchaseService.supporterProductId) {
-      if (isSupporter) return; // 既に渡してある
-      await _markSupporter();
+      // サポーターは「購入済み」の札そのものが記録なので、二度渡っても
+      // 害は無い。札を立ててから取引を覚える。
+      if (!isSupporter) await _markSupporter();
+      await _rememberDelivered(purchaseId);
       return;
     }
 
-    final pack = FundsPack.values
-        .where((p) => p.productId == productId)
-        .firstOrNull;
+    final pack = FundsPack.byProductId(productId);
     if (pack == null) return;
 
-    // 資金はセーブの中に入るため、ここでは預かるだけ。
-    final prefs = await SharedPreferences.getInstance();
-    final queued = [..._readUndelivered(prefs), pack];
-    await prefs.setStringList(
-        _undeliveredFundsKey, queued.map((p) => p.productId).toList());
-    undeliveredFundsPacks = queued;
+    // 資金はセーブの中に入るため、ここでは預かるだけ。手元の一覧を先に
+    // 書き換えてから保存する(保存を待つ間に同じ取引がもう一度届いても弾く)。
+    final entry = _QueuedPack(pack, purchaseId);
+    _queue = [..._queue, entry];
+    try {
+      await _persistQueue();
+    } catch (_) {
+      // 預けられなかった。手元からも外し、完了通知を返させない
+      // (次の起動でストアがもう一度送ってくる)。
+      _queue = [
+        for (final q in _queue)
+          if (!identical(q, entry)) q,
+      ];
+      rethrow;
+    }
     notifyListeners();
+  }
+
+  /// この取引をもう受け取っているか(渡し終えた／預かっている)。
+  bool _alreadyReceived(String purchaseId) =>
+      _deliveredIds.contains(purchaseId) ||
+      _queue.any((q) => q.purchaseId == purchaseId);
+
+  /// 渡し終えた取引として覚える。
+  Future<void> _rememberDelivered(String? purchaseId) async {
+    if (purchaseId == null || _deliveredIds.contains(purchaseId)) return;
+    final kept = [..._deliveredIds, purchaseId];
+    _deliveredIds = kept.length <= _deliveredIdsKept
+        ? kept
+        : kept.sublist(kept.length - _deliveredIdsKept);
+    final prefs = await _prefs();
+    await prefs.setStringList(_deliveredIdsKey, _deliveredIds);
+  }
+
+  Future<void> _persistQueue() async {
+    final prefs = await _prefs();
+    await prefs.setStringList(
+        _undeliveredFundsKey, [for (final q in _queue) q.encode()]);
   }
 
   /// 預かっている資金パックをクラブ資金へ移したあとに呼ぶ。
   Future<void> markFundsPackDelivered(FundsPack pack) async {
-    final remaining = [...undeliveredFundsPacks];
-    final at = remaining.indexOf(pack);
+    final at = _queue.indexWhere((q) => q.pack == pack);
     if (at < 0) return;
-    remaining.removeAt(at); // 同じパックを複数抱えていても1つだけ消す
+    final done = _queue[at];
     // 手元の一覧を先に書き換える。保存を待っている間に別の受け取りが
     // 一覧を読むと、渡し終えたパックがまだ残って見える。
-    undeliveredFundsPacks = remaining;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(
-        _undeliveredFundsKey, remaining.map((p) => p.productId).toList());
+    // 同じパックを複数抱えていても1つだけ消す。
+    _queue = [..._queue]..removeAt(at);
+    // 預かりから消す前に、取引を「渡し終えた」の側へ移す。逆の順だと、
+    // その間に落ちたときに取引の記録がどこにも無くなり、ストアが送り直して
+    // きたぶんをもう一度渡してしまう。
+    await _rememberDelivered(done.purchaseId);
+    await _persistQueue();
     notifyListeners();
   }
 
-  static List<FundsPack> _readUndelivered(SharedPreferences prefs) {
-    final ids = prefs.getStringList(_undeliveredFundsKey) ?? const [];
+  /// 預かりを読む。古い版は商品IDだけを並べていたので、識別子の無い
+  /// 行もそのまま読む。
+  static List<_QueuedPack> _readQueue(SharedPreferences prefs) {
+    final rows = prefs.getStringList(_undeliveredFundsKey) ?? const [];
     return [
-      for (final id in ids)
-        ...FundsPack.values.where((p) => p.productId == id),
+      for (final row in rows)
+        if (_QueuedPack.decode(row) case final q?) q,
     ];
   }
 
+  /// 保存できてから手元の札を立てる。先に立てると、保存に失敗して
+  /// 送り直されたときに「もう渡してある」と見て取引だけ覚えてしまい、
+  /// 次の起動でサポーターが消える。
   Future<void> _markSupporter() async {
-    isSupporter = true;
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _prefs();
     await prefs.setBool(_supporterKey, true);
+    isSupporter = true;
     notifyListeners();
   }
 
@@ -278,5 +350,31 @@ class MonetizationController extends ChangeNotifier {
     _ads.dispose();
     _purchases.dispose();
     super.dispose();
+  }
+}
+
+/// 預かっている資金パック1件。どの取引で届いたかを添えて持つ。
+///
+/// 取引の識別子を預かりと同じ行に書くのは、「預けた」と「その取引を
+/// 受け取った」を1回の書き込みで済ませるため。別々に書くと、間で落ちた
+/// ときに片方だけが残る。
+class _QueuedPack {
+  const _QueuedPack(this.pack, this.purchaseId);
+
+  final FundsPack pack;
+  final String? purchaseId;
+
+  /// 商品IDと取引の識別子の区切り。商品IDには使っていない字。
+  static const _sep = '|';
+
+  String encode() =>
+      purchaseId == null ? pack.productId : '${pack.productId}$_sep$purchaseId';
+
+  static _QueuedPack? decode(String row) {
+    final at = row.indexOf(_sep);
+    final productId = at < 0 ? row : row.substring(0, at);
+    final pack = FundsPack.byProductId(productId);
+    if (pack == null) return null;
+    return _QueuedPack(pack, at < 0 ? null : row.substring(at + 1));
   }
 }
