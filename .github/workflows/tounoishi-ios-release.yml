@@ -40,7 +40,11 @@ jobs:
     # Apple のツールチェーンは macOS でしか動かないため、ここだけ macOS ランナー。
     # このリポジトリは 2026-09-08 から public なので、macOS ランナーも無料枠で動く
     # （非公開だった頃は分単位で消費していた。その前提で書かれた注記を訂正）。
-    runs-on: macos-latest
+    # 2027年4月から iOS 27 SDK（Xcode 27）以上でないと App Store Connect に上げられない
+    # （アップロード時の警告 ITMS-90725）。macos-latest は Xcode 26 のままなので、
+    # Xcode 27 の入った像を使う（2026-11 時点で preview。標準サイズは public なら無料、
+    # -xlarge は有料なので使わない）。macos-latest に Xcode 27 が来たら戻してよい。
+    runs-on: xcode-27
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
     timeout-minutes: 60
     defaults:
