@@ -51,7 +51,7 @@ GuideStep? currentGuide(Game s) {
   return null;
 }
 
-/// 街のタブの上に出す1行
+/// 街のタブの「今月やること」の欄に出す1行
 class GuideBar extends StatelessWidget {
   final GameController ctl;
   final GuideStep step;
@@ -67,19 +67,21 @@ class GuideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final go = _go();
+    // 「今月やること」の欄の中の1行（金の薄い面の箱。押すとその手の小窓や画面へ進む）
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: TapCard(
+      padding: const EdgeInsets.only(right: 8, bottom: 2),
+      child: Material(
           color: Pal.goldBg,
-          border: Pal.gold,
-          margin: EdgeInsets.zero,
-          onTap: go,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 12),
+          shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.gold), borderRadius: BorderRadius.circular(Ui.rBox)),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: go,
+            child: Padding(
+            padding: const EdgeInsets.only(left: 10),
             child: Row(children: [
               Text(tr('次にやること'), style: ts(size: 12, bold: true, color: Pal.goldtx)),
               const SizedBox(width: 8),
-              Expanded(child: Text(tr(step.text), maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 13.5, bold: true))),
+              Expanded(child: Text(tr(step.text), maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(size: 13.5, bold: true, height: 1.3))),
               if (go != null) const Icon(Icons.chevron_right, size: 20, color: Pal.goldtx),
               IconButton(
                 tooltip: tr('案内を閉じる'),
@@ -94,7 +96,7 @@ class GuideBar extends StatelessWidget {
                 },
               ),
             ]),
-          ),
+          )),
       ),
     );
   }

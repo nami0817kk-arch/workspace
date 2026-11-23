@@ -114,6 +114,40 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     openBiz = openBiz == id ? null : id;
     notifyListeners();
   }
+
+  /// 「街」でたたんでいる欄（rivals 宿敵・news 最近のできごと）。セーブには入れない、画面だけの状態
+  final Set<String> folded = {};
+
+  /// 欄をたたむ・開く
+  void toggleFold(String id) {
+    if (!folded.remove(id)) folded.add(id);
+    notifyListeners();
+  }
+
+  /// 「街」で詳しく開いている宿敵の会社の id（開けるのは1つだけ）
+  int? openRival;
+
+  void toggleRival(int id) {
+    openRival = openRival == id ? null : id;
+    notifyListeners();
+  }
+
+  /// 「人」で詳しく開いている部下の id（部下が4人以上のとき。開けるのは1つだけ）
+  int? openStaff;
+
+  void toggleStaff(int id) {
+    openStaff = openStaff == id ? null : id;
+    notifyListeners();
+  }
+
+  /// 開いているもの・たたんでいるものを最初の形に戻す（別の会社を読み込んだとき）
+  void _resetOpen() {
+    openBiz = null;
+    openRival = null;
+    openStaff = null;
+    folded.clear();
+  }
+
   SetupConfig setup = SetupConfig();
 
   /// 開いている小窓（null なら閉じている）
@@ -279,7 +313,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
       game = Game.fromJson(jsonDecode(raw) as Map<String, dynamic>, rng: newRandom());
       slot = k;
       endHidden = false;
-      openBiz = null;
+      _resetOpen();
       return true;
     } catch (_) {
       return false;
@@ -306,7 +340,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     endHidden = false;
     slot = startSlot;
     newSlot = null;
-    openBiz = null;
+    _resetOpen();
     game = Game.newGame(setup, rng: newRandom());
     startGuide(game!);
     tab = 'town';

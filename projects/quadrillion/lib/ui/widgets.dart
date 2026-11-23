@@ -216,7 +216,10 @@ class PickChip extends StatelessWidget {
   final String label;
   final bool on;
   final VoidCallback onTap;
-  const PickChip(this.label, {super.key, required this.on, required this.onTap});
+
+  /// 押すと選ぶ小窓が開く札（後ろに下向きの印を付ける）
+  final bool more;
+  const PickChip(this.label, {super.key, required this.on, required this.onTap, this.more = false});
   @override
   Widget build(BuildContext context) => Semantics(
         button: true,
@@ -227,38 +230,156 @@ class PickChip extends StatelessWidget {
           onTap: onTap,
           child: Container(
             height: 32,
-            padding: EdgeInsets.only(left: on ? 8 : 12, right: 12),
+            padding: EdgeInsets.only(left: on ? 8 : 12, right: more ? 4 : 12),
             decoration: BoxDecoration(
                 color: on ? Pal.onBg : Pal.panel, border: Border.all(color: on ? Pal.gold : Pal.line), borderRadius: BorderRadius.circular(99)),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               if (on) const Padding(padding: EdgeInsets.only(right: 3), child: Icon(Icons.check, size: 15, color: Pal.goldtx)),
-              Text(label, maxLines: 1, softWrap: false, style: ts(size: 12.5, color: on ? Pal.goldtx : Pal.ink, bold: on)),
+              // 行より長い札は、字だけを縮める（押せる範囲は縮めない）
+              Flexible(
+                  child: FittedBox(
+                      fit: BoxFit.scaleDown, child: Text(label, maxLines: 1, softWrap: false, style: ts(size: 12.5, color: on ? Pal.goldtx : Pal.ink, bold: on)))),
+              if (more) Icon(Icons.arrow_drop_down, size: 20, color: on ? Pal.goldtx : Pal.mute),
             ]),
           ),
         ),
       );
 }
 
-/// 横に流せる札の列（左に小さな見出し）。[id] は流した位置を覚える名前。
-/// 名前を付けないと、外側の一覧（タブごとに位置を覚えている）の位置を取り違えて、右の端まで流れた形で出る
+/// 札の列（左に小さな見出し）。札は横に流さず、入りきらなければ次の行へ折り返して、全部がいつも見える。
+/// 1枚の札が行より長いときは、その札の字だけを縮める
 class ChipRow extends StatelessWidget {
   final String id, label;
   final List<Widget> chips;
   const ChipRow(this.id, this.label, this.chips, {super.key});
   @override
-  Widget build(BuildContext context) => Row(children: [
-        ConstrainedBox(constraints: const BoxConstraints(minWidth: 52), child: Muted(label, size: 12)),
+  Widget build(BuildContext context) => Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // 見出しは1行目の札と高さをそろえる
+        Container(
+            constraints: const BoxConstraints(minWidth: 52, minHeight: minTap),
+            alignment: Alignment.centerLeft,
+            child: Muted(label, size: 12)),
         const SizedBox(width: 6),
         Expanded(
-          child: SingleChildScrollView(
-            key: PageStorageKey<String>('chips-$id'),
-            scrollDirection: Axis.horizontal,
-            child: Row(children: [
-              for (final c in chips) Padding(padding: const EdgeInsets.only(right: 6), child: c),
-            ]),
-          ),
+          child: LayoutBuilder(
+              builder: (context, c) => Wrap(key: ValueKey('chips-$id'), spacing: 6, runSpacing: 0, children: [
+                    for (final chip in chips) ConstrainedBox(constraints: BoxConstraints(maxWidth: c.maxWidth), child: chip),
+                  ])),
         ),
       ]);
+}
+
+/// たためる欄の見出し（h2 と同じ字。右に開閉の印と、たたんだときの件数）。行のどこを押しても開閉する
+class FoldHead extends StatelessWidget {
+  final String text;
+  final bool open;
+  final VoidCallback onTap;
+
+  /// たたんでいるときに右に出す短い文（「4社」など）
+  final String? note;
+  const FoldHead(this.text, {super.key, required this.open, required this.onTap, this.note});
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Semantics(
+          button: true,
+          expanded: open,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(Ui.rBtn),
+            onTap: onTap,
+            child: Container(
+              constraints: const BoxConstraints(minHeight: minTap),
+              child: Row(children: [
+                Expanded(child: Text(tx(text), style: Ui.h2)),
+                if (note != null && !open) Padding(padding: const EdgeInsets.only(right: 4), child: Muted(note!, size: 12.5)),
+                Icon(open ? Icons.expand_less : Icons.expand_more, size: 24, color: Pal.goldtx),
+              ]),
+            ),
+          ),
+        ),
+      );
+}
+
+/// 能力の細い棒（0〜99）。値が幅でしか分かっていないときは、その幅を薄い帯で見せる
+class AbBar extends StatelessWidget {
+  final int lo, hi;
+  const AbBar(this.lo, this.hi, {super.key});
+
+  /// 棒の高さ
+  static const h = 4.0;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(h / 2),
+        child: SizedBox(
+          height: h,
+          child: LayoutBuilder(builder: (context, c) {
+            final w = c.maxWidth;
+            double x(int v) => w * v.clamp(0, 99) / 99;
+            return Stack(children: [
+              const Positioned.fill(child: ColoredBox(color: Pal.panel2)),
+              if (lo == hi)
+                Positioned(left: 0, top: 0, bottom: 0, width: x(lo), child: const ColoredBox(key: ValueKey('ab-fill'), color: Pal.gold))
+              else ...[
+                // 確かな分（下の値まで）は金、まだ分からない幅は薄い帯
+                Positioned(left: 0, top: 0, bottom: 0, width: x(lo), child: const ColoredBox(key: ValueKey('ab-fill'), color: Pal.gold)),
+                Positioned(left: x(lo), top: 0, bottom: 0, width: x(hi) - x(lo), child: const ColoredBox(key: ValueKey('ab-band'), color: Color(0x66F2C14E))),
+              ],
+            ]);
+          }),
+        ),
+      );
+}
+
+/// 能力の1つ（名前と数字の下に細い棒）
+class AbKv extends StatelessWidget {
+  final String k, text;
+  final int lo, hi;
+  const AbKv(this.k, this.text, this.lo, this.hi, {super.key});
+  @override
+  Widget build(BuildContext context) => Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Kv(k, text),
+        const SizedBox(height: 2),
+        Semantics(label: '$k $text', child: AbBar(lo, hi)),
+      ]);
+}
+
+/// 株主の割合の棒に、節目の線（33.4%・50%・66.7%）と小さな字の印を重ねたもの
+class MarkBar extends StatelessWidget {
+  final List<(double, Color)> parts;
+  final double height;
+  const MarkBar(this.parts, {super.key, this.height = 14});
+
+  /// 節目（合併を止められる・社長を替えられる・合併も自由）
+  static const marks = [33.4, 50.0, 66.7];
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(builder: (context, c) {
+        final w = c.maxWidth;
+        const labelW = 44.0;
+        return SizedBox(
+          height: height + 4 + 15,
+          child: Stack(clipBehavior: Clip.none, children: [
+            Positioned(left: 0, right: 0, top: 2, child: Bar(parts, height: height)),
+            for (final m in marks) ...[
+              // 線は棒の上下に少しはみ出させて、どの色の上でも見えるよう白で縁取る
+              Positioned(
+                  key: ValueKey('mark-$m'),
+                  left: w * m / 100 - 1.5,
+                  top: 0,
+                  width: 3,
+                  height: height + 4,
+                  child: Container(
+                      decoration: BoxDecoration(color: Pal.ink, border: Border.all(color: Pal.panel, width: .75), borderRadius: BorderRadius.circular(1.5)))),
+              Positioned(
+                  left: w * m / 100 - labelW / 2,
+                  top: height + 4,
+                  width: labelW,
+                  child: Text('${m == 50 ? '50' : m}%', key: ValueKey('mark-label-$m'), textAlign: TextAlign.center, maxLines: 1, softWrap: false, style: ts(size: 10.5, color: Pal.mute, height: 1.3))),
+            ],
+          ]),
+        );
+      });
 }
 
 /// 検索の欄（名前で絞る）
@@ -644,23 +765,38 @@ class Say extends StatelessWidget {
       );
 }
 
-/// ニュースの1行（左の線の色で種類を見せる）
+/// ニュースの1行。左の線の色で大事さ（大きな知らせ・悪い・良い）を見せ、[icon] があれば種類のアイコンも付ける
 class NewsLine extends StatelessWidget {
   final String text;
   final String kind;
   final String? prefix;
-  const NewsLine(this.text, this.kind, {super.key, this.prefix});
+
+  /// 種類のアイコン（時代の事件・宿敵・社内・人・良い知らせ・悪い知らせ）
+  final IconData? icon;
+  const NewsLine(this.text, this.kind, {super.key, this.prefix, this.icon});
+
+  /// 大事さの色（線）
+  static Color lineColor(String kind) => switch (kind) { 'big' => Pal.gold, 'bad' => Pal.down, 'good' => Pal.up, _ => Pal.line };
+
+  /// アイコンの色（白い面の上で見える濃さ）
+  static Color iconColor(String kind) => switch (kind) { 'big' => Pal.goldtx, 'bad' => Pal.down, 'good' => Pal.up, _ => Pal.mute };
+
   @override
   Widget build(BuildContext context) {
-    final c = switch (kind) { 'big' => Pal.gold, 'bad' => Pal.down, 'good' => Pal.up, _ => Pal.line };
+    final body = Text.rich(TextSpan(children: [
+      if (prefix != null) TextSpan(text: prefix, style: ts(size: 13, color: Pal.mute)),
+      TextSpan(text: tx(text), style: ts(size: 13)),
+    ]));
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.only(left: 10),
-      decoration: BoxDecoration(border: Border(left: BorderSide(color: c, width: 2))),
-      child: Text.rich(TextSpan(children: [
-        if (prefix != null) TextSpan(text: prefix, style: ts(size: 13, color: Pal.mute)),
-        TextSpan(text: tx(text), style: ts(size: 13)),
-      ])),
+      padding: EdgeInsets.only(left: icon != null ? 6 : 10),
+      decoration: BoxDecoration(border: Border(left: BorderSide(color: lineColor(kind), width: 2))),
+      child: icon == null
+          ? body
+          : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(padding: const EdgeInsets.only(top: 2, right: 6), child: Icon(icon, size: 16, color: iconColor(kind))),
+              Expanded(child: body),
+            ]),
     );
   }
 }

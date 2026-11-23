@@ -230,6 +230,8 @@ void main() {
       ctl.closeSheet();
       // 解雇
       s.staff.add(s.mkPerson(0)..name = '解雇 太郎');
+      // 部下が4人以上のときは1行にたたまれているので、その人を開いておく（1.0.0+14）
+      ctl.openStaff = s.staff.last.id;
       ctl.setTab('people');
       await tester.pump();
       final m = s.staff.length;
