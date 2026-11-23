@@ -340,7 +340,7 @@ void main() {
       'if(g.breed&&breedTap(', // 相手をタップして選ぶ
       'var BREED_COST=10,BREED_CD=30,BREED_T=20;', // 養分10・30秒休む・20秒で卵
       '<div id="expd"></div>', // 一覧の遠征の欄
-      'function expChance(ms)', // 見込み
+      'function expChance(ms,d)', // 見込み
       'if(g.exp)expBack();', // 波を守り切ると帰る
       'var EXP_MAX=3,', // 3匹まで
     ]) {
@@ -355,7 +355,7 @@ void main() {
       'var sg=e.yu?10:(e.boss||e.title)?3:1;g.soul=(g.soul||0)+sg;g.bone=(g.bone||0)+(e.yu?5:1);', // 倒すと魂と骨（v58 から骨は1、勇者5）
       'var EVO2_XP=12,EVO2_SOUL=5,REV_SOUL=15,HATCH_SOUL=2;', // 魂の使い道
       'function revive(id)', // 倒れた主役を1回よみがえらせる
-      'var BONE_S=5,BONE_L=12,BONE_T=3;', // 骨の使い道
+      'var BONE_S=5,BONE_L=12,BONE_T=3,BONE_K=8;', // 骨の使い道
       'hitEn(e,t.bone?30:15,', // 骨の罠は傷30
       'g.soul=g.soul||0;g.bone=g.bone||0;g.fallen=g.fallen||[];', // 古い保存でも動く
     ]) {
