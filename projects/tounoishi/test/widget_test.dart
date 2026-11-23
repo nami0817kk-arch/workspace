@@ -238,6 +238,20 @@ void main() {
     }
   });
 
+  test('自分で置く罠とコアの光（0.7.30・試作 v46）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'data-a="trap"', // 長押しのメニューの「罠を置く」
+      'function mtrapOn(', // 踏んだ冒険者に傷と足止め
+      'if(mtrapOn(e))return;', // 罠で倒れたらその後の処理をしない
+      'id="blight"', // コアの光のボタン
+      'function coreLight(', // 周りの冒険者の攻撃を半分に
+      'if(e.lgtT&&g.t>=e.lgtT){e.lgtT=0;e.atk*=2;}', // 10秒で元に戻る
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
