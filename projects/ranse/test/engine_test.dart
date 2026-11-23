@@ -444,6 +444,7 @@ void main() {
   test('実測（記録用）: 手書きの最期のうち、実際に出会えるもの', () {
     final seen = <String>{};
     final tierCount = <Tier, int>{};
+    final phantomIds = <String, int>{};
     const leans = [
       <String>[],
       ['働いて稼ぐ', '人の倍の田を植える'],
@@ -474,6 +475,9 @@ void main() {
       final e = buildEnding(g);
       if (e.handId != null) seen.add(e.handId!);
       if (e.tier != null) tierCount[e.tier!] = (tierCount[e.tier!] ?? 0) + 1;
+      if (e.tier == Tier.phantom) {
+        phantomIds[e.handId!] = (phantomIds[e.handId!] ?? 0) + 1;
+      }
     }
     final byWay = <String, List<int>>{};
     for (final e in kHandEndings) {
@@ -492,6 +496,9 @@ void main() {
       '【希少度の出方】6000人生: '
       '${Tier.values.map((t) => '${kTierNames[t]} ${tierCount[t] ?? 0}回（${(tierCount[t] ?? 0) == 0 ? '-' : '${(6000 / tierCount[t]!).toStringAsFixed(0)}人生に1回'}）').join('・')}',
     );
+    final ph = phantomIds.entries.toList()..sort((a, b) => b.value - a.value);
+    // ignore: avoid_print
+    print('【出た幻】${ph.map((e) => '${e.key}×${e.value}').join(' ')}');
     expect(seen, isNotEmpty);
   });
 
