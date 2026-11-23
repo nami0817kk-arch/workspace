@@ -671,6 +671,17 @@
     runPre(dt) {
       const p = this.pre;
       p.t += dt;
+      // 外に出て止まりかけた球のまま入りが始まったら、ラインの内側に置き直す（2026-11-23：ライン際へのパスが転がり出たまま入りになり、
+      // 主役が外の球を拾ってラインの外を運んでいた）
+      {
+        const b = this.ball;
+        if (!this.owner && !this.fl && (b[0] < -0.3 || b[0] > W + 0.3 || b[1] < -0.3 || b[1] > L + 0.3) && !(Math.abs(b[0] - 34) < 3.7 && (b[1] < 0 || b[1] > L))) {
+          this.ball = [clamp(b[0], 0.8, W - 0.8), clamp(b[1], 0.8, L - 0.8), 0];
+          this.bv = [0, 0];
+          this.cut = Math.max(this.cut || 0, 0.3);
+          this.places = (this.places || 0) + 1;
+        }
+      }
       const fr = this.scene.frames;
       if (!p.kicked) {
         // 相手が持っている：前は相手がこちらの主役へパスを出していて、急にこちらのボールになった。
