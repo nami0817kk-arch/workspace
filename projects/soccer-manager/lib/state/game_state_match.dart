@@ -245,21 +245,42 @@ extension GameStateMatch on GameState {
     required String inPlayerId,
   }) {
     if (!canMakeSubstitution) return false;
+    // ハーフタイムに替えられるのは、前半の終わりにピッチにいた選手だけ。
+    // 以前は何も確かめず、ピッチにいない選手を「下げる」と先発が12人に
+    // なり、怪我人・出場停止の選手も入れられ、一度下げた選手をもう一度
+    // 入れることもでき、そのたびに交代の枠だけが減っていた(2026-11-23)。
+    if (!isHalfTime) return false;
     final first = _liveFirstHalfState;
     if (first != null &&
         MatchEngine.sentOffIds(first.events).contains(outPlayerId)) {
       return false;
     }
+    final onPitch = {for (final p in MatchEngine.lineupOf(userTeam)) p.id};
+    final subbedOff = {
+      for (final e in [...?first?.events, ..._liveHalfTimeSubEvents])
+        if (e.type == MatchEventType.substitution && e.assistId != null)
+          e.assistId!,
+    };
     final out = userTeam.players.where((p) => p.id == outPlayerId).firstOrNull;
     final incoming =
         userTeam.players.where((p) => p.id == inPlayerId).firstOrNull;
+    if (out == null ||
+        incoming == null ||
+        !onPitch.contains(outPlayerId) ||
+        onPitch.contains(inPlayerId) ||
+        subbedOff.contains(inPlayerId) ||
+        incoming.isInjured ||
+        incoming.isSuspended ||
+        incoming.isOnInternationalDuty ||
+        incoming.isLoanedOut ||
+        incoming.notRegistered) {
+      return false;
+    }
     swapStartingPlayer(outPlayerId: outPlayerId, inPlayerId: inPlayerId);
     _liveSubstitutionsUsed++;
     // 試合経過に「46分 交代: A → B」と出す(後半を始めるときに入れる)。
-    if (out != null && incoming != null) {
-      _liveHalfTimeSubEvents.add(MatchEngine.substitutionEvent(
-          minute: 46, teamId: userTeam.id, out: out, incoming: incoming));
-    }
+    _liveHalfTimeSubEvents.add(MatchEngine.substitutionEvent(
+        minute: 46, teamId: userTeam.id, out: out, incoming: incoming));
     _notify();
     return true;
   }
@@ -608,8 +629,14 @@ extension GameStateMatch on GameState {
     // 対象外)。途中出場の半額は試合のあと、カップ戦は各試合のあとに払う
     // ([AppearanceFeeEngine])。
     if (userFixture != null) {
+      // 払うのは実際にピッチに立った先発(出られない先発の代わりに入った
+      // 控えを含む。MatchEngine.lineupOf)。先発の指定に残っている怪我人・
+      // 出場停止の選手には払わない。
+      final starters = {
+        for (final p in MatchEngine.lineupOf(userTeam)) p.id,
+      };
       lastAppearanceFeesPaid = userTeam.players
-          .where((p) => userTeam.startingXI.contains(p.id))
+          .where((p) => starters.contains(p.id))
           .fold<int>(0, (s, p) => s + p.appearanceFee);
       _book(LedgerCategory.appearanceFees, -(lastAppearanceFeesPaid));
     } else {
@@ -1066,6 +1093,11 @@ extension GameStateMatch on GameState {
             .clamp(0, 100)
         : 50;
     final awayPossession = 100 - homePossession;
+    // 利用者が自分で替えた(ハーフタイム・試合中)選手。下がった選手も
+    // 出ているので、自動の交代と同じく採点・出場・得点・試合勘を数える。
+    // 以前は先発の指定から外れたまま数えず、前半に得点した選手でも
+    // 採点が無く、今季の出場・通算の出場と得点に入っていなかった(2026-11-23)。
+    final manualPlan = _manualSubstitutionPlan(allEvents);
     // 採点は今節の出場停止・負傷が反映される前に算出する必要があるため、
     // applyPostMatchEffectsより先に計算する。
     final ratings = MatchEngine.computePlayerRatings(
@@ -1076,6 +1108,7 @@ extension GameStateMatch on GameState {
       awayGoals: awayGoals,
       subbedOff: [
         for (final plan in _liveAutoSubPlans) ...plan.subbedOff,
+        ...manualPlan.subbedOff,
       ],
     );
     final statsBefore = {
@@ -1094,6 +1127,9 @@ extension GameStateMatch on GameState {
         weather: weather,
       ),
     );
+    // 利用者の交代は先発の指定をそのままにして、下がった選手の出場だけを
+    // 数える(元の先発は今の指定。自動の交代より前に戻す)。
+    MatchEngine.finishHalfTimeSubstitutions(manualPlan, events: allEvents);
     // 後の交代から戻す(後半の途中の交代の「元」の先発は、ハーフタイムの
     // 交代のあとのもの。前から戻すとハーフタイムの交代が先発に残る)。
     for (final plan in _liveAutoSubPlans.reversed) {
@@ -1213,6 +1249,41 @@ extension GameStateMatch on GameState {
     _notify();
     await _persistNow();
     return merged;
+  }
+
+  /// 利用者が自分で行った交代([makeHalfTimeSubstitution]・
+  /// [makeLiveSubstitution])を、自動の交代と同じ形にまとめる。先発の
+  /// 指定は試合中に入れ替えてあるので、元の先発は今の指定のまま。
+  AutoSubstitutionPlan _manualSubstitutionPlan(List<MatchEvent> events) {
+    final team = userTeam;
+    final auto = {
+      for (final plan in _liveAutoSubPlans)
+        for (final s in plan.swaps) s.out.id,
+    };
+    final onPitch = {for (final p in MatchEngine.lineupOf(team)) p.id};
+    final byId = {for (final p in team.players) p.id: p};
+    final seen = <String>{};
+    final swaps = <AutoSubstitution>[];
+    for (final e in events) {
+      if (e.type != MatchEventType.substitution || e.teamId != team.id) {
+        continue;
+      }
+      final out = byId[e.assistId];
+      final incoming = byId[e.scorerId];
+      if (out == null || incoming == null) continue;
+      if (auto.contains(out.id) || onPitch.contains(out.id)) continue;
+      if (!seen.add(out.id)) continue;
+      swaps.add(AutoSubstitution(
+        out: out,
+        incoming: incoming,
+        outSharpnessBefore: out.matchSharpness,
+      ));
+    }
+    return AutoSubstitutionPlan(
+      team: team,
+      originalXI: List.of(team.startingXI),
+      swaps: swaps,
+    );
   }
 
   /// 今節の試合で自クラブの選手が達成したハットトリック・通算記録の

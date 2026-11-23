@@ -42,10 +42,15 @@ class AppearanceFeeEngine {
   /// 交代で先発の指定が入れ替わっていても、交代の出来事から数え直すので
   /// 二重には払わない。[includeStarters]が false なら途中出場の分だけ
   /// (リーグ戦は先発の分を試合の前に払っている)。
+  ///
+  /// 採点のある試合は、採点のある選手(=実際に出た選手)に払う。先発の指定
+  /// だけで数えると、出られない先発(怪我・出場停止)に払い、代わりに出た
+  /// 控えには払わなかった(2026-11-23)。
   static int feesFor(Team team, MatchResult r, {bool includeStarters = true}) {
     final on = substitutesOn(r, team.id);
     final played = <String>{
-      ...team.startingXI,
+      if (r.playerRatings.isEmpty) ...team.startingXI,
+      ...r.playerRatings.keys,
       ...substitutesOff(r, team.id),
       ...on,
     };

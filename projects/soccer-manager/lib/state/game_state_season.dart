@@ -568,7 +568,8 @@ extension GameStateSeason on GameState {
     );
     match.result = result;
     if (result.homeGoals == result.awayGoals) {
-      match.penaltyWinnerId = CupEngine.decidePenaltyWinner(home, away);
+      match.penaltyWinnerId =
+          CupEngine.decidePenaltyWinner(home, away, result: result);
     }
     _applyUserCupPostMatchEffects(result);
     _afterSuperCupApplied(match);
@@ -774,7 +775,7 @@ extension GameStateSeason on GameState {
               before, merged, [_liveCupHome!, _liveCupAway!]);
           match.extraTime = true;
           if (match.levelAfter(merged)) {
-            match.penaltyWinnerId = _runLiveShootout().winnerId;
+            match.penaltyWinnerId = _runLiveShootout(merged).winnerId;
           }
         }
         CupEngine.applyMatchResult(cup, allTeamsForCups, match, merged);
@@ -811,7 +812,7 @@ extension GameStateSeason on GameState {
                 before, merged, [_liveCupHome!, _liveCupAway!]);
             tie.extraTime = true;
             if (level(merged)) {
-              tie.penaltyWinnerId = _runLiveShootout().winnerId;
+              tie.penaltyWinnerId = _runLiveShootout(merged).winnerId;
             }
           }
         }
@@ -826,7 +827,7 @@ extension GameStateSeason on GameState {
         if (_isFourClubSuperCupMatch(match)) {
           // 4クラブのスーパーカップ: 延長は無く、並べばPK戦(1本ずつ)。
           if (merged.homeGoals == merged.awayGoals) {
-            match.penaltyWinnerId = _runLiveShootout().winnerId;
+            match.penaltyWinnerId = _runLiveShootout(merged).winnerId;
           }
           CupEngine.applyMatchResult(
               fourClubSuperCup!,
@@ -839,7 +840,7 @@ extension GameStateSeason on GameState {
         }
         match.result = merged;
         if (merged.homeGoals == merged.awayGoals) {
-          match.penaltyWinnerId = _runLiveShootout().winnerId;
+          match.penaltyWinnerId = _runLiveShootout(merged).winnerId;
         }
         _afterSuperCupApplied(match);
     }
@@ -862,8 +863,9 @@ extension GameStateSeason on GameState {
   /// ライブ観戦のカップ戦がPK戦にもつれた際、1本ずつのシュートアウトを
   /// 実施して勝者を決める。記録は[_lastShootout]に保持し、フルタイム画面が
   /// 1本ごとの成否を演出表示する。自クラブが勝てばPK戦勝利数も記録する。
-  PenaltyShootoutResult _runLiveShootout() {
-    final shootout = CupEngine.simulateShootout(_liveCupHome!, _liveCupAway!);
+  PenaltyShootoutResult _runLiveShootout(MatchResult played) {
+    final shootout = CupEngine.simulateShootout(_liveCupHome!, _liveCupAway!,
+        result: played);
     if (shootout.winnerId == _save!.userTeamId) {
       _save!.pkShootoutWins++;
     }
