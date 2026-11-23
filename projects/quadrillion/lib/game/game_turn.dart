@@ -1,0 +1,1412 @@
+// ignore_for_file: non_constant_identifier_names
+part of 'game.dart';
+
+/// 1か月すすめる・出来事・宿敵の動き
+extension GameTurn on Game {
+  // ===== 1期すすめる =====
+  List<LogEntry> nextQuarter() {
+    final news = <LogEntry>[];
+    void N(String m, [String t = '']) => news.add(LogEntry(m, t));
+    // 時代
+    econ = 1;
+    perMul = 1;
+    techBoom = 1;
+    final y = yr();
+    final rn = regFor(y);
+    final rr = [for (var i = 0; i < 3; i++) rn[i] / reg[i]];
+    reg = rn;
+    for (final c in cos) {
+      for (final b in c.biz) {
+        b.power *= rr[c.tier];
+      }
+    }
+    for (final b in biz) {
+      final k = rr[tierOf(b)];
+      b.power *= k;
+      if (b.crew != null && b.crew != 0) b.crew = b.crew! * k;
+    }
+    for (final c in cycles) {
+      if (y >= c.s && y < c.e + .99) {
+        econ *= c.econ;
+        perMul *= c.per;
+        techBoom *= c.tech;
+        if (!c.shown) {
+          c.shown = true;
+          N('【${c.name}】${c.news}', 'big');
+        }
+      }
+    }
+    // 市場の大きさに合わせて力を伸び縮みさせる
+    for (final ind in IND) {
+      final M = mkt(ind);
+      final old = indM[ind.id] ?? 0;
+      if (M > 0 && old <= 0 && yr() > startYear) {
+        // 新しい業種が生まれた
+        N('新しい業種「${ind.name}」が生まれました。まだ大きな会社はいません', 'big');
+        final k = ri(2, 4);
+        for (var i = 0; i < k; i++) {
+          final t = rnd() < .4
+              ? 0
+              : rnd() < .4
+                  ? 1
+                  : 2;
+          final c = mkCo(t, ind.cat);
+          c.g = .02 + rnd() * .02;
+          c.biz.add(CoBiz(ind: ind.id, power: M * reg[t] * (techCats.contains(ind.cat) ? .12 : .05) * (.5 + rnd())));
+        }
+        Company? gr;
+        for (final c in cos) {
+          if (c.alive && c.rival != null && c.rival!.type == 'genius') {
+            gr = c;
+            break;
+          }
+        }
+        if (gr != null && rnd() < .7) {
+          gr.biz.add(CoBiz(ind: ind.id, power: M * .08));
+          N('${gr.rival!.pres}（${gr.name}）が「${ind.name}」に乗り込みました', 'bad');
+        }
+      } else if (M > 0 && old > 0) {
+        final r = math.pow(M / old, .95).toDouble();
+        for (final c in cos) {
+          for (final b in c.biz) {
+            if (b.ind == ind.id) b.power *= r;
+          }
+        }
+        for (final b in biz) {
+          if (b.ind == ind.id) {
+            b.power *= r;
+            if (b.crew != null && b.crew != 0) b.crew = b.crew! * r;
+          }
+        }
+      }
+      indM[ind.id] = M;
+    }
+    // CPU の動き
+    for (final c in cos) {
+      if (!c.alive) continue;
+      for (final b in c.biz) {
+        var gg = (c.g + (rnd() - .5) * .03) / 3;
+        if (c.rival != null && c.rival!.k == 'li' && yr() > 1995 && yr() < 2035) gg += .004;
+        if (c.rival != null && c.rival!.type == 'genius' && indm[b.ind]!.b > 1985) gg += .0067;
+        b.power *= math.max(.8, 1 + gg);
+        final T = lastT?[b.ind];
+        final s = T != null && T[c.tier] > 0 ? b.power / T[c.tier] : 0.0;
+        final pr = b.rev * indm[b.ind]!.mg * c.eff;
+        if (pr > 0) b.power += pr * cpuReinv * invEff * math.pow(1 - math.min(s, .95), 2);
+      }
+      c.cash = c.cash * .985 + c.profit * .25;
+      c.presAge += 1 / 12;
+      c.revHist.add(c.rev);
+      if (c.revHist.length > 24) c.revHist.removeAt(0);
+    }
+    // 若い天才は時々つまずく
+    for (final c in cos) {
+      if (c.alive && c.rival != null && c.rival!.type == 'genius' && rnd() < .008) {
+        for (final b in c.biz) {
+          b.power *= .45;
+        }
+        N('${c.rival!.pres}の${c.name}で大きな失敗。事業の力が半分に落ちました', 'good');
+      }
+    }
+    // 時々、新しい会社が生まれ、弱い会社が消える
+    if (rnd() < .12) {
+      final live = liveInds().where((i) => eraF(i, yr()) < 1).toList();
+      if (live.isNotEmpty) {
+        final ind = pick(live);
+        final t = rnd() < .6
+            ? 0
+            : rnd() < .5
+                ? 1
+                : 2;
+        final c = mkCo(t, ind.cat);
+        c.g = .015 + rnd() * .02;
+        c.biz.add(CoBiz(ind: ind.id, power: mkt(ind) * reg[t] * .03));
+      }
+    }
+    for (final c in cos.toList()) {
+      if (c.alive &&
+          c.parent != 'player' &&
+          c.rival == null &&
+          c.rev < mkt(c.biz.isEmpty ? IND[0] : indm[c.biz[0].ind]!) * .0005 &&
+          c.cash <= 0 &&
+          rnd() < .1) {
+        c.alive = false;
+      }
+    }
+    // 儲かっている市場には、大手が後を追って入ってくる
+    for (final b in biz) {
+      if (b.share > .25 && !inAssoc(b.ind) && rnd() < .04 * (b.share / .25)) {
+        final ind = indm[b.ind]!;
+        final tb = tierOf(b);
+        final bigs = cos.where((c) => c.alive && c.parent != 'player' && c.tier >= tb && !c.biz.any((x) => x.ind == b.ind)).toList()
+          ..ssort((a, b2) => b2.cap.compareTo(a.cap));
+        final top = bigs.take(12).toList();
+        if (top.isNotEmpty) {
+          final c = pick(top);
+          c.biz.add(CoBiz(ind: b.ind, power: b.power * (.25 + rnd() * .25)));
+          N('${c.name}が、あなたの独り勝ちを見て「${ind.name}」に乗り込んできました', 'bad');
+        }
+      }
+    }
+    // 宿敵の手
+    rivalAI(N);
+    // 自分の事業
+    for (final b in biz) {
+      if (b.attack > 0) {
+        final tc = cos.where((c) => c.id == b.target && c.alive).firstOrNull;
+        if (tc != null) {
+          for (final x in tc.biz) {
+            if (x.ind == b.ind) x.power *= .965;
+          }
+        }
+        b.attack--;
+        if (b.attack == 0 && tc != null) N('「${indm[b.ind]!.name}」での${tc.name}との値下げ合戦が終わりました');
+      }
+    }
+    for (final b in biz) {
+      b.age++;
+      if (b.ad > 0) b.ad--;
+      if (b.war > 0) b.war--;
+      final p = staffById(b.mgr);
+      if (p != null && b.profit > 0) {
+        var rate = .3;
+        if (p.trait == 'careful') rate = .15;
+        if (p.trait == 'gambler') rate = .6;
+        final gain = b.profit * rate;
+        cash -= gain;
+        var eff = invEff * math.pow(1 - b.share, 2) * smallBonus(b);
+        if (p.trait == 'genius') eff *= .5 + rnd() * 1.6;
+        if (p.trait == 'gambler' && rnd() < .2) eff = 0;
+        if (p.trait == 'frugal') eff *= .8;
+        b.power += gain * eff * .6;
+        b.crew = crewOf(b) + gain * eff * .8;
+        if (p.amb > 75 && b.share < .15 && b.price != 'cut' && p.trait != 'charm' && rnd() < .08) {
+          b.price = 'cut';
+          p.ambKnown = true;
+          N('${p.name}が勝手に「${indm[b.ind]!.name}」で値下げ合戦を始めました。野心が強い人のようです', 'bad');
+        }
+      }
+    }
+    // 稼ぎ方ごとの動き
+    if (yr() >= 2022.2 && !ruDone && biz.any((b) => ctryOf(b).contains('ru'))) {
+      ruDone = true;
+      for (final b in biz) {
+        if (ctryOf(b).contains('ru') && home != 'ru') {
+          b.ctry = ctryOf(b).where((c) => c != 'ru').toList();
+          b.jv = (b.jv ?? []).where((c) => c != 'ru').toList();
+          b.power *= .9;
+        }
+      }
+      if (home != 'ru') N('【制裁】ロシアへの制裁が始まり、ロシアの事業から手を引くことになりました', 'bad');
+    }
+    for (final b in biz) {
+      if (b.model == 'plat' && b.share > .15) b.power *= 1.006;
+      if (b.model == 'sub' && rnd() < .006) {
+        b.power *= .65;
+        N('元請けの大企業が「${indm[b.ind]!.name}」との取引を打ち切りました。注文が大きく減ります', 'bad');
+      }
+      if (b.model == 'fc' && rnd() < .006) {
+        b.power *= .85;
+        scandal = math.max(scandal, 6);
+        N('「${indm[b.ind]!.name}」の加盟店で不祥事が起き、看板に傷がつきました', 'bad');
+      }
+    }
+    // 仕掛かり中の打ち手
+    for (final b in biz.toList()) {
+      if (b.pipe.isNotEmpty) {
+        for (final x in b.pipe) {
+          x.left--;
+        }
+        final done = b.pipe.where((x) => x.left <= 0).toList();
+        b.pipe = b.pipe.where((x) => x.left > 0).toList();
+        for (final x in done) {
+          finishPipe(b, x, N);
+        }
+      }
+    }
+    // 人
+    for (final p in staff) {
+      p.tenure++;
+      if (p.tenure == 12 && !p.traitKnown) {
+        p.traitKnown = true;
+        final t = STRAITS.firstWhere((x) => x.id == p.trait);
+        N('${p.name}の特性が分かりました：「${t.n}」（${t.g}／${t.b}）');
+      }
+      p.loy += (const {'merit': -.15, 'family': .15, 'sports': -.1, 'free': 0.0, 'steady': .05}[culture] ?? 0) +
+          (cultLeft > 0 ? -.2 : 0) +
+          (hasT('oneman') && culture == 'free' ? -.15 : 0) +
+          (hasT('charm') && culture == 'family' ? .1 : 0);
+      if (hasT('stamina')) p.loy -= .33;
+      if (hasT('frugal')) p.loy -= .17;
+      if (hasT('genius')) p.loy -= .1;
+      if (p.trait == 'stamina') {
+        for (final o in staff) {
+          if (o != p) o.loy -= .07;
+        }
+      }
+      if (q == 12) {
+        p.age++;
+        if (p.age > 58 && p.trait != 'stamina') {
+          for (final k in abKeys) {
+            p.ab[k] = math.max(5, p.ab[k]! - 2);
+          }
+        }
+        if (p.age < 40) {
+          for (final k in abKeys) {
+            p.ab[k] = math.min(
+                99,
+                p.ab[k]! +
+                    ri(
+                        0,
+                        culture == 'merit'
+                            ? 3
+                            : culture == 'family'
+                                ? 1
+                                : 2));
+          }
+          final job = biz.where((b) => b.mgr == p.id).firstOrNull;
+          if (job != null) {
+            final k = indm[job.ind]!.key;
+            p.ab[k] = math.min(99, p.ab[k]! + 2);
+          }
+        }
+      }
+    }
+    // 部下の引退
+    if (q == 12) {
+      for (final p in staff.toList()) {
+        if (p.age >= 65 && (p.age >= 72 || rnd() < .35)) {
+          fire(p);
+          N('${p.name}（${p.age}歳）が引退しました');
+        }
+      }
+    }
+    // 社長の年齢
+    if (q == 12) {
+      pres.age++;
+      final lim = hasT('stamina') ? 68 : 58;
+      if (pres.age > lim) {
+        for (final k in abKeys) {
+          pres.ab[k] = math.max(5, pres.ab[k]! - 2);
+        }
+      }
+      for (final k in kids) {
+        k.age++;
+      }
+      if (pres.age >= 30 && pres.age <= 45 && kids.length < 3 && rnd() < .25) {
+        final k = mkPerson(0);
+        k.age = 0;
+        k.name = kidName(pres.name);
+        k.kid = true;
+        kids.add(k);
+        N('子どもが生まれました。名前は${Game.givenOf(k.name)}。後継ぎの候補になるかもしれません', 'good');
+      }
+    }
+    final dieAge = hasT('stamina') ? 78 : 70;
+    if (pres.age > dieAge && rnd() < (pres.age - dieAge) * .004) presDies(N);
+    // お金
+    for (final b in biz) {
+      b.prevRev = b.rev;
+    }
+    calcAll();
+    final p0 = pre;
+    final tax = p0 > 0 ? p0 * .3 : 0.0;
+    cash += p0 - tax;
+    lastTax = tax;
+    for (final c in subs()) {
+      if (c.profit > 0) cash += c.profit * .4 * pctOf(c) / 100;
+    }
+    if (scandal > 0) scandal--;
+    if (cash < 0) {
+      final lim = borrowLimit() - debt;
+      if (lim > -cash) {
+        debt += -cash;
+        N('資金が足りず、銀行から${yen(-cash)}を借りてしのぎました', 'bad');
+        cash = 0;
+      } else {
+        if (biz.length > 1) {
+          final w = (biz.toList()..ssort((a, b) => a.profit.compareTo(b.profit)))[0];
+          final v = sellValue(w);
+          cash += v;
+          biz.remove(w);
+          N('資金が尽き、「${indm[w.ind]!.name}」を${yen(v)}で手放しました', 'bad');
+        }
+        if (cash < 0) {
+          if (mode == 'endless') {
+            N('会社は倒産しました。残った人脈で、もう一度ゼロから始めます', 'bad');
+            rebirth();
+          } else {
+            over = '資金が尽きて、会社は倒産しました';
+          }
+        }
+      }
+    }
+    // 引き抜きなどの出来事
+    rollEvents(N);
+    // 候補者
+    cands = [];
+    final n = hasT('noble') ? 2 : 3;
+    for (var i = 0; i < n; i++) {
+      cands.add(mkPerson((hasT('noble')
+              ? -.5
+              : biz.length > 4
+                  ? .5
+                  : 0) +
+          net * .1 +
+          (culture == 'merit' ? .3 : 0)));
+    }
+    for (final p in staff) {
+      if (p.partner && pre > 0) p.loy = math.min(99, p.loy + .17);
+    }
+    // 記録
+    q++;
+    if (q > 12) {
+      q = 1;
+      year++;
+    }
+    turn++;
+    if (q % 3 == 1) holdMeeting(N);
+    moneyChecks(N);
+    dealsMonthly(N);
+    dirtyMonthly(N);
+    rivalReturns(N);
+    if (noncomp != null && turn >= noncomp!.until) {
+      noncomp = null;
+      N('売ったときの「同じ業種に入らない」約束の期限が切れました');
+    }
+    calcAll();
+    hist.add(HistEntry(t: '$year-$q', cap: cap, rev: rev, cash: cash, pre: pre));
+    if (hist.length > 1200) hist.removeAt(0);
+    apMax = 3 + (biz.length >= 3 ? 1 : 0) + (biz.length + subs().length >= 10 ? 1 : 0);
+    ap = rest != 0 ? 1 : apMax;
+    rest = 0;
+    for (final k in kids) {
+      if (k.age < 22 && q == 1) {
+        for (final a in abKeys) {
+          k.ab[a] = math.min(99, k.ab[a]! + ri(0, 2));
+        }
+      }
+    }
+    // シナジー発見
+    final own = <String>{for (final b in biz) b.ind};
+    for (final c in subs()) {
+      for (final b in c.biz) {
+        own.add(b.ind);
+      }
+    }
+    for (final s in SYN) {
+      if (own.contains(s.a) && own.contains(s.b) && found[s.k] == null) {
+        found[s.k] = year;
+        N('シナジー発見！「${indm[s.a]!.name}」×「${indm[s.b]!.name}」＝${s.name}。両方の事業の力が2割上がります', 'big');
+      }
+    }
+    for (final g in BIG) {
+      if (g.set.every(own.contains) && big[g.k] == null) {
+        big[g.k] = year;
+        N('大シナジー「${g.name}」が完成！3つの事業の力が4割上がります', 'big');
+      }
+    }
+    // 勝ち負け
+    final rk = rankList();
+    final me = rk.indexWhere((x) => x.me) + 1;
+    rank = me;
+    peakRank = math.min(peakRank, me);
+    if (over == null && won == null) {
+      if (mode == 'world' && me == 1) won = '$year年、世界の企業ランキングで1位になりました';
+      if (mode == 'quad' && cap + wealth >= 1e15) won = '$year年、グループの時価総額が1000兆円に届きました（創業から${year - startYear}年）';
+    }
+    final rivMax = sh.rivMax;
+    if (rivMax > 50 && over == null) over = '宿敵に株の過半数を握られ、社長の座を追われました';
+    lastNews = news;
+    log.addAll(news.map((x) => LogEntry(x.m, x.t, year, q)));
+    if (log.length > 300) log.removeRange(0, log.length - 300);
+    return news;
+  }
+
+  void rebirth() {
+    biz = [];
+    staff = [];
+    cash = 1e7 * nom();
+    debt = 0;
+    listed = false;
+    sh = Shares();
+    region = 0;
+    for (final c in cos) {
+      c.stakePlayer = 0;
+      if (c.parent == 'player') c.parent = null;
+    }
+  }
+
+  void presDies(void Function(String, [String]) N) {
+    Person? s;
+    if (succ != null) {
+      s = staffById(succ) ?? kids.where((k) => k.id == succ && k.age >= 20).firstOrNull;
+    }
+    final old = pres.name;
+    if (s != null) {
+      takeOver(s);
+      N('$oldが亡くなりました。遺言どおり、${s.name}が社長を継ぎました', 'big');
+    } else {
+      final cand = staff.where((p) => p.age < 65).toList()..ssort((a, b) => Game.totOf(b) - Game.totOf(a));
+      final best = cand.firstOrNull ?? kids.where((k) => k.age >= 20).firstOrNull ?? staff.firstOrNull;
+      if (best != null) {
+        takeOver(best);
+        N('$oldが急死。後継ぎが決まっておらず、${best.name}が急きょ社長になりました', 'bad');
+      } else {
+        over = '$oldが亡くなり、会社を継ぐ人がいませんでした';
+      }
+    }
+  }
+
+  void takeOver(Person p) {
+    if (p.partner && p.stake != 0) {
+      sh.own += p.stake;
+      sh.pt = math.max(0, sh.pt - p.stake);
+      p.partner = false;
+      p.stake = 0;
+    }
+    staff.remove(p);
+    kids.remove(p);
+    for (final b in biz) {
+      if (b.mgr == p.id) b.mgr = null;
+    }
+    final keep = pres.traits.where((t) => t == 'noble').toList();
+    final t2 = TRAITS.any((t) => t.id == p.trait) ? p.trait : pick(TRAITS).id;
+    pres = President(name: p.name, age: p.age, ab: {...p.ab}, traits: <String>{t2, ...keep}.take(2).toList());
+    if (pres.traits.length < 2) {
+      final o = pick(TRAITS.where((t) => !pres.traits.contains(t.id)).toList());
+      pres.traits.add(o.id);
+    }
+    succ = null;
+    gen = gen + 1;
+  }
+
+  double smallBonus(Biz b) => 1 + 1.4 * math.exp(-b.rev * 3 / (8e7 * nom()));
+  double borrowLimit() {
+    final annual = math.max(0, pre) * 12;
+    return (math.max(math.max(cash * .5, annual * 3), 3e7 * nom()) + biz.fold(0.0, (s, b) => s + b.rev * .5)) *
+        (hasT('noble') ? 2 : 1) *
+        (econ > 1.1 ? 1.6 : 1) *
+        (1 + .15 * net) *
+        (culture == 'steady' ? 1.2 : 1) *
+        (cooked > 0 ? 1.3 : 1);
+  }
+
+  double sellValue(Biz b) {
+    final held = b.age >= 24;
+    return math.max(0, math.max(math.min(b.profit * 12 * 4, b.power * (held ? 2 : .7)), b.power * .15)) * perMul;
+  }
+
+  // ===== 宿敵 =====
+  void rivalAI(void Function(String, [String]) N) {
+    for (final c in cos.toList()) {
+      if (!c.alive || c.rival == null || c.parent == 'player') continue;
+      final r = c.rival!;
+      // 乗っ取り
+      if (listed && (r.type == 'fund' || (r.type == 'peer' && c.rel < 0) || (r.type == 'zaibatsu' && c.rel < -40))) {
+        var want = r.type == 'fund'
+            ? (cap < c.cap * 1.5 ? .12 : .033)
+            : .05;
+        if (hasT('noble')) want *= 1.5;
+        if (hasT('liar')) want *= .5;
+        final afford = c.cash / math.max(cap / 100, 1);
+        if (rnd() < want && sh.float > 0.5 && afford > 1) {
+          final before = sh.riv[c.id] ?? 0;
+          final buy = math.min(math.min(sh.float, ri(1, 4) * (r.type == 'fund' ? 1.3 : 1)), afford);
+          sh.float -= buy;
+          sh.riv[c.id] = before + buy;
+          c.cash -= buy * cap / 100;
+          final now = sh.riv[c.id]!;
+          for (final th in const [5.0, 20.0, 33.4, 50.0]) {
+            if (before < th && now >= th) {
+              final k = '${c.id}:${jsNum(th)}';
+              if (reported[k] == null) {
+                reported[k] = 1;
+                events.add(evHostile(c, th));
+              }
+            }
+          }
+        }
+      }
+      // 値下げ合戦
+      final mine = <String>{for (final b in biz) b.ind};
+      final shared = c.biz.where((b) => mine.contains(b.ind)).toList();
+      final warable = shared.where((b) {
+        final my = biz.where((x) => x.ind == b.ind).firstOrNull;
+        return my != null && my.war == 0 && !inAssoc(b.ind) && my.share >= (r.type == 'peer' ? .005 : .02);
+      }).toList();
+      if (warable.isNotEmpty &&
+          rnd() <
+              (r.type == 'peer'
+                  ? .06
+                  : r.type == 'zaibatsu'
+                      ? .017
+                      : .027)) {
+        final b = pick(warable);
+        final my = biz.firstWhere((x) => x.ind == b.ind);
+        b.power *= 1.15;
+        my.war = 9;
+        c.rel -= 5;
+        N('${r.pres}（${c.name}）が「${indm[b.ind]!.name}」で値下げ合戦を仕掛けてきました。9か月のあいだ利益が削られます', 'bad');
+      }
+      // 同期は真似して追ってくる
+      if (r.type == 'peer' && rnd() < .04) {
+        final cand = biz.where((b) => !c.biz.any((x) => x.ind == b.ind)).toList();
+        if (cand.isNotEmpty) {
+          final b = pick(cand);
+          c.biz.add(CoBiz(ind: b.ind, power: b.power * .6));
+          N('${r.pres}が、あなたの後を追って「${indm[b.ind]!.name}」に参入しました', 'bad');
+        }
+      }
+      // 引き抜き
+      final tgt = staff.where((p) => p.amb > 60 && p.loy < 55 && !events.any((e) => e.poach == p.id)).toList();
+      if (tgt.isNotEmpty && rnd() < .027) {
+        final p = pick(tgt);
+        final e = evPoach(c, p);
+        e.poach = p.id;
+        events.add(e);
+      }
+      // 代替わり
+      if (c.presAge > 72 && rnd() < .05) {
+        final old = c.presName;
+        c.presName = heirName(c.presName, r.k);
+        c.presAge = ri(32, 45).toDouble();
+        c.rel = rnd() < .5 ? c.rel : 0;
+        for (final b in c.biz) {
+          b.power *= .85;
+        }
+        N('${c.name}の$oldが引退し、息子・娘の${c.presName}が継ぎました。代替わりで隙ができています', 'big');
+      }
+      // 提携の申し出
+      if (c.rel > 25 && rnd() < .02) events.add(evAlliance(c));
+    }
+    // ファンドは株価が上がると売り抜ける
+    for (final id in sh.riv.keys.toList()) {
+      final c = coById(id);
+      if (c != null && c.rival != null && c.rival!.type == 'fund' && g > .3 && rnd() < .07 && sh.riv[id]! > 0) {
+        final sell = sh.riv[id]! * .5;
+        sh.riv[id] = sh.riv[id]! - sell;
+        sh.float += sell;
+        N('${c.name}が、値上がりしたあなたの会社の株を半分売り抜けました', 'good');
+      }
+    }
+  }
+
+  // ===== 出来事（選ぶもの） =====
+  GameEvent evHostile(Company c, double th) {
+    final r = c.rival!;
+    final x = math.min(sh.float, 8.0);
+    return GameEvent(
+        who: c,
+        face: r.col,
+        title: th >= 50 ? '過半数を握られた' : '株を買い集められている',
+        text:
+            '${r.pres}（${c.name}・${RTYPE[r.label ?? r.type]}）が、あなたの会社の株を${pct(sh.riv[c.id] ?? 0)}まで買い集めました。${th >= 33.4 ? '33.4%を超えたので、合併などの大事な決定を止められます。' : ''}50%を超えられると、社長の座を追われます。',
+        choices: [
+          Choice('自社株買いで市場の株を減らす', '市場の株を${pct(x)}買い戻す。費用は時価総額の約${jsNum(jsRound(x * 1.15))}%。相手の割合も少し上がる',
+              () => doBuyback(math.min(sh.float, 8))),
+          Choice('ホワイトナイトに頼む', '味方の会社に市場の株を10%持ってもらう。見返りに相手の株5%を買う', () => doWhiteKnight()),
+          Choice('新しい株を出して薄める', '味方に新しい株を15%分渡し、相手の割合を薄める。自分の割合も下がる', () => doDilute()),
+          Choice('様子を見る', '何もしない。お金も手も使わない', () {
+            c.rel -= 5;
+            return '様子を見ることにしました';
+          }),
+        ]);
+  }
+
+  GameEvent evPoach(Company c, Person p) => GameEvent(
+          who: c,
+          face: c.rival!.col,
+          title: '引き抜きの誘い',
+          text: '${c.rival!.pres}が、あなたの部下の${p.name}を高い給料で誘っています。${p.name}は迷っているようです。',
+          choices: [
+            Choice('給料を1.5倍にして引き留める', '毎月の給料が${yen(p.salary * .5)}増える', () {
+              p.salary *= 1.5;
+              p.loy += 25;
+              p.ambKnown = true;
+              return '${p.name}は残ってくれました';
+            }),
+            Choice('送り出す', '${p.name}は${c.name}へ移り、相手の事業が強くなる', () {
+              fire(p);
+              for (final b in c.biz) {
+                b.power *= 1.05;
+              }
+              c.rel -= 3;
+              return '${p.name}は${c.name}へ移りました';
+            }),
+          ]);
+
+  GameEvent evAlliance(Company c) => GameEvent(
+          who: c,
+          face: c.rival!.col,
+          title: '提携の申し出',
+          text: '${c.rival!.pres}（${c.name}）から提携の申し出です。組めば、互いに株を5%ずつ持ち合います。',
+          choices: [
+            Choice('組む', '相手の株5%を${yen(c.cap * .05)}で買う。相手も5%持つが、乗っ取りには使わない', () {
+              if (cash < c.cap * .05) return 'お金が足りず、提携は流れました';
+              cash -= c.cap * .05;
+              c.stakePlayer = c.stakePlayer + 5;
+              sh.ally += math.min(5, sh.float);
+              sh.float = math.max(0, sh.float - 5);
+              c.rel += 20;
+              return '${c.name}と提携しました';
+            }),
+            Choice('断る', '相手は少し機嫌を損ねる', () {
+              c.rel -= 15;
+              return '提携を断りました';
+            }),
+          ]);
+
+  GameEvent evPartnerLeave(Person p) => GameEvent(
+          title: '相棒が独立を言い出した',
+          text: '${p.name}が「自分の会社を持ちたい」と言い出しました。創業から一緒にやってきた相棒です。株を${pct(p.stake)}持っています。',
+          choices: [
+            Choice('株を5%足して引き留める', 'あなたの持ち株が5%減る（今 ${pct(sh.own)}）', () {
+              if (sh.own < 45) return '持ち株が足りず、引き留められませんでした。${partnerOut(p)}';
+              sh.own -= 5;
+              p.stake += 5;
+              sh.pt = sh.pt + 5;
+              p.loy += 30;
+              p.ambKnown = true;
+              return '${p.name}は残ってくれました。持ち株は${pct(p.stake)}になりました';
+            }),
+            Choice('送り出す', '相棒の株は会社の外に残る', () => partnerOut(p)),
+          ]);
+
+  String partnerOut(Person p) {
+    final st = p.stake;
+    fire(p);
+    return '${p.name}は会社を去りました。持っていた株${pct(st)}は${listed ? '市場で売られました' : '投資家の手に渡りました'}';
+  }
+
+  void rollEvents(void Function(String, [String]) N) {
+    for (final p in staff) {
+      if (p.partner && p.amb > 65 && p.loy < 50 && rnd() < .02 && !events.any((e) => e.pl == p.id)) {
+        final e = evPartnerLeave(p);
+        e.pl = p.id;
+        events.add(e);
+      }
+    }
+    // 不祥事
+    if (biz.isNotEmpty &&
+        rnd() <
+            (.017 + (staff.any((p) => p.trait == 'liar') ? .017 : 0)) *
+                (culture == 'sports'
+                    ? 1.5
+                    : culture == 'steady'
+                        ? .5
+                        : 1)) {
+      final b = pick(biz);
+      final liar = staff.where((p) => p.trait == 'liar').firstOrNull;
+      final what = pick(const ['品質の偽装', '帳簿のごまかし', '長時間労働', '顧客情報の流出']);
+      events.add(GameEvent(
+          title: '不祥事が発覚',
+          text: '「${indm[b.ind]!.name}」で$whatが見つかりました。${liar != null && !liar.traitKnown ? 'どうやら火元は${liar.name}のようです。' : ''}',
+          choices: [
+            Choice('謝罪会見を開く', '${yen(math.max(b.rev * .1, 1e6))}をかけて謝る。事業の力が1割落ちる', () {
+              cash -= math.max(b.rev * .1, 1e6);
+              b.power *= hasT('careful') ? .95 : .9;
+              if (liar != null) liar.traitKnown = true;
+              return '謝罪し、騒ぎは収まりました';
+            }),
+            Choice('もみ消す', 'お金はかからない。ばれると事業の力が3割5分落ち、株価も下がる。うまくいっても、火種は残る', () {
+              if (rnd() < .5) {
+                b.power *= hasT('careful') ? .8 : .65;
+                scandal = 12;
+                return 'もみ消しがばれ、大炎上しました';
+              }
+              buried.add(turn + ri(24, 60));
+              return 'うまくもみ消せました。ただ、火種は残っています';
+            }),
+          ]));
+    }
+    // 天才社員の売り込み
+    if (rnd() < .02) {
+      final p = mkPerson(1.6);
+      p.salary *= 2.5;
+      events.add(GameEvent(
+          title: '大物の売り込み',
+          text: '業界で名の知れた${p.name}（${p.age}歳）が、あなたの会社で働きたいと言ってきました。腕は確かと評判ですが、給料の要求も高い。',
+          choices: [
+            Choice('雇う', '毎月の給料は${yen(p.salary)}。手は使わない', () {
+              staff.add(p);
+              return '${p.name}が入社しました';
+            }),
+            Choice('断る', '相手はライバルに流れるかもしれない', () {
+              final c = pickOr(cos.where((x) => x.alive && x.rival != null).toList());
+              if (c != null) {
+                for (final b in c.biz) {
+                  b.power *= 1.03;
+                }
+              }
+              return '断りました';
+            }),
+          ]));
+    }
+    // 労働組合
+    if (staff.length >= 3 && rnd() < .017) {
+      events.add(GameEvent(title: '労働組合の要求', text: '社員の代表が、給料を1割上げてほしいと言ってきました。', choices: [
+        Choice('給料を上げる', '毎月の人件費が1割増える。皆の忠誠が上がる', () {
+          for (final p in staff) {
+            p.salary *= 1.1;
+            p.loy += 10;
+          }
+          return '給料を上げました';
+        }),
+        Choice('断る', '全事業の力が5%落ちる', () {
+          for (final b in biz) {
+            b.power *= .95;
+          }
+          for (final p in staff) {
+            p.loy -= 8;
+          }
+          return '要求を断りました';
+        }),
+      ]));
+    }
+    // 部下の独立
+    final star = staff.where((p) => p.amb > 78 && Game.totOf(p) > 250 && p.tenure > 24 && biz.any((b) => b.mgr == p.id)).firstOrNull;
+    if (star != null && rnd() < .017) {
+      final b = biz.firstWhere((x) => x.mgr == star.id);
+      star.ambKnown = true;
+      events.add(GameEvent(
+          title: '独立したい',
+          text: '「${indm[b.ind]!.name}」を任せている${star.name}が、自分の会社を作りたいと言ってきました。腕が良いぶん、敵に回すと手強い相手です。',
+          choices: [
+            Choice('出資して送り出す', '${yen(b.rev * .5)}を出資し、新しい会社の株を30%持つ。事業の力は1割5分落ちる', () {
+              final cost = b.rev * .5;
+              if (cash < cost) return 'お金が足りず、出資できませんでした';
+              cash -= cost;
+              final c = mkCo(0, indm[b.ind]!.cat, presName: star.name, fam: 50);
+              c.biz.add(CoBiz(ind: b.ind, power: b.power * .25));
+              c.stakePlayer = 30;
+              c.rel = 40;
+              c.g = .02;
+              b.power *= .85;
+              fire(star);
+              return '${star.name}は${c.name}を立ち上げました。株の30%はあなたのものです';
+            }),
+            Choice('給料を倍にして引き留める', '毎月の給料が${yen(star.salary)}増える。野心は消えない', () {
+              star.salary *= 2;
+              star.loy += 15;
+              star.amb -= 10;
+              return '${star.name}は残ってくれました。ただ、いつかまた言い出すかもしれません';
+            }),
+            Choice('黙って見送る', 'お金はかからない。同じ業種に手強い会社が生まれる', () {
+              final rv = Rival(k: 'ex${uid()}', pres: star.name, co: '', type: 'peer', label: 'ex', tier: 0, col: '#ffb454');
+              final c = mkCo(0, indm[b.ind]!.cat, presName: star.name, fam: 60, rival: rv);
+              rv.co = c.name;
+              c.presAge = star.age.toDouble();
+              c.biz.add(CoBiz(ind: b.ind, power: b.power * .4));
+              c.g = .025;
+              c.rel = -20;
+              b.power *= .8;
+              fire(star);
+              return '${star.name}は${c.name}を立ち上げ、あなたの客を奪い始めました';
+            }),
+          ]));
+    }
+    // 大型の受注
+    if (biz.isNotEmpty && rnd() < .017) {
+      final b = pick(biz);
+      events.add(GameEvent(title: '大型の受注', text: '「${indm[b.ind]!.name}」に、大口の取引の話が来ました。受ければ一気に伸びますが、現場はかなり無理をします。', choices: [
+        Choice('受ける', '事業の力が1割5分上がる。部下全員の忠誠が下がる', () {
+          b.power *= 1.15;
+          for (final p in staff) {
+            p.loy -= 8;
+          }
+          return '受注しました。現場は大忙しです';
+        }),
+        Choice('断る', '何も起きない', () => '見送りました'),
+      ]));
+    }
+    // 社長の病気
+    if (pres.age > 50 && rnd() < .01) {
+      events.add(GameEvent(title: '社長の体調', text: '${pres.name}が倒れました。医者は「しばらく休むように」と言っています。', choices: [
+        Choice('休む', '来月は手が1つしか使えない', () {
+          rest = 1;
+          return 'しばらく休むことにしました';
+        }),
+        Choice('働き続ける', '手は減らない。3割の確率で能力が大きく落ちる', () {
+          if (rnd() < .3) {
+            for (final k in abKeys) {
+              pres.ab[k] = math.max(5, pres.ab[k]! - 10);
+            }
+            return '無理がたたり、能力が落ちてしまいました';
+          }
+          return 'なんとか持ちこたえました';
+        }),
+      ]));
+    }
+    // 宿敵からの買い取りの申し出
+    final buyer = cos.where((c) => c.alive && c.rival != null && c.parent != 'player' && c.cash > 0).firstOrNull;
+    if (buyer != null && biz.length > 1 && rnd() < .013) {
+      final b = pick(biz);
+      final price = sellValue(b) * 1.5;
+      events.add(GameEvent(
+          who: buyer,
+          face: buyer.rival!.col,
+          title: '事業を売ってほしい',
+          text: '${buyer.rival!.pres}が、あなたの「${indm[b.ind]!.name}」を相場の1.5倍、${yen(price)}で買いたいと言っています。',
+          choices: [
+            Choice('売る', '${yen(price)}が入る。その事業は相手のものになる', () {
+              cash += price;
+              buyer.biz.add(CoBiz(ind: b.ind, power: b.power));
+              biz.remove(b);
+              buyer.rel += 15;
+              return '「${indm[b.ind]!.name}」を${buyer.name}に売りました';
+            }),
+            Choice('断る', '相手は機嫌を損ねる', () {
+              buyer.rel -= 10;
+              return '断りました';
+            }),
+          ]));
+    }
+    // 株主総会
+    final h4 = hist.length >= 12 ? hist[hist.length - 12] : null;
+    if (listed && sh.own < 50 && h4 != null && pre < h4.pre * .8 && rnd() < .08) {
+      events.add(GameEvent(title: '荒れる株主総会', text: '利益が落ちたことに、株主が怒っています。「社長は責任を取れ」という声も出ています。', choices: [
+        Choice('配当を増やして鎮める', '${yen(math.max(cash * .1, 0))}を株主に配る', () {
+          cash *= .9;
+          return '配当を増やし、総会は収まりました';
+        }),
+        Choice('強気で押し切る', 'お金はかからない。4割の確率で株価が下がり、市場の信用を失う', () {
+          if (rnd() < .4) {
+            scandal = 12;
+            return '反発を招き、株価が下がりました';
+          }
+          return 'どうにか押し切りました';
+        }),
+      ]));
+    }
+    // 好景気の不動産話
+    if (econ > 1.1 && rnd() < .05 && cash > 0) {
+      events.add(GameEvent(title: '銀行からの儲け話', text: '取引のある銀行が「土地を買えば必ず上がります。お金はいくらでも貸します」と言っています。', choices: [
+        Choice('借りて土地を買う', '${yen(cash)}を借りて土地に回す。景気が続けば大きく増え、崩れれば借金だけが残る', () {
+          final a = math.max(cash, 1e7);
+          debt += a;
+          land = land + a;
+          return '土地を買いました';
+        }),
+        Choice('断る', '何も起きない', () => '断りました'),
+      ]));
+    }
+    // 土地の値動き
+    if (land > 0) {
+      land *= econ > 1.1
+          ? 1.02
+          : econ < .95
+              ? .96
+              : 1.0017;
+      if (rnd() < .0001) land = 0;
+    }
+  }
+
+  void fire(Person p) {
+    if (p.partner && p.stake != 0) {
+      sh.pt = math.max(0, sh.pt - p.stake);
+      if (listed) {
+        sh.float += p.stake;
+      } else {
+        sh.vc += p.stake;
+      }
+      p.stake = 0;
+      p.partner = false;
+    }
+    staff.remove(p);
+    for (final b in biz) {
+      if (b.mgr == p.id) {
+        b.mgr = null;
+        if (p.trait == 'oneman') b.power *= .7;
+      }
+    }
+    if (succ == p.id) succ = null;
+  }
+
+  void finishPipe(Biz b, Pipe x, void Function(String, [String]) N) {
+    final name = indm[b.ind]!.name;
+    if (x.k == 'enter') {
+      addCtry(b, x.c!, x.mode!, x.pw ?? x.cost);
+      N('「$name」が${cm[x.c]!.n}で始まりました${x.mode == 'jv' ? '（地元の会社と組んで）' : ''}', 'good');
+      return;
+    }
+    if (x.k == 'build') {
+      var eff = pipeEff(b, x.cost) * (b.model == 'fc' ? 1.3 : 1);
+      if (hasT('gambler') && rnd() < .2) eff *= .3;
+      b.power += x.cost * eff;
+      b.upkeep = b.upkeep + x.cost * .006;
+      N('「$name」の新しい${uw(b)}が開きました', 'good');
+      return;
+    }
+    final p = staffById(b.mgr);
+    final kai = p != null ? p.ab['kai']! : pres.ab['kai']!;
+    final hit = .08 + (culture == 'free' ? .08 : 0) + kai / 1000 + (hasT('genius') ? .08 : 0) + (hasT('tech') ? .05 : 0);
+    final miss = math.max(.08, .3 - kai / 500);
+    final r = rnd();
+    double m;
+    String msg;
+    if (r < hit) {
+      m = 4 + rnd() * 3;
+      msg = '大当たり！「$name」の新商品が爆発的に売れています';
+    } else if (r < hit + miss) {
+      m = .15;
+      msg = '「$name」の新商品は不発に終わりました';
+    } else {
+      m = 1.3;
+      msg = '「$name」の新商品が出ました。評判はまずまずです';
+    }
+    if (hasDeal('codev', indm[b.ind]!.cat)) m *= 1.5;
+    b.power += x.cost * pipeEff(b, x.cost) * m * (b.model == 'fc' ? .6 : 1);
+    N(
+        msg,
+        m > 2
+            ? 'big'
+            : m < .5
+                ? 'bad'
+                : 'good');
+    final pp = staffById(x.by);
+    if (pp != null && m < .5) {
+      events.add(GameEvent(title: '提案が外れた', text: '${pp.name}の提案で作った「$name」の新商品は不発でした。責任をどう取らせますか。', choices: [
+        Choice('責任者から外す', '忠誠が大きく下がる', () {
+          for (final bb in biz) {
+            if (bb.mgr == pp.id) bb.mgr = null;
+          }
+          pp.loy -= 15;
+          return '${pp.name}を責任者から外しました';
+        }),
+        Choice('そのまま任せる', '忠誠が上がる', () {
+          pp.loy += 10;
+          return '${pp.name}に「次で取り返せ」と伝えました';
+        }),
+      ]));
+    }
+    if (pp != null && m > 2) pp.loy = math.min(99, pp.loy + 8);
+  }
+
+  // ===== 経営会議 =====
+  Proposal? proposalFor(Person p) {
+    final b = biz.where((x) => x.mgr == p.id).firstOrNull;
+    if (b == null) return null;
+    final ind = indm[b.ind]!;
+    final t = p.trait;
+    final bigF = t == 'gambler'
+        ? .5
+        : t == 'careful'
+            ? .12
+            : .25;
+    final cost = cash * bigF;
+    final opts = <Proposal>[];
+    if (crewEff(b) < b.power * .95) {
+      opts.add(Proposal(k: 'crew', w: 3, cost: cash * .15, l: '「${ind.name}」の現場の人を増やしたい', d: '今のままでは${uw(b)}の一部が止まっています'));
+    }
+    opts.add(Proposal(k: 'build', w: t == 'careful' ? 1 : 2, cost: cost, l: '「${ind.name}」の${uw(b)}を増やしたい', d: '客は来ています。広げれば確実に伸びます'));
+    opts.add(Proposal(k: 'dev', w: t == 'tech' || t == 'genius' ? 4 : 1, cost: cost, l: '「${ind.name}」で新しい商品を作りたい', d: '当たれば大きい。外れるかもしれません'));
+    if ((p.amb > 65 || t == 'gambler') && b.price != 'cut') {
+      opts.add(Proposal(k: 'cut', w: 2, cost: 0, l: '「${ind.name}」で値下げして客を奪いたい', d: '利益は薄くなりますが、シェアを取りに行きます'));
+    }
+    if (t == 'frugal' && b.upkeep > 0) opts.add(Proposal(k: 'trim', w: 3, cost: 0, l: '「${ind.name}」の維持費を削りたい', d: '維持費が2割減ります。現場は少し弱ります'));
+    if (p.partner) opts.add(Proposal(k: 'newbiz', w: 2, cost: 0, l: '新しい事業を始めたい', d: '自分で立ち上げて、責任者をやります'));
+    final tot = opts.fold(0, (s, o) => s + o.w);
+    var r = rnd() * tot;
+    var o = opts[0];
+    for (final x in opts) {
+      r -= x.w;
+      if (r <= 0) {
+        o = x;
+        break;
+      }
+    }
+    o = o.copy();
+    if (o.k == 'newbiz') {
+      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
+      if (cs.isEmpty) return null;
+      final ni = pick(cs);
+      o.ind = ni.id;
+      o.cost = capexOf(ni);
+      o.l = '新しく「${ni.name}」を始めたい';
+    }
+    if ((o.k == 'build' || o.k == 'dev' || o.k == 'crew') && o.cost < capexOf(ind) * .05) return null;
+    o.by = p.id;
+    o.bid = b.id;
+    return o;
+  }
+
+  String doProposal(Proposal o) {
+    final b = biz.where((x) => x.id == o.bid).firstOrNull;
+    final p = staffById(o.by);
+    if (b == null || p == null) return 'その提案はもう意味がなくなっていました';
+    if (o.cost > cash) return 'お金が足りず、提案は実行できませんでした';
+    if (o.k == 'crew') {
+      cash -= o.cost;
+      b.crew = crewOf(b) + o.cost * 4;
+      b.upkeep = b.upkeep + o.cost * .008;
+    } else if (o.k == 'build' || o.k == 'dev') {
+      cash -= o.cost;
+      b.pipe.add(Pipe(k: o.k, cost: o.cost, left: o.k == 'dev' ? ri(3, 6) : ri(1, 2), by: p.id));
+    } else if (o.k == 'cut') {
+      b.price = 'cut';
+    } else if (o.k == 'trim') {
+      b.upkeep *= .8;
+      b.crew = crewOf(b) * .93;
+    } else if (o.k == 'newbiz') {
+      if (biz.any((x) => x.ind == o.ind)) return 'その業種にはもう入っていました';
+      cash -= o.cost;
+      b.mgr = null;
+      biz.add(Biz(id: uid(), ind: o.ind!, power: o.cost * newPow, crew: o.cost * newPow * 1.2, mgr: p.id));
+    }
+    p.loy = math.min(99, p.loy + 3);
+    p.rej = 0;
+    calcAll();
+    return '${p.name}の提案を通しました';
+  }
+
+  String rejectProposal(Proposal o) {
+    final p = staffById(o.by);
+    if (p == null) return '';
+    p.rej = p.rej + 1;
+    p.loy -= p.amb > 65 ? 10 : 6;
+    if (p.rej >= 3) p.ambKnown = true;
+    return '${p.name}の提案を却下しました${p.rej >= 3 ? '。不満がたまっているようです' : ''}';
+  }
+
+  void holdMeeting(void Function(String, [String]) N) {
+    final mgrs = staff.where((p) => biz.any((b) => b.mgr == p.id)).toList();
+    if (mgrs.isEmpty) return;
+    final props = <Proposal>[];
+    shuffle(mgrs);
+    for (final p in mgrs) {
+      if (props.length >= 3) break;
+      if (rnd() < (p.partner ? .7 : .5)) {
+        final o = proposalFor(p);
+        if (o != null) props.add(o);
+      }
+    }
+    if (props.isEmpty) return;
+    for (final o in props.where((o) => staffById(o.by)!.auto)) {
+      final name = staffById(o.by)!.name;
+      N('$name（まかせている）：${o.l}。${doProposal(o)}');
+    }
+    final restP = props.where((o) => staffById(o.by) != null && !staffById(o.by)!.auto).toList();
+    if (restP.length >= 2 && restP[0].cost + restP[1].cost > cash * .6) {
+      final a = restP[0], b = restP[1];
+      final pa = staffById(a.by)!, pb = staffById(b.by)!;
+      events.add(GameEvent(title: '経営会議：意見がぶつかった', text: '${pa.name}は「${a.l}」、${pb.name}は「${b.l}」と言って譲りません。両方やるお金はありません。', choices: [
+        Choice('${pa.name}の案を通す', '${pb.name}の忠誠が大きく下がる', () {
+          pb.loy -= 12;
+          pb.rej = pb.rej + 1;
+          return doProposal(a);
+        }),
+        Choice('${pb.name}の案を通す', '${pa.name}の忠誠が大きく下がる', () {
+          pa.loy -= 12;
+          pa.rej = pa.rej + 1;
+          return doProposal(b);
+        }),
+        Choice('どちらも却下する', '二人とも不満を持つ', () => '${rejectProposal(a)}。${rejectProposal(b)}'),
+      ]));
+      restP.removeRange(0, 2);
+    }
+    for (final o in restP) {
+      final p = staffById(o.by)!;
+      events.add(GameEvent(title: '経営会議の提案', person: p, text: '${o.l}。${o.d}${o.cost > 0 ? '（${yen(o.cost)}）' : ''}', choices: [
+        Choice('承認する', '手は使わない。忠誠が少し上がる', () => doProposal(o)),
+        Choice('却下する', p.amb > 65 ? '忠誠が大きく下がる' : '忠誠が下がる', () => rejectProposal(o)),
+        Choice('この人に全部まかせる', 'これからの提案は自動で通す', () {
+          p.auto = true;
+          return '${doProposal(o)}。これからは任せます';
+        }),
+      ]));
+    }
+  }
+
+  // ===== お金の縛り =====
+  void moneyChecks(void Function(String, [String]) N) {
+    if (cultLeft > 0) {
+      cultLeft--;
+      if (cultLeft == 0) {
+        culture = cultNext!;
+        N('社風が「${CULT[culture]!.n}」に変わりました', 'good');
+      }
+    }
+    if (bond > 0 && turn >= bondDue) {
+      if (cash >= bond) {
+        cash -= bond;
+        N('社債の${yen(bond)}を返しました');
+      } else {
+        final lack = bond - cash;
+        cash = 0;
+        debt += lack;
+        N('社債を返すお金が足りず、${yen(lack)}を銀行から借りて返しました', 'bad');
+      }
+      bond = 0;
+    }
+    if (!listed && vcDeadline != 0 && turn >= vcDeadline && sh.vc > 0 && !events.any((e) => e.vc)) {
+      final cost = cap * sh.vc / 100 * 1.2;
+      events.add(GameEvent(vc: true, title: '投資家が上場を迫る', text: '「3年以内に上場する」という約束の期限が来ました。投資家は株${pct(sh.vc)}を持っています。', choices: [
+        Choice('株を買い戻す', '${yen(cost)}を払い、投資家の株をすべて引き取る', () {
+          if (cash < cost) return 'お金が足りません。投資家はあと1年だけ待つと言いました';
+          cash -= cost;
+          sh.own += sh.vc;
+          sh.vc = 0;
+          vcDeadline = 0;
+          return '投資家の株を買い戻しました';
+        }),
+        Choice('あと1年待ってもらう', '投資家に株を5%渡して、期限を1年延ばす', () {
+          final x = math.min(5, sh.own - 30);
+          sh.own -= x;
+          sh.vc += x;
+          vcDeadline = turn + 12;
+          return '期限が1年延びました';
+        }),
+        Choice('社長の座を降りる', '投資家が選んだ部下が社長になる', () {
+          final cand = staff.where((p) => p.age < 65).toList()..ssort((a, b) => Game.totOf(b) - Game.totOf(a));
+          final best = cand.firstOrNull;
+          if (best == null) return '代わりの人がおらず、投資家は株を市場で売り払いました';
+          final old = pres.name;
+          takeOver(best);
+          vcDeadline = turn + 24;
+          return '$oldは社長を降り、${best.name}が社長になりました';
+        }),
+      ]));
+    }
+    if (vcDeadline != 0 && !listed && turn == vcDeadline - 12) N('投資家との上場の約束まで、あと1年です', 'bad');
+    if (tie != null) {
+      final hit = biz.where((b) => tie!.inds.contains(b.ind)).firstOrNull;
+      final c = coById(tie!.co);
+      if (hit != null || c == null || !c.alive) {
+        if (hit != null && c != null) {
+          for (final b in biz) {
+            b.power *= .92;
+          }
+          c.rel -= 30;
+          N('取引先の${c.name}が「うちと同じ商売を始めるとは」と怒り、取引を打ち切りました', 'bad');
+        }
+        tie = null;
+      }
+    }
+    if (tie == null && biz.isNotEmpty && rnd() < .008) {
+      final c = pickOr(cos.where((x) => x.alive && x.rival == null && x.parent != 'player' && x.tier == 0 && x.cap > cap * 2).toList());
+      if (c != null) {
+        final money = cap * .12 + 1e7 * nom();
+        final inds = c.biz.map((b) => b.ind).toList();
+        final cats = <String>{for (final i in inds) indm[i]!.cat}.toList();
+        events.add(GameEvent(
+            title: '取引先からの出資の話',
+            text:
+                '取引のある${c.name}が「${yen(money)}を出資するので、株を8%もらいたい。注文も回します」と言っています。ただし${c.name}と同じ業種（${inds.take(4).map((i) => indm[i]!.name).join('・')}）に入ると、取引を切られます。',
+            choices: [
+              Choice('受ける', '${yen(money)}が入る。同じ分類の事業の力が少し上がる', () {
+                if (sh.own < 40) return '持ち株が足りず、話は流れました';
+                cash += money;
+                sh.own -= 8;
+                sh.ally += 8;
+                tie = Tie(co: c.id, inds: inds, cats: cats);
+                c.rel += 15;
+                return '${c.name}の出資を受けました';
+              }),
+              Choice('断る', '何も起きない', () => '断りました'),
+            ]));
+      }
+    }
+    final burn = math.max(0.0, -pre);
+    if (biz.isNotEmpty && cash < burn * 3 + 1e6 && rnd() < .15 && !events.any((e) => e.rivfund)) {
+      final c = cos.where((x) => x.alive && x.rival != null && x.parent != 'player' && x.cash > cap * .3).firstOrNull;
+      if (c != null) {
+        final money = math.max(cap * .25, burn * 12);
+        events.add(GameEvent(
+            rivfund: true,
+            who: c,
+            face: c.rival!.col,
+            title: '宿敵からの出資',
+            text: '${c.rival!.pres}が「資金に困っているそうだな。${yen(money)}出してやろう。そのかわり株を20%もらう」と言っています。',
+            choices: [
+              Choice('受ける', 'お金は助かるが、宿敵があなたの株を20%持つ', () {
+                cash += money;
+                final x = math.min(20.0, sh.own - 10);
+                sh.own -= x;
+                sh.riv[c.id] = (sh.riv[c.id] ?? 0) + x;
+                return '${c.name}の出資を受けました。株を${pct(x)}握られています';
+              }),
+              Choice('断る', '自力でしのぐ', () {
+                c.rel -= 5;
+                return '断りました';
+              }),
+            ]));
+      }
+    }
+  }
+
+  void dealsMonthly(void Function(String, [String]) N) {
+    for (final d in deals.toList()) {
+      final c = coById(d.co);
+      if (c == null || !c.alive) {
+        deals.remove(d);
+        continue;
+      }
+      if (d.type == 'outsrc' && rnd() < .004) {
+        for (final b in biz) {
+          if (['make', 'food'].contains(indm[b.ind]!.cat)) b.power *= .92;
+        }
+        scandal = math.max(scandal, 6);
+        N('製造を任せていた${c.name}の工場で不正が見つかりました。こちらの看板に傷がつきました', 'bad');
+      }
+    }
+    if (biz.isNotEmpty && rnd() < .008) {
+      final cats = <String>{for (final b in biz) indm[b.ind]!.cat};
+      final c = pickOr(cos
+          .where((x) => x.alive && x.parent != 'player' && x.rel >= 0 && x.biz.any((b) => cats.contains(indm[b.ind]!.cat)) && dealWith(x).isEmpty)
+          .toList());
+      if (c != null) {
+        final type = pick(const ['sales', 'codev', 'outsrc']);
+        events.add(GameEvent(
+            who: c.rival != null ? c : null,
+            face: c.rival?.col,
+            title: '組みたいという話',
+            text: '${c.name}から「${DEALN[type]}」の話が来ました。${DEALD[type]}',
+            choices: [
+              Choice('組む', '手は使わない', () {
+                deals.add(Deal(co: c.id, type: type, since: year));
+                c.rel += 10;
+                calcAll();
+                return '${c.name}と組みました';
+              }),
+              Choice('断る', '相手は少し機嫌を損ねる', () {
+                c.rel -= 5;
+                return '断りました';
+              }),
+            ]));
+      }
+    }
+    for (final c in subs()) {
+      if (c.fromStaff == null && !c.listed) continue;
+      if (rnd() < .01) {
+        for (final b in c.biz) {
+          b.power *= 1.1;
+        }
+        c.cash -= math.max(0, c.cash * .3);
+        N('子会社${c.name}の社長${c.presName}が、独断で大きな投資をしました');
+      }
+      if (c.rel < 10 && rnd() < .006 && !events.any((e) => e.subco == c.id)) {
+        events.add(GameEvent(subco: c.id, title: '子会社の社長が反発', text: '${c.name}の社長${c.presName}が「親会社の口出しは迷惑だ」と言い出しました。', choices: [
+          Choice('社長を替える', '子会社の力が1割落ちるが、言うことを聞くようになる', () {
+            for (final b in c.biz) {
+              b.power *= .9;
+            }
+            c.presName = nm();
+            c.presAge = ri(40, 55).toDouble();
+            c.rel = 40;
+            return '${c.name}の社長を替えました';
+          }),
+          Choice('好きにさせる', '関係は良くなるが、配当が減る', () {
+            c.rel += 25;
+            c.eff *= .95;
+            return '${c.name}には口を出さないことにしました';
+          }),
+        ]));
+      }
+    }
+  }
+
+  void dirtyMonthly(void Function(String, [String]) N) {
+    if (cooked > 0) {
+      cooked--;
+      if (rnd() < .03) {
+        cooked = 0;
+        scandal = 24;
+        final wl = listed;
+        if (wl) {
+          listed = false;
+          sh.vc += sh.float;
+          sh.float = 0;
+        }
+        N('【粉飾発覚】決算の粉飾が明るみに出ました。${wl ? '上場廃止となりました' : '信用は地に落ちました'}', 'bad');
+      }
+    }
+    for (final b in biz) {
+      if (b.cartel > 0) {
+        b.cartel--;
+        if (rnd() < .015) {
+          b.cartel = 0;
+          final fine = b.rev * 12 * .15;
+          cash -= fine;
+          scandal = math.max(scandal, 12);
+          N('「${indm[b.ind]!.name}」の談合が発覚し、罰金${yen(fine)}を払いました', 'bad');
+        }
+      }
+    }
+    if (buried.isNotEmpty && turn >= buried[0]) {
+      buried.removeAt(0);
+      for (final b in biz) {
+        b.power *= .75;
+      }
+      scandal = 18;
+      N('【古い不祥事が再燃】昔もみ消した不祥事が、もっと大きな事件として報じられました', 'bad');
+    }
+    bool sharesInd(Company c) => c.biz.any((x) => biz.any((y) => y.ind == x.ind));
+    final kur = cos.where((c) => c.alive && c.rival != null && c.rival!.k == 'kuroda' && c.parent != 'player' && c.rel < 0 && sharesInd(c)).firstOrNull;
+    if (biz.isNotEmpty && rnd() < (kur != null ? .01 : .004)) {
+      final foe = kur != null && rnd() < .6
+          ? kur
+          : pickOr(cos.where((c) => c.alive && c.rival != null && c.parent != 'player' && c.rel < 0 && sharesInd(c)).toList());
+      if (foe != null) {
+        final b = biz.where((y) => foe.biz.any((x) => x.ind == y.ind)).firstOrNull;
+        if (b != null) {
+          b.power *= .93;
+          for (final x in foe.biz) {
+            if (x.ind == b.ind) x.power *= 1.1;
+          }
+          events.add(GameEvent(
+              who: foe,
+              face: foe.rival!.col,
+              title: '情報が盗まれた',
+              text: '「${indm[b.ind]!.name}」の主力の開発者が突然辞め、半年後、${foe.name}から同じような商品が出ました。',
+              choices: [
+                Choice('訴える', '2年後に判決。勝てば賠償金が入る', () {
+                  suits.add(Suit(at: turn + 24, co: foe.id, amt: math.max(foe.cap * .01, b.rev * 6)));
+                  foe.rel -= 20;
+                  return '${foe.name}を訴えました';
+                }),
+                Choice('やり返す', 'こちらも相手の中身を盗む（手は使わない）', () {
+                  ap++;
+                  return doDirty('spy', foe);
+                }),
+                Choice('黙って次の商品で勝負する', '評判は守られる', () {
+                  rep = rep + 3;
+                  return '騒がず、次の商品で取り返すことにしました';
+                }),
+              ]));
+        }
+      }
+    }
+    if (suits.isNotEmpty && turn >= suits[0].at) {
+      final s = suits.removeAt(0);
+      final c = coById(s.co);
+      if (s.against) {
+        cash -= s.amt;
+        N('約束破りの裁判に負け、${yen(s.amt)}を払いました', 'bad');
+      } else if (rnd() < .6 && c != null) {
+        cash += s.amt;
+        N('${c.name}との裁判に勝ち、賠償金${yen(s.amt)}を受け取りました', 'good');
+      } else {
+        N('裁判に負けました。訴えは退けられました', 'bad');
+      }
+    }
+  }
+
+  void rivalReturns(void Function(String, [String]) N) {
+    if (ret.isEmpty || turn < ret[0].at) return;
+    final r = ret.removeAt(0);
+    final presN = r.west ? '${given()}・${r.fam}' : '${r.fam} ${given()}';
+    final name = '${r.fam}・ネクスト';
+    final rv = Rival(k: 'ret${uid()}', pres: presN, co: name, type: 'peer', label: 'avenger', tier: 0, col: r.col);
+    final c = mkCo(0, 'link', name: name, presName: presN, rival: rv, fam: 60);
+    c.presAge = ri(25, 35).toDouble();
+    c.rel = -60;
+    c.g = .03;
+    c.cash = cap * .05;
+    for (final b in (biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).take(2)) {
+      c.biz.add(CoBiz(ind: b.ind, power: b.power * .3));
+    }
+    calcAll();
+    N('${r.from}を失った一族の$presNが、新しい会社「$name」を立ち上げました。狙いはあなたです', 'big');
+  }
+}

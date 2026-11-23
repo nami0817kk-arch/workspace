@@ -1,0 +1,81 @@
+name: quadrillion-ci
+
+# クアドリリオンゲーム（projects/quadrillion）の検証(analyze + test)。テストの合否は CI で判断する。
+# basketball-ci.yml を写したもの。
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - "claude/quadrillion-**"
+    paths:
+      - "projects/quadrillion/**"
+      - ".github/workflows/quadrillion-ci.yml"
+  pull_request:
+    paths:
+      - "projects/quadrillion/**"
+      - ".github/workflows/quadrillion-ci.yml"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "回すテスト(例 test/game_test.dart)。空なら全件"
+        required: false
+        default: ""
+      skip_analyze:
+        description: "analyze を省く(テストの反復だけしたいとき)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/quadrillion
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.2
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        if: ${{ inputs.skip_analyze != true }}
+        run: flutter analyze
+
+      - name: Run tests
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          if [ -z "$TARGET" ]; then
+            flutter test
+            exit $?
+          fi
+          case "$TARGET" in
+            test|test/|test/*) ;;
+            *)
+              echo "::error::target は test/ 配下を指定してください: $TARGET"
+              exit 1 ;;
+          esac
+          case "$TARGET" in
+            *[!A-Za-z0-9_/.-]*)
+              echo "::error::target に使えない文字が含まれています: $TARGET"
+              exit 1 ;;
+          esac
+          echo "対象を絞って実行: $TARGET"
+          flutter test "$TARGET"
