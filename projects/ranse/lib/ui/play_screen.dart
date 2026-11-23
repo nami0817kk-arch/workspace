@@ -108,6 +108,9 @@ class _PlayScreenState extends State<PlayScreen> {
 
 const _pad = EdgeInsets.fromLTRB(14, 12, 14, 20);
 
+/// 場面の絵の置き場所（`kSceneArts` の名前から）。
+String sceneArtPath(String art) => 'assets/images/scene_$art.jpg';
+
 class _ChoiceTab extends StatelessWidget {
   const _ChoiceTab(this.g);
   final Game g;
@@ -219,6 +222,22 @@ class _PromptCard extends StatelessWidget {
                 ),
               ),
             const Divider(color: Pal.line, height: 18),
+          ],
+          // 場面の絵（Gemini で作ったドット絵）。「今年の重点」には添えない。
+          if (p.art case final art?) ...[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Image.asset(
+                sceneArtPath(art),
+                width: double.infinity,
+                height: 120,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+                errorBuilder: (context, error, stack) =>
+                    const SizedBox.shrink(),
+              ),
+            ),
+            const SizedBox(height: 10),
           ],
           Text(
             p.title,

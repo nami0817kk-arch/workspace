@@ -24,6 +24,7 @@ import 'lords.dart';
 import 'pastimes.dart';
 import 'regions.dart';
 import 'rng.dart';
+import 'scene_art.dart';
 import 'shadow_life.dart';
 import 'talents.dart';
 import 'temple.dart';
@@ -53,8 +54,11 @@ class Choice {
 }
 
 class Prompt {
-  Prompt(this.title, this.text, this.choices, this.after);
+  Prompt(this.title, this.text, this.choices, this.after, {this.art});
   final String title, text;
+
+  /// 添える絵の名前（`scene_art.dart` の `kSceneArts`）。場面でない問いは null。
+  final String? art;
   final List<Choice> choices;
 
   /// 選んだあとに呼ぶ（手番を進める・画面を更新する、など）。
@@ -184,6 +188,9 @@ class Game extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// いま進めている場面の id（絵を選ぶため。選んだら消す）。
+  String? _sceneId;
+
   void ask(
     String title,
     String text,
@@ -192,13 +199,20 @@ class Game extends ChangeNotifier {
   }) {
     lastResults = [..._pending];
     _pending.clear();
-    prompt = Prompt(title, text, choices, after ?? changed);
+    prompt = Prompt(
+      title,
+      text,
+      choices,
+      after ?? changed,
+      art: sceneArtFor(this, _sceneId, title),
+    );
     notifyListeners();
   }
 
   void choose(int i) {
     final p = prompt!;
     prompt = null;
+    _sceneId = null;
     final c = p.choices[i];
     if (c.cancel) {
       changed();
@@ -579,6 +593,7 @@ class Game extends ChangeNotifier {
         if (s.id == forcedId && !hasFlag('scene:${s.id}') && s.cond(this)) {
           l.t = a * 2 + 1;
           setFlag('scene:${s.id}');
+          _sceneId = s.id;
           s.run(this, _endYear);
           return;
         }
@@ -594,6 +609,7 @@ class Game extends ChangeNotifier {
       final s = hist.first;
       l.t = a * 2 + 1;
       setFlag('scene:${s.id}');
+      _sceneId = s.id;
       s.run(this, _endYear);
       return;
     }
@@ -611,6 +627,7 @@ class Game extends ChangeNotifier {
     final s = rng.wpick(cand, (e) => e.weight(this));
     l.t = a * 2 + 1;
     setFlag('scene:${s.id}');
+    _sceneId = s.id;
     s.run(this, _endYear);
   }
 
@@ -773,6 +790,7 @@ class Game extends ChangeNotifier {
 
   void _runAdultScene(SceneDef s, void Function() then) {
     setFlag('scene:${s.id}');
+    _sceneId = s.id;
     s.run(this, then);
   }
 

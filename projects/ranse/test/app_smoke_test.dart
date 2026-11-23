@@ -48,6 +48,8 @@ void main() {
     var guard = 0;
     while (c.game.isChild && !c.game.finished && guard++ < 60) {
       expect(c.game.prompt, isNotNull);
+      // 場面の絵が上にあるので、選択肢が画面の下に隠れることがある。
+      await tester.ensureVisible(find.byType(OutlinedButton).first);
       await tester.tap(find.byType(OutlinedButton).first);
       await tester.pump();
     }
@@ -74,6 +76,7 @@ void main() {
     );
     await tester.tap(find.byIcon(Icons.alt_route));
     await tester.pump();
+    await tester.ensureVisible(find.text('学問に励む'));
     await tester.tap(find.text('学問に励む'));
     await tester.pump();
     expect(c.game.prompt, isNotNull); // 次の岐路か、翌年の重点
