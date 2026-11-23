@@ -74,6 +74,7 @@ void main() {
 
     // 元服（裳着）の画面を閉じると、大人も毎年の重点を選ぶ。
     expect(find.text('乱世へ歩み出す'), findsOneWidget);
+    await tester.ensureVisible(find.text('乱世へ歩み出す'));
     await tester.tap(find.text('乱世へ歩み出す'));
     await tester.pump();
     expect(find.text('今年の重点'), findsOneWidget);
