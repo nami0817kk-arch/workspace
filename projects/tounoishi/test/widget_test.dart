@@ -265,6 +265,17 @@ void main() {
     }
   });
 
+  test('掘ったときは塔の上限に関係なく生まれる（0.7.33・試作 v49）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'if(g.cr.length>=CAP&&!(opt&&opt.force))return null;', // 上限は自然に増えるときだけ
+      'var m=mkCr(spc,env,f,x,y,amt,{force:1});', // 掘った土から生まれる
+      "mkCr('guardian','sp',f,cx,cy,0,{force:1})", // 守護獣
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
