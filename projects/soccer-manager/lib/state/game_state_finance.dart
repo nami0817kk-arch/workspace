@@ -253,7 +253,10 @@ extension GameStateFinance on GameState {
 
   /// 試合にオーナーは直接関わらない。先発と構えは、毎節かならず監督が決める。
   /// 穴(負傷・出場停止)を埋め、水準が高ければ相手との力関係から構えを、
-  /// さらに高ければ最善の先発を選ぶ。
+  /// さらに高ければ最善の先発を選ぶ。プレッシング・ライン・幅・テンポ・
+  /// 戦術スタイル・逃げ切りは、監督の考え方から毎節決める(ManagerTactics)。
+  /// セットプレーの担当も毎節決める。
+  /// キャプテンは季の初めの節と、務められなくなったときに指名し直す。
   void _managerPreparesMatch(Fixture next) {
     final save = _save;
     if (save == null) return;
@@ -270,15 +273,22 @@ extension GameStateFinance on GameState {
     } else {
       LineupUtils.fillVacancies(user);
     }
+    final style =
+        save.infrastructure.staffFor(StaffRole.manager)?.manager?.style ??
+            ManagerStyle.pragmatic;
     if (level >= 3) {
       // 相手に合わせた構えを、監督の考え方の分だけずらす。
-      final style =
-          save.infrastructure.staffFor(StaffRole.manager)?.manager?.style ??
-              ManagerStyle.pragmatic;
       user.mentality = style.shift(CpuTacticsAI.mentalityFor(
         ownRating: user.overallRating,
         opponentRating: opp.overallRating,
       ));
+    }
+    ManagerTactics.apply(user, style: style, level: level, opponent: opp);
+    // セットプレーの担当(PK・FK・CK・守備)も、CPU と同じ決め方で監督が
+    // 毎節決める。以前はユーザーのクラブだけ決める所が無く、空のままだった。
+    LineupUtils.autoAssignSetPieceRoles(user);
+    if (next.matchday == 1 || ManagerTactics.needsNewCaptain(user)) {
+      _managerAppointsCaptain();
     }
   }
 

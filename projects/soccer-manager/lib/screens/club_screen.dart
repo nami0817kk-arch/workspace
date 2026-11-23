@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../logic/board_engine.dart';
 import '../logic/scouting_engine.dart';
 import '../logic/manager_hr_engine.dart';
+import '../logic/manager_tactics.dart';
 import '../models/formation.dart';
 import '../models/manager_profile.dart';
 import '../models/player.dart';
