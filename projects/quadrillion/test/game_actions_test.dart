@@ -93,6 +93,8 @@ void main() {
   test('社長の行動と相棒（探す・誘う・日銭・腕磨き・人脈・種探し）', () {
     final s = Game.newGame(SetupConfig(year: 1980, traits: ['charm', 'noble']), rng: ParkMiller(8));
     for (final pl in PLACES) {
+      // 相棒は2人まで（誘いが断られることもあるので、何人目で埋まるかは乱数しだい）
+      if (s.partners().length >= 2) break;
       s.ap = 3;
       expect(s.presAct('seek', pl.id), isNull);
       final p = s.meet!;
@@ -174,7 +176,7 @@ void main() {
     expect(tx(s.spinOff(s.biz[0])), contains('分社'));
     s.biz[0].mgr = staff2.id;
     expect(tx(s.releaseBiz(s.biz[0])), contains('独立させました'));
-    final sub = s.subs().first;
+    final sub = s.subs().firstWhere((c) => s.pctOf(c) >= 60);
     expect(tx(s.subIPO(sub)), contains('上場させ'));
     final cat = indm[s.biz.last.ind]!.cat;
     if (s.biz.any((b) => indm[b.ind]!.cat != cat)) expect(tx(s.splitCompany(cat)), contains('切り離し'));

@@ -131,7 +131,7 @@ extension GameView on Game {
       return i.f != 0 && y > i.f;
     }).firstOrNull;
     if (dec != null) add(70, '「{0}」は市場が沈み始めています。売るなら早めに', [I(dec.ind)]);
-    final hots = IND.where((i) => y - i.b >= 0 && y - i.b < 6 && i.size >= 1.5e12 && !biz.any((b) => b.ind == i.id)).toList()
+    final hots = inds.where((i) => y - i.b >= 0 && y - i.b < 6 && i.size >= 1.5e12 && !biz.any((b) => b.ind == i.id)).toList()
       ..ssort((p, q) => q.size.compareTo(p.size));
     if (hots.isNotEmpty) add(65, '生まれたばかりの「{0}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります', [I(hots[0].id)]);
     // あと1か国で規模の利益（5か国から利益率が上がる）

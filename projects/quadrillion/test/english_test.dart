@@ -146,8 +146,8 @@ void main() {
       expect(missing, isEmpty, reason: missing.join('\n'));
     });
 
-    test('定義の名前（業種112・国24・特性・宿敵の型・時代の大事件など）にすべて英語がある', () {
-      expect(IND.length, 112);
+    test('定義の名前（業種200・国24・特性・宿敵の型・時代の大事件など）にすべて英語がある', () {
+      expect(IND.length, 200);
       expect(CTRY.length, 24);
       final names = <String>[
         for (final i in IND) i.ja,

@@ -270,7 +270,7 @@ extension GameActions on Game {
 
   List<Synergy> knownSynFor(String id) {
     final own = <String>{for (final b in biz) b.ind};
-    return SYN.where((s) => (found[s.k] != null || hint[s.k] != null) && ((s.a == id && own.contains(s.b)) || (s.b == id && own.contains(s.a)))).toList();
+    return syns.where((s) => (found[s.k] != null || hint[s.k] != null) && ((s.a == id && own.contains(s.b)) || (s.b == id && own.contains(s.a)))).toList();
   }
 
   String sellBiz(Biz b) {
@@ -411,7 +411,7 @@ extension GameActions on Game {
 
   String scout() {
     final y = yr();
-    final up = IND.where((i) => i.b > y && i.b <= y + 8 && seen[i.id] == null).toList();
+    final up = inds.where((i) => i.b > y && i.b <= y + 8 && seen[i.id] == null).toList();
     if (up.isNotEmpty && rnd() < .45) {
       final i = pick(up);
       seen[i.id] = 1;
@@ -419,7 +419,7 @@ extension GameActions on Game {
     }
     final own = <String>{for (final b in biz) b.ind};
     final live = <String>{for (final i in liveInds()) i.id};
-    final c = SYN.where((s) => found[s.k] == null && hint[s.k] == null && live.contains(s.a) && live.contains(s.b)).toList();
+    final c = syns.where((s) => found[s.k] == null && hint[s.k] == null && live.contains(s.a) && live.contains(s.b)).toList();
     final touch = c.where((s) => own.contains(s.a) || own.contains(s.b)).toList();
     final cheap = c.where((s) => capexOf(indm[s.a]!) <= cash * 3 && capexOf(indm[s.b]!) <= cash * 3).toList();
     if (c.isNotEmpty) {

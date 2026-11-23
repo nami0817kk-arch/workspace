@@ -69,10 +69,13 @@ void main() {
     expect(cw('in', 2040), closeTo(2.225448706454414, 1e-12));
   });
 
-  test('定義の数が試作と同じ（業種112・シナジー98・大シナジー10・国24）', () {
-    expect(IND.length, 112);
-    expect(SYN.length, 98);
-    expect(BIG.length, 10);
+  test('定義の数（試作の業種112・シナジー98・大シナジー10に足して、業種200・国24）', () {
+    expect(IND_BASE.length, 112);
+    expect(SYN_BASE.length, 98);
+    expect(BIG_BASE.length, 10);
+    expect(IND.length, 200);
+    expect(SYN.length, 98 + 43);
+    expect(BIG.length, 13);
     expect(CTRY.length, 24);
     expect(TRAITS.length, 10);
     expect(STRAITS.length, 10);

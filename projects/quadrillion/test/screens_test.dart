@@ -148,6 +148,46 @@ void main() {
     expect(tester.takeException(), isNull);
   }, skip: _out == null);
 
+  // 「事業」タブの新しい事業の一覧（200業種）と図鑑の数（日英）
+  for (final lang in ['ja', 'en']) {
+    testWidgets('新しい事業の一覧と図鑑の書き出し（$lang・幅390）', (tester) async {
+      await _loadFonts();
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final ctl = GameController(prefs: prefs, newRandom: () => ParkMiller(77), lang: lang);
+      addTearDown(() => L.lang = 'ja');
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final g = Game.newGame(SetupConfig(mode: 'world', year: 2000, traits: ['charm', 'gambler']), rng: ParkMiller(2024));
+      for (var i = 0; i < 120; i++) {
+        botMonth(g);
+      }
+      resolveEvents(g);
+      g.calcAll();
+      ctl.game = g;
+      ctl.bizFilter = 'all';
+      ctl.setTab('biz');
+      final key = GlobalKey();
+      await tester.pumpWidget(RepaintBoundary(key: key, child: QuadrillionApp(controller: ctl)));
+      await tester.pump();
+      await tester.scrollUntilVisible(find.text(tr('新しい事業')), 300, scrollable: find.byType(Scrollable).first);
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, -60));
+      await tester.pump();
+      await _shot(tester, key, 'n1_newbiz_$lang');
+      for (var k = 2; k <= 4; k++) {
+        await tester.drag(find.byType(Scrollable).first, const Offset(0, -700));
+        await tester.pump();
+        await _shot(tester, key, 'n${k}_newbiz_$lang');
+      }
+      ctl.setTab('zukan');
+      await tester.pump();
+      expect(find.textContaining('${g.found.length} / ${SYN.length}'), findsOneWidget);
+      await _shot(tester, key, 'n5_zukan_$lang');
+      expect(tester.takeException(), isNull);
+    }, skip: _out == null);
+  }
+
   // 宿敵の物語と取締役会の場面（日英）
   for (final lang in ['ja', 'en']) {
     testWidgets('物語と取締役会の場面の書き出し（$lang・幅390）', (tester) async {
