@@ -29,7 +29,9 @@ bool _regent(Game g) => _p(g, '後見として');
 bool _wed(Game g) => _p(g, '輿入れした');
 
 /// 娘との絆（娘の嫁ぎ先を決めた人生だけ）。
-int _musume(Game g) => g.l.people['娘']?.bond ?? -1;
+/// 嫁がせた娘との絆（嫁がせていなければ -1。娘の役割は裳着・祝い（family.dart）でも付くため）。
+int _musume(Game g) =>
+    _p(g, '縁組に出した') || _p(g, '慕う相手に嫁がせた') ? (g.l.people['娘']?.bond ?? -1) : -1;
 
 /// 生まれの低い家から上がった。
 bool _lowBorn(Game g) =>

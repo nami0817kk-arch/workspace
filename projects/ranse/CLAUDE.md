@@ -457,6 +457,29 @@
   2回目からの岐路も5種以上出て、1年に足す重点が上限を超えず（当てはまる数が上限以上なら上限ちょうど）、重点と岐路の選択肢に匂わせがあり数字が無い。
   手元で engine だけを Dart で流して（flutter の import を差し替えた写し）、この2つと「考えて選べば出世できる」「女性の岐路」「足軽の岐路」が通るのを見た（CI は未確認）。
 
+## 子と家族の岐路（2026-11-23）
+
+ユーザー「このような作り込みをストップというまで続けて」。親として子と家族にまつわる岐路を17足した（`lib/engine/family.dart`、id・旗は `fa_`。
+`game.dart` の大人の場面で `buildEchoTalentScenes` のあとに登録。どれも一生に一度、重み2〜3、続きの岐路は6）。
+- 武家（主家に仕える位1〜7。女は嫁いだ人）: 嫡男の元服（烏帽子親を主君・旧友・自分）／子の初陣（自分の隊に置くのは戦える人だけ）／嫡男の出奔／
+  人質の供（位2〜4。城主の人質は `lords.dart`）→ 数年のちに帰る・和が破れる（`fa_hitojichi_back`。旗 `fa_hostage_at:<年>` で年を見る）。
+- 町や村: 子の志（家業か、足軽・寺・堺へ）／子の放蕩（賭場・勘当）。
+- 誰でも（仏門・野の道を除く）: 娘の裳着（武家）／娘の祝い／息子の嫁取り（位4まで）／子の病（村の人は `village.dart` の「子の熱」）／子を亡くして（旗 `fa_lost_child`）／
+  兄弟の跡目（子2人以上・位4まで）／養子（子のない夫婦）／家督の前に（隠居の岐路の前）／孫の名（孫の岐路のあと）／連れ合いとの諍い／連れ合いの病。
+- 縁の役割: 「嫡男」（武家の跡継ぎ。`lords.dart` と同じ役割）・「娘」・「子」（町や村の跡継ぎ）・「養子」（`l.kids` を1にする）・「人質に出した子」・「旅立った子」・
+  「勘当した子」・「出奔した子」・「寺に入った子」・「孫」。名前は武家の城主以上が `kHeirNames`/`kHimeNames`（幼名）、ほかは `kGivenM`/`kGivenF`。
+- 子を亡くすのは `l.kids` を減らし文で表す（初陣・足軽に出た子・病・和の破れた人質）。`game.dart` の「幼い我が子を病で失った」と村の「子の熱」でも `fa_lost_child` を立てる。
+  親が死ぬのは2つだけで稀（初陣に付き添って子をかばう・敵地へ人質の子を迎えに行く。どちらも戦える人だけ）。連れ合いは病で亡くなることがある（`l.married` を偽に、旗 `fa_spouse_died`）。
+- 最期の条件を守るために直したこと: 「娘」の役割が裳着でも付くので、娘を嫁がせた最期（城主 `j_tenju_daughter`、女の道の `_musume` を使う2本）は、
+  嫁がせた `mark()` の文（「主家の重臣に嫁がせた」「縁組に出した」「慕う相手に嫁がせた」）があるときだけにした。娘の嫁ぎ先（`women.dart`）・娘の縁組（`lords.dart`）は、
+  名のある娘がいればその名で出す。`tool/audit_endings.py` は3件のまま。
+- 旗: `fa_eboshi_lord/friend/self`・`fa_comb`・`fa_uijin_together/kept`・`fa_kept_home`・`fa_let_go`・`fa_kid_returned`・`fa_bride_match/love`・`fa_kid_temple`・
+  `fa_grief_temple/work`・`fa_hoto_back/reformed`・`fa_disowned`・`fa_shuppon_cut/let`・`fa_atome_elder/younger/split`・`fa_yoshi_kin/lord/servant/foundling`・`fa_no_heir`・
+  `fa_tested_ok`・`fa_kakun`・`fa_held_on`・`fa_mago_name/memorial`・`fa_hostage_sent/refused/home/rescued`・`fa_couple_made_up/cold`・`fa_spouse_cured/nursed/died`。最期の条件からはまだ参照していない。
+- テスト（`engine_test.dart` の「子と家族の岐路」）: 連れ合いと子を持たせた300人生（五人に一人は子のない夫婦、男の三人に一人は位3の侍）で17のうち11以上が出て、
+  出た岐路の選択肢に匂わせがあり数字が無い／ふつうの300人生で、子の岐路が出たときは必ず子がいて、僧には家族の岐路が出ない。
+  手元で engine だけを Dart で流した写しでは17すべてが出て、engine_test 全体も通った（CI は未確認）。
+
 ## 手書きの最期（2026-11-23、品質改善ループ33回目から）
 
 - 仕組み: `lib/engine/endings_catalog.dart` の `EndingDef`（id・道・死に方・希少度 `Tier`・称号・最期の文・条件・細かさ `spec`）。

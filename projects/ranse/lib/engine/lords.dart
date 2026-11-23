@@ -486,7 +486,7 @@ List<SceneDef> buildLordScenes() {
       (g) => _castle(g) && g.l.kids >= 1,
       (g, next) {
         final l = g.l;
-        final hime = g.rng.pick(kHimeNames);
+        final hime = g.l.people['娘']?.name ?? g.rng.pick<String>(kHimeNames);
         g.ask('娘の縁組', '年頃になった娘の$himeに、主家の重臣から縁組の話が来た。相手は娘より二十も年上の後添えだ。', [
           Choice.h('縁組を受ける', '家の後ろ盾は厚くなる。娘の涙は見ないふり', () {
             _fav(g, 6);

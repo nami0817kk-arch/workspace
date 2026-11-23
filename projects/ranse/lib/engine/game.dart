@@ -9,6 +9,7 @@ import 'data.dart';
 import 'echoes.dart';
 import 'echoes_more.dart';
 import 'echoes_talent.dart';
+import 'family.dart';
 import 'history.dart';
 import 'history_east.dart';
 import 'history_life.dart';
@@ -68,6 +69,7 @@ class Game extends ChangeNotifier {
       ...buildEchoScenes(),
       ...buildEchoMoreScenes(),
       ...buildEchoTalentScenes(),
+      ...buildFamilyScenes(),
       ...buildWomenScenes(),
       ...buildAshigaruScenes(),
       ...buildVillageScenes(),
@@ -824,6 +826,7 @@ class Game extends ChangeNotifier {
       if (l.dead == null && l.kids > 0 && rng.chance(.012 * l.kids)) {
         l.kids--;
         j(-25);
+        setFlag('fa_lost_child');
         log('幼い我が子を病で失った。', 'bad');
       }
       // 天寿

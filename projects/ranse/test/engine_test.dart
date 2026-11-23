@@ -2132,4 +2132,128 @@ void main() {
       expect(capped, greaterThan(0));
     });
   });
+
+  group('子と家族の岐路', () {
+    // 子がいないと出ない岐路（養子・子を亡くした悲しみ・連れ合いの岐路を除く）。
+    const kidScenes = {
+      'fa_genpuku',
+      'fa_mogi',
+      'fa_uijin',
+      'fa_kokorozashi',
+      'fa_yome',
+      'fa_sick',
+      'fa_hoto',
+      'fa_shuppon',
+      'fa_atome',
+      'fa_tameshi',
+      'fa_mago',
+      'fa_hitojichi',
+      'fa_hitojichi_back',
+    };
+
+    /// 成人した人生を、連れ合いと子のいる家にする（五人に一人は子のない夫婦）。
+    /// 三人に一人（男）は主家に仕える侍にして、武家の岐路も見る。
+    void makeFamily(Game g, int seed) {
+      final l = g.l;
+      if (seed % 3 == 0 &&
+          !l.female &&
+          !g.hasFlag('priesthood') &&
+          !g.hasFlag('way_outlaw')) {
+        l
+          ..rank = 3
+          ..maxRank = 3
+          ..lord = g.alive.first.name
+          ..fav = 40;
+      }
+      l.married = true;
+      g.meet('伴侶', l.female ? '中村家の太郎' : '中村家のお福', 60);
+      l.kids = seed % 5 == 0 ? 0 : 2 + seed % 2;
+      // 子を数えるのは15歳から。家族の岐路は30歳前後から多いので、年を進めておく。
+      l.t = 30 * 2;
+    }
+
+    test('子のいる大人の人生で、家族の岐路が出る（匂わせがあり、数字が無い）', () {
+      final digits = RegExp(r'[0-9０-９%]');
+      final seen = <String>{};
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 9100);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished) continue;
+        // 大人の年の始まり（今年の重点）で、家族を持たせる。
+        if (g.prompt?.title != '今年の重点') {
+          g.choose(0);
+          if (g.finished || g.prompt?.title != '今年の重点') continue;
+        }
+        makeFamily(g, seed);
+        var count = g.l.flags.where((f) => f.startsWith('scene:fa_')).length;
+        playOut(
+          g,
+          Rng(seed + 1),
+          onPrompt: (p) {
+            final now = g.l.flags
+                .where((f) => f.startsWith('scene:fa_'))
+                .length;
+            if (now == count) return;
+            count = now;
+            for (final c in p.choices) {
+              expect(
+                c.hint,
+                isNotNull,
+                reason: '${p.title}/${c.label} に匂わせが無い',
+              );
+              expect(
+                c.hint!,
+                isNot(contains(digits)),
+                reason: '${p.title}/${c.hint}',
+              );
+              expect(
+                c.label,
+                isNot(contains(digits)),
+                reason: '${p.title}/${c.label}',
+              );
+            }
+          },
+        );
+        seen.addAll(
+          g.l.flags
+              .where((f) => f.startsWith('scene:fa_'))
+              .map((f) => f.substring(6)),
+        );
+      }
+      // 17 のうち 11 以上。
+      expect(seen.length, greaterThanOrEqualTo(11), reason: '$seen');
+    });
+
+    test('子のいない人に子の岐路は出ず、僧には家族の岐路が出ない', () {
+      var checked = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 9500);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        final before = <String>{};
+        playOut(
+          g,
+          Rng(seed),
+          onPrompt: (p) {
+            final now = g.l.flags
+                .where((f) => f.startsWith('scene:fa_'))
+                .toSet();
+            for (final f in now.difference(before)) {
+              final id = f.substring(6);
+              checked++;
+              expect(g.hasFlag('priesthood'), isFalse, reason: '僧に $id');
+              if (kidScenes.contains(id)) {
+                expect(g.l.kids, greaterThan(0), reason: '子のいない人に $id');
+              }
+            }
+            before.addAll(now);
+          },
+        );
+      }
+      expect(checked, greaterThan(20));
+    });
+  });
 }

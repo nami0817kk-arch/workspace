@@ -153,7 +153,8 @@ final kCastleEndings = <EndingDef>[
     title: '届かなかった娘の文',
     text: '{年}年、{歳}歳の{名}は、主家の重臣に嫁がせた娘からの文を待ちながら逝った。文は、葬儀の翌日に届いた。「父上の決めたことを、恨んではおりませぬ」。家臣はそれを、位牌の前で声に出して読んだ。',
     kinds: {'tenju'},
-    cond: (g) => _has(g, '娘') && !_f(g, 'love_match'),
+    // 娘の役割は裳着（family.dart）でも付くので、主家の重臣に嫁がせた人だけ。
+    cond: (g) => _has(g, '娘') && !_f(g, 'love_match') && _p(g, '主家の重臣に嫁がせた'),
     spec: 5,
   ),
   EndingDef(

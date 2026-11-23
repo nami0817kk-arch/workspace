@@ -108,6 +108,7 @@ List<SceneDef> buildVillageScenes() => [
           }
           g.l.kids--;
           g.j(-25);
+          g.setFlag('fa_lost_child');
           g.mark('幼い我が子を、熱病で失った');
           return '祈りは、届かなかった。';
         }),

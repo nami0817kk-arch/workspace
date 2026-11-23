@@ -156,7 +156,8 @@ List<SceneDef> buildWomenScenes() => [
     (g) => 2,
     (g) => g.l.female && g.l.kids >= 1 && g.l.rank >= 1 && g.active,
     (g, next) {
-      final hime = g.rng.pick(kGivenF);
+      // 裳着・祝い（family.dart）で名のある娘がいれば、その娘の縁談。
+      final hime = g.l.people['娘']?.name ?? g.rng.pick<String>(kGivenF);
       g.ask('娘の嫁ぎ先', '娘の$himeに、二つの縁談が来ている。家のためになる縁と、娘が慕う若侍との縁だ。', [
         Choice.h('家のためになる縁を選ぶ', '家は強くなる。娘は泣くかもしれない', () {
           g.l.fav = _c(g.l.fav + 8);
