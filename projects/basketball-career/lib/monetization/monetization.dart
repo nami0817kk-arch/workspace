@@ -22,10 +22,10 @@ enum RecoverGate {
 /// - 全画面広告: 自分の試合を [interstitialEvery] 試合終えた次に試合を進めるときに1回(2026-11-22 ユーザー指示)。
 ///   任期の1年目は出さない。オフシーズンが終わったとき([markDue])にも1回。数えと番の判断は GmController。
 ///   広告を消した人には出さない。出せなければ進行を止めない。
-/// - 動画広告: 勝ったあとのカードの候補を引き直す・決勝をやり直す(どちらも押したときだけ)。読み込めていなければ何もしない。
+/// - 動画広告: ドラフトのスカウトを増やす・解任されたらオーナーを説得する(どちらも押したときだけ)。読み込めていなければ何もしない。
 /// - 広告を消す: 全画面広告が出なくなり、スカウトの追加とオーナーの説得も動画なしで使える(回数は同じ)。
 /// - 動画を見た直後([rewardedCooldown] の間)は全画面広告を重ねない(番は次の操作に回す)。
-/// - 全画面広告の2回目と、その後4回ごとに、閉じたあと「広告を消す」を1度だけ案内する([removeAdsOfferDue])。
+/// - 「広告を消す」を勧める案内は出さない(2026-11-23 ユーザー指示「案内はいらない」)。買うのは設定画面から。
 class Monetization extends ChangeNotifier {
   Monetization(this._prefs, {AdService? ads, PurchaseService? store})
       : ads = ads ?? NoOpAdService(),
@@ -155,15 +155,6 @@ class Monetization extends ChangeNotifier {
 
   /// これまでに出した全画面広告の数(端末に残る)。
   int get interstitialsShown => _prefs.getInt('interstitialsShown') ?? 0;
-
-  /// 全画面広告のあとに「広告を消す」を案内する番か。2回目と、その後4回ごと(6・10・14…)に1度だけ。
-  bool get removeAdsOfferDue {
-    final n = interstitialsShown;
-    return !adFree && n >= 2 && (n - 2) % 4 == 0 && (_prefs.getInt('removeAdsOfferedAt') ?? 0) != n;
-  }
-
-  /// 案内を出した(または出さないと決めた)。同じ番では二度出さない。
-  Future<void> markRemoveAdsOffered() => _prefs.setInt('removeAdsOfferedAt', interstitialsShown);
 
   /// 動画で何かを受け取る前に呼ぶ。広告を消した人はそのまま、それ以外は動画を1本見てもらう。
   ///

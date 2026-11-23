@@ -35,7 +35,6 @@ import 'package:basketball_career/ui/app.dart';
 import 'package:basketball_career/ui/gm/common.dart';
 import 'package:basketball_career/ui/gm/style.dart';
 import 'package:basketball_career/ui/gm_controller.dart';
-import 'package:basketball_career/ui/remove_ads_offer.dart';
 import 'package:basketball_career/ui/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -460,16 +459,6 @@ void main() {
     fired.playPlayoffs();
     await _shoot(t, 'r5_fired', '解任', await _with(fired), outDir: out);
     await _shoot(t, 'r6_over', '任期の終わり', await _with(botPlayCareer(8, team: teamAtRank(8, 15))), outDir: out);
-    final offer = await _controller();
-    SharedPreferences.setMockInitialValues({'gmHowtoSeen': true});
-    final m = Monetization(await SharedPreferences.getInstance(), store: _PricedStore());
-    await _shoot(t, 'r7_offer', '広告を消す案内', offer, outDir: out, act: (t) async {
-      final ctx = t.element(find.text('GMに就任する'));
-      showRemoveAdsOffer(ctx, m);
-      await t.runAsync(() => Future.delayed(const Duration(milliseconds: 200)));
-      await t.pump();
-      await t.pump(const Duration(milliseconds: 400));
-    });
     await _shoot(t, 'r8_howto', '遊び方の画面', await _controller(), outDir: out, act: (t) async {
       await t.scrollUntilVisible(find.text('遊び方'), 200, scrollable: _list);
       await _tap(t, '遊び方');

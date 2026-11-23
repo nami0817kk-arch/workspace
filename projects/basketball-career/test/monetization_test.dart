@@ -194,51 +194,6 @@ void main() {
       expect(await m.beforeAction(), isFalse);
     });
 
-    test('案内は全画面広告の2回目と、その後4回ごとに1度だけ。出せなかった広告は数えない', () async {
-      final (m, ads, _) = await open();
-      final offers = <int>[];
-      for (var i = 1; i <= 10; i++) {
-        await due(m);
-        if (i == 4) {
-          ads.interstitialReady = false;
-          expect(await m.beforeAction(), isFalse);
-          ads.interstitialReady = true;
-        }
-        expect(await m.beforeAction(), isTrue);
-        if (m.removeAdsOfferDue) {
-          offers.add(m.interstitialsShown);
-          await m.markRemoveAdsOffered();
-          expect(m.removeAdsOfferDue, isFalse, reason: '同じ番で二度出さない');
-        }
-      }
-      expect(m.interstitialsShown, 10);
-      expect(offers, [2, 6, 10]);
-    });
-
-    test('数えは端末に残る(再起動しても同じ番で二度出さない)', () async {
-      final (m, _, _) = await open({'interstitialsShown': 2, 'removeAdsOfferedAt': 2});
-      expect(m.removeAdsOfferDue, isFalse);
-      final (m2, _, _) = await open({'interstitialsShown': 2});
-      expect(m2.removeAdsOfferDue, isTrue);
-    });
-
-    test('広告を消した人には案内しない', () async {
-      final (m, _, _) = await open({'interstitialsShown': 2, 'adFree': true});
-      expect(m.removeAdsOfferDue, isFalse);
-    });
-
-    test('コントローラ: 2回目の全画面広告のあとに案内が立つ。ストアに繋がらなければ立てない', () async {
-      for (final available in [true, false]) {
-        final (m, ads, store) = await open({'interstitialsShown': 1});
-        store.available = available;
-        final c = await inSeason(m);
-        await due(m);
-        await c.playBlock();
-        expect(ads.interstitials, 1);
-        expect(c.offerRemoveAds, available, reason: 'ストア $available');
-        expect(m.removeAdsOfferDue, isFalse, reason: '出さなかったときも、同じ番では二度聞かない');
-      }
-    });
   });
 
   group('動画で回復', () {
@@ -422,31 +377,37 @@ void main() {
       await tester.pumpAndSettle();
       // ストアが返す半角の円記号は、同梱フォントにある全角の円記号で出す(displayPrice)。
       expect(find.text('広告を消す(￥370)'), findsOneWidget);
-      expect(find.text('購入を復元'), findsOneWidget);
+      expect(find.textContaining('購入を復元'), findsOneWidget);
     });
 
-    testWidgets('全画面広告のあとの案内から「広告を消す」を買える。「今はいい」なら何も起きない', (tester) async {
+    testWidgets('全画面広告のあとに「広告を消す」の案内は出さない(2026-11-23 ユーザー指示)', (tester) async {
       tester.view.physicalSize = const Size(800, 2400);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
-      for (final buy in [false, true]) {
-        final (m, ads, _) = await open({'interstitialsShown': 1, 'tournamentsSinceAd': Monetization.interstitialEvery});
-        final c = await inSeason(m);
-        await tester.pumpWidget(BasketballCareerApp(controller: c));
-        await tester.pumpAndSettle();
-        await tester.runAsync(() => c.playBlock());
-        await tester.pumpAndSettle();
-        expect(ads.interstitials, 1);
-        expect(find.text('広告なしで遊ぶ'), findsOneWidget);
-        expect(find.text('広告を消す(￥370)'), findsOneWidget);
-        await tester.tap(find.text(buy ? '広告を消す(￥370)' : '今はいい'));
-        await tester.pumpAndSettle();
-        expect(find.text('広告なしで遊ぶ'), findsNothing);
-        expect(m.adFree, buy);
-        expect(c.offerRemoveAds, isFalse);
-        if (buy) expect(find.text('ありがとう! 広告が出なくなった。'), findsOneWidget);
-        await tester.pumpWidget(const SizedBox());
-      }
+      final (m, ads, _) = await open({'interstitialsShown': 1, 'tournamentsSinceAd': Monetization.interstitialEvery});
+      final c = await inSeason(m);
+      await tester.pumpWidget(BasketballCareerApp(controller: c));
+      await tester.pumpAndSettle();
+      await tester.runAsync(() => c.playBlock());
+      await tester.pumpAndSettle();
+      expect(ads.interstitials, 1);
+      expect(find.text('広告なしで遊ぶ'), findsNothing);
+      expect(find.textContaining('広告を消す'), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('設定の「広告を消す」から買うと、お礼に変わる', (tester) async {
+      final (m, _, _) = await open();
+      await tester.pumpWidget(MaterialApp(home: SettingsScreen(money: m)));
+      await tester.pumpAndSettle();
+      expect(find.text('￥370・買い切り'), findsOneWidget);
+      expect(find.textContaining('月額ではない'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('remove-ads-buy')));
+      await tester.pumpAndSettle();
+      expect(m.adFree, isTrue);
+      expect(find.text('広告を消しています'), findsOneWidget);
+      expect(find.byKey(const Key('remove-ads-buy')), findsNothing);
+      expect(find.text('購入を復元'), findsOneWidget);
     });
 
     testWidgets('解任の画面の「動画を見て、オーナーを説得する」を押すと続けられる', (tester) async {
