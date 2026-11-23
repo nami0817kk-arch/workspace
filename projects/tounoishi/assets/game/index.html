@@ -89,7 +89,7 @@ h1{margin:0 0 6px;font-size:15px}
 .sbox .help{margin-top:0}
 /* v12 */
 .bar{grid-template-columns:repeat(4,1fr)}
-.stat b.low{color:#d9534f}
+.stat b.low{color:#d9534f}.res2{display:block;font-size:10px;color:var(--sub);white-space:nowrap}
 .tabs{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;text-align:left}
@@ -145,6 +145,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <div class="shead"><b id="stitle">一覧</b><button class="btn" id="sclose">閉じる</button></div>
 <div id="spane-list">
  <div class="panel"><h2>遠征</h2><div id="expd"></div></div>
+ <div class="panel"><h2>魂と骨</h2><div id="soulp"></div></div>
  <div class="panel"><h2>主役</h2><div id="heroes"></div></div>
  <div class="panel"><h2 id="yuh">宿敵の勇者</h2><div id="yuusha"></div></div>
  <div class="panel"><h2>変異の気配</h2><div id="muts"></div></div>
@@ -158,7 +159,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <h3>操作</h3>
 ・<b>見る</b>：1本指でなぞると盤が動く。2本指で拡大・縮小、「全体」で全体が見える。<br>・<b>掘る</b>：右下の「⛏ 掘る」を押して光らせてから、掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。もう一度押すまで掘る状態が続く。1マスに掘る力を1使う。<br>
 ・<b>モンスターをタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱ったモンスターを間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
-・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）・<b>罠を置く</b>（掘る力3・塔全体で5つまで。踏んだ冒険者に15の傷と1秒の足止め）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>・<b>モンスターを長押し</b>：<b>食べさせる</b>（3マス以内の、食べられる相手のうち一番強い子が食べて育つ）・<b>掛け合わせる</b>（養分10。押してから2マス以内の相手をタップ→20秒後に卵。同じ種どうし＝同じ種でピュア種になりやすい、同じ系統＝上の段のさらに1つ上、養分と魔分＝キメラ）・<b>進化させる</b>（冒険者を倒すと2点・食べると1点、5点で頭に↑。甲＝体力1.7倍、牙＝攻撃1.5倍。1匹1回）。<br>・<b>遠征</b>（一覧の一番上）：波と波の間に3匹まで送り出す。次の波のあいだ塔からいなくなり、守り切ると帰る。成功の見込みは送る子の強さと周で決まる。成功で掘る力・養分・ときどき珍しい卵、失敗すると帰らない子も（主役は特に危ない）。<br>・<b>コアの光</b>：1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒のあいだ半分にする。<br>
+・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）・<b>罠を置く</b>（掘る力3・塔全体で5つまで。踏んだ冒険者に15の傷と1秒の足止め）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>・<b>モンスターを長押し</b>：<b>食べさせる</b>（3マス以内の、食べられる相手のうち一番強い子が食べて育つ）・<b>掛け合わせる</b>（養分10。押してから2マス以内の相手をタップ→20秒後に卵。同じ種どうし＝同じ種でピュア種になりやすい、同じ系統＝上の段のさらに1つ上、養分と魔分＝キメラ）・<b>進化させる</b>（冒険者を倒すと2点・食べると1点、5点で頭に↑。甲＝体力1.7倍、牙＝攻撃1.5倍。1匹1回）。<br>・<b>遠征</b>（一覧の一番上）：波と波の間に3匹まで送り出す。次の波のあいだ塔からいなくなり、守り切ると帰る。成功の見込みは送る子の強さと周で決まる。成功で掘る力・養分・ときどき珍しい卵、失敗すると帰らない子も（主役は特に危ない）。<br>・<b>魂と骨</b>（掘る力の下に数）：冒険者を倒すと魂1（面の勇者たち3・宿敵の勇者10）と骨2、モンスターが冒険者に倒されると骨1。魂＝2回目の進化（経験12・魂5）・倒れた主役を1回よみがえらせる（一覧で魂15）・卵をすぐかえす（卵のある通路を長押し、魂2）。骨＝通路を長押しして骨の兵（骨5）・強い骨の兵（骨12）・骨の罠（骨3と掘る力3。傷30・2秒止める）。<br>・<b>コアの光</b>：1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒のあいだ半分にする。<br>
 ・<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる（最上階に冒険者がいない間）。<br>
 ・2本指で拡大・移動。上の階のボタン（縮図つき）で階を切り替え。⏸ ×1 ×2 で時間。「今すぐ迎える」で波を早める（早いほど次の掘る力が増える）。
 <h3>モンスター</h3>
@@ -183,12 +184,12 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v55</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v56</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
  <div class="stat">コア<b id="core">最上階</b></div>
- <div class="stat">掘る力<b id="dp">-</b></div>
+ <div class="stat">掘る力<b id="dp">-</b><small id="res2" class="res2"></small></div>
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="stage">
@@ -510,7 +511,7 @@ function newGame(diff){
   yu:null,promos:0,yuKilled:0,trail:{},bub:[],lastLine:'',diff:diff||'normal',kills:0,corpses:[],chests:[],traps:[],guardian:false,guardOn:false,title:false,
   msg:'準備の時間です(時間は止まっています)。土を掘って、モンスターを生ませよう。',dp:DIFF[diff||'normal'].dp0,calm:{},dung:[],burn:[],illus:[],pher:[],nests:[],circles:[],torches:[],slv:{},roundT0:0,armyStart:0,dug:0,tut:tutDone()?null:0};
  for(f=0;f<F;f++)carve(f,PATHS[f]);
- g.yu=newYu();g.breed=null;g.exp=null;g.expSel=[];
+ g.yu=newYu();g.breed=null;g.exp=null;g.expSel=[];g.soul=0;g.bone=0;g.fallen=[];
  over=false;resetGo();setSpeed(0);buildTabs();coreSay('start',true);setDig(false);focusCore();ui();
 }
 // 守り切ったら塔を1階伸ばす。今の階・掘った道・モンスターはそのまま
@@ -614,7 +615,7 @@ var SPEC={
 var ORDN=['slime','mush','worm','beetle','lizard','bat','dragon','golem'],ORDM=['wisp','pixie','imp','ghost','gargoyle','harpy','demon','lich'];
 var MUTN={kyo:'強化種',ijo:'異常種',kyodai:'巨大種',pure:'ピュア種'};
 var HUN=[0,3,6,7,9];
-function spName(m){var S=SPEC[m.sp];return (m.evo?(m.evo=='k'?'甲':'牙')+'の':'')+(S.line=='nut'&&!S.noenv?ENV[m.env].n:'')+spBase(m)+(m.mut?'（'+MUTN[m.mut]+'）':'');}
+function spName(m){var S=SPEC[m.sp];return (m.evo?(m.evo=='k'?'甲':'牙')+(m.evo2?(m.evo2=='k'?'甲':'牙'):'')+'の':'')+(S.line=='nut'&&!S.noenv?ENV[m.env].n:'')+spBase(m)+(m.mut?'（'+MUTN[m.mut]+'）':'');}
 // 進化: 経験5点で1回だけ。甲＝体力1.7倍で少し遅く、牙＝攻撃1.5倍で少し速く
 var EVO_XP=5;
 function evoReady(m){return !!m&&!m.evo&&(m.xp||0)>=EVO_XP&&(!m.stage||m.stage=='adult')&&g.cr.indexOf(m)>=0;}
@@ -674,6 +675,34 @@ function expHTML(){if(!g)return '';var E=g.exp;
   cs.map(function(m){return '<button data-exp="'+m.id+'"'+(sel.indexOf(m.id)>=0?' class="on"':'')+'>'+dimg(m.sp)+'<span><b>'+esc(m.hero?fullName(m):spName(m))+'</b><br><small>'+(m.f+1)+'階 · 体力'+Math.round(m.hp)+'/'+Math.round(m.mhp)+' · 強さ'+Math.round(expPow(m))+'</small></span></button>';}).join('')+'</div>'+
   '<button class="btn go" data-expgo="1"'+(ms.length?'':' disabled')+'>'+(ms.length?ms.length+'匹を送り出す（見込み'+Math.round(expChance(ms)*100)+'%）':'送り出す子を選ぶ（'+EXP_MAX+'匹まで）')+'</button>';}
 var expLast='';
+// 魂: 2回目の進化（経験12・魂5）・よみがえり（魂15・1匹1回）・卵をすぐかえす（魂2）
+var EVO2_XP=12,EVO2_SOUL=5,REV_SOUL=15,HATCH_SOUL=2;
+function evo2Ready(m){return !!m&&!!m.evo&&!m.evo2&&(m.xp||0)>=EVO2_XP&&g.cr.indexOf(m)>=0;}
+function evolve2(m,k){if(!evo2Ready(m))return;if((g.soul||0)<EVO2_SOUL){say('魂が足りない（'+EVO2_SOUL+'要る）。');return;}g.soul-=EVO2_SOUL;m.evo2=k;
+ if(k=='k'){m.mhp*=1.7;m.hp=Math.min(m.mhp,m.hp*1.7);m.spdk=(m.spdk||1)*1.15;}else{m.atkk=(m.atkk||1)*1.5;m.spdk=(m.spdk||1)*0.85;}
+ addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:900,c:'200,170,255',r0:4,rad:36});addFx({k:'num',f:m.f,x:ccx(m.x),y:ccx(m.y)-16,s:'魂の進化',c:'#c8b0ff',life:1400});
+ say('魂を'+EVO2_SOUL+'使って、'+spName(m)+'にさらに進化した！');sfx('promote');haptic('medium');logEv(spName(m)+'にさらに進化した');}
+function revive(id){var FL=g.fallen||[],m=FL.filter(function(o){return o.id===id;})[0];if(!m)return;if((g.soul||0)<REV_SOUL){say('魂が足りない（'+REV_SOUL+'要る）。');return;}
+ g.soul-=REV_SOUL;FL.splice(FL.indexOf(m),1);var C=g.core;m.rev=1;m.hp=m.mhp;m.f=C.f;m.x=C.x;m.y=C.y;m.rx=m.x;m.ry=m.y;m.stage=m.stage=='stone'?null:m.stage;g.cr.push(m);
+ addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:1000,c:'200,170,255',r0:4,rad:40});banner(fullName(m)+'がよみがえった！','魂'+REV_SOUL+'を使った · よみがえりは1匹1回');
+ say('魂を'+REV_SOUL+'使って、主役「'+crLabel(m)+'」がコアのそばでよみがえった（もう一度倒れたら戻せない）。');sfx('grow');haptic('medium');logEv(fullName(m)+'がよみがえった');sideKey='';}
+function eggAt(f,x,y){for(var i=0;i<g.eggs.length;i++){var e=g.eggs[i];if(e.f==f&&e.x==x&&e.y==y)return e;}return null;}
+// 骨: 骨の兵（骨5＝ふつう、骨12＝強い）・骨の罠（骨3＋掘る力3。傷30・2秒止める）
+var BONE_S=5,BONE_L=12,BONE_T=3;
+function boneAct(a,f,x,y){var c=cellAt(f,x,y);if(!c||!c.open)return;
+ if(a=='hatch'){var eg=eggAt(f,x,y);if(!eg)return;if((g.soul||0)<HATCH_SOUL){say('魂が足りない（'+HATCH_SOUL+'要る）。');return;}g.soul-=HATCH_SOUL;eg.hatch=g.t;say('魂を'+HATCH_SOUL+'使って、卵をすぐかえした。');sfx('train');return;}
+ if(a=='bone5'||a=='bone12'){var big=a=='bone12',cost=big?BONE_L:BONE_S;if((g.bone||0)<cost){say('骨が足りない（'+cost+'要る）。');return;}
+  var sk=mkCr('skeleton','sp',f,x,y,0,{hpk:big?3:1.4,atkk:big?2.2:1.2,force:1});if(!sk)return;g.bone-=cost;sk.bonek=big?2:1;fxPuff(f,x,y,1);sfx('promote');
+  say('骨を'+cost+'使って、'+(big?'強い骨の兵':'骨の兵')+'を組んだ。');logEv((big?'強い骨の兵':'骨の兵')+'を組んだ');return;}
+ if(a=='btrap'){var MT=g.mtr||(g.mtr=[]),C2=g.core;if(MT.length>=5){say('罠は塔全体で5つまで。');return;}if((g.bone||0)<BONE_T||g.dp<3){say('骨'+BONE_T+'と掘る力3が要る。');return;}
+  if(mtrAt(f,x,y)||(f==C2.f&&x==C2.x&&y==C2.y)||(f==0&&x==ENTX&&y==ENTY)){say('ここには罠を置けません。');return;}
+  g.bone-=BONE_T;g.dp-=3;MT.push({f:f,x:x,y:y,bone:1});fxPuff(f,x,y,0.6);sfx('dig');say('骨の罠を置いた（骨-'+BONE_T+'・掘る力-3）。踏むと30の傷を負い、2秒止まる。');}}
+function soulHTML(){if(!g)return '';var FL=(g.fallen||[]).filter(function(m){return !m.rev;});
+ var h='<div class="empty">魂 <b style="color:var(--ink)">'+(g.soul||0)+'</b>（冒険者を倒すと1、面の勇者たちは3、宿敵の勇者は10）・骨 <b style="color:var(--ink)">'+(g.bone||0)+'</b>（冒険者を倒すと2、モンスターが冒険者に倒されると1）<br>'+
+  '魂は、モンスターの長押しで2回目の進化（経験'+EVO2_XP+'・魂'+EVO2_SOUL+'）、卵のある通路の長押しで卵をすぐかえす（魂'+HATCH_SOUL+'）。骨は、通路の長押しで骨の兵・骨の罠。</div>';
+ if(FL.length)h+='<div class="exl">'+FL.map(function(m){return '<button data-rev="'+m.id+'"'+((g.soul||0)<REV_SOUL?' disabled':'')+'>'+dimg(m.sp)+'<span><b>'+esc(fullName(m))+'をよみがえらせる</b><br><small>魂'+REV_SOUL+' · 1匹1回 · コアのそばに戻る</small></span></button>';}).join('')+'</div>';
+ return h;}
+var soulLast='';
 // 食べさせる: 3マス以内で、この子を食べられる相手のうち一番強い1匹
 function feedTarget(m){var best=null;g.cr.forEach(function(o){if(o===m||o.f!=m.f||man(o,m)>3||!canEat(o,m))return;if(!best||atkOf(o)*o.hp>atkOf(best)*best.hp)best=o;});return best;}
 function feedTo(m){if(g.cr.indexOf(m)<0)return;var o=feedTarget(m);if(!o){say('3マス以内に、'+spName(m)+'を食べられる相手がいない。');return;}
@@ -794,7 +823,7 @@ function killCr(m,why,killer){
  if(m.sp=='slimeking'){var made=0;for(var si=0;si<8;si++){if(mkCr('slime',m.kenv||'moss',m.f,m.x,m.y,1))made++;}if(m.ke&&m.ke>made)deposit(m.f,m.x,m.y,m.ke-made);say('スライムキングが崩れて、スライム'+made+'匹に戻った。');}
  if(m.sp=='noroi'&&killer&&g.en.indexOf(killer)>=0){killer.curse=Math.max(killer.curse||0,g.t+30);fxNum(killer.f,killer.x,killer.y,'呪','#d0a0ff');say(spName(m)+'が倒れ際に'+enName(killer)+'を呪った（30秒、攻撃が弱まる）。');}
  if(why=='starve')logEv(spName(m)+'が飢え死にした');else if(why=='enemy'&&killer&&killer.k)logEv(spName(m)+'が'+enName(killer)+'に倒された');
- recordDeath(m,why);if(why=='enemy')g.lostN=(g.lostN||0)+1;
+ recordDeath(m,why);if(why=='enemy')g.lostN=(g.lostN||0)+1;if(why=='enemy'&&m.sp!='skeleton')g.bone=(g.bone||0)+1;
  if(m.mg&&why!='eaten')depositM(m.f,m.x,m.y,m.mg);
  // 運んでいた養分（魔分）は、倒れた所の土へ。食べられたら塔の自由な分へ
  if(m.cg){if(why=='eaten'){if(m.env=='mag')g.mpool+=m.cg;else g.pool+=m.cg;}else if(m.env=='mag')depositM(m.f,m.x,m.y,m.cg);else deposit(m.f,m.x,m.y,m.cg);m.cg=0;}
@@ -811,6 +840,7 @@ function killCr(m,why,killer){
  if(m.hero){
   var cause=why=='starve'?'飢え死に':why=='eaten'?'食べられた':why=='loss'?'塔と共に消えた':(killer&&killer.yu?yuName()+'に倒された':(killer?enName(killer)+'に倒された':'倒れた'));
   toHall(m,cause);
+  if(why!='loss'&&!m.rev){var FL=g.fallen||(g.fallen=[]);FL.unshift(m);if(FL.length>3)FL.length=3;}
   if(why!='loss'){say('主役「'+crLabel(m)+'」が倒れた（'+cause+'）。殿堂に名が残る。');coreSay('herodie',true);}
   if(killer&&killer.yu)yuKillsHero(killer,m);
  }
@@ -984,7 +1014,7 @@ function hitEn(e,dm,m,col){
 }
 function killEn(e,killer){
  var i=g.en.indexOf(e);if(i<0)return;g.en.splice(i,1);
- fxPuff(e.f,e.x,e.y,1.3);g.kills=(g.kills||0)+1;g.dp+=e.yu?20+5*(g.giftK||0):1;sfx(e.yu?'yukill':'ekill');if(e.yu)coreSay('yukill',true);
+ fxPuff(e.f,e.x,e.y,1.3);g.kills=(g.kills||0)+1;var sg=e.yu?10:(e.boss||e.title)?3:1;g.soul=(g.soul||0)+sg;g.bone=(g.bone||0)+2;if(sg>1)fxNum(e.f,e.x,e.y,'魂+'+sg,'#c8b0ff');g.dp+=e.yu?20+5*(g.giftK||0):1;sfx(e.yu?'yukill':'ekill');if(e.yu)coreSay('yukill',true);
  if(e.yu){
   var Y=g.yu,amt=30+15*Y.lvl;deposit(e.f,e.x,e.y,amt);depositM(e.f,e.x,e.y,8+4*Y.lvl);g.yuKilled++;
   say(yuName()+'を倒し切った！ 養分'+amt+'が土に戻った。次の周からは新しい勇者が来る。');
@@ -1203,7 +1233,7 @@ window.__saveNow=saveGame;
 function loadGame(k){
  k=k||'tou-save';var s=kvGet(k);if(!s)return false;
  try{
-  var o=JSON.parse(s);setN(o.N||20);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];g.breed=null;setDig(false);focusCore();
+  var o=JSON.parse(s);setN(o.N||20);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];g.breed=null;g.soul=g.soul||0;g.bone=g.bone||0;g.fallen=g.fallen||[];setDig(false);focusCore();
   if(g.grid&&g.grid[0]&&Array.isArray(g.grid[0][0]))g.grid=g.grid.map(function(fl){return fl.map(function(a){var c={env:ENVS[a[0]],nut:a[1],mag:a[2],open:!!a[3],dt:a[4],chest:!!a[5]};if(a[6]>=0)c.spore=ENVS[a[6]];if(a[7])c.sk=1;return c;});});
   g.bub=[];if(g.dp===undefined)g.dp=100;g.calm=g.calm||{};['dung','burn','illus','pher','nests','circles','torches'].forEach(function(k){g[k]=g[k]||[];});g.slv=g.slv||{};if(g.roundT0===undefined){g.roundT0=g.t;g.armyStart=0;}g.chal=null;
   g.en.forEach(function(e){if(e.poiBy)e.poiBy=g.cr.filter(function(m){return m.id===e.poiBy;})[0]||null;});
@@ -1241,6 +1271,8 @@ var bnrT=0;
 // ---------- 手を出せる操作 ----------
 function closePop(){var p=document.getElementById('pop');if(p&&!p.hidden){p.hidden=true;p.innerHTML='';}}
 function monBtns(m){var ft=feedTarget(m),h='';
+ if(evo2Ready(m)){var sl=(g.soul||0)<EVO2_SOUL?' disabled':'';h+='<button data-m="evo2_k"'+sl+'>さらに進化：甲（魂'+EVO2_SOUL+'）</button><button data-m="evo2_g"'+sl+'>さらに進化：牙（魂'+EVO2_SOUL+'）</button>';}
+ else if(m.evo&&!m.evo2)h+='<button disabled>さらに進化（経験'+Math.min(EVO2_XP,m.xp||0)+'/'+EVO2_XP+'・魂'+EVO2_SOUL+'）</button>';
  if(evoReady(m))h+='<button data-m="evo_k">進化：甲（体力1.7倍・少し遅く）</button><button data-m="evo_g">進化：牙（攻撃1.5倍・少し速く）</button>';
  var bw=breedWhy(m);h+='<button data-m="breed"'+(bw?' disabled':'')+'>'+(bw?'掛け合わせる（'+bw+'）':'掛け合わせる（養分'+BREED_COST+'・相手をタップ）')+'</button>';
  if(!m.hero)h+='<button data-m="feed"'+(ft?'':' disabled')+'>'+(ft?'食べさせる（'+esc(spName(ft))+'へ）':'食べさせる（近くに食べる相手がいない）')+'</button>';
@@ -1249,19 +1281,23 @@ function openPop(kind,f,x,y,cx,cy,m){
  if(LPH!='2')lpSeen();
  var el=document.getElementById('pop'),st=el.parentNode.getBoundingClientRect(),h='',R=g.rally;
  if(kind=='soil'){var c=cellAt(f,x,y);h='<b>土（養分'+(c.nut||0)+'・魔分'+(c.mag||0)+'）</b><button data-a="fert"'+(g.pool<5?' disabled':'')+'>肥料をまく（自由な養分5）</button><button data-a="fertm"'+(g.mpool<5?' disabled':'')+'>魔分をまく（自由な魔分5）</button>';}
- else if(kind=='path'){var cd=Math.max(0,Math.ceil((g.rallyT||0)-g.t));h='<b>通路</b><button data-a="fill"'+(g.dp<2?' disabled':'')+'>埋め戻す（掘る力2）</button><button data-a="rally"'+(g.dp<5||cd>0?' disabled':'')+'>'+(cd>0?'ここに集まれ（あと'+cd+'秒）':'ここに集まれ（掘る力5）')+'</button><button data-a="trap"'+(g.dp<3||(g.mtr||[]).length>=5?' disabled':'')+'>'+((g.mtr||[]).length>=5?'罠はもう置けない（5/5）':'罠を置く（掘る力3）')+'</button>';}
+ else if(kind=='path'){var cd=Math.max(0,Math.ceil((g.rallyT||0)-g.t));h='<b>通路</b><button data-a="fill"'+(g.dp<2?' disabled':'')+'>埋め戻す（掘る力2）</button><button data-a="rally"'+(g.dp<5||cd>0?' disabled':'')+'>'+(cd>0?'ここに集まれ（あと'+cd+'秒）':'ここに集まれ（掘る力5）')+'</button><button data-a="trap"'+(g.dp<3||(g.mtr||[]).length>=5?' disabled':'')+'>'+((g.mtr||[]).length>=5?'罠はもう置けない（5/5）':'罠を置く（掘る力3）')+'</button>'+
+  '<button data-x="btrap"'+((g.bone||0)<BONE_T||g.dp<3||(g.mtr||[]).length>=5?' disabled':'')+'>骨の罠（骨'+BONE_T+'・掘る力3）</button>'+
+  '<button data-x="bone5"'+((g.bone||0)<BONE_S?' disabled':'')+'>骨の兵を組む（骨'+BONE_S+'）</button><button data-x="bone12"'+((g.bone||0)<BONE_L?' disabled':'')+'>強い骨の兵（骨'+BONE_L+'）</button>'+
+  (eggAt(f,x,y)?'<button data-x="hatch"'+((g.soul||0)<HATCH_SOUL?' disabled':'')+'>卵をすぐかえす（魂'+HATCH_SOUL+'）</button>':'');}
  else if(kind=='hero'){h='<b>'+esc(fullName(m))+'に命令</b>'+[['guard','守れ（コアのそばにいる）'],['attack','攻めろ（冒険者を追う）'],['','自由']].map(function(a){return '<button data-c="'+a[0]+'"'+((m.cmd||'')==a[0]?' class="on"':'')+'>'+a[1]+'</button>';}).join('')+monBtns(m);}
- else if(kind=='mon'){h='<b>'+esc(spName(m))+'</b><small class="pxp">'+(m.evo?'進化ずみ':'経験 '+Math.min(EVO_XP,m.xp||0)+'/'+EVO_XP)+'</small>'+monBtns(m);}
+ else if(kind=='mon'){h='<b>'+esc(spName(m))+'</b><small class="pxp">'+(m.evo2?'2回進化ずみ':m.evo?'進化ずみ · 経験 '+Math.min(EVO2_XP,m.xp||0)+'/'+EVO2_XP:'経験 '+Math.min(EVO_XP,m.xp||0)+'/'+EVO_XP)+'</small>'+monBtns(m);}
  el.innerHTML=h+'<button data-a="close">やめる</button>';el.hidden=false;
  var lx=Math.min(st.width-el.offsetWidth-4,Math.max(4,cx-st.left+10)),ly=Math.min(st.height-el.offsetHeight-4,Math.max(4,cy-st.top-10));el.style.left=lx+'px';el.style.top=ly+'px';
  el.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){var a=b.getAttribute('data-a');closePop();if(a=='close')return;doAct(a,f,x,y);ui();draw();};});
- el.querySelectorAll('[data-m]').forEach(function(b){b.onclick=function(){var a=b.getAttribute('data-m');closePop();HL=null;if(g.cr.indexOf(m)<0)return;if(a=='feed')feedTo(m);else if(a=='breed')breedStart(m);else if(a=='evo_k')evolve(m,'k');else if(a=='evo_g')evolve(m,'g');ui();draw();};});
+ el.querySelectorAll('[data-x]').forEach(function(b){b.onclick=function(){var a=b.getAttribute('data-x');closePop();boneAct(a,f,x,y);ui();draw();};});
+ el.querySelectorAll('[data-m]').forEach(function(b){b.onclick=function(){var a=b.getAttribute('data-m');closePop();HL=null;if(g.cr.indexOf(m)<0)return;if(a=='feed')feedTo(m);else if(a=='breed')breedStart(m);else if(a=='evo_k')evolve(m,'k');else if(a=='evo2_k')evolve2(m,'k');else if(a=='evo2_g')evolve2(m,'g');else if(a=='evo_g')evolve(m,'g');ui();draw();};});
  el.querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){var v=b.getAttribute('data-c')||null;closePop();if(g.cr.indexOf(m)<0)return;m.cmd=v;say(fullName(m)+'：'+(v=='guard'?'コアのそばを守る。':v=='attack'?'冒険者を追って戦う。':'自由に動く。'));sfx('train');ui();};});
 }
 // 自分で置いた罠（冒険者だけにかかる。一度で壊れる）
 function mtrAt(f,x,y){var MT=g.mtr||[];for(var i=0;i<MT.length;i++){var t=MT[i];if(t.f==f&&t.x==x&&t.y==y)return t;}return null;}
 function mtrapOn(e){var t=mtrAt(e.f,e.x,e.y);if(!t)return false;g.mtr.splice(g.mtr.indexOf(t),1);addFx({k:'ring',f:e.f,x:ccx(e.x),y:ccx(e.y),life:400,c:'255,208,96',r0:3,rad:16});sfx('hit');
- say(enName(e)+'が罠を踏んだ！');hitEn(e,15,null,'#ffd060');if(g.en.indexOf(e)<0)return true;if(e.k!='nin')e.frz=Math.max(e.frz||0,g.t+1);return false;}
+ say(enName(e)+'が'+(t.bone?'骨の罠':'罠')+'を踏んだ！');hitEn(e,t.bone?30:15,null,'#ffd060');if(g.en.indexOf(e)<0)return true;if(e.k!='nin')e.frz=Math.max(e.frz||0,g.t+(t.bone?2:1));return false;}
 // 入口からコアまで通路でつながっているか
 function reachCore(){var C=g.core;return !!bfs(0,ENTX,ENTY,function(f,x,y){return f==C.f&&x==C.x&&y==C.y;},4000)||(C.f==0&&C.x==ENTX&&C.y==ENTY);}
 function doAct(a,f,x,y){
@@ -1671,7 +1707,7 @@ g.dung.forEach(function(o){if(o.f!=f)return;var cx=ccx(o.x),cy=o.y*CS+CS-3;if(GI
  g.pher.forEach(function(o){if(o.f!=f)return;var cx=ccx(o.x),cy=ccx(o.y),a=0.12+0.25*o.hp/30;ctx.fillStyle='rgba(255,140,210,'+a.toFixed(2)+')';ctx.fillRect(cx-7,cy-3,14,9);ctx.fillStyle='rgba(255,200,235,'+(a+0.15).toFixed(2)+')';ctx.fillRect(cx-2+Math.round(Math.sin(now/200)*3),cy-1,2,2);});
  g.corpses.forEach(function(c){if(c.f!=f)return;var a=Math.max(0.35,1-(g.t-c.t)/180);ctx.globalAlpha=a;
   if(GIMG.corpse)put('corpse','n',c.x*CS+CS/2,c.y*CS+CS,20);else{ctx.fillStyle='#e8e0d0';ctx.fillRect(c.x*CS+4,c.y*CS+CS-5,CS-8,3);ctx.fillRect(c.x*CS+5,c.y*CS+CS-8,3,3);}ctx.globalAlpha=1;});
- (g.mtr||[]).forEach(function(t){if(t.f!=f)return;var x=t.x*CS+CS/2,y=t.y*CS+CS-4;ctx.fillStyle='#7a4a18';ctx.fillRect(x-6,y-1,12,3);ctx.fillStyle='#ffd060';for(var i=-5;i<=5;i+=2)ctx.fillRect(x+i,y-4,1,3);});
+ (g.mtr||[]).forEach(function(t){if(t.f!=f)return;var x=t.x*CS+CS/2,y=t.y*CS+CS-4;ctx.fillStyle=t.bone?'#d8d2c0':'#7a4a18';ctx.fillRect(x-6,y-1,12,3);ctx.fillStyle=t.bone?'#f4f0e4':'#ffd060';for(var i=-5;i<=5;i+=2)ctx.fillRect(x+i,y-4,1,3);});
  g.traps.forEach(function(t){if(t.f!=f)return;var x=t.x*CS+CS/2,y=t.y*CS+CS-4;ctx.fillStyle='#5a5a5a';ctx.fillRect(x-5,y-1,10,3);ctx.fillStyle='#c8c8c8';for(var i=-4;i<=4;i+=2)ctx.fillRect(x+i,y-3,1,2);});
  g.chests.forEach(function(c){if(c.f!=f)return;var b=Math.round(Math.sin(now/300)*0.6);
   if(GIMG.chest)put('chest','n',c.x*CS+CS/2,c.y*CS+CS+b,18);else{ctx.fillStyle='#000';ctx.fillRect(c.x*CS+3,c.y*CS+6,CS-6,CS-8);ctx.fillStyle='#a8682a';ctx.fillRect(c.x*CS+4,c.y*CS+7,CS-8,CS-10);ctx.fillStyle='#ffd45a';ctx.fillRect(c.x*CS+CS/2-1,c.y*CS+10,2,3);}});
@@ -1814,7 +1850,7 @@ function draw(){
   ctx.globalAlpha=1;
   var top=by+hop-h;
   if(!isE&&g.breed&&g.breed.id===o.id){ctx.strokeStyle='rgba(255,170,210,.95)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(px,by-h/2,Math.max(w,h)*0.62,0,Math.PI*2);ctx.stroke();}
-  if(!isE&&evoReady(o))label('↑',px+w/2-1,top+3+Math.sin(now/200)*1.5,'#ffe080');
+  if(!isE&&(evoReady(o)||(evo2Ready(o)&&(g.soul||0)>=EVO2_SOUL)))label(o.evo?'⇑':'↑',px+w/2-1,top+3+Math.sin(now/200)*1.5,'#ffe080');
   if(!isE&&o.cg){ctx.fillStyle=o.sp=='wisp'?'#d0a8ff':'#ffd45a';for(var q=0;q<o.cg;q++)ctx.fillRect(Math.round(px-4+q*3),Math.round(top-3),2,2);}
   if(isE){
    if(o.curse>g.t){ctx.fillStyle='#c080ff';ctx.fillRect(Math.round(px+w/2-4),Math.round(top+2),3,3);}
@@ -1887,11 +1923,11 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v55 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v56 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
- var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;dpe.classList.toggle('low',g.dp<=15);
+ var dpe=document.getElementById('dp');if(dpe.textContent!=String(g.dp))dpe.textContent=g.dp;var r2=document.getElementById('res2'),r2t='魂'+(g.soul||0)+' · 骨'+(g.bone||0);if(r2&&r2.textContent!=r2t)r2.textContent=r2t;dpe.classList.toggle('low',g.dp<=15);
  tutCheck();
  alertBadge();
  document.getElementById('go').classList.toggle('pulse',g.tut===2);
@@ -1908,6 +1944,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp
 function side(){
  var now=performance.now();if(now-sideT<250)return;sideT=now;renderLines();
  var eh=expHTML();if(eh!==expLast){expLast=eh;var ed=document.getElementById('expd');if(ed)ed.innerHTML=eh;}
+ var sh=soulHTML();if(sh!==soulLast){soulLast=sh;var sd=document.getElementById('soulp');if(sd)sd.innerHTML=sh;}
  var hs2=g.cr.filter(function(m){return m.hero;}).sort(function(a,b){return b.t-a.t||b.kills-a.kills;});
  var Y=g.yu,yuOn=g.en.filter(function(e){return e.yu;})[0];
  var key=g.view+'|'+hs2.map(function(m){return m.id+':'+m.f+':'+Math.round(m.hp/m.mhp*20)+':'+m.ep+m.kills+'L'+(m.lv||0);}).join(',')+'|'+yuName()+Y.lvl+Y.skills.length+(yuOn?Math.round(yuOn.hp/yuOn.mhp*20)+':'+yuOn.f+(yuOn.flee?'f':''):'-')+'|'+HALL.length+'|'+g.yuKilled;
@@ -1929,7 +1966,7 @@ function side(){
  document.getElementById('conn').innerHTML=connHTML();
 }
 document.getElementById('mini').addEventListener('click',function(ev){var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');ui();draw();});
-document.getElementById('spane-list').addEventListener('click',function(ev){var xb=ev.target.closest('[data-exp]');if(xb){expToggle(+xb.getAttribute('data-exp'));expLast='';sideT=0;side();return;}var xg=ev.target.closest('[data-expgo]');if(xg){expGo();expLast='';sideT=0;side();ui();draw();return;}var lb=ev.target.closest('[data-line]');if(lb){upLine(lb.getAttribute('data-line'));return;}var tb=ev.target.closest('[data-train]');if(tb){train(+tb.getAttribute('data-train'));return;}var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');sideKey='';closeSheet();ui();draw();});
+document.getElementById('spane-list').addEventListener('click',function(ev){var rb=ev.target.closest('[data-rev]');if(rb){revive(+rb.getAttribute('data-rev'));soulLast='';sideT=0;side();ui();draw();return;}var xb=ev.target.closest('[data-exp]');if(xb){expToggle(+xb.getAttribute('data-exp'));expLast='';sideT=0;side();return;}var xg=ev.target.closest('[data-expgo]');if(xg){expGo();expLast='';sideT=0;side();ui();draw();return;}var lb=ev.target.closest('[data-line]');if(lb){upLine(lb.getAttribute('data-line'));return;}var tb=ev.target.closest('[data-train]');if(tb){train(+tb.getAttribute('data-train'));return;}var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');sideKey='';closeSheet();ui();draw();});
 function loop(ts){var dt=Math.min(0.1,(ts-last)/1000);last=ts;if(!over&&speed>0)step(dt*speed);draw();ui();requestAnimationFrame(loop);}
 // ---------- v14: 初代の残り ----------
 // 物理と魔法
