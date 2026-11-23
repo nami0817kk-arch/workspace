@@ -34,7 +34,7 @@ bool isExternalLink(String url) => url.startsWith('https://') || url.startsWith(
 const pauseJs = 'window.__pause ? window.__pause() : (window.__saveNow && window.__saveNow())';
 
 /// ゲームが保存する値の名前（塔の途中経過・ストーリーと VS の途中経過・殿堂・自己ベスト・図鑑・
-/// 面ごとのランク・ストーリー全クリア・チャレンジ・ヒント・音・VS の勇者）。
+/// 面ごとのランク・ストーリー全クリア・チャレンジ・ヒント・音・VS の勇者・塔の記憶と記憶の棚）。
 const storeKeys = [
   'tou-save',
   'tou-save-m',
@@ -47,6 +47,7 @@ const storeKeys = [
   'tou-tut',
   'tou-snd',
   'tou-vs',
+  'tou-meta',
 ];
 
 Future<void> main() async {

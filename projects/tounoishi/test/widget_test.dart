@@ -162,6 +162,20 @@ void main() {
     }
   });
 
+  test('周回の解放と主役の物語（0.7.24・試作 v39）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'var SHELF=', // 記憶の棚の5項目
+      'function applyMeta(', // 新しい塔に棚の分を足す
+      'function metaGain(', // 落ちたら記憶がたまる
+      'id="tshelf"', // タイトルの記憶の棚
+      'function heroTitle(', // 二つ名
+      'function lifeText(', // 殿堂の一生
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
