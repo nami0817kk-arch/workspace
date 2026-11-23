@@ -264,6 +264,16 @@ extension GameLocal on Game {
     }
   }
 
+  /// 会議の吹き出しに出す肩書き（相棒・「〇〇」の責任者・部下）
+  String roleOf(Person p) {
+    if (p.partner) return M('相棒@@role');
+    final job = biz.where((x) => x.mgr == p.id).firstOrNull;
+    return job != null ? M('「{0}」の責任者', [I(job.ind)]) : M('部下@@role');
+  }
+
+  /// 会議で話す部下・相棒の1人
+  Voice voiceOf(Person p, String say) => Voice(name: p.name, who: Nm(p.name), role: roleOf(p), kind: p.partner ? 'partner' : 'staff', say: say);
+
   /// 意見を言う人（部下・相棒は2人まで、外の声は株主の代表かメインバンク。少なくとも2人）
   List<({Person? p, String who, String role, String kind})> crisisVoices() {
     final out = <({Person? p, String who, String role, String kind})>[];
@@ -274,17 +284,7 @@ extension GameLocal on Game {
         return ma != mb ? mb - ma : Game.totOf(b) - Game.totOf(a);
       });
     for (final p in [...ps, ...mgrs].take(2)) {
-      final job = biz.where((x) => x.mgr == p.id).firstOrNull;
-      out.add((
-        p: p,
-        who: Nm(p.name),
-        role: p.partner
-            ? M('相棒@@role')
-            : job != null
-                ? M('「{0}」の責任者', [I(job.ind)])
-                : M('部下@@role'),
-        kind: p.partner ? 'partner' : 'staff',
-      ));
+      out.add((p: p, who: Nm(p.name), role: roleOf(p), kind: p.partner ? 'partner' : 'staff'));
     }
     final holders = listed || sh.vc > 0;
     final holder = (p: null, who: M('株主の代表'), role: M(listed ? '市場の株主' : '投資家@@role'), kind: 'holder');
@@ -543,6 +543,8 @@ extension GameLocal on Game {
           M('急いで臨時の会議を開きました。意見は割れています'),
           for (final x in picks) M('{0}（{1}）：{2}', [x.who, x.role, opts[x.k]!.say]),
         ], ja: '\n', en: '\n'),
+        lead: Cat([why, M('急いで臨時の会議を開きました。意見は割れています')], ja: '。', en: '. '),
+        voices: [for (final x in picks) Voice(name: x.p?.name, who: x.who, role: x.role, kind: x.kind, say: opts[x.k]!.say)],
         choices: choices);
   }
 }
