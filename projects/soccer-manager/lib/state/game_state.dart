@@ -54,6 +54,7 @@ import '../models/staff_offer.dart';
 import '../models/rival_owner.dart';
 import '../models/manager_profile.dart';
 import '../logic/manager_hr_engine.dart';
+import '../logic/manager_tactics.dart';
 import '../logic/transfer_talk_engine.dart';
 import '../logic/transfer_value.dart';
 import '../logic/player_terms_engine.dart';

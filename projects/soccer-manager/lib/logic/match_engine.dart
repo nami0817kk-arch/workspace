@@ -1221,6 +1221,47 @@ class MatchEngine {
   static const int lateSubWindowEarliest = 60;
   static const int lateSubWindowLatest = 75;
 
+  /// 監督の逃げ切り([Team.holdLeadLate])が効き始める分。この分より後に
+  /// 始まる区間(後半の途中の交代のあと)を、リードして迎えたときだけ使う。
+  static const int lateHoldFromMinute = 60;
+
+  /// 終盤の区間の始めに、監督が逃げ切る考え方([Team.holdLeadLate])で
+  /// リードしているチームを、その区間だけ逃げ切りモードにする。攻守力と
+  /// 警告の抽選を済ませたら、返した関数で元に戻す(試合のあとの疲労や、
+  /// 次の試合には持ち越さない)。
+  static void Function() beginLateHold(
+    Team home,
+    Team away,
+    int startMinute,
+    List<MatchEvent> before,
+  ) {
+    if (startMinute <= lateHoldFromMinute) return _noRestore;
+    if (!home.holdLeadLate && !away.holdLeadLate) return _noRestore;
+    var homeGoals = 0;
+    var awayGoals = 0;
+    for (final e in before) {
+      if (e.type != MatchEventType.goal) continue;
+      if (e.teamId == home.id) homeGoals++;
+      if (e.teamId == away.id) awayGoals++;
+    }
+    final switched = <Team>[
+      if (home.holdLeadLate && !home.timeWastingMode && homeGoals > awayGoals)
+        home,
+      if (away.holdLeadLate && !away.timeWastingMode && awayGoals > homeGoals)
+        away,
+    ];
+    for (final t in switched) {
+      t.timeWastingMode = true;
+    }
+    return () {
+      for (final t in switched) {
+        t.timeWastingMode = false;
+      }
+    };
+  }
+
+  static void _noRestore() {}
+
   /// 後半の途中の交代の分を決める(60〜75分)。
   static int rollLateSubMinute() =>
       lateSubWindowEarliest +
@@ -1888,6 +1929,8 @@ class MatchEngine {
     final priorSentOff = sentOffIds(priorEvents);
     final homeLineup = _withoutIds(lineupOf(home), priorSentOff);
     final awayLineup = _withoutIds(lineupOf(away), priorSentOff);
+    // リードして終盤を迎えたら、逃げ切る監督はこの区間だけ守りに入る。
+    final endLateHold = beginLateHold(home, away, startMinute, priorEvents);
 
     final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
     final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
@@ -1932,6 +1975,7 @@ class MatchEngine {
       homeRedMinute: _priorRedMinute(priorEvents, home.id, startMinute),
       awayRedMinute: _priorRedMinute(priorEvents, away.id, startMinute),
     );
+    endLateHold();
     final homeRedMinute = reds.home;
     final awayRedMinute = reds.away;
 
@@ -2743,6 +2787,9 @@ class MatchEngine {
     final sentOffBefore = sentOffIds([...priorEvents, ...?carried?.events]);
     final homeLineup = _withoutIds(lineupOf(home), sentOffBefore);
     final awayLineup = _withoutIds(lineupOf(away), sentOffBefore);
+    // リードして終盤を迎えたら、逃げ切る監督はこの区間だけ守りに入る。
+    final endLateHold = beginLateHold(
+        home, away, startMinute, [...priorEvents, ...?carried?.events]);
     final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
     final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
 
@@ -2782,6 +2829,7 @@ class MatchEngine {
       awayRedMinute: _priorRedMinute(priorEvents, away.id, startMinute),
       excludedIds: sentOffBefore,
     );
+    endLateHold();
     final homeRedMinute = reds.home;
     final awayRedMinute = reds.away;
 

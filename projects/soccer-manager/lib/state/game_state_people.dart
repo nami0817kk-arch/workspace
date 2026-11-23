@@ -113,6 +113,31 @@ extension GameStatePeople on GameState {
     }
     s.managerStanding = ManagerHrEngine.startingStanding;
     s.managerWarned = false;
+    if (profile != null) {
+      // 新しい監督は、自分の考え方で戦い方を決め、キャプテンを選び直す。
+      ManagerTactics.apply(userTeam,
+          style: profile.style,
+          level: s.infrastructure.staffLevel(StaffRole.manager));
+      _managerAppointsCaptain();
+    }
+  }
+
+  /// 監督がキャプテン・副キャプテンを指名する。変わったらニュースに出す。
+  void _managerAppointsCaptain() {
+    final team = userTeam;
+    final before = team.captainId;
+    ManagerTactics.appointCaptains(team);
+    final id = team.captainId;
+    if (id == null || id == before) return;
+    final captain = team.players.firstWhere((p) => p.id == id);
+    final manager = currentManager;
+    _logNews(
+        manager == null
+            ? Tr.pick('${captain.name}がキャプテンになった。',
+                '${captain.name} is the new captain.')
+            : Tr.pick('${manager.name}監督は、${captain.name}をキャプテンに指名した。',
+                '${manager.name} has named ${captain.name} captain.'),
+        context: Tr.pick('スタッフ', 'Staff'));
   }
 
   /// 節ごと: 監督の立場を目標の順位と比べて動かす。若手を使う監督なら、
