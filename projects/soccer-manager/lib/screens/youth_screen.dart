@@ -135,7 +135,8 @@ class _YouthScreenState extends State<YouthScreen> {
                 children: [
                   Flexible(
                     child: Text(
-                      Tr.pick('資金: ${formatMoney(save.budget)}', 'Funds: ${formatMoney(save.budget)}'),
+                      Tr.pick('資金: ${formatMoney(save.budget)}',
+                          'Funds: ${formatMoney(save.budget)}'),
                       style: Theme.of(context).textTheme.titleMedium,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -265,10 +266,12 @@ class _YouthScreenState extends State<YouthScreen> {
                                   message: Tr.pick(
                                       'ワンダーキッドの可能性あり(推定潜在能力の上限が高い。獲得するまで確定情報ではない)',
                                       'Could be a wonderkid. His estimated ceiling is high, but nothing is certain until you sign him'),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.auto_awesome,
                                     size: 14,
-                                    color: Colors.amber,
+                                    color: SemanticColors.ink(
+                                        context, Colors.amber,
+                                        min: 3),
                                   ),
                                 ),
                               ],
@@ -414,10 +417,11 @@ class _YouthScreenState extends State<YouthScreen> {
                             Tooltip(
                               message: Tr.pick('ワンダーキッド(潜在能力が現在能力を大きく上回る逸材)',
                                   'Wonderkid: his ceiling sits far above where he is now'),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.auto_awesome,
                                 size: 14,
-                                color: Colors.amber,
+                                color: SemanticColors.ink(context, Colors.amber,
+                                    min: 3),
                               ),
                             ),
                           ],
@@ -442,14 +446,13 @@ class _YouthScreenState extends State<YouthScreen> {
                               fontSize: 12,
                               color: p.lastYouthMatchRating >=
                                       YouthMatchEngine.standoutRatingThreshold
-                                  ? Colors.green
+                                  ? SemanticColors.ink(context, Colors.green)
                                   : SemanticColors.subtleText(context),
                             ),
                           ),
                           if (YouthDepartureEngine.isAtRisk(p))
                             Text(
-                              Tr.pick(
-                                  '${p.age}歳。出場機会を求めており、いつ去ってもおかしくありません',
+                              Tr.pick('${p.age}歳。出場機会を求めており、いつ去ってもおかしくありません',
                                   'Age ${p.age}. He wants first-team football and could leave at any time'),
                               style: TextStyle(
                                 fontSize: 12,
@@ -548,71 +551,72 @@ class _YouthScreenState extends State<YouthScreen> {
         }
 
         return AlertDialog(
-        title: Text(Tr.pick('$nameとプロ契約を結びますか？',
-            'Sign $name to a professional contract?')),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(Tr.pick('背番号: ${terms.squadNumber}',
-                'Squad number: ${terms.squadNumber}')),
-            Text(Tr.pick('年俸: ${formatMoney(annualFromWeekly(terms.weeklyWage))}',
-                'Salary: ${formatMoney(annualFromWeekly(terms.weeklyWage))} a year')),
-            Text(Tr.pick('契約金: ${formatMoney(terms.signingBonus)}(一括)',
-                'Signing bonus: ${formatMoney(terms.signingBonus)} (one-off)')),
-            // 契約の長さ(今のシーズンを含めて。18歳未満は3年まで)。
-            DropdownButton<int>(
-              value: years,
-              isExpanded: true,
-              items: [
-                for (final y in YouthPromotionEngine.yearChoices(prospect))
-                  DropdownMenuItem(
-                    value: y,
-                    child: Text(Tr.pick(
-                        '$y年(${ContractEngine.untilLabel(Player.contractClockYear + y - 1)})',
-                        '${Tr.plural(y, 'year')} (${ContractEngine.untilLabel(Player.contractClockYear + y - 1)})')),
-                  ),
-              ],
-              onChanged: (y) {
-                if (y == null) return;
-                setState(() {
-                  years = y;
-                  refresh();
-                });
-              },
+          title: Text(Tr.pick(
+              '$nameとプロ契約を結びますか？', 'Sign $name to a professional contract?')),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(Tr.pick('背番号: ${terms.squadNumber}',
+                  'Squad number: ${terms.squadNumber}')),
+              Text(Tr.pick(
+                  '年俸: ${formatMoney(annualFromWeekly(terms.weeklyWage))}',
+                  'Salary: ${formatMoney(annualFromWeekly(terms.weeklyWage))} a year')),
+              Text(Tr.pick('契約金: ${formatMoney(terms.signingBonus)}(一括)',
+                  'Signing bonus: ${formatMoney(terms.signingBonus)} (one-off)')),
+              // 契約の長さ(今のシーズンを含めて。18歳未満は3年まで)。
+              DropdownButton<int>(
+                value: years,
+                isExpanded: true,
+                items: [
+                  for (final y in YouthPromotionEngine.yearChoices(prospect))
+                    DropdownMenuItem(
+                      value: y,
+                      child: Text(Tr.pick(
+                          '$y年(${ContractEngine.untilLabel(Player.contractClockYear + y - 1)})',
+                          '${Tr.plural(y, 'year')} (${ContractEngine.untilLabel(Player.contractClockYear + y - 1)})')),
+                    ),
+                ],
+                onChanged: (y) {
+                  if (y == null) return;
+                  setState(() {
+                    years = y;
+                    refresh();
+                  });
+                },
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                value: option,
+                onChanged: years < ContractEngine.capYears(prospect.age)
+                    ? (v) => setState(() {
+                          option = v ?? false;
+                          refresh();
+                        })
+                    : null,
+                title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
+                    'Add a 1-year club option (salary +5%)')),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                Tr.pick('昇格直後は一軍の強度に慣れておらず、実戦感覚が低い状態から始まります。出番を作ると戻ります。',
+                    'He will start short of match sharpness until he adjusts to first-team football. Playing him brings it back.'),
+                style: const TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(Tr.pick('やめる', 'Cancel')),
             ),
-            CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              value: option,
-              onChanged: years < ContractEngine.capYears(prospect.age)
-                  ? (v) => setState(() {
-                        option = v ?? false;
-                        refresh();
-                      })
-                  : null,
-              title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
-                  'Add a 1-year club option (salary +5%)')),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              Tr.pick('昇格直後は一軍の強度に慣れておらず、実戦感覚が低い状態から始まります。出番を作ると戻ります。',
-                  'He will start short of match sharpness until he adjusts to first-team football. Playing him brings it back.'),
-              style: const TextStyle(fontSize: 12),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(Tr.pick('契約して昇格', 'Sign and promote')),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(Tr.pick('やめる', 'Cancel')),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(Tr.pick('契約して昇格', 'Sign and promote')),
-          ),
-        ],
-      );
+        );
       }),
     );
     if (confirmed != true) return;
@@ -659,7 +663,6 @@ class _YouthScreenState extends State<YouthScreen> {
     );
   }
 }
-
 
 /// アカデミーの等級と、育成の方針。
 class _AcademyCard extends StatelessWidget {

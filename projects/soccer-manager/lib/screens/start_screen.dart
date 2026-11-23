@@ -80,7 +80,8 @@ class _StartScreenState extends State<StartScreen> {
               child: LayoutBuilder(
                 builder: (context, constraints) => SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
                       child: Column(
@@ -96,14 +97,14 @@ class _StartScreenState extends State<StartScreen> {
                                     .textTheme
                                     .headlineSmall
                                     ?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      shadows: const [
-                                        Shadow(
-                                            color: Color(0xCC000000),
-                                            blurRadius: 10),
-                                      ],
-                                    ),
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  shadows: const [
+                                    Shadow(
+                                        color: Color(0xCC000000),
+                                        blurRadius: 10),
+                                  ],
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -113,13 +114,13 @@ class _StartScreenState extends State<StartScreen> {
                                     .textTheme
                                     .bodyMedium
                                     ?.copyWith(
-                                      color: Colors.white.withValues(alpha: 0.9),
-                                      shadows: const [
-                                        Shadow(
-                                            color: Color(0xCC000000),
-                                            blurRadius: 8),
-                                      ],
-                                    ),
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  shadows: const [
+                                    Shadow(
+                                        color: Color(0xCC000000),
+                                        blurRadius: 8),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -229,7 +230,11 @@ class _StartScreenState extends State<StartScreen> {
             onPressed: () => Navigator.pop(ctx),
             child: Text(context.l10n.commonCancel),
           ),
-          TextButton(
+          // 取り消せない操作の確定は、赤く塗ったボタン(2026-11-24)。
+          FilledButton(
+            style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(ctx).colorScheme.error,
+                foregroundColor: Theme.of(ctx).colorScheme.onError),
             onPressed: () async {
               Navigator.pop(ctx);
               await context.read<GameState>().deleteSlot(slot.slot);
@@ -311,7 +316,7 @@ class _SlotCard extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(color: Colors.grey),
+                              ?.copyWith(color: SemanticColors.ink(context, Colors.grey)),
                         ),
                       ],
                     ),
@@ -500,8 +505,8 @@ class _NewClubDialogState extends State<_NewClubDialog> {
             if (name.isEmpty) return;
             Navigator.pop(
                 context,
-                _NewClubInput(name, _theme, _difficulty, _scenario,
-                    Map.of(_items)));
+                _NewClubInput(
+                    name, _theme, _difficulty, _scenario, Map.of(_items)));
           },
           child: Text(context.l10n.startCreate),
         ),

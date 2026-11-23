@@ -19,12 +19,15 @@ class RumorCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Tr.pick('記者会見: ${r[1]}の移籍の噂', 'Press conference: the ${r[1]} rumour'),
+            Text(
+                Tr.pick('記者会見: ${r[1]}の移籍の噂',
+                    'Press conference: the ${r[1]} rumour'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
-            Text(Tr.pick(
-                '${r[2]}が${r[1]}に関心と報じられています。売らないと言えば本人は落ち着きますが、今季のうちに売るとサポーターが怒ります。条件しだいと話せば、${r[2]}から話が来ます。',
-                '${r[2]} are said to want ${r[1]}. Saying he is not for sale settles him, but selling him this season would anger the fans. Saying the price is right brings an offer from ${r[2]}.'),
+            Text(
+                Tr.pick(
+                    '${r[2]}が${r[1]}に関心と報じられています。売らないと言えば本人は落ち着きますが、今季のうちに売るとサポーターが怒ります。条件しだいと話せば、${r[2]}から話が来ます。',
+                    '${r[2]} are said to want ${r[1]}. Saying he is not for sale settles him, but selling him this season would anger the fans. Saying the price is right brings an offer from ${r[2]}.'),
                 style: const TextStyle(fontSize: 12)),
             const SizedBox(height: 4),
             // 締切。過ぎたら「コメントしない」で片付く(2026-11-23)。
@@ -43,7 +46,8 @@ class RumorCard extends StatelessWidget {
               runSpacing: 4,
               children: [
                 for (final a in RumorAnswer.values)
-                  OutlinedButton(
+                  // 「決めること」の答えは塗りのボタン(owner_event_card と同じ)。
+                  FilledButton(
                     onPressed: () => gs.answerRumor(a),
                     child: Text(a.label),
                   ),

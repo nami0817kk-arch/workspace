@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/semantic_colors.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
@@ -37,7 +38,7 @@ class _InboxScreenState extends State<InboxScreen> {
     final actions = gs.inboxActions;
     final news = gs.save?.newsLog ?? const [];
     final scheme = Theme.of(context).colorScheme;
-    final warn = Colors.orange.shade800;
+    final warn = SemanticColors.ink(context, Colors.orange.shade800);
     return Scaffold(
       appBar: AppBar(
         title: Text(Tr.pick('受信箱', 'Inbox')),

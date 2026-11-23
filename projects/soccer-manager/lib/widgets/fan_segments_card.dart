@@ -67,10 +67,9 @@ class FanSegmentsCard extends StatelessWidget {
                   style: const TextStyle(fontSize: 12)),
               Align(
                 alignment: Alignment.centerRight,
-                child: OutlinedButton(
-                  onPressed: gs.canAskMunicipality
-                      ? () => gs.askMunicipality()
-                      : null,
+                child: FilledButton(
+                  onPressed:
+                      gs.canAskMunicipality ? () => gs.askMunicipality() : null,
                   child: Text(Tr.pick('自治体に補助を頼む', 'Ask the council')),
                 ),
               ),

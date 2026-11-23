@@ -211,6 +211,10 @@ void main() {
       final outDir = '${device.dir}${locale.suffix}';
       testWidgets('ストア用スクリーンショットを書き出す ($outDir)', (tester) async {
         addTearDown(tester.view.reset);
+        // テストの既定では影が「くっきりした板」で描かれる。明るい見た目は
+        // 白い箱を薄い影で浮かせているので、実機と同じ柔らかい影で撮る。
+        // 終わる前に戻す(戻さないとテストの枠組みが失敗にする)。
+        debugDisableShadows = false;
         tester.view.devicePixelRatio = device.ratio;
         tester.view.physicalSize = device.logical * device.ratio;
 
@@ -324,7 +328,10 @@ void main() {
                       viewPadding: EdgeInsets.zero,
                     ),
                     child: LandscapeScale(
+                      // 掲載画像は既定の見た目(ライト)で撮る(2026-11-24)。
                       child: FmThemeScope(
+                        light:
+                            app.buildTheme(Brightness.light, boldText: false),
                         dark: app.buildTheme(Brightness.dark, boldText: false),
                         child: const MainShell(),
                       ),
@@ -505,6 +512,7 @@ void main() {
             matchesGoldenFile('../../marketing/$outDir/${shot.name}.png'),
           );
         }
+        debugDisableShadows = true;
       });
     }
   }

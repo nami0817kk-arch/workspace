@@ -40,7 +40,9 @@ class OwnerEventCard extends StatelessWidget {
             Text(kind.body),
             const SizedBox(height: 10),
             for (var i = 0; i < options.length; i++) ...[
-              OutlinedButton(
+              // どれも「決める」操作なので塗りのボタン。灰色の細い枠では
+              // 押せる所に見えなかった(2026-11-24)。
+              FilledButton(
                 onPressed: () => context.read<GameState>().resolveOwnerEvent(i),
                 child: Text(options[i].label, textAlign: TextAlign.center),
               ),

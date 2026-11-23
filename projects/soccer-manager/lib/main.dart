@@ -243,6 +243,10 @@ class SoccerManagerApp extends StatelessWidget {
                 // なくここで拾って知らせる。
                 child: LandscapeScale(
                   child: FmThemeScope(
+                    light: buildTheme(
+                      Brightness.light,
+                      boldText: settings.boldTextMode,
+                    ),
                     dark: buildTheme(
                       Brightness.dark,
                       boldText: settings.boldTextMode,

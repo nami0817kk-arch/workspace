@@ -99,7 +99,8 @@ class IncomingOffersCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade800,
+                            color: SemanticColors.ink(
+                                context, Colors.orange.shade800),
                           ),
                         ),
                       ),
@@ -112,12 +113,14 @@ class IncomingOffersCard extends StatelessWidget {
                           final label = Row(
                             children: [
                               if (entry.length > 1 && i == 0)
-                                const Padding(
+                                Padding(
                                   padding: EdgeInsets.only(right: 4),
                                   child: Icon(
                                     Icons.star,
                                     size: 14,
-                                    color: Colors.amber,
+                                    color: SemanticColors.ink(
+                                        context, Colors.amber,
+                                        min: 3),
                                   ),
                                 ),
                               Expanded(
@@ -142,8 +145,9 @@ class IncomingOffersCard extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            else if (gameState.canCounterIncomingOffer(entry[i]))
-                              TextButton(
+                            else if (gameState
+                                .canCounterIncomingOffer(entry[i]))
+                              OutlinedButton(
                                 onPressed: () =>
                                     showCounterOfferDialog(context, entry[i]),
                                 child: Text(Tr.pick('対案', 'Counter')),
@@ -161,7 +165,8 @@ class IncomingOffersCard extends StatelessWidget {
                               style: FilledButton.styleFrom(
                                 disabledBackgroundColor:
                                     scheme.surfaceContainerHighest,
-                                disabledForegroundColor: scheme.onSurfaceVariant,
+                                disabledForegroundColor:
+                                    scheme.onSurfaceVariant,
                               ),
                               onPressed: !windowOpen
                                   ? null
@@ -174,14 +179,12 @@ class IncomingOffersCard extends StatelessWidget {
                               MediaQuery.textScalerOf(context).scale(1);
                           if (c.maxWidth / scale < 300) {
                             return Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.stretch,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 label,
                                 Wrap(
                                   alignment: WrapAlignment.end,
-                                  crossAxisAlignment:
-                                      WrapCrossAlignment.center,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
                                   children: buttons,
                                 ),
                               ],
@@ -296,7 +299,7 @@ void confirmAcceptIncomingOffer(BuildContext context, IncomingOffer offer) {
           child: Text(Tr.pick('キャンセル', 'Cancel')),
         ),
         if (!offer.viaReleaseClause)
-          TextButton(
+          FilledButton(
             onPressed: () {
               Navigator.pop(ctx);
               FeedbackService.success();

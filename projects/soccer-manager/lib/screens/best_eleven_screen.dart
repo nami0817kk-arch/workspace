@@ -38,7 +38,7 @@ class BestElevenScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.groups, size: 64, color: Colors.grey.shade400),
+                      Icon(Icons.groups, size: 64, color: Theme.of(context).colorScheme.outline),
                       const SizedBox(height: 12),
                       Text(
                         Tr.pick('まだ記録がありません(シーズン終了時に確定します)',
@@ -108,9 +108,9 @@ class _BestElevenCard extends StatelessWidget {
                   Text(
                     Tr.pick('自クラブから$userSelections名選出',
                         '$userSelections of your players made it'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Colors.blueAccent,
+                      color: SemanticColors.ink(context, Colors.blueAccent),
                       fontWeight: FontWeight.bold,
                     ),
                   ),

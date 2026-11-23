@@ -564,7 +564,7 @@ class TraitActivationBanner extends StatelessWidget {
                           : Icons.trending_down,
                       size: 16,
                       color: p.matchFormMultiplier > 1.0
-                          ? Colors.green
+                          ? SemanticColors.ink(context, Colors.green)
                           : Colors.redAccent,
                     ),
                     label: Text(

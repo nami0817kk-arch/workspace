@@ -53,7 +53,8 @@ class _StaffCard extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Colors.orange.shade700),
+                          color: SemanticColors.ink(
+                              context, Colors.orange.shade700)),
                     ),
                   ),
               ],
@@ -356,7 +357,9 @@ class _ManagerProfileLines extends StatelessWidget {
               Tr.pick(
                   'いま${m.employerClubName}で指揮している。引き抜きには補償金${formatMoney(context.read<GameState>().scaledMoney(m.compensation))}',
                   'Currently in charge at ${m.employerClubName}. Compensation to prise him away: ${formatMoney(context.read<GameState>().scaledMoney(m.compensation))}'),
-              style: TextStyle(fontSize: 11, color: Colors.orange.shade800),
+              style: TextStyle(
+                  fontSize: 11,
+                  color: SemanticColors.ink(context, Colors.orange.shade800)),
             ),
           if (recent.isNotEmpty)
             Text(
@@ -454,7 +457,9 @@ class _StaffOfferBox extends StatelessWidget {
             Tr.pick(
                 '${offer.clubName}が${offer.staffName}を引き抜きに来ています。補償金$comp。$untilまでに決めなければ移っていきます。',
                 '${offer.clubName} want ${offer.staffName}. Compensation: $comp. Decide by $until or he leaves.'),
-            style: TextStyle(fontSize: 12, color: Colors.orange.shade800),
+            style: TextStyle(
+                fontSize: 12,
+                color: SemanticColors.ink(context, Colors.orange.shade800)),
           ),
           OverflowBar(
             alignment: MainAxisAlignment.end,
