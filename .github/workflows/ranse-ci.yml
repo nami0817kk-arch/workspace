@@ -79,7 +79,7 @@ jobs:
       - name: Build web preview from a copy
         run: |
           mkdir -p /tmp/prev
-          cp -r projects/ranse/lib projects/ranse/pubspec.yaml projects/ranse/pubspec.lock /tmp/prev/
+          cp -r projects/ranse/lib projects/ranse/assets projects/ranse/pubspec.yaml projects/ranse/pubspec.lock /tmp/prev/
           cp projects/ranse/tool/preview_main.dart /tmp/prev/lib/main.dart
           cd /tmp/prev
           flutter create --platforms=web --project-name ranse .
