@@ -59,7 +59,8 @@ extension GameActions on Game {
   // ===== 国 =====
   List<String> entryModes(Biz b, String c) {
     final cat = indm[b.ind]!.cat;
-    if (c == 'cn' && (cat == 'net' || cat == 'money')) return ['jv'];
+    // 中国に現地法人があれば、ネットと金融も組む相手なしで入れる（地元の規制の緩み。game_local.dart）
+    if (c == 'cn' && (cat == 'net' || cat == 'money')) return extras && hasLocal('cn') ? ['solo', 'jv', 'buy'] : ['jv'];
     if (c == 'ru' && yr() >= 2022.5) return [];
     return ['solo', 'jv', 'buy'];
   }
@@ -93,6 +94,7 @@ extension GameActions on Game {
     if (ctryOf(b).contains(c)) return M('すでに出ています');
     if (!entryModes(b, c).contains(mode)) return M('その出方はできません');
     if (b.pipe.any((x) => x.k == 'enter' && x.c == c)) return M('すでに準備中です');
+    if (extras && hasLocal(c, b.ind)) return M('その国には現地法人が出ています');
     final cost = entryCost(b, c, mode);
     if (cash < cost) return M('お金が足りません');
     cash -= cost;
@@ -650,6 +652,10 @@ extension GameActions on Game {
     c.listed = true;
     cash += v;
     calcAll();
+    if (c.loc != null) {
+      chron('ipo', M('現地法人{0}を{1}の市場に上場させた。{2}が入った', [Nm(c.name), C(c.loc!), Y(v)]));
+      return M('現地法人{0}を{1}の市場に上場させ、株を30%売って{2}を得ました。まだ{3}持っています', [Nm(c.name), C(c.loc!), Y(v), pct(pctOf(c))]);
+    }
     return M('{0}を上場させ、株を30%売って{1}を得ました。まだ{2}持っています', [Nm(c.name), Y(v), pct(pctOf(c))]);
   }
 
@@ -1144,7 +1150,8 @@ extension GameActions on Game {
     return M('{0}の株を手放し、{1}を得ました', [Nm(c.name), Y(v)]);
   }
 
-  bool canMerge(Company c) => pctOf(c) >= 66.7 && sh.rivMax < 33.4;
+  /// 現地法人は合併できない（その国の分を本社に戻す仕組みは持たない）
+  bool canMerge(Company c) => pctOf(c) >= 66.7 && sh.rivMax < 33.4 && c.loc == null;
 
   String merge(Company c, {bool viaSwap = false}) {
     if (!canMerge(c)) return M('合併の条件を満たしていません');

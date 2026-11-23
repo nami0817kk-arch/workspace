@@ -21,6 +21,7 @@ part 'game_turn.dart';
 part 'game_actions.dart';
 part 'game_view.dart';
 part 'game_story.dart';
+part 'game_local.dart';
 
 // ===== データ =====
 const double invEff = .9, newPow = 1.5, cpuReinv = .12;
@@ -225,6 +226,9 @@ class Game {
 
   /// 取締役会との改革の約束（due: 期限の月 / target: 戻す年の利益 / y: 期限の年）
   Map<String, double>? vow;
+
+  /// 臨時の会議を開いたしるし（鍵 → 開いた月）。乗っ取りは近づいた割合ごとに一度、不祥事と資金は1年に一度まで
+  Map<String, int> crisis = {};
 
   /// 社史（古い順に積む。乱数は使わず、記録だけ足す）
   List<Chron> history = [];
@@ -632,6 +636,8 @@ class Game {
     }
     for (final c in cos) {
       if (!c.alive) continue;
+      // 現地法人はその国の市場だけで戦うので、地域ごとの奪い合いには入れない
+      if (c.loc != null) continue;
       for (final b in c.biz) {
         final e = b.power * (c.parent == 'player' ? (sm[b.ind] ?? 1) : 1);
         for (var t = c.tier; t < 3; t++) {
@@ -693,10 +699,15 @@ class Game {
       var rv = 0.0, pr = 0.0;
       for (final b in c.biz) {
         final ind = indm[b.ind]!;
-        final M = mkt(ind) * reg[c.tier];
         final e = b.power * (c.parent == 'player' ? (sm[b.ind] ?? 1) : 1);
-        final tot = T[b.ind]![c.tier];
-        final r = tot > 0 ? M * e / tot / 3 : 0.0;
+        double r;
+        if (c.loc != null) {
+          r = locRev(c.loc!, ind, e, T);
+        } else {
+          final M = mkt(ind) * reg[c.tier];
+          final tot = T[b.ind]![c.tier];
+          r = tot > 0 ? M * e / tot / 3 : 0.0;
+        }
         b.rev = r;
         rv += r;
         pr += r * ind.mg * c.eff * (econ < 1 ? 1 - (1 - econ) * ind.sens : 1);
@@ -842,6 +853,7 @@ class Game {
         'yAcc': yAcc,
         'yPrev': yPrev,
         'vow': vow,
+        'crisis': crisis,
       };
 
   static Game fromJson(Map<String, dynamic> j, {math.Random? rng}) {
@@ -925,7 +937,9 @@ class Game {
       // 取締役会は 1.0.0+7 から。古いセーブでは空から始める
       ..yAcc = md('yAcc') ?? {}
       ..yPrev = md('yPrev')
-      ..vow = md('vow');
+      ..vow = md('vow')
+      // 臨時の会議は 1.0.0+9 から。古いセーブでは空から始める
+      ..crisis = mi('crisis');
     s.events = [];
     s.reg = regFor(s.yr());
     final saved = j['indM'] as Map?;

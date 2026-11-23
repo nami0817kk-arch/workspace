@@ -374,6 +374,8 @@ extension GameTurn on Game {
     dirtyMonthly(N);
     rivalReturns(N);
     storyMonthly(N);
+    localMonthly(N);
+    crisisMonthly();
     if (noncomp != null && turn >= noncomp!.until) {
       noncomp = null;
       N(M('売ったときの「同じ業種に入らない」約束の期限が切れました'));
