@@ -224,6 +224,20 @@ void main() {
     }
   });
 
+  test('珍しい種の知らせと記憶の棚の3項目（0.7.29・試作 v45）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "banner('新しい種！ '", // 初めて図鑑に載った珍しい種を帯で知らせる
+      "var nw=!DEX[spc]||!DEX[spc].seen;", // 知らせるのは初めて載った時だけ
+      "{k:'mul',n:'記憶の上乗せ'", // 記憶の上乗せ
+      "{k:'mate',n:'始めの仲間'", // 始めの仲間
+      "{k:'gift',n:'勇者の置き土産'", // 勇者の置き土産
+      'g.dp+=e.yu?20+5*(g.giftK||0):1;', // 置き土産の掘る力
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
