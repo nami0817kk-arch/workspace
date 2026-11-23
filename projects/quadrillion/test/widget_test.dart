@@ -189,16 +189,24 @@ void main() {
     final g = _midGame();
     g.won = 'テストで勝ちました';
     final ctl = await _pump(tester, game: g);
-    expect(find.text('達成！'), findsOneWidget);
-    await tester.tap(find.text('このまま続ける'));
+    // 全画面のまとめが上に出る
+    Finder onEnd(String t) => find.descendant(of: find.byType(EndScreen), matching: find.text(t));
+    expect(onEnd('達成！'), findsOneWidget);
+    await tester.tap(onEnd('このまま続ける'));
     await tester.pump();
     expect(g.won, isNull);
     expect(g.mode, 'endless');
+    expect(find.byType(EndScreen), findsNothing);
     g.over = 'テストで負けました';
     ctl.render();
     await tester.pump();
-    expect(find.text('ゲームオーバー'), findsOneWidget);
+    expect(onEnd('ゲームオーバー'), findsOneWidget);
     expect(find.textContaining('次の月へ'), findsNothing);
+    // まとめを閉じても、盤面の札から「はじめから」に戻れる
+    await tester.tap(onEnd('盤面を見る'));
+    await tester.pump();
+    expect(find.byType(EndScreen), findsNothing);
+    expect(find.text('ゲームオーバー'), findsOneWidget);
     await tester.tap(find.text('はじめから'));
     await tester.pump();
     expect(ctl.game, isNull);

@@ -91,6 +91,40 @@ void main() {
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -700));
     await tester.pump();
     await _shot(tester, key, '5_town_rivals');
+
+    // 数字タブの下の社史
+    for (var i = 0; i < 120; i++) {
+      botMonth(g);
+    }
+    resolveEvents(g);
+    g.calcAll();
+    ctl.setTab('num');
+    await tester.pump();
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -1100));
+    await tester.pump();
+    await _shot(tester, key, '6_num_history');
+
+    // 設定と、取り返しのつかない操作の確認
+    openSettings(ctl);
+    await tester.pump();
+    await _shot(tester, key, '7_settings');
+    final b = g.biz.first;
+    actConfirmed(ctl, '「${indm[b.ind]!.name}」を売る', '「${indm[b.ind]!.name}」を約${yen(g.sellValue(b))}で手放します。育てた力は戻りません。', '売る', () => null);
+    await tester.pump();
+    await _shot(tester, key, '8_confirm');
+    ctl.closeSheet();
+
+    // 終わったときのまとめ（勝ち・負け）
+    g.won = '${g.year}年、世界の企業ランキングで1位になりました';
+    g.chron('rank', '世界の企業ランキングで1位になった');
+    ctl.render();
+    await tester.pump();
+    await _shot(tester, key, '9_end_win');
+    g.won = null;
+    g.over = '宿敵に株の過半数を握られ、社長の座を追われました';
+    ctl.render();
+    await tester.pump();
+    await _shot(tester, key, '10_end_over');
     expect(tester.takeException(), isNull);
   }, skip: _out == null);
 }

@@ -473,6 +473,18 @@ class HistEntry {
       HistEntry(t: j['t'] as String, cap: _d(j['cap']), rev: _d(j['rev']), cash: _d(j['cash']), pre: _d(j['pre']));
 }
 
+/// 社史の1行（いつ・何の種類の節目か・文）。仕組みの数字には使わない
+class Chron {
+  int y, q;
+
+  /// 種類: found / partner / partner_out / first_biz / ipo / abroad / buy / merge / swap / sold / pres / era / rank / won / over / rebirth
+  String k;
+  String m;
+  Chron(this.y, this.q, this.k, this.m);
+  Map<String, dynamic> toJson() => {'y': y, 'q': q, 'k': k, 'm': m};
+  factory Chron.fromJson(Map<String, dynamic> j) => Chron(_i(j['y']), _i(j['q'], 1), (j['k'] as String?) ?? '', (j['m'] as String?) ?? '');
+}
+
 /// 自社の株主
 class Shares {
   double own, vc, float, ally, pt;

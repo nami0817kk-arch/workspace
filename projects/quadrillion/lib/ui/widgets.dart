@@ -204,6 +204,26 @@ class Btn extends StatelessWidget {
   }
 }
 
+/// 取り返しのつかない操作のボタン（赤）
+class DangerBtn extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const DangerBtn(this.label, this.onTap, {super.key});
+  @override
+  Widget build(BuildContext context) => Material(
+        color: Pal.down,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+            child: Text(label, style: ts(bold: true, color: Pal.panel)),
+          ),
+        ),
+      );
+}
+
 /// 選択肢のボタン（左寄せ・下に小さな説明）
 class ChoiceBtn extends StatelessWidget {
   final String label;

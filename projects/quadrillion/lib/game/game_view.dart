@@ -67,6 +67,31 @@ extension GameView on Game {
           ? '成長期'
           : '創業期';
 
+  /// 終わったときのまとめに出す社史の節目（大きいものから[n]個選び、古い順に並べる。勝ち負けそのものと時代の出来事は除く）
+  List<Chron> highlights([int n = 5]) {
+    int score(Chron e) => switch (e.k) {
+          'rank' => e.m.contains('1位になった') ? 10 : 7,
+          'found' => 9,
+          'ipo' => 8,
+          'sold' => 7,
+          'swap' || 'merge' || 'first_biz' => 6,
+          'buy' || 'abroad' => 5,
+          'pres' || 'partner' || 'rebirth' => 4,
+          'partner_out' => 2,
+          _ => 0,
+        };
+    final idx = [for (var i = 0; i < history.length; i++) if (score(history[i]) > 0) i];
+    idx.sort((a, b) {
+      final c = score(history[b]) - score(history[a]);
+      return c != 0 ? c : a - b;
+    });
+    final pick = idx.take(n).toList()..sort();
+    return [for (final i in pick) history[i]];
+  }
+
+  /// 勝ち負けが決まったか
+  bool get ended => won != null || over != null;
+
   String meetLine(Person p) => meetLines[p.place] ?? (yr() < 2008 ? '掲示板で見たよ。俺と組めば勝てる' : 'DMありがとう。で、取り分は？');
 
   String goalText() {

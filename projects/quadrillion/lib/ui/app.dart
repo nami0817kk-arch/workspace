@@ -68,6 +68,8 @@ class RootScreen extends StatelessWidget {
       backgroundColor: Pal.sky,
       body: Stack(children: [
         Positioned.fill(child: SafeArea(bottom: false, child: ctl.game == null ? SetupScreen(ctl: ctl) : MainScreen(ctl: ctl))),
+        // 勝ち負けが決まったら、小窓を閉じたあとに全画面のまとめを出す
+        if (sheet == null && ctl.game != null && ctl.game!.ended && !ctl.endHidden) Positioned.fill(child: EndScreen(ctl: ctl)),
         if (sheet != null)
           Positioned.fill(
             child: Container(
@@ -224,6 +226,21 @@ class MainScreen extends StatelessWidget {
                   textAlign: TextAlign.right, overflow: TextOverflow.ellipsis, style: ts(size: 12.5, color: Pal.mute))),
           const SizedBox(width: 8),
           Semantics(label: '遊び方', child: Btn('？', () => showHelp(ctl), small: true)),
+          const SizedBox(width: 6),
+          Semantics(
+            label: '設定',
+            button: true,
+            child: Material(
+              color: Pal.panel2,
+              shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(8)),
+              child: InkWell(
+                key: const ValueKey('settings'),
+                borderRadius: BorderRadius.circular(8),
+                onTap: () => openSettings(ctl),
+                child: const Padding(padding: EdgeInsets.all(5), child: Icon(Icons.settings, size: 18, color: Pal.ink)),
+              ),
+            ),
+          ),
         ]),
         const SizedBox(height: 4),
         Wrap(spacing: 14, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
@@ -252,15 +269,13 @@ class MainScreen extends StatelessWidget {
               H2(s.won != null ? '達成！' : 'ゲームオーバー', top: true),
               Text((s.won ?? s.over)!, style: ts()),
               const SizedBox(height: 8),
-              Wrap(spacing: 8, children: [
-                if (s.won != null && s.over == null)
-                  Btn('このまま続ける', () {
-                    s.mode = 'endless';
-                    s.won = null;
-                    ctl.save();
-                    ctl.render();
-                  }),
-                Btn('はじめから', ctl.backToSetup),
+              Wrap(spacing: 8, runSpacing: 8, children: [
+                if (s.won != null && s.over == null) Btn('このまま続ける', () => continueAfterWin(ctl)),
+                Btn('まとめを見る', () {
+                  ctl.endHidden = false;
+                  ctl.render();
+                }),
+                Btn('はじめから', () => s.over != null ? ctl.backToSetup() : confirmRestart(ctl)),
               ]),
             ]),
           )
@@ -323,4 +338,88 @@ class MainScreen extends StatelessWidget {
         TextSpan(text: k, style: ts(size: 12.5, color: Pal.mute)),
         TextSpan(text: v, style: ts(size: 12.5, color: c, bold: true)),
       ]));
+}
+
+/// 勝ったあと、終わりなしのモードで続ける
+void continueAfterWin(GameController ctl) {
+  final s = ctl.game!;
+  s.mode = 'endless';
+  s.won = null;
+  ctl.endHidden = false;
+  ctl.save();
+  ctl.render();
+}
+
+// ===== 終わったときのまとめ =====
+class EndScreen extends StatelessWidget {
+  final GameController ctl;
+  const EndScreen({super.key, required this.ctl});
+
+  @override
+  Widget build(BuildContext context) {
+    final s = ctl.game!;
+    final win = s.won != null && s.over == null;
+    final accent = win ? Pal.goldtx : Pal.down;
+    final years = s.year - s.startYear;
+    final marks = s.highlights();
+    Widget stat(String k, String v) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Row(children: [
+            Expanded(child: Text(k, style: ts(size: 13.5, color: Pal.mute))),
+            Text(v, style: ts(size: 15, bold: true)),
+          ]),
+        );
+    return Material(
+      color: Pal.sky,
+      child: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 620),
+            child: ListView(padding: const EdgeInsets.fromLTRB(16, 28, 16, 32), children: [
+              Text(win ? '達成！' : 'ゲームオーバー', style: ts(size: 30, bold: true, color: accent)),
+              const SizedBox(height: 6),
+              Text((s.won ?? s.over)!, style: ts(size: 15, height: 1.5)),
+              const SizedBox(height: 4),
+              Muted('${s.pres.name}${s.gen > 1 ? '（${s.gen}代目）' : ''}・${s.year}年${s.q}月'),
+              const SizedBox(height: 14),
+              Panel(
+                border: win ? Pal.gold : Pal.line,
+                child: Column(children: [
+                  stat('創業から', '$years年（${s.startYear}年〜）'),
+                  stat('世界ランキングの最高位', s.peakRank >= 999 ? '―' : '${s.peakRank}位'),
+                  stat('時価総額の最大', yen(s.maxCap)),
+                  stat('財産の最大', yen(s.maxWealth)),
+                ]),
+              ),
+              if (marks.isNotEmpty) ...[
+                const H2('社史の節目'),
+                Panel(
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                    for (final e in marks)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          SizedBox(width: 84, child: Text('${e.y}年${e.q}月', style: ts(size: 12.5, color: Pal.mute))),
+                          Expanded(child: Text(e.m, style: ts(size: 13.5, height: 1.45))),
+                        ]),
+                      ),
+                  ]),
+                ),
+              ],
+              const SizedBox(height: 18),
+              if (win) ChoiceBtn('このまま続ける', () => continueAfterWin(ctl), primary: true, subs: const ['「終わりなし」のモードで、この会社を育て続ける']),
+              ChoiceBtn('はじめから', () => win ? confirmRestart(ctl) : ctl.backToSetup(), primary: !win, subs: const ['新しい会社を立ち上げる']),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Btn('盤面を見る', () {
+                  ctl.endHidden = true;
+                  ctl.render();
+                }),
+              ),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
 }

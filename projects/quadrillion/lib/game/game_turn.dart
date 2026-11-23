@@ -7,6 +7,7 @@ extension GameTurn on Game {
   List<LogEntry> nextQuarter() {
     final news = <LogEntry>[];
     void N(String m, [String t = '']) => news.add(LogEntry(m, t));
+    final over0 = over, won0 = won, peak0 = peakRank;
     // 時代
     econ = 1;
     perMul = 1;
@@ -33,6 +34,7 @@ extension GameTurn on Game {
         if (!c.shown) {
           c.shown = true;
           N('【${c.name}】${c.news}', 'big');
+          chron('era', '【${c.name}】${c.news}');
         }
       }
     }
@@ -417,6 +419,16 @@ extension GameTurn on Game {
     }
     final rivMax = sh.rivMax;
     if (rivMax > 50 && over == null) over = '宿敵に株の過半数を握られ、社長の座を追われました';
+    // 社史（記録だけ。乱数は使わない）
+    for (final th in rankMarks) {
+      if (peak0 > th && peakRank <= th) {
+        chron('rank', th == 1 ? '世界の企業ランキングで1位になった' : '世界の企業ランキングで初めて$th位以内に入った（$me位）');
+        break;
+      }
+    }
+    if (won != null && won != won0) chron('won', won!);
+    if (over != null && over != over0) chron('over', over!);
+    trackPeaks();
     lastNews = news;
     log.addAll(news.map((x) => LogEntry(x.m, x.t, year, q)));
     if (log.length > 300) log.removeRange(0, log.length - 300);
@@ -424,6 +436,7 @@ extension GameTurn on Game {
   }
 
   void rebirth() {
+    chron('rebirth', '会社が倒産した。残った人脈で、もう一度ゼロから始めた');
     biz = [];
     staff = [];
     cash = 1e7 * nom();
@@ -472,6 +485,7 @@ extension GameTurn on Game {
     }
     final keep = pres.traits.where((t) => t == 'noble').toList();
     final t2 = TRAITS.any((t) => t.id == p.trait) ? p.trait : pick(TRAITS).id;
+    chron('pres', '${pres.name}から${p.name}（${p.age}歳）へ社長が替わった（${gen + 1}代目）');
     pres = President(name: p.name, age: p.age, ab: {...p.ab}, traits: <String>{t2, ...keep}.take(2).toList());
     if (pres.traits.length < 2) {
       final o = pick(TRAITS.where((t) => !pres.traits.contains(t.id)).toList());
@@ -676,6 +690,7 @@ extension GameTurn on Game {
   String partnerOut(Person p) {
     final st = p.stake;
     fire(p);
+    chron('partner_out', '相棒の${p.name}が会社を去った');
     return '${p.name}は会社を去りました。持っていた株${pct(st)}は${listed ? '市場で売られました' : '投資家の手に渡りました'}';
   }
 
