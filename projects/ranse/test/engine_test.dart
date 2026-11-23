@@ -10,6 +10,7 @@ import 'package:ranse/engine/history.dart';
 import 'package:ranse/engine/history_lines.dart';
 import 'package:ranse/engine/life.dart';
 import 'package:ranse/engine/pastimes.dart';
+import 'package:ranse/engine/regions.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:ranse/engine/talents.dart';
 import 'package:ranse/engine/ways.dart';
@@ -2254,6 +2255,127 @@ void main() {
         );
       }
       expect(checked, greaterThan(20));
+    });
+  });
+
+  group('国ごとの暮らしの岐路', () {
+    /// 生まれを引き、国だけを [region] に置き換える。
+    Birth birthIn(Rng rng, String region) {
+      final b = rollBirth(rng);
+      final reg = kRegions.firstWhere((r) => r.n == region);
+      return Birth(
+        cls: b.cls,
+        region: reg,
+        faction: reg.f.first,
+        startYear: b.startYear,
+        month: b.month,
+        day: b.day,
+        female: b.female,
+        order: b.order,
+        stats: b.stats,
+        traits: b.traits,
+        rarity: b.rarity,
+        name: b.name,
+        label: b.label,
+        sameClass: b.sameClass,
+        birthRank: b.birthRank,
+      );
+    }
+
+    test('22国すべてに国の岐路があり、表の岐路はすべて実在する', () {
+      final g = Game();
+      final ids = {
+        for (final s in [...g.adultScenes, ...g.childScenes]) s.id,
+      };
+      for (final r in kRegions) {
+        expect(
+          kRegionScenes.values,
+          contains(r.n),
+          reason: '${r.n}に国の岐路が無い',
+        );
+      }
+      for (final id in kRegionScenes.keys) {
+        expect(id.startsWith('rg_'), isTrue, reason: id);
+        expect(ids, contains(id), reason: '$id が場面の一覧に無い');
+      }
+      // 子どもの岐路も5つ以上ある。
+      expect(
+        kRegionScenes.keys.where((id) => id.startsWith('rg_c_')).length,
+        greaterThanOrEqualTo(5),
+      );
+    });
+
+    test('国ごとに人生を流すと、その国の岐路が出て、ほかの国の岐路は出ない（匂わせがあり、数字が無い）', () {
+      final digits = RegExp(r'[0-9０-９%]');
+      final seenAll = <String>{};
+      final regionsHit = <String>{};
+      for (var ri = 0; ri < kRegions.length; ri++) {
+        final region = kRegions[ri].n;
+        for (var i = 0; i < 40; i++) {
+          final seed = 12000 + ri * 100 + i;
+          final rng = Rng(seed);
+          final g = Game(rng: rng);
+          g.start(birthIn(rng, region));
+          if (g.finished) continue;
+          var count = 0;
+          playOut(
+            g,
+            Rng(seed + 1),
+            onPrompt: (p) {
+              final now = g.l.flags
+                  .where((f) => f.startsWith('scene:rg_'))
+                  .toList();
+              if (now.length == count) return;
+              count = now.length;
+              for (final f in now) {
+                final id = f.substring(6);
+                expect(kRegionScenes[id], region, reason: '$regionの人生に $id');
+              }
+              for (final c in p.choices) {
+                expect(c.hint, isNotNull, reason: '${p.title}/${c.label}');
+                expect(
+                  c.hint!,
+                  isNot(contains(digits)),
+                  reason: '${p.title}/${c.hint}',
+                );
+                expect(
+                  c.label,
+                  isNot(contains(digits)),
+                  reason: '${p.title}/${c.label}',
+                );
+              }
+            },
+          );
+          final got = g.l.flags
+              .where((f) => f.startsWith('scene:rg_'))
+              .map((f) => f.substring(6))
+              .toList();
+          for (final id in got) {
+            expect(kRegionScenes[id], region, reason: '$regionの人生に $id');
+          }
+          seenAll.addAll(got);
+          if (got.isNotEmpty) regionsHit.add(region);
+        }
+      }
+      // 22国のうち18国以上で、その国の岐路が出る。岐路は36のうち24種以上。
+      final missedRegions = [
+        for (final r in kRegions)
+          if (!regionsHit.contains(r.n)) r.n,
+      ];
+      final missedScenes = [
+        for (final id in kRegionScenes.keys)
+          if (!seenAll.contains(id)) id,
+      ];
+      expect(
+        regionsHit.length,
+        greaterThanOrEqualTo(18),
+        reason: '出なかった国: $missedRegions',
+      );
+      expect(
+        seenAll.length,
+        greaterThanOrEqualTo(24),
+        reason: '出なかった岐路: $missedScenes',
+      );
     });
   });
 }

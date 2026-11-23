@@ -19,6 +19,7 @@ import 'history_west.dart';
 import 'life.dart';
 import 'lords.dart';
 import 'pastimes.dart';
+import 'regions.dart';
 import 'rng.dart';
 import 'talents.dart';
 import 'village.dart';
@@ -61,6 +62,7 @@ class Game extends ChangeNotifier {
       ...buildChildHistoryScenes(),
       ...buildChildRumorScenes(),
       ...buildTalentChildScenes(),
+      ...buildRegionChildScenes(),
     ];
     adultScenes = [
       ...buildAdultScenes(),
@@ -75,6 +77,7 @@ class Game extends ChangeNotifier {
       ...buildVillageScenes(),
       ...buildTalentScenes(),
       ...buildPastimeScenes(),
+      ...buildRegionScenes(),
       ...buildHistoryScenes(),
       ...buildHistoryEastScenes(),
       ...buildHistoryWestScenes(),

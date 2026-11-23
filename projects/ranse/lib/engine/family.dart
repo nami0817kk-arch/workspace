@@ -189,7 +189,7 @@ List<SceneDef> buildFamilyScenes() => [
     33,
     60,
     (g) => 3,
-    (g) => _buke(g) && g.l.people.containsKey('嫡男'),
+    (g) => _buke(g) && g.l.kids >= 1 && g.l.people.containsKey('嫡男'),
     (g, next) {
       final l = g.l;
       final k = l.people['嫡男']!;
@@ -488,7 +488,7 @@ List<SceneDef> buildFamilyScenes() => [
     40,
     66,
     (g) => 2,
-    (g) => _buke(g) && g.l.people.containsKey('嫡男'),
+    (g) => _buke(g) && g.l.kids >= 1 && g.l.people.containsKey('嫡男'),
     (g, next) {
       final l = g.l;
       final k = l.people['嫡男']!;
@@ -644,6 +644,7 @@ List<SceneDef> buildFamilyScenes() => [
         g.active &&
         g.l.rank <= 7 &&
         !g.hasFlag('scene:retire') &&
+        g.l.kids > 0 &&
         _child(g) != null &&
         g.l.people['娘'] != _child(g),
     (g, next) {
