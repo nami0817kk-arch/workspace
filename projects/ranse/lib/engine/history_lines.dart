@@ -2,6 +2,7 @@ import 'childhood.dart';
 import 'game.dart';
 import 'history.dart';
 import 'life.dart';
+import 'peace.dart';
 import 'rng.dart';
 
 /// 歴史の分かれ道（世界線）。
@@ -22,6 +23,14 @@ String houseName(Game g, String? name) {
   if (name == null) return '';
   if (name == '松平' && g.year >= 1567 && worldLine(g) != 'imagawa') {
     return '徳川';
+  }
+  // 本能寺のあとの '織田' は、羽柴秀吉が引き継いだ家。秀吉が豊臣の姓を賜った1586年から豊臣と呼ぶ
+  // （秀吉の天下にならない世と、プレイヤーが織田の当主のときは織田のまま）。
+  if (name == '織田' &&
+      g.year >= 1586 &&
+      const {'real', 'west'}.contains(worldLine(g)) &&
+      !(g.l.lord == '織田' && g.l.rank >= 8)) {
+    return '豊臣';
   }
   return name;
 }
@@ -59,8 +68,43 @@ const _hideyoshiEvents = {
   'sekigahara',
 };
 
+/// 徳川の世（関ヶ原で東軍が勝ち、江戸に幕府が開かれた世）を前提にした、1600年からの出来事。
+/// 歴史が変わった世では起きない（天災・琉球・遣欧の船・飢饉・龍造寺の本家の絶えは、どの世でも起きる）。
+const _edoEvents = {
+  'kaieki_1600',
+  'uesugi_yonezawa',
+  'satake_akita',
+  'shimazu_ando',
+  'edo_bakufu',
+  'hidetada',
+  'chosen_shisetsu',
+  'kinkyo',
+  'takayama',
+  'osaka_fuyu',
+  'osaka_natsu',
+  'ikkoku_ichijo',
+  'buke_shohatto',
+  'ieyasu_death',
+  'fukushima',
+  'genna_junkyo',
+  'mogami_kaieki',
+  'iemitsu',
+  'hosho',
+  'kaikin',
+  'sankin',
+  'shimabara',
+  'hara_jo',
+  'sakoku',
+  'dejima',
+  'denpata',
+  'iemitsu_death',
+  'keian',
+  'meireki',
+};
+
 const kSkipEvents = <String, Set<String>>{
   'imagawa': {
+    ..._edoEvents,
     'kiyosu',
     'mikawa_ikko',
     'inabayama',
@@ -89,6 +133,7 @@ const kSkipEvents = <String, Set<String>>{
   },
   'nobunaga': {
     ..._hideyoshiEvents,
+    ..._edoEvents,
     'takamatsu',
     'tensho_jingo',
     // 伴天連追放・安土での死は信長の世に合わないので、この世だけの出来事に置き換える
@@ -97,6 +142,7 @@ const kSkipEvents = <String, Set<String>>{
   },
   'akechi': {
     ..._hideyoshiEvents,
+    ..._edoEvents,
     // 「光秀は山崎で秀吉に敗れ」の文を含むので、この世だけの出来事に置き換える
     'honnoji',
     'kanpaku',
@@ -104,7 +150,7 @@ const kSkipEvents = <String, Set<String>>{
     'odawara',
     'hideyoshi_death',
   },
-  'west': {'sekigahara'},
+  'west': {'sekigahara', ..._edoEvents},
 };
 
 /// 秀吉の天下を前提にした岐路（信長の世・明智の世では出ない）。
@@ -141,6 +187,7 @@ const _hideyoshiScenes = {
 const kSkipScenes = <String, Set<String>>{
   'imagawa': {
     ..._hideyoshiScenes,
+    ...kPeaceEdoScenes,
     'h_tokichiro',
     'h_anegawa',
     'h_odani',
@@ -193,12 +240,14 @@ const kSkipScenes = <String, Set<String>>{
   },
   'nobunaga': {
     ..._hideyoshiScenes,
+    ...kPeaceEdoScenes,
     'h_e_tensho_jingo',
     'h_e_ueda',
     'h_l_chaya',
   },
-  'akechi': {..._hideyoshiScenes, 'h_odawara'},
-  'west': {},
+  'akechi': {..._hideyoshiScenes, 'h_odawara', ...kPeaceEdoScenes},
+  // 西軍が勝った世には、徳川の世を前提にした泰平の岐路（`peace.dart`）は出ない。
+  'west': {...kPeaceEdoScenes},
 };
 
 /// 小さな分岐: 世の中全体は史実のまま、一部の出来事だけが変わる（旗 → 出さない岐路）。
@@ -210,7 +259,8 @@ const kFlagSkipScenes = <String, Set<String>>{
     'h_c_erinji',
     'h_e_tensho_jingo',
   },
-  'history_odawara': {'h_e_edo'},
+  // 家康が江戸に入らないので、江戸の町・江戸の屋敷を前提にした泰平の岐路は出ない。
+  'history_odawara': {'h_e_edo', ...kPeaceEdoTownScenes},
   // 川中島で信玄が討たれた: 信玄が生きていることを前提にした岐路は出ない。
   'history_kawanakajima': {
     'h_mikatagahara',
@@ -224,7 +274,8 @@ const kFlagSkipScenes = <String, Set<String>>{
 const kFlagSkipEvents = <String, Set<String>>{
   'history_nagashino': {'tensho_jingo'},
   // 小田原で北条が早く降って残った: 家康の関東移封（北条の旧領へ）は起きない。
-  'history_odawara': {'edo'},
+  // 家康が江戸に入っていないので、幕府は駿府に開かれる（`b_sunpu_bakufu`・`b_sankin_sunpu` に置き換える）。
+  'history_odawara': {'edo', 'edo_bakufu', 'sankin', 'meireki'},
   'history_kawanakajima': {'mimasetoge', 'mikatagahara'},
 };
 
@@ -408,6 +459,86 @@ final kAltHistory = <HistEvent>[
     _cut(g, '松平', .5);
     _grow(g, '毛利', 10);
     return '関ヶ原で、石田三成の西軍が徳川家康を破った。豊臣の世は、もうしばらく続くことになった。';
+  }),
+  // ---- 2026-11-24 追加: 西軍が勝った世の、1601年からの続き ----
+  HistEvent('x_west_kanto', 1601, only: 'west', (g) {
+    _cut(g, '松平', .7);
+    _grow(g, '織田', 8);
+    return '敗れた徳川家康は関東へ退き、領地を大きく削られた。大坂では、石田三成ら奉行衆が幼い秀頼を戴いて政を執った。';
+  }),
+  HistEvent('x_west_ieyasu', 1603, only: 'west', (g) {
+    return '徳川家康が、江戸で髪を下ろして隠居した。征夷大将軍の位に就く者は、ついに現れなかった。';
+  }),
+  HistEvent('x_west_kanpaku', 1608, only: 'west', (g) {
+    _grow(g, '織田', 6);
+    return '年頃になった豊臣秀頼が、関白に任じられた。大坂城のまわりには、諸国の大名の屋敷が軒を連ねた。';
+  }),
+  HistEvent('x_west_rift', 1612, only: 'west', (g) {
+    _cut(g, '毛利', .9);
+    return '豊臣の政を支える奉行衆と、毛利・上杉ら大老たちのあいだに溝が生まれた。戦にはならなかったが、大坂の評定は長引くようになった。';
+  }),
+  HistEvent('x_west_ieyasu_death', 1616, only: 'west', (g) {
+    return '徳川家康が、江戸で世を去った。関ヶ原の負けを、最期まで口にしなかったという。';
+  }),
+  HistEvent('x_west_trade', 1624, only: 'west', (g) {
+    return '豊臣の朱印を携えた船が、堺と博多から南の海へ盛んに出ていった。この世では、海は閉じられなかった。';
+  }),
+  HistEvent('x_west_1640', 1640, only: 'west', (g) {
+    return '豊臣の世は、秀頼の子の代へ移った。大坂は天下の台所として栄え、戦を知る者は少なくなった。';
+  }),
+  // ---- 信長が生き延びた世の続き ----
+  HistEvent('x_nobu_nobutada', 1603, only: 'nobunaga', (g) {
+    _grow(g, '織田', 6);
+    return '織田信忠が、朝廷から太政大臣に任じられた。征夷大将軍の位を口にする者は、もういなかった。';
+  }),
+  HistEvent('x_nobu_nanban', 1609, only: 'nobunaga', (g) {
+    return '安土と大坂に、南蛮の学問を教える学び舎が建った。伴天連の教えは禁じられず、寺と南蛮寺が同じ町に並んだ。';
+  }),
+  HistEvent('x_nobu_ieyasu_death', 1616, only: 'nobunaga', (g) {
+    return '織田の天下を東で支え続けた徳川家康が、世を去った。';
+  }),
+  HistEvent('x_nobu_fleet', 1620, only: 'nobunaga', (g) {
+    return '織田の船団が、呂宋や暹羅の湊に日ノ本の者の町を築いた。海を渡る者は、年ごとに増えた。';
+  }),
+  HistEvent('x_nobu_hidenobu', 1630, only: 'nobunaga', (g) {
+    return '織田信忠が世を去り、子の秀信が跡を継いだ。本能寺の夜を知る者は、もうわずかになった。';
+  }),
+  HistEvent('x_nobu_1645', 1645, only: 'nobunaga', (g) {
+    return '織田の世は三代を数えた。大坂の湊には、異国の帆が絶えることがなかった。';
+  }),
+  // ---- 明智の世の続き ----
+  HistEvent('x_ake_standoff', 1601, only: 'akechi', (g) {
+    _cut(g, '松平', .9);
+    return '東から攻め上った徳川の軍勢と、明智の軍勢が美濃で睨み合った。大きな戦にはならず、冬を前に双方が兵を退いた。';
+  }),
+  HistEvent('x_ake_peace', 1604, only: 'akechi', (g) {
+    return '明智と徳川が和議を結んだ。西は明智、東は徳川。天下は二つのまま、戦だけが遠のいた。';
+  }),
+  HistEvent('x_ake_ieyasu_death', 1616, only: 'akechi', (g) {
+    return '徳川家康が世を去った。東の国々は秀忠が継ぎ、和議は破られなかった。';
+  }),
+  HistEvent('x_ake_kyoto', 1622, only: 'akechi', (g) {
+    return '明智の治める京で、古い寺社の再興が相次いだ。光秀の定めた掟は、子らの代にも守られた。';
+  }),
+  HistEvent('x_ake_1640', 1640, only: 'akechi', (g) {
+    return '東西ふたつの天下は、互いに使者を送り合うようになった。境の関所を、商人の荷が行き来した。';
+  }),
+  // ---- 今川の世の続き ----
+  HistEvent('x_ima_league', 1608, only: 'imagawa', (g) {
+    return '戦に倦んだ今川・武田・北条が、ふたたび三国の盟約を結んだ。東国の戦は、ようやく下火になった。';
+  }),
+  HistEvent('x_ima_ujizane', 1614, only: 'imagawa', (g) {
+    _cut(g, '今川', .9);
+    return '今川氏真が世を去った。和歌と蹴鞠の当主のもとで、今川の国はゆるやかに小さくなっていた。';
+  }),
+  HistEvent('x_ima_west', 1620, only: 'imagawa', (g) {
+    return '西国では、毛利と大友、島津が境を争い続けていた。乱世は、百五十年を越えた。';
+  }),
+  HistEvent('x_ima_hyojo', 1630, only: 'imagawa', (g) {
+    return '足利の将軍のもとで、諸国の大名が京に集い、国の境を定める評定が開かれた。刀を抜かずに境を決める、初めての試みだった。';
+  }),
+  HistEvent('x_ima_1645', 1645, only: 'imagawa', (g) {
+    return '大きな戦は絶えて久しい。天下人のいないまま、国々はそれぞれの主のもとで静かに暮らしている。';
   }),
 ];
 
@@ -962,6 +1093,8 @@ const _deathYear = {
   '長宗我部元親': 1599,
   '明智光秀': 1582,
   '千宗易': 1591,
+  '徳川家康': 1616,
+  '伊達政宗': 1636,
   'ザビエル': 1552,
 };
 

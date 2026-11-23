@@ -6,6 +6,7 @@ import 'history_lines.dart';
 import 'life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
+import 'peace.dart';
 import 'rng.dart';
 import 'spending.dart';
 import 'temple.dart';
@@ -227,7 +228,13 @@ List<FocusDef> _baseFocusOptions(Game g) {
         if (f != null) f.power += .5;
       },
     );
-    final war = FocusDef('war', '戦に備える', '兵を集め、出陣に加わる。手柄も、討死もありうる', (g) {
+    // 泰平の世（`peace.dart` の `peaceTime`）には出陣がない。武芸を錬り、家中の務めで覚えを得る。
+    final drill = FocusDef('war', '武芸を錬り、務めに備える', '戦は絶えた。腕を錆びつかせず、家中の務めで覚えを得る', (g) {
+      if (rng.chance(.5)) l.bu = clampInt(l.bu + 1, 0, 99);
+      l.merit += rng.range(2, 5);
+      l.fav = clampInt(l.fav + rng.range(1, 3), 0, 100);
+    });
+    final war = peaceTime(g) ? drill : FocusDef('war', '戦に備える', '兵を集め、出陣に加わる。手柄も、討死もありうる', (g) {
       // 位が表の外（大名以上）になっていても落ちないよう、いちばん上の位の値を使う。
       final cap = kTroopCap[l.rank.clamp(0, kTroopCap.length - 1)];
       var n = cap - l.troops;

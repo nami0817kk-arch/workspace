@@ -2,6 +2,7 @@ import 'childhood.dart';
 import 'game.dart';
 import 'history_lines.dart';
 import 'life.dart';
+import 'peace.dart';
 import 'rng.dart';
 
 /// 史実の年表と、史実の岐路。
@@ -357,6 +358,158 @@ final kHistory = <HistEvent>[
   HistEvent('toshiie', 1599, (g) {
     return '豊臣家を支えた前田利家が世を去った。徳川家康と石田三成の対立が、表に出始めた。';
   }),
+  // ---- 2026-11-24 追加: 関ヶ原のあとから、泰平の世へ（人生は亡くなるまで続く） ----
+  // 勢力の '織田' は、本能寺のあと羽柴・豊臣へ引き継がれた家（呼び名は `houseName` が豊臣にする）。
+  // '松平' は徳川。どの出来事も、プレイヤーが当主の家は滅ぼさず削らない（`_fall`・`_cut`）。
+  HistEvent('kaieki_1600', 1600, month: 11, (g) {
+    final t = _fall(g, '長宗我部', '松平') ? '土佐の長宗我部家は国を召し上げられた。' : '';
+    _cut(g, '織田', .45);
+    return '関ヶ原の戦のあと、西軍についた大名たちの領地が改められた。$t毛利は周防・長門の二国に減らされ、豊臣家は摂津・河内・和泉を領する一大名となった。';
+  }),
+  HistEvent('uesugi_yonezawa', 1601, (g) {
+    if (_f(g, '上杉') == null || _ruled(g, '上杉')) return null;
+    _cut(g, '上杉', .4);
+    return '会津の上杉景勝が、徳川に詫びを入れ、出羽の米沢へ移された。領地は、四分の一になった。';
+  }),
+  HistEvent('satake_akita', 1602, month: 5, (g) {
+    if (_f(g, '佐竹') == null || _ruled(g, '佐竹')) return null;
+    _cut(g, '佐竹', .5);
+    return '関ヶ原で旗色を明らかにしなかった常陸の佐竹家が、出羽の秋田へ移された。';
+  }),
+  HistEvent('shimazu_ando', 1602, month: 12, (g) {
+    if (_f(g, '島津') == null) return null;
+    return '西軍についた薩摩の島津家は、粘り強い談判の末に、領地をそのまま認められた。';
+  }),
+  HistEvent('edo_bakufu', 1603, month: 2, (g) {
+    _grow(g, '松平', 20);
+    return '徳川家康が征夷大将軍に任じられ、江戸に幕府を開いた。';
+  }),
+  HistEvent('hidetada', 1605, (g) {
+    _grow(g, '松平', 5);
+    return '家康が、将軍の職を子の秀忠に譲った。将軍の座は徳川が代々継ぐものだと、天下に示した。家康は大御所と呼ばれ、なお政を握った。';
+  }),
+  HistEvent('chosen_shisetsu', 1607, month: 5, (g) {
+    return '朝鮮の使節が海を渡り、将軍に国書を届けた。太閤の出兵で絶えていた交わりが、戻り始めた。';
+  }),
+  HistEvent('ryuzoji_end', 1607, month: 9, (g) {
+    if (_f(g, '龍造寺') == null || _ruled(g, '龍造寺')) return null;
+    return '肥前の龍造寺の本家が絶え、重臣の鍋島家が国を継いだ。';
+  }),
+  HistEvent('ryukyu', 1609, (g) {
+    if (_f(g, '島津') == null) return null;
+    _grow(g, '島津', 2);
+    return '薩摩の島津家が琉球へ兵を送り、首里の城を開かせた。';
+  }),
+  HistEvent('sanriku', 1611, month: 10, (g) {
+    return '奥州の海辺を大きな地震と津波が襲い、多くの人が波にのまれた。';
+  }),
+  HistEvent('kinkyo', 1612, (g) {
+    return '幕府が、キリシタンの教えを禁じた。はじめは幕府の治める地に、次の年には国じゅうに禁令が広げられ、南蛮寺は壊されていった。';
+  }),
+  HistEvent('hasekura', 1613, month: 9, (g) {
+    if (_f(g, '伊達') == null) return null;
+    return '伊達政宗の家臣・支倉常長が、陸奥の月の浦から大きな船で発ち、海の向こうの南蛮の国々へ向かった。';
+  }),
+  HistEvent('takayama', 1614, month: 9, (g) {
+    return 'キリシタンの高山右近らが国を追われ、長崎から呂宋へ送られた。';
+  }),
+  HistEvent('osaka_fuyu', 1614, month: 11, (g) {
+    _cut(g, '織田', .7);
+    return '方広寺の鐘の銘をきっかけに、徳川と豊臣が手切れとなった。大坂城には諸国の牢人が集まり、徳川の大軍が城を囲んだ（大坂冬の陣）。和議が結ばれ、城の堀は埋められた。';
+  }),
+  HistEvent('osaka_natsu', 1615, month: 5, (g) {
+    if (_ruled(g, '織田')) return '徳川の大軍がふたたび大坂へ押し寄せたが、城は落ちなかった。';
+    _fall(g, '織田', '松平');
+    return '堀を失った大坂城が、徳川の大軍の前に落ちた。豊臣秀頼は母とともに自害し、豊臣家は滅んだ（大坂夏の陣）。';
+  }),
+  HistEvent('ikkoku_ichijo', 1615, month: 6, (g) {
+    return '幕府が、一つの国に城は一つと定めた。諸国で、数えきれぬ城が壊された（一国一城令）。';
+  }),
+  HistEvent('buke_shohatto', 1615, month: 7, (g) {
+    return '幕府が、大名の守るべき掟を定めた（武家諸法度）。城を許しなく直すことも、勝手に縁組を結ぶことも禁じられた。年号は元和と改まり、長い戦の世は終わったと人々は言い合った。';
+  }),
+  HistEvent('ieyasu_death', 1616, month: 4, (g) {
+    return '大御所・徳川家康が、駿府で世を去った。';
+  }),
+  HistEvent('fukushima', 1619, (g) {
+    return '安芸の福島正則が、城を許しなく直した咎で、領地を召し上げられた。豊臣ゆかりの大名たちは、息をひそめた。';
+  }),
+  HistEvent('genna_junkyo', 1622, month: 8, (g) {
+    return '長崎の西坂で、伴天連と信者たち五十人あまりが、火あぶりと斬首に処された（元和の大殉教）。';
+  }),
+  HistEvent('mogami_kaieki', 1622, month: 9, (g) {
+    if (!_fall(g, '最上', '松平')) return null;
+    return '出羽の最上家が、家中の争いを咎められ、領地を召し上げられた。';
+  }),
+  HistEvent('iemitsu', 1623, (g) {
+    return '徳川家光が、三代目の将軍となった。「余は生まれながらの将軍である」と大名たちに告げたと伝わる。';
+  }),
+  HistEvent('hosho', 1633, (g) {
+    return '幕府が、老中の奉書を持たぬ船が海の外へ出ることを禁じた。';
+  }),
+  HistEvent('kaikin', 1635, month: 5, (g) {
+    return '幕府が、日ノ本の者が海の外へ渡ることも、海の外から帰ることも禁じた。';
+  }),
+  HistEvent('sankin', 1635, month: 6, (g) {
+    return '幕府が、大名は一年おきに江戸と国元を行き来せよと定めた（参勤交代）。妻と世継ぎは、江戸の屋敷に置かれた。';
+  }),
+  HistEvent('shimabara', 1637, month: 10, (g) {
+    return '肥前の島原と肥後の天草で、重い年貢と信仰の取り締まりに苦しむ百姓たちが蜂起した。一揆の勢は、原の古城に立てこもった。';
+  }),
+  HistEvent('hara_jo', 1638, month: 2, (g) {
+    return '幕府の大軍が原城を落とした。立てこもった者たちは、女や子どもまで、ほとんどが命を落とした。';
+  }),
+  HistEvent('sakoku', 1639, (g) {
+    return '幕府が、ポルトガルの船が日ノ本へ来ることを禁じた。';
+  }),
+  HistEvent('dejima', 1641, (g) {
+    return '阿蘭陀の商館が、平戸から長崎の出島へ移された。海の外への窓は、小さな島ひとつになった。';
+  }),
+  HistEvent('kanei_kikin', 1642, (g) {
+    return '幾年も続いた不作と牛の疫病で、国じゅうが飢えた（寛永の飢饉）。村を捨てる百姓が相次ぎ、町には飢えた者があふれた。';
+  }),
+  HistEvent('denpata', 1643, (g) {
+    return '幕府が、百姓が田畑を売り渡すことを禁じた。';
+  }),
+  HistEvent('iemitsu_death', 1651, month: 4, (g) {
+    return '三代将軍・徳川家光が世を去り、幼い家綱が跡を継いだ。';
+  }),
+  HistEvent('keian', 1651, month: 7, (g) {
+    return '軍学者の由井正雪が、牢人を集めて幕府を覆そうと企てた。事は露れ、正雪は駿府で自害した。';
+  }),
+  HistEvent('meireki', 1657, month: 1, (g) {
+    return '江戸で大火が起こり、町の大半と城の天守が焼けた（明暦の大火）。';
+  }),
+  // ---- 小さな分岐（長篠・小田原・川中島）の続き。旗のある史実どおりの世でだけ起きる ----
+  HistEvent('b_takeda_1601', 1601, month: 3, (g) {
+    if (!_h(g, 'history_nagashino') || worldLine(g) != 'real') return null;
+    if (_f(g, '武田') == null) return null;
+    return '長篠で兵を保った武田家は、関ヶ原で東軍につき、甲斐の国を認められた。';
+  }),
+  HistEvent('b_takeda_1615', 1615, month: 4, (g) {
+    if (!_h(g, 'history_nagashino') || worldLine(g) != 'real') return null;
+    if (_f(g, '武田') == null) return null;
+    return '大坂へ向かう徳川の軍勢の先手に、武田の赤備えが加わった。長篠で失われなかった騎馬の、最後の晴れ舞台だった。';
+  }),
+  HistEvent('b_hojo_1601', 1601, month: 4, (g) {
+    if (!_h(g, 'history_odawara') || worldLine(g) != 'real') return null;
+    if (_f(g, '北条') == null) return null;
+    return '相模の北条家は、関ヶ原では兵を動かさず、小田原の城を保った。';
+  }),
+  HistEvent('b_sunpu_bakufu', 1603, month: 2, (g) {
+    if (!_h(g, 'history_odawara') || worldLine(g) != 'real') return null;
+    _grow(g, '松平', 20);
+    return '徳川家康が征夷大将軍に任じられ、駿府に幕府を開いた。関東には、なお北条の旗が立っている。';
+  }),
+  HistEvent('b_sankin_sunpu', 1635, month: 6, (g) {
+    if (!_h(g, 'history_odawara') || worldLine(g) != 'real') return null;
+    return '幕府が、大名は一年おきに駿府と国元を行き来せよと定めた（参勤交代）。妻と世継ぎは、駿府の屋敷に置かれた。';
+  }),
+  HistEvent('b_kawanakajima_1601', 1601, month: 9, (g) {
+    if (!_h(g, 'history_kawanakajima') || worldLine(g) != 'real') return null;
+    if (_f(g, '上杉') == null) return null;
+    return '米沢へ移された上杉の家中では、川中島で信玄を討った日の話が、なお誇りとして語り継がれた。';
+  }),
 ];
 
 /// [year] までにまだ起きていない史実を起こす。[quietBefore] より前の年のものは見聞録に書かない
@@ -416,7 +569,9 @@ String? twinScene(String id) {
 }
 
 bool isHistoryScene(String id) =>
-    id.startsWith('h_') || kHistoryScenes.contains(id);
+    id.startsWith('h_') ||
+    kHistoryScenes.contains(id) ||
+    kPeaceHistoryScenes.contains(id);
 
 int _yr(Game g, int a) => g.l.startYear + a;
 bool _at(Game g, int a, int y) => _yr(g, a) == y;

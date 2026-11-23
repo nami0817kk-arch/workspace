@@ -6,6 +6,7 @@ import '../engine/birth.dart';
 import '../engine/data.dart';
 import '../engine/game.dart';
 import '../engine/history_lines.dart';
+import '../engine/peace.dart';
 import '../engine/rng.dart';
 import '../engine/spending.dart';
 import 'end_screen.dart';
@@ -603,7 +604,7 @@ class _WorldTab extends StatelessWidget {
                 ),
               const SizedBox(height: 8),
               Text(
-                '生き残り ${fs.length}家／1600年で乱世は終わる',
+                '生き残り ${fs.length}家／${peaceTime(g) ? '戦の絶えた世' : '乱世は続く'}',
                 style: const TextStyle(color: Pal.muted, fontSize: 12.5),
               ),
             ],

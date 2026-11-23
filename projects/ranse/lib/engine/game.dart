@@ -27,6 +27,7 @@ import 'lords.dart';
 import 'oku_life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
+import 'peace.dart';
 import 'regions.dart';
 import 'retainer_life.dart';
 import 'rng.dart';
@@ -114,6 +115,7 @@ class Game extends ChangeNotifier {
       ...buildTalentScenes(),
       ...buildPastimeScenes(),
       ...buildOldAgeScenes(),
+      ...buildPeaceScenes(),
       ...buildTempleScenes(),
       ...buildRegionScenes(),
       ...buildHistoryScenes(),
@@ -510,6 +512,9 @@ class Game extends ChangeNotifier {
   // ---------- ターン進行 ----------
   /// 年ごとの病死・老衰の割合（大人）。2026-11-23 に、若いうちの病死を4割ほど下げた
   /// （選択と関係のない「病に倒れた」が成人の死の3分の1を占め、平均31歳で人生が切れていたため）。
+  /// 寿命の上限の歳。この歳に届いた年に、必ず天寿が来る（一五六八年生まれでも一六五三年まで）。
+  static const kMaxAge = 85;
+
   static double annualMort(int a) => a < 25
       ? .007
       : a < 35
@@ -756,6 +761,7 @@ class Game extends ChangeNotifier {
       (s.repeat || !hasFlag('scene:${s.id}')) &&
       !_twinDone(s.id) &&
       !sceneSkippedInLine(this, s.id) &&
+      !sceneSkippedInPeace(this, s.id) &&
       s.cond(this);
 
   bool _twinDone(String id) {
@@ -964,19 +970,19 @@ class Game extends ChangeNotifier {
         } else if (l.joy >= 70) {
           dp *= .9;
         }
-        if (a >= 85 || rng.chance(dp)) {
+        // 人生は亡くなるまで続く（2026-11-24。一六〇一年で終える決まりは外した）。
+        // 老いの坂は annualMort が年ごとに急になり、[kMaxAge] に届いた年には必ず天寿が来る。
+        if (a >= kMaxAge || rng.chance(dp)) {
           a >= 55 ? die('天寿をまっとうした', 'tenju') : die('病に倒れた');
         }
       }
-      // 天下・時代の終わり
+      // 天下。人生が終わるのは、死と天下統一だけ（古い保存に残る `end == 'era'` は読めるが、もう立てない）。
       if (l.dead == null) {
         if (l.rank == 8 && share >= .5) {
           l.victory = true;
           l.rank = 9;
           l.maxRank = 9;
           l.end = 'victory';
-        } else if (year > 1600) {
-          l.end = 'era';
         }
       }
     }
@@ -989,7 +995,8 @@ class Game extends ChangeNotifier {
       if (f.power > 120) f.power = 120;
     }
     // 小競り合い。勢力は削り合うが、滅ぶのは史実の年表（history.dart）とプレイヤーの侵攻だけ。
-    if (al.length > 2 && rng.chance(.25)) {
+    // 泰平の世（史実どおりの世の大坂の陣のあと）には、家どうしの小競り合いは起きない。
+    if (al.length > 2 && !peaceTime(this) && rng.chance(.25)) {
       final a = rng.wpick(al, (f) => f.power);
       // 領地を削り合うのは隣り合う家どうし。
       final d = rng.pick(
@@ -1027,7 +1034,7 @@ class Game extends ChangeNotifier {
       l.fav = 10;
       l.troops = (l.troops * .5).floor();
       j(-8);
-      log('主家が滅び、${a.name}家に降った。位は${rk[l.rank]}に。', 'bad');
+      log('主家が滅び、${houseName(this, a.name)}家に降った。位は${rk[l.rank]}に。', 'bad');
     }
   }
 

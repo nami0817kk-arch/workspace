@@ -923,17 +923,24 @@ void main() {
     expect(kPopulation * cls.w / total, lessThan(1000));
   });
 
-  test('1600年を過ぎると乱世が終わる', () {
-    for (var seed = 0; seed < 40; seed++) {
+  test('1600年を過ぎても人生は続き、終わるのは死か天下統一だけ', () {
+    // 2026-11-24: 一六〇一年で人生を終える決まり（`end == 'era'`）を外した。くわしくは peace_test.dart。
+    var after = 0;
+    for (var seed = 0; seed < 120; seed++) {
       final rng = Rng(seed);
       final g = Game(rng: rng);
       g.start(rollBirth(rng));
       playOut(g, Rng(seed));
+      expect(g.finished, isTrue);
       if (g.l.dead == null) {
-        expect(g.l.end, anyOf('era', 'victory'));
+        expect(g.l.end, 'victory');
+      } else {
+        expect(g.l.end, isNull);
       }
-      if (g.l.end == 'era') expect(g.year, greaterThan(1600));
+      if (g.year > 1601) after++;
+      expect(g.age, lessThanOrEqualTo(Game.kMaxAge + 1));
     }
+    expect(after, greaterThan(3));
   });
 
   group('道と死に方（最期1000本の分け目）', () {
@@ -1195,22 +1202,32 @@ void main() {
       expect(checked, greaterThan(5));
     });
 
-    test('乱世を生き抜いた人生の最期の文には、新しい世の迎え方の結びが入る', () {
-      var checked = 0;
-      for (var seed = 0; seed < 600 && checked < 20; seed++) {
+    test('一六〇一年からの世に穏やかに亡くなった人には、乱世を生き抜いた最期が候補に入り、結びの一文が添えられる', () {
+      // 2026-11-24: 前は一六〇一年に生きていた人（`end == 'era'`）の最期だった。いまは亡くなるまで続くので、
+      // 一六〇一年からの世に天寿か病で亡くなった人の最期として出る（`ending.dart` の `eraEndingFits`）。
+      var checked = 0, viaEra = 0;
+      for (var seed = 0; seed < 900 && checked < 60; seed++) {
         final rng = Rng(seed + 5);
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         playOut(g, Rng(seed));
-        if (g.l.end != 'era') continue;
+        expect(g.l.end, isNot('era'));
+        if (g.year < 1601 || g.l.dead == null) continue;
         checked++;
         final e0 = buildEnding(g);
-        if (e0.handId != null) continue; // 手書きの最期は、それぞれの文で書く
+        expect(e0.handId, isNotNull);
+        expect(e0.kind, isNot('era'));
         final t = e0.text;
-        expect(t, matches(RegExp('世を迎えた|世の始まりに立った|胸を躍らせた')), reason: t);
         expect(t, isNot(contains('null')));
+        expect(t, isNot(contains('{')));
+        if (t.contains('それからほどなく、')) {
+          viaEra++;
+          expect(peaceDeath(g), isTrue, reason: t);
+          expect(['tenju', 'byo'], contains(e0.kind));
+        }
       }
-      expect(checked, greaterThan(5));
+      expect(checked, greaterThan(20));
+      expect(viaEra, greaterThan(2));
     });
 
     test('連れ合いを亡くした人の最期の文に、亡き連れ合いは最期の場の人として出ない', () {

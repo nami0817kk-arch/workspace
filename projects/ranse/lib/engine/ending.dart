@@ -2,6 +2,7 @@ import 'endings_catalog.dart';
 import 'endings_castle.dart';
 import 'endings_daimyo.dart';
 import 'endings_merchant.dart';
+import 'endings_peace.dart';
 import 'endings_priest.dart';
 import 'endings_samurai.dart';
 import 'endings_shadow.dart';
@@ -60,7 +61,7 @@ class Ending {
 
   String get wayName => kWays[way]!.$1;
   String get kindName => switch (kind) {
-    'era' => '乱世を生き抜く',
+    'era' => '乱世を生き抜く', // 古い保存（一六〇一年で終わった人生）だけ
     'victory' => '天下統一',
     _ => kDeathKinds[kind]!,
   };
@@ -272,7 +273,101 @@ final kHandEndings = <EndingDef>[
   ...kDaimyoEndings,
   ...kTenkaEndings,
   ...kWomanEndings,
+  ...kPeaceEndings,
 ];
+
+// ---------------------------------------------------------------------
+// 「乱世を生き抜いた」最期（kinds に era を持つ最期）の読み替え（2026-11-24）
+// ---------------------------------------------------------------------
+// 前は、一六〇一年を生きて越えた人生がそこで終わり（`end == 'era'`）、era の最期が出ていた。
+// いまは人生が亡くなるまで続くので、era の最期は「**一六〇一年からの世に、天寿か病で亡くなった人**」の
+// 最期の候補に入れる（死に方ごとの最期と、細かさ `spec` で競う。仕組みは変えていない）。
+// era の最期の文は「{年}年、乱世が終わった」「関ヶ原の戦から一年が過ぎた」のように、亡くなった年が
+// 関ヶ原のすぐあとである前提で書かれているので、文ごとに「何年までに亡くなった人に出すか」を決める
+// （[kEraUntil]。書いていないものは [kEraUntilDefault]＝大坂の陣で戦の世が終わる一六一五年まで）。
+
+/// era の最期を出す、亡くなった年の上限の既定（元和偃武の年）。
+const kEraUntilDefault = 1615;
+
+/// era の最期ごとの、亡くなった年の上限（文の言い方に合わせる）。
+const kEraUntil = <String, int>{
+  // 「関ヶ原の戦から一年が過ぎた」「前の年の関ヶ原で」「関ヶ原の知らせを」: 一六〇一年だけ
+  'j_era_east': 1601,
+  'j_era_west_ronin': 1601,
+  'j_era_west_win': 1601,
+  'm_era_tokugawa': 1601,
+  's_era_sekigahara': 1601,
+  'v_era': 1601,
+  'f_era': 1601,
+  'f_era_high': 1601,
+  'f_era_kids': 1601,
+  'f_era_political': 1601,
+  'f_era_hostage': 1601,
+  'f_era_widow': 1601,
+  // 「関ヶ原の戦いが終わり」「天下を分けた戦が終わり」「天下の行方が定まった」: 幕府が開かれる一六〇三年まで
+  'd_era_real': 1603,
+  'd_era_west': 1603,
+  's_era': 1603,
+  's_era_sato': 1603,
+  's_era_bandit': 1603,
+  's_era_assassin': 1603,
+  'f_era_low': 1603,
+  'b_era_honnoji': 1603, // 「本能寺の夜から、もう二十年近く」
+  // 「関ヶ原ののちの世を迎えた」「家康が天下を手にするのを見届けた」「幼い秀頼」: 一六〇五年まで
+  'p_era_m': 1605,
+  'b_era': 1605,
+  'b_era_east': 1605,
+  'b_era_west': 1605,
+  'b_era_ieyasu': 1605,
+  'f_era_lady': 1605,
+  'f_era_regent': 1605,
+  'f_era_nene': 1605,
+  'f_era_hime': 1605,
+  'v_era_drew_sword': 1605,
+  'm_era_fushimi': 1605,
+  'd_era_bunkokuho': 1605,
+  // 南蛮寺の鐘・長崎の異国の言葉: 禁教の前の一六一一年まで
+  'd_era_kirishitan': 1611,
+  'm_era_nagasaki': 1611,
+  // 年を限る言い方のないもの（戦のない世の暮らしを書いた文）: いつ亡くなっても出す
+  'j_era_office': 9999,
+  'j_era_retired': 9999,
+  'j_era_heir': 9999,
+  'j_era_grandchild': 9999,
+  'j_era_castletown': 9999,
+  'j_era_chisui': 9999,
+  'j_era_odawara': 9999,
+  'd_era_old': 9999,
+  'd_era_joy': 9999,
+  'p_era_f': 9999,
+  'p_era_hiei': 9999,
+  'b_era_family': 9999,
+  'b_era_letters': 9999,
+  'v_era_content': 9999,
+  'v_era_fisher': 9999,
+  'v_era_grand': 9999,
+  'v_era_edo': 9999,
+};
+
+/// 泰平の世まで生きて、穏やかに亡くなった人か（一六〇一年からの世に、天寿か病で。お産の死は除く）。
+bool peaceDeath(Game g) {
+  final l = g.l;
+  return l.dead != null &&
+      !l.victory &&
+      g.year >= 1601 &&
+      const {'tenju', 'byo'}.contains(l.deathKind ?? 'byo') &&
+      !l.dead!.contains('産');
+}
+
+/// era の最期 [e] を、この人生の最期の候補に入れてよいか。
+bool eraEndingFits(Game g, EndingDef e) =>
+    peaceDeath(g) && g.year <= (kEraUntil[e.id] ?? kEraUntilDefault);
+
+/// era の最期は「新しい世を迎えた」ところまでしか書いていないので、亡くなった人には結びを一文添える
+/// （最期の文そのものは変えない）。
+String _eraDeathTail(Game g, String kind) => kind == 'tenju'
+    ? 'それからほどなく、${g.l.name}は静かに息を引き取った。'
+    : 'それからほどなく、${g.l.name}は病の床に就き、世を去った。';
 
 /// 手書きの最期がそろっている道（この道の人生には必ず手書きの最期が付く）。
 const kHandWays = {
@@ -294,8 +389,19 @@ Ending buildEnding(Game g) {
   final kind = l.victory
       ? 'victory'
       : (l.end == 'era' ? 'era' : (l.deathKind ?? 'byo'));
-  final hand = findHandEnding(g, way, kind, kHandEndings);
+  final hand = findHandEnding(
+    g,
+    way,
+    kind,
+    kHandEndings,
+    eraFits: (e) => eraEndingFits(g, e),
+  );
   if (hand != null) {
+    // era の最期が、亡くなった人に出たとき（古い保存の `end == 'era'` では kind も era なので添えない）。
+    final viaEra =
+        hand.kinds != null &&
+        hand.kinds!.contains('era') &&
+        !hand.kinds!.contains(kind);
     // 歴史を変えた人生なら、どの最期にも「その世は、〜世だった。」を添える（幼くして亡くなった子は除く）。
     final changed = [
       for (final c in changedHistory(g))
@@ -306,7 +412,8 @@ Ending buildEnding(Game g) {
         : 'その世は、${changed.join('、')}世だった。';
     return Ending(
       title: hand.title,
-      text: '${fillEnding(g, hand.text)}$tail',
+      text:
+          '${fillEnding(g, hand.text)}${viaEra ? _eraDeathTail(g, kind) : ''}$tail',
       way: way,
       kind: kind,
       highlights: pickHighlights(l.path),

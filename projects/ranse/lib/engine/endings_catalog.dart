@@ -68,12 +68,17 @@ EndingDef? findHandEnding(
   Game g,
   String way,
   String kind,
-  List<EndingDef> catalog,
-) {
+  List<EndingDef> catalog, {
+  bool Function(EndingDef e)? eraFits,
+}) {
+  // [eraFits]: 泰平の世まで生きて亡くなった人には、「乱世を生き抜いた」最期（kinds に era を持つもの）も
+  // 候補に入れる（`ending.dart` の `eraEndingFits`）。どれが出るかは、ほかの最期と同じく細かさで決まる。
   final cands = [
     for (final e in catalog)
       if (e.way == way &&
-          (e.kinds == null || e.kinds!.contains(kind)) &&
+          (e.kinds == null ||
+              e.kinds!.contains(kind) ||
+              (eraFits != null && e.kinds!.contains('era') && eraFits(e))) &&
           e.cond(g))
         e,
   ];

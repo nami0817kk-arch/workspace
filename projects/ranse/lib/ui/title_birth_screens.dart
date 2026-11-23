@@ -58,7 +58,7 @@ class TitleScreen extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               Text(
-                '天下を狙うも、名もなき幸せを選ぶも、\nあなた次第。乱世は1600年で終わる。\nこの世には、${kHandEndings.length}の最期がある。',
+                '天下を狙うも、名もなき幸せを選ぶも、\nあなた次第。乱世はやがて終わり、\n泰平の世が来る。人生は、命の尽きるまで続く。\nこの世には、${kHandEndings.length}の最期がある。',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Pal.muted,
