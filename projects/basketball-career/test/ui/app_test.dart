@@ -101,14 +101,16 @@ void main() {
     final ours = car.me.roster.reduce((a, b) => a.ovr >= b.ovr ? a : b);
     await tester.scrollUntilVisible(find.text(theirs.name), 200, scrollable: _vertical);
     // 下の申し込みの欄に隠れないよう、全体が見える所まで送ってから押す
-    await tester.ensureVisible(find.text(theirs.name).first);
+    // 名前を押すとカードが開くので、選ぶのは行の左の四角で
+    await tester.ensureVisible(find.byKey(Key('trade-pick-${theirs.id}')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(theirs.name).first);
+    await tester.tap(find.byKey(Key('trade-pick-${theirs.id}')));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text(ours.name), 300, scrollable: _vertical);
-    await tester.ensureVisible(find.text(ours.name).last);
+    // 名前を押すとカードが開くので、選ぶのは行の左の四角で
+    await tester.ensureVisible(find.byKey(Key('trade-pick-${ours.id}')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(ours.name).last);
+    await tester.tap(find.byKey(Key('trade-pick-${ours.id}')));
     await tester.pumpAndSettle();
     final v = car.judge(TradeOffer(partner: them.index, give: [ours.id], get: [theirs.id]));
     final ok = v.ok;
@@ -161,9 +163,10 @@ void main() {
     final p = car.me.roster.firstWhere((x) => !car.expiring.contains(x.id) && car.blockOffers(x.id).isNotEmpty);
     final offers = car.blockOffers(p.id);
     await tester.scrollUntilVisible(find.text(p.name), 200, scrollable: _vertical);
-    await tester.ensureVisible(find.text(p.name).last);
+    // 名前を押すとカードが開くので、選ぶのは行の左の四角で
+    await tester.ensureVisible(find.byKey(Key('trade-pick-${p.id}')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(p.name).last);
+    await tester.tap(find.byKey(Key('trade-pick-${p.id}')));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.textContaining('を欲しがるチーム'), -200, scrollable: _vertical);
     expect(find.textContaining('${p.name}を欲しがるチーム: ${offers.length}チーム'), findsOneWidget);
@@ -175,6 +178,26 @@ void main() {
     expect(find.textContaining('出す: ${p.name}'), findsOneWidget);
     // 受けてもらえる申し込みでも、反応は幅で見せる(信頼や見る目しだいで「五分五分」に見えることもある)
     expect(find.textContaining(RegExp('受けてくれそう|あと一押し|五分五分')), findsOneWidget);
+  });
+
+  testWidgets('トレード: 表の選手の名前を押すと選手のカードが開き、選ばれはしない(2026-11-23 指示)', (tester) async {
+    _size(tester, 844, 390);
+    final c = await _controller({'gmHowtoSeen': true});
+    c.newCareer(teamAtRank(1, 15), seed: 1);
+    final car = c.career!;
+    await tester.pumpWidget(BasketballCareerApp(controller: c));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('トレード').first);
+    await tester.pumpAndSettle();
+    final p = car.me.roster.first;
+    final name = find.byKey(Key('trade-name-${p.id}'));
+    await tester.scrollUntilVisible(name, 200, scrollable: _vertical);
+    await tester.ensureVisible(name);
+    await tester.pumpAndSettle();
+    await tester.tap(name);
+    await tester.pumpAndSettle();
+    expect(find.byType(BottomSheet), findsOneWidget, reason: '選手のカードが開く');
+    expect(find.text('出す: まだ選んでいない'), findsOneWidget, reason: '名前を押しても選ばれない');
   });
 
   testWidgets('続きは保存され、起動するとはじめの画面から「続きから」で戻れる', (tester) async {

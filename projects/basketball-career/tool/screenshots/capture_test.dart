@@ -234,12 +234,22 @@ Future<void> _tradeShot(WidgetTester t, String name, String caption, {String? ou
     for (final id in o.get) {
       final n = them.roster.firstWhere((p) => p.id == id).name;
       await t.scrollUntilVisible(find.text(n), 200, scrollable: _list);
-      await _tap(t, n);
+      // 名前を押すとカードが開くので、行の左の四角で選ぶ
+      final pick = find.byKey(Key('trade-pick-$id'));
+      await t.ensureVisible(pick);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(pick);
+      await t.pump();
     }
     for (final id in o.give) {
       final n = car.me.roster.firstWhere((p) => p.id == id).name;
       await t.scrollUntilVisible(find.text(n), 200, scrollable: _list);
-      await _tap(t, n);
+      // 名前を押すとカードが開くので、行の左の四角で選ぶ
+      final pick = find.byKey(Key('trade-pick-$id'));
+      await t.ensureVisible(pick);
+      await t.pump(const Duration(milliseconds: 300));
+      await t.tap(pick);
+      await t.pump();
     }
     for (final i in o.givePicks) {
       final label = '指名権 ${car.picks[i].label(car.teams, car.season)}';
