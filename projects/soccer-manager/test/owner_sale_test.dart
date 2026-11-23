@@ -32,8 +32,12 @@ void main() {
     expect(gs.saleReason, isNull);
     s.consecutiveNegativeBudgetWeeks = 1;
     expect(gs.saleReason, SaleReason.funds);
-    // 両方ならサポーターを先に見る。
+    // 期待が0でも、最後通告の猶予(3か月)のうちは手放さない。
     s.confidence = 0;
+    s.supporterUltimatumUntil = gs.today.add(const Duration(days: 30));
+    expect(gs.saleReason, SaleReason.funds);
+    // 両方ならサポーターを先に見る(期限を過ぎた)。
+    s.supporterUltimatumUntil = DateTime(2000);
     expect(gs.saleReason, SaleReason.supporters);
   });
 

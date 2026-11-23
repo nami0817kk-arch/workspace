@@ -97,6 +97,7 @@ extension GameStateForms on GameState {
     _payTransferFee(c[0]);
     _takeFromSeller(target);
     ContractEngine.applyTransferContract(p);
+    _supportersOnSigning(p);
     userTeam.players.add(p);
     s.buyBacks.remove(playerId);
     _recordPlayerBook(p, c[0]);

@@ -212,7 +212,9 @@ void main() {
     test('同じ国のクラブを買い直すと、記録は空から。殿堂は残る', () async {
       final gs = await start();
       fillRecords(gs);
-      gs.save!.confidence = 0;
+      gs.save!
+        ..confidence = 0
+        ..supporterUltimatumUntil = DateTime(2000);
       expect(await gs.buyClub(gs.buyoutCandidates.first.id), isTrue);
       expectEmpty(gs);
       expect(gs.save!.ownerLegacies, hasLength(1));
@@ -221,7 +223,9 @@ void main() {
     test('別の国でクラブを立ち上げても、記録は空から。殿堂は残る', () async {
       final gs = await start();
       fillRecords(gs);
-      gs.save!.confidence = 0;
+      gs.save!
+        ..confidence = 0
+        ..supporterUltimatumUntil = DateTime(2000);
       final other = LeagueTheme.values.firstWhere(
         (t) => t != gs.currentLeagueTheme,
       );

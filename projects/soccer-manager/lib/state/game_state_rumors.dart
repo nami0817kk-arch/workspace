@@ -72,7 +72,7 @@ extension GameStateRumors on GameState {
         case RumorAnswer.deny:
           p.happiness = (p.happiness + 10).clamp(0, 100);
           s.rumorDenied[p.id] = s.league.season;
-          s.confidence = (s.confidence + 2).clamp(0, 100);
+          _changeSupporters(2, SupporterReason.events);
         case RumorAnswer.noComment:
           p.happiness = (p.happiness - 5).clamp(0, 100);
         case RumorAnswer.open:
@@ -103,10 +103,8 @@ extension GameStateRumors on GameState {
     final s = _save!;
     final season = s.rumorDenied.remove(p.id);
     if (season == null || season != s.league.season) return;
-    s.confidence = (s.confidence - brokenPromisePenalty).clamp(0, 100);
-    _noteSupporterMove(
-        -brokenPromisePenalty,
-        Tr.pick('「売らない」と言った${p.name}を売った',
+    _changeSupporters(-brokenPromisePenalty, SupporterReason.sales,
+        note: Tr.pick('「売らない」と言った${p.name}を売った',
             'Sold ${p.name} after saying he was not for sale'));
     _logNews(
         Tr.pick('「売らない」と言った${p.name}を同じ季に売り、サポーターが怒っている。',

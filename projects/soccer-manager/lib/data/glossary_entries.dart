@@ -317,9 +317,10 @@ List<GlossaryEntry> get glossaryEntries => [
         category: GlossaryCategory.club,
         // 実際の動きに合わせる(2026-11-23)。以前は「目標順位を下回る成績が
         // 続くと下がる」とだけあり、何で上下するのか分からなかった。
+        // 2026-11-23 に作り直した動きに合わせる。
         description: Tr.pick(
-            'サポーターの期待(0-100)。リーグ戦の勝ちで+3・負けで-3(ダービーは1.5倍)。季の折り返しの理事会レビューで、目標以内なら+8・目標より4つ以上下なら-12。季末は目標以内で+15・目標より3つ以上下で-20。0になるとクラブを手放す。季を越えれば最低40から始まる。オーナー室の広報・ファン向けの手や試合日のイベントでも上げられる。',
-            'What the supporters expect (0-100). A league win is +3 and a defeat -3 (derbies count 1.5 times). At the halfway mark the board review gives +8 within the target, or -12 if you are four or more places below it. At the end of the season it is +15 within the target, or -20 three or more places below. At zero you have to sell the club. A new season starts from at least 40. PR, fan moves and matchday events in the owner\'s office also raise it.'),
+            'サポーターの期待(0-100)。試合の結果は月末にまとめて-6〜+6(目標の順位との差と、その月の勝点の取り方)。ダービー(±4)・カップ・季の折り返しの理事会レビュー(目標との差に比例、最大-10)・季末(同じく比例、最大-10)はその場で動く。オーナーの手でも動く: チケットは毎月 安い+2・普通0・高い-2、広報・ファンの手は月に1回+3〜6、地域活動は続けている間 毎月+1、主力級の獲得+3、人気の選手の売却-3〜-6、スタジアムの増築の完成+5。毎月の内訳はホームと受信箱に出る。10を割ると最後通告が出て、3か月のうちに10以上へ戻せなければクラブを手放す。季を越えれば最低40から始まる。',
+            'What the supporters expect (0-100). Results are summed up at the end of each month, -6 to +6 (your place against the target, and the points you took that month). Derbies (±4), cups, the halfway board review (in proportion to the gap from the target, at most -10) and the season-end verdict (likewise) move it on the spot. Your own moves count too: tickets each month (cheap +2, standard 0, expensive -2), one PR or fan move a month (+3 to +6), community work +1 every month while it runs, signing a first-team star +3, selling a fans\' favourite -3 to -6, and a finished stadium expansion +5. The monthly breakdown appears on the home screen and in the inbox. Below 10 the supporters issue a final warning: get back to 10 within three months, or you have to sell the club. A new season starts from at least 40.'),
       ),
       GlossaryEntry(
         term: Tr.pick('オーナーの評判', 'Reputation'),

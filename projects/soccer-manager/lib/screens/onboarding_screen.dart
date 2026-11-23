@@ -42,15 +42,15 @@ List<_OnboardingSlide> get _slides => [
         art: OnboardingArtKind.squad,
         title: Tr.pick('2つの期待を保つ', 'Keep two groups happy'),
         description: Tr.pick(
-            'サポーターは成績と順位を、株主は収支を見ています。サポーターの期待は勝ち負け・季の途中の理事会レビュー・季末の順位で上下します。',
-            'Supporters watch results and the table; shareholders watch the books. Supporter expectation moves with wins and losses, the mid-season review and the final position.'),
+            'サポーターは成績と順位を、株主は収支を見ています。サポーターの期待は毎月の結果と、あなたの手(チケットの値段・広報・地域活動・補強)で上下します。',
+            'Supporters watch results and the table; shareholders watch the books. Supporter expectation moves with each month\'s results and with your own moves: ticket prices, PR, community work and signings.'),
       ),
       _OnboardingSlide(
         art: OnboardingArtKind.market,
         title: Tr.pick('期待が尽きると手放す', 'Run out and you must sell'),
         description: Tr.pick(
-            'サポーターの期待が0になるか、資金や株主の期待が尽きると、クラブを手放します。下がり始めたら、オーナー室の広報やファン向けの催しで支えましょう。',
-            "If supporter expectation hits zero, or the money or the shareholders run out, you have to sell. When it starts to slip, use PR and fan events in the owner's office."),
+            'サポーターの期待が10を割ると最後通告が出て、3か月のうちに戻せないか、資金が尽きると、クラブを手放します。下がり始めたら、オーナー室の広報やファン向けの催しで支えましょう。',
+            "If supporter expectation drops below 10 the fans issue a final warning, and if it is not back within three months, or the money runs out, you have to sell. When it starts to slip, use PR and fan events in the owner's office."),
       ),
       _OnboardingSlide(
         art: OnboardingArtKind.career,

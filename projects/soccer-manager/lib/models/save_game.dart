@@ -136,8 +136,9 @@ class SaveGame {
   /// 理事会が今シーズンに求める目標順位（1が最高位）
   int boardTargetRank;
 
-  /// サポーターの期待（0-100）。0になるとクラブを手放す(名前は監督型の頃の
-  /// まま。セーブの互換のため変えない)。
+  /// サポーターの期待（0-100）。10を割ると最後通告が出て、3か月のうちに
+  /// 戻せなければクラブを手放す(名前は監督型の頃のまま。セーブの互換のため
+  /// 変えない)。増減は GameStateSupporters._changeSupporters だけが行う。
   int confidence;
 
   /// 株主の期待(0-100)。資金のマイナスが続くと下がり、黒字でシーズンを
@@ -440,6 +441,33 @@ class SaveGame {
   /// サポーターの期待の大きな増減の記録(新しいものが後ろ)。[増減, 理由]。
   /// 手放す画面で「なぜこうなったか」を見せる。
   List<List<String>> supporterMoves;
+
+  /// 今月のサポーターの期待の増減の内訳(理由の種類の名前 → 増減の合計)。
+  /// 増減はすべて GameStateSupporters._changeSupporters を通り、ここに積む。
+  /// 月末に [supporterLastMonth] へ移す(2026-11-23)。旧セーブは空。
+  Map<String, int> supporterMonth;
+
+  /// 前の月の内訳(月の初めにホームと受信箱へ出す)。
+  Map<String, int> supporterLastMonth;
+
+  /// [supporterLastMonth] がどの月か(年×12+月-1。0 は無し)。
+  int supporterLastMonthKey;
+
+  /// 月末ごとのサポーターの期待(直近12か月。古い順)。最後通告の推移に出す。
+  List<int> supporterMonthEnds;
+
+  /// 今月の自クラブのリーグ戦の勝点と試合数(月末のまとめに使う)。
+  int supporterMonthPoints;
+  int supporterMonthGames;
+
+  /// 広報・ファン向けの手を最後に打った月(年×12+月-1。0 は無し)。
+  /// 広報・ファンの手は、どれか1つを月に1回打てる。
+  int fanWorkMonthKey;
+
+  /// サポーターの最後通告の期限。期待が
+  /// [GameStateSupporters.ultimatumLine] を割ると付き、この日までに戻せ
+  /// なければクラブを手放す。戻せば消える。無ければ null。
+  DateTime? supporterUltimatumUntil;
 
   /// 系列クラブ(提携先のクラブ id。無ければ null)。
   String? affiliateClubId;
@@ -866,6 +894,14 @@ class SaveGame {
     Map<String, int>? decisionAges,
     List<int>? supporterTrail,
     List<List<String>>? supporterMoves,
+    Map<String, int>? supporterMonth,
+    Map<String, int>? supporterLastMonth,
+    this.supporterLastMonthKey = 0,
+    List<int>? supporterMonthEnds,
+    this.supporterMonthPoints = 0,
+    this.supporterMonthGames = 0,
+    this.fanWorkMonthKey = 0,
+    this.supporterUltimatumUntil,
     this.affiliateClubId,
     List<List<String>>? pendingMoments,
     List<String>? momentKeys,
@@ -1062,6 +1098,9 @@ class SaveGame {
         decisionAges = decisionAges ?? {},
         supporterTrail = supporterTrail ?? [],
         supporterMoves = supporterMoves ?? [],
+        supporterMonth = supporterMonth ?? {},
+        supporterLastMonth = supporterLastMonth ?? {},
+        supporterMonthEnds = supporterMonthEnds ?? [],
         clubApps = clubApps ?? {},
         clubGoals = clubGoals ?? {},
         clubRecordNames = clubRecordNames ?? {},
@@ -1260,6 +1299,19 @@ class SaveGame {
         if (decisionAges.isNotEmpty) 'decisionAges': decisionAges,
         if (supporterTrail.isNotEmpty) 'supporterTrail': supporterTrail,
         if (supporterMoves.isNotEmpty) 'supporterMoves': supporterMoves,
+        if (supporterMonth.isNotEmpty) 'supporterMonth': supporterMonth,
+        if (supporterLastMonth.isNotEmpty)
+          'supporterLastMonth': supporterLastMonth,
+        if (supporterLastMonthKey > 0)
+          'supporterLastMonthKey': supporterLastMonthKey,
+        if (supporterMonthEnds.isNotEmpty)
+          'supporterMonthEnds': supporterMonthEnds,
+        if (supporterMonthPoints > 0)
+          'supporterMonthPoints': supporterMonthPoints,
+        if (supporterMonthGames > 0) 'supporterMonthGames': supporterMonthGames,
+        if (fanWorkMonthKey > 0) 'fanWorkMonthKey': fanWorkMonthKey,
+        if (supporterUltimatumUntil != null)
+          'supporterUltimatumUntil': formatSaveDate(supporterUltimatumUntil!),
         if (affiliateClubId != null) 'affiliateClubId': affiliateClubId,
         if (pendingMoments.isNotEmpty) 'pendingMoments': pendingMoments,
         if (momentKeys.isNotEmpty) 'momentKeys': momentKeys,
@@ -1542,6 +1594,20 @@ class SaveGame {
         supporterMoves: (json['supporterMoves'] as List?)
             ?.map((e) => (e as List).map((x) => x as String).toList())
             .toList(),
+        supporterMonth: (json['supporterMonth'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
+        supporterLastMonth: (json['supporterLastMonth'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
+        supporterLastMonthKey: json['supporterLastMonthKey'] as int? ?? 0,
+        supporterMonthEnds: (json['supporterMonthEnds'] as List?)
+            ?.map((e) => e as int)
+            .toList(),
+        supporterMonthPoints: json['supporterMonthPoints'] as int? ?? 0,
+        supporterMonthGames: json['supporterMonthGames'] as int? ?? 0,
+        fanWorkMonthKey: json['fanWorkMonthKey'] as int? ?? 0,
+        supporterUltimatumUntil: parseSaveDate(json['supporterUltimatumUntil']),
         affiliateClubId: json['affiliateClubId'] as String?,
         pendingMoments: (json['pendingMoments'] as List?)
             ?.map((e) => (e as List).map((x) => x as String).toList())

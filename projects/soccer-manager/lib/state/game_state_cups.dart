@@ -469,7 +469,8 @@ extension GameStateCups on GameState {
       final reward = continentalPrize(cup.level, championsCupWinnerPrize);
       _book(LedgerCategory.prize, reward);
       s.careerCupPrize += reward;
-      s.confidence = (s.confidence + (cup.level == 1 ? 20 : 12)).clamp(0, 100);
+      _changeSupporters(cup.level == 1 ? 20 : 12, SupporterReason.results,
+          note: Tr.pick('${cup.name}で優勝', 'Won the ${cup.name}'));
       s.trophyHistory.add(Tr.pick('シーズン${s.league.season}: ${cup.name} 優勝',
           'Season ${s.league.season}: ${cup.name} winners'));
     }

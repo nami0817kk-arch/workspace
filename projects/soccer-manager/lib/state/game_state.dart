@@ -87,6 +87,7 @@ import '../models/weather.dart';
 import '../logic/achievement_engine.dart';
 import '../logic/ai_transfer_engine.dart';
 import '../logic/money_calendar.dart';
+import '../logic/calendar_engine.dart';
 import '../logic/season_calendar.dart';
 import '../logic/day_events.dart';
 import '../logic/summer_tournament.dart';
@@ -212,6 +213,7 @@ part 'game_state_calendar.dart';
 part 'game_state_club_names.dart';
 part 'game_state_cups.dart';
 part 'game_state_cup_days.dart';
+part 'game_state_supporters.dart';
 part 'game_state_decisions.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
@@ -426,9 +428,10 @@ class GameState extends ChangeNotifier {
   Team get userTeam =>
       _save!.league.teams.firstWhere((t) => t.id == _save!.userTeamId);
 
-  /// サポーターの期待(信頼度)が0まで落ち、クラブを手放すことになった
-  /// 状態かどうか(旧名のまま。オーナーが解任されるわけではない)。
-  bool get isDismissed => _save != null && _save!.confidence <= 0;
+  /// サポーターの期待が尽き、クラブを手放すことになった状態かどうか
+  /// (旧名のまま。オーナーが解任されるわけではない)。2026-11-23 から、
+  /// 最後通告(期待が10を割る)から3か月のうちに戻せなかったとき。
+  bool get isDismissed => _save != null && supporterUltimatumExpired;
 
   /// 株主の期待が0まで落ちた状態かどうか。クラブを手放す理由にはならない
   /// (手放すのは資金とサポーターの期待が尽きたときだけ。saleReason)。
@@ -1788,7 +1791,6 @@ class GameState extends ChangeNotifier {
     return (income * (actualAttendance / baseAttendance)).round();
   }
 
-  static const double derbyConfidenceMultiplier = 1.5;
 
   /// 直近の試合の観客動員数(ダービーなら増幅される)。未実施の場合はnull。
   int? lastMatchAttendance;

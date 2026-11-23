@@ -60,10 +60,7 @@ extension GameStateFinance on GameState {
       return;
     }
     final option = question.options[optionIndex];
-    _save!.confidence = (_save!.confidence + option.confidenceDelta).clamp(
-      0,
-      100,
-    );
+    _changeSupporters(option.confidenceDelta, SupporterReason.events);
     for (final p in userTeam.players) {
       p.morale = (p.morale + option.moraleDelta).clamp(0, 100);
     }
@@ -150,10 +147,13 @@ extension GameStateFinance on GameState {
   /// 尽きたとき。オーナーは雇われる立場ではないので、理事会との契約の満了
   /// で辞めさせられることは無い。株主の期待が尽きても手放さない(株主総会
   /// の要求などで重くなるだけ)。両方のときはサポーターを先に見る。
+  ///
+  /// サポーターは、期待が10を割ると最後通告が出て、3か月のうちに10以上へ
+  /// 戻せなかったときに手放す(2026-11-23。以前は0になった瞬間だった)。
   SaleReason? get saleReason {
     final save = _save;
     if (save == null) return null;
-    if (save.confidence <= 0) return SaleReason.supporters;
+    if (supporterUltimatumExpired) return SaleReason.supporters;
     if (isFundsExhausted) return SaleReason.funds;
     return null;
   }
@@ -230,7 +230,9 @@ extension GameStateFinance on GameState {
           '${save.clubName}: ${goal.label}(シーズン$season)',
           '${save.clubName}: ${goal.label} (season $season)'));
       save.ownerGoal = null;
-      save.confidence = (save.confidence + 10).clamp(0, 100);
+      _changeSupporters(10, SupporterReason.events,
+          note: Tr.pick('オーナーの目標「${goal.label}」を達成',
+              'Owner goal achieved: ${goal.label}'));
       save.shareholderExpectation =
           (save.shareholderExpectation + 10).clamp(0, 100);
       _logNews(
@@ -481,7 +483,7 @@ extension GameStateFinance on GameState {
     final options = kind.options;
     if (optionIndex < 0 || optionIndex >= options.length) return false;
     final o = options[optionIndex];
-    save.confidence = (save.confidence + o.supportersDelta).clamp(0, 100);
+    _changeSupporters(o.supportersDelta, SupporterReason.events);
     save.shareholderExpectation =
         (save.shareholderExpectation + o.shareholdersDelta).clamp(0, 100);
     if (o.fundsDelta != 0) {
@@ -494,35 +496,48 @@ extension GameStateFinance on GameState {
     return true;
   }
 
-  /// オーナーの仕事を、いま打てるか。今季すでに打っている・資金が足りない
-  /// ときは打てない。
+  /// オーナーの仕事を、いま打てるか。打ち止めになっている・資金が足りない
+  /// ときは打てない。広報・ファンの手は、どれか1つを月に1回
+  /// (2026-11-23。サポーターの期待をオーナーの手で動かせるように)。
+  /// ほかの手は1シーズンに1回ずつ。
   bool canDoOwnerWork(OwnerWork work) {
     final save = _save;
     if (save == null) return false;
-    if (save.ownerWorkDoneSeason[work.id] == save.league.season) return false;
+    if (ownerWorkDoneThisSeason(work)) return false;
     if (work.onlyInRed && save.budget >= 0) return false;
     // 支出が要らない手は、資金がマイナスでも打てる(危機の手がそう)。
     return work.cost == 0 || save.budget >= scaledMoney(work.cost);
   }
 
-  /// 今季すでに打った仕事か。
+  /// 打ち止めになっている仕事か(広報・ファンの手は今月、ほかは今季)。
   bool ownerWorkDoneThisSeason(OwnerWork work) {
     final save = _save;
-    return save != null &&
-        save.ownerWorkDoneSeason[work.id] == save.league.season;
+    if (save == null) return false;
+    if (work.monthly) return fanWorkDoneThisMonth;
+    return save.ownerWorkDoneSeason[work.id] == save.league.season;
   }
 
-  /// オーナーの仕事を打つ。資金と2つの期待に反映し、今季は打ち止めにする。
+  /// オーナーの仕事を打つ。資金と2つの期待に反映し、打ち止めにする。
   Future<bool> doOwnerWork(String id) async {
     final save = _save;
     if (save == null) return false;
     final work = ownerWorks.where((w) => w.id == id).firstOrNull;
     if (work == null || !canDoOwnerWork(work)) return false;
-    save.confidence = (save.confidence + work.supporters).clamp(0, 100);
+    _changeSupporters(
+        work.supporters,
+        switch (work.category) {
+          OwnerWorkCategory.fans => SupporterReason.pr,
+          OwnerWorkCategory.community => SupporterReason.community,
+          _ => SupporterReason.events,
+        });
     save.shareholderExpectation =
         (save.shareholderExpectation + work.shareholders).clamp(0, 100);
     _book(LedgerCategory.other, scaledMoney(work.funds));
-    save.ownerWorkDoneSeason[work.id] = save.league.season;
+    if (work.monthly) {
+      save.fanWorkMonthKey = currentMonthKey;
+    } else {
+      save.ownerWorkDoneSeason[work.id] = save.league.season;
+    }
     _notify();
     await _persist();
     return true;
@@ -591,8 +606,8 @@ extension GameStateFinance on GameState {
       return;
     }
     _book(LedgerCategory.other, -partnerSeasonCost);
-    save.confidence =
-        (save.confidence + PartnerClubEngine.supportersBonus).clamp(0, 100);
+    _changeSupporters(
+        PartnerClubEngine.supportersBonus, SupporterReason.events);
     save.shareholderExpectation =
         (save.shareholderExpectation + PartnerClubEngine.shareholdersBonus)
             .clamp(0, 100);
@@ -658,7 +673,7 @@ extension GameStateFinance on GameState {
       save.matchdayPromoId = null;
       return;
     }
-    save.confidence = (save.confidence + promo.supporters).clamp(0, 100);
+    _changeSupporters(promo.supporters, SupporterReason.pr);
     save.shareholderExpectation =
         (save.shareholderExpectation + promo.shareholders).clamp(0, 100);
     save.matchdayPromoId = null;
@@ -1523,10 +1538,8 @@ extension GameStateFinance on GameState {
                 save.advisors[Advisor.legal.name] ?? 0))
         .round();
     if (fine > 0) _book(LedgerCategory.other, -fine);
-    save.confidence = (save.confidence - penalty.trustLoss).clamp(0, 100);
-    _noteSupporterMove(
-        -penalty.trustLoss,
-        Tr.pick('リーグの規則違反(${penalty.reason})',
+    _changeSupporters(-penalty.trustLoss, SupporterReason.events,
+        note: Tr.pick('リーグの規則違反(${penalty.reason})',
             'League rules breach (${penalty.reason})'));
     save.transferBanSeasons = max(save.transferBanSeasons, penalty.banSeasons);
     save.pendingPointsDeduction += penalty.pointsDeduction;
@@ -1663,7 +1676,7 @@ extension GameStateFinance on GameState {
     final fee = scaledMoney(AdvisorEngine.totalSalary(save.advisors));
     if (fee > 0) _book(LedgerCategory.staffWages, -fee);
     final pr = save.advisors[Advisor.pr.name] ?? 0;
-    if (pr > 0) save.confidence = (save.confidence + pr).clamp(0, 100);
+    if (pr > 0) _changeSupporters(pr, SupporterReason.pr);
   }
 
   /// 投資案件に着手する。費用は着手時に払う。
@@ -1700,7 +1713,7 @@ extension GameStateFinance on GameState {
     // 完成した季からではなく、稼働している季の末から効く。
     if (wasPartnerActive) {
       save.managerReputation = (save.managerReputation + 2).clamp(0, 100);
-      save.confidence = (save.confidence + 1).clamp(0, 100);
+      _changeSupporters(1, SupporterReason.events);
     }
   }
 
@@ -1716,7 +1729,7 @@ extension GameStateFinance on GameState {
     if (p == null) return false;
     save.retiredNumberIds.add(playerId);
     _addTimeline(Tr.pick('${p.name}の背番号を永久欠番に', '${p.name}\'s number retired'));
-    save.confidence = (save.confidence + 3).clamp(0, 100);
+    _changeSupporters(3, SupporterReason.pr);
     _logNews(
       Tr.pick('${p.name}の背番号を永久欠番にしました。サポーターが沸いています',
           '${p.name}\'s number is retired for good. Supporters are thrilled'),
@@ -1763,17 +1776,13 @@ extension GameStateFinance on GameState {
     return true;
   }
 
-  /// シーズン末: 保険料、地域貢献の効果、突発の出来事。
+  /// シーズン末: 保険料と突発の出来事。地域貢献のサポーターへの効き目は
+  /// 毎月(_closeSupporterMonth)。
   void _resolveSeasonRisks(
       {double? chanceRoll, double? kindRoll, double? sizeRoll}) {
     final save = _save!;
     final tier = save.currentDivisionTier;
     if (save.insured) _book(LedgerCategory.other, -RiskEngine.premium(tier));
-    if (save.communityLevel > 0) {
-      save.confidence =
-          (save.confidence + RiskEngine.communityTrustGain(save.communityLevel))
-              .clamp(0, 100);
-    }
     final rng = Random();
     final incident = RiskEngine.roll(
       chanceRoll: chanceRoll ?? rng.nextDouble(),
@@ -1788,8 +1797,8 @@ extension GameStateFinance on GameState {
         loss: incident.loss, insured: save.insured, fund: save.reserveFund);
     save.reserveFund = cover.fundAfter;
     if (cover.byClub > 0) _book(LedgerCategory.other, -cover.byClub);
-    save.confidence = (save.confidence - incident.trustLoss).clamp(0, 100);
-    _noteSupporterMove(-incident.trustLoss, incident.kind.label);
+    _changeSupporters(-incident.trustLoss, SupporterReason.events,
+        note: incident.kind.label);
     _logNews(
       Tr.pick(
           '${incident.kind.label}が起きました。損失${formatMoney(incident.loss)}(保険${formatMoney(cover.byInsurance)}・基金${formatMoney(cover.byFund)}・クラブ負担${formatMoney(cover.byClub)})',
@@ -2153,7 +2162,7 @@ extension GameStateFinance on GameState {
       seasonProfit: currentLedger.profit,
     );
     if (result == null) return;
-    save.confidence = (save.confidence + result.supporters).clamp(0, 100);
+    _changeSupporters(result.supporters, SupporterReason.events);
     save.shareholderExpectation =
         (save.shareholderExpectation + result.shareholders).clamp(0, 100);
     _logNews(result.reason, context: Tr.pick('クラブの方針', 'Club policy'));

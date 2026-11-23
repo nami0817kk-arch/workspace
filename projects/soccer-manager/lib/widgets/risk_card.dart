@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
+import '../logic/board_engine.dart';
 import '../logic/risk_engine.dart';
 import '../state/game_state.dart';
 import '../logic/economy_scale.dart';
@@ -28,8 +29,8 @@ class RiskCard extends StatelessWidget {
             TitleWithHelp(
               title: Tr.pick('備えと地域貢献', 'Safeguards and community'),
               help: Tr.pick(
-                  'シーズンの終わりに、不祥事・設備故障・災害のどれかが起きることがあります(約35%)。保険は損失の半分を持ち、基金は残りを先に払います。\n\n地域貢献を上げると、毎季末にサポーターの期待が上がり、不祥事の傷も浅くなります。',
-                  'At season end a scandal, breakdown or disaster may strike (about 35%). Insurance covers half; the fund pays the rest first.\n\nRaising community work lifts supporters every season end and softens scandals.'),
+                  'シーズンの終わりに、不祥事・設備故障・災害のどれかが起きることがあります(約35%)。保険は損失の半分を持ち、基金は残りを先に払います。\n\n地域貢献(Lv1以上)を続けている間は、毎月サポーターの期待が+${BoardEngine.communityMonthlyDelta}。レベルを上げるほど不祥事の傷が浅くなります。',
+                  'At season end a scandal, breakdown or disaster may strike (about 35%). Insurance covers half; the fund pays the rest first.\n\nWhile you keep up community work (Lv1 or higher), supporter expectation rises by ${BoardEngine.communityMonthlyDelta} every month. Higher levels soften scandals.'),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
@@ -65,11 +66,11 @@ class RiskCard extends StatelessWidget {
             Text(
               level == 0
                   ? Tr.pick(
-                      'Lv1にすると、毎季末にサポーターの期待が${RiskEngine.communityTrustGain(1)}上がります。',
-                      'At Lv1, supporters rise by ${RiskEngine.communityTrustGain(1)} every season end.')
+                      'Lv1にすると地域活動が始まり、毎月サポーターの期待が+${BoardEngine.communityMonthlyDelta}されます。',
+                      'At Lv1 community work begins, and supporter expectation rises by ${BoardEngine.communityMonthlyDelta} every month.')
                   : Tr.pick(
-                      '毎季末にサポーターの期待が${RiskEngine.communityTrustGain(level)}上がります。',
-                      'Supporters rise by ${RiskEngine.communityTrustGain(level)} every season end.'),
+                      '地域活動を続けています。毎月サポーターの期待が+${BoardEngine.communityMonthlyDelta}されます。',
+                      'Community work is ongoing: supporter expectation rises by ${BoardEngine.communityMonthlyDelta} every month.'),
               style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 4),
