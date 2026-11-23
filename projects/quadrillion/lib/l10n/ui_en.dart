@@ -195,8 +195,8 @@ const Map<String, String> uiEn = {
   '社長は22歳の大卒から始まります。「街」の「社長の行動」で、相棒を探す・日銭を稼ぐ・腕を磨く・人脈を作る・事業の種を探す、ができます。相棒には株を渡して口説きます。相棒が責任者の事業は強くなりますが、野心が強いと独立を言い出すこともあります。':
       'You start as a 22-year-old graduate. Under CEO Actions in Town you can find a partner, earn quick cash, train, network or scout for ideas. Partners are won with shares. Businesses they run get stronger, but ambitious ones may want to go it alone.',
   '稼ぐ': 'Earning',
-  '「事業」で業種を始め、打ち手で伸ばします。値段は手元のお金ではなく、業種ごとの「1ついくら」で決まります（時代の物価だけ乗ります）。「店・工場を増やす」は1つがその業種の元手で、1つ・3つ・10を選べます。1〜2か月後に確実に伸びますが、維持費がかかります。「商品を作る」は小さな改良・新しい商品・大型開発（元手の1倍・3倍・10倍）から選び、大きいほど時間がかかって、当たったときの伸びが大きくなります。店や工場は「現場の人」がいないと動きません。人は10人・50人・足りない分で雇い、採用の費用を払ったあとは毎月の人件費がかかります。仕掛かり中のものは、取り下げると半分戻ります。値付けを「安く」にすると客は増えますが利益は薄くなります。':
-      "Start industries in Business and grow them with moves. Prices don't depend on your cash: each industry has a fixed price per unit (only inflation moves it). Adding sites costs the industry's startup cost per site, in batches of 1, 3 or 10. They pay off reliably in 1-2 months but add upkeep. Making products comes in three sizes: small upgrade, new product and major development (1x, 3x and 10x the startup cost). Bigger ones take longer and boost more when they hit. Sites need frontline staff to run. Hire 10, 50 or just the shortfall: you pay a hiring cost, then monthly wages. Cancel work in progress to get half back. Low prices bring customers but thin margins.",
+  '「事業」で業種を始め、打ち手で伸ばします。値段は手元のお金ではなく、業種ごとの「1ついくら」で決まります（時代の物価だけ乗ります）。「店・工場を増やす」は1つがその業種の元手で、1つ・3つ・10を選べます。お金が足りないうちは、元手の4分の1で今ある店や工場を広げることもできます。1〜2か月後に確実に伸びますが、維持費がかかります。「商品を作る」は小さな改良・新しい商品・大型開発（元手の1倍・3倍・10倍）から選び、大きいほど時間がかかって、当たったときの伸びが大きくなります。店や工場は「現場の人」がいないと動きません。人は10人・50人・足りない分で雇い、採用の費用を払ったあとは毎月の人件費がかかります。仕掛かり中のものは、取り下げると半分戻ります。値付けを「安く」にすると客は増えますが利益は薄くなります。':
+      "Start industries in Business and grow them with moves. Prices don't depend on your cash: each industry has a fixed price per unit (only inflation moves it). Adding sites costs the industry's startup cost per site, in batches of 1, 3 or 10. While cash is tight you can also extend what you have for a quarter of that. They pay off reliably in 1-2 months but add upkeep. Making products comes in three sizes: small upgrade, new product and major development (1x, 3x and 10x the startup cost). Bigger ones take longer and boost more when they hit. Sites need frontline staff to run. Hire 10, 50 or just the shortfall: you pay a hiring cost, then monthly wages. Cancel work in progress to get half back. Low prices bring customers but thin margins.",
   '任せる': 'Delegating',
   '社長が直接見られる事業は2つまで。それより多いと放置された事業が弱ります。「人」で採用し、責任者に置きましょう。責任者は利益の一部を自分で事業に回します。能力は働かせるまで幅でしか分かりません。':
       'You can run 2 businesses yourself. Beyond that, neglected ones weaken. Hire in People and assign managers. Managers reinvest part of the profit. Skills show only as a range until people have worked a while.',
@@ -378,6 +378,8 @@ const Map<String, String> uiEn = {
   '手を1つ使います。1つの値段はこの業種の元手（{0}）です。1〜2か月後に開き、そのぶん維持費がかかります。手元 {1}':
       "Uses 1 move. Each one costs this industry's startup cost ({0}). Opens in 1-2 months and adds upkeep. Cash on hand {1}",
   '{0}増やす': 'Add {0}',
+  '今ある{0}を広げる（元手の1/4）': 'Extend your {0} (¼ of startup cost)',
+  '来月から使える。伸びは小さい': 'Ready next month. A small boost',
   '{0}　維持費 +{1}／月': '{0}  Upkeep +{1}/mo',
   '増やした店や工場を回すには、現場の人が要ります。': 'New sites need frontline staff to run.',
   '「{0}」で商品を作る': 'Make products for {0}',
@@ -582,7 +584,10 @@ const Map<String, String> uiEn = {
   '分類で絞る': 'Filter by category',
   '分類を外す': 'Clear category',
   '相棒@@tag': 'Partner',
-  '忠誠が下がっています': 'Loyalty is slipping',
+  '忠誠が下がっています': 'Loyalty is low',
+  '忠誠が下がり気味です': 'Loyalty is slipping',
+  '顔の色はいちばん高い能力': 'Face color = top skill',
+  '輪つきは社長と相棒': 'Ring = you and partners',
   '宿敵の持ち分は{0}。{1}%まであと{2}': "Rivals hold {0}: {2} short of {1}%",
   '宿敵の持ち分は{0}。{1}%を超えています': "Rivals hold {0}, past the {1}% line",
   '前月': 'Last mo',
@@ -650,7 +655,7 @@ const Map<String, String> uiEn = {
   '達成した実績': 'Milestones reached',
   '達成済み': 'Done',
   '見つけたシナジー': 'Synergies found',
-  '色の丸は宿敵（宿敵ごとの色）。上位10社・あなたの前後5社・宿敵を出しています': 'A colored dot marks a rival. Showing the top 10, five either side of you, and your rivals.',
+  '色の四角は宿敵（宿敵ごとの色）。上位10社・あなたの前後5社・宿敵を出しています': 'A colored square marks a rival. Showing the top 10, five either side of you, and your rivals.',
   '市場（国内・月） {0}': 'Market (home/mo) {0}',
   // 読み上げ（VoiceOver）に渡すグラフの説明
   '{0}。はじめ {1}、今 {2}': '{0}. Started at {1}, now {2}',

@@ -337,6 +337,7 @@ const Map<String, String> gameEn = {
   '設備を1式': "1 facility",
   '設備を{0}式': "{0} facilities",
   '{0}増やし始めました（{1}）。{2}か月後に開きます。{3}': "Started adding {0} ({1}). Opens in {2} mo. {3}",
+  '今ある{0}を広げ始めました（{1}）。来月から使えます。{2}': "Started extending your {0} ({1}). Ready next month. {2}",
   '小さな改良': "Small upgrade",
   '新しい商品': "New product",
   '大型開発': "Major development",

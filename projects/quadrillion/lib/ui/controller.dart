@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:math' as math;
 
 import 'package:flutter/services.dart';
@@ -236,7 +238,8 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     if (mark != null && apBefore != null && game != null && game!.ap < apBefore) markGuide(game, mark);
     // 始めた・買った業種を、図鑑の「手がけた業種」に控える
     game?.noteInds();
-    save();
+    // 手のたびの保存も、手が止まってから裏で（1.0.0+17。それまでは結果を見せる前にその場で書いていた）
+    saveSoon();
     if (m != null) {
       toast(m);
     } else {
@@ -280,14 +283,38 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 新しく始めるときの枠（選んでいなければ、空いている一番小さい枠。全部埋まっていれば枠1）
   int get startSlot => newSlot ?? [for (var i = 1; i <= slotCount; i++) i].firstWhere((i) => !hasSave(i), orElse: () => 1);
 
-  /// 描き終わったあとに保存する予約があるか
+  /// あとで保存する予約があるか（まだ書き出していない変更がある）
   bool savePending = false;
 
-  /// 月を進めたあとの保存。会社が900社を超えるとセーブは1MBほどになり、書き出しに数十msかかるので、
-  /// 結果の画面を先に描いてから（その描き終わりに）保存する。何度呼んでも、描き終わりの保存は1回だけ。
-  /// アプリが裏に回るとき・別の保存が走るときは、そこで済ませる
+  /// 手を止めてから保存するまでの間（1.0.0+17）。この間に次の手・次の月が来たら、保存は後ろへずらす。
+  /// 0 にすると、次の描き終わりにその場で保存する（もとからあるテストはこちら。test/flutter_test_config.dart）
+  static Duration saveDelay = const Duration(milliseconds: 350);
+
+  /// 保存を後ろへずらせる回数。連打が続いても、この回数を超えたら1度は書き出す（落ちたときに失う月を限る）
+  static const saveDeferMax = 12;
+
+  /// セーブの木を文字にする役。本番は別 Isolate（画面を止めない）。テストでは差し替えられる
+  Future<String> Function(Map<String, dynamic> tree) encodeOff = _encodeInIsolate;
+  static Future<String> _encodeInIsolate(Map<String, dynamic> tree) => Isolate.run(() => jsonEncode(tree));
+
+  Timer? _saveTimer;
+  int _saveDefers = 0;
+
+  /// 保存の通し番号。その場の保存・裏の保存のどちらでも増える。裏の保存は、書き出すときに自分より新しい保存があれば捨てる
+  int _saveSeq = 0;
+
+  /// 裏で文字にしている最中の保存の数（テストと点検用）
+  int savesInFlight = 0;
+
+  /// 保存にかかった時間の控え（その場の保存・裏の保存のうち画面が止まった分。マイクロ秒）
+  int lastSaveBlockUs = 0;
+
+  /// 手を打った・月を進めたあとの保存。会社が900社を超えるとセーブは1MBほどになり、文字にするだけで数十msかかるので、
+  /// ・手が止まるまで待つ（[saveDelay]。連打のあいだは1回も書かない。ただし [saveDeferMax] 回まで）
+  /// ・文字にするのは別 Isolate で（画面が止まるのは、木にして渡すあいだだけ）
+  /// アプリが裏に回るとき・別の保存が走るときは、その場で済ませる（[save]）ので、最新は失われない
   void saveSoon() {
-    if (savePending) return;
+    if (game == null || prefs == null) return;
     final WidgetsBinding b;
     try {
       b = WidgetsBinding.instance;
@@ -296,27 +323,91 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
       save();
       return;
     }
+    if (saveDelay == Duration.zero) {
+      if (savePending) return;
+      savePending = true;
+      b.addPostFrameCallback((_) {
+        if (savePending) save();
+      });
+      b.ensureVisualUpdate();
+      return;
+    }
+    if (savePending && _saveDefers >= saveDeferMax) return;
+    _saveDefers = savePending ? _saveDefers + 1 : 0;
     savePending = true;
-    b.addPostFrameCallback((_) {
-      if (savePending) save();
-    });
-    b.ensureVisualUpdate();
+    _saveTimer?.cancel();
+    _saveTimer = Timer(saveDelay, saveOff);
   }
 
-  void save() {
-    savePending = false;
+  /// 裏で保存する。木にするところまでをここで済ませ（この時点の中身が保存される）、文字にするのは別 Isolate。
+  /// 文字になったときに、もっと新しい保存が済んでいれば書かない
+  Future<void> saveOff() async {
+    _clearPending();
     final g = game;
     final p = prefs;
     if (g == null || p == null) return;
+    final sw = Stopwatch()..start();
+    final seq = ++_saveSeq;
+    final k = slot;
+    final Map<String, dynamic> tree;
+    final String meta;
+    try {
+      g.noteInds();
+      tree = g.toJson();
+      meta = jsonEncode(SlotInfo.of(k, g).toJson());
+    } catch (_) {
+      return;
+    }
+    savesInFlight++;
+    final f = encodeOff(tree);
+    lastSaveBlockUs = sw.elapsedMicroseconds;
+    try {
+      final text = await f;
+      if (seq == _saveSeq) {
+        p.setString(slotKey(k), text);
+        p.setString(slotMetaKey(k), meta);
+      }
+    } catch (_) {
+      // 別 Isolate が使えなかったら、その場で保存し直す（もっと新しい保存が済んでいなければ）
+      if (seq == _saveSeq) save();
+    } finally {
+      savesInFlight--;
+    }
+  }
+
+  void _clearPending() {
+    savePending = false;
+    _saveDefers = 0;
+    _saveTimer?.cancel();
+    _saveTimer = null;
+  }
+
+  /// その場で保存する（枠の切り替え・設定・アプリが裏に回るとき）。予約と、裏で作りかけの古い保存はここで用済みになる
+  void save() {
+    _clearPending();
+    final g = game;
+    final p = prefs;
+    if (g == null || p == null) return;
+    final sw = Stopwatch()..start();
+    _saveSeq++;
     g.noteInds();
     try {
       p.setString(slotKey(slot), jsonEncode(g.toJson()));
       p.setString(slotMetaKey(slot), jsonEncode(SlotInfo.of(slot, g).toJson()));
     } catch (_) {}
+    lastSaveBlockUs = sw.elapsedMicroseconds;
+  }
+
+  @override
+  void dispose() {
+    _saveTimer?.cancel();
+    super.dispose();
   }
 
   /// 枠の続きを読み込む（[s] を省くと今の枠）
   bool load([int? s]) {
+    // 今の会社にまだ書き出していない変更があれば、枠を替える前に済ませる
+    if (savePending) save();
     final k = s ?? slot;
     final raw = prefs?.getString(slotKey(k));
     if (raw == null) return false;
@@ -341,6 +432,9 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
 
   /// 今の枠のセーブを消す
   void clearSave() {
+    // 予約と、裏で作りかけの保存も捨てる（消したセーブがあとから書き戻されないように）
+    _clearPending();
+    _saveSeq++;
     prefs?.remove(slotKey(slot));
     prefs?.remove(slotMetaKey(slot));
   }
@@ -348,6 +442,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   // ===== はじめる =====
   /// 新しく始める（[startSlot] の枠に保存する。埋まっていれば上書き）
   void startNew() {
+    if (savePending) save();
     endHidden = false;
     slot = startSlot;
     newSlot = null;

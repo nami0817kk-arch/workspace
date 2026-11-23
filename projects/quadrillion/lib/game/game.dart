@@ -36,6 +36,9 @@ const Set<String> eastPools = {'zh', 'ko', 'vi'};
 /// 店・工場を一度に増やせる数
 const List<int> buildUnits = [1, 3, 10];
 
+/// 今ある店・工場を広げる手の値段（元手の何倍か。1.0.0+17）。いちばん小さい単位
+const double extendMult = .25;
+
 /// 商品の大きさ（0 小さな改良・1 新商品・2 大型開発）ごとの、元手の何倍か・できるまでの月・当たったときの伸びの倍
 const List<int> devMults = [1, 3, 10];
 const List<(int, int)> devMonths = [(2, 3), (3, 6), (6, 10)];

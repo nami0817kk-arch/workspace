@@ -81,8 +81,33 @@ class Pilot {
           if (w is RichText) w.text.toPlainText() else if (w is EditableText) w.controller.text,
       ];
 
+  /// 2行に折れていたボタン（字 → 見つけた場面と幅）。[watchWraps] を立てたときだけ集める（本物のフォントで描いているときに使う）
+  final Map<String, String> wraps = {};
+  bool watchWraps = false;
+
+  /// 画面に出ているふつうのボタン（[Btn]）のうち、字が2行以上に折れているものを [wraps] に控える。
+  /// 1行の高さは字の大きさの約1.45倍なので、2.2倍を超えていれば折れている
+  void _collectWraps() {
+    for (final e in find.byType(Btn).evaluate()) {
+      final btn = e.widget as Btn;
+      void visit(Element c) {
+        final ro = c.renderObject;
+        if (c.widget is RichText && ro is RenderParagraph && ro.hasSize) {
+          final fs = (ro.text.style?.fontSize ?? 14) * Ui.textScale;
+          if (ro.size.height > fs * 2.2 && ro.text.toPlainText() == tx(btn.label)) {
+            wraps.putIfAbsent(tx(btn.label), () => '$where（ボタンの幅 ${e.size?.width.round()}・字の高さ ${ro.size.height.round()}）');
+          }
+        }
+        c.visitChildren(visit);
+      }
+
+      e.visitChildren(visit);
+    }
+  }
+
   /// 例外・はみ出し・文の抜け・数字の壊れを調べる
   void check() {
+    if (watchWraps) _collectWraps();
     for (;;) {
       final e = t.takeException();
       if (e == null) break;
