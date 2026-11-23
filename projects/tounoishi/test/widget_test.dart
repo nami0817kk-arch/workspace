@@ -376,6 +376,24 @@ void main() {
     expect(cap, contains('function __s(v){return Math.round(v*(__N()-1)/19);}'));
   });
 
+  test('遠征の行き先・骨の弓兵と盾兵・掛け合わせ表（0.7.42・試作 v59）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // 遠征は行き先を3つから選ぶ（森＝易しい、墓地＝魂と骨、竜の谷＝難しい）
+    expect(html, contains("var EXD={mori:{n:'近くの森',k:0.6,"));
+    expect(html, contains("haka:{n:'古い墓地',k:1.0,"));
+    expect(html, contains("tani:{n:'竜の谷',k:1.8,"));
+    expect(html, contains('g.exp={ms:ms,ch:ch,d:d};'));
+    expect(html, contains("var xd=ev.target.closest('[data-expd]');"));
+    // 骨の兵に弓兵（3マス先まで）と盾兵（固い）
+    expect(html, contains('<button data-x="bonea"'));
+    expect(html, contains('<button data-x="boned"'));
+    expect(html, contains('(m.rng||S.range)?g.en.filter('));
+    // 図鑑の掛け合わせ表と、見つけた組み合わせの記録
+    expect(html, contains('<h3 class="dexh">掛け合わせ表</h3>'));
+    expect(html, contains('brdAdd(a.sp,b.sp,ch.sp);'));
+    expect(html, contains("kvSet('tou-brd',"));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
