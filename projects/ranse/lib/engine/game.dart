@@ -5,6 +5,7 @@ import 'ashigaru.dart';
 import 'ashigaru_life.dart';
 import 'birth.dart';
 import 'bonds.dart';
+import 'castle_life.dart';
 import 'childhood.dart';
 import 'childhood_focus.dart';
 import 'childhood_more.dart';
@@ -95,6 +96,7 @@ class Game extends ChangeNotifier {
       ...buildAshigaruLifeScenes(),
       ...buildRetainerLifeScenes(),
       ...buildOkuLifeScenes(),
+      ...buildCastleLifeScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
