@@ -108,6 +108,24 @@ void main() {
     expect(html, isNot(contains("localStorage.setItem('tou-")));
   });
 
+  test('新しい種の1つ目の束（0.7.21・試作 v35）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "tsuta:{line:'nut'", // ツタ
+      "mogura:{line:'nut'", // モグラ
+      "kame:{line:'nut'", // カメ
+      "frost:{line:'nut'", // フロスト（氷の層）
+      "salamander:{line:'nut'", // サラマンダー（溶岩の層）
+      "kagami:{line:'mag'", // カガミ
+      "kage:{line:'mag'", // カゲ
+      'function varSp(', // 土の色・昼夜で生まれる種が替わる
+      'function newSec(', // 新しい種の動き
+      'var PH=', // 絵がまだの種は仮の絵
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
