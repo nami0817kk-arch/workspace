@@ -9,6 +9,7 @@ import 'castle_life.dart';
 import 'childhood.dart';
 import 'childhood_focus.dart';
 import 'childhood_more.dart';
+import 'craft_life.dart';
 import 'data.dart';
 import 'echoes.dart';
 import 'echoes_more.dart';
@@ -97,6 +98,7 @@ class Game extends ChangeNotifier {
       ...buildRetainerLifeScenes(),
       ...buildOkuLifeScenes(),
       ...buildCastleLifeScenes(),
+      ...buildCraftLifeScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
