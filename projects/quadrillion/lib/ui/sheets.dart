@@ -361,6 +361,30 @@ void openDirty(GameController ctl, Company c) {
       ]));
 }
 
+/// 会社を2つに割る（どの分類の事業を切り離すかを選ぶ。1.0.0+18 で「株」の画面の分類ごとのボタンをここにまとめた）
+void openSplit(GameController ctl) {
+  final s = ctl.game!;
+  final cats = <String>{for (final b in s.biz) indm[b.ind]!.cat};
+  ctl.showSheet((_) => _col([
+        H2(tr('会社を2つに割る'), top: true),
+        _note(tr('手を1つ使います。選んだ分類の事業を別の会社として切り離し、別に上場させます。あなたは新しい会社の株を{0}持ちます。元には戻せません。', [pct(jsRound(s.sh.own).toDouble())])),
+        for (final cat in cats)
+          Builder(builder: (_) {
+            final bs = s.biz.where((b) => indm[b.ind]!.cat == cat).toList();
+            return ChoiceBtn(tr('{0}を切り離す', [CATN[cat]]), () => ctl.act(() => s.splitCompany(cat)),
+                key: ValueKey('split-$cat'),
+                // 全部の事業が同じ分類なら、切り離せない
+                enabled: bs.length < s.biz.length,
+                ap: 1,
+                subs: [
+                  tr('{0}つの事業・月の売上 {1}', [bs.length, yen(bs.fold(0.0, (a, b) => a + b.rev))]),
+                  bs.map((b) => indm[b.ind]!.name).take(4).join(tr('・')) + (bs.length > 4 ? tr(' ほか') : ''),
+                ]);
+          }),
+        _cancel(ctl),
+      ]));
+}
+
 void openSell(GameController ctl) {
   final s = ctl.game!;
   ctl.showSheet((_) => _col([
@@ -518,7 +542,12 @@ String pipeKindName(String k) => tr(k == 'dev'
     ? '開発中'
     : k == 'enter'
         ? '進出準備'
-        : '建設中');
+        : k == 'ext'
+            ? '拡張中'
+            : '建設中');
+
+/// 仕掛かりの見せ方の種類。「今ある店・工場を広げる」は、仕組みの上では建設（build）だが、札と行を「増やす」と分ける（1.0.0+18）
+String pipeKind(Pipe x) => x.ext ? 'ext' : x.k;
 
 /// 仕掛かり1件の説明（「新商品（1億円）あと2か月」）
 String pipeText(Game s, Biz b, Pipe x) => tr('{0}（{1}）あと{2}か月', [
@@ -526,7 +555,9 @@ String pipeText(Game s, Biz b, Pipe x) => tr('{0}（{1}）あと{2}か月', [
           ? (x.sz != null ? tx(s.devName(x.sz!)) : tr('新商品'))
           : x.k == 'enter'
               ? tr('{0}（{1}）', [cm[x.c]!.n, ENTRYN[x.mode]])
-              : tx(s.uw(b)),
+              : x.ext
+                  ? tr('今ある{0}を広げる', [s.uw(b)])
+                  : tx(s.uw(b)),
       yen(x.cost),
       x.left
     ]);
@@ -548,7 +579,7 @@ List<PipeGroup> pipeGroups(Biz b) {
   final order = <String>[];
   final by = <String, List<int>>{};
   for (var i = 0; i < b.pipe.length; i++) {
-    final k = b.pipe[i].k;
+    final k = pipeKind(b.pipe[i]);
     if (!by.containsKey(k)) order.add(k);
     (by[k] ??= []).add(i);
   }

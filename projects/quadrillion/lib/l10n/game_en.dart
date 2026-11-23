@@ -509,6 +509,31 @@ const Map<String, String> gameEn = {
   '社長が60歳を超えました。「人」で後継ぎを決めておかないと、急死したとき会社が混乱します': "You're over 60. Name an heir on the People tab, or a sudden death will throw the company into chaos",
   '上場の条件を満たしました。大金が入りますが、宿敵があなたの株を買えるようになります': "You qualify for an IPO. It brings in big money, but rivals can then buy your shares",
   '「{0}」は市場が沈み始めています。売るなら早めに': "The {0} market is starting to shrink. Sell early if you're selling",
+  // 中盤からの勧め・まとめての手（1.0.0+18）
+  '「{0}」など{1}つの事業で現場の人が足りず、{2}の一部が止まっています。「事業」の「まとめての手」から、まとめて雇えます':
+      "{0} and others ({1} businesses) are short on staff and some {2} are idle. Hire for all of them at once under Batch moves on the Business tab",
+  '「{0}」など{1}つの事業で現場の人が足りず、{2}の一部が止まっています。「事業」の「現場の人を増やす」で雇いましょう':
+      "{0} and others ({1} businesses) are short on staff and some {2} are idle. Hire frontline staff on the Business tab",
+  '「{0}」は沈む市場に残ったままです。売るか、「業態を変える」で近い業種に移れます': "{0} is still sitting in a shrinking market. Sell it, or pivot to a nearby industry",
+  '「{0}」は沈む市場に残ったままです。売れるうちに売るのも手です': "{0} is still sitting in a shrinking market. Selling while you can is an option",
+  '「{0}」は生まれて{1}年、まだ伸びている市場です。入るなら、大きな会社が固まる前に': "{0} is {1} years old and still growing. If you're getting in, do it before the big players settle",
+  '現地法人{0}の株を、{1}が{2}まで買い集めています。25%で経営に口を出されます。「株」で買い戻せます（{3}）':
+      "{1} has bought up {2} of your local subsidiary {0}. At 25% they start meddling. Buy the stake back on the Shares tab ({3})",
+  '現地法人{0}の株を、{1}が{2}握っています。「株」で買い戻せます（{3}）': "{1} holds {2} of your local subsidiary {0}. Buy the stake back on the Shares tab ({3})",
+  '{0}の忠誠が下がっています。宿敵の引き抜きの的になります。経営会議で{0}の提案を通すと、忠誠が上がります':
+      "{0}'s loyalty is low, which makes them a poaching target. Approving {0}'s proposals at management meetings raises it",
+  '「{0}」と「{1}」は相性がよさそうだと分かっています。「{1}」も始めれば、シナジーが見つかるかもしれません':
+      "You know {0} and {1} look like a good match. Start {1} too and you may find a synergy",
+  '子会社の{0}は上場させられます。株を30%売って約{1}が入り、70%は持ったままです（「株」の子会社のカードから）':
+      "Your subsidiary {0} can be listed. Selling 30% brings in about {1} and you keep 70% (from its card on the Shares tab)",
+  '「{0}」は{1}に出ています。「分社・独立」からその国の分を現地法人に分けると、地元の規制が少し緩み、現地の社長が自分で動かします':
+      "{0} operates in {1}. Under Spin off, you can carve that country out as a local subsidiary: local rules ease a little and a local CEO runs it",
+  '{0}つの事業で、現場の人を合わせて{1}人増やしました（採用の費用 {2}）。毎月の人件費が{3}増えます':
+      "Hired {1} frontline staff across {0} businesses (hiring cost {2}). Labor costs rise {3}/month",
+  '置ける部下がいません': "No staff to assign",
+  '{0}人を責任者に置きました：{1}': "Assigned {0} managers: {1}",
+  '{0}→「{1}」': "{0} → {1}",
+  '「{0}」の{1}を広げ終わりました': "Finished extending the {1} for {0}",
   '生まれたばかりの「{0}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります':
       "{0} is a newborn market set to grow huge worldwide. The firm that gets in early and goes global will rule the era",
   '「{0}」は4か国に出ています。あと1か国で規模の利益が効き、利益率が上がります': "{0} is in 4 countries. One more unlocks economies of scale and higher margins",

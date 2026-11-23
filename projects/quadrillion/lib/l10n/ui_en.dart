@@ -484,7 +484,35 @@ const Map<String, String> uiEn = {
   '持株会社にする': 'Form holding co.',
   '持株会社は、社長が直接見られる事業の上限がなくなります。事業は「事業」の画面から、分社（子会社にする）や、責任者に渡して独立させることもできます。':
       'A holding company removes the limit on businesses the CEO can run. From Business you can also spin off a business or hand it to its manager.',
-  '会社を2つに割る：': 'Split the company: ',
+  '会社を2つに割る': 'Split the company',
+  '手を1つ使います。選んだ分類の事業を別の会社として切り離し、別に上場させます。あなたは新しい会社の株を{0}持ちます。元には戻せません。':
+      "Uses 1 move. The businesses in the category you pick are split off as a separate listed company. You hold {0} of the new company. This can't be undone.",
+  '{0}つの事業・月の売上 {1}': 'Businesses: {0}, revenue {1}/mo',
+  ' ほか': ' and more',
+  '子会社・現地法人（{0}社）': 'Subsidiaries ({0})',
+  '上場@@tag': 'Listed',
+  '株式交換で丸ごと買う（成功率{0}）': 'Share swap ({0} odds)',
+  '株式交換をすると、あなたの持ち株は {0}→{1} に薄まります': 'A share swap dilutes your stake {0}→{1}',
+  '{0}の株を全部売る': 'Sell all of {0}',
+  '{0}の株{1}を約{2}で手放します。子会社ではなくなり、買い戻すには市場やTOBで集め直すことになります。':
+      'You give up your {1} of {0} for about {2}. It stops being your subsidiary, and getting it back means buying the shares again on the market or by tender offer.',
+  // 事業が多い会社のまとめての手・並べ替え（1.0.0+18）
+  '売上の大きい順': 'Top revenue',
+  '注意があるものを先に': 'Warnings first',
+  '利益の少ない順': 'Lowest profit',
+  'シェアの低い順': 'Lowest share',
+  'まとめての手': 'Batch moves',
+  '人手不足の事業が{0}つ：{1}': 'Short-staffed businesses ({0}): {1}',
+  '足りない人をまとめて雇う': 'Hire all missing staff',
+  '足りない人をまとめて雇う（{0}つ・{1}）': 'Hire all missing staff ({0}, {1})',
+  '手かお金が足りる{0}つだけ雇います（足りない割合の大きい順）': 'Your moves and cash cover only {0} of them (worst first)',
+  '担当のない部下が、責任者のいない事業を{0}つ引き受けられます': 'Unassigned staff can take over {0} unmanaged businesses',
+  '空いている部下を責任者に置く（{0}人）': 'Assign free staff as managers ({0})',
+  '拡張中': 'Extending',
+  '今ある{0}を広げる': 'Extending your {0}',
+  '棒は桁の目盛りです（1目盛りで10倍）': 'Bars use a log scale (each tick is ×10)',
+  '主な節目': 'Key milestones',
+  'すべての記録': 'Full record',
   '{0}を切り離す': 'Split off {0}',
   '勝ち負けは「今の会社の時価総額＋あなたの財産」で測ります。今の財産 {0}': 'Score = company value + your wealth. Wealth now: {0}',
   '持ち株を5%売る（約{0}）': 'Sell 5% stake (~{0})',
@@ -504,7 +532,6 @@ const Map<String, String> uiEn = {
   '合併する（株を渡して払う）': 'Merge (pay in shares)',
   '組む': 'Make a deal',
   '現金の代わりに自社の株を渡して丸ごと買う。あなたの持ち株は薄まる': 'Buy them outright with your shares instead of cash. Your stake gets diluted',
-  '株式交換で丸ごと買う（成功率{0}・持ち株 {1}→{2}）': 'Swap ({0} odds, stake {1}→{2})',
   '子会社を上場させる（30%売る・約{0}）': 'List subsidiary (sell 30%, ~{0})',
   '全部売る（{0}）': 'Sell all ({0})',
 
@@ -529,7 +556,7 @@ const Map<String, String> uiEn = {
   'まだ記録がありません。上場・買収・海外進出などの節目がここに残ります。': 'Nothing yet. Milestones like IPOs, acquisitions and overseas expansion appear here.',
 
   // ===== 図鑑 =====
-  'シナジー図鑑　{0} / {1}': 'Synergy Codex  {0} / {1}',
+  'シナジー図鑑': 'Synergy Codex',
   '2つの事業を同時に持つと見つかります。見つけた組み合わせは事業の力を2割上げます。': 'Found by owning two businesses at once. Each one found makes both 20% stronger.',
   '{0}の何か × {1}の何か': 'Some {0} × some {1}',
   '？？？（相性がよさそう）': '??? (looks promising)',

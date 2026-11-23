@@ -218,7 +218,7 @@ extension GameActions on Game {
     if (!canAP(1)) return M('今月の手が残っていません');
     cash -= cost;
     useAP(1);
-    b.pipe.add(Pipe(k: 'build', cost: cost, left: 1));
+    b.pipe.add(Pipe(k: 'build', cost: cost, left: 1, ext: true));
     calcAll();
     return M('今ある{0}を広げ始めました（{1}）。来月から使えます。{2}', [uw(b), Y(cost), M(b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります')]);
   }
@@ -286,6 +286,80 @@ extension GameActions on Game {
 
   /// 足りない分だけ現場の人を補う
   String addCrewNeeded(Biz b) => hireN(b, crewNeedPeople(b));
+
+  // ===== まとめての手（1.0.0+18。事業が20〜30ある会社で、同じ手を事業の数だけ繰り返さずに済むように） =====
+  /// 現場の人が足りない事業（足りない割合の大きい順）
+  List<Biz> crewShort() => biz.where((b) => crewNeedPeople(b) > 0).toList()..ssort((a, b) => (crewEff(a) / a.power).compareTo(crewEff(b) / b.power));
+
+  /// [crewShort] のうち、今の手とお金で足りない分を雇える事業（先頭から。払えない事業は飛ばす）
+  List<Biz> crewShortDoable() {
+    var c = cash;
+    final out = <Biz>[];
+    for (final b in crewShort()) {
+      if (out.length >= ap) break;
+      final cost = hireCost(b, crewNeedPeople(b));
+      if (cost > c) continue;
+      c -= cost;
+      out.add(b);
+    }
+    return out;
+  }
+
+  /// 人が足りない事業に、足りない分をまとめて雇う。1つずつ雇うのと同じ値段・同じ手の数（事業1つにつき1手）で、押す回数だけが減る
+  String hireShortAll() {
+    if (crewShort().isEmpty) return M('人は足りています');
+    final list = crewShortDoable();
+    if (list.isEmpty) return M(canAP(1) ? 'お金が足りません' : '今月の手が残っていません');
+    var heads = 0;
+    var cost = 0.0, pay = 0.0;
+    for (final b in list) {
+      final n = crewNeedPeople(b);
+      heads += n;
+      cost += hireCost(b, n);
+      pay += payPerMonth(b, n);
+      hireN(b, n);
+    }
+    return M('{0}つの事業で、現場の人を合わせて{1}人増やしました（採用の費用 {2}）。毎月の人件費が{3}増えます', [list.length, heads, Y(cost), Y(pay)]);
+  }
+
+  /// 担当のない部下を、責任者のいない事業に置く案（事業 → 部下。売上の大きい事業から、その業種に効く能力がいちばん高い人を当てる）。
+  /// 社長が直接見られる数（[presCap]）を超えて放置されている事業が先。そうでない事業は、置いたほうが強くなるときだけ
+  List<(Biz, Person)> managerPlan() {
+    final free = staff.where((p) => !biz.any((b) => b.mgr == p.id)).toList();
+    if (free.isEmpty) return const [];
+    final open = biz.where((b) => b.mgr == null).toList();
+    final cap = presCap();
+    // 放置されている事業（社長が見られる数を超えた分）を先に、その中は売上の大きい順
+    final list = [
+      ...(open.skip(cap).toList()..ssort((a, b) => b.rev.compareTo(a.rev))),
+      ...(open.take(cap).toList()..ssort((a, b) => b.rev.compareTo(a.rev))),
+    ];
+    final out = <(Biz, Person)>[];
+    for (final b in list) {
+      if (free.isEmpty) break;
+      final key = indm[b.ind]!.key;
+      final p = (free.toList()..ssort((x, y) => y.ab[key]!.compareTo(x.ab[key]!))).first;
+      final before = mgrMult(b);
+      b.mgr = p.id;
+      final after = mgrMult(b);
+      b.mgr = null;
+      if (after <= before) continue;
+      free.remove(p);
+      out.add((b, p));
+    }
+    return out;
+  }
+
+  /// [managerPlan] のとおりに責任者を置く（手は使わない。1人ずつ選ぶ欄で置くのと同じ）
+  String placeManagers() {
+    final plan = managerPlan();
+    if (plan.isEmpty) return M('置ける部下がいません');
+    for (final x in plan) {
+      x.$1.mgr = x.$2.id;
+    }
+    calcAll();
+    return M('{0}人を責任者に置きました：{1}', [plan.length, J(plan.map((x) => M('{0}→「{1}」', [Nm(x.$2.name), I(x.$1.ind)])))]);
+  }
 
   /// 現金の割合で現場の人を増やす（試作の手。extras を切った一致テストと、自動プレイの古い流れが使う）
   String addCrew(Biz b, double frac) {
@@ -1201,7 +1275,9 @@ extension GameActions on Game {
   }
 
   // ===== 株の攻め =====
-  double floatOf(Company c) => math.max(0, 100 - c.fam - c.stakePlayer);
+  /// 市場に出ている株。現地法人で宿敵が買い集めた分（[Company.locRivPct]）は、もう市場には無い
+  /// （1.0.0+18。引いていなかったので、あなた70%・宿敵30%の現地法人で「市場の株30%」と出て、さらに5%買えて合計が100%を超えた）
+  double floatOf(Company c) => math.max(0, 100 - c.fam - c.stakePlayer - c.locRivPct);
 
   String buyStake(Company c, double x) {
     if (!canAP(1)) return M('今月の手が残っていません');

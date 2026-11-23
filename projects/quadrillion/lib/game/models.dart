@@ -127,8 +127,12 @@ class Pipe {
 
   /// 商品の大きさ（0 小さな改良・1 新商品・2 大型開発）。単位で始めた開発だけが持つ（割合の開発は null）
   int? sz;
-  Pipe({required this.k, this.c, this.mode, required this.cost, this.pw, required this.left, this.by, this.sz});
-  Map<String, dynamic> toJson() => {'k': k, 'c': c, 'mode': mode, 'cost': cost, 'pw': pw, 'left': left, 'by': by, if (sz != null) 'sz': sz};
+
+  /// 「今ある店・工場を広げる」で始めた仕掛かりか（1.0.0+18。種類は build のままで、見せ方と知らせだけを「増やす」と分ける。古いセーブには無い → false）
+  bool ext;
+  Pipe({required this.k, this.c, this.mode, required this.cost, this.pw, required this.left, this.by, this.sz, this.ext = false});
+  Map<String, dynamic> toJson() =>
+      {'k': k, 'c': c, 'mode': mode, 'cost': cost, 'pw': pw, 'left': left, 'by': by, if (sz != null) 'sz': sz, if (ext) 'ext': true};
   factory Pipe.fromJson(Map<String, dynamic> j) => Pipe(
       k: j['k'] as String,
       c: j['c'] as String?,
@@ -137,7 +141,8 @@ class Pipe {
       pw: _dn(j['pw']),
       left: _i(j['left']),
       by: _in(j['by']),
-      sz: _in(j['sz']));
+      sz: _in(j['sz']),
+      ext: j['ext'] == true);
 }
 
 /// 自社の事業

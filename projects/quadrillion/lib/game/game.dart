@@ -33,6 +33,9 @@ final Map<String, Country> cm = {for (final x in CTRY) x.c: x};
 const Set<String> eastPools = {'zh', 'ko', 'vi'};
 
 // ===== 1単位の値段（1.0.0+12。extras のときの画面と提案で使う） =====
+/// 自社の事業がこの数以上になると、「事業」の画面で一覧をたためるようにし、並べ替えとまとめての手を出す（1.0.0+18。画面だけの線で、仕組みの数字ではない）
+const int bizManyMin = 8;
+
 /// 店・工場を一度に増やせる数
 const List<int> buildUnits = [1, 3, 10];
 

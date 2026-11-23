@@ -642,7 +642,9 @@ void main() {
         final full = tester.getSize(_key('pl-bar-biz')).width;
         for (final r in rows) {
           final bar = tester.widget<AmountBar>(_key('pl-bar-${r.$1}'));
-          expect(bar.frac, closeTo(r.$3.abs() / top, 1e-9));
+          // 1.0.0+18: 棒の長さは桁の目盛り（いちばん大きい額が端まで・10分の1ごとに1目盛り短い）
+          expect(bar.frac, closeTo(plFrac(r.$3, top, plDecades(rows.map((x) => x.$3))), 1e-9));
+          if (r.$3.abs() == top) expect(bar.frac, 1);
           expect(bar.minus, r.$3 < 0);
           final fill = find.descendant(of: _key('pl-bar-${r.$1}'), matching: find.byType(ColoredBox)).last;
           // 1.0.0+17: 額が0でなければ、棒は AmountBar.minFill より短くしない
