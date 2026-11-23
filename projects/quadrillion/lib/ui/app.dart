@@ -130,17 +130,14 @@ class SetupScreen extends StatelessWidget {
         child: ListView(padding: const EdgeInsets.fromLTRB(12, 24, 12, 40), children: [
           Text('QUADRILLION', style: ts(size: 34, color: Pal.goldtx, bold: true)),
           const Padding(padding: EdgeInsets.only(bottom: 18), child: Muted('クアドリリオンゲーム ― 屋台から1000兆円へ', size: 14)),
-          if (ctl.hasSave())
+          if (ctl.hasSave()) ...[
+            const H2('続きから', top: true),
             Panel(
-                child: Row(children: [
-              Expanded(child: Text('前回の続きがあります', style: ts())),
-              Btn('続きから', () {
-                if (ctl.load()) {
-                  ctl.tab = 'town';
-                  ctl.render();
-                }
-              }, primary: true),
-            ])),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                  for (var i = 1; i <= slotCount; i++) _slotRow(i, ctl.slotInfo(i), last: i == slotCount),
+                ])),
+          ],
           const H2('モード'),
           _opt([
             for (final o in const [
@@ -179,21 +176,79 @@ class SetupScreen extends StatelessWidget {
                 });
               }, on: st.traits.contains(t.id), subs: ['＋${t.g}', '－${t.b}']),
           ]),
+          const H2('難しさ'),
+          _opt([
+            for (final d in DIFFS) ChoiceBtn(d.n, () => set(() => st.diff = d.id), on: st.diff == d.id, subs: [d.d]),
+          ]),
+          const H2('保存する枠'),
+          _opt([
+            for (var i = 1; i <= slotCount; i++)
+              ChoiceBtn('枠$i', () => set(() => ctl.newSlot = i), on: ctl.startSlot == i, subs: [_slotShort(ctl.slotInfo(i))]),
+          ]),
           const Padding(padding: EdgeInsets.only(top: 16), child: Muted('社長は22歳、大学を出たばかり。最初は会社の名前だけがあります。')),
           const SizedBox(height: 10),
           Align(
             alignment: Alignment.centerLeft,
             child: Btn('会社を立ち上げる', () {
-              ctl.startNew();
-              ctl.render();
-              openIntro(ctl);
+              void go() {
+                ctl.startNew();
+                ctl.render();
+                openIntro(ctl);
+              }
+
+              final k = ctl.startSlot;
+              final old = ctl.slotInfo(k);
+              if (old == null) {
+                go();
+              } else {
+                confirmThen(ctl,
+                    title: '枠$kに上書きする',
+                    text: '枠$kの${old.name}の会社（${old.year}年${old.q}月・時価総額${yen(old.cap)}）は消え、新しい会社に置き換わります。',
+                    yes: '上書きして始める',
+                    onYes: go);
+              }
             }, primary: true, enabled: st.traits.length >= 2),
           ),
         ]),
       ),
     );
   }
+
+  /// 続きからの一覧の1行（年月・社長の名前・時価総額・順位）
+  Widget _slotRow(int i, SlotInfo? info, {bool last = false}) => Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: last ? null : const BoxDecoration(border: Border(bottom: BorderSide(color: Pal.line))),
+        child: Row(children: [
+          SizedBox(width: 44, child: Text('枠$i', style: ts(bold: true, color: Pal.goldtx))),
+          Expanded(
+            child: info == null
+                ? const Muted('空き', size: 13)
+                : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text('${info.year}年${info.q}月　${info.name}', style: ts(size: 14, bold: true)),
+                    Text(
+                        '時価総額${yen(info.cap)}・世界${info.rank > 0 ? '${info.rank}位' : '―'}'
+                        '\n${modeName(info.mode)}・${diffOf(info.diff).n}${info.ended ? '・決着済み' : ''}',
+                        style: ts(size: 12, color: Pal.mute, height: 1.4)),
+                  ]),
+          ),
+          if (info != null)
+            Btn('続きから', () {
+              if (ctl.load(i)) {
+                ctl.tab = 'town';
+                ctl.render();
+              }
+            }, primary: true, small: true),
+        ]),
+      );
+
+  static String _slotShort(SlotInfo? i) => i == null ? '空き' : '使用中：${i.year}年 ${i.name}';
 }
+
+String modeName(String m) => switch (m) {
+      'quad' => '1000兆円',
+      'endless' => '終わりなし',
+      _ => '世界一位',
+    };
 
 // ===== 本体 =====
 class MainScreen extends StatelessWidget {

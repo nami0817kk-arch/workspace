@@ -109,29 +109,60 @@ extension GameView on Game {
     return '終わりなし：好きなだけ育てる';
   }
 
-  List<String> advice() {
-    final a = <String>[];
+  /// 番頭のひとこと（大事な順に最大3行）。まだ使っていない仕組みは、使いどきに勧める。汚い手は勧めない
+  List<String> advice() => adviceAll().take(3).toList();
+
+  /// 番頭のひとことの候補を、大事な順にすべて並べる
+  List<String> adviceAll() {
+    final a = <(int, String)>[];
+    void add(int pri, String m) => a.add((pri, m));
     final riv = sh.rivMax;
     final y = yr();
-    if (biz.isEmpty) a.add('まだ事業がありません。相棒を探すか、「最初の事業を決める」から始めましょう');
-    final hots = IND.where((i) => y - i.b >= 0 && y - i.b < 6 && i.size >= 1.5e12 && !biz.any((b) => b.ind == i.id)).toList()
-      ..ssort((p, q) => q.size.compareTo(p.size));
-    if (hots.isNotEmpty) a.add('生まれたばかりの「${hots[0].name}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります');
-    final short = biz.where((b) => b.model != 'fc' && b.power > 0 && crewEff(b) < b.power * .9).firstOrNull;
-    if (short != null) a.add('「${indm[short.ind]!.name}」は現場の人が足りず、${uw(short)}の一部が止まっています。「現場の人を増やす」か、統率の強い責任者を置きましょう');
-    if (riv >= 20) a.add('宿敵にあなたの株を${pct(riv)}握られています。「株」でホワイトナイトや自社株買いを考えましょう');
-    if (canIPO()) a.add('上場の条件を満たしました。大金が入りますが、宿敵があなたの株を買えるようになります');
-    if (biz.isNotEmpty && cash > biz.map((b) => b.rev).reduce(math.max) * .5 && ap > 0) a.add('現金が余っています。伸びている事業に投資するか、新しい事業を始めましょう');
+    if (biz.isEmpty) add(100, 'まだ事業がありません。相棒を探すか、「最初の事業を決める」から始めましょう');
+    if (riv >= 20) add(95, '宿敵にあなたの株を${pct(riv)}握られています。「株」でホワイトナイトや自社株買いを考えましょう');
     final run = biz.where((b) => b.mgr == null).length;
-    if (run > presCap()) a.add('社長が直接見られる事業は${presCap()}つまでです。${run - presCap()}つの事業が放置されて弱っています。「人」で採用して責任者に置きましょう');
-    final idle = staff.where((p) => !biz.any((b) => b.mgr == p.id)).toList();
-    if (idle.isNotEmpty && run > 0) a.add('${idle[0].name}が担当なしです。「事業」で責任者に置けます');
+    if (run > presCap()) add(90, '社長が直接見られる事業は${presCap()}つまでです。${run - presCap()}つの事業が放置されて弱っています。「人」で採用して責任者に置きましょう');
+    final short = biz.where((b) => b.model != 'fc' && b.power > 0 && crewEff(b) < b.power * .9).firstOrNull;
+    if (short != null) add(85, '「${indm[short.ind]!.name}」は現場の人が足りず、${uw(short)}の一部が止まっています。「現場の人を増やす」か、統率の強い責任者を置きましょう');
+    if (pres.age >= 60 && succ == null) add(80, '社長が60歳を超えました。「人」で後継ぎを決めておかないと、急死したとき会社が混乱します');
+    if (canIPO()) add(75, '上場の条件を満たしました。大金が入りますが、宿敵があなたの株を買えるようになります');
     final dec = biz.where((b) {
       final i = indm[b.ind]!;
       return i.f != 0 && y > i.f;
     }).firstOrNull;
-    if (dec != null) a.add('「${indm[dec.ind]!.name}」は市場が沈み始めています。売るなら早めに');
-    if (pres.age >= 60 && succ == null) a.add('社長が60歳を超えました。「人」で後継ぎを決めておかないと、急死したとき会社が混乱します');
-    return a.take(3).toList();
+    if (dec != null) add(70, '「${indm[dec.ind]!.name}」は市場が沈み始めています。売るなら早めに');
+    final hots = IND.where((i) => y - i.b >= 0 && y - i.b < 6 && i.size >= 1.5e12 && !biz.any((b) => b.ind == i.id)).toList()
+      ..ssort((p, q) => q.size.compareTo(p.size));
+    if (hots.isNotEmpty) add(65, '生まれたばかりの「${hots[0].name}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります');
+    // あと1か国で規模の利益（5か国から利益率が上がる）
+    bool entering(Biz b) => b.pipe.any((x) => x.k == 'enter');
+    final four = biz.where((b) => ctryOf(b).length == 4 && !entering(b)).firstOrNull;
+    if (four != null) add(62, '「${indm[four.ind]!.name}」は4か国に出ています。あと1か国で規模の利益が効き、利益率が上がります');
+    final idle = staff.where((p) => !biz.any((b) => b.mgr == p.id)).toList();
+    if (idle.isNotEmpty && run > 0) add(60, '${idle[0].name}が担当なしです。「事業」で責任者に置けます');
+    // 株式交換（上場していて、自分より小さい同業の会社がある）
+    if (listed && riv < 33.4) {
+      final mine = <String>{for (final b in biz) b.ind};
+      final tg = (cos
+              .where((c) => c.alive && c.parent != 'player' && c.cap < cap && c.cap > cap * .02 && c.biz.any((b) => mine.contains(b.ind)))
+              .toList()
+            ..ssort((p, q) => q.cap.compareTo(p.cap)))
+          .firstOrNull;
+      if (tg != null) add(56, '上場した今なら、自分より小さい同業の${tg.name}を「株式交換」で丸ごと買えます。現金を使わずに大きくなれます（「株」の買える会社から）');
+    }
+    if (!holding && biz.length + subs().length >= 5) add(54, '事業と子会社が5つを超えました。「株」の会社の形から持株会社にすると、社長が直接見られる事業の上限がなくなります');
+    // 海外（伸びている事業がまだ1か国だけ）
+    final grow = (biz.where((b) => ctryOf(b).length == 1 && !entering(b) && b.prevRev > 0 && b.rev > b.prevRev && b.profit > 0).toList()
+          ..ssort((p, q) => q.rev.compareTo(p.rev)))
+        .firstOrNull;
+    if (grow != null) {
+      final cs = CTRY.where((x) => x.c != home && entryModes(grow, x.c).isNotEmpty).toList()
+        ..ssort((p, q) => cw(q.c, y).compareTo(cw(p.c, y)));
+      final c = cs.where((x) => cash >= entryCost(grow, x.c, entryModes(grow, x.c).contains('jv') ? 'jv' : entryModes(grow, x.c).first)).firstOrNull;
+      if (c != null) add(52, '「${indm[grow.ind]!.name}」が伸びています。まだ${cm[home]!.n}だけなので、「海外に出る」で${c.n}などに広げれば市場が何倍にもなります');
+    }
+    if (biz.isNotEmpty && cash > biz.map((b) => b.rev).reduce(math.max) * .5 && ap > 0) add(50, '現金が余っています。伸びている事業に投資するか、新しい事業を始めましょう');
+    a.ssort((p, q) => q.$1 - p.$1);
+    return [for (final x in a) x.$2];
   }
 }

@@ -100,9 +100,15 @@ void main() {
     g.calcAll();
     ctl.setTab('num');
     await tester.pump();
-    await tester.drag(find.byType(Scrollable).first, const Offset(0, -1100));
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -420));
+    await tester.pump();
+    await _shot(tester, key, '6a_num_graphs');
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -900));
     await tester.pump();
     await _shot(tester, key, '6_num_history');
+    ctl.setTab('town');
+    await tester.pump();
+    await _shot(tester, key, '6b_town_advice');
 
     // 設定と、取り返しのつかない操作の確認
     openSettings(ctl);
@@ -125,6 +131,20 @@ void main() {
     ctl.render();
     await tester.pump();
     await _shot(tester, key, '10_end_over');
+
+    // はじめの画面（続きからの一覧・難しさ・保存する枠）
+    ctl.save();
+    ctl.game = null;
+    ctl.sheet = null;
+    ctl.render();
+    await tester.pump();
+    await _shot(tester, key, '11_setup_slots');
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -1500));
+    await tester.pump();
+    await _shot(tester, key, '12_setup_diff');
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -800));
+    await tester.pump();
+    await _shot(tester, key, '13_setup_bottom');
     expect(tester.takeException(), isNull);
   }, skip: _out == null);
 }

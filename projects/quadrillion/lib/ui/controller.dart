@@ -9,15 +9,61 @@ import '../game/game.dart';
 import 'guide.dart';
 import 'widgets.dart';
 
-/// 試作の localStorage の鍵と同じ名前で保存する
-const saveKey = 'quad-save-m';
+/// 前の版（1.0.0+3 まで）の1つだけのセーブの鍵（試作の localStorage と同じ名前）。読み込むときは枠1に移す
+const legacySaveKey = 'quad-save-m';
+
+/// セーブ枠の数
+const slotCount = 3;
+
+/// 枠ごとのセーブの鍵と、一覧に出す見出しの鍵（中身を全部読まずに一覧を出すため）
+String slotKey(int slot) => 'quad-save-$slot';
+String slotMetaKey(int slot) => 'quad-meta-$slot';
+
+/// セーブ枠の一覧に出す見出し
+class SlotInfo {
+  final int slot, year, q, rank;
+  final String name, mode, diff;
+  final double cap;
+  final bool ended;
+  const SlotInfo(
+      {required this.slot,
+      required this.year,
+      required this.q,
+      required this.name,
+      required this.cap,
+      required this.rank,
+      this.mode = 'world',
+      this.diff = 'normal',
+      this.ended = false});
+  factory SlotInfo.of(int slot, Game g) =>
+      SlotInfo(slot: slot, year: g.year, q: g.q, name: g.pres.name, cap: g.cap, rank: g.rank > 0 ? g.rank : g.rankList().indexWhere((x) => x.me) + 1, mode: g.mode, diff: g.diff, ended: g.ended);
+  Map<String, dynamic> toJson() => {'year': year, 'q': q, 'name': name, 'cap': cap, 'rank': rank, 'mode': mode, 'diff': diff, 'ended': ended};
+  factory SlotInfo.fromJson(int slot, Map<String, dynamic> j) => SlotInfo(
+      slot: slot,
+      year: (j['year'] as num).round(),
+      q: (j['q'] as num? ?? 1).round(),
+      name: (j['name'] as String?) ?? '',
+      cap: (j['cap'] as num? ?? 0).toDouble(),
+      rank: (j['rank'] as num? ?? 0).round(),
+      mode: (j['mode'] as String?) ?? 'world',
+      diff: (j['diff'] as String?) ?? 'normal',
+      ended: j['ended'] == true);
+}
 
 /// 画面の状態（どのタブか・小窓・はじめの画面の選択）と、保存・読み込み。
 /// 試作の render / act / toast / showSheet / save / load にあたる。
 class GameController extends ChangeNotifier with WidgetsBindingObserver {
   SharedPreferences? prefs;
   final math.Random Function() newRandom;
-  GameController({this.prefs, math.Random Function()? newRandom}) : newRandom = newRandom ?? (() => math.Random());
+  GameController({this.prefs, math.Random Function()? newRandom}) : newRandom = newRandom ?? (() => math.Random()) {
+    migrateLegacy();
+  }
+
+  /// 今遊んでいる枠（自動保存の行き先）
+  int slot = 1;
+
+  /// 新しく始めるときに使う枠（はじめの画面で選ぶ。null なら空いている一番小さい枠）
+  int? newSlot;
 
   Game? game;
   String tab = 'town';
@@ -109,22 +155,59 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   // ===== 保存 =====
-  bool hasSave() => prefs?.getString(saveKey) != null;
+  /// 前の版の1つだけのセーブを枠1に移す（枠1が空いているときだけ。移したら古い鍵は消す）
+  void migrateLegacy() {
+    final p = prefs;
+    final old = p?.getString(legacySaveKey);
+    if (p == null || old == null) return;
+    if (p.getString(slotKey(1)) == null) {
+      p.setString(slotKey(1), old);
+      p.remove(slotMetaKey(1));
+    }
+    p.remove(legacySaveKey);
+  }
+
+  bool hasSave([int? s]) => s == null ? [for (var i = 1; i <= slotCount; i++) i].any(hasSave) : prefs?.getString(slotKey(s)) != null;
+
+  /// 枠の見出し（空なら null）。見出しが無い（前の版から移した）ときは中身を読んで作り、控えておく
+  SlotInfo? slotInfo(int s) {
+    final p = prefs;
+    final raw = p?.getString(slotKey(s));
+    if (p == null || raw == null) return null;
+    try {
+      final m = p.getString(slotMetaKey(s));
+      if (m != null) return SlotInfo.fromJson(s, jsonDecode(m) as Map<String, dynamic>);
+    } catch (_) {}
+    try {
+      final info = SlotInfo.of(s, Game.fromJson(jsonDecode(raw) as Map<String, dynamic>, rng: newRandom()));
+      p.setString(slotMetaKey(s), jsonEncode(info.toJson()));
+      return info;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// 新しく始めるときの枠（選んでいなければ、空いている一番小さい枠。全部埋まっていれば枠1）
+  int get startSlot => newSlot ?? [for (var i = 1; i <= slotCount; i++) i].firstWhere((i) => !hasSave(i), orElse: () => 1);
 
   void save() {
     final g = game;
     final p = prefs;
     if (g == null || p == null) return;
     try {
-      p.setString(saveKey, jsonEncode(g.toJson()));
+      p.setString(slotKey(slot), jsonEncode(g.toJson()));
+      p.setString(slotMetaKey(slot), jsonEncode(SlotInfo.of(slot, g).toJson()));
     } catch (_) {}
   }
 
-  bool load() {
-    final s = prefs?.getString(saveKey);
-    if (s == null) return false;
+  /// 枠の続きを読み込む（[s] を省くと今の枠）
+  bool load([int? s]) {
+    final k = s ?? slot;
+    final raw = prefs?.getString(slotKey(k));
+    if (raw == null) return false;
     try {
-      game = Game.fromJson(jsonDecode(s) as Map<String, dynamic>, rng: newRandom());
+      game = Game.fromJson(jsonDecode(raw) as Map<String, dynamic>, rng: newRandom());
+      slot = k;
       endHidden = false;
       return true;
     } catch (_) {
@@ -140,13 +223,18 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
+  /// 今の枠のセーブを消す
   void clearSave() {
-    prefs?.remove(saveKey);
+    prefs?.remove(slotKey(slot));
+    prefs?.remove(slotMetaKey(slot));
   }
 
   // ===== はじめる =====
+  /// 新しく始める（[startSlot] の枠に保存する。埋まっていれば上書き）
   void startNew() {
     endHidden = false;
+    slot = startSlot;
+    newSlot = null;
     game = Game.newGame(setup, rng: newRandom());
     startGuide(game!);
     tab = 'town';

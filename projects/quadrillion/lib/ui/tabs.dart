@@ -739,6 +739,24 @@ List<Widget> numTab(GameController ctl) {
         aspectRatio: 4,
         child: Semantics(label: '時価総額の推移', child: CustomPaint(painter: SparkPainter(s.hist), size: Size.infinite))),
   ));
+  out.add(const H2('売上と利益の推移（月）'));
+  out.add(Container(
+    decoration: BoxDecoration(border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(10)),
+    child: AspectRatio(
+        aspectRatio: 640 / 180,
+        child: Semantics(label: '売上と利益の推移', child: CustomPaint(painter: RevProfitPainter(s.hist), size: Size.infinite))),
+  ));
+  out.add(Padding(
+    padding: const EdgeInsets.only(top: 6),
+    child: Wrap(spacing: 14, children: [
+      for (final x in const [('売上', RevProfitPainter.revCol), ('利益（税引前）', RevProfitPainter.proCol), ('赤字の月', RevProfitPainter.lossCol)])
+        Row(mainAxisSize: MainAxisSize.min, children: [
+          Container(width: 14, height: 3, color: x.$2),
+          const SizedBox(width: 5),
+          Muted(x.$1, size: 12),
+        ]),
+    ]),
+  ));
   out.add(const H2('世界の企業ランキング'));
   final rk = s.rankList();
   final me = rk.indexWhere((x) => x.me);
