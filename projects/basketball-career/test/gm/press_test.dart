@@ -45,4 +45,33 @@ void main() {
     expect(q.needsAnswer, isFalse);
     botStep(car);
   });
+
+  test('答えないままレギュラーシーズンが終わった記者の質問は、押せないまま残らない(2026-11-23 押せない報告)', () {
+    final c = careerAt(3, 8)..startSeason();
+    while (c.phase == Phase.season) {
+      c.playBlock();
+    }
+    final left = c.inbox.where((m) => m.kind == MsgKind.press).toList();
+    expect(left, isNotEmpty, reason: 'シーズン中に記者の質問が届いている');
+    for (final m in left) {
+      expect(m.needsAnswer, isFalse, reason: 'プレーオフに入ったら閉じる');
+      expect(c.canAnswer(m), isFalse);
+    }
+    expect(c.inbox.where((m) => !c.canAnswer(m) && m.needsAnswer && m.kind == MsgKind.press), isEmpty);
+  });
+
+  test('前の版の保存に残った、時期を過ぎた記者の質問は読み込みで閉じる', () {
+    final c = careerAt(4, 8)..startSeason();
+    c.playBlock();
+    c.inbox.insert(0, Message(id: 99901, season: c.season - 1, from: Sender.press, title: '記者の質問', body: '', kind: MsgKind.press, choices: const ['a', 'b', 'c']));
+    final back = Career.fromJson(jsonDecode(jsonEncode(c.toJson())) as Map<String, dynamic>);
+    final m = back.inbox.firstWhere((m) => m.id == 99901);
+    expect(m.needsAnswer, isFalse);
+    // 今シーズンの質問はシーズン中なら答えられる
+    final now = Message(id: 99902, season: back.season, from: Sender.press, title: '記者の質問', body: '', kind: MsgKind.press, choices: const ['a', 'b', 'c']);
+    back.inbox.insert(0, now);
+    expect(back.canAnswer(now), isTrue);
+    back.answer(now.id, 1);
+    expect(now.answer, 1);
+  });
 }

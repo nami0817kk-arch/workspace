@@ -312,6 +312,8 @@ class _MessageCard extends StatelessWidget {
                       '返事: ${m.choices[m.answer!]}',
                       style: const TextStyle(color: GmColors.good, fontWeight: FontWeight.bold),
                     )
+                  else if (c.career?.canAnswer(m) == false)
+                    const Text('答える時期が過ぎた', style: TextStyle(color: GmColors.sub, fontSize: 12))
                   else
                     for (var i = 0; i < m.choices.length; i++)
                       Padding(
