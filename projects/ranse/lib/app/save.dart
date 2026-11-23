@@ -60,6 +60,12 @@ class SaveStore {
 
   static const _kDex = 'ranse.dex.v1';
 
+  /// 今ある手書きの最期の鍵。図鑑はこれだけを数えて並べる
+  /// （手書きの最期を入れる前の組み立ての最期や、消した最期の記録は読み飛ばす）。
+  static final Set<String> _handKeys = {
+    for (final d in kHandEndings) 'hand:${d.id}',
+  };
+
   /// 図鑑（見た最期）。鍵 → 1件。
   Future<Map<String, DexEntry>> dex() async {
     final p = await SharedPreferences.getInstance();
@@ -69,7 +75,8 @@ class SaveStore {
       final j = jsonDecode(raw) as Map<String, dynamic>;
       return {
         for (final e in j.entries)
-          e.key: DexEntry.fromJson(e.value as Map<String, dynamic>),
+          if (_handKeys.contains(e.key))
+            e.key: DexEntry.fromJson(e.value as Map<String, dynamic>),
       };
     } catch (_) {
       return {};

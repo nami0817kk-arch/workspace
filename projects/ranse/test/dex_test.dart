@@ -41,6 +41,17 @@ void main() {
     expect(key, isNot(contains(g.l.name)));
   });
 
+  test('手書きの最期でない古い記録は、図鑑に数えない', () async {
+    SharedPreferences.setMockInitialValues({
+      'ranse.dex.v1': '{"child/byo/":{"k":"child/byo/","t":"病に倒れた幼い命","x":"…","w":"child","d":"byo","n":"太郎","a":31,"y":1597,"c":1}}',
+    });
+    final store = SaveStore();
+    expect(await store.dex(), isEmpty);
+    final g = _finishedLife(5);
+    expect(await store.recordEnding(g), isTrue);
+    expect((await store.dex()).keys, [buildEnding(g).key]);
+  });
+
   test('記す途中で次の人生が始まっても、図鑑にはその人生の名前と歳が残る', () async {
     final store = SaveStore();
     final g = _finishedLife(3);
