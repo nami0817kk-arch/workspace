@@ -2,10 +2,10 @@
 
 このファイルは `growth-loop` ワークフローが自動生成している。手で編集しても次回上書きされる。
 
-- 最終更新: 2026-11-16
-- 平均成熟度: **80** `▁▄▁▇███▇▆▅▅▅▅▅▅`
+- 最終更新: 2026-11-23
+- 平均成熟度: **79** `▁▄▁▇███▇▆▅▅▅▅▅▅▅`
 - これまでに解決: **123** 件
-- 未対応: **72** 件（ほかに判断待ち 1 件）
+- 未対応: **84** 件（ほかに判断待ち 1 件）
 
 ## プロジェクト別の成熟度
 
@@ -28,6 +28,7 @@
 | `workspace/projects/kdp-novel` | Python | 87 | ±0 | 2 |
 | `workspace/projects/baseball-manager` | Flutter | 85 | ±0 | 3 |
 | `workspace/projects/rekishi-chiso` | Python | 85 | ±0 | 7 |
+| `workspace/projects/tounoishi` | Flutter | 85 | ±0 | 3 |
 | `workspace/projects/ipa-kakomon` | Python | 78 | ±0 | 3 |
 | `workspace/projects/basketball-career` | Flutter | 75 | ±0 | 2 |
 | `workspace/projects/dailyquarry-home` | Python | 75 | ±0 | 3 |
@@ -36,24 +37,25 @@
 | `workspace/projects/hikari7` | Flutter | 67 | ±0 | 4 |
 | `workspace/projects/tsuruhashi` | Flutter | 67 | ±0 | 3 |
 | `workspace/projects/youth-academy` | Flutter | 62 | ±0 | 4 |
+| `workspace/projects/naze` | Python | 42 | ±0 | 9 |
 | `workspace/projects/yononaka-danmen` | Python | 40 | ±0 | 8 |
 | `workspace/projects/cohabitation-budget` | 雛形のみ | 15 | ±0 | 0 |
 | `workspace/projects/torishirabe` | 雛形のみ | 0 | ±0 | 2 |
 
 ## 次にやること
 
-1. **[高] README が無い** — `workspace/projects/youth-academy`
+1. **[高] 依存パッケージがどこにも書かれていない** — `workspace/projects/naze`
+   - `requirements.txt`（または `pyproject.toml`）を作り、import しているサードパーティを列挙する。
+2. **[高] README が無い** — `workspace/projects/naze`
    - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
-2. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/youth-academy`
+3. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/naze`
    - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
-3. **[高] README が無い** — `workspace/projects/basketball-career`
-   - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
-4. **[中] 必要な環境変数の一覧が無い** — `workspace/projects/youth-academy`
-   - `.env.example` にキー名だけ（値は空）を並べる。README からそれを参照する。
-5. **[高] README が無い** — `workspace/projects/tsuruhashi`
-   - README.md に「目的」「動かし方」「構成」の3節を書く。長さは要らない。 参考: workspace/projects/soccer-manager が既に同じことをやっているので、そこから写すのが早い。
+4. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/tounoishi`
+   - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
+5. **[高] 環境変数を使っているのに .gitignore が .env を除外していない** — `workspace/projects/youth-academy`
+   - `.gitignore` に `.env` を追加する。1行で終わる割に事故の期待値が大きい。
 
-詳細と依頼文は `docs/growth/2026-11-16.md` を見る。
+詳細と依頼文は `docs/growth/2026-11-23.md` を見る。
 
 ## あなたの判断が要るもの
 
