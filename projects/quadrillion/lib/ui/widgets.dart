@@ -908,6 +908,86 @@ class _FlashStatState extends State<FlashStat> with SingleTickerProviderStateMix
   }
 }
 
+/// 横に並べた切り替え（図鑑の「シナジー・業種・実績」）。1つが 44pt の高さで、選んでいるものは金
+class Segments extends StatelessWidget {
+  /// （id・名前）
+  final List<(String, String)> items;
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  /// 鍵の頭（「zukan」なら zukan-syn など）
+  final String id;
+  const Segments(this.id, this.items, {super.key, required this.value, required this.onChanged});
+  @override
+  Widget build(BuildContext context) => Container(
+        margin: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(color: Pal.panel2, border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(Ui.rBtn + 3)),
+        child: Row(children: [
+          for (final e in items)
+            Expanded(
+              child: Semantics(
+                button: true,
+                selected: value == e.$1,
+                child: Material(
+                  color: value == e.$1 ? Pal.gold : Colors.transparent,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Ui.rBtn)),
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    key: ValueKey('$id-${e.$1}'),
+                    onTap: () => onChanged(e.$1),
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: minTap),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(e.$2,
+                              maxLines: 1, softWrap: false, style: ts(size: 13.5, bold: value == e.$1, color: value == e.$1 ? const Color(0xFF1A1300) : Pal.mute))),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ]),
+      );
+}
+
+/// 進み具合の棒（「12 / 141」の数字つき）
+class Progress extends StatelessWidget {
+  final int done, total;
+  final String label;
+  const Progress(this.label, this.done, this.total, {super.key});
+  @override
+  Widget build(BuildContext context) => Panel(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Row(children: [
+            Expanded(child: Text(label, style: ts(size: 13, color: Pal.mute))),
+            Text('$done / $total', key: const ValueKey('progress-count'), style: ts(size: 14, bold: true, color: Pal.goldtx)),
+          ]),
+          const SizedBox(height: 6),
+          Semantics(label: '$label $done / $total', child: Bar([(total > 0 ? done * 100 / total : 0, Pal.gold)], height: 10)),
+        ]),
+      );
+}
+
+/// 金額の横棒（決算の内訳）。プラスは緑、マイナスは赤。長さは [frac]（0〜1。いちばん大きい額を1とした比）
+class AmountBar extends StatelessWidget {
+  final double frac;
+  final bool minus;
+  const AmountBar(this.frac, {super.key, required this.minus});
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(3),
+        child: Container(
+          height: 6,
+          color: Pal.panel2,
+          alignment: Alignment.centerLeft,
+          child: FractionallySizedBox(widthFactor: frac.isFinite ? frac.clamp(0.0, 1.0) : 0, child: ColoredBox(color: minus ? Pal.down : Pal.up, child: const SizedBox.expand())),
+        ),
+      );
+}
+
 const _mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 /// 年と月（日本語は「1980年1月」、[sp] なら「1980年 1月」。英語は「Jan 1980」）

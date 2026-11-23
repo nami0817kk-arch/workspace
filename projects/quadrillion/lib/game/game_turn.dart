@@ -450,6 +450,10 @@ extension GameTurn on Game {
     if (won != null && won != won0) chron('won', won!);
     if (over != null && over != over0) chron('over', over!);
     trackPeaks();
+    // 実績（記録だけ。乱数は使わない。extras を切ると何もしない）
+    for (final a in achCheck()) {
+      N(M('実績「{0}」を達成しました', [D(a.nJa)]), 'big');
+    }
     lastNews = news;
     log.addAll(news.map((x) => LogEntry(x.m, x.t, year, q)));
     if (log.length > 300) log.removeRange(0, log.length - 300);

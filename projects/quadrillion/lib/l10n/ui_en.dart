@@ -591,4 +591,65 @@ const Map<String, String> uiEn = {
   '今': 'Now',
   '現金': 'Cash',
   'いま言うことはありません。': 'Nothing to flag right now.',
+
+  // ===== 1.0.0+15：ボタンの組・用語の説明・図鑑・まとめて進める・数字 =====
+  '伸ばす': 'Grow',
+  '戦う@@grp': 'Compete',
+  '形を変える': 'Reshape',
+  '手放すと戻せません': "Selling can't be undone",
+  'まとめて進める': 'Skip ahead',
+  '選ぶ出来事が起きたら、そこで止まります。': 'Time stops whenever an event needs your decision.',
+  '何か起きるまで': 'Until something happens',
+  '選ぶ出来事か大事な知らせが出るまで進める（最大{0}か月）': 'Run until an event or major news comes up (max {0} months)',
+  '大事な知らせがあったので、{0}で止めました': 'Stopped at {0}: major news came in',
+  '{0}か月進めましたが、大きなことは起きませんでした': 'Ran {0} months. Nothing major happened',
+  '用語の説明': 'Glossary',
+  '用語の説明：{0}': 'Explain: {0}',
+  '手@@term': 'Moves',
+  '1か月にできる行動の数です。金色の四角が今月の残りで、月が替わると元に戻ります。事業が増えると、使える手も増えます。':
+      'How many actions you get each month. The gold squares show what is left, and they refill when the month turns. More businesses give you more moves.',
+  'シェア@@term': 'Share',
+  'その業種の市場のうち、あなたの事業が取っている割合です。店・商品・人・責任者の力を、競争相手と比べて決まります。売上は「市場の大きさ×シェア」です。':
+      "The slice of an industry's market your business holds. It comes from your sites, products, people and manager measured against competitors. Revenue is market size times share.",
+  '現場の力@@term': 'Staffing',
+  '店や工場を動かす人手が足りているかを表します。100%なら全部が動きます。90%を切ると一部が止まり、止まった分はほとんど稼ぎません。「現場の人を増やす」で上がります。':
+      'Whether you have enough front-line people to run your sites. At 100% everything runs. Below 90% some sites stall, and stalled ones earn almost nothing. Raise it with "Hire staff".',
+  '維持費@@term': 'Upkeep',
+  '店・工場と現場の人に、毎月かかるお金です。増やすほど上がり、売上が落ちても減りません。事業の利益から引かれます。':
+      "The monthly cost of your sites and front-line staff. It grows as you add more and does not shrink when sales fall. It comes out of the business's profit.",
+  '先行者@@term': 'First mover',
+  '業種が生まれて3年以内に始めた事業に付きます。始めてから5年のあいだ、店・商品・広告などの打ち手がふだんの1.6倍よく効きます。':
+      'Given to a business started within 3 years of its industry being born. For 5 years after you start, building, products and ads work 1.6 times as well as usual.',
+  '規模の利益@@term': 'Scale bonus',
+  '1つの事業を5か国以上に出すと、利益率が上がります。5か国目から1か国ごとに＋6%、最大で＋50%です。':
+      'Run one business in 5 or more countries and its margin rises: +6% for each country from the fifth, up to +50%.',
+  '稼ぎ方@@term': 'Business model',
+  '直営・フランチャイズ・下請け・場をつくる、の4つです。業種によって選べるものが違い、広がる速さ・利益の厚さ・要る人手が変わります。あとから手を使って変えられます。':
+      'Four kinds: company-run, franchise, subcontractor and platform. Which ones you can pick depends on the industry, and they change how fast you spread, how thick the margin is and how many people you need. You can switch later for a move.',
+  '持ち株@@term': 'Your stake',
+  'あなたの会社の株のうち、社長（あなた）が持っている割合です。相棒や投資家に渡すと減ります。宿敵に50%を超えて握られると、社長の座を追われます。':
+      'The part of your company that you, the CEO, own. It shrinks when you hand shares to partners or investors. If a rival gets past 50%, you are forced out.',
+  '時価総額@@term': 'Company value',
+  '会社の値段です。年の利益に評価の倍率を掛け、現金や資産を足して、借金を引いて決まります。上場すると評価が上がります。世界の企業ランキングはこの額で並びます。':
+      'What the company is worth: yearly profit times a valuation multiple, plus cash and assets, minus debt. Going public lifts the multiple. The world rankings are ordered by this number.',
+  'シナジー@@term': 'Synergy',
+  '相性のよい2つの業種を同時に持つと見つかり、両方の事業の力が2割上がります。3つの業種をそろえる大シナジーは、3つとも4割上がります。':
+      'Hold two industries that fit together and you discover a synergy: both businesses gain 20% power. A grand synergy needs three industries and lifts all three by 40%.',
+  '世界の企業ランキング@@term': 'World rankings',
+  '世界中の会社を時価総額の大きい順に並べたものです。あなたの順位は、会社の時価総額にあなたの財産を足した額で決まります。':
+      'Every company in the world, ordered by value. Your place is set by your company value plus your personal wealth.',
+  '業種@@zukan': 'Industries',
+  '実績': 'Milestones',
+  '業種図鑑': 'Industry Guide',
+  '手がけた業種': 'Industries you have run',
+  '手がけたことのある業種は、生まれた年・頂点の年・利益率・稼ぎ方が見えます。': 'Industries you have run show their birth year, peak year, margin and business models.',
+  '{0}年生まれ・頂点 {1}年・利益率{2}': 'Born {0} | peak {1} | margin {2}',
+  '稼ぎ方：{0}': 'Models: {0}',
+  '{0}年ごろ生まれそう': 'Likely to emerge around {0}',
+  '？？？（未来の業種）': '??? (future industries)',
+  '達成した実績': 'Milestones reached',
+  '達成済み': 'Done',
+  '見つけたシナジー': 'Synergies found',
+  '色の丸は宿敵（宿敵ごとの色）。上位10社・あなたの前後5社・宿敵を出しています': 'A colored dot marks a rival. Showing the top 10, five either side of you, and your rivals.',
+  '市場（国内・月） {0}': 'Market (home/mo) {0}',
 };
