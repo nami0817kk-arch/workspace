@@ -92,7 +92,7 @@
     const opp = YA.matchOf(w) ? YA.opponentOf(w) : null;
     const wrap = h('div', { class: 'home' });
     // 左：今週
-    const left = h('div', { class: 'card', style: 'width:34%;min-width:250px;padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;overflow-x:hidden' });
+    const left = h('div', { class: 'card home-left', style: 'width:34%;min-width:250px;padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;overflow-x:hidden' });
     const tn = w.top ? YA.topNow(w) : null;
     const prom = (w.promises || []).filter((x) => w.players[x.pid]);
     left.append(h('div', { class: 'row', style: 'gap:6px' }, YA.emblemEl(w, w.clubName, 24), h('div', { class: 'sub' }, w.clubName)),
@@ -174,7 +174,7 @@
     }
     mid.append(list, h('div', { class: 'note', style: 'margin-top:3px' }, '大事・通常のお知らせは、長押しで上に留められます（5件まで）'), h('div', { class: 'row', style: 'gap:5px;margin-top:5px' }, h('button', { class: 'btn sm', onclick: () => { U().app.showLog = !showLog; rerender(); } }, showLog ? '記録だけのものを隠す' : 'すべてのお知らせ'), unread ? h('button', { class: 'btn sm', onclick: () => { w.readAt = w.year * 100 + w.week; YA.saveWorld(); rerender(); } }, 'すべて読んだ') : null));
     // 右：気にかけたい子
-    const right = h('div', { class: 'card pbody', style: 'width:210px;flex:none' });
+    const right = h('div', { class: 'card pbody home-right', style: 'width:210px;flex:none' });
     right.append(h('div', { class: 'h' }, '今週気にかけたい子'));
     const pick = [];
     for (const p of S.injured.concat(S.tired, S.lowconf, Object.values(w.players).filter((q) => q.unrest >= 3), S.hot)) if (pick.indexOf(p) < 0) pick.push(p);
