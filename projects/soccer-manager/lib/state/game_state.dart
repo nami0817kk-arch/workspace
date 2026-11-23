@@ -361,6 +361,11 @@ class GameState extends ChangeNotifier {
   /// スカウトが見つけてきた、獲得可能な候補選手一覧(閲覧専用・未確定)。
   List<Player> scoutCandidates = [];
 
+  /// スカウト網の「埋もれた即戦力」の所属先(選手の id → クラブ名)。
+  /// ここに載っている候補はユースの子ではなく、移籍で獲るプロ。候補と同じく
+  /// セーブには入らない。
+  Map<String, String> scoutedProClubs = {};
+
   /// IDから選手を探す。自軍だけでなく、ユースの有望株・スカウト候補・
   /// 移籍市場・フリーエージェントまで見る。
   ///
@@ -1697,6 +1702,11 @@ class GameState extends ChangeNotifier {
           strengthTier: strengthForTier(userStartTier),
         ),
       );
+    }
+    // 自クラブと同じ部の CPU は、開幕から毎週の練習で伸びる。24歳以上の
+    // 伸びしろは小さく作る(PlayerGenerator.capStartingRoom)。
+    for (final t in cpuTeams) {
+      PlayerGenerator.capStartingRoom(t);
     }
     final teams = [userTeam, ...cpuTeams];
     for (final t in teams) {

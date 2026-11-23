@@ -182,5 +182,18 @@ class RetirementEngine {
         strengthTier: cpuRecruitStrength(team,
             replacedOverall: replacedOverall, tier: tier),
         ageOverride: 21 + _rng.nextInt(7),
+        potentialSpreadUp: cpuRecruitPotentialSpreadUp(tier),
       );
+
+  /// CPU の補充の潜在の振れ幅の上側(-10〜+いくつ)。
+  ///
+  /// 2部・3部は +5 まで(1部と部が分からないときは +10 のまま)。CPU の
+  /// 練習を自クラブの標準とそろえた(2026-11-23)ら、21〜27歳の補充が
+  /// 潜在まで伸び切るようになり、+10 まで振ると3部の上位11人の中央が
+  /// 10季で 72→75 と上がり続けた。下の部ほど「伸びしろの大きい選手」は
+  /// 上の部へ抜けていく、という形にする。
+  static int cpuRecruitPotentialSpreadUp(int? tier) =>
+      (tier ?? 1) >= 2 ? cpuLowerTierPotentialSpreadUp : 10;
+
+  static const int cpuLowerTierPotentialSpreadUp = 5;
 }
