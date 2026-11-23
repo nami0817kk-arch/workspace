@@ -35,7 +35,9 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-latest
+    # Xcode 27（iOS 27 SDK）の入ったランナー。macos-latest は 2026-11 時点で Xcode 26 までしか無く、
+    # ITMS-90725（2027年4月から iOS 27 SDK 以降が必要）の警告が出た。xcode-27 は arm64 の macOS 27 で動く。
+    runs-on: xcode-27
     timeout-minutes: 60
     defaults:
       run:
