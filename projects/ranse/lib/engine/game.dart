@@ -24,6 +24,7 @@ import 'regions.dart';
 import 'rng.dart';
 import 'talents.dart';
 import 'temple.dart';
+import 'trade_farm.dart';
 import 'village.dart';
 import 'ways.dart';
 import 'women.dart';
@@ -80,6 +81,7 @@ class Game extends ChangeNotifier {
       ...buildWomanLifeScenes(),
       ...buildAshigaruScenes(),
       ...buildVillageScenes(),
+      ...buildTradeFarmScenes(),
       ...buildTalentScenes(),
       ...buildPastimeScenes(),
       ...buildTempleScenes(),
