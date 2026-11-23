@@ -2,7 +2,7 @@
 // ・特性 70→100（名前と金は data.js、効き目は data.js の YA.TRAIT_X を engine の traitXMod が足す）。ここは覚えやすさ（関わる能力）
 // ・悪い癖（YA.HABITS。入団時に約3割が1つ・まれに2つ。練習で直せる）
 // ・特性の組み合わせ（YA.TRAIT_COMBO。engine が足す。ここは見せ方）
-// ・金までの見せ方（試合で効いた回数と関わる能力）
+// ・金までの見せ方（効いた試合の数と関わる能力）
 // ・特性の出どころ（師匠・先輩・憧れの卒業生。教えてくれる人がいると覚えるのが速い）
 // ・覚醒の形 20→40・まれに覚醒の特性が2つ（両方残す）
 (function () {
@@ -251,7 +251,7 @@
   };
 
   // ---------- 見せ方 ----------
-  // 金までの道のり（試合で効いた回数・関わる能力）
+  // 金までの道のり（効いた試合の数・関わる能力）
   YA.goldProgress = function (p, t) {
     if (!YA.GOLD[t] || (YA.isGold && YA.isGold(p, t))) return null;
     const used = (p.trUse && p.trUse[t]) || 0;
@@ -280,7 +280,7 @@
           const g = YA.goldProgress(p, t);
           const from = p.trFrom && p.trFrom[t];
           const bits = [];
-          if (g) bits.push(`金「${g.name}」まで 試合${g.used}/${g.need}回・能力${g.ab}/${g.abNeed}`);
+          if (g) bits.push(`金「${g.name}」まで 効いた試合${g.used}/${g.need}・能力${g.ab}/${g.abNeed}`);
           if (from && from !== '自分で') bits.push(from + '覚えた');
           if (bits.length) lines.push(`${t}：${bits.join('・')}`);
         }

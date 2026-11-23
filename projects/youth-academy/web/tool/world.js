@@ -1437,6 +1437,12 @@ for (const p of Object.values(w.players)) ok(YA.abSum(p) <= p.pot + 6, '伸び�
     YA.goldCheck(wg, pg);
     ok(YA.isGold(pg, 'スルーパス') && /針の穴/.test(pg.hist[0].t), '条件がそろうと金の特性に変わる');
     ok(YA.goldReady(pg, 'スルーパス').ok, '金までの進み具合が読める');
+    // 1試合で何回効いても1と数える（2026-11-23：GK のセーブの特性が1試合で6回効き、1試合目で金に変わっていた）
+    const pk = Object.values(wg.players).find((p) => p.id !== pg.id);
+    pk.traits = ['足でのセーブ'];
+    pk.trUse = {};
+    YA.traitUse(wg, { trUse: { [pk.id + '|足でのセーブ']: 7 } });
+    ok(pk.trUse['足でのセーブ'] === 1 && !YA.isGold(pk, '足でのセーブ'), '1試合で7回効いても、効いた試合は1と数える（' + pk.trUse['足でのセーブ'] + '）');
   }
   // ★の付いていない子は覚醒しない。おまかせで3年回すと★の子が何人か覚醒する
   let star = 0, other = 0, yrs = 0;
