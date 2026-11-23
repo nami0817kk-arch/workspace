@@ -252,19 +252,27 @@ class _PromptCard extends StatelessWidget {
             for (var r = 0; r < n; r += 2)
               Padding(
                 padding: const EdgeInsets.only(bottom: 6),
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(child: _ChoiceButton(g, p, r, compact: true)),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: r + 1 < n
-                            ? _ChoiceButton(g, p, r + 1, compact: true)
-                            : const SizedBox.shrink(),
+                // IntrinsicHeight は字の折り返しを読み違えて字が枠からはみ出したので、
+                // 高さの下限をそろえるだけにする（長い字の釦は伸びる）。
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 66),
+                        child: _ChoiceButton(g, p, r, compact: true),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: r + 1 < n
+                          ? ConstrainedBox(
+                              constraints: const BoxConstraints(minHeight: 66),
+                              child: _ChoiceButton(g, p, r + 1, compact: true),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
                 ),
               )
           else
