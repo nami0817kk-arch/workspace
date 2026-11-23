@@ -811,7 +811,7 @@ class Game extends ChangeNotifier {
           age <= (l.female ? 40 : 60) &&
           l.kids < 8 &&
           rng.chance(l.female ? .10 : .06)) {
-        l.kids++;
+        l.addKid(year);
         j(8);
         log('子が生まれた（${l.kids}人目）。', 'good');
         final risk = clampD(
@@ -827,7 +827,7 @@ class Game extends ChangeNotifier {
         }
       }
       if (l.dead == null && l.kids > 0 && rng.chance(.012 * l.kids)) {
-        l.kids--;
+        l.loseKid(year, 0, 10);
         j(-25);
         setFlag('fa_lost_child');
         log('幼い我が子を病で失った。', 'bad');

@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ranse/engine/birth.dart';
 import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/ending.dart';
+import 'package:ranse/engine/family.dart';
 import 'package:ranse/engine/endings_catalog.dart';
 import 'package:ranse/engine/game.dart';
 import 'package:ranse/engine/history.dart';
@@ -2255,6 +2256,191 @@ void main() {
         );
       }
       expect(checked, greaterThan(20));
+    });
+
+    test('子の生まれた年は保存の往復で残り、古い保存（年が無い）も読める', () {
+      final g = startSurvivor(4242);
+      g.l
+        ..kids = 0
+        ..addKid(1550)
+        ..addKid(1553);
+      final (back, _) = fromJson(jsonOf(g));
+      expect(back.kids, 2);
+      expect(back.kidYears, [1550, 1553]);
+      expect(back.eldestKidAge(1565), 15);
+      expect(back.youngestKidAge(1565), 12);
+      // 古い保存: kidYears が無い。子は「年の分からない子」になる。
+      final m = jsonDecode(jsonOf(g)) as Map<String, dynamic>;
+      (m['life'] as Map<String, dynamic>).remove('kidYears');
+      final (old, _) = fromJson(jsonEncode(m));
+      expect(old.kids, 2);
+      expect(old.kidYears, isEmpty);
+      expect(old.eldestKidAge(1565), isNull);
+      expect(old.hasKidAged(1565, 12, 16), isTrue);
+      // 子を亡くすと、その歳の子の年が外れる。
+      back.loseKid(1565, 0, 12);
+      expect(back.kidYears, [1550]);
+      expect(back.kids, 1);
+    });
+
+    /// 主家に仕える侍（位3）の男で、連れ合いのいる大人の人生を作る（40歳）。
+    Game? bukeFather(int seed) {
+      final rng = Rng(seed);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      playChildhood(g, Rng(seed + 1));
+      if (g.finished ||
+          g.l.female ||
+          g.hasFlag('priesthood') ||
+          g.hasFlag('way_outlaw') ||
+          g.hasFlag('retired') ||
+          g.alive.isEmpty) {
+        return null;
+      }
+      g.l
+        ..rank = 3
+        ..maxRank = 3
+        ..lord = g.alive.first.name
+        ..fav = 40
+        ..married = true
+        ..t = 40 * 2;
+      g.meet('伴侶', '中村家のお福', 60);
+      return g;
+    }
+
+    test('いちばん上の子が幼いあいだは、元服・初陣・家督の場面が出ない（子が育つと出る）', () {
+      final scenes = {for (final s in buildFamilyScenes()) s.id: s};
+      bool ok(Game g, String id) => scenes[id]!.cond(g);
+      var checked = 0;
+      for (var seed = 0; seed < 40 && checked < 5; seed++) {
+        final g = bukeFather(seed + 9900);
+        if (g == null) continue;
+        checked++;
+        final l = g.l;
+        final y = g.year;
+        void kidsBorn(List<int> ages) {
+          l
+            ..kids = 0
+            ..kidYears.clear();
+          for (final a in ages) {
+            l.addKid(y - a);
+          }
+        }
+
+        // 生まれたばかりと二つの子。
+        kidsBorn([2, 0]);
+        l.people.remove('嫡男');
+        expect(ok(g, 'fa_genpuku'), isFalse);
+        expect(ok(g, 'fa_mogi'), isFalse);
+        expect(ok(g, 'fa_yome'), isFalse);
+        expect(ok(g, 'fa_atome'), isFalse);
+        expect(ok(g, 'fa_sick'), isTrue);
+        g.meet('嫡男', '太郎', 60);
+        expect(ok(g, 'fa_uijin'), isFalse);
+        expect(ok(g, 'fa_shuppon'), isFalse);
+        expect(ok(g, 'fa_tameshi'), isFalse);
+
+        // 十四と十二の子。
+        kidsBorn([14, 12]);
+        l.people.remove('嫡男');
+        expect(ok(g, 'fa_genpuku'), isTrue);
+        expect(ok(g, 'fa_mogi'), isTrue);
+        expect(ok(g, 'fa_sick'), isTrue);
+        g.meet('嫡男', '太郎', 60);
+        expect(ok(g, 'fa_uijin'), isTrue);
+        expect(ok(g, 'fa_tameshi'), isFalse);
+        expect(ok(g, 'fa_atome'), isFalse, reason: '弟がまだ幼い');
+
+        // 二十二と十八の子。
+        kidsBorn([22, 18]);
+        expect(ok(g, 'fa_genpuku'), isFalse, reason: '嫡男がいる');
+        expect(ok(g, 'fa_uijin'), isTrue);
+        expect(ok(g, 'fa_shuppon'), isTrue);
+        expect(ok(g, 'fa_tameshi'), isTrue);
+        expect(ok(g, 'fa_yome'), isTrue);
+        expect(ok(g, 'fa_atome'), isTrue);
+        expect(ok(g, 'fa_sick'), isFalse, reason: '幼い子がいない');
+        l.people.remove('嫡男');
+        expect(ok(g, 'fa_genpuku'), isFalse, reason: '元服の歳の子がいない');
+
+        // 古い保存（年の分からない子）は、今までどおり親の歳で見る。
+        l
+          ..kids = 2
+          ..kidYears.clear();
+        expect(ok(g, 'fa_genpuku'), isTrue);
+        g.meet('嫡男', '太郎', 60);
+        expect(ok(g, 'fa_uijin'), isTrue);
+        expect(ok(g, 'fa_tameshi'), isTrue);
+      }
+      expect(checked, greaterThanOrEqualTo(3));
+    });
+
+    test('生まれたばかりの子を持たせて生きると、元服・初陣・家督は子が育ってから出る', () {
+      final seen = <String>{};
+      var lives = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 9700);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished) continue;
+        if (g.prompt?.title != '今年の重点') {
+          g.choose(0);
+          if (g.finished || g.prompt?.title != '今年の重点') continue;
+        }
+        final l = g.l;
+        if (!l.female && !g.hasFlag('priesthood') && !g.hasFlag('way_outlaw')) {
+          l
+            ..rank = 3
+            ..maxRank = 3
+            ..lord = g.alive.first.name
+            ..fav = 40;
+        }
+        l
+          ..married = true
+          ..t = 26 * 2
+          ..kids = 0
+          ..kidYears.clear();
+        g.meet('伴侶', l.female ? '中村家の太郎' : '中村家のお福', 60);
+        l
+          ..addKid(g.year)
+          ..addKid(g.year);
+        lives++;
+        final before = <String>{};
+        playOut(
+          g,
+          Rng(seed + 1),
+          onPrompt: (p) {
+            final now = g.l.flags
+                .where((f) => f.startsWith('scene:fa_'))
+                .toSet();
+            for (final f in now.difference(before)) {
+              final id = f.substring(6);
+              seen.add(id);
+              final y = g.year;
+              final eldest = g.l.eldestKidAge(y);
+              String why() => '$id: 子の歳 ${g.l.kidYears.map((k) => y - k)}';
+              switch (id) {
+                case 'fa_genpuku' || 'fa_mogi':
+                  expect(g.l.hasKidAged(y, 11, 17), isTrue, reason: why());
+                case 'fa_uijin':
+                  expect(g.l.hasKidAged(y, 13, 20), isTrue, reason: why());
+                case 'fa_tameshi':
+                  expect(eldest, greaterThanOrEqualTo(20), reason: why());
+                case 'fa_mago':
+                  expect(eldest, greaterThanOrEqualTo(18), reason: why());
+                case 'fa_yome':
+                  expect(g.l.hasKidAged(y, 15, 28), isTrue, reason: why());
+              }
+            }
+            before.addAll(now);
+          },
+        );
+      }
+      expect(lives, greaterThan(100));
+      for (final id in ['fa_genpuku', 'fa_mogi', 'fa_uijin', 'fa_tameshi']) {
+        expect(seen, contains(id), reason: '$seen');
+      }
     });
   });
 

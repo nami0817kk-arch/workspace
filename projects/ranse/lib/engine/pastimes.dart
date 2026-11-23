@@ -235,7 +235,8 @@ final _pastimes = <_Pastime>[
   _Pastime(
     'ps_kid',
     (g) =>
-        g.l.kids > 0 &&
+        // 手習いの年頃（6〜15歳）の子がいるとき（年の分からない子は親の歳で見る）。
+        g.l.hasKidAged(g.year, 6, 15) &&
         g.age >= 22 &&
         _ctx(g) != _Ctx.monk &&
         _ctx(g) != _Ctx.outlaw,

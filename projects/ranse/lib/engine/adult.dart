@@ -1279,7 +1279,8 @@ List<SceneDef> buildAdultScenes() {
           g.l.female &&
           g.l.rank >= 6 &&
           g.l.rank < 8 &&
-          g.l.kids >= 1 &&
+          // 「幼い嫡子」の後見なので、15歳未満の子がいるときだけ（年の分からない子は親の歳で見る）。
+          g.l.hasKidAged(g.year, 0, 14) &&
           (g.hasFlag('sokushitsu') || g.l.path.any((p) => p.contains('輿入れした'))),
       (g, next) {
         g.ask('後見', '当主が急死した。幼い嫡子に代わり、後見を求める声が上がっている。', [

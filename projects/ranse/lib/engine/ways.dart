@@ -342,7 +342,7 @@ List<SceneDef> buildWayScenes() {
     SceneDef('shop_heir', 45, 80, (g) => 3, (g) => merchant(g), (g, next) {
       final l = g.l;
       g.ask('店の跡目', '店を誰に任せるか、決める時が来た。', [
-        if (l.kids > 0)
+        if (l.kids > 0 && l.hasKidAged(g.year, 15))
           Choice.h('我が子に継がせる', '家は続く。子の器量しだいでもある', () {
             final n = _childName(g);
             g.meet('子', n, 60);
@@ -818,7 +818,11 @@ List<SceneDef> buildWayScenes() {
       30,
       65,
       (g) => 2.5,
-      (g) => g.l.kids > 0 && !g.l.people.containsKey('子'),
+      // 一人前の歳（14〜24）の子がいるとき。年の分からない子は親の歳で見る。
+      (g) =>
+          g.l.kids > 0 &&
+          g.l.hasKidAged(g.year, 14, 24) &&
+          !g.l.people.containsKey('子'),
       (g, next) {
         final n = _childName(g);
         g.ask('子の門出', '子の$nが、一人前になる歳を迎えた。', [
@@ -898,20 +902,28 @@ List<SceneDef> buildWayScenes() {
       },
     ),
 
-    SceneDef('grandchild', 45, 84, (g) => 2, (g) => g.l.kids > 0, (g, next) {
-      g.ask('孫', '孫が生まれた。小さな手が、あなたの指を握った。', [
-        Choice.h('名付け親になる', '血はつながっていく', () {
-          g.setFlag('grandchild');
-          g.j(12);
-          g.mark('孫の名付け親となった');
-          return '孫に名を授けた。';
-        }),
-        Choice.h('遠くから喜ぶ', 'いまは務めが大事だ', () {
-          g.j(5);
-          return '便りを読み、ひとり静かに喜んだ。';
-        }),
-      ], after: next);
-    }),
+    // 孫は、いちばん上の子が十八を過ぎてから。
+    SceneDef(
+      'grandchild',
+      45,
+      84,
+      (g) => 2,
+      (g) => g.l.kids > 0 && (g.l.eldestKidAge(g.year) ?? 99) >= 18,
+      (g, next) {
+        g.ask('孫', '孫が生まれた。小さな手が、あなたの指を握った。', [
+          Choice.h('名付け親になる', '血はつながっていく', () {
+            g.setFlag('grandchild');
+            g.j(12);
+            g.mark('孫の名付け親となった');
+            return '孫に名を授けた。';
+          }),
+          Choice.h('遠くから喜ぶ', 'いまは務めが大事だ', () {
+            g.j(5);
+            return '便りを読み、ひとり静かに喜んだ。';
+          }),
+        ], after: next);
+      },
+    ),
 
     SceneDef(
       'last_battle',

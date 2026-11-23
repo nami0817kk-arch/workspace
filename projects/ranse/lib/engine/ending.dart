@@ -162,14 +162,27 @@ String _eraEpilogue(Game g, String way) {
   return '$who$kids';
 }
 
-/// 最期の場にいた人。絆の深い順に、伴侶・子・幼なじみ・弟子・主君・師。
+/// 最期の場にいた人。絆の深い順に、伴侶・子（嫡男・養子・娘）・孫・幼なじみ・弟子・主君・師。
+/// 組み立ての最期でだけ使う（手書きの最期の図鑑の鍵は `hand:<id>` なので、候補を足しても変わらない）。
 Person? _witness(Game g) {
   final l = g.l;
   // 連れ合いがいれば、最期の場にいるのは連れ合い。
   final sp = l.people['伴侶'];
   if (sp != null && l.married) return sp;
   // 連れ合いを亡くした・別れた人では、伴侶は最期の場にいない（候補から外す）。
-  const roles = ['子', '娘', '幼なじみ', '弟妹', '弟子', '主君', '師', '好敵手'];
+  const roles = [
+    '嫡男',
+    '子',
+    '養子',
+    '娘',
+    '孫',
+    '幼なじみ',
+    '弟妹',
+    '弟子',
+    '主君',
+    '師',
+    '好敵手',
+  ];
   Person? best;
   for (final r in roles) {
     final p = l.people[r];

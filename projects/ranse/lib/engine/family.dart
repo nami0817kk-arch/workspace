@@ -8,7 +8,8 @@ import 'rng.dart';
 /// 子と家族の岐路（2026-11-23）。親として、子の元服・裳着・初陣・志・縁談・病・反抗・出奔・
 /// 跡目・養子・家督・孫・人質と、連れ合いとの諍いと病を描く。id・新しい旗は `fa_` で始める。
 ///
-/// 子は `Life.kids`（数）で持つ。名のある子は縁のある人として残す:
+/// 子は `Life.kids`（数）と `Life.kidYears`（生まれた年）で持つ。場面は子の歳で出し分ける
+/// （年の分からない子＝古い保存がいれば、今までどおり親の歳の窓だけで見る）。名のある子は縁のある人として残す:
 /// - 「嫡男」（武家の跡継ぎ。元服・初陣・出奔・跡目で付く。城主・大名の岐路と同じ役割）
 /// - 「娘」（裳着・祝い）／「子」（百姓・町人の跡継ぎ）／「養子」
 /// - 「人質に出した子」「勘当した子」「出奔した子」「寺に入った子」「孫」
@@ -58,9 +59,18 @@ void _bond(Person? p, int v) {
   if (p != null) p.bond = _c(p.bond + v);
 }
 
-/// 子を亡くす。役割があれば人物から外し、悲しみの旗を立てる。
-void _loseChild(Game g, String? role, String text) {
-  if (g.l.kids > 0) g.l.kids--;
+/// 歳が [lo]〜[hi] の子がいるか（年の分からない子がいれば真）。
+bool _kidAged(Game g, int lo, [int hi = 999]) => g.l.hasKidAged(g.year, lo, hi);
+
+/// いちばん上の子が [min] 歳以上か（年の分からない子がいれば真）。
+bool _eldestAtLeast(Game g, int min) {
+  final a = g.l.eldestKidAge(g.year);
+  return a == null ? g.l.kids > 0 : a >= min;
+}
+
+/// 子を亡くす。役割があれば人物から外し、悲しみの旗を立てる。歳が [lo]〜[hi] の子を外す。
+void _loseChild(Game g, String? role, String text, [int lo = 0, int hi = 999]) {
+  g.l.loseKid(g.year, lo, hi);
   if (role != null) g.l.people.remove(role);
   g.setFlag('fa_lost_child');
   g.j(-25);
@@ -84,9 +94,13 @@ List<SceneDef> buildFamilyScenes() => [
   SceneDef(
     'fa_genpuku',
     30,
-    55,
+    60,
     (g) => 3,
-    (g) => _bukeParent(g) && g.l.kids >= 1 && !g.l.people.containsKey('嫡男'),
+    (g) =>
+        _bukeParent(g) &&
+        g.l.kids >= 1 &&
+        _kidAged(g, 11, 17) &&
+        !g.l.people.containsKey('嫡男'),
     (g, next) {
       final l = g.l;
       final young = l.rank >= 5 ? g.rng.pick(kHeirNames) : null;
@@ -133,10 +147,14 @@ List<SceneDef> buildFamilyScenes() => [
   SceneDef(
     'fa_mogi',
     28,
-    55,
+    60,
     (g) => 2.5,
     (g) =>
-        _home(g) && g.active && g.l.kids >= 1 && !g.l.people.containsKey('娘'),
+        _home(g) &&
+        g.active &&
+        g.l.kids >= 1 &&
+        _kidAged(g, 11, 17) &&
+        !g.l.people.containsKey('娘'),
     (g, next) {
       final l = g.l;
       final buke = l.rank >= 1;
@@ -187,9 +205,13 @@ List<SceneDef> buildFamilyScenes() => [
   SceneDef(
     'fa_uijin',
     33,
-    60,
-    (g) => 3,
-    (g) => _buke(g) && g.l.kids >= 1 && g.l.people.containsKey('嫡男'),
+    64,
+    (g) => 4,
+    (g) =>
+        _buke(g) &&
+        g.l.kids >= 1 &&
+        _kidAged(g, 13, 20) &&
+        g.l.people.containsKey('嫡男'),
     (g, next) {
       final l = g.l;
       final k = l.people['嫡男']!;
@@ -202,7 +224,7 @@ List<SceneDef> buildFamilyScenes() => [
               return '$nに迫った槍の前へ、体が先に出た。';
             }
             if (g.rng.chance(.04)) {
-              _loseChild(g, '嫡男', '嫡男の$nを、初陣で亡くした');
+              _loseChild(g, '嫡男', '嫡男の$nを、初陣で亡くした', 13, 20);
               return '乱戦の中で、$nの姿を見失った。見つけたときには、もう冷たかった。';
             }
             _bond(k, 10);
@@ -213,7 +235,7 @@ List<SceneDef> buildFamilyScenes() => [
           }),
         Choice.h('古参の侍に預ける', '戦の作法は身につく。親は戦場で見守れない', () {
           if (g.rng.chance(.06)) {
-            _loseChild(g, '嫡男', '嫡男の$nを、初陣で亡くした');
+            _loseChild(g, '嫡男', '嫡男の$nを、初陣で亡くした', 13, 20);
             return '古参の侍が、$nの兜を抱えて戻ってきた。';
           }
           _bond(k, 3);
@@ -235,11 +257,12 @@ List<SceneDef> buildFamilyScenes() => [
   SceneDef(
     'fa_kokorozashi',
     36,
-    60,
+    64,
     (g) => 2.5,
     (g) =>
         (_merchant(g) || _craft(g) || _villager(g)) &&
         g.l.kids >= 1 &&
+        _kidAged(g, 13, 22) &&
         !g.l.people.containsKey('子'),
     (g, next) {
       final n = g.rng.pick(kGivenM);
@@ -268,7 +291,7 @@ List<SceneDef> buildFamilyScenes() => [
           soldier ? '子は目を輝かせる。戦に出れば、無事は分からない' : '子は目を輝かせる。家は誰が継ぐ',
           () {
             if (soldier && g.rng.chance(.08)) {
-              _loseChild(g, null, '足軽に出た子の$nを、戦で亡くした');
+              _loseChild(g, null, '足軽に出た子の$nを、戦で亡くした', 13, 30);
               return 'その年の秋、$nの討死を知らせる者が来た。';
             }
             g.meet('旅立った子', n, 75);
@@ -295,9 +318,14 @@ List<SceneDef> buildFamilyScenes() => [
   SceneDef(
     'fa_yome',
     38,
-    64,
+    68,
     (g) => 2,
-    (g) => _home(g) && g.active && g.l.kids >= 1 && g.l.rank <= 4,
+    (g) =>
+        _home(g) &&
+        g.active &&
+        g.l.kids >= 1 &&
+        _kidAged(g, 15, 28) &&
+        g.l.rank <= 4,
     (g, next) {
       final l = g.l;
       final buke = l.rank >= 1;
@@ -357,7 +385,7 @@ List<SceneDef> buildFamilyScenes() => [
     22,
     58,
     (g) => 2,
-    (g) => g.l.kids >= 1 && !_monk(g) && !_villager(g),
+    (g) => g.l.kids >= 1 && _kidAged(g, 0, 12) && !_monk(g) && !_villager(g),
     (g, next) {
       final l = g.l;
       final n = g.rng.pick(g.rng.chance(.5) ? kGivenM : kGivenF);
@@ -365,14 +393,14 @@ List<SceneDef> buildFamilyScenes() => [
         Choice.h('名医を呼び、薬を求める', '効き目は確か。蔵が軽くなる', () {
           if (l.gold < 12) {
             if (g.rng.chance(.12)) {
-              _loseChild(g, null, '幼い我が子の$nを、病で亡くした');
+              _loseChild(g, null, '幼い我が子の$nを、病で亡くした', 0, 12);
               return '薬代が足りなかった。$nは、明け方に息を引き取った。';
             }
             return '薬代が足りず、半分だけ薬を分けてもらった。$nは何とか持ち直した。';
           }
           _pay(g, 12);
           if (g.rng.chance(.03)) {
-            _loseChild(g, null, '幼い我が子の$nを、病で亡くした');
+            _loseChild(g, null, '幼い我が子の$nを、病で亡くした', 0, 12);
             return '薬も届かなかった。$nは、小さく息を吐いて動かなくなった。';
           }
           g.j(3);
@@ -380,14 +408,14 @@ List<SceneDef> buildFamilyScenes() => [
         }),
         Choice.h('寺社に祈祷を頼む', '心は静まる。効くかどうかは神仏しだい', () {
           if (g.rng.chance(.15)) {
-            _loseChild(g, null, '幼い我が子の$nを、病で亡くした');
+            _loseChild(g, null, '幼い我が子の$nを、病で亡くした', 0, 12);
             return '祈りは、届かなかった。';
           }
           return '護摩の煙の中で夜を明かした。朝、$nが水を欲しがった。';
         }),
         Choice.h('寺に預け、仏に仕える身として助けを乞う', '命は助かりやすい。子は家に戻らない', () {
           if (g.rng.chance(.02)) {
-            _loseChild(g, null, '寺に預けた幼い我が子の$nを、病で亡くした');
+            _loseChild(g, null, '寺に預けた幼い我が子の$nを、病で亡くした', 0, 12);
             return '寺からの使いは、うつむいたまま口を開いた。';
           }
           g.meet('寺に入った子', n, 60);
@@ -441,45 +469,49 @@ List<SceneDef> buildFamilyScenes() => [
 
   // ------------------------------------------------------------------
   // 子が身を持ち崩す（町や村）。
-  SceneDef('fa_hoto', 36, 66, (g) => 2, (g) => _commoner(g) && g.l.kids >= 1, (
-    g,
-    next,
-  ) {
-    final l = g.l;
-    final k = l.people['子'];
-    final n = k?.name ?? g.rng.pick<String>(kGivenM);
-    g.ask('子の放蕩', '子の$nが、悪い仲間と賭場に入り浸り、家の銭を持ち出すようになった。', [
-      Choice.h('賭場に乗り込んで連れ戻す', '子は目を覚ますかもしれない。荒くれ者が相手だ', () {
-        if (g.rng.chance(.25)) {
-          l.hp -= 15;
+  SceneDef(
+    'fa_hoto',
+    36,
+    68,
+    (g) => 2,
+    (g) => _commoner(g) && g.l.kids >= 1 && _kidAged(g, 13, 22),
+    (g, next) {
+      final l = g.l;
+      final k = l.people['子'];
+      final n = k?.name ?? g.rng.pick<String>(kGivenM);
+      g.ask('子の放蕩', '子の$nが、悪い仲間と賭場に入り浸り、家の銭を持ち出すようになった。', [
+        Choice.h('賭場に乗り込んで連れ戻す', '子は目を覚ますかもしれない。荒くれ者が相手だ', () {
+          if (g.rng.chance(.25)) {
+            l.hp -= 15;
+            g.meet('子', n, _c((k?.bond ?? 55) - 5));
+            return '荒くれ者に叩き出され、額を割った。$nは、それを物陰から見ていた。';
+          }
+          g.meet('子', n, _c((k?.bond ?? 55) + 8));
+          g.setFlag('fa_hoto_back');
+          g.mark('賭場に入り浸る子の$nを、乗り込んで連れ戻した');
+          return '襟首をつかんで連れ帰った。$nは、道中ずっと泣いていた。';
+        }),
+        Choice.h('勘当する', '家は守れる。子は帰る場所をなくす', () {
+          l.people.remove('子');
+          g.meet('勘当した子', n, 20);
+          g.setFlag('fa_disowned');
+          g.j(-8);
+          g.mark('身を持ち崩した子の$nを勘当した');
+          return '戸口に立つ$nに、二度と敷居をまたぐなと告げた。';
+        }),
+        Choice.h('借りを肩代わりし、黙って待つ', '子は救われる。蔵はまた空になるかもしれない', () {
+          _pay(g, 10);
+          if (g.rng.chance(.6)) {
+            g.meet('子', n, _c((k?.bond ?? 55) + 12));
+            g.setFlag('fa_hoto_reformed');
+            return 'ある朝、$nが黙って仕事に出ていた。賭場には、それきり行かなくなった。';
+          }
           g.meet('子', n, _c((k?.bond ?? 55) - 5));
-          return '荒くれ者に叩き出され、額を割った。$nは、それを物陰から見ていた。';
-        }
-        g.meet('子', n, _c((k?.bond ?? 55) + 8));
-        g.setFlag('fa_hoto_back');
-        g.mark('賭場に入り浸る子の$nを、乗り込んで連れ戻した');
-        return '襟首をつかんで連れ帰った。$nは、道中ずっと泣いていた。';
-      }),
-      Choice.h('勘当する', '家は守れる。子は帰る場所をなくす', () {
-        l.people.remove('子');
-        g.meet('勘当した子', n, 20);
-        g.setFlag('fa_disowned');
-        g.j(-8);
-        g.mark('身を持ち崩した子の$nを勘当した');
-        return '戸口に立つ$nに、二度と敷居をまたぐなと告げた。';
-      }),
-      Choice.h('借りを肩代わりし、黙って待つ', '子は救われる。蔵はまた空になるかもしれない', () {
-        _pay(g, 10);
-        if (g.rng.chance(.6)) {
-          g.meet('子', n, _c((k?.bond ?? 55) + 12));
-          g.setFlag('fa_hoto_reformed');
-          return 'ある朝、$nが黙って仕事に出ていた。賭場には、それきり行かなくなった。';
-        }
-        g.meet('子', n, _c((k?.bond ?? 55) - 5));
-        return '半年ののち、$nはまた賭場にいた。';
-      }),
-    ], after: next);
-  }),
+          return '半年ののち、$nはまた賭場にいた。';
+        }),
+      ], after: next);
+    },
+  ),
 
   // ------------------------------------------------------------------
   // 嫡男の出奔（武家）。
@@ -488,7 +520,11 @@ List<SceneDef> buildFamilyScenes() => [
     40,
     66,
     (g) => 2,
-    (g) => _buke(g) && g.l.kids >= 1 && g.l.people.containsKey('嫡男'),
+    (g) =>
+        _buke(g) &&
+        g.l.kids >= 1 &&
+        _eldestAtLeast(g, 16) &&
+        g.l.people.containsKey('嫡男'),
     (g, next) {
       final l = g.l;
       final k = l.people['嫡男']!;
@@ -527,7 +563,12 @@ List<SceneDef> buildFamilyScenes() => [
     45,
     72,
     (g) => 2.5,
-    (g) => _home(g) && g.active && g.l.kids >= 2 && g.l.rank <= 4,
+    (g) =>
+        _home(g) &&
+        g.active &&
+        g.l.kids >= 2 &&
+        g.l.kidsAtLeast(g.year, 14) >= 2 &&
+        g.l.rank <= 4,
     (g, next) {
       final l = g.l;
       final role = _heirRole(g);
@@ -584,8 +625,11 @@ List<SceneDef> buildFamilyScenes() => [
     (g, next) {
       final l = g.l;
       final buke = l.rank >= 1;
-      void adopt(String name, int bond) {
-        l.kids = 1;
+      // 迎えた子の生まれた年も残す（親類・奉公人の子は少年、捨て子は乳飲み子）。
+      void adopt(String name, int bond, int age) {
+        l.kids = 0;
+        l.kidYears.clear();
+        l.addKid(g.year - age);
         g.meet('養子', name, bond);
       }
 
@@ -594,14 +638,14 @@ List<SceneDef> buildFamilyScenes() => [
       final foundling = g.rng.pick(g.rng.chance(.5) ? kGivenM : kGivenF);
       g.ask('養子', '連れ合いとのあいだに、子が授からない。家の行く末を思い、養子の話が持ち上がった。', [
         Choice.h('親類の子を迎える', '血は近い。親類の口出しが増える', () {
-          adopt(kin, 60);
+          adopt(kin, 60, 8);
           g.setFlag('fa_yoshi_kin');
           g.mark('親類の子の$kinを、養子に迎えた');
           return '$kinは、はにかみながら「父上、母上」と呼んだ。';
         }),
         if (buke)
           Choice.h('主君の勧める家の次男を迎える', '主家の覚えはよくなる。家の中に他人の目が入る', () {
-            adopt(other, 45);
+            adopt(other, 45, 10);
             l.fav = _c(l.fav + 6);
             g.setFlag('fa_yoshi_lord');
             g.mark('主君の勧めで、$otherを養子に迎えた');
@@ -609,14 +653,14 @@ List<SceneDef> buildFamilyScenes() => [
           })
         else
           Choice.h('働き者の奉公人の子を迎える', '家はよく回る。親類は眉をひそめる', () {
-            adopt(other, 60);
+            adopt(other, 60, 10);
             l.net = l.net >= 2 ? l.net - 2 : 0;
             g.setFlag('fa_yoshi_servant');
             g.mark('奉公人の子の$otherを、養子に迎えた');
             return '$otherは、明くる朝から誰よりも早く起きて働いた。';
           }),
         Choice.h('寺の門前の捨て子を引き取る', '小さな命が救われる。口さがない噂も立つ', () {
-          adopt(foundling, 75);
+          adopt(foundling, 75, 0);
           g.j(8);
           g.setFlag('fa_yoshi_foundling');
           g.mark('寺の門前の捨て子を引き取り、$foundlingと名付けて育てた');
@@ -645,6 +689,7 @@ List<SceneDef> buildFamilyScenes() => [
         g.l.rank <= 7 &&
         !g.hasFlag('scene:retire') &&
         g.l.kids > 0 &&
+        _eldestAtLeast(g, 20) &&
         _child(g) != null &&
         g.l.people['娘'] != _child(g),
     (g, next) {
@@ -691,7 +736,11 @@ List<SceneDef> buildFamilyScenes() => [
     50,
     84,
     (g) => 3,
-    (g) => g.hasFlag('scene:grandchild') && g.l.kids >= 1 && !_monk(g),
+    (g) =>
+        g.hasFlag('scene:grandchild') &&
+        g.l.kids >= 1 &&
+        _eldestAtLeast(g, 18) &&
+        !_monk(g),
     (g, next) {
       final m = g.rng.pick(g.rng.chance(.5) ? kGivenM : kGivenF);
       final lost = g.hasFlag('fa_lost_child');
@@ -730,7 +779,12 @@ List<SceneDef> buildFamilyScenes() => [
     32,
     60,
     (g) => 2,
-    (g) => _bukeParent(g) && g.l.rank >= 2 && g.l.rank <= 4 && g.l.kids >= 1,
+    (g) =>
+        _bukeParent(g) &&
+        g.l.rank >= 2 &&
+        g.l.rank <= 4 &&
+        g.l.kids >= 1 &&
+        _kidAged(g, 7, 15),
     (g, next) {
       final l = g.l;
       final heir = l.people['嫡男'];
@@ -822,7 +876,7 @@ List<SceneDef> buildFamilyScenes() => [
               return '城の堀を越えたところで、篝火に照らされた。';
             }
             if (g.rng.chance(.3)) {
-              _loseChild(g, '人質に出した子', '人質に出した子の$nを、和が破れた年に亡くした');
+              _loseChild(g, '人質に出した子', '人質に出した子の$nを、和が破れた年に亡くした', 10, 40);
               return '忍び入った屋敷は、もう空だった。';
             }
             l.people.remove('人質に出した子');
@@ -834,7 +888,7 @@ List<SceneDef> buildFamilyScenes() => [
           }),
         Choice.h('主家に、子の命乞いの使者を願う', '筋は通る。向こうが聞くかは分からない', () {
           if (g.rng.chance(.4)) {
-            _loseChild(g, '人質に出した子', '人質に出した子の$nを、和が破れた年に亡くした');
+            _loseChild(g, '人質に出した子', '人質に出した子の$nを、和が破れた年に亡くした', 10, 40);
             return '使者が持ち帰ったのは、$nの遺髪だった。';
           }
           l.people.remove('人質に出した子');

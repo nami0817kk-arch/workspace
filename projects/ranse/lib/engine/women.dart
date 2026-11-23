@@ -154,7 +154,12 @@ List<SceneDef> buildWomenScenes() => [
     34,
     60,
     (g) => 2,
-    (g) => g.l.female && g.l.kids >= 1 && g.l.rank >= 1 && g.active,
+    (g) =>
+        g.l.female &&
+        g.l.kids >= 1 &&
+        g.l.hasKidAged(g.year, 13, 25) &&
+        g.l.rank >= 1 &&
+        g.active,
     (g, next) {
       // 裳着・祝い（family.dart）で名のある娘がいれば、その娘の縁談。
       final hime = g.l.people['娘']?.name ?? g.rng.pick<String>(kGivenF);

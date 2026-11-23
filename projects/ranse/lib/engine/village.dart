@@ -89,7 +89,7 @@ List<SceneDef> buildVillageScenes() => [
     22,
     55,
     (g) => 1.5,
-    (g) => _villager(g) && g.l.kids >= 1,
+    (g) => _villager(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 0, 12),
     (g, next) {
       g.ask('子の熱', '幼い我が子が、ひどい熱を出した。薬師は町にしかいない。', [
         Choice.h('夜道を走って薬師を呼ぶ（銭4貫）', '間に合えば助かる。銭と体がすり減る', () {
@@ -106,7 +106,7 @@ List<SceneDef> buildVillageScenes() => [
           if (g.rng.chance(.7)) {
             return '三日三晩の祈りののち、子は目を開けた。';
           }
-          g.l.kids--;
+          g.l.loseKid(g.year, 0, 14);
           g.j(-25);
           g.setFlag('fa_lost_child');
           g.mark('幼い我が子を、熱病で失った');

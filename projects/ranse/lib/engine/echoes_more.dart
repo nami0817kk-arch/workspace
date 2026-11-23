@@ -636,7 +636,8 @@ List<SceneDef> buildEchoMoreScenes() => [
         (g.hasFlag('ps_kid_tera') ||
             g.hasFlag('ps_kid_home') ||
             g.hasFlag('ps_kid_work')) &&
-        g.l.kids > 0,
+        g.l.kids > 0 &&
+        g.l.hasKidAged(g.year, 15),
     (g, next) {
       final n = g.l.people['子']?.name ?? g.l.people['娘']?.name ?? '子';
       void bond(int v) {

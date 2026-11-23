@@ -276,7 +276,7 @@ List<SceneDef> buildLordScenes() {
       25,
       70,
       (g) => 1.5,
-      (g) => _castle(g) && g.l.kids >= 1,
+      (g) => _castle(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 5, 18),
       (g, next) {
         final n = _kid(g);
         g.ask('人質の差し出し', '主家が、忠誠の証として子を一人差し出せと求めてきた。行き先は、主家の城の奥深くだ。', [
@@ -449,7 +449,7 @@ List<SceneDef> buildLordScenes() {
       35,
       75,
       (g) => 1.5,
-      (g) => _castle(g) && g.l.kids >= 2,
+      (g) => _castle(g) && g.l.kids >= 2 && g.l.kidsAtLeast(g.year, 10) >= 2,
       (g, next) {
         final h1 = g.rng.pick(kHeirNames);
         final h2 = g.rng.pick(kHeirNames.where((n) => n != h1).toList());
@@ -483,7 +483,7 @@ List<SceneDef> buildLordScenes() {
       35,
       75,
       (g) => 1.5,
-      (g) => _castle(g) && g.l.kids >= 1,
+      (g) => _castle(g) && g.l.kids >= 1 && g.l.hasKidAged(g.year, 13, 25),
       (g, next) {
         final l = g.l;
         final hime = g.l.people['娘']?.name ?? g.rng.pick<String>(kHimeNames);
@@ -1050,7 +1050,7 @@ List<SceneDef> buildLordScenes() {
       40,
       84,
       (g) => 1.5,
-      (g) => _daimyo(g) && g.l.kids >= 2,
+      (g) => _daimyo(g) && g.l.kids >= 2 && g.l.kidsAtLeast(g.year, 10) >= 2,
       (g, next) {
         final h1 = g.rng.pick(kHeirNames);
         final h2 = g.rng.pick(kHeirNames.where((n) => n != h1).toList());
@@ -1121,7 +1121,8 @@ List<SceneDef> buildLordScenes() {
       50,
       84,
       (g) => 1.2,
-      (g) => _daimyo(g) && g.l.kids >= 1,
+      (g) =>
+          _daimyo(g) && g.l.kids >= 1 && (g.l.eldestKidAge(g.year) ?? 99) >= 15,
       (g, next) {
         g.ask('院政', '家督を譲れという声が、家中にそれとなく広がっている。だが、まだ若い跡継ぎに国を任せきるのは心もとない。', [
           Choice.h('家督を譲り、後ろで政を見る', '跡継ぎは育つ。二つの声は家臣を迷わせる', () {
@@ -1161,7 +1162,7 @@ List<SceneDef> buildLordScenes() {
             _grow(g, 2);
             g.j(4);
             if (sp != null) sp.bond = clampInt(sp.bond - 15, 0, 100);
-            if (g.rng.chance(.4)) l.kids++;
+            if (g.rng.chance(.4)) l.addKid(g.year);
             g.mark('$nameを側室に迎えた');
             return '$nameが奥に入った。${sp == null ? '' : '${sp.name}は、何も言わなかった。'}';
           }),

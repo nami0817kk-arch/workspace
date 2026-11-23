@@ -108,6 +108,66 @@ class Life {
   bool married = false, gun = false, ronin = false;
   final List<String> traits;
   final double rarity, sameClass;
+
+  /// 子の生まれた年（古い順）。`kids` より短いときは、足りない分が年の分からない子
+  /// （この持ち方より前の保存や、数だけを入れた子）で、その子らはいちばん上の側にいるとみなす。
+  /// 子の歳で出し分ける岐路は、年の分からない子がいれば今までどおり親の歳で見る。
+  final List<int> kidYears = [];
+
+  /// 子が生まれた（養子を迎えたときは、その子の生まれた年を入れる）。
+  void addKid(int year) {
+    kids++;
+    kidYears.add(year);
+  }
+
+  /// 子を一人亡くす（数を減らす）。`year` があれば、歳が [lo]〜[hi] の子のうち下の子から外す。
+  /// 当てはまる子がいなければ、年の分からない子がいればその子を、いなければいちばん下の子を外す。
+  void loseKid([int? year, int lo = 0, int hi = 999]) {
+    if (kids <= 0) return;
+    while (kidYears.length > kids) {
+      kidYears.removeAt(0);
+    }
+    kids--;
+    if (year != null) {
+      for (var i = kidYears.length - 1; i >= 0; i--) {
+        final a = year - kidYears[i];
+        if (a >= lo && a <= hi) {
+          kidYears.removeAt(i);
+          return;
+        }
+      }
+    }
+    if (kidYears.length > kids) kidYears.removeLast();
+  }
+
+  /// 歳の分かる子の生まれた年（古い順。数の合わない分は古いほうから捨てる）。
+  List<int> get _knownKidYears => kidYears.length > kids
+      ? kidYears.sublist(kidYears.length - kids)
+      : kidYears;
+
+  /// 年の分からない子がいるか。
+  bool get kidAgeUnknown => kids > 0 && kidYears.length < kids;
+
+  /// いちばん上の子の歳。子がいないか、年の分からない子がいれば null。
+  int? eldestKidAge(int year) =>
+      kids <= 0 || kidAgeUnknown ? null : year - _knownKidYears.first;
+
+  /// いちばん下の子の歳。歳の分かる子がいなければ null。
+  int? youngestKidAge(int year) {
+    final ys = _knownKidYears;
+    return kids <= 0 || ys.isEmpty ? null : year - ys.last;
+  }
+
+  /// 歳が [lo]〜[hi] の子がいるか。年の分からない子がいれば真とみなす（親の歳で見る）。
+  bool hasKidAged(int year, int lo, [int hi = 999]) =>
+      kids > 0 &&
+      (kidAgeUnknown ||
+          _knownKidYears.any((y) => year - y >= lo && year - y <= hi));
+
+  /// [min] 歳以上の子の数。年の分からない子は数に入れる。
+  int kidsAtLeast(int year, int min) =>
+      (kids - _knownKidYears.length).clamp(0, kids) +
+      _knownKidYears.where((y) => year - y >= min).length;
   final List<LogEntry> log = [];
   final List<HistPoint> hist = [];
 
@@ -160,6 +220,7 @@ class Life {
     'fame': fame,
     'net': net,
     'kids': kids,
+    'kidYears': kidYears,
     'conq': conq,
     'married': married,
     'gun': gun,
@@ -213,6 +274,8 @@ class Life {
     l.fame = j['fame'] as int;
     l.net = j['net'] as int;
     l.kids = j['kids'] as int;
+    // 古い保存には無い（年の分からない子として扱う）。
+    l.kidYears.addAll(((j['kidYears'] as List?) ?? const []).cast<int>());
     l.conq = j['conq'] as int;
     l.married = j['married'] as bool;
     l.gun = j['gun'] as bool;
