@@ -211,6 +211,19 @@ void main() {
     }
   });
 
+  test('図鑑の生まれ方のヒントと長押しのヒント（0.7.28・試作 v44）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "var HINT={tsuta:", // 新しい種の生まれ方のヒント
+      "slimeking:'スライムが8匹", // スライムキングの出来方
+      'function lpHint(', // 長押しのヒントは1度だけ
+      "kvSet('tou-tut','2')", // 長押しを知ったら保存する
+      "umihebi:{line:'nut',t:4,n:'ウミヘビ',hp:80,mv:0.9,hung:50,atk:11", // 釣り合い
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
