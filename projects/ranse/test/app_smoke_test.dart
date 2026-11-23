@@ -21,6 +21,8 @@ void main() {
     // 乳幼児で亡くなる人生もあるので、生き延びるまで引き直す。
     for (var i = 0; i < 12; i++) {
       if (i == 0) {
+        await tester.ensureVisible(find.text('運命の籤を引く'));
+        await tester.pump();
         await tester.tap(find.text('運命の籤を引く'));
       } else {
         c.draw();

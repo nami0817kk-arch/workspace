@@ -22,9 +22,18 @@ class TitleScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // 背の低い画面（iPhone SE など）でも籤の釦が見えるよう、絵の高さを画面の4分の1ほどに抑える。
               LayoutBuilder(
-                builder: (context, box) =>
-                    PixelCastle(width: box.maxWidth < 320 ? box.maxWidth : 320),
+                builder: (context, box) {
+                  final byHeight =
+                      MediaQuery.sizeOf(context).height *
+                      .25 *
+                      kCastleW /
+                      kCastleH;
+                  var w = box.maxWidth < 320 ? box.maxWidth : 320.0;
+                  if (byHeight < w) w = byHeight;
+                  return PixelCastle(width: w);
+                },
               ),
               const SizedBox(height: 20),
               const Text(

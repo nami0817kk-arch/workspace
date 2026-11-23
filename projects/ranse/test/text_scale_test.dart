@@ -70,6 +70,8 @@ void main() {
     final c = AppController(rng: Rng(5));
     await tester.pumpWidget(RanseApp(controller: c));
     await tester.pump();
+    await tester.ensureVisible(find.text('運命の籤を引く'));
+    await tester.pump();
     await tester.tap(find.text('運命の籤を引く'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 2));
