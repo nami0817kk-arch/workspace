@@ -86,6 +86,9 @@
   このブランチは master に入っていないので、**タグ `ranse-v*` を push して動かす**（手動実行は GitHub に見つけてもらえない）。
   このアプリだけの Secret は `RANSE_IOS_PROVISIONING_PROFILE_BASE64`。ほかは共用。ビルド番号は `pubspec.yaml` の `+N`（同じ番号は二度上げられない）。
 - Info.plist に `ITSAppUsesNonExemptEncryption=false`（暗号化の質問を出さない）と `UIRequiresFullScreen=true`（縦だけの iPad でアップロードの検査に通す）。
+- 2026-11-23 に初めて上げた: App ID（Ranse）・プロファイル「Ranse AppStore」・App Store Connect のアプリ「乱世下剋上」（SKU `ranse`）を作り、
+  タグ `ranse-v1.0.0-1` でビルド 1.0.0 (1) を TestFlight へ上げた（`UPLOAD SUCCEEDED`）。TestFlight の内部グループ「自分」（自動配信あり）に
+  アカウントの持ち主を入れてある。**次に上げるときは `pubspec.yaml` の `+N` を上げてから、新しいタグ（例 `ranse-v1.0.0-2`）を push する**。
 - 手順の正は `ios-app-release` スキル。広告・課金を入れていないので A-4（課金）・A-5（AdMob）・B（法務ページ）は TestFlight には要らない（公開前に要る）。
 
 ## 決まっていること
