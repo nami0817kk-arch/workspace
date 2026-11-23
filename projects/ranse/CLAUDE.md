@@ -89,6 +89,8 @@
 - 2026-11-23 に初めて上げた: App ID（Ranse）・プロファイル「Ranse AppStore」・App Store Connect のアプリ「乱世下剋上」（SKU `ranse`）を作り、
   タグ `ranse-v1.0.0-1` でビルド 1.0.0 (1) を TestFlight へ上げた（`UPLOAD SUCCEEDED`）。同日、明るい色・ドット絵・稀少度の直しを 1.0.0 (2)（タグ `ranse-v1.0.0-2`）で上げ直した。TestFlight の内部グループ「自分」（自動配信あり）に
   アカウントの持ち主を入れてある。**次に上げるときは `pubspec.yaml` の `+N` を上げてから、新しいタグ（例 `ranse-v1.0.0-2`）を push する**。
+- **ITMS-90725（2026-11-23）**: macos-latest のランナーは Xcode 26.5（iOS 26.5 SDK）までで、「2027年4月から iOS 27 SDK 以降が必要」の警告が出た。
+  リリースのビルドを Xcode 27 のランナー（`runs-on: xcode-27`、arm64 の macOS 27）にし、入っている中で最新の正式版の Xcode を選ぶ（27.2 で通った）。
 - 手順の正は `ios-app-release` スキル。広告・課金を入れていないので A-4（課金）・A-5（AdMob）・B（法務ページ）は TestFlight には要らない（公開前に要る）。
 
 ## 決まっていること
