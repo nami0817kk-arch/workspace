@@ -26,7 +26,7 @@ h1 small{font-size:12px;color:var(--sub);font-weight:400}
 .tab.on small{color:var(--onink);opacity:.8}
 .tab.alert{border-color:#d9534f}
 canvas{display:block;width:100%;height:auto;image-rendering:pixelated;border:1px solid var(--line);border-radius:8px;touch-action:none;background:#14120f}
-.row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:6px;margin-top:8px}
+.row{display:grid;grid-template-columns:2fr 1.4fr 1fr 1fr 1fr;gap:6px;margin-top:8px}#blight{font-size:12px;padding-left:2px;padding-right:2px}
 .btn{background:var(--panel);color:var(--ink);border:2px solid var(--line);border-radius:8px;padding:10px 2px;font-size:14px;cursor:pointer;font-family:inherit;min-width:0}
 .btn:focus-visible,.tab:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .btn.on{background:var(--on);color:var(--onink);border-color:var(--on)}
@@ -157,7 +157,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <h3>操作</h3>
 ・<b>掘る</b>：掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。1マスに掘る力を1使う。<br>
 ・<b>モンスターをタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱ったモンスターを間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
-・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>
+・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）・<b>罠を置く</b>（掘る力3・塔全体で5つまで。踏んだ冒険者に15の傷と1秒の足止め）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>・<b>コアの光</b>：1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒のあいだ半分にする。<br>
 ・<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる（最上階に冒険者がいない間）。<br>
 ・2本指で拡大・移動。上の階のボタン（縮図つき）で階を切り替え。⏸ ×1 ×2 で時間。「今すぐ迎える」で波を早める（早いほど次の掘る力が増える）。
 <h3>モンスター</h3>
@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v45</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v46</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -200,6 +200,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 <div class="row">
  <button class="btn go" id="go">今すぐ迎える</button>
+ <button class="btn" id="blight" disabled>コアの光</button>
  <button class="btn on" id="sp0" aria-label="停止">⏸</button>
  <button class="btn" id="sp1">×1</button>
  <button class="btn" id="sp2">×2</button>
@@ -1037,6 +1038,7 @@ function uraBonus(e,n){var C=g.core;if(C.f==e.f)return (man(e,C)-man({x:n[1],y:n
 function nearTorch(e){return g.torches.some(function(t){return t.f==e.f&&man(t,e)<=1;});}
 function stepEn(e,dt){
  var T=EN[e.k],i;
+ if(e.lgtT&&g.t>=e.lgtT){e.lgtT=0;e.atk*=2;}
  if(e.poi>g.t){e.pacc=(e.pacc||0)+e.pdps*dt;if(e.pacc>=1){var d=Math.floor(e.pacc);e.pacc-=d;hitEn(e,d,e.poiBy,'#b6f07a');if(g.en.indexOf(e)<0)return;}}
  e.tch=(e.tch||0)+dt;
  if(e.tch>=1){e.tch=0;if(e.hp<e.mhp&&nearTorch(e)){e.hp=Math.min(e.mhp,e.hp+Math.max(1,e.mhp*0.02));e.tacc=(e.tacc||0)+1;if(e.tacc>=3){e.tacc=0;fxNum(e.f,e.x,e.y,'+','#7ee08a');if(Math.random()<0.3)shout(e,'warm');}}}
@@ -1083,7 +1085,7 @@ function stepEn(e,dt){
   if(!nx)nx=explore(e);
   if(nx==='leave'){if(e.yu){yuFled(e);return;}var jl=g.en.indexOf(e);if(jl>=0)g.en.splice(jl,1);g.repelled++;say(enName(e)+'は'+(e.tired?'疲れて':'迷った末に')+'帰っていった。');return;}
  }
- if(nx){e.f=nx[0];e.x=nx[1];e.y=nx[2];e.stuck=0;trampleEggs(e);e.mot=Math.max(0,(e.mot||0)-1);stepOn(e);burnOn(e);illuOn(e);}
+ if(nx){e.f=nx[0];e.x=nx[1];e.y=nx[2];e.stuck=0;trampleEggs(e);e.mot=Math.max(0,(e.mot||0)-1);stepOn(e);burnOn(e);illuOn(e);if(mtrapOn(e))return;}
  else if(!carrying){
   e.stuck+=spd;
   if(e.stuck>=6){var j=g.en.indexOf(e);if(j>=0)g.en.splice(j,1);g.repelled++;say(enName(e)+'は進める道が無く、引き返した。');if(e.yu){g.yu.lvl++;}return;}
@@ -1171,13 +1173,17 @@ function openPop(kind,f,x,y,cx,cy,m){
  if(LPH!='2')lpSeen();
  var el=document.getElementById('pop'),st=el.parentNode.getBoundingClientRect(),h='',R=g.rally;
  if(kind=='soil'){var c=cellAt(f,x,y);h='<b>土（養分'+(c.nut||0)+'・魔分'+(c.mag||0)+'）</b><button data-a="fert"'+(g.pool<5?' disabled':'')+'>肥料をまく（自由な養分5）</button><button data-a="fertm"'+(g.mpool<5?' disabled':'')+'>魔分をまく（自由な魔分5）</button>';}
- else if(kind=='path'){var cd=Math.max(0,Math.ceil((g.rallyT||0)-g.t));h='<b>通路</b><button data-a="fill"'+(g.dp<2?' disabled':'')+'>埋め戻す（掘る力2）</button><button data-a="rally"'+(g.dp<5||cd>0?' disabled':'')+'>ここに集まれ（掘る力5）'+(cd>0?' あと'+cd+'秒':'')+'</button>';}
+ else if(kind=='path'){var cd=Math.max(0,Math.ceil((g.rallyT||0)-g.t));h='<b>通路</b><button data-a="fill"'+(g.dp<2?' disabled':'')+'>埋め戻す（掘る力2）</button><button data-a="rally"'+(g.dp<5||cd>0?' disabled':'')+'>ここに集まれ（掘る力5）'+(cd>0?' あと'+cd+'秒':'')+'</button><button data-a="trap"'+(g.dp<3||(g.mtr||[]).length>=5?' disabled':'')+'>罠を置く（掘る力3・'+(g.mtr||[]).length+'/5）</button>';}
  else if(kind=='hero'){h='<b>'+esc(fullName(m))+'に命令</b>'+[['guard','守れ（コアのそばにいる）'],['attack','攻めろ（冒険者を追う）'],['','自由']].map(function(a){return '<button data-c="'+a[0]+'"'+((m.cmd||'')==a[0]?' class="on"':'')+'>'+a[1]+'</button>';}).join('');}
  el.innerHTML=h+'<button data-a="close">やめる</button>';el.hidden=false;
  var lx=Math.min(st.width-170,Math.max(4,cx-st.left+10)),ly=Math.min(st.height-el.offsetHeight-4,Math.max(4,cy-st.top-10));el.style.left=lx+'px';el.style.top=ly+'px';
  el.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){var a=b.getAttribute('data-a');closePop();if(a=='close')return;doAct(a,f,x,y);ui();draw();};});
  el.querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){var v=b.getAttribute('data-c')||null;closePop();if(g.cr.indexOf(m)<0)return;m.cmd=v;say(fullName(m)+'：'+(v=='guard'?'コアのそばを守る。':v=='attack'?'冒険者を追って戦う。':'自由に動く。'));sfx('train');ui();};});
 }
+// 自分で置いた罠（冒険者だけにかかる。一度で壊れる）
+function mtrAt(f,x,y){var MT=g.mtr||[];for(var i=0;i<MT.length;i++){var t=MT[i];if(t.f==f&&t.x==x&&t.y==y)return t;}return null;}
+function mtrapOn(e){var t=mtrAt(e.f,e.x,e.y);if(!t)return false;g.mtr.splice(g.mtr.indexOf(t),1);addFx({k:'ring',f:e.f,x:ccx(e.x),y:ccx(e.y),life:400,c:'255,208,96',r0:3,rad:16});sfx('hit');
+ say(enName(e)+'が罠を踏んだ！');hitEn(e,15,null,'#ffd060');if(g.en.indexOf(e)<0)return true;if(e.k!='nin')e.frz=Math.max(e.frz||0,g.t+1);return false;}
 // 入口からコアまで通路でつながっているか
 function reachCore(){var C=g.core;return !!bfs(0,ENTX,ENTY,function(f,x,y){return f==C.f&&x==C.x&&y==C.y;},4000)||(C.f==0&&C.x==ENTX&&C.y==ENTY);}
 function doAct(a,f,x,y){
@@ -1191,6 +1197,9 @@ function doAct(a,f,x,y){
   if(C.carrier||!C.home){say('コアが運ばれている間は埋められません。');return;}
   c.open=false;if(!reachCore()){c.open=true;say('ここを埋めると、入口からコアまでの道が切れてしまう。');return;}
   c.dt=null;c.nut=0;c.mag=0;g.dp-=2;TK.key='';fxPuff(f,x,y,0.8);sfx('dig');say('通路を埋め戻した（掘る力-2）。冒険者は別の道を探す。');return;}
+ if(a=='trap'){if(!c.open)return;var MT=g.mtr||(g.mtr=[]),C2=g.core;if(MT.length>=5){say('罠は塔全体で5つまで。');return;}if(g.dp<3){say('掘る力が足りません（3要る）。');return;}
+  if(mtrAt(f,x,y)||(f==C2.f&&x==C2.x&&y==C2.y)||(f==0&&x==ENTX&&y==ENTY)){say('ここには罠を置けません。');return;}
+  g.dp-=3;MT.push({f:f,x:x,y:y});fxPuff(f,x,y,0.6);sfx('dig');say('罠を置いた（掘る力-3）。冒険者が踏むと15の傷を負い、1秒止まる。');return;}
  if(a=='rally'){if(!c.open)return;if(g.dp<5){say('掘る力が足りません（5要る）。');return;}if(g.t<(g.rallyT||0)){say('もう少し待ってから（あと'+Math.ceil(g.rallyT-g.t)+'秒）。');return;}
   g.dp-=5;g.rally={f:f,x:x,y:y,until:g.t+15};g.rallyT=g.t+30;addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:900,c:'255,225,120',r0:4,rad:30});sfx('promote');say('この階のモンスターに「ここに集まれ」（15秒）。');return;}
 }
@@ -1584,6 +1593,7 @@ g.dung.forEach(function(o){if(o.f!=f)return;var cx=ccx(o.x),cy=o.y*CS+CS-3;if(GI
  g.pher.forEach(function(o){if(o.f!=f)return;var cx=ccx(o.x),cy=ccx(o.y),a=0.12+0.25*o.hp/30;ctx.fillStyle='rgba(255,140,210,'+a.toFixed(2)+')';ctx.fillRect(cx-7,cy-3,14,9);ctx.fillStyle='rgba(255,200,235,'+(a+0.15).toFixed(2)+')';ctx.fillRect(cx-2+Math.round(Math.sin(now/200)*3),cy-1,2,2);});
  g.corpses.forEach(function(c){if(c.f!=f)return;var a=Math.max(0.35,1-(g.t-c.t)/180);ctx.globalAlpha=a;
   if(GIMG.corpse)put('corpse','n',c.x*CS+CS/2,c.y*CS+CS,20);else{ctx.fillStyle='#e8e0d0';ctx.fillRect(c.x*CS+4,c.y*CS+CS-5,CS-8,3);ctx.fillRect(c.x*CS+5,c.y*CS+CS-8,3,3);}ctx.globalAlpha=1;});
+ (g.mtr||[]).forEach(function(t){if(t.f!=f)return;var x=t.x*CS+CS/2,y=t.y*CS+CS-4;ctx.fillStyle='#7a4a18';ctx.fillRect(x-6,y-1,12,3);ctx.fillStyle='#ffd060';for(var i=-5;i<=5;i+=2)ctx.fillRect(x+i,y-4,1,3);});
  g.traps.forEach(function(t){if(t.f!=f)return;var x=t.x*CS+CS/2,y=t.y*CS+CS-4;ctx.fillStyle='#5a5a5a';ctx.fillRect(x-5,y-1,10,3);ctx.fillStyle='#c8c8c8';for(var i=-4;i<=4;i+=2)ctx.fillRect(x+i,y-3,1,2);});
  g.chests.forEach(function(c){if(c.f!=f)return;var b=Math.round(Math.sin(now/300)*0.6);
   if(GIMG.chest)put('chest','n',c.x*CS+CS/2,c.y*CS+CS+b,18);else{ctx.fillStyle='#000';ctx.fillRect(c.x*CS+3,c.y*CS+6,CS-6,CS-8);ctx.fillStyle='#a8682a';ctx.fillRect(c.x*CS+4,c.y*CS+7,CS-8,CS-10);ctx.fillStyle='#ffd45a';ctx.fillRect(c.x*CS+CS/2-1,c.y*CS+10,2,3);}});
@@ -1797,7 +1807,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v45 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v46 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1805,6 +1815,7 @@ function ui(){
  tutCheck();
  alertBadge();
  document.getElementById('go').classList.toggle('pulse',g.tut===2);
+ var blt=document.getElementById('blight');if(blt){var lok=lightOk();if(blt.disabled==lok)blt.disabled=!lok;var ltx=g.lightW===lightKey()?'光った':'コアの光';if(blt.textContent!=ltx)blt.textContent=ltx;}
  var tu=g.tut!=null&&TUT[g.tut],lh=!tu&&lpHint(),cm=document.getElementById('cmsg'),ct=tu?'ヒント：'+TUT[g.tut][0]+'（タップで閉じる）':lh?'ヒント：土・通路・モンスターを長押しすると、肥料・埋め戻す・ここに集まれ・主役への命令のメニューが開く（タップで閉じる）':g.cline?'コア「'+g.cline+'」':'';cm.classList.toggle('tut',!!tu||lh);if(cm.textContent!=ct)cm.textContent=ct;cm.classList.toggle('old',performance.now()-(g.clineRT||0)>12000);
  drawMinis();
  var nh=0,yin=false;for(i=0;i<g.cr.length;i++)if(g.cr[i].hero)nh++;for(i=0;i<g.en.length;i++)if(g.en[i].yu)yin=true;
@@ -2373,6 +2384,7 @@ function drawMinis(){
 }
 // コアの台詞（塔の意志＝あなたに話しかける）
 var CLINES={
+ light:['まぶしいでしょう。下がって。','ここから先へは行かせない。','わたしの光、見せてあげる。'],
  start:['さあ意志、掘って。わたしは最上階でじっとしてるから。','準備の間は時間が止まってる。ゆっくり考えていいよ。','掘る力は大事に使ってね。わたし、掘れないから。'],
  wave:['来た来た。足音が聞こえる。','また冒険者。お宝なんて無いのにね。','みんな、出番だよ。','入口のほうが騒がしい。'],
  yu:['勇者が来た…！ あの顔、前にも見た気がする。','勇者のお出ましだ。主役のみんな、気をつけて。'],
@@ -2390,6 +2402,14 @@ var CLINES={
  train:['鍛えたね。強くなった顔してる。','掘る力の使い道、それもありだね。']
 };
 var cLast=0;
+// コアの光: 1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒半分にする
+function lightKey(){return g.round*100+g.wave;}
+function lightOk(){return !!(g&&!g.title&&!over&&g.en.length&&g.lightW!==lightKey());}
+function coreLight(){if(!lightOk())return;var C=g.core;if(!C.home){say('コアが運ばれている間は光れない。');return;}
+ var es=g.en.filter(function(e){return e.f==C.f&&man(e,C)<=3;});if(!es.length){say('コアの周り3マスに冒険者がいない。近づいてから使おう。');return;}
+ g.lightW=lightKey();es.forEach(function(e){if(!(e.lgtT>g.t))e.atk*=0.5;e.lgtT=g.t+10;fxNum(e.f,e.x,e.y,'ひるむ','#fff0a0');});
+ addFx({k:'ring',f:C.f,x:ccx(C.x),y:ccx(C.y),life:900,c:'255,240,160',r0:4,rad:3.5*CS});sfx('promote');haptic('medium');coreSay('light',true);
+ say('コアの光！ 周りの冒険者'+es.length+'人の攻撃が10秒のあいだ半分になった。');ui();}
 function coreSay(k,force){var now=performance.now();if(!force&&now-cLast<6000)return;var a=CLINES[k];if(!a||!g)return;var s2=a[rnd(a.length)];if(a.length>1&&s2==g.cline)s2=a[(a.indexOf(s2)+1)%a.length];g.cline=s2;g.clineRT=now;cLast=now;}
 // 音（その場で合成。最初に触れた時に鳴らせるようになる）
 var SND={on:true,bgm:true,ac:null,last:{}};
@@ -2525,6 +2545,7 @@ function pauseGame(){if(!over&&speed>0&&!g.title){setSpeed(0);say('一時停止�
 window.__pause=function(){pauseGame();saveGame();};
 document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
+document.getElementById('blight').onclick=coreLight;
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
 window.__t={g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
 document.getElementById('bdex').onclick=function(){holdTime();showDex();};document.getElementById('bmenu').onclick=function(){saveGame();setSpeed(0);heldSpeed=0;g.title=true;showTitle();};
