@@ -260,7 +260,7 @@ bool _lowBorn(ClassDef c, bool female) => c.rank <= 2;
 
 /// 生まれつきの特性（2026-11-24 に13から100へ。4回に分けて作り、1回目で仕組みと25の特性の場面を作った）。
 /// どの特性も遊びの中で効く（能力に数字を足すだけのものは作らない。能力の上げ下げは元の13にだけ残した）。
-/// 場面のある特性は `trait_scenes.dart` の `kTraitScenesDone`（2回目で50。場面の続きは `trait_scenes2.dart`）。
+/// 場面のある特性は `trait_scenes.dart` の `kTraitScenesDone`（3回目で75。場面の続きは `trait_scenes2.dart`・`trait_scenes3.dart`）。
 class Trait {
   const Trait(
     this.id,
@@ -352,14 +352,14 @@ final kTraits = <Trait>[
     '健脚',
     TraitTier.common,
     '一日に人の倍の道を歩く。旅も使い走りも苦にしない',
-  ), // 2回目: 旅路・使い
-  Trait('big', '大柄', TraitTier.common, '人より頭ひとつ大きい。目立つぶん、狙われもする'), // 2回目: 合戦・相撲
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
+  Trait('big', '大柄', TraitTier.common, '人より頭ひとつ大きい。目立つぶん、狙われもする'), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'small',
     '小柄',
     TraitTier.common,
     '体が小さく身軽。人ごみに紛れ、狭い所にもぐり込める',
-  ), // 2回目: 逃げる・忍び
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'swimmer',
     '泳ぎ達者',
@@ -426,25 +426,25 @@ final kTraits = <Trait>[
     '頑固',
     TraitTier.common,
     '一度決めたら曲げない。信は得るが、折れどきを誤る',
-  ), // 2回目: 評定・籠城
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'cheerful',
     '楽天家',
     TraitTier.common,
     'くよくよしない。悪い年も笑って越す',
-  ), // 2回目: 幸福の落ち込み
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'worrier',
     '心配性',
     TraitTier.common,
     '先の悪いことばかり考える。備えはよいが、心が休まらない',
-  ), // 2回目: 備え・飢饉
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'curious',
     '物好き',
     TraitTier.common,
     '見慣れぬものに首を突っ込む。南蛮の品にも妖しい噂にも',
-  ), // 2回目: 南蛮・噂
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'honest',
     '正直者',
@@ -474,13 +474,13 @@ final kTraits = <Trait>[
     '親孝行',
     TraitTier.common,
     '親を何より大事にする。親の病や老いには家を空けられない',
-  ), // 2回目: 親の病・家督
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'patient',
     '辛抱強い',
     TraitTier.common,
     '苦しい時に耐えられる。籠城や長い修行で折れない',
-  ), // 2回目: 籠城・修行
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   // ---- 才
   Trait(
     'abacus',
@@ -513,7 +513,7 @@ final kTraits = <Trait>[
     '生き物に好かれる',
     TraitTier.common,
     '犬も馬もすぐなつく。荒れた獣もおとなしくなる',
-  ), // 2回目: 子犬・馬
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'weather',
     '空読み',
@@ -558,7 +558,7 @@ final kTraits = <Trait>[
     '地獄耳',
     TraitTier.uncommon,
     '遠くのささやきまで聞こえる。噂も陰口も耳に入る',
-  ), // 2回目: 密談・讒言
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'iron_gut',
     '鉄の胃袋',
@@ -588,7 +588,7 @@ final kTraits = <Trait>[
     '船に強い',
     TraitTier.uncommon,
     '荒れた海でも酔わない。船の上でも陸と同じに働ける',
-  ), // 2回目: 船・海の商い
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   // ---- 心
   Trait(
     'brave',
@@ -607,13 +607,13 @@ final kTraits = <Trait>[
     '沈着',
     TraitTier.uncommon,
     '何があっても慌てない。乱れた場で人をまとめる',
-  ), // 2回目: 火事・負け戦
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'generous',
     '気前がいい',
     TraitTier.uncommon,
     '惜しまず人に分け与える。慕う者が集まるが、蔵は空きやすい',
-  ), // 2回目: 恩賞・人
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'jealous',
     '嫉妬深い',
@@ -674,7 +674,7 @@ final kTraits = <Trait>[
     '歌詠み',
     TraitTier.uncommon,
     '和歌を詠む才がある。公家や風流人の座に呼ばれる',
-  ), // 2回目: 連歌・公家
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'builder',
     '普請上手',
@@ -686,7 +686,7 @@ final kTraits = <Trait>[
     '茶の心',
     TraitTier.uncommon,
     '茶の湯の作法を自然に身につける。茶の席で人に覚えられる',
-  ), // 2回目: 茶の湯
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'dialects',
     '国言葉に通じる',
@@ -733,14 +733,14 @@ final kTraits = <Trait>[
     TraitTier.uncommon,
     '先祖は名のある家だった。系図だけが家に残っている',
     ok: _commonBorn,
-  ), // 2回目: 仕官・縁談
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'temple_kin',
     '寺に縁者',
     TraitTier.uncommon,
     '叔父が寺の住持をしている。困った時の逃げ込み先がある',
     ok: _notDaimyo,
-  ), // 2回目: 寺入り・匿い
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'sakai_kin',
     '堺に親類',
@@ -799,14 +799,14 @@ final kTraits = <Trait>[
     '星を読む',
     TraitTier.rare,
     '天文に明るい。暦や吉凶を言い当て、殿に重んじられる',
-  ), // 2回目: 軍配者・暦
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'smith',
     '鍛冶の血',
     TraitTier.rare,
     '父祖は名工だった。鉄を打てば、よい刃になる',
-  ), // 2回目: 刀・鉄砲鍛冶
-  Trait('flute', '笛の名手', TraitTier.rare, '笛を吹けば、敵も味方も聞き入る'), // 2回目: 宴・敵陣
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
+  Trait('flute', '笛の名手', TraitTier.rare, '笛を吹けば、敵も味方も聞き入る'), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'go',
     '碁の才',
@@ -825,7 +825,7 @@ final kTraits = <Trait>[
     '神仏の申し子',
     TraitTier.rare,
     '親が願をかけて授かった子。寺社に大事にされる',
-  ), // 2回目: 寺社・願掛け
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'seer',
     '見鬼',
@@ -850,7 +850,7 @@ final kTraits = <Trait>[
     '神隠しの子',
     TraitTier.rare,
     '幼いころ山で消え、ひと月後に戻ってきた。何があったかは覚えていない',
-  ), // 2回目: 山・天狗
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   // ================================================================ 幻（8）
   Trait(
     'rakuin',
@@ -870,7 +870,7 @@ final kTraits = <Trait>[
     '忌み子',
     TraitTier.mythic,
     '不吉な星の下に生まれたと言われ、捨てられかけた',
-  ), // 3回目以降: 一生の筋
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'tenka_so',
     '天下の相',
@@ -894,7 +894,7 @@ final kTraits = <Trait>[
     '狐の子',
     TraitTier.mythic,
     '母は狐だったと噂される。妙に勘が当たり、人に恐れられる',
-  ), // 3回目以降: 一生の筋
+  ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
   Trait(
     'keikoku',
     '傾国の美貌',

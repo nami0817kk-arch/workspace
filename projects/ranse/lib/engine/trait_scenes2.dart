@@ -44,7 +44,7 @@ double _battleGain2(Game g, String role) {
 double traitOldAge(Game g) => g.has('longlived') && g.age >= 50 ? .8 : 1;
 
 /// 凶作の冬に飢える危うさの倍率（鉄の胃袋。`adult.dart` の凶作）。
-double traitHunger(Game g) => g.has('iron_gut') ? .4 : 1;
+double traitHunger(Game g) => (g.has('iron_gut') ? .4 : 1) * _hunger3(g);
 
 /// 仕入れの旅で当たる見込みに足す値（堺に親類。`ways.dart`）。
 double traitTradeEdge(Game g) => g.has('sakai_kin') ? .1 : 0;

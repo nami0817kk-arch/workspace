@@ -6,6 +6,7 @@ import 'peace.dart';
 import 'rng.dart';
 
 part 'trait_scenes2.dart';
+part 'trait_scenes3.dart';
 
 /// 特性の効く場面（2026-11-24、特性100の1回目）。id・旗は `tr_`（子どもは `tr_c_`）。
 ///
@@ -25,7 +26,7 @@ part 'trait_scenes2.dart';
 // ---------------------------------------------------------------- 表
 
 /// 効き方を作った特性 → その特性の場面の id（手や倍率だけの所は `kTraitHooks`）。テストが使う。
-/// 1回目の25（この下）と、2回目の25（`trait_scenes2.dart` に場面。表はここ一つ）。
+/// 1回目の25（この下）と、2回目の25（`trait_scenes2.dart`）・3回目の25（`trait_scenes3.dart`）。表はここ一つ。
 const kTraitScenesDone = <String, List<String>>{
   // よくある
   'power': ['tr_power'],
@@ -102,6 +103,48 @@ const kTraitScenesDone = <String, List<String>>{
     'tr_ryujin_storm',
     'tr_ryujin_shrine',
   ],
+  // ---------------- 3回目（trait_scenes3.dart）
+  // よくある
+  'walker': ['tr_walker'],
+  'big': ['tr_big'],
+  'small': ['tr_small'],
+  'stubborn': ['tr_stubborn'],
+  'cheerful': ['tr_cheerful'],
+  'worrier': ['tr_worrier'],
+  'curious': ['tr_curious'],
+  'filial': ['tr_filial'],
+  'patient': ['tr_patient'],
+  'animals': ['tr_animals'],
+  // 珍しい
+  'keen_ear': ['tr_keen_ear'],
+  'sea_legs': ['tr_sea_legs'],
+  'calm': ['tr_calm'],
+  'generous': ['tr_generous'],
+  'poet': ['tr_poet'],
+  'tea': ['tr_tea'],
+  'temple_kin': ['tr_temple_kin'],
+  'fallen': ['tr_fallen'],
+  // 稀
+  'stars': ['tr_stars_omen', 'tr_stars_day', 'tr_stars_book'],
+  'smith': ['tr_smith_forge', 'tr_smith_blade'],
+  'flute': ['tr_flute_night', 'tr_flute_call'],
+  'mosugo': ['tr_mosugo_vow', 'tr_mosugo_pray'],
+  'kamikakushi': ['tr_kami_mountain', 'tr_kami_hermit', 'tr_kami_child'],
+  // 幻
+  'imiko': [
+    'tr_c_imiko',
+    'tr_imiko_blame',
+    'tr_imiko_parent',
+    'tr_imiko_turn',
+    'tr_imiko_star',
+  ],
+  'kitsune': [
+    'tr_c_kitsune',
+    'tr_kitsune_guess',
+    'tr_kitsune_shrine',
+    'tr_kitsune_hunt',
+    'tr_kitsune_fox',
+  ],
 };
 
 /// 特性の効き方のうち、場面のほかに既存の仕組みへ掛けたもの（覚え書き。テストと CLAUDE.md 用）。
@@ -126,10 +169,27 @@ const kTraitHooks = <String, String>{
   'general': '組頭より上なら合戦の手柄が増える（battles.dart）',
   'deathless': '合戦の討死の危うさが下がる（battles.dart）',
   'kensei': '合戦の討死の危うさが下がり、手柄が増える（battles.dart）',
+  // 3回目
+  'worrier': '凶作の冬に飢えにくい（adult.dart）',
+  'patient': '籠城で飢えにくい（ways.dart）',
+  'keen_ear': '刺客に討たれにくい（ways.dart）',
+  'sea_legs': '仕入れの船が嵐に呑まれにくい（ways.dart）',
+  'calm': '大水・大地震で命を落としにくい（ways.dart）',
+  'generous': '給金が払えない年にも兵が逃げない（game.dart）',
+  'poet': '連歌の会で名が上がりやすい（pastimes.dart）',
+  'tea': '茶の湯の稽古で人の輪が広がりやすい（pastimes.dart）',
+  'temple_kin': '主君に腹を切れと命じられたとき、叔父の寺へ駆け込む手（ways.dart）',
+  'fallen': '仕官の口が通りやすい（adult.dart）',
 };
 
 /// 子どもの岐路の id。
-const kTraitChildSceneIds = ['tr_c_prodigy', 'tr_c_painter', 'tr_c_ryujin'];
+const kTraitChildSceneIds = [
+  'tr_c_prodigy',
+  'tr_c_painter',
+  'tr_c_ryujin',
+  'tr_c_imiko',
+  'tr_c_kitsune',
+];
 
 /// 筋の後段 → その前の段で立つ旗（どれか一つがあれば出られる）。テストも使う。
 const kTraitPrev = <String, List<String>>{
@@ -162,6 +222,20 @@ const kTraitPrev = <String, List<String>>{
   'tr_ryujin_rain': ['tr_ryujin_seen'],
   'tr_ryujin_storm': ['tr_ryujin_asked'],
   'tr_ryujin_shrine': ['tr_ryujin_storm_done'],
+  // 3回目
+  'tr_stars_day': ['tr_stars_seen'],
+  'tr_stars_book': ['tr_stars_served'],
+  'tr_smith_blade': ['tr_smith_struck'],
+  'tr_flute_call': ['tr_flute_heard'],
+  'tr_mosugo_pray': ['tr_mosugo_settled'],
+  'tr_kami_hermit': ['tr_kami_walked'],
+  'tr_kami_child': ['tr_kami_met'],
+  'tr_imiko_parent': ['tr_imiko_faced'],
+  'tr_imiko_turn': ['tr_imiko_heard'],
+  'tr_imiko_star': ['tr_imiko_turned'],
+  'tr_kitsune_shrine': ['tr_kitsune_known'],
+  'tr_kitsune_hunt': ['tr_kitsune_visited'],
+  'tr_kitsune_fox': ['tr_kitsune_judged'],
 };
 
 /// 筋の後段 → (筋の名, 前の段から空ける年)。
@@ -195,6 +269,20 @@ const kTraitGap = <String, (String, int)>{
   'tr_ryujin_rain': ('ryujin', 2),
   'tr_ryujin_storm': ('ryujin', 2),
   'tr_ryujin_shrine': ('ryujin', 3),
+  // 3回目
+  'tr_stars_day': ('stars', 2),
+  'tr_stars_book': ('stars', 3),
+  'tr_smith_blade': ('smith', 2),
+  'tr_flute_call': ('flute', 2),
+  'tr_mosugo_pray': ('mosugo', 2),
+  'tr_kami_hermit': ('kami', 1),
+  'tr_kami_child': ('kami', 2),
+  'tr_imiko_parent': ('imiko', 2),
+  'tr_imiko_turn': ('imiko', 2),
+  'tr_imiko_star': ('imiko', 3),
+  'tr_kitsune_shrine': ('kitsune', 2),
+  'tr_kitsune_hunt': ('kitsune', 2),
+  'tr_kitsune_fox': ('kitsune', 3),
 };
 
 // ---------------------------------------------------------------- 既存の仕組みに掛ける倍率
@@ -274,6 +362,14 @@ const _firstOf = <String, String>{
   'dowser': 'tr_dowser_well',
   'kensei': 'tr_kensei_first',
   'ryujin': 'tr_ryujin_boat',
+  // 3回目
+  'stars': 'tr_stars_omen',
+  'smith': 'tr_smith_forge',
+  'flute': 'tr_flute_night',
+  'mosugo': 'tr_mosugo_vow',
+  'kami': 'tr_kami_mountain',
+  'imiko': 'tr_imiko_blame',
+  'kitsune': 'tr_kitsune_guess',
 };
 
 /// 特性 [trait] を持つ人にだけ出る場面。筋の段を踏んだ年を残す。
@@ -413,6 +509,7 @@ List<SceneDef> buildTraitChildScenes() => [
     );
   }),
   ..._child2(),
+  ..._child3(),
 ];
 
 // ======================================================================
@@ -429,6 +526,10 @@ List<SceneDef> buildTraitScenes() => [
   ..._uncommon2(),
   ..._rare2(),
   ..._mythic2(),
+  ..._common3(),
+  ..._uncommon3(),
+  ..._rare3(),
+  ..._mythic3(),
 ];
 
 // ---------------------------------------------------------------- よくある

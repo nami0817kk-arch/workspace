@@ -2,6 +2,7 @@ import 'childhood.dart';
 import 'game.dart';
 import 'history_lines.dart';
 import 'rng.dart';
+import 'trait_scenes.dart';
 
 /// 大人の「今年の重点」に足す、暮らしと嗜みの重点（2026-11-23、ユーザー「寺子屋に通うなど選択肢もほしい」
 /// 「このような作り込みを続けて」）。
@@ -129,7 +130,7 @@ final _pastimes = <_Pastime>[
     (g) => FocusDef('ps_tea', '茶の湯を学ぶ', '人の輪が広がる。道具に銭が消える', (g) {
       _pay(g, 3);
       if (g.rng.chance(.5)) g.l.mi = _c(g.l.mi + 1);
-      g.l.net += g.rng.range(1, 2);
+      g.l.net += g.rng.range(1, 2) + traitTea(g); // 茶の心（`trait_scenes3.dart`）
       if (_ctx(g) == _Ctx.retainer) g.l.fav = _c100(g.l.fav + 2);
       g.j(2);
     }, forced: _forcedFor(g, 'ps_tea')),
@@ -144,7 +145,7 @@ final _pastimes = <_Pastime>[
       if (g.rng.chance(.5)) g.l.chi = _c(g.l.chi + 1);
       if (g.rng.chance(.3)) g.l.mi = _c(g.l.mi + 1);
       g.l.net += 1;
-      if (g.rng.chance(.4)) g.l.fame += 1;
+      if (g.rng.chance(.4 + traitRenga(g))) g.l.fame += 1; // 歌詠み（`trait_scenes3.dart`）
       g.j(3);
     }, forced: _forcedFor(g, 'ps_renga')),
   ),

@@ -892,7 +892,8 @@ class Game extends ChangeNotifier {
         l.hp -= 8;
         j(-6);
         log('飢えが身にこたえる…', 'bad');
-      } else if (l.troops > 0) {
+      } else if (l.troops > 0 && !traitKeepsMen(this)) {
+        // 気前がいい（`trait_scenes3.dart`）人の兵は、給金が滞っても逃げない。
         final d = (l.troops * .15).ceil();
         l.troops -= d;
         log('給金が払えず、兵$d人が逃散した。', 'bad');

@@ -213,7 +213,8 @@ List<SceneDef> buildWayScenes() {
             return '山賊に荷を奪われ、命からがら逃げ帰った。';
           }),
           Choice.h('船で遠国へ', '一度で蔵が建つこともある。海は人を返さないこともある', () {
-            if (g.rng.chance(.07)) {
+            // 船に強い（`trait_scenes3.dart`）は、時化でも働ける。
+            if (g.rng.chance(.07 * traitSeaRisk(g))) {
               g.die('仕入れの船が嵐に遭い、戻らなかった', 'yukue');
               return '船は嵐の海に消え、二度と戻らなかった。';
             }
@@ -804,7 +805,7 @@ List<SceneDef> buildWayScenes() {
           return '高台から、流されていく家を見た。';
         }),
         Choice.h('堤を守りに行く', '村を救えるかもしれない。水は人を選ばない', () {
-          if (g.rng.chance(.1)) {
+          if (g.rng.chance(.1 * traitDisaster(g))) {
             g.die('堤を守ろうとして、濁流に呑まれた', 'sai');
             return '堤が切れ、濁流に呑まれた。';
           }
@@ -1006,7 +1007,7 @@ List<SceneDef> buildWayScenes() {
       (g, next) {
         g.ask('大地震', '夜更け、大地が大きく揺れた。家が軋み、梁が落ちてくる。', [
           Choice.h('家の者を助けに戻る', '誰かを救えるかもしれない', () {
-            if (g.rng.chance(.12)) {
+            if (g.rng.chance(.12 * traitDisaster(g))) {
               g.die('大地震で崩れた家の下敷きになった', 'sai');
               return '家の者を外へ押し出したところで、屋根が崩れた。';
             }
@@ -1059,6 +1060,13 @@ List<SceneDef> buildWayScenes() {
             g.mark('主君の命に背き、出奔した');
             return '夜陰にまぎれて、国を出た。';
           }),
+          // 寺に縁者（`trait_scenes3.dart`）は、叔父の寺へ駆け込める。
+          if (traitTempleRefuge(g))
+            Choice.h(
+              '叔父の寺へ駆け込み、髪を下ろす',
+              '寺の内までは、追っ手も踏み込まない。侍としての道は、そこで終わる',
+              () => templeRefuge(g),
+            ),
         ], after: next);
       },
     ),
@@ -1077,7 +1085,8 @@ List<SceneDef> buildWayScenes() {
             return '警護を固めた。何事もなく、日々が過ぎた。';
           }),
           Choice.h('気に留めない', '臆病者と思われずに済む', () {
-            if (g.rng.chance(.12 - l.un / 2000)) {
+            // 地獄耳（`trait_scenes3.dart`）は、襖の開く前に気づく。
+            if (g.rng.chance((.12 - l.un / 2000) * traitAssassin(g))) {
               g.die('寝所に忍び込んだ刺客に討たれた', 'ansatsu');
               return '夜半、寝所の襖が音もなく開いた。';
             }
@@ -1108,7 +1117,7 @@ List<SceneDef> buildWayScenes() {
         final l = g.l;
         g.ask('籠城', '敵の大軍に城を囲まれた。兵糧は日ごとに減っていく。', [
           Choice.h('最後まで籠もる', '援軍が来れば勝てる。来なければ飢える', () {
-            if (g.rng.chance(.1)) {
+            if (g.rng.chance(.1 * traitSiege(g))) {
               g.die('長い籠城の末、城中で飢えて死んだ', 'ue');
               return '草の根も、壁の土も食べ尽くした。';
             }

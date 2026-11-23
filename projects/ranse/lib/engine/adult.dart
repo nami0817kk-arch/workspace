@@ -394,7 +394,8 @@ List<SceneDef> buildAdultScenes() {
             l.fame / 200 +
             (l.gold / 200 > .2 ? .2 : l.gold / 200) +
             (l.cls.id == 'ronin' ? .1 : 0) +
-            (g.hasFlag('letter') ? .2 : 0) -
+            (g.hasFlag('letter') ? .2 : 0) +
+            traitServeEdge(g) - // 没落した名家の出（`trait_scenes3.dart`）
             (l.female ? .05 : 0);
         g.ask(l.female ? '奉公先' : '仕官', '門を叩く先を選ぶ。', [
           for (final n in opts)
