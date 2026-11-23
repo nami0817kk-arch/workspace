@@ -361,6 +361,8 @@ const Map<String, String> uiEn = {
   '{0}を増やす {1}': 'Add {0} {1}',
   '大きく増やす {0}': 'Expand big {0}',
   '現場の人を増やす {0}': 'Hire staff {0}',
+  '足りない分の人を補う {0}': 'Fill the staff gap {0}',
+  '現場の人を多めに増やす {0}': 'Hire extra staff {0}',
   '広告 {0}': 'Advertise {0}',
   '値下げ合戦中（あと{0}期）': 'Price war ({0} mo left)',
   '値下げ合戦を仕掛ける（相手：{0}）': 'Start a price war (vs {0})',
