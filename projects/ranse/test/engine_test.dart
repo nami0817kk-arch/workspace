@@ -443,6 +443,7 @@ void main() {
 
   test('実測（記録用）: 手書きの最期のうち、実際に出会えるもの', () {
     final seen = <String>{};
+    final tierCount = <Tier, int>{};
     const leans = [
       <String>[],
       ['働いて稼ぐ', '人の倍の田を植える'],
@@ -472,6 +473,7 @@ void main() {
       }
       final e = buildEnding(g);
       if (e.handId != null) seen.add(e.handId!);
+      if (e.tier != null) tierCount[e.tier!] = (tierCount[e.tier!] ?? 0) + 1;
     }
     final byWay = <String, List<int>>{};
     for (final e in kHandEndings) {
@@ -483,6 +485,12 @@ void main() {
     print(
       '【最期の到達】6000人生で出た手書きの最期 ${seen.length}／${kHandEndings.length}: '
       '${byWay.entries.map((e) => '${e.key} ${e.value[0]}/${e.value[1]}').join('・')}',
+    );
+    // 希少度ごとに、何人生に一度出たか（幻は数百回に一度の狙い）。
+    // ignore: avoid_print
+    print(
+      '【希少度の出方】6000人生: '
+      '${Tier.values.map((t) => '${kTierNames[t]} ${tierCount[t] ?? 0}回（${(tierCount[t] ?? 0) == 0 ? '-' : '${(6000 / tierCount[t]!).toStringAsFixed(0)}人生に1回'}）').join('・')}',
     );
     expect(seen, isNotEmpty);
   });
