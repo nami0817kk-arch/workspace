@@ -789,7 +789,7 @@
               if (this.fl) { this.fl.icpt = p.h0; this.fl.ip = [p.f0.ball[0], p.f0.ball[1]]; }
             } else {
               this.kick([p.f0.ball[0], p.f0.ball[1], 0], p.h0, this.owner);
-              if (this.fl && this.fl.kind === 'ground') { const f = this.fl; f.vEnd = 0.5; f.v0 = Math.sqrt(0.25 + 2 * MOVE.fric * f.d); f.T = Math.max(0.15, (f.v0 - 0.5) / MOVE.fric); } // 2026-11-23：受け手を待つ球なので、落ちる所でほぼ止める（前は普通のパスの速さで10m 以上転がり、ライン際では外へ出て、外で拾っていた）
+              if (this.fl) this.fl.soft = true; // 受け手を待つ球：ふつうの速さで蹴り、届いて誰も取らなければ強めに止まる（2026-11-23：前は落ちる所でほぼ止まる弱さで蹴っていて、35m のパスが4秒以上かけて転がっていた。外へ転がり出たのを止めるための直しだった）
             }
           }
         } else if (p.t > 4) return this.endPre(true);
@@ -1035,6 +1035,7 @@
         v0 = (d + 0.5 * MOVE.fric * T * T) / T;
         vEnd = Math.max(0, v0 - MOVE.fric * T);
       }
+      this.softRoll = 0;
       this.fl = { by, from, to: [to[0], to[1], Math.max(0, to[2] || 0)], d: Math.max(0.5, dist(from, to)), T: Math.max(0.15, T), t: 0, kind, v0, vEnd, h, z0: from[2] || 0, save, recv: recv || null };
       if (by) this.lock[by] = 0.3;
       if (by && this.teamOf(by)) this.lastTouch = this.teamOf(by); // 最後に触ったチーム（外に出たときの再開に使う）
@@ -1128,6 +1129,7 @@
             }
             return;
           }
+          if (fl.soft) this.softRoll = 0.9; // 受け手を待つ球は、誰も取らなければ4m ほどで止まる
           // 届いたあとの残りの時間は転がす（届いたコマで止まって見えないように）
           const over = fl.t - fl.T;
           if (over > 0) this.roll(over);
@@ -1165,7 +1167,9 @@
       if (sp > 0) {
         // ネットに入った球は網に受け止められて、すぐに止まる
         const outside = b0[0] < -0.5 || b0[0] > W + 0.5 || b0[1] < -0.5 || b0[1] > L + 0.5;
-        const ns = Math.max(0, sp - (inNet ? 60 : outside ? 30 : MOVE.fric * 1.4) * dt); // 外は看板の手前で止まる
+        const soft = this.softRoll > 0;
+        if (soft) this.softRoll -= dt;
+        const ns = Math.max(0, sp - (inNet ? 60 : outside ? 30 : soft ? 14 : MOVE.fric * 1.4) * dt); // 外は看板の手前で止まる
         this.bv = [(this.bv[0] / sp) * ns, (this.bv[1] / sp) * ns];
       }
       const b = this.ball;
@@ -1387,6 +1391,7 @@
           const k = 1.1 + Math.random() * 0.25;
           to = [clamp(q[0] + (vx * Math.cos(ang) - vy * Math.sin(ang)) * k, 1, W - 1), clamp(q[1] + (vx * Math.sin(ang) + vy * Math.cos(ang)) * k, 1, L - 1), 0];
           this.astray = (this.astray || 0) + 1; // 点検用
+          this._astrayKick = true; // 点検用：わざとそれた球（読み違いではない）
         }
       }
       // 通り道に相手の足がある：うまい子ほど浮かせて越える（2026-11-23：うまい子ほど前へ・裏へ出すので、体に当たってこぼれる球が
@@ -1400,6 +1405,7 @@
         if (blk && Math.random() < clamp((this.ab01(me, 'パス') - 0.3) * 1.8, 0, 0.9)) to = [to[0], to[1], 0.85];
       }
       this.kick(to, tgt, me);
+      this._astrayKick = false;
       if (icpt && this.fl) { this.fl.icpt = icpt.id; this.fl.ip = icpt.ip; }
       else if (this.fl && (my === this.leadTeam() || Math.random() < clamp((this.ab01(me, 'パス') - 0.2) * 1.4, 0, 0.9))) this.fl.thread = true; // 見どころの前の攻める側のパスも足の間を通す（足を越える） // うまい子の球は足の間を通す（体に当たらない）
       this.idle = { recv: tgt, to };
