@@ -17,7 +17,7 @@
 - 仕組みは `lib/gm/` の純Dart(Flutter 非依存)に置き `test/gm/` で固定。保存データは `fromJson` に既定値、壊れていたら読まない。
 - テストは CI(`.github/workflows/basketball-ci.yml`)。**CI の `flutter analyze` は info でも落ちる。** 手元は `W:` から `dart analyze lib test tool` まで。
 - 出す先は iOS のみ。**2026-11-11 に仕様を作り直した**(正は仕様書 https://claude.ai/artifact/TGaLDo2xByJXcikWKagFr2 、画面の見本 https://claude.ai/artifact/9DH5ZE6Mv1FZFxNQxTaeGc )。
-  横画面だけ・英語対応・配信147か国・難しさ3段階・課金3種(広告を消す370円・保存の枠160円×最大5・自分の選手160円)などが決まっている。
+  横画面だけ・英語対応・配信147か国・難しさ3段階・課金(仕様書は3種だったが、**2026-11-23 ユーザー決定で最初の公開は「広告を消す」370円だけ**。保存の枠・自分の選手は作らない)などが決まっている。
   作る順番は仕様書の「作る順番」。**1回目(横画面・左メニュー・新しい名前・難しさ)は実装済み。** 画面は今も日本語のみ(英語は7回目)。
 
 ## 遊び方(`lib/gm/`)
