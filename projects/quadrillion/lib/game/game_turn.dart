@@ -83,18 +83,19 @@ extension GameTurn on Game {
       }
       indM[ind.id] = M;
     }
-    // CPU の動き
+    // CPU の動き（難しさで伸びと再投資を変える。ふつうは 1 をかけるだけなので試作と同じ）
+    final dG = dif.g, dR = dif.r;
     for (final c in cos) {
       if (!c.alive) continue;
       for (final b in c.biz) {
-        var gg = (c.g + (rnd() - .5) * .03) / 3;
-        if (c.rival != null && c.rival!.k == 'li' && yr() > 1995 && yr() < 2035) gg += .004;
-        if (c.rival != null && c.rival!.type == 'genius' && indm[b.ind]!.b > 1985) gg += .0067;
+        var gg = (c.g * dG + (rnd() - .5) * .03) / 3;
+        if (c.rival != null && c.rival!.k == 'li' && yr() > 1995 && yr() < 2035) gg += .004 * dG;
+        if (c.rival != null && c.rival!.type == 'genius' && indm[b.ind]!.b > 1985) gg += .0067 * dG;
         b.power *= math.max(.8, 1 + gg);
         final T = lastT?[b.ind];
         final s = T != null && T[c.tier] > 0 ? b.power / T[c.tier] : 0.0;
         final pr = b.rev * indm[b.ind]!.mg * c.eff;
-        if (pr > 0) b.power += pr * cpuReinv * invEff * math.pow(1 - math.min(s, .95), 2);
+        if (pr > 0) b.power += pr * cpuReinv * dR * invEff * math.pow(1 - math.min(s, .95), 2);
       }
       c.cash = c.cash * .985 + c.profit * .25;
       c.presAge += 1 / 12;
@@ -523,6 +524,7 @@ extension GameTurn on Game {
             : .05;
         if (hasT('noble')) want *= 1.5;
         if (hasT('liar')) want *= .5;
+        want *= dif.t;
         final afford = c.cash / math.max(cap / 100, 1);
         if (rnd() < want && sh.float > 0.5 && afford > 1) {
           final before = sh.riv[c.id] ?? 0;

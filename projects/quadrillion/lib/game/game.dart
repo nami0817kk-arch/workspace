@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names
 /// ゲームの仕組み（試作 prototype.html の `<script id="logic">` を写したもの）。
 /// Flutter に依存しない。乱数は注入した [Random] だけを使う。
 library;
@@ -28,7 +28,7 @@ final Map<String, Country> cm = {for (final x in CTRY) x.c: x};
 const Set<String> eastPools = {'zh', 'ko', 'vi'};
 
 /// 社史に残す世界ランキングの節目（小さい順。一度に越えたら一番上の節目だけ残す）
-const List<int> rankMarks = [1, 3, 10, 50, 100];
+const List<int> rankMarks = [1, 3, 10, 50, 100, 200, 500];
 
 /// JS の sort と同じく、同じ値の並びを崩さない並べ替え
 extension StableSort<T> on List<T> {
@@ -68,6 +68,20 @@ double cw(String c, double y) {
   return C.a + (C.b - C.a) / (1 + math.exp(-(y - C.m) / C.k));
 }
 
+/// 難しさ（ふつうは試作と同じ数字）。g は宿敵と CPU の会社の伸び、r は利益の再投資、t は宿敵が株を買い進める確率にかける
+class Difficulty {
+  final String id, n, d;
+  final double g, r, t;
+  const Difficulty(this.id, this.n, this.d, this.g, this.r, this.t);
+}
+
+const List<Difficulty> DIFFS = [
+  Difficulty('easy', 'やさしい', 'ライバルの伸びがゆるやか。乗っ取られにくい', .5, .5, .5),
+  Difficulty('normal', 'ふつう', 'ふつうの手ごたえ', 1, 1, 1),
+  Difficulty('hard', 'むずかしい', 'ライバルがよく伸び、株を狙ってくる', 1.5, 1.6, 1.8),
+];
+Difficulty diffOf(String id) => DIFFS.firstWhere((d) => d.id == id, orElse: () => DIFFS[1]);
+
 /// はじめるときの選択
 class SetupConfig {
   String mode;
@@ -75,7 +89,8 @@ class SetupConfig {
   List<String> traits;
   String home;
   String? name;
-  SetupConfig({this.mode = 'world', this.year = 1980, List<String>? traits, this.home = 'jp', this.name}) : traits = traits ?? [];
+  String diff;
+  SetupConfig({this.mode = 'world', this.year = 1980, List<String>? traits, this.home = 'jp', this.name, this.diff = 'normal'}) : traits = traits ?? [];
 }
 
 /// 世界の企業ランキングの1行
@@ -135,6 +150,10 @@ class Game {
   Map<String, List<double>>? lastT;
 
   String mode = 'world';
+
+  /// 難しさ（easy / normal / hard）。古いセーブはふつう
+  String diff = 'normal';
+  Difficulty get dif => diffOf(diff);
   int startYear = 1980, year = 1980, q = 1;
   double cash = 0, debt = 0;
   bool listed = false;
@@ -326,6 +345,7 @@ class Game {
   void _init(SetupConfig cfg) {
     uidCounter = 1;
     mode = cfg.mode;
+    diff = cfg.diff;
     startYear = cfg.year;
     year = cfg.year;
     q = 1;
@@ -723,6 +743,7 @@ class Game {
         'v': 1,
         'uid': uidCounter,
         'mode': mode,
+        'diff': diff,
         'startYear': startYear,
         'year': year,
         'q': q,
@@ -802,6 +823,7 @@ class Game {
     final s = Game(rng ?? math.Random())
       ..uidCounter = i('uid', 1)
       ..mode = j['mode'] as String
+      ..diff = (j['diff'] as String?) ?? 'normal'
       ..startYear = i('startYear')
       ..year = i('year')
       ..q = i('q', 1)

@@ -93,7 +93,7 @@ void main() {
       s.peakRank = 999;
       s.nextQuarter();
       final added = s.history.sublist(n0).where((e) => e.k == 'rank').toList();
-      expect(added.length, s.peakRank <= 100 ? 1 : 0);
+      expect(added.length, s.peakRank <= 500 ? 1 : 0);
     });
 
     test('セーブで残り、古いセーブ（社史なし）でも落ちずに空から始める', () {

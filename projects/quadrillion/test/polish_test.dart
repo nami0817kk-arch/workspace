@@ -147,14 +147,14 @@ void main() {
       for (final (i, st) in const [AppLifecycleState.inactive, AppLifecycleState.paused, AppLifecycleState.detached].indexed) {
         ctl.game!.cash = 12345.0 + i;
         tester.binding.handleAppLifecycleStateChanged(st);
-        final saved = jsonDecode(ctl.prefs!.getString(saveKey)!) as Map<String, dynamic>;
+        final saved = jsonDecode(ctl.prefs!.getString(slotKey(ctl.slot))!) as Map<String, dynamic>;
         expect(saved['cash'], 12345.0 + i, reason: '$st');
         tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       }
       // 戻ってきたときは保存しない
       ctl.game!.cash = 1;
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-      expect((jsonDecode(ctl.prefs!.getString(saveKey)!) as Map)['cash'], isNot(1));
+      expect((jsonDecode(ctl.prefs!.getString(slotKey(ctl.slot))!) as Map)['cash'], isNot(1));
     });
 
     test('ゲームが無いときは何もしない', () async {
