@@ -510,7 +510,7 @@ void main() {
   group('画面を目で見る（QUAD_SHOTS を渡したときだけ書き出す）', () {
     for (final lang in const ['ja', 'en']) {
       for (final w in const [390.0, 320.0]) {
-        testWidgets('国の事件・宿敵の場面・新しい提案（$lang・幅${w.round()}）', (tester) async {
+        testWidgets('国の事件・宿敵の場面（$lang・幅${w.round()}）', (tester) async {
           await loadRealFonts();
           final key = GlobalKey();
           final (g, c) = _foe('zaibatsu', grudge: 3);
