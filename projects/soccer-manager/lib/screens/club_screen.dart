@@ -296,8 +296,8 @@ class ClubScreen extends StatelessWidget {
                   readyOn: infra.constructionReadyOn(type),
                   buildNote: type == FacilityType.stadium
                       ? Tr.pick(
-                          '${ClubInfrastructure.stadiumSeatsPerLevel}席 × 1席${formatMoney(ClubInfrastructure.stadiumSeatCost(infra.facilityLevel(type)))}。来季の開幕に完成します',
-                          '${ClubInfrastructure.stadiumSeatsPerLevel} seats at ${formatMoney(ClubInfrastructure.stadiumSeatCost(infra.facilityLevel(type)))} each. Ready for the start of next season')
+                          '${ClubInfrastructure.stadiumSeatsPerLevel}席 × 1席${formatMoney(gameState.stadiumSeatCostNow)}。来季の開幕に完成します',
+                          '${ClubInfrastructure.stadiumSeatsPerLevel} seats at ${formatMoney(gameState.stadiumSeatCostNow)} each. Ready for the start of next season')
                       : Tr.pick(
                           '工期${ClubInfrastructure.buildMonths}か月。完成までは効き目が出ません',
                           'Takes ${ClubInfrastructure.buildMonths} months. No effect until it is finished'),

@@ -167,16 +167,32 @@ class LineupUtils {
     return map;
   }
 
-  /// CPUクラブ向けに、PK・直接FK・CK・守備セットプレー担当を能力値の
-  /// 最も高い選手へ自動的に割り当てる(ユーザーは戦術画面で手動指名する)。
+  /// PK・直接FK・CK・守備セットプレー担当を能力値の最も高い選手へ自動的に
+  /// 割り当てる(CPU は週ごと、自クラブは監督が毎節)。
   /// これがないとCPUは常にセットプレー担当不在のままになり、チャンスの
   /// 約4分の1を占めるセットプレーの得点力・失点抑止力で一方的に不利になる。
+  ///
+  /// 担当は先発のうち出られる選手から選ぶ(先発が組まれていなければ全員
+  /// から)。試合で蹴るのはピッチの上の選手だけで、担当が控え・怪我・
+  /// 出場停止だと、PK・FKは誰とも決まらない選手が蹴り、CKは担当なしに
+  /// なっていた(監督が毎節決めるようにした後も同じだった。2026-11-23)。
   static void autoAssignSetPieceRoles(Team team) {
     if (team.players.isEmpty) return;
+    final xi = team.startingXI.toSet();
+    final starters = [
+      for (final p in team.players)
+        if (xi.contains(p.id) &&
+            !p.isInjured &&
+            !p.isSuspended &&
+            !p.isLoanedOut &&
+            !p.isOnInternationalDuty)
+          p,
+    ];
+    final pool = starters.isNotEmpty ? starters : team.players;
     String bestBy(int Function(Player) score) {
-      var best = team.players.first;
+      var best = pool.first;
       var bestScore = score(best);
-      for (final p in team.players.skip(1)) {
+      for (final p in pool.skip(1)) {
         final s = score(p);
         if (s > bestScore) {
           best = p;

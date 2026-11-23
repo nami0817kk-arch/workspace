@@ -229,7 +229,10 @@ void main() {
       team.cornerTakerId = null;
       team.setPieceDefenderId = null;
       gs.debugManagerPreparesMatch(nextFixture(gs));
-      final best = team.players.reduce((a, b) =>
+      // 担当は先発(出られる選手)から選ぶ(2026-11-23)。
+      final best = team.players
+          .where((p) => team.startingXI.contains(p.id) && !p.isInjured)
+          .reduce((a, b) =>
           b.attributeValue(AttributeKeys.penalties) >
                   a.attributeValue(AttributeKeys.penalties)
               ? b

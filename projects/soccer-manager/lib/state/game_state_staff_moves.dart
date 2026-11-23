@@ -6,9 +6,30 @@ extension GameStateStaffMoves on GameState {
   /// 他のクラブから来ている、こちらのスタッフへの引き抜きの話。
   List<StaffOffer> get staffOffers => _save?.staffOffers ?? const [];
 
-  /// [role]のスタッフへの引き抜きの話(無ければ null)。
-  StaffOffer? staffOfferFor(StaffRole role) =>
-      staffOffers.where((o) => o.role == role).firstOrNull;
+  /// [role]のスタッフへの引き抜きの話(無ければ null)。いまその役職に
+  /// 就いている人への話だけ(前任への話を後任の欄に出さない)。
+  StaffOffer? staffOfferFor(StaffRole role) {
+    final st = _save?.infrastructure.staffFor(role);
+    if (st == null) return null;
+    return staffOffers
+        .where((o) => o.role == role && o.staffId == st.id)
+        .firstOrNull;
+  }
+
+  /// 話の相手がもう役職にいない引き抜きの話を消す(解任・入れ替え・
+  /// 事件で去った・クラブを買い直した)。以前は残ったまま、後任の欄に
+  /// 前任の名前で出て、押しても何も起きず、期限まで次の話も来なかった
+  /// (2026-11-23)。
+  void _dropStaleStaffOffers() {
+    final s = _save;
+    if (s == null) return;
+    s.staffOffers.removeWhere(
+        (o) => s.infrastructure.staffFor(o.role)?.id != o.staffId);
+  }
+
+  /// テスト用: 相手のいない引き抜きの話を片付ける。
+  @visibleForTesting
+  void debugDropStaleStaffOffers() => _dropStaleStaffOffers();
 
   /// 引き抜きの話が来る、1か月あたりの確率。水準4以上のスタッフだけ狙われ、
   /// 水準4で2%、1つ上がるごとに1%ずつ上がる(水準8で6%)。
@@ -44,6 +65,7 @@ extension GameStateStaffMoves on GameState {
   void _advanceStaffMoves(DateTime before, DateTime after) {
     final s = _save;
     if (s == null) return;
+    _dropStaleStaffOffers();
     for (final o in [...s.staffOffers]) {
       if (o.expiresOn.isBefore(after)) {
         _releaseStaff(o, answered: false);
