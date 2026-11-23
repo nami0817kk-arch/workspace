@@ -98,7 +98,12 @@ void main() {
         to.players.add(make('pad${to.players.length}', tier: 20));
       }
       final clock = Player.contractClockYear;
-      final movers = from.players.take(3).toList();
+      // 移るのは出す側の強い3人(弱い選手だと、上限に合わせて押し出す
+      // 「一番弱い選手」に当たることがある。CI で起きた)。
+      final movers = ([...from.players.where((p) => !p.isLoan)]
+            ..sort((a, b) => b.overall.compareTo(a.overall)))
+          .take(3)
+          .toList();
       for (final p in movers) {
         s.preContracts.add(PreContract(
           playerId: p.id,
