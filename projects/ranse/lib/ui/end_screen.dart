@@ -120,8 +120,19 @@ class EndScreen extends StatelessWidget {
 
 /// 結果カード。生まれの稀少度・選んだ道・結末の称号（共有する一枚）。
 /// 歩んだ道（`kWays` のキー）ごとの絵。Gemini で作り、assets/images/way_<道>.jpg に置く。
-/// 絵のない道は出さない（そろいしだい足す）。
-const kWayArt = <String, String>{'village': 'assets/images/way_village.jpg'};
+/// 10の道すべてにある（2026-11-23）。
+const kWayArt = <String, String>{
+  'young': 'assets/images/way_young.jpg',
+  'village': 'assets/images/way_village.jpg',
+  'merchant': 'assets/images/way_merchant.jpg',
+  'priest': 'assets/images/way_priest.jpg',
+  'shadow': 'assets/images/way_shadow.jpg',
+  'samurai': 'assets/images/way_samurai.jpg',
+  'castle': 'assets/images/way_castle.jpg',
+  'daimyo': 'assets/images/way_daimyo.jpg',
+  'tenka': 'assets/images/way_tenka.jpg',
+  'woman': 'assets/images/way_woman.jpg',
+};
 
 class _ResultCard extends StatelessWidget {
   const _ResultCard({required this.g, required this.e});

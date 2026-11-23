@@ -127,7 +127,7 @@ class _CastlePainter extends CustomPainter {
 
 /// タイトルの絵（Gemini で作った、夕焼けの城のドット絵。2026-11-23、ユーザー「Gemini に画像頼んで品質上げて」）。
 /// 絵が読めなかったときは、コードで描くドット絵（[PixelCastle]）に戻す。
-const kTitleArtW = 1312, kTitleArtH = 816;
+const kTitleArtW = 960, kTitleArtH = 597;
 
 class TitleArt extends StatelessWidget {
   const TitleArt({super.key, this.width = 340});
