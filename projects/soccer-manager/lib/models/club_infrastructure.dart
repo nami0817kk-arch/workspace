@@ -106,10 +106,10 @@ extension FacilityTypeInfo on FacilityType {
             '選手の成長速度と疲労回復を高める', 'Speeds up player growth and fatigue recovery'),
         FacilityType.stadium =>
           Tr.pick('試合ごとの観客収入を増やす', 'Increases gate receipts from each match'),
-        FacilityType.youthFacility => Tr.pick('ユース昇格候補の受け入れ枠を増やす',
-            'Increases how many academy graduates you can take on'),
-        FacilityType.commercialFacility => Tr.pick('観客収入とスポンサー収入をまとめて底上げする',
-            'Lifts both gate receipts and sponsorship income'),
+        FacilityType.youthFacility => Tr.pick('ユース昇格候補の受け入れ枠を増やし、ユースでの伸びを速める',
+            'Takes on more academy prospects and helps them develop faster'),
+        FacilityType.commercialFacility => Tr.pick('スポンサー・グッズ収入と、上限までの観客収入を底上げする',
+            'Lifts sponsorship and merchandise, and gate receipts up to their ceiling'),
         FacilityType.medicalCenter => Tr.pick('フィジオの効果と合わせて負傷リスク・療養期間をさらに減らす',
             'Works with your physio to cut injury risk and recovery time further'),
       };

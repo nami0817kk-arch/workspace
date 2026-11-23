@@ -45,8 +45,8 @@ class ManagerReportEngine {
           : Tr.pick('$tier部 $teamCount チーム中 $rank 位', 'Tier $tier: ${Tr.ordinal(rank)} of $teamCount'),
       if (lastResult != null) Tr.pick('直近: $lastResult', 'Last: $lastResult'),
       Tr.pick(
-          '週の収支 ${weeklyNet >= 0 ? '+' : ''}${formatMoney(weeklyNet)}(資金 ${formatMoney(budget)})',
-          'Weekly ${weeklyNet >= 0 ? '+' : ''}${formatMoney(weeklyNet)} (funds ${formatMoney(budget)})'),
+          '1年の収支 ${weeklyNet >= 0 ? '+' : ''}${formatMoney(weeklyNet)}(資金 ${formatMoney(budget)})',
+          'Per year ${weeklyNet >= 0 ? '+' : ''}${formatMoney(weeklyNet)} (funds ${formatMoney(budget)})'),
     ];
 
     // いまの順位のまま季を終えたときの、季末の増減(目標を大きく下回ると負)。

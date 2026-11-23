@@ -441,8 +441,8 @@ class HomeScreen extends StatelessWidget {
                     title: Text(Tr.pick('スポンサー未契約', 'No sponsor')),
                     subtitle: Text(
                       Tr.pick(
-                          'スポンサーオファーが${save.pendingSponsorOffers.length}件届いています。契約すると毎週の収入が増えます。${gameState.isPreseason ? '' : 'あと${gameState.decisionMatchdaysLeft('sponsor')}節選ばないと、週の収入がいちばん多い話を自動で結びます。'}',
-                          'Waiting: ${Tr.plural(save.pendingSponsorOffers.length, 'sponsorship offer')}. Signing one raises your weekly income.${gameState.isPreseason ? '' : ' If you have not chosen within ${Tr.plural(gameState.decisionMatchdaysLeft('sponsor'), 'matchday')}, the best-paying one is signed for you.'}'),
+                          'スポンサーオファーが${save.pendingSponsorOffers.length}件届いています。契約すると毎節の収入が増えます。${gameState.isPreseason ? '' : 'あと${gameState.decisionMatchdaysLeft('sponsor')}節選ばないと、収入がいちばん多い話を自動で結びます。'}',
+                          'Waiting: ${Tr.plural(save.pendingSponsorOffers.length, 'sponsorship offer')}. Signing one raises your income every matchday.${gameState.isPreseason ? '' : ' If you have not chosen within ${Tr.plural(gameState.decisionMatchdaysLeft('sponsor'), 'matchday')}, the best-paying one is signed for you.'}'),
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => Navigator.of(context).push(
@@ -505,8 +505,8 @@ class HomeScreen extends StatelessWidget {
                         label: Tr.pick('資金', 'Funds'),
                         value: formatMoney(save.budget),
                         sub: Tr.pick(
-                            '週収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
-                            "Weekly ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
+                            '1年の収支 ${net >= 0 ? '+' : ''}${formatMoney(net)}',
+                            "Per year ${net >= 0 ? '+' : ''}${formatMoney(net)}"),
                         color: net >= 0
                             ? SemanticColors.positive(context)
                             : SemanticColors.negative(context),
@@ -898,22 +898,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  int _netWeekly(GameState gameState) {
-    final loanRepayment = gameState.bankLoans.fold<int>(
-      0,
-      (s, l) => s + l.weeklyRepayment,
-    );
-    final team = gameState.userTeam;
-    final appearanceFees = team.players
-        .where((p) => team.startingXI.contains(p.id))
-        .fold<int>(0, (s, p) => s + p.appearanceFee);
-    // 放映権は今の順位での配分式の見込み、運営費も引く(記帳と同じ額)。
-    return gameState.projectedMatchdayIncome -
-        gameState.weeklyWageBill -
-        gameState.matchdayRunningCost -
-        loanRepayment -
-        appearanceFees;
-  }
+  /// 1年の収支の見込み。経営の画面の「収支」と同じ数([GameStateFinance.
+  /// annualNetForecast])。以前はここだけ1節の収入から**週**の給料を引く
+  /// 別の式で、「週収支」が経営の画面より甘く出ていた(2026-11-23)。
+  int _netWeekly(GameState gameState) => gameState.annualNetForecast;
 
   String _fixtureLabel(League league, Fixture f) {
     final home = league.teams.firstWhere((t) => t.id == f.homeTeamId).name;

@@ -55,17 +55,13 @@ class FinanceScreen extends StatelessWidget {
     final md = gameState.matchdaysPerSeason;
     // 放映権は今の順位での配分式の見込み、運営費も引く(記帳と同じ額)。
     final income = gameState.projectedMatchdayIncome * md;
-    final wageBill =
-        (gameState.matchdayPlayerWageCost + gameState.matchdayStaffWageCost) *
-            md;
-    final runningCost = gameState.matchdayRunningCost * md;
     final weeklyBill = gameState.weeklyWageBill;
-    final loanRepayment = gameState.bankLoans.fold<int>(
-          0,
-          (s, l) => s + l.weeklyRepayment,
-        ) *
-        md;
-    final net = income - wageBill - runningCost - loanRepayment;
+    final hasLoan = gameState.bankLoans.isNotEmpty;
+    // 支出は人件費・運営費・返済の合計。以前は真ん中の列に人件費と返済
+    // だけを出し、収支からは運営費も引いていたので、収入−支出が収支と
+    // 合わなかった(2026-11-23)。
+    final expenses = gameState.annualExpenseForecast;
+    final net = gameState.annualNetForecast;
 
     final sortedByExpiry = team.players.where((p) => !p.isLoan).toList()
       ..sort(
@@ -119,8 +115,8 @@ class FinanceScreen extends StatelessWidget {
                             title: Tr.pick('1年あたりのお金(見込み)', 'Money per year (forecast)'),
                             style: Theme.of(context).textTheme.titleSmall,
                             help: Tr.pick(
-                                '収入は観客動員・スポンサー・グッズ・放映権を合わせた額、人件費は年俸を節の数で割った額(スタッフ込み)です。\n\n給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。ここの額は、いまの1節あたりの額を1季の節の数($md節)だけ積んだ1年の見込みです。',
-                                'Income is gate, sponsorship, merchandise and broadcasting together. Wages are annual salaries spread over the matchdays, staff included.\n\nWages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The figures here are the current per-matchday amounts times the $md matchdays of a season.'),
+                                '収入は観客動員・スポンサー・グッズ・放映権を合わせた額、支出は人件費(選手とスタッフの年俸)・施設の運営費・融資の返済です。\n\n給与は毎月末に年俸の12分の1(${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)})を払い、放映権は年4回(8/1・11/1・2/1・5/1)に入ります。ここの額は、いまの1節あたりの額を1季の節の数($md節)だけ積んだ1年の見込みです。',
+                                'Income is gate, sponsorship, merchandise and broadcasting together. Spending is wages (players and staff), the running costs of your facilities and any loan repayments.\n\nWages are paid at the end of each month, one twelfth of the annual bill (${formatMoney(gameState.monthlyPlayerWageCost + gameState.monthlyStaffWageCost)}). Broadcast money arrives four times a year (1 Aug, 1 Nov, 1 Feb, 1 May). The figures here are the current per-matchday amounts times the $md matchdays of a season.'),
                           ),
                           // 列の頭をそろえ、列の間をあける。英語では3つの
                           // 金額がくっついて1つの数に見えていた(2026-11-23)。
@@ -132,11 +128,12 @@ class FinanceScreen extends StatelessWidget {
                                 value: '+${formatMoney(income)}',
                               ),
                               _BigFigure(
-                                label: loanRepayment > 0
-                                    ? Tr.pick('人件費・返済', 'Wages & loan')
-                                    : Tr.pick('人件費', 'Wages'),
-                                value:
-                                    '-${formatMoney(wageBill + loanRepayment)}',
+                                key: const ValueKey('finance-expenses'),
+                                label: hasLoan
+                                    ? Tr.pick('人件費・運営費・返済',
+                                        'Wages, costs & loan')
+                                    : Tr.pick('人件費・運営費', 'Wages & costs'),
+                                value: '-${formatMoney(expenses)}',
                               ),
                               _BigFigure(
                                 label: Tr.pick('収支', 'Balance'),
@@ -151,7 +148,7 @@ class FinanceScreen extends StatelessWidget {
                           const SizedBox(height: 8),
                           _CashFlowBar(
                             income: income,
-                            expenses: wageBill + loanRepayment,
+                            expenses: expenses,
                           ),
                           const SizedBox(height: 12),
                           // 理事会が設定する週給予算。上限を超える新規獲得は
@@ -351,8 +348,8 @@ class FinanceScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   TitleWithHelp(
                     title: Tr.pick('スポンサー契約', 'Sponsorship'),
-                    help: Tr.pick('週の収入が高いほど、契約の期間は短くなります。契約する候補を1つ選んでください。',
-                        'The more it pays weekly, the shorter the deal. Choose which offer to take.'),
+                    help: Tr.pick('1年の額が大きいほど、契約の期間は短くなります。契約する候補を1つ選んでください。',
+                        'The more it pays a year, the shorter the deal. Choose which offer to take.'),
                   ),
                   _SponsorSection(gameState: gameState),
                   const SponsorSlotsCard(),
@@ -401,7 +398,8 @@ class FinanceScreen extends StatelessWidget {
 
 /// 小さな見出しと大きな数字の1組(概要の「1週あたりのお金」)。
 class _BigFigure extends StatelessWidget {
-  const _BigFigure({required this.label, required this.value, this.color});
+  const _BigFigure(
+      {super.key, required this.label, required this.value, this.color});
   final String label;
   final String value;
   final Color? color;

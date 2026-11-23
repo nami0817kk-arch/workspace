@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/club_infrastructure.dart';
 import '../models/player.dart';
 import '../l10n/tr.dart';
 
@@ -294,8 +295,8 @@ List<GuideSection> get guideSections => [
         icon: Icons.account_balance,
         title: Tr.pick('クラブ経営(ファイナンス)画面', 'Finances screen'),
         overview: Tr.pick(
-            'クラブの資金繰りを管理する画面。収入(観客動員・スポンサー)と支出(年俸・ローン返済)を見ながら、融資や投資の判断を行う。',
-            'Where you manage the money. Weigh what comes in from the gate and sponsors against wages and loan repayments, and decide whether to borrow or invest.'),
+            'クラブの資金繰りを管理する画面。収入(観客動員・スポンサー・グッズ・放映権)と支出(年俸・施設の運営費・ローン返済)を見ながら、融資や投資の判断を行う。',
+            'Where you manage the money. Weigh what comes in from the gate, sponsors, merchandise and TV against wages, running costs and loan repayments, and decide whether to borrow or invest.'),
         topics: [
           GuideTopic(
             title: Tr.pick('銀行ローン', 'Bank loans'),
@@ -311,8 +312,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('スポンサー契約', 'Sponsorship'),
             description: Tr.pick(
-                '年単位で結ぶ契約で、契約期間中は毎週安定した収入が得られる。契約満了が近づくと更新や新規オファーの検討が必要になる。',
-                'A deal measured in years that pays steadily every week. As it runs down you need to think about renewing or taking a new offer.'),
+                '年単位で結ぶ契約で、契約期間中は毎節安定した収入が得られる。契約満了が近づくと更新や新規オファーの検討が必要になる。',
+                'A deal measured in years that pays steadily every matchday. As it runs down you need to think about renewing or taking a new offer.'),
           ),
           GuideTopic(
             title: Tr.pick('財政破綻ペナルティ', 'Running out of money'),
@@ -328,23 +329,40 @@ List<GuideSection> get guideSections => [
             'クラブの設備とスタッフを強化する画面。ここへの投資は選手の成長・怪我のしにくさ・収入に長期的な効果をもたらす。',
             'Where you upgrade the club itself. What you spend here pays back over time in player development, fewer injuries and more income.'),
         topics: [
+          // 今の仕組みに合わせる(2026-11-23)。以前は工期・建て方が無く、
+          // メディカルセンターが抜け、ユース施設は「入ってくる子の質」、
+          // 商業施設は「観客とスポンサーの両方」とだけ書いていた。
+          GuideTopic(
+            title: Tr.pick('建て方と工期', 'Building and how long it takes'),
+            description: Tr.pick(
+                'スタジアムは1段で${ClubInfrastructure.stadiumSeatsPerLevel}席を足し、建設費は席の数×1席の値段(大きいほど1席が高い)。完成は来季の開幕。ほかの施設は工期${ClubInfrastructure.buildMonths}か月で、完成するまで効き目は出ない。工事中の施設は重ねて増築できない。',
+                'A stadium level adds ${ClubInfrastructure.stadiumSeatsPerLevel} seats, and costs the number of seats times the price of one (each seat costs more the bigger the ground). It opens at the start of next season. Every other facility takes ${ClubInfrastructure.buildMonths} months and does nothing until it is finished. You cannot add to a facility while it is being built.'),
+          ),
           GuideTopic(
               title: Tr.pick('トレーニング施設', 'Training facilities'),
-              description: Tr.pick('レベルが高いほど選手の成長速度にボーナスが付く。',
-                  'Higher levels speed up how quickly players improve.')),
+              description: Tr.pick('レベルが高いほど選手の成長が速くなり、週の疲労回復も増える。',
+                  'Higher levels speed up how quickly players improve and add to their weekly recovery.')),
           GuideTopic(
               title: Tr.pick('スタジアム', 'Stadium'),
-              description: Tr.pick('レベルが高いほど収容人数が増え、観客動員による収入が伸びる。',
-                  'Higher levels mean more seats, and more money through the gate.')),
+              description: Tr.pick(
+                  'レベルが高いほど収容人数が増える。観客収入が増えるのは、来たいファンで埋まる席のぶんだけ(空席は入場料を生まない)。',
+                  'Higher levels mean more seats. Gate receipts only grow for the seats your fans will actually fill; empty seats earn nothing.')),
           GuideTopic(
             title: Tr.pick('ユース施設', 'Youth facilities'),
-            description: Tr.pick('レベルが高いほどユースインテークで入ってくる選手の質(潜在能力)が上がりやすくなる。',
-                'Higher levels raise the quality — the potential — of the players your academy produces.'),
+            description: Tr.pick(
+                'レベルが高いほど昇格候補の受け入れ枠が増え、ユースでの伸びが速くなる。アカデミーの等級も上がり、毎季入ってくる子の数と質に効く。',
+                'Higher levels give you more places for academy prospects and help them develop faster. They also raise the academy grade, which shapes how many come through each season, and how good they are.'),
           ),
           GuideTopic(
             title: Tr.pick('商業施設', 'Commercial facilities'),
-            description: Tr.pick('レベルに応じて観客収入とスポンサー収入の両方をまとめて底上げする。',
-                'Lifts both gate receipts and sponsorship income together, by level.'),
+            description: Tr.pick(
+                'レベルに応じてスポンサー・グッズ収入を底上げする。観客収入にも効くが、入る人数×1人の単価の上限までで、上限に届いているクラブでは増えない。',
+                'Lifts sponsorship and merchandise income, by level. Gate receipts rise too, but only up to their ceiling of crowd times revenue per head; a club already at the ceiling gains nothing there.'),
+          ),
+          GuideTopic(
+            title: Tr.pick('メディカルセンター', 'Medical centre'),
+            description: Tr.pick('フィジオの効果に重ねて、負傷のしやすさと療養の長さを減らす。',
+                'Works on top of your physio to make injuries rarer and shorter.'),
           ),
           GuideTopic(
             title: Tr.pick('スタッフ(スカウト等)', 'Staff'),

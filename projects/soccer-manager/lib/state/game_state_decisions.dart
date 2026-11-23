@@ -107,8 +107,8 @@ extension GameStateDecisions on GameState {
       final deal = offers[best];
       await chooseSponsor(best);
       return Tr.pick(
-          'スポンサーを選ばないまま締切を過ぎたので、週の収入がいちばん多い${deal.name}(週${formatMoney(deal.weeklyIncome)}・${deal.yearsRemaining}年)と結びました。',
-          'No sponsor was chosen in time, so the club signed the best-paying offer: ${deal.name} (${formatMoney(deal.weeklyIncome)} a week, ${Tr.plural(deal.yearsRemaining, 'year')}).');
+          'スポンサーを選ばないまま締切を過ぎたので、収入がいちばん多い${deal.name}(年${formatMoney(deal.weeklyIncome * matchdaysPerSeason)}・${deal.yearsRemaining}年)と結びました。',
+          'No sponsor was chosen in time, so the club signed the best-paying offer: ${deal.name} (${formatMoney(deal.weeklyIncome * matchdaysPerSeason)} a year for ${Tr.plural(deal.yearsRemaining, 'year')}).');
     }
     if (key.startsWith('surgery:')) {
       final id = key.substring('surgery:'.length);
