@@ -68,6 +68,12 @@
     if (this.fc > lastT - 0.05) this.fc = lastT - 0.05;
     if (this.fc < F[0].t) this.fc = F[0].t;
     const fc = this.fc;
+    // 見終わった記録は捨てる（iPhone のメモリのため。全90分を残すと約17MB）。見どころは今より先の攻めの始まりから
+    // 再生するので、40秒より前は二度と使わない
+    if (F.length > 1200 && F[600].t < fc - 40) {
+      F.splice(0, 600);
+      this._fi = Math.max(0, (this._fi || 0) - 600);
+    }
     const i = this.liveFrameAt(fc);
     const f0 = F[i];
     const f1 = F[Math.min(i + 1, F.length - 1)];
