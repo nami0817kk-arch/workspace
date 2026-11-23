@@ -605,7 +605,7 @@ SimResult simulateGame(Team home, Team away, Rng r,
       final before = o.pts;
       o.crunch = period >= 4 || (period == 3 && clock <= 300 && (hScore - aScore).abs() <= 8);
       final m = offense == 0 ? hScore - aScore : aScore - hScore;
-      o.blowout = period >= 2 && period < 4 ? ((m.abs() - 15) / 15).clamp(0.0, 1.0) * (period == 3 ? 1.0 : 0.6) : 0.0;
+      o.blowout = period >= 2 && period < 4 ? ((m.abs() - 22) / 18).clamp(0.0, 1.0) * (period == 3 ? 1.0 : 0.6) : 0.0;
       o.blowoutSide = m.sign;
       final ev = record ? PlayEvent(
               period: period,

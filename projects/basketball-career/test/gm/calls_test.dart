@@ -18,7 +18,7 @@ Career _atContracts(int seed) {
 void main() {
   test('電話: 契約の時期に2件まで届く。相手は別々で、同じ選手を重ねない。保存で残る', () {
     var seen = 0;
-    for (final seed in [1, 2, 3, 4, 5]) {
+    for (var seed = 1; seed <= 12; seed++) {
       final c = _atContracts(seed);
       expect(c.calls.length, lessThanOrEqualTo(2));
       if (c.calls.isEmpty) continue;
@@ -32,7 +32,7 @@ void main() {
   });
 
   test('電話: 受けると成立して選手が入れ替わる。断ると消える。オフを終えると残りも消える', () {
-    for (final seed in [1, 2, 3, 4, 5]) {
+    for (var seed = 1; seed <= 12; seed++) {
       final c = _atContracts(seed);
       if (c.calls.isEmpty) continue;
       final o = c.calls.first;
