@@ -213,19 +213,32 @@ class _PromptCard extends StatelessWidget {
             for (final e in results.take(2))
               Padding(
                 padding: const EdgeInsets.only(bottom: 2),
-                child: Text(
-                  e.txt,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12,
-                    height: 1.4,
-                    color: e.kind == 'bad'
-                        ? Pal.bad
-                        : (e.kind == 'good' || e.kind == 'big'
-                              ? Pal.gold
-                              : Pal.muted),
-                  ),
+                // 能力の段を越えた【才】の一行には、どの能力かの札を添える（`LogEntry.cause`）。
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        e.txt,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          height: 1.4,
+                          color: e.kind == 'bad'
+                              ? Pal.bad
+                              : (e.kind == 'good' || e.kind == 'big'
+                                    ? Pal.gold
+                                    : Pal.muted),
+                        ),
+                      ),
+                    ),
+                    if (e.cause case final cause?)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4, top: 1),
+                        child: _ViaTag(cause, compact: true),
+                      ),
+                  ],
                 ),
               ),
             if (results.length > 2)
@@ -237,15 +250,28 @@ class _PromptCard extends StatelessWidget {
           ],
           // 場面の絵（Gemini で作ったドット絵）に題を重ねる。「今年の重点」には絵を添えない。
           if (p.art case final art?)
-            _ArtBanner(art: art, title: p.title)
+            _ArtBanner(art: art, title: p.title, cause: p.cause)
           else
-            Text(
-              p.title,
-              style: const TextStyle(
-                color: Pal.gold,
-                fontSize: 18,
-                letterSpacing: 2,
-              ),
+            // 能力・特性のおかげで起きた場面には、題の横に札を添える（`Prompt.cause`）。
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    p.title,
+                    style: const TextStyle(
+                      color: Pal.gold,
+                      fontSize: 18,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+                if (p.cause case final cause?)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: _ViaTag(cause),
+                  ),
+              ],
             ),
           const SizedBox(height: 6),
           Text(p.text, style: const TextStyle(fontSize: 14.5, height: 1.6)),
@@ -294,8 +320,11 @@ class _PromptCard extends StatelessWidget {
 
 /// 場面の絵の帯。下に暗いぼかしを敷き、題を白で重ねる。
 class _ArtBanner extends StatelessWidget {
-  const _ArtBanner({required this.art, required this.title});
+  const _ArtBanner({required this.art, required this.title, this.cause});
   final String art, title;
+
+  /// 能力・特性のおかげで起きた場面の札（`Prompt.cause`）。札は地を塗ってあるので、絵の上でも読める。
+  final String? cause;
 
   @override
   Widget build(BuildContext context) {
@@ -328,17 +357,29 @@ class _ArtBanner extends StatelessWidget {
               left: 10,
               right: 10,
               bottom: 6,
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Color(0xFFFFF4DC),
-                  fontSize: 18,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w700,
-                  shadows: [Shadow(color: Color(0xCC000000), blurRadius: 4)],
-                ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Color(0xFFFFF4DC),
+                        fontSize: 18,
+                        letterSpacing: 2,
+                        fontWeight: FontWeight.w700,
+                        shadows: [Shadow(color: Color(0xCC000000), blurRadius: 4)],
+                      ),
+                    ),
+                  ),
+                  if (cause case final cause?)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: _ViaTag(cause),
+                    ),
+                ],
               ),
             ),
           ],
@@ -447,6 +488,7 @@ class _ChoiceButton extends StatelessWidget {
 }
 
 /// 能力・特性・持ち物のおかげで出た手に付ける小さな札（`Choice.via`）。
+/// 能力・特性のおかげで起きた場面の題の横（`Prompt.cause`）と、【才】の一行の横（`LogEntry.cause`）にも使う。
 /// 能力（武・知・政・魅・運）は朱の縁、特性と持ち物の名は金の縁。
 class _ViaTag extends StatelessWidget {
   const _ViaTag(this.via, {this.compact = false});

@@ -92,8 +92,12 @@ bool viaKnown(String via) =>
     kTraits.any((t) => t.name == via);
 
 class Prompt {
-  Prompt(this.title, this.text, this.choices, this.after, {this.art});
+  Prompt(this.title, this.text, this.choices, this.after, {this.art, this.cause});
   final String title, text;
+
+  /// その場面が起きた訳（能力で起きる岐路 `tal_` は能力の字、特性の場面 `tr_` は特性の名。ほかは null）。
+  /// 画面の題の横の札に出るだけ（`sceneCauseFor`）。
+  final String? cause;
 
   /// 添える絵の名前（`scene_art.dart` の `kSceneArts`）。場面でない問いは null。
   final String? art;
@@ -180,6 +184,12 @@ class Game extends ChangeNotifier {
   /// 戦える人だけに出る手の印（[Choice.via]）。女武者の特性のおかげで戦える女性にだけ付く。
   String? get fightVia => l.female && has('onna') ? kTraitOnna.name : null;
 
+  /// 運で当たり外れを引く（運の条件つきの手 `via: '運'` の結果）。運が高いほど当たりやすいが、必ずではない。
+  bool luck([double base = .35]) => rng.chance(clampD(base + l.un / 200, .1, .9));
+
+  /// 腕で片が付くかを引く（武の条件つきの手 `via: '武'` の結果）。武が高いほど通りやすい。
+  bool might([double base = .4]) => rng.chance(clampD(base + l.bu / 200, .1, .92));
+
   /// 隠居していない（家中の務めや合戦に関わる）。
   bool get active => !hasFlag('retired');
 
@@ -198,8 +208,8 @@ class Game extends ChangeNotifier {
   List<LogEntry> lastResults = [];
   final List<LogEntry> _pending = [];
 
-  void log(String txt, [String kind = '']) {
-    final e = LogEntry('$year$season', txt, kind);
+  void log(String txt, [String kind = '', String? cause]) {
+    final e = LogEntry('$year$season', txt, kind, cause: cause);
     _pending.add(e);
     l.log.insert(0, e);
     if (l.log.length > 140) l.log.removeLast();
@@ -257,6 +267,7 @@ class Game extends ChangeNotifier {
       choices,
       after ?? changed,
       art: sceneArtFor(this, _sceneId, title),
+      cause: sceneCauseFor(_sceneId),
     );
     notifyListeners();
   }

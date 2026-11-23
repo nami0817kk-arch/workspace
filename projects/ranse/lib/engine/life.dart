@@ -1,15 +1,18 @@
 import 'data.dart';
 
 class LogEntry {
-  LogEntry(this.t, this.txt, this.kind);
+  LogEntry(this.t, this.txt, this.kind, {this.cause});
   final String t, txt;
+
+  /// その一行が起きた訳（能力の段を越えた【才】の一行なら能力の字。ほかは null）。画面の札に出るだけ。
+  final String? cause;
 
   /// '' / 'good' / 'bad' / 'big'
   final String kind;
 
-  Map<String, dynamic> toJson() => {'t': t, 'x': txt, 'k': kind};
+  Map<String, dynamic> toJson() => {'t': t, 'x': txt, 'k': kind, if (cause != null) 'c': cause};
   factory LogEntry.fromJson(Map<String, dynamic> j) =>
-      LogEntry(j['t'] as String, j['x'] as String, j['k'] as String);
+      LogEntry(j['t'] as String, j['x'] as String, j['k'] as String, cause: j['c'] as String?);
 }
 
 /// 人生の軌跡（グラフ用）。数値はどれも 0〜100。

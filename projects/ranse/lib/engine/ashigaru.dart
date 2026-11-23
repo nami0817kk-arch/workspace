@@ -53,6 +53,17 @@ List<SceneDef> buildAshigaruScenes() => [
         g.l.net = g.l.net >= 1 ? g.l.net - 1 : 0;
         return '朋輩たちは、つまらなそうな顔をした。';
       }),
+      if (g.l.un >= 60)
+        Choice.h('ここぞの一番にだけ張る', '流れを見て、勘の働いたときだけ賽に乗る', () {
+          if (g.l.gold < 2) return '張れるほどの銭がなかった。';
+          if (g.luck()) {
+            g.l.gold += 6;
+            g.l.net += 2;
+            return '三番見送り、四番目に張った。賽は思ったとおりの目を出した。朋輩たちが、どよめいた。';
+          }
+          g.l.gold -= 2;
+          return '勘が働いたと思った一番は、外れた。深追いはしなかった。';
+        }, via: '運'),
     ], after: next);
   }),
 
@@ -117,6 +128,18 @@ List<SceneDef> buildAshigaruScenes() => [
       Choice.h('後ろで手を抜く', '体は楽だ。いざというとき困るかもしれない', () {
         return '要領よく、稽古をやり過ごした。';
       }),
+      if (g.l.bu >= 60)
+        Choice.h('槍衾の要を買って出る', '列の真ん中で皆の槍を支える。腕がなければ務まらない', () {
+          g.l.hp -= 4;
+          if (g.might()) {
+            g.l.fav = _c(g.l.fav + 6);
+            g.l.net += 3;
+            g.l.merit += 2;
+            return '馬に見立てた丸太を、列は一歩も退かずに受け止めた。組頭が「次の戦は、お前が要だ」と言った。';
+          }
+          g.l.fav = _c(g.l.fav + 2);
+          return '丸太に押されて列がたわんだ。それでも、要を買って出た心意気は組頭に買われた。';
+        }, via: '武'),
     ], after: next);
   }),
 
@@ -139,6 +162,16 @@ List<SceneDef> buildAshigaruScenes() => [
           g.setFlag('fair_share');
           return '皆で等しく分けた。朋輩たちの目が、少し変わった。';
         }),
+        if (g.l.un >= 60)
+          Choice.h('籤で分ける', '恨みっこなし。長い籤を誰が引くかは、神仏しだい', () {
+            g.l.net += 2;
+            if (g.luck(.25)) {
+              g.l.gold += 9;
+              return 'こよりの籤を皆で引いた。いちばん長い一本は、あなたの手にあった。誰も文句は言えなかった。';
+            }
+            g.l.gold += 2;
+            return 'こよりの籤を皆で引いた。長い一本は若い足軽が引き当て、皆で胴上げをした。';
+          }, via: '運'),
       ], after: next);
     },
   ),

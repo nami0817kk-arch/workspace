@@ -731,6 +731,12 @@ List<SceneDef> buildHistoryScenes() {
             '堅実だ。手柄は小さい',
             () => g.battle('rear', enemy: _anegawaFoe(g)),
           ),
+          if (g.l.bu >= 60)
+            Choice.h('浅瀬に立ち、渡ってくる敵を食い止める', '腕があれば、川の中の一人は十人に当たる。足を取られれば終わりだ', () {
+              final ok = g.might();
+              final pre = ok ? '膝までの流れに踏ん張り、渡ってくる者を次々に突き伏せた。味方が、その背に続いた。' : '流れに足を取られ、槍を合わせるのがやっとだった。';
+              return '$pre${g.battle('van', enemy: _anegawaFoe(g), risk: ok ? .8 : 1.3, gain: ok ? 1.6 : 1.0, edge: ok ? .1 : 0)}';
+            }, via: '武'),
         ], after: next);
       },
       ageOk: (g, a) => _at(g, a, 1570),
@@ -759,6 +765,20 @@ List<SceneDef> buildHistoryScenes() {
             g.mark('三方ヶ原で、敗走する家康を守って退いた');
             return '家康を守り、浜松城へ逃げ込んだ。';
           }),
+          if (g.l.bu >= 60)
+            Choice.h('殿に立ち、追いすがる騎馬を突き落としながら退く', '腕があれば、主も己も生きて帰れる。武田の騎馬は甘くない', () {
+              if (g.might(.3)) {
+                g.l.fav = _c(g.l.fav + 20);
+                g.l.merit += 12;
+                g.l.fame += 5;
+                g.mark('三方ヶ原で、敗走する家康を守って退いた');
+                return '振り返りざまに先頭の騎馬を突き落とし、また走った。それを幾度繰り返したか分からない。浜松の城門が閉まったとき、槍の穂先は曲がっていた。';
+              }
+              g.l.hp -= 25;
+              g.l.fav = _c(g.l.fav + 12);
+              g.mark('三方ヶ原で、敗走する家康を守って退いた');
+              return '二騎までは突き落としたが、三騎目の槍を肩に受けた。馬の首にしがみついて、浜松まで駆けた。';
+            }, via: '武'),
         ], after: next);
       },
       ageOk: (g, a) => _at(g, a, 1572),
@@ -954,6 +974,13 @@ List<SceneDef> buildHistoryScenes() {
             return r;
           }),
           Choice.h('後詰めにまわる', '命は守りやすい', () => g.battle('rear')),
+          if (g.l.bu >= 60)
+            Choice.h('一番槍を狙い、誰より先に坂を駆け上がる', '足と腕があれば、後の世まで名が残る。先頭は矢玉の的だ', () {
+              final ok = g.might();
+              final r = g.battle('van', risk: ok ? .9 : 1.4, gain: ok ? 1.7 : 1.0, edge: ok ? .1 : 0);
+              if (ok && g.l.dead == null) g.l.fame += 4;
+              return '${ok ? '息も継がずに坂を駆け上がり、柴田の陣に最初の槍を入れた。' : '坂の半ばで息が上がり、若い者たちに追い抜かれた。'}$r';
+            }, via: '武'),
         ], after: next);
       },
       ageOk: (g, a) => _at(g, a, 1583),

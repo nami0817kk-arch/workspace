@@ -3,6 +3,7 @@ import 'data.dart';
 import 'game.dart';
 import 'history_lines.dart';
 import 'rng.dart';
+import 'trait_scenes.dart';
 
 /// 能力で起きる岐路（2026-11-23、ユーザー指示「武芸数値が上がったり何かしらの能力が高い場合に
 /// 何かしらのイベントがあるなど、色々作り込んで欲しい」）。
@@ -135,6 +136,46 @@ int _stat(Game g, String s) => switch (s) {
   _ => g.l.un,
 };
 
+const _statVia = {'bu': '武', 'chi': '知', 'sei': '政', 'mi': '魅', 'un': '運'};
+
+/// 能力の組み合わせで起きる岐路の印（並びは 武→知→政→魅→運）。
+const _comboVia = {
+  'tal_combo_yasyu': '武知',
+  'tal_combo_machiwari': '知政',
+  'tal_combo_shisha': '政魅',
+  'tal_combo_jinbo': '武魅',
+};
+
+/// 子どもの能力の岐路の印。
+const _childVia = {
+  'tal_c_sumo': '武',
+  'tal_c_uma': '武',
+  'tal_c_kosatsu': '知',
+  'tal_c_kuchi': '魅',
+  'tal_c_soroban': '政',
+  'tal_c_shika': '運',
+};
+
+Map<String, String>? _traitSceneNames;
+
+/// その場面が起きた訳（[Prompt.cause]）。能力で起きる岐路（`tal_`）は能力の字（組み合わせは二字）、
+/// 特性の場面（`tr_`。`kTraitScenesDone` の表）は特性の名。低い能力で起きる岐路（`tal_low_`）と、ふつうの岐路は null。
+String? sceneCauseFor(String? id) {
+  if (id == null) return null;
+  if (id.startsWith('tal_')) {
+    final p = id.split('_');
+    return _comboVia[id] ?? _childVia[id] ?? (p.length > 2 ? _statVia[p[1]] : null);
+  }
+  if (id.startsWith('tr_')) {
+    final m = _traitSceneNames ??= {
+      for (final e in kTraitScenesDone.entries)
+        for (final s in e.value) s: kTraits.firstWhere((t) => t.id == e.key).name,
+    };
+    return m[id];
+  }
+  return null;
+}
+
 /// 毎年の終わりに呼ぶ。ある能力がはじめて 60・75・90 を越えたら、見聞録に【才】の一行を書く。
 /// 同じ段は一生に一度（`talent:<能力>:<段>` の旗）。一度に二つ以上の段を越えたときは、高いほうの一行だけ書く。
 void talentMilestones(Game g) {
@@ -149,7 +190,7 @@ void talentMilestones(Game g) {
       g.setFlag(flag);
       txt = lines[s]![i];
     }
-    if (txt != null) g.log('【才】${txt.replaceAll('{w}', _where(g))}', 'good');
+    if (txt != null) g.log('【才】${txt.replaceAll('{w}', _where(g))}', 'good', _statVia[s]);
   }
 }
 

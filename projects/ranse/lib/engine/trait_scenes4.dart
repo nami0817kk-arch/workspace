@@ -2076,6 +2076,6 @@ void _highOpening(Game g, String id) {
   final o = kTraitHighOpen[id];
   final p = g.prompt;
   if (o == null || p == null || !_high(g) || !p.text.contains(o.$1)) return;
-  g.prompt = Prompt(p.title, o.$2, p.choices, p.after, art: p.art);
+  g.prompt = Prompt(p.title, o.$2, p.choices, p.after, art: p.art, cause: p.cause);
   g.changed();
 }

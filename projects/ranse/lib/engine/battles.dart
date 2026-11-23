@@ -226,6 +226,25 @@ List<BattleSit> buildBattleSits() => [
         g.l.fav = _c(g.l.fav + 3);
         return _fight(g, c, '目の前の敵だけを見て、持ち場を崩さなかった。', 'main', risk: .8, gain: .9, edge: .05);
       }),
+      if (g.l.bu >= 65)
+        Choice.h('名乗りを上げ、敵将に一騎打ちを挑む', '腕に覚えのある者だけの手だ。応じられれば、旗本の槍衾を相手にせずに済む。敗れれば命はない', () {
+          final ok = _try(g, g.l.bu, .3);
+          final r = _fight(
+            g,
+            c,
+            ok ? '大音声の名乗りに、敵将が馬を返した。旗本が道を開け、槍と槍が正面からぶつかった。' : '名乗りは乱戦の声にかき消され、敵将は旗本の陰へ下がった。',
+            'van',
+            risk: ok ? 1.0 : 1.3,
+            gain: ok ? 2.2 : 1.0,
+            edge: ok ? .2 : 0,
+          );
+          if (ok && _alive(g)) {
+            g.l.fame += 8;
+            _markOnce(g, 'bt_slew_general', '乱戦の中で、敵の将を討ち取った');
+            return '$r一騎打ちの末、敵将の首を挙げた。';
+          }
+          return r;
+        }, via: '武'),
     ]);
   }),
 
@@ -277,6 +296,20 @@ List<BattleSit> buildBattleSits() => [
         g.l.fav = _c(g.l.fav + 4);
         return _fight(g, c, '首には目もくれず、次の敵へ向かった。${_who(g)}がそれを見ていた。', 'van', risk: .9, gain: .9, edge: .12);
       }),
+      if (g.l.bu >= 60)
+        Choice.h('首を腰に下げたまま、先へ駆ける', '力と足があれば、手柄の証も勝ち戦も取れる。重い首は、動きを鈍らせる', () {
+          final ok = _try(g, g.l.bu, .4);
+          if (ok) g.l.fav = _c(g.l.fav + 3);
+          return _fight(
+            g,
+            c,
+            ok ? '首を腰に結わえ、そのまま味方の先頭に追いついた。${_who(g)}が、腰の首とあなたの顔を見比べた。' : '腰の首が足にからみ、思うように駆けられなかった。',
+            'van',
+            risk: ok ? .9 : 1.3,
+            gain: ok ? 1.5 : 1.1,
+            edge: ok ? .1 : 0,
+          );
+        }, via: '武'),
     ]);
   }),
 
@@ -521,6 +554,19 @@ List<BattleSit> buildBattleSits() => [
       Choice.h('霧が晴れるまで動かない', '危うさは少ない。好機も逃すかもしれない', () {
         return _fight(g, c, '兵を伏せさせ、霧が晴れるのを待った。', 'main', risk: .7, gain: .8);
       }),
+      if (g.l.un >= 60)
+        Choice.h('勘の指すほうへ、まっすぐ押し出す', '理屈はない。霧の向こうに敵の本陣があるかどうかは、行ってみてのこと', () {
+          final ok = g.luck(.25);
+          return _fight(
+            g,
+            c,
+            ok ? '霧が切れた先に、敵の本陣の幔幕があった。向こうは、まだこちらに気づいていなかった。' : '霧の中を進んだ先は、葦の茂る沼だった。引き返すうちに、戦の山場は過ぎていた。',
+            ok ? 'van' : 'main',
+            risk: ok ? .8 : 1.0,
+            gain: ok ? 1.8 : .6,
+            edge: ok ? .2 : -.05,
+          );
+        }, via: '運'),
     ]);
   }),
 

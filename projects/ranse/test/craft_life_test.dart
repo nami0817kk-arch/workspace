@@ -219,7 +219,7 @@ void main() {
     for (final kind in _setups.keys) {
       final (classes, flag) = _setups[kind]!;
       var adults = 0, total = 0, withAny = 0, years = 0;
-      for (var seed = 0; adults < 300 && seed < 3000; seed++) {
+      for (var seed = 0; adults < 600 && seed < 6000; seed++) {
         final g = _grownUp(seed * 13 + 101 + kind.length * 7919, classes[seed % classes.length]);
         if (g == null) continue;
         if (flag != null) g.setFlag(flag);

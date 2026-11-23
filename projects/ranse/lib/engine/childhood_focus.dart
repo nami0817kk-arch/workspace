@@ -557,6 +557,16 @@ List<SceneDef> buildChildFocusScenes() => [
         g.setFlag('cf_freed_koi');
         return '鯉はしばらく浅瀬にとどまってから、ゆっくり淵へ帰っていった。';
       }),
+      if (g.l.bu >= 55)
+        Choice.h('淵に飛び込み、鯉を抱え上げる', '力と度胸があればできる。大鯉の尾は、子どもの腕より強い', () {
+          if (g.might()) {
+            g.l.bu = _c(g.l.bu + 2);
+            g.l.fame += 3;
+            return '冷たい水の中で鯉を胸に抱え、岸へ放り上げた。村の大人たちが、鯉とあなたを見比べて唸った。';
+          }
+          _hurt(g, 4);
+          return '尾で頬を張られ、水を飲んだ。鯉は籠ごと淵の底へ消えた。';
+        }, via: '武'),
     ], after: next);
   }),
   _second('kawa', (g, next) {
