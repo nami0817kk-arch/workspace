@@ -27,6 +27,7 @@
     this.flash = 0;
     if (Math.abs((this.fc || 0) - sc.live.t0) > 0.6) this.cut = 0.35;
     this.fc = sc.live.t0;
+    this._ei = null; // 出来事の位置は場面の頭に合わせ直す（飛ばした間の線や動きを描かない）
     this.focus = [sc.shooter, sc.assist].filter(Boolean);
     this.defFocus = sc.gk ? [sc.gk] : [];
     this.trails = [];
@@ -62,6 +63,15 @@
       this.fc = this.scene.live.t0 + this.t;
     } else {
       this.fc = prev + dt;
+      // 合間：絵が試合の時計から5分より遅れたら、いまの時間帯（動かし終えた所の約50秒前）へ飛ぶ。
+      // 合間の絵はいつも「いまの数分」の本当のプレーになる（2026-11-24：前は見どころの続きを流し続け、時計と絵が離れていった）
+      const now = F[F.length - 1].t;
+      if (now - this.fc > 300 && !this.celeb) {
+        this.fc = Math.max(F[0].t, now - 50);
+        this.cut = 0.3;
+        this.trails = [];
+        this._ei = null;
+      }
     }
     // 記録の先（まだ動かしていない所）へは行かない
     const lastT = F[F.length - 1].t;
@@ -113,7 +123,11 @@
     // 出来事：蹴った線・体の動き・GK の飛びつき（前のコマから今までに起きたもの）
     const E = lv.events;
     let ei = this._ei || 0;
-    if (fc < prev - 0.01) {
+    if (this._ei == null) {
+      // 飛んだ直後：出来事の位置をいまの時刻へ合わせる（間の出来事は描かない）
+      ei = 0;
+      while (ei < E.length && E[ei].t <= fc) ei++;
+    } else if (fc < prev - 0.01) {
       // 戻った（見どころの頭へ）：その時刻の出来事の位置まで戻す
       while (ei > 0 && E[ei - 1].t > fc) ei--;
     } else {
