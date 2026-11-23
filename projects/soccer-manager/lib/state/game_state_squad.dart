@@ -377,6 +377,12 @@ extension GameStateSquad on GameState {
                 'The ${f.label} upgrade is complete (level $lvl).'),
         context: Tr.pick('施設', 'Facilities'),
       );
+      // 広くなったスタジアムに、サポーターが沸く。
+      if (f == FacilityType.stadium) {
+        _changeSupporters(
+            BoardEngine.stadiumCompletedDelta, SupporterReason.stadium,
+            note: Tr.pick('スタジアムの増築が完成', 'Stadium expansion completed'));
+      }
     }
   }
 

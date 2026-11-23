@@ -214,7 +214,9 @@ void main() {
     test('同じ国のクラブを買い直す', () async {
       final gs = await start();
       fill(gs.save!);
-      gs.save!.confidence = 0;
+      gs.save!
+        ..confidence = 0
+        ..supporterUltimatumUntil = DateTime(2000);
       expect(await gs.buyClub(gs.buyoutCandidates.first.id), isTrue);
       expectCleared(gs);
     });
@@ -222,7 +224,9 @@ void main() {
     test('別の国でクラブを立ち上げる', () async {
       final gs = await start();
       fill(gs.save!);
-      gs.save!.confidence = 0;
+      gs.save!
+        ..confidence = 0
+        ..supporterUltimatumUntil = DateTime(2000);
       final other =
           LeagueTheme.values.firstWhere((t) => t != gs.currentLeagueTheme);
       expect(await gs.buyClubInCountry(other), isTrue);

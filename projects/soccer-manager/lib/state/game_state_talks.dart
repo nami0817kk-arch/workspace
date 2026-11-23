@@ -423,6 +423,7 @@ extension GameStateTalks on GameState {
     player.promiseMisses = 0;
     player.promiseBroken = false;
     player.happiness = player.traits.arrivalHappiness;
+    _supportersOnSigning(player);
     userTeam.players.add(player);
     _save!.transferTalks.remove(t);
     _logNews(

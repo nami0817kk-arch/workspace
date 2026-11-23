@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../screens/inbox_screen.dart';
 import '../state/game_state.dart';
+import '../theme/semantic_colors.dart';
 
 /// 受信箱。直近のお知らせを新しい順に並べる(FM のホームの受信箱に寄せる)。
 /// 全部は「すべて見る」から受信箱の画面で読める(絞り込みはその先のニュース画面)。
@@ -19,7 +20,10 @@ class InboxCard extends StatelessWidget {
     final gs = context.watch<GameState>();
     final all = gs.save?.newsLog ?? const [];
     final actions = gs.inboxActions;
-    if (all.isEmpty && actions.isEmpty) return const SizedBox.shrink();
+    final ultimatumDays = gs.supporterUltimatumDaysLeft;
+    if (all.isEmpty && actions.isEmpty && ultimatumDays == null) {
+      return const SizedBox.shrink();
+    }
     final unread = gs.unreadNewsCount;
     // newsLog は新しい順に積まれている。先頭から読む。
     final shownActions = actions.take(_shown).toList();
@@ -87,6 +91,30 @@ class InboxCard extends StatelessWidget {
                 ),
               ],
             ),
+            // サポーターの最後通告は、何よりも先に(2026-11-23)。答えを待つ
+            // ものとは数えない(数えると節をまとめて進められなくなる)。
+            if (ultimatumDays != null)
+              Padding(
+                key: const ValueKey('inbox-ultimatum'),
+                padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                child: Row(
+                  children: [
+                    Icon(Icons.campaign,
+                        size: 14, color: SemanticColors.negative(context)),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                          Tr.pick(
+                              '最後通告: 残り$ultimatumDays日でサポーターの期待を${GameStateSupporters.ultimatumLine}以上に(いま${gs.save!.confidence})',
+                              'Final warning: get supporter expectation to ${GameStateSupporters.ultimatumLine}+ within ${Tr.plural(ultimatumDays, 'day')} (now ${gs.save!.confidence})'),
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: SemanticColors.negative(context))),
+                    ),
+                  ],
+                ),
+              ),
             // 対応が要るもの(オーナーの答えを待っているもの)を先に。
             for (final a in shownActions)
               Padding(

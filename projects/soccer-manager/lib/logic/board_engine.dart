@@ -114,14 +114,6 @@ class BoardEngine {
   /// 新シーズンの開幕時点では最低限の猶予を与える。
   static const int newSeasonConfidenceFloor = 40;
 
-  /// 試合結果を受けて信頼度の増減量を返す。
-  /// かつては勝ち+4・引き分け-1・負け-6と負けが重く、信頼度を維持するには
-  /// 勝ちが負けの1.5倍(38試合なら23勝15敗)必要だった。つまり優勝争いを
-  /// しない限り信頼度が0へ落ち続け、実測では放置プレイ5回中5回が、うち
-  /// 3回はシーズン1〜2で解任されていた。勝ち負けを対称にし、勝率5割の
-  /// クラブは試合結果だけでは信頼を失わないようにする。理事会の評価は
-  /// シーズン中盤レビュー([midSeasonReviewDelta])とシーズン終了時の
-  /// 順位評価([confidenceDeltaForSeasonEnd])が主役になる。
   /// 理事会の路線を守れているか。
   ///
   /// 判定は「いま守れているか」だけを見る。守っていれば少し加算、
@@ -162,6 +154,11 @@ class BoardEngine {
         : -vision.violatedPenalty;
   }
 
+  /// 1試合の勝ち負けの向き(勝ち +3・引き分け 0・負け -3)。
+  ///
+  /// 2026-11-23 から、ふつうの試合ではサポーターの期待をその場で動かさない
+  /// (月末に [monthlyResultDelta] でまとめる)。その場で動くのはダービーだけ
+  /// ([derbyDeltaForMatch])。
   static int confidenceDeltaForMatch(MatchResult result, String userTeamId) {
     final isHome = result.homeTeamId == userTeamId;
     final userGoals = isHome ? result.homeGoals : result.awayGoals;
@@ -170,6 +167,102 @@ class BoardEngine {
     if (userGoals == oppGoals) return 0;
     return -3;
   }
+
+  /// ダービーの勝ち負けで、その場で動く期待の幅。
+  static const int derbyDelta = 4;
+
+  /// ダービーの結果による、その場の増減(勝ち +4・引き分け 0・負け -4)。
+  static int derbyDeltaForMatch(MatchResult result, String userTeamId) =>
+      confidenceDeltaForMatch(result, userTeamId).sign * derbyDelta;
+
+  /// 月末のまとめで動く幅の上限(上下とも)。
+  static const int monthlyResultCap = 6;
+
+  /// 月末に、その月の試合の結果をまとめた増減(-6〜+6)。
+  ///
+  /// 以前は1試合ごとに勝ち +3・負け -3 で、連敗すると数週で崩れ、オーナーが
+  /// 打つ手(広報 +3 など)は試合の波に埋もれていた。月ごとに「目標の順位
+  /// との差」と「その月の勝点の取り方」をまとめて反映し、オーナーの手が
+  /// 主な動かし手になるようにする(2026-11-23)。
+  ///
+  /// その月にリーグ戦が無ければ 0(夏の間や季の切り替え)。
+  static int monthlyResultDelta({
+    required int rank,
+    required int targetRank,
+    required int points,
+    required int games,
+  }) {
+    if (games <= 0) return 0;
+    return (monthlyRankPart(rank: rank, targetRank: targetRank) +
+            monthlyFormPart(points: points, games: games))
+        .clamp(-monthlyResultCap, monthlyResultCap);
+  }
+
+  /// 月末のまとめのうち、目標の順位との差の分(-3〜+3)。目標ちょうどは
+  /// 0。目標は戦力の順位に [targetRankCushion] の余裕を足したものなので、
+  /// 戦力どおりの順位なら +1 になる。
+  static int monthlyRankPart({required int rank, required int targetRank}) {
+    final gap = targetRank - rank;
+    if (gap >= 6) return 3;
+    if (gap >= 3) return 2;
+    if (gap >= 1) return 1;
+    if (gap >= -3) return 0;
+    if (gap >= -7) return -1;
+    if (gap >= -11) return -2;
+    return -3;
+  }
+
+  /// 月末のまとめのうち、その月の成績(1試合あたりの勝点)の分(-3〜+3)。
+  static int monthlyFormPart({required int points, required int games}) {
+    if (games <= 0) return 0;
+    final ppg = points / games;
+    if (ppg >= 2.2) return 3;
+    if (ppg >= 1.8) return 2;
+    if (ppg >= 1.4) return 1;
+    if (ppg >= 0.9) return 0;
+    if (ppg >= 0.6) return -1;
+    if (ppg >= 0.3) return -2;
+    return -3;
+  }
+
+  /// チケットの値段による、毎月の増減(安い +2・普通 0・高い -2)。
+  /// 高いほど1人あたりの収入は増える(TicketPricing の収入の倍率)。
+  static int ticketMonthlyDelta(TicketPricing pricing) => switch (pricing) {
+        TicketPricing.budget => 2,
+        TicketPricing.standard => 0,
+        TicketPricing.premium => -2,
+      };
+
+  /// 地域活動(地域貢献 Lv1 以上)を続けている間の、毎月の増減。
+  static const int communityMonthlyDelta = 1;
+
+  /// 主力級(チームの上位3人に入る選手)を獲ったときの増減。
+  static const int bigSigningDelta = 3;
+
+  /// 主力級とみなす順位(チームの総合力の上から何人目まで)。
+  static const int keyPlayerRank = 3;
+
+  /// 長く在籍したとみなす、自クラブでの公式戦の出場数。
+  static const int longServingApps = 100;
+
+  /// 人気の選手を売ったときの増減。人気の印(上位3人・長く在籍・生え抜き)の
+  /// 数で -3〜-6。どれにも当たらなければ 0。
+  static int saleDelta({
+    required bool topPlayer,
+    required bool longServing,
+    required bool academy,
+  }) {
+    final marks = [topPlayer, longServing, academy].where((b) => b).length;
+    return switch (marks) {
+      0 => 0,
+      1 => -3,
+      2 => -5,
+      _ => -6,
+    };
+  }
+
+  /// スタジアムの増築が完成したときの増減。
+  static const int stadiumCompletedDelta = 5;
 
   /// この値を超えた分の一部を、シーズン終了時に失う(期待への慣れ)。
   static const int adaptationLine = 75;
@@ -184,26 +277,26 @@ class BoardEngine {
     return (confidence - lost).clamp(0, 100);
   }
 
-  /// シーズン終了時の順位評価による信頼度の増減量を返す。
+  /// 理事会の評価で下がる幅の上限(中間レビュー・季末とも)。
+  static const int boardReviewMaxDrop = 10;
+
+  /// シーズン終了時の順位評価による増減。目標との差に比例する
+  /// (目標ちょうどで +3、1つ上回るごとに +3、上限 +15。1つ下回るごとに
+  /// -3、下限 -10)。以前は目標以内で +15・3つ以上下で -20 の段差だった
+  /// (2026-11-23)。
   static int confidenceDeltaForSeasonEnd({
     required int finalRank,
     required int targetRank,
-  }) {
-    if (finalRank <= targetRank) return 15;
-    if (finalRank > targetRank + 2) return -20;
-    return 0;
-  }
+  }) =>
+      (3 * (targetRank - finalRank) + 3).clamp(-boardReviewMaxDrop, 15);
 
-  /// シーズン中盤(折り返し地点)の理事会レビューによる信頼度の増減量。
-  /// シーズン終了時ほど大きくは動かないが、早期の軌道修正を促す。
+  /// シーズン中盤(折り返し地点)の理事会レビューによる増減。目標との差に
+  /// 比例する(目標ちょうどで +2、1つにつき ±2、上限 +8・下限 -10)。
   static int midSeasonReviewDelta({
     required int currentRank,
     required int targetRank,
-  }) {
-    if (currentRank <= targetRank) return 8;
-    if (currentRank > targetRank + 3) return -12;
-    return 0;
-  }
+  }) =>
+      (2 * (targetRank - currentRank) + 2).clamp(-boardReviewMaxDrop, 8);
 
   /// シーズン中盤レビューで理事会から届く講評文。
   static String midSeasonReviewMessage({

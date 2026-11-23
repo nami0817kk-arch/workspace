@@ -47,7 +47,7 @@ extension GameStateClubLook on GameState {
     final initial = look.initial.trim();
     if (initial.isEmpty || initial.runes.length > 2) return false;
     if (clubLookChangeCosts) {
-      s.confidence = (s.confidence - changePenalty).clamp(0, 100);
+      _changeSupporters(-changePenalty, SupporterReason.events);
       s.clubLookChangedSeason = s.league.season;
     }
     s.clubLook = look.copyWith(initial: initial);

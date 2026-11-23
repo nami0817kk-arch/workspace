@@ -28,6 +28,7 @@ extension GameStateTransfer on GameState {
     _recordPlayerBook(player, player.marketValue,
         announce: false, agentFee: fee);
     _takeFromSeller(target);
+    _supportersOnSigning(player);
     userTeam.players.add(player);
     _notify();
     await _persist();
@@ -472,6 +473,7 @@ extension GameStateTransfer on GameState {
     ContractEngine.applyTransferContract(player);
     _recordPlayerBook(player, offer, announce: false, agentFee: agentFee);
     _takeFromSeller(target);
+    _supportersOnSigning(player);
     userTeam.players.add(player);
     if (offer < player.marketValue) {
       _save!.negotiationSignings++;
@@ -890,6 +892,7 @@ extension GameStateTransfer on GameState {
         player.contractEndYear - Player.contractClockYear + 1);
     _recordPlayerBook(player, total, announce: false, agentFee: fee);
     _takeFromSeller(target);
+    _supportersOnSigning(player);
     userTeam.players.add(player);
     _notify();
     await _persist();
@@ -950,6 +953,7 @@ extension GameStateTransfer on GameState {
     // 自動移籍オファーの対象になってしまうため解除する。
     player.releaseClause = null;
     _takeFromSeller(target);
+    _supportersOnSigning(player);
     userTeam.players.add(player);
     _notify();
     await _persist();
@@ -1261,6 +1265,7 @@ extension GameStateTransfer on GameState {
     if (bonus > 0) _book(LedgerCategory.transfers, -bonus);
     _bookAgentFee(player, agentFee);
     _recordPlayerBook(player, 0, announce: false, agentFee: agentFee);
+    _supportersOnSigning(player);
     userTeam.players.add(player);
     _notify();
     await _persist();
@@ -1522,6 +1527,10 @@ extension GameStateTransfer on GameState {
     // 移籍金を受け取る売却: 連帯貢献金と、簿価との差(売却益)。
     _onPlayerSold(player, offer.amount, buyerClubName: offer.buyerClubName);
     _paySellOn(player, offer.amount);
+    // 人気の選手(上位・長く在籍・生え抜き)を売ると、サポーターが嘆く。
+    // オーナーが選んで受けた売却だけ(リリース条項は止められず、エースの
+    // 移籍志願は事件の答えに増減が入っている)。
+    _supportersOnSale(player);
     // ダイナミクス: チームリーダーの放出はロッカールーム全体を動揺させる
     // (その場で売れる形をやめたので、オファーを受けた売却で見る)。
     if (wasTeamLeader) {

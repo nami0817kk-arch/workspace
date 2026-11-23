@@ -28,7 +28,10 @@ void main() {
     final gs = GameState();
     await gs.startNewGame('テストFC');
     final save = gs.save!;
-    save.confidence = 0; // サポーターの期待が尽きた
+    // サポーターの期待が尽き、最後通告の期限も過ぎた。
+    save
+      ..confidence = 0
+      ..supporterUltimatumUntil = DateTime(2000);
     expect(gs.saleReason, isNotNull);
     final legacies = save.ownerLegacies.length;
     expect(await gs.buyClubInCountry(LeagueTheme.germany), isTrue);
@@ -48,7 +51,9 @@ void main() {
   test('いまいる国には、国またぎの買い直しはできない', () async {
     final gs = GameState();
     await gs.startNewGame('テストFC');
-    gs.save!.confidence = 0;
+    gs.save!
+      ..confidence = 0
+      ..supporterUltimatumUntil = DateTime(2000);
     expect(await gs.buyClubInCountry(gs.currentLeagueTheme), isFalse);
   });
 }

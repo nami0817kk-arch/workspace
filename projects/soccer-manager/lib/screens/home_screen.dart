@@ -34,6 +34,7 @@ import '../widgets/fm_panel.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/next_action_card.dart';
 import '../widgets/season_review_card.dart';
+import '../widgets/supporter_month_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import 'cup_screen.dart';
@@ -331,9 +332,14 @@ class HomeScreen extends StatelessWidget {
               // すぐ下に置く。左の欄の一番下だと、季の切り替え直後に出る
               // 実績解除の知らせ(画面下の帯)に「閉じる」ごと隠れた
               // (2026-11-23)。
+              // サポーターの最後通告。出ている間は帯のすぐ下に、いちばん
+              // 目立つ形で(2026-11-23)。
+              const SupporterUltimatumCard(),
               const SeasonReviewCard(),
               // 監督からの週次報告(ひとことと経営診断)。
               ManagerReportCard(weeklyNet: net),
+              // 前の月のサポーターの期待の内訳。
+              const SupporterMonthCard(),
               // いま手を付けるべきこと。画面が30以上あり、どこから見れば
               // よいか分からない状態だった。出すのは常に1件だけ。
               const NextActionCard(),
@@ -503,7 +509,7 @@ class HomeScreen extends StatelessWidget {
                         glossaryTerm:
                             Tr.pick('サポーターの期待', 'Supporter expectation'),
                         value: '${save.confidence}',
-                        sub: Tr.pick('成績・順位', 'Results'),
+                        sub: Tr.pick('結果とオーナーの手', 'Results and your moves'),
                         progress: save.confidence / 100,
                         color: save.confidence <= 25
                             ? Colors.redAccent
@@ -2051,8 +2057,8 @@ class _SaleScreen extends StatelessWidget {
                 Text(
                   switch (reason) {
                     SaleReason.supporters => Tr.pick(
-                        'サポーターの不満が限界を超えました。成績不振で、オーナーの座に居られなくなりました。',
-                        'The supporters have turned against you after poor results.'),
+                        'サポーターの不満が限界を超えました。最後通告から3か月のうちに期待を${GameStateSupporters.ultimatumLine}以上へ戻せず、オーナーの座に居られなくなりました。',
+                        'The supporters have turned against you. Expectation did not get back to ${GameStateSupporters.ultimatumLine} within three months of their final warning.'),
                     SaleReason.funds => Tr.pick(
                         '資金が尽きました。借金が膨らみ、クラブを売って返すほかなくなりました。',
                         'The money has run out. The debts have grown too large, and selling the club is the only way to pay them.'),
@@ -2064,7 +2070,29 @@ class _SaleScreen extends StatelessWidget {
                 ),
                 // 期待がどう落ちてきたか。直近の推移と、大きな増減の3件。
                 if (reason == SaleReason.supporters) ...[
-                  if (gameState.supporterTrailLine != null)
+                  // 月ごとの推移と、前の月の内訳(何で下がったか)。
+                  if (gameState.supporterMonthTrailLine != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        gameState.supporterMonthTrailLine!,
+                        key: const ValueKey('sale-month-trend'),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  if (gameState.lastMonthSupporterLine != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        gameState.lastMonthSupporterLine!,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  // 節ごとの推移は、月ごとの推移が無い(旧セーブ)ときだけ。
+                  if (gameState.supporterMonthTrailLine == null &&
+                      gameState.supporterTrailLine != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
@@ -2091,8 +2119,8 @@ class _SaleScreen extends StatelessWidget {
                 Text(
                   switch (reason) {
                     SaleReason.supporters => Tr.pick(
-                        '次は: 目標順位に届く戦力を早めにそろえ、期待が下がり始めたらオーナー室の広報や試合日のイベントで支えると良いでしょう。',
-                        'Next time: build a squad that can reach the target early, and when expectation starts to slip, use PR and matchday events from the owner\'s office.'),
+                        '次は: 目標順位に届く戦力を早めにそろえ、毎月の広報・ファンの手、手ごろなチケット、地域活動で期待を支えると良いでしょう。',
+                        'Next time: build a squad that can reach the target early, and hold up expectation with a monthly PR or fan move, fair ticket prices and community work.'),
                     SaleReason.funds => Tr.pick(
                         '次は: 人件費を収入の6割ほどに抑え、季の切り替え(6月までの給与)に備えて資金を残すと良いでしょう。',
                         'Next time: keep wages to about 60% of income, and keep cash back for the wages due before the season changes over.'),
