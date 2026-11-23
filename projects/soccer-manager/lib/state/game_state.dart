@@ -18,6 +18,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show WidgetsBinding;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'save_store.dart';
+
 import '../models/achievement.dart';
 import '../models/bank_loan.dart';
 import '../models/investment.dart';
@@ -306,6 +308,18 @@ class GameState extends ChangeNotifier {
   static const _restorePointKeyPrefix = 'soccer_manager_restore_point_';
   static const _backupKey = 'soccer_manager_save_backup';
   static const _backupSlotKey = 'soccer_manager_save_backup_slot';
+
+  /// セーブの置き場([SaveStore])に置くキー。小さな数(今のスロット・控えの
+  /// スロット)は SharedPreferences のまま。iOS・Android では初めて開いたときに
+  /// これらを SharedPreferences からファイルへ移す。
+  static List<String> get saveStoreKeys => [
+    _legacyPrefsKey,
+    for (int i = 0; i < maxSaveSlots; i++) _slotKey(i),
+    _backupKey,
+    for (int i = 0; i < maxSaveSlots; i++) _restorePointKey(i),
+  ];
+
+  static Future<SaveStore> _store() => SaveStore.instance(saveStoreKeys);
 
   int currentSlot = 0;
 
@@ -628,24 +642,34 @@ class GameState extends ChangeNotifier {
   /// セーブが1つしか無いと、書き込みの途中で中断されたときに積み上げた
   /// 数十シーズンがまとめて消える。読み込めた時点の内容を控えに残しておき、
   /// 壊れていたらそちらを使う。
-  Future<SaveGame?> _loadSlotData(SharedPreferences prefs, int slot) async {
-    final raw = prefs.getString(_slotKey(slot));
+  Future<SaveGame?> _loadSlotData(int slot) async {
+    final store = await _store();
+    final prefs = await SharedPreferences.getInstance();
+    final raw = await store.read(_slotKey(slot));
     if (raw == null) return null;
     final loaded = _decodeSave(raw);
     if (loaded != null) {
       // 読めたものが正。次に壊れたときのために控えを更新する。
-      await prefs.setString(_backupKey, raw);
-      await prefs.setInt(_backupSlotKey, slot);
+      // 控えが書けなくても読み込みは止めない(本体は読めている)。
+      // 書く前にどのスロットの控えかを外しておく。控えと札の間で止まると、
+      // 別のスロットの控えをこのスロットのものとして戻してしまう。
+      try {
+        await prefs.remove(_backupSlotKey);
+        await store.write(_backupKey, raw);
+        await prefs.setInt(_backupSlotKey, slot);
+      } catch (_) {}
       return loaded;
     }
 
-    final fallback = _fallbackSaveRaw(prefs, slot);
+    final fallback = await _fallbackSaveRaw(store, prefs, slot);
     if (fallback == null) return null;
     final restored = _decodeSave(fallback);
     if (restored == null) return null;
     // 戻した内容を本体にも書く。壊れたまま残すと、スロットの一覧で空きに
     // 見え(listSaveSlots)、そこへ新しいクラブを作ると控えごと上書きされる。
-    await prefs.setString(_slotKey(slot), fallback);
+    try {
+      await store.write(_slotKey(slot), fallback);
+    } catch (_) {}
 
     lastBackupRestoreNotice = Tr.pick(
       'セーブデータが壊れていたため、直前の控えから復元しました。進行が少し戻っている場合があります。',
@@ -659,14 +683,16 @@ class GameState extends ChangeNotifier {
   /// 自動の控え([_backupKey])は最後に開いたスロットのものしか持たない。
   /// 別のスロットを開いた後でこのスロットが壊れると戻す先が無くなるので、
   /// そのときは手で取った控え([saveRestorePoint])を使う。
-  String? _fallbackSaveRaw(SharedPreferences prefs, int slot) {
-    final backup = prefs.getString(_backupKey);
-    if (backup != null &&
-        prefs.getInt(_backupSlotKey) == slot &&
-        _decodeSave(backup) != null) {
-      return backup;
+  Future<String?> _fallbackSaveRaw(
+    SaveStore store,
+    SharedPreferences prefs,
+    int slot,
+  ) async {
+    if (prefs.getInt(_backupSlotKey) == slot) {
+      final backup = await store.read(_backupKey);
+      if (backup != null && _decodeSave(backup) != null) return backup;
     }
-    final point = prefs.getString(_restorePointKey(slot));
+    final point = await store.read(_restorePointKey(slot));
     if (point == null) return null;
     try {
       final json = jsonDecode(point) as Map<String, dynamic>;
@@ -686,8 +712,11 @@ class GameState extends ChangeNotifier {
   Future<void> refreshSaveBackup() async {
     if (_save == null) return;
     try {
+      final store = await _store();
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_backupKey, jsonEncode(_save!.toJson()));
+      // 書く前に札を外す([_loadSlotData]と同じ理由)。
+      await prefs.remove(_backupSlotKey);
+      await store.write(_backupKey, jsonEncode(_save!.toJson()));
       await prefs.setInt(_backupSlotKey, currentSlot);
     } catch (_) {
       // 控えが取れなくても進行は止めない(本体の保存が正)。
@@ -702,8 +731,8 @@ class GameState extends ChangeNotifier {
   Future<bool> saveRestorePoint() async {
     if (_save == null) return false;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
+      final store = await _store();
+      await store.write(
         _restorePointKey(currentSlot),
         jsonEncode({
           'takenAt': DateTime.now().toIso8601String(),
@@ -723,8 +752,8 @@ class GameState extends ChangeNotifier {
   /// いまのスロットに控えがあれば、その中身の説明を返す。
   Future<RestorePointInfo?> restorePointInfo([int? slot]) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final raw = prefs.getString(_restorePointKey(slot ?? currentSlot));
+      final store = await _store();
+      final raw = await store.read(_restorePointKey(slot ?? currentSlot));
       if (raw == null) return null;
       final json = jsonDecode(raw) as Map<String, dynamic>;
       return RestorePointInfo(
@@ -747,8 +776,8 @@ class GameState extends ChangeNotifier {
     _persistTimer?.cancel();
     _persistTimer = null;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final raw = prefs.getString(_restorePointKey(currentSlot));
+      final store = await _store();
+      final raw = await store.read(_restorePointKey(currentSlot));
       if (raw == null) return false;
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final restored = SaveGame.fromJson(json['save'] as Map<String, dynamic>);
@@ -768,14 +797,17 @@ class GameState extends ChangeNotifier {
 
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
+    // iOS・Android では、ここで初めて置き場を開き、SharedPreferences にある
+    // セーブをファイルへ移す([SaveStore.instance])。
+    final store = await _store();
     // 旧バージョンの単一セーブをスロット0へ移行する(スロット0が未使用の場合のみ)。
-    final legacy = prefs.getString(_legacyPrefsKey);
-    if (legacy != null && prefs.getString(_slotKey(0)) == null) {
-      await prefs.setString(_slotKey(0), legacy);
-      await prefs.remove(_legacyPrefsKey);
+    final legacy = await store.read(_legacyPrefsKey);
+    if (legacy != null && await store.read(_slotKey(0)) == null) {
+      await store.write(_slotKey(0), legacy);
+      await store.remove(_legacyPrefsKey);
     }
     currentSlot = prefs.getInt(_currentSlotKey) ?? 0;
-    _save = await _loadSlotData(prefs, currentSlot);
+    _save = await _loadSlotData(currentSlot);
     if (_save != null) {
       _repairLoadedSave(_save!);
       _migrateDivisionPyramidIfNeeded();
@@ -1420,17 +1452,19 @@ class GameState extends ChangeNotifier {
     final ticket = ++_writeTicket;
     bool stale() => (_writtenTicket[target] ?? 0) > ticket;
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final store = await _store();
       if (save == null) {
         if (stale()) return;
         _writtenTicket[target] = ticket;
-        await prefs.remove(_slotKey(target));
+        await store.remove(_slotKey(target));
       } else {
         final encoded = await (debugEncodeOverride ?? encodeSaveOffMain)(save);
         // 後から始めた書き出しが先に済んでいれば、こちらは古い。
         if (stale()) return;
         _writtenTicket[target] = ticket;
-        await prefs.setString(_slotKey(target), encoded);
+        // 置き場は同じキーへの書き込みを呼んだ順に行うので、札を確かめて
+        // から呼べば、古い内容が後から付け替わることはない。
+        await store.write(_slotKey(target), encoded);
       }
       lastSaveError = null;
     } catch (e) {
@@ -1453,10 +1487,17 @@ class GameState extends ChangeNotifier {
 
   /// 各スロットの概要一覧を返す(スロット番号順)。
   Future<List<SaveSlotSummary>> listSaveSlots() async {
+    final store = await _store();
     final prefs = await SharedPreferences.getInstance();
     final result = <SaveSlotSummary>[];
     for (int i = 0; i < maxSaveSlots; i++) {
-      final raw = prefs.getString(_slotKey(i));
+      final String? raw;
+      try {
+        raw = await store.read(_slotKey(i));
+      } catch (_) {
+        result.add(SaveSlotSummary(slot: i));
+        continue;
+      }
       if (raw == null) {
         result.add(SaveSlotSummary(slot: i));
         continue;
@@ -1468,7 +1509,7 @@ class GameState extends ChangeNotifier {
         } catch (_) {
           // 本体が書きかけで壊れていても、控えから戻せるなら「続きから」に
           // 見せる(空きに見えると、新しいクラブで控えごと上書きされる)。
-          final fallback = _fallbackSaveRaw(prefs, i);
+          final fallback = await _fallbackSaveRaw(store, prefs, i);
           if (fallback == null) rethrow;
           json = jsonDecode(fallback) as Map<String, dynamic>;
         }
@@ -1498,7 +1539,7 @@ class GameState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     currentSlot = slot;
     await prefs.setInt(_currentSlotKey, slot);
-    _save = await _loadSlotData(prefs, slot);
+    _save = await _loadSlotData(slot);
     if (_save != null) {
       _repairLoadedSave(_save!);
       _migrateDivisionPyramidIfNeeded();
@@ -1565,14 +1606,15 @@ class GameState extends ChangeNotifier {
     _saveGeneration++;
     // 消す前に保留を書き切る。消した後に保留が発火すると復活してしまう。
     await flushPendingSave();
+    final store = await _store();
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_slotKey(slot));
+    await store.remove(_slotKey(slot));
     // 控えも一緒に消す。残すと、消したはずのクラブに戻せてしまう。
-    await prefs.remove(_restorePointKey(slot));
+    await store.remove(_restorePointKey(slot));
     // 壊れたとき用の自動の控えも、この枠のものなら消す。残すと、同じ枠に
     // 作った新しいセーブが壊れたとき、消したはずのクラブに戻ってしまう。
     if (prefs.getInt(_backupSlotKey) == slot) {
-      await prefs.remove(_backupKey);
+      await store.remove(_backupKey);
       await prefs.remove(_backupSlotKey);
     }
     if (slot == currentSlot) {
@@ -1794,10 +1836,11 @@ class GameState extends ChangeNotifier {
     // 消す」は控えを残していたため、同じ枠で始めた新しいクラブから「控えに
     // 戻す」で消したはずのクラブに戻れ、壊れたときも消したクラブが戻った。
     try {
+      final store = await _store();
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_restorePointKey(currentSlot));
+      await store.remove(_restorePointKey(currentSlot));
       if (prefs.getInt(_backupSlotKey) == currentSlot) {
-        await prefs.remove(_backupKey);
+        await store.remove(_backupKey);
         await prefs.remove(_backupSlotKey);
       }
     } catch (_) {
