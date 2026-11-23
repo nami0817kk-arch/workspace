@@ -19,7 +19,8 @@ function play(seed, opp, opt) {
   const home = YA.makeOurs(1);
   const away = YA.makeOpponent(YA.OPPONENTS[opp], seed * 7 + 3);
   if (opt.boost) for (const p of Object.values(home.players)) for (const k of Object.keys(p.ab)) p.ab[k] = Math.min(20, p.ab[k] + opt.boost);
-  const m = new YA.Match({ seed, home, away, settings: { autoStop: false, live: true } });
+  if (opt.tactic) Object.assign(home.tactic, opt.tactic);
+  const m = new YA.Match({ seed, home, away, settings: { autoStop: false, live: true, record: !!opt.record } });
   let g = 0;
   while (!m.finished && g++ < 2000) m.step();
   ok(m.finished, '最後まで進まない ' + seed);
@@ -75,5 +76,43 @@ if (process.env.BOOST !== '0') {
   }
   console.log('能力+' + B + 'のとき：勝ち点 ' + (pts / NB).toFixed(2) + '/試合', '得点 ' + (gf / NB).toFixed(1) + ' 失点 ' + (ga / NB).toFixed(1));
   ok(pts / NB > 1.9, '強いチームが勝ちきれない');
+}
+// 戦い方が動きに出る：幅（持っているときの横の広がり）・プレス（相手が持っているときの寄せの近さと奪う回数）
+if (process.env.TAC !== '0') {
+  const meas = (tac) => {
+    let spread = 0;
+    let ns = 0;
+    let near = 0;
+    let nn = 0;
+    let won = 0;
+    for (let s = 1; s <= 3; s++) {
+      const lv = play(300 + s, 1, { tactic: tac, record: true });
+      for (const f of lv.frames) {
+        if (f.o < 0) continue;
+        const ownHome = f.ro[f.o] && lv.who[f.ro[f.o]].sd === 'home';
+        const xs = [];
+        let dmin = 99;
+        const bo = [f.p[f.o * 2], f.p[f.o * 2 + 1]];
+        for (let j = 0; j < f.ro.length; j++) {
+          const w = lv.who[f.ro[j]];
+          if (w.sd !== 'home' || w.gk) continue;
+          if (ownHome) xs.push(f.p[j * 2]);
+          else dmin = Math.min(dmin, Math.hypot(f.p[j * 2] - bo[0], f.p[j * 2 + 1] - bo[1]));
+        }
+        if (ownHome && xs.length) { spread += Math.max(...xs) - Math.min(...xs); ns++; }
+        if (!ownHome && dmin < 99) { near += dmin; nn++; }
+      }
+      for (const e of lv.events) if (e.sd === 'home' && (e.k === 'intercept' || (e.k === 'tackle' && e.ok))) won++;
+    }
+    return { spread: spread / ns, near: near / nn, won: won / 3 };
+  };
+  const wide = meas({ width: 0.9 });
+  const narrow = meas({ width: 0.1 });
+  const hp = meas({ press: 0.95, line: 0.85 });
+  const lp = meas({ press: 0.1, line: 0.2 });
+  console.log('横の広がり 幅0.9:', wide.spread.toFixed(1) + 'm', '幅0.1:', narrow.spread.toFixed(1) + 'm');
+  console.log('寄せの近さ プレス強:', hp.near.toFixed(1) + 'm', '弱:', lp.near.toFixed(1) + 'm', '奪った回数', hp.won.toFixed(0), lp.won.toFixed(0));
+  ok(wide.spread > narrow.spread + 4, '幅の戦術が横の広がりに出ない');
+  ok(hp.near < lp.near - 0.3, 'プレスの戦術が寄せの近さに出ない');
 }
 process.exitCode = fails ? 1 : 0;

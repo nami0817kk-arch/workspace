@@ -105,13 +105,18 @@
     const hs = typeof m.homeShare === 'function' ? m.homeShare() : 0.5;
     const mine = m.scenes.filter((sc) => sc.side === 'home');
     const theirs = m.scenes.filter((sc) => sc.side === 'away');
-    const poss = clamp(Math.round(100 * (0.65 * hs + 0.35 * (mine.length / Math.max(1, m.scenes.length)))), 25, 75);
+    const lvP = m.live && m.live.poss ? m.live.poss : null;
+    const poss = lvP && lvP.home + lvP.away > 0 ? Math.round((100 * lvP.home) / (lvP.home + lvP.away)) : clamp(Math.round(100 * (0.65 * hs + 0.35 * (mine.length / Math.max(1, m.scenes.length)))), 25, 75);
     // 相手陣で奪った回数＝高い位置での奪取の場面で奪えた回数＋合間の相手陣での奪取（下の選手ごとの奪取のうち、前の子ほど相手陣で取る割合が高い）。
     // 2026-11-17：前は自陣で止めた場面（DF 以外が絡んだもの）を数えていて、名前と中身がずれ、ほぼ0だった
     const stealWon = mine.filter((sc) => sc.type === 'steal' && sc.outcome !== 'escaped').length;
     // 攻めた方向：自分の見どころの最初のボールの横の位置（0〜68m）
     const dir = { 左: 0, 中央: 0, 右: 0 };
-    for (const sc of mine) {
+    if (m.live) {
+      // 一続きの試合：こちらのシュートの前にボールがあった横の位置（シュートを打った所）
+      for (const e of m.live.events) if (e.k === 'shot' && e.sd === 'home') dir[e.x < 23 ? '左' : e.x > 45 ? '右' : '中央']++;
+    }
+    for (const sc of m.live ? [] : mine) {
       const fs = (sc.frames || []).filter((f) => f.ball);
       if (!fs.length) continue;
       const x0 = fs.reduce((t, f) => t + f.ball[0], 0) / fs.length;
@@ -133,10 +138,23 @@
       const tw = theirs.filter((sc) => (sc.defs || []).includes(p.id) && ['dispossessed', 'intercepted', 'stopped', 'blocked', 'cleared'].includes(sc.outcome)).length;
       const tk = p.pos === 'GK' ? 0 : Math.round(k * ({ DF: 3, MF: 2.4, FW: 0.9 }[p.pos] || 1.5) * (1.4 - hs) * (ab('タックル') / 11) * (0.7 + r() * 0.6)) + (tw ? 1 : 0);
       const steal = p.pos === 'GK' ? 0 : Math.round(k * ({ DF: 2.6, MF: 2.2, FW: 0.8 }[p.pos] || 1.5) * (1.4 - hs) * (ab('予測') / 11) * (0.7 + r() * 0.6)) + tw;
-      players.push({ id: p.id, num: p.num, name: p.name, pos: p.pos, mins: st.minutes, rating: st.rating, passes, pct, shots: st.shots || 0, goals: st.goals || 0, tackles: tk, steals: steal, saves: st.saves || 0, yellow: p.yellow || 0, red: !!p.sentOff });
+      // 一続きの試合（live）は本当の数（パス・タックル・奪取）を使う
+      const lvN = m.live && st.pa != null;
+      players.push({ id: p.id, num: p.num, name: p.name, pos: p.pos, mins: st.minutes, rating: st.rating, passes: lvN ? st.pa : passes, pct: lvN ? Math.round((100 * (st.pc || 0)) / Math.max(1, st.pa)) : pct, shots: st.shots || 0, goals: st.goals || 0, tackles: m.live ? st.ta || 0 : tk, steals: m.live ? (st.tk || 0) + (st.ic || 0) : steal, saves: st.saves || 0, yellow: p.yellow || 0, red: !!p.sentOff });
     }
     const highShare = { FW: 0.7, MF: 0.3, DF: 0.05, GK: 0 };
-    const won = stealWon + Math.round(players.reduce((t, x) => t + x.steals * (highShare[x.pos] || 0), 0) * (0.6 + hs * 0.8));
+    let won = stealWon + Math.round(players.reduce((t, x) => t + x.steals * (highShare[x.pos] || 0), 0) * (0.6 + hs * 0.8));
+    if (m.live) {
+      // 相手陣（ホームは y が 52.5 より先）で奪った本当の回数。奪った子の位置で数える
+      won = 0;
+      const lv = m.live;
+      for (const e of lv.events) {
+        if (e.sd !== 'home' || !(e.k === 'intercept' || (e.k === 'tackle' && e.ok))) continue;
+        const q = lv.byId[e.pid];
+        const y = e.y != null ? e.y : q ? q.y : 0;
+        if (y > 52.5) won++;
+      }
+    }
     players.sort((a, b) => b.rating - a.rating);
     // 効いた戦術の一言（決定114）
     const type = (m.home.tactic && m.home.tactic.type) || '戦い方';

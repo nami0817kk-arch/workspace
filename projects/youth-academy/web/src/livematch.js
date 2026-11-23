@@ -79,7 +79,7 @@
     if (e.k === 'save') {
       if (p) {
         p.st.saves++;
-        p.st.rating += e.smother ? 0.3 : 0.5;
+        p.st.rating += e.smother ? 0.15 : 0.25;
       }
       const sh = e.vs ? this._lvP(e.vs) : null;
       if (sh && !e.smother) sh.conf = clamp(sh.conf - 1, 0, 100);
@@ -92,12 +92,12 @@
       if (p) p.st.rating += 0.3;
     } else if (e.k === 'tackle' && e.ok) {
       if (p) {
-        p.st.rating += 0.04;
+        p.st.rating += 0.02;
         p.st.tk = (p.st.tk || 0) + 1;
       }
     } else if (e.k === 'intercept') {
       if (p) {
-        p.st.rating += 0.03;
+        p.st.rating += 0.015;
         p.st.ic = (p.st.ic || 0) + 1;
       }
     } else if (e.k === 'foul') {
@@ -240,6 +240,7 @@
       if (!p || sc.fx.some((x) => x.pid === f.pid && x.tag === f.tag)) continue;
       const kind = p.gold && p.gold.indexOf && p.gold.indexOf(f.tag) >= 0 ? 'gold' : p.aw && p.aw.as && p.aw.as.indexOf(f.tag) >= 0 ? 'awake' : 'trait';
       sc.fx.push({ pid: f.pid, num: p.num, name: p.name, tag: f.tag, kind, text: '' });
+      if (this._use) this._use(p, f.tag); // 金の特性の回数（場面に出たものだけ）
     }
     sc.fxShow = sc.fx.slice().sort((a, b) => kr[a.kind] - kr[b.kind]).slice(0, 3);
     this.scenes.push(sc);
