@@ -241,13 +241,13 @@
       gain ? h('span', { style: 'color:#1a9d57;font-weight:900;font-size:11px;width:20px' }, '+' + gain) : h('span', { style: 'width:20px' }),
       yr ? h('span', { style: 'color:#7b879b;font-weight:700;font-size:11px;width:22px' }, (yr > 0 ? '+' : '') + yr) : h('span', { style: 'width:22px' }));
   }
-  // 金の特性に近いもの（試合で効いた回数と能力）。世界の選手だけ（trUse を持つ。p.tu は戦術理解なので別名）
+  // 金の特性に近いもの（効いた試合の数と能力）。世界の選手だけ（trUse を持つ。p.tu は戦術理解なので別名）
   function goldHint(p) {
     if (!YA.goldReady || !p.ab || !p.traits) return null;
     const c = p.traits.filter((x) => YA.GOLD && YA.GOLD[x] && !YA.isGold(p, x)).map((x) => [x, YA.goldReady(p, x)]).sort((a, b) => (b[1].used / YA.GOLD_USES + b[1].ab / YA.GOLD_AB) - (a[1].used / YA.GOLD_USES + a[1].ab / YA.GOLD_AB))[0];
     if (!c) return null;
     const aff = (YA.TRAIT_AFF[c[0]] || []).join('・');
-    return h('div', { class: 'sub', style: 'margin-top:2px' }, `金まで：「${c[0]}」→「${YA.GOLD[c[0]]}」　試合で効いた ${Math.min(c[1].used, YA.GOLD_USES)}/${YA.GOLD_USES}回・${aff}の平均 ${c[1].ab}/${YA.GOLD_AB}`);
+    return h('div', { class: 'sub', style: 'margin-top:2px' }, `金まで：「${c[0]}」→「${YA.GOLD[c[0]]}」　効いた試合 ${Math.min(c[1].used, YA.GOLD_USES)}/${YA.GOLD_USES}・${aff}の平均 ${c[1].ab}/${YA.GOLD_AB}`);
   }
   function playerCard(t, p, opts) {
     opts = opts || {};

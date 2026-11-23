@@ -361,7 +361,8 @@
   }
   YA.keyProgress = progress;
 
-  // ---------- 上位の特性（金）：試合で効いた回数を数え、条件がそろえば金に変わる ----------
+  // ---------- 上位の特性（金）：効いた試合の数を数え、条件がそろえば金に変わる ----------
+  // 2026-11-23：前は効いた回数を数えていて、GK のセーブの特性などは1試合で6回に届き、1試合目で金に変わっていた。1試合で何回効いても1と数える
   YA.goldReady = function (p, t) {
     const aff = YA.TRAIT_AFF[t] || [];
     const ab = aff.length ? aff.reduce((s, n) => s + (p.ab[n] || 0), 0) / aff.length : 0;
@@ -384,7 +385,7 @@
       if (!p) continue;
       const t = k.slice(i + 1);
       p.trUse = p.trUse || {};
-      p.trUse[t] = (p.trUse[t] || 0) + n;
+      if (n > 0) p.trUse[t] = (p.trUse[t] || 0) + 1;
       seen.add(p);
     }
     for (const p of seen) YA.goldCheck(w, p);
