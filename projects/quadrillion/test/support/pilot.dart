@@ -737,10 +737,9 @@ class Pilot {
     final c = shown.where((c) => c.cap * .0525 * 4 < s.cash).firstOrNull;
     if (c == null) return;
     await tab('stock');
-    if (!await reveal(find.text(nmL(c.name)))) return;
-    final cards = find.ancestor(of: find.text(nmL(c.name)), matching: find.byType(Panel));
-    if (cards.evaluate().isEmpty) return;
-    final card = cards.first;
+    // カードは会社の番号で探す（同じ名前の会社が世界に何社もいることがあり、名前で探すと、同じ名前の自分の現地法人のカードを押そうとしていた。1.0.0+19）
+    final card = find.byKey(ValueKey('co-${c.id}'));
+    if (!await reveal(card)) return;
     Finder inCard(Finder f) => find.descendant(of: card, matching: f);
     if (s.turn % 3 == 0 && s.pctOf(c) < 50.1 && s.tobCost(c, 50.1) * 2 < s.cash) {
       await press(inCard(find.textContaining(tr('TOBで{0}%（{1}・成功率{2}）', ['50.1', yen(s.tobCost(c, 50.1)), '${jsNum(jsRound(s.tobChance(c, 50.1) * 100))}%']))), 'TOB');

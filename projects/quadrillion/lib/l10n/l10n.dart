@@ -18,6 +18,7 @@ import '../game/format.dart';
 import 'data_en.dart';
 import 'game_en.dart';
 import 'lang.dart';
+import 'mid_en.dart';
 import 'ui_en.dart';
 
 export 'lang.dart';
@@ -27,7 +28,7 @@ const _tagMark = '\u0002';
 const _joinKey = '\u0003join';
 
 /// 英語の表（日本語の文 → 英語の文）。同じ日本語の鍵は、どの表でも同じ英語にする
-String? enText(String ja) => uiEn[ja] ?? gameEn[ja] ?? dataEn[ja];
+String? enText(String ja) => uiEn[ja] ?? gameEn[ja] ?? dataEn[ja] ?? midEn[ja];
 
 /// 定義の名前など、引数のない日本語を今の言語にする
 String de(String ja) => L.en ? (enText(ja) ?? _strip(ja)) : _strip(ja);

@@ -53,7 +53,10 @@ void _shape(Game g, int bizTarget) {
   // 現地法人（海外に出ている事業の、いちばん大きい国の分を2つまで）
   if (g.locals().length < 2 && g.turn % 12 == 9) {
     for (final b in g.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))) {
-      final cs = g.localCountries(b).where((c) => !g.hasLocal(c, b.ind)).toList();
+      // 市場の小さい国の分は分けない（1.0.0+19 から、部下の提案で早いうちに小さい国へ出ることがあり、
+      // 最初に出た国をそのまま分けると、時価総額が数千万円の現地法人しかない盤面になった）。大きい国を先に
+      final cs = g.localCountries(b).where((c) => !g.hasLocal(c, b.ind) && cw(c, g.year.toDouble()) >= .1).toList()
+        ..ssort((p, q) => cw(q, g.year.toDouble()).compareTo(cw(p, g.year.toDouble())));
       if (cs.isEmpty) continue;
       g.makeLocal(b, cs.first);
       return;
@@ -110,6 +113,10 @@ class MidStats {
   /// 同じ文がいちばん長く続いた月数
   int longestSame = 0;
 
+  /// 選ぶ出来事が2つ以上重なった月（うるさくないかを見る）・宿敵の物語の場面の数（出会い・張り合う・決着）
+  int crowded = 0, scenes = 0;
+  double get crowdedPct => months == 0 ? 0 : crowded * 100 / months;
+
   double get monoPct => months == 0 ? 0 : mono * 100 / months;
   double get quietPct => months == 0 ? 0 : quiet * 100 / months;
   double get sameAdvicePct => months == 0 ? 0 : sameAdvice * 100 / months;
@@ -118,10 +125,14 @@ class MidStats {
     String top(Map<String, int> m, [int n = 12]) =>
         (m.entries.toList()..sort((a, b) => b.value - a.value)).take(n).map((e) => '    ${e.value}  ${e.key.length > 44 ? '${e.key.substring(0, 44)}…' : e.key}').join('\n');
     return '月数 $months・何も起きない月 $quiet（${quietPct.toStringAsFixed(1)}%）・助言が先月と同じ月 $sameAdvice（${sameAdvicePct.toStringAsFixed(1)}%）・'
-        '単調な月 $mono（${monoPct.toStringAsFixed(1)}%）・同じ助言の最長 $longestSameか月・時代の波 $eras回・宿敵との決着 $rivalEnds回\n'
+        '単調な月 $mono（${monoPct.toStringAsFixed(1)}%）・同じ助言の最長 $longestSameか月・時代の波 $eras回・宿敵との決着 $rivalEnds回・'
+        '選ぶ出来事が2つ以上の月 $crowded（${crowdedPct.toStringAsFixed(1)}%）・宿敵の場面 $scenes\n'
         '  出来事:\n${top(events, 30)}\n  提案:\n${top(proposals)}\n  知らせ:\n${top(news)}\n  助言:\n${top(advice, 30)}';
   }
 }
+
+/// 宿敵の物語の場面の題（頭の言葉）
+const sceneTitles = ['宿敵との出会い', '因縁が深まる', '決着：', '宿敵：'];
 
 /// 経営会議の提案の種類（文に入っている言葉 → 呼び名）
 const proposalKinds = {
@@ -133,6 +144,13 @@ const proposalKinds = {
   '維持費を削': '維持費',
   '新しく「': '新しい事業',
   '新しい事業': '新しい事業',
+  '広告を打ちたい': '広告',
+  'に出したい': '海外',
+  '値下げをやめたい': '値付け',
+  '値段を高くしたい': '値付け',
+  'に切り替えたい': '稼ぎ方',
+  '手を引きたい': '撤退',
+  '社風を': '社風',
   '増やしたい': '店・工場',
 };
 
@@ -156,7 +174,9 @@ MidStats measureMid({int seed = 2024, int year = 1985, int from = 10, int to = 3
       continue;
     }
     st.months++;
+    if (g.events.length >= 2) st.crowded++;
     for (final e in g.events) {
+      if (e.who?.rival != null && sceneTitles.any((t) => msgKey(e.title).startsWith(t))) st.scenes++;
       final k = msgKey(e.title);
       st.events[k] = (st.events[k] ?? 0) + 1;
       if (k.startsWith('経営会議')) {

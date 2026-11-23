@@ -49,7 +49,12 @@ void main() {
         ranks.sort();
         med[d] = ranks[ranks.length ~/ 2];
       }
+      // ignore: avoid_print
+      print('[diff] $med');
       // 実測（12通りの中央値）: やさしい86位・ふつう157位・むずかしい244位
+      // 1.0.0+19（国ごとの事件・宿敵の場面・提案の種類を足した）の前後（この6通りの中央値）:
+      //   前 やさしい77位・ふつう123位・むずかしい195位 → 後 やさしい98位・ふつう179位・むずかしい270位
+      //   乱数の流れが変わり、自動プレイは新しい出来事でいつも受け身の選択肢を選ぶので順位は少し下がったが、線（0.8倍・1.2倍）は引き直さずに通る
       expect(med['easy']! < med['normal']! * .8, isTrue, reason: '$med');
       expect(med['hard']! > med['normal']! * 1.2, isTrue, reason: '$med');
     }, timeout: const Timeout(Duration(minutes: 10)));
