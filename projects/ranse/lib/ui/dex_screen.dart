@@ -94,15 +94,20 @@ class DexScreen extends StatelessWidget {
                   Panel(
                     title:
                         '${kWays[w]!.$1}　${byWay[w]?.length ?? 0} ／ ${kHandEndings.where((e) => e.way == w).length}',
-                    child: (byWay[w] ?? []).isEmpty
-                        ? const Text(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _Seats(way: w, seen: c.dexEntries),
+                        const SizedBox(height: 8),
+                        if ((byWay[w] ?? []).isEmpty)
+                          const Text(
                             '？？？　まだ見ていない',
                             style: TextStyle(color: Pal.muted),
                           )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [for (final e in byWay[w]!) _DexTile(e)],
-                          ),
+                        else
+                          for (final e in byWay[w]!) _DexTile(e),
+                      ],
+                    ),
                   ),
                 ],
               ],
@@ -110,6 +115,41 @@ class DexScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// その道の最期の席を、小さな升で並べる。見た最期は希少度の色で埋まり、
+/// 見ていない席は空のまま。幻の席だけは、見ていなくても金の縁で分かる（狙う目当てになる）。
+class _Seats extends StatelessWidget {
+  const _Seats({required this.way, required this.seen});
+  final String way;
+  final Map<String, DexEntry> seen;
+
+  @override
+  Widget build(BuildContext context) {
+    final defs = kHandEndings.where((d) => d.way == way).toList()
+      ..sort((a, b) => b.tier.index.compareTo(a.tier.index));
+    return Wrap(
+      key: ValueKey('dex-seats-$way'),
+      spacing: 3,
+      runSpacing: 3,
+      children: [
+        for (final d in defs)
+          Container(
+            width: 9,
+            height: 9,
+            decoration: BoxDecoration(
+              color: seen.containsKey('hand:${d.id}')
+                  ? _tierColor(d.tier)
+                  : Pal.panel2,
+              border: d.tier == Tier.phantom
+                  ? Border.all(color: Pal.gold, width: 1)
+                  : null,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+      ],
     );
   }
 }

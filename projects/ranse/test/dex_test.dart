@@ -91,6 +91,14 @@ void main() {
       expect(w.data, endsWith('$seen ／ $all'));
     }
     await tester.scrollUntilVisible(find.text(e.title), 200);
+    // 道ごとに、すべての最期の席が並ぶ。
+    final seats = tester.widget<Wrap>(
+      find.byKey(ValueKey('dex-seats-${def.way}')),
+    );
+    expect(
+      seats.children.length,
+      kHandEndings.where((d) => d.way == def.way).length,
+    );
     expect(find.text(e.title), findsOneWidget);
     expect(find.textContaining(kTierNames[def.tier]!), findsWidgets);
     expect(tester.takeException(), isNull);
