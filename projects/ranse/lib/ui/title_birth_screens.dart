@@ -52,7 +52,7 @@ class TitleScreen extends StatelessWidget {
               ),
               const SizedBox(height: 14),
               const Text(
-                '身分も、国も、性別も、才も、選べない。\n選べるのは、その人生の岐路だけ。',
+                '身分も、国も、才も、選べない。\n選べるのは、生まれる性別と、人生の岐路だけ。',
                 textAlign: TextAlign.center,
                 style: TextStyle(height: 1.8),
               ),
@@ -66,7 +66,9 @@ class TitleScreen extends StatelessWidget {
                   height: 1.8,
                 ),
               ),
-              const SizedBox(height: 36),
+              const SizedBox(height: 28),
+              SexPicker(c),
+              const SizedBox(height: 14),
               BigButton('運命の籤を引く', c.draw),
               if (c.hasSave) ...[
                 const SizedBox(height: 12),
@@ -222,6 +224,63 @@ class BirthScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 生まれる性別を選ぶ（2026-11-23 ユーザー「男か女は選べるように」）。運に任せることもできる。
+class SexPicker extends StatelessWidget {
+  const SexPicker(this.c, {super.key});
+  final AppController c;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget item(String label, bool? v) {
+      final on = c.sexChoice == v;
+      return Expanded(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Material(
+            color: on ? Pal.accent.withValues(alpha: .12) : Pal.panel,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(
+                color: on ? Pal.accent : Pal.line,
+                width: on ? 1.6 : 1,
+              ),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () => c.chooseSex(v),
+              child: SizedBox(
+                height: 42,
+                child: Center(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 14.5,
+                      letterSpacing: 1,
+                      color: on ? Pal.accent : Pal.ink,
+                      fontWeight: on ? FontWeight.w700 : FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        const Text(
+          '生まれる性別',
+          style: TextStyle(color: Pal.muted, fontSize: 12.5, letterSpacing: 2),
+        ),
+        const SizedBox(height: 6),
+        Row(children: [item('男', false), item('女', true), item('運に任せる', null)]),
+      ],
     );
   }
 }

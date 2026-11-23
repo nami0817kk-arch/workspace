@@ -30,6 +30,14 @@ class AppController extends ChangeNotifier {
   String flick = '…';
   bool hasSave = false;
 
+  /// 生まれる性別の選び（null は運に任せる。true は女、false は男）。籤を引く前にタイトルで選ぶ。
+  bool? sexChoice;
+
+  void chooseSex(bool? v) {
+    sexChoice = v;
+    notifyListeners();
+  }
+
   /// 生まれの画面で籤を引き直した回数（この人生を始めるまで）。
   int redraws = 0;
 
@@ -64,7 +72,7 @@ class AppController extends ChangeNotifier {
           '${rng.range(1525, 1568)}年生まれ…';
       if (++n > 14) {
         t.cancel();
-        birth = rollBirth(rng);
+        birth = rollBirth(rng, asFemale: sexChoice);
         rolling = false;
       }
       notifyListeners();

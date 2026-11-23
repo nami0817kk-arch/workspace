@@ -62,14 +62,18 @@ int calcBirthRank(ClassDef cls, bool female, int order) {
   return r;
 }
 
-Birth rollBirth(Rng r) {
+/// [asFemale] を渡すと性別をそれにする（2026-11-23 ユーザー「男か女は選べるように」）。
+/// 乱数の流れを変えないよう、性別の籤はいつも引いてから置き換える。選んだ性別は稀少度に数えない。
+Birth rollBirth(Rng r, {bool? asFemale}) {
+  final female0 = asFemale;
   final totalC = kClasses.fold<double>(0, (s, c) => s + c.w);
   final cls = r.wpick(kClasses, (c) => c.w);
   final reg = r.wpick(kRegions, (c) => c.w);
   final fac = r.pick(reg.f);
   final startYear = r.range(1525, 1568);
   final month = r.range(1, 12), day = r.range(1, 28);
-  final female = r.chance(.49);
+  final rolledFemale = r.chance(.49);
+  final female = female0 ?? rolledFemale;
   final od = r.wpick(const [(.45, 1), (.3, 2), (.25, 3)], (e) => e.$1);
   final order = od.$2;
   final classP = cls.w / totalC;
@@ -77,7 +81,7 @@ Birth rollBirth(Rng r) {
   // 数えるのは、身分・性別・生まれ順と、特性を持つか・際立った能力か。生まれた年・月日・国・特性の種類は
   // 誰でも必ずどれかに当たるので数えない（数えると、ありふれた農民の子まで「数千億分の1」になり、
   // 千五百万の民という前提と食い違っていた。2026-11-23 ユーザー指摘）。
-  var p = classP * .5 * od.$1;
+  var p = classP * (female0 == null ? .5 : 1) * od.$1;
 
   int base() => clampInt((40 + r.gauss() * 14).round(), 5, 95);
   final v = {
