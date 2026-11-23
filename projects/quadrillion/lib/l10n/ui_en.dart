@@ -490,4 +490,17 @@ const Map<String, String> uiEn = {
   '大シナジー': 'Grand Synergies',
   '（{0}年に完成）': ' (completed {0})',
   '3つの業種をそろえると完成。3つとも力が4割上がる': 'Own all 3 industries to complete. All 3 get 40% stronger',
+  // 1.0.0+6: 事業のたたみ・仕掛かりのまとめ・止まった理由
+  '人手不足': 'Understaffed',
+  '沈む市場': 'Shrinking market',
+  'シェア {0}': 'Share {0}',
+  '・売上 {0}': ' | Sales {0}',
+  '・利益 ': ' | Profit ',
+  '仕掛かり {0}件': '{0} in progress',
+  '{0}件・合計 {1}・早いもので あと{2}か月': '{0} items | {1} total | first done in {2} mo',
+  '「{0}」の{1}（{2}件）': '{0}: {1} ({2})',
+  '。取り下げると、かけたお金の半分が戻ります。': '. Cancel one to get half its cost back.',
+  'ゲームが終わったので、{0}で止めました': 'The game ended, so we stopped at {0}.',
+  '目標を達成したので、{0}で止めました': 'You reached the goal, so we stopped at {0}.',
+  '「{0}」が起きたので、{1}で止めました': '"{0}" came up, so we stopped at {1}.',
 };

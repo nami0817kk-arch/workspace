@@ -210,6 +210,8 @@ void main() {
       final s = _run(150);
       final ctl = await _pump(tester, game: s, size: const Size(390, 20000));
       s.ap = 5;
+      // 事業が3つ以上だとたたまれているので、1つ開く
+      ctl.openBiz = s.biz.first.id;
       ctl.setTab('biz');
       await tester.pump();
       final n = s.biz.length;

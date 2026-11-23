@@ -89,6 +89,15 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   Game? game;
   String tab = 'town';
   String bizFilter = 'can';
+
+  /// 「事業」タブで詳しく開いている事業の id（事業が3つ以上のとき。開けるのは1つだけ）
+  int? openBiz;
+
+  /// 事業カードを開く（開いているものを押したら閉じる）
+  void toggleBiz(int id) {
+    openBiz = openBiz == id ? null : id;
+    notifyListeners();
+  }
   SetupConfig setup = SetupConfig();
 
   /// 開いている小窓（null なら閉じている）
@@ -230,6 +239,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
       game = Game.fromJson(jsonDecode(raw) as Map<String, dynamic>, rng: newRandom());
       slot = k;
       endHidden = false;
+      openBiz = null;
       return true;
     } catch (_) {
       return false;
@@ -256,6 +266,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     endHidden = false;
     slot = startSlot;
     newSlot = null;
+    openBiz = null;
     game = Game.newGame(setup, rng: newRandom());
     startGuide(game!);
     tab = 'town';
