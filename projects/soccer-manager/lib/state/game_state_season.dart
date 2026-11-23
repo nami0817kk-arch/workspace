@@ -1691,6 +1691,10 @@ extension GameStateSeason on GameState {
       fixtures: newFixtures,
       season: league.season + 1,
     );
+    // 作り直したリーグ(自国の全部・他国の1部)にも、国ごとの順位の決め方
+    // (勝ち点で並んだとき得失点差が先か)を入れる。以前は開始時と読み込み時
+    // だけで、季の切り替えで既定に戻っていた(2026-11-23)。
+    _applyTieBreakRules();
     // ここから新しいシーズン。契約の残り年数もこのシーズンから数える。
     _syncContractClock();
     // 破綻したクラブの勝ち点の剥奪も、来季の順位表に入れる。
@@ -1855,6 +1859,11 @@ extension GameStateSeason on GameState {
       userTeam.players.add(signing);
       lastEmergencySignings.add(signing.name);
     }
+    if (lastEmergencySignings.isNotEmpty) LineupUtils.fillVacancies(userTeam);
+    // 引退・満了の補充で作った選手(他のクラブ)にも、国籍と国内育成の印を
+    // 決めて名前を国籍に合わせる。以前は読み込み時にだけ直していて、
+    // 再起動すると名前・国籍・登録の枠の数が変わっていた(2026-11-23)。
+    _localizeNames();
 
     _save!.lastSeasonRank = finalRank;
 
@@ -1992,6 +2001,10 @@ extension GameStateSeason on GameState {
     if (!supportersGone && belowUltimatumLine) _checkSupporterUltimatum();
     _settleLoansByDate();
     _startSummerTournament();
+    // 切り替えの途中で組み直した CPU の先発は、その時にケガ・代表で抜けて
+    // いた選手を外して11人に満たないことがある。夏の大会の休みを決めた後に、
+    // 欠けた先発を埋める(試合の前の安全網と同じ)。
+    _topUpCpuLineups();
     _pruneScoutKnowledge();
     _save!.boardReviewDoneThisSeason = false;
     _save!.pendingBoardReviewMessage = null;

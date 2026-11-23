@@ -114,6 +114,8 @@ for (const seed of SEEDS) {
       R.endScene();
     }
     for (let i = 0; i < 48; i++) step();
+    // 画面と同じく、次の1分が見どころで攻める側がまだ持っていなければ、最大3秒待つ（ui.js の leadWait）
+    { const nx = m.keyIdx && m.keyIdx.indexOf(m.ti + 1) >= 0; const ns = nx && m.nextSide ? m.nextSide() : null; let k = 0; while (ns && k++ < 180 && (!R.owner || (R.teamOf(R.owner) === m.home) !== (ns === 'home'))) step(); }
   }
   add('(参考)場面の数'); c['(参考)場面の数'] += (m.scenes ? m.scenes.length : 0) - 1;
   c['(参考)入りで奪った'] = (c['(参考)入りで奪った'] || 0) + (R.steals || 0);
@@ -134,6 +136,7 @@ const LIMIT = {
   '合間にボールがゴールの中へ': 0,
   '得点した側がキックオフ': 0,
   '得点の場面でボールが網に入らない': 0,
+  '場面の入りで攻める側と持っている側が逆': 3.2, // 2026-11-23：次に攻める側を前もって知り、合間で寄せる・時計を最大3秒待つ。前は1試合3.7〜4.2回、いまは1.5〜2.5回
   'ボールの瞬間移動(1コマ0.8m超)': 0.3,
   'GK がエリアの外でボールを持つ(回)': 0.3,
   '外に出たボールを持っている(回)': 0.6,

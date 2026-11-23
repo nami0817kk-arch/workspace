@@ -77,6 +77,8 @@ extension GameStateForeign on GameState {
         teams: l.teams,
         fixtures: FixtureGenerator.generateDoubleRoundRobin(l.teams),
         season: l.season + 1,
+        // 順位の決め方(得失点差が先か)は、前の季のものを引き継ぐ。
+        goalDiffFirst: l.goalDiffFirst,
       );
     }
   }

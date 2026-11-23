@@ -126,6 +126,10 @@
       const f = this.flow == null ? 0.5 : this.flow;
       return t && this.match && t === this.match.away ? 1 - f : f;
     }
+    // 次の見どころで攻める側のチーム（3分前から。それ以外は null）
+    leadTeam() {
+      return this.lead && this.match ? (this.lead === 'home' ? this.match.home : this.match.away) : null;
+    }
     // 次の見どころが近い（2分以内）とき、押している側が攻め上がる
     surgeOf(id) {
       return this.surge && this.shareOf(id) > 0.5;
@@ -1242,7 +1246,7 @@
           if (d > MOVE.reach) continue;
           if (!fl.tried[id]) {
             fl.tried[id] = true;
-            if (Math.random() < 0.4 * (0.4 + this.shareOf(id) * 1.2) * (1.35 + this.ab01(id, '予測') - this.ab01(fl.by, 'パス') * 2.3)) { // 読みのいい子ほど止め、うまいパスほど通る（2026-11-23：パスのうまさの効きを約2倍に。通る割合の差が数ポイントしかなかった）
+            if (Math.random() < 0.4 * (my === this.leadTeam() ? 0.3 : 1) * (0.4 + this.shareOf(id) * 1.2) * (1.35 + this.ab01(id, '予測') - this.ab01(fl.by, 'パス') * 2.3)) { // 読みのいい子ほど止め、うまいパスほど通る（2026-11-23：パスのうまさの効きを約2倍に。通る割合の差が数ポイントしかなかった）
               this.lastTouch = this.teamOf(id);
               this.fl = null;
               this.bv = [0, 0];
@@ -1277,7 +1281,7 @@
         if (near) {
           this.duel = this.duel && this.duel.id === near && this.duel.on === this.owner ? this.duel : { id: near, on: this.owner, t: 0 };
           this.duel.t += dt;
-          if (this.duel.t > 0.5 && Math.random() < dt * (0.4 + this.tacOf(near).press * 1.2) * (0.4 + this.shareOf(near) * 1.2) * (0.4 + this.ab01(near, 'タックル') * 1.2) * (1.6 - (this.ab01(this.owner, 'ドリブル') + this.ab01(this.owner, 'バランス') + this.ab01(this.owner, '強さ')) / 3 * 1.2)) {
+          if (this.duel.t > 0.5 && Math.random() < dt * (this.teamOf(this.owner) === this.leadTeam() ? 0.3 : 1) * (0.4 + this.tacOf(near).press * 1.2) * (0.4 + this.shareOf(near) * 1.2) * (0.4 + this.ab01(near, 'タックル') * 1.2) * (1.6 - (this.ab01(this.owner, 'ドリブル') + this.ab01(this.owner, 'バランス') + this.ab01(this.owner, '強さ')) / 3 * 1.2)) {
             const r = this.disp[near];
             this.lastTouch = this.teamOf(near);
             const d = Math.max(0.3, dist(r, b));
@@ -1310,7 +1314,8 @@
       // パスの失敗：相手の陣の深くほど引っかかる（守りが固まっていて通らない）。パスのうまい子・押している側はミスが少ない
       // 2026-11-22「いきなり相手にパスする」：前は失敗のときに相手の選手を受け手にして足元へ蹴っていた。いまは必ず味方を狙い、
       // 通り道の相手に切られるか、球がそれて相手に拾われる形で失う
-      const miss = Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(2.8 - this.shareOf(me) * 3.6, 0.3, 2.4) * clamp(2.6 - this.ab01(me, 'パス') * 4, 0.2, 2.4); // 2026-11-23 パスの効きを強めた（うまい子と下手な子の通る割合の差が数ポイントしかなかった。本物は 88% と 75% ほど）。 押している側はミスが少ない（2026-11-22 失い方を切る・それるに変えて流れの差が縮んだので強めた）
+      let miss = Math.random() < (0.06 + 0.25 * clamp((depth - 60) / 40, 0, 1)) * clamp(2.8 - this.shareOf(me) * 3.6, 0.3, 2.4) * clamp(2.6 - this.ab01(me, 'パス') * 4, 0.2, 2.4); // 2026-11-23 パスの効きを強めた（うまい子と下手な子の通る割合の差が数ポイントしかなかった。本物は 88% と 75% ほど）。 押している側はミスが少ない（2026-11-22 失い方を切る・それるに変えて流れの差が縮んだので強めた）
+      { const lt = this.leadTeam(); if (lt) miss = my === lt ? miss && Math.random() < 0.3 : miss || Math.random() < 0.25; } // 見どころの前：攻める側は失いにくく、守る側は失いやすい（2026-11-23）
       {
         // オフサイドの線：相手の後ろから2人目（GK を含む）。その先にいる味方へは出さない（2026-11-23：1試合0.2回出ていた）
         const offY = ids.filter((o) => this.teamOf(o) !== my && this.disp[o]).map((o) => this.disp[o][1] * atk).sort((u, v) => v - u)[1];
@@ -1396,7 +1401,7 @@
       }
       this.kick(to, tgt, me);
       if (icpt && this.fl) { this.fl.icpt = icpt.id; this.fl.ip = icpt.ip; }
-      else if (this.fl && Math.random() < clamp((this.ab01(me, 'パス') - 0.2) * 1.4, 0, 0.9)) this.fl.thread = true; // うまい子の球は足の間を通す（体に当たらない）
+      else if (this.fl && (my === this.leadTeam() || Math.random() < clamp((this.ab01(me, 'パス') - 0.2) * 1.4, 0, 0.9))) this.fl.thread = true; // 見どころの前の攻める側のパスも足の間を通す（足を越える） // うまい子の球は足の間を通す（体に当たらない）
       this.idle = { recv: tgt, to };
     }
     // キックオフ：両チームとも自分の陣地に並び、team の最前の子が真ん中で持つ（試合の始め・後半・得点のあと）
@@ -1669,9 +1674,14 @@
       if (this.clockI % 30 === 0) this._mk = {}; // 疲れで変わるので時々読み直す
       const share = m.homeShare ? m.homeShare() : 0.5;
       this.mom = (this.mom || 0) * Math.exp(-dt / 8); // 場面の勢いは8秒ほどで薄れる
-      const want = clamp(share + this.mom, 0.2, 0.8);
-      this.flow = this.flow == null ? want : this.flow + (want - this.flow) * (1 - Math.exp(-dt / 2));
+      let want = clamp(share + this.mom, 0.2, 0.8);
       const nk = (m.keyMinutes || []).find((k) => k > m.min);
+      // 次の見どころで攻める側へ、3分前から流れを寄せる（2026-11-23「見どころの入りで急に奪われる」：前は攻める側を知らず、
+      // 1試合に3〜4回、入りの直前に相手が持っていて、寄せて奪う・パスを切る形で急につないでいた）
+      const ns = !this.scene && m.ti >= 0 && nk != null && nk - m.min <= 3 && m.nextSide ? m.nextSide() : null; // 3分前から（見どころは1試合に約14回あり、6分前からだと試合の9割で効いてしまった）
+      if (ns) want = ns === 'home' ? Math.max(want, 0.8) : Math.min(want, 0.2);
+      this.lead = ns; // 合間で、攻める側はボールを失わず、守る側は失いやすい（下の leadTeam）
+      this.flow = this.flow == null ? want : this.flow + (want - this.flow) * (1 - Math.exp(-dt / 2));
       this.surge = !this.scene && nk != null && nk - m.min <= 2;
       this.clock = (this.clock || 0) + dt;
       this.base = this.basePositions();

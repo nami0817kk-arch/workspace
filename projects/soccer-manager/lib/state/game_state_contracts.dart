@@ -426,6 +426,10 @@ extension GameStateContracts on GameState {
       _clearPlayerRoleReferences(userTeam, p.id);
       userTeam.players.remove(p);
       userTeam.startingXI.remove(p.id);
+      // 貸し出し中に契約が切れた選手は、貸し出しを終えてから出す。貸し出しの
+      // 清算([_settleLoansByDate])はこの後に回るので、以前は「貸し出し中」の
+      // 印を付けたまま他のクラブ・所属なしへ移っていた(2026-11-23)。
+      if (p.isLoanedOut) _endLoanOutSilently(p);
       final c = byPlayer[p.id];
       final dest = c == null ? null : teamById[c.toClubId];
       if (c != null && dest != null && c.fromClubId == userId) {
@@ -521,6 +525,10 @@ extension GameStateContracts on GameState {
     for (final t in touched) {
       if (t.id != userId) LineupUtils.autoFill(t);
     }
+    // 自クラブも、満了・引退で抜けた先発の枠だけを埋める(残っている先発は
+    // 動かさない)。以前は季の切り替え直後に先発が7〜9人で表示されていた
+    // (2026-11-23)。
+    LineupUtils.fillVacancies(userTeam);
   }
 
   /// CPU のクラブ[t]が上限([AiTransferEngine.maxSquadSize])を超えていたら、
@@ -550,6 +558,17 @@ extension GameStateContracts on GameState {
       excess--;
     }
     return true;
+  }
+
+  /// 貸し出しの印を消す(復帰の知らせは出さない。契約が切れて出ていく
+  /// 選手・手放したクラブの選手に使う)。
+  void _endLoanOutSilently(Player p) {
+    p.loanedOutWeeksRemaining = 0;
+    p.loanedOutUntil = null;
+    p.loanRecallClause = false;
+    p.loanedOutToClubName = null;
+    p.loanedWithPlayingTime = false;
+    p.loanStartOverall = 0;
   }
 
   @visibleForTesting
