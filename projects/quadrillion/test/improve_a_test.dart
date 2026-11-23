@@ -232,7 +232,8 @@ void main() {
         // 前の選ぶ欄（絞り込み）は札に置き換わった
         expect(find.byType(SearchBox), findsOneWidget);
         expect(find.byKey(const ValueKey('sort-cost')), findsOneWidget);
-        expect(find.byType(PickChip), findsNWidgets(bizSorts.length + bizFilters.length + CATN.ja.length));
+        // 分類の10個は「分類」の札1つにまとめた（1.0.0+14）
+        expect(find.byType(PickChip), findsNWidgets(bizSorts.length + bizFilters.length + 1));
         for (final o in bizSorts) {
           expect(find.descendant(of: find.byKey(ValueKey('sort-${o.$1}')), matching: find.text(tr(o.$2))), findsOneWidget);
         }
@@ -259,12 +260,16 @@ void main() {
           expect(_rows(tester, s), newBizList(s, sort: o.$1).map((i) => i.name).toList(), reason: o.$1);
         }
 
-        // 分類の札（右のほうは横に流して出す）
+        // 分類の札（押すと選ぶ小窓が開く）
         final cat = CATN.ja.keys.last;
-        await tester.ensureVisible(find.byKey(ValueKey('filter-$cat')));
+        await tester.ensureVisible(find.byKey(const ValueKey('filter-cat')));
         await tester.pump();
+        await tester.tap(find.byKey(const ValueKey('filter-cat')));
+        await tester.pump();
+        await tester.ensureVisible(find.byKey(ValueKey('filter-$cat')));
         await tester.tap(find.byKey(ValueKey('filter-$cat')));
         await tester.pump();
+        expect(ctl.sheet, isNull);
         expect(ctl.bizFilter, cat);
         expect(_rows(tester, s), newBizList(s, filter: cat, sort: ctl.bizSort).map((i) => i.name).toList());
 
@@ -454,7 +459,8 @@ void main() {
       for (final lang in ['ja', 'en']) {
         final s = _newGame();
         final ctl = await _pump(tester, game: s, lang: lang);
-        await tester.ensureVisible(find.text(tr('日銭を稼ぐ')));
+        // 「社長の行動」は「今月やること」・街の絵・会社の数字の下（1.0.0+14）。流して出す
+        await tester.scrollUntilVisible(find.text(tr('日銭を稼ぐ')), 200, scrollable: find.byType(Scrollable).first);
         await tester.pumpAndSettle();
         await tester.tap(find.text(tr('日銭を稼ぐ')));
         await tester.pumpAndSettle();
@@ -542,6 +548,7 @@ void main() {
       ctl.closeSheet();
       ctl.setTab('town');
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('社長の行動'), 200, scrollable: find.byType(Scrollable).first);
       final title = tester.widget<Text>(find.text('社長の行動'));
       expect(title.style, Ui.cardTitle(gold: true));
     });

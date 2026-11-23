@@ -34,6 +34,69 @@ void actConfirmed(GameController ctl, String title, String text, String yes, Str
 void confirmRestart(GameController ctl) =>
     confirmThen(ctl, title: tr('はじめから'), text: tr('今の会社の続きは消え、はじめの画面に戻ります。'), yes: tr('はじめからにする'), onYes: ctl.backToSetup);
 
+/// 能力の4つ（数字と細い棒。幅でしか分からないものは薄い帯）
+Widget abGrid(Game s, Person p) => Grid2([
+      for (final k in abKeys)
+        if (s.rangeOf(p, k) case final r) AbKv(ABN[k]!, s.showAb(p, k), r[0], r[1]),
+    ]);
+
+/// 番頭のひとことを全部（大事な順に、切らずに）読む小窓
+void openAdvice(GameController ctl) {
+  final tips = ctl.game!.adviceAll();
+  ctl.showSheet((_) => _col([
+        H2(tr('番頭のひとこと'), top: true),
+        if (tips.isEmpty) _note(tr('いま言うことはありません。')),
+        for (final x in tips)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Padding(padding: EdgeInsets.only(top: 3, right: 6), child: Icon(Icons.lightbulb_outline, size: 16, color: Pal.goldtx)),
+              Expanded(child: Text(tx(x), style: ts(size: 14, height: 1.5))),
+            ]),
+          ),
+        _cancel(ctl, '閉じる'),
+      ]));
+}
+
+/// ニュースの種類（era 時代の事件・rival 宿敵・person 人・good 良い知らせ・bad 悪い知らせ・inside 社内）。
+/// 見るだけで、仕組みには触らない
+String newsKind(Game s, LogEntry n) {
+  final key = msgKey(n.m);
+  if (key.startsWith('【') || key.startsWith('新しい業種')) return 'era';
+  final ja = txIn(n.m, 'ja');
+  for (final c in s.cos) {
+    if (c.rival == null) continue;
+    if (ja.contains(c.name) || ja.contains(c.rival!.pres) || ja.contains(c.presName)) return 'rival';
+  }
+  if (_personWords.hasMatch(key)) return 'person';
+  for (final p in [...s.staff, ...s.kids]) {
+    if (ja.contains(p.name)) return 'person';
+  }
+  if (n.t == 'good') return 'good';
+  if (n.t == 'bad') return 'bad';
+  return 'inside';
+}
+
+final _personWords = RegExp('引退|亡くな|急死|子ども|特性が分か|後継ぎ|相棒|部下|解雇|入社');
+
+/// ニュースの種類ごとのアイコン
+const newsIcons = <String, IconData>{
+  'era': Icons.public,
+  'rival': Icons.local_fire_department,
+  'person': Icons.person,
+  'good': Icons.thumb_up_alt_outlined,
+  'bad': Icons.warning_amber_rounded,
+  'inside': Icons.business,
+};
+
+IconData newsIcon(Game s, LogEntry n) => newsIcons[newsKind(s, n)]!;
+
+/// 報告のニュースの並び。大事なもの（big・bad）を上に、そのほかを下に（それぞれの中は起きた順のまま）
+List<LogEntry> sortNews(List<LogEntry> news) => [
+      ...news.where((n) => n.t == 'big' || n.t == 'bad'),
+      ...news.where((n) => n.t != 'big' && n.t != 'bad'),
+    ];
+
 void openIntro(GameController ctl) {
   final s = ctl.game!;
   ctl.showSheet((_) => _col([
@@ -88,7 +151,7 @@ void openMeet(GameController ctl) {
   ctl.showSheet((_) => _col([
         H2(tr('{0}で出会った', [s.placeName(p.place ?? 'net')]), top: true),
         Say(face: Face(p.name), who: tr('{0}（{1}歳）', [nmL(p.name), p.age]), text: tr('「{0}」', [s.meetLine(p)])),
-        Grid2([for (final k in abKeys) Kv(ABN[k]!, s.showAb(p, k))]),
+        abGrid(s, p),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 6),
           child: Text.rich(TextSpan(children: [
@@ -536,9 +599,96 @@ class ReportBase {
   final double cap, cash;
   final String? label;
 
+  /// 進める前の月の売上・利益・世界の順位（表の「前月」の列。控えていなければ null で、その行は出さない）
+  final double? rev, pre;
+  final int? rank;
+
   /// まとめて進めたのを途中で止めたときの理由（止まらなかったら null）
   String? stop;
-  ReportBase(this.cap, this.cash, [this.label]);
+  ReportBase(this.cap, this.cash, [this.label, this.rev, this.pre, this.rank]);
+
+  /// 今の盤面を控える
+  factory ReportBase.of(Game s, [String? label]) => ReportBase(s.cap, s.cash, label, s.rev, s.pre, rankNow(s));
+}
+
+/// 今の世界の順位（月を進める前でまだ数えていないときは、その場で数える）
+int rankNow(Game s) => s.rank != 0 ? s.rank : s.rankList().indexWhere((x) => x.me) + 1;
+
+/// 報告の表の1行（名前・前の値・今の値・良くなったか）
+class ReportRow {
+  final String id, label, before, now;
+
+  /// 1 良くなった・-1 悪くなった・0 変わらない
+  final int dir;
+  const ReportRow(this.id, this.label, this.before, this.now, this.dir);
+}
+
+/// 報告の上の表の中身（現金・時価総額・売上・利益・順位の「前→今」）
+List<ReportRow> reportRows(Game s, ReportBase b) {
+  int d(double now, double was) => now > was ? 1 : now < was ? -1 : 0;
+  final rk = rankNow(s);
+  return [
+    ReportRow('cash', tr('現金'), yen(b.cash), yen(s.cash), d(s.cash, b.cash)),
+    ReportRow('cap', tr('時価総額'), yen(b.cap), yen(s.cap), d(s.cap, b.cap)),
+    if (b.rev != null) ReportRow('rev', tr('売上'), yen(b.rev!), yen(s.rev), d(s.rev, b.rev!)),
+    if (b.pre != null) ReportRow('pre', tr('利益'), yen(b.pre!), yen(s.pre), d(s.pre, b.pre!)),
+    // 順位は数が小さいほど良い
+    if (b.rank != null) ReportRow('rank', tr('順位'), tr('{0}位', [b.rank]), tr('{0}位', [rk]), d(b.rank!.toDouble(), rk.toDouble())),
+  ];
+}
+
+/// 報告の上の小さな表。増えた（良くなった）は緑、減った（悪くなった）は赤、向きは矢印のアイコン
+class ReportTable extends StatelessWidget {
+  final List<ReportRow> rows;
+
+  /// 列の見出し（「前月」「今月」）
+  final String beforeHead, nowHead;
+  const ReportTable(this.rows, {super.key, required this.beforeHead, required this.nowHead});
+
+  static Color dirColor(int dir) => dir > 0 ? Pal.up : dir < 0 ? Pal.down : Pal.ink;
+  /// 順位は「上がった（数が小さくなった）」を上向きにする
+  static IconData dirIcon(int dir) => dir == 0
+      ? Icons.remove
+      : dir > 0
+          ? Icons.arrow_upward
+          : Icons.arrow_downward;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget cell(String t, TextStyle st) =>
+        Align(alignment: Alignment.centerRight, child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerRight, child: Text(t, maxLines: 1, softWrap: false, style: st)));
+    const labelW = 68.0, iconW = 18.0;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: boxDeco(),
+      child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(children: [
+            const SizedBox(width: labelW),
+            Expanded(child: cell(beforeHead, ts(size: 11.5, color: Pal.mute))),
+            const SizedBox(width: iconW + 4),
+            Expanded(child: cell(nowHead, ts(size: 11.5, color: Pal.mute))),
+            const SizedBox(width: iconW),
+          ]),
+        ),
+        for (final r in rows)
+          Container(
+            key: ValueKey('report-${r.id}'),
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            decoration: const BoxDecoration(border: Border(top: BorderSide(color: Pal.line))),
+            child: Row(children: [
+              SizedBox(width: labelW, child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(r.label, maxLines: 1, softWrap: false, style: ts(size: 12.5, color: Pal.mute)))),
+              Expanded(child: cell(r.before, ts(size: 12.5, color: Pal.mute))),
+              const SizedBox(width: iconW + 4, child: Icon(Icons.arrow_forward, size: 13, color: Pal.mute)),
+              Expanded(child: cell(r.now, ts(size: 13.5, bold: true, color: dirColor(r.dir)))),
+              SizedBox(width: iconW, child: Icon(dirIcon(r.dir), key: ValueKey('report-dir-${r.id}'), size: 15, color: r.dir == 0 ? Pal.mute : dirColor(r.dir))),
+            ]),
+          ),
+      ]),
+    );
+  }
 }
 
 /// まとめて進めたのが出来事で途中で止まったときの文（「〇〇が起きたので、〇年〇月で止めました」）
@@ -551,7 +701,7 @@ String stopReason(Game s) {
 
 void doNext(GameController ctl) {
   final s = ctl.game!;
-  final before = ReportBase(s.cap, s.cash);
+  final before = ReportBase.of(s);
   final snap = ctl.snap();
   final news = s.nextQuarter();
   ctl.buzzAfter(snap, news);
@@ -565,7 +715,7 @@ void doNext(GameController ctl) {
 
 void doYear(GameController ctl, [int n = 12]) {
   final s = ctl.game!;
-  final before = ReportBase(s.cap, s.cash, tr('{0}から', [ym(s.year, s.q, sp: true)]));
+  final before = ReportBase.of(s, tr('{0}から', [ym(s.year, s.q, sp: true)]));
   final all = <LogEntry>[];
   final snap = ctl.snap();
   for (var i = 0; i < n; i++) {
@@ -583,7 +733,6 @@ void doYear(GameController ctl, [int n = 12]) {
 
 void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
   final s = ctl.game!;
-  final d = s.cap - before.cap;
   final lines = (s.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).take(4).map((b) {
     final p = s.staffById(b.mgr);
     final ind = indm[b.ind]!;
@@ -602,8 +751,9 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
     markGuide(s, 'meet');
     ctl.saveSoon();
   }
-  final pre = s.pre;
-  final cap = s.cap;
+  // 表とニュースは開いたときの値で固める（小窓は描き直されることがある）
+  final rows = reportRows(s, before);
+  final sorted = [for (final n in sortNews(news)) (n, newsIcon(s, n))];
   ctl.showSheet((_) => _col([
         if (before.stop != null)
           Container(
@@ -615,19 +765,9 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
           ),
         H2(head, top: true),
         if (before.label != null) Padding(padding: const EdgeInsets.only(bottom: 4), child: Muted(tr('{0}まとめて進めました', [before.label]))),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: Text.rich(TextSpan(style: ts(), children: [
-            TextSpan(text: tr('時価総額 ')),
-            TextSpan(text: yen(cap), style: ts(color: Pal.goldtx, bold: true)),
-            const TextSpan(text: ' '),
-            TextSpan(text: '${d >= 0 ? tr('＋') : ''}${yen(d)}', style: ts(color: d >= 0 ? Pal.up : Pal.down)),
-            TextSpan(text: tr('　今月の利益 ')),
-            TextSpan(text: yen(pre), style: ts(color: pre >= 0 ? Pal.up : Pal.down, bold: true)),
-          ])),
-        ),
+        ReportTable(rows, key: const ValueKey('report-table'), beforeHead: tr(before.label != null ? '進める前' : '前月'), nowHead: tr(before.label != null ? '今' : '今月')),
         ...lines,
-        if (news.isNotEmpty) ...[H3(tr('ニュース')), for (final n in news) NewsLine(n.m, n.t)],
+        if (sorted.isNotEmpty) ...[H3(tr('ニュース')), for (final n in sorted) NewsLine(n.$1.m, n.$1.t, icon: n.$2)],
         const SizedBox(height: 12),
         Align(
             alignment: Alignment.centerLeft,

@@ -19,7 +19,8 @@ Widget _apBtn(GameController ctl, String label, VoidCallback onTap, {int ap = 1,
   final short = !ctl.game!.canAP(ap);
   return Btn(label, () {
     if (!ctl.noAp(ap)) onTap();
-  }, small: true, ap: ap, dim: short, enabled: enabled, primary: primary, more: more);
+    // 英語は語の途中で折れず2行になりやすいので、1行に収め、入りきらないときは字だけを詰める
+  }, small: true, ap: ap, dim: short, enabled: enabled, primary: primary, more: more, shrink: L.en);
 }
 Widget _gap([double h = 8]) => SizedBox(height: h);
 String _pct0(double v) => '${jsNum(jsRound(v * 100))}%';
@@ -28,11 +29,13 @@ String _pct0(double v) => '${jsNum(jsRound(v * 100))}%';
 List<Widget> townTab(GameController ctl) {
   final s = ctl.game!;
   final out = <Widget>[];
-  final step = currentGuide(s);
-  if (step != null) out.add(GuideBar(ctl: ctl, step: step));
+  // 上から：今月やること → 街の絵 → 会社の数字 → 社長の行動 → 宿敵 → 最近のできごと
+  final todo = todoCard(ctl);
+  if (todo != null) out.add(Padding(padding: const EdgeInsets.only(top: 6), child: todo));
   out.add(Padding(
-    padding: const EdgeInsets.only(top: 10),
+    padding: EdgeInsets.only(top: todo != null ? 4 : 10, bottom: 4),
     child: Frame(
+      key: const ValueKey('town-picture'),
       child: AspectRatio(
           aspectRatio: 16 / 9,
           child: Semantics(label: tr('自社のビルが並ぶ街'), child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s), size: Size.infinite)))),
@@ -40,6 +43,7 @@ List<Widget> townTab(GameController ctl) {
   ));
   final nCtry = <String>{for (final b in s.biz) ...s.ctryOf(b)}.length;
   out.add(Panel(
+      key: const ValueKey('town-company'),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
     Row(children: [
       Expanded(
@@ -58,67 +62,184 @@ List<Widget> townTab(GameController ctl) {
       Kv(tr('部下'), tr('{0}人', [s.staff.length])),
       Kv(tr('持ち株'), pct(s.sh.own)),
     ]),
+    // 目標は会社の数字の下に添える
+    Container(
+      margin: const EdgeInsets.only(top: 6),
+      padding: const EdgeInsets.only(top: 8),
+      decoration: const BoxDecoration(border: Border(top: BorderSide(color: Pal.line))),
+      child: Text.rich(TextSpan(children: [TextSpan(text: tr('目標　'), style: ts(size: 13, bold: true)), TextSpan(text: tx(s.goalText()), style: ts(size: 13))])),
+    ),
   ])));
-  out.add(_presPanel(ctl));
-  out.add(Panel(
-      child: Text.rich(TextSpan(children: [TextSpan(text: tr('目標　'), style: ts(bold: true)), TextSpan(text: tx(s.goalText()), style: ts())]))));
   final vow = s.vow;
   if (vow != null) {
     out.add(Panel(
         border: Pal.down,
         child: Text(tr('取締役会との約束：{0}年1月までに、年の利益を{1}まで戻す', [vow['y']!.round(), yen(vow['target']!)]), style: ts(size: 13))));
   }
-  final tips = s.advice();
-  if (tips.isNotEmpty) {
-    out.add(Panel(
-        border: Pal.gold,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          CardTitle(tr('番頭のひとこと'), gold: true),
-          for (final x in tips) Padding(padding: const EdgeInsets.only(top: 4), child: Text('${tr('・@@bullet')}${tx(x)}', style: ts(size: 13))),
-        ])));
+  out.add(_presPanel(ctl));
+  // 宿敵：見出しを押すとたためる。1人1行の要約で、押すと因縁と「裏の手」が開く
+  final rivals = s.cos.where((c) => c.rival != null && c.alive).toList();
+  final rivOpen = !ctl.folded.contains('rivals');
+  out.add(FoldHead(tr('宿敵'), key: const ValueKey('fold-rivals'), open: rivOpen, onTap: () => ctl.toggleFold('rivals'), note: tr('{0}社', [rivals.length])));
+  if (rivOpen) {
+    if (rivals.isEmpty) out.add(Muted(tr('まだ宿敵はいません。同じ業種でぶつかると現れます。')));
+    for (final c in rivals) {
+      out.add(ctl.openRival == c.id ? _rivalCard(ctl, c) : _rivalRow(ctl, c));
+    }
   }
-  out.add(H2(tr('宿敵')));
-  for (final c in s.cos.where((c) => c.rival != null && c.alive)) {
-    final rel = c.rel;
-    out.add(Panel(
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Face(c.presName, col: c.rival!.col),
-      const SizedBox(width: 10),
-      Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          Expanded(child: Text(nmL(c.name), style: ts(bold: true))),
-          Flexible(child: Tag(RTYPE[c.rival!.label ?? c.rival!.type] ?? '')),
-        ]),
-        Muted(tr('{0}・{1}歳　時価総額 {2}　{3}', [nmL(c.presName), jsNum(jsRound(c.presAge)), yen(c.cap), c.parent == 'player' ? tr('あなたの子会社') : ''])),
-        Text.rich(TextSpan(style: ts(size: 12.5), children: [
-          TextSpan(text: tr('関係 ')),
-          TextSpan(
-              text: tx(relWord(rel)),
-              style: ts(
-                  size: 12.5,
-                  color: rel > 10
-                      ? Pal.up
-                      : rel < -10
-                          ? Pal.down
-                          : Pal.mute)),
-          if ((s.sh.riv[c.id] ?? 0) > 0) TextSpan(text: tr('　あなたの株を {0} 保有', [pct(s.sh.riv[c.id]!)])),
-        ])),
-        Text.rich(TextSpan(style: ts(size: 12.5), children: [
-          TextSpan(text: tr('因縁 ')),
-          TextSpan(text: tx(s.storyStage(c.rival!)), style: ts(size: 12.5, bold: true)),
-          if (c.rival!.st > 0) TextSpan(text: tr('　恨み {0}・恩 {1}・されたこと {2}', [c.rival!.grudge, c.rival!.favor, c.rival!.hurt])),
-        ])),
-        for (final t in c.rival!.ties.reversed.take(2)) Muted('${tr('・@@bullet')}${tx(t)}', size: 12),
-        if (c.parent != 'player') Padding(padding: const EdgeInsets.only(top: 6), child: _apBtn(ctl, tr('裏の手'), () => openDirty(ctl, c), more: true)),
-      ])),
-    ])));
-  }
-  out.add(H2(tr('最近のできごと')));
-  for (final n in s.log.reversed.take(8)) {
-    out.add(NewsLine(n.m, n.t, prefix: n.y != null ? '${yearL(n.y!)} ' : null));
+  final newsOpen = !ctl.folded.contains('news');
+  final recent = s.log.reversed.take(8).toList();
+  out.add(FoldHead(tr('最近のできごと'), key: const ValueKey('fold-news'), open: newsOpen, onTap: () => ctl.toggleFold('news'), note: tr('{0}件', [recent.length])));
+  if (newsOpen) {
+    for (final n in recent) {
+      out.add(NewsLine(n.m, n.t, prefix: n.y != null ? '${yearL(n.y!)} ' : null, icon: newsIcon(s, n)));
+    }
   }
   return out;
+}
+
+/// 「今月やること」：はじめの案内と番頭のひとことを1つの欄にまとめる（合わせて3つまで）。出すものが無ければ null。
+/// ひとことは2行までに切り、右上の「番頭のひとこと」から全部を小窓で読める
+Widget? todoCard(GameController ctl) {
+  final s = ctl.game!;
+  final step = currentGuide(s);
+  final tips = s.advice().take(step != null ? todoMax - 1 : todoMax).toList();
+  if (step == null && tips.isEmpty) return null;
+  return Panel(
+    key: const ValueKey('todo'),
+    border: Pal.gold,
+    padding: const EdgeInsets.fromLTRB(Ui.pad, 2, 4, 8),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      Row(children: [
+        Expanded(child: CardTitle(tr('今月やること'), gold: true)),
+        if (tips.isNotEmpty)
+          InkWell(
+            key: const ValueKey('todo-all'),
+            borderRadius: BorderRadius.circular(Ui.rBtn),
+            onTap: () => openAdvice(ctl),
+            child: Container(
+              constraints: const BoxConstraints(minHeight: minTap, minWidth: minTap),
+              padding: const EdgeInsets.only(left: 8),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Text(tr('番頭のひとこと'), style: ts(size: 12, color: Pal.goldtx)),
+                const Icon(Icons.chevron_right, size: 18, color: Pal.goldtx),
+              ]),
+            ),
+          )
+        else
+          const SizedBox(height: minTap),
+      ]),
+      if (step != null) GuideBar(ctl: ctl, step: step),
+      for (final x in tips)
+        Padding(
+          padding: const EdgeInsets.only(top: 3, right: 8),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Padding(padding: EdgeInsets.only(top: 3, right: 6), child: Icon(Icons.lightbulb_outline, size: 15, color: Pal.goldtx)),
+            Expanded(child: Text(tx(x), key: const ValueKey('todo-tip'), maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(size: 13, height: 1.4))),
+          ]),
+        ),
+    ]),
+  );
+}
+
+/// 「今月やること」に並べる数の上限（案内とひとことを合わせて）
+const todoMax = 3;
+
+/// 宿敵との関係の色
+Color _relColor(int rel) => rel > 10
+    ? Pal.up
+    : rel < -10
+        ? Pal.down
+        : Pal.mute;
+
+/// 宿敵の要約の文（時価総額・関係・あなたの株の持ち分）
+TextSpan _rivalFacts(Game s, Company c) {
+  final own = s.sh.riv[c.id] ?? 0;
+  return TextSpan(style: ts(size: 12.5, color: Pal.mute), children: [
+    TextSpan(text: tr('時価総額 {0}', [yen(c.cap)])),
+    TextSpan(text: tr('・関係 ')),
+    TextSpan(text: tx(relWord(c.rel)), style: ts(size: 12.5, color: _relColor(c.rel), bold: true)),
+    if (c.parent == 'player')
+      TextSpan(text: '${tr('・')}${tr('あなたの子会社')}')
+    else if (own > 0)
+      TextSpan(text: tr('・あなたの株 {0}', [pct(own)]), style: ts(size: 12.5, color: Pal.down, bold: true)),
+  ]);
+}
+
+/// たたんだ宿敵の1行（名前・型・時価総額・関係・あなたの株の持ち分）。押すと因縁と「裏の手」が開く
+Widget _rivalRow(GameController ctl, Company c) {
+  final s = ctl.game!;
+  return TapCard(
+    inkKey: ValueKey('rival-row-${c.id}'),
+    onTap: () => ctl.toggleRival(c.id),
+    child: Container(
+      constraints: const BoxConstraints(minHeight: minTap),
+      padding: const EdgeInsets.fromLTRB(12, 7, 6, 7),
+      child: Row(children: [
+        Face(c.presName, col: c.rival!.col),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+              Text(nmL(c.name), style: ts(size: 14, bold: true)),
+              Tag(RTYPE[c.rival!.label ?? c.rival!.type] ?? ''),
+            ]),
+            const SizedBox(height: 2),
+            Text.rich(_rivalFacts(s, c)),
+          ]),
+        ),
+        const Icon(Icons.expand_more, size: 22, color: Pal.mute),
+      ]),
+    ),
+  );
+}
+
+/// 開いた宿敵のカード（要約に、社長・因縁・最近のいきさつ・「裏の手」を足す）。名前の行を押すとたたむ
+Widget _rivalCard(GameController ctl, Company c) {
+  final s = ctl.game!;
+  final r = c.rival!;
+  return Panel(
+    border: Pal.gold,
+    padding: const EdgeInsets.fromLTRB(12, 2, 6, 10),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      InkWell(
+        key: ValueKey('rival-fold-${c.id}'),
+        borderRadius: BorderRadius.circular(Ui.rBtn),
+        onTap: () => ctl.toggleRival(c.id),
+        child: Container(
+          constraints: const BoxConstraints(minHeight: minTap),
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Row(children: [
+            Face(c.presName, col: r.col),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Text(nmL(c.name), style: ts(size: 14, bold: true)),
+                Tag(RTYPE[r.label ?? r.type] ?? ''),
+              ]),
+            ),
+            const Icon(Icons.expand_less, size: 22, color: Pal.mute),
+          ]),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(right: 6),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Muted(tr('社長 {0}（{1}歳）', [nmL(c.presName), jsNum(jsRound(c.presAge))])),
+          const SizedBox(height: 2),
+          Text.rich(_rivalFacts(s, c)),
+          const SizedBox(height: 6),
+          Text.rich(TextSpan(style: ts(size: 12.5), children: [
+            TextSpan(text: tr('因縁 '), style: ts(size: 12.5, color: Pal.mute)),
+            TextSpan(text: tx(s.storyStage(r)), style: ts(size: 12.5, bold: true)),
+            if (r.st > 0) TextSpan(text: tr('　恨み {0}・恩 {1}・されたこと {2}', [r.grudge, r.favor, r.hurt])),
+          ])),
+          for (final t in r.ties.reversed.take(3)) Padding(padding: const EdgeInsets.only(top: 2), child: Muted('${tr('・@@bullet')}${tx(t)}', size: 12)),
+          if (c.parent != 'player') Padding(padding: const EdgeInsets.only(top: 4), child: _apBtn(ctl, tr('裏の手'), () => openDirty(ctl, c), more: true)),
+        ]),
+      ),
+    ]),
+  );
 }
 
 Widget _presPanel(GameController ctl) {
@@ -130,6 +251,7 @@ Widget _presPanel(GameController ctl) {
         if (!ctl.noAp()) f();
       };
   return Panel(
+    key: const ValueKey('town-pres'),
     border: Pal.gold,
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Row(children: [
@@ -189,6 +311,41 @@ List<Industry> newBizList(Game s, {String filter = 'all', String sort = 'cost', 
   return list;
 }
 
+/// 新しい事業の一覧を分類で絞る小窓（分類ごとに、今ある・まだ持っていない業種の数を添える）
+void openCatPick(GameController ctl) {
+  final s = ctl.game!;
+  final q = ctl.bizSearch.text;
+  void pick(String f) {
+    ctl.bizFilter = f;
+    ctl.closeSheet();
+  }
+
+  ctl.showSheet((_) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
+        H2(tr('分類で絞る'), top: true),
+        LayoutBuilder(builder: (context, c) {
+          // 2列に並べる（10個が1画面に収まる）
+          final w = (c.maxWidth - 8) / 2;
+          return Wrap(spacing: 8, runSpacing: 0, children: [
+            for (final e in CATN.entries)
+              SizedBox(
+                width: w,
+                child: Builder(builder: (_) {
+                  final n = newBizList(s, filter: e.key, query: q).length;
+                  return ChoiceBtn(e.value, () => pick(e.key), key: ValueKey('filter-${e.key}'), on: ctl.bizFilter == e.key, dim: n == 0, subs: [tr('{0}件', [n])]);
+                }),
+              ),
+          ]);
+        }),
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Wrap(spacing: 8, children: [
+            Btn(tr('やめる'), ctl.closeSheet),
+            if (CATN.containsKey(ctl.bizFilter)) Btn(tr('分類を外す'), () => pick('all')),
+          ]),
+        ),
+      ]));
+}
+
 List<Widget> bizTab(GameController ctl) {
   final s = ctl.game!;
   final out = <Widget>[H2(tr('自社の事業'))];
@@ -214,11 +371,13 @@ List<Widget> bizTab(GameController ctl) {
   out.add(ChipRow('sort', tr('並べ替え'), [
     for (final o in bizSorts) PickChip(tr(o.$2), key: ValueKey('sort-${o.$1}'), on: ctl.bizSort == o.$1, onTap: () => pick(() => ctl.bizSort = o.$1)),
   ]));
-  out.add(ChipRow('filter', tr('絞り込み'), [
-    for (final o in [...bizFilters.map((o) => (o.$1, tr(o.$2))), for (final e in CATN.entries) (e.key, e.value)])
-      PickChip(o.$2, key: ValueKey('filter-${o.$1}'), on: ctl.bizFilter == o.$1, onTap: () => pick(() => ctl.bizFilter = o.$1)),
-  ]));
+  // 絞り込みは折り返して全部見せる。分類（10個）は1つの札にまとめ、押すと選ぶ小窓が開く
   final f = ctl.bizFilter;
+  final inCat = CATN.containsKey(f);
+  out.add(ChipRow('filter', tr('絞り込み'), [
+    for (final o in bizFilters) PickChip(tr(o.$2), key: ValueKey('filter-${o.$1}'), on: f == o.$1, onTap: () => pick(() => ctl.bizFilter = o.$1)),
+    PickChip(inCat ? tr('分類：{0}', [CATN[f]]) : tr('分類'), key: const ValueKey('filter-cat'), on: inCat, more: true, onTap: () => openCatPick(ctl)),
+  ]));
   final q = ctl.bizSearch.text.trim();
   final list = newBizList(s, filter: f, sort: ctl.bizSort, query: q);
   final firstFree = s.biz.isEmpty && !s.everBiz;
@@ -572,7 +731,7 @@ List<Widget> peopleTab(GameController ctl) {
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Text(tr('{0}（{1}歳）', [nmL(P.name), P.age]), style: ts(bold: true)),
       const SizedBox(height: 6),
-      Grid2([for (final k in abKeys) Kv(ABN[k]!, '${P.ab[k]}')]),
+      Grid2([for (final k in abKeys) AbKv(ABN[k]!, '${P.ab[k]}', P.ab[k]!, P.ab[k]!)]),
       for (final t in P.traits)
         Builder(builder: (_) {
           final T = TRAITS.firstWhere((x) => x.id == t, orElse: () => STRAITS.firstWhere((x) => x.id == t));
@@ -636,23 +795,143 @@ List<Widget> peopleTab(GameController ctl) {
       ),
   ])));
   out.add(H2(tr('部下（{0}人）', [s.staff.length])));
+  // 4人以上は1人1行にたたみ、押した1人だけを詳しく開く
+  final foldStaff = s.staff.length >= staffFoldMin;
   for (final p in s.staff) {
-    final t = STRAITS.firstWhere((x) => x.id == p.trait);
-    final job = s.biz.where((b) => b.mgr == p.id).firstOrNull;
+    out.add(!foldStaff
+        ? _staffCard(ctl, p)
+        : ctl.openStaff == p.id
+            ? _staffCard(ctl, p, onFold: () => ctl.toggleStaff(p.id))
+            : _staffRow(ctl, p));
+  }
+  out.add(H2(tr('採用の候補')));
+  out.add(Muted(tr('面接で分かるのは能力の幅だけです。働かせると本当の値と特性が見えてきます。')));
+  for (final p in s.cands) {
     out.add(Panel(
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Face(p.name),
       const SizedBox(width: 10),
       Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
-          Text(tr('{0}（{1}歳）', [nmL(p.name), p.age]), style: ts(bold: true)),
-          if (p.partner) Tag(tr('相棒・株{0}', [pct(p.stake)]), kind: TagKind.gold),
-          if (p.auto) Tag(tr('提案はまかせている'), kind: TagKind.good),
-          Muted(job != null ? tr('{0}の責任者', [indm[job.ind]!.name]) : tr('担当なし')),
-        ]),
+        Text(tr('{0}（{1}歳）', [nmL(p.name), p.age]), style: ts(bold: true)),
         const SizedBox(height: 4),
-        Grid2([for (final k in abKeys) Kv(ABN[k]!, s.showAb(p, k))]),
+        abGrid(s, p),
+        const SizedBox(height: 4),
+        p.traitKnown ? Text(tr('特性 {0}', [STRAITS.firstWhere((x) => x.id == p.trait).n]), style: ts(size: 12.5)) : Muted(tr('評判：{0}', [traitHints[p.trait]])),
+        const SizedBox(height: 6),
+        Row(children: [
+          Expanded(child: Muted(tr('給料 {0}／月・支度金 {1}', [yen(p.salary), yen(p.salary * 2)]))),
+          _apBtn(ctl, tr('雇う'), () => ctl.act(() => s.hire(p))),
+        ]),
+      ])),
+    ])));
+  }
+  return out;
+}
+
+/// 部下をたたみ始める人数
+const staffFoldMin = 4;
+
+/// 忠誠がこの値を下回ると、注意の印を付ける（引き抜きや独立の話が出始めるあたり）
+const loyWarn = 55.0;
+
+/// いちばん高い能力（幅でしか分からないものは幅の真ん中で比べる。同じなら並びの先のもの）
+String topAbility(Game s, Person p) {
+  var best = abKeys.first;
+  double mid(String k) {
+    final r = s.rangeOf(p, k);
+    return (r[0] + r[1]) / 2;
+  }
+
+  for (final k in abKeys) {
+    if (mid(k) > mid(best)) best = k;
+  }
+  return best;
+}
+
+/// たたんだ部下の1行（名前・年齢・担当・いちばん高い能力・相棒の札・忠誠の注意の印）。押すと詳しいカードが開く
+Widget _staffRow(GameController ctl, Person p) {
+  final s = ctl.game!;
+  final job = s.biz.where((b) => b.mgr == p.id).firstOrNull;
+  final top = topAbility(s, p);
+  final warn = p.loy < loyWarn;
+  return TapCard(
+    border: warn ? Pal.down : Pal.line,
+    inkKey: ValueKey('staff-row-${p.id}'),
+    onTap: () => ctl.toggleStaff(p.id),
+    child: Container(
+      constraints: const BoxConstraints(minHeight: minTap),
+      padding: const EdgeInsets.fromLTRB(12, 7, 6, 7),
+      child: Row(children: [
+        Face(p.name),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+              Text(tr('{0}（{1}歳）', [nmL(p.name), p.age]), style: ts(size: 14, bold: true)),
+              if (p.partner) Tag(tr('相棒@@tag'), kind: TagKind.gold),
+              if (warn)
+                Tooltip(
+                  message: tr('忠誠が下がっています'),
+                  child: Icon(Icons.warning_amber_rounded, key: ValueKey('loy-warn-${p.id}'), size: 17, color: Pal.down, semanticLabel: tr('忠誠が下がっています')),
+                ),
+            ]),
+            const SizedBox(height: 2),
+            Text.rich(TextSpan(style: ts(size: 12.5, color: Pal.mute), children: [
+              TextSpan(text: job != null ? tr('{0}の責任者', [indm[job.ind]!.name]) : tr('担当なし')),
+              TextSpan(text: tr('・')),
+              TextSpan(text: '${ABN[top]} ${s.showAb(p, top)}', style: ts(size: 12.5, color: Pal.ink, bold: true)),
+            ])),
+          ]),
+        ),
+        const Icon(Icons.expand_more, size: 22, color: Pal.mute),
+      ]),
+    ),
+  );
+}
+
+/// 部下の詳しいカード。[onFold] があれば（たたんだ一覧から開いたとき）名前の行を押すと1行に戻る
+Widget _staffCard(GameController ctl, Person p, {VoidCallback? onFold}) {
+  final s = ctl.game!;
+  {
+    final t = STRAITS.firstWhere((x) => x.id == p.trait);
+    final job = s.biz.where((b) => b.mgr == p.id).firstOrNull;
+    final head = Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+      Text(tr('{0}（{1}歳）', [nmL(p.name), p.age]), style: ts(bold: true)),
+      if (p.partner) Tag(tr('相棒・株{0}', [pct(p.stake)]), kind: TagKind.gold),
+      if (p.auto) Tag(tr('提案はまかせている'), kind: TagKind.good),
+      Muted(job != null ? tr('{0}の責任者', [indm[job.ind]!.name]) : tr('担当なし')),
+    ]);
+    return Panel(
+        border: onFold != null ? Pal.gold : Pal.line,
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Face(p.name),
+      const SizedBox(width: 10),
+      Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        onFold == null
+            ? head
+            : InkWell(
+                key: ValueKey('staff-fold-${p.id}'),
+                borderRadius: BorderRadius.circular(Ui.rBtn),
+                onTap: onFold,
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: minTap),
+                  alignment: Alignment.centerLeft,
+                  child: Row(children: [Expanded(child: head), const Icon(Icons.expand_less, size: 22, color: Pal.mute)]),
+                ),
+              ),
+        if (p.loy < loyWarn)
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Row(children: [
+              const Icon(Icons.warning_amber_rounded, size: 15, color: Pal.down),
+              const SizedBox(width: 4),
+              Expanded(child: Text(tr('忠誠が下がっています'), style: ts(size: 12.5, color: Pal.down))),
+            ]),
+          ),
+        const SizedBox(height: 4),
+        abGrid(s, p),
         const SizedBox(height: 4),
         Wrap(spacing: 4, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
           Text(tr('特性'), style: ts(size: 12.5)),
@@ -686,31 +965,18 @@ List<Widget> peopleTab(GameController ctl) {
               small: true),
         ]),
       ])),
-    ])));
+    ]));
   }
-  out.add(H2(tr('採用の候補')));
-  out.add(Muted(tr('面接で分かるのは能力の幅だけです。働かせると本当の値と特性が見えてきます。')));
-  for (final p in s.cands) {
-    out.add(Panel(
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Face(p.name),
-      const SizedBox(width: 10),
-      Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Text(tr('{0}（{1}歳）', [nmL(p.name), p.age]), style: ts(bold: true)),
-        const SizedBox(height: 4),
-        Grid2([for (final k in abKeys) Kv(ABN[k]!, s.showAb(p, k))]),
-        const SizedBox(height: 4),
-        p.traitKnown ? Text(tr('特性 {0}', [STRAITS.firstWhere((x) => x.id == p.trait).n]), style: ts(size: 12.5)) : Muted(tr('評判：{0}', [traitHints[p.trait]])),
-        const SizedBox(height: 6),
-        Row(children: [
-          Expanded(child: Muted(tr('給料 {0}／月・支度金 {1}', [yen(p.salary), yen(p.salary * 2)]))),
-          _apBtn(ctl, tr('雇う'), () => ctl.act(() => s.hire(p))),
-        ]),
-      ])),
-    ])));
-  }
-  return out;
+}
+
+/// 宿敵の持ち分（いちばん多く握っている1社）が、次の節目（33.4%・50%・66.7%）まであと何%か。
+/// 上場前は宿敵が株を買えないので null
+String? rivalGapText(Game s) {
+  if (!s.listed) return null;
+  final r = s.sh.rivMax;
+  final next = MarkBar.marks.where((m) => r < m).firstOrNull;
+  if (next == null) return tr('宿敵の持ち分は{0}。{1}%を超えています', [pct(r), jsNum(MarkBar.marks.last)]);
+  return tr('宿敵の持ち分は{0}。{1}%まであと{2}', [pct(r), jsNum(next), pct(next - r)]);
 }
 
 // --- 株 ---
@@ -728,11 +994,30 @@ List<Widget> stockTab(GameController ctl) {
   for (final e in sh.riv.entries) {
     if (e.value > 0) parts.add((nmL(s.coById(e.key)?.name ?? '?'), e.value, Pal.down));
   }
+  final gap = rivalGapText(s);
+  // 次の節目まで5%を切ったら（または節目を越えていたら）赤で知らせる
+  final rmax = sh.rivMax;
+  final near = MarkBar.marks.any((m) => rmax >= m || m - rmax < 5);
   out.add(Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-    Bar([for (final p in parts) (p.$2, p.$3)], height: 14),
-    _gap(),
-    Grid2([for (final p in parts.where((p) => p.$2 > .05)) Kv(p.$1, pct(p.$2))]),
+    // 棒の上に 33.4%・50%・66.7% の線を重ねる
+    Semantics(label: tr('あなたの会社の株主'), child: MarkBar([for (final p in parts) (p.$2, p.$3)], height: 14)),
+    const SizedBox(height: 4),
+    Grid2([
+      for (final p in parts.where((p) => p.$2 > .05))
+        Row(children: [
+          Container(width: 9, height: 9, margin: const EdgeInsets.only(right: 5), decoration: BoxDecoration(color: p.$3, borderRadius: BorderRadius.circular(2))),
+          Expanded(child: Kv(p.$1, pct(p.$2))),
+        ]),
+    ]),
+    if (gap != null)
+      Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(padding: const EdgeInsets.only(top: 2, right: 5), child: Icon(near ? Icons.warning_amber_rounded : Icons.shield_outlined, size: 15, color: near ? Pal.down : Pal.mute)),
+          Expanded(child: Text(gap, key: const ValueKey('rival-gap'), style: ts(size: 13, bold: true, color: near ? Pal.down : Pal.ink))),
+        ]),
+      ),
     const SizedBox(height: 6),
     Muted(tr('5%で相手に知られる／33.4%で合併を止められる／50%超で社長を替えられる／66.7%で合併も自由')),
   ])));
@@ -782,10 +1067,15 @@ List<Widget> stockTab(GameController ctl) {
   out.add(H2(tr('会社の形')));
   out.add(Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Row(children: [
-      Expanded(child: Text(tr(s.holding ? '持株会社' : 'ふつうの会社'), style: ts(bold: s.holding))),
-      if (!s.holding) Flexible(child: _apBtn(ctl, tr('持株会社にする'), () => ctl.act(s.makeHolding), enabled: s.biz.length + s.subs().length >= 5)),
-    ]),
+    LayoutBuilder(
+        builder: (context, c) => Row(children: [
+              Expanded(child: Text(tr(s.holding ? '持株会社' : 'ふつうの会社'), style: ts(bold: s.holding))),
+              // ボタンは字の幅をそのまま取る（半分の幅に押し込むと2行に折れる）。欄の7割までは広がれる
+              if (!s.holding)
+                ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: c.maxWidth * .7),
+                    child: _apBtn(ctl, tr('持株会社にする'), () => ctl.act(s.makeHolding), enabled: s.biz.length + s.subs().length >= 5)),
+            ])),
     Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Muted(tr('持株会社は、社長が直接見られる事業の上限がなくなります。事業は「事業」の画面から、分社（子会社にする）や、責任者に渡して独立させることもできます。'))),
