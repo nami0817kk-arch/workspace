@@ -7,6 +7,7 @@ import 'rng.dart';
 
 part 'trait_scenes2.dart';
 part 'trait_scenes3.dart';
+part 'trait_scenes4.dart';
 
 /// 特性の効く場面（2026-11-24、特性100の1回目）。id・旗は `tr_`（子どもは `tr_c_`）。
 ///
@@ -26,7 +27,8 @@ part 'trait_scenes3.dart';
 // ---------------------------------------------------------------- 表
 
 /// 効き方を作った特性 → その特性の場面の id（手や倍率だけの所は `kTraitHooks`）。テストが使う。
-/// 1回目の25（この下）と、2回目の25（`trait_scenes2.dart`）・3回目の25（`trait_scenes3.dart`）。表はここ一つ。
+/// 1回目の25（この下）と、2回目の25（`trait_scenes2.dart`）・3回目の25（`trait_scenes3.dart`）・4回目の25（`trait_scenes4.dart`）。
+/// 表はここ一つで、百の特性すべてが載る。
 const kTraitScenesDone = <String, List<String>>{
   // よくある
   'power': ['tr_power'],
@@ -106,7 +108,7 @@ const kTraitScenesDone = <String, List<String>>{
   // ---------------- 3回目（trait_scenes3.dart）
   // よくある
   'walker': ['tr_walker'],
-  'big': ['tr_big'],
+  'big': ['tr_big', 'tr_big_f'],
   'small': ['tr_small'],
   'stubborn': ['tr_stubborn'],
   'cheerful': ['tr_cheerful'],
@@ -145,6 +147,46 @@ const kTraitScenesDone = <String, List<String>>{
     'tr_kitsune_hunt',
     'tr_kitsune_fox',
   ],
+  // ---------------- 4回目（trait_scenes4.dart）
+  // よくある
+  'lustful': ['tr_lustful'],
+  'lazy': ['tr_lazy'],
+  'vain': ['tr_vain'],
+  'shy': ['tr_shy'],
+  'birthmark': ['tr_birthmark'],
+  'big_family': ['tr_big_family'],
+  'sickly': ['tr_sickly'],
+  'hardy': ['tr_hardy'],
+  'amb': ['tr_amb'],
+  'loyal': ['tr_loyal'],
+  'abacus': ['tr_abacus'],
+  // 珍しい
+  'lefty': ['tr_lefty'],
+  'cunning': ['tr_cunning'],
+  'jealous': ['tr_jealous'],
+  'vengeful': ['tr_vengeful'],
+  'dialects': ['tr_dialects'],
+  'sword': ['tr_sword'],
+  'stealth': ['tr_stealth'],
+  'onna': ['tr_onna'],
+  // 稀
+  'mimic': ['tr_mimic_voice', 'tr_mimic_plea'],
+  'seer': ['tr_seer_shadow', 'tr_seer_house', 'tr_seer_own'],
+  'nito': ['tr_nito_both', 'tr_nito_duel'],
+  'kaizoku': ['tr_kaizoku_crest', 'tr_kaizoku_toll', 'tr_kaizoku_sea'],
+  // 幻
+  'tenka_so': [
+    'tr_tenka_face',
+    'tr_tenka_rumor',
+    'tr_tenka_lord',
+    'tr_tenka_last',
+  ],
+  'keikoku': [
+    'tr_keikoku_blade',
+    'tr_keikoku_wish',
+    'tr_keikoku_ruin',
+    'tr_keikoku_mirror',
+  ],
 };
 
 /// 特性の効き方のうち、場面のほかに既存の仕組みへ掛けたもの（覚え書き。テストと CLAUDE.md 用）。
@@ -180,6 +222,20 @@ const kTraitHooks = <String, String>{
   'tea': '茶の湯の稽古で人の輪が広がりやすい（pastimes.dart）',
   'temple_kin': '主君に腹を切れと命じられたとき、叔父の寺へ駆け込む手（ways.dart）',
   'fallen': '仕官の口が通りやすい（adult.dart）',
+  // 4回目（上の六つは、1回目より前から仕組みで効いていたもの）
+  'sickly': '乳幼児と大人の病で命を落としやすい（game.dart）',
+  'hardy': '病と熱病で命を落としにくい（game.dart・childhood.dart）',
+  'amb': '下剋上の誘いが来やすく、成し遂げやすい（game.dart・adult.dart）',
+  'loyal': '主君の信頼を得やすく、主家を裏切りにくい（game.dart・adult.dart）',
+  'abacus': '働いて得る銭が増える（adult.dart）',
+  'onna': '女の身で戦に出られる（game.dart）',
+  'lefty': '先陣での手柄が少し増える（battles.dart）',
+  'cunning': '仕入れの旅（隣国・船）で当たりやすい（ways.dart）',
+  'jealous': '好敵手がいれば合戦の手柄が少し増える（battles.dart）',
+  'vengeful': '自分を狙う刺客を罠にかけやすい（ways.dart）',
+  'dialects': '仕官の口が少し通りやすく、泰平の世の関所を土地の者の顔で通る手（adult.dart・peace.dart）',
+  'sword': '子どものころの道場の稽古で武が伸びやすい（childhood.dart）',
+  'stealth': '夜討ちで、気づかれずに敵陣へ寄れる（battles.dart）',
 };
 
 /// 子どもの岐路の id。
@@ -236,6 +292,19 @@ const kTraitPrev = <String, List<String>>{
   'tr_kitsune_shrine': ['tr_kitsune_known'],
   'tr_kitsune_hunt': ['tr_kitsune_visited'],
   'tr_kitsune_fox': ['tr_kitsune_judged'],
+  // 4回目
+  'tr_mimic_plea': ['tr_mimic_done'],
+  'tr_seer_house': ['tr_seer_saw'],
+  'tr_seer_own': ['tr_seer_called'],
+  'tr_nito_duel': ['tr_nito_woke'],
+  'tr_kaizoku_toll': ['tr_kaizoku_known'],
+  'tr_kaizoku_sea': ['tr_kaizoku_passed'],
+  'tr_tenka_rumor': ['tr_tenka_seen'],
+  'tr_tenka_lord': ['tr_tenka_known'],
+  'tr_tenka_last': ['tr_tenka_met'],
+  'tr_keikoku_wish': ['tr_keikoku_seen'],
+  'tr_keikoku_ruin': ['tr_keikoku_wished'],
+  'tr_keikoku_mirror': ['tr_keikoku_ruined'],
 };
 
 /// 筋の後段 → (筋の名, 前の段から空ける年)。
@@ -283,6 +352,19 @@ const kTraitGap = <String, (String, int)>{
   'tr_kitsune_shrine': ('kitsune', 2),
   'tr_kitsune_hunt': ('kitsune', 2),
   'tr_kitsune_fox': ('kitsune', 3),
+  // 4回目
+  'tr_mimic_plea': ('mimic', 2),
+  'tr_seer_house': ('seer', 2),
+  'tr_seer_own': ('seer', 3),
+  'tr_nito_duel': ('nito', 2),
+  'tr_kaizoku_toll': ('kaizoku', 2),
+  'tr_kaizoku_sea': ('kaizoku', 2),
+  'tr_tenka_rumor': ('tenka', 2),
+  'tr_tenka_lord': ('tenka', 2),
+  'tr_tenka_last': ('tenka', 3),
+  'tr_keikoku_wish': ('keikoku', 2),
+  'tr_keikoku_ruin': ('keikoku', 2),
+  'tr_keikoku_mirror': ('keikoku', 3),
 };
 
 // ---------------------------------------------------------------- 既存の仕組みに掛ける倍率
@@ -301,7 +383,7 @@ double traitBattleGain(Game g, String role) {
   var m = 1.0;
   if (g.has('rider') && (role == 'van' || role == 'main')) m *= 1.1;
   if (g.has('gunner') && g.l.gun) m *= 1.15;
-  return m * _battleGain2(g, role);
+  return m * _battleGain2(g, role) * _battleGain4(g, role);
 }
 
 /// 合戦の場で人を説く見立てに足す値（弁舌巧み）。`battles.dart` の魅の見立てが使う。
@@ -370,6 +452,13 @@ const _firstOf = <String, String>{
   'kami': 'tr_kami_mountain',
   'imiko': 'tr_imiko_blame',
   'kitsune': 'tr_kitsune_guess',
+  // 4回目
+  'mimic': 'tr_mimic_voice',
+  'seer': 'tr_seer_shadow',
+  'nito': 'tr_nito_both',
+  'kaizoku': 'tr_kaizoku_crest',
+  'tenka': 'tr_tenka_face',
+  'keikoku': 'tr_keikoku_blade',
 };
 
 /// 特性 [trait] を持つ人にだけ出る場面。筋の段を踏んだ年を残す。
@@ -391,6 +480,8 @@ SceneDef _tr(
     final c = _chainOf(id);
     if (c != null) _stamp(g, c);
     run(g, next);
+    // 1回目・2回目の場面は、城主より上の人には書き出しだけを差し替える（`trait_scenes4.dart`）。
+    _highOpening(g, id);
   },
 );
 
@@ -530,6 +621,11 @@ List<SceneDef> buildTraitScenes() => [
   ..._uncommon3(),
   ..._rare3(),
   ..._mythic3(),
+  // 4回目（trait_scenes4.dart）
+  ..._common4(),
+  ..._uncommon4(),
+  ..._rare4(),
+  ..._mythic4(),
 ];
 
 // ---------------------------------------------------------------- よくある

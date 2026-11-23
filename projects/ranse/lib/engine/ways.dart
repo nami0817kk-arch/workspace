@@ -1093,7 +1093,8 @@ List<SceneDef> buildWayScenes() {
             return '噂は噂に過ぎなかった。';
           }),
           Choice.h('逆に刺客を罠にかける', '黒幕が分かるかもしれない', () {
-            if (g.rng.chance(clampD(.4 + l.chi / 200, .3, .85))) {
+            // 執念深い（`trait_scenes4.dart`）は、狙った者を逃がさない。
+            if (g.rng.chance(clampD(.4 + l.chi / 200 + traitTrap(g), .3, .85))) {
               l.fame += 5;
               g.setFlag('caught_assassin');
               g.mark('自分を狙う刺客を罠にかけた');

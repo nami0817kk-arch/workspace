@@ -96,7 +96,8 @@ List<FocusDef> childFocusOptions(Game g) {
       }, forced: 'c_tera'),
     if (_martial.contains(g.l.cls.id) && g.age >= 8)
       FocusDef('dojo', '道場で稽古をつけてもらう', '武芸がぐんと伸びる。荒稽古で怪我もする', (g) {
-        g.l.bu = clampInt(g.l.bu + rng.range(2, 3), 0, 99);
+        // 剣の筋（`trait_scenes4.dart`）は、道場での伸びが大きい。
+        g.l.bu = clampInt(g.l.bu + rng.range(2, 3) + (g.has('sword') ? 1 : 0), 0, 99);
         g.l.hp -= rng.chance(.25) ? 6 : 2;
         g.j(-1);
       }),

@@ -56,7 +56,7 @@ double traitRenga(Game g) => g.has('poet') ? .4 : 0;
 int traitTea(Game g) => g.has('tea') ? 1 : 0;
 
 /// 仕官の見込みに足す値（没落した名家の出。`adult.dart` の仕官）。
-double traitServeEdge(Game g) => g.has('fallen') ? .08 : 0;
+double traitServeEdge(Game g) => (g.has('fallen') ? .08 : 0) + _serveEdge4(g);
 
 /// 主君に腹を切れと命じられたとき、叔父の寺へ駆け込めるか（寺に縁者。`ways.dart` の主君の怒り）。
 bool traitTempleRefuge(Game g) => g.has('temple_kin');

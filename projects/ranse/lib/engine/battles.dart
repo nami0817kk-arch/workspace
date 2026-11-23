@@ -96,7 +96,8 @@ List<BattleSit> buildBattleSits() => [
         : '${_en(g, c)}勢と睨み合ったまま日が過ぎる。大将から、手勢を率いて夜討ちをかけよと命じられた。';
     return (t, [
       Choice.h('先頭で斬り込む', '夜討ちの一番乗りは大きな手柄。闇の中では討死もある', () {
-        final ok = _try(g, g.l.bu);
+        // 忍び足（`trait_scenes4.dart`）は、気づかれずに敵陣へ寄れる。
+        final ok = traitNightRaid(g) || _try(g, g.l.bu);
         return _fight(
           g,
           c,
@@ -108,7 +109,7 @@ List<BattleSit> buildBattleSits() => [
         );
       }),
       Choice.h('陣小屋に火を放って回る', '知恵が回れば敵は崩れる。しくじれば囲まれる', () {
-        final ok = _try(g, g.l.chi);
+        final ok = traitNightRaid(g) || _try(g, g.l.chi);
         return _fight(
           g,
           c,

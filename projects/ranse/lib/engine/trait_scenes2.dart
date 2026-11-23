@@ -47,7 +47,7 @@ double traitOldAge(Game g) => g.has('longlived') && g.age >= 50 ? .8 : 1;
 double traitHunger(Game g) => (g.has('iron_gut') ? .4 : 1) * _hunger3(g);
 
 /// 仕入れの旅で当たる見込みに足す値（堺に親類。`ways.dart`）。
-double traitTradeEdge(Game g) => g.has('sakai_kin') ? .1 : 0;
+double traitTradeEdge(Game g) => (g.has('sakai_kin') ? .1 : 0) + _tradeEdge4(g);
 
 // ======================================================================
 // 子どもの岐路（2回目）

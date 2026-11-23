@@ -260,7 +260,7 @@ bool _lowBorn(ClassDef c, bool female) => c.rank <= 2;
 
 /// 生まれつきの特性（2026-11-24 に13から100へ。4回に分けて作り、1回目で仕組みと25の特性の場面を作った）。
 /// どの特性も遊びの中で効く（能力に数字を足すだけのものは作らない。能力の上げ下げは元の13にだけ残した）。
-/// 場面のある特性は `trait_scenes.dart` の `kTraitScenesDone`（3回目で75。場面の続きは `trait_scenes2.dart`・`trait_scenes3.dart`）。
+/// 場面のある特性は `trait_scenes.dart` の `kTraitScenesDone`（4回目で百すべて。場面の続きは `trait_scenes2.dart`〜`trait_scenes4.dart`）。
 class Trait {
   const Trait(
     this.id,
@@ -308,7 +308,7 @@ final kTraits = <Trait>[
     '体が弱い。病にかかりやすく、重くなりやすい',
     fx: (a) => a.maxhp -= 30,
     w: 1.5,
-  ), // 済: 乳幼児・大人の病死（game.dart）
+  ), // 済: 乳幼児・大人の病死（game.dart）。場面は4回目（trait_scenes4.dart）
   Trait(
     'hardy',
     '頑健',
@@ -316,7 +316,7 @@ final kTraits = <Trait>[
     '体が丈夫。病にも深手にも強い',
     fx: (a) => a.maxhp += 20,
     w: 1.5,
-  ), // 済: 乳幼児・大人の病死・熱病（game.dart・childhood.dart）
+  ), // 済: 乳幼児・大人の病死・熱病（game.dart・childhood.dart）。場面は4回目（trait_scenes4.dart）
   Trait(
     'glutton',
     '大食い',
@@ -353,7 +353,7 @@ final kTraits = <Trait>[
     TraitTier.common,
     '一日に人の倍の道を歩く。旅も使い走りも苦にしない',
   ), // 済（3回目）: 場面と効き方は trait_scenes3.dart
-  Trait('big', '大柄', TraitTier.common, '人より頭ひとつ大きい。目立つぶん、狙われもする'), // 済（3回目）: 場面と効き方は trait_scenes3.dart
+  Trait('big', '大柄', TraitTier.common, '人より頭ひとつ大きい。目立つぶん、狙われもする'), // 済（3回目）: 場面と効き方は trait_scenes3.dart（女性の場面は4回目）
   Trait(
     'small',
     '小柄',
@@ -372,13 +372,13 @@ final kTraits = <Trait>[
     '野心家',
     TraitTier.common,
     '上を狙う気性。下剋上の誘いが来やすく、成し遂げやすい',
-  ), // 済: 下剋上（game.dart・adult.dart）
+  ), // 済: 下剋上（game.dart・adult.dart）。場面は4回目（trait_scenes4.dart）
   Trait(
     'loyal',
     '義理堅い',
     TraitTier.common,
     '恩を忘れない。主君の信頼を得やすいが、主家を裏切りにくい',
-  ), // 済: 下剋上・主君の信頼（game.dart・adult.dart）
+  ), // 済: 下剋上・主君の信頼（game.dart・adult.dart）。場面は4回目（trait_scenes4.dart）
   Trait(
     'coward',
     '臆病',
@@ -408,7 +408,7 @@ final kTraits = <Trait>[
     '好色',
     TraitTier.common,
     '色恋に目がない。縁も揉め事も向こうからやって来る',
-  ), // 2回目: 縁談・奥
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'frugal',
     '倹約家',
@@ -420,7 +420,7 @@ final kTraits = <Trait>[
     '怠け者',
     TraitTier.common,
     '楽な道を選びたがる。無理をしないので長持ちはする',
-  ), // 2回目: 重点・普請
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'stubborn',
     '頑固',
@@ -456,13 +456,13 @@ final kTraits = <Trait>[
     '見栄っ張り',
     TraitTier.common,
     '人前で格好をつけたがる。身の丈を越えた買い物もする',
-  ), // 2回目: 年賀・茶の湯
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'shy',
     '人見知り',
     TraitTier.common,
     '知らない人の前では口が重い。親しい者とは深く結ばれる',
-  ), // 2回目: 縁のある人
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'gambler',
     '博打好き',
@@ -488,7 +488,7 @@ final kTraits = <Trait>[
     TraitTier.common,
     '勘定に明るい。政に秀で、稼ぎも増える',
     fx: (a) => a.sei += 15,
-  ), // 済: 政・稼ぎ（adult.dart）
+  ), // 済: 政・稼ぎ（adult.dart）。場面は4回目（trait_scenes4.dart）
   Trait(
     'beauty',
     '人好きのする顔',
@@ -532,13 +532,13 @@ final kTraits = <Trait>[
     '痣がある',
     TraitTier.common,
     '顔に目立つ痣がある。一度で人に覚えられ、気味悪がられもする',
-  ), // 2回目: 人違い・縁談
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'big_family',
     '親類が多い',
     TraitTier.common,
     'あちこちに叔父や従兄がいる。頼る先も頼られる先も多い',
-  ), // 2回目: 頼る先・無心
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   // ================================================================ 珍しい（32）
   // ---- 体
   Trait(
@@ -576,7 +576,7 @@ final kTraits = <Trait>[
     '左利き',
     TraitTier.uncommon,
     '刀も箸も左で持つ。打ち合いで相手の調子を狂わせる',
-  ), // 2回目: 一騎打ち・試合
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'longlived',
     '長命の血筋',
@@ -601,7 +601,7 @@ final kTraits = <Trait>[
     '悪知恵',
     TraitTier.uncommon,
     '人を出し抜く手をすぐ思いつく。使えば得も恨みも大きい',
-  ), // 2回目: 調略・商い
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'calm',
     '沈着',
@@ -619,13 +619,13 @@ final kTraits = <Trait>[
     '嫉妬深い',
     TraitTier.uncommon,
     '人の出世や幸せが妬ましい。それを糧に励みもする',
-  ), // 2回目: 好敵手・奥
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'vengeful',
     '執念深い',
     TraitTier.uncommon,
     '受けた仇を決して忘れない。何年かけても返す',
-  ), // 2回目: 仇討ち
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   // ---- 才
   Trait(
     'prodigy',
@@ -692,7 +692,7 @@ final kTraits = <Trait>[
     '国言葉に通じる',
     TraitTier.uncommon,
     '諸国の言葉を聞き分け、真似られる。旅先でもよそ者と見られない',
-  ), // 2回目: 旅・間者
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'tactics',
     '兵法の勘',
@@ -710,13 +710,13 @@ final kTraits = <Trait>[
     '剣の筋',
     TraitTier.uncommon,
     '太刀筋がよい。師につけばすぐに目録をもらう',
-  ), // 2回目: 道場・試合
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'stealth',
     '忍び足',
     TraitTier.uncommon,
     '足音を立てずに歩ける。誰にも気づかれずに近づける',
-  ), // 2回目: 忍び・夜討ち
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   // ---- 生まれ
   Trait(
     'onna',
@@ -726,7 +726,7 @@ final kTraits = <Trait>[
     fx: (a) => a.bu += 12,
     ok: _onlyF,
     w: 6,
-  ), // 済: 戦える（game.dart ほか）
+  ), // 済: 戦える（game.dart ほか）。場面は4回目（trait_scenes4.dart）
   Trait(
     'fallen',
     '没落した名家の出',
@@ -818,7 +818,7 @@ final kTraits = <Trait>[
     '声色',
     TraitTier.rare,
     '人の声をそっくり真似られる。使い方しだいで身を助ける',
-  ), // 2回目: 忍び・偽り
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait('deathless', '不死身', TraitTier.rare, '大きな傷を負っても、なぜか生き延びる'), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'mosugo',
@@ -831,8 +831,8 @@ final kTraits = <Trait>[
     '見鬼',
     TraitTier.rare,
     '人に見えないものが見えると言う。恐れられ、頼られもする',
-  ), // 2回目: 物の怪・祈祷
-  Trait('nito', '二刀の才', TraitTier.rare, '左右の手で同じように刀を使う'), // 2回目: 一騎打ち・武芸者
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
+  Trait('nito', '二刀の才', TraitTier.rare, '左右の手で同じように刀を使う'), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'dowser',
     '水脈を当てる',
@@ -844,7 +844,7 @@ final kTraits = <Trait>[
     '海賊衆の血',
     TraitTier.rare,
     '父祖は瀬戸内の海賊衆だった。海の者に顔がきく',
-  ), // 2回目: 船・海
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'kamikakushi',
     '神隠しの子',
@@ -876,7 +876,7 @@ final kTraits = <Trait>[
     '天下の相',
     TraitTier.mythic,
     '人相見が「天下を取る相だ」と言って青ざめた',
-  ), // 3回目以降: 一生の筋
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
   Trait(
     'kensei',
     '剣聖の器',
@@ -900,7 +900,7 @@ final kTraits = <Trait>[
     '傾国の美貌',
     TraitTier.mythic,
     '人の運命を狂わせるほど美しい。望まぬ縁も引き寄せる',
-  ), // 3回目以降: 一生の筋
+  ), // 済（4回目）: 場面と効き方は trait_scenes4.dart
 ];
 
 /// 女武者（女だけに付く。`Game.canFight`）。
