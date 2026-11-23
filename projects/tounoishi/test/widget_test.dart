@@ -91,6 +91,23 @@ void main() {
     }
   });
 
+  test('バグ直し（0.7.20・試作 v34）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'o.flT=now+160', // 点滅の値がツボミの養分を上書きしない
+      "g.title=true;showTitle();", // メニューでタイトルに戻ると止まる
+      "function saveKey(", // ストーリー・VS は別の保存枠
+      "id=\"tcontm\"", // その続きから
+      "g.winSave=1;saveGame();", // 勝った直後も保存
+      "(?:_(moss|water|rock|ice|lava|mag))", // 氷・溶岩の層の絵
+      "if(g.cr.length>=CAP){eg.hatch=g.t+5;continue;}", // 塔がいっぱいなら卵は待つ
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+    // ランクや設定も localStorage に直接書かず、アプリ側の保存を通す
+    expect(html, isNot(contains("localStorage.setItem('tou-")));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること

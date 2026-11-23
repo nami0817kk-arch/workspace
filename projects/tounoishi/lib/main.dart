@@ -33,8 +33,21 @@ bool isExternalLink(String url) => url.startsWith('https://') || url.startsWith(
 /// 裏に回る時にゲームへ送る JS（止めて保存。古いゲームなら保存だけ）。
 const pauseJs = 'window.__pause ? window.__pause() : (window.__saveNow && window.__saveNow())';
 
-/// ゲームが保存する値の名前（塔の途中経過・殿堂・自己ベスト・図鑑）。
-const storeKeys = ['tou-save', 'tou-hall', 'tou-best', 'tou-dex'];
+/// ゲームが保存する値の名前（塔の途中経過・ストーリーと VS の途中経過・殿堂・自己ベスト・図鑑・
+/// 面ごとのランク・ストーリー全クリア・チャレンジ・ヒント・音・VS の勇者）。
+const storeKeys = [
+  'tou-save',
+  'tou-save-m',
+  'tou-hall',
+  'tou-best',
+  'tou-dex',
+  'tou-srank',
+  'tou-story',
+  'tou-chal',
+  'tou-tut',
+  'tou-snd',
+  'tou-vs',
+];
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
