@@ -1248,8 +1248,11 @@ extension GameActions on Game {
   void liarCheck() {
     if (hasT('liar') && rnd() < .15) {
       scandal = 12;
+      // 味方が持っている分までしか市場に戻らない（5%未満のときに5%を足すと合計が100%を超える）。
+      // extras を切ったときは試作と同じ数字のまま
+      final back = extras ? math.min(5.0, sh.ally) : 5.0;
       sh.ally = math.max(0, sh.ally - 5);
-      sh.float += 5;
+      sh.float += back;
       log.add(LogEntry(M('株の裏工作がばれ、信用を失いました'), 'bad', year, q));
     }
   }
