@@ -20,14 +20,27 @@ extension GameStateSquad on GameState {
   /// 営業ブーストの残り(節数)。
   int get marketingBoostWeeks => _save?.marketingBoostWeeks ?? 0;
 
+  /// 営業ブーストが上限まで貯まっていて、受け取っても入らないか。
+  ///
+  /// 広告を出す前にこれを見る(MonetizationController.claimReward の
+  /// bankFull)。見ずに出していた頃は、上限で広告を見ると回数だけ減って
+  /// 何も入らなかった。
+  bool get marketingBoostFull => marketingBoostWeeks >= marketingBoostCap;
+
+  /// 上限のとき、あと何節ぶん使えば次を受け取れるか。上限でなければ 0。
+  int get marketingBoostWeeksUntilRoom =>
+      marketingBoostFull ? marketingBoostWeeks - marketingBoostCap + 1 : 0;
+
   /// リワード広告の視聴、またはサポーター購入による特典を受け取る。
   /// 次の1節だけ、チケット・スポンサー・グッズの収入が上がる。
   ///
   /// 広告を見せたか・購入済みかの判定は MonetizationController の責務で、
   /// ここはゲームの状態を触るだけ。受け取った事実はクラブニュースに残す。
-  /// 戻り値は受け取り後の残り節数。
+  /// 戻り値は受け取り後の残り節数。上限のときは何も変えない
+  /// (入っていないのに「強化した」とニュースに残さない)。
   int claimMarketingBoost() {
     if (_save == null) return 0;
+    if (marketingBoostFull) return _save!.marketingBoostWeeks;
     _save!.marketingBoostWeeks =
         (_save!.marketingBoostWeeks + 1).clamp(0, marketingBoostCap);
     _logNews(Tr.pick('営業を強化した。次の1節は収入が増える。',
@@ -45,8 +58,14 @@ extension GameStateSquad on GameState {
   ///
   /// 購入が成立したかの判定は MonetizationController の責務で、ここは
   /// ゲームの状態を触るだけ。特典と同じく、増えた理由をニュースに残す。
+  ///
+  /// **クラブを手放すよう迫られているあいだは渡さない(0 を返す)。**
+  /// この間に入れた資金は、手放して買い直したときに資金が初期の額へ
+  /// 戻されるので、そのまま消えていた(buyClub / buyClubInCountry)。
+  /// 預かりに残しておけば、新しいクラブに移った時点で見張りが渡す。
   int claimPurchasedFunds(FundsPack pack) {
     if (_save == null) return 0;
+    if (isSaleForced) return 0;
     final amount = purchasedFundsAmount(pack);
     _book(LedgerCategory.other, amount);
     _logNews(Tr.pick('${pack.label}で${formatMoney(amount)}をクラブ資金に追加した。',

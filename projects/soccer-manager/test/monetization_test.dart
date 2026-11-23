@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
@@ -7,6 +11,8 @@ import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
 import 'package:soccer_manager/monetization/reward_offer.dart';
 import 'package:soccer_manager/state/game_state.dart';
+import 'package:soccer_manager/widgets/reward_funds_card.dart';
+import 'package:soccer_manager/widgets/supporter_section.dart';
 
 /// 常に広告が用意できていて、指定した結果を返す差し替え用の実装。
 class _FakeAdService implements AdService {
@@ -103,10 +109,11 @@ class _FakePurchaseService implements PurchaseService {
 
 Future<MonetizationController> _build({
   _FakeAdService? ads,
+  _HeldAdService? heldAds,
   _FakePurchaseService? purchases,
 }) async {
   final controller = MonetizationController(
-    adService: ads ?? _FakeAdService(),
+    adService: heldAds ?? ads ?? _FakeAdService(),
     purchases: purchases ?? _FakePurchaseService(),
   );
   await controller.initialize();
@@ -216,7 +223,10 @@ void main() {
       expect(gameState.save!.newsLog.first.text, contains('営業'));
     });
 
-    test('営業ブーストは上限まで貯まり、次の節の収入だけ増える', () async {
+    test('営業ブーストが上限のときは広告が出ず、回数も減らない。次の節の収入だけ増える',
+        () async {
+      // 以前は上限を超えて受け取れて(広告も出て)、3節で黙って止まっていた。
+      // 利用者から見ると「広告を見たのに入らず、回数だけ減った」。
       final gameState = GameState();
       await gameState.startNewGame('テストFC');
       final id = gameState.save!.userTeamId;
@@ -224,9 +234,28 @@ void main() {
       // 放映権は営業では増えない。
       final broadcast = gameState.weeklyIncomeParts(id).broadcast;
 
-      for (var i = 0; i < GameStateSquad.marketingBoostCap + 2; i++) {
+      // 前の日までに上限まで貯めてあり、今日の回数はまだ残っている場面。
+      for (var i = 0; i < GameStateSquad.marketingBoostCap; i++) {
         gameState.claimMarketingBoost();
       }
+      final ads = _FakeAdService();
+      final money = await _build(ads: ads);
+      expect(money.remainingToday, greaterThan(0));
+      expect(gameState.marketingBoostWeeks, GameStateSquad.marketingBoostCap);
+      expect(gameState.marketingBoostFull, isTrue);
+      expect(gameState.marketingBoostWeeksUntilRoom, 1);
+
+      final shown = ads.showCount;
+      final used = money.claimedToday;
+      final news = gameState.save!.newsLog.length;
+      expect(await money.claimReward(bankFull: gameState.marketingBoostFull),
+          ClaimResult.bankFull);
+      expect(ads.showCount, shown, reason: '上限なのに広告を出している');
+      expect(money.claimedToday, used, reason: '上限なのに回数を減らしている');
+      // ゲーム側も、上限で呼ばれたら何も変えない(ニュースにも残さない)。
+      expect(gameState.claimMarketingBoost(), GameStateSquad.marketingBoostCap);
+      expect(gameState.save!.newsLog.length, news,
+          reason: '入っていないのに「営業を強化した」と残している');
       expect(gameState.marketingBoostWeeks, GameStateSquad.marketingBoostCap);
       expect(
           gameState.weeklyIncomeFor(id),
@@ -270,4 +299,171 @@ void main() {
       expect(ads.interstitialShowCount, 0);
     });
   });
+
+  group('営業ブーストの上限', () {
+    test('上限なら、結果を後から返す広告でも表示を頼まずに断る', () async {
+      // 本物の広告は show がすぐ返り、結果は後から来る(app-pitfalls の9)。
+      // 断る判定が広告の結果待ちの後ろにあると、表示だけ始まってしまう。
+      final ads = _HeldAdService();
+      final money = await _build(ads: null, heldAds: ads);
+
+      ClaimResult? result;
+      final claim =
+          money.claimReward(bankFull: true).then((r) => result = r);
+      await Future<void>.delayed(Duration.zero);
+      expect(ads.showCount, 0, reason: '上限なのに広告の表示を頼んでいる');
+      await claim;
+      expect(result, ClaimResult.bankFull);
+      expect(money.claimedToday, 0);
+      expect(money.remainingToday, RewardOffer.dailyLimitFree);
+    });
+
+    test('上限の1つ手前なら、後から届く結果を待って受け取り、上限で止まる', () async {
+      final gameState = GameState();
+      await gameState.startNewGame('手前FC');
+      for (var i = 0; i < GameStateSquad.marketingBoostCap - 1; i++) {
+        gameState.claimMarketingBoost();
+      }
+      expect(gameState.marketingBoostFull, isFalse);
+
+      final ads = _HeldAdService();
+      final money = await _build(heldAds: ads);
+      ClaimResult? result;
+      final claim = money
+          .claimReward(bankFull: gameState.marketingBoostFull)
+          .then((r) => result = r);
+      await Future<void>.delayed(Duration.zero);
+      expect(ads.showCount, 1);
+      expect(result, isNull, reason: '広告が閉じる前に結果が出ている');
+
+      ads.finish(watched: true);
+      await claim;
+      expect(result, ClaimResult.granted);
+      gameState.claimMarketingBoost();
+      expect(gameState.marketingBoostWeeks, GameStateSquad.marketingBoostCap);
+      expect(gameState.marketingBoostFull, isTrue);
+
+      // 次はもう広告を出さない。
+      expect(await money.claimReward(bankFull: gameState.marketingBoostFull),
+          ClaimResult.bankFull);
+      expect(ads.showCount, 1);
+      expect(money.claimedToday, 1);
+    });
+
+    test('サポーターでも上限なら断り、回数を減らさない', () async {
+      final money = await _build();
+      await money.buySupporter();
+      expect(money.isSupporter, isTrue);
+
+      expect(await money.claimReward(bankFull: true), ClaimResult.bankFull);
+      expect(money.claimedToday, 0);
+      expect(money.remainingToday, RewardOffer.dailyLimitSupporter);
+    });
+
+    testWidgets('上限のとき、カードのボタンは押せず、理由と残りが出る', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final ads = _HeldAdService();
+      late final MonetizationController money;
+      late final GameState gameState;
+      await tester.runAsync(() async {
+        money = await _build(heldAds: ads);
+        gameState = GameState();
+        await gameState.startNewGame('満杯FC');
+      });
+      for (var i = 0; i < GameStateSquad.marketingBoostCap; i++) {
+        gameState.claimMarketingBoost();
+      }
+
+      await tester.pumpWidget(MultiProvider(
+        providers: [
+          ChangeNotifierProvider<GameState>.value(value: gameState),
+          ChangeNotifierProvider<MonetizationController>.value(value: money),
+        ],
+        child: const MaterialApp(
+          home: Scaffold(body: SingleChildScrollView(child: RewardFundsCard())),
+        ),
+      ));
+      await tester.pump();
+
+      expect(
+          find.text('貯められるのは${GameStateSquad.marketingBoostCap}節まで'
+              '（あと1節ぶん使うと見られます）'),
+          findsOneWidget);
+      final button = tester.widget<ButtonStyleButton>(
+          find.byWidgetPredicate((w) => w is ButtonStyleButton));
+      expect(button.onPressed, isNull, reason: '上限なのに押せる');
+
+      await tester.tap(find.byWidgetPredicate((w) => w is ButtonStyleButton));
+      await tester.pump();
+      expect(ads.showCount, 0, reason: '上限なのに広告を出している');
+      expect(money.claimedToday, 0);
+
+      await tester.runAsync(gameState.flushPendingSave);
+      await tester.pump(const Duration(seconds: 5));
+    });
+  });
+
+  group('価格の表示', () {
+    test('ストアの半角の「¥」は全角に置き換える', () {
+      // 同梱フォント(NotoSansJP・ShipporiMincho)には U+00A5 が無い。
+      expect(MonetizationController.displayPrice('¥480'), '￥480');
+      expect(MonetizationController.displayPrice('￥480'), '￥480');
+      expect(MonetizationController.displayPrice('\$4.99'), '\$4.99');
+    });
+
+    testWidgets('サポーターの購入ボタンは全角の「￥」で出る', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      late final MonetizationController money;
+      await tester.runAsync(() async => money = await _build());
+      expect(money.priceLabel, '￥480');
+
+      await tester.pumpWidget(
+        ChangeNotifierProvider<MonetizationController>.value(
+          value: money,
+          child: const MaterialApp(
+            home: Scaffold(
+                body: SingleChildScrollView(child: SupporterSection())),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('サポーターになる（￥480）'), findsOneWidget);
+      expect(find.textContaining('¥'), findsNothing,
+          reason: '同梱フォントに無い半角の「¥」が画面に出ている');
+      expect(find.text('課金と広告'), findsOneWidget);
+    });
+  });
+}
+
+/// 本物の広告と同じく、表示を頼んだ後で結果が届く差し替え。
+///
+/// [finish] を呼ぶまで [showRewardedAd] の結果は返らない。
+class _HeldAdService implements AdService {
+  int showCount = 0;
+  Completer<bool>? _gate;
+
+  void finish({required bool watched}) => _gate!.complete(watched);
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  bool get isRewardedAdReady => true;
+
+  @override
+  Future<bool> showRewardedAd() {
+    showCount++;
+    _gate = Completer<bool>();
+    return _gate!.future;
+  }
+
+  @override
+  bool get isInterstitialAdReady => false;
+
+  @override
+  Future<void> showInterstitialAd() async {}
+
+  @override
+  void dispose() {}
 }

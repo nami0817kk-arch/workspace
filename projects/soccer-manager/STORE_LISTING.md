@@ -12,7 +12,7 @@
 | アプリ名（短縮・ホーム画面表示） | サカマネ |
 | カテゴリ | ゲーム > スポーツ / シミュレーション |
 | 対象年齢 | 全年齢（暴力表現・実写、ギャンブル要素なし。クラブ経営の「融資」「スポンサー契約」はすべて架空のゲーム内通貨） |
-| 価格モデル | 無料（任意視聴のリワード広告 + 買い切りのサポーター課金 + 消費型の資金購入） |
+| 価格モデル | 無料（任意視聴のリワード広告で営業ブースト + シーズンの切り替わりの全画面広告 + 買い切りのサポーター課金）。資金の購入は 1.2.0 で画面から外した |
 | 対応言語 | 日本語・英語（アプリ内で切り替え可。既定は端末の設定に従う） |
 | プライバシーポリシー | https://soccer-manager.pages.dev/legal/privacy.html |
 | 利用規約 | https://soccer-manager.pages.dev/legal/terms.html |
@@ -85,12 +85,15 @@
 
 進行状況は端末内に保存されます。オンラインのアカウント登録は不要です。
 
-資金を受け取れる動画広告は「見たい人だけ」が対象で、一度も見なくてもゲームは
-最後まで遊べます。全画面広告はシーズンの切り替わりで1回だけ表示され、試合中や
-メニュー操作には割り込みません。バナー広告はありません。
-サポーター（買い切り）を購入すると全画面広告は表示されなくなります。
-アプリ内でクラブ資金を購入することもできます（任意・回数制限なし）。
-購入しなくても最後まで遊べますが、購入するとクラブを早く強くできます。
+営業を強化できる動画広告は「見たい人だけ」が対象で、自分から選んだときだけ
+再生されます。1日3回まで、見ると次の1節だけ収入（放映権を除く）が1.5倍に
+なります。一度も見なくてもゲームは最後まで遊べます。
+全画面広告はシーズンの切り替わりで1回だけ表示され、試合中やメニュー操作には
+割り込みません。バナー広告はありません。
+サポーター（買い切り）を購入すると、広告を見ずに同じ営業の強化ができ、
+1日の回数が3回から5回に増え、全画面広告も表示されなくなります。
+月額ではありません。サポーター自体は、選手の成長や試合の勝率を変えるものでは
+ありません。
 ```
 
 > **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
@@ -497,11 +500,15 @@ Top scorers, player of the season and a team of the season along the way.
 
 Your progress is saved on your device. No account, no sign-in.
 
-The rewarded video is there for people who want it; you can finish the game
-without watching a single one. One full-screen ad appears when a season rolls
-over, never during a match or while you are in the menus. There are no banners.
-Buying Supporter removes the full-screen ad. You can also buy club funds if you
-want to grow faster, but you never have to.
+The video ads that boost your marketing play only when you choose to watch
+them. Up to 3 a day, each one makes the next matchday's income (excluding TV
+money) 1.5 times higher. You can finish the game without watching a single one.
+One full-screen ad appears when a season rolls over, never during a match or
+while you are in the menus. There are no banners.
+Supporter is a one-off purchase: you get the same marketing boost without ads,
+your daily limit rises from 3 to 5, and the full-screen ad between seasons
+stops appearing. It is not a subscription, and it does not change player
+growth or your chances in a match.
 ```
 
 ## キーワード（App Store キーワードフィールド、100字以内目安）
@@ -673,11 +680,14 @@ App Preview は「アプリが動いている様子」であることを求め�
 - [ ] コンテンツのレーティング アンケートに回答した
 - [ ] ターゲット層と広告の申告で**「広告あり」**を選んだ
 - [ ] データセーフティで「広告 ID」「デバイスまたはその他の ID」の収集を申告した
-- [ ] アプリ内課金の商品を4件登録した（IDを1文字も違えないこと）
+- [ ] アプリ内課金の商品を登録した（IDを1文字も違えないこと）。**いま画面から
+      売っているのはサポーターの1件だけ**（`lib/widgets/supporter_section.dart`）
       - `soccer_manager_supporter`（**非消費型**）
-      - `soccer_manager_funds_small`（**消費型**）
-      - `soccer_manager_funds_medium`（**消費型**）
-      - `soccer_manager_funds_large`（**消費型**）
+      - 資金パック3件（`soccer_manager_funds_small` / `soccer_manager_funds_medium` /
+        `soccer_manager_funds_large`、**消費型**）は 1.2.0 で画面から外した
+        （`FundsPackCard` はどの画面にも置いていない）。**新しく登録しない。**
+        コードは、承認待ち（Ask to Buy）や落ちて届き損ねた購入がストアから
+        送られてきたときに受け取るためだけに残している
 - [ ] AdMob のアプリIDと広告ユニットIDを自分のものに差し替えた
       （既定は Google のテスト用ID。差し替え忘れると収益が発生しない）
 - [ ] プライバシーポリシーURLを登録した（必須。未入力だと公開できない）
@@ -695,13 +705,16 @@ App Preview は「アプリが動いている様子」であることを求め�
 - [ ] IPA をアップロードし、TestFlight にビルドが出たことを確認した
 - [ ] App プライバシーで「識別子 > デバイス ID」を
       「サードパーティ広告」の目的で申告した
-- [ ] アプリ内課金の商品を4件登録した（IDを1文字も違えないこと）
+- [ ] アプリ内課金の商品を登録した（IDを1文字も違えないこと）。**いま画面から
+      売っているのはサポーターの1件だけ**（`lib/widgets/supporter_section.dart`）
       - `soccer_manager_supporter`（**非消費型**）
-      - `soccer_manager_funds_small`（**消費型**）
-      - `soccer_manager_funds_medium`（**消費型**）
-      - `soccer_manager_funds_large`（**消費型**）
+      - 資金パック3件（`soccer_manager_funds_small` / `soccer_manager_funds_medium` /
+        `soccer_manager_funds_large`、**消費型**）は 1.2.0 で画面から外した。
+        **新しく登録しない。** App Store Connect に既にある分は、コードが
+        ストアから届いた購入を受け取れるように残してある（承認待ちや、落ちて
+        届き損ねたぶん）。販売を止めるかどうかはストアの画面で決める
 - [ ] 「購入の復元」導線が動くことを確認した（審査要件）
-      ※ 復元で戻るのは非消費型のサポーターのみ。資金は消費型なので戻らない
+      ※ 復元で戻るのは非消費型のサポーターのみ
 - [ ] 年齢制限レーティングのアンケートに回答した
 - [ ] サポートURL・マーケティングURLを登録した
 - [ ] キーワード（100字以内）を上記から転記した

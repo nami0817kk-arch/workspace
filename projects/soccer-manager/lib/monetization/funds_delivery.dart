@@ -40,10 +40,15 @@ Future<int> _deliverPendingFundsUnlocked(
   GameState gameState,
 ) async {
   if (!gameState.hasSave) return 0;
+  // クラブを手放すよう迫られているあいだは渡さない。買い直すと資金が
+  // 初期の額に戻されるので、ここで入れたぶんは消える。新しいクラブに
+  // 移ってから渡す(預かりはそのまま残る)。
+  if (gameState.isSaleForced) return 0;
   var total = 0;
   for (final pack in [...money.undeliveredFundsPacks]) {
     final amount = gameState.claimPurchasedFunds(pack);
-    // 0 が返るのはセーブが無いときだけ。預かったまま次の機会に回す。
+    // 0 が返るのはセーブが無いとき・手放しを迫られているときだけ。
+    // 預かったまま次の機会に回す。
     if (amount <= 0) break;
     total += amount;
     await money.markFundsPackDelivered(pack);
