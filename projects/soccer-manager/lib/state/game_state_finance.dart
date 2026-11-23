@@ -1426,6 +1426,7 @@ extension GameStateFinance on GameState {
   /// 1節あたりの観客収入の上限(万円)。1年で「入る人数([expectedAttendance])
   /// × ホームの試合の数 × 1人の単価([gateRevenuePerFan])× 値段の倍率」に
   /// なるよう、節の数で均す(観客収入は毎節、平均として入れているため)。
+  /// 試合日のイベントの上乗せは、この上限の外で掛ける。
   int get gateCapPerMatchday {
     final save = _save;
     if (save == null) return 0;
@@ -1486,13 +1487,16 @@ extension GameStateFinance on GameState {
             userAttendanceFactor *
             _save!.ticketPricing.revenueMultiplier *
             FacilityInvestmentEngine.gateMultiplier(_save!.facilityMomentum) *
-            (activeMatchdayPromo?.gateMultiplier ?? 1.0) *
             commercialMultiplier *
             scale)
         .round();
     // 入る人数 × 1人の単価で頭打ちにする(席とファンの需要より多くは
-    // 払われない)。
-    matchdayIncome = min(matchdayIncome, gateCapPerMatchday);
+    // 払われない)。試合日のイベントの上乗せは頭打ちの後に掛ける(お金を
+    // 払った催しで場内の売上が伸びるぶんは、ふだんの単価の外にある。
+    // 頭打ちの前に掛けると、上限に届いているクラブでは何も生まなかった)。
+    matchdayIncome = (min(matchdayIncome, gateCapPerMatchday) *
+            (activeMatchdayPromo?.gateMultiplier ?? 1.0))
+        .round();
     // 2部リーグは1部より観客動員が少ない(userAttendanceFactorに反映済み)。
     final sponsorIncome = (((_save!.sponsorDeal?.weeklyIncome ?? 0) +
                 (_save!.namingDeal?.weeklyIncome ?? 0) +

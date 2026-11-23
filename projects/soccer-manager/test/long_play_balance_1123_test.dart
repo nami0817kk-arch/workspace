@@ -132,6 +132,17 @@ void main() {
       expect(gate, lessThanOrEqualTo((cap * 1.3).round()));
     });
 
+    test('上限に届いていても、試合日のイベントを打てば観客収入は増える', () async {
+      final gs = await newGame();
+      final s = gs.save!;
+      s.budget = 500000;
+      s.fanDemand = 3000;
+      final id = s.userTeamId;
+      final capped = gs.weeklyIncomeParts(id).gate;
+      expect(await gs.setMatchdayPromo('light_up'), isTrue);
+      expect(gs.weeklyIncomeParts(id).gate, greaterThan(capped));
+    });
+
     test('順位の上乗せは1つにつき6', () {
       expect(GameStateFinance.gateRankStep, 6);
     });
