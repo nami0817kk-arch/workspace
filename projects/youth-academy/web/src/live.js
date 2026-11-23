@@ -284,17 +284,34 @@
       const r = this.restart;
       const b = this.ball;
       if (!r.taker) r.taker = this.pickTaker(r);
-      if (!r.placed) {
-        // ボールは置き場所へ（転がして戻す絵は画面の側。ここでは置く）
+      if (!r.placed && this.t >= (r.placeAt || 0)) {
+        // ボールは置き場所へ（得点のあとは喜びが終わるまで網の中に残す）
         b.x = r.x;
         b.y = r.y;
+        b.z = 0;
         r.placed = true;
       }
+      const cel = r.celeb && this.t < r.celeb.end ? r.celeb : null;
       for (const q of this.P) {
+        if (cel && q.sd === cel.sd && (q.id === cel.pid || cel.mates.indexOf(q.id) >= 0)) {
+          // 得点の喜び：決めた子はコーナーの方へ走り、近くの味方が駆け寄る
+          const sc = this.byId[cel.pid];
+          if (q.id === cel.pid) {
+            q.tx = cel.spot[0];
+            q.ty = cel.spot[1];
+            q.urg = 0.8;
+          } else if (sc) {
+            const a = (cel.mates.indexOf(q.id) / Math.max(1, cel.mates.length)) * Math.PI * 2;
+            q.tx = sc.x + Math.cos(a) * 1.6;
+            q.ty = sc.y + Math.sin(a) * 1.6;
+            q.urg = 0.85;
+          }
+          continue;
+        }
         const [tx, ty] = this.setPos(q);
         q.tx = tx;
         q.ty = ty;
-        q.urg = q === r.taker ? 0.85 : 0.55;
+        q.urg = q === r.taker ? 0.85 : cel ? 0.3 : 0.55;
       }
       if (this.t < r.at) return;
       const tk = r.taker;
@@ -1363,9 +1380,19 @@
       this.ball.owner = null;
       this.ball.vx *= 0.2;
       this.ball.vy *= 0.2;
-      // キックオフは失点した側
+      // キックオフは失点した側。喜び（7秒）のあいだボールは網の中、そのあと並び直す（時計は進む）
+      const bx = this.ball.x;
+      const by = this.ball.y;
       this.kickoff(sd === 'home' ? 'away' : 'home', false);
-      this.restart.at = this.t + 30; // 喜び・並び直し（時計は進む）
+      this.ball.x = bx;
+      this.ball.y = by;
+      this.restart.at = this.t + 30;
+      this.restart.placeAt = this.t + 6;
+      if (scorer) {
+        const spot = [scorer.x < W / 2 ? 3 : W - 3, sd === 'home' ? L - 3 : 3];
+        const mates = this.P.filter((r) => r.sd === sd && r !== scorer && !r.gk).sort((a, c) => hyp(a.x - scorer.x, a.y - scorer.y) - hyp(c.x - scorer.x, c.y - scorer.y)).slice(0, 5).map((r) => r.id);
+        this.restart.celeb = { sd, pid: scorer.id, spot, mates, end: this.t + 7 };
+      }
     }
     // 後半の始め（前半のキックオフでなかった側）
     // 時計は前半の追加時間のあとも続けて数える（記録の時刻が戻らないように。engine が分に直す）

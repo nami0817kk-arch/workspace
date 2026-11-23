@@ -89,7 +89,8 @@
       disp[id] = [x, y];
       vel[id] = span > 1e-6 ? [(f1.p[j * 2] - f0.p[j * 2]) / span, (f1.p[j * 2 + 1] - f0.p[j * 2 + 1]) / span] : [0, 0];
       const w = lv.who[id] || { sd: 'home', gk: false };
-      base[id] = [x, y, w.sd === 'home' ? m.home : m.away, w.gk ? 0 : 1, null];
+      const cur = lv.byId[id];
+      base[id] = [x, y, w.sd === 'home' ? m.home : m.away, cur ? cur.i : w.gk ? 0 : 50, cur ? cur.s : null]; // [3] は並びの番号（0＝GK。横の名簿の順）
       // 大きく飛んだ（置き直し）
       const o = this.disp && this.disp[id];
       if (o && Math.hypot(o[0] - x, o[1] - y) > 6 && !this.scene) this.cut = Math.max(this.cut || 0, 0.3);
