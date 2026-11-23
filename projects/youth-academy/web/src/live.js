@@ -1071,6 +1071,7 @@
       const se = this.ev('shot', { pid: q.id, sd, xg: xgv, x: b.x, y: b.y, head, pk: !!o.pk, fk: !!o.fk, assist });
       this.decideSave();
       const ss = this.shot;
+      se.snap = this.P.map((r) => [r.id, r.x, r.y]); // 場面の図のための、打った瞬間の全員の位置
       if (ss) { se.onT = !!ss.onT; se.save = !!ss.save; se.need = ss.need; se.reach = ss.reach; se.pSave = ss.pSave; se.meet = ss.meet; se.gkx = ss.gk ? ss.gk.x : null; se.cross = ss.cross; }
     }
     // シュートが枠に向かうなら、GK が届くかを決めておく（届く子は飛ぶ）
@@ -1500,7 +1501,7 @@
       q.dy = q.y;
       this.flight = null;
       this.shot = null;
-      this.ev('ctrl', { pid: q.id, sd: q.sd });
+      this.ev('ctrl', { pid: q.id, sd: q.sd, x: q.x, y: q.y });
     }
     inOwnBox(q) {
       const u = this.uOf(q, q.y);

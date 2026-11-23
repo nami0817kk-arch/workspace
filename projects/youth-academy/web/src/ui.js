@@ -1056,7 +1056,7 @@
   YA.liveOn = () => !!YA.Live && store.get('liveMatch', true) !== false;
   function startMatch(t, oppTeam, opp, sched) {
     app.seed = (app.seed * 1103515245 + 12345) % 2147483647;
-    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: app.autoStop, stopOnScore: !!app.stopOnScore, live: YA.liveOn(), record: true } });
+    const m = new YA.Match({ seed: sched ? app.w.seed + app.w.week * 3 + app.w.year : app.seed, home: t, away: oppTeam, settings: { autoStop: app.autoStop, stopOnScore: !!app.stopOnScore, live: YA.liveOn() } }); // 見せ方は場面の図（liveview.js）。動きの記録は取らない
     m.opp = opp;
     m.scheduled = !!sched;
     app.match = m;

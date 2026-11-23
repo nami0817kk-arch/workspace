@@ -1914,9 +1914,9 @@
       for (const tr of this.trails) {
         const a = P(tr.from[0], tr.from[1]);
         const b = P(tr.to[0], tr.to[1]);
-        ctx.strokeStyle = tr.kind === 'shot' ? 'rgba(255,214,80,' + 0.85 * tr.life + ')' : 'rgba(255,255,255,' + 0.6 * tr.life + ')';
-        ctx.lineWidth = Math.max(1.2, s * 0.22);
-        if (ctx.setLineDash) ctx.setLineDash(tr.kind === 'loft' ? [s * 0.9, s * 0.7] : []);
+        ctx.strokeStyle = tr.kind === 'shot' ? 'rgba(255,214,80,' + (tr.keep ? 0.98 : 0.85 * tr.life) + ')' : 'rgba(255,255,255,' + (tr.keep ? 0.92 : 0.6 * tr.life) + ')'; // keep＝場面の図の線（消えない・太い）
+        ctx.lineWidth = tr.keep ? Math.max(2.2, s * 0.36) : Math.max(1.2, s * 0.22);
+        if (ctx.setLineDash) ctx.setLineDash(tr.kind === 'loft' ? [s * 0.9, s * 0.7] : tr.kind === 'carry' ? [s * 0.25, s * 0.55] : []); // 浮き球＝破線・運んだ所＝点線（場面の図）
         ctx.beginPath();
         ctx.moveTo(a[0], a[1]);
         ctx.lineTo(b[0], b[1]);

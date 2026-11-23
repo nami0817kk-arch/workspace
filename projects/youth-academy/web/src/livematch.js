@@ -145,6 +145,56 @@
     if (sd === 'away' && this.settings.autoStop) this.pendingStop = 'conceded';
     if (sd === 'home' && this.settings.autoStop && this.settings.stopOnScore) this.pendingStop = 'scored';
   };
+  // 場面の図の道筋：攻めのパス（最後の4本まで）・運んだ所・シュート
+  M._lvPath = function (c, t0, sd) {
+    const lv = this.live;
+    const E = lv.events;
+    const sh = c.shot;
+    const end = c.i;
+    const steps = [];
+    let recv = null; // 直前に受けた所
+    let i0 = end;
+    while (i0 > 0 && E[i0 - 1].t >= t0) i0--;
+    for (let j = i0; j < end; j++) {
+      const e = E[j];
+      if (e.sd !== sd) {
+        if (e.k === 'ctrl' || e.k === 'intercept' || (e.k === 'tackle' && e.ok)) { steps.length = 0; recv = null; }
+        continue;
+      }
+      if (e.k === 'ctrl') recv = [e.x, e.y, e.pid];
+      if (e.k !== 'kick' || e.kind === 'shot' || e.kind === 'clear') continue;
+      // 受けた所（次にこの側が触った所。無ければ狙った所）
+      let to = [e.tx, e.ty];
+      for (let q = j + 1; q < end && E[q].t < e.t + 5; q++) {
+        if (E[q].k === 'ctrl' && E[q].sd === sd) { to = [E[q].x, E[q].y]; break; }
+        if (E[q].k === 'kick') break;
+      }
+      if (recv && Math.hypot(recv[0] - e.x, recv[1] - e.y) > 3.5) steps.push({ type: 'carry', from: [recv[0], recv[1]], to: [e.x, e.y], pid: e.pid });
+      steps.push({ type: e.loft ? 'loft' : 'pass', from: [e.x, e.y], to, pid: e.pid, kind: e.kind });
+      recv = null;
+    }
+    // 最後の4本のパスまで
+    let np = 0;
+    let cut = 0;
+    for (let k = steps.length - 1; k >= 0; k--) if (steps[k].type !== 'carry' && ++np > 4) { cut = k + 1; break; }
+    const out = steps.slice(cut);
+    if (sh) {
+      if (recv && Math.hypot(recv[0] - sh.x, recv[1] - sh.y) > 3.5) out.push({ type: 'carry', from: [recv[0], recv[1]], to: [sh.x, sh.y], pid: sh.pid });
+      const gy = sd === 'home' ? 105 : 0;
+      const o = sd === 'home' ? 1 : -1;
+      const snap = sh.snap || [];
+      const at = (pid) => { const r = snap.find((x) => x[0] === pid); return r ? [r[1], r[2]] : null; };
+      let to;
+      const cx = sh.cross ? sh.cross[0] : 34;
+      if (c.res === 'goal') to = [Math.max(31, Math.min(37, cx)), gy + o * 1.4];
+      else if (c.res === 'saved') to = at(this.gk(this._lvTeam(sd === 'home' ? 'away' : 'home')).id) || [34, gy - o * 1.5];
+      else if (c.res === 'blocked') { const bl = E.slice(end + 1, end + 12).find((x) => x.k === 'block'); to = (bl && at(bl.pid)) || [(sh.x + 34) / 2, (sh.y + gy) / 2]; }
+      else if (c.res === 'missed') to = [Math.abs(cx - 34) < 4.2 ? 34 + (cx < 34 ? -5 : 5) : Math.max(24, Math.min(44, cx)), gy + o * 2];
+      else to = [(sh.x + 34) / 2, (sh.y + gy) / 2];
+      out.push({ type: 'shot', from: [sh.x, sh.y], to, pid: sh.pid, res: c.res });
+    }
+    return out;
+  };
   // 見どころの場面（記録の再生の区切りと実況）
   M._lvScene = function (c) {
     const lv = this.live;
@@ -234,6 +284,21 @@
       if (c.ge && c.ge.og) sc.og = c.ge.og;
     }
     sc.gk = gk ? gk.id : null;
+    // 場面の図（2026-11-24：動きで見せるのをやめ、止めた図にパスとシュートの線を順に引く）
+    sc.live.path = this._lvPath(c, t0, sd);
+    sc.live.snap = sh && sh.snap ? sh.snap : lv.P.map((r) => [r.id, r.x, r.y]);
+    {
+      const n = sc.live.path.length;
+      const stepT = (i) => 0.7 + i * 0.85;
+      sc.live.path.forEach((st, i) => { st.at = stepT(i); });
+      const tShot = n ? stepT(n - 1) : 0.7;
+      // 実況の時刻を線の出る時刻に合わせる
+      const bs = sc.beats;
+      bs[bs.length - 1].at = tShot + 0.9;
+      if (bs.length >= 3) bs[bs.length - 2].at = tShot;
+      if (bs.length >= 4) bs[bs.length - 3].at = Math.max(0.3, tShot - 0.85);
+      sc.dur = tShot + 2.6;
+    }
     // 効いた特性（この場面のあいだ）
     const kr = { trait: 0, gold: 0, awake: 0 };
     for (const f of lv.fx) {
