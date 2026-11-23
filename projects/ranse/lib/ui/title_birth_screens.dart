@@ -28,11 +28,11 @@ class TitleScreen extends StatelessWidget {
                   final byHeight =
                       MediaQuery.sizeOf(context).height *
                       .25 *
-                      kCastleW /
-                      kCastleH;
-                  var w = box.maxWidth < 320 ? box.maxWidth : 320.0;
+                      kTitleArtW /
+                      kTitleArtH;
+                  var w = box.maxWidth < 340 ? box.maxWidth : 340.0;
                   if (byHeight < w) w = byHeight;
-                  return PixelCastle(width: w);
+                  return TitleArt(width: w);
                 },
               ),
               const SizedBox(height: 20),

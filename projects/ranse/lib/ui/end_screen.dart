@@ -119,6 +119,10 @@ class EndScreen extends StatelessWidget {
 }
 
 /// 結果カード。生まれの稀少度・選んだ道・結末の称号（共有する一枚）。
+/// 歩んだ道（`kWays` のキー）ごとの絵。Gemini で作り、assets/images/way_<道>.jpg に置く。
+/// 絵のない道は出さない（そろいしだい足す）。
+const kWayArt = <String, String>{'village': 'assets/images/way_village.jpg'};
+
 class _ResultCard extends StatelessWidget {
   const _ResultCard({required this.g, required this.e});
   final Game g;
@@ -136,6 +140,22 @@ class _ResultCard extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // 歩んだ道の絵（Gemini で作ったドット絵。絵のある道だけ）。
+          if (kWayArt[e.way] case final art?) ...[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Image.asset(
+                art,
+                width: double.infinity,
+                height: 150,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+                errorBuilder: (context, error, stack) =>
+                    const SizedBox.shrink(),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
           Text(
             '約 ${fmtN(l.rarity)} 分の 1 の生まれ',
             style: const TextStyle(color: Pal.muted, fontSize: 12),

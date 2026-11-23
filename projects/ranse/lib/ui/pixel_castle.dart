@@ -124,3 +124,25 @@ class _CastlePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
+/// タイトルの絵（Gemini で作った、夕焼けの城のドット絵。2026-11-23、ユーザー「Gemini に画像頼んで品質上げて」）。
+/// 絵が読めなかったときは、コードで描くドット絵（[PixelCastle]）に戻す。
+const kTitleArtW = 1312, kTitleArtH = 816;
+
+class TitleArt extends StatelessWidget {
+  const TitleArt({super.key, this.width = 340});
+  final double width;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(8),
+    child: Image.asset(
+      'assets/images/title_castle.jpg',
+      width: width,
+      height: width * kTitleArtH / kTitleArtW,
+      fit: BoxFit.cover,
+      filterQuality: FilterQuality.medium,
+      errorBuilder: (context, error, stack) => PixelCastle(width: width),
+    ),
+  );
+}
