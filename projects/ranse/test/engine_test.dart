@@ -1018,6 +1018,8 @@ void main() {
           g.setFlag(flag);
           expect(worldLine(g), line);
           playOut(g, Rng(seed));
+          // 無作為に選ぶうちに、別の分岐点でも歴史を変えて別の世へ移った人生は数えない。
+          if (worldLine(g) != line) continue;
           for (final id in kSkipScenes[line]!) {
             expect(g.hasFlag('scene:$id'), isFalse, reason: '$line で $id が出た');
           }
@@ -1418,6 +1420,8 @@ void main() {
         g.setFlag('history_yamazaki');
         playOut(g, Rng(seed));
         if (g.year <= 1583 || g.isChild) continue;
+        // 別の分岐点（桶狭間など）でも歴史を変えて、別の世へ移った人生は数えない。
+        if (worldLine(g) != 'akechi') continue;
         checked++;
         expect(g.fa['明智'], isNotNull, reason: '${g.year}');
         // 光秀に味方した織田の家臣は、明智家に移り主君が光秀になる。
@@ -1592,6 +1596,8 @@ void main() {
         if (g.finished) continue;
         g.setFlag('history_kawanakajima');
         playOut(g, Rng(seed));
+        // 別の分岐点でも歴史を変えて、別の世（今川の世など）へ移った人生は数えない。
+        if (worldLine(g) != 'real') continue;
         for (final id in kFlagSkipScenes['history_kawanakajima']!) {
           expect(g.hasFlag('scene:$id'), isFalse, reason: id);
         }
