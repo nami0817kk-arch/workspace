@@ -30,7 +30,7 @@ class YouthAnalyticsCard extends StatelessWidget {
             Text(
                 Tr.pick(
                     'U18 はアカデミーの有望株(${gs.u18Count}人)。先発に入っていない21歳以下の${u21.length}人は、毎節 U21 の試合に出て試合勘を保ち、少しずつ伸びます。',
-                    'The under-18s are your academy prospects (${gs.u18Count}). The ${u21.length} players aged 21 or under outside the starting XI play for the under-21s every week, keeping sharp and improving a little.'),
+                    'The under-18s are your academy prospects (${gs.u18Count}). ${u21.length == 1 ? 'The one player aged 21 or under outside the starting XI plays' : 'The ${u21.length} players aged 21 or under outside the starting XI play'} for the under-21s every matchday, keeping sharp and improving a little.'),
                 style: const TextStyle(fontSize: 12)),
             if (u21.isNotEmpty)
               Text(u21.map((p) => Tr.pick('${p.name}(${p.age})', '${p.name} (${p.age})')).join(Tr.pick('、', ', ')),

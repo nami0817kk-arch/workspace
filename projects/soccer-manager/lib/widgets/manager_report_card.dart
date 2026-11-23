@@ -94,7 +94,8 @@ class _Meter extends StatelessWidget {
 class ManagerReportCard extends StatelessWidget {
   const ManagerReportCard({super.key, required this.weeklyNet});
 
-  /// 週の収支(万円)。ホームが計算した値を受け取る。
+  /// 1年の収支の見込み(万円。GameStateFinance.annualNetForecast)。ホームが
+  /// 計算した値を受け取る。
   final int weeklyNet;
 
   @override

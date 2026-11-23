@@ -109,8 +109,8 @@ class NextActionAdvisor {
       }
       if (save.sponsorDeal == null && save.pendingSponsorOffers.isNotEmpty) {
         actions.add(NextAction(
-          message: Tr.pick('スポンサーが未契約です。結ぶと毎週の収入が増えます。',
-              'You have no sponsor. Signing one adds weekly income.'),
+          message: Tr.pick('スポンサーが未契約です。結ぶと毎節の収入が増えます。',
+              'You have no sponsor. Signing one adds income every matchday.'),
           target: NextActionTarget.finance,
         ));
       }

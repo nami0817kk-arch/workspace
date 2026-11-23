@@ -44,15 +44,19 @@ class _SlotRow extends StatelessWidget {
     final gs = context.watch<GameState>();
     final deal = gs.slotSponsor(slot);
     final offer = gs.slotSponsorOffer(slot);
+    // 額は胸のスポンサーと同じく1年あたり(1節の額 × 季の節の数)で出す。
+    // 以前は「週」と書いていたが、入るのは毎節で、胸のスポンサーの
+    // 「/年」とも単位が揃っていなかった(2026-11-23)。
+    final md = gs.matchdaysPerSeason;
     final String text;
     if (deal != null) {
       text = Tr.pick(
-          '${slot.label}: ${deal.name}・週${formatMoney(deal.weeklyIncome)}・残り${deal.yearsRemaining}年',
-          '${slot.label}: ${deal.name}, ${formatMoney(deal.weeklyIncome)}/week, ${deal.yearsRemaining} yr left');
+          '${slot.label}: ${deal.name}・年${formatMoney(deal.weeklyIncome * md)}・残り${deal.yearsRemaining}年',
+          '${slot.label}: ${deal.name}, ${formatMoney(deal.weeklyIncome * md)} a year, ${Tr.plural(deal.yearsRemaining, 'year')} left');
     } else if (offer != null) {
       text = Tr.pick(
-          '${slot.label}: ${offer.name}から提示・週${formatMoney(offer.weeklyIncome)}・${offer.yearsRemaining}年',
-          '${slot.label}: offer from ${offer.name}, ${formatMoney(offer.weeklyIncome)}/week, ${offer.yearsRemaining} yr');
+          '${slot.label}: ${offer.name}から提示・年${formatMoney(offer.weeklyIncome * md)}・${offer.yearsRemaining}年',
+          '${slot.label}: offer from ${offer.name}, ${formatMoney(offer.weeklyIncome * md)} a year for ${Tr.plural(offer.yearsRemaining, 'year')}');
     } else {
       text = Tr.pick('${slot.label}: 空き(次の季の始めに提示が来ます)',
           '${slot.label}: empty (an offer comes next season)');

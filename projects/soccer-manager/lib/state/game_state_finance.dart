@@ -1542,6 +1542,43 @@ extension GameStateFinance on GameState {
         .round();
   }
 
+  /// 商業施設の今の倍率(スポンサー・グッズと、上限までの観客収入に掛かる)。
+  double get _userCommercialMultiplier =>
+      ClubInfrastructure.commercialRevenueMultiplier(
+        _save!.infrastructure.facilityLevel(FacilityType.commercialFacility),
+      );
+
+  /// 自クラブの1節の観客収入の、上限([gateCapPerMatchday])で頭打ちに
+  /// する前の額。[base] は順位の上乗せを含めた土台、[scale] は部の規模。
+  int _userGateBeforeCap(int base, double scale) {
+    // スタジアムの段は、ファンの需要で埋まる席のぶんだけ数える(来たい人
+    // より多い席は、建てても入場料を生まない)。
+    final stadiumLevel = _filledStadiumLevel;
+    return ((base + (stadiumLevel - 1) * 80) *
+            userAttendanceFactor *
+            _save!.ticketPricing.revenueMultiplier *
+            FacilityInvestmentEngine.gateMultiplier(_save!.facilityMomentum) *
+            _userCommercialMultiplier *
+            scale)
+        .round();
+  }
+
+  /// 観客収入が、入る人数 × 1人の単価の上限([gateCapPerMatchday])に
+  /// 届いているか。届いていれば、商業施設を上げても観客収入は増えない
+  /// (施設の画面の「観客収入にも効く」は、届くまでの話。2026-11-23)。
+  bool get isGateAtCap {
+    final save = _save;
+    if (save == null) return false;
+    final standings = save.league.sortedStandings;
+    final rank =
+        standings.indexWhere((r) => r.teamId == save.userTeamId) + 1;
+    final rankBonus =
+        ((save.league.teams.length - rank) * gateRankStep).clamp(0, 999);
+    return _userGateBeforeCap(
+            gateBase + rankBonus, incomeScale(currentDivisionTier)) >=
+        gateCapPerMatchday;
+  }
+
   /// 週の収入の内訳(観客・スポンサー・グッズ・放映権)。合計は
   /// [weeklyIncomeFor] と必ず一致する(端数はグッズに寄せる)。他クラブは
   /// 観客収入と放映権だけを持つ。
@@ -1575,19 +1612,8 @@ extension GameStateFinance on GameState {
       );
     }
 
-    // スタジアムの段は、ファンの需要で埋まる席のぶんだけ数える(来たい人
-    // より多い席は、建てても入場料を生まない)。
-    final stadiumLevel = _filledStadiumLevel;
-    final commercialMultiplier = ClubInfrastructure.commercialRevenueMultiplier(
-      _save!.infrastructure.facilityLevel(FacilityType.commercialFacility),
-    );
-    var matchdayIncome = ((base + (stadiumLevel - 1) * 80) *
-            userAttendanceFactor *
-            _save!.ticketPricing.revenueMultiplier *
-            FacilityInvestmentEngine.gateMultiplier(_save!.facilityMomentum) *
-            commercialMultiplier *
-            scale)
-        .round();
+    final commercialMultiplier = _userCommercialMultiplier;
+    var matchdayIncome = _userGateBeforeCap(base, scale);
     // 入る人数 × 1人の単価で頭打ちにする(席とファンの需要より多くは
     // 払われない)。試合日のイベントの上乗せは頭打ちの後に掛ける(お金を
     // 払った催しで場内の売上が伸びるぶんは、ふだんの単価の外にある。
@@ -1984,8 +2010,8 @@ extension GameStateFinance on GameState {
     save.pendingNamingOffers = [];
     _logNews(
       Tr.pick(
-          'スタジアムの命名権を結びました: ${save.namingDeal!.name}(1節${formatMoney(save.namingDeal!.weeklyIncome)}・${save.namingDeal!.yearsRemaining}年)',
-          'Naming rights signed: ${save.namingDeal!.name} (${formatMoney(save.namingDeal!.weeklyIncome)} a match, ${save.namingDeal!.yearsRemaining} yr)'),
+          'スタジアムの命名権を結びました: ${save.namingDeal!.name}(年${formatMoney(save.namingDeal!.weeklyIncome * matchdaysPerSeason)}・${save.namingDeal!.yearsRemaining}年)',
+          'Naming rights signed: ${save.namingDeal!.name} (${formatMoney(save.namingDeal!.weeklyIncome * matchdaysPerSeason)} a year for ${Tr.plural(save.namingDeal!.yearsRemaining, 'year')})'),
       context: Tr.pick('命名権', 'Naming rights'),
     );
     _notify();
@@ -2456,6 +2482,26 @@ extension GameStateFinance on GameState {
       loanRepayment: bankLoans.fold<int>(0, (s, l) => s + l.weeklyRepayment),
     );
   }
+
+  /// 1年の支出の見込み(人件費・運営費・融資の返済。1節あたりの額 × 季の
+  /// 節の数)。経営の画面の「支出」と、ホームの収支はこれで数える。
+  int get annualExpenseForecast {
+    if (_save == null) return 0;
+    return (matchdayPlayerWageCost +
+            matchdayStaffWageCost +
+            matchdayRunningCost +
+            bankLoans.fold<int>(0, (s, l) => s + l.weeklyRepayment)) *
+        matchdaysPerSeason;
+  }
+
+  /// 1年の収支の見込み(収入 − [annualExpenseForecast])。
+  ///
+  /// 以前はホームの「週収支」だけが別の式で、1節の収入から**週**の給料
+  /// (年俸の52分の1)を引いていた。給料は1節あたり年俸の節の数分の1
+  /// なので、経営の画面の収支より甘く出ていた(2026-11-23)。
+  int get annualNetForecast => _save == null
+      ? 0
+      : projectedMatchdayIncome * matchdaysPerSeason - annualExpenseForecast;
 
   /// 今の収支のまま続けたとき、資金が尽きるまでの節数。尽きなければ null。
   int? get runwayWeeks => _save == null

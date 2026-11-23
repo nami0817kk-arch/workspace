@@ -20,6 +20,7 @@ class MediaDealsCard extends StatelessWidget {
     final holiday = save.tvHolidaySeasons;
     final shares = MediaDealsEngine.sharesFor(gs.currentLeagueTheme);
     String pct(double v) => (v * 100).round().toString();
+    final md = gs.matchdaysPerSeason;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -31,10 +32,13 @@ class MediaDealsCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(Tr.pick('スタジアムの命名権', 'Stadium naming rights'),
                 style: const TextStyle(fontWeight: FontWeight.bold)),
+            // 額は1年あたり(1節の額 × 季の節の数)。以前は「週」と書いて
+            // いたが、入るのは毎節で、結んだときの知らせは「1節」だった
+            // (2026-11-23)。
             if (naming != null)
               Text(Tr.pick(
-                  '${naming.name}: 週${formatMoney(naming.weeklyIncome)}・残り${naming.yearsRemaining}年',
-                  '${naming.name}: ${formatMoney(naming.weeklyIncome)}/week, ${naming.yearsRemaining} yr left'))
+                  '${naming.name}: 年${formatMoney(naming.weeklyIncome * md)}・残り${naming.yearsRemaining}年',
+                  '${naming.name}: ${formatMoney(naming.weeklyIncome * md)} a year, ${Tr.plural(naming.yearsRemaining, 'year')} left'))
             else if (offers.isEmpty)
               Text(Tr.pick('提示はありません(次のシーズン末に出ます)',
                   'No offers (next ones come at season end)'))
@@ -46,8 +50,8 @@ class MediaDealsCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(Tr.pick(
-                            '${offers[i].name} 週${formatMoney(offers[i].weeklyIncome)}・${offers[i].yearsRemaining}年',
-                            '${offers[i].name} ${formatMoney(offers[i].weeklyIncome)}/week, ${offers[i].yearsRemaining} yr')),
+                            '${offers[i].name} 年${formatMoney(offers[i].weeklyIncome * md)}・${offers[i].yearsRemaining}年',
+                            '${offers[i].name} ${formatMoney(offers[i].weeklyIncome * md)} a year for ${Tr.plural(offers[i].yearsRemaining, 'year')}')),
                       ),
                       FilledButton.tonal(
                         onPressed: () => gs.chooseNamingRights(i),
