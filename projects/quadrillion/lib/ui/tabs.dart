@@ -11,7 +11,8 @@ import 'widgets.dart';
 
 /// 6つのタブの中身（試作の tTown / tBiz / tPeople / tStock / tNum / tZukan）
 
-Widget _wrap(List<Widget> c) => Wrap(spacing: 6, runSpacing: 6, children: c);
+// ボタンは押せる範囲が 44pt あるので、行のあいだは空けない（見た目の隙間はその余白で足りる）
+Widget _wrap(List<Widget> c) => Wrap(spacing: 6, runSpacing: 0, children: c);
 Widget _gap([double h = 8]) => SizedBox(height: h);
 String _pct0(double v) => '${jsNum(jsRound(v * 100))}%';
 
@@ -132,8 +133,14 @@ List<Widget> bizTab(GameController ctl) {
   final out = <Widget>[H2(tr('自社の事業'))];
   if (s.biz.isEmpty) out.add(Panel(child: Muted(tr('まだ事業がありません。下の「新しい事業」から始めましょう。'), size: 14)));
   final y = s.yr();
+  // 3つ以上は1行ずつにたたみ、押した1つだけを詳しく開く
+  final fold = s.biz.length >= 3;
   for (final b in s.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))) {
-    out.add(_bizCard(ctl, b));
+    out.add(!fold
+        ? _bizCard(ctl, b)
+        : ctl.openBiz == b.id
+            ? _bizCard(ctl, b, onFold: () => ctl.toggleBiz(b.id))
+            : _bizRow(ctl, b));
   }
   out.add(H2(tr('新しい事業')));
   out.add(Row(children: [
@@ -241,7 +248,101 @@ List<Widget> bizTab(GameController ctl) {
   return out;
 }
 
-Widget _bizCard(GameController ctl, Biz b) {
+/// 事業の注意の印（人手不足・値下げ合戦中・沈む市場）
+List<String> bizWarnings(Game s, Biz b) {
+  final ind = indm[b.ind]!;
+  return [
+    if (b.model != 'fc' && b.power > 0 && s.crewEff(b) / b.power < .9) tr('人手不足'),
+    if (b.war > 0) tr('値下げ合戦中'),
+    if (ind.f != 0 && s.yr() > ind.f) tr('沈む市場'),
+  ];
+}
+
+/// たたんだ事業の1行（業種名・稼ぎ方・シェア・月の売上と利益・注意の印）。押すと詳しいカードが開く
+Widget _bizRow(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final warn = bizWarnings(s, b);
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 3),
+    child: Material(
+      color: Pal.panel,
+      shape: RoundedRectangleBorder(side: BorderSide(color: warn.isNotEmpty ? Pal.down : Pal.line), borderRadius: BorderRadius.circular(10)),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        key: ValueKey('biz-row-${b.id}'),
+        onTap: () => ctl.toggleBiz(b.id),
+        child: Container(
+          constraints: const BoxConstraints(minHeight: minTap),
+          padding: const EdgeInsets.fromLTRB(12, 7, 6, 7),
+          child: Row(children: [
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Wrap(spacing: 4, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                  Text(ind.name, style: ts(size: 14, bold: true)),
+                  Tag(MODELN[b.model]!, kind: TagKind.gold),
+                  for (final w in warn) Tag(w, kind: TagKind.bad),
+                  if (b.pipe.isNotEmpty) Tag(tr('仕掛かり {0}件', [b.pipe.length])),
+                ]),
+                const SizedBox(height: 2),
+                Text.rich(TextSpan(style: ts(size: 12.5, color: Pal.mute), children: [
+                  TextSpan(text: tr('シェア {0}', [pct(b.share * 100)])),
+                  TextSpan(text: tr('・売上 {0}', [yen(b.rev)])),
+                  TextSpan(text: tr('・利益 ')),
+                  TextSpan(text: yen(b.profit), style: ts(size: 12.5, color: b.profit >= 0 ? Pal.up : Pal.down)),
+                ])),
+              ]),
+            ),
+            const Icon(Icons.expand_more, size: 22, color: Pal.mute),
+          ]),
+        ),
+      ),
+    ),
+  );
+}
+
+/// 仕掛かり1件の行（今までどおり、その場で取り下げられる）
+Widget _pipeRow(GameController ctl, Biz b, int i) {
+  final s = ctl.game!;
+  return Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: Row(children: [
+      Expanded(
+        child: Wrap(spacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
+          Tag(pipeKindName(b.pipe[i].k)),
+          Text(pipeText(s, b, b.pipe[i]), style: ts(size: 12.5)),
+        ]),
+      ),
+      Btn(tr('取り下げる（半分戻る）'), () => ctl.act(() => s.cancelPipe(b, i)), small: true),
+    ]),
+  );
+}
+
+/// 同じ種類の仕掛かりが2件以上あるときの1行。押すと一覧が開く
+Widget _pipeGroupRow(GameController ctl, Biz b, PipeGroup g) => Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Material(
+        color: Pal.panel2,
+        shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(8)),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          key: ValueKey('pipe-${b.id}-${g.k}'),
+          onTap: () => openPipes(ctl, b, g.k),
+          child: Container(
+            constraints: const BoxConstraints(minHeight: minTap),
+            padding: const EdgeInsets.only(left: 8, right: 4),
+            child: Row(children: [
+              Tag(pipeKindName(g.k)),
+              const SizedBox(width: 6),
+              Expanded(child: Text(pipeGroupText(g), style: ts(size: 12.5))),
+              const Icon(Icons.chevron_right, size: 20, color: Pal.mute),
+            ]),
+          ),
+        ),
+      ),
+    );
+
+Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
   final s = ctl.game!;
   final ind = indm[b.ind]!;
   final p = s.staffById(b.mgr);
@@ -268,9 +369,25 @@ Widget _bizCard(GameController ctl, Biz b) {
     for (final x in [?p, ...free]) (x.id, tr('{0}（{1} {2}）', [nmL(x.name), ABN[ind.key], s.showAb(x, ind.key)])),
   ];
   return Panel(
+    border: onFold != null ? Pal.gold : Pal.line,
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(child: Text(ind.name, style: ts(bold: true))),
+      Row(crossAxisAlignment: onFold != null ? CrossAxisAlignment.center : CrossAxisAlignment.start, children: [
+        Expanded(
+            child: onFold == null
+                ? Text(ind.name, style: ts(bold: true))
+                // 名前の行を押すと、たたんで1行に戻す
+                : InkWell(
+                    key: ValueKey('biz-fold-${b.id}'),
+                    onTap: onFold,
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: minTap),
+                      alignment: Alignment.centerLeft,
+                      child: Row(children: [
+                        Flexible(child: Text(ind.name, style: ts(bold: true))),
+                        const Icon(Icons.expand_less, size: 22, color: Pal.mute),
+                      ]),
+                    ),
+                  )),
         Flexible(
           child: Wrap(alignment: WrapAlignment.end, spacing: 4, runSpacing: 4, children: [
             if (b.war > 0) Tag(tr('値下げ合戦中'), kind: TagKind.bad),
@@ -319,33 +436,8 @@ Widget _bizCard(GameController ctl, Biz b) {
       ])),
       const SizedBox(height: 6),
       crewLine,
-      if (b.pipe.isNotEmpty)
-        for (var i = 0; i < b.pipe.length; i++)
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Row(children: [
-              Expanded(
-                child: Wrap(spacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
-                  Tag(tr(b.pipe[i].k == 'dev'
-                      ? '開発中'
-                      : b.pipe[i].k == 'enter'
-                          ? '進出準備'
-                          : '建設中')),
-                  Text(
-                      tr('{0}（{1}）あと{2}か月', [
-                        b.pipe[i].k == 'dev' ? tr('新商品') : b.pipe[i].k == 'enter' ? tr('{0}（{1}）', [cm[b.pipe[i].c]!.n, ENTRYN[b.pipe[i].mode]]) : tx(s.uw(b)),
-                        yen(b.pipe[i].cost),
-                        b.pipe[i].left
-                      ]),
-                      style: ts(size: 12.5)),
-                ]),
-              ),
-              Btn(tr('取り下げる（半分戻る）'), () {
-                final idx = i;
-                ctl.act(() => s.cancelPipe(b, idx));
-              }, small: true),
-            ]),
-          ),
+      // 仕掛かりは種類ごとに1行。1件だけの種類は今までどおりその場で取り下げられる
+      for (final g in pipeGroups(b)) g.count == 1 ? _pipeRow(ctl, b, g.idx.first) : _pipeGroupRow(ctl, b, g),
       _gap(),
       Row(children: [
         Muted(tr('責任者')),

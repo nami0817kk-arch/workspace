@@ -84,7 +84,9 @@ class GuideBar extends StatelessWidget {
               if (go != null) const Icon(Icons.chevron_right, size: 20, color: Pal.goldtx),
               IconButton(
                 tooltip: tr('案内を閉じる'),
-                visualDensity: VisualDensity.compact,
+                visualDensity: VisualDensity.standard,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: minTap, minHeight: minTap),
                 icon: const Icon(Icons.close, size: 18, color: Pal.mute),
                 onPressed: () {
                   ctl.game!.guide['off'] = 1;

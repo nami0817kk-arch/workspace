@@ -332,6 +332,89 @@ void showHelp(GameController ctl) {
       ]));
 }
 
+// ===== 仕掛かり =====
+/// 仕掛かりの種類の名前（開発中・進出準備・建設中）
+String pipeKindName(String k) => tr(k == 'dev'
+    ? '開発中'
+    : k == 'enter'
+        ? '進出準備'
+        : '建設中');
+
+/// 仕掛かり1件の説明（「新商品（1億円）あと2か月」）
+String pipeText(Game s, Biz b, Pipe x) => tr('{0}（{1}）あと{2}か月', [
+      x.k == 'dev'
+          ? tr('新商品')
+          : x.k == 'enter'
+              ? tr('{0}（{1}）', [cm[x.c]!.n, ENTRYN[x.mode]])
+              : tx(s.uw(b)),
+      yen(x.cost),
+      x.left
+    ]);
+
+/// 事業の仕掛かりを種類ごとにまとめたもの
+class PipeGroup {
+  final String k;
+
+  /// [Biz.pipe] の何番目か（早く終わる順）
+  final List<int> idx;
+  final double total;
+  final int soonest;
+  const PipeGroup(this.k, this.idx, this.total, this.soonest);
+  int get count => idx.length;
+}
+
+/// 仕掛かりを種類ごとにまとめる（種類は最初に出てきた順）
+List<PipeGroup> pipeGroups(Biz b) {
+  final order = <String>[];
+  final by = <String, List<int>>{};
+  for (var i = 0; i < b.pipe.length; i++) {
+    final k = b.pipe[i].k;
+    if (!by.containsKey(k)) order.add(k);
+    (by[k] ??= []).add(i);
+  }
+  return [
+    for (final k in order)
+      if (by[k]! case final idx)
+        PipeGroup(
+          k,
+          idx..sort((x, y) => b.pipe[x].left.compareTo(b.pipe[y].left)),
+          idx.fold<double>(0, (a, i) => a + b.pipe[i].cost),
+          b.pipe[idx.first].left,
+        ),
+  ];
+}
+
+/// まとめた1行（「開発中 7件・合計 36.6億円・早いもので あと1か月」）
+String pipeGroupText(PipeGroup g) => tr('{0}件・合計 {1}・早いもので あと{2}か月', [g.count, yen(g.total), g.soonest]);
+
+/// 仕掛かりの一覧（1件ずつ取り下げられる）
+void openPipes(GameController ctl, Biz b, String k) {
+  final s = ctl.game!;
+  final g = pipeGroups(b).where((x) => x.k == k).firstOrNull;
+  if (g == null || !s.biz.contains(b)) {
+    ctl.closeSheet();
+    return;
+  }
+  ctl.showSheet((_) => _col([
+        H2(tr('「{0}」の{1}（{2}件）', [indm[b.ind]!.name, pipeKindName(k), g.count]), top: true),
+        _note('${pipeGroupText(g)}${tr('。取り下げると、かけたお金の半分が戻ります。')}'),
+        for (final i in g.idx)
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Pal.line))),
+            child: Row(children: [
+              Expanded(child: Text(pipeText(s, b, b.pipe[i]), style: ts(size: 13))),
+              Btn(tr('取り下げる（半分戻る）'), () {
+                final m = s.cancelPipe(b, i);
+                ctl.save();
+                ctl.toast(m, then: () => openPipes(ctl, b, k));
+              }, small: true),
+            ]),
+          ),
+        _cancel(ctl, '閉じる'),
+      ]));
+}
+
 // ===== 設定 =====
 void openSettings(GameController ctl) {
   ctl.showSheet((context) => _col([
@@ -359,7 +442,18 @@ void openSettings(GameController ctl) {
 class ReportBase {
   final double cap, cash;
   final String? label;
+
+  /// まとめて進めたのを途中で止めたときの理由（止まらなかったら null）
+  String? stop;
   ReportBase(this.cap, this.cash, [this.label]);
+}
+
+/// まとめて進めたのが出来事で途中で止まったときの文（「〇〇が起きたので、〇年〇月で止めました」）
+String stopReason(Game s) {
+  final when = ym(s.year, s.q);
+  if (s.over != null) return tr('ゲームが終わったので、{0}で止めました', [when]);
+  if (s.won != null) return tr('目標を達成したので、{0}で止めました', [when]);
+  return tr('「{0}」が起きたので、{1}で止めました', [tx(s.events.first.title), when]);
 }
 
 void doNext(GameController ctl) {
@@ -383,7 +477,11 @@ void doYear(GameController ctl, [int n = 12]) {
   final snap = ctl.snap();
   for (var i = 0; i < n; i++) {
     all.addAll(s.nextQuarter());
-    if (s.events.isNotEmpty || s.over != null || s.won != null) break;
+    if (s.events.isNotEmpty || s.over != null || s.won != null) {
+      // 最後の月で起きたのなら、途中で止めたことにはならない
+      if (i < n - 1) before.stop = stopReason(s);
+      break;
+    }
   }
   ctl.buzzAfter(snap, all);
   ctl.save();
@@ -414,6 +512,14 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
   final pre = s.pre;
   final cap = s.cap;
   ctl.showSheet((_) => _col([
+        if (before.stop != null)
+          Container(
+            key: const ValueKey('stop-reason'),
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(color: Pal.goldBg, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(8)),
+            child: Text(before.stop!, style: ts(size: 13.5, bold: true, color: Pal.goldtx)),
+          ),
         H2(head, top: true),
         if (before.label != null) Padding(padding: const EdgeInsets.only(bottom: 4), child: Muted(tr('{0}まとめて進めました', [before.label]))),
         Padding(

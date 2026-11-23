@@ -285,7 +285,10 @@ class MainScreen extends StatelessWidget {
           Semantics(
             label: tr('設定'),
             button: true,
-            child: Material(
+            child: TapArea(
+              key: const ValueKey('settings-tap'),
+              onTap: () => openSettings(ctl),
+              child: Material(
               color: Pal.panel2,
               shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(8)),
               child: InkWell(
@@ -294,7 +297,7 @@ class MainScreen extends StatelessWidget {
                 onTap: () => openSettings(ctl),
                 child: const Padding(padding: EdgeInsets.all(5), child: Icon(Icons.settings, size: 18, color: Pal.ink)),
               ),
-            ),
+            )),
           ),
         ]),
         const SizedBox(height: 4),
@@ -355,10 +358,10 @@ class MainScreen extends StatelessWidget {
             Btn(tr('3か月進める'), () => doYear(ctl, 3), small: true),
             const SizedBox(width: 6),
             Expanded(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
+              // 幅が足りないときは字だけ縮める（押せる高さは 44pt のまま）
+              child: Align(
                 alignment: Alignment.centerRight,
-                child: Btn(s.ap > 0 ? tr('次の月へ（手が{0}残っています）', [s.ap]) : tr('次の月へ'), () => doNext(ctl), primary: true),
+                child: Btn(s.ap > 0 ? tr('次の月へ（手が{0}残っています）', [s.ap]) : tr('次の月へ'), () => doNext(ctl), primary: true, shrink: true),
               ),
             ),
           ]),
@@ -373,8 +376,11 @@ class MainScreen extends StatelessWidget {
               for (final t in tabs)
                 Expanded(
                   child: InkWell(
+                    key: ValueKey('tab-${t.$1}'),
                     onTap: () => ctl.setTab(t.$1),
-                    child: Padding(
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: minTap),
+                      alignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,

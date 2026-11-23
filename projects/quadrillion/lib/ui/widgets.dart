@@ -178,17 +178,43 @@ class Face extends StatelessWidget {
   }
 }
 
+/// 押せる部品の最小の大きさ（Apple の目安 44pt）
+const minTap = 44.0;
+
+/// 見た目の大きさは変えずに、押せる範囲だけ [minTap] 四方まで広げる。
+/// 見た目の外側（透明な余白）を押しても [onTap] が動く
+class TapArea extends StatelessWidget {
+  final Widget child;
+  final VoidCallback? onTap;
+  const TapArea({super.key, required this.child, this.onTap});
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: minTap, minHeight: minTap),
+          child: Align(widthFactor: 1, heightFactor: 1, child: child),
+        ),
+      );
+}
+
 /// ふつうのボタン
 class Btn extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
   final bool primary, small;
   final bool enabled;
-  const Btn(this.label, this.onTap, {super.key, this.primary = false, this.small = false, this.enabled = true});
+
+  /// 幅が足りないときは字だけを縮める（押せる範囲は縮めない）
+  final bool shrink;
+  const Btn(this.label, this.onTap, {super.key, this.primary = false, this.small = false, this.enabled = true, this.shrink = false});
   @override
   Widget build(BuildContext context) {
     final on = enabled && onTap != null;
-    return Opacity(
+    return TapArea(
+      onTap: on ? onTap : null,
+      child: Opacity(
       opacity: on ? 1 : .4,
       child: Material(
         color: primary ? Pal.gold : Pal.panel2,
@@ -198,13 +224,15 @@ class Btn extends StatelessWidget {
           onTap: on ? onTap : null,
           child: Padding(
             padding: small ? const EdgeInsets.symmetric(horizontal: 8, vertical: 5) : const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: Text(tx(label),
-                style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink)),
+            child: _fit(Text(tx(label),
+                maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink))),
           ),
         ),
       ),
-    );
+    ));
   }
+
+  Widget _fit(Widget t) => shrink ? FittedBox(fit: BoxFit.scaleDown, child: t) : t;
 }
 
 /// 取り返しのつかない操作のボタン（赤）
@@ -213,7 +241,9 @@ class DangerBtn extends StatelessWidget {
   final VoidCallback onTap;
   const DangerBtn(this.label, this.onTap, {super.key});
   @override
-  Widget build(BuildContext context) => Material(
+  Widget build(BuildContext context) => TapArea(
+      onTap: onTap,
+      child: Material(
         color: Pal.down,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: InkWell(
@@ -224,7 +254,7 @@ class DangerBtn extends StatelessWidget {
             child: Text(tx(label), style: ts(bold: true, color: Pal.panel)),
           ),
         ),
-      );
+      ));
 }
 
 /// 選択肢のボタン（左寄せ・下に小さな説明）
@@ -254,8 +284,10 @@ class ChoiceBtn extends StatelessWidget {
             onTap: ok ? onTap : null,
             child: Container(
               width: double.infinity,
+              constraints: const BoxConstraints(minHeight: minTap),
+              alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
                 Text(tx(label), style: ts(bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink, height: 1.45)),
                 for (final s in subs)
                   if (s.isNotEmpty) Text(tx(s), style: ts(size: 12, color: primary ? const Color(0xFF3A2E00) : Pal.mute, height: 1.4)),
@@ -349,7 +381,8 @@ class Pick<T> extends StatelessWidget {
           child: DropdownButton<T>(
             value: items.any((e) => e.$1 == value) ? value : items.first.$1,
             isExpanded: true,
-            isDense: true,
+            // 押せる高さを 44pt 以上にする（isDense だと 24pt ほどしかない）
+            isDense: false,
             style: ts(size: 13),
             items: [for (final e in items) DropdownMenuItem<T>(value: e.$1, child: Text(tx(e.$2), overflow: TextOverflow.ellipsis, style: ts(size: 13)))],
             onChanged: (v) {
