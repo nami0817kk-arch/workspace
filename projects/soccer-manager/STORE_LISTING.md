@@ -50,53 +50,137 @@
 試合は監督に任せ、あなたは金・人・方針を決める。
 サポーターと株主、2つの期待を保ちながら1部の頂点へ。
 
-■ 監督を選ぶ
-監督の候補は、考え方と好みの布陣を見て雇う。試合は任せる。
-先発と構えは毎節、監督が決める。腕のいい監督ほど、相手に合わせて
+【監督を選ぶ】
+監督の候補は、考え方と好みの布陣を見て雇う。先発・戦い方・キャプテン・
+セットプレーの担当は毎節、監督が決める。腕のいい監督ほど、相手に合わせて
 戦い方を変える。契約が切れれば、次の監督を探す。
 
-■ 2つの期待を保つ
-サポーターの期待は勝ち負けと順位で、株主の期待は収支で動く。
+【2つの期待を保つ】
+サポーターの期待は毎月の結果とオーナーの手で、株主の期待は収支で動く。
 年に3回起きる事件の判断は、どちらを取ってももう一方が傷つく。
-サポーターの期待か資金が尽きればクラブを手放すことになるが、
-実績を残したまま別のクラブ（別の国も選べる）を買い直して続けられる。
+サポーターの期待が尽きて最後通告から戻せないか、資金が尽きればクラブを
+手放すことになる。それでも実績を残したまま、別のクラブ（別の国も選べる）を
+買い直して続けられる。
 
-■ 予算を配る
-年の予算を補強・育成・施設・営業・配当に配る。補強はすぐ、営業は1年、
-育成は2〜3年、施設は3〜5年かけて効く。スタジアム、スポンサー契約、
-銀行融資。コーチやスカウトは、能力と得意分野を見て一人ずつ雇う。
+【予算を配る】
+年の予算を補強・育成・施設・営業・配当の5つに配る。補強はすぐ、営業は1年、
+育成は2〜3年、施設は3〜5年かけて効く。スタジアムや練習場を建て、
+スポンサー契約を結び、銀行から借りる。コーチやスカウトは、能力と得意分野を
+見て一人ずつ雇う。
 
-■ 選手を動かす
-監督が挙げた補強の候補を買うか見送るか。他のクラブから届いた
-売却のオファーを受けるか断るか。主力と契約を延ばすときは、
-約束する出場機会と年俸を決める。
+【オーナー室から手を打つ】
+試合日のイベント、広報、地域活動、提携クラブ。何かを得れば何かを払う。
+どの手をいつ打つかで、2つの期待とお金が動く。
 
-■ ユースから育てる
+【選手を動かす】
+挙がってきた補強の候補を買うか見送るか。他のクラブから届いた売却の
+オファーを受けるか断るか。主力と契約を延ばすときは、約束する出場機会と
+年俸を条件の画面で話し合う。
+
+【アカデミーを持つ】
 自前のアカデミーには年間リーグがあり、有望株は毎週の試合で実戦を積む。
 ただし19歳を過ぎた有望株は出場機会を求め、放っておけば他クラブに
 引き抜かれる。いつプロ契約を結んで一軍へ上げるか、その判断がクラブの
 背骨をつくる。
 
-■ シーズンを戦い抜く
+【シーズンを戦い抜く】
+リーグはイングランド・スペイン・ドイツ・イタリア・フランスの5か国から選べる。
 昇降格のある3部制のリーグ戦、国内カップ、大陸カップ、スーパーカップ。
 得点王・年間MVP・ベストイレブンなどの個人タイトルや、殿堂入りする
 レジェンド選手たちがあなたの物語を彩る。
 
+画面は横向きです。上の帯に日付・資金・2つの期待、左にメニューを常に出し、
+ボタン1つで次に予定がある日まで進みます。
+
 進行状況は端末内に保存されます。オンラインのアカウント登録は不要です。
 
 営業を強化できる動画広告は「見たい人だけ」が対象で、自分から選んだときだけ
-再生されます。1日3回まで、見ると次の1節だけ収入（放映権を除く）が1.5倍に
-なります。一度も見なくてもゲームは最後まで遊べます。
+再生されます。1日3回まで、見ると次の1節だけ収入が増えます。
+一度も見なくてもゲームは最後まで遊べます。
 全画面広告はシーズンの切り替わりで1回だけ表示され、試合中やメニュー操作には
 割り込みません。バナー広告はありません。
-サポーター（買い切り）を購入すると、広告を見ずに同じ営業の強化ができ、
-1日の回数が3回から5回に増え、全画面広告も表示されなくなります。
-月額ではありません。サポーター自体は、選手の成長や試合の勝率を変えるものでは
-ありません。
+課金はサポーター（買い切り）の1つだけです。購入すると、広告を見ずに同じ営業の
+強化ができ、1日の回数が3回から5回に増え、全画面広告も表示されなくなります。
+月額ではありません。資金を買う商品はありません。サポーターは、選手の成長や
+試合の勝率を変えるものではありません。
 ```
 
 > **Android(Google Play)には出さない**(2026-09-26 決定)。以下に Play 向けの
 > 記述が残っているのは、出すことになったときのため。当面は iOS だけを見る。
+
+## このバージョンの新機能（1.2.0）
+
+**App Store で公開中なのは 1.1.3（2026-10-01 公開。2026-11-23 に lookup で確認）。**
+1.1.4〜1.1.8 は文面を用意しただけで、公開されていない。そのため 1.2.0 の欄は
+**1.1.3 との差**で書く（1.1.4〜1.1.8 の見た目の作り直しもここに含める）。
+
+欄の決まり: App Store の欄にそのまま貼る。`★ ■ … ― • —` と markdown の `*` は
+使わない。見出しは日本語が【】、英語が [ ]。
+
+提出のときに一緒に入れるもの:
+- **掲載画像を全部差し替える**（横画面になった。iPhone 2622x1206 と iPad 2752x2064、
+  日英それぞれ8枚。下の「スクリーンショット」の節）
+- 説明文・プロモーション用テキスト・キーワードを日英とも差し替える
+- **プレビュー動画は入れない**（`marketing/preview/` の動画は縦画面の試合・ハーフタイムを
+  映していて、どちらも 1.2.0 には無い画面。App Store Connect に載っていたら削除する）
+
+### 日本語
+
+```
+【クラブのオーナーになりました】
+1.2.0 は、ゲームの中身を大きく作り替えた版です。あなたは監督ではなく、3部の弱小クラブを買い取ったオーナーです。試合は監督に任せ、お金・人・方針を決めます。
+
+・年の予算を、補強・育成・施設・営業・配当の5つに配ります。効き始めるまでの時間がそれぞれ違います
+・サポーターの期待と株主の期待、2つを保ちながら上をめざします
+・先発・戦い方・キャプテン・セットプレーの担当は監督が決めます。監督は考え方と好みの布陣を見て雇います
+・補強は、挙がってきた候補を買うか見送るかで決めます。売却のオファーには監督の見立てが付きます
+・契約の更新と移籍は、条件を出し合う画面で話し合います
+・スタジアムや練習場などの施設を建て、コーチやスカウトを一人ずつ雇います
+・オーナー室から、試合日のイベント・広報・地域活動・提携クラブなどの手を打てます
+・年に3回、どちらかの期待を傷つける事件の判断を迫られます
+・サポーターの期待が尽きて最後通告から戻せないと、クラブを手放すことになります。実績はそのままに、別のクラブ（別の国も選べます）を買い直して続けられます
+
+【横画面になりました】
+・画面を横向きにし、上の帯に日付・資金・2つの期待、左に常設のメニューを置きました
+・ボタン1つで、次に予定がある日まで進みます
+
+【見た目】
+・選手の似顔絵、ピッチ、クラブのエンブレム、実績の記章を描き直しました
+・タイトル画面と、優勝・昇格を決めたときに絵が出るようになりました
+
+【そのほか】
+・設定から、このアプリを評価できるようになりました。お問い合わせの窓口も置きました
+・資金を買う商品はなくなりました。課金は、広告を見ずに済むサポーター（買い切り）の1つだけです
+```
+
+### 英語
+
+```
+[You own the club now]
+1.2.0 rebuilds the game. You are no longer the manager: you have bought a struggling third-tier club. The manager runs the matches; you decide the money, the people and the direction.
+
+- Split each year's budget five ways: signings, youth, facilities, marketing and dividends. Each takes a different time to pay off.
+- Keep two groups on side, the fans and the shareholders.
+- The manager picks the side, the approach, the captain and the set-piece takers. You hire him for his outlook and favourite formation.
+- Approve or pass on the signing candidates put to you. Offers for your players come with the manager's view.
+- Renewals and transfers are negotiated on a terms screen.
+- Build the stadium, the training ground and more, and hire coaches and scouts one by one.
+- From the owner's office: matchday events, PR, community work, a partner club and more.
+- Three times a season an incident needs your call, and every answer costs you with one side.
+- If the fans lose all faith and you cannot win them back after the final warning, you have to sell. You keep your record and can buy another club, even in another country.
+
+[Landscape]
+- The game now runs in landscape, with the date, funds and both expectations along the top and a menu down the side.
+- One button moves you on to the next day with something on.
+
+[New look]
+- Player portraits, the pitch, club crests and achievement badges have been redrawn.
+- The title screen, and winning the league or going up, now have artwork.
+
+[Other]
+- You can rate the app and contact support from Settings.
+- Funds can no longer be bought. The only purchase is Supporter, a one-off that lets you skip the ads.
+```
 
 ## このバージョンの新機能（1.1.8）
 
@@ -406,9 +490,8 @@ App Store Connect / Google Play Console の「このバージョンの新機能�
 文言を試せる場所なので、埋めておく。
 
 ```
-3部リーグの弱小クラブを買い取ったオーナーに。試合は監督に任せ、
-金・人・方針を決めて、サポーターと株主の2つの期待を保つ。
-1部の頂点をめざす本格シミュレーション。
+3部の弱小クラブを買い取ったオーナーに。試合は監督に任せ、予算を5つに配り、
+施設を建て、サポーターと株主の2つの期待を保つ。1部の頂点をめざす経営シミュレーション。
 一度も広告を見なくても、最後まで遊べます。
 ```
 
@@ -459,13 +542,13 @@ Take a small club to the top
 アプリ名に入れた `soccer` `club` `sim` は繰り返さない。
 
 ```
-manager,management,tactics,transfer,youth,squad,league,promotion,scout,simulation,coach,football
+football,manager,owner,chairman,tycoon,transfer,league,promotion,stadium,budget,academy,fans
 ```
 
 ### プロモーション用テキスト（170字以内・審査なしで差し替え可）
 
 ```
-You just bought a struggling third-tier club. The manager runs the matches; you decide the money, the people and the direction. Keep the fans and shareholders on side.
+You just bought a struggling third-tier club. The manager runs the matches; you split the budget, build the club and keep the fans and shareholders on side.
 ```
 
 ### 説明文
@@ -475,49 +558,59 @@ You just bought a struggling third-tier club.
 The manager runs the matches; you decide the money, the people and the direction.
 Keep two groups happy, the fans and the shareholders, and take it to the top.
 
-- HIRE A MANAGER
+[Hire a manager]
 Read each candidate's outlook and favourite formation, hire one, and leave
-the matches to him. He picks the side and the approach every matchday, and
-the better he is, the more he adapts to the opponent. When his contract runs
-out, you find the next one.
+the matches to him. He picks the side, the approach, the captain and the
+set-piece takers every matchday, and the better he is, the more he adapts to
+the opponent. When his contract runs out, you find the next one.
 
-- KEEP TWO GROUPS HAPPY
-Fan expectation follows results; shareholder expectation follows the books.
-Three times a season an incident needs your call, and every answer costs you
-with one side or the other. If the fans lose all faith or the money runs out
-you have to sell, but you keep your record and can buy another club, even in
-another country.
+[Keep two groups happy]
+Fan expectation follows each month's results and your own moves; shareholder
+expectation follows the books. Three times a season an incident needs your
+call, and every answer costs you with one side or the other. If the fans lose
+all faith after the final warning, or the money runs out, you have to sell.
+You keep your record and can buy another club, even in another country.
 
-- SPEND THE BUDGET
+[Spend the budget]
 Split it between signings, youth, facilities, marketing and dividends.
 Signings work at once, marketing in a year, youth in two or three, facilities
-in three to five. Stadium, sponsors, bank loans, and coaches and scouts hired
-one by one for their ability and specialty.
+in three to five. Build the stadium and the training ground, sign sponsors,
+borrow from the bank, and hire coaches and scouts one by one for their
+ability and specialty.
 
-- MOVE PLAYERS
-Approve or pass on the manager's signing candidates, accept or turn down
+[Make your moves from the office]
+Matchday events, PR, community work, a partner club. Every move gains you
+something and costs you something, and when you make it matters.
+
+[Move players]
+Approve or pass on the signing candidates put to you, accept or turn down
 offers for your players, and agree minutes and wages when you renew a key man.
 
-- RUN AN ACADEMY
+[Run an academy]
 Your academy plays its own season, so prospects get real matches. But once
 they turn 19 they want first-team football, and clubs will come for the ones
 you leave behind. Deciding when to hand out a professional contract is the job.
 
-- CLIMB
-Three divisions, promotion play-offs, domestic cups and two continental cups.
-Top scorers, player of the season and a team of the season along the way.
+[Climb]
+Pick a league in England, Spain, Germany, Italy or France. Three divisions,
+promotion play-offs, domestic cups and continental cups. Top scorers, player
+of the season and a team of the season along the way.
+
+The game is played in landscape, with the date, funds and both expectations
+along the top, a menu down the side, and one button to move on to the next
+day with something on.
 
 Your progress is saved on your device. No account, no sign-in.
 
 The video ads that boost your marketing play only when you choose to watch
-them. Up to 3 a day, each one makes the next matchday's income (excluding TV
-money) 1.5 times higher. You can finish the game without watching a single one.
+them. Up to 3 a day, each one raises income for the next matchday. You can
+finish the game without watching a single one.
 One full-screen ad appears when a season rolls over, never during a match or
 while you are in the menus. There are no banners.
-Supporter is a one-off purchase: you get the same marketing boost without ads,
-your daily limit rises from 3 to 5, and the full-screen ad between seasons
-stops appearing. It is not a subscription, and it does not change player
-growth or your chances in a match.
+The only purchase is Supporter, a one-off: you get the same marketing boost
+without ads, your daily limit rises from 3 to 5, and the full-screen ad between
+seasons stops appearing. It is not a subscription, funds are not for sale, and
+it does not change player growth or your chances in a match.
 ```
 
 ## キーワード（App Store キーワードフィールド、100字以内目安）
@@ -533,7 +626,7 @@ growth or your chances in a match.
 区切りは読点ではなくカンマで、スペースは入れない（入れると1文字ぶん損をする）。
 
 ```
-ゲーム,監督,移籍,リーグ,成り上がり,戦略,選手,ユース,スカウト,契約,昇格,優勝,フットボール,スポーツ,無料,無課金,オフライン,サカマネ,本格,シミュ,マネジメント
+監督,移籍,リーグ,戦略,選手,昇格,優勝,スタジアム,予算,株主,サカマネ
 ```
 
 ## スクリーンショットとフィーチャーグラフィック
@@ -548,48 +641,55 @@ flutter test tool/screenshots/feature_graphic_test.dart --update-goldens
 `tool/` に置いてあるのは、これらがテストではなく生成器で、実行すると
 ファイルを書き換えるため。`test/` の外なので CI では回らない。
 
-出力は端末ごとに9枚ずつ。
+出力は端末・言語ごとに8枚ずつ。**1.2.0 から横画面**（スマホは横向きに固定した）。
 
-| 出力先 | 寸法 | 用途 |
+| 出力先 | 寸法 | App Store の枠 |
 |---|---|---|
-| `marketing/screenshots/` | 1290x2796 | iPhone 6.9インチ・日本語 |
-| `marketing/screenshots_ipad/` | 2064x2752 | iPad 13インチ・日本語 |
-| `marketing/screenshots_en/` | 1290x2796 | iPhone 6.9インチ・英語 |
-| `marketing/screenshots_ipad_en/` | 2064x2752 | iPad 13インチ・英語 |
+| `marketing/screenshots/` | 2622x1206 | iPhone・Dynamic Island 搭載の中型（6.3インチ）・日本語 |
+| `marketing/screenshots_en/` | 2622x1206 | 同・英語 |
+| `marketing/screenshots_ipad/` | 2752x2064 | iPad 13インチ・日本語 |
+| `marketing/screenshots_ipad_en/` | 2752x2064 | iPad 13インチ・英語 |
+
+寸法は Apple の仕様（2026-11-23 に確認）:
+https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications
+iPhone で**必須なのは「Dynamic Island 搭載・中型」の枠だけ**（横は 2622x1206 か 2556x1179）。
+大型（6.9インチ）は任意で、出さなければ中型から縮めて使われる。iPad はアプリが
+iPad で動く設定（`TARGETED_DEVICE_FAMILY = "1,2"`）なので 13インチが必須。
+どれも1〜10枚、png か jpg、透過なし。
 
 英語ぶんは**翻訳ではなく、英語で動かしたアプリを撮ったもの**。選手名・クラブ名
 まで英語のプールに切り替わる。生成器は言語を決めてからシミュレーションに入る
-（記者会見やニュースは作られた時点の言語で確定し、後から切り替えても遡って
-訳されない）。撮る前に、記者会見と選手名がその言語になっているかを検査している。
+（ニュースや事件の文面は作られた時点の言語で確定し、後から切り替えても遡って
+訳されない）。撮る前に、クラブ名・選手名・ニュースがその言語になっているかを
+検査している。
 
 iPad ぶんが要るのは、アプリが iPad でも動く設定になっているため。iPhone
 だけだと「13インチのiPadディスプレイのスクリーンショットをアップロード
 する必要があります」で提出できない。
 
-**番号は撮る順ではなく、ストアに並べる順。** 検索結果には**先頭3枚しか出ない**ので、
-そこに何を置くかで見られ方が変わる。起動画面を先頭にしていた頃は、いちばん目立つ枠が
-「何のゲームか伝わらない絵」で埋まっていた。
+撮り方: 実機と同じ包み方（`LandscapeScale`・`FmThemeScope`）の `MainShell` を端末の
+寸法で組み、**左のメニューとページのタブを実際に押して**開いた画面を撮る。帯を
+乗せるぶん縮めて置くが、組むのは実機の寸法（枠の幅で組ませると割付が変わり、
+名前が切れる）。試合の結果は乱数なので、冬の移籍ウィンドウ（第25節の前）まで
+進めて**理事会の目標より4つ以上上の順位にいる回**を撮る（下位の回だと1枚目から赤字が並ぶ。
+数字は作らず、実際に進めた結果から選ぶ）。
 
-> **撮り直しが要る（2026-11-23 時点・まだ撮り直していない）。** 1.2.0 でオーナーの
-> ゲームに作り替え、`00_lineup`（スタメン編成・戦術）・`01_live_match`（ライブ観戦）・
-> `06_halftime`（ハーフタイムの檄・交代・戦術変更）の3つの画面はアプリから無くなった。
-> 今の掲載画像は**無い画面を見せている**。提出の前に、今ある画面（監督の報告・
-> 今週の決断・オーナー室・監督を選ぶ画面など）で撮り直し、帯の文言
-> （`tool/screenshots/capture_test.dart` の `_captions`。「5部から、頂点へ」
-> 「采配が、試合を動かす」「ハーフタイムで流れを変える」）も今のゲームに合わせる。
-> 下のプレビュー動画も試合画面を撮っているので同じく撮り直しが要る。
+**番号は撮る順ではなく、ストアに並べる順。** 検索結果には**先頭の数枚しか出ない**ので、
+「クラブを買った経営者になる」ことが伝わる順に置いている。
 
-| ファイル | 画面 | この順にした理由 |
+| ファイル | 画面 | 帯の言葉（日 / 英） |
 |---|---|---|
-| `00_lineup.png` | スタメン編成・戦術（**専用の下絵の中に置く**）。**撮り直しが要る（画面が無い）** | 検索結果でいちばん見られる枠。ここだけ「撮っただけ」から離し、石段を昇った先にトロフィーがある絵の中へ実機の画面を置く（iPhone のみ） |
-| `01_live_match.png` | 試合（ライブ経過・ゴール演出）。**撮り直しが要る（画面が無い）** | 「GOAL!」が小さくても読める。試合が実際に動くことが伝わる |
-| `02_home.png` | ホーム（クラブ状況ダッシュボード） | 経営の数字。ここまでの3枚が検索結果に出る |
-| `03_transfer.png` | 移籍市場 | |
-| `04_standings.png` | 日程・順位表 | |
-| `05_squad.png` | スカッド（選手一覧） | |
-| `06_halftime.png` | ハーフタイム（檄・交代・戦術変更）。**撮り直しが要る（画面が無い）** | |
-| `07_scorers.png` | 得点・アシストランキング | |
-| `08_club.png` | クラブ施設・スタッフ | 能力と得意分野で人を選ぶ画面。スタッフを雇った状態で撮る（空席のままだと「就いている人がいない」の赤字だけが目立つ） |
+| `01_home.png` | 状況（監督の報告・期待・決めること） | 弱小クラブのオーナーになる / Buy a struggling club |
+| `02_budget.png` | 経営 > 概要（年のお金・予算の配り方） | 予算を5つに配る / Split the budget five ways |
+| `03_office.png` | オーナー室 > オーナーの仕事（試合日のイベント） | サポーターと株主、2つの期待 / Keep fans and shareholders on side |
+| `04_facilities.png` | クラブ > 施設 | 施設を建てて、クラブを大きくする / Build up the club |
+| `05_transfer.png` | 移籍 > SD の案（冬の窓） | 補強の候補を、買うか見送るか / Sign him, or pass |
+| `06_league.png` | リーグ > 順位・日程 | 3部から、1部の頂点へ / From the third tier to the top |
+| `07_staff.png` | クラブ > スタッフ（雇った状態で撮る） | コーチもスカウトも、選んで雇う / Hire coaches and scouts |
+| `08_community.png` | クラブ > ファンと街 | 街とファンを味方につける / Win over the town and the fans |
+
+手元の確認用に、端末・言語ごとのフォルダへ写したもの:
+`C:\Users\<ユーザー>\Downloads\サカマネ1.2.0_掲載画像\{1_iPhone_日本語,2_iPhone_英語,3_iPad_日本語,4_iPad_英語}`
 
 ## プレビュー動画（App Preview）
 
@@ -629,6 +729,8 @@ App Preview は「アプリが動いている様子」であることを求め�
 クラブ・選手は写っていない。文字はアプリ同梱のフォントで載せているので、
 ストアの絵とアプリの中で書体が揃う。
 
+> **（1.1.x までの縦画面の話。1.2.0 の横画面では下絵を使っていない。下絵が縦長で、横の枠に入らないため）**
+>
 > **1枚目だけは専用の下絵を敷く**（`marketing/hero/hero_bg.png`、生成AIで作った絵）。
 > 下絵の中央に端末を置く場所が空けてあり、生成器がそこへ実機の画面を重ねる。
 > **絵だけにはできない**——App Review 2.3.3 が「掲載画像はアプリが動いている様子を
@@ -688,7 +790,7 @@ App Preview は「アプリが動いている様子」であることを求め�
 - [ ] 上記のプライバシーポリシーURL・利用規約URLをブラウザで開いて表示を確認する
       （Web版のデプロイが一度も走っていないと404になる）
 - [ ] `pubspec.yaml` の `version:` を今回の提出内容に合わせて更新した
-- [ ] スクリーンショットを生成した（下記の生成器を実行。9枚）
+- [ ] スクリーンショットを生成した（下記の生成器を実行。横画面で8枚×4組）
 - [ ] 実機で一度リリースビルドを起動し、初回起動〜ニューゲーム〜1試合消化まで通した
 
 ### Google Play
