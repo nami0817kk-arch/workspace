@@ -1294,8 +1294,16 @@
             S.acc += S.speed === 'hl' ? dt : dt * speedK();
             const need = S.speed === 'hl' ? 0.035 : 0.8;
             if (S.acc >= need) {
-              S.acc = 0;
-              handle(m.step());
+              // 次の1分が見どころで、攻める側がまだボールを持っていなければ、時計を最大3秒待つ（絵は動き続け、攻める側が奪い返す）。
+              // 2026-11-23「見どころの入りで急に奪われる」：合間は1分0.8秒しかなく、入りの直前に相手が持っていて急につないでいた。「見どころ」の速さでは待たない
+              const nx = S.speed !== 'hl' && m.keyIdx && m.keyIdx.indexOf(m.ti + 1) >= 0;
+              const ns = nx && m.nextSide ? m.nextSide() : null;
+              if (ns && (S.leadWait || 0) < 3 && (!R.owner || (R.teamOf(R.owner) === m.home) !== (ns === 'home'))) S.leadWait = (S.leadWait || 0) + dt * speedK();
+              else {
+                S.leadWait = 0;
+                S.acc = 0;
+                handle(m.step());
+              }
             }
           }
         }
