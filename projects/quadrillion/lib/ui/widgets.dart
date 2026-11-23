@@ -59,14 +59,72 @@ const _tab = [FontFeature.tabularFigures()];
 TextStyle ts({double size = 14, Color color = Pal.ink, bool bold = false, double? height}) =>
     TextStyle(fontFamily: fontFamily, fontSize: size, color: color, fontWeight: bold ? FontWeight.w700 : FontWeight.w400, height: height, fontFeatures: _tab);
 
+/// 見た目の決まり（カード・小窓・ボタンの角の丸み、枠、影、余白、見出しの字）。
+/// 画面ごとに数字を直書きせず、ここから取る
+class Ui {
+  /// カード（白い箱・絵の枠・たたんだ行・案内の帯）の角の丸み
+  static const rCard = 12.0;
+
+  /// 小窓の角の丸み
+  static const rSheet = 18.0;
+
+  /// ボタン・入力欄・選ぶ欄の角の丸み
+  static const rBtn = 8.0;
+
+  /// カードの中の箱（吹き出し・知らせの帯）の角の丸み
+  static const rBox = 10.0;
+
+  /// カードの内側の余白
+  static const pad = 12.0;
+
+  /// 小窓の内側の余白
+  static const sheetPad = 16.0;
+
+  /// カードどうしの上下のすきま（片側）
+  static const cardGap = 4.0;
+
+  /// カードのごく薄い影
+  static const shadow = [BoxShadow(color: Color(0x0F1F2433), blurRadius: 6, offset: Offset(0, 1))];
+
+  /// 小窓の影（後ろの画面から浮かせる）
+  static const sheetShadow = [BoxShadow(color: Color(0x261F2433), blurRadius: 18, offset: Offset(0, 4))];
+
+  /// 小窓の後ろの幕
+  static const scrim = Color(0x59282832);
+
+  /// 小窓が出入りする時間の決まり
+  static const sheetMotionDefault = Duration(milliseconds: 220);
+
+  /// 小窓が出入りする時間（今の値。もとからあるテストは0に差し替えている）
+  static Duration sheetMotion = sheetMotionDefault;
+
+  /// 見出し（h2）・カードの見出し・小見出し（h3）の字
+  static TextStyle get h2 => ts(size: 17, color: Pal.goldtx, bold: true);
+  static TextStyle cardTitle({bool gold = false}) => ts(size: 14, color: gold ? Pal.goldtx : Pal.ink, bold: true);
+  static TextStyle get h3 => ts(bold: true);
+
+  /// 欄の中の1行の下の線
+  static const rowLine = BoxDecoration(border: Border(bottom: BorderSide(color: Pal.line)));
+}
+
+/// カードの見た目（白い面・1px の枠・角の丸み・ごく薄い影）
+BoxDecoration cardDeco({Color border = Pal.line, Color color = Pal.panel, double radius = Ui.rCard, bool shadow = true}) => BoxDecoration(
+    color: color, border: Border.all(color: border), borderRadius: BorderRadius.circular(radius), boxShadow: shadow ? Ui.shadow : null);
+
+/// カードの中の箱の見た目（吹き出しなど。枠なしの薄い面、または枠つき）
+BoxDecoration boxDeco({Color color = Pal.panel2, Color? border}) =>
+    BoxDecoration(color: color, border: border == null ? null : Border.all(color: border), borderRadius: BorderRadius.circular(Ui.rBox));
+
+/// ボタン・選ぶ欄の形
+ShapeBorder btnShape(Color border) => RoundedRectangleBorder(side: BorderSide(color: border), borderRadius: BorderRadius.circular(Ui.rBtn));
+
 /// 見出し（試作の h2）
 class H2 extends StatelessWidget {
   final String text;
   final bool top;
   const H2(this.text, {super.key, this.top = false});
   @override
-  Widget build(BuildContext context) =>
-      Padding(padding: EdgeInsets.only(top: top ? 0 : 18, bottom: 8), child: Text(tx(text), style: ts(size: 17, color: Pal.goldtx, bold: true)));
+  Widget build(BuildContext context) => Padding(padding: EdgeInsets.only(top: top ? 0 : 18, bottom: 8), child: Text(tx(text), style: Ui.h2));
 }
 
 /// 小見出し（h3）
@@ -74,23 +132,188 @@ class H3 extends StatelessWidget {
   final String text;
   const H3(this.text, {super.key});
   @override
-  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(top: 14, bottom: 6), child: Text(tx(text), style: ts(bold: true)));
+  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(top: 14, bottom: 6), child: Text(tx(text), style: Ui.h3));
 }
 
+/// カードの見出し（[gold] は社長の行動・番頭のひとことなど、目立たせる欄）
+class CardTitle extends StatelessWidget {
+  final String text;
+  final bool gold;
+  const CardTitle(this.text, {super.key, this.gold = false});
+  @override
+  Widget build(BuildContext context) => Text(tx(text), style: Ui.cardTitle(gold: gold));
+}
+
+/// 白いカード
 class Panel extends StatelessWidget {
   final Widget child;
   final Color border;
   final EdgeInsets padding;
   final Color color;
-  const Panel({super.key, required this.child, this.border = Pal.line, this.padding = const EdgeInsets.all(12), this.color = Pal.panel});
+  const Panel({super.key, required this.child, this.border = Pal.line, this.padding = const EdgeInsets.all(Ui.pad), this.color = Pal.panel});
   @override
   Widget build(BuildContext context) => Container(
         width: double.infinity,
-        margin: const EdgeInsets.symmetric(vertical: 4),
+        margin: const EdgeInsets.symmetric(vertical: Ui.cardGap),
         padding: padding,
-        decoration: BoxDecoration(color: color, border: Border.all(color: border), borderRadius: BorderRadius.circular(10)),
+        decoration: cardDeco(border: border, color: color),
         child: child,
       );
+}
+
+/// 押せるカード（たたんだ事業の行・案内の帯）。見た目は [Panel] と同じで、全体が押せる
+class TapCard extends StatelessWidget {
+  final Widget child;
+  final VoidCallback? onTap;
+  final Color border, color;
+  final Key? inkKey;
+  final EdgeInsets margin;
+  const TapCard(
+      {super.key,
+      required this.child,
+      this.onTap,
+      this.border = Pal.line,
+      this.color = Pal.panel,
+      this.inkKey,
+      this.margin = const EdgeInsets.symmetric(vertical: Ui.cardGap)});
+  @override
+  Widget build(BuildContext context) => Container(
+        margin: margin,
+        decoration: cardDeco(border: border, color: color),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(key: inkKey, borderRadius: BorderRadius.circular(Ui.rCard), onTap: onTap, child: child),
+        ),
+      );
+}
+
+/// 絵やグラフの枠（カードと同じ角・枠・影。中身は角で切る）
+class Frame extends StatelessWidget {
+  final Widget child;
+  const Frame({super.key, required this.child});
+  @override
+  Widget build(BuildContext context) => Container(
+        decoration: cardDeco(border: Colors.transparent),
+        foregroundDecoration: BoxDecoration(border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(Ui.rCard)),
+        child: ClipRRect(borderRadius: BorderRadius.circular(Ui.rCard), child: child),
+      );
+}
+
+/// 手を使う数の小さな札（「1手」）
+class ApTag extends StatelessWidget {
+  final int n;
+  const ApTag(this.n, {super.key});
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        decoration: BoxDecoration(color: Pal.panel, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(99)),
+        child: Text(n == 1 ? tr('1手') : tr('{0}手', [n]), maxLines: 1, softWrap: false, style: ts(size: 10.5, color: Pal.goldtx, bold: true, height: 1.5)),
+      );
+}
+
+/// 上に並べる選ぶ札（並べ替え・絞り込み）。見た目は高さ32、押せる範囲は 44pt
+class PickChip extends StatelessWidget {
+  final String label;
+  final bool on;
+  final VoidCallback onTap;
+  const PickChip(this.label, {super.key, required this.on, required this.onTap});
+  @override
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        selected: on,
+        label: label,
+        excludeSemantics: true,
+        child: TapArea(
+          onTap: onTap,
+          child: Container(
+            height: 32,
+            padding: EdgeInsets.only(left: on ? 8 : 12, right: 12),
+            decoration: BoxDecoration(
+                color: on ? Pal.onBg : Pal.panel, border: Border.all(color: on ? Pal.gold : Pal.line), borderRadius: BorderRadius.circular(99)),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              if (on) const Padding(padding: EdgeInsets.only(right: 3), child: Icon(Icons.check, size: 15, color: Pal.goldtx)),
+              Text(label, maxLines: 1, softWrap: false, style: ts(size: 12.5, color: on ? Pal.goldtx : Pal.ink, bold: on)),
+            ]),
+          ),
+        ),
+      );
+}
+
+/// 横に流せる札の列（左に小さな見出し）。[id] は流した位置を覚える名前。
+/// 名前を付けないと、外側の一覧（タブごとに位置を覚えている）の位置を取り違えて、右の端まで流れた形で出る
+class ChipRow extends StatelessWidget {
+  final String id, label;
+  final List<Widget> chips;
+  const ChipRow(this.id, this.label, this.chips, {super.key});
+  @override
+  Widget build(BuildContext context) => Row(children: [
+        ConstrainedBox(constraints: const BoxConstraints(minWidth: 52), child: Muted(label, size: 12)),
+        const SizedBox(width: 6),
+        Expanded(
+          child: SingleChildScrollView(
+            key: PageStorageKey<String>('chips-$id'),
+            scrollDirection: Axis.horizontal,
+            child: Row(children: [
+              for (final c in chips) Padding(padding: const EdgeInsets.only(right: 6), child: c),
+            ]),
+          ),
+        ),
+      ]);
+}
+
+/// 検索の欄（名前で絞る）
+class SearchBox extends StatelessWidget {
+  final TextEditingController controller;
+  final String hint;
+  final ValueChanged<String> onChanged;
+  const SearchBox({super.key, required this.controller, required this.hint, required this.onChanged});
+  @override
+  Widget build(BuildContext context) {
+    OutlineInputBorder b(Color c, [double w = 1]) =>
+        OutlineInputBorder(borderRadius: BorderRadius.circular(Ui.rBtn), borderSide: BorderSide(color: c, width: w));
+    // 欄の中の字の横の位置も、外側の一覧の位置と取り違えないように名前を付ける
+    return ConstrainedBox(
+      key: const PageStorageKey<String>('search-box'),
+      constraints: const BoxConstraints(minHeight: minTap),
+      child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        onSubmitted: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+        onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+        textInputAction: TextInputAction.search,
+        autocorrect: false,
+        style: ts(size: 14),
+        cursorColor: Pal.goldtx,
+        decoration: InputDecoration(
+          isDense: true,
+          filled: true,
+          fillColor: Pal.panel,
+          hintText: hint,
+          hintStyle: ts(size: 14, color: Pal.mute),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          prefixIcon: const Icon(Icons.search, size: 20, color: Pal.mute),
+          prefixIconConstraints: const BoxConstraints(minWidth: 38, minHeight: minTap),
+          suffixIcon: controller.text.isEmpty
+              ? null
+              : IconButton(
+                  key: const ValueKey('search-clear'),
+                  tooltip: tr('検索を消す'),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(minWidth: minTap, minHeight: minTap),
+                  icon: const Icon(Icons.close, size: 18, color: Pal.mute),
+                  onPressed: () {
+                    controller.clear();
+                    onChanged('');
+                  },
+                ),
+          suffixIconConstraints: const BoxConstraints(minWidth: minTap, minHeight: minTap),
+          enabledBorder: b(Pal.line),
+          focusedBorder: b(Pal.gold, 1.5),
+          border: b(Pal.line),
+        ),
+      ),
+    );
+  }
 }
 
 class Muted extends StatelessWidget {
@@ -221,7 +444,7 @@ class VoiceSay extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(10)),
+              decoration: boxDeco(),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text.rich(TextSpan(children: [
                   TextSpan(text: tx(who), style: ts(size: 12.5, bold: true)),
@@ -269,29 +492,51 @@ class Btn extends StatelessWidget {
 
   /// 押すと選ぶ小窓が開くボタン（後ろに「›」の印を付ける）
   final bool more;
-  const Btn(this.label, this.onTap, {super.key, this.primary = false, this.small = false, this.enabled = true, this.shrink = false, this.more = false});
+
+  /// 使う手の数（1以上なら「1手」の小さな札を付ける）
+  final int ap;
+
+  /// 薄く見せるが押せる（押すと「今月の手が残っていません」などを出す）
+  final bool dim;
+
+  /// 手の札を字の下に置く（幅の狭い列のボタン用）
+  final bool apBelow;
+  const Btn(this.label, this.onTap,
+      {super.key,
+      this.primary = false,
+      this.small = false,
+      this.enabled = true,
+      this.shrink = false,
+      this.more = false,
+      this.ap = 0,
+      this.dim = false,
+      this.apBelow = false});
   @override
   Widget build(BuildContext context) {
     final on = enabled && onTap != null;
+    final text = Text(tx(label),
+        maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink));
     return TapArea(
       onTap: on ? onTap : null,
       child: Opacity(
-      opacity: on ? 1 : .4,
+      opacity: on && !dim ? 1 : .4,
       child: Material(
         color: primary ? Pal.gold : Pal.panel2,
-        shape: RoundedRectangleBorder(side: BorderSide(color: primary ? Pal.gold : Pal.line), borderRadius: BorderRadius.circular(8)),
+        shape: btnShape(primary ? Pal.gold : Pal.line),
         child: InkWell(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Ui.rBtn),
           onTap: on ? onTap : null,
           child: Padding(
             padding: small ? const EdgeInsets.symmetric(horizontal: 8, vertical: 5) : const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: _fit(more
+            child: _fit(ap > 0 && apBelow
+                ? Column(mainAxisSize: MainAxisSize.min, children: [text, const SizedBox(height: 1), ApTag(ap)])
+                : more || ap > 0
                 ? Row(mainAxisSize: MainAxisSize.min, children: [
-                    Flexible(child: Text(tx(label), style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink))),
-                    Icon(Icons.chevron_right, size: small ? 16 : 18, color: Pal.mute),
+                    Flexible(child: text),
+                    if (ap > 0) Padding(padding: const EdgeInsets.only(left: 5), child: ApTag(ap)),
+                    if (more) Icon(Icons.chevron_right, size: small ? 16 : 18, color: Pal.mute),
                   ])
-                : Text(tx(label),
-                    maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink))),
+                : text),
           ),
         ),
       ),
@@ -311,9 +556,9 @@ class DangerBtn extends StatelessWidget {
       onTap: onTap,
       child: Material(
         color: Pal.down,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: btnShape(Pal.down),
         child: InkWell(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(Ui.rBtn),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
@@ -332,10 +577,15 @@ class ChoiceBtn extends StatelessWidget {
 
   /// 薄く見せるが押せる（押すと「お金が足りません」などを出す）
   final bool dim;
-  const ChoiceBtn(this.label, this.onTap, {super.key, this.subs = const [], this.enabled = true, this.primary = false, this.on = false, this.dim = false});
+
+  /// 使う手の数（1以上なら右上に「1手」の小さな札を付ける）
+  final int ap;
+  const ChoiceBtn(this.label, this.onTap,
+      {super.key, this.subs = const [], this.enabled = true, this.primary = false, this.on = false, this.dim = false, this.ap = 0});
   @override
   Widget build(BuildContext context) {
     final ok = enabled && onTap != null;
+    final title = Text(tx(label), style: ts(bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink, height: 1.45));
     return Opacity(
       opacity: ok && !dim ? 1 : .4,
       child: Padding(
@@ -346,10 +596,9 @@ class ChoiceBtn extends StatelessWidget {
               : on
                   ? Pal.onBg
                   : Pal.panel2,
-          shape: RoundedRectangleBorder(
-              side: BorderSide(color: primary || on ? Pal.gold : Pal.line), borderRadius: BorderRadius.circular(8)),
+          shape: btnShape(primary || on ? Pal.gold : Pal.line),
           child: InkWell(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(Ui.rBtn),
             onTap: ok ? onTap : null,
             child: Container(
               width: double.infinity,
@@ -357,7 +606,7 @@ class ChoiceBtn extends StatelessWidget {
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                Text(tx(label), style: ts(bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink, height: 1.45)),
+                if (ap > 0) Row(children: [Expanded(child: title), const SizedBox(width: 6), ApTag(ap)]) else title,
                 for (final s in subs)
                   if (s.isNotEmpty) Text(tx(s), style: ts(size: 12, color: primary ? const Color(0xFF3A2E00) : Pal.mute, height: 1.4)),
               ]),
@@ -384,7 +633,7 @@ class Say extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(10)),
+              decoration: boxDeco(),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(tx(who), style: ts(size: 12, color: Pal.mute)),
                 Text(tx(text), style: ts(size: 13)),
@@ -445,7 +694,7 @@ class Pick<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 6),
-        decoration: BoxDecoration(color: Pal.panel2, border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(6)),
+        decoration: BoxDecoration(color: Pal.panel2, border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(Ui.rBtn)),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<T>(
             value: items.any((e) => e.$1 == value) ? value : items.first.$1,

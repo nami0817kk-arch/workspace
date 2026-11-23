@@ -73,7 +73,7 @@ void openSeek(GameController ctl) {
             markGuide(s, 'partner');
             ctl.save();
             openMeet(ctl);
-          }, subs: [pl.s]),
+          }, ap: 1, subs: [pl.s]),
         _cancel(ctl),
       ]));
 }
@@ -119,7 +119,7 @@ void openTrain(GameController ctl) {
   ctl.showSheet((_) => _col([
         H2(tr('腕を磨く'), top: true),
         _note(tr('手を1つ使い、社長の能力を1つ {0} 伸ばします。若いほどよく伸びます。', [s.trainGain()])),
-        for (final k in abKeys) ChoiceBtn(tr('{0}（今 {1}）', [ABN[k], s.pres.ab[k]]), () => ctl.act(() => s.presAct('train', k)), subs: [trainDesc[k]!]),
+        for (final k in abKeys) ChoiceBtn(tr('{0}（今 {1}）', [ABN[k], s.pres.ab[k]]), () => ctl.act(() => s.presAct('train', k)), ap: 1, subs: [trainDesc[k]!]),
         _cancel(ctl),
       ]));
 }
@@ -185,7 +185,7 @@ void openPivot(GameController ctl, Biz b) {
         H2(tr('「{0}」の業態を変える', [from.name]), top: true),
         _note(tr('同じ分類の業種に乗り換えます。今の事業の力の半分を引き継ぎ、新しい業種の元手がかかります。手を1つ使います。')),
         for (final i in list)
-          ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)), enabled: s.cash >= s.capexOf(i), subs: [
+          ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)), enabled: s.cash >= s.capexOf(i), ap: 1, subs: [
             tr('利益率{0}%・{1}', [jsNum(jsRound(i.mg * 100)), s.yr() - i.b < 10 ? tr('生まれたばかり') : i.f != 0 && s.yr() > i.f ? tr('沈み中') : tr('市場 {0}', [yen(s.mkt(i) / 3)])])
           ]),
         _cancel(ctl),
@@ -196,7 +196,7 @@ void openPivot(GameController ctl, Biz b) {
 Widget _unitChoice(GameController ctl, String label, double cost, String Function() fn, List<String> subs) {
   final s = ctl.game!;
   final short = s.cash < cost;
-  return ChoiceBtn(label, () => short ? ctl.toast(M('お金が足りません')) : ctl.act(fn, mark: 'act'), dim: short, subs: subs);
+  return ChoiceBtn(label, () => short ? ctl.toast(M('お金が足りません')) : ctl.act(fn, mark: 'act'), dim: short, ap: 1, subs: subs);
 }
 
 /// 店・工場を増やす（1つ・3つ・10。1つの値段はその業種の元手）
@@ -268,6 +268,7 @@ void openDirty(GameController ctl, Company c) {
                       : ctl.act(() => s.doDirty(k, c)),
               enabled: s.ap >= 1,
               dim: s.cash < s.dirtyCost(k),
+              ap: 1,
               subs: ['${DIRTYD[k]}${k == 'cartel' && s.cartelBiz(c) != null ? tr('。対象は「{0}」', [indm[s.cartelBiz(c)!.ind]!.name]) : ''}']),
         _cancel(ctl),
       ]));
@@ -311,7 +312,7 @@ void openDeal(GameController ctl, Company c) {
         _note(tr('手を1つ使います。関係が悪すぎる相手とは組めません。')),
         for (final t in const ['sales', 'codev', 'outsrc'])
           ChoiceBtn(DEALN[t]!, () => ctl.act(() => s.makeDeal(c, t)),
-              enabled: s.dealOk(c, t).isEmpty, subs: [s.dealOk(c, t).isNotEmpty ? s.dealOk(c, t) : DEALD[t]!]),
+              enabled: s.dealOk(c, t).isEmpty, ap: 1, subs: [s.dealOk(c, t).isNotEmpty ? s.dealOk(c, t) : DEALD[t]!]),
         _cancel(ctl),
       ]));
 }
@@ -493,7 +494,7 @@ void openPipes(GameController ctl, Biz b, String k) {
         for (final i in g.idx)
           Container(
             padding: const EdgeInsets.symmetric(vertical: 2),
-            decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Pal.line))),
+            decoration: Ui.rowLine,
             child: Row(children: [
               Expanded(child: Text(pipeText(s, b, b.pipe[i]), style: ts(size: 13))),
               Btn(tr('取り下げる（半分戻る）'), () {
@@ -609,7 +610,7 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
             key: const ValueKey('stop-reason'),
             margin: const EdgeInsets.only(bottom: 10),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(color: Pal.goldBg, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(8)),
+            decoration: boxDeco(color: Pal.goldBg, border: Pal.gold),
             child: Text(before.stop!, style: ts(size: 13.5, bold: true, color: Pal.goldtx)),
           ),
         H2(head, top: true),
