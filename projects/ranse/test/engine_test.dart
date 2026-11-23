@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ranse/engine/birth.dart';
 import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/ending.dart';
+import 'package:ranse/engine/endings_catalog.dart';
 import 'package:ranse/engine/game.dart';
 import 'package:ranse/engine/history.dart';
 import 'package:ranse/engine/history_lines.dart';
@@ -945,6 +946,11 @@ void main() {
         final s = shareText(g, e);
         expect(s, contains(e.title));
         expect(s, contains('分の1'));
+        if (e.tier != null && e.tier != Tier.common) {
+          expect(s, contains(e.tierName!));
+        } else {
+          expect(s, isNot(contains('最期 ―')));
+        }
       }
       // 道 × 死に方 × 幸福で、称号はばらける。
       expect(titles.length, greaterThan(40));

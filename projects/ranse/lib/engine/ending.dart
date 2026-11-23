@@ -347,5 +347,7 @@ String shareText(Game g, Ending e) {
     '${l.region}国の${l.clsName}の${l.female ? '娘' : '子'}・${l.name}',
     for (final h in e.highlights) '・$h',
     '結末：${e.title}（${g.age}歳）',
+    // よくある最期は書かない。珍しいほど、共有したくなる一行になる。
+    if (e.tier != null && e.tier != Tier.common) '― ${e.tierName} ―',
   ].join('\n');
 }
