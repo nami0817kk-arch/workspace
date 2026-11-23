@@ -276,6 +276,19 @@ void main() {
     }
   });
 
+  test('空っぽ・吸われていた土を掘ったときの知らせ（0.7.34・試作 v50）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "fxNum(f,x,y,'吸われていた',", // 吸われて0になっていた土
+      "fxNum(f,x,y,'空っぽ',", // もとから空っぽの土
+      'sc.nut--;sc.sk=1;', // モンスターが吸った土に印
+      'c.nut-=t;c.sk=1;', // 錬金術師が吸った土に印
+      'if(a[7])c.sk=1;', // 保存から戻しても印が残る
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
