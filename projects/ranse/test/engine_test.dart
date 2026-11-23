@@ -1586,6 +1586,73 @@ void main() {
       expect(seen.length, greaterThanOrEqualTo(10), reason: '$seen');
     });
 
+    test('能力の岐路と願掛けの旗が、何年もあとに返ってくる（伏線の回収 その3）', () {
+      const flags = [
+        'tal_karo_grudge',
+        'tal_envied',
+        'tal_favorite',
+        'tal_gamble_debt',
+        'tal_wrote_book',
+        'tal_exposed_fraud',
+        'tal_bribe',
+        'tal_kenchi',
+        'tal_fushin',
+        'tal_beloved_captain',
+        'tal_followers',
+        'tal_night_raid',
+        'tal_alliance',
+        'tal_machiwari',
+        'tal_shinan',
+        'tal_c_sumo_win',
+        'tal_c_white_deer',
+        'tal_c_horse',
+        'ps_wish_home',
+      ];
+      final digits = RegExp(r'[0-9０-９%]');
+      final seen = <String>{};
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 7300);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished) continue;
+        for (final f in flags) {
+          g.setFlag(f);
+        }
+        // 二人に一人は主家に仕える身にして、家中の岐路も見る（出城の縄張りをした侍として）。
+        if (seed.isEven && g.l.rank == 0 && !g.hasFlag('priesthood')) {
+          g.l
+            ..rank = 3
+            ..maxRank = 3
+            ..lord = g.alive.first.name
+            ..fav = 40;
+          g.mark('出城の縄張りを任され、守りの堅い城を築いた');
+        }
+        var count = g.l.flags.where((f) => f.startsWith('scene:e3_')).length;
+        playOut(
+          g,
+          Rng(seed + 1),
+          onPrompt: (p) {
+            final now = g.l.flags.where((f) => f.startsWith('scene:e3_')).length;
+            if (now == count) return;
+            count = now;
+            for (final c in p.choices) {
+              expect(c.hint, isNotNull, reason: '${p.title}/${c.label} に匂わせが無い');
+              expect(c.hint!, isNot(contains(digits)), reason: '${p.title}/${c.hint}');
+              expect(c.label, isNot(contains(digits)), reason: '${p.title}/${c.label}');
+            }
+          },
+        );
+        seen.addAll(
+          g.l.flags
+              .where((f) => f.startsWith('scene:e3_'))
+              .map((f) => f.substring(6)),
+        );
+      }
+      // 19 のうち 12 以上。
+      expect(seen.length, greaterThanOrEqualTo(12), reason: '$seen');
+    });
+
     test('長篠で武田が兵を退いた人生では、1582年に武田が滅ばず、武田の滅亡にまつわる岐路も出ない', () {
       var checked = 0;
       for (var seed = 0; seed < 300; seed++) {

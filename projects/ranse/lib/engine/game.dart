@@ -8,6 +8,7 @@ import 'childhood_more.dart';
 import 'data.dart';
 import 'echoes.dart';
 import 'echoes_more.dart';
+import 'echoes_talent.dart';
 import 'history.dart';
 import 'history_east.dart';
 import 'history_life.dart';
@@ -66,6 +67,7 @@ class Game extends ChangeNotifier {
       ...buildLordScenes(),
       ...buildEchoScenes(),
       ...buildEchoMoreScenes(),
+      ...buildEchoTalentScenes(),
       ...buildWomenScenes(),
       ...buildAshigaruScenes(),
       ...buildVillageScenes(),

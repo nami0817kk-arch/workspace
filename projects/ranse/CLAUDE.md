@@ -343,6 +343,26 @@
   `tal_monk_warrior`・`tal_mondo_win`・`tal_alliance`・`tal_beloved_captain`・`tal_night_raid`・`tal_machiwari` ほか）と、子どもの `tal_c_*` 6つ。
   `tal_meibutsu` は掘り出した茶碗を売っているので、名物を持つ旗ではない。
 
+## 伏線の回収 その3（2026-11-23）
+
+能力の岐路（`tal_`・子どもの `tal_c_`）と寺社の願掛け（`ps_wish_*`）の旗を、何年もあとに返す岐路を19足した
+（`lib/engine/echoes_talent.dart`、id・新しい旗は `e3_`。`game.dart` の大人の場面で `buildEchoMoreScenes` のあとに登録。どれも一生に一度、重み5〜6）。
+- 回収した旗: `tal_karo_grudge`（＝御前試合の `tal_gozen_win` と同時に立つ。家老の讒言／不始末を暴いて失脚させる、しくじれば稀に切腹）／
+  `tal_envied`（侍は戦場で脇を固める同輩が当てにならない、奥の女性は櫛の濡れ衣）／`tal_favorite`（殿が老い、若殿の側近に疎まれる）／
+  `tal_gamble_debt`（取り立て。荒事で帳消しは戦える人だけ）／`tal_wrote_book`（侍は敵が自分の書どおりの陣を敷く、ほかは写しを携えた若者が来る）／
+  `tal_exposed_fraud`（男は代官の息子の恨み、奥の女性は暇を出された女中）／`tal_bribe`（帳面の洗い直し）／`tal_kenchi`（凶作の年に検地の村々が来る）／
+  `tal_fushin`（同じ旗が侍の出城と村の堤の二通りで立つので、歩んだ道に「出城の縄張り」があるかで見分ける）／`tal_beloved_captain`（負け戦のしんがり）／
+  `tal_followers`（人を集めて企んでいると疑われる）／`tal_night_raid`（討った敵将の子が仇を名乗る）／`tal_alliance`（結んだ縁が揺らぐ）／
+  `tal_machiwari`（栄えた町と古い座の訴え）／`tal_shinan`（教えた若侍が勘気をこうむる／浪人なら仕官の口。縁の役割「槍の弟子」）／
+  `tal_c_sumo_win`（力自慢として相撲に召し出され、身分のない人は召し抱えも）／`tal_c_white_deer`（ふたたび白い鹿）／
+  `tal_c_horse`（救った子が馬喰になって訪ねる。縁の役割「馬喰の縁」）／`ps_wish_home`・`ps_wish_rise`（お礼参り・願ほどき）。
+- `mark()` の文はすべて新しく足しただけ。死ぬ結果は11で、どれも数%（帳面を焼くのは露見したときの2割）、匂わせに危うさを書いてある。
+- テスト（`engine_test.dart` の「伏線の回収 その3」）: 19の旗を立てた300人生（二人に一人は出城の縄張りをした侍）で、19のうち12以上が出て、
+  出た岐路の選択肢に匂わせがあり数字が無い。手元で engine だけを Dart で流した写しでは19すべてが出て、engine_test 全体も通った（CI は未確認）。
+- **まだ回収していない旗**: `tal_ikki`・`tal_strategy`・`tal_saw_forgery`・`tal_gunshi`・`tal_judge`・`tal_bugyo`・`tal_chorayaku`・`tal_nursed`・
+  `tal_monk_warrior`・`tal_mondo_win`・`tal_nanban_talk`・`tal_jinpu`・`tal_cheated`・`tal_read_deed`・`tal_shrine`・`tal_big_win`・`tal_many_friends`・
+  `tal_machi_toshiyori`・`tal_beat_challenger`／子どもの `tal_c_peacemaker`・`tal_c_read_sign`・`tal_c_sharp`／`ps_tea_praise`・`ps_tea_honest`・`ps_koto_played`・`ps_sea_luck`。
+
 ## 最期の図鑑（2026-11-23、品質改善ループ12回目）
 
 - 人生が終わると、その結末を図鑑に記す（`SaveStore.recordEnding`、`ranse.dex.v1`）。同じ結末かは `Ending.key`
