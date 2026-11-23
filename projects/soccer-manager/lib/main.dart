@@ -313,8 +313,12 @@ class _DeliverPendingPurchasesState extends State<_DeliverPendingPurchases> {
     final money = context.watch<MonetizationController>();
     final gameState = context.watch<GameState>();
 
+    // 手放しを迫られているあいだは渡さない(買い直しで資金が初期の額に
+    // 戻され、入れたぶんが消える)。新しいクラブに移ると saleReason が
+    // 外れて GameState が知らせてくるので、そのときここで渡る。
     if (!_delivering &&
         gameState.hasSave &&
+        !gameState.isSaleForced &&
         money.undeliveredFundsPacks.isNotEmpty) {
       _delivering = true;
       // 描画の最中にセーブを書き換えない。

@@ -190,6 +190,199 @@ void main() {
     expect(money.undeliveredFundsPacks, isEmpty);
     expect(money.isSupporter, isFalse);
   });
+
+  group('受け取りの途中で落ちる', () {
+    // 以前は「渡した」と記録してから預けていた。その間に落ちると、
+    // ストアが送り直してきても「渡し済み」として弾き、払ったぶんが
+    // 届かなかった(消費型は復元でも戻らない)。
+
+    test('預ける書き込みで落ちても、送り直しで届く', () async {
+      final store = _SilentPurchaseService();
+      final crashing = _CrashingPrefs(
+          await SharedPreferences.getInstance(),
+          crashOnKey: 'monetization.undeliveredFunds');
+      final money = MonetizationController(
+          adService: _NoAdService(),
+          purchases: store,
+          prefs: () async => crashing);
+      await money.initialize();
+
+      // 受け取りが途中で落ちる。窓口は完了通知を返さない(本物は例外で
+      // received = false になる)。
+      await expectLater(
+          store.deliver(FundsPack.small.productId, purchaseId: 'tx-crash'),
+          throwsA(isA<_Crash>()));
+      expect(money.undeliveredFundsPacks, isEmpty);
+
+      // 起動し直したところへ、ストアが同じ取引を送り直してくる。
+      final store2 = _SilentPurchaseService();
+      final money2 =
+          MonetizationController(adService: _NoAdService(), purchases: store2);
+      await money2.initialize();
+      await store2.deliver(FundsPack.small.productId, purchaseId: 'tx-crash');
+
+      expect(money2.undeliveredFundsPacks, [FundsPack.small],
+          reason: '落ちた取引を「渡し済み」として弾いている(払ったのに届かない)');
+    });
+
+    test('預けた後で落ちても、送り直しで二重に渡らない', () async {
+      // 預かりの1件に取引の識別子が添えてあるので、記録は預けた時点で
+      // 済んでいる。渡し終えた取引の一覧を書く前に落ちても弾ける。
+      final store = _SilentPurchaseService();
+      final crashing = _CrashingPrefs(
+          await SharedPreferences.getInstance(),
+          crashOnKey: 'monetization.deliveredPurchaseIds');
+      final money = MonetizationController(
+          adService: _NoAdService(),
+          purchases: store,
+          prefs: () async => crashing);
+      await money.initialize();
+      await store.deliver(FundsPack.medium.productId, purchaseId: 'tx-9');
+      expect(money.undeliveredFundsPacks, [FundsPack.medium]);
+
+      final store2 = _SilentPurchaseService();
+      final money2 =
+          MonetizationController(adService: _NoAdService(), purchases: store2);
+      await money2.initialize();
+      await store2.deliver(FundsPack.medium.productId, purchaseId: 'tx-9');
+
+      expect(money2.undeliveredFundsPacks, [FundsPack.medium],
+          reason: '同じ取引を二度預けている');
+    });
+
+    test('クラブ資金へ移した後でも、送り直しで二重に渡らない', () async {
+      final (money, store) = await build();
+      final game = GameState();
+      await game.startNewGame('送り直しFC');
+      await store.deliver(FundsPack.small.productId, purchaseId: 'tx-5');
+      final first = await deliverPendingFunds(money, game);
+      expect(first, greaterThan(0));
+
+      final store2 = _SilentPurchaseService();
+      final money2 =
+          MonetizationController(adService: _NoAdService(), purchases: store2);
+      await money2.initialize();
+      await store2.deliver(FundsPack.small.productId, purchaseId: 'tx-5');
+      expect(money2.undeliveredFundsPacks, isEmpty,
+          reason: '渡し終えた取引を忘れて、もう一度預けている');
+    });
+
+    test('サポーターの札を書く前に落ちても、送り直しで届く', () async {
+      final store = _SilentPurchaseService();
+      final crashing = _CrashingPrefs(
+          await SharedPreferences.getInstance(),
+          crashOnKey: 'monetization.supporter');
+      final money = MonetizationController(
+          adService: _NoAdService(),
+          purchases: store,
+          prefs: () async => crashing);
+      await money.initialize();
+      await expectLater(
+          store.deliver(PurchaseService.supporterProductId,
+              purchaseId: 'tx-s'),
+          throwsA(isA<_Crash>()));
+
+      final store2 = _SilentPurchaseService();
+      final money2 =
+          MonetizationController(adService: _NoAdService(), purchases: store2);
+      await money2.initialize();
+      expect(money2.isSupporter, isFalse);
+      await store2.deliver(PurchaseService.supporterProductId,
+          purchaseId: 'tx-s');
+      expect(money2.isSupporter, isTrue,
+          reason: '落ちた取引を「渡し済み」として弾いている');
+    });
+
+    test('古い版の預かり(商品IDだけの行)も読める', () async {
+      SharedPreferences.setMockInitialValues({
+        'monetization.undeliveredFunds': [FundsPack.large.productId],
+      });
+      final (money, _) = await build();
+      expect(money.undeliveredFundsPacks, [FundsPack.large]);
+    });
+  });
+
+  group('手放しを迫られているあいだ', () {
+    test('資金パックは渡さず、新しいクラブに移ってから渡す', () async {
+      // 迫られているあいだに渡すと、買い直しで資金が初期の額に戻され、
+      // 払ったぶんが消えていた。
+      final (money, store) = await build();
+      final game = GameState();
+      await game.startNewGame('売却FC');
+      game.save!.confidence = 0; // サポーターの期待が尽きた
+      expect(game.isSaleForced, isTrue);
+
+      await store.deliver(FundsPack.medium.productId);
+      final during = await deliverPendingFunds(money, game);
+      expect(during, 0, reason: '手放しを迫られているのに渡している');
+      expect(money.undeliveredFundsPacks, [FundsPack.medium],
+          reason: '渡していないのに預かりを消している');
+      // 直接呼ばれても入れない。
+      expect(game.claimPurchasedFunds(FundsPack.medium), 0);
+
+      final other = game.save!.league.teams
+          .firstWhere((t) => t.id != game.save!.userTeamId);
+      expect(await game.buyClub(other.id), isTrue);
+      expect(game.isSaleForced, isFalse);
+      final startBudget = game.save!.budget;
+
+      final after = await deliverPendingFunds(money, game);
+      expect(after, game.purchasedFundsAmount(FundsPack.medium));
+      expect(game.save!.budget, startBudget + after,
+          reason: '新しいクラブに資金が入っていない');
+      expect(money.undeliveredFundsPacks, isEmpty);
+      await game.flushPendingSave();
+    });
+  });
+}
+
+class _Crash implements Exception {
+  const _Crash();
+}
+
+/// 決めた鍵への書き込みで落ちる保存先。「書き込みの途中でアプリが落ちた」
+/// 場面を作る。読み書きは本物の(テスト用の)保存先へそのまま渡す。
+class _CrashingPrefs implements SharedPreferences {
+  _CrashingPrefs(this._real, {required this.crashOnKey});
+
+  final SharedPreferences _real;
+  final String crashOnKey;
+
+  @override
+  bool? getBool(String key) => _real.getBool(key);
+  @override
+  int? getInt(String key) => _real.getInt(key);
+  @override
+  String? getString(String key) => _real.getString(key);
+  @override
+  List<String>? getStringList(String key) => _real.getStringList(key);
+
+  @override
+  Future<bool> setBool(String key, bool value) async {
+    if (key == crashOnKey) throw const _Crash();
+    return _real.setBool(key, value);
+  }
+
+  @override
+  Future<bool> setInt(String key, int value) async {
+    if (key == crashOnKey) throw const _Crash();
+    return _real.setInt(key, value);
+  }
+
+  @override
+  Future<bool> setString(String key, String value) async {
+    if (key == crashOnKey) throw const _Crash();
+    return _real.setString(key, value);
+  }
+
+  @override
+  Future<bool> setStringList(String key, List<String> value) async {
+    if (key == crashOnKey) throw const _Crash();
+    return _real.setStringList(key, value);
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 /// 買う操作では何も返さず、ストアからの通知だけを起こせる差し替え。

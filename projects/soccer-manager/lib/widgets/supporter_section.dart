@@ -29,12 +29,14 @@ class _SupporterSectionState extends State<SupporterSection> {
       return const SizedBox.shrink();
     }
 
+    // 「¥」は全角に置き換え済み(MonetizationController.displayPrice)。
+    // 同梱フォントに半角の「¥」が無く、そのままだと豆腐になりうる。
     final price = money.priceLabel;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Text(Tr.pick('課金とひろこく', 'Payments and ads'),
+        Text(Tr.pick('課金と広告', 'Payments and ads'),
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 4),
         // 課金要素の全体像。個々の画面には説明があるが、「このアプリで
