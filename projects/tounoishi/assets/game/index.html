@@ -132,6 +132,13 @@ canvas{-webkit-user-select:none;user-select:none}
 .links{margin:2px 0 0;font-size:11.5px;color:var(--sub);text-align:center}.links a{color:var(--sub)}
 .tbox .btn small{display:block;font-size:10.5px;color:var(--sub);font-weight:400}
 .chl{display:flex;flex-direction:column;gap:6px}.chl .btn{text-align:left;padding:8px 10px}.chl .btn small{display:block;font-size:11px;color:var(--sub)}
+.pop{position:absolute;z-index:6;background:rgba(32,22,14,.95);color:#f3e6c8;border:1px solid #c9a46a;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:4px;min-width:150px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.pop b{font-size:12px;padding:2px 4px}.pop button{font:inherit;font-size:13px;text-align:left;padding:8px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:inherit}.pop button.on{border-color:#ffd45a;color:#ffd45a}.pop button:disabled{opacity:.45}
+.yubar{position:absolute;left:8px;right:8px;top:8px;z-index:3;pointer-events:none;background:rgba(20,10,10,.72);color:#ffe9b0;border:1px solid #d9534f;border-radius:8px;padding:4px 8px;font-size:12px}
+.yubar i{display:block;height:6px;margin-top:3px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden}.yubar i b{display:block;height:100%;background:linear-gradient(90deg,#d9534f,#f0a040)}
+.bnr{position:absolute;left:0;right:0;top:34%;z-index:4;pointer-events:none;text-align:center;background:linear-gradient(90deg,rgba(0,0,0,0),rgba(30,10,10,.86) 15%,rgba(30,10,10,.86) 85%,rgba(0,0,0,0));color:#ffd45a;padding:12px 8px;animation:bnrin 2.6s ease forwards}
+.bnr b{display:block;font-size:20px;letter-spacing:.08em}.bnr small{display:block;color:#f3e6c8;font-size:12px;margin-top:4px}
+@keyframes bnrin{0%{opacity:0;transform:scaleX(.6)}12%{opacity:1;transform:scaleX(1)}80%{opacity:1}100%{opacity:0}}
 </style>
 <div class="overlay" id="title" hidden></div>
 <div class="overlay sheet" id="sheet" hidden><div class="sbox">
@@ -150,6 +157,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <h3>操作</h3>
 ・<b>掘る</b>：掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。1マスに掘る力を1使う。<br>
 ・<b>モンスターをタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱ったモンスターを間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
+・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>
 ・<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる（最上階に冒険者がいない間）。<br>
 ・2本指で拡大・移動。上の階のボタン（縮図つき）で階を切り替え。⏸ ×1 ×2 で時間。「今すぐ迎える」で波を早める（早いほど次の掘る力が増える）。
 <h3>モンスター</h3>
@@ -174,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v40</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v42</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -185,6 +193,9 @@ canvas{-webkit-user-select:none;user-select:none}
 <div class="stage">
 <canvas id="c" aria-label="ダンジョンタワーの1フロア。20マス×20マスの土を掘る"></canvas>
 <button class="alertb" id="alertb" hidden></button>
+<div class="yubar" id="yubar" hidden></div>
+<div class="bnr" id="bnr" hidden></div>
+<div class="pop" id="pop" hidden></div>
 <div class="zoom"><button id="zfit" hidden>全体</button><button id="zout" hidden aria-label="縮小">－</button><button id="zin" aria-label="拡大">＋</button></div>
 </div>
 <div class="row">
@@ -458,7 +469,7 @@ function carve(f,P){
 function emul(){var r=g.round-1,D=DIFF[g.diff||'normal'];return {hp:(1+0.4*r)*D.hp,atk:(1+0.25*r)*(0.85+0.15*D.hp)};}
 function resetGo(){var go=document.getElementById('go');go.textContent='今すぐ迎える';go.onclick=launch;go.disabled=false;}
 function newGame(diff){
- NH=[];EVL=[];HL=null;
+ NH=[];EVL=[];HL=null;if(typeof closePop=='function')closePop();
  interNext=null;clearTimeout(interT);growPass=false;
  F=3;CAP=30*F;fx=[];
  var grid=[],f;
@@ -729,6 +740,9 @@ function moveCr(m,S){
  if(m.sp=='slime'||m.sp=='wisp'||m.sp=='yukidama'){var st=straight(m);if(st){m.f=st[0];m.x=st[1];m.y=st[2];m.mv2=true;}return;}
  if(m.sp=='dragon'){dragonMove(m);return;}
  if(m.sleep)return;
+ if(m.hero&&m.cmd=='attack'){var at=bfs(m.f,m.x,m.y,function(f,x,y){return enAt(f,x,y).length>0;},14);if(at){m.f=at[0];m.x=at[1];m.y=at[2];m.mv2=true;return;}}
+ if(m.hero&&m.cmd=='guard'){var GC=g.core;if(GC.home&&m.f==GC.f){if(man(m,GC)<=2)return;var gt=bfs(m.f,m.x,m.y,function(f,x,y){return f==GC.f&&x==GC.x&&y==GC.y;},30);if(gt){m.f=gt[0];m.x=gt[1];m.y=gt[2];m.mv2=true;}return;}}
+ var RL=g.rally;if(RL&&g.t<RL.until&&m.f==RL.f&&!(m.hero&&m.cmd)){if(man(m,RL)<=1)return;var rt=bfs(m.f,m.x,m.y,function(f,x,y){return f==RL.f&&x==RL.x&&y==RL.y;},24);if(rt){m.f=rt[0];m.x=rt[1];m.y=rt[2];m.mv2=true;return;}}
  if(m.sp=='ghost'){
   // 壁をすり抜けて、近くの冒険者へ
   var near=null,bd=99;g.en.forEach(function(e){if(e.f==m.f){var d=man(e,m);if(d<bd){bd=d;near=e;}}});
@@ -877,6 +891,7 @@ function killEn(e,killer){
  if(e.yu){
   var Y=g.yu,amt=30+15*Y.lvl;deposit(e.f,e.x,e.y,amt);depositM(e.f,e.x,e.y,8+4*Y.lvl);g.yuKilled++;
   say(yuName()+'を倒し切った！ 養分'+amt+'が土に戻った。次の周からは新しい勇者が来る。');
+  banner(yuName()+'を倒し切った！','掘る力 ＋20 · 養分'+amt+'が土に · モンスターの傷が全快');g.cr.forEach(function(m){m.hp=m.mhp;});haptic('medium');
   var yn0=yuName();g.yu=newYu();
   if(killer){killer.kills++;if(!killer.hero)promote(killer,'yuusha');else killer.ep=EP.yuusha;if(killer.bio){killer.bio.yus.push(yn0);heroTitle(killer);}}
  }else{
@@ -1010,7 +1025,7 @@ function stepEn(e,dt){
  if(T.heal){e.ht+=dt;if(e.ht>=1.5){e.ht=0;for(i=0;i<g.en.length;i++){var o=g.en[i];if(o!==e&&o.f==e.f&&man(o,e)<=2&&o.hp<o.mhp){o.hp=Math.min(o.mhp,o.hp+4);fxNum(o.f,o.x,o.y,'+4','#7ee08a');}}}}
  var carrying=g.core.carrier===e;
  if(e.yu){
-  e.skT-=dt;if(e.skT<=0)e.skT=yuSkill(e)?6:1;
+  e.skT-=dt;if(e.skT<=1.5&&!e.warn){e.warn=1;fxNum(e.f,e.x,e.y,'！技','#ff8080');addFx({k:'ring',f:e.f,x:ccx(e.x),y:ccx(e.y),life:900,c:'255,90,90',r0:3,rad:22});}if(e.skT<=0){e.skT=yuSkill(e)?6:1;e.warn=0;}
   if(!e.flee&&!carrying&&e.hp<e.mhp*0.35){e.flee=true;say(yuName()+'は傷を負い、逃げ出した！ 入口に着く前に倒し切れば終わる。');}
  }
  if(!e.flee&&!e.ret){
@@ -1123,6 +1138,39 @@ function showResult(){
   '<div class="row2"><button class="btn go" id="tagain">もう一度（'+DIFF[g.diff||'normal'].n+'）</button><button class="btn" id="tback">タイトルへ</button></div></div>';
  el.hidden=false;document.getElementById('tback').onclick=showTitle;document.getElementById('tagain').onclick=function(){newGame(g.diff||'normal');applyMeta();hideTitle();};
 }
+// ---------- 勇者の見せ場 ----------
+var bnrT=0;
+// ---------- 手を出せる操作 ----------
+function closePop(){var p=document.getElementById('pop');if(p&&!p.hidden){p.hidden=true;p.innerHTML='';}}
+function openPop(kind,f,x,y,cx,cy,m){
+ var el=document.getElementById('pop'),st=el.parentNode.getBoundingClientRect(),h='',R=g.rally;
+ if(kind=='soil'){var c=cellAt(f,x,y);h='<b>土（養分'+(c.nut||0)+'・魔分'+(c.mag||0)+'）</b><button data-a="fert"'+(g.pool<5?' disabled':'')+'>肥料をまく（自由な養分5）</button><button data-a="fertm"'+(g.mpool<5?' disabled':'')+'>魔分をまく（自由な魔分5）</button>';}
+ else if(kind=='path'){var cd=Math.max(0,Math.ceil((g.rallyT||0)-g.t));h='<b>通路</b><button data-a="fill"'+(g.dp<2?' disabled':'')+'>埋め戻す（掘る力2）</button><button data-a="rally"'+(g.dp<5||cd>0?' disabled':'')+'>ここに集まれ（掘る力5）'+(cd>0?' あと'+cd+'秒':'')+'</button>';}
+ else if(kind=='hero'){h='<b>'+esc(fullName(m))+'に命令</b>'+[['guard','守れ（コアのそばにいる）'],['attack','攻めろ（冒険者を追う）'],['','自由']].map(function(a){return '<button data-c="'+a[0]+'"'+((m.cmd||'')==a[0]?' class="on"':'')+'>'+a[1]+'</button>';}).join('');}
+ el.innerHTML=h+'<button data-a="close">やめる</button>';el.hidden=false;
+ var lx=Math.min(st.width-170,Math.max(4,cx-st.left+10)),ly=Math.min(st.height-el.offsetHeight-4,Math.max(4,cy-st.top-10));el.style.left=lx+'px';el.style.top=ly+'px';
+ el.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){var a=b.getAttribute('data-a');closePop();if(a=='close')return;doAct(a,f,x,y);ui();draw();};});
+ el.querySelectorAll('[data-c]').forEach(function(b){b.onclick=function(){var v=b.getAttribute('data-c')||null;closePop();if(g.cr.indexOf(m)<0)return;m.cmd=v;say(fullName(m)+'：'+(v=='guard'?'コアのそばを守る。':v=='attack'?'冒険者を追って戦う。':'自由に動く。'));sfx('train');ui();};});
+}
+// 入口からコアまで通路でつながっているか
+function reachCore(){var C=g.core;return !!bfs(0,ENTX,ENTY,function(f,x,y){return f==C.f&&x==C.x&&y==C.y;},4000)||(C.f==0&&C.x==ENTX&&C.y==ENTY);}
+function doAct(a,f,x,y){
+ var c=cellAt(f,x,y);if(!c)return;
+ if(a=='fert'||a=='fertm'){if(c.open)return;var mg=a=='fertm',have=mg?g.mpool:g.pool;if(have<5){say(mg?'自由な魔分が足りません（5要る）。':'自由な養分が足りません（5要る）。');return;}
+  if((mg?c.mag||0:c.nut||0)>=10){say('この土はもう十分に濃い。');return;}if(mg){g.mpool-=5;c.mag=(c.mag||0)+5;}else{g.pool-=5;c.nut=(c.nut||0)+5;}
+  fxNum(f,x,y,mg?'魔分+5':'養分+5',mg?'#c8a0ff':'#ffd86a');sfx('train');say((mg?'魔分':'肥料')+'をまいた（今 養分'+(c.nut||0)+'・魔分'+(c.mag||0)+'）。掘るとこの量で生まれる種が決まる。');return;}
+ if(a=='fill'){
+  if(!c.open)return;if(g.dp<2){say('掘る力が足りません（2要る）。');return;}var C=g.core;
+  if(crAt(f,x,y).length||enAt(f,x,y).length||(f==C.f&&x==C.x&&y==C.y)||(f==0&&x==ENTX&&y==ENTY)||chestAt(f,x,y)||circleAt(f,x,y)){say('何かがいる所は埋められません。');return;}
+  if(C.carrier||!C.home){say('コアが運ばれている間は埋められません。');return;}
+  c.open=false;if(!reachCore()){c.open=true;say('ここを埋めると、入口からコアまでの道が切れてしまう。');return;}
+  c.dt=null;c.nut=0;c.mag=0;g.dp-=2;TK.key='';fxPuff(f,x,y,0.8);sfx('dig');say('通路を埋め戻した（掘る力-2）。冒険者は別の道を探す。');return;}
+ if(a=='rally'){if(!c.open)return;if(g.dp<5){say('掘る力が足りません（5要る）。');return;}if(g.t<(g.rallyT||0)){say('もう少し待ってから（あと'+Math.ceil(g.rallyT-g.t)+'秒）。');return;}
+  g.dp-=5;g.rally={f:f,x:x,y:y,until:g.t+15};g.rallyT=g.t+30;addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:900,c:'255,225,120',r0:4,rad:30});sfx('promote');say('この階のモンスターに「ここに集まれ」（15秒）。');return;}
+}
+function banner(t,sub){var b=document.getElementById('bnr');if(!b)return;b.innerHTML='<b>'+esc(t)+'</b>'+(sub?'<small>'+esc(sub)+'</small>':'');b.hidden=false;b.style.animation='none';void b.offsetWidth;b.style.animation='';clearTimeout(bnrT);bnrT=setTimeout(function(){b.hidden=true;},2600);}
+function yuBar(){var el=document.getElementById('yubar');if(!el)return;var y=g&&!g.title&&g.en.filter(function(e){return e.yu;})[0];if(!y){if(!el.hidden)el.hidden=true;return;}
+ var h=yuName()+'（Lv'+(g.yu.lvl+1)+'）'+(y.flee?' 逃げている！':'')+' · '+(y.f+1)+'階<i><b style="width:'+Math.max(0,Math.round(100*y.hp/y.mhp))+'%"></b></i>';if(el.innerHTML!=h)el.innerHTML=h;el.hidden=false;}
 function alertBadge(){
  var b=document.getElementById('alertb'),C=g.core,txt='',tf=-1,hot=false;
  if(C.carrier&&C.carrier.f!=g.view){txt='コアが運ばれている！ '+(C.carrier.f+1)+'階へ ▶';tf=C.carrier.f;hot=true;}
@@ -1358,7 +1406,7 @@ function step(dt){
  for(i=g.spawnQ.length-1;i>=0;i--){if(g.t>=g.spawnQ[i].t){
   var k=g.spawnQ[i].k,M=emul(),Y=g.yu,yb=k=='yuu'?(1+0.45*Y.lvl)*Y.bonus:0.8,ya=k=='yuu'?(1+0.25*Y.lvl)*Y.bonus:1;if(k!='yuu'){var ne=spawnEn(k,0,ENTX,ENTY);if(g.spawnQ[i].p)applyParty(ne,g.spawnQ[i].p);if(!(g.spawnQ[i].p&&g.spawnQ[i].p.line)&&Math.random()<0.5)shout(ne,'enter');if(!g.msgLock)say(enFull(ne)+'が入ってきた。');g.spawnQ.splice(i,1);continue;}
   g.en.push({k:k,f:0,x:ENTX,y:ENTY,hp:EN[k].hp*yb*M.hp,mhp:EN[k].hp*yb*M.hp,atk:EN[k].atk*ya*M.atk,mt:0,at:0,ht:0,stuck:0,spawnT:g.t,id:idc++,yu:k=='yuu',skT:4,skI:0,nm:ENAMES[rnd(ENAMES.length)],seen:{},stk:[],steps:0,pri:shuffle([0,1,2,3])});
-  initEn(g.en[g.en.length-1]);dexEn(k);
+  initEn(g.en[g.en.length-1]);dexEn(k);if(k=='yuu'){banner(yuName()+' 来襲！','挑戦'+(g.yu.fled+1)+'度目 · 技：'+g.yu.skills.join('・'));haptic('medium');}
   if(Math.random()<0.5||k=='yuu')shout(g.en[g.en.length-1],'enter');
   if(k=='yuu')say('「'+yuName()+'」が塔に入ってきた！'+(Y.lvl?'（'+(Y.lvl+1)+'度目の挑戦・技'+Y.skills.length+'つ）':''));
   g.spawnQ.splice(i,1);}}
@@ -1665,6 +1713,7 @@ function draw(){
    label('★'+o.name,px,ty,'#ffe08a');
   }
  });
+ var RF=g.rally;if(RF&&RF.f==f&&g.t<RF.until){var fxp=ccx(RF.x),fyp=RF.y*CS+CS-3;ctx.fillStyle='#5a3a1e';ctx.fillRect(fxp-1,fyp-14,2,14);ctx.fillStyle='#ffd45a';ctx.beginPath();ctx.moveTo(fxp+1,fyp-14);ctx.lineTo(fxp+10,fyp-11);ctx.lineTo(fxp+1,fyp-8);ctx.fill();}
  if(HL&&HL.f==f&&g.cr.indexOf(HL)>=0){g.cr.forEach(function(o){if(o.f!=f)return;var col=o===HL?'255,225,120':canEat(HL,o)?'90,220,110':canEat(o,HL)?'240,80,80':null;if(!col)return;ctx.strokeStyle='rgba('+col+',.95)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(ccx(o.x),o.y*CS+CS/2,CS*0.48,0,Math.PI*2);ctx.stroke();});ctx.lineWidth=1;}
  // 吹き出し(同時に2つまで)
  var placed=[];
@@ -1705,6 +1754,7 @@ function buildTabs(){
  })(f);
 }
 function ui(){
+ yuBar();
  var n=[0,0,0,0],i,f,tot=g.pool;
  for(i=0;i<g.cr.length;i++){n[g.cr[i].t]=(n[g.cr[i].t]||0)+1;tot+=g.cr[i].e;}
  for(f=0;f<F;f++){
@@ -1718,7 +1768,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v40 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v42 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2392,7 +2442,12 @@ cv.addEventListener('pointerdown',function(ev){
  if(ev.shiftKey&&ZM>1){pinch={pan:1,id:ev.pointerId,m:logicalOf(ev.clientX,ev.clientY)};return;}
  if(over||(ev.button&&ev.button>0))return;
  var p=cellOf(ev);path={f:g.view,cells:[],first:p[0]+','+p[1],left:false,cancel:false};
- clearTimeout(lpT);var lpF=g.view;lpT=setTimeout(function(){if(!path||pinch||path.left||g.view!=lpF)return;var ms=crAt(lpF,p[0],p[1]);if(!ms.length)return;HL=ms[0];path.cancel=true;path.cells=[];haptic('light');say(spName(HL)+'：緑＝食べる相手、赤＝食べられる相手');draw();},450);
+ clearTimeout(lpT);closePop();var lpF=g.view,lpX=ev.clientX,lpY=ev.clientY;lpT=setTimeout(function(){if(!path||pinch||path.left||g.view!=lpF||over)return;var ms=crAt(lpF,p[0],p[1]),c=cellAt(lpF,p[0],p[1]);
+  if(ms.length){HL=ms.filter(function(o){return o.hero;})[0]||ms[0];say(spName(HL)+'：緑＝食べる相手、赤＝食べられる相手');if(HL.hero)openPop('hero',lpF,p[0],p[1],lpX,lpY,HL);}
+  else if(c&&!c.open&&!bedrock(lpF,p[0],p[1]))openPop('soil',lpF,p[0],p[1],lpX,lpY);
+  else if(c&&c.open)openPop('path',lpF,p[0],p[1],lpX,lpY);
+  else return;
+  path.cancel=true;path.cells=[];haptic('light');draw();},450);
  if(canDig(g.view,p[0],p[1])&&touchesOpen(g.view,p[0],p[1]))path.cells.push([p[0],p[1],path.first]);
  else if(canDig(g.view,p[0],p[1]))say('掘れるのは、掘ってあるマスの隣の土だけです。');
  else{var c0=cellAt(g.view,p[0],p[1]);if(c0&&!c0.open&&bedrock(g.view,p[0],p[1]))say('ここは固くて掘れません。');}
@@ -2405,7 +2460,7 @@ cv.addEventListener('pointermove',function(ev){
  if(path){addPath(cellOf(ev));draw();}
 });
 function endPtr(ev,cancel){
- if(!ptrs[ev.pointerId])return;delete ptrs[ev.pointerId];clearTimeout(lpT);if(HL){HL=null;path=null;draw();return;}
+ if(!ptrs[ev.pointerId])return;delete ptrs[ev.pointerId];clearTimeout(lpT);if(HL||!document.getElementById('pop').hidden){HL=null;path=null;draw();return;}
  if(pinch){if(Object.keys(ptrs).length<2)pinch=null;else if(!pinch.pan)startPinch();path=null;draw();return;}
  if(!path)return;var P=path;path=null;
  if(cancel||P.cancel||over||P.f!=g.view){draw();return;}
