@@ -31,6 +31,9 @@ extension GameStateContracts on GameState {
         currentLeagueTheme, _tierOfClub(t.id) ?? s.currentDivisionTier);
   }
 
+  /// [t]のいる部(補充の強さを寄せる先。他国のクラブは1部)。
+  int _cpuTierOf(Team t) => _tierOfClub(t.id) ?? _save!.currentDivisionTier;
+
   /// [t]のいる国・部の水準で選手を作る(他の部・他国のクラブの補充)。
   T _generatingFor<T>(Team t, T Function() body) =>
       withWageLevel(_wageLevelOfTeam(t), body);
@@ -490,7 +493,10 @@ extension GameStateContracts on GameState {
       // 1人足していて、受け入れ側の1人ぶん世界の選手が毎回増えていた。
       if (from.players.length < minSquadSize) {
         from.players.add(_generatingFor(
-            from, () => RetirementEngine.cpuRecruitFor(from, player.position)));
+            from,
+            () => RetirementEngine.cpuRecruitFor(from, player.position,
+                replacedOverall: player.overall,
+                tier: _cpuTierOf(from))));
       }
     }
     lastPreContractArrivals = joined;
@@ -511,7 +517,9 @@ extension GameStateContracts on GameState {
           _save!.freeAgents.add(p);
         }
         t.players.add(_generatingFor(
-            t, () => RetirementEngine.cpuRecruitFor(t, p.position)));
+            t,
+            () => RetirementEngine.cpuRecruitFor(t, p.position,
+                replacedOverall: p.overall, tier: _cpuTierOf(t))));
       }
       touched.add(t);
     }
