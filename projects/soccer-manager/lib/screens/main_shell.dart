@@ -523,7 +523,7 @@ class _FmSidebar extends StatelessWidget {
         Padding(
           // 選んでいる項目は、主役の色で塗った札にする。以前は左の細い印と
           // 12%の下地だけで、どこを開いているか一目で分からなかった。
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+          padding: const EdgeInsets.symmetric(horizontal: 6),
           child: Material(
             color: on ? scheme.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
@@ -531,7 +531,7 @@ class _FmSidebar extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               onTap: onTap,
               child: SizedBox(
-                height: _itemHeight - 2,
+                height: _itemHeight,
                 width: double.infinity,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
