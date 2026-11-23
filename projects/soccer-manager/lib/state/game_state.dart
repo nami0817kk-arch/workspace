@@ -914,7 +914,38 @@ class GameState extends ChangeNotifier {
     ]) {
       if (st.id.startsWith('staff-legacy-')) continue;
       st.wage = max(1, (st.wage * StaffMember.staffWageFactor).round());
+      // 他のクラブで指揮している候補の補償金も、週俸から出した額
+      // (ManagerHrEngine.compensation)。週俸だけ下げると、補償金だけが
+      // 古い相場のまま6倍余りで残った(2026-11-23)。
+      final m = st.manager;
+      if (m != null && m.compensation > 0) {
+        st.manager = ManagerProfile(
+          style: m.style,
+          formation: m.formation,
+          career: m.career,
+          employerClubId: m.employerClubId,
+          employerClubName: m.employerClubName,
+          compensation:
+              max(1, (m.compensation * StaffMember.staffWageFactor).round()),
+        );
+      }
     }
+    // 届いている引き抜きの話の補償金も、古い週俸から出した額。
+    save.staffOffers = [
+      for (final o in save.staffOffers)
+        StaffOffer(
+          id: o.id,
+          role: o.role,
+          staffId: o.staffId,
+          staffName: o.staffName,
+          clubId: o.clubId,
+          clubName: o.clubName,
+          compensation:
+              max(0, (o.compensation * StaffMember.staffWageFactor).round()),
+          raisePercent: o.raisePercent,
+          expiresOn: o.expiresOn,
+        ),
+    ];
     save.staffWageVersion = SaveGame.currentStaffWageVersion;
   }
 

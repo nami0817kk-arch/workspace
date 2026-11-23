@@ -150,7 +150,7 @@ extension GameStateRivals on GameState {
     final agreed =
         talks.where((t) => t.stage == TransferTalkStage.agreed).length;
     return [
-      if (s.pendingOwnerEvent != null)
+      if (pendingOwnerEvent != null)
         Tr.pick('オーナーの判断を待つ出来事があります', 'An owner decision is waiting'),
       if (s.pendingRumor != null)
         Tr.pick('${s.pendingRumor![1]}の噂に、記者会見で答えていません',
