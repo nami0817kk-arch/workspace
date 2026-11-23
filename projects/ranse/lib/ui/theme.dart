@@ -44,10 +44,49 @@ ThemeData buildTheme() {
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: Pal.panel,
-      indicatorColor: Pal.accent.withValues(alpha: .18),
-      labelTextStyle: WidgetStatePropertyAll(
-        TextStyle(fontSize: 12, color: Pal.ink, fontFamilyFallback: _serif),
+      surfaceTintColor: Colors.transparent,
+      elevation: 3,
+      shadowColor: Pal.ink.withValues(alpha: .3),
+      height: 66,
+      indicatorColor: Pal.accent.withValues(alpha: .14),
+      indicatorShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: Pal.accent.withValues(alpha: .35)),
       ),
+      iconTheme: WidgetStateProperty.resolveWith(
+        (s) => IconThemeData(
+          size: 22,
+          color: s.contains(WidgetState.selected) ? Pal.accent : Pal.muted,
+        ),
+      ),
+      labelTextStyle: WidgetStateProperty.resolveWith(
+        (s) => TextStyle(
+          fontSize: 12,
+          letterSpacing: 1,
+          color: s.contains(WidgetState.selected) ? Pal.accent : Pal.muted,
+          fontWeight: s.contains(WidgetState.selected)
+              ? FontWeight.w700
+              : FontWeight.w400,
+          fontFamilyFallback: _serif,
+        ),
+      ),
+    ),
+    appBarTheme: const AppBarTheme(
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 1,
+      shape: Border(bottom: BorderSide(color: Pal.line)),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Pal.gold,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    ),
+    snackBarTheme: const SnackBarThemeData(
+      backgroundColor: Pal.ink,
+      contentTextStyle: TextStyle(color: Pal.onAccent),
+      behavior: SnackBarBehavior.floating,
     ),
   );
 }

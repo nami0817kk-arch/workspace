@@ -58,14 +58,17 @@ class _PlayScreenState extends State<PlayScreen> {
               ),
               const NavigationDestination(
                 icon: Icon(Icons.person_outline),
+                selectedIcon: Icon(Icons.person),
                 label: '人物',
               ),
               const NavigationDestination(
-                icon: Icon(Icons.public),
+                icon: Icon(Icons.map_outlined),
+                selectedIcon: Icon(Icons.map),
                 label: '天下',
               ),
               const NavigationDestination(
                 icon: Icon(Icons.menu_book_outlined),
+                selectedIcon: Icon(Icons.menu_book),
                 label: '見聞録',
               ),
             ],
@@ -262,39 +265,67 @@ class _PromptCard extends StatelessWidget {
                       horizontal: 14,
                       vertical: 12,
                     ),
-                    backgroundColor: Pal.panel2,
-                    side: const BorderSide(color: Pal.line),
+                    backgroundColor: Pal.bg,
+                    overlayColor: Pal.accent,
+                    side: BorderSide(
+                      color: p.choices[i].danger
+                          ? Pal.bad.withValues(alpha: .55)
+                          : Pal.line,
+                      width: 1.2,
+                    ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   onPressed: () {
                     HapticFeedback.selectionClick();
                     g.choose(i);
                   },
-                  child: Column(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        p.choices[i].label,
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: p.choices[i].danger ? Pal.bad : Pal.ink,
-                          fontWeight: FontWeight.w600,
+                      ChoiceMark(i, danger: p.choices[i].danger),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Text(
+                                p.choices[i].label,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: p.choices[i].danger
+                                      ? Pal.bad
+                                      : Pal.ink,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            if (p.choices[i].hint != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 3),
+                                child: Text(
+                                  p.choices[i].hint!,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Pal.muted,
+                                    height: 1.4,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                      if (p.choices[i].hint != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 3),
-                          child: Text(
-                            p.choices[i].hint!,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Pal.muted,
-                              height: 1.4,
-                            ),
-                          ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 4, left: 4),
+                        child: Icon(
+                          Icons.chevron_right,
+                          size: 18,
+                          color: Pal.line,
                         ),
+                      ),
                     ],
                   ),
                 ),

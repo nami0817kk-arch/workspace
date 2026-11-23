@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../engine/life.dart';
 import 'theme.dart';
@@ -138,20 +139,125 @@ class BigButton extends StatelessWidget {
   final VoidCallback? onTap;
   final bool secondary;
 
+  /// 朱塗りの札（主）と、和紙に墨の縁（従）。内側に細い金の線を引き、押すと沈む。
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: double.infinity,
-    height: 52,
-    child: FilledButton(
-      style: FilledButton.styleFrom(
-        backgroundColor: secondary ? Pal.panel2 : Pal.accent,
-        foregroundColor: secondary ? Pal.ink : Pal.onAccent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  Widget build(BuildContext context) {
+    final enabled = onTap != null;
+    final radius = BorderRadius.circular(10);
+    final deco = secondary
+        ? BoxDecoration(
+            color: Pal.panel,
+            borderRadius: radius,
+            border: Border.all(
+              color: Pal.ink.withValues(alpha: .55),
+              width: 1.2,
+            ),
+          )
+        : BoxDecoration(
+            borderRadius: radius,
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFFC6483A), Pal.accent, Color(0xFF8E2A1F)],
+              stops: [0, .55, 1],
+            ),
+            border: Border.all(color: const Color(0xFF6E1F17)),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x40000000),
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              ),
+            ],
+          );
+    return Opacity(
+      opacity: enabled ? 1 : .45,
+      child: Container(
+        width: double.infinity,
+        height: 54,
+        decoration: deco,
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: radius,
+            splashColor: (secondary ? Pal.accent : Colors.white).withValues(
+              alpha: .18,
+            ),
+            highlightColor: Colors.black.withValues(alpha: .08),
+            onTap: onTap == null
+                ? null
+                : () {
+                    HapticFeedback.lightImpact();
+                    onTap!();
+                  },
+            child: Container(
+              margin: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: secondary
+                      ? Pal.line
+                      : const Color(0xFFE8C46A).withValues(alpha: .7),
+                  width: .8,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  letterSpacing: 3,
+                  fontWeight: FontWeight.w700,
+                  color: secondary ? Pal.ink : Pal.onAccent,
+                  shadows: secondary
+                      ? null
+                      : const [
+                          Shadow(
+                            color: Color(0x66000000),
+                            offset: Offset(0, 1),
+                          ),
+                        ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
-      onPressed: onTap,
-      child: Text(text, style: const TextStyle(fontSize: 16, letterSpacing: 2)),
-    ),
-  );
+    );
+  }
+}
+
+/// 選択肢の頭に置く漢数字の印（一・二・三…）。
+const kChoiceMarks = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+
+class ChoiceMark extends StatelessWidget {
+  const ChoiceMark(this.index, {super.key, this.danger = false});
+  final int index;
+  final bool danger;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = danger ? Pal.bad : Pal.gold;
+    return Container(
+      width: 26,
+      height: 26,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: c.withValues(alpha: .1),
+        border: Border.all(color: c.withValues(alpha: .8)),
+      ),
+      child: Text(
+        index < kChoiceMarks.length ? kChoiceMarks[index] : '・',
+        style: TextStyle(
+          fontSize: 13,
+          height: 1.1,
+          color: c,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
 }
 
 Color logColor(String kind) => switch (kind) {
