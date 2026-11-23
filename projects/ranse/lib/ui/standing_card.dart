@@ -86,7 +86,7 @@ class StandingCard extends StatelessWidget {
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  '次の目当て　${g.nextPromo()}',
+                  '次の目当て　${_goalHead(g)}${g.nextPromo()}',
                   style: const TextStyle(fontSize: 12.5, color: Pal.ink),
                 ),
               ),
@@ -225,4 +225,11 @@ class _Chip extends StatelessWidget {
     ),
     child: Text(text, style: const TextStyle(fontSize: 11.5, color: Pal.ink)),
   );
+}
+
+/// 昇進の条件が並ぶときは、どの身分への条件かを頭に添える（「足軽組頭まで　功0/15…」）。
+String _goalHead(Game g) {
+  final l = g.l;
+  if (g.isChild || l.rank < 1 || l.rank >= 7 || g.hasFlag('retired')) return '';
+  return '${g.rk[l.rank + 1]}まで　';
 }
