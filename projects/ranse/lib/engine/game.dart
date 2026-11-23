@@ -314,13 +314,23 @@ class Game extends ChangeNotifier {
   }
 
   // ---------- 合戦 ----------
-  String battle(String role, {String? enemy}) {
+  /// 合戦に加わる。[role] は持ち場（van 先陣・main 本陣・ほかは後詰め）。
+  /// 合戦の状況（`battles.dart`）は、選んだ手で [risk]（討死の危うさの倍率）・[gain]（手柄の倍率）・
+  /// [edge]（味方の勝ちやすさに足す）を変える。既定の値なら従来どおり。
+  String battle(
+    String role, {
+    String? enemy,
+    double risk = 1,
+    double gain = 1,
+    double edge = 0,
+  }) {
     final lf = fa[l.lord]!;
     final named = enemy == null ? null : fa[enemy];
     final e = (named != null && named.alive && named != lf)
         ? named
         : rng.pick(alive.where((f) => f != lf).toList());
-    final w = clampD(lf.power / (lf.power + e.power), .15, .85);
+    var w = clampD(lf.power / (lf.power + e.power), .15, .85);
+    if (edge != 0) w = clampD(w + edge, .08, .92);
     final win = rng.chance(w);
     final (d: danger, m: mult) = switch (role) {
       'van' => (d: .2, m: 2.0),
@@ -335,12 +345,14 @@ class Game extends ChangeNotifier {
         (l.troops * .3 > 30 ? 30 : l.troops * .3);
     var dp = danger * (win ? .7 : 1.4) * (1 - clampD(skill / 150, 0, .7));
     if (l.hp < 40) dp *= 1.5;
+    dp *= risk;
     if (rng.chance(dp)) {
       die('${e.name}との合戦で討死', 'senshi');
       return '${e.name}との合戦で、${role == 'van' ? '先陣にて' : ''}討死した。';
     }
     final merit =
         (mult *
+                gain *
                 (skill / 12 + rng.range(0, 6)) *
                 (win ? 1.3 : .6) *
                 (1 + l.troops / 150))

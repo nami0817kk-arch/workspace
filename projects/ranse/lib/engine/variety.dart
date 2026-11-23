@@ -10,19 +10,27 @@ String _season(Game g) => g.l.t % 2 == 0
     ? g.rng.pick(['田植えの終わった頃', '若葉の頃', '梅雨の晴れ間'])
     : g.rng.pick(['稲刈りの済んだ頃', '木枯らしの吹く頃', '雪の便りの届く頃']);
 
-String battleIntro(Game g) {
+const _seasonOf = [
+  ['菜の花の咲く頃', '春霞の立つ頃', '田起こしの済んだ頃'],
+  ['田植えの終わった頃', '梅雨の晴れ間', '蝉の鳴きしきる頃'],
+  ['稲刈りの済んだ頃', '木枯らしの吹く頃', '紅葉の頃'],
+  ['雪の便りの届く頃', '霜の降りる頃', '吐く息の白い頃'],
+];
+
+/// 出陣の書き出し（1〜2回目は決まった文、以降は回数と時節で書き分ける）。
+/// [season] は 0 春・1 夏・2 秋・3 冬（合戦の状況の季節に揃える）。
+String battleHead(Game g, {int? season}) {
   final n = _n(g, 'war');
   final lord = g.l.lord == null ? '主' : houseName(g, g.l.lord);
-  final head = n <= 2
-      ? '主命により、合戦に加わることになった。'
-      : g.rng.pick([
-          '${_season(g)}、$lord家にまた陣触れが出た。',
+  if (n <= 2) return '主命により、合戦に加わることになった。';
+  final when = season == null ? _season(g) : g.rng.pick(_seasonOf[season]);
+  return g.rng.pick([
+          '$when、$lord家にまた陣触れが出た。',
           '具足の紐を結ぶ手にも、もう迷いはない。$lord家の陣触れだ。',
           '国境の向こうに、敵の旗が見えたという。$lord家の陣触れに応じる。',
           '戦はいつまで続くのか。それでも、陣触れが出れば行くしかない。',
           '若い者たちが、あなたの顔を見て落ち着きを取り戻す。今度の戦も、主命だ。',
         ]);
-  return '$headどの持ち場に就く？';
 }
 
 String invadeIntro(Game g) {

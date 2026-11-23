@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ranse/engine/battles.dart';
 import 'package:ranse/engine/birth.dart';
 import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/ending.dart';
@@ -798,9 +799,9 @@ void main() {
             if (g.finished) break;
             expect(g.prompt?.title, had ? '出陣' : '初陣', reason: 'seed=$seed');
             had ? battles++ : firsts++;
-            // 後詰め（いちばん安全）を選んで進める。
+            // 最後に並ぶ手を選んで進める（出陣は状況ごとに手の数が2〜3で変わる）。
             final q = g.prompt!;
-            g.choose(q.title == '出陣' ? 2 : 1);
+            g.choose(q.choices.length - 1);
             continue;
           }
           g.choose(0);
@@ -2562,6 +2563,126 @@ void main() {
         greaterThanOrEqualTo(24),
         reason: '出なかった岐路: $missedScenes',
       );
+    });
+  });
+
+  group('合戦の状況', () {
+    /// 戦に出続ける侍の人生。重点は「戦に備える」（なければ仕官の口を探す・主君に尽くす）、岐路は考えて選ぶ。
+    /// 出陣の岐路のたびに、出た状況の id（旗 bsr0:）を順に控える。
+    List<String> warLife(int seed, void Function(Game g, Prompt p)? onBattle) {
+      final g = startSurvivor(seed + 7100);
+      final seq = <String>[];
+      final r = Rng(seed);
+      var n = 0;
+      while (!g.finished && n++ < 3000) {
+        final p = g.prompt!;
+        if (p.title == '今年の重点') {
+          final labels = p.choices.map((c) => c.label).toList();
+          final i = [
+            '戦に備える',
+            '仕官の口を探す',
+            '主君に尽くす',
+          ].map(labels.indexOf).firstWhere((i) => i >= 0, orElse: () => -1);
+          g.choose(i >= 0 && r.chance(.85) ? i : pickAmbitious(g, p, r));
+          continue;
+        }
+        if (p.title == '出陣') {
+          final id = recentBattles(g).first;
+          seq.add(id);
+          onBattle?.call(g, p);
+        }
+        g.choose(pickAmbitious(g, p, r));
+      }
+      return seq;
+    }
+
+    test('状況は約16あり、id が重複せず、身分の幅が正しい', () {
+      final ids = kBattleSits.map((s) => s.id).toList();
+      expect(ids.length, greaterThanOrEqualTo(15));
+      expect(ids.toSet().length, ids.length);
+      for (final s in kBattleSits) {
+        expect(s.lo, greaterThanOrEqualTo(1), reason: s.id);
+        expect(s.hi, lessThanOrEqualTo(7), reason: s.id);
+        expect(s.lo, lessThanOrEqualTo(s.hi), reason: s.id);
+      }
+    });
+
+    test('戦に出続ける侍の人生で、いろいろな状況が出て、同じ状況が続けて出にくく、匂わせがあり数字が無い', () {
+      final seen = <String>{};
+      var battles = 0, repeats = 0, pairs = 0;
+      final digits = RegExp(r'[0-9０-９%％]');
+      for (var seed = 0; seed < 300; seed++) {
+        final seq = warLife(seed, (g, p) {
+          expect(g.canFight, isTrue);
+          expect(p.choices.length, inInclusiveRange(2, 3), reason: p.text);
+          for (final c in p.choices) {
+            expect(c.hint, isNotNull, reason: '${p.text}/${c.label}');
+            expect(c.hint!, isNot(matches(digits)), reason: c.hint);
+            expect(c.label, isNot(matches(digits)), reason: c.label);
+            expect(c.hint!, isNot(contains('成功率')));
+          }
+          expect(p.text, isNot(contains('null')));
+        });
+        battles += seq.length;
+        seen.addAll(seq);
+        for (var i = 1; i < seq.length; i++) {
+          pairs++;
+          if (seq[i] == seq[i - 1]) repeats++;
+        }
+      }
+      final missed = [
+        for (final s in kBattleSits)
+          if (!seen.contains(s.id)) s.id,
+      ];
+      // 作った状況の6〜7割以上が出る。
+      expect(
+        seen.length,
+        greaterThanOrEqualTo((kBattleSits.length * .65).ceil()),
+        reason: '出なかった状況: $missed（出陣 $battles回）',
+      );
+      expect(battles, greaterThan(300));
+      // 同じ状況が二度続けて出るのはごく稀（直近の状況は外して選ぶ）。
+      expect(repeats / pairs, lessThan(.05), reason: '$repeats/$pairs');
+    });
+
+    test('直近の状況は旗に残り、保存の往復で失われない', () {
+      for (var seed = 0; seed < 60; seed++) {
+        final g = startSurvivor(seed + 7100);
+        final r = Rng(seed);
+        var n = 0;
+        while (!g.finished && n++ < 3000) {
+          final p = g.prompt!;
+          if (p.title == '出陣' && recentBattles(g).length >= 2) {
+            final before = recentBattles(g);
+            expect(before.length, lessThanOrEqualTo(kRecentBattles));
+            expect(before.toSet().length, before.length);
+            final (life, _) = fromJson(jsonOf(g));
+            final back = Game(rng: Rng(1))..life = life;
+            expect(recentBattles(back), before);
+            return;
+          }
+          if (p.title == '今年の重点') {
+            final i = p.choices.indexWhere((c) => c.label == '戦に備える');
+            g.choose(i >= 0 ? i : pickAmbitious(g, p, r));
+            continue;
+          }
+          g.choose(pickAmbitious(g, p, r));
+        }
+      }
+      fail('出陣を二度以上した人生が見つからなかった');
+    });
+
+    test('侍大将以上には采配の状況が出て、足軽には出ない', () {
+      var command = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        warLife(seed, (g, p) {
+          final id = recentBattles(g).first;
+          final s = kBattleSits.firstWhere((x) => x.id == id);
+          expect(g.l.rank, inInclusiveRange(s.lo, s.hi), reason: id);
+          if (id == 'bt_command') command++;
+        });
+      }
+      expect(command, greaterThan(0));
     });
   });
 }

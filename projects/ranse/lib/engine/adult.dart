@@ -1,3 +1,4 @@
+import 'battles.dart';
 import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
@@ -412,18 +413,8 @@ List<SceneDef> buildAdultScenes() {
           g.canFight &&
           g.active &&
           g.hasFlag('first_battle'),
-      (g, next) {
-        g.ask('出陣', battleIntro(g), [
-          Choice.h('先陣を駆ける', '大きな手柄か、討死か', () => g.battle('van')),
-          Choice.h('本陣に控える', '手柄も危うさも、ほどほど', () => g.battle('main')),
-          Choice.h('後詰めにまわる', '命は守りやすい。手柄は小さい', () => g.battle('rear')),
-          Choice.h('病と称して断る', '命は守れる。主君の目は冷たくなる', () {
-            g.l.fav = clampInt(g.l.fav - 8, 0, 100);
-            g.j(-2);
-            return '病と称して陣を離れた。主君は何も言わなかった。';
-          }),
-        ], after: next);
-      },
+      // 出陣のたびに、身分・能力・主家の勢い・季節で合戦の状況を一つ選んで出す（battles.dart）。
+      (g, next) => runBattleScene(g, next),
       repeat: true,
     ),
 
