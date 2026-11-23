@@ -79,6 +79,15 @@
   「人のやる回数を減らすものは入れない」「答えは見せない」を、この作品にどう当てるかは
   課金を入れる前に決める（例: 広告で別の道の結末を覗けるようにするか）。
 
+## TestFlight（2026-11-23、ユーザー「テストに上げて」）
+
+- バンドルID `com.namiki.ranse`・App Store Connect のアプリ名「乱世下剋上」（ユーザー決定）。
+- ビルドと TestFlight へのアップロードは `.github/workflows/ranse-ios-release.yml`（goso-boat-ios-release.yml を写し、広告・法務ページの確かめを外したもの）。
+  このブランチは master に入っていないので、**タグ `ranse-v*` を push して動かす**（手動実行は GitHub に見つけてもらえない）。
+  このアプリだけの Secret は `RANSE_IOS_PROVISIONING_PROFILE_BASE64`。ほかは共用。ビルド番号は `pubspec.yaml` の `+N`（同じ番号は二度上げられない）。
+- Info.plist に `ITSAppUsesNonExemptEncryption=false`（暗号化の質問を出さない）と `UIRequiresFullScreen=true`（縦だけの iPad でアップロードの検査に通す）。
+- 手順の正は `ios-app-release` スキル。広告・課金を入れていないので A-4（課金）・A-5（AdMob）・B（法務ページ）は TestFlight には要らない（公開前に要る）。
+
 ## 決まっていること
 
 - **出す先は iOS だけ**（`flutter create --platforms=ios`）。向きは縦のみ。
