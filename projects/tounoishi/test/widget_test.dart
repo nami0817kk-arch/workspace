@@ -326,7 +326,7 @@ void main() {
       'function evolve(m,k)', // 甲・牙
       'var EVO_XP=5;', // 経験5点で進化できる
       'killer.xp=(killer.xp||0)+2;', // 倒すと2点
-      "label('↑',", // 進化できる印
+      "label(o.evo?'⇑':'↑',", // 進化できる印（2回目は⇑）
     ]) {
       expect(html, contains(s), reason: s);
     }
@@ -343,6 +343,22 @@ void main() {
       'function expChance(ms)', // 見込み
       'if(g.exp)expBack();', // 波を守り切ると帰る
       'var EXP_MAX=3,', // 3匹まで
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
+  test('新しい資源 魂と骨（0.7.39・試作 v56）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      '<small id="res2" class="res2">', // 掘る力の下に魂と骨
+      'var sg=e.yu?10:(e.boss||e.title)?3:1;g.soul=(g.soul||0)+sg;g.bone=(g.bone||0)+2;', // 倒すと魂と骨
+      "if(why=='enemy'&&m.sp!='skeleton')g.bone=(g.bone||0)+1;", // 冒険者に倒されたモンスターから骨
+      'var EVO2_XP=12,EVO2_SOUL=5,REV_SOUL=15,HATCH_SOUL=2;', // 魂の使い道
+      'function revive(id)', // 倒れた主役を1回よみがえらせる
+      'var BONE_S=5,BONE_L=12,BONE_T=3;', // 骨の使い道
+      'hitEn(e,t.bone?30:15,', // 骨の罠は傷30
+      'g.soul=g.soul||0;g.bone=g.bone||0;g.fallen=g.fallen||[];', // 古い保存でも動く
     ]) {
       expect(html, contains(s), reason: s);
     }
