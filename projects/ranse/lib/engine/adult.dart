@@ -1265,7 +1265,14 @@ List<SceneDef> buildAdultScenes() {
       20,
       70,
       (g) => 1.2,
-      (g) => g.l.female && g.l.rank >= 6 && g.l.rank < 8 && g.l.kids >= 1,
+      // 幼い嫡子の母であること: 殿の側室に上がったか、家のために輿入れした人だけ
+      // （奥で仕えるだけの老女に、当主の後見の話は来ない）。
+      (g) =>
+          g.l.female &&
+          g.l.rank >= 6 &&
+          g.l.rank < 8 &&
+          g.l.kids >= 1 &&
+          (g.hasFlag('sokushitsu') || g.l.path.any((p) => p.contains('輿入れした'))),
       (g, next) {
         g.ask('後見', '当主が急死した。幼い嫡子に代わり、後見を求める声が上がっている。', [
           Choice.h('後見を引き受ける', '一国の政を担う。敵も多くなる', () {
