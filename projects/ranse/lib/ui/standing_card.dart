@@ -233,3 +233,60 @@ String _goalHead(Game g) {
   if (g.isChild || l.rank < 1 || l.rank >= 7 || g.hasFlag('retired')) return '';
   return '${g.rk[l.rank + 1]}まで　';
 }
+
+/// 岐路を選んでいる間に上に出す、一行の立ち位置（身分・主家・段・歳）。くわしいカードは岐路の下にある。
+class StandingStrip extends StatelessWidget {
+  const StandingStrip(this.g, {super.key});
+  final Game g;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = g.l;
+    final lord = l.lord;
+    final house = lord == null ? null : '${houseName(g, lord)}家';
+    final where = g.isChild
+        ? '${l.region}国'
+        : (house == null ? '主家なし' : (l.rank >= 8 ? '$houseの当主' : house));
+    final onLadder =
+        !g.isChild &&
+        !(l.rank == 0 &&
+            (g.hasFlag('priesthood') ||
+                g.hasFlag('way_merchant') ||
+                g.hasFlag('way_outlaw') ||
+                g.hasFlag('retired')));
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Pal.panel,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Pal.line),
+      ),
+      child: Row(
+        children: [
+          Text(
+            g.rankName(),
+            style: const TextStyle(
+              color: Pal.accent,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              where,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12.5, color: Pal.ink),
+            ),
+          ),
+          if (onLadder)
+            Text(
+              '段 ${l.rank + 1}／${g.rk.length}',
+              style: const TextStyle(fontSize: 12, color: Pal.gold),
+            ),
+        ],
+      ),
+    );
+  }
+}

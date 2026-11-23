@@ -231,16 +231,22 @@ class BigButton extends StatelessWidget {
 const kChoiceMarks = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
 
 class ChoiceMark extends StatelessWidget {
-  const ChoiceMark(this.index, {super.key, this.danger = false});
+  const ChoiceMark(
+    this.index, {
+    super.key,
+    this.danger = false,
+    this.size = 26,
+  });
   final int index;
   final bool danger;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     final c = danger ? Pal.bad : Pal.gold;
     return Container(
-      width: 26,
-      height: 26,
+      width: size,
+      height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -250,7 +256,7 @@ class ChoiceMark extends StatelessWidget {
       child: Text(
         index < kChoiceMarks.length ? kChoiceMarks[index] : '・',
         style: TextStyle(
-          fontSize: 13,
+          fontSize: size * .5,
           height: 1.1,
           color: c,
           fontWeight: FontWeight.w700,

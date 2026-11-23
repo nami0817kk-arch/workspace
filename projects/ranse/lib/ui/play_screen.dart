@@ -123,12 +123,19 @@ class _ChoiceTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = g.l;
     final p = g.prompt;
+    // 選択肢をスクロールせずに押せるよう、岐路があるときは立ち位置を一行に縮めて上に、
+    // くわしいカードは岐路の下に回す（2026-11-23 ユーザー「選択肢はスクロールしないでも可能にして」）。
     return ListView(
-      padding: _pad,
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
       children: [
+        if (p != null) ...[
+          StandingStrip(g),
+          const SizedBox(height: 6),
+          _PromptCard(g, p),
+          const SizedBox(height: 12),
+        ],
         StandingCard(g),
-        const SizedBox(height: 10),
-        if (p != null) ...[_PromptCard(g, p), const SizedBox(height: 12)],
+        const SizedBox(height: 12),
         Panel(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +182,11 @@ class _ChoiceTab extends StatelessWidget {
   }
 }
 
+/// 選択肢がこの数以上なら二列に並べる（毎年の重点は多いと十ほどになる）。
+const kTwoColumnChoices = 5;
+
 /// 岐路（いまの選択）。行動タブの先頭に出す。選んでいる間も他のタブは見られる。
+/// 一画面に収まるよう詰めてある: 前の結果は二行まで、絵は題を重ねた帯、選択肢が多ければ二列。
 class _PromptCard extends StatelessWidget {
   const _PromptCard(this.g, this.p);
   final Game g;
@@ -183,8 +194,11 @@ class _PromptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final results = g.lastResults;
+    final n = p.choices.length;
+    final twoCol = n >= kTwoColumnChoices;
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
       decoration: BoxDecoration(
         color: Pal.panel,
         border: Border.all(color: Pal.gold),
@@ -193,15 +207,17 @@ class _PromptCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (g.lastResults.isNotEmpty) ...[
-            for (final e in g.lastResults.take(4))
+          if (results.isNotEmpty) ...[
+            for (final e in results.take(2))
               Padding(
-                padding: const EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.only(bottom: 2),
                 child: Text(
                   e.txt,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 12.5,
-                    height: 1.5,
+                    fontSize: 12,
+                    height: 1.4,
                     color: e.kind == 'bad'
                         ? Pal.bad
                         : (e.kind == 'good' || e.kind == 'big'
@@ -210,113 +226,185 @@ class _PromptCard extends StatelessWidget {
                   ),
                 ),
               ),
-            const Divider(color: Pal.line, height: 18),
+            if (results.length > 2)
+              Text(
+                'ほか${results.length - 2}件は見聞録に',
+                style: const TextStyle(fontSize: 11, color: Pal.muted),
+              ),
+            const Divider(color: Pal.line, height: 12),
           ],
-          // 場面の絵（Gemini で作ったドット絵）。「今年の重点」には添えない。
-          if (p.art case final art?) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: Image.asset(
-                sceneArtPath(art),
-                width: double.infinity,
-                height: 120,
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.medium,
-                errorBuilder: (context, error, stack) =>
-                    const SizedBox.shrink(),
+          // 場面の絵（Gemini で作ったドット絵）に題を重ねる。「今年の重点」には絵を添えない。
+          if (p.art case final art?)
+            _ArtBanner(art: art, title: p.title)
+          else
+            Text(
+              p.title,
+              style: const TextStyle(
+                color: Pal.gold,
+                fontSize: 18,
+                letterSpacing: 2,
               ),
             ),
-            const SizedBox(height: 10),
-          ],
-          Text(
-            p.title,
-            style: const TextStyle(
-              color: Pal.gold,
-              fontSize: 19,
-              letterSpacing: 2,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(p.text, style: const TextStyle(height: 1.7)),
-          const SizedBox(height: 14),
-          for (var i = 0; i < p.choices.length; i++)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 12,
-                    ),
-                    backgroundColor: Pal.bg,
-                    overlayColor: Pal.accent,
-                    side: BorderSide(
-                      color: p.choices[i].danger
-                          ? Pal.bad.withValues(alpha: .55)
-                          : Pal.line,
-                      width: 1.2,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    HapticFeedback.selectionClick();
-                    g.choose(i);
-                  },
+          const SizedBox(height: 6),
+          Text(p.text, style: const TextStyle(fontSize: 14.5, height: 1.6)),
+          const SizedBox(height: 10),
+          if (twoCol)
+            for (var r = 0; r < n; r += 2)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: IntrinsicHeight(
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ChoiceMark(i, danger: p.choices[i].danger),
-                      const SizedBox(width: 12),
+                      Expanded(child: _ChoiceButton(g, p, r, compact: true)),
+                      const SizedBox(width: 6),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 2),
-                              child: Text(
-                                p.choices[i].label,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: p.choices[i].danger
-                                      ? Pal.bad
-                                      : Pal.ink,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            if (p.choices[i].hint != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 3),
-                                child: Text(
-                                  p.choices[i].hint!,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Pal.muted,
-                                    height: 1.4,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 4, left: 4),
-                        child: Icon(
-                          Icons.chevron_right,
-                          size: 18,
-                          color: Pal.line,
-                        ),
+                        child: r + 1 < n
+                            ? _ChoiceButton(g, p, r + 1, compact: true)
+                            : const SizedBox.shrink(),
                       ),
                     ],
                   ),
                 ),
+              )
+          else
+            for (var i = 0; i < n; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: _ChoiceButton(g, p, i),
+                ),
+              ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 場面の絵の帯。下に暗いぼかしを敷き、題を白で重ねる。
+class _ArtBanner extends StatelessWidget {
+  const _ArtBanner({required this.art, required this.title});
+  final String art, title;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(6),
+      child: SizedBox(
+        height: 86,
+        width: double.infinity,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              sceneArtPath(art),
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.medium,
+              errorBuilder: (context, error, stack) =>
+                  const ColoredBox(color: Pal.panel2),
+            ),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x00000000), Color(0xB3000000)],
+                  stops: [.35, 1],
+                ),
               ),
             ),
+            Positioned(
+              left: 10,
+              right: 10,
+              bottom: 6,
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Color(0xFFFFF4DC),
+                  fontSize: 18,
+                  letterSpacing: 2,
+                  fontWeight: FontWeight.w700,
+                  shadows: [Shadow(color: Color(0xCC000000), blurRadius: 4)],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ChoiceButton extends StatelessWidget {
+  const _ChoiceButton(this.g, this.p, this.i, {this.compact = false});
+  final Game g;
+  final Prompt p;
+  final int i;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = p.choices[i];
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.topLeft,
+        padding: compact
+            ? const EdgeInsets.fromLTRB(8, 7, 8, 7)
+            : const EdgeInsets.fromLTRB(12, 8, 8, 8),
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        backgroundColor: Pal.bg,
+        overlayColor: Pal.accent,
+        side: BorderSide(
+          color: c.danger ? Pal.bad.withValues(alpha: .55) : Pal.line,
+          width: 1.2,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+      ),
+      onPressed: () {
+        HapticFeedback.selectionClick();
+        g.choose(i);
+      },
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ChoiceMark(i, danger: c.danger, size: compact ? 20 : 24),
+          SizedBox(width: compact ? 6 : 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  c.label,
+                  maxLines: compact ? 2 : 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: compact ? 13.5 : 15,
+                    height: 1.35,
+                    color: c.danger ? Pal.bad : Pal.ink,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (c.hint != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      c.hint!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: compact ? 11 : 12,
+                        color: Pal.muted,
+                        height: 1.35,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );
