@@ -125,7 +125,10 @@ class _RankingTable extends StatelessWidget {
                     child: Text('${i + 1}',
                         style: small.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: i < 3 ? Colors.amber.shade700 : subtle)),
+                            color: i < 3
+                                ? SemanticColors.ink(
+                                    context, Colors.amber.shade700)
+                                : subtle)),
                   ),
                   Expanded(
                     flex: 3,

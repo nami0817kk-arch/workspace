@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'fm_panel.dart';
 import 'screen_bar.dart';
 
 /// グループの中の1つのページ(見出しの文字と、画面を作る関数)。
@@ -47,7 +48,8 @@ class _GroupPageState extends State<GroupPage> {
         Container(
           height: 48,
           decoration: BoxDecoration(
-            color: scheme.surfaceContainerHighest,
+            // 上の帯・ほかの画面のタブの帯と同じ地にそろえる(fm_look.dart)。
+            color: FmLook.of(context)?.topBar ?? scheme.surfaceContainerHighest,
             border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
           ),
           child: Row(
@@ -88,12 +90,12 @@ class _GroupPageState extends State<GroupPage> {
                             child: Text(
                               widget.tabs[i].label,
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 12.5,
                                 fontWeight: i == _index
                                     ? FontWeight.bold
                                     : FontWeight.normal,
                                 color: i == _index
-                                    ? scheme.onSurface
+                                    ? scheme.primary
                                     : scheme.onSurfaceVariant,
                               ),
                             ),

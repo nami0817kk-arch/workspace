@@ -243,8 +243,8 @@ class PlayerDetailScreen extends StatelessWidget {
                           : Tr.pick(
                               '${InjuryCare.describe(p)}で負傷中（あと${p.injuryWeeks}週は出場不可）',
                               '${InjuryCare.describe(p)} (out for another ${Tr.plural(p.injuryWeeks, 'week')})'),
-                      style: const TextStyle(
-                        color: Colors.redAccent,
+                      style: TextStyle(
+                        color: SemanticColors.ink(context, Colors.redAccent),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -255,8 +255,8 @@ class PlayerDetailScreen extends StatelessWidget {
                     child: Text(
                       Tr.pick('出場停止中（あと${p.suspendedMatches}試合は出場不可）',
                           'Suspended (out for another ${Tr.plural(p.suspendedMatches, 'match', 'matches')})'),
-                      style: const TextStyle(
-                        color: Colors.redAccent,
+                      style: TextStyle(
+                        color: SemanticColors.ink(context, Colors.redAccent),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -279,8 +279,8 @@ class PlayerDetailScreen extends StatelessWidget {
                       child: Text(
                         Tr.pick('$labelは出場停止中（あと$left試合）',
                             'Suspended in $label (${Tr.plural(left, 'match', 'matches')} left)'),
-                        style: const TextStyle(
-                          color: Colors.redAccent,
+                        style: TextStyle(
+                          color: SemanticColors.ink(context, Colors.redAccent),
                           fontSize: 12,
                         ),
                       ),
@@ -297,8 +297,8 @@ class PlayerDetailScreen extends StatelessWidget {
                           : Tr.pick(
                               '代表召集中（あと${p.internationalDutyWeeksRemaining}週は出場不可）',
                               'On international duty (away for another ${Tr.plural(p.internationalDutyWeeksRemaining, 'week')})'),
-                      style: const TextStyle(
-                        color: Colors.blueAccent,
+                      style: TextStyle(
+                        color: SemanticColors.ink(context, Colors.blueAccent),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -333,8 +333,11 @@ class PlayerDetailScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w800,
                                 height: 1.05,
                                 letterSpacing: -1,
-                                color: OverallBadge.colorFor(context, p.overall),
-                                fontFeatures: const [FontFeature.tabularFigures()],
+                                color:
+                                    OverallBadge.colorFor(context, p.overall),
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures()
+                                ],
                               ),
                             ),
                             Text(
@@ -354,8 +357,9 @@ class PlayerDetailScreen extends StatelessWidget {
                                 " (this week ${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})"),
                             style: TextStyle(
                               color: latestGrowth.overallDelta > 0
-                                  ? Colors.green
-                                  : Colors.redAccent,
+                                  ? SemanticColors.ink(context, Colors.green)
+                                  : SemanticColors.ink(
+                                      context, Colors.redAccent),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -366,7 +370,8 @@ class PlayerDetailScreen extends StatelessWidget {
                           child: Builder(
                             builder: (context) {
                               final potentialProgress = p.potential > 0
-                                  ? (p.overall / p.potential * 100).clamp(0, 100)
+                                  ? (p.overall / p.potential * 100)
+                                      .clamp(0, 100)
                                   : 0.0;
                               final seasonStart = gameState
                                   .save?.seasonStartOverallByPlayerId[p.id];
@@ -393,7 +398,8 @@ class PlayerDetailScreen extends StatelessWidget {
                                                       'Room to grow: plenty'),
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: SemanticColors.subtleText(context),
+                                        color:
+                                            SemanticColors.subtleText(context),
                                       ),
                                     ),
                                     if (seasonDelta != null) ...[
@@ -405,8 +411,9 @@ class PlayerDetailScreen extends StatelessWidget {
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: seasonDelta > 0
-                                              ? Colors.green
-                                              : SemanticColors.subtleText(context),
+                                              ? SemanticColors.ink(context, Colors.green)
+                                              : SemanticColors.subtleText(
+                                                  context),
                                           fontWeight: seasonDelta > 0
                                               ? FontWeight.bold
                                               : FontWeight.normal,
@@ -483,24 +490,24 @@ class PlayerDetailScreen extends StatelessWidget {
                 StatBar(
                     label: Tr.pick('潜在能力', 'Potential'),
                     value: p.potential,
-                    color: Colors.purple),
+                    color: SemanticColors.ink(context, Colors.purple)),
                 StatBar(
                   label: Tr.pick('疲労', 'Fatigue'),
                   value: p.fatigue,
                   max: 100,
-                  color: Colors.redAccent,
+                  color: SemanticColors.ink(context, Colors.redAccent),
                 ),
                 StatBar(
                   label: Tr.pick('士気', 'Morale'),
                   value: p.morale,
                   max: 100,
-                  color: Colors.blueAccent,
+                  color: SemanticColors.ink(context, Colors.blueAccent),
                 ),
                 StatBar(
                   label: Tr.pick('マッチシャープネス', 'Match Sharpness'),
                   value: p.matchSharpness,
                   max: 100,
-                  color: Colors.teal,
+                  color: SemanticColors.ink(context, Colors.teal),
                 ),
                 StatBar(
                   label:
@@ -607,9 +614,10 @@ class PlayerDetailScreen extends StatelessWidget {
                 ),
                 if (gameState.releaseClauseOf(p) != null)
                   Text(
-                    Tr.pick('リリース条項: ${formatMoney(gameState.releaseClauseOf(p)!)}',
+                    Tr.pick(
+                        'リリース条項: ${formatMoney(gameState.releaseClauseOf(p)!)}',
                         'Release clause: ${formatMoney(gameState.releaseClauseOf(p)!)}'),
-                    style: const TextStyle(color: Colors.deepPurple),
+                    style: TextStyle(color: SemanticColors.ink(context, Colors.deepPurple)),
                   ),
                 if (!p.isLoan)
                   Text(
@@ -884,7 +892,7 @@ class PlayerDetailScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11,
                       color: p.promiseBroken
-                          ? Colors.redAccent
+                          ? SemanticColors.ink(context, Colors.redAccent)
                           : SemanticColors.subtleText(context),
                     ),
                   ),
@@ -902,7 +910,7 @@ class PlayerDetailScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11,
                     color: p.wantsTransfer
-                        ? Colors.redAccent
+                        ? SemanticColors.ink(context, Colors.redAccent)
                         : SemanticColors.subtleText(context),
                   ),
                 ),
@@ -911,7 +919,7 @@ class PlayerDetailScreen extends StatelessWidget {
                   Text(
                     Tr.pick('ロール: ${p.role.label} — ${p.role.description}',
                         'Role: ${p.role.label} — ${p.role.description}'),
-                    style: const TextStyle(fontSize: 12, color: Colors.teal),
+                    style: TextStyle(fontSize: 12, color: SemanticColors.ink(context, Colors.teal)),
                   ),
                 ],
                 // 怪我のしやすさ。同じ疲労でも壊れやすい選手がいる。
@@ -935,8 +943,9 @@ class PlayerDetailScreen extends StatelessWidget {
                     Tr.pick(
                         '特性(${p.trait!.category.label}): ${p.trait!.label} — ${p.trait!.description}',
                         'Trait (${p.trait!.category.label}): ${p.trait!.label} — ${p.trait!.description}'),
-                    style:
-                        const TextStyle(fontSize: 12, color: Colors.deepOrange),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.ink(context, Colors.deepOrange)),
                   ),
                   // 能力値で発動する特性は、条件に届いていないと何も起きない。
                   // その条件が実装の中にしか無く、持っているのに効果が無い状態が
@@ -979,7 +988,7 @@ class PlayerDetailScreen extends StatelessWidget {
                     Tr.pick(
                         '成長タイプ: ${p.growthType.label} — ${p.growthType.description}',
                         'Growth: ${p.growthType.label} — ${p.growthType.description}'),
-                    style: const TextStyle(fontSize: 12, color: Colors.indigo),
+                    style: TextStyle(fontSize: 12, color: SemanticColors.ink(context, Colors.indigo)),
                   ),
                 ],
                 if (latestGrowth != null && latestGrowth.isBreakthrough) ...[
@@ -987,9 +996,9 @@ class PlayerDetailScreen extends StatelessWidget {
                   Text(
                     Tr.pick('★ 今週、才能開花が発生しました！',
                         '★ A breakthrough came this week.'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Colors.amber,
+                      color: SemanticColors.ink(context, Colors.amber, min: 3),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -1518,8 +1527,9 @@ Widget _leagueYellowLine(BuildContext context, Player p, CardRules rules) {
           : Tr.pick('今季リーグ戦の警告: ${p.yellowCards}枚(あと$left枚で出場停止)',
               'League yellow cards this season: ${p.yellowCards} ($left more brings a ban)'),
       style: TextStyle(
-        color:
-            left == 1 ? Colors.redAccent : SemanticColors.subtleText(context),
+        color: left == 1
+            ? SemanticColors.ink(context, Colors.redAccent)
+            : SemanticColors.subtleText(context),
         fontSize: 12,
       ),
     ),

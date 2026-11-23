@@ -44,7 +44,7 @@ class SeasonHistoryScreen extends StatelessWidget {
                       Icon(
                         Icons.history,
                         size: 64,
-                        color: Colors.grey.shade400,
+                        color: Theme.of(context).colorScheme.outline,
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -128,10 +128,11 @@ class _SeasonRecordCard extends StatelessWidget {
                 children: record.cupsWon
                     .map(
                       (name) => Chip(
-                        avatar: const Icon(
+                        avatar: Icon(
                           Icons.emoji_events,
                           size: 16,
-                          color: Colors.amber,
+                          color:
+                              SemanticColors.ink(context, Colors.amber, min: 3),
                         ),
                         label: Text(Tr.pick('$name 優勝', '$name winners')),
                         visualDensity: VisualDensity.compact,

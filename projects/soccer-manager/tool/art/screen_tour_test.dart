@@ -4,6 +4,15 @@
 /// **CI では回らない。** 実行するとファイルを書く。
 ///
 ///     flutter test tool/art/screen_tour_test.dart --dart-define=OUT=<出力先>
+///
+/// 切り替え(どれも省略できる):
+/// - `LOOK=light|dark` 明暗(既定 light。アプリの既定と同じ)
+/// - `LANG=ja|en` 言語(既定 ja)
+/// - `DEVICE=phone|ipad` 端末(既定 phone)
+///
+/// 撮るたびに、文字と地の色の差を測り(contrast_audit.dart)、3:1 に
+/// 届かない文字を `LOWCONTRAST` の行で出す。明るい見た目を足したとき、
+/// 直書きの白い文字が明るい地に乗る箇所をここで拾った(2026-11-24)。
 library;
 
 // ignore_for_file: invalid_use_of_visible_for_testing_member
@@ -33,9 +42,19 @@ import 'package:soccer_manager/widgets/landscape_scale.dart';
 import 'package:soccer_manager/widgets/notch_side_insets.dart';
 
 import '../../test/support/app_fonts.dart';
+import 'contrast_audit.dart';
 
-const _out = String.fromEnvironment('OUT', defaultValue: 'build/screen_tour');
-const _size = Size(852, 393);
+const _look = String.fromEnvironment('LOOK', defaultValue: 'light');
+const _lang = String.fromEnvironment('LANG', defaultValue: 'ja');
+const _device = String.fromEnvironment('DEVICE', defaultValue: 'phone');
+const _out = String.fromEnvironment('OUT',
+    defaultValue: 'build/screen_tour/${_look}_${_lang}_$_device');
+const _ipad = _device == 'ipad';
+const _en = _lang == 'en';
+const _size = _ipad ? Size(1376, 1032) : Size(852, 393);
+
+/// 撮る言語の文言。
+String _t(String ja, String en) => _en ? en : ja;
 
 void main() {
   setUpAll(() async {
@@ -53,9 +72,11 @@ void main() {
     addTearDown(tester.view.reset);
     tester.view.devicePixelRatio = 2;
     tester.view.physicalSize = _size * 2;
-    tester.view.padding =
-        const FakeViewPadding(left: 118, right: 118, bottom: 42);
-    tester.view.viewPadding = tester.view.padding;
+    if (!_ipad) {
+      tester.view.padding =
+          const FakeViewPadding(left: 118, right: 118, bottom: 42);
+      tester.view.viewPadding = tester.view.padding;
+    }
 
     SharedPreferences.setMockInitialValues({});
     late final SettingsController settings;
@@ -64,12 +85,12 @@ void main() {
     await tester.runAsync(() async {
       settings = SettingsController();
       await settings.init();
-      Tr.language = AppLanguage.japanese;
+      Tr.language = _en ? AppLanguage.english : AppLanguage.japanese;
       monetization = MonetizationController(
           adService: NoOpAdService(), purchases: _NoStore());
       await monetization.initialize();
       game = GameState();
-      await game.startNewGame('青嵐FC');
+      await game.startNewGame(_t('青嵐FC', 'Blue Storm FC'));
       for (var i = 0; i < 6; i++) {
         await game.playNextMatchday();
         if (game.isHalfTime) await game.playSecondHalf();
@@ -91,12 +112,15 @@ void main() {
         key: key,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          locale: const Locale('ja'),
-          theme: app.buildTheme(Brightness.light, boldText: false),
+          locale: Locale(_lang),
+          theme: app.buildTheme(
+              _look == 'dark' ? Brightness.dark : Brightness.light,
+              boldText: false),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => LandscapeScale(
             child: FmThemeScope(
+              light: app.buildTheme(Brightness.light, boldText: false),
               dark: app.buildTheme(Brightness.dark, boldText: false),
               child: NotchSideInsets(child: child!),
             ),
@@ -131,25 +155,39 @@ void main() {
         final data = await image.toByteData(format: ui.ImageByteFormat.png);
         Directory(_out).createSync(recursive: true);
         File('$_out/$file.png').writeAsBytesSync(data!.buffer.asUint8List());
+        for (final issue in await auditContrast(b, image, 1.5)) {
+          // ignore: avoid_print
+          print('LOWCONTRAST $file $issue');
+        }
       });
     }
 
     // 始めに出るお知らせ(全面の札・ダイアログ)を撮ってから閉じる。
     for (var i = 0;
-        i < 6 && find.text('状況').hitTestable().evaluate().isEmpty;
+        i < 6 && find.text(_t('状況', 'Status')).hitTestable().evaluate().isEmpty;
         i++) {
       await shoot('notice');
-      final close = find.textContaining('閉じる').hitTestable();
+      final close = find.textContaining(_t('閉じる', 'Close')).hitTestable();
       if (close.evaluate().isNotEmpty) {
         await tester.tap(close.first, warnIfMissed: false);
       } else {
-        await tester.tapAt(const Offset(426, 200));
+        await tester.tapAt(Offset(_size.width / 2, 200));
       }
       await tester.pump(const Duration(milliseconds: 600));
     }
     // 環境変数 PAGES で撮るページを絞れる(例: オーナー室)。
     const only = String.fromEnvironment('PAGES');
-    for (final p in ['状況', '経営', 'クラブ', '選手', '移籍', 'リーグ', 'オーナー室']) {
+    for (final p in _en
+        ? const [
+            'Status',
+            'Finance',
+            'Club',
+            'Players',
+            'Transfers',
+            'League',
+            'Office'
+          ]
+        : const ['状況', '経営', 'クラブ', '選手', '移籍', 'リーグ', 'オーナー室']) {
       if (only.isNotEmpty && !only.split(',').contains(p)) continue;
       // 前のページで別の画面(用語集など)が開いたままなら閉じる。
       for (var i = 0; i < 4; i++) {
@@ -185,7 +223,7 @@ void main() {
       if (labels.isEmpty) {
         await shoot(p);
         // 状況は全部を見たいので、左右の欄を下へ送りながら撮る。
-        if (p == '状況') {
+        if (p == _t('状況', 'Status')) {
           for (var i = 1; i <= 8; i++) {
             await tester.dragFrom(
                 const Offset(430, 330), const Offset(0, -260));
@@ -207,8 +245,9 @@ void main() {
         await tester.pump(const Duration(milliseconds: 300));
         await shoot('$p-$l');
         // スタッフの候補の表を開いたところも撮る。
-        if (p == 'クラブ' && l == 'スタッフ') {
-          final open = find.textContaining('候補を見る').hitTestable();
+        if (p == _t('クラブ', 'Club') && l == _t('スタッフ', 'Staff')) {
+          final open =
+              find.textContaining(_t('候補を見る', 'candidates')).hitTestable();
           if (open.evaluate().isNotEmpty) {
             await tester.tap(open.first);
             await tester.pump(const Duration(milliseconds: 600));
@@ -218,7 +257,10 @@ void main() {
           }
         }
         // 経営・クラブは各タブが長いので、下へ送りながら撮る。
-        if (const ['経営', 'クラブ', 'オーナー室', 'リーグ'].contains(p)) {
+        if ((_en
+                ? const ['Finance', 'Club', 'Office', 'League']
+                : const ['経営', 'クラブ', 'オーナー室', 'リーグ'])
+            .contains(p)) {
           // 座標は論理ピクセル(幅852)。左右2つの欄の両方を送る。
           for (var i = 1; i <= 6; i++) {
             await tester.dragFrom(
@@ -233,23 +275,32 @@ void main() {
           await tester.pump(const Duration(milliseconds: 400));
         }
         // 選手のスカッドは、表を下へ送ったところ・カード・選手の詳しい画面も撮る。
-        if (p == '選手' && l == 'スカッド') {
+        if (p == _t('選手', 'Players') && l == _t('スカッド', 'Squad')) {
           await tester.dragFrom(const Offset(940, 330), const Offset(0, -250));
           await tester.pump(const Duration(milliseconds: 400));
           await shoot('$p-$l-scroll');
           await tester.dragFrom(const Offset(940, 200), const Offset(0, 3000));
           await tester.pump(const Duration(milliseconds: 400));
           final player = find.text(game.userTeam.players.first.name);
-          await tester.tap(find.byTooltip('カード').hitTestable().first);
+          await tester
+              .tap(find.byTooltip(_t('カード', 'Cards')).hitTestable().first);
           await tester.pump(const Duration(milliseconds: 400));
           await shoot('$p-$l-card');
-          await tester.tap(find.byTooltip('表').hitTestable().first);
+          await tester
+              .tap(find.byTooltip(_t('表', 'Table')).hitTestable().first);
           await tester.pump(const Duration(milliseconds: 400));
           if (player.hitTestable().evaluate().isNotEmpty) {
             await tester.tap(player.hitTestable().first);
             await tester.pump(const Duration(milliseconds: 600));
             await shoot('$p-detail-open');
-            for (final t in ['概要', '能力', '契約', '人柄・経歴']) {
+            for (final t in _en
+                ? const [
+                    'Overview',
+                    'Attributes',
+                    'Contract',
+                    'Character & history'
+                  ]
+                : const ['概要', '能力', '契約', '人柄・経歴']) {
               final tf = find.text(t).hitTestable();
               if (tf.evaluate().isEmpty) continue;
               await tester.tap(tf.first);
@@ -265,7 +316,7 @@ void main() {
       }
     }
     tester.takeException();
-  });
+  }, timeout: const Timeout(Duration(minutes: 45)));
 }
 
 class _NoStore implements PurchaseService {

@@ -52,7 +52,8 @@ class AchievementsScreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.emoji_events,
-                        color: Colors.amber.shade700,
+                        color:
+                            SemanticColors.ink(context, Colors.amber.shade700),
                         size: 32,
                       ),
                       const SizedBox(width: 12),
@@ -85,8 +86,9 @@ class AchievementsScreen extends StatelessWidget {
                                   all.isEmpty ? 0 : unlockedCount / all.length,
                               strokeWidth: 4,
                               // 暗い表示でほぼ白の帯が浮いていたので、テーマの色にする。
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.surfaceContainerHighest,
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
                             ),
                             Text(
                               all.isEmpty
@@ -238,7 +240,7 @@ class _AchievementTile extends StatelessWidget {
           achievement.name,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: unlocked ? null : Colors.grey.shade600,
+            color: unlocked ? null : SemanticColors.ink(context, Colors.grey.shade600),
           ),
         ),
         subtitle: Column(
@@ -251,7 +253,7 @@ class _AchievementTile extends StatelessWidget {
                   : achievement.description,
               style: TextStyle(
                 color: unlocked
-                    ? Colors.grey.shade700
+                    ? SemanticColors.ink(context, Colors.grey.shade700)
                     : SemanticColors.subtleText(context),
               ),
             ),
@@ -268,8 +270,9 @@ class _AchievementTile extends StatelessWidget {
                             : (progress.$1 / progress.$2).clamp(0.0, 1.0),
                         minHeight: 6,
                         // 暗い表示でほぼ白の帯が浮いていたので、テーマの色にする。
-                        backgroundColor:
-                            Theme.of(context).colorScheme.surfaceContainerHighest,
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
                       ),
                     ),
                   ),

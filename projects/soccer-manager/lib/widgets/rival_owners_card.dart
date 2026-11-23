@@ -43,7 +43,8 @@ class RivalOwnersCard extends StatelessWidget {
                       style: small),
                   TextSpan(
                       text: stars(r.ambition),
-                      style: const TextStyle(color: Colors.amber)),
+                      style: TextStyle(
+                          color: SemanticColors.ink(context, Colors.amber))),
                   TextSpan(
                       text: Tr.pick('・今季の補強 ${r.signingsThisSeason}人',
                           ', signed ${r.signingsThisSeason} this season'),

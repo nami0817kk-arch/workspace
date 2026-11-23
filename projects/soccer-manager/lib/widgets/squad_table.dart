@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/semantic_colors.dart';
 
 import '../l10n/tr.dart';
 import '../logic/contract_engine.dart';
@@ -144,11 +145,11 @@ class _SquadTableState extends State<SquadTable> {
                     const SizedBox(width: 4),
                     Tooltip(
                       message: Tr.pick('移籍リストに登録済み', 'On the transfer list'),
-                      child: const Icon(
+                      child: Icon(
                         Icons.sell_outlined,
                         key: ValueKey('squad-table-listed'),
                         size: 14,
-                        color: Colors.orange,
+                        color: SemanticColors.ink(context, Colors.orange),
                       ),
                     ),
                   ],
@@ -190,7 +191,9 @@ class _SquadTableState extends State<SquadTable> {
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     style: small.copyWith(
-                        color: expiring ? Colors.orange : base)),
+                        color: expiring
+                            ? SemanticColors.ink(context, Colors.orange)
+                            : base)),
               ),
             ),
             SizedBox(
