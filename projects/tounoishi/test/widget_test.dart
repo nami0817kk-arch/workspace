@@ -143,6 +143,25 @@ void main() {
     }
   });
 
+  test('新しい種の3つ目の束（0.7.23・試作 v37）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "yamaarashi:{line:'nut'", // ヤマアラシ
+      "iwakui:{line:'nut'", // イワクイ
+      "yukidama:{line:'nut'", // ユキダマ（氷の層）
+      "magma:{line:'nut'", // マグマスライム（溶岩の層）
+      "hotaru:{line:'nut'", // ホタル（夜）
+      "himawari:{line:'nut'", // ヒマワリ（昼）
+      "fukurou:{line:'mag'", // フクロウ
+      "maboroshi:{line:'mag'", // マボロシ
+      "slimeking:{line:'sp'", // スライムキング
+      "tsuchinoko:{line:'sp'", // ツチノコ
+      'function illuOn(', // 幻の壁
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
