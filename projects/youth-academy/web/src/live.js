@@ -700,7 +700,7 @@
         no.cool = 0.6;
         // 飛び込むか、間合いを取って待つか（タックル・判断。自陣の箱の中は慎重に）
         const box = this.inOwnBox(no);
-        const go = (0.14 + no.a.tck * 0.14 + no.a.dec * 0.06 + ((no.team.tactic && no.team.tactic.intensity) || 0.5) * 0.08) * (box ? 0.6 : 1) * (q.hold > 1.2 ? 1.5 : 1) * (q.blocked > 0.4 ? 1.6 : 1);
+        const go = (0.14 + no.a.tck * 0.14 + no.a.dec * 0.06 + ((no.team.tactic && no.team.tactic.intensity) || 0.5) * 0.08) * (box ? 0.6 : 1) * (q.hold > 1.2 ? 1.5 : 1) * (q.blocked > 0.4 ? 1.6 : 1) * (no.p.yellow ? 0.6 : 1);
         if (this.rng() < go && this.tackle(no, q)) return;
       }
       // GK が自分の箱の中で足元に飛び込む（1対1・飛び出し）
@@ -1175,7 +1175,7 @@
         return true;
       }
       // ファウル（下手なほど・後ろから）
-      const foulP = clamp(0.1 + (1 - d.a.tck) * 0.14 + ((d.team.tactic && d.team.tactic.intensity) || 0.5) * 0.06 - d.a.con * 0.05, 0.04, 0.3) * (this.inOwnBox(d) ? 0.35 : 1);
+      const foulP = clamp(0.17 + (1 - d.a.tck) * 0.16 + ((d.team.tactic && d.team.tactic.intensity) || 0.5) * 0.06 - d.a.con * 0.05, 0.04, 0.3) * (this.inOwnBox(d) ? 0.35 : 1);
       if (this.rng() < foulP) {
         const inBox = L - this.uOfSide(q.sd, q.y) < 16.5 && Math.abs(q.x - W / 2) < 20.16;
         this.ev('foul', { pid: d.id, sd: d.sd, vs: q.id, x: q.x, y: q.y, pk: inBox });
