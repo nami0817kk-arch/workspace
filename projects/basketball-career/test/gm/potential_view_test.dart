@@ -124,4 +124,12 @@ void main() {
     final y = Career.fromJson(x.toJson());
     expect(y.potentialRevealed, contains(pl.id));
   });
+
+  test('幅の下の端が「伸びしろなし」なら「なし〜A」(表は「無〜A」)。「-〜A」とは書かない', () {
+    const v = PotentialView(0, 3, 70, 85, 30);
+    expect(v.text, 'なし〜A');
+    expect(v.shortText, '無〜A');
+    expect(const PotentialView(1, 3, 70, 85, 30).text, 'C〜A');
+    expect(const PotentialView(0, 0, 70, 70, 100).text, '-');
+  });
 }

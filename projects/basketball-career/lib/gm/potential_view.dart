@@ -28,8 +28,11 @@ class PotentialView {
   String get loText => potentialGrades[lo];
   String get hiText => potentialGrades[hi];
 
-  /// 「C〜A」か「A」。伸びしろが無いと分かっていれば「-」。
-  String get text => exact ? loText : '$loText〜$hiText';
+  /// 「C〜A」か「A」。伸びしろが無いと分かっていれば「-」。幅の下の端が無しなら「なし〜A」(「-〜A」は読めなかった)。
+  String get text => exact ? loText : '${lo == 0 ? 'なし' : loText}〜$hiText';
+
+  /// 表の狭い列用(「無〜A」)。
+  String get shortText => exact ? loText : '${lo == 0 ? '無' : loText}〜$hiText';
 
   /// 一覧に札を出すか(伸びしろが無いと分かっている選手には出さない)。
   bool get worthShowing => hi > 0;
