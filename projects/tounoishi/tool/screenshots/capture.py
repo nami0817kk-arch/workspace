@@ -57,8 +57,16 @@ BOOT = r"""
 # 場面づくりの道具（ページの中で使う）
 HELP = r"""
 var T=window.__t;
+// 盤の大きさ（v51 から 28×28）。場面の座標は 20×20 で書いてあるので、__s で引き伸ばす
+function __N(){var n=0;while(T.cell(0,n,0))n++;return n;}
+function __s(v){return Math.round(v*(__N()-1)/19);}
+// 見せたい所（20×20 の座標）を真ん中あたりにして、マスを今までの大きさで見せる
+function __focus(f,x,y){T.view(f);T.zoom(1,0,0);var L=__N()*18;T.zoom(__N()/20,__s(x)*18+9,__s(y)*18+9);}
+// 冒険者がいればその辺り、いなければ入口の辺り
+function __focusEn(f){var e=T.g().en.filter(function(e){return e.f==f;})[0];if(e){T.view(f);T.zoom(1,0,0);T.zoom(__N()/20,e.x*18+9,e.y*18+9);}else __focus(f,10,15);}
 // (x,y) から (dx,dy) の向きに len マス掘る。nuts[i] があれば、掘る前にその土の養分を入れておく（生まれる魔物が決まる）
 function __br(f,x,y,dx,dy,len,nuts,mag){
+ x=__s(x);y=__s(y);
  for(var i=1;i<=len;i++){var cx=x+dx*i,cy=y+dy*i,c=T.cell(f,cx,cy);if(!c)break;
   if(nuts&&nuts[i-1]!=null){c.nut=nuts[i-1];c.mag=0;}
   if(mag&&mag[i-1]!=null){c.mag=mag[i-1];c.nut=0;}
@@ -108,7 +116,7 @@ __run(6);T.view(f);__fin(64);
 T.reset('normal');__floor0();__run(4);
 T.launch();__run(3);T.launch();
 __until(function(g){var e=g.en.filter(function(e){return e.f==0;});return e.length>=2&&e.some(function(e){return __near(g,e,1);});},60);
-T.view(0);__fin(52);
+__focusEn(0);__fin(52);
 """, PAUSE),
     # 3. 主役と勇者（第6波の勇者が主役に迫った所で止める）
     ('03_hero', r"""
@@ -116,13 +124,13 @@ T.reset('normal');__floor0();__run(4);
 __heroes(['kill','eat']);
 var g=T.g();g.wave=5;g.cd=0;T.launch();
 __until(function(g){var y=g.en.filter(function(e){return e.yu&&e.f==0;})[0];return y&&g.cr.some(function(m){return m.hero&&m.f==0&&Math.abs(m.x-y.x)+Math.abs(m.y-y.y)<=3;});},120);
-T.view(0);__fin(41);
+__focusEn(0);__fin(41);
 """, PAUSE),
     # 4. 一覧のシート（主役・勇者・系統の強化）
     ('04_list', r"""
 T.reset('normal');__floor0();__run(4);
 __heroes(['kill','big','eat']);
-T.view(0);__fin(73);
+__focus(0,10,10);__fin(73);
 """, "document.getElementById('blist').click();var sb=document.querySelector('.sbox');if(sb)sb.scrollTop=0;"),
     # 5. タイトル
     ('05_title', '', ''),
@@ -235,6 +243,8 @@ async def shoot():
                 await tab.js(HELP + setup + ';window.scrollTo(0,0);true')
                 if after:
                     await tab.js(after + ';true')
+                # 「新しい種！」「勇者来襲！」の帯は盤に重なるので、撮る前に消す
+                await tab.js("var __b=document.getElementById('bnr');if(__b)__b.hidden=true;true")
                 await asyncio.sleep(1.5)  # 描き直しと入りの動きが落ち着くまで
                 text = await tab.js('document.body.innerText')
                 bad = [x for x in NG if x in text]
