@@ -48,6 +48,11 @@ abstract class SaveStore {
   static Future<SaveStore> instance(List<String> migrateKeys) {
     final override = debugOverride;
     if (override != null) return Future.value(override);
+    // テストでは開いた Future を覚えておかない。widget テストは1件ごとに
+    // 別の偽の時間の中で動くので、前のテストで作った Future を次のテストで
+    // 待つと、続きが前のテストの(もう進まない)時間に積まれて止まる
+    // (CI で widget テストが10分で打ち切られた)。
+    if (!kIsWeb && _underTest) return Future.value(PrefsSaveStore());
     return _opened ??= _open(migrateKeys);
   }
 
