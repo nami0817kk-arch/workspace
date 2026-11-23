@@ -541,15 +541,27 @@ List<SceneDef> buildWayScenes() {
             g.j(3);
             return '峠の上から、見知らぬ国が見えた。';
           }),
-          Choice.h('海を渡る', 'まだ見ぬ土地へ。海は気まぐれだ', () {
-            if (g.rng.chance(.1)) {
-              g.die('海を渡ったまま、消息を絶った', 'yukue');
-              return '船出したきり、消息は絶えた。';
-            }
-            g.setFlag('crossed_sea');
-            g.mark('海を渡り、遠い土地へ流れた');
-            return '海を渡り、言葉もよく分からない土地に着いた。';
-          }),
+          // 海の向こうにいる人には「戻る」を出す（戻れば、海の向こうで果てる最期は出なくなる）。
+          if (g.hasFlag('crossed_sea'))
+            Choice.h('海を渡って日ノ本へ戻る', '見慣れた土地へ。海は気まぐれだ', () {
+              if (g.rng.chance(.1)) {
+                g.die('海を渡ったまま、消息を絶った', 'yukue');
+                return '帰りの船は、港に着かなかった。';
+              }
+              g.l.flags.remove('crossed_sea');
+              g.mark('海の向こうから、日ノ本へ戻った');
+              return '懐かしい言葉の聞こえる浜に、船が着いた。';
+            })
+          else
+            Choice.h('海を渡る', 'まだ見ぬ土地へ。海は気まぐれだ', () {
+              if (g.rng.chance(.1)) {
+                g.die('海を渡ったまま、消息を絶った', 'yukue');
+                return '船出したきり、消息は絶えた。';
+              }
+              g.setFlag('crossed_sea');
+              g.mark('海を渡り、遠い土地へ流れた');
+              return '海を渡り、言葉もよく分からない土地に着いた。';
+            }),
         ], after: next);
       },
       repeat: true,
