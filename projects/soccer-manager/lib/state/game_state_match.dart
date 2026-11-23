@@ -21,19 +21,68 @@ extension GameStateMatch on GameState {
   ///
   /// ライブ観戦中のカップ戦が中立の会場(決勝・スーパーカップ)なら、どちらの
   /// クラブにもホームの利は無い(ライブ観戦の間は、ほかの試合は進まない)。
-  double _homeAdvantageFor(String homeTeamId) {
+  ///
+  /// 自クラブのリーグ戦では [awayTeamId] も渡す。自クラブが前の季の1部の
+  /// 王者なら、相手はいつも以上に向かってくる([championPressure])。
+  double _homeAdvantageFor(String homeTeamId, {String? awayTeamId}) {
     if (_liveCupKind != null && _liveCupNeutral) {
       return MatchEngine.neutralHomeAdvantageFactor;
     }
-    if (_save == null || homeTeamId != _save!.userTeamId) {
-      return MatchEngine.defaultHomeAdvantageFactor;
+    final save = _save;
+    if (save == null) return MatchEngine.defaultHomeAdvantageFactor;
+    final userId = save.userTeamId;
+    // リーグ戦([awayTeamId] を渡す所)だけ。カップ戦には掛けない。
+    final pressure = awayTeamId == null
+        ? 0.0
+        : championPressure * min(reigningTitleStreak, 3);
+    if (homeTeamId != userId) {
+      return MatchEngine.defaultHomeAdvantageFactor +
+          (awayTeamId == userId ? pressure : 0.0);
     }
     final capacity = stadiumCapacity;
     final ratio =
         capacity <= 0 ? 0.0 : (expectedAttendance / capacity).clamp(0.0, 1.0);
     // 満員ならCPU既定値を上回り、ガラガラなら下回る(中央値≒既定値)。
-    return MatchEngine.defaultHomeAdvantageFactor - 0.04 + 0.08 * ratio;
+    return MatchEngine.defaultHomeAdvantageFactor -
+        0.04 +
+        0.08 * ratio -
+        pressure;
   }
+
+  /// 前の季の1部の王者に、リーグ戦の相手が向かってくる分(ホームの利の
+  /// 倍率への上乗せ。王者のホームでは利が減り、敵地では相手の利が増える)。
+  /// 連覇が続くほど強まる(連覇の数×この値。3連覇で頭打ち)。
+  ///
+  /// 1部の強めのクラブを持つと、10季のうち7〜9季で優勝する組があった
+  /// (2026-11-23 の測定)。王者は研究され、どの相手も目の色を変えてくる。
+  static const double championPressure = 0.04;
+
+  /// 自クラブが、前の季まで1部で何連覇しているか(いまも1部にいるとき)。
+  int get reigningTitleStreak {
+    final save = _save;
+    if (save == null || save.currentDivisionTier != 1) return 0;
+    var streak = 0;
+    var season = save.league.season - 1;
+    for (final r in save.seasonHistory.reversed) {
+      if (r.season != season ||
+          !r.wonLeague ||
+          r.divisionTier != 1 ||
+          r.clubName != save.clubName) {
+        break;
+      }
+      streak++;
+      season--;
+    }
+    return streak;
+  }
+
+  /// テスト用: [homeTeamId] のホームの利の倍率。
+  @visibleForTesting
+  double debugHomeAdvantageFor(String homeTeamId, {String? awayTeamId}) =>
+      _homeAdvantageFor(homeTeamId, awayTeamId: awayTeamId);
+
+  /// 自クラブが前の季に1部で優勝し、いまも1部にいるか。
+  bool get isReigningTopChampion => reigningTitleStreak > 0;
 
   /// ライブ観戦中のカップ試合の要約(なければnull)。LiveMatchScreenが
   /// リーグの[liveFixture]の代わりに参照する。
@@ -435,7 +484,8 @@ extension GameStateMatch on GameState {
           endMinute: 45,
           interactiveTeamId: _save!.userTeamId,
           weather: weather,
-          homeAdvantageFactor: _homeAdvantageFor(home.id),
+          homeAdvantageFactor:
+              _homeAdvantageFor(home.id, awayTeamId: away.id),
         );
         if (!interactive) {
           while (!state.isFinished) {
@@ -666,7 +716,8 @@ extension GameStateMatch on GameState {
           interactiveTeamId: userId,
           carried: progress.firstHalf,
           weather: weather,
-          homeAdvantageFactor: _homeAdvantageFor(home.id),
+          homeAdvantageFactor:
+              _homeAdvantageFor(home.id, awayTeamId: away.id),
         );
         _liveSecondHalfResume =
             (tally: secondHalf, resumeMinute: progress.resumeMinute);
@@ -678,7 +729,8 @@ extension GameStateMatch on GameState {
           endMinute: 45,
           interactiveTeamId: userId,
           weather: weather,
-          homeAdvantageFactor: _homeAdvantageFor(home.id),
+          homeAdvantageFactor:
+              _homeAdvantageFor(home.id, awayTeamId: away.id),
           carried: progress?.firstHalf,
         );
         if (!interactive) {

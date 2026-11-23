@@ -155,6 +155,7 @@ extension GameStateSupporters on GameState {
       targetRank: s.boardTargetRank,
       points: s.supporterMonthPoints,
       games: s.supporterMonthGames,
+      teamCount: s.league.teams.length,
     );
   }
 

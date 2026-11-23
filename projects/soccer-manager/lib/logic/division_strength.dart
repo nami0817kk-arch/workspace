@@ -18,6 +18,17 @@ import 'dart:math';
       _ => (48, 66),
     };
 
+/// [tier] 部の真ん中くらいのクラブの、選手全員の総合力の平均の目安。
+///
+/// [divisionStrengthRange] は選手を作るときの目安で、出来上がるクラブの
+/// 平均(控えと若手を含む)はその真ん中より7ほど低い(1部 82・2部 72・
+/// 3部 65。2026-11-23 の実測)。CPU のクラブが選手を補充するとき、
+/// 部の水準へ少し寄せるのに使う(RetirementEngine.cpuRecruitStrength)。
+int divisionTypicalSquadLevel(int tier) {
+  final (lo, hi) = divisionStrengthRange(tier);
+  return (lo + hi) ~/ 2 - 7;
+}
+
 /// [tier] 部のクラブの強さを1つ引く。
 int rollDivisionStrength(int tier, Random rng) {
   final (lo, hi) = divisionStrengthRange(tier);

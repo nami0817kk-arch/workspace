@@ -99,12 +99,33 @@ class BoardEngine {
   static const int targetRankCushion = 2;
 
   /// 現在のスカッド総合力から見て妥当な目標順位（1が最高位）を見積もる。
-  static int estimateTargetRank(League league, String userTeamId) {
+  ///
+  /// [relegationZone] はクラブのいる部の降格圏の広さ(いちばん下の部は 0)。
+  /// 目標は [targetRankFloor] より下にはしない。
+  static int estimateTargetRank(League league, String userTeamId,
+      {int relegationZone = 0}) {
     final sorted = [...league.teams]
       ..sort((a, b) => b.overallRating.compareTo(a.overallRating));
     final idx = sorted.indexWhere((t) => t.id == userTeamId);
     final strengthRank = idx < 0 ? (league.teams.length / 2).ceil() : idx + 1;
-    return (strengthRank + targetRankCushion).clamp(1, league.teams.length);
+    final n = league.teams.length;
+    return min(strengthRank + targetRankCushion,
+            targetRankFloor(teamCount: n, relegationZone: relegationZone))
+        .clamp(1, n);
+  }
+
+  /// 理事会の目標の下限(これより下の順位は目標にしない)。
+  ///
+  /// 降格のある部は「降格圏の外」、いちばん下の部は「下位4分の1の上」。
+  /// 以前は戦力の順位だけで決まり、戦力が最下位なら目標も最下位で、
+  /// 最下位を続けても月末・季末の期待がほとんど下がらなかった。何もしない
+  /// オーナーが手放すまで8〜10季かかっていた(2026-11-23)。
+  static int targetRankFloor(
+      {required int teamCount, required int relegationZone}) {
+    final floor = relegationZone > 0
+        ? teamCount - relegationZone
+        : teamCount - teamCount ~/ 4;
+    return floor.clamp(1, teamCount);
   }
 
   /// 新シーズン開幕時に、続投が決まった監督へ戻す信頼度の下限。
@@ -186,16 +207,30 @@ class BoardEngine {
   /// 主な動かし手になるようにする(2026-11-23)。
   ///
   /// その月にリーグ戦が無ければ 0(夏の間や季の切り替え)。
+  ///
+  /// [teamCount] を渡すと、順位そのものの分([monthlyPositionPart])も混ぜる。
   static int monthlyResultDelta({
     required int rank,
     required int targetRank,
     required int points,
     required int games,
+    int teamCount = 0,
   }) {
     if (games <= 0) return 0;
     return (monthlyRankPart(rank: rank, targetRank: targetRank) +
-            monthlyFormPart(points: points, games: games))
+            monthlyFormPart(points: points, games: games) +
+            monthlyPositionPart(rank: rank, teamCount: teamCount))
         .clamp(-monthlyResultCap, monthlyResultCap);
+  }
+
+  /// 月末のまとめのうち、順位そのものの分。下位4分の1にいる月は -1。
+  ///
+  /// 目標との差だけで見ると、目標が下限([targetRankFloor])に張り付いた
+  /// 弱いクラブは、最下位でも月に -1 しか動かなかった。サポーターは目標
+  /// よりも順位表そのものを見ている(2026-11-23)。
+  static int monthlyPositionPart({required int rank, required int teamCount}) {
+    if (teamCount <= 0 || rank <= 0) return 0;
+    return rank > teamCount - teamCount ~/ 4 ? -1 : 0;
   }
 
   /// 月末のまとめのうち、目標の順位との差の分(-3〜+3)。目標ちょうどは
