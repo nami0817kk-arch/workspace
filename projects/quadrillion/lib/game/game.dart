@@ -211,6 +211,14 @@ class Game {
   /// 試作との一致テストでは切る（切ると乱数の使い方も試作と同じになる）。保存しない
   bool extras = true;
 
+  /// 使う業種・シナジー・大シナジー。extras を切ると試作にある分だけ（112業種）
+  List<Industry> get inds => extras ? IND : IND_BASE;
+  List<Synergy> get syns => extras ? SYN : SYN_BASE;
+  List<BigSynergy> get bigs => extras ? BIG : BIG_BASE;
+
+  /// 古いセーブを読んだとき、まだ CPU の会社がいない足した業種（次の月に知らせなしで会社を置く）
+  Set<String> lateInds = {};
+
   /// 取締役会: 今年の売上・利益の積み上げ（rev / pre / n）、去年の振り返り（rev / pre / cap / rank）
   Map<String, double> yAcc = {};
   Map<String, double>? yPrev;
@@ -280,7 +288,7 @@ class Game {
     return c;
   }
 
-  List<Industry> liveInds() => IND.where((i) => eraF(i, yr()) > 0).toList();
+  List<Industry> liveInds() => inds.where((i) => eraF(i, yr()) > 0).toList();
 
   // ===== 人 =====
   Person mkPerson([double qq = 0]) {
@@ -352,8 +360,8 @@ class Game {
   static Rival rivalOf(RivalDef r) => Rival(k: r.k, pres: r.pres, co: r.co, type: r.type, label: r.label, tier: r.tier, col: r.col);
 
   // ===== はじめる =====
-  static Game newGame(SetupConfig cfg, {math.Random? rng}) {
-    final s = Game(rng ?? math.Random());
+  static Game newGame(SetupConfig cfg, {math.Random? rng, bool extras = true}) {
+    final s = Game(rng ?? math.Random())..extras = extras;
     s._init(cfg);
     return s;
   }
@@ -474,7 +482,7 @@ class Game {
       }
     }
     // 各業種の力を市場の大きさに合わせる
-    indM = {for (final i in IND) i.id: 0};
+    indM = {for (final i in inds) i.id: 0};
     normalizeAll(true);
     for (var i = 0; i < 3; i++) {
       cands.add(mkPerson(0));
@@ -489,7 +497,7 @@ class Game {
   }
 
   void normalizeAll(bool init) {
-    for (final ind in IND) {
+    for (final ind in inds) {
       final M = mkt(ind);
       if (M <= 0) continue;
       for (var t = 0; t < 3; t++) {
@@ -522,13 +530,13 @@ class Game {
       }
     }
     final m = <String, double>{};
-    for (final s in SYN) {
+    for (final s in syns) {
       if (own.contains(s.a) && own.contains(s.b)) {
         m[s.a] = (m[s.a] ?? 1) * 1.2;
         m[s.b] = (m[s.b] ?? 1) * 1.2;
       }
     }
-    for (final g in BIG) {
+    for (final g in bigs) {
       if (g.set.every(own.contains)) {
         for (final x in g.set) {
           m[x] = (m[x] ?? 1) * 1.4;
@@ -618,7 +626,7 @@ class Game {
   ({Map<String, List<double>> T, Map<String, double> sm}) totals() {
     final sm = synMult();
     final T = <String, List<double>>{};
-    for (final ind in IND) {
+    for (final ind in inds) {
       final M = mkt(ind), o = othOf(ind);
       T[ind.id] = [M * reg[0] * o[0], M * reg[1] * o[1], M * reg[2] * o[2]];
     }
@@ -921,7 +929,16 @@ class Game {
     s.events = [];
     s.reg = regFor(s.yr());
     final saved = j['indM'] as Map?;
-    s.indM = {for (final ind in IND) ind.id: saved != null && saved[ind.id] != null ? (saved[ind.id] as num).toDouble() : s.mkt(ind)};
+    s.indM = {for (final ind in s.inds) ind.id: saved != null && saved[ind.id] != null ? (saved[ind.id] as num).toDouble() : s.mkt(ind)};
+    // 1.0.0+7 までのセーブには足した業種がない。生まれたことにして、次の月に CPU の会社を置く（知らせは出さない）
+    if (saved != null) {
+      for (final ind in s.inds) {
+        if (saved[ind.id] == null && s.mkt(ind) > 0) {
+          s.indM[ind.id] = 0;
+          s.lateInds.add(ind.id);
+        }
+      }
+    }
     s.calcAll();
     // 古いセーブには最大値がないので、残っている推移から埋める
     for (final h in s.hist) {

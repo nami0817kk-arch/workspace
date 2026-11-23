@@ -39,12 +39,12 @@ extension GameTurn on Game {
       }
     }
     // 市場の大きさに合わせて力を伸び縮みさせる
-    for (final ind in IND) {
+    for (final ind in inds) {
       final mk0 = mkt(ind);
       final old = indM[ind.id] ?? 0;
       if (mk0 > 0 && old <= 0 && yr() > startYear) {
-        // 新しい業種が生まれた
-        N(M('新しい業種「{0}」が生まれました。まだ大きな会社はいません', [I(ind.id)]), 'big');
+        // 新しい業種が生まれた（古いセーブで足した業種は知らせを出さない）
+        if (!lateInds.remove(ind.id)) N(M('新しい業種「{0}」が生まれました。まだ大きな会社はいません', [I(ind.id)]), 'big');
         final k = ri(2, 4);
         for (var i = 0; i < k; i++) {
           final t = rnd() < .4
@@ -130,7 +130,7 @@ extension GameTurn on Game {
       if (c.alive &&
           c.parent != 'player' &&
           c.rival == null &&
-          c.rev < mkt(c.biz.isEmpty ? IND[0] : indm[c.biz[0].ind]!) * .0005 &&
+          c.rev < mkt(c.biz.isEmpty ? inds[0] : indm[c.biz[0].ind]!) * .0005 &&
           c.cash <= 0 &&
           rnd() < .1) {
         c.alive = false;
@@ -398,13 +398,13 @@ extension GameTurn on Game {
         own.add(b.ind);
       }
     }
-    for (final s in SYN) {
+    for (final s in syns) {
       if (own.contains(s.a) && own.contains(s.b) && found[s.k] == null) {
         found[s.k] = year;
         N(M('シナジー発見！「{0}」×「{1}」＝{2}。両方の事業の力が2割上がります', [I(s.a), I(s.b), D(s.ja)]), 'big');
       }
     }
-    for (final g in BIG) {
+    for (final g in bigs) {
       if (g.set.every(own.contains) && big[g.k] == null) {
         big[g.k] = year;
         N(M('大シナジー「{0}」が完成！3つの事業の力が4割上がります', [D(g.ja)]), 'big');

@@ -396,7 +396,7 @@ void main() {
 
   group('切り替え', () {
     test('extras を切ると、取締役会も物語も動かない（乱数の使い方は試作と同じ）', () {
-      final s = Game.newGame(SetupConfig(mode: 'world', year: 1980, traits: ['charm', 'gambler']), rng: ParkMiller(2024))..extras = false;
+      final s = Game.newGame(SetupConfig(mode: 'world', year: 1980, traits: ['charm', 'gambler']), rng: ParkMiller(2024), extras: false);
       for (var i = 0; i < 240; i++) {
         botMonth(s);
       }

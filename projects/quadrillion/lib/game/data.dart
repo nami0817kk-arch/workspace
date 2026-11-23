@@ -3,7 +3,8 @@
 
 import 'models_static.dart';
 
-const List<Industry> IND = [
+/// 試作にある112業種（Game.extras を切るとこれだけを使う）
+const List<Industry> IND_BASE = [
   Industry('yatai', '屋台', 'food', 1900, 1950, 1975, 0.15, 0.3, 3000000.0, 40000000000.0, 'ei'),
   Industry('teishoku', '定食屋', 'food', 1900, 1965, 2010, 0.08, 0.4, 20000000.0, 600000000000.0, 'tou'),
   Industry('ff', 'ファストフード', 'food', 1971, 1995, 0, 0.08, 0.3, 200000000.0, 1200000000000.0, 'tou'),
@@ -118,7 +119,102 @@ const List<Industry> IND = [
   Industry('seabed', '海底資源', 'fut', 2035, 2070, 0, 0.2, 1.0, 500000000000.0, 5000000000000.0, 'zai'),
 ];
 
-const List<Synergy> SYN = [
+/// 試作のあとに足した88業種（1.0.0+8）
+const List<Industry> IND_MORE = [
+  Industry('dagashi', '駄菓子屋', 'food', 1900, 1965, 1990, 0.12, 0.2, 3000000.0, 100000000000.0, 'ei'),
+  Industry('ramen', 'ラーメンチェーン', 'food', 1958, 2010, 0, 0.08, 0.3, 30000000.0, 600000000000.0, 'tou'),
+  Industry('izakaya', '居酒屋チェーン', 'food', 1970, 1998, 2015, 0.06, 0.7, 30000000.0, 1200000000000.0, 'tou'),
+  Industry('famires', 'ファミレス', 'food', 1970, 1992, 2015, 0.05, 0.4, 200000000.0, 1400000000000.0, 'tou'),
+  Industry('confect', '製菓', 'food', 1900, 1990, 0, 0.1, 0.2, 3000000000.0, 1500000000000.0, 'kai'),
+  Industry('fishery', '水産加工', 'food', 1900, 1975, 0, 0.05, 0.4, 2000000000.0, 2000000000000.0, 'tou'),
+  Industry('mealkit', 'ミールキット', 'food', 2013, 2032, 0, 0.06, 0.3, 50000000.0, 300000000000.0, 'ei'),
+  Industry('plantmeat', '代替肉', 'food', 2019, 2040, 0, 0.1, 0.3, 1000000000.0, 600000000000.0, 'kai'),
+  Industry('boba', 'タピオカ店', 'food', 2008, 2019, 2022, 0.2, 0.5, 10000000.0, 100000000000.0, 'ei'),
+  Industry('sento', '銭湯', 'live', 1900, 1965, 1980, 0.1, 0.1, 20000000.0, 150000000000.0, 'tou'),
+  Industry('laundry', 'コインランドリー', 'live', 1970, 2020, 0, 0.15, 0.2, 30000000.0, 100000000000.0, 'tou'),
+  Industry('photolab', '写真の現像', 'live', 1950, 1997, 2003, 0.2, 0.4, 30000000.0, 400000000000.0, 'ei'),
+  Industry('salon', '美容室', 'live', 1900, 2005, 0, 0.08, 0.4, 10000000.0, 2000000000000.0, 'ei'),
+  Industry('reform', 'リフォーム', 'live', 1980, 2025, 0, 0.08, 0.7, 30000000.0, 6000000000000.0, 'ei'),
+  Industry('storage', 'トランクルーム', 'live', 2000, 2035, 0, 0.2, 0.3, 50000000.0, 150000000000.0, 'zai'),
+  Industry('smarthome', 'スマートホーム', 'live', 2015, 2045, 0, 0.12, 0.5, 500000000.0, 1200000000000.0, 'kai'),
+  Industry('kimono', '呉服', 'live', 1900, 1960, 1985, 0.15, 0.8, 30000000.0, 1800000000000.0, 'ei'),
+  Industry('waste', '廃棄物処理', 'live', 1960, 2020, 0, 0.08, 0.2, 500000000.0, 5000000000000.0, 'tou'),
+  Industry('textile', '紡績', 'make', 1900, 1955, 1975, 0.05, 0.9, 5000000000.0, 3000000000000.0, 'tou'),
+  Industry('camera', 'カメラ', 'make', 1950, 2008, 2015, 0.12, 0.8, 5000000000.0, 1500000000000.0, 'kai'),
+  Industry('watch', '腕時計', 'make', 1950, 1985, 0, 0.12, 0.7, 2000000000.0, 800000000000.0, 'kai'),
+  Industry('mdplayer', 'MDプレーヤー', 'make', 1992, 1999, 2004, 0.1, 0.6, 3000000000.0, 400000000000.0, 'kai'),
+  Industry('handset', '携帯電話機', 'make', 1990, 2005, 2010, 0.05, 0.7, 20000000000.0, 2000000000000.0, 'kai'),
+  Industry('machine', '工作機械', 'make', 1930, 2007, 0, 0.12, 1.5, 10000000000.0, 1600000000000.0, 'kai'),
+  Industry('paper', '製紙', 'make', 1900, 1990, 2010, 0.04, 0.5, 50000000000.0, 3000000000000.0, 'tou'),
+  Industry('battery', '電池', 'make', 1920, 2030, 0, 0.08, 0.7, 50000000000.0, 2500000000000.0, 'kai'),
+  Industry('printer3d', '3Dプリンター', 'make', 2012, 2040, 0, 0.15, 0.7, 1000000000.0, 600000000000.0, 'kai'),
+  Industry('coal', '石炭', 'ene', 1900, 1955, 1965, 0.06, 0.8, 50000000000.0, 2000000000000.0, 'tou'),
+  Industry('citygas', '都市ガス', 'ene', 1900, 2005, 0, 0.07, 0.3, 100000000000.0, 4000000000000.0, 'tou'),
+  Industry('lpg', 'プロパンガス', 'ene', 1950, 1990, 2015, 0.1, 0.3, 50000000.0, 2000000000000.0, 'ei'),
+  Industry('nuclear', '原子力発電', 'ene', 1966, 1998, 2011, 0.1, 0.2, 1000000000000.0, 2000000000000.0, 'zai'),
+  Industry('wind', '洋上風力', 'ene', 2015, 2045, 0, 0.1, 0.5, 100000000000.0, 1500000000000.0, 'kai'),
+  Industry('gasstation', 'ガソリンスタンド', 'ene', 1950, 1995, 2020, 0.02, 0.5, 100000000.0, 8000000000000.0, 'ei'),
+  Industry('gridbatt', '蓄電池', 'ene', 2015, 2045, 0, 0.12, 0.6, 20000000000.0, 2000000000000.0, 'kai'),
+  Industry('geothermal', '地熱', 'ene', 1966, 2050, 0, 0.1, 0.2, 50000000000.0, 600000000000.0, 'kai'),
+  Industry('powerretail', '電力小売', 'ene', 2016, 2030, 0, 0.04, 0.8, 500000000.0, 2000000000000.0, 'ei'),
+  Industry('wholesale', '問屋', 'link', 1900, 1975, 2000, 0.03, 0.7, 500000000.0, 10000000000000.0, 'ei'),
+  Industry('callcenter', 'コールセンター', 'link', 1990, 2015, 0, 0.06, 0.5, 50000000.0, 1000000000000.0, 'tou'),
+  Industry('bus', '高速バス', 'link', 1960, 2010, 0, 0.08, 0.6, 2000000000.0, 500000000000.0, 'tou'),
+  Industry('printing', '印刷', 'link', 1900, 1991, 2010, 0.05, 0.7, 1000000000.0, 9000000000000.0, 'tou'),
+  Industry('warehouse', '倉庫', 'link', 1900, 2025, 0, 0.1, 0.5, 10000000000.0, 2000000000000.0, 'zai'),
+  Industry('translation', '翻訳', 'link', 1960, 2020, 2030, 0.12, 0.5, 10000000.0, 300000000000.0, 'ei'),
+  Industry('courier', '宅配便', 'link', 1976, 2020, 0, 0.05, 0.4, 10000000000.0, 3000000000000.0, 'tou'),
+  Industry('datacenter', 'データセンター', 'link', 2000, 2040, 0, 0.15, 0.4, 100000000000.0, 3000000000000.0, 'zai'),
+  Industry('pawn', '質屋', 'money', 1900, 1955, 1990, 0.2, 0.5, 20000000.0, 300000000000.0, 'zai'),
+  Industry('lease', 'リース', 'money', 1963, 1995, 0, 0.06, 0.9, 50000000000.0, 5000000000000.0, 'zai'),
+  Industry('fx', 'FX取引', 'money', 1998, 2012, 0, 0.3, 1.5, 1000000000.0, 200000000000.0, 'kai'),
+  Industry('crowdfund', 'クラウドファンディング', 'money', 2011, 2030, 0, 0.1, 0.6, 30000000.0, 100000000000.0, 'kai'),
+  Industry('reit', '不動産投資信託', 'money', 2001, 2025, 0, 0.3, 1.4, 50000000000.0, 600000000000.0, 'zai'),
+  Industry('asset', '資産運用', 'money', 1960, 2030, 0, 0.3, 1.2, 5000000000.0, 1200000000000.0, 'zai'),
+  Industry('robo', 'ロボアドバイザー', 'money', 2016, 2035, 0, 0.2, 1.0, 1000000000.0, 100000000000.0, 'kai'),
+  Industry('bnpl', '後払い決済', 'money', 2018, 2035, 0, 0.1, 0.7, 1000000000.0, 300000000000.0, 'kai'),
+  Industry('exchange', '外貨両替', 'money', 1900, 2000, 2020, 0.1, 0.8, 100000000.0, 200000000000.0, 'ei'),
+  Industry('mobilesite', 'ガラケーのコンテンツ', 'net', 1999, 2006, 2012, 0.3, 0.4, 30000000.0, 600000000000.0, 'kai'),
+  Industry('blog', 'ブログ', 'net', 2003, 2008, 2015, 0.2, 0.5, 20000000.0, 100000000000.0, 'kai'),
+  Industry('jobboard', '求人サイト', 'net', 1997, 2020, 0, 0.25, 1.2, 50000000.0, 600000000000.0, 'ei'),
+  Industry('flea', 'フリマアプリ', 'net', 2013, 2025, 0, 0.2, 0.3, 50000000.0, 1200000000000.0, 'kai'),
+  Industry('review', '口コミサイト', 'net', 2000, 2015, 0, 0.25, 0.4, 30000000.0, 200000000000.0, 'ei'),
+  Industry('saas', '業務アプリ', 'net', 2010, 2035, 0, 0.25, 0.4, 100000000.0, 1500000000000.0, 'kai'),
+  Industry('livestream', 'ライブ配信', 'net', 2015, 2030, 0, 0.2, 0.4, 50000000.0, 400000000000.0, 'kai'),
+  Industry('webdesign', 'ホームページ制作', 'net', 1996, 2012, 2025, 0.1, 0.4, 10000000.0, 300000000000.0, 'ei'),
+  Industry('dialup', 'ダイヤルアップ接続', 'net', 1994, 2000, 2005, 0.2, 0.3, 1000000000.0, 300000000000.0, 'tou'),
+  Industry('radio', 'ラジオ局', 'fun', 1925, 1975, 1995, 0.1, 0.6, 5000000000.0, 300000000000.0, 'ei'),
+  Industry('pachinko', 'パチンコ', 'fun', 1950, 1995, 2008, 0.04, 0.3, 500000000.0, 20000000000000.0, 'ei'),
+  Industry('bowling', 'ボウリング場', 'fun', 1961, 1972, 1975, 0.2, 0.6, 500000000.0, 300000000000.0, 'tou'),
+  Industry('themepark', 'テーマパーク', 'fun', 1983, 2018, 0, 0.15, 0.9, 100000000000.0, 800000000000.0, 'tou'),
+  Industry('esports', 'eスポーツ', 'fun', 2015, 2035, 0, 0.12, 0.7, 50000000.0, 300000000000.0, 'ei'),
+  Industry('vtuber', 'Vチューバー', 'fun', 2017, 2030, 0, 0.2, 0.6, 30000000.0, 200000000000.0, 'ei'),
+  Industry('talent', '芸能事務所', 'fun', 1960, 2010, 0, 0.1, 0.6, 30000000.0, 400000000000.0, 'ei'),
+  Industry('proteam', 'プロ球団', 'fun', 1936, 2020, 0, 0.05, 0.5, 5000000000.0, 400000000000.0, 'ei'),
+  Industry('golf', 'ゴルフ場', 'fun', 1957, 1992, 2005, 0.1, 1.2, 50000000000.0, 1500000000000.0, 'zai'),
+  Industry('clinic', '診療所', 'med', 1900, 2010, 0, 0.1, 0.1, 50000000.0, 12000000000000.0, 'tou'),
+  Industry('dental', '歯科医院', 'med', 1900, 2000, 0, 0.1, 0.2, 50000000.0, 3000000000000.0, 'tou'),
+  Industry('generic', '後発薬', 'med', 1970, 2025, 0, 0.1, 0.1, 5000000000.0, 1000000000000.0, 'kai'),
+  Industry('medequip', '医療機器', 'med', 1950, 2035, 0, 0.15, 0.2, 5000000000.0, 3000000000000.0, 'kai'),
+  Industry('seitai', '整体', 'med', 1950, 2010, 0, 0.1, 0.3, 5000000.0, 400000000000.0, 'tou'),
+  Industry('telemed', 'オンライン診療', 'med', 2020, 2040, 0, 0.15, 0.2, 300000000.0, 500000000000.0, 'kai'),
+  Industry('pharmacy', '調剤薬局', 'med', 1974, 2015, 0, 0.06, 0.1, 100000000.0, 7000000000000.0, 'tou'),
+  Industry('rojin', '老人ホーム', 'med', 1990, 2040, 0, 0.08, 0.2, 2000000000.0, 1500000000000.0, 'tou'),
+  Industry('cro', '治験の受託', 'med', 1995, 2030, 0, 0.12, 0.3, 1000000000.0, 300000000000.0, 'kai'),
+  Industry('bci', '脳とつなぐ機械', 'fut', 2035, 2070, 0, 0.3, 0.6, 100000000000.0, 3000000000000.0, 'kai'),
+  Industry('android', '人型ロボット', 'fut', 2030, 2065, 0, 0.2, 0.9, 100000000000.0, 5000000000000.0, 'kai'),
+  Industry('spaceelev', '軌道エレベーター', 'fut', 2060, 2095, 0, 0.3, 0.5, 5000000000000.0, 8000000000000.0, 'zai'),
+  Industry('moon', '月面基地', 'fut', 2040, 2080, 0, 0.2, 0.8, 1000000000000.0, 3000000000000.0, 'zai'),
+  Industry('longevity', '老化を止める薬', 'fut', 2040, 2075, 0, 0.35, 0.1, 200000000000.0, 6000000000000.0, 'kai'),
+  Industry('weather', '天気の制御', 'fut', 2050, 2085, 0, 0.25, 0.3, 500000000000.0, 2000000000000.0, 'kai'),
+  Industry('vertfarm', '植物工場', 'fut', 2010, 2045, 0, 0.08, 0.2, 1000000000.0, 600000000000.0, 'tou'),
+  Industry('ccs', '二酸化炭素の回収', 'fut', 2030, 2060, 0, 0.12, 0.5, 100000000000.0, 3000000000000.0, 'kai'),
+];
+
+/// 全200業種
+const List<Industry> IND = [...IND_BASE, ...IND_MORE];
+
+const List<Synergy> SYN_BASE = [
   Synergy('logi', 'ec', '当日配達'),
   Synergy('konbini', 'bank', '店内ATM'),
   Synergy('konbini', 'frozen', '冷凍棚の目玉'),
@@ -219,7 +315,56 @@ const List<Synergy> SYN = [
   Synergy('farm', 'konbini', '産地直送の弁当'),
 ];
 
-const List<BigSynergy> BIG = [
+/// 足した業種のシナジー（1.0.0+8）
+const List<Synergy> SYN_MORE = [
+  Synergy('ramen', 'frozen', '冷凍の名店の味'),
+  Synergy('izakaya', 'sake', '蔵元直送の酒'),
+  Synergy('famires', 'foodmaker', 'セントラルキッチン'),
+  Synergy('confect', 'konbini', '限定のお菓子'),
+  Synergy('fishery', 'sushi', '港直送のネタ'),
+  Synergy('mealkit', 'farm', '産地のミールキット'),
+  Synergy('plantmeat', 'gyudon', '代替肉の牛丼'),
+  Synergy('boba', 'sns', '映える一杯'),
+  Synergy('sento', 'laundry', 'ランドリー銭湯'),
+  Synergy('photolab', 'camera', 'フィルムの現像網'),
+  Synergy('salon', 'cosme', 'サロン専売品'),
+  Synergy('smarthome', 'kaden', 'つながる家電'),
+  Synergy('kimono', 'wedding', '婚礼衣装'),
+  Synergy('waste', 'paper', '古紙の再生'),
+  Synergy('textile', 'apparel', '自前の生地'),
+  Synergy('handset', 'mobilesite', '公式メニューの一等地'),
+  Synergy('machine', 'auto', '自前の生産ライン'),
+  Synergy('battery', 'ev', '自前の電池'),
+  Synergy('coal', 'steel', '原料炭の自給'),
+  Synergy('citygas', 'power', 'ガスと電気のセット'),
+  Synergy('wind', 'shipbuild', '洋上風力の作業船'),
+  Synergy('gridbatt', 'solar', '夜も使える太陽光'),
+  Synergy('powerretail', 'telecom', '電気とスマホのセット割'),
+  Synergy('printing', 'publish', '自前の印刷所'),
+  Synergy('courier', 'flea', '匿名配送'),
+  Synergy('datacenter', 'cloud', '自前のデータセンター'),
+  Synergy('translation', 'ai', '機械翻訳'),
+  Synergy('reit', 'estate', '物件の証券化'),
+  Synergy('bnpl', 'ec', 'あと払いで買う'),
+  Synergy('crowdfund', 'anime', 'ファンが出す制作費'),
+  Synergy('jobboard', 'haken', '求人から派遣まで'),
+  Synergy('livestream', 'ec', 'ライブで売る'),
+  Synergy('dialup', 'portal', 'つないだ先の最初の画面'),
+  Synergy('pachinko', 'anime', 'アニメの台'),
+  Synergy('themepark', 'hotel', 'パークの公式ホテル'),
+  Synergy('esports', 'game', '大会の運営'),
+  Synergy('vtuber', 'livestream', '仮想の配信者'),
+  Synergy('clinic', 'pharmacy', '門前薬局'),
+  Synergy('telemed', 'app', 'スマホで診察'),
+  Synergy('android', 'care', '介護ロボット'),
+  Synergy('moon', 'spacetravel', '月への旅'),
+  Synergy('longevity', 'gene', '老化の遺伝子'),
+  Synergy('ccs', 'oil', '掘った穴に埋め戻す'),
+];
+
+const List<Synergy> SYN = [...SYN_BASE, ...SYN_MORE];
+
+const List<BigSynergy> BIG_BASE = [
   BigSynergy('media', 'メディア帝国', ['tv', 'movie', 'game']),
   BigSynergy('trade', '総合商社', ['shosha', 'ship', 'oil']),
   BigSynergy('fin', '金融コングロマリット', ['bank', 'secur', 'insur']),
@@ -231,6 +376,15 @@ const List<BigSynergy> BIG = [
   BigSynergy('medical', '医療コングロマリット', ['pharma', 'hospital', 'regen']),
   BigSynergy('farm2shelf', '畑から棚まで', ['farm', 'foodmaker', 'konbini']),
 ];
+
+/// 足した大シナジー（1.0.0+8）
+const List<BigSynergy> BIG_MORE = [
+  BigSynergy('keitai', 'ガラケー王国', ['handset', 'mobilesite', 'telecom']),
+  BigSynergy('frontier', '宇宙の開拓者', ['space', 'moon', 'spaceelev']),
+  BigSynergy('kakari', 'かかりつけの全部', ['clinic', 'pharmacy', 'telemed']),
+];
+
+const List<BigSynergy> BIG = [...BIG_BASE, ...BIG_MORE];
 
 const List<Trait> TRAITS = [
   Trait('genius', '天才肌', '新しい事業と投資が時々大当たりする', '当たり外れの差が大きい。部下がついてこない'),
@@ -358,9 +512,9 @@ const List<Country> CTRY = [
 ];
 
 const Map<String, Set<String>> MODELS_BY = {
-  'fc': {'teishoku', 'ff', 'konbini', 'bento', 'gyudon', 'sushi', 'cafe', 'drug', 'yen100', 'juku', 'eikaiwa', 'gym', 'karaoke', 'rentalvideo', 'cdshop', 'arcade', 'hotel', 'kadenstore', 'homecenter', 'keitaishop', 'care', 'hoiku', 'wedding', 'taxi', 'estate', 'funeral', 'pet', 'travel', 'hikkoshi', 'keibi', 'dining'},
-  'sub': {'kaden', 'auto', 'semi', 'foodmaker', 'steel', 'pc', 'cosme', 'chem', 'shipbuild', 'semiequip', 'parts', 'lcd', 'frozen', 'drink', 'farm', 'logi', 'ship', 'sier', 'security', 'construct', 'haken', 'consult', 'adagency', 'anime', 'game', 'apparel', 'robot', 'movie', 'publish'},
-  'plat': {'portal', 'ec', 'sns', 'app', 'video', 'cloud', 'rideshare', 'delivery', 'minpaku', 'matching', 'ebook', 'pay', 'netsec', 'crypto', 'card', 'metaverse'},
+  'fc': {'teishoku', 'ff', 'konbini', 'bento', 'gyudon', 'sushi', 'cafe', 'drug', 'yen100', 'juku', 'eikaiwa', 'gym', 'karaoke', 'rentalvideo', 'cdshop', 'arcade', 'hotel', 'kadenstore', 'homecenter', 'keitaishop', 'care', 'hoiku', 'wedding', 'taxi', 'estate', 'funeral', 'pet', 'travel', 'hikkoshi', 'keibi', 'dining', 'ramen', 'izakaya', 'famires', 'boba', 'laundry', 'photolab', 'salon', 'reform', 'storage', 'gasstation', 'seitai', 'pharmacy', 'rojin'},
+  'sub': {'kaden', 'auto', 'semi', 'foodmaker', 'steel', 'pc', 'cosme', 'chem', 'shipbuild', 'semiequip', 'parts', 'lcd', 'frozen', 'drink', 'farm', 'logi', 'ship', 'sier', 'security', 'construct', 'haken', 'consult', 'adagency', 'anime', 'game', 'apparel', 'robot', 'movie', 'publish', 'confect', 'fishery', 'plantmeat', 'waste', 'textile', 'handset', 'machine', 'paper', 'battery', 'gridbatt', 'callcenter', 'printing', 'warehouse', 'translation', 'courier', 'datacenter', 'webdesign', 'generic', 'medequip', 'cro', 'android', 'vertfarm', 'ccs'},
+  'plat': {'portal', 'ec', 'sns', 'app', 'video', 'cloud', 'rideshare', 'delivery', 'minpaku', 'matching', 'ebook', 'pay', 'netsec', 'crypto', 'card', 'metaverse', 'fx', 'crowdfund', 'bnpl', 'blog', 'jobboard', 'flea', 'review', 'livestream', 'telemed'},
 };
 
 const Map<String, Culture> CULT = {

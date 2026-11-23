@@ -229,7 +229,7 @@ List<Widget> bizTab(GameController ctl) {
       ]),
     ));
   }
-  final soon = IND.where((i) => s.seen[i.id] != null && i.b > y).toList();
+  final soon = s.inds.where((i) => s.seen[i.id] != null && i.b > y).toList();
   if (soon.isNotEmpty) {
     out.add(Panel(
         child: Text.rich(TextSpan(children: [
@@ -929,11 +929,11 @@ List<Widget> chronSection(Game s) {
 // --- 図鑑 ---
 List<Widget> zukanTab(GameController ctl) {
   final s = ctl.game!;
-  final out = <Widget>[H2(tr('シナジー図鑑　{0} / {1}', [s.found.length, SYN.length]))];
+  final out = <Widget>[H2(tr('シナジー図鑑　{0} / {1}', [s.found.length, s.syns.length]))];
   out.add(Muted(tr('2つの事業を同時に持つと見つかります。見つけた組み合わせは事業の力を2割上げます。')));
   out.add(Panel(
       child: Column(children: [
-    for (final x in SYN)
+    for (final x in s.syns)
       Builder(builder: (_) {
         final f = s.found[x.k];
         final hn = f == null && s.hint[x.k] != null;
@@ -962,7 +962,7 @@ List<Widget> zukanTab(GameController ctl) {
       }),
   ])));
   out.add(H2(tr('大シナジー')));
-  for (final g in BIG) {
+  for (final g in s.bigs) {
     final f = s.big[g.k];
     out.add(Panel(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
