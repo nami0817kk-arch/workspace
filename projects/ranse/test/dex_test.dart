@@ -67,8 +67,8 @@ void main() {
     final c = AppController(rng: Rng(1));
     await tester.pumpWidget(RanseApp(controller: c));
     await tester.pumpAndSettle();
-    expect(find.text('最期の図鑑（1種）'), findsOneWidget);
-    await tester.tap(find.text('最期の図鑑（1種）'));
+    expect(find.text('最期の図鑑　1 ／ ${kHandEndings.length}'), findsOneWidget);
+    await tester.tap(find.text('最期の図鑑　1 ／ ${kHandEndings.length}'));
     await tester.pumpAndSettle();
     expect(find.textContaining('見た最期 1 ／ '), findsOneWidget);
     // 希少度ごとの数: 見た1本の希少度だけが 1、ほかは 0。合わせて 1001 本。

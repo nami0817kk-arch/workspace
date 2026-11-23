@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../app/controller.dart';
 import '../engine/birth.dart';
 import '../engine/data.dart';
+import '../engine/ending.dart';
 import '../engine/rng.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -54,7 +55,11 @@ class TitleScreen extends StatelessWidget {
               ],
               if (c.dexCount > 0) ...[
                 const SizedBox(height: 12),
-                BigButton('最期の図鑑（${c.dexCount}種）', c.openDex, secondary: true),
+                BigButton(
+                  '最期の図鑑　${c.dexCount} ／ ${kHandEndings.length}',
+                  c.openDex,
+                  secondary: true,
+                ),
               ],
               if (c.best > 0) ...[
                 const SizedBox(height: 18),
