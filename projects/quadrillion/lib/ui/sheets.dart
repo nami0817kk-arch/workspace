@@ -192,19 +192,82 @@ void openPivot(GameController ctl, Biz b) {
       ]));
 }
 
+/// 1単位の手の選び肢。払えないものは薄く見せ、押すと「お金が足りません」と出す
+Widget _unitChoice(GameController ctl, String label, double cost, String Function() fn, List<String> subs) {
+  final s = ctl.game!;
+  final short = s.cash < cost;
+  return ChoiceBtn(label, () => short ? ctl.toast(M('お金が足りません')) : ctl.act(fn, mark: 'act'), dim: short, subs: subs);
+}
+
+/// 店・工場を増やす（1つ・3つ・10。1つの値段はその業種の元手）
+void openBuild(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  ctl.showSheet((_) => _col([
+        H2(tr('「{0}」の{1}を増やす', [ind.name, s.uw(b)]), top: true),
+        _note(tr('手を1つ使います。1つの値段はこの業種の元手（{0}）です。1〜2か月後に開き、そのぶん維持費がかかります。手元 {1}', [yen(s.capexOf(ind)), yen(s.cash)])),
+        for (final n in buildUnits)
+          _unitChoice(ctl, tr('{0}増やす', [s.unitsOf(b, n)]), s.buildCost(b, n), () => s.buildN(b, n), [
+            tr('{0}　維持費 +{1}／月', [yen(s.buildCost(b, n)), yen(s.buildCost(b, n) * .006)]),
+          ]),
+        if (b.model != 'fc') Muted(tr('増やした店や工場を回すには、現場の人が要ります。'), size: 12),
+        _cancel(ctl),
+      ]));
+}
+
+/// 商品を作る（小さな改良・新しい商品・大型開発。元手の1倍・3倍・10倍）
+void openDevelop(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  const desc = ['早く出せる。当たっても伸びは控えめ', '当たれば大きい。外れることもある', '時間はかかるが、当たると伸びがいちばん大きい'];
+  ctl.showSheet((_) => _col([
+        H2(tr('「{0}」で商品を作る', [ind.name]), top: true),
+        _note(tr('手を1つ使います。値段はこの業種の元手（{0}）の何倍かで決まります。当たるか外れるかは出てみるまで分かりません。手元 {1}', [yen(s.capexOf(ind)), yen(s.cash)])),
+        for (var sz = 0; sz < devMults.length; sz++)
+          _unitChoice(ctl, tr('{0}（元手の{1}倍）', [s.devName(sz), devMults[sz]]), s.devCost(b, sz), () => s.developN(b, sz), [
+            tr('{0}　{1}〜{2}か月後に出る', [yen(s.devCost(b, sz)), devMonths[sz].$1, devMonths[sz].$2]),
+            tr(desc[sz]),
+          ]),
+        _cancel(ctl),
+      ]));
+}
+
+/// 現場の人を増やす（10人・50人・足りない分）
+void openCrew(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final need = s.crewNeedPeople(b);
+  final r = b.power > 0 ? s.crewEff(b) / b.power : 1.0;
+  Widget row(String label, int n) => _unitChoice(ctl, label, s.hireCost(b, n), () => s.hireN(b, n), [
+        tr('採用の費用 {0}　毎月の人件費 +{1}', [yen(s.hireCost(b, n)), yen(s.payPerMonth(b, n))]),
+      ]);
+  ctl.showSheet((_) => _col([
+        H2(tr('「{0}」の現場の人を増やす', [ind.name]), top: true),
+        _note(tr('手を1つ使います。{0}の1人の年の人件費は{1}。雇うときに採用の費用（年の人件費の{2}割）を払い、そのあとは毎月の維持費に人数分の月給が乗ります。',
+            [CATN[ind.cat], yen(s.wageOf(b)), jsNum(jsRound(hireFee * 10))])),
+        _note(need > 0 ? tr('現場の力 {0}%。あと{1}人いれば、止まっている{2}が全部動きます。', [jsNum(jsRound(r * 100)), need, s.uw(b)]) : tr('現場の力 {0}%。今は人が足りています。', [jsNum(jsRound(r * 100))])),
+        if (need > 0) row(tr('足りない分（{0}人）を雇う', [need]), need),
+        for (final n in crewUnits) row(tr('{0}人雇う', [n]), n),
+        _cancel(ctl),
+      ]));
+}
+
 void openDirty(GameController ctl, Company c) {
   final s = ctl.game!;
   ctl.showSheet((_) => _col([
         H2(tr('{0}への裏の手', [nmL(c.name)]), top: true),
-        _note(tr('手を1つ使います。使うほど、ばれやすくなります。')),
+        _note(tr('手を1つ使います。値段は手ごとに決まっています。使うほど、ばれやすくなります。')),
         for (final k in DIRTYN.keys)
           ChoiceBtn(
               tr('{0}（{1}・ばれる見込み {2}%）', [DIRTYN[k], yen(s.dirtyCost(k)), jsNum(jsRound(s.dirtyRisk(k, c) * 100))]),
-              () => k == 'cook'
-                  ? actConfirmed(ctl, DIRTYN[k]!, tr(s.listed ? '決算の数字を飾ります。ばれる見込みは{0}%。ばれると上場廃止になり、信用は2年のあいだ地に落ちます。' : '決算の数字を飾ります。ばれる見込みは{0}%。ばれると信用は2年のあいだ地に落ちます。', [jsNum(jsRound(s.dirtyRisk(k, c) * 100))]),
-                      tr('粉飾する'), () => s.doDirty(k, c))
-                  : ctl.act(() => s.doDirty(k, c)),
-              enabled: !(s.cash < s.dirtyCost(k) || s.ap < 1),
+              () => s.cash < s.dirtyCost(k)
+                  ? ctl.toast(M('お金が足りません'))
+                  : k == 'cook'
+                      ? actConfirmed(ctl, DIRTYN[k]!, tr(s.listed ? '決算の数字を飾ります。ばれる見込みは{0}%。ばれると上場廃止になり、信用は2年のあいだ地に落ちます。' : '決算の数字を飾ります。ばれる見込みは{0}%。ばれると信用は2年のあいだ地に落ちます。', [jsNum(jsRound(s.dirtyRisk(k, c) * 100))]),
+                          tr('粉飾する'), () => s.doDirty(k, c))
+                      : ctl.act(() => s.doDirty(k, c)),
+              enabled: s.ap >= 1,
+              dim: s.cash < s.dirtyCost(k),
               subs: ['${DIRTYD[k]}${k == 'cartel' && s.cartelBiz(c) != null ? tr('。対象は「{0}」', [indm[s.cartelBiz(c)!.ind]!.name]) : ''}']),
         _cancel(ctl),
       ]));
@@ -331,7 +394,7 @@ void showHelp(GameController ctl) {
   const parts = [
     (null, '1期は1か月。毎月、使える「手」（金色の四角）の数だけ行動できます。手は事業が増えると増えます。'),
     ('社長の行動', '社長は22歳の大卒から始まります。「街」の「社長の行動」で、相棒を探す・日銭を稼ぐ・腕を磨く・人脈を作る・事業の種を探す、ができます。相棒には株を渡して口説きます。相棒が責任者の事業は強くなりますが、野心が強いと独立を言い出すこともあります。'),
-    ('稼ぐ', '「事業」で業種を始め、打ち手で伸ばします。「商品を作る」は3〜6か月後に出て、大当たりも不発もあります。「店・工場を増やす」は1〜2か月後に確実に伸びますが、維持費がかかります。店や工場は「現場の人」がいないと動きません。仕掛かり中のものは、取り下げると半分戻ります。値付けを「安く」にすると客は増えますが利益は薄くなります。'),
+    ('稼ぐ', '「事業」で業種を始め、打ち手で伸ばします。値段は手元のお金ではなく、業種ごとの「1ついくら」で決まります（時代の物価だけ乗ります）。「店・工場を増やす」は1つがその業種の元手で、1つ・3つ・10を選べます。1〜2か月後に確実に伸びますが、維持費がかかります。「商品を作る」は小さな改良・新しい商品・大型開発（元手の1倍・3倍・10倍）から選び、大きいほど時間がかかって、当たったときの伸びが大きくなります。店や工場は「現場の人」がいないと動きません。人は10人・50人・足りない分で雇い、採用の費用を払ったあとは毎月の人件費がかかります。仕掛かり中のものは、取り下げると半分戻ります。値付けを「安く」にすると客は増えますが利益は薄くなります。'),
     ('任せる', '社長が直接見られる事業は2つまで。それより多いと放置された事業が弱ります。「人」で採用し、責任者に置きましょう。責任者は利益の一部を自分で事業に回します。能力は働かせるまで幅でしか分かりません。'),
     ('裏の手', '「街」の宿敵の欄から、引き抜き・産業スパイ・ロビー活動・粉飾決算・談合が使えます。効き目は大きいかわりに、ばれると重い罰があります。使うほどばれやすくなります。宿敵も同じ手を使ってきます。もみ消した不祥事は、数年後にもっと大きくなって戻ってくることがあります。'),
     ('売り抜け', '「株」の画面で、持ち株を売る、非上場に戻す、会社を丸ごと売る、ができます。売ったお金はあなたの財産になり、半分を元手にもう一度起業します。勝ち負けは、今の会社の時価総額とあなたの財産の合計で測ります。倒した宿敵は、一族や元の社員が新しい会社を作って戻ってきます。'),
@@ -372,7 +435,7 @@ String pipeKindName(String k) => tr(k == 'dev'
 /// 仕掛かり1件の説明（「新商品（1億円）あと2か月」）
 String pipeText(Game s, Biz b, Pipe x) => tr('{0}（{1}）あと{2}か月', [
       x.k == 'dev'
-          ? tr('新商品')
+          ? (x.sz != null ? tx(s.devName(x.sz!)) : tr('新商品'))
           : x.k == 'enter'
               ? tr('{0}（{1}）', [cm[x.c]!.n, ENTRYN[x.mode]])
               : tx(s.uw(b)),

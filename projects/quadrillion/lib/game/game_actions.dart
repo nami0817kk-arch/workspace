@@ -151,6 +151,7 @@ extension GameActions on Game {
     return (b.early > turn ? 1.6 : 1) * invEff * math.pow(1 - b.share, 2) * clampD(math.pow(rel, -.12).toDouble(), .55, 1.3) * smallBonus(b);
   }
 
+  /// 現金の割合で商品を作る（試作の手。extras を切った一致テストと、自動プレイの古い流れが使う）
   String develop(Biz b, double frac) {
     final cost = cash * frac;
     if (cost <= 0) return M('お金がありません');
@@ -163,6 +164,7 @@ extension GameActions on Game {
     return M('新しい商品の開発を始めました（{0}）。出来上がるのは{1}か月後。当たるかどうかは出てみるまで分かりません', [Y(cost), left]);
   }
 
+  /// 現金の割合で店・工場を増やす（試作の手。extras を切った一致テストと、自動プレイの古い流れが使う）
   String build(Biz b, double frac) {
     final cost = cash * frac;
     if (cost <= 0) return M('お金がありません');
@@ -175,25 +177,101 @@ extension GameActions on Game {
     return M('{0}を増やし始めました（{1}）。{2}か月後に開きます。{3}', [uw(b), Y(cost), left, M(b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります')]);
   }
 
-  /// 止まっている店や工場をちょうど動かすのに要る人件費（足りていれば 0）。
-  /// 現場の力（crewEff）が事業の力（power）に届くまでの差を、1円で4人分（addCrew と同じ割合）で買うとして求める。
-  double crewNeedCost(Biz b) {
+  // ===== 1単位の手（1.0.0+12。画面と提案はこちらを使う） =====
+  /// 「店を3つ」「設備を1式」のような数え方
+  String unitsOf(Biz b, int n) {
+    final c = indm[b.ind]!.cat;
+    final one = n == 1;
+    final k = c == 'food' || c == 'live' || c == 'fun'
+        ? (one ? '店を1つ' : '店を{0}つ')
+        : c == 'make' || c == 'ene'
+            ? (one ? '工場を1つ' : '工場を{0}つ')
+            : c == 'link'
+                ? (one ? '拠点を1つ' : '拠点を{0}つ')
+                : (one ? '設備を1式' : '設備を{0}式');
+    return M(k, [n]);
+  }
+
+  /// 店・工場をn個増やす値段（1つがその業種の元手）
+  double buildCost(Biz b, int n) => capexOf(indm[b.ind]!) * n;
+
+  String buildN(Biz b, int n) {
+    final cost = buildCost(b, n);
+    if (cash < cost) return M('お金が足りません');
+    if (!canAP(1)) return M('今月の手が残っていません');
+    cash -= cost;
+    useAP(1);
+    final left = b.model == 'fc' ? 1 : ri(1, 2);
+    b.pipe.add(Pipe(k: 'build', cost: cost, left: left));
+    calcAll();
+    return M('{0}増やし始めました（{1}）。{2}か月後に開きます。{3}', [unitsOf(b, n), Y(cost), left, M(b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります')]);
+  }
+
+  /// 商品の大きさの名前
+  String devName(int sz) => M(sz == 0
+      ? '小さな改良'
+      : sz == 2
+          ? '大型開発'
+          : '新しい商品');
+
+  /// 商品を作る値段（元手の1倍・3倍・10倍）
+  double devCost(Biz b, int sz) => capexOf(indm[b.ind]!) * devMults[sz];
+
+  String developN(Biz b, int sz) {
+    final cost = devCost(b, sz);
+    if (cash < cost) return M('お金が足りません');
+    if (!canAP(1)) return M('今月の手が残っていません');
+    cash -= cost;
+    useAP(1);
+    final left = ri(devMonths[sz].$1, devMonths[sz].$2);
+    b.pipe.add(Pipe(k: 'dev', cost: cost, left: left, sz: sz));
+    calcAll();
+    return M('{0}を始めました（{1}）。出来上がるのは{2}か月後。当たるかどうかは出てみるまで分かりません', [devName(sz), Y(cost), left]);
+  }
+
+  /// 現場の人1人の年の人件費（業種の分類で決まり、時代の物価だけが乗る）
+  double wageOf(Biz b) => (wageByCat[indm[b.ind]!.cat] ?? 4e6) * nom();
+
+  /// 現場の人1人の現場の力（3年分の総額1円あたりが、割合の手と同じになるように合わせる）
+  double crewPerHead(Biz b) => wageOf(b) * crewPerYen3y * (hireFee + 3);
+
+  /// n人を雇う採用の費用（その場で払う）
+  double hireCost(Biz b, int n) => wageOf(b) * hireFee * n;
+
+  /// n人ぶん増える毎月の人件費
+  double payPerMonth(Biz b, int n) => wageOf(b) / 12 * n;
+
+  /// 止まっている店や工場をちょうど動かすのに足りない人数（足りていれば 0）
+  int crewNeedPeople(Biz b) {
     if (b.model == 'fc' || b.power <= 0) return 0;
     final have = crewEff(b);
     if (have >= b.power) return 0;
-    final perCrew = have / math.max(crewOf(b), 1e-9); // 現場の人1単位が生む現場の力
-    return (b.power - have) / math.max(perCrew, 1e-9) / 4;
+    return ((b.power - have) / (crewMult(b) * crewPerHead(b)) - 1e-9).ceil();
   }
 
-  /// 足りない分だけ現場の人を補う（現金の割合ではなく、必要な分の値段で）。
-  String addCrewNeeded(Biz b) {
-    final cost = crewNeedCost(b);
-    if (cost <= 0) return M('人は足りています');
+  /// 現場の人をn人雇う
+  String hireN(Biz b, int n) {
+    if (b.model == 'fc') return M('人は加盟店が集めます');
+    if (n <= 0) return M('人は足りています');
+    final cost = hireCost(b, n);
     if (cash < cost) return M('お金が足りません');
     if (!canAP(1)) return M('今月の手が残っていません');
-    return _hireCrew(b, cost);
+    cash -= cost;
+    useAP(1);
+    _addHeads(b, n);
+    calcAll();
+    return M('現場の人を{0}人増やしました（採用の費用 {1}）。毎月の人件費が{2}増えます', [n, Y(cost), Y(payPerMonth(b, n))]);
   }
 
+  void _addHeads(Biz b, int n) {
+    b.crew = crewOf(b) + crewPerHead(b) * n;
+    b.upkeep = b.upkeep + payPerMonth(b, n);
+  }
+
+  /// 足りない分だけ現場の人を補う
+  String addCrewNeeded(Biz b) => hireN(b, crewNeedPeople(b));
+
+  /// 現金の割合で現場の人を増やす（試作の手。extras を切った一致テストと、自動プレイの古い流れが使う）
   String addCrew(Biz b, double frac) {
     final cost = cash * frac;
     if (cost <= 0) return M('お金がありません');
@@ -209,6 +287,25 @@ extension GameActions on Game {
     calcAll();
     return M('現場の人を増やしました（{0}）。毎月の人件費が{1}増えます', [Y(cost), Y(cost * .008)]);
   }
+
+  /// 決まった額を払う。手元で足りない分は銀行から借りて払う（借りたときだけ文を返す）
+  String? payOut(double a) {
+    cash -= a;
+    if (cash >= 0) return null;
+    final lack = math.min(a, -cash);
+    debt += lack;
+    cash += lack;
+    return M('足りない{0}は銀行から借りて払いました', [Y(lack)]);
+  }
+
+  /// 株主総会で配当を増やすときの額（年の売上の1%。少なくとも1,000万円）
+  double meetingDividend() => math.max(rev * 12 * .01, 1e7 * nom());
+
+  /// 解任動議を配当で乗り切るときの額（年の売上の2%。少なくとも2,000万円）
+  double oustDividend() => math.max(rev * 12 * .02, 2e7 * nom());
+
+  /// 臨時の会議で社長が返上する報酬（5,000万円。財産より多くは返せない）
+  double presRefund() => math.min(math.max(wealth, 0.0), 5e7 * nom());
 
   String cancelPipe(Biz b, int i) {
     if (i < 0 || i >= b.pipe.length) return M('取り下げるものがありません');
@@ -725,8 +822,10 @@ extension GameActions on Game {
     return clampD(r, .05, .9);
   }
 
-  double dirtyCost(String kind) =>
-      math.max(3e6 * nom(), cap * const {'poach': .005, 'spy': .008, 'lobby': .015, 'cook': .002, 'cartel': .004}[kind]!);
+  /// 裏の手の値段。extras のときは手ごとの固定額（時代の物価だけ乗る）。切ると試作と同じ時価総額の割合
+  double dirtyCost(String kind) => extras
+      ? dirtyPrice[kind]! * nom()
+      : math.max(3e6 * nom(), cap * const {'poach': .005, 'spy': .008, 'lobby': .015, 'cook': .002, 'cartel': .004}[kind]!);
 
   Biz? cartelBiz(Company c) {
     final a = biz.where((b) => c.biz.any((x) => x.ind == b.ind)).toList()..ssort((a, b) => b.rev.compareTo(a.rev));
