@@ -581,19 +581,36 @@
     for (let i = 0; others.length < 19 && i < TOWNS.length; i++) others.push(TOWNS[i] + ' FC');
     const teams = others.slice(0, 19).map((name) => ({ name, str: J_AVG[t.j] + ((YA.hash(name + w.year) % 100) / 100 - 0.5) * 22 }));
     teams.push({ name: t.name, str: YA.topStrength(w), me: true });
-    const rows = teams.map((tm) => {
-      const r = YA.rngOf(YA.hash(tm.name) * 7 + w.year * 131 + t.j);
-      const dev = (r() - 0.5) * 16; // その年のぶれ（勝点、38節あたり）
-      const ppg = clamp(1.35 + (tm.str - J_AVG[t.j]) * 0.055, 0.45, 2.5);
-      let pts = Math.max(0, Math.round(ppg * k + dev * (k / YA.J_GAMES)));
-      const d = Math.round(k * (0.22 + r() * 0.08));
-      let wn = Math.max(0, Math.min(k - d, Math.round((pts - d) / 3)));
-      const dd = clamp(pts - wn * 3, 0, k - wn);
-      pts = wn * 3 + dd;
-      const gf = Math.round(k * (1.1 + (tm.str - J_AVG[t.j]) * 0.03 + r() * 0.3));
-      const ga = Math.max(0, Math.round(gf - (wn - (k - wn - dd)) * 1.05));
-      return { name: tm.name, me: !!tm.me, p: k, w: wn, d: dd, l: k - wn - dd, gf, ga, gd: gf - ga, pts };
-    });
+    // 総当たりの組み合わせ（円の方式。前半19節・後半19節はホームとアウェイを入れ替える）で、1試合ずつ結果を出す
+    // （2026-11-23：前はチームごとに見込みの勝点を別々に出していて、勝ちと負けが対にならず、第1節で8勝・12分・0敗になっていた）
+    const n = teams.length;
+    const rows = teams.map((tm) => ({ name: tm.name, me: !!tm.me, str: tm.str, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }));
+    // その年のぶれ（チームごとに少し強い・弱い年がある）
+    rows.forEach((x) => { const r0 = YA.rngOf(YA.hash(x.name) * 7 + w.year * 131 + t.j); x.form = (r0() - 0.5) * 8; });
+    const pois = (lam, r) => { const L0 = Math.exp(-lam); let p2 = 1; let g = 0; do { g++; p2 *= r(); } while (p2 > L0 && g < 12); return g - 1; };
+    const ring = rows.map((_, i) => i);
+    for (let rd = 0; rd < k; rd++) {
+      const half = rd % (n - 1);
+      const rot = ring.slice(1);
+      for (let q = 0; q < half; q++) rot.unshift(rot.pop());
+      const arr = [ring[0]].concat(rot);
+      for (let m2 = 0; m2 < n / 2; m2++) {
+        let a = arr[m2];
+        let b = arr[n - 1 - m2];
+        if ((rd >= n - 1) !== (m2 % 2 === 1)) { const tt = a; a = b; b = tt; } // ホームを入れ替える
+        const A = rows[a];
+        const B = rows[b];
+        const r = YA.rngOf(YA.hash(A.name + '|' + B.name) * 13 + w.year * 131 + rd * 7 + t.j);
+        const diff = A.str + A.form - (B.str + B.form);
+        const ga2 = pois(clamp(1.45 + diff * 0.035, 0.35, 3.2), r);
+        const gb2 = pois(clamp(1.15 - diff * 0.035, 0.25, 3), r);
+        for (const [X, f, g] of [[A, ga2, gb2], [B, gb2, ga2]]) {
+          X.p++; X.gf += f; X.ga += g;
+          if (f > g) { X.w++; X.pts += 3; } else if (f === g) { X.d++; X.pts += 1; } else X.l++;
+        }
+      }
+    }
+    rows.forEach((x) => { x.gd = x.gf - x.ga; delete x.str; delete x.form; });
     rows.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
     rows.forEach((x, i) => (x.rank = i + 1));
     return rows;

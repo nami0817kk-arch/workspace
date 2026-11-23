@@ -567,6 +567,10 @@
         else if (ha && (hb === ha || (!hb && d < 10 && (b.ball[2] || 0) < 0.5))) kind = 'dribble';
         ev.push({ k, kind, a, b, who: ha, recv: hb && hb !== ha ? hb : null, to: b.ball, minDur: Math.max(0.35, b.t - a.t) });
       }
+      // PK：倒れた所から「PKを蹴る」のコマへは、蹴って転がすのではなく、笛のあと一瞬暗くしてボールをスポットに置き直す（2026-11-23）
+      if (sc.type === 'pk' && sc.actors && sc.actors.kicker) {
+        for (const e of ev) if (e.b && e.b.cap && /PKを蹴る/.test(e.b.cap)) { e.kind = 'place'; e.who = sc.actors.kicker; e.recv = null; }
+      }
       // 蹴る子が決まらない蹴り（PK など、ボールが置かれてから蹴る）：攻める側でボールにいちばん近い子（6m 以内）が蹴る。
       // その前の球の受け手にもして、持ってから蹴る（2026-11-23：PK の場面でキッカーがいず、シュートが「待つ」になって打たれないまま「得点」で終わっていた）
       {
@@ -865,6 +869,39 @@
       e.t += dt;
       if (this.t > 16) { this.stuck++; this.ev.length = this.evI; return; } // 念のため（動きが詰まったとき）
       const has = e.kicker && this.owner === e.kicker;
+      if (e.kind === 'place') {
+        if (!e.done) {
+          e.done = true;
+          const spot = [e.to[0], e.to[1]];
+          const end = spot[1] > L / 2 ? L : 0;
+          const sgn = end === L ? 1 : -1; // ゴールへ向かう向き
+          const kid = e.who;
+          this.cut = 0.4;
+          this.fl = null;
+          this.bv = [0, 0];
+          this.ball = [spot[0], spot[1], 0];
+          for (const id of Object.keys(this.disp)) {
+            const fp = e.b.pos && e.b.pos[id];
+            if (id === kid) this.disp[id] = [spot[0], spot[1] - sgn * 0.7];
+            else if (fp) this.disp[id] = fp.slice(0, 2);
+            else {
+              // ペナルティエリアの外へ（ゴールラインから17.5m）
+              const q = this.disp[id];
+              const depth = Math.abs(end - q[1]);
+              if (Math.abs(q[0] - 34) < 21 && depth < 17.5) this.disp[id] = [q[0], end - sgn * (17.5 + Math.random() * 2)];
+            }
+            this.vel[id] = [0, 0];
+            if (this.brain && this.brain[id]) this.brain[id].next = 0;
+            this.stgt[id] = this.disp[id].slice(); // 蹴るまでその場で待つ（キッカーがボールを持って助走の位置へ下がり、ほかの子がエリアへ戻っていた）
+          }
+          this.owner = kid;
+          this.expect = kid;
+          this.lastTouch = this.teamOf(kid);
+          this.places = (this.places || 0) + 1;
+        }
+        if (e.t >= 1.1) this.nextEvent();
+        return;
+      }
       if (e.kind === 'wait') {
         // 台本の「待つ」の受け手が持ち主の相手なら、その子が奪う（2026-11-23：最後の2コマでボールが少ししか動かない奪われ方は
         // 「待つ」になっていて、相手が取らないまま場面が終わり、攻めた側が持ち続けていた）

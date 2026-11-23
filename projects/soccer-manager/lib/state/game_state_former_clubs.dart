@@ -13,9 +13,13 @@ extension GameStateFormerClubs on GameState {
         if (s.otherDivisionLeagues[i] != null)
           (i + 1, s.otherDivisionLeagues[i]!),
     ];
+    // 順位表は部ごとに1回だけ作る(手放したクラブごとに作り直さない)。
+    final tables = <League, List<StandingRow>>{};
     for (final e in s.formerClubs.entries) {
       for (final (tier, l) in leagues) {
-        final rank = l.sortedStandings.indexWhere((r) => r.teamId == e.key);
+        final rank = tables
+            .putIfAbsent(l, () => l.sortedStandings)
+            .indexWhere((r) => r.teamId == e.key);
         if (rank < 0) continue;
         s.formerClubStatus[e.key] = [l.season, tier, rank + 1];
         _logNews(

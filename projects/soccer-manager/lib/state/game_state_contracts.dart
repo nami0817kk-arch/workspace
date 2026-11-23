@@ -265,6 +265,8 @@ extension GameStateContracts on GameState {
       alreadyTaken: {for (final c in preContracts) c.playerId},
       countryOf: (t) => _countryOfClub(t.id, foreign),
       canRegister: _aiPreContractRegistrable(foreign),
+      maxSquad: AiTransferEngine.maxSquadSize,
+      incoming: _preContractsByDestination(),
     );
     _save!.preContracts.addAll(made);
     final mine = userTeam.players
@@ -319,8 +321,19 @@ extension GameStateContracts on GameState {
       alreadyTaken: {for (final c in preContracts) c.playerId},
       canRegister: (to, p) =>
           _cpuCanRegister(to, p, fromCountry: country, foreign: foreign),
+      maxSquad: AiTransferEngine.maxSquadSize,
+      incoming: _preContractsByDestination(),
     );
     _save!.preContracts.addAll(made);
+  }
+
+  /// 結ばれている仮契約の、行き先のクラブ ID→人数(7月1日に加わる人数)。
+  Map<String, int> _preContractsByDestination() {
+    final n = <String, int>{};
+    for (final c in preContracts) {
+      n[c.toClubId] = (n[c.toClubId] ?? 0) + 1;
+    }
+    return n;
   }
 
   /// 3月31日までに行使しなかった延長オプションを消す。
@@ -363,6 +376,8 @@ extension GameStateContracts on GameState {
       domesticOpensOn: PreContractEngine.domesticOpensOn(currentLeagueTheme),
       canRegister: (to, p) => _cpuCanRegister(to, p,
           fromCountry: currentLeagueTheme, foreign: foreign),
+      maxSquad: AiTransferEngine.maxSquadSize,
+      incoming: _preContractsByDestination(),
     );
     for (final c in made) {
       _save!.preContracts.add(c);
@@ -387,11 +402,21 @@ extension GameStateContracts on GameState {
   ///    一部は「延長しない」と言い出す。
   /// 2. 仮契約: 自クラブが結んだ選手を加え、AI 同士の仮契約も移す。
   /// 3. 他のクラブ: 満了日を過ぎた選手が出ていき、若手で埋める。
+  /// 4. 他のクラブ: 上限([AiTransferEngine.maxSquadSize])を超えたクラブは、
+  ///    弱い選手からフリーエージェントへ出す(古いセーブで膨らんだクラブも
+  ///    ここで上限まで減る)。
   void _settleContractsAtSeasonStart() {
     final userId = _save!.userTeamId;
     final contracts = List<PreContract>.from(_save!.preContracts);
     _save!.preContracts.clear();
     final byPlayer = {for (final c in contracts) c.playerId: c};
+    // クラブ ID→クラブ・他国のクラブの国は1回だけ引く(以前は仮契約1件ごとに
+    // 全クラブの一覧を作り直していた)。
+    final worldTeams = _worldTeams;
+    final teamById = {for (final t in worldTeams) t.id: t};
+    final foreign = _foreignTeamIds();
+    // 選手が入れ替わった CPU のクラブ。先発の組み直しは最後に1回ずつ。
+    final touched = <Team>{};
 
     // 1. 自クラブ。
     final contractResult = ContractEngine.advanceSeason(userTeam);
@@ -402,11 +427,12 @@ extension GameStateContracts on GameState {
       userTeam.players.remove(p);
       userTeam.startingXI.remove(p.id);
       final c = byPlayer[p.id];
-      final dest = c == null ? null : _worldTeamById(c.toClubId);
+      final dest = c == null ? null : teamById[c.toClubId];
       if (c != null && dest != null && c.fromClubId == userId) {
         PreContractEngine.applyOnJoin(p, c);
         _fixNationality(p);
         dest.players.add(p);
+        touched.add(dest);
         continue;
       }
       p.contractOption = false;
@@ -431,17 +457,18 @@ extension GameStateContracts on GameState {
     final joined = <String>[];
     for (final c in contracts) {
       if (c.fromClubId == userId) continue; // 上で済ませた
-      final from = _worldTeamById(c.fromClubId);
+      final from = teamById[c.fromClubId];
       final player = from?.players.where((p) => p.id == c.playerId).firstOrNull;
       if (from == null || player == null) continue; // 引退・消滅したクラブ
-      final to = c.toClubId == userId ? userTeam : _worldTeamById(c.toClubId);
+      final to = c.toClubId == userId ? userTeam : teamById[c.toClubId];
       if (to == null) continue;
       // イタリアの「EU 外は1季2人まで」は、仮契約で国外から来る選手も
       // 数える(加入の季に。元のクラブから外す前に)。
       if (to.id == userId) {
         _noteSigningFromAbroad(player);
       } else {
-        _noteCpuSigning(to, player, fromCountry: _countryOfClub(from.id));
+        _noteCpuSigning(to, player,
+            fromCountry: _countryOfClub(from.id, foreign), foreign: foreign);
       }
       _fixNationality(player);
       _removeFromCpuTeam(from, player);
@@ -452,16 +479,20 @@ extension GameStateContracts on GameState {
       if (to.id == userId) {
         joined.add(player.name);
       } else {
-        LineupUtils.autoFill(to);
+        touched.add(to);
       }
-      // 抜けたクラブは若手で埋める(人数を保つ)。
-      from.players.add(_generatingFor(
-          from, () => RetirementEngine.cpuRecruitFor(from, player.position)));
+      touched.add(from);
+      // 抜けたクラブは、最低人数を割るときだけ若手で埋める。以前は必ず
+      // 1人足していて、受け入れ側の1人ぶん世界の選手が毎回増えていた。
+      if (from.players.length < minSquadSize) {
+        from.players.add(_generatingFor(
+            from, () => RetirementEngine.cpuRecruitFor(from, player.position)));
+      }
     }
     lastPreContractArrivals = joined;
 
     // 3. 他のクラブの満了。
-    for (final t in _worldTeams) {
+    for (final t in worldTeams) {
       if (t.id == userId) continue;
       final expired = t.players
           .where(
@@ -478,9 +509,51 @@ extension GameStateContracts on GameState {
         t.players.add(_generatingFor(
             t, () => RetirementEngine.cpuRecruitFor(t, p.position)));
       }
-      LineupUtils.autoFill(t);
+      touched.add(t);
+    }
+
+    // 4. 上限を超えた CPU のクラブは、弱い選手から出す。
+    for (final t in worldTeams) {
+      if (t.id == userId) continue;
+      if (_trimCpuSquad(t)) touched.add(t);
+    }
+
+    for (final t in touched) {
+      if (t.id != userId) LineupUtils.autoFill(t);
     }
   }
+
+  /// CPU のクラブ[t]が上限([AiTransferEngine.maxSquadSize])を超えていたら、
+  /// 総合力の低い選手からフリーエージェントへ出して上限に収める。ローンで
+  /// 来ている選手は出さない(持ち主のクラブがある)。GK は2人を残す。
+  /// 出した選手がいれば true。
+  bool _trimCpuSquad(Team t) {
+    final limit = AiTransferEngine.maxSquadSize;
+    var excess = t.players.length - limit;
+    if (excess <= 0) return false;
+    var keepers = t.players.where((p) => p.position == Position.gk).length;
+    final candidates = t.players.where((p) => !p.isLoan).toList()
+      ..sort((a, b) => a.overall.compareTo(b.overall));
+    for (final p in candidates) {
+      if (excess <= 0) break;
+      if (p.position == Position.gk) {
+        if (keepers <= 2) continue;
+        keepers--;
+      }
+      _removeFromCpuTeam(t, p);
+      if (_save!.freeAgents.length < FreeAgentEngine.maxPoolSize &&
+          p.age < 34) {
+        p.contractOption = false;
+        p.refusesRenewal = false;
+        _save!.freeAgents.add(p);
+      }
+      excess--;
+    }
+    return true;
+  }
+
+  @visibleForTesting
+  void debugSettleContractsAtSeasonStart() => _settleContractsAtSeasonStart();
 
   /// CPU クラブから選手を外す(先発・役割の指名も外す)。
   void _removeFromCpuTeam(Team team, Player p) {

@@ -2055,9 +2055,27 @@ extension GameStateSeason on GameState {
 
   /// [before]の翌日から[after]までに誕生日が来た選手に、1つ歳を足す。
   /// 殿堂入りした選手は引退したときの歳のまま。
+  ///
+  /// 日を送るたびに呼ばれる(1日ずつのことが多い)。同じ年の中なら、誕生日が
+  /// 月日の範囲に入る選手だけを整数で比べて選ぶ([Player.birthdaysBetween]
+  /// と同じ結果)。範囲に誰の誕生日も無ければ何もしない。
   void _ageByBirthdays(DateTime before, DateTime after) {
-    final legends = _save!.retiredLegends.toSet();
-    for (final p in _save!.allPlayers) {
+    if (!after.isAfter(before)) return;
+    final s = _save!;
+    final legends = Set<Player>.identity()..addAll(s.retiredLegends);
+    if (before.year == after.year) {
+      final from = Player.monthDayKey(before);
+      final to = Player.monthDayKey(after);
+      if (from >= to) return;
+      for (final p in s.allPlayers) {
+        final k = p.birthdayKey;
+        if (k <= from || k > to) continue;
+        if (legends.contains(p)) continue;
+        p.age += 1;
+      }
+      return;
+    }
+    for (final p in s.allPlayers) {
       if (legends.contains(p)) continue;
       final n = p.birthdaysBetween(before, after);
       if (n > 0) p.age += n;

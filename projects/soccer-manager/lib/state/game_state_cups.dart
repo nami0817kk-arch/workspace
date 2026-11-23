@@ -377,13 +377,14 @@ extension GameStateCups on GameState {
 
   /// 他国のリーグの今の順位の順(まだ試合が無ければ強さの順)。
   List<Team> _foreignOrderNow(League l) {
-    final played = l.sortedStandings.any((r) => r.played > 0);
+    final rows = l.sortedStandings;
+    final played = rows.any((r) => r.played > 0);
     if (!played) {
       return [...l.teams]
         ..sort((a, b) => b.overallRating.compareTo(a.overallRating));
     }
     return [
-      for (final r in l.sortedStandings)
+      for (final r in rows)
         if (l.teams.where((t) => t.id == r.teamId).firstOrNull case final t?) t,
     ];
   }

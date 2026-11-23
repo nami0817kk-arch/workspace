@@ -1652,15 +1652,28 @@ class Player {
   /// [year]年の誕生日。
   DateTime birthdayIn(int year) => DateTime(year, birthMonth, birthDay);
 
+  /// 誕生日の月日を1つの整数にしたもの(月×100+日。3月5日なら305)。
+  late final int birthdayKey = _birthday.month * 100 + _birthday.day;
+
+  /// [day]の月日を[birthdayKey]と同じ形の整数にする。
+  static int monthDayKey(DateTime day) => day.month * 100 + day.day;
+
   /// [before]の翌日から[after]まで(両端は前を含まず後を含む)に来た誕生日の数。
+  ///
+  /// 日を送るたびに全選手(約5,000人)について呼ばれるので、DateTime を作らず
+  /// 月日の整数で比べる(2026-11-23)。結果は年ごとに誕生日の DateTime を
+  /// 作って比べていた前の数え方と同じ(時刻が付いていても、誕生日は0時なので
+  /// 「前の日と同じ日なら数えない・後の日と同じ日なら数える」で一致する)。
   int birthdaysBetween(DateTime before, DateTime after) {
     if (!after.isAfter(before)) return 0;
-    var n = 0;
-    for (var y = before.year; y <= after.year; y++) {
-      final b = birthdayIn(y);
-      if (b.isAfter(before) && !b.isAfter(after)) n++;
-    }
-    return n;
+    final k = birthdayKey;
+    final from = monthDayKey(before);
+    final to = monthDayKey(after);
+    if (before.year == after.year) return (k > from && k <= to) ? 1 : 0;
+    // 前の年は前の日より後なら、後の年は後の日までなら。間の年は必ず1回。
+    return (k > from ? 1 : 0) +
+        (after.year - before.year - 1) +
+        (k <= to ? 1 : 0);
   }
 
   /// 他クラブへローン放出中で、自クラブの試合には出場できない状態かどうか。
