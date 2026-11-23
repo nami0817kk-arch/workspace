@@ -437,13 +437,15 @@ extension GameStateMatch on GameState {
           );
         }
       } else {
+        // 他のクラブの試合は、画面・記録・賞が読む出来事だけ残す
+        // ([MatchResult.archived])。セーブが重くなるため。
         f.result = MatchEngine.simulate(
           home: home,
           away: away,
           matchday: md,
           weather: weather,
           homeAdvantageFactor: _homeAdvantageFor(home.id),
-        );
+        ).archived();
       }
     }
 
@@ -635,7 +637,7 @@ extension GameStateMatch on GameState {
           matchday: md,
           weather: weather,
           homeAdvantageFactor: _homeAdvantageFor(home.id),
-        );
+        ).archived();
         continue;
       }
       userFixture = f;
@@ -1205,15 +1207,23 @@ extension GameStateMatch on GameState {
   /// ライブ観戦せず、前半・後半を一括で消化して確定結果のみを返す
   /// (クイックシム)。ユーザーの試合がない、またはシーズンが既に終了して
   /// いる場合はnull。
-  Future<MatchResult?> playNextMatchdayQuickSim() async {
-    final firstHalf = await playNextMatchday();
-    if (firstHalf == null) return null;
-    return playSecondHalf();
-  }
+  ///
+  /// 前半と後半を続けて進めるので、保存は後半のあとの1回にまとめる
+  /// (前半のあとに書いても、すぐ後半のあとの保存で置き換わる)。
+  Future<MatchResult?> playNextMatchdayQuickSim() => _inBulkSave(() async {
+        final firstHalf = await playNextMatchday();
+        if (firstHalf == null) return null;
+        return playSecondHalf();
+      });
 
   /// クイックシムを最大[matchdays]節分繰り返し、確定した結果を節の順で返す。
   /// シーズンが終了する、またはユーザーの試合がない節に達した時点で止まる。
-  Future<List<MatchResult>> simulateAheadMatchdays(int matchdays) async {
+  ///
+  /// 節ごとの保存は省き、終わったときに1回だけ書く([_inBulkSave])。
+  Future<List<MatchResult>> simulateAheadMatchdays(int matchdays) =>
+      _inBulkSave(() => _simulateAheadMatchdays(matchdays));
+
+  Future<List<MatchResult>> _simulateAheadMatchdays(int matchdays) async {
     isBusy = true;
     _notify();
     final results = <MatchResult>[];

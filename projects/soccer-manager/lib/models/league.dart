@@ -24,12 +24,13 @@ class Fixture {
     this.weather,
   });
 
+  /// まだの試合の結果・天候(null)は書かない(2026-11-23)。
   Map<String, dynamic> toJson() => {
         'matchday': matchday,
         'homeTeamId': homeTeamId,
         'awayTeamId': awayTeamId,
-        'result': result?.toJson(),
-        'weather': weather?.name,
+        if (result != null) 'result': result!.toJson(),
+        if (weather != null) 'weather': weather!.name,
       };
 
   factory Fixture.fromJson(Map<String, dynamic> json) => Fixture(
@@ -97,6 +98,17 @@ class League {
   }
 
   bool get isSeasonComplete => fixtures.every((f) => f.result != null);
+
+  /// [userTeamId]のクラブが出ていない試合の結果を、残す形
+  /// ([MatchResult.archived])にする。自クラブの試合はそのまま。
+  void archiveResultsExcept(String userTeamId) {
+    for (final f in fixtures) {
+      final r = f.result;
+      if (r == null) continue;
+      if (f.homeTeamId == userTeamId || f.awayTeamId == userTeamId) continue;
+      f.result = r.archived();
+    }
+  }
 
   /// 指定チームが直近にプレーした(結果が確定している)試合を返す。まだ1試合も
   /// 消化していない場合はnull。

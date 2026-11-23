@@ -50,12 +50,10 @@ extension GameStateCoefficient on GameState {
     _lastForeignOrder = {};
     for (final e in s.foreignLeagues.entries) {
       final l = e.value;
-      final played = l.sortedStandings.any((r) => r.played > 0);
+      final rows = l.sortedStandings;
+      final played = rows.any((r) => r.played > 0);
       final order = played
-          ? [
-              for (final r in l.sortedStandings)
-                l.teams.firstWhere((t) => t.id == r.teamId)
-            ]
+          ? [for (final r in rows) l.teams.firstWhere((t) => t.id == r.teamId)]
           : ([...l.teams]
             ..sort((a, b) => b.overallRating.compareTo(a.overallRating)));
       _lastForeignTop.addAll(order.take(foreignTopPerLeague));
