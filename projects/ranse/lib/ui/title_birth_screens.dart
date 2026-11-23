@@ -208,6 +208,17 @@ class BirthScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             BigButton('この人生を生きる', c.begin),
+            const SizedBox(height: 10),
+            // 生まれる前なら、何度でも籤を引き直せる（2026-11-23 ユーザー指示）。
+            BigButton('籤を引き直す', c.draw, secondary: true),
+            if (c.redraws > 0)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  '引き直し　${c.redraws}度目',
+                  style: const TextStyle(color: Pal.muted, fontSize: 12),
+                ),
+              ),
           ],
         ),
       ),

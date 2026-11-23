@@ -55,6 +55,7 @@ String? sceneArtFor(Game g, String? id, String title) {
   }
   if (i.startsWith('bd_') ||
       i.startsWith('fa_') ||
+      i.startsWith('oa_') ||
       _any(t, ['縁側', '幼なじみ', '連れ合い', '孫', '隠居', '辞世', '旧友'])) {
     return 'engawa';
   }

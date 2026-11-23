@@ -31,6 +31,19 @@ void main() {
       await tester.pump(const Duration(seconds: 2)); // 演出が終わるまで
       expect(find.text('この人生を生きる'), findsOneWidget);
       expect(find.textContaining('分の 1'), findsOneWidget);
+      if (i == 0) {
+        // 生まれる前なら籤を引き直せる。
+        final before = c.birth;
+        await tester.ensureVisible(find.text('籤を引き直す'));
+        await tester.tap(find.text('籤を引き直す'));
+        await tester.pump();
+        await tester.pump(const Duration(seconds: 2));
+        expect(c.redraws, 1);
+        expect(c.birth, isNotNull);
+        expect(identical(c.birth, before), isFalse);
+        expect(find.text('引き直し　1度目'), findsOneWidget);
+      }
+      await tester.ensureVisible(find.text('この人生を生きる'));
       await tester.tap(find.text('この人生を生きる'));
       await tester.pump();
       if (!c.game.finished) break;

@@ -30,6 +30,9 @@ class AppController extends ChangeNotifier {
   String flick = '…';
   bool hasSave = false;
 
+  /// 生まれの画面で籤を引き直した回数（この人生を始めるまで）。
+  int redraws = 0;
+
   /// この人生の最期が、図鑑に初めて載ったか。
   bool newEnding = false;
 
@@ -49,6 +52,8 @@ class AppController extends ChangeNotifier {
   /// 運命の籤を引く。演出のあと、生まれが決まる。
   void draw() {
     _timer?.cancel();
+    // 生まれの画面から引き直したときだけ数える（タイトル・終わりの画面から引いたら0から）。
+    redraws = screen == AppScreen.birth && birth != null ? redraws + 1 : 0;
     screen = AppScreen.birth;
     birth = null;
     rolling = true;
