@@ -16,6 +16,7 @@ import 'package:ranse/engine/pastimes.dart';
 import 'package:ranse/engine/regions.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:ranse/engine/talents.dart';
+import 'package:ranse/engine/temple.dart';
 import 'package:ranse/engine/ways.dart';
 import 'package:ranse/engine/women_life.dart';
 
@@ -2924,6 +2925,215 @@ void main() {
           isEmpty,
           reason: 'seed=$seed',
         );
+      }
+    });
+  });
+
+  group('仏門の道', () {
+    final digits = RegExp(r'[0-9０-９%]');
+    // 重点の名 → tag
+    const focusLabels = <String, String>{
+      '寺の田畑と台所を切り盛りする': 'tm_estate',
+      '経典を学び、論義に備える': 'tm_sutra',
+      '経典を学び、講で説く備えをする': 'tm_sutra',
+      '施餓鬼や弔いを務める': 'tm_rites',
+      '寺で子らに手習いを教える': 'tm_teach',
+      '山にこもって行をする': 'tm_retreat',
+    };
+    // はじめて選んだ年の岐路の題（経典は男女で違う）
+    String firstTitle(String tag, bool female) => switch (tag) {
+      'tm_estate' => '寺の台所',
+      'tm_sutra' => female ? '女人の講' : '論義の座',
+      'tm_rites' => '施餓鬼',
+      'tm_teach' => '手習いの師',
+      _ => '山の行',
+    };
+    const titles = {
+      '寺の台所', '女人の講', '論義の座', '施餓鬼', '手習いの師', '山の行', //
+      '寺の蔵', '門前の市', '経蔵', '弔いの夜', '野辺送り', '手習いの子ら', '山ごもり', //
+      '辻の宗論', '使僧', '寺領の兵', '首の供養', '檀家の争い', '般若湯', '消えた本尊', //
+      '一夜の宿', '本山の使い', '跡目', '焼け出された子ら', '門前の列', '寺の鐘', '戦勝の祈祷', //
+      '髪を下ろしたい女',
+    };
+
+    /// 元服・裳着まで進めた人を、仏門に入れ直す。
+    Game? monkOf(int seed) {
+      final rng = Rng(seed);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      playChildhood(g, Rng(seed + 1));
+      if (g.finished) return null;
+      g.choose(0); // 元服・裳着
+      if (g.finished) return null;
+      final l = g.l;
+      l
+        ..rank = 0
+        ..lord = null
+        ..troops = 0
+        ..married = false;
+      l.flags.remove('way_merchant');
+      l.flags.remove('way_outlaw');
+      g.setFlag('priesthood');
+      return g;
+    }
+
+    test('僧・尼に仏門の重点が出て、俗人と隠居には出ない', () {
+      var men = 0, women = 0;
+      for (var seed = 0; seed < 300; seed++) {
+        final g = monkOf(seed + 5100);
+        if (g == null) continue;
+        g.l.t = 30 * 2;
+        expect(templeLife(g), isTrue);
+        final tags = templeTags(g);
+        expect(tags, containsAll(['tm_estate', 'tm_sutra', 'tm_rites']));
+        expect(tags, contains('tm_teach'));
+        final opts = adultFocusOptions(g)
+            .where((f) => f.tag.startsWith('tm_'))
+            .toList();
+        expect(opts.length, templeFocusCap(g));
+        // 尼は「女人の参る寺を守る」が足される分、一つ少ない。
+        expect(
+          templeFocusCap(g),
+          g.l.female ? kTemplePerYear - 1 : kTemplePerYear,
+        );
+        for (final o in opts) {
+          expect(o.hint, isNot(contains(digits)));
+          expect(o.label, isNot(contains(digits)));
+          expect(o.label, isNot(contains(RegExp('妻|嫁|休|家族'))));
+        }
+        if (g.l.female) {
+          women++;
+        } else {
+          men++;
+        }
+        // 隠居した僧には出ない。
+        g.setFlag('retired');
+        expect(templeTags(g), isEmpty);
+        g.l.flags.remove('retired');
+        // 還俗した（旗を外した）人には出ない。
+        g.l.flags.remove('priesthood');
+        expect(templeTags(g), isEmpty);
+        expect(
+          adultFocusOptions(g).where((f) => f.tag.startsWith('tm_')),
+          isEmpty,
+        );
+      }
+      expect(men, greaterThan(20));
+      expect(women, greaterThan(20));
+
+      // 俗人には、どの身分でも出ない。
+      for (var seed = 0; seed < 200; seed++) {
+        final rng = Rng(seed + 9300);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        g.l.t = 30 * 2;
+        if (g.hasFlag('priesthood')) continue;
+        for (final setUp in <void Function()>[
+          () {},
+          () => g.l
+            ..rank = 3
+            ..lord = g.alive.first.name,
+          () => g.setFlag('way_merchant'),
+        ]) {
+          setUp();
+          expect(templeTags(g), isEmpty);
+          expect(
+            adultFocusOptions(g).where((f) => f.tag.startsWith('tm_')),
+            isEmpty,
+          );
+        }
+      }
+    });
+
+    test('仏門の人生で、重点の岐路と仏門の岐路が出て、1年の重点は上限まで、匂わせがあり数字が無い', () {
+      final firsts = <String>{};
+      final again = <String>{};
+      final life = <String>{};
+      var lives = 0;
+      for (var seed = 0; seed < 600; seed++) {
+        final g = monkOf(seed + 6100);
+        if (g == null) continue;
+        lives++;
+        final r = Rng(seed + 3);
+        var n = 0;
+        String? expectTitle;
+        // 元服の直後の重点は、仏門に入れ直す前に作られているので、数の突き合わせから外す。
+        var fresh = true;
+        while (!g.finished && n++ < 3000) {
+          final p = g.prompt!;
+          if (expectTitle != null) {
+            expect(p.title, expectTitle, reason: 'seed=$seed');
+            expectTitle = null;
+          }
+          if (titles.contains(p.title)) {
+            expect(p.choices.length, inInclusiveRange(2, 4));
+            for (final c in p.choices) {
+              expect(c.hint, isNotNull, reason: '${p.title}/${c.label}');
+              expect(c.hint!, isNot(contains(digits)), reason: c.hint);
+              expect(c.label, isNot(contains(digits)), reason: c.label);
+            }
+          }
+          if (p.title == '今年の重点' && !g.isChild) {
+            final mine = [
+              for (var i = 0; i < p.choices.length; i++)
+                if (focusLabels.containsKey(p.choices[i].label)) i,
+            ];
+            final cap = templeFocusCap(g);
+            expect(mine.length, lessThanOrEqualTo(kTemplePerYear));
+            if (!fresh) {
+              final tags = templeTags(g);
+              expect(
+                mine.length,
+                tags.length < cap ? tags.length : cap,
+                reason: 'seed=$seed $tags',
+              );
+            }
+            fresh = false;
+            if (mine.isNotEmpty && r.chance(.6)) {
+              final i = mine[r.range(0, mine.length - 1)];
+              final tag = focusLabels[p.choices[i].label]!;
+              if (!g.hasFlag('scene:$tag')) {
+                expectTitle = firstTitle(tag, g.l.female);
+                firsts.add(tag);
+              }
+              g.choose(i);
+              continue;
+            }
+          }
+          g.choose(r.range(0, p.choices.length - 1));
+        }
+        for (final f in g.l.flags) {
+          if (!f.startsWith('scene:tm_')) continue;
+          final id = f.substring(6);
+          if (id.endsWith('_again')) again.add(id);
+          if (kTempleSceneIds.contains(id)) life.add(id);
+        }
+      }
+      expect(lives, greaterThan(200));
+      expect(firsts.length, 5, reason: '$firsts');
+      expect(again.length, greaterThanOrEqualTo(4), reason: '$again');
+      // 仏門の岐路15のうち、6〜7割以上が出る。
+      expect(life.length, greaterThanOrEqualTo(10), reason: '$life');
+    });
+
+    test('俗人の人生には仏門の岐路が出ず、使僧は男の僧・後家の出家は尼にだけ出る', () {
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 4700);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        String? why;
+        playOut(
+          g,
+          Rng(seed),
+          onPrompt: (p) {
+            if (p.title == '使僧' && g.l.female) why = '尼に使僧';
+            if (p.title == '髪を下ろしたい女' && !g.l.female) why = '僧に後家の出家';
+            if (titles.contains(p.title) && !g.hasFlag('priesthood')) {
+              why = '俗人に${p.title}';
+            }
+          },
+        );
+        expect(why, isNull, reason: 'seed=$seed');
       }
     });
   });

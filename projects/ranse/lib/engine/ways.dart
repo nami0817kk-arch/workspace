@@ -633,7 +633,11 @@ List<SceneDef> buildWayScenes() {
       ageOk: (g, a) => _yr(g, a) >= 1563 && _yr(g, a) <= 1580,
     ),
 
-    SceneDef('hiei', 15, 84, (g) => 20, (g) => monk(g), (g, next) {
+    // 比叡山は女人禁制なので、男の僧だけ（比叡山の最期も男の僧だけ）。
+    SceneDef('hiei', 15, 84, (g) => 20, (g) => monk(g) && !g.l.female, (
+      g,
+      next,
+    ) {
       g.ask('比叡山', '織田の軍勢が比叡山を囲み、火を放った。あなたは山の寺にいる。', [
         Choice.h('経典を抱えて逃げる', '命と教えを残す。仲間を見捨てることになる', () {
           if (g.rng.chance(.25)) {

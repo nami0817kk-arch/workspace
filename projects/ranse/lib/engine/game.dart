@@ -22,6 +22,7 @@ import 'pastimes.dart';
 import 'regions.dart';
 import 'rng.dart';
 import 'talents.dart';
+import 'temple.dart';
 import 'village.dart';
 import 'ways.dart';
 import 'women.dart';
@@ -79,6 +80,7 @@ class Game extends ChangeNotifier {
       ...buildVillageScenes(),
       ...buildTalentScenes(),
       ...buildPastimeScenes(),
+      ...buildTempleScenes(),
       ...buildRegionScenes(),
       ...buildHistoryScenes(),
       ...buildHistoryEastScenes(),

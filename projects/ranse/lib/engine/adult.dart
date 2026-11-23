@@ -6,6 +6,7 @@ import 'history_lines.dart';
 import 'life.dart';
 import 'pastimes.dart';
 import 'rng.dart';
+import 'temple.dart';
 import 'variety.dart';
 import 'women_life.dart';
 
@@ -33,10 +34,12 @@ void _heal(Life l, int n) => l.hp = l.hp + n > l.maxhp ? l.maxhp : l.hp + n;
 
 /// 今年の重点。身分・道ごとのいつもの重点に、暮らしと嗜みの重点（`pastimes.dart`）を
 /// [kPastimesPerYear] まで足す（増えすぎると選ぶのが重くなるため）。女性には、暮らし方の型に合う重点
-/// （`women_life.dart`）を [kWomenLifePerYear] まで足す。
+/// （`women_life.dart`）を [kWomenLifePerYear] まで足す。仏門の人には、寺の暮らしの重点（`temple.dart`）を
+/// `templeFocusCap` まで足す。
 List<FocusDef> adultFocusOptions(Game g) => [
   ..._baseFocusOptions(g),
   ...pastimeFocusOptions(g),
+  ...templeFocusOptions(g),
   ...womanLifeFocusOptions(g),
 ];
 
