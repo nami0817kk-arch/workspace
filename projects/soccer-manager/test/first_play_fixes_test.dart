@@ -55,12 +55,16 @@ void main() {
   }
 
   group('1 季の切り替えの崖', () {
-    test('期待20で最下位でも、新しい季は40から始まり手放さない', () async {
+    test('期待35で最下位でも、新しい季は40から始まり手放さない', () async {
       final gs = await newGame();
       loseEverything(gs);
       final s = gs.save!;
       s.clubVision = ClubVision.none;
-      s.confidence = 20;
+      // 最後の月の締め(順位の分を含め最大 -6)と季末(最大 -10)を引いても
+      // 最後通告の線(10)より上に残る値。線を割ると底上げせず、新しい季の
+      // 初日に最後通告を出す(別のテスト)。以前は20で、#1323 で月末に
+      // 順位そのものの分が入ってから線を割ることがあった。
+      s.confidence = 35;
       // 季末は目標との差に比例し、下がる幅は最大 -10(2026-11-23)。
       // 目標の順位はくじで変わるので、最下位との差しだいで -9 などにもなる。
       expect(gs.seasonEndSupporterDelta,
