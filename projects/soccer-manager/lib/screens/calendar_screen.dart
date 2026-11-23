@@ -301,7 +301,7 @@ class _MonthGrid extends StatelessWidget {
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: color),
+          Icon(icon, size: 12, color: SemanticColors.ink(context, color, min: 3)),
           const SizedBox(width: 2),
           Text(label,
               style: TextStyle(

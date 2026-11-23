@@ -44,7 +44,7 @@ class SeasonHistoryScreen extends StatelessWidget {
                       Icon(
                         Icons.history,
                         size: 64,
-                        color: Colors.grey.shade400,
+                        color: Theme.of(context).colorScheme.outline,
                       ),
                       const SizedBox(height: 12),
                       Text(

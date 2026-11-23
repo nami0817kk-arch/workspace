@@ -105,8 +105,10 @@ class FmPalette {
     onPrimaryContainer: Color(0xFFDCEBFF),
     secondary: Color(0xFFE0BC6A),
     onSecondary: Color(0xFF1A1407),
-    secondaryContainer: Color(0xFF34414F),
-    onSecondaryContainer: Color(0xFFEFF3F7),
+    // 控えめな塗りのボタン(FilledButton.tonal)の地にもなる。灰色だと
+    // 押せない札に見えたので、主役の青に寄せる。
+    secondaryContainer: Color(0xFF24405F),
+    onSecondaryContainer: Color(0xFFDCEBFF),
     tertiaryContainer: Color(0xFF453822),
     onTertiaryContainer: Color(0xFFF6E7C1),
     error: Color(0xFFFF8A80),
@@ -137,8 +139,8 @@ class FmPalette {
     onPrimaryContainer: Color(0xFF0D2F61),
     secondary: Color(0xFF8E6A17),
     onSecondary: Color(0xFFFFFFFF),
-    secondaryContainer: Color(0xFFE6ECF3),
-    onSecondaryContainer: Color(0xFF16212E),
+    secondaryContainer: Color(0xFFD6E4F7),
+    onSecondaryContainer: Color(0xFF0D2F61),
     tertiaryContainer: Color(0xFFFFF0D2),
     onTertiaryContainer: Color(0xFF4F3A00),
     error: Color(0xFFC62828),

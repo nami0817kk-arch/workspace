@@ -1439,8 +1439,8 @@ class _TransferWindowBanner extends StatelessWidget {
     final color = deadlineDay
         ? SemanticColors.negative(context)
         : open
-            ? Colors.green.shade700
-            : Colors.grey.shade700;
+            ? SemanticColors.ink(context, Colors.green.shade700)
+            : SemanticColors.ink(context, Colors.grey.shade700);
     // 横画面は縦が狭いので、1行・細めにする(2026-11-21)。
     return Container(
       width: double.infinity,

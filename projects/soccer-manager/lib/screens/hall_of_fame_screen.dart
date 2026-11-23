@@ -35,7 +35,7 @@ class HallOfFameScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.stars, size: 64, color: Colors.grey.shade400),
+                      Icon(Icons.stars, size: 64, color: Theme.of(context).colorScheme.outline),
                       const SizedBox(height: 12),
                       Text(Tr.pick('まだ引退した選手はいません', 'Nobody has retired yet'),
                           textAlign: TextAlign.center),
