@@ -42,7 +42,7 @@ class ManagerReportEngine {
     final lines = <String>[
       preseason
           ? Tr.pick('$tier部 $teamCount チーム・開幕前', 'Tier $tier: $teamCount clubs, pre-season')
-          : Tr.pick('$tier部 $teamCount チーム中 $rank 位', 'Tier $tier: $rank of $teamCount'),
+          : Tr.pick('$tier部 $teamCount チーム中 $rank 位', 'Tier $tier: ${Tr.ordinal(rank)} of $teamCount'),
       if (lastResult != null) Tr.pick('直近: $lastResult', 'Last: $lastResult'),
       Tr.pick(
           '週の収支 ${weeklyNet >= 0 ? '+' : ''}${formatMoney(weeklyNet)}(資金 ${formatMoney(budget)})',
@@ -70,7 +70,7 @@ class ManagerReportEngine {
     } else if (!preseason && targetRank != null && seasonEndDrop < 0) {
       headline = Tr.pick(
           '目標の$targetRank位に対していま$rank位です。このまま終わると、季末にサポーターの期待が$seasonEndDrop動きます。',
-          'We are $rank against a target of $targetRank. Finish there and supporter expectation moves $seasonEndDrop at the end of the season.');
+          'We are ${Tr.ordinal(rank)} against a target of ${Tr.topTarget(targetRank)}. Finish there and supporter expectation moves $seasonEndDrop at the end of the season.');
     } else if (shareholder <= dangerLine) {
       headline = Tr.pick('株主が収支を気にしています。支出を見直してください。',
           'Shareholders are worried about the books. Review spending.');
@@ -81,9 +81,9 @@ class ManagerReportEngine {
       // 開幕前は全クラブが勝点0で並ぶだけなので、順位では語らない。
       headline = lastSeasonRank != null
           ? Tr.pick('開幕前です。昨季は$lastSeasonRank位でした。今季の目標は$targetRank位以内です。',
-              'Pre-season. We finished $lastSeasonRank last time; the target this season is the top $targetRank.')
+              'Pre-season. We finished ${Tr.ordinal(lastSeasonRank)} last time; the target this season is ${targetRank <= 1 ? 'to win the league' : 'the top $targetRank'}.')
           : Tr.pick('開幕前です。今季の目標は$targetRank位以内です。',
-              'Pre-season. The target this season is the top $targetRank.');
+              'Pre-season. The target this season is ${targetRank <= 1 ? 'to win the league' : 'the top $targetRank'}.');
     } else if (supporter >= goodLine && shareholder >= goodLine) {
       headline = Tr.pick('順調です。このまま任せてください。',
           'All good. Leave it to me.');

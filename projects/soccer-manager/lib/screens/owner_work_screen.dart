@@ -142,7 +142,7 @@ class _WorkTile extends StatelessWidget {
               child: Text(done
                   ? Tr.pick('今季済み', 'Done')
                   : work.onlyInRed && !can
-                      ? Tr.pick('赤字のとき', 'When in red')
+                      ? Tr.pick('赤字のとき', 'When in the red')
                       : Tr.pick('実行', 'Do it')),
             ),
           ],

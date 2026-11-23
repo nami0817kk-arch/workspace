@@ -375,7 +375,7 @@ List<GlossaryEntry> get glossaryEntries => [
         category: GlossaryCategory.condition,
         description: Tr.pick(
             'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う年俸と契約金(一括)が発生する。契約金が払えない、または給与予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
-            "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing fee. Without the fee or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
+            "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing bonus. Without the bonus or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
       ),
       GlossaryEntry(
         term: Tr.pick('有望株の流出', 'Losing a prospect'),
@@ -411,6 +411,13 @@ List<GlossaryEntry> get glossaryEntries => [
         description: Tr.pick(
             '打撲(1-2週)・肉離れ(2-5週)・靭帯損傷(4-10週)の3種類があり、療養期間が異なる。基礎体力(naturalFitness)が高いほど負傷しにくく、同じ種類の負傷を繰り返すと再発しやすくなる。',
             'Three kinds, each with its own lay-off: a bruise (1-2 weeks), a torn muscle (2-5) and ligament damage (4-10). Better natural fitness means fewer injuries, and repeating the same one makes it more likely again.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('決定機', 'Big chance'),
+        category: GlossaryCategory.liveMatch,
+        description: Tr.pick(
+            '試合の中で、得点か失点かが懸かる場面。判断は監督と選手に任され、決まるかどうかは関わる選手の能力値の勝負(シューター対GKなど)で決まる。試合の記録には両チームの決定機の数が並ぶ。',
+            'The moments in a match where a goal is on. The manager and players make the call, and whether it goes in comes down to the attributes of the players involved, shooter against keeper for instance. The match stats show how many each side had.'),
       ),
       GlossaryEntry(
         term: Tr.pick('メンタリティ', 'Mentality'),
@@ -504,11 +511,25 @@ List<GlossaryEntry> get glossaryEntries => [
             'Star a player to keep an eye on him. Tap the star in Proposals or Search on the transfer screen, and the Watchlist tab shows them all. Your scouts get a little clearer on a watched player every week, wherever he plays, and when one of them scores it reaches your club news.'),
       ),
       GlossaryEntry(
+        term: Tr.pick('試合中の交代', 'Substitutions'),
+        category: GlossaryCategory.liveMatch,
+        description: Tr.pick(
+            '試合中の選手交代は監督が行う。1試合5人まで、ハーフタイム以外では3回まで(同じ場面で続けて替えるのは1回、ハーフタイムの交代は回数に数えない)。退場した選手の代わりは入れられない。',
+            'The manager makes the changes during a match: five at most, in no more than three stoppages outside half-time (changes at the same stoppage count once; half-time changes do not count). A sent-off player cannot be replaced.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('モメンタム(試合の流れ)', 'Momentum'),
+        category: GlossaryCategory.liveMatch,
+        description: Tr.pick(
+            '試合の流れ。ゴールなどで勢いづいた側に傾き、傾いている間はその側の決定機がわずかに決まりやすくなる。',
+            'Which way a match is flowing. It swings towards whoever has just had a moment, and while it leans their way their chances go in a little more often.'),
+      ),
+      GlossaryEntry(
         term: Tr.pick('クイック消化', 'Simming a match'),
         category: GlossaryCategory.liveMatch,
         description: Tr.pick(
-            '試合を一括で計算して結果を確定させる進め方。試合には直接関わらず、先発と構えは監督が決める。疲労・負傷・警告累積・出場記録などの試合後効果は、カップ戦を含めすべてに適用される。',
-            'How matches are played: the whole match is worked out at once and the result settled. You do not take part; the manager picks the side and the approach. Everything that follows a match, such as fatigue, injuries, cards and appearances, applies as normal, cup ties included.'),
+            '試合の進め方。オーナーは試合の中に手を出さず、監督に任せて結果だけを確定させる。リーグ戦は短いまとめで、カップ戦は試合の出来事を順に見せる。疲労・負傷・警告の累積・出場記録などの試合後の効果は、どの大会でも同じように付く。',
+            'How every match is played: the manager takes charge and the result is settled without you stepping in. League matches end in a short digest; cup ties play back the moments of the match. Fatigue, injuries, cards and appearances follow in every competition.'),
       ),
       GlossaryEntry(
         term: Tr.pick('値切り交渉', 'Haggling'),

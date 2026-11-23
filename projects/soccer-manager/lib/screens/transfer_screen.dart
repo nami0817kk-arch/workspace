@@ -119,7 +119,7 @@ class _TransferScreenState extends State<TransferScreen>
         controller: _tabController,
         tabs: [
           gameState.currentSd != null
-              ? Tr.pick('SDの案', 'SD shortlist')
+              ? Tr.pick('SDの案', 'DoF shortlist')
               : Tr.pick('監督の案', 'Proposals'),
           Tr.pick('探す', 'Search'),
           Tr.pick('交渉 (${gameState.transferTalks.length})',
@@ -1648,7 +1648,7 @@ class _SdBriefCard extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
       child: ExpansionTile(
         title: Text(Tr.pick(
-            'SD(${sd.name})に補強を任せる', 'Let your SD (${sd.name}) run signings')),
+            'SD(${sd.name})に補強を任せる', 'Let your DoF (${sd.name}) run signings')),
         subtitle: Text(
           b.active
               ? Tr.pick(
@@ -1714,7 +1714,7 @@ class _SdBriefCard extends StatelessWidget {
           Text(
             Tr.pick(
                 'SDは、見えている選手のうち方針に合い、今の先発より上の選手を探して、クラブとも選手とも交渉します。上限を超える値なら降ります。位置を選ばなければ全部の位置から探します。',
-                'Your SD looks for players you have scouted who fit the brief and beat your current starters, then negotiates with the club and the player. He walks away if the price passes your limit. Pick no position to search them all.'),
+                'Your DoF looks for players you have scouted who fit the brief and beat your current starters, then negotiates with the club and the player. He walks away if the price passes your limit. Pick no position to search them all.'),
             style: small,
           ),
         ],

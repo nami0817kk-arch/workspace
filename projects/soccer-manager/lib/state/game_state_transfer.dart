@@ -1161,7 +1161,7 @@ extension GameStateTransfer on GameState {
     if (_save!.budget < terms.signingBonus) {
       lastSigningBlockReason = Tr.pick(
           '契約金${formatMoney(terms.signingBonus)}が払えません(資金${formatMoney(_save!.budget)})。',
-          'You cannot cover the ${formatMoney(terms.signingBonus)} signing fee (funds ${formatMoney(_save!.budget)}).');
+          'You cannot cover the ${formatMoney(terms.signingBonus)} signing bonus (funds ${formatMoney(_save!.budget)}).');
       _notify();
       return false;
     }
@@ -1177,7 +1177,7 @@ extension GameStateTransfer on GameState {
     _logNews(
       Tr.pick(
           'ユースの${player.name}がプロ契約(背番号${terms.squadNumber}・年俸${formatMoney(annualFromWeekly(terms.weeklyWage))}・${terms.years}年)を結び、一軍に昇格しました',
-          '${player.name} signed his first professional contract (no. ${terms.squadNumber}, salary ${formatMoney(annualFromWeekly(terms.weeklyWage))}, ${terms.years} years) and joined the first team'),
+          '${player.name} signed his first professional contract (no. ${terms.squadNumber}, salary ${formatMoney(annualFromWeekly(terms.weeklyWage))}, ${Tr.plural(terms.years, 'year')}) and joined the first team'),
       context: Tr.pick('ユース', 'Youth'),
     );
     _notify();

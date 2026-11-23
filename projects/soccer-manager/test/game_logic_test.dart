@@ -8391,6 +8391,9 @@ void main() {
 
     final glossaryTerms = glossaryEntries.map((e) => e.term).toSet();
     for (final term in [
+      '決定機',
+      '試合中の交代',
+      'モメンタム(試合の流れ)',
       'クイック消化',
       '値切り交渉',
       '勝ち上がり賞金',
@@ -8410,6 +8413,7 @@ void main() {
         reason: '週数ベースの契約は年単位へ移行済みで、用語集も追随している');
     // オーナー型(2026-11-16)では画面からも監督からも触れない機能。
     // 用語集に残っていると、無い操作を探させることになる(2026-11-23 に外した)。
+    // 決定機・モメンタムは試合の再生に出るので残す(#1280)。
     for (final term in [
       'キャプテン/副キャプテン',
       'プレッシング',
@@ -8424,10 +8428,8 @@ void main() {
       '自動トレーニング',
       '試合前の確認',
       'チームトーク',
-      '決定機',
       '采配方針',
       'ライブ交代',
-      'モメンタム(試合の流れ)',
       '監督としての評価',
     ]) {
       expect(glossaryTerms, isNot(contains(term)), reason: '$term は今は無い機能');
@@ -8436,6 +8438,12 @@ void main() {
     final press = glossaryEntries.firstWhere((e) => e.term == '記者会見');
     expect(press.description, contains('移籍の噂'));
     expect(press.description, isNot(contains('試合後')));
+    expect(
+      glossaryEntries
+          .where((e) => e.category == GlossaryCategory.liveMatch)
+          .length,
+      greaterThanOrEqualTo(4),
+    );
   });
 
   test(
@@ -8697,8 +8705,6 @@ void main() {
       'bargain_hunter',
       'cup_prize_1000',
       'breakthrough_10',
-      'live_wins_10',
-      'shootout_winner',
     };
 
     Set<String> unlockedIds() =>

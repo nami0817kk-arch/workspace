@@ -52,7 +52,7 @@ extension OwnerGoalInfo on OwnerGoal {
         OwnerGoal.unbeaten => Tr.pick('無敗でシーズンを終える', 'Go a season unbeaten'),
         OwnerGoal.bigStadium => Tr.pick('スタジアムをレベル${OwnerGoalRules.stadiumTarget}に', 'Grow the stadium to level ${OwnerGoalRules.stadiumTarget}'),
         OwnerGoal.healthA => Tr.pick('経営診断でAを取る', 'Earn an A in the club health check'),
-        OwnerGoal.fanFavorite => Tr.pick('サポーターの期待を${OwnerGoalRules.fanTarget}以上に', 'Lift fan expectation to ${OwnerGoalRules.fanTarget}'),
+        OwnerGoal.fanFavorite => Tr.pick('サポーターの期待を${OwnerGoalRules.fanTarget}以上に', 'Lift supporter expectation to ${OwnerGoalRules.fanTarget}'),
         OwnerGoal.investorFavorite => Tr.pick('株主の期待を${OwnerGoalRules.investorTarget}以上に', 'Lift shareholder expectation to ${OwnerGoalRules.investorTarget}'),
       };
 

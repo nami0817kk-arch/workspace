@@ -82,4 +82,19 @@ class Tr {
   /// match → matches のように -s を付けるだけで済まない語は [plural] を渡す。
   static String plural(int n, String singular, [String? plural]) =>
       '$n ${n == 1 ? singular : (plural ?? '${singular}s')}';
+
+  /// 英語の序数(1st・2nd・3rd・4th、11th〜13th は th)。順位を英語で出すときに使う。
+  /// 日本語側は「3位」のように書くので、使うのは Tr.pick の英語側だけ。
+  static String ordinal(int n) => switch (n % 100) {
+        11 || 12 || 13 => '${n}th',
+        _ => switch (n % 10) {
+            1 => '${n}st',
+            2 => '${n}nd',
+            3 => '${n}rd',
+            _ => '${n}th',
+          },
+      };
+
+  /// 「N位以内」の目標を英語の見出しで出す(「top 1」ではなく「win the league」)。
+  static String topTarget(int n) => n <= 1 ? 'win the league' : 'top $n';
 }
