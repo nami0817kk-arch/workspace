@@ -406,6 +406,17 @@ List<SceneDef> buildFamilyScenes() => [
           g.j(3);
           return '薬が効き、$nの熱は三日で下がった。';
         }),
+        // 薬の心得（`trait_scenes.dart`）: 自ら薬草を煎じる手。
+        if (g.has('herbal'))
+          Choice.h('自ら山へ入り、熱さましの草を摘んで煎じる', '銭はかからず、効き目も確か。夜通しの看病になる', () {
+            if (g.rng.chance(.03)) {
+              _loseChild(g, null, '幼い我が子の$nを、病で亡くした', 0, 12);
+              return '夜通し煎じ薬を含ませたが、$nは明け方に息を引き取った。';
+            }
+            g.j(3);
+            g.setFlag('tr_herbal_kid');
+            return '摘んできた草を煎じ、匙で少しずつ含ませた。二日目の朝、$nが目を開けて親を呼んだ。';
+          }),
         Choice.h('寺社に祈祷を頼む', '心は静まる。効くかどうかは神仏しだい', () {
           if (g.rng.chance(.15)) {
             _loseChild(g, null, '幼い我が子の$nを、病で亡くした', 0, 12);
@@ -978,6 +989,16 @@ List<SceneDef> buildFamilyScenes() => [
           g.mark('病の$sのために、遠くまで薬を求めに行った');
           return '煎じた薬を飲ませると、$sの咳は少しずつ静まっていった。';
         }),
+        // 薬の心得（`trait_scenes.dart`）: 胸の病に効く草を自ら煎じる手。
+        if (g.has('herbal'))
+          Choice.h('胸に効く草を自ら摘み、毎日煎じて飲ませる', '銭はかからない。治るまで手間と日がかかる', () {
+            if (g.rng.chance(.04)) {
+              return lose('煎じ薬の湯気の向こうで、$sは静かに目を閉じた。');
+            }
+            _bond(sp, 12);
+            g.setFlag('tr_herbal_spouse');
+            return '朝夕に煎じた薬を飲ませた。ふた月ののち、$sの咳はすっかり静まっていた。';
+          }),
         Choice.h('寺社に籠もって祈る', '心は通う。効くかは神仏しだい', () {
           if (g.rng.chance(.15)) {
             return lose('七日目の朝、知らせの者が社の石段を駆け上がってきた。');

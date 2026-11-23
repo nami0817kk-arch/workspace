@@ -7,6 +7,7 @@ import '../engine/data.dart';
 import '../engine/game.dart';
 import '../engine/history_lines.dart';
 import '../engine/rng.dart';
+import '../engine/spending.dart';
 import 'end_screen.dart';
 import 'standing_card.dart';
 import 'theme.dart';
@@ -457,7 +458,11 @@ class _PersonTab extends StatelessWidget {
               const SizedBox(height: 10),
               TraitList(
                 [for (final t in l.traits) traitOf(t)],
-                extra: [if (l.gun) ('鉄砲', '撃ち方を覚えている。合戦で有利になる')],
+                extra: [
+                  if (l.gun) ('鉄砲', '撃ち方を覚えている。合戦で有利になる'),
+                  // 銭と功で手に入れた持ち物（`spending.dart`）。
+                  ...spendingBelongings(g),
+                ],
               ),
             ],
           ),

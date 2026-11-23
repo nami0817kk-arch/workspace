@@ -2,6 +2,7 @@ import 'data.dart';
 import 'game.dart';
 import 'history_lines.dart';
 import 'rng.dart';
+import 'trait_scenes.dart';
 import 'variety.dart';
 
 /// 合戦の状況（2026-11-23）。足軽・侍の道は成人した人生でいちばん多いのに、出陣の岐路は
@@ -76,7 +77,7 @@ String _fight(
   double gain = 1,
   double edge = 0,
 }) =>
-    '$pre${g.battle(role, enemy: c.enemy, risk: risk, gain: gain, edge: edge)}';
+    '$pre${g.battle(role, enemy: c.enemy, risk: risk * traitBattleRisk(g, role), gain: gain * traitBattleGain(g, role), edge: edge)}';
 
 bool _alive(Game g) => g.l.dead == null;
 
@@ -142,7 +143,7 @@ List<BattleSit> buildBattleSits() => [
         );
       }),
       Choice.h('篝火を焚いて味方を起こす', '陣が立ち直れば主君の目に留まる', () {
-        final ok = _try(g, g.l.mi);
+        final ok = _try(g, g.l.mi + traitPersuade(g));
         if (ok) g.l.fav = _c(g.l.fav + 4);
         return _fight(
           g,
@@ -245,7 +246,7 @@ List<BattleSit> buildBattleSits() => [
         );
       }),
       Choice.h('崩れた味方を助けに戻る', '人を救えば慕われる。乱戦に飛び込むことになる', () {
-        final ok = _try(g, g.l.mi);
+        final ok = _try(g, g.l.mi + traitPersuade(g));
         g.l.net += ok ? 4 : 2;
         g.j(3);
         return _fight(
@@ -341,7 +342,7 @@ List<BattleSit> buildBattleSits() => [
       Choice.h('持ち場の兵に声をかけて回る', '兵の心がまとまる。人の縁が深まる', () {
         g.l.net += 3;
         g.j(2);
-        final ok = _try(g, g.l.mi);
+        final ok = _try(g, g.l.mi + traitPersuade(g));
         if (ok) g.l.fav = _c(g.l.fav + 3);
         return _fight(g, c, '眠れぬ兵たちと、国の話をして夜を明かした。', 'main', risk: .8, gain: .9, edge: ok ? .08 : 0);
       }),
@@ -409,7 +410,7 @@ List<BattleSit> buildBattleSits() => [
         );
       }),
       Choice.h('声を合わせて列を揃える', '組がまとまれば崩れない。組頭の目にも留まる', () {
-        final ok = _try(g, g.l.mi);
+        final ok = _try(g, g.l.mi + traitPersuade(g));
         if (ok) {
           g.l.fav = _c(g.l.fav + 4);
           g.l.net += 2;
@@ -486,7 +487,7 @@ List<BattleSit> buildBattleSits() => [
           return r;
         }),
         Choice.h('味方に降るよう説く', '引き入れれば手柄。しくじれば斬りかかられる', () {
-          final ok = _try(g, g.l.mi, .3);
+          final ok = _try(g, g.l.mi + traitPersuade(g), .3);
           if (ok) {
             g.l.merit += 5 + g.l.mi ~/ 15;
             g.l.fame += 4;
@@ -537,7 +538,7 @@ List<BattleSit> buildBattleSits() => [
         return _fight(g, c, '「早う、国へ帰れ」とだけ言って、背を向けた。', 'main', risk: .8, gain: .8, edge: .05);
       }),
       Choice.h('手当てをして捕らえる', '情けは人のためならず。手間はかかる', () {
-        final ok = _try(g, g.l.mi);
+        final ok = _try(g, g.l.mi + traitPersuade(g));
         g.l.net += ok ? 3 : 1;
         if (ok) g.l.fav = _c(g.l.fav + 2);
         return _fight(

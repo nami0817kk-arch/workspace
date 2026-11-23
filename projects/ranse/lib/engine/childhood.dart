@@ -56,7 +56,10 @@ List<FocusDef> childFocusOptions(Game g) {
           : (g.l.cls.id == 'beggar' ? .15 : .45);
       if (rng.chance(p)) {
         g.l.chi = clampInt(
-          g.l.chi + rng.range(1, 2) + (g.l.cls.id == 'priest' ? 1 : 0),
+          g.l.chi +
+              rng.range(1, 2) +
+              (g.l.cls.id == 'priest' ? 1 : 0) +
+              (g.has('prodigy') ? 1 : 0), // 神童は伸びが大きい（`trait_scenes.dart`）
           0,
           99,
         );
@@ -86,7 +89,7 @@ List<FocusDef> childFocusOptions(Game g) {
         if (paid) g.l.gold -= 1;
         final p = paid ? (g.l.cls.id == 'beggar' ? .6 : 1.0) : .4;
         if (rng.chance(p)) {
-          g.l.chi = clampInt(g.l.chi + rng.range(1, 3), 0, 99);
+          g.l.chi = clampInt(g.l.chi + rng.range(1, 3) + (g.has('prodigy') ? 1 : 0), 0, 99);
           if (rng.chance(.4)) g.l.sei = clampInt(g.l.sei + 1, 0, 99);
           g.j(1);
         }
@@ -169,6 +172,16 @@ List<SceneDef> buildChildScenes() {
           g.j(-4);
           return '銭がなく、薬湯は手に入らなかった。ただ耐えるしかなかった。';
         }),
+        // 薬の心得（`trait_scenes.dart`）: 野の草で熱を下げる手。
+        if (g.has('herbal'))
+          Choice.h('裏の野で熱さましの草を摘み、自分で煎じる', '銭はかからない。床を抜け出すぶん体はこたえる', () {
+            final l = g.l;
+            g.mark('熱病に伏した');
+            l.hp -= g.rng.range(4, 10);
+            g.j(-1);
+            g.setFlag('tr_herbal_fever');
+            return 'ふらつく足で摘んだ草を煎じて飲むと、その晩のうちに汗が噴き出し、熱が引いた。';
+          }),
         Choice.h('ただ耐える', '丈夫な子なら乗り切れる。そうでなければ…', () {
           final l = g.l;
           g.mark('熱病に伏した');

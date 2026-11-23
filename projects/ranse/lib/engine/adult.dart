@@ -7,6 +7,7 @@ import 'life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
 import 'rng.dart';
+import 'spending.dart';
 import 'temple.dart';
 import 'variety.dart';
 import 'women_life.dart';
@@ -43,6 +44,8 @@ List<FocusDef> adultFocusOptions(Game g) => [
   ...oldAgeFocusOptions(g),
   ...templeFocusOptions(g),
   ...womanLifeFocusOptions(g),
+  // 銭と功の使い道の入り口（`spending.dart`。たまったときだけ出る）。
+  ...spendingFocusOptions(g),
 ];
 
 List<FocusDef> _baseFocusOptions(Game g) {

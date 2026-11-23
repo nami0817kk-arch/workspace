@@ -2,6 +2,7 @@ import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
 import 'rng.dart';
+import 'trait_scenes.dart';
 
 /// 幼少期（5〜14歳）の岐路を足す（2026-11-23）。
 /// 史実以外の子どもの場面が12しかなく、生まれ直しても子ども時代が同じ場面の繰り返しになっていたため。
@@ -307,4 +308,6 @@ List<SceneDef> buildMoreChildScenes() => [
       ], after: next);
     },
   ),
+  // 特性の効く子どもの場面（神童・絵の才。`trait_scenes.dart`）。
+  ...buildTraitChildScenes(),
 ];

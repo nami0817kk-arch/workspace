@@ -194,7 +194,7 @@ List<SceneDef> buildWayScenes() {
         final l = g.l;
         g.ask('仕入れの旅', tradeIntro(g), [
           Choice.h('近くの市へ', '儲けは小さい。危うさも小さい', () {
-            l.gold += g.rng.range(3, 8);
+            l.gold += g.rng.range(3, 8) + (g.has('appraiser') ? 2 : 0);
             return '近くの市で手堅く仕入れ、売り切った。';
           }),
           Choice.h('峠を越えて隣国へ', '儲けは大きい。山賊が出るという', () {
@@ -202,7 +202,8 @@ List<SceneDef> buildWayScenes() {
               g.die('峠で山賊に襲われ、命を落とした', 'senshi');
               return '峠で山賊に囲まれた。荷も命も、奪われた。';
             }
-            if (g.rng.chance(.7)) {
+            // 目利き（`trait_scenes.dart`）は良い品を選ぶので売れやすい。
+            if (g.rng.chance(.7 + (g.has('appraiser') ? .12 : 0))) {
               l.gold += g.rng.range(12, 25);
               return '隣国の品は、飛ぶように売れた。';
             }
@@ -215,7 +216,7 @@ List<SceneDef> buildWayScenes() {
               g.die('仕入れの船が嵐に遭い、戻らなかった', 'yukue');
               return '船は嵐の海に消え、二度と戻らなかった。';
             }
-            if (g.rng.chance(.55)) {
+            if (g.rng.chance(.55 + (g.has('appraiser') ? .12 : 0))) {
               l.gold += g.rng.range(25, 50);
               g.mark('船で遠国と商いし、大きく儲けた');
               return '遠国の品で、蔵が一つ建つほど儲けた。';

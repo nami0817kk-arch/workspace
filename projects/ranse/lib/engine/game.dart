@@ -33,9 +33,11 @@ import 'rng.dart';
 import 'scene_art.dart';
 import 'seasons.dart';
 import 'shadow_life.dart';
+import 'spending.dart';
 import 'talents.dart';
 import 'temple.dart';
 import 'trade_farm.dart';
+import 'trait_scenes.dart';
 import 'village.dart';
 import 'ways.dart';
 import 'women.dart';
@@ -104,6 +106,8 @@ class Game extends ChangeNotifier {
       ...buildCraftLifeScenes(),
       ...buildDaimyoLifeScenes(),
       ...buildSeasonScenes(),
+      ...buildTraitScenes(),
+      ...buildSpendingScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
@@ -389,7 +393,7 @@ class Game extends ChangeNotifier {
         (l.troops * .3 > 30 ? 30 : l.troops * .3);
     var dp = danger * (win ? .7 : 1.4) * (1 - clampD(skill / 150, 0, .7));
     if (l.hp < 40) dp *= 1.5;
-    dp *= risk;
+    dp *= risk * spendingRisk(this); // 具足・馬・郎党（`spending.dart`）
     if (rng.chance(dp)) {
       die('${e.name}との合戦で討死', 'senshi');
       return '${e.name}との合戦で、${role == 'van' ? '先陣にて' : ''}討死した。';
@@ -397,6 +401,7 @@ class Game extends ChangeNotifier {
     final merit =
         (mult *
                 gain *
+                spendingGain(this) *
                 (skill / 12 + rng.range(0, 6)) *
                 (win ? 1.3 : .6) *
                 (1 + l.troops / 150))
@@ -815,6 +820,9 @@ class Game extends ChangeNotifier {
     _runAdultScene(rng.wpick(cand, (e) => e.weight(this)), _endAdultYear);
   }
 
+  /// 重点で決まった岐路のあとに、ふつうの年と同じく岐路を引く（`spending.dart` の使い道。ほかの岐路を押しのけない）。
+  void usualYearScene() => _adultYearScene();
+
   /// 大人の年に（重点で決まった岐路・史実の岐路がないとき）岐路が起きる確率。
   /// 2026-11-23 に .55 → .7（岐路が約300に増え、1人生の長さが目標の半分だったため）。
   static const sceneChance = .7;
@@ -848,6 +856,7 @@ class Game extends ChangeNotifier {
       changed();
       return;
     }
+    spendingYear(this); // 田・知行・店などの持ち物（`spending.dart`）
     _halfYearUpkeep();
     if (l.dead == null && l.end == null) _halfYearUpkeep();
     rec();

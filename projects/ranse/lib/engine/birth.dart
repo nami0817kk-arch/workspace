@@ -103,17 +103,12 @@ Birth rollBirth(Rng r, {bool? asFemale}) {
     v['mi'] = v['mi']! + 3;
   }
 
-  final nt = r.chance(.45) ? 0 : (r.chance(.73) ? 1 : 2);
-  final pool = [...kTraits];
-  final tr = <Trait>[];
-  for (var i = 0; i < nt; i++) {
-    tr.add(pool.removeAt(r.range(0, pool.length - 1)));
-  }
-  // 特性を持たないのが当たり前（並）。持つことだけを珍しさに数える。
-  p *= nt == 0 ? 1 : (nt == 1 ? .40 : .15);
-  if (female && r.chance(.04)) {
-    tr.add(kTraitOnna);
-    p *= .04;
+  // 特性（2026-11-24 に100へ）: 段ごとに一度ずつ籤を引き、当たればその段の特性を一つ持つ
+  // （幻→稀→珍しい→よくある の順。多くて kMaxTraits）。身分・性別で付かない特性は籤の前に外す。
+  // 特性を持たないのが当たり前（並）。持つことだけを、その段の珍しさとして数える（特性の種類は数えない）。
+  final tr = traitDraw(r, cls, female);
+  for (final t in tr) {
+    p *= t.tier.chance;
   }
 
   final a = Abil(v['bu']!, v['chi']!, v['sei']!, v['mi']!, v['un']!, 100);
@@ -155,6 +150,29 @@ Birth rollBirth(Rng r, {bool? asFemale}) {
     sameClass: kPopulation * classP,
     birthRank: calcBirthRank(cls, female, order),
   );
+}
+
+/// 一人が持つ特性の数の上限。
+const kMaxTraits = 3;
+
+/// 生まれの特性の籤（`rollBirth` が使う。テストも使う）。段ごとに必ず一度ずつ籤を引く（乱数の流れを揃えるため）。
+List<Trait> traitDraw(Rng r, ClassDef cls, bool female) {
+  final tr = <Trait>[];
+  for (final tier in const [
+    TraitTier.mythic,
+    TraitTier.rare,
+    TraitTier.uncommon,
+    TraitTier.common,
+  ]) {
+    if (!r.chance(tier.chance) || tr.length >= kMaxTraits) continue;
+    final pool = [
+      for (final t in kTraits)
+        if (t.tier == tier && t.fits(cls, female)) t,
+    ];
+    if (pool.isEmpty) continue;
+    tr.add(r.wpick(pool, (t) => t.w));
+  }
+  return tr;
 }
 
 String rarityText(double n) {

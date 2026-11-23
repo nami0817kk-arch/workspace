@@ -434,7 +434,12 @@ class TraitList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rows = [for (final t in traits) (t.name, t.desc), ...extra];
+    // よくある特性のほかは、説明の頭に段の名（珍しい・稀・幻）を添える（2026-11-24 特性100）。
+    final rows = [
+      for (final t in traits)
+        (t.name, t.tier == TraitTier.common ? t.desc : '【${t.tier.label}】${t.desc}'),
+      ...extra,
+    ];
     if (rows.isEmpty) {
       return const Text(
         '特性なし',
