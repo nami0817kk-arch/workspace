@@ -82,7 +82,8 @@ final _shotKey = GlobalKey();
 
 /// 経営会議で意見がぶつかる場面を作る（責任者を相棒にして、新しい事業の高い提案が出やすくする）
 GameEvent? _conflict(Game g) {
-  final cash = g.cash;
+  // 1.0.0+12 から提案は「店を3つ」のような単位の値段なので、手元を一番高い業種の元手の3倍ほどにして、2つの案が手元を取り合うようにする
+  final cash = g.biz.where((b) => b.mgr != null).map((b) => g.capexOf(indm[b.ind]!)).fold(0.0, (a, x) => a > x ? a : x) * 3;
   for (final p in g.staff.where((p) => g.biz.any((b) => b.mgr == p.id))) {
     p.partner = true;
   }

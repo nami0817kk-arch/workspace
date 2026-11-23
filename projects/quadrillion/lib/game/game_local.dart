@@ -373,9 +373,9 @@ extension GameLocal on Game {
       o['resign'] = (
         l: M('社長の報酬を返上する'),
         say: M('社長が自ら身を切る姿を見せれば、社員も客もついてきます'),
-        d: M('あなたの財産から{0}を返上する。騒ぎが少し早く収まり、部下の忠誠が上がる', [Y(wealth * .1)]),
+        d: M('あなたの財産から{0}を返上する。騒ぎが少し早く収まり、部下の忠誠が上がる', [Y(presRefund())]),
         f: () {
-          wealth *= .9;
+          wealth -= presRefund();
           scandal = math.max(0, scandal - 4);
           for (final p in staff) {
             p.loy = math.min(99, p.loy + 3);

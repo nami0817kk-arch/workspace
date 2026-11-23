@@ -108,14 +108,25 @@ void main() {
       }
     });
 
-    test('配当を約束すると現金の2割を払って乗り切る', () {
+    // 1.0.0+12: 現金の2割ではなく、年の売上の2%（少なくとも2,000万円）を払う
+    test('配当を約束すると年の売上の2%を払って乗り切る（現金では変わらない）', () {
       final s = _game();
-      s.cash = 1e9;
+      s.cash = 1e12;
       _board(s, prevPre: 1e9, pre: 5e8);
       final name = s.pres.name;
+      final d = s.oustDividend();
+      expect(d, closeTo(math.max(s.rev * 12 * .02, 2e7 * s.nom()), 1));
+      expect(txIn(s.events.first.choices[1].s, 'ja'), contains(yen(d)));
       s.events.first.choices[1].f();
-      expect(s.cash, closeTo(8e8, 1));
+      expect(s.cash, closeTo(1e12 - d, 1));
       expect(s.pres.name, name);
+      // 手元で足りなければ、足りない分を借りて払う
+      _board(s, prevPre: 1e9, pre: 5e8);
+      s.cash = d * .25;
+      final debt0 = s.debt;
+      expect(txIn(s.events.first.choices[1].f(), 'ja'), contains('銀行から借りて払いました'));
+      expect(s.cash, closeTo(0, 1));
+      expect(s.debt - debt0, closeTo(d * .75, 1));
     });
 
     test('強気で押し切ると、確率で解任される（後継ぎがいればその人が継ぐ）', () {

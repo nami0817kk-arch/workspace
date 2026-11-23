@@ -917,9 +917,12 @@ extension GameTurn on Game {
     final h4 = hist.length >= 12 ? hist[hist.length - 12] : null;
     if (listed && sh.own < 50 && h4 != null && pre < h4.pre * .8 && rnd() < .08) {
       events.add(GameEvent(title: M('荒れる株主総会'), text: M('利益が落ちたことに、株主が怒っています。「社長は責任を取れ」という声も出ています。'), choices: [
-        Choice(M('配当を増やして鎮める'), M('{0}を株主に配る', [Y(math.max(cash * .1, 0))]), () {
-          cash *= .9;
-          return M('配当を増やし、総会は収まりました');
+        Choice(M('配当を増やして鎮める'), M('{0}を株主に配る', [Y(extras ? meetingDividend() : math.max(cash * .1, 0))]), () {
+          if (!extras) {
+            cash *= .9;
+            return M('配当を増やし、総会は収まりました');
+          }
+          return Cat([M('配当を増やし、総会は収まりました'), ?payOut(meetingDividend())], ja: '。', en: '. ');
         }),
         Choice(M('強気で押し切る'), M('お金はかからない。4割の確率で株価が下がり、市場の信用を失う'), () {
           if (rnd() < .4) {
@@ -1006,6 +1009,8 @@ extension GameTurn on Game {
       m = 1.3;
       msg = M('「{0}」の新商品が出ました。評判はまずまずです', [name]);
     }
+    // 単位で作った商品は、大きいほど当たったときの伸びが大きい
+    if (x.sz != null && m > 2) m *= devHitMul[x.sz!];
     if (hasDeal('codev', indm[b.ind]!.cat)) m *= 1.5;
     b.power += x.cost * pipeEff(b, x.cost) * m * (b.model == 'fc' ? .6 : 1);
     N(
@@ -1038,6 +1043,7 @@ extension GameTurn on Game {
   Proposal? proposalFor(Person p) {
     final b = biz.where((x) => x.mgr == p.id).firstOrNull;
     if (b == null) return null;
+    if (extras) return _unitProposal(p, b);
     final ind = indm[b.ind]!;
     final t = p.trait;
     final bigF = t == 'gambler'
@@ -1082,15 +1088,102 @@ extension GameTurn on Game {
     return o;
   }
 
+  /// 経営会議の提案を1単位の手で作る（extras のとき）。部下の特性で大きさが変わる。
+  /// 博打打ちは10店・大型開発・人も50人から、慎重は1店・小さな改良、ほかは3店・新商品。払えなければ1段ずつ小さくし、どれも払えない案は出さない
+  Proposal? _unitProposal(Person p, Biz b) {
+    final ind = indm[b.ind]!;
+    final t = p.trait;
+    final bigI = t == 'gambler'
+        ? 2
+        : t == 'careful'
+            ? 0
+            : 1;
+    final opts = <Proposal>[];
+    final need = crewNeedPeople(b);
+    if (need > 0) {
+      var n = t == 'gambler' ? math.max(need, crewUnits.last) : need;
+      if (hireCost(b, n) > cash) n = need;
+      if (hireCost(b, n) <= cash) {
+        opts.add(Proposal(
+            k: 'crew',
+            w: 3,
+            cost: hireCost(b, n),
+            l: M('「{0}」の現場の人を{1}人増やしたい', [I(ind.id), n]),
+            d: M('今のままでは{0}の一部が止まっています。毎月の人件費が{1}増えます', [uw(b), Y(payPerMonth(b, n))]))
+          ..n = n);
+      }
+    }
+    final bi = [for (var i = bigI; i >= 0; i--) i].where((i) => buildCost(b, buildUnits[i]) <= cash).firstOrNull;
+    if (bi != null) {
+      final n = buildUnits[bi];
+      opts.add(Proposal(k: 'build', w: t == 'careful' ? 1 : 2, cost: buildCost(b, n), l: M('「{0}」で{1}増やしたい', [I(ind.id), unitsOf(b, n)]), d: M('客は来ています。広げれば確実に伸びます'))
+        ..n = n);
+    }
+    final di = [for (var i = bigI; i >= 0; i--) i].where((i) => devCost(b, i) <= cash).firstOrNull;
+    if (di != null) {
+      opts.add(Proposal(
+          k: 'dev',
+          w: t == 'tech' || t == 'genius' ? 4 : 1,
+          cost: devCost(b, di),
+          l: M(
+              di == 2
+                  ? '「{0}」で大型開発をしたい'
+                  : di == 0
+                      ? '「{0}」で小さな改良をしたい'
+                      : '「{0}」で新しい商品を作りたい',
+              [I(ind.id)]),
+          d: M(di == 2
+              ? '時間はかかりますが、当たれば会社が変わります'
+              : di == 0
+                  ? '今の商品を少し良くします。早く出せます'
+                  : '当たれば大きい。外れるかもしれません'))
+        ..sz = di);
+    }
+    if ((p.amb > 65 || t == 'gambler') && b.price != 'cut') {
+      opts.add(Proposal(k: 'cut', w: 2, cost: 0, l: M('「{0}」で値下げして客を奪いたい', [I(ind.id)]), d: M('利益は薄くなりますが、シェアを取りに行きます')));
+    }
+    if (t == 'frugal' && b.upkeep > 0) opts.add(Proposal(k: 'trim', w: 3, cost: 0, l: M('「{0}」の維持費を削りたい', [I(ind.id)]), d: M('維持費が2割減ります。現場は少し弱ります')));
+    if (p.partner) opts.add(Proposal(k: 'newbiz', w: 2, cost: 0, l: M('新しい事業を始めたい'), d: M('自分で立ち上げて、責任者をやります')));
+    if (opts.isEmpty) return null;
+    final tot = opts.fold(0, (s, o) => s + o.w);
+    var r = rnd() * tot;
+    var o = opts[0];
+    for (final x in opts) {
+      r -= x.w;
+      if (r <= 0) {
+        o = x;
+        break;
+      }
+    }
+    o = o.copy();
+    if (o.k == 'newbiz') {
+      final cs = liveInds().where((i) => !biz.any((x) => x.ind == i.id) && capexOf(i) <= cash * .6 && i.cat == ind.cat).toList();
+      if (cs.isEmpty) return null;
+      final ni = pick(cs);
+      o.ind = ni.id;
+      o.cost = capexOf(ni);
+      o.l = M('新しく「{0}」を始めたい', [I(ni.id)]);
+    }
+    o.by = p.id;
+    o.bid = b.id;
+    return o;
+  }
+
   String doProposal(Proposal o) {
     final b = biz.where((x) => x.id == o.bid).firstOrNull;
     final p = staffById(o.by);
     if (b == null || p == null) return M('その提案はもう意味がなくなっていました');
     if (o.cost > cash) return M('お金が足りず、提案は実行できませんでした');
-    if (o.k == 'crew') {
+    if (o.k == 'crew' && o.n > 0) {
+      cash -= o.cost;
+      _addHeads(b, o.n);
+    } else if (o.k == 'crew') {
       cash -= o.cost;
       b.crew = crewOf(b) + o.cost * 4;
       b.upkeep = b.upkeep + o.cost * .008;
+    } else if (o.k == 'dev' && o.sz != null) {
+      cash -= o.cost;
+      b.pipe.add(Pipe(k: 'dev', cost: o.cost, left: ri(devMonths[o.sz!].$1, devMonths[o.sz!].$2), by: p.id, sz: o.sz));
     } else if (o.k == 'build' || o.k == 'dev') {
       cash -= o.cost;
       b.pipe.add(Pipe(k: o.k, cost: o.cost, left: o.k == 'dev' ? ri(3, 6) : ri(1, 2), by: p.id));

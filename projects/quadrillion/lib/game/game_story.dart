@@ -286,7 +286,7 @@ extension GameStory on Game {
     // 解任動議
     final h = hostileStake();
     final target = math.max(prev['pre']! * .9, 0.0);
-    final cost = math.max(0.0, cash * .2);
+    final cost = oustDividend();
     final p = oustChance();
     final motion = M('業績の悪化を受けて、社長の解任動議が出ました。味方の株は{0}、動議に回りそうな株は{1}です', [pct(f), pct(h)]);
     events.add(GameEvent(
@@ -301,8 +301,7 @@ extension GameStory on Game {
             return M('改革を約束しました。1年後に利益が戻っていなければ、社長の座を追われます');
           }),
           Choice(M('株主に配当を約束して乗り切る'), M('{0}を配当として払う', [Y(cost)]), () {
-            cash -= cost;
-            return M('{0}の配当を約束し、動議は取り下げられました', [Y(cost)]);
+            return Cat([M('{0}の配当を約束し、動議は取り下げられました', [Y(cost)]), ?payOut(cost)], ja: '。', en: '. ');
           }),
           Choice(M('強気で押し切る'), M('お金はかからない。{0}%の確率で解任され、社長が替わる', [jsNum(jsRound(p * 100))]), () {
             if (rnd() < p) return Cat([M('押し切れず、動議は可決されました'), oust()], ja: '。', en: '. ');
