@@ -16,11 +16,13 @@
 
 ## 名前・サブタイトル・キーワード
 
-| 項目 | 日本語 |
-|---|---|
-| 名前(30字まで) | バスケGM：球団を勝たせろ(13字) |
-| サブタイトル(30字まで) | トレードとドラフトで、優勝チームを作れ(19字) |
-| キーワード(100バイトまで) | バスケットボール,ゼネラルマネージャー,シミュレーション,プレーオフ(96バイト) |
+| 項目 | 日本語 | 英語(画面の英語対応のときに入れる。まだ入れない) |
+|---|---|---|
+| 名前(30字まで) | バスケGM：球団を勝たせろ | Basuke GM |
+| サブタイトル(30字まで) | トレードとドラフトで、優勝チームを作れ | Trade and draft to win it all |
+| キーワード(100バイトまで) | バスケットボール,ゼネラルマネージャー,シミュレーション,プレーオフ | basketball,general manager,simulation,salary cap,playoffs,offline |
+
+- 日本語のキーワードは96バイト。
 
 - ホーム画面の表示名は「バスケGM」(`ios/Runner/Info.plist`)。
 - 名前とサブタイトルの語(バスケ・GM・トレード・ドラフト・優勝)は検索に効くので、キーワードには重ねない。日本語は1字3バイト。
@@ -68,9 +70,10 @@
 ・オフラインで遊べます(広告と購入の確認には通信が必要)
 ・広告つき。「広告を消す」(買い切り)で、全画面広告が出なくなり、スカウトの追加とオーナーの説得も動画なしで使えます
 
-## スクリーンショット(iPhone 1206x2622・iPad 13インチ 2064x2752 の2組、各8枚。最初の3枚が検索結果に出る)
+## スクリーンショット(横画面。iPhone 2622x1206・iPad 13インチ 2752x2064 の2組、各8枚。最初の3枚が検索結果に出る)
 
-`tool/screenshots/capture_test.dart` が作る(iPhone は `flutter test tool/screenshots/capture_test.dart`、iPad は `DEVICE=ipad` を付ける)。出力は `marketing/screenshots/iphone/` と `ipad/`。
+`tool/screenshots/review_landscape_test.dart` を `STORE=1` で回す(iPad は `DEVICE=ipad` も付ける)。出力は `build/store_landscape/<端末>/`。
+この中から8枚を選んで `marketing/screenshots/landscape/` に置く(縦画面の `capture_test.dart` は使わない)。
 
 **撮るときの決まり**(`docs/app-pitfalls.md` #4・Apple 2.3.2・2.3.7):
 - 読み込み中の画面を撮らない(生成器が検査する)。タイトル画面は撮らない。値段(¥370)を写さない。実在の名称を入れない。
