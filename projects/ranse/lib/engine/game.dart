@@ -273,7 +273,7 @@ class Game extends ChangeNotifier {
   void _recap() {
     _note('―― 前回までのあらすじ ――', 'big');
     _note(
-      '${l.name}、$age歳。${rankName()}${l.lord != null ? '（${l.lord}家）' : ''}。',
+      '${l.name}、$age歳。${rankName()}${l.lord != null ? '（${houseName(this, l.lord)}家）' : ''}。',
     );
     for (final p in l.path.reversed.take(3).toList().reversed) {
       _note(p);
@@ -293,7 +293,7 @@ class Game extends ChangeNotifier {
     setFlag('chapter:$age');
     final sp = l.married ? l.people['伴侶'] : null;
     log(
-      '$headいまは${rankName()}${l.lord != null ? '（${l.lord}家）' : ''}。'
+      '$headいまは${rankName()}${l.lord != null ? '（${houseName(this, l.lord)}家）' : ''}。'
           '${sp != null ? '連れ合いは${sp.name}。' : ''}${l.kids > 0 ? '子は${l.kids}人。' : ''}',
       'big',
     );
@@ -385,7 +385,7 @@ class Game extends ChangeNotifier {
       l.gold += 40;
       l.troops = 0;
       j(10);
-      return '下剋上成功！${l.lord}家を乗っ取り、ついに大名の座に就いた！';
+      return '下剋上成功！${houseName(this, l.lord)}家を乗っ取り、ついに大名の座に就いた！';
     }
     if (rng.chance(.7)) {
       die('謀反に失敗し、処刑された', 'seppuku');

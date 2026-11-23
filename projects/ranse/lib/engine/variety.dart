@@ -1,4 +1,5 @@
 import 'game.dart';
+import 'history_lines.dart';
 
 /// 何度も起きる岐路（出陣・侵攻・仕入れの旅・獲物・旅路）の書き出しを、回数と時節で書き分ける。
 /// 2026-11-23 の実測で、選んだ重点しだいで同じ岐路が1人生に4〜9回出ていたため（回数は選んだ結果なので減らさない）。
@@ -11,7 +12,7 @@ String _season(Game g) => g.l.t % 2 == 0
 
 String battleIntro(Game g) {
   final n = _n(g, 'war');
-  final lord = g.l.lord ?? '主家';
+  final lord = g.l.lord == null ? '主' : houseName(g, g.l.lord);
   final head = n <= 2
       ? '主命により、合戦に加わることになった。'
       : g.rng.pick([

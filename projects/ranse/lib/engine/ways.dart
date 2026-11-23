@@ -2,6 +2,7 @@ import 'adult.dart';
 import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
+import 'history_lines.dart';
 import 'life.dart';
 import 'rng.dart';
 import 'variety.dart';
@@ -275,7 +276,7 @@ List<SceneDef> buildWayScenes() {
       (g) => 1.5 + g.l.gold / 60,
       (g) => merchant(g) && g.l.gold >= 30,
       (g, next) {
-        final lord = homeLord(g);
+        final lord = houseName(g, homeLord(g));
         g.ask('御用の話', '$lord家の勘定方が、戦の費えを用立ててほしいと頭を下げてきた。', [
           Choice.h('銭30貫を貸す', '御用商人になれるかもしれない。踏み倒されるかもしれない', () {
             g.l.gold -= 30;
@@ -407,7 +408,7 @@ List<SceneDef> buildWayScenes() {
       outlaw,
       (g, next) {
         final l = g.l;
-        final lord = homeLord(g);
+        final lord = houseName(g, homeLord(g));
         g.ask('山狩り', '$lord家が、野盗を根こそぎにする山狩りを始めた。', [
           Choice.h('山奥へ逃げる', '生き延びられるかもしれない。仲間は散る', () {
             if (g.rng.chance(.1)) {

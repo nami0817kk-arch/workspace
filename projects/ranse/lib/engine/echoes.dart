@@ -1,6 +1,7 @@
 import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
+import 'history_lines.dart';
 import 'rng.dart';
 
 /// 伏線の回収（2026-11-23）。前に選んだことが、何年もあとに返ってくる岐路。
@@ -275,9 +276,12 @@ List<SceneDef> buildEchoScenes() => [
     (g, next) {
       final lord = g.alive.isEmpty
           ? '国'
-          : (g.alive.toList()..sort((a, b) => b.power.compareTo(a.power)))
-                .first
-                .name;
+          : houseName(
+              g,
+              (g.alive.toList()..sort((a, b) => b.power.compareTo(a.power)))
+                  .first
+                  .name,
+            );
       g.ask('名工の評判', 'あなたの作った品が、$lord家の目に留まった。献上の品を一つ作れという。', [
         Choice.h('一世一代の品を作る', '名が残る。一年がかりの仕事になる', () {
           g.l.hp -= 15;

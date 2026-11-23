@@ -477,7 +477,7 @@ List<SceneDef> buildAdultScenes() {
         g.ask('下剋上の誘い', '家中の不満を抱える者たちが、あなたを担ごうとしている。主家を討つか。', [
           Choice.h('兵を挙げる', _betrayHint(p), () {
             final r = g.doBetray(p);
-            if (g.l.rank == 8) g.mark('主家を討ち、${g.l.lord}家を乗っ取った');
+            if (g.l.rank == 8) g.mark('主家を討ち、${houseName(g, g.l.lord)}家を乗っ取った');
             return r;
           }),
           Choice.h('時期を待つ', '機はまた巡る。巡らないかもしれない', () => '誘いは聞かなかったことにした。'),

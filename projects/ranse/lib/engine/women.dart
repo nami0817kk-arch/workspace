@@ -1,6 +1,7 @@
 import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
+import 'history_lines.dart';
 import 'rng.dart';
 
 /// 女性の人生に固有の岐路（2026-11-23）。生まれの半分は女性で、全人生の約2割が「女の道」に進むのに、
@@ -40,22 +41,27 @@ List<SceneDef> buildWomenScenes() => [
     (g) => _oku(g) && !g.l.married && g.l.rank <= 5,
     (g, next) {
       final l = g.l;
-      g.ask('殿の目', '${l.lord}家の殿が、廊下ですれ違ったあなたに目を留めた。側に上がれ、という内々の話が来た。', [
-        Choice.h('お側に上がる', '身分は上がる。正室や他の側室の目は厳しい', () {
-          l.rank = l.rank + 2 > 7 ? 7 : l.rank + 2;
-          if (l.rank > l.maxRank) l.maxRank = l.rank;
-          l.fav = _c(l.fav + 15);
-          g.j(-5);
-          g.setFlag('sokushitsu');
-          g.mark('${l.lord}家の殿の側室に上がった');
-          return '殿の側室となった。奥の空気が、少し冷たくなった。';
-        }),
-        Choice.h('丁重にお断りする', '心は自分のものだ。殿の機嫌を損ねるかもしれない', () {
-          l.fav = _c(l.fav - 10);
-          g.j(3);
-          return '丁重に辞退した。殿は何も言わなかった。';
-        }),
-      ], after: next);
+      g.ask(
+        '殿の目',
+        '${houseName(g, l.lord)}家の殿が、廊下ですれ違ったあなたに目を留めた。側に上がれ、という内々の話が来た。',
+        [
+          Choice.h('お側に上がる', '身分は上がる。正室や他の側室の目は厳しい', () {
+            l.rank = l.rank + 2 > 7 ? 7 : l.rank + 2;
+            if (l.rank > l.maxRank) l.maxRank = l.rank;
+            l.fav = _c(l.fav + 15);
+            g.j(-5);
+            g.setFlag('sokushitsu');
+            g.mark('${houseName(g, l.lord)}家の殿の側室に上がった');
+            return '殿の側室となった。奥の空気が、少し冷たくなった。';
+          }),
+          Choice.h('丁重にお断りする', '心は自分のものだ。殿の機嫌を損ねるかもしれない', () {
+            l.fav = _c(l.fav - 10);
+            g.j(3);
+            return '丁重に辞退した。殿は何も言わなかった。';
+          }),
+        ],
+        after: next,
+      );
     },
   ),
 
