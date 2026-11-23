@@ -200,7 +200,7 @@ class _RosterTabState extends State<RosterTab> {
                   numCell('${shown(p.ovr)}', bold: true, color: GmColors.ovr(p.ovr)),
                   if (d != 0) Text(d > 0 ? '+$d' : '$d', style: TextStyle(fontSize: 9, color: d > 0 ? GmColors.good : GmColors.bad)),
                 ]),
-                numCell(pv.worthShowing ? pv.text : '', color: pv.bright ? GmColors.gold : GmColors.sub),
+                numCell(pv.worthShowing ? pv.shortText : '', color: pv.bright ? GmColors.gold : GmColors.sub),
                 numCell(s.gp == 0 ? '-' : one(s.ppg), color: last ? GmColors.sub : null),
                 numCell(s.gp == 0 ? '-' : one(s.rpg), color: last ? GmColors.sub : null),
                 numCell(s.gp == 0 ? '-' : one(s.apg), color: last ? GmColors.sub : null),

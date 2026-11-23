@@ -569,7 +569,7 @@ class _TradeTabState extends State<TradeTab> {
               numCell('${shown(p.ovr)}', color: GmColors.ovr(p.ovr), bold: true),
               () {
                 final pv = car.potentialOf(p);
-                return numCell(pv.worthShowing ? pv.text : '', color: pv.bright ? GmColors.gold : GmColors.sub);
+                return numCell(pv.worthShowing ? pv.shortText : '', color: pv.bright ? GmColors.gold : GmColors.sub);
               }(),
               numCell(money(p.salary), color: GmColors.salary(p.salary, fairSalary(p.ovr, p.age))),
               numCell('${p.years}', color: GmColors.sub),
