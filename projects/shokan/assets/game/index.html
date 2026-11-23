@@ -123,6 +123,10 @@ button.card:hover,button.card:focus-visible{transform:translateY(-4px);outline:2
 .shop button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .shop b{font-size:13px}.shop span{font-size:12px;color:var(--muted)}.shop em{font-style:normal;color:var(--gold);font-size:12px;font-variant-numeric:tabular-nums}
 .coins{font-family:var(--display);color:var(--gold);font-size:18px}
+.rank{display:flex;flex-direction:column;gap:5px;margin:6px 0 10px;text-align:left}
+.rank>div{display:grid;grid-template-columns:40px 1fr auto;gap:8px;align-items:center;font-size:12px;background:var(--panel);border-radius:8px;padding:3px 8px}
+.rank img{width:36px;height:36px;image-rendering:pixelated}.rank b{display:block;font-weight:400}.rank small{margin-left:6px;color:var(--muted);font-size:11px}
+.rank i{display:block;height:5px;background:var(--gold);border-radius:3px;margin-top:3px}.rank .num{text-align:right;color:var(--gold)}.rank .num small{display:block;margin:0}.rank .gone{opacity:.5}
 </style>
 
 <div id="app">
@@ -388,7 +392,7 @@ function newGame(units){
   G={t:0,state:'play',player:{x:0,y:0,r:13,hp:php,maxHp:php,speed:150,cd:0},mag:110*(1+.2*up('mag')),
     enemies:[],allies:[],shots:[],eshots:[],gems:[],fx:[],chests:[],pickups:[],trail:[{x:0,y:0}],
     draw:shuffle(units.map(u=>({u}))),discard:[],level:1,xp:0,kills:0,called:0,
-    nextBoss:60,bossCount:0,spawnAcc:0,hudAcc:0,syn:{},cnt:{},buff:{guard:0,atk:0,crit:0,song:0},
+    nextBoss:60,bossCount:0,dmgLog:{},spawnAcc:0,hudAcc:0,syn:{},cnt:{},buff:{guard:0,atk:0,crit:0,song:0},
     fallen:[],joined:[],stars:[],shrines:[],nextShrine:45,bonusAtk:0,bonusCoins:0,curse:false,pending:[],zones:[],traps:[],taunt:null,form:'snake',hd:0,lvq:0,heroLv:0,shake:0,morale:0,loopCd:0,loops:0,loopHint:false,maou:false,won:false};
 }
 function need(){return 2+G.level*2}
@@ -434,7 +438,7 @@ const WEAPONS={
   holy:{name:'聖印',desc:'回復量 +60%・届く範囲 +30%',kinds:['heal'],f:s=>{s.heal*=1.6;s.range*=1.3}},
 };
 function allyStats(a){const s=unitStats(a.u),c=a.c,m=1+.25*(a.tr||0);s.hp*=m;s.dmg*=m;s.heal*=m;s.range=c.range;s.aoe=c.aoe||0;s.ls=c.ls||0;s.armor=1;s.crit=c.crit||0;s.pierce=c.pierce||0;s.slow=c.slow||0;s.poison=c.poison||0;s.chain=c.chain||0;s.areaHeal=!!c.areaHeal;
-  const w=a.wp&&WEAPONS[a.wp];if(w)w.f(s);return s}
+  const w=a.wp&&WEAPONS[a.wp];if(w)w.f(s);if(a.aw){s.dmg*=1.5;s.heal*=1.5;s.hp*=1.3;s.rate*=.85}return s}
 function refreshAlly(a){const ratio=a.hp/a.maxHp;a.s=allyStats(a);a.maxHp=a.s.hp;a.hp=Math.max(1,a.s.hp*ratio)}
 const isFront=a=>G.form==='snake'&&a===G.allies[0],isRear=a=>G.form==='snake'&&G.allies.length>1&&a===G.allies[G.allies.length-1];
 const armorOf=a=>a.s.armor*(isFront(a)?.7:1)*(G.form==='box'?.75:1)*(a.tauntT>0?.5:1)*(a.invT>0?0:1)*(inSanct(a)?.4:1);
@@ -452,13 +456,14 @@ function spawnEnemy(kind){
   const hp=d.hp*s*(elite?4:1)*(G.curse&&!d.final?1.25:1);
   G.enemies.push({kind,d,x:p.x+Math.cos(ang)*R,y:p.y+Math.sin(ang)*R,r:d.r*(elite?1.25:1),hp,maxHp:hp,spd:d.spd*rnd(.9,1.1)*(elite?.85:1),flash:0,boss:!!d.boss,elite});
 }
+function logOf(src){if(!src)return null;const k=src.u?src.u.uid:src===G.player?'hero':null;if(!k)return null;return G.dmgLog[k]||(G.dmgLog[k]={u:src.u||null,d:0,k:0,aw:false})}
 function hurt(e,dmg,src,quiet){
-  if(e.dead)return;e.hp-=dmg;e.flash=.08;
+  if(e.dead)return;const lg=logOf(src);if(lg){lg.d+=Math.min(dmg,Math.max(0,e.hp));if(src.aw)lg.aw=true}e.hp-=dmg;e.flash=.08;
   if(!quiet&&src&&src.s){if(src.s.slow)e.slowT=2;if(src.s.poison){e.psT=3;e.psD=dmg*src.s.poison/3;e.psSrc=src}}if(src&&src.s&&src.s.ls&&src.hp>0)src.hp=Math.min(src.maxHp,src.hp+dmg*src.s.ls);
   if(!quiet){if(G.fx.length<380)G.fx.push({type:'num',x:e.x+rnd(-6,6),y:e.y-e.r,v:Math.max(1,Math.round(dmg)),life:.6,t:0,big:dmg>=60||G.critNow});
   sfx('hit');}
   if(e.hp>0)return;
-  e.dead=true;G.kills++;sfx('kill');
+  e.dead=true;G.kills++;sfx('kill');if(lg)lg.k++;
   if(G.fx.length<420)G.fx.push({type:'burst',x:e.x,y:e.y,color:e.d.color,life:.45,t:0,r:e.r,parts:Array.from({length:e.boss?18:6},()=>[rnd(0,7),rnd(40,e.boss?220:120)])});
   if(e.d.final){G.won=true;G.shake=20;return;}
   const u=src&&src.u;let mul=e.elite?3:1;
@@ -513,8 +518,8 @@ const SKILLS={
   lich:{name:'魂の刈り取り',cd:15,desc:'周りの敵すべての体力を15%削る（中ボスは3%）',f:a=>{const es=near(a,260);if(es.length<3)return false;for(const e of es)hurt(e,e.maxHp*(e.boss?.03:.15),a);ring(a,260,'#8affb8');return true}},
 };
 function tickSkill(a,dt){a.tauntT=Math.max(0,(a.tauntT||0)-dt);a.invT=Math.max(0,(a.invT||0)-dt);a.frenzyT=Math.max(0,(a.frenzyT||0)-dt);a.atkT=Math.max(0,(a.atkT||0)-dt);
-  const sk=SKILLS[a.u.type];if(!sk)return;a.sk=(a.sk??rnd(2,sk.cd*.6))-dt;if(a.sk>0)return;G.critNow=false;
-  if(sk.f(a)){a.sk=sk.cd;G.skills=(G.skills||0)+1;G.fx.push({type:'skill',x:a.x,y:a.y,v:sk.name,life:1.1,t:0,color:JOBS[a.job].color});sfx('draw')}else a.sk=.5}
+  const sk=SKILLS[a.u.type];if(!sk)return;a.sk=(a.sk??rnd(2,sk.cd*.6))-dt*(a.aw?2:1);if(a.sk>0)return;G.critNow=false;
+  if(sk.f(a)){a.sk=sk.cd;G.skills=(G.skills||0)+1;G.fx.push({type:'skill',x:a.x,y:a.y,v:(a.aw?'真・':'')+sk.name,life:1.1,t:0,color:a.aw?'#ffd86a':JOBS[a.job].color});sfx('draw')}else a.sk=.5}
 const inSanct=a=>G.zones.some(z=>z.type==='sanct'&&dist2(a,z)<z.r*z.r);
 function inPoly(pt,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];
   if((a.y>pt.y)!==(b.y>pt.y)&&pt.x<(b.x-a.x)*(pt.y-a.y)/(b.y-a.y)+a.x)c=!c}return c}
@@ -578,7 +583,7 @@ function update(dt){
   G.buff.guard=Math.max(0,G.buff.guard-dt);G.buff.atk=Math.max(0,G.buff.atk-dt);G.buff.crit=Math.max(0,G.buff.crit-dt);G.buff.song=Math.max(0,G.buff.song-dt);
   p.cd-=dt;
   if(p.cd<=0){let best=null,bd=200*200;for(const e of G.enemies){const d=dist2(e,p);if(d<bd){bd=d;best=e}}
-    if(best){const l=Math.sqrt(bd)||1;G.shots.push({x:p.x,y:p.y,vx:(best.x-p.x)/l*380,vy:(best.y-p.y)/l*380,dmg:8*(1+.35*G.heroLv),life:.8,color:'#fff1c1',src:null});p.cd=.8/(1+.12*G.heroLv);}}
+    if(best){const l=Math.sqrt(bd)||1;G.shots.push({x:p.x,y:p.y,vx:(best.x-p.x)/l*380,vy:(best.y-p.y)/l*380,dmg:8*(1+.35*G.heroLv),life:.8,color:'#fff1c1',src:p});p.cd=.8/(1+.12*G.heroLv);}}
   const cnt={};let warden=false;for(const a of G.allies){cnt[a.job]=(cnt[a.job]||0)+1;if(a.u.trait==='守護')warden=true;}
   G.cnt=cnt;for(const j in JOBS)G.syn[j]=(cnt[j]||0)>=JOBS[j].need;
   if((cnt['弓兵']||0)>=3)SAVE.st.archer3=true;if((cnt['盗賊']||0)>=2)SAVE.st.thief2=true;
@@ -591,7 +596,7 @@ function update(dt){
   while(G.spawnAcc>=1&&G.enemies.length<260){G.spawnAcc--;const r=Math.random();
     let kind='slime';if(G.t>30&&r<.5)kind='goblin';
     if(G.t>90&&r<.16)kind='orc';else if(G.t>120&&r>=.16&&r<.24)kind='skel';else if(G.t>150&&r>=.24&&r<.31)kind='boar';
-    else if(G.t>60&&r>=.31&&r<.42)kind='bat';else if(G.t>240&&r>=.42&&r<.46)kind='golem';
+    else if(G.t>60&&r>=.31&&r<.39)kind='bat';else if(G.t>240&&r>=.42&&r<.46)kind='golem';
     spawnEnemy(kind);}
   const bossAlive=G.enemies.some(e=>e.boss&&!e.d.final);
   if(G.t>=G.nextBoss&&G.nextBoss<600&&!bossAlive){const kind=['ogre','lich','dragon'][G.bossCount%3];G.bossCount++;spawnEnemy(kind);G.nextBoss+=60;toast(`中ボス（${CARDS[kind].name}）が現れた`);sfx('boss');G.shake=Math.max(G.shake,8);}
@@ -707,13 +712,15 @@ function openLevel(first){
   G.state='level';G.lvFirst=!!first;G.lvStep='menu';fw(true);
   if(first){lvSummon();$('lvup').hidden=false;return}
   const opts=[];
+  const canAw=a=>a.wp&&a.tr>=3&&!a.aw;
+  if(G.allies.some(canAw))opts.push({k:'awaken',name:'覚醒させる',desc:'武器を持ち3回鍛えた仲間が覚醒する。攻撃・回復 +50%・体力 +30%・技が2倍の速さで出て「真・」の技になる'});
   if(pile().length)opts.push({k:'summon',name:'仲間を呼ぶ',desc:`山札（${pile().length}枚）から、呼ぶ1枚を自分で選ぶ`});
   const ws=shuffle(Object.keys(WEAPONS).filter(w=>G.allies.some(a=>WEAPONS[w].kinds.includes(a.c.kind)))).slice(0,2);
   for(const w of ws)opts.push({k:'weapon',w,name:`武器を渡す：${WEAPONS[w].name}`,desc:WEAPONS[w].desc+'（渡す相手を選ぶ。持っていた武器とは入れ替え）'});
   if(G.allies.length)opts.push({k:'train',name:'仲間を鍛える',desc:'選んだ1人の攻撃・体力・回復 +25%、体力も全回復'});
   opts.push({k:'hero',name:'主人公を鍛える',desc:'最大体力 +15・全回復・光の弾が強く速くなる'});
   if(G.allies.length)opts.push({k:'mend',name:'隊列の手当て',desc:'主人公と仲間全員の体力を半分回復'});
-  const head=opts.filter(o=>o.k==='summon'),rest=shuffle(opts.filter(o=>o.k!=='summon'));
+  const head=opts.filter(o=>o.k==='summon'||o.k==='awaken'),rest=shuffle(opts.filter(o=>o.k!=='summon'&&o.k!=='awaken'));
   G.lvOpts=[...head,...rest].slice(0,4);
   $('lvTitle').textContent=`レベル ${G.level}`;$('lvSub').textContent='ひとつ選ぶ'+(G.lvq>1?`（あと${G.lvq-1}回）`:'');
   $('lvOpts').innerHTML=G.lvOpts.map((o,i)=>`<button type="button" data-i="${i}"><b>${o.name}</b><span>${o.desc}</span></button>`).join('');
@@ -728,9 +735,9 @@ function lvSummon(){G.lvStep='summon';fw(true);
 }
 function lvTarget(o){
   const w=o.k==='weapon'?WEAPONS[o.w]:null;G.lvStep='target';fw(false);
-  $('lvTitle').textContent=w?`${w.name}を渡す相手`:'鍛える仲間を選ぶ';$('lvSub').textContent=w?w.desc:'攻撃・体力・回復 +25%';
+  const aw=o.k==='awaken';$('lvTitle').textContent=w?`${w.name}を渡す相手`:aw?'覚醒させる仲間を選ぶ':'鍛える仲間を選ぶ';$('lvSub').textContent=w?w.desc:aw?'攻撃・回復 +50%・体力 +30%・技が2倍の速さで出る':'攻撃・体力・回復 +25%（武器を持って3回鍛えると覚醒できる）';
   $('lvOpts').innerHTML='<button type="button" class="back" data-back="1"><b>戻る</b><span>ほかを選ぶ</span></button>';
-  $('lvCards').innerHTML='<div class="form">'+G.allies.map((a,i)=>{const ok=!w||w.kinds.includes(a.c.kind);
+  $('lvCards').innerHTML='<div class="form">'+G.allies.map((a,i)=>{const ok=aw?!!(a.wp&&a.tr>=3&&!a.aw):!w||w.kinds.includes(a.c.kind);
     return `<button type="button" class="frow pick" data-t="${i}" ${ok?'':'disabled'}>${formCells(a,i)}<span>${ok?'':'<small>使えない</small>'}</span></button>`}).join('')+'</div>';
   G.lvSel=o;
 }
@@ -740,27 +747,31 @@ function pickPile(i){const all=pile(),en=all[i];if(!en)return;
 function lvDone(){G.lvq=Math.max(0,G.lvq-(G.lvFirst?0:1));G.lvFirst=false;$('lvup').hidden=true;resumePlay();hud();}
 function lvChoose(i){const o=G.lvOpts[i],p=G.player;if(!o)return;
   if(o.k==='summon')lvSummon();
-  else if(o.k==='weapon'||o.k==='train')lvTarget(o);
+  else if(o.k==='weapon'||o.k==='train'||o.k==='awaken')lvTarget(o);
   else if(o.k==='hero'){G.heroLv++;p.maxHp+=15;p.hp=p.maxHp;toast('主人公を鍛えた');lvDone();}
   else if(o.k==='mend'){p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.5);for(const a of G.allies)a.hp=Math.min(a.maxHp,a.hp+a.maxHp*.5);toast('隊列を手当てした');lvDone();}
 }
 function lvApply(t){const a=G.allies[t],o=G.lvSel;if(!a||!o)return;
-  if(o.k==='weapon'){a.wp=o.w;refreshAlly(a);SAVE.st.weapons++;toast(`${a.u.name}に${WEAPONS[o.w].name}を渡した`);}
+  const awOk=x=>x.wp&&x.tr>=3&&!x.aw,was=awOk(a);
+  if(o.k==='awaken'){a.aw=true;refreshAlly(a);a.hp=a.maxHp;SAVE.st.awakens=(SAVE.st.awakens||0)+1;toast(`${a.u.name}が覚醒した！ 技は「真・${SKILLS[a.u.type].name}」に`);sfx('will');G.shake=Math.max(G.shake,6);
+    G.fx.push({type:'ring',x:a.x,y:a.y,r:6,max:110,life:.8,t:0,color:'#ffd86a'});}
+  else if(o.k==='weapon'){a.wp=o.w;refreshAlly(a);SAVE.st.weapons++;toast(`${a.u.name}に${WEAPONS[o.w].name}を渡した`);}
   else{a.tr++;SAVE.st.trains++;refreshAlly(a);a.hp=a.maxHp;toast(`${a.u.name}を鍛えた（${a.tr}回目）`);}
+  if(!was&&awOk(a))setTimeout(()=>toast(`${a.u.name}が覚醒できるようになった（レベルアップで選べる）`),900);
   G.fx.push({type:'ring',x:a.x,y:a.y,r:4,max:40,life:.5,t:0,color:'#e8c25a'});lvDone();}
 $('lvOpts').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.back){openLevel();return}lvChoose(+b.dataset.i);});
 $('lvCards').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.p!==undefined)pickPile(+b.dataset.p);else if(b.dataset.t!==undefined)lvApply(+b.dataset.t);});
 // 自動の試走用：呼べるなら呼び、なければ武器→鍛える
 function simForm(k){G.form=k}
 function lvAuto(){if(G.lvFirst||G.lvStep==='summon'){pickPile(pile().length-1);return}
-  const o=G.lvOpts.find(o=>o.k==='summon')||G.lvOpts.find(o=>o.k==='weapon')||G.lvOpts.find(o=>o.k==='train')||G.lvOpts[0];
+  const o=G.lvOpts.find(o=>o.k==='awaken')||G.lvOpts.find(o=>o.k==='summon')||G.lvOpts.find(o=>o.k==='weapon')||G.lvOpts.find(o=>o.k==='train')||G.lvOpts[0];
   if(o.k==='summon'){pickPile(pile().length-1);return}
-  if(o.k==='weapon'||o.k==='train'){G.lvSel=o;const t=G.allies.findIndex(a=>o.k!=='weapon'||WEAPONS[o.w].kinds.includes(a.c.kind));lvApply(Math.max(0,t));return}
+  if(o.k==='weapon'||o.k==='train'||o.k==='awaken'){G.lvSel=o;const t=G.allies.findIndex(a=>o.k==='awaken'?a.wp&&a.tr>=3&&!a.aw:o.k==='train'?!!a.wp||!G.allies.some(b=>b.wp):WEAPONS[o.w].kinds.includes(a.c.kind)&&!a.wp);lvApply(Math.max(0,t));return}
   lvChoose(G.lvOpts.indexOf(o));}
 // 隊列の並べ替え
 function formCells(a,i){const c=a.c,col=c.monster?ENEMY[a.u.type].color:JOBS[c.job].color,u=portrait(a.u.type,col);
   const pos=isFront(a)?'先頭：受けるダメージ -30%':isRear(a)?'しんがり：攻撃 +30%':'';
-  return `<span class="no">${i+1}</span>${u?`<img src="${u}" alt="">`:'<span></span>'}<span><b>${esc(a.u.name)}</b> <small style="display:inline">${c.name}${'★'.repeat(a.u.star)}${a.tr?` 鍛${a.tr}`:''}</small><small>技「${SKILLS[a.u.type].name}」・${a.wp?WEAPONS[a.wp].name+'・':''}体力 ${Math.ceil(a.hp)}/${Math.ceil(a.maxHp)}</small>${pos?`<small class="pos">${pos}</small>`:''}</span>`}
+  return `<span class="no">${i+1}</span>${u?`<img src="${u}" alt="">`:'<span></span>'}<span><b>${esc(a.u.name)}</b> <small style="display:inline">${c.name}${'★'.repeat(a.u.star)}${a.tr?` 鍛${a.tr}`:''}${a.aw?' <span style="color:#ffd86a">覚醒</span>':a.wp&&a.tr>=3?' <span style="color:#ffd86a">覚醒できる</span>':''}</small><small>技「${SKILLS[a.u.type].name}」・${a.wp?WEAPONS[a.wp].name+'・':''}体力 ${Math.ceil(a.hp)}/${Math.ceil(a.maxHp)}</small>${pos?`<small class="pos">${pos}</small>`:''}</span>`}
 function formIcon(k){const pts={snake:[[30,15],[22,15],[14,15],[6,15]],line:[[32,3],[32,11],[32,19],[32,27]],ring:[[22,3],[33,15],[22,27],[11,15]],wedge:[[34,15],[26,8],[26,22],[18,3],[18,27]],box:[[30,8],[30,22],[14,8],[14,22]]}[k];
   return `<svg viewBox="0 0 44 30" aria-hidden="true"><circle cx="22" cy="15" r="4" fill="#e8c25a"/>${pts.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="3.2" fill="#8fb3e8"/>`).join('')}<path d="M40 15l-4-3v6z" fill="#efe2c2"/></svg>`}
 function renderForms(id){$(id).innerHTML=Object.entries(FORMS).map(([k,f])=>`<button type="button" data-form="${k}" aria-pressed="${G.form===k}">${formIcon(k)}<b>${f.name}</b><span>${f.desc}</span></button>`).join('');}
@@ -823,7 +834,13 @@ function gameOver(win){G.state='over';
   $('overTitle').textContent=win?'魔王を倒した！ 勝利':'主人公が倒れた';if(win)sfx('win');
   $('res').innerHTML=`<dt>生き残った時間</dt><dd>${fmt(G.t)}</dd><dt>レベル</dt><dd>${G.level}</dd><dt>倒した敵</dt><dd>${G.kills}</dd><dt>呼んだ回数</dt><dd>${G.called}回</dd><dt>隊列で囲んだ</dt><dd>${G.loops}回</dd><dt>手に入れたコイン</dt><dd>${G.coins}枚（工房で使える）</dd>`;
   const sec=(h,list,empty)=>`<h3>${h}</h3><p class="names">${list.length?list.map(esc).join('、'):empty}</p>`;
-  $('runlog').innerHTML=sec('新しく仲間になった',G.joined,'なし')+sec('★が上がった',G.stars,'なし')+sec('倒れた仲間（もう戻らない）',G.fallen,'いない。全員が兵舎へ戻った')+(G.left.length?sec(`兵舎が満員（${ROSTER_MAX}人）で去った`,G.left,''):'')+(newly.length?sec('新しいカードが宝箱と酒場に出るようになった',newly.map(k=>CARDS[k].name),''):'');
+  const fallenSet=new Set(G.fallen);
+  const rows=Object.entries(G.dmgLog).map(([k,r])=>({k,r})).filter(x=>x.r.d>0).sort((a,b)=>b.r.d-a.r.d).slice(0,8),top=rows.length?rows[0].r.d:1;
+  const rank=rows.length?'<h3>この回の働き（与えたダメージ）</h3><div class="rank">'+rows.map(({k,r},i)=>{const u=r.u,c=u?CARDS[u.type]:null;
+    const img=u?portrait(u.type,c.monster?ENEMY[u.type].color:JOBS[c.job].color):portrait('hero','#e8c25a');
+    const nm=u?`${esc(u.name)}<small>${c.name}${r.aw?'・覚醒':''}</small>`:'主人公<small>光の弾</small>';
+    return `<div class="${u&&fallenSet.has(u.name)?'gone':''}"><img src="${img}" alt=""><span><b>${i===0?'👑 ':''}${nm}</b><i style="width:${Math.max(4,Math.round(r.d/top*100))}%"></i></span><span class="num">${Math.round(r.d).toLocaleString()}<small>${r.k}体</small></span></div>`}).join('')+'</div>':'';
+  $('runlog').innerHTML=rank+sec('新しく仲間になった',G.joined,'なし')+sec('★が上がった',G.stars,'なし')+sec('倒れた仲間（もう戻らない）',G.fallen,'いない。全員が兵舎へ戻った')+(G.left.length?sec(`兵舎が満員（${ROSTER_MAX}人）で去った`,G.left,''):'')+(newly.length?sec('新しいカードが宝箱と酒場に出るようになった',newly.map(k=>CARDS[k].name),''):'');
   $('over').hidden=false;}
 
 function hud(){
@@ -1005,7 +1022,7 @@ function present(M,bw,bh,ox,oy){ctx=M;ctx.setTransform(1,0,0,1,0,0);ctx.imageSmo
   ctx.setTransform(DPR,0,0,DPR,0,0);vignette()}
 function render(){
   const p=G?G.player:{x:0,y:0},MAIN=ctx;
-  const bw=Math.ceil(cv.width/PX),bh=Math.ceil(cv.height/PX);
+  const bw=Math.ceil(cv.width/PX),bh=Math.ceil(cv.height/PX);if(bw<1||bh<1)return;
   if(!BUF){BUF=document.createElement('canvas');BCTX=BUF.getContext('2d')}
   if(BUF.width!==bw||BUF.height!==bh){BUF.width=bw;BUF.height=bh}
   ctx=BCTX;ctx.setTransform(1,0,0,1,0,0);ctx.imageSmoothingEnabled=false;
@@ -1037,7 +1054,9 @@ function render(){
   for(let i=G.allies.length-1;i>=0;i--){const a=G.allies[i],j=JOBS[a.job];
     ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(a.x,a.y+a.r*.85,a.r*1.05,a.r*.4,0,0,7);ctx.fill();
     ctx.strokeStyle=j.color;ctx.lineWidth=2.5;ctx.beginPath();ctx.ellipse(a.x,a.y+a.r*.85,a.r*1.15,a.r*.45,0,0,7);ctx.stroke();
+    if(a.aw){const g=.45+.3*Math.sin(G.t*6+a.x*.01);ctx.fillStyle=`rgba(255,210,90,${g*.35})`;ctx.beginPath();ctx.ellipse(a.x,a.y+a.r*.3,a.r*1.5,a.r*1.9,0,0,7);ctx.fill();}
     drawSprite(a,a.u.type,a.x,a.y,a.r,a.c.monster?ENEMY[a.u.type].color:j.color,a.flash>0);
+    if(a.aw){ctx.fillStyle='#ffe9a0';for(let q=0;q<3;q++){const ph=(G.t*1.4+q/3+a.x*.003)%1;pixAt(a.x+Math.sin(q*2.1+G.t*2)*a.r,a.y+a.r-ph*a.r*3.2,ph<.5?2:1)}}
     if(a.tauntT>0){ctx.strokeStyle='rgba(232,194,90,.7)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a.x,a.y,a.r+6+Math.sin(G.t*8)*2,0,7);ctx.stroke();}
     if(a.invT>0){ctx.fillStyle='rgba(255,241,193,.3)';ctx.beginPath();ctx.arc(a.x,a.y,a.r+5,0,7);ctx.fill();}
     if(a.c.monster){ctx.strokeStyle='#e0a24f';ctx.lineWidth=2;ctx.beginPath();ctx.arc(a.x,a.y,a.r+1.5,0,7);ctx.stroke();}
