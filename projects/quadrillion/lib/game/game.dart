@@ -759,6 +759,8 @@ class Game {
         'deals': deals.map((e) => e.toJson()).toList(),
         'tie': tie?.toJson(),
         'noncomp': noncomp?.toJson(),
+        // 試作は保存せず読み込みで作り直していた（月の途中の値になり、続きが少しずれる）。ずれないように持つ
+        'indM': indM,
       };
 
   static Game fromJson(Map<String, dynamic> j, {math.Random? rng}) {
@@ -834,7 +836,8 @@ class Game {
       ..noncomp = j['noncomp'] == null ? null : Noncomp.fromJson(j['noncomp'] as Map<String, dynamic>);
     s.events = [];
     s.reg = regFor(s.yr());
-    s.indM = {for (final ind in IND) ind.id: s.mkt(ind)};
+    final saved = j['indM'] as Map?;
+    s.indM = {for (final ind in IND) ind.id: saved != null && saved[ind.id] != null ? (saved[ind.id] as num).toDouble() : s.mkt(ind)};
     s.calcAll();
     return s;
   }
