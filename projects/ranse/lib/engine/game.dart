@@ -22,6 +22,7 @@ import 'lords.dart';
 import 'pastimes.dart';
 import 'regions.dart';
 import 'rng.dart';
+import 'shadow_life.dart';
 import 'talents.dart';
 import 'temple.dart';
 import 'trade_farm.dart';
@@ -82,6 +83,7 @@ class Game extends ChangeNotifier {
       ...buildAshigaruScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
+      ...buildShadowLifeScenes(),
       ...buildTalentScenes(),
       ...buildPastimeScenes(),
       ...buildTempleScenes(),
