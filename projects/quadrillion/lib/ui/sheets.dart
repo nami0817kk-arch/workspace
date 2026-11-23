@@ -731,6 +731,64 @@ void doYear(GameController ctl, [int n = 12]) {
   showReport(ctl, all, before);
 }
 
+/// 「何か起きるまで」で進める月の上限
+const untilMax = 24;
+
+/// 何か起きるまで月を進める。止まるのは、選ぶ出来事（経営会議の提案も）・大事な知らせ（big / bad）・勝ち負けが出た月。
+/// 何も起きなければ [max] か月で止まる。返すのは、そのあいだのニュース・進めた月の数・止まった理由
+/// （event 選ぶ出来事・news 大事な知らせ・end 勝ち負け・null 何も起きなかった）
+({List<LogEntry> news, int months, String? why}) advanceUntil(Game s, {int max = untilMax}) {
+  final all = <LogEntry>[];
+  for (var i = 1; i <= max; i++) {
+    final news = s.nextQuarter();
+    all.addAll(news);
+    final why = s.over != null || s.won != null
+        ? 'end'
+        : s.events.isNotEmpty
+            ? 'event'
+            : news.any((n) => n.t == 'big' || n.t == 'bad')
+                ? 'news'
+                : null;
+    if (why != null) return (news: all, months: i, why: why);
+  }
+  return (news: all, months: max, why: null);
+}
+
+/// 何か起きるまで進めて、報告を出す
+void doUntil(GameController ctl) {
+  final s = ctl.game!;
+  final before = ReportBase.of(s, tr('{0}から', [ym(s.year, s.q, sp: true)]));
+  final snap = ctl.snap();
+  final r = advanceUntil(s);
+  final when = ym(s.year, s.q);
+  before.stop = switch (r.why) {
+    'news' => tr('大事な知らせがあったので、{0}で止めました', [when]),
+    null => tr('{0}か月進めましたが、大きなことは起きませんでした', [r.months]),
+    _ => stopReason(s),
+  };
+  ctl.buzzAfter(snap, r.news);
+  ctl.saveSoon();
+  showReport(ctl, r.news, before);
+}
+
+/// まとめて進める長さを選ぶ小窓（何か起きるまで・3か月・1年）
+void openAdvance(GameController ctl) {
+  void go(VoidCallback f) {
+    ctl.hideSheet();
+    f();
+  }
+
+  ctl.showSheet((_) => _col([
+        H2(tr('まとめて進める'), top: true),
+        _note(tr('選ぶ出来事が起きたら、そこで止まります。')),
+        ChoiceBtn(tr('何か起きるまで'), () => go(() => doUntil(ctl)),
+            key: const ValueKey('adv-until'), primary: true, subs: [tr('選ぶ出来事か大事な知らせが出るまで進める（最大{0}か月）', [untilMax])]),
+        ChoiceBtn(tr('3か月進める'), () => go(() => doYear(ctl, 3)), key: const ValueKey('adv-3')),
+        ChoiceBtn(tr('1年進める'), () => go(() => doYear(ctl, 12)), key: const ValueKey('adv-12')),
+        _cancel(ctl),
+      ]));
+}
+
 void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
   final s = ctl.game!;
   final lines = (s.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).take(4).map((b) {

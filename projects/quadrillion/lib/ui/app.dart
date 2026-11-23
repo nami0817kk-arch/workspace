@@ -466,9 +466,8 @@ class MainScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
           // 出来事が起きたらそこで止まる
           child: Row(children: [
-            Btn(tr('1年進める'), () => doYear(ctl, 12), small: true),
-            const SizedBox(width: 6),
-            Btn(tr('3か月進める'), () => doYear(ctl, 3), small: true),
+            // まとめて進めるのは1つのボタンにまとめ、押すと長さ（何か起きるまで・3か月・1年）を選ぶ小窓が開く
+            Btn(tr('まとめて進める'), () => openAdvance(ctl), key: const ValueKey('advance-menu'), small: true, more: true),
             const SizedBox(width: 6),
             Expanded(
               // 幅が足りないときは字だけ縮める（押せる高さは 44pt のまま）

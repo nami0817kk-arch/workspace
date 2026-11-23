@@ -98,6 +98,14 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 新しい事業の一覧の検索の欄（名前で絞る）
   final TextEditingController bizSearch = TextEditingController();
 
+  /// 図鑑で見ているもの（syn シナジー・ind 業種・ach 実績）
+  String zukanView = 'syn';
+
+  void setZukan(String v) {
+    zukanView = v;
+    notifyListeners();
+  }
+
   /// 手が足りないとき true を返し、「今月の手が残っていません」を出す
   bool noAp([int need = 1]) {
     final g = game;
@@ -226,6 +234,8 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     final m = fn();
     buzzAfter(before, [if (m != null) LogEntry(m)]);
     if (mark != null && apBefore != null && game != null && game!.ap < apBefore) markGuide(game, mark);
+    // 始めた・買った業種を、図鑑の「手がけた業種」に控える
+    game?.noteInds();
     save();
     if (m != null) {
       toast(m);
@@ -298,6 +308,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     final g = game;
     final p = prefs;
     if (g == null || p == null) return;
+    g.noteInds();
     try {
       p.setString(slotKey(slot), jsonEncode(g.toJson()));
       p.setString(slotMetaKey(slot), jsonEncode(SlotInfo.of(slot, g).toJson()));

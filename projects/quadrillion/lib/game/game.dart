@@ -22,6 +22,7 @@ part 'game_actions.dart';
 part 'game_view.dart';
 part 'game_story.dart';
 part 'game_local.dart';
+part 'game_achieve.dart';
 
 // ===== データ =====
 const double invEff = .9, newPow = 1.5, cpuReinv = .12;
@@ -264,6 +265,12 @@ class Game {
 
   /// 社史（古い順に積む。乱数は使わず、記録だけ足す）
   List<Chron> history = [];
+
+  /// 達成した実績（id → 年×100＋月。古いセーブを読んで今の状態から分かった分は 0）。1.0.0+15 から
+  Map<String, int> ach = {};
+
+  /// 手がけたことのある業種の id（図鑑の「業種」で中身が見える）。1.0.0+15 から
+  Set<String> everInd = {};
 
   /// これまでの時価総額と財産の最大（終わったときのまとめに使う）
   double maxCap = 0, maxWealth = 0;
@@ -896,6 +903,8 @@ class Game {
         'yPrev': yPrev,
         'vow': vow,
         'crisis': crisis,
+        'ach': ach,
+        'everInd': everInd.toList(),
       };
 
   static Game fromJson(Map<String, dynamic> j, {math.Random? rng}) {
@@ -981,7 +990,10 @@ class Game {
       ..yPrev = md('yPrev')
       ..vow = md('vow')
       // 臨時の会議は 1.0.0+9 から。古いセーブでは空から始める
-      ..crisis = mi('crisis');
+      ..crisis = mi('crisis')
+      // 実績と手がけた業種は 1.0.0+15 から
+      ..ach = mi('ach')
+      ..everInd = {for (final e in (j['everInd'] as List? ?? [])) e as String};
     s.events = [];
     s.reg = regFor(s.yr());
     final saved = j['indM'] as Map?;
@@ -1001,6 +1013,12 @@ class Game {
       if (h.cap > s.maxCap) s.maxCap = h.cap;
     }
     s.trackPeaks();
+    // 古いセーブには実績がないので、今の状態から分かるものだけ達成済みにする（年月は付かない）
+    if (j['ach'] == null) {
+      s.achCheck(silent: true);
+    } else {
+      s.noteInds();
+    }
     return s;
   }
 }
