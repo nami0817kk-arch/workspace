@@ -9,6 +9,7 @@ import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/logic/lineup_utils.dart';
 import 'package:soccer_manager/logic/match_engine.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
+import 'package:soccer_manager/models/attributes.dart';
 import 'package:soccer_manager/models/match_result.dart';
 import 'package:soccer_manager/models/opposition_plan.dart';
 import 'package:soccer_manager/models/player.dart';
@@ -190,6 +191,26 @@ void main() {
       expect(t.startingXI, before, reason: '先発の指定まで書き換えている');
       // 同じ状態なら何度呼んでも同じ顔ぶれ(試合の前と後で採点が合う)。
       expect(MatchEngine.lineupOf(t).map((p) => p.id), lineup.map((p) => p.id));
+    });
+
+    test('同じ大分類の控えが尽きても、フィールドの枠に控えの GK を入れない', () {
+      // CI で一度だけ出た「先発の GK が2人」(2026-11-23)を、乱数に頼らず
+      // 作る。守備の選手が全員出られず、控えの GK がいちばん強い。
+      final t = squad('twogk');
+      for (final p in t.players) {
+        p.secondaryPositions = [];
+        if (p.position.group == PositionGroup.def) p.injuryWeeks = 3;
+      }
+      final starterGk =
+          MatchEngine.lineupOf(t).firstWhere((p) => p.position == Position.gk);
+      final backupGk = t.players
+          .firstWhere((p) => p.position == Position.gk && p.id != starterGk.id);
+      backupGk.attributes = {for (final k in AttributeKeys.all) k: 99};
+      final lineup = MatchEngine.lineupOf(t);
+      expect(lineup.length, 11);
+      expect(lineup.where((p) => p.position == Position.gk).length, 1,
+          reason: '控えの GK が守備の枠に入った');
+      expect(lineup.map((p) => p.id), isNot(contains(backupGk.id)));
     });
 
     test('カップ戦の出場手当は、実際に出た選手に払う', () {

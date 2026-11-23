@@ -702,6 +702,10 @@ class MatchEngine {
         (p) => p.position == slot,
         (p) => p.secondaryPositions.contains(slot),
         (p) => p.position.group == slot.group,
+        // フィールドの枠に控えの GK は入れない(同じ大分類の控えが尽きると
+        // 総合力の高い順で選び、控えの GK が入って GK が2人になっていた)。
+        // 入れるのは、残りが GK だけのときだけ。
+        (p) => slot == Position.gk || p.position.group != PositionGroup.gk,
         (p) => true,
       ]) {
         for (final p in bench) {
