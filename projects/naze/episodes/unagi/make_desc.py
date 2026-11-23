@@ -11,7 +11,7 @@ OUT = ROOT / "out" / "unagi"
 OUT.mkdir(parents=True, exist_ok=True)
 LONG_ID = sys.argv[1] if len(sys.argv) > 1 else ""
 
-TITLES = {"long": "養殖うなぎも、始まりは天然の魚だった。稚魚1匹600円、60年で60分の1に減った理由",
+TITLES = {"long": "うなぎは、なぜこんなに高いのか。養殖でも、始まりは1匹600円の天然の稚魚だった",
           "s1": "重さ0.2グラムのうなぎの稚魚に、1匹600円の値が付いた理由 #shorts",
           "s2": "うなぎの完全養殖は2010年に成功。それでも天然の稚魚に頼る理由 #shorts",
           "s3": "うなぎが生まれる場所は、日本から2,000キロ先の海だった #shorts",
