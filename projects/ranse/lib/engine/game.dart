@@ -719,6 +719,16 @@ class Game extends ChangeNotifier {
         if (!s.onlyForced && !isHistoryScene(s.id) && _sceneOk(s, a)) s,
     ];
     if (cand.isEmpty || !rng.chance(sceneChance)) {
+      // 岐路の起きない静かな年にも、始まった縁の筋の続き（二の段から）は出ることがある
+      // （ほかの岐路を押しのけずに、筋を結末まで見届けやすくする。`bonds.dart`）。
+      final bonds = [
+        for (final s in cand)
+          if (kBondPrev.containsKey(s.id)) s,
+      ];
+      if (bonds.isNotEmpty && rng.chance(kBondQuietChance)) {
+        _runAdultScene(rng.wpick(bonds, (e) => e.weight(this)), _endAdultYear);
+        return;
+      }
       _endAdultYear();
       return;
     }

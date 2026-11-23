@@ -3368,5 +3368,51 @@ void main() {
       // 絆の深さで筋が分かれる（同じ段の両方の筋が出る）。
       expect(titles, containsAll(['友との盃', '友との溝']), reason: '$titles');
     });
+
+    test('ふつうの人生で、成人のうち筋の結末まで届く人生が十分にあり、縁の場面は続けて出ない', () {
+      // 手を加えない人生（ランダムと考えて選ぶを半々）。2026-11-23 の手元の実測（4000人生）では、
+      // どれか1本の筋で最後の段まで届く成人が約21%、好敵手・師の二の段が約31%。ゆらぎを見て緩めに切る。
+      var adults = 0, finals = 0, rv2 = 0, ms2 = 0;
+      for (var seed = 0; seed < 400; seed++) {
+        final rng = Rng(seed + 52000);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        final pr = Rng(seed + 92000);
+        final smart = seed.isOdd;
+        final yearOf = <String, int>{};
+        var n = 0;
+        while (!g.finished && n++ < 3000) {
+          final p = g.prompt!;
+          for (final f in g.l.flags) {
+            if (f.startsWith('scene:bd_')) yearOf.putIfAbsent(f, () => g.year);
+          }
+          g.choose(
+            smart ? pickAmbitious(g, p, pr) : pr.range(0, p.choices.length - 1),
+          );
+        }
+        for (final f in g.l.flags) {
+          if (f.startsWith('scene:bd_')) yearOf.putIfAbsent(f, () => g.year);
+        }
+        // 縁の場面は1年に1つまでで、続けて出ない（あいだに休みの年がある）。
+        final years = yearOf.values.toList()..sort();
+        for (var i = 1; i < years.length; i++) {
+          expect(
+            years[i] - years[i - 1],
+            greaterThan(kBondRestYears),
+            reason: 'seed=$seed $yearOf',
+          );
+        }
+        if (g.age < 15) continue;
+        adults++;
+        final ids = {for (final f in yearOf.keys) f.substring(6)};
+        if (kBondChains.values.any((c) => ids.contains(c.last))) finals++;
+        if (ids.contains('bd_rv_rise')) rv2++;
+        if (ids.contains('bd_ms_old')) ms2++;
+      }
+      expect(adults, greaterThan(200));
+      expect(finals / adults, greaterThanOrEqualTo(.12), reason: '$finals/$adults');
+      expect(rv2 / adults, greaterThanOrEqualTo(.2), reason: '$rv2/$adults');
+      expect(ms2 / adults, greaterThanOrEqualTo(.2), reason: '$ms2/$adults');
+    });
   });
 }

@@ -74,11 +74,43 @@ bool _since(Game g, String prev, String k, int gap) {
   return y != null && g.year - y >= gap;
 }
 
-/// 段の重み。伏線の岐路と同じくらいから始め、待った年が長いほど少しずつ出やすくする。
+/// 最初の段の重み。
+double _first(Game g) => kBondFirstWeight;
+
+/// 次の段からの重み。始まった筋は結末まで見届けられるよう、ほかの岐路より重めから始め、
+/// 待った年が長いほど少しずつ出やすくする。
 double _wait(Game g, String k, int gap) {
   final y = bondStageYear(g, k);
-  if (y == null) return 6;
-  return 6 + clampInt(g.year - y - gap, 0, 6).toDouble();
+  if (y == null) return kBondNextWeight;
+  return kBondNextWeight + clampInt(g.year - y - gap, 0, kBondWaitMax).toDouble();
+}
+
+/// 重みの目安（2026-11-23 に、最後の段まで届く成人が約6%だったので上げた）。
+const kBondFirstWeight = 9.0;
+const kBondNextWeight = 10.0;
+const kBondWaitMax = 8;
+
+/// 岐路の起きない静かな年に、縁の筋の続き（二の段から）が出る確率（`Game._adultYearScene`）。
+const kBondQuietChance = .3;
+
+/// 縁の場面を踏んだあと、どの縁の場面も出さない年数。1年に出る縁の場面は1つまでで、
+/// 続けて出ないようにする（1本の人生が縁の場面ばかりにならないための歯止め）。
+const kBondRestYears = 1;
+
+/// どれかの縁の段を最後に踏んだ年（無ければ null）。
+int? lastBondYear(Game g) {
+  int? last;
+  for (final k in kBondChains.keys) {
+    final y = bondStageYear(g, k);
+    if (y != null && (last == null || y > last)) last = y;
+  }
+  return last;
+}
+
+/// 縁の場面を出してよい年か（今年も、休みの年のうちも、まだ縁の場面を踏んでいない）。
+bool bondRested(Game g) {
+  final y = lastBondYear(g);
+  return y == null || g.year - y > kBondRestYears;
 }
 
 // ---------------- 暮らしの場 ----------------
@@ -171,14 +203,30 @@ Person? _heir(Game g) {
 Person? _sp(Game g) => g.l.married ? g.l.people['伴侶'] : null;
 bool _spOk(Game g) => _sp(g) != null && !_monk(g);
 
+/// 縁の場面。どれも [bondRested] の年にだけ出る。
 List<SceneDef> buildBondScenes() => [
+  for (final s in _bondScenes())
+    SceneDef(
+      s.id,
+      s.minAge,
+      s.maxAge,
+      s.weight,
+      (g) => bondRested(g) && s.cond(g),
+      s.run,
+      ageOk: s.ageOk,
+      repeat: s.repeat,
+      onlyForced: s.onlyForced,
+    ),
+];
+
+List<SceneDef> _bondScenes() => [
   // ================================================================
   // 幼なじみ 一の段: 身分の差が開く。
   SceneDef(
     'bd_os_gap',
-    20,
+    18,
     50,
-    (g) => 5,
+    (g) => _first(g),
     (g) => _os(g) != null,
     (g, next) {
       final l = g.l;
@@ -230,10 +278,10 @@ List<SceneDef> buildBondScenes() => [
   // 幼なじみ 二の段: 頼みごと。
   SceneDef(
     'bd_os_ask',
-    22,
-    60,
-    (g) => _wait(g, 'os', 3),
-    (g) => _os(g) != null && _since(g, 'bd_os_gap', 'os', 3),
+    20,
+    65,
+    (g) => _wait(g, 'os', 2),
+    (g) => _os(g) != null && _since(g, 'bd_os_gap', 'os', 2),
     (g, next) {
       final l = g.l;
       final fr = _os(g)!;
@@ -302,10 +350,10 @@ List<SceneDef> buildBondScenes() => [
   // 幼なじみ 三の段: 絆が深ければ和解・恩返し、浅ければ仲違い。
   SceneDef(
     'bd_os_turn',
-    25,
-    70,
-    (g) => _wait(g, 'os', 3),
-    (g) => _os(g) != null && _since(g, 'bd_os_ask', 'os', 3),
+    22,
+    75,
+    (g) => _wait(g, 'os', 2),
+    (g) => _os(g) != null && _since(g, 'bd_os_ask', 'os', 2),
     (g, next) {
       final fr = _os(g)!;
       final n = fr.name;
@@ -439,10 +487,10 @@ List<SceneDef> buildBondScenes() => [
   // 幼なじみ 終の段: 晩年の再会。絆が深ければ昔話、浅ければ病の床へ。
   SceneDef(
     'bd_os_old',
-    45,
+    40,
     84,
-    (g) => _wait(g, 'os', 4),
-    (g) => _os(g) != null && _since(g, 'bd_os_turn', 'os', 4),
+    (g) => _wait(g, 'os', 3),
+    (g) => _os(g) != null && _since(g, 'bd_os_turn', 'os', 3),
     (g, next) {
       final fr = _os(g)!;
       final n = fr.name;
@@ -495,7 +543,7 @@ List<SceneDef> buildBondScenes() => [
     'bd_rv_match',
     17,
     45,
-    (g) => _rv(g) != null ? 6 : 3,
+    (g) => _rv(g) != null ? _first(g) + 1 : _first(g) - 3,
     (g) => _arena(g) != null,
     (g, next) {
       final l = g.l;
@@ -565,10 +613,10 @@ List<SceneDef> buildBondScenes() => [
   // 好敵手 二の段: 出世争い。
   SceneDef(
     'bd_rv_rise',
-    20,
-    55,
-    (g) => _wait(g, 'rv', 3),
-    (g) => _rv(g) != null && _arena(g) != null && _since(g, 'bd_rv_match', 'rv', 3),
+    19,
+    60,
+    (g) => _wait(g, 'rv', 2),
+    (g) => _rv(g) != null && _arena(g) != null && _since(g, 'bd_rv_match', 'rv', 2),
     (g, next) {
       final l = g.l;
       final a = _arena(g)!;
@@ -630,10 +678,10 @@ List<SceneDef> buildBondScenes() => [
   // 好敵手 三の段: 好敵手の窮地を救うか、見捨てるか。
   SceneDef(
     'bd_rv_peril',
-    22,
-    60,
-    (g) => _wait(g, 'rv', 3),
-    (g) => _rv(g) != null && _arena(g) != null && _since(g, 'bd_rv_rise', 'rv', 3),
+    21,
+    65,
+    (g) => _wait(g, 'rv', 2),
+    (g) => _rv(g) != null && _arena(g) != null && _since(g, 'bd_rv_rise', 'rv', 2),
     (g, next) {
       final l = g.l;
       final a = _arena(g)!;
@@ -744,10 +792,10 @@ List<SceneDef> buildBondScenes() => [
   // 好敵手 四の段: 絆が深ければ認め合い、浅ければ討ち合う。
   SceneDef(
     'bd_rv_end',
-    25,
-    70,
-    (g) => _wait(g, 'rv', 4),
-    (g) => _rv(g) != null && _since(g, 'bd_rv_peril', 'rv', 4),
+    23,
+    75,
+    (g) => _wait(g, 'rv', 3),
+    (g) => _rv(g) != null && _since(g, 'bd_rv_peril', 'rv', 3),
     (g, next) {
       final l = g.l;
       final rv = _rv(g)!;
@@ -855,7 +903,7 @@ List<SceneDef> buildBondScenes() => [
   // 好敵手 終の段: 好敵手の死を聞く（好敵手は人物から外れる）。
   SceneDef(
     'bd_rv_death',
-    40,
+    32,
     84,
     (g) => _wait(g, 'rv', 3),
     (g) => _rv(g) != null && _since(g, 'bd_rv_end', 'rv', 3),
@@ -912,9 +960,9 @@ List<SceneDef> buildBondScenes() => [
   // 師 一の段: 師の教えが役立つ場面。
   SceneDef(
     'bd_ms_lesson',
-    18,
+    17,
     45,
-    (g) => 5,
+    (g) => _first(g),
     (g) => _ms(g) != null && g.active && !_outlaw(g),
     (g, next) {
       final l = g.l;
@@ -979,10 +1027,10 @@ List<SceneDef> buildBondScenes() => [
   // 師 二の段: 老いた師が頼ってくる。
   SceneDef(
     'bd_ms_old',
-    25,
+    21,
     65,
-    (g) => _wait(g, 'ms', 4),
-    (g) => _ms(g) != null && _since(g, 'bd_ms_lesson', 'ms', 4),
+    (g) => _wait(g, 'ms', 3),
+    (g) => _ms(g) != null && _since(g, 'bd_ms_lesson', 'ms', 3),
     (g, next) {
       final m = _ms(g)!;
       final n = m.name;
@@ -1018,7 +1066,7 @@ List<SceneDef> buildBondScenes() => [
   // 師 三の段: 師の最期と形見（師は人物から外れる）。絆が深ければ枕元に呼ばれる。
   SceneDef(
     'bd_ms_keep',
-    28,
+    23,
     75,
     (g) => _wait(g, 'ms', 2),
     (g) => _ms(g) != null && _since(g, 'bd_ms_old', 'ms', 2),
@@ -1095,10 +1143,10 @@ List<SceneDef> buildBondScenes() => [
   // 師 終の段: 師の墓参り。
   SceneDef(
     'bd_ms_grave',
-    40,
+    26,
     84,
-    (g) => _wait(g, 'ms', 4),
-    (g) => g.hasFlag('bd_ms_dead') && !_outlaw(g) && _since(g, 'bd_ms_keep', 'ms', 4),
+    (g) => _wait(g, 'ms', 2),
+    (g) => g.hasFlag('bd_ms_dead') && !_outlaw(g) && _since(g, 'bd_ms_keep', 'ms', 2),
     (g, next) {
       final l = g.l;
       final n = _msName(g) ?? '師';
@@ -1139,11 +1187,12 @@ List<SceneDef> buildBondScenes() => [
   SceneDef(
     'bd_sp_new',
     16,
-    35,
-    (g) => 5,
+    40,
+    // 所帯を持って日の浅いあいだ（上の子が幼いうち）しか出ないので、ほかの最初の段より重い。
+    (g) => _first(g) + 5,
     (g) =>
         _spOk(g) &&
-        (g.l.kids == 0 || (g.l.eldestKidAge(g.year) ?? 99) <= 2),
+        (g.l.kids == 0 || (g.l.eldestKidAge(g.year) ?? 99) <= 4),
     (g, next) {
       final sp = _sp(g)!;
       final n = sp.name;
@@ -1178,10 +1227,10 @@ List<SceneDef> buildBondScenes() => [
   // 連れ合い 二の段: 苦しい年を支え合う。絆の深さで連れ合いの出方が変わる。
   SceneDef(
     'bd_sp_hard',
-    20,
-    60,
-    (g) => _wait(g, 'sp', 3),
-    (g) => _spOk(g) && _since(g, 'bd_sp_new', 'sp', 3),
+    18,
+    65,
+    (g) => _wait(g, 'sp', 2),
+    (g) => _spOk(g) && _since(g, 'bd_sp_new', 'sp', 2),
     (g, next) {
       final l = g.l;
       final sp = _sp(g)!;
@@ -1227,10 +1276,10 @@ List<SceneDef> buildBondScenes() => [
   // 連れ合い 三の段: 連れ合いの願い（旅・寺参り）。
   SceneDef(
     'bd_sp_wish',
-    30,
-    70,
-    (g) => _wait(g, 'sp', 4),
-    (g) => _spOk(g) && _since(g, 'bd_sp_hard', 'sp', 4),
+    24,
+    75,
+    (g) => _wait(g, 'sp', 3),
+    (g) => _spOk(g) && _since(g, 'bd_sp_hard', 'sp', 3),
     (g, next) {
       final l = g.l;
       final sp = _sp(g)!;
@@ -1273,10 +1322,10 @@ List<SceneDef> buildBondScenes() => [
   // 連れ合い 終の段: 晩年の縁側。
   SceneDef(
     'bd_sp_engawa',
-    45,
+    40,
     84,
-    (g) => _wait(g, 'sp', 4),
-    (g) => _spOk(g) && _since(g, 'bd_sp_wish', 'sp', 4),
+    (g) => _wait(g, 'sp', 3),
+    (g) => _spOk(g) && _since(g, 'bd_sp_wish', 'sp', 3),
     (g, next) {
       final l = g.l;
       final sp = _sp(g)!;
