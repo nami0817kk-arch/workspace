@@ -3,7 +3,7 @@ description: "召喚の山札（仮題） — ヴァンサバ×デッキの試�
 publish_to: 'none'
 
 # ビルド番号（+N）は TestFlight に上げるたびに1つ上げる。同じ番号は二度上げられない
-version: 0.3.0+3
+version: 0.4.0+4
 
 environment:
   sdk: ^3.13.2
