@@ -64,7 +64,19 @@ String? sceneArtFor(Game g, String? id, String title) {
       _any(t, ['奥', '輿入れ', '縁談'])) {
     return 'oku';
   }
-  if (i.startsWith('l_') || _any(t, ['評定', '家督', '謀反', '同盟', '重臣', '下剋上'])) {
+  if (i.startsWith('l_') ||
+      _any(t, [
+        '評定',
+        '家督',
+        '謀反',
+        '同盟',
+        '重臣',
+        '下剋上',
+        '仕官',
+        '奉公',
+        '徴募',
+        '草履取り',
+      ])) {
     return 'council';
   }
   // 決め手がなければ、その人の暮らしで選ぶ。

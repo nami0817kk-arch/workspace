@@ -8,6 +8,7 @@ import '../engine/game.dart';
 import '../engine/history_lines.dart';
 import '../engine/rng.dart';
 import 'end_screen.dart';
+import 'standing_card.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
@@ -125,33 +126,18 @@ class _ChoiceTab extends StatelessWidget {
     return ListView(
       padding: _pad,
       children: [
+        StandingCard(g),
+        const SizedBox(height: 10),
         if (p != null) ...[_PromptCard(g, p), const SizedBox(height: 12)],
         Panel(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l.name,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Text(
-                '${g.rankName()}${l.lord != null ? '／${houseName(g, l.lord)}家${l.rank == 8 ? '当主' : ''}' : ''}',
-                style: const TextStyle(color: Pal.muted, fontSize: 13),
-              ),
-              const SizedBox(height: 8),
               Gauge('健康', l.hp / l.maxhp * 100, color: Pal.good),
               Gauge('幸福', l.joy.toDouble(), color: Pal.gold),
               Gauge('人間関係', l.net.toDouble(), color: Pal.purple),
               if (!g.isChild) ...[
-                const SizedBox(height: 4),
-                Text(
-                  g.nextPromo(),
-                  style: const TextStyle(color: Pal.muted, fontSize: 12.5),
-                ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   '銭 ${l.gold}貫　兵 ${l.troops}　功 ${l.merit}　信頼 ${l.fav}',
                   style: const TextStyle(fontSize: 13),
