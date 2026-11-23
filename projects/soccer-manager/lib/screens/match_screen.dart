@@ -77,93 +77,142 @@ class _MatchScreenState extends State<MatchScreen> {
         .where((e) => e.teamId == away.id && e.type == MatchEventType.goal)
         .length;
 
+    final size = MediaQuery.sizeOf(context);
+    // 横画面(852x393 など)は縦が短い。ピッチ(3:2)を縦に積むと、それだけで
+    // 画面の高さを超え、カップ戦の結果の画面が下に 272px はみ出していた
+    // (2026-11-23)。ピッチを左、スコアと実況を右に並べる。
+    final wide = size.width > size.height;
+    final scoreRow = Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: wide ? 6 : 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(child: TeamHeader(team: home)),
+          Column(
+            children: [
+              Text(
+                _finished ? Tr.pick('試合終了', 'Full time') : "$_currentMinute'",
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: _finished ? Colors.redAccent : Colors.grey,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  '$homeGoalsSoFar - $awayGoalsSoFar',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
+            ],
+          ),
+          Expanded(child: TeamHeader(team: away)),
+        ],
+      ),
+    );
+    final banners = <Widget>[
+      if (_finished)
+        FullTimeBanner(userTeamId: _userTeamId, result: widget.result),
+      if (_finished)
+        ManOfTheMatchBanner(
+          result: widget.result,
+          teams: teams,
+          userTeamId: _userTeamId,
+        ),
+      if (_finished)
+        MatchStatsBar(
+          result: widget.result,
+          homeTeamName: home.name,
+          awayTeamName: away.name,
+        ),
+      if (_finished)
+        TraitActivationBanner(userTeam: context.read<GameState>().userTeam),
+    ];
+    final pitch = AspectRatio(
+      aspectRatio: 3 / 2,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: GameWidget(game: _game),
+      ),
+    );
+    final backButton = Padding(
+      padding: EdgeInsets.all(wide ? 8 : 16),
+      child: SizedBox(
+        width: double.infinity,
+        child: FilledButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(Tr.pick('戻る', 'Back')),
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title ??
             Tr.pick('第${widget.result.matchday}節',
                 'Matchday ${widget.result.matchday}')),
         automaticallyImplyLeading: false,
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: WeatherBadge(weather: widget.result.weather),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(child: TeamHeader(team: home)),
-                Column(
-                  children: [
-                    Text(
-                      _finished
-                          ? Tr.pick('試合終了', 'Full time')
-                          : "$_currentMinute'",
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: _finished ? Colors.redAccent : Colors.grey,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        '$homeGoalsSoFar - $awayGoalsSoFar',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(child: TeamHeader(team: away)),
-              ],
-            ),
-          ),
-          if (_finished)
-            FullTimeBanner(userTeamId: _userTeamId, result: widget.result),
-          if (_finished)
-            ManOfTheMatchBanner(
-              result: widget.result,
-              teams: teams,
-              userTeamId: _userTeamId,
-            ),
-          if (_finished)
-            MatchStatsBar(
-              result: widget.result,
-              homeTeamName: home.name,
-              awayTeamName: away.name,
-            ),
-          if (_finished)
-            TraitActivationBanner(userTeam: context.read<GameState>().userTeam),
-          const SizedBox(height: 8),
-          AspectRatio(
-            aspectRatio: 3 / 2,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              child: GameWidget(game: _game),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: _buildCommentary(teams),
-            ),
-          ),
-          if (_finished)
+        toolbarHeight: wide ? 44 : null,
+        actions: [
+          if (wide)
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(Tr.pick('戻る', 'Back')),
-                ),
-              ),
+              padding: const EdgeInsets.only(right: 12),
+              child: WeatherBadge(weather: widget.result.weather),
             ),
         ],
       ),
+      body: wide
+          ? Row(
+              key: const ValueKey('match-wide'),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Center(child: pitch),
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    children: [
+                      scoreRow,
+                      Expanded(
+                        child: ListView(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          children: [
+                            ...banners,
+                            ..._buildCommentary(teams),
+                          ],
+                        ),
+                      ),
+                      if (_finished) backButton,
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: WeatherBadge(weather: widget.result.weather),
+                ),
+                scoreRow,
+                ...banners,
+                const SizedBox(height: 8),
+                pitch,
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: _buildCommentary(teams),
+                  ),
+                ),
+                if (_finished) backButton,
+              ],
+            ),
     );
   }
 

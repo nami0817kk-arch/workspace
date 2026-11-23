@@ -315,8 +315,8 @@ List<GuideSection> get guideSections => [
           ),
           GuideTopic(
             title: Tr.pick('財政破綻ペナルティ', 'Running out of money'),
-            description: Tr.pick('資金がマイナスの状態が長期間続くと、理事会からの信頼度低下などのペナルティが課される。',
-                "Stay in the red long enough and there are consequences, starting with the board's confidence in you."),
+            description: Tr.pick('資金がマイナスの状態が長期間続くと、株主の期待が削られる。借金が膨らみすぎるとクラブを手放す。',
+                'Stay in the red long enough and shareholder expectation suffers. Let the debt grow too far and you have to sell.'),
           ),
         ],
       ),
@@ -417,10 +417,10 @@ List<GuideSection> get guideSections => [
           ),
           GuideTopic(
             title:
-                Tr.pick('監督への信頼度・監督としての評価', 'Board confidence and reputation'),
+                Tr.pick('サポーターの期待・オーナーの評判', 'Supporter expectation and reputation'),
             description: Tr.pick(
-                '信頼度はサポーターの期待で、目標順位を下回る成績が続くと下がり、0でクラブを手放すことになる。評価は世間からの評価で、クラブを移っても引き継がれ、他クラブからの話の来やすさに影響する。',
-                'Confidence is what the supporters expect: results below the target push it down, and at zero you have to sell the club. Reputation is what the wider game thinks, and unlike confidence it follows you from club to club, shaping the offers you receive.'),
+                'サポーターの期待は、リーグ戦の勝ち負け・季の途中の理事会レビュー・季末の順位で上下し、0でクラブを手放すことになる(季を越えれば最低40から)。評判は世間からの評価で、クラブを移っても引き継がれる。',
+                'Supporter expectation moves with league wins and defeats, the mid-season board review and your final position; at zero you have to sell the club (a new season starts from at least 40). Reputation is what the wider game thinks, and it follows you from club to club.'),
           ),
         ],
       ),

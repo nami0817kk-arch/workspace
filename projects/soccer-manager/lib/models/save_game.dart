@@ -136,7 +136,8 @@ class SaveGame {
   /// 理事会が今シーズンに求める目標順位（1が最高位）
   int boardTargetRank;
 
-  /// 監督への信頼度（0-100）。0になると解任される。
+  /// サポーターの期待（0-100）。0になるとクラブを手放す(名前は監督型の頃の
+  /// まま。セーブの互換のため変えない)。
   int confidence;
 
   /// 株主の期待(0-100)。資金のマイナスが続くと下がり、黒字でシーズンを
@@ -425,6 +426,20 @@ class SaveGame {
 
   /// 記者会見で「売らない」と言った選手と、その季(選手 id → 季)。
   Map<String, int> rumorDenied;
+
+  /// 答えを待っている決めごと(噂の記者会見・手術の判断・スポンサー)が、
+  /// 何節そのままになっているか。キーは 'rumor'・'sponsor'・'surgery:選手id'。
+  /// 締切([GameStateDecisions.decisionDeadlineMatchdays])を過ぎたら既定の
+  /// 答えで片付ける(2026-11-23。放っておくと決めることが溜まり続けた)。
+  Map<String, int> decisionAges;
+
+  /// 自クラブのリーグ戦の後ごとの、サポーターの期待(この季の分)。
+  /// 「下がり続けている」を早めに知らせるのに使う。
+  List<int> supporterTrail;
+
+  /// サポーターの期待の大きな増減の記録(新しいものが後ろ)。[増減, 理由]。
+  /// 手放す画面で「なぜこうなったか」を見せる。
+  List<List<String>> supporterMoves;
 
   /// 系列クラブ(提携先のクラブ id。無ければ null)。
   String? affiliateClubId;
@@ -848,6 +863,9 @@ class SaveGame {
     this.clubCultureChangedSeason = 0,
     this.pendingRumor,
     Map<String, int>? rumorDenied,
+    Map<String, int>? decisionAges,
+    List<int>? supporterTrail,
+    List<List<String>>? supporterMoves,
     this.affiliateClubId,
     List<List<String>>? pendingMoments,
     List<String>? momentKeys,
@@ -1041,6 +1059,9 @@ class SaveGame {
         pendingMoments = pendingMoments ?? [],
         momentKeys = momentKeys ?? [],
         rumorDenied = rumorDenied ?? {},
+        decisionAges = decisionAges ?? {},
+        supporterTrail = supporterTrail ?? [],
+        supporterMoves = supporterMoves ?? [],
         clubApps = clubApps ?? {},
         clubGoals = clubGoals ?? {},
         clubRecordNames = clubRecordNames ?? {},
@@ -1226,6 +1247,9 @@ class SaveGame {
           'clubCultureChangedSeason': clubCultureChangedSeason,
         if (pendingRumor != null) 'pendingRumor': pendingRumor,
         if (rumorDenied.isNotEmpty) 'rumorDenied': rumorDenied,
+        if (decisionAges.isNotEmpty) 'decisionAges': decisionAges,
+        if (supporterTrail.isNotEmpty) 'supporterTrail': supporterTrail,
+        if (supporterMoves.isNotEmpty) 'supporterMoves': supporterMoves,
         if (affiliateClubId != null) 'affiliateClubId': affiliateClubId,
         if (pendingMoments.isNotEmpty) 'pendingMoments': pendingMoments,
         if (momentKeys.isNotEmpty) 'momentKeys': momentKeys,
@@ -1486,6 +1510,14 @@ class SaveGame {
         rumorDenied: (json['rumorDenied'] as Map?)?.map(
           (k, v) => MapEntry(k as String, v as int),
         ),
+        decisionAges: (json['decisionAges'] as Map?)?.map(
+          (k, v) => MapEntry(k as String, v as int),
+        ),
+        supporterTrail:
+            (json['supporterTrail'] as List?)?.map((e) => e as int).toList(),
+        supporterMoves: (json['supporterMoves'] as List?)
+            ?.map((e) => (e as List).map((x) => x as String).toList())
+            .toList(),
         affiliateClubId: json['affiliateClubId'] as String?,
         pendingMoments: (json['pendingMoments'] as List?)
             ?.map((e) => (e as List).map((x) => x as String).toList())

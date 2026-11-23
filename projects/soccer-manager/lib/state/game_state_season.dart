@@ -1125,9 +1125,21 @@ extension GameStateSeason on GameState {
     // シミュレーションなど重い処理に入る。
     await Future<void>.delayed(Duration.zero);
     final league = _save!.league;
+    // 季を締める前の2つの期待。季末の増減を引く前の値で、新しい季の底上げを
+    // 決める(引いた後の値で決めると、期待20で季末の -20 を受けたクラブが
+    // 0 のまま、第2季の1試合目より前に手放すことになった。2026-11-23)。
+    // 季を越えて手放すのは、季の途中で0になっていた場合だけ。
+    final supporterBefore = _save!.confidence;
+    final shareholderBefore = _save!.shareholderExpectation;
+    final previousTargetRank = _save!.boardTargetRank;
+    final wagesBefore = _save!.ledgerFor(league.season).wageCost;
     // 会計年度の終わり(6月30日)まで日を進める。5・6月の給与は、この季の
     // 年度の記録に入る(7月1日からが次の年度)。
     _advanceTodayTo(MoneyCalendar.fiscalYearEnd(league.season));
+    // 切り替えでまとめて引かれた給与。説明なしに資金が減って見えたので、
+    // シーズン開始レポートに1行で出す。
+    final rolloverWages =
+        _save!.ledgerFor(league.season).wageCost - wagesBefore;
     final standings = league.sortedStandings;
     final finalRank =
         standings.indexWhere((r) => r.teamId == _save!.userTeamId) + 1;
@@ -1209,6 +1221,10 @@ extension GameStateSeason on GameState {
       targetRank: _save!.boardTargetRank,
     );
     _save!.confidence = (_save!.confidence + confidenceDelta).clamp(0, 100);
+    _noteSupporterMove(
+        confidenceDelta,
+        Tr.pick('季末の順位(第${league.season}季 $finalRank位・目標${_save!.boardTargetRank}位)',
+            'Season-end finish (season ${league.season}: $finalRank, target ${_save!.boardTargetRank})'));
     // 期待への慣れ。勝ち続けるうちにサポーターの目は肥え、満点に張り付いた
     // ままだと緊張が無くなる(放置3シーズンの実測で94〜97に張り付いた)。
     _save!.confidence = BoardEngine.afterAdaptation(_save!.confidence);
@@ -1226,6 +1242,10 @@ extension GameStateSeason on GameState {
             _save!.shareholderExpectation, visionDelta);
       } else {
         _save!.confidence = (_save!.confidence + visionDelta).clamp(0, 100);
+        _noteSupporterMove(
+            visionDelta,
+            Tr.pick('理事会の路線「${_save!.clubVision.label}」の評価',
+                'Board direction "${_save!.clubVision.label}"'));
       }
       _logNews(
         visionDelta > 0
@@ -1674,12 +1694,32 @@ extension GameStateSeason on GameState {
     _save!.boardTargetRank = _difficultyAdjustedTarget(
       BoardEngine.estimateTargetRank(_save!.league, _save!.userTeamId),
     );
-    // 新しい季を迎えたら、最低限の期待を戻す(サポーターの期待が尽きて
-    // 手放すことが決まっている場合は0のままにして、その流れを壊さない)。
-    if (_save!.confidence > 0) {
+    // 新しい季を迎えたら、最低限の期待を戻す。判断は季末の増減を引く
+    // 前の値で行う(上の supporterBefore)。季の途中で0になって手放すことが
+    // 決まっている場合だけ、0のままにしてその流れを壊さない。
+    final supporterAfterSeason = _save!.confidence;
+    if (supporterBefore > 0) {
       _save!.confidence =
           max(_save!.confidence, BoardEngine.newSeasonConfidenceFloor);
     }
+    // 期待の推移は季ごとに数え直す。始まりの値を1つ置いておく。
+    _save!.supporterTrail
+      ..clear()
+      ..add(_save!.confidence);
+    lastSeasonResultLines = _seasonResultLines(
+      season: league.season,
+      finalRank: finalRank,
+      teamCount: league.teams.length,
+      targetRank: previousTargetRank,
+      playedTier: playedTier,
+      newTier: _save!.currentDivisionTier,
+      supporterBefore: supporterBefore,
+      supporterAfter: supporterAfterSeason,
+      supporterNow: _save!.confidence,
+      shareholderBefore: shareholderBefore,
+      cashChange: _save!.ledgerFor(league.season).cashChange,
+      rolloverWages: rolloverWages,
+    );
     _save!.wageBudget = BoardEngine.wageBudgetFor(
       tier: _save!.currentDivisionTier,
       currentWeeklyWageBill: weeklyWageBill,
@@ -2092,8 +2132,10 @@ extension GameStateSeason on GameState {
     if (mine.isEmpty) return;
     _logNews(
       Tr.pick(
-        '${mine.map((p) => p.name).join('、')}が${tournament.name}のあとの休みを終えて合流しました。先発に戻すかは編成の画面で決めてください。',
-        '${mine.map((p) => p.name).join(', ')} rejoined after the ${tournament.name} break. Put them back in the side from the squad screen.',
+        // 先発は監督が決める(オーナーは選ばない)。2026-11-23 に監督型の
+        // 「編成の画面で決めてください」から改めた。
+        '${mine.map((p) => p.name).join('、')}が${tournament.name}のあとの休みを終えて合流しました。先発に戻すかは監督が決めます。',
+        '${mine.map((p) => p.name).join(', ')} rejoined after the ${tournament.name} break. The manager will decide when they go back in the side.',
       ),
       context: Tr.pick('代表', 'International'),
     );

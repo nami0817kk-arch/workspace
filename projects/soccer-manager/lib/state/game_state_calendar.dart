@@ -86,6 +86,33 @@ extension GameStateCalendar on GameState {
     return null;
   }
 
+  /// 自クラブの国内カップの次の試合の日。自分の番がまだ来ていなければ null。
+  DateTime? get userDomesticCupDate {
+    final s = _save;
+    if (s == null || !isUserDomesticCupMatchUpNext) return null;
+    final dom = domesticCup!;
+    final m = dom.nextUnplayedMatch!;
+    if (m.isBye) return null;
+    return _cupDate(dom.plannedRounds != null ? null : dom.lastPlayedAtMatchday,
+        continental: false, due: dom.dueMatchdayForMatch(m));
+  }
+
+  /// 国内カップの出番を、状況の画面の札で知らせる時期か。7月のうちから
+  /// 「カップ戦へ」と出ていて、まだ何週も先の試合だった(2026-11-23)。
+  /// 試合の日まで [cupNoticeDays] 日以内か、次の予定がそのカップ戦のとき。
+  bool get isUserDomesticCupMatchSoon {
+    final d = userDomesticCupDate;
+    if (d == null) return false;
+    if (nextStop?.kind == DayEventKind.cupMatch) return true;
+    return SeasonCalendar.dateOnly(d)
+            .difference(SeasonCalendar.dateOnly(today))
+            .inDays <=
+        cupNoticeDays;
+  }
+
+  /// カップ戦の札を出し始める日数。
+  static const int cupNoticeDays = 7;
+
   /// 自クラブの、次のカップ戦(国内・大陸)。その試合が「次に消化する
   /// 試合」になっているものだけ(他のクラブの試合が先に残っているときは、
   /// いつ自分の番になるかまだ決まらない)。

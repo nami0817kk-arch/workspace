@@ -324,12 +324,15 @@ extension GameStateMatch on GameState {
         1;
     // 序列を約束した選手を、先発から外し続けていないか(節ごとに数える)。
     _checkPromisesWeekly();
+    final userPlaysToday = league.fixturesForMatchday(next.matchday).any((f) =>
+        f.homeTeamId == _save!.userTeamId || f.awayTeamId == _save!.userTeamId);
+    // 答えを待つ決めごとの締切。新しく出るもの(下の怪我など)より先に
+    // 数え、過ぎたものは既定の答えで片付ける。
+    if (userPlaysToday) await _tickDecisionDeadlines();
     // 大きな怪我は、手術か保存療法かを選ばせる。
     _reviewInjuries();
     // 前の試合から間を空けずに戦うなら、先発に疲れが残る(過密日程)。
     // 判定は試合の日付の間隔で行う。
-    final userPlaysToday = league.fixturesForMatchday(next.matchday).any((f) =>
-        f.homeTeamId == _save!.userTeamId || f.awayTeamId == _save!.userTeamId);
     if (userPlaysToday) _noteUserMatchDay();
     // 先発に入っていない21歳以下は、U21 の試合に出る。
     _playU21Matchday();
@@ -344,10 +347,21 @@ extension GameStateMatch on GameState {
           targetRank: _save!.boardTargetRank,
         );
         _save!.confidence = (_save!.confidence + delta).clamp(0, 100);
-        _save!.pendingBoardReviewMessage = BoardEngine.midSeasonReviewMessage(
+        // 増減を本文に書く。以前は講評だけで、期待がいくつ動いたのかが
+        // 分からなかった(2026-11-23)。
+        final sign = delta > 0 ? '+$delta' : '$delta';
+        final review = BoardEngine.midSeasonReviewMessage(
           currentRank: preMatchRank,
           targetRank: _save!.boardTargetRank,
         );
+        final now = _save!.confidence;
+        _save!.pendingBoardReviewMessage = '$review\n${Tr.pick(
+            'サポーターの期待 $sign(いま$now)',
+            'Supporter expectation $sign (now $now)')}';
+        _noteSupporterMove(
+            delta,
+            Tr.pick('季の途中の理事会レビュー($preMatchRank位・目標${_save!.boardTargetRank}位)',
+                'Mid-season review ($preMatchRank, target ${_save!.boardTargetRank})'));
         _save!.boardReviewDoneThisSeason = true;
       }
     }
@@ -1107,6 +1121,7 @@ extension GameStateMatch on GameState {
         delta = (delta * GameState.derbyConfidenceMultiplier).round();
       }
       _save!.confidence = (_save!.confidence + delta).clamp(0, 100);
+      _recordSupporterTrail();
     } else {
       // カップ戦のライブ観戦: 結果を該当大会のブラケット/グループへ適用する
       // (引き分け時のPK戦・敗退時の信頼度低下・賞金・優勝処理を含む)。
