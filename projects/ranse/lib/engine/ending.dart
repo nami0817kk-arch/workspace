@@ -1,8 +1,13 @@
 import 'endings_catalog.dart';
+import 'endings_castle.dart';
+import 'endings_daimyo.dart';
 import 'endings_merchant.dart';
 import 'endings_priest.dart';
+import 'endings_samurai.dart';
 import 'endings_shadow.dart';
+import 'endings_tenka.dart';
 import 'endings_village.dart';
+import 'endings_woman.dart';
 import 'endings_young.dart';
 import 'game.dart';
 import 'history_lines.dart';
@@ -249,10 +254,26 @@ final kHandEndings = <EndingDef>[
   ...kMerchantEndings,
   ...kPriestEndings,
   ...kShadowEndings,
+  ...kSamuraiEndings,
+  ...kCastleEndings,
+  ...kDaimyoEndings,
+  ...kTenkaEndings,
+  ...kWomanEndings,
 ];
 
 /// 手書きの最期がそろっている道（この道の人生には必ず手書きの最期が付く）。
-const kHandWays = {'young', 'village', 'merchant', 'priest', 'shadow'};
+const kHandWays = {
+  'young',
+  'village',
+  'merchant',
+  'priest',
+  'shadow',
+  'samurai',
+  'castle',
+  'daimyo',
+  'tenka',
+  'woman',
+};
 
 Ending buildEnding(Game g) {
   final l = g.l;
@@ -262,9 +283,17 @@ Ending buildEnding(Game g) {
       : (l.end == 'era' ? 'era' : (l.deathKind ?? 'byo'));
   final hand = findHandEnding(g, way, kind, kHandEndings);
   if (hand != null) {
+    // 歴史を変えた人生なら、どの最期にも「その世は、〜世だった。」を添える（幼くして亡くなった子は除く）。
+    final changed = [
+      for (final c in changedHistory(g))
+        c.endsWith('世') ? c.substring(0, c.length - 1) : c,
+    ];
+    final tail = changed.isEmpty || way == 'young'
+        ? ''
+        : 'その世は、${changed.join('、')}世だった。';
     return Ending(
       title: hand.title,
-      text: fillEnding(g, hand.text),
+      text: '${fillEnding(g, hand.text)}$tail',
       way: way,
       kind: kind,
       highlights: pickHighlights(l.path),

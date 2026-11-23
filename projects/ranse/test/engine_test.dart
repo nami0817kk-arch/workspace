@@ -1111,7 +1111,14 @@ void main() {
         expect(e.text, isNot(contains('{')), reason: e.text);
         seen.putIfAbsent(e.way, () => {}).add(e.handId!);
       }
-      for (final w in ['village', 'merchant', 'priest', 'shadow']) {
+      for (final w in [
+        'village',
+        'merchant',
+        'priest',
+        'shadow',
+        'samurai',
+        'woman',
+      ]) {
         expect(
           seen[w]?.length ?? 0,
           greaterThanOrEqualTo(8),
@@ -1120,6 +1127,47 @@ void main() {
       }
       final ids = kHandEndings.map((e) => e.id).toList();
       expect(ids.toSet().length, ids.length);
+    });
+
+    test('手書きの最期: 10の道すべてで、どの人生にも手書きの最期が付く（城主・大名・天下人は身分を強制して確かめる）', () {
+      expect(kHandEndings.length, greaterThanOrEqualTo(1000));
+      for (final rank in [6, 8]) {
+        final seen = <String>{};
+        for (var seed = 0; seed < 150; seed++) {
+          final rng = Rng(seed * 17 + rank);
+          final g = Game(rng: rng);
+          g.start(rollBirth(rng));
+          playChildhood(g, Rng(seed));
+          if (g.finished || g.l.female) continue;
+          g.l
+            ..rank = rank
+            ..maxRank = rank
+            ..lord = g.alive.first.name
+            ..fav = 50
+            ..troops = 40;
+          playOut(g, Rng(seed + 1));
+          final e = buildEnding(g);
+          expect(e.handId, isNotNull, reason: '${e.way} ${e.kind} ${g.l.dead}');
+          expect(e.text, isNot(contains('{')), reason: e.text);
+          seen.add(e.handId!);
+        }
+        expect(seen.length, greaterThanOrEqualTo(8), reason: '位$rank $seen');
+      }
+      // 天下人: 天下統一した人生
+      final g = Game(rng: Rng(1));
+      g.start(rollBirth(Rng(2)));
+      playChildhood(g, Rng(3));
+      if (!g.finished) {
+        g.l
+          ..rank = 9
+          ..maxRank = 9
+          ..victory = true
+          ..end = 'victory';
+        final e = buildEnding(g);
+        expect(e.way, 'tenka');
+        expect(e.handId, isNotNull);
+        expect(e.handId, startsWith('t_'));
+      }
     });
 
     test('選んだ道の抜き出しは、初めと終わりを残し、順番を崩さない', () {

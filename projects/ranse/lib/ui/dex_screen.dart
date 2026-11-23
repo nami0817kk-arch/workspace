@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app/controller.dart';
 import '../app/save.dart';
+import '../engine/ending.dart';
 import '../engine/ways.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -35,7 +36,7 @@ class DexScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '見た最期 ${c.dexCount} 種',
+                  '見た最期 ${c.dexCount} ／ ${kHandEndings.length}',
                   style: const TextStyle(color: Pal.gold, fontSize: 14),
                 ),
               ],
@@ -57,7 +58,8 @@ class DexScreen extends StatelessWidget {
                 for (final w in kWays.keys) ...[
                   const SizedBox(height: 10),
                   Panel(
-                    title: '${kWays[w]!.$1}　${byWay[w]?.length ?? 0}',
+                    title:
+                        '${kWays[w]!.$1}　${byWay[w]?.length ?? 0} ／ ${kHandEndings.where((e) => e.way == w).length}',
                     child: (byWay[w] ?? []).isEmpty
                         ? const Text(
                             '？？？　まだ見ていない',

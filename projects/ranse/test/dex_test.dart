@@ -69,7 +69,7 @@ void main() {
     expect(find.text('最期の図鑑（1種）'), findsOneWidget);
     await tester.tap(find.text('最期の図鑑（1種）'));
     await tester.pumpAndSettle();
-    expect(find.text('見た最期 1 種'), findsOneWidget);
+    expect(find.textContaining('見た最期 1 ／ '), findsOneWidget);
     await tester.scrollUntilVisible(find.text(e.title), 200);
     expect(find.text(e.title), findsOneWidget);
     expect(tester.takeException(), isNull);
