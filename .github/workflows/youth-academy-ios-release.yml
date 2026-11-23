@@ -30,13 +30,23 @@ permissions:
 jobs:
   build:
     # Apple のツールチェーンは macOS でしか動かないため、ここだけ macOS ランナー（public リポジトリなので無料枠）
-    runs-on: macos-latest
+    # 2026-11-23 ITMS-90725：macos-latest（macOS 26）の Xcode 26.x（iOS 26.5 SDK）で組み立てると、
+    # 「2027年4月から iOS 27 SDK（Xcode 27）以上でないと上げられない」と警告が出た。Xcode 27 は xcode-27 のランナーにだけ入っている（GitHub では先行公開）。
+    # 標準の大きさなので public リポジトリでは無料（xlarge は有料なので使わない）
+    runs-on: xcode-27
     timeout-minutes: 60
     defaults:
       run:
         working-directory: projects/youth-academy/app
 
     steps:
+      - name: Xcode の版を確かめる（iOS 27 SDK 以上で組み立てる）
+        working-directory: .
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i iphoneos
+          v=$(xcodebuild -version | head -1 | awk '{print $2}' | cut -d. -f1)
+          if [ "$v" -lt 27 ]; then echo "::error::Xcode $v で組み立てようとしています。iOS 27 SDK（Xcode 27）以上が必要です（ITMS-90725）"; exit 1; fi
       - name: Checkout
         uses: actions/checkout@v7
 
