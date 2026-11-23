@@ -6,6 +6,7 @@ import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
 import '../widgets/chip_switcher.dart';
 import '../widgets/club_emblem.dart';
+import '../widgets/fm_panel.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/screen_bar.dart';
@@ -341,7 +342,10 @@ class _FmTopBar extends StatelessWidget {
       maxScaleFactor: 1.1,
       child: Container(
         height: 52,
-        color: scheme.surfaceContainerHighest,
+        decoration: BoxDecoration(
+          color: FmLook.of(context)?.topBar ?? scheme.surfaceContainerHighest,
+          boxShadow: FmLook.shadowOf(context),
+        ),
         padding: const EdgeInsets.only(left: 4, right: 12),
         child: Row(
           children: [
@@ -517,20 +521,19 @@ class _FmSidebar extends StatelessWidget {
       required bool on,
       required VoidCallback onTap,
     }) =>
-        InkWell(
+        Padding(
+          // 選んでいる項目は、主役の色で塗った札にする。以前は左の細い印と
+          // 12%の下地だけで、どこを開いているか一目で分からなかった。
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+          child: Material(
+            color: on ? scheme.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            child: InkWell(
+          borderRadius: BorderRadius.circular(8),
           onTap: onTap,
-          child: Container(
-            height: _itemHeight,
+          child: SizedBox(
+            height: _itemHeight - 2,
             width: double.infinity,
-            decoration: BoxDecoration(
-              color: on ? scheme.primary.withValues(alpha: 0.12) : null,
-              border: Border(
-                left: BorderSide(
-                  color: on ? scheme.primary : Colors.transparent,
-                  width: 3,
-                ),
-              ),
-            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -542,11 +545,13 @@ class _FmSidebar extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 11,
-                    fontWeight: on ? FontWeight.bold : FontWeight.normal,
-                    color: on ? scheme.onSurface : scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.bold,
+                    color: on ? scheme.onPrimary : scheme.onSurfaceVariant,
                   ),
                 ),
               ],
+            ),
+          ),
             ),
           ),
         );
@@ -557,7 +562,7 @@ class _FmSidebar extends StatelessWidget {
       maxScaleFactor: 1.2,
       child: Container(
         width: 88,
-        color: scheme.surfaceContainerLow,
+        color: FmLook.of(context)?.sidebar ?? scheme.surfaceContainerLow,
         child: Column(
           children: [
             Expanded(
@@ -574,7 +579,7 @@ class _FmSidebar extends StatelessWidget {
                             page == p ? selectedIcon : icon,
                             size: 22,
                             color: page == p
-                                ? scheme.primary
+                                ? scheme.onPrimary
                                 : scheme.onSurfaceVariant,
                           );
                           final n = badges[p] ?? 0;

@@ -509,7 +509,8 @@ class _UpgradeCard extends StatelessWidget {
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
-              child: OutlinedButton(
+              // この箱の主な操作なので塗りのボタン。
+              child: FilledButton(
                 onPressed: isMax || building || !canAfford
                     ? null
                     : () async {

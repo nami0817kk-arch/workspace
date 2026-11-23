@@ -9,11 +9,18 @@ class SemanticColors {
   static bool _colorblind(BuildContext context) =>
       context.watch<SettingsController>().colorblindMode;
 
-  static Color positive(BuildContext context) =>
-      _colorblind(context) ? Colors.blue.shade700 : Colors.green.shade600;
+  static bool _light(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.light;
 
-  static Color negative(BuildContext context) =>
-      _colorblind(context) ? Colors.orange.shade800 : Colors.redAccent;
+  /// 良い知らせの色。明暗で濃さを変える。1つの固定色(green.shade600)は
+  /// 白地で 3.3:1、暗い箱で 4.3:1 と、どちらでも AA に届かなかった。
+  static Color positive(BuildContext context) => _colorblind(context)
+      ? (_light(context) ? const Color(0xFF1558B0) : const Color(0xFF7DB8FF))
+      : (_light(context) ? const Color(0xFF1B7A3A) : const Color(0xFF6CD48C));
+
+  static Color negative(BuildContext context) => _colorblind(context)
+      ? (_light(context) ? const Color(0xFFB04A00) : const Color(0xFFFFB066))
+      : (_light(context) ? const Color(0xFFC62828) : const Color(0xFFFF8A80));
 
   static Color neutral(BuildContext context) => Colors.blueGrey;
 

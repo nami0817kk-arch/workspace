@@ -412,7 +412,9 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: TextButton(
+                          // 唯一の操作なので塗りのボタン(文字だけだと
+                          // 押せる所に見えなかった)。
+                          child: FilledButton(
                             onPressed: () {
                               FeedbackService.tap();
                               gameState.dismissBoardReview();
