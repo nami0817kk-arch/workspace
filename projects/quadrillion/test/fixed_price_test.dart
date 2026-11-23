@@ -116,7 +116,7 @@ void main() {
       s.cash = s.buildCost(b, 10) * 3;
       s.ap = 3;
       final c0 = s.cash;
-      expect(tx(s.buildN(b, 3)), anyOf(contains('店を3つ'), contains('工場を3つ'), contains('拠点を3つ'), contains('設備を3式')));
+      expect(tx(s.buildN(b, 3)), anyOf(contains('店を3店舗'), contains('工場を3か所'), contains('拠点を3か所'), contains('設備を3式')));
       expect(c0 - s.cash, closeTo(s.buildCost(b, 3), 1));
       final x = b.pipe.last;
       expect(x.k, 'build');
@@ -232,7 +232,7 @@ void main() {
       final build = l.firstWhere((o) => o.k == 'build');
       expect(build.n, 3);
       expect(build.cost, s.buildCost(b, 3));
-      expect(txIn(build.l, 'ja'), matches(RegExp('で(店|工場|拠点)を3つ増やしたい|で設備を3式増やしたい')));
+      expect(txIn(build.l, 'ja'), matches(RegExp('で(店を3店舗|工場を3か所|拠点を3か所|設備を3式)増やしたい')));
       final dev = l.firstWhere((o) => o.k == 'dev');
       expect(dev.sz, 1);
       expect(dev.cost, s.devCost(b, 1));

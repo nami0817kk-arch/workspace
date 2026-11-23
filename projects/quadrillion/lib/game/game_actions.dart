@@ -183,11 +183,11 @@ extension GameActions on Game {
     final c = indm[b.ind]!.cat;
     final one = n == 1;
     final k = c == 'food' || c == 'live' || c == 'fun'
-        ? (one ? '店を1つ' : '店を{0}つ')
+        ? (one ? '店を1つ' : '店を{0}店舗')
         : c == 'make' || c == 'ene'
-            ? (one ? '工場を1つ' : '工場を{0}つ')
+            ? (one ? '工場を1つ' : '工場を{0}か所')
             : c == 'link'
-                ? (one ? '拠点を1つ' : '拠点を{0}つ')
+                ? (one ? '拠点を1つ' : '拠点を{0}か所')
                 : (one ? '設備を1式' : '設備を{0}式');
     return M(k, [n]);
   }
