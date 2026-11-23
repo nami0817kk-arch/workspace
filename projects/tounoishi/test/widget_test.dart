@@ -352,8 +352,7 @@ void main() {
     final html = File(gameAsset).readAsStringSync();
     for (final s in [
       '<small id="res2" class="res2">', // 掘る力の下に魂と骨
-      'var sg=e.yu?10:(e.boss||e.title)?3:1;g.soul=(g.soul||0)+sg;g.bone=(g.bone||0)+2;', // 倒すと魂と骨
-      "if(why=='enemy'&&m.sp!='skeleton')g.bone=(g.bone||0)+1;", // 冒険者に倒されたモンスターから骨
+      'var sg=e.yu?10:(e.boss||e.title)?3:1;g.soul=(g.soul||0)+sg;g.bone=(g.bone||0)+(e.yu?5:1);', // 倒すと魂と骨（v58 から骨は1、勇者5）
       'var EVO2_XP=12,EVO2_SOUL=5,REV_SOUL=15,HATCH_SOUL=2;', // 魂の使い道
       'function revive(id)', // 倒れた主役を1回よみがえらせる
       'var BONE_S=5,BONE_L=12,BONE_T=3;', // 骨の使い道
@@ -368,6 +367,8 @@ void main() {
     final html = File(gameAsset).readAsStringSync();
     expect(html, contains('モンスター＝食べさせる・進化・掛け合わせ'));
     expect(html, isNot(contains('肥料・埋め戻す・ここに集まれ・主役への命令のメニューが開く')));
+    // v58: 骨はモンスターが倒れても出さない（自動プレイで4周目に400〜2000本たまった）
+    expect(html, isNot(contains("g.bone=(g.bone||0)+1;")));
     // 掲載画像の道具がメニューを開けるように
     expect(html, contains('window.__t={pop:openPop,'));
     // 掲載画像の道具は 28×28 の座標に引き伸ばす
