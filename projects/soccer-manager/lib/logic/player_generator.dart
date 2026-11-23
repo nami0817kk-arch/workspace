@@ -334,10 +334,16 @@ class PlayerGenerator {
     required int strengthTier,
     int? ageOverride,
     Set<String>? avoidNames,
+
+    /// 潜在能力の振れ幅の上側([strengthTier] からいくつ上まで)。下側は
+    /// いつも -10。
+    int potentialSpreadUp = 10,
   }) {
     final id = nextPlayerId();
     final age = ageOverride ?? rollAge(_rng);
-    final potential = (strengthTier + _rng.nextInt(21) - 10).clamp(40, 99);
+    final potential =
+        (strengthTier + _rng.nextInt(11 + potentialSpreadUp) - 10)
+            .clamp(40, 99);
 
     double ageFactor;
     if (age < 24) {
