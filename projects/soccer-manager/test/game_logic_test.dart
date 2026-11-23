@@ -1819,6 +1819,9 @@ void main() {
 
     final outDefender = state.homeLineup.firstWhere((p) =>
         p.position.group == PositionGroup.def && !involved.contains(p.id));
+    // 交代のあとは入った選手が下がった選手の枠に入る(先発の指定も入れ
+    // 替える。2026-11-23)。本職の枠で比べるため、同じポジションにする。
+    incoming.position = outDefender.position;
 
     final injuredBench = home.players
         .firstWhere((p) => p.id != incoming.id && !onPitch(p) && eligible(p));

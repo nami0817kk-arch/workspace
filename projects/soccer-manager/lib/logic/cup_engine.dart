@@ -176,14 +176,14 @@ class CupEngine {
     final ag = _poisson(al, rng);
     final events = [...result.events];
     void addGoals(Team t, int n) {
-      final shooters = MatchEngine.lineupOf(t)
-          .where((p) => p.position.group != PositionGroup.gk)
-          .toList();
+      final onPitch = playersOnPitchAtEnd(t, result);
+      final shooters =
+          onPitch.where((p) => p.position.group != PositionGroup.gk).toList();
       for (var i = 0; i < n; i++) {
         final p =
             shooters.isEmpty ? null : shooters[rng.nextInt(shooters.length)];
         final others = [
-          for (final q in MatchEngine.lineupOf(t))
+          for (final q in onPitch)
             if (q.id != p?.id) q,
         ];
         final a = others.isEmpty || rng.nextDouble() < 0.22
@@ -202,23 +202,65 @@ class CupEngine {
 
     addGoals(home, hg);
     addGoals(away, ag);
-    events.sort((a, b) => a.minute.compareTo(b.minute));
     return MatchResult(
       matchday: result.matchday,
       homeTeamId: result.homeTeamId,
       awayTeamId: result.awayTeamId,
       homeGoals: result.homeGoals + hg,
       awayGoals: result.awayGoals + ag,
-      events: events,
+      // 同じ分の出来事(46分の交代と後半の出来事など)の並びは保つ。
+      events: MatchEngine.sortedByMinute(events),
       playerRatings: result.playerRatings,
       weather: result.weather,
       homePossession: result.homePossession,
       awayPossession: result.awayPossession,
-      homeShots: result.homeShots,
-      awayShots: result.awayShots,
-      homeShotsOnTarget: result.homeShotsOnTarget,
-      awayShotsOnTarget: result.awayShotsOnTarget,
+      // 延長の得点も枠内のシュート。足さないと、延長で決まった試合で
+      // 「枠内シュートより得点が多い」記録になっていた(2026-11-23)。
+      homeShots: _plus(result.homeShots, hg),
+      awayShots: _plus(result.awayShots, ag),
+      homeShotsOnTarget: _plus(result.homeShotsOnTarget, hg),
+      awayShotsOnTarget: _plus(result.awayShotsOnTarget, ag),
     );
+  }
+
+  static int? _plus(int? v, int n) => v == null ? null : v + n;
+
+  /// [result](90分)の終わりにピッチにいた[team]の選手。延長に出られるのは
+  /// この選手だけ(交代で下がった選手・退場した選手は出られない)。
+  ///
+  /// 延長は[MatchEngine.simulate]の後に決めるので、その時の先発の指定は
+  /// 試合の前のもの(交代の前)に戻っている。以前はそれで得点者を選んで
+  /// いて、ハーフタイムや後半に下がった選手が延長に得点・アシストしていた
+  /// (2026-11-23)。採点のある選手(=出た選手)から、交代で下がった・
+  /// 退場した選手を除く。採点の無い結果は今の先発から同じように除く。
+  static List<Player> playersOnPitchAtEnd(Team team, MatchResult result) {
+    final byId = {for (final p in team.players) p.id: p};
+    final gone = <String>{};
+    final cameOn = <String>{};
+    for (final e in result.events) {
+      if (e.teamId != team.id) continue;
+      if (e.type == MatchEventType.redCard && e.scorerId != null) {
+        gone.add(e.scorerId!);
+      } else if (e.type == MatchEventType.substitution) {
+        if (e.assistId != null) gone.add(e.assistId!);
+        if (e.scorerId != null) cameOn.add(e.scorerId!);
+      }
+    }
+    final played = result.playerRatings.isNotEmpty
+        ? [
+            for (final id in result.playerRatings.keys)
+              if (byId[id] != null) byId[id]!,
+          ]
+        : [
+            ...MatchEngine.lineupOf(team),
+            for (final id in cameOn)
+              if (byId[id] != null) byId[id]!,
+          ];
+    final seen = <String>{};
+    return [
+      for (final p in played)
+        if (!gone.contains(p.id) && seen.add(p.id)) p,
+    ];
   }
 
   /// [extraTime]が[before]に足した延長の得点([after]にだけある得点)。
@@ -355,19 +397,26 @@ class CupEngine {
   /// CPU同士のクイック消化は従来通り[decidePenaltyWinner](重み付き抽選1回)で
   /// 軽量に決めるため両者の結果分布は厳密には一致しないが、どちらも
   /// チーム力・キッカーのPK/冷静さ・相手GKの一対一を反映する。
-  static PenaltyShootoutResult simulateShootout(Team home, Team away) {
+  ///
+  /// [result]を渡すと、その試合の終わりにピッチにいた選手だけが蹴る
+  /// ([playersOnPitchAtEnd]。交代で下がった・退場した選手は蹴らない)。
+  static PenaltyShootoutResult simulateShootout(Team home, Team away,
+      {MatchResult? result}) {
+    List<Player> squadOf(Team t) => result == null
+        ? MatchEngine.lineupOf(t)
+        : playersOnPitchAtEnd(t, result);
     List<Player> kickersOf(Team t) {
       double kickSkill(Player p) =>
           p.attributeValue(AttributeKeys.penalties) * 0.7 +
           p.attributeValue(AttributeKeys.composure) * 0.3;
-      return MatchEngine.lineupOf(t)
+      return squadOf(t)
           .where((p) => p.position.group != PositionGroup.gk)
           .toList()
         ..sort((a, b) => kickSkill(b).compareTo(kickSkill(a)));
     }
 
     double gkSkillOf(Team t) {
-      final gks = MatchEngine.lineupOf(t)
+      final gks = squadOf(t)
           .where((p) => p.position.group == PositionGroup.gk)
           .toList();
       if (gks.isEmpty) return 50;
@@ -435,7 +484,7 @@ class CupEngine {
       }
       // 異常系の安全弁: 30往復しても決まらなければ重み付き抽選で決める。
       if (round >= 30) {
-        if (decidePenaltyWinner(home, away) == home.id) {
+        if (decidePenaltyWinner(home, away, result: result) == home.id) {
           homeScore++;
         } else {
           awayScore++;
@@ -455,9 +504,11 @@ class CupEngine {
 
   /// 引き分け時のPK戦勝者を、チーム総合力に加えてキッカーのPK精度・冷静さと
   /// 相手GKの一対一対応力を反映した重み付き抽選で決める。
-  static String decidePenaltyWinner(Team home, Team away) {
-    final homeStrength = _shootoutStrength(home, away);
-    final awayStrength = _shootoutStrength(away, home);
+  /// [result]の意味は[simulateShootout]と同じ。
+  static String decidePenaltyWinner(Team home, Team away,
+      {MatchResult? result}) {
+    final homeStrength = _shootoutStrength(home, away, result);
+    final awayStrength = _shootoutStrength(away, home, result);
     final totalMilli = ((homeStrength + awayStrength) * 1000).round();
     if (totalMilli <= 0) return _rng.nextBool() ? home.id : away.id;
     return _rng.nextInt(totalMilli) < (homeStrength * 1000).round()
@@ -468,8 +519,12 @@ class CupEngine {
   /// PK戦における[attacking]チームの強さ。チーム総合力を基準に、
   /// キッカー役(フィールドプレーヤー)のPK精度・冷静さと、相手GKの
   /// 一対一対応力による減点を加味する。
-  static double _shootoutStrength(Team attacking, Team defending) {
-    final outfield = MatchEngine.lineupOf(attacking)
+  static double _shootoutStrength(
+      Team attacking, Team defending, MatchResult? result) {
+    List<Player> squadOf(Team t) => result == null
+        ? MatchEngine.lineupOf(t)
+        : playersOnPitchAtEnd(t, result);
+    final outfield = squadOf(attacking)
         .where((p) => p.position.group != PositionGroup.gk)
         .toList();
     final kickerSkill = outfield.isEmpty
@@ -483,7 +538,7 @@ class CupEngine {
             ) /
             outfield.length;
 
-    final defendingGk = MatchEngine.lineupOf(defending)
+    final defendingGk = squadOf(defending)
         .where((p) => p.position.group == PositionGroup.gk)
         .toList();
     final gkSkill = defendingGk.isEmpty
@@ -562,7 +617,7 @@ class CupEngine {
       final r = match.result!;
       if (match.levelAfter(r)) {
         // ライブ観戦側で1本ずつのPK戦を先に実施済みの場合はその勝者を尊重する。
-        match.penaltyWinnerId ??= decidePenaltyWinner(home, away);
+        match.penaltyWinnerId ??= decidePenaltyWinner(home, away, result: r);
       }
     }
     _advanceRoundIfComplete(cup);

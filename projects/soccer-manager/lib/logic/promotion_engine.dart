@@ -100,7 +100,11 @@ class PromotionEngine {
   }) {
     var result = MatchEngine.simulate(home: home, away: away, matchday: 0);
     if (extraTime && result.homeGoals == result.awayGoals) {
+      final before = result;
       result = CupEngine.extraTime(result, home, away);
+      // 延長の得点を選手の通算得点に数える(カップ戦と同じ。90分までは
+      // 試合の後の共通処理で数えてある)。以前は数えていなかった(2026-11-23)。
+      CupEngine.creditExtraTimeGoals(before, result, [home, away]);
     }
     final level = result.homeGoals == result.awayGoals;
     final decidedByPenalties = level && drawWinner == null;
@@ -108,7 +112,8 @@ class PromotionEngine {
         ? home.id
         : result.homeGoals < result.awayGoals
             ? away.id
-            : (drawWinner?.id ?? CupEngine.decidePenaltyWinner(home, away));
+            : (drawWinner?.id ??
+                CupEngine.decidePenaltyWinner(home, away, result: result));
     return PromotionPlayoffMatch(
       roundLabel: roundLabel,
       homeId: home.id,
@@ -141,7 +146,9 @@ class PromotionEngine {
     var pens = false;
     Team winner;
     if (aggHigher() == aggLower() && (extraTime ?? !higherSeedOnTie)) {
+      final before = leg2;
       leg2 = CupEngine.extraTime(leg2, higher, lower);
+      CupEngine.creditExtraTimeGoals(before, leg2, [higher, lower]);
     }
     if (aggHigher() > aggLower()) {
       winner = higher;
@@ -151,7 +158,8 @@ class PromotionEngine {
       winner = higher;
     } else {
       pens = true;
-      winner = CupEngine.decidePenaltyWinner(higher, lower) == higher.id
+      winner = CupEngine.decidePenaltyWinner(higher, lower, result: leg2) ==
+              higher.id
           ? higher
           : lower;
     }
