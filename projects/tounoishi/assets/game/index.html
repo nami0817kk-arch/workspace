@@ -140,6 +140,7 @@ canvas{-webkit-user-select:none;user-select:none}
  <div class="panel"><h2>主役</h2><div id="heroes"></div></div>
  <div class="panel"><h2 id="yuh">宿敵の勇者</h2><div id="yuusha"></div></div>
  <div class="panel"><h2>変異の気配</h2><div id="muts"></div></div>
+ <div class="panel"><h2>つながり</h2><div id="conn"></div></div>
  <div class="panel"><h2>塔の軍 <span id="army"></span></h2><div id="lines"></div></div>
  <div class="panel"><h2>殿堂</h2><div id="hall"></div></div>
 </div>
@@ -173,7 +174,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v39</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v40</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -457,6 +458,7 @@ function carve(f,P){
 function emul(){var r=g.round-1,D=DIFF[g.diff||'normal'];return {hp:(1+0.4*r)*D.hp,atk:(1+0.25*r)*(0.85+0.15*D.hp)};}
 function resetGo(){var go=document.getElementById('go');go.textContent='今すぐ迎える';go.onclick=launch;go.disabled=false;}
 function newGame(diff){
+ NH=[];EVL=[];HL=null;
  interNext=null;clearTimeout(interT);growPass=false;
  F=3;CAP=30*F;fx=[];
  var grid=[],f;
@@ -604,7 +606,7 @@ function promote(m,why){
  var used={},i;for(i=0;i<g.cr.length;i++)if(g.cr[i].hero)used[g.cr[i].name]=1;
  var cand=MNAMES.filter(function(n){return !used[n];});
  m.bio={r:g.round,f:m.f+1,env:m.env,mut:m.mut||null,sp:spName(m),yus:[],waves:0,low:0};
- m.hero=true;m.name=cand.length?cand[rnd(cand.length)]:MNAMES[rnd(MNAMES.length)]+'二世';m.ep=EP[why];
+ logEv(spName(m)+'が主役に昇格した');m.hero=true;m.name=cand.length?cand[rnd(cand.length)]:MNAMES[rnd(MNAMES.length)]+'二世';m.ep=EP[why];
  m.mhp*=1.8;m.hp=m.mhp;m.sk=3+Math.random()*2;m.last=false;g.promos++;
  addFx({k:'ring',f:m.f,x:ccx(m.x),y:ccx(m.y),life:700,c:'255,215,90',r0:4,rad:30});
  addFx({k:'num',f:m.f,x:ccx(m.x),y:ccx(m.y)-16,s:'昇格！',c:'#ffd45a',life:1400});
@@ -618,6 +620,23 @@ function lifeText(h){var b=h.b;if(!b)return h.c;
  var t=b.r+'周目、'+b.f+'階の'+where+'で生まれた'+(b.mut&&MUTN[b.mut]?MUTN[b.mut]+'の':'')+b.sp+'。冒険者を'+h.k+'人倒した。'+(b.yus&&b.yus.length?b.yus.join('・')+'を倒し切った。':'');
  if(h.lv)t+=h.lv+'回鍛えられた。';if(b.waves)t+=b.waves+'の波を生き延び、';return t+h.c+'。';}
 document.addEventListener('click',function(ev){if(ev.target&&ev.target.id=='hsort'){hallSort=hallSort=='k'?'new':'k';sideKey='';ui();}});
+// ---------- つながりを見せる ----------
+var NH=[],EVL=[];
+function logEv(s2){EVL.unshift(s2);if(EVL.length>10)EVL.length=10;}
+function nutNow(){var soil=0,body=0;g.grid.forEach(function(fl){fl.forEach(function(c){if(!c.open)soil+=(c.nut||0)+(c.mag||0);});});g.cr.forEach(function(m){body+=Math.max(0,m.e||0)+(m.cg||0)+(m.stage?(m.fl||0):0)+(m.mg||0);});return {free:(g.pool||0)+(g.mpool||0),soil:soil,body:body};}
+function connHTML(){
+ var cnt={};g.cr.forEach(function(m){cnt[m.sp]=(cnt[m.sp]||0)+1;});
+ function col(line,lbl){var rows=[];for(var t=1;t<=4;t++){var a=Object.keys(cnt).filter(function(k){return SPEC[k].line==line&&SPEC[k].t==t;});if(a.length)rows.push('<div><small>段'+t+'</small> '+a.map(function(k){return SPEC[k].n+'×'+cnt[k];}).join('　')+'</div>');}
+  return rows.length?'<div style="flex:1;min-width:0"><b>'+lbl+'</b>'+rows.join('<div style="color:var(--sub);font-size:11px">↑ 下の段を食べる</div>')+'</div>':'';}
+ var sp2=Object.keys(cnt).filter(function(k){return SPEC[k].line=='sp';});
+ var ch='<div style="display:flex;gap:10px;flex-wrap:wrap">'+col('nut','養分の系統')+col('mag','魔分の系統')+'</div>'+(sp2.length?'<div><b>特別</b> '+sp2.map(function(k){return SPEC[k].n+'×'+cnt[k];}).join('　')+'</div>':'')+'<div style="color:var(--sub);font-size:11px">魔分の系統は養分の系統の1つ下も食べる。盤面のモンスターを長押しすると、食べる相手が緑・食べられる相手が赤に光る。</div>';
+ if(!g.cr.length)ch='<div class="empty">まだモンスターがいません。</div>';
+ var n=nutNow(),old=NH.length?NH[0]:null,tot=n.free+n.soil+n.body||1;
+ function bar(lbl,v,k,c){var d=old?v-old[k]:0;return '<div style="display:flex;align-items:center;gap:6px;margin:3px 0"><small style="width:5.5em">'+lbl+'</small><div style="flex:1;height:9px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden"><div style="width:'+Math.round(100*v/tot)+'%;height:100%;background:'+c+'"></div></div><small style="width:6.5em;text-align:right">'+v+(old?' ('+(d>=0?'+':'')+d+')':'')+'</small></div>';}
+ var bars='<p class="lbl" style="margin-top:8px">養分のありか（かっこは1分前から）</p>'+bar('自由な分',n.free,'free','#d9a441')+bar('土の中',n.soil,'soil','#8a6a3a')+bar('体の中',n.body,'body','#5ac46a')+(n.soil>n.free+n.body?'<small style="color:var(--accent)">土にたまっている。掘ると生き物に変わる。</small>':'');
+ var ev='<p class="lbl" style="margin-top:8px">最近の出来事</p>'+(EVL.length?'<ol class="hall">'+EVL.map(function(e){return '<li><small>'+esc(e)+'</small></li>';}).join('')+'</ol>':'<div class="empty">まだ何も起きていません。</div>');
+ return ch+bars+ev;
+}
 function toHall(m,cause){
  HALL.unshift({n:crLabel(m),k:m.kills||0,f:m.f+1,c:cause,tw:F,b:m.bio||null,lv:m.lv||0,at:Date.now()});
  if(HALL.length>30)HALL.length=30;
@@ -642,7 +661,7 @@ function layEgg(spc,env,f,x,y,secs,opt){g.eggs.push({sp:spc,env:SPEC[spc].line==
 function stepEggs(){
  for(var i=g.eggs.length-1;i>=0;i--){var eg=g.eggs[i];if(g.t<eg.hatch)continue;if(g.cr.length>=CAP){eg.hatch=g.t+5;continue;}g.eggs.splice(i,1);
   var m=mkCr(eg.sp,eg.env,eg.f,eg.x,eg.y,(eg.opt&&eg.opt.e)||3,eg.opt);fxPuff(eg.f,eg.x,eg.y,0.6);
-  if(m&&SPEC[eg.sp].t>=3)say(baseName(eg.sp,eg.env)+'の卵がかえった！');}
+  if(m&&SPEC[eg.sp].t>=3)say(baseName(eg.sp,eg.env)+'の卵がかえった！');if(m)logEv(baseName(eg.sp,eg.env)+'の卵がかえった');}
 }
 function trampleEggs(e){
  for(var i=g.eggs.length-1;i>=0;i--){var eg=g.eggs[i];if(eg.f==e.f&&eg.x==e.x&&eg.y==e.y){g.eggs.splice(i,1);fxPuff(eg.f,eg.x,eg.y,0.7);say(enName(e)+'が'+baseName(eg.sp,eg.env)+'の卵を踏みつぶした！');}}
@@ -666,6 +685,7 @@ function killCr(m,why,killer){
  if(m.sp=='magma'){var MB=g.burn||(g.burn=[]);[[0,0]].concat(D4).forEach(function(d){var bx=m.x+d[0],by=m.y+d[1],bc=cellAt(m.f,bx,by);if(bc&&bc.open&&MB.length<60)MB.push({f:m.f,x:bx,y:by,hp:15});});say('マグマスライムが倒れ、溶岩だまりが残った。');}
  if(m.sp=='slimeking'){var made=0;for(var si=0;si<8;si++){if(mkCr('slime',m.kenv||'moss',m.f,m.x,m.y,1))made++;}if(m.ke&&m.ke>made)deposit(m.f,m.x,m.y,m.ke-made);say('スライムキングが崩れて、スライム'+made+'匹に戻った。');}
  if(m.sp=='noroi'&&killer&&g.en.indexOf(killer)>=0){killer.curse=Math.max(killer.curse||0,g.t+30);fxNum(killer.f,killer.x,killer.y,'呪','#d0a0ff');say(spName(m)+'が倒れ際に'+enName(killer)+'を呪った（30秒、攻撃が弱まる）。');}
+ if(why=='starve')logEv(spName(m)+'が飢え死にした');else if(why=='enemy'&&killer&&killer.k)logEv(spName(m)+'が'+enName(killer)+'に倒された');
  recordDeath(m,why);if(why=='enemy')g.lostN=(g.lostN||0)+1;
  if(m.mg&&why!='eaten')depositM(m.f,m.x,m.y,m.mg);
  // 運んでいた養分（魔分）は、倒れた所の土へ。食べられたら塔の自由な分へ
@@ -738,7 +758,7 @@ function eat(m,S){
  if(!prey.length)return;
  var pv=prey[0];m.mg=(m.mg||0)+(pv.mg||0);var gain=Math.max(1,Math.round(pv.e*0.8));
  if(pv.env=='mag')g.mpool+=Math.max(0,pv.e-gain);else g.pool+=Math.max(0,pv.e-gain);
- m.e+=gain;killCr(pv,'eaten');fxPuff(m.f,m.x,m.y,0.6);
+ m.e+=gain;logEv(spName(pv)+'が'+spName(m)+'に食べられた');killCr(pv,'eaten');fxPuff(m.f,m.x,m.y,0.6);
  m.ate++;if(!m.hero&&m.ate>=PROMO.eat)promote(m,'eat');
 }
 // 種ごとの増え方(1秒ごと)。異常種は増えやすく、巨大種は増えにくい
@@ -1645,6 +1665,7 @@ function draw(){
    label('★'+o.name,px,ty,'#ffe08a');
   }
  });
+ if(HL&&HL.f==f&&g.cr.indexOf(HL)>=0){g.cr.forEach(function(o){if(o.f!=f)return;var col=o===HL?'255,225,120':canEat(HL,o)?'90,220,110':canEat(o,HL)?'240,80,80':null;if(!col)return;ctx.strokeStyle='rgba('+col+',.95)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(ccx(o.x),o.y*CS+CS/2,CS*0.48,0,Math.PI*2);ctx.stroke();});ctx.lineWidth=1;}
  // 吹き出し(同時に2つまで)
  var placed=[];
  g.bub.forEach(function(b){
@@ -1697,7 +1718,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v39 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v40 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1734,6 +1755,7 @@ function side(){
  document.getElementById('yuusha').innerHTML=g.party?partyInfo():yh;document.getElementById('yuh').textContent=g.party?'この面の勇者たち':'宿敵の勇者';
  document.getElementById('mini').innerHTML='<div class="panel"><h2>主役</h2>'+(hs2.length?hs2.slice(0,2).map(function(m){return '<button class="hrow hp'+(m.f==g.view?' view':'')+'" data-f="'+m.f+'">'+dimg(m.sp).replace('class="dimg"','class="himg"')+'<b>'+esc(fullName(m))+'</b><small>'+esc(sp(m).n)+' · '+(m.f+1)+'階 · 倒した'+m.kills+'</small><i style="width:'+Math.max(0,Math.round(m.hp/m.mhp*100))+'%"></i></button>';}).join('')+(hs2.length>2?'<div class="empty">ほか'+(hs2.length-2)+'匹は「一覧」で</div>':''):'<div class="empty">まだいません。よく食べた個体などが、まれに昇格します。</div>')+'</div><div class="panel"><h2>'+(g.party?'この面の勇者たち':'宿敵の勇者')+'</h2>'+(g.party?partyInfo():yh)+'</div>';
  document.getElementById('hall').innerHTML=HALL.length?'<button class="btn" id="hsort" style="margin-bottom:6px">'+(hallSort=='k'?'倒した数の順（押すと新しい順）':'新しい順（押すと倒した数の順）')+'</button><ol class="hall">'+hallList().slice(0,12).map(function(h){return '<li><b>'+esc(h.n)+'</b> 倒した'+h.k+' · '+h.f+'階<br><small>'+esc(lifeText(h))+'</small></li>';}).join('')+'</ol>':'<div class="empty">倒れた主役の名がここに残ります（強さは次の塔に持ち越しません）。</div>';
+ document.getElementById('conn').innerHTML=connHTML();
 }
 document.getElementById('mini').addEventListener('click',function(ev){var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');ui();draw();});
 document.getElementById('spane-list').addEventListener('click',function(ev){var lb=ev.target.closest('[data-line]');if(lb){upLine(lb.getAttribute('data-line'));return;}var tb=ev.target.closest('[data-train]');if(tb){train(+tb.getAttribute('data-train'));return;}var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');sideKey='';closeSheet();ui();draw();});
@@ -2065,7 +2087,7 @@ function plantStep(m,dt){
   var cind=(m.flm||0)>=3,n=Math.min(cind||m.cind?8:5,Math.floor(m.fl/3)),spots=nbrs(m.f,m.x,m.y);spots.push([m.f,m.x,m.y]);var made=0;
   for(var k=0;k<n;k++){var sp2=spots[k%spots.length];if(mkCr('slime',m.env,sp2[0],sp2[1],sp2[2],2,cind?{cind:1}:null))made++;}
   deposit(m.f,m.x,m.y,Math.max(0,m.fl-made*2));fxPuff(m.f,m.x,m.y,1);
-  say(cind&&made?'魔分を吸った花が枯れて、ひめスライムが'+made+'匹生まれた！':'花が枯れて、新しいスライムが'+made+'匹生まれた。');
+  say(cind&&made?'魔分を吸った花が枯れて、ひめスライムが'+made+'匹生まれた！':'花が枯れて、新しいスライムが'+made+'匹生まれた。');logEv('花が枯れて、スライムが'+made+'匹生まれた');
  }
 }
 function drawPlant(o,px,by,now){
@@ -2130,6 +2152,7 @@ function stepOn(e){
 }
 // 毎秒: ふん・フェロモンが減る、魔法陣と亡骸がウィスプを吸う、魔法陣が冒険者の MP を吸う
 function worldTick(){
+ if(g&&!g.title){NH.push(nutNow());if(NH.length>61)NH.shift();}
  g.dung.forEach(function(d){d.hp--;});g.dung=g.dung.filter(function(d){return d.hp>0;});if(g.burn){g.burn.forEach(function(b){b.hp--;});g.burn=g.burn.filter(function(b){return b.hp>0;});}if(g.illus){g.illus.forEach(function(b){b.hp--;});g.illus=g.illus.filter(function(b){return b.hp>0;});}
  g.pher.forEach(function(d){d.hp-=0.5;});g.pher=g.pher.filter(function(d){return d.hp>0;});
  g.cr.slice().forEach(function(w){if(w.sp!='wisp'||w.hero)return;
@@ -2337,7 +2360,7 @@ document.addEventListener('visibilitychange',function(){if(!SND.ac)return;if(doc
 // ---- 盤面の操作（v11）----
 // 1本指: 触れた・なぞったマスに印 → 指を離すとまとめて掘る。最初のマスへ戻すと取り消し
 // 2本指: 広げて拡大・動かして移動。PC はホイールで拡大、Shift+ドラッグで移動
-var W0=N*CS,ptrs={},path=null,pinch=null;
+var W0=N*CS,ptrs={},path=null,pinch=null,HL=null,lpT=0;
 function clampCam(){var v=W0/ZM;OX=Math.max(0,Math.min(W0-v,OX));OY=Math.max(0,Math.min(W0-v,OY));}
 function zoomBtns(){document.getElementById('zout').hidden=ZM<=1.001;document.getElementById('zfit').hidden=ZM<=1.001;document.getElementById('zin').hidden=ZM>=ZMAX-0.001;}
 function setZoom(z,lx,ly){var nz=Math.max(1,Math.min(ZMAX,z));if(lx===undefined){lx=OX+W0/ZM/2;ly=OY+W0/ZM/2;}
@@ -2369,6 +2392,7 @@ cv.addEventListener('pointerdown',function(ev){
  if(ev.shiftKey&&ZM>1){pinch={pan:1,id:ev.pointerId,m:logicalOf(ev.clientX,ev.clientY)};return;}
  if(over||(ev.button&&ev.button>0))return;
  var p=cellOf(ev);path={f:g.view,cells:[],first:p[0]+','+p[1],left:false,cancel:false};
+ clearTimeout(lpT);var lpF=g.view;lpT=setTimeout(function(){if(!path||pinch||path.left||g.view!=lpF)return;var ms=crAt(lpF,p[0],p[1]);if(!ms.length)return;HL=ms[0];path.cancel=true;path.cells=[];haptic('light');say(spName(HL)+'：緑＝食べる相手、赤＝食べられる相手');draw();},450);
  if(canDig(g.view,p[0],p[1])&&touchesOpen(g.view,p[0],p[1]))path.cells.push([p[0],p[1],path.first]);
  else if(canDig(g.view,p[0],p[1]))say('掘れるのは、掘ってあるマスの隣の土だけです。');
  else{var c0=cellAt(g.view,p[0],p[1]);if(c0&&!c0.open&&bedrock(g.view,p[0],p[1]))say('ここは固くて掘れません。');}
@@ -2381,7 +2405,7 @@ cv.addEventListener('pointermove',function(ev){
  if(path){addPath(cellOf(ev));draw();}
 });
 function endPtr(ev,cancel){
- if(!ptrs[ev.pointerId])return;delete ptrs[ev.pointerId];
+ if(!ptrs[ev.pointerId])return;delete ptrs[ev.pointerId];clearTimeout(lpT);if(HL){HL=null;path=null;draw();return;}
  if(pinch){if(Object.keys(ptrs).length<2)pinch=null;else if(!pinch.pan)startPinch();path=null;draw();return;}
  if(!path)return;var P=path;path=null;
  if(cancel||P.cancel||over||P.f!=g.view){draw();return;}

@@ -176,6 +176,19 @@ void main() {
     }
   });
 
+  test('つながりを見せる（0.7.25・試作 v40）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'id="conn"', // 一覧のつながりの欄
+      'function connHTML(', // 段ごとの種・養分のありか・最近の出来事
+      'function nutNow(', // 養分のありか
+      'function logEv(', // 最近の出来事
+      'HL=null,lpT=0', // 長押しで食べる・食べられる相手を光らせる
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
