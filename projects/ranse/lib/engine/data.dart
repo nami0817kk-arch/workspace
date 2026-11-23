@@ -260,7 +260,7 @@ bool _lowBorn(ClassDef c, bool female) => c.rank <= 2;
 
 /// 生まれつきの特性（2026-11-24 に13から100へ。4回に分けて作り、1回目で仕組みと25の特性の場面を作った）。
 /// どの特性も遊びの中で効く（能力に数字を足すだけのものは作らない。能力の上げ下げは元の13にだけ残した）。
-/// 場面のある特性は `trait_scenes.dart` の `kTraitScenesDone`。
+/// 場面のある特性は `trait_scenes.dart` の `kTraitScenesDone`（2回目で50。場面の続きは `trait_scenes2.dart`）。
 class Trait {
   const Trait(
     this.id,
@@ -340,13 +340,13 @@ final kTraits = <Trait>[
     '手先が器用',
     TraitTier.common,
     '細かい手仕事が得意。壊れた物を直してしまう',
-  ), // 2回目: 職人・具足の繕い
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'light_sleeper',
     '眠りが浅い',
     TraitTier.common,
     '小さな物音でも目を覚ます。夜討ちや盗人に気づきやすい',
-  ), // 2回目: 夜討ち・夜盗
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'walker',
     '健脚',
@@ -365,7 +365,7 @@ final kTraits = <Trait>[
     '泳ぎ達者',
     TraitTier.common,
     '水を怖がらない。川も海も泳いで渡る',
-  ), // 2回目: 渡し・大水・船
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   // ---- 心
   Trait(
     'amb',
@@ -396,7 +396,7 @@ final kTraits = <Trait>[
     '情け深い',
     TraitTier.common,
     '弱い者を見捨てられない。恩も厄介ごとも背負い込む',
-  ), // 2回目: 行き倒れ・孤児
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'pious',
     '信心深い',
@@ -450,7 +450,7 @@ final kTraits = <Trait>[
     '正直者',
     TraitTier.common,
     '嘘がつけない。信じられるが、隠し事には向かない',
-  ), // 2回目: 検地・帳面
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'vain',
     '見栄っ張り',
@@ -468,7 +468,7 @@ final kTraits = <Trait>[
     '博打好き',
     TraitTier.common,
     '賭け事に目がない。勝てば大きいが、負けも大きい',
-  ), // 2回目: 賭場
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'filial',
     '親孝行',
@@ -501,13 +501,13 @@ final kTraits = <Trait>[
     '唄がうまい',
     TraitTier.common,
     '田植え唄も舟唄も、聞く者の手を止めさせる',
-  ), // 2回目: 祭り・田植え・盆踊り
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'cook',
     '料理上手',
     TraitTier.common,
     'ありあわせで旨いものを作る。台所から人の心をつかむ',
-  ), // 2回目: 陣中・奥
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'animals',
     '生き物に好かれる',
@@ -519,13 +519,13 @@ final kTraits = <Trait>[
     '空読み',
     TraitTier.common,
     '雲と風で明日の天気を当てる。田にも船にも戦にも役立つ',
-  ), // 2回目: 船・合戦・田
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'handwriting',
     '達筆',
     TraitTier.common,
     '字が美しい。代筆を頼まれ、書状で人に覚えられる',
-  ), // 2回目: 書状・代筆
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   // ---- 生まれ
   Trait(
     'birthmark',
@@ -564,13 +564,13 @@ final kTraits = <Trait>[
     '鉄の胃袋',
     TraitTier.uncommon,
     '何を食べても腹を壊さない。毒にも傷んだ物にも強い',
-  ), // 2回目: 毒・飢え
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'painless',
     '痛みに強い',
     TraitTier.uncommon,
     '深手を負っても顔色を変えない。戦場で倒れにくい',
-  ), // 2回目: 深手
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'lefty',
     '左利き',
@@ -582,7 +582,7 @@ final kTraits = <Trait>[
     '長命の血筋',
     TraitTier.uncommon,
     '祖父も祖母も長生きだった。老いてなお足腰が強い',
-  ), // 2回目: 老いの病死
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'sea_legs',
     '船に強い',
@@ -595,7 +595,7 @@ final kTraits = <Trait>[
     '豪胆',
     TraitTier.uncommon,
     '肝が据わっている。恐ろしい場でも手が震えない',
-  ), // 2回目: 一騎打ち・籠城
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'cunning',
     '悪知恵',
@@ -680,7 +680,7 @@ final kTraits = <Trait>[
     '普請上手',
     TraitTier.uncommon,
     '石垣も堤も、どう組めば持つかが分かる',
-  ), // 2回目: 普請・治水
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'tea',
     '茶の心',
@@ -698,13 +698,13 @@ final kTraits = <Trait>[
     '兵法の勘',
     TraitTier.uncommon,
     '陣の形を見ただけで、どこが崩れるか分かる',
-  ), // 2回目: 合戦の状況
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'archer',
     '弓の才',
     TraitTier.uncommon,
     '狙った的を外さない。遠矢でも狩りでも名を上げる',
-  ), // 2回目: 弓・狩り
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'sword',
     '剣の筋',
@@ -747,7 +747,7 @@ final kTraits = <Trait>[
     TraitTier.uncommon,
     '堺の商家に親類がいる。南蛮の品や銭の話が届く',
     ok: _notDaimyo,
-  ), // 2回目: 商い・南蛮
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   // ================================================================ 稀（20）
   Trait(
     'lucky',
@@ -792,8 +792,8 @@ final kTraits = <Trait>[
     '金創の手',
     TraitTier.rare,
     '刀傷を縫い、矢を抜く手際がある。陣中で重宝される',
-  ), // 2回目: 陣中・深手
-  Trait('general', '将の器', TraitTier.rare, '人の上に立つと、兵が自ずと従う'), // 2回目: 兵・慕い寄る兵
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
+  Trait('general', '将の器', TraitTier.rare, '人の上に立つと、兵が自ずと従う'), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'stars',
     '星を読む',
@@ -812,14 +812,14 @@ final kTraits = <Trait>[
     '碁の才',
     TraitTier.rare,
     '碁盤の上では誰にも負けない。名のある人と打つ機会が来る',
-  ), // 2回目: 碁の相手
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'mimic',
     '声色',
     TraitTier.rare,
     '人の声をそっくり真似られる。使い方しだいで身を助ける',
   ), // 2回目: 忍び・偽り
-  Trait('deathless', '不死身', TraitTier.rare, '大きな傷を負っても、なぜか生き延びる'), // 2回目: 討死・深手
+  Trait('deathless', '不死身', TraitTier.rare, '大きな傷を負っても、なぜか生き延びる'), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'mosugo',
     '神仏の申し子',
@@ -838,7 +838,7 @@ final kTraits = <Trait>[
     '水脈を当てる',
     TraitTier.rare,
     '地を見て、どこを掘れば水が出るかを当てる',
-  ), // 2回目: 新田・井戸・籠城
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'kaizoku',
     '海賊衆の血',
@@ -882,13 +882,13 @@ final kTraits = <Trait>[
     '剣聖の器',
     TraitTier.mythic,
     '剣を持てば、師がやがて教えることがなくなる',
-  ), // 3回目以降: 一生の筋
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'ryujin',
     '竜神の加護',
     TraitTier.mythic,
     '水に落ちても、なぜか沈まない。海の者に拝まれる',
-  ), // 3回目以降: 一生の筋
+  ), // 済（2回目）: 場面と効き方は trait_scenes2.dart
   Trait(
     'kitsune',
     '狐の子',

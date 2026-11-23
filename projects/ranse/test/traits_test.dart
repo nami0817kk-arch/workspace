@@ -1,14 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ranse/engine/birth.dart';
+import 'package:ranse/engine/childhood.dart';
 import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/game.dart';
+import 'package:ranse/engine/peace.dart';
 import 'package:ranse/engine/remembrance.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:ranse/engine/trait_scenes.dart';
 
 import 'bot.dart';
 
-/// 特性100（2026-11-24、1回目）。ユーザー「ゲームに効くのを増やしたい。影響が強いほどレア」「100で」。
+/// 特性100（2026-11-24、1回目と2回目。場面のある特性は50）。ユーザー「ゲームに効くのを増やしたい。影響が強いほどレア」「100で」。
 final _digits = RegExp('[0-9０-９%％]');
 
 /// 特性の場面 id → その特性。
@@ -58,6 +60,38 @@ _Run _play(Game g, Rng r, {bool smart = false}) {
   }
   expect(g.finished, isTrue, reason: '人生が終わらない');
   return out;
+}
+
+/// 2回目で場面を作った特性。
+const _second = {
+  'nimble', 'light_sleeper', 'swimmer', 'kind', 'honest', 'gambler', 'singer', 'cook', 'weather', 'handwriting', //
+  'iron_gut', 'painless', 'longlived', 'brave', 'builder', 'tactics', 'archer', 'sakai_kin', //
+  'surgeon', 'general', 'go', 'deathless', 'dowser', 'kensei', 'ryujin',
+};
+
+/// [g] を [year] 年の、主家に仕える五十歳の侍（位2）に置き直す。
+Game _place(Game g, int year) {
+  final l = g.l;
+  l.t = (year - l.startYear) * 2;
+  final lord = g.alive.first.name;
+  l
+    ..rank = 2
+    ..maxRank = 2
+    ..lord = lord
+    ..fav = 50
+    ..hp = l.maxhp
+    ..ronin = false;
+  l.flags.removeWhere((f) => f == 'retired' || f == 'priesthood');
+  return g;
+}
+
+/// [trait] を持たせた男の人生を [year] 年に置く。
+Game _withMale(int seed, String trait, int year) {
+  for (var s = seed;; s++) {
+    final g = _with(s, trait);
+    if (g.l.female) continue;
+    return _place(g, year);
+  }
 }
 
 /// [trait] を持たせた人生を始める（[adult] なら元服まで生き延びる生まれを選ぶ）。
@@ -157,11 +191,11 @@ void main() {
     }
   });
 
-  test('場面の表: 二十五の特性・段が偏らず幻が二つ以上・id はすべて一度ずつ登録され、筋の表の id も実在する', () {
-    expect(kTraitScenesDone.length, 25);
+  test('場面の表: 五十の特性・段が偏らず幻が四つ以上・id はすべて一度ずつ登録され、筋の表の id も実在する', () {
+    expect(kTraitScenesDone.length, 50);
     final tiers = [for (final id in kTraitScenesDone.keys) traitOf(id).tier];
     for (final t in TraitTier.values) {
-      expect(tiers.where((x) => x == t).length, greaterThanOrEqualTo(t == TraitTier.mythic ? 2 : 5),
+      expect(tiers.where((x) => x == t).length, greaterThanOrEqualTo(t == TraitTier.mythic ? 4 : 10),
           reason: t.label);
     }
     final g = Game(rng: Rng(1));
@@ -218,7 +252,113 @@ void main() {
     expect(traitPersuade(g), greaterThan(0));
   });
 
-  test('場面のある二十五の特性を持たせた人生で、その場面（か手）が出て、選択肢に匂わせがあり数字が無い', () {
+  test('既存の仕組みに掛ける倍率（2回目）: 痛みに強い・兵法の勘・不死身・剣聖は危うさを下げ、豪胆・弓・将の器は手柄を増やす。長命・鉄の胃袋・堺の親類', () {
+    final g = _with(3, 'power');
+    g.l.t = 40 * 2;
+    for (final t in ['painless', 'tactics', 'deathless', 'kensei']) {
+      g.l.traits.add(t);
+      expect(traitBattleRisk(g, 'main'), lessThan(1), reason: t);
+      g.l.traits.remove(t);
+    }
+    g.l.traits.add('brave');
+    expect(traitBattleGain(g, 'van'), greaterThan(1.1));
+    expect(traitBattleGain(g, 'rear'), 1);
+    g.l.traits
+      ..remove('brave')
+      ..add('archer');
+    expect(traitBattleGain(g, 'van'), 1);
+    expect(traitBattleGain(g, 'rear'), greaterThan(1.1));
+    g.l.traits
+      ..remove('archer')
+      ..add('general');
+    g.l.rank = 1;
+    expect(traitBattleGain(g, 'main'), 1);
+    g.l.rank = 3;
+    expect(traitBattleGain(g, 'main'), greaterThan(1));
+    g.l.traits.remove('general');
+    // 長命の血筋は五十から老いの坂がゆるい。鉄の胃袋は飢えにくい。堺の親類は仕入れが当たりやすい。
+    expect(traitOldAge(g), 1);
+    expect(traitHunger(g), 1);
+    expect(traitTradeEdge(g), 0);
+    g.l.traits.addAll(['longlived', 'iron_gut', 'sakai_kin']);
+    expect(traitOldAge(g), 1, reason: '四十では効かない');
+    g.l.t = 60 * 2;
+    expect(traitOldAge(g), lessThan(1));
+    expect(traitHunger(g), lessThan(1));
+    expect(traitTradeEdge(g), greaterThan(0));
+    // 掛け合わせても、危うさが消えることはない。
+    g.l.traits.addAll(['swift', 'nighteye', 'rider', 'painless', 'tactics', 'deathless', 'kensei']);
+    expect(traitBattleRisk(g, 'van'), greaterThan(.25));
+  });
+
+  test('泰平の世（一六〇一年から）では、2回目の場面は陣中の書き出しを出さず、泰平だけの書き出しと手が出る', () {
+    // 戦の世の、陣中の書き出しの題。
+    const warTitles = {'切れた威の糸', '腐れ水', '残った矢尻', '敵方への使い', '陣の崩れ目'};
+    Game setUp(String trait, int year) => _withMale(41, trait, year);
+
+    SceneDef scene(Game g, String id) => g.adultScenes.firstWhere((s) => s.id == id);
+    String titleOf(String trait, String id, int year) {
+      final g = setUp(trait, year);
+      // 筋の後段は前の段の旗を立て、年を空けておく。
+      for (final f in kTraitPrev[id] ?? const <String>[]) {
+        g.setFlag(f);
+      }
+      final gap = kTraitGap[id];
+      if (gap != null) g.setFlag('tr_at:${gap.$1}:${g.year - 5}');
+      final sc = scene(g, id);
+      expect(sc.cond(g), isTrue, reason: '$id が$year年に出られない');
+      sc.run(g, () {});
+      final p = g.prompt!;
+      for (final c in p.choices) {
+        expect(c.hint, isNotNull, reason: '$id: ${c.label}');
+        expect(_digits.hasMatch(c.label), isFalse, reason: c.label);
+        expect(_digits.hasMatch(c.hint!), isFalse, reason: c.hint);
+      }
+      return p.title;
+    }
+
+    // 戦の世（一五八〇年）の侍には、陣中の書き出しが出る。
+    expect(titleOf('nimble', 'tr_nimble', 1580), '切れた威の糸');
+    expect(titleOf('tactics', 'tr_tactics', 1580), '陣の崩れ目');
+    expect(titleOf('handwriting', 'tr_handwriting', 1580), '代筆');
+    // 泰平の世（一六一〇年）の侍には出ない。
+    for (final e in kTraitScenesDone.entries) {
+      for (final id in e.value) {
+        if (kTraitChildSceneIds.contains(id)) continue;
+        final g = setUp(e.key, 1610);
+        expect(peaceTime(g), isTrue);
+        final sc = scene(g, id);
+        for (final f in kTraitPrev[id] ?? const <String>[]) {
+          g.setFlag(f);
+        }
+        final gap = kTraitGap[id];
+        if (gap != null) g.setFlag('tr_at:${gap.$1}:${g.year - 5}');
+        if (g.age < sc.minAge || g.age > sc.maxAge || !sc.cond(g)) continue;
+        // 2回目の場面だけを見る（1回目の場面は陣中の書き出しを残している）。
+        if (!_second.contains(e.key)) continue;
+        sc.run(g, () {});
+        expect(warTitles.contains(g.prompt!.title), isFalse, reason: '$id が泰平の世に「${g.prompt!.title}」');
+      }
+    }
+    // 泰平の世だけの書き出し。
+    expect(titleOf('handwriting', 'tr_handwriting', 1610), '手習いの手本');
+    expect(titleOf('longlived', 'tr_longlived', 1610), '昔語り');
+    expect(titleOf('longlived', 'tr_longlived', 1580), '同い年の葬い');
+    // 普請上手は、手伝い普請（江戸の城の石垣）に自分で指図する手が増える。
+    for (final has in [true, false]) {
+      final g = setUp(has ? 'builder' : 'power', 1610);
+      g.l
+        ..rank = 6
+        ..maxRank = 6;
+      final sc = scene(g, 'pc_fushin');
+      if (g.l.lord == '松平') g.l.lord = g.alive.firstWhere((f) => f.name != '松平').name;
+      expect(sc.cond(g), isTrue);
+      sc.run(g, () {});
+      expect(g.prompt!.choices.any((c) => c.label.contains('自ら図に引いて指図する')), has);
+    }
+  });
+
+  test('場面のある五十の特性を持たせた人生で、その場面（か手）が出て、選択肢に匂わせがあり数字が無い', () {
     final missing = <String>[];
     final stages = <String, Set<String>>{};
     // 手だけで効く所（熱病・子の病・連れ合いの病の薬草）。
@@ -269,7 +409,9 @@ void main() {
       }
       final d = g.l.dead ?? '';
       if (run.ids.isNotEmpty &&
-          RegExp('早駆けの使い|敵の物見|流行り病の看病|双子の片割れと並んで|異国の湊|異母兄|不吉な夢').hasMatch(d)) {
+          RegExp('早駆けの使い|敵の物見|流行り病の看病|双子の片割れと並んで|異国の湊|異母兄|不吉な夢|'
+                  '子を助けに飛び込み|敵方への使者|しんがりを引き受け|真剣の立ち合い|荒れる沖')
+              .hasMatch(d)) {
         trDeaths++;
       }
     }
@@ -285,6 +427,10 @@ void main() {
     for (final f in [
       'tr_power_stone', 'tr_herbal_village', 'tr_twin_met', 'tr_nanban_sailed', //
       'tr_painter_castle_done', 'tr_rakuin_named', 'tr_rakuin_lord', 'tr_yume_known', 'tr_c_prodigy_praised',
+      // 2回目
+      'tr_swimmer_saved', 'tr_kind_took', 'tr_builder_wall', 'tr_surgeon_healer', 'tr_general_trusted', //
+      'tr_go_pupil', 'tr_deathless_legend', 'tr_dowser_water', 'tr_kensei_ryu', 'tr_ryujin_shrine_kept',
+      'tr_c_ryujin_told',
     ]) {
       expect(ids.contains(f), isTrue, reason: f);
     }
@@ -301,5 +447,15 @@ void main() {
     for (final s in lines) {
       expect(_digits.hasMatch(s), isFalse, reason: s);
     }
+    // 2回目: 同じ組（剣聖・竜神）からは一番重い一行だけ。
+    final g2 = _with(12, 'kensei');
+    g2.l.t = 50 * 2;
+    for (final f in ['tr_kensei_won', 'tr_kensei_ryu', 'tr_ryujin_saved', 'tr_ryujin_rain_fell', 'tr_ryujin_shrine_kept']) {
+      g2.setFlag(f);
+    }
+    final lines2 = remembrances(g2);
+    expect(lines2.where((s) => s.contains('剣')).length, 1, reason: '$lines2');
+    expect(lines2.where((s) => s.contains('竜神') || s.contains('渡し舟')).length, 1, reason: '$lines2');
+    expect(lines2.any((s) => s.contains('一流を立て')), isTrue, reason: '$lines2');
   });
 }

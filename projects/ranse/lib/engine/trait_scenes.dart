@@ -2,7 +2,10 @@ import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
 import 'history_lines.dart';
+import 'peace.dart';
 import 'rng.dart';
+
+part 'trait_scenes2.dart';
 
 /// 特性の効く場面（2026-11-24、特性100の1回目）。id・旗は `tr_`（子どもは `tr_c_`）。
 ///
@@ -21,7 +24,8 @@ import 'rng.dart';
 
 // ---------------------------------------------------------------- 表
 
-/// 1回目で効き方を作った特性 → その特性の場面の id（手や倍率だけの所は `kTraitHooks`）。テストが使う。
+/// 効き方を作った特性 → その特性の場面の id（手や倍率だけの所は `kTraitHooks`）。テストが使う。
+/// 1回目の25（この下）と、2回目の25（`trait_scenes2.dart` に場面。表はここ一つ）。
 const kTraitScenesDone = <String, List<String>>{
   // よくある
   'power': ['tr_power'],
@@ -57,6 +61,47 @@ const kTraitScenesDone = <String, List<String>>{
     'tr_rakuin_brother',
   ],
   'yume': ['tr_yume_fire', 'tr_yume_morning', 'tr_yume_tell', 'tr_yume_last'],
+  // ---------------- 2回目（trait_scenes2.dart）
+  // よくある
+  'nimble': ['tr_nimble'],
+  'light_sleeper': ['tr_light_sleeper'],
+  'swimmer': ['tr_swimmer'],
+  'kind': ['tr_kind'],
+  'honest': ['tr_honest'],
+  'gambler': ['tr_gambler'],
+  'singer': ['tr_singer'],
+  'cook': ['tr_cook'],
+  'weather': ['tr_weather'],
+  'handwriting': ['tr_handwriting'],
+  // 珍しい
+  'iron_gut': ['tr_iron_gut'],
+  'painless': ['tr_painless'],
+  'longlived': ['tr_longlived'],
+  'brave': ['tr_brave'],
+  'builder': ['tr_builder'],
+  'tactics': ['tr_tactics'],
+  'archer': ['tr_archer'],
+  'sakai_kin': ['tr_sakai_kin'],
+  // 稀
+  'surgeon': ['tr_surgeon_wound', 'tr_surgeon_call'],
+  'general': ['tr_general_men', 'tr_general_follow', 'tr_general_lord'],
+  'go': ['tr_go_board', 'tr_go_lord', 'tr_go_house'],
+  'deathless': ['tr_deathless_fall', 'tr_deathless_talk'],
+  'dowser': ['tr_dowser_well', 'tr_dowser_call'],
+  // 幻
+  'kensei': [
+    'tr_kensei_first',
+    'tr_kensei_license',
+    'tr_kensei_duel',
+    'tr_kensei_school',
+  ],
+  'ryujin': [
+    'tr_c_ryujin',
+    'tr_ryujin_boat',
+    'tr_ryujin_rain',
+    'tr_ryujin_storm',
+    'tr_ryujin_shrine',
+  ],
 };
 
 /// 特性の効き方のうち、場面のほかに既存の仕組みへ掛けたもの（覚え書き。テストと CLAUDE.md 用）。
@@ -69,10 +114,22 @@ const kTraitHooks = <String, String>{
   'prodigy': '読み書き・寺の手習いの伸びが大きい（childhood.dart）',
   'herbal': '熱病・子の病・連れ合いの病に薬草を煎じる手（childhood.dart・family.dart）',
   'appraiser': '仕入れの旅で儲けやすい（ways.dart）',
+  // 2回目
+  'iron_gut': '凶作の冬に飢えにくい（adult.dart）',
+  'painless': '合戦の討死の危うさが少し下がる（battles.dart）',
+  'longlived': '五十からの老いの坂がゆるい（game.dart）',
+  'brave': '先陣での手柄が増える（battles.dart）',
+  'builder': '泰平の世の手伝い普請に、自ら石組みを指図する手（peace.dart）',
+  'tactics': '合戦の討死の危うさが少し下がり、手柄が少し増える（battles.dart）',
+  'archer': '先陣でない持ち場での手柄が増える（battles.dart）',
+  'sakai_kin': '仕入れの旅（隣国・船）で当たりやすい（ways.dart）',
+  'general': '組頭より上なら合戦の手柄が増える（battles.dart）',
+  'deathless': '合戦の討死の危うさが下がる（battles.dart）',
+  'kensei': '合戦の討死の危うさが下がり、手柄が増える（battles.dart）',
 };
 
 /// 子どもの岐路の id。
-const kTraitChildSceneIds = ['tr_c_prodigy', 'tr_c_painter'];
+const kTraitChildSceneIds = ['tr_c_prodigy', 'tr_c_painter', 'tr_c_ryujin'];
 
 /// 筋の後段 → その前の段で立つ旗（どれか一つがあれば出られる）。テストも使う。
 const kTraitPrev = <String, List<String>>{
@@ -91,6 +148,20 @@ const kTraitPrev = <String, List<String>>{
   'tr_yume_morning': ['tr_yume_dreamt'],
   'tr_yume_tell': ['tr_yume_known', 'tr_yume_hidden'],
   'tr_yume_last': ['tr_yume_told', 'tr_yume_silent', 'tr_yume_fled'],
+  // 2回目
+  'tr_surgeon_call': ['tr_surgeon_seen'],
+  'tr_general_follow': ['tr_general_seen'],
+  'tr_general_lord': ['tr_general_band', 'tr_general_sent'],
+  'tr_go_lord': ['tr_go_known'],
+  'tr_go_house': ['tr_go_played'],
+  'tr_deathless_talk': ['tr_deathless_back'],
+  'tr_dowser_call': ['tr_dowser_tried'],
+  'tr_kensei_license': ['tr_kensei_woke'],
+  'tr_kensei_duel': ['tr_kensei_master'],
+  'tr_kensei_school': ['tr_kensei_dueled'],
+  'tr_ryujin_rain': ['tr_ryujin_seen'],
+  'tr_ryujin_storm': ['tr_ryujin_asked'],
+  'tr_ryujin_shrine': ['tr_ryujin_storm_done'],
 };
 
 /// 筋の後段 → (筋の名, 前の段から空ける年)。
@@ -110,6 +181,20 @@ const kTraitGap = <String, (String, int)>{
   'tr_yume_morning': ('yume', 1),
   'tr_yume_tell': ('yume', 2),
   'tr_yume_last': ('yume', 3),
+  // 2回目
+  'tr_surgeon_call': ('surgeon', 2),
+  'tr_general_follow': ('general', 2),
+  'tr_general_lord': ('general', 3),
+  'tr_go_lord': ('go', 2),
+  'tr_go_house': ('go', 3),
+  'tr_deathless_talk': ('deathless', 2),
+  'tr_dowser_call': ('dowser', 2),
+  'tr_kensei_license': ('kensei', 2),
+  'tr_kensei_duel': ('kensei', 2),
+  'tr_kensei_school': ('kensei', 3),
+  'tr_ryujin_rain': ('ryujin', 2),
+  'tr_ryujin_storm': ('ryujin', 2),
+  'tr_ryujin_shrine': ('ryujin', 3),
 };
 
 // ---------------------------------------------------------------- 既存の仕組みに掛ける倍率
@@ -120,7 +205,7 @@ double traitBattleRisk(Game g, String role) {
   if (g.has('swift')) m *= .85;
   if (g.has('nighteye')) m *= .92;
   if (g.has('rider') && (role == 'van' || role == 'main')) m *= .85;
-  return m;
+  return m * _battleRisk2(g, role);
 }
 
 /// 合戦の手柄の倍率（`battles.dart` の `_fight` が掛ける）。
@@ -128,7 +213,7 @@ double traitBattleGain(Game g, String role) {
   var m = 1.0;
   if (g.has('rider') && (role == 'van' || role == 'main')) m *= 1.1;
   if (g.has('gunner') && g.l.gun) m *= 1.15;
-  return m;
+  return m * _battleGain2(g, role);
 }
 
 /// 合戦の場で人を説く見立てに足す値（弁舌巧み）。`battles.dart` の魅の見立てが使う。
@@ -181,6 +266,14 @@ const _firstOf = <String, String>{
   'painter': 'tr_painter_studio',
   'rakuin': 'tr_rakuin_charm',
   'yume': 'tr_yume_fire',
+  // 2回目
+  'surgeon': 'tr_surgeon_wound',
+  'general': 'tr_general_men',
+  'go': 'tr_go_board',
+  'deathless': 'tr_deathless_fall',
+  'dowser': 'tr_dowser_well',
+  'kensei': 'tr_kensei_first',
+  'ryujin': 'tr_ryujin_boat',
 };
 
 /// 特性 [trait] を持つ人にだけ出る場面。筋の段を踏んだ年を残す。
@@ -319,6 +412,7 @@ List<SceneDef> buildTraitChildScenes() => [
       after: next,
     );
   }),
+  ..._child2(),
 ];
 
 // ======================================================================
@@ -330,6 +424,11 @@ List<SceneDef> buildTraitScenes() => [
   ..._uncommon(),
   ..._rare(),
   ..._mythic(),
+  // 2回目（trait_scenes2.dart）
+  ..._common2(),
+  ..._uncommon2(),
+  ..._rare2(),
+  ..._mythic2(),
 ];
 
 // ---------------------------------------------------------------- よくある

@@ -10,6 +10,7 @@ import 'peace.dart';
 import 'rng.dart';
 import 'spending.dart';
 import 'temple.dart';
+import 'trait_scenes.dart';
 import 'variety.dart';
 import 'women_life.dart';
 
@@ -840,7 +841,7 @@ List<SceneDef> buildAdultScenes() {
       (g, next) {
         g.ask('凶作', '長雨で稲が実らない。年貢の取り立ては容赦ない。', [
           Choice.h('蓄えを切り崩して食いつなぐ', '蓄えがあれば、飢えはしのげる', () {
-            if (g.l.gold < 3 && g.rng.chance(.15)) {
+            if (g.l.gold < 3 && g.rng.chance(.15 * traitHunger(g))) {
               g.die('凶作の冬、蓄えが尽きて飢え死にした', 'ue');
               return '蓄えは、とうに尽きていた。春を待たずに力尽きた。';
             }

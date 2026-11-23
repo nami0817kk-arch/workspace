@@ -5,6 +5,7 @@ import 'game.dart';
 import 'history_lines.dart';
 import 'life.dart';
 import 'rng.dart';
+import 'trait_scenes.dart';
 import 'variety.dart';
 
 /// 歩んだ道と死に方。最期の場面（1000本）は「道 × 死に方 × 縁のある人」で選ぶ
@@ -203,7 +204,7 @@ List<SceneDef> buildWayScenes() {
               return '峠で山賊に囲まれた。荷も命も、奪われた。';
             }
             // 目利き（`trait_scenes.dart`）は良い品を選ぶので売れやすい。
-            if (g.rng.chance(.7 + (g.has('appraiser') ? .12 : 0))) {
+            if (g.rng.chance(.7 + (g.has('appraiser') ? .12 : 0) + traitTradeEdge(g))) {
               l.gold += g.rng.range(12, 25);
               return '隣国の品は、飛ぶように売れた。';
             }
@@ -216,7 +217,7 @@ List<SceneDef> buildWayScenes() {
               g.die('仕入れの船が嵐に遭い、戻らなかった', 'yukue');
               return '船は嵐の海に消え、二度と戻らなかった。';
             }
-            if (g.rng.chance(.55 + (g.has('appraiser') ? .12 : 0))) {
+            if (g.rng.chance(.55 + (g.has('appraiser') ? .12 : 0) + traitTradeEdge(g))) {
               l.gold += g.rng.range(25, 50);
               g.mark('船で遠国と商いし、大きく儲けた');
               return '遠国の品で、蔵が一つ建つほど儲けた。';

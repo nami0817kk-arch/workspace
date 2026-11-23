@@ -965,6 +965,7 @@ class Game extends ChangeNotifier {
         if (l.hp < 30) dp *= 2;
         if (has('sickly')) dp *= 1.5;
         if (has('hardy')) dp *= .7;
+        dp *= traitOldAge(this); // 長命の血筋（`trait_scenes2.dart`）
         if (l.joy < 20) {
           dp *= 1.3;
         } else if (l.joy >= 70) {
