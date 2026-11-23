@@ -134,6 +134,10 @@ class ManagerReportCard extends StatelessWidget {
       budget: save.budget,
       weeklyNet: weeklyNet,
       lastResult: lastResult,
+      targetRank: save.boardTargetRank,
+      supporterTrend: game.supporterTrend,
+      preseason: game.isPreseason,
+      lastSeasonRank: save.lastSeasonRank,
     );
     final health = ClubHealthEngine.assess(
       supporter: save.confidence,

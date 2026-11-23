@@ -110,7 +110,12 @@ void main() {
       expect(p.yellowCards, 0, reason: 'リーグ戦の警告に入った');
       expect(p.cupSuspendedMatches, 1, reason: 'スペインの国内カップは2枚で1試合');
       expect(p.suspendedMatches, 0);
-      // リーグ戦(既定)では出られる。カップ戦では出られない。
+      // リーグ戦(既定)では出られる。カップ戦では出られない。試合後の
+      // 処理はまれに怪我・疲れを付けて先発から外すので、それは消して見る。
+      p
+        ..injuryWeeks = 0
+        ..injuryType = null
+        ..fatigue = 0;
       expect(p.isSuspended, isFalse);
       expect(MatchEngine.lineupOf(home).any((x) => x.id == p.id), isTrue);
       CardRules.run(const CardRules.cup(), () {

@@ -29,7 +29,7 @@ class OwnerGoalCard extends StatelessWidget {
           subtitle: Text(Tr.pick('達成すると殿堂に残り、売却後も消えません。',
               'Achievements stay in the hall of fame, even after a sale.')),
           trailing: const Icon(Icons.chevron_right),
-          onTap: () => _choose(context),
+          onTap: () => choose(context),
         ),
       );
     }
@@ -67,8 +67,8 @@ class OwnerGoalCard extends StatelessWidget {
     );
   }
 
-  /// 目標を選ぶ画面(下から出る一覧)。
-  static Future<void> _choose(BuildContext context) async {
+  /// 目標を選ぶ画面(下から出る一覧)。今週の決断のカードからも開く。
+  static Future<void> choose(BuildContext context) async {
     final game = context.read<GameState>();
     final picked = await showModalBottomSheet<OwnerGoal>(
       context: context,

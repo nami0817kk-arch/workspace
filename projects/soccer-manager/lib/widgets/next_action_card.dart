@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../logic/next_action_advisor.dart';
 import '../logic/signing_proposal_engine.dart';
+import '../screens/club_screen.dart';
 import '../screens/finance_screen.dart';
+import '../screens/owner_work_screen.dart';
 import '../screens/squad_screen.dart';
 import '../screens/transfer_screen.dart';
 import '../screens/youth_screen.dart';
@@ -11,6 +13,7 @@ import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import 'fm_panel.dart';
+import 'owner_goal_card.dart';
 import '../l10n/tr.dart';
 
 /// いま手を付けるべきこと1件を、行き先付きで出す。
@@ -20,13 +23,18 @@ import '../l10n/tr.dart';
 class NextActionCard extends StatelessWidget {
   const NextActionCard({super.key});
 
-  static Widget _screenFor(NextActionTarget target) => switch (target) {
+  /// 行き先の画面。[NextActionTarget.ownerGoal] は画面ではなく一覧を
+  /// 下から出すので null。
+  static Widget? _screenFor(NextActionTarget target) => switch (target) {
         NextActionTarget.squad => const SquadScreen(),
         NextActionTarget.youth => const YouthScreen(),
         NextActionTarget.finance => const FinanceScreen(),
         NextActionTarget.transfer => const TransferScreen(),
         NextActionTarget.transferOffers =>
           const TransferScreen(initialTab: TransferScreen.offersTab),
+        NextActionTarget.ownerWork => const OwnerWorkScreen(),
+        NextActionTarget.staff => const ClubScreen(section: ClubSection.staff),
+        NextActionTarget.ownerGoal => null,
       };
 
   static String _labelFor(NextActionTarget target) => switch (target) {
@@ -36,6 +44,10 @@ class NextActionCard extends StatelessWidget {
         NextActionTarget.transfer => Tr.pick('移籍市場へ', 'Open transfers'),
         NextActionTarget.transferOffers =>
           Tr.pick('届いたオファーへ', 'Open the offers'),
+        NextActionTarget.ownerWork =>
+          Tr.pick('オーナー室へ', "Open the owner's office"),
+        NextActionTarget.staff => Tr.pick('スタッフへ', 'Open staff'),
+        NextActionTarget.ownerGoal => Tr.pick('目標を選ぶ', 'Choose a goal'),
       };
 
   @override
@@ -57,6 +69,9 @@ class NextActionCard extends StatelessWidget {
       hasSigningProposals: proposals.isNotEmpty,
       transferDeadlineDaysLeft: gameState.transferWindowDaysLeft,
       transferDeadlineBeforeNextMatch: gameState.isTransferDeadlineDay,
+      includeSetup: true,
+      supporterTrend: gameState.supporterTrend,
+      rolloverShortfall: gameState.rolloverShortfall,
     );
     if (action == null) return const SizedBox.shrink();
 
@@ -67,8 +82,13 @@ class NextActionCard extends StatelessWidget {
 
     void go() {
       FeedbackService.tap();
+      final screen = _screenFor(action.target);
+      if (screen == null) {
+        OwnerGoalCard.choose(context);
+        return;
+      }
       Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => _screenFor(action.target)),
+        MaterialPageRoute<void>(builder: (_) => screen),
       );
     }
 
