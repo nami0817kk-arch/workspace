@@ -269,7 +269,7 @@ const List<RivalDef> RIVALS = [
   RivalDef('yuki', '結城 蒼', 'ユウキ・テック', 'genius', null, 0, '#8ad8ff'),
 ];
 
-const Map<String, String> RTYPE = {'zaibatsu': '老舗の財閥', 'fund': '外資ファンド', 'genius': '若い天才起業家', 'peer': '同期のライバル', 'state': '国策企業', 'avenger': '復讐者', 'ex': '元部下', 'grit': '地方の叩き上げ', 'asia': 'アジアの新興財閥', 'bigtech': '米国の巨大IT'};
+const LMap RTYPE = LMap({'zaibatsu': '老舗の財閥', 'fund': '外資ファンド', 'genius': '若い天才起業家', 'peer': '同期のライバル', 'state': '国策企業', 'avenger': '復讐者', 'ex': '元部下', 'grit': '地方の叩き上げ', 'asia': 'アジアの新興財閥', 'bigtech': '米国の巨大IT'});
 
 const List<String> SEI = ['佐藤', '鈴木', '高橋', '田中', '伊藤', '渡辺', '山本', '中村', '小林', '加藤', '吉田', '山田', '佐々木', '山口', '松本', '井上', '木村', '林', '清水', '山崎', '森', '池田', '橋本', '阿部', '石川', '前田', '藤田', '小川', '岡田', '後藤', '長谷川', '村上', '近藤', '石井', '坂本', '遠藤', '青木', '藤井', '西村', '福田', '太田', '三浦', '藤原', '岡本', '松田', '中川', '中野', '原田', '小野', '竹内'];
 
@@ -281,9 +281,9 @@ const List<String> CO_F = ['オーロラ', 'ゼニス', 'ノヴァ', 'ヘリオ�
 
 const List<String> CO_C = ['龍華', '瑞龍', '東華', '金鳳', '海天', '宏遠', '華星', '天穹', '錦江', '翠雲'];
 
-const List<String> NETMSG = ['大学の先輩経営者と知り合いました。採用の候補が少し良くなります', '銀行の支店長と顔なじみになりました。借りられる額が増えます', '投資家の集まりに呼ばれるようになりました', '業界団体の顔役に気に入られました', '財界の大物と会食しました。人脈はこれで十分です'];
+const LList NETMSG = LList(['大学の先輩経営者と知り合いました。採用の候補が少し良くなります', '銀行の支店長と顔なじみになりました。借りられる額が増えます', '投資家の集まりに呼ばれるようになりました', '業界団体の顔役に気に入られました', '財界の大物と会食しました。人脈はこれで十分です']);
 
-const List<String> REGN = ['国内', 'アジア', '世界'];
+const LList REGN = LList(['国内', 'アジア', '世界']);
 
 const List<String> CITY = ['東京', '上海', 'ニューヨーク'];
 
@@ -293,23 +293,23 @@ const Map<String, String> CO_FSUF = {'food': 'フーズ', 'live': 'リアルテ�
 
 const Map<String, String> NAMEC = {'jp': 'jp', 'cn': 'zh', 'tw': 'zh', 'sg': 'zh', 'kr': 'ko', 'in': 'hi', 'id': 'id', 'th': 'th', 'vn': 'vi', 'ph': 'tl', 'us': 'en', 'ca': 'en', 'uk': 'en', 'au': 'en', 'za': 'en', 'mx': 'es', 'es': 'es', 'br': 'pt', 'de': 'de', 'fr': 'fr', 'it': 'it', 'ru': 'ru', 'sa': 'ar', 'ng': 'yo'};
 
-const Map<String, String> MODELN = {'direct': '直営', 'fc': 'フランチャイズ', 'sub': '下請け', 'plat': '場をつくる'};
+const LMap MODELN = LMap({'direct': '直営', 'fc': 'フランチャイズ', 'sub': '下請け', 'plat': '場をつくる'});
 
-const Map<String, String> MODELD = {'direct': '自分で店や人を持つ。利益はふつう。現場の人が多く要る', 'fc': '加盟店に広げてもらう。速く安く広がり、人も加盟店が集める。取り分は加盟料だけで薄い。加盟店の不祥事が起きる', 'sub': '大企業の仕事を受ける。注文が安定し、不況にも強い。利益は薄い。元請けに切られることがある', 'plat': '売り手と買い手を集める場を持つ。小さいうちは赤字。シェアが大きくなるほど利益が厚くなり、一人勝ちしやすい。広告と値下げがよく効く'};
+const LMap MODELD = LMap({'direct': '自分で店や人を持つ。利益はふつう。現場の人が多く要る', 'fc': '加盟店に広げてもらう。速く安く広がり、人も加盟店が集める。取り分は加盟料だけで薄い。加盟店の不祥事が起きる', 'sub': '大企業の仕事を受ける。注文が安定し、不況にも強い。利益は薄い。元請けに切られることがある', 'plat': '売り手と買い手を集める場を持つ。小さいうちは赤字。シェアが大きくなるほど利益が厚くなり、一人勝ちしやすい。広告と値下げがよく効く'});
 
-const Map<String, String> ENTRYN = {'solo': '単独で出る', 'jv': '地元の会社と組む', 'buy': '地元の会社を買う'};
+const LMap ENTRYN = LMap({'solo': '単独で出る', 'jv': '地元の会社と組む', 'buy': '地元の会社を買う'});
 
-const Map<String, String> DEALN = {'sales': '販売の提携', 'codev': '共同開発', 'outsrc': '元請けになる（製造を任せる）', 'assoc': '業界団体に入る'};
+const LMap DEALN = LMap({'sales': '販売の提携', 'codev': '共同開発', 'outsrc': '元請けになる（製造を任せる）', 'assoc': '業界団体に入る'});
 
-const Map<String, String> DEALD = {'sales': '互いの商品を売り合う。同じ分類の事業の力が6%上がる', 'codev': '商品の開発費を出し合う。新商品の効きが1.5倍になる', 'outsrc': '作る仕事を相手に任せる。ものづくりと食の事業の維持費が3割減る。相手の不祥事はこちらの責任になる', 'assoc': 'その業種の会社の集まりに入る。宿敵がその業種で値下げ合戦を仕掛けてこなくなり、大手も後から入りにくくなる。自分から値下げ合戦をすると追い出される'};
+const LMap DEALD = LMap({'sales': '互いの商品を売り合う。同じ分類の事業の力が6%上がる', 'codev': '商品の開発費を出し合う。新商品の効きが1.5倍になる', 'outsrc': '作る仕事を相手に任せる。ものづくりと食の事業の維持費が3割減る。相手の不祥事はこちらの責任になる', 'assoc': 'その業種の会社の集まりに入る。宿敵がその業種で値下げ合戦を仕掛けてこなくなり、大手も後から入りにくくなる。自分から値下げ合戦をすると追い出される'});
 
-const Map<String, String> DIRTYN = {'poach': '強引な引き抜き', 'spy': '産業スパイ', 'lobby': 'ロビー活動', 'cook': '粉飾決算', 'cartel': '談合'};
+const LMap DIRTYN = LMap({'poach': '強引な引き抜き', 'spy': '産業スパイ', 'lobby': 'ロビー活動', 'cook': '粉飾決算', 'cartel': '談合'});
 
-const Map<String, String> DIRTYD = {'poach': '相手の腕利きを、高い給料で奪う。ばれると訴えられて賠償金', 'spy': '相手の商品の中身を盗む。同じ業種の事業が強くなり、相手が弱る。ばれると刑事事件', 'lobby': '政治家を動かして、相手の業種に規制をかける。ばれると汚職事件', 'cook': '利益を多く見せる。1年のあいだ株価と借りられる額が上がる。ばれると上場廃止', 'cartel': '同業者と値段を決め合う。2年のあいだ、その事業の利益が3割増える。ばれると巨額の罰金'};
+const LMap DIRTYD = LMap({'poach': '相手の腕利きを、高い給料で奪う。ばれると訴えられて賠償金', 'spy': '相手の商品の中身を盗む。同じ業種の事業が強くなり、相手が弱る。ばれると刑事事件', 'lobby': '政治家を動かして、相手の業種に規制をかける。ばれると汚職事件', 'cook': '利益を多く見せる。1年のあいだ株価と借りられる額が上がる。ばれると上場廃止', 'cartel': '同業者と値段を決め合う。2年のあいだ、その事業の利益が3割増える。ばれると巨額の罰金'});
 
-const Map<String, String> ABN = {'tou': '統率', 'kai': '開発', 'ei': '営業', 'zai': '財務'};
+const LMap ABN = LMap({'tou': '統率', 'kai': '開発', 'ei': '営業', 'zai': '財務'});
 
-const Map<String, String> CATN = {'live': '暮らし', 'food': '食', 'make': 'ものづくり', 'ene': 'エネルギー', 'link': 'つなぐ', 'money': 'お金', 'net': 'ネット', 'fun': '娯楽', 'med': '医療', 'fut': '未来'};
+const LMap CATN = LMap({'live': '暮らし', 'food': '食', 'make': 'ものづくり', 'ene': 'エネルギー', 'link': 'つなぐ', 'money': 'お金', 'net': 'ネット', 'fun': '娯楽', 'med': '医療', 'fut': '未来'});
 
 const Map<String, List<List<String>>> NAMEP = {
   'en': [['スミス', 'ジョンソン', 'ブラウン', 'テイラー', 'ミラー', 'ウィルソン', 'ムーア', 'クラーク', 'ホール', 'ヤング'], ['ジェームズ', 'エミリー', 'マイケル', 'サラ', 'デビッド', 'オリビア', 'ダニエル', 'ソフィア', 'ライアン', 'グレース']],
@@ -378,3 +378,61 @@ const List<Place> PLACES = [
   Place('meet', '異業種交流会', 'お金を出してくれる人がいる。ただし野心家が多い'),
   Place('net', '', '当たり外れが大きい。たまに天才がいる'),
 ];
+
+// ===== 名前のローマ字・元の綴り（英語の画面で使う。上の SEI / MEI / NAMEP / CO_A / CO_C / CO_F と同じ並び） =====
+
+const List<String> SEI_EN = ['Sato', 'Suzuki', 'Takahashi', 'Tanaka', 'Ito', 'Watanabe', 'Yamamoto', 'Nakamura', 'Kobayashi', 'Kato', 'Yoshida', 'Yamada', 'Sasaki', 'Yamaguchi', 'Matsumoto', 'Inoue', 'Kimura', 'Hayashi', 'Shimizu', 'Yamazaki', 'Mori', 'Ikeda', 'Hashimoto', 'Abe', 'Ishikawa', 'Maeda', 'Fujita', 'Ogawa', 'Okada', 'Goto', 'Hasegawa', 'Murakami', 'Kondo', 'Ishii', 'Sakamoto', 'Endo', 'Aoki', 'Fujii', 'Nishimura', 'Fukuda', 'Ota', 'Miura', 'Fujiwara', 'Okamoto', 'Matsuda', 'Nakagawa', 'Nakano', 'Harada', 'Ono', 'Takeuchi'];
+
+const List<String> MEI_EN = ['Kenichi', 'Makoto', 'Daisuke', 'Sho', 'Takuya', 'Hiroshi', 'Takashi', 'Tsuyoshi', 'Manabu', 'Ryo', 'Naoki', 'Kazuya', 'Yuma', 'Ren', 'Sota', 'Yoko', 'Megumi', 'Misaki', 'Aya', 'Mayumi', 'Aoi', 'Yui', 'Akemi', 'Yuki', 'Sakura', 'Rin', 'Naoko', 'Yuko', 'Chihiro', 'Akane'];
+
+const List<String> CO_A_EN = ['Gyosei', 'Hosho', 'Ruri', 'Ginga', 'Shiun', 'Suiho', 'Soten', 'Reinan', 'Setsurei', 'Suzaku', 'Genbu', 'Shirasagi', 'Tenro', 'Kyokko', 'Seikan', 'Kaien', 'Hibari', 'Geppaku', 'Aizome', 'Reimei', 'Shinonome', 'Saiun', 'Raicho', 'Wakaba', 'Kinpo', 'Seiryu', 'Hekikai', 'Momiji', 'Oto', 'Todai'];
+
+const List<String> CO_F_EN = ['Aurora', 'Zenith', 'Nova', 'Helios', 'Kestrel', 'Magna', 'Altea', 'Ceres', 'Draco', 'Polaris', 'Vega', 'Cassiopeia', 'Rigel', 'Antares', 'Betelgeuse', 'Sirius', 'Mira', 'Lumina', 'Strata', 'Quanta'];
+
+const List<String> CO_C_EN = ['Longhua', 'Ruilong', 'Donghua', 'Jinfeng', 'Haitian', 'Hongyuan', 'Huaxing', 'Tianqiong', 'Jinjiang', 'Cuiyun'];
+
+/// 分類ごとの社名の結び（国内の会社の結び・外資の会社の結び）
+const Map<String, (String, String)> CO_SUF_EN = {
+  'food': ('Foods', 'Foods'),
+  'live': ('Realty', 'Realty'),
+  'make': ('Industries', 'Industries'),
+  'ene': ('Energy', 'Energy'),
+  'link': ('Trading', 'Logistics'),
+  'money': ('Bank', 'Capital'),
+  'net': ('Tech', 'Systems'),
+  'fun': ('Entertainment', 'Studios'),
+  'med': ('Medical', 'Pharma'),
+  'fut': ('Labs', 'Dynamics'),
+};
+
+/// 宿敵の名前と会社、名前の部品
+const Map<String, String> RIVAL_NAMES_EN = {
+  '黒田': 'Kuroda', '剛造': 'Gozo', '黒田興産': 'Kuroda Kosan',
+  'マーカス': 'Marcus', 'ヘイル': 'Hale',
+  '真壁': 'Makabe', '修': 'Osamu', '真壁商会': 'Makabe & Co.',
+  '天佑': 'Tianyou', '天佑集団': 'Tianyou Group',
+  '西園寺': 'Saionji', '麗子': 'Reiko', '西園寺ホールディングス': 'Saionji Holdings',
+  '鬼塚': 'Onizuka', '獅郎': 'Shiro', '鬼塚興業': 'Onizuka Industries',
+  'アーニャ': 'Anya', 'ヴォルコワ': 'Volkova',
+  '結城': 'Yuki', '蒼': 'Ao', 'ユウキ': 'Yuki', 'テック': 'Tech',
+  'ネクスト': 'Next',
+};
+
+const Map<String, List<List<String>>> NAMEP_EN = {
+  'en': [['Smith', 'Johnson', 'Brown', 'Taylor', 'Miller', 'Wilson', 'Moore', 'Clark', 'Hall', 'Young'], ['James', 'Emily', 'Michael', 'Sarah', 'David', 'Olivia', 'Daniel', 'Sophia', 'Ryan', 'Grace']],
+  'zh': [['Wang', 'Li', 'Zhang', 'Liu', 'Chen', 'Yang', 'Huang', 'Zhao', 'Zhou', 'Wu'], ['Wei', 'Fang', 'Na', 'Min', 'Jing', 'Lei', 'Yang', 'Yong', 'Jie', 'Li']],
+  'ko': [['Kim', 'Lee', 'Park', 'Choi', 'Jung', 'Kang', 'Cho', 'Yoon', 'Jang', 'Lim'], ['Minjun', 'Seoyeon', 'Jihoon', 'Haeun', 'Dohyun', 'Subin', 'Jiwoo', 'Yuna', 'Hyunwoo', 'Seoa']],
+  'hi': [['Sharma', 'Patel', 'Singh', 'Kumar', 'Gupta', 'Mehta', 'Rao', 'Nair', 'Joshi', 'Reddy'], ['Arjun', 'Priya', 'Rahul', 'Ananya', 'Vikram', 'Divya', 'Rohan', 'Neha', 'Aditya', 'Kavya']],
+  'es': [['Garcia', 'Rodriguez', 'Martinez', 'Lopez', 'Gonzalez', 'Perez', 'Sanchez', 'Ramirez', 'Torres', 'Flores'], ['Alejandro', 'Maria', 'Javier', 'Lucia', 'Carlos', 'Sofia', 'Diego', 'Camila', 'Miguel', 'Valentina']],
+  'pt': [['Silva', 'Santos', 'Oliveira', 'Souza', 'Ferreira', 'Alves', 'Pereira', 'Lima', 'Gomes', 'Costa'], ['Joao', 'Ana', 'Pedro', 'Beatriz', 'Lucas', 'Julia', 'Gabriel', 'Larissa', 'Mateus', 'Fernanda']],
+  'de': [['Muller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker', 'Hoffmann', 'Schulz'], ['Lukas', 'Hanna', 'Jonas', 'Lea', 'Felix', 'Mia', 'Paul', 'Emma', 'Maximilian', 'Sophie']],
+  'fr': [['Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand', 'Leroy', 'Moreau'], ['Louis', 'Camille', 'Gabriel', 'Lea', 'Jules', 'Manon', 'Arthur', 'Chloe', 'Raphael', 'Ines']],
+  'it': [['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco'], ['Leonardo', 'Giulia', 'Francesco', 'Sofia', 'Alessandro', 'Aurora', 'Lorenzo', 'Alice', 'Matteo', 'Ginevra']],
+  'ru': [['Ivanov', 'Smirnov', 'Kuznetsov', 'Popov', 'Vasiliev', 'Petrov', 'Sokolov', 'Mikhailov', 'Fyodorov', 'Morozov'], ['Alexander', 'Anastasia', 'Dmitry', 'Maria', 'Sergei', 'Ekaterina', 'Andrei', 'Daria', 'Mikhail', 'Polina']],
+  'ar': [['Al-Rashid', 'Al-Harbi', 'Al-Ghamdi', 'Al-Zahrani', 'Al-Otaibi', 'Al-Shamrani', 'Al-Qahtani', 'Al-Dosari', 'Al-Mutairi', 'Al-Khalidi'], ['Muhammad', 'Fatima', 'Ahmad', 'Noor', 'Khalid', 'Sara', 'Abdullah', 'Layla', 'Faisal', 'Hana']],
+  'yo': [['Adeyemi', 'Okonkwo', 'Oladipo', 'Babatunde', 'Eze', 'Adebayo', 'Nwosu', 'Ogunleye', 'Ibrahim', 'Bello'], ['Chidi', 'Amaka', 'Tunde', 'Ngozi', 'Emeka', 'Folake', 'Segun', 'Chioma', 'Ifeanyi', 'Busi']],
+  'id': [['Susilo', 'Wijaya', 'Santoso', 'Haryono', 'Kusuma', 'Pratama', 'Nugroho', 'Saputra', 'Hadi', 'Utami'], ['Adi', 'Dewi', 'Budi', 'Siti', 'Rizki', 'Putri', 'Agus', 'Indah', 'Fajar', 'Ratna']],
+  'th': [['Srisawat', 'Wongsawan', 'Chaiyaphon', 'Saksai', 'Boonmee', 'Suksawat', 'Rattana', 'Phatthana', 'Thanawat', 'Kitti'], ['Somchai', 'Mali', 'Anan', 'Nipha', 'Chatchai', 'Pranee', 'Wichai', 'Suda', 'Thana', 'Phon']],
+  'vi': [['Nguyen', 'Tran', 'Le', 'Pham', 'Hoang', 'Huynh', 'Phan', 'Vu', 'Vo', 'Dang'], ['Minh', 'Linh', 'Hung', 'Lan', 'Tuan', 'Ha', 'Dung', 'Mai', 'Nam', 'Thu']],
+  'tl': [['Santos', 'Reyes', 'Cruz', 'Bautista', 'Ocampo', 'Garcia', 'Mendoza', 'Torres', 'Ramos', 'Aquino'], ['Jose', 'Maria', 'Juan', 'Ana', 'Mark', 'Christine', 'John', 'Jasmine', 'Paul', 'Nicole']],
+};

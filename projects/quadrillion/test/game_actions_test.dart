@@ -71,18 +71,18 @@ void main() {
     final s = _grown(seed: 31, months: 36);
     _fill(s);
     final b = s.biz.first;
-    expect(s.develop(b, .1), contains('開発'));
-    expect(s.build(b, .1), contains('か月後に開きます'));
-    expect(s.addCrew(b, .05), contains('現場の人'));
-    expect(s.adv(b), contains('広告'));
+    expect(tx(s.develop(b, .1)), contains('開発'));
+    expect(tx(s.build(b, .1)), contains('か月後に開きます'));
+    expect(tx(s.addCrew(b, .05)), contains('現場の人'));
+    expect(tx(s.adv(b)), contains('広告'));
     expect(s.invest(b, .05), isNotEmpty);
     s.setPrice(b, 'cut');
     expect(b.price, 'cut');
     for (final m in s.modelsFor(b.ind).where((m) => m != b.model)) {
-      expect(s.changeModel(b, m), contains('切り替えました'));
+      expect(tx(s.changeModel(b, m)), contains('切り替えました'));
     }
     final t = s.pivotTargets(b);
-    if (t.isNotEmpty) expect(s.pivot(b, t.first.id), contains('業態転換'));
+    if (t.isNotEmpty) expect(tx(s.pivot(b, t.first.id)), contains('業態転換'));
     expect(s.cancelPipe(b, 0), isNotEmpty);
     for (var i = 0; i < 8; i++) {
       s.nextQuarter();
@@ -98,27 +98,27 @@ void main() {
       final p = s.meet!;
       expect(p.place, pl.id);
       final r = s.recruitPartner(p, 10);
-      expect(r, contains(p.name));
+      expect(tx(r), contains(p.name));
       expect(s.meet, isNull);
     }
     expect(s.partners().length, lessThanOrEqualTo(2));
     expect(s.sh.own + s.sh.pt, closeTo(100, 1e-9));
     s.ap = 9;
-    expect(s.presAct('work'), contains('稼ぎました'));
-    expect(s.presAct('train', 'zai'), contains('財務'));
+    expect(tx(s.presAct('work')), contains('稼ぎました'));
+    expect(tx(s.presAct('train', 'zai')), contains('財務'));
     expect(s.presAct('net'), isNotEmpty);
     expect(s.presAct('scout'), isNotEmpty);
-    if (s.partners().length >= 2) expect(s.presAct('seek', 'lab'), '相棒は2人までです');
+    if (s.partners().length >= 2) expect(tx(s.presAct('seek', 'lab')), '相棒は2人までです');
   });
 
   test('海外に出る（単独・組む・買う）と、準備が済むと国が増える', () {
     final s = _grown(seed: 41, months: 24);
     _fill(s);
     final b = s.biz.first;
-    expect(s.enterCountry(b, 'kr', 'buy'), contains('すぐに'));
+    expect(tx(s.enterCountry(b, 'kr', 'buy')), contains('すぐに'));
     expect(s.ctryOf(b), contains('kr'));
-    expect(s.enterCountry(b, 'us', 'solo'), contains('6か月後'));
-    expect(s.enterCountry(b, 'cn', 'jv'), contains('3か月後'));
+    expect(tx(s.enterCountry(b, 'us', 'solo')), contains('6か月後'));
+    expect(tx(s.enterCountry(b, 'cn', 'jv')), contains('3か月後'));
     for (var i = 0; i < 7; i++) {
       s.nextQuarter();
       resolveEvents(s);
@@ -136,7 +136,7 @@ void main() {
     s.turn = 30;
     if (!s.listed) {
       s.pre = 1e12;
-      expect(s.ipo(), contains('上場しました'));
+      expect(tx(s.ipo()), contains('上場しました'));
     }
     s.calcAll();
     _fill(s);
@@ -150,7 +150,7 @@ void main() {
     }
     expect(target.parent, 'player');
     s.tob(target, 66.7);
-    if (s.pctOf(target) >= 66.7 && s.canMerge(target)) expect(s.merge(target), contains('合併しました'));
+    if (s.pctOf(target) >= 66.7 && s.canMerge(target)) expect(tx(s.merge(target)), contains('合併しました'));
     // 株式交換（小さい会社を丸ごと）
     final small = (s.cos.where((c) => c.alive && c.parent != 'player').toList()..ssort((a, b) => a.cap.compareTo(b.cap))).first;
     final own0 = s.sh.own;
@@ -159,7 +159,7 @@ void main() {
       s.ap = 99;
       r = s.shareSwap(small);
     }
-    expect(r, contains('丸ごと買いました'));
+    expect(tx(r), contains('丸ごと買いました'));
     expect(small.alive, isFalse);
     expect(s.sh.own, lessThan(own0));
     // 会社の形
@@ -167,20 +167,20 @@ void main() {
       final i = s.liveInds().firstWhere((i) => !s.biz.any((b) => b.ind == i.id));
       s.startBiz(i.id);
     }
-    expect(s.makeHolding(), contains('持株会社'));
+    expect(tx(s.makeHolding()), contains('持株会社'));
     final staff1 = s.mkPerson(0), staff2 = s.mkPerson(0);
     s.staff.addAll([staff1, staff2]);
     s.biz[0].mgr = staff1.id;
-    expect(s.spinOff(s.biz[0]), contains('分社'));
+    expect(tx(s.spinOff(s.biz[0])), contains('分社'));
     s.biz[0].mgr = staff2.id;
-    expect(s.releaseBiz(s.biz[0]), contains('独立させました'));
+    expect(tx(s.releaseBiz(s.biz[0])), contains('独立させました'));
     final sub = s.subs().first;
-    expect(s.subIPO(sub), contains('上場させ'));
+    expect(tx(s.subIPO(sub)), contains('上場させ'));
     final cat = indm[s.biz.last.ind]!.cat;
-    if (s.biz.any((b) => indm[b.ind]!.cat != cat)) expect(s.splitCompany(cat), contains('切り離し'));
-    expect(s.sellOwn(5), contains('財産'));
+    if (s.biz.any((b) => indm[b.ind]!.cat != cat)) expect(tx(s.splitCompany(cat)), contains('切り離し'));
+    expect(tx(s.sellOwn(5)), contains('財産'));
     _fill(s);
-    expect(s.goPrivate(), contains('非上場'));
+    expect(tx(s.goPrivate()), contains('非上場'));
     for (var i = 0; i < 12; i++) {
       s.nextQuarter();
       resolveEvents(s);
@@ -194,7 +194,7 @@ void main() {
     buyer.cap = s.cap * 3;
     final price = s.salePrice(true);
     final msg = s.sellCompany(buyer, true);
-    expect(msg, contains('売りました'));
+    expect(tx(msg), contains('売りました'));
     expect(s.biz, isEmpty);
     expect(s.wealth, closeTo(price * .5, price * 1e-9));
     expect(s.cash, closeTo(price * .5, price * 1e-9));
@@ -202,8 +202,8 @@ void main() {
     expect(s.cos.any((c) => c.formerMine), isTrue);
     // 約束の業種には入れない。破ると裁判
     final banned = s.noncomp!.inds.first;
-    expect(s.startBiz(banned), contains('約束'));
-    expect(s.breakNoncomp(), contains('約束を破る'));
+    expect(tx(s.startBiz(banned)), contains('約束'));
+    expect(tx(s.breakNoncomp()), contains('約束を破る'));
     expect(s.suits.single.against, isTrue);
     for (var i = 0; i < 30; i++) {
       s.nextQuarter();
@@ -216,11 +216,11 @@ void main() {
     _fill(s);
     final c = s.cos.firstWhere((c) => c.alive && c.parent != 'player' && c.rel >= -20);
     for (final t in const ['sales', 'codev', 'outsrc']) {
-      expect(s.makeDeal(c, t), contains('組みました'));
+      expect(tx(s.makeDeal(c, t)), contains('組みました'));
     }
-    expect(s.makeDeal(c, 'sales'), 'すでに組んでいます');
-    expect(s.betray(s.deals.first), contains('裏切り'));
-    expect(s.endDeal(s.deals.first), contains('解消'));
+    expect(tx(s.makeDeal(c, 'sales')), 'すでに組んでいます');
+    expect(tx(s.betray(s.deals.first)), contains('裏切り'));
+    expect(tx(s.endDeal(s.deals.first)), contains('解消'));
     final b = s.biz.first;
     if (s.competitors(b).isNotEmpty) expect(s.joinAssoc(b), isNotEmpty);
     final foe = s.cos.firstWhere((c) => c.rival != null && c.alive && c.parent != 'player');
@@ -233,7 +233,7 @@ void main() {
     s.staff.add(p);
     s.choosePresSucc(p.id);
     final gen0 = s.gen;
-    expect(s.retire(), contains('社長になりました'));
+    expect(tx(s.retire()), contains('社長になりました'));
     expect(s.pres.name, p.name);
     expect(s.gen, gen0 + 1);
     for (var i = 0; i < 30; i++) {

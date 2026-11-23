@@ -42,7 +42,7 @@ class _QuadrillionAppState extends State<QuadrillionApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'クアドリリオン',
+      title: tr('クアドリリオン'),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
@@ -129,41 +129,41 @@ class SetupScreen extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 620),
         child: ListView(padding: const EdgeInsets.fromLTRB(12, 24, 12, 40), children: [
           Text('QUADRILLION', style: ts(size: 34, color: Pal.goldtx, bold: true)),
-          const Padding(padding: EdgeInsets.only(bottom: 18), child: Muted('クアドリリオンゲーム ― 屋台から1000兆円へ', size: 14)),
+          Padding(padding: const EdgeInsets.only(bottom: 18), child: Muted(tr('クアドリリオンゲーム ― 屋台から1000兆円へ'), size: 14)),
           if (ctl.hasSave()) ...[
-            const H2('続きから', top: true),
+            H2(tr('続きから'), top: true),
             Panel(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                   for (var i = 1; i <= slotCount; i++) _slotRow(i, ctl.slotInfo(i), last: i == slotCount),
                 ])),
           ],
-          const H2('モード'),
+          H2(tr('モード')),
           _opt([
             for (final o in const [
               ('world', '世界一位', '世界の企業ランキングで1位になれば勝ち'),
               ('quad', '1000兆円', 'グループの時価総額1000兆円を目指す'),
               ('endless', '終わりなし', '倒産しても再起できる。のんびり育てる'),
             ])
-              ChoiceBtn(o.$2, () => set(() => st.mode = o.$1), on: st.mode == o.$1, subs: [o.$3]),
+              ChoiceBtn(tr(o.$2), () => set(() => st.mode = o.$1), on: st.mode == o.$1, subs: [tr(o.$3)]),
           ]),
-          const H2('始める年代'),
+          H2(tr('始める年代')),
           _opt([
             for (final o in const [
               (1980, '1980年', 'バブル・崩壊・ネット・スマホ・AI をすべてくぐる'),
               (2000, '2000年', 'ネットの到来から。IT の成り上がり'),
               (2025, '2025年', 'AI の時代から未来へ'),
             ])
-              ChoiceBtn(o.$2, () => set(() => st.year = o.$1), on: st.year == o.$1, subs: [o.$3]),
+              ChoiceBtn(tr(o.$2), () => set(() => st.year = o.$1), on: st.year == o.$1, subs: [tr(o.$3)]),
           ]),
-          const H2('始める国'),
+          H2(tr('始める国')),
           _opt([
             for (final x in CTRY)
               ChoiceBtn(x.n, () => set(() => st.home = x.c),
-                  on: st.home == x.c, subs: ['${x.city}・市場 ×${(cw(x.c, y) / cw('jp', y)).toStringAsFixed(2)}']),
+                  on: st.home == x.c, subs: [tr('{0}・市場 ×{1}', [x.city, (cw(x.c, y) / cw('jp', y)).toStringAsFixed(2)])]),
           ]),
-          const H2('社長の特性（2つ選ぶ）'),
-          const Padding(padding: EdgeInsets.only(bottom: 8), child: Muted('どの特性にも強い点と弱い点があります')),
+          H2(tr('社長の特性（2つ選ぶ）')),
+          Padding(padding: const EdgeInsets.only(bottom: 8), child: Muted(tr('どの特性にも強い点と弱い点があります'))),
           _opt([
             for (final t in TRAITS)
               ChoiceBtn(t.n, () {
@@ -174,22 +174,22 @@ class SetupScreen extends StatelessWidget {
                     st.traits.add(t.id);
                   }
                 });
-              }, on: st.traits.contains(t.id), subs: ['＋${t.g}', '－${t.b}']),
+              }, on: st.traits.contains(t.id), subs: ['${tr('＋')}${t.g}', '${tr('－')}${t.b}']),
           ]),
-          const H2('難しさ'),
+          H2(tr('難しさ')),
           _opt([
             for (final d in DIFFS) ChoiceBtn(d.n, () => set(() => st.diff = d.id), on: st.diff == d.id, subs: [d.d]),
           ]),
-          const H2('保存する枠'),
+          H2(tr('保存する枠')),
           _opt([
             for (var i = 1; i <= slotCount; i++)
-              ChoiceBtn('枠$i', () => set(() => ctl.newSlot = i), on: ctl.startSlot == i, subs: [_slotShort(ctl.slotInfo(i))]),
+              ChoiceBtn(tr('枠{0}', [i]), () => set(() => ctl.newSlot = i), on: ctl.startSlot == i, subs: [_slotShort(ctl.slotInfo(i))]),
           ]),
-          const Padding(padding: EdgeInsets.only(top: 16), child: Muted('社長は22歳、大学を出たばかり。最初は会社の名前だけがあります。')),
+          Padding(padding: const EdgeInsets.only(top: 16), child: Muted(tr('社長は22歳、大学を出たばかり。最初は会社の名前だけがあります。'))),
           const SizedBox(height: 10),
           Align(
             alignment: Alignment.centerLeft,
-            child: Btn('会社を立ち上げる', () {
+            child: Btn(tr('会社を立ち上げる'), () {
               void go() {
                 ctl.startNew();
                 ctl.render();
@@ -202,9 +202,9 @@ class SetupScreen extends StatelessWidget {
                 go();
               } else {
                 confirmThen(ctl,
-                    title: '枠$kに上書きする',
-                    text: '枠$kの${old.name}の会社（${old.year}年${old.q}月・時価総額${yen(old.cap)}）は消え、新しい会社に置き換わります。',
-                    yes: '上書きして始める',
+                    title: tr('枠{0}に上書きする', [k]),
+                    text: tr('枠{0}の{1}の会社（{2}・時価総額{3}）は消え、新しい会社に置き換わります。', [k, nmL(old.name), ym(old.year, old.q), yen(old.cap)]),
+                    yes: tr('上書きして始める'),
                     onYes: go);
               }
             }, primary: true, enabled: st.traits.length >= 2),
@@ -219,20 +219,20 @@ class SetupScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: last ? null : const BoxDecoration(border: Border(bottom: BorderSide(color: Pal.line))),
         child: Row(children: [
-          SizedBox(width: 44, child: Text('枠$i', style: ts(bold: true, color: Pal.goldtx))),
+          SizedBox(width: 56, child: Text(tr('枠{0}', [i]), style: ts(bold: true, color: Pal.goldtx))),
           Expanded(
             child: info == null
-                ? const Muted('空き', size: 13)
+                ? Muted(tr('空き'), size: 13)
                 : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('${info.year}年${info.q}月　${info.name}', style: ts(size: 14, bold: true)),
+                    Text('${ym(info.year, info.q)}${tr('　')}${nmL(info.name)}', style: ts(size: 14, bold: true)),
                     Text(
-                        '時価総額${yen(info.cap)}・世界${info.rank > 0 ? '${info.rank}位' : '―'}'
-                        '\n${modeName(info.mode)}・${diffOf(info.diff).n}${info.ended ? '・決着済み' : ''}',
+                        '${tr('時価総額{0}・世界{1}', [yen(info.cap), info.rank > 0 ? tr('{0}位', [info.rank]) : '―'])}'
+                        '\n${modeName(info.mode)}${tr('・')}${diffOf(info.diff).n}${info.ended ? tr('・決着済み') : ''}',
                         style: ts(size: 12, color: Pal.mute, height: 1.4)),
                   ]),
           ),
           if (info != null)
-            Btn('続きから', () {
+            Btn(tr('続きから'), () {
               if (ctl.load(i)) {
                 ctl.tab = 'town';
                 ctl.render();
@@ -241,13 +241,13 @@ class SetupScreen extends StatelessWidget {
         ]),
       );
 
-  static String _slotShort(SlotInfo? i) => i == null ? '空き' : '使用中：${i.year}年 ${i.name}';
+  static String _slotShort(SlotInfo? i) => i == null ? tr('空き') : tr('使用中：{0} {1}', [yearL(i.year), nmL(i.name)]);
 }
 
 String modeName(String m) => switch (m) {
-      'quad' => '1000兆円',
-      'endless' => '終わりなし',
-      _ => '世界一位',
+      'quad' => tr('1000兆円'),
+      'endless' => tr('終わりなし'),
+      _ => tr('世界一位'),
     };
 
 // ===== 本体 =====
@@ -255,7 +255,7 @@ class MainScreen extends StatelessWidget {
   final GameController ctl;
   const MainScreen({super.key, required this.ctl});
 
-  static const tabs = [('town', '街'), ('biz', '事業'), ('people', '人'), ('stock', '株'), ('num', '数字'), ('zukan', '図鑑')];
+  static const tabs = [('town', '街@@tab'), ('biz', '事業@@tab'), ('people', '人@@tab'), ('stock', '株@@tab'), ('num', '数字@@tab'), ('zukan', '図鑑@@tab')];
 
   @override
   Widget build(BuildContext context) {
@@ -274,16 +274,16 @@ class MainScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
-          Text('${s.year}年 ${s.q}月', style: ts(size: 18, color: Pal.goldtx, bold: true)),
+          Text(ym(s.year, s.q, sp: true), style: ts(size: 18, color: Pal.goldtx, bold: true)),
           const SizedBox(width: 8),
           Expanded(
-              child: Text('${s.pres.name}・${s.pres.age}歳${s.gen > 1 ? '（${s.gen}代目）' : ''}',
+              child: Text(tr('{0}・{1}歳{2}', [nmL(s.pres.name), s.pres.age, s.gen > 1 ? tr('（{0}代目）', [s.gen]) : '']),
                   textAlign: TextAlign.right, overflow: TextOverflow.ellipsis, style: ts(size: 12.5, color: Pal.mute))),
           const SizedBox(width: 8),
-          Semantics(label: '遊び方', child: Btn('？', () => showHelp(ctl), small: true)),
+          Semantics(label: tr('遊び方'), child: Btn(tr('？'), () => showHelp(ctl), small: true)),
           const SizedBox(width: 6),
           Semantics(
-            label: '設定',
+            label: tr('設定'),
             button: true,
             child: Material(
               color: Pal.panel2,
@@ -299,13 +299,13 @@ class MainScreen extends StatelessWidget {
         ]),
         const SizedBox(height: 4),
         Wrap(spacing: 14, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
-          FlashStat('現金 ', yen(s.cash), value: s.cash, turn: s.turn),
-          if (s.debt > 0) _stat('借金 ', yen(s.debt), Pal.down),
-          FlashStat('時価総額 ', yen(s.cap), value: s.cap, turn: s.turn, color: Pal.goldtx),
-          if (s.wealth > 0) _stat('財産 ', yen(s.wealth)),
-          FlashStat('世界 ', '$rk位', value: rk.toDouble(), turn: s.turn, higherIsBetter: false),
+          FlashStat(tr('現金 '), yen(s.cash), value: s.cash, turn: s.turn),
+          if (s.debt > 0) _stat(tr('借金 '), yen(s.debt), Pal.down),
+          FlashStat(tr('時価総額 '), yen(s.cap), value: s.cap, turn: s.turn, color: Pal.goldtx),
+          if (s.wealth > 0) _stat(tr('財産 '), yen(s.wealth)),
+          FlashStat(tr('世界 '), tr('{0}位', [rk]), value: rk.toDouble(), turn: s.turn, higherIsBetter: false),
           Row(mainAxisSize: MainAxisSize.min, children: [
-            Text('手 ', style: ts(size: 12.5, color: Pal.mute)),
+            Text(tr('手 '), style: ts(size: 12.5, color: Pal.mute)),
             for (var i = 0; i < s.apMax; i++)
               Container(
                 width: 10,
@@ -321,16 +321,16 @@ class MainScreen extends StatelessWidget {
         ? Panel(
             border: s.won != null ? Pal.gold : Pal.down,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              H2(s.won != null ? '達成！' : 'ゲームオーバー', top: true),
-              Text((s.won ?? s.over)!, style: ts()),
+              H2(tr(s.won != null ? '達成！' : 'ゲームオーバー'), top: true),
+              Text(tx(s.won ?? s.over), style: ts()),
               const SizedBox(height: 8),
               Wrap(spacing: 8, runSpacing: 8, children: [
-                if (s.won != null && s.over == null) Btn('このまま続ける', () => continueAfterWin(ctl)),
-                Btn('まとめを見る', () {
+                if (s.won != null && s.over == null) Btn(tr('このまま続ける'), () => continueAfterWin(ctl)),
+                Btn(tr('まとめを見る'), () {
                   ctl.endHidden = false;
                   ctl.render();
                 }),
-                Btn('はじめから', () => s.over != null ? ctl.backToSetup() : confirmRestart(ctl)),
+                Btn(tr('はじめから'), () => s.over != null ? ctl.backToSetup() : confirmRestart(ctl)),
               ]),
             ]),
           )
@@ -350,15 +350,15 @@ class MainScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
           // 出来事が起きたらそこで止まる
           child: Row(children: [
-            Btn('1年進める', () => doYear(ctl, 12), small: true),
+            Btn(tr('1年進める'), () => doYear(ctl, 12), small: true),
             const SizedBox(width: 6),
-            Btn('3か月進める', () => doYear(ctl, 3), small: true),
+            Btn(tr('3か月進める'), () => doYear(ctl, 3), small: true),
             const SizedBox(width: 6),
             Expanded(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerRight,
-                child: Btn(s.ap > 0 ? '次の月へ（手が${s.ap}残っています）' : '次の月へ', () => doNext(ctl), primary: true),
+                child: Btn(s.ap > 0 ? tr('次の月へ（手が{0}残っています）', [s.ap]) : tr('次の月へ'), () => doNext(ctl), primary: true),
               ),
             ),
           ]),
@@ -376,9 +376,13 @@ class MainScreen extends StatelessWidget {
                     onTap: () => ctl.setTab(t.$1),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Text(t.$2,
-                          textAlign: TextAlign.center,
-                          style: ts(size: 13, color: ctl.tab == t.$1 ? Pal.goldtx : Pal.mute, bold: ctl.tab == t.$1)),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(tr(t.$2),
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            style: ts(size: 13, color: ctl.tab == t.$1 ? Pal.goldtx : Pal.mute, bold: ctl.tab == t.$1)),
+                      ),
                     ),
                   ),
                 ),
@@ -390,7 +394,7 @@ class MainScreen extends StatelessWidget {
   }
 
   Widget _stat(String k, String v, [Color c = Pal.ink]) => Text.rich(TextSpan(children: [
-        TextSpan(text: k, style: ts(size: 12.5, color: Pal.mute)),
+        TextSpan(text: tx(k), style: ts(size: 12.5, color: Pal.mute)),
         TextSpan(text: v, style: ts(size: 12.5, color: c, bold: true)),
       ]));
 }
@@ -431,42 +435,42 @@ class EndScreen extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 620),
             child: ListView(padding: const EdgeInsets.fromLTRB(16, 28, 16, 32), children: [
-              Text(win ? '達成！' : 'ゲームオーバー', style: ts(size: 30, bold: true, color: accent)),
+              Text(tr(win ? '達成！' : 'ゲームオーバー'), style: ts(size: 30, bold: true, color: accent)),
               const SizedBox(height: 6),
-              Text((s.won ?? s.over)!, style: ts(size: 15, height: 1.5)),
+              Text(tx(s.won ?? s.over), style: ts(size: 15, height: 1.5)),
               const SizedBox(height: 4),
-              Muted('${s.pres.name}${s.gen > 1 ? '（${s.gen}代目）' : ''}・${s.year}年${s.q}月'),
+              Muted('${nmL(s.pres.name)}${s.gen > 1 ? tr('（{0}代目）', [s.gen]) : ''}${tr('・')}${ym(s.year, s.q)}'),
               const SizedBox(height: 14),
               Panel(
                 border: win ? Pal.gold : Pal.line,
                 child: Column(children: [
-                  stat('創業から', '$years年（${s.startYear}年〜）'),
-                  stat('世界ランキングの最高位', s.peakRank >= 999 ? '―' : '${s.peakRank}位'),
-                  stat('時価総額の最大', yen(s.maxCap)),
-                  stat('財産の最大', yen(s.maxWealth)),
+                  stat(tr('創業から'), tr('{0}年（{1}年〜）', [years, s.startYear])),
+                  stat(tr('世界ランキングの最高位'), s.peakRank >= 999 ? '―' : tr('{0}位', [s.peakRank])),
+                  stat(tr('時価総額の最大'), yen(s.maxCap)),
+                  stat(tr('財産の最大'), yen(s.maxWealth)),
                 ]),
               ),
               if (marks.isNotEmpty) ...[
-                const H2('社史の節目'),
+                H2(tr('社史の節目')),
                 Panel(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                     for (final e in marks)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          SizedBox(width: 84, child: Text('${e.y}年${e.q}月', style: ts(size: 12.5, color: Pal.mute))),
-                          Expanded(child: Text(e.m, style: ts(size: 13.5, height: 1.45))),
+                          SizedBox(width: 84, child: Text(ym(e.y, e.q), style: ts(size: 12.5, color: Pal.mute))),
+                          Expanded(child: Text(tx(e.m), style: ts(size: 13.5, height: 1.45))),
                         ]),
                       ),
                   ]),
                 ),
               ],
               const SizedBox(height: 18),
-              if (win) ChoiceBtn('このまま続ける', () => continueAfterWin(ctl), primary: true, subs: const ['「終わりなし」のモードで、この会社を育て続ける']),
-              ChoiceBtn('はじめから', () => win ? confirmRestart(ctl) : ctl.backToSetup(), primary: !win, subs: const ['新しい会社を立ち上げる']),
+              if (win) ChoiceBtn(tr('このまま続ける'), () => continueAfterWin(ctl), primary: true, subs: [tr('「終わりなし」のモードで、この会社を育て続ける')]),
+              ChoiceBtn(tr('はじめから'), () => win ? confirmRestart(ctl) : ctl.backToSetup(), primary: !win, subs: [tr('新しい会社を立ち上げる')]),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Btn('盤面を見る', () {
+                child: Btn(tr('盤面を見る'), () {
                   ctl.endHidden = true;
                   ctl.render();
                 }),

@@ -162,7 +162,7 @@ void main() {
           final th = rankMarks.where((m) => s.peakRank <= m).firstOrNull;
           expect(added.length, th == null ? 0 : 1);
           if (th != null && th > 1) {
-            expect(added.single.m, contains('$th位以内'));
+            expect(tx(added.single.m), contains('$th位以内'));
             seen.add(th);
           }
         }
@@ -186,9 +186,9 @@ void main() {
       final s = mid();
       expect(s.biz.length + s.subs().length, greaterThanOrEqualTo(5));
       s.holding = false;
-      expect(s.adviceAll().any((m) => m.contains('持株会社')), isTrue);
+      expect(s.adviceAll().map(tx).any((m) => m.contains('持株会社')), isTrue);
       s.holding = true;
-      expect(s.adviceAll().any((m) => m.contains('持株会社')), isFalse);
+      expect(s.adviceAll().map(tx).any((m) => m.contains('持株会社')), isFalse);
     });
 
     test('4か国の事業には「あと1か国で規模の利益」', () {
@@ -196,9 +196,9 @@ void main() {
       final b = s.biz.first;
       b.pipe.clear();
       b.ctry = [s.home, 'us', 'cn', 'de'];
-      expect(s.adviceAll().any((m) => m.contains('あと1か国で規模の利益')), isTrue);
+      expect(s.adviceAll().map(tx).any((m) => m.contains('あと1か国で規模の利益')), isTrue);
       b.ctry = [s.home, 'us', 'cn', 'de', 'in'];
-      expect(s.adviceAll().any((m) => m.contains('「${indm[b.ind]!.name}」は4か国')), isFalse);
+      expect(s.adviceAll().map(tx).any((m) => m.contains('「${indm[b.ind]!.name}」は4か国')), isFalse);
     });
 
     test('伸びている事業が1か国だけなら海外を勧める', () {
@@ -212,9 +212,9 @@ void main() {
       b.prevRev = b.rev * .9;
       b.profit = b.rev.abs() + 1;
       s.cash = 1e15;
-      expect(s.adviceAll().any((m) => m.contains('「${indm[b.ind]!.name}」が伸びています') && m.contains('海外に出る')), isTrue);
+      expect(s.adviceAll().map(tx).any((m) => m.contains('「${indm[b.ind]!.name}」が伸びています') && m.contains('海外に出る')), isTrue);
       b.prevRev = b.rev * 1.1;
-      expect(s.adviceAll().any((m) => m.contains('海外に出る')), isFalse);
+      expect(s.adviceAll().map(tx).any((m) => m.contains('海外に出る')), isFalse);
     });
 
     test('上場していて小さい同業があれば株式交換。上場前は言わない', () {
@@ -223,10 +223,10 @@ void main() {
       final c = s.mkCo(0, indm[ind]!.cat, name: 'テスト商会')..biz.add(CoBiz(ind: ind, power: 1));
       c.cap = s.cap * .3;
       s.listed = false;
-      expect(s.adviceAll().any((m) => m.contains('株式交換')), isFalse);
+      expect(s.adviceAll().map(tx).any((m) => m.contains('株式交換')), isFalse);
       s.listed = true;
       s.sh.riv.clear();
-      final m = s.adviceAll().where((m) => m.contains('株式交換')).toList();
+      final m = s.adviceAll().map(tx).where((m) => m.contains('株式交換')).toList();
       expect(m, hasLength(1));
     });
 
@@ -235,8 +235,8 @@ void main() {
       s.holding = false;
       s.pres.age = 65;
       s.succ = null;
-      final all = s.adviceAll();
-      expect(s.advice(), all.take(3).toList());
+      final all = s.adviceAll().map(tx).toList();
+      expect(s.advice().map(tx).toList(), all.take(3).toList());
       expect(s.advice().length, lessThanOrEqualTo(3));
       expect(all.indexWhere((m) => m.contains('60歳')), lessThan(all.indexWhere((m) => m.contains('持株会社'))));
       expect(all.any((m) => RegExp('粉飾|談合|汚い|裏金|スパイ').hasMatch(m)), isFalse);

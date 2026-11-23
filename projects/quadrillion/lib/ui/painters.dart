@@ -125,7 +125,7 @@ class SparkPainter extends CustomPainter {
 
     final d = hist.map((x) => math.log(math.max(x.cap, 1)) / math.ln10).toList();
     if (d.length < 2) {
-      text('期を進めると、ここに線が引かれます', 16, 84, 14);
+      text(tr('期を進めると、ここに線が引かれます'), 16, 84, 14);
       canvas.restore();
       return;
     }
@@ -136,7 +136,7 @@ class SparkPainter extends CustomPainter {
     for (var i = lo.ceil(); i <= hi; i++) {
       final y = H - 12 - (i - lo) / (hi - lo) * (H - 30);
       canvas.drawLine(Offset(40, y), Offset(W - 8, y), grid);
-      text(yen(math.pow(10, i).toDouble()).replaceAll('円', ''), 2, y + 4, 12);
+      text(yen(math.pow(10, i).toDouble()).replaceAll('円', '').replaceAll('¥', ''), 2, y + 4, 12);
     }
     final path = Path();
     for (var i = 0; i < d.length; i++) {
@@ -187,7 +187,7 @@ class RevProfitPainter extends CustomPainter {
     drawn[0].clear();
     drawn[1].clear();
     if (hist.length < 2) {
-      text('期を進めると、ここに線が引かれます', 16, 94, 14);
+      text(tr('期を進めると、ここに線が引かれます'), 16, 94, 14);
       canvas.restore();
       return;
     }
@@ -210,7 +210,7 @@ class RevProfitPainter extends CustomPainter {
     for (var v = lo; v <= hi + step / 2; v += step) {
       final yy = yOf(v);
       canvas.drawLine(Offset(L, yy), Offset(W - 8, yy), grid);
-      text(v == 0 ? '0' : yen(v).replaceAll('円', ''), 2, yy + 4, 11.5);
+      text(v == 0 ? '0' : yen(v).replaceAll('円', '').replaceAll('¥', ''), 2, yy + 4, 11.5);
     }
     zeroY = yOf(0);
     canvas.drawLine(

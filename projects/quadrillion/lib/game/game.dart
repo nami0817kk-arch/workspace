@@ -5,11 +5,13 @@ library;
 
 import 'dart:math' as math;
 
+import '../l10n/l10n.dart';
 import 'data.dart';
 import 'format.dart';
 import 'models.dart';
 import 'models_static.dart';
 
+export '../l10n/l10n.dart';
 export 'data.dart';
 export 'format.dart';
 export 'models.dart';
@@ -70,9 +72,11 @@ double cw(String c, double y) {
 
 /// 難しさ（ふつうは試作と同じ数字）。g は宿敵と CPU の会社の伸び、r は利益の再投資、t は宿敵が株を買い進める確率にかける
 class Difficulty {
-  final String id, n, d;
+  final String id, nJa, dJa;
   final double g, r, t;
-  const Difficulty(this.id, this.n, this.d, this.g, this.r, this.t);
+  const Difficulty(this.id, this.nJa, this.dJa, this.g, this.r, this.t);
+  String get n => de(nJa);
+  String get d => de(dJa);
 }
 
 const List<Difficulty> DIFFS = [
@@ -305,7 +309,7 @@ class Game {
 
   String showAb(Person p, String k) {
     final r = rangeOf(p, k);
-    return r[0] == r[1] ? '${r[0]}' : '${r[0]}〜${r[1]}';
+    return r[0] == r[1] ? '${r[0]}' : '${r[0]}${L.en ? '-' : '〜'}${r[1]}';
   }
 
   // ===== 会社（CPU） =====
@@ -377,12 +381,14 @@ class Game {
     int j(int a) => a + ri(-2, 2);
     double m() => .6 + rnd() * .8;
     void add(String name, int s, int e, double ec, double per, double tech, String news) {
+      // 名前と知らせは「鍵と引数」で持つ（見せるときに言語を選ぶ）
+      var nw = M(news);
       if (home != 'jp' && RegExp('バブル景気|バブル崩壊').hasMatch(name)) {
         ec = 1 + (ec - 1) * .3;
         per = 1 + (per - 1) * .3;
-        news = '日本の$news';
+        nw = M('日本の{0}', [nw]);
       }
-      if (e >= cfg.year) cycles.add(Cycle(name: name, s: s, e: e, econ: ec, per: per, tech: tech, news: news, shown: s < cfg.year));
+      if (e >= cfg.year) cycles.add(Cycle(name: M(name), s: s, e: e, econ: ec, per: per, tech: tech, news: nw, shown: s < cfg.year));
     }
 
     final b0 = j(1986);
@@ -464,9 +470,9 @@ class Game {
     hist = [];
     reg = regFor(yr());
     calcAll();
-    log.add(LogEntry('$year年、${pres.name}は${hasT('noble') ? '親の援助を受けて' : 'わずかな元手で'}会社を立ち上げた。手元の資金は${yen(cash)}。', 'big'));
+    log.add(LogEntry(M('{0}年、{1}は{2}会社を立ち上げた。手元の資金は{3}。', [year, Nm(pres.name), M(hasT('noble') ? '親の援助を受けて' : 'わずかな元手で'), Y(cash)]), 'big'));
     history = [];
-    chron('found', '${pres.name}（${pres.age}歳）が${cm[home]!.n}で会社を立ち上げた。元手は${yen(cash)}');
+    chron('found', M('{0}（{1}歳）が{2}で会社を立ち上げた。元手は{3}', [Nm(pres.name), pres.age, C(home), Y(cash)]));
     trackPeaks();
   }
 

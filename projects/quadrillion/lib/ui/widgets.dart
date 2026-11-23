@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n.dart';
+
 /// 試作の :root の配色（明るい紙色）
 class Pal {
   static const sky = Color(0xFFF5F2EA);
@@ -64,7 +66,7 @@ class H2 extends StatelessWidget {
   const H2(this.text, {super.key, this.top = false});
   @override
   Widget build(BuildContext context) =>
-      Padding(padding: EdgeInsets.only(top: top ? 0 : 18, bottom: 8), child: Text(text, style: ts(size: 17, color: Pal.goldtx, bold: true)));
+      Padding(padding: EdgeInsets.only(top: top ? 0 : 18, bottom: 8), child: Text(tx(text), style: ts(size: 17, color: Pal.goldtx, bold: true)));
 }
 
 /// 小見出し（h3）
@@ -72,7 +74,7 @@ class H3 extends StatelessWidget {
   final String text;
   const H3(this.text, {super.key});
   @override
-  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(top: 14, bottom: 6), child: Text(text, style: ts(bold: true)));
+  Widget build(BuildContext context) => Padding(padding: const EdgeInsets.only(top: 14, bottom: 6), child: Text(tx(text), style: ts(bold: true)));
 }
 
 class Panel extends StatelessWidget {
@@ -96,7 +98,7 @@ class Muted extends StatelessWidget {
   final double size;
   const Muted(this.text, {super.key, this.size = 12.5});
   @override
-  Widget build(BuildContext context) => Text(text, style: ts(size: size, color: Pal.mute));
+  Widget build(BuildContext context) => Text(tx(text), style: ts(size: size, color: Pal.mute));
 }
 
 /// 左に名前、右に値
@@ -106,13 +108,14 @@ class Kv extends StatelessWidget {
   const Kv(this.k, this.v, {super.key});
   @override
   Widget build(BuildContext context) => Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Flexible(flex: 2, fit: FlexFit.tight, child: Text(k, style: ts(size: 13, color: Pal.mute))),
+        // 英語は見出しが長いので、見出しに幅を多く回す
+        Flexible(flex: L.en ? 3 : 2, fit: FlexFit.tight, child: Text(tx(k), style: ts(size: 13, color: Pal.mute))),
         const SizedBox(width: 6),
         Flexible(
-            flex: 3,
+            flex: L.en ? 2 : 3,
             child: Align(
                 alignment: Alignment.centerRight,
-                child: v is Widget ? v as Widget : Text('$v', textAlign: TextAlign.right, style: ts(size: 13)))),
+                child: v is Widget ? v as Widget : Text(v is String ? tx(v as String) : '$v', textAlign: TextAlign.right, style: ts(size: 13)))),
       ]);
 }
 
@@ -151,7 +154,7 @@ class Tag extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
       decoration: BoxDecoration(
           color: kind == TagKind.gold ? Pal.goldBg : null, border: Border.all(color: bc), borderRadius: BorderRadius.circular(99)),
-      child: Text(text, style: ts(size: 11.5, color: c)),
+      child: Text(tx(text), style: ts(size: 11.5, color: c)),
     );
   }
 }
@@ -163,7 +166,7 @@ class Face extends StatelessWidget {
   const Face(this.name, {super.key, this.col});
   @override
   Widget build(BuildContext context) {
-    final n = name.replaceAll(RegExp(r'\s'), '');
+    final n = nmL(name).replaceAll(RegExp(r'\s'), '');
     final c = col ?? faceCols[(n.isEmpty ? 63 : n.codeUnitAt(0)) % faceCols.length];
     return Container(
       width: 34,
@@ -195,7 +198,7 @@ class Btn extends StatelessWidget {
           onTap: on ? onTap : null,
           child: Padding(
             padding: small ? const EdgeInsets.symmetric(horizontal: 8, vertical: 5) : const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: Text(label,
+            child: Text(tx(label),
                 style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink)),
           ),
         ),
@@ -218,7 +221,7 @@ class DangerBtn extends StatelessWidget {
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: Text(label, style: ts(bold: true, color: Pal.panel)),
+            child: Text(tx(label), style: ts(bold: true, color: Pal.panel)),
           ),
         ),
       );
@@ -253,9 +256,9 @@ class ChoiceBtn extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(label, style: ts(bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink, height: 1.45)),
+                Text(tx(label), style: ts(bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink, height: 1.45)),
                 for (final s in subs)
-                  if (s.isNotEmpty) Text(s, style: ts(size: 12, color: primary ? const Color(0xFF3A2E00) : Pal.mute, height: 1.4)),
+                  if (s.isNotEmpty) Text(tx(s), style: ts(size: 12, color: primary ? const Color(0xFF3A2E00) : Pal.mute, height: 1.4)),
               ]),
             ),
           ),
@@ -282,8 +285,8 @@ class Say extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
               decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(10)),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(who, style: ts(size: 12, color: Pal.mute)),
-                Text(text, style: ts(size: 13)),
+                Text(tx(who), style: ts(size: 12, color: Pal.mute)),
+                Text(tx(text), style: ts(size: 13)),
               ]),
             ),
           ),
@@ -306,7 +309,7 @@ class NewsLine extends StatelessWidget {
       decoration: BoxDecoration(border: Border(left: BorderSide(color: c, width: 2))),
       child: Text.rich(TextSpan(children: [
         if (prefix != null) TextSpan(text: prefix, style: ts(size: 13, color: Pal.mute)),
-        TextSpan(text: text, style: ts(size: 13)),
+        TextSpan(text: tx(text), style: ts(size: 13)),
       ])),
     );
   }
@@ -348,7 +351,7 @@ class Pick<T> extends StatelessWidget {
             isExpanded: true,
             isDense: true,
             style: ts(size: 13),
-            items: [for (final e in items) DropdownMenuItem<T>(value: e.$1, child: Text(e.$2, overflow: TextOverflow.ellipsis, style: ts(size: 13)))],
+            items: [for (final e in items) DropdownMenuItem<T>(value: e.$1, child: Text(tx(e.$2), overflow: TextOverflow.ellipsis, style: ts(size: 13)))],
             onChanged: (v) {
               if (v is T) onChanged(v);
             },
@@ -358,7 +361,7 @@ class Pick<T> extends StatelessWidget {
 }
 
 /// 金額などに色を付けて出す
-Text colored(String s, Color c, {double size = 13, bool bold = false}) => Text(s, style: ts(size: size, color: c, bold: bold));
+Text colored(String s, Color c, {double size = 13, bool bold = false}) => Text(tx(s), style: ts(size: size, color: c, bold: bold));
 
 /// 上の帯の数字。月を進めて値が変わったとき、0.6秒ほど緑（よくなった）か赤（悪くなった）にふわっと光る
 class FlashStat extends StatefulWidget {
@@ -395,7 +398,7 @@ class _FlashStatState extends State<FlashStat> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     final text = Text.rich(TextSpan(children: [
-      TextSpan(text: widget.label, style: ts(size: 12.5, color: Pal.mute)),
+      TextSpan(text: tx(widget.label), style: ts(size: 12.5, color: Pal.mute)),
       TextSpan(text: widget.text, style: ts(size: 12.5, color: widget.color, bold: true)),
     ]));
     return AnimatedBuilder(
@@ -417,3 +420,11 @@ class _FlashStatState extends State<FlashStat> with SingleTickerProviderStateMix
     );
   }
 }
+
+const _mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/// 年と月（日本語は「1980年1月」、[sp] なら「1980年 1月」。英語は「Jan 1980」）
+String ym(int y, int q, {bool sp = false}) => L.en ? '${_mon[(q - 1).clamp(0, 11)]} $y' : (sp ? '$y年 $q月' : '$y年$q月');
+
+/// 年（日本語は「1980年」、英語は「1980」）
+String yearL(int y) => L.en ? '$y' : '$y年';

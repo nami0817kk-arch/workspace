@@ -24,7 +24,7 @@ final _choice = RegExp('断る|謝罪|送り出す|上げる|自社株|ホワイ
 void resolveEvents(Game s) {
   while (s.events.isNotEmpty) {
     final e = s.events.removeAt(0);
-    final ch = e.choices.where((c) => _choice.hasMatch(c.l)).firstOrNull ?? e.choices.last;
+    final ch = e.choices.where((c) => _choice.hasMatch(txIn(c.l, 'ja'))).firstOrNull ?? e.choices.last;
     ch.f();
   }
 }
