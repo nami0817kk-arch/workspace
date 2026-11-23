@@ -87,6 +87,17 @@ Future<void> _shoot(WidgetTester t, String name, GmController c, {Future<void> F
   });
 }
 
+/// 「ほかの進め方」から、次の区切りまでまとめて進める。
+Future<void> _simBlock(WidgetTester t) async {
+  final more = find.byKey(const Key('sim-more'));
+  await t.ensureVisible(more);
+  await t.pumpAndSettle();
+  await t.tap(more);
+  await t.pumpAndSettle();
+  await t.tap(find.byKey(const Key('sim-block')));
+  await t.pump();
+}
+
 Future<void> _tap(WidgetTester t, String text, {bool first = false}) async {
   final f = first ? find.text(text).first : find.text(text).last;
   await t.ensureVisible(f);
@@ -160,7 +171,9 @@ void main() {
     if (poLive.poLive) await _shoot(t, '4c3_po_live', await _with(poLive));
     // まとめて進めるあいだ、結果が流れる(途中で撮って、最後まで流す)
     await _shoot(t, '4j3_sim_ticker', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
-      await t.tap(find.textContaining('次の20試合へ'));
+      await t.tap(find.byKey(const Key('sim-more')));
+      await t.pumpAndSettle();
+      await t.tap(find.byKey(const Key('sim-block')));
       for (var i = 0; i < 8; i++) {
         await t.pump(const Duration(milliseconds: 130));
       }
@@ -221,7 +234,7 @@ void main() {
       await t.pumpAndSettle();
     });
     await _shoot(t, '4d_box_score', await _with(careerAt(3, 12)..startSeason()), act: (t) async {
-      await _tap(t, '次の20試合へ');
+      await _simBlock(t);
       await t.pumpAndSettle();
       final list = find.textContaining('試合ごとの結果');
       await t.scrollUntilVisible(list, 200, scrollable: find.byType(Scrollable).last);
@@ -236,7 +249,7 @@ void main() {
     });
     final rep = careerAt(3, 12)..startSeason();
     await _shoot(t, '4b_block_report', await _with(rep), act: (t) async {
-      await _tap(t, '次の20試合へ');
+      await _simBlock(t);
     });
     // 優勝の祝い(優勝するまで種を替えて、プレーオフを終えたところで開く。紙吹雪の途中で撮る)
     Career? champ;
