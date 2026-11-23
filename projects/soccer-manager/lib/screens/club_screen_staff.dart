@@ -474,8 +474,10 @@ class _StaffOfferBox extends StatelessWidget {
                             Tr.pick('残せませんでした。', 'He could not be kept.'))));
                   }
                 },
-                child: Text(Tr.pick('昇給(+${offer.raisePercent}%)して残す',
-                    'Keep him on a ${offer.raisePercent}% raise')),
+                // 残すと契約も1年延びる(keepStaffWithRaise)。押す前に
+                // 分かるよう、ボタンにも書く(2026-11-23)。
+                child: Text(Tr.pick('昇給(+${offer.raisePercent}%)・契約+1年で残す',
+                    'Keep him (+${offer.raisePercent}% pay, +1 year)')),
               ),
             ],
           ),

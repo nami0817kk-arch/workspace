@@ -28,8 +28,8 @@ extension GameStateSponsorSlots on GameState {
     s.slotSponsorOffers.remove(slot.name);
     _logNews(
         Tr.pick(
-            '${slot.label}のスポンサーを${offer.name}と結んだ(週${formatMoney(offer.weeklyIncome)}・${offer.yearsRemaining}年)。',
-            'Signed ${offer.name} as ${slot.label.toLowerCase()} sponsor (${formatMoney(offer.weeklyIncome)}/week, ${offer.yearsRemaining} yr).'),
+            '${slot.label}のスポンサーを${offer.name}と結んだ(年${formatMoney(offer.weeklyIncome * matchdaysPerSeason)}・${offer.yearsRemaining}年)。',
+            'Signed ${offer.name} as ${slot.label.toLowerCase()} sponsor (${formatMoney(offer.weeklyIncome * matchdaysPerSeason)} a year for ${Tr.plural(offer.yearsRemaining, 'year')}).'),
         context: Tr.pick('スポンサー', 'Sponsors'));
     _notify();
     await _persist();

@@ -403,8 +403,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('守備セットプレー担当', 'Defensive set piece duty'),
         category: GlossaryCategory.tactics,
         description: Tr.pick(
-            '相手のコーナーキック・フリーキックを守る担当選手。ヘディング・ジャンプ力が高いほど、相手のセットプレー由来のチャンスの質を下げられる。',
-            'Who takes charge of defending their corners and free kicks. The better his heading and jumping reach, the less dangerous their set pieces become.'),
+            '相手のコーナーキック・フリーキックを守る担当選手。監督が毎節、先発の中からヘディングとジャンプ力のいちばん高い選手を選ぶ。高いほど、相手のセットプレー由来のチャンスの質を下げられる。',
+            'Who takes charge of defending their corners and free kicks. Each matchday the manager gives it to the starter with the best heading and jumping reach. The better those are, the less dangerous their set pieces become.'),
       ),
       GlossaryEntry(
         term: Tr.pick('負傷の種類', 'Types of injury'),
@@ -445,8 +445,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('給与予算', 'Wage budget'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            '理事会が設定する給与の総額の上限。シーズン開始時にディビジョンと現在の人件費から決まり、上限を超える新規獲得はブロックされる。クラブ経営画面で使用状況を確認できる。',
-            'The ceiling the board puts on your total weekly wages. It is set at the start of the season from your division and current bill, and any signing that would break it is blocked. The finances screen shows where you stand.'),
+            '理事会が設定する給与の総額の上限。シーズン開始時にディビジョンと現在の人件費から決まり、年の予算の補強の配分とクラブの方針でも広がり・狭まる。上限を超える新規獲得はブロックされる。クラブ経営画面で使用状況を確認できる。',
+            'The ceiling the board puts on your total wages. It is set at the start of the season from your division and current bill, and it widens or narrows with the signings share of your budget and with your club policy. Any signing that would break it is blocked. The finances screen shows where you stand.'),
       ),
       GlossaryEntry(
         term: Tr.pick('チームリーダー', 'Team leaders'),
@@ -508,8 +508,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('監督が決める戦い方', 'How the manager sets up'),
         category: GlossaryCategory.tactics,
         description: Tr.pick(
-            '試合の戦い方は、雇っている監督が考え方に沿って毎節決める。オーナーは選べないので、どんな戦い方をさせたいかは監督を選ぶことで決まる。決めるのは、プレッシング(寄せの強さ。強いほど守りが固くなるが疲れやすい)、ラインの高さ(高いほど攻めに厚いが裏を取られやすい)、攻撃の幅(広いほど攻めに厚いが中央が薄くなる)、テンポ(速いほど攻めに厚いが疲れやすい)、戦術スタイル(選手に合う型ほど効く)、リードした終盤に逃げ切るかどうか、キャプテン(統率力・年齢・経験で選び、季の初めと監督が替わったときに選び直す)。攻撃的な監督は高いライン・強いプレス・速いテンポで攻め続け、堅守の監督は低いラインで守って奪ったら速く出て、リードした終盤は逃げ切る。水準の高い監督ほど、相手の強さや戦術に合わせてラインと型を変える。監督の考え方と戦い方は、スタッフの画面(雇う前の候補にも)に出る。',
-            'Your manager decides how the side plays every week, following his own philosophy. You cannot pick it yourself, so the way you want to play is decided by who you hire. He sets the pressing (harder makes you tighter but tires the side), the defensive line (higher adds to the attack but leaves space behind), the width (wider adds to the attack but thins the middle), the tempo (quicker adds to the attack but tires the side), the tactical style (it works best when it suits the players), whether to shut up shop when ahead late on, and the captain (chosen for leadership, age and experience, and picked again at the start of each season and when the manager changes). An attacking manager plays a high line, presses hard and goes quickly, and keeps going when ahead; a defensive one sits deep, breaks quickly when he wins the ball and sees games out. The better the manager, the more he adjusts the line and style to the opponent. The staff screen shows the philosophy and approach of every manager, candidates included.'),
+            '試合の戦い方は、雇っている監督が考え方に沿って毎節決める。オーナーは選べないので、どんな戦い方をさせたいかは監督を選ぶことで決まる。決めるのは、プレッシング(寄せの強さ。強いほど守りが固くなるが疲れやすい)、ラインの高さ(高いほど攻めに厚いが裏を取られやすい)、攻撃の幅(広いほど攻めに厚いが中央が薄くなる)、テンポ(速いほど攻めに厚いが疲れやすい)、戦術スタイル(選手に合う型ほど効く)、リードした終盤に逃げ切るかどうか、キャプテン(統率力・年齢・経験で選び、季の初めと監督が替わったときに選び直す)、セットプレーの担当(PK・直接FK・CK・守備。毎節、先発の中からそれぞれ得意な選手)。攻撃的な監督は高いライン・強いプレス・速いテンポで攻め続け、堅守の監督は低いラインで守って奪ったら速く出て、リードした終盤は逃げ切る。水準の高い監督ほど、相手の強さや戦術に合わせてラインと型を変える。監督の考え方と戦い方は、スタッフの画面(雇う前の候補にも)に出る。',
+            'Your manager decides how the side plays every week, following his own philosophy. You cannot pick it yourself, so the way you want to play is decided by who you hire. He sets the pressing (harder makes you tighter but tires the side), the defensive line (higher adds to the attack but leaves space behind), the width (wider adds to the attack but thins the middle), the tempo (quicker adds to the attack but tires the side), the tactical style (it works best when it suits the players), whether to shut up shop when ahead late on, the captain (chosen for leadership, age and experience, and picked again at the start of each season and when the manager changes), and the set-piece duties (penalties, direct free kicks, corners and defending them, given each matchday to the starters best at each). An attacking manager plays a high line, presses hard and goes quickly, and keeps going when ahead; a defensive one sits deep, breaks quickly when he wins the ball and sees games out. The better the manager, the more he adjusts the line and style to the opponent. The staff screen shows the philosophy and approach of every manager, candidates included.'),
       ),
       GlossaryEntry(
         term: Tr.pick('ウォッチリスト', 'Watchlist'),

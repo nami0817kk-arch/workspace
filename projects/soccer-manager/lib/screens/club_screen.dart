@@ -118,8 +118,9 @@ String _facilityEffectLabel(
   FacilityType type,
   int level,
   int expectedAttendance,
-  int fanDemand,
-) {
+  int fanDemand, {
+  bool gateAtCap = false,
+}) {
   const maxLevel = ClubInfrastructure.maxLevel;
   final hasNext = level < maxLevel;
   switch (type) {
@@ -151,9 +152,15 @@ String _facilityEffectLabel(
       final next = hasNext
           ? ClubInfrastructure.commercialRevenueMultiplier(level + 1)
           : cur;
+      // 観客収入は、入る人数 × 1人の単価の上限で頭打ちになる。上限に
+      // 届いているクラブでは、商業施設を上げても観客収入は増えない
+      // (以前は「観客・スポンサー収入+X%」とだけ出ていた。グッズにも
+      // 掛かっているのに書いていなかった。2026-11-23)。
       return Tr.pick(
-          'いま: 観客・スポンサー収入${_pct(cur)}${hasNext ? '\n次のLvで: ${_pct(next)}' : ''}',
-          "Now: gate and sponsorship income ${_pct(cur)}${hasNext ? '\nNext level: ${_pct(next)}' : ''}");
+          'いま: スポンサー・グッズ収入${_pct(cur)}${hasNext ? '\n次のLvで: ${_pct(next)}' : ''}\n'
+              '${gateAtCap ? '観客収入は上限(入る人数×1人の単価)に届いているので増えません' : '観客収入にも同じだけ効きます(入る人数×1人の単価の上限まで)'}',
+          "Now: sponsorship and merchandise ${_pct(cur)}${hasNext ? '\nNext level: ${_pct(next)}' : ''}\n"
+              "${gateAtCap ? 'Gate receipts are already at their ceiling (crowd x revenue per head), so they will not rise' : 'Gate receipts rise by the same, up to their ceiling (crowd x revenue per head)'}");
     case FacilityType.medicalCenter:
       final cur =
           ((1 - ClubInfrastructure.medicalCenterInjuryFactor(level)) * 100)
@@ -290,6 +297,7 @@ class ClubScreen extends StatelessWidget {
                     infra.facilityLevel(type),
                     gameState.expectedAttendance,
                     gameState.fanDemand,
+                    gateAtCap: gameState.isGateAtCap,
                   ),
                   canAfford:
                       save.budget >= gameState.facilityUpgradeCostFor(type),
