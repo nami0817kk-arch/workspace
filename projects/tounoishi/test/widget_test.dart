@@ -252,6 +252,19 @@ void main() {
     }
   });
 
+  test('ストーリーの面に氷・溶岩の層（0.7.31・試作 v47）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "land:{f:1,env:'ice'}", // 第3面で2階が氷の層に
+      "land:{f:0,env:'lava'}", // 第5面で1階が溶岩の層に
+      'function applyLand(', // 面が始まるときに土を変える
+      'for(var ls=1;ls<=st;ls++)applyLand(ls);', // 途中の面から始めても、それまでの層は変わっている
+      'function landNote(', // 面の紹介に一文
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
