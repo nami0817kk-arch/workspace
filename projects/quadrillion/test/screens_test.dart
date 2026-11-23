@@ -263,4 +263,89 @@ void main() {
       expect(tester.takeException(), isNull);
     }, skip: _out == null);
   }
+
+  // 現地法人と臨時の会議の場面（日英）
+  for (final lang in ['ja', 'en']) {
+    testWidgets('現地法人と臨時の会議の場面の書き出し（$lang・幅390）', (tester) async {
+      await _loadFonts();
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final ctl = GameController(prefs: prefs, newRandom: () => ParkMiller(77), lang: lang);
+      addTearDown(() => L.lang = 'ja');
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final g = Game.newGame(SetupConfig(mode: 'world', year: 1990, traits: ['charm', 'gambler']), rng: ParkMiller(2024));
+      for (var i = 0; i < 150; i++) {
+        botMonth(g);
+      }
+      resolveEvents(g);
+      g.calcAll();
+      ctl.game = g;
+      final key = GlobalKey();
+      await tester.pumpWidget(RepaintBoundary(key: key, child: QuadrillionApp(controller: ctl)));
+      await tester.pump();
+      final b = (g.biz.toList()..ssort((x, y) => y.rev.compareTo(x.rev))).first;
+      b.ctry = {g.home, ...g.ctryOf(b), 'us', 'cn'}.toList();
+      g.calcAll();
+      g.ap = 3;
+      // 分社・独立のシート（現地法人に分ける）
+      openShape(ctl, b);
+      await tester.pump();
+      await _shot(tester, key, 'l1_shape_$lang');
+      openLocal(ctl, b, 'us');
+      await tester.pump();
+      await _shot(tester, key, 'l2_local_pres_$lang');
+      ctl.closeSheet();
+      g.makeLocal(b, 'us');
+      final c = g.locals().single;
+      g.subIPO(c);
+      final foe = g.cos.firstWhere((x) => x.alive && x.rival != null && x.parent != 'player');
+      c.locRiv = foe.id;
+      c.locRivPct = 26;
+      g.calcAll();
+      // 株の画面の現地法人のカード
+      ctl.setTab('stock');
+      await tester.pump();
+      await tester.scrollUntilVisible(find.textContaining(tr('現地法人（{0}）', [cm['us']!.n])), 300, scrollable: find.byType(Scrollable).first);
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, -120));
+      await tester.pump();
+      await _shot(tester, key, 'l3_local_card_$lang');
+      // 宿敵に狙われる
+      g.events
+        ..clear()
+        ..add(g.evLocalHostile(c, foe, 25));
+      nextEvent(ctl);
+      await tester.pump();
+      await _shot(tester, key, 'l4_local_hostile_$lang');
+      ctl.closeSheet();
+      // 臨時の会議（乗っ取り・不祥事・資金）
+      if (!g.staff.any((p) => p.partner)) {
+        final p = g.mkPerson(.5)
+          ..partner = true
+          ..stake = 5;
+        g.staff.add(p);
+      }
+      g.listed = true;
+      g.sh = Shares(own: 40, pt: 5, float: 37, riv: {foe.id: 18});
+      var k = 5;
+      g.pre = -g.cash / 2.5;
+      for (final kind in ['takeover', 'scandal', 'cash']) {
+        g.events
+          ..clear()
+          ..add(g.crisisMeeting(kind, foe: foe, near: 20)!);
+        nextEvent(ctl);
+        await tester.pump();
+        await _shot(tester, key, 'l${k++}_crisis_${kind}_$lang');
+        ctl.closeSheet();
+      }
+      // 遊び方の2項目
+      showHelp(ctl);
+      await tester.pump();
+      await tester.scrollUntilVisible(find.text(tr('現地法人')), 300, scrollable: find.byType(Scrollable).last);
+      await tester.pump();
+      await _shot(tester, key, 'l8_help_$lang');
+      expect(tester.takeException(), isNull);
+    }, skip: _out == null);
+  }
 }

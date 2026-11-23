@@ -786,7 +786,7 @@ Widget _coCard(GameController ctl, Company c) {
     Row(children: [
       if (c.rival != null) ...[Face(c.presName, col: c.rival!.col), const SizedBox(width: 6)],
       Expanded(child: Text(nmL(c.name), style: ts(bold: true))),
-      if (c.parent == 'player') ...[Tag(tr('子会社@@tag'), kind: TagKind.gold), const SizedBox(width: 4)],
+      if (c.parent == 'player') ...[Tag(c.loc != null ? tr('現地法人（{0}）', [cm[c.loc!]!.n]) : tr('子会社@@tag'), kind: TagKind.gold), const SizedBox(width: 4)],
       Flexible(child: Tag(c.rival != null ? RTYPE[c.rival!.label ?? c.rival!.type] ?? '' : REGN[c.tier])),
     ]),
     Muted(c.biz.map((b) => indm[b.ind]!.name).join(tr('・'))),
@@ -798,6 +798,7 @@ Widget _coCard(GameController ctl, Company c) {
       Kv(tr('社風'), CULT[s.cultureOf(c)]!.n),
       Kv(tr('市場の株'), pct(s.floatOf(c))),
       if (own > 0) Kv(tr('あなた'), pct(own)),
+      if (c.loc != null && c.locRivPct > 0 && s.coById(c.locRiv) != null) Kv(tr('宿敵の持ち分'), pct(c.locRivPct)),
     ]),
     _gap(),
     _wrap([
@@ -815,7 +816,12 @@ Widget _coCard(GameController ctl, Company c) {
               () => ctl.act(() => s.shareSwap(c)),
               small: true),
         ),
-      if (c.parent == 'player' && !c.listed && own >= 60) Btn(tr('子会社を上場させる（30%売る・約{0}）', [yen(c.cap * .3 * .95)]), () => ctl.act(() => s.subIPO(c)), small: true),
+      if (c.parent == 'player' && !c.listed && own >= 60)
+        Btn(c.loc != null ? tr('{0}の市場に上場させる（30%売る・約{1}）', [cm[c.loc!]!.n, yen(c.cap * .3 * .95)]) : tr('子会社を上場させる（30%売る・約{0}）', [yen(c.cap * .3 * .95)]),
+            () => ctl.act(() => s.subIPO(c)),
+            small: true),
+      if (c.loc != null && c.locRivPct > 0 && s.coById(c.locRiv) != null)
+        Btn(tr('宿敵の持ち分を買い戻す（{0}）', [yen(s.localBuybackCost(c))]), () => ctl.act(() => s.localBuyback(c)), small: true, enabled: s.cash >= s.localBuybackCost(c)),
       if (own > 0) Btn(tr('全部売る（{0}）', [yen(c.cap * own / 100 * .95)]), () => ctl.act(() => s.sellStake(c)), small: true),
     ]),
   ]));

@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v48</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v49</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -614,7 +614,7 @@ function sp(m){return {n:spName(m)};}
 function baseName(spc,env){var S=SPEC[spc];return (S.line=='nut'&&!S.noenv?ENV[env].n:'')+S.n;}
 function skey(spc,env){return SPEC[spc].line=='nut'?spc+'_'+env:spc;}
 function mkCr(spc,env,f,x,y,e,opt){
- if(g.cr.length>=CAP)return null;
+ if(g.cr.length>=CAP&&!(opt&&opt.force))return null;
  var S=SPEC[spc],key=skey(spc,env),mut=g.mutNext[key]||null;
  if(mut)delete g.mutNext[key];
  var k=mut=='kyodai'?1.8:mut=='kyo'?1.5:mut=='pure'?1.3:1;
@@ -1344,7 +1344,7 @@ function checkGuardian(){
  if(g.guardian)return;
  var f=F-1,cx=COREX,cy=COREY+1,ok=true;
  for(var dy=-1;dy<=1&&ok;dy++)for(var dx=-1;dx<=1&&ok;dx++){if(!dx&&!dy)continue;var x=cx+dx,y=cy+dy,c=cellAt(f,x,y);if(!c||bedrock(f,x,y))continue;if(!c.open)ok=false;}
- if(ok){var m=mkCr('guardian','sp',f,cx,cy,0);if(m)g.guardian=true;if(m)say('コアの周りを掘り抜いた。守護獣ガーディアンが目を覚ました！（この塔のモンスターが少し硬くなる）');}
+ if(ok){var m=mkCr('guardian','sp',f,cx,cy,0,{force:1});if(m)g.guardian=true;if(m)say('コアの周りを掘り抜いた。守護獣ガーディアンが目を覚ました！（この塔のモンスターが少し硬くなる）');}
 }
 function guardOn(){return g.cr.some(function(m){return m.sp=='guardian';});}
 
@@ -1385,7 +1385,7 @@ function openCell(f,x,y,main){
  var c=cellAt(f,x,y);if(!c||c.open||bedrock(f,x,y))return;
  c.open=true;c.dt=g.t;
  var n=c.nut,mg=c.mag||0,born=0,spc=null,env=c.env,amt=0;c.nut=0;c.mag=0;
- if(main&&(n>=7||mg>=7)&&ringAround(f,x,y)){g.circles.push({f:f,x:x,y:y,nut:n,mag:mg,hp:350});say('魔法陣ができた！ 魔法陣をタップするとモンスターを呼べる（養分が多いとデーモン、魔分が多いとリッチ）。');fxDig(f,x,y,c.env,0);addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:800,c:'200,120,255',r0:4,rad:26});sfx('promote');if(c.chest){c.chest=false;g.chests.push({f:f,x:x,y:y});}if(c.spore){mkCr('mush',c.spore,f,x,y,2);c.spore=null;}if(f==F-1)checkGuardian();return;}
+ if(main&&(n>=7||mg>=7)&&ringAround(f,x,y)){g.circles.push({f:f,x:x,y:y,nut:n,mag:mg,hp:350});say('魔法陣ができた！ 魔法陣をタップするとモンスターを呼べる（養分が多いとデーモン、魔分が多いとリッチ）。');fxDig(f,x,y,c.env,0);addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:800,c:'200,120,255',r0:4,rad:26});sfx('promote');if(c.chest){c.chest=false;g.chests.push({f:f,x:x,y:y});}if(c.spore){mkCr('mush',c.spore,f,x,y,2,{force:1});c.spore=null;}if(f==F-1)checkGuardian();return;}
  var mino=0;if(mg>0&&mg>=n){amt=mg;spc=ORDM[Math.min(8,mg)-1];env='mag';mino=n;}
  else if(n>0){amt=n;spc=ORDN[Math.min(8,n)-1];mino=-mg;}
  spc=varSp(spc,env,f,x,y,n);
@@ -1393,14 +1393,14 @@ function openCell(f,x,y,main){
  if(spc&&n>=9&&Math.random()<0.4+0.1*(g.rareK||0)){spc='gslime';env='sp';}
  else if(spc&&distinctEnvs(f,x,y)>=3&&Math.random()<0.15+0.05*(g.rareK||0)&&g.cr.filter(function(o){return o.sp=='chimera'&&o.f==f;}).length<2){spc='chimera';env='sp';}
  if(spc){
-  var m=mkCr(spc,env,f,x,y,amt);
+  var m=mkCr(spc,env,f,x,y,amt,{force:1});
   if(m&&mino<0)m.mg=-mino;else if(m&&mino>0)g.pool+=mino;else if(!m&&mino){if(mino>0)g.pool+=mino;else g.mpool-=mino;}
   if(m){born=amt;if(main)sfx('spawn');if(main&&!m.mut)say((env=='mag'?'魔分':'養分')+amt+'の土を掘った。'+spName(m)+'が生まれた。');}
   else{if(env=='mag')g.mpool+=amt;else g.pool+=amt;if(main)say('塔がいっぱいで、生まれなかった。');}
  }else if(main)say('掘った。');
- if(c.spore){var ms=mkCr('mush',c.spore,f,x,y,2);c.spore=null;if(main&&ms)say('胞子の子株から、マッシュが出てきた。');}
+ if(c.spore){var ms=mkCr('mush',c.spore,f,x,y,2,{force:1});c.spore=null;if(main&&ms)say('胞子の子株から、マッシュが出てきた。');}
  if(c.chest){c.chest=false;g.chests.push({f:f,x:x,y:y});if(main)say('宝箱を掘り当てた！ 冒険者が見つけると寄り道して開ける（中身は開けるまで分からない）。');}
- var ci=corpseNear(f,x,y);if(ci>=0){var cp=g.corpses.splice(ci,1)[0];var sk=mkCr('skeleton','sp',cp.f,cp.x,cp.y,0,{hpk:1+cp.str/60});if(sk&&main)say('亡骸の隣を掘ると、骨が起き上がった。スケルトンだ！');}
+ var ci=corpseNear(f,x,y);if(ci>=0){var cp=g.corpses.splice(ci,1)[0];var sk=mkCr('skeleton','sp',cp.f,cp.x,cp.y,0,{hpk:1+cp.str/60,force:1});if(sk&&main)say('亡骸の隣を掘ると、骨が起き上がった。スケルトンだ！');}
  if(f==F-1)checkGuardian();
  fxDig(f,x,y,c.env,born);
  if(y==0&&f<F-1)openCell(f+1,x,N-1,false);
@@ -1807,7 +1807,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v48 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v49 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2202,7 +2202,7 @@ var DEMONS=['demon','d_sleepy','d_blue','d_bigblue','evilgod'],DVR={};
 function circleType(o){if(o.evil)return 'evilgod';if(o.nut>=o.mag)return o.mag>=4?'d_sleepy':'demon';return o.mag>=9?'d_bigblue':'d_blue';}
 var CCOL={demon:'255,90,90',d_sleepy:'170,170,180',d_blue:'150,110,255',d_bigblue:'110,210,255',evilgod:'255,170,60'};
 function summon(o){
- var t=circleType(o),m=mkCr(t,t=='demon'?'mag':'sp',o.f,o.x,o.y,Math.max(3,Math.min(9,Math.round((o.nut+o.mag)/2))));
+ var t=circleType(o),m=mkCr(t,t=='demon'?'mag':'sp',o.f,o.x,o.y,Math.max(3,Math.min(9,Math.round((o.nut+o.mag)/2))),{force:1});
  if(!m){say('塔がいっぱいで、呼べなかった。');return;}
  if(DVR[t])m.vr=DVR[t];
  g.circles.splice(g.circles.indexOf(o),1);fxPuff(o.f,o.x,o.y,1.5);addFx({k:'ring',f:o.f,x:ccx(o.x),y:ccx(o.y),life:700,c:CCOL[t],r0:4,rad:34});sfx('promote');

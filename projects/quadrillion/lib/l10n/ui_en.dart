@@ -512,4 +512,26 @@ const Map<String, String> uiEn = {
   'ゲームが終わったので、{0}で止めました': 'The game ended, so we stopped at {0}.',
   '目標を達成したので、{0}で止めました': 'You reached the goal, so we stopped at {0}.',
   '「{0}」が起きたので、{1}で止めました': '"{0}" came up, so we stopped at {1}.',
+  // 1.0.0+9: 現地法人・臨時の会議
+  '現地法人に分ける': "Split off a local subsidiary",
+  '海外に出ている国があると、その国の分を現地法人（株100%の子会社）にできます。': "Once this business is abroad, you can turn a country's share into a local subsidiary (100% owned).",
+  '出ている国の分を、株100%の子会社（現地法人）にします。社長は自分の判断で動き、地元の規制が少し緩みます。': "Turn one country's share into a 100%-owned local subsidiary. Its CEO runs it independently, and local rules ease a little.",
+  '{0}の分を現地法人にする': "Make the {0} share a local subsidiary",
+  'その国の市場 ×{0}・事業の力の{1}を移す': "Market ×{0} | moves {1} of the business's strength",
+  '「{0}」の{1}の現地法人': "{0}: local subsidiary in {1}",
+  '手を1つ使います。社長を部下から選ぶか、現地で雇います（相棒は本社に残ります）。': "Uses 1 move. Pick a CEO from your staff or hire locally (partners stay at headquarters).",
+  '{0}を社長にする': "Make {0} CEO",
+  '{0}歳': "Age {0}",
+  '現地で社長を雇う': "Hire a local CEO",
+  'その国の人を雇う。腕と特性は働かせてみるまで分からない': "Hire someone from that country. You won't know their skills and trait until they work",
+  '現地法人': "Local subsidiaries",
+  '事業が海外に出ていれば、「分社・独立」からその国の分を現地法人（株100%の子会社）に分けられます。社長は部下から選ぶか現地で雇い、その人が自分の判断で動かします。現地法人は地元の会社なので、組んで出ていた国でも利益を半分にされず、中国に現地法人があればネットと金融も組まずに入れます。株の30%をその国の市場に上場させて大金を得ることもできますが、上場すると宿敵に株を狙われることがあります。':
+      "If a business operates abroad, use \"Spin off / release\" to split a country's share into a local subsidiary (100% owned). Pick its CEO from your staff or hire locally; they run it as they see fit. As a local company, it keeps all its profit even where you had a joint venture, and with a local subsidiary in China, your internet and finance businesses can enter without a partner. You can list 30% on that country's market for a big payout, but once listed, rivals may go after its shares.",
+  '臨時の会議': "Emergency meetings",
+  '乗っ取りの危機（宿敵の持ち分が20%・33.4%・50%に近づく）、大きな不祥事、資金が尽きかける、のときに臨時の会議が開かれます。相棒・部下・株主の代表（またはメインバンク）が別々の案を出すので、1つを選びます。案は手を使わずに実行されます。選ばれなかった部下と相棒は忠誠が下がります。':
+      "An emergency meeting is called when a takeover looms (a rival nears 20%, 33.4% or 50%), a major scandal breaks, or cash is about to run out. Your partners, staff and a shareholder rep (or your main bank) each propose something different, and you pick one. The plan runs without using a move. Staff and partners you turn down lose loyalty.",
+  '現地法人（{0}）': "Local sub ({0})",
+  '宿敵の持ち分': "Rival's stake",
+  '{0}の市場に上場させる（30%売る・約{1}）': "List on the {0} market (sell 30%, about {1})",
+  '宿敵の持ち分を買い戻す（{0}）': "Buy back the rival's stake ({0})",
 };
