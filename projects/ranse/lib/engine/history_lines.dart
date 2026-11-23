@@ -16,6 +16,16 @@ import 'rng.dart';
 /// 世界線ごとに、起きない史実の出来事（[kSkipEvents]）と、出ない史実の岐路（[kSkipScenes]）を決め、
 /// 代わりに、その世界線だけの出来事（[kAltHistory]）と岐路（[buildAltScenes]）を置く。
 
+/// 画面や文に出す家の名。勢力の内部の名（`Faction.name`・`Life.lord`）は変えず、
+/// 呼び名だけを時代に合わせる: 松平は1566年の暮れに徳川へ改めた（今川が生き延びた世では、松平は今川の下にいるので改めない）。
+String houseName(Game g, String? name) {
+  if (name == null) return '';
+  if (name == '松平' && g.year >= 1567 && worldLine(g) != 'imagawa') {
+    return '徳川';
+  }
+  return name;
+}
+
 String worldLine(Game g) {
   if (g.hasFlag('history_okehazama')) return 'imagawa';
   if (g.hasFlag('history_yamazaki')) return 'akechi';

@@ -148,9 +148,9 @@ String _eraEpilogue(Game g, String way) {
   final alive = l.lord != null && (g.fa[l.lord]?.alive ?? false);
   final String who;
   if (l.rank >= 8 && alive) {
-    who = '${l.lord}家の当主として、新しい世の始まりに立った。';
+    who = '${houseName(g, l.lord)}家の当主として、新しい世の始まりに立った。';
   } else if (l.rank >= 1 && alive) {
-    who = '${l.lord}家の${g.rk[l.rank]}として、泰平の世を迎えた。';
+    who = '${houseName(g, l.lord)}家の${g.rk[l.rank]}として、泰平の世を迎えた。';
   } else if (way == 'priest') {
     who = '寺の鐘を撞きながら、静かに新しい世を迎えた。';
   } else if (way == 'merchant') {

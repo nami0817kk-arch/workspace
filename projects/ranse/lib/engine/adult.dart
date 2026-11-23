@@ -1,6 +1,7 @@
 import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
+import 'history_lines.dart';
 import 'life.dart';
 import 'rng.dart';
 import 'variety.dart';
@@ -272,9 +273,9 @@ String adultYearText(Game g) {
   if (g.hasFlag('priesthood')) {
     status = '仏門に身を置いて迎える年。';
   } else if (l.rank >= 8) {
-    status = '${l.lord}家の当主として迎える年。';
+    status = '${houseName(g, l.lord)}家の当主として迎える年。';
   } else if (l.rank >= 1) {
-    status = '${l.lord}家の${g.rk[l.rank]}として迎える年。';
+    status = '${houseName(g, l.lord)}家の${g.rk[l.rank]}として迎える年。';
   } else {
     status = l.ronin ? '主を持たぬ身で迎える年。' : '身を立てる当ては、まだない。';
   }

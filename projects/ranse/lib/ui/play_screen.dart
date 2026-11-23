@@ -132,7 +132,7 @@ class _ChoiceTab extends StatelessWidget {
                 ),
               ),
               Text(
-                '${g.rankName()}${l.lord != null ? '／${l.lord}家${l.rank == 8 ? '当主' : ''}' : ''}',
+                '${g.rankName()}${l.lord != null ? '／${houseName(g, l.lord)}家${l.rank == 8 ? '当主' : ''}' : ''}',
                 style: const TextStyle(color: Pal.muted, fontSize: 13),
               ),
               const SizedBox(height: 8),
@@ -344,7 +344,10 @@ class _PersonTab extends StatelessWidget {
               KV('功', '${l.merit}'),
               KV('名声', '${l.fame}'),
               KV('主君の信頼', '${l.fav}'),
-              KV('家族', '${l.married ? '妻帯' : '独り身'}・子${l.kids}人'),
+              KV(
+                '家族',
+                '${l.married ? (l.female ? '嫁いだ身' : '妻帯') : '独り身'}・子${l.kids}人',
+              ),
             ],
           ),
         ),
@@ -432,7 +435,7 @@ class _WorldTab extends StatelessWidget {
                       SizedBox(
                         width: 62,
                         child: Text(
-                          f.name,
+                          houseName(g, f.name),
                           style: TextStyle(
                             fontWeight: f.name == g.l.lord
                                 ? FontWeight.w700

@@ -87,6 +87,19 @@ void main() {
     expect(before('koriyama', 'shingen'), isTrue);
   });
 
+  test('松平の家は、1567年から徳川と呼ぶ（今川が生き延びた世では松平のまま）', () {
+    final rng = Rng(5);
+    final g = Game(rng: rng);
+    g.start(rollBirth(rng));
+    g.l.t = (1566 - g.l.startYear) * 2;
+    expect(houseName(g, '松平'), '松平');
+    g.l.t = (1570 - g.l.startYear) * 2;
+    expect(houseName(g, '松平'), '徳川');
+    expect(houseName(g, '織田'), '織田');
+    g.setFlag('history_okehazama');
+    expect(houseName(g, '松平'), '松平');
+  });
+
   test('どんな生まれでも最後まで進み、例外を出さない', () {
     for (var seed = 0; seed < 300; seed++) {
       final rng = Rng(seed);
