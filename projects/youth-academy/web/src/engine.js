@@ -1546,7 +1546,7 @@
       for (const t of [this.home]) {
         t.lineup.forEach((s, i) => {
           const fit = this.roleFit(t, i);
-          if (fit < 0) this.discontent[s.pid] = (this.discontent[s.pid] || 0) + 1;
+          if (fit < 0) { this.discontent[s.pid] = (this.discontent[s.pid] || 0) + 1; (this.discRole = this.discRole || {})[s.pid] = s.role; } // 役割も覚えておく（途中で交代して並びから外れると、試合後に役割が引けず「null」と出ていた。2026-11-23）
         });
       }
       // 当事者の評価
@@ -1761,7 +1761,7 @@
       const notes = [];
       for (const [pid, n] of Object.entries(this.discontent)) {
         const p = this.home.players[pid];
-        if (p && n >= 8) notes.push({ kind: 'bad', text: p.num + '番 ' + p.name.split(' ')[0] + '：今の役割「' + this.roleOf(this.home, p) + '」が合っておらず、不満を感じている' });
+        if (p && n >= 8) notes.push({ kind: 'bad', text: p.num + '番 ' + p.name.split(' ')[0] + '：今の役割「' + (this.roleOf(this.home, p) || (this.discRole && this.discRole[pid]) || '') + '」が合っておらず、不満を感じている' });
       }
       // 勝ち負けの補正と、無失点の GK（+0.6）は両チーム同じ処理（2026-11-17：前はこちらだけで、相手の採点が10を超えていた）
       const adj = (t, mine, theirs) => {
