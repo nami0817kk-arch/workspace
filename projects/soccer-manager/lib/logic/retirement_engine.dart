@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../models/player.dart';
 import '../models/team.dart';
+import 'division_strength.dart';
 import 'lineup_utils.dart';
 import 'player_generator.dart';
 import 'training_engine.dart';
@@ -74,10 +75,14 @@ class RetirementEngine {
   /// デフレを確認)。世代交代でリーグ全体が弱体化しないよう、20〜26歳の
   /// 「若手〜即戦力」で補充し、生成基準もチーム力より少し上乗せして
   /// 年齢係数による目減りを相殺する。
-  static List<Player> resolveAndReplaceForCpu(Team team) {
+  ///
+  /// [tier] はクラブのいる部。渡すと、補充の強さを部の水準へ少し寄せる
+  /// ([cpuRecruitStrength])。
+  static List<Player> resolveAndReplaceForCpu(Team team, {int? tier}) {
     final retirees = resolveRetirements(team);
     for (final p in retirees) {
-      team.players.add(_generateCpuRecruit(team, p.position));
+      team.players.add(_generateCpuRecruit(team, p.position,
+          replacedOverall: p.overall, tier: tier));
     }
 
     // 引退だけに頼るとスカッド全体が少しずつ高齢化し、衰えが若手の成長を
@@ -93,7 +98,8 @@ class RetirementEngine {
       team.startingXI.remove(leaver.id);
       if (team.captainId == leaver.id) team.captainId = null;
       if (team.viceCaptainId == leaver.id) team.viceCaptainId = null;
-      team.players.add(_generateCpuRecruit(team, leaver.position));
+      team.players.add(_generateCpuRecruit(team, leaver.position,
+          replacedOverall: leaver.overall, tier: tier));
     }
     // 抜けた先発の枠を組み直す。CPU のクラブは試合の前に先発を組み直さず、
     // 7人以上残っていればそのまま使われるため、以前は季の切り替えの後に
@@ -117,14 +123,64 @@ class RetirementEngine {
   /// (リーグデフレ)ため、この値が均衡点になる。
   static const int cpuRecruitStrengthBias = 3;
 
-  /// 契約満了・仮契約で抜けた CPU クラブの選手の代わり(引退の補充と同じ形)。
-  static Player cpuRecruitFor(Team team, Position position) =>
-      _generateCpuRecruit(team, position);
+  /// 抜けた主力の穴を、どれだけその主力の水準で埋めるか(0〜1)。部が
+  /// 分からないときと1部はこの値、2部は半分、3部は 0([replaceShareFor])。
+  ///
+  /// 以前は補充の強さがクラブの平均(控えと若手を含む)だけで決まり、
+  /// 主力が抜けても平均並みの選手しか来なかった。上位のクラブほど主力と
+  /// 平均の差が大きいので、1部の先発の水準が10季で 89→84 と下がり続け、
+  /// 1部の強めのクラブを持つと連覇が続いた(2026-11-23 の実測)。
+  /// 平均より強い選手が抜けたときは、平均とその選手の間の強さで埋める。
+  /// 下の部まで同じにすると、3部の先発の水準が上がり続けた(上の部ほど
+  /// 資金があり、主力の穴を主力級で埋められる)。
+  static const double cpuRecruitReplaceShare = 0.5;
 
-  static Player _generateCpuRecruit(Team team, Position position) =>
+  /// [tier] 部の [cpuRecruitReplaceShare] の掛かり方。
+  static double replaceShareFor(int? tier) => switch (tier) {
+        null || 1 => cpuRecruitReplaceShare,
+        2 => cpuRecruitReplaceShare / 2,
+        _ => 0,
+      };
+
+  /// 補充の強さを、クラブのいる部の水準へどれだけ寄せるか(0〜1)。
+  ///
+  /// 寄せないと、昇格・降格で部をまたいだクラブがいつまでも元の部の
+  /// 強さのままで、10季で1部の平均が 82→78 と下がり、3部の先発の水準は
+  /// 71→75 と上がって、部の間の差が縮んでいった(上手に経営しても3部から
+  /// 抜けられない理由の1つ。2026-11-23)。実在のクラブも、昇格すれば
+  /// 予算が増えて上の部の水準の選手を獲り、降格すれば主力を手放す。
+  static const double cpuRecruitTierPull = 0.5;
+
+  /// CPU のクラブ[team]が補充する選手の強さ(PlayerGenerator の strengthTier)。
+  ///
+  /// クラブの平均に [cpuRecruitStrengthBias] を足したものが土台。抜けた
+  /// 選手[replacedOverall]が平均より強ければ [replaceShareFor] だけ
+  /// その選手へ寄せ、部[tier]が分かれば、その部の水準
+  /// ([divisionTypicalSquadLevel])へ [cpuRecruitTierPull] だけ寄せる。
+  static int cpuRecruitStrength(Team team, {int? replacedOverall, int? tier}) {
+    final level = team.overallRating;
+    var base = level.toDouble();
+    if (replacedOverall != null && replacedOverall > level) {
+      base += (replacedOverall - level) * replaceShareFor(tier);
+    }
+    if (tier != null) {
+      base += (divisionTypicalSquadLevel(tier) - level) * cpuRecruitTierPull;
+    }
+    return base.round() + cpuRecruitStrengthBias;
+  }
+
+  /// 契約満了・仮契約で抜けた CPU クラブの選手の代わり(引退の補充と同じ形)。
+  static Player cpuRecruitFor(Team team, Position position,
+          {int? replacedOverall, int? tier}) =>
+      _generateCpuRecruit(team, position,
+          replacedOverall: replacedOverall, tier: tier);
+
+  static Player _generateCpuRecruit(Team team, Position position,
+          {int? replacedOverall, int? tier}) =>
       PlayerGenerator.generate(
         position: position,
-        strengthTier: team.overallRating + cpuRecruitStrengthBias,
+        strengthTier: cpuRecruitStrength(team,
+            replacedOverall: replacedOverall, tier: tier),
         ageOverride: 21 + _rng.nextInt(7),
       );
 }

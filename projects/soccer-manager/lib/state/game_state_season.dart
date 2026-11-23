@@ -1337,7 +1337,10 @@ extension GameStateSeason on GameState {
         for (final p in t.players) {
           OffscreenDevelopment.apply(p, offscreenRng);
         }
-        _generatingFor(t, () => RetirementEngine.resolveAndReplaceForCpu(t));
+        _generatingFor(
+            t,
+            () => RetirementEngine.resolveAndReplaceForCpu(t,
+                tier: 1));
       }
     }
     for (final t in _save!.allTeams) {
@@ -1351,7 +1354,10 @@ extension GameStateSeason on GameState {
       // 引退+若手補充を行う。行わないと選手が永遠に加齢し続けてしまう。
       if (t.id != _save!.userTeamId) {
         // 補充の若手の年俸は、そのクラブのいる部の水準。
-        _generatingFor(t, () => RetirementEngine.resolveAndReplaceForCpu(t));
+        _generatingFor(
+            t,
+            () => RetirementEngine.resolveAndReplaceForCpu(t,
+                tier: _cpuTierOf(t)));
       }
     }
     final infra = _save!.infrastructure;
@@ -1706,7 +1712,8 @@ extension GameStateSeason on GameState {
       _save!.pendingPointsDeduction = 0;
     }
     _save!.boardTargetRank = _difficultyAdjustedTarget(
-      BoardEngine.estimateTargetRank(_save!.league, _save!.userTeamId),
+      BoardEngine.estimateTargetRank(_save!.league, _save!.userTeamId,
+          relegationZone: ownRelegationZone),
     );
     // 新しい季を迎えたら、最低限の期待を戻す。判断は季末の増減を引く
     // 前に行う(上の supportersGone)。最後通告の期限を過ぎて手放すことが

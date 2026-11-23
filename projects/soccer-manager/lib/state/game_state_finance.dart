@@ -104,7 +104,8 @@ extension GameStateFinance on GameState {
     _resetSupporterRecords();
     _save!.shareholderExpectation = 60;
     _save!.boardTargetRank = _difficultyAdjustedTarget(
-      BoardEngine.estimateTargetRank(_save!.league, newTeamId),
+      BoardEngine.estimateTargetRank(_save!.league, newTeamId,
+          relegationZone: ownRelegationZone),
     );
     _save!.clubHistory.add(newTeamName);
     _resetFanDemand(_save!);
@@ -118,6 +119,14 @@ extension GameStateFinance on GameState {
     _save!.pendingJobOfferTeamId = null;
     _notify();
     await _persist();
+  }
+
+  /// 自クラブのいる部の降格圏の広さ(いちばん下の部は 0)。理事会の目標の
+  /// 下限に使う([BoardEngine.targetRankFloor])。
+  int get ownRelegationZone {
+    final s = _save;
+    if (s == null || s.currentDivisionTier >= totalDivisionTiers) return 0;
+    return currentLeagueTheme.rulesBelow(s.currentDivisionTier).relegationZone;
   }
 
   /// 資金が尽きたとみなす線: 借金(資金のマイナス)がその部の年収の目安の
@@ -848,7 +857,8 @@ extension GameStateFinance on GameState {
     save.bankLoans = [];
     save.youthProspects = [];
     save.boardTargetRank = _difficultyAdjustedTarget(
-      BoardEngine.estimateTargetRank(save.league, team.id),
+      BoardEngine.estimateTargetRank(save.league, team.id,
+          relegationZone: ownRelegationZone),
     );
     save.wageBudget = BoardEngine.wageBudgetFor(
       tier: save.currentDivisionTier,
@@ -1078,7 +1088,8 @@ extension GameStateFinance on GameState {
     save.retiredLegends.clear();
     save.retiredNumberIds.clear();
     save.boardTargetRank = _difficultyAdjustedTarget(
-      BoardEngine.estimateTargetRank(save.league, 'user'),
+      BoardEngine.estimateTargetRank(save.league, 'user',
+          relegationZone: ownRelegationZone),
     );
     save.boardCupTargetRound = _estimateDomesticCupTarget();
     save.wageBudget = BoardEngine.wageBudgetFor(
