@@ -21,7 +21,6 @@ import 'history_rumor.dart';
 import 'history_west.dart';
 import 'life.dart';
 import 'lords.dart';
-import 'old_age.dart';
 import 'pastimes.dart';
 import 'regions.dart';
 import 'rng.dart';
@@ -96,7 +95,6 @@ class Game extends ChangeNotifier {
       ...buildShadowLifeScenes(),
       ...buildTalentScenes(),
       ...buildPastimeScenes(),
-      ...buildOldAgeScenes(),
       ...buildTempleScenes(),
       ...buildRegionScenes(),
       ...buildHistoryScenes(),

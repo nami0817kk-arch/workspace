@@ -4,7 +4,6 @@ import 'data.dart';
 import 'game.dart';
 import 'history_lines.dart';
 import 'life.dart';
-import 'old_age.dart';
 import 'pastimes.dart';
 import 'rng.dart';
 import 'temple.dart';
@@ -40,7 +39,6 @@ void _heal(Life l, int n) => l.hp = l.hp + n > l.maxhp ? l.maxhp : l.hp + n;
 List<FocusDef> adultFocusOptions(Game g) => [
   ..._baseFocusOptions(g),
   ...pastimeFocusOptions(g),
-  ...oldAgeFocusOptions(g),
   ...templeFocusOptions(g),
   ...womanLifeFocusOptions(g),
 ];
