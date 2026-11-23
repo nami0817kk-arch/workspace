@@ -494,7 +494,7 @@ void main() {
     // ignore: avoid_print
     print(
       '【希少度の出方】6000人生: '
-      '${Tier.values.map((t) => '${kTierNames[t]} ${tierCount[t] ?? 0}回（${(tierCount[t] ?? 0) == 0 ? '-' : '${(6000 / tierCount[t]!).toStringAsFixed(0)}人生に1回'}）').join('・')}',
+      '${Tier.values.map((t) => '${kTierNames[t]} ${tierCount[t] ?? 0}回（${(tierCount[t] ?? 0) == 0 ? '-' : '${(6000 / tierCount[t]!).toStringAsFixed(1)}人生に1回'}）').join('・')}',
     );
     final ph = phantomIds.entries.toList()..sort((a, b) => b.value - a.value);
     // ignore: avoid_print
