@@ -204,6 +204,13 @@ void main() {
     }
   });
 
+  test('新しい25種の絵（0.7.27・試作 v43）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final k in ['tsuta', 'mogura', 'kame', 'frost', 'salamander', 'kagami', 'kage', 'ant', 'hachi', 'shidemushi', 'bakudan', 'umihebi', 'purupuru', 'manasui', 'noroi', 'yamaarashi', 'iwakui', 'yukidama', 'magma', 'hotaru', 'himawari', 'fukurou', 'maboroshi', 'slimeking', 'tsuchinoko']) {
+      expect(html, contains(" $k:'data:image/png;base64,"), reason: k);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
