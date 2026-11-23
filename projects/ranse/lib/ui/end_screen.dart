@@ -159,15 +159,25 @@ class _ResultCard extends StatelessWidget {
               ),
           ],
           const SizedBox(height: 14),
-          Text(
-            e.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 22,
-              color: Pal.gold,
-              fontWeight: FontWeight.w700,
-              height: 1.4,
-            ),
+          // 称号が一行に少しだけ収まらないと、最後の一、二字だけが次の行に落ちる。
+          // 16まで字を小さくして一行に収まるなら、そうする（もっと長い称号は二行に折る）。
+          LayoutBuilder(
+            builder: (context, box) {
+              final n = e.title.length;
+              final scale = MediaQuery.textScalerOf(context).scale(1);
+              final oneLine = box.maxWidth / (n * scale) - .5;
+              final size = oneLine < 22 && oneLine >= 16 ? oneLine : 22.0;
+              return Text(
+                e.title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: size,
+                  color: Pal.gold,
+                  fontWeight: FontWeight.w700,
+                  height: 1.4,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 4),
           Text(
