@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ranse/engine/adult.dart';
 import 'package:ranse/engine/battles.dart';
 import 'package:ranse/engine/birth.dart';
 import 'package:ranse/engine/data.dart';
@@ -16,6 +17,7 @@ import 'package:ranse/engine/regions.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:ranse/engine/talents.dart';
 import 'package:ranse/engine/ways.dart';
+import 'package:ranse/engine/women_life.dart';
 
 import 'bot.dart';
 
@@ -948,19 +950,24 @@ void main() {
 
     test('多くの人生を通すと、8種の死に方と、大名・天下人以外の道がどれも現れる', () {
       final kinds = <String>{}, ways = <String>{};
-      for (var seed = 0; seed < 1500; seed++) {
+      final wantWays = kWays.keys.where((k) => k != 'tenka' && k != 'daimyo');
+      // 暗殺はランダムな選択では600人生に1回ほどと稀なので、そろうまで（5000人生まで）流す
+      // （1500人生で切ると、岐路が増えて乱数の流れが変わるたびに出たり出なかったりした）。
+      for (var seed = 0; seed < 5000; seed++) {
         final rng = Rng(seed);
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         playOut(g, Rng(seed + 1));
         if (g.l.deathKind != null) kinds.add(g.l.deathKind!);
         ways.add(lifeWay(g.l));
+        if (seed >= 1500 &&
+            kinds.containsAll(kDeathKinds.keys) &&
+            ways.containsAll(wantWays)) {
+          break;
+        }
       }
       expect(kinds, containsAll(kDeathKinds.keys));
-      expect(
-        ways,
-        containsAll(kWays.keys.where((k) => k != 'tenka' && k != 'daimyo')),
-      );
+      expect(ways, containsAll(wantWays));
     });
 
     test('世の動きは史実の年表に沿う（主家を自分が継いでいなければ）', () {
@@ -2683,6 +2690,241 @@ void main() {
         });
       }
       expect(command, greaterThan(0));
+    });
+  });
+
+  group('女性の生き方', () {
+    final digits = RegExp(r'[0-9０-９%]');
+    // 重点の名 → (tag, はじめて選んだ年の岐路の題)
+    const focusLabels = <String, (String, String)>{
+      '奥方さまの文の取り次ぎを務める': ('wl_letters', '文の取り次ぎ'),
+      '若い侍女たちを仕込む': ('wl_maids', '侍女の仕込み'),
+      '屋敷の内を切り盛りする': ('wl_house', '屋敷の切り盛り'),
+      '店を切り盛りする': ('wl_shop', '店の帳場'),
+      '機を織って市へ出す': ('wl_loom', '市の機織り'),
+      '村の女たちと田植え唄を合わせる': ('wl_song', '田植え唄'),
+      '女人の参る寺を守る': ('wl_refuge', '寺へ逃げてきた女'),
+      '薙刀を若い女たちに教える': ('wl_naginata', '薙刀の弟子'),
+    };
+    const titles = {
+      '文の取り次ぎ', '侍女の仕込み', '屋敷の切り盛り', '店の帳場', '市の機織り', '田植え唄', //
+      '寺へ逃げてきた女', '薙刀の弟子', '取り次ぎ', '侍女たち', '家の内', '店先', '機の音', '唄の輪', //
+      '寺の務め', '薙刀の稽古場', '奥の出世', '奥方の密命', '落ち延びた姫', '野の弔い', '討死の報せ', //
+      '郎党の女房たち', '家督を守る', '娘の奉公', '倒れた夫', '頼母子の講', '市の揉め事', '米の値', //
+      '逃げてきた女', '取り上げ',
+    };
+
+    /// 裳着まで進めた女性を、暮らし方の型に置き直す
+    /// （0 奥で仕える・1 武家の妻・2 商家の女・3 村の女・4 尼・5 幼い子のいる武家の後家）。
+    Game? womanOf(int seed, int kind) {
+      final rng = Rng(seed);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      if (!g.l.female) return null;
+      playChildhood(g, Rng(seed + 1));
+      if (g.finished) return null;
+      g.choose(0); // 裳着
+      if (g.finished || g.hasFlag('priesthood')) return null;
+      final l = g.l;
+      void serve() => l
+        ..rank = 2
+        ..maxRank = 2
+        ..lord = g.alive.first.name
+        ..fav = 30;
+      void free() => l
+        ..rank = 0
+        ..lord = null;
+      switch (kind) {
+        case 0:
+          serve();
+          l.married = false;
+        case 1:
+          serve();
+          l.married = true;
+          g.meet('伴侶', '中村家の太郎', 50);
+        case 2:
+          free();
+          g.setFlag('way_merchant');
+          if (seed % 2 == 0) {
+            l.married = true;
+            g.meet('伴侶', '小川屋の吉蔵', 50);
+          }
+        case 3:
+          if (l.cls.id != 'farmer' && l.cls.id != 'fisher') return null;
+          free();
+        case 4:
+          free();
+          l.married = false;
+          g.setFlag('priesthood');
+        case 5:
+          serve();
+          l.married = false;
+          g.meet('伴侶', '青木家の次郎', 50);
+          l.addKid(g.year + 6); // 二十一の年に生まれる子（家督の岐路は幼い子がいるあいだだけ）
+      }
+      return g;
+    }
+
+    test('暮らし方の型ごとに女性の重点が出て、男性には出ない', () {
+      final want = <int, (WomanKind, List<String>)>{
+        0: (WomanKind.oku, ['wl_letters', 'wl_maids']),
+        1: (WomanKind.wife, ['wl_house']),
+        2: (WomanKind.merchant, ['wl_shop']),
+        3: (WomanKind.village, ['wl_loom', 'wl_song']),
+        4: (WomanKind.nun, ['wl_refuge']),
+      };
+      final all = {for (final v in want.values) ...v.$2};
+      final found = <int>{};
+      for (var seed = 0; seed < 400 && found.length < want.length; seed++) {
+        for (final k in want.keys) {
+          if (found.contains(k)) continue;
+          final g = womanOf(seed + 7000, k);
+          if (g == null || g.has('onna')) continue;
+          final (kind, tags) = want[k]!;
+          expect(womanKind(g), kind, reason: 'kind=$k');
+          // その型の重点だけが出る。
+          expect(womanLifeTags(g).toSet(), tags.toSet(), reason: 'kind=$k');
+          expect(all.containsAll(tags), isTrue);
+          found.add(k);
+        }
+      }
+      expect(found.length, want.length);
+
+      // 女武者には薙刀の重点が足される（尼になると出ない）。
+      var onna = 0;
+      for (var seed = 0; seed < 20000 && onna < 3; seed++) {
+        final rng = Rng(seed);
+        final b = rollBirth(rng);
+        if (!b.female || !b.traits.any((t) => t.id == 'onna')) continue;
+        final g = Game(rng: rng);
+        g.start(b);
+        g.l.t = 25 * 2;
+        expect(womanLifeTags(g), contains('wl_naginata'));
+        g.setFlag('priesthood');
+        expect(womanLifeTags(g), isNot(contains('wl_naginata')));
+        onna++;
+      }
+      expect(onna, greaterThan(0));
+
+      // 男性には、どの身分でも出ない。
+      var men = 0;
+      for (var seed = 0; seed < 200; seed++) {
+        final rng = Rng(seed + 9100);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.l.female) continue;
+        g.l.t = 30 * 2;
+        for (final setUp in <void Function()>[
+          () {},
+          () => g.l
+            ..rank = 3
+            ..lord = g.alive.first.name,
+          () => g.l.married = true,
+          () => g.setFlag('priesthood'),
+        ]) {
+          setUp();
+          expect(womanKind(g), isNull);
+          expect(womanLifeTags(g), isEmpty);
+          expect(
+            adultFocusOptions(g).where((f) => f.tag.startsWith('wl_')),
+            isEmpty,
+          );
+        }
+        men++;
+      }
+      expect(men, greaterThan(50));
+    });
+
+    test('女性の人生で、重点の岐路と型ごとの岐路が出て、1年の重点は上限まで、匂わせがあり数字が無い', () {
+      final firsts = <String>{};
+      final again = <String>{};
+      final life = <String>{};
+      var capped = 0, lives = 0;
+      for (var seed = 0; seed < 900; seed++) {
+        final g = womanOf(seed + 3300, seed % 6);
+        if (g == null) continue;
+        lives++;
+        final r = Rng(seed + 2);
+        var n = 0;
+        String? expectTitle;
+        // 裳着の直後の重点は、型を置き直す前に作られているので、数の突き合わせから外す。
+        var fresh = true;
+        while (!g.finished && n++ < 3000) {
+          final p = g.prompt!;
+          if (expectTitle != null) {
+            expect(p.title, expectTitle, reason: 'seed=$seed');
+            expectTitle = null;
+          }
+          if (titles.contains(p.title)) {
+            for (final c in p.choices) {
+              expect(c.hint, isNotNull, reason: '${p.title}/${c.label}');
+              expect(c.hint!, isNot(contains(digits)), reason: c.hint);
+              expect(c.label, isNot(contains(digits)), reason: c.label);
+            }
+          }
+          if (p.title == '今年の重点' && !g.isChild) {
+            final mine = [
+              for (var i = 0; i < p.choices.length; i++)
+                if (focusLabels.containsKey(p.choices[i].label)) i,
+            ];
+            final tags = womanLifeTags(g);
+            expect(mine.length, lessThanOrEqualTo(kWomenLifePerYear));
+            if (!fresh) {
+              expect(
+                mine.length,
+                tags.length < kWomenLifePerYear
+                    ? tags.length
+                    : kWomenLifePerYear,
+                reason: 'seed=$seed $tags',
+              );
+              if (tags.length > kWomenLifePerYear) capped++;
+            }
+            fresh = false;
+            for (final i in mine) {
+              final c = p.choices[i];
+              expect(c.hint!, isNot(contains(digits)), reason: c.hint);
+              expect(c.label, isNot(contains(digits)), reason: c.label);
+            }
+            if (mine.isNotEmpty && r.chance(.6)) {
+              final (tag, first) = focusLabels[p.choices[mine.first].label]!;
+              if (!g.hasFlag('scene:$tag')) {
+                expectTitle = first;
+                firsts.add(tag);
+              }
+              g.choose(mine.first);
+              continue;
+            }
+          }
+          g.choose(r.range(0, p.choices.length - 1));
+        }
+        for (final f in g.l.flags) {
+          if (!f.startsWith('scene:wl_')) continue;
+          final id = f.substring(6);
+          if (id.endsWith('_again')) again.add(id);
+          if (kWomanLifeSceneIds.contains(id)) life.add(id);
+        }
+      }
+      expect(lives, greaterThan(150));
+      expect(firsts.length, greaterThanOrEqualTo(7), reason: '$firsts');
+      expect(again.length, greaterThanOrEqualTo(5), reason: '$again');
+      // 型ごとの岐路14のうち、6〜7割以上が出る。
+      expect(life.length, greaterThanOrEqualTo(9), reason: '$life');
+      expect(capped, greaterThan(0));
+    });
+
+    test('男性の人生には、女性の生き方の岐路が出ない', () {
+      for (var seed = 0; seed < 200; seed++) {
+        final rng = Rng(seed + 4400);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.l.female) continue;
+        playOut(g, Rng(seed));
+        expect(
+          g.l.flags.where((f) => f.startsWith('scene:wl_')),
+          isEmpty,
+          reason: 'seed=$seed',
+        );
+      }
     });
   });
 }

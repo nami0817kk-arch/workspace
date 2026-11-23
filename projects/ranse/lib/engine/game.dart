@@ -25,6 +25,7 @@ import 'talents.dart';
 import 'village.dart';
 import 'ways.dart';
 import 'women.dart';
+import 'women_life.dart';
 
 /// 選択肢。[f] が返した文字列は見聞録に書かれる。
 class Choice {
@@ -73,6 +74,7 @@ class Game extends ChangeNotifier {
       ...buildEchoTalentScenes(),
       ...buildFamilyScenes(),
       ...buildWomenScenes(),
+      ...buildWomanLifeScenes(),
       ...buildAshigaruScenes(),
       ...buildVillageScenes(),
       ...buildTalentScenes(),
