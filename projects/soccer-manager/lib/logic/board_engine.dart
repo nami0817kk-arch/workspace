@@ -383,7 +383,19 @@ class BoardEngine {
 
   static int promotionBonusFor(int newTier,
           [LeagueTheme theme = LeagueTheme.england]) =>
-      wageBudgetBaseForTier(newTier, theme) * promotionBonusWeeks;
+      wageBudgetBaseForTier(newTier, theme) * promotionBonusWeeksFor(theme);
+
+  /// 国ごとの昇格の手付けの週数。ドイツとスペインは [promotionBonusWeeks]
+  /// の倍(4週)。
+  ///
+  /// 両国は部の間の放映権の差が小さく、昇格しても最初の入金までに補強の
+  /// 元手が足りず、2部に上がっても上位の水準の選手を獲れないまま落ちる
+  /// ことが多かった(2026-11-24 の測定)。6週には戻さない(放映権の増加と
+  /// 二重になる)。
+  static int promotionBonusWeeksFor(LeagueTheme theme) => switch (theme) {
+        LeagueTheme.germany || LeagueTheme.spain => promotionBonusWeeks * 2,
+        _ => promotionBonusWeeks,
+      };
 
   static int seasonPrizeMoney({
     required int finalRank,
