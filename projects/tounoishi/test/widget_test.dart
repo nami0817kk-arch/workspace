@@ -189,6 +189,21 @@ void main() {
     }
   });
 
+  test('勇者の見せ場と手を出せる操作（0.7.26・試作 v42）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'function banner(', // 来襲・倒し切った時の帯
+      'function yuBar(', // 勇者の体力の帯
+      "'！技'", // 技の予告
+      'function openPop(', // 長押しのメニュー
+      'function doAct(', // 肥料・埋め戻す・集まれ
+      'function reachCore(', // 埋めても入口からコアまでの道は切れない
+      "m.cmd=='guard'", // 主役に命令
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
