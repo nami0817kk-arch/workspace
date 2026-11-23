@@ -668,7 +668,7 @@
         no.cool = 0.6;
         // 飛び込むか、間合いを取って待つか（タックル・判断。自陣の箱の中は慎重に）
         const box = this.inOwnBox(no);
-        const go = (0.3 + no.a.tck * 0.25 + no.a.dec * 0.1 + ((no.team.tactic && no.team.tactic.intensity) || 0.5) * 0.1) * (box ? 0.6 : 1) * (q.hold > 1.2 ? 1.4 : 1);
+        const go = (0.14 + no.a.tck * 0.14 + no.a.dec * 0.06 + ((no.team.tactic && no.team.tactic.intensity) || 0.5) * 0.08) * (box ? 0.6 : 1) * (q.hold > 1.2 ? 1.5 : 1) * (q.blocked > 0.4 ? 1.6 : 1);
         if (this.rng() < go && this.tackle(no, q)) return;
       }
       // GK が自分の箱の中で足元に飛び込む（1対1・飛び出し）
@@ -756,7 +756,7 @@
         const xg = this.xg(q, q.x, q.y);
         const press = nd < 2 ? 0.75 : 1;
         // 打つ気（ためらい）：冷静さ・フィニッシュ
-        if (xg > 0.058 - q.a.lsh * 0.03 - (nd > 3 ? 0.008 : 0) || (xg > 0.025 && this.has(q, '弾丸ミドル'))) opts.push({ k: 'shoot', v: xg * press * (0.9 + q.a.fin * 0.1) + (L - u < 9 ? 0.02 : 0) });
+        if (xg > 0.066 - q.a.lsh * 0.03 - (nd > 3 ? 0.008 : 0) || (xg > 0.025 && this.has(q, '弾丸ミドル'))) opts.push({ k: 'shoot', v: xg * press * (0.9 + q.a.fin * 0.1) + (L - u < 9 ? 0.02 : 0) });
       }
       // 2. パス
       const lanes = this.passOptions(q);
@@ -989,7 +989,7 @@
       // 高さ：低めが基本、下手ほど浮く
       const lift = o.pk ? 0.3 + this.rng() * 1.3 : head ? 0.2 + this.rng() * 1.2 : this.rng() * 1.5 + (1 - sk) * this.rng() * 3.6 + (press ? this.rng() * 1.5 : 0) + (d > 18 ? this.rng() * 1.2 : 0);
       const T = hyp(aimX - b.x, gy - b.y) / v;
-      this.kick(q, aimX, gy, { v, err: err * (o.pk ? 2 : 4.2), vz: (lift + 0.5 * G * T * T) / Math.max(T, 0.15), kind: 'shot' });
+      this.kick(q, aimX, gy, { v, err: err * (o.pk ? 2 : 4.7), vz: (lift + 0.5 * G * T * T) / Math.max(T, 0.15), kind: 'shot' });
       const se = this.ev('shot', { pid: q.id, sd, xg: xgv, x: b.x, y: b.y, head, pk: !!o.pk, fk: !!o.fk, assist });
       this.decideSave();
       const ss = this.shot;
@@ -1359,6 +1359,7 @@
       b.z = 0;
       b.vz = 0;
       q.hold = 0;
+      q.blocked = 0;
       q.think = 0.7 + (1 - q.a.dec) * 0.4 + this.rng() * 0.8 - ((q.team.tactic && q.team.tactic.tempo) || 0.5) * 0.4;
       q.dx = q.x;
       q.dy = q.y;
