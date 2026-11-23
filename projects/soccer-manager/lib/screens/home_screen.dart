@@ -283,7 +283,7 @@ class HomeScreen extends StatelessWidget {
                                 Text(
                                   Tr.pick(
                                       '目標: ${save.boardTargetRank}位以内${gameState.boardCupTargetLabel != null ? '・カップ${gameState.boardCupTargetLabel}進出' : ''}',
-                                      "Target: top ${save.boardTargetRank}${gameState.boardCupTargetLabel != null ? ' • reach ${CupEngine.roundInSentence(gameState.boardCupTargetLabel!)} in the cup' : ''}"),
+                                      "Target: ${Tr.topTarget(save.boardTargetRank)}${gameState.boardCupTargetLabel != null ? ' • reach ${CupEngine.roundInSentence(gameState.boardCupTargetLabel!)} in the cup' : ''}"),
                                   style: TextStyle(
                                       color:
                                           Colors.white.withValues(alpha: 0.88)),
@@ -446,7 +446,9 @@ class HomeScreen extends StatelessWidget {
                     subtitle: Text(
                       Tr.pick(
                           '${gameState.pendingYouthIntake.length}名の新人候補が加入を待っています',
-                          '${gameState.pendingYouthIntake.length} young hopefuls are waiting to join'),
+                          gameState.pendingYouthIntake.length == 1
+                              ? 'A young hopeful is waiting to join'
+                              : '${gameState.pendingYouthIntake.length} young hopefuls are waiting to join'),
                     ),
                     trailing: FilledButton(
                       onPressed: () => Navigator.of(context).push(
@@ -630,7 +632,7 @@ class HomeScreen extends StatelessWidget {
                     // (2026-11-23。押した後に初めて -20 を知った)。
                     subtitle: Text(Tr.pick(
                         '最終順位: $userRank位。${gameState.seasonEndPreviewLine}',
-                        'Final position: $userRank. ${gameState.seasonEndPreviewLine}')),
+                        'Final position: ${Tr.ordinal(userRank)}.${gameState.seasonEndPreviewLine}')),
                     trailing: FilledButton(
                       onPressed: () => _startNextSeason(context),
                       child: Text(Tr.pick('次のシーズンへ', 'On to next season')),
@@ -770,7 +772,7 @@ class HomeScreen extends StatelessWidget {
                                           Text(
                                             Tr.pick(
                                                 '$oppRank位・総合${opp.overallRating}',
-                                                '$oppRank in the table • overall ${opp.overallRating}'),
+                                                '${Tr.ordinal(oppRank)} in the table • overall ${opp.overallRating}'),
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: SemanticColors.subtleText(

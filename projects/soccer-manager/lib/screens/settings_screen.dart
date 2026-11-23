@@ -353,8 +353,8 @@ class SettingsScreen extends StatelessWidget {
                         const SizedBox(height: 6),
                         Text(
                           Tr.pick(
-                              'クラブ経営からスタメン編成、移籍市場、ユース育成までを1本で楽しめるサッカーマネージメントゲームです。',
-                              'A football management game covering everything from running the club to picking your XI, working the transfer market and bringing through the academy.'),
+                              'サッカークラブのオーナーになって、お金・人事・移籍市場・ユース育成でクラブを育てるゲームです。試合は雇った監督に任せます。',
+                              'A football club owner game: run the money, hire the people, work the transfer market and bring through the academy, while the manager you hire takes care of the matches.'),
                           style: const TextStyle(fontSize: 12),
                         ),
                       ],

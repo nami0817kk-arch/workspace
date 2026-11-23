@@ -25,7 +25,7 @@ extension AgmDemandInfo on AgmDemand {
         AgmDemand.manager => Tr.pick('監督を解任する', 'Sack the manager'),
       };
 
-  String get rejectLabel => Tr.pick('断る(株主の期待が下がる)', 'Refuse (shareholders lose faith)');
+  String get rejectLabel => Tr.pick('断る(株主の期待が下がる)', 'Refuse (shareholder expectation falls)');
 
   /// 受けたときの株主の期待の増減。
   int get acceptDelta => switch (this) {

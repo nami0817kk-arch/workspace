@@ -323,7 +323,7 @@ class _YouthScreenState extends State<YouthScreen> {
                                     '${d.player.name} (${d.player.age}) was poached by another club. Development fee ${formatMoney(d.compensation)}')
                                 : Tr.pick(
                                     '${d.player.name}(${d.player.age}歳)が出場機会を求めて去りました。育成補償金 ${formatMoney(d.compensation)}',
-                                    '${d.player.name} (${d.player.age}) left in search of first-team football. Development fee ${d.compensation}'),
+                                    '${d.player.name} (${d.player.age}) left in search of first-team football. Development fee ${formatMoney(d.compensation)}'),
                           ),
                       ],
                     ),
@@ -559,7 +559,7 @@ class _YouthScreenState extends State<YouthScreen> {
             Text(Tr.pick('年俸: ${formatMoney(annualFromWeekly(terms.weeklyWage))}',
                 'Salary: ${formatMoney(annualFromWeekly(terms.weeklyWage))} a year')),
             Text(Tr.pick('契約金: ${formatMoney(terms.signingBonus)}(一括)',
-                'Signing fee: ${formatMoney(terms.signingBonus)} (one-off)')),
+                'Signing bonus: ${formatMoney(terms.signingBonus)} (one-off)')),
             // 契約の長さ(今のシーズンを含めて。18歳未満は3年まで)。
             DropdownButton<int>(
               value: years,

@@ -27,7 +27,7 @@ class FormerClubsCard extends StatelessWidget {
                   ? Tr.pick('$name: 季の終わりに分かります',
                       '$name: known at the end of the season')
                   : Tr.pick('$name: 第${st[0]}季は${st[1]}部の${st[2]}位',
-                      '$name: season ${st[0]}, Tier ${st[1]}, finished ${st[2]}th')),
+                      '$name: season ${st[0]}, Tier ${st[1]}, finished ${Tr.ordinal(st[2])}')),
           ],
         ),
       ),

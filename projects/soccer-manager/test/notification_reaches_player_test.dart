@@ -22,6 +22,8 @@ void main() {
       'lastPromotionBonus': '金額を lastDivisionChangeMessage の文面に含めている',
       'lastRenewalRefusals': 'シーズン開始のニュースログへ流し込んでいる(_logNews)',
       'lastPreContractArrivals': 'シーズン開始のニュースログへ流し込んでいる(_logNews)',
+      'lastSeasonManagerAwardName':
+          '年間最優秀監督賞の受賞者名として、シーズン開始のニュースログへ流し込んでいる(_logNews)',
     };
 
     // フィールドの宣言は全て game_state.dart にある。part 側の extension は

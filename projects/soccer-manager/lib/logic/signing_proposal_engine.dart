@@ -98,7 +98,7 @@ class SigningProposalEngine {
 
   static String groupLabel(PositionGroup g) => switch (g) {
         PositionGroup.gk => 'GK',
-        PositionGroup.def => Tr.pick('ディフェンス', 'defense'),
+        PositionGroup.def => Tr.pick('ディフェンス', 'defence'),
         PositionGroup.mid => Tr.pick('ミッドフィールド', 'midfield'),
         PositionGroup.att => Tr.pick('フォワード', 'attack'),
       };

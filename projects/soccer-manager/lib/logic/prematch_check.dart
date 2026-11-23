@@ -56,7 +56,9 @@ class PreMatchCheck {
     if (starters.length < 11) {
       warnings.add(PreMatchWarning(
         message: Tr.pick('スタメンが${starters.length}人です。',
-            'Only ${starters.length} players are in the XI.'),
+            starters.isEmpty
+                ? 'Nobody is in the XI.'
+                : 'Only ${Tr.plural(starters.length, 'player')} ${starters.length == 1 ? 'is' : 'are'} in the XI.'),
         serious: true,
       ));
     }
@@ -67,7 +69,9 @@ class PreMatchCheck {
     if (tired.isNotEmpty) {
       warnings.add(PreMatchWarning(
         message: Tr.pick('疲労が濃い選手が${tired.length}人スタメンにいます(${tired.first.name}ほか)。',
-            '${tired.length} tired players are starting (${tired.first.name} and others).'),
+            tired.length == 1
+                ? '${tired.first.name} is starting while tired.'
+                : '${tired.length} tired players are starting (${tired.first.name} and others).'),
       ));
     }
 
@@ -77,7 +81,9 @@ class PreMatchCheck {
     if (rusty.isNotEmpty) {
       warnings.add(PreMatchWarning(
         message: Tr.pick('実戦感覚が戻っていない選手が${rusty.length}人います(${rusty.first.name}ほか)。',
-            '${rusty.length} players are short of match sharpness (${rusty.first.name} and others).'),
+            rusty.length == 1
+                ? '${rusty.first.name} is short of match sharpness.'
+                : '${rusty.length} players are short of match sharpness (${rusty.first.name} and others).'),
       ));
     }
 
@@ -97,7 +103,9 @@ class PreMatchCheck {
     if (outOfPosition > 0) {
       warnings.add(PreMatchWarning(
         message: Tr.pick('本職ではないポジションの選手が$outOfPosition人います($firstNameほか)。',
-            '$outOfPosition players are out of position ($firstName and others).'),
+            outOfPosition == 1
+                ? '$firstName is playing out of position.'
+                : '$outOfPosition players are out of position ($firstName and others).'),
       ));
     }
 
@@ -108,7 +116,9 @@ class PreMatchCheck {
     if (bench < minBenchPlayers) {
       warnings.add(PreMatchWarning(
         message: Tr.pick('交代で出せる選手が$bench人しかいません。',
-            'Only $bench players are available from the bench.'),
+            bench == 0
+                ? 'Nobody is available on the bench.'
+                : 'Only ${Tr.plural(bench, 'player')} ${bench == 1 ? 'is' : 'are'} available on the bench.'),
       ));
     }
 

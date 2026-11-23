@@ -43,7 +43,7 @@ class _BudgetPlanCardState extends State<BudgetPlanCard> {
       case BudgetCategory.dividend:
         final d = BudgetEngine.dividendExpectationDelta(plan);
         return Tr.pick('株主の期待 毎年 ${d >= 0 ? '+' : ''}$d',
-            "Shareholders' confidence ${d >= 0 ? '+' : ''}$d per year");
+            "Shareholder expectation ${d >= 0 ? '+' : ''}$d per year");
     }
   }
 

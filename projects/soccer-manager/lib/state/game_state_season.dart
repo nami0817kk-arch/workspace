@@ -1205,6 +1205,7 @@ extension GameStateSeason on GameState {
       _save!.trophyHistory.add(Tr.pick('シーズン${league.season} 年間最優秀監督賞',
           'Season ${league.season} Manager of the Year'));
       lastSeasonManagerAwardWon = true;
+      lastSeasonManagerAwardName = currentManager?.name;
     }
 
     // 下位ディビジョンほど観客動員・賞金が少ない(ティアごとに段階的に低下する)。
@@ -1224,7 +1225,7 @@ extension GameStateSeason on GameState {
     _noteSupporterMove(
         confidenceDelta,
         Tr.pick('季末の順位(第${league.season}季 $finalRank位・目標${_save!.boardTargetRank}位)',
-            'Season-end finish (season ${league.season}: $finalRank, target ${_save!.boardTargetRank})'));
+            'Season-end finish (season ${league.season}: ${Tr.ordinal(finalRank)}, target: ${Tr.topTarget(_save!.boardTargetRank)})'));
     // 期待への慣れ。勝ち続けるうちにサポーターの目は肥え、満点に張り付いた
     // ままだと緊張が無くなる(放置3シーズンの実測で94〜97に張り付いた)。
     _save!.confidence = BoardEngine.afterAdaptation(_save!.confidence);
@@ -1995,7 +1996,14 @@ extension GameStateSeason on GameState {
       _logNews(lastManagerContractNote!, context: newsCtx);
     }
     if (lastSeasonManagerAwardWon) {
-      _logNews(Tr.pick('年間最優秀監督賞を受賞しました！', 'You won Manager of the Year!'),
+      // プレイヤーはオーナーで、賞を受けるのは雇っている監督(2026-11-23)。
+      final name = lastSeasonManagerAwardName;
+      _logNews(
+          Tr.pick(
+              name == null
+                  ? 'クラブの監督が年間最優秀監督賞を受賞しました！'
+                  : '監督の$nameが年間最優秀監督賞を受賞しました！',
+              '${name ?? 'Your manager'} won Manager of the Year!'),
           context: newsCtx);
     }
     if (lastSuperCupNews != null) {

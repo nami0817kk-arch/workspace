@@ -47,4 +47,16 @@ void main() {
     expect(AppLanguage.japanese.label, '日本語');
     expect(AppLanguage.english.label, 'English');
   });
+
+  test('Tr.ordinal は 11〜13 を th にし、topTarget は 1 位を優勝と言う', () {
+    expect(
+      [1, 2, 3, 4, 11, 12, 13, 21, 22, 23, 101, 111, 112].map(Tr.ordinal),
+      [
+        '1st', '2nd', '3rd', '4th', '11th', '12th', '13th', //
+        '21st', '22nd', '23rd', '101st', '111th', '112th',
+      ],
+    );
+    expect(Tr.topTarget(1), 'win the league');
+    expect(Tr.topTarget(4), 'top 4');
+  });
 }

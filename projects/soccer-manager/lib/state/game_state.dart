@@ -1757,6 +1757,10 @@ class GameState extends ChangeNotifier {
   /// 直近のstartNextSeasonでユーザーが年間最優秀監督賞を受賞したかどうか。
   bool lastSeasonManagerAwardWon = false;
 
+  /// 年間最優秀監督賞を受けた監督の名前(受賞の時点の監督。季の替わり目に
+  /// 監督が入れ替わっても、受けた人の名前で知らせるため)。
+  String? lastSeasonManagerAwardName;
+
   /// 直近のplayNextMatchdayでスタメン出場手当として支払った総額(万円)。
   int lastAppearanceFeesPaid = 0;
 

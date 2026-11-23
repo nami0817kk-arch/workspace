@@ -19,7 +19,7 @@ class AgmDemandCard extends StatelessWidget {
     final detail = switch (d) {
       AgmDemand.wageCut => Tr.pick(
           '人件費率が${(save.agmWageRatio * 100).round()}%です。受けると、来季の総会までに${((save.agmWageRatio - AgmEngine.wageCutPoints) * 100).round()}%以下に下げる約束になります(守れなければ期待-10)。',
-          'Your wage ratio is ${(save.agmWageRatio * 100).round()}%. Accept and you must bring it to ${((save.agmWageRatio - AgmEngine.wageCutPoints) * 100).round()}% by next year\'s meeting (or lose 10 points of their faith).'),
+          'Your wage ratio is ${(save.agmWageRatio * 100).round()}%. Accept and you must bring it to ${((save.agmWageRatio - AgmEngine.wageCutPoints) * 100).round()}% by next year\'s meeting (or shareholder expectation drops 10).'),
       AgmDemand.payout => Tr.pick('上乗せの配当は${formatMoney(save.agmPayout)}です。',
           'The extra dividend comes to ${formatMoney(save.agmPayout)}.'),
       AgmDemand.manager => Tr.pick(
@@ -43,7 +43,7 @@ class AgmDemandCard extends StatelessWidget {
                 FilledButton(
                   onPressed: () => gs.answerAgmDemand(accept: true),
                   child: Text(Tr.pick('${d.acceptLabel}(期待+${d.acceptDelta})',
-                      '${d.acceptLabel} (faith +${d.acceptDelta})')),
+                      '${d.acceptLabel} (shareholder expectation +${d.acceptDelta})')),
                 ),
                 OutlinedButton(
                   onPressed: () => gs.answerAgmDemand(accept: false),

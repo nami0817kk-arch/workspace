@@ -74,7 +74,7 @@ extension GameStateSd on GameState {
     final b = s.sdBrief;
     final sd = currentSd;
     if (!b.active || sd == null || !isTransferWindowOpen) return;
-    final ctx = Tr.pick('SD', 'SD');
+    final ctx = Tr.pick('SD', 'DoF');
     for (final t in [...s.transferTalks.where((t) => t.bySd)]) {
       switch (t.stage) {
         case TransferTalkStage.waiting:
@@ -86,7 +86,7 @@ extension GameStateSd on GameState {
             if (_acceptCounterCore(t.playerId)) {
               _logNews(
                   Tr.pick('SDの${sd.name}が、${t.clubName}の対案(${formatMoney(t.fee)})をのんだ。',
-                      'Your SD ${sd.name} accepted ${t.clubName}\'s terms (${formatMoney(t.fee)}).'),
+                      'Your DoF ${sd.name} accepted ${t.clubName}\'s terms (${formatMoney(t.fee)}).'),
                   context: ctx);
             }
           } else {
@@ -99,7 +99,7 @@ extension GameStateSd on GameState {
               s.transferTalks.remove(t);
               _logNews(
                   Tr.pick('SDの${sd.name}は、${t.playerName}の値が上限を超えるので降りた。',
-                      'Your SD ${sd.name} pulled out of the ${t.playerName} deal: it went past your limit.'),
+                      'Your DoF ${sd.name} pulled out of the ${t.playerName} deal: it went past your limit.'),
                   context: ctx);
             }
           }
@@ -122,7 +122,7 @@ extension GameStateSd on GameState {
               s.sdSignedThisWindow++;
               _logNews(
                   Tr.pick('SDの${sd.name}が、${p.name}の獲得をまとめた。',
-                      'Your SD ${sd.name} closed the deal for ${p.name}.'),
+                      'Your DoF ${sd.name} closed the deal for ${p.name}.'),
                   context: ctx);
             case TermsOutcome.counter:
               break; // 次の日に、望む額で出し直す。
@@ -132,7 +132,7 @@ extension GameStateSd on GameState {
               s.transferTalks.removeWhere((x) => x.playerId == p.id);
               _logNews(
                   Tr.pick('SDの${sd.name}は${p.name}の獲得をあきらめた${reason == null ? '' : '($reason)'}。',
-                      'Your SD ${sd.name} gave up on ${p.name}${reason == null ? '' : ' ($reason)'}.'),
+                      'Your DoF ${sd.name} gave up on ${p.name}${reason == null ? '' : ' ($reason)'}.'),
                   context: ctx);
           }
       }
@@ -147,7 +147,7 @@ extension GameStateSd on GameState {
         talkFor(p.id)!.bySd = true;
         _logNews(
             Tr.pick('SDの${sd.name}が、${clubNameOf(p.id) ?? '-'}の${p.name}に動いた(${formatMoney(bid)}を提示)。',
-                'Your SD ${sd.name} made a move for ${p.name} of ${clubNameOf(p.id) ?? '-'} (bid ${formatMoney(bid)}).'),
+                'Your DoF ${sd.name} made a move for ${p.name} of ${clubNameOf(p.id) ?? '-'} (bid ${formatMoney(bid)}).'),
             context: ctx);
         return;
       }

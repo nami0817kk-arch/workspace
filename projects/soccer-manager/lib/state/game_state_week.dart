@@ -312,7 +312,7 @@ extension GameStateWeek on GameState {
                 'Academy player ${d.player.name} was poached by another club (compensation ${formatMoney(d.compensation)})')
             : Tr.pick(
                 'ユースの${d.player.name}が出場機会を求めてクラブを去りました(育成補償金 ${formatMoney(d.compensation)})',
-                'Academy player ${d.player.name} left in search of first-team football (compensation ${d.compensation})'),
+                'Academy player ${d.player.name} left in search of first-team football (compensation ${formatMoney(d.compensation)})'),
         context: Tr.pick('ユース', 'Youth'),
       );
     }
@@ -369,7 +369,7 @@ extension GameStateWeek on GameState {
       );
       crisis = Tr.pick(
           '資金マイナスが${s.consecutiveNegativeBudgetWeeks}週続いています。株主の期待が低下しました。借金が${formatMoney(-fundsExhaustedLine)}を超えると、クラブを手放すことになります。',
-          "You have been in the red for ${Tr.plural(s.consecutiveNegativeBudgetWeeks, 'week')}. The shareholders' confidence has slipped. If the debt passes ${formatMoney(-fundsExhaustedLine)}, you will have to sell the club.");
+          "You have been in the red for ${Tr.plural(s.consecutiveNegativeBudgetWeeks, 'week')}. Shareholder expectation has slipped. If the debt passes ${formatMoney(-fundsExhaustedLine)}, you will have to sell the club.");
       lastBudgetCrisisWarning = crisis;
     }
 
@@ -447,14 +447,14 @@ extension GameStateWeek on GameState {
                   'Your academy won the youth league, top after ${YouthLeague.matchdayCount} rounds')
               : Tr.pick(
                   'ユースリーグが終了。$rank位(勝点${youthLeague.userStanding.points})',
-                  'The youth league finished. You came $rank (${youthLeague.userStanding.points} pts)'),
+                  'The youth league finished. You came ${Tr.ordinal(rank)} (${youthLeague.userStanding.points} pts)'),
           context: Tr.pick('ユース', 'Youth'),
         );
         final scorer = YouthLeagueEngine.topScorer(s.youthProspects);
         if (scorer != null) {
           _logNews(
             Tr.pick('ユースの得点王は${scorer.name}(${scorer.youthMatchGoals}得点)',
-                'Academy top scorer: ${scorer.name} (${scorer.youthMatchGoals} goals)'),
+                'Academy top scorer: ${scorer.name} (${Tr.plural(scorer.youthMatchGoals, 'goal')})'),
             context: Tr.pick('ユース', 'Youth'),
           );
         }

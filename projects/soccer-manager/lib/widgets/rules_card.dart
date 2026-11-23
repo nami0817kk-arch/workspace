@@ -79,7 +79,7 @@ class RulesCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 Tr.pick('補強が禁止されています(あと${save.transferBanSeasons}季)。',
-                    'Signings are banned (${save.transferBanSeasons} more seasons).'),
+                    'Signings are banned (${Tr.plural(save.transferBanSeasons, 'more season')}).'),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: SemanticColors.negative(context)),
