@@ -8,7 +8,10 @@ import 'widgets.dart';
 /// 試作の drawTown。320×180 の点描きを、幅に合わせて拡大して描く
 class TownPainter extends CustomPainter {
   final Game s;
-  TownPainter(this.s);
+
+  /// 描く中身が変わったかの目印（月・売上・時価総額・事業の数・拠点・言語）。同じなら描き直さない
+  final int stamp;
+  TownPainter(this.s) : stamp = Object.hash(s.turn, s.rev, s.cap, s.biz.length, s.subs().length, s.home, s.wealth, L.lang);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -102,8 +105,9 @@ class TownPainter extends CustomPainter {
     canvas.restore();
   }
 
+  /// 900社の並べ替えを伴うので、中身が変わったときだけ描き直す（上の帯の数字が光るあいだも描き直さない）
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant TownPainter oldDelegate) => oldDelegate.s != s || oldDelegate.stamp != stamp;
 }
 
 /// 試作の drawSpark（時価総額の推移・対数の目盛り）

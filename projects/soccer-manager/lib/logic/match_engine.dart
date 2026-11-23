@@ -209,6 +209,10 @@ class InteractiveHalfState {
   /// 下げて11人に戻すことを防ぐのに使う。
   final List<MatchEvent> priorEvents;
 
+  /// この区間だけ監督の逃げ切り([Team.holdLeadLate])で守りに入った
+  /// チーム。試合中の交代で攻守力を計算し直すときも同じ条件にする。
+  final Set<String> lateHoldTeamIds;
+
   // 決定機の中でカード(警告・退場)が出た場合に更新されるため、
   // 事前生成分と合わせて可変にしている。
   int? homeRedMinute;
@@ -261,6 +265,7 @@ class InteractiveHalfState {
     required this.chanceMinutes,
     required this.events,
     this.priorEvents = const [],
+    this.lateHoldTeamIds = const {},
   });
 
   /// このハーフの進行が(判断待ちなく)完了したかどうか。
@@ -303,10 +308,10 @@ class InteractiveHalfState {
     return HalfTally(
       homeGoals: homeGoals,
       awayGoals: awayGoals,
-      events: [
+      events: MatchEngine.sortedByMinute([
         for (final e in events)
           if (e.minute < beforeMinute) e,
-      ]..sort((a, b) => a.minute.compareTo(b.minute)),
+      ]),
       homeShots: homeShots + (c?.homeShots ?? 0),
       awayShots: awayShots + (c?.awayShots ?? 0),
       homeShotsOnTarget: homeShotsOnTarget + (c?.homeShotsOnTarget ?? 0),
@@ -317,7 +322,7 @@ class InteractiveHalfState {
   }
 
   HalfResult toHalfResult() {
-    final sorted = [...events]..sort((a, b) => a.minute.compareTo(b.minute));
+    final sorted = MatchEngine.sortedByMinute(events);
     // ライブ観戦でも自動消化と同じ基準でシュート数を記録する
     // (枠外・ブロックされた「打っただけ」のシュートを上乗せする)。
     final speculative = MatchEngine.speculativeShotsForStats(
@@ -611,6 +616,13 @@ class MatchEngine {
   }
 
   /// 先発11人を解決する。未設定・不整合な場合は負傷者を除いた総合力上位11人で代用する。
+  ///
+  /// 先発の指定に、怪我・代表・出場停止で出られない選手が混じっていたら、
+  /// その枠には控えの出られる選手が入る(先発の指定そのものは変えない。
+  /// 治れば元の選手に戻る)。以前は出られる先発が7人以上いればそのまま
+  /// 使い、控えがいるのに9人・10人で試合をしていた(監督の水準が低い
+  /// クラブは穴埋めしかせず、出られない先発を外さない。カップ戦はCPUの
+  /// 先発の見直しより前に行う。2026-11-23)。
   static List<Player> lineupOf(Team t) {
     if (t.startingXI.isNotEmpty) {
       final byId = {for (final p in t.players) p.id: p};
@@ -626,7 +638,7 @@ class MatchEngine {
                 !p.notRegistered,
           )
           .toList();
-      if (lineup.length >= 7) return lineup;
+      if (lineup.length >= 7) return _withStandIns(t, lineup);
     }
     final available = t.players
         .where(
@@ -649,6 +661,66 @@ class MatchEngine {
     final emergency = [...t.players]
       ..sort((a, b) => b.overall.compareTo(a.overall));
     return emergency.take(11).toList();
+  }
+
+  /// [lineup](出られる先発)で埋まらない布陣の枠に、出られる控えを入れる。
+  /// 選び方は自動編成と同じ(枠と同じ主ポジション → 副ポジション → 同じ
+  /// 大分類 → 残りの総合力の高い順)。乱数は使わないので、試合の前と後で
+  /// 同じ顔ぶれになる。
+  static List<Player> _withStandIns(Team t, List<Player> lineup) {
+    final seen = <String>{};
+    final xi = [
+      for (final p in lineup)
+        if (seen.add(p.id)) p,
+    ];
+    final slots = t.formation.slots;
+    if (xi.length >= slots.length) return xi;
+    // 先発で埋まっている枠を除く(同じポジション → 同じ大分類 → どれか)。
+    final open = [...slots];
+    final unplaced = <Player>[];
+    for (final p in xi) {
+      if (!open.remove(p.position)) unplaced.add(p);
+    }
+    for (final p in unplaced) {
+      final i = open.indexWhere((s) => s.group == p.position.group);
+      if (i >= 0) {
+        open.removeAt(i);
+      } else if (open.isNotEmpty) {
+        open.removeAt(open.length - 1);
+      }
+    }
+    final bench = t.players
+        .where((p) => !seen.contains(p.id) && _canPlay(p))
+        .toList()
+      ..sort((a, b) => b.overall.compareTo(a.overall));
+    // GK の枠から埋める(GK がいないまま試合をしない)。
+    open.sort((a, b) => (a == Position.gk ? 0 : 1) - (b == Position.gk ? 0 : 1));
+    for (final slot in open) {
+      if (bench.isEmpty || xi.length >= slots.length) break;
+      Player? pick;
+      for (final fits in <bool Function(Player)>[
+        (p) => p.position == slot,
+        (p) => p.secondaryPositions.contains(slot),
+        (p) => p.position.group == slot.group,
+        // フィールドの枠に控えの GK は入れない(同じ大分類の控えが尽きると
+        // 総合力の高い順で選び、控えの GK が入って GK が2人になっていた)。
+        // 入れるのは、残りが GK だけのときだけ。
+        (p) => slot == Position.gk || p.position.group != PositionGroup.gk,
+        (p) => true,
+      ]) {
+        for (final p in bench) {
+          if (fits(p)) {
+            pick = p;
+            break;
+          }
+        }
+        if (pick != null) break;
+      }
+      if (pick == null) break;
+      bench.remove(pick);
+      xi.add(pick);
+    }
+    return xi;
   }
 
   /// スカウティングレポート・マンマーク指令の対象となる「キープレイヤー」
@@ -1472,6 +1544,19 @@ class MatchEngine {
     return s.chanceMinutes[i];
   }
 
+  /// 出来事を分の順に並べる。同じ分の出来事は、入っていた順のまま
+  /// (ハーフタイムの交代のあとに46分の出来事、後半の途中の交代の前に
+  /// その分までの出来事)。List.sort は同じ分の並びを保たないので、交代で
+  /// 下がった選手の得点が交代の後に並ぶことがあった(2026-11-23)。
+  static List<MatchEvent> sortedByMinute(List<MatchEvent> events) {
+    final indexed = [for (var i = 0; i < events.length; i++) (i, events[i])]
+      ..sort((a, b) {
+        final byMinute = a.$2.minute.compareTo(b.$2.minute);
+        return byMinute != 0 ? byMinute : a.$1.compareTo(b.$1);
+      });
+    return [for (final x in indexed) x.$2];
+  }
+
   /// 続けて行った2つの区間([a]のあとに[b])の結果を1つにまとめる。
   static HalfResult combineHalves(HalfResult a, HalfResult b) => HalfResult(
         homeGoals: a.homeGoals + b.homeGoals,
@@ -1932,27 +2017,18 @@ class MatchEngine {
     // リードして終盤を迎えたら、逃げ切る監督はこの区間だけ守りに入る。
     final endLateHold = beginLateHold(home, away, startMinute, priorEvents);
 
-    final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
-    final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
-
-    // 対策指示。自分の攻守に掛かるぶんと、相手の攻撃を鈍らせるぶんがある。
-    final homeAttackBase = _attackPower(home, homeLineup,
-            suppressedId: homeMarkedId, opponentStyle: away.tacticalStyle) *
-        planAttackFactor(home, awayLineup) *
-        away.oppositionPlan.opponentAttackFactor *
-        homeAdvantageFactor *
-        weather.attackMultiplier;
-    final awayAttackBase = _attackPower(away, awayLineup,
-            suppressedId: awayMarkedId, opponentStyle: home.tacticalStyle) *
-        planAttackFactor(away, homeLineup) *
-        home.oppositionPlan.opponentAttackFactor *
-        weather.attackMultiplier;
-    final homeDefenseBase = _defensePower(home, homeLineup) *
-        home.oppositionPlan.ownDefenseFactor *
-        weather.defenseMultiplier;
-    final awayDefenseBase = _defensePower(away, awayLineup) *
-        away.oppositionPlan.ownDefenseFactor *
-        weather.defenseMultiplier;
+    final bases = _segmentBases(
+      home: home,
+      away: away,
+      homeLineup: homeLineup,
+      awayLineup: awayLineup,
+      weather: weather,
+      homeAdvantageFactor: homeAdvantageFactor,
+    );
+    final homeAttackBase = bases.homeAttack;
+    final awayAttackBase = bases.awayAttack;
+    final homeDefenseBase = bases.homeDefense;
+    final awayDefenseBase = bases.awayDefense;
 
     final events = <MatchEvent>[];
     int homeGoals = 0;
@@ -2595,9 +2671,9 @@ class MatchEngine {
   }
 
   /// ライブ観戦中(インタラクティブ進行中)の交代を適用する。ハーフタイム
-  /// を待たず試合中に選手を入れ替えられる。交代枠の消費とstartingXIの
-  /// 更新は呼び出し側(GameState)の責務で、ここでは進行中ハーフの状態
-  /// (出場中ラインナップと攻守力)だけを交代後の内容へ再計算する。
+  /// を待たず試合中に選手を入れ替えられる。交代枠の消費は呼び出し側
+  /// (GameState)の責務で、ここでは進行中ハーフの状態(出場中ラインナップ・
+  /// 先発の指定・攻守力)を交代後の内容へ入れ替える。
   ///
   /// 未終了の状態は常に次の決定機([InteractiveHalfState.pending])で
   /// 停止しているため、pendingが立っていても交代は許可する。ただし、
@@ -2627,11 +2703,23 @@ class MatchEngine {
         return false;
       }
     }
-    // 退場した選手を下げて控えを入れると、11人に戻ってしまう。
-    if (sentOffIds([...state.priorEvents, ...state.events])
-        .contains(outPlayerId)) {
-      return false;
-    }
+    // 退場した選手を下げて控えを入れると、11人に戻ってしまう。警告・退場は
+    // 区間の始めに全時間ぶん決めてあるので、いまの分までに出たものだけを
+    // 見る(まだ来ていない退場で、交代を断らない)。
+    final now = currentMinuteOf(state);
+    final upToNow = [
+      ...state.priorEvents,
+      for (final e in state.events)
+        if (e.minute <= now) e,
+    ];
+    if (sentOffIds(upToNow).contains(outPlayerId)) return false;
+    // 一度下がった選手は、もう一度は入れない(実際の決まり)。
+    final subbedOff = {
+      for (final e in [...state.priorEvents, ...state.events])
+        if (e.type == MatchEventType.substitution && e.assistId != null)
+          e.assistId!,
+    };
+    if (subbedOff.contains(inPlayerId)) return false;
     final team = isHome ? state.home : state.away;
     final lineup = isHome ? state.homeLineup : state.awayLineup;
     final outIndex = lineup.indexWhere((p) => p.id == outPlayerId);
@@ -2651,6 +2739,25 @@ class MatchEngine {
     }
 
     lineup[outIndex] = incoming;
+    // 先発の指定も入れ替える。攻守力の「どの枠で出ているか」は先発の指定
+    // から決まるので、先に入れ替えないと、入った選手は枠の無いまま、残りの
+    // 選手は下がった選手のいる並びのまま計算し直していた(2026-11-23)。
+    // 入った選手は下がった選手のいた位置に置く(ピッチの並び[lineup]と
+    // 同じ順)。末尾に足すと、本職でない枠への割り当てが並びで変わり、
+    // 同じ顔ぶれで区間を始め直したときと守備力がずれた。後から呼ばれる
+    // swapStartingPlayer は、これで何もしなくなる。
+    final xiIndex = team.startingXI.indexOf(outPlayerId);
+    if (team.startingXI.contains(inPlayerId)) {
+      team.startingXI.remove(outPlayerId);
+    } else if (xiIndex >= 0) {
+      team.startingXI[xiIndex] = inPlayerId;
+    } else {
+      team.startingXI.add(inPlayerId);
+    }
+    // 下がった選手に、この先の分に決めてあった警告・退場を消す。残すと、
+    // ベンチの選手が警告・退場を受け、退場ならピッチの11人のまま数的
+    // 不利にもなっていた(2026-11-23)。
+    _dropLaterCards(state, outPlayerId, after: now);
     // 途中出場の選手に、この試合分の特性由来パフォーマンス倍率をまだ
     // 持っていなければ割り当てる(前半に出場済みなら同じ値を使い続ける)。
     if (!incoming.matchFormRolledThisMatch) {
@@ -2669,22 +2776,118 @@ class MatchEngine {
     return true;
   }
 
+  /// [playerId]の、[after]分より後に決めてあった警告・退場を消す。退場が
+  /// 消えたら、そのチームの数的不利の分を残りの退場から決め直す。
+  static void _dropLaterCards(
+    InteractiveHalfState s,
+    String playerId, {
+    required int after,
+  }) {
+    bool later(MatchEvent e) =>
+        e.scorerId == playerId &&
+        e.minute > after &&
+        (e.type == MatchEventType.yellowCard ||
+            e.type == MatchEventType.redCard);
+    final dropped = s.events.where(later).toList();
+    if (dropped.isEmpty) return;
+    s.events.removeWhere(later);
+    _refreshRedMinutes(s);
+    final player = [...s.home.players, ...s.away.players]
+        .where((p) => p.id == playerId)
+        .firstOrNull;
+    if (player != null) {
+      player.yellowCardedThisMatch = [...s.priorEvents, ...s.events].any((e) =>
+          e.type == MatchEventType.yellowCard && e.scorerId == playerId);
+    }
+  }
+
+  /// 数的不利の分(両チーム)を、いま残っている退場から決め直す。前の区間
+  /// (前半)の退場は区間の始めから数える。
+  static void _refreshRedMinutes(InteractiveHalfState s) {
+    int? redMinuteOf(String teamId) {
+      final reds = [
+        for (final e in s.events)
+          if (e.type == MatchEventType.redCard && e.teamId == teamId) e.minute,
+      ];
+      final prior = s.priorEvents.any(
+          (e) => e.type == MatchEventType.redCard && e.teamId == teamId);
+      final current = teamId == s.home.id ? s.homeRedMinute : s.awayRedMinute;
+      if (prior) return current;
+      return reds.isEmpty ? null : reds.reduce(min);
+    }
+
+    s.homeRedMinute = redMinuteOf(s.home.id);
+    s.awayRedMinute = redMinuteOf(s.away.id);
+  }
+
   /// 交代でラインナップが変わった後、このハーフの残りのチャンス評価に
   /// 使う攻守力をハーフ開始時と同じ算出条件で計算し直す。
+  ///
+  /// 以前はここだけ対策指示([OppositionPlan])と、監督の逃げ切り
+  /// ([Team.holdLeadLate])を掛けていなかった。試合中に交代すると、その
+  /// ハーフの残りは対策も逃げ切りも消えていた(2026-11-23)。
   static void _recomputeInteractiveBases(InteractiveHalfState s) {
-    final homeMarkedId = markedTargetId(s.away, s.awayLineup, s.homeLineup);
-    final awayMarkedId = markedTargetId(s.home, s.homeLineup, s.awayLineup);
-    s.homeAttackBase = _attackPower(s.home, s.homeLineup,
-            suppressedId: homeMarkedId, opponentStyle: s.away.tacticalStyle) *
-        s.homeAdvantageFactor *
-        s.weather.attackMultiplier;
-    s.awayAttackBase = _attackPower(s.away, s.awayLineup,
-            suppressedId: awayMarkedId, opponentStyle: s.home.tacticalStyle) *
-        s.weather.attackMultiplier;
-    s.homeDefenseBase =
-        _defensePower(s.home, s.homeLineup) * s.weather.defenseMultiplier;
-    s.awayDefenseBase =
-        _defensePower(s.away, s.awayLineup) * s.weather.defenseMultiplier;
+    final switched = <Team>[
+      for (final t in [s.home, s.away])
+        if (s.lateHoldTeamIds.contains(t.id) && !t.timeWastingMode) t,
+    ];
+    for (final t in switched) {
+      t.timeWastingMode = true;
+    }
+    final bases = _segmentBases(
+      home: s.home,
+      away: s.away,
+      homeLineup: s.homeLineup,
+      awayLineup: s.awayLineup,
+      weather: s.weather,
+      homeAdvantageFactor: s.homeAdvantageFactor,
+    );
+    for (final t in switched) {
+      t.timeWastingMode = false;
+    }
+    s.homeAttackBase = bases.homeAttack;
+    s.awayAttackBase = bases.awayAttack;
+    s.homeDefenseBase = bases.homeDefense;
+    s.awayDefenseBase = bases.awayDefense;
+  }
+
+  /// 区間の始めの攻守力(区間の試合と、試合中の交代のあとの計算し直しで
+  /// 同じものを使う)。対策指示は、自分の攻守に掛かるぶんと、相手の攻撃を
+  /// 鈍らせるぶんがある。
+  static ({
+    double homeAttack,
+    double awayAttack,
+    double homeDefense,
+    double awayDefense,
+  }) _segmentBases({
+    required Team home,
+    required Team away,
+    required List<Player> homeLineup,
+    required List<Player> awayLineup,
+    required Weather weather,
+    required double homeAdvantageFactor,
+  }) {
+    final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
+    final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
+    return (
+      homeAttack: _attackPower(home, homeLineup,
+              suppressedId: homeMarkedId, opponentStyle: away.tacticalStyle) *
+          planAttackFactor(home, awayLineup) *
+          away.oppositionPlan.opponentAttackFactor *
+          homeAdvantageFactor *
+          weather.attackMultiplier,
+      awayAttack: _attackPower(away, awayLineup,
+              suppressedId: awayMarkedId, opponentStyle: home.tacticalStyle) *
+          planAttackFactor(away, homeLineup) *
+          home.oppositionPlan.opponentAttackFactor *
+          weather.attackMultiplier,
+      homeDefense: _defensePower(home, homeLineup) *
+          home.oppositionPlan.ownDefenseFactor *
+          weather.defenseMultiplier,
+      awayDefense: _defensePower(away, awayLineup) *
+          away.oppositionPlan.ownDefenseFactor *
+          weather.defenseMultiplier,
+    );
   }
 
   /// [lineup]からゴールキーパーを探す(見つからなければnull)。
@@ -2788,29 +2991,28 @@ class MatchEngine {
     final homeLineup = _withoutIds(lineupOf(home), sentOffBefore);
     final awayLineup = _withoutIds(lineupOf(away), sentOffBefore);
     // リードして終盤を迎えたら、逃げ切る監督はこの区間だけ守りに入る。
+    final wastingBefore = {
+      for (final t in [home, away])
+        if (t.timeWastingMode) t.id,
+    };
     final endLateHold = beginLateHold(
         home, away, startMinute, [...priorEvents, ...?carried?.events]);
-    final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
-    final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
-
-    // 対策指示。自分の攻守に掛かるぶんと、相手の攻撃を鈍らせるぶんがある。
-    final homeAttackBase = _attackPower(home, homeLineup,
-            suppressedId: homeMarkedId, opponentStyle: away.tacticalStyle) *
-        planAttackFactor(home, awayLineup) *
-        away.oppositionPlan.opponentAttackFactor *
-        homeAdvantageFactor *
-        weather.attackMultiplier;
-    final awayAttackBase = _attackPower(away, awayLineup,
-            suppressedId: awayMarkedId, opponentStyle: home.tacticalStyle) *
-        planAttackFactor(away, homeLineup) *
-        home.oppositionPlan.opponentAttackFactor *
-        weather.attackMultiplier;
-    final homeDefenseBase = _defensePower(home, homeLineup) *
-        home.oppositionPlan.ownDefenseFactor *
-        weather.defenseMultiplier;
-    final awayDefenseBase = _defensePower(away, awayLineup) *
-        away.oppositionPlan.ownDefenseFactor *
-        weather.defenseMultiplier;
+    final lateHoldTeamIds = {
+      for (final t in [home, away])
+        if (t.timeWastingMode && !wastingBefore.contains(t.id)) t.id,
+    };
+    final bases = _segmentBases(
+      home: home,
+      away: away,
+      homeLineup: homeLineup,
+      awayLineup: awayLineup,
+      weather: weather,
+      homeAdvantageFactor: homeAdvantageFactor,
+    );
+    final homeAttackBase = bases.homeAttack;
+    final awayAttackBase = bases.awayAttack;
+    final homeDefenseBase = bases.homeDefense;
+    final awayDefenseBase = bases.awayDefense;
 
     final events = <MatchEvent>[];
     final span = endMinute - startMinute + 1;
@@ -2867,6 +3069,7 @@ class MatchEngine {
       chanceMinutes: chanceMinutes,
       events: events,
       priorEvents: priorEvents,
+      lateHoldTeamIds: lateHoldTeamIds,
     );
     if (carried != null) state.applyCarried(carried);
     _advanceInteractiveHalf(state);
@@ -3143,10 +3346,46 @@ class MatchEngine {
             _pickCardTarget(defendingLineup,
                 exclude: sentOffIds([...state.priorEvents, ...state.events]));
         if (tackler != null) {
-          final isSecondYellow = tackler.yellowCardedThisMatch;
+          // 警告は区間の始めに全時間ぶん決めてあり、印はまだ来ていない分の
+          // 警告でも立っている。この分までに受けた警告だけで2枚目かを見る
+          // (以前は印で見ていて、70分に受ける予定の警告で20分に退場した)。
+          final isSecondYellow = [...state.priorEvents, ...state.events].any(
+              (e) =>
+                  e.type == MatchEventType.yellowCard &&
+                  e.scorerId == tackler.id &&
+                  e.minute <= pending.minute);
           final isRed =
               isSecondYellow || _rng.nextDouble() < _aggressiveTackleRedChance;
+          // この先に決めてあった、この選手の警告・退場は消す(退場した
+          // 選手は二度と受けない。警告なら、2枚目の扱いは下で入れ直す)。
+          final laterRed = state.events
+              .where((e) =>
+                  e.type == MatchEventType.redCard &&
+                  e.scorerId == tackler.id &&
+                  e.minute > pending.minute)
+              .firstOrNull;
+          final laterYellow = state.events
+              .where((e) =>
+                  e.type == MatchEventType.yellowCard &&
+                  e.scorerId == tackler.id &&
+                  e.minute > pending.minute)
+              .firstOrNull;
+          _dropLaterCards(state, tackler.id, after: pending.minute);
           if (!isRed) tackler.yellowCardedThisMatch = true;
+          if (!isRed && (laterRed != null || laterYellow != null)) {
+            // 決めてあった次のカードが、2枚目の警告(=退場)になる。
+            final next = [laterRed, laterYellow]
+                .whereType<MatchEvent>()
+                .reduce((a, b) => a.minute <= b.minute ? a : b);
+            state.events.add(MatchEvent(
+              minute: next.minute,
+              teamId: next.teamId,
+              scorerName: next.scorerName,
+              scorerId: next.scorerId,
+              type: MatchEventType.redCard,
+            ));
+            _refreshRedMinutes(state);
+          }
           final cardEvent = MatchEvent(
             minute: pending.minute,
             teamId: defendingTeam.id,

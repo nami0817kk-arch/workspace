@@ -7,9 +7,15 @@
 ///
 /// 手で撮らずにここで作る理由:
 ///
-/// - ストアが求める解像度(iPhone 6.7インチ = 1290x2796)を確実に満たせる。
-///   実機やエミュレータのスクリーンショットは端末ごとに寸法が違う。
+/// - ストアが求める解像度を確実に満たせる。実機やエミュレータの
+///   スクリーンショットは端末ごとに寸法が違う。
 /// - 同じ内容で撮り直せる。文言を直すたびに端末を出してくる必要がない。
+///
+/// **1.2.0 から横画面。** オーナー型に作り替えたとき、スマホは横向きに固定
+/// した(main.dart の `_lockLandscapeOnPhones`)。縦の掲載画像は、今のアプリと
+/// 違う見た目を見せることになる。撮るのは、実機と同じ作り
+/// (上の帯・左のメニュー・`LandscapeScale`・`FmThemeScope`)の [MainShell] を、
+/// 左のメニューとページのタブを実際に押して開いた画面。
 ///
 /// 以前 `marketing/screenshots/` に置かれていた画像は、天気アイコンが
 /// 豆腐(□)のまま写っていた。ウィジェットテストの既定ではアイコンフォントが
@@ -22,7 +28,6 @@ library;
 // ignore_for_file: invalid_use_of_visible_for_testing_member
 
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,31 +37,42 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/app_localizations.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/main.dart';
+import 'package:soccer_manager/models/club_infrastructure.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/funds_pack.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
-import 'package:soccer_manager/screens/fixtures_screen.dart';
-import 'package:soccer_manager/screens/home_screen.dart';
-import 'package:soccer_manager/screens/league_ranking_screen.dart';
-import 'package:soccer_manager/screens/squad_screen.dart';
-import 'package:soccer_manager/models/club_infrastructure.dart';
-import 'package:soccer_manager/screens/club_screen.dart';
-import 'package:soccer_manager/screens/transfer_screen.dart';
+import 'package:soccer_manager/screens/main_shell.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
+import 'package:soccer_manager/widgets/fm_panel.dart';
+import 'package:soccer_manager/widgets/landscape_scale.dart';
 
 /// 撮る端末の寸法。App Store は iPhone と iPad のそれぞれで
-/// スクリーンショットを求める。アプリが iPad でも動く設定になっているため、
-/// iPhone だけでは「13インチのiPadディスプレイのスクリーンショットを
-/// アップロードする必要があります」で提出できない(実際に止まった)。
-typedef _Device = ({String dir, Size logical, double ratio});
+/// スクリーンショットを求める。アプリが iPad でも動く設定
+/// (TARGETED_DEVICE_FAMILY = "1,2")になっているため、iPhone だけでは
+/// 「13インチのiPadディスプレイのスクリーンショットをアップロードする
+/// 必要があります」で提出できない(実際に止まった)。
+typedef _Device = ({String dir, Size logical, double ratio, bool tablet});
 
-/// iPhone 6.7インチ = 1290x2796。
-const _phone = (dir: 'screenshots', logical: Size(430, 932), ratio: 3.0);
+/// iPhone「Dynamic Island 搭載・中型」の横向き = 2622x1206(iPhone 16 Pro など)。
+/// 2026-11 時点で iPhone の必須はこの枠だけ(大型は任意で、無ければ縮めて
+/// 使われる)。Apple の仕様:
+/// https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications
+const _phone = (
+  dir: 'screenshots',
+  logical: Size(874, 402),
+  ratio: 3.0,
+  tablet: false,
+);
 
-/// iPad 13インチ = 2064x2752。
-const _tablet = (dir: 'screenshots_ipad', logical: Size(1032, 1376), ratio: 2.0);
+/// iPad 13インチの横向き = 2752x2064。
+const _tablet = (
+  dir: 'screenshots_ipad',
+  logical: Size(1376, 1032),
+  ratio: 2.0,
+  tablet: true,
+);
 
 const _devices = <_Device>[_phone, _tablet];
 
@@ -70,47 +86,79 @@ const _en = (language: AppLanguage.english, code: 'en', suffix: '_en');
 
 const _locales = <_Locale>[_ja, _en];
 
-/// 掲載画像に乗せる言葉。
-///
-/// 画面をそのまま撮っただけでは、スクロールしている人に何のゲームか伝わら
-/// ない。同じ分野の上位(カルチョビットA・サッカークラブ物語)は全カットに
-/// 帯を入れている。露出5,730に対してページ閲覧557(9.7%)で詰まっていたので、
-/// ここを上げにいく。
-///
-/// **検索結果に出るのは先頭3枚**なので、00〜02に力を入れている。
-const _captions = <String, (String ja, String en)>{
-  '00_lineup': ('5部から、頂点へ', 'Fifth tier to the top'),
-  '01_live_match': ('采配が、試合を動かす', 'Your calls decide it'),
-  '02_home': ('勝てなければ、クビ', 'Lose, and you are sacked'),
-  '03_transfer': ('値切って、引き抜く', 'Haggle, then sign him'),
-  '04_standings': ('昇格争いに食い込む', 'Fight for promotion'),
-  '05_squad': ('無名を、主力に育てる', 'Turn nobodies into stars'),
-  '06_halftime': ('ハーフタイムで流れを変える', 'Change it at half time'),
-  '07_scorers': ('得点王が、生まれる', 'Grow a top scorer'),
-  '08_club': ('クラブごと、大きくする', 'Grow the whole club'),
-};
+/// 1枚の中身。左のメニューの項目と、開くページのタブ(無ければ最初のタブ)。
+typedef _Shot = ({
+  String name,
+  (String ja, String en) menu,
+  (String ja, String en)? tab,
+  (String ja, String en) caption,
+  (int top, int bottom) shade,
+});
 
-/// 専用の絵を敷く1枚。検索結果でいちばん見られる枠なので、ここだけは
-/// 画面を撮っただけにしない。
+/// 撮る画面と、上に乗せる言葉。**番号はストアに並べる順。**
 ///
-/// **iPhone だけ。** 下絵は縦長(9:16)で、端末を置く場所が中央に空けてある。
-/// iPad は横に広いぶん上下を切ることになり、どこで切ってもその空き枠が
-/// 端末からはみ出して白く残る。iPad は検索結果に出ないので、帯のままにする。
-const _heroShot = '00_lineup';
-
-/// ① 画像ごとの地の色。同じ緑が9枚続くと、並べたときに単調になる。
-/// 緑〜藍の近い色で振って、まとまりは崩さずにリズムだけ作る。
-const _shades = <String, (int top, int bottom)>{
-  '00_lineup': (0xFF0F3D22, 0xFF1C6B3A),
-  '01_live_match': (0xFF0B3B33, 0xFF156B55),
-  '02_home': (0xFF12324D, 0xFF1D5B7A),
-  '03_transfer': (0xFF1A3A2A, 0xFF2E6E46),
-  '04_standings': (0xFF0F3D22, 0xFF1C6B3A),
-  '05_squad': (0xFF0B3B33, 0xFF156B55),
-  '06_halftime': (0xFF12324D, 0xFF1D5B7A),
-  '07_scorers': (0xFF1A3A2A, 0xFF2E6E46),
-  '08_club': (0xFF0F3D22, 0xFF1C6B3A),
-};
+/// 検索結果に出るのは先頭の数枚なので、「クラブを買った経営者になる」
+/// ことが一目で伝わる順に置く(状況 → 予算 → 2つの期待 → 施設 → 補強 →
+/// 順位)。画面をそのまま撮っただけでは、スクロールしている人に何のゲームか
+/// 伝わらないので、全カットに帯を入れる(同じ分野の上位もそうしている)。
+const _shots = <_Shot>[
+  (
+    name: '01_home',
+    menu: ('状況', 'Status'),
+    tab: null,
+    caption: ('弱小クラブのオーナーになる', 'Buy a struggling club'),
+    shade: (0xFF0B1526, 0xFF14213D),
+  ),
+  (
+    name: '02_budget',
+    menu: ('経営', 'Finance'),
+    tab: null,
+    caption: ('予算を5つに配る', 'Split the budget five ways'),
+    shade: (0xFF12324D, 0xFF1D5B7A),
+  ),
+  (
+    name: '03_office',
+    menu: ('オーナー室', 'Office'),
+    tab: null,
+    caption: ('サポーターと株主、2つの期待', 'Keep fans and shareholders on side'),
+    shade: (0xFF0F3D22, 0xFF1C6B3A),
+  ),
+  (
+    name: '04_facilities',
+    menu: ('クラブ', 'Club'),
+    tab: ('施設', 'Facilities'),
+    caption: ('施設を建てて、クラブを大きくする', 'Build up the club'),
+    shade: (0xFF1A3A2A, 0xFF2E6E46),
+  ),
+  (
+    name: '05_transfer',
+    menu: ('移籍', 'Transfers'),
+    tab: null,
+    caption: ('補強の候補を、買うか見送るか', 'Sign him, or pass'),
+    shade: (0xFF0B3B33, 0xFF156B55),
+  ),
+  (
+    name: '06_league',
+    menu: ('リーグ', 'League'),
+    tab: ('順位・日程', 'Table & fixtures'),
+    caption: ('3部から、1部の頂点へ', 'From the third tier to the top'),
+    shade: (0xFF12324D, 0xFF1D5B7A),
+  ),
+  (
+    name: '07_staff',
+    menu: ('クラブ', 'Club'),
+    tab: ('スタッフ', 'Staff'),
+    caption: ('コーチもスカウトも、選んで雇う', 'Hire coaches and scouts'),
+    shade: (0xFF0F3D22, 0xFF1C6B3A),
+  ),
+  (
+    name: '08_community',
+    menu: ('クラブ', 'Club'),
+    tab: ('ファンと街', 'Fans & city'),
+    caption: ('街とファンを味方につける', 'Win over the town and the fans'),
+    shade: (0xFF1A3A2A, 0xFF2E6E46),
+  ),
+];
 
 /// 同梱フォントと、Flutter SDK が持つアイコンフォントを読み込む。
 ///
@@ -153,360 +201,310 @@ String _materialIconsPath() {
   return '$root/bin/cache/artifacts/material_fonts/materialicons-regular.otf';
 }
 
+final _japanese = RegExp(r'[ぁ-んァ-ヴ一-龠]');
+
 void main() {
   setUpAll(_loadFonts);
 
   for (final device in _devices) {
     for (final locale in _locales) {
       final outDir = '${device.dir}${locale.suffix}';
-      testWidgets('ストア用スクリーンショットを書き出す ($outDir)',
-        (tester) async {
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      tester.view.devicePixelRatio = device.ratio;
-      tester.view.physicalSize = device.logical * device.ratio;
+      testWidgets('ストア用スクリーンショットを書き出す ($outDir)', (tester) async {
+        addTearDown(tester.view.reset);
+        tester.view.devicePixelRatio = device.ratio;
+        tester.view.physicalSize = device.logical * device.ratio;
 
-      SharedPreferences.setMockInitialValues({});
+        SharedPreferences.setMockInitialValues({});
 
-      addTearDown(() => Tr.language = AppLanguage.system);
+        addTearDown(() => Tr.language = AppLanguage.system);
 
-      late final SettingsController settings;
-      late final MonetizationController monetization;
-      late final GameState gameState;
-      late final ui.Image hero;
-      await tester.runAsync(() async {
-        final heroFile = File('marketing/hero/hero_bg.png');
-        if (!heroFile.existsSync()) {
-          fail('1枚目の下絵が見つからない: ${heroFile.path}');
-        }
-        hero = await decodeImageFromList(heroFile.readAsBytesSync());
-        settings = SettingsController();
-        await settings.init();
-        // **シミュレーションより先に言語を決める。** 記者会見やニュースの文面は
-        // 作られた時点の言語で確定し、セーブにそのまま残る。あとから切り替えても
-        // 遡って訳されない。ここを撮影直前に置いていたため、日本語の画面に英語の
-        // 記者会見が写った画像がストアに載っていた (1.0 の掲載画像が実際にそう)。
-        // init() が保存値(既定=端末準拠)を書き戻すので、その後で決めること。
-        Tr.language = locale.language;
-        monetization = MonetizationController(
-          adService: NoOpAdService(),
-          purchases: _StubPurchaseService(),
-        );
-        await monetization.initialize();
-        gameState = GameState();
-        // **クラブ名も撮る言語に合わせる。** 英語の画面に日本語のクラブ名が
-        // 出ていると、英語圏には「訳し切れていないアプリ」に見える。
-        // ヘッダーに常時出るので、1枚だけの問題ではない。
-        await gameState.startNewGame(
-            locale.language == AppLanguage.japanese
+        late final SettingsController settings;
+        late final MonetizationController monetization;
+        late final GameState gameState;
+        await tester.runAsync(() async {
+          settings = SettingsController();
+          await settings.init();
+          // **シミュレーションより先に言語を決める。** ニュースや事件の文面は
+          // 作られた時点の言語で確定し、セーブにそのまま残る。あとから
+          // 切り替えても遡って訳されない。撮影直前に決めていたため、日本語の
+          // 画面に英語の記者会見が写った画像がストアに載っていた(1.0)。
+          // init() が保存値(既定=端末準拠)を書き戻すので、その後で決めること。
+          Tr.language = locale.language;
+          monetization = MonetizationController(
+            adService: NoOpAdService(),
+            purchases: _StubPurchaseService(),
+          );
+          await monetization.initialize();
+          gameState = GameState();
+          // **クラブ名も撮る言語に合わせる。** 英語の画面に日本語のクラブ名が
+          // 出ていると、英語圏には「訳し切れていないアプリ」に見える。
+          // 上の帯に常時出るので、1枚だけの問題ではない。
+          // 試合の結果は乱数で決まる。下位に沈んだ回を撮ると、1枚目から
+          // 「目標まで勝点6差」「期待 -19」の赤字が並ぶ。理事会の目標より
+          // 4つ以上上にいる回を選ぶ(数字は作らない。実際に進めた結果の
+          // うち、うまく行っている回を撮る)。3部の弱小クラブなので、
+          // 上位3分の1を条件にすると8回続けて届かなかった。
+          for (var attempt = 0; attempt < 30; attempt++) {
+            await gameState.startNewGame(locale.language == AppLanguage.japanese
                 ? '青嵐フットボールクラブ'
                 : 'Blue Storm FC');
-        // 空の順位表や無得点の名簿を写しても、何ができるゲームか伝わらない。
-        // 数節進めて、実際に遊んだ状態にしてから撮る。
-        for (var i = 0; i < 6; i++) {
-          await gameState.playNextMatchday();
-          if (gameState.isHalfTime) await gameState.playSecondHalf();
+            // 空の順位表や無得点の名簿を写しても、何ができるゲームか伝わら
+            // ない。数節進めて、実際に遊んだ状態にしてから撮る。
+            await gameState.simulateAheadMatchdays(8);
+            // 移籍ウィンドウが閉じている時期に撮ると、「クローズ中」の帯が
+            // 出て何もできない移籍市場がストアに載る(1.1.0 の撮り直しで
+            // 気づいた)。開く時期(冬の窓)まで進める。
+            var guard = 0;
+            while (!gameState.isTransferWindowOpen && guard++ < 40) {
+              await gameState.simulateAheadMatchdays(1);
+            }
+            final standings = gameState.save!.league.sortedStandings;
+            final rank =
+                standings.indexWhere((r) => r.teamId == gameState.userTeam.id) +
+                    1;
+            // 締切日は画面いっぱいの知らせが上に被さる(撮れない)。
+            if (rank <= gameState.save!.boardTargetRank - 4 &&
+                gameState.isTransferWindowOpen &&
+                !gameState.isTransferDeadlineDay) {
+              break;
+            }
+          }
+          // 昇格や締切日などの「画面いっぱいの1枚」は、遊ぶ人なら閉じて
+          // から次へ進む。溜まったまま撮ると、どの画面にも被さる。
+          gameState.save!.pendingMoments.clear();
+          // スタッフの画面を空席のまま撮ると「就いている人がいない」の赤字
+          // だけが目立つ。いちばん質の高い候補を雇った状態にする。
+          for (final role in StaffRole.values) {
+            final candidates = gameState.staffCandidatesFor(role);
+            if (candidates.isEmpty) continue;
+            final best = candidates
+                .reduce((a, b) => a.effectiveLevel >= b.effectiveLevel ? a : b);
+            await gameState.hireStaff(best.id);
+          }
+          // 初回ガイドは画面の上を占める。何ができるゲームかを見せる場所
+          // なので、遊び始めた人の画面として閉じた状態で撮る。
+          gameState.save!.firstRunGuideDismissed = true;
+        });
+        expect(gameState.isTransferWindowOpen, isTrue,
+            reason: '移籍ウィンドウが閉じたまま移籍市場を撮ろうとしている');
+
+        // 生成された文面・名前が撮る言語になっているか、撮る前に確かめる。
+        // 掲載画像は人が1枚ずつ見返さないので、混ざっていても気づかない。
+        final wantJa = locale.language == AppLanguage.japanese;
+        final clubName = gameState.userTeam.name;
+        expect(_japanese.hasMatch(clubName), wantJa,
+            reason: 'クラブ名が${locale.code}になっていない: $clubName');
+        final aPlayer = gameState.userTeam.players.first.name;
+        expect(_japanese.hasMatch(aPlayer), wantJa,
+            reason: '選手名が${locale.code}になっていない: $aPlayer');
+        final news = gameState.save!.newsLog;
+        if (news.isNotEmpty) {
+          final text = news.last.text;
+          expect(_japanese.hasMatch(text), wantJa,
+              reason: 'ニュースが${locale.code}になっていない: $text');
         }
-        // 初回ガイドは画面の上4分の1を占める。何ができるゲームかを見せる
-        // 場所なので、遊び始めた人の画面として閉じた状態で撮る。
-        gameState.save!.firstRunGuideDismissed = true;
-      });
 
-      // 生成された文面が日本語になっているか、撮る前に確かめる。掲載画像は
-      // 人が1枚ずつ見返さないので、混ざっていても気づかないまま出てしまう。
-      final press = gameState.save!.pendingPressConference;
-      expect(press, isNotNull, reason: '記者会見が出ていない状態で撮ろうとしている');
-      final hasJapanese = RegExp(r'[ぁ-んァ-ヴ一-龠]').hasMatch(press!.prompt);
-      expect(hasJapanese, locale.language == AppLanguage.japanese,
-          reason: '記者会見が${locale.code}になっていない: ${press.prompt}');
+        final app = const SoccerManagerApp();
 
-      // 選手名も撮る言語に合っているか見る。英語の画面に日本人名が並ぶと、
-      // 英語圏の人には「翻訳し切れていないアプリ」に見える。名前のプールは
-      // Tr.isEnglish で切り替わるので、言語を決める順を間違えると混ざる。
-      // クラブ名も見る。ヘッダーに常時出るので、1枚だけの問題ではない。
-      final clubName = gameState.userTeam.name;
-      expect(RegExp(r'[ぁ-んァ-ヴ一-龠]').hasMatch(clubName),
-          locale.language == AppLanguage.japanese,
-          reason: 'クラブ名が${locale.code}になっていない: $clubName');
-
-      final aPlayer = gameState.userTeam.players.first.name;
-      expect(RegExp(r'[ぁ-んァ-ヴ一-龠]').hasMatch(aPlayer),
-          locale.language == AppLanguage.japanese,
-          reason: '選手名が${locale.code}になっていない: $aPlayer');
-
-      /// 画面の上に言葉の帯を乗せる。
-      ///
-      /// 縮めても読めるよう、太く大きく、濃い緑に白で置く。アプリの画面と
-      /// 同じ色にすると境目が曖昧になるので、はっきり分ける。
-      // Material で包む。ColoredBox のままだと「Material の外のテキスト」
-      // と見なされ、黄色い二重下線が引かれる(実際に引かれた)。
-      //
-      // 画面をそのまま全面に敷くと「撮っただけ」に見える。背景の上に少し
-      // 浮かせて、角を丸めて影を落とすと、作った絵として見える。
-      Widget captioned(String text, Widget screen, (int, int) shade) {
-        final tablet = device == _tablet;
-        return Material(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(shade.$1), Color(shade.$2)],
-              ),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      28, tablet ? 52 : 38, 28, tablet ? 30 : 22),
-                  // **1行に収める。** 字を大きくしたら「11人をどう並べる／か」
-                  // のように語の途中で折り返した。入らないぶんは縮める。
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    softWrap: false,
-                    style: TextStyle(
-                      // **フォントを指定する。** 省くと日本語が豆腐(□)に
-                      // なる。アプリの画面は theme が指定しているので出るが、
-                      // この帯は theme の外にあるため当たらない。
-                      fontFamily: 'NotoSansJP',
-                      color: Colors.white,
-                      fontSize: tablet ? 54 : 42,
-                      fontWeight: FontWeight.w800,
-                      height: 1.2,
-                      letterSpacing: -0.5,
+        /// 実機と同じ寸法・同じ包み方で組んだアプリの画面。
+        ///
+        /// **端末の幅で組み直させない。** 帯を乗せるぶん画面は縮めて置くが、
+        /// 枠の大きさで組ませると実機と違う割付になり、名前が「Ashwo…」の
+        /// ように切れる。実機の寸法で組ませてから縮める。
+        Widget realScreen() => FittedBox(
+              fit: BoxFit.contain,
+              alignment: Alignment.topCenter,
+              child: SizedBox.fromSize(
+                size: device.logical,
+                child: Builder(
+                  builder: (context) => MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      size: device.logical,
+                      padding: EdgeInsets.zero,
+                      viewPadding: EdgeInsets.zero,
                     ),
+                    child: LandscapeScale(
+                      child: FmThemeScope(
+                        dark: app.buildTheme(Brightness.dark, boldText: false),
+                        child: const MainShell(),
+                      ),
                     ),
                   ),
                 ),
-                // ③ 端末の枠に入れる。黒い縁を回すと、画面が「アプリの中」
-                // だと一目で分かる。枠の内側だけ角を丸める。
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                        tablet ? 60 : 34, 0, tablet ? 60 : 34, 0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF111111),
-                        borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(tablet ? 40 : 34)),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x55000000),
-                            blurRadius: 24,
-                            offset: Offset(0, 8),
+              ),
+            );
+
+        /// 帯の言葉(書き換えて撮り直す)。地の色も画像ごとに振る。
+        final caption = ValueNotifier<_Shot>(_shots.first);
+
+        // 画面の上に言葉の帯を乗せ、下に端末の枠に入れた画面を置く。
+        //
+        // 縮めても読めるよう、太く大きく、濃い地に白で置く。Material で包む
+        // (ColoredBox のままだと「Material の外のテキスト」と見なされ、黄色い
+        // 二重下線が引かれる。実際に引かれた)。帯は theme の外なので、
+        // fontFamily を明示しないと日本語が豆腐になる(実際になった)。
+        //
+        // 画面は1回だけ組み、帯だけを差し替える。組み直すと MainShell の
+        // 開いているページが最初に戻る。
+        final band = device.tablet ? 96.0 : 62.0;
+        final side = device.tablet ? 40.0 : 60.0;
+        final bezel = device.tablet ? 12.0 : 7.0;
+        final body = Material(
+          child: ValueListenableBuilder<_Shot>(
+            valueListenable: caption,
+            child: realScreen(),
+            builder: (context, shot, screen) => DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(shot.shade.$1), Color(shot.shade.$2)],
+                ),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: band,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Center(
+                        // **1行に収める。** 語の途中で折り返したことがある。
+                        // 入らないぶんは縮める。
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            wantJa ? shot.caption.$1 : shot.caption.$2,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontFamily: 'NotoSansJP',
+                              color: Colors.white,
+                              fontSize: device.tablet ? 50 : 34,
+                              fontWeight: FontWeight.w800,
+                              height: 1.2,
+                              letterSpacing: -0.5,
+                            ),
                           ),
-                        ],
-                      ),
-                      padding: EdgeInsets.fromLTRB(
-                          tablet ? 12 : 9, tablet ? 12 : 9, tablet ? 12 : 9, 0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(tablet ? 30 : 26)),
-                        child: screen,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-
-      /// 1枚目だけは、画面の上に帯を乗せるのではなく、専用の絵を敷く。
-      ///
-      /// 検索結果でいちばん見られる枠なので、ここだけは「撮っただけ」から
-      /// 離す。石段を昇った先にトロフィーがある絵の中へ、実機の画面を置く。
-      ///
-      /// **絵だけにはできない。** App Review 2.3.3 が「掲載画像はアプリが
-      /// 動いている様子を見せること。タイトル絵・ログイン画面・起動画面
-      /// だけのものは不可」としている。必ず画面を重ねる。
-      Widget heroFramed(String text, Widget screen) {
-        return Material(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              RawImage(image: hero, fit: BoxFit.cover),
-              Positioned(
-                left: 28,
-                right: 28,
-                top: 38,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    softWrap: false,
-                    style: TextStyle(
-                      fontFamily: 'NotoSansJP',
-                      color: Colors.white,
-                      fontSize: 46,
-                      fontWeight: FontWeight.w800,
-                      height: 1.2,
-                      letterSpacing: -0.5,
-                      shadows: const [
-                        // 絵の上に直に置くので、影がないと沈む。
-                        Shadow(color: Color(0xAA000000), blurRadius: 12),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              // 下絵の中央に空けてある場所へ端末を置く。トロフィーと階段の
-              // 上の方は隠さない(隠すと何の絵か分からなくなる)。
-              Positioned(
-                left: 83,
-                right: 83,
-                top: 300,
-                bottom: 60,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF111111),
-                    borderRadius: BorderRadius.circular(28),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x88000000),
-                        blurRadius: 30,
-                        offset: Offset(0, 12),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(21),
-                      // **端末の幅で組み直させない。** 枠は画面より細いので、
-                      // そのまま入れると実機と違う割付になり、選手名が
-                      // 「Ashwo…」のように切れる。実機の寸法で組ませてから
-                      // 縮める。中身は小さくなるが、割付は実機と同じ。
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: SizedBox(
-                          width: device.logical.width,
-                          height: device.logical.height,
-                          child: screen,
                         ),
                       ),
                     ),
                   ),
-                ),
+                  // 端末の枠に入れる。黒い縁を回すと、画面が「アプリの中」
+                  // だと一目で分かる。下は画像の端で切る。
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: side),
+                      child: Center(
+                        child: AspectRatio(
+                          aspectRatio: (device.logical.width + bezel * 2) /
+                              (device.logical.height + bezel),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF111111),
+                              borderRadius: BorderRadius.vertical(
+                                  top:
+                                      Radius.circular(device.tablet ? 36 : 26)),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x55000000),
+                                  blurRadius: 24,
+                                  offset: Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            padding:
+                                EdgeInsets.fromLTRB(bezel, bezel, bezel, 0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                  top:
+                                      Radius.circular(device.tablet ? 26 : 20)),
+                              child: screen,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
-      }
 
-      Widget wrap(Widget child) => MultiProvider(
-            providers: [
-              ChangeNotifierProvider<GameState>.value(value: gameState),
-              ChangeNotifierProvider<SettingsController>.value(value: settings),
-              ChangeNotifierProvider<MonetizationController>.value(
-                  value: monetization),
-            ],
-            child: MaterialApp(
-              locale: Locale(locale.code),
-              theme: const SoccerManagerApp()
-                  .buildTheme(Brightness.light, boldText: false),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              // これを外さないと、右上にデバッグ用の赤い帯が写り込む。
-              // 実際に1度撮り込んでいる。
-              debugShowCheckedModeBanner: false,
-              home: child,
-            ),
+        await tester.pumpWidget(MultiProvider(
+          providers: [
+            ChangeNotifierProvider<GameState>.value(value: gameState),
+            ChangeNotifierProvider<SettingsController>.value(value: settings),
+            ChangeNotifierProvider<MonetizationController>.value(
+                value: monetization),
+          ],
+          child: MaterialApp(
+            locale: Locale(locale.code),
+            theme: app.buildTheme(Brightness.light, boldText: false),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            // これを外さないと、右上にデバッグ用の赤い帯が写り込む。
+            debugShowCheckedModeBanner: false,
+            home: body,
+          ),
+        ));
+        await tester.pump();
+
+        Future<void> open((String, String) label) async {
+          final text = wantJa ? label.$1 : label.$2;
+          final f = find.text(text).hitTestable();
+          if (f.evaluate().isEmpty) {
+            final shown = find
+                .byType(Text)
+                .hitTestable()
+                .evaluate()
+                .map((e) => (e.widget as Text).data)
+                .whereType<String>()
+                .take(30)
+                .join(' | ');
+            fail('「$text」が押せる所に無い。見えている文字: $shown');
+          }
+          await tester.tap(f.first, warnIfMissed: false);
+          await tester.pump(const Duration(milliseconds: 300));
+        }
+
+        for (final shot in _shots) {
+          caption.value = shot;
+          await open(shot.menu);
+          if (shot.tab != null) await open(shot.tab!);
+          // **裏で読み込みを待つ画面は、疑似時間の pump では終わらない。**
+          // 読み込み中の丸だけが写った白紙を、ストアの1枚目として出して
+          // いた(2026-09-28 に指摘された)。実時間を少し進めて終わらせる。
+          await tester.runAsync(
+              () => Future<void>.delayed(const Duration(milliseconds: 300)));
+          await tester.pump(const Duration(milliseconds: 350));
+          await tester.pump(const Duration(milliseconds: 350));
+
+          // はみ出しや例外を抱えたまま掲載画像を作らない。
+          expect(tester.takeException(), isNull,
+              reason: '${shot.name} の描画で例外が出ている');
+
+          // **何も描かれていない絵を掲載画像にしない。** 上の白紙は、例外も
+          // はみ出しも出さないので、それまでの検査を全部すり抜けていた。
+          expect(find.byType(CircularProgressIndicator), findsNothing,
+              reason: '${shot.name} が読み込み中のまま撮られている');
+          expect(find.byType(Text).hitTestable(), findsAtLeastNWidgets(3),
+              reason: '${shot.name} に文字がほとんど無い(描画を待たずに撮っている)');
+
+          // **値段を写さない。** 掲載画像の値段は国ごとに違って見え、
+          // 改定のたびに嘘になる(App Review 2.3 でも避けるよう求められる)。
+          for (final t in find.byType(Text).hitTestable().evaluate()) {
+            final s = (t.widget as Text).data ?? '';
+            expect(s.contains(RegExp(r'[¥￥\$]\s?\d')), isFalse,
+                reason: '${shot.name} に値段らしきもの「$s」が写っている');
+          }
+
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile('../../marketing/$outDir/${shot.name}.png'),
           );
-
-      /// [warmUpFrames] は、時間で動く画面のために進める分。試合画面は
-      /// 開いた直後だと 0-0 の1分で、画面の下半分が空のまま写る。
-      Future<void> shoot(String name, Widget screen,
-          {int warmUpFrames = 0}) async {
-        final caption = _captions[name];
-        final text = caption == null
-            ? null
-            : locale.language == AppLanguage.japanese
-                ? caption.$1
-                : caption.$2;
-        final body = text == null
-            ? screen
-            : name == _heroShot && device == _phone
-                ? heroFramed(text, screen)
-                : captioned(
-                    text, screen, _shades[name] ?? (0xFF0F3D22, 0xFF1C6B3A));
-        await tester.pumpWidget(wrap(body));
-        // **裏で読み込みを待つ画面は、疑似時間の pump では終わらない。**
-        // 開始画面はセーブ一覧(SharedPreferences)を待つ FutureBuilder を
-        // 持っており、読み込み中の丸だけが写った白紙をストアの1枚目として
-        // 出していた(2026-09-28 に指摘された)。実時間を少し進めて終わらせる。
-        await tester
-            .runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
-        await tester.pump(const Duration(milliseconds: 350));
-        for (var i = 0; i < warmUpFrames; i++) {
-          await tester.pump(const Duration(milliseconds: 100));
         }
-        // はみ出しや例外を抱えたまま掲載画像を作らない。
-        expect(tester.takeException(), isNull, reason: '$name の描画で例外が出ている');
-
-        // **何も描かれていない絵を掲載画像にしない。** 上の白紙は、例外も
-        // はみ出しも出さないので、それまでの検査を全部すり抜けていた。
-        // 人は9枚を1枚ずつ見返さないので、機械で気づけるようにしておく。
-        expect(find.byType(CircularProgressIndicator), findsNothing,
-            reason: '$name が読み込み中のまま撮られている');
-        expect(find.byType(Text), findsAtLeastNWidgets(3),
-            reason: '$name に文字がほとんど無い(描画を待たずに撮っている)');
-        await expectLater(
-          find.byType(MaterialApp),
-          matchesGoldenFile('../../marketing/$outDir/$name.png'),
-        );
-      }
-
-      // **番号は撮る順ではなく、ストアに並べる順。** 検索結果には先頭3枚しか
-      // 出ないので、そこに何を置くかで見られ方が変わる。起動画面を先頭に
-      // していた頃は、いちばん目立つ枠が「何のゲームか伝わらない絵」で
-      // 埋まっていた。フォーメーション→試合→ホームの順に変えてある。
-      // 撮る順は変えられない(試合はここまで進めないと撮れない)ので、
-      // 名前だけで並べ替えている。
-      //
-      // **開始画面は撮らない。** セーブ一覧の読み込みを待つ画面で、
-      // 読み込み中の丸だけが写った白紙になっていた(それを1枚目として
-      // ストアに出していた)。そもそもタイトルとスロット選択なので、
-      // 何ができるゲームかを伝えない。代わりにクラブ画面を撮る。
-      // 空席のまま撮ると「就いている人がいない」の赤字だけが目立つ。
-      // 雇った状態にして、能力と得意分野で人を選ぶ画面として見せる。
-      await tester.runAsync(() async {
-        for (final role in StaffRole.values) {
-          final candidates = gameState.staffCandidatesFor(role);
-          if (candidates.isEmpty) continue;
-          // いちばん質の高い候補を雇う。
-          final best = candidates
-              .reduce((a, b) => a.effectiveLevel >= b.effectiveLevel ? a : b);
-          await gameState.hireStaff(best.id);
-        }
-      });
-      await shoot('08_club', const ClubScreen());
-      await shoot('02_home', const HomeScreen());
-      await shoot('05_squad', const SquadScreen());
-      // 移籍ウィンドウが閉じている時期に撮ると、「クローズ中」の帯が出て
-      // 「獲得する」が全部灰色の画面になる。何もできない画面をストアの
-      // 移籍市場として載せていた(1.1.0 の撮り直しで気づいた)。
-      // ウィンドウが開く時期まで進めてから撮る。
-      await tester.runAsync(() async {
-        while (!gameState.isTransferWindowOpen) {
-          await gameState.simulateAheadMatchdays(1);
-        }
-      });
-      expect(gameState.isTransferWindowOpen, isTrue,
-          reason: '移籍ウィンドウが閉じたまま移籍市場を撮ろうとしている');
-      await shoot('03_transfer', const TransferScreen());
-      // 日程・順位表。LeagueRankingScreen は得点王ランキングで、順位表ではない。
-      await shoot('04_standings', const FixturesScreen());
-      await shoot('07_scorers', const LeagueRankingScreen());
-
-      // 試合はオーナーが直接関わらない(ライブ観戦の画面は無い)。
       });
     }
   }
@@ -515,10 +513,13 @@ void main() {
 class _StubPurchaseService implements PurchaseService {
   /// 受け取り口。本物は待っているかどうかに関係なく呼ぶ。
   @override
-  set onDelivered(Future<void> Function(String productId, String? purchaseId)? callback) =>
+  set onDelivered(
+          Future<void> Function(String productId, String? purchaseId)?
+              callback) =>
       onDeliveredCallback = callback;
 
-  Future<void> Function(String productId, String? purchaseId)? onDeliveredCallback;
+  Future<void> Function(String productId, String? purchaseId)?
+      onDeliveredCallback;
 
   @override
   Future<void> initialize() async {}

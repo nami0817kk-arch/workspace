@@ -559,10 +559,12 @@ class HomeScreen extends StatelessWidget {
                       label: Tr.pick('観客動員', 'Attendance'),
                       glossaryTerm: Tr.pick('観客動員', 'Attendance'),
                       value: Tr.pick(
-                          '${gameState.lastMatchAttendance ?? gameState.expectedAttendance}人',
-                          '${gameState.lastMatchAttendance ?? gameState.expectedAttendance}'),
-                      sub: Tr.pick('収容人数 ${gameState.stadiumCapacity}人',
-                          'Capacity ${gameState.stadiumCapacity}'),
+                          '${formatCount(gameState.lastMatchAttendance ?? gameState.expectedAttendance)}人',
+                          formatCount(gameState.lastMatchAttendance ??
+                              gameState.expectedAttendance)),
+                      sub: Tr.pick(
+                          '収容人数 ${formatCount(gameState.stadiumCapacity)}人',
+                          'Capacity ${formatCount(gameState.stadiumCapacity)}'),
                       color: Colors.brown.shade600,
                     ),
                   ],

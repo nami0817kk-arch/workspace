@@ -311,6 +311,7 @@ const Map<String, String> gameEn = {
   'その出方はできません': "That entry option isn't available",
   'すでに準備中です': "Already preparing",
   'お金が足りません': "Not enough money",
+  '人は足りています': "You already have enough staff",
   '{0}の地元の会社を買い、すぐに「{1}」を始めました': "Bought a local firm in {0} and launched {1} right away",
   '{0}に出る準備を始めました（{1}）。{2}か月後に始まります': "Preparing to enter {0} ({1}). Launches in {2} months",
   'すでにその稼ぎ方です': "Already using that model",
@@ -745,4 +746,11 @@ const Map<String, String> gameEn = {
   '結論を出さずに会議を打ち切りました': "You ended the meeting without a decision",
   '急いで臨時の会議を開きました。意見は割れています': "You called an emergency meeting. Opinions are divided",
   '{0}（{1}）：{2}': "{0} ({1}): {2}",
+  // 会議の吹き出し（1.0.0+10）
+  '二人とも自分の案を譲りません。両方やるお金はありません。': "Neither will back down on their plan, and you can't afford both.",
+  '取締役の代表': "Board representative",
+  '評価：{0}': "Verdict: {0}",
+  'この調子で頼みます': "Keep it up.",
+  'このままでは困ります': "This can't go on.",
+  '来年はもう一段の成長を': "We expect more growth next year.",
 };

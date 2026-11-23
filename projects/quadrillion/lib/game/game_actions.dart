@@ -175,10 +175,33 @@ extension GameActions on Game {
     return M('{0}を増やし始めました（{1}）。{2}か月後に開きます。{3}', [uw(b), Y(cost), left, M(b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります')]);
   }
 
+  /// 止まっている店や工場をちょうど動かすのに要る人件費（足りていれば 0）。
+  /// 現場の力（crewEff）が事業の力（power）に届くまでの差を、1円で4人分（addCrew と同じ割合）で買うとして求める。
+  double crewNeedCost(Biz b) {
+    if (b.model == 'fc' || b.power <= 0) return 0;
+    final have = crewEff(b);
+    if (have >= b.power) return 0;
+    final perCrew = have / math.max(crewOf(b), 1e-9); // 現場の人1単位が生む現場の力
+    return (b.power - have) / math.max(perCrew, 1e-9) / 4;
+  }
+
+  /// 足りない分だけ現場の人を補う（現金の割合ではなく、必要な分の値段で）。
+  String addCrewNeeded(Biz b) {
+    final cost = crewNeedCost(b);
+    if (cost <= 0) return M('人は足りています');
+    if (cash < cost) return M('お金が足りません');
+    if (!canAP(1)) return M('今月の手が残っていません');
+    return _hireCrew(b, cost);
+  }
+
   String addCrew(Biz b, double frac) {
     final cost = cash * frac;
     if (cost <= 0) return M('お金がありません');
     if (!canAP(1)) return M('今月の手が残っていません');
+    return _hireCrew(b, cost);
+  }
+
+  String _hireCrew(Biz b, double cost) {
     cash -= cost;
     useAP(1);
     b.crew = crewOf(b) + cost * 4;

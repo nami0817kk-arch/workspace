@@ -39,6 +39,7 @@ extension GameTurn on Game {
       }
     }
     // 市場の大きさに合わせて力を伸び縮みさせる
+    final grow = <String, double>{};
     for (final ind in inds) {
       final mk0 = mkt(ind);
       final old = indM[ind.id] ?? 0;
@@ -68,20 +69,26 @@ extension GameTurn on Game {
           N(M('{0}（{1}）が「{2}」に乗り込みました', [Nm(gr.rival!.pres), Nm(gr.name), I(ind.id)]), 'bad');
         }
       } else if (mk0 > 0 && old > 0) {
-        final r = math.pow(mk0 / old, .95).toDouble();
-        for (final c in cos) {
-          for (final b in c.biz) {
-            if (b.ind == ind.id) b.power *= r;
-          }
-        }
-        for (final b in biz) {
-          if (b.ind == ind.id) {
-            b.power *= r;
-            if (b.crew != null && b.crew != 0) b.crew = b.crew! * r;
-          }
-        }
+        // 倍率だけ控えて、あとで会社を1回だけ回してかける（業種ごとに全社を回すと、会社が900社あると重い）。
+        // 1つの事業にかかる倍率は自分の業種の1つだけなので、かける順を変えても数字は同じ
+        grow[ind.id] = math.pow(mk0 / old, .95).toDouble();
       }
       indM[ind.id] = mk0;
+    }
+    if (grow.isNotEmpty) {
+      for (final c in cos) {
+        for (final b in c.biz) {
+          final r = grow[b.ind];
+          if (r != null) b.power *= r;
+        }
+      }
+      for (final b in biz) {
+        final r = grow[b.ind];
+        if (r != null) {
+          b.power *= r;
+          if (b.crew != null && b.crew != 0) b.crew = b.crew! * r;
+        }
+      }
     }
     // CPU の動き（難しさで伸びと再投資を変える。ふつうは 1 をかけるだけなので試作と同じ）
     final dG = dif.g, dR = dif.r;
@@ -126,12 +133,14 @@ extension GameTurn on Game {
         c.biz.add(CoBiz(ind: ind.id, power: mkt(ind) * reg[t] * .03));
       }
     }
+    // 市場の大きさは業種ごとに1回だけ求める。安い条件（現金）を先に見る（どれも乱数を使わないので、結果は同じ）
+    final mkC = <String, double>{};
     for (final c in cos.toList()) {
       if (c.alive &&
           c.parent != 'player' &&
           c.rival == null &&
-          c.rev < mkt(c.biz.isEmpty ? inds[0] : indm[c.biz[0].ind]!) * .0005 &&
           c.cash <= 0 &&
+          c.rev < (mkC[c.biz.isEmpty ? inds[0].id : c.biz[0].ind] ??= mkt(c.biz.isEmpty ? inds[0] : indm[c.biz[0].ind]!)) * .0005 &&
           rnd() < .1) {
         c.alive = false;
       }
@@ -1132,7 +1141,13 @@ extension GameTurn on Game {
     if (restP.length >= 2 && restP[0].cost + restP[1].cost > cash * .6) {
       final a = restP[0], b = restP[1];
       final pa = staffById(a.by)!, pb = staffById(b.by)!;
-      events.add(GameEvent(title: M('経営会議：意見がぶつかった'), text: M('{0}は「{1}」、{2}は「{3}」と言って譲りません。両方やるお金はありません。', [Nm(pa.name), a.l, Nm(pb.name), b.l]), choices: [
+      String says(Proposal o) => M(o.cost > 0 ? '{0}。{1}（{2}）' : '{0}。{1}', [o.l, o.d, Y(o.cost)]);
+      events.add(GameEvent(
+          title: M('経営会議：意見がぶつかった'),
+          text: M('{0}は「{1}」、{2}は「{3}」と言って譲りません。両方やるお金はありません。', [Nm(pa.name), a.l, Nm(pb.name), b.l]),
+          lead: M('二人とも自分の案を譲りません。両方やるお金はありません。'),
+          voices: [voiceOf(pa, says(a)), voiceOf(pb, says(b))],
+          choices: [
         Choice(M('{0}の案を通す', [Nm(pa.name)]), M('{0}の忠誠が大きく下がる', [Nm(pb.name)]), () {
           pb.loy -= 12;
           pb.rej = pb.rej + 1;

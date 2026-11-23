@@ -424,7 +424,8 @@ class ContinentalCupEngine {
       }
       if (tie.goalsFor(tie.teamAId) == tie.goalsFor(tie.teamBId)) {
         // ライブ観戦側で1本ずつのPK戦を先に実施済みの場合はその勝者を尊重する。
-        tie.penaltyWinnerId ??= CupEngine.decidePenaltyWinner(home, away);
+        tie.penaltyWinnerId ??= CupEngine.decidePenaltyWinner(home, away,
+            result: tie.legs.last);
       }
     }
     _advanceKnockoutIfRoundComplete(cup);

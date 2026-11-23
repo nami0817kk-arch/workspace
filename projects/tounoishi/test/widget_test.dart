@@ -265,6 +265,59 @@ void main() {
     }
   });
 
+  test('掘ったときは塔の上限に関係なく生まれる（0.7.33・試作 v49）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'if(g.cr.length>=CAP&&!(opt&&opt.force))return null;', // 上限は自然に増えるときだけ
+      'var m=mkCr(spc,env,f,x,y,amt,{force:1});', // 掘った土から生まれる
+      "mkCr('guardian','sp',f,cx,cy,0,{force:1})", // 守護獣
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
+  test('空っぽ・吸われていた土を掘ったときの知らせ（0.7.34・試作 v50）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "fxNum(f,x,y,'吸われていた',", // 吸われて0になっていた土
+      "fxNum(f,x,y,'空っぽ',", // もとから空っぽの土
+      'sc.nut--;sc.sk=1;', // モンスターが吸った土に印
+      'c.nut-=t;c.sk=1;', // 錬金術師が吸った土に印
+      'if(a[7])c.sk=1;', // 保存から戻しても印が残る
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
+  test('盤を28×28に広げ、古い保存は20×20のまま続ける（0.7.35・試作 v51）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'NEWN=28', // 新しい塔の大きさ
+      'function setN(n)', // 盤の大きさを切り替える
+      'setN(o.N||20)', // 大きさの無い古い保存は20×20
+      '{v:1,N:N,F:F,', // 保存に大きさを入れる
+      'function key3(f,x,y){return (f*N+y)*N+x;}', // 番号が大きさでぶつからない
+      'return Math.round(30*F*N*N/400);', // 自然に増える上限は広さに比例
+      'function szH(){return 1+SZH*(N-20)/8;}', // 冒険者を広さに合わせて強く
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+    expect(html, isNot(contains('f*400+y*20+x')), reason: '20マス前提の番号が残っている');
+  });
+
+  test('1本指は盤のスクロール、「掘る」ボタンの間だけ掘る（0.7.36・試作 v52）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      '<button id="zdig" aria-pressed="false">', // 掘るボタン
+      'function setDig(on)', // 押すまで続く切り替え
+      'pan:!DIG', // ボタンが消えていれば指で盤を動かす
+      'function focusCore()', // 最初はコアのあたりを今までのマスの大きさで
+      "document.getElementById('zdig').onclick=", // ボタンで切り替える
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること

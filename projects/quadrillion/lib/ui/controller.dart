@@ -220,7 +220,31 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 新しく始めるときの枠（選んでいなければ、空いている一番小さい枠。全部埋まっていれば枠1）
   int get startSlot => newSlot ?? [for (var i = 1; i <= slotCount; i++) i].firstWhere((i) => !hasSave(i), orElse: () => 1);
 
+  /// 描き終わったあとに保存する予約があるか
+  bool savePending = false;
+
+  /// 月を進めたあとの保存。会社が900社を超えるとセーブは1MBほどになり、書き出しに数十msかかるので、
+  /// 結果の画面を先に描いてから（その描き終わりに）保存する。何度呼んでも、描き終わりの保存は1回だけ。
+  /// アプリが裏に回るとき・別の保存が走るときは、そこで済ませる
+  void saveSoon() {
+    if (savePending) return;
+    final WidgetsBinding b;
+    try {
+      b = WidgetsBinding.instance;
+    } catch (_) {
+      // 画面の無いところ（仕組みだけのテスト）では、すぐ保存する
+      save();
+      return;
+    }
+    savePending = true;
+    b.addPostFrameCallback((_) {
+      if (savePending) save();
+    });
+    b.ensureVisualUpdate();
+  }
+
   void save() {
+    savePending = false;
     final g = game;
     final p = prefs;
     if (g == null || p == null) return;

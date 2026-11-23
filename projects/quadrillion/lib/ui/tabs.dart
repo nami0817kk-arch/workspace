@@ -30,7 +30,7 @@ List<Widget> townTab(GameController ctl) {
         decoration: BoxDecoration(border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(10)),
         child: AspectRatio(
             aspectRatio: 16 / 9,
-            child: Semantics(label: tr('自社のビルが並ぶ街'), child: CustomPaint(painter: TownPainter(s), size: Size.infinite))),
+            child: Semantics(label: tr('自社のビルが並ぶ街'), child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s), size: Size.infinite)))),
       ),
     ),
   ));
@@ -47,8 +47,8 @@ List<Widget> townTab(GameController ctl) {
     ]),
     _gap(),
     Grid2([
-      Kv(tr('売上（月）'), yen(s.rev)),
-      Kv(tr('利益（月）'), yen(s.pre)),
+      Kv(tr('月の売上'), yen(s.rev)),
+      Kv(tr('月の利益'), yen(s.pre)),
       Kv(tr('事業'), tr('{0}つ', [s.biz.length])),
       Kv(tr('子会社'), tr('{0}社', [s.subs().length])),
       Kv(tr('部下'), tr('{0}人', [s.staff.length])),
@@ -487,7 +487,10 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
         Btn(tr('商品を作る {0}', [yen(s.cash * .3)]), () => ctl.act(() => s.develop(b, .3), mark: 'act'), small: true, enabled: s.cash > 0),
         Btn(tr('{0}を増やす {1}', [s.uw(b), yen(s.cash * .3)]), () => ctl.act(() => s.build(b, .3), mark: 'act'), small: true, enabled: s.cash > 0),
         Btn(tr('大きく増やす {0}', [yen(s.cash * .6)]), () => ctl.act(() => s.build(b, .6), mark: 'act'), small: true, enabled: s.cash > 0),
-        Btn(tr('現場の人を増やす {0}', [yen(s.cash * .2)]), () => ctl.act(() => s.addCrew(b, .2), mark: 'act'), small: true, enabled: s.cash > 0),
+        if (s.crewNeedCost(b) > 0)
+          Btn(tr('足りない分の人を補う {0}', [yen(s.crewNeedCost(b))]), () => ctl.act(() => s.addCrewNeeded(b), mark: 'act'),
+              small: true, enabled: s.cash >= s.crewNeedCost(b)),
+        Btn(tr('現場の人を多めに増やす {0}', [yen(s.cash * .2)]), () => ctl.act(() => s.addCrew(b, .2), mark: 'act'), small: true, enabled: s.cash > 0),
         Btn(tr('広告 {0}', [yen(s.invBase(b) * .25)]), () => ctl.act(() => s.adv(b), mark: 'act'), small: true),
         if (cs.isNotEmpty)
           Btn(b.attack > 0 ? tr('値下げ合戦中（あと{0}期）', [b.attack]) : tr('値下げ合戦を仕掛ける（相手：{0}）', [nmL(cs[0].c.name)]), () => ctl.act(() => s.priceWar(b), mark: 'act'),

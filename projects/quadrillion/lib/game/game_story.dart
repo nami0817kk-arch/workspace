@@ -267,9 +267,20 @@ extension GameStory on Game {
             ? M('「このままでは困ります」')
             : M('「来年はもう一段の成長を」');
     final eval = M('取締役の評価：{0}　{1}', [word, say]);
+    // 吹き出しに出す取締役のひとこと（かぎかっこは吹き出しが持つので付けない）
+    final board = Voice(
+        who: M('取締役の代表'),
+        role: M('評価：{0}', [word]),
+        kind: 'board',
+        say: good
+            ? M('この調子で頼みます')
+            : bad
+                ? M('このままでは困ります')
+                : M('来年はもう一段の成長を'));
     final f = friendlyStake();
     if (!bad || f >= 50) {
-      events.add(_note(title, [review, eval, if (bad) M('業績は悪いものの、味方の株が{0}あるので、解任の声は上がりませんでした', [pct(f)])]));
+      final calm = bad ? M('業績は悪いものの、味方の株が{0}あるので、解任の声は上がりませんでした', [pct(f)]) : null;
+      events.add(_note(title, [review, eval, ?calm], lead: review, voices: [board], tail: calm));
       return;
     }
     // 解任動議
@@ -277,13 +288,13 @@ extension GameStory on Game {
     final target = math.max(prev['pre']! * .9, 0.0);
     final cost = math.max(0.0, cash * .2);
     final p = oustChance();
+    final motion = M('業績の悪化を受けて、社長の解任動議が出ました。味方の株は{0}、動議に回りそうな株は{1}です', [pct(f), pct(h)]);
     events.add(GameEvent(
         title: M('取締役会：解任動議'),
-        text: Cat([
-          review,
-          eval,
-          M('業績の悪化を受けて、社長の解任動議が出ました。味方の株は{0}、動議に回りそうな株は{1}です', [pct(f), pct(h)]),
-        ], ja: '\n', en: '\n'),
+        text: Cat([review, eval, motion], ja: '\n', en: '\n'),
+        lead: review,
+        voices: [board],
+        tail: motion,
         choices: [
           Choice(M('改革を約束する'), M('1年後の取締役会までに、年の利益を{0}まで戻せなければ解任される', [Y(target)]), () {
             vow = {'due': (turn + 12).toDouble(), 'target': target, 'y': (year + 1).toDouble()};
@@ -300,8 +311,8 @@ extension GameStory on Game {
         ]));
   }
 
-  GameEvent _note(String title, List<Object?> parts) =>
-      GameEvent(title: title, text: Cat(parts, ja: '\n', en: '\n'), choices: [Choice(M('承知した'), M('取締役会を閉じる'), () => M('取締役会が終わりました'))]);
+  GameEvent _note(String title, List<Object?> parts, {String? lead, List<Voice> voices = const [], String? tail}) =>
+      GameEvent(title: title, text: Cat(parts, ja: '\n', en: '\n'), lead: lead, voices: voices, tail: tail, choices:[Choice(M('承知した'), M('取締役会を閉じる'), () => M('取締役会が終わりました'))]);
 
   /// 取締役会で社長を解任する。後継ぎ、なければ一番の部下、子、それもいなければ外から呼ぶ。ゲームは続く
   String oust() {

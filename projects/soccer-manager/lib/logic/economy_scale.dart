@@ -445,6 +445,10 @@ String _oneDecimal(double x) {
   return '${_grouped(whole)}.$tenth';
 }
 
+/// 人数・席数などの数の表示。3桁ごとに区切る(12000 → 12,000)。
+/// 金額は [formatMoney] を使う。
+String formatCount(int v) => v < 0 ? '-${_grouped(-v)}' : _grouped(v);
+
 String _grouped(int v) {
   final s = v.toString();
   final buf = StringBuffer();

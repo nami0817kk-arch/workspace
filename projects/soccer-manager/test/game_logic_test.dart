@@ -1819,6 +1819,9 @@ void main() {
 
     final outDefender = state.homeLineup.firstWhere((p) =>
         p.position.group == PositionGroup.def && !involved.contains(p.id));
+    // 交代のあとは入った選手が下がった選手の枠に入る(先発の指定も入れ
+    // 替える。2026-11-23)。本職の枠で比べるため、同じポジションにする。
+    incoming.position = outDefender.position;
 
     final injuredBench = home.players
         .firstWhere((p) => p.id != incoming.id && !onPitch(p) && eligible(p));
@@ -3860,14 +3863,26 @@ void main() {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
     final team = gameState.userTeam;
-    for (final id in team.startingXI) {
-      team.players.firstWhere((p) => p.id == id).appearanceFee = 10;
+    // 手当は実際にピッチに立った先発(出られない先発の代わりに入った控え
+    // を含む)に払う(2026-11-23)。節の前の週に代表・怪我で先発が欠けると
+    // 控えが入るので、全員に同じ手当を付けて、出た11人ぶんを確かめる。
+    for (final p in team.players) {
+      p.appearanceFee = 10;
     }
-    final expectedFee = team.startingXI.length * 10;
+    // 先発の1人は怪我で出られない(手当を高くして、払えば分かるように)。
+    final absent = team.players.firstWhere(
+        (p) => team.startingXI.contains(p.id) && p.position != Position.gk);
+    absent
+      ..appearanceFee = 1000
+      ..injuryWeeks = 6;
 
     await gameState.playNextMatchday();
 
-    expect(gameState.lastAppearanceFeesPaid, expectedFee);
+    final starters = MatchEngine.lineupOf(team);
+    expect(starters.length, 11);
+    expect(starters, isNot(contains(absent)));
+    expect(gameState.lastAppearanceFeesPaid, 110,
+        reason: '出られない先発に払った/代わりに出た控えに払っていない');
   });
 
   test(

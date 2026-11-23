@@ -101,22 +101,30 @@ class Muted extends StatelessWidget {
   Widget build(BuildContext context) => Text(tx(text), style: ts(size: size, color: Pal.mute));
 }
 
-/// 左に名前、右に値
+/// 左に名前、右に値。名前も値も1行に収める。
+/// 名前は折り返さずにそのままの幅を取り（欄の [labelShare] まで）、値は残りの幅に右寄せで置く。
+/// どちらも入りきらないときだけ、字を少し縮める（折り返さない）
 class Kv extends StatelessWidget {
   final String k;
   final Object v;
   const Kv(this.k, this.v, {super.key});
+
+  /// 名前が取ってよい幅の割合
+  static const labelShare = .64;
+
   @override
-  Widget build(BuildContext context) => Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // 英語は見出しが長いので、見出しに幅を多く回す
-        Flexible(flex: L.en ? 3 : 2, fit: FlexFit.tight, child: Text(tx(k), style: ts(size: 13, color: Pal.mute))),
-        const SizedBox(width: 6),
-        Flexible(
-            flex: L.en ? 2 : 3,
-            child: Align(
-                alignment: Alignment.centerRight,
-                child: v is Widget ? v as Widget : Text(v is String ? tx(v as String) : '$v', textAlign: TextAlign.right, style: ts(size: 13)))),
-      ]);
+  Widget build(BuildContext context) => LayoutBuilder(builder: (context, c) {
+        final label = Text(tx(k), key: const ValueKey('kv-label'), maxLines: 1, softWrap: false, style: ts(size: 13, color: Pal.mute));
+        final value = v is Widget ? v as Widget : Text(v is String ? tx(v as String) : '$v', maxLines: 1, softWrap: false, style: ts(size: 13));
+        return Row(children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: c.maxWidth.isFinite ? c.maxWidth * labelShare : double.infinity),
+            child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: label),
+          ),
+          const SizedBox(width: 6),
+          Expanded(child: Align(alignment: Alignment.centerRight, child: FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerRight, child: value))),
+        ]);
+      });
 }
 
 /// 2列に並べる（試作の grid2）
@@ -176,6 +184,56 @@ class Face extends StatelessWidget {
       child: Text(n.isEmpty ? '?' : n.characters.first, style: ts(size: 14, bold: true, color: const Color(0xFF0D1426))),
     );
   }
+}
+
+/// 役割の印の丸（株主の代表・銀行・取締役など、名前の無い話し手）
+class RoleFace extends StatelessWidget {
+  final String kind;
+  const RoleFace(this.kind, {super.key});
+  @override
+  Widget build(BuildContext context) {
+    final (icon, col) = switch (kind) {
+      'bank' => (Icons.account_balance, const Color(0xFF9FB3FF)),
+      'board' => (Icons.gavel, const Color(0xFFC9A0FF)),
+      _ => (Icons.pie_chart, const Color(0xFF7FF0C8)),
+    };
+    return Container(
+      width: 34,
+      height: 34,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: col, shape: BoxShape.circle),
+      child: Icon(icon, size: 18, color: const Color(0xFF0D1426)),
+    );
+  }
+}
+
+/// 会議の発言者1人（顔の丸＋名前と肩書き＋言ったこと）
+class VoiceSay extends StatelessWidget {
+  final String? name;
+  final String who, role, kind, say;
+  const VoiceSay({super.key, this.name, required this.who, required this.role, required this.kind, required this.say});
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          name != null ? Face(name!) : RoleFace(kind),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              decoration: BoxDecoration(color: Pal.panel2, borderRadius: BorderRadius.circular(10)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text.rich(TextSpan(children: [
+                  TextSpan(text: tx(who), style: ts(size: 12.5, bold: true)),
+                  TextSpan(text: '  ${tx(role)}', style: ts(size: 12, color: Pal.mute)),
+                ])),
+                const SizedBox(height: 2),
+                Text(tx(say), style: ts(size: 13.5, height: 1.45)),
+              ]),
+            ),
+          ),
+        ]),
+      );
 }
 
 /// 押せる部品の最小の大きさ（Apple の目安 44pt）

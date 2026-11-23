@@ -139,9 +139,14 @@ String _facilityEffectLabel(
       final cur = ClubInfrastructure.stadiumCapacity(level);
       final next =
           hasNext ? ClubInfrastructure.stadiumCapacity(level + 1) : cur;
+      // 人数は3桁で区切る(「12000人」が読みにくかった。2026-11-23)。
+      final c = formatCount(cur);
+      final n = formatCount(next);
+      final usual = formatCount(expectedAttendance);
+      final demand = formatCount(fanDemand);
       return Tr.pick(
-          'いま: $cur人入る(ふだんの入り$expectedAttendance人・来たいファン$fanDemand人)${hasNext ? '\n次のLvで: $next人' : ''}',
-          "Now: holds $cur (usual crowd $expectedAttendance, fans wanting to come $fanDemand)${hasNext ? '\nNext level: $next' : ''}");
+          'いま: $c人入る(ふだんの入り$usual人・来たいファン$demand人)${hasNext ? '\n次のLvで: $n人' : ''}',
+          "Now: holds $c (usual crowd $usual, fans wanting to come $demand)${hasNext ? '\nNext level: $n' : ''}");
     case FacilityType.youthFacility:
       final cur = ScoutingEngine.maxProspectsFor(level);
       final next = hasNext ? ScoutingEngine.maxProspectsFor(level + 1) : cur;
@@ -213,7 +218,10 @@ class ClubScreen extends StatelessWidget {
           twoColumnWidth: section == ClubSection.staff ? double.infinity : 640,
           children: [
             // 上の札は細い1行に。資金は上の段に出ているので、横画面では
-            // 出さない(2026-11-21)。
+            // 出さない(2026-11-21)。充実度とスタッフの年俸はスタッフの
+            // 集計なので、スタッフのタブ(と全部を出すとき)だけに出す。
+            // 施設・ファンと街のタブの上にもそのまま出ていた(2026-11-23)。
+            if (!EmbeddedInShell.of(context) || show(ClubSection.staff))
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
               // 狭い画面では折り返す(1行に並べきれないことがある)。
@@ -228,7 +236,9 @@ class ClubScreen extends StatelessWidget {
                           'Funds ${formatMoney(save.budget)}'),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
+                  if (show(ClubSection.staff)) ...[
                   Row(
+                    key: const ValueKey('club-staff-summary-level'),
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
@@ -254,10 +264,12 @@ class ClubScreen extends StatelessWidget {
                     Tr.pick(
                         'スタッフの年俸 ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))}',
                         'Staff salaries ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))} a year'),
+                    key: const ValueKey('club-staff-summary-wages'),
                     style: TextStyle(
                         fontSize: 12,
                         color: SemanticColors.subtleText(context)),
                   ),
+                  ],
                 ],
               ),
             ),
@@ -304,8 +316,8 @@ class ClubScreen extends StatelessWidget {
                   readyOn: infra.constructionReadyOn(type),
                   buildNote: type == FacilityType.stadium
                       ? Tr.pick(
-                          '${ClubInfrastructure.stadiumSeatsPerLevel}席 × 1席${formatMoney(gameState.stadiumSeatCostNow)}。来季の開幕に完成します',
-                          '${ClubInfrastructure.stadiumSeatsPerLevel} seats at ${formatMoney(gameState.stadiumSeatCostNow)} each. Ready for the start of next season')
+                          '${formatCount(ClubInfrastructure.stadiumSeatsPerLevel)}席 × 1席${formatMoney(gameState.stadiumSeatCostNow)}。来季の開幕に完成します',
+                          '${formatCount(ClubInfrastructure.stadiumSeatsPerLevel)} seats at ${formatMoney(gameState.stadiumSeatCostNow)} each. Ready for the start of next season')
                       : Tr.pick(
                           '工期${ClubInfrastructure.buildMonths}か月。完成までは効き目が出ません',
                           'Takes ${ClubInfrastructure.buildMonths} months. No effect until it is finished'),
@@ -517,8 +529,10 @@ class _UpgradeCard extends StatelessWidget {
                         'Under construction (ready ${TransferWindowCalendar.formatYearMonth(readyOn!)})')
                     : isMax
                         ? Tr.pick('最大レベル', 'Fully upgraded')
+                        // 英語は「Upgrade for 150m yen (Build cost)」と
+                        // 札を括弧で後ろに付けていて不自然だった(2026-11-23)。
                         : Tr.pick('$costLabel ${formatMoney(cost)}で増築',
-                            'Upgrade for ${formatMoney(cost)} ($costLabel)')),
+                            'Upgrade for ${formatMoney(cost)}')),
               ),
             ),
           ],

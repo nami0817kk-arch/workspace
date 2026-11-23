@@ -7,7 +7,7 @@
 <title>塔の意志</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-/* 1フロア=20×20マスの掘る画面。ゲーム部分は暗い石の色、周りの UI はテーマに従う。 */
+/* 1フロア=28×28マスの掘る画面。ゲーム部分は暗い石の色、周りの UI はテーマに従う。 */
 :root{--bg:#efece4;--panel:#fbf8f0;--ink:#26221b;--sub:#665e4e;--line:#d6ccb4;--accent:#8a4b1c;--accent-ink:#fff;--on:#26221b;--onink:#fff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14120e;--panel:#201d16;--ink:#efe8d6;--sub:#a39a84;--line:#3a3527;--accent:#d98c4c;--accent-ink:#1a1209;--on:#efe8d6;--onink:#1a1209;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#14120e;--panel:#201d16;--ink:#efe8d6;--sub:#a39a84;--line:#3a3527;--accent:#d98c4c;--accent-ink:#1a1209;--on:#efe8d6;--onink:#1a1209;color-scheme:dark}
@@ -74,7 +74,7 @@ h1{margin:0 0 6px;font-size:15px}
 .stage canvas{width:100%}
 .zoom{position:absolute;right:6px;bottom:6px;display:flex;gap:5px}
 .zoom button{min-width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(20,16,10,.62);color:#fff;font:600 15px system-ui,sans-serif;padding:0 8px;cursor:pointer}
-.zoom button[hidden]{display:none}
+.zoom button[hidden]{display:none}.zoom #zdig{margin-right:6px}.zoom #zdig.on{background:#e8b84a;color:#2a1c08;border-color:#ffe39a;box-shadow:0 0 0 2px rgba(255,220,120,.45)}
 .row{margin-top:6px}
 .btn{min-height:44px;padding:6px 2px}
 #msg{margin-top:6px;font-size:12.5px;min-height:2.6em;line-height:1.5}
@@ -155,7 +155,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <h3>目的</h3>
 あなたは姿の見えない<b>塔の意志</b>。土を掘るとモンスターが生まれ、モンスターが冒険者から<b>コア</b>（最上階の金の玉）を守ります。コアを入口まで運び出されたら負け。6つの波を守り切ると塔が1階伸び、どこまで高く積めるかに挑みます。
 <h3>操作</h3>
-・<b>掘る</b>：掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。1マスに掘る力を1使う。<br>
+・<b>見る</b>：1本指でなぞると盤が動く。2本指で拡大・縮小、「全体」で全体が見える。<br>・<b>掘る</b>：右下の「⛏ 掘る」を押して光らせてから、掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。もう一度押すまで掘る状態が続く。1マスに掘る力を1使う。<br>
 ・<b>モンスターをタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱ったモンスターを間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
 ・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）・<b>罠を置く</b>（掘る力3・塔全体で5つまで。踏んだ冒険者に15の傷と1秒の足止め）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>・<b>コアの光</b>：1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒のあいだ半分にする。<br>
 ・<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる（最上階に冒険者がいない間）。<br>
@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v48</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v52</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -191,12 +191,12 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="stage">
-<canvas id="c" aria-label="ダンジョンタワーの1フロア。20マス×20マスの土を掘る"></canvas>
+<canvas id="c" aria-label="ダンジョンタワーの1フロア。28マス×28マスの土を掘る"></canvas>
 <button class="alertb" id="alertb" hidden></button>
 <div class="yubar" id="yubar" hidden></div>
 <div class="bnr" id="bnr" hidden></div>
 <div class="pop" id="pop" hidden></div>
-<div class="zoom"><button id="zfit" hidden>全体</button><button id="zout" hidden aria-label="縮小">－</button><button id="zin" aria-label="拡大">＋</button></div>
+<div class="zoom"><button id="zdig" aria-pressed="false">⛏ 掘る</button><button id="zfit" hidden>全体</button><button id="zout" hidden aria-label="縮小">－</button><button id="zin" aria-label="拡大">＋</button></div>
 </div>
 <div class="row">
  <button class="btn go" id="go">今すぐ迎える</button>
@@ -216,7 +216,10 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 <script>
 (function(){
-var N=20,F=3,CS=18,CAP=60,ENTX=10,ENTY=19,COREX=10,COREY=0;
+var SZH=0.6,SZA=0.25,NEWN=28,N=NEWN,F=3,CS=18,CAP=60,ENTX=14,ENTY=27,COREX=14,COREY=0;
+// 盤の大きさを変える（キャンバス・灯り・地形の下絵・視点もそろえる）
+function setN(n){if(n===N&&cv.width==N*CS*4)return;N=n;ENTX=COREX=Math.floor(n/2);ENTY=n-1;cv.width=cv.height=N*CS*4;if(typeof LC!='undefined'&&LC){LC.width=LC.height=N*CS;}if(typeof TK!='undefined'&&TK){TK.c.width=TK.c.height=N*CS*4;TK.key='';}W0=N*CS;ZM=1;OX=0;OY=0;}
+function capOf(){return Math.round(30*F*N*N/400);}
 var cv=document.getElementById('c'),ctx=cv.getContext('2d');
 cv.width=N*CS*4;cv.height=N*CS*4;
 // ---------- ドット絵 ----------
@@ -466,7 +469,7 @@ var GROW=[
 var JOBS=['sen','tou','mah','sou','yumi'];
 var g,speed=0,last=0,over=false,idc=1,down=false,fx=[];
 // 拡大（1〜2.5倍）と見ている位置（盤面の論理座標 0〜360）
-var ZM=1,OX=0,OY=0,ZMAX=2.5;
+var ZM=1,OX=0,OY=0,ZMAX=3.5;
 
 function rnd(n){return Math.floor(Math.random()*n);}
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=rnd(i+1),t=a[i];a[i]=a[j];a[j]=t;}return a;}
@@ -487,17 +490,18 @@ function genFloor(f){
 }
 function carve(f,P){
  for(var i=0;i<P.length-1;i++){
-  var ax=P[i][0],ay=P[i][1],bx=P[i+1][0],by=P[i+1][1];
+  var sc=function(v){return Math.round(v*(N-1)/19);},ax=sc(P[i][0]),ay=sc(P[i][1]),bx=sc(P[i+1][0]),by=sc(P[i+1][1]);
   var dx=Math.sign(bx-ax),dy=Math.sign(by-ay),cx=ax,cy=ay;
   for(;;){var c=cellAt(f,cx,cy);c.open=true;c.nut=0;if(cx==bx&&cy==by)break;cx+=dx;cy+=dy;}
  }
 }
-function emul(){var r=g.round-1,D=DIFF[g.diff||'normal'];return {hp:(1+0.4*r)*D.hp,atk:(1+0.25*r)*(0.85+0.15*D.hp)};}
+function szH(){return 1+SZH*(N-20)/8;}function szA(){return 1+SZA*(N-20)/8;}
+function emul(){var r=g.round-1,D=DIFF[g.diff||'normal'];return {hp:(1+0.4*r)*D.hp*szH(),atk:(1+0.25*r)*(0.85+0.15*D.hp)*szA()};}
 function resetGo(){var go=document.getElementById('go');go.textContent='今すぐ迎える';go.onclick=launch;go.disabled=false;}
 function newGame(diff){
  NH=[];EVL=[];HL=null;if(typeof closePop=='function')closePop();
  interNext=null;clearTimeout(interT);growPass=false;
- F=3;CAP=30*F;fx=[];
+ setN(NEWN);F=3;CAP=capOf();fx=[];
  var grid=[],f;
  for(f=0;f<F;f++)grid.push(genFloor(f));
  g={t:0,wave:0,cd:120,spawnQ:[],pool:60,grid:grid,cr:[],en:[],seedT:[0,0,0],round:1,
@@ -506,18 +510,18 @@ function newGame(diff){
   msg:'準備の時間です(時間は止まっています)。土を掘って、モンスターを生ませよう。',dp:DIFF[diff||'normal'].dp0,calm:{},dung:[],burn:[],illus:[],pher:[],nests:[],circles:[],torches:[],slv:{},roundT0:0,armyStart:0,dug:0,tut:tutDone()?null:0};
  for(f=0;f<F;f++)carve(f,PATHS[f]);
  g.yu=newYu();
- over=false;resetGo();setSpeed(0);buildTabs();coreSay('start',true);ui();
+ over=false;resetGo();setSpeed(0);buildTabs();coreSay('start',true);setDig(false);focusCore();ui();
 }
 // 守り切ったら塔を1階伸ばす。今の階・掘った道・モンスターはそのまま
 function grow(){
  // 伸ばす前に全画面広告を頼む（アプリの中だけ。閉じたらもう一度ここへ来て、そのまま伸ばす）
  if(!growPass){appInter('grow',function(){growPass=true;grow();});return;}
  growPass=false;
- F++;CAP=30*F;var f=F-1;
+ F++;CAP=capOf();var f=F-1;
  g.grid.push(genFloor(f));carve(f,GROW[g.round%2]);g.seedT.push(0);
  g.round++;g.wave=0;g.cd=120;g.spawnQ=[];g.done=false;g.winSave=0;g.trail={};
  var C=g.core;C.f=f;C.x=COREX;C.y=COREY;C.hx=C.hy=null;C.home=true;C.carrier=null;C.dropT=0;
- g.view=f;over=false;resetGo();setSpeed(0);buildTabs();
+ g.view=f;over=false;resetGo();setSpeed(0);buildTabs();focusCore();
  var nl=landOf(f),pl=landOf(f-1),nj=jobsUnlocked(),add='',items=[];
  if(nl!=pl){add+=' 新しい土地「'+ENV[nl].n+'の層」が現れた！ '+ENV[nl].n+'の種が生まれる。';items.push('新しい土地「'+ENV[nl].n+'の層」。'+ENV[nl].n+'の種が生まれる');}
  if(nj.length&&(g.round-2)<=NEWJOBS.length){var jk=nj[nj.length-1];add+=' 新しい職業「'+EN[jk].n+'」が来るようになった（'+JOBDESC[jk]+'）。';items.push('新しい職業「'+EN[jk].n+'」：'+JOBDESC[jk]);}
@@ -539,12 +543,12 @@ function nbrs(f,x,y,e,carry){
  return a;
 }
 function bfs(sf,sx_,sy,test,maxd,e,carry,rand){
- var seen={},q=[[sf,sx_,sy,0,null]],h=0,i;seen[sf*400+sy*20+sx_]=1;
+ var seen={},q=[[sf,sx_,sy,0,null]],h=0,i;seen[(sf*N+sy)*N+sx_]=1;
  while(h<q.length){var n=q[h++];
   if(n[3]>0&&test(n[0],n[1],n[2]))return n[4]||[n[0],n[1],n[2]];
   if(n[3]>=maxd)continue;
   var nb=nbrs(n[0],n[1],n[2],e,carry);if(rand)shuffle(nb);
-  for(i=0;i<nb.length;i++){var k=nb[i][0]*400+nb[i][2]*20+nb[i][1];if(seen[k])continue;seen[k]=1;q.push([nb[i][0],nb[i][1],nb[i][2],n[3]+1,n[4]||nb[i]]);}
+  for(i=0;i<nb.length;i++){var k=(nb[i][0]*N+nb[i][2])*N+nb[i][1];if(seen[k])continue;seen[k]=1;q.push([nb[i][0],nb[i][1],nb[i][2],n[3]+1,n[4]||nb[i]]);}
  }
  return null;
 }
@@ -614,7 +618,7 @@ function sp(m){return {n:spName(m)};}
 function baseName(spc,env){var S=SPEC[spc];return (S.line=='nut'&&!S.noenv?ENV[env].n:'')+S.n;}
 function skey(spc,env){return SPEC[spc].line=='nut'?spc+'_'+env:spc;}
 function mkCr(spc,env,f,x,y,e,opt){
- if(g.cr.length>=CAP)return null;
+ if(g.cr.length>=CAP&&!(opt&&opt.force))return null;
  var S=SPEC[spc],key=skey(spc,env),mut=g.mutNext[key]||null;
  if(mut)delete g.mutNext[key];
  var k=mut=='kyodai'?1.8:mut=='kyo'?1.5:mut=='pure'?1.3:1;
@@ -789,7 +793,7 @@ function moveCr(m,S){
 function feed1(m,S){
  if(m.e>=3)return;
  var mg=S.line=='mag',di,sc;
- for(di=0;di<4;di++){sc=cellAt(m.f,m.x+D4[di][0],m.y+D4[di][1]);if(sc&&!sc.open){if(mg&&sc.mag>0){sc.mag--;m.e++;return;}if(!mg&&sc.nut>0){sc.nut--;m.e++;return;}}}
+ for(di=0;di<4;di++){sc=cellAt(m.f,m.x+D4[di][0],m.y+D4[di][1]);if(sc&&!sc.open){if(mg&&sc.mag>0){sc.mag--;sc.sk=1;m.e++;return;}if(!mg&&sc.nut>0){sc.nut--;sc.sk=1;m.e++;return;}}}
  if(mg){if(g.mpool>=1){g.mpool--;m.e++;}}else if(onMyEnv(m)&&g.pool>=1){g.pool--;m.e++;}
 }
 function eat(m,S){
@@ -979,7 +983,7 @@ function shout(e,kind,force){
  var L=LINES[kind],t=L[rnd(L.length)];if(t==g.lastLine)t=L[(L.indexOf(t)+1)%L.length];g.lastLine=t;
  g.bub=g.bub.filter(function(b){return b.e!==e;});g.bub.push({e:e,s:t,until:now+2600});
 }
-function key3(f,x,y){return f*400+y*20+x;}
+function key3(f,x,y){return (f*N+y)*N+x;}
 function isEnt(f,x,y){return f==0&&x==ENTX&&y==ENTY;}
 function seeFrom(e,test){
  if(test(e.f,e.x,e.y))return [e.f,e.x,e.y];
@@ -1116,9 +1120,9 @@ function saveKey(q){q=q||g;return q&&(q.mode=='story'||q.mode=='ura'||q.mode=='v
 function saveGame(){
  if(!g||(over&&!(g.winSave&&g.done&&!g.result))||g.title||g.chal)return;
  try{
-  var s=JSON.stringify({v:1,F:F,CAP:CAP,idc:idc,g:g},function(k,v){
+  var s=JSON.stringify({v:1,N:N,F:F,CAP:CAP,idc:idc,g:g},function(k,v){
    if(k=='bub')return [];
-   if(k=='grid')return v.map(function(fl){return fl.map(function(c){return [ENVS.indexOf(c.env),c.nut||0,c.mag||0,c.open?1:0,c.dt==null?-1:Math.round(c.dt*10)/10,c.chest?1:0,c.spore?ENVS.indexOf(c.spore):-1];});});
+   if(k=='grid')return v.map(function(fl){return fl.map(function(c){return [ENVS.indexOf(c.env),c.nut||0,c.mag||0,c.open?1:0,c.dt==null?-1:Math.round(c.dt*10)/10,c.chest?1:0,c.spore?ENVS.indexOf(c.spore):-1,c.sk?1:0];});});
    if(k=='seen'||k=='trail')return {};
    if(k=='poiBy')return v&&v.id?v.id:null;
    if(k=='carrier')return v&&v.id?{__en:v.id}:null;
@@ -1132,8 +1136,8 @@ window.__saveNow=saveGame;
 function loadGame(k){
  k=k||'tou-save';var s=kvGet(k);if(!s)return false;
  try{
-  var o=JSON.parse(s);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];
-  if(g.grid&&g.grid[0]&&Array.isArray(g.grid[0][0]))g.grid=g.grid.map(function(fl){return fl.map(function(a){var c={env:ENVS[a[0]],nut:a[1],mag:a[2],open:!!a[3],dt:a[4],chest:!!a[5]};if(a[6]>=0)c.spore=ENVS[a[6]];return c;});});
+  var o=JSON.parse(s);setN(o.N||20);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];setDig(false);focusCore();
+  if(g.grid&&g.grid[0]&&Array.isArray(g.grid[0][0]))g.grid=g.grid.map(function(fl){return fl.map(function(a){var c={env:ENVS[a[0]],nut:a[1],mag:a[2],open:!!a[3],dt:a[4],chest:!!a[5]};if(a[6]>=0)c.spore=ENVS[a[6]];if(a[7])c.sk=1;return c;});});
   g.bub=[];if(g.dp===undefined)g.dp=100;g.calm=g.calm||{};['dung','burn','illus','pher','nests','circles','torches'].forEach(function(k){g[k]=g[k]||[];});g.slv=g.slv||{};if(g.roundT0===undefined){g.roundT0=g.t;g.armyStart=0;}g.chal=null;
   g.en.forEach(function(e){if(e.poiBy)e.poiBy=g.cr.filter(function(m){return m.id===e.poiBy;})[0]||null;});
   var c=g.core.carrier;g.core.carrier=c&&c.__en?g.en.filter(function(e){return e.id===c.__en;})[0]||null:null;
@@ -1344,7 +1348,7 @@ function checkGuardian(){
  if(g.guardian)return;
  var f=F-1,cx=COREX,cy=COREY+1,ok=true;
  for(var dy=-1;dy<=1&&ok;dy++)for(var dx=-1;dx<=1&&ok;dx++){if(!dx&&!dy)continue;var x=cx+dx,y=cy+dy,c=cellAt(f,x,y);if(!c||bedrock(f,x,y))continue;if(!c.open)ok=false;}
- if(ok){var m=mkCr('guardian','sp',f,cx,cy,0);if(m)g.guardian=true;if(m)say('コアの周りを掘り抜いた。守護獣ガーディアンが目を覚ました！（この塔のモンスターが少し硬くなる）');}
+ if(ok){var m=mkCr('guardian','sp',f,cx,cy,0,{force:1});if(m)g.guardian=true;if(m)say('コアの周りを掘り抜いた。守護獣ガーディアンが目を覚ました！（この塔のモンスターが少し硬くなる）');}
 }
 function guardOn(){return g.cr.some(function(m){return m.sp=='guardian';});}
 
@@ -1358,7 +1362,7 @@ function jobSkill(e,dt){
  else if(e.k=='mah'&&e.js>=7){var ms=g.cr.filter(function(m){return m.f==e.f&&man(m,e)<=1;});if(ms.length){e.js=0;ms.forEach(function(m){var d=e.atk*1.5*monDef();m.hp-=d;fxNum(m.f,m.x,m.y,d,'#b8c8ff');if(m.hp<=0)killCr(m,'enemy',e);});depositM(e.f,e.x,e.y,1);addFx({k:'ring',f:e.f,x:ccx(e.x),y:ccx(e.y),life:450,c:'170,190,255',r0:4,rad:22});addFx({k:'num',f:e.f,x:ccx(e.x),y:ccx(e.y)-22,s:'炎の輪',c:'#b8c8ff',life:900});}}
  else if(e.k=='wana'&&e.js>=8){e.js=0;if(!g.traps.some(function(t){return t.f==e.f&&t.x==e.x&&t.y==e.y;})&&!isEnt(e.f,e.x,e.y)){g.traps.push({f:e.f,x:e.x,y:e.y});if(g.traps.length>20)g.traps.shift();}}
  else if(e.k=='ren'&&e.js>=10){e.js=0;var got=0;
-  for(var dy=-2;dy<=2;dy++)for(var dx=-2;dx<=2;dx++){var c=cellAt(e.f,e.x+dx,e.y+dy);if(c&&!c.open&&c.nut>0&&got<6){var t=Math.min(c.nut,6-got);c.nut-=t;got+=t;}}
+  for(var dy=-2;dy<=2;dy++)for(var dx=-2;dx<=2;dx++){var c=cellAt(e.f,e.x+dx,e.y+dy);if(c&&!c.open&&c.nut>0&&got<6){var t=Math.min(c.nut,6-got);c.nut-=t;c.sk=1;got+=t;}}
   if(got>=4){spawnEn('doll',e.f,e.x,e.y);addFx({k:'ring',f:e.f,x:ccx(e.x),y:ccx(e.y),life:500,c:'200,200,180',r0:4,rad:20});say(enName(e)+'が周りの養分を吸い取り、石人形を呼んだ。');}}
 }
 function monDef(){var a=0;for(var i=0;i<g.cr.length;i++){var s5=g.cr[i].sp;if(s5=='demon')a+=0.03;else if(s5=='d_sleepy')a+=0.12;}return (g.guardOn?0.85:1)*(1-Math.min(0.6,a));}
@@ -1385,7 +1389,7 @@ function openCell(f,x,y,main){
  var c=cellAt(f,x,y);if(!c||c.open||bedrock(f,x,y))return;
  c.open=true;c.dt=g.t;
  var n=c.nut,mg=c.mag||0,born=0,spc=null,env=c.env,amt=0;c.nut=0;c.mag=0;
- if(main&&(n>=7||mg>=7)&&ringAround(f,x,y)){g.circles.push({f:f,x:x,y:y,nut:n,mag:mg,hp:350});say('魔法陣ができた！ 魔法陣をタップするとモンスターを呼べる（養分が多いとデーモン、魔分が多いとリッチ）。');fxDig(f,x,y,c.env,0);addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:800,c:'200,120,255',r0:4,rad:26});sfx('promote');if(c.chest){c.chest=false;g.chests.push({f:f,x:x,y:y});}if(c.spore){mkCr('mush',c.spore,f,x,y,2);c.spore=null;}if(f==F-1)checkGuardian();return;}
+ if(main&&(n>=7||mg>=7)&&ringAround(f,x,y)){g.circles.push({f:f,x:x,y:y,nut:n,mag:mg,hp:350});say('魔法陣ができた！ 魔法陣をタップするとモンスターを呼べる（養分が多いとデーモン、魔分が多いとリッチ）。');fxDig(f,x,y,c.env,0);addFx({k:'ring',f:f,x:ccx(x),y:ccx(y),life:800,c:'200,120,255',r0:4,rad:26});sfx('promote');if(c.chest){c.chest=false;g.chests.push({f:f,x:x,y:y});}if(c.spore){mkCr('mush',c.spore,f,x,y,2,{force:1});c.spore=null;}if(f==F-1)checkGuardian();return;}
  var mino=0;if(mg>0&&mg>=n){amt=mg;spc=ORDM[Math.min(8,mg)-1];env='mag';mino=n;}
  else if(n>0){amt=n;spc=ORDN[Math.min(8,n)-1];mino=-mg;}
  spc=varSp(spc,env,f,x,y,n);
@@ -1393,14 +1397,14 @@ function openCell(f,x,y,main){
  if(spc&&n>=9&&Math.random()<0.4+0.1*(g.rareK||0)){spc='gslime';env='sp';}
  else if(spc&&distinctEnvs(f,x,y)>=3&&Math.random()<0.15+0.05*(g.rareK||0)&&g.cr.filter(function(o){return o.sp=='chimera'&&o.f==f;}).length<2){spc='chimera';env='sp';}
  if(spc){
-  var m=mkCr(spc,env,f,x,y,amt);
+  var m=mkCr(spc,env,f,x,y,amt,{force:1});
   if(m&&mino<0)m.mg=-mino;else if(m&&mino>0)g.pool+=mino;else if(!m&&mino){if(mino>0)g.pool+=mino;else g.mpool-=mino;}
   if(m){born=amt;if(main)sfx('spawn');if(main&&!m.mut)say((env=='mag'?'魔分':'養分')+amt+'の土を掘った。'+spName(m)+'が生まれた。');}
   else{if(env=='mag')g.mpool+=amt;else g.pool+=amt;if(main)say('塔がいっぱいで、生まれなかった。');}
- }else if(main)say('掘った。');
- if(c.spore){var ms=mkCr('mush',c.spore,f,x,y,2);c.spore=null;if(main&&ms)say('胞子の子株から、マッシュが出てきた。');}
+ }else if(main){if(c.sk){fxNum(f,x,y,'吸われていた','#e0a070');say('掘った。この土の養分は、まわりのモンスターに吸われていた。');}else{fxNum(f,x,y,'空っぽ','#b8b0a0');say('掘った。この土は空っぽだった（光っている土から生まれる）。');}}
+ if(c.spore){var ms=mkCr('mush',c.spore,f,x,y,2,{force:1});c.spore=null;if(main&&ms)say('胞子の子株から、マッシュが出てきた。');}
  if(c.chest){c.chest=false;g.chests.push({f:f,x:x,y:y});if(main)say('宝箱を掘り当てた！ 冒険者が見つけると寄り道して開ける（中身は開けるまで分からない）。');}
- var ci=corpseNear(f,x,y);if(ci>=0){var cp=g.corpses.splice(ci,1)[0];var sk=mkCr('skeleton','sp',cp.f,cp.x,cp.y,0,{hpk:1+cp.str/60});if(sk&&main)say('亡骸の隣を掘ると、骨が起き上がった。スケルトンだ！');}
+ var ci=corpseNear(f,x,y);if(ci>=0){var cp=g.corpses.splice(ci,1)[0];var sk=mkCr('skeleton','sp',cp.f,cp.x,cp.y,0,{hpk:1+cp.str/60,force:1});if(sk&&main)say('亡骸の隣を掘ると、骨が起き上がった。スケルトンだ！');}
  if(f==F-1)checkGuardian();
  fxDig(f,x,y,c.env,born);
  if(y==0&&f<F-1)openCell(f+1,x,N-1,false);
@@ -1807,7 +1811,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v48 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v52 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1952,7 +1956,7 @@ function storyMenu(mode){
 }
 function applyParty(e,p){
  var M=p.boss?2.4:1,lk=1+p.lv/10,ak=1+p.lv/18;if(p.ura){lk*=1.5;ak*=1.3;}
- e.nm=p.nm;e.lv=p.lv;e.title=p.ti;if(p.boss){e.spr='yuu';e.boss=1;}e.mhp=e.hp=EN[e.k].hp*lk*M;e.atk=EN[e.k].atk*ak*M;e.skl=(p.skl||[]).slice();e.mmp=e.mp=Math.round((MMP[e.k]||10)*(1+p.lv/15)*M);
+ e.nm=p.nm;e.lv=p.lv;e.title=p.ti;if(p.boss){e.spr='yuu';e.boss=1;}e.mhp=e.hp=EN[e.k].hp*lk*M*szH();e.atk=EN[e.k].atk*ak*M*szA();e.skl=(p.skl||[]).slice();e.mmp=e.mp=Math.round((MMP[e.k]||10)*(1+p.lv/15)*M);
  if(p.line)showBub(e,p.line);
  if(!g.msgLock)say(enFull(e)+'が入ってきた。');
 }
@@ -2161,7 +2165,7 @@ function plantStep(m,dt){
  m.ct+=dt;if(m.ct<1)return;m.ct=0;
  var r=m.stage=='bud'?2:3,got=false,dy,dx;
  if(m.stage=='bud'||(m.tk=(m.tk||0)+1)%2==0){
-  for(dy=-r;dy<=r&&!got;dy++)for(dx=-r;dx<=r&&!got;dx++){var c=cellAt(m.f,m.x+dx,m.y+dy);if(c&&!c.open&&c.nut>0&&c.nut<=11){c.nut--;m.fl=(m.fl||0)+1;got=true;}else if(c&&!c.open&&(c.mag||0)>0&&m.stage=='flower'){c.mag--;m.flm=(m.flm||0)+1;got=true;}}
+  for(dy=-r;dy<=r&&!got;dy++)for(dx=-r;dx<=r&&!got;dx++){var c=cellAt(m.f,m.x+dx,m.y+dy);if(c&&!c.open&&c.nut>0&&c.nut<=11){c.nut--;c.sk=1;m.fl=(m.fl||0)+1;got=true;}else if(c&&!c.open&&(c.mag||0)>0&&m.stage=='flower'){c.mag--;c.sk=1;m.flm=(m.flm||0)+1;got=true;}}
  }
  if(m.stage=='bud'){
   if(got)m.idle=0;else{m.idle=(m.idle||0)+1;if(m.idle>=20){m.hp-=1;if(m.hp<=0){killCr(m,'starve');return;}}}
@@ -2202,7 +2206,7 @@ var DEMONS=['demon','d_sleepy','d_blue','d_bigblue','evilgod'],DVR={};
 function circleType(o){if(o.evil)return 'evilgod';if(o.nut>=o.mag)return o.mag>=4?'d_sleepy':'demon';return o.mag>=9?'d_bigblue':'d_blue';}
 var CCOL={demon:'255,90,90',d_sleepy:'170,170,180',d_blue:'150,110,255',d_bigblue:'110,210,255',evilgod:'255,170,60'};
 function summon(o){
- var t=circleType(o),m=mkCr(t,t=='demon'?'mag':'sp',o.f,o.x,o.y,Math.max(3,Math.min(9,Math.round((o.nut+o.mag)/2))));
+ var t=circleType(o),m=mkCr(t,t=='demon'?'mag':'sp',o.f,o.x,o.y,Math.max(3,Math.min(9,Math.round((o.nut+o.mag)/2))),{force:1});
  if(!m){say('塔がいっぱいで、呼べなかった。');return;}
  if(DVR[t])m.vr=DVR[t];
  g.circles.splice(g.circles.indexOf(o),1);fxPuff(o.f,o.x,o.y,1.5);addFx({k:'ring',f:o.f,x:ccx(o.x),y:ccx(o.y),life:700,c:CCOL[t],r0:4,rad:34});sfx('promote');
@@ -2314,7 +2318,7 @@ function advice(){
 // 朝・昼・夕・夜（4分で一回り。見た目だけ）
 function phase(){var p=((g&&g.t)||0)%240/240;return p<0.1?'朝':p<0.55?'昼':p<0.65?'夕':'夜';}
 // 最初の数分のヒント
-var TUT=[['道の隣の土をなぞって掘ろう。白っぽい模様の土ほど養分が多い',function(){return (g.dug||0)>=3;}],
+var TUT=[['右下の「⛏ 掘る」を押してから、道の隣の土をなぞって掘ろう。白っぽい模様の土ほど養分が多い',function(){return (g.dug||0)>=3;}],
  ['モンスターが生まれた！ もう少し掘って仲間を増やそう',function(){return g.cr.length>=6;}],
  ['準備ができたら「今すぐ迎える」。早く呼ぶほど、次に戻る掘る力が増える',function(){return g.wave>=1;}],
  ['冒険者は、入った時に掘ってあった道を探す。枝道や行き止まりで迷わせよう',function(){return (g.kills||0)>=1;}],
@@ -2466,9 +2470,11 @@ document.getElementById('bsnd').onclick=function(){
 sndLabel();
 document.addEventListener('visibilitychange',function(){if(!SND.ac)return;if(document.hidden)SND.ac.suspend();else if(SND.on)SND.ac.resume();});
 // ---- 盤面の操作（v11）----
-// 1本指: 触れた・なぞったマスに印 → 指を離すとまとめて掘る。最初のマスへ戻すと取り消し
+// 1本指: ふだんは盤を動かす。「掘る」を押している間は、なぞったマスに印 → 指を離すとまとめて掘る
 // 2本指: 広げて拡大・動かして移動。PC はホイールで拡大、Shift+ドラッグで移動
-var W0=N*CS,ptrs={},path=null,pinch=null,HL=null,lpT=0;
+var W0=N*CS,ptrs={},path=null,pinch=null,HL=null,lpT=0,DIG=false;
+function setDig(on){DIG=!!on;var b=document.getElementById('zdig');if(b){b.classList.toggle('on',DIG);b.setAttribute('aria-pressed',DIG?'true':'false');}}
+function focusCore(){if(typeof W0!='number')return;ZM=Math.max(1,N/20);var v=W0/ZM,C=g.core;OX=C.x*CS+CS/2-v/2;OY=C.y*CS+CS/2-v/2;clampCam();zoomBtns();}
 function clampCam(){var v=W0/ZM;OX=Math.max(0,Math.min(W0-v,OX));OY=Math.max(0,Math.min(W0-v,OY));}
 function zoomBtns(){document.getElementById('zout').hidden=ZM<=1.001;document.getElementById('zfit').hidden=ZM<=1.001;document.getElementById('zin').hidden=ZM>=ZMAX-0.001;}
 function setZoom(z,lx,ly){var nz=Math.max(1,Math.min(ZMAX,z));if(lx===undefined){lx=OX+W0/ZM/2;ly=OY+W0/ZM/2;}
@@ -2499,13 +2505,14 @@ cv.addEventListener('pointerdown',function(ev){
  if(Object.keys(ptrs).length>=2){path=null;startPinch();draw();return;}
  if(ev.shiftKey&&ZM>1){pinch={pan:1,id:ev.pointerId,m:logicalOf(ev.clientX,ev.clientY)};return;}
  if(over||(ev.button&&ev.button>0))return;
- var p=cellOf(ev);path={f:g.view,cells:[],first:p[0]+','+p[1],left:false,cancel:false};
+ var p=cellOf(ev);path={f:g.view,cells:[],first:p[0]+','+p[1],left:false,cancel:false,pan:!DIG,sx:ev.clientX,sy:ev.clientY,m:logicalOf(ev.clientX,ev.clientY)};
  clearTimeout(lpT);closePop();var lpF=g.view,lpX=ev.clientX,lpY=ev.clientY;lpT=setTimeout(function(){if(!path||pinch||path.left||g.view!=lpF||over)return;var ms=crAt(lpF,p[0],p[1]),c=cellAt(lpF,p[0],p[1]);
   if(ms.length){HL=ms.filter(function(o){return o.hero;})[0]||ms[0];say(spName(HL)+'：緑＝食べる相手、赤＝食べられる相手');if(HL.hero)openPop('hero',lpF,p[0],p[1],lpX,lpY,HL);}
   else if(c&&!c.open&&!bedrock(lpF,p[0],p[1]))openPop('soil',lpF,p[0],p[1],lpX,lpY);
   else if(c&&c.open)openPop('path',lpF,p[0],p[1],lpX,lpY);
   else return;
   path.cancel=true;path.cells=[];haptic('light');draw();},450);
+ if(path.pan){draw();return;}
  if(canDig(g.view,p[0],p[1])&&touchesOpen(g.view,p[0],p[1]))path.cells.push([p[0],p[1],path.first]);
  else if(canDig(g.view,p[0],p[1]))say('掘れるのは、掘ってあるマスの隣の土だけです。');
  else{var c0=cellAt(g.view,p[0],p[1]);if(c0&&!c0.open&&bedrock(g.view,p[0],p[1]))say('ここは固くて掘れません。');}
@@ -2515,12 +2522,14 @@ cv.addEventListener('pointermove',function(ev){
  if(!ptrs[ev.pointerId])return;ptrs[ev.pointerId]={x:ev.clientX,y:ev.clientY};
  if(pinch&&pinch.pan){var r=cv.getBoundingClientRect();OX=pinch.m[0]-(ev.clientX-r.left)*W0/r.width/ZM;OY=pinch.m[1]-(ev.clientY-r.top)*W0/r.height/ZM;clampCam();draw();return;}
  if(pinch){if(Object.keys(ptrs).length>=2)movePinch();draw();return;}
+ if(path&&path.pan){if(!path.left&&Math.hypot(ev.clientX-path.sx,ev.clientY-path.sy)<8)return;path.left=true;clearTimeout(lpT);var r=cv.getBoundingClientRect();OX=path.m[0]-(ev.clientX-r.left)*W0/r.width/ZM;OY=path.m[1]-(ev.clientY-r.top)*W0/r.height/ZM;clampCam();draw();return;}
  if(path){addPath(cellOf(ev));draw();}
 });
 function endPtr(ev,cancel){
  if(!ptrs[ev.pointerId])return;delete ptrs[ev.pointerId];clearTimeout(lpT);if(HL||!document.getElementById('pop').hidden){HL=null;path=null;draw();return;}
  if(pinch){if(Object.keys(ptrs).length<2)pinch=null;else if(!pinch.pan)startPinch();path=null;draw();return;}
  if(!path)return;var P=path;path=null;
+ if(P.pan){if(cancel||P.cancel||P.left||over||P.f!=g.view){draw();return;}var tp=P.first.split(','),tx=+tp[0],ty=+tp[1];if(tapOpen(P.f,tx,ty)){draw();ui();return;}var tc=cellAt(P.f,tx,ty);if(tc&&!tc.open&&!bedrock(P.f,tx,ty))say('掘るときは、右下の「⛏ 掘る」を押してから土をなぞる。');draw();return;}
  if(cancel||P.cancel||over||P.f!=g.view){draw();return;}
  if(!P.cells.length&&!P.left){var fp=P.first.split(',');if(tapOpen(P.f,+fp[0],+fp[1])){draw();ui();return;}}
  if(P.cells.length)g.moveCore=false;var dug=0;P.cells.forEach(function(p){if(digAt(P.f,p[0],p[1]))dug++;});
@@ -2531,6 +2540,7 @@ cv.addEventListener('pointerup',function(ev){endPtr(ev,false);});
 cv.addEventListener('pointercancel',function(ev){endPtr(ev,true);});
 cv.addEventListener('wheel',function(ev){ev.preventDefault();var p=logicalOf(ev.clientX,ev.clientY);setZoom(ZM*(ev.deltaY<0?1.25:0.8),p[0],p[1]);},{passive:false});
 cv.addEventListener('contextmenu',function(ev){ev.preventDefault();});
+document.getElementById('zdig').onclick=function(){setDig(!DIG);say(DIG?'掘る：土をなぞって指を離すと掘れる。もう一度押すと、指で盤を動かせる。':'指で盤を動かせる。掘るときは「⛏ 掘る」を押す。');haptic('light');ui();};
 document.getElementById('zin').onclick=function(){setZoom(ZM*1.5);};
 document.getElementById('zout').onclick=function(){setZoom(ZM/1.5);};
 document.getElementById('zfit').onclick=function(){ZM=1;OX=OY=0;zoomBtns();draw();};
