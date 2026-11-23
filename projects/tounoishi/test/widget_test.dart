@@ -318,6 +318,20 @@ void main() {
     }
   });
 
+  test('モンスターの長押しで食べさせる・進化させる（0.7.37・試作 v53）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "openPop(HL.hero?'hero':'mon',", // 主役でなくてもメニューが開く
+      'function feedTarget(m)', // 3マス以内の食べられる相手
+      'function evolve(m,k)', // 甲・牙
+      'var EVO_XP=5;', // 経験5点で進化できる
+      'killer.xp=(killer.xp||0)+2;', // 倒すと2点
+      "label('↑',", // 進化できる印
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
