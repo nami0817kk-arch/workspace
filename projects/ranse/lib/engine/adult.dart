@@ -345,10 +345,17 @@ List<SceneDef> buildAdultScenes() {
         final l = g.l;
         final home = homeLord(g);
         final opts = <String>[if (g.fa[home]?.alive ?? false) home];
-        final pool = g.alive
-            .map((f) => f.name)
-            .where((n) => n != home)
-            .toList();
+        // 故郷の家のほかは、近い家の中から選ぶ（会津の娘が土佐の家へ奉公に出る、ということは起きない）。
+        final pool = g.alive.map((f) => f.name).where((n) => n != home).toList()
+          ..sort(
+            (a, b) => factionDistance(
+              l.region,
+              a,
+            ).compareTo(factionDistance(l.region, b)),
+          );
+        // 畿内までは東国からも上るが、中国・四国・九州は遠すぎる（隔たり 30 は、おおよそ経緯度で5度あまり）。
+        pool.removeWhere((n) => factionDistance(l.region, n) > 30);
+        if (pool.length > 4) pool.removeRange(4, pool.length);
         while (opts.length < 3 && pool.isNotEmpty) {
           opts.add(pool.removeAt(g.rng.range(0, pool.length - 1)));
         }

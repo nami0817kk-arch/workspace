@@ -138,6 +138,49 @@ const kRegions = <Region>[
   Region('会津', 3, ['蘆名']),
 ];
 
+/// 国のおおよその位置（経度・緯度）。遠すぎる家に奉公・仕官する選択肢を出さないために使う。
+const kRegionPos = <String, (double, double)>{
+  '尾張': (136.9, 35.2),
+  '美濃': (136.8, 35.6),
+  '三河': (137.3, 34.9),
+  '駿河': (138.4, 35.0),
+  '甲斐': (138.6, 35.7),
+  '信濃': (138.2, 36.3),
+  '越後': (138.9, 37.5),
+  '相模': (139.3, 35.4),
+  '近江': (136.1, 35.2),
+  '山城': (135.8, 35.0),
+  '摂津': (135.5, 34.7),
+  '越前': (136.2, 35.9),
+  '安芸': (132.5, 34.4),
+  '出雲': (132.8, 35.4),
+  '土佐': (133.5, 33.6),
+  '薩摩': (130.5, 31.6),
+  '豊後': (131.6, 33.2),
+  '肥前': (130.0, 33.3),
+  '陸奥': (140.9, 38.3),
+  '出羽': (140.3, 38.2),
+  '常陸': (140.4, 36.4),
+  '会津': (139.9, 37.5),
+};
+
+/// 国から家までの、おおよその隔たり（その家の国のうち最も近いもの）。
+/// 表にない家（明智など、のちに立った家）は京に本拠があるとみなす。
+double factionDistance(String region, String faction) {
+  final (x, y) = kRegionPos[region] ?? kRegionPos['山城']!;
+  double d(String r) {
+    final (a, b) = kRegionPos[r]!;
+    return (a - x) * (a - x) + (b - y) * (b - y);
+  }
+
+  final homes = [
+    for (final r in kRegions)
+      if (r.f.contains(faction)) r.n,
+  ];
+  if (homes.isEmpty) return d('山城');
+  return homes.map(d).reduce((a, b) => a < b ? a : b);
+}
+
 const kFactionBase = <String, double>{
   '織田': 28,
   '斎藤': 22,

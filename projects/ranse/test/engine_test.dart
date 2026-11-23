@@ -100,6 +100,44 @@ void main() {
     expect(houseName(g, '松平'), '松平');
   });
 
+  test('どの国にも位置があり、近い家ほど隔たりが小さい', () {
+    for (final r in kRegions) {
+      expect(kRegionPos.containsKey(r.n), isTrue, reason: r.n);
+    }
+    expect(
+      factionDistance('会津', '伊達'),
+      lessThan(factionDistance('会津', '長宗我部')),
+    );
+    expect(factionDistance('土佐', '毛利'), lessThan(factionDistance('土佐', '伊達')));
+    expect(factionDistance('近江', '浅井'), 0);
+  });
+
+  test('仕官・奉公の先に、遠国の家は出ない（会津から四国・九州へは行かない）', () {
+    const far = {'長宗我部', '島津', '大友', '龍造寺', '毛利', '尼子'};
+    var asked = 0;
+    for (var seed = 0; seed < 3000 && asked < 30; seed++) {
+      final rng = Rng(seed);
+      final b = rollBirth(rng);
+      if (b.region.n != '会津' && b.region.n != '陸奥') continue;
+      final g = Game(rng: rng);
+      g.start(b);
+      final r = Rng(seed + 1);
+      var n = 0;
+      while (!g.finished && n++ < 3000) {
+        final p = g.prompt!;
+        if (p.title == '仕官' || p.title == '奉公先') {
+          asked++;
+          // 先頭は故郷の家（滅んでいれば天下で最も強い家）なので、2つめ以降を見る。
+          for (final c in p.choices.skip(1)) {
+            expect(far.any((f) => c.label == '$f家'), isFalse, reason: c.label);
+          }
+        }
+        g.choose(r.range(0, p.choices.length - 1));
+      }
+    }
+    expect(asked, greaterThan(0));
+  });
+
   test('どんな生まれでも最後まで進み、例外を出さない', () {
     for (var seed = 0; seed < 300; seed++) {
       final rng = Rng(seed);
