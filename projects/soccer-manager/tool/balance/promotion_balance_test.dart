@@ -19,6 +19,9 @@
 ///
 /// none 以外は、上の部のライセンスに要るスタジアムの段へ払えるうちに
 /// 上げる(上げないと、昇格しても猶予の季の終わりに降格処分になる)。
+/// 上位16人の満了が近い選手は自分で更新し、週給の10週分は使わずに残す
+/// (2026-11-24。どちらも無いと、1季目の終わりに満了と給料の未払いで
+/// 開幕の顔ぶれの3割前後が抜け、上位11人が上がらなかった)。
 /// - lean     倹約。提案は承認し、SD に安い補強を1人だけ任せる。施設は触らない
 /// - standard 標準。SD に予算の25%まで2人、施設(練習・ユース)を余裕があれば
 ///            上げ、スカウトとヘッドコーチを良い人に替える。スカウト網も使う
@@ -96,6 +99,26 @@ Future<void> _approveProposals(GameState gs) async {
   }
 }
 
+/// 手を付けずに残しておく資金(週給の10週分)。資金がマイナスになると
+/// 給料の未払いで選手が契約を解除して出ていく。
+int _reserve(GameState gs) => gs.weeklyWageBill * 10;
+
+/// 使ってよい資金(手元 − 残しておく分)。
+int _spendable(GameState gs) => gs.save!.budget - _reserve(gs);
+
+/// 上位16人のうち、この季で契約が切れる31歳以下の選手の契約を更新する。
+/// 監督の提案(主力だけ)を待つと、開幕の顔ぶれの半分近くが1季目の
+/// 終わりに満了で抜けていた。
+Future<void> _renewCore(GameState gs) async {
+  final xs = [...gs.userTeam.players]
+    ..sort((a, b) => b.overall.compareTo(a.overall));
+  for (final p in xs.take(16)) {
+    if (p.isLoan || p.age > 31 || p.contractYearsRemaining > 1) continue;
+    if (_spendable(gs) <= 0) return;
+    await gs.renewContract(p.id);
+  }
+}
+
 Future<void> _keepBestIntake(GameState gs) async {
   final intake = [...gs.pendingYouthIntake]
     ..sort((a, b) => b.potential.compareTo(a.potential));
@@ -113,8 +136,8 @@ Future<void> _upgradeStaff(GameState gs, StaffRole role,
     ..sort((a, b) => b.roleAbility.compareTo(a.roleAbility));
   for (final c in cands) {
     if (c.effectiveLevel <= curLevel) break;
-    // 1年の週俸が資金の [budgetShare] 以内。
-    if (c.wage * 52 > gs.save!.budget * budgetShare) continue;
+    // 1年の週俸が使ってよい資金の [budgetShare] 以内。
+    if (c.wage * 52 > _spendable(gs) * budgetShare) continue;
     if (await gs.hireStaff(c.id)) return;
   }
 }
@@ -126,22 +149,41 @@ Future<void> _upgradeFacilities(GameState gs, double headroom) async {
   ]) {
     final cost = gs.facilityUpgradeCostFor(type);
     if (cost <= 0) continue;
-    if (gs.save!.budget > cost * headroom) await gs.upgradeFacility(type);
+    if (_spendable(gs) > cost * headroom) await gs.upgradeFacility(type);
   }
 }
 
-/// スカウト網の候補から、即戦力(18歳以上)を見立ての良い順に1人獲る。
+/// スカウト網の候補から、即戦力(20歳以上。ユースの子は16〜19歳)を
+/// 総合力の良い順に1人獲る。
 /// スカウト網から獲った即戦力の人数(測定の表に出す)。
 var _gemsSigned = 0;
 
-Future<void> _useScoutNetwork(GameState gs) async {
+/// 即戦力として獲った選手・ユースにいた選手の id(一軍の顔ぶれの出どころを
+/// 数えるため)。
+final _gemIds = <String>{};
+final _youthIds = <String>{};
+
+void _noteYouth(GameState gs) {
+  for (final p in gs.save!.youthProspects) {
+    _youthIds.add(p.id);
+  }
+  for (final p in gs.pendingYouthIntake) {
+    _youthIds.add(p.id);
+  }
+}
+
+Future<void> _useScoutNetwork(GameState gs, {bool refresh = false}) async {
+  // スカウトを替えた直後は、顔ぶれが前のスカウトのまま。季の初めに
+  // 一度だけ更新する(費用は払う)。
+  if (refresh && gs.scoutLevel >= 3) await gs.refreshScoutCandidates();
   final pros = [
     for (final p in gs.scoutCandidates)
-      if (p.age >= 18) p,
+      if (p.age >= 20) p,
   ]..sort((a, b) => b.overall.compareTo(a.overall));
   for (final p in pros) {
     if (await gs.scoutProspect(p.id)) {
       _gemsSigned++;
+      _gemIds.add(p.id);
       return;
     }
   }
@@ -154,7 +196,7 @@ Future<void> _keepStadiumLicensed(GameState gs) async {
   final need = ClubLicenseEngine.stadiumLevelFor(tier > 1 ? tier - 1 : 1);
   if (gs.licensedStadiumLevel >= need) return;
   final cost = gs.facilityUpgradeCostFor(FacilityType.stadium);
-  if (cost > 0 && gs.save!.budget > cost * 1.2) {
+  if (cost > 0 && _spendable(gs) > cost * 1.2) {
     await gs.upgradeFacility(FacilityType.stadium);
   }
 }
@@ -162,7 +204,8 @@ Future<void> _keepStadiumLicensed(GameState gs) async {
 Future<void> _seasonStart(GameState gs, String policy) async {
   if (policy == 'none') return;
   await _keepStadiumLicensed(gs);
-  final budget = gs.save!.budget;
+  await _renewCore(gs);
+  final budget = _spendable(gs) < 0 ? 0 : _spendable(gs);
   switch (policy) {
     case 'lean':
       await _upgradeStaff(gs, StaffRole.sportingDirector, budgetShare: 0.05);
@@ -176,7 +219,7 @@ Future<void> _seasonStart(GameState gs, String policy) async {
       await _upgradeFacilities(gs, 3.0);
       await gs.updateSdBrief(
           active: true, maxFee: (budget * 0.25).round(), maxSignings: 2);
-      await _useScoutNetwork(gs);
+      await _useScoutNetwork(gs, refresh: true);
     case 'invest':
       await gs.setBudgetShare(BudgetCategory.signing, 45);
       await gs.setBudgetShare(BudgetCategory.youth, 25);
@@ -187,8 +230,9 @@ Future<void> _seasonStart(GameState gs, String policy) async {
       await _upgradeFacilities(gs, 1.6);
       await gs.updateSdBrief(
           active: true, maxFee: (budget * 0.40).round(), maxSignings: 3);
-      await _useScoutNetwork(gs);
+      await _useScoutNetwork(gs, refresh: true);
   }
+  _noteYouth(gs);
   await _keepBestIntake(gs);
   await _approveProposals(gs);
 }
@@ -201,9 +245,11 @@ Future<void> _playSeason(GameState gs, String policy) async {
     if (gs.pendingOwnerEvent != null) await gs.resolveOwnerEvent(0);
     if (gs.pendingBoardReviewMessage != null) await gs.dismissBoardReview();
     await gs.simulateAheadMatchdays(1);
+    _noteYouth(gs);
     md++;
     if (policy != 'none' && md % 6 == 0) {
       await _approveProposals(gs);
+      await _renewCore(gs);
       await _keepStadiumLicensed(gs);
       // 冬の窓の前にもう一度スカウト網を見る。
       if (md == 18 && (policy == 'standard' || policy == 'invest')) {
@@ -231,6 +277,7 @@ void defineRuns({
   required int seeds,
   required int seasons,
   String? out,
+  int seedOffset = 0,
 }) {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() {
@@ -241,11 +288,16 @@ void defineRuns({
   for (final themeName in themes) {
     final theme = LeagueTheme.values.byName(themeName);
     for (final policy in policies) {
-      for (var seed = 0; seed < seeds; seed++) {
+      for (var seed = seedOffset; seed < seedOffset + seeds; seed++) {
         test('測定: $themeName / $policy / #$seed', () async {
           _gemsSigned = 0;
+          _gemIds.clear();
+          _youthIds.clear();
           final gs = GameState();
           await gs.startNewGame('測定FC', theme: theme);
+          final initialIds = {for (final p in gs.userTeam.players) p.id};
+          var prevIds = {...initialIds};
+          final names = {for (final p in gs.userTeam.players) p.id: p.name};
           final rows = <Map<String, Object?>>[];
           int? reached2;
           int? reached1;
@@ -274,6 +326,67 @@ void defineRuns({
               'scout': gs.scoutLevel,
               'gems': _gemsSigned,
             };
+            // 一軍の顔ぶれの出どころ(上位11人と、この季に入った人)。
+            String src(String id) => initialIds.contains(id)
+                ? 'init'
+                : _gemIds.contains(id)
+                    ? 'gem'
+                    : _youthIds.contains(id)
+                        ? 'youth'
+                        : 'buy';
+            final top = [...gs.userTeam.players]
+              ..sort((a, b) => b.overall.compareTo(a.overall));
+            final top11 = top.take(11).toList();
+            for (final k in ['init', 'gem', 'youth', 'buy']) {
+              row['top11_$k'] = top11.where((p) => src(p.id) == k).length;
+            }
+            final nowIds = {for (final p in gs.userTeam.players) p.id};
+            final arrivals = [
+              for (final p in gs.userTeam.players)
+                if (!prevIds.contains(p.id)) p,
+            ];
+            for (final k in ['gem', 'youth', 'buy']) {
+              final xs = arrivals.where((p) => src(p.id) == k).toList();
+              row['in_$k'] = xs.length;
+              row['in_${k}_ovr'] = xs.isEmpty
+                  ? null
+                  : (xs.map((p) => p.overall).reduce((a, b) => a + b) /
+                          xs.length)
+                      .round();
+            }
+            final goneIds = prevIds.difference(nowIds);
+            row['out'] = goneIds.length;
+            // 抜けた選手の訳(ニュースのうち、その選手の名前が出るもの)。
+            row['out_why'] = [
+              for (final id in goneIds)
+                [
+                  for (final n in save.newsLog.take(400))
+                    if (n.text.contains(names[id] ?? '<不明>')) n.text,
+                ].take(1).join(),
+            ];
+            row['squad'] = gs.userTeam.players.length;
+            // SD があきらめた理由・獲った件数(ニュースから)。
+            final recent = [
+              for (final n in save.newsLog)
+                if (n.season == save.league.season && n.context == 'SD') n,
+            ];
+            row['sd_signed'] =
+                recent.where((n) => n.text.contains('の獲得をまとめた')).length;
+            row['sd_gaveup'] = recent
+                .where((n) =>
+                    n.text.contains('の獲得をあきらめた') ||
+                    n.text.contains('上限を超えるので降りた'))
+                .length;
+            row['sd_why'] = [
+              for (final n in recent)
+                if (n.text.contains('あきらめた') || n.text.contains('降りた')) n.text,
+            ];
+            row['sd_moves'] =
+                recent.where((n) => n.text.contains('に動いた(')).length;
+            prevIds = nowIds;
+            for (final p in gs.userTeam.players) {
+              names[p.id] = p.name;
+            }
             rows.add(row);
             if (gs.saleReason != null) {
               row['sale'] = gs.saleReason.toString();
