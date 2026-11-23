@@ -126,6 +126,23 @@ void main() {
     }
   });
 
+  test('新しい種の2つ目の束（0.7.22・試作 v36）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      "ant:{line:'nut'", // アリ
+      "hachi:{line:'nut'", // ハチ
+      "shidemushi:{line:'nut'", // シデムシ
+      "bakudan:{line:'nut'", // バクダンダケ
+      "umihebi:{line:'nut'", // ウミヘビ
+      "purupuru:{line:'mag'", // プルプル
+      "manasui:{line:'mag'", // マナスイ
+      "noroi:{line:'mag'", // ノロイ人形
+      'function bakuBoom(', // 破裂
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
