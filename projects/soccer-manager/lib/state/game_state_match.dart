@@ -394,6 +394,8 @@ extension GameStateMatch on GameState {
     final md = next.matchday;
     Fixture? userFixture;
     HalfResult? userFirstHalf;
+    // CPU のクラブの先発が11人に満たなければ、試合の前に埋める(安全網)。
+    _topUpCpuLineups();
     // この節のリーグ戦の警告は、国と節の決まりで数える(他の部も同じ国)。
     CardRules.current = _leagueCardRules(md);
     for (final f in league.fixturesForMatchday(md)) {
@@ -1393,4 +1395,31 @@ extension GameStateMatch on GameState {
         culture: clubCulture, r: r, userId: s.userTeamId, starters: starters);
     if (bonus > 0) _changeSupporters(bonus, SupporterReason.events);
   }
+
+  /// CPU のクラブの、試合に出られる先発が11人(フォーメーションの枠の数)に
+  /// 満たなければ、試合の前に組み直す(安全網)。CPU は試合の前に先発を
+  /// 組み直さず、出られる先発が7人以上残っていればそのまま試合に使われる
+  /// ([MatchEngine.lineupOf])。数え方は[MatchEngine.lineupOf]と同じで、
+  /// 名簿から居なくなった選手・ケガ・代表・出場停止の選手は数えない。
+  void _topUpCpuLineups() {
+    final userId = _save!.userTeamId;
+    for (final t in _worldTeams) {
+      if (t.id == userId) continue;
+      final byId = {for (final p in t.players) p.id: p};
+      final playable = t.startingXI
+          .map((id) => byId[id])
+          .whereType<Player>()
+          .where((p) =>
+              !p.isInjured &&
+              !p.isOnInternationalDuty &&
+              !p.isLoanedOut &&
+              !p.isSuspended &&
+              !p.notRegistered)
+          .length;
+      if (playable < t.formation.slots.length) LineupUtils.autoFill(t);
+    }
+  }
+
+  @visibleForTesting
+  void debugTopUpCpuLineups() => _topUpCpuLineups();
 }
