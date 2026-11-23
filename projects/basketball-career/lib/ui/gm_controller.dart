@@ -45,8 +45,6 @@ class GmController extends ChangeNotifier {
   /// 新しく達成した実績(画面がダイアログで見せて消す)。
   final pending = <Achievement>[];
 
-  /// 「広告を消す」の案内を出す番(全画面広告のあと、ときどき)。
-  bool offerRemoveAds = false;
 
   /// 広告を待っている間(ボタンを止める)。
   bool busy = false;
@@ -205,11 +203,7 @@ class GmController extends ChangeNotifier {
     busy = true;
     notifyListeners();
     try {
-      final shown = await m.beforeAction();
-      if (shown && m.removeAdsOfferDue) {
-        offerRemoveAds = (await m.canBuy) && await m.price != null;
-        await m.markRemoveAdsOffered();
-      }
+      await m.beforeAction();
     } catch (_) {
     } finally {
       busy = false;
@@ -674,11 +668,6 @@ class GmController extends ChangeNotifier {
 
   void dismissAchievement() {
     if (pending.isNotEmpty) pending.removeAt(0);
-    notifyListeners();
-  }
-
-  void dismissRemoveAdsOffer() {
-    offerRemoveAds = false;
     notifyListeners();
   }
 

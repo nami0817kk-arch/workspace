@@ -5,7 +5,6 @@ import 'gm/home_screen.dart';
 import 'gm/hub_screen.dart';
 import 'gm/style.dart';
 import 'gm_controller.dart';
-import 'remove_ads_offer.dart';
 
 class BasketballCareerApp extends StatefulWidget {
   const BasketballCareerApp({super.key, this.controller});
@@ -53,7 +52,7 @@ class _BasketballCareerAppState extends State<BasketballCareerApp> {
   }
 }
 
-/// 実績の解放と「広告を消す」の案内を、ダイアログで見せる。
+/// 実績の解放を、ダイアログで見せる。
 class _NoticeHost extends StatefulWidget {
   const _NoticeHost({required this.controller, required this.child});
   final GmController controller;
@@ -81,7 +80,7 @@ class _NoticeHostState extends State<_NoticeHost> {
   void _check() {
     final c = widget.controller;
     // 試合を進めている間は出さない(進める窓の上に重なると、窓が閉じられなくなる)。終わると知らせが来て出る
-    if (_showing || c.busy || (c.pending.isEmpty && !c.offerRemoveAds)) return;
+    if (_showing || c.busy || c.pending.isEmpty) return;
     _showing = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       while (mounted && c.pending.isNotEmpty) {
@@ -92,11 +91,6 @@ class _NoticeHostState extends State<_NoticeHost> {
         );
         c.dismissAchievement();
       }
-      final money = c.money;
-      if (mounted && c.offerRemoveAds && money != null) {
-        await showRemoveAdsOffer(context, money);
-      }
-      c.dismissRemoveAdsOffer();
       _showing = false;
     });
   }

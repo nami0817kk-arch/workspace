@@ -109,30 +109,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             if (v) await Sfx.play(SoundEffect.chime);
                           },
                         ),
-                        if (m.adFree)
-                          const ListTile(
-                            leading: Icon(Icons.check_circle_rounded),
-                            title: Text('広告を消している'),
-                          ),
-                        if (_storeAvailable && !m.adFree && _price != null)
-                          ListTile(
-                            leading: const Icon(Icons.block_rounded),
-                            title: Text('広告を消す(${displayPrice(_price!)})'),
-                            subtitle: const Text('全画面広告が出なくなり、スカウトの追加とオーナーの説得も動画なしで使える。'),
-                            enabled: !_busy,
-                            onTap: () => _run(restore: false),
-                          ),
-                        // 復元の導線は審査の要件(Apple)
-                        if (_storeAvailable)
-                          ListTile(
-                            leading: const Icon(Icons.restore_rounded),
-                            title: const Text('購入を復元'),
-                            enabled: !_busy,
-                            onTap: () => _run(restore: true),
-                          ),
                       ],
                     ),
                   ),
+                // 「広告を消す」は効果音と分けて1つの枠にする(2026-11-23「課金の画面をわかりやすく」)
+                if (m != null && (m.adFree || _storeAvailable)) ...[
+                  const SizedBox(height: 12),
+                  _RemoveAdsCard(
+                    adFree: m.adFree,
+                    price: _storeAvailable && _price != null ? displayPrice(_price!) : null,
+                    busy: _busy,
+                    onBuy: () => _run(restore: false),
+                    // 復元の導線は審査の要件(Apple)
+                    onRestore: _storeAvailable ? () => _run(restore: true) : null,
+                  ),
+                ],
                 const SizedBox(height: 12),
                 Card(
                   child: Column(
@@ -170,6 +161,79 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 設定画面の「広告を消す」の枠。値段・買い切り・買うと変わることを並べ、買ったあとはお礼を出す。
+class _RemoveAdsCard extends StatelessWidget {
+  const _RemoveAdsCard({required this.adFree, required this.price, required this.busy, required this.onBuy, required this.onRestore});
+  final bool adFree;
+
+  /// 表示する値段(ストアに繋がらないと null。そのときは買うボタンを出さない)。
+  final String? price;
+  final bool busy;
+  final VoidCallback onBuy;
+  final VoidCallback? onRestore;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    Widget line(IconData icon, String text) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Icon(icon, size: 20, color: cs.primary),
+            const SizedBox(width: 10),
+            Expanded(child: Text(text, style: const TextStyle(fontSize: 14, height: 1.4))),
+          ]),
+        );
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(children: [
+              Icon(adFree ? Icons.check_circle_rounded : Icons.block_rounded, color: adFree ? Colors.green : cs.primary),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(adFree ? '広告を消しています' : '広告を消す', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              if (!adFree && price != null)
+                Text('$price・買い切り', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: cs.primary)),
+            ]),
+            const SizedBox(height: 8),
+            if (adFree)
+              const Text('お買い上げありがとうございます。全画面広告は出ず、スカウトの追加とオーナーの説得も動画なしで使えます。',
+                  style: TextStyle(fontSize: 14, height: 1.4))
+            else ...[
+              line(Icons.tv_off_rounded, '30試合ごとと、新しいシーズンに入るときの全画面広告が出なくなる'),
+              line(Icons.play_disabled_rounded, 'スカウトの追加とオーナーの説得が、動画を見ずに使える(回数は同じ)'),
+              line(Icons.all_inclusive_rounded, '一度買えばずっと。月額ではない'),
+              if (price != null) ...[
+                const SizedBox(height: 10),
+                FilledButton(
+                  key: const Key('remove-ads-buy'),
+                  onPressed: busy ? null : onBuy,
+                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                  child: busy
+                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                      : Text('広告を消す($price)', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+              ],
+            ],
+            if (onRestore != null)
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: busy ? null : onRestore,
+                  icon: const Icon(Icons.restore_rounded, size: 18),
+                  label: Text(adFree ? '購入を復元' : '購入を復元(機種を変えた人はこちら)'),
+                ),
+              ),
+          ],
         ),
       ),
     );
