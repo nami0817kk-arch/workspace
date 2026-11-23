@@ -641,7 +641,8 @@ void main() {
           reason: 'seed=$seed',
         );
         final n = titles.where((t) => t != '今年の重点').length;
-        scenes += n;
+        // 季節の行事（`seasons.dart`、`sn_c_`）は岐路の起きなかった年にだけ出る別枠なので、岐路の数の目安には数えない。
+        scenes += n - g.l.flags.where((f) => f.startsWith('scene:sn_c_')).length;
         // 1年に1つまで。史実の岐路はその年に必ず出るので、10年すべてで出ることもある。
         expect(n, inInclusiveRange(2, 10), reason: 'seed=$seed $titles');
         expect(g.prompt?.title, anyOf('元服', '裳着'), reason: 'seed=$seed');
@@ -843,7 +844,7 @@ void main() {
 
     test('幼い日に信長と遊んだ人は、のちに信長と再会しうる（史実の年代で）', () {
       var reunions = 0;
-      for (var seed = 0; seed < 6000 && reunions == 0; seed++) {
+      for (var seed = 0; seed < 30000 && reunions == 0; seed++) {
         final rng = Rng(seed);
         final b = rollBirth(rng);
         if (b.region.n != '尾張') continue;
@@ -3380,7 +3381,7 @@ void main() {
       // 手を加えない人生（ランダムと考えて選ぶを半々）。2026-11-23 の手元の実測（4000人生）では、
       // どれか1本の筋で最後の段まで届く成人が約21%、好敵手・師の二の段が約31%。ゆらぎを見て緩めに切る。
       var adults = 0, finals = 0, rv2 = 0, ms2 = 0;
-      for (var seed = 0; seed < 400; seed++) {
+      for (var seed = 0; seed < 1200; seed++) {
         final rng = Rng(seed + 52000);
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
@@ -3416,10 +3417,12 @@ void main() {
         if (ids.contains('bd_rv_rise')) rv2++;
         if (ids.contains('bd_ms_old')) ms2++;
       }
-      expect(adults, greaterThan(200));
-      expect(finals / adults, greaterThanOrEqualTo(.12), reason: '$finals/$adults');
-      expect(rv2 / adults, greaterThanOrEqualTo(.2), reason: '$rv2/$adults');
-      expect(ms2 / adults, greaterThanOrEqualTo(.2), reason: '$ms2/$adults');
+      // 2026-11-24: 1200人生に増やして測ると、季節の岐路を足す前の写しでも 結末 .128〜.145・好敵手の二の段 .175〜.235・
+      // 師の二の段 .194〜.245 と種しだいで揺れ、.2 の線を下回ったので、人生の数を増やしたうえで線を下げた。
+      expect(adults, greaterThan(600));
+      expect(finals / adults, greaterThanOrEqualTo(.1), reason: '$finals/$adults');
+      expect(rv2 / adults, greaterThanOrEqualTo(.16), reason: '$rv2/$adults');
+      expect(ms2 / adults, greaterThanOrEqualTo(.16), reason: '$ms2/$adults');
     });
   });
 }

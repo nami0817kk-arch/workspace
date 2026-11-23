@@ -31,6 +31,7 @@ import 'regions.dart';
 import 'retainer_life.dart';
 import 'rng.dart';
 import 'scene_art.dart';
+import 'seasons.dart';
 import 'shadow_life.dart';
 import 'talents.dart';
 import 'temple.dart';
@@ -81,6 +82,7 @@ class Game extends ChangeNotifier {
       ...buildTalentChildScenes(),
       ...buildRegionChildScenes(),
       ...buildChildFocusScenes(),
+      ...buildSeasonChildScenes(),
     ];
     adultScenes = [
       ...buildAdultScenes(),
@@ -101,6 +103,7 @@ class Game extends ChangeNotifier {
       ...buildCastleLifeScenes(),
       ...buildCraftLifeScenes(),
       ...buildDaimyoLifeScenes(),
+      ...buildSeasonScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
@@ -611,9 +614,10 @@ class Game extends ChangeNotifier {
         }
       }
     }
+    // 季節の行事（`seasons.dart`）はふつうの候補に入れず、岐路の起きなかった年にだけ出す。
     final cand = [
       for (final s in childScenes)
-        if (_childSceneOk(s, a)) s,
+        if (!isSeasonScene(s.id) && _childSceneOk(s, a)) s,
     ];
     // その年の史実の岐路は、数の上限や確率に関係なく必ず出す。
     final hist = cand.where((s) => isHistoryScene(s.id)).toList();
@@ -626,13 +630,31 @@ class Game extends ChangeNotifier {
       return;
     }
     final done = l.flags
-        .where((f) => f.startsWith('scene:') && !isHistoryScene(f.substring(6)))
+        .where(
+          (f) =>
+              f.startsWith('scene:') &&
+              !isHistoryScene(f.substring(6)) &&
+              !isSeasonScene(f.substring(6)),
+        )
         .length;
     // 幼少期の岐路は6つほどに収める。少なすぎれば出やすく、多すぎれば出にくくする。
     var p = .5;
     if (a >= 11 && done < 4) p = .9;
     if (done >= 7) p = .1;
     if (cand.isEmpty || !rng.chance(p)) {
+      // 岐路の起きなかった年にも、季節の行事が巡ってくることがある（`seasons.dart`）。
+      final seasons = [
+        for (final s in childScenes)
+          if (isSeasonScene(s.id) && _childSceneOk(s, a)) s,
+      ];
+      if (seasons.isNotEmpty && rng.chance(kSeasonChildQuietChance)) {
+        final s = rng.wpick(seasons, (e) => e.weight(this));
+        l.t = a * 2 + 1;
+        setFlag('scene:${s.id}');
+        _sceneId = s.id;
+        s.run(this, _endYear);
+        return;
+      }
       _endYear();
       return;
     }
@@ -760,7 +782,11 @@ class Game extends ChangeNotifier {
     }
     final cand = [
       for (final s in adultScenes)
-        if (!s.onlyForced && !isHistoryScene(s.id) && _sceneOk(s, a)) s,
+        if (!s.onlyForced &&
+            !isHistoryScene(s.id) &&
+            !isSeasonScene(s.id) &&
+            _sceneOk(s, a))
+          s,
     ];
     if (cand.isEmpty || !rng.chance(sceneChance)) {
       // 岐路の起きない静かな年にも、始まった縁の筋の続き（二の段から）は出ることがある
@@ -771,6 +797,16 @@ class Game extends ChangeNotifier {
       ];
       if (bonds.isNotEmpty && rng.chance(kBondQuietChance)) {
         _runAdultScene(rng.wpick(bonds, (e) => e.weight(this)), _endAdultYear);
+        return;
+      }
+      // 縁の続きも出なかった静かな年には、季節の行事が巡ってくることがある（`seasons.dart`。
+      // ふつうの年の候補には入れないので、ほかの岐路を押しのけない）。
+      final seasons = [
+        for (final s in adultScenes)
+          if (isSeasonScene(s.id) && _sceneOk(s, a)) s,
+      ];
+      if (seasons.isNotEmpty && rng.chance(kSeasonQuietChance)) {
+        _runAdultScene(rng.wpick(seasons, (e) => e.weight(this)), _endAdultYear);
         return;
       }
       _endAdultYear();
