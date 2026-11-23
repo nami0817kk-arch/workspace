@@ -16,6 +16,9 @@
 /// 方針(オーナーの動き方):
 ///
 /// - none     何もしない(出来事は1つ目の答え、提案は承認しない)
+///
+/// none 以外は、上の部のライセンスに要るスタジアムの段へ払えるうちに
+/// 上げる(上げないと、昇格しても猶予の季の終わりに降格処分になる)。
 /// - lean     倹約。提案は承認し、SD に安い補強を1人だけ任せる。施設は触らない
 /// - standard 標準。SD に予算の25%まで2人、施設(練習・ユース)を余裕があれば
 ///            上げ、スカウトとヘッドコーチを良い人に替える。スカウト網も使う
@@ -34,6 +37,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
+import 'package:soccer_manager/logic/club_license.dart';
 import 'package:soccer_manager/models/budget_plan.dart';
 import 'package:soccer_manager/models/club_infrastructure.dart';
 import 'package:soccer_manager/models/league.dart';
@@ -127,18 +131,37 @@ Future<void> _upgradeFacilities(GameState gs, double headroom) async {
 }
 
 /// スカウト網の候補から、即戦力(18歳以上)を見立ての良い順に1人獲る。
+/// スカウト網から獲った即戦力の人数(測定の表に出す)。
+var _gemsSigned = 0;
+
 Future<void> _useScoutNetwork(GameState gs) async {
   final pros = [
     for (final p in gs.scoutCandidates)
       if (p.age >= 18) p,
   ]..sort((a, b) => b.overall.compareTo(a.overall));
   for (final p in pros) {
-    if (await gs.scoutProspect(p.id)) return;
+    if (await gs.scoutProspect(p.id)) {
+      _gemsSigned++;
+      return;
+    }
+  }
+}
+
+/// 上の部のライセンスに要るスタジアムの段へ、払えるなら上げておく。
+/// 上げないと、昇格しても猶予の季の終わりに降格処分になる。
+Future<void> _keepStadiumLicensed(GameState gs) async {
+  final tier = gs.save!.currentDivisionTier;
+  final need = ClubLicenseEngine.stadiumLevelFor(tier > 1 ? tier - 1 : 1);
+  if (gs.licensedStadiumLevel >= need) return;
+  final cost = gs.facilityUpgradeCostFor(FacilityType.stadium);
+  if (cost > 0 && gs.save!.budget > cost * 1.2) {
+    await gs.upgradeFacility(FacilityType.stadium);
   }
 }
 
 Future<void> _seasonStart(GameState gs, String policy) async {
   if (policy == 'none') return;
+  await _keepStadiumLicensed(gs);
   final budget = gs.save!.budget;
   switch (policy) {
     case 'lean':
@@ -181,6 +204,7 @@ Future<void> _playSeason(GameState gs, String policy) async {
     md++;
     if (policy != 'none' && md % 6 == 0) {
       await _approveProposals(gs);
+      await _keepStadiumLicensed(gs);
       // 冬の窓の前にもう一度スカウト網を見る。
       if (md == 18 && (policy == 'standard' || policy == 'invest')) {
         await _useScoutNetwork(gs);
@@ -219,6 +243,7 @@ void defineRuns({
     for (final policy in policies) {
       for (var seed = 0; seed < seeds; seed++) {
         test('測定: $themeName / $policy / #$seed', () async {
+          _gemsSigned = 0;
           final gs = GameState();
           await gs.startNewGame('測定FC', theme: theme);
           final rows = <Map<String, Object?>>[];
@@ -246,6 +271,8 @@ void defineRuns({
               'cpu1': double.parse(_cpuTop11Median(gs, 1).toStringAsFixed(1)),
               'wageRatio': (ledger.wageRatio * 100).round(),
               'budget': save.budget,
+              'scout': gs.scoutLevel,
+              'gems': _gemsSigned,
             };
             rows.add(row);
             if (gs.saleReason != null) {
