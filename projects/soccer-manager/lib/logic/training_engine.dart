@@ -630,6 +630,17 @@ class TrainingEngine {
       for (final k in specialtyKeys(coachSpecialty, p)) {
         _grow(p, k, 0.5 * factor);
       }
+
+      // 一軍の全体練習と同じ底上げ(ユース施設の係数つき)。以前はポジションの
+      // 4項目しか伸びず、総合力は28項目前後の加重平均なので、アカデミーで
+      // 何年育てても総合力が上がりきらず、一軍の戦力に届かなかった
+      // (2026-11-23)。
+      final taper = _conditioningAgeTaper(p);
+      if (taper > 0) {
+        for (final k in _conditioningKeysFor(p)) {
+          _grow(p, k, _conditioningChance * factor * taper);
+        }
+      }
     }
   }
 

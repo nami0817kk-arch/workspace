@@ -1075,6 +1075,89 @@ extension GameStateTransfer on GameState {
       (_) => ScoutingEngine.generateScoutedProspect(scoutLevel: scoutLevel)
         ..originLeague = currentLeagueTheme.name,
     );
+    // 水準3以上のスカウトは、他のクラブで出番の無い即戦力も見つけてくる
+    // (候補の一部を置き換える。顔ぶれの人数は変えない)。
+    scoutedProClubs = {};
+    final gems = min(ScoutingEngine.hiddenGemCountFor(scoutLevel), count);
+    final clubs = [
+      for (final t in _save!.league.teams)
+        if (t.id != _save!.userTeamId) t,
+    ];
+    if (gems == 0 || clubs.isEmpty) return;
+    final target = _divisionTop11Median().round();
+    final rng = Random();
+    for (var i = 0; i < gems; i++) {
+      final club = clubs[rng.nextInt(clubs.length)];
+      final p = _generatingFor(club,
+          () => ScoutingEngine.generateHiddenGem(targetOverall: target))
+        ..originLeague = currentLeagueTheme.name;
+      scoutCandidates[count - 1 - i] = p;
+      scoutedProClubs[p.id] = club.name;
+    }
+  }
+
+  /// 自クラブの部の CPU のクラブの、上位11人の総合力の平均の中央。
+  double _divisionTop11Median() {
+    final xs = <double>[];
+    for (final t in _save!.league.teams) {
+      if (t.id == _save!.userTeamId || t.players.isEmpty) continue;
+      final o = t.players.map((p) => p.overall).toList()
+        ..sort((a, b) => b.compareTo(a));
+      final top = o.take(11).toList();
+      xs.add(top.reduce((a, b) => a + b) / top.length);
+    }
+    if (xs.isEmpty) return userTeam.overallRating.toDouble();
+    xs.sort();
+    final m = xs.length ~/ 2;
+    return xs.length.isOdd ? xs[m] : (xs[m - 1] + xs[m]) / 2;
+  }
+
+  /// [p]がスカウト網の「埋もれた即戦力」(移籍で獲るプロ)か。
+  bool isScoutedPro(Player p) => scoutedProClubs.containsKey(p.id);
+
+  /// 「埋もれた即戦力」の移籍金(万円)。相場([TransferValue.worth])から
+  /// スカウトの水準に応じて2〜4割引く。
+  int scoutedProFeeFor(Player p) =>
+      (TransferValue.worth(p, seasonProgress) *
+              (1 - ScoutingEngine.hiddenGemDiscount(scoutLevel)))
+          .round();
+
+  /// 「埋もれた即戦力」を移籍で獲る。移籍の窓が開いていて、移籍金と
+  /// 代理人手数料が払え、登録と週給の枠が足りるときだけ。
+  bool _signScoutedPro(int idx) {
+    final p = scoutCandidates[idx];
+    final clubName = scoutedProClubs[p.id] ?? '-';
+    if (!isTransferWindowOpen) {
+      lastSigningBlockReason = Tr.pick('移籍の窓が閉じているので、所属先のある選手は獲れません。',
+          'The transfer window is closed, so you cannot sign a player under contract.');
+      return false;
+    }
+    if (userTeam.players.length >= maxSquadSize) {
+      lastSigningBlockReason = Tr.pick('一軍の人数が上限です。',
+          'Your first-team squad is full.');
+      return false;
+    }
+    final fee = scoutedProFeeFor(p);
+    final agentFee = TransferTermsEngine.agentFee(fee);
+    if (_save!.budget < fee + agentFee) {
+      lastSigningBlockReason = Tr.pick('資金が足りません。', 'Not enough funds.');
+      return false;
+    }
+    if (!_registrationAllows(p)) return false;
+    if (!_wageBudgetAllowsSigning(p.wage, fee: fee)) return false;
+    _payTransferFee(fee);
+    _bookAgentFee(p, agentFee);
+    ContractEngine.applyTransferContract(p);
+    _recordPlayerBook(p, fee, announce: false, agentFee: agentFee);
+    scoutCandidates.removeAt(idx);
+    scoutedProClubs.remove(p.id);
+    _supportersOnSigning(p);
+    userTeam.players.add(p);
+    _logNews(
+        Tr.pick('スカウトが見つけた$clubNameの${p.name}を、${formatMoney(fee)}で獲得した。',
+            'Signed ${p.name} from $clubName for ${formatMoney(fee)}, found by your scouts.'),
+        context: Tr.pick('移籍', 'Transfer'));
+    return true;
   }
 
   /// スカウト網を手動で更新する1回あたりの費用(万円)。
@@ -1102,6 +1185,13 @@ extension GameStateTransfer on GameState {
     if (_save == null) return false;
     final idx = scoutCandidates.indexWhere((p) => p.id == candidateId);
     if (idx < 0) return false;
+    if (isScoutedPro(scoutCandidates[idx])) {
+      lastSigningBlockReason = null;
+      final ok = _signScoutedPro(idx);
+      _notify();
+      if (ok) await _persist();
+      return ok;
+    }
     final infra = _save!.infrastructure;
     final cost = scoutCost;
     final maxP = ScoutingEngine.maxProspectsFor(

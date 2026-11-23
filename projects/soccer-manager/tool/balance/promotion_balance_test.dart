@@ -116,7 +116,10 @@ Future<void> _upgradeStaff(GameState gs, StaffRole role,
 }
 
 Future<void> _upgradeFacilities(GameState gs, double headroom) async {
-  for (final type in [FacilityType.trainingGround, FacilityType.youthFacility]) {
+  for (final type in [
+    FacilityType.trainingGround,
+    FacilityType.youthFacility
+  ]) {
     final cost = gs.facilityUpgradeCostFor(type);
     if (cost <= 0) continue;
     if (gs.save!.budget > cost * headroom) await gs.upgradeFacility(type);

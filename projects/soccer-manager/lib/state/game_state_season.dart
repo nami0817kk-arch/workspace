@@ -1391,6 +1391,7 @@ extension GameStateSeason on GameState {
         youthCoachLevel: infra.staffAttributeLevel(
             StaffRole.youthCoach, StaffAttribute.judging),
         investmentBonus: investmentBonus,
+        tier: _save!.currentDivisionTier,
       ),
     );
     for (final p in _save!.pendingYouthIntake) {
