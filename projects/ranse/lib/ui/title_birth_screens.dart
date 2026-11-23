@@ -5,6 +5,7 @@ import '../engine/birth.dart';
 import '../engine/data.dart';
 import '../engine/ending.dart';
 import '../engine/rng.dart';
+import 'pixel_castle.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
@@ -21,6 +22,11 @@ class TitleScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              LayoutBuilder(
+                builder: (context, box) =>
+                    PixelCastle(width: box.maxWidth < 320 ? box.maxWidth : 320),
+              ),
+              const SizedBox(height: 20),
               const Text(
                 '乱世下剋上',
                 style: TextStyle(
@@ -182,7 +188,7 @@ class BirthScreen extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              '（身分・国・性別・生まれ順・生年月日・\n能力・特性が、すべて揃う確率）\n'
+              '（身分・国・性別・生まれ順と、\n際立った才・特性が、すべて揃う確率）\n'
               '戦国の日本で同じ身分に生まれた者は、約${fmtN(b.sameClass)}人',
               textAlign: TextAlign.center,
               style: const TextStyle(

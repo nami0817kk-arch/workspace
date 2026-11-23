@@ -839,6 +839,7 @@ void main() {
     for (var i = 0; i < 6000; i++) {
       final b = rollBirth(rng);
       expect(b.rarity, greaterThan(1));
+      expect(b.rarity, lessThanOrEqualTo(kPopulation));
       if (b.cls.id == 'daimyo') daimyo.add(b.rarity);
       if (b.cls.id == 'farmer') farmer.add(b.rarity);
     }
@@ -847,6 +848,9 @@ void main() {
       l.sort();
       return l[l.length ~/ 2];
     }
+
+    // 生まれた年・月日・国を数えないので、ありふれた農民の子は数十分の1ほど。民の数（千五百万）を超えない。
+    expect(median(farmer), lessThan(200));
 
     if (daimyo.isNotEmpty) {
       expect(median(daimyo), greaterThan(median(farmer) * 100));

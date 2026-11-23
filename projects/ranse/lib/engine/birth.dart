@@ -64,7 +64,6 @@ int calcBirthRank(ClassDef cls, bool female, int order) {
 
 Birth rollBirth(Rng r) {
   final totalC = kClasses.fold<double>(0, (s, c) => s + c.w);
-  final totalR = kRegions.fold<double>(0, (s, c) => s + c.w);
   final cls = r.wpick(kClasses, (c) => c.w);
   final reg = r.wpick(kRegions, (c) => c.w);
   final fac = r.pick(reg.f);
@@ -74,7 +73,11 @@ Birth rollBirth(Rng r) {
   final od = r.wpick(const [(.45, 1), (.3, 2), (.25, 3)], (e) => e.$1);
   final order = od.$2;
   final classP = cls.w / totalC;
-  var p = classP * (reg.w / totalR) * (1 / 44) * (1 / 336) * .5 * od.$1;
+  // 生まれの稀少度は「同じような生まれの人が、戦国の民のうちにどれだけ珍しいか」。
+  // 数えるのは、身分・性別・生まれ順と、特性を持つか・際立った能力か。生まれた年・月日・国・特性の種類は
+  // 誰でも必ずどれかに当たるので数えない（数えると、ありふれた農民の子まで「数千億分の1」になり、
+  // 千五百万の民という前提と食い違っていた。2026-11-23 ユーザー指摘）。
+  var p = classP * .5 * od.$1;
 
   int base() => clampInt((40 + r.gauss() * 14).round(), 5, 95);
   final v = {
@@ -87,7 +90,8 @@ Birth rollBirth(Rng r) {
   for (final x in v.values) {
     final z = (x - 40) / 14;
     final tail = 2 * (phi(z) < 1 - phi(z) ? phi(z) : 1 - phi(z));
-    p *= tail < 0.02 ? 0.02 : tail;
+    // 能力は、際立って高い（低い）ものだけを珍しさに数える（並の能力は誰にでもある）。
+    if (tail < .2) p *= (tail < 0.02 ? 0.02 : tail) / .2;
   }
   cls.mod.forEach((k, d) => v[k] = v[k]! + d);
   if (female) {
@@ -100,9 +104,9 @@ Birth rollBirth(Rng r) {
   final tr = <Trait>[];
   for (var i = 0; i < nt; i++) {
     tr.add(pool.removeAt(r.range(0, pool.length - 1)));
-    p *= 1 / 12;
   }
-  p *= nt == 0 ? .45 : (nt == 1 ? .40 : .15);
+  // 特性を持たないのが当たり前（並）。持つことだけを珍しさに数える。
+  p *= nt == 0 ? 1 : (nt == 1 ? .40 : .15);
   if (female && r.chance(.04)) {
     tr.add(kTraitOnna);
     p *= .04;
@@ -140,7 +144,8 @@ Birth rollBirth(Rng r) {
     order: order,
     stats: a,
     traits: tr,
-    rarity: 1 / p,
+    // 民の数より珍しくはなれない（上限は千五百万分の1）。
+    rarity: 1 / p > kPopulation ? kPopulation.toDouble() : 1 / p,
     name: name,
     label: clsLabel(cls, female, order),
     sameClass: kPopulation * classP,
@@ -149,10 +154,10 @@ Birth rollBirth(Rng r) {
 }
 
 String rarityText(double n) {
-  if (n >= 8e9) return '世界の総人口（約80億）をも超える、\n唯一無二の巡り合わせ';
-  if (n >= 1e9) return '十億に一人の、天に選ばれし生まれ';
-  if (n >= 1e8) return '億に一人。歴史に名を残す器かもしれない';
-  if (n >= 1e7) return '千万に一人の、稀有な生まれ';
-  if (n >= 1e6) return '百万に一人の巡り合わせ';
+  if (n >= kPopulation) return '千五百万の民のうち、\nただ一人いるかどうかの生まれ';
+  if (n >= 1e6) return '百万に一人の、天に選ばれし生まれ';
+  if (n >= 1e5) return '十万に一人。歴史に名を残す器かもしれない';
+  if (n >= 1e4) return '万に一人の、稀有な生まれ';
+  if (n >= 1e3) return '千人に一人の巡り合わせ';
   return 'ありふれた、しかし確かな一つの命';
 }

@@ -34,7 +34,7 @@ class Gauge extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: v / 100,
                 minHeight: 8,
-                backgroundColor: const Color(0xFF0E0C0A),
+                backgroundColor: Pal.track,
                 valueColor: AlwaysStoppedAnimation(color),
               ),
             ),
@@ -145,7 +145,7 @@ class BigButton extends StatelessWidget {
     child: FilledButton(
       style: FilledButton.styleFrom(
         backgroundColor: secondary ? Pal.panel2 : Pal.accent,
-        foregroundColor: Pal.ink,
+        foregroundColor: secondary ? Pal.ink : Pal.onAccent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       onPressed: onTap,
@@ -249,7 +249,7 @@ class _ChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.drawRRect(
       RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(6)),
-      Paint()..color = const Color(0xFF17130F),
+      Paint()..color = Pal.panel2,
     );
     if (h.length < 2) return;
     const pl = 28.0, pr = 8.0, pt = 8.0, pb = 18.0;

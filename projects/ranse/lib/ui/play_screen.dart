@@ -450,11 +450,9 @@ class _WorldTab extends StatelessWidget {
                           child: LinearProgressIndicator(
                             value: f.power / maxP,
                             minHeight: 8,
-                            backgroundColor: const Color(0xFF0E0C0A),
+                            backgroundColor: Pal.track,
                             valueColor: AlwaysStoppedAnimation(
-                              f.name == g.l.lord
-                                  ? Pal.gold
-                                  : const Color(0xFF6B5A46),
+                              f.name == g.l.lord ? Pal.gold : Pal.muted,
                             ),
                           ),
                         ),
