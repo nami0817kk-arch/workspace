@@ -810,19 +810,24 @@ class HomeScreen extends StatelessWidget {
                                                 width: 16,
                                                 height: 16,
                                                 alignment: Alignment.center,
+                                                // 白い字を乗せる丸なので、暗い見た目
+                                                // の明るい赤・緑のままだと読めない
+                                                // (2.3:1)。白が読める濃さに寄せる。
                                                 decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
-                                                  color: r == 'W'
-                                                      ? SemanticColors.positive(
-                                                          context,
-                                                        )
-                                                      : r == 'L'
-                                                          ? SemanticColors
-                                                              .negative(
-                                                              context,
-                                                            )
-                                                          : Colors
-                                                              .grey.shade500,
+                                                  color: SemanticColors
+                                                      .readableOn(
+                                                    r == 'W'
+                                                        ? SemanticColors
+                                                            .positive(context)
+                                                        : r == 'L'
+                                                            ? SemanticColors
+                                                                .negative(
+                                                                    context)
+                                                            : Colors
+                                                                .grey.shade600,
+                                                    Colors.white,
+                                                  ),
                                                 ),
                                                 child: Text(
                                                   r,

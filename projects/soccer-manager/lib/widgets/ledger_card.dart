@@ -29,7 +29,7 @@ class LedgerCard extends StatelessWidget {
 
     Color levelColor() => switch (level) {
           2 => SemanticColors.negative(context),
-          1 => Colors.orange.shade700,
+          1 => SemanticColors.ink(context, Colors.orange.shade700),
           _ => SemanticColors.positive(context),
         };
 
