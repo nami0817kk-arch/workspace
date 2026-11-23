@@ -817,6 +817,8 @@
       }
       // 5. 持つ（相手が遠いときだけ。テンポが遅いほど）
       if (nd > 4) opts.push({ k: 'hold', v: here + clamp((nd - 3) * 0.002, 0, 0.008) + (1 - tempo) * 0.004 });
+      // 6. 大きく蹴り出す（自陣の深い所で寄せられたとき。冷静さが低いほど選びやすい）
+      if (this.uOf(q, q.y) < 24 && nd < 2.6) opts.push({ k: 'clear', v: 0.012 + (1 - q.a.cmp) * 0.01 + (q.bu < 30 ? 0.006 : 0) });
       // 選ぶ：判断の良い子ほど一番良いものを選ぶ
       const temp = 0.004 + (1 - q.a.dec) * 0.012;
       let best = opts[0];
@@ -832,6 +834,14 @@
       if (best.k === 'shoot') return this.shoot(q, {});
       if (best.k === 'pass') return this.pass(q, best.q, { lead: best.lead, loft: best.loft, through: best.through });
       if (best.k === 'cross') return this.cross(q, false);
+      if (best.k === 'clear') {
+        // 外側の前へ高く。ときどきタッチラインを割る
+        const side = q.x < W / 2 ? -1 : 1;
+        const [tx, ty] = this.abs(q, clamp(this.xOf(q, q.x) + side * (q.dir > 0 ? 1 : -1) * (8 + this.rng() * 16), 2, W - 2), this.uOf(q, q.y) + 35 + this.rng() * 15);
+        this.ev('clear', { pid: q.id, sd: q.sd });
+        this.flight = null;
+        return this.kick(q, tx, ty, { loft: true, err: 0.12 + (1 - q.a.tec) * 0.1, vh: 20, kind: 'clear' });
+      }
       if (best.k === 'carry') {
         if (q.tr.has('縦への突破') && best.ps > 0.4) this.useTr(q, '縦への突破');
         if (q.tr.has('カットイン') && Math.abs(best.x - W / 2) < Math.abs(q.x - W / 2) - 2) this.useTr(q, 'カットイン');
@@ -1251,11 +1261,22 @@
               return;
             }
             // 弾く：横へ
-            const a = (gk.dir > 0 ? 1 : -1) * (Math.PI / 2) + (this.rng() - 0.5) * 1.6 + (this.rng() < 0.5 ? 0 : Math.PI);
             const v = 5 + this.rng() * 6;
-            b.vx = Math.cos(a) * v * (b.x < W / 2 ? -1 : 1);
-            b.vy = Math.abs(Math.sin(a)) * v * gk.dir;
-            b.vz = 1 + this.rng() * 2;
+            if (this.rng() < 0.5) {
+              // ゴールの外へ（枠の横を抜けてゴールラインを割る → コーナー）
+              const side = b.x < W / 2 ? -1 : 1;
+              const tx = W / 2 + side * (6 + this.rng() * 8);
+              const ty = gk.dir > 0 ? -1 : L + 1;
+              const dd = hyp(tx - b.x, ty - b.y) || 1;
+              b.vx = ((tx - b.x) / dd) * (v + 4);
+              b.vy = ((ty - b.y) / dd) * (v + 4);
+              b.vz = 1.5 + this.rng() * 2.5;
+            } else {
+              const a = (gk.dir > 0 ? 1 : -1) * (Math.PI / 2) + (this.rng() - 0.5) * 1.6 + (this.rng() < 0.5 ? 0 : Math.PI);
+              b.vx = Math.cos(a) * v * (b.x < W / 2 ? -1 : 1);
+              b.vy = Math.abs(Math.sin(a)) * v * gk.dir;
+              b.vz = 1 + this.rng() * 2;
+            }
             b.last = gk;
             b.lastTeam = gk.sd;
             this.lock = { q: gk, until: this.t + 0.4 };
@@ -1329,8 +1350,10 @@
         if (this.rng() < 0.55 + q.a.pos * 0.25) {
           this.ev('block', { pid: q.id, sd: q.sd, vs: s.q.id });
           if (this.has(q, 'シュートブロック')) this.useTr(q, 'シュートブロック');
-          const a = Math.atan2(b.vy, b.vx) + Math.PI + (this.rng() - 0.5) * 2.4;
-          const v = 3 + this.rng() * 7;
+          // 4割はそのまま後ろへそれてゴールラインを割る（コーナー）、残りは前へはね返る
+          const behind = this.rng() < 0.4;
+          const a = Math.atan2(b.vy, b.vx) + (behind ? (this.rng() < 0.5 ? 0.9 : -0.9) + (this.rng() - 0.5) * 0.4 : Math.PI + (this.rng() - 0.5) * 2.4);
+          const v = behind ? 8 + this.rng() * 6 : 3 + this.rng() * 7;
           b.vx = Math.cos(a) * v;
           b.vy = Math.sin(a) * v;
           b.vz = this.rng() * 3;
@@ -1388,7 +1411,19 @@
           q.nd = 3;
           return this.shoot(q, {});
         }
-        // はね返す
+        // はね返す（自陣の箱の中では、3割はそらしてゴールラインの外へ）
+        if (this.inOwnBox(q) && Math.abs(q.x - W / 2) > 6 && this.rng() < 0.35) {
+          const side = q.x < W / 2 ? -1 : 1;
+          b.vx = side * (6 + this.rng() * 5);
+          b.vy = -q.dir * (5 + this.rng() * 4);
+          b.vz = 2 + this.rng() * 2;
+          b.last = q;
+          b.lastTeam = q.sd;
+          this.flight = null;
+          this.lock = { q, until: this.t + 0.4 };
+          this.ev('header', { pid: q.id, sd: q.sd, clear: true });
+          return;
+        }
         const a = Math.atan2(q.dir, (this.rng() - 0.5) * 1.5);
         const v = 8 + q.a.hea * 6;
         b.vx = Math.cos(a) * v * 0.6;

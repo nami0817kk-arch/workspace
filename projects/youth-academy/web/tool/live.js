@@ -115,4 +115,19 @@ if (process.env.TAC !== '0') {
   ok(wide.spread > narrow.spread + 4, '幅の戦術が横の広がりに出ない');
   ok(hp.near < lp.near - 0.3, 'プレスの戦術が寄せの近さに出ない');
 }
+// 交代と戦術の変更が動きに入る（60分に交代し、最後のコマに入った子がいて、出た子がいない）
+{
+  const home = YA.makeOurs(1);
+  const m = new YA.Match({ seed: 4, home, away: YA.makeOpponent(YA.OPPONENTS[1], 10), settings: { autoStop: false, live: true, record: true } });
+  let g = 0;
+  while (m.min < 60 && g++ < 2000) m.step();
+  const out = home.lineup[5].pid;
+  const inn = Object.keys(home.players).find((id) => !home.onPitch.has(id) && m.canSub(home, out, id).ok);
+  m.substitute(home, out, inn);
+  m.setTactic(home, { press: 0.95 });
+  while (!m.finished && g++ < 4000) m.step();
+  const last = m.live.frames[m.live.frames.length - 1];
+  ok(last.ro.includes(inn) && !last.ro.includes(out) && last.ro.length === 22, '交代が動きに入らない');
+  ok(home.players[inn].st.minutes > 20 && home.players[out].st.minutes < 70, '交代した子の出場時間');
+}
 process.exitCode = fails ? 1 : 0;
