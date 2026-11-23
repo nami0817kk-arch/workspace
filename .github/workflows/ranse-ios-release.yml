@@ -45,6 +45,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      # ITMS-90725: 2027年4月から、iOS 27 SDK（Xcode 27）以降でビルドしたものでないと App Store Connect に上げられない。
+      # ランナーの既定の Xcode は古いことがある（2026-11-23 は 26.5 だった）ので、入っている中でいちばん新しい
+      # 正式版の Xcode（ベータ・RC は除く）を選ぶ。27 以降が無ければ、既定のまま警告を出して続ける。
+      - name: Select the newest Xcode
+        run: |
+          echo "ランナーの Xcode:"
+          ls -d /Applications/Xcode*.app
+          X=$(ls -d /Applications/Xcode_*.app | grep -viE 'beta|rc|release_candidate' | sort -V | tail -1)
+          if [ -n "$X" ]; then
+            sudo xcode-select -s "$X/Contents/Developer"
+          fi
+          xcodebuild -version
+          SDK=$(xcrun --sdk iphoneos --show-sdk-version)
+          echo "iOS SDK: $SDK"
+          if [ "${SDK%%.*}" -lt 27 ]; then
+            echo "::warning::iOS SDK が $SDK です。2027年4月からは iOS 27 SDK（Xcode 27）以降でないと App Store Connect に上げられません（ITMS-90725）。"
+          fi
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
