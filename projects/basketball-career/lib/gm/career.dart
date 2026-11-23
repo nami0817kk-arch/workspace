@@ -1023,11 +1023,24 @@ class Career {
   }
 
   /// 知らせに返事をする。返事ごとの効き目(選手の気持ち・先発の順)をここで起こす。
+  /// いま返事ができるか(時期が限られた知らせは、時期を過ぎると答えられない)。
+  bool canAnswer(Message m) {
+    if (!m.needsAnswer) return false;
+    if (m.kind == MsgKind.ownerGoal) return m.season == season && phase == Phase.season && block == 0;
+    if (m.kind == MsgKind.press) return m.season == season && phase == Phase.season;
+    return true;
+  }
+
+  /// 答える時期を過ぎた記者の質問を、はぐらかしたことにして閉じる(効き目は付けない)。
+  void _closeStalePress() {
+    for (final m in inbox) {
+      if (m.kind == MsgKind.press && m.needsAnswer && !canAnswer(m)) m.answer = m.choices.length - 1;
+    }
+  }
+
   void answer(int id, int choice) {
     final m = inbox.where((x) => x.id == id).firstOrNull;
-    if (m == null || !m.needsAnswer || choice < 0 || choice >= m.choices.length) return;
-    if (m.kind == MsgKind.ownerGoal && (m.season != season || phase != Phase.season || block > 0)) return;
-    if (m.kind == MsgKind.press && (m.season != season || phase != Phase.season)) return;
+    if (m == null || !canAnswer(m) || choice < 0 || choice >= m.choices.length) return;
     m
       ..answer = choice
       ..read = true;
@@ -3245,6 +3258,7 @@ class Career {
     if (block <= tradeDeadlineBlock && rng.chance(0.5)) _aiTrades(1);
     if (block >= blocksPerSeason) {
       phase = Phase.playoffs;
+      _closeStalePress();
     } else if (rng.chance(0.6)) {
       _makeIncoming();
     }
@@ -6260,6 +6274,8 @@ class Career {
     c._fillPicks(c.phase == Phase.contracts ? c.season + 1 : c.season);
     c.refreshPickScales();
     c.me.familiar = c.familiarity;
+    // 前の版の保存には、答える時期を過ぎたまま残った記者の質問がある(押しても何も起きなかった)
+    c._closeStalePress();
     return c;
   }
 
