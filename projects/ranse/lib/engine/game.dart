@@ -21,6 +21,7 @@ import 'history_rumor.dart';
 import 'history_west.dart';
 import 'life.dart';
 import 'lords.dart';
+import 'oku_life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
 import 'regions.dart';
@@ -93,6 +94,7 @@ class Game extends ChangeNotifier {
       ...buildAshigaruScenes(),
       ...buildAshigaruLifeScenes(),
       ...buildRetainerLifeScenes(),
+      ...buildOkuLifeScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
