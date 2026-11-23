@@ -332,6 +332,22 @@ void main() {
     }
   });
 
+  test('掛け合わせる・遠征（0.7.38・試作 v54・v55）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      'function breedChild(a,b)', // 生まれる種の決め方
+      "if(A.line!=B.line)return {sp:'chimera',env:'sp'};", // 養分と魔分はキメラ
+      'if(g.breed&&breedTap(', // 相手をタップして選ぶ
+      'var BREED_COST=10,BREED_CD=30,BREED_T=20;', // 養分10・30秒休む・20秒で卵
+      '<div id="expd"></div>', // 一覧の遠征の欄
+      'function expChance(ms)', // 見込み
+      'if(g.exp)expBack();', // 波を守り切ると帰る
+      'var EXP_MAX=3,', // 3匹まで
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
