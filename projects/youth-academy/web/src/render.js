@@ -1997,6 +1997,12 @@
         const by = 6;
         const bh2 = 9;
         const fh = bw * this.flow;
+        // 帯の下（名前の札の高さぶん下まで）に選手かボールがいるときは薄くして、下が見えるようにする（2026-11-23：タッチライン際の子と名前が隠れていた）
+        let under = false;
+        for (const id of Object.keys(this.disp)) { const q = P(this.disp[id][0], this.disp[id][1]); if (q[0] > bx - 50 && q[0] < bx + bw + 16 && q[1] < by + bh2 + 30) { under = true; break; } }
+        { const q = P(this.ball[0], this.ball[1]); if (q[0] > bx - 50 && q[0] < bx + bw + 16 && q[1] < by + bh2 + 20) under = true; }
+        const fa = (this._flowA = (this._flowA == null ? 1 : this._flowA) + ((under ? 0.3 : 1) - (this._flowA == null ? 1 : this._flowA)) * 0.2);
+        ctx.globalAlpha = fa;
         ctx.fillStyle = 'rgba(10,18,30,.75)';
         this.rr(ctx, bx - 36, by - 4, bw + 40, bh2 + 8, 8);
         ctx.fill();
@@ -2012,6 +2018,7 @@
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(bx + bw / 2 - 0.75, by - 2, 1.5, bh2 + 4);
         ctx.textBaseline = 'alphabetic';
+        ctx.globalAlpha = 1;
       }
       if (m) this.drawSides(ctx, P, kits);
       // 早送りの印（場面の入り）
