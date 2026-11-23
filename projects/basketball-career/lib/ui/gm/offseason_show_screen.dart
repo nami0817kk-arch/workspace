@@ -73,8 +73,12 @@ Future<void> showFaDayReport(NavigatorState nav, GmController c, FaDayReport r) 
       BidOutcome.pending => (
           Icons.hourglass_top_rounded,
           GmColors.gold,
-          '${b.name}はまだ迷っている。見込み ${_pct(b.chanceBefore)} → ${_pct(b.chanceAfter)}'
-              '${b.rivalsAfter > b.rivalsBefore ? '(新しく${b.rivalsAfter - b.rivalsBefore}チームが申し込んだ)' : ''}'
+          // 見込みは「ほかのチームと比べて選ばれる見込み」。ほかに申し込みが無いと100%になり、
+          // 「まだ迷っている。見込み100%」と食い違って見えた(2026-11-23)
+          b.rivalsAfter == 0
+              ? '${b.name}はまだ返事をしていない。申し込みは自分のチームだけ(このまま返事が来れば取れる)'
+              : '${b.name}はまだ迷っている。ほかのチームより選ばれる見込み ${_pct(b.chanceBefore)} → ${_pct(b.chanceAfter)}'
+                  '${b.rivalsAfter > b.rivalsBefore ? '(新しく${b.rivalsAfter - b.rivalsBefore}チームが申し込んだ)' : ''}'
         ),
       BidOutcome.dropped => (Icons.remove_circle_outline_rounded, GmColors.sub, '${b.name}への申し込みは取り消しになった(人数か年俸の枠が足りない)'),
     };
