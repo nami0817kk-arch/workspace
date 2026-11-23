@@ -1,7 +1,10 @@
-// 一続きの試合（live.js）の再生（2026-11-23）。描き方は render.js の draw をそのまま使い、
-// 位置は live.js が残した記録（10コマ/秒）を補間して置く。動きを作り足すことはしない。
-//   合間：記録を等倍で流す（試合の時計は先に進むので、合間の絵は少し前の本当のプレー）。
-//   見どころ：その攻めの始まりへ切り替えて（一瞬暗く）、シュートの結末まで流す。終わったらその続きから流す。
+// 一続きの試合（live.js）の見せ方（2026-11-24 作り直し）。
+// 「試合の動き変だよ」→ 動きで見せるのをやめ、実況と場面の図で見せる（ユーザー決定）。
+// 22人が本物らしく動く絵は作りきれなかった。試合の中身（結果・成績・特性・戦術の効き）は live.js のまま。
+//   見どころ：シュートの瞬間の全員の位置を止めた図に、攻めの道筋（パス＝実線・浮き球＝破線・運んだ所＝点線・シュート＝黄色）を
+//            順に引く。ボールは線の上を進む。選手は動かさない。
+//   合間：両チームの並びを止めた図（ボールは出さない）。試合の流れは上のバーと実況で伝える。
+// 描き方は render.js の draw をそのまま使う（disp・trails・focus を置くだけ）。
 (function () {
   'use strict';
   const YA = globalThis.YA;
@@ -13,7 +16,9 @@
   const baseUpdate = R.update;
   const baseStart = R.startScene;
   const baseEnd = R.endScene;
-  const isLive = (r) => !!(r.match && r.match.live && r.match.live.record);
+  const baseDraw = R.draw;
+  const isLive = (r) => !!(r.match && r.match.live);
+  const OFF = [-200, -200, 0]; // ボールを出さないときの置き場（画面の外）
   R.update = function (dt) {
     if (!isLive(this)) return baseUpdate.call(this, dt);
     this.liveStep(dt);
@@ -25,11 +30,36 @@
     this.pre = null;
     this.celeb = null;
     this.flash = 0;
-    if (Math.abs((this.fc || 0) - sc.live.t0) > 0.6) this.cut = 0.35;
-    this.fc = sc.live.t0;
-    this.focus = [sc.shooter, sc.assist].filter(Boolean);
-    this.defFocus = sc.gk ? [sc.gk] : [];
+    this.cut = 0.3;
     this.trails = [];
+    this._step = 0;
+    this._seg = null;
+    this.focus = [sc.shooter, sc.assist].filter(Boolean);
+    this.defFocus = [];
+    this.capText = null;
+    // 選手はシュートの瞬間の位置で止める
+    const m = this.match;
+    const lv = m.live;
+    const disp = {};
+    const base = {};
+    for (const [id, x, y] of sc.live.snap || []) {
+      const w = lv.who[id] || { sd: 'home', gk: false };
+      const cur = lv.byId[id];
+      disp[id] = [x, y];
+      base[id] = [x, y, w.sd === 'home' ? m.home : m.away, cur ? cur.i : w.gk ? 0 : 50, cur ? cur.s : null];
+    }
+    this.disp = disp;
+    this.base = base;
+    this.vel = {};
+    this.owner = null;
+    this.fl = {};
+    const p0 = sc.live.path && sc.live.path[0];
+    this.ball = p0 ? [p0.from[0], p0.from[1], 0] : OFF.slice();
+    this.bh = [];
+    this.poss = sc.side;
+    // 見る場所：道筋とゴールが入る所
+    const ys = (sc.live.path || []).reduce((a, s) => a.concat([s.from[1], s.to[1]]), [sc.side === 'home' ? L : 0]);
+    this._camY = clamp((Math.min(...ys) + Math.max(...ys)) / 2, 26, L - 26);
   };
   R.endScene = function () {
     if (!isLive(this)) return baseEnd.call(this);
@@ -38,156 +68,125 @@
     this.defFocus = [];
     this.celeb = null;
     this.capText = null;
+    this.trails = [];
+    this.cut = 0.25;
+    this._idle = false;
   };
-  // 記録の中の時刻 fc の位置へ
-  R.liveFrameAt = function (fc) {
-    const F = this.match.live.frames;
-    if (!F.length) return null;
-    let i = this._fi || 0;
-    if (i >= F.length) i = F.length - 1;
-    while (i > 0 && F[i].t > fc) i--;
-    while (i < F.length - 1 && F[i + 1].t <= fc) i++;
-    this._fi = i;
-    return i;
+  // 合間：並びを止めた図
+  R.liveIdle = function () {
+    const m = this.match;
+    const bp = this.basePositions();
+    const disp = {};
+    const base = {};
+    for (const id of Object.keys(bp)) {
+      const b = bp[id];
+      const home = b[2] === m.home;
+      // 両チームが重ならないよう、自陣側へ寄せて置く（ホームは左、アウェイは右）
+      const y = home ? 4 + (b[1] - 4) * 0.56 : L - 4 - (L - 4 - b[1]) * 0.56;
+      disp[id] = [b[0], y];
+      base[id] = [b[0], y, b[2], b[3], b[4]];
+    }
+    this.disp = disp;
+    this.base = base;
+    this.vel = {};
+    this.owner = null;
+    this.fl = {};
+    this.ball = OFF.slice();
+    this.bh = [];
+    this.trails = [];
+    this._idle = true;
+    this._idleKey = m.home.lineup.map((s) => s.pid + ':' + s.x + ':' + s.y).join() + '|' + m.away.lineup.map((s) => s.pid).join();
   };
   R.liveStep = function (dt) {
     const m = this.match;
-    const lv = m.live;
-    const F = lv.frames;
     this.clock = (this.clock || 0) + dt;
-    if (!F.length) return;
-    const prev = this.fc == null ? F[0].t : this.fc;
-    if (this.scene && this.scene.live) {
-      this.t += dt;
-      this.fc = this.scene.live.t0 + this.t;
-    } else {
-      this.fc = prev + dt;
-    }
-    // 記録の先（まだ動かしていない所）へは行かない
-    const lastT = F[F.length - 1].t;
-    if (this.fc > lastT - 0.05) this.fc = lastT - 0.05;
-    if (this.fc < F[0].t) this.fc = F[0].t;
-    const fc = this.fc;
-    // 見終わった記録は捨てる（iPhone のメモリのため。全90分を残すと約17MB）。見どころは今より先の攻めの始まりから
-    // 再生するので、40秒より前は二度と使わない
-    if (F.length > 1200 && F[600].t < fc - 40) {
-      F.splice(0, 600);
-      this._fi = Math.max(0, (this._fi || 0) - 600);
-    }
-    const i = this.liveFrameAt(fc);
-    const f0 = F[i];
-    const f1 = F[Math.min(i + 1, F.length - 1)];
-    const span = f1.t - f0.t;
-    const k = span > 1e-6 && f0.rv === f1.rv ? clamp((fc - f0.t) / span, 0, 1) : 0;
-    // 置き直し（再開・後半・交代）で位置が大きく飛ぶ所は一瞬暗くする
-    if (f0.rv !== this._rv) {
-      this._rv = f0.rv;
-      this.cut = Math.max(this.cut || 0, 0.25);
-    }
-    const disp = {};
-    const vel = {};
-    const base = {};
-    const ro = f0.ro;
-    for (let j = 0; j < ro.length; j++) {
-      const id = ro[j];
-      const x = f0.p[j * 2] + (f1.p[j * 2] - f0.p[j * 2]) * k;
-      const y = f0.p[j * 2 + 1] + (f1.p[j * 2 + 1] - f0.p[j * 2 + 1]) * k;
-      disp[id] = [x, y];
-      vel[id] = span > 1e-6 ? [(f1.p[j * 2] - f0.p[j * 2]) / span, (f1.p[j * 2 + 1] - f0.p[j * 2 + 1]) / span] : [0, 0];
-      const w = lv.who[id] || { sd: 'home', gk: false };
-      const cur = lv.byId[id];
-      base[id] = [x, y, w.sd === 'home' ? m.home : m.away, cur ? cur.i : w.gk ? 0 : 50, cur ? cur.s : null]; // [3] は並びの番号（0＝GK。横の名簿の順）
-      // 大きく飛んだ（置き直し）
-      const o = this.disp && this.disp[id];
-      if (o && Math.hypot(o[0] - x, o[1] - y) > 6 && !this.scene) this.cut = Math.max(this.cut || 0, 0.3);
-    }
-    this.disp = disp;
-    this.vel = vel;
-    this.base = base;
-    const b0 = f0.b;
-    const b1 = f1.b;
-    this.ball = [b0[0] + (b1[0] - b0[0]) * k, b0[1] + (b1[1] - b0[1]) * k, Math.max(0, b0[2] + (b1[2] - b0[2]) * k)];
-    this.owner = f0.o >= 0 ? ro[f0.o] : null;
-    this.fl = this.owner ? null : {};
-    this.poss = this.owner ? lv.who[this.owner] && lv.who[this.owner].sd : this.poss;
-    // 出来事：蹴った線・体の動き・GK の飛びつき（前のコマから今までに起きたもの）
-    const E = lv.events;
-    let ei = this._ei || 0;
-    if (fc < prev - 0.01) {
-      // 戻った（見どころの頭へ）：その時刻の出来事の位置まで戻す
-      while (ei > 0 && E[ei - 1].t > fc) ei--;
-    } else {
-      while (ei < E.length && E[ei].t <= fc) {
-        const e = E[ei++];
-        if (e.t <= prev) continue;
-        this.liveEvent(e);
+    if (this.cut > 0) this.cut = Math.max(0, this.cut - dt);
+    const c = this.cam;
+    const sc = this.scene && this.scene.live ? this.scene : null;
+    if (!sc) {
+      const key = m.home.lineup.map((s) => s.pid + ':' + s.x + ':' + s.y).join() + '|' + m.away.lineup.map((s) => s.pid).join();
+      if (!this._idle || key !== this._idleKey) this.liveIdle();
+      // 流れのバー：直近（20秒ぶんの保持）のボールの持ち方
+      const ps = m.live.poss;
+      const tot = ps.home + ps.away;
+      const last = this._ps || { h: 0, t: 0 };
+      if (tot - last.t > 20) {
+        this._flowT = clamp((ps.home - last.h) / Math.max(1, tot - last.t), 0.2, 0.8);
+        this._ps = { h: ps.home, t: tot };
       }
+      const want = this._flowT == null ? 0.5 : this._flowT;
+      this.flow = this.flow == null ? 0.5 : this.flow + (want - this.flow) * (1 - Math.exp(-dt / 1.5));
+      this.flash = 0;
+      c.zoom += (1 - c.zoom) * (1 - Math.exp(-dt * 3));
+      c.cy += (L / 2 - c.cy) * (1 - Math.exp(-dt * 3));
+      c.cx += (W / 2 - c.cx) * (1 - Math.exp(-dt * 3));
+      return;
     }
-    this._ei = ei;
-    for (const tr of this.trails) tr.life -= dt * (this.owner ? 1.2 : 0.35);
-    this.trails = this.trails.filter((tr) => tr.life > 0);
-    if (this.dive) {
-      this.dive.t += dt;
-      if (this.dive.t > this.dive.end + 0.3) this.dive = null;
+    this.t += dt;
+    const path = sc.live.path || [];
+    // 線を順に引く
+    while (this._step < path.length && this.t >= path[this._step].at) {
+      const st = path[this._step++];
+      this.trails.push({ from: st.from, to: st.to, kind: st.type === 'shot' ? 'shot' : st.type === 'loft' ? 'loft' : st.type === 'carry' ? 'carry' : 'pass', life: 1, keep: true });
+      const p = m.home.players[st.pid] || m.away.players[st.pid];
+      if (p && st.type !== 'carry') this.capText = { text: p.num + '番 ' + (st.type === 'shot' ? 'シュート' : st.kind === 'cross' ? 'クロス' : st.kind === 'through' ? 'スルーパス' : st.type === 'loft' ? '浮き球' : 'パス'), t: 0 };
+      this._seg = { st, t0: this.t, done: false };
+    }
+    // ボールは、いま引いた線の上を進む（0.6秒。シュートは0.4秒）
+    if (this._seg) {
+      const g = this._seg;
+      const k = clamp((this.t - g.t0) / (g.st.type === 'shot' ? 0.4 : 0.6), 0, 1);
+      const z = g.st.type === 'loft' ? Math.sin(k * Math.PI) * 3 : 0;
+      this.ball = [g.st.from[0] + (g.st.to[0] - g.st.from[0]) * k, g.st.from[1] + (g.st.to[1] - g.st.from[1]) * k, z];
+      if (k >= 1 && g.st.type === 'shot' && !g.done) {
+        g.done = true;
+        if (g.st.res === 'goal') {
+          this.flash = 1;
+          this.noteNet();
+          if (sc.scorer) this.celeb = { scorer: sc.scorer, spot: this.disp[sc.scorer] || [34, 52], mates: [], t: 0 };
+        }
+      }
     }
     if (this.celeb) this.celeb.t += dt;
-    if (this.cut > 0) this.cut = Math.max(0, this.cut - dt);
-    if (this.flash > 0 && !(this.scene && this.scene.goal)) this.flash = Math.max(0, this.flash - dt);
-    this.noteNet();
-    // 流れのバー：直近のボールの持ち方
-    const own = this.owner ? (lv.who[this.owner] && lv.who[this.owner].sd === 'home' ? 1 : 0) : null;
-    this.flow = this.flow == null ? 0.5 : this.flow;
-    if (own != null) this.flow = clamp(this.flow + (own - this.flow) * (1 - Math.exp(-dt / 25)), 0.2, 0.8);
-    const sd = (this.strd = this.strd || {});
-    for (const id of Object.keys(vel)) sd[id] = (sd[id] || 0) + Math.hypot(vel[id][0], vel[id][1]) * dt;
-    this.stepRefs(dt);
-    this.bh = this.bh || [];
-    this.bh.push(this.ball.slice());
-    if (this.bh.length > 6) this.bh.shift();
-    if (this.cut > 0.3) this.bh = [];
-    // 見る場所
-    const c = this.cam;
-    const kk = 1 - Math.exp(-dt * 2.2);
-    const zw = this.scene ? 1.45 : 1;
-    c.zoom += (zw - c.zoom) * (1 - Math.exp(-dt * 1.6));
-    c.cy += (this.ball[1] - c.cy) * kk;
-    c.cx += (this.ball[0] - c.cx) * kk;
-    if (this.cut > 0.3) {
-      c.cy = this.ball[1];
-      c.cx = this.ball[0];
-    }
     if (this.capText) this.capText.t += dt;
+    this.flash = Math.max(0, (this.flash || 0) - dt * 0.6);
+    // 見る場所はピッチ全体のまま動かさない（寄ると、外へ開いたパスが画面から切れた）
+    c.zoom = 1;
+    c.cy = L / 2;
+    c.cx = W / 2;
   };
-  R.liveEvent = function (e) {
-    const d = this.disp || {};
+  // 図の上に、パスを出した所の番号を小さく添える（選手はシュートの瞬間の位置に止めてあるので、出した所は別に示す）
+  R.draw = function () {
+    baseDraw.call(this);
+    if (!isLive(this) || !this.scene || !this.scene.live || !this.ctx) return;
+    const ctx = this.ctx;
+    const { s, P } = this.view();
     const m = this.match;
-    const P = (pid) => (m.home.players[pid] || m.away.players[pid] || null);
-    if (e.k === 'kick') {
-      if (e.kind !== 'shot') this.trails.push({ from: [e.x, e.y], to: [e.tx, e.ty], kind: e.loft ? 'loft' : 'pass', life: 1 });
-      else this.trails.push({ from: [e.x, e.y], to: [e.tx, e.ty], kind: 'shot', life: 1 });
-      if (d[e.pid]) this.pose(e.pid, 'kick', [e.tx - d[e.pid][0], e.ty - d[e.pid][1]]);
-      if (this.scene && (e.kind === 'through' || e.kind === 'cross')) {
-        const p = P(e.pid);
-        if (p) this.capText = { text: p.num + '番 ' + (e.kind === 'cross' ? 'クロス' : 'スルーパス'), t: 0 };
-      }
-    } else if (e.k === 'header') {
-      if (d[e.pid]) this.pose(e.pid, 'jump', [0, 1]);
-    } else if (e.k === 'tackle' && e.ok) {
-      const v = d[e.vs];
-      if (d[e.pid] && v) this.pose(e.pid, 'slide', [v[0] - d[e.pid][0], v[1] - d[e.pid][1]]);
-    } else if (e.k === 'save') {
-      const g = d[e.pid];
-      if (g) this.dive = { id: e.pid, t: 0, t0: 0, dur: 0.22, end: 0.65, from: g.slice(), tgt: [this.ball[0], this.ball[1]] };
-    } else if (e.k === 'shot') {
-      const p = P(e.pid);
-      if (p && this.scene) this.capText = { text: p.num + '番 ' + (e.head ? 'ヘディング' : 'シュート'), t: 0 };
-    } else if (e.k === 'goal') {
-      this.flash = 1;
-      const sc = this.scene;
-      const sid = (sc && sc.scorer) || e.pid;
-      if (sid && d[sid]) this.celeb = { scorer: sid, spot: d[sid], mates: [], t: 0 };
+    const path = this.scene.live.path || [];
+    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    for (let i = 0; i < Math.min(this._step || 0, path.length); i++) {
+      const st = path[i];
+      if (st.type === 'carry') continue;
+      const p = m.home.players[st.pid] || m.away.players[st.pid];
+      if (!p) continue;
+      const cur = this.disp[st.pid];
+      // 出した所が、いまの位置（シュートの瞬間）から離れているときだけ
+      if (cur && Math.hypot(cur[0] - st.from[0], cur[1] - st.from[1]) < 3) continue;
+      const q = P(st.from[0], st.from[1]);
+      const r = Math.max(7, s * 1.5);
+      ctx.fillStyle = 'rgba(15,25,40,.82)';
+      ctx.beginPath();
+      ctx.arc(q[0], q[1], r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.9)';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '800 ' + Math.round(r * 1.05) + 'px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(p.num), q[0], q[1] + 0.5);
+      ctx.textBaseline = 'alphabetic';
     }
   };
-  void L;
-  void W;
 })();

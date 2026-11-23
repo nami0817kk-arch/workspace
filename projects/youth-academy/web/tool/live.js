@@ -54,6 +54,13 @@ for (let s = 1; s <= N; s++) {
   if (process.env.V) console.log(s, g.home + '-' + g.away, 'shots', lv.events.filter((e) => e.k === 'shot').length, '見どころ', lv.m.scenes.length, '記録の点', lv.m.score.home + '-' + lv.m.score.away);
   ok(lv.m.score.home === g.home && lv.m.score.away === g.away, '得点の数が記録と合わない ' + s);
   ok(lv.m.scenes.filter((sc) => sc.goal).length === g.home + g.away, '得点の見どころが得点の数と合わない ' + s);
+  // 場面の図の素：道筋があり、シュートの場面は最後がシュートの線、全員の位置がある
+  for (const sc of lv.m.scenes) {
+    const p = sc.live && sc.live.path;
+    ok(p && sc.live.snap && sc.live.snap.length >= 14, '場面の図の位置が無い ' + s);
+    if (sc.shooter && p && sc.outcome !== 'goal' || (sc.goal && sc.actors.shooter)) ok(p.length && p[p.length - 1].type === 'shot', '場面の図の最後がシュートでない ' + s + ' ' + sc.type);
+    for (const st of p || []) ok(st.at > 0 && st.at < sc.dur && isFinite(st.from[0] + st.from[1] + st.to[0] + st.to[1]), '場面の図の線がおかしい ' + s);
+  }
 }
 const per = (k) => (sum[k] / N).toFixed(1);
 const ms = (Date.now() - t0) / N;
