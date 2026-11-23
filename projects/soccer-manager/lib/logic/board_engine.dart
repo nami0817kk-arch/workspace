@@ -213,16 +213,16 @@ class BoardEngine {
     if (currentRank <= targetRank) {
       return Tr.pick(
           '理事会からシーズン中盤レビュー: 現在$currentRank位と好調な滑り出しです。このまま$targetRank位以内を目指してください。',
-          'Mid-season review from the board: $currentRank is a strong start. Keep it up and finish in the top $targetRank.');
+          'Mid-season review from the board: ${Tr.ordinal(currentRank)} is a strong start. Keep it up and ${targetRank <= 1 ? 'win the league' : 'finish in the top $targetRank'}.');
     }
     if (currentRank > targetRank + 3) {
       return Tr.pick(
           '理事会からシーズン中盤レビュー: 現在$currentRank位と目標の$targetRank位を大きく下回っています。残り試合での早急な立て直しを求めます。',
-          'Mid-season review from the board: $currentRank is well short of the target of $targetRank. They want it turned around, quickly.');
+          'Mid-season review from the board: ${Tr.ordinal(currentRank)} is well short of the target (${Tr.topTarget(targetRank)}). They want it turned around, quickly.');
     }
     return Tr.pick(
         '理事会からシーズン中盤レビュー: 現在$currentRank位。目標の$targetRank位以内に向けて、引き続き注視しています。',
-        'Mid-season review from the board: $currentRank. They are still watching, with the top $targetRank as the target.');
+        'Mid-season review from the board: ${Tr.ordinal(currentRank)}. They are still watching, with ${targetRank <= 1 ? 'the title' : 'the top $targetRank'} as the target.');
   }
 
   /// 資金がマイナスのまま連続した週数がこの値に達するたびに信頼度が下がる。

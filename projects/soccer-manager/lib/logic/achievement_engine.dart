@@ -99,7 +99,7 @@ class AchievementEngine {
           id: 'wins_50',
           category: AchievementCategory.record,
           name: Tr.pick('通算50勝', '50 Wins'),
-          description: Tr.pick('監督として通算50勝を挙げる', 'Reach 50 wins as a manager'),
+          description: Tr.pick('オーナーとしてリーグ戦で通算50勝を挙げる', 'Reach 50 league wins as an owner'),
           isUnlocked: (save, team) => save.careerWins >= 50,
           progress: (save, team) => (save.careerWins, 50),
         ),
@@ -108,7 +108,8 @@ class AchievementEngine {
           category: AchievementCategory.record,
           name: Tr.pick('通算100勝', '100 Wins'),
           description:
-              Tr.pick('監督として通算100勝を挙げる', 'Reach 100 wins as a manager'),
+              Tr.pick('オーナーとしてリーグ戦で通算100勝を挙げる',
+                  'Reach 100 league wins as an owner'),
           isUnlocked: (save, team) => save.careerWins >= 100,
           progress: (save, team) => (save.careerWins, 100),
         ),
@@ -117,34 +118,35 @@ class AchievementEngine {
           category: AchievementCategory.record,
           name: Tr.pick('通算200勝', '200 Wins'),
           description:
-              Tr.pick('監督として通算200勝を挙げる', 'Reach 200 wins as a manager'),
+              Tr.pick('オーナーとしてリーグ戦で通算200勝を挙げる',
+                  'Reach 200 league wins as an owner'),
           isUnlocked: (save, team) => save.careerWins >= 200,
           progress: (save, team) => (save.careerWins, 200),
         ),
         Achievement(
           id: 'seasons_5',
           category: AchievementCategory.record,
-          name: Tr.pick('監督歴5シーズン', 'Five Seasons'),
+          name: Tr.pick('オーナー歴5シーズン', 'Five Seasons'),
           description: Tr.pick(
-              '同一クラブで5シーズンを指揮する', 'Manage the same club for five seasons'),
+              'オーナーとして通算5シーズンを過ごす', 'Own a club for five seasons in all'),
           isUnlocked: (save, team) => save.careerSeasons >= 5,
           progress: (save, team) => (save.careerSeasons, 5),
         ),
         Achievement(
           id: 'seasons_10',
           category: AchievementCategory.record,
-          name: Tr.pick('監督歴10シーズン', 'Ten Seasons'),
+          name: Tr.pick('オーナー歴10シーズン', 'Ten Seasons'),
           description: Tr.pick(
-              '同一クラブで10シーズンを指揮する', 'Manage the same club for ten seasons'),
+              'オーナーとして通算10シーズンを過ごす', 'Own a club for ten seasons in all'),
           isUnlocked: (save, team) => save.careerSeasons >= 10,
           progress: (save, team) => (save.careerSeasons, 10),
         ),
         Achievement(
           id: 'win_rate_60',
           category: AchievementCategory.record,
-          name: Tr.pick('高勝率監督', 'A Winning Record'),
-          description: Tr.pick('通算20試合以上を指揮し、勝率60%以上を記録する',
-              'Manage 20 or more matches at a win rate of 60% or better'),
+          name: Tr.pick('高勝率クラブ', 'A Winning Record'),
+          description: Tr.pick('オーナーとしてリーグ戦を通算20試合以上戦い、勝率60%以上を記録する',
+              'Win 60% or more of at least 20 league matches as an owner'),
           isUnlocked: (save, team) {
             final total =
                 save.careerWins + save.careerDraws + save.careerLosses;
@@ -203,7 +205,7 @@ class AchievementEngine {
           category: AchievementCategory.management,
           name: Tr.pick('サポーターの絶大な期待', "The Supporters' Faith"),
           description: Tr.pick(
-              'サポーターの期待が90に到達する', 'Reach 90 supporter expectation'),
+              'サポーターの期待が90に到達する', 'Lift supporter expectation to 90'),
           isUnlocked: (save, team) => save.confidence >= 90,
           progress: (save, team) => (save.confidence, 90),
         ),
@@ -303,42 +305,27 @@ class AchievementEngine {
           progress: (save, team) => (save.breakthroughCount, 10),
         ),
 
-        // --- 監督キャリア ---
+        // --- オーナー歴 ---
         Achievement(
           id: 'veteran_manager',
           category: AchievementCategory.career,
           name: Tr.pick('百戦錬磨', 'Battle Hardened'),
           description: Tr.pick(
-              '同一クラブで15シーズンを指揮する', 'Manage the same club for fifteen seasons'),
+              'オーナーとして通算15シーズンを過ごす', 'Own a club for fifteen seasons in all'),
           isUnlocked: (save, team) => save.careerSeasons >= 15,
           progress: (save, team) => (save.careerSeasons, 15),
         ),
         Achievement(
           id: 'reputation_elite',
           category: AchievementCategory.career,
-          name: Tr.pick('世界的名将', 'World Renowned'),
+          name: Tr.pick('世界に名高いオーナー', 'World Renowned'),
           description: Tr.pick('世間の評価が90に到達する', 'Reach a reputation of 90'),
           isUnlocked: (save, team) => save.managerReputation >= 90,
           progress: (save, team) => (save.managerReputation, 90),
         ),
-        Achievement(
-          id: 'live_wins_10',
-          category: AchievementCategory.career,
-          name: Tr.pick('采配の妙', 'Master of the Touchline'),
-          description: Tr.pick('ライブ観戦(決定機の判断あり)で通算10勝する',
-              'Win ten matches watching live and calling the big chances'),
-          isUnlocked: (save, team) => save.liveWins >= 10,
-          progress: (save, team) => (save.liveWins, 10),
-        ),
-        Achievement(
-          id: 'shootout_winner',
-          category: AchievementCategory.career,
-          name: Tr.pick('PK戦を制す', 'Nerves of Steel'),
-          description: Tr.pick(
-              'ライブ観戦のカップ戦でPK戦を制する', 'Win a cup shootout while watching live'),
-          isUnlocked: (save, team) => save.pkShootoutWins >= 1,
-          progress: (save, team) => (save.pkShootoutWins, 1),
-        ),
+        // ライブ観戦で決定機を判断する「采配の妙」と、ライブ観戦のPK戦の
+        // 「PK戦を制す」は外した(2026-11-23)。オーナー型では試合を観戦して
+        // 采配する場面が無く、どちらも達成できなかった。
       ];
 
   /// まだ未達成の実績のうち、現在のセーブデータの状態で新たに条件を

@@ -21,7 +21,7 @@ extension StaffAttributeInfo on StaffAttribute {
   String get description => switch (this) {
         StaffAttribute.coaching => Tr.pick(
             'トレーニングで選手をどれだけ伸ばせるか。ヘッドコーチ・ユースコーチ・フィットネスコーチに効く。',
-            'How much players gain from training. Matters for the head coach, youth coach and fitness coach.'),
+            'How much players gain from training. Matters for the first-team coach, youth coach and fitness coach.'),
         StaffAttribute.judging => Tr.pick(
             '選手の実力と伸びしろを見抜く精度。スカウトとユースコーチに効く。',
             'How accurately he reads a player\'s ability and potential. Matters for scouts and the youth coach.'),

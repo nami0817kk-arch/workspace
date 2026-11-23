@@ -76,9 +76,7 @@ class ClubValueCard extends StatelessWidget {
                               'Season ${history[i].$1}'))),
                       Text(
                         i > 0
-                            ? Tr.pick(
-                                '${formatMoney(history[i].$2)} (${history[i].$2 - history[i - 1].$2 >= 0 ? '+' : ''}${history[i].$2 - history[i - 1].$2})',
-                                '${formatMoney(history[i].$2)} (${history[i].$2 - history[i - 1].$2 >= 0 ? '+' : ''}${history[i].$2 - history[i - 1].$2})')
+                            ? '${formatMoney(history[i].$2)} (${formatMoneySigned(history[i].$2 - history[i - 1].$2)})'
                             : formatMoney(history[i].$2),
                         style: TextStyle(
                           color: i > 0 &&

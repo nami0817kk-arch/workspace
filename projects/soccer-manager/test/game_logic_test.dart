@@ -8392,8 +8392,7 @@ void main() {
     final glossaryTerms = glossaryEntries.map((e) => e.term).toSet();
     for (final term in [
       '決定機',
-      '采配方針',
-      'ライブ交代',
+      '試合中の交代',
       'モメンタム(試合の流れ)',
       'クイック消化',
       '値切り交渉',
@@ -8411,11 +8410,16 @@ void main() {
     }
     expect(glossaryTerms, isNot(contains('契約残り週数')),
         reason: '週数ベースの契約は年単位へ移行済みで、用語集も追随している');
+    // オーナー型の試合は監督任せ。観戦中に選ぶ機能(試合前の確認・
+    // チームトーク・采配方針)は無いので、用語集にも載せない(2026-11-23)。
+    for (final gone in ['試合前の確認', 'チームトーク', '采配方針', 'ライブ交代']) {
+      expect(glossaryTerms, isNot(contains(gone)));
+    }
     expect(
       glossaryEntries
           .where((e) => e.category == GlossaryCategory.liveMatch)
           .length,
-      greaterThanOrEqualTo(5),
+      greaterThanOrEqualTo(4),
     );
   });
 
@@ -8678,8 +8682,6 @@ void main() {
       'bargain_hunter',
       'cup_prize_1000',
       'breakthrough_10',
-      'live_wins_10',
-      'shootout_winner',
     };
 
     Set<String> unlockedIds() =>

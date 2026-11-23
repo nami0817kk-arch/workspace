@@ -141,7 +141,7 @@ extension GameStatePeople on GameState {
       s.managerWarned = true;
       _logNews(
           Tr.pick('${m.name}監督の立場が危うい、と報じられている(目標$managerTarget位・いま$rank位)。続けるか替えるかはオーナー次第。',
-              'The press say ${m.name} is under pressure (target ${_ordinal(managerTarget)}, now ${_ordinal(rank)}). Whether he stays is your call.'),
+              'The press say ${m.name} is under pressure (target ${Tr.ordinal(managerTarget)}, now ${Tr.ordinal(rank)}). Whether he stays is your call.'),
           context: Tr.pick('スタッフ', 'Staff'));
     }
   }
@@ -190,16 +190,6 @@ extension GameStatePeople on GameState {
             '${p.name} has asked to leave, saying you broke your word ($why).'),
         context: Tr.pick('選手', 'Players'));
   }
-
-  String _ordinal(int n) => switch (n % 100) {
-        11 || 12 || 13 => '${n}th',
-        _ => switch (n % 10) {
-            1 => '${n}st',
-            2 => '${n}nd',
-            3 => '${n}rd',
-            _ => '${n}th',
-          },
-      };
 
   /// 季の終わり: 監督の経歴に今季を足し、目標を果たしたら立場を上げる。
   /// 目標は「戦力どおり」に戻す(新しい季に改めて伝える)。
