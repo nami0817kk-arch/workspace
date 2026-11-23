@@ -316,8 +316,12 @@ void main() {
         final s = gs.save!;
         final parent = s.league.teams.firstWhere((t) => t.id != s.userTeamId);
         final clock = Player.contractClockYear;
-        final loanee = PlayerGenerator.generate(
-            position: Position.st, strengthTier: 30, ageOverride: 40)
+        // 名前で確かめるので、自クラブの満了の選手と同じ名前にならない
+        // よう固有の名前にする(CI で同名の別人と重なった)。
+        final generated = PlayerGenerator.generate(
+            position: Position.st, strengthTier: 30, ageOverride: 40);
+        final loanee = Player.fromJson(
+            {...generated.toJson(), 'name': 'テスト借用選手$round'})
           ..isLoan = true
           ..loanFromClubId = parent.id
           ..loanEndDate = DateTime(clock, 6, 30)
