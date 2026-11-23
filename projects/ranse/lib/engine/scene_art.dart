@@ -15,6 +15,9 @@ const kSceneArts = <String>[
   'tea', // 茶室（嗜み）
   'temple', // 山寺（仏門）
   'winter', // 冬の村（飢え・病・災い）
+  'sea', // 漁村の浜（漁民）
+  'smith', // 刀鍛冶の仕事場（職人）
+  'mountain', // 炭焼きの山（山の民）
 ];
 
 bool _any(String s, List<String> words) => words.any(s.contains);
@@ -37,6 +40,17 @@ String? sceneArtFor(Game g, String? id, String title) {
     return 'battle';
   }
   if (g.isChild) return 'child';
+  // 庶民の生業（craft_life.dart の cr_）。町人は市の絵。
+  if (i.startsWith('cr_u_') || _any(t, ['浜', '網元', '寄り鯨', '塩浜', '沖'])) {
+    return 'sea';
+  }
+  if (i.startsWith('cr_y_') || _any(t, ['炭焼き', '山の神', '木地'])) {
+    return 'mountain';
+  }
+  if (i.startsWith('cr_k_') || _any(t, ['鍛冶', '弟子入り'])) {
+    return 'smith';
+  }
+  if (i.startsWith('cr_t_')) return 'market';
   if (i.startsWith('a_') || i.startsWith('al_')) return 'camp';
   if (i.startsWith('sh_') || _any(t, ['忍', '刺客', '野盗', '追手', '獲物', '山狩り'])) {
     return 'ninja';
