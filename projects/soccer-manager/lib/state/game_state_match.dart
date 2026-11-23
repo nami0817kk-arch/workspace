@@ -361,7 +361,7 @@ extension GameStateMatch on GameState {
         _noteSupporterMove(
             delta,
             Tr.pick('季の途中の理事会レビュー($preMatchRank位・目標${_save!.boardTargetRank}位)',
-                'Mid-season review ($preMatchRank, target ${_save!.boardTargetRank})'));
+                'Mid-season review (${Tr.ordinal(preMatchRank)}, target: ${Tr.topTarget(_save!.boardTargetRank)})'));
         _save!.boardReviewDoneThisSeason = true;
       }
     }
@@ -1109,9 +1109,14 @@ extension GameStateMatch on GameState {
               'シーズン${league.season} 月間最優秀監督賞($label)',
               'Season ${league.season} Manager of the Month ($label)'));
           lastMonthlyManagerAward = label;
+          // 賞を受けるのは雇っている監督。プレイヤー(オーナー)ではない。
+          final manager = currentManager?.name;
           _logNews(
-              Tr.pick('月間最優秀監督賞を受賞($label)!',
-                  'You won Manager of the Month ($label)!'),
+              Tr.pick(
+                  manager == null
+                      ? 'クラブの監督が月間最優秀監督賞を受賞($label)!'
+                      : '監督の$managerが月間最優秀監督賞を受賞($label)!',
+                  '${manager ?? 'Your manager'} won Manager of the Month ($label)!'),
               context: Tr.pick('表彰', 'Award'));
         }
         _save!.lastManagerOfMonthCheckpoint = f.matchday;
@@ -1217,7 +1222,11 @@ extension GameStateMatch on GameState {
   /// 実績を達成したシーズン番号(未達成の場合はnull)。
   int? achievementUnlockedSeason(String id) => _save?.unlockedAchievements[id];
 
-  int get unlockedAchievementCount => _save?.unlockedAchievements.length ?? 0;
+  /// 今ある実績のうち達成済みの数。外した実績(ライブ観戦の2つ。2026-11-23)
+  /// の記録が古いセーブに残っていても数えない。
+  int get unlockedAchievementCount => AchievementEngine.all
+      .where((a) => isAchievementUnlocked(a.id))
+      .length;
 
   /// ライブ観戦せず、前半・後半を一括で消化して確定結果のみを返す
   /// (クイックシム)。ユーザーの試合がない、またはシーズンが既に終了して

@@ -95,7 +95,7 @@ extension GameStateEraGroup on GameState {
       _logNews(
           Tr.pick(
               '持っている$nameは${idx + 1}位。私財に${profit >= 0 ? '+' : ''}${formatMoney(profit)}。',
-              'Your club $name finished ${idx + 1}th: ${profit >= 0 ? '+' : ''}${formatMoney(profit)} to your wealth.'),
+              'Your club $name finished ${Tr.ordinal(idx + 1)}: ${profit >= 0 ? '+' : ''}${formatMoney(profit)} to your wealth.'),
           context: Tr.pick('グループ', 'Group'));
     }
   }

@@ -29,7 +29,7 @@ class ClubCultureCard extends StatelessWidget {
               title: Tr.pick('クラブの文化', 'Club identity'),
               help: Tr.pick(
                   '文化に沿った試合のたびにサポーターの期待+1。変えられるのは1季に1回で、決めたものから変えると期待-${ClubCultureEngine.changePenalty}。',
-                  'Each match that fits the identity adds 1 to fan faith. You can change it once a season; switching away costs ${ClubCultureEngine.changePenalty}.'),
+                  'Each match that fits the identity adds 1 to supporter expectation. You can change it once a season; switching away costs ${ClubCultureEngine.changePenalty}.'),
             ),
             Text(current.description, style: small),
             const SizedBox(height: 8),

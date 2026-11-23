@@ -82,7 +82,7 @@ List<GuideSection> get guideSections => [
             title: Tr.pick('理事会の目標順位', "The board's target"),
             description: Tr.pick(
                 'シーズン開始時に理事会から示される目標順位。これを下回る成績が続くとサポーターの期待が下がり、0になるとクラブを手放すことになる。ホーム画面の順位表示と見比べて、順位が目標に届いているか確認する。',
-                'The finishing position the board asks for at the start of the season. Sitting below it for long wears down the supporters, and if their faith hits zero you have to sell the club. Check it against the position shown on the home screen.'),
+                'The finishing position the board asks for at the start of the season. Sitting below it for long wears down supporter expectation, and if it hits zero you have to sell the club. Check it against the position shown on the home screen.'),
           ),
           GuideTopic(
             title: Tr.pick('通知バッジ', 'Notification badges'),
@@ -109,7 +109,7 @@ List<GuideSection> get guideSections => [
             title: Tr.pick('2つの期待', 'Two expectations'),
             description: Tr.pick(
                 'サポーターの期待は成績と人気で、株主の期待は収支で動きます。クラブを手放すことになるのは、サポーターの期待が尽きたときと、資金が尽きたとき(借金がその部の年収の半分を超えたとき)の2つだけです。オーナーは雇われる立場ではないので、契約の満了で辞めさせられることはありません。',
-                'Fan expectation follows results and popularity; shareholder expectation follows the books. Only two things can force you to sell the club: the fans losing all faith, or the money running out (debts above half a season\'s typical income for your division). You own the club, so no contract can run out on you.'),
+                'Supporter expectation follows results and popularity; shareholder expectation follows the books. Only two things can force you to sell the club: supporter expectation hitting zero, or the money running out (debts above half a season\'s typical income for your division). You own the club, so no contract can run out on you.'),
           ),
           GuideTopic(
             title: Tr.pick('進むボタン(日付で進む)', 'The advance button'),

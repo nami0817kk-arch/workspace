@@ -150,7 +150,7 @@ class TrendsCard extends StatelessWidget {
       TrendChart(
         title: Tr.pick('順位(全部の部を通した位置)', 'Position across all divisions'),
         points: rank,
-        format: (v) => Tr.pick('${v.round()}番目', 'no. ${v.round()}'),
+        format: (v) => Tr.pick('${v.round()}番目', Tr.ordinal(v.round())),
         lowerIsBetter: true,
         color: scheme.primary,
       ),

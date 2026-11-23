@@ -47,6 +47,9 @@ class _SquadTableState extends State<SquadTable> {
 
   static const double _rowHeight = 34;
 
+  /// 疲労の列の幅。英語は見出しを「Fatigue」と略さずに出すので広げる。
+  static double get _fatigueWidth => Tr.isEnglish ? 56 : 28;
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -80,7 +83,7 @@ class _SquadTableState extends State<SquadTable> {
               head(Tr.pick('位置', 'Pos'), width: 40, key: 'pos'),
               head(Tr.pick('年', 'Age'), width: 26, key: 'age'),
               head(Tr.pick('総合', 'OVR'), width: 34, key: 'ovr'),
-              head(Tr.pick('疲', 'Fat'), width: 28, key: 'fat'),
+              head(Tr.pick('疲', 'Fatigue'), width: _fatigueWidth, key: 'fat'),
               head(Tr.pick('契約', 'Term'), width: 34, key: 'term'),
               head(Tr.pick('年俸', 'Salary'), width: 52, key: 'wage'),
             ],
@@ -166,7 +169,7 @@ class _SquadTableState extends State<SquadTable> {
                 width: 34,
                 child: Center(child: OverallBadge(overall: p.overall))),
             SizedBox(
-              width: 28,
+              width: _fatigueWidth,
               child: Text('${p.fatigue}',
                   textAlign: TextAlign.center,
                   style: small.copyWith(
@@ -176,7 +179,7 @@ class _SquadTableState extends State<SquadTable> {
               width: 34,
               child: Text(
                   p.isLoan
-                      ? Tr.pick('借', 'Ln')
+                      ? Tr.pick('借', 'Loan')
                       : ContractEngine.untilTinyLabel(p.contractEndYear),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,

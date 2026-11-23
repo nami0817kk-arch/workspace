@@ -78,7 +78,7 @@ class OwnerEventOption {
 extension OwnerEventInfo on OwnerEventKind {
   String get title => switch (this) {
         OwnerEventKind.transferDemand =>
-          Tr.pick('エースが移籍を要求', 'Your ace demands a transfer'),
+          Tr.pick('エースが移籍を要求', 'Your star player hands in a transfer request'),
         OwnerEventKind.sponsorExit =>
           Tr.pick('スポンサーが撤退をほのめかす', 'A sponsor hints at pulling out'),
         OwnerEventKind.managerClash =>
@@ -116,7 +116,7 @@ extension OwnerEventInfo on OwnerEventKind {
   String get body => switch (this) {
         OwnerEventKind.transferDemand => Tr.pick(
             '他クラブの誘いを受けたエースが、移籍を求めています。残すか、手放すか。',
-            'Courted by another club, your ace wants out. Keep him or cash in?'),
+            'Courted by another club, your star man wants out. Keep him or cash in?'),
         OwnerEventKind.sponsorExit => Tr.pick('成績への不満から、主要スポンサーが契約の見直しを求めています。',
             'Unhappy with results, a main sponsor wants to renegotiate.'),
         OwnerEventKind.managerClash => Tr.pick(
@@ -153,13 +153,13 @@ extension OwnerEventInfo on OwnerEventKind {
             'A new sponsor offers big money in return for a major kit change.'),
         OwnerEventKind.staffDispute => Tr.pick(
             'ヘッドコーチとフィットネスコーチが、練習の方針で対立しています。',
-            'The head coach and the fitness coach disagree over training.'),
+            'The first-team coach and the fitness coach disagree over training.'),
         OwnerEventKind.injuryCrisis => Tr.pick(
             '主力が長期離脱します。急いで補強するか、いる戦力で乗り切るか。',
             'A key man is out for a long time. Rush a signing or ride it out?'),
         OwnerEventKind.broadcastTalks => Tr.pick(
             '放映権の再交渉が始まりました。強気に出るか、安定を取るか。',
-            'Broadcast talks have reopened. Push hard or take security?'),
+            'Broadcast talks have reopened. Push hard or settle for security?'),
         OwnerEventKind.taxChange => Tr.pick('自治体の税制が変わり、スタジアムの負担が増えます。',
             'A tax change raises the stadium\'s burden.'),
         OwnerEventKind.execScandal => Tr.pick('経営陣の1人に不祥事が報じられました。処分するか、擁護するか。',
@@ -313,7 +313,7 @@ extension OwnerEventInfo on OwnerEventKind {
           ],
         OwnerEventKind.staffDispute => [
             OwnerEventOption(
-                label: Tr.pick('ヘッドコーチの方針を採る', 'Back the head coach'),
+                label: Tr.pick('ヘッドコーチの方針を採る', 'Back the first-team coach'),
                 supportersDelta: 2,
                 shareholdersDelta: -1),
             OwnerEventOption(
@@ -351,7 +351,7 @@ extension OwnerEventInfo on OwnerEventKind {
                 shareholdersDelta: -3,
                 fundsDelta: -350),
             OwnerEventOption(
-                label: Tr.pick('チケット代に転嫁する', 'Pass it to ticket prices'),
+                label: Tr.pick('チケット代に転嫁する', 'Pass it on through ticket prices'),
                 supportersDelta: -4,
                 shareholdersDelta: 2),
           ],

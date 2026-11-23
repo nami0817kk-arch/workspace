@@ -172,7 +172,7 @@ extension GameStateRivals on GameState {
             '${Tr.plural(agreed, 'deal')} agreed with clubs: talk to the player'),
       if (s.staffOffers.isNotEmpty)
         Tr.pick('スタッフの引き抜きの話が${s.staffOffers.length}件',
-            '${s.staffOffers.length} approach(es) for your staff'),
+            '${Tr.plural(s.staffOffers.length, 'approach', 'approaches')} for your staff'),
       if (s.pendingSponsorOffers.isNotEmpty)
         Tr.pick('スポンサーを選んでいません', 'Pick a sponsor'),
     ];

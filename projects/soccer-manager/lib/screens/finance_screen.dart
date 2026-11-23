@@ -225,7 +225,7 @@ class FinanceScreen extends StatelessWidget {
                           title: Text(inst.description),
                           subtitle: Text(inst.annual
                               ? Tr.pick('残り${inst.weeksRemaining}回(季の締めに払う)',
-                                  '${inst.weeksRemaining} payments left (at each season end)')
+                                  '${Tr.plural(inst.weeksRemaining, 'payment')} left (at each season end)')
                               : Tr.pick('残り${inst.weeksRemaining}週',
                                   '${Tr.plural(inst.weeksRemaining, 'week')} left')),
                           trailing: Text(inst.annual
