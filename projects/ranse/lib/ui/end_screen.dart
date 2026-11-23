@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../app/controller.dart';
 import '../engine/ending.dart';
 import '../engine/game.dart';
+import '../engine/remembrance.dart';
 import '../engine/rng.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -20,6 +21,7 @@ class EndScreen extends StatelessWidget {
     final child = g.age < 15;
     final e = buildEnding(g);
     final aj = g.avgJoy;
+    final remembered = remembrances(g);
     final head = child ? '幼き命' : (l.victory ? '天下統一' : '一生の終わり');
     return Scaffold(
       body: SafeArea(
@@ -99,6 +101,26 @@ class EndScreen extends StatelessWidget {
                         child: Text(
                           p,
                           style: const TextStyle(fontSize: 14, height: 1.5),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+            // 人々が覚えていたこと（`remembrance.dart`）。何もなければ出さない。結果を写す文には入れない。
+            if (remembered.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Panel(
+                title: '遺されたもの',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final r in remembered)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text(
+                          r,
+                          style: const TextStyle(fontSize: 14, height: 1.6),
                         ),
                       ),
                   ],

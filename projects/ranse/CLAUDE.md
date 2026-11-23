@@ -610,6 +610,32 @@
 - 実測（手元、3000人生・ランダムな選択／考えて選ぶ。縁は自然に持たせたまま）: 成人の約35%が幼なじみ、64%／95%が師を持つ。一の段に出会うのは 幼なじみ約16%・好敵手30〜40%・師32〜47%・連れ合い13〜21%、
   段ごとにおよそ半分ずつ減り、最後の段まで届くのは成人の1%前後（長生きした人生だけ）。
 
+## 遺されたもの（2026-11-23）
+
+才能・嗜み・女性の暮らし・縁・国・戦・寺・家族で立てた旗の多くが最期の画面に何も出ず、遊んだ選択が一生の終わりに返ってこなかったので、
+「人々が覚えていたこと」を一行ずつ出すようにした（`lib/engine/remembrance.dart`）。
+- `remembrances(g)` が行の一覧を返す（`rememberedEntries(g)` は行の定義ごと。テストが使う）。**旗と行の対応の置き場所は `kRemembrances`**（候補286行。
+  id は旗の名そのもの。条件から作った行だけ `focus_tera`・`tal_fushin_castle`・`bd_ms_keepsake_sword`・`many_kids` などの名）。
+- 重み（1〜6.5）の高い順に**最大5行**（`kRemembranceMax`）。同じ組（`group`。幼なじみ・好敵手の終わり・師・連れ合い・武・茶 など）からは一番重い一行だけ。何もなければ空。
+- **15歳前に亡くなった子には、子ども向けの行（`child: true`。寺の手習い・道場・子犬・暴れ馬・白い鹿・国の子どもの岐路など37）だけ**。大人にも重みを低めにして出る。
+- 文は各旗を立てる岐路の文（選択肢・結果・`mark()`）を読んで書いた。同じ旗で中身が二通りのもの（縄張りか堤か `tal_fushin`・検地の厳しさ `tal_kenchi`・形見が刀か書か `bd_ms_keepsake`・
+  富士の頂か女人の登れるところまでか）は、`l.path` の `mark()` の文字で見分ける（**これらの `mark()` を変えるときは `remembrance.dart` も grep する**）。
+  教えを伝える約束（`bd_ms_vow`）も `bd_ms_keepsake` を立てるので、形見を持ち続けた行にはしない。名物の茶碗は、差し出した（`e2_gave_meibutsu`）なら手放さなかった行にしない。
+  名は、いまいる人（`l.people` の幼なじみ・好敵手・伴侶・侍女）と、亡くなった師の旗 `bd_ms_name:<名>` から差し込む。連れ合いの名は、いまも夫婦のときだけ。
+- 終わりの画面（`end_screen.dart`）の「歩んだ道」の下に「遺されたもの」パネル（空なら出さない）。**「結果を写す」の文（`shareText`）には入れていない**。
+  既存の `mark()`・`die()`・最期の文は変えていない（`audit_endings.py` は3件のまま）。
+- テスト（`test/remembrance_test.dart`）: 候補80以上・id 重複なし・旗の行の旗がゲーム側（`lib/engine`）に文字列としてある／400人生（ランダムと考えて選ぶを半々）で
+  最大5行・重複なし・空なし・半角全角の数字なし・同じ組から二行出ない・重み順・子どもには子ども向けの行だけ／主な旗を立てた Game で対応する行が出る／名の差し込み／
+  道の文での見分け／重みの押し出し／子どもと何もない人生は空。手元で engine を写した純 Dart で通した（CI は未確認）。
+- 実測（手元、2000人生・ランダムと考えて選ぶを半々）: 1行以上出たのは 1482（74%。出ないのはほぼ5歳前に亡くなった人生）、成人 1378／1383（99.6%）、
+  5〜14歳で亡くなった子 104／145（72%）。行数は 5行 875・4行 178・3行 181・2行 150・1行 98・0行 518。出た行は 228／286 種。
+  出なかった行は、城主以上・奉行・女の家督争い・幼なじみの終わり（敵方・病の床）・国の岐路の一部など、自動の選び方では届きにくいもの。
+- **行にしていない旗**（意味が薄い・ほかの行と重なる・選ばなかった側）: `wl_letter_read`・`wl_house_plea`／`bd_os_letters/half/suspected/avoided/to_rival`・
+  `bd_rv_foul/yield/passed/helped/last_bout/draw/refused_duel/peace/won_case/feud/bowed/dead`・`bd_ms_coin/shallow/forgot/deep`・`bd_sp_own/yield/alone/inlaws/sent`／
+  `rg_owari_wait/ford`・`rg_mino_washi_tera`・`rg_kamiari_kazoku`・`rg_kashima`・`rg_c_onbashira`／`tm_paid_honzan`・`tm_atome_lost`・`tm_goke_home`／
+  `fa_eboshi_self`・`fa_uijin_kept`・`fa_hostage_sent/refused`・`fa_couple_cold`・`fa_lost_child`／`tal_envied`・`tal_karo_grudge`（御前試合・殿の覚えの行に含めた）。
+  伏線の回収（`e_`・`e2_`・`e3_`）の旗は `e2_gave_meibutsu` のほかは使っていない。
+
 ## 手書きの最期（2026-11-23、品質改善ループ33回目から）
 
 - 仕組み: `lib/engine/endings_catalog.dart` の `EndingDef`（id・道・死に方・希少度 `Tier`・称号・最期の文・条件・細かさ `spec`）。
