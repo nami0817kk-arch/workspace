@@ -1335,7 +1335,7 @@ extension GameStateSeason on GameState {
     for (final l in _save!.foreignLeagues.values) {
       for (final t in l.teams) {
         for (final p in t.players) {
-          OffscreenDevelopment.apply(p, offscreenRng);
+          OffscreenDevelopment.apply(p, offscreenRng, tier: 1);
         }
         _generatingFor(
             t,
@@ -1344,9 +1344,10 @@ extension GameStateSeason on GameState {
       }
     }
     for (final t in _save!.allTeams) {
-      for (final p in t.players) {
-        if (!activeIds.contains(t.id)) {
-          OffscreenDevelopment.apply(p, offscreenRng);
+      if (!activeIds.contains(t.id)) {
+        final tier = _cpuTierOf(t);
+        for (final p in t.players) {
+          OffscreenDevelopment.apply(p, offscreenRng, tier: tier);
         }
       }
       // CPUクラブは自クラブ(userTeam、下でRetirementEngine.resolveRetirements
