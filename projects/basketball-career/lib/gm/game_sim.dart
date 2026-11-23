@@ -107,6 +107,13 @@ class SimTeam {
   /// いまが接戦の終盤か(4Q残り5分・8点差以内、と延長)。
   bool crunch = false;
 
+  /// 後半の大差(0〜1)。リードしている側は主力を下げて緩み、負けている側は粘る(ガベージタイム)。
+  /// 本物のリーグで50点差がほぼ起きないのはこのため(2026-11-23、6000試合で50点差が1.7%出ていた)。
+  double blowout = 0;
+
+  /// [blowout] の向き(+1 リードしている、-1 負けている)。
+  int blowoutSide = 0;
+
   /// 試合ごとの調子を決める(試合の乱数で)。
   void rollForm(Rng r) {
     form = [for (final p in order) (r.nextInt(2001) - 1000) / 1000 * formRange(p) - wearSlump(p)];
@@ -597,6 +604,9 @@ SimResult simulateGame(Team home, Team away, Rng r,
       }
       final before = o.pts;
       o.crunch = period >= 4 || (period == 3 && clock <= 300 && (hScore - aScore).abs() <= 8);
+      final m = offense == 0 ? hScore - aScore : aScore - hScore;
+      o.blowout = period >= 2 && period < 4 ? ((m.abs() - 22) / 18).clamp(0.0, 1.0) * (period == 3 ? 1.0 : 0.6) : 0.0;
+      o.blowoutSide = m.sign;
       final ev = record ? PlayEvent(
               period: period,
               clockStart: clock + used,
@@ -684,7 +694,8 @@ void _possession(SimTeam o, SimTeam d, Rng r, void Function(String)? play, [Play
     o.matchups[m.index]++;
     d.matchups[m.index]++;
   }
-  final edge = diff * edgePerStrength;
+  // 後半の大差では、強さの差が薄れ、リードしている側が少し緩む
+  final edge = diff * edgePerStrength * (1 - 0.7 * o.blowout) - o.blowoutSide * o.blowout * 0.03;
   final press = d.press; // 0 中を固める / 2 前から当たる
   final focus = o.focus; // 0 外 / 2 中
   final share = o.share; // 0 エース任せ / 2 パス回し
