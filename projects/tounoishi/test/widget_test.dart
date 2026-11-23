@@ -305,6 +305,19 @@ void main() {
     expect(html, isNot(contains('f*400+y*20+x')), reason: '20マス前提の番号が残っている');
   });
 
+  test('1本指は盤のスクロール、「掘る」ボタンの間だけ掘る（0.7.36・試作 v52）', () {
+    final html = File(gameAsset).readAsStringSync();
+    for (final s in [
+      '<button id="zdig" aria-pressed="false">', // 掘るボタン
+      'function setDig(on)', // 押すまで続く切り替え
+      'pan:!DIG', // ボタンが消えていれば指で盤を動かす
+      'function focusCore()', // 最初はコアのあたりを今までのマスの大きさで
+      "document.getElementById('zdig').onclick=", // ボタンで切り替える
+    ]) {
+      expect(html, contains(s), reason: s);
+    }
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること

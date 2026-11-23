@@ -74,7 +74,7 @@ h1{margin:0 0 6px;font-size:15px}
 .stage canvas{width:100%}
 .zoom{position:absolute;right:6px;bottom:6px;display:flex;gap:5px}
 .zoom button{min-width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.35);background:rgba(20,16,10,.62);color:#fff;font:600 15px system-ui,sans-serif;padding:0 8px;cursor:pointer}
-.zoom button[hidden]{display:none}
+.zoom button[hidden]{display:none}.zoom #zdig{margin-right:6px}.zoom #zdig.on{background:#e8b84a;color:#2a1c08;border-color:#ffe39a;box-shadow:0 0 0 2px rgba(255,220,120,.45)}
 .row{margin-top:6px}
 .btn{min-height:44px;padding:6px 2px}
 #msg{margin-top:6px;font-size:12.5px;min-height:2.6em;line-height:1.5}
@@ -155,7 +155,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <h3>目的</h3>
 あなたは姿の見えない<b>塔の意志</b>。土を掘るとモンスターが生まれ、モンスターが冒険者から<b>コア</b>（最上階の金の玉）を守ります。コアを入口まで運び出されたら負け。6つの波を守り切ると塔が1階伸び、どこまで高く積めるかに挑みます。
 <h3>操作</h3>
-・<b>掘る</b>：掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。1マスに掘る力を1使う。<br>
+・<b>見る</b>：1本指でなぞると盤が動く。2本指で拡大・縮小、「全体」で全体が見える。<br>・<b>掘る</b>：右下の「⛏ 掘る」を押して光らせてから、掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。もう一度押すまで掘る状態が続く。1マスに掘る力を1使う。<br>
 ・<b>モンスターをタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱ったモンスターを間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
 ・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）・<b>罠を置く</b>（掘る力3・塔全体で5つまで。踏んだ冒険者に15の傷と1秒の足止め）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>・<b>コアの光</b>：1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒のあいだ半分にする。<br>
 ・<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる（最上階に冒険者がいない間）。<br>
@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v51</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v52</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -196,7 +196,7 @@ canvas{-webkit-user-select:none;user-select:none}
 <div class="yubar" id="yubar" hidden></div>
 <div class="bnr" id="bnr" hidden></div>
 <div class="pop" id="pop" hidden></div>
-<div class="zoom"><button id="zfit" hidden>全体</button><button id="zout" hidden aria-label="縮小">－</button><button id="zin" aria-label="拡大">＋</button></div>
+<div class="zoom"><button id="zdig" aria-pressed="false">⛏ 掘る</button><button id="zfit" hidden>全体</button><button id="zout" hidden aria-label="縮小">－</button><button id="zin" aria-label="拡大">＋</button></div>
 </div>
 <div class="row">
  <button class="btn go" id="go">今すぐ迎える</button>
@@ -510,7 +510,7 @@ function newGame(diff){
   msg:'準備の時間です(時間は止まっています)。土を掘って、モンスターを生ませよう。',dp:DIFF[diff||'normal'].dp0,calm:{},dung:[],burn:[],illus:[],pher:[],nests:[],circles:[],torches:[],slv:{},roundT0:0,armyStart:0,dug:0,tut:tutDone()?null:0};
  for(f=0;f<F;f++)carve(f,PATHS[f]);
  g.yu=newYu();
- over=false;resetGo();setSpeed(0);buildTabs();coreSay('start',true);ui();
+ over=false;resetGo();setSpeed(0);buildTabs();coreSay('start',true);setDig(false);focusCore();ui();
 }
 // 守り切ったら塔を1階伸ばす。今の階・掘った道・モンスターはそのまま
 function grow(){
@@ -521,7 +521,7 @@ function grow(){
  g.grid.push(genFloor(f));carve(f,GROW[g.round%2]);g.seedT.push(0);
  g.round++;g.wave=0;g.cd=120;g.spawnQ=[];g.done=false;g.winSave=0;g.trail={};
  var C=g.core;C.f=f;C.x=COREX;C.y=COREY;C.hx=C.hy=null;C.home=true;C.carrier=null;C.dropT=0;
- g.view=f;over=false;resetGo();setSpeed(0);buildTabs();
+ g.view=f;over=false;resetGo();setSpeed(0);buildTabs();focusCore();
  var nl=landOf(f),pl=landOf(f-1),nj=jobsUnlocked(),add='',items=[];
  if(nl!=pl){add+=' 新しい土地「'+ENV[nl].n+'の層」が現れた！ '+ENV[nl].n+'の種が生まれる。';items.push('新しい土地「'+ENV[nl].n+'の層」。'+ENV[nl].n+'の種が生まれる');}
  if(nj.length&&(g.round-2)<=NEWJOBS.length){var jk=nj[nj.length-1];add+=' 新しい職業「'+EN[jk].n+'」が来るようになった（'+JOBDESC[jk]+'）。';items.push('新しい職業「'+EN[jk].n+'」：'+JOBDESC[jk]);}
@@ -1136,7 +1136,7 @@ window.__saveNow=saveGame;
 function loadGame(k){
  k=k||'tou-save';var s=kvGet(k);if(!s)return false;
  try{
-  var o=JSON.parse(s);setN(o.N||20);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];
+  var o=JSON.parse(s);setN(o.N||20);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];setDig(false);focusCore();
   if(g.grid&&g.grid[0]&&Array.isArray(g.grid[0][0]))g.grid=g.grid.map(function(fl){return fl.map(function(a){var c={env:ENVS[a[0]],nut:a[1],mag:a[2],open:!!a[3],dt:a[4],chest:!!a[5]};if(a[6]>=0)c.spore=ENVS[a[6]];if(a[7])c.sk=1;return c;});});
   g.bub=[];if(g.dp===undefined)g.dp=100;g.calm=g.calm||{};['dung','burn','illus','pher','nests','circles','torches'].forEach(function(k){g[k]=g[k]||[];});g.slv=g.slv||{};if(g.roundT0===undefined){g.roundT0=g.t;g.armyStart=0;}g.chal=null;
   g.en.forEach(function(e){if(e.poiBy)e.poiBy=g.cr.filter(function(m){return m.id===e.poiBy;})[0]||null;});
@@ -1811,7 +1811,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v51 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v52 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2318,7 +2318,7 @@ function advice(){
 // 朝・昼・夕・夜（4分で一回り。見た目だけ）
 function phase(){var p=((g&&g.t)||0)%240/240;return p<0.1?'朝':p<0.55?'昼':p<0.65?'夕':'夜';}
 // 最初の数分のヒント
-var TUT=[['道の隣の土をなぞって掘ろう。白っぽい模様の土ほど養分が多い',function(){return (g.dug||0)>=3;}],
+var TUT=[['右下の「⛏ 掘る」を押してから、道の隣の土をなぞって掘ろう。白っぽい模様の土ほど養分が多い',function(){return (g.dug||0)>=3;}],
  ['モンスターが生まれた！ もう少し掘って仲間を増やそう',function(){return g.cr.length>=6;}],
  ['準備ができたら「今すぐ迎える」。早く呼ぶほど、次に戻る掘る力が増える',function(){return g.wave>=1;}],
  ['冒険者は、入った時に掘ってあった道を探す。枝道や行き止まりで迷わせよう',function(){return (g.kills||0)>=1;}],
@@ -2470,9 +2470,11 @@ document.getElementById('bsnd').onclick=function(){
 sndLabel();
 document.addEventListener('visibilitychange',function(){if(!SND.ac)return;if(document.hidden)SND.ac.suspend();else if(SND.on)SND.ac.resume();});
 // ---- 盤面の操作（v11）----
-// 1本指: 触れた・なぞったマスに印 → 指を離すとまとめて掘る。最初のマスへ戻すと取り消し
+// 1本指: ふだんは盤を動かす。「掘る」を押している間は、なぞったマスに印 → 指を離すとまとめて掘る
 // 2本指: 広げて拡大・動かして移動。PC はホイールで拡大、Shift+ドラッグで移動
-var W0=N*CS,ptrs={},path=null,pinch=null,HL=null,lpT=0;
+var W0=N*CS,ptrs={},path=null,pinch=null,HL=null,lpT=0,DIG=false;
+function setDig(on){DIG=!!on;var b=document.getElementById('zdig');if(b){b.classList.toggle('on',DIG);b.setAttribute('aria-pressed',DIG?'true':'false');}}
+function focusCore(){if(typeof W0!='number')return;ZM=Math.max(1,N/20);var v=W0/ZM,C=g.core;OX=C.x*CS+CS/2-v/2;OY=C.y*CS+CS/2-v/2;clampCam();zoomBtns();}
 function clampCam(){var v=W0/ZM;OX=Math.max(0,Math.min(W0-v,OX));OY=Math.max(0,Math.min(W0-v,OY));}
 function zoomBtns(){document.getElementById('zout').hidden=ZM<=1.001;document.getElementById('zfit').hidden=ZM<=1.001;document.getElementById('zin').hidden=ZM>=ZMAX-0.001;}
 function setZoom(z,lx,ly){var nz=Math.max(1,Math.min(ZMAX,z));if(lx===undefined){lx=OX+W0/ZM/2;ly=OY+W0/ZM/2;}
@@ -2503,13 +2505,14 @@ cv.addEventListener('pointerdown',function(ev){
  if(Object.keys(ptrs).length>=2){path=null;startPinch();draw();return;}
  if(ev.shiftKey&&ZM>1){pinch={pan:1,id:ev.pointerId,m:logicalOf(ev.clientX,ev.clientY)};return;}
  if(over||(ev.button&&ev.button>0))return;
- var p=cellOf(ev);path={f:g.view,cells:[],first:p[0]+','+p[1],left:false,cancel:false};
+ var p=cellOf(ev);path={f:g.view,cells:[],first:p[0]+','+p[1],left:false,cancel:false,pan:!DIG,sx:ev.clientX,sy:ev.clientY,m:logicalOf(ev.clientX,ev.clientY)};
  clearTimeout(lpT);closePop();var lpF=g.view,lpX=ev.clientX,lpY=ev.clientY;lpT=setTimeout(function(){if(!path||pinch||path.left||g.view!=lpF||over)return;var ms=crAt(lpF,p[0],p[1]),c=cellAt(lpF,p[0],p[1]);
   if(ms.length){HL=ms.filter(function(o){return o.hero;})[0]||ms[0];say(spName(HL)+'：緑＝食べる相手、赤＝食べられる相手');if(HL.hero)openPop('hero',lpF,p[0],p[1],lpX,lpY,HL);}
   else if(c&&!c.open&&!bedrock(lpF,p[0],p[1]))openPop('soil',lpF,p[0],p[1],lpX,lpY);
   else if(c&&c.open)openPop('path',lpF,p[0],p[1],lpX,lpY);
   else return;
   path.cancel=true;path.cells=[];haptic('light');draw();},450);
+ if(path.pan){draw();return;}
  if(canDig(g.view,p[0],p[1])&&touchesOpen(g.view,p[0],p[1]))path.cells.push([p[0],p[1],path.first]);
  else if(canDig(g.view,p[0],p[1]))say('掘れるのは、掘ってあるマスの隣の土だけです。');
  else{var c0=cellAt(g.view,p[0],p[1]);if(c0&&!c0.open&&bedrock(g.view,p[0],p[1]))say('ここは固くて掘れません。');}
@@ -2519,12 +2522,14 @@ cv.addEventListener('pointermove',function(ev){
  if(!ptrs[ev.pointerId])return;ptrs[ev.pointerId]={x:ev.clientX,y:ev.clientY};
  if(pinch&&pinch.pan){var r=cv.getBoundingClientRect();OX=pinch.m[0]-(ev.clientX-r.left)*W0/r.width/ZM;OY=pinch.m[1]-(ev.clientY-r.top)*W0/r.height/ZM;clampCam();draw();return;}
  if(pinch){if(Object.keys(ptrs).length>=2)movePinch();draw();return;}
+ if(path&&path.pan){if(!path.left&&Math.hypot(ev.clientX-path.sx,ev.clientY-path.sy)<8)return;path.left=true;clearTimeout(lpT);var r=cv.getBoundingClientRect();OX=path.m[0]-(ev.clientX-r.left)*W0/r.width/ZM;OY=path.m[1]-(ev.clientY-r.top)*W0/r.height/ZM;clampCam();draw();return;}
  if(path){addPath(cellOf(ev));draw();}
 });
 function endPtr(ev,cancel){
  if(!ptrs[ev.pointerId])return;delete ptrs[ev.pointerId];clearTimeout(lpT);if(HL||!document.getElementById('pop').hidden){HL=null;path=null;draw();return;}
  if(pinch){if(Object.keys(ptrs).length<2)pinch=null;else if(!pinch.pan)startPinch();path=null;draw();return;}
  if(!path)return;var P=path;path=null;
+ if(P.pan){if(cancel||P.cancel||P.left||over||P.f!=g.view){draw();return;}var tp=P.first.split(','),tx=+tp[0],ty=+tp[1];if(tapOpen(P.f,tx,ty)){draw();ui();return;}var tc=cellAt(P.f,tx,ty);if(tc&&!tc.open&&!bedrock(P.f,tx,ty))say('掘るときは、右下の「⛏ 掘る」を押してから土をなぞる。');draw();return;}
  if(cancel||P.cancel||over||P.f!=g.view){draw();return;}
  if(!P.cells.length&&!P.left){var fp=P.first.split(',');if(tapOpen(P.f,+fp[0],+fp[1])){draw();ui();return;}}
  if(P.cells.length)g.moveCore=false;var dug=0;P.cells.forEach(function(p){if(digAt(P.f,p[0],p[1]))dug++;});
@@ -2535,6 +2540,7 @@ cv.addEventListener('pointerup',function(ev){endPtr(ev,false);});
 cv.addEventListener('pointercancel',function(ev){endPtr(ev,true);});
 cv.addEventListener('wheel',function(ev){ev.preventDefault();var p=logicalOf(ev.clientX,ev.clientY);setZoom(ZM*(ev.deltaY<0?1.25:0.8),p[0],p[1]);},{passive:false});
 cv.addEventListener('contextmenu',function(ev){ev.preventDefault();});
+document.getElementById('zdig').onclick=function(){setDig(!DIG);say(DIG?'掘る：土をなぞって指を離すと掘れる。もう一度押すと、指で盤を動かせる。':'指で盤を動かせる。掘るときは「⛏ 掘る」を押す。');haptic('light');ui();};
 document.getElementById('zin').onclick=function(){setZoom(ZM*1.5);};
 document.getElementById('zout').onclick=function(){setZoom(ZM/1.5);};
 document.getElementById('zfit').onclick=function(){ZM=1;OX=OY=0;zoomBtns();draw();};
