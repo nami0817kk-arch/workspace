@@ -145,7 +145,7 @@
     const lv = YA.trustLevel(w);
     const info = { low: '信頼度が低いので、配分はクラブが決めています（要望を出せるだけ）', mid: '信頼度が中くらいなので、スカウトと遠征の配分だけ変えられます', high: '信頼度が高いので、配分を自分で決められます' }[lv];
     const left = h('div', { style: 'flex:1;min-width:0' });
-    left.append(card(h('div', { class: 'row' }, h('b', { class: 'grow' }, `今年の予算 ${b.total}万円`), h('span', { class: 'chip gray' }, (c.saleIn ? `トップの売却 ${c.saleIn}万円を含む・` : '') + `育成基金へ ${c.solidarityLast || 0}万円（連帯貢献金の半分）`)),
+    left.append(card(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, h('b', { class: 'grow', style: 'white-space:nowrap' }, `今年の予算 ${b.total}万円`), h('span', { class: 'chip gray' }, (c.saleIn ? `トップの売却 ${c.saleIn}万円を含む・` : '') + `育成基金へ ${c.solidarityLast || 0}万円（連帯貢献金の半分）`)),
       h('div', { class: 'note' }, `スタッフの給料 ${YA.yen(b.salaries)} → 残り ${YA.yen(b.free)}を配分`),
       // 2026-11-23：各欄にスカウト・合宿の「予備を足した使える上限」を出していて、合計が残りを超えて見えた。欄は配分した額だけにして、予備は分けて書く
       h('div', { class: 'note' }, `配分しなかった ${YA.yen(b.reserve)} は予備（いま ${YA.yen(b.reserveLeft)}）。スカウトと合宿で足りないときに使われる`), h('div', { class: 'note', style: 'color:var(--blue-d);margin-top:3px' }, info)));
@@ -374,10 +374,10 @@
       const rowsS = SCH.map(([s0, s1, t]) => {
         const now = w.week >= s0 && w.week <= s1;
         const m0 = mon(s0), m1 = mon(s1);
-        return h('div', { class: 'pitem', style: 'cursor:default;gap:6px;padding:3px 8px;min-height:0;font-size:11.5px;' + (now ? 'background:#fff7d6;border-color:#f0cf55;font-weight:800' : '') },
+        return h('div', { class: 'pitem', style: 'cursor:default;gap:6px;flex-wrap:wrap;row-gap:0;padding:3px 8px;min-height:0;font-size:11.5px;' + (now ? 'background:#fff7d6;border-color:#f0cf55;font-weight:800' : '') },
           h('span', { style: 'width:62px;flex:none' }, s0 === s1 ? `${s0}週` : `${s0}〜${s1}週`),
           h('span', { class: 'sub', style: 'width:58px;flex:none' }, m0 === m1 ? m0 : `${m0}〜${m1}`),
-          h('span', { class: 'grow' }, t), now ? h('span', { class: 'chip trait', style: 'font-size:11px;padding:0 5px' }, '今') : null);
+          h('span', { class: 'grow', style: 'min-width:110px' }, t), now ? h('span', { class: 'chip trait', style: 'font-size:11px;padding:0 5px' }, '今') : null);
       });
       right.append(card(title(`今年の日程（いま${YA.wkName(w.week)}）`), h('div', { class: 'plist', style: 'gap:2px' }, rowsS)));
     }

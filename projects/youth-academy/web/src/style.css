@@ -268,4 +268,4 @@ button.pitem{min-height:34px}
 .tabs .btn{position:relative}.subdot{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:#ff6b5e;box-shadow:0 0 0 2px #fff}
 
 /* 小さい iPhone（横667px など）：ホームの真ん中（お知らせ）が110px まで潰れて1行4文字になっていた（2026-11-23） */
-@media (max-width:760px){.home-left{min-width:200px!important;width:30%!important}.home-right{width:168px!important}}
+@media (max-width:760px){.home-left{min-width:200px!important;width:30%!important}.home-right{width:168px!important}.ovcols{grid-template-columns:1fr}}
