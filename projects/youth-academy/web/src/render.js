@@ -1068,7 +1068,8 @@
         const z = fl.kind === 'ground' ? 0 : lerp(fl.z0, fl.to[2], u) + fl.h * 4 * u * (1 - u);
         this.ball = [fl.from[0] + dx * s, fl.from[1] + dy * s, Math.max(0, z)];
         // 場面の台本の地を這う球（受け手のほかは触らない）：相手の足元を通る所だけ、少し浮いて足を越える（届く時間は変えない）
-        if (this.scene && fl.kind === 'ground' && fl.by && this.base[fl.by]) {
+        // 合間の「足の間を通す」うまいパス（fl.thread）も同じく足を越える（2026-11-23：体のすぐそばを触られずに通り、体を通り抜けて見えた）
+        if ((this.scene || fl.thread) && fl.kind === 'ground' && fl.by && this.base[fl.by]) {
           let hop = 0;
           for (const o of Object.keys(this.disp)) {
             if (o === fl.recv || o === fl.icpt || !this.base[o] || this.base[o][2] === this.base[fl.by][2]) continue;
