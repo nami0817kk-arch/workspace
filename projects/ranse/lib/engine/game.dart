@@ -24,6 +24,7 @@ import 'lords.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
 import 'regions.dart';
+import 'retainer_life.dart';
 import 'rng.dart';
 import 'scene_art.dart';
 import 'shadow_life.dart';
@@ -91,6 +92,7 @@ class Game extends ChangeNotifier {
       ...buildWomanLifeScenes(),
       ...buildAshigaruScenes(),
       ...buildAshigaruLifeScenes(),
+      ...buildRetainerLifeScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
