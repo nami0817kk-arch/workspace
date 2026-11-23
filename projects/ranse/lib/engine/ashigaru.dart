@@ -5,6 +5,7 @@ import 'rng.dart';
 
 /// 足軽（位1〜2）の暮らしの岐路（2026-11-23）。成人した人生で最も多い「足軽・侍」の道なのに、
 /// 位1〜2には合戦と縁談のほか固有の岐路がほとんどなかったため。id は `a_`。
+/// 足軽の暮らしの岐路（`ashigaru_life.dart`）を足したときに、ここの8つが押し出されないよう重みを上げた（2026-11-23）。
 
 int _c(int v) => clampInt(v, 0, 100);
 bool _ashigaru(Game g) =>
@@ -16,7 +17,7 @@ bool _ashigaru(Game g) =>
     (g.fa[g.l.lord]?.alive ?? false);
 
 List<SceneDef> buildAshigaruScenes() => [
-  SceneDef('a_nagaya', 15, 40, (g) => 2, _ashigaru, (g, next) {
+  SceneDef('a_nagaya', 15, 40, (g) => 3, _ashigaru, (g, next) {
     g.ask('足軽長屋', '長屋の隣の男が、夜ごと酒を飲んで騒ぐ。今夜もまた、壁越しに怒鳴り声が聞こえる。', [
       Choice.h('殴り込んで黙らせる', '静かになるかもしれない。喧嘩は御法度だ', () {
         if (g.rng.chance(.5)) {
@@ -36,7 +37,7 @@ List<SceneDef> buildAshigaruScenes() => [
     ], after: next);
   }),
 
-  SceneDef('a_gamble', 15, 45, (g) => 1.5, _ashigaru, (g, next) {
+  SceneDef('a_gamble', 15, 45, (g) => 2.5, _ashigaru, (g, next) {
     g.ask('博打', '陣中の暇つぶしに、朋輩たちが賽を振っている。「一口どうだ」', [
       Choice.h('有り金を張る（銭5貫）', '勝てば倍。負ければ素寒貧', () {
         if (g.l.gold < 5) return '張れるほどの銭がなかった。';
@@ -59,7 +60,7 @@ List<SceneDef> buildAshigaruScenes() => [
     'a_randori',
     15,
     50,
-    (g) => 1.5,
+    (g) => 2.5,
     (g) => _ashigaru(g) && g.hasFlag('first_battle'),
     (g, next) {
       g.ask('乱取り', '勝ち戦のあと、足軽たちが敵地の村へなだれ込んでいく。米も、牛も、人までも奪っていく。', [
@@ -85,7 +86,7 @@ List<SceneDef> buildAshigaruScenes() => [
     'a_comrade_death',
     16,
     50,
-    (g) => 2,
+    (g) => 3.5,
     (g) => _ashigaru(g) && g.l.people.containsKey('朋輩'),
     (g, next) {
       final p = g.l.people['朋輩']!;
@@ -105,7 +106,7 @@ List<SceneDef> buildAshigaruScenes() => [
     },
   ),
 
-  SceneDef('a_spear', 15, 35, (g) => 1.5, _ashigaru, (g, next) {
+  SceneDef('a_spear', 15, 35, (g) => 2.5, _ashigaru, (g, next) {
     g.ask('長槍の稽古', '組頭が、三間の長槍で槍衾を組む稽古をさせている。息が合わねば、敵の騎馬に崩される。', [
       Choice.h('先頭に立って稽古する', '腕と信頼が上がる。体はくたくただ', () {
         g.l.bu = _c(g.l.bu + 2);
@@ -123,7 +124,7 @@ List<SceneDef> buildAshigaruScenes() => [
     'a_reward',
     16,
     50,
-    (g) => 1.5,
+    (g) => 2.5,
     (g) => _ashigaru(g) && g.l.merit >= 10,
     (g, next) {
       g.ask('恩賞の分け方', '組の手柄に、恩賞の銭が下された。組頭が、分け方をあなたに任せるという。', [
@@ -146,7 +147,7 @@ List<SceneDef> buildAshigaruScenes() => [
     'a_desert',
     16,
     45,
-    (g) => 1 + (g.l.joy < 30 ? 2 : 0) + (g.l.fav < 15 ? 1 : 0),
+    (g) => 1.5 + (g.l.joy < 30 ? 2 : 0) + (g.l.fav < 15 ? 1 : 0),
     _ashigaru,
     (g, next) {
       g.ask('逃げ散る夜', '負け戦続きで、陣から逃げ出す足軽が後を絶たない。朋輩が「今夜、一緒に逃げよう」と囁いた。', [
@@ -170,7 +171,7 @@ List<SceneDef> buildAshigaruScenes() => [
     },
   ),
 
-  SceneDef('a_letter_home', 15, 40, (g) => 1.2, _ashigaru, (g, next) {
+  SceneDef('a_letter_home', 15, 40, (g) => 2, _ashigaru, (g, next) {
     g.ask('国への便り', '陣に、国の母から便りが届いた。字の読める朋輩に読んでもらうと、「体を大事に」とだけあった。', [
       Choice.h('返事を書いてもらう', '母は安心する', () {
         g.j(5);

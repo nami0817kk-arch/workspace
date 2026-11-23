@@ -914,7 +914,12 @@ List<SceneDef> buildHistoryScenes() {
       15,
       84,
       (g) => 20,
-      (g) => g.l.rank == 0 && !g.l.female && !g.hasFlag('priesthood'),
+      (g) =>
+          g.l.rank == 0 &&
+          !g.l.female &&
+          !g.hasFlag('priesthood') &&
+          // 足軽をやめるときに刀を差し出した人には、もう一度は来ない（`ashigaru_life.dart` の `al_kino`）。
+          !g.hasFlag('al_kino_katanagari'),
       (g, next) {
         g.ask('刀狩', '役人が村に来て、刀や槍を差し出せと言う。大仏を造る釘にするのだという。', [
           Choice.h('差し出す', '百姓として生きる。もう武士にはなれない', () {

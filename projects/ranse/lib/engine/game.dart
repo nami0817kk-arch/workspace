@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'adult.dart';
 import 'ashigaru.dart';
+import 'ashigaru_life.dart';
 import 'birth.dart';
 import 'bonds.dart';
 import 'childhood.dart';
@@ -81,6 +82,7 @@ class Game extends ChangeNotifier {
       ...buildWomenScenes(),
       ...buildWomanLifeScenes(),
       ...buildAshigaruScenes(),
+      ...buildAshigaruLifeScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
@@ -932,6 +934,8 @@ class Game extends ChangeNotifier {
       log('国は滅んだ…浪々の身となる。', 'bad');
       if (rng.chance(.4)) die('国と共に滅んだ', 'senshi');
     } else {
+      // 足軽・雑兵として降った者には、降った先の暮らしの岐路が出る（`ashigaru_life.dart` の `al_kuragae`）。
+      if (l.rank <= 2) setFlag('al_kuragae');
       l.lord = a.name;
       l.rank = l.rank - 1 < 1 ? 1 : l.rank - 1;
       l.fav = 10;
