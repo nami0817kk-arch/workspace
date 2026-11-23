@@ -538,11 +538,8 @@ extension GameLocal on Game {
         who: kind == 'takeover' ? foe : null,
         face: kind == 'takeover' ? foe!.rival!.col : null,
         title: title,
-        text: Cat([
-          why,
-          M('急いで臨時の会議を開きました。意見は割れています'),
-          for (final x in picks) M('{0}（{1}）：{2}', [x.who, x.role, opts[x.k]!.say]),
-        ], ja: '\n', en: '\n'),
+        text: Cat([why, M('急いで臨時の会議を開きました。意見は割れています')], ja: '\n', en: '\n'),
+        voices: [for (final x in picks) Voice(who: x.who, role: x.role, text: opts[x.k]!.say, kind: x.kind, name: x.p?.name)],
         choices: choices);
   }
 }
