@@ -20,6 +20,7 @@ export 'models_static.dart';
 part 'game_turn.dart';
 part 'game_actions.dart';
 part 'game_view.dart';
+part 'game_story.dart';
 
 // ===== データ =====
 const double invEff = .9, newPow = 1.5, cpuReinv = .12;
@@ -205,6 +206,17 @@ class Game {
 
   /// 初めて遊ぶ人への案内の進み（仕組みの数字には使わない）。'start' があれば案内を出す
   Map<String, int> guide = {};
+
+  /// 試作のあとに足した仕組み（取締役会・宿敵の物語）を動かすか。ふだんは有効。
+  /// 試作との一致テストでは切る（切ると乱数の使い方も試作と同じになる）。保存しない
+  bool extras = true;
+
+  /// 取締役会: 今年の売上・利益の積み上げ（rev / pre / n）、去年の振り返り（rev / pre / cap / rank）
+  Map<String, double> yAcc = {};
+  Map<String, double>? yPrev;
+
+  /// 取締役会との改革の約束（due: 期限の月 / target: 戻す年の利益 / y: 期限の年）
+  Map<String, double>? vow;
 
   /// 社史（古い順に積む。乱数は使わず、記録だけ足す）
   List<Chron> history = [];
@@ -819,12 +831,16 @@ class Game {
         'history': history.map((e) => e.toJson()).toList(),
         'maxCap': maxCap,
         'maxWealth': maxWealth,
+        'yAcc': yAcc,
+        'yPrev': yPrev,
+        'vow': vow,
       };
 
   static Game fromJson(Map<String, dynamic> j, {math.Random? rng}) {
     double d(String k, [double def = 0]) => j[k] == null ? def : (j[k] as num).toDouble();
     int i(String k, [int def = 0]) => j[k] == null ? def : (j[k] as num).round();
     Map<String, int> mi(String k) => {for (final e in (j[k] as Map? ?? {}).entries) e.key as String: (e.value as num).round()};
+    Map<String, double>? md(String k) => j[k] == null ? null : {for (final e in (j[k] as Map).entries) e.key as String: (e.value as num).toDouble()};
     List<T> l<T>(String k, T Function(Map<String, dynamic>) f) => (j[k] as List? ?? []).map((e) => f(e as Map<String, dynamic>)).toList();
     final s = Game(rng ?? math.Random())
       ..uidCounter = i('uid', 1)
@@ -897,7 +913,11 @@ class Game {
       // 社史と最大値は 1.0.0+3 から。古いセーブでは空から始める
       ..history = l('history', Chron.fromJson)
       ..maxCap = d('maxCap')
-      ..maxWealth = d('maxWealth');
+      ..maxWealth = d('maxWealth')
+      // 取締役会は 1.0.0+7 から。古いセーブでは空から始める
+      ..yAcc = md('yAcc') ?? {}
+      ..yPrev = md('yPrev')
+      ..vow = md('vow');
     s.events = [];
     s.reg = regFor(s.yr());
     final saved = j['indM'] as Map?;

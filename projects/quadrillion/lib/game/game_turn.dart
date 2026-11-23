@@ -373,6 +373,7 @@ extension GameTurn on Game {
     dealsMonthly(N);
     dirtyMonthly(N);
     rivalReturns(N);
+    storyMonthly(N);
     if (noncomp != null && turn >= noncomp!.until) {
       noncomp = null;
       N(M('売ったときの「同じ業種に入らない」約束の期限が切れました'));
@@ -419,7 +420,15 @@ extension GameTurn on Game {
       if (mode == 'quad' && cap + wealth >= 1e15) won = M('{0}年、グループの時価総額が1000兆円に届きました（創業から{1}年）', [year, year - startYear]);
     }
     final rivMax = sh.rivMax;
-    if (rivMax > 50 && over == null) over = M('宿敵に株の過半数を握られ、社長の座を追われました');
+    if (rivMax > 50 && over == null) {
+      over = M('宿敵に株の過半数を握られ、社長の座を追われました');
+      if (extras) {
+        final top = sh.riv.entries.where((e) => e.value == rivMax).firstOrNull;
+        final c = coById(top?.key);
+        if (c != null) storyEnd(c, 'boughtBy');
+      }
+    }
+    boardMonthly();
     // 社史（記録だけ。乱数は使わない）
     for (final th in rankMarks) {
       if (peak0 > th && peakRank <= th) {
@@ -538,6 +547,7 @@ extension GameTurn on Game {
               final k = '${c.id}:${jsNum(th)}';
               if (reported[k] == null) {
                 reported[k] = 1;
+                tieRec(c, 'h', M('あなたの株を{0}まで買い集められた', [pct(now)]));
                 events.add(evHostile(c, th));
               }
             }
@@ -563,6 +573,7 @@ extension GameTurn on Game {
         b.power *= 1.15;
         my.war = 9;
         c.rel -= 5;
+        tieRec(c, 'h', M('「{0}」で値下げ合戦を仕掛けられた', [I(b.ind)]));
         N(M('{0}（{1}）が「{2}」で値下げ合戦を仕掛けてきました。9か月のあいだ利益が削られます', [Nm(r.pres), Nm(c.name), I(b.ind)]), 'bad');
       }
       // 同期は真似して追ってくる
@@ -580,6 +591,7 @@ extension GameTurn on Game {
         final p = pick(tgt);
         final e = evPoach(c, p);
         e.poach = p.id;
+        tieRec(c, 'h', M('部下の{0}を引き抜かれかけた', [Nm(p.name)]));
         events.add(e);
       }
       // 代替わり
@@ -651,6 +663,7 @@ extension GameTurn on Game {
                 b.power *= 1.05;
               }
               c.rel -= 3;
+              tieRec(c, 'f', M('部下の{0}を送り出した', [Nm(p.name)]));
               return M('{0}は{1}へ移りました', [Nm(p.name), Nm(c.name)]);
             }),
           ]);
@@ -668,10 +681,13 @@ extension GameTurn on Game {
               sh.ally += math.min(5, sh.float);
               sh.float = math.max(0, sh.float - 5);
               c.rel += 20;
+              if (extras && c.rival != null) c.rival!.allied = true;
+              tieRec(c, 'f', M('提携の申し出を受けて組んだ'));
               return M('{0}と提携しました', [Nm(c.name)]);
             }),
             Choice(M('断る'), M('相手は少し機嫌を損ねる'), () {
               c.rel -= 15;
+              tieRec(c, 'g', M('提携の申し出を断った'));
               return M('提携を断りました');
             }),
           ]);
@@ -877,6 +893,7 @@ extension GameTurn on Game {
               buyer.biz.add(CoBiz(ind: b.ind, power: b.power));
               biz.remove(b);
               buyer.rel += 15;
+              tieRec(buyer, 'f', M('「{0}」を売り渡した', [I(b.ind)]));
               return M('「{0}」を{1}に売りました', [I(b.ind), Nm(buyer.name)]);
             }),
             Choice(M('断る'), M('相手は機嫌を損ねる'), () {
@@ -1289,6 +1306,7 @@ extension GameTurn on Game {
               Choice(M('組む'), M('手は使わない'), () {
                 deals.add(Deal(co: c.id, type: type, since: year));
                 c.rel += 10;
+                tieRec(c, 'f', M('「{0}」で組んだ', [D(DEALN.ja[type]!)]));
                 calcAll();
                 return M('{0}と組みました', [Nm(c.name)]);
               }),
@@ -1377,6 +1395,7 @@ extension GameTurn on Game {
           for (final x in foe.biz) {
             if (x.ind == b.ind) x.power *= 1.1;
           }
+          tieRec(foe, 'h', M('「{0}」の開発の中身を盗まれた', [I(b.ind)]));
           events.add(GameEvent(
               who: foe,
               face: foe.rival!.col,
@@ -1386,6 +1405,7 @@ extension GameTurn on Game {
                 Choice(M('訴える'), M('2年後に判決。勝てば賠償金が入る'), () {
                   suits.add(Suit(at: turn + 24, co: foe.id, amt: math.max(foe.cap * .01, b.rev * 6)));
                   foe.rel -= 20;
+                  tieRec(foe, 'g', M('情報を盗まれて訴えた'));
                   return M('{0}を訴えました', [Nm(foe.name)]);
                 }),
                 Choice(M('やり返す'), M('こちらも相手の中身を盗む（手は使わない）'), () {
@@ -1425,6 +1445,11 @@ extension GameTurn on Game {
     c.presAge = ri(25, 35).toDouble();
     c.rel = -60;
     c.g = .03;
+    if (extras) rv.from = r.from;
+    if (extras && r.end != null) {
+      rv.grudge = r.grudge;
+      rv.ties.add(M('{0}年：{1}', [year, M('一族は、{0}が買収された恨みを覚えている', [Nm(r.from)])]));
+    }
     c.cash = cap * .05;
     for (final b in (biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).take(2)) {
       c.biz.add(CoBiz(ind: b.ind, power: b.power * .3));

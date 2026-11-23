@@ -255,8 +255,81 @@ class Rival {
   int tier;
   String col;
   bool gone;
-  Rival({required this.k, required this.pres, required this.co, required this.type, this.label, required this.tier, required this.col, this.gone = false});
-  Map<String, dynamic> toJson() => {'k': k, 'pres': pres, 'co': co, 'type': type, 'label': label, 'tier': tier, 'col': col, 'gone': gone};
+
+  // ===== 宿敵の物語（1.0.0+7 から。古いセーブでは空から） =====
+  /// 段: 0 まだ出会っていない / 1 張り合う / 2 決着
+  int st;
+
+  /// 恨み（あなたが相手にしたこと）・恩（助けた・組んだ）・相手からされたこと
+  int grudge, favor, hurt;
+
+  /// 因縁の記録（包んだ文。新しいものを後ろに、最大6つ）
+  List<String> ties;
+
+  /// 友好が続いている起点の月（-1 は続いていない）・組んでいる起点の月
+  int friendSince, allySince;
+
+  /// 提携の申し出を受けて組んでいる
+  bool allied;
+
+  /// 張り合う場面を出したか
+  bool vexed;
+
+  /// 決着: bought（買収した）/ boughtBy（買収された）/ peace（和解）/ ally（組んだ）
+  String? end;
+  int endY;
+
+  /// 戻ってきた一族なら、前に倒された会社の名前
+  String? from;
+
+  Rival({
+    required this.k,
+    required this.pres,
+    required this.co,
+    required this.type,
+    this.label,
+    required this.tier,
+    required this.col,
+    this.gone = false,
+    this.st = 0,
+    this.grudge = 0,
+    this.favor = 0,
+    this.hurt = 0,
+    List<String>? ties,
+    this.friendSince = -1,
+    this.allySince = -1,
+    this.allied = false,
+    this.vexed = false,
+    this.end,
+    this.endY = 0,
+    this.from,
+  }) : ties = ties ?? [];
+
+  /// せりふの型（RTYPE の鍵）
+  String get kind => label ?? type;
+
+  Map<String, dynamic> toJson() => {
+        'k': k,
+        'pres': pres,
+        'co': co,
+        'type': type,
+        'label': label,
+        'tier': tier,
+        'col': col,
+        'gone': gone,
+        'st': st,
+        'grudge': grudge,
+        'favor': favor,
+        'hurt': hurt,
+        'ties': ties,
+        'friendSince': friendSince,
+        'allySince': allySince,
+        'allied': allied,
+        'vexed': vexed,
+        'end': end,
+        'endY': endY,
+        'from': from,
+      };
   factory Rival.fromJson(Map<String, dynamic> j) => Rival(
       k: j['k'] as String,
       pres: j['pres'] as String,
@@ -265,7 +338,19 @@ class Rival {
       label: j['label'] as String?,
       tier: _i(j['tier']),
       col: j['col'] as String,
-      gone: j['gone'] == true);
+      gone: j['gone'] == true,
+      st: _i(j['st']),
+      grudge: _i(j['grudge']),
+      favor: _i(j['favor']),
+      hurt: _i(j['hurt']),
+      ties: _sl(j['ties']),
+      friendSince: _i(j['friendSince'], -1),
+      allySince: _i(j['allySince'], -1),
+      allied: j['allied'] == true,
+      vexed: j['vexed'] == true,
+      end: j['end'] as String?,
+      endY: _i(j['endY']),
+      from: j['from'] as String?);
 }
 
 class Company {
@@ -449,10 +534,20 @@ class Return {
   int at;
   String fam, col, from;
   bool west;
-  Return({required this.at, required this.fam, required this.west, required this.col, required this.from});
-  Map<String, dynamic> toJson() => {'at': at, 'fam': fam, 'west': west, 'col': col, 'from': from};
-  factory Return.fromJson(Map<String, dynamic> j) =>
-      Return(at: _i(j['at']), fam: j['fam'] as String, west: j['west'] == true, col: j['col'] as String, from: j['from'] as String);
+
+  /// 前の決着（bought など）と、そのときの恨み。一族はこれを覚えて戻ってくる（古いセーブでは無し）
+  String? end;
+  int grudge;
+  Return({required this.at, required this.fam, required this.west, required this.col, required this.from, this.end, this.grudge = 0});
+  Map<String, dynamic> toJson() => {'at': at, 'fam': fam, 'west': west, 'col': col, 'from': from, 'end': end, 'grudge': grudge};
+  factory Return.fromJson(Map<String, dynamic> j) => Return(
+      at: _i(j['at']),
+      fam: j['fam'] as String,
+      west: j['west'] == true,
+      col: j['col'] as String,
+      from: j['from'] as String,
+      end: j['end'] as String?,
+      grudge: _i(j['grudge']));
 }
 
 /// ニュース・記録の1行。t は '' / 'big' / 'good' / 'bad'
@@ -477,7 +572,7 @@ class HistEntry {
 class Chron {
   int y, q;
 
-  /// 種類: found / partner / partner_out / first_biz / ipo / abroad / buy / merge / swap / sold / pres / era / rank / won / over / rebirth
+  /// 種類: found / partner / partner_out / first_biz / ipo / abroad / buy / merge / swap / sold / pres / era / rank / won / over / rebirth / rival / board
   String k;
   String m;
   Chron(this.y, this.q, this.k, this.m);
