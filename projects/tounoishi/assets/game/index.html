@@ -182,7 +182,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v44</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v45</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -912,11 +912,11 @@ function hitEn(e,dm,m,col){
 }
 function killEn(e,killer){
  var i=g.en.indexOf(e);if(i<0)return;g.en.splice(i,1);
- fxPuff(e.f,e.x,e.y,1.3);g.kills=(g.kills||0)+1;g.dp+=e.yu?20:1;sfx(e.yu?'yukill':'ekill');if(e.yu)coreSay('yukill',true);
+ fxPuff(e.f,e.x,e.y,1.3);g.kills=(g.kills||0)+1;g.dp+=e.yu?20+5*(g.giftK||0):1;sfx(e.yu?'yukill':'ekill');if(e.yu)coreSay('yukill',true);
  if(e.yu){
   var Y=g.yu,amt=30+15*Y.lvl;deposit(e.f,e.x,e.y,amt);depositM(e.f,e.x,e.y,8+4*Y.lvl);g.yuKilled++;
   say(yuName()+'を倒し切った！ 養分'+amt+'が土に戻った。次の周からは新しい勇者が来る。');
-  banner(yuName()+'を倒し切った！','掘る力 ＋20 · 養分'+amt+'が土に · モンスターの傷が全快');g.cr.forEach(function(m){m.hp=m.mhp;});haptic('medium');
+  banner(yuName()+'を倒し切った！','掘る力 ＋'+(20+5*(g.giftK||0))+' · 養分'+amt+'が土に · モンスターの傷が全快');g.cr.forEach(function(m){m.hp=m.mhp;});haptic('medium');
   var yn0=yuName();g.yu=newYu();
   if(killer){killer.kills++;if(!killer.hero)promote(killer,'yuusha');else killer.ep=EP.yuusha;if(killer.bio){killer.bio.yus.push(yn0);heroTitle(killer);}}
  }else{
@@ -1263,31 +1263,34 @@ function renderShop(){
 var DEX=loadDex();
 function loadDex(){try{return JSON.parse(kvGet('tou-dex')||'{}')||{};}catch(_){return {};}}
 // ---------- 周回の解放: 塔の記憶と記憶の棚 ----------
-var SHELF=[{k:'dp',n:'始めの掘る力',d:'新しい塔の掘る力 ＋10',c:[5,10,15,20,25]},{k:'pool',n:'始めの養分',d:'自由な養分 ＋10',c:[6,12,18]},{k:'rare',n:'珍しい種',d:'金スライム・キメラ・ツチノコが出やすい',c:[8,16,24]},{k:'train',n:'鍛える上限',d:'主役を鍛えられる回数 ＋1',c:[15,30]},{k:'soil',n:'始めの土を選ぶ',d:'1階目の土の色を選べる',c:[20]}];
+var SHELF=[{k:'dp',n:'始めの掘る力',d:'新しい塔の掘る力 ＋10',c:[5,10,15,20,25]},{k:'pool',n:'始めの養分',d:'自由な養分 ＋10',c:[6,12,18]},{k:'rare',n:'珍しい種',d:'金スライム・キメラ・ツチノコが出やすい',c:[8,16,24]},{k:'train',n:'鍛える上限',d:'主役を鍛えられる回数 ＋1',c:[15,30]},{k:'soil',n:'始めの土を選ぶ',d:'1階目の土の色を選べる',c:[20]},{k:'mul',n:'記憶の上乗せ',d:'落ちたときにたまる記憶 ＋2割',c:[10,20,30]},{k:'mate',n:'始めの仲間',d:'新しい塔の1階にスライム ＋2匹',c:[6,12,18]},{k:'gift',n:'勇者の置き土産',d:'勇者を倒し切ったときの掘る力 ＋5',c:[10,20]}];
 function meta(){try{var o=JSON.parse(kvGet('tou-meta')||'null');if(o&&o.lv)return o;}catch(_){}return {pts:0,tot:0,lv:{},soil:''};}
 function metaSave(o){kvSet('tou-meta',JSON.stringify(o));}
 function dexSeen(){return DEXORD.filter(function(k){return DEX[k]&&DEX[k].seen;}).length;}
 function shelfDone(){var M=meta(),a=0,b=0;SHELF.forEach(function(it){a+=M.lv[it.k]||0;b+=it.c.length;});return a+'/'+b;}
 // 新しい塔を始めたときに棚の分を足す
-function applyMeta(){var M=meta(),L=M.lv;g.dp+=10*(L.dp||0);g.pool+=10*(L.pool||0);g.rareK=L.rare||0;g.trainMax=5+(L.train||0);
+function applyMeta(){var M=meta(),L=M.lv;g.dp+=10*(L.dp||0);g.pool+=10*(L.pool||0);g.rareK=L.rare||0;g.trainMax=5+(L.train||0);g.giftK=L.gift||0;
+ if(L.mate){var need=2*L.mate,op=[];for(var my=0;my<N;my++)for(var mx=0;mx<N;mx++){var mc=cellAt(0,mx,my);if(mc&&mc.open&&!(mx==COREX&&my==COREY))op.push([mx,my,mc.env]);}op=shuffle(op);for(var mi=0;mi<need&&op.length;mi++){var q=op[mi%op.length];mkCr('slime',q[2],0,q[0],q[1],1);}}
  if(L.soil&&M.soil&&M.soil!=DOM[0]){g.grid[0].forEach(function(c){if(c.env==DOM[0])c.env=M.soil;});TK.key='';}g.dex0=dexSeen();}
 // 新しい塔が落ちたときに記憶がたまる
-function metaGain(){var M=meta(),nd=Math.max(0,dexSeen()-(g.dex0==null?dexSeen():g.dex0)),p=F+(g.yuKilled||0)*3+nd*2;M.pts+=p;M.tot=(M.tot||0)+p;metaSave(M);return {p:p,t:M.pts,nd:nd};}
+function metaGain(){var M=meta(),nd=Math.max(0,dexSeen()-(g.dex0==null?dexSeen():g.dex0)),p=F+(g.yuKilled||0)*3+nd*2;p=Math.round(p*(1+0.2*(M.lv.mul||0)));M.pts+=p;M.tot=(M.tot||0)+p;metaSave(M);return {p:p,t:M.pts,nd:nd};}
 function showShelf(){
  var M=meta(),el=document.getElementById('title');
  var h=SHELF.map(function(it){var lv=M.lv[it.k]||0,mx=it.c.length,c=it.c[lv];return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.12)"><div style="flex:1;min-width:0"><b>'+it.n+'</b> <small>'+lv+'/'+mx+'段</small><br><small>'+it.d+'</small></div>'+(lv>=mx?'<button class="btn" disabled>そろった</button>':'<button class="btn" data-k="'+it.k+'"'+(M.pts<c?' disabled':'')+'>上げる<small>記憶 '+c+'</small></button>')+'</div>';}).join('');
  var soil=M.lv.soil?'<p class="lbl">1階目の土</p><div class="row3">'+['rock','water','moss'].map(function(e){return '<button class="btn'+((M.soil||DOM[0])==e?' go':'')+'" data-soil="'+e+'">'+ENV[e].n+'</button>';}).join('')+'</div>':'';
- el.innerHTML='<div class="tbox"><h2>記憶の棚</h2><p class="sub">新しい塔が落ちるたびに「塔の記憶」がたまります（たどり着いた階＋倒し切った勇者×3＋その塔で初めて図鑑に載った種×2）。棚の分は、新しい塔を始めたときに効きます。</p><p class="big">塔の記憶 '+M.pts+'</p>'+h+soil+'<button class="btn go" id="tback">もどる</button></div>';
+ el.innerHTML='<div class="tbox"><h2>記憶の棚</h2><p class="sub">新しい塔が落ちるたびに「塔の記憶」がたまります（たどり着いた階＋倒し切った勇者×3＋その塔で初めて図鑑に載った種×2。記憶の上乗せの分を掛ける）。棚の分は、新しい塔を始めたときに効きます。</p><p class="big">塔の記憶 '+M.pts+'</p>'+h+soil+'<button class="btn go" id="tback">もどる</button></div>';
  el.hidden=false;
  el.querySelectorAll('[data-k]').forEach(function(b){b.onclick=function(){var k=b.getAttribute('data-k'),it=SHELF.filter(function(x){return x.k==k;})[0],M2=meta(),lv=M2.lv[k]||0,c=it.c[lv];if(c==null||M2.pts<c)return;M2.pts-=c;M2.lv[k]=lv+1;if(k=='soil'&&!M2.soil)M2.soil=DOM[0];metaSave(M2);sfx('train');showShelf();};});
  el.querySelectorAll('[data-soil]').forEach(function(b){b.onclick=function(){var M2=meta();M2.soil=b.getAttribute('data-soil');metaSave(M2);showShelf();};});
  document.getElementById('tback').onclick=showTitle;
 }
 function dexAdd(spc,env,mut){
+ var nw=!DEX[spc]||!DEX[spc].seen;
  var d=DEX[spc]||(DEX[spc]={e:{},m:{}}),ch=false;
  if(!DEX[spc].seen){DEX[spc].seen=1;ch=true;}
  if(env&&!d.e[env]){d.e[env]=1;ch=true;}if(mut&&!d.m[mut]){d.m[mut]=1;ch=true;}
  if(ch){kvSet('tou-dex',JSON.stringify(DEX));if(SPEC[spc].line=='sp'&&g&&!g.title)say('図鑑に「'+SPEC[spc].n+'」が載った！');}
+ if(nw&&g&&!g.title&&ORDN.indexOf(spc)<0&&ORDM.indexOf(spc)<0){banner('新しい種！ '+SPEC[spc].n,(/…$/.test(HINT[spc]||'')?HINT[spc].replace(/…$/,'')+'生まれた · ':'')+'図鑑に載った');haptic('medium');logEv('新しい種「'+SPEC[spc].n+'」が図鑑に載った');}
 }
 var HINT={tsuta:'岩の土の養分1から、ときどき…',mogura:'養分3の土から、まれに…',kame:'水の土の養分5から、ときどき…',frost:'氷の層の養分4から…',salamander:'溶岩の層の養分6から…',kagami:'魔分3の土から、まれに…',kage:'夜に、魔分5の土から…',ant:'水の土の養分1から、ときどき…',hachi:'花の近くの、養分2の土から…',shidemushi:'亡骸の隣の、養分2の土から…',bakudan:'養分2の土から、ときどき…',umihebi:'水の土の養分8から、ときどき…',purupuru:'魔分1の土から、まれに…',manasui:'魔分4の土から、まれに…',noroi:'5階より深い所の、魔分6の土から…',yamaarashi:'岩の土の養分5から、ときどき…',iwakui:'岩の土の養分7から、ときどき…',yukidama:'氷の層の養分1から…',magma:'溶岩の層の養分1から…',hotaru:'夜に、苔の土の養分1から…',himawari:'昼に、苔の土の養分1から…',fukurou:'魔分5の土から、まれに…',maboroshi:'魔分7の土から、ときどき…',slimeking:'スライムが8匹、ひとかたまりに集まると…',tsuchinoko:'養分9の土から、ごくまれに…',d_sleepy:'養分も魔分も多い魔法陣から…',d_blue:'魔分の多い魔法陣から…',d_bigblue:'魔分がとても多い魔法陣から…',evilgod:'あおデーモンの魔法陣を冒険者に踏ませると…',skeleton:'倒れた冒険者の亡骸の隣を掘ると…',mimic:'深い階ほど、土の中に宝箱が埋まっている',chimera:'苔・水・岩の3色が接する所を掘ると…',gslime:'養分がいっぱい(9)の土を掘ると、まれに',guardian:'コアのすぐ下のマスの周り8マスを全部掘ると',phoenix:'主役のドラゴンが倒れると…'};
 var DEXORD=ORDN.concat(ORDM).concat(['tsuta','mogura','kame','frost','salamander','kagami','kage','ant','hachi','shidemushi','bakudan','umihebi','purupuru','manasui','noroi','yamaarashi','iwakui','yukidama','magma','hotaru','himawari','fukurou','maboroshi','slimeking','tsuchinoko']).concat(['skeleton','mimic','chimera','gslime','guardian','phoenix','d_sleepy','d_blue','d_bigblue','evilgod']);
@@ -1794,7 +1797,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v44 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v45 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
