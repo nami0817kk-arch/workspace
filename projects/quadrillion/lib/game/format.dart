@@ -1,6 +1,8 @@
 /// 数の見せ方（試作の yen / pct / trim と同じ結果になるように、JS の数の書き方をまねる）。
 library;
 
+import '../l10n/lang.dart';
+
 /// JS の Math.round（.5 は上へ）
 double jsRound(double x) => (x + 0.5).floorToDouble();
 
@@ -30,7 +32,22 @@ String trim(double x) {
   return jsNum(double.parse(x.toStringAsFixed(2)));
 }
 
-String yen(double v) {
+/// 金額を今の言語で書く（日本語は 兆・億・万円、英語は ¥ と K / M / B / T / Q）
+String yen(double v) => L.en ? yenEn(v) : yenJa(v);
+
+/// 英語の金額。円のまま、桁を K（千）M（百万）B（十億）T（兆）Q（千兆）で書く（例: ¥3.51T・¥29.9B）
+String yenEn(double v) {
+  if (!v.isFinite) return '-';
+  final a = v.abs(), s = v < 0 ? '-' : '';
+  if (a >= 1e15) return '$s¥${trim(a / 1e15)}Q';
+  if (a >= 1e12) return '$s¥${trim(a / 1e12)}T';
+  if (a >= 1e9) return '$s¥${trim(a / 1e9)}B';
+  if (a >= 1e6) return '$s¥${trim(a / 1e6)}M';
+  if (a >= 1e3) return '$s¥${trim(a / 1e3)}K';
+  return '$s¥${jsNum(jsRound(a))}';
+}
+
+String yenJa(double v) {
   if (!v.isFinite) return '-';
   final a = v.abs(), s = v < 0 ? '-' : '';
   if (a >= 1e16) return '$s${trim(a / 1e16)}京円';

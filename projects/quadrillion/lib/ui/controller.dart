@@ -55,8 +55,29 @@ class SlotInfo {
 class GameController extends ChangeNotifier with WidgetsBindingObserver {
   SharedPreferences? prefs;
   final math.Random Function() newRandom;
-  GameController({this.prefs, math.Random Function()? newRandom}) : newRandom = newRandom ?? (() => math.Random()) {
+  GameController({this.prefs, math.Random Function()? newRandom, String? lang}) : newRandom = newRandom ?? (() => math.Random()) {
     migrateLegacy();
+    final saved = prefs?.getString(langKey);
+    L.lang = saved == 'ja' || saved == 'en' ? saved! : (lang ?? systemLang());
+  }
+
+  /// 選んだ言語を残す鍵
+  static const langKey = 'lang';
+
+  /// 端末の言語が日本語なら 'ja'、それ以外は 'en'
+  static String systemLang() {
+    try {
+      return WidgetsBinding.instance.platformDispatcher.locale.languageCode == 'ja' ? 'ja' : 'en';
+    } catch (_) {
+      return 'ja';
+    }
+  }
+
+  /// 言語を切り替えて残す
+  void setLang(String l) {
+    L.lang = l == 'en' ? 'en' : 'ja';
+    prefs?.setString(langKey, L.lang);
+    notifyListeners();
   }
 
   /// 今遊んでいる枠（自動保存の行き先）
@@ -103,7 +124,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     if (g.over != null && g.over != b.over) return true;
     if (b.rivMax < 33.4 && g.sh.rivMax >= 33.4) return true;
     if (g.listed && !b.listed) return false;
-    if (news.any((n) => n.m.startsWith('大当たり') || n.m.startsWith('シナジー発見') || n.m.startsWith('大シナジー'))) return false;
+    if (news.map((n) => msgKey(n.m)).any((k) => k.startsWith('大当たり') || k.startsWith('シナジー発見') || k.startsWith('大シナジー'))) return false;
     return null;
   }
 
@@ -270,7 +291,7 @@ class ToastBody extends StatelessWidget {
   const ToastBody({super.key, required this.msg, required this.onOk});
   @override
   Widget build(BuildContext context) => Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-        Padding(padding: const EdgeInsets.only(bottom: 12), child: Text(msg, style: ts())),
+        Padding(padding: const EdgeInsets.only(bottom: 12), child: Text(tx(msg), style: ts())),
         Btn('OK', onOk, primary: true),
       ]);
 }

@@ -11,11 +11,11 @@ extension GameActions on Game {
     final ind = indm[id]!;
     final c = capexOf(ind);
     final free = biz.isEmpty && !everBiz;
-    if (cash < c) return '元手が足りません';
-    if (!free && !canAP(1)) return '今月の手が残っていません';
-    if (biz.any((b) => b.ind == id)) return 'すでにその業種にいます';
+    if (cash < c) return M('元手が足りません');
+    if (!free && !canAP(1)) return M('今月の手が残っていません');
+    if (biz.any((b) => b.ind == id)) return M('すでにその業種にいます');
     if (noncomp != null && turn < noncomp!.until && noncomp!.inds.contains(id) && !noncomp!.broken) {
-      return '会社を売ったときの約束で、この業種にはまだ入れません（「株」の画面で約束を破ることもできます）';
+      return M('会社を売ったときの約束で、この業種にはまだ入れません（「株」の画面で約束を破ることもできます）');
     }
     cash -= c;
     if (!free) useAP(1);
@@ -24,17 +24,17 @@ extension GameActions on Game {
     if (hasT('genius')) p *= .5 + rnd() * 1.7;
     final early = yr() - ind.b < 3;
     biz.add(Biz(id: uid(), ind: id, early: early ? turn + 60 : 0, model: model ?? 'direct', power: p, crew: p * 1.2));
-    if (free) chron('first_biz', '${serial > 0 ? '新しい会社で' : '最初の事業として'}「${ind.name}」を始めた');
+    if (free) chron('first_biz', M('{0}「{1}」を始めた', [M(serial > 0 ? '新しい会社で' : '最初の事業として'), I(id)]));
     calcAll();
-    return '「${ind.name}」を${MODELN[model ?? 'direct']}で始めました（元手 ${yen(c)}）';
+    return M('「{0}」を{1}で始めました（元手 {2}）', [I(id), D(MODELN.ja[model ?? 'direct']!), Y(c)]);
   }
 
   double invBase(Biz b) => math.max(capexOf(indm[b.ind]!), b.rev * 3);
 
   String invest(Biz b, double frac) {
     final cost = math.max(0.0, cash * frac);
-    if (cost <= 0) return 'お金がありません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (cost <= 0) return M('お金がありません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     cash -= cost;
     useAP(1);
     final rel = cost / math.max(b.rev + capexOf(indm[b.ind]!), 1);
@@ -53,7 +53,7 @@ extension GameActions on Game {
     final s0 = b.share, r0 = b.rev;
     b.power += cost * eff;
     calcAll();
-    return eff == 0 ? '投資は空振りに終わりました…' : '${yen(cost)}を投資しました。シェア ${pct(s0 * 100)} → ${pct(b.share * 100)}、売上の見込み ${yen(r0)} → ${yen(b.rev)}';
+    return eff == 0 ? M('投資は空振りに終わりました…') : M('{0}を投資しました。シェア {1} → {2}、売上の見込み {3} → {4}', [Y(cost), pct(s0 * 100), pct(b.share * 100), Y(r0), Y(b.rev)]);
   }
 
   // ===== 国 =====
@@ -76,7 +76,7 @@ extension GameActions on Game {
 
   void addCtry(Biz b, String c, String mode, double pw) {
     if (c != home && !biz.any((x) => ctryOf(x).contains(c))) {
-      chron('abroad', '${cm[c]!.n}に進出した（「${indm[b.ind]!.name}」・${ENTRYN[mode]}）');
+      chron('abroad', M('{0}に進出した（「{1}」・{2}）', [C(c), I(b.ind), D(ENTRYN.ja[mode]!)]));
     }
     b.ctry = ctryOf(b).toList();
     if (!b.ctry!.contains(c)) b.ctry!.add(c);
@@ -89,24 +89,24 @@ extension GameActions on Game {
   }
 
   String enterCountry(Biz b, String c, String mode) {
-    if (!canAP(1)) return '今月の手が残っていません';
-    if (ctryOf(b).contains(c)) return 'すでに出ています';
-    if (!entryModes(b, c).contains(mode)) return 'その出方はできません';
-    if (b.pipe.any((x) => x.k == 'enter' && x.c == c)) return 'すでに準備中です';
+    if (!canAP(1)) return M('今月の手が残っていません');
+    if (ctryOf(b).contains(c)) return M('すでに出ています');
+    if (!entryModes(b, c).contains(mode)) return M('その出方はできません');
+    if (b.pipe.any((x) => x.k == 'enter' && x.c == c)) return M('すでに準備中です');
     final cost = entryCost(b, c, mode);
-    if (cash < cost) return 'お金が足りません';
+    if (cash < cost) return M('お金が足りません');
     cash -= cost;
     useAP(1);
     final pw = cost * 1.1 + b.power * cw(c, yr()) / reachOf(b) * .5;
     if (mode == 'buy') {
       addCtry(b, c, mode, pw);
       calcAll();
-      return '${cm[c]!.n}の地元の会社を買い、すぐに「${indm[b.ind]!.name}」を始めました';
+      return M('{0}の地元の会社を買い、すぐに「{1}」を始めました', [C(c), I(b.ind)]);
     }
     final left = mode == 'jv' ? 3 : 6;
     b.pipe.add(Pipe(k: 'enter', c: c, mode: mode, cost: cost, pw: pw, left: left));
     calcAll();
-    return '${cm[c]!.n}に出る準備を始めました（${ENTRYN[mode]}）。$leftか月後に始まります';
+    return M('{0}に出る準備を始めました（{1}）。{2}か月後に始まります', [C(c), D(ENTRYN.ja[mode]!), left]);
   }
 
   // ===== 稼ぎ方 =====
@@ -124,23 +124,23 @@ extension GameActions on Game {
 
   String uw(Biz b) {
     final c = indm[b.ind]!.cat;
-    return c == 'food' || c == 'live' || c == 'fun'
+    return M(c == 'food' || c == 'live' || c == 'fun'
         ? '店'
         : c == 'make' || c == 'ene'
             ? '工場'
             : c == 'link'
                 ? '拠点'
-                : '設備';
+                : '設備');
   }
 
   String changeModel(Biz b, String m) {
-    if (!canAP(1)) return '今月の手が残っていません';
-    if (b.model == m) return 'すでにその稼ぎ方です';
+    if (!canAP(1)) return M('今月の手が残っていません');
+    if (b.model == m) return M('すでにその稼ぎ方です');
     useAP(1);
     b.model = m;
     b.power *= .85;
     calcAll();
-    return '「${indm[b.ind]!.name}」を${MODELN[m]}に切り替えました。切り替えの混乱で、力が少し落ちます';
+    return M('「{0}」を{1}に切り替えました。切り替えの混乱で、力が少し落ちます', [I(b.ind), D(MODELN.ja[m]!)]);
   }
 
   // ===== 打ち手 =====
@@ -151,57 +151,57 @@ extension GameActions on Game {
 
   String develop(Biz b, double frac) {
     final cost = cash * frac;
-    if (cost <= 0) return 'お金がありません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (cost <= 0) return M('お金がありません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     cash -= cost;
     useAP(1);
     final left = ri(3, 6);
     b.pipe.add(Pipe(k: 'dev', cost: cost, left: left));
     calcAll();
-    return '新しい商品の開発を始めました（${yen(cost)}）。出来上がるのは$leftか月後。当たるかどうかは出てみるまで分かりません';
+    return M('新しい商品の開発を始めました（{0}）。出来上がるのは{1}か月後。当たるかどうかは出てみるまで分かりません', [Y(cost), left]);
   }
 
   String build(Biz b, double frac) {
     final cost = cash * frac;
-    if (cost <= 0) return 'お金がありません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (cost <= 0) return M('お金がありません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     cash -= cost;
     useAP(1);
     final left = b.model == 'fc' ? 1 : ri(1, 2);
     b.pipe.add(Pipe(k: 'build', cost: cost, left: left));
     calcAll();
-    return '${uw(b)}を増やし始めました（${yen(cost)}）。$leftか月後に開きます。${b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります'}';
+    return M('{0}を増やし始めました（{1}）。{2}か月後に開きます。{3}', [uw(b), Y(cost), left, M(b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります')]);
   }
 
   String addCrew(Biz b, double frac) {
     final cost = cash * frac;
-    if (cost <= 0) return 'お金がありません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (cost <= 0) return M('お金がありません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     cash -= cost;
     useAP(1);
     b.crew = crewOf(b) + cost * 4;
     b.upkeep = b.upkeep + cost * .008;
     calcAll();
-    return '現場の人を増やしました（${yen(cost)}）。毎月の人件費が${yen(cost * .008)}増えます';
+    return M('現場の人を増やしました（{0}）。毎月の人件費が{1}増えます', [Y(cost), Y(cost * .008)]);
   }
 
   String cancelPipe(Biz b, int i) {
-    if (i < 0 || i >= b.pipe.length) return '取り下げるものがありません';
+    if (i < 0 || i >= b.pipe.length) return M('取り下げるものがありません');
     final x = b.pipe.removeAt(i);
     cash += x.cost * .5;
-    return '取り下げて、${yen(x.cost * .5)}を取り戻しました';
+    return M('取り下げて、{0}を取り戻しました', [Y(x.cost * .5)]);
   }
 
   String adv(Biz b) {
     final cost = invBase(b) * .25;
-    if (cash < cost) return 'お金が足りません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (cash < cost) return M('お金が足りません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     cash -= cost;
     useAP(1);
     b.ad = 6;
     b.adCost = 0;
     calcAll();
-    return '6か月のあいだ広告を打ちます';
+    return M('6か月のあいだ広告を打ちます');
   }
 
   List<({Company c, double share})> competitors(Biz b) {
@@ -221,10 +221,10 @@ extension GameActions on Game {
 
   String priceWar(Biz b) {
     final cs = competitors(b);
-    if (cs.isEmpty) return '相手がいません';
+    if (cs.isEmpty) return M('相手がいません');
     final top = cs[0];
-    if (!canAP(1)) return '今月の手が残っていません';
-    if (b.attack > 0) return 'すでに値下げ合戦の最中です';
+    if (!canAP(1)) return M('今月の手が残っていません');
+    if (b.attack > 0) return M('すでに値下げ合戦の最中です');
     useAP(1);
     b.attack = 9;
     b.target = top.c.id;
@@ -234,10 +234,10 @@ extension GameActions on Game {
       for (final c in cos) {
         if (c.alive && c.biz.any((x) => x.ind == b.ind)) c.rel -= 20;
       }
-      log.add(LogEntry('抜け駆けの値下げで、「${indm[b.ind]!.name}」の業界団体から追い出されました', 'bad', year, q));
+      log.add(LogEntry(M('抜け駆けの値下げで、「{0}」の業界団体から追い出されました', [I(b.ind)]), 'bad', year, q));
     }
     calcAll();
-    return '${top.c.name}に値下げ合戦を仕掛けました。9か月のあいだ、こちらの利益は3割減り、相手の力は毎月3%ずつ削れます';
+    return M('{0}に値下げ合戦を仕掛けました。9か月のあいだ、こちらの利益は3割減り、相手の力は毎月3%ずつ削れます', [Nm(top.c.name)]);
   }
 
   List<Industry> pivotTargets(Biz b) {
@@ -248,11 +248,11 @@ extension GameActions on Game {
   String pivot(Biz b, String id) {
     final to = indm[id]!;
     final c = capexOf(to);
-    if (cash < c) return '元手が足りません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (cash < c) return M('元手が足りません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     cash -= c;
     useAP(1);
-    final from = indm[b.ind]!.name;
+    final from = b.ind;
     final keep = b.power * .5 * (mkt(to) > 0 ? math.min(1, mkt(to) / math.max(mkt(indm[b.ind]!), 1)) : 1) + c * newPow;
     b.crew = crewOf(b) * .5;
     b.pipe = [];
@@ -264,7 +264,7 @@ extension GameActions on Game {
     b.attack = 0;
     b.prevRev = 0;
     calcAll();
-    return '「$from」を「${to.name}」に業態転換しました。客と人の半分を引き継ぎます';
+    return M('「{0}」を「{1}」に業態転換しました。客と人の半分を引き継ぎます', [I(from), I(id)]);
   }
 
   List<Synergy> knownSynFor(String id) {
@@ -274,24 +274,24 @@ extension GameActions on Game {
 
   String sellBiz(Biz b) {
     final need = hasT('charm') ? 2 : 1;
-    if (!canAP(need)) return '今月の手が足りません';
+    if (!canAP(need)) return M('今月の手が足りません');
     final v = sellValue(b);
     cash += v;
     useAP(need);
     biz.remove(b);
     calcAll();
-    return '「${indm[b.ind]!.name}」を${yen(v)}で売りました';
+    return M('「{0}」を{1}で売りました', [I(b.ind), Y(v)]);
   }
 
   String hire(Person p) {
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canAP(1)) return M('今月の手が残っていません');
     final sign = p.salary * 2;
-    if (cash < sign) return '支度金が足りません';
+    if (cash < sign) return M('支度金が足りません');
     cash -= sign;
     useAP(1);
     cands.remove(p);
     staff.add(p);
-    return '${p.name}を雇いました';
+    return M('{0}を雇いました', [Nm(p.name)]);
   }
 
   /// 責任者を決める（手は使わない）
@@ -309,7 +309,7 @@ extension GameActions on Game {
   String dismiss(Person p) {
     if (p.partner) return partnerOut(p);
     fire(p);
-    return '${p.name}を解雇しました';
+    return M('{0}を解雇しました', [Nm(p.name)]);
   }
 
   String kidJoin(Person k) {
@@ -318,11 +318,11 @@ extension GameActions on Game {
     k.tenure = 0;
     k.salary = jsRound(3e6 * nom() / 12);
     staff.add(k);
-    return '${k.name}が入社しました。能力は働かせると見えてきます';
+    return M('{0}が入社しました。能力は働かせると見えてきます', [Nm(k.name)]);
   }
 
   // ===== 社長の行動 =====
-  String placeName(String id) => id == 'net' ? (yr() < 2008 ? 'ネットの掲示板' : 'SNS') : PLACES.firstWhere((x) => x.id == id).n;
+  String placeName(String id) => M(id == 'net' ? (yr() < 2008 ? 'ネットの掲示板' : 'SNS') : PLACES.firstWhere((x) => x.id == id).nJa);
 
   Person mkPartner(String pl) {
     final p = mkPerson(0);
@@ -385,7 +385,7 @@ extension GameActions on Game {
 
   String recruitPartner(Person p, int x) {
     meet = null;
-    if (sh.own - x < 40) return '持ち株がこれ以上減ると、経営権が危うくなります';
+    if (sh.own - x < 40) return M('持ち株がこれ以上減ると、経営権が危うくなります');
     if (rnd() < partnerChance(p, x)) {
       p.partner = true;
       p.stake = x.toDouble();
@@ -393,15 +393,16 @@ extension GameActions on Game {
       sh.own -= x;
       sh.pt = sh.pt + x;
       staff.add(p);
-      chron('partner', '${p.name}（${p.age}歳）が相棒になった。株を$x%渡した');
-      var m = '${p.name}が相棒になりました。株を$x%渡しました';
+      chron('partner', M('{0}（{1}歳）が相棒になった。株を{2}%渡した', [Nm(p.name), p.age, x]));
+      final m = <Object?>[M('{0}が相棒になりました。株を{1}%渡しました', [Nm(p.name), x])];
       if (p.money != null && p.money != 0) {
         cash += p.money!;
-        m += '。${yen(p.money!)}を出資してくれました';
+        m.add(M('{0}を出資してくれました', [Y(p.money!)]));
       }
-      return '$m。相棒が責任者の事業は力が1割5分上がります';
+      m.add(M('相棒が責任者の事業は力が1割5分上がります'));
+      return Cat(m, ja: '。', en: '. ');
     }
-    return '${p.name}は「もう少し考えたい」と言って去っていきました';
+    return M('{0}は「もう少し考えたい」と言って去っていきました', [Nm(p.name)]);
   }
 
   double workIncome() => (3.3e5 + (pres.ab['ei']! + pres.ab['kai']!) * 3.3e3) * nom();
@@ -413,7 +414,7 @@ extension GameActions on Game {
     if (up.isNotEmpty && rnd() < .45) {
       final i = pick(up);
       seen[i.id] = 1;
-      return '調べてみると、${i.b}年ごろに「${i.name}」の市場が生まれそうです。「事業」の下に書き留めました';
+      return M('調べてみると、{0}年ごろに「{1}」の市場が生まれそうです。「事業」の下に書き留めました', [i.b, I(i.id)]);
     }
     final own = <String>{for (final b in biz) b.ind};
     final live = <String>{for (final i in liveInds()) i.id};
@@ -427,16 +428,16 @@ extension GameActions on Game {
               ? pick(cheap)
               : pick(c);
       hint[s.k] = 1;
-      return '「${indm[s.a]!.name}」と「${indm[s.b]!.name}」は相性がよさそうです。図鑑に書き留めました';
+      return M('「{0}」と「{1}」は相性がよさそうです。図鑑に書き留めました', [I(s.a), I(s.b)]);
     }
-    return '今回は目ぼしい話がありませんでした';
+    return M('今回は目ぼしい話がありませんでした');
   }
 
   /// 社長の行動。seek は成功すると null（出会いの小窓へ）
   String? presAct(String kind, [String? arg]) {
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canAP(1)) return M('今月の手が残っていません');
     if (kind == 'seek') {
-      if (partners().length >= 2) return '相棒は2人までです';
+      if (partners().length >= 2) return M('相棒は2人までです');
       useAP(1);
       meet = mkPartner(arg!);
       return null;
@@ -446,19 +447,19 @@ extension GameActions on Game {
       final v = workIncome();
       cash += v;
       calcAll();
-      return '受託の仕事を片付け、${yen(v)}を稼ぎました';
+      return M('受託の仕事を片付け、{0}を稼ぎました', [Y(v)]);
     }
     if (kind == 'train') {
       useAP(1);
       final gn = trainGain();
       pres.ab[arg!] = math.min(99, pres.ab[arg]! + gn);
-      return '${ABN[arg]}を磨きました（${pres.ab[arg]! - gn} → ${pres.ab[arg]}）';
+      return M('{0}を磨きました（{1} → {2}）', [D(ABN.ja[arg]!), pres.ab[arg]! - gn, pres.ab[arg]]);
     }
     if (kind == 'net') {
-      if (net >= 5) return '人脈はもう十分に広がっています';
+      if (net >= 5) return M('人脈はもう十分に広がっています');
       useAP(1);
       net++;
-      return NETMSG[net - 1];
+      return M(NETMSG.ja[net - 1]);
     }
     if (kind == 'scout') {
       useAP(1);
@@ -468,34 +469,34 @@ extension GameActions on Game {
   }
 
   String borrow(double a) {
-    if (a > borrowLimit() - debt) return '銀行がこれ以上は貸してくれません';
+    if (a > borrowLimit() - debt) return M('銀行がこれ以上は貸してくれません');
     debt += a;
     cash += a;
-    return '${yen(a)}を借りました';
+    return M('{0}を借りました', [Y(a)]);
   }
 
   String sellLand() {
     final v = land;
-    if (v <= 0) return '土地を持っていません';
+    if (v <= 0) return M('土地を持っていません');
     cash += v;
     land = 0;
     calcAll();
-    return '土地を${yen(v)}で売りました';
+    return M('土地を{0}で売りました', [Y(v)]);
   }
 
   String repay(double a) {
     a = math.min(a, math.min(debt, cash));
     debt -= a;
     cash -= a;
-    return '${yen(a)}を返しました';
+    return M('{0}を返しました', [Y(a)]);
   }
 
   String vcRaise() {
-    if (listed) return '上場後は使えません';
-    if (turn - (lastOffer ?? -99) < 12) return '投資家から集めるのは1年に1回までです';
+    if (listed) return M('上場後は使えません');
+    if (turn - (lastOffer ?? -99) < 12) return M('投資家から集めるのは1年に1回までです');
     lastOffer = turn;
-    if (!canAP(1)) return '今月の手が残っていません';
-    if (sh.own <= 40) return 'これ以上持ち株を減らすと経営権が危うくなります';
+    if (!canAP(1)) return M('今月の手が残っていません');
+    if (sh.own <= 40) return M('これ以上持ち株を減らすと経営権が危うくなります');
     final money = cap * .1;
     cash += money;
     sh.own -= 10;
@@ -504,21 +505,21 @@ extension GameActions on Game {
     final first = vcDeadline == 0;
     if (first) vcDeadline = turn + 36;
     calcAll();
-    return '投資家から${yen(money)}を集めました。持ち株は${pct(sh.own)}に。${first ? '条件は「3年以内に上場すること」です' : '上場の約束は${year + ((vcDeadline - turn + q - 1) / 12).floor()}年まで'}';
+    return M('投資家から{0}を集めました。持ち株は{1}に。{2}', [Y(money), pct(sh.own), first ? M('条件は「3年以内に上場すること」です') : M('上場の約束は{0}年まで', [year + ((vcDeadline - turn + q - 1) / 12).floor()])]);
   }
 
   // ===== お金 =====
   bool canBond() => rev * 12 >= 5e9 * nom() && econ >= .95 && !(bond > 0);
   String issueBond() {
-    if (!canBond()) return '今は社債を出せません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canBond()) return M('今は社債を出せません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     final a = math.max(borrowLimit() * .6, 1e8 * nom());
     bond = a;
     bondDue = turn + 60;
     cash += a;
     useAP(1);
     calcAll();
-    return '社債を出して${yen(a)}を集めました。5年後に全額返します。利息は毎月0.25%';
+    return M('社債を出して{0}を集めました。5年後に全額返します。利息は毎月0.25%', [Y(a)]);
   }
 
   // ===== 他社と組む =====
@@ -530,27 +531,27 @@ extension GameActions on Game {
       });
   bool inAssoc(String ind) => deals.any((d) => d.type == 'assoc' && d.ind == ind);
   String dealOk(Company c, String type) {
-    if (c.parent == 'player') return 'その会社はもう子会社です';
-    if (c.rel < -20) return '${c.name}はあなたを警戒していて、話に乗りません';
-    if (dealWith(c).any((d) => d.type == type)) return 'すでに組んでいます';
+    if (c.parent == 'player') return M('その会社はもう子会社です');
+    if (c.rel < -20) return M('{0}はあなたを警戒していて、話に乗りません', [Nm(c.name)]);
+    if (dealWith(c).any((d) => d.type == type)) return M('すでに組んでいます');
     return '';
   }
 
   String makeDeal(Company c, String type, [String? ind]) {
     final ng = dealOk(c, type);
     if (ng.isNotEmpty) return ng;
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     deals.add(Deal(co: c.id, type: type, ind: ind, since: year));
     c.rel += 10;
     calcAll();
-    return '${c.name}と「${DEALN[type]}」で組みました';
+    return M('{0}と「{1}」で組みました', [Nm(c.name), D(DEALN.ja[type]!)]);
   }
 
   /// 事業の画面の「業界団体に入る」
   String joinAssoc(Biz b) {
     final cs = competitors(b);
-    if (cs.isEmpty) return '相手がいません';
+    if (cs.isEmpty) return M('相手がいません');
     final c = cs[0].c;
     final ng = dealOk(c, 'assoc');
     if (ng.isNotEmpty) return ng;
@@ -562,13 +563,13 @@ extension GameActions on Game {
     final c = coById(d.co);
     if (c != null) c.rel -= 5;
     calcAll();
-    return '${c != null ? c.name : '相手'}との「${DEALN[d.type]}」を解消しました';
+    return M('{0}との「{1}」を解消しました', [c != null ? Nm(c.name) : M('相手'), D(DEALN.ja[d.type]!)]);
   }
 
   String betray(Deal d) {
     final c = coById(d.co);
     deals.remove(d);
-    if (c == null) return '相手がいません';
+    if (c == null) return M('相手がいません');
     final inds = <String>{for (final b in c.biz) b.ind};
     for (final b in biz) {
       if (inds.contains(b.ind)) b.power *= 1.1;
@@ -582,7 +583,7 @@ extension GameActions on Game {
     }
     rep = rep - 10;
     calcAll();
-    return '${c.name}を裏切り、組んでいた間に知った客を奪いました。${c.name}は激怒し、業界中の評判も落ちました';
+    return M('{0}を裏切り、組んでいた間に知った客を奪いました。{0}は激怒し、業界中の評判も落ちました', [Nm(c.name)]);
   }
 
   // ===== 会社の形 =====
@@ -598,8 +599,8 @@ extension GameActions on Game {
 
   String spinOff(Biz b) {
     final p = staffById(b.mgr);
-    if (p == null) return '先に責任者を置いてください。その人が子会社の社長になります';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (p == null) return M('先に責任者を置いてください。その人が子会社の社長になります');
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     final ind = indm[b.ind]!;
     final c = mkCo(tierOf(b), ind.cat, presName: p.name, fam: 0);
@@ -614,13 +615,13 @@ extension GameActions on Game {
     staff.remove(p);
     biz.remove(b);
     calcAll();
-    return '「${ind.name}」を分社し、${c.name}を作りました。社長は${p.name}。これからは${p.name}が自分の判断で動かします';
+    return M('「{0}」を分社し、{1}を作りました。社長は{2}。これからは{2}が自分の判断で動かします', [I(ind.id), Nm(c.name), Nm(p.name)]);
   }
 
   String releaseBiz(Biz b) {
     final p = staffById(b.mgr);
-    if (p == null) return '先に責任者を置いてください。その人に事業を渡します';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (p == null) return M('先に責任者を置いてください。その人に事業を渡します');
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     final ind = indm[b.ind]!;
     final c = mkCo(tierOf(b), ind.cat, presName: p.name, fam: 60);
@@ -632,38 +633,38 @@ extension GameActions on Game {
     fire(p);
     biz.remove(b);
     calcAll();
-    return '「${ind.name}」を${p.name}に渡し、独立させました。${c.name}の株を10%持ちます。${p.name}は恩を忘れないでしょう';
+    return M('「{0}」を{1}に渡し、独立させました。{2}の株を10%持ちます。{1}は恩を忘れないでしょう', [I(ind.id), Nm(p.name), Nm(c.name)]);
   }
 
   String subIPO(Company c) {
-    if (c.parent != 'player' || pctOf(c) < 60) return '株を60%以上持つ子会社だけです';
-    if (c.listed) return 'すでに上場しています';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (c.parent != 'player' || pctOf(c) < 60) return M('株を60%以上持つ子会社だけです');
+    if (c.listed) return M('すでに上場しています');
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     final v = c.cap * .3 * .95;
     c.stakePlayer -= 30;
     c.listed = true;
     cash += v;
     calcAll();
-    return '${c.name}を上場させ、株を30%売って${yen(v)}を得ました。まだ${pct(pctOf(c))}持っています';
+    return M('{0}を上場させ、株を30%売って{1}を得ました。まだ{2}持っています', [Nm(c.name), Y(v), pct(pctOf(c))]);
   }
 
   String makeHolding() {
-    if (holding) return 'すでに持株会社です';
-    if (biz.length + subs().length < 5) return '事業と子会社が合わせて5つ以上になってからです';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (holding) return M('すでに持株会社です');
+    if (biz.length + subs().length < 5) return M('事業と子会社が合わせて5つ以上になってからです');
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     holding = true;
     calcAll();
-    return '持株会社になりました。社長が直接見られる事業の上限がなくなります。本社の経費は5割増えます';
+    return M('持株会社になりました。社長が直接見られる事業の上限がなくなります。本社の経費は5割増えます');
   }
 
   String splitCompany(String cat) {
     final bs = biz.where((b) => indm[b.ind]!.cat == cat).toList();
-    if (bs.isEmpty) return 'その分類の事業がありません';
-    if (bs.length == biz.length) return '全部を切り離すことはできません';
-    if (!listed) return '上場してからです';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (bs.isEmpty) return M('その分類の事業がありません');
+    if (bs.length == biz.length) return M('全部を切り離すことはできません');
+    if (!listed) return M('上場してからです');
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     final c = mkCo(bs.map(tierOf).reduce(math.max), cat, fam: 0);
     c.biz = bs.map((b) => CoBiz(ind: b.ind, power: b.power * 1.1)).toList();
@@ -677,7 +678,7 @@ extension GameActions on Game {
       b.power *= 1.1;
     }
     calcAll();
-    return '「${CATN[cat]}」の事業を${c.name}として切り離し、別に上場させました。あなたは新しい会社の株を${pct(pctOf(c))}持ちます。身軽になって、両方の評価が上がりました';
+    return M('「{0}」の事業を{1}として切り離し、別に上場させました。あなたは新しい会社の株を{2}持ちます。身軽になって、両方の評価が上がりました', [D(CATN.ja[cat]!), Nm(c.name), pct(pctOf(c))]);
   }
 
   // ===== 汚い手 =====
@@ -702,14 +703,14 @@ extension GameActions on Game {
   }
 
   String doDirty(String kind, Company c) {
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canAP(1)) return M('今月の手が残っていません');
     final cost = dirtyCost(kind);
-    if (cash < cost) return 'お金が足りません';
+    if (cash < cost) return M('お金が足りません');
     cash -= cost;
     useAP(1);
     final caught = rnd() < dirtyRisk(kind, c);
     dirty++;
-    var m = '';
+    var m = <Object?>[];
     if (kind == 'poach') {
       final p = mkPerson(1.3);
       p.salary *= 1.8;
@@ -718,12 +719,12 @@ extension GameActions on Game {
         x.power *= .93;
       }
       c.rel -= 20;
-      m = '${c.name}の腕利き、${p.name}を引き抜きました';
+      m = [M('{0}の腕利き、{1}を引き抜きました', [Nm(c.name), Nm(p.name)])];
       if (caught) {
         final pay = math.max(c.cap * .005, cost * 2);
         cash -= pay;
         scandal = math.max(scandal, 6);
-        m += '。しかし訴えられ、賠償金${yen(pay)}を払いました';
+        m.add(M('しかし訴えられ、賠償金{0}を払いました', [Y(pay)]));
       }
     }
     if (kind == 'spy') {
@@ -734,7 +735,7 @@ extension GameActions on Game {
       for (final x in c.biz) {
         if (biz.any((y) => y.ind == x.ind)) x.power *= .95;
       }
-      m = '${c.name}の開発の中身を盗み出しました';
+      m = [M('{0}の開発の中身を盗み出しました', [Nm(c.name)])];
       if (caught) {
         scandal = 12;
         for (final k in abKeys) {
@@ -742,25 +743,25 @@ extension GameActions on Game {
         }
         rest = 1;
         c.rel -= 40;
-        m += '。ところが発覚して刑事事件になり、社長は取り調べを受けました。信用も能力も落ちました';
+        m.add(M('ところが発覚して刑事事件になり、社長は取り調べを受けました。信用も能力も落ちました'));
       }
     }
     if (kind == 'lobby') {
       for (final x in c.biz) {
         x.power *= .9;
       }
-      m = '政治家を動かし、${c.name}の業種に規制がかかりました';
+      m = [M('政治家を動かし、{0}の業種に規制がかかりました', [Nm(c.name)])];
       if (caught) {
         scandal = 12;
         for (final x in biz) {
           x.power *= .92;
         }
-        m += '。しかし汚職事件として報じられ、株価が暴落しました';
+        m.add(M('しかし汚職事件として報じられ、株価が暴落しました'));
       }
     }
     if (kind == 'cook') {
       cooked = 12;
-      m = '決算の数字を飾りました。1年のあいだ、会社は実際より良く見えます';
+      m = [M('決算の数字を飾りました。1年のあいだ、会社は実際より良く見えます')];
       if (caught) {
         cooked = 0;
         scandal = 24;
@@ -770,24 +771,24 @@ extension GameActions on Game {
           sh.vc += sh.float;
           sh.float = 0;
         }
-        m = '粉飾がすぐに発覚しました。${wl ? '上場廃止となり、' : ''}信用は地に落ちました';
+        m = [M(wl ? '粉飾がすぐに発覚しました。上場廃止となり、信用は地に落ちました' : '粉飾がすぐに発覚しました。信用は地に落ちました')];
       }
     }
     if (kind == 'cartel') {
       final b = cartelBiz(c);
-      if (b == null) return '事業がありません';
+      if (b == null) return M('事業がありません');
       b.cartel = 24;
-      m = '「${indm[b.ind]!.name}」で、同業者と値段を決め合いました。2年のあいだ利益が増えます';
+      m = [M('「{0}」で、同業者と値段を決め合いました。2年のあいだ利益が増えます', [I(b.ind)])];
       if (caught) {
         b.cartel = 0;
         final fine = b.rev * 12 * .15;
         cash -= fine;
         scandal = math.max(scandal, 12);
-        m += '。しかし当局に見つかり、罰金${yen(fine)}を払いました';
+        m.add(M('しかし当局に見つかり、罰金{0}を払いました', [Y(fine)]));
       }
     }
     calcAll();
-    return m;
+    return Cat(m, ja: '。', en: '. ');
   }
 
   // ===== 売り抜け =====
@@ -799,8 +800,8 @@ extension GameActions on Game {
   double salePrice(bool nc) => cap * (nc ? 1.3 : 1.05) * sh.own / 100;
 
   String sellCompany(Company c, bool nc) {
-    if (!canAP(1)) return '今月の手が残っていません';
-    if (biz.isEmpty) return '売る事業がありません';
+    if (!canAP(1)) return M('今月の手が残っていません');
+    if (biz.isEmpty) return M('売る事業がありません');
     final price = salePrice(nc);
     final old = mkCo(0, 'link', name: '${Game.famOf(pres.name)}グループ', presName: nm(), fam: 0);
     old.biz = biz.map((b) => CoBiz(ind: b.ind, power: b.power)).toList();
@@ -810,7 +811,7 @@ extension GameActions on Game {
     old.formerMine = true;
     c.rel += 10;
     final inds = biz.map((b) => b.ind).toList();
-    chron('sold', '会社を${c.name}に${yen(price)}で売った。前の会社は「${old.name}」として残る');
+    chron('sold', M('会社を{0}に{1}で売った。前の会社は「{2}」として残る', [Nm(c.name), Y(price), Nm(old.name)]));
     noncomp = nc ? Noncomp(inds: inds, until: turn + ri(36, 120), buyer: c.id, price: price) : null;
     final keep = staff.where((p) => p.partner && p.loy >= 60).toList();
     for (final p in keep) {
@@ -837,35 +838,40 @@ extension GameActions on Game {
     wealth = wealth + price * .5;
     cash = price * .5;
     calcAll();
-    return '会社を${c.name}に${yen(price)}で売りました。半分を自分の財産に、半分を元手に、新しい会社を立ち上げます${nc ? '。${jsNum(jsRound((noncomp!.until - turn) / 12))}年間は同じ業種に入らない約束です' : ''}${keep.isNotEmpty ? '。相棒の${keep.map((p) => p.name).join('・')}がついてきてくれました' : ''}。前の会社は「${old.name}」として残ります';
+    return Cat([
+      M('会社を{0}に{1}で売りました。半分を自分の財産に、半分を元手に、新しい会社を立ち上げます', [Nm(c.name), Y(price)]),
+      if (nc) M('{0}年間は同じ業種に入らない約束です', [jsNum(jsRound((noncomp!.until - turn) / 12))]),
+      if (keep.isNotEmpty) M('相棒の{0}がついてきてくれました', [J(keep.map((p) => Nm(p.name)))]),
+      M('前の会社は「{0}」として残ります', [Nm(old.name)]),
+    ], ja: '。', en: '. ');
   }
 
   String breakNoncomp() {
-    if (noncomp == null) return '約束はありません';
+    if (noncomp == null) return M('約束はありません');
     noncomp!.broken = true;
     suits.add(Suit(at: turn + 24, against: true, amt: noncomp!.price * .2));
     scandal = math.max(scandal, 6);
-    return '約束を破ることにしました。2年後に裁判で賠償を求められます';
+    return M('約束を破ることにしました。2年後に裁判で賠償を求められます');
   }
 
   String sellOwn(double x) {
-    if (!listed) return '上場してからです';
+    if (!listed) return M('上場してからです');
     x = math.min(x, sh.own - 1);
-    if (x <= 0) return '売れる株がありません';
+    if (x <= 0) return M('売れる株がありません');
     final v = cap * x / 100 * .9;
     wealth = wealth + v;
     sh.own -= x;
     sh.float += x;
     calcAll();
-    return '持ち株を${pct(x)}売り、${yen(v)}を自分の財産にしました';
+    return M('持ち株を{0}売り、{1}を自分の財産にしました', [pct(x), Y(v)]);
   }
 
   String goPrivate() {
-    if (!listed) return '上場していません';
+    if (!listed) return M('上場していません');
     final out = sh.float + sh.rivSum;
     final cost = cap * out / 100 * 1.3;
-    if (cash < cost) return 'お金が足りません（${yen(cost)} 必要）';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (cash < cost) return M('お金が足りません（{0} 必要）', [Y(cost)]);
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     cash -= cost;
     sh.own += out;
@@ -877,7 +883,7 @@ extension GameActions on Game {
     }
     listed = false;
     calcAll();
-    return '市場の株をすべて買い戻し、非上場に戻しました。乗っ取られる心配はなくなります';
+    return M('市場の株をすべて買い戻し、非上場に戻しました。乗っ取られる心配はなくなります');
   }
 
   void rivalDefeated(Company c) {
@@ -888,13 +894,13 @@ extension GameActions on Game {
 
   // ===== 社風 =====
   String changeCulture(String x) {
-    if (cultLeft > 0) return '社風を切り替えている途中です';
-    if (culture == x) return 'すでにその社風です';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (cultLeft > 0) return M('社風を切り替えている途中です');
+    if (culture == x) return M('すでにその社風です');
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     cultNext = x;
     cultLeft = 24;
-    return '社風を「${CULT[x]!.n}」に切り替え始めました。変わるまで2年かかり、その間は人が辞めやすくなります';
+    return M('社風を「{0}」に切り替え始めました。変わるまで2年かかり、その間は人が辞めやすくなります', [D(CULT[x]!.nJa)]);
   }
 
   String cultureOf(Company c) {
@@ -914,9 +920,9 @@ extension GameActions on Game {
   }
 
   String publicOffer() {
-    if (!listed) return '上場してから使えます';
-    if (turn - (lastOffer ?? -99) < 12) return '増資は1年に1回までです';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!listed) return M('上場してから使えます');
+    if (turn - (lastOffer ?? -99) < 12) return M('増資は1年に1回までです');
+    if (!canAP(1)) return M('今月の手が残っていません');
     lastOffer = turn;
     final money = cap * .1 * .95;
     const k = 100 / 110;
@@ -925,13 +931,13 @@ extension GameActions on Game {
     cash += money;
     useAP(1);
     calcAll();
-    return '新しい株を市場に出し、${yen(money)}を集めました。持ち株は${pct(sh.own)}に下がりました';
+    return M('新しい株を市場に出し、{0}を集めました。持ち株は{1}に下がりました', [Y(money), pct(sh.own)]);
   }
 
   bool canIPO() => !listed && pre * 12 >= 3e8 * nom() && turn >= 24;
   String ipo() {
-    if (!canIPO()) return '上場の条件を満たしていません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canIPO()) return M('上場の条件を満たしていません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     final money = cap * .25;
     cash += money;
     const k = 100 / 120;
@@ -943,8 +949,8 @@ extension GameActions on Game {
     vcDeadline = 0;
     useAP(1);
     calcAll();
-    chron('ipo', '株式を上場した。${yen(money)}が入った（時価総額 ${yen(cap)}）');
-    return '上場しました！${yen(money)}が入り、ここからは誰でもあなたの株を買えます';
+    chron('ipo', M('株式を上場した。{0}が入った（時価総額 {1}）', [Y(money), Y(cap)]));
+    return M('上場しました！{0}が入り、ここからは誰でもあなたの株を買えます', [Y(money)]);
   }
 
   void normSh() {
@@ -963,24 +969,24 @@ extension GameActions on Game {
   String doBuyback(double x) {
     x = math.min(x, sh.float);
     final cost = cap * x / 100 * 1.15;
-    if (cash < cost) return 'お金が足りません';
+    if (cash < cost) return M('お金が足りません');
     cash -= cost;
     sh.float -= x;
     normSh();
     liarCheck();
-    return '自社株を${pct(x)}買い戻しました';
+    return M('自社株を{0}買い戻しました', [pct(x)]);
   }
 
   /// 株の画面の「自社株買い 5%」（手を1つ使う）
   String buybackAct() {
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     return doBuyback(math.min(sh.float, 5));
   }
 
   /// 株の画面の「ホワイトナイトを頼む」（手を1つ使う）
   String whiteKnightAct() {
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canAP(1)) return M('今月の手が残っていません');
     useAP(1);
     return doWhiteKnight();
   }
@@ -988,16 +994,16 @@ extension GameActions on Game {
   String doWhiteKnight() {
     final l = cos.where((c) => c.alive && c.rival == null && c.parent != 'player' && c.tier == 0).toList()..ssort((a, b) => b.cap.compareTo(a.cap));
     final ally = l.firstOrNull;
-    if (ally == null) return '頼める相手がいません';
+    if (ally == null) return M('頼める相手がいません');
     final cost = ally.cap * .05;
-    if (cash < cost) return '${ally.name}の株を買うお金が足りません';
+    if (cash < cost) return M('{0}の株を買うお金が足りません', [Nm(ally.name)]);
     cash -= cost;
     ally.stakePlayer = ally.stakePlayer + 5;
     final x = math.min(10.0, sh.float);
     sh.float -= x;
     sh.ally += x;
     liarCheck();
-    return '${ally.name}がホワイトナイトになり、株を${pct(x)}持ってくれました';
+    return M('{0}がホワイトナイトになり、株を{1}持ってくれました', [Nm(ally.name), pct(x)]);
   }
 
   String doDilute() {
@@ -1006,7 +1012,7 @@ extension GameActions on Game {
     normSh();
     liarCheck();
     calcAll();
-    return '新しい株を味方に渡し、相手の割合を薄めました';
+    return M('新しい株を味方に渡し、相手の割合を薄めました');
   }
 
   void liarCheck() {
@@ -1014,7 +1020,7 @@ extension GameActions on Game {
       scandal = 12;
       sh.ally = math.max(0, sh.ally - 5);
       sh.float += 5;
-      log.add(LogEntry('株の裏工作がばれ、信用を失いました', 'bad', year, q));
+      log.add(LogEntry(M('株の裏工作がばれ、信用を失いました'), 'bad', year, q));
     }
   }
 
@@ -1023,10 +1029,10 @@ extension GameActions on Game {
   double expandNeed() => (region == 0 ? 1e11 : 2e12) * nom();
   bool canExpand() => region < 2 && rev * 12 >= expandNeed();
   String expand() {
-    if (!canExpand()) return 'まだ売上が足りません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canExpand()) return M('まだ売上が足りません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     final c = expandCost();
-    if (cash < c) return 'お金が足りません';
+    if (cash < c) return M('お金が足りません');
     cash -= c;
     region++;
     for (final b in biz) {
@@ -1034,35 +1040,35 @@ extension GameActions on Game {
     }
     useAP(1);
     calcAll();
-    chron('abroad', '${REGN[region]}に進出した');
-    return '${REGN[region]}に進出しました！市場が大きくなり、海外の会社とも競います';
+    chron('abroad', M('{0}に進出した', [D(REGN.ja[region])]));
+    return M('{0}に進出しました！市場が大きくなり、海外の会社とも競います', [D(REGN.ja[region])]);
   }
 
   // ===== 株の攻め =====
   double floatOf(Company c) => math.max(0, 100 - c.fam - c.stakePlayer);
 
   String buyStake(Company c, double x) {
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canAP(1)) return M('今月の手が残っていません');
     x = math.min(x, floatOf(c));
-    if (x <= 0) return '市場に株が残っていません';
+    if (x <= 0) return M('市場に株が残っていません');
     final cost = c.cap * x / 100 * 1.05;
-    if (cash < cost) return 'お金が足りません';
+    if (cash < cost) return M('お金が足りません');
     final before = pctOf(c);
     cash -= cost;
     c.stakePlayer = before + x;
     useAP(1);
     liarCheck();
-    var msg = '${c.name}の株を${pct(x)}買いました（${yen(cost)}）。持ち株は${pct(c.stakePlayer)}';
+    final msg = <Object?>[M('{0}の株を{1}買いました（{2}）。持ち株は{3}', [Nm(c.name), pct(x), Y(cost), pct(c.stakePlayer)])];
     if (before < 5 && c.stakePlayer >= 5) {
-      msg += '。相手に気づかれました';
+      msg.add(M('相手に気づかれました'));
       c.rel -= 20;
       if (c.rival != null && (c.rival!.type == 'zaibatsu' || c.rival!.type == 'state')) {
         c.fam = math.min(70, c.fam + 8);
-        msg += '。${c.rival!.pres}は守りを固めています';
+        msg.add(M('{0}は守りを固めています', [Nm(c.rival!.pres)]));
       }
     }
     afterStake(c);
-    return msg;
+    return Cat(msg, ja: '。', en: '. ');
   }
 
   double tobChance(Company c, double target) {
@@ -1084,9 +1090,9 @@ extension GameActions on Game {
   double tobCost(Company c, double target) => c.cap * math.max(0, target - pctOf(c)) / 100 * 1.3;
 
   String tob(Company c, double target) {
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canAP(1)) return M('今月の手が残っていません');
     final cost = tobCost(c, target);
-    if (cash < cost) return 'お金が足りません（${yen(cost)} 必要）';
+    if (cash < cost) return M('お金が足りません（{0} 必要）', [Y(cost)]);
     useAP(1);
     liarCheck();
     if (rnd() < tobChance(c, target)) {
@@ -1097,19 +1103,19 @@ extension GameActions on Game {
       c.stakePlayer = target;
       c.rel -= 30;
       afterStake(c);
-      return 'TOB成功！${c.name}の株を${pct(target)}まで買い取りました';
+      return M('TOB成功！{0}の株を{1}まで買い取りました', [Nm(c.name), pct(target)]);
     }
     cash -= cost * .03;
     c.rel -= 20;
-    return 'TOBは失敗しました。株主が応じてくれませんでした（手数料 ${yen(cost * .03)}）';
+    return M('TOBは失敗しました。株主が応じてくれませんでした（手数料 {0}）', [Y(cost * .03)]);
   }
 
   void afterStake(Company c) {
     if (pctOf(c) > 50 && c.parent != 'player') {
       c.parent = 'player';
       rivalDefeated(c);
-      log.add(LogEntry('${c.name}を子会社にしました', 'big', year, q));
-      chron('buy', '${c.name}${c.rival != null ? '（宿敵）' : ''}の株を${pct(pctOf(c))}握り、子会社にした');
+      log.add(LogEntry(M('{0}を子会社にしました', [Nm(c.name)]), 'big', year, q));
+      chron('buy', M(c.rival != null ? '{0}（宿敵）の株を{1}握り、子会社にした' : '{0}の株を{1}握り、子会社にした', [Nm(c.name), pct(pctOf(c))]));
     }
     calcAll();
   }
@@ -1121,14 +1127,14 @@ extension GameActions on Game {
     c.stakePlayer = 0;
     if (c.parent == 'player') c.parent = null;
     calcAll();
-    return '${c.name}の株を手放し、${yen(v)}を得ました';
+    return M('{0}の株を手放し、{1}を得ました', [Nm(c.name), Y(v)]);
   }
 
   bool canMerge(Company c) => pctOf(c) >= 66.7 && sh.rivMax < 33.4;
 
   String merge(Company c, {bool viaSwap = false}) {
-    if (!canMerge(c)) return '合併の条件を満たしていません';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!canMerge(c)) return M('合併の条件を満たしていません');
+    if (!canAP(1)) return M('今月の手が残っていません');
     final rest0 = c.cap * (100 - pctOf(c)) / 100;
     final n = rest0 / (cap + rest0);
     if (listed) {
@@ -1157,7 +1163,7 @@ extension GameActions on Game {
       for (final b in biz) {
         if (c.biz.any((x) => x.ind == b.ind)) b.power *= .92;
       }
-      log.add(LogEntry('${c.name}は「${CULT[cultureOf(c)]!.n}」の会社でした。社風がぶつかり、社内が揺れています', 'bad', year, q));
+      log.add(LogEntry(M('{0}は「{1}」の会社でした。社風がぶつかり、社内が揺れています', [Nm(c.name), D(CULT[cultureOf(c)]!.nJa)]), 'bad', year, q));
     }
     rivalDefeated(c);
     cash += c.cash;
@@ -1172,25 +1178,25 @@ extension GameActions on Game {
     }
     calcAll();
     if (viaSwap) {
-      chron('swap', '株式交換で${c.name}${c.rival != null ? '（宿敵）' : ''}を丸ごと買い、合併した。持ち株は${pct(sh.own)}に');
+      chron('swap', M(c.rival != null ? '株式交換で{0}（宿敵）を丸ごと買い、合併した。持ち株は{1}に' : '株式交換で{0}を丸ごと買い、合併した。持ち株は{1}に', [Nm(c.name), pct(sh.own)]));
     } else {
-      chron('merge', '${c.name}${c.rival != null ? '（宿敵）' : ''}を合併した');
+      chron('merge', M(c.rival != null ? '{0}（宿敵）を合併した' : '{0}を合併した', [Nm(c.name)]));
     }
-    return '${c.name}を合併しました。事業はすべてあなたのものです。${p.name}が部下に加わりました';
+    return M('{0}を合併しました。事業はすべてあなたのものです。{1}が部下に加わりました', [Nm(c.name), Nm(p.name)]);
   }
 
   double swapChance(Company c) => clampD(tobChance(c, 100) + (c.rel > 20 ? .15 : 0) - (c.cap > cap * .5 ? .15 : 0), .05, .9);
 
   String shareSwap(Company c) {
-    if (!listed) return '上場してからです';
-    if (c.parent == 'player' && pctOf(c) >= 66.7) return 'そのまま合併できます';
-    if (c.cap > cap) return '自分より大きな会社は、株式交換では買えません';
-    if (sh.rivMax >= 33.4) return '宿敵に株を33.4%以上握られていて、株式交換を止められます';
-    if (!canAP(1)) return '今月の手が残っていません';
+    if (!listed) return M('上場してからです');
+    if (c.parent == 'player' && pctOf(c) >= 66.7) return M('そのまま合併できます');
+    if (c.cap > cap) return M('自分より大きな会社は、株式交換では買えません');
+    if (sh.rivMax >= 33.4) return M('宿敵に株を33.4%以上握られていて、株式交換を止められます');
+    if (!canAP(1)) return M('今月の手が残っていません');
     if (rnd() > swapChance(c)) {
       useAP(1);
       c.rel -= 15;
-      return '${c.name}の経営陣が反対し、株式交換は流れました';
+      return M('{0}の経営陣が反対し、株式交換は流れました', [Nm(c.name)]);
     }
     final rest0 = c.cap * (100 - pctOf(c)) / 100;
     final n = rest0 / (cap + rest0);
@@ -1199,28 +1205,28 @@ extension GameActions on Game {
     sh.float = sh.float * k + n * 100;
     c.stakePlayer = 100;
     final m = merge(c, viaSwap: true);
-    return '株式交換で${c.name}を丸ごと買いました。あなたの持ち株は${pct(sh.own)}に下がりました。$m';
+    return Cat([M('株式交換で{0}を丸ごと買いました。あなたの持ち株は{1}に下がりました', [Nm(c.name), pct(sh.own)]), m], ja: '。', en: '. ');
   }
 
   List<RankRow> rankList() {
     final L = cos.where((c) => c.alive && c.parent != 'player').map((c) => RankRow(c.name, c.cap, c: c)).toList();
-    L.add(RankRow('あなたのグループ', cap + wealth, me: true));
+    L.add(RankRow(M('あなたのグループ'), cap + wealth, me: true));
     L.ssort((a, b) => b.cap.compareTo(a.cap));
     return L;
   }
 
   String choosePresSucc(int? id) {
     succ = id;
-    return '後継ぎを決めました';
+    return M('後継ぎを決めました');
   }
 
   String retire() {
     Person? s;
     if (succ != null) s = staffById(succ) ?? kids.where((k) => k.id == succ).firstOrNull;
-    if (s == null) return '先に後継ぎを決めてください';
+    if (s == null) return M('先に後継ぎを決めてください');
     final old = pres.name;
     takeOver(s);
     calcAll();
-    return '$oldが引退し、${s.name}が社長になりました';
+    return M('{0}が引退し、{1}が社長になりました', [Nm(old), Nm(s.name)]);
   }
 }

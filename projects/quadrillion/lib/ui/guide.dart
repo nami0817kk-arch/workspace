@@ -78,12 +78,12 @@ class GuideBar extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 12),
             child: Row(children: [
-              Text('次にやること', style: ts(size: 12, bold: true, color: Pal.goldtx)),
+              Text(tr('次にやること'), style: ts(size: 12, bold: true, color: Pal.goldtx)),
               const SizedBox(width: 8),
-              Expanded(child: Text(step.text, maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 13.5, bold: true))),
+              Expanded(child: Text(tr(step.text), maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 13.5, bold: true))),
               if (go != null) const Icon(Icons.chevron_right, size: 20, color: Pal.goldtx),
               IconButton(
-                tooltip: '案内を閉じる',
+                tooltip: tr('案内を閉じる'),
                 visualDensity: VisualDensity.compact,
                 icon: const Icon(Icons.close, size: 18, color: Pal.mute),
                 onPressed: () {
