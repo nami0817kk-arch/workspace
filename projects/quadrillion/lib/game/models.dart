@@ -379,6 +379,14 @@ class Company {
   String? culture, fromStaff;
   bool formerMine;
 
+  // ===== 現地法人（1.0.0+9 から。古いセーブでは無し） =====
+  /// 現地法人ならその国（事業のその国の分を分けた子会社）
+  String? loc;
+
+  /// 上場した現地法人の株を買い集めている宿敵の会社と、その割合
+  int? locRiv;
+  double locRivPct;
+
   Company({
     required this.id,
     required this.name,
@@ -406,6 +414,9 @@ class Company {
     this.culture,
     this.fromStaff,
     this.formerMine = false,
+    this.loc,
+    this.locRiv,
+    this.locRivPct = 0,
   })  : biz = biz ?? [],
         revHist = revHist ?? [];
 
@@ -436,6 +447,9 @@ class Company {
         'culture': culture,
         'fromStaff': fromStaff,
         'formerMine': formerMine,
+        'loc': loc,
+        'locRiv': locRiv,
+        'locRivPct': locRivPct,
       };
 
   factory Company.fromJson(Map<String, dynamic> j) => Company(
@@ -465,6 +479,9 @@ class Company {
         culture: j['culture'] as String?,
         fromStaff: j['fromStaff'] as String?,
         formerMine: j['formerMine'] == true,
+        loc: j['loc'] as String?,
+        locRiv: _in(j['locRiv']),
+        locRivPct: _d(j['locRivPct']),
       );
 }
 
@@ -572,7 +589,7 @@ class HistEntry {
 class Chron {
   int y, q;
 
-  /// 種類: found / partner / partner_out / first_biz / ipo / abroad / buy / merge / swap / sold / pres / era / rank / won / over / rebirth / rival / board
+  /// 種類: found / partner / partner_out / first_biz / ipo / abroad / buy / merge / swap / sold / pres / era / rank / won / over / rebirth / rival / board / local
   String k;
   String m;
   Chron(this.y, this.q, this.k, this.m);
@@ -613,5 +630,20 @@ class GameEvent {
   Person? person;
   int? poach, pl, subco;
   bool vc, rivfund;
-  GameEvent({required this.title, required this.text, required this.choices, this.who, this.face, this.person, this.poach, this.pl, this.subco, this.vc = false, this.rivfund = false});
+
+  /// 臨時の会議ならそのきっかけ（takeover / scandal / cash）
+  String? em;
+  GameEvent(
+      {required this.title,
+      required this.text,
+      required this.choices,
+      this.who,
+      this.face,
+      this.person,
+      this.poach,
+      this.pl,
+      this.subco,
+      this.vc = false,
+      this.rivfund = false,
+      this.em});
 }
