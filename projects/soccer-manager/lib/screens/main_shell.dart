@@ -395,8 +395,7 @@ class _FmTopBar extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          Tr.pick(
-                              ' 第$matchday節・${save.currentDivisionTier}部',
+                          Tr.pick(' 第$matchday節・${save.currentDivisionTier}部',
                               ' • MD $matchday • Tier ${save.currentDivisionTier}'),
                           key: const ValueKey('topbar-division'),
                           maxLines: 1,
@@ -529,29 +528,29 @@ class _FmSidebar extends StatelessWidget {
             color: on ? scheme.primary : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: onTap,
-          child: SizedBox(
-            height: _itemHeight - 2,
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                icon,
-                const SizedBox(height: 2),
-                Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: on ? scheme.onPrimary : scheme.onSurfaceVariant,
-                  ),
+              borderRadius: BorderRadius.circular(8),
+              onTap: onTap,
+              child: SizedBox(
+                height: _itemHeight - 2,
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    icon,
+                    const SizedBox(height: 2),
+                    Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: on ? scheme.onPrimary : scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
             ),
           ),
         );
@@ -583,9 +582,7 @@ class _FmSidebar extends StatelessWidget {
                                 : scheme.onSurfaceVariant,
                           );
                           final n = badges[p] ?? 0;
-                          return n > 0
-                              ? Badge(label: Text('$n'), child: i)
-                              : i;
+                          return n > 0 ? Badge(label: Text('$n'), child: i) : i;
                         }(),
                       ),
                   ],

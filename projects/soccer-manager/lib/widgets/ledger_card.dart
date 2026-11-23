@@ -121,7 +121,8 @@ class LedgerCard extends StatelessWidget {
               ),
               if (otherRows.isNotEmpty) ...[
                 const SizedBox(height: 6),
-                _Heading(Tr.pick('損益に含めないもの(資金だけが動く)', 'Not in profit (cash only)')),
+                _Heading(
+                    Tr.pick('損益に含めないもの(資金だけが動く)', 'Not in profit (cash only)')),
                 ...otherRows,
               ],
               const Divider(height: 20),
@@ -140,7 +141,11 @@ class LedgerCard extends StatelessWidget {
                   '人件費率: ${(ratio * 100).round()}% ('
                       '${switch (level) { 2 => '危険', 1 => '注意', _ => '健全' }})',
                   'Wage ratio: ${(ratio * 100).round()}% ('
-                      '${switch (level) { 2 => 'danger', 1 => 'caution', _ => 'healthy' }})'),
+                      '${switch (level) {
+                    2 => 'danger',
+                    1 => 'caution',
+                    _ => 'healthy'
+                  }})'),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: levelColor(),
@@ -170,8 +175,7 @@ class LedgerCard extends StatelessWidget {
               runway == null
                   ? Tr.pick('資金の見通し: 今の収支なら資金は減りません。',
                       'Outlook: at the current rate your funds do not run out.')
-                  : Tr.pick(
-                      '資金の見通し: 今の収支のままだと約$runway節で資金が尽きます。',
+                  : Tr.pick('資金の見通し: 今の収支のままだと約$runway節で資金が尽きます。',
                       'Outlook: at the current rate your funds run out in about ${Tr.plural(runway, 'matchday')}.'),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -179,7 +183,7 @@ class LedgerCard extends StatelessWidget {
                     ? SemanticColors.positive(context)
                     : (runway <= 10
                         ? SemanticColors.negative(context)
-                        : Colors.orange.shade700),
+                        : SemanticColors.ink(context, Colors.orange.shade700)),
               ),
             ),
             if (past.isNotEmpty) ...[
@@ -190,7 +194,8 @@ class LedgerCard extends StatelessWidget {
                 children: [
                   Expanded(
                       child: Text(Tr.pick('季', 'Season'),
-                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
+                          style: const TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
                   _Cell(Tr.pick('営業収入', 'Income'), bold: true),
                   _Cell(Tr.pick('人件費', 'Wages'), bold: true),
                   _Cell(Tr.pick('損益', 'Profit'), bold: true),

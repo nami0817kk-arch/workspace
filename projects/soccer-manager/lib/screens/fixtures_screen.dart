@@ -323,9 +323,11 @@ class FixturesScreen extends StatelessWidget {
                                 Tr.pick(
                                     '優勝 ${(p.titleProbability * 100).toStringAsFixed(0)}%',
                                     'Title ${(p.titleProbability * 100).toStringAsFixed(0)}%'),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 11,
-                                  color: Colors.amber,
+                                  color: SemanticColors.ink(
+                                      context, Colors.amber,
+                                      min: 3),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -450,7 +452,7 @@ class _StandingsTabState extends State<_StandingsTab> {
             children: [
               if (showContinental) ...[
                 _ZoneLegend(
-                    color: Colors.amber.shade700,
+                    color: SemanticColors.ink(context, Colors.amber.shade700),
                     mark: 'CC',
                     label: Tr.pick(
                         'チャンピオンズカップ出場圏', 'Champions Cup qualification')),
@@ -715,7 +717,9 @@ Future<void> _showFixtureResultDialog(
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const Icon(Icons.star, color: Colors.amber, size: 18),
+                  Icon(Icons.star,
+                      color: SemanticColors.ink(context, Colors.amber, min: 3),
+                      size: 18),
                   const SizedBox(width: 4),
                   Expanded(
                       child: Text(Tr.pick('マン・オブ・ザ・マッチ: $motmName',
@@ -956,9 +960,9 @@ class _MatchdayList extends StatelessWidget {
                 ? null
                 : () => _showFixtureResultDialog(context, result, home, away),
             leading: isDerby
-                ? const Icon(
+                ? Icon(
                     Icons.local_fire_department,
-                    color: Colors.redAccent,
+                    color: SemanticColors.ink(context, Colors.redAccent),
                   )
                 : null,
             title: Row(
@@ -1103,10 +1107,10 @@ class _UserFixtureList extends StatelessWidget {
                 ),
                 if (isDerby) ...[
                   const SizedBox(width: 6),
-                  const Icon(
+                  Icon(
                     Icons.local_fire_department,
                     size: 16,
-                    color: Colors.redAccent,
+                    color: SemanticColors.ink(context, Colors.redAccent),
                   ),
                 ],
               ],

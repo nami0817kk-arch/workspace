@@ -190,8 +190,8 @@ class SettingsScreen extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.drive_file_rename_outline),
                 title: Text(Tr.pick('クラブ名の書き換え', 'Rename clubs')),
-                subtitle: Text(Tr.pick('どのクラブの名前も、好きな名前に直せます',
-                    'Give any club the name you like')),
+                subtitle: Text(Tr.pick(
+                    'どのクラブの名前も、好きな名前に直せます', 'Give any club the name you like')),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => const ClubRenameScreen())),
@@ -240,13 +240,14 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => _importSave(context),
                 ),
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.delete_forever,
-                    color: Colors.redAccent,
+                    color: SemanticColors.ink(context, Colors.redAccent),
                   ),
                   title: Text(
                     Tr.pick('セーブデータを削除', 'Delete your save'),
-                    style: const TextStyle(color: Colors.redAccent),
+                    style: TextStyle(
+                        color: SemanticColors.ink(context, Colors.redAccent)),
                   ),
                   subtitle: Text(Tr.pick('最初からやり直します。この操作は取り消せません',
                       'Starts again from scratch. This cannot be undone')),
@@ -297,8 +298,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 subtitle: Text(
-                  Tr.pick(
-                      'この状態で配信しても広告収益は発生しません。ビルド時に本番のIDを渡してください。',
+                  Tr.pick('この状態で配信しても広告収益は発生しません。ビルド時に本番のIDを渡してください。',
                       'Shipping like this earns nothing from ads. Pass your production IDs at build time.'),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onErrorContainer,
@@ -374,8 +374,8 @@ class SettingsScreen extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.star_outline),
                   title: Text(Tr.pick('このアプリを評価する', 'Rate this app')),
-                  subtitle: Text(Tr.pick('App Store のページを開きます',
-                      'Opens the App Store page')),
+                  subtitle: Text(Tr.pick(
+                      'App Store のページを開きます', 'Opens the App Store page')),
                   trailing: const Icon(Icons.open_in_new, size: 16),
                   onTap: () => ReviewPrompt().openStoreListing(),
                 ),
@@ -536,7 +536,11 @@ class SettingsScreen extends StatelessWidget {
             onPressed: () => Navigator.pop(ctx),
             child: Text(Tr.pick('キャンセル', 'Cancel')),
           ),
-          TextButton(
+          // 取り消せない操作の確定は、赤く塗ったボタン(2026-11-24)。
+          FilledButton(
+            style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(ctx).colorScheme.error,
+                foregroundColor: Theme.of(ctx).colorScheme.onError),
             onPressed: () async {
               final gameState = ctx.read<GameState>();
               await gameState.deleteSave();
@@ -590,8 +594,8 @@ class _RestorePointTiles extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.history),
                 title: Text(Tr.pick('控えの時点に戻す', 'Go back to that point')),
-                subtitle: Text(Tr.pick('控えを取ってからの進行は失われます',
-                    'Anything since then will be lost')),
+                subtitle: Text(Tr.pick(
+                    '控えを取ってからの進行は失われます', 'Anything since then will be lost')),
                 onTap: () => _confirmRestore(context, info),
               ),
           ],
@@ -631,7 +635,7 @@ class _RestorePointTiles extends StatelessWidget {
               onPressed: () => Navigator.pop(ctx, false),
               child: Text(Tr.pick('キャンセル', 'Cancel')),
             ),
-            TextButton(
+            FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
               child: Text(Tr.pick('取り直す', 'Replace')),
             ),
@@ -665,7 +669,10 @@ class _RestorePointTiles extends StatelessWidget {
             onPressed: () => Navigator.pop(ctx, false),
             child: Text(Tr.pick('キャンセル', 'Cancel')),
           ),
-          TextButton(
+          FilledButton(
+            style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(ctx).colorScheme.error,
+                foregroundColor: Theme.of(ctx).colorScheme.onError),
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(Tr.pick('戻す', 'Go back')),
           ),

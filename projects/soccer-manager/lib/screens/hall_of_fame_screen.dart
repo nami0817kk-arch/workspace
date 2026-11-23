@@ -92,7 +92,7 @@ class _LegendCard extends StatelessWidget {
               Text(Tr.pick('永久欠番', 'Number retired'),
                   style: const TextStyle(fontWeight: FontWeight.bold))
             else
-              TextButton(
+              OutlinedButton(
                 onPressed: onRetireNumber,
                 child: Text(Tr.pick('永久欠番にする', 'Retire his number')),
               ),

@@ -222,57 +222,57 @@ class ClubScreen extends StatelessWidget {
             // 集計なので、スタッフのタブ(と全部を出すとき)だけに出す。
             // 施設・ファンと街のタブの上にもそのまま出ていた(2026-11-23)。
             if (!EmbeddedInShell.of(context) || show(ClubSection.staff))
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
-              // 狭い画面では折り返す(1行に並べきれないことがある)。
-              child: Wrap(
-                spacing: 12,
-                runSpacing: 4,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  if (!EmbeddedInShell.of(context))
-                    Text(
-                      Tr.pick('資金 ${formatMoney(save.budget)}',
-                          'Funds ${formatMoney(save.budget)}'),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  if (show(ClubSection.staff)) ...[
-                  Row(
-                    key: const ValueKey('club-staff-summary-level'),
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+                // 狭い画面では折り返す(1行に並べきれないことがある)。
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    if (!EmbeddedInShell.of(context))
                       Text(
-                        Tr.pick('充実度 $totalLevels/$maxTotalLevels',
-                            'Development $totalLevels/$maxTotalLevels'),
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600),
+                        Tr.pick('資金 ${formatMoney(save.budget)}',
+                            'Funds ${formatMoney(save.budget)}'),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(width: 8),
-                      SizedBox(
-                        width: 80,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: totalLevels / maxTotalLevels,
-                            minHeight: 6,
+                    if (show(ClubSection.staff)) ...[
+                      Row(
+                        key: const ValueKey('club-staff-summary-level'),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            Tr.pick('充実度 $totalLevels/$maxTotalLevels',
+                                'Development $totalLevels/$maxTotalLevels'),
+                            style: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w600),
                           ),
-                        ),
+                          const SizedBox(width: 8),
+                          SizedBox(
+                            width: 80,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: LinearProgressIndicator(
+                                value: totalLevels / maxTotalLevels,
+                                minHeight: 6,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        Tr.pick(
+                            'スタッフの年俸 ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))}',
+                            'Staff salaries ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))} a year'),
+                        key: const ValueKey('club-staff-summary-wages'),
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.subtleText(context)),
                       ),
                     ],
-                  ),
-                  Text(
-                    Tr.pick(
-                        'スタッフの年俸 ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))}',
-                        'Staff salaries ${formatMoney(annualFromWeekly(gameState.scaledMoney(infra.totalStaffWeeklyWage)))} a year'),
-                    key: const ValueKey('club-staff-summary-wages'),
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: SemanticColors.subtleText(context)),
-                  ),
                   ],
-                ],
+                ),
               ),
-            ),
             if (show(ClubSection.staff)) ...[
               Builder(builder: (context) {
                 final filled = StaffRole.values
@@ -478,7 +478,7 @@ class _UpgradeCard extends StatelessWidget {
                     (i) => Icon(
                       i < level ? Icons.star : Icons.star_border,
                       size: 16,
-                      color: Colors.amber,
+                      color: SemanticColors.ink(context, Colors.amber, min: 3),
                     ),
                   ),
                 ),

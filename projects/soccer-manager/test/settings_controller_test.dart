@@ -14,7 +14,8 @@ void main() {
     await settings.init();
 
     expect(settings.initialized, isTrue);
-    expect(settings.themeMode, ThemeMode.system);
+    // 既定はライト(2026-11-24。暗い画面が指摘された)。
+    expect(settings.themeMode, ThemeMode.light);
     expect(settings.textScale, 1.0);
     expect(settings.soundEnabled, isTrue);
     expect(settings.hapticsEnabled, isTrue);
@@ -44,6 +45,22 @@ void main() {
     expect(reloaded.hasSeenOnboarding, isTrue);
     expect(reloaded.colorblindMode, isTrue);
     expect(reloaded.boldTextMode, isTrue);
+  });
+
+  test('明暗を選んで保存した人の値は、既定がライトになっても変えない', () async {
+    // 「端末に合わせる」を明示的に選んだ人。保存値は設定画面で選んだ
+    // ときにしか書かれないので、選ばなかった人と区別できる。
+    SharedPreferences.setMockInitialValues(
+        {'settings_theme_mode': ThemeMode.system.name});
+    final chose = SettingsController();
+    await chose.init();
+    expect(chose.themeMode, ThemeMode.system);
+
+    SharedPreferences.setMockInitialValues(
+        {'settings_theme_mode': ThemeMode.dark.name});
+    final dark = SettingsController();
+    await dark.init();
+    expect(dark.themeMode, ThemeMode.dark);
   });
 
   test('SettingsController.setTextScale clamps to the allowed range', () async {

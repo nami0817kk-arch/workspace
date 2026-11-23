@@ -122,14 +122,17 @@ class InboxCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Icon(Icons.priority_high,
-                        size: 14, color: Colors.orange.shade800),
+                        size: 14,
+                        color: SemanticColors.ink(
+                            context, Colors.orange.shade800)),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(a,
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: Colors.orange.shade800)),
+                              color: SemanticColors.ink(
+                                  context, Colors.orange.shade800))),
                     ),
                   ],
                 ),

@@ -82,12 +82,13 @@ class HomeScreen extends StatelessWidget {
     // 他のクラブ同士の試合のことがあり、次の試合の札に「ボルトン vs
     // ブラックプール」と自クラブの出ない試合が出ていた(2026-11-23)。
     final next = (league.fixtures
-            .where((f) =>
-                f.result == null &&
-                (f.homeTeamId == userTeam.id || f.awayTeamId == userTeam.id))
-            .toList()
-          ..sort((a, b) => a.matchday.compareTo(b.matchday)))
-        .firstOrNull ??
+                .where((f) =>
+                    f.result == null &&
+                    (f.homeTeamId == userTeam.id ||
+                        f.awayTeamId == userTeam.id))
+                .toList()
+              ..sort((a, b) => a.matchday.compareTo(b.matchday)))
+            .firstOrNull ??
         league.nextUnplayedFixture;
     final seasonComplete = league.isSeasonComplete;
     final preseason = gameState.isPreseason;
@@ -407,8 +408,8 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(gameState.pendingBoardReviewMessage!,
-                            style: TextStyle(
-                                color: scheme.onSecondaryContainer)),
+                            style:
+                                TextStyle(color: scheme.onSecondaryContainer)),
                         const SizedBox(height: 8),
                         Align(
                           alignment: Alignment.centerRight,
@@ -497,7 +498,7 @@ class HomeScreen extends StatelessWidget {
                       sub: Tr.pick(
                           '${userRow.won}勝${userRow.draw}分${userRow.lost}敗',
                           '${userRow.won}W ${userRow.draw}D ${userRow.lost}L'),
-                      color: Colors.amber.shade800,
+                      color: SemanticColors.ink(context, Colors.amber.shade800),
                     ),
                     // 資金と2つの期待は、横画面では上バーに出ている。
                     // 3か所に同じ数字が並んでいたので、上バーが無いときだけ出す。
@@ -526,8 +527,8 @@ class HomeScreen extends StatelessWidget {
                         sub: Tr.pick('結果とオーナーの手', 'Results and your moves'),
                         progress: save.confidence / 100,
                         color: save.confidence <= 25
-                            ? Colors.redAccent
-                            : Colors.teal.shade700,
+                            ? SemanticColors.ink(context, Colors.redAccent)
+                            : SemanticColors.ink(context, Colors.teal.shade700),
                       ),
                       _StatTile(
                         icon: Icons.account_balance,
@@ -536,15 +537,16 @@ class HomeScreen extends StatelessWidget {
                         sub: Tr.pick('収支', 'Finances'),
                         progress: save.shareholderExpectation / 100,
                         color: save.shareholderExpectation <= 25
-                            ? Colors.redAccent
-                            : Colors.amber.shade800,
+                            ? SemanticColors.ink(context, Colors.redAccent)
+                            : SemanticColors.ink(
+                                context, Colors.amber.shade800),
                       ),
                     ],
                     _StatTile(
                       icon: Icons.bar_chart,
                       label: Tr.pick('平均総合力', 'Average overall'),
                       value: '${userTeam.overallRating}',
-                      color: Colors.blue.shade700,
+                      color: SemanticColors.ink(context, Colors.blue.shade700),
                       glossaryTerm: Tr.pick('総合力', 'Overall'),
                     ),
                     _StatTile(
@@ -554,7 +556,7 @@ class HomeScreen extends StatelessWidget {
                       glossaryTerm: Tr.pick('オーナーの評判', 'Reputation'),
                       value: '${gameState.managerReputation}',
                       progress: gameState.managerReputation / 100,
-                      color: Colors.deepPurple,
+                      color: SemanticColors.ink(context, Colors.deepPurple),
                     ),
                     _StatTile(
                       icon: Icons.groups,
@@ -567,7 +569,7 @@ class HomeScreen extends StatelessWidget {
                       sub: Tr.pick(
                           '収容人数 ${formatCount(gameState.stadiumCapacity)}人',
                           'Capacity ${formatCount(gameState.stadiumCapacity)}'),
-                      color: Colors.brown.shade600,
+                      color: SemanticColors.ink(context, Colors.brown.shade600),
                     ),
                   ],
                 ),
@@ -591,8 +593,8 @@ class HomeScreen extends StatelessWidget {
                   color: scheme.tertiaryContainer,
                   onColor: scheme.onTertiaryContainer,
                   icon: Icons.emoji_events_outlined,
-                  title: Tr.pick(
-                      '国内カップ戦の出番です', 'You are up in the domestic cup'),
+                  title:
+                      Tr.pick('国内カップ戦の出番です', 'You are up in the domestic cup'),
                   body: Tr.pick(
                       '${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}に自クラブの試合があります',
                       'Your tie is on ${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}'),
@@ -1147,7 +1149,10 @@ class HomeScreen extends StatelessWidget {
                 constraints: const BoxConstraints(minHeight: 44),
                 child: Row(
                   children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 18),
+                    Icon(Icons.star,
+                        color:
+                            SemanticColors.ink(context, Colors.amber, min: 3),
+                        size: 18),
                     const SizedBox(width: 4),
                     Expanded(
                         child: Text(Tr.pick('マン・オブ・ザ・マッチ: $motmName',
@@ -1295,7 +1300,9 @@ class HomeScreen extends StatelessWidget {
                       Icon(
                         isWarning ? Icons.warning_amber : Icons.info_outline,
                         size: 18,
-                        color: isWarning ? Colors.red.shade700 : Colors.grey,
+                        color: isWarning
+                            ? SemanticColors.ink(context, Colors.red.shade700)
+                            : SemanticColors.ink(context, Colors.grey),
                       ),
                       const SizedBox(width: 8),
                       Expanded(child: Text(text)),
@@ -1489,8 +1496,8 @@ class HomeScreen extends StatelessWidget {
                       for (final line in summary.skip(1))
                         Padding(
                           padding: const EdgeInsets.only(top: 3),
-                          child: Text(line,
-                              style: const TextStyle(fontSize: 13)),
+                          child:
+                              Text(line, style: const TextStyle(fontSize: 13)),
                         ),
                     ],
                   ),
@@ -1504,8 +1511,9 @@ class HomeScreen extends StatelessWidget {
                       Icon(
                         isHighlight ? Icons.celebration : Icons.info_outline,
                         size: 18,
-                        color:
-                            isHighlight ? Colors.amber.shade700 : Colors.grey,
+                        color: isHighlight
+                            ? SemanticColors.ink(context, Colors.amber.shade700)
+                            : SemanticColors.ink(context, Colors.grey),
                       ),
                       const SizedBox(width: 8),
                       Expanded(child: Text(text)),
@@ -1806,10 +1814,10 @@ class _ThisWeekCard extends StatelessWidget {
               const SizedBox(height: 6),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.emoji_events_outlined,
                     size: 18,
-                    color: Colors.amber,
+                    color: SemanticColors.ink(context, Colors.amber, min: 3),
                   ),
                   const SizedBox(width: 6),
                   Expanded(

@@ -467,7 +467,9 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
             Tr.pick(
                 '${talk.rivalClubName}も年俸${formatMoney(annualFromWeekly(talk.rivalWage))}で誘っています。',
                 '${talk.rivalClubName} offer ${formatMoney(annualFromWeekly(talk.rivalWage))} a year too.'),
-            style: TextStyle(fontSize: 12, color: Colors.orange.shade800),
+            style: TextStyle(
+                fontSize: 12,
+                color: SemanticColors.ink(context, Colors.orange.shade800)),
           ),
         ],
         if (kind != ContractKind.preContract) ...[
@@ -811,8 +813,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
     final theme = Theme.of(context);
     final years = _years();
     final annual = annualFromWeekly(_wage);
-    final upfront =
-        _signingBonus(game) + _agentFee(game) + _transferFee(game);
+    final upfront = _signingBonus(game) + _agentFee(game) + _transferFee(game);
     final total = annual * years + upfront;
     // 給与の枠: 更新は今の年俸を差し替える。
     final bill = game.weeklyWageBill -

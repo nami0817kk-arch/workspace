@@ -20,7 +20,17 @@ class SettingsController extends ChangeNotifier {
   static const double maxTextScale = 1.3;
 
   bool initialized = false;
-  ThemeMode themeMode = ThemeMode.system;
+
+  /// 画面の明暗。**既定はライト**(2026-11-24)。
+  ///
+  /// 以前の既定は「端末に合わせる」で、しかも横画面は設定に関係なく暗い
+  /// 見た目に固定していた。「画面が暗い。ユーザビリティ性のない画面」と
+  /// 指摘を受け、明るい見た目を既定にした。保存値は利用者が設定画面で
+  /// 選んだときにしか書かれないので、保存値がある人(「端末に合わせる」を
+  /// 選んだ人も含む)はその値のまま、無い人だけがライトになる。
+  static const ThemeMode defaultThemeMode = ThemeMode.light;
+
+  ThemeMode themeMode = defaultThemeMode;
   double textScale = 1.0;
   bool soundEnabled = true;
   bool hapticsEnabled = true;
@@ -46,7 +56,7 @@ class SettingsController extends ChangeNotifier {
     final modeName = prefs.getString(_themeModeKey);
     themeMode = ThemeMode.values.firstWhere(
       (m) => m.name == modeName,
-      orElse: () => ThemeMode.system,
+      orElse: () => defaultThemeMode,
     );
     textScale = prefs.getDouble(_textScaleKey) ?? 1.0;
     soundEnabled = prefs.getBool(_soundEnabledKey) ?? true;

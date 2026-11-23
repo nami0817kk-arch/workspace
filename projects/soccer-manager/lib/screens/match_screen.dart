@@ -7,6 +7,7 @@ import '../models/match_result.dart';
 import '../models/team.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
+import '../widgets/fm_panel.dart';
 import '../widgets/match_widgets.dart';
 import '../l10n/tr.dart';
 
@@ -65,8 +66,14 @@ class _MatchScreenState extends State<MatchScreen> {
     );
   }
 
+  // 試合の画面は、明るい見た目を選んでいても暗いまま描く。芝の絵が
+  // 主役で、周りが白いと芝が浮いて見えるため(2026-11-24)。中の文字の
+  // 色も暗い配色から引くよう、Builder で包んだ下の context で組む。
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) =>
+      FmDarkOnly(child: Builder(builder: _buildScreen));
+
+  Widget _buildScreen(BuildContext context) {
     final teams = widget.teams;
     final home = teams.firstWhere((t) => t.id == widget.result.homeTeamId);
     final away = teams.firstWhere((t) => t.id == widget.result.awayTeamId);

@@ -167,10 +167,11 @@ class _TransferTableState extends State<TransferTable> {
           ),
           SizedBox(
             width: 52,
-            child: TextButton(
-              style: TextButton.styleFrom(
+            // 行の主な操作なので塗りのボタン(2026-11-24)。
+            child: FilledButton(
+              style: FilledButton.styleFrom(
                 padding: EdgeInsets.zero,
-                minimumSize: const Size(52, 48),
+                minimumSize: const Size(52, 40),
               ),
               onPressed: canSign ? () => onSign(p) : null,
               child: FittedBox(

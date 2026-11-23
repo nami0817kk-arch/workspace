@@ -120,6 +120,28 @@ ThemeData fmDarkTheme(ThemeData darkBase) =>
 ThemeData fmLightTheme(ThemeData lightBase) =>
     fmLookTheme(lightBase, FmPalette.light);
 
+/// 設定の明暗にかかわらず、中を暗い配色(案B)で描く。
+///
+/// 試合の画面で使う。芝の絵が主役なので、周りを白くすると芝が浮いて
+/// 見え、スコアと実況より絵の縁が目立つ。
+class FmDarkOnly extends StatelessWidget {
+  const FmDarkOnly({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final current = Theme.of(context);
+    if (current.brightness == Brightness.dark) return child;
+    final base = current.copyWith(
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.fromSeed(
+          seedColor: current.colorScheme.primary, brightness: Brightness.dark),
+    );
+    return Theme(data: fmDarkTheme(base), child: child);
+  }
+}
+
 /// 横画面のときだけ、中の画面すべてに FM 風の密なテーマを当てる。
 /// ホームの外(その他メニューから開く画面)も同じ見た目にそろう。
 ///

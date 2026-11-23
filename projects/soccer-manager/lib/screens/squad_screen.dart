@@ -295,52 +295,52 @@ class _SquadScreenState extends State<SquadScreen> {
             children: [
               _LegendRow(
                 icon: Icons.swap_horiz,
-                color: Colors.indigo,
+                color: SemanticColors.ink(context, Colors.indigo),
                 label: Tr.pick('ローンで加入中の選手', 'On loan at your club'),
               ),
               _LegendRow(
                 icon: Icons.sentiment_dissatisfied,
-                color: Colors.redAccent,
+                color: SemanticColors.ink(context, Colors.redAccent),
                 label: Tr.pick('移籍を希望している', 'Wants a move away'),
               ),
               _LegendRow(
                 icon: Icons.flag,
-                color: Colors.blueAccent,
+                color: SemanticColors.ink(context, Colors.blueAccent),
                 label: Tr.pick('代表召集中', 'On international duty'),
               ),
               // キャプテンを指名する手段は今は無い(2026-11-16 のオーナー型への
               // 作り替えから)。印の表示は古いセーブのために残し、凡例からは外す。
               _LegendRow(
                 icon: Icons.block,
-                color: Colors.redAccent,
+                color: SemanticColors.ink(context, Colors.redAccent),
                 label: Tr.pick('出場停止中(警告累積または退場)',
                     'Suspended (booked too often, or sent off)'),
               ),
               _LegendRow(
                 icon: Icons.flight_takeoff,
-                color: Colors.deepPurple,
+                color: SemanticColors.ink(context, Colors.deepPurple),
                 label: Tr.pick('他クラブへローン放出中', 'Out on loan elsewhere'),
               ),
               _LegendRow(
                 icon: Icons.sell_outlined,
-                color: Colors.orange,
+                color: SemanticColors.ink(context, Colors.orange),
                 label: Tr.pick('移籍リストに登録中', 'On the transfer list'),
               ),
               _LegendRow(
                 icon: Icons.trending_up,
-                color: Colors.green,
+                color: SemanticColors.ink(context, Colors.green),
                 label: Tr.pick('総合値の下の▲/▼ = 直近5節の総合力の変化(成長トレンド)',
                     '▲/▼ under the overall = change across the last 5 matchdays'),
               ),
               _LegendRow(
                 icon: Icons.monitor_heart_outlined,
-                color: Colors.grey,
+                color: SemanticColors.ink(context, Colors.grey),
                 label: Tr.pick('2行目の疲労/感覚/士気は、問題のある値だけ赤く強調される',
                     'On the second line, only fatigue, sharpness and morale that need attention turn red'),
               ),
               _LegendRow(
                 icon: Icons.workspace_premium,
-                color: Colors.teal,
+                color: SemanticColors.ink(context, Colors.teal),
                 label: Tr.pick('名前の横のKP/ROT/育成 = スカッド・ステータス(主力は非表示)',
                     'KP/ROT/Prospect beside the name is his squad status (first-team players show nothing)'),
               ),
@@ -746,10 +746,10 @@ class _SquadScreenState extends State<SquadScreen> {
               const SizedBox(width: 6),
               Tooltip(
                 message: Tr.pick('ローン加入中', 'On loan here'),
-                child: const Icon(
+                child: Icon(
                   Icons.swap_horiz,
                   size: 16,
-                  color: Colors.indigo,
+                  color: SemanticColors.ink(context, Colors.indigo),
                 ),
               ),
             ],
@@ -757,10 +757,10 @@ class _SquadScreenState extends State<SquadScreen> {
               const SizedBox(width: 6),
               Tooltip(
                 message: Tr.pick('移籍を希望している', 'Wants a move away'),
-                child: const Icon(
+                child: Icon(
                   Icons.sentiment_dissatisfied,
                   size: 16,
-                  color: Colors.redAccent,
+                  color: SemanticColors.ink(context, Colors.redAccent),
                 ),
               ),
             ],
@@ -770,10 +770,10 @@ class _SquadScreenState extends State<SquadScreen> {
                 message: p.onTournamentLeave
                     ? Tr.pick('大会明けの休み', 'Post-tournament break')
                     : Tr.pick('代表召集中', 'On international duty'),
-                child: const Icon(
+                child: Icon(
                   Icons.flag,
                   size: 16,
-                  color: Colors.blueAccent,
+                  color: SemanticColors.ink(context, Colors.blueAccent),
                 ),
               ),
             ],
@@ -781,10 +781,10 @@ class _SquadScreenState extends State<SquadScreen> {
               const SizedBox(width: 6),
               Tooltip(
                 message: Tr.pick('出場停止中', 'Suspended'),
-                child: const Icon(
+                child: Icon(
                   Icons.block,
                   size: 16,
-                  color: Colors.redAccent,
+                  color: SemanticColors.ink(context, Colors.redAccent),
                 ),
               ),
             ],
@@ -792,10 +792,10 @@ class _SquadScreenState extends State<SquadScreen> {
               const SizedBox(width: 6),
               Tooltip(
                 message: Tr.pick('ローンで放出中', 'Out on loan'),
-                child: const Icon(
+                child: Icon(
                   Icons.flight_takeoff,
                   size: 16,
-                  color: Colors.deepPurple,
+                  color: SemanticColors.ink(context, Colors.deepPurple),
                 ),
               ),
             ],
@@ -803,10 +803,10 @@ class _SquadScreenState extends State<SquadScreen> {
               const SizedBox(width: 6),
               Tooltip(
                 message: Tr.pick('移籍リストに登録済み', 'On the transfer list'),
-                child: const Icon(
+                child: Icon(
                   Icons.sell_outlined,
                   size: 16,
-                  color: Colors.orange,
+                  color: SemanticColors.ink(context, Colors.orange),
                 ),
               ),
             ],
@@ -847,9 +847,11 @@ class _SquadScreenState extends State<SquadScreen> {
                       p.isOnInternationalDuty ||
                       p.isLoanedOut ||
                       p.notRegistered)
-                  ? const TextStyle(color: Colors.redAccent)
+                  ? TextStyle(
+                      color: SemanticColors.ink(context, Colors.redAccent))
                   : (!p.isLoan && p.contractYearsRemaining <= 1)
-                      ? const TextStyle(color: Colors.orange)
+                      ? TextStyle(
+                          color: SemanticColors.ink(context, Colors.orange))
                       : null,
             ),
             // 特性・役割・指示は選手詳細を開かないと
@@ -899,8 +901,9 @@ class _SquadScreenState extends State<SquadScreen> {
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                       color: trend > 0
-                                          ? Colors.green
-                                          : Colors.redAccent,
+                                          ? SemanticColors.ink(context, Colors.green)
+                                          : SemanticColors.ink(
+                                              context, Colors.redAccent),
                                     ),
                                   ),
                                 ),
@@ -1063,7 +1066,9 @@ class _SquadToolbarState extends State<_SquadToolbar> {
                     if (injured > 0)
                       TextSpan(
                           text: Tr.pick('・負傷$injured', ' • injured $injured'),
-                          style: const TextStyle(color: Colors.redAccent)),
+                          style: TextStyle(
+                              color: SemanticColors.ink(
+                                  context, Colors.redAccent))),
                   ]),
                 ),
                 const SizedBox(width: 12),
@@ -1190,12 +1195,16 @@ class _SquadSummaryCard extends StatelessWidget {
               _SummaryItem(
                 label: Tr.pick('負傷', 'Injured'),
                 value: '$injured',
-                valueColor: injured > 0 ? Colors.redAccent : null,
+                valueColor: injured > 0
+                    ? SemanticColors.ink(context, Colors.redAccent)
+                    : null,
               ),
               _SummaryItem(
                 label: Tr.pick('要対応', 'Needs attention'),
                 value: '$attention',
-                valueColor: attention > 0 ? Colors.orange : null,
+                valueColor: attention > 0
+                    ? SemanticColors.ink(context, Colors.orange)
+                    : null,
               ),
             ],
           ),
@@ -1253,8 +1262,9 @@ class _ConditionLine extends StatelessWidget {
             Tr.pick('$label$value', '$label $value'),
             style: TextStyle(
               fontSize: 11,
-              color:
-                  bad ? Colors.redAccent : SemanticColors.subtleText(context),
+              color: bad
+                  ? SemanticColors.ink(context, Colors.redAccent)
+                  : SemanticColors.subtleText(context),
               fontWeight: bad ? FontWeight.bold : FontWeight.normal,
             ),
           ),

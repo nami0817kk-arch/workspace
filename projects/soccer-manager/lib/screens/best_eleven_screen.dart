@@ -108,9 +108,9 @@ class _BestElevenCard extends StatelessWidget {
                   Text(
                     Tr.pick('自クラブから$userSelections名選出',
                         '$userSelections of your players made it'),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Colors.blueAccent,
+                      color: SemanticColors.ink(context, Colors.blueAccent),
                       fontWeight: FontWeight.bold,
                     ),
                   ),

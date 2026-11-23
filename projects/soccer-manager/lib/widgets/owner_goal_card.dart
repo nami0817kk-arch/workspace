@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/semantic_colors.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
@@ -23,7 +24,8 @@ class OwnerGoalCard extends StatelessWidget {
     if (goal == null) {
       return Card(
         child: ListTile(
-          leading: const Icon(Icons.flag, color: Colors.amber),
+          leading: Icon(Icons.flag,
+              color: SemanticColors.ink(context, Colors.amber, min: 3)),
           title: Text(Tr.pick('オーナーの目標を決める', 'Choose your owner goal'),
               style: theme.textTheme.titleSmall),
           subtitle: Text(Tr.pick('達成すると殿堂に残り、売却後も消えません。',
@@ -42,7 +44,8 @@ class OwnerGoalCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.flag, color: Colors.amber),
+                Icon(Icons.flag,
+                    color: SemanticColors.ink(context, Colors.amber, min: 3)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(

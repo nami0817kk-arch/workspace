@@ -144,11 +144,15 @@ Color _colorFor(BuildContext context, DayEventKind k) {
   final scheme = Theme.of(context).colorScheme;
   return switch (k) {
     DayEventKind.leagueMatch || DayEventKind.friendly => scheme.primary,
-    DayEventKind.cupMatch || DayEventKind.superCup => Colors.amber.shade700,
+    DayEventKind.cupMatch ||
+    DayEventKind.superCup =>
+      SemanticColors.ink(context, Colors.amber.shade700, min: 3),
     DayEventKind.windowDeadline ||
     DayEventKind.optionDeadline =>
       SemanticColors.negative(context),
-    DayEventKind.windowOpens || DayEventKind.preContracts => Colors.teal,
+    DayEventKind.windowOpens ||
+    DayEventKind.preContracts =>
+      SemanticColors.ink(context, Colors.teal, min: 3),
     DayEventKind.wages ||
     DayEventKind.broadcast =>
       SemanticColors.subtleText(context),
@@ -368,7 +372,8 @@ class _DayList extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: Colors.amber.shade700)),
+                          color: SemanticColors.ink(
+                              context, Colors.amber.shade700))),
               ],
             ),
           ),

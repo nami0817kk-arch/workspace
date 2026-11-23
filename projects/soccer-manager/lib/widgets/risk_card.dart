@@ -36,7 +36,8 @@ class RiskCard extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               value: save.insured,
               onChanged: (v) => gs.setInsured(v),
-              title: Text(Tr.pick('保険に入る(毎季 ${formatMoney(RiskEngine.premium(tier))})',
+              title: Text(Tr.pick(
+                  '保険に入る(毎季 ${formatMoney(RiskEngine.premium(tier))})',
                   'Insurance (${formatMoney(RiskEngine.premium(tier))} per season)')),
             ),
             Row(
@@ -45,11 +46,12 @@ class RiskCard extends StatelessWidget {
                   child: Text(Tr.pick('災害基金 ${formatMoney(save.reserveFund)}',
                       'Disaster fund ${formatMoney(save.reserveFund)}')),
                 ),
-                TextButton(
+                OutlinedButton(
                   onPressed: () => gs.depositReserveFund(gs.scaledMoney(200)),
                   child: Text('+${formatMoney(gs.scaledMoney(200))}'),
                 ),
-                TextButton(
+                const SizedBox(width: 6),
+                OutlinedButton(
                   onPressed: save.reserveFund > 0
                       ? () => gs.depositReserveFund(
                           -gs.scaledMoney(200).clamp(0, save.reserveFund))
@@ -74,12 +76,13 @@ class RiskCard extends StatelessWidget {
               style: const TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 4),
-            OutlinedButton(
+            FilledButton(
               onPressed: level < RiskEngine.maxCommunityLevel
                   ? () => gs.upgradeCommunity()
                   : null,
               child: Text(level < RiskEngine.maxCommunityLevel
-                  ? Tr.pick('Lv$nextにする(${formatMoney(gs.scaledMoney(RiskEngine.communityCost(next)))})',
+                  ? Tr.pick(
+                      'Lv$nextにする(${formatMoney(gs.scaledMoney(RiskEngine.communityCost(next)))})',
                       'Raise to Lv$next (${formatMoney(gs.scaledMoney(RiskEngine.communityCost(next)))})')
                   : Tr.pick('最大です', 'Maxed')),
             ),

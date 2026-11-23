@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/semantic_colors.dart';
 import 'package:provider/provider.dart';
 
 import '../state/game_state.dart';
@@ -93,9 +94,9 @@ class AwardsScreen extends StatelessWidget {
                           const Divider(height: 20),
                           ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: const Icon(
+                            leading: Icon(
                               Icons.sports_soccer,
-                              color: Colors.green,
+                              color: SemanticColors.ink(context, Colors.green),
                             ),
                             title: Row(
                               children: [
@@ -106,10 +107,10 @@ class AwardsScreen extends StatelessWidget {
                                 ),
                                 if (scorerIsOwnClub) ...[
                                   const SizedBox(width: 6),
-                                  const Icon(
+                                  Icon(
                                     Icons.shield,
                                     size: 14,
-                                    color: Colors.blueAccent,
+                                    color: SemanticColors.ink(context, Colors.blueAccent),
                                   ),
                                 ],
                               ],
@@ -127,23 +128,25 @@ class AwardsScreen extends StatelessWidget {
                           ),
                           ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: const Icon(
+                            leading: Icon(
                               Icons.emoji_events,
-                              color: Colors.amber,
+                              color: SemanticColors.ink(context, Colors.amber,
+                                  min: 3),
                             ),
                             title: Row(
                               children: [
                                 // Row の中の Text は幅の制約を受けない。
                                 // 英語の見出しは長く、狭い端末ではみ出す。
                                 Flexible(
-                                  child: Text(Tr.pick('年間MVP', 'Player of the season')),
+                                  child: Text(
+                                      Tr.pick('年間MVP', 'Player of the season')),
                                 ),
                                 if (mvpIsOwnClub) ...[
                                   const SizedBox(width: 6),
-                                  const Icon(
+                                  Icon(
                                     Icons.shield,
                                     size: 14,
-                                    color: Colors.blueAccent,
+                                    color: SemanticColors.ink(context, Colors.blueAccent),
                                   ),
                                 ],
                               ],
@@ -158,23 +161,24 @@ class AwardsScreen extends StatelessWidget {
                           ),
                           ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: const Icon(
+                            leading: Icon(
                               Icons.sports,
-                              color: Colors.indigo,
+                              color: SemanticColors.ink(context, Colors.indigo),
                             ),
                             title: Row(
                               children: [
                                 // Row の中の Text は幅の制約を受けない。
                                 // 英語の見出しは長く、狭い端末ではみ出す。
                                 Flexible(
-                                  child: Text(Tr.pick('ゴールデングラブ', 'Golden Glove')),
+                                  child:
+                                      Text(Tr.pick('ゴールデングラブ', 'Golden Glove')),
                                 ),
                                 if (gloveIsOwnClub) ...[
                                   const SizedBox(width: 6),
-                                  const Icon(
+                                  Icon(
                                     Icons.shield,
                                     size: 14,
-                                    color: Colors.blueAccent,
+                                    color: SemanticColors.ink(context, Colors.blueAccent),
                                   ),
                                 ],
                               ],

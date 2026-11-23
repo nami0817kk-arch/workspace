@@ -243,7 +243,8 @@ ThemeData fmLookTheme(ThemeData base, FmPalette palette) {
     titleMedium: head(text.titleMedium, 14),
     titleSmall: head(text.titleSmall, 13),
   );
-  text = text.apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface);
+  text =
+      text.apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface);
 
   const radius = 6.0;
   final shape =
@@ -293,8 +294,8 @@ ThemeData fmLookTheme(ThemeData base, FmPalette palette) {
       unselectedLabelColor: scheme.onSurfaceVariant,
       indicatorColor: scheme.primary,
       dividerColor: scheme.outlineVariant,
-      labelStyle:
-          TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, fontFamily: body),
+      labelStyle: TextStyle(
+          fontSize: 12.5, fontWeight: FontWeight.bold, fontFamily: body),
       unselectedLabelStyle: TextStyle(fontSize: 12.5, fontFamily: body),
     ),
     cardTheme: CardThemeData(
@@ -315,8 +316,8 @@ ThemeData fmLookTheme(ThemeData base, FmPalette palette) {
       iconColor: scheme.onSurfaceVariant,
       textColor: scheme.onSurface,
     ),
-    dividerTheme: DividerThemeData(
-        space: 1, thickness: 1, color: scheme.outlineVariant),
+    dividerTheme:
+        DividerThemeData(space: 1, thickness: 1, color: scheme.outlineVariant),
     // 主な操作: 塗り。
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(

@@ -482,8 +482,10 @@ class _TransferScreenState extends State<TransferScreen>
               SizedBox(width: 40, child: _WatchButton(playerId: p.id)),
               SizedBox(
                 width: 52,
-                child: TextButton(
-                  style: TextButton.styleFrom(
+                // 行の主な操作なので塗りのボタン(文字だけだと押せる所に
+                // 見えなかった。2026-11-24)。
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
                       padding: EdgeInsets.zero,
                       minimumSize: const Size(52, 40)),
                   onPressed:
@@ -800,7 +802,7 @@ class _TransferScreenState extends State<TransferScreen>
                   style: TextStyle(
                       fontSize: 12,
                       color: squadFull
-                          ? Colors.orange
+                          ? SemanticColors.ink(context, Colors.orange)
                           : SemanticColors.subtleText(context)),
                 ),
               ),
@@ -968,8 +970,8 @@ class _TransferScreenState extends State<TransferScreen>
     Widget heading(String text) => Padding(
           padding: const EdgeInsets.fromLTRB(4, 8, 4, 4),
           child: Text(text,
-              style: const TextStyle(
-                  fontSize: 13, fontWeight: FontWeight.w600)),
+              style:
+                  const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
         );
     return ListView(
       key: const ValueKey('transfer-offers-tab'),
@@ -1156,7 +1158,7 @@ class _TransferScreenState extends State<TransferScreen>
       if (t.stage == TransferTalkStage.waiting) withdraw,
       if (t.stage == TransferTalkStage.countered) ...[
         withdraw,
-        TextButton(
+        OutlinedButton(
           onPressed: player != null && t.round < TransferTalkEngine.maxRounds
               ? () => _showBidDialog(context, player, talk: t)
               : null,
@@ -1201,7 +1203,10 @@ class _TransferScreenState extends State<TransferScreen>
                   Tr.pick(
                       '競合: ${t.rivalClubName}が年俸${formatMoney(annualFromWeekly(t.rivalWage))}で誘っている。${md(t.rivalDecidesOn)}ごろまでに契約しないと、選手はあちらへ行く',
                       'Rival: ${t.rivalClubName} offer ${formatMoney(annualFromWeekly(t.rivalWage))} a year. Sign him by about ${md(t.rivalDecidesOn)} or he goes there'),
-                  style: TextStyle(fontSize: 12, color: Colors.orange.shade800),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color:
+                          SemanticColors.ink(context, Colors.orange.shade800)),
                 ),
               ),
             if (buttons.isNotEmpty)
@@ -1521,7 +1526,8 @@ class _NoticeLine extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.orange, fontSize: 12),
+        style: TextStyle(
+            color: SemanticColors.ink(context, Colors.orange), fontSize: 12),
       ),
     );
   }
@@ -1573,7 +1579,7 @@ class _RegistrationCard extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.centerRight,
-              child: TextButton(
+              child: OutlinedButton(
                 onPressed: () => _editRoster(context),
                 child: Text(Tr.pick('名簿を選ぶ', 'Choose the list')),
               ),
@@ -1657,7 +1663,9 @@ class _WatchButton extends StatelessWidget {
     final watched = game.isWatched(playerId);
     return IconButton(
       icon: Icon(watched ? Icons.star : Icons.star_border,
-          color: watched ? Colors.amber : null),
+          color: watched
+              ? SemanticColors.ink(context, Colors.amber, min: 3)
+              : null),
       tooltip: watched
           ? Tr.pick('注目から外す', 'Stop watching')
           : Tr.pick('注目に入れる', 'Watch this player'),

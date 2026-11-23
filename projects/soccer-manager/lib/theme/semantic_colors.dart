@@ -36,4 +36,34 @@ class SemanticColors {
   /// コントラストが出るよう定義されているので、それを使う。
   static Color subtleText(BuildContext context) =>
       Theme.of(context).colorScheme.onSurfaceVariant;
+
+  /// 色の付いた文字・アイコン(注意の橙・星の黄・負傷の赤など)を、いまの
+  /// 地で読める濃さに寄せる。色相はそのままで、明るい地なら暗く、暗い地
+  /// なら明るくする。
+  ///
+  /// 画面ごとに `Colors.orange` や `Colors.amber` を直書きしていた箇所は、
+  /// 暗い地では読めても白い地では 1.6〜2.8:1 しか出ず読めなかった
+  /// (明るい見た目を足したとき、tool/art/contrast_audit.dart で実測)。
+  /// [min] は文字なら 4.5、星などの飾りのアイコンなら 3.0。
+  static Color ink(BuildContext context, Color color, {double min = 4.5}) =>
+      readableOn(color, Theme.of(context).colorScheme.surfaceContainerLow,
+          min: min);
+
+  /// [color] を [background] の上で [min] 以上の差が出るまで暗く(明るく)する。
+  static Color readableOn(Color color, Color background, {double min = 4.5}) {
+    final darken = background.computeLuminance() > 0.4;
+    var hsl = HSLColor.fromColor(color.withValues(alpha: 1));
+    for (var i = 0; i < 25 && contrast(hsl.toColor(), background) < min; i++) {
+      final l = hsl.lightness + (darken ? -0.03 : 0.03);
+      hsl = hsl.withLightness(l.clamp(0.0, 1.0));
+    }
+    return hsl.toColor().withValues(alpha: color.a);
+  }
+
+  /// WCAG のコントラスト比。
+  static double contrast(Color a, Color b) {
+    final la = a.computeLuminance(), lb = b.computeLuminance();
+    final hi = la > lb ? la : lb, lo = la > lb ? lb : la;
+    return (hi + 0.05) / (lo + 0.05);
+  }
 }
