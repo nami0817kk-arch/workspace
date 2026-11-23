@@ -249,10 +249,19 @@ void main() {
       return (home: home, away: away, s: s);
     }
 
-    Player benchOf(Team t, InteractiveHalfState s) {
+    /// 入れられる控え(出られる・まだ出ていないフィールドの選手)。
+    Player benchOf(Team t, InteractiveHalfState s,
+        [bool Function(Player)? also]) {
       final on = {for (final p in s.homeLineup) p.id};
       return t.players.firstWhere((p) =>
-          !on.contains(p.id) && p.position != Position.gk && !p.isInjured);
+          !on.contains(p.id) &&
+          p.position != Position.gk &&
+          !p.isInjured &&
+          !p.isSuspended &&
+          !p.isOnInternationalDuty &&
+          !p.isLoanedOut &&
+          !p.notRegistered &&
+          (also == null || also(p)));
     }
 
     Set<String?> involvedIn(InteractiveHalfState s) => {
@@ -262,6 +271,23 @@ void main() {
           s.pending?.keeper?.id,
           s.pending?.attacker?.id,
         };
+
+    /// 下げられるホームの選手: いまピッチにいて(この分までに退場して
+    /// いない)、目前の決定機に関わっていないフィールドの選手。
+    /// 区間の始めに決めた退場が判断待ちの分より前にあると、その選手は
+    /// もうピッチにいないので交代では下げられない(ゲームが正しく断る)。
+    Player outOf(InteractiveHalfState s) {
+      final now = MatchEngine.currentMinuteOf(s);
+      final gone = MatchEngine.sentOffIds([
+        for (final e in s.events)
+          if (e.minute <= now) e,
+      ]);
+      final involved = involvedIn(s);
+      return s.homeLineup.firstWhere((p) =>
+          p.position != Position.gk &&
+          !involved.contains(p.id) &&
+          !gone.contains(p.id));
+    }
 
     test('交代で入った選手は、先発の指定でも下がった選手の位置に入る', () {
       // CI で一度だけ守備力がずれた(2026-11-23)原因。入った選手を先発の
@@ -278,16 +304,10 @@ void main() {
           interactiveTeamId: home.id,
         );
         if (s.isFinished) continue;
-        final involved = involvedIn(s);
         // 先頭に近いフィールドの選手(末尾でない)を、ポジションの違う
         // 控えと替える。
-        final out = s.homeLineup.firstWhere(
-            (p) => p.position != Position.gk && !involved.contains(p.id));
-        final incoming = home.players.firstWhere((p) =>
-            !s.homeLineup.contains(p) &&
-            p.position != Position.gk &&
-            p.position != out.position &&
-            !p.isInjured);
+        final out = outOf(s);
+        final incoming = benchOf(home, s, (p) => p.position != out.position);
         final at = home.startingXI.indexOf(out.id);
         expect(
             MatchEngine.applyInteractiveSubstitution(s,
@@ -315,9 +335,7 @@ void main() {
           interactiveTeamId: home.id,
         );
         if (s.isFinished) continue;
-        final involved = involvedIn(s);
-        final out = s.homeLineup.firstWhere(
-            (p) => p.position != Position.gk && !involved.contains(p.id));
+        final out = outOf(s);
         final incoming = benchOf(home, s);
         expect(
             MatchEngine.applyInteractiveSubstitution(s,
@@ -390,9 +408,7 @@ void main() {
         final m = secondHalf(100 + i);
         final s = m.s;
         if (s.isFinished) continue;
-        final involved = involvedIn(s);
-        final out = s.homeLineup.firstWhere(
-            (p) => p.position != Position.gk && !involved.contains(p.id));
+        final out = outOf(s);
         final incoming = benchOf(m.home, s);
         expect(
             MatchEngine.applyInteractiveSubstitution(s,
