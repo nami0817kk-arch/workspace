@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ranse/engine/adult.dart';
 import 'package:ranse/engine/battles.dart';
 import 'package:ranse/engine/birth.dart';
+import 'package:ranse/engine/bonds.dart';
 import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/ending.dart';
 import 'package:ranse/engine/family.dart';
@@ -3135,6 +3136,237 @@ void main() {
         );
         expect(why, isNull, reason: 'seed=$seed');
       }
+    });
+  });
+
+  group('縁のある人の物語', () {
+    final digits = RegExp(r'[0-9０-９%]');
+    final scenes = {for (final s in buildBondScenes()) s.id: s};
+
+    /// 元服を越えた男の人生（仏門・野の道でない）を探し、侍の位3にして、
+    /// 幼なじみ・好敵手・師・連れ合いを持たせる。
+    Game bondGame(int seed) {
+      for (var s = seed; ; s++) {
+        final rng = Rng(s);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(s + 1));
+        if (g.finished ||
+            g.l.female ||
+            g.hasFlag('priesthood') ||
+            g.hasFlag('way_outlaw')) {
+          continue;
+        }
+        g.l
+          ..rank = 3
+          ..maxRank = 3
+          ..lord = g.alive.first.name
+          ..fav = 40
+          ..married = true
+          ..kids = 0;
+        g.meet('伴侶', '中村家のお福', 50);
+        g.meet('幼なじみ', '源太', 50);
+        g.meet('好敵手', '藤助', 40);
+        g.meet('師', '旅の剣客', 50);
+        return g;
+      }
+    }
+
+    /// 縁 [k] の段を [ago] 年前に踏んだことにする。
+    void stampAgo(Game g, String k, int ago) {
+      g.l.flags.removeWhere((f) => f.startsWith('bd_${k}_at:'));
+      g.setFlag('bd_${k}_at:${g.year - ago}');
+    }
+
+    void clearStages(Game g) => g.l.flags.removeWhere(
+      (f) => f.startsWith('scene:bd_') || f.startsWith('bd_'),
+    );
+
+    test('段は前の段がないと出ず、前の段から年が空くと出る', () {
+      expect(scenes.length, 18);
+      expect(kBondChains.values.expand((e) => e).toSet(), scenes.keys.toSet());
+      final g = bondGame(100);
+      for (final c in kBondChains.values) {
+        clearStages(g);
+        expect(scenes[c.first]!.cond(g), isTrue, reason: '${c.first} は最初の段');
+      }
+      for (final e in kBondPrev.entries) {
+        final id = e.key;
+        final k = id.substring(3, 5);
+        clearStages(g);
+        g.meet('師', '旅の剣客', 50);
+        g.meet('好敵手', '藤助', 40);
+        g.meet('幼なじみ', '源太', 50);
+        if (id == 'bd_ms_grave') g.setFlag('bd_ms_dead');
+        expect(
+          scenes[id]!.cond(g),
+          isFalse,
+          reason: '$id は前の段（${e.value}）がないと出ない',
+        );
+        g.setFlag('scene:${e.value}');
+        stampAgo(g, k, 0);
+        expect(scenes[id]!.cond(g), isFalse, reason: '$id は前の段と同じ年には出ない');
+        stampAgo(g, k, 10);
+        expect(scenes[id]!.cond(g), isTrue, reason: '$id は前の段から年が空けば出る');
+      }
+      // 果たし合いで好敵手を斬った人には、好敵手の死の段は出ない。
+      clearStages(g);
+      g.l.people.remove('好敵手');
+      g.setFlag('scene:bd_rv_end');
+      stampAgo(g, 'rv', 10);
+      expect(scenes['bd_rv_death']!.cond(g), isFalse);
+    });
+
+    test('絆の深さで、次の段の筋が分かれる（選んだ手で絆が上下する）', () {
+      String titleOf(Game g, String id) {
+        scenes[id]!.run(g, () {});
+        return g.prompt!.title;
+      }
+
+      final g = bondGame(200);
+      final fr = g.l.people['幼なじみ']!;
+      fr.bond = 70;
+      expect(titleOf(g, 'bd_os_turn'), '友との盃');
+      fr.bond = 20;
+      expect(titleOf(g, 'bd_os_turn'), '友との溝');
+      fr.bond = 70;
+      expect(titleOf(g, 'bd_os_old'), '老いた友');
+      fr.bond = 20;
+      expect(titleOf(g, 'bd_os_old'), '友の病');
+
+      final rv = g.l.people['好敵手']!;
+      rv.bond = 70;
+      expect(titleOf(g, 'bd_rv_end'), '好敵手と盃');
+      rv.bond = 20;
+      expect(titleOf(g, 'bd_rv_end'), '果たし状');
+      // 侍でない人には、果たし状でなく訴えになる。
+      g.l.rank = 0;
+      expect(titleOf(g, 'bd_rv_end'), '訴え');
+      g.l.rank = 3;
+
+      g.l.people['師']!.bond = 70;
+      expect(titleOf(g, 'bd_ms_keep'), '師の形見');
+      expect(g.l.people.containsKey('師'), isFalse, reason: '亡くなった師は人物から外れる');
+      g.meet('師', '旅の剣客', 20);
+      expect(titleOf(g, 'bd_ms_keep'), '師の死');
+
+      // 頼みを断ると絆が下がり、聞き入れると上がる。
+      fr.bond = 50;
+      g.setFlag('bd_os_high');
+      scenes['bd_os_ask']!.run(g, () {});
+      g.choose(g.prompt!.choices.length - 1);
+      expect(fr.bond, 30);
+      scenes['bd_os_ask']!.run(g, () {});
+      g.choose(0);
+      expect(fr.bond, greaterThan(30));
+
+      // 連れ合いの縁側: 約束を残した人には、約束を果たす手が出る。
+      g.l.people['伴侶']!.bond = 70;
+      scenes['bd_sp_engawa']!.run(g, () {});
+      final plain = g.prompt!.choices.length;
+      g.setFlag('bd_sp_promise');
+      scenes['bd_sp_engawa']!.run(g, () {});
+      expect(g.prompt!.choices.length, plain + 1);
+    });
+
+    test('敵味方に分かれる段は、戦える侍で、男の幼なじみのときだけ出る', () {
+      final g = bondGame(300);
+      clearStages(g);
+      g.setFlag('scene:bd_os_ask');
+      stampAgo(g, 'os', 10);
+      expect(scenes['bd_os_foes']!.cond(g), isTrue);
+      g.l.rank = 0;
+      expect(scenes['bd_os_foes']!.cond(g), isFalse, reason: '主家に仕えていない');
+      g.l.rank = 3;
+      g.meet('幼なじみ', 'お梅', 50);
+      expect(scenes['bd_os_foes']!.cond(g), isFalse, reason: '幼なじみが女');
+    });
+
+    test('縁のある人を持たせた人生で、段を追った岐路が出て、最後の段まで届く人生があり、匂わせがあり数字が無い', () {
+      final seen = <String>{};
+      final titles = <String>{};
+      var finals = 0;
+      final finalChains = <String>{};
+      for (var seed = 0; seed < 400; seed++) {
+        final rng = Rng(seed + 11300);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished) continue;
+        final l = g.l;
+        // 縁のある人を持たせる（三人に一人の男は主家に仕える侍）。
+        if (seed % 3 == 0 &&
+            !l.female &&
+            !g.hasFlag('priesthood') &&
+            !g.hasFlag('way_outlaw')) {
+          l
+            ..rank = 3
+            ..maxRank = 3
+            ..lord = g.alive.first.name
+            ..fav = 40;
+        }
+        if (!l.people.containsKey('幼なじみ')) {
+          g.meet('幼なじみ', seed.isEven ? '源太' : 'お梅', 30 + seed % 40);
+        }
+        if (!l.people.containsKey('師')) {
+          g.meet('師', seed.isEven ? '旅の剣客' : '寺の和尚', 30 + seed % 40);
+        }
+        if (!g.hasFlag('priesthood') && !l.married) {
+          l.married = true;
+          g.meet('伴侶', l.female ? '中村家の太郎' : '中村家のお福', 30 + seed % 40);
+        }
+        final order = <String>[];
+        var count = 0;
+        playOut(
+          g,
+          Rng(seed + 1),
+          onPrompt: (p) {
+            final now = g.l.flags
+                .where((f) => f.startsWith('scene:bd_'))
+                .toList();
+            if (now.length == count) return;
+            count = now.length;
+            for (final f in now) {
+              if (!order.contains(f)) order.add(f);
+            }
+            titles.add(p.title);
+            for (final c in p.choices) {
+              expect(c.hint, isNotNull, reason: '${p.title}/${c.label} に匂わせが無い');
+              expect(c.hint!, isNot(contains(digits)), reason: '${p.title}/${c.hint}');
+              expect(c.label, isNot(contains(digits)), reason: '${p.title}/${c.label}');
+            }
+          },
+        );
+        final ids = g.l.flags
+            .where((f) => f.startsWith('scene:bd_'))
+            .map((f) => f.substring(6))
+            .toSet();
+        seen.addAll(ids);
+        // 前の段は必ず先に出ている。
+        for (final id in ids) {
+          final prev = kBondPrev[id];
+          if (prev == null) continue;
+          expect(ids, contains(prev), reason: 'seed=$seed $id の前に $prev が無い');
+          expect(
+            order.indexOf('scene:$prev'),
+            lessThan(order.indexOf('scene:$id')),
+            reason: 'seed=$seed $prev → $id の順',
+          );
+        }
+        for (final e in kBondChains.entries) {
+          if (ids.contains(e.value.last)) {
+            finals++;
+            finalChains.add(e.key);
+          }
+        }
+      }
+      // 18 のうち 15 以上が出る。
+      expect(seen.length, greaterThanOrEqualTo(15), reason: '$seen');
+      // 段がそろって最後の段まで届く人生がある（縁の種類も二つ以上）。
+      expect(finals, greaterThanOrEqualTo(3), reason: '$finalChains');
+      expect(finalChains.length, greaterThanOrEqualTo(2), reason: '$finalChains');
+      // 絆の深さで筋が分かれる（同じ段の両方の筋が出る）。
+      expect(titles, containsAll(['友との盃', '友との溝']), reason: '$titles');
     });
   });
 }

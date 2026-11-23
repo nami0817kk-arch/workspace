@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'adult.dart';
 import 'ashigaru.dart';
 import 'birth.dart';
+import 'bonds.dart';
 import 'childhood.dart';
 import 'childhood_more.dart';
 import 'data.dart';
@@ -74,6 +75,7 @@ class Game extends ChangeNotifier {
       ...buildEchoMoreScenes(),
       ...buildEchoTalentScenes(),
       ...buildFamilyScenes(),
+      ...buildBondScenes(),
       ...buildWomenScenes(),
       ...buildWomanLifeScenes(),
       ...buildAshigaruScenes(),
