@@ -155,9 +155,9 @@ class _StaffCard extends StatelessWidget {
                               text: '${c.name} (${c.age})',
                               style:
                                   const TextStyle(fontWeight: FontWeight.w600)),
-                          if (c.specialty != StaffSpecialty.balanced)
+                          if (c.shownSpecialty != StaffSpecialty.balanced)
                             TextSpan(
-                                text: '  ${c.specialty.label}',
+                                text: '  ${c.shownSpecialty.label}',
                                 style: TextStyle(
                                     fontSize: 11,
                                     color: SemanticColors.subtleText(context))),
@@ -258,12 +258,12 @@ class _StaffRow extends StatelessWidget {
                     // 得意分野。ユースコーチなら、ここが有望株の伸びる
                     // 能力を決める。万能のときは札を出さない(全員に
                     // 付くと見分けの役に立たない)。
-                    if (staff.specialty != StaffSpecialty.balanced) ...[
+                    if (staff.shownSpecialty != StaffSpecialty.balanced) ...[
                       const SizedBox(width: 6),
                       Tooltip(
-                        message: staff.specialty.description,
+                        message: staff.shownSpecialty.description,
                         child: Chip(
-                          label: Text(staff.specialty.label,
+                          label: Text(staff.shownSpecialty.label,
                               style: const TextStyle(fontSize: 10)),
                           visualDensity: VisualDensity.compact,
                           materialTapTargetSize:

@@ -27,11 +27,13 @@ class ContractEngine {
     return Tr.pick('$endYear/6', 'Jun $endYear');
   }
 
-  /// ごく狭い列向けの満了の年(「28年」/ "'28")。
+  /// ごく狭い列向けの満了の年(「2028」/ "2028")。
+  ///
+  /// 以前は「28年」/ "'28" と2桁に縮めていて、「残り28年」の年数に
+  /// 読めた(2026-11-23)。4桁の西暦なら年数と取り違えない。
   static String untilTinyLabel(int endYear) {
     if (endYear < Player.contractClockYear) return Tr.pick('なし', '-');
-    final yy = (endYear % 100).toString().padLeft(2, '0');
-    return Tr.pick('$yy年', "'$yy");
+    return '$endYear';
   }
 
   /// 選手の契約の表示(延長オプション・「延長しない」の印つき)。
