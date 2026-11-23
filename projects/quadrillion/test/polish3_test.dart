@@ -292,7 +292,8 @@ void main() {
       await tester.pumpWidget(QuadrillionApp(controller: ctl));
       await tester.pump();
       expect(find.text('売上と利益の推移（月）'), findsOneWidget);
-      expect(find.bySemanticsLabel('売上と利益の推移'), findsOneWidget);
+      // 読み上げの名前は、見出しのあとに今の値が続く（1.0.0+16 から）
+      expect(find.bySemanticsLabel(RegExp('^売上と利益の推移。')), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   });

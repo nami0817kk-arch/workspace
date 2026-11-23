@@ -256,7 +256,7 @@ const Map<String, String> uiEn = {
   '版': 'Version',
 
   // ===== 月の報告 =====
-  '{0}から': 'Since {0}',
+  '{0}から': 'from {0}',
   '{0}は値下げ合戦の最中です。シェア{1}、利益は{2}に削られています。': "{0} is in a price war. Share {1}; profit is down to {2}.",
   '{0}はシェア{1}。市場の半分以上を押さえました。': '{0} has a {1} share. We own over half the market.',
   '{0}の売上は{1}、シェア{2}です。': '{0}: sales {1}, share {2}.',
@@ -264,7 +264,7 @@ const Map<String, String> uiEn = {
   '{0}（社長が直接）': '{0} (run by CEO)',
   '{0} の経営会議': '{0}: Board Meeting',
   '{0} の報告': '{0}: Report',
-  '{0}まとめて進めました': 'Advanced from {0}',
+  '{0}まとめて進めました': 'Skipped ahead {0}',
   '　今月の利益 ': '  Profit this month ',
   'ニュース': 'News',
   '続ける': 'Continue',
@@ -272,7 +272,7 @@ const Map<String, String> uiEn = {
 
   // ===== 街 =====
   '自社のビルが並ぶ街': 'Town with your buildings',
-  '　{0}を拠点に{1}か国で勝負中': '  Based in {0}, active in {1} countries',
+  '　{0}を拠点に{1}か国で勝負中': '  Based in {0}. Countries: {1}',
   '月の売上': 'Sales/mo',
   '事業': 'Businesses',
   '{0}つ': '{0}',
@@ -652,4 +652,7 @@ const Map<String, String> uiEn = {
   '見つけたシナジー': 'Synergies found',
   '色の丸は宿敵（宿敵ごとの色）。上位10社・あなたの前後5社・宿敵を出しています': 'A colored dot marks a rival. Showing the top 10, five either side of you, and your rivals.',
   '市場（国内・月） {0}': 'Market (home/mo) {0}',
+  // 読み上げ（VoiceOver）に渡すグラフの説明
+  '{0}。はじめ {1}、今 {2}': '{0}. Started at {1}, now {2}',
+  '{0}。今の売上 {1}、利益 {2}': '{0}. Revenue now {1}, profit {2}',
 };

@@ -49,6 +49,8 @@ class Info extends StatelessWidget {
         button: true,
         label: tr('用語の説明：{0}', [terms.map((t) => tr(glossary[t]!.$1)).join(tr('、'))]),
         excludeSemantics: true,
+        // 中身を読み上げから外しているので、押す動きはここで渡す（渡さないと VoiceOver から押せない）
+        onTap: () => openGlossary(ctl, terms),
         child: TapArea(
           key: ValueKey('info-${terms.join('-')}'),
           onTap: () => openGlossary(ctl, terms),

@@ -105,6 +105,33 @@ class Ui {
 
   /// 欄の中の1行の下の線
   static const rowLine = BoxDecoration(border: Border(bottom: BorderSide(color: Pal.line)));
+
+  /// 幅の広い画面（iPad など）で、中身を収める最大の幅（これより広い分は左右の余白にする）
+  static const maxBody = 720.0;
+
+  /// 小窓の最大の幅
+  static const maxSheet = 620.0;
+
+  /// 幅 [width] の画面で、中身を [maxBody] に収めるために左右に足す余白（片側）
+  static double sideGap(double width) => width.isFinite && width > maxBody ? (width - maxBody) / 2 : 0;
+
+  /// 端末の「文字を大きく」に従う上限（これより大きい設定でも、この倍率で描く）
+  static const maxTextScale = 1.4;
+
+  /// 今の字の倍率（1〜[maxTextScale]）。アプリの一番上で、端末の設定から決めて書き換える
+  static double textScale = 1;
+
+  /// 字を入れる決まった幅の欄（表の列・年月の欄）の幅。字が大きくなった分だけ広げる
+  static double sw(double w) => w * textScale;
+}
+
+/// 幅の広い画面では、中身を最大 [Ui.maxBody] の幅で中央に置く（左右は余白）。狭い画面ではそのまま
+class Wide extends StatelessWidget {
+  final Widget child;
+  const Wide({super.key, required this.child});
+  @override
+  Widget build(BuildContext context) =>
+      Align(alignment: Alignment.topCenter, heightFactor: 1, child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: Ui.maxBody), child: child));
 }
 
 /// カードの見た目（白い面・1px の枠・角の丸み・ごく薄い影）
@@ -168,6 +195,9 @@ class TapCard extends StatelessWidget {
   final Color border, color;
   final Key? inkKey;
   final EdgeInsets margin;
+
+  /// 押すと開く行なら false（読み上げに「たたんでいる」と伝える）。開閉しないカードは null
+  final bool? expanded;
   const TapCard(
       {super.key,
       required this.child,
@@ -175,6 +205,7 @@ class TapCard extends StatelessWidget {
       this.border = Pal.line,
       this.color = Pal.panel,
       this.inkKey,
+      this.expanded,
       this.margin = const EdgeInsets.symmetric(vertical: Ui.cardGap)});
   @override
   Widget build(BuildContext context) => Container(
@@ -182,8 +213,25 @@ class TapCard extends StatelessWidget {
         decoration: cardDeco(border: border, color: color),
         child: Material(
           type: MaterialType.transparency,
-          child: InkWell(key: inkKey, borderRadius: BorderRadius.circular(Ui.rCard), onTap: onTap, child: child),
+          child: Semantics(
+              button: true,
+              expanded: expanded,
+              child: InkWell(key: inkKey, borderRadius: BorderRadius.circular(Ui.rCard), onTap: onTap, child: child)),
         ),
+      );
+}
+
+/// 開いたカードの名前の行（押すとたたむ）。読み上げに「ボタン・開いている」と伝える
+class FoldRow extends StatelessWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  final Key? inkKey;
+  const FoldRow({super.key, required this.child, required this.onTap, this.inkKey});
+  @override
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        expanded: true,
+        child: InkWell(key: inkKey, borderRadius: BorderRadius.circular(Ui.rBtn), onTap: onTap, child: child),
       );
 }
 
@@ -226,6 +274,8 @@ class PickChip extends StatelessWidget {
         selected: on,
         label: label,
         excludeSemantics: true,
+        // 中身を読み上げから外しているので、押す動きはここで渡す（渡さないと VoiceOver から押せない）
+        onTap: onTap,
         child: TapArea(
           onTap: onTap,
           child: Container(
@@ -256,7 +306,7 @@ class ChipRow extends StatelessWidget {
   Widget build(BuildContext context) => Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // 見出しは1行目の札と高さをそろえる
         Container(
-            constraints: const BoxConstraints(minWidth: 52, minHeight: minTap),
+            constraints: BoxConstraints(minWidth: Ui.sw(52), minHeight: minTap),
             alignment: Alignment.centerLeft,
             child: Muted(label, size: 12)),
         const SizedBox(width: 6),
@@ -356,9 +406,10 @@ class MarkBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(builder: (context, c) {
         final w = c.maxWidth;
-        const labelW = 44.0;
+        // 節目の字の欄は、字が大きい設定のぶんだけ広げる
+        final labelW = Ui.sw(44);
         return SizedBox(
-          height: height + 4 + 15,
+          height: height + 4 + Ui.sw(15),
           child: Stack(clipBehavior: Clip.none, children: [
             Positioned(left: 0, right: 0, top: 2, child: Bar(parts, height: height)),
             for (final m in marks) ...[
@@ -421,6 +472,9 @@ class SearchBox extends StatelessWidget {
                   tooltip: tr('検索を消す'),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: minTap, minHeight: minTap),
+                  // 押せる範囲は 44pt のまま、Material の既定の 48pt には広げない
+                  // （広げると、字を打って「消す」が出たときに欄が 3pt 伸びて、下の一覧がずれる）
+                  style: IconButton.styleFrom(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                   icon: const Icon(Icons.close, size: 18, color: Pal.mute),
                   onPressed: () {
                     controller.clear();
@@ -525,7 +579,10 @@ class Face extends StatelessWidget {
       height: 34,
       alignment: Alignment.center,
       decoration: BoxDecoration(color: hexColor(c), shape: BoxShape.circle),
-      child: Text(n.isEmpty ? '?' : n.characters.first, style: ts(size: 14, bold: true, color: const Color(0xFF0D1426))),
+      // 飾りの丸（名前の1文字目）。名前は隣に書いてあるので、読み上げからは外す。字は丸からはみ出さないよう、大きさを変えない
+      child: ExcludeSemantics(
+          child: Text(n.isEmpty ? '?' : n.characters.first,
+              textScaler: TextScaler.noScaling, style: ts(size: 14, bold: true, color: const Color(0xFF0D1426)))),
     );
   }
 }
@@ -578,6 +635,24 @@ class VoiceSay extends StatelessWidget {
           ),
         ]),
       );
+}
+
+/// 左に説明、右にボタンの1行。幅が足りないとき（狭い画面・大きい字）は、ボタンを説明の下の行に右寄せで回す。
+/// 横に並べたままだと、ボタンが説明の幅を食いつぶして、説明が1字ずつ縦に折れる
+class TextBtnRow extends StatelessWidget {
+  final Widget text, btn;
+
+  /// これより狭い（字の倍率で割った幅）と、ボタンを下に回す
+  final double stackBelow;
+  const TextBtnRow({super.key, required this.text, required this.btn, this.stackBelow = 300});
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+      builder: (context, c) => c.maxWidth / Ui.textScale < stackBelow
+          ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
+              text,
+              Align(alignment: Alignment.centerRight, child: FittedBox(fit: BoxFit.scaleDown, child: btn)),
+            ])
+          : Row(children: [Expanded(child: text), btn]));
 }
 
 /// 押せる部品の最小の大きさ（Apple の目安 44pt）
@@ -641,6 +716,10 @@ class Btn extends StatelessWidget {
       onTap: on ? onTap : null,
       child: Opacity(
       opacity: on && !dim ? 1 : .4,
+      // 読み上げに「ボタン」と、押せないときは「使えない」を伝える
+      child: Semantics(
+      button: true,
+      enabled: on,
       child: Material(
         color: primary ? Pal.gold : Pal.panel2,
         shape: btnShape(primary ? Pal.gold : Pal.line),
@@ -660,7 +739,7 @@ class Btn extends StatelessWidget {
                 : text),
           ),
         ),
-      ),
+      )),
     ));
   }
 
@@ -675,18 +754,20 @@ class DangerBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TapArea(
       onTap: onTap,
-      child: Material(
-        color: Pal.down,
-        shape: btnShape(Pal.down),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(Ui.rBtn),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: Text(tx(label), style: ts(bold: true, color: Pal.panel)),
-          ),
-        ),
-      ));
+      child: Semantics(
+          button: true,
+          child: Material(
+            color: Pal.down,
+            shape: btnShape(Pal.down),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(Ui.rBtn),
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                child: Text(tx(label), style: ts(bold: true, color: Pal.panel)),
+              ),
+            ),
+          )));
 }
 
 /// 選択肢のボタン（左寄せ・下に小さな説明）
@@ -711,7 +792,12 @@ class ChoiceBtn extends StatelessWidget {
       opacity: ok && !dim ? 1 : .4,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: Material(
+        // 読み上げに「ボタン」と、選んでいるか・押せるかを伝える
+        child: Semantics(
+          button: true,
+          enabled: ok,
+          selected: on,
+          child: Material(
           color: primary
               ? Pal.gold
               : on
@@ -733,7 +819,7 @@ class ChoiceBtn extends StatelessWidget {
               ]),
             ),
           ),
-        ),
+        )),
       ),
     );
   }
@@ -813,8 +899,13 @@ class Bar extends StatelessWidget {
           height: height,
           color: Pal.line,
           child: LayoutBuilder(builder: (context, c) {
+            // 割合の合計が100%を超えることがある（株主の割合は別々に動くので、端数や出来事で100からずれる）。
+            // そのときは全体を100%に縮めて、棒からはみ出さないようにする
+            final total = parts.fold(0.0, (a, p) => a + (p.$1.isFinite ? p.$1.clamp(0, 100) : 0));
+            final k = total > 100 ? 100 / total : 1.0;
             return Row(children: [
-              for (final p in parts) Container(width: c.maxWidth * (p.$1.clamp(0, 100) / 100), color: p.$2),
+              for (final p in parts)
+                if (p.$1.isFinite) Container(width: c.maxWidth * (p.$1.clamp(0, 100) / 100) * k, color: p.$2),
             ]);
           }),
         ),
