@@ -42,10 +42,14 @@ class TitleScreen extends StatelessWidget {
                 style: TextStyle(height: 1.8),
               ),
               const SizedBox(height: 14),
-              const Text(
-                '目標：成り上がり、天下の過半を握れ。\nただし乱世は1600年で終わる。\nそれとも、名もなき幸せを選ぶか。',
+              Text(
+                '天下を狙うも、名もなき幸せを選ぶも、\nあなた次第。乱世は1600年で終わる。\nこの世には、${kHandEndings.length}の最期がある。',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Pal.muted, fontSize: 13, height: 1.8),
+                style: const TextStyle(
+                  color: Pal.muted,
+                  fontSize: 13,
+                  height: 1.8,
+                ),
               ),
               const SizedBox(height: 36),
               BigButton('運命の籤を引く', c.draw),
