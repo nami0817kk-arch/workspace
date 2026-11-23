@@ -7,7 +7,7 @@
 - 試作の正: リポジトリの外の `game-assets/fukaana/prototype-v*.html`（0.4.0 は v11：縦画面1枚・2本指で拡大・なぞって印→離して掘る・一覧と遊び方は下のシート。0.5.0 は v12：掘る力・主役を鍛える・養分を運ぶ・ピュア種・塔の全体図・コアの台詞・音。0.6.0 は v13：初代との差を全部（掘ったマスの隣だけ掘れる・コケの運び方と花・ドラゴンの生まれ変わりと炎・ふん・フェロモン・巣・魔法陣・冒険者の MP と技・たいまつ・系統の強化・軍・ヒント・チャレンジ・朝昼夜）。初代の調べは game-assets/fukaana/research-shodai.md）。
   更新したら `python tool/sync_game.py <試作>` で `assets/game/index.html` へ写す
 - 仕様書: Claude Docs「塔の意志 仕様書」
-- 保存: ゲームは `window.TouStore` 経由でアプリ側（shared_preferences）にも保存し、起動時に `window.__boot` で戻す（鍵は tou-save・tou-hall・tou-best・tou-dex）
+- 保存: ゲームは `window.TouStore` 経由でアプリ側（shared_preferences）にも保存し、起動時に `window.__boot` で戻す（鍵は lib/main.dart の storeKeys。塔の途中は tou-save、ストーリーと VS の途中は tou-save-m に分けてある）
 - 広告と課金（0.3.0 から。ひかりの指名 `projects/hikari7/app` を写して絞ったもの。触る前に `docs/app-pitfalls.md` を読む）
   - 全画面広告だけ。ゲームが頼んだときに出す: 負けて結果画面を出す前（`finishTower()`）と、塔が1階伸びる前（`grow()`）。リワード広告と ATT は入れない
   - 課金は非消耗型1つ「広告を消す」（370円、`com.namiki.tounoishi.removeads`）。買うと全画面広告が出ない。タイトルに「広告を消す（値段）」「購入を復元」、買った後は「広告なし」
