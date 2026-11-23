@@ -363,6 +363,52 @@ void main() {
     expect(g.rankName(), startsWith('隠居（元'));
   });
 
+  test('実測（記録用）: 手書きの最期のうち、実際に出会えるもの', () {
+    final seen = <String>{};
+    const leans = [
+      <String>[],
+      ['働いて稼ぐ', '人の倍の田を植える'],
+      ['店を構える', '商いを広げる', '仕入れの旅に出る'],
+      ['髪を下ろす', '出家して仏門に入る', '修行に打ち込む'],
+      ['仲間に加わる', 'あてのない旅に出る', '獲物を狙う'],
+    ];
+    for (var seed = 0; seed < 6000; seed++) {
+      final rng = Rng(seed + 77777);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      final r = Rng(seed);
+      final lean = leans[seed % leans.length];
+      final smart = seed % 3 == 0;
+      var n = 0;
+      while (!g.finished && n++ < 3000) {
+        final p = g.prompt!;
+        var i = -1;
+        for (final w in lean) {
+          final k = p.choices.indexWhere((c) => c.label == w);
+          if (k >= 0) i = k;
+        }
+        if (i < 0) {
+          i = smart ? pickAmbitious(g, p, r) : r.range(0, p.choices.length - 1);
+        }
+        g.choose(i);
+      }
+      final e = buildEnding(g);
+      if (e.handId != null) seen.add(e.handId!);
+    }
+    final byWay = <String, List<int>>{};
+    for (final e in kHandEndings) {
+      final v = byWay.putIfAbsent(e.way, () => [0, 0]);
+      v[1]++;
+      if (seen.contains(e.id)) v[0]++;
+    }
+    // ignore: avoid_print
+    print(
+      '【最期の到達】6000人生で出た手書きの最期 ${seen.length}／${kHandEndings.length}: '
+      '${byWay.entries.map((e) => '${e.key} ${e.value[0]}/${e.value[1]}').join('・')}',
+    );
+    expect(seen, isNotEmpty);
+  });
+
   test('同じ種なら同じ人生になる', () {
     String run(int seed) {
       final rng = Rng(seed);
