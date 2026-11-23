@@ -65,8 +65,8 @@ class RiskEngine {
   /// 地域貢献を1段上げる費用。
   static int communityCost(int nextLevel) => 300 * nextLevel;
 
-  /// 地域貢献の効果: シーズン末にサポーターの期待が上がる量。
-  static int communityTrustGain(int level) => level * 2;
+  // 地域貢献のサポーターへの効き目は、2026-11-23 から季末にまとめてではなく
+  // 毎月(BoardEngine.communityMonthlyDelta)。レベルは不祥事の傷を浅くする。
 
   /// 出来事を引く。[chanceRoll]が確率に入らなければ null。
   /// [kindRoll]と[sizeRoll]は 0〜1。

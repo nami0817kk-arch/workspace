@@ -81,8 +81,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('理事会の目標順位', "The board's target"),
             description: Tr.pick(
-                'シーズン開始時に理事会から示される目標順位。これを下回る成績が続くとサポーターの期待が下がり、0になるとクラブを手放すことになる。ホーム画面の順位表示と見比べて、順位が目標に届いているか確認する。',
-                'The finishing position the board asks for at the start of the season. Sitting below it for long wears down supporter expectation, and if it hits zero you have to sell the club. Check it against the position shown on the home screen.'),
+                'シーズン開始時に理事会から示される目標順位。月末のまとめ・季の途中のレビュー・季末で、この順位との差がサポーターの期待に響く。ホーム画面の順位表示と見比べて、順位が目標に届いているか確認する。',
+                'The finishing position the board asks for at the start of the season. The gap from it feeds into supporter expectation at each month end, the mid-season review and the season end. Check it against the position shown on the home screen.'),
           ),
           GuideTopic(
             title: Tr.pick('通知バッジ', 'Notification badges'),
@@ -108,8 +108,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('2つの期待', 'Two expectations'),
             description: Tr.pick(
-                'サポーターの期待は成績と人気で、株主の期待は収支で動きます。クラブを手放すことになるのは、サポーターの期待が尽きたときと、資金が尽きたとき(借金がその部の年収の半分を超えたとき)の2つだけです。オーナーは雇われる立場ではないので、契約の満了で辞めさせられることはありません。',
-                'Supporter expectation follows results and popularity; shareholder expectation follows the books. Only two things can force you to sell the club: supporter expectation hitting zero, or the money running out (debts above half a season\'s typical income for your division). You own the club, so no contract can run out on you.'),
+                'サポーターの期待は毎月の結果とオーナーの手(チケットの値段・広報・地域活動・補強と売却)で、株主の期待は収支で動きます。クラブを手放すことになるのは、サポーターの期待が10を割って最後通告が出てから3か月のうちに戻せなかったときと、資金が尽きたとき(借金がその部の年収の半分を超えたとき)の2つだけです。オーナーは雇われる立場ではないので、契約の満了で辞めさせられることはありません。',
+                'Supporter expectation follows each month\'s results and your own moves (ticket prices, PR, community work, signings and sales); shareholder expectation follows the books. Only two things can force you to sell the club: supporter expectation staying below 10 for three months after the final warning, or the money running out (debts above half a season\'s typical income for your division). You own the club, so no contract can run out on you.'),
           ),
           GuideTopic(
             title: Tr.pick('進むボタン(日付で進む)', 'The advance button'),
@@ -421,8 +421,8 @@ List<GuideSection> get guideSections => [
             title:
                 Tr.pick('サポーターの期待・オーナーの評判', 'Supporter expectation and reputation'),
             description: Tr.pick(
-                'サポーターの期待は、リーグ戦の勝ち負け・季の途中の理事会レビュー・季末の順位で上下し、0でクラブを手放すことになる(季を越えれば最低40から)。評判は世間からの評価で、クラブを移っても引き継がれる。',
-                'Supporter expectation moves with league wins and defeats, the mid-season board review and your final position; at zero you have to sell the club (a new season starts from at least 40). Reputation is what the wider game thinks, and it follows you from club to club.'),
+                'サポーターの期待は、月末にまとめる試合の結果・季の途中の理事会レビュー・季末の順位と、オーナーの手(チケット・広報・地域活動・補強と売却)で上下する。10を割ると最後通告が出て、3か月のうちに戻せなければクラブを手放す(季を越えれば最低40から)。評判は世間からの評価で、クラブを移っても引き継がれる。',
+                'Supporter expectation moves with results (summed up each month), the mid-season board review, your final position and your own moves (tickets, PR, community work, signings and sales). Below 10 the fans issue a final warning; if it is not back within three months you have to sell the club (a new season starts from at least 40). Reputation is what the wider game thinks, and it follows you from club to club.'),
           ),
         ],
       ),

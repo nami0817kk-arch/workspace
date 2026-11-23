@@ -346,7 +346,10 @@ extension GameStateMatch on GameState {
           currentRank: preMatchRank,
           targetRank: _save!.boardTargetRank,
         );
-        _save!.confidence = (_save!.confidence + delta).clamp(0, 100);
+        _changeSupporters(delta, SupporterReason.results,
+            note: Tr.pick(
+                '季の途中の理事会レビュー($preMatchRank位・目標${_save!.boardTargetRank}位)',
+                'Mid-season review (${Tr.ordinal(preMatchRank)}, target: ${Tr.topTarget(_save!.boardTargetRank)})'));
         // 増減を本文に書く。以前は講評だけで、期待がいくつ動いたのかが
         // 分からなかった(2026-11-23)。
         final sign = delta > 0 ? '+$delta' : '$delta';
@@ -358,10 +361,6 @@ extension GameStateMatch on GameState {
         _save!.pendingBoardReviewMessage = '$review\n${Tr.pick(
             'サポーターの期待 $sign(いま$now)',
             'Supporter expectation $sign (now $now)')}';
-        _noteSupporterMove(
-            delta,
-            Tr.pick('季の途中の理事会レビュー($preMatchRank位・目標${_save!.boardTargetRank}位)',
-                'Mid-season review (${Tr.ordinal(preMatchRank)}, target: ${Tr.topTarget(_save!.boardTargetRank)})'));
         _save!.boardReviewDoneThisSeason = true;
       }
     }
@@ -1122,12 +1121,9 @@ extension GameStateMatch on GameState {
         _save!.lastManagerOfMonthCheckpoint = f.matchday;
       }
 
-      var delta =
-          BoardEngine.confidenceDeltaForMatch(merged, _save!.userTeamId);
-      if (isRivalFixture(f)) {
-        delta = (delta * GameState.derbyConfidenceMultiplier).round();
-      }
-      _save!.confidence = (_save!.confidence + delta).clamp(0, 100);
+      // サポーターの期待は1試合ごとには動かさない。勝点を数えて月末に
+      // まとめる。ダービーだけはその場で動く(2026-11-23)。
+      _supportersAfterLeagueMatch(merged, f);
       _recordSupporterTrail();
     } else {
       // カップ戦のライブ観戦: 結果を該当大会のブラケット/グループへ適用する
@@ -1374,8 +1370,8 @@ extension GameStateMatch on GameState {
     final s = _save;
     if (s == null || !canChangeClubCulture || c == clubCulture) return false;
     if (clubCulture != ClubCulture.none) {
-      s.confidence =
-          (s.confidence - ClubCultureEngine.changePenalty).clamp(0, 100);
+      _changeSupporters(
+          -ClubCultureEngine.changePenalty, SupporterReason.events);
     }
     s.clubCulture = c.name;
     s.clubCultureChangedSeason = s.league.season;
@@ -1395,6 +1391,6 @@ extension GameStateMatch on GameState {
     ];
     final bonus = ClubCultureEngine.matchBonus(
         culture: clubCulture, r: r, userId: s.userTeamId, starters: starters);
-    if (bonus > 0) s.confidence = (s.confidence + bonus).clamp(0, 100);
+    if (bonus > 0) _changeSupporters(bonus, SupporterReason.events);
   }
 }

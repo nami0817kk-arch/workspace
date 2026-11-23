@@ -72,6 +72,7 @@ class NextActionCard extends StatelessWidget {
       includeSetup: true,
       supporterTrend: gameState.supporterTrend,
       rolloverShortfall: gameState.rolloverShortfall,
+      supporterUltimatumDaysLeft: gameState.supporterUltimatumDaysLeft,
     );
     if (action == null) return const SizedBox.shrink();
 

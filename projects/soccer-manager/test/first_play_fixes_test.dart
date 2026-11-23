@@ -61,21 +61,37 @@ void main() {
       final s = gs.save!;
       s.clubVision = ClubVision.none;
       s.confidence = 20;
-      // 季末は -20(目標より3つ以上下)。引いた後は0になる。
-      expect(gs.seasonEndSupporterDelta, -20);
+      // 季末は目標との差に比例し、下がる幅は最大 -10(2026-11-23)。
+      // 目標の順位はくじで変わるので、最下位との差しだいで -9 などにもなる。
+      expect(gs.seasonEndSupporterDelta,
+          inInclusiveRange(-BoardEngine.boardReviewMaxDrop, -1));
       await gs.startNextSeason();
       expect(s.confidence, BoardEngine.newSeasonConfidenceFloor);
       expect(gs.saleReason, isNull, reason: '第2季の1試合目より前に手放していた');
     });
 
-    test('季の途中で0になっていたら、季を越えても手放す', () async {
+    test('最後通告の期限を過ぎていたら、季を越えても手放す', () async {
       final gs = await newGame();
       loseEverything(gs);
       gs.save!.clubVision = ClubVision.none;
       gs.save!.confidence = 0;
+      gs.save!.supporterUltimatumUntil = DateTime(2000);
       await gs.startNextSeason();
       expect(gs.save!.confidence, 0);
       expect(gs.saleReason, SaleReason.supporters);
+    });
+
+    test('最後通告の猶予中なら、季の切り替えで40へ戻り通告は取り下げ', () async {
+      final gs = await newGame();
+      loseEverything(gs);
+      final s = gs.save!;
+      s.clubVision = ClubVision.none;
+      s.confidence = 5;
+      s.supporterUltimatumUntil = gs.today.add(const Duration(days: 300));
+      await gs.startNextSeason();
+      expect(s.confidence, BoardEngine.newSeasonConfidenceFloor);
+      expect(s.supporterUltimatumUntil, isNull);
+      expect(gs.saleReason, isNull);
     });
 
     test('「シーズン終了！」の札に、来る増減を先に出す', () async {
@@ -83,7 +99,7 @@ void main() {
       loseEverything(gs);
       gs.save!.confidence = 20;
       final line = gs.seasonEndPreviewLine;
-      expect(line, contains('-20'));
+      expect(line, contains('-${BoardEngine.boardReviewMaxDrop}'));
       expect(line, contains('最低${BoardEngine.newSeasonConfidenceFloor}'));
     });
   });
@@ -101,7 +117,8 @@ void main() {
         targetRank: 17,
       );
       expect(r.headline, isNot(contains('大きな問題はありません')));
-      expect(r.headline, contains('-20'));
+      // 季末の増減は目標との差に比例(下がる幅は最大 -10)。
+      expect(r.headline, contains('-10'));
     });
 
     test('直近5節で -10 以上下がれば、危ない線の前でも報告が変わる', () {
@@ -197,7 +214,7 @@ void main() {
       await gs.startNextSeason();
       final lines = gs.lastSeasonResultLines!;
       expect(lines.first, contains('$teams位'));
-      // 季末の -20 のほかに、季の締めで出来事などの小さな増減が乗ることが
+      // 季末の -10 のほかに、季の締めで出来事などの小さな増減が乗ることが
       // ある(CI で 46→26 以外が出た)。前の値と矢印が出ていることを見る。
       expect(lines.any((l) => l.contains('サポーターの期待 46→')), isTrue,
           reason: lines.join(' / '));

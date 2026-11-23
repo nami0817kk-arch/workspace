@@ -47,7 +47,9 @@ void main() {
       expect(s0.lastWeeklyTickDate, isNotNull);
       final reached = gs.today;
 
-      s0.confidence = 0;
+      s0
+        ..confidence = 0
+        ..supporterUltimatumUntil = DateTime(2000);
       expect(await gs.buyClubInCountry(otherTheme(gs)), isTrue);
       final s = gs.save!;
       expect(gs.today.isBefore(reached), isTrue, reason: '新しい国は開幕前から');
@@ -64,7 +66,10 @@ void main() {
       final gs = await start();
       expect((await gs.simulateAheadMatchdays(6)).length, 6);
       final reached = gs.today;
-      gs.save!.confidence = 0;
+      gs.save!
+        ..confidence = 0
+        // 最後通告の期限を過ぎた(手放す)ことにする。
+        ..supporterUltimatumUntil = DateTime(2000);
       expect(await gs.buyClubInCountry(otherTheme(gs)), isTrue);
       final s = gs.save!;
 
@@ -84,7 +89,10 @@ void main() {
       final gs = await start();
       expect((await gs.simulateAheadMatchdays(1)).length, 1);
       expect(gs.save!.weekProcessedMatchday, 1);
-      gs.save!.confidence = 0;
+      gs.save!
+        ..confidence = 0
+        // 最後通告の期限を過ぎた(手放す)ことにする。
+        ..supporterUltimatumUntil = DateTime(2000);
       expect(await gs.buyClubInCountry(otherTheme(gs)), isTrue);
       final s = gs.save!;
 
@@ -106,7 +114,10 @@ void main() {
       gs.debugAdvanceTodayTo(DateTime(year, 11, 15));
       final reached = gs.today;
 
-      gs.save!.confidence = 0;
+      gs.save!
+        ..confidence = 0
+        // 最後通告の期限を過ぎた(手放す)ことにする。
+        ..supporterUltimatumUntil = DateTime(2000);
       expect(await gs.buyClubInCountry(otherTheme(gs)), isTrue);
       expect(gs.today.isBefore(reached), isTrue);
       final wealth = gs.ownerWealth;
@@ -142,7 +153,9 @@ void main() {
       final s = gs.save!;
       final day = gs.today;
       final tick = s.lastWeeklyTickDate;
-      s.confidence = 0;
+      s
+        ..confidence = 0
+        ..supporterUltimatumUntil = DateTime(2000);
       final target = gs.buyoutCandidates.first;
       expect(await gs.buyClub(target.id), isTrue);
       expect(gs.today, day);
@@ -303,8 +316,12 @@ void main() {
         final s = gs.save!;
         final parent = s.league.teams.firstWhere((t) => t.id != s.userTeamId);
         final clock = Player.contractClockYear;
-        final loanee = PlayerGenerator.generate(
-            position: Position.st, strengthTier: 30, ageOverride: 40)
+        // 名前で確かめるので、自クラブの満了の選手と同じ名前にならない
+        // よう固有の名前にする(CI で同名の別人と重なった)。
+        final generated = PlayerGenerator.generate(
+            position: Position.st, strengthTier: 30, ageOverride: 40);
+        final loanee = Player.fromJson(
+            {...generated.toJson(), 'name': 'テスト借用選手$round'})
           ..isLoan = true
           ..loanFromClubId = parent.id
           ..loanEndDate = DateTime(clock, 6, 30)

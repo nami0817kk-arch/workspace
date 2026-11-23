@@ -92,12 +92,18 @@ void main() {
       final cpus = s.league.teams.where((t) => t.id != s.userTeamId).toList();
       final to = cpus[0];
       final from = cpus[1];
-      // 受け入れ側を上限ちょうどにする。
+      // 受け入れ側を上限ちょうどにする。足す選手は弱くしておく(強いと、
+      // 3部の仮契約の選手のほうが一番弱くなり、押し出されてしまう)。
       while (to.players.length < AiTransferEngine.maxSquadSize) {
-        to.players.add(make('pad${to.players.length}'));
+        to.players.add(make('pad${to.players.length}', tier: 20));
       }
       final clock = Player.contractClockYear;
-      final movers = from.players.take(3).toList();
+      // 移るのは出す側の強い3人(弱い選手だと、上限に合わせて押し出す
+      // 「一番弱い選手」に当たることがある。CI で起きた)。
+      final movers = ([...from.players.where((p) => !p.isLoan)]
+            ..sort((a, b) => b.overall.compareTo(a.overall)))
+          .take(3)
+          .toList();
       for (final p in movers) {
         s.preContracts.add(PreContract(
           playerId: p.id,

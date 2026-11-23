@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/board_engine.dart';
 import '../logic/scouting_engine.dart';
 import '../logic/manager_hr_engine.dart';
 import '../logic/manager_tactics.dart';
@@ -374,6 +375,24 @@ class _TicketPricingCard extends StatelessWidget {
               style: TextStyle(
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
+            // サポーターの期待への効き目(試合のある月ごと。2026-11-23)。
+            Builder(builder: (context) {
+              final d = BoardEngine.ticketMonthlyDelta(current);
+              return Text(
+                Tr.pick(
+                    'サポーターの期待: 試合のある月ごとに ${d > 0 ? '+$d' : d == 0 ? '±0' : '$d'}',
+                    'Supporter expectation: ${d > 0 ? '+$d' : d == 0 ? '±0' : '$d'} each month with matches'),
+                key: const ValueKey('ticket-supporter-effect'),
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: d > 0
+                        ? SemanticColors.positive(context)
+                        : d < 0
+                            ? SemanticColors.negative(context)
+                            : SemanticColors.subtleText(context)),
+              );
+            }),
           ],
         ),
       ),

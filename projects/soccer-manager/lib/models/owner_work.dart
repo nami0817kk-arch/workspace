@@ -13,7 +13,8 @@ extension OwnerWorkCategoryInfo on OwnerWorkCategory {
       };
 }
 
-/// オーナーが自分の判断で打てる1つの手。1シーズンに1回ずつ。
+/// オーナーが自分の判断で打てる1つの手。1シーズンに1回ずつ(広報・ファンの
+/// 手は、どれか1つを月に1回。[monthly])。
 ///
 /// 効きは3つだけ: 資金(万円)、サポーターの期待、株主の期待。どの手も
 /// 何かを得て何かを払う(ただで済む手は無い)。
@@ -48,6 +49,10 @@ class OwnerWork {
 
   /// 支出が要る手か。資金が足りないと打てない。
   int get cost => funds < 0 ? -funds : 0;
+
+  /// 月に1回打てる手か(広報・ファンの手。どれか1つを月に1回)。
+  /// ほかの手は1シーズンに1回ずつ(2026-11-23)。
+  bool get monthly => category == OwnerWorkCategory.fans;
 }
 
 /// 仕事の名前と説明(日英)。getter にして、言語の切り替えに追従させる。
@@ -237,13 +242,13 @@ const List<OwnerWork> ownerWorks = [
   OwnerWork(id: 'asset_sale', category: OwnerWorkCategory.finance, funds: 1000, supporters: -2, shareholders: 2),
   OwnerWork(id: 'credit_talk', category: OwnerWorkCategory.finance, funds: -100, supporters: 0, shareholders: 3),
   OwnerWork(id: 'auditor', category: OwnerWorkCategory.finance, funds: -150, supporters: 0, shareholders: 5),
-  // 広報・ファン
-  OwnerWork(id: 'fan_thanks', category: OwnerWorkCategory.fans, funds: -400, supporters: 7, shareholders: -2),
+  // 広報・ファン(月に1回、どれか1つ。サポーターの期待 +3〜6)
+  OwnerWork(id: 'fan_thanks', category: OwnerWorkCategory.fans, funds: -400, supporters: 6, shareholders: -2),
   OwnerWork(id: 'supporter_dinner', category: OwnerWorkCategory.fans, funds: -50, supporters: 4, shareholders: 0),
   OwnerWork(id: 'vision_press', category: OwnerWorkCategory.fans, funds: 0, supporters: 3, shareholders: -1),
   OwnerWork(id: 'legend_match', category: OwnerWorkCategory.fans, funds: -350, supporters: 5, shareholders: 1),
   OwnerWork(id: 'kids_clinic', category: OwnerWorkCategory.fans, funds: -200, supporters: 4, shareholders: 1),
-  OwnerWork(id: 'fan_survey', category: OwnerWorkCategory.fans, funds: -80, supporters: 2, shareholders: 1),
+  OwnerWork(id: 'fan_survey', category: OwnerWorkCategory.fans, funds: -80, supporters: 3, shareholders: 1),
   OwnerWork(id: 'chant_contest', category: OwnerWorkCategory.fans, funds: -120, supporters: 4, shareholders: 0),
   // 組織・人事
   OwnerWork(id: 'hire_analyst', category: OwnerWorkCategory.org, funds: -300, supporters: 0, shareholders: 4),

@@ -14,7 +14,8 @@ import '../widgets/responsive_body.dart';
 import '../logic/economy_scale.dart';
 
 /// オーナーの仕事。資金と2つの期待を動かす手を、分野ごとに並べる。
-/// どの手も1シーズンに1回。何かを得て何かを払う。
+/// 広報・ファンの手は月に1回(どれか1つ)、ほかの手は1シーズンに1回。
+/// 何かを得て何かを払う。
 class OwnerWorkScreen extends StatefulWidget {
   const OwnerWorkScreen({super.key});
 
@@ -41,8 +42,8 @@ class _OwnerWorkScreenState extends State<OwnerWorkScreen> {
                 children: [
                   Text(
                     Tr.pick(
-                        '資金 ${formatMoney(save.budget)}。どの手も1シーズンに1回だけ打てます。',
-                        'Funds ${formatMoney(save.budget)}. Each move can be made once per season.'),
+                        '資金 ${formatMoney(save.budget)}。広報・ファンの手は月に1回(どれか1つ)、ほかの手は1シーズンに1回ずつ打てます。${game.fanWorkDoneThisMonth ? '今月の広報は済んでいます。' : '今月の広報はまだです。'}',
+                        'Funds ${formatMoney(save.budget)}. One fans & PR move a month; every other move once per season. ${game.fanWorkDoneThisMonth ? 'This month\'s PR move is done.' : 'This month\'s PR move is still open.'}'),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 8),
@@ -140,7 +141,9 @@ class _WorkTile extends StatelessWidget {
                     }
                   : null,
               child: Text(done
-                  ? Tr.pick('今季済み', 'Done')
+                  ? (work.monthly
+                      ? Tr.pick('今月済み', 'Done this month')
+                      : Tr.pick('今季済み', 'Done'))
                   : work.onlyInRed && !can
                       ? Tr.pick('赤字のとき', 'When in the red')
                       : Tr.pick('実行', 'Do it')),

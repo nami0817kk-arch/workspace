@@ -155,6 +155,8 @@ extension GameStateSeason on GameState {
     _onContractDatesAdvanced(before, d);
     // 給与の月末・放映権の入金日。
     _settleMoneyDates(before, d);
+    // サポーターの期待の月末のまとめ(結果・チケット・地域活動)と内訳。
+    _settleSupporterMonths(before, d);
     // 誕生日とオーナーの本業の収入は、前に済ませた日より後の分だけ
     // (季の途中で別の国のクラブを買い直すと今日が戻る。二重に入れない)。
     final through = _save!.personalDatesThrough;
@@ -954,19 +956,19 @@ extension GameStateSeason on GameState {
         final target = _save!.boardCupTargetRound;
         final label = boardCupTargetLabel;
         if (target > 0 && reached >= target) {
-          _save!.confidence = (_save!.confidence + 2).clamp(0, 100);
+          _changeSupporters(2, SupporterReason.results);
           _logNews(
               Tr.pick('国内カップは理事会の期待($label進出)に応えた。敗退したが評価は上々だ',
                   "You met the board's expectation in the domestic cup (reaching ${CupEngine.roundInSentence(label!)}). You are out, but they are pleased"),
               context: Tr.pick('カップ戦', 'Cup'));
         } else if (target > 0 && target - reached >= 2) {
-          _save!.confidence = (_save!.confidence - 3).clamp(0, 100);
+          _changeSupporters(-3, SupporterReason.results);
           _logNews(
               Tr.pick('国内カップで早期敗退。理事会の期待($label進出)を大きく裏切った',
                   "An early exit from the domestic cup, well short of the board's expectation of ${CupEngine.roundInSentence(label!)}"),
               context: Tr.pick('カップ戦', 'Cup'));
         } else {
-          _save!.confidence = (_save!.confidence - 1).clamp(0, 100);
+          _changeSupporters(-1, SupporterReason.results);
         }
       }
     }
@@ -975,7 +977,8 @@ extension GameStateSeason on GameState {
       final reward = scaledMoney(GameState.domesticCupChampionPrize);
       _book(LedgerCategory.prize, reward);
       _save!.careerCupPrize += reward;
-      _save!.confidence = (_save!.confidence + 10).clamp(0, 100);
+      _changeSupporters(10, SupporterReason.results,
+          note: Tr.pick('${cup.name}で優勝', 'Won the ${cup.name}'));
       _save!.trophyHistory.add(Tr.pick(
           'シーズン${_save!.league.season}: ${cup.name} 優勝',
           'Season ${_save!.league.season}: ${cup.name} winners'));
@@ -1023,7 +1026,7 @@ extension GameStateSeason on GameState {
       _settleContinentalPrizes(cup);
     }
     if (cup.isEliminated(userId)) {
-      _save!.confidence = (_save!.confidence - 3).clamp(0, 100);
+      _changeSupporters(-3, SupporterReason.results);
     }
   }
 
@@ -1050,7 +1053,7 @@ extension GameStateSeason on GameState {
       if (userInTie) _playCpuContinental(cup);
       _settleContinentalPrizes(cup);
       if (userInTie && cup.isEliminated(userId)) {
-        _save!.confidence = (_save!.confidence - 3).clamp(0, 100);
+        _changeSupporters(-3, SupporterReason.results);
       }
       return;
     }
@@ -1064,7 +1067,7 @@ extension GameStateSeason on GameState {
         _logNews(lastCupPrizeNote!, context: Tr.pick('カップ戦', 'Cup'));
       }
       if (cup.isEliminated(userId)) {
-        _save!.confidence = (_save!.confidence - 3).clamp(0, 100);
+        _changeSupporters(-3, SupporterReason.results);
       }
     }
     if (cup.isComplete && cup.championId == userId && !cup.rewardClaimed) {
@@ -1072,7 +1075,8 @@ extension GameStateSeason on GameState {
       final reward = scaledMoney(GameState.continentalChampionPrize);
       _book(LedgerCategory.prize, reward);
       _save!.careerCupPrize += reward;
-      _save!.confidence = (_save!.confidence + 20).clamp(0, 100);
+      _changeSupporters(20, SupporterReason.results,
+          note: Tr.pick('${cup.name}で優勝', 'Won the ${cup.name}'));
       _save!.trophyHistory.add(Tr.pick(
           'シーズン${_save!.league.season}: ${cup.name} 優勝',
           'Season ${_save!.league.season}: ${cup.name} winners'));
@@ -1130,6 +1134,8 @@ extension GameStateSeason on GameState {
     // 0 のまま、第2季の1試合目より前に手放すことになった。2026-11-23)。
     // 季を越えて手放すのは、季の途中で0になっていた場合だけ。
     final supporterBefore = _save!.confidence;
+    // 最後通告の期限を過ぎて手放すことが決まっていれば、底上げしない。
+    final supportersGone = supporterUltimatumExpired;
     final shareholderBefore = _save!.shareholderExpectation;
     final previousTargetRank = _save!.boardTargetRank;
     final wagesBefore = _save!.ledgerFor(league.season).wageCost;
@@ -1221,14 +1227,14 @@ extension GameStateSeason on GameState {
       finalRank: finalRank,
       targetRank: _save!.boardTargetRank,
     );
-    _save!.confidence = (_save!.confidence + confidenceDelta).clamp(0, 100);
-    _noteSupporterMove(
-        confidenceDelta,
-        Tr.pick('季末の順位(第${league.season}季 $finalRank位・目標${_save!.boardTargetRank}位)',
+    _changeSupporters(confidenceDelta, SupporterReason.results,
+        note: Tr.pick(
+            '季末の順位(第${league.season}季 $finalRank位・目標${_save!.boardTargetRank}位)',
             'Season-end finish (season ${league.season}: ${Tr.ordinal(finalRank)}, target: ${Tr.topTarget(_save!.boardTargetRank)})'));
     // 期待への慣れ。勝ち続けるうちにサポーターの目は肥え、満点に張り付いた
     // ままだと緊張が無くなる(放置3シーズンの実測で94〜97に張り付いた)。
-    _save!.confidence = BoardEngine.afterAdaptation(_save!.confidence);
+    _setSupportersTo(BoardEngine.afterAdaptation(_save!.confidence),
+        SupporterReason.results);
 
     // 理事会の路線。1年を通して守れていたかを、ここで一度だけ評価する。
     final visionDelta = BoardEngine.confidenceDeltaForVisionSeason(
@@ -1242,10 +1248,8 @@ extension GameStateSeason on GameState {
         _save!.shareholderExpectation = ShareholderEngine.applied(
             _save!.shareholderExpectation, visionDelta);
       } else {
-        _save!.confidence = (_save!.confidence + visionDelta).clamp(0, 100);
-        _noteSupporterMove(
-            visionDelta,
-            Tr.pick('理事会の路線「${_save!.clubVision.label}」の評価',
+        _changeSupporters(visionDelta, SupporterReason.events,
+            note: Tr.pick('理事会の路線「${_save!.clubVision.label}」の評価',
                 'Board direction "${_save!.clubVision.label}"'));
       }
       _logNews(
@@ -1696,12 +1700,15 @@ extension GameStateSeason on GameState {
       BoardEngine.estimateTargetRank(_save!.league, _save!.userTeamId),
     );
     // 新しい季を迎えたら、最低限の期待を戻す。判断は季末の増減を引く
-    // 前の値で行う(上の supporterBefore)。季の途中で0になって手放すことが
-    // 決まっている場合だけ、0のままにしてその流れを壊さない。
+    // 前に行う(上の supportersGone)。最後通告の期限を過ぎて手放すことが
+    // 決まっている場合だけ、そのままにしてその流れを壊さない。底上げで
+    // 10以上に戻れば、最後通告も取り下げられる。
     final supporterAfterSeason = _save!.confidence;
-    if (supporterBefore > 0) {
-      _save!.confidence =
-          max(_save!.confidence, BoardEngine.newSeasonConfidenceFloor);
+    if (!supportersGone &&
+        _save!.confidence < BoardEngine.newSeasonConfidenceFloor) {
+      _setSupportersTo(
+          BoardEngine.newSeasonConfidenceFloor, SupporterReason.events,
+          note: Tr.pick('新しい季の底上げ', 'New-season floor'));
     }
     // 期待の推移は季ごとに数え直す。始まりの値を1つ置いておく。
     _save!.supporterTrail

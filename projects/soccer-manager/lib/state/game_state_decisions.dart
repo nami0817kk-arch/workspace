@@ -7,8 +7,8 @@ part of 'game_state.dart';
 /// - サポーターの期待の推移を控え、下がり続けたら早めに知らせる。
 /// - 季末に来る増減を、季を締める前に見せる。
 ///
-/// サポーターの期待の増減の仕組みそのもの(勝ち負け・中間レビュー・季末の
-/// 幅)は変えない。ここは見せ方と、決めごとの片付けだけ。
+/// サポーターの期待の増減の仕組みそのものは game_state_supporters.dart。
+/// ここは見せ方と、決めごとの片付けだけ。
 extension GameStateDecisions on GameState {
   /// 決めごとの締切(自クラブのリーグ戦の数)。
   static const int decisionDeadlineMatchdays = 3;
@@ -19,7 +19,7 @@ extension GameStateDecisions on GameState {
   /// 直近 [supporterTrendWindow] 節でこれ以上下がったら、早めに知らせる。
   static const int supporterDropAlert = 10;
 
-  /// 手放す画面に出す、大きな増減の下限(1試合の±3は数えない)。
+  /// 手放す画面に出す、大きな増減の下限(小さな増減は数えない)。
   static const int bigSupporterMove = 5;
 
   // ---- 締切 ----
@@ -141,6 +141,15 @@ extension GameStateDecisions on GameState {
       ..add(s.confidence);
     s.supporterMoves.clear();
     s.decisionAges.clear();
+    // 月の内訳と最後通告も、前のクラブのものは持ち越さない。
+    s.supporterMonth.clear();
+    s.supporterLastMonth.clear();
+    s.supporterLastMonthKey = 0;
+    s.supporterMonthEnds.clear();
+    s.supporterMonthPoints = 0;
+    s.supporterMonthGames = 0;
+    s.fanWorkMonthKey = 0;
+    s.supporterUltimatumUntil = null;
   }
 
   /// 自クラブのリーグ戦の後に、いまの期待を控える。
@@ -223,7 +232,8 @@ extension GameStateDecisions on GameState {
     final sign = delta > 0 ? '+$delta' : '$delta';
     final floor = BoardEngine.newSeasonConfidenceFloor;
     final after = (s.confidence + delta).clamp(0, 100);
-    final floorNote = after < floor && s.confidence > 0
+    // 最後通告の期限を過ぎて手放すことが決まっていれば、底上げは無い。
+    final floorNote = after < floor && !supporterUltimatumExpired
         ? Tr.pick('新しい季は最低$floorから始まります。',
             'The new season starts from at least $floor.')
         : '';

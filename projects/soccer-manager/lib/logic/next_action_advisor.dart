@@ -73,8 +73,22 @@ class NextActionAdvisor {
     bool includeSetup = false,
     int? supporterTrend,
     int? rolloverShortfall,
+    int? supporterUltimatumDaysLeft,
   }) {
     final actions = <NextAction>[];
+
+    // サポーターの最後通告。期限までに戻せなければ手放すので、何よりも先に
+    // (2026-11-23)。
+    final ultimatum = supporterUltimatumDaysLeft;
+    if (ultimatum != null) {
+      actions.add(NextAction(
+        message: Tr.pick(
+            '最後通告: 残り$ultimatum日でサポーターの期待を10以上に戻さないと、クラブを手放します(いま${save.confidence})。広報・ファンの手、安いチケット、地域活動で支えましょう。',
+            'Final warning: get supporter expectation back to 10 within ${Tr.plural(ultimatum, 'day')} or sell the club (now ${save.confidence}). Use a PR or fan move, cheaper tickets and community work.'),
+        target: NextActionTarget.ownerWork,
+        urgent: true,
+      ));
+    }
 
     // 開幕前は、まずクラブの用意。何から手を付けるか分からないまま
     // 第1節へ進めてしまうと、空席のスタッフとスポンサー無しで季を戦う。
@@ -225,6 +239,7 @@ class NextActionAdvisor {
     bool includeSetup = false,
     int? supporterTrend,
     int? rolloverShortfall,
+    int? supporterUltimatumDaysLeft,
   }) {
     final actions = all(save, team,
         transferDeadlineDaysLeft: transferDeadlineDaysLeft,
@@ -232,7 +247,8 @@ class NextActionAdvisor {
         hasSigningProposals: hasSigningProposals,
         includeSetup: includeSetup,
         supporterTrend: supporterTrend,
-        rolloverShortfall: rolloverShortfall);
+        rolloverShortfall: rolloverShortfall,
+        supporterUltimatumDaysLeft: supporterUltimatumDaysLeft);
     if (actions.isEmpty) return null;
     // 損が確定しているものを先に出す。
     final urgent = actions.where((a) => a.urgent);
