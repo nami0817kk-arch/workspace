@@ -83,15 +83,39 @@ PreferredSizeWidget screenBar(
           : Row(
               children: [
                 titleText,
-                const SizedBox(width: 8),
+                // 見出しとタブの間に縦の区切りを置き、タブの左端は薄く消す。
+                // 文字1.3倍以上では、スクロールしたタブが見出しのすぐ右で
+                // 切れ、見出しと続けて別の語に見えていた(2026-11-23)。
+                const SizedBox(width: 10),
+                SizedBox(
+                  height: 20,
+                  child: VerticalDivider(
+                    width: 1,
+                    thickness: 1,
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ),
+                const SizedBox(width: 2),
                 Expanded(
-                  child: TabBar(
-                    controller: controller,
-                    isScrollable: true,
-                    tabAlignment: TabAlignment.start,
-                    dividerColor: Colors.transparent,
-                    labelPadding: const EdgeInsets.symmetric(horizontal: 14),
-                    tabs: [for (final t in tabs) Tab(height: 48, text: t)],
+                  child: ShaderMask(
+                    blendMode: BlendMode.dstIn,
+                    shaderCallback: (bounds) => LinearGradient(
+                      colors: const [Color(0x00000000), Color(0xFF000000)],
+                      stops: [
+                        0.0,
+                        bounds.width <= 0
+                            ? 0.0
+                            : (14 / bounds.width).clamp(0.0, 1.0),
+                      ],
+                    ).createShader(bounds),
+                    child: TabBar(
+                      controller: controller,
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.start,
+                      dividerColor: Colors.transparent,
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 14),
+                      tabs: [for (final t in tabs) Tab(height: 48, text: t)],
+                    ),
                   ),
                 ),
               ],

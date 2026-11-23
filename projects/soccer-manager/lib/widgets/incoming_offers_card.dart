@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
+import '../logic/calendar_engine.dart';
 import '../logic/economy_scale.dart';
 import '../logic/sale_advice_engine.dart';
 import '../models/incoming_offer.dart';
@@ -42,6 +43,9 @@ class IncomingOffersCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
     if (gameState.incomingOffers.isEmpty) return const SizedBox.shrink();
+    final scheme = Theme.of(context).colorScheme;
+    final windowOpen = gameState.isTransferWindowOpen;
+    final nextWindow = gameState.nextTransferWindow;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -52,6 +56,33 @@ class IncomingOffersCard extends StatelessWidget {
               Text(
                 Tr.pick('移籍オファー', 'Transfer offers'),
                 style: Theme.of(context).textTheme.titleSmall,
+              ),
+            // 窓が閉じている間は承諾できない。ボタンが薄いだけで理由が
+            // 無かったので、ホームの札にはいつ開くかを書く(2026-11-23)。
+            // 移籍の画面は上の帯に窓の状態が出ているので出さない。
+            if (showTitle && !windowOpen)
+              Padding(
+                key: const ValueKey('offers-window-closed'),
+                padding: const EdgeInsets.only(top: 2, bottom: 2),
+                child: Row(
+                  children: [
+                    Icon(Icons.lock_clock,
+                        size: 14, color: scheme.onSurfaceVariant),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        nextWindow == null
+                            ? Tr.pick('移籍の窓が開くと承諾できます。',
+                                'You can accept once the transfer window opens.')
+                            : Tr.pick(
+                                '移籍の窓が開くと承諾できます(${CalendarEngine.formatShortDate(nextWindow.opens)}から)。',
+                                'You can accept once the transfer window opens (from ${CalendarEngine.formatShortDate(nextWindow.opens)}).'),
+                        style: TextStyle(
+                            fontSize: 12, color: scheme.onSurfaceVariant),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             for (final entry in groupOffersByPlayer(gameState.incomingOffers))
               Padding(
@@ -73,57 +104,96 @@ class IncomingOffersCard extends StatelessWidget {
                         ),
                       ),
                     for (int i = 0; i < entry.length; i++)
-                      Row(
-                        children: [
-                          if (entry.length > 1 && i == 0)
-                            const Padding(
-                              padding: EdgeInsets.only(right: 4),
-                              child: Icon(
-                                Icons.star,
-                                size: 14,
-                                color: Colors.amber,
-                              ),
-                            ),
-                          Expanded(
-                            child: Text(
-                              Tr.pick(
-                                  '${entry[i].buyerClubName}が${entry[i].playerName}に${formatMoney(entry[i].amount)}${entry[i].isFinal ? '(これ以上は出さない)' : ''}',
-                                  '${entry[i].buyerClubName} bid ${formatMoney(entry[i].amount)} for ${entry[i].playerName}${entry[i].isFinal ? ' (final)' : ''}'),
-                            ),
-                          ),
-                          if (entry[i].askedAmount != null)
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                Tr.pick('返事待ち', 'Awaiting reply'),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: SemanticColors.subtleText(context),
+                      // 狭い欄・大きな文字では、ボタンを本文の下の行へ回す
+                      // (文字1.5倍の英語で、本文が細い列に押し込まれ、
+                      // ボタンが右へはみ出していた)。
+                      LayoutBuilder(
+                        builder: (context, c) {
+                          final label = Row(
+                            children: [
+                              if (entry.length > 1 && i == 0)
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 4),
+                                  child: Icon(
+                                    Icons.star,
+                                    size: 14,
+                                    color: Colors.amber,
+                                  ),
+                                ),
+                              Expanded(
+                                child: Text(
+                                  Tr.pick(
+                                      '${entry[i].buyerClubName}が${entry[i].playerName}に${formatMoney(entry[i].amount)}${entry[i].isFinal ? '(これ以上は出さない)' : ''}',
+                                      '${entry[i].buyerClubName} bid ${formatMoney(entry[i].amount)} for ${entry[i].playerName}${entry[i].isFinal ? ' (final)' : ''}'),
                                 ),
                               ),
-                            )
-                          else if (gameState.canCounterIncomingOffer(entry[i]))
+                            ],
+                          );
+                          final buttons = <Widget>[
+                            if (entry[i].askedAmount != null)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  Tr.pick('返事待ち', 'Awaiting reply'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: SemanticColors.subtleText(context),
+                                  ),
+                                ),
+                              )
+                            else if (gameState.canCounterIncomingOffer(entry[i]))
+                              TextButton(
+                                onPressed: () =>
+                                    showCounterOfferDialog(context, entry[i]),
+                                child: Text(Tr.pick('対案', 'Counter')),
+                              ),
                             TextButton(
-                              onPressed: () =>
-                                  showCounterOfferDialog(context, entry[i]),
-                              child: Text(Tr.pick('対案', 'Counter')),
+                              onPressed: () {
+                                FeedbackService.tap();
+                                gameState.declineIncomingOffer(entry[i].id);
+                              },
+                              child: Text(Tr.pick('拒否', 'Reject')),
                             ),
-                          TextButton(
-                            onPressed: () {
-                              FeedbackService.tap();
-                              gameState.declineIncomingOffer(entry[i].id);
-                            },
-                            child: Text(Tr.pick('拒否', 'Reject')),
-                          ),
-                          FilledButton(
-                            onPressed: !gameState.isTransferWindowOpen
-                                ? null
-                                : () => confirmAcceptIncomingOffer(
-                                    context, entry[i]),
-                            child: Text(Tr.pick('承諾', 'Accept')),
-                          ),
-                        ],
+                            FilledButton(
+                              // 押せないときも字が読めるように、地と字の色を
+                              // テーマから取る(既定は暗い地に沈む灰色だった)。
+                              style: FilledButton.styleFrom(
+                                disabledBackgroundColor:
+                                    scheme.surfaceContainerHighest,
+                                disabledForegroundColor: scheme.onSurfaceVariant,
+                              ),
+                              onPressed: !windowOpen
+                                  ? null
+                                  : () => confirmAcceptIncomingOffer(
+                                      context, entry[i]),
+                              child: Text(Tr.pick('承諾', 'Accept')),
+                            ),
+                          ];
+                          final scale =
+                              MediaQuery.textScalerOf(context).scale(1);
+                          if (c.maxWidth / scale < 300) {
+                            return Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.stretch,
+                              children: [
+                                label,
+                                Wrap(
+                                  alignment: WrapAlignment.end,
+                                  crossAxisAlignment:
+                                      WrapCrossAlignment.center,
+                                  children: buttons,
+                                ),
+                              ],
+                            );
+                          }
+                          return Row(
+                            children: [
+                              Expanded(child: label),
+                              ...buttons,
+                            ],
+                          );
+                        },
                       ),
                     // 監督の見立て。買い手ごとに1行。
                     for (int i = 0; i < entry.length; i++)
