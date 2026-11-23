@@ -30,7 +30,7 @@ List<Widget> townTab(GameController ctl) {
         decoration: BoxDecoration(border: Border.all(color: Pal.line), borderRadius: BorderRadius.circular(10)),
         child: AspectRatio(
             aspectRatio: 16 / 9,
-            child: Semantics(label: tr('自社のビルが並ぶ街'), child: CustomPaint(painter: TownPainter(s), size: Size.infinite))),
+            child: Semantics(label: tr('自社のビルが並ぶ街'), child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s), size: Size.infinite)))),
       ),
     ),
   ));
@@ -47,8 +47,8 @@ List<Widget> townTab(GameController ctl) {
     ]),
     _gap(),
     Grid2([
-      Kv(tr('売上（月）'), yen(s.rev)),
-      Kv(tr('利益（月）'), yen(s.pre)),
+      Kv(tr('月の売上'), yen(s.rev)),
+      Kv(tr('月の利益'), yen(s.pre)),
       Kv(tr('事業'), tr('{0}つ', [s.biz.length])),
       Kv(tr('子会社'), tr('{0}社', [s.subs().length])),
       Kv(tr('部下'), tr('{0}人', [s.staff.length])),

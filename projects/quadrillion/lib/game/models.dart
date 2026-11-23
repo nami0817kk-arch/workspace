@@ -621,6 +621,22 @@ class Choice {
   Choice(this.l, this.s, this.f);
 }
 
+/// 会議で話す1人（画面では、顔の丸と肩書きつきの吹き出し1つになる）
+class Voice {
+  /// 話す人の名前（部下・相棒のとき。顔の丸に名前の頭文字を出す）。株主の代表・銀行・取締役は null
+  final String? name;
+
+  /// 呼び名と肩書き（包んだ文）
+  final String who, role;
+
+  /// 話す人の種類（partner / staff / holder / bank / board）。顔の丸の印に使う
+  final String kind;
+
+  /// 言ったこと（包んだ文）
+  final String say;
+  const Voice({this.name, required this.who, required this.role, required this.kind, required this.say});
+}
+
 /// 選ぶ出来事（保存しない）
 class GameEvent {
   final String title, text;
@@ -633,6 +649,14 @@ class GameEvent {
 
   /// 臨時の会議ならそのきっかけ（takeover / scandal / cash）
   String? em;
+
+  /// 会議の場面の見せ方。[voices] があれば、[lead]（状況の説明・地の文）のあとに、話す人ごとの吹き出しを並べる。
+  /// [text] は今までどおり全部をつないだ文（記録・自動プレイ・古い見せ方のため）
+  final String? lead;
+  final List<Voice> voices;
+
+  /// 吹き出しのあとに続ける地の文（取締役会の解任動議など）
+  final String? tail;
   GameEvent(
       {required this.title,
       required this.text,
@@ -645,5 +669,8 @@ class GameEvent {
       this.subco,
       this.vc = false,
       this.rivfund = false,
-      this.em});
+      this.em,
+      this.lead,
+      this.voices = const [],
+      this.tail});
 }

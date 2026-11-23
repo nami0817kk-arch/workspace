@@ -274,11 +274,23 @@ class MainScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
-          Text(ym(s.year, s.q, sp: true), style: ts(size: 18, color: Pal.goldtx, bold: true)),
-          const SizedBox(width: 8),
+          // 年月の下に社長の名前と年齢。代は札にして、幅が足りなければ次の行へ回す（名前は切らない）
           Expanded(
-              child: Text(tr('{0}・{1}歳{2}', [nmL(s.pres.name), s.pres.age, s.gen > 1 ? tr('（{0}代目）', [s.gen]) : '']),
-                  textAlign: TextAlign.right, overflow: TextOverflow.ellipsis, style: ts(size: 12.5, color: Pal.mute))),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+              Text(ym(s.year, s.q, sp: true), style: ts(size: 18, color: Pal.goldtx, bold: true, height: 1.25)),
+              // 名前・年齢・代の札は、入りきらなければ区切りごとに次の行へ回る（長い外国の名前でも切らない）
+              Wrap(runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(nmL(s.pres.name), key: const ValueKey('pres-name'), maxLines: 1, softWrap: false, style: ts(size: 12.5, color: Pal.mute)),
+                ),
+                Text(tr('・{0}歳', [s.pres.age]), key: const ValueKey('pres-age'), maxLines: 1, softWrap: false, style: ts(size: 12.5, color: Pal.mute)),
+                if (s.gen > 1)
+                  Padding(padding: const EdgeInsets.only(left: 6), child: Tag(tr('{0}代目', [s.gen]), key: const ValueKey('pres-gen'))),
+              ]),
+            ]),
+          ),
           const SizedBox(width: 8),
           Semantics(label: tr('遊び方'), child: Btn(tr('？'), () => showHelp(ctl), small: true)),
           const SizedBox(width: 6),

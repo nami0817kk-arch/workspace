@@ -491,7 +491,7 @@ void doNext(GameController ctl) {
   final snap = ctl.snap();
   final news = s.nextQuarter();
   ctl.buzzAfter(snap, news);
-  ctl.save();
+  ctl.saveSoon();
   if (news.isEmpty && s.q % 3 != 1 && s.events.isEmpty && s.over == null && s.won == null) {
     ctl.render();
     return;
@@ -513,7 +513,7 @@ void doYear(GameController ctl, [int n = 12]) {
     }
   }
   ctl.buzzAfter(snap, all);
-  ctl.save();
+  ctl.saveSoon();
   showReport(ctl, all, before);
 }
 
@@ -536,7 +536,7 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
   final head = tr(s.q % 3 == 1 ? '{0} の経営会議' : '{0} の報告', [ym(s.year, s.q, sp: true)]);
   if (s.q % 3 == 1) {
     markGuide(s, 'meet');
-    ctl.save();
+    ctl.saveSoon();
   }
   final pre = s.pre;
   final cap = s.cap;
@@ -587,7 +587,15 @@ void nextEvent(GameController ctl) {
   }
   final e = s.events.removeAt(0);
   Widget body;
-  if (e.who != null) {
+  if (e.voices.isNotEmpty) {
+    // 会議：状況の説明は地の文、発言は話す人ごとの吹き出し
+    Widget plain(String t) => Padding(padding: const EdgeInsets.only(bottom: 6), child: Text(tx(t), style: ts(height: 1.5)));
+    body = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      if (e.lead != null) plain(e.lead!),
+      for (final v in e.voices) VoiceSay(name: v.name, who: v.who, role: v.role, kind: v.kind, say: v.say),
+      if (e.tail != null) Padding(padding: const EdgeInsets.only(top: 4), child: plain(e.tail!)),
+    ]);
+  } else if (e.who != null) {
     body = Say(face: Face(e.who!.presName, col: e.face), who: '${nmL(e.who!.presName)}${tr('・')}${nmL(e.who!.name)}', text: e.text);
   } else if (e.person != null) {
     body = Say(face: Face(e.person!.name), who: '${nmL(e.person!.name)}${e.person!.partner ? tr('（相棒）') : ''}', text: e.text);
