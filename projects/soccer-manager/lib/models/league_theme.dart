@@ -100,7 +100,8 @@ extension LeagueThemeInfo on LeagueTheme {
       case LeagueTheme.england:
         return Tr.pick('イングランド協会カップ', 'English Association Cup');
       case LeagueTheme.spain:
-        return Tr.pick('コパ・デ・エスパーニャ', 'Copa de España');
+        // 同梱フォントに ñ の字形が無い(豆腐になる)ので n で書く。
+        return Tr.pick('コパ・デ・エスパーニャ', 'Copa de Espana');
       case LeagueTheme.germany:
         return Tr.pick('ドイツ連盟カップ', 'German Federation Cup');
       case LeagueTheme.italy:
