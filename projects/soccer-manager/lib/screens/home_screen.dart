@@ -533,7 +533,7 @@ class HomeScreen extends StatelessWidget {
                       icon: Icons.star,
                       // オーナーとしての世間の評価(グッズ収入などに効く)。
                       label: Tr.pick('オーナーの評判', 'Your reputation'),
-                      glossaryTerm: Tr.pick('監督としての評価', 'Reputation'),
+                      glossaryTerm: Tr.pick('オーナーの評判', 'Reputation'),
                       value: '${gameState.managerReputation}',
                       progress: gameState.managerReputation / 100,
                       color: Colors.deepPurple,

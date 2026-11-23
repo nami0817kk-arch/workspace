@@ -51,6 +51,9 @@ class _GuideSectionCard extends StatelessWidget {
         ),
         subtitle: Text(section.overview),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+        // 既定は中央寄せで、短い項目ほど右へずれて段がばらばらに見えていた。
+        expandedAlignment: Alignment.centerLeft,
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (final topic in section.topics)
             Padding(

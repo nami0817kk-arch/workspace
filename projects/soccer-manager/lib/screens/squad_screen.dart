@@ -288,65 +288,64 @@ class _SquadScreenState extends State<SquadScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(Tr.pick('アイコンの意味', 'What the icons mean')),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _LegendRow(
-              icon: Icons.swap_horiz,
-              color: Colors.indigo,
-              label: Tr.pick('ローンで加入中の選手', 'On loan at your club'),
-            ),
-            _LegendRow(
-              icon: Icons.sentiment_dissatisfied,
-              color: Colors.redAccent,
-              label: Tr.pick('移籍を希望している', 'Wants a move away'),
-            ),
-            _LegendRow(
-              icon: Icons.flag,
-              color: Colors.blueAccent,
-              label: Tr.pick('代表召集中', 'On international duty'),
-            ),
-            _LegendRow(
-              icon: Icons.shield,
-              color: Colors.amber,
-              label: Tr.pick('「C」=キャプテン / 「VC」=副キャプテン(選手詳細画面から指名)',
-                  '"C" = captain, "VC" = vice captain (named from the player\'s page)'),
-            ),
-            _LegendRow(
-              icon: Icons.block,
-              color: Colors.redAccent,
-              label: Tr.pick('出場停止中(警告累積または退場)',
-                  'Suspended (booked too often, or sent off)'),
-            ),
-            _LegendRow(
-              icon: Icons.flight_takeoff,
-              color: Colors.deepPurple,
-              label: Tr.pick('他クラブへローン放出中', 'Out on loan elsewhere'),
-            ),
-            _LegendRow(
-              icon: Icons.sell_outlined,
-              color: Colors.orange,
-              label: Tr.pick('移籍リストに登録中', 'On the transfer list'),
-            ),
-            _LegendRow(
-              icon: Icons.trending_up,
-              color: Colors.green,
-              label: Tr.pick('総合値の下の▲/▼ = 直近5節の総合力の変化(成長トレンド)',
-                  '▲/▼ under the overall = change across the last 5 matchdays'),
-            ),
-            _LegendRow(
-              icon: Icons.monitor_heart_outlined,
-              color: Colors.grey,
-              label: Tr.pick('2行目の疲労/感覚/士気は、問題のある値だけ赤く強調される',
-                  'On the second line, only fatigue, sharpness and morale that need attention turn red'),
-            ),
-            _LegendRow(
-              icon: Icons.workspace_premium,
-              color: Colors.teal,
-              label: Tr.pick('名前の横のKP/ROT/育成 = スカッド・ステータス(主力は非表示)',
-                  'KP/ROT/Prospect beside the name is his squad status (first-team players show nothing)'),
-            ),
-          ],
+        // 横画面(高さ390前後)では全部の行が入りきらず、はみ出しの縞が出ていた。
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _LegendRow(
+                icon: Icons.swap_horiz,
+                color: Colors.indigo,
+                label: Tr.pick('ローンで加入中の選手', 'On loan at your club'),
+              ),
+              _LegendRow(
+                icon: Icons.sentiment_dissatisfied,
+                color: Colors.redAccent,
+                label: Tr.pick('移籍を希望している', 'Wants a move away'),
+              ),
+              _LegendRow(
+                icon: Icons.flag,
+                color: Colors.blueAccent,
+                label: Tr.pick('代表召集中', 'On international duty'),
+              ),
+              // キャプテンを指名する手段は今は無い(2026-11-16 のオーナー型への
+              // 作り替えから)。印の表示は古いセーブのために残し、凡例からは外す。
+              _LegendRow(
+                icon: Icons.block,
+                color: Colors.redAccent,
+                label: Tr.pick('出場停止中(警告累積または退場)',
+                    'Suspended (booked too often, or sent off)'),
+              ),
+              _LegendRow(
+                icon: Icons.flight_takeoff,
+                color: Colors.deepPurple,
+                label: Tr.pick('他クラブへローン放出中', 'Out on loan elsewhere'),
+              ),
+              _LegendRow(
+                icon: Icons.sell_outlined,
+                color: Colors.orange,
+                label: Tr.pick('移籍リストに登録中', 'On the transfer list'),
+              ),
+              _LegendRow(
+                icon: Icons.trending_up,
+                color: Colors.green,
+                label: Tr.pick('総合値の下の▲/▼ = 直近5節の総合力の変化(成長トレンド)',
+                    '▲/▼ under the overall = change across the last 5 matchdays'),
+              ),
+              _LegendRow(
+                icon: Icons.monitor_heart_outlined,
+                color: Colors.grey,
+                label: Tr.pick('2行目の疲労/感覚/士気は、問題のある値だけ赤く強調される',
+                    'On the second line, only fatigue, sharpness and morale that need attention turn red'),
+              ),
+              _LegendRow(
+                icon: Icons.workspace_premium,
+                color: Colors.teal,
+                label: Tr.pick('名前の横のKP/ROT/育成 = スカッド・ステータス(主力は非表示)',
+                    'KP/ROT/Prospect beside the name is his squad status (first-team players show nothing)'),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(

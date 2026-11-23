@@ -34,7 +34,7 @@
 
 ## 短い説明文（Google Play「簡単な説明」80字以内 目安）
 
-> 弱小クラブを率いて下部リーグから成り上がれ。育成・移籍・戦術、すべてお前次第。
+> 3部の弱小クラブを買い取った。試合は監督に任せ、金・人・方針を決めて1部の頂点へ。
 
 ## 長い説明文（ストア掲載用）
 
@@ -46,40 +46,39 @@
 > まるごと「入れてもらうための文」に使ってよい。
 
 ```
-3部リーグの弱小クラブ。オーナー兼監督は、あなた一人。
-スタメンも、移籍も、クラブの金も、すべてあなたが決める。
-1部リーグの頂点まで勝ち上がる、本格サッカー経営シミュレーション。
+3部リーグの弱小クラブを買い取った。
+試合は監督に任せ、あなたは金・人・方針を決める。
+サポーターと株主、2つの期待を保ちながら1部の頂点へ。
 
-■ クラブを育てる
-選手のトレーニング方針・強度を個別に設定し、メンター制度やピンポイント特訓で
-若手を一流選手へと育て上げよう。トップに絡めない選手はリザーブの試合や
-育成型レンタルで実戦を積ませる。ポジションごとの衰え方や、出場機会が育成に
-与える影響までシミュレートされたリアルな成長システム。
+■ 監督を選ぶ
+監督の候補は、考え方と好みの布陣を見て雇う。試合は任せる。
+先発と構えは毎節、監督が決める。腕のいい監督ほど、相手に合わせて
+戦い方を変える。契約が切れれば、次の監督を探す。
+
+■ 2つの期待を保つ
+サポーターの期待は勝ち負けと順位で、株主の期待は収支で動く。
+年に3回起きる事件の判断は、どちらを取ってももう一方が傷つく。
+サポーターの期待か資金が尽きればクラブを手放すことになるが、
+実績を残したまま別のクラブ（別の国も選べる）を買い直して続けられる。
+
+■ 予算を配る
+年の予算を補強・育成・施設・営業・配当に配る。補強はすぐ、営業は1年、
+育成は2〜3年、施設は3〜5年かけて効く。スタジアム、スポンサー契約、
+銀行融資。コーチやスカウトは、能力と得意分野を見て一人ずつ雇う。
+
+■ 選手を動かす
+監督が挙げた補強の候補を買うか見送るか。他のクラブから届いた
+売却のオファーを受けるか断るか。主力と契約を延ばすときは、
+約束する出場機会と年俸を決める。
 
 ■ ユースから育てる
 自前のアカデミーには年間リーグがあり、有望株は毎週の試合で実戦を積む。
-一軍のベテランをメンターに付ければ、その選手の得意技を受け継いでいく。
 ただし19歳を過ぎた有望株は出場機会を求め、放っておけば他クラブに
 引き抜かれる。いつプロ契約を結んで一軍へ上げるか、その判断がクラブの
 背骨をつくる。
 
-■ 戦術を組み立てる
-14種類の細分化されたポジション、選手ごとのプレースタイル・デューティ設定と
-個別指示、セットプレーの狙い、ハーフタイムの采配まで。布陣は練習を重ねて
-はじめて手に馴染む。相手のスカウティングレポートを読み解き、弱いサイドを
-突くか司令塔を潰すか、その試合の対策を立てて臨もう。
-
-■ 移籍市場を制す
-資金の範囲内で選手を獲得し、不要な選手はローンや移籍リストで放出。
-競合オファーやカウンターオファーが飛び交うリアルな交渉を駆け引きしよう。
-
-■ クラブを経営する
-スタジアム拡張、スポンサー契約、銀行融資。コーチ・スカウト・フィジオは
-能力を見て一人ずつ雇い、週俸と成果を天秤にかける。理事会が求める路線と
-順位目標をやりくりしながら、長期的な視点でクラブを強化していく。
-
 ■ シーズンを戦い抜く
-昇降格のあるリーグ戦、国内カップ、大陸カップ、スーパーカップ。
+昇降格のある3部制のリーグ戦、国内カップ、大陸カップ、スーパーカップ。
 得点王・年間MVP・ベストイレブンなどの個人タイトルや、殿堂入りする
 レジェンド選手たちがあなたの物語を彩る。
 
@@ -407,8 +406,9 @@ App Store Connect / Google Play Console の「このバージョンの新機能�
 文言を試せる場所なので、埋めておく。
 
 ```
-弱小クラブのオーナー兼監督。選手を育て、移籍で整え、戦術を組み、
-クラブの金を回す。下部リーグから頂点をめざす本格シミュレーション。
+3部リーグの弱小クラブを買い取ったオーナーに。試合は監督に任せ、
+金・人・方針を決めて、サポーターと株主の2つの期待を保つ。
+1部の頂点をめざす本格シミュレーション。
 一度も広告を見なくても、最後まで遊べます。
 ```
 
@@ -420,8 +420,11 @@ App Store Connect / Google Play Console の「このバージョンの新機能�
 「サッカー経営マネージャー クラブ育成シミュレーション」になったので、
 `クラブ` `育成` `シミュレーション` はここでは使わない。
 
+試合を監督に任せるオーナーのゲームになった（1.2.0）ので、「監督の采配」は
+言わない（2026-11-23 に書き直した）。
+
 ```
-下部リーグから成り上がる、監督の采配と移籍
+オーナーとして3部から1部の頂点へ
 ```
 
 ## 英語圏向けの掲載（App Store の英語ローカライズ）
@@ -462,40 +465,46 @@ manager,management,tactics,transfer,youth,squad,league,promotion,scout,simulatio
 ### プロモーション用テキスト（170字以内・審査なしで差し替え可）
 
 ```
-Start with nothing but a badge and a shoestring budget. Sign, train and sell players, pick your tactics, and drag a fifth-tier club all the way up.
+You just bought a struggling third-tier club. The manager runs the matches; you decide the money, the people and the direction. Keep the fans and shareholders on side.
 ```
 
 ### 説明文
 
 ```
-Take charge of a broke fifth-tier club and drag it to the top.
+You just bought a struggling third-tier club.
+The manager runs the matches; you decide the money, the people and the direction.
+Keep two groups happy, the fans and the shareholders, and take it to the top.
 
-You are the owner and the manager. Nobody else picks the team, balances the
-books or decides who to sell.
+- HIRE A MANAGER
+Read each candidate's outlook and favourite formation, hire one, and leave
+the matches to him. He picks the side and the approach every matchday, and
+the better he is, the more he adapts to the opponent. When his contract runs
+out, you find the next one.
 
-- BUILD A SQUAD
-Set training for each player, pair a veteran with a prospect as his mentor,
-and send the ones who cannot get a game out on loan. Players peak and decline
-by position, and game time changes how fast they grow.
+- KEEP TWO GROUPS HAPPY
+Fan expectation follows results; shareholder expectation follows the books.
+Three times a season an incident needs your call, and every answer costs you
+with one side or the other. If the fans lose all faith or the money runs out
+you have to sell, but you keep your record and can buy another club, even in
+another country.
+
+- SPEND THE BUDGET
+Split it between signings, youth, facilities, marketing and dividends.
+Signings work at once, marketing in a year, youth in two or three, facilities
+in three to five. Stadium, sponsors, bank loans, and coaches and scouts hired
+one by one for their ability and specialty.
+
+- MOVE PLAYERS
+Approve or pass on the manager's signing candidates, accept or turn down
+offers for your players, and agree minutes and wages when you renew a key man.
 
 - RUN AN ACADEMY
-Your academy plays its own season, so prospects get real matches. Pair them
-with a first-team veteran and they pick up his traits. But once they turn 19
-they want first-team football, and clubs will come for the ones you leave
-behind. Deciding when to hand out a professional contract is the job.
-
-- WIN ON MATCHDAY
-Pick the shape, set the instructions, and watch it play out minute by minute.
-At half time you can change the tactics, make substitutions and pick the words
-you use in the dressing room.
-
-- KEEP THE CLUB ALIVE
-Wages, transfer fees, gate receipts, sponsors, bank loans, ticket prices,
-stadium and facility upgrades. Miss the board's target for too long and you
-are out of a job.
+Your academy plays its own season, so prospects get real matches. But once
+they turn 19 they want first-team football, and clubs will come for the ones
+you leave behind. Deciding when to hand out a professional contract is the job.
 
 - CLIMB
-Five divisions, promotion play-offs, domestic cups and a continental cup.
+Three divisions, promotion play-offs, domestic cups and two continental cups.
 Top scorers, player of the season and a team of the season along the way.
 
 Your progress is saved on your device. No account, no sign-in.
@@ -517,13 +526,14 @@ growth or your chances in a match.
 名前・サブタイトル・キーワードをまとめて見るので、重ねたぶんは枠を削るだけになる。
 以前ここに `サッカー,マネージャー,経営` と書いていたが、3つともアプリ名に
 入っていた。名前を長くしたぶん `クラブ` `育成` `シミュレーション` も名前側に移り、
-`リーグ` `監督` `采配` `移籍` `成り上がり` はサブタイトルに入った。ここに残すのは
-どちらにも無い語だけ。
+`オーナー` はサブタイトルに入った。ここに残すのはどちらにも無い語だけ。
+（2026-11-23 にサブタイトルを書き直し、そこから外れた `監督` `移籍` `リーグ`
+`成り上がり` をこちらへ移した。`采配` はもう遊ぶ人の仕事ではないので入れない。）
 
 区切りは読点ではなくカンマで、スペースは入れない（入れると1文字ぶん損をする）。
 
 ```
-ゲーム,戦術,戦略,選手,ユース,スカウト,契約,昇格,優勝,フットボール,スポーツ,無料,無課金,オフライン,サカマネ,オーナー,本格,シミュ,マネジメント,名門
+ゲーム,監督,移籍,リーグ,成り上がり,戦略,選手,ユース,スカウト,契約,昇格,優勝,フットボール,スポーツ,無料,無課金,オフライン,サカマネ,本格,シミュ,マネジメント
 ```
 
 ## スクリーンショットとフィーチャーグラフィック
@@ -560,15 +570,24 @@ iPad ぶんが要るのは、アプリが iPad でも動く設定になってい
 そこに何を置くかで見られ方が変わる。起動画面を先頭にしていた頃は、いちばん目立つ枠が
 「何のゲームか伝わらない絵」で埋まっていた。
 
+> **撮り直しが要る（2026-11-23 時点・まだ撮り直していない）。** 1.2.0 でオーナーの
+> ゲームに作り替え、`00_lineup`（スタメン編成・戦術）・`01_live_match`（ライブ観戦）・
+> `06_halftime`（ハーフタイムの檄・交代・戦術変更）の3つの画面はアプリから無くなった。
+> 今の掲載画像は**無い画面を見せている**。提出の前に、今ある画面（監督の報告・
+> 今週の決断・オーナー室・監督を選ぶ画面など）で撮り直し、帯の文言
+> （`tool/screenshots/capture_test.dart` の `_captions`。「5部から、頂点へ」
+> 「采配が、試合を動かす」「ハーフタイムで流れを変える」）も今のゲームに合わせる。
+> 下のプレビュー動画も試合画面を撮っているので同じく撮り直しが要る。
+
 | ファイル | 画面 | この順にした理由 |
 |---|---|---|
-| `00_lineup.png` | スタメン編成・戦術（**専用の下絵の中に置く**） | 検索結果でいちばん見られる枠。ここだけ「撮っただけ」から離し、石段を昇った先にトロフィーがある絵の中へ実機の画面を置く（iPhone のみ） |
-| `01_live_match.png` | 試合（ライブ経過・ゴール演出） | 「GOAL!」が小さくても読める。試合が実際に動くことが伝わる |
+| `00_lineup.png` | スタメン編成・戦術（**専用の下絵の中に置く**）。**撮り直しが要る（画面が無い）** | 検索結果でいちばん見られる枠。ここだけ「撮っただけ」から離し、石段を昇った先にトロフィーがある絵の中へ実機の画面を置く（iPhone のみ） |
+| `01_live_match.png` | 試合（ライブ経過・ゴール演出）。**撮り直しが要る（画面が無い）** | 「GOAL!」が小さくても読める。試合が実際に動くことが伝わる |
 | `02_home.png` | ホーム（クラブ状況ダッシュボード） | 経営の数字。ここまでの3枚が検索結果に出る |
 | `03_transfer.png` | 移籍市場 | |
 | `04_standings.png` | 日程・順位表 | |
 | `05_squad.png` | スカッド（選手一覧） | |
-| `06_halftime.png` | ハーフタイム（檄・交代・戦術変更） | |
+| `06_halftime.png` | ハーフタイム（檄・交代・戦術変更）。**撮り直しが要る（画面が無い）** | |
 | `07_scorers.png` | 得点・アシストランキング | |
 | `08_club.png` | クラブ施設・スタッフ | 能力と得意分野で人を選ぶ画面。スタッフを雇った状態で撮る（空席のままだと「就いている人がいない」の赤字だけが目立つ） |
 
@@ -577,6 +596,9 @@ iPad ぶんが要るのは、アプリが iPad でも動く設定になってい
 `marketing/preview/app_preview_ja.mp4` と `app_preview_en.mp4`（20秒・886x1920）。
 **検索結果でもページでも1枠目に出て、自動再生される。** ここが空のままだと、
 いちばん目立つ枠を静止画に使うことになる。
+
+> **撮り直しが要る（2026-11-23 時点・まだ撮り直していない）。** 今の動画は
+> ライブ観戦とハーフタイムの画面を映しているが、どちらも 1.2.0 で無くなった。
 
 ```bash
 flutter test tool/preview/capture_frames_test.dart   # コマを書き出す
@@ -685,7 +707,7 @@ App Preview は「アプリが動いている様子」であることを求め�
       - `soccer_manager_supporter`（**非消費型**）
       - 資金パック3件（`soccer_manager_funds_small` / `soccer_manager_funds_medium` /
         `soccer_manager_funds_large`、**消費型**）は 1.2.0 で画面から外した
-        （`FundsPackCard` はどの画面にも置いていない）。**新しく登録しない。**
+        （買う画面の部品 `FundsPackCard` も 2026-11-23 に消した）。**新しく登録しない。**
         コードは、承認待ち（Ask to Buy）や落ちて届き損ねた購入がストアから
         送られてきたときに受け取るためだけに残している
 - [ ] AdMob のアプリIDと広告ユニットIDを自分のものに差し替えた
