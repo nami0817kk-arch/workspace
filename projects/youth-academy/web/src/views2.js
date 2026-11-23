@@ -427,7 +427,7 @@
     const ss = (a.seasons || []).slice().reverse();
     const count = (list) => { const m = {}; for (const x of list) m[x.name] = (m[x.name] || 0) + 1; return Object.entries(m).map(([k, n]) => k + (n > 1 ? ` ×${n}` : '')); };
     V().modal((close) => h('div', { class: 'sheet-in', style: 'flex:none;align-self:center;margin:auto;width:min(720px,97%);max-height:96%;padding:10px 12px;gap:6px;overflow:auto' },
-      h('div', { class: 'row', style: 'gap:6px' }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos), h('b', { style: 'font-size:15px' }, a.name), h('span', { class: 'sub' }, `${a.year}年卒・いま${a.age}歳${a.retired ? '（' + YA.retireWord(a) + '）' : ''}`), h('span', { class: 'grow' }), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
+      h('div', { class: 'row', style: 'gap:6px' }, h('span', { class: 'pos ' + a.pos }, YA.POS_LABEL[a.main] || a.pos), h('b', { style: 'font-size:15px' }, a.name), h('span', { class: 'sub' }, (a.status === 'left' ? `${a.year}年目に退団` : `${a.year}年卒`) + (a.age != null ? `・いま${a.age}歳` : '') + (a.retired ? '（' + YA.retireWord(a) + '）' : '')), h('span', { class: 'grow' }), h('button', { class: 'btn sm', onclick: close }, '閉じる')),
       h('div', { class: 'note' }, a.status === 'left' ? '在学中に退団した子です。' : `いま：${a.club || '-'}${a.league ? '（' + a.league + '）' : ''}　卒業時：${a.note || ''}　総合力 ${YA.rate(a.ovr)}（${YA.levelOf(YA.rate(a.ovr))}）`),
       h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' },
         h('span', { class: 'chip trait' }, a.pos === 'GK' ? `通算 ${a.apps}試合・完封${a.cleans || 0}` : `通算 ${a.apps}試合・${a.goals}得点・${a.assists || 0}アシスト`),
