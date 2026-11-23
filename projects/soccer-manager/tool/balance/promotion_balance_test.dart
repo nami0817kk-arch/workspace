@@ -181,6 +181,9 @@ Future<void> _useScoutNetwork(GameState gs, {bool refresh = false}) async {
       if (p.age >= 20) p,
   ]..sort((a, b) => b.overall.compareTo(a.overall));
   for (final p in pros) {
+    // 移籍金で資金を割ると、給料の未払いで選手が出ていく。相場の値で
+    // 残しておく分を越えないかを見る(割引の前の値なので少し控えめ)。
+    if (_spendable(gs) < p.marketValue) continue;
     if (await gs.scoutProspect(p.id)) {
       _gemsSigned++;
       _gemIds.add(p.id);
