@@ -144,7 +144,7 @@ button.card:hover,button.card:focus-visible{transform:translateY(-4px);outline:2
   <div class="overlay" id="title">
     <div class="box">
       <h1>召喚の山札</h1>
-      <p>主人公は弱い。戦うのは山札から呼ぶ仲間たち。レベルが上がるたびに、山札から呼ぶ仲間を選ぶか、仲間を鍛えるか、武器を渡すかを選ぶ。仲間はそれぞれ自分だけの技を持ち、時間がたつと自動で使う。並び順と陣形（縦一列・横陣・円陣・楔・密集）は自分で決める。</p>
+      <p>主人公は弱い。戦うのは山札から呼ぶ仲間たち。レベルが上がるたびに、山札から呼ぶ仲間を選ぶか、仲間を鍛えるか、武器を渡すかを選ぶ。仲間はそれぞれ自分だけの技を持ち、時間がたつと自動で使う。並び順と陣形（縦一列・横陣・円陣・楔・密集）は自分で決める。武器を持たせて3回鍛えた仲間は覚醒する。決まった2人が一緒に並ぶと、連携技が出る（組み合わせは探して見つける）。</p>
       <p class="small">金色に光る敵や中ボスを倒すと、その敵が仲間のカードになる。倒れた仲間は「遺志のカード」に変わり、引くと一度だけ強い力を残して消える。そして二度と兵舎には戻らない。</p>
       <h3 id="rosterHead">兵舎：出撃する仲間を選ぶ（定員15人）</h3>
       <div class="cards" id="roster"></div>
@@ -341,7 +341,7 @@ function ensureRoster(){const added=[];while(SAVE.roster.length<5){const u=makeU
 
 function unitCard(u,tag='div',extra=''){
   const c=CARDS[u.type],j=JOBS[c.job];
-  return `<${tag} class="card" style="--jc:${j.color}" ${extra}><span class="k">${c.name} <em>${'★'.repeat(u.star)}</em></span><span class="n">${esc(u.name)}</span>${cardFace(u.type,j.glyph)}<span class="j">${c.job}</span><span class="d">${c.desc}</span><span class="t sk">技「${SKILLS[u.type].name}」${SKILLS[u.type].desc}</span><span class="t">素質：${u.known?`${u.trait}（${TRAITS[u.trait]}）`:'？？？（★2で分かる）'}</span><span class="t">倒した数 ${u.kills}</span></${tag}>`;
+  return `<${tag} class="card" style="--jc:${j.color}" ${extra}><span class="k">${c.name} <em>${'★'.repeat(u.star)}</em></span><span class="n">${esc(u.name)}</span>${cardFace(u.type,j.glyph)}<span class="j">${c.job}</span><span class="d">${c.desc}</span><span class="t sk">技「${SKILLS[u.type].name}」${SKILLS[u.type].desc}</span>${comboLine(u.type)}<span class="t">素質：${u.known?`${u.trait}（${TRAITS[u.trait]}）`:'？？？（★2で分かる）'}</span><span class="t">倒した数 ${u.kills}</span></${tag}>`;
 }
 function willCard(en){const w=WILLS[en.w];return `<div class="card will"><span class="k">遺志のカード</span><span class="n">${w.name}</span><span class="g">${JOBS[en.w].glyph}</span><span class="d">${esc(en.from)}が遺した力。${w.desc}。</span><span class="t">使うとなくなる</span></div>`}
 function entryCard(en){return en.w?willCard(en):unitCard(en.u)}
@@ -392,7 +392,7 @@ function newGame(units){
   G={t:0,state:'play',player:{x:0,y:0,r:13,hp:php,maxHp:php,speed:150,cd:0},mag:110*(1+.2*up('mag')),
     enemies:[],allies:[],shots:[],eshots:[],gems:[],fx:[],chests:[],pickups:[],trail:[{x:0,y:0}],
     draw:shuffle(units.map(u=>({u}))),discard:[],level:1,xp:0,kills:0,called:0,
-    nextBoss:60,bossCount:0,dmgLog:{},spawnAcc:0,hudAcc:0,syn:{},cnt:{},buff:{guard:0,atk:0,crit:0,song:0},
+    nextBoss:60,bossCount:0,dmgLog:{},items:[],magT:0,nextSwarm:45,swarmA:null,spawnAcc:0,hudAcc:0,syn:{},cnt:{},buff:{guard:0,atk:0,crit:0,song:0},
     fallen:[],joined:[],stars:[],shrines:[],nextShrine:45,bonusAtk:0,bonusCoins:0,curse:false,pending:[],zones:[],traps:[],taunt:null,form:'snake',hd:0,lvq:0,heroLv:0,shake:0,morale:0,loopCd:0,loops:0,loopHint:false,maou:false,won:false};
 }
 function need(){return 2+G.level*2}
@@ -468,7 +468,8 @@ function hurt(e,dmg,src,quiet){
   if(e.d.final){G.won=true;G.shake=20;return;}
   const u=src&&src.u;let mul=e.elite?3:1;
   if(u){u.kills++;if(CARDS[u.type].job==='騎士')SAVE.st.knightKills++;checkStar(src);if(u.trait==='吸収')src.hp=Math.min(src.maxHp,src.hp+src.maxHp*.05);if(u.trait==='強運')mul*=2;}
-  if(e.boss){G.chests.push({x:e.x,y:e.y,t:0,type:e.kind});toast(`${CARDS[e.kind].name}を倒した！宝箱を拾おう`);G.nextBoss=Math.max(G.nextBoss,G.t+20);G.shake=Math.max(G.shake,12);}
+  if(e.boss){G.chests.push({x:e.x,y:e.y,t:0,type:e.kind});toast(`${CARDS[e.kind].name}を倒した！宝箱を拾おう`);G.nextBoss=Math.max(G.nextBoss,G.t+20);G.shake=Math.max(G.shake,12);G.slowT=.7;G.flashT=.35;}
+  if(!e.boss&&!e.elite&&G.items.length<2&&Math.random()<.004)G.items.push({x:e.x,y:e.y,t:0,kind:'magnet'});
   if(e.elite){G.pickups.push({x:e.x,y:e.y,t:0,type:e.kind});toast(`光る${CARDS[e.kind].name}がカードを落とした`);}
   G.gems.push({x:e.x,y:e.y,v:e.d.xp*mul*(G.curse?2:1)});
 }
@@ -517,6 +518,29 @@ const SKILLS={
   golem:{name:'地震',cd:16,desc:'周りの敵すべての足を3秒遅くしてダメージ',f:a=>{const es=near(a,170);if(es.length<3)return false;for(const e of es){e.slowT=3;hurt(e,sd(a)*1.5,a)}ring(a,170,'#8a8478');G.shake=Math.max(G.shake,6);return true}},
   lich:{name:'魂の刈り取り',cd:15,desc:'周りの敵すべての体力を15%削る（中ボスは3%）',f:a=>{const es=near(a,260);if(es.length<3)return false;for(const e of es)hurt(e,e.maxHp*(e.boss?.03:.15),a);ring(a,260,'#8affb8');return true}},
 };
+// 連携技：決まった2人が同時に隊列にいると、時間ごとに自動で出る。見つけるまでカードには「？？？」
+const COMBOS=[
+  {a:'knight',b:'cleric',name:'聖騎の誓い',cd:24,desc:'仲間全員が2.5秒ダメージを受けず、主人公の受けるダメージも半分',f:()=>{if(!near(G.player,220).length)return false;for(const x of G.allies)x.invT=2.5;G.buff.guard=Math.max(G.buff.guard,2.5);ring(G.player,180,'#fff1c1');return true}},
+  {a:'mage',b:'icemage',name:'氷炎の嵐',cd:18,desc:'一番敵が多い所に、凍らせる大爆発（4倍）',f:(A)=>{const t=densest(420);if(!t)return false;for(const e of near(t,120)){hurt(e,sd(A)*4,A);if(!e.dead)e.frzT=e.boss?.8:2}G.fx.push({type:'boom',x:t.x,y:t.y,max:120,life:.6,t:0});return true}},
+  {a:'archer',b:'hunter',name:'矢の雨',cd:14,desc:'主人公の周りへ24本の矢を放つ（1.5倍・1体貫く）',f:(A)=>{if(!near(G.player,320).length)return false;const o=Object.assign({},A,{x:G.player.x,y:G.player.y});for(let i=0;i<24;i++)shoot(o,i/24*Math.PI*2,sd(A)*1.5,'#cfe9b4',1);return true}},
+  {a:'thief',b:'assassin',name:'影の舞',cd:15,desc:'近くの敵8体に会心の一撃（5倍）',f:(A,B)=>{const p=G.player,es=near(p,320).sort((x,y)=>dist2(x,p)-dist2(y,p)).slice(0,8);if(!es.length)return false;for(const e of es){G.critNow=true;hurt(e,sd(B)*5,B);G.fx.push({type:'slash',x:e.x,y:e.y,a:rnd(0,7),life:.25,t:0})}G.critNow=false;return true}},
+  {a:'paladin',b:'nun',name:'聖域の光',cd:20,desc:'主人公と仲間全員の体力を40%回復',f:()=>{const p=G.player;if(p.hp>=p.maxHp*.9&&G.allies.every(x=>x.hp>=x.maxHp*.9))return false;p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.4);for(const x of G.allies)x.hp=Math.min(x.maxHp,x.hp+x.maxHp*.4);ring(p,220,'#9ff0a8');return true}},
+  {a:'thunder',b:'witch',name:'雷火',cd:16,desc:'雷が敵10体を渡り、3倍で焼く',f:(A)=>{let cur=nearest(G.player,350);if(!cur)return false;const hit=new Set(),pts=[{x:G.player.x,y:G.player.y}];
+    for(let i=0;i<10&&cur;i++){hit.add(cur);hurt(cur,sd(A)*3,A);pts.push({x:cur.x,y:cur.y});let nb=null,bd=220*220;for(const e of G.enemies){if(e.dead||hit.has(e))continue;const d=dist2(e,cur);if(d<bd){bd=d;nb=e}}cur=nb}
+    G.fx.push({type:'bolt',pts,life:.45,t:0});return true}},
+  {a:'heavy',b:'lancer',name:'鉄壁の突撃',cd:16,desc:'主人公の周りの敵を大きく押し返し、2倍のダメージ',f:(A,B)=>{const es=near(G.player,160);if(es.length<3)return false;for(const e of es){hurt(e,sd(B)*2,B);push(e,G.player,130)}ring(G.player,160,'#8fb3e8');return true}},
+  {a:'slime',b:'goblin',name:'魔物の宴',cd:22,desc:'6秒間、全員の攻撃 +50%。魔物の仲間は体力を30%回復',f:()=>{if(!near(G.player,300).length)return false;G.buff.atk=Math.max(G.buff.atk,6);for(const x of G.allies)if(x.c.monster)x.hp=Math.min(x.maxHp,x.hp+x.maxHp*.3);ring(G.player,160,'#e0a24f');return true}},
+];
+function densest(R){let best=null,bn=0;const es=near(G.player,R);for(let i=0;i<es.length;i+=2){const n=near(es[i],100).length;if(n>bn){bn=n;best=es[i]}}return best}
+const comboOn=c=>G.allies.some(x=>x.u.type===c.a&&x.hp>0)&&G.allies.some(x=>x.u.type===c.b&&x.hp>0);
+function tickCombos(dt){G.comboCd=G.comboCd||{};
+  for(const c of COMBOS){if(!comboOn(c))continue;const k=c.name;G.comboCd[k]=(G.comboCd[k]??6)-dt;if(G.comboCd[k]>0)continue;
+    const A=G.allies.find(x=>x.u.type===c.a),B=G.allies.find(x=>x.u.type===c.b);
+    if(c.f(A,B)){G.comboCd[k]=c.cd;G.combos=(G.combos||0)+1;G.fx.push({type:'skill',x:G.player.x,y:G.player.y-12,v:'連携「'+c.name+'」',life:1.5,t:0,color:'#ffd86a'});sfx('will');G.shake=Math.max(G.shake,5);
+      if(!SAVE.st.combos)SAVE.st.combos=[];if(!SAVE.st.combos.includes(k)){SAVE.st.combos.push(k);save();toast(`連携技を見つけた！「${c.name}」（${CARDS[c.a].name}＋${CARDS[c.b].name}）`)}}
+    else G.comboCd[k]=.5}}
+function comboLine(t){const st=(SAVE&&SAVE.st&&SAVE.st.combos)||[];return COMBOS.filter(c=>c.a===t||c.b===t).map(c=>{const o=c.a===t?c.b:c.a;
+  return st.includes(c.name)?`<span class="t sk">連携「${c.name}」${CARDS[o].name}と：${c.desc}</span>`:'<span class="t">連携：？？？（ある仲間と一緒に隊列にいると…）</span>'}).join('')}
 function tickSkill(a,dt){a.tauntT=Math.max(0,(a.tauntT||0)-dt);a.invT=Math.max(0,(a.invT||0)-dt);a.frenzyT=Math.max(0,(a.frenzyT||0)-dt);a.atkT=Math.max(0,(a.atkT||0)-dt);
   const sk=SKILLS[a.u.type];if(!sk)return;a.sk=(a.sk??rnd(2,sk.cd*.6))-dt*(a.aw?2:1);if(a.sk>0)return;G.critNow=false;
   if(sk.f(a)){a.sk=sk.cd;G.skills=(G.skills||0)+1;G.fx.push({type:'skill',x:a.x,y:a.y,v:(a.aw?'真・':'')+sk.name,life:1.1,t:0,color:a.aw?'#ffd86a':JOBS[a.job].color});sfx('draw')}else a.sk=.5}
@@ -592,14 +616,19 @@ function update(dt){
   G.atkMul=atkMul;
   const guard=(G.syn['騎士']?.6:1)*(G.buff.guard>0?.5:1);
   const pguard=guard*(warden?.85:1)*(G.form==='ring'?.5:1);
-  const rate=Math.min(7,.6+G.t/50);G.spawnAcc+=rate*dt;
+  const rate=Math.min(7,1.2+G.t/55);G.spawnAcc+=rate*dt;
   while(G.spawnAcc>=1&&G.enemies.length<260){G.spawnAcc--;const r=Math.random();
     let kind='slime';if(G.t>30&&r<.5)kind='goblin';
     if(G.t>90&&r<.16)kind='orc';else if(G.t>120&&r>=.16&&r<.24)kind='skel';else if(G.t>150&&r>=.24&&r<.31)kind='boar';
     else if(G.t>60&&r>=.31&&r<.39)kind='bat';else if(G.t>240&&r>=.42&&r<.46)kind='golem';
     spawnEnemy(kind);}
+  tickCombos(dt);
   const bossAlive=G.enemies.some(e=>e.boss&&!e.d.final);
   if(G.t>=G.nextBoss&&G.nextBoss<600&&!bossAlive){const kind=['ogre','lich','dragon'][G.bossCount%3];G.bossCount++;spawnEnemy(kind);G.nextBoss+=60;toast(`中ボス（${CARDS[kind].name}）が現れた`);sfx('boss');G.shake=Math.max(G.shake,8);}
+  if(G.t>=G.nextSwarm&&!G.maou){G.nextSwarm+=90;const kind=G.t>240?'orc':G.t>150?'boar':G.t>60?'bat':'goblin';
+    G.swarmA={a:rnd(0,Math.PI*2),t:2.5,kind,n:Math.min(42,16+(G.t/15|0))};toast(`大群が来る！（${CARDS[kind].name}）矢印の方向から`);sfx('boss');}
+  if(G.swarmA){G.swarmA.t-=dt;if(G.swarmA.t<=0){const sw=G.swarmA,R0=Math.hypot(W,H)/2/Z+40;G.swarmA=null;G.swarms=(G.swarms||0)+1;
+    for(let i=0;i<sw.n&&G.enemies.length<300;i++){spawnEnemy(sw.kind);const e=G.enemies[G.enemies.length-1],a=sw.a+rnd(-.38,.38),rr=R0+rnd(0,140);e.x=p.x+Math.cos(a)*rr;e.y=p.y+Math.sin(a)*rr;}}}
   if(G.t>=600&&!G.maou){G.maou=true;spawnEnemy('maou');toast('魔王が現れた！倒せば勝利');sfx('boss');G.shake=16;}
   for(const a of G.allies){
     const c=a.c,k=Math.min(1,dt*12);a.x+=(a.sx-a.x)*k;a.y+=(a.sy-a.y)*k;
@@ -677,7 +706,10 @@ function update(dt){
     SAVE.roster=SAVE.roster.filter(x=>x.uid!==u.uid);SAVE.fallen.push({name:u.name,type:u.type,kills:u.kills,star:u.star});
     toast(a.sacrificed?`${u.name}を捧げた…遺志のカードが捨て札へ`:`${u.name}が倒れた…遺志のカードが捨て札へ`);sfx('fall');
     G.fx.push({type:'ring',x:a.x,y:a.y,r:a.r,max:a.r+24,life:.5,t:0,color:'#8d7bb0'});return false;});
-  for(const g of G.gems){const d=Math.sqrt(dist2(g,p));if(d<G.mag){const s=Math.min(d,420*dt);g.x+=(p.x-g.x)/(d||1)*s;g.y+=(p.y-g.y)/(d||1)*s}
+  G.magT=Math.max(0,G.magT-dt);
+  for(const it of G.items){it.t+=dt;if(dist2(it,p)<28*28){it.got=true;G.magT=3;G.magnets=(G.magnets||0)+1;toast('磁石を拾った：宝石を全部吸い寄せる');sfx('chest');G.fx.push({type:'ring',x:p.x,y:p.y,r:10,max:160,life:.6,t:0,color:'#ff8a7a'});}}
+  G.items=G.items.filter(i=>!i.got&&i.t<40);
+  for(const g of G.gems){const d=Math.sqrt(dist2(g,p));if(d<G.mag||G.magT>0){const s=Math.min(d,(G.magT>0?1100:420)*dt);g.x+=(p.x-g.x)/(d||1)*s;g.y+=(p.y-g.y)/(d||1)*s}
     if(d<p.r+6){g.got=true;G.xp+=g.v}}
   G.gems=G.gems.filter(g=>!g.got);
   if(G.gems.length>400)G.gems.splice(0,G.gems.length-400);
@@ -832,7 +864,7 @@ function gameOver(win){G.state='over';
   G.left=[];if(SAVE.roster.length>ROSTER_MAX){const keep=SAVE.roster.slice().sort((a,b)=>b.star-a.star||b.kills-a.kills).slice(0,ROSTER_MAX);const ks=new Set(keep.map(u=>u.uid));G.left=SAVE.roster.filter(u=>!ks.has(u.uid)).map(u=>u.name);SAVE.roster=SAVE.roster.filter(u=>ks.has(u.uid));}
   const newly=Object.keys(LOCKS).filter(k=>!SAVE.unlocked.includes(k)&&LOCKS[k].ok(SAVE.st));SAVE.unlocked.push(...newly);if(win)SAVE.clears=(SAVE.clears||0)+1;save();
   $('overTitle').textContent=win?'魔王を倒した！ 勝利':'主人公が倒れた';if(win)sfx('win');
-  $('res').innerHTML=`<dt>生き残った時間</dt><dd>${fmt(G.t)}</dd><dt>レベル</dt><dd>${G.level}</dd><dt>倒した敵</dt><dd>${G.kills}</dd><dt>呼んだ回数</dt><dd>${G.called}回</dd><dt>隊列で囲んだ</dt><dd>${G.loops}回</dd><dt>手に入れたコイン</dt><dd>${G.coins}枚（工房で使える）</dd>`;
+  $('res').innerHTML=`<dt>生き残った時間</dt><dd>${fmt(G.t)}</dd><dt>レベル</dt><dd>${G.level}</dd><dt>倒した敵</dt><dd>${G.kills}</dd><dt>呼んだ回数</dt><dd>${G.called}回</dd><dt>隊列で囲んだ</dt><dd>${G.loops}回</dd><dt>しのいだ大群</dt><dd>${G.swarms||0}回</dd><dt>連携技</dt><dd>${G.combos||0}回（見つけた組 ${(SAVE.st.combos||[]).length}/${COMBOS.length}）</dd><dt>手に入れたコイン</dt><dd>${G.coins}枚（工房で使える）</dd>`;
   const sec=(h,list,empty)=>`<h3>${h}</h3><p class="names">${list.length?list.map(esc).join('、'):empty}</p>`;
   const fallenSet=new Set(G.fallen);
   const rows=Object.entries(G.dmgLog).map(([k,r])=>({k,r})).filter(x=>x.r.d>0).sort((a,b)=>b.r.d-a.r.d).slice(0,8),top=rows.length?rows[0].r.d:1;
@@ -857,6 +889,8 @@ function hud(){
   html+=`<span class="chip buff">陣形 ${FORMS[G.form].name}</span>`;
   if(G.bonusAtk)html+=`<span class="chip buff">生贄 攻撃 +${Math.round(G.bonusAtk*100)}%</span>`;
   if(G.curse)html+=`<span class="chip buff">呪い 経験値2倍</span>`;
+  for(const c of COMBOS)if(comboOn(c))html+=`<span class="chip buff">連携 ${c.name}</span>`;
+  if(G.nextSwarm-G.t<10&&!G.maou)html+=`<span class="chip buff" style="color:#ff8a7a">大群まで ${Math.ceil(G.nextSwarm-G.t)}秒</span>`;
   if(G.buff.song>0)html+=`<span class="chip buff">鼓舞の歌 ${Math.ceil(G.buff.song)}秒</span>`;
   if(G.buff.crit>0)html+=`<span class="chip buff">影の刃 ${Math.ceil(G.buff.crit)}秒</span>`;
   if(G.buff.atk>0)html+=`<span class="chip buff">魔物の咆哮 ${Math.ceil(G.buff.atk)}秒</span>`;
@@ -947,6 +981,7 @@ const ITEM={
   chest:mon([[".BBBBBBBBBBBB.","BbbbbbbbbbbbbB","BbbbbbbbbbbbbB","BggggggggggggB","BbbbbbGGbbbbbB","BbbbbbgybbbbbB","BbbbbbGGbbbbbB","BbbbbbbbbbbbbB","BggggggggggggB",".BBBBBBBBBBBB."]],7,5),
   shrine:mon([["............","....x..x....",".....xx.....","....xyyx....","....xyyx....",".....xx.....",".cccccccccc.",".CCCCCCCCCC.","..cccccccC..","..ccCcccCC..","..cccccccC..","..cCccccCC..","..cccccccC..",".cccccccccC.","CCCCCCCCCCCC"]],6,9,{pal:{c:'#b0a690',C:'#7a7262'}}),
   card:mon([["oooooooooo","occcccccCo","occcccccCo","occBccBcCo","occBBBBcCo","ocBeBBeBCo","ocBBBBBBCo","occBwwBcCo","occcBBccCo","occcccccCo","oCCCCCCCCo","oooooooooo"]],5,6,{pal:{o:'#e0a24f',c:'#efe2c2',C:'#c8b890'}}),
+  magnet:mon([["..rrrr..",".rRRRRr.","rR....Rr","rR....Rr","rR....Rr","mm....mm","nm....mn"]],4,3),
   crown:mon([["g...g...g","gg.ggg.gg","ggggggggg","gggrgrggg","GGGGGGGGG"]],4,2),
 };
 function palOf(d,col){const P=Object.assign({},PAL0,d.dark?{a:shade(col,-.3),A:shade(col,-.62),L:shade(col,.05)}:{a:col,A:shade(col,-.35),L:shade(col,.35),v:shade(col,-.2),V:shade(col,-.5)});for(const[k,v]of Object.entries(d.pal||{}))if(v)P[k]=v;return P}
@@ -1019,7 +1054,8 @@ function present(M,bw,bh,ox,oy){ctx=M;ctx.setTransform(1,0,0,1,0,0);ctx.imageSmo
       else if(f.type==='skill'){ctx.globalAlpha=Math.min(1,(1-k)*2);ctx.font='13px "DotGothic16",sans-serif';ctx.lineWidth=3;ctx.strokeStyle='rgba(10,8,6,.85)';ctx.strokeText(f.v,f.x,f.y-40-k*14);ctx.fillStyle=f.color;ctx.fillText(f.v,f.x,f.y-40-k*14);}
       else if(f.type==='heal'){ctx.globalAlpha=1-k;ctx.fillStyle='#9ff0a8';ctx.font='16px "DotGothic16",sans-serif';ctx.fillText('+',f.x,f.y-14-k*14);}
       ctx.globalAlpha=1;}}
-  ctx.setTransform(DPR,0,0,DPR,0,0);vignette()}
+  ctx.setTransform(DPR,0,0,DPR,0,0);vignette();
+  if(G&&G.flashT>0){G.flashT-=1/60;ctx.fillStyle=`rgba(255,250,230,${Math.max(0,G.flashT)*1.6})`;ctx.fillRect(0,0,W,H)}}
 function render(){
   const p=G?G.player:{x:0,y:0},MAIN=ctx;
   const bw=Math.ceil(cv.width/PX),bh=Math.ceil(cv.height/PX);if(bw<1||bh<1)return;
@@ -1034,6 +1070,7 @@ function render(){
   ctx.save();ctx.translate(ox,oy);
   ctx.globalCompositeOperation='lighter';for(const g of G.gems){ctx.fillStyle=g.v>2?'rgba(255,200,90,.22)':'rgba(90,160,255,.22)';ctx.beginPath();ctx.arc(g.x,g.y,9,0,7);ctx.fill();}ctx.globalCompositeOperation='source-over';
   for(const g of G.gems)drawItem(g.v>2?'gemG':'gemB',g.x,g.y);
+  for(const it of G.items){if(it.t>34&&Math.sin(it.t*20)>0)continue;ctx.fillStyle='rgba(255,120,110,.2)';ctx.beginPath();ctx.arc(it.x,it.y,14,0,7);ctx.fill();drawItem('magnet',it.x,it.y-(Math.sin(it.t*5)>0?WP:0),2)}
   for(const ch of G.chests){ctx.fillStyle='rgba(232,194,90,.18)';ctx.beginPath();ctx.arc(ch.x,ch.y,22,0,7);ctx.fill();drawItem('chest',ch.x,ch.y-(Math.sin(ch.t*5)>0?WP:0),2)}
   for(const pk of G.pickups){ctx.fillStyle='rgba(224,162,79,.2)';ctx.beginPath();ctx.arc(pk.x,pk.y,18,0,7);ctx.fill();drawItem('card',pk.x,pk.y-(Math.sin(pk.t*5)>0?WP*2:0),2)}
   for(const e of G.enemies){
@@ -1090,6 +1127,8 @@ function render(){
   for(const ch of G.chests)edgeArrow(ch.x,ch.y,ox,oy,'#e8c25a');
   for(const pk of G.pickups)edgeArrow(pk.x,pk.y,ox,oy,'#e0a24f');
   for(const sr of G.shrines)edgeArrow(sr.x,sr.y,ox,oy,'#c58cf0');
+  for(const it of G.items)edgeArrow(it.x,it.y,ox,oy,'#ff8a7a');
+  if(G.swarmA&&Math.sin(G.t*14)>0){const a=G.swarmA.a;edgeArrow(p.x+Math.cos(a)*4000,p.y+Math.sin(a)*4000,ox,oy,'#ff4a4a')}
   if(joy&&G.state==='play'){ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(joy.ox,joy.oy,50,0,7);ctx.stroke();
     const dx=joy.x-joy.ox,dy=joy.y-joy.oy,l=Math.hypot(dx,dy),k=l>50?50/l:1;ctx.fillStyle='rgba(255,255,255,.3)';ctx.beginPath();ctx.arc(joy.ox+dx*k,joy.oy+dy*k,18,0,7);ctx.fill();}
 }
@@ -1097,7 +1136,7 @@ function render(){
 let last=performance.now();
 function frame(now){
   const dt=Math.min(.05,(now-last)/1000);last=now;
-  if(G&&G.state==='play'){update(dt);G.hudAcc+=dt;if(G.hudAcc>.1){G.hudAcc=0;hud();}}
+  if(G&&G.state==='play'){if(G.slowT>0){G.slowT-=dt;update(dt*.3)}else update(dt);G.hudAcc+=dt;if(G.hudAcc>.1){G.hudAcc=0;hud();}}
   render();requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
