@@ -45,6 +45,8 @@ flutter:
     - assets/art/event_draft.jpg
     - assets/art/players/
     - assets/art/logos/
+    - assets/faces/body/
+    - assets/faces/hair/
 
   # 日本語フォントを同梱する(Web は足りない字形を外から取りに行って豆腐になる)。
   fonts:
