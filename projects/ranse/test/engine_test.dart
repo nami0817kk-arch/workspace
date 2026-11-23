@@ -2388,7 +2388,14 @@ void main() {
     test('生まれたばかりの子を持たせて生きると、元服・初陣・家督は子が育ってから出る', () {
       final seen = <String>{};
       var lives = 0;
-      for (var seed = 0; seed < 300; seed++) {
+      const want = ['fa_genpuku', 'fa_mogi', 'fa_uijin', 'fa_tameshi'];
+      // 子の初陣は稀なので、300人生で出なければ出るまで（多くて1200人生）流す
+      // （ほかの場面を足して乱数の流れが変わると、300人生では出ないことがあった）。
+      for (
+        var seed = 0;
+        seed < 300 || (seed < 1200 && !seen.containsAll(want));
+        seed++
+      ) {
         final rng = Rng(seed + 9700);
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
@@ -2448,7 +2455,7 @@ void main() {
         );
       }
       expect(lives, greaterThan(100));
-      for (final id in ['fa_genpuku', 'fa_mogi', 'fa_uijin', 'fa_tameshi']) {
+      for (final id in want) {
         expect(seen, contains(id), reason: '$seen');
       }
     });

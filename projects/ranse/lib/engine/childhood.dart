@@ -1,3 +1,4 @@
+import 'childhood_focus.dart';
 import 'data.dart';
 import 'game.dart';
 import 'rng.dart';
@@ -110,6 +111,8 @@ List<FocusDef> childFocusOptions(Game g) {
         g.l.net += 1;
         g.j(-2);
       }),
+    // ---- 身分で増える重点 その2（弓馬・薬草・歌と書・子守・川・市の使い・経。`childhood_focus.dart`）----
+    ...moreChildFocusOptions(g),
   ];
 }
 

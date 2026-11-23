@@ -6,6 +6,7 @@ import 'ashigaru_life.dart';
 import 'birth.dart';
 import 'bonds.dart';
 import 'childhood.dart';
+import 'childhood_focus.dart';
 import 'childhood_more.dart';
 import 'data.dart';
 import 'echoes.dart';
@@ -69,6 +70,7 @@ class Game extends ChangeNotifier {
       ...buildChildRumorScenes(),
       ...buildTalentChildScenes(),
       ...buildRegionChildScenes(),
+      ...buildChildFocusScenes(),
     ];
     adultScenes = [
       ...buildAdultScenes(),
@@ -77,6 +79,7 @@ class Game extends ChangeNotifier {
       ...buildEchoScenes(),
       ...buildEchoMoreScenes(),
       ...buildEchoTalentScenes(),
+      ...buildChildFocusEchoScenes(),
       ...buildFamilyScenes(),
       ...buildBondScenes(),
       ...buildWomenScenes(),
@@ -565,7 +568,13 @@ class Game extends ChangeNotifier {
     // 重点で選んだ岐路（寺の手習いの初日など）は、まだ出ていなければその年に出す。
     final forcedId = _forced;
     _forced = null;
-    if (forcedId != null) {
+    // 続けた年の岐路（`childhood_focus.dart`）は、その年に史実の岐路があれば次に選んだ年へ回す
+    // （史実の岐路はその年かぎりで、1年に出す岐路は1つまでのため）。
+    final deferred =
+        forcedId != null &&
+        isChildFocusStage(forcedId) &&
+        childScenes.any((s) => isHistoryScene(s.id) && _childSceneOk(s, a));
+    if (forcedId != null && !deferred) {
       for (final s in childScenes) {
         if (s.id == forcedId && !hasFlag('scene:${s.id}') && s.cond(this)) {
           l.t = a * 2 + 1;
@@ -577,15 +586,7 @@ class Game extends ChangeNotifier {
     }
     final cand = [
       for (final s in childScenes)
-        if (!s.onlyForced &&
-            !hasFlag('scene:${s.id}') &&
-            !_twinDone(s.id) &&
-            !sceneSkippedInLine(this, s.id) &&
-            a >= s.minAge &&
-            a <= s.maxAge &&
-            (s.ageOk == null || s.ageOk!(this, a)) &&
-            s.cond(this))
-          s,
+        if (_childSceneOk(s, a)) s,
     ];
     // その年の史実の岐路は、数の上限や確率に関係なく必ず出す。
     final hist = cand.where((s) => isHistoryScene(s.id)).toList();
@@ -612,6 +613,16 @@ class Game extends ChangeNotifier {
     setFlag('scene:${s.id}');
     s.run(this, _endYear);
   }
+
+  bool _childSceneOk(SceneDef s, int a) =>
+      !s.onlyForced &&
+      !hasFlag('scene:${s.id}') &&
+      !_twinDone(s.id) &&
+      !sceneSkippedInLine(this, s.id) &&
+      a >= s.minAge &&
+      a <= s.maxAge &&
+      (s.ageOk == null || s.ageOk!(this, a)) &&
+      s.cond(this);
 
   /// 年の終わり。体力が戻り、幼い命が病で失われることもある。
   void _endYear() {

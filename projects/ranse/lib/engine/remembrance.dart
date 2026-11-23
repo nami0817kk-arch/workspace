@@ -79,6 +79,14 @@ String _spOf(Game g) {
   return n == null ? '連れ合い' : '連れ合いの$n';
 }
 
+/// 子守をした弟妹の名（`cf_sib_name:<名>`）。分からなければ「弟妹」。
+String _sib(Game g) {
+  for (final f in g.l.flags) {
+    if (f.startsWith('cf_sib_name:')) return f.substring(12);
+  }
+  return '弟妹';
+}
+
 /// 旗ひとつで決まる、文の変わらない行。
 Remembrance _r(
   String flag,
@@ -137,6 +145,29 @@ final List<Remembrance> kRemembrances = [
       child: true, group: 'master_child'),
   _r('master_bu', 1.5, '一夜の宿の礼に、旅の剣客から棒術の手ほどきを受けた。',
       child: true, group: 'master_child'),
+  // ---- 子どもの重点 その2（`childhood_focus.dart`）と、大人になって返ってきたもの（`e4_`）----
+  _r('cf_yumi_praised', 2.5, '弓の稽古で雁を射落とし、家中の大人たちに名を尋ねられた。',
+      child: true, group: 'yumi'),
+  _r('e4_yumi_archer', 4, '幼い日の弓の噂に違わず、大人になっても的を外さなかった。', group: 'yumi'),
+  _r('cf_herb_healer', 3, '幼い身で薬草を煎じ、寝込んだ家の者の熱を下げた。',
+      child: true, group: 'herb'),
+  _r('e4_herb_saved', 4.5, '熱の出た村を、幼い日に覚えた薬草で救って回った。', group: 'herb'),
+  _r('cf_uta_praised', 2.5, '子どもの歌の集まりで詠んだ初雪の歌を、大人たちが褒めた。',
+      child: true, group: 'uta'),
+  Remembrance('cf_sib_close', 2.5, _f('cf_sib_close'),
+      (g) => '子守をして育てた${_sib(g)}は、片時もそばを離れなかった。',
+      child: true, group: 'komori'),
+  Remembrance('e4_sib_helped', 3.5, _f('e4_sib_helped'),
+      (g) => '子守をして育てた${_sib(g)}が困ったとき、黙って手を差し伸べた。',
+      group: 'komori'),
+  _r('cf_read_river', 3, '川の水の匂いが変わったのに気づき、河原の子らを逃がしたことがあった。',
+      child: true, group: 'river'),
+  _r('e4_river_saved', 4.5, '大水の前に川の匂いを嗅ぎ分け、人々を高みへ逃がした。', group: 'river'),
+  _r('cf_errand_trusted', 2, '市の使いでは、大人たちに正直者と信じられていた。',
+      child: true, group: 'errand'),
+  _r('cf_sutra_comfort', 3, '幼い身で、死にゆく人の枕元に座って経を読んだ。',
+      child: true, group: 'sutra'),
+  _r('e4_sutra_mourned', 3, '名もない骸や行き倒れの前で、足を止めて経を読んだ。', group: 'sutra'),
   Remembrance('river_rescue', 3, (g) => _p(g, '川で溺れかけた子を助けた'),
       _t('川で溺れかけた年下の子の手をつかみ、必死で岸へ引き上げた。'),
       child: true),
