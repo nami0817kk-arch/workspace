@@ -159,6 +159,11 @@ class PreContractEngine {
   /// 国内のクラブを行き先に引いたらその日は結ばず、その国の開始日に
   /// [openDomesticForAi]で改めて決める。[canRegister]を渡すと、登録の決まり
   /// ([SquadRegistration])で加えられないクラブは行き先にしない。
+  ///
+  /// [maxSquad]を渡すと、在籍と向かってくる仮契約([incoming]。クラブ ID→
+  /// 人数。ここで結んだ分も足していく)の合計がその人数に達したクラブは
+  /// 行き先にしない(2026-11-23。以前は人数を見ずに行き先を引いていて、
+  /// 10季で1季に約100人ずつ選手が増え、148人のクラブもあった)。
   static List<PreContract> openSeasonForAi(
     List<Team> teams,
     String userTeamId,
@@ -167,10 +172,15 @@ class PreContractEngine {
     Set<String> alreadyTaken = const {},
     LeagueTheme Function(Team)? countryOf,
     bool Function(Team to, Player p)? canRegister,
+    int? maxSquad,
+    Map<String, int> incoming = const {},
   }) {
     final made = <PreContract>[];
     final cpuTeams = teams.where((t) => t.id != userTeamId).toList();
     if (cpuTeams.length < 2) return made;
+    final load = {...incoming};
+    bool hasRoom(Team t) =>
+        maxSquad == null || t.players.length + (load[t.id] ?? 0) < maxSquad;
     for (final team in cpuTeams) {
       final from = countryOf?.call(team);
       final domesticOk = from == null || domesticOpen(from, today);
@@ -186,13 +196,17 @@ class PreContractEngine {
         if (rng.nextDouble() >= aiPreContractChance) continue;
         final pool = [
           for (final t in cpuTeams)
-            if (t.id != team.id && (canRegister?.call(t, p) ?? true)) t,
+            if (t.id != team.id &&
+                hasRoom(t) &&
+                (canRegister?.call(t, p) ?? true))
+              t,
         ];
         if (pool.isEmpty) continue;
         final to = pool[rng.nextInt(pool.length)];
         // 国内のクラブとはまだ話せない(その国の開始日に改めて決める)。
         if (!domesticOk && countryOf!(to) == from) continue;
         made.add(_aiContract(p, team, to, today));
+        load[to.id] = (load[to.id] ?? 0) + 1;
       }
     }
     return made;
@@ -203,6 +217,7 @@ class PreContractEngine {
   /// 満了の年の選手のうち、まだ行き先の決まっていない選手と、同じ国の別の
   /// クラブが仮契約を結ぶ。確率は1月1日と同じ([aiPreContractChance])。
   /// 更新するかは1月1日に決めてあるので、ここでは更新しない。
+  /// [maxSquad]・[incoming]は[openSeasonForAi]と同じ(人数の上限)。
   static List<PreContract> openDomesticForAi(
     List<Team> teams,
     String userTeamId,
@@ -212,6 +227,8 @@ class PreContractEngine {
     required DateTime today,
     Set<String> alreadyTaken = const {},
     bool Function(Team to, Player p)? canRegister,
+    int? maxSquad,
+    Map<String, int> incoming = const {},
   }) {
     final made = <PreContract>[];
     final domestic = [
@@ -219,6 +236,9 @@ class PreContractEngine {
         if (t.id != userTeamId && countryOf(t) == country) t,
     ];
     if (domestic.length < 2) return made;
+    final load = {...incoming};
+    bool hasRoom(Team t) =>
+        maxSquad == null || t.players.length + (load[t.id] ?? 0) < maxSquad;
     for (final team in domestic) {
       for (final p in team.players) {
         if (!inFinalYear(p) || alreadyTaken.contains(p.id)) continue;
@@ -226,10 +246,15 @@ class PreContractEngine {
         if (rng.nextDouble() >= aiPreContractChance) continue;
         final pool = [
           for (final t in domestic)
-            if (t.id != team.id && (canRegister?.call(t, p) ?? true)) t,
+            if (t.id != team.id &&
+                hasRoom(t) &&
+                (canRegister?.call(t, p) ?? true))
+              t,
         ];
         if (pool.isEmpty) continue;
-        made.add(_aiContract(p, team, pool[rng.nextInt(pool.length)], today));
+        final to = pool[rng.nextInt(pool.length)];
+        made.add(_aiContract(p, team, to, today));
+        load[to.id] = (load[to.id] ?? 0) + 1;
       }
     }
     return made;
@@ -258,7 +283,8 @@ class PreContractEngine {
   /// クラブ同士の開始日)を渡すと、その日より前は国外のクラブ
   /// ([foreignTeams])だけが声をかける(イングランドは6月1日まで、
   /// イタリアは2月1日まで。2026-11-22)。[canRegister]を渡すと、登録の
-  /// 決まりで加えられないクラブは声をかけない。
+  /// 決まりで加えられないクラブは声をかけない。[maxSquad]・[incoming]は
+  /// [openSeasonForAi]と同じ(人数の上限)。
   static List<PreContract> poachFromUser(
     Team userTeam,
     List<Team> cpuTeams,
@@ -269,6 +295,8 @@ class PreContractEngine {
     List<Team> foreignTeams = const [],
     DateTime? domesticOpensOn,
     bool Function(Team to, Player p)? canRegister,
+    int? maxSquad,
+    Map<String, int> incoming = const {},
   }) {
     if (!isOpen(today) || weeks <= 0) return const [];
     final d = DateTime(today.year, today.month, today.day);
@@ -277,6 +305,9 @@ class PreContractEngine {
         : cpuTeams;
     if (clubs.isEmpty) return const [];
     final made = <PreContract>[];
+    final load = {...incoming};
+    bool hasRoom(Team t) =>
+        maxSquad == null || t.players.length + (load[t.id] ?? 0) < maxSquad;
     for (final p in userTeam.players) {
       if (!inFinalYear(p) || alreadyTaken.contains(p.id)) continue;
       if (ContractEngine.canExerciseOption(p, today)) continue;
@@ -285,7 +316,7 @@ class PreContractEngine {
       if (rng.nextDouble() >= chance) continue;
       final open = [
         for (final t in clubs)
-          if (canRegister?.call(t, p) ?? true) t,
+          if (hasRoom(t) && (canRegister?.call(t, p) ?? true)) t,
       ];
       if (open.isEmpty) continue;
       // 実力に見合うクラブ(平均総合力が近いか上)を優先する。
@@ -294,6 +325,7 @@ class PreContractEngine {
       final pool = fitting.isNotEmpty ? fitting : open;
       final to = pool[rng.nextInt(pool.length)];
       made.add(_aiContract(p, userTeam, to, today));
+      load[to.id] = (load[to.id] ?? 0) + 1;
     }
     return made;
   }

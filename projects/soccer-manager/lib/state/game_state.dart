@@ -1196,6 +1196,37 @@ class GameState extends ChangeNotifier {
   /// 保存をまとめるためのタイマー。
   Timer? _persistTimer;
 
+  /// 見せる前の大事な場面([SaveGame.pendingMoments])を溜めておく上限。
+  static const int maxPendingMoments = 20;
+
+  /// 何節もまとめて進めている間([_inBulkSave])は、節ごとの保存
+  /// ([_persistNow])を書かずに印だけ付け、終わったときに1回だけ書く。
+  /// セーブは約3MBあり、節ごとに丸ごと書き出すと1節の処理時間の大半を
+  /// 占めていた(2026-11-23)。1節ずつ進めるときは今までどおり毎回書く
+  /// (途中でアプリが落ちても進めた分を失わない)。
+  int _bulkSaveDepth = 0;
+  bool _bulkSavePending = false;
+  int _saveWriteCount = 0;
+
+  /// テスト用: セーブを書き出した回数。
+  @visibleForTesting
+  int get debugSaveWriteCount => _saveWriteCount;
+
+  /// [body]の間の保存を1回にまとめる。入れ子にしてよい(外側の終わりで書く)。
+  /// [body]が途中で投げても、それまでの分は書く。
+  Future<T> _inBulkSave<T>(Future<T> Function() body) async {
+    _bulkSaveDepth++;
+    try {
+      return await body();
+    } finally {
+      _bulkSaveDepth--;
+      if (_bulkSaveDepth == 0 && _bulkSavePending) {
+        _bulkSavePending = false;
+        await _persistNow();
+      }
+    }
+  }
+
   /// セーブを JSON にする重い処理を、画面を描く処理とは別のところで行う。
   ///
   /// セーブは約1.5MB あり、JSON にするのに PC でも約160ms かかっていた
@@ -1260,6 +1291,10 @@ class GameState extends ChangeNotifier {
     _persistTimer = Timer(persistDebounce, () {
       _persistTimer = null;
       if (generation != _saveGeneration) return; // 既に別のセーブが正
+      if (_bulkSaveDepth > 0 && slot == currentSlot) {
+        _bulkSavePending = true; // まとめて進めている間は、終わりに書く
+        return;
+      }
       _persistNow(slot: slot);
     });
   }
@@ -1278,6 +1313,12 @@ class GameState extends ChangeNotifier {
   Future<void> _persistNow({int? slot}) async {
     _persistTimer?.cancel();
     _persistTimer = null;
+    if (_bulkSaveDepth > 0 && slot == null) {
+      // まとめて進めている間は、終わったときに1回だけ書く。
+      _bulkSavePending = true;
+      return;
+    }
+    _saveWriteCount++;
     final target = slot ?? currentSlot;
     try {
       final prefs = await SharedPreferences.getInstance();

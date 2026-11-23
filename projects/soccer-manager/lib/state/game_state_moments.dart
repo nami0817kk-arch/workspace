@@ -27,6 +27,10 @@ extension GameStateMoments on GameState {
     // 印は古いものから捨てる(季ごとに数件しか増えない)。
     if (s.momentKeys.length > 200) s.momentKeys.removeAt(0);
     s.pendingMoments.add([kind.name, tag, body]);
+    // 見ないまま溜まった場面は、古いものから捨てる(上限が無く、開かずに
+    // 何季も進めるとセーブに積み上がっていた。2026-11-23)。
+    final over = s.pendingMoments.length - GameState.maxPendingMoments;
+    if (over > 0) s.pendingMoments.removeRange(0, over);
   }
 
   /// リーグ戦の節のあと: 優勝・昇格・降格が数字の上で決まったか。
@@ -123,4 +127,8 @@ extension GameStateMoments on GameState {
   void debugCheckClinch(int matchday) => _checkClinchMoments(matchday);
   @visibleForTesting
   void debugCheckRecordSigning(Player p, int fee) => _checkRecordSigning(p, fee);
+  @visibleForTesting
+  void debugQueueMoment(
+          BigMomentKind kind, String key, String tag, String body) =>
+      _queueMoment(kind, key, tag, body);
 }

@@ -1114,28 +1114,38 @@ class SaveGame {
   /// 選手IDのカウンターは起動のたびに0へ戻り、読み込んだセーブの全選手IDを
   /// 見て引き上げる。ここに漏れがあると(以前は移籍市場・大陸カップの海外
   /// クラブが漏れていた)、再起動後に作った選手が既存の選手と同じIDになる。
+  ///
+  /// 日を送るたびに呼ばれる(誕生日)。以前は全クラブの選手を2回なめて
+  /// (1回は返すため、1回は重なりを見る Set を作るため)いた。重なりを見る
+  /// Set は、大陸大会のクラブがあるときだけ、返しながら作る(2026-11-23)。
   Iterable<Player> get allPlayers sync* {
+    final continental = continentalTeams;
+    final seen = continental.isEmpty ? null : <String>{};
     for (final l in foreignLeagues.values) {
       for (final t in l.teams) {
-        yield* t.players;
+        for (final p in t.players) {
+          seen?.add(p.id);
+          yield p;
+        }
       }
     }
-    for (final t in allTeams) {
-      yield* t.players;
+    for (final l in [league, ...otherDivisionLeagues]) {
+      if (l == null) continue;
+      for (final t in l.teams) {
+        for (final p in t.players) {
+          seen?.add(p.id);
+          yield p;
+        }
+      }
     }
     // 大陸大会に出る他国のクラブは、他国のリーグ(foreignLeagues)のクラブの
     // 写し(同じクラブID・同じ選手ID)。同じ選手を二度数えないよう、他国の
     // リーグ・国内の部にすでにいる選手は飛ばす(2026-11-22)。
-    final seen = <String>{
-      for (final l in foreignLeagues.values)
-        for (final t in l.teams)
-          for (final p in t.players) p.id,
-      for (final t in allTeams)
-        for (final p in t.players) p.id,
-    };
-    for (final t in continentalTeams) {
-      for (final p in t.players) {
-        if (!seen.contains(p.id)) yield p;
+    if (seen != null) {
+      for (final t in continental) {
+        for (final p in t.players) {
+          if (!seen.contains(p.id)) yield p;
+        }
       }
     }
     yield* youthProspects;
@@ -1443,7 +1453,21 @@ class SaveGame {
   factory SaveGame.fromJson(Map<String, dynamic> json) {
     final season = (json['league'] as Map?)?['season'] as int? ?? 1;
     Player.contractClockYear = Player.seasonEndYearOf(season);
-    return SaveGame._fromJson(json).._fitToTierCount();
+    return SaveGame._fromJson(json)
+      .._fitToTierCount()
+      .._archiveOtherResults();
+  }
+
+  /// 前の形のセーブは他のクラブの試合の出来事(決定機・交代)も全部持って
+  /// いた。読むときに残す形([MatchResult.archived])にする(2026-11-23)。
+  void _archiveOtherResults() {
+    league.archiveResultsExcept(userTeamId);
+    for (final l in otherDivisionLeagues) {
+      l?.archiveResultsExcept(userTeamId);
+    }
+    for (final l in foreignLeagues.values) {
+      l.archiveResultsExcept(userTeamId);
+    }
   }
 
   factory SaveGame._fromJson(Map<String, dynamic> json) => SaveGame(

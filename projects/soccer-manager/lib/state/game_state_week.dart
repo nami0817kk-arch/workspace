@@ -210,11 +210,10 @@ extension GameStateWeek on GameState {
       LineupUtils.fillVacancies(userTeam);
     }
 
-    // 選手の不満度を更新する。
-    final rank = league.sortedStandings.indexWhere(
-          (r) => r.teamId == s.userTeamId,
-        ) +
-        1;
+    // 選手の不満度を更新する。順位表は全試合から作り直すので、ここで
+    // 1回だけ作って引く(以前は CPU のクラブごとに作り直していた)。
+    final ranks = _standingRanks(league);
+    final rank = ranks[s.userTeamId] ?? 0;
     HappinessEngine.applyWeekly(
       userTeam,
       leagueRank: rank,
@@ -231,7 +230,7 @@ extension GameStateWeek on GameState {
     // 順位をそのまま目標として扱い、出場機会・待遇の要素のみ効かせる)。
     for (final t in league.teams) {
       if (t.id == s.userTeamId) continue;
-      final r = league.sortedStandings.indexWhere((x) => x.teamId == t.id) + 1;
+      final r = ranks[t.id] ?? 0;
       HappinessEngine.applyWeekly(t, leagueRank: r, boardTargetRank: r);
     }
 
@@ -513,4 +512,13 @@ extension GameStateWeek on GameState {
   /// テスト用: 日数で進む回復を走らせる。
   @visibleForTesting
   void debugRecoverByDays(int days) => _recoverByDays(days);
+
+  /// [league]の順位表を1回作り、クラブ ID→順位(1から)にする。
+  Map<String, int> _standingRanks(League league) {
+    final rows = league.sortedStandings;
+    return {for (var i = 0; i < rows.length; i++) rows[i].teamId: i + 1};
+  }
+
+  @visibleForTesting
+  Map<String, int> debugStandingRanks(League league) => _standingRanks(league);
 }
