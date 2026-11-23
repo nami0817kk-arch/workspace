@@ -2294,15 +2294,29 @@ void main() {
     expect(gameState.isHalfTime, isTrue);
 
     final team = gameState.userTeam;
-    final outId = team.startingXI.first;
-    final inId = team.players
-        .firstWhere((p) => !team.startingXI.contains(p.id) && !p.isInjured)
-        .id;
+    // 先発の1人目・控えの1人目を決め打ちにすると、前半に退場した選手や
+    // 出場停止・代表招集中の控えに当たったとき、交代が正しく断られて
+    // テストが乱数しだいで落ちていた(2026-11-24 CI)。交代できる組を探す。
+    final onPitch = MatchEngine.lineupOf(team).map((p) => p.id).toList();
+    final bench = team.players
+        .where((p) => !onPitch.contains(p.id) && !p.isInjured)
+        .map((p) => p.id)
+        .toList();
+    String? outId;
+    String? inId;
+    for (final o in onPitch) {
+      for (final i in bench) {
+        if (gameState.makeHalfTimeSubstitution(
+            outPlayerId: o, inPlayerId: i)) {
+          outId = o;
+          inId = i;
+          break;
+        }
+      }
+      if (outId != null) break;
+    }
 
-    final ok = gameState.makeHalfTimeSubstitution(
-        outPlayerId: outId, inPlayerId: inId);
-
-    expect(ok, isTrue);
+    expect(outId, isNotNull);
     expect(team.startingXI.contains(inId), isTrue);
     expect(team.startingXI.contains(outId), isFalse);
     expect(gameState.substitutionsUsed, 1);
