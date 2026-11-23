@@ -165,8 +165,11 @@ void main() {
       final cpuNow = game.save!.allTeams.firstWhere((t) => t.id == cpu.id);
       expect(cpuNow.players.any((p) => p.id == theirs.id), isFalse,
           reason: '他のクラブの満了した選手も出ていく');
-      expect(cpuNow.players.length, greaterThanOrEqualTo(cpuSize - 2),
-          reason: '抜けた分は若手で埋める');
+      // 抜けた分を若手で埋めるのは最低人数(18)を割るときだけ(2026-11-23。
+      // 毎回埋めると世界中で選手が増え続けた)。残りは窓の補強で埋まる。
+      expect(cpuNow.players.length,
+          greaterThanOrEqualTo(min(cpuSize - 2, 18)),
+          reason: '最低人数は割らない');
     });
   });
 
