@@ -795,6 +795,8 @@ extension GameStateFinance on GameState {
     if (team == null || team.id == save.userTeamId) return false;
 
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
+    // 手放したクラブの貸し借りを清算する(自クラブを替える前に)。
+    _settleLoansOfFormerClub(userTeam);
     // 手放したクラブを覚えておく(季の終わりにその後を知らせる)。
     save.formerClubs[save.userTeamId] = save.clubName;
     save.formerClubs.remove(team.id);
@@ -852,6 +854,41 @@ extension GameStateFinance on GameState {
     return true;
   }
 
+  /// 手放すクラブ[old]の貸し借りを終わらせる。ローンの清算は自クラブにしか
+  /// 回らないため、以前は買い直しの後、手放したクラブの貸し出していた選手が
+  /// 「貸し出し中」の印のまま試合に出られず、借りていた選手も貸し元へ
+  /// 戻らなかった(2026-11-23)。
+  ///
+  /// - 貸し出していた選手: 手放すクラブへ戻る(印を消す)。
+  /// - 借りていた選手: 貸し元へ戻る。貸し元の無い旧セーブの選手は、
+  ///   そのまま手放すクラブの選手にする。
+  void _settleLoansOfFormerClub(Team old) {
+    var changed = false;
+    for (final p in old.players) {
+      if (!p.isLoanedOut) continue;
+      _endLoanOutSilently(p);
+      changed = true;
+    }
+    final borrowed = old.players.where((p) => p.isLoan).toList();
+    for (final p in borrowed) {
+      changed = true;
+      p.loanObligation = false;
+      if (p.loanFromClubId == null) {
+        p.isLoan = false;
+        p.loanEndDate = null;
+        p.loanBuyOptionFee = null;
+        if (p.loanBaseWage != null) p.wage = p.loanBaseWage!;
+        p.loanBaseWage = null;
+        continue;
+      }
+      old.players.remove(p);
+      old.startingXI.remove(p.id);
+      _clearPlayerRoleReferences(old, p.id);
+      _returnLoanToParent(p);
+    }
+    if (changed) LineupUtils.autoFill(old);
+  }
+
   /// 別の国のクラブを新しく立ち上げて、続きを遊ぶ。その国の規則に従い、
   /// 新しい国のピラミッドの最下部(3部)から始まる。実績は殿堂に残る。
   Future<bool> buyClubInCountry(LeagueTheme theme) async {
@@ -879,6 +916,8 @@ extension GameStateFinance on GameState {
     // 前のクラブで進めた今日(リーグを入れ替える前に控える)。
     final reachedDay = today;
     save.ownerLegacies.add(_legacyOfCurrentClub(reason));
+    // 手放したクラブの貸し借りを清算する(借りていた選手は他国の貸し元へ戻る)。
+    _settleLoansOfFormerClub(this.userTeam);
 
     // 年俸の水準は新しい国・部のもの(他の部のクラブはその部の水準)。
     setHomeWageLevel(theme, startTier);

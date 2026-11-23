@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../models/player.dart';
 import '../models/team.dart';
+import 'lineup_utils.dart';
 import 'player_generator.dart';
 import 'training_engine.dart';
 
@@ -94,6 +95,10 @@ class RetirementEngine {
       if (team.viceCaptainId == leaver.id) team.viceCaptainId = null;
       team.players.add(_generateCpuRecruit(team, leaver.position));
     }
+    // 抜けた先発の枠を組み直す。CPU のクラブは試合の前に先発を組み直さず、
+    // 7人以上残っていればそのまま使われるため、以前は季の切り替えの後に
+    // 先発9〜10人のまま1季ずっと試合をしていた(2026-11-23)。
+    if (retirees.isNotEmpty || turnover > 0) LineupUtils.autoFill(team);
     return retirees;
   }
 
