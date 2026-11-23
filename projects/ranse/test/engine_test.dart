@@ -10,6 +10,7 @@ import 'package:ranse/engine/history.dart';
 import 'package:ranse/engine/history_lines.dart';
 import 'package:ranse/engine/life.dart';
 import 'package:ranse/engine/rng.dart';
+import 'package:ranse/engine/talents.dart';
 import 'package:ranse/engine/ways.dart';
 
 import 'bot.dart';
@@ -145,6 +146,59 @@ void main() {
       }
     }
     expect(asked, greaterThan(0));
+  });
+
+  test('子どもの重点に「寺へ手習いに通う」が出て、初めて選んだ年に手習いの岐路が起きる', () {
+    var checked = 0;
+    for (var seed = 0; seed < 400 && checked < 20; seed++) {
+      final rng = Rng(seed + 9100);
+      final g = Game(rng: rng);
+      g.start(rollBirth(rng));
+      if (g.finished || g.l.cls.id == 'priest') continue;
+      final p = g.prompt!;
+      if (p.title != '今年の重点') continue;
+      final i = p.choices.indexWhere((c) => c.label == '寺へ手習いに通う');
+      expect(i, isNonNegative, reason: g.l.cls.id);
+      g.choose(i);
+      // 手習いの岐路まで進める（間に史実の岐路などが挟まることはない年の初め）。
+      expect(g.prompt!.title, '寺の手習い');
+      g.choose(0);
+      expect(g.hasFlag('tera_diligent'), isTrue);
+      checked++;
+    }
+    expect(checked, greaterThan(10));
+  });
+
+  test('家柄で増える子どもの重点: 商家の子に算盤、武家の子に道場', () {
+    var merchant = 0, samurai = 0;
+    for (var seed = 0; seed < 4000; seed++) {
+      final rng = Rng(seed + 9300);
+      final b = rollBirth(rng);
+      if (b.cls.id != 'merchant' && b.cls.id != 'samurai') continue;
+      final g = Game(rng: rng);
+      g.start(b);
+      final r = Rng(seed);
+      var n = 0;
+      // 8歳を過ぎるまで進めて、重点の選択肢を見る。
+      while (!g.finished && n++ < 200) {
+        final p = g.prompt!;
+        if (p.title == '今年の重点' && g.age >= 8) {
+          final labels = p.choices.map((c) => c.label).toList();
+          if (b.cls.id == 'merchant') {
+            expect(labels, contains('算盤と商いを習う'));
+            merchant++;
+          } else {
+            expect(labels, contains('道場で稽古をつけてもらう'));
+            samurai++;
+          }
+          break;
+        }
+        g.choose(r.range(0, p.choices.length - 1));
+      }
+      if (merchant >= 5 && samurai >= 3) break;
+    }
+    expect(merchant, greaterThan(0));
+    expect(samurai, greaterThan(0));
   });
 
   test('どんな生まれでも最後まで進み、例外を出さない', () {
@@ -1581,6 +1635,176 @@ void main() {
             if (y != null) expect(g.year, y, reason: p.title);
           },
         );
+      }
+    });
+  });
+
+  group('能力で起きる岐路', () {
+    final digits = RegExp(r'[0-9０-９%]');
+
+    /// 新しく出た能力の岐路の選択肢に、匂わせがあり数字が無いことを確かめる。
+    void Function(Prompt p) hintCheck(Game g, Set<String> seenNow) {
+      seenNow.addAll(g.l.flags.where((f) => f.startsWith('scene:tal_')));
+      return (p) {
+        final now = g.l.flags.where((f) => f.startsWith('scene:tal_')).toSet();
+        if (now.length == seenNow.length) return;
+        seenNow
+          ..clear()
+          ..addAll(now);
+        for (final c in p.choices) {
+          expect(c.hint, isNotNull, reason: '${p.title}/${c.label} に匂わせが無い');
+          expect(
+            c.hint!,
+            isNot(contains(digits)),
+            reason: '${p.title}/${c.hint}',
+          );
+          expect(
+            c.label,
+            isNot(contains(digits)),
+            reason: '${p.title}/${c.label}',
+          );
+        }
+      };
+    }
+
+    test('能力の高い大人には、能力の岐路がいろいろ出て、匂わせがあり数字が無い', () {
+      final seen = <String>{};
+      for (var seed = 0; seed < 300; seed++) {
+        final rng = Rng(seed + 4400);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished) continue;
+        g.l
+          ..bu = 95
+          ..chi = 95
+          ..sei = 95
+          ..mi = 95
+          ..un = 95;
+        // 半分は主家に仕える身にして、家中の岐路も見る。
+        if (seed.isEven && g.l.rank == 0 && !g.hasFlag('priesthood')) {
+          g.l
+            ..rank = 2
+            ..maxRank = 2
+            ..lord = g.alive.first.name
+            ..fav = 30;
+        }
+        final mine = <String>{};
+        playOut(g, Rng(seed + 1), onPrompt: hintCheck(g, mine));
+        seen.addAll(
+          g.l.flags
+              .where(
+                (f) =>
+                    f.startsWith('scene:tal_') && !f.startsWith('scene:tal_c_'),
+              )
+              .map((f) => f.substring(6)),
+        );
+      }
+      expect(seen.length, greaterThanOrEqualTo(16), reason: '$seen');
+    });
+
+    test('能力の低い大人には、低い能力の岐路（陣触れ・証文・厄）が出る', () {
+      final seen = <String>{};
+      for (var seed = 0; seed < 200; seed++) {
+        final rng = Rng(seed + 4700);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        playChildhood(g, Rng(seed));
+        if (g.finished) continue;
+        g.l
+          ..bu = 10
+          ..chi = 10
+          ..un = 10;
+        final mine = <String>{};
+        playOut(g, Rng(seed + 1), onPrompt: hintCheck(g, mine));
+        seen.addAll(
+          g.l.flags
+              .where((f) => f.startsWith('scene:tal_low_'))
+              .map((f) => f.substring(6)),
+        );
+      }
+      expect(seen.length, greaterThanOrEqualTo(2), reason: '$seen');
+    });
+
+    test('才のある子には、幼少期の能力の岐路が出る', () {
+      final seen = <String>{};
+      for (var seed = 0; seed < 200; seed++) {
+        final rng = Rng(seed + 4900);
+        final g = Game(rng: rng);
+        g.start(rollBirth(rng));
+        if (g.finished) continue;
+        g.l
+          ..bu = 70
+          ..chi = 70
+          ..sei = 70
+          ..mi = 70
+          ..un = 70;
+        final mine = <String>{};
+        playChildhood(g, Rng(seed), onPrompt: hintCheck(g, mine));
+        seen.addAll(
+          g.l.flags
+              .where((f) => f.startsWith('scene:tal_c_'))
+              .map((f) => f.substring(6)),
+        );
+      }
+      expect(seen.length, greaterThanOrEqualTo(5), reason: '$seen');
+    });
+
+    test('能力が段（60・75・90）を越えた一言は、同じ段で二度出ない', () {
+      int lines(Game g) => g.l.log.where((e) => e.txt.startsWith('【才】')).length;
+      final g = startSurvivor(12);
+      expect(g.finished, isFalse);
+      g.l
+        ..bu = 10
+        ..chi = 10
+        ..sei = 10
+        ..mi = 10
+        ..un = 10;
+      final n0 = lines(g);
+      g.l.bu = 95;
+      talentMilestones(g);
+      expect(lines(g), n0 + 1, reason: '一度に三つの段を越えても、一行だけ');
+      talentMilestones(g);
+      expect(lines(g), n0 + 1);
+      g.l.bu = 40;
+      talentMilestones(g);
+      g.l.bu = 95;
+      talentMilestones(g);
+      expect(lines(g), n0 + 1, reason: '下がってまた越えても、二度は出ない');
+      g.l.chi = 65;
+      talentMilestones(g);
+      g.l.chi = 80;
+      talentMilestones(g);
+      g.l.chi = 92;
+      talentMilestones(g);
+      expect(lines(g), n0 + 4, reason: '段ごとに一行ずつ');
+      for (final s in ['chi']) {
+        for (final t in [60, 75, 90]) {
+          expect(g.hasFlag('talent:$s:$t'), isTrue);
+        }
+      }
+
+      // 一生を通しても、同じ一行は二度出ず、段の数（5×3）を超えない。
+      for (var seed = 0; seed < 60; seed++) {
+        final rng = Rng(seed + 5100);
+        final h = Game(rng: rng);
+        h.start(rollBirth(rng));
+        playOut(
+          h,
+          Rng(seed),
+          onPrompt: (p) {
+            if (h.isChild || h.age % 5 != 0) return;
+            h.l
+              ..bu = clampInt(h.l.bu + 8, 0, 99)
+              ..chi = clampInt(h.l.chi + 8, 0, 99);
+          },
+        );
+        final got = h.l.log
+            .where((e) => e.txt.startsWith('【才】'))
+            .map((e) => e.txt)
+            .toList();
+        expect(got.length, lessThanOrEqualTo(15));
+        expect(got.toSet().length, got.length, reason: '$got');
       }
     });
   });

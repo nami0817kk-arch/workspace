@@ -16,6 +16,7 @@ import 'history_west.dart';
 import 'life.dart';
 import 'lords.dart';
 import 'rng.dart';
+import 'talents.dart';
 import 'village.dart';
 import 'ways.dart';
 import 'women.dart';
@@ -55,6 +56,7 @@ class Game extends ChangeNotifier {
       ...buildMoreChildScenes(),
       ...buildChildHistoryScenes(),
       ...buildChildRumorScenes(),
+      ...buildTalentChildScenes(),
     ];
     adultScenes = [
       ...buildAdultScenes(),
@@ -64,6 +66,7 @@ class Game extends ChangeNotifier {
       ...buildWomenScenes(),
       ...buildAshigaruScenes(),
       ...buildVillageScenes(),
+      ...buildTalentScenes(),
       ...buildHistoryScenes(),
       ...buildHistoryEastScenes(),
       ...buildHistoryWestScenes(),
@@ -497,13 +500,20 @@ class Game extends ChangeNotifier {
     l.t = a * 2;
     onCheckpoint?.call(this);
     final opts = childFocusOptions(this);
-    final shown = [...opts.sublist(0, 3), rng.chance(.5) ? opts[3] : opts[4]];
+    // いつもの4つ（手伝い・読み書き・武芸ごっこ、遊ぶか友と過ごすのどちらか）に、
+    // 家柄・年頃で増える重点（寺の手習い・道場・算盤・行儀見習い）を足す。
+    final shown = [
+      ...opts.sublist(0, 3),
+      rng.chance(.5) ? opts[3] : opts[4],
+      ...opts.sublist(5),
+    ];
     ask('今年の重点', childYearText(this), [
       for (final o in shown)
         Choice.h(o.label, o.hint, () {
           final before = (l.bu, l.chi, l.net, l.gold);
           o.perYear(this);
           l.focus[o.tag] = (l.focus[o.tag] ?? 0) + 1;
+          _forced = o.forced;
           final d = <String>[];
           if (l.bu > before.$1) d.add('武+${l.bu - before.$1}');
           if (l.chi > before.$2) d.add('知+${l.chi - before.$2}');
@@ -517,9 +527,23 @@ class Game extends ChangeNotifier {
   /// 年の途中。この年齢で起こりうる岐路があれば、確率で一つ出す。
   void _yearScene() {
     final a = age;
+    // 重点で選んだ岐路（寺の手習いの初日など）は、まだ出ていなければその年に出す。
+    final forcedId = _forced;
+    _forced = null;
+    if (forcedId != null) {
+      for (final s in childScenes) {
+        if (s.id == forcedId && !hasFlag('scene:${s.id}') && s.cond(this)) {
+          l.t = a * 2 + 1;
+          setFlag('scene:${s.id}');
+          s.run(this, _endYear);
+          return;
+        }
+      }
+    }
     final cand = [
       for (final s in childScenes)
-        if (!hasFlag('scene:${s.id}') &&
+        if (!s.onlyForced &&
+            !hasFlag('scene:${s.id}') &&
             !_twinDone(s.id) &&
             !sceneSkippedInLine(this, s.id) &&
             a >= s.minAge &&
@@ -574,6 +598,8 @@ class Game extends ChangeNotifier {
       changed();
       return;
     }
+    // 能力がはじめて段（60・75・90）を越えたら、【才】の一行を書く。
+    talentMilestones(this);
     // 子どものうちも世は動く（見聞録に【世】として残る）。
     applyHistory(this, year, quietBefore: year);
     l.t = (a + 1) * 2;
@@ -707,6 +733,8 @@ class Game extends ChangeNotifier {
       changed();
       return;
     }
+    // 能力がはじめて段（60・75・90）を越えたら、【才】の一行を書く。
+    talentMilestones(this);
     _beginAdultYear();
   }
 

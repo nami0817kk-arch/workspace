@@ -75,6 +75,41 @@ List<FocusDef> childFocusOptions(Game g) {
       g.l.net += rng.range(1, 2);
       g.j(2);
     }),
+    // ---- 家柄・年頃で増える重点（2026-11-23、ユーザー「寺子屋に通うなど選択肢もほしい」）----
+    // 寺子屋は江戸の言葉なので、戦国の言い方で「寺へ手習いに通う」とした。
+    // 寺に住む子（僧の家・小僧として寺に入った子）には出さない。
+    if (g.l.cls.id != 'priest' && !g.hasFlag('monk'))
+      FocusDef('tera', '寺へ手習いに通う', '字と算用が身につく。和尚への謝礼がいる', (g) {
+        // 謝礼（束脩）が払えない家の子は、学びが細る。
+        final paid = g.l.gold > 0;
+        if (paid) g.l.gold -= 1;
+        final p = paid ? (g.l.cls.id == 'beggar' ? .6 : 1.0) : .4;
+        if (rng.chance(p)) {
+          g.l.chi = clampInt(g.l.chi + rng.range(1, 3), 0, 99);
+          if (rng.chance(.4)) g.l.sei = clampInt(g.l.sei + 1, 0, 99);
+          g.j(1);
+        }
+      }, forced: 'c_tera'),
+    if (_martial.contains(g.l.cls.id) && g.age >= 8)
+      FocusDef('dojo', '道場で稽古をつけてもらう', '武芸がぐんと伸びる。荒稽古で怪我もする', (g) {
+        g.l.bu = clampInt(g.l.bu + rng.range(2, 3), 0, 99);
+        g.l.hp -= rng.chance(.25) ? 6 : 2;
+        g.j(-1);
+      }),
+    if (g.l.cls.id == 'merchant')
+      FocusDef('abacus', '算盤と商いを習う', '銭勘定に強くなる。遊ぶ暇は減る', (g) {
+        g.l.sei = clampInt(g.l.sei + rng.range(1, 2), 0, 99);
+        if (rng.chance(.4)) g.l.chi = clampInt(g.l.chi + 1, 0, 99);
+        g.l.gold += 1;
+        g.j(-1);
+      }),
+    if (g.l.female && g.age >= 10 && g.l.cls.id != 'beggar')
+      FocusDef('manners', '行儀見習いに上がる', '立ち居振る舞いが身につく。家からは離れる', (g) {
+        g.l.mi = clampInt(g.l.mi + rng.range(1, 2), 0, 99);
+        if (rng.chance(.4)) g.l.sei = clampInt(g.l.sei + 1, 0, 99);
+        g.l.net += 1;
+        g.j(-2);
+      }),
   ];
 }
 
@@ -282,11 +317,43 @@ List<SceneDef> buildChildScenes() {
         ], after: next);
       },
     ),
+    // はじめて寺へ手習いに通った年（重点「寺へ手習いに通う」で一度だけ）。
+    SceneDef('c_tera', 5, 14, (g) => 1, (g) => true, (g, next) {
+      g.ask('寺の手習い', '村の寺で、和尚が子らに手習いを教えている。初めての日、硯と筆を抱えて本堂の隅に座った。', [
+        Choice.h('一番前で熱心に学ぶ', '和尚に目をかけられる。遊び仲間には煙たがられる', () {
+          g.l.chi = clampInt(g.l.chi + 3, 0, 99);
+          g.j(-1);
+          g.setFlag('tera_diligent');
+          if (!g.l.people.containsKey('師')) g.meet('師', '手習いの和尚', 30);
+          g.mark('寺へ手習いに通い、和尚に目をかけられた');
+          return '和尚は、あなたの字を見て「筋がよい」と言った。';
+        }),
+        Choice.h('仲間と机を並べて学ぶ', '友ができる。学びはほどほど', () {
+          g.l.chi = clampInt(g.l.chi + 1, 0, 99);
+          g.l.net += 2;
+          g.j(3);
+          g.setFlag('tera_friends');
+          g.mark('寺の手習いで、机を並べる仲間ができた');
+          return '筆の持ち方を教え合ううちに、仲間ができた。';
+        }),
+        Choice.h('抜け出して遊ぶ', '気は晴れる。親に知れれば叱られる', () {
+          g.j(3);
+          if (g.rng.chance(.5)) {
+            g.j(-4);
+            return '川で遊んでいたところを見つかり、こっぴどく叱られた。';
+          }
+          return '裏山へ抜け出した。誰にも気づかれなかった。';
+        }),
+      ], after: next);
+    }, onlyForced: true),
     SceneDef(
       'temple_offer',
       8,
       13,
-      (g) => g.l.cls.id == 'priest' ? 3 : 1.2 + f(g, 'learn') * .6,
+      // 寺へ手習いに通う子ほど、和尚から寺入りの話が来やすい。
+      (g) => g.l.cls.id == 'priest'
+          ? 3
+          : 1.2 + (f(g, 'learn') + f(g, 'tera')) * .6,
       (g) =>
           !g.hasFlag('temple') && !g.hasFlag('monk') && g.l.cls.id != 'beggar',
       (g, next) {
