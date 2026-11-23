@@ -301,7 +301,7 @@ List<SceneDef> _realmScenes() => [
           _net(g, -2);
           _pay(g, 5);
           return '取り分の割り振りで揉め、関の主たちはそろって城へ訴えに来た。話はまとまらなかった。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -342,7 +342,7 @@ List<SceneDef> _realmScenes() => [
           _pay(g, 8);
           g.setFlag('dm_chisui_small');
           return '切れ目の位置を誤り、水は思わぬ村へ流れ込んだ。慌てて切れ目を塞がせ、ただの堤にした。';
-        }),
+        }, via: '知'),
       Choice.h('川には手を触れない', '銭も人手も残る。下流の村は大水を恐れ続ける', () {
         _net(g, -1);
         _stamp(g, 'chisui');
@@ -382,7 +382,7 @@ List<SceneDef> _realmScenes() => [
             }
             _pay(g, 10);
             return '移ってきた村は、水の引きの悪さに音を上げ、二年もたたずに元の地へ帰っていった。';
-          }),
+          }, via: '政'),
       ], after: next);
       return;
     }
@@ -448,7 +448,7 @@ List<SceneDef> _realmScenes() => [
             return '外の守りに寺を並べ、鍛冶と紺屋は川下に、商人は大通りに置いた。絵図のとおりに、町は年ごとに埋まっていった。';
           }
           return '割り付けた町は、まだらにしか埋まらなかった。職人たちは、決められた町より古い馴染みの隣を選んだ。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -549,7 +549,7 @@ List<SceneDef> _realmScenes() => [
           }
           _net(g, -2);
           return '国人たちは、子を差し出せというのは人質のことだと受け取った。何人かは、病と称して子を出さなかった。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -594,7 +594,7 @@ List<SceneDef> _realmScenes() => [
           }
           _net(g, -1);
           return '証文の山は改めきれず、冬が来た。村も土倉も、待たされたことだけを恨んだ。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -630,7 +630,7 @@ List<SceneDef> _realmScenes() => [
           }
           _pay(g, 5);
           return '金銀の目方をごまかす者が後を絶たず、秤の番人が足りなくなった。触れは半年で取り下げた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];
@@ -683,7 +683,7 @@ List<SceneDef> _outerScenes() => [
             return '三つの家の使いが一つの寺に集まり、起請文を取り交わした。国境の砦から、物見の兵が引き上げられた。';
           }
           return '$wnは話に乗らなかった。$himeだけが、$snへ嫁いでいった。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -743,7 +743,7 @@ List<SceneDef> _outerScenes() => [
             g.j(-4);
             _net(g, -2);
             return '文は$tnの目付に読まれていた。$himeは奥の一間に押し込められたという。';
-          }),
+          }, via: '知'),
       ], after: next);
       return;
     }
@@ -801,7 +801,7 @@ List<SceneDef> _outerScenes() => [
           }
           g.j(-1);
           return '家臣たちは、歌の会のたびに居眠りをした。公家は、困ったように扇で口元を隠した。';
-        }),
+        }, via: '知'),
       Choice.h('銭だけ渡して、ほかの国へ送る', '費えは軽い。都とのつながりは得られない', () {
         _pay(g, 4);
         g.setFlag('dm_kuge_sent');
@@ -911,7 +911,7 @@ List<SceneDef> _outerScenes() => [
             return '伴天連は、丸い地の模型と、傷を縫う細い針を持ってきた。若い家臣たちは、目を輝かせて南蛮の言葉を書き留めた。';
           }
           return '伴天連は、教えを聞かぬ者に学びだけを渡すことはできぬと言った。話は、半ばで終わった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -952,7 +952,7 @@ List<SceneDef> _outerScenes() => [
             }
             _net(g, -2);
             return '僧は席に着くなり経を唱え始め、伴天連は十字を切って立ち去った。';
-          }),
+          }, via: '魅'),
       ], after: next);
       return;
     }
@@ -1041,7 +1041,7 @@ List<SceneDef> _outerScenes() => [
           }
           _cut(g, .97);
           return '偽りの書状はすぐに見抜かれた。$enは、こちらの使いを捕らえて晒した。';
-        }),
+        }, via: '知'),
       Choice.h('調略は好まぬ、と忍びを下がらせる', '名は汚れない。好機は去る', () {
         _fame(g, 2);
         g.setFlag('dm_cho_clean');
@@ -1155,7 +1155,7 @@ List<SceneDef> _outerScenes() => [
           }
           _net(g, -2);
           return '背後の家は動かなかった。$anは、ひとりで持ちこたえるほかなかった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];
@@ -1226,7 +1226,7 @@ List<SceneDef> _houseScenes() => [
             }
             _net(g, -2);
             return '盃が三巡したところで、家老が「土の匂いがする」と言った。$nは盃を置いて、黙って席を立った。';
-          }),
+          }, via: '魅'),
       ], after: next);
       return;
     }
@@ -1288,7 +1288,7 @@ List<SceneDef> _houseScenes() => [
           _net(g, -2);
           g.setFlag('dm_ichi_cut');
           return '叔父は「体よく追い払うつもりか」と笑い、所領に引き籠もった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -1379,7 +1379,7 @@ List<SceneDef> _houseScenes() => [
           }
           _net(g, -2);
           return '文を写させていたことが叔父に知れた。叔父は、それきり文を寄こさなくなった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -1421,7 +1421,7 @@ List<SceneDef> _houseScenes() => [
           }
           _net(g, -1);
           return '帳面を作るうちに、手柄の取り合いで家臣どうしの口論が始まった。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 ];
@@ -1465,7 +1465,7 @@ List<SceneDef> _tenkaScenes() => [
           g.setFlag('dm_t_machishu');
           g.mark('都の町衆の年寄たちを宿所に招き、自ら言い分を聞いた');
           return '年寄たちは最初こそ身を固くしていたが、夜更けには祇園の祭りの話で笑い声を上げた。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1498,7 +1498,7 @@ List<SceneDef> _tenkaScenes() => [
             return '奉行所の前に、諸国の大名の使いが訴えの文を抱えて列をなした。刀を抜く代わりに、絵図と証文が持ち込まれるようになった。';
           }
           return '奉行は置いたが、訴えは裁ききれずに積み上がった。命だけが、諸国に届いた。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -1636,7 +1636,7 @@ List<SceneDef> _tenkaScenes() => [
           }
           _net(g, -2);
           return '会合衆は特権の中身に満足せず、話はこじれたまま年を越した。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -1701,7 +1701,7 @@ List<SceneDef> _womanScenes() => [
           _fame(g, -2);
           g.setFlag('dm_w_yielded');
           return '正したはずの数が、帳面と合わなかった。重臣たちは、扇の陰で笑った。';
-        }),
+        }, via: '知'),
       if (l.mi >= 60)
         Choice.h('若い家臣たちを奥の茶の席に招き、味方につける', '人柄が通じれば次の世の家中が味方になる。年寄たちはなお遠ざかる', () {
           _stamp(g, 'wan');
@@ -1713,7 +1713,7 @@ List<SceneDef> _womanScenes() => [
           }
           g.setFlag('dm_w_yielded');
           return '若い侍たちは、奥の席を居心地悪そうにして、早々に帰っていった。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1799,7 +1799,7 @@ List<SceneDef> _womanScenes() => [
           }
           _net(g, -1);
           return '使いは帳面を眺めて鼻で笑った。「紙の上の兵は、槍を持ちませぬ」。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -1866,7 +1866,7 @@ List<SceneDef> _womanScenes() => [
           }
           g.setFlag('dm_w_kept');
           return '黙っているつもりが、つい口を挟んでしまった。重臣たちは、やはり後見の顔色をうかがった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];

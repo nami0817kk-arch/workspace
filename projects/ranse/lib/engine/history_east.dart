@@ -527,7 +527,7 @@ List<SceneDef> buildHistoryEastScenes() {
                 _join(g, '上杉', fav: 20);
                 g.mark('村上義清について、越後へ落ちていった');
                 return '雪の峠を越えた。春日山の若い殿は、義清を温かく迎えた。';
-              })
+              }, via: g.fightVia)
             else
               Choice.h('寺に逃げ込み、戦をやり過ごす', '命は守れる。村の田は荒れる', () {
                 _pay(g, 2);
@@ -562,7 +562,7 @@ List<SceneDef> buildHistoryEastScenes() {
               g.l.fame += 6;
               g.mark('上田合戦で、真田昌幸の城下の戦いに加わった');
               return '城下に引き込んだ徳川勢に、四方から石と矢を浴びせた。逃げる敵は神川で溺れた。';
-            })
+            }, via: g.fightVia)
           else
             Choice.h('城の兵に握り飯を運ぶ', '戦を陰で支える。町は戦場になる', () {
               g.l.net += 2;

@@ -633,7 +633,7 @@ List<SceneDef> _focusScenes() => [
           g.l.fame += 3;
           g.mark('見聞きした乱世の人々のことを、記録に書き残した');
           return '会った人、聞いた噂、見た戦を、年を追って細かに書き記した。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
   _again('oa_record', (g, next) {
@@ -760,7 +760,7 @@ List<SceneDef> _lateScenes() => [
               g.setFlag('oa_heir_talked');
               g.mark('家督を譲った子と酒を酌み交わし、胸の内を聞いた');
               return '$hにも考えがあった。夜更けまで語り合い、古い者の使いどころを一つだけ頼んだ。';
-            })
+            }, via: '魅')
           else
             Choice.h(
               retired ? '遠ざけられた者を、隠居所に引き取る' : '古い者を、自分のそばに置く',
@@ -802,7 +802,7 @@ List<SceneDef> _lateScenes() => [
             g.setFlag('oa_recalled_led');
             g.mark('隠居の身で呼び戻され、家の危機に陣頭に立った');
             return '白髪の将の姿に、若い者たちが奮い立った。家はひとまず持ちこたえた。';
-          }),
+          }, via: g.fightVia),
         Choice.h('評定に出て、策だけを授ける', '命の危うさはない。策が当たるかは知恵しだい', () {
           if (g.l.chi >= 60 || g.rng.chance(g.l.chi / 150)) {
             g.l.fame += 3;
@@ -823,7 +823,7 @@ List<SceneDef> _lateScenes() => [
               return '敵の将は、白髪の使者の言葉に耳を傾けた。和睦はまとまった。';
             }
             return '話はまとまらず、追い返された。';
-          }),
+          }, via: '知'),
         Choice.h('老いた者の出る幕ではないと断る', '体は守れる。家中の目は冷たくなる', () {
           g.j(-2);
           return '使いの者は、肩を落として帰っていった。';
@@ -951,7 +951,7 @@ List<SceneDef> _lateScenes() => [
           g.setFlag('oa_benefactor_placed');
           g.l.net -= 1;
           return '昔なじみの家が、孫を引き受けてくれた。';
-        })
+        }, via: g.l.mi >= 60 ? '魅' : null)
       else
         Choice.h('昔の恩は昔のことだと断る', 'これ以上の荷は負わない。胸は晴れない', () {
           g.j(-5);
@@ -1040,7 +1040,7 @@ List<SceneDef> _lateScenes() => [
           g.setFlag('oa_yuigon_letter');
           g.mark('遺言を書状にしたため、寺に預けた');
           return '封をした書状を、住持に預けた。中身は誰にも明かさなかった。';
-        }),
+        }, via: '知'),
       Choice.h('何も言わぬ', '子らは自分で考える。迷う者も出る', () {
         g.setFlag('oa_yuigon_none');
         return 'それぞれの道を行け。それだけを胸の内で思った。';
@@ -1182,7 +1182,7 @@ List<SceneDef> _lateScenes() => [
           g.setFlag('oa_forget_diary');
           g.j(2);
           return '枕元に紙と筆を置き、その日のことを短く書き付けるようにした。';
-        }),
+        }, via: '知'),
       Choice.h('碁や歌で頭を使う', '少しは冴えが戻る。疲れやすい', () {
         g.l.hp -= 3;
         if (g.rng.chance(.5)) g.l.chi = _c(g.l.chi - 1);
@@ -1369,7 +1369,7 @@ List<SceneDef> _lateScenes() => [
             g.l.net += 1;
             g.mark('しくじった店の帳面を見て、若い者に商いの急所を教えた');
             return '帳面の一行を指で叩くと、若い者たちは青くなり、それから深くうなずいた。';
-          }),
+          }, via: '政'),
         Choice.h('任せたのだから口は出さぬ', '店は若い者のものだ。潰れるかもしれない', () {
           if (g.rng.chance(.5)) {
             g.j(-6);
@@ -1405,7 +1405,7 @@ List<SceneDef> _lateScenes() => [
           g.l.fame += 2;
           g.mark('一生かけて学んだ教えを、書にまとめた');
           return '灯の下で筆を運び、冬が三度過ぎるころに書き上げた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -1477,7 +1477,7 @@ List<SceneDef> _lateScenes() => [
             g.l.fame += 2;
             g.mark('若い殿に、古い者と若い者を一つ席に呼ぶよう勧めた');
             return '古い者と若い者が同じ膳を囲んだ。わだかまりは、少しずつほどけていった。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
   ),
@@ -1535,7 +1535,7 @@ List<SceneDef> _lateScenes() => [
               g.setFlag('oa_village_settled');
               g.mark('老いて、隣村の長老と山の入会の話をつけた');
               return '隣村の長老とは、若い頃に水争いで睨み合った仲だった。二人で笑い、話はその日のうちについた。';
-            }),
+            }, via: '政魅'),
         ],
         after: next,
       );

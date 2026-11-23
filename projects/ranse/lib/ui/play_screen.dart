@@ -358,6 +358,11 @@ class _ChoiceButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = p.choices[i];
+    // 能力・特性・持ち物のおかげで出た手の印（`Choice.via`）。能力の一字・二字は手の名の右、
+    // 特性や持ち物の名は長いので匂わせの下に置く。二列の詰めた釦は幅が狭く、名の右に置くと
+    // 手の名が削られるので、どの印も匂わせの下に置く。
+    final via = c.via;
+    final viaShort = via != null && viaIsAbility(via) && !compact;
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         alignment: Alignment.topLeft,
@@ -387,16 +392,28 @@ class _ChoiceButton extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  c.label,
-                  maxLines: compact ? 2 : 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: compact ? 13.5 : 15,
-                    height: 1.35,
-                    color: c.danger ? Pal.bad : Pal.ink,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        c.label,
+                        maxLines: compact ? 2 : 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: compact ? 13.5 : 15,
+                          height: 1.35,
+                          color: c.danger ? Pal.bad : Pal.ink,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    if (via != null && viaShort)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4, top: 1),
+                        child: _ViaTag(via, compact: compact),
+                      ),
+                  ],
                 ),
                 if (c.hint != null)
                   Padding(
@@ -412,10 +429,51 @@ class _ChoiceButton extends StatelessWidget {
                       ),
                     ),
                   ),
+                if (via != null && !viaShort)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: _ViaTag(via, compact: compact),
+                    ),
+                  ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 能力・特性・持ち物のおかげで出た手に付ける小さな札（`Choice.via`）。
+/// 能力（武・知・政・魅・運）は朱の縁、特性と持ち物の名は金の縁。
+class _ViaTag extends StatelessWidget {
+  const _ViaTag(this.via, {this.compact = false});
+  final String via;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = viaIsAbility(via) ? Pal.accent : Pal.gold;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(
+        color: Pal.panel,
+        border: Border.all(color: color, width: 1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        via,
+        maxLines: 1,
+        softWrap: false,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: compact ? 10 : 11,
+          height: 1.2,
+          color: color,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }

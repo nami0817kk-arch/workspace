@@ -1001,7 +1001,7 @@ List<SceneDef> buildPeaceScenes() => [
               g.setFlag('pc_fushin_built');
               g.mark('江戸の城の石垣を、自ら石組みを指図して積み上げた');
               return '角石の据え方から裏の栗石の厚みまで、自分で決めた。検分の役人は水準を当て、何も言わずに次の丁場へ行った。隣の丁場の家が、石工を借りに来た。';
-            }),
+            }, via: '普請上手'),
         ],
         after: next,
       );
@@ -1663,7 +1663,7 @@ List<SceneDef> buildPeaceScenes() => [
               g.setFlag('pc_seki_kotoba');
               g.mark('土地の言葉をそっくり真似て、手形もなしに関所を通った');
               return '番士に、土地の訛りで、今年の柿の出来をこぼしてみせた。番士は、同じ訛りで相づちを打ち、手形のことは聞きもしなかった。';
-            }),
+            }, via: '国言葉に通じる'),
         ],
         after: next,
       );

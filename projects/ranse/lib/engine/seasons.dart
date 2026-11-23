@@ -338,7 +338,7 @@ List<SceneDef> _spring() => [
             }
             l.fav -= 1;
             return '墨がにじみ、字が一つ崩れた。奥方さまは何も言わず、短冊は伏せて置かれた。';
-          }),
+          }, via: '知'),
       ], after: next);
       return;
     }
@@ -366,7 +366,7 @@ List<SceneDef> _spring() => [
           }
           _fame(g, -1);
           return '二の句で声がかすれた。主君は笑って盃を差し出したが、広間の隅で忍び笑いが聞こえた。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -402,7 +402,7 @@ List<SceneDef> _spring() => [
           }
           _net(g, -1);
           return '館の門は閉ざされたままで、留守を預かる老臣が平伏して詫びるばかりだった。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -584,7 +584,7 @@ List<SceneDef> _summer() => [
           }
           _net(g, -1);
           return '灰は風に飛ばされ、虫は減らなかった。年寄りに「神様に任せておけ」とたしなめられた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];
@@ -626,7 +626,7 @@ List<SceneDef> _autumn() => [
               return '星合いの歌を一首書いて結んだ。翌日、近所の娘たちがその歌を口ずさんでいた。';
             }
             return '言葉が五つ七つに収まらず、結局「ねがい」とだけ書いた。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
   ),
@@ -860,7 +860,7 @@ List<SceneDef> _autumn() => [
           _fame(g, 2);
           g.setFlag('sn_tanagyo_talk');
           return '亡き者の話を聞いてから経をあげると、家の者の顔が和らいだ。その年、回りきれなかった家には、盆明けに詫びて回った。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -893,7 +893,7 @@ List<SceneDef> _autumn() => [
           }
           _net(g, -2);
           return '台所の女中に銭を握らせたことが用人に知れ、門前でたしなめられた。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -931,7 +931,7 @@ List<SceneDef> _autumn() => [
             g.setFlag('sn_tsuki_uta');
             _stamp(g, 'tsuki');
             return '懐紙に一首書いて渡した。$spは月明かりで二度読み、黙って袂にしまった。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
   ),
@@ -1008,7 +1008,7 @@ List<SceneDef> _autumn() => [
           _fame(g, -3);
           g.setFlag('sn_yabu_miss');
           return '三の的を外した。宣言の言葉を覚えている者たちの目が、背中に痛かった。';
-        }),
+        }, via: '武'),
     ], after: next);
   }),
 
@@ -1117,7 +1117,7 @@ List<SceneDef> _winter() => [
           }
           _net(g, -1);
           return '帳面に誤りはなかった。手代はわざとらしくため息をついて、残らず取り立てていった。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -1333,7 +1333,7 @@ List<SceneDef> buildSeasonChildScenes() => [
             }
             g.j(-1);
             return '途中で一字抜けているのに気づいた。兄に指さして笑われた。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
   ),

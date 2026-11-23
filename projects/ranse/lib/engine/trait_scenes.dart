@@ -1036,7 +1036,7 @@ List<SceneDef> _uncommon() => [
             g.setFlag('tr_nighteye_scouted');
             g.mark('月のない夜、闇にまぎれて敵の物見のあとをつけ、伏兵の場所を知らせた');
             return '影は敵の物見だった。伏兵の場所を突き止めて戻ると、殿は夜のうちに陣を動かした。';
-          }),
+          }, via: g.fightVia),
         Choice.h('見なかったことにする', '何も起きないことを祈る', () {
           if (g.rng.chance(.4)) {
             g.j(-3);

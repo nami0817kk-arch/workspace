@@ -353,7 +353,7 @@ List<SceneDef> _seaScenes() => [
           g.j(-2);
           g.setFlag('cr_ami_alone');
           return '網元は「網子が座敷に上がるとは」と笑い、あなたを網から外した。その年は一人で小舟を出すほかなかった。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -396,7 +396,7 @@ List<SceneDef> _seaScenes() => [
           }
           g.j(-2);
           return '長雨が続き、干した魚はみな傷んだ。浜の者は、気の毒そうに目をそらした。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -620,7 +620,7 @@ List<SceneDef> _seaScenes() => [
           }
           _pay(g, 2);
           return '工夫した釜は煮えたぎりすぎて、塩が焦げた。親方に薪の代を払わされた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];
@@ -656,7 +656,7 @@ List<SceneDef> _mountainScenes() => [
           }
           _net(g, -2);
           return '年寄りたちは「よそ者の言うような理屈だ」と席を立った。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -725,7 +725,7 @@ List<SceneDef> _mountainScenes() => [
           }
           g.setFlag('cr_sato_cheap');
           return '問屋は約定の書き付けに細工を入れていた。気づいたときには、いつもの安値で荷を渡していた。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -792,7 +792,7 @@ List<SceneDef> _mountainScenes() => [
           }
           _pay(g, 2);
           return '工夫した窯は火が回りすぎて、木はみな灰になった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -934,7 +934,7 @@ List<SceneDef> _artisanScenes() => [
           }
           g.setFlag('cr_oya_endured');
           return '親方は「口で覚える技はない」と盃を伏せた。それきり、また水汲みの日々に戻った。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1026,7 +1026,7 @@ List<SceneDef> _artisanScenes() => [
           }
           _net(g, -2);
           return '割り振りで職人たちが揉め、仕事は遅れた。結局、夜を徹して自分で仕上げた。';
-        }),
+        }, via: '知'),
       Choice.h('御用を断る', '面倒は避けられる。この町では仕事がしにくくなる', () {
         _fame(g, -2);
         return '奉行は鼻を鳴らして帰った。しばらく、町の問屋からの注文が減った。';
@@ -1064,7 +1064,7 @@ List<SceneDef> _artisanScenes() => [
             return '新しい工夫の${ww.$2}を出すと、客は戻ってきた。盗んだ男の品は、ひと月で古く見えた。';
           }
           return '工夫は思ったようにいかず、試しに作った物は売り物にならなかった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -1145,7 +1145,7 @@ List<SceneDef> _artisanScenes() => [
           _stamp(g, 'deshi');
           g.mark('$wの弟子の$bに、自分の仕事場を譲る約束をした');
           return '「よそへ行かずとも、ここをお前の仕事場にすればよい」と言うと、$bは道具を握ったまま泣いた。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1173,7 +1173,7 @@ List<SceneDef> _artisanScenes() => [
           g.setFlag('cr_mei_sign');
           g.mark('自分の${ww.$2}の目立たぬところに、小さな印を入れるようになった');
           return '品の裏の目立たぬところに、小さな印を入れた。それに気づいた客は、黙って笑ってうなずいた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];
@@ -1210,7 +1210,7 @@ List<SceneDef> _kawaraScenes() => [
           _hurt(g, 6);
           g.setFlag('cr_niwa_worked');
           return '寺の役僧が「人足が口を出すな」と怒鳴り、竹で打った。庭作りの者は、何も言わなかった。';
-        }),
+        }, via: '知魅'),
     ], after: next);
   }),
 
@@ -1395,7 +1395,7 @@ List<SceneDef> _townScenes() => [
           }
           g.setFlag('cr_gyoji_took');
           return '古い町衆が「昔からのやり方を変えるな」と言い張り、話はまとまらなかった。';
-        }),
+        }, via: '政魅'),
     ], after: next);
   }),
 
@@ -1496,7 +1496,7 @@ List<SceneDef> _townScenes() => [
           }
           g.setFlag('cr_ie_wait');
           return '世話した店で$bは喧嘩をして、三日で戻ってきた。結局、春まで待つことにした。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -1575,7 +1575,7 @@ List<SceneDef> _townScenes() => [
           }
           _net(g, -2);
           return '眼鏡をかけた者の目がつぶれたという噂が流れ、誰も手に取らなくなった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }, ageOk: (g, a) => g.l.startYear + a >= 1560),
 
@@ -1611,7 +1611,7 @@ List<SceneDef> _townScenes() => [
           }
           _pay(g, 3);
           return '縁日の市を立てたが、雨続きで人は集まらなかった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];

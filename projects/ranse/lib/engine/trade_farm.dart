@@ -301,7 +301,7 @@ List<SceneDef> _merchantScenes() => [
           _stamp(g, 'za');
           g.mark('よその町の商人と売り場を分け、座の争いを収めた');
           return '日と場所を分けて商うことで、話がついた。';
-        })
+        }, via: '政魅')
       else
         Choice.h('争いには関わらない', '揉め事は避けられる。座の中で軽んじられる', () {
           l.net = l.net >= 2 ? l.net - 2 : 0;
@@ -460,7 +460,7 @@ List<SceneDef> _merchantScenes() => [
           g.setFlag('tf_detchi_raised');
           _stamp(g, 'detchi');
           return '$nを方々の店へ使いに出した。帰るたびに、よその商いの話を聞かせてくれる。';
-        }),
+        }, via: '政'),
       Choice.h('下働きのまま使う', '店の中は今のまま。小僧の目の光は消える', () {
         return '$nには、水汲みと掃除を続けさせた。';
       }),
@@ -548,7 +548,7 @@ List<SceneDef> _merchantScenes() => [
           g.setFlag('tf_kake_ledger');
           _stamp(g, 'kake');
           return '一文の狂いもない帳面に、勘定方はうなった。掛けは、主家の蔵から払われた。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -645,7 +645,7 @@ List<SceneDef> _merchantScenes() => [
             g.setFlag('tf_kasho');
             g.mark('寺社の過書を得て、関所を関銭なしで通った');
             return '寺社の過書を見せると、関守は黙って道を開けた。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
   ),
@@ -682,7 +682,7 @@ List<SceneDef> _merchantScenes() => [
             l.fame += 3;
             g.setFlag('tf_ensho_eye');
             return '砂の混じった煙硝を突き返し、上物だけを買った。あの店の煙硝なら間違いない、と言われるようになった。';
-          }),
+          }, via: '知'),
         Choice.h('戦の道具には手を出さない', '儲けは逃す。寝覚めは悪くない', () => '煙硝の話は断った。'),
       ], after: next);
     },
@@ -728,7 +728,7 @@ List<SceneDef> _merchantScenes() => [
             _lose(g, .3);
             l.hp -= 8;
             return '大将の機嫌を損ね、矢銭はかえって増えた。';
-          }),
+          }, via: '政魅'),
       ], after: next);
     },
   ),
@@ -799,7 +799,7 @@ List<SceneDef> _farmerScenes() => [
           _stamp(g, 'seki');
           g.mark('堰の落とし口を工夫し、川上と川下の両方の田を潤した');
           return '堰の脇に落とし口を切り、川下へも水が流れるようにした。川下の村の長が、礼を言いに来た。';
-        }),
+        }, via: '知'),
       Choice.h('堰はあきらめる', '揉め事は起きない。日照りの年はつらい', () {
         g.j(-2);
         return '堰の話は立ち消えになった。';
@@ -843,7 +843,7 @@ List<SceneDef> _farmerScenes() => [
           }
           g.j(-4);
           return '証文は取り上げられず、起請の日取りが決まった。若い者が鉄を握り、どうにか運び切った。';
-        }),
+        }, via: paper ? null : '知'),
     ], after: next);
   }),
 
@@ -884,7 +884,7 @@ List<SceneDef> _farmerScenes() => [
             g.setFlag('tf_sashi_clever');
             _stamp(g, 'sashi');
             return '日の当たらぬ田、水の悪い田を一枚ずつ書き分けた。役人も文句のつけようがなかった。';
-          }),
+          }, via: '政'),
       ], after: next);
     },
     ageOk: (g, a) => g.l.startYear + a < 1582,
@@ -1032,7 +1032,7 @@ List<SceneDef> _farmerScenes() => [
           g.setFlag('tf_murauke_fair');
           g.mark('村の年貢を請け負い、家ごとの割り付けを田の出来で決め直した');
           return '田の出来を一枚ずつ見て回り、年貢の割り付けを決め直した。苦しい家の顔が明るくなった。';
-        }),
+        }, via: '政'),
       Choice.h('ほかの者に譲る', '重荷は負わない', () => '自分には荷が重いと、年寄りの一人に譲った。'),
     ], after: next);
   }, also: (g) => !g.l.female),
@@ -1094,7 +1094,7 @@ List<SceneDef> _farmerScenes() => [
           }
           g.setFlag('tf_lost_field');
           return '頭を下げても通らなかった。田の一枚を手放した。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1134,7 +1134,7 @@ List<SceneDef> _farmerScenes() => [
           l.hp -= 18;
           _lose(g, .2);
           return '雑兵の数が多すぎた。手傷を負って山へ逃げた。';
-        }),
+        }, via: g.fightVia),
       if (l.mi >= 60)
         Choice.h('雑兵の頭に酒を振る舞い、村を素通りさせる', '口と酒でかわせることもある', () {
           if (g.rng.chance(.65)) {
@@ -1144,7 +1144,7 @@ List<SceneDef> _farmerScenes() => [
           }
           _lose(g, .3);
           return '酒は飲まれ、蔵も荒らされた。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1222,7 +1222,7 @@ List<SceneDef> _farmerScenes() => [
             l.fame += 4;
             g.setFlag('tf_ikki_talk');
             return '借りた銭の半ばを棒引きにさせる話を、土倉の主とまとめた。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
     ageOk: (g, a) => g.l.startYear + a <= 1570,

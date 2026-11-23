@@ -244,7 +244,7 @@ List<SceneDef> _sideScenes() => [
           _fav(g, -2);
           g.setFlag('rt_chohei_rival');
           return '$nは盃に口もつけず、「何が望みだ」と言った。それきり、二人の間には冷たい風が吹いた。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -325,7 +325,7 @@ List<SceneDef> _sideScenes() => [
           }
           _fav(g, -4);
           return '$lwの顔が、さっと青ざめた。「余計なことを」と言い捨てて、席を立った。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -434,7 +434,7 @@ List<SceneDef> _sideScenes() => [
           g.setFlag('rt_mori_learned');
           _stamp(g, 'mori');
           return '文机を並べ、孫子の一節を読み聞かせた。$kは、わからぬところを何度でも尋ねてきた。';
-        }),
+        }, via: '知'),
       Choice.h('荷が重いと辞する', '気楽ではある。主君の期待を裏切る', () {
         _fav(g, -4);
         _stamp(g, 'mori');
@@ -553,7 +553,7 @@ List<SceneDef> _sideScenes() => [
           l.merit += 3;
           g.setFlag('rt_shisha_back');
           return '夜、家老の屋敷の裏木戸を叩いた。家老は「当主はああ言うが」と苦笑し、国境の杭を少し引く約束をした。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -582,7 +582,7 @@ List<SceneDef> _sideScenes() => [
             g.setFlag('rt_kongi_done');
             g.mark('殿の姫の嫁入り支度を、帳面をつけて取り仕切った');
             return '寺から借りた屏風、町で誂えた打掛、奥の蔵から出した漆器。帳面のとおりに揃った長持の列を、老女が目を細めて見ていた。';
-          }),
+          }, via: '政'),
       ], after: next);
       return;
     }
@@ -611,7 +611,7 @@ List<SceneDef> _sideScenes() => [
           g.setFlag('rt_kongi_done');
           g.mark('主君の姫の婚儀の使者として、先方での口上を務め上げた');
           return '「格の違いは、姫の器量で埋めてご覧に入れましょう」と笑うと、先方の当主が手を打って笑った。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -707,7 +707,7 @@ List<SceneDef> _sideScenes() => [
           _fav(g, 2);
           g.setFlag('rt_sekiji_won');
           return '先代のころの席次の書付を探し出して示すと、取次の者は黙って並びを直した。';
-        }),
+        }, via: '知'),
       Choice.h('笑って譲る', '器の大きさは見られる。出世の妬みは和らぐ', () {
         _net(g, 2);
         g.j(1);
@@ -798,7 +798,7 @@ List<SceneDef> _commandScenes() => [
           _stamp(g, 'haika');
           g.mark('配下の不始末の償いに、配下を率いて村の溝さらいを手伝わせた');
           return '$xは泥にまみれて村の溝をさらった。三日目には、殴られた男が$xに握り飯を差し出していた。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -872,7 +872,7 @@ List<SceneDef> _commandScenes() => [
           g.setFlag('rt_chigyo_survey');
           _stamp(g, 'chigyo');
           return '名主と畦を歩き、日照りに負けた田と持ちこたえた田を分けて帳面に記した。名主は「このようなお侍は初めてだ」と言った。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -911,7 +911,7 @@ List<SceneDef> _commandScenes() => [
           _pay(g, 3);
           g.j(-3);
           return '落とし口から出た水が、思わぬ田へ流れ込んだ。名主は何も言わなかったが、目が恨めしげだった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -950,7 +950,7 @@ List<SceneDef> _commandScenes() => [
           _stamp(g, 'chigyo');
           g.mark('重い年貢を訴え出た知行地の百姓の声を聞き、夫役を減らして折り合いをつけた');
           return '名主と夜更けまで帳面を突き合わせた。年貢は据え置き、城の普請に出す人足を半ばにした。百姓たちは、渋い顔ながらも村へ戻った。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 ];
@@ -1039,7 +1039,7 @@ List<SceneDef> _houseScenes() => [
           _fav(g, -2);
           _net(g, -2);
           return '席の途中で、二人の頭は刀の柄に手をかけて立ち上がった。どちらからも「あちらの回し者か」と言われた。';
-        }),
+        }, via: l.mi >= 60 ? '魅' : null),
     ], after: next);
   }),
 
@@ -1068,7 +1068,7 @@ List<SceneDef> _houseScenes() => [
           g.setFlag('rt_bugyo_wise');
           g.mark('城の堀の普請で、村ごとに持ち場を割り付けて期日より早く仕上げた');
           return '縄を張って村ごとの持ち場を分け、早く終えた村には酒を出すと触れた。堀は半月早く仕上がり、主君は馬で見に来た。';
-        }),
+        }, via: '政'),
       Choice.h('戦場の務めを願って辞する', '槍の道を守れる。主君の期待を外す', () {
         _fav(g, -3);
         l.bu = _c(l.bu + 1);
@@ -1167,7 +1167,7 @@ List<SceneDef> _okuScenes() => [
             _fav(g, 3);
             _net(g, 1);
             return '「若君の夜泣きのことばかり話しておりました」と申し上げた。御台所さまは少し笑い、それきり同じことは命じなかった。';
-          }),
+          }, via: '知'),
       ], after: next);
       return;
     }
@@ -1197,7 +1197,7 @@ List<SceneDef> _okuScenes() => [
             g.setFlag('rt_o_mediated');
             g.mark('奥の御台所方と側室方のあいだを取り持ち、若君の祝いを両方の部屋から贈らせた');
             return '御台所さまの名で守り刀を、$sさまの名で産着を。殿は二つの祝いを並べて見て、「奥が一つになったか」と目を細めた。';
-          }),
+          }, via: '魅'),
       ], after: next);
       return;
     }
@@ -1282,7 +1282,7 @@ List<SceneDef> _okuScenes() => [
           g.setFlag('rt_o_tsukai_wit');
           g.mark('御台所の内々の文を帯に縫い込み、峠を越えて実家へ届けた');
           return '峠で荷を検められたが、男たちは偽の文を奪って去った。帯の内の文は、誰にも触れられずに届いた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];

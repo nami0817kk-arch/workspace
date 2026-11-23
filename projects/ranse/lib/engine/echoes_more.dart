@@ -604,7 +604,7 @@ List<SceneDef> buildEchoMoreScenes() => [
             }
             g.l.hp -= 12;
             return '隣村の者に追い返され、頭に傷を負った。';
-          }),
+          }, via: g.fightVia),
         Choice.h('寄合で、水を日ごとに分ける取り決めをする', '実りは減る。争いは収まる', () {
           g.l.net += 3;
           g.j(2);
@@ -698,7 +698,7 @@ List<SceneDef> buildEchoMoreScenes() => [
             g.setFlag('e2_killed_assassin');
             g.mark('捨てた元の主家の放った刺客を、返り討ちにした');
             return '夜半、障子の影が動いた。斬り結んで、刺客を倒した。';
-          }),
+          }, via: g.fightVia),
         Choice.h('今の主君に守りを頼む', '身は守られる。頼り切りと見られる', () {
           if (g.l.lord != null) g.l.fav = _c(g.l.fav - 3);
           g.j(-2);
@@ -845,7 +845,7 @@ List<SceneDef> buildEchoMoreScenes() => [
             g.setFlag('e2_village_defended');
             g.mark('昔武芸を教えた若い衆を率い、村を襲った野盗を追い払った');
             return '若い衆は教えたとおりに棒を揃え、野盗を村の外へ押し返した。';
-          }),
+          }, via: g.fightVia),
         Choice.h('若い衆に柵と見張りを任せ、女子供を山へ逃がす', '人は守れる。家と蔵は野盗しだい', () {
           if (g.rng.chance(.5)) {
             g.l.net += 3;

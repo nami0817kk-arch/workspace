@@ -246,7 +246,7 @@ List<SceneDef> _campScenes() => [
           _stamp(g, 'hyoro');
           g.mark('陣中の兵糧の配りを、帳面をつけて取り仕切った');
           return '誰に何合を渡したか、帳面に書きつけていった。小荷駄の奉行が、帳面を覗き込んでうなった。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -373,7 +373,7 @@ List<SceneDef> _campScenes() => [
           g.setFlag('al_kumi_tact');
           _stamp(g, 'kumi');
           return '「組頭と、討たれた朋輩が共に取った首」と申し立てた。組頭は苦い顔をしたが、何も言わなかった。朋輩の家には恩賞の米が届いた。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -581,7 +581,7 @@ List<SceneDef> _campScenes() => [
           g.setFlag('al_boiled_water');
           g.mark('陣に病が流行ったとき、水を沸かして飲むよう説いて回った');
           return '鍋で沸かした湯を冷まして飲ませた。倒れる者は目に見えて減り、組頭が侍大将に話を上げた。';
-        }),
+        }, via: '知'),
       Choice.h('離れた所で寝起きする', '病はもらいにくい。薄情と言われる', () {
         l.net = l.net >= 1 ? l.net - 1 : 0;
         return '陣小屋を離れ、木の根を枕に寝た。うめき声は、そこまでは届かなかった。';
@@ -758,7 +758,7 @@ List<SceneDef> _battleSideScenes() => [
               return '硝石と硫黄と炭の加減を覚えた。一度、火の粉が飛んで眉を焦がした。';
             }
             return '硝石と硫黄と炭の加減を覚えた。鉄砲頭が「お前は筒より薬だな」と笑った。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
   ),
@@ -830,7 +830,7 @@ List<SceneDef> _battleSideScenes() => [
             _stamp(g, 'teppo');
             g.mark('鉄砲組に、撃つ者と込める者を分ける工夫を説いた');
             return '込める者が筒を渡し、撃つ者は撃つだけ。的場の音が、途切れなくなった。侍大将が、足を止めて見ていた。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
   ),

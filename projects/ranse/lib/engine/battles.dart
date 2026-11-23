@@ -319,7 +319,7 @@ List<BattleSit> buildBattleSits() => [
               gain: ok ? 1.4 : .9,
               edge: ok ? .12 : 0,
             );
-          }),
+          }, via: '鉄砲'),
       ]);
     },
   ),

@@ -47,10 +47,14 @@ import 'women_life.dart';
 /// 選択肢。[f] が返した文字列は見聞録に書かれる。
 class Choice {
   Choice(this.label, [this.f, this.cancel = false, this.danger = false])
-    : hint = null;
+    : hint = null,
+      via = null;
 
   /// 岐路の選択肢。[hint] は結果を匂わせる一言（数字は出さない）。
-  Choice.h(this.label, this.hint, this.f) : cancel = false, danger = false;
+  /// [via] は、能力・特性・持ち物の条件つきで出る手に付ける印（下の [via]）。
+  Choice.h(this.label, this.hint, this.f, {this.via})
+    : cancel = false,
+      danger = false;
 
   final String label;
 
@@ -61,7 +65,31 @@ class Choice {
   /// true なら何も起こさず閉じる（手番も進まない）。
   final bool cancel;
   final bool danger;
+
+  /// その手が出た理由（能力・特性・持ち物のおかげで出た手だけ。ほかは null）。
+  /// 能力は一字（武・知・政・魅・運。二つの能力なら「知魅」のように二字）、
+  /// 特性は名（`kTraits` の name）、持ち物は名（「鉄砲」など）。画面の札に出るだけで、
+  /// 乱数にも結果にも効かない。
+  final String? via;
 }
+
+/// [Choice.via] に書ける能力の字。
+const kViaAbilities = ['武', '知', '政', '魅', '運'];
+
+/// [Choice.via] に書ける持ち物の名。
+const kViaItems = ['鉄砲'];
+
+/// 能力の字だけでできた印か（一字、または「知魅」のような二字）。
+bool viaIsAbility(String via) =>
+    via.isNotEmpty &&
+    via.length <= 2 &&
+    via.split('').every(kViaAbilities.contains);
+
+/// [Choice.via] に書いてよい語か（能力の字・特性の名・持ち物の名）。
+bool viaKnown(String via) =>
+    viaIsAbility(via) ||
+    kViaItems.contains(via) ||
+    kTraits.any((t) => t.name == via);
 
 class Prompt {
   Prompt(this.title, this.text, this.choices, this.after, {this.art});
@@ -148,6 +176,9 @@ class Game extends ChangeNotifier {
   List<String> get rk => l.female ? kRanksF : kRanksM;
   bool has(String id) => l.has(id);
   bool get canFight => !l.female || has('onna') || l.rank == 8;
+
+  /// 戦える人だけに出る手の印（[Choice.via]）。女武者の特性のおかげで戦える女性にだけ付く。
+  String? get fightVia => l.female && has('onna') ? kTraitOnna.name : null;
 
   /// 隠居していない（家中の務めや合戦に関わる）。
   bool get active => !hasFlag('retired');

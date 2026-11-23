@@ -232,7 +232,7 @@ List<SceneDef> buildFamilyScenes() => [
             g.setFlag('fa_uijin_together');
             g.mark('嫡男の$nの初陣に、自ら付き添った');
             return '$nは震えながらも槍を構え、最後まで退かなかった。';
-          }),
+          }, via: g.fightVia),
         Choice.h('古参の侍に預ける', '戦の作法は身につく。親は戦場で見守れない', () {
           if (g.rng.chance(.06)) {
             _loseChild(g, '嫡男', '嫡男の$nを、初陣で亡くした', 13, 20);
@@ -416,7 +416,7 @@ List<SceneDef> buildFamilyScenes() => [
             g.j(3);
             g.setFlag('tr_herbal_kid');
             return '摘んできた草を煎じ、匙で少しずつ含ませた。二日目の朝、$nが目を開けて親を呼んだ。';
-          }),
+          }, via: '薬の心得'),
         Choice.h('寺社に祈祷を頼む', '心は静まる。効くかどうかは神仏しだい', () {
           if (g.rng.chance(.15)) {
             _loseChild(g, null, '幼い我が子の$nを、病で亡くした', 0, 12);
@@ -896,7 +896,7 @@ List<SceneDef> buildFamilyScenes() => [
             g.setFlag('fa_hostage_rescued');
             g.mark('和が破れた年、人質の$nを敵地から連れ戻した');
             return '$nを背負い、夜明けの川を渡った。';
-          }),
+          }, via: g.fightVia),
         Choice.h('主家に、子の命乞いの使者を願う', '筋は通る。向こうが聞くかは分からない', () {
           if (g.rng.chance(.4)) {
             _loseChild(g, '人質に出した子', '人質に出した子の$nを、和が破れた年に亡くした', 10, 40);
@@ -998,7 +998,7 @@ List<SceneDef> buildFamilyScenes() => [
             _bond(sp, 12);
             g.setFlag('tr_herbal_spouse');
             return '朝夕に煎じた薬を飲ませた。ふた月ののち、$sの咳はすっかり静まっていた。';
-          }),
+          }, via: '薬の心得'),
         Choice.h('寺社に籠もって祈る', '心は通う。効くかは神仏しだい', () {
           if (g.rng.chance(.15)) {
             return lose('七日目の朝、知らせの者が社の石段を駆け上がってきた。');

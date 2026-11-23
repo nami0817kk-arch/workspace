@@ -1065,7 +1065,7 @@ List<SceneDef> buildWayScenes() {
             Choice.h(
               '叔父の寺へ駆け込み、髪を下ろす',
               '寺の内までは、追っ手も踏み込まない。侍としての道は、そこで終わる',
-              () => templeRefuge(g),
+              () => templeRefuge(g), via: '寺に縁者',
             ),
         ], after: next);
       },

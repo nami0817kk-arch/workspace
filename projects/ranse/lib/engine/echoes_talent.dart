@@ -264,7 +264,7 @@ List<SceneDef> buildEchoTalentScenes() => [
             g.l.hp -= 12;
             if (_retainer(g)) g.l.fav = _c(g.l.fav - 5);
             return '話がこじれ、手傷を負って逃げ帰った。妙な噂が立った。';
-          }),
+          }, via: g.fightVia),
         Choice.h('高利の証文だと役人に訴え出る', '筋が通れば借りは軽くなる。胴元に恨まれる', () {
           if (g.rng.chance(.4 + g.l.chi / 250)) {
             _pay(g, 5);

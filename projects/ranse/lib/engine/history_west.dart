@@ -335,7 +335,7 @@ List<SceneDef> buildHistoryWestScenes() {
                 '一矢報いて、城を落ち延びた。',
                 mark: '観音寺城に最後まで残り、織田に一矢報いた',
               );
-            }),
+            }, via: g.fightVia),
         ],
         after: next,
       );
@@ -988,7 +988,7 @@ List<SceneDef> buildHistoryWestScenes() {
                 '夜討ちは退けられた。まもなく、主の義久は頭を丸めて秀吉に降った。',
                 mark: '根白坂で、豊臣の砦に夜討ちをかけた',
               );
-            }),
+            }, via: g.fightVia),
           Choice.h('降伏を説く', '国は残るかもしれない。臆病者と言われる', () {
             g.l.fav = _c(g.l.fav - 4);
             g.l.net += 1;

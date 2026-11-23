@@ -182,7 +182,7 @@ List<SceneDef> buildChildScenes() {
             g.j(-1);
             g.setFlag('tr_herbal_fever');
             return 'ふらつく足で摘んだ草を煎じて飲むと、その晩のうちに汗が噴き出し、熱が引いた。';
-          }),
+          }, via: '薬の心得'),
         Choice.h('ただ耐える', '丈夫な子なら乗り切れる。そうでなければ…', () {
           final l = g.l;
           g.mark('熱病に伏した');

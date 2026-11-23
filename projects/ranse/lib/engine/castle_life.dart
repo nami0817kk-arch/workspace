@@ -271,7 +271,7 @@ List<SceneDef> _castleScenes() => [
           }
           _fav(g, -1);
           return '石を据えた所は、敵が攻めてくるはずのない斜面だった。石工の頭が、気の毒そうに顔をそむけた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -308,7 +308,7 @@ List<SceneDef> _castleScenes() => [
           }
           g.j(-2);
           return '目を赤くして帳面を繰ったが、漏れは見つからなかった。結局、倹約の触れを出すほかなかった。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -346,7 +346,7 @@ List<SceneDef> _castleScenes() => [
           _pay(g, 10);
           _net(g, -1);
           return '主人は茶を飲み干すと、「御用は御用、証文は証文にございます」と言った。利だけは、その場で払わされた。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -378,7 +378,7 @@ List<SceneDef> _castleScenes() => [
           }
           _fame(g, -2);
           return '住持は、経を読む声を止めもしなかった。あなたは半刻ほど待たされ、黙って城へ帰った。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -422,7 +422,7 @@ List<SceneDef> _castleScenes() => [
           }
           g.setFlag('cl_iriai_deed');
           return '三日かけて山を歩いたが、古老たちの話は食い違うばかりだった。結局、証文どおりに裁くほかなかった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -530,7 +530,7 @@ List<SceneDef> _castleScenes() => [
           }
           _net(g, -3);
           return '敵は別の道を通って引き上げた。伏せた兵たちは、夜露に濡れて城へ戻った。';
-        }),
+        }, via: '知'),
       if (_lordWeak(g) || l.fav >= 40)
         Choice.h('主家へ使いを出し、援けの兵を請う', '主家の兵が来れば押し返せる。自分の城も守れぬのかと見られる', () {
           _fav(g, -3);
@@ -567,7 +567,7 @@ List<SceneDef> _castleScenes() => [
           g.setFlag('cl_mizunote');
           _stamp(g, 'rojo');
           return '谷へ下る水汲みの道に、塀と小さな櫓を設けさせた。古参の家臣は「ここを断たれた城を、いくつも見てまいりました」と言った。';
-        }),
+        }, via: '知'),
       Choice.h('いまは何もしない', '銭は残る。いざというときに悔いるかもしれない', () {
         g.setFlag('cl_rojo_none');
         _stamp(g, 'rojo');
@@ -643,7 +643,7 @@ List<SceneDef> _castleScenes() => [
           g.setFlag('cl_spy_turned');
           _stamp(g, 'kancho');
           return '台所の近くで、わざと兵糧が尽きかけていると話してみせた。その夜も、$nは塀の外へ小石を投げた。';
-        }),
+        }, via: '知'),
       Choice.h('何も言わずに暇を出す', '騒ぎにはならない。何を漏らしたかは分からないままだ', () {
         g.setFlag('cl_spy_sent');
         _stamp(g, 'kancho');
@@ -707,7 +707,7 @@ List<SceneDef> _castleScenes() => [
             }
             _fav(g, -2);
             return '$nは、牢番が目を離したすきに姿を消していた。床には、食べ残しの飯がそのまま残っていた。';
-          }),
+          }, via: '魅'),
       ], after: next);
       return;
     }
@@ -760,7 +760,7 @@ List<SceneDef> _castleScenes() => [
           }
           _fav(g, -2);
           return '$nは盃を伏せたまま、「酒で目は曇りませぬ」と言った。検めは、いつもより念入りになった。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 ];
@@ -808,7 +808,7 @@ List<SceneDef> _karoScenes() => [
           _fav(g, -3);
           g.setFlag('cl_yt_silent');
           return '「二人の主を立てる気か」と、評定の席がざわめいた。あなたの言葉は、どちらの側にも届かなかった。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -867,7 +867,7 @@ List<SceneDef> _karoScenes() => [
           }
           _fav(g, -5);
           return '若殿の耳に、「あの者が夜ごと誰かの屋敷を訪ねている」と囁く者がいた。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -916,7 +916,7 @@ List<SceneDef> _karoScenes() => [
           _fav(g, -6);
           g.setFlag('cl_isame_spoke');
           return '名を連ねると約した重臣たちは、いざとなると誰も筆を取らなかった。諫書には、あなたの名だけが残った。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1016,7 +1016,7 @@ List<SceneDef> _karoScenes() => [
           _fav(g, -5);
           g.setFlag('cl_domei_failed');
           return '家老は話を聞くと、翌朝それを当主に漏らした。「名代が裏で取引を持ちかけた」と、話は主家にまで届いた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -1120,7 +1120,7 @@ List<SceneDef> _karoScenes() => [
           _net(g, -2);
           g.setFlag('cl_fudai_judged');
           return '$nは「孫を人質に取る気か」と声を荒らげた。話は、家中に面白おかしく広まった。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1194,7 +1194,7 @@ List<SceneDef> _karoScenes() => [
           _fav(g, -3);
           _hurt(g, 10);
           return '敵陣では門前で半日待たされ、帰りには石を投げられた。和は成らず、主家は砦を三つ差し出して降った。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 ];
@@ -1461,7 +1461,7 @@ List<SceneDef> _houseScenes() => [
           }
           g.j(-1);
           return '歌会には誰も筆を取らなかった。女たちは、あなたの顔をうかがうばかりだった。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -1493,7 +1493,7 @@ List<SceneDef> _houseScenes() => [
           }
           _net(g, -2);
           return '根回しの文が途中で漏れ、重臣の家から「奥方の差し出口」と苦情が来た。話は、振り出しに戻った。';
-        }),
+        }, via: '知魅'),
     ], after: next);
   }),
 ];

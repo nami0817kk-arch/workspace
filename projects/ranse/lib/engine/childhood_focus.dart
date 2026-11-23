@@ -242,7 +242,7 @@ List<SceneDef> buildChildFocusScenes() => [
             return '羽ばたいた一羽が、まっすぐ落ちてきた。師が、黙ってあなたの肩を叩いた。';
           }
           return '雁は高く舞い上がり、矢は空を切った。';
-        }),
+        }, via: '武'),
     ], after: next);
   }),
   _second('yumiba', (g, next) {
@@ -292,7 +292,7 @@ List<SceneDef> buildChildFocusScenes() => [
             }
             g.j(-4);
             return '二の矢をつがえる間に、的は後ろへ流れていった。';
-          }),
+          }, via: '武'),
       ],
       after: next,
     );
@@ -363,7 +363,7 @@ List<SceneDef> buildChildFocusScenes() => [
           g.setFlag('cf_herb_healer');
           g.mark('幼い身で町の薬師を訪ね、$whoの病に効く薬を持ち帰った');
           return '薬師は書き付けを見て目を丸くし、合う薬を分けてくれた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -399,7 +399,7 @@ List<SceneDef> buildChildFocusScenes() => [
           }
           g.j(-2);
           return '「子どもらしくない歌だ」と、誰かが眉をひそめた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
   _second('uta', (g, next) {
@@ -412,7 +412,7 @@ List<SceneDef> buildChildFocusScenes() => [
           g.setFlag('cf_fine_hand');
           g.mark('幼い身で、大人顔負けの改まった文を書き上げた');
           return '書き上げた文を見て、頼んだ人が、しばらく言葉を失っていた。';
-        }),
+        }, via: '知'),
     ];
     if (praised) {
       g.ask('文の清書', '歌の噂を聞いた屋敷の奥方から、文の清書を頼まれた。遠くの縁者へ送る、大事な文だという。', [
@@ -486,7 +486,7 @@ List<SceneDef> buildChildFocusScenes() => [
           g.setFlag('cf_sib_found');
           _bond(g, name, 10);
           return '足跡は、川とは逆の祠の方へ続いていた。$nameは祠の陰で、供え物の団子を握っていた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
   _second('komori', (g, next) {
@@ -526,7 +526,7 @@ List<SceneDef> buildChildFocusScenes() => [
             g.setFlag('cf_komori_leader');
             g.mark('村の子らを集めて、熱を出した弟妹を交代で看た');
             return '子らは代わるがわる、$nameの額の手ぬぐいを替えた。';
-          }),
+          }, via: '魅'),
       ],
       after: next,
     );
@@ -629,7 +629,7 @@ List<SceneDef> buildChildFocusScenes() => [
           g.setFlag('cf_market_face');
           g.mark('市の顔なじみの手を借り、すりから銭を取り戻した');
           return '団子屋の婆さまが男の塒を知っていた。男は、渋々銭を返した。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
   _second('tsukai', (g, next) {
@@ -654,7 +654,7 @@ List<SceneDef> buildChildFocusScenes() => [
             g.setFlag('cf_ootana_offer');
             g.mark('大店の主人に、品の目利きの手ほどきを受けた');
             return '主人は面白がって、反物の良し悪しを一つずつ見せてくれた。';
-          }),
+          }, via: '政'),
       ], after: next);
       return;
     }
@@ -727,7 +727,7 @@ List<SceneDef> buildChildFocusScenes() => [
             g.setFlag('cf_sutra_preached');
             g.mark('死にゆく人に、経の意味をやさしく説いて聞かせた');
             return '話し終えると、その人は「そうか、そうか」と笑った。';
-          }),
+          }, via: '知'),
       ],
       after: next,
     );
@@ -879,7 +879,7 @@ List<SceneDef> buildChildFocusEchoScenes() => [
             g.setFlag('e4_herb_saved');
             g.mark('熱の出た村で、病の者の寝床を分けさせて広がりを止めた');
             return '病の者を寺の庫裏に移すと、新しく倒れる者がぴたりと減った。';
-          }),
+          }, via: '知'),
       ], after: next);
     },
   ),
@@ -1106,7 +1106,7 @@ List<SceneDef> buildChildFocusEchoScenes() => [
               g.setFlag('e4_ootana_helped');
               g.mark('大店の帳面の穴を突き止め、番頭の不正を暴いた');
               return '三人目の番頭が、帳面を前に青ざめた。';
-            }),
+            }, via: '政'),
         ],
         after: next,
       );

@@ -1091,7 +1091,7 @@ List<SceneDef> buildSpendingScenes() => [
           g.l.hp -= g.rng.range(5, 12);
           _loseHorse(g);
           return '盗人ともみ合い、腕を切られた。馬は戻らなかった。';
-        }),
+        }, via: g.fightVia),
       Choice.h('馬喰に頼んで探させる', '銭はかかる。顔の広い馬喰なら見つけ出す', () {
         if (g.l.gold >= 10) g.l.gold -= 10;
         if (g.rng.chance(.55 + g.l.net / 200)) {

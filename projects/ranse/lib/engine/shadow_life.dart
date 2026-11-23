@@ -249,7 +249,7 @@ List<SceneDef> _ninjaScenes() => [
           _stamp(g, 'kashira');
           g.mark('敵の城の縄張りを、絵図に写し取った');
           return '人足に紛れて普請場に入り、縄張りをそっくり紙に写した。頭は絵図を見て、長く黙っていた。';
-        }),
+        }, via: '知'),
       Choice.h('仕事を断る', '手は汚れない。里での立場は細る', () {
         g.j(-2);
         l.net -= 1;
@@ -293,7 +293,7 @@ List<SceneDef> _ninjaScenes() => [
           g.setFlag('sh_lord_near');
           _stamp(g, 'kashira');
           return 'ひと月かけて両家の兵糧と人の出入りを見た。勝つのは$aだと、確かめてから手を結んだ。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -434,7 +434,7 @@ List<SceneDef> _ninjaScenes() => [
           g.j(-8);
           l.fame -= 3;
           return '待ち伏せは、あっけなく終わった。倒れた仲間の顔を、あなたは見なかった。';
-        }),
+        }, via: g.fightVia),
     ], after: next);
   }),
 
@@ -589,7 +589,7 @@ List<SceneDef> _ninjaScenes() => [
           g.setFlag('sh_henso_master');
           g.mark('猿楽の一座に紛れて、城の奥の宴に入り込んだ');
           return '舞の合間に、酔った重臣の話をすべて聞いた。誰も、囃子方の顔など見ていなかった。';
-        }),
+        }, via: '魅'),
       Choice.h('下働きとして屋敷に住み込む', '長く潜れる。抜け出すのが難しい', () {
         if (g.rng.chance(.75)) {
           l.gold += 10;
@@ -701,7 +701,7 @@ List<SceneDef> _ninjaScenes() => [
               g.setFlag('sh_iga_fought');
               g.mark('天正の伊賀の戦で、織田の兵と戦い抜いた');
               return '三日、砦を守った。落ちる前に、抜け穴から生き残りと逃れた。';
-            }),
+            }, via: g.fightVia),
           Choice.h('関わらず、身を潜める', '命は確かに残る。焼けた里の噂を一生聞く', () {
             g.j(-6);
             return '遠い山の上から、煙が幾日も上がるのを見ていた。';
@@ -807,7 +807,7 @@ List<SceneDef> _nukeScenes() => [
           }
           l.hp -= 25;
           return '深手を負わせ合い、互いに闇へ退いた。';
-        }),
+        }, via: g.fightVia),
       Choice.h('話をして、見逃してくれと頼む', '昔の縁が効くかもしれない。効かなければ逃げ場はない', () {
         final bond = os?.bond ?? 30;
         if (g.rng.chance(clampD(.3 + bond / 200 + l.mi / 300, .25, .85))) {
@@ -857,7 +857,7 @@ List<SceneDef> _roadScenes() => [
           l.hp -= 10;
           _lose(g, .3);
           return '印の形を怪しまれ、銭を置いて逃げ出した。';
-        }),
+        }, via: '知'),
       if (g.canFight && l.bu >= 65)
         Choice.h('関を押し通る', '腕に覚えがあればできる。関守の槍は飾りではない', () {
           if (g.rng.chance(.05)) {
@@ -867,7 +867,7 @@ List<SceneDef> _roadScenes() => [
           l.fame -= 2;
           l.bu = _c(l.bu + 1);
           return '関守を突き飛ばし、柵を越えて駆け抜けた。後ろで鐘が鳴り続けていた。';
-        }),
+        }, via: '武'),
     ], after: next);
   }),
 
@@ -898,7 +898,7 @@ List<SceneDef> _roadScenes() => [
           _stamp(g, 'band');
           g.mark('山の一味の頭となった');
           return '「争えば、討手の思うつぼだ」。その一言で、睨み合いはほどけた。';
-        }),
+        }, via: '魅'),
       Choice.h('別の者を推して、下につく', '血は流れない。頭の器量しだいの身になる', () {
         l.net += 1;
         _stamp(g, 'band');
@@ -1036,7 +1036,7 @@ List<SceneDef> _roadScenes() => [
           l.hp -= 25;
           _stamp(g, 'yojin');
           return '追い払いはしたが、深手を負った。村の蔵が一つ焼かれた。';
-        }),
+        }, via: g.fightVia),
       Choice.h('女子どもを山の寺へ逃がす', '人は守れる。家と米は奪われる', () {
         l.net += 2;
         g.setFlag('sh_yojin_saved');
@@ -1132,14 +1132,14 @@ List<SceneDef> _roadScenes() => [
           l.hp -= 6;
           l.net += 1;
           return '負けた客が暴れるたびに、外へ放り出した。胴元は銭をはずんだ。';
-        }),
+        }, via: g.fightVia),
       if (l.chi >= 60)
         Choice.h('壺振りの手口を見破る', '目の利く者にしか見えない。胴元に恨まれる', () {
           l.gold += 10;
           l.fame += 1;
           g.setFlag('sh_saw_cheat');
           return '壺の中の賽の細工を言い当てた。胴元は青い顔で、口止めの銭を握らせてきた。';
-        }),
+        }, via: '知'),
       Choice.h('近寄らない', '何も変わらない', () => '賭場の灯りを横目に、宿へ戻った。'),
     ], after: next);
   }),
@@ -1158,7 +1158,7 @@ List<SceneDef> _roadScenes() => [
           l.net += 2;
           g.j(4);
           return '三つの国を共に越えた。焚き火の夜ごとに、一座は新しい舞を見せてくれた。';
-        }),
+        }, via: g.fightVia),
       Choice.h('一座に加わり、芸を覚える', '居場所ができる。人目に立つ暮らしになる', () {
         l.mi = _c(l.mi + 2);
         l.net += 3;
@@ -1184,7 +1184,7 @@ List<SceneDef> _roadScenes() => [
           l.gold += 12;
           l.fame -= 2;
           return '沢で休む武者を囲み、首を挙げた。勝った側の陣で、褒美の銭を受け取った。';
-        }),
+        }, via: g.fightVia),
       Choice.h('手負いの武者を見逃し、道を教える', '人の道は守る。見つかれば咎めを受ける', () {
         if (g.rng.chance(.88)) {
           g.setFlag('sh_ochi_spared');

@@ -778,7 +778,7 @@ List<SceneDef> _lifeScenes() => [
               l.hp -= 15;
               _pay(g, 6);
               return '門は破られ、蔵の米は奪われた。打たれた傷が、長く疼いた。';
-            },
+            }, via: '武',
           ),
       ], after: next);
     },

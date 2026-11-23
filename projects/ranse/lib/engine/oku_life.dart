@@ -308,7 +308,7 @@ List<SceneDef> _servingScenes() => [
           g.setFlag('ok_midai_fav');
           g.setFlag('ok_midai_learned');
           return '古い歌の本歌まで言い当てると、御台所さまは身を乗り出した。その日から、あなたは御前の文箱を預かる役に呼ばれた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -338,7 +338,7 @@ List<SceneDef> _servingScenes() => [
           g.setFlag('ok_kane_saved');
           g.mark('奥の台所の払いを改め、出入りの商人を競わせて奥の蔵を潤した');
           return '城下の呉服屋三軒に同じ反物の値を出させた。御台所さまは帳面を見て、「奥にも勘定のできる者がおったか」と笑った。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -564,7 +564,7 @@ List<SceneDef> _servingScenes() => [
           g.setFlag('ok_hoso_isolated');
           g.mark('奥に疱瘡が出たとき、寝所を離れに移して病の広がりを止めた');
           return '幼いころに疱瘡を済ませた下女たちを選んで離れに詰めさせた。奥でほかに熱を出す者は出ず、$hさまも持ち直した。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -597,7 +597,7 @@ List<SceneDef> _servingScenes() => [
           _fav(g, -6);
           g.j(-4);
           return '奥方さまは「何のことか」と笑ったが、その日から、あなたを身の回りから遠ざけた。';
-        }),
+        }, via: '知'),
     ], after: next);
   }),
 
@@ -638,7 +638,7 @@ List<SceneDef> _servingScenes() => [
           g.setFlag('ok_rojo_wall');
           g.mark('囲まれた日に、薙刀を取って塀の上に立った');
           return '塀に梯子をかけた敵を、薙刀で三人まで払い落とした。ひと月ののち囲みは解け、兵たちはあなたを「奥の鬼」と呼んだ。';
-        }),
+        }, via: g.fightVia),
     ], after: next);
   }),
 
@@ -709,7 +709,7 @@ List<SceneDef> _servingScenes() => [
           g.j(1);
           g.setFlag('ok_oku_stayed');
           return '伝手の女中は、言いにくそうに首を振った。縁談は断り、奥に残った。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 ];
@@ -751,7 +751,7 @@ List<SceneDef> _wifeScenes() => [
           g.j(-2);
           g.setFlag('ok_shutome_bow');
           return '姑は膳を見て、「誰に聞いた」とだけ言った。';
-        }),
+        }, via: '魅'),
     ], after: next);
   }),
 
@@ -823,7 +823,7 @@ List<SceneDef> _wifeScenes() => [
           g.setFlag('ok_rusu_wise');
           g.mark('夫の長陣の留守に、村と掛け合って屋敷の帳尻を合わせた');
           return '麻は郎党の女房たちに織らせ、薪は冬の分を蔵に積んだ。帰った$whoは帳面を見て、「わしより上手い」と笑った。';
-        }),
+        }, via: '政'),
     ], after: next);
   }),
 
@@ -851,7 +851,7 @@ List<SceneDef> _wifeScenes() => [
           g.setFlag('ok_sobame_met');
           g.j(-1);
           return '女は、まだ若い機織りの娘だった。あなたを見るなり土間に手をついた。帰り道、怒りよりも、妙な哀れさが胸に残った。';
-        }),
+        }, via: '知魅'),
     ], after: next);
   }),
 
@@ -936,7 +936,7 @@ List<SceneDef> _wifeScenes() => [
           _fav(g, -5);
           g.j(-4);
           return '文は敵方の表の者に渡り、主家の重臣に「内通ではないか」と問われた。$whoは結局、身代を払って帰された。';
-        }),
+        }, via: '知魅'),
     ], after: next);
   }),
 
@@ -970,7 +970,7 @@ List<SceneDef> _wifeScenes() => [
           _net(g, 2);
           g.setFlag('ok_ryoke_bridge');
           return '父にも、婚家の舅にも、同じ日に文を書いた。どちらの返事にも、「女の出る幕ではない」とあった。それでも、筆を置かなかった。';
-        }),
+        }, via: '知魅'),
     ], after: next);
   }),
 
@@ -1091,7 +1091,7 @@ List<SceneDef> _wifeScenes() => [
               }
               _net(g, -1);
               return '相手の家は「詫びもせずに盃とは」と、招きを断った。';
-            }),
+            }, via: '魅'),
         ], after: next);
         return;
       }
