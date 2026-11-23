@@ -229,6 +229,15 @@ const Map<String, String> uiEn = {
   '戦う': 'Fighting',
   '宿敵は値下げ合戦を仕掛け、あなたの株を買い集め、部下を引き抜きます。上場すると大金が入りますが、株を買われるようになります。50%を超えて握られると社長を追われます。':
       "Rivals start price wars, buy up your shares and poach your staff. Going public brings a fortune, but anyone can buy your shares. If a rival gets over 50%, you're ousted.",
+  '宿敵の物語': 'Rival Stories',
+  '宿敵とは、同じ業種で初めてぶつかったときに出会います。値下げ合戦・株の買い集め・引き抜き・裏の手でぶつかるたびに、恨み（あなたがしたこと）と恩（助けた・組んだ）が「街」の宿敵の欄に因縁として残ります。買収する・買収される・友好のまま3年で和解・提携が5年続く、のどれかで決着がつきます。倒した宿敵の一族は、恨みを覚えて戻ってきます。':
+      'You meet a rival the first time you clash in the same industry. Every price war, share raid, poaching or dirty trick adds to the history in the Rivals list on the Town tab: grudges (what you did to them) and favors (help and partnerships). A rivalry ends when you buy them, they buy you, you stay friendly for 3 years (peace), or stay partnered for 5 years (allies). The family of a beaten rival comes back, remembering the grudge.',
+  '取締役会': 'The Board',
+  '毎年1月に取締役会が開かれ、1年の売上・利益・時価総額・順位を振り返ります。利益が前年の7割を切り、味方の株（あなた・相棒・味方の会社）が50%に届かないと、解任動議が出ます。改革を約束する・配当を払う・強気で押し切る、から選びます。解任されても後継ぎや部下が社長を継ぎ、会社は続きます。':
+      "Every January the board reviews the year's revenue, profit, market cap and rank. If profit falls below 70% of last year and friendly shares (you, partners, allied firms) are under 50%, a motion to oust you is filed. Promise reforms, pay a dividend, or force it through. If you're removed, your heir or a top manager takes over and the company carries on.",
+  '因縁 ': 'History ',
+  '　恨み {0}・恩 {1}・されたこと {2}': '  Grudges {0}, favors {1}, wrongs suffered {2}',
+  '取締役会との約束：{0}年1月までに、年の利益を{1}まで戻す': 'Promise to the board: get annual profit back to {1} by Jan {0}',
   '飲み込む': 'Takeovers',
   '「株」で他社の株を買い、50%を超えると子会社、66.7%で合併できます。': 'Buy shares of other firms in Shares. Over 50% makes them a subsidiary; 66.7% lets you merge.',
   '株式交換': 'Share Swaps',

@@ -147,4 +147,80 @@ void main() {
     await _shot(tester, key, '13_setup_bottom');
     expect(tester.takeException(), isNull);
   }, skip: _out == null);
+
+  // 宿敵の物語と取締役会の場面（日英）
+  for (final lang in ['ja', 'en']) {
+    testWidgets('物語と取締役会の場面の書き出し（$lang・幅390）', (tester) async {
+      await _loadFonts();
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final ctl = GameController(prefs: prefs, newRandom: () => ParkMiller(77), lang: lang);
+      addTearDown(() => L.lang = 'ja');
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final g = Game.newGame(SetupConfig(mode: 'world', year: 1980, traits: ['charm', 'gambler']), rng: ParkMiller(2024));
+      for (var i = 0; i < 150; i++) {
+        botMonth(g);
+      }
+      resolveEvents(g);
+      g.calcAll();
+      ctl.game = g;
+      final key = GlobalKey();
+      await tester.pumpWidget(RepaintBoundary(key: key, child: QuadrillionApp(controller: ctl)));
+      await tester.pump();
+      final rv = g.cos.where((c) => c.alive && c.rival != null && c.parent != 'player').toList();
+      // 出会い
+      final a = rv.firstWhere((c) => c.rival!.kind == 'peer', orElse: () => rv.first);
+      a.rival!
+        ..st = 0
+        ..ties.clear();
+      a.biz.add(CoBiz(ind: g.biz.first.ind, power: 1e6));
+      g.events.clear();
+      g.storyMonthly((m, [t = '']) {});
+      g.events.removeWhere((e) => e.who != a);
+      nextEvent(ctl);
+      await tester.pump();
+      await _shot(tester, key, 's1_meet_$lang');
+      // 因縁が深まる → 決着（組んだ）
+      for (final k in ['g', 'h', 'g']) {
+        g.tieRec(a, k, k == 'g' ? M('「{0}」で値下げ合戦を仕掛けた', [I(g.biz.first.ind)]) : M('部下の{0}を引き抜かれかけた', [Nm(g.staff.isNotEmpty ? g.staff.first.name : '佐藤 健一')]));
+      }
+      g.events.clear();
+      g.storyMonthly((m, [t = '']) {});
+      g.events.removeWhere((e) => e.who != a);
+      nextEvent(ctl);
+      await tester.pump();
+      await _shot(tester, key, 's2_clash_$lang');
+      final b = rv.firstWhere((c) => c != a);
+      b.rival!.st = 1;
+      g.events.clear();
+      g.storyEnd(b, 'ally');
+      nextEvent(ctl);
+      await tester.pump();
+      await _shot(tester, key, 's3_end_ally_$lang');
+      // 取締役会の解任動議
+      g.sh = Shares(own: 32, pt: 6, float: 50, riv: {b.id: 12});
+      g.listed = true;
+      g.yPrev = {'rev': g.rev * 12 * 1.1, 'pre': g.pre.abs() * 12 * 2, 'cap': g.cap * 1.2, 'rank': g.rank + 3.0};
+      g.yAcc = {'rev': g.rev * 11, 'pre': g.pre.abs() * 11, 'n': 11};
+      g.events.clear();
+      g.holdBoard();
+      final motion = g.events.first;
+      nextEvent(ctl);
+      await tester.pump();
+      await _shot(tester, key, 's4_board_motion_$lang');
+      // 約束したあとの街（約束と、宿敵の欄の因縁）
+      motion.choices[0].f();
+      g.events.clear();
+      ctl.closeSheet();
+      ctl.setTab('town');
+      await tester.pump();
+      await _shot(tester, key, 's5_town_vow_$lang');
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, -700));
+      await tester.pump();
+      await _shot(tester, key, 's6_town_ties_$lang');
+      expect(tester.takeException(), isNull);
+    }, skip: _out == null);
+  }
 }

@@ -16,7 +16,9 @@ void main() {
     test('試作と同じ数字になる（seed ${m['seed']}・${cfg['mode']}・${cfg['year']}年・${cfg['home']}）', () {
       final s = Game.newGame(
           SetupConfig(mode: cfg['mode'] as String, year: cfg['year'] as int, traits: (cfg['traits'] as List).cast<String>(), home: cfg['home'] as String),
-          rng: ParkMiller(m['seed'] as int));
+          rng: ParkMiller(m['seed'] as int))
+        // 試作のあとに足した仕組み（取締役会・宿敵の物語）は切って比べる
+        ..extras = false;
       final rows = (m['rows'] as List).cast<List>();
       for (var t = 0; t < rows.length; t++) {
         botMonth(s);

@@ -229,6 +229,7 @@ extension GameActions on Game {
     b.attack = 9;
     b.target = top.c.id;
     top.c.rel -= 15;
+    tieRec(top.c, 'g', M('「{0}」で値下げ合戦を仕掛けた', [I(b.ind)]));
     if (inAssoc(b.ind)) {
       deals = deals.where((d) => !(d.type == 'assoc' && d.ind == b.ind)).toList();
       for (final c in cos) {
@@ -544,6 +545,7 @@ extension GameActions on Game {
     useAP(1);
     deals.add(Deal(co: c.id, type: type, ind: ind, since: year));
     c.rel += 10;
+    tieRec(c, 'f', M('「{0}」で組んだ', [D(DEALN.ja[type]!)]));
     calcAll();
     return M('{0}と「{1}」で組みました', [Nm(c.name), D(DEALN.ja[type]!)]);
   }
@@ -578,6 +580,8 @@ extension GameActions on Game {
       if (biz.any((x) => x.ind == b.ind)) b.power *= .9;
     }
     c.rel -= 50;
+    tieRec(c, 'g', M('組んでいたのに裏切った'));
+    if (c.rival != null) c.rival!.allied = false;
     for (final o in cos) {
       if (o.alive && o != c) o.rel -= 5;
     }
@@ -710,6 +714,8 @@ extension GameActions on Game {
     useAP(1);
     final caught = rnd() < dirtyRisk(kind, c);
     dirty++;
+    const dirtyWhat = {'poach': '裏の手で腕利きを引き抜いた', 'spy': '裏の手で開発の中身を盗んだ', 'lobby': '裏の手で規制をかけさせた'};
+    if (dirtyWhat[kind] != null) tieRec(c, 'g', M(dirtyWhat[kind]!));
     var m = <Object?>[];
     if (kind == 'poach') {
       final p = mkPerson(1.3);
@@ -810,6 +816,7 @@ extension GameActions on Game {
     old.cash = cash * .5;
     old.formerMine = true;
     c.rel += 10;
+    storyEnd(c, 'boughtBy');
     final inds = biz.map((b) => b.ind).toList();
     chron('sold', M('会社を{0}に{1}で売った。前の会社は「{2}」として残る', [Nm(c.name), Y(price), Nm(old.name)]));
     noncomp = nc ? Noncomp(inds: inds, until: turn + ri(36, 120), buyer: c.id, price: price) : null;
@@ -890,6 +897,11 @@ extension GameActions on Game {
     if (c.rival == null || c.rival!.gone) return;
     c.rival!.gone = true;
     ret.add(Return(at: turn + ri(24, 72), fam: Game.famOf(c.presName), west: c.presName.contains('・'), col: c.rival!.col, from: c.name));
+    if (extras) {
+      ret.last.end = 'bought';
+      ret.last.grudge = c.rival!.grudge;
+      storyEnd(c, 'bought');
+    }
   }
 
   // ===== 社風 =====
@@ -1062,6 +1074,7 @@ extension GameActions on Game {
     if (before < 5 && c.stakePlayer >= 5) {
       msg.add(M('相手に気づかれました'));
       c.rel -= 20;
+      tieRec(c, 'g', M('株を買い集めた'));
       if (c.rival != null && (c.rival!.type == 'zaibatsu' || c.rival!.type == 'state')) {
         c.fam = math.min(70, c.fam + 8);
         msg.add(M('{0}は守りを固めています', [Nm(c.rival!.pres)]));
@@ -1095,6 +1108,7 @@ extension GameActions on Game {
     if (cash < cost) return M('お金が足りません（{0} 必要）', [Y(cost)]);
     useAP(1);
     liarCheck();
+    tieRec(c, 'g', M('TOBを仕掛けた'));
     if (rnd() < tobChance(c, target)) {
       cash -= cost;
       final need = target - pctOf(c);

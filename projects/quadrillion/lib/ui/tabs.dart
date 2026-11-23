@@ -58,6 +58,12 @@ List<Widget> townTab(GameController ctl) {
   out.add(_presPanel(ctl));
   out.add(Panel(
       child: Text.rich(TextSpan(children: [TextSpan(text: tr('目標　'), style: ts(bold: true)), TextSpan(text: tx(s.goalText()), style: ts())]))));
+  final vow = s.vow;
+  if (vow != null) {
+    out.add(Panel(
+        border: Pal.down,
+        child: Text(tr('取締役会との約束：{0}年1月までに、年の利益を{1}まで戻す', [vow['y']!.round(), yen(vow['target']!)]), style: ts(size: 13))));
+  }
   final tips = s.advice();
   if (tips.isNotEmpty) {
     out.add(Panel(
@@ -94,6 +100,12 @@ List<Widget> townTab(GameController ctl) {
                           : Pal.mute)),
           if ((s.sh.riv[c.id] ?? 0) > 0) TextSpan(text: tr('　あなたの株を {0} 保有', [pct(s.sh.riv[c.id]!)])),
         ])),
+        Text.rich(TextSpan(style: ts(size: 12.5), children: [
+          TextSpan(text: tr('因縁 ')),
+          TextSpan(text: tx(s.storyStage(c.rival!)), style: ts(size: 12.5, bold: true)),
+          if (c.rival!.st > 0) TextSpan(text: tr('　恨み {0}・恩 {1}・されたこと {2}', [c.rival!.grudge, c.rival!.favor, c.rival!.hurt])),
+        ])),
+        for (final t in c.rival!.ties.reversed.take(2)) Muted('${tr('・@@bullet')}${tx(t)}', size: 12),
         if (c.parent != 'player') Padding(padding: const EdgeInsets.only(top: 6), child: Btn(tr('裏の手'), () => openDirty(ctl, c), small: true)),
       ])),
     ])));
