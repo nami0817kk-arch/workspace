@@ -4,6 +4,7 @@ import '../game/game.dart';
 import '../version.dart';
 import 'controller.dart';
 import 'guide.dart';
+import 'tabs.dart' show topAbility;
 import 'widgets.dart';
 
 /// 小窓（試作の openXxx / showReport / nextEvent / showHelp）
@@ -35,6 +36,24 @@ void confirmRestart(GameController ctl) =>
     confirmThen(ctl, title: tr('はじめから'), text: tr('今の会社の続きは消え、はじめの画面に戻ります。'), yes: tr('はじめからにする'), onYes: ctl.backToSetup);
 
 /// 能力の4つ（数字と細い棒。幅でしか分からないものは薄い帯）
+/// 部下・候補の顔。色はいちばん高い能力（統率・開発・営業・財務）、相棒は輪つき
+Face staffFace(Game s, Person p) => Face(p.name, col: abFaceCols[topAbility(s, p)], ring: p.partner);
+
+/// 顔の色と形の見方（「人」の画面の下に1度だけ出す）
+Widget faceLegend() {
+  // 1つの文として並べる（幅が狭い・字が大きいときは、語の切れ目で折り返す）
+  WidgetSpan dot(Color fill, Color edge, double w) => WidgetSpan(
+      alignment: PlaceholderAlignment.middle,
+      child: Container(
+          width: 12, height: 12, margin: const EdgeInsets.only(right: 4), decoration: BoxDecoration(color: fill, shape: BoxShape.circle, border: Border.all(color: edge, width: w))));
+  return Text.rich(TextSpan(style: ts(size: 12, color: Pal.mute, height: 1.6), children: [
+    TextSpan(text: '${tr('顔の色はいちばん高い能力')}${tr('　')}'),
+    for (final k in abKeys) ...[dot(hexColor(abFaceCols[k]!), Pal.mute, 1), TextSpan(text: '${ABN[k]}${tr('　')}')],
+    dot(Pal.panel, Pal.goldtx, 2),
+    TextSpan(text: tr('輪つきは社長と相棒')),
+  ]));
+}
+
 Widget abGrid(Game s, Person p) => Grid2([
       for (final k in abKeys)
         if (s.rangeOf(p, k) case final r) AbKv(ABN[k]!, s.showAb(p, k), r[0], r[1]),
@@ -102,7 +121,7 @@ void openIntro(GameController ctl) {
   ctl.showSheet((_) => _col([
         H2(tr('{0}年 春', [s.year]), top: true),
         Say(
-            face: Face(s.pres.name, col: '#f2c14e'),
+            face: Face.pres(s.pres.name),
             who: tr('{0}（{1}歳）', [nmL(s.pres.name), 22]),
             text: tr('大学を出たばかり。手元には{0}。会社の名前だけは登記した。最初の事業を決める前に、一緒にやる相棒を探そうか。', [yen(s.cash)])),
         _note(tr('毎月「手」の数だけ動けます。街の「社長の行動」から、相棒探し・日銭稼ぎ・腕磨き・人脈作り・事業の種探しができます。最初の事業を始めるのは手を使いません。')),
@@ -150,7 +169,7 @@ void openMeet(GameController ctl) {
   }
   ctl.showSheet((_) => _col([
         H2(tr('{0}で出会った', [s.placeName(p.place ?? 'net')]), top: true),
-        Say(face: Face(p.name), who: tr('{0}（{1}歳）', [nmL(p.name), p.age]), text: tr('「{0}」', [s.meetLine(p)])),
+        Say(face: staffFace(s, p), who: tr('{0}（{1}歳）', [nmL(p.name), p.age]), text: tr('「{0}」', [s.meetLine(p)])),
         abGrid(s, p),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 6),
@@ -210,7 +229,7 @@ void openStart(GameController ctl) {
   final list = s.liveInds().where((i) => s.capexOf(i) <= s.cash).toList()..ssort((a, b) => s.capexOf(a).compareTo(s.capexOf(b)));
   ctl.showSheet((_) => _col([
         H2(tr('{0}年 創業', [s.year]), top: true),
-        Say(face: Face(s.pres.name, col: '#f2c14e'), who: tr('{0}（{1}歳）', [nmL(s.pres.name), s.pres.age]), text: tr('手元にあるのは{0}。まずは何で稼ぐか決めよう。', [yen(s.cash)])),
+        Say(face: Face.pres(s.pres.name), who: tr('{0}（{1}歳）', [nmL(s.pres.name), s.pres.age]), text: tr('手元にあるのは{0}。まずは何で稼ぐか決めよう。', [yen(s.cash)])),
         const SizedBox(height: 6),
         for (final i in list)
           ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () {
@@ -269,6 +288,11 @@ void openBuild(GameController ctl, Biz b) {
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の{1}を増やす', [ind.name, s.uw(b)]), top: true),
         _note(tr('手を1つ使います。1つの値段はこの業種の元手（{0}）です。1〜2か月後に開き、そのぶん維持費がかかります。手元 {1}', [yen(s.capexOf(ind)), yen(s.cash)])),
+        // いちばん小さい単位（元手の4分の1）。始めたばかりで店1つぶんのお金が無いときにも打てる
+        _unitChoice(ctl, tr('今ある{0}を広げる（元手の1/4）', [s.uw(b)]), s.extendCost(b), () => s.extendN(b), [
+          tr('{0}　維持費 +{1}／月', [yen(s.extendCost(b)), yen(s.extendCost(b) * .006)]),
+          tr('来月から使える。伸びは小さい'),
+        ]),
         for (final n in buildUnits)
           _unitChoice(ctl, tr('{0}増やす', [s.unitsOf(b, n)]), s.buildCost(b, n), () => s.buildN(b, n), [
             tr('{0}　維持費 +{1}／月', [yen(s.buildCost(b, n)), yen(s.buildCost(b, n) * .006)]),
@@ -458,7 +482,7 @@ void showHelp(GameController ctl) {
   const parts = [
     (null, '1期は1か月。毎月、使える「手」（金色の四角）の数だけ行動できます。手は事業が増えると増えます。'),
     ('社長の行動', '社長は22歳の大卒から始まります。「街」の「社長の行動」で、相棒を探す・日銭を稼ぐ・腕を磨く・人脈を作る・事業の種を探す、ができます。相棒には株を渡して口説きます。相棒が責任者の事業は強くなりますが、野心が強いと独立を言い出すこともあります。'),
-    ('稼ぐ', '「事業」で業種を始め、打ち手で伸ばします。値段は手元のお金ではなく、業種ごとの「1ついくら」で決まります（時代の物価だけ乗ります）。「店・工場を増やす」は1つがその業種の元手で、1つ・3つ・10を選べます。1〜2か月後に確実に伸びますが、維持費がかかります。「商品を作る」は小さな改良・新しい商品・大型開発（元手の1倍・3倍・10倍）から選び、大きいほど時間がかかって、当たったときの伸びが大きくなります。店や工場は「現場の人」がいないと動きません。人は10人・50人・足りない分で雇い、採用の費用を払ったあとは毎月の人件費がかかります。仕掛かり中のものは、取り下げると半分戻ります。値付けを「安く」にすると客は増えますが利益は薄くなります。'),
+    ('稼ぐ', '「事業」で業種を始め、打ち手で伸ばします。値段は手元のお金ではなく、業種ごとの「1ついくら」で決まります（時代の物価だけ乗ります）。「店・工場を増やす」は1つがその業種の元手で、1つ・3つ・10を選べます。お金が足りないうちは、元手の4分の1で今ある店や工場を広げることもできます。1〜2か月後に確実に伸びますが、維持費がかかります。「商品を作る」は小さな改良・新しい商品・大型開発（元手の1倍・3倍・10倍）から選び、大きいほど時間がかかって、当たったときの伸びが大きくなります。店や工場は「現場の人」がいないと動きません。人は10人・50人・足りない分で雇い、採用の費用を払ったあとは毎月の人件費がかかります。仕掛かり中のものは、取り下げると半分戻ります。値付けを「安く」にすると客は増えますが利益は薄くなります。'),
     ('任せる', '社長が直接見られる事業は2つまで。それより多いと放置された事業が弱ります。「人」で採用し、責任者に置きましょう。責任者は利益の一部を自分で事業に回します。能力は働かせるまで幅でしか分かりません。'),
     ('裏の手', '「街」の宿敵の欄から、引き抜き・産業スパイ・ロビー活動・粉飾決算・談合が使えます。効き目は大きいかわりに、ばれると重い罰があります。使うほどばれやすくなります。宿敵も同じ手を使ってきます。もみ消した不祥事は、数年後にもっと大きくなって戻ってくることがあります。'),
     ('売り抜け', '「株」の画面で、持ち株を売る、非上場に戻す、会社を丸ごと売る、ができます。売ったお金はあなたの財産になり、半分を元手にもう一度起業します。勝ち負けは、今の会社の時価総額とあなたの財産の合計で測ります。倒した宿敵は、一族や元の社員が新しい会社を作って戻ってきます。'),
@@ -801,7 +825,7 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
             ? tr('{0}はシェア{1}。市場の半分以上を押さえました。', [ind.name, pct(b.share * 100)])
             : tr('{0}の売上は{1}、シェア{2}です。', [ind.name, yen(b.rev), pct(b.share * 100)]);
     return Say(
-        face: Face(p != null ? p.name : s.pres.name, col: p != null ? null : '#f2c14e'),
+        face: p != null ? staffFace(s, p) : Face.pres(s.pres.name),
         who: p != null ? tr('{0}（責任者）', [nmL(p.name)]) : tr('{0}（社長が直接）', [nmL(s.pres.name)]),
         text: line);
   }).toList();
@@ -859,9 +883,9 @@ void nextEvent(GameController ctl) {
       if (e.tail != null) Padding(padding: const EdgeInsets.only(top: 4), child: plain(e.tail!)),
     ]);
   } else if (e.who != null) {
-    body = Say(face: Face(e.who!.presName, col: e.face), who: '${nmL(e.who!.presName)}${tr('・')}${nmL(e.who!.name)}', text: e.text);
+    body = Say(face: e.face != null ? Face.rival(e.who!.presName, e.face!) : Face(e.who!.presName), who: '${nmL(e.who!.presName)}${tr('・')}${nmL(e.who!.name)}', text: e.text);
   } else if (e.person != null) {
-    body = Say(face: Face(e.person!.name), who: '${nmL(e.person!.name)}${e.person!.partner ? tr('（相棒）') : ''}', text: e.text);
+    body = Say(face: staffFace(ctl.game!, e.person!), who: '${nmL(e.person!.name)}${e.person!.partner ? tr('（相棒）') : ''}', text: e.text);
   } else {
     body = Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(tx(e.text), style: ts()));
   }

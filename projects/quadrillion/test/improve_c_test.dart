@@ -645,7 +645,8 @@ void main() {
           expect(bar.frac, closeTo(r.$3.abs() / top, 1e-9));
           expect(bar.minus, r.$3 < 0);
           final fill = find.descendant(of: _key('pl-bar-${r.$1}'), matching: find.byType(ColoredBox)).last;
-          expect(tester.getSize(fill).width, closeTo(full * bar.frac, .6), reason: r.$1);
+          // 1.0.0+17: 額が0でなければ、棒は AmountBar.minFill より短くしない
+          expect(tester.getSize(fill).width, closeTo(bar.fillWidth(full), .6), reason: r.$1);
           expect(tester.widget<ColoredBox>(fill).color, r.$3 < 0 ? Pal.down : Pal.up);
           expect(find.descendant(of: _key('pl-${r.$1}'), matching: find.text(yen(r.$3))), findsOneWidget);
         }
@@ -692,7 +693,9 @@ void main() {
         expect(row, findsOneWidget, reason: '宿敵 ${rk[i].name} の行');
         final dot = find.descendant(of: row, matching: _key('rank-rival-${rk[i].c!.id}'));
         expect(dot, findsOneWidget);
-        expect((tester.widget<Container>(dot).decoration as BoxDecoration).color, hexColor(rv.col));
+        // 1.0.0+17: 印も白い面で読める濃さに塗る
+        expect(tester.widget<RivalDot>(dot).col, rv.col);
+        expect(contrastRatio(rivalInk(rv.col), Pal.panel), greaterThanOrEqualTo(4.5));
         expect(find.descendant(of: row, matching: find.text('${i + 1}')), findsOneWidget);
         // 名前はその宿敵の色（白い面で読める濃さ）
         final name = tester.widget<Text>(find.descendant(of: row, matching: find.text(rk[i].name)));

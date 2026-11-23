@@ -20,8 +20,9 @@ Widget _apBtn(GameController ctl, String label, VoidCallback onTap, {int ap = 1,
   final short = !ctl.game!.canAP(ap);
   return Btn(label, () {
     if (!ctl.noAp(ap)) onTap();
-    // 英語は語の途中で折れず2行になりやすいので、1行に収め、入りきらないときは字だけを詰める
-  }, small: true, ap: ap, dim: short, enabled: enabled, primary: primary, more: more, shrink: L.en);
+    // 1行に収め、入りきらないときは字だけを詰める。英語は語の途中で折れず2行になりやすく、
+    // 日本語も幅320では「TOBで50.1%（…・成功率…）」のような長いものが2行に折れていた（1.0.0+17）
+  }, small: true, ap: ap, dim: short, enabled: enabled, primary: primary, more: more, shrink: true);
 }
 Widget _gap([double h = 8]) => SizedBox(height: h);
 String _pct0(double v) => '${jsNum(jsRound(v * 100))}%';
@@ -182,7 +183,7 @@ Widget _rivalRow(GameController ctl, Company c) {
       constraints: const BoxConstraints(minHeight: minTap),
       padding: const EdgeInsets.fromLTRB(12, 7, 6, 7),
       child: Row(children: [
-        Face(c.presName, col: c.rival!.col),
+        Face.rival(c.presName, c.rival!.col),
         const SizedBox(width: 10),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -215,7 +216,7 @@ Widget _rivalCard(GameController ctl, Company c) {
           constraints: const BoxConstraints(minHeight: minTap),
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Row(children: [
-            Face(c.presName, col: r.col),
+            Face.rival(c.presName, r.col),
             const SizedBox(width: 10),
             Expanded(
               child: Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
@@ -491,7 +492,7 @@ List<Widget> bizTab(GameController ctl) {
         Muted(tr('社債 {0}（{1}年に返す）', [yen(s.bond), s.year + ((s.bondDue - s.turn + s.q - 1) / 12).floor()]))
       else
         _apBtn(ctl, tr('社債を出す'), () => ctl.act(s.issueBond), enabled: s.canBond()),
-      if (s.land > 0) Btn(tr('土地を売る（今の値 {0}）', [yen(s.land)]), () => ctl.act(s.sellLand), small: true),
+      if (s.land > 0) Btn(tr('土地を売る（今の値 {0}）', [yen(s.land)]), () => ctl.act(s.sellLand), small: true, shrink: true),
     ]),
   ])));
   return out;
@@ -790,7 +791,7 @@ List<Widget> peopleTab(GameController ctl) {
   final out = <Widget>[H2(tr('社長'))];
   out.add(Panel(
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Face(P.name, col: '#f2c14e'),
+    Face.pres(P.name),
     const SizedBox(width: 10),
     Expanded(
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -860,6 +861,7 @@ List<Widget> peopleTab(GameController ctl) {
       ),
   ])));
   out.add(H2(tr('部下（{0}人）', [s.staff.length])));
+  if (s.staff.isNotEmpty || s.cands.isNotEmpty) out.add(Padding(key: const ValueKey('face-legend'), padding: const EdgeInsets.only(bottom: 4), child: faceLegend()));
   // 4人以上は1人1行にたたみ、押した1人だけを詳しく開く
   final foldStaff = s.staff.length >= staffFoldMin;
   for (final p in s.staff) {
@@ -874,7 +876,7 @@ List<Widget> peopleTab(GameController ctl) {
   for (final p in s.cands) {
     out.add(Panel(
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Face(p.name),
+      staffFace(s, p),
       const SizedBox(width: 10),
       Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -897,8 +899,25 @@ List<Widget> peopleTab(GameController ctl) {
 /// 部下をたたみ始める人数
 const staffFoldMin = 4;
 
-/// 忠誠がこの値を下回ると、注意の印を付ける（引き抜きや独立の話が出始めるあたり）
+/// 忠誠がこの値を下回ると、赤い注意の印を付ける。仕組みの線と同じ値にしてある:
+/// 宿敵の引き抜きは「野心60超・忠誠55未満」（game_turn.dart の「引き抜き」）、相棒の独立は「野心65超・忠誠50未満」。
+/// 55 は引き抜きが実際に始まる線そのものなので、遅くはないが、前触れにもならない → 手前に [loySoft] の線を足した（1.0.0+17）
 const loyWarn = 55.0;
+
+/// 前触れの線（橙の印）。月に 0.15〜0.6 ずつ下がる社風・特性の組み合わせで、赤の線の 8〜33 か月前に出る。
+/// 会社を丸ごと売るときに相棒がついてくる線（忠誠60以上）とも同じ
+const loySoft = 60.0;
+
+/// 忠誠の注意の段（null 注意なし・'soft' 下がり気味・'bad' 引き抜きや独立の話が出うる）。
+/// 野心が弱い（60以下）と分かっている人は、忠誠が低くても引き抜きの的にならないので、赤にはしない
+String? loyLevel(Person p) {
+  if (p.loy >= loySoft) return null;
+  final risky = !p.ambKnown || p.amb > 60;
+  return p.loy < loyWarn && risky ? 'bad' : 'soft';
+}
+
+/// 忠誠の注意の文と色
+(String, Color) loyNote(String level) => level == 'bad' ? (tr('忠誠が下がっています'), Pal.down) : (tr('忠誠が下がり気味です'), Pal.warn);
 
 /// いちばん高い能力（幅でしか分からないものは幅の真ん中で比べる。同じなら並びの先のもの）
 String topAbility(Game s, Person p) {
@@ -919,9 +938,9 @@ Widget _staffRow(GameController ctl, Person p) {
   final s = ctl.game!;
   final job = s.biz.where((b) => b.mgr == p.id).firstOrNull;
   final top = topAbility(s, p);
-  final warn = p.loy < loyWarn;
+  final lv = loyLevel(p);
   return TapCard(
-    border: warn ? Pal.down : Pal.line,
+    border: lv == 'bad' ? Pal.down : lv == 'soft' ? Pal.warn : Pal.line,
     inkKey: ValueKey('staff-row-${p.id}'),
     expanded: false,
     onTap: () => ctl.toggleStaff(p.id),
@@ -929,17 +948,18 @@ Widget _staffRow(GameController ctl, Person p) {
       constraints: const BoxConstraints(minHeight: minTap),
       padding: const EdgeInsets.fromLTRB(12, 7, 6, 7),
       child: Row(children: [
-        Face(p.name),
+        staffFace(s, p),
         const SizedBox(width: 10),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
               Text(tr('{0}（{1}歳）', [nmL(p.name), p.age]), style: ts(size: 14, bold: true)),
               if (p.partner) Tag(tr('相棒@@tag'), kind: TagKind.gold),
-              if (warn)
+              if (lv != null)
                 Tooltip(
-                  message: tr('忠誠が下がっています'),
-                  child: Icon(Icons.warning_amber_rounded, key: ValueKey('loy-warn-${p.id}'), size: 17, color: Pal.down, semanticLabel: tr('忠誠が下がっています')),
+                  message: loyNote(lv).$1,
+                  child: Icon(lv == 'bad' ? Icons.warning_amber_rounded : Icons.trending_down,
+                      key: ValueKey('loy-warn-${p.id}'), size: 17, color: loyNote(lv).$2, semanticLabel: loyNote(lv).$1),
                 ),
             ]),
             const SizedBox(height: 2),
@@ -971,7 +991,7 @@ Widget _staffCard(GameController ctl, Person p, {VoidCallback? onFold}) {
     return Panel(
         border: onFold != null ? Pal.gold : Pal.line,
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Face(p.name),
+      staffFace(s, p),
       const SizedBox(width: 10),
       Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -986,13 +1006,13 @@ Widget _staffCard(GameController ctl, Person p, {VoidCallback? onFold}) {
                   child: Row(children: [Expanded(child: head), const Icon(Icons.expand_less, size: 22, color: Pal.mute)]),
                 ),
               ),
-        if (p.loy < loyWarn)
+        if (loyLevel(p) case final lv?)
           Padding(
             padding: const EdgeInsets.only(top: 2),
             child: Row(children: [
-              const Icon(Icons.warning_amber_rounded, size: 15, color: Pal.down),
+              Icon(lv == 'bad' ? Icons.warning_amber_rounded : Icons.trending_down, size: 15, color: loyNote(lv).$2),
               const SizedBox(width: 4),
-              Expanded(child: Text(tr('忠誠が下がっています'), style: ts(size: 12.5, color: Pal.down))),
+              Expanded(child: Text(loyNote(lv).$1, style: ts(size: 12.5, color: loyNote(lv).$2))),
             ]),
           ),
         const SizedBox(height: 4),
@@ -1162,11 +1182,11 @@ List<Widget> stockTab(GameController ctl) {
     Muted(tr('勝ち負けは「今の会社の時価総額＋あなたの財産」で測ります。今の財産 {0}', [yen(s.wealth)])),
     const SizedBox(height: 6),
     _wrap([
-      if (s.listed) Btn(tr('持ち株を5%売る（約{0}）', [yen(s.cap * .045)]), () => ctl.act(() => s.sellOwn(5)), small: true),
+      if (s.listed) Btn(tr('持ち株を5%売る（約{0}）', [yen(s.cap * .045)]), () => ctl.act(() => s.sellOwn(5)), small: true, shrink: true),
       if (s.listed) _apBtn(ctl, tr('非上場に戻す（MBO）'), () => ctl.act(s.goPrivate)),
       _apBtn(ctl, tr('会社を丸ごと売る'), () => openSell(ctl), enabled: s.biz.isNotEmpty && s.buyers().isNotEmpty, more: true),
       if (s.noncomp != null && !s.noncomp!.broken)
-        Tooltip(message: tr('2年後に裁判で賠償を求められる'), child: Btn(tr('同じ業種に入らない約束を破る'), () => ctl.act(s.breakNoncomp), small: true)),
+        Tooltip(message: tr('2年後に裁判で賠償を求められる'), child: Btn(tr('同じ業種に入らない約束を破る'), () => ctl.act(s.breakNoncomp), small: true, shrink: true)),
     ]),
   ])));
   final mine = s.cos.where((c) => c.alive && s.pctOf(c) > 0).toList();
@@ -1198,7 +1218,7 @@ Widget _coCard(GameController ctl, Company c) {
   return Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
     Row(children: [
-      if (c.rival != null) ...[Face(c.presName, col: c.rival!.col), const SizedBox(width: 6)],
+      if (c.rival != null) ...[Face.rival(c.presName, c.rival!.col), const SizedBox(width: 6)],
       Expanded(child: Text(nmL(c.name), style: ts(bold: true))),
       if (c.parent == 'player') ...[Tag(c.loc != null ? tr('現地法人（{0}）', [cm[c.loc!]!.n]) : tr('子会社@@tag'), kind: TagKind.gold), const SizedBox(width: 4)],
       Flexible(child: Tag(c.rival != null ? RTYPE[c.rival!.label ?? c.rival!.type] ?? '' : REGN[c.tier])),
@@ -1233,8 +1253,8 @@ Widget _coCard(GameController ctl, Company c) {
         _apBtn(ctl, c.loc != null ? tr('{0}の市場に上場させる（30%売る・約{1}）', [cm[c.loc!]!.n, yen(c.cap * .3 * .95)]) : tr('子会社を上場させる（30%売る・約{0}）', [yen(c.cap * .3 * .95)]),
             () => ctl.act(() => s.subIPO(c))),
       if (c.loc != null && c.locRivPct > 0 && s.coById(c.locRiv) != null)
-        Btn(tr('宿敵の持ち分を買い戻す（{0}）', [yen(s.localBuybackCost(c))]), () => ctl.act(() => s.localBuyback(c)), small: true, enabled: s.cash >= s.localBuybackCost(c)),
-      if (own > 0) Btn(tr('全部売る（{0}）', [yen(c.cap * own / 100 * .95)]), () => ctl.act(() => s.sellStake(c)), small: true),
+        Btn(tr('宿敵の持ち分を買い戻す（{0}）', [yen(s.localBuybackCost(c))]), () => ctl.act(() => s.localBuyback(c)), small: true, shrink: true, enabled: s.cash >= s.localBuybackCost(c)),
+      if (own > 0) Btn(tr('全部売る（{0}）', [yen(c.cap * own / 100 * .95)]), () => ctl.act(() => s.sellStake(c)), small: true, shrink: true),
     ]),
   ]));
 }
@@ -1337,12 +1357,7 @@ List<Widget> numTab(GameController ctl) {
         SizedBox(width: Ui.sw(44), child: Text('${i + 1}', style: st)),
         // 宿敵には、その宿敵の色の丸を付ける
         if (rv != null)
-          Container(
-              key: ValueKey('rank-rival-${x.c!.id}'),
-              width: 10,
-              height: 10,
-              margin: const EdgeInsets.only(right: 6),
-              decoration: BoxDecoration(color: hexColor(rv.col), shape: BoxShape.circle, border: Border.all(color: rivalInk(rv.col)))),
+          Padding(padding: const EdgeInsets.only(right: 6), child: RivalDot(rv.col, key: ValueKey('rank-rival-${x.c!.id}'))),
         Expanded(child: Text(x.me ? tx(x.name) : nmL(x.name), style: st, overflow: TextOverflow.ellipsis)),
         Text(yen(x.cap), style: st),
       ]),
@@ -1352,8 +1367,8 @@ List<Widget> numTab(GameController ctl) {
   out.add(Padding(
     padding: const EdgeInsets.only(top: 2),
     child: Row(children: [
-      Container(width: 10, height: 10, margin: const EdgeInsets.only(right: 6), decoration: BoxDecoration(color: Pal.gold, shape: BoxShape.circle, border: Border.all(color: Pal.goldtx))),
-      Expanded(child: Muted(tr('色の丸は宿敵（宿敵ごとの色）。上位10社・あなたの前後5社・宿敵を出しています'), size: 12)),
+      const Padding(padding: EdgeInsets.only(right: 6), child: RivalDot('#f2c14e')),
+      Expanded(child: Muted(tr('色の四角は宿敵（宿敵ごとの色）。上位10社・あなたの前後5社・宿敵を出しています'), size: 12)),
     ]),
   ));
   out.addAll(chronSection(s));

@@ -565,26 +565,67 @@ class Tag extends StatelessWidget {
   }
 }
 
-/// 丸い顔（名前の1文字目）
+/// 部下の顔の色（いちばん高い能力で分ける。1.0.0+17）。どれも濃い字（#0D1426）が 4.5:1 以上で読める明るさ
+const Map<String, String> abFaceCols = {'tou': '#ffb454', 'kai': '#9fb3ff', 'ei': '#7ff0c8', 'zai': '#c9a0ff'};
+
+/// 顔の印（名前の1文字目）。絵は使わず、形と色で誰の側の人かを見分ける（1.0.0+17）:
+/// ・社長（[Face.pres]）… 金色の丸に、濃い金の輪
+/// ・部下 … 丸。色はいちばん高い能力（[abFaceCols]）。相棒は濃い金の輪つき（[ring]）
+/// ・宿敵（[Face.rival]）… 角の丸い四角。その宿敵の色を白地で読める濃さ（[rivalInk]）にして塗り、字は白
+/// 色を渡さなければ、名前から決まる色の丸（会議の発言者など）
 class Face extends StatelessWidget {
   final String name;
   final String? col;
-  const Face(this.name, {super.key, this.col});
+
+  /// 輪を付ける（社長・相棒）
+  final bool ring;
+
+  /// 宿敵の印（四角・濃い塗り・白い字）
+  final bool rival;
+  const Face(this.name, {super.key, this.col, this.ring = false}) : rival = false;
+  const Face.pres(this.name, {super.key})
+      : col = '#f2c14e',
+        ring = true,
+        rival = false;
+  const Face.rival(this.name, String this.col, {super.key})
+      : ring = false,
+        rival = true;
+
+  /// 塗りの色（宿敵は白地で 4.5:1 以上の濃さ）
+  Color get fill {
+    final n = nmL(name).replaceAll(RegExp(r'\s'), '');
+    final c = col ?? faceCols[(n.isEmpty ? 63 : n.codeUnitAt(0)) % faceCols.length];
+    return rival ? rivalInk(c) : hexColor(c);
+  }
+
   @override
   Widget build(BuildContext context) {
     final n = nmL(name).replaceAll(RegExp(r'\s'), '');
-    final c = col ?? faceCols[(n.isEmpty ? 63 : n.codeUnitAt(0)) % faceCols.length];
     return Container(
       width: 34,
       height: 34,
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: hexColor(c), shape: BoxShape.circle),
-      // 飾りの丸（名前の1文字目）。名前は隣に書いてあるので、読み上げからは外す。字は丸からはみ出さないよう、大きさを変えない
+      decoration: BoxDecoration(
+          color: fill,
+          shape: rival ? BoxShape.rectangle : BoxShape.circle,
+          borderRadius: rival ? BorderRadius.circular(9) : null,
+          border: ring ? Border.all(color: Pal.goldtx, width: 2) : null),
+      // 飾りの印（名前の1文字目）。名前は隣に書いてあるので、読み上げからは外す。字は印からはみ出さないよう、大きさを変えない
       child: ExcludeSemantics(
           child: Text(n.isEmpty ? '?' : n.characters.first,
-              textScaler: TextScaler.noScaling, style: ts(size: 14, bold: true, color: const Color(0xFF0D1426)))),
+              textScaler: TextScaler.noScaling, style: ts(size: 14, bold: true, color: rival ? Pal.panel : const Color(0xFF0D1426)))),
     );
   }
+}
+
+/// 宿敵の小さな印（ランキングなど）。顔と同じく四角で、白地で読める濃さに塗る
+class RivalDot extends StatelessWidget {
+  final String col;
+  final double size;
+  const RivalDot(this.col, {super.key, this.size = 10});
+  @override
+  Widget build(BuildContext context) => Container(
+      width: size, height: size, decoration: BoxDecoration(color: rivalInk(col), borderRadius: BorderRadius.circular(size * .28)));
 }
 
 /// 役割の印の丸（株主の代表・銀行・取締役など、名前の無い話し手）
@@ -1067,15 +1108,26 @@ class AmountBar extends StatelessWidget {
   final double frac;
   final bool minus;
   const AmountBar(this.frac, {super.key, required this.minus});
+
+  /// 額が0でなければ、棒はこの幅より短くしない（費用が利益の1%でも、赤い棒として見える。1.0.0+17）
+  static const minFill = 12.0;
+
+  /// 幅 [full] の欄での、塗りの幅
+  double fillWidth(double full) {
+    final f = frac.isFinite ? frac.clamp(0.0, 1.0) : 0.0;
+    return f <= 0 ? 0 : math.min(full, math.max(minFill, full * f));
+  }
+
   @override
   Widget build(BuildContext context) => ClipRRect(
         borderRadius: BorderRadius.circular(3),
-        child: Container(
-          height: 6,
-          color: Pal.panel2,
-          alignment: Alignment.centerLeft,
-          child: FractionallySizedBox(widthFactor: frac.isFinite ? frac.clamp(0.0, 1.0) : 0, child: ColoredBox(color: minus ? Pal.down : Pal.up, child: const SizedBox.expand())),
-        ),
+        child: LayoutBuilder(
+            builder: (context, c) => Container(
+                  height: 8,
+                  color: Pal.panel2,
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(width: fillWidth(c.maxWidth), child: ColoredBox(color: minus ? Pal.down : Pal.up, child: const SizedBox.expand())),
+                )),
       );
 }
 

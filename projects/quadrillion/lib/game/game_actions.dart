@@ -207,6 +207,22 @@ extension GameActions on Game {
     return M('{0}増やし始めました（{1}）。{2}か月後に開きます。{3}', [unitsOf(b, n), Y(cost), left, M(b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります')]);
   }
 
+  /// 今ある店・工場を広げる値段（1.0.0+17。その業種の元手の [extendMult] 倍の固定額）。
+  /// 最初の事業を始めた直後は、店を1つ（＝元手）増やせるお金がたまるまで数か月、事業に打てる手が無かったので、小さい単位を足した
+  double extendCost(Biz b) => capexOf(indm[b.ind]!) * extendMult;
+
+  /// 今ある店・工場を広げる。仕組みは店・工場を増やすのと同じ（払った額が仕掛かりに入り、開いたときに同じ式で伸びる）
+  String extendN(Biz b) {
+    final cost = extendCost(b);
+    if (cash < cost) return M('お金が足りません');
+    if (!canAP(1)) return M('今月の手が残っていません');
+    cash -= cost;
+    useAP(1);
+    b.pipe.add(Pipe(k: 'build', cost: cost, left: 1));
+    calcAll();
+    return M('今ある{0}を広げ始めました（{1}）。来月から使えます。{2}', [uw(b), Y(cost), M(b.model == 'fc' ? '人は加盟店が集めます' : '回すには現場の人が要ります')]);
+  }
+
   /// 商品の大きさの名前
   String devName(int sz) => M(sz == 0
       ? '小さな改良'

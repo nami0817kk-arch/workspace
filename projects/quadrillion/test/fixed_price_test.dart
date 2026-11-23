@@ -419,7 +419,8 @@ void main() {
         openBuild(ctl, b);
         await tester.pump();
         final c0 = g.cash;
-        await tester.tap(find.byType(ChoiceBtn).at(2));
+        // 1.0.0+17 で一番上に「広げる」（元手の1/4）が入ったので、10店は4つ目
+        await tester.tap(find.byType(ChoiceBtn).at(3));
         await tester.pump();
         expect(g.cash, c0);
         expect(tx(g.log.last.m), lang == 'ja' ? 'お金が足りません' : 'Not enough money');
