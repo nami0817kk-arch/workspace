@@ -451,19 +451,23 @@ class _StandingsTabState extends State<_StandingsTab> {
               if (showContinental) ...[
                 _ZoneLegend(
                     color: Colors.amber.shade700,
+                    mark: 'CC',
                     label: Tr.pick(
                         'チャンピオンズカップ出場圏', 'Champions Cup qualification')),
                 _ZoneLegend(
                     color: Colors.lightBlue.shade400,
+                    mark: 'EC',
                     label: Tr.pick('ヨーロッパカップ出場圏', 'Europa Cup qualification')),
               ],
               if (showPromotion) ...[
                 _ZoneLegend(
                   color: SemanticColors.positive(context),
+                  mark: '↑',
                   label: Tr.pick('自動昇格圏', 'Automatic promotion'),
                 ),
                 _ZoneLegend(
                   color: Colors.deepPurple.shade300,
+                  mark: 'PO',
                   label: above.relegationPlayoff
                       ? Tr.pick('入れ替え戦圏', 'Relegation play-off')
                       : Tr.pick('昇格プレーオフ圏', 'Promotion play-offs'),
@@ -472,6 +476,7 @@ class _StandingsTabState extends State<_StandingsTab> {
               if (showRelegation)
                 _ZoneLegend(
                   color: SemanticColors.negative(context),
+                  mark: '↓',
                   label: Tr.pick('降格圏', 'Relegation'),
                 ),
               Text(
@@ -531,17 +536,25 @@ class _StandingsTabState extends State<_StandingsTab> {
               final r = rows[i];
               final team = league.teams.firstWhere((t) => t.id == r.teamId);
               final isUser = r.teamId == userTeamId;
+              // 圏は色の帯だけでは見分けにくい(色の見え方によっては
+              // 分からない)。行に小さな印(↑・PO など)も添える。
               Color? zoneColor;
+              String? zoneMark;
               if (showContinental && i < continentalQualifyCount) {
                 zoneColor = Colors.amber.shade700;
+                zoneMark = 'CC';
               } else if (showContinental && i < europaEnd) {
                 zoneColor = Colors.lightBlue.shade400;
+                zoneMark = 'EC';
               } else if (showPromotion && i < autoPromotionEnd) {
                 zoneColor = SemanticColors.positive(context);
+                zoneMark = '↑';
               } else if (showPromotion && i < playoffEnd) {
                 zoneColor = Colors.deepPurple.shade300;
+                zoneMark = 'PO';
               } else if (showRelegation && i >= relegationStart) {
                 zoneColor = SemanticColors.negative(context);
+                zoneMark = '↓';
               }
               final scheme = Theme.of(context).colorScheme;
               const num = TextStyle(
@@ -594,6 +607,11 @@ class _StandingsTabState extends State<_StandingsTab> {
                         ),
                       ),
                     ),
+                    if (zoneMark != null && zoneColor != null)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: _ZoneMark(color: zoneColor, mark: zoneMark),
+                      ),
                     cell('${r.played}', 26),
                     cell('${r.won}', 24),
                     cell('${r.draw}', 24),
@@ -722,19 +740,51 @@ class _ZoneLegend extends StatelessWidget {
   final Color color;
   final String label;
 
-  const _ZoneLegend({required this.color, required this.label});
+  /// 表の行に添える印(↑・PO など)。凡例にも同じ印を出す。
+  final String mark;
+
+  const _ZoneLegend(
+      {required this.color, required this.mark, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(width: 10, height: 10, color: color),
+        _ZoneMark(color: color, mark: mark),
         const SizedBox(width: 4),
         Text(label,
             style: TextStyle(
                 fontSize: 11, color: SemanticColors.subtleText(context))),
       ],
+    );
+  }
+}
+
+/// 順位表の圏の小さな印(色の枠に「↑」「PO」など)。
+class _ZoneMark extends StatelessWidget {
+  const _ZoneMark({required this.color, required this.mark});
+
+  final Color color;
+  final String mark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 3),
+      decoration: BoxDecoration(
+        border: Border.all(color: color),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      child: Text(
+        mark,
+        style: TextStyle(
+          fontSize: 10,
+          height: 1.3,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
     );
   }
 }

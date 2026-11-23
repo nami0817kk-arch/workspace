@@ -36,7 +36,8 @@ class SupporterMonthCard extends StatelessWidget {
             : SemanticColors.neutral(context);
     return FmPanel(
       key: const ValueKey('supporter-month-card'),
-      title: Tr.pick('$monthのサポーターの期待', 'Supporter expectation in $month'),
+      // 見出しの帯は1行なので短く(文字1.5倍の英語で月名が「…」に消えていた)。
+      title: Tr.pick('$monthの期待', 'Fans in $month'),
       trailing: Text(
         _signed(total),
         style: TextStyle(
@@ -127,20 +128,31 @@ class SupporterUltimatumCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            // 見出しと残りの日数は Wrap で並べる。同じ行に入らなければ、
+            // 残りの日数が下の行へ回る(文字1.5倍で見出しが細い列に押し込まれ、
+            // 英語は単語の途中で切れていた)。
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 12,
+              runSpacing: 2,
               children: [
-                Icon(Icons.campaign, color: bad),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    Tr.pick(
-                        'サポーターからの最後通告', 'Final warning from the supporters'),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: bad,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.campaign, color: bad),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        Tr.pick('サポーターからの最後通告',
+                            'Final warning from the supporters'),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: bad,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
                 Text(
                   Tr.pick('残り$days日', '${Tr.plural(days, 'day')} left'),

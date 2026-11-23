@@ -186,7 +186,9 @@ class FinanceScreen extends StatelessWidget {
                                     color: over
                                         ? SemanticColors.negative(context)
                                         : null,
-                                    backgroundColor: Colors.grey.shade300,
+                                    // 暗い表示でほぼ白の帯が浮いていたので、テーマの色にする。
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.surfaceContainerHighest,
                                   ),
                                 ),
                               ],

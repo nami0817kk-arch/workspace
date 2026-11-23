@@ -304,120 +304,142 @@ class PlayerDetailScreen extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(height: 16),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // この画面の主役の数字。明朝の titleLarge に「総合力: 78」と
-                    // 書いていた頃は、見出しの一部に見えて目が止まらなかった。
-                    // 見出しを小さく上に置き、数字を大きく太く出す。
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+                // 総合力の横に能力のレーダーを置く。文字1.5倍で概要が1列に
+                // なると、レーダーが下へ落ちて縦に長くなっていた(2026-11-23)。
+                // 幅が足りないときだけ、これまでどおり下に置く。
+                LayoutBuilder(
+                  builder: (context, c) {
+                    final overallRow = Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          Tr.pick('総合力', 'Overall'),
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: SemanticColors.subtleText(context)),
+                        // この画面の主役の数字。明朝の titleLarge に「総合力: 78」と
+                        // 書いていた頃は、見出しの一部に見えて目が止まらなかった。
+                        // 見出しを小さく上に置き、数字を大きく太く出す。
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              Tr.pick('総合力', 'Overall'),
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: SemanticColors.subtleText(context)),
+                            ),
+                            Text(
+                              '${p.overall}',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansJP',
+                                fontSize: 34,
+                                fontWeight: FontWeight.w800,
+                                height: 1.05,
+                                letterSpacing: -1,
+                                color: OverallBadge.colorFor(context, p.overall),
+                                fontFeatures: const [FontFeature.tabularFigures()],
+                              ),
+                            ),
+                            Text(
+                              RatingWords.forOverall(p.overall),
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: SemanticColors.subtleText(context)),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '${p.overall}',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansJP',
-                            fontSize: 34,
-                            fontWeight: FontWeight.w800,
-                            height: 1.05,
-                            letterSpacing: -1,
-                            color: OverallBadge.colorFor(context, p.overall),
-                            fontFeatures: const [FontFeature.tabularFigures()],
+                        if (latestGrowth != null &&
+                            latestGrowth.overallDelta != 0) ...[
+                          const SizedBox(width: 8),
+                          Text(
+                            Tr.pick(
+                                '(今週${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})',
+                                " (this week ${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})"),
+                            style: TextStyle(
+                              color: latestGrowth.overallDelta > 0
+                                  ? Colors.green
+                                  : Colors.redAccent,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                        // 伸びしろと今季の伸びは、総合力のすぐ横に(2026-11-21)。
+                        const SizedBox(width: 20),
+                        Flexible(
+                          child: Builder(
+                            builder: (context) {
+                              final potentialProgress = p.potential > 0
+                                  ? (p.overall / p.potential * 100).clamp(0, 100)
+                                  : 0.0;
+                              final seasonStart = gameState
+                                  .save?.seasonStartOverallByPlayerId[p.id];
+                              final seasonDelta = seasonStart != null
+                                  ? p.overall - seasonStart
+                                  : null;
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // 到達度の数字(97%)ではなく、伸びしろを言葉で出す。
+                                    Text(
+                                      potentialProgress >= 95
+                                          ? Tr.pick('伸びしろ: ほぼ上限',
+                                              'Room to grow: almost none')
+                                          : potentialProgress >= 85
+                                              ? Tr.pick('伸びしろ: 少しある',
+                                                  'Room to grow: a little')
+                                              : potentialProgress >= 70
+                                                  ? Tr.pick('伸びしろ: まだ伸びる',
+                                                      'Room to grow: still improving')
+                                                  : Tr.pick('伸びしろ: 大きい',
+                                                      'Room to grow: plenty'),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: SemanticColors.subtleText(context),
+                                      ),
+                                    ),
+                                    if (seasonDelta != null) ...[
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        Tr.pick(
+                                            '今シーズンの成長: ${seasonDelta > 0 ? '+' : ''}$seasonDelta',
+                                            "Growth this season: ${seasonDelta > 0 ? '+' : ''}$seasonDelta"),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: seasonDelta > 0
+                                              ? Colors.green
+                                              : SemanticColors.subtleText(context),
+                                          fontWeight: seasonDelta > 0
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
-                        Text(
-                          RatingWords.forOverall(p.overall),
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: SemanticColors.subtleText(context)),
-                        ),
                       ],
-                    ),
-                    if (latestGrowth != null &&
-                        latestGrowth.overallDelta != 0) ...[
-                      const SizedBox(width: 8),
-                      Text(
-                        Tr.pick(
-                            '(今週${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})',
-                            " (this week ${latestGrowth.overallDelta > 0 ? '+' : ''}${latestGrowth.overallDelta})"),
-                        style: TextStyle(
-                          color: latestGrowth.overallDelta > 0
-                              ? Colors.green
-                              : Colors.redAccent,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                    // 伸びしろと今季の伸びは、総合力のすぐ横に(2026-11-21)。
-                    const SizedBox(width: 20),
-                    Flexible(
-                      child: Builder(
-                        builder: (context) {
-                          final potentialProgress = p.potential > 0
-                              ? (p.overall / p.potential * 100).clamp(0, 100)
-                              : 0.0;
-                          final seasonStart = gameState
-                              .save?.seasonStartOverallByPlayerId[p.id];
-                          final seasonDelta = seasonStart != null
-                              ? p.overall - seasonStart
-                              : null;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // 到達度の数字(97%)ではなく、伸びしろを言葉で出す。
-                                Text(
-                                  potentialProgress >= 95
-                                      ? Tr.pick('伸びしろ: ほぼ上限',
-                                          'Room to grow: almost none')
-                                      : potentialProgress >= 85
-                                          ? Tr.pick('伸びしろ: 少しある',
-                                              'Room to grow: a little')
-                                          : potentialProgress >= 70
-                                              ? Tr.pick('伸びしろ: まだ伸びる',
-                                                  'Room to grow: still improving')
-                                              : Tr.pick('伸びしろ: 大きい',
-                                                  'Room to grow: plenty'),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: SemanticColors.subtleText(context),
-                                  ),
-                                ),
-                                if (seasonDelta != null) ...[
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    Tr.pick(
-                                        '今シーズンの成長: ${seasonDelta > 0 ? '+' : ''}$seasonDelta',
-                                        "Growth this season: ${seasonDelta > 0 ? '+' : ''}$seasonDelta"),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: seasonDelta > 0
-                                          ? Colors.green
-                                          : SemanticColors.subtleText(context),
-                                      fontWeight: seasonDelta > 0
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                    );
+                    if (c.maxWidth < 400) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          overallRow,
+                          const SizedBox(height: 12),
+                          Center(child: AttributeRadar(player: p)),
+                        ],
+                      );
+                    }
+                    return Row(
+                      children: [
+                        Expanded(child: overallRow),
+                        const SizedBox(width: 8),
+                        AttributeRadar(player: p, size: 160),
+                      ],
+                    );
+                  },
                 ),
-                const SizedBox(height: 12),
-                Center(child: AttributeRadar(player: p)),
                 // 今季の成績と特性(人柄・経歴のタブを開かなくても分かるように)。
                 // 「試合への影響(定量)」は値がほぼ0%で言葉も分かりにくく、外した。
                 const SizedBox(height: 12),

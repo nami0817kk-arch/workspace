@@ -206,7 +206,9 @@ class HomeScreen extends StatelessWidget {
                                             '${save.currentDivisionTier}部・${gameState.leagueDisplayName}',
                                             'Tier ${save.currentDivisionTier} • ${gameState.leagueDisplayName}'),
                                         key: const ValueKey('band-league-name'),
-                                        maxLines: 1,
+                                        // 文字1.5倍では1行に入らず、部の名前が
+                                        // 切れていた。2行まで折り返す。
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme
@@ -260,17 +262,22 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(width: 6),
-                                    Text(
-                                      preseason
-                                          ? Tr.pick(
-                                              ' 開幕前・${standings.length}クラブ',
-                                              ' pre-season, ${standings.length} clubs')
-                                          : Tr.pick('位 / ${standings.length}クラブ',
-                                              ' of ${standings.length}'),
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.white
-                                            .withValues(alpha: 0.80),
+                                    // 文字1.5倍の英語で右へはみ出していた。
+                                    // 入らなければ折り返す。
+                                    Flexible(
+                                      child: Text(
+                                        preseason
+                                            ? Tr.pick(
+                                                ' 開幕前・${standings.length}クラブ',
+                                                ' pre-season, ${standings.length} clubs')
+                                            : Tr.pick(
+                                                '位 / ${standings.length}クラブ',
+                                                ' of ${standings.length}'),
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.white
+                                              .withValues(alpha: 0.80),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -503,6 +510,9 @@ class HomeScreen extends StatelessWidget {
                         color: net >= 0
                             ? SemanticColors.positive(context)
                             : SemanticColors.negative(context),
+                        subColor: net >= 0
+                            ? SemanticColors.positive(context)
+                            : SemanticColors.negative(context),
                       ),
                       // 2つの期待。成績・順位はサポーター、収支は株主が見ている。
                       _StatTile(
@@ -572,25 +582,24 @@ class HomeScreen extends StatelessWidget {
               // 試合の日が近いときだけ出す。以前は7月から「カップ戦へ」が
               // 出ていて、押しても何週も先の試合だった(2026-11-23)。
               if (gameState.isUserDomesticCupMatchSoon)
-                Card(
+                _NoticeCard(
                   key: const ValueKey('domestic-cup-soon'),
                   color: scheme.tertiaryContainer,
-                  child: ListTile(
-                    leading: const Icon(Icons.emoji_events_outlined),
-                    title: Text(Tr.pick(
-                        '国内カップ戦の出番です', 'You are up in the domestic cup')),
-                    subtitle: Text(Tr.pick(
-                        '${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}に自クラブの試合があります',
-                        'Your tie is on ${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}')),
-                    trailing: FilledButton(
-                      onPressed: () {
-                        FeedbackService.tap();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const CupScreen()),
-                        );
-                      },
-                      child: Text(Tr.pick('カップ戦へ', 'Go to the cup')),
-                    ),
+                  onColor: scheme.onTertiaryContainer,
+                  icon: Icons.emoji_events_outlined,
+                  title: Tr.pick(
+                      '国内カップ戦の出番です', 'You are up in the domestic cup'),
+                  body: Tr.pick(
+                      '${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}に自クラブの試合があります',
+                      'Your tie is on ${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}'),
+                  button: FilledButton(
+                    onPressed: () {
+                      FeedbackService.tap();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const CupScreen()),
+                      );
+                    },
+                    child: Text(Tr.pick('カップ戦へ', 'Go to the cup')),
                   ),
                 ),
               // 理事会の路線。順位だけでなく戦い方も見られている。
@@ -628,21 +637,20 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               if (seasonComplete)
-                Card(
+                _NoticeCard(
                   key: const ValueKey('season-over-card'),
                   color: scheme.primaryContainer,
-                  child: ListTile(
-                    leading: const Icon(Icons.flag),
-                    title: Text(Tr.pick('シーズン終了！', 'Season over.')),
-                    // 季を締めたときに来る増減を、押す前に見せる
-                    // (2026-11-23。押した後に初めて -20 を知った)。
-                    subtitle: Text(Tr.pick(
-                        '最終順位: $userRank位。${gameState.seasonEndPreviewLine}',
-                        'Final position: ${Tr.ordinal(userRank)}.${gameState.seasonEndPreviewLine}')),
-                    trailing: FilledButton(
-                      onPressed: () => _startNextSeason(context),
-                      child: Text(Tr.pick('次のシーズンへ', 'On to next season')),
-                    ),
+                  onColor: scheme.onPrimaryContainer,
+                  icon: Icons.flag,
+                  title: Tr.pick('シーズン終了！', 'Season over.'),
+                  // 季を締めたときに来る増減を、押す前に見せる
+                  // (2026-11-23。押した後に初めて -20 を知った)。
+                  body: Tr.pick(
+                      '最終順位: $userRank位。${gameState.seasonEndPreviewLine}',
+                      'Final position: ${Tr.ordinal(userRank)}. ${gameState.seasonEndPreviewLine}'),
+                  button: FilledButton(
+                    onPressed: () => _startNextSeason(context),
+                    child: Text(Tr.pick('次のシーズンへ', 'On to next season')),
                   ),
                 )
               else if (next != null)
@@ -1441,29 +1449,34 @@ class HomeScreen extends StatelessWidget {
       );
       return;
     }
+    // 横画面(高さ375など)では、絵を縦に積むと結果が欄に収まらず、
+    // スクロールできることも分からなかった。横画面では絵を左・結果を右の
+    // 2列にし、上下の余白を詰め、スクロールの手掛かり(つまみ)を常に出す。
+    final reportScroll = ScrollController();
     await showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(switch (finale) {
-          SeasonFinale.champion => Tr.pick('優勝！', 'Champions!'),
-          SeasonFinale.promoted => Tr.pick('昇格！', 'Promoted!'),
-          SeasonFinale.none => Tr.pick('シーズン開始レポート', 'Pre-season report'),
-        }),
-        content: SizedBox(
-          width: double.maxFinite,
+      builder: (dialogContext) {
+        final size = MediaQuery.sizeOf(dialogContext);
+        final landscape = size.width > size.height;
+        Widget artImage(String path) => ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: AspectRatio(
+                aspectRatio: 4 / 3,
+                child: Image.asset(path, fit: BoxFit.cover),
+              ),
+            );
+        final list = Scrollbar(
+          controller: reportScroll,
+          thumbVisibility: true,
           child: ListView(
+            controller: reportScroll,
             shrinkWrap: true,
+            padding: const EdgeInsets.only(right: 10),
             children: [
-              if (art != null)
+              if (art != null && !landscape)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 14),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: AspectRatio(
-                      aspectRatio: 4 / 3,
-                      child: Image.asset(art, fit: BoxFit.cover),
-                    ),
-                  ),
+                  child: artImage(art),
                 ),
               if (summary.isNotEmpty)
                 Container(
@@ -1509,25 +1522,55 @@ class HomeScreen extends StatelessWidget {
                 ),
             ],
           ),
-        ),
-        actions: [
-          // 昇格・優勝のときだけ、評価への道を添える。**押させない。**
-          // いちばん機嫌のいい瞬間に置くだけで、閉じるのと並べてある。
-          if (art != null)
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-                ReviewPrompt().openStoreListing();
-              },
-              child: Text(Tr.pick('このアプリを評価する', 'Rate this app')),
-            ),
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(Tr.pick('閉じる', 'Close')),
+        );
+        return AlertDialog(
+          insetPadding: landscape
+              ? const EdgeInsets.symmetric(horizontal: 40, vertical: 8)
+              : const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+          titlePadding:
+              landscape ? const EdgeInsets.fromLTRB(24, 14, 24, 0) : null,
+          contentPadding:
+              landscape ? const EdgeInsets.fromLTRB(24, 10, 14, 0) : null,
+          actionsPadding:
+              landscape ? const EdgeInsets.fromLTRB(24, 0, 24, 8) : null,
+          title: Text(switch (finale) {
+            SeasonFinale.champion => Tr.pick('優勝！', 'Champions!'),
+            SeasonFinale.promoted => Tr.pick('昇格！', 'Promoted!'),
+            SeasonFinale.none => Tr.pick('シーズン開始レポート', 'Pre-season report'),
+          }),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: art != null && landscape
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 180, child: artImage(art)),
+                      const SizedBox(width: 14),
+                      Expanded(child: list),
+                    ],
+                  )
+                : list,
           ),
-        ],
-      ),
+          actions: [
+            // 昇格・優勝のときだけ、評価への道を添える。**押させない。**
+            // いちばん機嫌のいい瞬間に置くだけで、閉じるのと並べてある。
+            if (art != null)
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  ReviewPrompt().openStoreListing();
+                },
+                child: Text(Tr.pick('このアプリを評価する', 'Rate this app')),
+              ),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(Tr.pick('閉じる', 'Close')),
+            ),
+          ],
+        );
+      },
     );
+    reportScroll.dispose();
   }
 
   Future<void> _startNextSeason(BuildContext context) async {
@@ -1790,6 +1833,70 @@ class _ThisWeekCard extends StatelessWidget {
   }
 }
 
+/// 知らせの札(見出し・本文・右寄せのボタンを縦に積む)。
+///
+/// 以前は ListTile の右にボタンを置いていて、文字1.3〜1.5倍では
+/// 本文が細い列に押し込まれ、札が縦に長くなっていた(2026-11-23)。
+class _NoticeCard extends StatelessWidget {
+  const _NoticeCard({
+    super.key,
+    required this.color,
+    required this.onColor,
+    required this.icon,
+    required this.title,
+    required this.body,
+    required this.button,
+  });
+
+  final Color color;
+
+  /// 地の上の字と印の色(地が primaryContainer なら onPrimaryContainer)。
+  final Color onColor;
+  final IconData icon;
+  final String title;
+  final String body;
+  final Widget button;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      color: color,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, size: 20, color: onColor),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          style: theme.textTheme.titleSmall
+                              ?.copyWith(color: onColor)),
+                      const SizedBox(height: 2),
+                      Text(body,
+                          style: theme.textTheme.bodyMedium
+                              ?.copyWith(color: onColor)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Align(alignment: Alignment.centerRight, child: button),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _StatTile extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -1797,6 +1904,11 @@ class _StatTile extends StatelessWidget {
   final String? sub;
   final Color color;
   final double? progress;
+
+  /// 補足の行の色。良い/悪いを表すとき(週の収支)だけ渡す。渡さなければ
+  /// 地に沈まない控えめな色(onSurfaceVariant)。以前は項目の色(濃い茶など)で、
+  /// 暗い地では「収容人数 12000人」が読めなかった。
+  final Color? subColor;
 
   /// 用語集で引く語。指定すると、タイルを押して意味を読めるようになる。
   /// 数字の意味が分からないまま画面を眺める時間を無くすためのもの。
@@ -1810,6 +1922,7 @@ class _StatTile extends StatelessWidget {
     this.sub,
     this.progress,
     this.glossaryTerm,
+    this.subColor,
   });
 
   @override
@@ -1920,7 +2033,8 @@ class _StatTile extends StatelessWidget {
                 sub!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 11, color: color),
+                style: TextStyle(
+                    fontSize: 11, color: subColor ?? scheme.onSurfaceVariant),
               ),
             ),
           if (progress != null)
