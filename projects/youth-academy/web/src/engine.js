@@ -149,6 +149,9 @@
       this.ti = -1;
       this.keyIdx = this._pickMinutes();
       this.keyMinutes = this.keyIdx.map((k) => this.timeline[k][0]);
+      // 見どころごとの攻め手の乱数を、別の乱数で先に作っておく（2026-11-23：試合の絵が次に攻める側を前もって知り、
+      // 見どころの前に攻める側がボールを持つ流れを作るため。本来の乱数は今までどおり1つ引くので、ほかの中身はずれない）
+      { const sr = YA.rngOf((opts.seed | 0) * 311 + 71); this.sideRolls = this.keyIdx.map(() => sr()); }
       this._refreshPen();
     }
     // 時刻の表示（「45+2」「90+3」）
@@ -490,7 +493,17 @@
     }
 
     pickAttacker() {
-      return this.rng() < this.homeShare() ? this.home : this.away;
+      const u = this.rng(); // 乱数の流れを変えないため、今までどおり引く
+      const k = this.keyIdx ? this.keyIdx.indexOf(this.ti) : -1;
+      const roll = k >= 0 && this.sideRolls ? this.sideRolls[k] : u;
+      return roll < this.homeShare() ? this.home : this.away;
+    }
+    // 次の見どころで攻める側（'home'／'away'）。試合の絵が、その前にボールを持つ側を寄せるのに使う
+    nextSide() {
+      if (this.queuedFK) return this.queuedFK;
+      const k = (this.keyIdx || []).findIndex((i) => i > this.ti);
+      if (k < 0 || !this.sideRolls) return null;
+      return this.sideRolls[k] < this.homeShare() ? 'home' : 'away';
     }
     // いまホームが押している割合（0.22〜0.78）。場面の攻め手の選び方と、試合の絵の「流れ」に使う
     homeShare() {
