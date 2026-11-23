@@ -177,6 +177,9 @@ class Game {
   Tie? tie;
   Noncomp? noncomp;
 
+  /// 初めて遊ぶ人への案内の進み（仕組みの数字には使わない）。'start' があれば案内を出す
+  Map<String, int> guide = {};
+
   double yr() => year + (q - 1) / 12;
   double nom() => nomOf(yr());
   bool hasT(String id) => pres.traits.contains(id);
@@ -761,6 +764,7 @@ class Game {
         'noncomp': noncomp?.toJson(),
         // 試作は保存せず読み込みで作り直していた（月の途中の値になり、続きが少しずれる）。ずれないように持つ
         'indM': indM,
+        'guide': guide,
       };
 
   static Game fromJson(Map<String, dynamic> j, {math.Random? rng}) {
@@ -833,7 +837,8 @@ class Game {
       ..ret = l('ret', Return.fromJson)
       ..deals = l('deals', Deal.fromJson)
       ..tie = j['tie'] == null ? null : Tie.fromJson(j['tie'] as Map<String, dynamic>)
-      ..noncomp = j['noncomp'] == null ? null : Noncomp.fromJson(j['noncomp'] as Map<String, dynamic>);
+      ..noncomp = j['noncomp'] == null ? null : Noncomp.fromJson(j['noncomp'] as Map<String, dynamic>)
+      ..guide = mi('guide');
     s.events = [];
     s.reg = regFor(s.yr());
     final saved = j['indM'] as Map?;

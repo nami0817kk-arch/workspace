@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
+import 'guide.dart';
 import 'painters.dart';
 import 'sheets.dart';
 import 'widgets.dart';
@@ -18,6 +19,8 @@ String _pct0(double v) => '${jsNum(jsRound(v * 100))}%';
 List<Widget> townTab(GameController ctl) {
   final s = ctl.game!;
   final out = <Widget>[];
+  final step = currentGuide(s);
+  if (step != null) out.add(GuideBar(ctl: ctl, step: step));
   out.add(Padding(
     padding: const EdgeInsets.only(top: 10),
     child: ClipRRect(
@@ -302,7 +305,7 @@ Widget _bizCard(GameController ctl, Biz b) {
                 if (i > 0) const TextSpan(text: '／'),
                 TextSpan(
                     text: cs[i].c.name,
-                    style: cs[i].c.rival != null ? ts(size: 12.5, bold: true, color: hexColor(cs[i].c.rival!.col).withValues(alpha: 1)) : null),
+                    style: cs[i].c.rival != null ? ts(size: 12.5, bold: true, color: rivalInk(cs[i].c.rival!.col)) : null),
                 TextSpan(text: ' ${pct(cs[i].share * 100)}'),
               ],
             ])),
@@ -373,17 +376,17 @@ Widget _bizCard(GameController ctl, Biz b) {
       ]),
       _gap(),
       _wrap([
-        Btn('商品を作る ${yen(s.cash * .3)}', () => ctl.act(() => s.develop(b, .3)), small: true, enabled: s.cash > 0),
-        Btn('${s.uw(b)}を増やす ${yen(s.cash * .3)}', () => ctl.act(() => s.build(b, .3)), small: true, enabled: s.cash > 0),
-        Btn('大きく増やす ${yen(s.cash * .6)}', () => ctl.act(() => s.build(b, .6)), small: true, enabled: s.cash > 0),
-        Btn('現場の人を増やす ${yen(s.cash * .2)}', () => ctl.act(() => s.addCrew(b, .2)), small: true, enabled: s.cash > 0),
-        Btn('広告 ${yen(s.invBase(b) * .25)}', () => ctl.act(() => s.adv(b)), small: true),
+        Btn('商品を作る ${yen(s.cash * .3)}', () => ctl.act(() => s.develop(b, .3), mark: 'act'), small: true, enabled: s.cash > 0),
+        Btn('${s.uw(b)}を増やす ${yen(s.cash * .3)}', () => ctl.act(() => s.build(b, .3), mark: 'act'), small: true, enabled: s.cash > 0),
+        Btn('大きく増やす ${yen(s.cash * .6)}', () => ctl.act(() => s.build(b, .6), mark: 'act'), small: true, enabled: s.cash > 0),
+        Btn('現場の人を増やす ${yen(s.cash * .2)}', () => ctl.act(() => s.addCrew(b, .2), mark: 'act'), small: true, enabled: s.cash > 0),
+        Btn('広告 ${yen(s.invBase(b) * .25)}', () => ctl.act(() => s.adv(b), mark: 'act'), small: true),
         if (cs.isNotEmpty)
-          Btn(b.attack > 0 ? '値下げ合戦中（あと${b.attack}期）' : '値下げ合戦を仕掛ける（相手：${cs[0].c.name}）', () => ctl.act(() => s.priceWar(b)),
+          Btn(b.attack > 0 ? '値下げ合戦中（あと${b.attack}期）' : '値下げ合戦を仕掛ける（相手：${cs[0].c.name}）', () => ctl.act(() => s.priceWar(b), mark: 'act'),
               small: true, enabled: b.attack <= 0),
         Btn('海外に出る', () => openEnter(ctl, b), small: true),
         Btn('分社・独立', () => openShape(ctl, b), small: true),
-        if (!s.inAssoc(b.ind) && cs.isNotEmpty) Btn('業界団体に入る', () => ctl.act(() => s.joinAssoc(b)), small: true),
+        if (!s.inAssoc(b.ind) && cs.isNotEmpty) Btn('業界団体に入る', () => ctl.act(() => s.joinAssoc(b), mark: 'act'), small: true),
         if (s.modelsFor(b.ind).length > 1) Btn('稼ぎ方を変える', () => openModel(ctl, b.ind, b), small: true),
         if (s.pivotTargets(b).isNotEmpty) Btn('業態を変える', () => openPivot(ctl, b), small: true),
         Btn('売る（約${yen(s.sellValue(b))}）', () => ctl.act(() => s.sellBiz(b)), small: true),
