@@ -38,12 +38,12 @@ class EndScreen extends StatelessWidget {
             const SizedBox(height: 14),
             _ResultCard(g: g, e: e),
             if (c.newEnding)
-              const Padding(
-                padding: EdgeInsets.only(top: 8),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  '図鑑に、新しい最期が記された。',
+                  '図鑑に、新しい最期が記された（${c.dexCount} ／ ${kHandEndings.length}）。',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Pal.good),
+                  style: const TextStyle(color: Pal.good),
                 ),
               ),
             const SizedBox(height: 8),
