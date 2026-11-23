@@ -70,35 +70,118 @@ class RootScreen extends StatelessWidget {
         Positioned.fill(child: SafeArea(bottom: false, child: ctl.game == null ? SetupScreen(ctl: ctl) : MainScreen(ctl: ctl))),
         // 勝ち負けが決まったら、小窓を閉じたあとに全画面のまとめを出す
         if (sheet == null && ctl.game != null && ctl.game!.ended && !ctl.endHidden) Positioned.fill(child: EndScreen(ctl: ctl)),
-        if (sheet != null)
-          Positioned.fill(
-            child: Container(
-              color: const Color(0x59282832),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: LayoutBuilder(builder: (context, c) {
-                    return Align(
-                      alignment: c.maxWidth >= 700 ? Alignment.center : Alignment.bottomCenter,
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 620, maxHeight: c.maxHeight * .94),
+        Positioned.fill(child: SheetHost(sheet: sheet, seq: ctl.sheetSeq)),
+      ]),
+    );
+  }
+}
+
+/// 小窓を重ねる所。開くときは下から滑り出て、閉じるときは沈む。後ろの幕も薄く出入りする。
+/// 小窓から次の小窓へ続くとき（手の結果・出来事の続き）は、出入りさせずに中身だけ替える。
+/// 沈んでいるあいだは中身を描き直さず（閉じたあとの盤面で組み直すと、もう無い事業を見に行くことがある）、押しても動かない
+class SheetHost extends StatefulWidget {
+  final WidgetBuilder? sheet;
+  final int seq;
+  const SheetHost({super.key, required this.sheet, required this.seq});
+
+  @override
+  State<SheetHost> createState() => SheetHostState();
+}
+
+class SheetHostState extends State<SheetHost> with SingleTickerProviderStateMixin {
+  late final AnimationController _a = AnimationController(vsync: this, duration: Ui.sheetMotion, value: widget.sheet != null ? 1 : 0)
+    ..addStatusListener((st) {
+      // 沈みきったら、残していた中身を外す
+      if (st != AnimationStatus.dismissed || !mounted) return;
+      _last = null;
+      // 出入りの時間が0のときは、描き直しの途中でここに来る（そのまま次の描画に任せる）
+      if (!_updating) setState(() {});
+    });
+  late final Animation<double> _curve = CurvedAnimation(parent: _a, curve: Curves.easeOutCubic, reverseCurve: Curves.easeInCubic);
+  late final Animation<Offset> _slide = Tween(begin: const Offset(0, 1.08), end: Offset.zero).animate(_curve);
+  bool _updating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // late の初期化はここで済ませる（最初に開くときから出入りさせるため）
+    _a.value = widget.sheet != null ? 1 : 0;
+  }
+
+  /// 最後に描いた小窓（沈むあいだ、これをそのまま見せる）
+  Widget? _last;
+
+  /// 出入りの進み（0 閉じている〜1 開いている）。テストから見る
+  double get progress => _a.value;
+
+  /// 沈んでいる途中か
+  bool get closing => widget.sheet == null && _last != null;
+
+  @override
+  void didUpdateWidget(SheetHost oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if ((oldWidget.sheet == null) == (widget.sheet == null)) return;
+    _a.duration = MediaQuery.maybeDisableAnimationsOf(context) == true ? Duration.zero : Ui.sheetMotion;
+    _updating = true;
+    if (widget.sheet != null) {
+      _a.forward();
+    } else {
+      _a.reverse();
+    }
+    _updating = false;
+  }
+
+  @override
+  void dispose() {
+    _a.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final sheet = widget.sheet;
+    if (sheet != null) {
+      _last = SingleChildScrollView(
+        key: ValueKey('sheet${widget.seq}'),
+        padding: const EdgeInsets.all(Ui.sheetPad),
+        child: Builder(builder: sheet),
+      );
+    }
+    final body = _last;
+    if (body == null) return const SizedBox.shrink();
+    return IgnorePointer(
+      ignoring: sheet == null,
+      child: Stack(children: [
+        Positioned.fill(child: FadeTransition(opacity: _curve, child: const ColoredBox(key: ValueKey('sheet-scrim'), color: Ui.scrim))),
+        Positioned.fill(
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: LayoutBuilder(builder: (context, c) {
+                return Align(
+                  alignment: c.maxWidth >= 700 ? Alignment.center : Alignment.bottomCenter,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 620, maxHeight: c.maxHeight * .94),
+                    // 小窓の高さのぶんだけ下から上がってくる（沈むときは逆）
+                    child: SlideTransition(
+                      position: _slide,
+                      child: Container(
+                        key: const ValueKey('sheet-card'),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(Ui.rSheet), boxShadow: Ui.sheetShadow),
                         child: Material(
                           color: Pal.panel,
-                          shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(14)),
+                          shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(Ui.rSheet)),
                           clipBehavior: Clip.antiAlias,
-                          child: SingleChildScrollView(
-                            key: ValueKey('sheet${ctl.sheetSeq}'),
-                            padding: const EdgeInsets.all(16),
-                            child: Builder(builder: sheet),
-                          ),
+                          child: body,
                         ),
                       ),
-                    );
-                  }),
-                ),
-              ),
+                    ),
+                  ),
+                );
+              }),
             ),
           ),
+        ),
       ]),
     );
   }
@@ -217,7 +300,7 @@ class SetupScreen extends StatelessWidget {
   /// 続きからの一覧の1行（年月・社長の名前・時価総額・順位）
   Widget _slotRow(int i, SlotInfo? info, {bool last = false}) => Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: last ? null : const BoxDecoration(border: Border(bottom: BorderSide(color: Pal.line))),
+        decoration: last ? null : Ui.rowLine,
         child: Row(children: [
           SizedBox(width: 56, child: Text(tr('枠{0}', [i]), style: ts(bold: true, color: Pal.goldtx))),
           Expanded(
@@ -256,6 +339,16 @@ class MainScreen extends StatelessWidget {
   const MainScreen({super.key, required this.ctl});
 
   static const tabs = [('town', '街@@tab'), ('biz', '事業@@tab'), ('people', '人@@tab'), ('stock', '株@@tab'), ('num', '数字@@tab'), ('zukan', '図鑑@@tab')];
+
+  /// 下のタブのアイコン
+  static const tabIcons = <String, IconData>{
+    'town': Icons.location_city,
+    'biz': Icons.work,
+    'people': Icons.people,
+    'stock': Icons.pie_chart,
+    'num': Icons.bar_chart,
+    'zukan': Icons.menu_book,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -302,10 +395,10 @@ class MainScreen extends StatelessWidget {
               onTap: () => openSettings(ctl),
               child: Material(
               color: Pal.panel2,
-              shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.line), borderRadius: BorderRadius.circular(8)),
+              shape: btnShape(Pal.line),
               child: InkWell(
                 key: const ValueKey('settings'),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(Ui.rBtn),
                 onTap: () => openSettings(ctl),
                 child: const Padding(padding: EdgeInsets.all(5), child: Icon(Icons.settings, size: 18, color: Pal.ink)),
               ),
@@ -319,16 +412,23 @@ class MainScreen extends StatelessWidget {
           FlashStat(tr('時価総額 '), yen(s.cap), value: s.cap, turn: s.turn, color: Pal.goldtx),
           if (s.wealth > 0) _stat(tr('財産 '), yen(s.wealth)),
           FlashStat(tr('世界 '), tr('{0}位', [rk]), value: rk.toDouble(), turn: s.turn, higherIsBetter: false),
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            Text(tr('手 '), style: ts(size: 12.5, color: Pal.mute)),
-            for (var i = 0; i < s.apMax; i++)
-              Container(
-                width: 10,
-                height: 10,
-                margin: const EdgeInsets.only(right: 3),
-                decoration: BoxDecoration(color: i < s.ap ? Pal.gold : Pal.line, borderRadius: BorderRadius.circular(2)),
-              ),
-          ]),
+          // 今月の残りの手。金の四角に、数字（残り/全部）も添える
+          Semantics(
+            label: tr('手 残り{0}／{1}', [s.ap, s.apMax]),
+            excludeSemantics: true,
+            child: Row(key: const ValueKey('ap'), mainAxisSize: MainAxisSize.min, children: [
+              Text(tr('手 '), style: ts(size: 12.5, color: Pal.mute)),
+              for (var i = 0; i < s.apMax; i++)
+                Container(
+                  width: 10,
+                  height: 10,
+                  margin: const EdgeInsets.only(right: 3),
+                  decoration: BoxDecoration(color: i < s.ap ? Pal.gold : Pal.line, borderRadius: BorderRadius.circular(2)),
+                ),
+              const SizedBox(width: 2),
+              Text('${s.ap}/${s.apMax}', key: const ValueKey('ap-count'), style: ts(size: 12.5, color: s.ap > 0 ? Pal.goldtx : Pal.mute, bold: true)),
+            ]),
+          ),
         ]),
       ]),
     );
@@ -355,6 +455,7 @@ class MainScreen extends StatelessWidget {
       Expanded(
         child: ListView(
           key: PageStorageKey('tab-${ctl.tab}'),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
           children: [?result, ...body],
         ),
@@ -383,23 +484,39 @@ class MainScreen extends StatelessWidget {
         child: SafeArea(
           top: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             child: Row(children: [
               for (final t in tabs)
                 Expanded(
-                  child: InkWell(
-                    key: ValueKey('tab-${t.$1}'),
-                    onTap: () => ctl.setTab(t.$1),
-                    child: Container(
-                      constraints: const BoxConstraints(minHeight: minTap),
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(tr(t.$2),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            style: ts(size: 13, color: ctl.tab == t.$1 ? Pal.goldtx : Pal.mute, bold: ctl.tab == t.$1)),
+                  child: Semantics(
+                    button: true,
+                    selected: ctl.tab == t.$1,
+                    child: InkWell(
+                      key: ValueKey('tab-${t.$1}'),
+                      borderRadius: BorderRadius.circular(Ui.rBtn),
+                      onTap: () => ctl.setTab(t.$1),
+                      child: Container(
+                        constraints: const BoxConstraints(minHeight: minTap),
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Column(mainAxisSize: MainAxisSize.min, children: [
+                          // 選んでいるタブは、アイコンの後ろに金の丸い帯を敷く
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 150),
+                            width: 46,
+                            height: 26,
+                            decoration: BoxDecoration(color: ctl.tab == t.$1 ? Pal.gold : Pal.gold.withValues(alpha: 0), borderRadius: BorderRadius.circular(13)),
+                            child: Icon(tabIcons[t.$1], size: 20, color: ctl.tab == t.$1 ? const Color(0xFF1A1300) : Pal.mute),
+                          ),
+                          const SizedBox(height: 2),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(tr(t.$2),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                style: ts(size: 11.5, color: ctl.tab == t.$1 ? Pal.goldtx : Pal.mute, bold: ctl.tab == t.$1, height: 1.3)),
+                          ),
+                        ]),
                       ),
                     ),
                   ),

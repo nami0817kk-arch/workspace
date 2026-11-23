@@ -88,7 +88,23 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
 
   Game? game;
   String tab = 'town';
+
+  /// 新しい事業の一覧の絞り込み（can 今の資金で始められる・new 生まれて10年以内・all すべて・分類の id）
   String bizFilter = 'can';
+
+  /// 新しい事業の一覧の並べ替え（cost 元手の安い順・market 市場の大きい順・new 生まれたばかり順・margin 利益率の高い順）
+  String bizSort = 'cost';
+
+  /// 新しい事業の一覧の検索の欄（名前で絞る）
+  final TextEditingController bizSearch = TextEditingController();
+
+  /// 手が足りないとき true を返し、「今月の手が残っていません」を出す
+  bool noAp([int need = 1]) {
+    final g = game;
+    if (g == null || g.canAP(need)) return false;
+    toast(M(g.ap > 0 ? '今月の手が足りません' : '今月の手が残っていません'));
+    return true;
+  }
 
   /// 「事業」タブで詳しく開いている事業の id（事業が3つ以上のとき。開けるのは1つだけ）
   int? openBiz;

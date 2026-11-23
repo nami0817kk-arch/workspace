@@ -69,11 +69,10 @@ class GuideBar extends StatelessWidget {
     final go = _go();
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: Material(
-        color: Pal.goldBg,
-        shape: RoundedRectangleBorder(side: const BorderSide(color: Pal.gold), borderRadius: BorderRadius.circular(10)),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
+      child: TapCard(
+          color: Pal.goldBg,
+          border: Pal.gold,
+          margin: EdgeInsets.zero,
           onTap: go,
           child: Padding(
             padding: const EdgeInsets.only(left: 12),
@@ -96,7 +95,6 @@ class GuideBar extends StatelessWidget {
               ),
             ]),
           ),
-        ),
       ),
     );
   }
