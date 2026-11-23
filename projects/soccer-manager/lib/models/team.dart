@@ -193,6 +193,11 @@ class Team {
   /// 終盤の采配として使う想定。
   bool timeWastingMode;
 
+  /// 監督が「リードしている終盤は逃げ切る」考え方か。試合の終盤の区間
+  /// ([MatchEngine.lateHoldFromMinute]分以降)をリードして迎えたときだけ、
+  /// その区間を逃げ切りモードで戦う。監督が毎節決める(ManagerTactics)。
+  bool holdLeadLate;
+
   /// 保存済みの戦術プリセット(最大[maxTacticPresets]件)。
   List<TacticPreset> tacticPresets;
 
@@ -235,6 +240,7 @@ class Team {
     this.manMarkerId,
     this.setPieceDefenderId,
     this.timeWastingMode = false,
+    this.holdLeadLate = false,
     List<TacticPreset>? tacticPresets,
     Map<String, List<String>>? depthChartOrder,
     this.tacticalMeetingCooldownWeeks = 0,
@@ -338,6 +344,7 @@ class Team {
         'manMarkerId': manMarkerId,
         'setPieceDefenderId': setPieceDefenderId,
         'timeWastingMode': timeWastingMode,
+        if (holdLeadLate) 'holdLeadLate': true,
         'tacticPresets': tacticPresets.map((t) => t.toJson()).toList(),
         'depthChartOrder': depthChartOrder,
         'tacticalMeetingCooldownWeeks': tacticalMeetingCooldownWeeks,
@@ -411,6 +418,7 @@ class Team {
         manMarkerId: json['manMarkerId'] as String?,
         setPieceDefenderId: json['setPieceDefenderId'] as String?,
         timeWastingMode: json['timeWastingMode'] as bool? ?? false,
+        holdLeadLate: json['holdLeadLate'] as bool? ?? false,
         tacticPresets: (json['tacticPresets'] as List?)
                 ?.map((e) => TacticPreset.fromJson(e as Map<String, dynamic>))
                 .toList() ??

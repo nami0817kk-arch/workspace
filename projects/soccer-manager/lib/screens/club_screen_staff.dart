@@ -344,6 +344,13 @@ class _ManagerProfileLines extends StatelessWidget {
                 'Style: ${m.style.label} (${m.style.description}) • Preferred shape ${m.formation.label}'),
             style: small,
           ),
+          // 試合の中の戦い方は、この考え方で監督が毎節決める(オーナーは
+          // 選べない)。雇う前に分かるよう、候補にも出す。
+          Text(
+            Tr.pick('この監督の戦い方: ${ManagerTactics.summary(m.style)}',
+                "How he sets up: ${ManagerTactics.summary(m.style)}"),
+            style: small,
+          ),
           if (m.employerClubName != null)
             Text(
               Tr.pick(
