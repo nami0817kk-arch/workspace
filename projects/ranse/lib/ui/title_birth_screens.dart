@@ -61,13 +61,6 @@ class TitleScreen extends StatelessWidget {
                   secondary: true,
                 ),
               ],
-              if (c.best > 0) ...[
-                const SizedBox(height: 18),
-                Text(
-                  'これまでの最高：${c.best}点',
-                  style: const TextStyle(color: Pal.muted, fontSize: 13),
-                ),
-              ],
             ],
           ),
         ),

@@ -106,18 +106,6 @@ class EndScreen extends StatelessWidget {
               ),
             ],
             const SizedBox(height: 14),
-            Text(
-              'スコア ${g.score}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 26, color: Pal.gold),
-            ),
-            if (c.newBest)
-              const Text(
-                '最高記録を更新した！',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Pal.good),
-              ),
-            const SizedBox(height: 14),
             Panel(title: '最期のころ', child: LogList(l.log.take(8).toList())),
             const SizedBox(height: 20),
             BigButton('新たな生を引く', c.draw),

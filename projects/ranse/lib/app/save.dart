@@ -10,8 +10,6 @@ import '../engine/life.dart';
 /// （選択肢は関数を抱えているので保存できない）。
 class SaveStore {
   static const _kSave = 'ranse.save.v1';
-  static const _kBest = 'ranse.best';
-
   Future<void> save(Game g) async {
     final life = g.life;
     if (life == null) return;
@@ -60,11 +58,6 @@ class SaveStore {
     await p.remove(_kSave);
   }
 
-  Future<int> best() async {
-    final p = await SharedPreferences.getInstance();
-    return p.getInt(_kBest) ?? 0;
-  }
-
   static const _kDex = 'ranse.dex.v1';
 
   /// 図鑑（見た最期）。鍵 → 1件。
@@ -111,16 +104,6 @@ class SaveStore {
       jsonEncode({for (final x in d.values) x.key: x.toJson()}),
     );
     return isNew;
-  }
-
-  /// 最高点を更新したら true。
-  Future<bool> submitScore(int score) async {
-    final p = await SharedPreferences.getInstance();
-    if (score > (p.getInt(_kBest) ?? 0)) {
-      await p.setInt(_kBest, score);
-      return true;
-    }
-    return false;
   }
 }
 

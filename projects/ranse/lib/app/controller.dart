@@ -29,8 +29,6 @@ class AppController extends ChangeNotifier {
   bool rolling = false;
   String flick = '…';
   bool hasSave = false;
-  int best = 0;
-  bool newBest = false;
 
   /// この人生の最期が、図鑑に初めて載ったか。
   bool newEnding = false;
@@ -43,7 +41,6 @@ class AppController extends ChangeNotifier {
 
   Future<void> init() async {
     hasSave = await store.hasSave();
-    best = await store.best();
     dexEntries = await store.dex();
     dexCount = dexEntries.length;
     notifyListeners();
@@ -74,7 +71,6 @@ class AppController extends ChangeNotifier {
     final b = birth;
     if (b == null) return;
     _scored = false;
-    newBest = false;
     newEnding = false;
     screen = AppScreen.play;
     game.start(b);
@@ -84,7 +80,6 @@ class AppController extends ChangeNotifier {
   Future<void> resume() async {
     if (await store.restoreInto(game)) {
       _scored = game.finished;
-      newBest = false;
       screen = AppScreen.play;
     } else {
       hasSave = false;
@@ -114,13 +109,6 @@ class AppController extends ChangeNotifier {
         store.recordEnding(g).then((isNew) {
           newEnding = isNew;
           if (isNew) dexCount++;
-          notifyListeners();
-        }),
-      );
-      unawaited(
-        store.submitScore(g.score).then((isBest) {
-          newBest = isBest;
-          if (isBest) best = g.score;
           notifyListeners();
         }),
       );
