@@ -239,6 +239,23 @@ class SaveGame {
   /// 今のクラブ価値の数え方の版。新しいゲームはこの版で始まる。
   static const int currentClubValueVersion = 2;
 
+  /// スタッフの週俸の版。1 は週俸の相場が今の約6.7倍だった頃。
+  /// 2 は相場を15%にした後(StaffMember.staffWageFactor。2026-11-23)。
+  /// 版1のセーブは、読み込んだときに一度だけ、雇っているスタッフと候補の
+  /// 週俸を15%にする。
+  int staffWageVersion;
+
+  /// 今のスタッフの週俸の版。新しいゲームはこの版で始まる。
+  static const int currentStaffWageVersion = 2;
+
+  /// 最後にスタッフの引き抜きの話が来た季(1季に1回まで。0は来ていない)。
+  int staffPoachSeason;
+
+  /// 広報「ビジョンを語る会見」を打った季と、その季に打った回数。
+  /// 続けて打つと効き目が1ずつ減る(季の初めに戻る)。
+  int visionPressSeason;
+  int visionPressUses;
+
   /// オーナーの持分(%)。外部の株主へ売ると減る。51〜100。
   int ownerShare;
 
@@ -969,6 +986,10 @@ class SaveGame {
     Map<int, int>? clubValueHistory,
     this.ownerGoalStartValue = 0,
     this.clubValueVersion = currentClubValueVersion,
+    this.staffWageVersion = currentStaffWageVersion,
+    this.staffPoachSeason = 0,
+    this.visionPressSeason = 0,
+    this.visionPressUses = 0,
     this.ownerShare = 100,
     List<String>? retiredNumberIds,
     Map<String, int>? projects,
@@ -1383,6 +1404,10 @@ class SaveGame {
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
         'ownerGoalStartValue': ownerGoalStartValue,
         'clubValueVersion': clubValueVersion,
+        'staffWageVersion': staffWageVersion,
+        if (staffPoachSeason > 0) 'staffPoachSeason': staffPoachSeason,
+        if (visionPressSeason > 0) 'visionPressSeason': visionPressSeason,
+        if (visionPressUses > 0) 'visionPressUses': visionPressUses,
         'ownerShare': ownerShare,
         'retiredNumberIds': retiredNumberIds,
         'projects': projects,
@@ -1714,6 +1739,11 @@ class SaveGame {
         ownerGoalStartValue: json['ownerGoalStartValue'] as int? ?? 0,
         // 版が書かれていないのは、施設のレベル1を0円にしていた頃のセーブ。
         clubValueVersion: json['clubValueVersion'] as int? ?? 1,
+        // 版が書かれていないのは、スタッフの週俸が今より高かった頃のセーブ。
+        staffWageVersion: json['staffWageVersion'] as int? ?? 1,
+        staffPoachSeason: json['staffPoachSeason'] as int? ?? 0,
+        visionPressSeason: json['visionPressSeason'] as int? ?? 0,
+        visionPressUses: json['visionPressUses'] as int? ?? 0,
         ownerShare: json['ownerShare'] as int? ?? 100,
         rivalPast:
             (json['rivalPast'] as List?)?.map((e) => e as int).toList() ??

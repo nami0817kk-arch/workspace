@@ -63,6 +63,14 @@ class ShareholderEngine {
     return delta;
   }
 
+  /// 季末の収支の評価[financial]に、順位と目標の差による増減[results]
+  /// (サポーター側の季末の増減。-10〜+15)を[resultsShare]だけ混ぜる。
+  static int mixedWithResults({required int financial, required int results}) =>
+      (financial * (1 - resultsShare) + results * resultsShare).round();
+
+  /// 季末の株主の期待の増減のうち、順位と目標の差が占める割合。
+  static const double resultsShare = 0.3;
+
   /// 増減を適用した値(0〜100に収める)。
   static int applied(int current, int delta) =>
       (current + delta).clamp(0, 100);

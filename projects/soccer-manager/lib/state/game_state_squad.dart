@@ -152,8 +152,21 @@ extension GameStateSquad on GameState {
       for (final p in userTeam.players)
         p.id: Map<String, int>.from(p.attributes),
     };
+    // 先発が疲れている週は、監督が練習を軽くする(水準4以上の監督)。
+    final starters = userTeam.players
+        .where((p) => userTeam.startingXI.contains(p.id) && !p.isLoanedOut)
+        .toList();
+    final starterFatigue = starters.isEmpty
+        ? 0.0
+        : starters.fold<int>(0, (a, p) => a + p.fatigue) / starters.length;
+    final (focusOverride, intensityOverride) = TrainingEngine.managerEasing(
+      managerLevel: infra.staffLevel(StaffRole.manager),
+      starterFatigue: starterFatigue,
+    );
     TrainingEngine.applyWeeklyTraining(
       userTeam,
+      focusOverride: focusOverride,
+      intensityOverride: intensityOverride,
       headCoachLevel: infra.staffLevel(StaffRole.headCoach),
       trainingGroundLevel: infra.facilityLevel(FacilityType.trainingGround),
       fitnessCoachLevel: infra.staffLevel(StaffRole.fitnessCoach),
@@ -296,6 +309,7 @@ extension GameStateSquad on GameState {
       return false;
     }
 
+    hired.hiredOn = SeasonCalendar.dateOnly(today);
     _save!.infrastructure.staff[hired.role] = hired;
     _save!.staffCandidates.removeAt(idx);
     if (severance > 0) _book(LedgerCategory.staffWages, -severance);

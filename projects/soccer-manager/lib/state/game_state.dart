@@ -781,6 +781,7 @@ class GameState extends ChangeNotifier {
     _dropDanglingJobOffer(save);
     _migrateEconomyIfNeeded(save);
     _migrateClubValueIfNeeded(save);
+    _migrateStaffWageIfNeeded(save);
     // ファンの需要を持たない旧セーブは、部と規模から作る。
     _ensureFanDemand(save);
     // 今日の日付を持たない旧セーブは、ここで日付を作る。
@@ -899,6 +900,22 @@ class GameState extends ChangeNotifier {
     if (save.ownerGoalStartValue > 0) save.ownerGoalStartValue += delta;
     if (save.planTargetValue > 0) save.planTargetValue += delta;
     save.clubValueVersion = SaveGame.currentClubValueVersion;
+  }
+
+  /// スタッフの週俸の相場を15%にした(2026-11-23)のに合わせ、版1の
+  /// セーブの雇っているスタッフと候補の週俸を一度だけ同じ割合にする。
+  /// 古いレベル制から移した人(id が staff-legacy-)は、新しい相場で
+  /// 作られているので触らない。
+  void _migrateStaffWageIfNeeded(SaveGame save) {
+    if (save.staffWageVersion >= SaveGame.currentStaffWageVersion) return;
+    for (final st in [
+      ...save.infrastructure.staff.values.whereType<StaffMember>(),
+      ...save.staffCandidates,
+    ]) {
+      if (st.id.startsWith('staff-legacy-')) continue;
+      st.wage = max(1, (st.wage * StaffMember.staffWageFactor).round());
+    }
+    save.staffWageVersion = SaveGame.currentStaffWageVersion;
   }
 
   /// [save]の自クラブのいる国・部の年俸の水準([wageCountryFactor])。

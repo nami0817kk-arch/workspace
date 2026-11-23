@@ -13,6 +13,21 @@ export '../models/training_focus.dart';
 class TrainingEngine {
   static final Random _rng = Random();
 
+  // 練習で溜まる疲れ(通常の強度で1週あたり)と、練習の週の抜け。
+  //
+  // 以前は全体練習 +10・特化 +12 に対して抜けが -5 で、練習をする自クラブ
+  // だけが週に +5〜7 ずつ疲れを溜めていた(CPU は練習をしない)。長く
+  // 回すと先発の平均疲労が自クラブ 75〜99・CPU 20〜35 になり、試合の強さ
+  // ((1 - 疲労/250))で2〜3割負けて、どの方針でもいつも最下位だった
+  // (2026-11-23 の実測)。練習の疲れは軽く、抜けは日々の回復に近づける。
+  // 抜けを -8 にすると自クラブが CPU より10ほど元気になったので -6 にした
+  // (普通の運び方で先発の平均疲労が CPU と同じ 20〜30 ほど)。
+  static const int fatigueBalanced = 4;
+  static const int fatigueFocused = 5;
+  static const int fatigueFitness = 2;
+  static const int fatigueSwitch = 3;
+  static const int weeklyRecovery = 6;
+
   /// チームの全選手に、チームの既定方針でトレーニングを適用する。
   /// 選手ごとの個別の方針は持たない(練習の中身はクラブのコーチ陣に任せる)。
   /// [headCoachLevel]は成長効率、[trainingGroundLevel]は成長効率と疲労回復を高める。
@@ -30,6 +45,8 @@ class TrainingEngine {
     double injuryFactor = 1.0,
     double careerGrowthBonus = 1.0,
     double weekScale = 1.0,
+    TrainingFocus? focusOverride,
+    TrainingIntensity? intensityOverride,
   }) {
     final growthMultiplier = ClubInfrastructure.trainingGrowthMultiplier(
           headCoachLevel,
@@ -39,7 +56,8 @@ class TrainingEngine {
     final fatigueRecoveryBonus =
         ClubInfrastructure.fatigueRecoveryBonus(trainingGroundLevel) +
             ClubInfrastructure.fitnessCoachRecoveryBonus(fitnessCoachLevel);
-    final focus = team.defaultTrainingFocus;
+    final focus = focusOverride ?? team.defaultTrainingFocus;
+    final intensity = intensityOverride ?? team.trainingIntensity;
 
     for (final p in team.players) {
       // 「才能開花」の発生有無は毎週リセットする(セーブデータには
@@ -60,12 +78,38 @@ class TrainingEngine {
         focus,
         effectiveGrowthMultiplier,
         effectiveFatigueRecoveryBonus,
-        team.trainingIntensity,
+        intensity,
         injuryFactor,
         weekScale,
       );
     }
   }
+
+  /// 監督がその週の練習を軽くするか。水準4以上の監督は、先発の平均疲労が
+  /// [easeFatigueLine]を超えた週は強度を軽めに、[restFatigueLine]を超えた
+  /// 週は休養にする(練習の中身は監督の仕事。2026-11-23)。返すのは
+  /// (重点, 強度)。軽くしないなら両方 null。
+  static (TrainingFocus?, TrainingIntensity?) managerEasing({
+    required int managerLevel,
+    required double starterFatigue,
+  }) {
+    if (managerLevel < easeManagerLevel) return (null, null);
+    if (starterFatigue > restFatigueLine) return (TrainingFocus.rest, null);
+    if (starterFatigue > easeFatigueLine) {
+      return (null, TrainingIntensity.light);
+    }
+    return (null, null);
+  }
+
+  /// 練習を軽くする監督の水準の下限。
+  static const int easeManagerLevel = 4;
+
+  /// 先発の平均疲労がこれを超えたら、強度を軽めにする。60では日程の
+  /// 詰まったイングランドで自クラブが CPU より5ほど疲れたままだった。
+  static const int easeFatigueLine = 45;
+
+  /// 先発の平均疲労がこれを超えたら、休養にする。
+  static const int restFatigueLine = 60;
 
   static void _applyToPlayer(
     Player p,
@@ -115,7 +159,8 @@ class TrainingEngine {
         ]) {
           _grow(p, k, 0.25 * effectiveGrowth);
         }
-        p.fatigue = (p.fatigue + (10 * intensityFactor).round()).clamp(0, 100);
+        p.fatigue = (p.fatigue + (fatigueBalanced * intensityFactor).round())
+            .clamp(0, 100);
         break;
       case TrainingFocus.attack:
         final primary = (p.position.group == PositionGroup.att ||
@@ -137,7 +182,8 @@ class TrainingEngine {
         ]) {
           _grow(p, k, 0.25 * effectiveGrowth);
         }
-        p.fatigue = (p.fatigue + (12 * intensityFactor).round()).clamp(0, 100);
+        p.fatigue = (p.fatigue + (fatigueFocused * intensityFactor).round())
+            .clamp(0, 100);
         break;
       case TrainingFocus.defense:
         if (p.position.group == PositionGroup.gk) {
@@ -163,7 +209,8 @@ class TrainingEngine {
             _grow(p, k, 0.2 * effectiveGrowth);
           }
         }
-        p.fatigue = (p.fatigue + (12 * intensityFactor).round()).clamp(0, 100);
+        p.fatigue = (p.fatigue + (fatigueFocused * intensityFactor).round())
+            .clamp(0, 100);
         break;
       case TrainingFocus.fitness:
         for (final k in [
@@ -174,7 +221,8 @@ class TrainingEngine {
         ]) {
           _grow(p, k, 0.45 * effectiveGrowth);
         }
-        p.fatigue = (p.fatigue + (6 * intensityFactor).round()).clamp(0, 100);
+        p.fatigue = (p.fatigue + (fatigueFitness * intensityFactor).round())
+            .clamp(0, 100);
         break;
       case TrainingFocus.positionSwitch:
         for (final pos in p.secondaryPositions) {
@@ -182,7 +230,8 @@ class TrainingEngine {
             p.growFamiliarity(pos, amount: 2);
           }
         }
-        p.fatigue = (p.fatigue + (8 * intensityFactor).round()).clamp(0, 100);
+        p.fatigue = (p.fatigue + (fatigueSwitch * intensityFactor).round())
+            .clamp(0, 100);
         break;
       case TrainingFocus.rest:
         p.fatigue = (p.fatigue - 30 - fatigueRecoveryBonus).clamp(0, 100);
@@ -206,7 +255,8 @@ class TrainingEngine {
       }
     }
 
-    p.fatigue = (p.fatigue - 5 - fatigueRecoveryBonus ~/ 2).clamp(0, 100);
+    p.fatigue = (p.fatigue - weeklyRecovery - fatigueRecoveryBonus ~/ 2)
+        .clamp(0, 100);
 
     if (focus != TrainingFocus.rest) {
       _rollTrainingInjury(p, intensityFactor, injuryFactor);

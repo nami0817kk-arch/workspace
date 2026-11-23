@@ -235,18 +235,30 @@ void main() {
     });
 
     test('CPU 同士の試合(simulate)で交代が起き、試合後は先発の指定が元に戻る', () {
-      final home = squad('h');
-      final away = squad('a');
-      final lineup = MatchEngine.lineupOf(home);
-      final tired = lineup.firstWhere((p) => p.position != Position.gk);
-      tired.fatigue = 95;
-      final bench = strongBenchFor(home, tired);
-      final xiBefore = List<String>.of(home.startingXI);
-      final tiredApps = tired.careerAppearances;
-      final benchApps = bench.careerAppearances;
-
-      final result =
-          MatchEngine.simulate(home: home, away: away, matchday: 1);
+      // 疲れた選手が前半に退場すると、替えられずに控えは入らない(運で
+      // 400回に1回ほど。2026-11-23 に CI で出た)。そのときは組み直す。
+      late Team home;
+      late Player tired;
+      late Player bench;
+      late List<String> xiBefore;
+      late int tiredApps;
+      late int benchApps;
+      late MatchResult result;
+      for (var attempt = 0; attempt < 5; attempt++) {
+        home = squad('h');
+        final away = squad('a');
+        final lineup = MatchEngine.lineupOf(home);
+        tired = lineup.firstWhere((p) => p.position != Position.gk);
+        tired.fatigue = 95;
+        bench = strongBenchFor(home, tired);
+        xiBefore = List<String>.of(home.startingXI);
+        tiredApps = tired.careerAppearances;
+        benchApps = bench.careerAppearances;
+        result = MatchEngine.simulate(home: home, away: away, matchday: 1);
+        final sentOff = result.events.any((e) =>
+            e.type == MatchEventType.redCard && e.scorerId == tired.id);
+        if (!sentOff) break;
+      }
 
       expect(home.startingXI, xiBefore, reason: '交代が先発の指定に残った');
       expect(bench.careerAppearances, benchApps + 1, reason: '入った控えが出場に数えられていない');

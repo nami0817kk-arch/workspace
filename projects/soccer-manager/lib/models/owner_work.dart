@@ -53,6 +53,11 @@ class OwnerWork {
   /// 月に1回打てる手か(広報・ファンの手。どれか1つを月に1回)。
   /// ほかの手は1シーズンに1回ずつ(2026-11-23)。
   bool get monthly => category == OwnerWorkCategory.fans;
+
+  /// 同じ季に続けて打つと効き目が1ずつ減る手か(資金0の会見)。
+  bool get wearsOff => id == visionPressId;
+
+  static const String visionPressId = 'vision_press';
 }
 
 /// 仕事の名前と説明(日英)。getter にして、言語の切り替えに追従させる。
@@ -139,8 +144,8 @@ Map<String, (String, String)> get ownerWorkTexts => {
       ),
       'vision_press': (
         Tr.pick('ビジョン発表の会見', 'Vision press conference'),
-        Tr.pick('夢を語って期待を集める。数字の裏付けが薄いと株主は冷める。',
-            'Sell the dream. Shareholders cool if the numbers are thin.')
+        Tr.pick('夢を語って期待を集める。数字の裏付けが薄いと株主は冷める。同じ季に続けて開くと、聞き飽きられて効き目が1ずつ減る。',
+            'Sell the dream. Shareholders cool if the numbers are thin. Hold it again in the same season and each one moves the fans 1 less.')
       ),
       'legend_match': (
         Tr.pick('OBレジェンド招待試合', 'Legends exhibition match'),
@@ -245,7 +250,9 @@ const List<OwnerWork> ownerWorks = [
   // 広報・ファン(月に1回、どれか1つ。サポーターの期待 +3〜6)
   OwnerWork(id: 'fan_thanks', category: OwnerWorkCategory.fans, funds: -400, supporters: 6, shareholders: -2),
   OwnerWork(id: 'supporter_dinner', category: OwnerWorkCategory.fans, funds: -50, supporters: 4, shareholders: 0),
-  OwnerWork(id: 'vision_press', category: OwnerWorkCategory.fans, funds: 0, supporters: 3, shareholders: -1),
+  // 資金0で打てるぶん、効き目は小さく、同じ季に続けて打つと1ずつ減る
+  // (GameState.ownerWorkSupporters。2026-11-23)。
+  OwnerWork(id: 'vision_press', category: OwnerWorkCategory.fans, funds: 0, supporters: 2, shareholders: -1),
   OwnerWork(id: 'legend_match', category: OwnerWorkCategory.fans, funds: -350, supporters: 5, shareholders: 1),
   OwnerWork(id: 'kids_clinic', category: OwnerWorkCategory.fans, funds: -200, supporters: 4, shareholders: 1),
   OwnerWork(id: 'fan_survey', category: OwnerWorkCategory.fans, funds: -80, supporters: 3, shareholders: 1),

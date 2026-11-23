@@ -1,3 +1,4 @@
+import 'dart:math';
 import '../logic/manager_hr_engine.dart';
 import 'club_infrastructure.dart';
 import 'manager_profile.dart';
@@ -126,6 +127,10 @@ class StaffMember {
   /// 自クラブで引退した選手なら、その選手の id(元選手の印)。
   final String? formerPlayerId;
 
+  /// 自クラブに就いた日。着任から1年は引き抜きの話が来ない。旧セーブと
+  /// 候補は null(いつでも来る)。
+  DateTime? hiredOn;
+
   StaffMember({
     required this.id,
     required this.name,
@@ -137,6 +142,7 @@ class StaffMember {
     this.specialty = StaffSpecialty.balanced,
     this.manager,
     this.formerPlayerId,
+    this.hiredOn,
   });
 
   int attribute(StaffAttribute a) => attributes[a] ?? 1;
@@ -214,8 +220,20 @@ class StaffMember {
   /// 使い切っていた。5つの役職があるのに1人しか雇えない状態だった。
   ///
   /// 裏方の待遇は選手ほど高くない、という当たり前の形に直す。
-  static int askingWage(double roleAbility) =>
-      (4 + roleAbility * roleAbility * 0.25).round();
+  ///
+  /// さらに [staffWageFactor] を掛ける。週俸は部の規模の倍率
+  /// (moneyScale: 3部 14.4)で払うが、収入の倍率(incomeScale: 3部 6.2)は
+  /// その半分以下で、主要3人のスタッフの給与が選手の給与を上回り、
+  /// 引き抜きを昇給で止めるたびに積み上がって2〜4季で資金が尽きた
+  /// (2026-11-23 の実測)。4割でも良い候補で埋めると主要3人が選手の
+  /// 給与の8割に届いたので、15%にした(3部で主要3人が選手の給与の
+  /// 2〜3割ほど)。
+  static int askingWage(double roleAbility) => max(
+      1,
+      ((4 + roleAbility * roleAbility * 0.25) * staffWageFactor).round());
+
+  /// 週俸の相場に掛ける倍率。
+  static const double staffWageFactor = 0.15;
 
   /// その規模のクラブに来るスタッフの、おおよその能力。
   ///
@@ -251,6 +269,7 @@ class StaffMember {
         'specialty': specialty.name,
         if (manager != null) 'manager': manager!.toJson(),
         if (formerPlayerId != null) 'formerPlayerId': formerPlayerId,
+        if (hiredOn != null) 'hiredOn': hiredOn!.toIso8601String(),
       };
 
   static StaffMember fromJson(Map<String, dynamic> json) {
@@ -278,6 +297,7 @@ class StaffMember {
               (json['manager'] as Map).cast<String, dynamic>())
           : null,
       formerPlayerId: json['formerPlayerId'] as String?,
+      hiredOn: DateTime.tryParse(json['hiredOn'] as String? ?? ''),
     );
   }
 }

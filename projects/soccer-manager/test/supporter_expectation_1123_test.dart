@@ -251,9 +251,11 @@ void main() {
       expect(gs.canDoOwnerWork(dinner), isTrue, reason: '翌月はまた打てる');
     });
 
-    test('広報・ファンの手の期待は +3〜6、ほかの分野は今までどおり1季に1回', () async {
+    test('広報・ファンの手の期待は +2〜6、ほかの分野は今までどおり1季に1回', () async {
+      // 資金0の会見だけ +2(続けて打つと減る。2026-11-23)。ほかは +3〜6。
       for (final w in ownerWorks.where((w) => w.monthly)) {
-        expect(w.supporters, inInclusiveRange(3, 6), reason: w.id);
+        expect(w.supporters, inInclusiveRange(w.funds == 0 ? 2 : 3, 6),
+            reason: w.id);
         expect(w.funds, lessThanOrEqualTo(0), reason: w.id);
       }
       final gs = await newGame();
