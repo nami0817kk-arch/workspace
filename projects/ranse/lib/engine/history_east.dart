@@ -839,7 +839,8 @@ List<SceneDef> buildHistoryEastScenes() {
       15,
       84,
       (g) => 20,
-      (g) => _inRegion(g, ['出羽']) && g.l.rank <= 1 && g.active,
+      // 月山・湯殿山は女人禁制だったので、男だけに出す。
+      (g) => _inRegion(g, ['出羽']) && g.l.rank <= 1 && g.active && !g.l.female,
       (g, next) {
         g.ask(
           '出羽三山',
