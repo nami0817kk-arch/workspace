@@ -147,6 +147,18 @@ class StaffMember {
 
   int attribute(StaffAttribute a) => attributes[a] ?? 1;
 
+  /// 得意分野が仕事に効く役職か。いまはユースコーチだけ(有望株の伸びる
+  /// 能力を決める。TrainingEngine.specialtyKeys)。ほかの役職では効かない。
+  static bool roleUsesSpecialty(StaffRole role) => role == StaffRole.youthCoach;
+
+  /// 画面に出す得意分野。役職で効かないものは万能として扱い、札を出さない。
+  ///
+  /// 候補を作るときは役職を問わず得意分野を引くため、スカウトやフィジオに
+  /// 「攻撃」の札が付いていた(2026-11-23)。保存済みのスタッフにも効くよう、
+  /// 持っている値は変えずに、見せるときに役職で絞る。
+  StaffSpecialty get shownSpecialty =>
+      roleUsesSpecialty(role) ? specialty : StaffSpecialty.balanced;
+
   /// 監督以外の役職の、解任の違約金の率(残りの契約の週俸に対して)。
   static const double staffSeveranceRate = 0.2;
 

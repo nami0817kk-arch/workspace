@@ -168,7 +168,7 @@ class NextActionAdvisor {
     if (hasSigningProposals) {
       actions.add(NextAction(
         message: Tr.pick('監督から補強の候補が届いています。買うか見送るかを決めてください。',
-            'Your manager has sent signing candidates. Sign them or pass.'),
+            'Your manager has picked out signing candidates. Sign them or pass.'),
         target: NextActionTarget.transfer,
       ));
     }
