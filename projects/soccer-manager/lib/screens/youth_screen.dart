@@ -241,6 +241,15 @@ class _YouthScreenState extends State<YouthScreen> {
                     );
                     final maybeWonderkid =
                         range.$2 - p.overall >= _wonderkidGap;
+                    // 「埋もれた即戦力」(所属先のあるプロ)は移籍で獲る。
+                    final pro = gameState.isScoutedPro(p);
+                    final proFee = pro ? gameState.scoutedProFeeFor(p) : 0;
+                    final proClub = gameState.scoutedProClubs[p.id] ?? '-';
+                    final canSign = pro
+                        ? save.budget >= proFee &&
+                            gameState.isTransferWindowOpen &&
+                            !squadFull
+                        : canScout;
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -278,14 +287,20 @@ class _YouthScreenState extends State<YouthScreen> {
                             ],
                           ),
                           subtitle: Text(
-                            Tr.pick(
-                                '${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2} / 成長 ${p.growthType.label}',
-                                'Age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2} / ${p.growthType.label}'),
+                            pro
+                                ? Tr.pick(
+                                    '埋もれた即戦力 / $proClub所属 / ${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2} / 移籍金 ${formatMoney(proFee)}',
+                                    'Hidden gem at $proClub / age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2} / fee ${formatMoney(proFee)}')
+                                : Tr.pick(
+                                    '${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2} / 成長 ${p.growthType.label}',
+                                    'Age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2} / ${p.growthType.label}'),
                           ),
                           trailing: FilledButton(
                             onPressed:
-                                canScout ? () => _scout(context, p.id) : null,
-                            child: Text(Tr.pick('獲得', 'Sign')),
+                                canSign ? () => _scout(context, p.id) : null,
+                            child: Text(pro
+                                ? Tr.pick('移籍で獲得', 'Buy')
+                                : Tr.pick('獲得', 'Sign')),
                           ),
                         ),
                       ),
@@ -502,14 +517,22 @@ class _YouthScreenState extends State<YouthScreen> {
   }
 
   Future<void> _scout(BuildContext context, String candidateId) async {
-    final ok = await context.read<GameState>().scoutProspect(candidateId);
+    final gameState = context.read<GameState>();
+    final pro = gameState.scoutCandidates
+        .any((p) => p.id == candidateId && gameState.isScoutedPro(p));
+    final ok = await gameState.scoutProspect(candidateId);
     ok ? FeedbackService.success() : FeedbackService.error();
     if (context.mounted) {
+      final reason = gameState.lastSigningBlockReason;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(ok
-                ? Tr.pick('新しい有望株を発見しました', 'You found a new prospect')
-                : Tr.pick('スカウトできませんでした', 'The scouting did not come off'))),
+                ? (pro
+                    ? Tr.pick('移籍で獲得しました。一軍に加わります', 'Signed. He joins the first team')
+                    : Tr.pick('新しい有望株を発見しました', 'You found a new prospect'))
+                : (pro && reason != null
+                    ? reason
+                    : Tr.pick('スカウトできませんでした', 'The scouting did not come off')))),
       );
     }
   }

@@ -1028,6 +1028,10 @@ extension GameStateFinance on GameState {
         ),
       ];
       for (final t in teams) {
+        // 自クラブと同じ部の CPU の伸びしろ(startNewGame と同じ)。
+        if (tier == startTier && t.id != userTeam.id) {
+          PlayerGenerator.capStartingRoom(t);
+        }
         LineupUtils.autoFill(t);
       }
       final league = League(

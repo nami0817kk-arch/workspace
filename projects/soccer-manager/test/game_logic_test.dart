@@ -9875,32 +9875,42 @@ void main() {
         t.players.map((p) => p.overall).reduce((a, b) => a + b) /
         t.players.length;
 
-    final userTeam = squad('ca4user');
-    final cpuTeam = squad('ca4cpu');
-    final userBefore = averageOverall(userTeam);
-    final cpuBefore = averageOverall(cpuTeam);
+    // 1組だけだと、選手の潜在の当たり外れで比が 0.7〜1.1 と振れる。
+    // 4組の合計で比べる(2026-11-23)。
+    var userGain = 0.0;
+    var cpuGain = 0.0;
+    for (var pair = 0; pair < 4; pair++) {
+      final userTeam = squad('ca4user$pair');
+      final cpuTeam = squad('ca4cpu$pair');
+      final userBefore = averageOverall(userTeam);
+      final cpuBefore = averageOverall(cpuTeam);
 
-    for (var season = 0; season < 5; season++) {
-      for (var week = 0; week < 42; week++) {
-        for (final p in userTeam.players) {
-          p.fatigue = 20;
-          p.matchSharpness = 85;
+      for (var season = 0; season < 5; season++) {
+        for (var week = 0; week < 42; week++) {
+          for (final p in userTeam.players) {
+            p.fatigue = 20;
+            p.matchSharpness = 85;
+          }
+          TrainingEngine.applyWeeklyTraining(userTeam);
+          TrainingEngine.applyPassiveCpuGrowth(cpuTeam);
         }
-        TrainingEngine.applyWeeklyTraining(userTeam);
-        TrainingEngine.applyPassiveCpuGrowth(cpuTeam);
+        for (final p in [...userTeam.players, ...cpuTeam.players]) {
+          p.age += 1;
+        }
       }
-      for (final p in [...userTeam.players, ...cpuTeam.players]) {
-        p.age += 1;
-      }
-    }
 
-    final userGain = averageOverall(userTeam) - userBefore;
-    final cpuGain = averageOverall(cpuTeam) - cpuBefore;
-    // 手をかけたユーザークラブの方が伸びるのは正しいが、CPUが置き去りに
-    // されてはいけない。
+      userGain += averageOverall(userTeam) - userBefore;
+      cpuGain += averageOverall(cpuTeam) - cpuBefore;
+    }
+    // CPU の練習は自クラブの標準(Lv1 の全体練習)と同じ数にした
+    // (2026-11-23)。以前の基準は「自クラブの0.4倍を超える」で、CPU が
+    // 自クラブの半分しか伸びなくても通っていた。いまは同じ土俵にあることを
+    // 見る(自クラブには才能開花の分だけ上乗せがある)。
     expect(cpuGain, greaterThan(0), reason: 'CPUクラブがまったく成長していない');
-    expect(cpuGain, greaterThan(userGain * 0.4),
+    expect(cpuGain, greaterThan(userGain * 0.7),
         reason: 'CPU$cpuGain に対しユーザー$userGain で、リーグが置き去りにされている');
+    expect(cpuGain, lessThan(userGain * 1.25),
+        reason: 'CPU$cpuGain に対しユーザー$userGain で、CPU だけが速く伸びている');
   });
 
   test(

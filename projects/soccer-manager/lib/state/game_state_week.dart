@@ -277,12 +277,12 @@ extension GameStateWeek on GameState {
     final aiNews =
         isTransferWindowOpen ? _advanceAiTransfers() : const <String>[];
 
-    // CPUクラブの簡易的な週次成長(施設・スタッフの上乗せは無いが、
-    // 何もしないとユーザーだけが伸び続けリーグ全体が停滞するため)。
+    // CPUクラブの週の練習(自クラブの標準の全体練習と同じ数を、部の倍率で)。
     // あわせてセットプレー担当も自動更新し、移籍で放出入りした穴を埋める。
     for (final t in league.teams) {
       if (t.id == s.userTeamId) continue;
-      TrainingEngine.applyPassiveCpuGrowth(t, weekScale: weekScale);
+      TrainingEngine.applyPassiveCpuGrowth(t,
+          tier: _cpuTierOf(t), weekScale: weekScale);
       LineupUtils.autoAssignSetPieceRoles(t);
     }
 

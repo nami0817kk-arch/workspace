@@ -334,10 +334,16 @@ class PlayerGenerator {
     required int strengthTier,
     int? ageOverride,
     Set<String>? avoidNames,
+
+    /// 潜在能力の振れ幅の上側([strengthTier] からいくつ上まで)。下側は
+    /// いつも -10。
+    int potentialSpreadUp = 10,
   }) {
     final id = nextPlayerId();
     final age = ageOverride ?? rollAge(_rng);
-    final potential = (strengthTier + _rng.nextInt(21) - 10).clamp(40, 99);
+    final potential =
+        (strengthTier + _rng.nextInt(11 + potentialSpreadUp) - 10)
+            .clamp(40, 99);
 
     double ageFactor;
     if (age < 24) {
@@ -644,6 +650,27 @@ class PlayerGenerator {
     Position.aml: 1,
     Position.st: 3,
   };
+
+  /// 開幕のときの CPU のクラブ(自クラブと同じ部)の、24歳以上の伸びしろ
+  /// (潜在 − 総合力)の上限。
+  static const int cpuStartMaxRoom = 1;
+
+  /// [team] の24歳以上の選手の伸びしろを [maxRoom] までにする(潜在を
+  /// 下げる。今の力は変えない)。
+  ///
+  /// 作ったばかりの選手は、24〜29歳でも潜在の9割前後の力しかなく、伸びしろ
+  /// が4〜5ある。自クラブのいる部の CPU は毎週の練習で伸びるので、最初の
+  /// 3〜4季でこれを埋めて上位11人が 72→73.7 と上がり、その間に自クラブは
+  /// 補強が間に合わず抜け出せなかった(2026-11-24)。実在の下の部の中堅は、
+  /// その歳ならほぼ天井に来ている。若手(24歳未満)の伸びしろは残す。
+  static void capStartingRoom(Team team,
+      {int maxRoom = cpuStartMaxRoom, int fromAge = 24}) {
+    for (final p in team.players) {
+      if (p.age < fromAge) continue;
+      final cap = p.overall + maxRoom;
+      if (p.potential > cap) p.potential = cap.clamp(1, 99);
+    }
+  }
 
   static Team generateSquad({
     required String id,

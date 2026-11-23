@@ -297,10 +297,12 @@ class TrainingEngine {
   /// 画面に出ない選手([OffscreenDevelopment])の1年ぶんの衰えの目安
   /// (総合力)。画面に出る他のクラブの選手が1年の練習([applyPassiveCpuGrowth]。
   /// 底上げで少し戻る分を含む)で落ちる量に合わせてある(実測で
-  /// 倍率1倍あたり約0.95、底上げの戻りが約0.25)。
+  /// 倍率1倍あたり約0.95、練習で戻る分が約0.45)。戻りは以前 0.25 だったが、
+  /// CPU の練習を自クラブの全体練習と同じ数にした(技術3項目が足された)
+  /// ので測り直した(2026-11-23。31・33・35歳で画面の内外の差 0.2 前後)。
   static double yearlyDeclineEstimate(Player p) {
     if (p.age < declineStartAge(p)) return 0;
-    final net = max(0.0, 0.95 * declineSeverity(p) - 0.25);
+    final net = max(0.0, 0.95 * declineSeverity(p) - 0.45);
     return net *
         _declineChance(p.growthType) /
         _declineChance(PlayerGrowthType.balanced);
@@ -446,33 +448,43 @@ class TrainingEngine {
     return participants;
   }
 
-  /// CPUクラブ向けの簡易的な週次成長。施設・スタッフといった
-  /// ユーザー専用の仕組みは適用しないが、何もしないとユーザーだけが
-  /// 育成システムで伸び続け、CPUの相対的な強さが何シーズンも停滞して
-  /// しまう(=対戦相手として意味を失う)ため、ポジションに応じた基本成長を
-  /// 通常のトレーニングより控えめな確率で与える。高齢選手の衰えも
-  /// applyWeeklyTrainingと同様に適用する。
-  static const double passiveGrowthFactor = 0.4;
+  /// CPU のクラブの練習の伸びの倍率。自クラブの標準(ヘッドコーチ・練習
+  /// 施設とも Lv1 の全体練習)を 1.0 として、部が上がるほど良いコーチと
+  /// 設備を持っている分だけ伸びる(3部 1.0・2部 1.15・1部 1.3。部が
+  /// 分からないときは 1.0)。
+  static double cpuStandardGrowthMultiplier(int? tier) => switch (tier) {
+        1 => 1.3,
+        2 => 1.15,
+        _ => 1.0,
+      };
 
-  /// 若手(24歳未満)のCPU選手に適用する追加の成長係数。世代交代で入って
-  /// くる若手が現在能力の低いまま伸び悩むと、リーグ全体の平均戦力が
-  /// シーズンを追うごとに下がり続ける(長期実測で確認)ため、若いうちは
-  /// ユーザークラブの育成に近い速度でポテンシャルへ向かって成長させる。
-  static const double cpuYouthGrowthBonus = 2.5;
-
-  /// CPUクラブの底上げに掛ける、ユーザークラブに対する割合。ユーザーは
-  /// 施設・スタッフでさらに上乗せできるので、この値が
-  /// 1.0でもユーザーが育成で優位に立てる。逆にここを絞りすぎるとリーグ全体が
-  /// 年々弱くなり、対戦相手として意味を失う。
-  static const double cpuConditioningShare = 0.85;
-
-  static void applyPassiveCpuGrowth(Team team, {double weekScale = 1.0}) {
+  /// CPU のクラブの週の練習。自クラブの全体練習([TrainingFocus.balanced]
+  /// の通常の強度)と同じ数を、部の倍率([cpuStandardGrowthMultiplier])で
+  /// 掛けて与える。主戦場の能力 0.35・技術3項目 0.25・底上げ
+  /// [_conditioningChance](年齢で効かなくなる)。衰えも同じ決まりで入る。
+  ///
+  /// 練習の疲れ・練習中の怪我・才能開花は CPU には付けない(疲れを付けると
+  /// 試合の強さに効き、CPU だけ試合の前に休ませる仕組みが無いので弱くなる)。
+  ///
+  /// **以前は年齢で倍率を変えていた(2026-11-23 にやめた)。** 24歳未満は
+  /// 0.5×0.4×2.5=0.5(主戦場)と底上げ 0.085、24歳以上は 0.2 と 0.034
+  /// だった。若手の底上げが自クラブ Lv1 の2倍あり、補充で入る21〜27歳が
+  /// 数季で潜在の上限まで届いた。他の部は年1回の伸び([OffscreenDevelopment])
+  /// で育つので、膨らむのは自クラブのいる部だけになり、上手に経営しても
+  /// 3部の上位の総合力が季ごとに上がって抜け出せなかった。逆に年齢の倍率を
+  /// 0.4 のまま全体に掛けると、リーグ平均が 51→40 まで下がった(過去の実測)。
+  /// 自クラブの標準と同じ数にそろえるのが、どちらにも倒れない形。
+  static void applyPassiveCpuGrowth(
+    Team team, {
+    int? tier,
+    double weekScale = 1.0,
+  }) {
+    final m = cpuStandardGrowthMultiplier(tier) * weekScale;
     for (final p in team.players) {
       if (p.isLoanedOut) continue;
-      final youthBonus = (p.age < 24 ? cpuYouthGrowthBonus : 1.0) * weekScale;
       if (p.position.group == PositionGroup.gk) {
         for (final k in AttributeKeys.goalkeeping) {
-          _grow(p, k, 0.5 * passiveGrowthFactor * youthBonus);
+          _grow(p, k, 0.35 * m);
         }
       } else if (p.position.group == PositionGroup.def) {
         for (final k in [
@@ -481,7 +493,7 @@ class TrainingEngine {
           AttributeKeys.positioning,
           AttributeKeys.anticipation,
         ]) {
-          _grow(p, k, 0.5 * passiveGrowthFactor * youthBonus);
+          _grow(p, k, 0.35 * m);
         }
       } else {
         for (final k in [
@@ -490,23 +502,20 @@ class TrainingEngine {
           AttributeKeys.dribbling,
           AttributeKeys.offTheBall,
         ]) {
-          _grow(p, k, 0.5 * passiveGrowthFactor * youthBonus);
+          _grow(p, k, 0.35 * m);
         }
       }
-      // ユーザークラブの全体練習と同じ底上げをCPUにも与える。これがないと
-      // CPU選手は4項目しか伸びず総合力がポテンシャルの7割強で頭打ちになり、
-      // ユーザークラブだけがリーグから抜け出してしまう。重点練習と違い、
-      // 底上げはpassiveGrowthFactor(0.4)ではなくcpuConditioningShareで
-      // 割り引く。0.4まで絞るとリーグ平均が毎シーズン下がり続け、実測で
-      // ユーザークラブとの差が1シーズンあたり1.5ずつ開いていった。
+      for (final k in [
+        AttributeKeys.passing,
+        AttributeKeys.firstTouch,
+        AttributeKeys.technique,
+      ]) {
+        _grow(p, k, 0.25 * m);
+      }
       final taper = _conditioningAgeTaper(p);
       if (taper > 0) {
         for (final k in _conditioningKeysFor(p)) {
-          _grow(
-            p,
-            k,
-            _conditioningChance * cpuConditioningShare * youthBonus * taper,
-          );
+          _grow(p, k, _conditioningChance * m * taper);
         }
       }
       _rollWeeklyDecline(p, weekScale);
@@ -620,6 +629,17 @@ class TrainingEngine {
       // ユースコーチの得意分野。担当が違う分野(GKに決定力など)は効かない。
       for (final k in specialtyKeys(coachSpecialty, p)) {
         _grow(p, k, 0.5 * factor);
+      }
+
+      // 一軍の全体練習と同じ底上げ(ユース施設の係数つき)。以前はポジションの
+      // 4項目しか伸びず、総合力は28項目前後の加重平均なので、アカデミーで
+      // 何年育てても総合力が上がりきらず、一軍の戦力に届かなかった
+      // (2026-11-23)。
+      final taper = _conditioningAgeTaper(p);
+      if (taper > 0) {
+        for (final k in _conditioningKeysFor(p)) {
+          _grow(p, k, _conditioningChance * factor * taper);
+        }
       }
     }
   }

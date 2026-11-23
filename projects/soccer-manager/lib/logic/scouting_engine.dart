@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import '../models/player.dart';
+import '../models/player_stub.dart';
+import 'division_strength.dart';
 import 'player_generator.dart';
 import 'scout_knowledge.dart';
 
@@ -78,13 +80,31 @@ class ScoutingEngine {
   }
 
   /// シーズン終了時にアカデミーから無償で昇格候補が生まれる。ユースコーチのレベルが質を高める。
+  ///
+  /// クラブのいる部[tier]が分かれば、強さの真ん中(55)をその部の水準
+  /// ([divisionTypicalSquadLevel])へ [academyTierPull] だけ寄せる。上の部の
+  /// クラブほど良い子が集まる(実在のアカデミーも、強いクラブほど選べる)。
+  /// 寄せないと、3部の水準(65)に届く子がほとんど入らず、育てても一軍の
+  /// 戦力にならなかった(2026-11-23)。
   static Player generateAcademyGraduate({
     int youthCoachLevel = 1,
     int investmentBonus = 0,
+    int? tier,
   }) {
-    final bonus = (youthCoachLevel - 1) * 3 + investmentBonus;
+    final bonus = (youthCoachLevel - 1) * 3 +
+        investmentBonus +
+        academyTierShift(tier);
     return _generateProspect(tierMin: 40 + bonus, tierMax: 70 + bonus);
   }
+
+  /// アカデミーの子の強さを、部の水準へ寄せる割合。
+  static const double academyTierPull = 0.4;
+
+  /// [tier] 部のクラブのアカデミーの子の強さの上乗せ(3部 +4・2部 +7・
+  /// 1部 +11。部が分からなければ 0)。
+  static int academyTierShift(int? tier) => tier == null
+      ? 0
+      : ((divisionTypicalSquadLevel(tier) - 55) * academyTierPull).round();
 
   /// 資金を払ってスカウトした有望株。アカデミー生より粒ぞろいで、スカウトの
   /// レベルが質を高める。レベルが上がるほど下限が底上げされるだけでなく、
@@ -95,5 +115,57 @@ class ScoutingEngine {
     final rangeWidth = (30 - (scoutLevel - 1) * 2).clamp(14, 30);
     final tierMin = 55 + bonus;
     return _generateProspect(tierMin: tierMin, tierMax: tierMin + rangeWidth);
+  }
+
+  /// スカウト網の「埋もれた即戦力」が見つかり始めるスカウトの水準。
+  static const int hiddenGemMinScoutLevel = 3;
+
+  /// 一度の顔ぶれに混ざる「埋もれた即戦力」の人数。水準3で1人、水準が
+  /// 1つ上がるごとに1人増え、3人まで。
+  ///
+  /// スカウト網はユースの年代(16〜19歳)しか探さず、良いスカウトを雇っても
+  /// 今の戦力には何も足せなかった。3部から抜け出すには、他のクラブで
+  /// 出番の無い20代前半の選手を見つけて安く獲る道が要る(2026-11-23)。
+  /// 当たりを引き直せないよう、顔ぶれの更新の費用はそのまま掛かる。
+  static int hiddenGemCountFor(int scoutLevel) =>
+      scoutLevel < hiddenGemMinScoutLevel
+          ? 0
+          : min(3, scoutLevel - hiddenGemMinScoutLevel + 1);
+
+  /// 「埋もれた即戦力」の移籍金の割引(相場に対して)。水準3で2割、
+  /// 1つ上がるごとに5%ずつ、4割まで。所属先が出番を与えていない選手で、
+  /// まだ他のクラブに知られていないので安く獲れる。
+  static double hiddenGemDiscount(int scoutLevel) =>
+      (0.2 + (scoutLevel - hiddenGemMinScoutLevel) * 0.05).clamp(0.2, 0.4);
+
+  /// 「埋もれた即戦力」の潜在能力の上乗せの幅(今の総合力に足す)。
+  static const int hiddenGemPotentialMin = 5;
+  static const int hiddenGemPotentialMax = 12;
+
+  /// 「埋もれた即戦力」を1人作る。20〜23歳、総合力は[targetOverall]
+  /// (今の部の上位11人並み)、潜在は総合力 +5〜+12。
+  static Player generateHiddenGem({required int targetOverall}) {
+    final position = Position.values[_rng.nextInt(Position.values.length)];
+    final age = 20 + _rng.nextInt(4);
+    final potential = (targetOverall +
+            hiddenGemPotentialMin +
+            _rng.nextInt(hiddenGemPotentialMax - hiddenGemPotentialMin + 1))
+        .clamp(40, 99);
+    final p = PlayerGenerator.generate(
+      position: position,
+      strengthTier: potential,
+      ageOverride: age,
+    );
+    p.potential = potential;
+    // 総合力を狙いに合わせ、潜在を超えた能力は潜在までに切る。切ると
+    // 総合力が少し下がるので、何度か繰り返して寄せる。
+    for (var i = 0; i < 4; i++) {
+      PlayerStub.matchOverall(p, targetOverall.clamp(25, potential));
+      for (final k in p.attributes.keys.toList()) {
+        p.attributes[k] = p.attributes[k]!.clamp(1, potential);
+      }
+    }
+    p.wage = p.fairWeeklyWage();
+    return p;
   }
 }
