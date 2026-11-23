@@ -309,7 +309,11 @@ void main() {
       final (money, store) = await build();
       final game = GameState();
       await game.startNewGame('売却FC');
-      game.save!.confidence = 0; // サポーターの期待が尽きた
+      // サポーターの期待が尽き、最後通告の期限も過ぎた(0だけでは猶予中で
+      // 手放さない)。
+      game.save!
+        ..confidence = 0
+        ..supporterUltimatumUntil = DateTime(2000);
       expect(game.isSaleForced, isTrue);
 
       await store.deliver(FundsPack.medium.productId);
