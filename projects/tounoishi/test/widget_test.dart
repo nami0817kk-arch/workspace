@@ -326,7 +326,7 @@ void main() {
       'function evolve(m,k)', // 甲・牙
       'var EVO_XP=5;', // 経験5点で進化できる
       'killer.xp=(killer.xp||0)+2;', // 倒すと2点
-      "label('↑',", // 進化できる印
+      "label(o.evo?'⇑':'↑',", // 進化できる印（2回目は⇑）
     ]) {
       expect(html, contains(s), reason: s);
     }
