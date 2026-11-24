@@ -100,6 +100,9 @@ const ltab = (label) => {
 // 画面に出ている文字だけを見る（ページに埋め込んだスクリプトの文字を拾うと、何でも通ってしまう）
 const txt = () => d.getElementById('app').textContent;
 const rail = (k) => btn(k, d.getElementById('rail')).click();
+// 2026-11-25 選手の画面は一覧が全面。選手を押すと詳しい画面（小タブ プロフィール・育成・コーチの報告・成績・経歴）
+const pOpen = (id) => { const rows = [...d.querySelectorAll('#main .ptable .prow')]; if (id) { const A0 = w.YA._ui.app; A0.pSel = id; A0._pSeen = id; A0.pOpen = true; w.YA._ui.render(); return; } if (rows[0]) rows[0].click(); };
+const ptab = (n) => { const b = [...d.querySelectorAll('#main .ptabs button')].find((x) => x.textContent.trim() === n); if (b) b.click(); return !!b; };
 // 2026-11-16 左の帯の最後は「ほか」（中は名鑑・記録・Bチーム・実績と引退・用語集・設定）
 
 // 出来事が出ていたら、最初の選択肢で全部片付ける
@@ -226,15 +229,26 @@ async function clearEvents() {
   { const rt = d.querySelector('[data-train-right]'); ok(!!rt && [...rt.querySelectorAll('.h')].some((x) => x.textContent.startsWith('戦術理解の内訳')), '戦術理解の欄は練習の右の欄に入る'); }
   // 選手
   rail('選手');
-  ok(txt().includes('進路') && txt().includes('様子') && txt().includes('特性') && txt().includes('性格'), '選手の詳細（能力・様子・進路）');
-  { const hd = d.querySelector('#main .plhead'); ok(!!hd && ['名前', '学年', '総合'].every((x) => hd.textContent.includes(x)) && /伸び|将来/.test(hd.textContent), '選手一覧の数字に見出し（2026-11-21）'); }
+  { const hd = d.querySelector('#main .plhead'); ok(!!hd && ['印', '位置', '名前', '学年', '総合', '調子', '疲れ', '今季', '今週'].every((x) => hd.textContent.includes(x)) && /伸び|将来/.test(hd.textContent), '選手一覧は全面で10列の見出し（2026-11-25）'); }
+  ok(!d.querySelector('#main .pdetail') && d.querySelectorAll('#main .ptable .prow').length === Object.keys(A.w.players).length, '左の帯の「選手」は一覧だけ（詳しい画面は押してから）');
+  { const hb = [...d.querySelectorAll('#main .plhead button')].find((b) => b.textContent.startsWith('総合')); hb.click(); const r1 = [...d.querySelectorAll('#main .ptable .prow')].map((e) => +e.children[4].textContent); ok(r1.every((v, i) => i === 0 || r1[i - 1] >= v), '見出しの「総合」で総合力の高い順'); hb && [...d.querySelectorAll('#main .plhead button')].find((b) => b.textContent.startsWith('総合')).click(); const r2 = [...d.querySelectorAll('#main .ptable .prow')].map((e) => +e.children[4].textContent); ok(r2.every((v, i) => i === 0 || r2[i - 1] <= v), 'もう一度押すと逆順'); const sp0 = d.querySelector('select[title="並び替え"]'); sp0.value = 'pos'; sp0.dispatchEvent(new w.Event('change')); }
+  pOpen();
+  ok(!!d.querySelector('#main .pdetail') && !!btn('‹ 一覧') && !!d.querySelector('#main .ptabs'), '一覧の選手を押すと詳しい画面（一覧へ戻るボタン）');
+  ok(['プロフィール', '育成', 'コーチの報告', '成績', '経歴'].every((n) => [...d.querySelectorAll('#main .ptabs button')].some((b) => b.textContent.trim() === n)), '詳しい画面の小タブ5つ（FM 寄り）');
+  ok(!!d.querySelector('#main .pdetail .abtable') && d.querySelector('#main .pdetail .abtable').textContent.includes('頭'), 'プロフィールの左に能力の数字の表（2026-11-25「出す」）');
+  ok(['情報', '特性', '直近の試合', '状態'].every((t) => d.querySelector('#main .pdetail').textContent.includes(t)), 'プロフィールの右に情報・特性・直近の試合・状態');
+  { const n0 = A.pSel; btn('▶', d.querySelector('#main .phead')).click(); ok(A.pSel !== n0 && !!d.querySelector('#main .pdetail'), '▶で次の選手'); btn('◀', d.querySelector('#main .phead')).click(); ok(A.pSel === n0, '◀で前の選手'); }
+  ptab('育成');
+  ok(txt().includes('進路') && txt().includes('面談'), '育成に進路と面談');
+  ptab('コーチの報告');
+  ok(txt().includes('特性') && txt().includes('性格'), 'コーチの報告に特性と性格');
   ok(w.YA.wkName(1) === '4月第1週' && /^\d+年目 \d+月第\d週$/.test(w.YA.ywName(2, 11)), '週の呼び方は「4月第1週」の形（2026-11-21） ' + w.YA.ywName(2, 11));
   // 2026-11-19「能力値とかはいらない。FM の選手概要欄を参考にして」：最初に開くのは概要。能力の数字の棒は出さない
   {
     const ov = d.querySelector('#main .pdetail .overview');
-    ok(!!ov, '選手を開くと最初は概要');
+    ok(!!ov, 'コーチの報告に見立て（前の概要）');
     ok(!!ov && ['コーチの見立て', 'プロフィール', 'ポジション', '状態', '試合', '特性'].every((t) => ov.textContent.includes(t)), '概要に見立て・プロフィール・ポジション・状態・試合・特性');
-    ok(!!ov && !ov.querySelector('.abg') && !ov.textContent.includes('ファーストタッチ'), '概要に能力の数字の表を出さない');
+    ok(!!ov && !ov.querySelector('.abtable'), 'コーチの報告の見立ては言葉（能力の数字の表はプロフィール）');
     // 2026-11-20 選手を構成する要素：体格・誕生日・出身・仲間・性格と相性・8週のグラフ・記録
     ok(!!ov && ['体格', '誕生日', '出身', '仲間', '性格と相性', 'cm', 'kg'].every((t) => ov.textContent.includes(t)), '概要に体格・誕生日・出身・仲間・性格と相性 ' + ['体格', '誕生日', '出身', '仲間', '性格と相性'].filter((t) => !(ov && ov.textContent.includes(t))).join('・'));
     ok(!!ov && /適性20/.test(ov.textContent), '概要のポジションに適性20の位置');
@@ -245,8 +259,8 @@ async function clearEvents() {
     const bad = Object.values(W0.players).map((p) => w.YA.coachReport(W0, p)).filter((t) => /うえ、|確か[^な]|苦手こと|がちこと|がち[^な]|undefined|NaN/.test(t));
     ok(bad.length === 0, 'コーチの見立ての文がつながる ' + (bad[0] || ''));
     ok(Object.values(W0.players).every((p) => !/\d{2,}/.test(w.YA.futureWords(W0, p))), '将来の見立ては水準の名前だけ（数字なし）');
-    btn('能力').click();
-    ok(!!d.querySelector('#main .pdetail .abg'), '能力の数字は「能力」タブに残す');
+    ptab('プロフィール');
+    ok(!!d.querySelector('#main .pdetail .abtable .abrow'), '能力の数字はプロフィールに出す');
     // 直近の試合の採点（p.rl）：A・B とも残り、5つまで
     const w2 = w.YA.newWorld(23);
     for (let k = 0; k < 8; k++) w.YA.simulate(w2, { until: 'week', stopOnImportant: false });
@@ -254,8 +268,8 @@ async function clearEvents() {
     ok(rls.some((r) => r.some((x) => x.t === 'A')) && rls.some((r) => r.some((x) => x.t === 'B')), '直近の採点は A と B の試合で残る');
     ok(rls.every((r) => r.length <= 5 && r.every((x) => x.r >= 3 && x.r <= 10)), '直近の採点は5つまで・3〜10');
   }
-  btn('様子').click();
-  ok(txt().includes('調子') && txt().includes('コーチの一言'), '選手の様子');
+  ptab('コーチの報告');
+  ok(txt().includes('調子') && txt().includes('コーチの一言'), '選手の調子（コーチの報告）');
   ok(![...d.querySelectorAll('#main .chip.gray')].some((c) => c.textContent === 'ふつう'), '性格に「ふつう」の札を並べない（2026-11-16）');
   // 2026-11-17：長押しの説明は iPhone で見えない。札は押すと下に説明が出る（tip）
   {
@@ -267,9 +281,9 @@ async function clearEvents() {
       ok(!!t && t.textContent === pc.dataset.tip, '説明つきの札を押すと、下にその説明が出る');
     } else ok(false, '説明つきの札が見つからない');
     const fut = [...d.querySelectorAll('#main .chip.trait')].find((c) => c.textContent.startsWith('伸びしろ'));
-    ok(!!fut && !!fut.dataset.tip && !/\d/.test(fut.textContent), '伸びしろは押すと説明、帯には数字を出さない（2026-11-19）');
+    ok(!!fut && !!fut.dataset.tip && !/\d/.test(fut.textContent), '伸びしろは押すと説明、星で出す');
   }
-  btn('進路').click();
+  ptab('育成');
   ok(txt().includes('本人の希望') && txt().includes('トップへの近さ'), '選手の進路（希望・トップへの近さ）');
   // 面談の一言と選択肢は選手の状態で変わる（talkSetup）ので、どれかが出ていれば押す
   (['褒める', '課題を伝える', '悩みを聞く', 'できていることを褒める', '背中を押す'].map((t) => btn(t)).find(Boolean) || btn('不安をゆっくり聞く') || btn('足りない点を伝える') || btn('期待していると伝える') || btn('焦らなくていいと聞く') || btn('さらに上を求める') || btn('気を引き締める') || btn('しっかり見ていると伝える') || btn('話を聞く')).click();
@@ -280,7 +294,7 @@ async function clearEvents() {
     sp.star = true; sp.inj = 0; sp.fat = 10;
     A.w.saUsed = null;
     w.YA._ui.render();
-    btn('進路').click();
+    ptab('育成');
     ok(['★の子と過ごす（今週あと2回', '居残り練習に付き合う', '試合の映像を一緒に見る', '覚醒の手がかりを話し合う', 'ご飯に連れて行く', '目標を約束する', '卒業生に会わせる', '自主練のメニューを一緒に作る', '休ませて話を聞く', '家族と話す', '試合前に声をかける', '別の位置を試させる', '本を薦める'].every((x) => txt().includes(x)), '★の子の働きかけが12並ぶ');
     btn('ご飯に連れて行く').click();
     ok(errors.length === 0 && txt().includes('今週あと1回') && txt().includes('信頼+8') && txt().includes('「'), 'ご飯に連れて行くと結果と本人の一言が出る: ' + errors.slice(0, 2).join('|'));
@@ -289,6 +303,7 @@ async function clearEvents() {
   }
   // 絞り込みは選択欄1つ（2026-11-18）。選ぶと一覧が絞られ、件数が選択肢に出る
   {
+    btn('‹ 一覧').click();
     const fs = d.querySelector('select[title="絞り込み"]');
     ok(!!fs && fs.options.length === 12 && /GK（\d+）/.test(fs.textContent), '選手の絞り込みは選択欄1つで件数つき');
     const pick = (v) => { fs.value = v; fs.dispatchEvent(new w.Event('change')); };
@@ -298,6 +313,7 @@ async function clearEvents() {
     pick('all');
     ok(d.querySelectorAll('.plist.scroll .pitem').length === Object.keys(A.w.players).length, '全員に戻る');
     // 名前は詳しい画面の帯に出る（2026-11-18）
+    pOpen(A.pSel);
     const sp = A.w.players[A.pSel];
     ok(!!d.querySelector('#main .pname') && d.querySelector('#main .pname').textContent.includes(sp.name), '選手の帯に名前');
     // A・Bの入れ替えは名前と同じ段（2026-11-21 品質）
@@ -810,7 +826,8 @@ async function clearEvents() {
     }
     // フリー対戦（成績に残らない）
     rail('選手');
-    btn('様子').click();
+    pOpen();
+    ptab('コーチの報告');
     ok(txt().includes('キャプテン') && txt().includes('ポジション'), '選手にキャプテンとポジション変更');
     btn('キャプテンにする').click();
     ok(A.w.captain != null, 'キャプテンを指名');
@@ -824,7 +841,7 @@ async function clearEvents() {
       gp.gold = ['スルーパス'];
       gp.trUse = { ボール奪取: 4 };
       A.pSel = gp.id; A.tab = 'players'; w.YA._ui.render();
-      btn('能力').click();
+      ptab('プロフィール');
       ok(!!d.querySelector('.chip.gold') && txt().includes('金 針の穴を通すパス'), '金の特性の札が出る');
       ok(txt().includes('金まで：「ボール奪取」→「ボールハンター」') && txt().includes('4/' + w.YA.GOLD_USES), '金までの進み具合が出る');
     }
@@ -875,9 +892,10 @@ async function clearEvents() {
     ok(!!sortSel && sortSel.options.length === 7, '選手一覧に並び替え');
     if (sortSel) { sortSel.value = 'ovr'; sortSel.dispatchEvent(new w.Event('change')); }
     await sleep(10);
-    btn('育て方').click();
+    pOpen();
+    ptab('育成');
     ok(txt().includes('今年の育成計画') && txt().includes('伸び悩みの診断') && txt().includes('位置の転向練習') && !txt().includes('この子との記憶'), '選手の育て方に育成計画・診断・転向');
-    btn('思い出').click();
+    ptab('経歴');
     ok(!txt().includes('今年の育成計画') && (txt().includes('最近のこと') || txt().includes('まだ思い出はありません')), '選手の思い出は別の小タブ');
     btn('…').click();
     ok(!!btn('PK戦のキッカー') && !btn('名前を変える'), '「…」に比べる・PK（名前は変えられない）');
@@ -998,8 +1016,10 @@ async function clearEvents() {
       Y.ent.eye = false;
       const tab0 = A.tab; A.tab = 'players'; Y._ui.render();
       ok(!/→\d{2,3}/.test(txt()), '見抜く目: 持っていなければ一覧は星のまま');
-      Y.ent.eye = true; Y._ui.render();
-      ok(/→\d{2,3}/.test(txt()) && /将来 \d{2,3}/.test(txt()), '見抜く目: 一覧と帯に将来の総合力が数字で出る');
+      Y.ent.eye = true; A.pOpen = false; Y._ui.render();
+      const listHas = /→\d{2,3}/.test(txt());
+      pOpen();
+      ok(listHas && /将来 \d{2,3}/.test(txt()), '見抜く目: 一覧と帯に将来の総合力が数字で出る');
       Y.ent.eye = eye0; A.tab = tab0; Y._ui.render();
       ok([...d.querySelectorAll('#app button[disabled]')].every((b) => b.dataset.why), '課金: ショップの押せないボタンに理由がある');
       // 控えに戻す確認に、オリジナル選手の扱い
