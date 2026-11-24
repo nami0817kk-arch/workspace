@@ -68,6 +68,64 @@ void main() {
       expect(r.gap, contains(formatMoney(200)));
     });
 
+    test('大陸大会の比率は、季の途中は1年の見込みで注意どまり、季末は帳簿で違反', () {
+      final l = _season(1, income: 100, cost: 300); // 季の途中の帳簿では300%
+      RuleReport r({required bool over}) => RulesEngine.evaluate(
+            ruleSet: RuleSet.britain,
+            tier: 1,
+            ledgers: [l],
+            budget: 100,
+            snapshot: ClubFinanceSnapshot(
+                inContinental: true,
+                projectedIncome: 1000,
+                squadCost: 600,
+                seasonOver: over),
+          );
+      final mid = r(over: false);
+      final st = mid.statuses.last;
+      expect(st.label, contains('見込み'));
+      expect(st.now, '60%'); // 600 / 1000
+      expect(st.level, lessThan(2));
+      expect(mid.penalty, isNull);
+      // 見込みでも超えるなら注意(罰は出さない)。
+      final heavy = RulesEngine.evaluate(
+        ruleSet: RuleSet.britain,
+        tier: 1,
+        ledgers: [l],
+        budget: 100,
+        snapshot: const ClubFinanceSnapshot(
+            inContinental: true,
+            projectedIncome: 1000,
+            squadCost: 900,
+            seasonOver: false),
+      );
+      expect(heavy.statuses.last.level, 1);
+      expect(heavy.statuses.last.gap, contains('季末'));
+      expect(heavy.penalty, isNull);
+      // 季末は今季の帳簿で判定する。
+      final end = r(over: true);
+      expect(end.statuses.last.level, 2);
+      expect(end.penalty, isNotNull);
+    });
+
+    test('大陸大会に出ていないクラブには、大陸大会の規則を出さない', () async {
+      final gs = GameState();
+      await gs.startNewGame('テストFC');
+      for (var i = 0; i < 3; i++) {
+        await gs.playNextMatchdayQuickSim();
+        if (gs.pendingOwnerEvent != null) await gs.resolveOwnerEvent(0);
+      }
+      final s = gs.save!;
+      final cup = s.continentalCup;
+      expect(cup == null || !cup.groups.any((g) => g.contains(s.userTeamId)),
+          isTrue, reason: '3部から始めるので出ていない');
+      expect(gs.userInContinental, isFalse);
+      expect(gs.ruleReport.statuses.map((x) => x.label).join(),
+          isNot(contains('大陸大会')));
+      final items = TodoAdvisor.build(gs, hasSigningProposals: false);
+      expect(items.map((t) => t.title).join(), isNot(contains('大陸大会')));
+    });
+
     test('どの国にも、判定の時期と違反したときの罰の説明がある', () {
       for (final r in RuleSet.values) {
         expect(r.checkTiming, isNotEmpty);
