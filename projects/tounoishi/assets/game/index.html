@@ -78,7 +78,7 @@ h1{margin:0 0 6px;font-size:15px}
 .row{margin-top:6px}
 .btn{min-height:44px;padding:6px 2px}
 #msg{margin-top:6px;font-size:12.5px;min-height:2.6em;line-height:1.5}
-.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .nav .btn{font-size:13px}
 .nav .btn.alert{border-color:#d9534f}
 .sheet{align-items:flex-end;padding-block:0}
@@ -133,7 +133,8 @@ canvas{-webkit-user-select:none;user-select:none}
 .links{margin:2px 0 0;font-size:11.5px;color:var(--sub);text-align:center}.links a{color:var(--sub)}
 .tbox .btn small{display:block;font-size:10.5px;color:var(--sub);font-weight:400}
 .chl{display:flex;flex-direction:column;gap:6px}.chl .btn{text-align:left;padding:8px 10px}.chl .btn small{display:block;font-size:11px;color:var(--sub)}
-.pop button{white-space:nowrap}.exd{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:6px 0}.exd button{display:flex;flex-direction:column;gap:2px;text-align:left;padding:5px 6px;border-radius:8px;border:1px solid var(--line,#8886);background:transparent;color:inherit;font:inherit}.exd button small{font-size:10px;color:var(--sub);line-height:1.3}.exd button.on{border-color:#e8b84a;background:rgba(232,184,74,.15)}
+.pop button{white-space:nowrap}.cfl{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0}.cfl button{padding:5px 10px;border-radius:8px;border:1px solid var(--line,#8886);background:transparent;color:inherit;font:inherit}.cfl button.on{border-color:#e8b84a;background:rgba(232,184,74,.15)}.exl button:disabled{opacity:.45}#cmdbr .exl{max-height:300px;overflow-y:auto}
+.exd{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:6px 0}.exd button{display:flex;flex-direction:column;gap:2px;text-align:left;padding:5px 6px;border-radius:8px;border:1px solid var(--line,#8886);background:transparent;color:inherit;font:inherit}.exd button small{font-size:10px;color:var(--sub);line-height:1.3}.exd button.on{border-color:#e8b84a;background:rgba(232,184,74,.15)}
 .exl{display:flex;flex-direction:column;gap:4px;margin:6px 0}.exl button{display:flex;align-items:center;gap:6px;text-align:left;padding:4px 8px;border-radius:8px;border:1px solid var(--line,#8886);background:transparent;color:inherit;font:inherit}.exl button.on{border-color:#e8b84a;background:rgba(232,184,74,.18)}.exl .dimg{width:26px;height:26px}.exl small{opacity:.75}.pop .pxp{display:block;opacity:.75;font-size:11px;margin:-2px 0 4px}.pop{position:absolute;z-index:6;background:rgba(32,22,14,.95);color:#f3e6c8;border:1px solid #c9a46a;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:4px;min-width:150px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
 .pop b{font-size:12px;padding:2px 4px}.pop button{font:inherit;font-size:13px;text-align:left;padding:8px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:inherit}.pop button.on{border-color:#ffd45a;color:#ffd45a}.pop button:disabled{opacity:.45}
 .yubar{position:absolute;left:8px;right:8px;top:8px;z-index:3;pointer-events:none;background:rgba(20,10,10,.72);color:#ffe9b0;border:1px solid #d9534f;border-radius:8px;padding:4px 8px;font-size:12px}
@@ -155,13 +156,18 @@ canvas{-webkit-user-select:none;user-select:none}
  <div class="panel"><h2>塔の軍 <span id="army"></span></h2><div id="lines"></div></div>
  <div class="panel"><h2>殿堂</h2><div id="hall"></div></div>
 </div>
+<div id="spane-cmd" hidden>
+ <div class="panel"><h2>掛け合わせる</h2><div id="cmdbr"></div></div>
+ <div class="panel"><h2>骨の兵を組む</h2><div id="cmdbone"></div></div>
+ <div class="panel"><h2>卵をすぐかえす</h2><div id="cmdegg"></div></div>
+</div>
 <div class="help" id="spane-help">
 <h3>目的</h3>
 あなたは姿の見えない<b>塔の意志</b>。土を掘るとモンスターが生まれ、モンスターが冒険者から<b>コア</b>（最上階の金の玉）を守ります。コアを入口まで運び出されたら負け。6つの波を守り切ると塔が1階伸び、どこまで高く積めるかに挑みます。
 <h3>操作</h3>
 ・<b>見る</b>：1本指でなぞると盤が動く。2本指で拡大・縮小、「全体」で全体が見える。<br>・<b>掘る</b>：右下の「⛏ 掘る」を押して光らせてから、掘ってあるマスの隣の土をなぞる。印が付き、指を離すと掘れる（最初のマスへ戻すと取りやめ）。もう一度押すまで掘る状態が続く。1マスに掘る力を1使う。<br>
 ・<b>モンスターをタップ</b>：名前と体力。続けてもう一度で<b>つつく</b>（少し削る・弱ったモンスターを間引く）。亡骸をタップでスケルトン、宝箱は自分で開けられる。<br>
-・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）・<b>罠を置く</b>（掘る力3・塔全体で5つまで。踏んだ冒険者に15の傷と1秒の足止め）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>・<b>モンスターを長押し</b>：<b>食べさせる</b>（3マス以内の、食べられる相手のうち一番強い子が食べて育つ）・<b>掛け合わせる</b>（養分10。押してから2マス以内の相手をタップ→20秒後に卵。同じ種どうし＝同じ種でピュア種になりやすい、同じ系統＝上の段のさらに1つ上、養分と魔分＝キメラ）・<b>進化させる</b>（冒険者を倒すと2点・食べると1点、5点で頭に↑。甲＝体力1.7倍、牙＝攻撃1.5倍。1匹1回）。<br>・<b>遠征</b>（一覧の一番上）：波と波の間に、行き先を選んで3匹まで送り出す。次の波のあいだ塔からいなくなり、守り切ると帰る。成功の見込みは送る子の強さ・周・行き先で決まる。近くの森＝易しく少し、古い墓地＝魂と骨、竜の谷＝難しいが掘る力と養分がたくさん・珍しい卵が出やすい。失敗すると帰らない子も（主役は特に危ない）。<br>・<b>魂と骨</b>（掘る力の下に数）：冒険者を倒すと魂1（面の勇者たち3・宿敵の勇者10）と骨1（宿敵の勇者5）。魂＝2回目の進化（経験12・魂5）・倒れた主役を1回よみがえらせる（一覧で魂15）・卵をすぐかえす（卵のある通路を長押し、魂2）。骨＝通路を長押しして骨の兵（骨5）・強い骨の兵（骨12）・骨の弓兵（骨8。3マス先まで射る）・骨の盾兵（骨8。とても固い）・骨の罠（骨3と掘る力3。傷30・2秒止める）。<br>・<b>コアの光</b>：1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒のあいだ半分にする。<br>
+・<b>長押し</b>：土なら<b>肥料・魔分をまく</b>（自由な分を5入れて、生まれる種を狙う）。通路なら<b>埋め戻す</b>（掘る力2。入口からコアまでの道は切れない）・<b>ここに集まれ</b>（掘る力5・15秒）・<b>罠を置く</b>（掘る力3・塔全体で5つまで。踏んだ冒険者に15の傷と1秒の足止め）。モンスターなら食べる相手（緑）と食べられる相手（赤）を光らせ、主役には<b>命令</b>（守れ・攻めろ・自由）。<br>・<b>コマンド</b>（下のボタン）：掛け合わせる2匹を一覧から選ぶ（離れていてもよい）・骨の兵を階と種類で組む・卵をすぐかえす。盤の長押しと同じことが一覧からできる。<br>・<b>モンスターを長押し</b>：<b>食べさせる</b>（3マス以内の、食べられる相手のうち一番強い子が食べて育つ）・<b>掛け合わせる</b>（養分10。押してから2マス以内の相手をタップ→20秒後に卵。同じ種どうし＝同じ種でピュア種になりやすい、同じ系統＝上の段のさらに1つ上、養分と魔分＝キメラ）・<b>進化させる</b>（冒険者を倒すと2点・食べると1点、5点で頭に↑。甲＝体力1.7倍、牙＝攻撃1.5倍。1匹1回）。<br>・<b>遠征</b>（一覧の一番上）：波と波の間に、行き先を選んで3匹まで送り出す。次の波のあいだ塔からいなくなり、守り切ると帰る。成功の見込みは送る子の強さ・周・行き先で決まる。近くの森＝易しく少し、古い墓地＝魂と骨、竜の谷＝難しいが掘る力と養分がたくさん・珍しい卵が出やすい。失敗すると帰らない子も（主役は特に危ない）。<br>・<b>魂と骨</b>（掘る力の下に数）：冒険者を倒すと魂1（面の勇者たち3・宿敵の勇者10）と骨1（宿敵の勇者5）。魂＝2回目の進化（経験12・魂5）・倒れた主役を1回よみがえらせる（一覧で魂15）・卵をすぐかえす（卵のある通路を長押し、魂2）。骨＝通路を長押しして骨の兵（骨5）・強い骨の兵（骨12）・骨の弓兵（骨8。3マス先まで射る）・骨の盾兵（骨8。とても固い）・骨の罠（骨3と掘る力3。傷30・2秒止める）。<br>・<b>コアの光</b>：1つの波に1回、コアの周り3マスの冒険者の攻撃を10秒のあいだ半分にする。<br>
 ・<b>コアをタップ</b>してから最上階の通路をタップすると、コアを置き直せる（最上階に冒険者がいない間）。<br>
 ・2本指で拡大・移動。上の階のボタン（縮図つき）で階を切り替え。⏸ ×1 ×2 で時間。「今すぐ迎える」で波を早める（早いほど次の掘る力が増える）。
 <h3>モンスター</h3>
@@ -186,7 +192,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v59</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v60</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -211,6 +217,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 <div id="cmsg"></div><div id="msg"></div>
 <div class="nav">
+ <button class="btn" id="bcmd">コマンド</button>
  <button class="btn" id="blist">一覧</button>
  <button class="btn" id="bdex">図鑑</button>
  <button class="btn" id="bhelp">遊び方</button>
@@ -638,7 +645,8 @@ function breedWhy(m){if(SPEC[m.sp].line=='sp')return '特別な種は掛け合�
 function breedStart(m){var w=breedWhy(m);if(w){say(w+'。');return;}g.breed={id:m.id};say(spName(m)+'と掛け合わせる相手（2マス以内のモンスター）をタップ。ほかの所をタップすると取りやめ。');}
 function breedTap(f,x,y){var B=g.breed;g.breed=null;var a=g.cr.filter(function(o){return o.id===B.id;})[0];if(!a){say('掛け合わせを取りやめた。');return true;}
  var b=crAt(f,x,y).filter(function(o){return o!==a;})[0];if(!b||b.f!=a.f||man(a,b)>2){say('掛け合わせを取りやめた（2マス以内のモンスターをタップする）。');return true;}
- var w=breedWhy(b);if(w&&w.indexOf('養分')<0){say(spName(b)+'：'+w+'。');return true;}if(g.pool<BREED_COST){say('自由な養分が足りない（'+BREED_COST+'要る）。');return true;}
+ return breedDo(a,b);}
+function breedDo(a,b){var w=breedWhy(b);if(w&&w.indexOf('養分')<0){say(spName(b)+'：'+w+'。');return true;}if(g.pool<BREED_COST){say('自由な養分が足りない（'+BREED_COST+'要る）。');return true;}
  var ch=breedChild(a,b);if(!ch){say('特別な種は掛け合わせられない。');return true;}brdAdd(a.sp,b.sp,ch.sp);
  g.pool-=BREED_COST;a.brT=b.brT=g.t+BREED_CD;a.e=Math.max(0,(a.e||0)-1);b.e=Math.max(0,(b.e||0)-1);
  if(ch.same&&!g.mutNext[skey(ch.sp,ch.env)]&&Math.random()<0.5)g.mutNext[skey(ch.sp,ch.env)]='pure';
@@ -682,6 +690,34 @@ function expHTML(){if(!g)return '';var E=g.exp;
   cs.map(function(m){return '<button data-exp="'+m.id+'"'+(sel.indexOf(m.id)>=0?' class="on"':'')+'>'+dimg(m.sp)+'<span><b>'+esc(m.hero?fullName(m):spName(m))+'</b><br><small>'+(m.f+1)+'階 · 体力'+Math.round(m.hp)+'/'+Math.round(m.mhp)+' · 強さ'+Math.round(expPow(m))+'</small></span></button>';}).join('')+'</div>'+
   '<button class="btn go" data-expgo="1"'+(ms.length?'':' disabled')+'>'+(ms.length?ms.length+'匹を送り出す（見込み'+Math.round(expChance(ms)*100)+'%）':'送り出す子を選ぶ（'+EXP_MAX+'匹まで）')+'</button>';}
 var expLast='';
+// ---------- コマンド: 掛け合わせ・骨の兵・卵をすぐかえすを一覧から選ぶ ----------
+var cmdLast='';
+function cmdBrCand(){return g.cr.filter(function(m){return SPEC[m.sp].line!='sp'&&(!m.stage||m.stage=='adult');}).sort(function(a,b){return b.f-a.f||(a.sp<b.sp?-1:a.sp>b.sp?1:0);}).slice(0,40);}
+function cmdBrSel(){var sel=g.cmdBr||(g.cmdBr=[]);for(var i=sel.length-1;i>=0;i--){var id=sel[i];if(!g.cr.some(function(o){return o.id===id&&!(o.brT>g.t);}))sel.splice(i,1);}return sel.map(function(id){return g.cr.filter(function(o){return o.id===id;})[0];});}
+function cmdBrToggle(id){var sel=g.cmdBr||(g.cmdBr=[]),i=sel.indexOf(id);if(i>=0)sel.splice(i,1);else{if(sel.length>=2)sel.shift();sel.push(id);}}
+function cmdBrName(ch){return ch.sp=='chimera'?'キメラ':baseName(ch.sp,ch.env);}
+function cmdBrGo(){var ms=cmdBrSel();if(ms.length<2){say('掛け合わせる2匹を選んでください。');return;}var w=breedWhy(ms[0]);if(w&&w.indexOf('養分')<0){say(spName(ms[0])+'：'+w+'。');return;}
+ var n0=g.eggs.length;breedDo(ms[0],ms[1]);if(g.eggs.length>n0)g.cmdBr=[];}
+function cmdBrHTML(){var cs=cmdBrCand(),ms=cmdBrSel(),sel=g.cmdBr;if(cs.length<2)return '<div class="empty">掛け合わせられるモンスター（育ちきった子）が2匹以上いない。</div>';
+ var pv='';if(ms.length==2){var ch=breedChild(ms[0],ms[1]);pv=ch?spName(ms[0])+' × '+spName(ms[1])+' → <b style="color:var(--ink)">'+esc(cmdBrName(ch))+'</b>の卵'+(ch.same?'（ピュア種になりやすい）':''):'特別な種は掛け合わせられない';}
+ return '<div class="empty">2匹を選んで「掛け合わせる」。養分'+BREED_COST+'を使い、'+BREED_T+'秒後に1匹目の足元で卵がかえる。親は'+BREED_CD+'秒休む。自由な養分 <b style="color:var(--ink)">'+g.pool+'</b></div>'+
+  (pv?'<div class="empty">'+pv+'</div>':'')+
+  '<button class="btn go" data-cbrgo="1"'+(ms.length==2&&g.pool>=BREED_COST&&breedChild(ms[0],ms[1])?'':' disabled')+'>'+(ms.length==2?'掛け合わせる（養分'+BREED_COST+'）':'あと'+(2-ms.length)+'匹選ぶ')+'</button>'+
+  '<div class="exl">'+cs.map(function(m){var rest=m.brT>g.t;return '<button data-cbr="'+m.id+'"'+(sel.indexOf(m.id)>=0?' class="on"':'')+(rest?' disabled':'')+'>'+dimg(m.sp)+'<span><b>'+esc(m.hero?fullName(m):spName(m))+'</b><br><small>'+(m.f+1)+'階'+(rest?' · あと'+Math.ceil(m.brT-g.t)+'秒休む':'')+'</small></span></button>';}).join('')+'</div>';}
+function cmdBk(){return [['bone5','骨の兵',BONE_S,'ふつう'],['bone12','強い骨の兵',BONE_L,'体力3倍・攻撃2.2倍'],['bonea','骨の弓兵',BONE_K,'3マス先まで射る'],['boned','骨の盾兵',BONE_K,'体力5倍']];}
+function cmdBoneSpot(f){var C=g.core,tx=C.x,ty=f==C.f?C.y:0,best=null,bd=1e9;for(var y=0;y<N;y++)for(var x=0;x<N;x++){var c=cellAt(f,x,y);if(!c||!c.open)continue;if(f==C.f&&x==C.x&&y==C.y)continue;if(f==0&&x==ENTX&&y==ENTY)continue;
+  var d=Math.abs(x-tx)+Math.abs(y-ty)+(crAt(f,x,y).length?2:0);if(d<bd){bd=d;best=[x,y];}}return best;}
+function cmdBoneGo(k){var f=g.cmdBf==null?g.view:g.cmdBf;if(f>=F)f=F-1;var p=cmdBoneSpot(f);if(!p){say((f+1)+'階に通路がない。');return;}boneAct(k,f,p[0],p[1]);}
+function cmdBoneHTML(){var f=g.cmdBf==null?g.view:g.cmdBf;if(f>=F)f=F-1;var fl=[];for(var i=F-1;i>=0;i--)fl.push(i);
+ return '<div class="empty">階を選んでから種類を押すと、その階のコアに近い通路に出てくる。骨 <b style="color:var(--ink)">'+(g.bone||0)+'</b></div>'+
+  '<div class="cfl">'+fl.map(function(i){return '<button data-cbf="'+i+'"'+(i==f?' class="on"':'')+'>'+(i+1)+'階'+(i==g.core.f?'（コア）':'')+'</button>';}).join('')+'</div>'+
+  '<div class="exl">'+cmdBk().map(function(b){return '<button data-cbone="'+b[0]+'"'+((g.bone||0)<b[2]?' disabled':'')+'>'+dimg('skeleton')+'<span><b>'+b[1]+'</b><br><small>骨'+b[2]+' · '+b[3]+'</small></span></button>';}).join('')+'</div>';}
+function cmdEggHTML(){var es=g.eggs.filter(function(e){return e.hatch>g.t;});if(!es.length)return '<div class="empty">かえる前の卵がない。</div>';
+ return '<div class="empty">魂'+HATCH_SOUL+'で、選んだ卵をすぐかえす。魂 <b style="color:var(--ink)">'+(g.soul||0)+'</b></div><div class="exl">'+
+  es.slice(0,20).map(function(e,i){return '<button data-cegg="'+g.eggs.indexOf(e)+'"'+((g.soul||0)<HATCH_SOUL?' disabled':'')+'>'+dimg(e.sp)+'<span><b>'+esc(e.sp=='chimera'?'キメラ':baseName(e.sp,e.env))+'の卵</b><br><small>'+(e.f+1)+'階 · あと'+Math.ceil(e.hatch-g.t)+'秒</small></span></button>';}).join('')+'</div>';}
+function cmdRender(){var p=document.getElementById('spane-cmd');if(!p||p.hidden)return;var a=cmdBrHTML(),b=cmdBoneHTML(),c=cmdEggHTML(),k=a+b+c;if(k===cmdLast)return;cmdLast=k;
+ document.getElementById('cmdbr').innerHTML=a;document.getElementById('cmdbone').innerHTML=b;document.getElementById('cmdegg').innerHTML=c;}
+
 // 魂: 2回目の進化（経験12・魂5）・よみがえり（魂15・1匹1回）・卵をすぐかえす（魂2）
 var EVO2_XP=12,EVO2_SOUL=5,REV_SOUL=15,HATCH_SOUL=2;
 function evo2Ready(m){return !!m&&!!m.evo&&!m.evo2&&(m.xp||0)>=EVO2_XP&&g.cr.indexOf(m)>=0;}
@@ -1944,7 +1980,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  document.getElementById('core').textContent=g.core.carrier?'奪われた！':g.core.home?'最上階':'落ちている';
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v59 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v60 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -1964,6 +2000,7 @@ var sideKey='',sideT=0;
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function side(){
  var now=performance.now();if(now-sideT<250)return;sideT=now;renderLines();
+ cmdRender();
  var eh=expHTML();if(eh!==expLast){expLast=eh;var ed=document.getElementById('expd');if(ed)ed.innerHTML=eh;}
  var sh=soulHTML();if(sh!==soulLast){soulLast=sh;var sd=document.getElementById('soulp');if(sd)sd.innerHTML=sh;}
  var hs2=g.cr.filter(function(m){return m.hero;}).sort(function(a,b){return b.t-a.t||b.kills-a.kills;});
@@ -1987,6 +2024,13 @@ function side(){
  document.getElementById('conn').innerHTML=connHTML();
 }
 document.getElementById('mini').addEventListener('click',function(ev){var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');ui();draw();});
+document.getElementById('spane-cmd').addEventListener('click',function(ev){var t=ev.target,b;
+ if(b=t.closest('[data-cbr]')){cmdBrToggle(+b.getAttribute('data-cbr'));}
+ else if(b=t.closest('[data-cbrgo]')){cmdBrGo();}
+ else if(b=t.closest('[data-cbf]')){g.cmdBf=+b.getAttribute('data-cbf');}
+ else if(b=t.closest('[data-cbone]')){cmdBoneGo(b.getAttribute('data-cbone'));}
+ else if(b=t.closest('[data-cegg]')){var e=g.eggs[+b.getAttribute('data-cegg')];if(e)boneAct('hatch',e.f,e.x,e.y);}
+ else return;cmdLast='';sideT=0;side();ui();draw();});
 document.getElementById('spane-list').addEventListener('click',function(ev){var rb=ev.target.closest('[data-rev]');if(rb){revive(+rb.getAttribute('data-rev'));soulLast='';sideT=0;side();ui();draw();return;}var xd=ev.target.closest('[data-expd]');if(xd){g.expDest=xd.getAttribute('data-expd');expLast='';sideT=0;side();return;}var xb=ev.target.closest('[data-exp]');if(xb){expToggle(+xb.getAttribute('data-exp'));expLast='';sideT=0;side();return;}var xg=ev.target.closest('[data-expgo]');if(xg){expGo();expLast='';sideT=0;side();ui();draw();return;}var lb=ev.target.closest('[data-line]');if(lb){upLine(lb.getAttribute('data-line'));return;}var tb=ev.target.closest('[data-train]');if(tb){train(+tb.getAttribute('data-train'));return;}var b=ev.target.closest('[data-f]');if(!b)return;g.view=+b.getAttribute('data-f');sideKey='';closeSheet();ui();draw();});
 function loop(ts){var dt=Math.min(0.1,(ts-last)/1000);last=ts;if(!over&&speed>0)step(dt*speed);draw();ui();requestAnimationFrame(loop);}
 // ---------- v14: 初代の残り ----------
@@ -2682,12 +2726,13 @@ document.getElementById('zfit').onclick=function(){ZM=1;OX=OY=0;zoomBtns();draw(
 // 指に小さな振動（アプリの中だけ）
 var lastHap=0;function haptic(kind){var t=performance.now();if(t-lastHap<60)return;lastHap=t;appPost({type:'haptic',kind:kind||'light'});}
 // 一覧・遊び方のシート
-function openSheet(which){document.getElementById('stitle').textContent=which=='help'?'遊び方':'一覧';
- document.getElementById('spane-list').hidden=which=='help';document.getElementById('spane-help').hidden=which!='help';
+function openSheet(which){document.getElementById('stitle').textContent=which=='help'?'遊び方':which=='cmd'?'コマンド':'一覧';
+ document.getElementById('spane-list').hidden=which!='list';document.getElementById('spane-help').hidden=which!='help';document.getElementById('spane-cmd').hidden=which!='cmd';cmdLast='';
  sideKey='';sideT=0;side();document.getElementById('sheet').hidden=false;holdTime();}
 function closeSheet(){document.getElementById('sheet').hidden=true;resumeTime();}
 var heldSpeed=0;function holdTime(){if(speed>0&&!over){heldSpeed=speed;setSpeed(0);}}function resumeTime(){if(heldSpeed&&!over){setSpeed(heldSpeed);}heldSpeed=0;}
 document.getElementById('blist').onclick=function(){openSheet('list');};
+document.getElementById('bcmd').onclick=function(){openSheet('cmd');};
 document.getElementById('bhelp').onclick=function(){openSheet('help');};
 document.getElementById('sclose').onclick=closeSheet;
 document.getElementById('sheet').addEventListener('click',function(ev){if(ev.target.id=='sheet')closeSheet();});
@@ -2698,7 +2743,7 @@ document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
 document.getElementById('blight').onclick=coreLight;
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
-window.__t={pop:openPop,bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
+window.__t={pop:openPop,cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
 document.getElementById('bdex').onclick=function(){holdTime();showDex();};document.getElementById('bmenu').onclick=function(){saveGame();setSpeed(0);heldSpeed=0;g.title=true;showTitle();};
 newGame('normal');g.title=true;showTitle();draw();ui();requestAnimationFrame(function(t){last=t;requestAnimationFrame(loop);});
 })();
