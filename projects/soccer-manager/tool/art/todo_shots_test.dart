@@ -26,6 +26,7 @@ import 'package:soccer_manager/logic/proposal_engine.dart';
 import 'package:soccer_manager/logic/todo_advisor.dart';
 import 'package:soccer_manager/main.dart';
 import 'package:soccer_manager/models/club_infrastructure.dart';
+import 'package:soccer_manager/models/cup.dart';
 import 'package:soccer_manager/models/incoming_offer.dart';
 import 'package:soccer_manager/models/owner_event.dart';
 import 'package:soccer_manager/models/owner_work.dart';
@@ -267,6 +268,69 @@ void main() {
     final year = find.byKey(const ValueKey('chip-1')).hitTestable();
     await tester.tap(year.first);
     await shoot('${prefix}9_year');
+  }
+
+  // 試合のあとのダイジェスト(どの大会も同じ部品)。大会ごとに、その日まで
+  // 進めてから上の帯の進むボタンを押して撮る。
+  Future<void> untilStop(GameState gs, bool Function(DayEvent) want) async {
+    for (var guard = 0; guard < 400; guard++) {
+      final first = gs.nextStop;
+      if (first == null) return;
+      await gs.playBackgroundCupMatchesBefore(first);
+      final stop = gs.nextStop!;
+      if (want(stop)) return;
+      switch (stop.kind) {
+        case DayEventKind.leagueMatch:
+          await gs.playNextMatchdayQuickSim();
+        case DayEventKind.cupMatch:
+          final dom = gs.domesticCup?.nextUnplayedMatch;
+          final uid = gs.userTeam.id;
+          if (dom != null &&
+              gs.canPlayNextDomesticCupMatch &&
+              (dom.homeTeamId == uid || dom.awayTeamId == uid)) {
+            await gs.playNextCupMatch();
+          } else if (gs.canPlayNextFourClubSuperCupMatch) {
+            await gs.playNextFourClubSuperCupMatch();
+          } else if (gs.continentalCup!.isGroupStageComplete) {
+            await gs.playNextContinentalKnockoutLeg();
+          } else {
+            await gs.playNextContinentalGroupMatch();
+          }
+        case DayEventKind.superCup:
+          await gs.playSuperCup();
+        case DayEventKind.friendly:
+          await gs.playFriendly(gs.friendlyIndexFor(stop)!);
+        default:
+          await gs.advanceToDateStop(stop);
+      }
+    }
+  }
+
+  for (final (name, kind) in [
+    ('friendly', DayEventKind.friendly),
+    ('supercup', DayEventKind.superCup),
+    ('league', DayEventKind.leagueMatch),
+    ('cup', DayEventKind.cupMatch),
+  ]) {
+    testWidgets('試合のあと: $name', (tester) async {
+      await run(tester, 'g_digest_$name', arrange: (gs) async {
+        if (kind == DayEventKind.superCup) {
+          final u = gs.userTeam.id;
+          final other =
+              gs.save!.league.teams.firstWhere((t) => t.id != u).id;
+          gs.save!.pendingSuperCup =
+              CupMatch(round: 1, homeTeamId: u, awayTeamId: other);
+        }
+        await untilStop(gs, (s) => s.kind == kind);
+      }, shots: (nav, shoot) async {
+        await tester.runAsync(() async {
+          await tester.tap(find.byKey(const ValueKey('advance-button')));
+          await Future<void>.delayed(const Duration(milliseconds: 600));
+        });
+        await tester.pump();
+        await shoot('1_dialog');
+      });
+    });
   }
 
   testWidgets('カレンダー: 開幕前', (tester) async {

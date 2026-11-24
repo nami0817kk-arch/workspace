@@ -466,7 +466,10 @@ class _FmTopBar extends StatelessWidget {
             const SizedBox(width: 12),
             const ExpectationMeters(compact: true),
             const SizedBox(width: 12),
-            if (next != null && gameState.saleReason == null)
+            // リーグ戦を終えた後でも、自クラブのカップ戦が残っていれば出す
+            // (試合は全部ここから行う。2026-11-24)。
+            if ((next != null || gameState.nextStop != null) &&
+                gameState.saleReason == null)
               // 帯が狭いとき(小さな端末・大きい文字)は、件数の札を数字だけに
               // し、それでも入らなければボタンの字を「…」で切る(はみ出さない)。
               ConstrainedBox(

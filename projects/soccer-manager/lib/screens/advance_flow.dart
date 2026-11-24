@@ -3,13 +3,16 @@ import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
 import '../logic/calendar_engine.dart';
+import '../logic/continental_cup_engine.dart';
+import '../logic/cup_engine.dart';
 import '../logic/day_events.dart';
 import '../logic/economy_scale.dart';
+import '../models/match_result.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
-import 'cup_screen.dart';
+import '../widgets/achievement_unlock_notifier.dart';
+import '../widgets/match_digest_dialog.dart';
 import 'home_screen.dart';
-import 'match_screen.dart';
 
 /// 進むボタンの字。どこまで進むかを動詞つきで書く。
 /// 「次の試合へ 9/5(土)」「カップ戦へ 9/9(水)」「給料日まで進む 7/31(金)」。
@@ -40,8 +43,11 @@ IconData advanceButtonIcon(GameState gs) =>
 
 /// 次の予定がある日まで進む(何もない日は飛ばす。2026-11-22)。
 ///
-/// - リーグ戦の日: 今まで通り、その節を行って結果を見せる。
-/// - 自クラブのカップ戦の日: その試合を行い、試合の画面を開く。
+/// - 試合の日(リーグ戦・国内カップ・大陸カップ・スーパーカップ・親善試合):
+///   その試合を行い、どの大会でも同じ結果のダイジェスト
+///   ([showMatchDigestDialog])を出す。試合経過はその中から開く。
+///   (2026-11-24 に揃えた。以前はカップ戦だけ試合経過の画面が開き、
+///   スーパーカップと親善試合は進むボタンが止まらなかった)
 /// - 給料日・放映権・移籍の窓・契約の期日: その日まで進めて、何が
 ///   起きたかを1行で知らせる。
 ///
@@ -63,9 +69,9 @@ Future<void> advanceToNextStop(BuildContext context) async {
     case DayEventKind.cupMatch:
       await _playUserCupMatch(context, gs);
     case DayEventKind.superCup:
+      await _playSuperCup(context, gs);
     case DayEventKind.friendly:
-      // 進むボタンはここに止まらない(状況の画面の札から行う)。
-      break;
+      await _playFriendly(context, gs, stop);
     case DayEventKind.wages:
     case DayEventKind.broadcast:
     case DayEventKind.windowOpens:
@@ -99,39 +105,156 @@ Future<void> advanceToNextStop(BuildContext context) async {
   }
 }
 
-/// 自クラブのカップ戦を1試合行い、試合の画面を開く。
-Future<void> _playUserCupMatch(BuildContext context, GameState gs) async {
+/// 試合を行って、結果のダイジェストを出す(どの大会でも同じ)。
+///
+/// [play] が試合を行う。期待の動きは試合の前後の差、賞金は
+/// [GameState.lastCupPrizeNote](出したら消す)。
+Future<void> _playAndShow(
+  BuildContext context,
+  GameState gs, {
+  required String competition,
+  required Future<MatchResult?> Function() play,
+  String? Function()? penaltyNote,
+}) async {
   FeedbackService.kickOff();
-  final userId = gs.userTeam.id;
   final teams = gs.allTeamsForCups;
-  final dom = gs.domesticCup?.nextUnplayedMatch;
+  final userId = gs.userTeam.id;
+  final supportBefore = gs.save!.confidence;
+  final shareBefore = gs.save!.shareholderExpectation;
+  final result = await play();
+  if (!context.mounted) return;
+  final prize = gs.lastCupPrizeNote;
+  gs.lastCupPrizeNote = null;
+  if (result == null) {
+    // 試合にならなかった(相手が決まっていない等)。賞金だけは知らせる。
+    if (prize != null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(prize)));
+    }
+    return;
+  }
+  await showMatchDigestDialog(
+    context,
+    result: result,
+    userTeamId: userId,
+    // 相手が別の部・別の国のクラブでも名前が引けるように、カップ戦の顔ぶれ
+    // (リーグ戦の顔ぶれを含む)を渡す。
+    teams: teams,
+    competition: competition,
+    supportDelta: (gs.save?.confidence ?? supportBefore) - supportBefore,
+    shareDelta:
+        (gs.save?.shareholderExpectation ?? shareBefore) - shareBefore,
+    prizeNote: prize,
+    penaltyNote: penaltyNote?.call(),
+  );
+  if (context.mounted) showAchievementUnlockNotification(context, gs);
+}
+
+/// PK戦で決まったときの一言。
+String? _penaltyLine(String? penaltyWinnerId, String userId) {
+  if (penaltyWinnerId == null) return null;
+  return penaltyWinnerId == userId
+      ? Tr.pick('PK戦で勝ち抜け', 'Through on penalties')
+      : Tr.pick('PK戦で敗退', 'Out on penalties');
+}
+
+/// 自クラブのカップ戦(国内カップ・4クラブのスーパーカップ・大陸カップ)を
+/// 1試合行う。
+Future<void> _playUserCupMatch(BuildContext context, GameState gs) async {
+  final userId = gs.userTeam.id;
+  final domCup = gs.domesticCup;
+  final dom = domCup?.nextUnplayedMatch;
   final domesticIsUser = dom != null &&
       gs.canPlayNextDomesticCupMatch &&
       (dom.homeTeamId == userId || dom.awayTeamId == userId);
   // 4クラブのスーパーカップ(スペイン・イタリア)も同じように止まって行う。
   final superCup = !domesticIsUser && gs.canPlayNextFourClubSuperCupMatch;
+  final sc = gs.fourClubSuperCup;
+  final scm = superCup ? gs.userFourClubSuperCupMatch : null;
   final cont = gs.continentalCup;
-  final title = domesticIsUser
-      ? Tr.pick('国内カップ', 'Domestic Cup')
-      : superCup
-          ? Tr.pick('スーパーカップ', 'Super Cup')
-          : (cont?.isGroupStageComplete ?? false)
-              ? Tr.pick('大陸カップ 決勝トーナメント', 'Continental Cup knockout stage')
-              : Tr.pick('大陸カップ グループステージ', 'Continental Cup group stage');
-  final result = domesticIsUser
-      ? await gs.playNextCupMatch()
-      : superCup
-          ? await gs.playNextFourClubSuperCupMatch()
-          : cont == null
-              ? null
-              : cont.isGroupStageComplete
-                  ? await gs.playNextContinentalKnockoutLeg()
-                  : await gs.playNextContinentalGroupMatch();
-  if (!context.mounted) return;
-  showCupPrizeSnackBar(context, gs);
-  if (result != null) {
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => MatchScreen(result: result, teams: teams, title: title),
-    ));
+  final String competition;
+  if (domesticIsUser) {
+    competition = Tr.pick(
+        '${domCup!.name} ${CupEngine.roundLabel(dom.round, domCup.totalRounds)}',
+        '${domCup.name} • ${CupEngine.roundLabel(dom.round, domCup.totalRounds)}');
+  } else if (superCup && sc != null && scm != null) {
+    competition = Tr.pick('${sc.name} ${CupEngine.roundLabel(scm.round, 2)}',
+        '${sc.name} • ${CupEngine.roundLabel(scm.round, 2)}');
+  } else if (cont != null && !cont.isGroupStageComplete) {
+    competition = Tr.pick('${cont.name} グループステージ', '${cont.name} • Group stage');
+  } else if (cont != null) {
+    final leg = ContinentalCupEngine.nextKnockoutLeg(cont);
+    var total = 0;
+    for (var n = cont.groups.length * 2; n > 1; n ~/= 2) {
+      total++;
+    }
+    final round = leg == null
+        ? ''
+        : ContinentalCupEngine.roundLabel(leg.tie.round, total);
+    final legNo = leg == null || leg.tie.singleLeg
+        ? ''
+        : Tr.pick(' 第${leg.tie.legs.length + 1}戦',
+            ' • Leg ${leg.tie.legs.length + 1}');
+    competition =
+        Tr.pick('${cont.name} $round$legNo', '${cont.name} • $round$legNo');
+  } else {
+    competition = Tr.pick('カップ戦', 'Cup tie');
   }
+  final tie = cont != null && cont.isGroupStageComplete
+      ? ContinentalCupEngine.nextKnockoutLeg(cont)?.tie
+      : null;
+  await _playAndShow(
+    context,
+    gs,
+    competition: competition,
+    play: () async => domesticIsUser
+        ? await gs.playNextCupMatch()
+        : superCup
+            ? await gs.playNextFourClubSuperCupMatch()
+            : cont == null
+                ? null
+                : cont.isGroupStageComplete
+                    ? await gs.playNextContinentalKnockoutLeg()
+                    : await gs.playNextContinentalGroupMatch(),
+    penaltyNote: () {
+      if (domesticIsUser) {
+        return dom.result == null
+            ? null
+            : _penaltyLine(dom.penaltyWinnerId, userId);
+      }
+      if (superCup && scm != null) {
+        return _penaltyLine(scm.penaltyWinnerId, userId);
+      }
+      if (tie != null && tie.isComplete) {
+        return _penaltyLine(tie.penaltyWinnerId, userId);
+      }
+      return null;
+    },
+  );
+}
+
+/// 開幕前のスーパーカップ(1試合。中立の会場)。
+Future<void> _playSuperCup(BuildContext context, GameState gs) async {
+  final match = gs.pendingSuperCup;
+  if (match == null) return;
+  await _playAndShow(
+    context,
+    gs,
+    competition: Tr.pick('スーパーカップ', 'Super Cup'),
+    play: gs.playSuperCup,
+    penaltyNote: () => _penaltyLine(match.penaltyWinnerId, gs.userTeam.id),
+  );
+}
+
+/// 開幕前の親善試合(順位・カップ戦・疲れには響かない)。
+Future<void> _playFriendly(
+    BuildContext context, GameState gs, DayEvent stop) async {
+  final index = gs.friendlyIndexFor(stop);
+  if (index == null) return;
+  await _playAndShow(
+    context,
+    gs,
+    competition: Tr.pick('親善試合', 'Friendly'),
+    play: () => gs.playFriendly(index),
+  );
 }

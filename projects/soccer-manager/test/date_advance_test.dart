@@ -61,6 +61,15 @@ void main() {
           } else {
             await game.playNextContinentalGroupMatch();
           }
+        // スーパーカップと親善試合の日にも止まる(2026-11-24。以前は状況の
+        // 札から行い、進むボタンは止まらなかった)。
+        case DayEventKind.superCup:
+          expect(await game.playSuperCup(), isNotNull);
+        case DayEventKind.friendly:
+          final i = game.friendlyIndexFor(stop);
+          expect(i, isNotNull, reason: '${stop.label} の親善試合が引けない');
+          expect(await game.playFriendly(i!), isNotNull);
+          expect(game.today, stop.date, reason: '${stop.label} の日に行っていない');
         default:
           await game.advanceToDateStop(stop);
           expect(game.today, stop.date, reason: '${stop.label} の日に止まっていない');
