@@ -95,15 +95,25 @@ Future<void> _loadFaces(WidgetTester tester) async {
 
 void main() {
   group('顔の絵の素材', () {
-    test('一覧の160枚がすべて assets/faces にあり、余りも無い。pubspec に登録してある', () {
+    test('一覧の220枚がすべて assets/faces にあり、余りも無い。pubspec に登録してある', () {
       final files = Directory('assets/faces').listSync().whereType<File>().map((f) => f.uri.pathSegments.last).where((n) => n.endsWith('.png')).toSet();
-      expect(FACES.length, 160);
-      expect(faceById.length, 160, reason: '同じ名前の絵が2つある');
+      expect(FACES.length, 220);
+      expect(faceById.length, 220, reason: '同じ名前の絵が2つある');
       expect(files, {for (final f in FACES) '${f.id}.png'});
       expect(File('pubspec.yaml').readAsStringSync(), contains('- assets/faces/'));
-      // 外した絵（実在のブランドの印・実在の人物に似る）は入れない
-      expect(faceById.containsKey('la3_0'), isFalse);
-      expect(faceById.containsKey('af3_8'), isFalse);
+      // 外した絵（実在のブランドの印・実在の人物に似る・崩れた絵）は入れない
+      for (final id in ['la3_0', 'af3_8', 'saf_0', 'sam_7', 'saf2_6']) {
+        expect(faceById.containsKey(id), isFalse, reason: id);
+      }
+      // 1.0.0+24 で足した絵のうち、見た目に合わせて札を直したもの
+      expect((faceById['me4_0']!.region, faceById['me4_0']!.sex), ('af', 'f'));
+      expect(faceById['mix4_6']!.region, 'sa');
+      expect(faceById['saf2_3']!.age, lessThan(45), reason: '白髪の無い30代後半');
+      expect(faceById['sam_3']!.age, greaterThanOrEqualTo(50));
+      // 年齢の違う別の人の並びは、同じ人の続きにしない
+      for (final id in ['saf_1', 'sam_0', 'saf2_0', 'mix4_0', 'la4_0', 'aff_0', 'me4_0']) {
+        expect(faceNext(id), isNull, reason: id);
+      }
       // 見た目が東アジアの we_4・we_5 は東アジア
       expect(faceById['we_4']!.region, 'ea');
       expect(faceById['we_5']!.region, 'ea');
@@ -125,9 +135,9 @@ void main() {
         expect(l.sex, f.sex, reason: f.id);
         expect(faceLook(l.id), l.id, reason: '代表は自分自身');
       }
-      // 地域・性別ごとの枚数（1.0.0+23）
+      // 地域・性別ごとの枚数（1.0.0+24。1.0.0+23 は 17/22・21/15・9/5・15/11・9/7・8/7・8/6）
       int n(String r, String sx) => FACES.where((f) => f.region == r && f.sex == sx).length;
-      expect([for (final r in ['ea', 'we', 'sa', 'af', 'me', 'la', 'sea']) '${n(r, 'm')}/${n(r, 'f')}'], ['17/22', '21/15', '9/5', '15/11', '9/7', '8/7', '8/6']);
+      expect([for (final r in ['ea', 'we', 'sa', 'af', 'me', 'la', 'sea']) '${n(r, 'm')}/${n(r, 'f')}'], ['17/22', '21/15', '21/21', '15/21', '13/11', '12/13', '9/9']);
       // どの地域・性別にも、若い（32歳まで）・中年（38〜52歳）・老年（60歳から）の絵が1枚はある
       for (final r in ['ea', 'we', 'sa', 'af', 'la', 'me', 'sea']) {
         for (final sx in ['m', 'f']) {
@@ -136,11 +146,11 @@ void main() {
           }
         }
       }
-      // 大きさ（アプリに足される分）: 3MB を超えない（160枚で約2.5MB）
+      // 大きさ（アプリに足される分）: 4MB を超えない（160枚で約2.5MB、220枚で約3.4MB）
       final bytes = Directory('assets/faces').listSync().whereType<File>().fold<int>(0, (a, f) => a + f.lengthSync());
       // ignore: avoid_print
       print('顔の絵の合計: $bytes バイト');
-      expect(bytes, lessThan(3 * 1024 * 1024));
+      expect(bytes, lessThan(4 * 1024 * 1024));
     });
   });
 
@@ -342,8 +352,10 @@ void main() {
       expect(faceStale(null, 30, region: 'ea', sex: 'm'), isTrue);
       expect(faceStale('zz_9', 30, region: 'ea', sex: 'm'), isTrue);
       // とても年をとった人で、12歳より近い絵が無いときは、いちばん近い絵まで許す（替わり続けない）
-      expect(faceGapLimit('sa', 'f', 90), 22);
-      expect(faceStale('sa2_5', 90, region: 'sa', sex: 'f'), isFalse);
+      expect(faceGapLimit('ea', 'm', 95), 15);
+      expect(faceStale('eam_8', 95, region: 'ea', sex: 'm'), isFalse);
+      // 1.0.0+24 で80歳の南アジアの女の絵が入ったので、90歳でも12歳まで
+      expect(faceGapLimit('sa', 'f', 90), faceGapMax);
       expect(faceGapLimit('ea', 'm', 40), faceGapMax);
       // 同じ人が年をとった絵（0→1→2・3→4→5）が空いていれば、それに替わる
       expect(faceNext('ea_0'), 'ea_1');
@@ -519,12 +531,12 @@ void main() {
     });
 
     test('育った会社：どの国から始めても、社長と部下の顔は地域・性別が合い、年の差は12歳まで。重なりは絵の足りない分だけ', () {
-      for (final home in ['jp', 'us', 'in', 'ng']) {
+      for (final home in ['jp', 'us', 'in', 'ng', 'mx', 'sa']) {
         final g = _grownIn(home);
         final staff = g.staff;
         expect(staff.length, greaterThanOrEqualTo(6), reason: home);
         final detail = <String>[];
-        var far = 0;
+        var far = 0, lent = 0;
         for (final (name, age, face) in [(g.pres.name, g.pres.age, g.pres.face), for (final p in staff) (p.name, p.age, p.face)]) {
           final f = faceById[face]!;
           final reg = faceRegion(name, home: g.home);
@@ -535,6 +547,7 @@ void main() {
           // 年の差12歳超が残らない
           expect((f.age - age).abs(), lessThanOrEqualTo(faceGapMax), reason: '$home $name $age ${f.id}');
           if ((f.age - age).abs() > 12) far++;
+          if (f.region != reg) lent++;
           detail.add('$age${faceSex(name)}→${f.id}(${f.age})');
         }
         // 古いセーブのような食い違いは、読み込みのときにも残らない（読み直しても同じ顔）
@@ -551,7 +564,7 @@ void main() {
         final regions = {for (final p in staff) faceRegion(p.name, home: g.home)};
         final rivals = g.cos.where((c) => c.rival != null && c.alive).toList();
         // ignore: avoid_print
-        print('顔の重なり $home: 社長＋部下${staff.length}人で $pairs 組（地域 $regions・地域/性別ごとの人数 $need）・宿敵${rivals.length}社で ${_pairs(rivals.map((c) => c.pf))} 組・年が12歳より離れた絵 $far 人\n  ${detail.join(' ')}');
+        print('顔の重なり $home: 社長＋部下${staff.length}人で $pairs 組（地域 $regions・地域/性別ごとの人数 $need）・宿敵${rivals.length}社で ${_pairs(rivals.map((c) => c.pf))} 組・年が12歳より離れた絵 $far 人・別地域の絵 $lent 人\n  ${detail.join(' ')}');
         expect(_pairs(rivals.map((c) => c.pf)), 0, reason: home);
         // 宿敵の顔も地域が合う（欧州の宿敵に東アジアの顔が付かない）。年の差も12歳まで
         for (final c in rivals) {
@@ -565,8 +578,10 @@ void main() {
           return a + (e.value > have ? e.value - have : 0);
         });
         // 絵が足りない分（人数 − 絵の数）の3倍＋年の片寄りの分までに収まる
-        // （1.0.0+23 から、年の差12歳を超える絵より重ねるほうを選ぶ。インド開始は南アジアの女の絵が5枚しか無く、ここで20組を超える）
+        // （1.0.0+23 から、年の差12歳を超える絵より重ねるほうを選ぶ。1.0.0+23 のインド開始は南アジアの女の絵が5枚しか無く25組。
+        // 1.0.0+24 で南アジアの絵を足して1組）
         expect(pairs, lessThanOrEqualTo(over * 3 + 4), reason: '$home: 重なりが多い');
+        if (home == 'in') expect(pairs, lessThanOrEqualTo(3), reason: 'インド開始の重なり');
       }
     });
 
@@ -751,7 +766,7 @@ void main() {
 
   // 目で見る用の書き出し（QUAD_SHOTS があるときだけ）
   group('書き出し', () {
-    for (final home in const ['jp', 'us', 'in', 'ng']) {
+    for (final home in const ['jp', 'us', 'in', 'ng', 'mx', 'sa']) {
       for (final w in const [390.0, 320.0]) {
         for (final lang in const ['ja', 'en']) {
           testWidgets('顔の絵：$home・幅${w.round()}・$lang', (tester) async {
