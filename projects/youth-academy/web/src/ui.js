@@ -613,7 +613,8 @@
       body.replaceChildren();
       const sl = t.lineup[st.sel];
       const p = t.players[sl.pid];
-      if (st.tab === 'tactic') {
+      // 戦い方（型・相性・つまみ・攻める方向・クロス）。setPieces が真ならキッカーの欄も（試合中の「戦い方」）
+      function renderTactic(setPieces) {
         body.append(h('div', { class: 'h' }, '戦い方の型'), h('div', { class: 'fm-row', style: 'margin:4px 0 6px' }, Object.keys(YA.TACTICS).map((n) => h('button', { class: 'btn sm' + (t.tactic.type === n ? ' on' : ''), onclick: () => { o.match ? o.match.setType(t, n) : (t.tactic = YA.withType(t.tactic, n)); onChange(); } }, n + ' ' + YA.tacticFitOf(t, n).mark))));
         // つまみを動かして「カスタム」になっても、相性は元の型で見る（2026-11-17）
         if (t.tactic.type === 'カスタム' && t.tactic.baseType) body.append(h('div', { class: 'note', style: 'margin:-2px 0 4px' }, `いまはカスタム（もとは「${t.tactic.baseType}」。相性はこの型で見ます）`));
@@ -636,11 +637,30 @@
         body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'クロスの種類'), h('div', { class: 'fm-row', style: 'margin-top:3px' }, [['', '標準'], ['high', '高い（長身が生きる）'], ['early', '早い（アーリー）'], ['low', '低い（ニアに合わせる）']].map(([k, n]) => h('button', { class: 'btn sm' + ((t.tactic.crossType || '') === k ? ' on' : ''), onclick: () => { t.tactic.crossType = k; onChange(); } }, n))));
         const onPitch = t.lineup.map((x) => t.players[x.pid]);
         const sel = (key, label) => h('div', { class: 'row', style: 'gap:6px;margin:3px 0' }, h('span', { style: 'width:78px;font-weight:800' }, label), (() => { const s2 = h('select', { style: 'flex:1;padding:5px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, '自動（得意な選手）'), onPitch.map((p) => h('option', { value: p.id }, `${p.num} ${p.name}`))); s2.value = t.tactic[key] && onPitch.some((p) => p.id === t.tactic[key]) ? t.tactic[key] : ''; s2.addEventListener('change', () => { t.tactic[key] = s2.value || null; o.onChange && o.onChange(); }); return s2; })());
-        body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'セットプレーのキッカー'), sel('fk', 'フリーキック'), sel('ck', 'コーナー'), sel('pk', 'PK'));
+        if (setPieces) body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'セットプレーのキッカー'), sel('fk', 'フリーキック'), sel('ck', 'コーナー'), sel('pk', 'PK'));
         const rep = t.tactRep != null ? t.tactRep : 1;
         body.append(h('div', { class: 'note', style: 'margin-top:8px' }, `戦い方の浸透：${Math.round(rep * 100)}%。同じ戦い方を続けるほど、つまみどおりに動きます（変えると下がります）。守備のマークは「指示」で、相手の1人に付かせられます。`));
+      }
+      // セットプレー（2026-11-25 試合前の小タブ）：キッカーと PK 戦の順番
+      function renderSet() {
+        const onPitch = t.lineup.map((x) => t.players[x.pid]);
+        const sel = (key, label) => h('div', { class: 'row', style: 'gap:6px;margin:3px 0' }, h('span', { style: 'width:78px;font-weight:800' }, label), (() => { const s2 = h('select', { style: 'flex:1;padding:5px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, '自動（得意な選手）'), onPitch.map((p) => h('option', { value: p.id }, `${p.num} ${p.name}`))); s2.value = t.tactic[key] && onPitch.some((p) => p.id === t.tactic[key]) ? t.tactic[key] : ''; s2.addEventListener('change', () => { t.tactic[key] = s2.value || null; o.onChange && o.onChange(); }); return s2; })());
+        body.append(h('div', { class: 'h' }, 'セットプレーのキッカー'), sel('fk', 'フリーキック'), sel('ck', 'コーナー'), sel('pk', 'PK'));
+        const w = app.w;
+        if (w && YA.pkToggle) {
+          const ord = (w.pkOrder || []).filter((id) => w.players[id]);
+          body.append(h('div', { class: 'h', style: 'margin-top:8px' }, `PK戦の順番（${ord.length}/5）`), h('div', { class: 'note' }, '大会の引き分けで PK 戦になったときに蹴る順番です。押すと入れる・外す（5人まで）。'));
+          body.append(h('div', { class: 'fm-row pkrow', style: 'margin-top:4px;flex-wrap:wrap' }, onPitch.concat(t.bench.map((id) => t.players[id]).filter(Boolean)).filter((p) => p.pos !== 'GK').map((p) => { const k = ord.indexOf(p.id); return h('button', { class: 'btn sm' + (k >= 0 ? ' on' : ''), onclick: () => { const r = YA.pkToggle(w, w.players[p.id] || p); st.msgs = [r.msg]; YA.saveWorld(); renderBody(); } }, (k >= 0 ? (k + 1) + '. ' : '') + p.num + ' ' + surname(p)); })));
+        }
+      }
+      if (st.tab === 'tactic') {
+        renderTactic(true);
+      } else if (st.tab === 'set') {
+        renderSet();
       } else if (st.tab === 'squad') {
         renderSquad();
+        // 試合前の「戦術」：左に選手（先発・ベンチ・控え外）、続けて戦い方とチームの指示（2026-11-25 FM 寄り）
+        if (o.combined) { body.append(h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' })); renderTactic(false); }
       } else if (st.tab === 'role') {
         const p15 = YA.pos15OfSlot(sl, st.sel);
         body.append(h('div', { class: 'row', style: 'gap:6px;margin-bottom:4px' }, posChip(p), h('b', {}, `${p.num} ${p.name}`), h('span', { class: 'sub grow' }, `${p.height}cm ／ 自信 ${Math.round(p.conf)} ／ 利き足 ${p.foot === 'R' ? '右' : p.foot === 'L' ? '左' : '両'}`)), aptBlock(p));
@@ -1027,7 +1047,17 @@
       // 見ずに結果まで進める。試合中の「結果まで」と名前をそろえ、確かめてから進める（2026-11-17）
       h('button', { class: 'btn sm', style: 'margin-left:10px', onclick: () => { persistTeam(t); YA.confirmBox('試合を見ずに、結果まで進めますか？（交代・指示はできません）', () => simulateAll(t, oppTeam, opp, sched), { yes: '結果まで進める', skip: 'skipmatch' }); } }, '結果まで'));
     top.append(kick);
-    const panel = tacticPanel(t, { tabs: [['squad', '編成'], ['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
+    // A／B の切り替え（2026-11-25：「ほか」にあった Bチームの指揮をここへ）
+    if (w && YA.bBlock) top.prepend(h('div', { class: 'row abtog', style: 'gap:3px;align-self:center;flex:none' }, h('button', { class: 'btn sm' + (!app.preB ? ' on' : ''), onclick: () => { app.preB = false; render(); } }, 'Aチーム'), h('button', { class: 'btn sm' + (app.preB ? ' on' : ''), onclick: () => { app.preB = true; render(); } }, 'Bチーム')));
+    if (w && app.preB && YA.bBlock) {
+      const bb = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
+      YA.bBlock(bb);
+      wrap.append(top, bb);
+      main.append(wrap);
+      return;
+    }
+    // 2026-11-25 FM 寄り：戦術（選手と戦い方）・選手の指示（役割と任務）・セットプレー・相手
+    const panel = tacticPanel(t, { combined: true, tabs: [['squad', '戦術'], ['role', '選手の指示'], ['set', 'セットプレー'], ['opp', '相手']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
     preState = panel.state;
     wrap.append(top, panel);
     main.append(wrap);

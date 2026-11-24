@@ -432,14 +432,20 @@ async function clearEvents() {
   ok(txt().includes('試合へ'), '試合へのボタン');
   btn('試合へ（').click();
   ok(txt().includes('キックオフ') && txt().includes('vs') && txt().includes('結果まで'), '今週の試合の前の画面');
-  for (const k of ['戦い方', '選手と役割', '相手の分析']) {
-    btn(k).click();
+  // 2026-11-25 試合前は FM 寄り：戦術・選手の指示・セットプレー・相手。上に A／B の切り替え
+  const pretab = (n) => { const b = [...d.querySelectorAll('#main .tabs button')].find((x) => x.textContent.trim() === n); if (b) b.click(); return !!b; };
+  ok(['戦術', '選手の指示', 'セットプレー', '相手'].every((n) => [...d.querySelectorAll('#main .tabs button')].some((b) => b.textContent.trim() === n)), '試合前の小タブ4つ');
+  ok(txt().includes('ベンチ（9人）') && txt().includes('戦い方の型'), '戦術の小タブに選手と戦い方');
+  pretab('セットプレー');
+  ok(txt().includes('セットプレーのキッカー') && txt().includes('PK戦の順番') && d.querySelectorAll('#main select').length === 3, 'セットプレーの小タブにキッカーと PK 戦の順番');
+  for (const k of ['選手の指示', '相手']) {
+    pretab(k);
     await sleep(10);
   }
   // 2026-11-16 相手の分析：先発に位置の札（分析の担当がいれば）と要注意の印
   ok(txt().includes('先発（') && (w.YA.analysisLevel(A.w) < 1 || (d.querySelectorAll('#main .plist .pos').length >= 11 && txt().includes('要注意'))), '相手の分析に先発の位置と要注意');
   // 編成（FM風）：先発・ベンチ・控え外を、タップ→タップで入れ替える
-  [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === '編成').click();
+  pretab('戦術');
   // おまかせ編成：押すと11人がそろい、適性の合わない先発が減る
   {
     btn('おまかせ編成').click();
@@ -448,7 +454,7 @@ async function clearEvents() {
     ok(lu.length === 11 && new Set(lu.map((s) => s.pid)).size === 11 && A.w.players[lu[0].pid].pos === 'GK', 'おまかせ編成で11人とGKがそろう');
     const off = lu.filter((s, i) => A.w.players[s.pid].apt[d.defaultView.YA.pos15OfSlot(s, i)] < 14).length;
     ok(off <= 1, 'おまかせ編成では、適性の合わない先発がほとんどいない（Aに本職がいないときだけ） ' + off);
-    [...d.querySelectorAll('.tabs button')].find((b) => b.textContent.trim() === '編成').click();
+    pretab('戦術');
   }
   ok(txt().includes('ベンチ（9人）') && txt().includes('控え外') && d.querySelectorAll('.pitem.sq').length >= 9, '編成の画面');
   {
@@ -493,14 +499,17 @@ async function clearEvents() {
       ok(new Set(A.w.lineupA.map((s) => s.pid).concat(A.w.benchA)).size === 20, '控え外から入れたあとも重複なし');
     }
   }
-  btn('戦い方').click();
-  ok(txt().includes('クロスの種類') && txt().includes('セットプレーのキッカー') && txt().includes('戦い方の浸透') && d.querySelectorAll('#main select').length === 3, '戦術の細かい設定（クロス・キッカー・浸透）');
+  pretab('戦術');
+  ok(txt().includes('クロスの種類') && txt().includes('戦い方の浸透'), '戦術の細かい設定（クロス・浸透）');
   btn('高い（長身が生きる）').click();
   ok(A.w.tactic && A.w.tactic.crossType === 'high', 'クロスの種類が保存される');
+  pretab('セットプレー');
   const fkSel = d.querySelectorAll('#main select')[0];
   fkSel.value = fkSel.options[2].value;
   fkSel.dispatchEvent(new w.Event('change', { bubbles: true }));
   ok(A.w.tactic.fk === fkSel.options[2].value, 'キッカーの指定が保存される');
+  { const before = (A.w.pkOrder || []).length; const pb = [...d.querySelectorAll('#main .pkrow button')].find((b) => !b.classList.contains('on')); pb.click(); ok((A.w.pkOrder || []).length === before + 1, 'セットプレーで PK 戦の順番に入れられる'); }
+  pretab('戦術');
   // 布陣は「布陣：」のボタンから一覧で選ぶ。変えたら「元に戻す」で1回戻せる（2026-11-17）
   for (const f of ['4-4-2', '3-5-2', '4-2-3-1', '5-3-2', '4-3-3']) {
     btn('布陣：').click();
