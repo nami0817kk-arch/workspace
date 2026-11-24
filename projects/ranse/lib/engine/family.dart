@@ -2,6 +2,7 @@ import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
 import 'history_lines.dart';
+import 'kid_raising.dart';
 import 'life.dart';
 import 'rng.dart';
 
@@ -88,6 +89,9 @@ void _loseChild(
   g.mark(text);
 }
 
+/// 育て方（`kid_raising.dart`）を決めた子なら、書き出しに添える一文。
+String _raised(Kid k, String name) => raisingLine(k, name);
+
 /// 跡継ぎを置く役割（武家は嫡男、ほかは子）。
 String _heirRole(Game g) => g.l.rank >= 1 ? '嫡男' : '子';
 
@@ -143,7 +147,8 @@ List<SceneDef> buildFamilyScenes() => [
       final who = l.female ? '夫と、' : '';
       g.ask(
         '嫡男の元服',
-        '${young == null ? '嫡男の$nが、元服の歳を迎えた。' : '幼名を$youngという嫡男が、元服の歳を迎えた。名を$nと改める。'}$who烏帽子親を誰に頼むか、決めねばならない。',
+        '${young == null ? '嫡男の$nが、元服の歳を迎えた。' : '幼名を$youngという嫡男が、元服の歳を迎えた。名を$nと改める。'}'
+            '${_raised(k, young ?? n)}$who烏帽子親を誰に頼むか、決めねばならない。',
         [
           Choice.h('主君に烏帽子親を願い出る', '主家との結びつきは深まる。子は殿の名を背負う', () {
             l.renameKid(k, n);
@@ -194,13 +199,15 @@ List<SceneDef> buildFamilyScenes() => [
     (g, next) {
       final l = g.l;
       final buke = l.rank >= 1;
-      final n = l.daughterAged(g.year, 11, 17)!.name;
+      final dk = l.daughterAged(g.year, 11, 17)!;
+      final n = dk.name;
       final sp = l.married ? l.people['伴侶'] : null;
       g.ask(
         buke ? '娘の裳着' : '娘の祝い',
-        buke
-            ? '娘の$nが、裳着の歳を迎えた。髪を上げ、裳を着ければ、もう子どもではない。'
-            : '娘の$nが、一人前の祝いの歳を迎えた。近所の女たちが、髪を結ってやろうと集まってきた。',
+        (buke
+                ? '娘の$nが、裳着の歳を迎えた。髪を上げ、裳を着ければ、もう子どもではない。'
+                : '娘の$nが、一人前の祝いの歳を迎えた。近所の女たちが、髪を結ってやろうと集まってきた。') +
+            _raised(dk, n),
         [
           Choice.h('晴れ着を誂える', '娘の晴れの日になる。蔵は軽くなる', () {
             _pay(g, 8);
@@ -302,7 +309,18 @@ List<SceneDef> buildFamilyScenes() => [
       final n = kid.name;
       final String text;
       final String want;
-      if (_merchant(g)) {
+      // 育て方（`kid_raising.dart`）を決めていれば、子の望む道はそれに沿う（商家の子が商いを望むなら、いつもの望み）。
+      final wish = raisingWish(kid);
+      final sameTrade = wish == '町で商う' && _merchant(g);
+      if (wish != null && !sameTrade) {
+        final home = _merchant(g) ? '店' : (_craft(g) ? '工房' : '田');
+        text = '$homeを継ぐはずの子の$nが、${switch (wish) {
+          '寺で学ぶ' => '幼い日に預けた寺へ戻り、学問を究めたいと言い出した',
+          '足軽に出る' => '仕込まれた腕を試したい、足軽に出たいと言い出した',
+          _ => '覚えた商いで、町に出て身を立てたいと言い出した',
+        }}。';
+        want = wish;
+      } else if (_merchant(g)) {
         text = '店を継ぐはずの子の$nが、寺に入って学問を究めたいと言い出した。帳場に座らせても、上の空だ。';
         want = '寺で学ぶ';
       } else if (_craft(g)) {
@@ -637,7 +655,8 @@ List<SceneDef> buildFamilyScenes() => [
           : (_merchant(g) ? '店' : (_craft(g) ? '工房' : '田畑'));
       g.ask(
         '兄弟の跡目',
-        '$whatを誰が継ぐかで、兄の$elderと弟の$youngerが言い争うようになった。兄は実直だが、才は弟のほうが上だと皆が言う。',
+        '$whatを誰が継ぐかで、兄の$elderと弟の$youngerが言い争うようになった。兄は実直だが、才は弟のほうが上だと皆が言う。'
+            '${_raised(sons[0], elder)}${_raised(sons[1], younger)}',
         [
           Choice.h('兄に継がせる', '筋目は守れる。弟は不満を抱く', () {
             g.meet(role, elder, 65);
@@ -653,6 +672,34 @@ List<SceneDef> buildFamilyScenes() => [
             g.mark('$whatを、兄をさしおいて弟の$youngerに継がせた');
             return '$elderは「父上の決めたことなら」と言った。目は笑っていなかった。';
           }),
+          // 弟を寺・武芸・商いで育てていれば（`kid_raising.dart`）、弟はその道で身を立てる。
+          if (const [KidRaising.tera, KidRaising.bugei, KidRaising.akinai]
+              .contains(sons[1].raising))
+            Choice.h(
+              '兄に継がせ、弟は仕込んだ道で身を立てさせる',
+              '兄弟の溝は浅く済む。弟は家を出る',
+              () {
+                g.meet(role, elder, 68);
+                final way = sons[1].raising!;
+                l.kidLeft(
+                  sons[1],
+                  way == KidRaising.tera
+                      ? KidFate.temple
+                      : (way == KidRaising.bugei ? KidFate.service : KidFate.away),
+                  g.year,
+                );
+                g.setFlag('fa_atome_elder');
+                g.j(2);
+                g.mark(
+                  '$whatを$elderに継がせ、$youngerを${way == KidRaising.tera ? '学問' : (way == KidRaising.bugei ? '武芸' : '商い')}の道へ送り出した',
+                );
+                return '$youngerは「兄上、家を頼みます」と笑って頭を下げ、${switch (way) {
+                  KidRaising.tera => '寺の門をくぐった',
+                  KidRaising.bugei => '槍を担いで出ていった',
+                  _ => '町へ下っていった',
+                }}。';
+              },
+            ),
           Choice.h('$whatを分けて与える', '争いは起きない。家は小さくなる', () {
             l.gold = l.gold * 2 ~/ 3;
             g.meet(role, elder, 70);

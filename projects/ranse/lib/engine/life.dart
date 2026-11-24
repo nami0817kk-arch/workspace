@@ -109,6 +109,41 @@ const kKidRoles = [
   '人質の子',
 ];
 
+/// 子の育て方（`Kid.raising`。2026-11-25、ユーザーが決めた項目「子の育て方を決める」）。
+/// 家にいる五〜十四の子に、年の初めの問いのときだけ人物のタブから選べる（`Game.setKidRaising`）。
+class KidRaising {
+  static const tera = 'tera'; // 寺へ預ける
+  static const bugei = 'bugei'; // 武芸を仕込む
+  static const akinai = 'akinai'; // 商いを覚えさせる
+  static const ie = 'ie'; // 家で育てる
+
+  static const all = [tera, bugei, akinai, ie];
+
+  /// 画面の選択肢の名。
+  static const label = {
+    tera: '寺へ預ける',
+    bugei: '武芸を仕込む',
+    akinai: '商いを覚えさせる',
+    ie: '家で育てる',
+  };
+
+  /// 家族の欄に出す短い言い方。
+  static const short = {
+    tera: '寺で学ぶ',
+    bugei: '武芸を仕込む',
+    akinai: '商いを習う',
+    ie: '家で育つ',
+  };
+
+  /// 選ぶ前に見せる匂わせ（数字は出さない）。
+  static const hint = {
+    tera: '読み書きと行儀が身につく。家には寄りつかなくなる',
+    bugei: '腕っぷしが育つ。怪我も絶えない',
+    akinai: '銭の勘定に聡くなる。武家の子は侮られもする',
+    ie: '親子の情は深まる。外の世を知らずに育つ',
+  };
+}
+
 /// 子ひとりの記録。
 class Kid {
   Kid({
@@ -119,7 +154,19 @@ class Kid {
     this.fate = KidFate.home,
     this.endYear,
     this.adopted = false,
+    this.raising,
+    this.raisingSince,
   });
+
+  /// 育て方（`KidRaising`）。決めていなければ null。
+  String? raising;
+
+  /// 今の育て方にした年（何年続けたかを見る）。
+  int? raisingSince;
+
+  /// 今の育て方を何年続けたか（決めていなければ 0）。
+  int raisingYears(int year) =>
+      raising == null || raisingSince == null ? 0 : year - raisingSince!;
 
   /// 生まれた年。分からない子（古い保存・数だけ入れた子）は null。
   int? born;
@@ -163,6 +210,8 @@ class Kid {
     's': fate,
     if (endYear != null) 'e': endYear,
     if (adopted) 'a': true,
+    if (raising != null) 'r': raising,
+    if (raisingSince != null) 'rs': raisingSince,
   };
   factory Kid.fromJson(Map<String, dynamic> j) => Kid(
     born: j['b'] as int?,
@@ -172,6 +221,71 @@ class Kid {
     fate: (j['s'] as String?) ?? KidFate.home,
     endYear: j['e'] as int?,
     adopted: (j['a'] as bool?) ?? false,
+    raising: j['r'] as String?,
+    raisingSince: j['rs'] as int?,
+  );
+}
+
+/// 家臣の気質（`Retainer.temper`。2026-11-25、ユーザーが決めた項目「家臣の顔ぶれ」）。
+class RetainerTemper {
+  static const loyal = '忠義';
+  static const ambitious = '野心';
+  static const wise = '知恵';
+  static const brave = '武勇';
+  static const all = [loyal, ambitious, wise, brave];
+}
+
+/// 家臣の今（`Retainer.state`）。
+class RetainerState {
+  static const serving = 'serving'; // 仕えている
+  static const away = 'away'; // 遠ざけた・暇を出した・去った
+  static const dead = 'dead'; // 亡くなった
+  static const label = {serving: '', away: '去った', dead: '亡くなった'};
+}
+
+/// 城主より上（位5〜8）の人に仕える家臣ひとり（`retainers.dart`）。
+class Retainer {
+  Retainer(
+    this.name,
+    this.temper, {
+    this.bond = 50,
+    this.state = RetainerState.serving,
+    this.head = false,
+    this.since,
+  });
+
+  final String name;
+
+  /// 気質（`RetainerTemper`）。
+  final String temper;
+
+  /// あなたへの思い。0〜100。
+  int bond;
+  String state;
+
+  /// 筆頭として重く用いている。
+  bool head;
+
+  /// 仕え始めた年。
+  int? since;
+
+  bool get serving => state == RetainerState.serving;
+
+  Map<String, dynamic> toJson() => {
+    'n': name,
+    't': temper,
+    'b': bond,
+    's': state,
+    if (head) 'h': true,
+    if (since != null) 'y': since,
+  };
+  factory Retainer.fromJson(Map<String, dynamic> j) => Retainer(
+    j['n'] as String,
+    j['t'] as String,
+    bond: (j['b'] as int?) ?? 50,
+    state: (j['s'] as String?) ?? RetainerState.serving,
+    head: (j['h'] as bool?) ?? false,
+    since: j['y'] as int?,
   );
 }
 
@@ -659,6 +773,12 @@ class Life {
     }
   }
 
+  /// 家臣（城主より上の人に仕える顔ぶれ。`retainers.dart`）。古い保存は空。
+  final List<Retainer> retainers = [];
+
+  /// 仕えている家臣。
+  Iterable<Retainer> get servingRetainers => retainers.where((r) => r.serving);
+
   final List<LogEntry> log = [];
   final List<HistPoint> hist = [];
 
@@ -713,6 +833,8 @@ class Life {
     'kids': kids,
     'kidYears': kidYears.toList(),
     'children': children.map((e) => e.toJson()).toList(),
+    if (retainers.isNotEmpty)
+      'retainers': retainers.map((e) => e.toJson()).toList(),
     'conq': conq,
     'married': married,
     'gun': gun,
@@ -801,6 +923,10 @@ class Life {
         j['kids'] as int,
         ((j['kidYears'] as List?) ?? const []).cast<int>(),
       );
+    }
+    // 家臣（2026-11-25 から。無い古い保存は空）。
+    for (final e in ((j['retainers'] as List?) ?? const [])) {
+      l.retainers.add(Retainer.fromJson(e as Map<String, dynamic>));
     }
     return l;
   }

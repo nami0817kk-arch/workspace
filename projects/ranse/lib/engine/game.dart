@@ -17,6 +17,7 @@ import 'echoes.dart';
 import 'echoes_more.dart';
 import 'echoes_talent.dart';
 import 'family.dart';
+import 'famous_ties.dart';
 import 'history.dart';
 import 'illness.dart';
 import 'history_east.dart';
@@ -25,6 +26,7 @@ import 'history_lines.dart';
 import 'history_rumor.dart';
 import 'history_shift.dart';
 import 'history_west.dart';
+import 'kid_raising.dart';
 import 'life.dart';
 import 'lords.dart';
 import 'major_scenes.dart';
@@ -36,11 +38,13 @@ import 'peace.dart';
 import 'peace_life.dart';
 import 'regions.dart';
 import 'retainer_life.dart';
+import 'retainers.dart';
 import 'rng.dart';
 import 'scene_art.dart';
 import 'seasons.dart';
 import 'shadow_life.dart';
 import 'spending.dart';
+import 'spouse_match.dart';
 import 'talents.dart';
 import 'temple.dart';
 import 'trade_farm.dart';
@@ -159,6 +163,11 @@ class Game extends ChangeNotifier {
       ...buildEchoTalentScenes(),
       ...buildChildFocusEchoScenes(),
       ...buildFamilyScenes(),
+      // 人と家（2026-11-25）: 縁談の相手の型・家臣・有名人との縁の続き・子の育て方。
+      ...buildSpouseScenes(),
+      ...buildRetainerScenes(),
+      ...buildFamousTieScenes(),
+      ...buildKidRaisingScenes(),
       ...buildBondScenes(),
       ...buildWomenScenes(),
       ...buildWomanLifeScenes(),
@@ -299,6 +308,30 @@ class Game extends ChangeNotifier {
   void meet(String role, String name, int bond) {
     l.people[role] = Person(role, name, bond);
     if (kKidRoles.contains(role)) l.bindKidRole(role, year);
+  }
+
+  /// 子の育て方（`kid_raising.dart`）を画面から選べるか。年の初めの問い（この年の心がけ）が出ていて、
+  /// まだ何も選んでいないときだけ（年の途中で状態を変えると、再開で消えるため）。
+  bool get canSetKidRaising =>
+      life != null &&
+      !finished &&
+      !isChild &&
+      !_restoring &&
+      prompt?.title == 'この年の心がけ' &&
+      choiceLog.isEmpty;
+
+  /// 子の育て方を決める（家にいる五〜十四の子だけ）。決めたら、その年の初めの保存を書き直す
+  /// （年の初めの保存と同じ種のまま、方針だけが変わる）。決められなければ false。
+  bool setKidRaising(Kid k, String raising) {
+    if (!canSetKidRaising || !KidRaising.all.contains(raising)) return false;
+    if (!raisableKids(this).contains(k)) return false;
+    if (k.raising != raising) {
+      k.raising = raising;
+      k.raisingSince = year;
+    }
+    onCheckpoint?.call(this);
+    notifyListeners();
+    return true;
   }
 
   /// 画面を更新する。選択肢が出ていない区切りでは保存も呼ぶ。

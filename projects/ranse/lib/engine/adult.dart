@@ -11,6 +11,7 @@ import 'peace.dart';
 import 'peace_life.dart';
 import 'rng.dart';
 import 'aims.dart';
+import 'spouse_match.dart';
 import 'temple.dart';
 import 'trait_scenes.dart';
 import 'variety.dart';
@@ -358,12 +359,6 @@ void _join(Game g, String lord, {int fav = 20}) {
   l.ronin = false;
 }
 
-String _spouseName(Game g) {
-  final given = g.l.female ? g.rng.pick(kGivenM) : g.rng.pick(kGivenF);
-  if (g.l.rank >= 1) return '${g.rng.pick(kSurnames)}家の$given';
-  return given;
-}
-
 List<SceneDef> buildAdultScenes() {
   int f(Game g, String tag) => g.l.focus[tag] ?? 0;
   bool notMonk(Game g) => !g.hasFlag('priesthood');
@@ -481,20 +476,14 @@ List<SceneDef> buildAdultScenes() {
       onlyForced: true,
     ),
 
+    // 縁談（2026-11-25 から、家柄・気立て・才の違う二、三人の候補から選ぶ。`spouse_match.dart`）。
+    // 文は前と同じ「◯◯と夫婦になった」（最期の条件と遺されたものが見ている）。
     SceneDef('engagement', 16, 50, (g) => 1.2, (g) => !g.l.married, (g, next) {
-      final name = _spouseName(g);
-      g.ask('縁談', '$nameとの縁談が持ち上がった。', [
-        Choice.h('受ける', '家が持てる。背負うものも増える', () {
-          final l = g.l;
-          l.married = true;
-          l.net += 3;
-          l.gold += 5 + l.rank * 4;
-          g.j(10);
-          g.meet('伴侶', name, 50);
-          g.mark('$nameと夫婦になった');
-          return '$nameと夫婦になった。家に灯がともる。';
-        }),
-        Choice.h('断る', '身軽なままでいられる', () {
+      final cands = spouseCandidates(g);
+      g.ask('縁談', spouseIntro(g, cands), [
+        for (final c in cands)
+          Choice.h(c.label, c.hint, () => marrySpouse(g, c)),
+        Choice.h('どの縁談も断る', '身軽なままでいられる', () {
           g.j(-1);
           return '縁談は断った。';
         }),

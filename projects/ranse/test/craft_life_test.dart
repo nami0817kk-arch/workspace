@@ -274,9 +274,12 @@ void main() {
       final r = Rng(seed + 71000);
       final run = _play(g, (g, p) => seed.isEven ? _randomPick(r, p) : pickAmbitious(g, p, r));
       seen += run.ids.length;
+      // 足軽の家に身分なしで生まれ、職人になってから仕官した人は「身分を保った」に入れない
+      // （2026-11-25、乱数の流れが変わって、そういう人生が一つ出た。職人の道に入らなかった人だけを見る）。
       if (const ['ashigaru', 'lowsamurai', 'samurai', 'kokujin', 'daimyo'].contains(g.l.cls.id) &&
           g.l.rank > 0 &&
-          g.l.maxRank > 0) {
+          g.l.maxRank > 0 &&
+          !const ['craftsman', 'cr_craft', 'rg_seki_deshi'].any(g.hasFlag)) {
         samurai++;
         expect(run.ids.where((id) => !kCraftEntryIds.contains(id)), isEmpty, reason: '武家に ${run.ids}');
       }
