@@ -431,8 +431,8 @@ void main() {
     expect(html, contains('function hitCore(e){'));
     expect(html, contains('<div class="stat">コアの体力<b id="core">-</b></div>'));
     expect(html, isNot(contains("say(enName(e)+'がコアを奪った！")));
-    // タイトルからストーリー・VS・チャレンジを外した（元の仕組みで作った面のため）
-    expect(html, isNot(contains('id="tstory"')));
+    // VS は元の仕組みで作った面のため、タイトルから外したまま（チャレンジは v62、ストーリーは v63 で作り直して戻した）
+    expect(html, isNot(contains('id="tvs"')));
   });
 
   test('チャレンジを今の仕組みで作り直してタイトルに戻す（0.7.45・試作 v62）', () {
