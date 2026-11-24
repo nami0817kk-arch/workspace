@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../engine/ending.dart';
 import '../engine/game.dart';
 import '../engine/life.dart';
+import '../engine/life_record.dart';
 
 /// 途中経過の保存。選択肢が出ていない区切りでだけ書く
 /// （選択肢は関数を抱えているので保存できない）。
@@ -151,6 +152,47 @@ class SaveStore {
       jsonEncode({for (final x in d.values) x.key: x.toJson()}),
     );
     return isNew;
+  }
+
+  // ---------- これまでの人生（2026-11-25） ----------
+  static const _kLives = 'ranse.lives.v1';
+
+  /// これまでの人生（新しい順）。壊れていたら空。
+  Future<List<LifeRecord>> lives() async {
+    final p = await SharedPreferences.getInstance();
+    final raw = p.getString(_kLives);
+    if (raw == null) return [];
+    try {
+      return [
+        for (final e in jsonDecode(raw) as List)
+          LifeRecord.fromJson(e as Map<String, dynamic>),
+      ];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// 終わった人生を一件記す（先頭と同じ人生なら記さない。上限 `kMaxLifeRecords` を越えたら古いものから捨てる）。
+  /// 記したあとの件数を返す。
+  Future<int> recordLife(LifeRecord r) async {
+    final list = addLifeRecord(await lives(), r);
+    final p = await SharedPreferences.getInstance();
+    await p.setString(_kLives, jsonEncode([for (final x in list) x.toJson()]));
+    return list.length;
+  }
+
+  // ---------- 遊び方（2026-11-25） ----------
+  static const _kGuideSeen = 'ranse.guide_seen.v1';
+
+  /// 初めの遊び方を一度見たか。
+  Future<bool> guideSeen() async {
+    final p = await SharedPreferences.getInstance();
+    return p.getBool(_kGuideSeen) ?? false;
+  }
+
+  Future<void> markGuideSeen() async {
+    final p = await SharedPreferences.getInstance();
+    await p.setBool(_kGuideSeen, true);
   }
 }
 

@@ -22,9 +22,11 @@ import 'history_east.dart';
 import 'history_life.dart';
 import 'history_lines.dart';
 import 'history_rumor.dart';
+import 'history_shift.dart';
 import 'history_west.dart';
 import 'life.dart';
 import 'lords.dart';
+import 'major_scenes.dart';
 import 'oku_life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
@@ -94,8 +96,19 @@ bool viaKnown(String via) =>
     kTraits.any((t) => t.name == via);
 
 class Prompt {
-  Prompt(this.title, this.text, this.choices, this.after, {this.art, this.cause});
+  Prompt(
+    this.title,
+    this.text,
+    this.choices,
+    this.after, {
+    this.art,
+    this.cause,
+    this.major = false,
+  });
   final String title, text;
+
+  /// 世を変えうる・一生の向きを変える「大きな分かれ道」か（`major_scenes.dart` の表）。画面の印に出るだけ。
+  final bool major;
 
   /// その場面が起きた訳（能力で起きる岐路 `tal_` は能力の字、特性の場面 `tr_` は特性の名。ほかは null）。
   /// 画面の題の横の札に出るだけ（`sceneCauseFor`）。
@@ -308,7 +321,19 @@ class Game extends ChangeNotifier {
       after ?? changed,
       art: sceneArtFor(this, _sceneId, title),
       cause: sceneCauseFor(_sceneId),
+      major: isMajorScene(_sceneId),
     );
+    notifyListeners();
+  }
+
+  /// 直近の手で変わった歴史（`history_shift.dart`）。画面が一度だけ「歴史が動いた」と知らせる。
+  /// 次の手を選ぶか、[dismissHistoryShift] で消える。続きから選び直すあいだは立てない。
+  HistoryShift? historyShift;
+  bool _replaying = false;
+
+  void dismissHistoryShift() {
+    if (historyShift == null) return;
+    historyShift = null;
     notifyListeners();
   }
 
@@ -316,6 +341,7 @@ class Game extends ChangeNotifier {
     final p = prompt!;
     prompt = null;
     _sceneId = null;
+    historyShift = null;
     final c = p.choices[i];
     choiceLog.add((i, c.label));
     if (c.cancel) {
@@ -323,7 +349,9 @@ class Game extends ChangeNotifier {
       onChoice?.call(this);
       return;
     }
+    final before = _replaying ? null : historyKeys(this);
     final res = c.f?.call();
+    if (before != null) historyShift = newHistoryShift(this, before);
     // 岐路の結果には場面の名前を付ける（「この年の心がけ」は文の中に「今年は…」とあるので付けない）。
     if (res != null) log(p.title == 'この年の心がけ' ? res : '【${p.title}】$res');
     p.after();
@@ -343,6 +371,7 @@ class Game extends ChangeNotifier {
   void start(Birth b) {
     newWorld();
     prompt = null;
+    historyShift = null;
     final s = b.stats;
     life = Life(
       name: b.name,
@@ -413,6 +442,7 @@ class Game extends ChangeNotifier {
     life = saved;
     fa = world;
     prompt = null;
+    historyShift = null;
     if (saved.dead == null && saved.end == null) {
       _recap();
       final recap = [..._pending];
@@ -425,6 +455,7 @@ class Game extends ChangeNotifier {
       _restoring = false;
       var n = 0;
       if (seed != null) {
+        _replaying = true;
         for (final (i, label) in replay) {
           final p = prompt;
           if (p == null || finished || i >= p.choices.length) break;
@@ -432,6 +463,7 @@ class Game extends ChangeNotifier {
           choose(i);
           n++;
         }
+        _replaying = false;
       }
       // 選び直した場合も、再開した最初の画面に「前回までのあらすじ」を出す。
       if (n > 0 && !finished) {

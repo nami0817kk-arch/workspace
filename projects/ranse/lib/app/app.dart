@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../ui/dex_screen.dart';
+import '../ui/how_to_screen.dart';
+import '../ui/lives_screen.dart';
 import '../ui/play_screen.dart';
 import '../ui/theme.dart';
 import '../ui/title_birth_screens.dart';
@@ -17,7 +19,8 @@ class RanseApp extends StatefulWidget {
 }
 
 class _RanseAppState extends State<RanseApp> {
-  late final AppController c = widget.controller ?? AppController();
+  late final AppController c =
+      widget.controller ?? AppController(autoGuide: true);
 
   @override
   void initState() {
@@ -57,6 +60,8 @@ class _RanseAppState extends State<RanseApp> {
           AppScreen.birth => Scaffold(body: BirthScreen(c)),
           AppScreen.play => PlayScreen(c),
           AppScreen.dex => Scaffold(body: DexScreen(c)),
+          AppScreen.guide => Scaffold(body: HowToScreen(c)),
+          AppScreen.lives => Scaffold(body: LivesScreen(c)),
         },
       ),
     );
