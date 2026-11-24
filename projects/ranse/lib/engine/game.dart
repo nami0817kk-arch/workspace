@@ -632,7 +632,8 @@ class Game extends ChangeNotifier {
           l.fav / 400 +
           (l.chi + l.un) / 600 +
           (has('loyal') ? -.1 : 0) +
-          gkPrepBonus(this), // 謀反の支度（`aims.dart`。2026-11-25）
+          gkPrepBonus(this) + // 謀反の支度（`aims.dart`。2026-11-25）
+          retainerPlotBonus(this), // 家臣の顔ぶれ（`retainers.dart`。2026-11-25）
       .05,
       .8,
     );
