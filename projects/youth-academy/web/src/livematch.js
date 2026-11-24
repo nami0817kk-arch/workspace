@@ -57,7 +57,6 @@
     if (e.k === 'shot') {
       if (p) p.st.shots++;
       st[e.sd].shots++;
-      if (e.onT) st[e.sd].onTarget++;
       // 結末を先読み（4秒以内）
       let res = 'other';
       let re = null;
@@ -73,6 +72,7 @@
         if (x.k === 'miss') { res = 'missed'; re = x; break; }
         if (x.k === 'shot' || x.k === 'dead') break;
       }
+      if (res === 'goal' || res === 'saved') st[e.sd].onTarget++; // 枠内＝得点か GK が止めたもの（守りが体で止めた分は数えない）
       if (res === 'goal') {
         this._lvDone.add(re);
         this._lvGoal(re);
@@ -106,13 +106,13 @@
     } else if (e.k === 'intercept') {
       if (p) {
         p.st.rating += 0.015;
-        p.st.ic = (p.st.ic || 0) + 1;
+        if (e.read) p.st.ic = (p.st.ic || 0) + 1; // 数は、通り道を読んで切った分だけ（こぼれ球や受け手のそばで拾った分は数えない）
       }
     } else if (e.k === 'foul') {
       const t = this._lvTeam(e.sd);
       if (p && t) {
         const pk = !!e.pk;
-        const res = this._foul(t, p, pk ? 0.3 : p.yellow ? 0.04 : 0.13, pk ? 0.03 : 0.002); // 1枚もらった子は気をつける（2枚目の退場が多かった）
+        const res = this._foul(t, p, pk ? 0.3 : p.yellow ? 0.045 : 0.2, pk ? 0.03 : 0.002); // 1枚もらった子は気をつける（2枚目の退場が多かった）
         const v = e.vs ? this._lvP(e.vs) : null;
         if (pk) this.log.push({ minute: this.min, ml: this.minLabel(), text: nm(p) + 'がエリアの中で倒した。PK' + (res.txt || ''), kind: 'scene' });
         else if (res.card && v) this.log.push({ minute: this.min, ml: this.minLabel(), text: nm(p) + 'が' + nm(v) + 'を倒した', kind: 'flow' });

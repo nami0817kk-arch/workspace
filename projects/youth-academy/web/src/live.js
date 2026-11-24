@@ -355,7 +355,7 @@
       if (type === 'fk') {
         const du = L - this.uOf(tk, r.y);
         const dx = Math.abs(r.x - W / 2);
-        if (du < 30 && du > 16 && dx < 20 && this.rng() < 0.75) return this.shoot(tk, { fk: true });
+        if (du < 30 && du > 16 && dx < 20 && this.rng() < 0.5) return this.shoot(tk, { fk: true });
         if (du < 40 && this.rng() < 0.6) return this.cross(tk, true);
       }
       // 自由に（判断に任せる）
@@ -710,10 +710,10 @@
       q.nd = nd;
       // タックル：寄せた相手がすぐ近くにいる
       if (no && nd < 1.5 && no.cool <= 0 && no.stun <= 0 && !no.gk && this.state === 'play') {
-        no.cool = 0.6;
+        no.cool = 1.1;
         // 飛び込むか、間合いを取って待つか（タックル・判断。自陣の箱の中は慎重に）
         const box = this.inOwnBox(no);
-        const go = (0.14 + no.a.tck * 0.14 + no.a.dec * 0.06 + ((no.team.tactic && no.team.tactic.intensity) || 0.5) * 0.08) * (box ? 0.6 : 1) * (q.hold > 1.2 ? 1.5 : 1) * (q.blocked > 0.4 ? 1.6 : 1) * (no.p.yellow ? 0.6 : 1);
+        const go = (0.14 + no.a.tck * 0.14 + no.a.dec * 0.06 + ((no.team.tactic && no.team.tactic.intensity) || 0.5) * 0.08) * 0.4 * (box ? 0.6 : 1) * (q.hold > 1.2 ? 1.5 : 1) * (q.blocked > 0.4 ? 1.6 : 1) * (no.p.yellow ? 0.6 : 1);
         if (this.rng() < go && this.tackle(no, q)) return;
       }
       // GK が自分の箱の中で足元に飛び込む（1対1・飛び出し）
@@ -801,7 +801,7 @@
         const xg = this.xg(q, q.x, q.y);
         const press = nd < 2 ? 0.75 : 1;
         // 打つ気（ためらい）：冷静さ・フィニッシュ
-        if (xg > 0.088 - q.a.lsh * 0.03 - (this.tag(q, 'finish') ? 0.01 : 0) - (nd > 3 ? 0.008 : 0) || (xg > 0.025 && this.has(q, '弾丸ミドル'))) opts.push({ k: 'shoot', v: xg * press * (0.9 + q.a.fin * 0.1) + (L - u < 9 ? 0.02 : 0) });
+        if (xg > 0.15 - q.a.lsh * 0.03 - (this.tag(q, 'finish') ? 0.01 : 0) - (nd > 3 ? 0.008 : 0) || (xg > 0.025 && this.has(q, '弾丸ミドル'))) opts.push({ k: 'shoot', v: xg * press * (0.9 + q.a.fin * 0.1) + (L - u < 9 ? 0.02 : 0) });
       }
       // 2. パス。受けてすぐは蹴らない（持って前を向く・運ぶ）。寄せられたら早く放す
       const settle = q.hold < (q.minHold || 0) && nd > 2.2;
@@ -816,7 +816,7 @@
       const xside = Math.abs(q.x - W / 2);
       if (L - u < 30 && xside > 16 && !settle) {
         const hs = this.P.filter((r) => r.sd === sd && !r.gk && L - this.uOfSide(sd, r.y) < 20 && Math.abs(r.x - W / 2) < 12).length;
-        if (hs) opts.push({ k: 'cross', v: 0.03 + hs * 0.018 + q.a.crs * 0.03 + (tac.width || 0.5) * 0.015 + (this.tag(q, 'cross') ? 0.015 : 0) + (q.tr.has('アーリークロス') ? 0.01 : 0) });
+        if (hs) opts.push({ k: 'cross', v: 0.006 + hs * 0.012 + q.a.crs * 0.024 + (tac.width || 0.5) * 0.015 + (this.tag(q, 'cross') ? 0.015 : 0) + (q.tr.has('アーリークロス') ? 0.01 : 0) });
       }
       // 4. 運ぶ：前・斜め・横
       const dirs = [[0, 1], [0.6, 0.8], [-0.6, 0.8], [1, 0], [-1, 0], [0.7, -0.7], [-0.7, -0.7]];
@@ -859,6 +859,11 @@
         const [tx, ty] = this.abs(q, clamp(this.xOf(q, q.x) + side * (q.dir > 0 ? 1 : -1) * (8 + this.rng() * 16), 2, W - 2), this.uOf(q, q.y) + 35 + this.rng() * 15);
         this.ev('clear', { pid: q.id, sd: q.sd });
         this.flight = null;
+        // 自分のゴールのすぐ前では、1割はゴールラインの外へ逃げる（コーナー）
+        if (this.uOf(q, q.y) < 13 && this.rng() < 0.1) {
+          const gx = W / 2 + side * (q.dir > 0 ? 1 : -1) * (GW + 4 + this.rng() * 14);
+          return this.kick(q, clamp(gx, 1, W - 1), q.dir > 0 ? -4 : L + 4, { loft: true, err: 0.05, vh: 14, kind: 'clear' });
+        }
         return this.kick(q, tx, ty, { loft: true, err: 0.12 + (1 - q.a.tec) * 0.1, vh: 20, kind: 'clear' });
       }
       if (best.k === 'carry') {
@@ -925,7 +930,7 @@
           let near = 99;
           for (const o of this.P) if (o.sd !== sd) near = Math.min(near, hyp(o.x - lx, o.y - ly) - o.vmax * Tf * 0.7);
           const pl = clamp(0.25 + q.a.pas * 0.2 + clamp(near, -4, 6) * 0.06 - d * 0.004 + r.a.ft * 0.05, 0.03, 0.8);
-          if (pl > ps + 0.12) {
+          if (pl > ps + 0.3) {
             ps = pl;
             loft = true;
           }
@@ -997,11 +1002,12 @@
       const press = q.nd != null && q.nd < 2 ? 0.05 : 0;
       // 自陣の深い所では丁寧に蹴る
       const careful = this.uOf(q, q.y) < 30 ? 0.55 : 1;
-      let err = ((o.throwIn ? 0.04 : 0.012) + (1 - q.a.pas) * 0.06 + press + d * 0.0006 * (1.2 - q.a.pas) + (o.long ? 0.05 : 0)) * careful * (this.tag(q, 'pass') ? 0.85 : 1);
+      let err = ((o.throwIn ? 0.03 : 0.008) + (1 - q.a.pas) * 0.036 + press * 0.6 + d * 0.0004 * (1.2 - q.a.pas) + (o.long ? 0.035 : 0)) * careful * (this.tag(q, 'pass') ? 0.85 : 1);
       if (o.through && this.trOn(q, 'スルーパス')) err *= 0.7;
       if (o.long && this.trOn(q, 'ロングフィード')) err *= 0.75;
       this.passes[q.sd]++;
       if (q.p.st) q.p.st.pa = (q.p.st.pa || 0) + 1;
+      this.lp = q; // 最後にパスを出した子（誰も触らないまま味方が拾えば成功に数える）
       this.flight = { from: q, to: r, tx: lx, ty: ly, t0: this.t, sd: q.sd, kind: o.throwIn ? 'throw' : 'pass', offside: this.uOfSide(q.sd, r.y) > this.offLine(q.sd) + 0.2 && !o.throwIn, chasers: [r], tried: new Set() };
       this.setPiece = o.throwIn ? this.setPiece : null;
       if (o.loft || o.throwIn) this.kick(q, lx, ly, { loft: true, err, vh: o.throwIn ? 11 : null, kind: o.throwIn ? 'throw' : o.long ? 'long' : 'loft' });
@@ -1067,7 +1073,7 @@
       // 高さ：低めが基本、下手ほど浮く
       const lift = o.pk ? 0.3 + this.rng() * 1.3 : head ? 0.2 + this.rng() * 1.2 : this.rng() * 1.5 + (1 - sk) * this.rng() * 3.6 + (press ? this.rng() * 1.5 : 0) + (d > 18 ? this.rng() * 1.2 : 0);
       const T = hyp(aimX - b.x, gy - b.y) / v;
-      this.kick(q, aimX, gy, { v, err: err * errK * (o.pk ? 2 : 5.4), vz: (lift + 0.5 * G * T * T) / Math.max(T, 0.15), kind: 'shot' });
+      this.kick(q, aimX, gy, { v, err: err * errK * (o.pk ? 2 : 6), vz: (lift + 0.5 * G * T * T) / Math.max(T, 0.15), kind: 'shot' });
       const se = this.ev('shot', { pid: q.id, sd, xg: xgv, x: b.x, y: b.y, head, pk: !!o.pk, fk: !!o.fk, assist });
       this.decideSave();
       const ss = this.shot;
@@ -1098,7 +1104,7 @@
       const mx = b.x + b.vx * tMeet;
       const need = Math.abs(mx - gkLineX) + Math.max(0, cz - 1.9) * 0.8;
       let pSave = need < 1.0 ? 0.97 : need < reach ? 0.96 - Math.pow(need / reach, 2.2) * 0.45 : 0.06;
-      pSave *= 0.93 + gk.a.han * 0.1 + gk.a.ref * 0.1;
+      pSave *= 0.86 + gk.a.han * 0.1 + gk.a.ref * 0.1;
       if (s.pk) pSave = clamp(0.18 + gk.a.ref * 0.12 - s.q.a.pk * 0.08, 0.08, 0.32);
       const sd0 = hyp(b.x - W / 2, L - this.uOfSide(s.sd, b.y));
       if (this.has(gk, 'シュートへの反応')) pSave += 0.04;
@@ -1191,8 +1197,17 @@
       if (this.has(d, 'スライディング')) { p += 0.04; this.useTr(d, 'スライディング'); }
       if (this.has(q, '粘り腰のキープ')) { p -= 0.05; this.useTr(q, '粘り腰のキープ'); }
       p = clamp(p, 0.12, 0.82);
-      if (d.p.st) d.p.st.ta = (d.p.st.ta || 0) + 1;
       const b = this.ball;
+      // ファウル（下手なほど）。競り合いのうち約4割（現実はタックル17に対してファウル11）。先に決め、タックルには数えない
+      const foulP = clamp(0.34 + (1 - d.a.tck) * 0.22 + ((d.team.tactic && d.team.tactic.intensity) || 0.5) * 0.1 - d.a.con * 0.08, 0.12, 0.6) * (this.inOwnBox(d) ? 0.12 : 1);
+      if (this.rng() < foulP) {
+        const inBox = L - this.uOfSide(q.sd, q.y) < 16.5 && Math.abs(q.x - W / 2) < 20.16;
+        this.ev('foul', { pid: d.id, sd: d.sd, vs: q.id, x: q.x, y: q.y, pk: inBox });
+        if (inBox) this.setDead('pk', q.sd, W / 2, q.dir > 0 ? L - 11 : 11, 3.5, { foul: d.id });
+        else this.setDead('fk', q.sd, q.x, q.y, 8 + this.rng() * 8, { foul: d.id });
+        return true;
+      }
+      if (d.p.st) d.p.st.ta = (d.p.st.ta || 0) + 1;
       if (this.rng() < p) {
         // 突いて転がす（近い所に）
         b.owner = null;
@@ -1206,15 +1221,6 @@
         q.cool = 0.4;
         this.lock = { q, until: this.t + 0.35 };
         this.ev('tackle', { pid: d.id, sd: d.sd, vs: q.id, ok: true, x: d.x, y: d.y });
-        return true;
-      }
-      // ファウル（下手なほど・後ろから）
-      const foulP = clamp(0.17 + (1 - d.a.tck) * 0.16 + ((d.team.tactic && d.team.tactic.intensity) || 0.5) * 0.06 - d.a.con * 0.05, 0.04, 0.3) * (this.inOwnBox(d) ? 0.35 : 1);
-      if (this.rng() < foulP) {
-        const inBox = L - this.uOfSide(q.sd, q.y) < 16.5 && Math.abs(q.x - W / 2) < 20.16;
-        this.ev('foul', { pid: d.id, sd: d.sd, vs: q.id, x: q.x, y: q.y, pk: inBox });
-        if (inBox) this.setDead('pk', q.sd, W / 2, q.dir > 0 ? L - 11 : 11, 3.5, { foul: d.id });
-        else this.setDead('fk', q.sd, q.x, q.y, 8 + this.rng() * 8, { foul: d.id });
         return true;
       }
       d.stun = 0.3 + q.a.dri * 0.35;
@@ -1296,7 +1302,7 @@
             }
             // 弾く：横へ
             const v = 5 + this.rng() * 6;
-            if (this.rng() < 0.5) {
+            if (this.rng() < 0.65) {
               // ゴールの外へ（枠の横を抜けてゴールラインを割る → コーナー）
               const side = b.x < W / 2 ? -1 : 1;
               // ゴールラインを、ポストの外（1.5m 以上）で越える向きへ（線の上の点を狙う。枠の中を通らない）
@@ -1383,11 +1389,11 @@
       }
       // シュートの通り道の守り手は体で止める
       if (s && q.sd !== s.sd && !q.gk) {
-        if (this.rng() < 0.55 + q.a.pos * 0.25) {
+        if (this.rng() < 0.38 + q.a.pos * 0.2) {
           this.ev('block', { pid: q.id, sd: q.sd, vs: s.q.id });
           if (this.has(q, 'シュートブロック')) this.useTr(q, 'シュートブロック');
           // 4割はそのまま後ろへそれてゴールラインを割る（コーナー）、残りは前へはね返る
-          const behind = this.rng() < 0.4;
+          const behind = this.rng() < 0.55;
           const a = Math.atan2(b.vy, b.vx) + (behind ? (this.rng() < 0.5 ? 0.9 : -0.9) + (this.rng() - 0.5) * 0.4 : Math.PI + (this.rng() - 0.5) * 2.4);
           const v = behind ? 8 + this.rng() * 6 : 3 + this.rng() * 7;
           b.vx = Math.cos(a) * v;
@@ -1416,12 +1422,12 @@
         if (f.kind !== 'pass' || b.z > 0.2) {
           let near = 99;
           for (const o of this.P) if (o.sd !== q.sd) near = Math.min(near, hyp(o.x - q.x, o.y - q.y));
-          p = clamp(0.5 + q.a.ft * 0.4 + q.a.tec * 0.08 - (near < 1.8 ? 0.22 : 0), 0.2, 0.95);
+          p = clamp(0.58 + q.a.ft * 0.36 + q.a.tec * 0.08 - (near < 1.8 ? 0.2 : 0), 0.2, 0.96);
         }
       }
       else if (mine) p = 0.85;
       else if (!f) p = clamp(0.95 - Math.max(0, bs - 6) * 0.05, 0.4, 0.97); // 転がっている球を拾う
-      else p = clamp(0.25 + q.a.ant * 0.35 - Math.max(0, bs - 8) * 0.025 + (this.has(q, '読みのインターセプト') ? 0.1 : 0), 0.08, 0.75); // 切る
+      else p = clamp(0.13 + q.a.ant * 0.25 - Math.max(0, bs - 8) * 0.025 + (this.has(q, '読みのインターセプト') ? 0.1 : 0), 0.08, 0.75); // 切る
       if (f && !gkHome) f.tried.add(q); // GK は自分の箱の中なら取り直せる（味方のバックパスを一度こぼすと、そのままゴールへ転がっていた）
       if (this.rng() > p) {
         // 触ったが取れない：少しそれる
@@ -1449,7 +1455,7 @@
           return this.shoot(q, {});
         }
         // はね返す（自陣の箱の中では、3割はそらしてゴールラインの外へ）
-        if (this.inOwnBox(q) && Math.abs(q.x - W / 2) > 6 && this.rng() < 0.35) {
+        if (this.inOwnBox(q) && Math.abs(q.x - W / 2) > 4 && this.rng() < 0.55) {
           const side = q.x < W / 2 ? -1 : 1;
           b.vx = side * (6 + this.rng() * 5);
           b.vy = -q.dir * (5 + this.rng() * 4);
@@ -1485,8 +1491,13 @@
           this.passes[f.sd + 'Ok']++;
           if (f.from && f.from.p.st) f.from.p.st.pc = (f.from.p.st.pc || 0) + 1;
         }
-        else this.ev('intercept', { pid: q.id, sd: q.sd, vs: f.from.id, x: q.x, y: q.y });
+        // read＝通り道を読んで切った（出し手からも受ける所からも4m 以上）。画面の「パスカット」はこれだけを数える
+        else this.ev('intercept', { pid: q.id, sd: q.sd, vs: f.from.id, x: q.x, y: q.y, read: hyp(q.x - f.from.x, q.y - f.from.y) > 4 && hyp(q.x - f.tx, q.y - f.ty) > 4 });
+      } else if (!f && this.lp && b.last === this.lp && this.lp.sd === q.sd && this.lp !== q) {
+        this.passes[q.sd + 'Ok']++;
+        if (this.lp.p.st) this.lp.p.st.pc = (this.lp.p.st.pc || 0) + 1;
       }
+      this.lp = null;
       b.owner = q;
       b.last = q;
       b.lastTeam = q.sd;
@@ -1495,7 +1506,7 @@
       q.hold = 0;
       q.blocked = 0;
       // 持ってから放すまでの最低の時間：ふつうは1.2〜2.8秒（テンポが速いと短い）。1割強はワンタッチ
-      q.minHold = this.rng() < 0.12 ? 0.2 : (1.2 + this.rng() * 1.6) * (1.25 - ((q.team.tactic && q.team.tactic.tempo) || 0.5) * 0.6);
+      q.minHold = this.rng() < 0.08 ? 0.2 : (2.6 + this.rng() * 3.0) * (1.25 - ((q.team.tactic && q.team.tactic.tempo) || 0.5) * 0.6);
       q.think = 1.0 + (1 - q.a.dec) * 0.4 + this.rng() * 1.0 - ((q.team.tactic && q.team.tactic.tempo) || 0.5) * 0.5;
       q.dx = q.x;
       q.dy = q.y;
