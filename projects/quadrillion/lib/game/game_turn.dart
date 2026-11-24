@@ -1630,8 +1630,11 @@ extension GameTurn on Game {
                   return M('{0}を訴えました', [Nm(foe.name)]);
                 }),
                 Choice(M('やり返す'), M('こちらも相手の中身を盗む（社長の時間は使わない）'), () {
-                  hUsed -= hrs('dirty');
-                  return doDirty('spy', foe);
+                  // 1.1.0+28：使った分だけを戻す（先に引くと、手が打てなかったときに時間がマイナスになっていた）
+                  final h0 = hUsed;
+                  final r = doDirty('spy', foe);
+                  hUsed = h0;
+                  return r;
                 }),
                 Choice(M('黙って次の商品で勝負する'), M('評判は守られる'), () {
                   rep = rep + 3;

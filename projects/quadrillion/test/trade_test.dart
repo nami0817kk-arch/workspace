@@ -250,6 +250,25 @@ void main() {
       expect(g.cash, greaterThan(c0 - 1e9));
     });
 
+    test('文化の違いによる失敗：慣れていないほど起き、その国の客が離れる', () {
+      int count(double a) {
+        final g = _g(2000, 4);
+        final b = _biz(g, 'konbini', abroad: ['in']);
+        var n = 0;
+        for (var m = 0; m < 400; m++) {
+          g.trade.adapt['${b.id}/in'] = a;
+          g.monthTrade((x, [t = '']) {
+            if (msgKey(x).contains('現地の習慣') || msgKey(x).contains('現地の好み') || msgKey(x).contains('祝日')) n++;
+          });
+        }
+        return n;
+      }
+
+      final low = count(.55);
+      expect(low, greaterThan(0));
+      expect(count(.97), lessThan(low));
+    });
+
     test('政変・国有化の起きやすさは国で違う（ナイジェリアは日本より不安定）', () {
       final g = _g(2000);
       expect(g.polRisk('ng'), greaterThan(g.polRisk('jp') * 5));

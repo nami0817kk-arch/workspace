@@ -640,7 +640,7 @@ extension GameTrade on Game {
     for (final c in ex) {
       if (trade.stops.any((s) => s.c == c)) continue;
       if (rnd() < .0025 * (HAZARD[c] ?? 1)) {
-        final kinds = ['大きな地震', '台風', '洪水', '港の事故'];
+        final kinds = ['大きな地震', '台風', '洪水', '港の事故', '港のストライキ'];
         final ja = pick(kinds);
         final st = ActiveStop(c: c, ja: M(ja), left: ri(1, 3), unit: .03 + rnd() * .07, sup: .2 + rnd() * .3);
         trade.stops.add(st);
@@ -674,6 +674,12 @@ extension GameTrade on Game {
         final a = adaptOf(b, c);
         final h = helperOf(b, c).$1;
         trade.adapt[key] = math.min(1, a + (1 - a) * (.02 + .05 * h + .02 * (trade.know[c] ?? 0)));
+        // 文化の違いによる失敗（慣れていないほど起きやすい。その国の客が離れ、慣れは少し上がる＝失敗から学ぶ）
+        if (rnd() < .004 * (1 - a) / .3) {
+          b.power *= 1 - .3 * share;
+          trade.adapt[key] = math.min(1, trade.adapt[key]! + .03);
+          N(M(pick(const ['{0}で「{1}」の広告が現地の習慣に合わず、反発を受けました', '{0}で「{1}」の商品が現地の好みに合わず、売れ残りました', '{0}で「{1}」が祝日や宗教の決まりを知らずに営業し、評判を落としました']), [C(c), I(b.ind)]), 'bad');
+        }
         // 為替の損（現地にある売掛と在庫の値打ちが、通貨の動きで増減する）
         final r0 = ev(home, 'fx_usd', y - 1 / 12) / math.max(ev(c, 'fx_usd', y - 1 / 12), 1e-12);
         final r1 = ev(home, 'fx_usd', y) / math.max(ev(c, 'fx_usd', y), 1e-12);
