@@ -1899,6 +1899,16 @@ class GameState extends ChangeNotifier {
     _persist();
   }
 
+  /// 最初の数日の案内(logic/first_days_guide.dart)の段を、見たことにする。
+  void markGuideStepSeen(String key) {
+    final save = _save;
+    if (save == null) return;
+    if (save.firstRunStepsSeen.contains(key)) return;
+    save.firstRunStepsSeen.add(key);
+    _notify();
+    _persist();
+  }
+
   /// 初回ガイドを閉じる。以後このセーブでは表示しない。
   void dismissFirstRunGuide() {
     final save = _save;

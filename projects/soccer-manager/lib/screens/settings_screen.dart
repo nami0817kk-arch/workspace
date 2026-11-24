@@ -12,7 +12,7 @@ import '../state/settings_controller.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/supporter_section.dart';
 import 'club_rename_screen.dart';
-import 'onboarding_screen.dart';
+import 'guide_screen.dart';
 import 'start_screen.dart';
 import '../theme/semantic_colors.dart';
 import '../monetization/ad_service.dart';
@@ -198,17 +198,15 @@ class SettingsScreen extends StatelessWidget {
           Text(Tr.pick('ヘルプ', 'Help'),
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
+          // 5枚の説明(チュートリアル)は 2026-11-25 にやめた。遊び方は
+          // ガイドで読める。
           Card(
             child: ListTile(
               leading: const Icon(Icons.school_outlined),
-              title:
-                  Text(Tr.pick('チュートリアルをもう一度見る', 'Watch the tutorial again')),
+              title: Text(Tr.pick('遊び方ガイド', 'How to play')),
+              trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => OnboardingScreen(
-                    onDone: () => Navigator.of(context).pop(),
-                  ),
-                ),
+                MaterialPageRoute(builder: (_) => const GuideScreen()),
               ),
             ),
           ),

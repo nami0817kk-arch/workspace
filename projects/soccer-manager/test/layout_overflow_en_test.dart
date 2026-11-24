@@ -46,9 +46,7 @@ void main() {
   Future<void> createClub(WidgetTester tester) async {
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Skip'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('New club').first);
+    await tester.tap(find.text('New game').first);
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'Test FC');
     await tester.tap(find.text('Found the club'));
@@ -61,10 +59,8 @@ void main() {
 
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Skip'));
-    await tester.pumpAndSettle();
 
-    expect(find.text('New club'), findsWidgets);
+    expect(find.text('New game'), findsWidgets);
   });
 
   testWidgets('the new club dialog fits within a narrow phone in English',
@@ -73,9 +69,7 @@ void main() {
 
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Skip'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('New club').first);
+    await tester.tap(find.text('New game').first);
     await tester.pumpAndSettle();
 
     expect(find.text('Found the club'), findsOneWidget);
@@ -96,21 +90,18 @@ void main() {
     expect(find.text('Test FC'), findsWidgets);
   });
 
-  testWidgets('the onboarding slides fit within a narrow phone in English',
+  testWidgets('the league lines in the new game dialog fit a narrow phone',
       (WidgetTester tester) async {
+    // 5枚の説明はやめた(2026-11-25)。代わりに、新しく始めるの各リーグに
+    // 予算・登録・難しさの1行が付いた。狭い幅の英語ではみ出さないか。
     useNarrowPhone(tester);
 
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
+    await tester.tap(find.text('New game').first);
+    await tester.pumpAndSettle();
 
-    // 「次へ」で最後のスライドまで送る。各スライドの描画で
-    // オーバーフローが出ないことを確かめる。
-    while (find.text('Next').evaluate().isNotEmpty) {
-      await tester.tap(find.text('Next'));
-      await tester.pumpAndSettle();
-    }
-
-    // 最終スライドまで来ると「次へ」が開始ボタンに変わる。
-    expect(find.text('Start'), findsOneWidget);
+    expect(find.textContaining('Budget '), findsWidgets);
+    expect(tester.takeException(), isNull);
   });
 }

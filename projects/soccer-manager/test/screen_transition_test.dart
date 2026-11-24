@@ -36,9 +36,7 @@ void main() {
   Future<void> createClub(WidgetTester tester) async {
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Skip'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('New club').first);
+    await tester.tap(find.text('New game').first);
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'Test FC');
     await tester.tap(find.text('Found the club'));

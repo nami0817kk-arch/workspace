@@ -37,22 +37,20 @@ void main() {
   testWidgets('start screen shows save slot list', (WidgetTester tester) async {
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('スキップ'));
-    await tester.pumpAndSettle();
 
+    // 初回の5枚の説明は無く、すぐタイトルが出る(2026-11-25)。セーブが
+    // まだ無いので「続きから」は出ず、「新しく始める」が主役。
     expect(find.text('サッカー経営マネージャー'), findsOneWidget);
-    expect(find.text('空きスロット'), findsWidgets);
-    expect(find.text('新規クラブ作成'), findsWidgets);
+    expect(find.text('新しく始める'), findsOneWidget);
+    expect(find.text('続きから'), findsNothing);
   });
 
   testWidgets('creating a club navigates to the home dashboard',
       (WidgetTester tester) async {
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('スキップ'));
-    await tester.pumpAndSettle();
 
-    await tester.tap(find.text('新規クラブ作成').first);
+    await tester.tap(find.text('新しく始める').first);
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'テストFC');
@@ -68,10 +66,8 @@ void main() {
       'instead of exiting to the title screen', (WidgetTester tester) async {
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('スキップ'));
-    await tester.pumpAndSettle();
 
-    await tester.tap(find.text('新規クラブ作成').first);
+    await tester.tap(find.text('新しく始める').first);
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'テストFC');
@@ -91,14 +87,14 @@ void main() {
     await tester.pumpAndSettle();
 
     // タイトル画面まで戻るのではなく、ホームに戻るだけであるべき。
-    expect(find.text('新規クラブ作成'), findsNothing);
+    expect(find.text('新しく始める'), findsNothing);
     expect(find.text('テストFC'), findsWidgets);
 
     // ホームタブの状態でもう一度戻る操作をすると、今度はタイトル画面へ戻る。
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
 
-    expect(find.text('新規クラブ作成'), findsWidgets);
+    expect(find.text('新しく始める'), findsWidgets);
   });
 
   testWidgets(
@@ -168,10 +164,8 @@ void main() {
 
     await tester.pumpWidget(const SoccerManagerApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('スキップ'));
-    await tester.pumpAndSettle();
 
-    await tester.tap(find.text('新規クラブ作成').first);
+    await tester.tap(find.text('新しく始める').first);
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'テストFC');

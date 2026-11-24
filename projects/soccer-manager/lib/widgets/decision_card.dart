@@ -82,8 +82,12 @@ class _DecisionCardState extends State<DecisionCard> {
       padding: const WidgetStatePropertyAll(
           EdgeInsets.symmetric(horizontal: 12, vertical: 6)),
       minimumSize: const WidgetStatePropertyAll(Size(0, 40)),
-      textStyle: const WidgetStatePropertyAll(
-          TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+      // 字の形(フォント)はテーマのまま、大きさだけ変える。TextStyle を
+      // 新しく作ると、同梱フォントの指定が外れて日本語が豆腐になる。
+      textStyle: WidgetStatePropertyAll(Theme.of(context)
+          .textTheme
+          .labelLarge
+          ?.copyWith(fontSize: 13, fontWeight: FontWeight.bold)),
     );
     final hasMore =
         widget.detail != null || effects.isNotEmpty || widget.extra.isNotEmpty;

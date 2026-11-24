@@ -145,8 +145,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('オーナー室', "Owner's office"),
             description: Tr.pick(
-                'オーナーの仕事(1シーズンに1回ずつ打てる手・月に1回の広報)、試合日のイベント、友好提携クラブと、「オーナーと世界」(クラブの文化・他のオーナー・クラブの買収)をまとめています。ニュース・シーズン分析・記録・ランキングなどの見るだけの画面は、左上のメニュー(三本線)の「資料」にあります。カレンダーは左メニューの「カレンダー」(状況のすぐ下)にあります。',
-                "Moves you can make once a season (and one PR move a month), matchday events, a friendship partner, plus Owner & world (club culture, rival owners, buying another club). View-only screens such as news, season analysis, records and rankings are under Reference in the top-left menu. The calendar has its own item in the left menu, just below Status."),
+                'オーナーの仕事(いま打てる手を上に。1シーズンに1回ずつの手と月に1回の広報)、毎節続ける試合日のイベントと、「オーナーと世界」(文化と方針・他のオーナー・時代)をまとめています。ニュース・シーズン分析・記録・ランキングなどの見るだけの画面は、左上のメニュー(三本線)の「資料」にあります。カレンダーは左メニューの「カレンダー」(状況のすぐ下)にあります。',
+                "Your moves, with the ones open now on top (once a season each, plus one PR move a month), the matchday event that runs every game, and Owner & world (identity and policy, rival owners, the era). View-only screens such as news, season analysis, records and rankings are under Reference in the top-left menu. The calendar has its own item in the left menu, just below Status."),
           ),
           GuideTopic(
             title: Tr.pick('事件と目標', 'Incidents and goals'),
