@@ -48,6 +48,10 @@ const Map<String, String> realEn = {
   '時間は減らない。3割の確率で能力が大きく落ちる': "No time lost. 30% chance of a big drop in skills",
   'こちらも相手の中身を盗む（社長の時間は使わない）': "Steal their secrets in return (no CEO time)",
 
+  '社長の時間@@term': "CEO time",
+  '社長が1か月に使える時間です。ふつう200時間、無理をすれば300時間。行動ごとに時間がかかり、会社が大きいほど会議に取られます（任せると減る）。無理が続くと体力が尽きて倒れます。':
+      "The CEO's hours each month: about 200, up to 300 if pushed. Every action takes time, and meetings eat more as you grow (delegating helps). Overwork drains stamina until the CEO collapses.",
+
   // ===== 横向きの画面の骨組み =====
   'お金@@tab': "Money",
   '世界@@tab': "World",
@@ -148,7 +152,8 @@ const Map<String, String> realEn = {
   'メインバンクが経営に口を出しています（あと{0}か月）。新しく借りられません': "Your main bank is overseeing the company ({0} more months). No new loans",
   '借りている相手': "Lenders",
   '借金はありません': "No debt",
-  '相手': "Lender",
+  '借りた相手': "Lender",
+  '無理 +{0}h': "Overtime +{0}h",
   '期限': "Term left",
   '毎月の返済': "Monthly payment",
   'あと{0}年{1}か月': "{0}y {1}m left",

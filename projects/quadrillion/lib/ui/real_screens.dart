@@ -51,10 +51,11 @@ Widget topBar(GameController ctl, {required bool side}) {
     child: Row(children: [
       Text(ym(s.year, s.q, sp: true), key: const ValueKey('top-date'), style: ts(size: 15, color: Pal.goldtx, bold: true)),
       const SizedBox(width: 12),
-      // 数字の列は、入りきらなければ横に動かせる（画面ごとは動かない）
+      // 数字の列は、入りきらなければ字を縮めて1行に収める
       Expanded(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
           child: Row(children: [
             FlashStat(tr('現金 '), yen(s.cash), value: s.cash, turn: s.turn),
             const SizedBox(width: 12),
@@ -120,7 +121,13 @@ class HoursGauge extends StatelessWidget {
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(s.down > 0 ? Icons.local_hospital : Icons.schedule, size: 15, color: s.down > 0 ? Pal.down : Pal.goldtx),
         const SizedBox(width: 3),
-        Text(s.down > 0 ? tr('休養中 あと{0}か月', [s.down]) : tr('残り{0}h', [jsRound(left)]),
+        // ふつうに使える残りを出し、使い切ったら無理をして使える分を出す
+        Text(
+            s.down > 0
+                ? tr('休養中 あと{0}か月', [s.down])
+                : normal > 0 || left <= 0
+                    ? tr('残り{0}h', [jsRound(normal)])
+                    : tr('無理 +{0}h', [jsRound(left)]),
             key: const ValueKey('ap-count'), style: ts(size: 13, bold: true, color: normal > 0 ? Pal.goldtx : (left > 0 ? Pal.warn : Pal.mute))),
         const SizedBox(width: 8),
         Text(tr('体力 '), style: ts(size: 12, color: Pal.mute)),
@@ -145,11 +152,13 @@ Widget leftRail(GameController ctl) => Container(
       child: LayoutBuilder(builder: (context, c) {
         // 7つが縦に入りきらない低い画面では、高さを等分する（1つ40未満なら字を省いて印だけにする）
         final compact = c.maxHeight < railTabs.length * 48;
-        final each = compact ? math.max(36.0, c.maxHeight / railTabs.length) : 48.0;
-        return SingleChildScrollView(
+        final each = compact ? c.maxHeight / railTabs.length : 48.0;
+        // 流す欄にはしない（真ん中の一覧より前に流す欄があると、ほかの所の「最初の流す欄」を取り違える）。低い画面では高さを等分する
+        Widget sized(Widget w) => compact ? Expanded(child: w) : SizedBox(height: each, child: w);
+        return ClipRect(
           child: Column(children: [
             for (final t in railTabs)
-              Semantics(
+              sized(Semantics(
                 button: true,
                 selected: ctl.tab == t.$1,
                 label: tr(t.$2),
@@ -157,7 +166,6 @@ Widget leftRail(GameController ctl) => Container(
                   key: ValueKey('tab-${t.$1}'),
                   onTap: () => ctl.setTab(t.$1),
                   child: Container(
-                    height: each,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         color: ctl.tab == t.$1 ? Pal.onBg : null, border: Border(left: BorderSide(color: ctl.tab == t.$1 ? Pal.gold : Colors.transparent, width: 3))),
@@ -171,7 +179,7 @@ Widget leftRail(GameController ctl) => Container(
                     ]),
                   ),
                 ),
-              ),
+              )),
           ]),
         );
       }),
@@ -209,8 +217,6 @@ List<Widget> sideItems(GameController ctl, {bool sheet = false}) {
         const SizedBox(height: 6),
         Text(tr('体力 {0}／100', [jsRound(s.stamina)]), style: ts(size: 12.5, bold: true, color: s.stamina < 25 ? Pal.down : Pal.ink)),
         Text(tr('200時間を超えて働くと体力が減り、0で倒れます。事業を任せると会議の時間が減ります'), style: ts(size: 11.5, color: Pal.mute, height: 1.35)),
-        const SizedBox(height: 6),
-        Btn(tr('社長の行動'), () => openPresSheet(ctl), key: const ValueKey('pres-open'), small: true, more: true, shrink: true),
       ]),
     ),
   ];
@@ -551,7 +557,7 @@ List<Widget> _bankView(GameController ctl) {
           Muted(tr('借金はありません'))
         else ...[
           Row(children: [
-            _cell(tr('相手'), w: Ui.sw(92), a: TextAlign.left, c: Pal.mute),
+            _cell(tr('借りた相手'), w: Ui.sw(92), a: TextAlign.left, c: Pal.mute),
             _cell(tr('残り'), c: Pal.mute),
             _cell(tr('金利'), c: Pal.mute),
             _cell(tr('期限'), c: Pal.mute),

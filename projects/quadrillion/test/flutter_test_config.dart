@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quadrillion/game/game.dart';
-import 'package:quadrillion/l10n/lang.dart';
 import 'package:quadrillion/ui/controller.dart';
 import 'package:quadrillion/ui/widgets.dart';
 

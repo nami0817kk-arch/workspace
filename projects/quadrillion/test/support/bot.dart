@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' show Size;
 
 import 'package:quadrillion/game/game.dart';
 
@@ -33,6 +34,10 @@ extension HoursCompat on Game {
   }
 }
 
+/// 1.1.0+25 で横向きの骨組み（左の切り替え66・真ん中の余白16）にした。縦の幅（320・390）で書かれた画面のテストは、
+/// 真ん中の幅が前と同じになるよう、その分を足した幅で見る（右の帯は幅760未満なので出ない）
+Size centerAs(Size s) => s.width < 700 ? Size(s.width + 82, s.height) : s;
+
 final _choice = RegExp('断る|謝罪|送り出す|上げる|自社株|ホワイト');
 
 /// 出来事は決まった選び方で片付ける（試作の自動プレイと同じ）
@@ -53,6 +58,8 @@ void resolveEvents(Game s) {
 void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borrow = 'none'}) {
   int tot(Person p) => Game.totOf(p);
   resolveEvents(s);
+  // 会議で社長の時間が埋まってきたら、責任者のいる事業を任せる（1.1.0+25。人が遊ぶときと同じ）
+  if (mine == null && s.hNormalLeft() < 40) s.delegAll();
   if (borrow == 'max' && s.borrowRoom() > 1e6) {
     s.borrow(s.borrowRoom(), 60);
   } else if (borrow == 'some' && s.biz.isNotEmpty && s.cash < s.capexOf(indm[s.biz.first.ind]!) && s.borrowRoom() > 1e6) {

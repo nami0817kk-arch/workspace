@@ -130,17 +130,20 @@ Widget? todoCard(GameController ctl) {
       Row(children: [
         Expanded(child: CardTitle(tr('今月やること'), gold: true)),
         if (tips.isNotEmpty)
-          InkWell(
-            key: const ValueKey('todo-all'),
-            borderRadius: BorderRadius.circular(Ui.rBtn),
-            onTap: () => openAdvice(ctl),
-            child: Container(
-              constraints: const BoxConstraints(minHeight: minTap, minWidth: minTap),
-              padding: const EdgeInsets.only(left: 8),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(tr('番頭のひとこと'), style: ts(size: 12, color: Pal.goldtx)),
-                const Icon(Icons.chevron_right, size: 18, color: Pal.goldtx),
-              ]),
+          // 幅の狭い右の帯（1.1.0+25）でもはみ出さないよう、字は縮めて1行に収める
+          Flexible(
+            child: InkWell(
+              key: const ValueKey('todo-all'),
+              borderRadius: BorderRadius.circular(Ui.rBtn),
+              onTap: () => openAdvice(ctl),
+              child: Container(
+                constraints: const BoxConstraints(minHeight: minTap, minWidth: minTap),
+                padding: const EdgeInsets.only(left: 8),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Flexible(child: FittedBox(fit: BoxFit.scaleDown, child: Text(tr('番頭のひとこと'), maxLines: 1, style: ts(size: 12, color: Pal.goldtx)))),
+                  const Icon(Icons.chevron_right, size: 18, color: Pal.goldtx),
+                ]),
+              ),
             ),
           )
         else

@@ -52,7 +52,7 @@ Future<GameController> _pump(WidgetTester tester, {Game? game, String lang = 'ja
   final ctl = GameController(prefs: prefs, newRandom: () => ParkMiller(77), lang: lang);
   ctl.game = game;
   addTearDown(() => L.lang = 'ja');
-  tester.view.physicalSize = size;
+  tester.view.physicalSize = centerAs(size);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(RepaintBoundary(key: _shotKey, child: QuadrillionApp(controller: ctl)));

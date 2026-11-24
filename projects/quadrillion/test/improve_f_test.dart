@@ -184,31 +184,32 @@ void main() {
           x.crew = g.crewOf(x) * .6;
         }
         g.calcAll();
-        g.ap = 2;
+        // 社長の時間を、人を雇う2回ぶんだけ残す（1.1.0+25 から手ではなく時間）
+        g.hUsed = hoursMax - g.hMeet() - 2 * g.hrs('crew');
         g.cash = 1e14;
       }
       expect(a.crewShort().length, greaterThanOrEqualTo(3));
-      // 手は2つなので、足りない割合の大きい2つだけ
+      // 時間は2回ぶんなので、足りない割合の大きい2つだけ
       final plan = a.crewShortDoable();
       expect(plan.length, 2);
       final ids = plan.map((x) => x.id).toList();
       final cost = plan.fold(0.0, (s, x) => s + a.hireCost(x, a.crewNeedPeople(x)));
       final cashA = a.cash;
       a.hireShortAll();
-      expect(a.ap, 0);
+      expect(a.hLeft(), 0);
       expect(cashA - a.cash, closeTo(cost, cost * 1e-9));
       for (final id in ids) {
         final x = b.biz.firstWhere((x) => x.id == id);
         b.hireN(x, b.crewNeedPeople(x));
       }
-      expect(b.ap, 0);
+      expect(b.hLeft(), 0);
       expect(b.cash, closeTo(a.cash, a.cash.abs() * 1e-12));
       for (final id in ids) {
         expect(a.crewNeedPeople(a.biz.firstWhere((x) => x.id == id)), 0);
         expect(a.biz.firstWhere((x) => x.id == id).crew, closeTo(b.biz.firstWhere((x) => x.id == id).crew!, 1e-3));
       }
       // 手が無ければ何もしないで、わけを言う
-      expect(txIn(a.hireShortAll(), 'ja'), '今月の手が残っていません');
+      expect(txIn(a.hireShortAll(), 'ja'), startsWith('今月の社長の時間が足りません'));
       a.ap = 1;
       a.cash = 0;
       expect(txIn(a.hireShortAll(), 'ja'), 'お金が足りません');

@@ -13,6 +13,8 @@ Game grownGame({int seed = 2024, int year = 1985, int years = 25, int bizTarget 
     growMonth(g, bizTarget: bizTarget);
   }
   resolveEvents(g);
+  // 任せた事業は戻して渡す（受け取ったテストが自分で任せ方を決める）
+  g.undelegAll();
   g.calcAll();
   return g;
 }
@@ -24,6 +26,8 @@ void growMonth(Game g, {int bizTarget = 26}) {
     g.mode = 'endless';
     g.won = null;
   }
+  // 1.1.0+25 から、事業が増えると会議に社長の時間を取られる。責任者のいる事業は任せて、会議の時間を減らす（人が遊ぶときと同じ）
+  if (g.hNormalLeft() < 60) g.delegAll();
   _shape(g, bizTarget);
   botMonth(g, units: true);
 }

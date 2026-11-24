@@ -403,6 +403,9 @@ class MainScreen extends StatelessWidget {
                 // まとめて進めるのは1つのボタンにまとめ、押すと長さ（何か起きるまで・3か月・1年）を選ぶ小窓が開く
                 Btn(tr('まとめて進める'), () => openAdvance(ctl), key: const ValueKey('advance-menu'), small: true, more: true),
                 const SizedBox(width: 6),
+                // 社長の行動（相棒探し・日銭・腕磨き・人脈・種探し・休む）は、いつでも押せるよう下の帯に置く
+                Btn(tr('社長の行動'), () => openPresSheet(ctl), key: const ValueKey('pres-open'), small: true, more: true),
+                const SizedBox(width: 6),
                 Expanded(
                   child: Align(
                     alignment: Alignment.centerRight,

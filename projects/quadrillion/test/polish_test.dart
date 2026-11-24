@@ -114,10 +114,11 @@ void main() {
       expect(back.guide, isEmpty);
     });
 
-    testWidgets('街のタブの上に1行で出て、×で閉じられる', (tester) async {
+    testWidgets('右の帯の「今月やること」に1行で出て、×で閉じられる', (tester) async {
       final ctl = await _newCtl();
       ctl.startNew();
-      tester.view.physicalSize = const Size(390, 844);
+      // 1.1.0+25 から横向き。案内は右の帯の「今月やること」に出る
+      tester.view.physicalSize = const Size(844, 390);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(QuadrillionApp(controller: ctl));

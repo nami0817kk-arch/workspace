@@ -312,7 +312,7 @@ void main() {
         print('同じお金あたりの伸びの見込み：任せた ÷ 最善手（種11・36か月・2本・枠 元手の${delegMults[budget]}倍）: ${perYen.toStringAsFixed(3)}（使ったお金の比 ${(sa / sb).toStringAsFixed(2)}）');
         // 目安は7〜9割。手元で5つの盤面×6本×60か月を回した値は test/h_balance_test.dart の頭の注釈にある。ここでは幅を少し広めに見る
         expect(perYen, inInclusiveRange(.6, .95), reason: '枠 元手の${delegMults[budget]}倍');
-        expect(sa, lessThan(sb), reason: '責任者は1件ずつ仕上げるので、使うお金も人より少ない');
+        // 「使うお金も人より少ない」は 1.1.0+25 で外した（人の最善手は社長の時間で月に打てる数が限られ、任せた事業より使うお金が少ないことがある）
       }
     }, timeout: const Timeout(Duration(minutes: 5)));
   });
@@ -349,7 +349,7 @@ void main() {
         final need = g.crewNeedPeople(b), cost = g.hireCost(b, need);
         final btn = find.byKey(_k('todo-act-$i'));
         expect(find.descendant(of: btn, matching: find.text(tr('足りない人を雇う（{0}人・{1}）', [need, yen(cost)]))), findsOneWidget);
-        expect(find.descendant(of: btn, matching: find.text(tr('1手'))), findsOneWidget, reason: '手の数を書く');
+        expect(find.descendant(of: btn, matching: find.text(tr('{0}時間', [g.hrs('crew').round()]))), findsOneWidget, reason: 'かかる社長の時間を書く（1.1.0+25）');
         final ap = g.ap, cash = g.cash;
         await p.press(btn);
         expect(g.crewNeedPeople(b), 0);
@@ -379,7 +379,7 @@ void main() {
       p.ctl.render();
       await p.pump();
       await p.press(find.byKey(_k('todo-act-$i')));
-      expect(p.inSheet(find.text('今月の手が残っていません')), findsOneWidget);
+      expect(p.inSheet(find.textContaining('今月の社長の時間が足りません')), findsOneWidget);
       await p.drain();
       expect(p.found, isEmpty, reason: p.found.join('\n'));
     });
@@ -715,7 +715,8 @@ void main() {
       final dg = await run(true);
       // ignore: avoid_print
       print('押す回数：前 $beforeTaps → 今（自分で） ${self.$1}［${self.$2}］ → 今（任せて） ${dg.$1}［${dg.$2}］');
-      expect(self.$1, lessThanOrEqualTo(beforeTaps), reason: '自分で全部動かしても、前より増えない');
+      // 1.1.0+25 から手の数ではなく社長の時間なので、月に打てる手が少し増えた。そのぶん（4回）だけ線を上げる
+      expect(self.$1, lessThanOrEqualTo(beforeTaps + 4), reason: '自分で全部動かしても、前とほぼ同じ');
       expect(dg.$1, lessThanOrEqualTo(beforeTaps * 2 ~/ 3), reason: '任せれば3分の2以下');
     }, timeout: const Timeout(Duration(minutes: 5)));
   });

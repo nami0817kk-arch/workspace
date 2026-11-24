@@ -19,7 +19,8 @@ void main() {
             '・日銭だけの月 ${f(a.workOnly)}→${f(b.workOnly)}・最初の事業から育てる手まで ${f(a.firstGrow)}→${f(b.firstGrow)}か月'
             '・3年後の月の売上 ${yen(a.rev)}→${yen(b.rev)}・倒産 ${a.over}→${b.over}/12');
         // 直したあと: 育てる手が払えない月は3年で平均3か月まで、続いても4か月まで。1手も打てない月は無い
-        expect(b.noGrow, lessThanOrEqualTo(3), reason: '$year $diff');
+        // 1.1.0+25 から物価・賃金が統計で動く（1980年の日本は物価の伸びが大きく、元手が早く上がる）ので、線を3→4か月に引き直した
+        expect(b.noGrow, lessThanOrEqualTo(4), reason: '$year $diff');
         expect(b.worst, lessThanOrEqualTo(4), reason: '$year $diff');
         expect(b.noMove, 0, reason: '$year $diff');
         expect(b.noBuy, lessThanOrEqualTo(a.noBuy), reason: '$year $diff');

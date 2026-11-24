@@ -580,6 +580,11 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
 
   void setTab(String t) {
     if (t != 'biz') _unfoldAuto();
+    // 「数字」のタブは 1.1.0+25 から「お金」の「決算と記録」（前の版の呼び方でも開けるようにしておく）
+    if (t == 'num') {
+      t = 'money';
+      moneyView = 'book';
+    }
     tab = t;
     notifyListeners();
   }
