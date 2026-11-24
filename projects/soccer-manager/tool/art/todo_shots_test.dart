@@ -341,38 +341,17 @@ void main() {
 
   testWidgets('カレンダー: シーズン中(結果の入った月)', (tester) async {
     await run(tester, 'f_calendar_season', arrange: (gs) async {
-      // 進むボタンと同じ順に、リーグ戦を8節まで進める。
-      var guard = 0;
-      while (gs.save!.league.fixtures
+      // 進むボタンと同じ順に、リーグ戦を8節まで進める(親善試合・
+      // スーパーカップ・カップ戦の日にも止まる)。
+      await untilStop(
+          gs,
+          (_) =>
+              gs.save!.league.fixtures
                   .where((f) => f.result != null)
                   .map((f) => f.matchday)
                   .toSet()
-                  .length <
-              8 &&
-          guard++ < 200) {
-        final first = gs.nextStop;
-        if (first == null) break;
-        await gs.playBackgroundCupMatchesBefore(first);
-        final stop = gs.nextStop!;
-        switch (stop.kind) {
-          case DayEventKind.leagueMatch:
-            await gs.playNextMatchdayQuickSim();
-          case DayEventKind.cupMatch:
-            final dom = gs.domesticCup?.nextUnplayedMatch;
-            final uid = gs.userTeam.id;
-            if (dom != null &&
-                gs.canPlayNextDomesticCupMatch &&
-                (dom.homeTeamId == uid || dom.awayTeamId == uid)) {
-              await gs.playNextCupMatch();
-            } else if (gs.continentalCup!.isGroupStageComplete) {
-              await gs.playNextContinentalKnockoutLeg();
-            } else {
-              await gs.playNextContinentalGroupMatch();
-            }
-          default:
-            await gs.advanceToDateStop(stop);
-        }
-      }
+                  .length >=
+              8);
     }, shots: (nav, shoot) async {
       await calendarShots(tester, nav, shoot,
           months: 0, prefix: '', prev: true);
