@@ -774,6 +774,7 @@ class Game extends ChangeNotifier {
       rng.chance(.5) ? opts[3] : opts[4],
       ...opts.sublist(5),
     ];
+    _sceneId = null; // 前の場面の id を心がけに持ち越さない
     ask('この年の心がけ', childYearText(this), [
       for (final o in shown)
         Choice.h(o.label, o.hint, () {
@@ -919,6 +920,7 @@ class Game extends ChangeNotifier {
     _chapter();
     _yearCheckpoint();
     final opts = adultFocusOptions(this);
+    _sceneId = null; // 前の場面の id を心がけに持ち越さない
     ask('この年の心がけ', adultYearText(this), [
       for (final o in opts)
         Choice.h(o.label, o.hint, () {
