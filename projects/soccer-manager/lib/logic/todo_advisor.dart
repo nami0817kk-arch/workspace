@@ -205,7 +205,8 @@ class TodoItem {
     required this.place,
     this.count = 1,
     this.inline = false,
-  });
+    bool? marked,
+  }) : marked = marked ?? level == TodoLevel.must;
 
   final TodoKind kind;
   final TodoLevel level;
@@ -225,6 +226,12 @@ class TodoItem {
   /// 状況の画面に、その場で答えられる札が出ているか。出ているものは
   /// 一覧に行としては並べない(札そのものが並ぶ)。
   final bool inline;
+
+  /// 左メニューとタブに印を付けるか。必須は必ず付ける。おすすめは、期限や
+  /// 時期があって「今だけ」のものにだけ付ける([TodoAdvisor.markedKinds])。
+  /// いつでも出がちなもの(増築できる施設・更新の時期・打てるオーナーの手)
+  /// にまで付けると、左メニューのほぼ全部に点が付いて、印の意味が無くなった。
+  final bool marked;
 
   bool get isMust => level == TodoLevel.must;
 
@@ -266,6 +273,7 @@ extension TodoCounts on List<TodoItem> {
     if (menu == TodoMenu.status) return 0;
     var n = 0;
     for (final t in recommended) {
+      if (!t.marked) continue;
       if (t.place.menu == menu && (tab == null || t.place.tab == tab)) n++;
     }
     return n;
@@ -289,6 +297,22 @@ extension TodoCounts on List<TodoItem> {
 class TodoAdvisor {
   const TodoAdvisor._();
 
+  /// おすすめのうち、左メニューとタブに青い点を付ける種類。期限や時期が
+  /// あって今だけのもの。スタッフの空席は開幕前だけ([build] の中で見る)。
+  static const Set<TodoKind> markedKinds = {
+    TodoKind.supporterFalling,
+    TodoKind.transferDeadline,
+    TodoKind.seasonTickets,
+    TodoKind.clubPolicy,
+    TodoKind.managerProposals,
+    TodoKind.signingProposals,
+    TodoKind.sponsorSlots,
+    TodoKind.youthAtRisk,
+    TodoKind.monthlyPr,
+    TodoKind.matchdayEvent,
+    TodoKind.preContracts,
+  };
+
   /// [hasSigningProposals] は、監督の補強候補があるか。省くとここで調べる
   /// (他のクラブの選手を見て回るので、分かっているなら渡す)。
   static List<TodoItem> build(GameState gs, {bool? hasSigningProposals}) {
@@ -296,7 +320,19 @@ class TodoAdvisor {
     if (save == null || gs.saleReason != null) return const [];
     final team = gs.userTeam;
     final items = <TodoItem>[];
-    void add(TodoItem item) => items.add(item);
+    final preseason = gs.isPreseason;
+    void add(TodoItem t) => items.add(TodoItem(
+          kind: t.kind,
+          level: t.level,
+          title: t.title,
+          note: t.note,
+          place: t.place,
+          count: t.count,
+          inline: t.inline,
+          marked: t.isMust ||
+              markedKinds.contains(t.kind) ||
+              (t.kind == TodoKind.staffVacant && preseason),
+        ));
 
     String deadline(String key) => gs.isPreseason
         ? ''

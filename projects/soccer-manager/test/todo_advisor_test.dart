@@ -453,11 +453,52 @@ void main() {
       expect(items.recommendedAt(TodoMenu.status), 0);
       for (final menu in TodoMenu.values) {
         if (menu == TodoMenu.status) continue;
-        final want =
-            items.where((t) => !t.isMust && t.place.menu == menu).length;
+        final want = items
+            .where((t) => !t.isMust && t.marked && t.place.menu == menu)
+            .length;
         expect(items.recommendedAt(menu), want, reason: '$menu');
       }
       expect(items.recommendedCount, items.where((t) => !t.isMust).length);
+    });
+
+    test('青い点は「今だけ」のおすすめに絞る(いつでも出がちなものには付けない)', () async {
+      final gs = await quietGame();
+      final s = gs.save!;
+      s.budget = 1 << 40;
+      final p = gs.userTeam.players.firstWhere((p) => !p.isLoan);
+      p.contractYearsRemaining = 1;
+      final role = StaffRole.values
+          .firstWhere((r) => gs.staffCandidatesFor(r).isNotEmpty);
+      s.infrastructure.staff.remove(role);
+      final items = build(gs);
+      // 増築できる施設・更新の時期・開幕後のスタッフの空席・打てるオーナーの
+      // 手は、一覧には出すが印は付けない。
+      for (final k in [
+        TodoKind.facilities,
+        TodoKind.contractRenewals,
+        TodoKind.staffVacant,
+        TodoKind.ownerWorks,
+        TodoKind.ownerGoal,
+      ]) {
+        expect(find(items, k), isNotNull, reason: '$k が一覧に無い');
+        expect(find(items, k)!.marked, isFalse, reason: '$k に印が付く');
+      }
+      // 今月の広報・試合日のイベントは今だけなので付ける。
+      expect(find(items, TodoKind.monthlyPr)!.marked, isTrue);
+      expect(find(items, TodoKind.matchdayEvent)!.marked, isTrue);
+      // クラブと選手には、おすすめの青い点が付かない。
+      expect(items.recommendedAt(TodoMenu.club), 0);
+      expect(items.recommendedAt(TodoMenu.squad), 0);
+      expect(items.recommendedAt(TodoMenu.ownerRoom), 2);
+      // 打てるオーナーの手は、おすすめのいちばん下。
+      expect(items.last.kind, TodoKind.ownerWorks);
+      // 必須は必ず印が付く。
+      expect(items.where((t) => t.isMust).every((t) => t.marked), isTrue);
+    });
+
+    test('開幕前のスタッフの空席は「今だけ」なので印を付ける', () async {
+      final gs = await newGame();
+      expect(find(build(gs), TodoKind.staffVacant)!.marked, isTrue);
     });
 
     test('並びは必須が先、同じ重さの中は種類の順', () async {

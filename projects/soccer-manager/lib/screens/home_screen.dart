@@ -353,8 +353,10 @@ class HomeScreen extends StatelessWidget {
               // 一覧に入れた(2026-11-24)。1件だけだと、ほかの用件が隠れた。
               // 直近のお知らせ。FMの受信箱のように、状況を開いたらまず目に入る。
               const InboxCard(),
-              // オーナーの目標。決めるまで選択肢を出し、決めたら残りを見せる。
-              const OwnerGoalCard(),
+              // オーナーの目標。決めた後の残りだけをここに出す。決める前の
+              // 「目標を決める」は、右の「やること」の行の1つだけにした
+              // (同じ用件が左右に2つ並んでいた。2026-11-24)。
+              if (gameState.ownerGoal != null) const OwnerGoalCard(),
               // 横画面では、ここまでが左、これ以降が右。縦長では何も出ない。
               const PaneBreak(divider: false),
               // 右の欄の先頭は「やること」の一覧(2026-11-24)。以前は左メニューの
