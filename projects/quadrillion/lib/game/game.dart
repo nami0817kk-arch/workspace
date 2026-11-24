@@ -14,6 +14,7 @@ import 'ind_profile.dart';
 import 'models.dart';
 import 'models_static.dart';
 import 'people_data.dart';
+import 'trade_data.dart';
 
 export '../l10n/l10n.dart';
 export 'data.dart';
@@ -24,6 +25,7 @@ export 'ind_profile.dart';
 export 'models.dart';
 export 'models_static.dart';
 export 'people_data.dart';
+export 'trade_data.dart';
 
 part 'game_turn.dart';
 part 'game_actions.dart';
@@ -37,6 +39,7 @@ part 'game_faces.dart';
 part 'game_real.dart';
 part 'game_units.dart';
 part 'game_people.dart';
+part 'game_trade.dart';
 
 /// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
 const int saveVersion = 2;
@@ -265,6 +268,9 @@ class Game {
 
   /// 売掛金（売上のうち、まだ入っていない分。1.1.0+26）
   double ar = 0;
+
+  /// 関税・輸送・海外の難しさ・供給の網の状態（1.1.0+28。game_trade.dart）
+  TradeState trade = TradeState();
 
   /// 社長の時間を使わずに手を打っている最中か（任せた責任者・会議の提案。保存しない）
   bool freeTime = false;
@@ -892,6 +898,8 @@ class Game {
         cogsOf[b.id] = math.max(0.0, b.rev * (1 - mg - pf.fixed));
         final sl = KIND_FIX_SPLIT[pf.kind]!;
         fixOf[b.id] = [for (var i = 0; i < 5; i++) fx * sl[i] + (i == 2 ? b.rev * pen + hr : 0)];
+        // 関税・輸送・インフラ・現地の人の手間・為替の損（1.1.0+28。game_trade.dart）
+        tradeCalc(b);
       }
     }
     // 業種の市場の大きさは、この計算のあいだは変わらないので1回ずつだけ求める（会社が900社あると、会社ごとに求めると重い）
@@ -963,7 +971,8 @@ class Game {
   List<String> ctryOf(Biz b) => b.ctry != null && b.ctry!.isNotEmpty ? b.ctry! : [home];
   double reachOf(Biz b) {
     final y = yr();
-    return ctryOf(b).fold(0.0, (s, c) => s + cw(c, y));
+    // 1.1.0+28 から、海外の客の数は現地の慣れ・災害・政変で減る（game_trade.dart）
+    return ctryOf(b).fold(0.0, (s, c) => s + cw(c, y) * ctryReachF(b, c));
   }
 
   double rEff(Biz b) => reg[0] + math.max(0, reachOf(b) - cw(home, yr()));
@@ -1008,6 +1017,7 @@ class Game {
         'ytdTax': ytdTax,
         'lastPrincipal': lastPrincipal,
         'ar': ar,
+        'trade': trade.toJson(),
         'reg': reg,
         'wiLast': wiLast,
         'expLast': expLast,
@@ -1110,6 +1120,7 @@ class Game {
       ..ytdTax = d('ytdTax')
       ..lastPrincipal = d('lastPrincipal')
       ..ar = d('ar')
+      ..trade = TradeState.fromJson((j['trade'] as Map?)?.cast<String, dynamic>())
       ..wiLast = md('wiLast') ?? {}
       ..expLast = md('expLast') ?? {}
       ..listed = j['listed'] == true

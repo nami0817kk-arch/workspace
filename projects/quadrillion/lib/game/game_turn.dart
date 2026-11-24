@@ -228,6 +228,8 @@ extension GameTurn on Game {
     }
     // 店などの育ち・解約・許可・物件（1.1.0+26）
     monthUnits(N);
+    // 関税・輸送・海外の難しさ・供給の網（1.1.0+28）
+    monthTrade(N);
     // 仕掛かり中の打ち手
     for (final b in biz.toList()) {
       if (b.pipe.isNotEmpty) {

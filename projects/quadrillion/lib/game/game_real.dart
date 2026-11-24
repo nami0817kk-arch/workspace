@@ -52,6 +52,8 @@ const Map<String, double> hoursOf = {
   'dilute': 8,
   'local': 24,
   'rest': 40, // 休む（体力が戻る）
+  'inspect': 50, // 海外の視察（1週間。1.1.0+28）
+  'supply': 6, // 仕入れ先を足す交渉（1.1.0+28）
 };
 
 /// 借金が年の利益の何倍を超えると金利が上がるか（段ごとの上乗せ。年の率）
@@ -493,6 +495,7 @@ extension GameReal on Game {
     for (final b in biz) {
       labor += b.upkeep;
       if (unitsOn) labor += b.sv * svPayOne(b);
+      if (tradeOn) labor += trade.labor[b.id] ?? 0;
       cogs += cogsOf[b.id] ?? math.max(0.0, b.rev - b.profit - b.upkeep);
       final x = fixOf[b.id];
       if (x != null) {

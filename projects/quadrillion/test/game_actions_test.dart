@@ -125,16 +125,19 @@ void main() {
     b.ctry = null;
     b.jv = null;
     s.calcAll();
-    expect(tx(s.enterCountry(b, 'kr', 'buy')), contains('すぐに'));
-    expect(s.ctryOf(b), contains('kr'));
-    expect(tx(s.enterCountry(b, 'us', 'solo')), contains('6か月後'));
-    expect(tx(s.enterCountry(b, 'cn', 'jv')), contains('3か月後'));
+    // 1.1.0+28（段5）から、外資の決まりのある国（1980年代の韓国・中国など）では出方が限られ、立ち上げの月は国と年で変わる。
+    // 決まりの無い国（英国・米国・ドイツ）で、3つの出方と、立ち上げの月が札どおりかを見る
+    expect(tx(s.enterCountry(b, 'uk', 'buy')), contains('すぐに'));
+    expect(s.ctryOf(b), contains('uk'));
+    expect(tx(s.enterCountry(b, 'us', 'solo')), contains('${s.setupMonths('us', 'solo')}か月後'));
+    expect(tx(s.enterCountry(b, 'de', 'jv')), contains('${s.setupMonths('de', 'jv')}か月後'));
+    expect(s.setupMonths('de', 'jv'), lessThan(s.setupMonths('de', 'solo')));
     for (var i = 0; i < 7; i++) {
       s.nextQuarter();
       resolveEvents(s);
     }
-    expect(s.ctryOf(b), containsAll(['kr', 'us', 'cn']));
-    expect(b.jv, contains('cn'));
+    expect(s.ctryOf(b), containsAll(['uk', 'us', 'de']));
+    expect(b.jv, contains('de'));
     // 中国のネットと金融は組むだけ
     final net = Biz(id: 999999, ind: 'sns', power: 1);
     expect(s.entryModes(net, 'cn'), ['jv']);
