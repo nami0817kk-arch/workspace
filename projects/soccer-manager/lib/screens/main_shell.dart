@@ -12,6 +12,7 @@ import '../widgets/screen_bar.dart';
 import '../widgets/group_page.dart';
 import 'club_screen.dart';
 import 'contract_board_screen.dart';
+import 'registration_rules_screen.dart';
 import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'fixtures_screen.dart';
@@ -133,6 +134,9 @@ class _MainShellState extends State<MainShell> {
             GroupTab(Tr.pick('スカッド', 'Squad'), (_) => const SquadScreen()),
             GroupTab(Tr.pick('登録と契約', 'Contracts'),
                 (_) => const ContractBoardScreen()),
+            // 国の登録の決まりを「今 / 上限 / あと何人」で(2026-11-25)。
+            GroupTab(Tr.pick('登録ルール', 'Rules'),
+                (_) => const RegistrationRulesScreen()),
           ],
         ),
         const TransferScreen(embedded: true),
