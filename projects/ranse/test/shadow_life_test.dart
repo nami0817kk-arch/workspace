@@ -200,7 +200,9 @@ void main() {
     final byKind = <String, List<int>>{};
     // 600人生の平均は種しだいで 1.8〜2.2 と揺れた（場面を足して乱数の流れが変わると下回った）ので、
     // 1200人生で見る。平均の目安は 1.9〜2.0（2026-11-23、子どもの重点 その2を足したときに測った）。
-    for (var seed = 0; seed < 1200; seed++) {
+    // 2026-11-25: 1200人生でも、乱数を一つ余分に引くだけで 1.76 → 1.67 と線を割るほど揺れた（直す前のコードで測った）ので、
+    // 2400人生で見る（直す前 1.77・乱数をずらして 1.75・人と家の4項目を足して 1.72）。線は下げていない。
+    for (var seed = 0; seed < 2400; seed++) {
       final kind = ['ninja', 'bandit', 'wanderer'][seed % 3];
       final g = _grownUp(seed * 7 + 13, ninja: kind == 'ninja');
       if (g == null) continue;

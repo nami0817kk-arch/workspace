@@ -6,7 +6,10 @@ import '../engine/birth.dart';
 import '../engine/data.dart';
 import '../engine/game.dart';
 import '../engine/history_lines.dart';
+import '../engine/kid_raising.dart';
+import '../engine/life.dart';
 import '../engine/peace.dart';
+import '../engine/retainers.dart';
 import '../engine/rng.dart';
 import '../engine/spending.dart';
 import 'end_screen.dart';
@@ -629,6 +632,21 @@ class _PersonTab extends StatelessWidget {
               children: [
                 for (final r in l.familyRows(g.year))
                   _FamilyRow(r.$1, r.$2, faded: r.$3),
+                // 子の育て方（家にいる五〜十四の子。決められるのは年の初めだけ。`kid_raising.dart`）。
+                if (raisableKids(g).isNotEmpty) _RaisingBox(g),
+              ],
+            ),
+          ),
+        ],
+        // 家臣（城主より上の人の顔ぶれ。`retainers.dart`）。
+        if (l.retainers.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Panel(
+            title: '家臣',
+            child: Column(
+              children: [
+                for (final r in retainerRows(g))
+                  _FamilyRow(r.$1, r.$2, faded: r.$3),
               ],
             ),
           ),
@@ -804,6 +822,102 @@ class _FamilyRow extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// 家族の欄の下の「子の育て方」。家にいる五〜十四の子ごとに、今の方針と、決める釦。
+/// 決められるのは年の初め（この年の心がけを選ぶ前）だけで、年の途中は釦を押せず、そのことを出す。
+class _RaisingBox extends StatelessWidget {
+  const _RaisingBox(this.g);
+  final Game g;
+
+  @override
+  Widget build(BuildContext context) {
+    final can = g.canSetKidRaising;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '子の育て方',
+            style: TextStyle(
+              color: Pal.gold,
+              fontSize: 13.5,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          for (final k in raisableKids(g))
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${k.name}（${g.year - k.born!}歳）',
+                    style: const TextStyle(fontSize: 13.5),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                TextButton(
+                  onPressed: can ? () => _pick(context, k) : null,
+                  style: TextButton.styleFrom(
+                    foregroundColor: Pal.accent,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    minimumSize: const Size(0, 36),
+                  ),
+                  child: Text(
+                    k.raising == null
+                        ? (can ? '決める' : '決めていない')
+                        : KidRaising.short[k.raising]!,
+                    style: const TextStyle(fontSize: 13.5),
+                  ),
+                ),
+              ],
+            ),
+          if (!can)
+            const Text(
+              '育て方は、年の初め（この年の心がけを選ぶ前）にだけ決められる。',
+              style: TextStyle(color: Pal.muted, fontSize: 12, height: 1.5),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void _pick(BuildContext context, Kid k) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Pal.panel,
+      builder: (ctx) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Text(
+                '${k.name}の育て方',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+            for (final r in KidRaising.all)
+              ListTile(
+                title: Text(KidRaising.label[r]!),
+                subtitle: Text(
+                  KidRaising.hint[r]!,
+                  style: const TextStyle(color: Pal.muted, fontSize: 12.5),
+                ),
+                trailing: k.raising == r
+                    ? const Icon(Icons.check, color: Pal.accent)
+                    : null,
+                onTap: () {
+                  g.setKidRaising(k, r);
+                  Navigator.pop(ctx);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// 立ち位置を押すと、位の解説を開く。
