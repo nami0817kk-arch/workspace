@@ -109,7 +109,8 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    for (final t in ['収支・契約', '資金・取引', '投資・規則', '記録']) {
+    // 5つあったタブを3つにまとめた(2026-11-24)。
+    for (final t in ['お金を作る', '方針と投資']) {
       await tester.tap(find.text(t));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull, reason: '$tのタブ');

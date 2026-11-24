@@ -33,6 +33,7 @@ class _ChipSwitcherState extends State<ChipSwitcher> {
             children: [
               for (var k = 0; k < widget.items.length; k++)
                 ChoiceChip(
+                  key: ValueKey('chip-$k'),
                   label: Text(widget.items[k].$1),
                   selected: k == i,
                   onSelected: (_) => setState(() => _index = k),

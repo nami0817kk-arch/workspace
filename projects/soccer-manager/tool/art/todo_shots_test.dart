@@ -195,6 +195,49 @@ void main() {
     });
   });
 
+  testWidgets('引き出しの「資料」と、資料の画面・カレンダー', (tester) async {
+    await run(tester, 'd_reference', shots: (nav, shoot) async {
+      final menu =
+          find.byTooltip(_en ? 'Reference, settings, help' : '資料・設定・ヘルプ');
+      await tester.tap(menu);
+      await shoot('1_drawer');
+      final scroll = find
+          .descendant(
+              of: find.byType(Drawer), matching: find.byType(Scrollable))
+          .first;
+      await tester.drag(scroll, const Offset(0, -320));
+      await shoot('2_drawer_scrolled');
+      await tester.drag(scroll, const Offset(0, 2000));
+      await tester.pump(const Duration(milliseconds: 400));
+      var n = 3;
+      for (final label in _en
+          ? const ['Accounts in detail', 'Club records', 'Owner records']
+          : const ['収支の詳しい表', 'クラブの記録', 'オーナーの記録']) {
+        final item = find.descendant(
+            of: find.byType(Drawer), matching: find.text(label));
+        await tester.scrollUntilVisible(item, 120, scrollable: scroll);
+        await tester.tap(item);
+        await shoot('${n++}_reference');
+        tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.tap(menu);
+        await tester.pump(const Duration(milliseconds: 600));
+      }
+      // 引き出しを閉じる。
+      tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.tap(find.byKey(const ValueKey('topbar-date')));
+      await shoot('6_calendar');
+      final year = find.byKey(const ValueKey('chip-1')).hitTestable();
+      await tester.tap(year.first);
+      await shoot('7_calendar_year');
+    });
+  });
+
   testWidgets('答えを待つ札が並ぶ(事件・オファー・提案)', (tester) async {
     await run(tester, 'b_must', arrange: (gs) async {
       final s = gs.save!;

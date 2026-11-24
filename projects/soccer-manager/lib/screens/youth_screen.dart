@@ -120,7 +120,7 @@ class _YouthScreenState extends State<YouthScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(Tr.pick('ユース・スカウト', 'Youth & scouting')),
+        title: Text(Tr.pick('ユース・新人発掘', 'Youth & intake')),
         leading: const BackButton(),
         actions: const [QuickAccessMenuButton()],
       ),

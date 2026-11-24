@@ -211,14 +211,23 @@ void main() {
 
     // 窓が開いているあいだは、理由は出ない。
     expect(game.isTransferWindowOpen, isTrue);
-    await pump(tester, game, settings, const TransferScreen(initialTab: 4));
+    // 注目は「候補」のタブの2つ目の札(2026-11-24 にタブを3つにまとめた)。
+    Future<void> openWatch() async {
+      await tester.tap(find.byKey(const ValueKey('chip-1')).first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+
+    await pump(tester, game, settings, const TransferScreen());
+    await openWatch();
     expect(reasonsIn(tester, find.byType(TransferScreen)), isEmpty);
 
     // 夏の窓の締切を過ぎた秋の日。
     game.save!.today = DateTime(game.today.year, 10, 15);
     expect(game.isTransferWindowOpen, isFalse);
     await pump(tester, game, settings,
-        const TransferScreen(initialTab: 4, key: ValueKey('b')));
+        const TransferScreen(key: ValueKey('b')));
+    await openWatch();
     final sign = find.ancestor(
         of: find.text('獲得'), matching: find.byType(FilledButton));
     expect(sign, findsOneWidget);

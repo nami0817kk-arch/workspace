@@ -4,32 +4,22 @@ import 'package:provider/provider.dart';
 import '../services/feedback_service.dart';
 import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
-import '../widgets/chip_switcher.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/manager_report_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/screen_bar.dart';
 import '../widgets/group_page.dart';
-import 'achievements_screen.dart';
-import 'analysis_screen.dart';
-import 'awards_screen.dart';
-import 'best_eleven_screen.dart';
-import 'club_calendar_screen.dart';
 import 'club_screen.dart';
 import 'contract_board_screen.dart';
 import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'fixtures_screen.dart';
-import 'hall_of_fame_screen.dart';
 import 'home_screen.dart';
 import 'advance_flow.dart';
-import 'calendar_screen.dart';
-import 'league_ranking_screen.dart';
-import 'news_screen.dart';
+import 'reference_screens.dart';
 import 'owner_work_screen.dart';
 import 'owner_world_screen.dart';
-import 'season_history_screen.dart';
 import 'squad_screen.dart';
 import 'transfer_screen.dart';
 import 'youth_screen.dart';
@@ -127,7 +117,9 @@ class _MainShellState extends State<MainShell> {
                 (_) => const ClubScreen(section: ClubSection.facilities)),
             GroupTab(Tr.pick('ファンと街', 'Fans & city'),
                 (_) => const ClubScreen(section: ClubSection.community)),
-            GroupTab(Tr.pick('ユース・スカウト', 'Youth & scouting'),
+            // 移籍の「スカウトの地域」(他クラブの選手を見に行く先)と紛れない
+            // 名前にする。こちらは自前の育成と新人の発掘。
+            GroupTab(Tr.pick('ユース・新人発掘', 'Youth & intake'),
                 (_) => const YouthScreen()),
           ],
         ),
@@ -148,9 +140,7 @@ class _MainShellState extends State<MainShell> {
             GroupTab(Tr.pick('順位・日程', 'Table & fixtures'),
                 (_) => const FixturesScreen()),
             GroupTab(Tr.pick('カップ戦', 'Cups'), (_) => const CupScreen()),
-            GroupTab(Tr.pick('ランキング', 'Rankings'),
-                (_) => const LeagueRankingScreen()),
-            GroupTab(Tr.pick('個人タイトル', 'Awards'), (_) => const AwardsScreen()),
+            // ランキングと個人タイトルは見るだけなので、≡ の「資料」へ。
           ],
         ),
         GroupPage(
@@ -161,41 +151,8 @@ class _MainShellState extends State<MainShell> {
                 (_) => const OwnerWorkScreen()),
             GroupTab(Tr.pick('オーナーと世界', 'Owner & world'),
                 (_) => const OwnerWorldScreen()),
-            // 1か月のマス目のカレンダー。1年の予定の一覧は中で切り替える
-            // (2026-11-22)。左のメニューは7項目で高さいっぱいのため、ここに置く。
-            GroupTab(
-                Tr.pick('カレンダー', 'Calendar'),
-                (_) => ChipSwitcher(items: [
-                      (Tr.pick('月', 'Month'), (_) => const CalendarScreen()),
-                      (
-                        Tr.pick('1年の予定', 'The year'),
-                        (_) => const ClubCalendarScreen()
-                      ),
-                    ])),
-            GroupTab(Tr.pick('ニュース', 'News'), (_) => const NewsScreen()),
-            GroupTab(
-                Tr.pick('シーズン分析', 'Analysis'), (_) => const AnalysisScreen()),
-            // 記録もの4つは1つのタブにまとめ、中で選ぶ(タブが8つあった)。
-            GroupTab(
-                Tr.pick('記録', 'Records'),
-                (_) => ChipSwitcher(items: [
-                      (
-                        Tr.pick('シーズン成績', 'Seasons'),
-                        (_) => const SeasonHistoryScreen()
-                      ),
-                      (
-                        Tr.pick('ベストイレブン', 'Team of the season'),
-                        (_) => const BestElevenScreen()
-                      ),
-                      (
-                        Tr.pick('殿堂', 'Hall of fame'),
-                        (_) => const HallOfFameScreen()
-                      ),
-                      (
-                        Tr.pick('実績', 'Achievements'),
-                        (_) => const AchievementsScreen()
-                      ),
-                    ])),
+            // カレンダーは上の帯の日付から開く。ニュース・シーズン分析・記録は
+            // 見るだけなので、≡ の「資料」へ(タブが6つあった。2026-11-24)。
           ],
         ),
       ];
@@ -401,7 +358,7 @@ class _FmTopBar extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.menu),
-              tooltip: Tr.pick('設定・用語集・ガイド', 'Settings, glossary, guide'),
+              tooltip: Tr.pick('資料・設定・ヘルプ', 'Reference, settings, help'),
               onPressed: onMore,
             ),
             ClubEmblem(
@@ -415,7 +372,7 @@ class _FmTopBar extends StatelessWidget {
               // 日付を押すとカレンダーを開く(2026-11-22)。
               child: InkWell(
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const CalendarScreen(standalone: true))),
+                    builder: (_) => const CalendarHubScreen())),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,

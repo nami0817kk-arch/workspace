@@ -137,7 +137,9 @@ void main() {
           await tester.pump();
           tester.takeException();
           expect(
-            find.text(lang == AppLanguage.english ? 'Club calendar' : 'クラブの年間予定'),
+            // 引き出しの「クラブの年間予定」は「カレンダー」(月と1年の予定)に
+            // なった(2026-11-24)。
+            find.text(lang == AppLanguage.english ? 'Calendar' : 'カレンダー'),
             findsWidgets,
             reason: '$langLabel のはずが、その言語の見出しが描画されていない',
           );

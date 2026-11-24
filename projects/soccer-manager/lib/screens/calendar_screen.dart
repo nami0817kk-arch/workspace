@@ -237,7 +237,9 @@ class _MonthGrid extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                           onTap: () => onPick(d),
                           child: SizedBox(
-                            height: 44,
+                            // 押す所は48以上。文字を大きくしたら、その分だけ
+                            // 伸ばす(単独の画面で、下にはみ出していた)。
+                            height: MediaQuery.textScalerOf(context).scale(48),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 4, vertical: 2),

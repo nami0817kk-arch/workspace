@@ -17,6 +17,9 @@ import '../widgets/undoable.dart';
 import '../widgets/auto_columns.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
+import '../logic/todo_advisor.dart';
+import '../widgets/community_card.dart';
+import '../widgets/place_link.dart';
 import '../l10n/tr.dart';
 import '../models/staff_member.dart';
 import '../theme/semantic_colors.dart';
@@ -341,6 +344,19 @@ class ClubScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const SeasonTicketsCard(),
+              const SizedBox(height: 8),
+              // 地域の用件はここに寄せる(地域貢献は、以前は経営の
+              // 「備えと地域貢献」にあった)。
+              const CommunityCard(),
+              PlaceLink(
+                key: const ValueKey('club-to-community-works'),
+                icon: Icons.work_outline,
+                title: Tr.pick('チャリティー・学校訪問は「オーナーの仕事」へ',
+                    "Charity and school visits: open Owner's work"),
+                note: Tr.pick('地域・社会の手(1シーズンに1回ずつ)は、オーナー室にまとめてあります。',
+                    "Community moves (once a season each) are in the owner's office."),
+                place: TodoPlaces.ownerCommunityWorks,
+              ),
             ],
           ],
         ),

@@ -88,8 +88,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('通知バッジ', 'Notification badges'),
             description: Tr.pick(
-                '各タブのアイコンに付くバッジは、その画面で確認すべき新しい出来事(移籍オファー・契約満了間近・負傷の回復など)がある合図。バッジが消えるまで一度は該当画面を開いて確認するとよい。',
-                'A badge on a tab means something there needs your attention: a transfer offer, a contract running down, a player back from injury. Open the screen once and the badge clears.'),
+                '左のメニューとタブに付く印は、「やること」がそこにある合図。赤い数字は必ず決めること(届いたオファー・スポンサーの選択など)、青い点は今だけのおすすめ(今月の広報・開幕前の決めごとなど)。その場所を開けば、用件が見つかります。',
+                'A mark on the menu or a tab means a to-do item lives there. A red number is something you must decide (an offer, a sponsor to pick); a blue dot is a suggestion that will not wait (this month\'s PR move, a pre-season choice). Open that place and you will find it.'),
           ),
           GuideTopic(
             title: Tr.pick('スーパーカップ', 'Super Cup'),
@@ -145,8 +145,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('オーナー室', "Owner's office"),
             description: Tr.pick(
-                'オーナーの仕事(1シーズンに1回ずつ打てる手)、試合日のイベント、提携クラブ、カレンダー、ニュースや記録をまとめています。',
-                "Moves you can make once a season, matchday events, a partner club, the club calendar, news and records."),
+                'オーナーの仕事(1シーズンに1回ずつ打てる手・月に1回の広報)、試合日のイベント、友好提携クラブと、「オーナーと世界」(クラブの文化・他のオーナー・クラブの買収)をまとめています。ニュース・シーズン分析・記録・ランキングなどの見るだけの画面は、左上のメニュー(三本線)の「資料」にあります。カレンダーは上の帯の日付を押すと開きます。',
+                "Moves you can make once a season (and one PR move a month), matchday events, a friendship partner, plus Owner & world (club culture, rival owners, buying another club). View-only screens such as news, season analysis, records and rankings are under Reference in the top-left menu. Tap the date in the top bar to open the calendar."),
           ),
           GuideTopic(
             title: Tr.pick('事件と目標', 'Incidents and goals'),
@@ -272,7 +272,7 @@ List<GuideSection> get guideSections => [
       ),
       GuideSection(
         icon: Icons.emoji_people,
-        title: Tr.pick('ユース・スカウト画面', 'Youth and scouting screen'),
+        title: Tr.pick('ユース・新人発掘の画面', 'Youth and intake screen'),
         overview: Tr.pick(
             '将来性のある若手選手を獲得するための画面。スカウトによる個別発掘と、シーズンごとのユースインテークの両方を扱う。',
             'Where you bring young players in, both by scouting them individually and through the yearly academy intake.'),
@@ -404,8 +404,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('カレンダー', 'Calendar'),
             description: Tr.pick(
-                'リーグ戦・カップ戦の実際の日付を一覧できる。試合が詰まる週の見通しを立てるのに使う。',
-                'The actual dates of league and cup matches. Use it to see a congested run coming.'),
+                '上の帯の日付を押すと開く。リーグ戦・カップ戦の実際の日付を、月のマス目と1年の予定の2通りで一覧できる。試合が詰まる週の見通しを立てるのに使う。',
+                'Tap the date in the top bar to open it. It shows the actual dates of league and cup matches, as a month grid or a year list. Use it to see a congested run coming.'),
           ),
         ],
       ),
