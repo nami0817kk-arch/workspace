@@ -38,7 +38,7 @@ class Person {
   /// 顔の絵（faces.dart の FACES の id。1.0.0+21 から。古いセーブには無く、読み込んだときに割り当てる。15歳までの子どもは null）
   String? face;
 
-  /// 顔を決めたときの年代（0 〜34歳・1 35〜54歳・2 55歳〜）。これより上の年代になったら顔を選び直す
+  /// 顔を決めたときの年齢（1.0.0+22 までは年代 0〜2 を入れていた）。記録だけで、選び直すかは本人と絵の年の差で決める（faces.dart の faceStale）
   int? fb;
 
   Person({
@@ -126,7 +126,7 @@ class President {
   /// 顔の絵（1.0.0+21 から。古いセーブには無い）
   String? face;
 
-  /// 顔を決めたときの年代（[Person.fb] と同じ）
+  /// 顔を決めたときの年齢（[Person.fb] と同じ）
   int? fb;
   President({required this.name, required this.age, required this.traits, required this.ab, this.face, this.fb});
   Map<String, dynamic> toJson() => {'name': name, 'age': age, 'traits': traits, 'ab': ab, if (face != null) 'face': face, if (fb != null) 'fb': fb};
@@ -296,6 +296,7 @@ class CoBiz {
 
 /// 宿敵（会社ごとに持つ。試作では定数を共有していた）
 class Rival {
+  /// [pres] は初代の社長の名前（代替わりしても変わらない）。場面の文に出す名前は、今の社長の [Company.presName]（1.0.0+23 から）
   String k, pres, co, type;
   String? label;
   int tier;
@@ -437,7 +438,7 @@ class Company {
   /// 顔の絵と、それを割り当てたときの社長の名前（代替わりで名前が変わったら割り当て直す）
   String? pf, pfn;
 
-  /// 顔を決めたときの社長の年代（[Person.fb] と同じ）
+  /// 顔を決めたときの社長の年齢（[Person.fb] と同じ）
   int? pfb;
 
   Company({

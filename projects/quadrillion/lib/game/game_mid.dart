@@ -550,8 +550,8 @@ extension GameMid on Game {
   /// 場面の前置き（恨みと恩で変わる）
   String? _mood(Company c) {
     final r = c.rival!;
-    if (r.grudge - r.favor >= 2) return M('これまでの恨みを、{0}は忘れていません。', [Nm(r.pres)]);
-    if (r.favor - r.grudge >= 2) return M('これまでの恩を、{0}は覚えています。', [Nm(r.pres)]);
+    if (r.grudge - r.favor >= 2) return M('これまでの恨みを、{0}は忘れていません。', [Nm(c.presName)]);
+    if (r.favor - r.grudge >= 2) return M('これまでの恩を、{0}は覚えています。', [Nm(c.presName)]);
     return null;
   }
 
@@ -574,7 +574,7 @@ extension GameMid on Game {
         c.biz.add(x);
         tieRec(c, 'h', M('「{0}」に乗り込まれた', [I(b.ind)]));
         final cost = invBase(b) * .25;
-        return _rs(c, k, M('{0}（{1}）が、あなたの「{2}」と同じ商売を始めました。', [Nm(r.pres), Nm(c.name), I(b.ind)]), [
+        return _rs(c, k, M('{0}（{1}）が、あなたの「{2}」と同じ商売を始めました。', [Nm(c.presName), Nm(c.name), I(b.ind)]), [
           Choice(M('広告で迎え撃つ'), M('{0}で6か月の広告を打つ。相手の出足をくじくが、関係は悪くなる', [Y(cost)]), () {
             if (cash < cost) return M('お金が足りず、迎え撃てませんでした');
             cash -= cost;
@@ -592,7 +592,7 @@ extension GameMid on Game {
             c.rel += 12;
             tieRec(c, 'f', M('「{0}」で棲み分けた', [I(b.ind)]));
             calcAll();
-            return M('{0}と話をつけ、「{1}」では棲み分けることにしました', [Nm(r.pres), I(b.ind)]);
+            return M('{0}と話をつけ、「{1}」では棲み分けることにしました', [Nm(c.presName), I(b.ind)]);
           }),
           Choice(M('静観する'), M('お金はかからない。相手はそのまま客を取りに来る'), () => M('静観することにしました')),
         ]);
@@ -603,7 +603,7 @@ extension GameMid on Game {
         tieRec(c, 'h', M('「{0}」の現場の人を引き抜かれた', [I(b.ind)]));
         calcAll();
         final cost = hireCost(b, crewUnits.first);
-        return _rs(c, k, M('{0}（{1}）に、「{2}」の現場の人をまとめて引き抜かれました。現場の力が8%落ちています。', [Nm(r.pres), Nm(c.name), I(b.ind)]), [
+        return _rs(c, k, M('{0}（{1}）に、「{2}」の現場の人をまとめて引き抜かれました。現場の力が8%落ちています。', [Nm(c.presName), Nm(c.name), I(b.ind)]), [
           Choice(M('引き抜き返す'), M('{0}で相手の人を引き抜く。現場は元に戻り、相手は弱るが、関係は悪くなる', [Y(cost)]), () {
             if (cash < cost) return M('お金が足りず、引き抜き返せませんでした');
             cash -= cost;
@@ -642,7 +642,7 @@ extension GameMid on Game {
           t.alive = false;
           calcAll();
         }
-        return _rs(c, k, M('売りに出た{0}を、{1}（{2}）と取り合うことになりました。', [Nm(t.name), Nm(r.pres), Nm(c.name)]), [
+        return _rs(c, k, M('売りに出た{0}を、{1}（{2}）と取り合うことになりました。', [Nm(t.name), Nm(c.presName), Nm(c.name)]), [
           Choice(M('競り勝つ'), M('{0}で株の51%を買い、子会社にする。関係は悪くなる', [Y(cost)]), () {
             if (cash < cost || !t.alive || t.parent == 'player') return M('お金が足りず、競り負けました');
             cash -= cost;
@@ -657,7 +657,7 @@ extension GameMid on Game {
             if (t.alive && t.parent != 'player') absorb();
             c.rel += 15;
             tieRec(c, 'f', M('{0}を譲った', [Nm(t.name)]));
-            return M('{0}を{1}に譲りました', [Nm(t.name), Nm(r.pres)]);
+            return M('{0}を{1}に譲りました', [Nm(t.name), Nm(c.presName)]);
           }),
           Choice(M('値をつり上げてから降りる'), M('相手に高値で買わせて、手元の資金を削る。関係は悪くなる'), () {
             if (t.alive && t.parent != 'player') absorb();
@@ -679,7 +679,7 @@ extension GameMid on Game {
           calcAll();
           return M('{0}と一緒に、「{1}」の新しい商品を作り始めました', [Nm(c.name), I(b.ind)]);
         }
-        return _rs(c, k, M('{0}（{1}）が、「{2}」の新しい商品を一緒に作ろうと言ってきました。', [Nm(r.pres), Nm(c.name), I(b.ind)]), [
+        return _rs(c, k, M('{0}（{1}）が、「{2}」の新しい商品を一緒に作ろうと言ってきました。', [Nm(c.presName), Nm(c.name), I(b.ind)]), [
           Choice(M('組む'), M('{0}を出す。相手も同じだけ出すので、1.5倍の大きさの商品になる。相手も少し強くなる', [Y(cost)]), () {
             if (cash < cost) return M('お金が足りず、話は流れました');
             c.rel += 15;
@@ -694,7 +694,7 @@ extension GameMid on Game {
             }
             c.rel -= 12;
             tieRec(c, 'g', M('手を組む話で条件をつり上げた'));
-            return M('{0}は怒って席を立ちました', [Nm(r.pres)]);
+            return M('{0}は怒って席を立ちました', [Nm(c.presName)]);
           }),
           Choice(M('断る'), M('お金はかからない。相手は機嫌を損ねる'), () {
             c.rel -= 8;
@@ -705,7 +705,7 @@ extension GameMid on Game {
       case 'expose':
         tieRec(c, 'h', M('不祥事を暴かれた'));
         final cost = math.max(rev * .1, 1e6 * nom());
-        return _rs(c, k, M('{0}（{1}）が、あなたの会社の古い不始末を記者に流しました。', [Nm(r.pres), Nm(c.name)]), [
+        return _rs(c, k, M('{0}（{1}）が、あなたの会社の古い不始末を記者に流しました。', [Nm(c.presName), Nm(c.name)]), [
           Choice(M('謝罪会見を開く'), M('{0}をかけて謝る。株価に3か月響く', [Y(cost)]), () {
             if (cash < cost) {
               scandal = math.max(scandal, 8);
@@ -738,7 +738,7 @@ extension GameMid on Game {
         final mine = <String>{for (final b in biz) b.ind};
         final x = c.biz.length > 1 ? (c.biz.where((y) => mine.contains(y.ind)).toList()..ssort((a, b) => a.power.compareTo(b.power))).firstOrNull : null;
         final cheap = x == null ? 0.0 : x.power * .5;
-        return _rs(c, k, M('{0}（{1}）の資金繰りが苦しくなり、あなたに助けを求めてきました。', [Nm(r.pres), Nm(c.name)]), [
+        return _rs(c, k, M('{0}（{1}）の資金繰りが苦しくなり、あなたに助けを求めてきました。', [Nm(c.presName), Nm(c.name)]), [
           Choice(M('お金を貸す'), M('{0}を貸す。見返りに相手の株を5%受け取り、大きな恩を売る', [Y(cost)]), () {
             if (cash < cost) return M('お金が足りず、貸せませんでした');
             cash -= cost;
@@ -747,7 +747,7 @@ extension GameMid on Game {
             c.rel += 25;
             tieRec(c, 'f', M('苦しいときにお金を貸した'));
             tieRec(c, 'f', M('株を5%預かった'));
-            return M('{0}にお金を貸しました。{1}は深く頭を下げました', [Nm(c.name), Nm(r.pres)]);
+            return M('{0}にお金を貸しました。{1}は深く頭を下げました', [Nm(c.name), Nm(c.presName)]);
           }),
           if (x != null)
             Choice(M('弱みにつけこんで事業を買い叩く'), M('{0}で相手の「{1}」を安く買い取る。深い恨みを買う', [Y(cheap), I(x.ind)]), () {

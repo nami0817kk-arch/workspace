@@ -66,7 +66,7 @@ extension GameTurn on Game {
         }
         if (gr != null && rnd() < .7) {
           gr.biz.add(CoBiz(ind: ind.id, power: mk0 * .08));
-          N(M('{0}（{1}）が「{2}」に乗り込みました', [Nm(gr.rival!.pres), Nm(gr.name), I(ind.id)]), 'bad');
+          N(M('{0}（{1}）が「{2}」に乗り込みました', [Nm(gr.presName), Nm(gr.name), I(ind.id)]), 'bad');
         }
       } else if (mk0 > 0 && old > 0) {
         // 倍率だけ控えて、あとで会社を1回だけ回してかける（業種ごとに全社を回すと、会社が900社あると重い）。
@@ -115,7 +115,7 @@ extension GameTurn on Game {
         for (final b in c.biz) {
           b.power *= .45;
         }
-        N(M('{0}の{1}で大きな失敗。事業の力が半分に落ちました', [Nm(c.rival!.pres), Nm(c.name)]), 'good');
+        N(M('{0}の{1}で大きな失敗。事業の力が半分に落ちました', [Nm(c.presName), Nm(c.name)]), 'good');
       }
     }
     // 時々、新しい会社が生まれ、弱い会社が消える
@@ -597,7 +597,7 @@ extension GameTurn on Game {
         my.war = 9;
         c.rel -= 5;
         tieRec(c, 'h', M('「{0}」で値下げ合戦を仕掛けられた', [I(b.ind)]));
-        N(M('{0}（{1}）が「{2}」で値下げ合戦を仕掛けてきました。9か月のあいだ利益が削られます', [Nm(r.pres), Nm(c.name), I(b.ind)]), 'bad');
+        N(M('{0}（{1}）が「{2}」で値下げ合戦を仕掛けてきました。9か月のあいだ利益が削られます', [Nm(c.presName), Nm(c.name), I(b.ind)]), 'bad');
       }
       // 同期は真似して追ってくる
       if (r.type == 'peer' && rnd() < .04) {
@@ -605,7 +605,7 @@ extension GameTurn on Game {
         if (cand.isNotEmpty) {
           final b = pick(cand);
           c.biz.add(CoBiz(ind: b.ind, power: b.power * .6));
-          N(M('{0}が、あなたの後を追って「{1}」に参入しました', [Nm(r.pres), I(b.ind)]), 'bad');
+          N(M('{0}が、あなたの後を追って「{1}」に参入しました', [Nm(c.presName), I(b.ind)]), 'bad');
         }
       }
       // 引き抜き
@@ -655,7 +655,7 @@ extension GameTurn on Game {
             th >= 33.4
                 ? '{0}（{1}・{2}）が、あなたの会社の株を{3}まで買い集めました。33.4%を超えたので、合併などの大事な決定を止められます。50%を超えられると、社長の座を追われます。'
                 : '{0}（{1}・{2}）が、あなたの会社の株を{3}まで買い集めました。50%を超えられると、社長の座を追われます。',
-            [Nm(r.pres), Nm(c.name), D(RTYPE.ja[r.label ?? r.type] ?? ''), pct(sh.riv[c.id] ?? 0)]),
+            [Nm(c.presName), Nm(c.name), D(RTYPE.ja[r.label ?? r.type] ?? ''), pct(sh.riv[c.id] ?? 0)]),
         choices: [
           Choice(M('自社株買いで市場の株を減らす'), M('市場の株を{0}買い戻す。費用は時価総額の約{1}%。相手の割合も少し上がる', [pct(x), jsNum(jsRound(x * 1.15))]),
               () => doBuyback(math.min(sh.float, 8))),
@@ -672,7 +672,7 @@ extension GameTurn on Game {
           who: c,
           face: c.rival!.col,
           title: M('引き抜きの誘い'),
-          text: M('{0}が、あなたの部下の{1}を高い給料で誘っています。{1}は迷っているようです。', [Nm(c.rival!.pres), Nm(p.name)]),
+          text: M('{0}が、あなたの部下の{1}を高い給料で誘っています。{1}は迷っているようです。', [Nm(c.presName), Nm(p.name)]),
           choices: [
             Choice(M('給料を1.5倍にして引き留める'), M('毎月の給料が{0}増える', [Y(p.salary * .5)]), () {
               p.salary *= 1.5;
@@ -695,7 +695,7 @@ extension GameTurn on Game {
           who: c,
           face: c.rival!.col,
           title: M('提携の申し出'),
-          text: M('{0}（{1}）から提携の申し出です。組めば、互いに株を5%ずつ持ち合います。', [Nm(c.rival!.pres), Nm(c.name)]),
+          text: M('{0}（{1}）から提携の申し出です。組めば、互いに株を5%ずつ持ち合います。', [Nm(c.presName), Nm(c.name)]),
           choices: [
             Choice(M('組む'), M('相手の株5%を{0}で買う。相手も5%持つが、乗っ取りには使わない', [Y(c.cap * .05)]), () {
               if (cash < c.cap * .05) return M('お金が足りず、提携は流れました');
@@ -913,7 +913,7 @@ extension GameTurn on Game {
           who: buyer,
           face: buyer.rival!.col,
           title: M('事業を売ってほしい'),
-          text: M('{0}が、あなたの「{1}」を相場の1.5倍、{2}で買いたいと言っています。', [Nm(buyer.rival!.pres), I(b.ind), Y(price)]),
+          text: M('{0}が、あなたの「{1}」を相場の1.5倍、{2}で買いたいと言っています。', [Nm(buyer.presName), I(b.ind), Y(price)]),
           choices: [
             Choice(M('売る'), M('{0}が入る。その事業は相手のものになる', [Y(price)]), () {
               cash += price;
@@ -1470,7 +1470,7 @@ extension GameTurn on Game {
             who: c,
             face: c.rival!.col,
             title: M('宿敵からの出資'),
-            text: M('{0}が「資金に困っているそうだな。{1}出してやろう。そのかわり株を20%もらう」と言っています。', [Nm(c.rival!.pres), Y(money)]),
+            text: M('{0}が「資金に困っているそうだな。{1}出してやろう。そのかわり株を20%もらう」と言っています。', [Nm(c.presName), Y(money)]),
             choices: [
               Choice(M('受ける'), M('お金は助かるが、宿敵があなたの株を20%持つ'), () {
                 cash += money;

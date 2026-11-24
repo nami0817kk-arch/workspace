@@ -107,14 +107,32 @@ void main() {
       // 見た目が東アジアの we_4・we_5 は東アジア
       expect(faceById['we_4']!.region, 'ea');
       expect(faceById['we_5']!.region, 'ea');
-      // 地域・性別ごとの枚数（1.0.0+22）
+      // 1.0.0+23 で見た目に合わせて直した絵（ea_8 は30代の東南アジアの男・sa_4/sa_5/sa_7 は東アジア・sa_2/ea2_8 は欧米）
+      expect(faceById['ea_8']!.region, 'sea');
+      expect(faceById['ea_8']!.age, lessThan(45));
+      expect([for (final id in ['sa_4', 'sa_5', 'sa_7']) faceById[id]!.region], ['ea', 'ea', 'ea']);
+      expect([for (final id in ['sa_2', 'ea2_8']) faceById[id]!.region], ['we', 'we']);
+      for (final id in ['we_8', 'sa_8', 'mx_8']) {
+        expect(faceById[id]!.age, lessThanOrEqualTo(45), reason: '$id は白髪の無い40歳前後');
+      }
+      // ほぼ同じ絵の組は、見た目では1つ（同じ地域・性別の絵どうし、または地域を直した絵）
+      expect(faceLook('we_4'), 'ea_4');
+      expect(faceLook('sa_5'), 'ea_5');
+      expect(faceLook('ea2_8'), 'we2_8');
+      expect(faceLook('ea_0'), 'ea_0');
+      for (final f in FACES) {
+        final l = faceById[faceLook(f.id)]!;
+        expect(l.sex, f.sex, reason: f.id);
+        expect(faceLook(l.id), l.id, reason: '代表は自分自身');
+      }
+      // 地域・性別ごとの枚数（1.0.0+23）
       int n(String r, String sx) => FACES.where((f) => f.region == r && f.sex == sx).length;
-      expect([for (final r in ['ea', 'we', 'sa', 'af', 'me', 'la', 'sea']) '${n(r, 'm')}/${n(r, 'f')}'], ['19/19', '19/15', '10/8', '15/11', '9/7', '8/7', '7/6']);
-      // どの地域・性別にも、若い・中年・老年の絵が1枚はある
+      expect([for (final r in ['ea', 'we', 'sa', 'af', 'me', 'la', 'sea']) '${n(r, 'm')}/${n(r, 'f')}'], ['17/22', '21/15', '9/5', '15/11', '9/7', '8/7', '8/6']);
+      // どの地域・性別にも、若い（32歳まで）・中年（38〜52歳）・老年（60歳から）の絵が1枚はある
       for (final r in ['ea', 'we', 'sa', 'af', 'la', 'me', 'sea']) {
         for (final sx in ['m', 'f']) {
-          for (var b = 0; b < 3; b++) {
-            expect(FACES.any((f) => f.region == r && f.sex == sx && f.band == b), isTrue, reason: '$r $sx $b');
+          for (final (lo, hi) in [(0, 32), (38, 52), (60, 99)]) {
+            expect(FACES.any((f) => f.region == r && f.sex == sx && f.age >= lo && f.age <= hi), isTrue, reason: '$r $sx $lo-$hi');
           }
         }
       }
@@ -226,14 +244,21 @@ void main() {
         got.add(f);
       }
       expect(got.toSet().length, 4);
-      // 東南アジアの人は東南アジアの絵を先に使い、年の合う絵が尽きたら東アジアから借りる
+      // 東南アジアと東アジアは互いに借りない（1.0.0+23）。空きが無ければ自分の地域の中で重ねる
       final sea = {for (var i = 0; i < 40; i++) pickFace(name: 'ホセ・サントス$i', age: 30, region: 'sea', sex: 'm')};
       expect(sea.every((f) => faceById[f]!.region == 'sea'), isTrue, reason: '$sea');
       final allSea = {for (final f in FACES.where((f) => f.region == 'sea')) f.id: 1};
-      expect(faceById[pickFace(name: 'ホセ・サントス', age: 30, region: 'sea', sex: 'm', used: allSea)]!.region, 'ea');
-      // 東アジアの人に東南アジアの絵を借りるのは、東アジアの空きが本当に無いときだけ
-      final allEa = {for (final f in FACES.where((f) => f.region == 'ea')) f.id: 1};
-      expect(faceById[pickFace(name: '佐藤 健一', age: 28, region: 'ea', sex: 'm', used: allEa)]!.region, 'sea');
+      expect(faceById[pickFace(name: 'ホセ・サントス', age: 30, region: 'sea', sex: 'm', used: allSea)]!.region, 'sea');
+      final allEa = {for (final f in FACES.where((f) => f.region == 'ea')) faceLook(f.id): 1};
+      for (final sx in ['m', 'f']) {
+        for (var age = 16; age <= 90; age += 3) {
+          final f = faceById[pickFace(name: '佐藤 健一$age', age: age, region: 'ea', sex: sx, used: allEa)]!;
+          expect(f.region, 'ea', reason: '$sx $age ${f.id}');
+          expect(faceFits(f.id, 'ea'), isTrue);
+        }
+      }
+      expect(faceFits('sea3_1', 'ea'), isFalse);
+      expect(faceFits('ea_1', 'sea'), isFalse);
       for (var i = 0; i < 40; i++) {
         final u = <String, int>{};
         for (var k = 0; k < 19; k++) {
@@ -247,8 +272,8 @@ void main() {
       expect(faceById[pickFace(name: 'カルロス・ガルシア', age: 30, region: 'la', sex: 'm', used: allLa)]!.region, 'we');
       final allMe = {for (final f in FACES.where((f) => f.region == 'me')) f.id: 1};
       expect(faceById[pickFace(name: 'ムハンマド・アル＝ラシード', age: 30, region: 'me', sex: 'm', used: allMe)]!.region, 'sa');
-      // 同じ地域・性別の絵の数までは、年齢が若いほうから老年まで散っていれば、どの順に来てもほぼ重ならない
-      for (final (region, sex, n) in [('ea', 'm', 10), ('ea', 'f', 8), ('we', 'm', 10), ('sa', 'f', 8), ('af', 'm', 10)]) {
+      // 同じ地域・性別の絵の数までは、年齢が若いほうから老年まで散っていれば、どの順に来てもほぼ重ならない。年の差は必ず12歳まで
+      for (final (region, sex, n) in [('ea', 'm', 10), ('ea', 'f', 8), ('we', 'm', 10), ('sa', 'f', 5), ('af', 'm', 10)]) {
         final spread = List.generate(n, (i) => 26 + i * 40 ~/ (n - 1));
         for (final ages in [spread, spread.reversed.toList(), List.generate(n, (i) => 58 + i % 3).take(sex == 'm' ? 4 : 2).toList()]) {
           final n = ages.length;
@@ -256,54 +281,70 @@ void main() {
           for (var i = 0; i < n; i++) {
             final f = pickFace(name: '人$i', age: ages[i], region: region, sex: sex, used: u);
             expect(faceById[f]!.sex, sex);
-            u[f] = (u[f] ?? 0) + 1;
+            expect((faceById[f]!.age - ages[i]).abs(), lessThanOrEqualTo(faceGapMax), reason: '$region $sex ${ages[i]} $f');
+            u[faceLook(f)] = (u[faceLook(f)] ?? 0) + 1;
           }
-          // 来た順に近い年の絵から埋めるので、終わりの1〜2人は、残った絵が年の離れすぎたもので重なることがある
           expect(u.length, greaterThanOrEqualTo(n - 2), reason: '$region $sex $ages $u');
           expect(u.values.every((c) => c <= 2), isTrue, reason: '$region $sex $ages $u');
         }
       }
-      // 年の合う絵が尽きたら、年上20歳までの絵を借りる（同じ顔を重ねるより先）。それより離れた絵は使わず、重ねる
-      // （東南アジアの若い絵が空いていても、東アジアの年上の絵が先）
-      final youngEa = {for (final f in FACES.where((f) => f.region == 'ea' && f.sex == 'm' && f.age <= 43)) f.id: 1};
+      // 年の合う絵が尽きたら、年の離れた絵に逃げずに、年の合う絵を重ねる（見た目の食い違いを重なりより重く見る）
+      final youngEa = {for (final f in FACES.where((f) => f.region == 'ea' && f.sex == 'm' && f.age <= 43)) faceLook(f.id): 1};
       final lent = faceById[pickFace(name: '佐藤 健一', age: 28, region: 'ea', sex: 'm', used: youngEa)]!;
       expect(lent.region, 'ea');
-      expect(lent.age, inInclusiveRange(45, 48));
-      final midEa = {for (final f in FACES.where((f) => (f.region == 'ea' || f.region == 'sea') && f.sex == 'm' && f.age <= 50)) f.id: 1};
-      expect(faceById[pickFace(name: '佐藤 健一', age: 28, region: 'ea', sex: 'm', used: midEa)]!.age, lessThanOrEqualTo(43), reason: '55歳より上の絵は使わない');
+      expect(lent.age, inInclusiveRange(16, 40));
+      // 重ねるのは、同じ画面に並ぶ人（重い）より、ほかの人（軽い）の顔を先に
+      final weighed = {for (final f in FACES.where((f) => f.region == 'ea' && f.sex == 'm')) faceLook(f.id): 2}..['ea2_0'] = 1;
+      expect(pickFace(name: '佐藤 健一', age: 28, region: 'ea', sex: 'm', used: weighed), 'ea2_0');
       // 全部使われていたら、使われている数の少ないものを重ねる（年の離れた絵には逃げない）
       final allWe = {for (final f in FACES.where((f) => f.region == 'we')) f.id: 2};
       allWe['we_0'] = 1;
       expect(pickFace(name: 'ジェームズ・スミス', age: 26, region: 'we', sex: 'm', used: allWe), 'we_0');
     });
 
-    test('年をとると年代の絵に替わる。替わるのは35歳と55歳の2回まで', () {
-      for (final n in ['佐藤 健一', '鈴木 陽子', 'ジェームズ・スミス', 'プリヤ・パテル', 'チディ・アデイェミ', 'ファーティマ・アル＝ハルビー', 'ルシア・ロペス', 'ホセ・サントス']) {
-        final region = faceRegion(n), sex = faceSex(n);
-        String? cur;
-        int? band;
-        final changes = <int>[];
-        for (var age = 22; age <= 80; age++) {
-          if (faceStale(cur, band, age)) {
-            final next = pickFace(name: n, age: age, region: region, sex: sex, prev: cur);
-            if (cur != null && next != cur) changes.add(age);
-            cur = next;
-            band = ageBand(age);
+    test('本人と絵の年の差が12歳を超えたら、その時点で年の近い絵に替わる。替えたら少なくとも3年は保つ', () {
+      for (final n in ['佐藤 健一', '鈴木 陽子', 'ジェームズ・スミス', 'プリヤ・パテル', 'アルジュン・シャルマ', 'チディ・アデイェミ', 'アマカ・オコンクォ', 'ファーティマ・アル＝ハルビー',
+        'ムハンマド・アル＝ラシード', 'ルシア・ロペス', 'カルロス・ガルシア', 'ホセ・サントス', 'グエン ミン']) {
+        for (final home in ['jp', 'us', 'in', 'ng', 'sa', 'mx', 'ph', 'vn']) {
+          final region = faceRegion(n, home: home), sex = faceSex(n);
+          String? cur;
+          var since = 0;
+          final changes = <int>[];
+          for (var age = 16; age <= 95; age++) {
+            if (faceStale(cur, age, region: region, sex: sex)) {
+              final next = pickFace(name: n, age: age, region: region, sex: sex, prev: cur);
+              if (cur != null && next != cur) {
+                // 替えたら少なくとも3年は保つ（とても年をとって、使える絵が1枚しか無い年ごろは別）
+                if (age - since < faceHoldYears) expect(faceGapLimit(region, sex, age), greaterThan(faceGapMax), reason: '$n $home $age $changes');
+                changes.add(age);
+              }
+              cur = next;
+              since = age;
+            }
+            final f = faceById[cur]!;
+            // 年の差は12歳まで（その地域・性別に12歳より近い絵が1枚も無い年ごろだけ、いちばん近い絵まで）
+            expect((f.age - age).abs(), lessThanOrEqualTo(faceGapLimit(region, sex, age)), reason: '$n $home $age ${f.id}');
+            expect(f.sex, sex);
+            expect(faceFits(f.id, region), isTrue);
           }
-          // ほかに誰も使っていなければ、年代の合う絵になる
-          expect(faceById[cur]!.band, ageBand(age), reason: '$n $age');
+          // 一生（16〜95歳）で替わるのは数回
+          expect(changes.length, inInclusiveRange(2, 8), reason: '$n $home $changes');
         }
-        expect(changes, [35, 55], reason: n);
       }
-      // 決めたときの年代より上の年代になったときだけ選び直す（年の離れた絵を借りた人も、替わり続けない）
-      expect(faceStale('ea_1', 0, 34), isFalse);
-      expect(faceStale('ea_1', 0, 35), isTrue);
-      expect(faceStale('ea_1', 1, 54), isFalse);
-      expect(faceStale('ea_1', 1, 55), isTrue);
-      expect(faceStale('ea_0', 2, 90), isFalse);
-      expect(faceStale(null, null, 30), isTrue);
-      expect(faceStale('ea_0', null, 30), isTrue);
-      expect(faceStale('zz_9', 0, 30), isTrue);
+      // 選び直すのは、年の差が12歳を超えたとき・地域か性別が合わないとき・絵が無いとき
+      expect(faceStale('ea_1', 57, region: 'ea', sex: 'm'), isFalse, reason: '45歳の絵と12歳差');
+      expect(faceStale('ea_1', 58, region: 'ea', sex: 'm'), isTrue);
+      expect(faceStale('ea_1', 33, region: 'ea', sex: 'm'), isFalse);
+      expect(faceStale('ea_1', 32, region: 'ea', sex: 'm'), isTrue);
+      expect(faceStale('ea_1', 45, region: 'ea', sex: 'f'), isTrue, reason: '性別が違う');
+      expect(faceStale('ea_8', 38, region: 'ea', sex: 'm'), isTrue, reason: 'ea_8 は東南アジアの絵');
+      expect(faceStale('sea3_1', 45, region: 'ea', sex: 'm'), isTrue, reason: '東アジアの人に東南アジアの絵');
+      expect(faceStale(null, 30, region: 'ea', sex: 'm'), isTrue);
+      expect(faceStale('zz_9', 30, region: 'ea', sex: 'm'), isTrue);
+      // とても年をとった人で、12歳より近い絵が無いときは、いちばん近い絵まで許す（替わり続けない）
+      expect(faceGapLimit('sa', 'f', 90), 22);
+      expect(faceStale('sa2_5', 90, region: 'sa', sex: 'f'), isFalse);
+      expect(faceGapLimit('ea', 'm', 40), faceGapMax);
       // 同じ人が年をとった絵（0→1→2・3→4→5）が空いていれば、それに替わる
       expect(faceNext('ea_0'), 'ea_1');
       expect(faceNext('ea_1'), 'ea_2');
@@ -312,6 +353,7 @@ void main() {
       expect(faceNext('ea_6'), isNull);
       // 地域を直した絵・年齢の違う別の人の並びは、続きにしない
       expect(faceNext('we_3'), isNull);
+      expect(faceNext('sa_1'), isNull, reason: 'sa_2 は欧米に直した');
       expect(faceNext('we_4'), 'we_5', reason: 'どちらも東アジアの同じ人');
       expect(faceNext('eam_0'), isNull);
       expect(faceNext('wef_3'), isNull);
@@ -342,8 +384,9 @@ void main() {
       final after = {s.pres.name: s.pres.face, for (final c in s.cos.where((c) => c.rival != null && before.containsKey(c.presName))) c.presName: c.pf};
       for (final e in after.entries) {
         // 1年目のうちは、年代をまたぐ人はいない（社長22歳。宿敵は月ごとに年をとるので、またいだ人だけは替わってよい）
+        // 1年目のうちは、社長（22歳）の顔は替わらない。宿敵は年の差が12歳を超えた人だけ替わってよい
         final c = s.cos.where((x) => x.presName == e.key).firstOrNull;
-        if (c != null && ageBand(c.presAge) != ageBand(c.presAge - 1)) continue;
+        if (c != null && (faceById[before[e.key]]!.age - c.presAge).abs() > faceGapMax) continue;
         expect(e.value, before[e.key], reason: e.key);
       }
     });
@@ -409,6 +452,42 @@ void main() {
       expect(faceById.containsKey(fixed.staff.first.face), isTrue);
     });
 
+    test('1.0.0+22 のセーブ：年の差12歳超・東南アジアの絵の東アジアの人だけ、読み込んだときに選び直す。合っている顔はそのまま', () {
+      final g = _grownIn('jp');
+      final j = g.toJson();
+      final staff = (j['staff'] as List).cast<Map<String, dynamic>>();
+      final eaM = staff.where((p) => faceRegion(p['name'] as String, home: 'jp') == 'ea' && faceSex(p['name'] as String) == 'm').toList();
+      expect(eaM.length, greaterThanOrEqualTo(3));
+      // 1.0.0+22 で実際にあった形: 68歳の人に ea_8（30代の東南アジアの絵）・47歳の人に sea3_1・年代の古い印 fb=2
+      eaM[0]
+        ..['age'] = 68
+        ..['face'] = 'ea_8'
+        ..['fb'] = 2;
+      eaM[1]
+        ..['face'] = 'sea3_1'
+        ..['fb'] = 1;
+      eaM[2]['face'] = 'ea2_6';
+      eaM[2]['age'] = 60;
+      final keep = {
+        for (final p in staff)
+          if (!identical(p, eaM[0]) && !identical(p, eaM[1]) && !identical(p, eaM[2])) p['name'] as String: p['face'] as String?
+      };
+      final a = Game.fromJson(jsonDecode(jsonEncode(j)) as Map<String, dynamic>, rng: ParkMiller(7));
+      Person by(Map m) => a.staff.firstWhere((p) => p.name == m['name'] && p.age == m['age']);
+      for (final m in eaM.take(3)) {
+        final p = by(m);
+        final f = faceById[p.face]!;
+        expect(f.region, 'ea', reason: '${p.name} ${p.face}');
+        expect((f.age - p.age).abs(), lessThanOrEqualTo(faceGapMax), reason: '${p.name} ${p.age} ${p.face}');
+        expect(p.fb, p.age, reason: '選び直した年齢を記録する');
+      }
+      // 68歳の人には60代〜70代の東アジアの男の絵
+      expect(faceById[by(eaM[0]).face]!.age, inInclusiveRange(56, 80));
+      // 合っていた顔は、重なりを解くとき以外はそのまま（9割以上）
+      final same = a.staff.where((p) => keep[p.name] == p.face).length;
+      expect(same, greaterThanOrEqualTo((keep.length * .9).floor()), reason: '$same / ${keep.length}');
+    });
+
     test('1.0.0+21 のセーブで欧米の人が we_4・we_5（東アジアに直した絵）を持っていたら、読み込んだときに選び直す', () {
       final g = _grownIn('us');
       final w = g.staff.firstWhere((p) => faceRegion(p.name, home: g.home) == 'we' && faceSex(p.name) == 'f');
@@ -429,27 +508,40 @@ void main() {
       final a = Game.fromJson(jsonDecode(jsonEncode(j)) as Map<String, dynamic>, rng: ParkMiller(7));
       final w2 = a.staff.firstWhere((p) => p.name == w.name);
       expect(faceById[w2.face]!.region, 'we', reason: w2.face);
-      // 東アジアの人が持っていた we_5 はそのまま
-      if (e != null) expect(a.staff.firstWhere((p) => p.name == e.name).face, 'we_5');
+      // 東アジアの人が持っていた we_5 は、年が合えばそのまま（合わなければ東アジアの別の絵）
+      if (e != null) {
+        final e2 = a.staff.firstWhere((p) => p.name == e.name);
+        if ((65 - e2.age).abs() <= faceGapMax) expect(e2.face, 'we_5');
+        expect(faceById[e2.face]!.region, 'ea');
+      }
       final rv2 = a.cos.firstWhere((c) => c.id == rv.id);
       expect(faceById[a.coFace(rv2)]!.region, 'we');
     });
 
-    test('育った会社：どの国から始めても、部下の顔は地域・性別・年代が合い、ほとんど重ならない', () {
+    test('育った会社：どの国から始めても、社長と部下の顔は地域・性別が合い、年の差は12歳まで。重なりは絵の足りない分だけ', () {
       for (final home in ['jp', 'us', 'in', 'ng']) {
         final g = _grownIn(home);
         final staff = g.staff;
         expect(staff.length, greaterThanOrEqualTo(6), reason: home);
         final detail = <String>[];
         var far = 0;
-        for (final p in staff) {
-          final f = faceById[p.face]!;
-          expect(f.sex, faceSex(p.name), reason: '$home ${p.name}');
-          expect(faceFits(f.id, faceRegion(p.name, home: g.home)), isTrue, reason: '$home ${p.name} ${f.id}');
-          if ((f.age - p.age).abs() > 25 && !(f.band == 2 && ageBand(p.age) == 2)) far++;
-          detail.add('${p.age}${faceSex(p.name)}→${f.id}(${f.age})');
+        for (final (name, age, face) in [(g.pres.name, g.pres.age, g.pres.face), for (final p in staff) (p.name, p.age, p.face)]) {
+          final f = faceById[face]!;
+          final reg = faceRegion(name, home: g.home);
+          expect(f.sex, faceSex(name), reason: '$home $name');
+          expect(faceFits(f.id, reg), isTrue, reason: '$home $name ${f.id}');
+          // 東アジアの人に東南アジアの絵は付かない（1.0.0+23）
+          if (reg == 'ea') expect(f.region, 'ea', reason: '$home $name ${f.id}');
+          // 年の差12歳超が残らない
+          expect((f.age - age).abs(), lessThanOrEqualTo(faceGapMax), reason: '$home $name $age ${f.id}');
+          if ((f.age - age).abs() > 12) far++;
+          detail.add('$age${faceSex(name)}→${f.id}(${f.age})');
         }
-        final pairs = _pairs([g.pres.face, ...staff.map((p) => p.face)]);
+        // 古いセーブのような食い違いは、読み込みのときにも残らない（読み直しても同じ顔）
+        final again = Game.fromJson(jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, rng: ParkMiller(3));
+        expect([for (final p in again.staff) p.face], [for (final p in staff) p.face], reason: home);
+        // 重なりは見た目で数える（ほぼ同じ絵の組は1つ）
+        final pairs = _pairs([g.pres.face, ...staff.map((p) => p.face)].map((f) => f == null ? null : faceLook(f)));
         // 重なってよいのは、その地域・性別の絵が足りない分だけ
         final need = <String, int>{};
         for (final p in staff) {
@@ -459,20 +551,22 @@ void main() {
         final regions = {for (final p in staff) faceRegion(p.name, home: g.home)};
         final rivals = g.cos.where((c) => c.rival != null && c.alive).toList();
         // ignore: avoid_print
-        print('顔の重なり $home: 社長＋部下${staff.length}人で $pairs 組（地域 $regions・地域/性別ごとの人数 $need）・宿敵${rivals.length}社で ${_pairs(rivals.map((c) => c.pf))} 組・年が25歳より離れた絵 $far 人\n  ${detail.join(' ')}');
+        print('顔の重なり $home: 社長＋部下${staff.length}人で $pairs 組（地域 $regions・地域/性別ごとの人数 $need）・宿敵${rivals.length}社で ${_pairs(rivals.map((c) => c.pf))} 組・年が12歳より離れた絵 $far 人\n  ${detail.join(' ')}');
         expect(_pairs(rivals.map((c) => c.pf)), 0, reason: home);
-        // 宿敵の顔も地域が合う（欧州の宿敵に東アジアの顔が付かない）
+        // 宿敵の顔も地域が合う（欧州の宿敵に東アジアの顔が付かない）。年の差も12歳まで
         for (final c in rivals) {
           expect(faceFits(c.pf, faceRegion(c.presName)), isTrue, reason: '$home ${c.presName} ${c.pf}');
           if (faceRegion(c.presName) == 'we') expect(faceById[c.pf]!.region, 'we', reason: '$home ${c.presName} ${c.pf}');
+          expect((faceById[c.pf]!.age - c.presAge).abs(), lessThanOrEqualTo(faceGapMax), reason: '$home ${c.presName} ${c.presAge} ${c.pf}');
         }
         final over = need.entries.fold<int>(0, (a, e) {
           final r = e.key.split('/');
           final have = FACES.where((f) => f.region == r[0] && f.sex == r[1]).length;
           return a + (e.value > have ? e.value - have : 0);
         });
-        // 絵が足りない分（人数 − 絵の数）の2倍＋年の片寄りの分までに収まる
-        expect(pairs, lessThanOrEqualTo(over * 2 + 4), reason: '$home: 重なりが多い');
+        // 絵が足りない分（人数 − 絵の数）の3倍＋年の片寄りの分までに収まる
+        // （1.0.0+23 から、年の差12歳を超える絵より重ねるほうを選ぶ。インド開始は南アジアの女の絵が5枚しか無く、ここで20組を超える）
+        expect(pairs, lessThanOrEqualTo(over * 3 + 4), reason: '$home: 重なりが多い');
       }
     });
 
@@ -488,7 +582,70 @@ void main() {
       g.ensureFaces();
       expect(c.pfn, c.presName);
       expect(faceById[c.pf]!.sex, faceSex(c.presName));
-      expect(c.pfb, 0);
+      expect(c.pfb, 34, reason: '顔を決めたときの年齢');
+      expect((faceById[c.pf]!.age - 34).abs(), lessThanOrEqualTo(faceGapMax));
+    });
+
+    test('宿敵の代替わりのあと、場面の文に出る名前は今の社長（初代の名前が残らない）', () {
+      final g = _grownIn('jp')..listed = true;
+      final c = g.cos.firstWhere((c) => c.rival != null && c.alive);
+      final first = c.presName;
+      // 初代の名前（この盤面では、すでに1度代替わりしている宿敵もある）
+      final founder = c.rival!.pres;
+      // 代替わり（月の進みと同じ書き換え）
+      String heir;
+      var i = 0;
+      do {
+        heir = g.heirName(first, c.rival!.k);
+      } while (heir == first && ++i < 20);
+      c
+        ..presName = heir
+        ..presAge = 38;
+      g.ensureFaces();
+      expect(c.rival!.pres, founder, reason: '初代の名前は記録として残る');
+      final texts = <String>[];
+      void add(GameEvent? e) {
+        if (e == null) return;
+        texts.add(txIn(e.text, 'ja'));
+        for (final ch in e.choices) {
+          texts.add(txIn(ch.s, 'ja'));
+        }
+      }
+
+      add(g.evAlliance(c));
+      add(g.evPoach(c, g.staff.first));
+      add(g.evHostile(c, 40));
+      g.sh = Shares(own: 40, pt: 5, float: 37, riv: {c.id: 18});
+      add(g.crisisMeeting('takeover', foe: c, near: 20));
+      for (final k in sceneTitle.keys) {
+        final s = Game.fromJson(jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, rng: ParkMiller(5));
+        final sc = s.cos.firstWhere((x) => x.id == c.id);
+        sc.rival!.grudge = 3;
+        add(s.rivalScene(sc, k));
+      }
+      // 決着の場面（社史・場面の文）
+      g.events.clear();
+      c.rival!.st = 1;
+      g.storyEnd(c, 'peace');
+      add(g.events.lastOrNull);
+      expect(texts.length, greaterThan(8));
+      final all = texts.join('\n');
+      expect(all, contains(heir), reason: all);
+      expect(all, isNot(contains(first)), reason: all);
+      if (founder != heir) expect(all, isNot(contains(founder)), reason: all);
+      // 選んだ結果の文も今の社長
+      final pact = g.rivalScene(c, 'pact');
+      if (pact != null) {
+        for (final ch in pact.choices) {
+          final s = Game.fromJson(jsonDecode(jsonEncode(g.toJson())) as Map<String, dynamic>, rng: ParkMiller(5));
+          final sc = s.cos.firstWhere((x) => x.id == c.id);
+          final r = s.rivalScene(sc, 'pact')!.choices[pact.choices.indexOf(ch)].f();
+          expect(txIn(r, 'ja'), isNot(contains(first)));
+          if (founder != heir) expect(txIn(r, 'ja'), isNot(contains(founder)));
+        }
+      }
+      // 顔の名札も今の社長
+      expect(c.pfn, heir);
     });
 
     test('子どもは16歳から顔が付く', () {
@@ -651,6 +808,27 @@ void main() {
             await snap('town_rivals');
             await p.pressKey('rival-row-${rv.id}');
             await snap('town_rival_open');
+            // 宿敵の代替わりのあとの場面（名札・本文の名前・顔が今の社長）
+            final first = rv.presName;
+            var heir = first;
+            for (var i = 0; i < 20 && heir == first; i++) {
+              heir = g.heirName(first, rv.rival!.k);
+            }
+            rv
+              ..presName = heir
+              ..presAge = 38;
+            g.ensureFaces();
+            for (final (name, e) in [('alliance', g.evAlliance(rv)), ('poach', g.rivalScene(rv, 'poach'))]) {
+              if (e == null) continue;
+              g.events
+                ..clear()
+                ..add(e);
+              nextEvent(p.ctl);
+              await tester.pump();
+              await snap('rival_heir_$name');
+              p.ctl.closeSheet();
+              await tester.pump();
+            }
             expect(tester.takeException(), isNull);
           }, skip: shotDir == null, timeout: const Timeout(Duration(minutes: 10)));
         }
