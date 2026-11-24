@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../game/faces.dart' show faceAsset;
 import '../l10n/l10n.dart';
 
 /// 試作の :root の配色（明るい紙色）
@@ -568,11 +569,12 @@ class Tag extends StatelessWidget {
 /// 部下の顔の色（いちばん高い能力で分ける。1.0.0+17）。どれも濃い字（#0D1426）が 4.5:1 以上で読める明るさ
 const Map<String, String> abFaceCols = {'tou': '#ffb454', 'kai': '#9fb3ff', 'ei': '#7ff0c8', 'zai': '#c9a0ff'};
 
-/// 顔の印（名前の1文字目）。絵は使わず、形と色で誰の側の人かを見分ける（1.0.0+17）:
-/// ・社長（[Face.pres]）… 金色の丸に、濃い金の輪
-/// ・部下 … 丸。色はいちばん高い能力（[abFaceCols]）。相棒は濃い金の輪つき（[ring]）
-/// ・宿敵（[Face.rival]）… 角の丸い四角。その宿敵の色を白地で読める濃さ（[rivalInk]）にして塗り、字は白
-/// 色を渡さなければ、名前から決まる色の丸（会議の発言者など）
+/// 顔の印。形と縁の色で誰の側の人かを見分ける（1.0.0+17）。1.0.0+21 から、中に顔の絵（[img]）を入れる:
+/// ・社長（[Face.pres]）… 金色の縁の丸に、濃い金の輪
+/// ・部下 … 丸。縁の色はいちばん高い能力（[abFaceCols]）。相棒は濃い金の輪つき（[ring]）
+/// ・宿敵（[Face.rival]）… 角の丸い四角。縁はその宿敵の色を白地で読める濃さ（[rivalInk]）にしたもの
+/// 色を渡さなければ、名前から決まる色の丸（会議の発言者など）。
+/// 絵が無い・読めないときは、今までどおり縁の色で塗った印に名前の1文字目を出す
 class Face extends StatelessWidget {
   final String name;
   final String? col;
@@ -582,14 +584,26 @@ class Face extends StatelessWidget {
 
   /// 宿敵の印（四角・濃い塗り・白い字）
   final bool rival;
-  const Face(this.name, {super.key, this.col, this.ring = false}) : rival = false;
-  const Face.pres(this.name, {super.key})
+
+  /// 顔の絵（FACES の id）。null なら名前の1文字目
+  final String? img;
+
+  /// 大きさ（一覧は 34、開いたカードや場面は 56 など）
+  final double size;
+  const Face(this.name, {super.key, this.col, this.ring = false, this.img, this.size = 34}) : rival = false;
+  const Face.pres(this.name, {super.key, this.img, this.size = 34})
       : col = '#f2c14e',
         ring = true,
         rival = false;
-  const Face.rival(this.name, String this.col, {super.key})
+  const Face.rival(this.name, String this.col, {super.key, this.img, this.size = 34})
       : ring = false,
         rival = true;
+
+  /// 絵を出すいちばん小さい大きさ（これより小さい印は、絵が潰れるので1文字のまま）
+  static const minImg = 26.0;
+
+  /// 絵の中の顔に寄せる倍率（絵は肩まで描いてあるので、上に寄せて大きくする）
+  static const zoom = 1.5;
 
   /// 塗りの色（宿敵は白地で 4.5:1 以上の濃さ）
   Color get fill {
@@ -601,19 +615,52 @@ class Face extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final n = nmL(name).replaceAll(RegExp(r'\s'), '');
+    final k = size / 34;
+    // 飾りの印（名前の1文字目）。名前は隣に書いてあるので、読み上げからは外す。字は印からはみ出さないよう、大きさを変えない
+    final letter = Text(n.isEmpty ? '?' : n.characters.first,
+        textScaler: TextScaler.noScaling, style: ts(size: 14 * k, bold: true, color: rival ? Pal.panel : const Color(0xFF0D1426)));
+    final showImg = img != null && size >= minImg;
+    // 縁（塗りの色が絵のまわりに残る幅）。輪があるときは、輪の内側に細く残す
+    final edge = !showImg ? 0.0 : (ring ? 1.5 : 2.0) * (k > 1.5 ? 1.5 : 1);
+    final ringW = ring ? (k > 1.5 ? 3.0 : 2.0) : 0.0;
+    final inner = size - 2 * (edge + ringW);
     return Container(
-      width: 34,
-      height: 34,
+      width: size,
+      height: size,
       alignment: Alignment.center,
+      padding: EdgeInsets.all(edge),
       decoration: BoxDecoration(
           color: fill,
           shape: rival ? BoxShape.rectangle : BoxShape.circle,
-          borderRadius: rival ? BorderRadius.circular(9) : null,
-          border: ring ? Border.all(color: Pal.goldtx, width: 2) : null),
-      // 飾りの印（名前の1文字目）。名前は隣に書いてあるので、読み上げからは外す。字は印からはみ出さないよう、大きさを変えない
+          borderRadius: rival ? BorderRadius.circular(9 * k) : null,
+          border: ring ? Border.all(color: Pal.goldtx, width: ringW) : null),
       child: ExcludeSemantics(
-          child: Text(n.isEmpty ? '?' : n.characters.first,
-              textScaler: TextScaler.noScaling, style: ts(size: 14, bold: true, color: rival ? Pal.panel : const Color(0xFF0D1426)))),
+          child: !showImg
+              ? letter
+              : Stack(alignment: Alignment.center, children: [
+                  // 絵が出るまで（と、読めなかったとき）は1文字
+                  letter,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(rival ? (9 * k - edge).clamp(0, inner / 2) : inner / 2),
+                    child: SizedBox(
+                      width: inner,
+                      height: inner,
+                      child: OverflowBox(
+                        maxWidth: inner * zoom,
+                        maxHeight: inner * zoom,
+                        alignment: Alignment.topCenter,
+                        child: Image.asset(faceAsset(img!),
+                            width: inner * zoom,
+                            height: inner * zoom,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.medium,
+                            excludeFromSemantics: true,
+                            gaplessPlayback: true,
+                            errorBuilder: (_, _, _) => const SizedBox.shrink()),
+                      ),
+                    ),
+                  ),
+                ])),
     );
   }
 }
@@ -653,12 +700,15 @@ class RoleFace extends StatelessWidget {
 class VoiceSay extends StatelessWidget {
   final String? name;
   final String who, role, kind, say;
-  const VoiceSay({super.key, this.name, required this.who, required this.role, required this.kind, required this.say});
+
+  /// 話す人の顔（部下・相棒。渡さなければ名前から決まる色の丸）
+  final Face? face;
+  const VoiceSay({super.key, this.name, required this.who, required this.role, required this.kind, required this.say, this.face});
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          name != null ? Face(name!) : RoleFace(kind),
+          name != null ? (face ?? Face(name!)) : RoleFace(kind),
           const SizedBox(width: 10),
           Expanded(
             child: Container(

@@ -461,6 +461,8 @@ extension GameTurn on Game {
     lastNews = news;
     log.addAll(news.map((x) => LogEntry(x.m, x.t, year, q)));
     if (log.length > 300) log.removeRange(0, log.length - 300);
+    // 新しく来た人・年代をまたいだ人・代替わりした宿敵に顔を割り当てる（乱数は使わない）
+    ensureFaces();
     return news;
   }
 
@@ -515,7 +517,7 @@ extension GameTurn on Game {
     final keep = pres.traits.where((t) => t == 'noble').toList();
     final t2 = TRAITS.any((t) => t.id == p.trait) ? p.trait : pick(TRAITS).id;
     chron('pres', M('{0}から{1}（{2}歳）へ社長が替わった（{3}代目）', [Nm(pres.name), Nm(p.name), p.age, gen + 1]));
-    pres = President(name: p.name, age: p.age, ab: {...p.ab}, traits: <String>{t2, ...keep}.take(2).toList());
+    pres = President(name: p.name, age: p.age, ab: {...p.ab}, traits: <String>{t2, ...keep}.take(2).toList(), face: p.face, fb: p.fb);
     if (pres.traits.length < 2) {
       final o = pick(TRAITS.where((t) => !pres.traits.contains(t.id)).toList());
       pres.traits.add(o.id);
@@ -857,6 +859,10 @@ extension GameTurn on Game {
               final c = mkCo(0, indm[b.ind]!.cat, presName: star.name, fam: 60, rival: rv);
               rv.co = c.name;
               c.presAge = star.age.toDouble();
+              // 元部下は同じ顔のまま宿敵になる
+              c.pf = star.face;
+              c.pfb = star.fb;
+              c.pfn = star.name;
               c.biz.add(CoBiz(ind: b.ind, power: b.power * .4));
               c.g = .025;
               c.rel = -20;

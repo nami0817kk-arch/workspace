@@ -36,21 +36,41 @@ void confirmRestart(GameController ctl) =>
     confirmThen(ctl, title: tr('はじめから'), text: tr('今の会社の続きは消え、はじめの画面に戻ります。'), yes: tr('はじめからにする'), onYes: ctl.backToSetup);
 
 /// 能力の4つ（数字と細い棒。幅でしか分からないものは薄い帯）
-/// 部下・候補の顔。色はいちばん高い能力（統率・開発・営業・財務）、相棒は輪つき
-Face staffFace(Game s, Person p) => Face(p.name, col: abFaceCols[topAbility(s, p)], ring: p.partner);
+/// 部下・候補の顔。縁の色はいちばん高い能力（統率・開発・営業・財務）、相棒は輪つき
+Face staffFace(Game s, Person p, {double size = 34}) =>
+    Face(p.name, col: abFaceCols[topAbility(s, p)], ring: p.partner, img: s.faceOf(p), size: size);
 
-/// 顔の色と形の見方（「人」の画面の下に1度だけ出す）
+/// 会議の発言者（名前だけを持つ）の顔。部下にいなければ null（名前から決まる色の丸になる）
+Face? _voiceFace(Game s, String name) {
+  final p = s.staff.where((x) => x.name == name).firstOrNull;
+  return p == null ? null : staffFace(s, p);
+}
+
+/// 社長の顔（金の輪つき）
+Face presFace(Game s, {double size = 34}) => Face.pres(s.pres.name, img: s.presFace, size: size);
+
+/// 宿敵の社長の顔（角の丸い四角。縁は宿敵の色）
+Face rivalFace(Game s, Company c, {double size = 34}) => Face.rival(c.presName, c.rival!.col, img: s.coFace(c), size: size);
+
+/// 開いたカード・場面で見せる顔の大きさ
+const faceBig = 56.0;
+
+/// 顔の縁の色と形の見方（「人」の画面の下に1度だけ出す）
 Widget faceLegend() {
-  // 1つの文として並べる（幅が狭い・字が大きいときは、語の切れ目で折り返す）
-  WidgetSpan dot(Color fill, Color edge, double w) => WidgetSpan(
+  // 1つの文として並べる（幅が狭い・字が大きいときは、語の切れ目で折り返す）。
+  // 印は顔と同じく「中は絵・縁に色」の輪にする（中を塗ると、絵になった顔と結び付かない）
+  WidgetSpan dot(Color edge, double w) => WidgetSpan(
       alignment: PlaceholderAlignment.middle,
       child: Container(
-          width: 12, height: 12, margin: const EdgeInsets.only(right: 4), decoration: BoxDecoration(color: fill, shape: BoxShape.circle, border: Border.all(color: edge, width: w))));
+          width: 13,
+          height: 13,
+          margin: const EdgeInsets.only(right: 4),
+          decoration: BoxDecoration(color: Pal.panel2, shape: BoxShape.circle, border: Border.all(color: edge, width: w))));
   return Text.rich(TextSpan(style: ts(size: 12, color: Pal.mute, height: 1.6), children: [
-    TextSpan(text: '${tr('顔の色はいちばん高い能力')}${tr('　')}'),
-    for (final k in abKeys) ...[dot(hexColor(abFaceCols[k]!), Pal.mute, 1), TextSpan(text: '${ABN[k]}${tr('　')}')],
-    dot(Pal.panel, Pal.goldtx, 2),
-    TextSpan(text: tr('輪つきは社長と相棒')),
+    TextSpan(text: '${tr('顔の縁の色はいちばん高い能力')}${tr('　')}'),
+    for (final k in abKeys) ...[dot(hexColor(abFaceCols[k]!), 3), TextSpan(text: '${ABN[k]}${tr('　')}')],
+    dot(Pal.goldtx, 2),
+    TextSpan(text: tr('金の輪は社長と相棒')),
   ]));
 }
 
@@ -127,7 +147,7 @@ void openIntro(GameController ctl) {
   ctl.showSheet((_) => _col([
         H2(tr('{0}年 春', [s.year]), top: true),
         Say(
-            face: Face.pres(s.pres.name),
+            face: presFace(s, size: faceBig),
             who: tr('{0}（{1}歳）', [nmL(s.pres.name), 22]),
             text: tr('大学を出たばかり。手元には{0}。会社の名前だけは登記した。最初の事業を決める前に、一緒にやる相棒を探そうか。', [yen(s.cash)])),
         _note(tr('毎月「手」の数だけ動けます。街の「社長の行動」から、相棒探し・日銭稼ぎ・腕磨き・人脈作り・事業の種探しができます。最初の事業を始めるのは手を使いません。')),
@@ -175,7 +195,7 @@ void openMeet(GameController ctl) {
   }
   ctl.showSheet((_) => _col([
         H2(tr('{0}で出会った', [s.placeName(p.place ?? 'net')]), top: true),
-        Say(face: staffFace(s, p), who: tr('{0}（{1}歳）', [nmL(p.name), p.age]), text: tr('「{0}」', [s.meetLine(p)])),
+        Say(face: staffFace(s, p, size: faceBig), who: tr('{0}（{1}歳）', [nmL(p.name), p.age]), text: tr('「{0}」', [s.meetLine(p)])),
         abGrid(s, p),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 6),
@@ -235,7 +255,7 @@ void openStart(GameController ctl) {
   final list = s.liveInds().where((i) => s.capexOf(i) <= s.cash).toList()..ssort((a, b) => s.capexOf(a).compareTo(s.capexOf(b)));
   ctl.showSheet((_) => _col([
         H2(tr('{0}年 創業', [s.year]), top: true),
-        Say(face: Face.pres(s.pres.name), who: tr('{0}（{1}歳）', [nmL(s.pres.name), s.pres.age]), text: tr('手元にあるのは{0}。まずは何で稼ぐか決めよう。', [yen(s.cash)])),
+        Say(face: presFace(s, size: faceBig), who: tr('{0}（{1}歳）', [nmL(s.pres.name), s.pres.age]), text: tr('手元にあるのは{0}。まずは何で稼ぐか決めよう。', [yen(s.cash)])),
         const SizedBox(height: 6),
         for (final i in list)
           ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () {
@@ -866,7 +886,7 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
             ? tr('{0}はシェア{1}。市場の半分以上を押さえました。', [ind.name, pct(b.share * 100)])
             : tr('{0}の売上は{1}、シェア{2}です。', [ind.name, yen(b.rev), pct(b.share * 100)]);
     return Say(
-        face: p != null ? staffFace(s, p) : Face.pres(s.pres.name),
+        face: p != null ? staffFace(s, p) : presFace(s),
         who: p != null ? tr('{0}（責任者）', [nmL(p.name)]) : tr('{0}（社長が直接）', [nmL(s.pres.name)]),
         text: line);
   }).toList();
@@ -933,13 +953,24 @@ void nextEvent(GameController ctl) {
     Widget plain(String t) => Padding(padding: const EdgeInsets.only(bottom: 6), child: Text(tx(t), style: ts(height: 1.5)));
     body = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       if (e.lead != null) plain(e.lead!),
-      for (final v in e.voices) VoiceSay(name: v.name, who: v.who, role: v.role, kind: v.kind, say: v.say),
+      for (final v in e.voices)
+        VoiceSay(
+            name: v.name,
+            who: v.who,
+            role: v.role,
+            kind: v.kind,
+            say: v.say,
+            // 話すのが部下・相棒なら、その人の顔（縁の色と輪も人タブと同じ）
+            face: v.name == null ? null : _voiceFace(ctl.game!, v.name!)),
       if (e.tail != null) Padding(padding: const EdgeInsets.only(top: 4), child: plain(e.tail!)),
     ]);
   } else if (e.who != null) {
-    body = Say(face: e.face != null ? Face.rival(e.who!.presName, e.face!) : Face(e.who!.presName), who: '${nmL(e.who!.presName)}${tr('・')}${nmL(e.who!.name)}', text: e.text);
+    final img = ctl.game!.coFace(e.who!);
+    body = Say(
+        face: e.face != null ? Face.rival(e.who!.presName, e.face!, img: img, size: faceBig) : Face(e.who!.presName, img: img, size: faceBig),
+        who: '${nmL(e.who!.presName)}${tr('・')}${nmL(e.who!.name)}', text: e.text);
   } else if (e.person != null) {
-    body = Say(face: staffFace(ctl.game!, e.person!), who: '${nmL(e.person!.name)}${e.person!.partner ? tr('（相棒）') : ''}', text: e.text);
+    body = Say(face: staffFace(ctl.game!, e.person!, size: faceBig), who: '${nmL(e.person!.name)}${e.person!.partner ? tr('（相棒）') : ''}', text: e.text);
   } else {
     body = Padding(padding: const EdgeInsets.only(bottom: 8), child: Text(tx(e.text), style: ts()));
   }

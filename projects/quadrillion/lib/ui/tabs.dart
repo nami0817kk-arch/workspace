@@ -260,7 +260,7 @@ Widget _rivalRow(GameController ctl, Company c) {
       constraints: const BoxConstraints(minHeight: minTap),
       padding: const EdgeInsets.fromLTRB(12, 7, 6, 7),
       child: Row(children: [
-        Face.rival(c.presName, c.rival!.col),
+        rivalFace(s, c),
         const SizedBox(width: 10),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -293,7 +293,7 @@ Widget _rivalCard(GameController ctl, Company c) {
           constraints: const BoxConstraints(minHeight: minTap),
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Row(children: [
-            Face.rival(c.presName, r.col),
+            rivalFace(s, c, size: faceBig),
             const SizedBox(width: 10),
             Expanded(
               child: Wrap(spacing: 6, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
@@ -1088,7 +1088,7 @@ List<Widget> peopleTab(GameController ctl) {
   final out = <Widget>[H2(tr('社長'))];
   out.add(Panel(
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Face.pres(P.name),
+    presFace(s, size: faceBig),
     const SizedBox(width: 10),
     Expanded(
         child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -1152,6 +1152,8 @@ List<Widget> peopleTab(GameController ctl) {
       Padding(
         padding: const EdgeInsets.only(top: 6),
         child: Row(children: [
+          // 後継ぎの候補になる年頃（16歳〜）の子どもには顔の絵。小さい子は名前の1文字の丸
+          Padding(padding: const EdgeInsets.only(right: 8), child: Face(Game.givenOf(k.name), img: s.faceOf(k), key: ValueKey('kid-face-${k.id}'))),
           Expanded(child: Muted(tr('子ども {0}（{1}歳）', [nmL(Game.givenOf(k.name)), k.age]))),
           k.age >= 22 ? Btn(tr('入社させる'), () => ctl.act(() => s.kidJoin(k)), small: true) : Muted(tr('22歳で入社できる')),
         ]),
@@ -1173,7 +1175,7 @@ List<Widget> peopleTab(GameController ctl) {
   for (final p in s.cands) {
     out.add(Panel(
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      staffFace(s, p),
+      staffFace(s, p, size: faceBig),
       const SizedBox(width: 10),
       Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -1288,7 +1290,7 @@ Widget _staffCard(GameController ctl, Person p, {VoidCallback? onFold}) {
     return Panel(
         border: onFold != null ? Pal.gold : Pal.line,
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      staffFace(s, p),
+      staffFace(s, p, size: faceBig),
       const SizedBox(width: 10),
       Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -1524,7 +1526,7 @@ Widget _coCard(GameController ctl, Company c) {
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
     // 名前と札は折り返して並べる（横に押し込むと、幅320では名前と札がくっつき、札の字が語の途中で折れていた。1.0.0+18）
     Wrap(spacing: 6, runSpacing: 3, crossAxisAlignment: WrapCrossAlignment.center, children: [
-      if (c.rival != null) Face.rival(c.presName, c.rival!.col),
+      if (c.rival != null) rivalFace(s, c),
       Text(nmL(c.name), style: ts(bold: true)),
       if (mine) Tag(c.loc != null ? tr('現地法人（{0}）', [cm[c.loc!]!.n]) : tr('子会社@@tag'), kind: TagKind.gold),
       // 現地法人は国の名前が札に出ているので、「国内・地域・世界」の札は付けない
