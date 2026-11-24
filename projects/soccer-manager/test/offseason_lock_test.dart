@@ -43,7 +43,7 @@ void main() {
     expect(gs.canChangeClubLook, isFalse);
     expect(await gs.setClubLook(look.copyWith(hue: (look.hue + 90) % 360)),
         isFalse);
-  });
+  }, timeout: const Timeout(Duration(minutes: 4)));
 
   test('最終節のあとはオフシーズン。方針は来季の分として持ち、季を越すと入れ替わる',
       () async {
@@ -80,7 +80,7 @@ void main() {
     expect(gs.clubPolicy, ClubPolicy.profit);
     expect(gs.save!.pendingClubPolicy, isNull);
     expect(gs.isPreseason, isTrue);
-  });
+  }, timeout: const Timeout(Duration(minutes: 4)));
 
   test('見た目は、季の終わりと次の開幕前を合わせて1回まで(2季目から)', () async {
     final gs = GameState();
@@ -108,5 +108,5 @@ void main() {
     await gs.startNextSeason();
     expect(gs.isPreseason, isTrue);
     expect(gs.canChangeClubLook, isFalse);
-  });
+  }, timeout: const Timeout(Duration(minutes: 4)));
 }

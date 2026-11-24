@@ -151,15 +151,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
             padding: const EdgeInsets.all(8),
             children: [
               if (widget.modeSwitch != null) widget.modeSwitch!,
+              // 月の行は縮めない(押す所が48を割る)。入らないときだけ縮める。
               Row(children: [
-                Flexible(
+                Expanded(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: monthNav,
                   ),
                 ),
-                const Spacer(),
                 todayButton,
               ]),
               grid,
@@ -191,14 +191,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       widget.modeSwitch!,
                       const SizedBox(width: 8),
                     ],
-                    Flexible(
+                    Expanded(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         alignment: Alignment.centerLeft,
                         child: monthNav,
                       ),
                     ),
-                    const Spacer(),
                     todayButton,
                     IconButton(
                       key: const ValueKey('calendar-legend-button'),

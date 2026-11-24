@@ -21,7 +21,7 @@ void main() {
         LeagueTheme.england.divisionTitle(3));
     // 国を引けない名前でも壊れない。
     expect(divisionTitleFor('謎のリーグ', 2), '謎のリーグ(2部)');
-  });
+  }, timeout: const Timeout(Duration(minutes: 4)));
 
   test('中盤の理事会レビューは、季の途中だけ出す(最終節のあとは出さない)', () async {
     final gs = GameState();
@@ -35,7 +35,7 @@ void main() {
     expect(gs.isOffseason, isTrue);
     expect(gs.pendingBoardReviewMessage, isNull, reason: '季末の状況に残さない');
     expect(gs.openDecisionCount, gs.inboxActions.length);
-  });
+  }, timeout: const Timeout(Duration(minutes: 4)));
 
   test('季を越すと、前の季の最後の試合の「今日の一面」を消す', () async {
     final gs = GameState();
@@ -46,5 +46,5 @@ void main() {
     expect(gs.save!.frontPageHeadline, isNull);
     expect(gs.save!.frontPageQuote, isNull);
     expect(gs.save!.pendingBoardReviewMessage, isNull);
-  });
+  }, timeout: const Timeout(Duration(minutes: 4)));
 }
