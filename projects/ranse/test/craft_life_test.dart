@@ -114,11 +114,18 @@ Game? _grownUp(int seed, String cls) {
   return g;
 }
 
-int _randomPick(Rng r, Prompt p) => r.range(0, p.choices.length - 1);
+/// 病に伏したら「病を養う」を選ぶ（人が遊ぶ形。2026-11-24 に病の前触れを入れてから、
+/// 養わずに押して務めると多くが亡くなり、生業の年が縮んで平均が線を割った）。
+int _randomPick(Rng r, Prompt p) {
+  final y = p.choices.indexWhere((c) => c.label == '病を養う');
+  return y >= 0 ? y : r.range(0, p.choices.length - 1);
+}
 
 /// 生業に留まる選び方: 重点では仕官・奉公を探さず、岐路は無作為。
 int _stayPick(Game g, Prompt p, Rng r) {
   if (p.title == 'この年の心がけ') {
+    final y = p.choices.indexWhere((c) => c.label == '病を養う');
+    if (y >= 0) return y;
     final ok = [
       for (var i = 0; i < p.choices.length; i++)
         if (!p.choices[i].label.contains('仕官') && !p.choices[i].label.contains('奉公')) i,

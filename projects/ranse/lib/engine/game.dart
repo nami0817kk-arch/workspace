@@ -17,6 +17,7 @@ import 'echoes_more.dart';
 import 'echoes_talent.dart';
 import 'family.dart';
 import 'history.dart';
+import 'illness.dart';
 import 'history_east.dart';
 import 'history_life.dart';
 import 'history_lines.dart';
@@ -1077,10 +1078,13 @@ class Game extends ChangeNotifier {
         log('幼い我が子を病で失った。', 'bad');
       }
       // 天寿
+      // 病に伏した翌年は、持ち直すか亡くなるかが決まる（`illness.dart`）。
+      if (l.dead == null) resolveIllness(this);
       if (l.dead == null) {
         final a = age;
         var dp = annualMort(a) / 2 * l.cls.m;
-        if (l.hp < 30) dp *= 2;
+        // 健康が高いほど病にかかりにくい（2026-11-24。前は三十を下回ったときに2倍にするだけだった）。
+        dp *= healthMortFactor(l.hp);
         if (has('sickly')) dp *= 1.5;
         if (has('hardy')) dp *= .7;
         dp *= traitOldAge(this); // 長命の血筋（`trait_scenes2.dart`）
@@ -1091,8 +1095,13 @@ class Game extends ChangeNotifier {
         }
         // 人生は亡くなるまで続く（2026-11-24。一六〇一年で終える決まりは外した）。
         // 老いの坂は annualMort が年ごとに急になり、[kMaxAge] に届いた年には必ず天寿が来る。
-        if (a >= kMaxAge || rng.chance(dp)) {
-          a >= 55 ? die('天寿をまっとうした', 'tenju') : die('病に倒れた');
+        // 五十五より前は、突然亡くならずに、まず病に伏す（翌年に持ち直すか亡くなるかが決まる）。
+        if (a >= kMaxAge) {
+          die('天寿をまっとうした', 'tenju');
+        } else if (a >= 55) {
+          if (rng.chance(dp)) die('天寿をまっとうした', 'tenju');
+        } else if (!isSick(this) && rng.chance(dp * kIllOnsetScale)) {
+          fallIll(this);
         }
       }
       // 天下。人生が終わるのは、死と天下統一だけ（古い保存に残る `end == 'era'` は読めるが、もう立てない）。

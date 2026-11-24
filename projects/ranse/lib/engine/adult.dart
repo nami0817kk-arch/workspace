@@ -3,6 +3,7 @@ import 'childhood.dart';
 import 'data.dart';
 import 'game.dart';
 import 'history_lines.dart';
+import 'illness.dart';
 import 'life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
@@ -42,6 +43,8 @@ void _heal(Life l, int n) => l.hp = l.hp + n > l.maxhp ? l.maxhp : l.hp + n;
 /// （`women_life.dart`）を [kWomenLifePerYear] まで足す。仏門の人には、寺の暮らしの重点（`temple.dart`）を
 /// `templeFocusCap` まで足す。
 List<FocusDef> adultFocusOptions(Game g) => [
+  // 病に伏しているあいだは「病を養う」を先頭に（`illness.dart`）。
+  ...illnessFocusOptions(g),
   ..._baseFocusOptions(g),
   ...pastimeFocusOptions(g),
   ...oldAgeFocusOptions(g),
@@ -314,6 +317,8 @@ String adultYearText(Game g) {
   final sp = l.people['伴侶'];
   if (sp != null && l.married) extra.add('家では${sp.name}が待っている。');
   if (l.kids > 0) extra.add('子は${l.kids}人。');
+  // 病に伏しているときの一言（`illness.dart`）。
+  if (isSick(g)) extra.add(illnessNote(g).trim());
   return '$a歳。$head\n$status${extra.isEmpty ? '' : '\n${extra.join('')}'}\n今年は何に重きを置く？';
 }
 
