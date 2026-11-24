@@ -183,7 +183,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v64</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v65</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -1327,16 +1327,26 @@ function saveGame(){
  }catch(_){}
 }
 window.__saveNow=saveGame;
+// 前の版の塔（祭壇が無い）を新しい仕組みに合わせる
+var OLD_KEEP=40;
+function fromOldTower(){
+ var hs=g.cr.filter(function(m){return m.hero;}),rest=g.cr.filter(function(m){return !m.hero&&!m.stage;});
+ rest.sort(function(a,b){return expPow(b)-expPow(a);});g.cr=hs.concat(rest.slice(0,Math.max(0,OLD_KEEP-hs.length)));
+ g.eggs=[];g.mutNext={};g.circles=[];g.nests=[];
+ g.alt=[];altAdd(g.core.f);g.loot=g.loot||{sw:2,st:2,ho:2,bo:2};g.soul=Math.max(g.soul||0,START_SOUL);
+ g.core.mhp=coreMax();g.core.hp=g.core.mhp;g.core.carrier=null;g.core.home=true;
+ for(var f=0;f<F;f++)for(var i=0;i<g.grid[f].length;i++){g.grid[f][i].nut=0;g.grid[f][i].mag=0;}}
 function loadGame(k){
  k=k||'tou-save';var s=kvGet(k);if(!s)return false;
  try{
   var o=JSON.parse(s);setN(o.N||20);F=o.F;CAP=o.CAP;idc=o.idc;g=o.g;fx=[];g.breed=null;g.soul=g.soul||0;g.bone=g.bone||0;g.fallen=g.fallen||[];setDig(false);focusCore();
   if(g.grid&&g.grid[0]&&Array.isArray(g.grid[0][0]))g.grid=g.grid.map(function(fl){return fl.map(function(a){var c={env:ENVS[a[0]],nut:a[1],mag:a[2],open:!!a[3],dt:a[4],chest:!!a[5]};if(a[6]>=0)c.spore=ENVS[a[6]];if(a[7])c.sk=1;return c;});});
+  var oldTower=!g.alt;if(oldTower)fromOldTower();
   g.bub=[];if(g.dp===undefined)g.dp=100;g.calm=g.calm||{};['dung','burn','illus','pher','nests','circles','torches'].forEach(function(k){g[k]=g[k]||[];});g.slv=g.slv||{};if(g.roundT0===undefined){g.roundT0=g.t;g.armyStart=0;}g.chal=null;
   g.en.forEach(function(e){if(e.poiBy)e.poiBy=g.cr.filter(function(m){return m.id===e.poiBy;})[0]||null;});
   var c=g.core.carrier;g.core.carrier=c&&c.__en?g.en.filter(function(e){return e.id===c.__en;})[0]||null:null;
   over=!!g.done;g.title=false;g.moveCore=false;g.tutT=performance.now();g.clineRT=performance.now()-13000;interNext=null;clearTimeout(interT);growPass=false;resetGo();setSpeed(0);buildTabs();sideKey='';
-  say('続きから再開しました（'+F+'階の塔・'+g.round+'周目・'+DIFF[g.diff||'normal'].n+'）。時間は止まっています。');
+  say(oldTower?'前の版の塔を、新しい仕組み（召喚・配合・コアの体力）に合わせた。祭壇と魂'+g.soul+'・供物を渡し、モンスターは強い順に'+OLD_KEEP+'匹（主役は全員）だけ残した。':'続きから再開しました（'+F+'階の塔・'+g.round+'周目・'+DIFF[g.diff||'normal'].n+'）。時間は止まっています。');
   hideTitle();if(g.done&&!g.party)showGrow();if(g.done&&g.party)stageClear();return true;
  }catch(_){kvSet(k,null);return false;}
 }
@@ -2001,7 +2011,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v64 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v65 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
