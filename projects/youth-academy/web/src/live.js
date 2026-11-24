@@ -963,6 +963,7 @@
     }
     // ---------- 蹴る ----------
     kick(q, tx, ty, opt) {
+      if (opt && opt.kind !== 'clear') this.lastAtk = { q, sd: q.sd, t: this.t };
       const b = this.ball;
       opt = opt || {};
       const dx = tx - b.x;
@@ -1069,6 +1070,7 @@
       this.shotN = (this.shotN || 0) + 1;
       const assist = this.assist && this.assist.sd === sd && this.assist.pid !== q.id && this.t - this.assist.t < 8 ? this.assist.pid : null;
       this.shot = { q, sd, t0: this.t, xg: xgv, head, pk: !!o.pk, fk: !!o.fk, assist, gk: gk || null, decided: false, from: [b.x, b.y] };
+      this.lastShot = { q, sd, t: this.t, assist };
       this.flight = null;
       // 高さ：低めが基本、下手ほど浮く
       const lift = o.pk ? 0.3 + this.rng() * 1.3 : head ? 0.2 + this.rng() * 1.2 : this.rng() * 1.5 + (1 - sk) * this.rng() * 3.6 + (press ? this.rng() * 1.5 : 0) + (d > 18 ? this.rng() * 1.2 : 0);
@@ -1455,7 +1457,7 @@
           return this.shoot(q, {});
         }
         // はね返す（自陣の箱の中では、3割はそらしてゴールラインの外へ）
-        if (this.inOwnBox(q) && Math.abs(q.x - W / 2) > 4 && this.rng() < 0.55) {
+        if (this.inOwnBox(q) && Math.abs(q.x - W / 2) > 6 && this.rng() < 0.4) {
           const side = q.x < W / 2 ? -1 : 1;
           b.vx = side * (6 + this.rng() * 5);
           b.vy = -q.dir * (5 + this.rng() * 4);
@@ -1520,9 +1522,15 @@
     }
     goal(sd) {
       const s = this.shot;
-      const scorer = s && s.sd === sd ? s.q : this.ball.last && this.ball.last.sd === sd ? this.ball.last : null;
+      let scorer = s && s.sd === sd ? s.q : this.ball.last && this.ball.last.sd === sd ? this.ball.last : null;
+      // 守り手に当たって入ったシュート（4秒以内）は、打った子の得点にする（2026-11-25：全得点の24%がオウンゴールになっていた。実際は数%）
+      const ls = this.lastShot;
+      if (!scorer && ls && ls.sd === sd && this.t - ls.t < 4) scorer = ls.q;
+      // 味方のクロス・浮き球が守り手に当たって入ったもの（2.5秒以内）は、蹴った子の得点に
+      const la = this.lastAtk;
+      if (!scorer && la && la.sd === sd && this.t - la.t < 2.5) scorer = la.q;
       const og = !scorer && this.ball.last;
-      this.ev('goal', { sd, pid: scorer ? scorer.id : null, assist: s && s.sd === sd ? s.assist : null, og: og ? og.id : null, xg: s ? s.xg : 0, pk: s && s.pk });
+      this.ev('goal', { sd, pid: scorer ? scorer.id : null, assist: s && s.sd === sd ? s.assist : ls && ls.q === scorer && ls.assist !== (scorer && scorer.id) ? ls.assist : null, og: og ? og.id : null, xg: s ? s.xg : 0, pk: s && s.pk });
       this.shot = null;
       this.flight = null;
       this.ball.owner = null;

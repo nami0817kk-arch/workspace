@@ -613,7 +613,8 @@
       body.replaceChildren();
       const sl = t.lineup[st.sel];
       const p = t.players[sl.pid];
-      if (st.tab === 'tactic') {
+      // 戦い方（型・相性・つまみ・攻める方向・クロス）。setPieces が真ならキッカーの欄も（試合中の「戦い方」）
+      function renderTactic(setPieces) {
         body.append(h('div', { class: 'h' }, '戦い方の型'), h('div', { class: 'fm-row', style: 'margin:4px 0 6px' }, Object.keys(YA.TACTICS).map((n) => h('button', { class: 'btn sm' + (t.tactic.type === n ? ' on' : ''), onclick: () => { o.match ? o.match.setType(t, n) : (t.tactic = YA.withType(t.tactic, n)); onChange(); } }, n + ' ' + YA.tacticFitOf(t, n).mark))));
         // つまみを動かして「カスタム」になっても、相性は元の型で見る（2026-11-17）
         if (t.tactic.type === 'カスタム' && t.tactic.baseType) body.append(h('div', { class: 'note', style: 'margin:-2px 0 4px' }, `いまはカスタム（もとは「${t.tactic.baseType}」。相性はこの型で見ます）`));
@@ -636,11 +637,30 @@
         body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'クロスの種類'), h('div', { class: 'fm-row', style: 'margin-top:3px' }, [['', '標準'], ['high', '高い（長身が生きる）'], ['early', '早い（アーリー）'], ['low', '低い（ニアに合わせる）']].map(([k, n]) => h('button', { class: 'btn sm' + ((t.tactic.crossType || '') === k ? ' on' : ''), onclick: () => { t.tactic.crossType = k; onChange(); } }, n))));
         const onPitch = t.lineup.map((x) => t.players[x.pid]);
         const sel = (key, label) => h('div', { class: 'row', style: 'gap:6px;margin:3px 0' }, h('span', { style: 'width:78px;font-weight:800' }, label), (() => { const s2 = h('select', { style: 'flex:1;padding:5px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, '自動（得意な選手）'), onPitch.map((p) => h('option', { value: p.id }, `${p.num} ${p.name}`))); s2.value = t.tactic[key] && onPitch.some((p) => p.id === t.tactic[key]) ? t.tactic[key] : ''; s2.addEventListener('change', () => { t.tactic[key] = s2.value || null; o.onChange && o.onChange(); }); return s2; })());
-        body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'セットプレーのキッカー'), sel('fk', 'フリーキック'), sel('ck', 'コーナー'), sel('pk', 'PK'));
+        if (setPieces) body.append(h('div', { class: 'h', style: 'margin-top:6px' }, 'セットプレーのキッカー'), sel('fk', 'フリーキック'), sel('ck', 'コーナー'), sel('pk', 'PK'));
         const rep = t.tactRep != null ? t.tactRep : 1;
         body.append(h('div', { class: 'note', style: 'margin-top:8px' }, `戦い方の浸透：${Math.round(rep * 100)}%。同じ戦い方を続けるほど、つまみどおりに動きます（変えると下がります）。守備のマークは「指示」で、相手の1人に付かせられます。`));
+      }
+      // セットプレー（2026-11-25 試合前の小タブ）：キッカーと PK 戦の順番
+      function renderSet() {
+        const onPitch = t.lineup.map((x) => t.players[x.pid]);
+        const sel = (key, label) => h('div', { class: 'row', style: 'gap:6px;margin:3px 0' }, h('span', { style: 'width:78px;font-weight:800' }, label), (() => { const s2 = h('select', { style: 'flex:1;padding:5px;border:1px solid #b9c7de;border-radius:8px;font:inherit' }, h('option', { value: '' }, '自動（得意な選手）'), onPitch.map((p) => h('option', { value: p.id }, `${p.num} ${p.name}`))); s2.value = t.tactic[key] && onPitch.some((p) => p.id === t.tactic[key]) ? t.tactic[key] : ''; s2.addEventListener('change', () => { t.tactic[key] = s2.value || null; o.onChange && o.onChange(); }); return s2; })());
+        body.append(h('div', { class: 'h' }, 'セットプレーのキッカー'), sel('fk', 'フリーキック'), sel('ck', 'コーナー'), sel('pk', 'PK'));
+        const w = app.w;
+        if (w && YA.pkToggle) {
+          const ord = (w.pkOrder || []).filter((id) => w.players[id]);
+          body.append(h('div', { class: 'h', style: 'margin-top:8px' }, `PK戦の順番（${ord.length}/5）`), h('div', { class: 'note' }, '大会の引き分けで PK 戦になったときに蹴る順番です。押すと入れる・外す（5人まで）。'));
+          body.append(h('div', { class: 'fm-row pkrow', style: 'margin-top:4px;flex-wrap:wrap' }, onPitch.concat(t.bench.map((id) => t.players[id]).filter(Boolean)).filter((p) => p.pos !== 'GK').map((p) => { const k = ord.indexOf(p.id); return h('button', { class: 'btn sm' + (k >= 0 ? ' on' : ''), onclick: () => { const r = YA.pkToggle(w, w.players[p.id] || p); st.msgs = [r.msg]; YA.saveWorld(); renderBody(); } }, (k >= 0 ? (k + 1) + '. ' : '') + p.num + ' ' + surname(p)); })));
+        }
+      }
+      if (st.tab === 'tactic') {
+        renderTactic(true);
+      } else if (st.tab === 'set') {
+        renderSet();
       } else if (st.tab === 'squad') {
         renderSquad();
+        // 試合前の「戦術」：左に選手（先発・ベンチ・控え外）、続けて戦い方とチームの指示（2026-11-25 FM 寄り）
+        if (o.combined) { body.append(h('div', { style: 'margin-top:8px;border-top:1px dashed var(--line);padding-top:6px' })); renderTactic(false); }
       } else if (st.tab === 'role') {
         const p15 = YA.pos15OfSlot(sl, st.sel);
         body.append(h('div', { class: 'row', style: 'gap:6px;margin-bottom:4px' }, posChip(p), h('b', {}, `${p.num} ${p.name}`), h('span', { class: 'sub grow' }, `${p.height}cm ／ 自信 ${Math.round(p.conf)} ／ 利き足 ${p.foot === 'R' ? '右' : p.foot === 'L' ? '左' : '両'}`)), aptBlock(p));
@@ -919,7 +939,7 @@
     const rail = document.getElementById('rail');
     let todoTabs = null;
     try { todoTabs = app.w && app.view !== 'play' && YA.todoTabs ? YA.todoTabs(app.w) : null; } catch (er) { todoTabs = null; }
-    rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; app.tab = k; render(); } }, h('i', {}, ic), n, todoTabs && todoTabs.has(k) && app.tab !== k ? h('b', { class: 'tdot', 'aria-label': 'やり残しあり' }) : null)), app.w && app.view !== 'play' ? h('button', { class: 'tab tiphelp', style: 'margin-top:auto;min-height:30px', 'aria-label': 'この画面のガイド', onclick: () => (YA.showGuide ? YA.showGuide() : YA.coachTipAgain()) }, h('i', { style: 'font-size:15px' }, '？')) : null, h('button', { class: 'tab' + (app.tab === 'more' ? ' on' : ''), style: (app.w && app.view !== 'play' ? '' : 'margin-top:auto'), onclick: () => { if (app.view === 'play') return; app.tab = 'more'; render(); } }, h('i', {}, '☰'), 'ほか')); // 2026-11-16 案A：中は名鑑・記録・Bチーム・実績と引退・用語集・設定なので「ほか」に
+    rail.replaceChildren(h('div', { class: 'logo' }, 'ユースの', h('br'), '系譜'), ...TABS.map(([k, n, ic]) => h('button', { class: 'tab' + (app.tab === k ? ' on' : ''), onclick: () => { if (app.view === 'play') return; if (k === 'players') app.pOpen = false; app.tab = k; render(); } }, h('i', {}, ic), n, todoTabs && todoTabs.has(k) && app.tab !== k ? h('b', { class: 'tdot', 'aria-label': 'やり残しあり' }) : null)), app.w && app.view !== 'play' ? h('button', { class: 'tab tiphelp', style: 'margin-top:auto;min-height:30px', 'aria-label': 'この画面のガイド', onclick: () => (YA.showGuide ? YA.showGuide() : YA.coachTipAgain()) }, h('i', { style: 'font-size:15px' }, '？')) : null, h('button', { class: 'tab' + (app.tab === 'more' ? ' on' : ''), style: (app.w && app.view !== 'play' ? '' : 'margin-top:auto'), onclick: () => { if (app.view === 'play') return; app.tab = 'more'; render(); } }, h('i', {}, '☰'), 'ほか')); // 2026-11-16 案A：中は名鑑・記録・Bチーム・実績と引退・用語集・設定なので「ほか」に
   }
   // ボードの札に出す役割の短い名前（5字まで。切れ字の「…」を出さない）
   YA.ROLE_SHORT = { ゴールキーパー: 'GK', スイーパーキーパー: 'SWキーパー', センターディフェンダー: 'CB', ボールプレイングDF: '組立DF', ノーナンセンスCB: '堅実CB', ワイドCB: 'ワイドCB', フルバック: 'FB', インバーテッドフルバック: '偽SB', ウイングバック: 'WB', インバーテッドウイングバック: '偽WB', プレイメイキングウイングバック: '組立WB', アンカーマン: 'アンカー', ディフェンシブMF: '守備MF', ボール奪取MF: '奪取MF', ハーフバック: 'HB', ディープライイングプレイメーカー: '底の司令塔', セグンドボランチ: '2列目ボラ', セントラルMF: 'CM', ボックス・トゥ・ボックスMF: 'BtoB', アドバンスドプレイメーカー: '前の司令塔', メッツァラ: 'メッツァラ', ローミングプレイメーカー: '動く司令塔', ワイドMF: 'ワイドMF', ディフェンシブウインガー: '守備WG', ワイドプレイメーカー: '外の司令塔', インサイドフォワード: '内FW', インサイドウイング: '内WG', ラウムドイター: '空間屋', アタッキングMF: '攻撃MF', エンガンチェ: 'エンガンチェ', シャドーストライカー: 'シャドー', トレクァルティスタ: 'トレクァ', フリーロール: '自由', ディープライイングフォワード: '下がるFW', フォルスナイン: '偽9番', アドバンスドフォワード: '裏抜けFW', コンプリートフォワード: '万能FW', ポーチャー: 'ポーチャー', プレッシングフォワード: '守備FW', ターゲットフォワード: '的FW' };
@@ -1027,7 +1047,17 @@
       // 見ずに結果まで進める。試合中の「結果まで」と名前をそろえ、確かめてから進める（2026-11-17）
       h('button', { class: 'btn sm', style: 'margin-left:10px', onclick: () => { persistTeam(t); YA.confirmBox('試合を見ずに、結果まで進めますか？（交代・指示はできません）', () => simulateAll(t, oppTeam, opp, sched), { yes: '結果まで進める', skip: 'skipmatch' }); } }, '結果まで'));
     top.append(kick);
-    const panel = tacticPanel(t, { tabs: [['squad', '編成'], ['tactic', '戦い方'], ['role', '選手と役割'], ['opp', '相手の分析']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
+    // A／B の切り替え（2026-11-25：「ほか」にあった Bチームの指揮をここへ）
+    if (w && YA.bBlock) top.prepend(h('div', { class: 'row abtog', style: 'gap:3px;align-self:center;flex:none' }, h('button', { class: 'btn sm' + (!app.preB ? ' on' : ''), onclick: () => { app.preB = false; render(); } }, 'Aチーム'), h('button', { class: 'btn sm' + (app.preB ? ' on' : ''), onclick: () => { app.preB = true; render(); } }, 'Bチーム')));
+    if (w && app.preB && YA.bBlock) {
+      const bb = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
+      YA.bBlock(bb);
+      wrap.append(top, bb);
+      main.append(wrap);
+      return;
+    }
+    // 2026-11-25 FM 寄り：戦術（選手と戦い方）・選手の指示（役割と任務）・セットプレー・相手
+    const panel = tacticPanel(t, { combined: true, tabs: [['squad', '戦術'], ['role', '選手の指示'], ['set', 'セットプレー'], ['opp', '相手']], opp, oppTeam, onChange: () => { persistTeam(t); }, state: preState || {} });
     preState = panel.state;
     wrap.append(top, panel);
     main.append(wrap);
@@ -1393,6 +1423,8 @@
   }
 
   // ---------- 試合後 ----------
+  // 2026-11-25 画面の構成の作り直し（ユーザー決定・FM の試合の報告寄り）：小タブ 概要／選手／チーム／流れ。
+  //   攻めた方向・奪った位置の図は外し、数字（左・中・右の割合など）で「チーム」に出す
   function viewResult(main) {
     const { m, summary } = app.last;
     const wrap = h('div', { class: 'result' });
@@ -1401,95 +1433,119 @@
     wrap.append(
       h('div', { class: 'res-top' }, h('div', { class: 'res-score' }, YA.emblemEl(app.w, m.home.name, 24), h('span', {}, m.home.short), h('b', {}, `${summary.score.home} - ${summary.score.away}`), h('span', {}, m.away.short), YA.emblemEl(app.w, m.away.name, 24)), h('div', { class: 'h grow', style: 'font-size:15px' }, win ? '勝利' : draw ? '引き分け' : '敗戦'), m.scheduled ? h('button', { class: 'btn pri', style: 'min-width:110px', onclick: () => { app.view = 'pre'; preState = null; app.tab = 'home'; render(); } }, 'ホームへ（次の週へ）') : h('button', { class: 'btn', onclick: () => { app.view = 'pre'; preState = null; render(); } }, '戦術を直す'), m.scheduled ? null : h('button', { class: 'btn pri', onclick: () => { const t = newOurs(); startMatch(t, YA.makeOpponent(YA.OPPONENTS[app.opp], app.seed * 3 + app.opp + 1), YA.OPPONENTS[app.opp], false); } }, '同じ設定でもう一度')),
     );
-    const left = h('div', { class: 'card pbody grow' });
     const NB = YA.matchNumbers ? YA.matchNumbers(m) : null;
     const hasExp = !!(m.scheduled && app.w);
-    const lpane = h('div', {});
-    const showL = (k) => {
-      left.replaceChildren(h('div', { class: 'row', style: 'margin-bottom:5px;gap:5px' }, h('button', { class: 'btn sm' + (k === 'tl' ? ' on' : ''), onclick: () => showL('tl') }, '見どころ'), NB ? h('button', { class: 'btn sm' + (k === 'pn' ? ' on' : ''), onclick: () => showL('pn') }, '選手の数字') : null, hasExp ? h('button', { class: 'btn sm' + (k === 'xp' ? ' on' : ''), onclick: () => showL('xp') }, '試合の経験') : null), k === 'xp' ? expPane() : k === 'pn' ? numPane() : lpane);
+    const RT = [['ov', '概要'], ['pl', '選手'], ['tm', 'チーム'], ['fl', '流れ']];
+    app.rt = RT.some((x) => x[0] === app.rt) ? app.rt : 'ov';
+    const tabs = h('div', { class: 'tabs rtabs2' });
+    const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
+    const show = () => {
+      tabs.replaceChildren(...RT.map(([k, n]) => h('button', { class: 'btn sm' + (app.rt === k ? ' on' : ''), onclick: () => { app.rt = k; show(); } }, n)));
+      body.replaceChildren(app.rt === 'pl' ? playersPane() : app.rt === 'tm' ? teamPane() : app.rt === 'fl' ? flowPane() : overviewPane());
+      body.scrollTop = 0;
     };
-    // 選手ごとの主な数字（決定89）
-    function numPane() {
+    // 概要：得点・最優秀・コーチの一言（効いた戦術と気づき）
+    function overviewPane() {
+      const box = h('div', { style: 'display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap' });
+      const left = h('div', { style: 'flex:1;min-width:240px;display:flex;flex-direction:column;gap:6px' });
+      const goals = m.scenes.filter((sc) => sc.goal).map((sc) => { const t = sc.side === 'home' ? m.home : m.away; const sp = t.players[sc.scorer]; const ap = sc.assist ? t.players[sc.assist] : null; return { side: sc.side, k: sc.ml || sc.minute, t: sp ? `${surname(sp)}${ap ? `（${surname(ap)}）` : ''}` : 'オウンゴール' }; });
+      left.append(h('div', { class: 'h' }, '得点'), goals.length ? h('div', { style: 'display:grid;grid-template-columns:1fr 1fr;gap:2px 12px' }, h('div', {}, goals.filter((g) => g.side === 'home').map((g) => h('div', { style: 'font-size:12.5px' }, h('b', {}, g.k + "' "), g.t))), h('div', { style: 'text-align:right' }, goals.filter((g) => g.side === 'away').map((g) => h('div', { style: 'font-size:12.5px;color:#a83224' }, g.t, h('b', {}, ' ' + g.k + "'"))))) : h('div', { class: 'note' }, '得点はありませんでした'));
+      const all = Object.values(m.home.players).concat(Object.values(m.away.players)).filter((p) => p.st && p.st.minutes > 0).sort((a, b) => b.st.rating - a.st.rating);
+      const mom = all[0];
+      if (mom) { const mine = !!m.home.players[mom.id]; left.append(h('div', { class: 'h', style: 'margin-top:4px' }, 'この試合の最優秀'), h('div', { class: 'row', style: 'gap:6px' }, posChip(mom), h('b', {}, `${mom.num} ${mom.name}`), h('span', { class: 'sub' }, mine ? m.home.short : m.away.short), h('b', { style: 'margin-left:auto;font-size:15px' }, mom.st.rating.toFixed(1)))); }
+      left.append(h('div', { class: 'h', style: 'margin-top:4px' }, '採点（上位）'), h('div', { class: 'plist' }, summary.rated.slice(0, 5).map((p) => h('div', { class: 'pitem', style: 'cursor:default' }, posChip(p), h('span', { class: 'nm grow' }, `${p.num} ${surname(p)}`), p.st.goals ? h('span', { class: 'chip gray' }, `${p.st.goals}得点`) : null, h('b', {}, p.st.rating.toFixed(1))))));
+      const right = h('div', { style: 'width:300px;max-width:100%;display:flex;flex-direction:column;gap:4px' });
+      right.append(h('div', { class: 'h' }, '気づき（コーチの一言）'));
+      for (const n of summary.notes) right.append(h('div', { class: 'insight bad' }, n.text));
+      if (NB) right.append(h('div', { class: 'insight' }, h('span', { class: 'chip instr' }, '戦術'), ' ' + NB.tactic));
+      // 特性・性格が効いた回数（子ごとに1行。2026-11-21 品質）
+      const cnt = {};
+      for (const sc of m.scenes) for (const f of sc.fx) {
+        if (!m.home.players[f.pid]) continue;
+        const k = f.pid + '|' + f.tag + '|' + f.kind;
+        cnt[k] = cnt[k] || { f, n: 0, g: 0 };
+        cnt[k].n++;
+        if (sc.goal && sc.side === 'home') cnt[k].g++;
+      }
+      const byP = {};
+      for (const c of Object.values(cnt)) { const b = (byP[c.f.pid] = byP[c.f.pid] || { f: c.f, list: [], n: 0, g: 0 }); b.list.push(c); b.n += c.n; b.g += c.g; }
+      const ins = Object.values(byP).sort((a, b) => b.g - a.g || b.n - a.n).slice(0, 5);
+      if (!ins.length) right.append(h('div', { class: 'note' }, 'この試合は、特性や性格が目立つ場面がありませんでした。'));
+      for (const b of ins) { b.list.sort((x, y) => y.g - x.g || y.n - x.n); right.append(h('div', { class: 'insight', 'data-insight-player': '' }, h('b', {}, `${b.f.num}番 ${surname({ name: b.f.name })}`), '：' + b.list.slice(0, 3).map((c) => `「${c.f.tag}」${c.n}回`).join('・') + (b.list.length > 3 ? ` ほか${b.list.length - 3}つ` : '') + 'が効いた' + (b.g ? `（得点に${b.g}回）` : ''))); }
+      // ライバル監督の一言（試合のあと。club5.js が残したもの）
+      const rv = app.w && (app.w.inbox || []).slice(-6).reverse().find((n) => n.year === app.w.year && n.week === app.w.week && / → /.test(String(n.text)));
+      if (rv) right.append(h('div', { class: 'note', style: 'color:var(--ink)' }, '相手の監督：' + String(rv.text).split(' → ').pop()));
+      box.append(left, right);
+      return box;
+    }
+    // 選手：両チーム全員の採点と数字の表
+    function playersPane() {
       const box = h('div', {});
-      const th = (t, wd) => h('b', { style: `width:${wd}px;text-align:right;font-size:11.5px` }, t);
-      box.append(h('div', { class: 'pitem', style: 'cursor:default;gap:5px;background:#f5f8fd' }, h('span', { class: 'grow', style: 'font-size:11.5px;font-weight:800' }, '選手'), th('分', 26), th('採点', 30), th('パス', 62), th('シュート', 46), th('タックル', 44), th('奪取', 30), th('札', 22)));
-      box.append(h('div', { class: 'plist' }, NB.players.map((x) => {
-        const p = m.home.players[x.id];
-        const td = (t, wd) => h('span', { style: `width:${wd}px;text-align:right;font-size:11px` }, t);
-        return h('div', { class: 'pitem', style: 'cursor:default;gap:5px' }, posChip(p), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px' }, `${x.num} ${surname(p)}`), td(x.mins, 26), h('b', { style: 'width:30px;text-align:right;font-size:11px' }, x.rating.toFixed(1)), td(x.pos === 'GK' ? `セーブ${x.saves}` : `${x.passes}本 ${x.pct}%`, 62), td(x.shots + (x.goals ? `（${x.goals}点）` : ''), 46), td(x.tackles, 44), td(x.steals, 30), h('span', { style: 'width:22px;text-align:right;font-size:11px;font-weight:900;color:' + (x.red ? '#d62828' : '#b08a00') }, x.red ? '退' : x.yellow ? '黄' : ''));
-      })));
-      box.append(h('div', { class: 'note', style: 'margin-top:4px' }, 'パス・タックル・奪取は、見どころ以外の時間も含めた目安です。'));
+      app.rside = app.rside === 'away' ? 'away' : 'home';
+      const t = app.rside === 'away' ? m.away : m.home;
+      box.append(h('div', { class: 'row', style: 'gap:4px;margin-bottom:4px' }, ...[['home', m.home.short], ['away', m.away.short]].map(([k, n]) => h('button', { class: 'btn sm' + (app.rside === k ? ' on' : ''), onclick: () => { app.rside = k; show(); } }, n))));
+      const th = (tx, wd) => h('b', { style: `width:${wd}px;flex:none;text-align:right;font-size:11px` }, tx);
+      box.append(h('div', { class: 'pitem', style: 'cursor:default;gap:5px;background:#f5f8fd' }, h('span', { class: 'grow', style: 'font-size:11px;font-weight:800' }, '選手'), th('分', 26), th('採点', 30), th('パス', 58), th('シュート', 48), th('タックル', 52), th('カット', 34), th('セーブ', 34), th('札', 20)));
+      const ps = Object.values(t.players).filter((p) => p.st && p.st.minutes > 0).sort((a, b) => b.st.rating - a.st.rating);
+      const td = (tx, wd) => h('span', { style: `width:${wd}px;flex:none;text-align:right;font-size:11px` }, tx);
+      const cardOf = (p) => { const cs = (m.cards || []).filter((c) => c.pid === p.id); return cs.some((c) => c.kind !== 'Y') ? '退' : cs.length ? '黄' : ''; };
+      box.append(h('div', { class: 'plist' }, ps.map((p) => { const x = p.st; const pct = x.pa ? Math.round(((x.pc || 0) / x.pa) * 100) + '%' : '-'; const c = cardOf(p); return h('div', { class: 'pitem', style: 'cursor:default;gap:5px' }, posChip(p), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px' }, `${p.num} ${surname(p)}`), td(Math.round(x.minutes), 26), h('b', { style: 'width:30px;flex:none;text-align:right;font-size:11px' }, x.rating.toFixed(1)), td(x.pa ? `${x.pc || 0}/${x.pa} ${pct}` : '-', 58), td((x.shots || 0) + (x.goals ? `（${x.goals}点）` : ''), 48), td(x.ta ? `${x.tk || 0}/${x.ta}` : x.tk || 0, 52), td(x.ic || 0, 34), td(x.saves || 0, 34), h('span', { style: 'width:20px;flex:none;text-align:right;font-size:11px;font-weight:900;color:' + (c === '退' ? '#d62828' : '#b08a00') }, c)); })));
+      if (hasExp && t === m.home) box.append(expPane());
       return box;
     }
     // 試合でもらった経験：出場した選手ごとに、何がどれだけ増えたかを並べる
     function expPane() {
-      const box = h('div', {});
-      box.append(h('div', { class: 'note', style: 'margin-bottom:4px' }, '出た時間と採点で、自信・戦術理解・頭の経験値が増えます。頭の経験値は、次の週の成長（判断・予測など）に入ります。'));
+      const box = h('div', { style: 'margin-top:8px' });
+      box.append(h('div', { class: 'h' }, '試合の経験'), h('div', { class: 'note', style: 'margin-bottom:4px' }, '出た時間と採点で、自信・戦術理解・頭の経験値が増えます。頭の経験値は、次の週の成長（判断・予測など）に入ります。'));
       const rows = Object.keys(m.home.players).map((id) => app.w.players[id]).filter((p) => p && p.lm && p.lm.y === app.w.year && p.lm.w === app.w.week).sort((a, b) => b.lm.mins - a.lm.mins || b.lm.rating - a.lm.rating);
       if (!rows.length) box.append(h('div', { class: 'note' }, '経験の記録がありません'));
       const sg = (v, u) => (v > 0 ? '+' : '') + v + (u || '');
       box.append(h('div', { class: 'plist' }, rows.map((p) => h('div', { class: 'pitem', style: 'cursor:default;gap:5px;font-size:11px' }, posChip(p), h('span', { class: 'nm grow', style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `${p.num} ${surname(p)}`), h('span', { class: 'sub', style: 'width:34px' }, p.lm.mins + '分'), h('b', { style: 'width:26px' }, p.lm.rating.toFixed(1)), h('span', { class: 'chip trait', style: 'font-size:11px' }, '頭 +' + p.lm.xp), h('span', { class: 'sub', style: 'width:50px' }, '自信' + sg(p.lm.conf)), h('span', { class: 'sub', style: 'width:54px' }, '戦術' + sg(p.lm.tu)), p.lm.state ? h('span', { class: 'fit ' + (p.lm.state === 'peak' ? 'good' : 'bad') }, p.lm.state === 'peak' ? '伸び盛り' : '壁') : null))));
       return box;
     }
-    const tl = h('div', { class: 'tl' });
-    for (const sc of m.scenes) {
-      const who = (sc.side === 'home' ? m.home : m.away);
-      const sh = sc.shooter ? who.players[sc.shooter] : null;
-      const lastBeat = sc.beats[sc.beats.length - 1].text;
-      const tags = sc.fxShow.map((f) => h('span', { class: 'chip ' + f.kind }, `${f.num}番 ${f.tag}`));
-      tl.append(h('div', { class: 'it' + (sc.goal ? (sc.side === 'home' ? ' goal' : ' ogoal') : '') }, h('div', { class: 'm' }, (sc.ml || sc.minute) + "'"), h('div', { class: 'tx' }, h('span', { class: 'nm' }, (sc.side === 'home' ? m.home.short : m.away.short) + ' ' + sc.typeName), ' ', lastBeat, h('div', { class: 'tags' }, tags))));
-    }
-    // カード（2026-11-17）
-    for (const c of m.cards || []) {
-      const tm = c.side === 'home' ? m.home : m.away;
-      const p = tm.players[c.pid];
-      if (!p) continue;
-      tl.append(h('div', { class: 'it' }, h('div', { class: 'm' }, c.ml + "'"), h('div', { class: 'tx' }, h('span', { class: 'nm' }, tm.short + (c.kind === 'Y' ? ' イエロー' : ' 退場')), ' ', h('span', { style: 'display:inline-block;width:8px;height:11px;border-radius:1px;vertical-align:-1px;margin-right:4px;background:' + (c.kind === 'Y' ? '#f2c400' : '#d62828') }), p.num + '番 ' + surname(p) + (c.second ? '（2枚目）' : ''))));
-    }
-    // 時刻の順に並べ直す（「45+2」は45と46のあいだ）
-    const items = [...tl.children].map((el, i) => ({ el, i, k: (() => { const t0 = el.querySelector('.m').textContent.replace("'", ''); const [a, b] = t0.split('+'); return +a + (+b || 0) / 100; })() }));
-    items.sort((x, y) => x.k - y.k || x.i - y.i).forEach((x) => tl.append(x.el));
-    lpane.append(tl);
-    showL('tl');
-    const right = h('div', { class: 'card pbody', style: 'width:250px;flex:none' });
-    right.append(h('div', { class: 'h' }, '気づき'));
-    // 特性・性格が効いた回数
-    const cnt = {};
-    for (const sc of m.scenes) {
-      for (const f of sc.fx) {
-        const t = m.home.players[f.pid] ? 'h' : 'a';
-        if (t !== 'h') continue;
-        const k = f.pid + '|' + f.tag + '|' + f.kind;
-        cnt[k] = cnt[k] || { f, n: 0, g: 0 };
-        cnt[k].n++;
-        if (sc.goal && sc.side === 'home') cnt[k].g++;
-      }
-    }
-    // 不満など大事な指摘を先に出し、効いた特性は子ごとに1行へまとめる（2026-11-21 品質：同じ子の行が並んで指摘が埋もれた）
-    for (const n of summary.notes) right.append(h('div', { class: 'insight bad' }, n.text));
-    const byP = {};
-    for (const c of Object.values(cnt)) { const b = byP[c.f.pid] = byP[c.f.pid] || { f: c.f, list: [], n: 0, g: 0 }; b.list.push(c); b.n += c.n; b.g += c.g; }
-    const ins = Object.values(byP).sort((a, b) => b.g - a.g || b.n - a.n).slice(0, 5);
-    if (!ins.length) right.append(h('div', { class: 'note' }, 'この試合は、特性や性格が目立つ場面がありませんでした。'));
-    for (const b of ins) { b.list.sort((x, y) => y.g - x.g || y.n - x.n); right.append(h('div', { class: 'insight', 'data-insight-player': '' }, h('b', {}, `${b.f.num}番 ${surname({ name: b.f.name })}`), '：' + b.list.slice(0, 3).map((c) => `「${c.f.tag}」${c.n}回`).join('・') + (b.list.length > 3 ? ` ほか${b.list.length - 3}つ` : '') + 'が効いた' + (b.g ? `（得点に${b.g}回）` : ''))); }
-    const sh = m.stats.home;
-    const sa = m.stats.away;
-    function cardLine() {
+    // チーム：両チームの数字の比較
+    function teamPane() {
+      const sum = (t) => { const o = { pa: 0, pc: 0, ta: 0, tk: 0, ic: 0 }; for (const p of Object.values(t.players)) { const x = p.st || {}; o.pa += x.pa || 0; o.pc += x.pc || 0; o.ta += x.ta || 0; o.tk += x.tk || 0; o.ic += x.ic || 0; } return o; };
+      const a = sum(m.home), b = sum(m.away);
+      const sh = m.stats.home, sa = m.stats.away;
       const cs = m.cards || [];
-      const n = (sd, k) => cs.filter((c) => c.side === sd && c.kind === k).length;
-      return h('div', { class: 'note', style: 'color:var(--ink)' }, 'カード　' + m.home.short + ' イエロー' + n('home', 'Y') + '・退場' + n('home', 'R') + '　-　' + m.away.short + ' イエロー' + n('away', 'Y') + '・退場' + n('away', 'R'));
+      const cn = (sd, k) => cs.filter((c) => c.side === sd && (k === 'Y' ? c.kind === 'Y' : c.kind !== 'Y')).length;
+      const ps = m.live && m.live.poss ? m.live.poss : null;
+      const hp = NB ? NB.poss : ps && ps.home + ps.away > 0 ? Math.round((ps.home / (ps.home + ps.away)) * 100) : 50;
+      const pct = (x, y) => (y > 0 ? Math.round((x / y) * 100) + '%' : '-');
+      const rows = [['ボール保持', hp + '%', 100 - hp + '%'], ['シュート', sh.shots, sa.shots], ['枠内', sh.onTarget, sa.onTarget], ['パス', a.pa, b.pa], ['パス成功率', pct(a.pc, a.pa), pct(b.pc, b.pa)], ['タックル', a.tk, b.tk], ['パスカット', a.ic, b.ic], ['CK', sh.corners || 0, sa.corners || 0], ['ファウル', sh.fouls || 0, sa.fouls || 0], ['オフサイド', sh.offside || 0, sa.offside || 0], ['イエロー', cn('home', 'Y'), cn('away', 'Y')], ['退場', cn('home', 'R'), cn('away', 'R')]];
+      if (NB) rows.push(['相手陣で奪った', NB.won, '-']);
+      const box = h('div', { style: 'max-width:520px;margin:0 auto' });
+      box.append(h('div', { class: 'row', style: 'justify-content:space-between;font-weight:900;color:var(--navy);font-size:13px;margin-bottom:4px' }, h('span', {}, m.home.short), h('span', {}, m.away.short)));
+      box.append(h('div', { style: 'height:8px;border-radius:5px;background:#c8402f;overflow:hidden;margin-bottom:6px' }, h('i', { style: `display:block;height:100%;width:${hp}%;background:#1f6feb` })));
+      for (const [n, x, y] of rows) box.append(h('div', { class: 'row tmrow', style: 'justify-content:space-between;border-bottom:1px dashed var(--line);padding:3px 0;font-size:12.5px' }, h('b', { style: 'width:70px' }, String(x)), h('span', { class: 'sub' }, n), h('b', { style: 'width:70px;text-align:right' }, String(y))));
+      if (NB) box.append(h('div', { class: 'h', style: 'margin-top:8px' }, '攻めた方向（' + m.home.short + '）'), h('div', { class: 'row', style: 'gap:14px;justify-content:center;font-size:13px' }, ...['左', '中央', '右'].map((k) => h('span', {}, k + ' ', h('b', {}, NB.dir[k] + '%')))));
+      return box;
     }
-    if (NB) {
-      right.append(h('div', { class: 'insight' }, h('span', { class: 'chip instr' }, '戦術'), ' ' + NB.tactic));
-      const bar = (lbl, v) => h('div', { class: 'row', style: 'gap:6px;font-size:11px' }, h('span', { style: 'width:30px' }, lbl), h('span', { style: 'flex:1;height:8px;background:#e6ebe2;border-radius:4px;overflow:hidden' }, h('span', { style: `display:block;height:100%;width:${v}%;background:#2a62c4` })), h('b', { style: 'width:34px;text-align:right' }, v + '%'));
-      right.append(h('div', { class: 'h', style: 'margin-top:8px' }, '試合の数字'),
-        h('div', { class: 'note', style: 'color:var(--ink)' }, `保持 ${NB.poss}%　シュート ${sh.shots}（枠内${sh.onTarget}）- ${sa.shots}（枠内${sa.onTarget}）　相手陣で奪った ${NB.won}回`),
-        cardLine(),
-        h('div', { class: 'note', style: 'margin-top:4px' }, '攻めた方向'), bar('左', NB.dir.左), bar('中央', NB.dir.中央), bar('右', NB.dir.右));
-    } else right.append(h('div', { class: 'h', style: 'margin-top:8px' }, 'シュート'), h('div', { class: 'note' }, `${m.home.short} ${sh.shots}（枠内${sh.onTarget}）  -  ${m.away.short} ${sa.shots}（枠内${sa.onTarget}）`), cardLine());
-    right.append(h('div', { class: 'h', style: 'margin-top:8px' }, '採点（上位）'));
-    right.append(h('div', { class: 'plist' }, summary.rated.slice(0, 6).map((p, i) => h('div', { class: 'pitem' }, posChip(p), h('span', { class: 'nm grow' }, `${p.num} ${surname(p)}`), p.st.goals ? h('span', { class: 'chip gray' }, `${p.st.goals}得点`) : null, h('b', {}, p.st.rating.toFixed(1))))));
-    wrap.append(h('div', { class: 'res-body' }, left, right));
+    // 流れ：見どころ・カードを時刻順に、そのあと実況のすべて
+    function flowPane() {
+      const box = h('div', {});
+      const tl = h('div', { class: 'tl' });
+      for (const sc of m.scenes) {
+        const lastBeat = sc.beats[sc.beats.length - 1].text;
+        const tags = sc.fxShow.map((f) => h('span', { class: 'chip ' + f.kind }, `${f.num}番 ${f.tag}`));
+        tl.append(h('div', { class: 'it' + (sc.goal ? (sc.side === 'home' ? ' goal' : ' ogoal') : '') }, h('div', { class: 'm' }, (sc.ml || sc.minute) + "'"), h('div', { class: 'tx' }, h('span', { class: 'nm' }, (sc.side === 'home' ? m.home.short : m.away.short) + ' ' + sc.typeName), ' ', lastBeat, h('div', { class: 'tags' }, tags))));
+      }
+      for (const c of m.cards || []) {
+        const tm = c.side === 'home' ? m.home : m.away;
+        const p = tm.players[c.pid];
+        if (!p) continue;
+        tl.append(h('div', { class: 'it' }, h('div', { class: 'm' }, c.ml + "'"), h('div', { class: 'tx' }, h('span', { class: 'nm' }, tm.short + (c.kind === 'Y' ? ' イエロー' : ' 退場')), ' ', h('span', { style: 'display:inline-block;width:8px;height:11px;border-radius:1px;vertical-align:-1px;margin-right:4px;background:' + (c.kind === 'Y' ? '#f2c400' : '#d62828') }), p.num + '番 ' + surname(p) + (c.second ? '（2枚目）' : ''))));
+      }
+      const items = [...tl.children].map((el, i) => ({ el, i, k: (() => { const t0 = el.querySelector('.m').textContent.replace("'", ''); const [x, y] = t0.split('+'); return +x + (+y || 0) / 100; })() }));
+      items.sort((x, y) => x.k - y.k || x.i - y.i).forEach((x) => tl.append(x.el));
+      box.append(h('div', { class: 'h' }, '見どころ'), tl);
+      const lg = (m.log || []).filter((l) => l.scene == null && l.text);
+      if (lg.length) box.append(h('div', { class: 'h', style: 'margin-top:8px' }, '実況'), h('div', { style: 'display:flex;flex-direction:column;gap:1px' }, lg.map((l) => h('div', { style: 'font-size:11.5px;color:#5a6a84' }, h('b', { style: 'color:var(--navy);margin-right:6px' }, (l.ml || l.minute) + "'"), l.text))));
+      return box;
+    }
+    show();
+    wrap.append(tabs, h('div', { class: 'res-body', style: 'flex:1;min-height:0;display:flex' }, body));
     main.append(wrap);
   }
 
@@ -1500,5 +1556,5 @@
     document.addEventListener('click', (e) => { if (YA.bgm) YA.bgm.unlock(); if (e.target.closest && e.target.closest('button')) YA.sfx.play('tap'); });
     render();
   };
-  YA._ui = { app, render, store, h, playerCard, persChips, abBar, surname, persText, newOurs, persistTeam };
+  YA._ui = { app, render, store, h, playerCard, persChips, abBar, surname, persText, newOurs, persistTeam, goldHint };
 })();
