@@ -8,11 +8,12 @@ import '../theme/semantic_colors.dart';
 import '../widgets/chip_switcher.dart';
 import '../widgets/club_emblem.dart';
 import 'awards_history.dart';
+import 'best_eleven_screen.dart';
 import 'club_detail_screen.dart';
 import 'player_detail_screen.dart';
 
 /// リーグの個人成績(FM の「Stats」)。今季のランキング(得点・アシスト・
-/// 平均採点・無失点)と、歴代の個人タイトル。
+/// 平均採点・無失点)と、歴代の個人タイトル・ベストイレブン。
 ///
 /// 2026-11-25 に資料の「リーグランキング」「個人タイトル」から移して1つに
 /// した(利用者「得点王などの情報もリーグで見られるように」)。選手の名前を
@@ -24,8 +25,11 @@ class LeagueStatsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChipSwitcher(items: [
       (Tr.pick('今季のランキング', 'This season'), (_) => const _Rankings()),
-      (Tr.pick('個人タイトル(歴代)', 'Awards by season'),
-          (_) => const AwardsHistory()),
+      (Tr.pick('個人タイトル(歴代)', 'Awards by season'), (_) => const AwardsHistory()),
+      (
+        Tr.pick('ベストイレブン(歴代)', 'Teams of the season'),
+        (_) => const BestElevenHistory()
+      ),
     ]);
   }
 }
@@ -55,8 +59,7 @@ class _Rankings extends StatelessWidget {
       ),
       _RankingTable(
         key: const ValueKey('ranking-rating'),
-        title: Tr.pick('平均採点($minApps試合以上)',
-            'Average rating ($minApps+ apps)'),
+        title: Tr.pick('平均採点($minApps試合以上)', 'Average rating ($minApps+ apps)'),
         lines: stats.top((l) => l.avgRating, limit: 10, minApps: minApps),
         value: (l) => l.avgRating.toStringAsFixed(2),
       ),

@@ -146,6 +146,7 @@ extension GameStateDecisions on GameState {
     s.supporterLastMonth.clear();
     s.supporterLastMonthKey = 0;
     s.supporterMonthEnds.clear();
+    s.fundsMonthEnds.clear();
     s.supporterMonthPoints = 0;
     s.supporterMonthGames = 0;
     s.fanWorkMonthKey = 0;

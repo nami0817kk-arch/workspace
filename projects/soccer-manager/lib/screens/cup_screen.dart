@@ -88,8 +88,8 @@ class _DomesticCupTab extends StatelessWidget {
         _CupHeading(
           key: const ValueKey('domestic-cup-heading'),
           title: cup.name,
-          divider: gameState.leagueCup != null ||
-              gameState.fourClubSuperCup != null,
+          divider:
+              gameState.leagueCup != null || gameState.fourClubSuperCup != null,
         ),
         if (cup.isComplete)
           Card(
@@ -142,7 +142,6 @@ class _DomesticCupTab extends StatelessWidget {
       ],
     );
   }
-
 }
 
 /// 出場のしかたの説明(チャンピオンズカップとヨーロッパカップ)。
@@ -301,7 +300,6 @@ class _ContinentalCupTabState extends State<_ContinentalCupTab> {
       ],
     );
   }
-
 }
 
 /// 国内カップの1試合分カード。自クラブの試合は背景色に加えて、
@@ -712,7 +710,6 @@ class _FourClubSuperCupSection extends StatelessWidget {
       ),
     );
   }
-
 }
 
 /// カップ戦の試合は、進むボタンがその日に止まって行う(2026-11-22)。
@@ -741,7 +738,6 @@ class _CupByDateNote extends StatelessWidget {
       );
 }
 
-
 /// 山の形に出す回戦の組の数の上限。これより組の多い回戦は一覧で出す。
 const int _bracketMax = 8;
 
@@ -749,8 +745,7 @@ const int _bracketMax = 8;
 BracketTie _tieOfCup(CupMatch m) {
   if (m.isBye) {
     final team = m.homeTeamId == byeTeamId ? m.awayTeamId : m.homeTeamId;
-    return BracketTie(
-        teamA: team, winnerId: team, note: Tr.pick('不戦勝', 'bye'));
+    return BracketTie(teamA: team, winnerId: team, note: Tr.pick('不戦勝', 'bye'));
   }
   final done = m.result != null;
   return BracketTie(
@@ -783,8 +778,9 @@ BracketTie _tieOfContinental(CupTie t) => BracketTie(
 /// 国内カップの、組が[_bracketMax]以下になった回戦から決勝までの山の形の表。
 Widget _domesticBracket(List<List<CupMatch>> rounds, int totalRounds,
     String Function(String) nameOf, String userId) {
-  final all = CupBracket.withPlaceholders(
-      [for (final r in rounds) [for (final m in r) _tieOfCup(m)]], totalRounds);
+  final all = CupBracket.withPlaceholders([
+    for (final r in rounds) [for (final m in r) _tieOfCup(m)]
+  ], totalRounds);
   var start = all.indexWhere((r) => r.length <= _bracketMax);
   if (start < 0) start = all.length - 1;
   return Padding(

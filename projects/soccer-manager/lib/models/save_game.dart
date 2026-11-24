@@ -492,6 +492,10 @@ class SaveGame {
   /// 月末ごとのサポーターの期待(直近12か月。古い順)。最後通告の推移に出す。
   List<int> supporterMonthEnds;
 
+  /// 月末ごとの資金([月の番号(年×12+月-1), 資金(万円)]。古い順・直近120
+  /// か月)。収支の詳しい表の月ごとの推移に出す(2026-11-25)。旧セーブは空。
+  List<List<int>> fundsMonthEnds;
+
   /// 今月の自クラブのリーグ戦の勝点と試合数(月末のまとめに使う)。
   int supporterMonthPoints;
   int supporterMonthGames;
@@ -853,6 +857,10 @@ class SaveGame {
   /// 解除済みの実績(アチーブメント)ID→達成したシーズン番号。
   Map<String, int> unlockedAchievements;
 
+  /// 実績を達成した日(ID→「2026-08-16」)。2026-11-25 に足した。それより前に
+  /// 達成した実績は無い(画面は季だけを出す)。
+  Map<String, String> achievementDates;
+
   /// 現在のシーズン開始時点での自クラブ選手の総合力(選手ID→総合力)。
   /// シーズン終了時に、この時点からの成長を選手ごとに算出するために使う。
   Map<String, int> seasonStartOverallByPlayerId;
@@ -931,6 +939,7 @@ class SaveGame {
     Map<String, int>? supporterLastMonth,
     this.supporterLastMonthKey = 0,
     List<int>? supporterMonthEnds,
+    List<List<int>>? fundsMonthEnds,
     this.supporterMonthPoints = 0,
     this.supporterMonthGames = 0,
     this.fanWorkMonthKey = 0,
@@ -1110,6 +1119,7 @@ class SaveGame {
     this.pendingSuperCup,
     this.consecutiveNegativeBudgetWeeks = 0,
     Map<String, int>? unlockedAchievements,
+    Map<String, String>? achievementDates,
     Map<String, int>? seasonStartOverallByPlayerId,
     this.weekProcessedSeason = 0,
     this.weekProcessedMatchday = 0,
@@ -1140,6 +1150,7 @@ class SaveGame {
         supporterMonth = supporterMonth ?? {},
         supporterLastMonth = supporterLastMonth ?? {},
         supporterMonthEnds = supporterMonthEnds ?? [],
+        fundsMonthEnds = fundsMonthEnds ?? [],
         clubApps = clubApps ?? {},
         clubGoals = clubGoals ?? {},
         clubRecordNames = clubRecordNames ?? {},
@@ -1152,6 +1163,7 @@ class SaveGame {
         rivalOwners = rivalOwners ?? [],
         budgetPlan = budgetPlan ?? BudgetPlan.balanced(),
         unlockedAchievements = unlockedAchievements ?? {},
+        achievementDates = achievementDates ?? {},
         seasonStartOverallByPlayerId = seasonStartOverallByPlayerId ?? {},
         newsLog = newsLog ?? [],
         trophyHistory = trophyHistory ?? [],
@@ -1347,6 +1359,7 @@ class SaveGame {
           'supporterLastMonthKey': supporterLastMonthKey,
         if (supporterMonthEnds.isNotEmpty)
           'supporterMonthEnds': supporterMonthEnds,
+        if (fundsMonthEnds.isNotEmpty) 'fundsMonthEnds': fundsMonthEnds,
         if (supporterMonthPoints > 0)
           'supporterMonthPoints': supporterMonthPoints,
         if (supporterMonthGames > 0) 'supporterMonthGames': supporterMonthGames,
@@ -1554,6 +1567,7 @@ class SaveGame {
         'pendingSuperCup': pendingSuperCup?.toJson(),
         'consecutiveNegativeBudgetWeeks': consecutiveNegativeBudgetWeeks,
         'unlockedAchievements': unlockedAchievements,
+        if (achievementDates.isNotEmpty) 'achievementDates': achievementDates,
         'seasonStartOverallByPlayerId': seasonStartOverallByPlayerId,
         'weekProcessedSeason': weekProcessedSeason,
         'weekProcessedMatchday': weekProcessedMatchday,
@@ -1666,6 +1680,11 @@ class SaveGame {
         supporterLastMonthKey: json['supporterLastMonthKey'] as int? ?? 0,
         supporterMonthEnds: (json['supporterMonthEnds'] as List?)
             ?.map((e) => e as int)
+            .toList(),
+        fundsMonthEnds: (json['fundsMonthEnds'] as List?)
+            ?.whereType<List>()
+            .where((e) => e.length == 2)
+            .map((e) => [(e[0] as num).toInt(), (e[1] as num).toInt()])
             .toList(),
         supporterMonthPoints: json['supporterMonthPoints'] as int? ?? 0,
         supporterMonthGames: json['supporterMonthGames'] as int? ?? 0,
@@ -2106,6 +2125,10 @@ class SaveGame {
             json['consecutiveNegativeBudgetWeeks'] as int? ?? 0,
         unlockedAchievements: (json['unlockedAchievements'] as Map?)?.map(
               (k, v) => MapEntry(k as String, v as int),
+            ) ??
+            {},
+        achievementDates: (json['achievementDates'] as Map?)?.map(
+              (k, v) => MapEntry(k as String, '$v'),
             ) ??
             {},
         seasonStartOverallByPlayerId:

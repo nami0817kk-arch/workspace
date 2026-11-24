@@ -48,7 +48,6 @@ import '../logic/board_target_progress.dart';
 import '../models/club_vision.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
-import '../widgets/big_moment_overlay.dart';
 import '../widgets/rumor_card.dart';
 import '../logic/economy_scale.dart';
 
@@ -769,8 +768,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              // まだ見せていない大事な場面があれば、画面いっぱいの1枚で出す。
-              const BigMomentPresenter(),
               if (gameState.save?.frontPageHeadline != null)
                 const FrontPageCard(),
               // 横画面では、どの画面も左メニューの項目から開ける。同じ入口を

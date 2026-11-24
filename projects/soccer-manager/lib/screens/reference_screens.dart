@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
-import '../logic/contract_engine.dart';
-import '../logic/economy_scale.dart';
-import '../models/player.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/auto_columns.dart';
@@ -22,7 +19,6 @@ import '../widgets/rival_card.dart';
 import '../widgets/trend_chart.dart';
 import 'calendar_screen.dart';
 import 'club_calendar_screen.dart';
-import 'player_detail_screen.dart';
 
 /// 見るだけの画面(資料)。左上の ≡ の「資料」から開く。
 ///
@@ -30,140 +26,78 @@ import 'player_detail_screen.dart';
 /// 「記録」、オーナー室の「オーナーと世界」の一部)。操作する場所と見る場所を
 /// 分け、見るだけのものはここへ集めた(2026-11-24)。
 
-/// 収支の詳しい表: 帳簿・5年の見込み・推移・全員の契約の一覧。
+/// 収支の詳しい表: 今季の帳簿・資金の月ごとの推移・5年の見込み。
+///
+/// 2026-11-25: 全員の契約の一覧は外した(選手の「登録と契約」と同じ表だった)。
+/// 季ごとの推移はシーズン成績の画面に同じものがあるので外し、代わりに資金を
+/// 1季目から月ごとに出す。試合がまだ無いうちは、空の表を並べずに
+/// 「まだ試合がありません」の1行だけにする。
 class FinanceReportScreen extends StatelessWidget {
   const FinanceReportScreen({super.key});
 
-  void _openPlayer(BuildContext context, String playerId) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => PlayerDetailScreen(playerId: playerId)),
-    );
+  /// 帳簿に出せる試合がまだ無いか(今季のリーグ戦が1つも済んでおらず、
+  /// 終えた季も無い)。
+  static bool noMatchesYet(GameState gs) {
+    final s = gs.save;
+    if (s == null) return true;
+    return gs.seasonHistory.isEmpty &&
+        s.league.fixtures.every((f) => f.result == null);
   }
 
   @override
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
-    final team = gameState.userTeam;
-    final sortedByExpiry = team.players.where((p) => !p.isLoan).toList()
-      ..sort(
-        (a, b) => a.contractYearsRemaining.compareTo(b.contractYearsRemaining),
-      );
     return Scaffold(
       appBar: AppBar(title: Text(Tr.pick('収支の詳しい表', 'Accounts in detail'))),
       body: ResponsiveBody(
-        child: AutoColumns(
-          children: [
-            const LedgerCard(),
-            const ProjectionCard(),
-            const TrendsCard(),
-            // 見出しと行を1つにまとめる(2列に割るとき、見出しだけが左の列に
-            // 残らないように)。
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 16),
-                Text(
-                  Tr.pick(
-                      '契約状況（残り年数が少ない順）', 'Contracts, shortest remaining first'),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                for (final (i, p) in sortedByExpiry.indexed)
-                  InkWell(
-                    onTap: () => _openPlayer(context, p.id),
-                    child: Container(
-                      height: 48,
-                      color: i.isOdd
-                          ? Theme.of(context).colorScheme.surfaceContainerLow
-                          : null,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(p.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.w600)),
-                          ),
-                          SizedBox(
-                            width: 44,
-                            child: Text(p.position.label,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 12)),
-                          ),
-                          // 英語の「1.2m yen」が2行に折れていた(2026-11-23)。
-                          SizedBox(
-                            width: 84,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerRight,
-                              child: Text(formatMoney(annualFromWeekly(p.wage)),
-                                  maxLines: 1,
-                                  textAlign: TextAlign.right,
-                                  style: const TextStyle(fontSize: 12)),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 64,
-                            child: Text(
-                              ContractEngine.untilShortLabel(p.contractEndYear),
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: p.contractYearsRemaining <= 1
-                                    ? SemanticColors.negative(context)
-                                    : null,
-                                fontWeight: p.contractYearsRemaining <= 1
-                                    ? FontWeight.bold
-                                    : null,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+        child: noMatchesYet(gameState)
+            ? Center(
+                child: Padding(
+                  key: const ValueKey('finance-report-empty'),
+                  padding: const EdgeInsets.all(24),
+                  child: Text(
+                    Tr.pick('まだ試合がありません。節が進むと、収支の内訳と月ごとの資金の推移が出ます。',
+                        'No matches yet. Once matchdays are played, the accounts and the month-by-month funds appear here.'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: SemanticColors.subtleText(context)),
                   ),
-              ],
-            ),
-          ],
-        ),
+                ),
+              )
+            : const AutoColumns(
+                minChildren: 2,
+                children: [
+                  LedgerCard(),
+                  MonthlyFundsCard(),
+                  ProjectionCard(),
+                ],
+              ),
       ),
     );
   }
 }
 
-/// クラブの記録: クラブの価値・番付・宿敵・年表。
+/// クラブとオーナーの記録(2026-11-25 に「クラブの記録」と「オーナーの記録」を
+/// 1つにした。どちらもクラブの価値・他のクラブとの比べを持っていて、
+/// 同じ話が2つのページに分かれていた)。
+///
+/// 上から: クラブ価値(内訳と季末の推移)・リーグの他クラブとの比べ・世界の
+/// 番付・宿敵・年表・オーナーの経歴・手放したクラブ・国の係数。
 class ClubRecordsScreen extends StatelessWidget {
   const ClubRecordsScreen({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(Tr.pick('クラブの記録', 'Club records'))),
+        appBar:
+            AppBar(title: Text(Tr.pick('クラブとオーナーの記録', 'Club & owner records'))),
         body: const ResponsiveBody(
           child: AutoColumns(
             children: [
               ClubValueCard(),
+              ClubComparisonCard(),
               ClubRankingCard(),
               RivalCard(),
               ClubTimelineCard(),
-            ],
-          ),
-        ),
-      );
-}
-
-/// オーナーの記録: 経歴・他のクラブとの比較・手放したクラブのその後・国の係数。
-class OwnerRecordsScreen extends StatelessWidget {
-  const OwnerRecordsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(Tr.pick('オーナーの記録', 'Owner records'))),
-        body: const ResponsiveBody(
-          child: AutoColumns(
-            children: [
               OwnerCareerCard(),
-              ClubComparisonCard(),
               FormerClubsCard(),
               CountryCoefficientCard(),
             ],

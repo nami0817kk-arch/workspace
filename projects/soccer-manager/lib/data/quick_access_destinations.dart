@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../screens/achievements_screen.dart';
-import '../screens/best_eleven_screen.dart';
 import '../screens/reference_screens.dart';
 import '../screens/club_screen.dart';
 import '../screens/contract_board_screen.dart';
@@ -128,16 +127,9 @@ List<QuickAccessDestination> get quickAccessDestinations => [
       ),
       QuickAccessDestination(
         icon: Icons.shield_outlined,
-        label: Tr.pick('クラブの記録', 'Club records'),
+        label: Tr.pick('クラブとオーナーの記録', 'Club & owner records'),
         color: Colors.blueGrey.shade600,
         builder: (_) => const ClubRecordsScreen(),
-        group: QuickAccessGroup.reference,
-      ),
-      QuickAccessDestination(
-        icon: Icons.person_outline,
-        label: Tr.pick('オーナーの記録', 'Owner records'),
-        color: Colors.indigo.shade400,
-        builder: (_) => const OwnerRecordsScreen(),
         group: QuickAccessGroup.reference,
       ),
       QuickAccessDestination(
@@ -171,14 +163,6 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('シーズン成績', 'Season archive'),
         color: Colors.teal.shade700,
         builder: (_) => const SeasonHistoryScreen(),
-        group: QuickAccessGroup.reference,
-        lockedReason: _needsFirstSeason,
-      ),
-      QuickAccessDestination(
-        icon: Icons.groups,
-        label: Tr.pick('ベストイレブン', 'Team of the season'),
-        color: Colors.orange.shade700,
-        builder: (_) => const BestElevenScreen(),
         group: QuickAccessGroup.reference,
         lockedReason: _needsFirstSeason,
       ),

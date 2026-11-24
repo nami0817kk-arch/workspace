@@ -94,8 +94,8 @@ class FixturesScreen extends StatelessWidget {
                       // 3〜5)。その下の2クラブがヨーロッパカップ。
                       continentalQualifyCount: context
                           .read<GameState>()
-                          .championsSpotsFor(leagueThemeFromName(name) ??
-                              LeagueTheme.england),
+                          .championsSpotsFor(
+                              leagueThemeFromName(name) ?? LeagueTheme.england),
                       europaQualifyCount: CountryCoefficientEngine.europaSpots,
                     ),
               ),

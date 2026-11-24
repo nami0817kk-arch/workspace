@@ -72,8 +72,8 @@ class InboxScreen extends StatefulWidget {
     // 札の言葉(画面の文言ではない)。i18n-ignore
     if (has(['施設', 'Facilit'])) return TodoPlaces.clubFacilities;
     // 札の言葉(画面の文言ではない)。i18n-ignore
-    if (has(['サポーター', 'Supporter', '自治体', 'Council', '年間シート',
-        'Season ticket'])) {
+    if (has(
+        ['サポーター', 'Supporter', '自治体', 'Council', '年間シート', 'Season ticket'])) {
       return TodoPlaces.clubCommunity;
     }
     // 札の言葉(画面の文言ではない)。i18n-ignore
@@ -162,8 +162,7 @@ class _InboxScreenState extends State<InboxScreen> {
     final gs = context.watch<GameState>();
     final actions = gs.inboxActions;
     final all = gs.save?.newsLog ?? const <NewsItem>[];
-    final news =
-        InboxScreen.filter(all, category: _category, query: _query);
+    final news = InboxScreen.filter(all, category: _category, query: _query);
     final size = MediaQuery.sizeOf(context);
     final wide = size.width > size.height && size.width >= 600;
     final open = _open != null && news.contains(_open)
@@ -191,13 +190,12 @@ class _InboxScreenState extends State<InboxScreen> {
                   children: [
                     Icon(Icons.priority_high,
                         size: 18,
-                        color:
-                            SemanticColors.ink(context, Colors.orange.shade800)),
+                        color: SemanticColors.ink(
+                            context, Colors.orange.shade800)),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        Tr.pick(
-                            '答えを待つものが${actions.length}件(状況の「やること」へ)',
+                        Tr.pick('答えを待つものが${actions.length}件(状況の「やること」へ)',
                             '${actions.length} waiting for your answer (to do list)'),
                         maxLines: 2,
                         style: TextStyle(
@@ -238,8 +236,8 @@ class _InboxScreenState extends State<InboxScreen> {
                     avatar: Icon(c.icon, size: 16, color: c.color(context)),
                     label: Text('${c.label} ${counts[c]}'),
                     selected: _category == c,
-                    onSelected: (_) => setState(
-                        () => _category = _category == c ? null : c),
+                    onSelected: (_) =>
+                        setState(() => _category = _category == c ? null : c),
                   ),
                 ),
             ],
@@ -297,10 +295,10 @@ class _InboxScreenState extends State<InboxScreen> {
                             if (wide) {
                               setState(() => _open = n);
                             } else {
-                              Navigator.of(context).push(MaterialPageRoute<void>(
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute<void>(
                                 builder: (_) => Scaffold(
-                                  appBar: AppBar(
-                                      title: Text(n.category.label)),
+                                  appBar: AppBar(title: Text(n.category.label)),
                                   body: _InboxDetail(item: n, onGo: _goTo),
                                 ),
                               ));
@@ -335,7 +333,8 @@ class _InboxScreenState extends State<InboxScreen> {
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(width: (size.width * 0.44).clamp(300.0, 480.0),
+                SizedBox(
+                    width: (size.width * 0.44).clamp(300.0, 480.0),
                     child: list),
                 const VerticalDivider(width: 1),
                 Expanded(
@@ -478,7 +477,8 @@ class _InboxDetail extends StatelessWidget {
           ],
         ),
         const Divider(height: 20),
-        SelectableText(item.text, style: const TextStyle(fontSize: 15, height: 1.5)),
+        SelectableText(item.text,
+            style: const TextStyle(fontSize: 15, height: 1.5)),
         if (place != null) ...[
           const SizedBox(height: 16),
           Align(

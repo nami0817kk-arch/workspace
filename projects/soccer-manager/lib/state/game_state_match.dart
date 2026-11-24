@@ -1334,6 +1334,10 @@ extension GameStateMatch on GameState {
     final recordedSeason = season ?? _save!.league.season;
     for (final a in newly) {
       _save!.unlockedAchievements[a.id] = recordedSeason;
+      // 達成した日(実績の画面に出す。2026-11-25)。
+      final d = SeasonCalendar.dateOnly(today);
+      _save!.achievementDates[a.id] =
+          '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
       _logNews(Tr.pick('実績「${a.name}」を達成!', 'Achievement unlocked: ${a.name}'),
           context: Tr.pick('実績', 'Achievement'));
     }
@@ -1348,6 +1352,10 @@ extension GameStateMatch on GameState {
 
   /// 実績を達成したシーズン番号(未達成の場合はnull)。
   int? achievementUnlockedSeason(String id) => _save?.unlockedAchievements[id];
+
+  /// 実績を達成した日(2026-11-25 より前に達成したものは null)。
+  DateTime? achievementUnlockedDate(String id) =>
+      DateTime.tryParse(_save?.achievementDates[id] ?? '');
 
   /// 今ある実績のうち達成済みの数。外した実績(ライブ観戦の2つ。2026-11-23)
   /// の記録が古いセーブに残っていても数えない。

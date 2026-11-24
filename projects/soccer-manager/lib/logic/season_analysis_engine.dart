@@ -127,4 +127,81 @@ class SeasonAnalysisEngine {
     }
     return count;
   }
+
+  /// 得点と失点の形(2026-11-25)。PK・直接フリーキック・アシストのある
+  /// 崩し・アシストの無い個人技/こぼれ球の4つ。[GoalShape] ごとに
+  /// (得点, 失点)。
+  static Map<GoalShape, (int, int)> goalShapes(League league, String teamId) {
+    final out = {for (final s in GoalShape.values) s: (0, 0)};
+    for (final f in playedFixturesFor(league, teamId)) {
+      for (final e in f.result!.events) {
+        if (e.type != MatchEventType.goal) continue;
+        final shape = switch (e.setPiece) {
+          SetPieceKind.penalty => GoalShape.penalty,
+          SetPieceKind.directFreeKick => GoalShape.freeKick,
+          null => e.assistId != null || e.assistName != null
+              ? GoalShape.assisted
+              : GoalShape.solo,
+        };
+        final (f0, a0) = out[shape]!;
+        out[shape] = e.teamId == teamId ? (f0 + 1, a0) : (f0, a0 + 1);
+      }
+    }
+    return out;
+  }
+
+  /// 相手の順位別の成績(2026-11-25)。相手のいまの順位で上位・中位・下位の
+  /// 3つに分ける(20クラブなら1〜7位・8〜14位・15〜20位)。
+  static Map<OpponentBand,
+          ({int played, int won, int drawn, int lost, int gf, int ga})>
+      recordByOpponentRank(League league, String teamId) {
+    final order = [for (final r in league.sortedStandings) r.teamId];
+    final n = order.length;
+    OpponentBand bandOf(String id) {
+      final i = order.indexOf(id);
+      if (i < 0) return OpponentBand.middle;
+      if (i < (n / 3).ceil()) return OpponentBand.top;
+      if (i < (n * 2 / 3).ceil()) return OpponentBand.middle;
+      return OpponentBand.bottom;
+    }
+
+    final acc = {
+      for (final b in OpponentBand.values) b: [0, 0, 0, 0, 0, 0],
+    };
+    for (final f in playedFixturesFor(league, teamId)) {
+      final r = f.result!;
+      final isHome = f.homeTeamId == teamId;
+      final opp = isHome ? f.awayTeamId : f.homeTeamId;
+      final own = isHome ? r.homeGoals : r.awayGoals;
+      final against = isHome ? r.awayGoals : r.homeGoals;
+      final a = acc[bandOf(opp)]!;
+      a[0]++;
+      if (own > against) {
+        a[1]++;
+      } else if (own == against) {
+        a[2]++;
+      } else {
+        a[3]++;
+      }
+      a[4] += own;
+      a[5] += against;
+    }
+    return {
+      for (final e in acc.entries)
+        e.key: (
+          played: e.value[0],
+          won: e.value[1],
+          drawn: e.value[2],
+          lost: e.value[3],
+          gf: e.value[4],
+          ga: e.value[5],
+        ),
+    };
+  }
 }
+
+/// 得点の形。
+enum GoalShape { assisted, solo, penalty, freeKick }
+
+/// 相手の順位の帯。
+enum OpponentBand { top, middle, bottom }

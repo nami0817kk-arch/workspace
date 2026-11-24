@@ -214,3 +214,81 @@ class TrendsCard extends StatelessWidget {
     );
   }
 }
+
+/// 資金の月ごとの推移(1季目から。収支の詳しい表に出す。2026-11-25)。
+///
+/// 月末ごとの資金([SaveGame.fundsMonthEnds])に、いまの資金を足して線にする。
+/// 季ごとの推移([TrendsCard])はシーズン成績の画面にある。
+class MonthlyFundsCard extends StatelessWidget {
+  const MonthlyFundsCard({super.key});
+
+  static String _month(int key) {
+    final y = key ~/ 12, m = key % 12 + 1;
+    return Tr.pick('$y年$m月', '$m/$y');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final s = gs.save;
+    if (s == null) return const SizedBox.shrink();
+    final points = <(int, double)>[
+      for (final e in s.fundsMonthEnds) (e[0], e[1].toDouble()),
+    ];
+    // いまの資金(今月の途中)を最後に足す。
+    final nowKey = gs.today.year * 12 + gs.today.month - 1;
+    if (points.isEmpty || points.last.$1 != nowKey) {
+      points.add((nowKey, s.budget.toDouble()));
+    }
+    final small =
+        TextStyle(fontSize: 11, color: SemanticColors.subtleText(context));
+    final lo = points.map((p) => p.$2).reduce(min);
+    final hi = points.map((p) => p.$2).reduce(max);
+    return Card(
+      key: const ValueKey('monthly-funds'),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('資金の推移(月ごと)', 'Funds, month by month'),
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 110,
+              child: points.length < 2
+                  ? Center(
+                      child: Text(
+                          Tr.pick('月末を迎えると線になります',
+                              'A line appears after a month end'),
+                          style: small))
+                  : CustomPaint(
+                      size: Size.infinite,
+                      painter: _LinePainter(
+                        values: [for (final p in points) p.$2],
+                        color: Theme.of(context).colorScheme.primary,
+                        invert: false,
+                        grid: SemanticColors.subtleText(context)
+                            .withValues(alpha: 0.3),
+                      ),
+                    ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              Tr.pick(
+                  '${_month(points.first.$1)} ${formatMoney(points.first.$2.round())} → ${_month(points.last.$1)} ${formatMoney(points.last.$2.round())}(いま)',
+                  '${_month(points.first.$1)} ${formatMoney(points.first.$2.round())} -> ${_month(points.last.$1)} ${formatMoney(points.last.$2.round())} (now)'),
+              style: small,
+            ),
+            Text(
+              Tr.pick(
+                  'いちばん多い月 ${formatMoney(hi.round())}・少ない月 ${formatMoney(lo.round())}',
+                  'Highest ${formatMoney(hi.round())}, lowest ${formatMoney(lo.round())}'),
+              style: small,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
