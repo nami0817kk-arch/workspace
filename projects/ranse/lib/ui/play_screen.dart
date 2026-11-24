@@ -474,10 +474,10 @@ class _ChoiceButton extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
+                      // 手の名も匂わせも、途中で切らずに全文を出す（2026-11-24。二列で匂わせが「…」で切れ、
+                      // 「命を落とす」などの危うさの言葉が見えなくなることがあった）。
                       child: Text(
                         c.label,
-                        maxLines: compact ? 2 : 3,
-                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: compact ? 13.5 : 15,
                           height: 1.35,
@@ -498,8 +498,6 @@ class _ChoiceButton extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
                       c.hint!,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: compact ? 11 : 12,
                         color: Pal.muted,

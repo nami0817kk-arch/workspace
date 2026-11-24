@@ -10,6 +10,10 @@ import '../engine/life.dart';
 /// （選択肢は関数を抱えているので保存できない）。
 class SaveStore {
   static const _kSave = 'ranse.save.v1';
+
+  /// 年の初めから選んだ手（`Game.choiceLog`）。本体の保存とは別に、手を選ぶたびに書く。
+  static const _kChoices = 'ranse.choices.v1';
+
   Future<void> save(Game g) async {
     final life = g.life;
     if (life == null) return;
@@ -17,14 +21,35 @@ class SaveStore {
     final p = await SharedPreferences.getInstance();
     if (g.finished) {
       await p.remove(_kSave);
+      await p.remove(_kChoices);
       return;
     }
+    // 年の初めの保存。選んだ手はまだ無い。
+    await p.setString(_kChoices, '[]');
     await p.setString(
       _kSave,
       jsonEncode({
         'life': life.toJson(),
         'world': g.fa.values.map((f) => f.toJson()).toList(),
+        if (g.checkpointSeed != null) 'seed': g.checkpointSeed,
       }),
+    );
+  }
+
+  /// 年の途中で選んだ手を残す（アプリを閉じても、続きからその手を選び直せる）。
+  Future<void> saveChoices(Game g) async {
+    if (g.life == null) return;
+    final p = await SharedPreferences.getInstance();
+    if (g.finished) {
+      await p.remove(_kSave);
+      await p.remove(_kChoices);
+      return;
+    }
+    await p.setString(
+      _kChoices,
+      jsonEncode([
+        for (final (i, label) in g.choiceLog) [i, label],
+      ]),
     );
   }
 
@@ -40,7 +65,21 @@ class SaveStore {
         for (final e in (j['world'] as List))
           (e as Map<String, dynamic>)['n'] as String: Faction.fromJson(e),
       };
-      g.restore(life, world);
+      // 種と選んだ手は、無い古い保存でも読める（その年の初めからやり直す）。
+      final seed = j['seed'] as int?;
+      final replay = <(int, String)>[];
+      final rawChoices = p.getString(_kChoices);
+      if (seed != null && rawChoices != null) {
+        try {
+          for (final e in jsonDecode(rawChoices) as List) {
+            final x = e as List;
+            replay.add((x[0] as int, x[1] as String));
+          }
+        } catch (_) {
+          replay.clear();
+        }
+      }
+      g.restore(life, world, seed: seed, replay: replay);
       return true;
     } catch (_) {
       await p.remove(_kSave);
@@ -56,6 +95,7 @@ class SaveStore {
   Future<void> clear() async {
     final p = await SharedPreferences.getInstance();
     await p.remove(_kSave);
+    await p.remove(_kChoices);
   }
 
   static const _kDex = 'ranse.dex.v1';

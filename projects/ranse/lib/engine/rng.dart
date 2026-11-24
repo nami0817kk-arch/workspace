@@ -3,7 +3,17 @@ import 'dart:math';
 /// 乱数。テストで種を固定できるように、Random を直に使わずここを通す。
 class Rng {
   Rng([int? seed]) : _r = Random(seed);
-  final Random _r;
+  Random _r;
+
+  /// 自分から新しい種を引き、その種で引き直す（年の初めの保存で使う。種を残せば、同じ年を同じ乱数で流し直せる）。
+  int reseed() {
+    final s = _r.nextInt(1 << 32);
+    _r = Random(s);
+    return s;
+  }
+
+  /// 残しておいた種から引き直す。
+  void setSeed(int s) => _r = Random(s);
 
   double next() => _r.nextDouble();
 

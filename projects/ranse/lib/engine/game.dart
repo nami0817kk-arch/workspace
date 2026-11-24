@@ -123,7 +123,7 @@ Kid? marriageableDaughter(Game g) =>
     roleKid(g, '娘', 13, 25, true) ?? g.l.daughterAged(g.year, 13, 25);
 
 class Game extends ChangeNotifier {
-  Game({Rng? rng, this.onCheckpoint}) : rng = rng ?? Rng() {
+  Game({Rng? rng, this.onCheckpoint, this.onChoice}) : rng = rng ?? Rng() {
     childScenes = [
       ...buildChildScenes(),
       ...buildMoreChildScenes(),
@@ -178,6 +178,26 @@ class Game extends ChangeNotifier {
 
   /// 区切り（選択肢が出ていない状態）ごとに呼ばれる。保存用。
   final void Function(Game g)? onCheckpoint;
+
+  /// 手を一つ選ぶたびに呼ばれる（年の途中の選びを残す。2026-11-24、アプリを閉じるとその年の選択が消えていた）。
+  final void Function(Game g)? onChoice;
+
+  /// 年の初めから選んだ手（何番目か・手の名）。続きから再開するとき、この順に選び直す。
+  final List<(int, String)> choiceLog = [];
+
+  /// 年の初めに乱数を引き直すか（アプリだけ真。テストの人生の流れは変えない）。
+  bool reseedAtCheckpoint = false;
+
+  /// 年の初めに引き直した種（保存に入れる。同じ種から同じ年を流し直す）。
+  int? checkpointSeed;
+  bool _restoring = false;
+
+  /// 年の初めの区切り。選んだ手の記録を空にし、乱数を引き直してから保存を呼ぶ。
+  void _yearCheckpoint() {
+    choiceLog.clear();
+    if (reseedAtCheckpoint && !_restoring) checkpointSeed = rng.reseed();
+    onCheckpoint?.call(this);
+  }
 
   late final List<SceneDef> childScenes, adultScenes;
 
@@ -296,14 +316,17 @@ class Game extends ChangeNotifier {
     prompt = null;
     _sceneId = null;
     final c = p.choices[i];
+    choiceLog.add((i, c.label));
     if (c.cancel) {
       changed();
+      onChoice?.call(this);
       return;
     }
     final res = c.f?.call();
     // 岐路の結果には場面の名前を付ける（「この年の心がけ」は文の中に「今年は…」とあるので付けない）。
     if (res != null) log(p.title == 'この年の心がけ' ? res : '【${p.title}】$res');
     p.after();
+    onChoice?.call(this);
   }
 
   // ---------- 人生の開始 ----------
@@ -377,14 +400,43 @@ class Game extends ChangeNotifier {
   }
 
   /// 保存から復元する。
-  void restore(Life saved, Map<String, Faction> world) {
+  ///
+  /// 年の始まりで保存している。その年を最初から流し、種（`seed`）があれば同じ乱数で流し直して、
+  /// 年の初めから選んでいた手（`replay`）を順に選び直す。手の名が食い違ったら、そこで止める。
+  void restore(
+    Life saved,
+    Map<String, Faction> world, {
+    int? seed,
+    List<(int, String)> replay = const [],
+  }) {
     life = saved;
     fa = world;
     prompt = null;
-    // 年の始まりで保存している。その年を最初からやり直す。
     if (saved.dead == null && saved.end == null) {
       _recap();
+      final recap = [..._pending];
+      if (seed != null) {
+        rng.setSeed(seed);
+        checkpointSeed = seed;
+      }
+      _restoring = true;
       isChild ? _beginYear() : _beginAdultYear();
+      _restoring = false;
+      var n = 0;
+      if (seed != null) {
+        for (final (i, label) in replay) {
+          final p = prompt;
+          if (p == null || finished || i >= p.choices.length) break;
+          if (p.choices[i].label != label) break;
+          choose(i);
+          n++;
+        }
+      }
+      // 選び直した場合も、再開した最初の画面に「前回までのあらすじ」を出す。
+      if (n > 0 && !finished) {
+        lastResults = [...recap, ...lastResults];
+        notifyListeners();
+      }
       return;
     }
     notifyListeners();
@@ -638,7 +690,7 @@ class Game extends ChangeNotifier {
     prompt = null;
     final a = age;
     l.t = a * 2;
-    onCheckpoint?.call(this);
+    _yearCheckpoint();
     final opts = childFocusOptions(this);
     // いつもの4つ（手伝い・読み書き・武芸ごっこ、遊ぶか友と過ごすのどちらか）に、
     // 家柄・年頃で増える重点（寺の手習い・道場・算盤・行儀見習い）を足す。
@@ -790,7 +842,7 @@ class Game extends ChangeNotifier {
     prompt = null;
     l.t = age * 2;
     _chapter();
-    onCheckpoint?.call(this);
+    _yearCheckpoint();
     final opts = adultFocusOptions(this);
     ask('この年の心がけ', adultYearText(this), [
       for (final o in opts)

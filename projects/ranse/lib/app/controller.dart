@@ -15,7 +15,11 @@ class AppController extends ChangeNotifier {
   AppController({SaveStore? store, Rng? rng})
     : store = store ?? SaveStore(),
       rng = rng ?? Rng() {
-    game = Game(rng: this.rng, onCheckpoint: _checkpoint);
+    game = Game(
+      rng: this.rng,
+      onCheckpoint: _checkpoint,
+      onChoice: (g) => unawaited(this.store.saveChoices(g)),
+    )..reseedAtCheckpoint = true;
   }
 
   final SaveStore store;
