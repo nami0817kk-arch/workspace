@@ -6,21 +6,18 @@ import 'rng.dart';
 
 /// 銭と功の使い道（2026-11-24、ユーザー「稼いだお金でできることも増やそう。功とかも」）。
 ///
-/// - **入り口**: 大人の「この年の心がけ」に「蓄えを使う」（銭）と「功を願い出る」（功）を足す
-///   （`adultFocusOptions` が、暮らしと嗜み・晩年・仏門・女性の重点のうしろに足す）。
-///   銭は身分の段（[spTier]）ごとの目安（[kSpendGoldMin]）を越え、功は次の昇進に要る分を
-///   [kMeritSpare] 以上越えたときだけ出る。使った年から [kSpendGap] 年は出ない。
-///   並べられる使い道が3つに満たなければ出さない。当てはまるかは乱数を使わずに決める（テストも使う）。
-/// - 選ぶとその年に岐路（`sp_spend` / `sp_boon`）が出て、身分・暮らし・持ち物でまだ持っていないもの・
-///   その年の状況に合う使い道を3〜5つと「見送る」を並べる。値は出さず、蓄えに比べての重さを匂わせる。
-///   使い道を決めたあとは、ふつうの年と同じく岐路を引く（`Game.usualYearScene`。ほかの岐路を押しのけない）。
-/// - **銭の使い道 21**（[kSpendGoldIds]）と**功の使い道 11**（[kSpendMeritIds]）。功を使っても、
-///   次の昇進に要る功を割り込まないものだけを並べる（昇進の仕組みはそのまま通す）。
+/// - **入り口**（2026-11-25 に作り替えた。ユーザーと決めた案）: 遊ぶ画面の上の帯の「使い道」の印から、
+///   いまの身分と蓄えで買えるものを**全部**並べた一覧（[spendingMenu]）を開き、値（何貫・功いくつ）を見て選ぶ（[spendingBuy]）。
+///   前は「この年の心がけ」の一つ（「蓄えを使う」「功を願い出る」）で、選ぶとその年の重点を使い切り、2年に一度・3〜5つしか並ばなかった。
+///   **使えるのは大人の年の初め（「この年の心がけ」の問いが出ているとき）だけ**（[spendingOpen]）。年の途中で買うと、
+///   再開（`Game.restore` の選び直し）で買ったことが消えるため。買ったら年の初めの問いのまま保存し直す（`Game.resaveYearStart`）。
+///   持ち物は一つずつ、何度でも買える物（寄進・献上・施し・薬・赦し など）も一年に一度ずつ。功は次の昇進に要る分を割り込まない。
+/// - **銭の使い道 21**（[kSpendGoldIds]）と**功の使い道 11**（[kSpendMeritIds]）。
 /// - 持ち物は旗で持ち、合戦（`Game.battle` の倍率 [spendingRisk]・[spendingGain]）と、
 ///   毎年の暮らし（[spendingYear]。田・知行・店・下人・屋敷・茶器）に効き続ける。
 /// - 買ったもの・賜ったものに続く岐路 8（[kSpendEchoIds]。一生に一度ずつ）。
 ///
-/// id・旗は `sp_`。数字は選択肢に出さない。新しい `die()` は無い。
+/// id・旗は `sp_`。新しい `die()` は無い。
 
 // ======================================================================
 // 補助
@@ -52,8 +49,7 @@ bool _serving(Game g) =>
     (g.fa[g.l.lord]?.alive ?? false);
 
 /// 戦える武家（主家に仕える身か一国の主）。
-bool _warrior(Game g) =>
-    g.canFight && (_serving(g) || _ctx(g) == _Ctx.lord);
+bool _warrior(Game g) => g.canFight && (_serving(g) || _ctx(g) == _Ctx.lord);
 
 /// 身分の段。0 貧しい（身分なし・野・仏門）／1 足軽・組頭・商人／2 馬廻・侍大将／3 城主より上・大名。
 int spTier(Game g) {
@@ -66,15 +62,6 @@ int spTier(Game g) {
     _Ctx.retired => l.maxRank >= 5 ? 3 : (l.maxRank >= 3 ? 2 : 1),
   };
 }
-
-/// 「蓄えを使う」が出る銭の目安（段ごと）。
-const kSpendGoldMin = [25, 60, 150, 400];
-
-/// 「功を願い出る」が出るのに、次の昇進に要る功より多く要る分。
-const kMeritSpare = 25;
-
-/// 使った年から、次に入り口が出るまでの年。
-const kSpendGap = 2;
 
 /// 旗 `<key>@<年>` の最新の年。
 int? _atYear(Game g, String key) {
@@ -120,17 +107,6 @@ int spMeritSpare(Game g) => g.l.merit - _needMerit(g);
 
 String _house(Game g) => g.l.lord == null ? '主' : houseName(g, g.l.lord);
 
-/// 値の重さの匂わせ（数字は出さない）。
-String _costWord(int price, int have) {
-  final r = have <= 0 ? 1.0 : price / have;
-  if (r >= .6) return '蓄えの大半が要る';
-  if (r >= .3) return '少し値が張る';
-  return '蓄えからすれば軽い';
-}
-
-String _meritWord(int cost, int spare) =>
-    cost >= spare * .6 ? '積んだ功の多くを差し出す' : '功を少し差し出す';
-
 // ======================================================================
 // 使い道の表
 // ======================================================================
@@ -164,8 +140,10 @@ class _Use {
   final double Function(Game g)? w;
 }
 
-int? Function(Game) _tp(List<int?> byTier) => (g) => byTier[spTier(g)];
-String Function(Game) _s(String s) => (_) => s;
+int? Function(Game) _tp(List<int?> byTier) =>
+    (g) => byTier[spTier(g)];
+String Function(Game) _s(String s) =>
+    (_) => s;
 
 final _goldUses = <_Use>[
   // ------------------------------------------------------------ 持ち物
@@ -178,9 +156,7 @@ final _goldUses = <_Use>[
     (g) => _ctx(g) == _Ctx.merchant
         ? '荷駄の馬を買う'
         : (spTier(g) >= 3 ? '名馬を求める' : '馬を買う'),
-    (g) => _ctx(g) == _Ctx.merchant
-        ? '仕入れの旅が楽になり、儲けが増える'
-        : '戦場を駆けられ、手柄の目が増える',
+    (g) => _ctx(g) == _Ctx.merchant ? '仕入れの旅が楽になり、儲けが増える' : '戦場を駆けられ、手柄の目が増える',
     (g) {
       g.setFlag('sp_horse');
       _stamp(g, 'sp_horse');
@@ -315,9 +291,7 @@ final _goldUses = <_Use>[
       2 => '屋敷を構える',
       _ => _ctx(g) == _Ctx.lord ? '館を造り直す' : '屋敷を普請する',
     },
-    (g) => spTier(g) >= 2
-        ? '人を招ける屋敷ができる。暮らしに張りが出る'
-        : '雨漏りのしない家で、暮らしが落ち着く',
+    (g) => spTier(g) >= 2 ? '人を招ける屋敷ができる。暮らしに張りが出る' : '雨漏りのしない家で、暮らしが落ち着く',
     (g) {
       g.setFlag('sp_house');
       _stamp(g, 'sp_house');
@@ -617,7 +591,8 @@ const _meritCost = <String, int>{
   'sp_m_robe': 15,
 };
 
-int? Function(Game) _mc(String id) => (g) => _meritCost[id];
+int? Function(Game) _mc(String id) =>
+    (g) => _meritCost[id];
 
 final _meritUses = <_Use>[
   _Use(
@@ -706,8 +681,7 @@ final _meritUses = <_Use>[
   ),
   _Use(
     'sp_m_roto',
-    (g) =>
-        !g.hasFlag('sp_m_roto') && g.canFight && g.l.troops >= 5,
+    (g) => !g.hasFlag('sp_m_roto') && g.canFight && g.l.troops >= 5,
     _mc('sp_m_roto'),
     _s('郎党の取り立てを願う'),
     _s('手勢が増え、配下の者の励みになる'),
@@ -800,15 +774,23 @@ final kSpendGoldIds = [for (final u in _goldUses) u.id];
 final kSpendMeritIds = [for (final u in _meritUses) u.id];
 
 // ======================================================================
-// 入り口
+// 入り口（2026-11-25 に作り替えた。遊ぶ画面の上の帯の「使い道」から開く一覧）
 // ======================================================================
 
-/// いま並べられる銭の使い道（身分・持ち物・状況に合い、銭で買えるもの。乱数を使わない）。
+/// 一年に一度ずつ買える印（`spb_<id>@<年>`）。何度でも買える物（寄進・献上・施し・薬・赦し など）も、同じ年には一度だけ。
+String _boughtKey(String id) => 'spb_$id';
+
+bool _boughtThisYear(Game g, String id) => spSince(g, _boughtKey(id)) == 0;
+
+/// いま買える銭の使い道（身分・持ち物・状況に合い、銭が足り、この年にまだ買っていないもの。乱数を使わない）。
 List<String> spendGoldIds(Game g) {
   final have = g.l.gold;
   return [
     for (final u in _goldUses)
-      if (u.ok(g) && (u.cost(g) ?? 1 << 30) <= have) u.id,
+      if (u.ok(g) &&
+          !_boughtThisYear(g, u.id) &&
+          (u.cost(g) ?? 1 << 30) <= have)
+        u.id,
   ];
 }
 
@@ -816,70 +798,89 @@ List<String> spendGoldIds(Game g) {
 bool _meritCtx(Game g) =>
     _serving(g) && g.l.rank >= 1 && g.l.rank <= 7 && g.active;
 
-/// いま並べられる功の使い道（次の昇進に要る功を割り込まないもの。乱数を使わない）。
+/// いま願い出られる功の使い道（差し出しても次の昇進に要る功を割り込まないもの。乱数を使わない）。
 List<String> spendMeritIds(Game g) {
   if (!_meritCtx(g)) return const [];
   final spare = spMeritSpare(g);
   return [
     for (final u in _meritUses)
-      if (u.ok(g) && (u.cost(g) ?? 1 << 30) <= spare) u.id,
+      if (u.ok(g) &&
+          !_boughtThisYear(g, u.id) &&
+          (u.cost(g) ?? 1 << 30) <= spare)
+        u.id,
   ];
 }
 
-/// 「蓄えを使う」が出るか。
-bool spendGoldReady(Game g) =>
-    g.l.gold >= kSpendGoldMin[spTier(g)] &&
-    spSince(g, 'sp_gold') >= kSpendGap &&
-    spendGoldIds(g).length >= 3;
-
-/// 「功を願い出る」が出るか。
-bool spendMeritReady(Game g) =>
-    _meritCtx(g) &&
-    spMeritSpare(g) >= kMeritSpare &&
-    spSince(g, 'sp_merit') >= kSpendGap &&
-    spendMeritIds(g).length >= 3;
-
-/// 入り口を出すか（足す前と比べるテスト用の切り替え。ゲームではいつも真）。
+/// 使い道の一覧を開けるか（足す前と比べるテスト用の切り替え。ゲームではいつも真）。
 bool spendingEnabled = true;
 
-/// 使い道の名（テストが、並んだ選択肢と持ち物を突き合わせるのに使う）。
+/// 使い道の名（テストが、持ち物と突き合わせるのに使う）。
 String spendLabel(Game g, String id) =>
     [..._goldUses, ..._meritUses].firstWhere((u) => u.id == id).label(g);
 
-/// 大人の「この年の心がけ」に足す、銭と功の使い道の入り口。
-List<FocusDef> spendingFocusOptions(Game g) => [
-  if (spendingEnabled && spendGoldReady(g))
-    FocusDef(
-      'sp_gold',
-      '蓄えを使う',
-      '貯めた銭の使い道を考える。蔵は軽くなる',
-      (g) {},
-      forced: 'sp_spend',
-    ),
-  if (spendingEnabled && spendMeritReady(g))
-    FocusDef(
-      'sp_merit',
-      g.l.female ? '働きに見合う恩賞を願い出る' : '功を願い出る',
-      '積んだ功に見合う恩賞を願う。功は減る',
-      (g) {},
-      forced: 'sp_boon',
-    ),
-];
+/// 一覧の一行。[cost] は何貫か、差し出す功（一覧には値を出す。2026-11-25 ユーザーと決めた）。
+class SpendItem {
+  const SpendItem(this.id, this.merit, this.label, this.hint, this.cost);
+  final String id;
 
-/// 並べる使い道を、重みをつけて [n] まで選ぶ（並びの順は表のまま）。
-List<_Use> _sample(Game g, List<_Use> cand, int n) {
-  if (cand.length <= n) return cand;
-  final pool = [...cand];
-  final keep = <_Use>{};
-  while (keep.length < n) {
-    final u = g.rng.wpick(pool, (e) => e.w?.call(g) ?? 1);
-    keep.add(u);
-    pool.remove(u);
-  }
+  /// 功の使い道か（偽なら銭）。
+  final bool merit;
+  final String label, hint;
+  final int cost;
+
+  /// 値の書き方（「二十貫」ではなく、一覧では算用数字で「20貫」「功20」）。
+  String get price => merit ? '功$cost' : '$cost貫';
+}
+
+/// 使い道を使えるのは、大人の年の初め（「この年の心がけ」の問いが出ているとき）だけ。
+/// 年の途中で買うと、再開（`Game.restore` の選び直し）で買ったことが消えるため。
+bool spendingOpen(Game g) =>
+    spendingEnabled && g.life != null && !g.finished && g.atYearStart;
+
+/// 開けないときの一言（画面に出す）。開けるときは null。
+String? spendingClosedReason(Game g) {
+  if (g.life == null || g.finished) return '使い道はない。';
+  if (g.isChild) return '子どものうちは、蓄えも功も自分では使えない。';
+  if (!g.atYearStart) return '銭と功の使い道は、年の初め（この年の心がけを決める前）に考えられる。';
+  return null;
+}
+
+/// 一覧に並べる使い道（いまの身分と蓄えで買えるものを全部。銭のあとに功）。年の初めでなければ空。
+List<SpendItem> spendingMenu(Game g) {
+  if (!spendingOpen(g)) return const [];
+  final gold = spendGoldIds(g).toSet();
+  final merit = spendMeritIds(g).toSet();
   return [
-    for (final u in cand)
-      if (keep.contains(u)) u,
+    for (final u in _goldUses)
+      if (gold.contains(u.id))
+        SpendItem(u.id, false, u.label(g), u.hint(g), u.cost(g)!),
+    for (final u in _meritUses)
+      if (merit.contains(u.id))
+        SpendItem(u.id, true, u.label(g), u.hint(g), u.cost(g)!),
   ];
+}
+
+/// 使い道を一つ使う。年の初めでなければ、買えないものなら何もせず null。
+/// 使ったら見聞録に書き、年の初めの問いのまま保存し直す（`Game.resaveYearStart`）。見聞録の文を返す。
+String? spendingBuy(Game g, String id) {
+  if (!spendingOpen(g)) return null;
+  final isMerit = kSpendMeritIds.contains(id);
+  final ok = isMerit ? spendMeritIds(g) : spendGoldIds(g);
+  if (!ok.contains(id)) return null;
+  final u = [..._goldUses, ..._meritUses].firstWhere((u) => u.id == id);
+  final cost = u.cost(g)!;
+  if (isMerit) {
+    g.l.merit -= cost;
+    _stamp(g, 'sp_merit');
+  } else {
+    g.l.gold -= cost;
+    _stamp(g, 'sp_gold');
+  }
+  _stamp(g, _boughtKey(id));
+  final res = u.apply(g);
+  g.log('【${isMerit ? '恩賞の願い' : '蓄えの使い道'}】$res');
+  g.resaveYearStart();
+  return res;
 }
 
 // ======================================================================
@@ -934,7 +935,9 @@ List<(String, String)> spendingBelongings(Game g) {
     out.add(
       g.hasFlag('sp_horse_fine')
           ? ('名馬', '脚の太い栗毛。合戦で手柄を立てやすい')
-          : (g.hasFlag('sp_horse_gift') ? ('拝領の馬', '主君の厩の葦毛。合戦で手柄を立てやすい') : ('馬', '合戦や旅で頼れる')),
+          : (g.hasFlag('sp_horse_gift')
+                ? ('拝領の馬', '主君の厩の葦毛。合戦で手柄を立てやすい')
+                : ('馬', '合戦や旅で頼れる')),
     );
   }
   if (g.hasFlag('sp_armor')) {
@@ -996,117 +999,44 @@ SceneDef _echo(
   String id,
   bool Function(Game g) who,
   void Function(Game g, void Function() next) run,
-) => SceneDef(
-  id,
-  16,
-  90,
-  (g) => 6,
-  (g) => _echoReady(g, id) && who(g),
-  run,
-);
+) => SceneDef(id, 16, 90, (g) => 6, (g) => _echoReady(g, id) && who(g), run);
 
 List<SceneDef> buildSpendingScenes() => [
-  // ------------------------------------------------------------ 蓄えを使う
-  SceneDef(
-    'sp_spend',
-    15,
-    100,
-    (g) => 1,
-    (g) => spendGoldIds(g).isNotEmpty,
-    (g, next) {
-      _stamp(g, 'sp_gold');
-      final have = g.l.gold;
-      final cand = [
-        for (final u in _goldUses)
-          if (u.ok(g) && (u.cost(g) ?? 1 << 30) <= have) u,
-      ];
-      final shown = _sample(g, cand, g.rng.range(3, 5));
-      final head = switch (spTier(g)) {
-        0 => '壺の底に貯めてきた銭を、膝の上で数えた。',
-        1 => '銭箱の重みが、思いのほか増えていた。',
-        2 => '蔵の銭が、ひと財産と呼べるほどになった。',
-        _ => '勘定方が、蔵の銭が溢れそうだと言ってきた。',
-      };
-      g.ask('蓄えの使い道', '$head何に使う？', [
-        for (final u in shown)
-          Choice.h(u.label(g), '${u.hint(g)}。${_costWord(u.cost(g)!, have)}', () {
-            final price = u.cost(g)!;
-            g.l.gold -= price;
-            return u.apply(g);
-          }),
-        Choice.h('今年は使わずにおく', '蓄えはそのまま残る', () {
-          return '銭箱の蓋を閉め、そのまましまっておいた。';
-        }),
-      ], after: () => _thenUsual(g, next));
-    },
-    repeat: true,
-    onlyForced: true,
-  ),
-
-  // ------------------------------------------------------------ 功を願い出る
-  SceneDef(
-    'sp_boon',
-    15,
-    100,
-    (g) => 1,
-    (g) => spendMeritIds(g).isNotEmpty,
-    (g, next) {
-      _stamp(g, 'sp_merit');
-      final spare = spMeritSpare(g);
-      final cand = [
-        for (final u in _meritUses)
-          if (u.ok(g) && (u.cost(g) ?? 1 << 30) <= spare) u,
-      ];
-      final shown = _sample(g, cand, g.rng.range(3, 5));
-      final text = g.l.female
-          ? '奥での働きが積もり、老女から「望みがあれば申してみよ」と言われた。'
-          : '${_house(g)}家の主君から「これまでの働きに報いたい。望みを申せ」と言われた。';
-      g.ask('恩賞の願い', '$text何を願う？', [
-        for (final u in shown)
-          Choice.h(u.label(g), '${u.hint(g)}。${_meritWord(u.cost(g)!, spare)}', () {
-            g.l.merit -= u.cost(g)!;
-            return u.apply(g);
-          }),
-        Choice.h('何も願わずに下がる', '功はそのまま残る。欲のない者と見られる', () {
-          g.l.fav = _c100(g.l.fav + 1);
-          return '「働きは務めのうち」と答え、何も願わずに下がった。';
-        }),
-      ], after: () => _thenUsual(g, next));
-    },
-    repeat: true,
-    onlyForced: true,
-  ),
-
   // ------------------------------------------------------------ 名馬が盗まれる
   _echo('sp_e_horse', (g) => g.active, (g, next) {
     final fine = g.hasFlag('sp_horse_fine');
-    g.ask('馬盗人', '夜明け前、厩が空になっていた。${fine ? '自慢の名馬' : '馬'}が盗まれたらしい。泥に蹄の跡が残っている。', [
-      if (g.canFight)
-        Choice.h('跡を追う', '取り戻せるかもしれない。盗人は刃物を持っている', () {
-          if (g.rng.chance(.45 + g.l.bu / 300)) {
+    g.ask(
+      '馬盗人',
+      '夜明け前、厩が空になっていた。${fine ? '自慢の名馬' : '馬'}が盗まれたらしい。泥に蹄の跡が残っている。',
+      [
+        if (g.canFight)
+          Choice.h('跡を追う', '取り戻せるかもしれない。盗人は刃物を持っている', () {
+            if (g.rng.chance(.45 + g.l.bu / 300)) {
+              g.setFlag('sp_horse_back');
+              g.l.fame += 2;
+              return '峠の手前で盗人に追いついた。盗人は馬を捨てて藪に逃げ込んだ。';
+            }
+            g.l.hp -= g.rng.range(5, 12);
+            _loseHorse(g);
+            return '盗人ともみ合い、腕を切られた。馬は戻らなかった。';
+          }, via: g.fightVia),
+        Choice.h('馬喰に頼んで探させる', '銭はかかる。顔の広い馬喰なら見つけ出す', () {
+          if (g.l.gold >= 10) g.l.gold -= 10;
+          if (g.rng.chance(.55 + g.l.net / 200)) {
             g.setFlag('sp_horse_back');
-            g.l.fame += 2;
-            return '峠の手前で盗人に追いついた。盗人は馬を捨てて藪に逃げ込んだ。';
+            return '十日ほどして、隣国の馬市に出ていたのを馬喰が見つけて連れ戻した。';
           }
-          g.l.hp -= g.rng.range(5, 12);
           _loseHorse(g);
-          return '盗人ともみ合い、腕を切られた。馬は戻らなかった。';
-        }, via: g.fightVia),
-      Choice.h('馬喰に頼んで探させる', '銭はかかる。顔の広い馬喰なら見つけ出す', () {
-        if (g.l.gold >= 10) g.l.gold -= 10;
-        if (g.rng.chance(.55 + g.l.net / 200)) {
-          g.setFlag('sp_horse_back');
-          return '十日ほどして、隣国の馬市に出ていたのを馬喰が見つけて連れ戻した。';
-        }
-        _loseHorse(g);
-        return '馬喰は方々を探したが、馬の行方は知れなかった。';
-      }),
-      Choice.h('諦める', '何も起きない。厩が寂しくなる', () {
-        _loseHorse(g);
-        g.j(-4);
-        return '空になった厩に、飼い葉だけが残った。';
-      }),
-    ], after: next);
+          return '馬喰は方々を探したが、馬の行方は知れなかった。';
+        }),
+        Choice.h('諦める', '何も起きない。厩が寂しくなる', () {
+          _loseHorse(g);
+          g.j(-4);
+          return '空になった厩に、飼い葉だけが残った。';
+        }),
+      ],
+      after: next,
+    );
   }),
 
   // ------------------------------------------------------------ 茶器を所望される
@@ -1114,9 +1044,7 @@ List<SceneDef> buildSpendingScenes() => [
     // 大名には隣国の大名、仕える身には主君、ほかの人には町を治める奉行が所望する。
     final lord = g.l.rank >= 8;
     final serving = _serving(g);
-    final who = lord
-        ? '隣国の大名'
-        : (serving ? '${_house(g)}家の主君' : '町を治める奉行');
+    final who = lord ? '隣国の大名' : (serving ? '${_house(g)}家の主君' : '町を治める奉行');
     g.ask('茶入の所望', '$whoが、あなたの茶入を見たいと言ってきた。使いの口ぶりでは、見るだけでは済みそうにない。', [
       Choice.h('差し出す', '惜しいが、覚えはめでたくなる', () {
         g.l.flags.remove('sp_chaki');
@@ -1353,10 +1281,6 @@ List<SceneDef> buildSpendingScenes() => [
     },
   ),
 ];
-
-/// 使い道を決めたあとは、ふつうの年と同じく岐路を引く（使い道の岐路が、その年のほかの岐路を押しのけない）。
-void _thenUsual(Game g, void Function() next) =>
-    g.l.dead != null ? next() : g.usualYearScene();
 
 void _loseHorse(Game g) {
   g.l.flags
