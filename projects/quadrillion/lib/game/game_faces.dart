@@ -30,7 +30,7 @@ extension GameFaces on Game {
     for (final p in people) {
       take(p.face);
     }
-    if (faceStale(pres.face, pres.fb, pres.age)) {
+    if (faceStale(pres.face, pres.fb, pres.age) || !faceFits(pres.face, faceRegion(pres.name, home: home))) {
       drop(pres.face);
       pres.face = _pick(pres.name, pres.age, used, pres.face, home: home);
       pres.fb = ageBand(pres.age);
@@ -38,7 +38,8 @@ extension GameFaces on Game {
     }
     for (final p in people) {
       if (p.kid && p.age < kidFaceAge) continue;
-      if (!faceStale(p.face, p.fb, p.age)) continue;
+      // 年代をまたいだ人と、地域の合わない絵（1.0.0+22 で東アジアに直した we_4・we_5 を持っている欧米の人など）を選び直す
+      if (!faceStale(p.face, p.fb, p.age) && faceFits(p.face, faceRegion(p.name, home: home))) continue;
       drop(p.face);
       p.face = _pick(p.name, p.age, used, p.face, home: home);
       p.fb = ageBand(p.age);
@@ -57,7 +58,7 @@ extension GameFaces on Game {
       take(c.pf);
     }
     for (final c in rivals) {
-      if (!faceStale(c.pf, c.pfb, c.presAge)) continue;
+      if (!faceStale(c.pf, c.pfb, c.presAge) && faceFits(c.pf, faceRegion(c.presName))) continue;
       drop(c.pf);
       c.pf = _pick(c.presName, c.presAge, used, c.pf);
       c.pfb = ageBand(c.presAge);

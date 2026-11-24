@@ -95,24 +95,34 @@ Future<void> _loadFaces(WidgetTester tester) async {
 
 void main() {
   group('顔の絵の素材', () {
-    test('一覧の90枚がすべて assets/faces にあり、余りも無い。pubspec に登録してある', () {
+    test('一覧の160枚がすべて assets/faces にあり、余りも無い。pubspec に登録してある', () {
       final files = Directory('assets/faces').listSync().whereType<File>().map((f) => f.uri.pathSegments.last).where((n) => n.endsWith('.png')).toSet();
-      expect(FACES.length, 90);
+      expect(FACES.length, 160);
+      expect(faceById.length, 160, reason: '同じ名前の絵が2つある');
       expect(files, {for (final f in FACES) '${f.id}.png'});
       expect(File('pubspec.yaml').readAsStringSync(), contains('- assets/faces/'));
-      // どの地域・性別にも、若い・中年・老年の絵が1枚はある（東南アジアは東アジアと混ぜる）
-      for (final r in ['ea', 'we', 'sa', 'af', 'la', 'me']) {
+      // 外した絵（実在のブランドの印・実在の人物に似る）は入れない
+      expect(faceById.containsKey('la3_0'), isFalse);
+      expect(faceById.containsKey('af3_8'), isFalse);
+      // 見た目が東アジアの we_4・we_5 は東アジア
+      expect(faceById['we_4']!.region, 'ea');
+      expect(faceById['we_5']!.region, 'ea');
+      // 地域・性別ごとの枚数（1.0.0+22）
+      int n(String r, String sx) => FACES.where((f) => f.region == r && f.sex == sx).length;
+      expect([for (final r in ['ea', 'we', 'sa', 'af', 'me', 'la', 'sea']) '${n(r, 'm')}/${n(r, 'f')}'], ['19/19', '19/15', '10/8', '15/11', '9/7', '8/7', '7/6']);
+      // どの地域・性別にも、若い・中年・老年の絵が1枚はある
+      for (final r in ['ea', 'we', 'sa', 'af', 'la', 'me', 'sea']) {
         for (final sx in ['m', 'f']) {
           for (var b = 0; b < 3; b++) {
             expect(FACES.any((f) => f.region == r && f.sex == sx && f.band == b), isTrue, reason: '$r $sx $b');
           }
         }
       }
-      // 大きさ（アプリに足される分）: 2MB を超えない
+      // 大きさ（アプリに足される分）: 3MB を超えない（160枚で約2.5MB）
       final bytes = Directory('assets/faces').listSync().whereType<File>().fold<int>(0, (a, f) => a + f.lengthSync());
       // ignore: avoid_print
       print('顔の絵の合計: $bytes バイト');
-      expect(bytes, lessThan(2 * 1024 * 1024));
+      expect(bytes, lessThan(3 * 1024 * 1024));
     });
   });
 
@@ -216,12 +226,22 @@ void main() {
         got.add(f);
       }
       expect(got.toSet().length, 4);
-      // 東南アジアは東アジアの絵も使う。東アジアが尽きたら東南アジアから借りる
+      // 東南アジアの人は東南アジアの絵を先に使い、年の合う絵が尽きたら東アジアから借りる
       final sea = {for (var i = 0; i < 40; i++) pickFace(name: 'ホセ・サントス$i', age: 30, region: 'sea', sex: 'm')};
-      expect(sea.any((f) => faceById[f]!.region == 'ea'), isTrue);
-      expect(sea.any((f) => faceById[f]!.region == 'sea'), isTrue);
+      expect(sea.every((f) => faceById[f]!.region == 'sea'), isTrue, reason: '$sea');
+      final allSea = {for (final f in FACES.where((f) => f.region == 'sea')) f.id: 1};
+      expect(faceById[pickFace(name: 'ホセ・サントス', age: 30, region: 'sea', sex: 'm', used: allSea)]!.region, 'ea');
+      // 東アジアの人に東南アジアの絵を借りるのは、東アジアの空きが本当に無いときだけ
       final allEa = {for (final f in FACES.where((f) => f.region == 'ea')) f.id: 1};
       expect(faceById[pickFace(name: '佐藤 健一', age: 28, region: 'ea', sex: 'm', used: allEa)]!.region, 'sea');
+      for (var i = 0; i < 40; i++) {
+        final u = <String, int>{};
+        for (var k = 0; k < 19; k++) {
+          final f = pickFace(name: '佐藤 健一$i', age: 22 + (k * 3 + i) % 50, region: 'ea', sex: k.isEven ? 'm' : 'f', used: u);
+          u[f] = (u[f] ?? 0) + 1;
+        }
+        expect(u.keys.every((f) => faceById[f]!.region == 'ea'), isTrue, reason: '東アジアの人19人なら東アジアの絵で足りる $u');
+      }
       // 中南米は欧米から、中東は南アジアから借りる
       final allLa = {for (final f in FACES.where((f) => f.region == 'la')) f.id: 1};
       expect(faceById[pickFace(name: 'カルロス・ガルシア', age: 30, region: 'la', sex: 'm', used: allLa)]!.region, 'we');
@@ -244,9 +264,11 @@ void main() {
         }
       }
       // 年の合う絵が尽きたら、年上20歳までの絵を借りる（同じ顔を重ねるより先）。それより離れた絵は使わず、重ねる
-      final youngEa = {for (final f in FACES.where((f) => (f.region == 'ea' || f.region == 'sea') && f.sex == 'm' && f.age <= 43)) f.id: 1};
+      // （東南アジアの若い絵が空いていても、東アジアの年上の絵が先）
+      final youngEa = {for (final f in FACES.where((f) => f.region == 'ea' && f.sex == 'm' && f.age <= 43)) f.id: 1};
       final lent = faceById[pickFace(name: '佐藤 健一', age: 28, region: 'ea', sex: 'm', used: youngEa)]!;
-      expect(lent.age, 45);
+      expect(lent.region, 'ea');
+      expect(lent.age, inInclusiveRange(45, 48));
       final midEa = {for (final f in FACES.where((f) => (f.region == 'ea' || f.region == 'sea') && f.sex == 'm' && f.age <= 50)) f.id: 1};
       expect(faceById[pickFace(name: '佐藤 健一', age: 28, region: 'ea', sex: 'm', used: midEa)]!.age, lessThanOrEqualTo(43), reason: '55歳より上の絵は使わない');
       // 全部使われていたら、使われている数の少ないものを重ねる（年の離れた絵には逃げない）
@@ -288,6 +310,15 @@ void main() {
       expect(faceNext('ea2_3'), 'ea2_4');
       expect(faceNext('ea_2'), isNull);
       expect(faceNext('ea_6'), isNull);
+      // 地域を直した絵・年齢の違う別の人の並びは、続きにしない
+      expect(faceNext('we_3'), isNull);
+      expect(faceNext('we_4'), 'we_5', reason: 'どちらも東アジアの同じ人');
+      expect(faceNext('eam_0'), isNull);
+      expect(faceNext('wef_3'), isNull);
+      expect(faceNext('af3_0'), isNull);
+      expect(faceNext('me3_0'), 'me3_1');
+      expect(faceNext('sea3_3'), 'sea3_4');
+      expect(faceNext('mx2_0'), isNull, reason: '女 → 男');
       expect(pickFace(name: '佐藤 健一', age: 35, region: 'ea', sex: 'm', prev: 'ea_0'), 'ea_1');
       expect(pickFace(name: '佐藤 健一', age: 55, region: 'ea', sex: 'm', prev: 'ea_1'), 'ea_2');
       // 続きの絵がほかの人に使われていたら、別の絵
@@ -378,6 +409,32 @@ void main() {
       expect(faceById.containsKey(fixed.staff.first.face), isTrue);
     });
 
+    test('1.0.0+21 のセーブで欧米の人が we_4・we_5（東アジアに直した絵）を持っていたら、読み込んだときに選び直す', () {
+      final g = _grownIn('us');
+      final w = g.staff.firstWhere((p) => faceRegion(p.name, home: g.home) == 'we' && faceSex(p.name) == 'f');
+      final e = g.staff.where((p) => faceRegion(p.name, home: g.home) == 'ea' && faceSex(p.name) == 'f').firstOrNull;
+      final rv = g.cos.firstWhere((c) => c.rival != null && c.alive);
+      final j = g.toJson();
+      for (final p in j['staff'] as List) {
+        if ((p as Map)['name'] == w.name) p['face'] = 'we_4';
+        if (e != null && p['name'] == e.name) p['face'] = 'we_5';
+      }
+      for (final c in j['cos'] as List) {
+        if ((c as Map)['id'] == rv.id) {
+          c['presName'] = 'アーニャ・ヴォルコワ';
+          c['pfn'] = 'アーニャ・ヴォルコワ';
+          c['pf'] = 'we_5';
+        }
+      }
+      final a = Game.fromJson(jsonDecode(jsonEncode(j)) as Map<String, dynamic>, rng: ParkMiller(7));
+      final w2 = a.staff.firstWhere((p) => p.name == w.name);
+      expect(faceById[w2.face]!.region, 'we', reason: w2.face);
+      // 東アジアの人が持っていた we_5 はそのまま
+      if (e != null) expect(a.staff.firstWhere((p) => p.name == e.name).face, 'we_5');
+      final rv2 = a.cos.firstWhere((c) => c.id == rv.id);
+      expect(faceById[a.coFace(rv2)]!.region, 'we');
+    });
+
     test('育った会社：どの国から始めても、部下の顔は地域・性別・年代が合い、ほとんど重ならない', () {
       for (final home in ['jp', 'us', 'in', 'ng']) {
         final g = _grownIn(home);
@@ -388,6 +445,7 @@ void main() {
         for (final p in staff) {
           final f = faceById[p.face]!;
           expect(f.sex, faceSex(p.name), reason: '$home ${p.name}');
+          expect(faceFits(f.id, faceRegion(p.name, home: g.home)), isTrue, reason: '$home ${p.name} ${f.id}');
           if ((f.age - p.age).abs() > 25 && !(f.band == 2 && ageBand(p.age) == 2)) far++;
           detail.add('${p.age}${faceSex(p.name)}→${f.id}(${f.age})');
         }
@@ -403,6 +461,11 @@ void main() {
         // ignore: avoid_print
         print('顔の重なり $home: 社長＋部下${staff.length}人で $pairs 組（地域 $regions・地域/性別ごとの人数 $need）・宿敵${rivals.length}社で ${_pairs(rivals.map((c) => c.pf))} 組・年が25歳より離れた絵 $far 人\n  ${detail.join(' ')}');
         expect(_pairs(rivals.map((c) => c.pf)), 0, reason: home);
+        // 宿敵の顔も地域が合う（欧州の宿敵に東アジアの顔が付かない）
+        for (final c in rivals) {
+          expect(faceFits(c.pf, faceRegion(c.presName)), isTrue, reason: '$home ${c.presName} ${c.pf}');
+          if (faceRegion(c.presName) == 'we') expect(faceById[c.pf]!.region, 'we', reason: '$home ${c.presName} ${c.pf}');
+        }
         final over = need.entries.fold<int>(0, (a, e) {
           final r = e.key.split('/');
           final have = FACES.where((f) => f.region == r[0] && f.sex == r[1]).length;
@@ -441,7 +504,9 @@ void main() {
       k.age = 16;
       g.ensureFaces();
       expect(k.face, isNotNull);
-      expect(faceById[k.face]!.band, 0);
+      // 若い東アジアの絵が会社の人で埋まっていれば、東南アジアから借りる前に年上20歳までの東アジアの絵を使う
+      expect(faceById[k.face]!.age, lessThanOrEqualTo(16 + 20), reason: k.face);
+      expect(faceById[k.face]!.region, faceRegion(k.name, home: g.home), reason: k.face);
     });
   });
 
