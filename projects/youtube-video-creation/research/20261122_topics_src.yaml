@@ -1,0 +1,102 @@
+title: 11月22日のショート題材
+lead: 海外フィード約430件から10件をClaudeが選びました（日本人5件・海外5件）。取材で前提が崩れたら次点に差し替えます。
+note: 日曜（22日）の朝7時に集めました。見出しからの選定。次点：ケイン手術完了、前田大然、アモリム、ラヤ。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 上田綺世、足底筋膜断裂から約1か月ぶりの実戦復帰。後半から出場も、中村敬斗先発のリヨンが1-0で勝利
+  why: フットボールZONE系（11/22）。条件：代表FW・復帰。重なり：11/20 ueda_lille_stadium は別の話。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 2
+  slot: 日本人（代表）
+  head: 坂元達裕、ブラジル戦に続く衝撃のスーパーゴール。鎌田との日本人対決を制しコベントリー13位浮上
+  why: 11/22。条件：代表・ブラジル戦に続く弾。本人の言葉があれば Y。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 3
+  slot: 日本人（代表）
+  head: 伊東純也、監督解任後の初陣で2アシスト。ゲンクが3発快勝
+  why: 11/22。条件：代表・記録。重なり：11/20 ito_usage_moriyasu は別の話。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 4
+  slot: 日本人（代表）
+  head: 田中碧、プレミアで3位に「上回る選手はわずか2人」。リーズの快勝
+  why: 11/21-22。条件：代表・数字。11/20 の田中碧（7クラブ）とは別の話。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 5
+  slot: 日本人（代表）
+  head: 鈴木唯人、途中出場5分でゴールも取り消し。フライブルクは3連勝で3位維持
+  why: 11/22。条件：代表。弱めなので取材で薄ければ前田大然に差し替え。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 6
+  slot: 海外
+  head: ドゥエ、PSGの勝利のなか重傷。ルイス・エンリケ「2倍強くなって戻る」
+  why: 14媒体。条件：大物・監督本人の言葉→Y。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: quote
+- num: 7
+  slot: 海外
+  head: マレン、ローマで4得点。ファン・バステンとシェフチェンコを超える。ガスペリーニ「ルカク以外では最高」
+  why: 記録・監督の言葉。重なり：17時のレジェンド回（シェフチェンコ）とは別の話。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: quote
+- num: 8
+  slot: 海外
+  head: ベリンガム同点弾、エムバペはPKを外す。レアルが逆転でセルタに勝利
+  why: 大物の名前。11/22 試合。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 9
+  slot: 海外
+  head: ムシアラの扱いにFIFPROが「バイエルンには注意義務がある」と批判
+  why: 大物の名前・FIFPROの声明。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 10
+  slot: 海外
+  head: シャビ・アロンソ「チェルシーは脆い。もっとタフに」。リーズに大敗
+  why: 大物監督の言葉→Y。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: quote
+- num: 11
+  slot: 海外
+  head: ケイン、足首の手術が無事完了。SNSで決意表明
+  why: 次点。11/21 kane_ankle_ligament の続報。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: quote
+- num: 12
+  slot: 日本人（代表）
+  head: 前田大然、スパーズ戦で55分まで出場
+  why: 次点。弱い。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news
+- num: 13
+  slot: 海外
+  head: アモリム、ミランのプリシッチを称賛「替えがきかない」
+  why: 次点。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: quote
+- num: 14
+  slot: 海外
+  head: アーセナル、ラヤの負傷が心配
+  why: 次点。
+  src: 各社（11/22）
+  url: https://www.espn.com/soccer/
+  fmt: news

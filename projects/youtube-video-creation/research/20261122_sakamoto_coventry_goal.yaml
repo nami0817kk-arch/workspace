@@ -1,0 +1,124 @@
+# 取材メモ（2026年11月22日）坂元達裕、ブラジル戦に続くゴール。鎌田大地のC・パレス戦で今季プレミア2点目（ニュースのショート。見せ方 X＝冒頭1秒の強い一言）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 本文を読んだもの:
+#   ・フットボールチャンネル 2026-11-22「コベントリーMF坂元達裕、衝撃のスーパーゴール！ …13位浮上」（全文）https://www.footballchannel.jp/2026/11/22/post1058639/
+#       30分、ルドニが中央をドリブルで持ち上がり、浮き球のパス。坂元は胸でボールをコントロールし、落ち際を左足で振り抜いた。ゴール右上隅。今季リーグ戦2点目（10/31 サンダーランド戦以来）。フル出場。ホーム2連勝。
+#       コベントリーは前節エヴァートン戦に1-3で負け、3勝7敗の勝ち点9で17位。C・パレスはトーマス・フランク新監督の初陣で、鎌田大地は先発・フル出場、リーグ戦5連敗。次節 11/28 コベントリーは敵地でリーズ。
+#   ・サッカーキング 2026-11-22「代表帰りの坂元達裕がスーパーミドル！ …」（全文）https://www.soccer-king.jp/news/world/eng/20261122/2230137.html → 「ルドニのパスを胸トラップで収めて左足一閃。強烈なミドルシュート」。上の記事と一致。
+#   ・Football ZONE 2026-11-22（2本）→ 「胸トラップから左足」「坂元は14日のブラジル戦で代表初ゴール」で一致。
+#   ・CoventryLive 2026-11-21 の選手採点: 「ルドニの切り返しから、坂元が（エリア外の）20ヤードの強烈なシュートを屋根（ゴールの上）へ」。試合後のランパード監督は交代策を語っただけで、坂元個人の言葉は無し。
+# ESPN の試合データ（site.api.espn.com summary event=401879235、11/21 15:00 UTC）:
+#   ・コベントリー 3-2 C・パレス。5分 アウォニイ（アシスト ルドニ）／13分 ピノ／30分 坂元（左足、エリアの外から、ゴール右上。アシスト ルドニ）／45+1分 ストランド・ラーセン（ヘッド）／85分 マクニールのオウンゴール（コベントリーに1点）。
+#   ・坂元は先発で交代なし（フル出場）。鎌田も先発で交代なし（フル出場）。
+#   ・順位表（eng.1 standings）: コベントリー 13位・11試合 4勝7敗・勝ち点12。C・パレス 20位・勝ち点7（2勝1分8敗）。
+#   ・ESPN fifa.friendly 2026-11-14: 日本 3-2 ブラジル。90+1分に坂元（右足）の決勝点。
+#   ・ESPN scoreboard 2026-11-28: コベントリー at リーズ（15:00 UTC）。
+# 食い違い（気をつけた点）:
+#   ・ゴールの種類: 報道は「ボレー」「ミドル」「ゴラッソ」と表現が割れる。ESPN は「左足、エリア外から」。→ 台本は「胸で止めて、左足で、エリアの外から」と、一致する事実だけ。
+#   ・85分の勝ち越しはオウンゴール（ESPN・各報道一致）。Football ZONE は「後半40分」＝85分。一致。
+#   ・順位: 13位は ESPN の順位表と報道で一致。「3勝7敗 勝ち点9で17位」は試合前の数字（報道）。
+#   ・Football ZONE は本拠地を「リコー・アリーナ」と書く（旧称）。台本は本拠地名を言わない。
+#   ・写真: フットボールチャンネル（Getty）・サッカーキング（キャプションが Getty）・Football ZONE（Reuters）・CoventryLive（キャプション Getty）は使わない。
+# 前の本との重なり: 10/19 sakamoto_lampard_words／10/20 sakamoto_first_start／11/4 sakamoto_pl_first_goal／11/15 sakamoto_brazil_winner_words（ブラジル戦の決勝点と本人の言葉）。
+#   → 今回の初出: 今回のゴール（胸トラップ→左足）・鎌田との日本人対決・13位浮上。ブラジル戦は「7日前」と一言だけ。
+# 自分で数えたもの: ブラジル戦（11/14）から7日後（11/21）。順位 17位→13位、勝ち点9→12。
+# 【言わないこと】本人の気持ち（試合後の言葉が見つからない）／鎌田の評価（フルに出た事実だけ）／ブラジル戦の発言の再掲／本拠地名。
+# 本人の言葉: 今回の試合後の坂元本人の言葉は見つからず（CoventryLive・日本語各社とも無し）。X。
+# 写真: 01・02＝今回の試合の写真（ゲキサカの記事の写真。ゴールを喜ぶ坂元。説明に代理店名は無い）。03＝日本代表の坂元（11/15 の本で取り込んだゲキサカの写真の流用）。_pool.png を目で見た: 本人。透かしは無い。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [坂元達裕, コベントリー, 鎌田大地, クリスタル・パレス, ランパード監督]
+
+short_style: X
+short_hook_word: ブラジル戦の7日後
+short_photos:
+  - assets/images/20261122_sakamoto_coventry_goal/02_v.jpg
+  - assets/images/20261122_sakamoto_coventry_goal/01_v.jpg
+  - assets/images/20261122_sakamoto_coventry_goal/03_v.jpg
+  - assets/images/20261122_sakamoto_coventry_goal/02_v.jpg
+short_question: 坂元達裕は、28日のリーズ戦でもゴールを決めると思いますか。
+short_telops: []
+
+theme:
+  id: sakamoto_coventry_goal
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 坂元達裕、ブラジル戦の7日後に決めた左足。鎌田大地のC・パレス戦
+  hook: ""
+  question: 坂元達裕は、鎌田大地のC・パレス戦でどんなゴールを決めたのか
+  takeaway: ブラジル戦の決勝点から7日後に、クラブでも決めた。コベントリーは勝ち点9から12に伸ばし、17位から13位へ上がった。次は28日、敵地のリーズ戦
+
+thumbnail:
+  layout: face
+  line1: 坂元達裕 今季2点目
+  line2: ブラジル戦の7日後に左足
+  tags: [坂元達裕, コベントリー]
+  photo: assets/images/20261122_sakamoto_coventry_goal/02_w.jpg
+  short_photo: assets/images/20261122_sakamoto_coventry_goal/02_v.jpg
+
+answer: 胸で止めて左足。エリアの外からゴール右上へ。コベントリーは3対2で勝ち、13位に上がった
+watch: 28日のリーズ戦（敵地）
+
+sections:
+  - id: what
+    main: true
+    heading: 坂元達裕は、C・パレス戦でどんなゴールを決めたのか
+    tier: 報道
+    telop: 坂元達裕、今季プレミア2点目。胸で止めて左足
+    say:
+      - text: コベントリーの坂元達裕が、プレミアリーグで今季2点目。チームは、C・パレスに3対2で勝ちました。
+        image: assets/images/20261122_sakamoto_coventry_goal/02_w.jpg
+      - text: 日本代表でブラジルに勝ち越しゴールを決めた14日から、7日後です。
+        image: assets/images/20261122_sakamoto_coventry_goal/03_w.jpg
+      - text: 相手は、鎌田大地のいるクリスタル・パレス。鎌田も先発しました。
+      - text: 前半30分、チームメートのジャック・ルドニの浮き球のパスを、胸で止めます。
+        image: assets/images/20261122_sakamoto_coventry_goal/01_w.jpg
+        emph: true
+      - text: そのまま左足を振り抜き、ゴールの右上へ。勝ち越しのゴールです。
+      - text: ペナルティエリアの外からの一撃です。
+      - text: 坂元は、90分間フルに出場しました。
+        image: assets/images/20261122_sakamoto_coventry_goal/02_w.jpg
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/22/post1058639/
+      - https://www.soccer-king.jp/news/world/eng/20261122/2230137.html
+      - https://www.football-zone.net/archives/686603
+      - https://www.espn.com/soccer/match/_/gameId/401879235
+      - https://www.espn.com/soccer/match/_/gameId/401916337
+  - id: game
+    heading: 坂元のゴールのあと、試合はどう動いたのか
+    tier: 報道
+    telop: コベントリー 3-2 C・パレス。ホーム2連勝
+    say:
+      - text: 坂元が勝ち越したあとも、試合は点の取り合いでした。
+        card: {type: table, title: コベントリー 3-2 C・パレス, columns: [分, できごと], rows: [[5分, アウォニイが先制], [13分, ピノが同点], [30分, 坂元が勝ち越し], [45+1分, ストランド・ラーセンが同点], [85分, オウンゴールで勝ち越し]], highlight_row: 2}
+      - text: 前半は2対2。最後は3対2で、コベントリーが勝ちました。
+        card: none
+      - text: 決勝点は85分。ロングスローから、相手のオウンゴールでした。
+        image: assets/images/20261122_sakamoto_coventry_goal/01_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879235
+      - https://www.soccer-king.jp/news/world/eng/20261122/2230137.html
+  - id: view
+    viewpoint: true
+    heading: 坂元の2試合で、コベントリーの順位はどう変わったのか
+    tier: 背景
+    telop: 17位→13位。勝ち点9→12
+    say:
+      - text: 見立てです。この勝利で、コベントリーの勝ち点は9から12になりました。
+        card: {type: table, title: コベントリーの順位, columns: [時点, 順位, 勝ち点], rows: [[試合前, 17位, 9], [試合後, 13位, 12]], highlight_row: 1}
+        image: assets/images/20261122_sakamoto_coventry_goal/03_w.jpg
+      - text: 順位は17位から13位に上がりました。
+        emph: true
+        card: none
+      - text: 鎌田のクリスタル・パレスは5連敗で、20位のままです。
+      - text: 坂元のコベントリーの次は、28日の敵地リーズ戦です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879235
+      - https://www.footballchannel.jp/2026/11/22/post1058639/

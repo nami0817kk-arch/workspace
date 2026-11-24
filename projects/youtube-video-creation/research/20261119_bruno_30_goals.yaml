@@ -1,0 +1,114 @@
+# 取材メモ（2026年11月19日）ブルーノ・フェルナンデス、ポルトガル代表で通算30ゴール。30点以上は史上5人目（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は無し）
+# 取材: 2026-11-19。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: A Bola 2026-11-18「Bruno Fernandes é apenas o quinto a chegar aos 30 golos」（requests で本文と写真ギャラリーの表記まで全文）
+#   https://www.abola.pt/noticias/bruno-fernandes-e-apenas-o-quinto-a-chegar-aos-30-golos-2026111817331751039
+# 出典で確かめたこと（5人の名前とゴール数は2つの出どころで一致した）:
+#   ・A Bola（本文）: ウェールズ戦の先制ゴールが代表30点目。代表で30ゴールに届いたのは史上5人目。99試合目で、あと1試合で100試合。「問題が無ければ3月のネーションズリーグ準々決勝で、9人目の100試合達成者になる」。
+#   ・A Bola（ギャラリーの表記）: 1 クリスティアーノ・ロナウド 146点／234試合、2 パウレタ 47点／88試合、3 エウゼビオ 41点／64試合、4 ルイス・フィーゴ 32点／127試合、5 ブルーノ・フェルナンデス 30点／99試合（同じギャラリーの次は ヌーノ・ゴメス 29点／79試合、ポスティガ 27点／71試合）。
+#   ・Wikipedia（英語版 Portugal national football team、Top goalscorers。試合前の版）: ロナウド146/234、パウレタ47/88、エウゼビオ41/64、フィーゴ32/127、ヌーノ・ゴメス29/79、ブルーノ29/98。→ ブルーノが29点・98試合から、この試合で30点・99試合になった形で、A Bola の表と合う。
+#   ・Wikipedia（英語版 Bruno Fernandes、代表ゴールの表）: 30点目＝2026年11月17日、カーディフ・シティ・スタジアム、ウェールズ戦、1-0、結果3-2、2026-27 UEFAネーションズリーグ A。
+#   ・ESPN の試合データ（site.api.espn.com uefa.nations summary event=401861189、2026-11-17 19:45 UTC、カーディフ・シティ・スタジアム）: ウェールズ 2-3 ポルトガル。11' ブルーノ・フェルナンデス（ボックス外から右足、ボトムレフト。アシスト ジョアン・ネヴェス）／13' ブルックス（ウェールズ）／40' ソルバ・トーマス（ウェールズ）／43' ペドロ・ネト（ポルトガル）／70' カルロス・フォーブス（ポルトガル。決勝点）。74' ペドロ・ネトが2枚目の警告で退場。
+#   ・A Bola: カルロス・フォーブスは3試合目の代表で初ゴール。ルベン・ネヴェスが75試合目でデコと並ぶ（試合数の歴代24位）。→ 台本では使わない（題と別の話）。
+# 依頼文との違い: 依頼文は「相手・分は確かめる」だったので、相手＝ウェールズ（アウェー）、分＝11分、スコア＝ポルトガルの3-2、大会＝UEFAネーションズリーグA（リーグ戦）と確定。A Bola の「ペドロ・ネトが4点目」は、試合で4点目のゴール（ポルトガルの2点目）という意味とみられるが、台本では使わない。
+# 自分で数えたもの: 5人の1試合あたりの得点（得点÷試合数）。エウゼビオ0.64、ロナウド0.62、パウレタ0.53、ブルーノ0.30、フィーゴ0.25。5人のうち、通算の試合数が100に届かないのはエウゼビオ（64）・パウレタ（88）・ブルーノ（99）。
+# 前の本との重なり: research/covered.yaml・posted.json に「ブルーノ代表30ゴール」は無い。20261114 のブルーノは移籍の話（クラブ）で別。直近3日の scripts/ にも無い。
+# 【言わないこと】ブルーノの去就・移籍の話／ロナウドの引退や評価の話／他の選手を小さく見せる言い方（「フィーゴを上回った」とは言わない。得点数はフィーゴが32で上）／本人の言葉（無いので作らない）。
+# 本人の言葉: 無し（A Bola の本文に本人・監督の直接の発言が無い）。X。
+# 反応: 0件（実在の投稿を探していない／作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月19日"
+format: news
+no_main: true
+people: [ブルーノ・フェルナンデス, ポルトガル代表, ウェールズ代表, ジョアン・ネヴェス]
+
+short_style: X
+short_hook_word: 代表30ゴール
+short_photos:
+  - assets/images/20261119_bruno_30_goals/03_v.jpg
+  - assets/images/20261119_bruno_30_goals/01_v.jpg
+  - assets/images/20261119_bruno_30_goals/02_v.jpg
+short_question: ブルーノ・フェルナンデスは、代表であと何ゴール伸ばせると思いますか。
+short_telops: []
+
+theme:
+  id: bruno_30_goals
+  league: england
+  league_name: ポルトガル代表
+  prefix: ""
+  title: ブルーノ・フェルナンデス、代表30ゴール。ポルトガルで史上5人目
+  hook: ""
+  question: 代表30ゴールに届いたブルーノ・フェルナンデスは、どんな5人の仲間入りをしたのか
+  takeaway: 30ゴール以上は5人。1試合あたりで見ると、ブルーノの0.30はフィーゴの0.25より上で、エウゼビオ・ロナウド・パウレタの0.5台〜0.6台より下。次は3月に100試合目が来る
+
+thumbnail:
+  layout: face
+  line1: ブルーノ 代表30ゴール
+  line2: ポルトガル史上5人目
+  tags: [ブルーノ・フェルナンデス, ポルトガル代表]
+  photo: assets/images/20261119_bruno_30_goals/03_w.jpg
+  short_photo: assets/images/20261119_bruno_30_goals/03_v.jpg
+
+answer: 30ゴールは史上5人目。99試合目で届いた
+watch: 3月のネーションズリーグ準々決勝で100試合目
+
+sections:
+  - id: what
+    main: true
+    heading: ブルーノ・フェルナンデスは、どの試合で30点目を決めたのか
+    tier: 報道
+    telop: ブルーノ・フェルナンデス 代表30ゴール
+    say:
+      - text: ブルーノ・フェルナンデスが、ポルトガル代表で通算30ゴールに届きました。
+        image: assets/images/20261119_bruno_30_goals/03_w.jpg
+        emph: true
+      - text: ロナウドやフィーゴら、歴史的な名選手に続く、史上5人目です。
+        image: assets/images/20261119_bruno_30_goals/02.jpg
+      - text: 17日、ヨーロッパの代表同士のリーグ戦、ネーションズリーグのウェールズ戦です。
+      - text: 11分、ペナルティエリアの外から右足で先制しました。
+        image: assets/images/20261119_bruno_30_goals/03_w.jpg
+      - text: アシストはジョアン・ネヴェスでした。
+      - text: ポルトガルは3対2で勝ちました。ブルーノは、これが代表99試合目です。
+        card: {type: table, title: ブルーノ 30点目（11月17日）, columns: [項目, 中身], rows: [[相手, ウェールズ（カーディフ）], [分, 11分], [スコア, 3-2でポルトガル], [代表通算, 99試合で30点]], highlight_row: 3}
+        image: assets/images/20261119_bruno_30_goals/03_w.jpg
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/bruno-fernandes-e-apenas-o-quinto-a-chegar-aos-30-golos-2026111817331751039
+      - https://www.espn.com/soccer/report/_/gameId/401861189
+      - https://en.wikipedia.org/wiki/Bruno_Fernandes
+  - id: five
+    heading: ポルトガルで30ゴールに届いたのは、誰と誰なのか
+    tier: 報道
+    telop: 代表30ゴール以上は5人
+    say:
+      - text: ポルトガル代表で30ゴール以上を決めたのは、5人だけです。
+        card: none
+        image: assets/images/20261119_bruno_30_goals/03_w.jpg
+      - text: 1位はクリスティアーノ・ロナウドで146点。2位がパウレタの47点、3位がエウゼビオの41点です。
+        card: {type: table, title: ポルトガル代表 30ゴール以上の5人, columns: [順位, 名前, 点, 試合], rows: [[1, クリスティアーノ・ロナウド, 146, 234], [2, パウレタ, 47, 88], [3, エウゼビオ, 41, 64], [4, ルイス・フィーゴ, 32, 127], [5, ブルーノ・フェルナンデス, 30, 99]], highlight_row: 4}
+      - text: 4位はルイス・フィーゴの32点。そのあとにブルーノが並びました。
+        card: none
+        image: assets/images/20261119_bruno_30_goals/03_w.jpg
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/bruno-fernandes-e-apenas-o-quinto-a-chegar-aos-30-golos-2026111817331751039
+      - https://en.wikipedia.org/wiki/Portugal_national_football_team
+  - id: view
+    viewpoint: true
+    heading: 1試合あたりで数えると、ブルーノは5人のどこに入るのか
+    tier: 背景
+    telop: 1試合あたり ブルーノ0.30点
+    say:
+      - text: 見立てです。ブルーノは99試合で30点。フィーゴは127試合で32点です。点を試合数で割ってみました。
+        card: {type: table, title: 1試合あたりの得点（得点÷試合数）, columns: [名前, 1試合あたり], rows: [[エウゼビオ, 0.64], [ロナウド, 0.62], [パウレタ, 0.53], [ブルーノ, 0.30], [フィーゴ, 0.25]], highlight_row: 3}
+        image: assets/images/20261119_bruno_30_goals/03_w.jpg
+      - text: 上位は、エウゼビオの0.64、ロナウドの0.62、パウレタの0.53。3人とも、ブルーノより上です。
+      - text: ブルーノは0.30。フィーゴは0.25。
+        card: none
+        emph: true
+      - text: 次の節目は、代表の100試合目です。
+        image: assets/images/20261119_bruno_30_goals/03_w.jpg
+      - text: それは3月のネーションズリーグ準々決勝になる見込みです。
+        image: assets/images/20261119_bruno_30_goals/02.jpg
+    official: false
+    sources:
+      - https://www.abola.pt/noticias/bruno-fernandes-e-apenas-o-quinto-a-chegar-aos-30-golos-2026111817331751039

@@ -1,0 +1,402 @@
+# プレミアリーグ20クラブ紹介 ③ユヴェントス（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/sa_data/juventus*.json と旧台本 -
+format: news
+voice_min: 0
+slot: other_1
+date: 2026年9月19日
+people:
+- ユヴェントス
+- アレッサンドロ・デル・ピエロ
+- ジャンルイジ・ブッフォン
+- パベル・ネドベド
+- ルチアーノ・スパレッティ
+short_title: ユヴェントス、2部から9連覇まで
+series: セリエAチーム紹介
+theme:
+  id: juventus_intro
+  league: italy
+  league_name: セリエA
+  kind: other
+  topic: ユヴェントス
+  title: ユヴェントスは2006年に初の2部へ。9連覇まで何があったのか？
+  question: どんなクラブなのか
+  hook: ''
+  lead: 北イタリアの街トリノの、白と黒のクラブ。
+  opening_image: assets/stats/sa_juventus_data_t.png
+thumbnail:
+  line1: ユヴェントス
+  line2: 2部から9連覇まで
+  crest_main:
+  - ユヴェントス
+  tags:
+  - ユヴェントス
+  - ユベントス
+  - セリエA
+  - デル・ピエロ
+  layout: classic
+  board: assets/stats/sa_juventus_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 昨季は6位でCLに届かず。監督はナポリを優勝させたスパレッティ。今季は7位、ヨーロッパリーグは4試合負けなし
+  narrator: キャスター
+  say:
+  - text: 昨季は6位で、チャンピオンズリーグに届きませんでした。
+    image: assets/stats/sa_juventus_data_r1.png
+    no_telop: true
+  - text: 監督は、ナポリを優勝させたスパレッティです。
+    image: assets/stats/sa_juventus_data_r2.png
+    no_telop: true
+  - text: 今季は7位。ヨーロッパリーグでは、4試合負けなしです。
+    image: assets/stats/sa_juventus_data_r3.png
+    no_telop: true
+  - image: assets/stats/sa_juventus_data0.png
+    text: 創立は**1897年**。トリノの高校生たちが作りました。
+    no_telop: true
+  - image: assets/stats/sa_juventus_data3.png
+    text: 本拠地はユヴェントス・スタジアム。2011年に開き、収容は**4万1507人**です。
+    no_telop: true
+  - image: assets/stats/sa_juventus_data2.png
+    text: ホームタウンはトリノ。ピエモンテ州。北西イタリアの都市です。
+    no_telop: true
+  - image: assets/stats/sa_juventus_cups.png
+    text: リーグ優勝は**36回**で、イタリア最多。ヨーロッパ王者は**2回**。
+    no_telop: true
+  - image: assets/stats/sa_juventus_data8.png
+    text: 昨シーズンは**6位**。勝ち点69、5位のミランと1点差でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Juventus_FC
+  - https://en.wikipedia.org/wiki/2026–27_Juventus_FC_season
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+  official: false
+- id: rise
+  heading: 2部に落ちたユヴェントスは、どうやって9連覇までたどり着いたのか
+  tier: 背景
+  telop: 2006年にカルチョポリの処分で初の2部。1年で戻り、2011年に新スタジアム。2012年から9年続けて優勝
+  narrator: 解説
+  main: true
+  say:
+  - text: 2006年。ユヴェントスは、クラブの歴史で初めて、2部に落とされます。
+    image: assets/backgrounds/stadium_ユヴェントス_in.png
+    card:
+      type: table
+      title: ユヴェントスの歩み
+      columns:
+      - 年
+      - 出来事
+      rows:
+      - - 2006年
+        - カルチョポリの処分で初めて2部へ
+      - - 2007年
+        - 2部で優勝して1部へ
+      - - 2011年
+        - 新しいスタジアムが開く
+      - - 2012年
+        - 負けなしで優勝。連覇の始まり
+      - - 2020年
+        - 9年続けての優勝
+  - 審判をめぐる不正の事件、カルチョポリの処分でした。
+  - 2004年から05年の優勝は、取り消されました。
+  - 2部では、勝ち点マイナス9から始めることになります。
+  - 最初はマイナス30の処分が、9まで減らされていました。
+  - text: 主力の多くが去るなか、デル・ピエロ、ブッフォン、ネドベドは残りました。
+    card: none
+    image: assets/backgrounds/stadium_ユヴェントス.png
+  - 2部は1年で優勝。デル・ピエロは21得点で、2部の得点王でした。
+  - 2011年、新しいスタジアムの最初のシーズンに、コンテが監督になります。
+  - アントニオ・コンテは、かつてユヴェントスでプレーした人です。
+  - その1年目、2011年から12年は、リーグ戦で1度も負けずに優勝します。
+  - 20クラブで争う形になってから、イタリアで初めての無敗優勝でした。
+  - 2013年から14年の勝ち点**102**は、セリエAの最多記録です。
+  - 2014年からはアッレグリが引き継ぎ、優勝を重ねます。
+  - 2020年までに、**9年**続けての優勝。イタリアの1部の記録です。
+  sources:
+  - https://en.wikipedia.org/wiki/Juventus_FC
+  - https://en.wikipedia.org/wiki/History_of_Juventus_FC
+  - https://en.wikipedia.org/wiki/2006_Italian_football_scandal
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: クラブ名はラテン語で「若さ」。愛称は「老婦人」。1923年からアニェッリ家が持つ
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - クラブ名
+      - ラテン語で「若さ」
+    - - 愛称
+      - 老婦人
+    - - 持ち主
+      - 1923年からアニェッリ家
+  say:
+  - text: クラブ名のユヴェントスは、ラテン語で「若さ」という意味です。
+    image: assets/photos/sa/juventus/juventus_manager_ec00de50.jpg
+  - 創立のときの名前は、スポーツクラブ・ユヴェントスでした。
+  - 一方で、愛称は「老婦人」。名前と反対の言葉です。
+  - 1923年からは、自動車会社フィアットの一族、アニェッリ家が持ち続けています。
+  - イタリア代表には、どのクラブよりも多くの選手を送ってきました。
+  sources:
+  - https://en.wikipedia.org/wiki/Juventus_FC
+  official: false
+- id: episode
+  heading: 1996年の欧州王者のあと、ユヴェントスの決勝はどうなったのか
+  tier: 背景
+  telop: 1996年5月、ローマでアヤックスにPK戦で勝ち、2度目の欧州王者。その後の決勝は5回とも負け
+  narrator: 解説
+  card:
+    type: table
+    title: ヨーロッパの頂点を決める決勝
+    columns: &id001
+    - 年
+    - 相手と結果
+    rows:
+    - - 1996年
+      - アヤックスにPK戦で勝ち
+  say:
+  - text: 1994年。マルチェロ・リッピが、ユヴェントスの監督になります。
+    image: assets/backgrounds/stadium_ユヴェントス_in.png
+  - 1996年5月22日。ヨーロッパの頂点を決める決勝は、ローマで行われました。
+  - 相手は、前の年の王者アヤックス。
+  - text: 12分、ラバネッリが角度のない所から決めて先制します。
+    card:
+      type: table
+      title: ヨーロッパの頂点を決める決勝
+      columns: *id001
+      rows:
+      - - 1997年
+        - ドルトムントに1対3
+  - 41分に追いつかれ、延長を終えても1対1。
+  - PK戦を4対2で制して、2度目の欧州王者になりました。
+  - text: 翌1997年と98年も決勝へ。3年続けての決勝です。
+    card:
+      type: table
+      title: ヨーロッパの頂点を決める決勝
+      columns:
+      - 年
+      - 相手と結果
+      rows:
+      - - 2003年
+        - ミランにPK戦で負け
+      - - 2015年
+        - バルセロナに負け
+      - - 2017年
+        - レアル・マドリードに負け
+  - text: ただ、ドルトムントに1対3、レアル・マドリードに0対1で負けます。
+    card:
+      type: table
+      title: ヨーロッパの頂点を決める決勝
+      columns: *id001
+      rows:
+      - - 1998年
+        - レアル・マドリードに0対1
+  - そのあとの2003年、2015年、2017年の決勝も、勝てませんでした。
+  - 1996年のローマの夜が、いまも最後の欧州王者です。
+  sources:
+  - https://en.wikipedia.org/wiki/1996_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/1997_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/1998_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/Juventus_FC
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id002
+      - デル・ピエロ
+      - 1993-2012
+      - 705試合290得点
+  say:
+  - text: デル・ピエロは、1993年から2012年まで在籍したフォワードです。
+    image: assets/photos/sa/juventus/juventus_legend_49281aea.jpg
+  - 全大会**705試合290得点**は、どちらもクラブの最多記録。
+  - 2部に落ちた2006年、「本当の紳士は貴婦人を離れない」と話して残りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Alessandro_Del_Piero
+  - https://en.wikipedia.org/wiki/Gianluigi_Buffon
+  - https://en.wikipedia.org/wiki/Pavel_Nedv%C4%9Bd
+  - https://en.wikipedia.org/wiki/Juventus_FC
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - &id003
+      - ブッフォン
+      - 2001-2021
+      - 685試合
+  say:
+  - text: ブッフォンは、2001年にパルマから来たゴールキーパー。
+    image: assets/photos/sa/juventus/juventus_legend_49d1cf00.jpg
+  - 移籍金5290万ユーロは、当時のゴールキーパーの世界最高額でした。
+  - 最後の試合は2021年、コッパ・イタリアの決勝。クラブで**685試合**目でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Alessandro_Del_Piero
+  - https://en.wikipedia.org/wiki/Gianluigi_Buffon
+  - https://en.wikipedia.org/wiki/Pavel_Nedv%C4%9Bd
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id002
+    - *id003
+    - - ネドベド
+      - 2001-2009
+      - 2003年バロンドール
+  say:
+  - text: ネドベドは、チェコ代表のミッドフィールダー。2001年にラツィオから来ました。
+    image: assets/photos/sa/juventus/juventus_legend_882d4fcf.jpg
+  - 2003年には、その年の最優秀選手に贈られるバロンドールを受けます。
+  - 2部でもリーグ戦11得点。外国人選手として、クラブ最多の**327試合**に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Alessandro_Del_Piero
+  - https://en.wikipedia.org/wiki/Gianluigi_Buffon
+  - https://en.wikipedia.org/wiki/Pavel_Nedv%C4%9Bd
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はスパレッティ。2025年10月に就任。前はイタリア代表の監督
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ルチアーノ・スパレッティ
+    - - 就任
+      - 2025年10月
+    - - 前の仕事
+      - イタリア代表の監督
+  say:
+  - text: ユヴェントスの今季の監督は、イタリア人のルチアーノ・スパレッティ。**67歳**です。
+    image: assets/photos/sa/juventus/juventus_manager_ec00de50.jpg
+  - 監督の仕事は、1993年にエンポリで始めました。
+  - ナポリでは、2022年から23年にリーグ優勝。
+  - そのあと、イタリア代表の監督も務めました。
+  - ユヴェントスの監督になったのは、2025年10月です。
+  sources:
+  - https://en.wikipedia.org/wiki/Juventus_FC
+  - https://en.wikipedia.org/wiki/Luciano_Spalletti
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/sa_juventus_gk.png
+    no_telop: true
+  - image: assets/stats/sa_juventus_gk.png
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/sa_juventus_df.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/sa_juventus_mf_f.png
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/sa_juventus_mf_f.png
+    text: 主将を務めるのが**マヌエル・ロカテッリ**。
+    no_telop: true
+  - image: assets/stats/sa_juventus_fw.png
+    text: フォワードは9人。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Juventus_FC
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 11試合で5勝3引き分け3敗。7位
+  narrator: 解説
+  card:
+    type: table
+    title: セリエAの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - フロジノーネ（アウェー）
+      - 1対0
+    - - 第2節
+      - パルマ（ホーム）
+      - 2対0
+    - - 第3節
+      - ミラン（ホーム）
+      - 1対1
+    - - 第4節
+      - サッスオーロ（アウェー）
+      - 2対3
+    - - 第5節
+      - アタランタ（ホーム）
+      - 2対0
+    - - 第6節
+      - カリアリ（アウェー）
+      - 1対1
+    - - 第7節
+      - ラツィオ（ホーム）
+      - 0対3
+    - - 第8節
+      - レッチェ（アウェー）
+      - 2対0
+    - - 第9節
+      - ジェノア（アウェー）
+      - 0対2
+    - - 第10節
+      - ナポリ（ホーム）
+      - 2対0
+    - - 第11節
+      - フィオレンティーナ（アウェー）
+      - 2対2
+  say:
+  - セリエAは11試合を終えて、**5勝3引き分け3敗**です。
+  - 順位は**7位**、勝ち点は**18**です。
+  - text: 11月22日には、ホームでヴェネツィアと戦います。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/juventus
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://site.api.espn.com/apis/v2/sports/soccer/ita.1/standings
+  official: false

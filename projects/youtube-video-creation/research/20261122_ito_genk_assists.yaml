@@ -1,0 +1,137 @@
+# 取材メモ（2026年11月22日）伊東純也、ゲンクの新監督の初陣で2アシスト。シモンズ監督が語ったこと（ニュースのショート。見せ方 Y＝新監督の言葉から始める）
+# 取材: 2026-11-22。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 本文を読んだもの:
+#   ・フットボールチャンネル 2026-11-22「ゲンクMF伊東純也、圧巻の2アシスト！ 監督解任後の初陣で“即結果” …」（全文）https://www.footballchannel.jp/2026/11/22/post1058649/
+#       ベルギー・プロ・リーグ第12節 ゲンク 3-0 ラ・ルヴィエール（現地21日）。伊東は先発、前半だけで2アシスト。10分 右サイドで受けて正確なクロス→ヘイネンが頭で先制（今季リーグ戦3アシスト目）。
+#       22分 セットプレーからラヴィヒ。32分 ヘイマンスのスルーパス→伊東のクロス→ドゥロシンミが右足（今季4アシスト）。伊東は60分にメディナと交代。90+ 分スメッツ退場。
+#       ゲンクは開幕11試合で勝ち点15の7位、リーグ戦2連敗中だった。クラブは10日にジェス・トルップ監督の解任を発表、17日にティミー・シモンズ氏の就任が決まり、今節が初戦。勝ち点18で暫定6位。
+#   ・Voetbalkrant 2026-11-21「Ligt daar dé sleutel voor Racing Genk? Zowel Ravych en Simons …」（オランダ語、全文）https://www.voetbalkrant.com/nieuws/2026-11-21/match-reactie-ligt-daar-de-sleutel-voor-racing-genk-zowel-ravych-en-simons-hebben-het-over-een-belangrijk-aspect-na-zege
+#       シモンズ監督の試合後の記者会見（原文）: "Die one second reaction vond ik knap om te zien bij iedereen. Ook bij Ito en Adedeji-Sternberg, die het niet altijd gewoon zijn om in balverlies terug te lopen en te verdedigen. Nu heb ik ze zien verdedigen met slidings, dat maakt me als trainer heel trots."
+#       "Ik heb een team gezien dat meteen zijn stempel wou drukken … Nu komt de Limburgse derby, een van dé matchen van het seizoen van deze club. Die willen we ook winnen."
+#       → 台本の言葉は、この原文を私が日本語にしたもの（語順はなぞらず日本語として通るように直した）。「one second reaction」＝ボールを失ったら1秒以内に反応する、というチームの決まり（選手のラヴィヒ＝Ravych も同じことを言っている）。
+#   ・Voetbalkrant 2026-11-21 の試合記事（オランダ語）: 「Na nul op zes」＝直前の2試合は勝ち点0（2連敗）。10分は伊東が一度ボールを止め損ねたあと、もう一度時間をもらってクロス→ヘイネン。30分すぎは伊東がドゥロシンミの得点の出し手。伊東とアデデジ＝スターンバーグは60分に交代。
+# ESPN の試合データ（site.api.espn.com summary event=401878939、11/21 17:15 UTC）:
+#   ・ゲンク 3-0 ラ・ルヴィエール。10分 ヘイネン／22分 ラヴィヒ／32分 ドゥロシンミ。伊東は先発で60分にメディナと交代。スメッツ（ゲンク）が90+2分に退場。伊東の試合記録は「アシスト 2」。
+#   ・順位表（bel.1 standings）: ゲンク 6位・12試合 5勝3分4敗・勝ち点18。
+# 食い違い（気をつけた点）:
+#   ・ESPN の記録は得点者のみで、アシストの出し手は載らない（伊東の「アシスト2」は試合記録の数）。どの得点か＝10分・32分は、フットボールチャンネルと Voetbalkrant の本文が一致。
+#   ・今季リーグ戦のアシスト数「4」はフットボールチャンネルの数字（ESPN では確かめていない）。→ 台本は「報道によると」ではなく数字を出す前に tier を報道にし、語りは「4つ目」と言う。
+#   ・トルップ監督の解任日: フットボールチャンネルは「10日に発表」。クラブ発表そのものは見ていない（報道）。
+#   ・写真: ESPN 掲載の Photo News の写真（透かしの入った Voetbalkrant 写真）は使わない。フットボールチャンネル（Getty）も使わない。
+# 前の本との重なり: 11/20 ito_usage_moriyasu（森保監督の起用）、11/18 ito_most_caps_words、11/16 ito_last_match、10/21 ito_tanaka_brazil_miss。
+#   → 今回の初出: ゲンクでの2アシストと新監督の言葉。
+# 自分で数えたもの: 伊東の出番は60分で交代（ESPN）。得点3つのうち伊東の出し手は10分・32分の2つ（報道2社一致）。
+# 【言わないこと】伊東の気持ち・本人の言葉（見つからず）／トルップ監督の解任理由の細部／スメッツの退場の評価／アデデジ＝スターンバーグへの個人的な評価（監督の言葉の中だけ）。
+# 本人の言葉: 伊東本人の試合後の言葉は見つからず（ベルギー紙の試合後欄は、ラヴィヒ・シモンズ監督・アデデジ＝スターンバーグの言葉）。Y はシモンズ監督の言葉（新監督の言葉。伊東本人の言葉ではない）。
+# 写真: 日本代表の伊東の写真3枚（11/16・11/20 の本で取り込んだゲキサカ・サッカーキングの写真の流用）。今回の試合の写真ではない（Photo News 透かしあり・Getty のため）。_pool.png を目で見た: 本人、透かし無し。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月22日"
+format: news
+no_main: true
+people: [伊東純也, ゲンク, ティミー・シモンズ監督, ラ・ルヴィエール]
+
+short_style: Y
+short_hook_quote: ボールを失ったら、すぐ反応する。
+short_photos:
+  - assets/images/20261122_ito_genk_assists/01_v.jpg
+  - assets/images/20261122_ito_genk_assists/02_v.jpg
+  - assets/images/20261122_ito_genk_assists/03_v.jpg
+  - assets/images/20261122_ito_genk_assists/01_v.jpg
+short_question: 伊東純也は、次のリンブルフ・ダービーでもアシストすると思いますか。
+short_telops: []
+
+theme:
+  id: ito_genk_assists
+  league: japan
+  league_name: ベルギー・プロリーグ
+  prefix: ""
+  title: 伊東純也、新監督の初陣で2アシスト。シモンズ監督が口にした「誇らしい」
+  hook: ""
+  question: 新監督の初陣で2アシストした伊東純也を、シモンズ監督はどう見たのか
+  takeaway: 伊東は前半の10分と32分のクロスで、3点のうち2点を作った。ゲンクは勝ち点18で6位。新監督は次のリンブルフ・ダービーも勝ちたいと話した
+
+thumbnail:
+  layout: face
+  line1: 伊東純也 2アシスト
+  line2: 新監督が語った「誇らしい」
+  tags: [伊東純也, ゲンク]
+  photo: assets/images/20261122_ito_genk_assists/02_w.jpg
+  short_photo: assets/images/20261122_ito_genk_assists/02_v.jpg
+
+answer: 前半の10分と32分のクロスで2アシスト。新監督は、伊東が戻って守る姿を誇らしいと語った
+watch: 次のリンブルフ・ダービー
+
+sections:
+  - id: what
+    main: true
+    heading: 新監督の初陣で、伊東純也は何をしたのか。シモンズ監督は何と語ったのか
+    tier: 報道
+    telop: 伊東純也、前半に2アシスト。ゲンクが3対0
+    say:
+      - text: ゲンクの伊東純也が、新監督の初陣で2アシスト。ゲンクは3対0で勝ちました。
+        image: assets/images/20261122_ito_genk_assists/02_w.jpg
+      - text: 10分、右サイドからの伊東のクロスを、ヘイネンが頭で決めました。
+      - text: 32分にも、伊東のクロスから、ドゥロシンミが右足で3点目。
+        image: assets/images/20261122_ito_genk_assists/03_w.jpg
+      - text: ティミー・シモンズ監督が語ったのは、伊東の守備でした。
+      - text: 伊東とチームメートのアデデジ・スターンバーグについて、試合後にこう話しました。
+      - voice: シモンズ監督
+        text: ボールを失ったら、すぐ反応する。
+        emph: true
+      - voice: シモンズ監督
+        text: 全員がそれをやってくれたのが、見事でした。
+        cont: true
+      - voice: シモンズ監督
+        text: 伊東とアデデジ・スターンバーグは、
+        cont: true
+      - voice: シモンズ監督
+        text: 守りに戻るのが、いつもの形ではありません。
+        cont: true
+      - voice: シモンズ監督
+        text: その二人が、スライディングで守っていた。
+        cont: true
+      - voice: シモンズ監督
+        text: 監督として、とても誇らしいです。
+        cont: true
+        image: assets/images/20261122_ito_genk_assists/01_w.jpg
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/22/post1058649/
+      - https://www.voetbalkrant.com/nieuws/2026-11-21/match-reactie-ligt-daar-de-sleutel-voor-racing-genk-zowel-ravych-en-simons-hebben-het-over-een-belangrijk-aspect-na-zege
+      - https://www.espn.com/soccer/match/_/gameId/401878939
+  - id: game
+    heading: 伊東の2アシストのあと、ゲンクの試合と順位はどうなったのか
+    tier: 報道
+    telop: ゲンク 3-0 ラ・ルヴィエール。2連敗を止めて6位
+    say:
+      - text: ゲンクは直前のリーグ戦2試合で勝ち点0。10日に、トルップ監督を解任していました。
+      - text: その新体制の初戦。3点は、前半の32分までに入りました。
+        card: {type: table, title: ゲンク 3-0 ラ・ルヴィエール, columns: [分, 得点], rows: [[10分, ヘイネン（伊東のクロス）], [22分, ラヴィヒ], [32分, ドゥロシンミ（伊東のクロス）]], highlight_row: 0}
+      - text: 伊東は60分に交代しました。
+        card: none
+        image: assets/images/20261122_ito_genk_assists/01_w.jpg
+      - text: この勝利で、勝ち点は18。順位は6位です。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401878939
+      - https://www.footballchannel.jp/2026/11/22/post1058649/
+      - https://www.voetbalkrant.com/nieuws/2026-11-21/timmy-simons-debuteert-met-duidelijke-driepunter-bij-racing-genk-tegen-zwak-la-louviere
+  - id: view
+    viewpoint: true
+    heading: 伊東のアシストは今季いくつになり、次の試合はどんな一戦か
+    tier: 背景
+    telop: 今季のリーグ戦アシストは4。次はリンブルフ・ダービー
+    say:
+      - text: 見立てです。この日の2つで、伊東の今季リーグ戦のアシストは4になりました。
+        card: {type: table, title: 伊東純也 今季リーグ戦のアシスト, columns: [時点, アシスト], rows: [[ラ・ルヴィエール戦の前, 2], [ラ・ルヴィエール戦の後, 4]], highlight_row: 1}
+        image: assets/images/20261122_ito_genk_assists/03_w.jpg
+        emph: true
+      - text: 次の試合について、シモンズ監督はこう話しています。
+        card: none
+      - text: リンブルフ地方のクラブどうしのダービーは、今季の大事な試合のひとつ。
+      - text: それも勝ちたい、と。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/11/22/post1058649/
+      - https://www.voetbalkrant.com/nieuws/2026-11-21/match-reactie-ligt-daar-de-sleutel-voor-racing-genk-zowel-ravych-en-simons-hebben-het-over-een-belangrijk-aspect-na-zege

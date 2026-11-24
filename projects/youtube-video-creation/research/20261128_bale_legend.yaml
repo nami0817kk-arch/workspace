@@ -1,0 +1,877 @@
+# ギャレス・ベイル（元ウェールズ代表FW、レアル・マドリード9シーズン）の紹介。シリーズ「レジェンドの紹介（世界）」2026-11-28 用。9節（フック→基礎DATA→日本との接点→歩み→持ち味→あの試合→現役の終わり→マル秘話→見立て）。
+# **FotMob・DataMB・FBref・Sofascore・Transfermarkt 不使用**。数字は英語版 Wikipedia（Gareth Bale の成績表・本文・Honours、2014/2016/2018/2022 UEFA Champions League final、2018 FIFA Club World Cup）と自分で足した・割った値だけ。
+# **私生活・法的な問題は入れない**（家族・父の病気の話・ゴルフ・マルカとの言い合い・中国移籍の破談・ゴール後の振る舞いの騒ぎ・五輪代表の辞退の件は台本に出さない）。
+# **重なりの確認（2026-11-21）**：scripts/・covered.yaml・posted.json・research/20261109〜20261127_picks.txt を「ベイル／Bale」で grep。主役の回は無し（20261016_record_transfer_fee に移籍金の1行が出るだけ）。同じ日（11/28）の別シリーズはユヴェントス・アモリム監督など（20261127_picks.txt）で重ならない。
+# **引退の確認**：Wikipedia「On 9 January 2023 ... Bale announced his retirement from professional football」（出典 BBC Sport「Wales captain Bale retires from football aged 33」）→ 現役ではない（37歳）。
+# **数字の出どころと自分で足した値**
+# - 成績表（Wikipedia、公式戦）：サウサンプトン 45試合5ゴール、トッテナム 203試合55ゴール＋期限付き移籍 2020-21 34試合16ゴール＝237試合71ゴール（自分で足した）、レアル・マドリード 258試合106ゴール、LAFC 13試合3ゴール。ウェールズ代表 111試合41ゴール（最多出場・最多得点）。サムネの表：レアル258/106＋トッテナム237/71＋ウェールズ代表111/41＝606試合218点（自分で足した値。サウサンプトン・LAFCは除く）。
+# - レアルの欧州（すべてCL）：57試合16ゴール（成績表の Continental 列の合計）。CL決勝：2014（先発・110分に頭で勝ち越し、4-1）、2016（先発・ラモスの先制点をアシスト〔Bale本文〕、PK戦の3人目で成功）、2017（終盤に途中出場、4-1）、2018（61分にイスコと交代で出場、63分オーバーヘッド・83分の長いシュート、3-1、最優秀選手、途中出場で2点は初）、2022（ベンチ入り・出場なし〔2022決勝の出場表に subon なし〕）。→ 決勝に出た4試合で3ゴール（PK戦は数えない）＝1試合0.75点。決勝以外のCL：57−4＝53試合、16−3＝13ゴール＝0.245点。0.75÷0.245＝3.06→約3倍。
+# - 2018-12-19 クラブW杯 準決勝（アブダビ、ザイード・スポーツシティ・スタジアム、観客30,554）鹿島アントラーズ1-3レアル。ベイル 44・53・55分、鹿島は土居 78分。クラブW杯でハットトリックは C・ロナウド、スアレスに次ぐ3人目。決勝はアル・アインに4-1、ベイルが大会最優秀選手（ゴールデンボール）。
+# - 歩み：2006-04-17 サウサンプトンでデビュー（16歳275日）。2007-05-25 トッテナムへ（最初に500万ポンド）。2009-10からレドナップ監督のもとで左ウイングへ。2010-10-20 CLのインテル戦（サン・シーロ）でハットトリック（試合は3-4）。PFA年間最優秀選手 2010-11・2012-13。2013-09-01 レアルへ（当時の世界最高額。のちの流出文書で1億80万ユーロ）。2014 コパ・デル・レイ決勝でバルセロナから決勝点（残り5分、ピッチの外を回って走り抜けた）。2022-06 LAFCへ、2022 MLSカップ決勝 128分に頭で同点（MLS史上最も遅いゴール）、PK戦で優勝。2023-01-09 引退（33歳）。
+# - ウェールズ：2006-05-27 デビュー 16歳315日で当時の最年少。ユーロ2016 準決勝（1958年W杯以来の大舞台）。2022 W杯出場（1958年以来）、アメリカ戦でPKを決め、1958年以来のW杯でのゴール。最後の試合は2022 W杯のイングランド戦。
+# - マル秘話：2006 ウェールズ代表の最年少出場（当時）。2012-13 PFA年間最優秀選手・PFA若手最優秀・FWA年間最優秀の3冠は C・ロナウド（2007）と2人だけ。2016-03-20 セビージャ戦でラ・リーガ43点目、リネカーを抜いてイギリス人の最多得点。
+# **本人の言葉**：取れていない（2022-06 W杯出場決定の言葉は本文にあるが、出典の取材元を確かめていないので置かない）。声の行は置かない。
+# **入れなかったもの**：私生活・家族・父の病気・ゴルフ、移籍金の内訳、中国移籍の破談、マルカとの言い合い、ゴール後の振る舞いの騒ぎ、五輪代表の辞退、レアル終盤の出場の少なさの細部、2016クラブW杯（日本開催）はケガで出ていないので入れない。
+# **読みで怪しいもの**：ギャレス・ベイル、カーディフ、サウサンプトン、トッテナム、レドナップ、サン・シーロ、ロス・アンジェレス（LAFC）、鹿島アントラーズ、土居、アブダビ、アル・アイン、キエフ（キーウ）、イスコ、マルセロ、カリウス、リバプール、アトレティコ、ラモス、リネカー、コパ・デル・レイ、ラ・リーガ。
+title: ベイルは、どんな選手だった？ CL決勝の4試合で、何点を決めたのか
+format: news
+short_title: ベイルは、どんな選手だった？
+series: レジェンドの紹介
+topic: ギャレス・ベイル
+date: 2026年11月21日
+slot: other_1
+people:
+- ギャレス・ベイル
+watch: 毎日、数字でサッカーを読み解きます
+theme:
+  id: legend_bale
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ギャレス・ベイル
+  title: ベイルは、どんな選手だった？ CL決勝の4試合で、何点を決めたのか
+  question: レアルで5回CLを制したベイルは、決勝の舞台でどれだけ点を取ったのか
+  takeaway: CL決勝に出た4試合で3ゴール。1試合0.75点は、決勝以外のCL53試合（13点、0.25点）の約3倍
+  nameplate: ギャレス・ベイル｜元ウェールズ代表 FW
+  opening_image: assets/images/20261128_bale_legend/01_w.jpg
+  end_bg: assets/images/20261128_bale_legend/01_w.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: ベイル、606試合218点
+  line2: CL決勝4試合で3ゴール
+  tags:
+  - レアル・マドリード
+  photo: assets/images/20261128_bale_legend/panel_01.jpg
+  board: assets/images/20261128_bale_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261128_bale_legend/01_v.jpg
+sections:
+- id: hook
+  heading: ベイルは、CL決勝で何点を決めたのか
+  tier: 報道
+  telop: CL決勝4試合で3ゴール
+  say:
+  - text: 欧州一を決める決勝に4試合出て、3ゴール。そんな選手がいました。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: ギャレス・ベイル。レアル・マドリードで、258試合に出ました。
+    card:
+      type: stats
+      title: ギャレス・ベイル 元FW（37歳）
+      items:
+      - - '258'
+        - 試合
+        - レアル・マドリードの公式戦
+      - - '5'
+        - 回
+        - チャンピオンズリーグ優勝
+      - - '3'
+        - ゴール
+        - CL決勝（出場4試合）
+      focus: 0
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  - text: チャンピオンズリーグの優勝は、5回。レアルにいた9シーズンで、です。
+    card:
+      type: stats
+      title: ギャレス・ベイル 元FW（37歳）
+      items:
+      - - '258'
+        - 試合
+        - レアル・マドリードの公式戦
+      - - '5'
+        - 回
+        - チャンピオンズリーグ優勝
+      - - '3'
+        - ゴール
+        - CL決勝（出場4試合）
+      focus: 1
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: そして決勝では、4試合で3ゴール。大舞台で、点を取りました。
+    card:
+      type: stats
+      title: ギャレス・ベイル 元FW（37歳）
+      items:
+      - - '258'
+        - 試合
+        - レアル・マドリードの公式戦
+      - - '5'
+        - 回
+        - チャンピオンズリーグ優勝
+      - - '3'
+        - ゴール
+        - CL決勝（出場4試合）
+      focus: 2
+    image: assets/images/20261128_bale_legend/04_w.jpg
+    emph: true
+    callword: 決勝で3点
+  - text: 日本のクラブとも、戦っています。鹿島アントラーズから、ハットトリック。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: ここからは、ベイルの歩みを見ていきます。
+    card: none
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+- id: data
+  heading: ベイルは、いつ、どこで生まれ、どんな選手か
+  tier: 報道
+  telop: ベイルの基礎DATA
+  say:
+  - text: ベイルは1989年7月16日、ウェールズのカーディフに生まれました。
+    card:
+      type: table
+      title: ギャレス・ベイル
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1989年7月16日・ウェールズ
+      - - ポジション
+        - 右ウイング（若いころは左サイドバック）
+      - - クラブ
+        - サウサンプトン、トッテナム、レアル・マドリード、LAFC
+      - - 代表
+        - ウェールズ代表 111試合41ゴール
+      - - 現役を終えた
+        - 2023年・33歳
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: ポジションは、ウイング。若いころは、左のサイドバックでした。
+    card:
+      type: table
+      title: ギャレス・ベイル
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1989年7月16日・ウェールズ
+      - - ポジション
+        - 右ウイング（若いころは左サイドバック）
+      - - クラブ
+        - サウサンプトン、トッテナム、レアル・マドリード、LAFC
+      - - 代表
+        - ウェールズ代表 111試合41ゴール
+      - - 現役を終えた
+        - 2023年・33歳
+      highlight_row: 1
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 所属は、サウサンプトン、トッテナム、レアル・マドリード。最後はアメリカへ。
+    card:
+      type: table
+      title: ギャレス・ベイル
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1989年7月16日・ウェールズ
+      - - ポジション
+        - 右ウイング（若いころは左サイドバック）
+      - - クラブ
+        - サウサンプトン、トッテナム、レアル・マドリード、LAFC
+      - - 代表
+        - ウェールズ代表 111試合41ゴール
+      - - 現役を終えた
+        - 2023年・33歳
+      highlight_row: 2
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: ウェールズ代表では、111試合で41ゴール。どちらも、国の歴代最多です。
+    card:
+      type: table
+      title: ギャレス・ベイル
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1989年7月16日・ウェールズ
+      - - ポジション
+        - 右ウイング（若いころは左サイドバック）
+      - - クラブ
+        - サウサンプトン、トッテナム、レアル・マドリード、LAFC
+      - - 代表
+        - ウェールズ代表 111試合41ゴール
+      - - 現役を終えた
+        - 2023年・33歳
+      highlight_row: 3
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  - text: 2023年1月、33歳で、引退を発表しています。
+    card:
+      type: table
+      title: ギャレス・ベイル
+      columns:
+      - 項目
+      - 内容
+      rows:
+      - - 生年月日
+        - 1989年7月16日・ウェールズ
+      - - ポジション
+        - 右ウイング（若いころは左サイドバック）
+      - - クラブ
+        - サウサンプトン、トッテナム、レアル・マドリード、LAFC
+      - - 代表
+        - ウェールズ代表 111試合41ゴール
+      - - 現役を終えた
+        - 2023年・33歳
+      highlight_row: 4
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+- id: japan
+  heading: ベイルと日本のクラブには、どんな縁があったのか
+  tier: 報道
+  telop: 鹿島アントラーズから、11分でハットトリック
+  say:
+  - text: 日本との縁は、2018年12月。各大陸の王者が集まる、クラブワールドカップです。
+    card:
+      type: timeline
+      title: ベイルと鹿島アントラーズ
+      rows:
+      - - 44分
+        - ベイルが先制
+      - - 53分・55分
+        - ベイルが2点を追加。ハットトリック
+      - - 78分
+        - 鹿島の土居が1点を返す。1対3
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 12月19日、アラブ首長国連邦のアブダビ。準決勝の相手は、鹿島アントラーズでした。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 44分、ベイルが先制。
+    card:
+      type: timeline
+      title: ベイルと鹿島アントラーズ
+      rows:
+      - - 44分
+        - ベイルが先制
+      - - 53分・55分
+        - ベイルが2点を追加。ハットトリック
+      - - 78分
+        - 鹿島の土居が1点を返す。1対3
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 後半の53分と55分にも決めて、11分のあいだに、ハットトリックです。
+    card:
+      type: timeline
+      title: ベイルと鹿島アントラーズ
+      rows:
+      - - 44分
+        - ベイルが先制
+      - - 53分・55分
+        - ベイルが2点を追加。ハットトリック
+      - - 78分
+        - 鹿島の土居が1点を返す。1対3
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/01_w.jpg
+    emph: true
+  - text: 鹿島は78分に、土居聖真が1点を返しますが、1対3で敗れました。
+    card:
+      type: timeline
+      title: ベイルと鹿島アントラーズ
+      rows:
+      - - 44分
+        - ベイルが先制
+      - - 53分・55分
+        - ベイルが2点を追加。ハットトリック
+      - - 78分
+        - 鹿島の土居が1点を返す。1対3
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: この大会でのハットトリックは、クリスティアーノ・ロナウド、スアレスに続く3人目。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: レアルはそのまま優勝し、ベイルは、大会の最優秀選手に選ばれました。
+    card: none
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+  - https://en.wikipedia.org/wiki/2018_FIFA_Club_World_Cup
+- id: career
+  heading: ベイルは、どこでプレーしてきたのか
+  tier: 報道
+  telop: サイドバックから、世界最高額のウイングへ
+  say:
+  - text: ベイルは、2006年4月、16歳でサウサンプトンのトップチームにデビューします。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '2006'
+        - 16歳でサウサンプトンでデビュー
+      - - '2007'
+        - トッテナムへ
+      - - '2010'
+        - CLのインテル戦でハットトリック
+      - - '2013'
+        - レアル・マドリードへ。当時の世界最高額
+      - - 2014〜22
+        - CLを5回制す
+      - - '2022'
+        - アメリカのLAFCへ
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: 2007年、ロンドンのトッテナムへ移ります。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '2006'
+        - 16歳でサウサンプトンでデビュー
+      - - '2007'
+        - トッテナムへ
+      - - '2010'
+        - CLのインテル戦でハットトリック
+      - - '2013'
+        - レアル・マドリードへ。当時の世界最高額
+      - - 2014〜22
+        - CLを5回制す
+      - - '2022'
+        - アメリカのLAFCへ
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 2009-10シーズンから、レドナップ監督のもとで、守りの位置から左のウイングへ。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 2010年10月、CLのインテル戦。サン・シーロで、ハットトリックを決めました。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '2006'
+        - 16歳でサウサンプトンでデビュー
+      - - '2007'
+        - トッテナムへ
+      - - '2010'
+        - CLのインテル戦でハットトリック
+      - - '2013'
+        - レアル・マドリードへ。当時の世界最高額
+      - - 2014〜22
+        - CLを5回制す
+      - - '2022'
+        - アメリカのLAFCへ
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  - text: 2013年9月、レアル・マドリードへ。移籍金は、当時の世界最高額でした。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '2006'
+        - 16歳でサウサンプトンでデビュー
+      - - '2007'
+        - トッテナムへ
+      - - '2010'
+        - CLのインテル戦でハットトリック
+      - - '2013'
+        - レアル・マドリードへ。当時の世界最高額
+      - - 2014〜22
+        - CLを5回制す
+      - - '2022'
+        - アメリカのLAFCへ
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: レアルでは、2014年から2022年に、チャンピオンズリーグを5回制します。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '2006'
+        - 16歳でサウサンプトンでデビュー
+      - - '2007'
+        - トッテナムへ
+      - - '2010'
+        - CLのインテル戦でハットトリック
+      - - '2013'
+        - レアル・マドリードへ。当時の世界最高額
+      - - 2014〜22
+        - CLを5回制す
+      - - '2022'
+        - アメリカのLAFCへ
+      focus: 4
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 2020-21シーズンは、古巣のトッテナムへ、期限付きで戻りました。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 2022年、アメリカのロサンゼルスのクラブへ移ります。
+    card:
+      type: timeline
+      title: 歩んできた道
+      rows:
+      - - '2006'
+        - 16歳でサウサンプトンでデビュー
+      - - '2007'
+        - トッテナムへ
+      - - '2010'
+        - CLのインテル戦でハットトリック
+      - - '2013'
+        - レアル・マドリードへ。当時の世界最高額
+      - - 2014〜22
+        - CLを5回制す
+      - - '2022'
+        - アメリカのLAFCへ
+      focus: 5
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+- id: style
+  heading: ベイルは、何で相手を上回ったのか
+  tier: 報道
+  telop: 速さ、左足のシュート、頭
+  say:
+  - text: ベイルの武器は、大きく3つあります。
+    card:
+      type: table
+      title: ベイルの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（左も右も）
+      - - 武器1
+        - 一気に抜け出す速さ
+      - - 武器2
+        - 左足の、ぶれるシュートとフリーキック
+      - - 武器3
+        - 体の強さと、ヘディング
+      - - 記録
+        - ウェールズ代表 最多の41ゴール
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: 1つ目は、速さ。相手を置き去りにして、前のスペースへ走りました。
+    card:
+      type: table
+      title: ベイルの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（左も右も）
+      - - 武器1
+        - 一気に抜け出す速さ
+      - - 武器2
+        - 左足の、ぶれるシュートとフリーキック
+      - - 武器3
+        - 体の強さと、ヘディング
+      - - 記録
+        - ウェールズ代表 最多の41ゴール
+      highlight_row: 1
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 2つ目は、左足。回転をかけずに蹴る、ぶれるシュートで、フリーキックも得意でした。
+    card:
+      type: table
+      title: ベイルの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（左も右も）
+      - - 武器1
+        - 一気に抜け出す速さ
+      - - 武器2
+        - 左足の、ぶれるシュートとフリーキック
+      - - 武器3
+        - 体の強さと、ヘディング
+      - - 記録
+        - ウェールズ代表 最多の41ゴール
+      highlight_row: 2
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 3つ目は、体の強さと、ヘディング。身長は、186センチです。
+    card:
+      type: table
+      title: ベイルの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（左も右も）
+      - - 武器1
+        - 一気に抜け出す速さ
+      - - 武器2
+        - 左足の、ぶれるシュートとフリーキック
+      - - 武器3
+        - 体の強さと、ヘディング
+      - - 記録
+        - ウェールズ代表 最多の41ゴール
+      highlight_row: 3
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  - text: レアルでは右のウイングに置かれ、中へ切れ込んで、左足で打ちました。
+    card: none
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: この武器で、代表でも点を重ね、国の歴代最多得点者になりました。
+    card:
+      type: table
+      title: ベイルの持ち味
+      columns:
+      - 項目
+      - 中身
+      rows:
+      - - 位置
+        - ウイング（左も右も）
+      - - 武器1
+        - 一気に抜け出す速さ
+      - - 武器2
+        - 左足の、ぶれるシュートとフリーキック
+      - - 武器3
+        - 体の強さと、ヘディング
+      - - 記録
+        - ウェールズ代表 最多の41ゴール
+      highlight_row: 4
+    image: assets/images/20261128_bale_legend/04_w.jpg
+    emph: true
+  - text: 2016年のユーロでは、ウェールズを準決勝へ。1958年以来の、大きな大会でした。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+- id: match
+  heading: 2018年のCL決勝で、ベイルは何を決めたのか
+  tier: 報道
+  telop: 途中出場から2分、オーバーヘッド
+  main: true
+  say:
+  - text: ギャレス・ベイル。
+    card: none
+    short_only: true
+  - text: 途中から出て、決勝を決めた夜があります。
+    card: none
+    short_only: true
+  - text: 2018年5月26日、ウクライナのキエフ。
+    card: none
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: チャンピオンズリーグの決勝。レアル・マドリードの相手は、リバプールです。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: ベイルは、ベンチから始まりました。
+    card: none
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 51分、ベンゼマが先制。55分、マネが決めて、同点に追いつかれます。
+    card:
+      type: timeline
+      title: 2018年5月26日 CL決勝 リバプール戦
+      rows:
+      - - 61分
+        - ベイルが途中から出場
+      - - 63分
+        - ベイルのオーバーヘッドで、2対1
+      - - 83分
+        - ベイルの遠くからのシュートで、3対1
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 61分、ベイルが入ります。
+    card:
+      type: timeline
+      title: 2018年5月26日 CL決勝 リバプール戦
+      rows:
+      - - 61分
+        - ベイルが途中から出場
+      - - 63分
+        - ベイルのオーバーヘッドで、2対1
+      - - 83分
+        - ベイルの遠くからのシュートで、3対1
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: その2分後。マルセロのクロスを、空中で体をひねって、オーバーヘッド。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+    emph: true
+  - text: 63分、2対1。CLの決勝で、最も美しいゴールの1つと言われます。
+    card: none
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 83分にも、遠くからのシュートが入って3対1。勝ちを決めた2点目です。
+    card:
+      type: timeline
+      title: 2018年5月26日 CL決勝 リバプール戦
+      rows:
+      - - 61分
+        - ベイルが途中から出場
+      - - 63分
+        - ベイルのオーバーヘッドで、2対1
+      - - 83分
+        - ベイルの遠くからのシュートで、3対1
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 途中から出た選手が、CLの決勝で2点を決めたのは、初めてでした。
+    card: none
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 試合の最優秀選手も、ベイル。レアルは、CLの3連覇です。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+  - https://en.wikipedia.org/wiki/2018_UEFA_Champions_League_final
+- id: after
+  heading: ベイルは、どんな形で現役を終えたのか
+  tier: 報道
+  telop: 最後の決勝は、128分の同点ゴール
+  say:
+  - text: ベイルの最後のクラブは、アメリカのロサンゼルス。2022年の夏に加わりました。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2022年6月
+        - アメリカのLAFCへ
+      - - 2022年 MLSカップ
+        - 決勝の128分に同点、PK戦で優勝
+      - - 2022年 W杯
+        - ウェールズ代表の主将として、64年ぶりのW杯へ
+      - - 2023年1月
+        - 現役の引退を発表
+      focus: 0
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: その年の、アメリカのリーグの優勝決定戦。途中から出て、延長の128分。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2022年6月
+        - アメリカのLAFCへ
+      - - 2022年 MLSカップ
+        - 決勝の128分に同点、PK戦で優勝
+      - - 2022年 W杯
+        - ウェールズ代表の主将として、64年ぶりのW杯へ
+      - - 2023年1月
+        - 現役の引退を発表
+      focus: 1
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: ヘディングで同点。負けを消す1点で、リーグの歴史で、最も遅い時間のゴールです。
+    card: none
+    image: assets/images/20261128_bale_legend/02_w.jpg
+    emph: true
+  - text: チームは、PK戦で勝って、初めての優勝。これが、クラブでの最後の試合です。
+    card: none
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: その年の11月、主将として、64年ぶりのワールドカップに立ちました。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2022年6月
+        - アメリカのLAFCへ
+      - - 2022年 MLSカップ
+        - 決勝の128分に同点、PK戦で優勝
+      - - 2022年 W杯
+        - ウェールズ代表の主将として、64年ぶりのW杯へ
+      - - 2023年1月
+        - 現役の引退を発表
+      focus: 2
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: アメリカ戦でPKを決め、1958年以来の、ワールドカップでのゴールになりました。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: そして2023年1月。33歳で、スパイクを脱ぎました。
+    card:
+      type: timeline
+      title: 現役の終わり
+      rows:
+      - - 2022年6月
+        - アメリカのLAFCへ
+      - - 2022年 MLSカップ
+        - 決勝の128分に同点、PK戦で優勝
+      - - 2022年 W杯
+        - ウェールズ代表の主将として、64年ぶりのW杯へ
+      - - 2023年1月
+        - 現役の引退を発表
+      focus: 3
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+- id: secret
+  heading: ベイルには、どんな意外な話があるのか
+  tier: 報道
+  telop: 16歳の代表、3つの賞、イギリス人の最多得点
+  say:
+  - text: ベイルの、あまり知られていない話を3つ。
+    card: none
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: 1つ目。2006年、16歳315日でウェールズ代表に。当時の最年少でした。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2006年5月
+        - 16歳315日で、ウェールズ代表の最年少出場（当時）
+      - - 2013年
+        - イングランドの年間最優秀の賞を、1年で3つ
+      - - 2016年3月
+        - ラ・リーガで、イギリス人の最多得点に
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 2つ目。2013年、イングランドの年間最優秀選手の賞を、3つ同時に受けました。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2006年5月
+        - 16歳315日で、ウェールズ代表の最年少出場（当時）
+      - - 2013年
+        - イングランドの年間最優秀の賞を、1年で3つ
+      - - 2016年3月
+        - ラ・リーガで、イギリス人の最多得点に
+      highlight_row: 1
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 同じ年に3つは、クリスティアーノ・ロナウドとベイルの2人だけです。
+    card: none
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  - text: 3つ目。2016年3月、スペインのリーグで43点目。
+    card:
+      type: table
+      title: 知られざる、3つの話
+      columns:
+      - いつ
+      - 何があったか
+      rows:
+      - - 2006年5月
+        - 16歳315日で、ウェールズ代表の最年少出場（当時）
+      - - 2013年
+        - イングランドの年間最優秀の賞を、1年で3つ
+      - - 2016年3月
+        - ラ・リーガで、イギリス人の最多得点に
+      highlight_row: 2
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  - text: リネカーを抜いて、ラ・リーガで最も点を取ったイギリス人になりました。
+    card: none
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+- id: view
+  heading: ベイルは、CL決勝でどれだけ点を取ったのか
+  tier: 背景
+  telop: 決勝は1試合0.75点、それ以外の約3倍
+  viewpoint: true
+  say:
+  - text: 最後に、レアルでのチャンピオンズリーグを、決勝とそれ以外に分けて比べます。
+    card:
+      type: table
+      title: レアルでのCL（決勝とそれ以外）
+      columns:
+      - 試合
+      - 出場
+      - ゴール
+      - 1試合あたり
+      rows:
+      - - 決勝
+        - '4'
+        - 3点
+        - 0.75点
+      - - 決勝以外
+        - '53'
+        - 13点
+        - 0.25点
+      - - 合計
+        - '57'
+        - 16点
+        - 0.28点
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 決勝に出たのは、2014年、2016年、2017年、2018年の4試合。
+    card: none
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  - text: 決勝の4試合では、1試合あたり0.75点。
+    card:
+      type: table
+      title: レアルでのCL（決勝とそれ以外）
+      columns:
+      - 試合
+      - 出場
+      - ゴール
+      - 1試合あたり
+      rows:
+      - - 決勝
+        - '4'
+        - 3点
+        - 0.75点
+      - - 決勝以外
+        - '53'
+        - 13点
+        - 0.25点
+      - - 合計
+        - '57'
+        - 16点
+        - 0.28点
+      highlight_row: 0
+    image: assets/images/20261128_bale_legend/03_w.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 3
+  - text: 決勝以外のCLは、53試合で13ゴール。平均すると、0.25点にとどまります。
+    card:
+      type: table
+      title: レアルでのCL（決勝とそれ以外）
+      columns:
+      - 試合
+      - 出場
+      - ゴール
+      - 1試合あたり
+      rows:
+      - - 決勝
+        - '4'
+        - 3点
+        - 0.75点
+      - - 決勝以外
+        - '53'
+        - 13点
+        - 0.25点
+      - - 合計
+        - '57'
+        - 16点
+        - 0.28点
+      highlight_row: 1
+    image: assets/images/20261128_bale_legend/04_w.jpg
+  - text: 決勝での1試合あたりの点は、それ以外の約3倍です。
+    card: none
+    image: assets/images/20261128_bale_legend/01_w.jpg
+  - text: 2016年の決勝も、先制点をお膳立てし、PK戦の3人目で決めています。
+    card: none
+    image: assets/images/20261128_bale_legend/02_w.jpg
+  - text: 大きな試合ほど、点を取った。それが、ベイルでした。
+    card: none
+    image: assets/images/20261128_bale_legend/03_w.jpg
+  quotes_from: []
+  sources:
+  - https://en.wikipedia.org/wiki/Gareth_Bale
+  - https://en.wikipedia.org/wiki/2014_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/2016_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/2018_UEFA_Champions_League_final
+  - https://en.wikipedia.org/wiki/2022_UEFA_Champions_League_final

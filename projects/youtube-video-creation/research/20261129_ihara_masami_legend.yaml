@@ -1,0 +1,347 @@
+# 井原正巳（元日本代表 DF）の紹介。シリーズ「レジェンドの紹介（日本）」2026-11-29。型は 11/25 の名波浩と同じ6節（「あの1年」＝1997年のワールドカップ最終予選、「見立て」＝代表の試合が集まった年）。
+# **情報の時点は 2026-11-21。**年齢は出さない。引退後の仕事（監督・コーチ・解説）は言わない。私生活・女子サッカーは入れない。
+# 題材を選んだ理由：引退した日本人の大物。「アジアの壁」、日本代表122試合（遠藤保仁に抜かれるまで歴代1位）、1998年W杯の主将。既出の国内レジェンド（scripts/*_legend.md 25人）・posted.json・covered.yaml・picks に無い。同じ日（11/29）の別シリーズ（ロドリ・クルトワ×アリソン・PSG のスタジアム・アヤックスのユニフォーム）に出ない。11/27 の釜本邦茂とも重ならない。
+# 引退の確認：日本語版 Wikipedia「井原正巳」（2002年のJ1最終節・横浜F・マリノス戦に先発フル出場したのを最後に引退。引退試合は2004-01-04 国立。出典は Jリーグデータサイトと浦和レッズ公式）。2025-12 に水原三星のコーチを退任しているが、指導者の話は台本に入れない。
+# 数字の出どころ：日本語版 Wikipedia「井原正巳」（raw の wikitext を読んだ）。
+# - クラブ：日産 JSL 44試合2点（1990-91 22-2、91-92 22-0）、横浜 J 223試合3点（93 32-0、94 41-1、95 47-1、96 29-1、97 22-0、98 27-0、99 25-0）、磐田 2000 20-1、浦和 2001 26-1・2002 28-0。J1 計 297試合5点（足して一致）。
+# - 日本代表：122試合5点、全試合先発。年別 88 5、89 11、90 6、91 2、92 11、93 15-2、94 9-1、95 16-1、96 13、97 21-1、98 10、99 3（足して122-5）。1997年以外＝101試合（11年）。
+# - 1997年の21試合は出場一覧の89〜109番。最終予選8試合（9/7 ウズベキスタン 6-3、9/19 UAE 0-0、9/28 韓国 1-2、10/4 カザフスタン 1-1、10/11 ウズベキスタン 1-1、11/1 韓国 2-0、11/8 カザフスタン 5-1、11/16 イラン 3-2 延長）すべてに出場。監督は10/11 から岡田武史（一覧の監督欄）。カザフスタン戦（11/8）の点が代表で最後の点（samuraiblue の記録を出典に）。
+# - 初出場 1988-01-27 UAE戦。1990/91 日本リーグ新人賞。1993-97 Jリーグベストイレブン5回。1995年から代表主将（加茂周監督が指名）。1995年のチャンピオンシップ第2戦で決勝点。1998年W杯は大会直前に負傷しながら主将として3試合すべてに先発フル出場。
+# - 最後のゴール：2001-05-19 ガンバ大阪戦。
+# 本人の言葉は取れていない（Wikipedia の範囲で引用に足る言葉が無い）。台本は本人の言葉なしで組んだ。
+# 写真：Number Web の記事の写真（日本代表の背番号7。©Kazuaki Nishiyama）と（横浜マリノスの背番号4。©Sports Graphic Number）。代理店ではない。
+watch: 毎日、数字でサッカーを読み解きます
+title: 井原正巳は、どんな選手だった？ キャプテンでワールドカップへ導いた1997年
+format: news
+short_title: 井原正巳は、どんな選手だった？
+series: レジェンドの紹介
+topic: 井原正巳
+date: 2026年11月21日
+slot: other_1
+people:
+- 井原正巳
+theme:
+  id: legend_ihara_masami_legend
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 井原正巳
+  title: 井原正巳は、どんな選手だった？ キャプテンでワールドカップへ導いた1997年
+  question: ディフェンダーの井原正巳が、キャプテンとして日本を初めてのワールドカップへ導いた1997年は、どんな年だったのか
+  takeaway: 井原正巳の日本代表122試合のうち21試合（約17%）は1997年に集まっている。ほかの11年は1年あたり約9.2試合で、1997年は約2.3倍。この年の最終予選8試合すべてに出て、日本は初めてワールドカップの出場を決めた
+  nameplate: 井原正巳｜元日本代表 DF
+  opening_image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+  end_bg: assets/images/20261129_ihara_masami_legend/01_r.jpg
+  bgm: assets/audio/bgm_calm.wav
+  outro_title: 毎日、数字でサッカーを読み解きます
+thumbnail:
+  line1: 井原正巳、代表122試合5点
+  line2: 主将で初のW杯へ
+  tags:
+  - 日本
+  photo: assets/images/20261129_ihara_masami_legend/01_w.jpg
+  board: assets/images/20261129_ihara_masami_legend/panel_01.jpg
+  photos: []
+  short_photo: assets/images/20261129_ihara_masami_legend/01_v.jpg
+sections:
+- id: hook
+  heading: 日本を初めてのワールドカップへ導いたキャプテンは誰だったのか
+  tier: 報道
+  telop: 1997年、ジョホールバル
+  card: &hookcard
+    type: stats
+    title: 井原正巳 元日本代表DF
+    items:
+    - - '122'
+      - 試合
+      - 日本代表（すべて先発）
+    - - '5'
+      - 回
+      - Jリーグのベストイレブン
+    - - '297'
+      - 試合
+      - J1の通算（5得点）
+    focus: 0
+  say:
+  - text: 1997年11月16日、マレーシアのジョホールバル。
+    image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+    card: none
+  - text: 日本はイランに延長で勝ち、初めてのワールドカップを決めます。
+    card: none
+  - text: この予選で、守りの真ん中に立ち、キャプテンマークを巻いていた選手がいます。
+    card: none
+    emph: true
+  - text: その選手が、井原正巳です。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *hookcard, focus: 0}
+    callword: 井原正巳
+  - text: 呼び名は、アジアの壁。
+    image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+    card: none
+  - text: 年間の優秀な11人、Jリーグのベストイレブンには5回選ばれました。
+    card: {<<: *hookcard, focus: 1}
+  - text: 日本代表は122試合。そのすべてに、先発で出ました。
+    card: {<<: *hookcard, focus: 0}
+  quotes_from: []
+  sources: &src
+  - https://ja.wikipedia.org/wiki/%E4%BA%95%E5%8E%9F%E6%AD%A3%E5%B7%B3
+  - http://samuraiblue.jp/timeline/19971108/
+  - https://number.bunshun.jp/articles/-/847490
+- id: data
+  heading: 井原正巳は、どこでプレーし、どんな数字を残したのか
+  tier: 報道
+  telop: 井原正巳の基礎DATA
+  card: &datacard
+    type: table
+    title: 井原正巳
+    columns:
+    - 項目
+    - 内容
+    rows:
+    - - 生年月日
+      - 1967年9月18日・滋賀県生まれ
+    - - ポジション
+      - ディフェンダー（センターバック）
+    - - 所属したクラブ
+      - 日産 → 横浜M → 磐田 → 浦和
+    - - J1通算
+      - 297試合5得点（1993〜2002年）
+    - - 日本代表
+      - 122試合5得点（1988〜1999年）
+    - - タイトル
+      - アジアカップ（1992年）・J1（1995年）
+    - - 現役を退く
+      - 2002年
+    highlight_row: 0
+  say:
+  - text: 井原正巳は1967年、滋賀県の生まれ。守りの真ん中、センターバックです。
+    card: {<<: *datacard, highlight_row: 1}
+  - text: クラブは、日産から続く横浜マリノスが中心。のちに磐田と浦和でもプレーしました。
+    card: {<<: *datacard, highlight_row: 2}
+  - text: J1では、1993年から5年続けて、ベストイレブンに入りました。
+    card: {<<: *datacard, highlight_row: 3}
+  - text: 日本代表には、筑波大学の2年生だった1988年から選ばれます。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *datacard, highlight_row: 4}
+  - text: 1992年のアジアカップで、日本は初めてアジアの頂点に立ちました。
+    image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+    card: {<<: *datacard, highlight_row: 5}
+  quotes_from: []
+  sources: *src
+- id: road
+  heading: フォワードだった井原正巳は、どうやって日本の守りの柱になったのか
+  tier: 報道
+  telop: 1988年、大学生で代表に
+  card: &roadcard
+    type: timeline
+    title: 井原正巳の歩み
+    rows:
+    - - 1988年
+      - 大学生で日本代表に初めて出る
+    - - 1990年
+      - 日産に入る。日本リーグの新人王
+    - - 1993年
+      - Jリーグが始まる。予選はドーハで敗退
+    - - 1995年
+      - 代表のキャプテンに。マリノスはJ1優勝
+    highlight_row: 0
+  say:
+  - text: 井原正巳は、もともとフォワードでした。大学に入る前に、ディフェンダーへ移ります。
+    image: assets/images/20261129_ihara_masami_legend/02_r.jpg
+    card: none
+  - text: 1988年1月27日、アラブ首長国連邦との試合で、日本代表に初めて出ます。
+    card: {<<: *roadcard, highlight_row: 0}
+  - text: 1990年、日産自動車に入ります。日本リーグでは、新人王に選ばれました。
+    card: {<<: *roadcard, highlight_row: 1}
+  - text: 1993年、Jリーグが始まります。
+    card: {<<: *roadcard, highlight_row: 2}
+  - text: この年の10月、カタールのドーハでワールドカップ予選のイラク戦。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *roadcard, highlight_row: 2}
+    emph: true
+  - text: 終わり間際に追いつかれ、ワールドカップを逃します。
+    card: none
+  - text: 1995年、日本代表のキャプテンを任されます。
+    image: assets/images/20261129_ihara_masami_legend/02_r.jpg
+    card: {<<: *roadcard, highlight_row: 3}
+  - text: この年、マリノスはJ1で優勝します。
+    card: none
+  - text: 優勝を決める試合で、井原正巳はヘディングで決勝点を取りました。
+    card: none
+  quotes_from: []
+  sources: *src
+- id: y1997
+  heading: 1997年のワールドカップ予選で、井原正巳はどんな試合を戦ったのか
+  tier: 報道
+  telop: 1997年、代表で21試合
+  main: true
+  card: &qcard
+    type: table
+    title: 1997年 ワールドカップ最終予選の日本
+    columns:
+    - 日付
+    - 相手
+    - 結果
+    rows:
+    - - 9月7日
+      - ウズベキスタン
+      - 6対3で勝ち
+    - - 9月19日
+      - UAE
+      - 0対0
+    - - 9月28日
+      - 韓国
+      - 1対2で負け
+    - - 10月4日
+      - カザフスタン
+      - 1対1
+    - - 10月11日
+      - ウズベキスタン
+      - 1対1
+    - - 11月1日
+      - 韓国
+      - 2対0で勝ち
+    - - 11月8日
+      - カザフスタン
+      - 5対1で勝ち
+    - - 11月16日
+      - イラン
+      - 3対2で勝ち（延長）
+    highlight_row: 0
+  say:
+  - text: 1997年、井原正巳は日本代表で21試合に出ます。キャリアで、いちばん多い年です。
+    image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+    card: none
+    emph: true
+  - text: 9月から始まった最終予選。初戦は、ウズベキスタンに6対3で勝ちます。
+    card: {<<: *qcard, highlight_row: 0}
+  - text: しかし、アラブ首長国連邦とは0対0の引き分け。韓国には1対2で負けます。
+    card: {<<: *qcard, highlight_row: 2}
+  - text: 10月4日、カザフスタンとも1対1の引き分け。
+    card: {<<: *qcard, highlight_row: 3}
+  - text: この試合のあと、監督が加茂周から岡田武史に替わります。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+    emph: true
+  - text: 10月11日、ウズベキスタン戦も引き分け。4試合、勝ちがありません。
+    image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+    card: {<<: *qcard, highlight_row: 4}
+  - text: 11月1日、ソウルで韓国に2対0で勝ちます。
+    card: {<<: *qcard, highlight_row: 5}
+  - text: 11月8日、ホームのカザフスタン戦。井原正巳が点を取り、5対1で勝ちます。
+    card: {<<: *qcard, highlight_row: 6}
+    emph: true
+  - text: これが、井原正巳の代表での最後の点になりました。
+    card: none
+  - text: そして11月16日、ジョホールバル。アジアの第3代表を決める、イランとの試合です。
+    image: assets/backgrounds/cut_日本.png
+    card: {<<: *qcard, highlight_row: 7}
+  - text: 延長の末に3対2で勝ち、日本は初めて、ワールドカップの出場を決めました。
+    image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+    card: {<<: *qcard, highlight_row: 7}
+    emph: true
+  - text: 井原正巳は、最終予選の8試合すべてに出ています。
+    card: none
+  quotes_from: []
+  sources: *src
+- id: after
+  heading: ワールドカップのあと、井原正巳はどんな形で現役を終えたのか
+  tier: 報道
+  telop: 2002年、現役を退く
+  card: &aftercard
+    type: table
+    title: 井原正巳のJ1
+    columns:
+    - 年
+    - クラブ
+    - 試合
+    - 得点
+    rows:
+    - - '1998'
+      - 横浜
+      - '27'
+      - '0'
+    - - '1999'
+      - 横浜FM
+      - '25'
+      - '0'
+    - - '2000'
+      - 磐田
+      - '20'
+      - '1'
+    - - '2001'
+      - 浦和
+      - '26'
+      - '1'
+    - - '2002'
+      - 浦和
+      - '28'
+      - '0'
+    highlight_row: 0
+  say:
+  - text: 1998年、フランスのワールドカップ。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  - text: 井原正巳は大会の直前にけがをしましたが、キャプテンとして、3試合とも先発しました。
+    image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+    card: none
+  - text: アルゼンチンとクロアチアに0対1、ジャマイカに1対2。日本は3試合とも負けました。
+    card: none
+  - text: 1999年7月のコパ・アメリカ。ボリビア戦が、代表での最後の試合になりました。
+    card: none
+  - text: クラブでは、2000年にマリノスを離れて磐田へ。20試合で1点です。
+    image: assets/images/20261129_ihara_masami_legend/02_r.jpg
+    card: {<<: *aftercard, highlight_row: 2}
+  - text: 2001年、浦和へ。5月19日のガンバ大阪戦の点が、現役で最後のゴールでした。
+    card: {<<: *aftercard, highlight_row: 3}
+  - text: 2002年、J1の最終節で、古巣の横浜F・マリノスと戦います。
+    card: {<<: *aftercard, highlight_row: 4}
+  - text: この試合に先発で最後まで出て、現役を退きました。
+    card: {<<: *aftercard, highlight_row: 4}
+    emph: true
+  - text: 2004年1月4日、国立競技場で引退試合。井原正巳はゴールを決めました。
+    card: none
+  quotes_from: []
+  sources: *src
+- id: view
+  heading: 井原正巳の代表の122試合は、どの年に集まっていたのか
+  tier: 背景
+  telop: 1997年は、1年で21試合
+  viewpoint: true
+  card: &viewcard
+    type: table
+    title: 井原正巳の日本代表の試合数
+    columns:
+    - 区分
+    - 試合
+    - 1年あたり
+    rows:
+    - - 1988〜1999年（12年）
+      - '122'
+      - 約10.2
+    - - 1997年
+      - '21'
+      - '21'
+    - - 1997年以外（11年）
+      - '101'
+      - 約9.2
+    highlight_row: 0
+  say:
+  - text: 最後に、井原正巳の代表の試合が、どの年に多いかを見ます。
+    image: assets/images/20261129_ihara_masami_legend/01_r.jpg
+    card: none
+  - text: 12年で122試合。1年あたり、約10.2試合です。
+    card: {<<: *viewcard, highlight_row: 0}
+  - text: 1997年は、1年で21試合。
+    card: {<<: *viewcard, highlight_row: 1}
+    emph: true
+    mark: {"kind": "circle", "row": 1, "col": "試合"}
+  - text: ほかの11年は101試合で、1年あたり約9.2試合でした。
+    card: {<<: *viewcard, highlight_row: 2}
+  - text: 1997年は、ほかの年の約2.3倍です。
+    card: {<<: *viewcard, highlight_row: 1}
+  - text: その年の最後に、日本の初出場が決まりました。
+    image: assets/backgrounds/cut_日本.png
+    card: none
+  quotes_from: []
+  sources: *src

@@ -1,0 +1,24 @@
+{
+ "juventus": {
+  "デル・ピエロ": {
+   "role": "legend",
+   "file": "assets/photos/sa/juventus/juventus_legend_49281aea.jpg",
+   "page": "Alessandro Del Piero"
+  },
+  "ブッフォン": {
+   "role": "legend",
+   "file": "assets/photos/sa/juventus/juventus_legend_49d1cf00.jpg",
+   "page": "Gianluigi Buffon"
+  },
+  "ネドベド": {
+   "role": "legend",
+   "file": "assets/photos/sa/juventus/juventus_legend_882d4fcf.jpg",
+   "page": "Pavel Nedvěd"
+  },
+  "ルチアーノ・スパレッティ": {
+   "role": "manager",
+   "file": "assets/photos/sa/juventus/juventus_manager_ec00de50.jpg",
+   "page": "Luciano Spalletti"
+  }
+ }
+}

@@ -1,0 +1,138 @@
+# 取材メモ（2026年11月16日）46歳ロナウジーニョがセリエCのラヴェンナで11年ぶり復帰。前半45分で交代、ラヴェンナは1-0勝ち。試合後に語ったこと（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-16。ESPN の記事2本は requests が 202（空）だったので WebFetch で読んだ。サッカーキング2本は requests（ブラウザUA）で全文。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# 出典で確かめたこと:
+#   ・サッカーキング 2228194（2026-11-16、全文。元は スカイ・スポルト）: 11年ぶりの現役復帰。フルミネンセ時代の 2015-09-26 以来。15日、本拠地スタディオ・ベネッリ、セリエC 第14節 対フォルリに先発、前半45分間の出場。
+#       1万2000人収容のスタジアムは完売。守備は最前線、攻撃は攻撃的MF。ボールタッチ28回、ゴール・シュートなし。CKのキッカーとして味方のシュートを演出。
+#       35分のジュリオ・ドナーティの中距離シュートのゴールは、ロナウジーニョがボックス手前で受けてロレンツォ・ロナルディ（記事表記「ロナアルディ」）へ横パスを出したのが起点。ラヴェンナは 1-0 で勝った。
+#       あらかじめ前半のみの出場が決まっていた。ハーフタイムのスカイ・スポルトのインタビューと試合後の囲み取材で本人が語った（下）。
+#   ・ESPN（story 50491487・50489043、WebFetch、2026-11-15）: 46歳。ラヴェンナ対フォルリ（地元のライバル）。前半45分でマッジョに交代（後半の頭）。引退時の通算299ゴール、ゴールなし。ドナーティが先制（分は書かれていない）。
+#       本人の言葉（スカイ・イタリア）: "It went by too fast, that has always been football for me." "Is this my last one? I don't know." "It was lovely to be here, playing, having the build-up in the dressing room."
+#       → サッカーキングの日本語と中身が合う。台本の言葉はサッカーキングの日本語を使い、言い回しだけ話し言葉に整えた。
+#   ・サッカーキング 2227757（11/14）: 監督アンドレア・マンドルリーニ「彼は間違いなく先発する。我々には結果が必要だからだ」。チームトレーニングには2日ほどしか参加していない。ラヴェンナはセリエC 2位（11/14 時点）。
+#   ・ESPN の試合データ（site.api.espn.com）は セリエC を持っていない（ita.3 系は空）。スコア 1-0 とドナーティ35分はサッカーキングのみ（ESPN の記事もドナーティの先制は確認）。→ 報道。
+# 食い違い・扱い:
+#   ①「300ゴールを目指す」という8月の発言は本文を読んでいない（サッカーキング 08-21 の見出しのみ）。台本には使わない。通算は ESPN の「299ゴール」だけ使う。
+#   ②交代の分: ESPN は「後半の頭に交代」、サッカーキングは「前半45分間の出場」。「前半だけ出場」と言う。
+#   ③写真: 記事の写真はすべて Getty/AFP なので使わない。Commons の CC BY-SA 2.0（Sports Festival 2025、2025-06-14）などを使った。ラヴェンナの試合の写真ではない（台本では「その試合の写真」と言わない）。
+# 本人の言葉: あり（上）。Y。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月16日"
+format: news
+no_main: true
+people: [ロナウジーニョ, ラヴェンナ, フォルリ]
+
+short_style: Y
+short_hook_quote: あっという間だったね。
+short_photos:
+  - assets/images/20261116_ronaldinho_ravenna/05_v.jpg
+  - assets/images/20261116_ronaldinho_ravenna/06_v.jpg
+  - assets/images/20261116_ronaldinho_ravenna/07_v.jpg
+  - assets/images/20261116_ronaldinho_ravenna/02_v.jpg
+  - assets/images/20261116_ronaldinho_ravenna/04_v.jpg
+short_question: ロナウジーニョは、また現役のピッチに戻ってくると思いますか。
+short_telops: []
+
+theme:
+  id: ronaldinho_ravenna
+  league: italy
+  league_name: セリエC
+  prefix: ""
+  title: 46歳ロナウジーニョ、11年ぶりの復帰戦。前半45分のあとに語ったこと
+  hook: ""
+  question: 11年ぶりにピッチに立ったロナウジーニョは、試合後に何を語ったのか
+  takeaway: 復帰戦は前半45分で、ゴールはなし。通算299ゴールのまま。それでも本人は「会長がまた声をかけてくれたら、戻ってくる」と話した
+
+thumbnail:
+  layout: face
+  line1: ロナウジーニョ 46歳
+  line2: 11年ぶりの復帰戦
+  tags: [ロナウジーニョ, ラヴェンナ]
+  photo: assets/images/20261116_ronaldinho_ravenna/02_w.jpg
+  short_photo: assets/images/20261116_ronaldinho_ravenna/05_v.jpg
+
+answer: あっという間だった。サッカーは、いつだって最高のもの。会長に呼ばれたら、また戻ってくる
+watch: 会長からまた声がかかるかどうか
+
+sections:
+  - id: what
+    main: true
+    heading: 11年ぶりに復帰したロナウジーニョは、試合後に何を語ったのか
+    tier: 報道
+    telop: ロナウジーニョ「あっという間だったね」
+    say:
+      - text: 46歳ロナウジーニョが、イタリア3部ラヴェンナで11年ぶりに復帰。
+      - text: 前半の45分間、プレーしています。
+        image: assets/images/20261116_ronaldinho_ravenna/02_w.jpg
+      - voice: ロナウジーニョ
+        text: あっという間だったね。
+        emph: true
+      - voice: ロナウジーニョ
+        text: 私にとってサッカーとは、いつだってこういうものなんだ。
+        cont: true
+      - text: 復帰は、クラブと本人の意向で、1試合限定でした。
+      - text: 最後の試合になるのかと聞かれて、こう答えています。
+        image: assets/images/20261116_ronaldinho_ravenna/02_w.jpg
+      - voice: ロナウジーニョ
+        text: これが最後になるかって？さあ、どうだろう。
+      - voice: ロナウジーニョ
+        text: 会長がまた声をかけてくれたら、戻ってくるよ。
+        cont: true
+      - voice: ロナウジーニョ
+        text: いつだって楽しいからね。
+        cont: true
+      - text: 試合後には、ロッカールームで過ごした時間についても語っています。
+        image: assets/images/20261116_ronaldinho_ravenna/04_w.jpg
+      - voice: ロナウジーニョ
+        text: ここに来て、プレーして、ロッカールームで試合の準備をする。
+      - voice: ロナウジーニョ
+        text: その時間は、本当に素晴らしかった。
+        cont: true
+      - voice: ロナウジーニョ
+        text: 若い選手たちと過ごせて楽しかったよ。
+      - voice: ロナウジーニョ
+        text: 僕のプレーを見て育った選手もいて、最高だった。
+        cont: true
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20261116/2228194.html
+      - https://www.espn.com/soccer/story/_/id/50491487/ronaldinho-comeback-300-goals-ravenna-serie-c
+      - https://www.espn.com/soccer/story/_/id/50489043/ronaldinho-ravenna-brazil-barcelona-serie-c
+  - id: game
+    heading: 復帰戦で、ロナウジーニョは何をしたのか
+    tier: 報道
+    telop: ラヴェンナ 1-0 フォルリ。ボールタッチ28回
+    say:
+      - text: 1万2000人入るスタジアムは、完売。ラヴェンナは、1対0で勝ちました。
+        card: {type: table, title: ラヴェンナ 1-0 フォルリ（15日、セリエC 第14節）, columns: [分, 得点者], rows: [[35分, ジュリオ・ドナーティ]], highlight_row: 0}
+        image: assets/images/20261116_ronaldinho_ravenna/04_w.jpg
+      - text: ロナウジーニョのボールタッチは28回。ゴールもシュートもありませんでした。
+        card: none
+        image: assets/images/20261116_ronaldinho_ravenna/07_w.jpg
+      - text: ただ、35分のゴールの起点は、ロナウジーニョでした。
+        image: assets/images/20261116_ronaldinho_ravenna/02_w.jpg
+      - text: ペナルティエリアの手前でボールを受け、味方につなぎました。
+        image: assets/images/20261116_ronaldinho_ravenna/02_w.jpg
+      - text: コーナーキックでも、味方のシュートを演出しています。
+        image: assets/images/20261116_ronaldinho_ravenna/07_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20261116/2228194.html
+      - https://www.espn.com/soccer/story/_/id/50489043/ronaldinho-ravenna-brazil-barcelona-serie-c
+  - id: view
+    viewpoint: true
+    heading: 復帰戦のあと、ロナウジーニョはまたピッチに立つのか
+    tier: 背景
+    telop: 通算299ゴールのまま。次の声は会長しだい
+    say:
+      - text: 見立てです。ロナウジーニョの公式戦は、2015年9月以来、およそ11年ぶり。
+        card: none
+        image: assets/images/20261116_ronaldinho_ravenna/02_w.jpg
+      - text: 引退したときの通算は299ゴール。復帰戦でも、300点目は生まれませんでした。
+        image: assets/images/20261116_ronaldinho_ravenna/07_w.jpg
+      - text: 次があるかどうかは、会長がまた声をかけるかどうか。
+        image: assets/images/20261116_ronaldinho_ravenna/02_w.jpg
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20261116/2228194.html
+      - https://www.espn.com/soccer/story/_/id/50491487/ronaldinho-comeback-300-goals-ravenna-serie-c

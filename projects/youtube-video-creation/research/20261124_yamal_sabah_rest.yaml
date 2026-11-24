@@ -1,0 +1,124 @@
+# 取材メモ（2026年11月24日）ヤマル、今季初めてメンバー外。右足首の軽い違和感で、CLのサバフ戦（アゼルバイジャン・バクー）に予防措置で帯同せず（ニュースのショート。見せ方 X＝冒頭に強い一言）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。FotMob は使っていない。
+# 一次情報: FCバルセロナ公式（11/23）
+#   ・「Lamine Yamal availability news」: "First team player Lamine Yamal has discomfort in his right ankle. As a precaution he will miss the game against Sabah but will be available for next Sunday's game against Deportivo de A Coruña."
+#   ・「Squad for the trip to Baku」: 長い移動のため水曜の試合の2日前に出発。リーグフェーズは4試合で3勝1敗の5位。"A win in Azerbaijan will be vital ... with regards to their hopes of a top eight finish." ヤマルは "a slight ankle problem" でバルセロナに残る。ロドリ・シャビ・エスパルト・クリステンセンも負傷で不在。
+#     招集22人: Joan Garcia, Cancelo, Balde, Fariñas, Cubarsí, Gavi, Fermín, Pedri, G. Jesus, Raphinha, Szczesny, Adeyemi, Gordon, Gerard Martín, Olmo, De Jong, Bernal, Kounde, Eric, Livakovic, Bisiwu, A. Campos。
+#   ・「Baku, FC Barcelona's longest-ever trip in European competition」: バクーはバルセロナから3,970キロ。ヨーロッパの大会でクラブ史上いちばん遠い遠征（それまではカザン 3,725キロ）。
+# ESPN（Sam Marsden、11/23 09:46 UTC「Lamine Yamal out of Barcelona's Champions League game at Sabah」、content API で全文）:
+#   ・足首の治療を受けてからビジャレアル戦に先発、90分出場。フェルミン・ロペスの2点目をアシストし、決勝点（パウ・ナバーロのオウンゴール）にも関わった。19歳。
+#   ・クラブと代表の20試合すべてに先発してきたが、今月の代表戦（チェコ戦）は膝の負傷で欠場（→ 代表では欠場がある。だから「バルセロナでは今季初」と言う）。
+#   ・今季バルサで17試合13得点13アシスト。先月のバロンドールは3位。代わりにアデイェミとガブリエル・ジェズスが、ラフィーニャ・ゴードンと並ぶ先発を争う（"in the running"）。
+# MARCA（11/23「Lamine, baja contra el Sabah」、requests で全文）: 右足首の軽い違和感（"leves molestias en el tobillo derecho"）、予防措置で遠征せず。前日のビジャレアル戦のウォーミングアップで違和感が出て、試合前に医療班の手当て。月曜の朝に医療班が見直し、無理をしない判断。日曜のデポルティーボ戦には出られる。
+# Foot Mercato（「Barça : Lamine Yamal forfait contre Sabah」）: クラブの発表の文をフランス語で引用（中身は公式と同じ）。
+# A Bola の記事は requests で見出しまで辿れなかった（使っていない）。
+# ESPN の日程（Barcelona の今季の公式戦）: ラ・リーガ13試合＋CL4試合＝17試合（ほかは親善試合）。→ 自分で数えた: 公式戦17試合すべてにヤマルが出場（ESPN の「17 Barça appearances」と一致）。サバフ戦が今季初めての欠場になる。
+# ESPN 順位表（uefa.champions、11/24 取得）: バルセロナ 4試合3勝1敗 勝ち点9（5位）／サバフ 1勝3敗 勝ち点3（31位）。
+# ESPN scoreboard（uefa.champions 2026-11-25）: Barcelona at Sabah FK 17:45 UTC、Baku Olympic Stadium（event 401915378）＝日本時間 11/26 2:45。
+# フリック監督の言葉: 11/24 朝（日本時間）の時点で、サバフ戦の前日会見はまだ（ヤマルの欠場についての言葉は見つからない）。→ 本人・監督の言葉が無いので X。
+# 前の本との重なり: 20261123_yamal_pk_comeback（ビジャレアル戦のPK失敗と逆転。PK・フリックのキッカーの話）。今回は欠場という新しい事実を軸にし、PKの話はしない。ビジャレアル戦はアシストと90分出場だけ言う。
+#   20261112_yamal_delafuente_lying（代表の膝の件）とも重ねない。
+# 【言わないこと】PK失敗／代表の膝の件の中身／負傷の程度の推測（クラブは「軽い違和感」「予防措置」）／ジェズス・アデイェミの今季の数字。
+# 反応: 0件（作らない。approve は --no-voices）。
+# 写真: 3枚。02＝ヤマル（FCバルセロナ公式の記事「Lamine Yamal availability news」の主写真。クラブの写真で代理店の表記なし。630x1120 の縦は小さい）、
+#   03・04＝ヤマル（Commons、2026年7月のスペイン代表、Bryan Berlin CC BY-SA 4.0。顔の検出が外れたので facecrop --center で手で切った）。
+#   外したもの: ESPN の主写真（Europa Press via Getty）、Foot Mercato の主写真（ビジャレアルの選手しか写っていない）、バルサ公式の遠征の写真2枚（カンセロと別の選手）、Commons の後ろ姿1枚。一覧を目で見た: 本人、透かしなし。
+#   各 NN_w の隣にショート用の縦版 NN_w_v（= NN_v の写し）を置いた。
+slot: foreign
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [ラミン・ヤマル, バルセロナ, サバフ]
+
+short_style: X
+short_hook_word: 今季初のメンバー外
+short_photos:
+  - assets/images/20261124_yamal_sabah_rest/04_v.jpg
+  - assets/images/20261124_yamal_sabah_rest/03_v.jpg
+  - assets/images/20261124_yamal_sabah_rest/02_v.jpg
+short_question: ヤマルのいないサバフ戦、バルセロナは勝てると思いますか。
+short_telops: []
+
+theme:
+  id: yamal_sabah_rest
+  league: spain
+  league_name: チャンピオンズリーグ
+  prefix: ""
+  title: ヤマル、今季初のメンバー外。バルサが休ませた理由
+  hook: ""
+  question: 公式戦17試合すべてに出てきたヤマルを、バルセロナはなぜサバフ戦から外したのか
+  takeaway: ヤマルは今季のバルセロナの公式戦17試合すべてに出場してきた。右足首の軽い違和感で、クラブ史上いちばん遠い3,970キロの遠征には連れて行かず、日曜のリーグ戦に備えた
+
+thumbnail:
+  layout: face
+  line1: ヤマル 今季初のメンバー外
+  line2: 17試合すべてに出てきた
+  tags: [ヤマル, バルセロナ]
+  photo: assets/images/20261124_yamal_sabah_rest/04_w.jpg
+  short_photo: assets/images/20261124_yamal_sabah_rest/04_v.jpg
+
+answer: 右足首の軽い違和感。クラブは予防措置として遠征に加えず、日曜のデポルティーボ戦には出られるとした
+watch: 25日のサバフ戦（日本時間26日2時45分）
+
+sections:
+  - id: what
+    main: true
+    heading: ヤマルは、なぜサバフ戦のメンバーから外れたのか
+    tier: 報道
+    telop: ヤマル、右足首の違和感でサバフ戦を欠場
+    say:
+      - text: バルセロナのヤマルが、チャンピオンズリーグのサバフ戦のメンバーから外れました。
+        short_only: true
+        image: assets/images/20261124_yamal_sabah_rest/04_w.jpg
+      - text: バルサの今季の公式戦すべてに出てきたヤマル。メンバー外は初めてです。
+        image: assets/images/20261124_yamal_sabah_rest/04_w.jpg
+        emph: true
+      - text: クラブの発表では、右の足首に軽い違和感がある、とのこと。
+        image: assets/images/20261124_yamal_sabah_rest/03_w.jpg
+      - text: 大事を取って、アゼルバイジャンのバクーへの遠征には加わりません。
+      - text: 違和感が出たのは22日、ビジャレアル戦の試合前の練習中と報じられています。
+        image: assets/images/20261124_yamal_sabah_rest/02_w.jpg
+      - text: それでも先発して90分プレーし、2対2の同点ゴールをアシストしました。
+      - text: クラブは、次の日曜のデポルティーボ戦には出られる、としています。
+        image: assets/images/20261124_yamal_sabah_rest/04_w.jpg
+    official: false
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4613043/lamine-yamal-availability-news
+      - https://www.espn.com/soccer/story/_/id/50571569/lamine-yamal-barcelona-champions-league-sabah
+      - https://www.marca.com/futbol/barcelona/2026/11/23/lamine-baja-sabah.html
+      - https://www.footmercato.net/a8805004569426641898-barca-lamine-yamal-forfait-contre-sabah-en-ligue-des-champions
+  - id: record
+    heading: ヤマルは今季、バルセロナでどれだけ試合に出てきたのか
+    tier: 報道
+    telop: 今季の公式戦17試合、すべてに出場してきた
+    say:
+      - text: ここまでのバルセロナの公式戦は、リーグとチャンピオンズリーグを合わせて17試合。
+        image: assets/images/20261124_yamal_sabah_rest/03_w.jpg
+        card: {type: stats, title: 今季のヤマル（バルセロナ）, items: [[17, 試合, 公式戦すべてに出場], [13, 点, 得点], [13, 本, アシスト]], focus: 0}
+      - text: ヤマルはその全部でピッチに立ち、13点を決めて、13アシストを記録しています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50571569/lamine-yamal-barcelona-champions-league-sabah
+  - id: view
+    viewpoint: true
+    heading: ヤマル抜きのサバフ戦は、バルセロナにとってどんな一戦なのか
+    tier: 背景
+    telop: クラブ史上いちばん遠い3,970キロの遠征
+    say:
+      - text: 見立てです。ヤマルの抜けるバルサは、ここまでチャンピオンズリーグで3勝1敗。
+        image: assets/images/20261124_yamal_sabah_rest/02_w.jpg
+        card: {type: stats, title: サバフ戦の前のバルセロナ, items: [[5, 位, 36チーム中], [9, 点, 勝ち点], [8, 位, までが直接の突破]], focus: 0}
+      - text: 36チーム中の5位。相手のサバフは31位です。
+      - text: 8位までに入れば、決勝トーナメントへ直接進めます。
+      - text: ヤマルの代わりの先発には、アデイェミとガブリエル・ジェズスの名前が挙がっています。
+        card: none
+      - text: 行き先のバクーは、バルセロナから3,970キロ。
+      - text: ヨーロッパの大会では、クラブ史上いちばん遠い遠征です。
+      - text: 試合は25日。日本時間では、26日の午前2時45分です。
+    official: false
+    sources:
+      - https://www.fcbarcelona.com/en/football/first-team/news/4613109/squad-for-the-trip-to-baku
+      - https://www.fcbarcelona.com/en/football/first-team/news/4610386/baku-fc-barcelonas-longest-ever-trip-in-european-competition
+      - https://site.api.espn.com/apis/v2/sports/soccer/uefa.champions/standings
+      - https://www.espn.com/soccer/story/_/id/50571569/lamine-yamal-barcelona-champions-league-sabah
+      - https://www.espn.com/soccer/match/_/gameId/401915378

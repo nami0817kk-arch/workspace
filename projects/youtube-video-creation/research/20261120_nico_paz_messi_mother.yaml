@@ -1,0 +1,154 @@
+# 取材メモ（2026年11月20日）メッシの母がニコ・パスにかけた言葉「あなたは私の息子の後継者よ」（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。パス本人の言葉は「10番は考えていない」のみ・母の言葉は叔父の証言）
+# 取材: 2026-11-20。requests（ブラウザUA）で Marca・ゲキサカ・フットボールチャンネルの本文を全文読んだ。検索AI要約は事実に使っていない。ブラウザの道具・FotMob は使っていない。
+# 題材の元（元の出どころまで辿った）:
+#   Marca 2026-11-19 09:33 CET（Enrique Corbella）「Desvelan el mensaje de la madre de Messi a Nico Paz: "Tú eres el sucesor de mi hijo"」＝元の報道。パスの叔父ファビアン・パス（デザイナー）が Radio La Red（アルゼンチンのラジオ）で語った内容を伝える
+#   https://www.marca.com/futbol/2026/11/19/desvelan-mensaje-madre-messi-nico-paz-sucesor-mi-hijo.html
+#   フットボールチャンネル 2026-11-19 20:43「メッシ母がニコ・パスに「あなたは息子の後継者」…」（Marca の報道を伝える。日本語の引用はこちら）https://www.footballchannel.jp/2026/11/19/post1058413/
+#   ゲキサカ 2026-11-19（編集部）「「息子の後継者はあなた」メッシ母が直接伝えた選手が明らかに…本人は「信じられない」と大きな衝撃」（スペイン『カデナ・セール』を伝える）https://web.gekisaka.jp/news/world/detail/?463447-463447-fl
+#   Marca 2026-11-18（写真）https://www.marca.com/futbol/2026/11/18/felicidad-plena-nico-paz-goleando-argentina-decidio-jugar-espana.html
+#   ESPN 試合データ site.api.espn.com fifa.friendly 2026-10-06: アルゼンチン 3-0 ベナン（gameId 401921408、23:00 UTC）。10/7 の messi_farewell の台本と同じ試合（メッシの代表での最後の試合）。
+# 出典で確かめたこと:
+#   ・Marca（原文）: ファビアン・パスは、10月6日のベナン戦（3-0）のあとの出来事として、Radio La Red でこう話した。"Cuando lo fui a ver a la despedida de Messi, Nico salió del vestuario y estaba la mamá de Messi emocionada, llorando. Nico la va a saludar porque la conocía y ella le agarró la mano y le dijo: 'Vos sos el sucesor de mi hijo'."
+#     ファビアンは、パスが "shockeado"（衝撃を受けた）様子だったと言い、Marca はその瞬間をパス自身が「muy increíble（とても信じられない）」と表現したと書く（誰に・いつ言ったかは書かれていない＝叔父を通した話）。
+#     ファビアン: "Nico es una persona muy tranquila y sencilla. Él no tiene en la cabeza ser el sucesor de Messi. Para él lo máximo fue conocerlo y jugar con Leo y eso fue como tocar el cielo con las manos."
+#     パス本人（Marca 引用。いつの取材かは書かれていない）: "La verdad que no pienso en ello (en heredar la camiseta con el 10), lo que pienso es en disfrutar días como hoy… Divertirme en el campo que lo que más amo es jugar al fútbol y encima representando a la selección y representando a tanta gente… juego para eso y quiero seguir haciéndolo"
+#   ・フットボールチャンネルの引用も同じ（「ニコが挨拶に行くと、彼女は手を握って…」）。ゲキサカは「メッシが代表を引退した日」と書き、FC・Marca は「10月6日のベナン戦後」と書く。同じ日（10/6 がメッシの最後の試合）で矛盾しない。
+# 食い違い・気をつけた点:
+#   ・ゲキサカの見出し「本人は『信じられない』と大きな衝撃」は、本文では叔父が「ニコが『今、自分に起きたことが信じられない』と語っていた」と明かした、という伝聞。パスが自分で話した取材ではない。台本は「叔父が明かした」と書き、パス本人の言葉として読まない。
+#   ・「信じられない」は ゲキサカ（カデナ・セール経由）と Marca（"muy increíble"）で言い回しが違う。台本は「とても信じられない出来事」と、Marca の言い方に合わせる。
+#   ・ゲキサカは「通算16試合6得点」「18日のコスタリカ戦」。Marca は「48日で4ゴール」、フットボールチャンネルは「代表4ゴール」。数が合わないので数字は使わない（11/19 の台本は15試合6ゴールだった）。
+#   ・Cadena SER の元の放送は読んでいない（ゲキサカ経由）。元の語り手は叔父ファビアン・パス（Radio La Red）で、Marca とゲキサカが同じ出どころに行き着く。
+#   ・メッシの母の名前: Marca「Celia Cuccittini」、ゲキサカ「セリア・マリア・クッチティーニ」、FC「セリア・クッチッティーニ」。表記が割れるので台本は「メッシの母」とだけ書く。
+# 前の本との重なり: 20261119_nico_paz_two_goals（コスタリカ戦の2ゴール・ESPN の「後継者」評）。今回は10月6日の出来事とメッシの母の言葉で、別の話。2ゴールの数字は入れない。20261007_messi_farewell（ベナン戦）とは、そのあとの楽屋の話で重ならない。
+# 【言わないこと】母の言葉を本人の言葉・事実として言い切る（叔父の証言）／パスが10番を継ぐと決まったような言い方（Marca は候補としか書かない）／代表の通算の数字／背番号／メッシの母の名前／2人の私的な関係の推測。メッシの母の言葉を「メッシの意思」と言わない。
+# 写真の出どころ（目で見た）: 01＝Marca 2026-11-18 記事の主写真（手で口を覆うパス。権利表記なし）／02〜04＝Commons（Bryan Berlin、CC BY-SA 4.0、2026年7月のW杯・アルゼンチン戦。今回の出来事の写真ではない）／05＝Commons のメッシ（同大会）。02〜04 の _w は顔のアップになりすぎるので使わず、縦のショートだけ。ゲキサカの主写真（MESSI 10 の背中）は出どころ不明のため外した。
+# 本人の言葉: 一部あり（パス本人「10番は考えていない」＝Marca 引用）。母の言葉は叔父の証言。X。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月20日"
+format: news
+no_main: true
+people: [ニコ・パス, メッシ, アルゼンチン代表]
+
+short_style: X
+short_hook_word: メッシの母の一言
+short_photos:
+  - assets/images/20261120_nico_paz_messi_mother/04_v.jpg
+  - assets/images/20261120_nico_paz_messi_mother/02_v.jpg
+  - assets/images/20261120_nico_paz_messi_mother/03_v.jpg
+short_question: ニコ・パスは、メッシの後継者になれると思いますか。
+short_telops: []
+
+theme:
+  id: nico_paz_messi_mother
+  league: italy
+  league_name: アルゼンチン代表
+  prefix: ""
+  title: ニコ・パスに、メッシの母がかけた言葉とは。叔父が明かした10月6日の楽屋
+  hook: ""
+  question: メッシの母は、ニコ・パスに何と言ったのか
+  takeaway: 言葉は10月6日、メッシの代表最後の試合のあとにかけられ、叔父の証言で明らかになった。一方パス本人は、10番を継ぐことは「考えていない」と答えていて、期待と本人の距離が見える
+
+thumbnail:
+  layout: face
+  line1: ニコ・パスに、メッシの母が
+  line2: 「後継者よ」
+  tags: [ニコ・パス, メッシ, アルゼンチン代表]
+  photo: assets/images/20261120_nico_paz_messi_mother/02_w.jpg
+  short_photo: assets/images/20261120_nico_paz_messi_mother/03_v.jpg
+
+answer: 10月6日、メッシの代表最後の試合のあと。「あなたは私の息子の後継者よ」
+watch: アルゼンチン代表の次の試合でのニコ・パス
+
+sections:
+  - id: what
+    main: true
+    heading: メッシの母は、ニコ・パスに何と言ったのか
+    tier: 報道
+    telop: メッシの母「あなたは私の息子の後継者よ」
+    say:
+      - text: アルゼンチン代表のニコ・パスに、メッシの母がかけた言葉が明らかになりました。
+        image: assets/images/20261120_nico_paz_messi_mother/04_w.jpg
+      - text: パスは、メッシの背番号10を継ぐ候補として注目される若手です。
+      - text: 10月6日、ベナン戦のあと。メッシの、代表引退試合です。
+      - text: パスの叔父ファビアンさんが、アルゼンチンのラジオで明かしました。
+      - text: ロッカールームを出たパスの前に、メッシの母がいました。
+      - text: 感激して、涙を流していたといいます。
+        image: assets/images/20261120_nico_paz_messi_mother/02_w.jpg
+      - voice: ファビアン・パス
+        text: ニコが挨拶に行くと、彼女は手を握って、
+        image: assets/images/20261120_nico_paz_messi_mother/03_w.jpg
+      - voice: ファビアン・パス
+        text: 「あなたは私の息子の後継者よ」と言ったんです。
+        cont: true
+        emph: true
+      - text: パスは、とても信じられない出来事だと感じて、大きな衝撃を受けたそうです。
+      - text: ただ、パス本人は、10番を継ぐことは「考えていない」と答えています。
+    official: false
+    sources:
+      - https://www.marca.com/futbol/2026/11/19/desvelan-mensaje-madre-messi-nico-paz-sucesor-mi-hijo.html
+      - https://www.footballchannel.jp/2026/11/19/post1058413/
+      - https://web.gekisaka.jp/news/world/detail/?463447-463447-fl
+  - id: uncle
+    heading: 叔父は、パスの気持ちをどう語ったのか
+    tier: 報道
+    telop: 叔父「頭に後継者になる考えはない」
+    say:
+      - text: 叔父のファビアンさんは、パスの人柄をこう説明しました。
+      - voice: ファビアン・パス
+        text: ニコはとても落ち着いていて、飾らない人間です。
+        image: assets/images/20261120_nico_paz_messi_mother/04_w.jpg
+      - voice: ファビアン・パス
+        text: 頭の中に、メッシの後継者になるという考えはありません。
+        cont: true
+      - voice: ファビアン・パス
+        text: 最高だったのは、メッシに会って一緒にプレーできたこと。
+      - voice: ファビアン・パス
+        text: 天にも昇る気持ちでした。
+        cont: true
+        emph: true
+        image: assets/images/20261120_nico_paz_messi_mother/02_w.jpg
+    official: false
+    sources:
+      - https://www.marca.com/futbol/2026/11/19/desvelan-mensaje-madre-messi-nico-paz-sucesor-mi-hijo.html
+      - https://www.footballchannel.jp/2026/11/19/post1058413/
+  - id: self
+    heading: パス本人は、10番を継ぐことをどう答えたのか
+    tier: 報道
+    telop: パス「10番を継ぐことは、考えていない」
+    say:
+      - text: 背番号10を受け継ぐことについて、パス本人はこう答えています。
+        image: assets/images/20261120_nico_paz_messi_mother/03_w.jpg
+      - voice: ニコ・パス
+        text: 正直、そのことは考えていません。
+      - voice: ニコ・パス
+        text: 考えているのは、今日のような日を楽しむことです。
+        cont: true
+        image: assets/images/20261120_nico_paz_messi_mother/04_w.jpg
+      - voice: ニコ・パス
+        text: いちばん好きなサッカーを、代表として楽しむ。
+      - voice: ニコ・パス
+        text: そのためにプレーしているし、続けたいです。
+        cont: true
+    official: false
+    sources:
+      - https://www.marca.com/futbol/2026/11/19/desvelan-mensaje-madre-messi-nico-paz-sucesor-mi-hijo.html
+      - https://www.footballchannel.jp/2026/11/19/post1058413/
+  - id: view
+    viewpoint: true
+    heading: 期待の言葉と、本人の答えの距離はどこにあるのか
+    tier: 背景
+    telop: 10月6日の言葉から、6週間
+    say:
+      - text: 見立てです。メッシの母の言葉は、叔父の証言で、パス本人が語った話ではありません。
+        card: {type: table, title: 同じ話の、語り手の違い, columns: [内容, 語ったのは誰か], rows: [[母の言葉「後継者よ」, 叔父ファビアン], [パスの衝撃, 叔父ファビアン], [10番は考えていない, パス本人]], highlight_row: 2}
+        image: assets/images/20261120_nico_paz_messi_mother/02_w.jpg
+      - text: 本人の口から出ているのは、10番は「考えていない」という言葉です。
+        card: none
+        emph: true
+        image: assets/images/20261120_nico_paz_messi_mother/03_w.jpg
+      - text: 次の見どころは、期待が続くなか、パスが次の代表戦でどう戦うかです。
+    official: false
+    sources:
+      - https://www.marca.com/futbol/2026/11/19/desvelan-mensaje-madre-messi-nico-paz-sucesor-mi-hijo.html
+      - https://www.footballchannel.jp/2026/11/19/post1058413/

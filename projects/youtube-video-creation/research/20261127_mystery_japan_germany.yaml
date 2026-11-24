@@ -1,0 +1,1493 @@
+# 取材メモ（11/27 金、新しい型「サッカーの謎」の試し、key: mystery_japan_germany）。情報の時点は 2026-11-21。
+# 題材：なぜ日本人選手はドイツ（ブンデスリーガ）に多いのか。指示書 20261127_series_brief.md の候補1。
+#   既出確認：scripts・posted.json・covered.yaml・picks を grep。同じ問いの回は無し（奥寺・長谷部・高原・槙野はレジェンドで個人として既出。この回は人ではなく問い）。
+#   同じ日（11/27）の他シリーズ：ケイン（バイエルン）・ヤマル×ニコ・ドルトムントのスタジアム・レジェンド（国内）。→ 香川（ドルトムント）と伊藤洋輝（バイエルン）は語らない。
+# 使った数字と出どころ
+#   28人：サッカーキング 2026-08-20「8月20日現在、1部および2部に所属するクラブ（トップチーム）には、総勢28名もの日本人選手（日本国籍資格を持つ選手を含む）…過去最多の規模」。※同じ記事の前半に「20名を超える」とも書く（矛盾は記事のまま）。
+#   15人：bundesliga.com 2026-06-20「冬の移籍期間のあと、1部の日本人15人。日本より多いのはオーストリア・フランス・デンマークだけ。スイス・アメリカ・オランダ・ベルギーより多い」。
+#   スペイン1部2人：ja.wikipedia「ヨーロッパのサッカーリーグに所属する日本人選手一覧」2026-10-02 編集（久保建英・佐藤龍之介）と config/japan_abroad.yaml（10/14、ES1 2人）が一致。
+#   2部に10人超：サッカーキング同記事が2部のクラブで名前を挙げた日本人が12人（藤田・安藤・原・三好・関根・髙橋・安部・松田・秋山・古川・田中聡・福田）。
+#   EU外の上限なし：en.wikipedia「Foreign football players in Germany」：2006-07から非EUの制限を撤廃、DFBとDFLの2005-12-21の決定。
+#   スペイン：en.wikipedia「La Liga」：2020年、非EUは1クラブ5人まで、試合の登録は3人まで（台本は「試合に登録できるのは3人まで」とだけ言う）。
+#   イングランド：FA 2020-12-01 発表、2021年からGBEの点数制（代表の出場・前所属リーグの強さ）。
+#   50人超：ja.wikipedia「ドイツ・ブンデスリーガに所属する日本人サッカー選手一覧」（2026-10-21 更新）で1部の現所属17人＋過去38人＝55人を自分で数えた。台本は「50人を超える」。
+#   長谷部：en.wikipedia：1部380試合、ドイツ人以外で3番目、2020-06-06にアジア最多、2008年1月ヴォルフスブルク、2009年優勝（日本人2人目）、2022-05-18 EL優勝。奥寺が1人目の優勝（1977-78 ケルン）。
+#   遠藤航：en.wikipedia：2019-08-13 シュトゥットガルトへ期限付き、2020年4月完全移籍、最後の季に主将、1部でデュエル最多の季、2023年リヴァプールへ1600万ポンド。2019-20 のシュトゥットガルトが2部だったのは記憶（未確認）。
+#   板倉（シャルケ2021-22 2部優勝）・田中碧（デュッセルドルフ2021〜、2024リーズ）は記憶と ja.wikipedia 一覧の在籍年で、優勝・2部であることの一次は未確認。
+#   シュレーダーの言葉：bundesliga.com 2026-06-20 の英語の引用を訳した（"Zento is a defensively minded, tactically disciplined midfielder who is strong in the tackle, covers plenty of ground"）。フライブルク（ザイアー）とシャルケ（ムルダー）は aggressive の一語だけ。
+#   自分で計算：28÷2＝14倍／15÷2＝7.5（時点が違うので台本は「昨季後半の15人と、いまの2人」と時点を言う）。
+# 写真：既存の取り込みを再利用（再ダウンロードなし）。P1 Commons Sven Mandel CC BY-SA 4.0（長谷部・鎌田 2022-05-08）／P2 Commons Felix König CC BY 3.0（乾）＋同 Sven Mandel（長谷部）／P3 Commons Jeollo von VfB-exklusiv.de CC BY 3.0（遠藤航・伊藤洋輝）／P4 footballchannel.jp の報道写真（宇野禅斗、2025年の日本代表の練習）。
+slot: other_1
+date: 2026年11月21日
+format: news
+series: サッカーの謎
+voice_min: 0
+watch: 毎日、数字でサッカーを読み解きます
+people:
+- 日本人選手
+- 遠藤航
+- 長谷部誠
+- 奥寺康彦
+- 鎌田大地
+- 板倉滉
+- 田中碧
+- 宇野禅斗
+- 堂安律
+- 浅野拓磨
+theme:
+  end_bg: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  id: mystery_japan_germany
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: 日本人選手
+  prefix: ''
+  hook: ''
+  title: 日本人選手は、なぜドイツに多いのか。数字で見る4つの理由
+  question: ドイツの1部と2部には日本人選手が28人（2026年8月20日、過去最多）。スペインの1部は2人。同じヨーロッパの大きなリーグで、なぜドイツにだけ日本人が集まるのか
+  lead: ドイツの1部と2部に日本人28人。スペインの1部は2人。なぜドイツなのか。
+  opening_image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  takeaway: 日本人がドイツに多いのは、EU外の選手の数に上限がなく（2006-07から。スペインの1部は試合の登録が3人まで）、2部が入口になり（1部と2部で28人。遠藤航は2部のシュトゥットガルトから入り、2023年にリヴァプールへ1600万ポンド）、奥寺康彦から約50年で1部の日本人が50人を超えた信頼があるから。情報は11月21日時点。
+  short_title: 日本人選手は、なぜドイツに多いのか
+thumbnail:
+  layout: number
+  photo: assets/images/20261127_mystery_thumb/01.jpg
+  short_photo: assets/images/bd_frankfurt_pair_hasebe_kamada/01_v.jpg
+  number: 28人
+  line1: 日本人選手 ドイツに
+  line2: なぜドイツなのか
+  callouts:
+  - 1部と2部の合計
+  - 理由は4つ
+  tags:
+  - 日本人選手
+  - ブンデスリーガ
+  - サッカーの謎
+  - 海外組
+  - 遠藤航
+  - 長谷部誠
+sections:
+- id: hook
+  heading: 日本人選手は、なぜドイツに多いのか
+  tier: 報道
+  narrator: 解説
+  telop: ドイツの1部と2部に、日本人28人
+  card:
+    type: stats
+    title: 日本人選手の数
+    items:
+    - - '28'
+      - 人
+      - ドイツ1部・2部（8月20日）
+    - - '15'
+      - 人
+      - ドイツ1部（昨季後半）
+    - - '2'
+      - 人
+      - スペイン1部（いま）
+    focus: 0
+  say:
+  - text: ドイツのリーグに、日本人選手は何人いるか。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 1部と2部を合わせて、28人です。
+    card:
+      type: stats
+      title: 日本人選手の数
+      items:
+      - - '28'
+        - 人
+        - ドイツ1部・2部（8月20日）
+      - - '15'
+        - 人
+        - ドイツ1部（昨季後半）
+      - - '2'
+        - 人
+        - スペイン1部（いま）
+      focus: 0
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    emph: true
+  - text: 2026年8月20日時点の報道で、過去最多の規模です。
+    card:
+      type: stats
+      title: 日本人選手の数
+      items:
+      - - '28'
+        - 人
+        - ドイツ1部・2部（8月20日）
+      - - '15'
+        - 人
+        - ドイツ1部（昨季後半）
+      - - '2'
+        - 人
+        - スペイン1部（いま）
+      focus: 0
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 1部だけでも、昨季の後半は15人いました。
+    card:
+      type: stats
+      title: 日本人選手の数
+      items:
+      - - '28'
+        - 人
+        - ドイツ1部・2部（8月20日）
+      - - '15'
+        - 人
+        - ドイツ1部（昨季後半）
+      - - '2'
+        - 人
+        - スペイン1部（いま）
+      focus: 1
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: ドイツの1部で、日本より選手が多い外国は、3つだけ。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: オーストリア、フランス、デンマークです。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: アメリカやオランダ、ベルギーよりも多いんです。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: ところが、スペインの1部にいる日本人は、2人。
+    card:
+      type: stats
+      title: 日本人選手の数
+      items:
+      - - '28'
+        - 人
+        - ドイツ1部・2部（8月20日）
+      - - '15'
+        - 人
+        - ドイツ1部（昨季後半）
+      - - '2'
+        - 人
+        - スペイン1部（いま）
+      focus: 2
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+    emph: true
+  - text: 同じヨーロッパの大きなリーグで、なぜここまで違うのか。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 鍵は、ルール、入口、先輩、そして代表の4つ。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 4つの理由を、順に数字で見ていきます。情報は11月21日時点です。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  sources:
+  - https://www.soccer-king.jp/news/world/ger/20260820/2194188.html
+  - https://www.bundesliga.com/en/bundesliga/news/japanese-arrivals-strengthen-symbiotic-relationship-kagawa-hasebe-doan-37896
+  - https://ja.wikipedia.org/wiki/ヨーロッパのサッカーリーグに所属する日本人選手一覧
+- id: history
+  heading: 日本人とドイツの縁は、いつ始まったのか
+  tier: 報道
+  narrator: 解説
+  telop: 1977年の奥寺康彦から、約50年
+  card:
+    type: timeline
+    title: 日本人とドイツの1部
+    rows:
+    - - 1977年
+      - 奥寺康彦がケルンへ。日本人で最初
+    - - 1978年
+      - 奥寺がケルンでリーグ優勝
+    - - 2008年
+      - 長谷部誠がヴォルフスブルクへ
+    - - 2022年
+      - 長谷部と鎌田がヨーロッパリーグ優勝
+    - - 2026年
+      - 1部と2部に28人
+    focus: 0
+  say:
+  - text: まず、前提をそろえます。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: ドイツの1部リーグは、ブンデスリーガと呼ばれます。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 日本人で最初にプレーしたのは、奥寺康彦。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 0
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 1977年に、ケルンに入りました。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 0
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 当時の日本では、海外へ出ること自体が珍しい時代でした。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 0
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 奥寺の移籍を知る通訳の鈴木達朗は、こう振り返っています。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 0
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 当時、海外へ行くのは、ご法度だった。
+    voice: 鈴木達朗
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+    card: none
+  - text: その奥寺が、翌年には、ケルンでリーグ優勝しています。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 1
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 日本人で初めての、ドイツ1部の優勝でした。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 1
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 2008年1月には、長谷部誠がヴォルフスブルクへ。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 2
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 2022年には、フランクフルトで鎌田大地と並んで、
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 3
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: ヨーロッパリーグの優勝を手にしました。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 3
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: ヨーロッパのクラブの大会で、2番目の格の大会です。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 3
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 奥寺から約50年。ドイツの1部でプレーした日本人は、
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 4
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 一覧で数えると、50人を超えます。
+    card:
+      type: timeline
+      title: 日本人とドイツの1部
+      rows:
+      - - 1977年
+        - 奥寺康彦がケルンへ。日本人で最初
+      - - 1978年
+        - 奥寺がケルンでリーグ優勝
+      - - 2008年
+        - 長谷部誠がヴォルフスブルクへ
+      - - 2022年
+        - 長谷部と鎌田がヨーロッパリーグ優勝
+      - - 2026年
+        - 1部と2部に28人
+      focus: 0
+      highlight_row: 4
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    emph: true
+  - text: では、なぜドイツなのか。ここから理由です。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  sources:
+  - https://ja.wikipedia.org/wiki/ドイツ・ブンデスリーガに所属する日本人サッカー選手一覧
+  - https://en.wikipedia.org/wiki/Makoto_Hasebe
+- id: rule
+  main: true
+  heading: 理由① 外国人の枠がない
+  tier: 報道
+  narrator: 解説
+  telop: ドイツは、EU外の選手の数に上限なし
+  card:
+    type: table
+    title: EU外の選手の扱い
+    columns:
+    - 国の1部
+    - EU外の選手
+    - いつから
+    rows:
+    - - ドイツ
+      - 数の上限なし
+      - 2006-07
+    - - スペイン
+      - 試合の登録は3人まで
+      - ―
+    - - イングランド
+      - 労働許可に点数の制度
+      - 2021年
+  say:
+  - text: ドイツは、日本人選手が多い国です。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+    short_only: true
+  - text: 1つ目の理由は、ルールです。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 日本の選手は、ヨーロッパでは、EU外の選手になります。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: EUは、ヨーロッパ連合のこと。日本は入っていません。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: ドイツは、2006-07シーズンから、
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: EU外の選手の数の制限を、なくしました。
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+    emph: true
+  - text: 決めたのは2005年12月。ドイツの協会とリーグです。
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 一方、スペインの1部は、試合に登録できるEU外の選手が、
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 1
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 3人までです。
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 1
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+    emph: true
+  - text: ブラジルやアルゼンチンの選手とも、同じ枠を分け合います。
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 1
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: イングランドは、2021年から、労働許可に点数の制度を入れました。
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 2
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 代表戦への出場や、前のクラブのリーグの強さが、
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 2
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 点数になります。
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 2
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 同じEU外の選手でも、ドイツの縛りは、ほかの国よりずっと緩いんです。
+    card:
+      type: table
+      title: EU外の選手の扱い
+      columns:
+      - 国の1部
+      - EU外の選手
+      - いつから
+      rows:
+      - - ドイツ
+        - 数の上限なし
+        - 2006-07
+      - - スペイン
+        - 試合の登録は3人まで
+        - ―
+      - - イングランド
+        - 労働許可に点数の制度
+        - 2021年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 0
+      col: 1
+  - text: クラブが日本人を取るとき、枠を気にしなくてよい。それがドイツ。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: たとえば、フライブルク。いま日本人が4人。スペインの枠の3人より多い数です。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 鈴木唯人、山本理仁、後藤啓介、長田澪。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: スペインの1部なら、EU外の4人を同じ試合に登録することはできません。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: ドイツなら、4人とも同じ試合に出られます。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Foreign_football_players_in_Germany
+  - https://en.wikipedia.org/wiki/La_Liga
+  - https://www.thefa.com/news/2020/dec/01/gbe-points-based-system-launched-011220
+- id: gate
+  heading: 理由② 2部が入口になる
+  tier: 報道
+  narrator: 解説
+  telop: 28人は、1部と2部を合わせた数
+  card:
+    type: table
+    title: 2部から入った日本人
+    columns:
+    - 選手
+    - 入口（2部）
+    - その後
+    rows:
+    - - 遠藤航
+      - シュトゥットガルト 2019年
+      - リヴァプール 2023年
+    - - 板倉滉
+      - シャルケ 2021年
+      - 2部優勝で1部へ
+    - - 田中碧
+      - デュッセルドルフ 2021年
+      - リーズ 2024年
+  say:
+  - text: 2つ目の理由は、入口の広さです。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: さきほどの28人には、2部のクラブの選手も入っています。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 2部のクラブにも、10人を超える日本人がいます。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+    emph: true
+  - text: ザンクトパウリに3人、ホルシュタイン・キールにも3人。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 2部のクラブが、日本人をまとめて取っています。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 2部で結果を出せば、クラブごと1部へ上がれます。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: その道を通ったのが、遠藤航です。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 2019年8月、当時2部のシュトゥットガルトに、
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 期限付き、つまりレンタルで加わりました。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 2020年4月に完全移籍。チームは1部へ上がりました。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 1部では、ボールの競り合いの数が、リーグで最も多い季も。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 最後の季には主将。そして2023年、リヴァプールへ。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: 移籍金は、1600万ポンドでした。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 0
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+    emph: true
+  - text: 板倉滉も、2021年に2部のシャルケへ。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 1
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: その季に2部で優勝して、1部へ上がっています。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 1
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 田中碧は、2部のデュッセルドルフで3シーズン。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 2
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 2024年に、イングランドのリーズへ移りました。
+    card:
+      type: table
+      title: 2部から入った日本人
+      columns:
+      - 選手
+      - 入口（2部）
+      - その後
+      rows:
+      - - 遠藤航
+        - シュトゥットガルト 2019年
+        - リヴァプール 2023年
+      - - 板倉滉
+        - シャルケ 2021年
+        - 2部優勝で1部へ
+      - - 田中碧
+        - デュッセルドルフ 2021年
+        - リーズ 2024年
+      highlight_row: 2
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 2部で試合に出て、1部や、ほかの国へ上がっていく。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: ドイツには、その階段がそろっています。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: その階段の先には、イングランドもあります。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: いまプレミアリーグにいる日本人は、10月の時点で9人。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  - text: そのうち遠藤航、鎌田大地、田中碧の3人は、ドイツを通ってきました。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+    emph: true
+  - text: 9人に3人。プレミアへの道の途中に、ドイツがあるんです。
+    card: none
+    image: assets/images/bd_stuttgart_pair_endo_ito/01.jpg
+  sources:
+  - https://www.soccer-king.jp/news/world/ger/20260820/2194188.html
+  - https://en.wikipedia.org/wiki/Wataru_Endo
+  - https://ja.wikipedia.org/wiki/ヨーロッパのサッカーリーグに所属する日本人選手一覧
+- id: trust
+  heading: 理由③ 先輩が作った信頼
+  tier: 報道
+  narrator: 解説
+  telop: 長谷部誠は、1部で380試合
+  card:
+    type: stats
+    title: 先輩たちが残した数字
+    items:
+    - - '380'
+      - 試合
+      - 長谷部誠の1部出場
+    - - '3'
+      - 番目
+      - ドイツ人以外で多い順
+    - - '50'
+      - 人超
+      - 1部でプレーした日本人
+    focus: 0
+  say:
+  - text: 3つ目の理由は、先輩たちが積み上げた信頼です。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 長谷部誠は、ヴォルフスブルクで、2009年にリーグ優勝。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 奥寺に続いて、2人目の日本人の優勝でした。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: フランクフルトには、2014年から2024年まで。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 1部の出場は、380試合です。
+    card:
+      type: stats
+      title: 先輩たちが残した数字
+      items:
+      - - '380'
+        - 試合
+        - 長谷部誠の1部出場
+      - - '3'
+        - 番目
+        - ドイツ人以外で多い順
+      - - '50'
+        - 人超
+        - 1部でプレーした日本人
+      focus: 0
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+    emph: true
+  - text: ドイツ人以外の選手で、3番目に多い数。
+    card:
+      type: stats
+      title: 先輩たちが残した数字
+      items:
+      - - '380'
+        - 試合
+        - 長谷部誠の1部出場
+      - - '3'
+        - 番目
+        - ドイツ人以外で多い順
+      - - '50'
+        - 人超
+        - 1部でプレーした日本人
+      focus: 1
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 2020年には、アジアの選手の最多出場を塗り替えました。
+    card:
+      type: stats
+      title: 先輩たちが残した数字
+      items:
+      - - '380'
+        - 試合
+        - 長谷部誠の1部出場
+      - - '3'
+        - 番目
+        - ドイツ人以外で多い順
+      - - '50'
+        - 人超
+        - 1部でプレーした日本人
+      focus: 1
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 信頼は、いまも続いています。
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: この夏も、20代前半の日本人が4人、ドイツのクラブに加わりました。
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: そのうちの1人、宇野禅斗を取ったボルシア・メンヒェングラートバッハ。
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: スポーツ部門のトップ、シュレーダーは、こう話しています。
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: 禅斗は、守備の意識が高く、戦術の規律がある中盤だ。
+    voice: シュレーダー
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+    card: none
+  - text: 球際に強く、よく走る。
+    voice: シュレーダー
+    cont: true
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+    card: none
+  - text: 東京で日本のサッカーを取材する記者、ダン・オーロウィッツも、
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: ドイツのクラブが見る日本人を、こう書いています。
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: 献身的に働き、チームのために戦い、エゴがない。
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: それがドイツのやり方に合っている、と。
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: フライブルクとシャルケも、新しく取った日本人の、
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: アグレッシブなプレーを、口をそろえて挙げました。
+    card: none
+    image: assets/images/20261019_uno_first_start/01_w.jpg
+  - text: 50人を超える先輩が、日本人はこういう選手だ、という形を作ってきたんです。
+    card:
+      type: stats
+      title: 先輩たちが残した数字
+      items:
+      - - '380'
+        - 試合
+        - 長谷部誠の1部出場
+      - - '3'
+        - 番目
+        - ドイツ人以外で多い順
+      - - '50'
+        - 人超
+        - 1部でプレーした日本人
+      focus: 2
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    emph: true
+  sources:
+  - https://en.wikipedia.org/wiki/Makoto_Hasebe
+  - https://www.bundesliga.com/en/bundesliga/news/japanese-arrivals-strengthen-symbiotic-relationship-kagawa-hasebe-doan-37896
+  - https://ja.wikipedia.org/wiki/ドイツ・ブンデスリーガに所属する日本人サッカー選手一覧
+  - https://global.espn.com/football/story/_/id/37634385/bundesliga-home-japans-best-end-germanys-world-cup
+- id: wc
+  heading: 理由④ ドイツで鍛えた選手が、ドイツに勝った
+  tier: 報道
+  narrator: 解説
+  telop: W杯のドイツ戦、2点ともドイツ1部の日本人
+  card:
+    type: stats
+    title: 2022年W杯の日本代表
+    items:
+    - - '7'
+      - 人
+      - フィールドの選手23人のうちドイツ1部
+    - - 2-1
+      - ''
+      - ドイツ戦の結果
+    - - '2'
+      - 人
+      - ゴールした堂安・浅野もドイツ1部
+    focus: 0
+  say:
+  - text: 4つ目の理由は、代表です。ドイツで鍛えた日本人が、代表で結果を出しました。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 2022年のワールドカップ。日本代表のフィールドの選手は23人。
+    card:
+      type: stats
+      title: 2022年W杯の日本代表
+      items:
+      - - '7'
+        - 人
+        - フィールドの選手23人のうちドイツ1部
+      - - 2-1
+        - ''
+        - ドイツ戦の結果
+      - - '2'
+        - 人
+        - ゴールした堂安・浅野もドイツ1部
+      focus: 0
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: そのうち7人が、ドイツ1部のクラブの選手でした。
+    card:
+      type: stats
+      title: 2022年W杯の日本代表
+      items:
+      - - '7'
+        - 人
+        - フィールドの選手23人のうちドイツ1部
+      - - 2-1
+        - ''
+        - ドイツ戦の結果
+      - - '2'
+        - 人
+        - ゴールした堂安・浅野もドイツ1部
+      focus: 0
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    emph: true
+  - text: 2部にも、もう1人いました。
+    card:
+      type: stats
+      title: 2022年W杯の日本代表
+      items:
+      - - '7'
+        - 人
+        - フィールドの選手23人のうちドイツ1部
+      - - 2-1
+        - ''
+        - ドイツ戦の結果
+      - - '2'
+        - 人
+        - ゴールした堂安・浅野もドイツ1部
+      focus: 0
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: そして、グループリーグのドイツ戦。日本は2対1で勝ちました。
+    card:
+      type: stats
+      title: 2022年W杯の日本代表
+      items:
+      - - '7'
+        - 人
+        - フィールドの選手23人のうちドイツ1部
+      - - 2-1
+        - ''
+        - ドイツ戦の結果
+      - - '2'
+        - 人
+        - ゴールした堂安・浅野もドイツ1部
+      focus: 1
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: ゴールを決めたのは、堂安律と浅野拓磨。
+    card:
+      type: stats
+      title: 2022年W杯の日本代表
+      items:
+      - - '7'
+        - 人
+        - フィールドの選手23人のうちドイツ1部
+      - - 2-1
+        - ''
+        - ドイツ戦の結果
+      - - '2'
+        - 人
+        - ゴールした堂安・浅野もドイツ1部
+      focus: 2
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 堂安はフライブルク、浅野はボーフム。2人ともドイツ1部の選手です。
+    card:
+      type: stats
+      title: 2022年W杯の日本代表
+      items:
+      - - '7'
+        - 人
+        - フィールドの選手23人のうちドイツ1部
+      - - 2-1
+        - ''
+        - ドイツ戦の結果
+      - - '2'
+        - 人
+        - ゴールした堂安・浅野もドイツ1部
+      focus: 2
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    emph: true
+  - text: 続くスペイン戦も、2対1の勝ち。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: このとき決勝点を決めた田中碧は、ドイツ2部、デュッセルドルフの選手でした。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    emph: true
+  - text: ドイツの1部と2部で戦う選手が、優勝経験国を2つ続けて破ったことになります。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 森保一監督は、ヨーロッパで戦う選手たちを、こう評しました。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: とても強く、厳しいリーグで戦っている。力を積み上げてきた。
+    voice: 森保一
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    card: none
+  - text: ドイツのクラブにとって、日本人の力は、
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 毎週の自分たちのリーグと、代表の舞台で、同時に見えているわけです。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  sources:
+  - https://global.espn.com/football/story/_/id/37634385/bundesliga-home-japans-best-end-germanys-world-cup
+  - https://ja.wikipedia.org/wiki/ドイツ・ブンデスリーガに所属する日本人サッカー選手一覧
+- id: view
+  viewpoint: true
+  heading: 見立て・日本人がドイツに集まるのは、何が大きいのか
+  tier: 背景
+  narrator: 解説
+  telop: 枠がなく、2部から入れて、先輩の信頼がある
+  card:
+    type: table
+    title: 3つの理由を数字で
+    columns:
+    - 理由
+    - ドイツ
+    - 比べる相手
+    rows:
+    - - ① 枠
+      - EU外の上限なし
+      - スペイン 3人まで
+    - - ② 入口
+      - 1部15人・2部も合わせ28人
+      - スペイン1部 2人
+    - - ③ 信頼
+      - 1部の日本人 50人超
+      - 1977年から約50年
+    - - ④ 代表
+      - W杯の23人中7人
+      - ドイツ戦 2対1
+  say:
+  - text: 見立てに入ります。理由を、数字でまとめ直します。
+    card: none
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 1つ目の枠。EU外の選手を、ドイツは何人でも取れます。
+    card:
+      type: table
+      title: 3つの理由を数字で
+      columns:
+      - 理由
+      - ドイツ
+      - 比べる相手
+      rows:
+      - - ① 枠
+        - EU外の上限なし
+        - スペイン 3人まで
+      - - ② 入口
+        - 1部15人・2部も合わせ28人
+        - スペイン1部 2人
+      - - ③ 信頼
+        - 1部の日本人 50人超
+        - 1977年から約50年
+      - - ④ 代表
+        - W杯の23人中7人
+        - ドイツ戦 2対1
+      highlight_row: 0
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: スペインは試合の登録で3人。ドイツには、その壁がありません。
+    card:
+      type: table
+      title: 3つの理由を数字で
+      columns:
+      - 理由
+      - ドイツ
+      - 比べる相手
+      rows:
+      - - ① 枠
+        - EU外の上限なし
+        - スペイン 3人まで
+      - - ② 入口
+        - 1部15人・2部も合わせ28人
+        - スペイン1部 2人
+      - - ③ 信頼
+        - 1部の日本人 50人超
+        - 1977年から約50年
+      - - ④ 代表
+        - W杯の23人中7人
+        - ドイツ戦 2対1
+      highlight_row: 0
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 2つ目の入口。ドイツの1部と2部で28人。
+    card:
+      type: table
+      title: 3つの理由を数字で
+      columns:
+      - 理由
+      - ドイツ
+      - 比べる相手
+      rows:
+      - - ① 枠
+        - EU外の上限なし
+        - スペイン 3人まで
+      - - ② 入口
+        - 1部15人・2部も合わせ28人
+        - スペイン1部 2人
+      - - ③ 信頼
+        - 1部の日本人 50人超
+        - 1977年から約50年
+      - - ④ 代表
+        - W杯の23人中7人
+        - ドイツ戦 2対1
+      highlight_row: 1
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 1部だけでも、ドイツは昨季の後半で15人。
+    card:
+      type: table
+      title: 3つの理由を数字で
+      columns:
+      - 理由
+      - ドイツ
+      - 比べる相手
+      rows:
+      - - ① 枠
+        - EU外の上限なし
+        - スペイン 3人まで
+      - - ② 入口
+        - 1部15人・2部も合わせ28人
+        - スペイン1部 2人
+      - - ③ 信頼
+        - 1部の日本人 50人超
+        - 1977年から約50年
+      - - ④ 代表
+        - W杯の23人中7人
+        - ドイツ戦 2対1
+      highlight_row: 1
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: スペインの1部は、いま2人。7倍を超える差です。
+    card:
+      type: table
+      title: 3つの理由を数字で
+      columns:
+      - 理由
+      - ドイツ
+      - 比べる相手
+      rows:
+      - - ① 枠
+        - EU外の上限なし
+        - スペイン 3人まで
+      - - ② 入口
+        - 1部15人・2部も合わせ28人
+        - スペイン1部 2人
+      - - ③ 信頼
+        - 1部の日本人 50人超
+        - 1977年から約50年
+      - - ④ 代表
+        - W杯の23人中7人
+        - ドイツ戦 2対1
+      highlight_row: 1
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+    emph: true
+    mark:
+      kind: circle
+      row: 1
+      col: 2
+  - text: 3つ目の信頼。1977年から約50年で、1部の日本人は50人超。
+    card:
+      type: table
+      title: 3つの理由を数字で
+      columns:
+      - 理由
+      - ドイツ
+      - 比べる相手
+      rows:
+      - - ① 枠
+        - EU外の上限なし
+        - スペイン 3人まで
+      - - ② 入口
+        - 1部15人・2部も合わせ28人
+        - スペイン1部 2人
+      - - ③ 信頼
+        - 1部の日本人 50人超
+        - 1977年から約50年
+      - - ④ 代表
+        - W杯の23人中7人
+        - ドイツ戦 2対1
+      highlight_row: 2
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 4つ目の代表。W杯では7人がドイツ1部。そのドイツに、2対1の勝ち。
+    card:
+      type: table
+      title: 3つの理由を数字で
+      columns:
+      - 理由
+      - ドイツ
+      - 比べる相手
+      rows:
+      - - ① 枠
+        - EU外の上限なし
+        - スペイン 3人まで
+      - - ② 入口
+        - 1部15人・2部も合わせ28人
+        - スペイン1部 2人
+      - - ③ 信頼
+        - 1部の日本人 50人超
+        - 1977年から約50年
+      - - ④ 代表
+        - W杯の23人中7人
+        - ドイツ戦 2対1
+      highlight_row: 3
+    image: assets/images/bd_frankfurt_pair_hasebe_kamada/01.jpg
+  - text: 題への答えです。日本人がドイツに多いのは、
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 枠がなく、2部から入れて、先輩と代表が信頼を作った国だから。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+    emph: true
+  - text: とくに1つ目の枠は、クラブの努力では動かせない差です。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: 次の注目は、1月の移籍期間。28人が、まだ増えるのか。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  - text: あなたは、4つのうちどれがいちばん大きいと思いますか。
+    card: none
+    image: assets/images/bd_frankfurt_pair_inui_hasebe/01.jpg
+  sources:
+  - https://www.soccer-king.jp/news/world/ger/20260820/2194188.html
+  - https://www.bundesliga.com/en/bundesliga/news/japanese-arrivals-strengthen-symbiotic-relationship-kagawa-hasebe-doan-37896
+  - https://en.wikipedia.org/wiki/Foreign_football_players_in_Germany
+  - https://en.wikipedia.org/wiki/La_Liga
+  - https://ja.wikipedia.org/wiki/ヨーロッパのサッカーリーグに所属する日本人選手一覧
+  - https://ja.wikipedia.org/wiki/ドイツ・ブンデスリーガに所属する日本人サッカー選手一覧
+  - https://global.espn.com/football/story/_/id/37634385/bundesliga-home-japans-best-end-germanys-world-cup

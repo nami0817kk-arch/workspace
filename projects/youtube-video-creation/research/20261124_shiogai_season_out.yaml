@@ -1,0 +1,134 @@
+# 取材メモ（2026年11月24日）塩貝健人、左太もも裏に重い筋肉の損傷。ヴォルフスブルクが「当面のあいだ出場できない」と発表（ニュースのショート。見せ方 X。本人の言葉は無し）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。
+# リーグ: ヴォルフスブルクは今季ドイツ2部（ESPN の ger.2 順位表に載る。ger.1 には無い）。欧州7リーグの国の2部で、松木の回（イングランド2部）と同じ扱い。league_name を「ブンデスリーガ2部」で上書き。
+# 題材の元: ゲキサカ 463737（11/23 12:04）「日本代表FW塩貝健人が今季絶望の可能性も…ドイツ誌『深刻な懸念』」 https://web.gekisaka.jp/news/world/detail/?463737-463737-fl
+# 一次（クラブ）: ヴォルフスブルク公式 2026-11-23「Serious muscle injury」 https://www.vfl-wolfsburg.de/en/newsdetails/news-detail/detail/news/serious-muscle-injury
+#   "The Japanese international suffered a serious muscle injury to the back of his left thigh during last Saturday's home game against Holstein Kiel. The 21-year-old forward will be unavailable until further notice. Shiogai came on in the 65th minute against the Storks but was forced off again in the closing stages."
+#   → 台本の言葉は「左太もも裏に、重い筋肉の損傷」「当面のあいだ、試合に出られない」。病名を狭めない（肉離れ・ハムストリングの断裂などとは言わない）。全治の期間はクラブが出していない。
+# 元のドイツ誌（kicker）: 本文は requests・WebFetch とも 403。見出しと要約だけ RSS（newsfeed.kicker.de/team/vfl-wolfsburg）で読んだ。
+#   ・11/22「Wolfsburg will mit Breite an die Spitze - Große Sorgen um Shiogai」 https://www.kicker.de/wolfsburg-will-mit-breite-an-die-spitze-grosse-sorgen-um-shiogai-1273834/artikel 要約 "Bitter: Stürmer Kento Shiogai droht eine längere Pause."
+#   ・11/23「Shiogai erleidet "schwere Muskelverletzung" und fehlt Wolfsburg」 https://www.kicker.de/shiogai-erleidet-schwere-muskelverletzung-und-fehlt-wolfsburg-1274383/artikel 要約 "Nur 20 Minuten stand Kento Shiogai gegen Holstein Kiel auf dem Rasen …"
+#   ・「今季の残り試合を欠場する可能性が高い」は kicker の本文を日本の各紙（日刊スポーツ・スポニチ・サンスポ）が訳したもの。kicker の原文は読めていない → 台本では「今季の残りを欠場する可能性も報じられていた」と報道の形で1回だけ言う。「今季絶望」とは言い切らない（クラブは期間を出していない）。
+# 日本語の記事（全文を読んだ）:
+#   ・スポニチ（Yahoo 11/24 5:30）https://news.yahoo.co.jp/articles/945ba24a8aa054df2265ad98476277ceec9dccc4 後半20分から出場、2点目のゴールに絡む、同40分に運び出された。今季公式戦13試合3得点。W杯はオランダ戦で後半39分から出場。9月24日のウルグアイ戦で代表初ゴール。11月の U-21 の遠征で2試合続けて主将。「今季絶望となれば、来年3月から新たなスタートを切る大岩ジャパンの初陣参加は不可能」。
+#   ・日刊スポーツ（Yahoo 11/23）https://news.yahoo.co.jp/articles/d91588bea2ed00e112d222d91dd6d6d58b6feaf7 自力で歩けず、スタッフ2人に抱えられてピッチを後に。
+#   ・サンスポ（Yahoo 11/23）https://news.yahoo.co.jp/articles/798d8ff73db0cce1157a99f8cfc92fbd6384951a
+#   ・サッカーダイジェスト（Yahoo 11/24 0:36）https://news.yahoo.co.jp/articles/32892b6f7a566eccd6f19ae1fa7760040667fb99 クラブの発表の訳、65分出場・85分交代。
+# ESPN の試合データ（site.api.espn.com ger.2 summary event=401885056、2026-11-21 12:00 UTC）: ヴォルフスブルク 3-0 ホルシュタイン・キール。50分 オウンゴール／67分 ホーンビー／76分 リース。塩貝は65分に途中出場、85分に交代（ESPN の交代の記録は85分 ツェーンター）。
+#   ESPN は 67分の得点にアシストを付けていない → 「2点目に絡んだ」は日本の2紙（スポニチ・ゲキサカ）の書き方。台本では「2点目に絡む動き」と報道の形で。
+# ESPN 順位表（ger.2、11/24 取得）: ヴォルフスブルク 4位 勝ち点22（12試合）、首位ヘルタ 34。次は 11/29 12:30 UTC アイントラハト・ブラウンシュヴァイク戦（敵地）。
+# 食い違い: 交代の時刻 → ESPN・ダイジェスト「85分」、スポニチ・サンスポ・日刊「後半40分」（＝85分）で一致。クラブは「終盤に」。kicker の要約「わずか20分」も 65→85 と合う。
+# 自分で数えたもの: 65分から85分まで ＝ 20分のプレー。今季13試合3得点。
+# 前の本との重なり: 20261104_japan_squad_brazil_paraguay など代表の回で塩貝が出ているが、負傷の話は初出。
+# 【言わないこと】「今季絶望」と言い切る（クラブは期間を出していない）／全治の期間／「肉離れ」などクラブが使っていない病名／媒体名（kicker）／大岩ジャパンの初陣に出られないという断定（スポニチは「今季絶望となれば」の仮定）。
+# 本人の言葉: 見つからず（クラブの発表・各紙とも無し。本人の SNS はブラウザの道具を使わない決まりで当たっていない）。→ X。
+# 写真: 3枚。01＝ヴォルフスブルク公式の発表の主写真（キール戦、スタッフに抱えられてピッチを出る場面）／02＝ゲキサカ 463737 の主写真（日本代表の青、背番号26）／03＝サンスポの主写真（U-21 日本代表の練習着でボールを蹴る）。
+#   _pool.png を目で見た: 3枚とも本人、透かし無し。東スポ（ロイター）・ダイジェスト（Getty）の写真は使わない。ゲキサカの写真は代理店の表記なし。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [塩貝健人, ヴォルフスブルク, 日本代表]
+
+short_style: X
+short_hook_word: 当面プレー不可
+short_photos:
+  - assets/images/20261124_shiogai_season_out/02_v.jpg
+  - assets/images/20261124_shiogai_season_out/01_v.jpg
+  - assets/images/20261124_shiogai_season_out/03_v.jpg
+short_question: 塩貝健人は、いつごろピッチに戻ってくると思いますか。
+short_telops: []
+
+theme:
+  id: shiogai_season_out
+  league: germany
+  league_name: ブンデスリーガ2部
+  prefix: ""
+  title: 塩貝健人、当面のあいだ出場できず。クラブが発表した負傷の中身
+  hook: ""
+  question: 負傷交代した塩貝健人について、クラブは何を発表したのか
+  takeaway: クラブの発表は「左太もも裏に重い筋肉の損傷、当面のあいだ出場できない」。戻る時期は出していない。今季13試合3得点、W杯にも出た21歳が、20分のプレーで離脱することになった
+
+thumbnail:
+  layout: face
+  line1: 塩貝健人 当面プレー不可
+  line2: 左太もも裏に重い損傷
+  tags: [塩貝健人, ヴォルフスブルク]
+  photo: assets/images/20261124_shiogai_season_out/02_w.jpg
+  short_photo: assets/images/20261124_shiogai_season_out/02_v.jpg
+
+answer: 左太もも裏に重い筋肉の損傷。当面のあいだ出場できない。戻る時期は出していない
+watch: 戻る時期をクラブがいつ伝えるか
+
+sections:
+  - id: what
+    main: true
+    heading: 塩貝健人について、クラブは何を発表したのか
+    tier: 確定
+    telop: 塩貝健人、左太もも裏に重い筋肉の損傷
+    say:
+      - text: ヴォルフスブルクの塩貝健人が、左太もも裏に重い筋肉の損傷を負った。クラブが発表しました。
+        image: assets/images/20261124_shiogai_season_out/02_w.jpg
+        emph: true
+      - text: 当面のあいだ、試合には出られません。戻る時期は、まだ示されていません。
+      - text: 塩貝健人は、日本代表にも選ばれている21歳のフォワードです。
+      - text: けがをしたのは21日、ホームのキール戦です。
+        image: assets/images/20261124_shiogai_season_out/01_w.jpg
+        card: {type: timeline, title: 塩貝健人の21日, rows: [[65分, 途中から出場], [67分, チームの2点目], [85分, 負傷して交代]], highlight_row: 0}
+      - text: 65分から入り、チームの2点目に絡む動きも見せました。
+        image: assets/images/20261124_shiogai_season_out/01_w.jpg
+        card: {type: timeline, title: 塩貝健人の21日, rows: [[65分, 途中から出場], [67分, チームの2点目], [85分, 負傷して交代]], highlight_row: 1}
+      - text: ところが85分。自分の足では歩けず、スタッフ2人に抱えられてピッチを出ました。
+        image: assets/images/20261124_shiogai_season_out/03_w.jpg
+        card: {type: timeline, title: 塩貝健人の21日, rows: [[65分, 途中から出場], [67分, チームの2点目], [85分, 負傷して交代]], highlight_row: 2}
+        emph: true
+      - text: 検査の前から、今季の残りを欠場する可能性も報じられていました。
+        card: none
+        image: assets/images/20261124_shiogai_season_out/02_w.jpg
+    official: true
+    sources:
+      - https://www.vfl-wolfsburg.de/en/newsdetails/news-detail/detail/news/serious-muscle-injury
+      - https://www.espn.com/soccer/match/_/gameId/401885056
+      - https://news.yahoo.co.jp/articles/d91588bea2ed00e112d222d91dd6d6d58b6feaf7
+      - https://news.yahoo.co.jp/articles/945ba24a8aa054df2265ad98476277ceec9dccc4
+  - id: season
+    heading: 塩貝健人は、今季どんな1年を送っていたのか
+    tier: 報道
+    telop: 今季13試合3得点。W杯にも出場
+    say:
+      - text: 塩貝健人は今年1月に、オランダのナイメヘンからヴォルフスブルクへ移りました。
+        image: assets/images/20261124_shiogai_season_out/03_w.jpg
+      - text: 今季はここまで公式戦13試合で3得点。
+        card: {type: table, title: 塩貝健人の2026年, columns: [いつ, できごと], rows: [[6月, W杯 オランダ戦に途中出場], [9月24日, ウルグアイ戦で代表初ゴール], [11月, U-21日本代表で主将], [今季, 公式戦13試合3得点]], highlight_row: 3}
+      - text: 夏のワールドカップでは、オランダ戦に途中から出場。
+        image: assets/images/20261124_shiogai_season_out/03_w.jpg
+        card: {type: table, title: 塩貝健人の2026年, columns: [いつ, できごと], rows: [[6月, W杯 オランダ戦に途中出場], [9月24日, ウルグアイ戦で代表初ゴール], [11月, U-21日本代表で主将], [今季, 公式戦13試合3得点]], highlight_row: 0}
+      - text: 9月のウルグアイ戦では、代表初ゴールも挙げています。
+        image: assets/images/20261124_shiogai_season_out/01_w.jpg
+        card: {type: table, title: 塩貝健人の2026年, columns: [いつ, できごと], rows: [[6月, W杯 オランダ戦に途中出場], [9月24日, ウルグアイ戦で代表初ゴール], [11月, U-21日本代表で主将], [今季, 公式戦13試合3得点]], highlight_row: 1}
+      - text: 11月には21歳以下の日本代表で、2試合続けてキャプテンを務めたばかりでした。
+        image: assets/images/20261124_shiogai_season_out/03_w.jpg
+        card: {type: table, title: 塩貝健人の2026年, columns: [いつ, できごと], rows: [[6月, W杯 オランダ戦に途中出場], [9月24日, ウルグアイ戦で代表初ゴール], [11月, U-21日本代表で主将], [今季, 公式戦13試合3得点]], highlight_row: 2}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/945ba24a8aa054df2265ad98476277ceec9dccc4
+      - https://web.gekisaka.jp/news/world/detail/?463737-463737-fl
+  - id: view
+    viewpoint: true
+    heading: 塩貝健人の離脱は、チームと代表にどう響くのか
+    tier: 背景
+    telop: ヴォルフスブルクは2部で4位、首位と12点差
+    say:
+      - text: 見立てです。ヴォルフスブルクはドイツ2部で4位。首位ヘルタとは勝ち点12の差を追っています。
+        image: assets/images/20261124_shiogai_season_out/01_w.jpg
+        card: {type: stats, title: ヴォルフスブルク（2部 12試合）, items: [[4, 位, いまの順位], [22, 点, 勝ち点], [12, 点差, 首位ヘルタと]], focus: 2}
+      - text: その追い上げのさなかに、点を取れる21歳の塩貝健人が抜けます。
+        card: none
+      - text: 日本代表は来年3月、新しく就く大岩監督のもとで動き出します。
+        image: assets/images/20261124_shiogai_season_out/02_w.jpg
+      - text: そこに間に合うかは、クラブが戻る時期をどう伝えるか次第です。
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/ger.2/standings
+      - https://news.yahoo.co.jp/articles/945ba24a8aa054df2265ad98476277ceec9dccc4

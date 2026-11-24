@@ -1,0 +1,123 @@
+# 取材メモ（2026年11月20日）上田綺世、リールの本拠地の第一印象（ファンの質問コーナーへの答え）（ニュースのショート。見せ方 X＝冒頭1秒の強い一言）
+# 取材: 2026-11-20。WebFetch と requests（ブラウザUA）。検索エンジンのAI要約は使っていない。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元: フットボール・トライブ 2026-11-19（ライター MOUNT）「上田綺世はリールの本拠地をどう評価した？明かした第一印象が話題に！」（全文）
+#   https://football-tribe.com/japan/2026/11/19/361508/
+# 一次を探した結果（発言の出どころ）:
+#   ・Le Petit Lillois 2026-11-18「LOSC : Ayase Ueda juge l'ambiance du stade Pierre-Mauroy」（全文を読んだ） https://lepetitlillois.com/2026/11/18/ayase-ueda-ambiance-stade-pierre-mauroy-losc/
+#   ・リール公式（@LOSC_EN）の X 投稿 2026-11-15「アヤセに聞こう！第2問🎤 Q. スタッド・ピエール＝モロワの雰囲気を、3つの言葉で表すと？ @flitoryy さんからの質問です」（動画つき。syndication で本文を確認）
+#       https://x.com/LOSC_EN/status/2121864363133050960
+#   ・上田の答えは**動画の中の日本語の音声**で、文字では取れなかった。フランス語の記事は「母国語で打ち明けた」と書き、仏語に訳して載せている（« Déjà, en premier lieu, le stade est joli … Le terrain est de très grande qualité. Et l'atmosphère est vraiment superbe. Je prends beaucoup de plaisir à y jouer »）。
+#       フットボール・トライブの日本語の「鉤括弧の発言」は、この仏語からの訳し戻し。→ **上田本人の一字一句の言葉としては使えない**。台本は内容の伝聞（「〜と答えました」）にし、本人の声（voice:）は使わない。X。
+# 出典で確かめたこと（ESPN の試合データ。site.api.espn.com）:
+#   ・ベティス戦（CL、リールのホーム、2026-09-08、event=401915450）: リール 2-3 ベティス。上田は先発。12分、上田が頭で先制ゴール（試合は負け）。
+#   ・上田の出場（リール加入後）: 8/28以降の試合記録で、トゥールーズ戦（9/3、途中出場、73分ゴール）／ベティス戦（9/8、先発、12分ゴール）／トロワ戦（9/13、先発）／ニース戦（9/20、先発、79分ゴール）／ルアーブル戦（10/10、途中出場）／アーセナル戦（10/13、先発）＝6試合3ゴール。記事の「最初の6試合で3ゴール」と一致。
+#   ・リールのホームでの出場は ベティス戦・トロワ戦・ルアーブル戦の3試合、ホームでのゴールはベティス戦の1点だけ（ブレスト戦・ガラタサライ戦・ランス戦は欠場）。→ 自分で数えた。
+#   ・日程: 11/21（土）19:45 UTC（現地20:45）リール対リヨン（リールのホーム）。ESPN で Scheduled。
+#   ・離脱: Le Petit Lillois は「アーセナル戦（0-3）以降、足底腱膜の断裂で離脱」。ESPN で アーセナル戦 10/13 3-0（上田は先発、途中交代）。
+# 記事の食い違い（台本は ESPN・Le Petit Lillois に合わせた）:
+#   ・フットボール・トライブは「10月14日のアーセナル戦」「11月22日のリヨン戦」。ESPN・Le Petit Lillois は 10月13日（現地）・11月21日（土、現地20:45）。日本時間では 14日未明・22日未明になるので、日付のずれ。→ 台本は日付を言わず「アーセナル戦」「リヨン戦」とだけ言う。
+#   ・フットボール・トライブは「ベティス戦（2-3）でもゴール」。ESPN も 2-3（リールが負け）で一致。
+#   ・「デカトロン・アリーナ＝スタッド・ピエール・モーロワ」: 同じスタジアム（Le Petit Lillois）。台本は「ピエール・モーロワ」で通す。
+# 前の本との重なり: ueda_ancelotti_words（監督のケガの説明）、ueda_plantar_out（上田を欠いたブレスト戦）、ueda_lille_mvp。今回の初出は「本拠地の第一印象」と「ホームでの3試合1ゴール」。posted.json・直近3日の scripts/ に同じ題は無い。
+# 【言わないこと】上田の言葉を一字一句の発言としては読まない（訳し戻し）／復帰が決まったという言い方（Le Petit Lillois は「可能性がある」）／アーセナル戦・リヨン戦の日付／ケガの治り具合。
+# 本人の言葉: 動画の中の日本語の音声（文字は取れず）。記事は仏語訳→日本語訳し戻し。台本は伝聞。X。
+# 写真の出どころ（目で見た）: 04・06・07＝Le Petit Lillois の写真（04 はベンチ、06 は練習で走る姿＝11/10 の記事、07 は笑顔＝11/17 の記事。原寸 2048〜2560px）。01（サッカーキング、1200px）・02/03（後ろ姿）・05（1620px）は小さいか顔が無いので使わない。AFLO の写真（Tribe 主写真）・Getty は使わない。
+# 反応: 0件（実在の投稿を探していない／作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月20日"
+format: news
+no_main: true
+people: [上田綺世, リール]
+
+short_style: X
+short_hook_word: 新本拠地の第一印象
+short_photos:
+  - assets/images/20261120_ueda_lille_stadium/07_v.jpg
+  - assets/images/20261120_ueda_lille_stadium/04_v.jpg
+  - assets/images/20261120_ueda_lille_stadium/06_v.jpg
+  - assets/images/20261120_ueda_lille_stadium/04_v.jpg
+short_question: 上田綺世は、リヨン戦で本拠地のファンの前に戻ってくると思いますか。
+short_telops: []
+
+theme:
+  id: ueda_lille_stadium
+  league: france
+  league_name: リーグ・アン
+  prefix: ""
+  title: 上田綺世が明かした、リールの本拠地への第一印象とは
+  hook: ""
+  question: 上田綺世は、リールの本拠地をどう感じているのか
+  takeaway: 上田がリールのホームで出たのは3試合で、ゴールはベティス戦の1点だけ。足底腱膜の断裂で離脱中だが、トレーニングに戻っていて、リヨン戦での復帰の可能性が伝えられている
+
+thumbnail:
+  layout: face
+  line1: 上田綺世 リールの本拠地
+  line2: 第一印象「雰囲気が素晴らしい」
+  tags: [上田綺世, リール]
+  photo: assets/images/20261120_ueda_lille_stadium/07_w.jpg
+  short_photo: assets/images/20261120_ueda_lille_stadium/07_v.jpg
+
+answer: スタジアムはきれい、ピッチの質も高く、雰囲気は本当に素晴らしい
+watch: リヨン戦での復帰
+
+sections:
+  - id: what
+    main: true
+    heading: 上田綺世は、リールの本拠地の第一印象をどう語ったのか
+    tier: 報道
+    telop: 上田綺世、新本拠地の第一印象は「雰囲気が素晴らしい」
+    say:
+      - text: リールの上田綺世が、本拠地の第一印象を明かしました。
+        image: assets/images/20261120_ueda_lille_stadium/07_w.jpg
+      - text: クラブのXで、ファンの質問に答えるコーナーが始まりました。
+      - text: 質問は、スタジアムの雰囲気を言葉で表すと、どうなるか。
+        image: assets/images/20261120_ueda_lille_stadium/04_w.jpg
+      - text: 上田は、まず、スタジアムがきれいだと答えました。ピッチの質も、とても高いそうです。
+        card: {type: table, title: 上田綺世が語った、本拠地の印象, columns: [項目, 上田の答え], rows: [[スタジアム, きれい], [ピッチ, 質がとても高い], [雰囲気, 本当に素晴らしい]], highlight_row: 2}
+        emph: true
+      - text: そして、雰囲気は本当に素晴らしい。ここでプレーするのはとても楽しい、と話しました。
+        card: none
+        image: assets/images/20261120_ueda_lille_stadium/06_w.jpg
+        emph: true
+      - text: これは、上田が日本語で話した答えを、訳して伝えた内容です。
+    official: false
+    sources:
+      - https://lepetitlillois.com/2026/11/18/ayase-ueda-ambiance-stade-pierre-mauroy-losc/
+      - https://x.com/LOSC_EN/status/2121864363133050960
+      - https://football-tribe.com/japan/2026/11/19/361508/
+  - id: game
+    heading: 上田は、この本拠地でどんな試合をしてきたのか
+    tier: 報道
+    telop: 上田綺世、リールのホームで出たのは3試合
+    say:
+      - text: 上田は、リールの本拠地で3試合に出ました。
+        card: {type: table, title: 上田綺世 リールのホームで出た3試合, columns: [試合, 出場, ゴール], rows: [[ベティス戦（9月8日）, 先発, 12分], [トロワ戦（9月13日）, 先発, なし], [ルアーブル戦（10月10日）, 途中出場, なし]], highlight_row: 0}
+        image: assets/images/20261120_ueda_lille_stadium/06_w.jpg
+      - text: 点を取ったのは、チャンピオンズリーグのベティス戦。12分に頭で決めました。
+      - text: ただ、その試合は2対3で負けています。
+        card: none
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401915450
+  - id: view
+    viewpoint: true
+    heading: 本拠地での上田に、次の見どころはあるのか
+    tier: 背景
+    telop: ホームは3試合で1ゴール。次はリヨン戦
+    say:
+      - text: 見立てです。リールに来て最初の6試合で、上田は3ゴールを決めました。
+        image: assets/images/20261120_ueda_lille_stadium/04_w.jpg
+      - text: ただ、本拠地では3試合で1ゴール。
+      - text: あとの2点は、トゥールーズ戦とニース戦。どちらもアウェーです。
+        card: {type: table, title: 上田綺世 リールでの最初の6試合, columns: [会場, 試合, ゴール], rows: [[ホーム, 3, 1], [アウェー, 3, 2]], highlight_row: 0}
+      - text: 上田は10月のアーセナル戦のあと、足の裏の腱膜を断裂して離脱しています。
+        card: none
+        image: assets/images/20261120_ueda_lille_stadium/07_w.jpg
+      - text: 代表ウィークのあいだに、トレーニングへ戻りました。
+        emph: true
+      - text: 次のリヨン戦で復帰する可能性がある、と現地では伝えられています。
+      - text: 戻れば、ファンの前で2点目を決めるチャンスになります。
+    official: false
+    sources:
+      - https://lepetitlillois.com/2026/11/18/ayase-ueda-ambiance-stade-pierre-mauroy-losc/
+      - https://www.espn.com/soccer/match/_/gameId/401876402

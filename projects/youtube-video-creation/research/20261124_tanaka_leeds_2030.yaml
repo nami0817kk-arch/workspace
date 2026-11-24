@@ -1,0 +1,134 @@
+# 取材メモ（2026年11月24日）田中碧、リーズと2030年までの契約延長に合意と報道。プレミアのクラブと延長した日本人は5人目とされる（ニュースのショート。見せ方 X。契約についての本人の言葉は無し）
+# 取材: 2026-11-24。WebFetch と requests（ブラウザUA）だけ。検索エンジンのAI要約・ブラウザの道具は使っていない。FotMob は使っていない（ゲキサカの記事が FotMob の数字を引いているが、その数字は使わない）。
+# 題材の元:
+#   ・スポーツ報知（Yahoo!ニュース 11/21 0:55 配信）「田中碧がリーズと契約延長に合意　２０３０年まで　プレミアクラブとの契約延長は日本人５人目」 https://news.yahoo.co.jp/articles/28b8e6a8e3e42227ab12b79cb9f5555590f4f211
+#       「２０３０年までの契約延長に合意したことが２０日、わかった」。24年夏に4年契約で加入、現行契約は28年夏まで。今季リーグ戦10試合中8試合に先発、2アシスト。
+#       プレミアで契約延長を勝ち取った日本人は 吉田麻也（サウサンプトン）・冨安健洋（アーセナル）・三笘薫（ブライトン）・鎌田大地（クリスタルパレス）で、田中が5人目。
+#   ・手がかりに渡されたゲキサカ 463763（11/23）は「最も過小評価されている」の記事で、延長の合意の話ではなかった。チェルシー戦の先発と「第3節ブライトン戦から9試合連続先発」「チェルシーの本拠地で27年ぶりの白星」だけ使う。 https://web.gekisaka.jp/news/world/detail/?463763-463763-fl
+# 一次（クラブ）: リーズ公式のニュース一覧（男子トップ 1〜6ページ・クラブ）を 11/24 に見たが、田中の契約延長の発表は無い。→ 確度は「報道」。台本では「クラブからの正式な発表は、まだありません」と言う。
+#   リーズ公式「Ao Tanaka's four-word Brazil reunion and the missing piece he's started to find」（ファルケ監督の言葉。日付は11月の代表ウィーク明け）
+#     https://www.leedsunited.com/en/news/ao-tanakas-four-word-brazil-reunion-and-the-missing-piece-hes-started-to-find
+#     "on the weaker days you're still a six or a seven out of 10. And this is what he's doing." ／ "So he is not a man of many words, but of many skills on the football pitch. And we all love him."
+#     → 台本の言葉は、この英語を私が日本語にしたもの。
+# ESPN の試合データ（site.api.espn.com eng.1 summary event=401879236、2026-11-21 15:00 UTC）: チェルシー 1-4 リーズ（スタンフォード・ブリッジ）。田中は先発、86分にロドンと交代。得点 オカフォー2・キャルバート＝ルーウィン（PK）・アーロンソン。
+# ESPN 順位表（eng.1、11/24 取得）: リーズ 7位 勝ち点17（11試合）。ゲキサカは「6位に浮上」と書く（日曜の試合の前の順位）→ 台本では順位を言わない。
+# ESPN 日程: 次は 11/28 15:00 UTC（日本時間 29日 0時）ホームのコヴェントリー戦。
+# 食い違い:
+#   ・「日本人5人目」: 報知の見出し・本文は5人目。同じ記事を配信した dメニューニュースの見出しは「４人目」（Google ニュースの見出しで見た）。報知の本文は4人の名前を挙げて「田中で５人目」なので5人目を使い、「とされる」で言う。
+#   ・先発数: 報知は「10試合中8試合に先発」（チェルシー戦の前）。ゲキサカは「第3節から9試合連続先発」（チェルシー戦を含む）。→ 台本では「チェルシー戦まで、9試合続けて先発」とゲキサカの数で言い、10試合中8は使わない。
+#   ・アンパドゥの「チーム内で最も愛されている選手」（サッカーキング 11/21 が Stadium Astro のインタビューを引く）は、写真の都合で使わない（アンパドゥの写真が無い）。
+# 自分で数えたもの: 現行契約 2028年夏まで → 2030年まで ＝ 2年延びる。報知が挙げた先例は4人 → 田中で5人目。
+# 前の本との重なり: 20261120_tanaka_ao_seven_clubs（6クラブの関心とリーズが話し合いへ）。今回は「合意」という新しい事実が軸。6クラブの名前は繰り返さない。
+# 見立ての「移籍金」は報知の本文「今回の契約延長は、獲得を狙う他クラブにとって移籍金の高騰を意味する」による。
+# 【言わないこと】年俸・契約の中身（報道に無い）／6クラブの関心の話（11/20 に出した）／「クラブが発表」（発表は無い）／順位（食い違い）。
+# 本人の言葉: 契約について本人の言葉は見つからず（報知・リーズ公式とも無し。本人のSNSはブラウザの道具を使わない決まりで当たっていない）。ファルケ監督の言葉はある → X。
+# 写真: 3枚＋2人並び1枚（リーズ公式の記事の主写真。ctfassets。代理店の表記は無いが、権利は引き受ける危険）。
+#   01＝日本代表（スウェーデン戦 2026年6月、ファイル名より）／02＝日本代表（ブラジル戦 2026年11月）／03＝リーズの白いユニフォーム（マンU戦 2026年10月）／04＝ファルケ監督（チェルシー戦、2026年11月21日）→ 04f に切り、pair_farke/01.jpg（左ファルケ・右田中）。
+#   _pool.png を目で見た: 01〜03 は本人、透かし無し。最初に取った04（顔の切り出しが黄色いユニフォームの胴だけ）は外し、元の画像から取り直した。報知の主写真は「ロイター」、サッカーキングは Getty なので使わない。
+#   写真の元のページ: https://www.leedsunited.com/en/news/tanaka-opens-emotive-massive-debate-on-opponent-as-dream-continues ／ https://www.leedsunited.com/en/news/tanaka-set-for-japans-november-double-header ／ https://www.leedsunited.com/en/news/farke-reveals-half-time-message-and-tactical-focus-in-battering-of-chelsea
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月24日"
+format: news
+no_main: true
+people: [田中碧, リーズ, ファルケ監督, 吉田麻也, 冨安健洋, 三笘薫, 鎌田大地]
+
+short_style: X
+short_hook_word: 2030年まで
+short_photos:
+  - assets/images/20261124_tanaka_leeds_2030/03_v.jpg
+  - assets/images/20261124_tanaka_leeds_2030/02_v.jpg
+  - assets/images/20261124_tanaka_leeds_2030/01_v.jpg
+short_question: 田中碧は、2030年までリーズで戦うと思いますか。
+short_telops: []
+
+theme:
+  id: tanaka_leeds_2030
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 田中碧、リーズと2030年まで延長合意か。ファルケ監督が語った評価
+  hook: ""
+  question: リーズと契約延長に合意したとされる田中碧は、監督にどう見られているのか
+  takeaway: 2028年夏までの契約が、2年延びて2030年までになると報じられた。プレミアのクラブと延長した日本人は、吉田・冨安・三笘・鎌田に続く5人目とされる。監督は「調子の悪い日でも10点中6点か7点」と、崩れない安定を評価している
+
+thumbnail:
+  layout: face
+  line1: 田中碧 2030年まで延長へ
+  line2: プレミアで日本人5人目
+  tags: [田中碧, リーズ]
+  photo: assets/images/20261124_tanaka_leeds_2030/03_w.jpg
+  short_photo: assets/images/20261124_tanaka_leeds_2030/03_v.jpg
+
+answer: 調子の悪い日でも10点中6点か7点。崩れない安定を、監督は評価している
+watch: 28日のコヴェントリー戦（日本時間29日0時）
+
+sections:
+  - id: what
+    main: true
+    heading: 田中碧とリーズの契約は、どう変わるのか
+    tier: 報道
+    telop: 田中碧、リーズと2030年までの契約延長に合意と報道
+    say:
+      - text: リーズの田中碧、2030年までの延長に合意と報道。発表はまだです。
+        image: assets/images/20261124_tanaka_leeds_2030/03_w.jpg
+        emph: true
+      - text: ファルケ監督の評価です。
+        image: assets/images/20261124_tanaka_leeds_2030/pair_farke/01.jpg
+      - voice: ファルケ監督
+        text: 調子の悪い日でも、10点中6点か7点は出す。
+      - voice: ファルケ監督
+        text: いまの彼は、それができている。
+        cont: true
+      - voice: ファルケ監督
+        text: 口数は少ないが、ピッチでの技は多い。
+        cont: true
+      - voice: ファルケ監督
+        text: 私たちはみんな、彼が大好きなんです。
+        cont: true
+      - text: 田中碧は今季、9試合続けて先発している中盤の主力です。
+        image: assets/images/20261124_tanaka_leeds_2030/02_w.jpg
+      - text: 2024年の夏に、4年契約でリーズへ加入。いまの契約は2028年の夏までです。
+        image: assets/images/20261124_tanaka_leeds_2030/03_w.jpg
+        card: {type: convert, title: 田中碧とリーズの契約, from: [2028, 年夏まで, いまの契約], to: [2030, 年まで, 延長に合意と報道], via: ＋2年}
+      - text: イングランド1部、プレミアリーグのクラブと契約を延ばした日本人は、これまでに4人。
+        card: {type: table, title: プレミアのクラブと契約を延ばした日本人, columns: [名前, クラブ], rows: [[吉田麻也, サウサンプトン], [冨安健洋, アーセナル], [三笘薫, ブライトン], [鎌田大地, クリスタル・パレス], [田中碧, リーズ]], highlight_row: 3}
+      - text: 吉田麻也、冨安健洋、三笘薫、鎌田大地。田中は、それに続く5人目とされます。
+        card: {type: table, title: プレミアのクラブと契約を延ばした日本人, columns: [名前, クラブ], rows: [[吉田麻也, サウサンプトン], [冨安健洋, アーセナル], [三笘薫, ブライトン], [鎌田大地, クリスタル・パレス], [田中碧, リーズ]], highlight_row: 4}
+        emph: true
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/28b8e6a8e3e42227ab12b79cb9f5555590f4f211
+      - https://www.leedsunited.com/en/news/ao-tanakas-four-word-brazil-reunion-and-the-missing-piece-hes-started-to-find
+  - id: chelsea
+    heading: 合意が報じられた翌日、田中はどんな試合をしたのか
+    tier: 報道
+    telop: チェルシー 1-4 リーズ。田中は86分までプレー
+    say:
+      - text: 合意が報じられた翌日の21日、リーズは敵地でチェルシーと対戦しました。
+        card: none
+        image: assets/images/20261124_tanaka_leeds_2030/01_w.jpg
+      - text: 田中碧は先発し、86分に交代するまでプレー。
+        image: assets/images/20261124_tanaka_leeds_2030/03_w.jpg
+        card: {type: stats, title: チェルシー戦の田中碧, items: [[86, 分, 先発で出場], [9, 試合, 続けて先発], [27, 年ぶり, チェルシーの本拠地で勝利]], focus: 1}
+      - text: リーズは4対1で勝ち、チェルシーの本拠地での勝利は27年ぶりです。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879236
+      - https://web.gekisaka.jp/news/world/detail/?463763-463763-fl
+  - id: view
+    viewpoint: true
+    heading: 2年の延長は、田中にとって何を意味するのか
+    tier: 背景
+    telop: 2028年夏まで → 2030年まで
+    say:
+      - text: 見立てです。契約が長く残るほど、ほかのクラブが田中碧を獲るには高い移籍金が要ります。
+        image: assets/images/20261124_tanaka_leeds_2030/01_w.jpg
+      - text: ほかのクラブの関心が報じられるなかで、リーズは先に手を打った。
+      - text: そのリーズの次の試合は28日、ホームのコヴェントリー戦。日本時間では29日の午前0時キックオフ。
+        card: none
+        image: assets/images/20261124_tanaka_leeds_2030/02_w.jpg
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/28b8e6a8e3e42227ab12b79cb9f5555590f4f211
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/teams/357/schedule?fixture=true

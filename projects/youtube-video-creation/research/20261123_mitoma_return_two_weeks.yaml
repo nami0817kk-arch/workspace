@@ -1,0 +1,136 @@
+# 取材メモ（2026年11月23日）三笘薫は今節も負傷欠場、監督「あと1、2週間」。守田英正も欠場で元川崎F対決はお預け、ブライトンは10人でハルに敗戦（ニュースのショート。見せ方 X＝冒頭1秒の強い一言）
+# 取材: 2026-11-23。WebFetch と requests（ブラウザUA）だけ。検索AI要約・ブラウザの道具は使っていない。
+# 本文を読んだもの:
+#   ・ゲキサカ 463696「三笘薫は今節も欠場濃厚か…ブライトン指揮官『あと1、2週間』」: 20日の会見でヒュルツェラー監督が、復帰は近づいているが「あと1、2週間」必要との見通し（地元『Sussex Express』の報道）。今月9日には代表ウィーク明けの復帰に期待を示していた。
+#   ・スポニチ 2026-11-21「三笘薫の復帰はさらに先送り　ブライトンの監督が『1、2週間かかる』と発言」: 地元メディア「サセックス・ワールド」が20日に報じた。三笘は5月9日のウルバーハンプトン戦で左太腿裏を負傷して手術、W杯を欠場。
+#   ・ゲキサカ 463710「三笘薫、守田英正は揃って負傷欠場…プレミアで初の元川崎F同僚対決お預け」: 22日の第11節ハル・シティ対ブライトン、両者ともメンバー外。守田は前節アーセナル戦（7日）も欠場、鼠径部と内転筋の負傷と報じられた。2人は2020年に川崎フロンターレでJ1優勝した元チームメート。
+#   ・スポニチ 2026-11-07「ハル守田英正が再離脱」: ヤキロビッチ監督（ハル・ライブの報道）「もう一度検査を受けることになっている。鼠径部と内転筋に問題がある」。→ 守田の所属はハル・シティで確かめた。
+#   ・スカイスポーツ 試合記事 https://www.skysports.com/football/hull-city-vs-brighton/report/559549 : ハルのGKツォラキスが前半だけで5本のセーブ（今季のGKで最多）。ブライトンの期待値2.24。89分にコスティーニャが2枚目の警告で退場。マクバーニーが後半アディショナルタイムに2点。ハルは8月以来のホームでの勝利。
+#   ・BBC の試合の速報 https://www.bbc.com/sport/football/live/cky97ll8253wt : 「ハルはプレミアで8試合勝ちなしを止めた」「8月29日以来のリーグ戦の勝利」。ヒュルツェラー監督（スカイスポーツへ）"That's football. The Premier League is ruthless. Hull scored with a lucky punch, we have to accept it and be better next time."
+#     ブライトンは木曜（26日）にカンファレンスリーグでクラヨーヴァとホーム戦。
+#   ・The Argus 26752042: ヒュルツェラー監督 "especially the last 20 minutes I wasn't happy with." ／ブライトンは2位のまま、首位アーセナルと勝ち点6差。
+# ESPN の試合データで確かめたこと（site.api.espn.com summary event=401879234、11/22 14:00 UTC、会場 MKMスタジアム）:
+#   ・ハル・シティ 2-0 ブライトン。89分 コスティーニャ（ブライトン）が2枚目の警告で退場。90+2分 マクバーニー（右足、カウンター、アシストはグルナ＝ドゥアト）／90+5分 マクバーニー（右足、アシストはベルウミ）。
+#   ・三笘・守田はどちらのメンバー表（先発・控え）にも無い。
+#   ・ESPN 順位表（eng.1 standings、11/23 取得）: 1位アーセナル 勝ち点28、2位ブライトン 22（7勝1分3敗）、3位マンチェスター・シティ 22。ハルは11位 勝ち点14。
+#   ・ハルの今季（ESPN の日程）: 8/22 マンU 2-0・8/29 コベントリー 1-0 のあと、リーグ戦8試合勝ちなし（3分け…自分で数えた: 0-0 ヴィラ/2-2 チェルシー/1-2 ニューカッスル/2-2 エヴァートン/0-1 フラム/1-1 ブレントフォード/2-2 イプスウィッチ/0-1 アーセナル）→ 9試合ぶりの勝利。BBC の「8試合勝ちなしを止めた」と一致。
+#   ・次の試合: UEFAカンファレンスリーグ 11/26 17:45 UTC ブライトン対クラヨーヴァ（日本時間27日2時45分）／プレミア 11/29 14:05 UTC ブライトン対ニューカッスル（日本時間29日23時5分）。ハルは11/29 クリスタル・パレス戦（アウェー）。
+# 食い違い（気をつけた点）:
+#   ・マクバーニーの得点の分: スカイの本文の時系列は「90+1」「90+4」、ESPN と スカイの見出しの表は「90+2」「90+5」。→ 台本は分を言わず「後半アディショナルタイムに2点」。
+#   ・監督の「あと1、2週間」は日本語の報道（ゲキサカ・スポニチ）経由。英語の原文は地元紙サセックス・ワールド（Sussex Express）だが、サイトが自動取得を弾き（403）、原文の言い回しは読めていない。BBC・The Argus・スカイの記事にも三笘についての言葉は無かった。
+#     → 監督の言葉としての代弁（voice）にはせず、キャスターの地の文で「〜という見通しを示しました」と言う。確度は 報道。
+#   ・ゲキサカは「今季ここまで公式戦の出場がない」と書く。ESPN の今季の日程・メンバー表でも三笘の出場は見ていない（全部は当たっていない）→ 「今季はまだ公式戦に出ていない」は報道として使う。
+#   ・負傷の日付「5月9日」は前の本（11/11）で出し済み。日数は繰り返さない。
+# 前の本との重なり: 11/11 mitoma_injury_update（9日の会見の「さらに1〜2週間必要になる可能性」「断言できない」「197日」）。11/7 tanaka_mitoma_words。
+#   → 今回の初出: 20日の会見の新しい見通し・ハル戦の欠場・守田も欠場で元川崎F対決が流れた・試合の結果（10人で敗戦）。9日の言葉と197日は繰り返さない。
+# 【言わないこと】「この試合で復帰する」という予想（見立ては、20日＋1〜2週間の幅にニューカッスル戦が入る、という日付の計算だけ）／9日の会見の言葉／守田の復帰時期（報道に無い）／ブライトンの優勝争いの見立て。
+# 本人の言葉: 三笘・守田とも無し。監督の三笘についての言葉は日本語の報道経由のみ（英語原文に届かなかった）→ X。試合後の監督の英語の言葉（BBC・The Argus）は試合について。
+# 写真: 記事の主写真はゲキサカ2本が Getty（右下に ©Getty Images）、スポニチの守田はロイター、BBC と The Argus は別の選手（マクバーニー・ダンク）だったので全部外した。
+#   代わりに Commons の CC0（撮影 Timmy96）: 01・03＝三笘（2026-01-24 フラム戦、ユニフォームは昨季の22番）、02＝三笘（同日のスタジアム到着、うつむき）、04・05＝守田（2026-10-17 フラム対ハルの試合前のアップ）。
+#   Commons に「被写体」の指定が無く portrait が通さないので、説明文（Kaoru Mitoma … / Hidemasa Morita …）を読み、目で本人と確かめて取り込んだ。01・03 は本人が小さいので手で寄せて _v（900x1600）・_w（1920x1080）を切った。
+#   _pool.png を見た: 三笘3枚・守田2枚とも本人、透かし無し。今回のハル戦の写真ではない（2人ともけがで出ていない）。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: japanese
+date: "2026年11月23日"
+format: news
+no_main: true
+people: [三笘薫, 守田英正, ブライトン, ハル・シティ, ヒュルツェラー監督]
+
+short_style: X
+short_hook_word: 三笘、今節も欠場
+short_photos:
+  - assets/images/20261123_mitoma_return_two_weeks/01_v.jpg
+  - assets/images/20261123_mitoma_return_two_weeks/04_v.jpg
+  - assets/images/20261123_mitoma_return_two_weeks/03_v.jpg
+  - assets/images/20261123_mitoma_return_two_weeks/01_v.jpg
+short_question: 三笘薫は、29日のニューカッスル戦に間に合うと思いますか。
+short_telops: []
+
+theme:
+  id: mitoma_return_two_weeks
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: 三笘薫、ハル戦も欠場。監督が口にした、復帰までの残り時間
+  hook: ""
+  question: 三笘薫の復帰はいつになりそうで、ハル戦では何が起きたのか
+  takeaway: 監督の見通しは「あと1、2週間」。守田も欠場で元川崎Fの2人の初対決は流れ、ブライトンは10人になってから2点を失い、ハルにリーグ戦9試合ぶりの勝利を許した
+
+thumbnail:
+  layout: face
+  line1: 三笘薫 今節も欠場
+  line2: 復帰まであと1、2週間
+  tags: [三笘薫, ブライトン]
+  photo: assets/images/20261123_mitoma_return_two_weeks/01_w.jpg
+  short_photo: assets/images/20261123_mitoma_return_two_weeks/01_v.jpg
+
+answer: 監督は「あと1、2週間」。ハル戦は三笘も守田も欠場し、ブライトンが0対2で敗れた
+watch: 29日のニューカッスル戦（日本時間23時5分）
+
+sections:
+  - id: what
+    main: true
+    heading: 三笘薫の復帰は、いつになりそうなのか
+    tier: 報道
+    telop: 三笘薫、ハル戦も欠場。復帰まで「あと1、2週間」
+    say:
+      - text: 三笘薫を欠いたブライトンは、ハルに0対2で敗戦。
+        image: assets/images/20261123_mitoma_return_two_weeks/01_w.jpg
+      - text: ヒュルツェラー監督は試合後、こう話しました。
+      - voice: ヒュルツェラー監督
+        text: これがサッカーです。プレミアリーグは容赦がない。
+      - voice: ヒュルツェラー監督
+        text: 受け入れて、次はもっと良くならなければいけません。
+        cont: true
+      - text: その監督は20日の会見で、三笘の復帰は近いとしつつ、あと1、2週間かかるという見通しを示していました。
+        emph: true
+        image: assets/images/20261123_mitoma_return_two_weeks/03_w.jpg
+      - text: ハルの守田英正も、けがで欠場。
+        image: assets/images/20261123_mitoma_return_two_weeks/04_w.jpg
+      - text: 2020年に川崎フロンターレで一緒にJ1を制した二人の、プレミアでの初対決は、またお預けです。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?463696-463696-fl
+      - https://web.gekisaka.jp/news/world/detail/?463710-463710-fl
+      - https://www.sponichi.co.jp/soccer/news/2026/11/21/kiji/20261121s00002021088000c.html
+      - https://www.sponichi.co.jp/soccer/news/2026/11/07/kiji/20261107s00002021076000c.html
+      - https://www.espn.com/soccer/match/_/gameId/401879234
+      - https://www.bbc.com/sport/football/live/cky97ll8253wt
+  - id: game
+    heading: 三笘薫のいないブライトンは、ハル戦でどう負けたのか
+    tier: 報道
+    telop: ハル 2-0 ブライトン。10人になってから2失点
+    say:
+      - text: 三笘薫のいない試合は、点が入らないまま終盤へ。前半だけで5本、相手のキーパーに止められました。
+        card: {type: table, title: ハル 2-0 ブライトン, columns: [時間, できごと], rows: [[前半, ハルのGKが5本のセーブ], [89分, コスティーニャが2枚目の警告で退場], [後半AT, マクバーニーが先制], [後半AT, マクバーニーが2点目]], highlight_row: 0}
+        image: assets/images/20261123_mitoma_return_two_weeks/02_w.jpg
+      - text: そして89分、ブライトンのコスティーニャが2枚目の警告で退場。
+        card: {type: table, title: ハル 2-0 ブライトン, columns: [時間, できごと], rows: [[前半, ハルのGKが5本のセーブ], [89分, コスティーニャが2枚目の警告で退場], [後半AT, マクバーニーが先制], [後半AT, マクバーニーが2点目]], highlight_row: 1}
+      - text: 10人になったあと、アディショナルタイムに、ハルのマクバーニーがカウンターから2点。
+        card: {type: table, title: ハル 2-0 ブライトン, columns: [時間, できごと], rows: [[前半, ハルのGKが5本のセーブ], [89分, コスティーニャが2枚目の警告で退場], [後半AT, マクバーニーが先制], [後半AT, マクバーニーが2点目]], highlight_row: 2}
+      - text: ブライトンは、0対2の負けです。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/match/_/gameId/401879234
+      - https://www.skysports.com/football/hull-city-vs-brighton/report/559549
+  - id: view
+    viewpoint: true
+    heading: 三笘薫の戻り先は、いま何位で、次はいつなのか
+    tier: 背景
+    telop: ブライトンは2位のまま。首位と勝ち点6差、次は29日のニューカッスル戦
+    say:
+      - text: 見立てです。ブライトンは敗れても2位のまま。首位アーセナルとは、勝ち点6差になりました。
+        card: {type: table, title: プレミアリーグ 第11節のあと, columns: [順位, クラブ, 勝ち点], rows: [[1位, アーセナル, 28], [2位, ブライトン, 22], [3位, マンチェスター・シティ, 22], [11位, ハル・シティ, 14]], highlight_row: 1}
+      - text: ハルは、8月29日以来、リーグ戦9試合ぶりの勝利でした。
+      - text: ブライトンの次は、27日の朝。ヨーロッパの3番目の大会、カンファレンスリーグです。
+      - text: プレミアは29日、日本時間の夜11時からニューカッスル戦です。
+        card: none
+      - text: 三笘薫は5月に左の太ももの裏を痛めて手術し、今季はまだ公式戦に出ていません。
+      - text: 20日から1、2週間なら、11月27日から12月4日のあいだ。ニューカッスル戦は、その中に入ります。
+        emph: true
+        image: assets/images/20261123_mitoma_return_two_weeks/01_w.jpg
+    official: false
+    sources:
+      - https://site.api.espn.com/apis/v2/sports/soccer/eng.1/standings
+      - https://www.bbc.com/sport/football/live/cky97ll8253wt
+      - https://www.theargus.co.uk/sport/26752042.fabian-hurzeler-unhappy-brighton-suffer-shock-2-0-hull-defeat/

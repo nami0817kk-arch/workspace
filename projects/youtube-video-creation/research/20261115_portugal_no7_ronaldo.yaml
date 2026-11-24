@@ -1,0 +1,117 @@
+# 取材メモ（2026年11月15日）ポルトガル代表、背番号7のデザインを変更。引退したC・ロナウドへの敬意（ニュースのショート。見せ方 X＝冒頭1秒の強い一言。本人の言葉は無い）
+# 取材: 2026-11-15。ESPN の記事本文は requests では 202（空）、WebFetch は要約になるため、ESPN の記事API（now.core.api.espn.com/v1/sports/news/50480173）で全文を読んだ。
+#   試合データは site.api.espn.com（uefa.nations, event 401861167）。検索エンジンのAI要約・ブラウザの道具は使っていない。
+#   サッカーキング（依頼の URL 2227902）は requests で全文を読んだが、これは背番号の記事ではなく、ポルトガル対デンマークの試合レポートだった（背番号7の変更には触れていない）。
+#   マルカ「Histórico cambio en el dorsal 7 de Portugal…」は URL が分からず、検索でも見つからなかった（未確認）。FPF（ポルトガルサッカー連盟）の声明のポルトガル語の原文も未確認。
+# 出典で確かめたこと:
+#   ・ESPN 記事「Portugal FA to change No. 7 jersey design as tribute to Cristiano Ronaldo」（Shubi Arun、2026-11-14 20:03Z、AP の情報を含む）:
+#       FPF が背番号7のデザインを変えると発表。デンマーク戦（ネーションズリーグ第5節。ロナウド引退後のポルトガルの最初の試合）から。
+#       FPF の声明（記事の引用＝英語。元はポルトガル語。英訳）: 今日のデンマーク戦から、代表の背番号7（長年ロナウドのものだった）は別のグラフィックデザイン、別の7になる。
+#         "This is yet another way to immortalize the meaning of such a special number and honor the legacy it represents."
+#         "From today onwards, we will have a different number 7 on the jersey, but with the same essence and the same pride, reserving the previous one for the immortalization of a story that will never be forgotten."
+#       FIFAの規定で、ポルトガルは背番号7を永久欠番として引退させられない。新しいデザインの数字には、ロナウドのキャリアに線を引くように、小さな十字が付く（記事の地の文。AP 由来）。
+#       ロナウドは今月（11月）初めに代表引退。ポルトガル歴代最多の146得点・234試合（記事）。41歳（記事）。11月5日に代表の合宿を離れた。最後の出場は9月24日のウェールズ戦（1-0、ホーム）（記事）。
+#       後継の背番号7は未発表（記事）。
+#   ・ESPN の試合データ（event 401861167、2026-11-14 19:45Z、Estádio Municipal de Braga）: ポルトガル 1-4 デンマーク（43分PK・49分・57分・75分・90+3分）。台本は試合の中身を主題にしない。日付（14日）だけ確かめた。
+# 食い違い・扱い:
+#   ①記事に「ロナウドが監督との対立で去った」旨の記述があるが、題から離れるので台本では使わない（引退した、までを事実として使う）。
+#   ②記事は「前の試合（デンマーク戦）でレオンが7を着た」と書くが、今回の試合がデンマーク戦で矛盾する（記事側の誤記の可能性）。使わない。サッカーキングは「現在背番号7をつけるカルロス・ボルジェス」と書くが記事と合わない。誰が7を着るかは言わない。
+#   ③「引退」: ESPN は「引退」、サッカーキングは「電撃引退」と書く。どちらも事実として一致。台本は「引退」。
+#   ④写真: ESPN の写真は Getty なので使わない。Commons の CC BY-SA 4.0（Bryan Berlin、2026-07-02 クロアチア戦）の4枚。04 = 背中（RONALDO 7）。01・02 は胸の7と顔。
+#   ⑤新デザインの見た目は出典に写真が無いので、どんな柄かは言わない。小さな十字は記事のとおり。
+# 本人の言葉: 無し。X。
+# 反応: 0件（探していない／作らない。approve は --no-voices）。
+slot: overseas
+date: "2026年11月15日"
+format: news
+no_main: true
+people: [クリスティアーノ・ロナウド, ポルトガル代表, ポルトガルサッカー連盟]
+
+short_style: X
+short_hook_word: 背番号7が変わる
+short_photos:
+  - assets/images/20261115_portugal_no7_ronaldo/04_v.jpg
+  - assets/images/20261115_portugal_no7_ronaldo/01_v.jpg
+  - assets/images/20261115_portugal_no7_ronaldo/02_v.jpg
+short_question: ロナウドの背番号7は、次に誰が着ることになると思いますか。
+short_telops: []
+
+theme:
+  id: portugal_no7_ronaldo
+  league: england
+  league_name: ポルトガル代表
+  prefix: ""
+  title: ポルトガル代表、背番号7のデザインを変更。引退したロナウドに敬意
+  hook: ""
+  question: ポルトガル代表は、引退したロナウドの背番号7をどうしたのか
+  takeaway: 永久欠番にはできないので、背番号7のデザインを変えて、これまでの7を物語のために残す。新デザインは14日のデンマーク戦から
+
+thumbnail:
+  layout: face
+  line1: 背番号7が変わる
+  line2: ロナウドへの敬意
+  tags: [ロナウド, ポルトガル代表]
+  photo: assets/images/20261115_portugal_no7_ronaldo/01_w.jpg
+  short_photo: assets/images/20261115_portugal_no7_ronaldo/01_v.jpg
+
+answer: 永久欠番にはできないので、背番号7のデザインを変えた。これまでの7は、語り継ぐために残す
+watch: 背番号7の後継者の発表
+
+sections:
+  - id: what
+    main: true
+    heading: ポルトガル代表は、背番号7をどう変えたのか
+    tier: 報道
+    telop: 背番号7のデザインを変更。14日のデンマーク戦から
+    say:
+      - text: ポルトガル代表が、引退したロナウドに敬意を表し、背番号7を変えました。
+        short_only: true
+        image: assets/images/20261115_portugal_no7_ronaldo/04_w.jpg
+      - text: ポルトガルサッカー連盟は、声明でこう伝えています。
+        image: assets/images/20261115_portugal_no7_ronaldo/01_w.jpg
+      - voice: ポルトガルサッカー連盟
+        text: 同じ本質と、同じ誇りを持った、別の7になります。
+        emph: true
+      - voice: ポルトガルサッカー連盟
+        text: これまでの7は、忘れられない物語のために残します。
+        cont: true
+        image: assets/images/20261115_portugal_no7_ronaldo/02_w.jpg
+      - text: 14日のデンマーク戦から、背番号7のユニフォームが、別のデザインと別の7の数字になりました。
+        image: assets/images/20261115_portugal_no7_ronaldo/01_w.jpg
+      - text: 国際サッカー連盟の規定で、背番号7を永久欠番にはできません。
+        image: assets/images/20261115_portugal_no7_ronaldo/03_w.jpg
+      - text: そこで新しい7の数字には、小さな十字がつきます。ロナウドのキャリアに、区切りをつける印です。
+        image: assets/images/20261115_portugal_no7_ronaldo/04_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50480173/portugal-cristiano-ronaldo-jersey
+      - https://now.core.api.espn.com/v1/sports/news/50480173
+  - id: why
+    heading: 引退したロナウドが、ポルトガル代表に残した記録
+    tier: 報道
+    telop: ロナウドの代表通算 146得点・234試合
+    say:
+      - text: ロナウドは、ポルトガル代表で歴代最多の146得点、234試合に出場しました。
+        card: {type: table, title: ロナウドのポルトガル代表通算, columns: [項目, 記録], rows: [[出場, 234試合], [得点, 146]], highlight_row: 1}
+        image: assets/images/20261115_portugal_no7_ronaldo/01_w.jpg
+      - text: 最後の出場は、9月24日のウェールズ戦。1対0の勝利でした。
+        card: none
+        image: assets/images/20261115_portugal_no7_ronaldo/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50480173/portugal-cristiano-ronaldo-jersey
+  - id: view
+    viewpoint: true
+    heading: 空いた背番号7は、これからどうなるのか
+    tier: 背景
+    telop: 背番号7の後継は、まだ発表されていません
+    say:
+      - text: 見立てです。ロナウドのあとの新しい7を着る選手は、まだ発表されていません。
+        card: none
+        image: assets/images/20261115_portugal_no7_ronaldo/02_w.jpg
+      - text: 背番号7を誰が着るのかが、次の注目です。
+        image: assets/images/20261115_portugal_no7_ronaldo/03_w.jpg
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50480173/portugal-cristiano-ronaldo-jersey
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861167

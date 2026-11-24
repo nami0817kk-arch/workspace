@@ -1,0 +1,141 @@
+# 取材メモ（2026年11月20日）ポチェッティーノ、マンUでの最初のインタビュー「物事を変えていくときだ」（ニュースのショート。見せ方 Y＝本人の言葉から始める）
+# 取材: 2026-11-20。requests（ブラウザUA）で Sky Sports・BBC Sport の本文を読み、site.api.espn.com で順位と日程を確かめた。検索AI要約は事実に使っていない（WebSearch は URL 探しだけ）。ブラウザの道具は使っていない。FotMob は使っていない。
+# 題材の元:
+#   Sky Sports 2026-11-19 11:00 UTC「Mauricio Pochettino at Manchester United: New boss vows to change situation at Old Trafford in first interview」（一覧の見出しは Pochettino vows to 'change things' at Man Utd）
+#   https://www.skysports.com/football/news/11661/13613821/mauricio-pochettino-at-manchester-united-new-boss-vows-to-change-situation-at-old-trafford-in-first-interview
+#   BBC Sport 2026-11-19「Culture, defence, Fernandes - Pochettino's priorities at Man Utd」（同じインタビューを引く。クラブの社内メディアの15分の導入インタビューと書く）
+#   https://www.bbc.co.uk/sport/football/articles/cxlylzyg38l8o
+#   https://www.espn.com/soccer/story/_/id/50470928/pochettino-leave-usmnt-nov-17-cherundolo-interim-december （写真の出どころ）
+# 出典で確かめたこと:
+#   ・場面: 11/19 に公開された、クラブの SNS（Sky）／社内メディア（BBC）での最初のインタビュー。依頼文の「カリントンへ初到着」ではない（到着は前日までで、BBC は水曜にスタッフと会い・木曜に初練習・金曜(11/20)に初の会見と書く）。台本はインタビューの言葉だけを使い、場所は言わない。
+#   ・本人の言葉（Sky 原文。台本は日本語に訳した。意味は変えない）:
+#       "It's a mistake to see the situation. We need to see the potential of this club."（BBC も同じ引用）
+#       "It's about to start to act and to change things, and to try to affect in a good way all the areas, to try to really believe that we can recover that feeling about to win."
+#       "The best request that we can have, the players that we have, and we need to love the players that we have." / "We need to support the players, we need to provide all the tools for their performance."
+#       "We are going to go there, to Anfield, with the idea to win and be brave and to be Manchester United."
+#       BBC: "To create the culture is the most important [thing]"
+#   ・ESPN の順位表（site.api.espn.com standings eng.1）: マンU 18位・10試合1勝・勝点8（17位コヴェントリー 9点、19位サンダーランド 8点、20位パレス 7点）。Sky・BBC とも「18位」。
+#   ・ESPN の日程（scoreboard 2026-11-22）: リヴァプール対マンU 16:30 UTC（アンフィールド）。Sky「日曜のアンフィールド」と一致。
+#   ・Sky: 1月の補強はクラブが後押しする見込みと Sky Sports News が報じた（左SB・CB・FW を狙うとも）。→ 台本は「Sky が報じた」と伝聞で一文だけ。ポジションは言わない。
+# 前の本との重なり: 11/11 manutd_carrick_pochettino（就任の噂）・11/14 pochettino_tears（米国代表を去る涙の会見と就任発表）・11/16 manager_pochettino（監督紹介）と重ねない。
+#   今回の初出: マンUの人間としての最初のインタビューの中身（可能性を見る・今いる選手を愛する・勇敢にアンフィールドへ）。涙・米国代表・契約年数・解任されたキャリックの話は入れない。
+# 【言わないこと】涙・米国代表・契約・キャリックの話／補強の具体名／ドローン映像（別の話）／取材した場所／本人が言っていない「何をどう変えるか」の中身（戦術・布陣）／前任者への評価（BBC の分析部分は BBC の見方で本人の言葉ではない）。
+# 写真の出どころ（目で見た）: 01〜03＝Commons（2026年6〜7月の米国代表の試合。今回の会見の写真ではない）／04＝Commons（USMNT v Belgium 2026-03-28）。いずれも米国代表監督時代。BBC の主写真は「Getty Images」と明記のため外した。
+# 本人の言葉: あり（Sky・BBC）。Y。
+# 反応: 0件（作らない。approve は --no-voices）。
+slot: foreign
+date: "2026年11月20日"
+format: news
+no_main: true
+people: [ポチェッティーノ, マンチェスター・ユナイテッド, リヴァプール]
+
+short_style: Y
+short_hook_quote: 物事を変えていくとき
+short_photos:
+  - assets/images/20261120_pochettino_manutd_first_words/04_v.jpg
+  - assets/images/20261120_pochettino_manutd_first_words/02_v.jpg
+  - assets/images/20261120_pochettino_manutd_first_words/03_v.jpg
+short_question: ポチェッティーノのマンUは、日曜のアンフィールドで勇敢に戦えると思いますか。
+short_telops: []
+
+theme:
+  id: pochettino_manutd_first_words
+  league: england
+  league_name: プレミアリーグ
+  prefix: ""
+  title: ポチェッティーノ、マンU最初のインタビューで「物事を変えていくときだ」
+  hook: ""
+  question: ポチェッティーノは、マンUでの最初のインタビューで何を語ったのか
+  takeaway: 語ったのは状況ではなく可能性、補強ではなく今いる選手を愛すること。マンUは18位・10試合で1勝（勝点8）。最初の試合は22日のアンフィールドで、「勇敢に」の言葉が試される
+
+thumbnail:
+  layout: face
+  line1: ポチェッティーノ マンU
+  line2: 「物事を変える」
+  tags: [ポチェッティーノ, マンチェスター・ユナイテッド]
+  photo: assets/images/20261120_pochettino_manutd_first_words/04_w.jpg
+  short_photo: assets/images/20261120_pochettino_manutd_first_words/04_v.jpg
+
+answer: 状況ではなく可能性を見る。今いる選手を愛し、アンフィールドへ勝つつもりで行く
+watch: 22日、アンフィールドでのリヴァプール戦
+
+sections:
+  - id: what
+    main: true
+    heading: ポチェッティーノは、マンUでの最初のインタビューで何を語ったのか
+    tier: 報道
+    telop: ポチェッティーノ「物事を変えていくときだ」
+    say:
+      - text: マンU新監督のポチェッティーノが、最初のインタビューに答えました。
+        image: assets/images/20261120_pochettino_manutd_first_words/04_w.jpg
+      - text: マンUは18位。10試合で1勝です。
+        image: assets/images/20261120_pochettino_manutd_first_words/02_w.jpg
+        card: {type: table, title: プレミアリーグ 10試合を終えて, columns: [順位, クラブ, 勝, 勝点], rows: [[17位, コヴェントリー, 3, 9], [18位, マンU, 1, 8], [19位, サンダーランド, 2, 8]], highlight_row: 1}
+      - voice: ポチェッティーノ
+        text: 状況を見るのは、間違いです。
+      - voice: ポチェッティーノ
+        text: このクラブの可能性を見なければいけません。
+        cont: true
+        emph: true
+      - voice: ポチェッティーノ
+        text: 行動を起こして、物事を変えていくときです。
+        card: none
+        image: assets/images/20261120_pochettino_manutd_first_words/04_w.jpg
+      - voice: ポチェッティーノ
+        text: そして、勝つという感覚を取り戻せると、
+        cont: true
+      - voice: ポチェッティーノ
+        text: 本当に信じることです。
+        cont: true
+        emph: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13613821/mauricio-pochettino-at-manchester-united-new-boss-vows-to-change-situation-at-old-trafford-in-first-interview
+      - https://www.bbc.co.uk/sport/football/articles/cxlylzyg38l8o
+  - id: players
+    heading: ポチェッティーノは、選手と最初の試合をどう語ったのか
+    tier: 報道
+    telop: 今いる選手を愛し、アンフィールドへ勝ちに行く
+    say:
+      - text: 選手については、こう語っています。
+      - voice: ポチェッティーノ
+        text: 私たちが持っている選手たちを、愛さなければいけません。
+        image: assets/images/20261120_pochettino_manutd_first_words/02_w.jpg
+      - voice: ポチェッティーノ
+        text: 選手を支えて、力を出すための道具を、
+        cont: true
+      - voice: ポチェッティーノ
+        text: すべてそろえる必要があります。
+        cont: true
+      - text: 最初の試合は22日、敵地アンフィールドでのリヴァプール戦です。
+        image: assets/images/20261120_pochettino_manutd_first_words/03_w.jpg
+      - voice: ポチェッティーノ
+        text: 勝つつもりで、勇敢に、
+        image: assets/images/20261120_pochettino_manutd_first_words/04_w.jpg
+        emph: true
+      - voice: ポチェッティーノ
+        text: マンチェスター・ユナイテッドらしく戦います。
+        cont: true
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13613821/mauricio-pochettino-at-manchester-united-new-boss-vows-to-change-situation-at-old-trafford-in-first-interview
+      - https://www.bbc.co.uk/sport/football/articles/cxlylzyg38l8o
+  - id: view
+    viewpoint: true
+    heading: 「変える」と言ったポチェッティーノは、最初の試合で何を見せるのか
+    tier: 背景
+    telop: 勝点8の18位から、勝点18の4位のアンフィールドへ
+    say:
+      - text: 見立てです。ポチェッティーノが語ったのは、状況の分析ではなく、選手と姿勢でした。
+        card: {type: table, title: 最初の試合の前に並ぶ数字（10試合を終えて）, columns: [クラブ, 勝, 勝点, 順位], rows: [[マンU, 1, 8, 18位], [リヴァプール, 5, 18, 4位]], highlight_row: 0}
+        image: assets/images/20261120_pochettino_manutd_first_words/04_w.jpg
+      - text: 1月の補強は、後押しされる見込みとイギリスの放送局が伝えています。
+      - text: ただ、本人が語ったのは、今いる選手のことでした。
+      - text: 勝点は、マンUが8、リヴァプールが18で、10点の差です。
+        card: none
+        emph: true
+      - text: 本拠地アンフィールドの最初の試合で、「勇敢に」は通じるのか。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13613821/mauricio-pochettino-at-manchester-united-new-boss-vows-to-change-situation-at-old-trafford-in-first-interview
+      - https://www.espn.com/soccer/standings/_/league/eng.1

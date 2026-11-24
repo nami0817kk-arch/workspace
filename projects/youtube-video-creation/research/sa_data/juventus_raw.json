@@ -1,0 +1,685 @@
+{
+ "club_title": "Juventus_FC",
+ "season_title": "2026–27_Juventus_FC_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "POL",
+   "name": "Kamil Grabara",
+   "page": "Kamil Grabara",
+   "dob": "1999-01-08",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "TUR",
+   "name": "Zeki Çelik",
+   "page": "Zeki Çelik",
+   "dob": "1997-02-17",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Bremer",
+   "page": "Gleison Bremer",
+   "dob": "1997-03-18",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Federico Gatti",
+   "page": "Federico Gatti",
+   "dob": "1998-06-24",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "5",
+   "pos": "MF",
+   "nat": "ITA",
+   "name": "Manuel Locatelli",
+   "page": "Manuel Locatelli",
+   "dob": "1998-01-08",
+   "captain": true,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Lloyd Kelly",
+   "page": "Lloyd Kelly",
+   "dob": "1998-10-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "POR",
+   "name": "Francisco Conceição",
+   "page": "Francisco Conceição",
+   "dob": "2002-12-14",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Teun Koopmeiners",
+   "page": "Teun Koopmeiners",
+   "dob": "1998-02-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Randal Kolo Muani",
+   "page": "Randal Kolo Muani",
+   "dob": "1998-12-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "TUR",
+   "name": "Kenan Yıldız",
+   "page": "Kenan Yıldız",
+   "dob": "2005-05-04",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "KOS",
+   "name": "Edon Zhegrova",
+   "page": "Edon Zhegrova",
+   "dob": "1999-03-31",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "12",
+   "pos": "MF",
+   "nat": "BRA",
+   "name": "Douglas Luiz",
+   "page": "Douglas Luiz",
+   "dob": "1998-05-09",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "13",
+   "pos": "FW",
+   "nat": "CIV",
+   "name": "Jérémie Boga",
+   "page": "Jérémie Boga",
+   "dob": "1997-01-03",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "POL",
+   "name": "Arkadiusz Milik",
+   "page": "Arkadiusz Milik",
+   "dob": "1994-02-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Pierre Kalulu",
+   "page": "Pierre Kalulu",
+   "dob": "2000-06-05",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "BIH",
+   "name": "Kerim Alajbegović",
+   "page": "Kerim Alajbegović",
+   "dob": "2007-09-21",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "18",
+   "pos": "FW",
+   "nat": "ITA",
+   "name": "Jeff Ekhator",
+   "page": "Jeff Ekhator",
+   "dob": "2006-11-11",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "19",
+   "pos": "MF",
+   "nat": "FRA",
+   "name": "Khéphren Thuram",
+   "page": "Khéphren Thuram",
+   "dob": "2001-03-26",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Andrea Cambiaso",
+   "page": "Andrea Cambiaso",
+   "dob": "2000-02-20",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "22",
+   "pos": "MF",
+   "nat": "USA",
+   "name": "Weston McKennie",
+   "page": "Weston McKennie",
+   "dob": "1998-08-28",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "23",
+   "pos": "GK",
+   "nat": "ITA",
+   "name": "Carlo Pinsoglio",
+   "page": "Carlo Pinsoglio",
+   "dob": "1990-03-16",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Daniele Rugani",
+   "page": "Daniele Rugani",
+   "dob": "1994-07-29",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "25",
+   "pos": "GK",
+   "nat": "ITA",
+   "name": "Guglielmo Vicario",
+   "page": "Guglielmo Vicario",
+   "dob": "1996-10-07",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "COL",
+   "name": "Jhon Lucumí",
+   "page": "Jhon Lucumí",
+   "dob": "1998-06-26",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "27",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Nick Woltemade",
+   "page": "Nick Woltemade",
+   "dob": "2002-02-14",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "29",
+   "pos": "MF",
+   "nat": "SEN",
+   "name": "Pape Matar Sarr",
+   "page": "Pape Matar Sarr",
+   "dob": "2002-09-14",
+   "captain": false,
+   "loan": true,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "31",
+   "pos": "FW",
+   "nat": "ARG",
+   "name": "Nico González",
+   "page": "Nicolás González (footballer, born 1998)",
+   "dob": "1998-04-06",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "32",
+   "pos": "DF",
+   "nat": "COL",
+   "name": "Juan Cabal",
+   "page": "Juan Cabal",
+   "dob": "2001-01-08",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "33",
+   "pos": "GK",
+   "nat": "BRA",
+   "name": "Neto",
+   "page": "Neto (footballer, born 1989)",
+   "dob": "1989-07-19",
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
+  }
+ ],
+ "results": [
+  [
+   "23 August 2026",
+   "1",
+   "Frosinone",
+   "0–1",
+   "Juventus"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Juventus",
+   "2–0",
+   "Parma"
+  ],
+  [
+   "6 September 2026",
+   "3",
+   "Juventus",
+   "1–1",
+   "Milan"
+  ],
+  [
+   "13 September 2026",
+   "4",
+   "Sassuolo",
+   "3–2",
+   "Juventus"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Juventus",
+   "2–0",
+   "Atalanta"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "Cagliari",
+   "1–1",
+   "Juventus"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Juventus",
+   "0–3",
+   "Lazio"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Lecce",
+   "0–2",
+   "Juventus"
+  ],
+  [
+   "28 October 2026",
+   "9",
+   "Genoa",
+   "2–0",
+   "Juventus"
+  ],
+  [
+   "1 November 2026",
+   "10",
+   "Juventus",
+   "2–0",
+   "Napoli"
+  ],
+  [
+   "8 November 2026",
+   "11",
+   "Fiorentina",
+   "2–2",
+   "Juventus"
+  ],
+  [
+   "22 November 2026",
+   "12",
+   "Juventus",
+   "",
+   "Venezia"
+  ],
+  [
+   "29 November 2026",
+   "13",
+   "Como",
+   "",
+   "Juventus"
+  ],
+  [
+   "6 December 2026",
+   "14",
+   "Juventus",
+   "",
+   "Udinese"
+  ],
+  [
+   "14 December 2026",
+   "15",
+   "Juventus",
+   "",
+   "Monza"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Roma",
+   "",
+   "Juventus"
+  ],
+  [
+   "3 January 2027",
+   "17",
+   "Bologna",
+   "",
+   "Juventus"
+  ],
+  [
+   "6 January 2027",
+   "18",
+   "Juventus",
+   "",
+   "Torino"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Internazionale",
+   "",
+   "Juventus"
+  ],
+  [
+   "16 January 2027",
+   "20",
+   "Juventus",
+   "",
+   "Genoa"
+  ],
+  [
+   "23 January 2027",
+   "21",
+   "Juventus",
+   "",
+   "Cagliari"
+  ],
+  [
+   "30 January 2027",
+   "22",
+   "Milan",
+   "",
+   "Juventus"
+  ],
+  [
+   "6 February 2027",
+   "23",
+   "Juventus",
+   "",
+   "Sassuolo"
+  ],
+  [
+   "13 February 2027",
+   "24",
+   "Napoli",
+   "",
+   "Juventus"
+  ],
+  [
+   "20 February 2027",
+   "25",
+   "Juventus",
+   "",
+   "Bologna"
+  ],
+  [
+   "27 February 2027",
+   "26",
+   "Monza",
+   "",
+   "Juventus"
+  ],
+  [
+   "6 March 2027",
+   "27",
+   "Juventus",
+   "",
+   "Roma"
+  ],
+  [
+   "13 March 2027",
+   "28",
+   "Lazio",
+   "",
+   "Juventus"
+  ],
+  [
+   "20 March 2027",
+   "29",
+   "Juventus",
+   "",
+   "Como"
+  ],
+  [
+   "3 April 2027",
+   "30",
+   "Torino",
+   "",
+   "Juventus"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Juventus",
+   "",
+   "Lecce"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Venezia",
+   "",
+   "Juventus"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Juventus",
+   "",
+   "Fiorentina"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Atalanta",
+   "",
+   "Juventus"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Udinese",
+   "",
+   "Juventus"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Juventus",
+   "",
+   "Internazionale"
+  ],
+  [
+   "22 May 2027",
+   "37",
+   "Parma",
+   "",
+   "Juventus"
+  ],
+  [
+   "29 May 2027",
+   "38",
+   "Juventus",
+   "",
+   "Frosinone"
+  ],
+  [
+   "3 December 2026",
+   "Round of 16",
+   "Juventus",
+   "",
+   "Sassuolo"
+  ],
+  [
+   "17 September 2026",
+   "1",
+   "Juventus",
+   "5–0",
+   "NEC"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "Celta Vigo",
+   "1–2",
+   "Juventus"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "Juventus",
+   "2–2",
+   "Rennes"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "AZ",
+   "1–2",
+   "Juventus"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "Juventus",
+   "",
+   "Omonia"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Hapoel Be'er Sheva",
+   "",
+   "Juventus"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Ferencváros",
+   "",
+   "Juventus"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "Juventus",
+   "",
+   "Real Sociedad"
+  ]
+ ]
+}

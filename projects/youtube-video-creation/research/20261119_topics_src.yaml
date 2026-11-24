@@ -1,0 +1,74 @@
+title: 11月19日のショート題材（Claude選）
+lead: 森保ジャパン最終戦の翌日、選手たちの言葉を中心に日本人6本・海外4本を選びました。
+note: 確認なしの運用（11/4〜）のため、Claude が選んだ結果です。日本人の題は 9〜17時の枠、海外は18時以降の枠。外した題：久保・堂安・田中・福田・伊東・森保の最終戦の言葉（11/18に扱い済み）／ルカク引退（扱い済み）／ギュレルの契約延長（9月に扱い済み）／ルーニーの告白（動画向きでない）／ハーランド（直近に重ねている）／高校選手権・J・女子。次点：プリシッチのバイシクル弾、上田綺世の復帰。
+items:
+- num: 1
+  slot: 日本人（代表）
+  head: 南野拓実「W杯の苦い記憶は箱にしまっている」。悪夢を払う2030年へ
+  why: ゲキサカ（18日）。条件：代表・W杯・本人の言葉。11/17までの南野の話は試合と森保への感謝で、今回は2030年への決意（別の出来事）。
+  src: ゲキサカ
+  url: https://web.gekisaka.jp/news/japan/detail/?463397-463397-fl
+  fmt: quote
+- num: 2
+  slot: 日本人（代表）
+  head: 森保監督が帰国。「これから就活頑張ります」。欧州からの打診も認める
+  why: ゲキサカ・フットボールチャンネル（18〜19日）。条件：代表・本人の言葉。最終戦の言葉（11/18）とは別の、帰国後の発言。
+  src: ゲキサカ、フットボールチャンネル
+  url: https://web.gekisaka.jp/news/japan/detail/?463440-463440-fl
+  fmt: quote
+- num: 3
+  slot: 日本人（代表）
+  head: 佐野航大、A代表で過去最長プレー。久保建英も称賛「結果が常に求められる世界」
+  why: ゲキサカ（18日）。条件：代表・本人の言葉・久保の名前。
+  src: ゲキサカ
+  url: https://web.gekisaka.jp/news/japan/detail/?463406-463406-fl
+  fmt: quote
+- num: 4
+  slot: 日本人（代表）
+  head: 21歳FW後藤啓介、中1で発足した森保Jでの「夢みたいな時間」
+  why: ゲキサカ（18日）。条件：代表・本人の言葉。
+  src: ゲキサカ
+  url: https://web.gekisaka.jp/news/japan/detail/?463420-463420-fl
+  fmt: quote
+- num: 5
+  slot: 日本人（代表）
+  head: 鈴木淳之介「人生を変えてくれた」。森保Jラストマッチに悔い
+  why: ゲキサカ（18日）。条件：代表・本人の言葉。
+  src: ゲキサカ
+  url: https://web.gekisaka.jp/news/japan/detail/?463414-463414-fl
+  fmt: quote
+- num: 6
+  slot: 日本人（代表）
+  head: 鈴木唯人、A代表で初のトップ下。「もうちょっと打開策はあった」
+  why: ゲキサカ（18日）。条件：代表・本人の言葉。
+  src: ゲキサカ
+  url: https://web.gekisaka.jp/news/japan/detail/?463404-463404-fl
+  fmt: quote
+- num: 7
+  slot: 海外
+  head: フアン・マタが38歳で現役引退。W杯もCLも制し、神戸にも在籍
+  why: サッカーキング・フットボールチャンネル・BBC（18日）。条件：本人の言葉（別れの挨拶）・記録。日本（神戸）とのつながり。
+  src: サッカーキング、フットボールチャンネル、BBC
+  url: https://www.soccer-king.jp/news/world/esp/20261118/2229445.html
+  fmt: news
+- num: 8
+  slot: 海外
+  head: ニコ・パス、左右の足で2発。「メッシの後継者」と呼ばれるアルゼンチン代表MF
+  why: ESPN・フットボールチャンネル（18日）。条件：大物（メッシの名前）。コモの所属で欧州7リーグ内。
+  src: ESPN、フットボールチャンネル
+  url: https://www.footballchannel.jp/2026/11/18/post1058265/
+  fmt: news
+- num: 9
+  slot: 海外
+  head: ブルーノ・フェルナンデス、ポルトガル代表で30ゴール。到達は史上5人目
+  why: A Bola（18日）。条件：記録・大物（ブルーノ）。数字は一次で確かめる。
+  src: A Bola
+  url: https://www.abola.pt/noticias/bruno-fernandes-e-apenas-o-quinto-a-chegar-aos-30-golos-2026111817331751039
+  fmt: news
+- num: 10
+  slot: 海外
+  head: アーセナルのPKが見逃されていた。ハル戦のハヴァーツのオフサイド判定は誤りと発表
+  why: サッカーキング（18日）。条件：大物クラブ。公式発表の事実を確かめる。弱ければ次点（プリシッチのバイシクル弾）へ。
+  src: サッカーキング
+  url: https://www.soccer-king.jp/news/world/eng/20261118/2229471.html
+  fmt: news
