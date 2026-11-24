@@ -352,7 +352,7 @@
     };
   }
 
-  // ---------- 画面（設定の「ショップ」と、ホームのご褒美の動画） ----------
+  // ---------- 画面（ほか → ショップと、ご褒美の動画） ----------
   const U = () => YA._ui;
   const h = (...a) => U().h(...a);
   const rerender = () => U().render();
@@ -496,7 +496,7 @@
       return box;
     });
   }
-  // ご褒美の動画（ホームの右列に足す）
+  // ご褒美の動画（ショップの画面の下に出す）
   YA.rewardCard = function (w) {
     const st = U().store;
     const left = YA.rewardLeft(st);
