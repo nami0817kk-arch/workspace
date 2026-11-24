@@ -143,7 +143,7 @@ extension GameLocal on Game {
             c.locRivPct = buy;
             f.cash -= c.cap * buy / 100;
             tieRec(f, 'h', M('現地法人{0}の株を買われた', [Nm(c.name)]));
-            N(M('{0}（{1}）が、上場した現地法人{2}の株を{3}買いました', [Nm(f.rival!.pres), Nm(f.name), Nm(c.name), pct(buy)]), 'bad');
+            N(M('{0}（{1}）が、上場した現地法人{2}の株を{3}買いました', [Nm(f.presName), Nm(f.name), Nm(c.name), pct(buy)]), 'bad');
           }
         }
       } else if (float > .5 && foe.cash > 0 && rnd() < .08 * dif.t) {
@@ -194,7 +194,7 @@ extension GameLocal on Game {
             th >= 25
                 ? '{0}（{1}）が、{2}の現地法人{3}の株を{4}まで買い集めました。「経営に口を出させてもらう。いやなら、あなたの持ち株を高く買ってやろう」と言っています。'
                 : '{0}（{1}）が、{2}の現地法人{3}の株を{4}まで買い集めています。',
-            [Nm(r.pres), Nm(f.name), C(c.loc!), Nm(c.name), pct(c.locRivPct)]),
+            [Nm(f.presName), Nm(f.name), C(c.loc!), Nm(c.name), pct(c.locRivPct)]),
         choices: [
           Choice(M('株を買い戻す'), M('{0}を払い、相手の持ち分をすべて引き取る', [Y(cost)]), () => localBuyback(c)),
           if (th >= 25)
@@ -349,12 +349,12 @@ extension GameLocal on Game {
       if (fc != null && fc.rival != null) {
         o['talk'] = (
           l: M('相手の社長と話し合う'),
-          say: M('争えば双方が傷つきます。一度、{0}と腹を割って話すべきです', [Nm(fc.rival!.pres)]),
+          say: M('争えば双方が傷つきます。一度、{0}と腹を割って話すべきです', [Nm(fc.presName)]),
           d: M('お金はかからない。相手との関係が良くなり、買い進める気が弱まることがある'),
           f: () {
             fc.rel += 20;
             tieRec(fc, 'f', M('臨時の会議のあと、話し合いに出向いた'));
-            return M('{0}と話し合い、関係が少し和らぎました', [Nm(fc.rival!.pres)]);
+            return M('{0}と話し合い、関係が少し和らぎました', [Nm(fc.presName)]);
           },
         );
       }
@@ -498,7 +498,7 @@ extension GameLocal on Game {
     }
     if (picks.length < 2) return null;
     final why = switch (kind) {
-      'takeover' => M('{0}（{1}）の持ち分が{2}になり、{3}%に近づいています', [Nm(foe!.rival!.pres), Nm(foe.name), pct(sh.riv[foe.id] ?? 0), jsNum(near)]),
+      'takeover' => M('{0}（{1}）の持ち分が{2}になり、{3}%に近づいています', [Nm(foe!.presName), Nm(foe.name), pct(sh.riv[foe.id] ?? 0), jsNum(near)]),
       'scandal' => M('不祥事で信用が揺らぎ、株価も下がっています（あと{0}か月は響きます）', [scandal]),
       _ => M('赤字が続き、手元の資金はあと{0}か月分ほどしかありません', [pre < 0 ? jsNum(math.min(99, (math.max(0.0, cash) / -pre).floorToDouble())) : 0]),
     };

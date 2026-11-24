@@ -1,7 +1,10 @@
 // ignore_for_file: constant_identifier_names
-/// 人の顔の絵（assets/faces/）と、その割り当て方（1.0.0+21。1.0.0+22 で160枚に増やした）。
+/// 人の顔の絵（assets/faces/）と、その割り当て方（1.0.0+21。1.0.0+22 で160枚に増やした。
+/// 1.0.0+23 で、本人と絵の年の差を12歳までにし、見た目の地域と年を直した）。
 /// Flutter に依存しない。ゲームの乱数は使わず、名前と年齢と「すでに使われている顔」だけで決まる。
 library;
+
+import 'dart:math' as math;
 
 import 'data.dart';
 
@@ -18,32 +21,33 @@ class FacePic {
   /// 描かれた年齢
   final int age;
   const FacePic(this.id, this.region, this.sex, this.age);
-
-  /// 絵の年代（0 若い・1 中年・2 老年）
-  int get band => age <= 32 ? 0 : (age <= 52 ? 1 : 2);
 }
 
 /// 顔の絵の一覧（素材の faces.json と同じ。全部で160枚）
 const List<FacePic> FACES = [
   FacePic('ea_0', 'ea', 'm', 25), FacePic('ea_1', 'ea', 'm', 45), FacePic('ea_2', 'ea', 'm', 65),
   FacePic('ea_3', 'ea', 'f', 25), FacePic('ea_4', 'ea', 'f', 45), FacePic('ea_5', 'ea', 'f', 65),
-  FacePic('ea_6', 'ea', 'm', 35), FacePic('ea_7', 'ea', 'f', 35), FacePic('ea_8', 'ea', 'm', 55),
+  // ea_8 は30代の東南アジアの男に見える（1.0.0+23 で直した。ファイル名はそのまま）
+  FacePic('ea_6', 'ea', 'm', 35), FacePic('ea_7', 'ea', 'f', 35), FacePic('ea_8', 'sea', 'm', 38),
   FacePic('we_0', 'we', 'm', 25), FacePic('we_1', 'we', 'm', 45), FacePic('we_2', 'we', 'm', 65),
   // we_4・we_5 は見た目が東アジアなので東アジア（1.0.0+22 で直した。ファイル名はそのまま）
   FacePic('we_3', 'we', 'f', 25), FacePic('we_4', 'ea', 'f', 45), FacePic('we_5', 'ea', 'f', 65),
-  FacePic('we_6', 'we', 'm', 35), FacePic('we_7', 'we', 'f', 35), FacePic('we_8', 'we', 'm', 55),
-  FacePic('sa_0', 'sa', 'm', 25), FacePic('sa_1', 'sa', 'm', 45), FacePic('sa_2', 'sa', 'm', 65),
-  FacePic('sa_3', 'sa', 'f', 25), FacePic('sa_4', 'sa', 'f', 45), FacePic('sa_5', 'sa', 'f', 65),
-  FacePic('sa_6', 'sa', 'm', 35), FacePic('sa_7', 'sa', 'f', 35), FacePic('sa_8', 'sa', 'm', 55),
+  // we_8・sa_8・mx_8 は白髪の無い40歳前後に描かれている（1.0.0+23 で年を直した）
+  FacePic('we_6', 'we', 'm', 35), FacePic('we_7', 'we', 'f', 35), FacePic('we_8', 'we', 'm', 42),
+  // sa_2 は見た目が欧米（we_2 とほぼ同じ絵）、sa_4・sa_5・sa_7 は見た目が東アジア（sa_4・sa_5 は ea_4・ea_5 とほぼ同じ絵）。1.0.0+23 で直した
+  FacePic('sa_0', 'sa', 'm', 25), FacePic('sa_1', 'sa', 'm', 45), FacePic('sa_2', 'we', 'm', 65),
+  FacePic('sa_3', 'sa', 'f', 25), FacePic('sa_4', 'ea', 'f', 45), FacePic('sa_5', 'ea', 'f', 65),
+  FacePic('sa_6', 'sa', 'm', 35), FacePic('sa_7', 'ea', 'f', 35), FacePic('sa_8', 'sa', 'm', 45),
   FacePic('af_0', 'af', 'm', 25), FacePic('af_1', 'af', 'm', 45), FacePic('af_2', 'af', 'm', 65),
   FacePic('af_3', 'af', 'f', 25), FacePic('af_4', 'af', 'f', 45), FacePic('af_5', 'af', 'f', 65),
   FacePic('af_6', 'af', 'm', 35), FacePic('af_7', 'af', 'f', 35), FacePic('af_8', 'af', 'm', 55),
   FacePic('mx_0', 'me', 'm', 25), FacePic('mx_1', 'me', 'm', 45), FacePic('mx_2', 'me', 'm', 65),
   FacePic('mx_3', 'la', 'f', 25), FacePic('mx_4', 'la', 'f', 45), FacePic('mx_5', 'la', 'f', 65),
-  FacePic('mx_6', 'me', 'f', 40), FacePic('mx_7', 'la', 'm', 35), FacePic('mx_8', 'sea', 'm', 50),
+  FacePic('mx_6', 'me', 'f', 40), FacePic('mx_7', 'la', 'm', 35), FacePic('mx_8', 'sea', 'm', 40),
   FacePic('ea2_0', 'ea', 'm', 30), FacePic('ea2_1', 'ea', 'm', 50), FacePic('ea2_2', 'ea', 'm', 70),
   FacePic('ea2_3', 'ea', 'f', 28), FacePic('ea2_4', 'ea', 'f', 50), FacePic('ea2_5', 'ea', 'f', 70),
-  FacePic('ea2_6', 'ea', 'm', 22), FacePic('ea2_7', 'ea', 'f', 40), FacePic('ea2_8', 'ea', 'm', 60),
+  // ea2_8 は見た目が欧米（we2_8 とほぼ同じ絵。1.0.0+23 で直した）
+  FacePic('ea2_6', 'ea', 'm', 22), FacePic('ea2_7', 'ea', 'f', 40), FacePic('ea2_8', 'we', 'm', 60),
   FacePic('we2_0', 'we', 'm', 30), FacePic('we2_1', 'we', 'm', 55), FacePic('we2_2', 'we', 'm', 75),
   FacePic('we2_3', 'we', 'f', 27), FacePic('we2_4', 'we', 'f', 50), FacePic('we2_5', 'we', 'f', 70),
   FacePic('we2_6', 'we', 'm', 22), FacePic('we2_7', 'we', 'f', 40), FacePic('we2_8', 'we', 'm', 60),
@@ -88,9 +92,6 @@ final Map<String, FacePic> faceById = {for (final f in FACES) f.id: f};
 
 /// 絵のファイルの場所
 String faceAsset(String id) => 'assets/faces/$id.png';
-
-/// 人の年代（0 〜34歳・1 35〜54歳・2 55歳〜）。絵が替わるのは、この境をまたぐ35歳と55歳の2回だけ
-int ageBand(num age) => age < 35 ? 0 : (age < 55 ? 1 : 2);
 
 /// 名前の決まったハッシュ（FNV-1a の32ビット。端末・起動ごとに変わらない）
 int nameHash(String s) {
@@ -193,35 +194,58 @@ String faceRegion(String name, {String? home}) {
   return name.contains('・') ? 'we' : 'ea';
 }
 
-/// 年の合う自分の地域の絵が空いていないとき、年の差を広げる前に借りる近い地域
-/// （1.0.0+22: 東南アジアが13枚になったので東アジアと混ぜるのをやめ、東南アジア → 東アジアの順にした。
-///  中南米は欧米、中東は南アジアから。どちらも13〜16枚になったので、借りるのは年の合う自分の絵が尽きたときだけ）
+/// 年の合う自分の地域の絵が空いていないとき、同じ顔を重ねる前に借りてよい近い地域。
+/// 1.0.0+23 から、借りるのは中南米 → 欧米・中東 → 南アジアだけ。
+/// 東アジアと東南アジアは互いに借りない（肌の色と顔立ちが違って見える。足りなければ自分の地域の中で重ねる）
 const Map<String, List<String>> _secondary = {
-  'sea': ['ea'],
   'la': ['we'],
   'me': ['sa'],
 };
 
-/// 年の差を広げても自分の地域の絵が空いていないときだけ借りる地域（重ねる前の最後）。
-/// 東アジアの人に東南アジアの絵を借りるのは、東アジアの空きが本当に無いときだけ
-const Map<String, List<String>> _lastResort = {
-  'ea': ['sea'],
-};
-
 const _regions = {'ea', 'we', 'sa', 'af', 'me', 'la', 'sea'};
 
+/// ほぼ同じ絵（色だけ違う・ひげだけ違う）の組。並べると同じ顔に見えるので、重なりを数えるときは1つとみる
+const Map<String, String> _sameLook = {
+  'we_4': 'ea_4', 'sa_4': 'ea_4', 'we_5': 'ea_5', 'sa_5': 'ea_5',
+  'ea2_8': 'we2_8', 'sa_2': 'we_2', 'we2_4': 'ea2_4',
+};
+
+/// 見た目で数えるときの絵の id（ほぼ同じ絵の組は、代表の1つにまとめる）
+String faceLook(String id) => _sameLook[id] ?? id;
+
+/// 本人と絵の年の差の上限。これを超えたら、その時点で年の近い絵に替える（1.0.0+23 から。それまでは35歳・55歳の2回だけ替えていた）
+const faceGapMax = 12;
+
+/// 替えた絵を少なくとも保つ年数（年の近い絵を選ぶとき、この年数のうちに上限を超える若い絵は後回しにする）
+const faceHoldYears = 3;
+
+String _reg(String region) => _regions.contains(region) ? region : 'we';
+
 /// 絵 [id] が地域 [region] の人に使ってよい絵か（自分の地域か、借りてよい地域）。
-/// 1.0.0+21 までのセーブで、地域を直した絵（we_4・we_5）を欧米の人が持っていたら選び直すのに使う
+/// 古いセーブで、地域を直した絵（we_4・we_5・ea_8 など）や東南アジア ⇔ 東アジアで借りた絵を持っていたら選び直すのに使う
 bool faceFits(String? id, String region) {
   final f = faceById[id];
   if (f == null) return false;
-  final reg = _regions.contains(region) ? region : 'we';
-  return f.region == reg || (_secondary[reg]?.contains(f.region) ?? false) || (_lastResort[reg]?.contains(f.region) ?? false);
+  final reg = _reg(region);
+  return f.region == reg || (_secondary[reg]?.contains(f.region) ?? false);
 }
 
-/// ふつうに使う年の差の幅（近い地域から借りるのもこの幅の中だけ）と、
-/// 空きが無いときに広げる幅（本人より年上の絵は20歳まで・年下の絵は25歳まで）
-const _ageSpan = 15, _olderMax = 20, _youngerMax = 25;
+double _gap(FacePic f, num age) => (f.age - age).abs().toDouble();
+
+final _limits = <String, double>{};
+
+/// 地域 [region]・性別 [sex] の [age] 歳の人に許す、本人と絵の年の差。ふつうは [faceGapMax]（12歳）。
+/// 使ってよい絵（借りてよい地域も）にそれより近いものが1枚も無いとき（とても年をとった人など）だけ、いちばん近い絵までの差
+double faceGapLimit(String region, String sex, num age) {
+  final reg = _reg(region);
+  return _limits.putIfAbsent('$reg/$sex/$age', () {
+    var best = double.infinity;
+    for (final f in FACES) {
+      if (f.sex == sex && faceFits(f.id, reg)) best = math.min(best, _gap(f, age));
+    }
+    return math.max(best, faceGapMax.toDouble());
+  });
+}
 
 /// 年齢の違う別の人を並べた組（0→1→2 が同じ人ではない）
 const _ladderSets = {'eaf', 'eam', 'wef', 'wem', 'af3'};
@@ -241,58 +265,86 @@ String? faceNext(String id) {
   return next;
 }
 
-/// 顔を選び直すときか。[band] は顔を決めたときの年代（人に保存してある）。
-/// 年代をまたいだ（35歳・55歳になった）ときと、絵が無い・知らない絵（素材から消えた）のときだけ true。
-/// 決めたときの年代で比べるので、絵が替わるのは一生で2回まで
-bool faceStale(String? id, int? band, num age) => id == null || band == null || !faceById.containsKey(id) || ageBand(age) > band;
+/// 顔を選び直すときか。絵が無い・知らない絵（素材から消えた）・性別か地域の合わない絵・
+/// 本人との年の差が [faceGapLimit]（ふつうは12歳）を超えた絵のとき true。
+/// 年の差を超えたその時点で替える（1.0.0+23 から。それまでは35歳・55歳の2回だけだった）
+bool faceStale(String? id, num age, {required String region, required String sex}) {
+  final f = faceById[id];
+  if (f == null || f.sex != sex || !faceFits(id, region)) return true;
+  return _gap(f, age) > faceGapLimit(region, sex, age);
+}
 
-/// 顔を1つ選ぶ。
-/// ・地域 [region] と性別 [sex] の絵の中から、今の年齢 [age] にいちばん近いもの（6歳までの差は同じとみて、名前のハッシュで分ける。
-///   年代より若い絵は8歳ぶん遠いものとして数え、同じ年代か上の年代の絵を先に選ぶ）
-/// ・[used]（同じ会社の人・宿敵どうしがもう使っている顔と、その人数）にあるものは避ける
-/// ・年の合う空きが無ければ、近い地域から借りる → 年の差の幅を広げる →（東アジアだけ）東南アジアから借りる →
-///   それでも空きが無ければ、年の合う絵のうち使われている数のいちばん少ないものを重ねる
-/// ・[prev]（今までの絵）があれば、同じ人が年をとった続きの絵を先に見る
-String pickFace({required String name, required num age, required String region, required String sex, Map<String, int> used = const {}, String? prev}) {
-  final band = ageBand(age);
-  final h = nameHash(name);
-  double d(FacePic f) {
-    // 老年の人には、老年の絵ならどれでも合う（80歳でも70歳の絵でよい）
-    if (band == 2 && f.band == 2) return (f.age - age).abs().clamp(0, _ageSpan).toDouble();
-    return ((f.age - age).abs() + (f.band < band ? 8 : 0)).toDouble();
+/// 同じ画面で顔が重なっている人の、重なりの少ない絵（この先 [faceHoldYears] 年は年の差の上限を超えない絵のうち、
+/// [shared]（同じ画面でその絵を使っている人数。鍵は [faceLook]）のいちばん少ないもの。
+/// 同じ数なら、ほかの画面の人（[used] の重さが [shared] の2倍を超える分）が使っていないもの → 自分の地域 → 年の近いもの → 名前のハッシュ）
+String? faceLeastShared(
+    {required String name, required num age, required String region, required String sex, required Map<String, int> shared, Map<String, int> used = const {}}) {
+  final reg = _reg(region);
+  final lim = faceGapLimit(reg, sex, age);
+  final c = FACES
+      .where((f) => f.sex == sex && faceFits(f.id, reg) && _gap(f, age) <= lim && (lim > faceGapMax || age + faceHoldYears - f.age <= lim))
+      .toList();
+  if (c.isEmpty) return null;
+  int key(FacePic f) {
+    final s = shared[faceLook(f.id)] ?? 0;
+    return s * 4 + ((used[faceLook(f.id)] ?? 0) > s * 2 ? 2 : 0) + (f.region == reg ? 0 : 1);
   }
+  final k = c.map(key).reduce(math.min);
+  final best = c.where((f) => key(f) == k).toList();
+  double cost(FacePic f) => f.age >= age ? f.age - age.toDouble() : (age - f.age) * 2.0;
+  final m = best.map(cost).reduce(math.min);
+  final near = best.where((f) => cost(f) <= m + 4).toList();
+  return near[nameHash(name) % near.length].id;
+}
 
-  bool free(FacePic f) => (used[f.id] ?? 0) == 0;
+/// 顔を1つ選ぶ（1.0.0+23 から。見た目の食い違いを、同じ顔の重なりより重く見る）。
+/// ・使ってよいのは、本人との年の差が [faceGapLimit]（ふつうは12歳）までの絵だけ。それより離れた絵は、重ねてでも使わない
+/// ・[prev]（今までの絵）があれば、同じ人が年をとった続きの絵を先に見る
+/// ・自分の地域で空いている絵 → 借りてよい地域（中南米 → 欧米・中東 → 南アジア）で空いている絵 → 同じ顔を重ねる、の順。
+///   重ねるときは [used] の数（同じ画面に並ぶ人ほど重い）のいちばん少ないもの
+/// ・選ぶときは、この先 [faceHoldYears] 年は上限を超えない絵（年上の絵か、少し若い絵）を先にする。毎年替わってちらつかないように
+/// ・年の近いもの（年上の絵はそのままの差、年下の絵は2倍の差で数えて、4歳までの差は同じとみる）を、名前のハッシュで分ける
+/// [used] の鍵は [faceLook]（ほぼ同じ絵の組は1つ）
+String pickFace({required String name, required num age, required String region, required String sex, Map<String, int> used = const {}, String? prev}) {
+  final reg = _reg(region);
+  final h = nameHash(name);
+  final lim = faceGapLimit(reg, sex, age);
+  double cost(FacePic f) => f.age >= age ? f.age - age.toDouble() : (age - f.age) * 2.0;
+  bool ok(FacePic f) => _gap(f, age) <= lim;
+  bool lasts(FacePic f) => ok(f) && (lim > faceGapMax || age + faceHoldYears - f.age <= lim);
+  int use(FacePic f) => used[faceLook(f.id)] ?? 0;
+  bool free(FacePic f) => use(f) == 0;
   if (prev != null) {
     final n = faceById[faceNext(prev)];
-    if (n != null && n.sex == sex && faceFits(n.id, region) && free(n) && d(n) <= _olderMax) return n.id;
+    if (n != null && n.sex == sex && faceFits(n.id, reg) && free(n) && lasts(n)) return n.id;
   }
   String? choose(Iterable<FacePic> all) {
     final c = all.toList();
     if (c.isEmpty) return null;
-    final best = c.map(d).reduce((a, b) => a < b ? a : b);
-    final near = c.where((f) => d(f) <= best + 6).toList();
+    final best = c.map(cost).reduce(math.min);
+    final near = c.where((f) => cost(f) <= best + 4).toList();
     return near[h % near.length].id;
   }
 
-  final reg = _regions.contains(region) ? region : 'we';
-  final sec = _secondary[reg] ?? const <String>[];
-  final last = _lastResort[reg] ?? const <String>[];
   final own = FACES.where((f) => f.region == reg && f.sex == sex).toList();
-  final near = FACES.where((f) => sec.contains(f.region) && f.sex == sex).toList();
-  final far = FACES.where((f) => last.contains(f.region) && f.sex == sex).toList();
-  // 空いている絵があるうちは同じ顔を重ねない。ただし年が離れすぎた絵（20歳より上・25歳より下）は使わない
-  // （28歳の人に72歳の絵を当てるより、同じ顔が2人いるほうがまし）
-  bool wide(FacePic f) => (band == 2 && f.band == 2) || (f.age - age <= _olderMax && age - f.age <= _youngerMax);
-  final got = choose(own.where((f) => free(f) && d(f) <= _ageSpan)) ??
-      choose(near.where((f) => free(f) && d(f) <= _ageSpan)) ??
-      choose(own.where((f) => free(f) && wide(f))) ??
-      choose(far.where((f) => free(f) && d(f) <= _ageSpan));
-  if (got != null) return got;
-  // 重ねる: 年の合う絵のうち、使われている数の少ないものから
-  var pool = own.where((f) => d(f) <= _ageSpan).toList();
-  if (pool.isEmpty) pool = own;
-  if (pool.isEmpty) pool = FACES.where((f) => f.sex == sex).toList();
-  final least = pool.map((f) => used[f.id] ?? 0).reduce((x, y) => x < y ? x : y);
-  return choose(pool.where((f) => (used[f.id] ?? 0) == least))!;
+  final sec = FACES.where((f) => (_secondary[reg]?.contains(f.region) ?? false) && f.sex == sex).toList();
+  String? least(Iterable<FacePic> pool) {
+    final c = pool.toList();
+    if (c.isEmpty) return null;
+    final n = c.map(use).reduce(math.min);
+    return choose(c.where((f) => use(f) == n));
+  }
+
+  // 保てる絵: 空いているもの（自分の地域 → 借りてよい地域）→ 自分の地域で重ねる
+  // （すぐ上限を超える若い絵に替えて数年のうちにまた替わるより、同じ顔が2人いるほうがまし）
+  // 保てる絵が無いときだけ、年の差が上限までの絵（空いているもの → 重ねる）
+  return choose(own.where((f) => free(f) && lasts(f))) ??
+      choose(sec.where((f) => free(f) && lasts(f))) ??
+      least(own.where(lasts)) ??
+      least(sec.where(lasts)) ??
+      choose(own.where((f) => free(f) && ok(f))) ??
+      choose(sec.where((f) => free(f) && ok(f))) ??
+      least(own.where(ok)) ??
+      least(sec.where(ok)) ??
+      choose(own)!;
 }

@@ -1307,7 +1307,7 @@ extension GameActions on Game {
       tieRec(c, 'g', M('株を買い集めた'));
       if (c.rival != null && (c.rival!.type == 'zaibatsu' || c.rival!.type == 'state')) {
         c.fam = math.min(70, c.fam + 8);
-        msg.add(M('{0}は守りを固めています', [Nm(c.rival!.pres)]));
+        msg.add(M('{0}は守りを固めています', [Nm(c.presName)]));
       }
     }
     afterStake(c);

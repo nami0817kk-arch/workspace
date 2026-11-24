@@ -108,7 +108,7 @@ extension GameStory on Game {
       face: c.rival!.col,
       title: title,
       text: Cat([M(line, args), note], ja: '\n', en: '\n'),
-      choices: [Choice(M('うなずく'), M('物語は次へ進む'), () => M('{0}との因縁を胸に刻みました', [Nm(c.rival!.pres)]))]);
+      choices: [Choice(M('うなずく'), M('物語は次へ進む'), () => M('{0}との因縁を胸に刻みました', [Nm(c.presName)]))]);
 
   /// 毎月の物語の進み（出会い・張り合う・和解・組んだ）。乱数は使わない
   void storyMonthly(void Function(String, [String]) N) {
@@ -170,12 +170,12 @@ extension GameStory on Game {
     r.end = end;
     r.endY = year;
     final what = D(storyEndName[end]!);
-    chron('rival', M('{0}（{1}）との因縁に決着がついた：{2}', [Nm(r.pres), Nm(c.name), what]));
+    chron('rival', M('{0}（{1}）との因縁に決着がついた：{2}', [Nm(c.presName), Nm(c.name), what]));
     final note = switch (end) {
-      'bought' => M('{0}を手に入れ、{1}との因縁に決着がつきました', [Nm(c.name), Nm(r.pres)]),
-      'boughtBy' => M('{0}に会社を買われ、{1}との因縁に決着がつきました', [Nm(c.name), Nm(r.pres)]),
-      'peace' => M('{0}年のあいだ友好が続き、{1}と和解しました', [peaceMonths ~/ 12, Nm(r.pres)]),
-      _ => M('{0}年のあいだ組み続け、{1}とは盟友になりました', [allyMonths ~/ 12, Nm(r.pres)]),
+      'bought' => M('{0}を手に入れ、{1}との因縁に決着がつきました', [Nm(c.name), Nm(c.presName)]),
+      'boughtBy' => M('{0}に会社を買われ、{1}との因縁に決着がつきました', [Nm(c.name), Nm(c.presName)]),
+      'peace' => M('{0}年のあいだ友好が続き、{1}と和解しました', [peaceMonths ~/ 12, Nm(c.presName)]),
+      _ => M('{0}年のあいだ組み続け、{1}とは盟友になりました', [allyMonths ~/ 12, Nm(c.presName)]),
     };
     events.add(_scene(c, M('決着：{0}', [what]), _line(storyEndLines[end]!, r), const [], note));
   }
