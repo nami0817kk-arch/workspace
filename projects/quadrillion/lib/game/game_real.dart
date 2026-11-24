@@ -53,7 +53,7 @@ const Map<String, double> hoursOf = {
 };
 
 /// 借金が年の利益の何倍を超えると金利が上がるか（段ごとの上乗せ。年の率）
-const List<(double, double)> debtSteps = [(3, .015), (5, .015), (8, .03)];
+const List<(double, double)> debtSteps = [(3, .02), (5, .03), (8, .05)];
 
 /// 借りるたびに付く返す期限（月）
 const int loanTermDefault = 60;
@@ -283,9 +283,9 @@ extension GameReal on Game {
   /// 借りられる上限（稼ぐ力×倍率＋担保の半分＋小さな会社でも借りられる分）。現金は入れない
   double borrowLimit() {
     final a = math.max(0.0, annualProfit());
-    final mult = 4.0 * (econ > 1.05 ? 1.25 : econ < .95 ? .8 : 1) * (1 + .1 * net) * (culture == 'steady' ? 1.1 : 1) * (hasT('noble') ? 1.5 : 1) * (cooked > 0 ? 1.3 : 1);
+    final mult = 3.0 * (econ > 1.05 ? 1.25 : econ < .95 ? .8 : 1) * (1 + .1 * net) * (culture == 'steady' ? 1.1 : 1) * (hasT('noble') ? 1.5 : 1) * (cooked > 0 ? 1.3 : 1);
     final base = 2e7 * nom() * (1 + .2 * net) * (hasT('noble') ? 2 : 1);
-    return a * mult + collateral() * .5 + base;
+    return a * mult + collateral() * .4 + base;
   }
 
   /// あといくら借りられるか（格付けが C なら残りの半分、D なら貸さない）
@@ -299,7 +299,7 @@ extension GameReal on Game {
   /// 新しく借りるときの金利（その国のその年の金利＋上乗せ。借金が利益の3倍・5倍・8倍を超えるごとに上がる）
   double loanRate([double extra = 0]) {
     final after = annualProfit() > 0 ? (debt + extra) / annualProfit() : 99.0;
-    var r = math.max(0.0, rateOf(home)) / 100 + .015;
+    var r = math.max(0.0, rateOf(home)) / 100 + .02;
     for (final s in debtSteps) {
       if (after > s.$1) r += s.$2;
     }
@@ -407,19 +407,23 @@ extension GameReal on Game {
   void recessionCall(void Function(String, [String]) N) {
     if (q != 1 || growthOf(home) >= 0) return;
     N(M('【景気後退】{0}の今年の成長率は{1}%の見込みです', [C(home), pctD(growthOf(home))]), 'bad');
-    if (ratingIdx() < 2) return;
+    // 格付けが C・D なら借金の2割、B でも借金が上限を超えていれば1割を、すぐ返すよう迫られる（不況で担保の値打ちと利益が落ちると、上限も下がる）
+    final r = ratingIdx();
+    final k = r >= 2
+        ? .2
+        : r == 1 && debt > borrowLimit()
+            ? .1
+            : 0.0;
+    if (k == 0) return;
     final bank = loans.where((l) => l.lender != 'bond').toList();
-    final owe = bank.fold(0.0, (s, l) => s + l.amt) * .2;
+    final owe = bank.fold(0.0, (s, l) => s + l.amt) * k;
     if (owe <= 0) return;
-    var left = owe;
     for (final l in bank) {
-      final p = math.min(l.amt, l.amt * .2);
-      l.amt -= p;
-      left -= p;
+      l.amt -= l.amt * k;
     }
     loans.removeWhere((l) => l.amt <= 1);
-    cash -= owe - math.max(0, left);
-    N(M('不況で銀行が貸しはがしに来ました。格付け{0}のため、借金の2割（{1}）をすぐ返すよう求められ、返しました', [rating(), Y(owe)]), 'bad');
+    cash -= owe;
+    N(M('不況で銀行が貸しはがしに来ました。格付け{0}のため、借金の{1}割（{2}）をすぐ返すよう求められ、返しました', [rating(), jsRound(k * 10), Y(owe)]), 'bad');
     missed = math.max(missed, 6);
   }
 

@@ -801,6 +801,8 @@ class Btn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final on = enabled && onTap != null;
+    // 幅の狭い右の帯の中では、字を縮めずに折り返す（縮めると豆粒になる。1.1.0+25）
+    final shrink = this.shrink && !NoShrink.on(context);
     final text = Text(tx(label),
         maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink));
     return TapArea(
@@ -827,14 +829,22 @@ class Btn extends StatelessWidget {
                     if (ap > 0) Padding(padding: const EdgeInsets.only(left: 5), child: ApTag(ap)),
                     if (more) Icon(Icons.chevron_right, size: small ? 16 : 18, color: Pal.mute),
                   ])
-                : text),
+                : text, shrink),
           ),
         ),
       )),
     ));
   }
 
-  Widget _fit(Widget t) => shrink ? FittedBox(fit: BoxFit.scaleDown, child: t) : t;
+  Widget _fit(Widget t, bool shrink) => shrink ? FittedBox(fit: BoxFit.scaleDown, child: t) : t;
+}
+
+/// この下のボタンは、字を縮めずに折り返す（幅の狭い右の帯）
+class NoShrink extends InheritedWidget {
+  const NoShrink({super.key, required super.child});
+  static bool on(BuildContext context) => context.dependOnInheritedWidgetOfExactType<NoShrink>() != null;
+  @override
+  bool updateShouldNotify(NoShrink oldWidget) => false;
 }
 
 /// 取り返しのつかない操作のボタン（赤）

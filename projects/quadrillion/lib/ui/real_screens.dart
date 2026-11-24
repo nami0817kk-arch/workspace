@@ -143,8 +143,9 @@ Widget leftRail(GameController ctl) => Container(
       width: railW,
       decoration: const BoxDecoration(color: Pal.panel, border: Border(right: BorderSide(color: Pal.line))),
       child: LayoutBuilder(builder: (context, c) {
-        // 7つが縦に入りきらない低い画面では、字を省いて印だけにする
-        final compact = c.maxHeight < railTabs.length * 46;
+        // 7つが縦に入りきらない低い画面では、高さを等分する（1つ40未満なら字を省いて印だけにする）
+        final compact = c.maxHeight < railTabs.length * 48;
+        final each = compact ? math.max(36.0, c.maxHeight / railTabs.length) : 48.0;
         return SingleChildScrollView(
           child: Column(children: [
             for (final t in railTabs)
@@ -156,13 +157,13 @@ Widget leftRail(GameController ctl) => Container(
                   key: ValueKey('tab-${t.$1}'),
                   onTap: () => ctl.setTab(t.$1),
                   child: Container(
-                    height: compact ? math.max(minTap, c.maxHeight / railTabs.length) : 48,
+                    height: each,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         color: ctl.tab == t.$1 ? Pal.onBg : null, border: Border(left: BorderSide(color: ctl.tab == t.$1 ? Pal.gold : Colors.transparent, width: 3))),
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
                       Icon(t.$3, size: compact ? 18 : 20, color: ctl.tab == t.$1 ? Pal.goldtx : Pal.mute),
-                      if (!compact || c.maxHeight >= railTabs.length * 40)
+                      if (each >= 40)
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(tr(t.$2), maxLines: 1, style: ts(size: 10.5, color: ctl.tab == t.$1 ? Pal.goldtx : Pal.mute, bold: ctl.tab == t.$1, height: 1.2)),
@@ -262,13 +263,13 @@ void openPresSheet(GameController ctl) => ctl.showSheet((_) => Column(crossAxisA
 // ===== 街 =====
 List<Widget> townTabL(GameController ctl, double width) {
   final s = ctl.game!;
-  final wide = width >= 560;
+  final wide = width >= 500;
+  // 横に広い街（高さの低い横向きの画面でも、絵だけで画面が埋まらないように）
   final pic = Frame(
     key: const ValueKey('town-picture'),
     child: AspectRatio(
-        aspectRatio: wide ? 480 / 180 : 16 / 9,
-        child: Semantics(
-            label: tr('自社のビルが並ぶ街'), image: true, child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s, W: wide ? 480 : 320), size: Size.infinite)))),
+        aspectRatio: 480 / 180,
+        child: Semantics(label: tr('自社のビルが並ぶ街'), image: true, child: RepaintBoundary(child: CustomPaint(painter: TownPainter(s, W: 480), size: Size.infinite)))),
   );
   final nCtry = <String>{for (final b in s.biz) ...s.ctryOf(b)}.length;
   final rival = topRival(s);
@@ -364,7 +365,7 @@ Widget countryPanel(GameController ctl, String c, {Key? key, String? title}) {
         Kv(tr('物価'), '${pctD(s.inflOf(c))}%'),
         Kv(tr('金利'), '${pctD(s.rateOf(c))}%'),
         Kv(tr('為替'), tx(s.fxText(c))),
-        Kv(tr('最低賃金'), tr('{0}／月', [yen(s.minWageYen(c) / 12)])),
+        Kv(tr('最低賃金（月）'), yen(s.minWageYen(c) / 12)),
         Kv(tr('法人税'), '${pctD(s.ev(c, 'corp_tax'))}%'),
       ]),
       if (s.yr() > econData.lastYear + 1) Padding(padding: const EdgeInsets.only(top: 4), child: Muted(tr('{0}年より先は予測です', [econData.lastYear + 1]), size: 11.5)),
@@ -536,7 +537,7 @@ List<Widget> _bankView(GameController ctl) {
         ]),
         const SizedBox(height: 4),
         Muted(
-            tr('上限は年の利益の約4倍と、店・工場・土地の値打ちの半分で決まります。現金は入りません。借金が利益の3倍・5倍・8倍を超えるごとに金利が上がり、格付けが下がります。C は残りの半分まで、D は貸してもらえません'),
+            tr('上限は年の利益の約3倍と、店・工場・土地の値打ちの4割で決まります。現金は入りません。借金が利益の3倍・5倍・8倍を超えるごとに金利が上がり、格付けが下がります。C は残りの半分まで、D は貸してもらえません'),
             size: 11.5),
         if (s.bankCtl > 0) Padding(padding: const EdgeInsets.only(top: 4), child: Text(tr('メインバンクが経営に口を出しています（あと{0}か月）。新しく借りられません', [s.bankCtl]), style: ts(size: 12.5, color: Pal.down, bold: true))),
       ]),
@@ -768,12 +769,12 @@ Widget _countryDetail(GameController ctl, String c) {
     Panel(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Grid2([
-          Kv(tr('人口'), tr('{0}万人', [jsNum(jsRound(s.ev(c, 'pop') / 1e4))])),
+          Kv(tr('人口'), L.en ? '${(s.ev(c, 'pop') / 1e6).toStringAsFixed(1)}M' : tr('{0}万人', [jsNum(jsRound(s.ev(c, 'pop') / 1e4))])),
           Kv(tr('失業率'), '${pctD(s.ev(c, 'unemp'))}%'),
           Kv(tr('市場の大きさ'), tr('{0}の{1}倍', [cm[s.home]!.n, (cw(c, s.yr()) / math.max(cw(s.home, s.yr()), 1e-9)).toStringAsFixed(2)])),
           Kv(tr('平均賃金'), tr('{0}／年', [yen(s.ev(c, 'wage_usd') * s.usdJpy())])),
         ]),
-        if (cities.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 4), child: Muted(tr('主な都市：{0}', [cities.take(4).map((x) => tx(x.ja)).join(tr('・'))]), size: 12)),
+        if (cities.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 4), child: Muted(tr('主な都市：{0}', [cities.take(4).map((x) => L.en ? x.en : x.ja).join(tr('・'))]), size: 12)),
         const SizedBox(height: 6),
         CardTitle(tr('自社の出方')),
         const SizedBox(height: 2),

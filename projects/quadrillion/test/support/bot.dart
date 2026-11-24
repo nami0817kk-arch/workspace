@@ -18,6 +18,21 @@ class ParkMiller implements math.Random {
   bool nextBool() => nextDouble() < .5;
 }
 
+/// 自動プレイとテストの物差し（1.1.0+25 で毎月の「手」をやめ、社長の時間にした）。
+/// [ap] は「ふつうに使える残りの時間で、8時間の行動があといくつ打てるか」。[apMax] は会議を引いた月の初めの数。
+/// 仕組みの側には「手」はもう無い（game_real.dart の hoursOf と hLeft）
+extension HoursCompat on Game {
+  int get ap => down > 0 ? 0 : (hNormalLeft() / hoursOf['act']!).floor();
+  int get apMax => down > 0 ? 0 : (math.max(0.0, hoursNormal - hMeet()) / hoursOf['act']!).floor();
+  bool canAP(int n) => ap >= n;
+
+  /// テストで「手をn個残す」：8時間の行動がちょうどn個打てるだけの時間を残す。0 なら無理をしても1時間も残さない
+  set ap(int n) {
+    down = 0;
+    hUsed = n <= 0 ? hoursMax - hMeet() : math.max(0.0, hoursNormal - hMeet() - n * hoursOf['act']! - 1);
+  }
+}
+
 final _choice = RegExp('断る|謝罪|送り出す|上げる|自社株|ホワイト');
 
 /// 出来事は決まった選び方で片付ける（試作の自動プレイと同じ）
@@ -33,9 +48,16 @@ void resolveEvents(Game s) {
 /// [units] を立てると、打ち手を現金の割合ではなく1単位の手（店をn個・商品の大きさ・人をn人）で打つ（1.0.0+12 の画面と同じ遊び方）
 ///
 /// [mine] を渡すと、事業を伸ばす手（人・店や工場・商品）は、それが true の事業にだけ打つ（責任者に任せた事業は責任者が打つので、社長は打たない。1.0.0+20）
-void botMonth(Game s, {bool units = false, bool Function(Biz)? mine}) {
+///
+/// [borrow] は借金の打ち方（1.1.0+25）: 'none' 借りない（つなぎの融資は自動で入る）/ 'max' 毎月、借りられるだけ借りる / 'some' 現金が元手に足りないときだけ半分まで
+void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borrow = 'none'}) {
   int tot(Person p) => Game.totOf(p);
   resolveEvents(s);
+  if (borrow == 'max' && s.borrowRoom() > 1e6) {
+    s.borrow(s.borrowRoom(), 60);
+  } else if (borrow == 'some' && s.biz.isNotEmpty && s.cash < s.capexOf(indm[s.biz.first.ind]!) && s.borrowRoom() > 1e6) {
+    s.borrow(s.borrowRoom() * .5, 60);
+  }
   if (s.biz.isEmpty) {
     final l = s.liveInds().where((i) => s.capexOf(i) <= s.cash).toList()..ssort((a, b) => b.mg.compareTo(a.mg));
     if (l.isNotEmpty) s.startBiz(l[0].id);
@@ -68,6 +90,7 @@ void botMonth(Game s, {bool units = false, bool Function(Biz)? mine}) {
   final cand = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.capexOf(i) < s.cash * .8).toList()
     ..ssort((a, b) => (b.mg * b.size).compareTo(a.mg * a.size));
   if (cand.isNotEmpty && s.ap > 0 && s.biz.length < 12) s.startBiz(cand[0].id);
+  // 事業を伸ばす手は月に3つまで（時間が残っていても。人の手で遊ぶ速さに近づける）
   for (var k = 0; k < 3 && s.ap > 0; k++) {
     double score(Biz y) => (y.profit / (y.rev + 1)) * (1 - y.share);
     final b = ((mine == null ? s.biz.toList() : s.biz.where(mine).toList())..ssort((x, y) => score(y).compareTo(score(x)))).firstOrNull;

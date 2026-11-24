@@ -349,6 +349,9 @@ class MainScreen extends StatelessWidget {
   /// 「次の月へ」のボタンに残りの時間まで書く、ボタンの欄の最小の幅（字の倍率で割った幅。これより狭いと「次の月へ」だけ）
   static const nextLongMin = 220.0;
 
+  /// 左の切り替え（id・名前）
+  static List<(String, String)> get tabs => [for (final t in railTabs) (t.$1, t.$2)];
+
   @override
   Widget build(BuildContext context) {
     final s = ctl.game!;
@@ -425,7 +428,7 @@ class MainScreen extends StatelessWidget {
               Container(
                 width: sideW,
                 decoration: const BoxDecoration(color: Pal.sky, border: Border(left: BorderSide(color: Pal.line))),
-                child: ListView(key: const ValueKey('side'), padding: const EdgeInsets.fromLTRB(6, 2, 6, 10), children: sideItems(ctl)),
+                child: NoShrink(child: ListView(key: const ValueKey('side'), padding: const EdgeInsets.fromLTRB(6, 2, 6, 10), children: sideItems(ctl))),
               ),
           ]),
         ),
