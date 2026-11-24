@@ -167,11 +167,11 @@ MatchCompetition? _competitionOf(DayEvent e) =>
     };
 
 IconData _competitionIcon(MatchCompetition c) => switch (c) {
-  MatchCompetition.league => Icons.sports_soccer,
-  MatchCompetition.cup => Icons.emoji_events_outlined,
-  MatchCompetition.continental => Icons.public,
-  MatchCompetition.friendly => Icons.handshake_outlined,
-};
+      MatchCompetition.league => Icons.sports_soccer,
+      MatchCompetition.cup => Icons.emoji_events_outlined,
+      MatchCompetition.continental => Icons.public,
+      MatchCompetition.friendly => Icons.handshake_outlined,
+    };
 
 IconData _iconFor(DayEvent e) {
   if (_competitionOf(e) case final c?) return _competitionIcon(c);
@@ -197,20 +197,20 @@ Color _competitionColor(
   return switch (c) {
     MatchCompetition.league => scheme.primary,
     MatchCompetition.cup => SemanticColors.ink(
-      context,
-      Colors.amber.shade800,
-      min: min,
-    ),
+        context,
+        Colors.amber.shade800,
+        min: min,
+      ),
     MatchCompetition.continental => SemanticColors.ink(
-      context,
-      Colors.deepPurple.shade400,
-      min: min,
-    ),
+        context,
+        Colors.deepPurple.shade400,
+        min: min,
+      ),
     MatchCompetition.friendly => SemanticColors.ink(
-      context,
-      Colors.blueGrey,
-      min: min,
-    ),
+        context,
+        Colors.blueGrey,
+        min: min,
+      ),
   };
 }
 
@@ -220,12 +220,13 @@ Color _colorFor(BuildContext context, DayEvent e) {
   }
   return switch (e.kind) {
     DayEventKind.windowDeadline ||
-    DayEventKind.optionDeadline => SemanticColors.negative(context),
+    DayEventKind.optionDeadline =>
+      SemanticColors.negative(context),
     DayEventKind.windowOpens || DayEventKind.preContracts => SemanticColors.ink(
-      context,
-      Colors.teal,
-      min: 3,
-    ),
+        context,
+        Colors.teal,
+        min: 3,
+      ),
     _ => SemanticColors.subtleText(context),
   };
 }
@@ -351,9 +352,9 @@ class _MonthGrid extends StatelessWidget {
                   MatchCompetition.league => Tr.pick('リーグ戦', 'League'),
                   MatchCompetition.cup => Tr.pick('カップ戦', 'Cup'),
                   MatchCompetition.continental => Tr.pick(
-                    '大陸カップ',
-                    'Continental',
-                  ),
+                      '大陸カップ',
+                      'Continental',
+                    ),
                   MatchCompetition.friendly => Tr.pick('親善試合', 'Friendly'),
                 },
               ),
@@ -384,35 +385,38 @@ class _MonthGrid extends StatelessWidget {
     IconData icon,
     Color color,
     String label,
-  ) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(icon, size: 12, color: SemanticColors.ink(context, color, min: 3)),
-      const SizedBox(width: 2),
-      _legendText(context, label),
-    ],
-  );
+  ) =>
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon,
+              size: 12, color: SemanticColors.ink(context, color, min: 3)),
+          const SizedBox(width: 2),
+          _legendText(context, label),
+        ],
+      );
 
   Widget _legendBox(BuildContext context, Color color, String label) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Container(
-        width: 11,
-        height: 11,
-        decoration: BoxDecoration(
-          border: Border.all(color: color, width: 2),
-          borderRadius: BorderRadius.circular(2),
-        ),
-      ),
-      const SizedBox(width: 3),
-      _legendText(context, label),
-    ],
-  );
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 11,
+            height: 11,
+            decoration: BoxDecoration(
+              border: Border.all(color: color, width: 2),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 3),
+          _legendText(context, label),
+        ],
+      );
 
   Widget _legendText(BuildContext context, String label) => Text(
-    label,
-    style: TextStyle(fontSize: 10, color: SemanticColors.subtleText(context)),
-  );
+        label,
+        style:
+            TextStyle(fontSize: 10, color: SemanticColors.subtleText(context)),
+      );
 }
 
 /// 月の表の1マス。
@@ -450,12 +454,10 @@ class _DayCell extends StatelessWidget {
     final match = events.where((e) => e.kind.isMatch).firstOrNull;
     final others = events.where((e) => !e.kind.isMatch).toList();
     final comp = match == null ? null : _competitionOf(match);
-    final compColor = comp == null
-        ? null
-        : _competitionColor(context, comp, min: 3);
-    final base = isSelected
-        ? scheme.primaryContainer
-        : scheme.surfaceContainerLow;
+    final compColor =
+        comp == null ? null : _competitionColor(context, comp, min: 3);
+    final base =
+        isSelected ? scheme.primaryContainer : scheme.surfaceContainerLow;
     final fill = compColor == null || isSelected
         ? base
         : Color.alphaBlend(compColor.withValues(alpha: 0.16), base);
@@ -498,72 +500,89 @@ class _DayCell extends StatelessWidget {
         ],
       );
     } else {
-      final (String, Color)? result = facts != null && facts.played
-          ? _resultOf(context, facts)
-          : null;
-      content = Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              dayText,
-              const Spacer(),
-              if (facts != null)
-                _SidePill(
-                  home: facts.home,
-                  color: compColor!,
-                  key: ValueKey('cal-side-${_dayKey(day)}'),
-                ),
-            ],
-          ),
-          const SizedBox(height: 1),
-          Text(
-            facts?.opponentShort ?? match.buttonLabel,
-            key: ValueKey('cal-opp-${_dayKey(day)}'),
-            maxLines: 1,
-            softWrap: false,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 11,
-              height: 1.15,
-              fontWeight: FontWeight.bold,
-              color: past && result == null ? subtle : scheme.onSurface,
-            ),
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  result?.$1 ??
-                      (facts == null
-                          ? ''
-                          : comp == MatchCompetition.league
-                          ? (match.matchday == null
-                                ? facts.competitionName
-                                : Tr.pick(
-                                    '第${match.matchday}節',
-                                    'MD ${match.matchday}',
-                                  ))
-                          : facts.competitionName),
-                  key: ValueKey('cal-note-${_dayKey(day)}'),
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 10,
-                    height: 1.1,
-                    fontWeight: result != null ? FontWeight.bold : null,
-                    color:
-                        result?.$2 ??
-                        _competitionColor(context, comp!, min: 4.5),
+      final (String, Color)? result =
+          facts != null && facts.played ? _resultOf(context, facts) : null;
+      final note = result?.$1 ??
+          (facts == null
+              ? ''
+              : comp == MatchCompetition.league
+                  ? (match.matchday == null
+                      ? facts.competitionName
+                      : Tr.pick('第${match.matchday}節', 'MD ${match.matchday}'))
+                  : facts.competitionName);
+      final scaler = MediaQuery.textScalerOf(context);
+      content = LayoutBuilder(
+        builder: (context, box) {
+          // 縦の狭い画面(幅320)で文字を大きくすると、マスの幅が日付と
+          // H/A の札の合計に足りない(はみ出していた)。そのときは札を
+          // 下の行の頭に字で入れ、小さな印も省く。
+          final narrow = box.maxWidth < scaler.scale(36);
+          final side = facts == null ? null : _sideLabel(facts.home);
+          // 字の高さは端末の字体で変わる。3行がマスの高さを超えるときは、
+          // はみ出さずに少し縮めて収める(下に切れていた)。
+          return FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: box.maxWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(child: dayText),
+                      if (!narrow && facts != null) ...[
+                        const Spacer(),
+                        _SidePill(
+                          home: facts.home,
+                          color: compColor!,
+                          key: ValueKey('cal-side-${_dayKey(day)}'),
+                        ),
+                      ],
+                    ],
                   ),
-                ),
+                  const SizedBox(height: 1),
+                  Text(
+                    facts?.opponentShort ?? match.buttonLabel,
+                    key: ValueKey('cal-opp-${_dayKey(day)}'),
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11,
+                      height: 1.15,
+                      fontWeight: FontWeight.bold,
+                      color: past && result == null ? subtle : scheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          narrow && side != null ? '$side $note' : note,
+                          key: ValueKey('cal-note-${_dayKey(day)}'),
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 10,
+                            height: 1.1,
+                            fontWeight: result != null ? FontWeight.bold : null,
+                            color: result?.$2 ??
+                                _competitionColor(context, comp!, min: 4.5),
+                          ),
+                        ),
+                      ),
+                      if (!narrow) ...icons,
+                    ],
+                  ),
+                ],
               ),
-              ...icons,
-            ],
-          ),
-        ],
+            ),
+          );
+        },
       );
     }
     return Material(
@@ -614,8 +633,8 @@ class _SidePill extends StatelessWidget {
     final filled = home == true;
     final onFill =
         ThemeData.estimateBrightnessForColor(color) == Brightness.dark
-        ? Colors.white
-        : Colors.black;
+            ? Colors.white
+            : Colors.black;
     final text = Theme.of(context).colorScheme.onSurface;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -769,8 +788,7 @@ class _DayList extends StatelessWidget {
     }
     // カップ戦の日は、その日の一覧から、カップ戦の画面(勝ち上がりの表・
     // 組み合わせ)へ移れるようにする(画面を重ねない)。
-    final toCups =
-        (comp == MatchCompetition.cup ||
+    final toCups = (comp == MatchCompetition.cup ||
             comp == MatchCompetition.continental) &&
         e.kind == DayEventKind.cupMatch;
     return Container(

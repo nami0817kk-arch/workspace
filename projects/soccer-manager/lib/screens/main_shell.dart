@@ -362,7 +362,9 @@ class _FmTopBar extends StatelessWidget {
     final sub = TextStyle(fontSize: 12, color: scheme.onSurfaceVariant);
     // 帯の高さは決まっているので、文字の大きさの設定は少しだけ効かせる
     // (1.3倍だと「サポーター」が2行になり、メーターがはみ出していた)。
-    final barWidth = MediaQuery.sizeOf(context).width;
+    // 帯は左メニュー(幅88＋区切り1)の右にある(2026-11-24)。ボタンの幅の
+    // 上限は、画面ではなく帯の幅から決める。
+    final barWidth = MediaQuery.sizeOf(context).width - 89;
     return MediaQuery.withClampedTextScaling(
       maxScaleFactor: 1.1,
       child: Container(
@@ -410,18 +412,30 @@ class _FmTopBar extends StatelessWidget {
                     // 右端の季から(2026-11-24)。英語は曜日を落として短くする。
                     // 小さなカレンダーの印で、押すとカレンダーが開くと分かる
                     // ようにする。
-                    Row(
+                    // 帯がとても狭いとき(左メニューの右に置いたので、小さな
+                    // 横画面では約60しか残らないことがある)は、日付を切らずに
+                    // 字を少し縮めて収める。
+                    LayoutBuilder(builder: (context, box) => Row(
                       children: [
                         Icon(Icons.calendar_month,
                             key: const ValueKey('topbar-calendar-icon'),
                             size: 13,
                             color: scheme.primary),
                         const SizedBox(width: 3),
-                        Text(
-                          _shortToday(gameState.today),
-                          key: const ValueKey('topbar-date'),
-                          maxLines: 1,
-                          style: sub,
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxWidth: (box.maxWidth - 16)
+                                  .clamp(0.0, double.infinity)),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _shortToday(gameState.today),
+                              key: const ValueKey('topbar-date'),
+                              maxLines: 1,
+                              style: sub,
+                            ),
+                          ),
                         ),
                         Flexible(
                           child: Text(
@@ -436,7 +450,7 @@ class _FmTopBar extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),
+                    )),
                   ],
                 ),
               ),
@@ -479,7 +493,7 @@ class _FmTopBar extends StatelessWidget {
                   mustCount: mustCount,
                   onTodo: onTodo,
                   // スマホの幅では、日付と節の字を残すために数字だけにする。
-                  compact: barWidth < 1000,
+                  compact: barWidth < 911,
                 ),
               ),
           ],
