@@ -181,7 +181,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v66</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v67</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -521,13 +521,12 @@ function grow(){
  var C=g.core;C.f=f;C.x=COREX;C.y=COREY;C.hx=C.hy=null;C.home=true;C.carrier=null;C.dropT=0;C.mhp=coreMax();C.hp=C.mhp;C.warned=0;altAdd(f);g.cmdAl=null;
  g.view=f;over=false;resetGo();setSpeed(0);buildTabs();focusCore();
  var nl=landOf(f),pl=landOf(f-1),nj=jobsUnlocked(),add='',items=[];
- if(nl!=pl){add+=' 新しい土地「'+ENV[nl].n+'の層」が現れた！ '+ENV[nl].n+'の種が生まれる。';items.push('新しい土地「'+ENV[nl].n+'の層」。'+ENV[nl].n+'の種が生まれる');}
  if(nj.length&&(g.round-2)<=NEWJOBS.length){var jk=nj[nj.length-1];add+=' 新しい職業「'+EN[jk].n+'」が来るようになった（'+JOBDESC[jk]+'）。';items.push('新しい職業「'+EN[jk].n+'」：'+JOBDESC[jk]);}
  var nd=nextDp();add+=' '+nd;items.unshift(nd.replace(/。$/,''));items.push('次の冒険者は前より強い（体力×'+emul().hp.toFixed(1)+'）');g.roundT0=g.t;g.armyStart=armyPower();sfx('grow');coreSay('grow',true);
  appPrep();
  say(F+'階ができた！ 準備の時間です（時間は止まっています）。');
  ui();
- var el=document.getElementById('title');el.innerHTML='<div class="tbox"><h2>'+F+'階ができた！<br><small>'+g.round+'周目</small></h2><p class="sub">コアは新しい最上階へ。掘った道もモンスターもそのまま。'+(F-1)+'階の天井も掘れる。</p><ul class="sc">'+items.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul><button class="btn go" id="tgo">準備を始める</button></div>';el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
+ var el=document.getElementById('title');el.innerHTML='<div class="tbox"><h2>'+F+'階ができた！<br><small>'+g.round+'周目</small></h2><p class="sub">コアは新しい最上階へ。掘った道もゴブリンもそのまま。新しい階にも祭壇ができた。'+(F-1)+'階の天井も掘れる。</p><ul class="sc">'+items.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul><button class="btn go" id="tgo">準備を始める</button></div>';el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
 }
 
 // ---------- 地形 ----------
@@ -747,7 +746,7 @@ function gobNm(house){return house+'家の'+GNAME[rnd(GNAME.length)];}
 function randTr(){var ks=Object.keys(TR);return ks[rnd(ks.length)];}
 function randWk(){var ks=Object.keys(WK);return ks[rnd(ks.length)];}
 function gobCand(){var L=sumLv(),q=Math.random(),pl=Math.min(0.35,0.15+0.05*(L-1)),sz=q<pl?'l':q<pl+0.4?'s':'m',tr=[],trl={},wk=[];
- if(Math.random()<0.55){var k=randTr();tr.push(k);trl[k]=Math.random()<Math.min(0.4,0.1*(L-1))?2:1;}
+ if(Math.random()<Math.min(0.85,0.55+0.1*((g&&g.rareK)||0))){var k=randTr();tr.push(k);trl[k]=Math.random()<Math.min(0.4,0.1*(L-1))?2:1;}
  if(Math.random()<0.3)wk.push(randWk());
  var house=GHOUSE[rnd(GHOUSE.length)];return {sz:sz,hd:Math.random()<0.5?'m':'t',tr:tr,trl:trl,wk:wk,house:house,nm:gobNm(house)};}
 function sumCands(){if(!g.sumCand||g.sumCand.length!=3)g.sumCand=[gobCand(),gobCand(),gobCand()];return g.sumCand;}
@@ -971,7 +970,6 @@ function killCr(m,why,killer){
   if(m.sp=='dragon'&&m.hero){var ph=mkCr('phoenix','sp',m.f,m.x,m.y,5);if(ph){ph.revive=1;say('主役のドラゴンが倒れ、その炎からフェニックスが生まれた！');}}
   if(m.sp=='gslime'){deposit(m.f,m.x,m.y,25);say('ゴールデンスライムが倒れ、大量の養分をばらまいた！');}
   // ゴーストは、モンスターが死んだ所の近くにたまに現れる
-  if(m.sp!='ghost'&&m.sp!='skeleton'&&Math.random()<0.1&&g.mpool>=2&&g.cr.length<CAP){g.mpool-=2;mkCr('ghost','mag',m.f,m.x,m.y,2);}
  }
  if(m.hero){
   var cause=why=='starve'?'飢え死に':why=='eaten'?'食べられた':why=='loss'?'塔と共に消えた':(killer&&killer.yu?yuName()+'に倒された':(killer?enName(killer)+'に倒された':'倒れた'));
@@ -1164,7 +1162,7 @@ function killEn(e,killer){
  if(killer&&killer.sp=='demon'){var bk=1+e.mhp/80;layEgg('demon','mag',e.f,e.x,e.y,30,{hpk:bk,atkk:bk});say('デーモンが'+enName(e)+'の亡骸に子を宿した…');}
  var lich=g.cr.filter(function(o){return o.sp=='lich'&&o.f==e.f&&man(o,e)<=3;})[0];
  var lsk=lich?mkCr('skeleton','sp',e.f,e.x,e.y,0,{hpk:1+e.mhp/60}):null;if(lsk)say('リッチが'+enName(e)+'をスケルトンに変えた。');
- else if(e.k!='doll')addCorpse(e);
+
  if(g.core.carrier===e){g.core.carrier=null;g.core.f=e.f;g.core.x=e.x;g.core.y=e.y;g.core.home=false;g.core.dropT=0;g.core.lure=g.t+15;say('運び手を倒した！ コアが落ちた。ほかの冒険者が足跡をたどって取りに来る！');}
  else if(!e.yu&&!g.msgLock)say(enName(e)+'を倒した（魂+2）。');
  var mate=g.en.filter(function(o){return o.f==e.f&&man(o,e)<=5;})[0];if(mate&&Math.random()<0.7)shout(mate,'ally');
@@ -1543,15 +1541,14 @@ function brdHTML(){var D=cmbDone();
   '<br><br><b>弱点</b><br>'+Object.keys(WK).map(function(k){return '<b>'+WK[k].n+'</b>：'+WK[k].d;}).join('<br>')+'</div>';}
 function loadDex(){try{return JSON.parse(kvGet('tou-dex')||'{}')||{};}catch(_){return {};}}
 // ---------- 周回の解放: 塔の記憶と記憶の棚 ----------
-var SHELF=[{k:'dp',n:'始めの掘る力',d:'新しい塔の掘る力 ＋10',c:[5,10,15,20,25]},{k:'pool',n:'始めの養分',d:'自由な養分 ＋10',c:[6,12,18]},{k:'rare',n:'珍しい種',d:'金スライム・キメラ・ツチノコが出やすい',c:[8,16,24]},{k:'train',n:'鍛える上限',d:'主役を鍛えられる回数 ＋1',c:[15,30]},{k:'soil',n:'始めの土を選ぶ',d:'1階目の土の色を選べる',c:[20]},{k:'mul',n:'記憶の上乗せ',d:'落ちたときにたまる記憶 ＋2割',c:[10,20,30]},{k:'mate',n:'始めの仲間',d:'新しい塔の1階にスライム ＋2匹',c:[6,12,18]},{k:'gift',n:'勇者の置き土産',d:'勇者を倒し切ったときの掘る力 ＋5',c:[10,20]}];
+var SHELF=[{k:'dp',n:'始めの掘る力',d:'新しい塔の掘る力 ＋10',c:[5,10,15,20,25]},{k:'pool',n:'始めの魂',d:'新しい塔の魂 ＋10',c:[6,12,18]},{k:'rare',n:'良い候補',d:'はぐれゴブリンに特性つきが来やすい',c:[8,16,24]},{k:'train',n:'鍛える上限',d:'主役を鍛えられる回数 ＋1',c:[15,30]},{k:'mul',n:'記憶の上乗せ',d:'落ちたときにたまる記憶 ＋2割',c:[10,20,30]},{k:'mate',n:'始めの仲間',d:'新しい塔に、はぐれゴブリン ＋1匹',c:[6,12,18]},{k:'gift',n:'勇者の置き土産',d:'勇者を倒し切ったときの掘る力 ＋5',c:[10,20]}];
 function meta(){try{var o=JSON.parse(kvGet('tou-meta')||'null');if(o&&o.lv)return o;}catch(_){}return {pts:0,tot:0,lv:{},soil:''};}
 function metaSave(o){kvSet('tou-meta',JSON.stringify(o));}
 function dexSeen(){return DEXORD.filter(function(k){return DEX[k]&&DEX[k].seen;}).length;}
 function shelfDone(){var M=meta(),a=0,b=0;SHELF.forEach(function(it){a+=M.lv[it.k]||0;b+=it.c.length;});return a+'/'+b;}
 // 新しい塔を始めたときに棚の分を足す
-function applyMeta(){var M=meta(),L=M.lv;g.dp+=10*(L.dp||0);g.pool+=10*(L.pool||0);g.rareK=L.rare||0;g.trainMax=5+(L.train||0);g.giftK=L.gift||0;
- if(L.mate){var need=2*L.mate,op=[];for(var my=0;my<N;my++)for(var mx=0;mx<N;mx++){var mc=cellAt(0,mx,my);if(mc&&mc.open&&!(mx==COREX&&my==COREY))op.push([mx,my,mc.env]);}op=shuffle(op);for(var mi=0;mi<need&&op.length;mi++){var q=op[mi%op.length];mkCr('slime',q[2],0,q[0],q[1],1);}}
- if(L.soil&&M.soil&&M.soil!=DOM[0]){g.grid[0].forEach(function(c){if(c.env==DOM[0])c.env=M.soil;});TK.key='';}g.dex0=dexSeen();}
+function applyMeta(){var M=meta(),L=M.lv;g.dp+=10*(L.dp||0);g.soul=(g.soul||0)+10*(L.pool||0);g.rareK=L.rare||0;g.trainMax=5+(L.train||0);g.giftK=L.gift||0;
+ if(L.mate&&g.alt&&g.alt[0]){var a0=g.alt[0];for(var mi=0;mi<L.mate;mi++){var gm=mkCr(gobKey('m',mi%2?'t':'m'),landOf(a0.f),a0.f,a0.x,a0.y,3,{gob:gobCand(),hpk:sumK(),atkk:sumK()});if(gm)gm.home={f:a0.f,x:a0.x,y:a0.y};}g.sumCand=null;}g.dex0=dexSeen();}
 // 新しい塔が落ちたときに記憶がたまる
 function metaGain(){var M=meta(),nd=Math.max(0,dexSeen()-(g.dex0==null?dexSeen():g.dex0)),p=F+(g.yuKilled||0)*3+nd*2;p=Math.round(p*(1+0.2*(M.lv.mul||0)));M.pts+=p;M.tot=(M.tot||0)+p;metaSave(M);return {p:p,t:M.pts,nd:nd};}
 function showShelf(){
@@ -1570,7 +1567,7 @@ function dexAdd(spc,env,mut){
  if(!DEX[spc].seen){DEX[spc].seen=1;ch=true;}
  if(env&&!d.e[env]){d.e[env]=1;ch=true;}if(mut&&!d.m[mut]){d.m[mut]=1;ch=true;}
  if(ch){kvSet('tou-dex',JSON.stringify(DEX));if(SPEC[spc].line=='sp'&&g&&!g.title)say('図鑑に「'+SPEC[spc].n+'」が載った！');}
- if(nw&&g&&!g.title&&ORDN.indexOf(spc)<0&&ORDM.indexOf(spc)<0){banner('新しい種！ '+SPEC[spc].n,'図鑑に載った');haptic('medium');logEv('新しい種「'+SPEC[spc].n+'」が図鑑に載った');}
+ if(nw&&g&&!g.title&&!SPEC[spc].gob&&ORDN.indexOf(spc)<0&&ORDM.indexOf(spc)<0){banner('新しい種！ '+SPEC[spc].n,'図鑑に載った');haptic('medium');logEv('新しい種「'+SPEC[spc].n+'」が図鑑に載った');}
 }
 var HINT={tsuta:'岩の土の養分1から、ときどき…',mogura:'養分3の土から、まれに…',kame:'水の土の養分5から、ときどき…',frost:'氷の層の養分4から…',salamander:'溶岩の層の養分6から…',kagami:'魔分3の土から、まれに…',kage:'夜に、魔分5の土から…',ant:'水の土の養分1から、ときどき…',hachi:'花の近くの、養分2の土から…',shidemushi:'亡骸の隣の、養分2の土から…',bakudan:'養分2の土から、ときどき…',umihebi:'水の土の養分8から、ときどき…',purupuru:'魔分1の土から、まれに…',manasui:'魔分4の土から、まれに…',noroi:'5階より深い所の、魔分6の土から…',yamaarashi:'岩の土の養分5から、ときどき…',iwakui:'岩の土の養分7から、ときどき…',yukidama:'氷の層の養分1から…',magma:'溶岩の層の養分1から…',hotaru:'夜に、苔の土の養分1から…',himawari:'昼に、苔の土の養分1から…',fukurou:'魔分5の土から、まれに…',maboroshi:'魔分7の土から、ときどき…',slimeking:'スライムが8匹、ひとかたまりに集まると…',tsuchinoko:'養分9の土から、ごくまれに…',d_sleepy:'養分も魔分も多い魔法陣から…',d_blue:'魔分の多い魔法陣から…',d_bigblue:'魔分がとても多い魔法陣から…',evilgod:'あおデーモンの魔法陣を冒険者に踏ませると…',skeleton:'倒れた冒険者の亡骸の隣を掘ると…',mimic:'深い階ほど、土の中に宝箱が埋まっている',chimera:'苔・水・岩の3色が接する所を掘ると…',gslime:'養分がいっぱい(9)の土を掘ると、まれに',guardian:'コアのすぐ下のマスの周り8マスを全部掘ると',phoenix:'主役のドラゴンが倒れると…'};
 var DEXORD=['gob_sm','gob_st','gob_mm','gob_mt','gob_lm','gob_lt'];
@@ -2046,13 +2043,13 @@ function ui(){
   for(i=0;i<g.en.length;i++)if(g.en[i].f==f)ne++;
   for(i=0;i<g.cr.length;i++)if(g.cr[i].f==f)nm++;
   for(i=0;i<N*N;i++)tot+=g.grid[f][i].nut;
-  if(t){var cn='tab'+(g.view==f?' on':'')+(ne?' alert':'');if(t.className!=cn)t.className=cn;var tl=t.querySelector('.tl'),th=(f+1)+'階<small>敵'+ne+' 魔'+nm+'</small>';if(tl&&tl.innerHTML!=th)tl.innerHTML=th;}
+  if(t){var cn='tab'+(g.view==f?' on':'')+(ne?' alert':'');if(t.className!=cn)t.className=cn;var tl=t.querySelector('.tl'),th=(f+1)+'階<small>敵'+ne+' ゴブ'+nm+'</small>';if(tl&&tl.innerHTML!=th)tl.innerHTML=th;}
  }
  document.getElementById('wave').textContent=Math.min(g.wave,nW())+' / '+nW();
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v66 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v67 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2558,21 +2555,21 @@ function enRows(){return Object.keys(EN).map(function(k){return DEX['en_'+k]?'<l
 function partyAdvice(){
  var P=g.party||[],has=function(k){return P.some(function(p){return (p.skl||[]).indexOf(k)>=0;});};
  if(has('heal'))return '回復する者がいる。行き止まりで分断して、回復役から先に倒そう。';
- if(has('warcry'))return 'ウォークライで攻撃が何倍にもなる。長引かせず、魔法陣やふんで足止めしよう。';
- if(has('fire')||has('wind'))return '範囲の技で群れごとやられる。モンスターを一か所に固めず、通路に散らそう。';
+ if(has('warcry'))return 'ウォークライで攻撃が何倍にもなる。呪いで弱らせ、癒しで粘ろう。';
+ if(has('fire')||has('wind'))return '範囲の技で群れごとやられる。ゴブリンを一か所に固めず、祭壇を分けて置こう。';
  if(P.length>=3)return '3人組は分かれ道で散る。枝道を増やして1人ずつ迎え撃とう。';
- if(P.some(function(p){return p.boss;}))return '伝承の勇者はとても強い。主役を鍛え、ドラゴンを育てて挑もう。';
- return '入口からコアまでの道を長く、迷いやすく。強いモンスターは最上階の近くに。';
+ if(P.some(function(p){return p.boss;}))return '伝承の勇者はとても強い。主役を鍛え、上の技をそろえた一族で挑もう。';
+ return '入口からコアまでの道を長く、迷いやすく。強いゴブリンは最上階の近くに。';
 }
 function advice(){
  var ar=armyPower(),nh=g.cr.filter(function(m){return m.hero;}).length;
- if(ar<60)return 'モンスターが少なかったね。養分の濃い土（白っぽい模様）を探して掘ろう。';
+ if(ar<60)return 'ゴブリンが少なかったね。魂を貯めずに、はぐれゴブリンを呼んで守りを厚くしよう。';
  if(g.party)return partyAdvice();
  if(g.round==1&&g.wave<=3)return '早いうちに取られた。最上階までの道を長く、枝分かれさせて迷わせよう。';
  if((g.dp||0)>60)return '掘る力が余ってたよ。行き止まりや枝道をもっと作ってもよかった。';
- if(!nh&&!g.promos)return '主役がいなかったね。餌の多い所で育てると、昇格しやすいよ。';
+ if(!nh&&!g.promos)return '主役がいなかったね。冒険者をたくさん倒した子が、主役に昇格するよ。';
  if(g.en.some(function(e){return e.yu;}))return '勇者は主役を先に狙う。主役をコアから離しておくと時間が稼げるよ。';
- if(!g.circles.length&&!g.cr.some(function(m){return m.sp=='demon'||m.sp=='lich';}))return '魔法陣を試してみて。周りの8マスを掘ってから、濃い土を掘るんだ。';
+ if(!g.cr.some(function(m){return cmbList(m).length;}))return '上の技を試してみて。特性を2つそろえると強い技になる。組み合わせは図鑑に載るよ。';
  return 'まあ、塔はまた建てられる。次はもっと意地悪に掘ろう。';
 }
 // 朝・昼・夕・夜（4分で一回り。見た目だけ）
@@ -2581,7 +2578,7 @@ function phase(){var p=((g&&g.t)||0)%240/240;return p<0.1?'朝':p<0.55?'昼':p<0
 var TUT=[['下の「コマンド」→「召喚する」で、はぐれゴブリンを3匹の中から選んで呼ぼう',function(){return g.cr.length>=3;}],
  ['右下の「⛏ 掘る」を押してから、道の隣の土をなぞって通路を広げよう。掘っても何も生まれない。冒険者の道を長く、迷わせる形に',function(){return (g.dug||0)>=3;}],
  ['準備ができたら「今すぐ迎える」。早く呼ぶほど、次に戻る掘る力が増える',function(){return g.wave>=1;}],
- ['冒険者を倒すと魂と供物（持ち物）が手に入る。コアの体力が0になると負け',function(){return (g.kills||0)>=1;}],
+ ['冒険者を倒すと魂が手に入る。コアの体力が0になると負け',function(){return (g.kills||0)>=1;}],
  ['「コマンド」の配合で一族を増やす。血が濃いと特性の段が上がり、2つの特性がそろうと上の技になる。説明はこれでおしまい',function(){return performance.now()-(g.tutT||0)>12000;}]];
 function tutDone(){var v=kvGet('tou-tut');return v=='1'||v=='2';}
 var LPH=null;

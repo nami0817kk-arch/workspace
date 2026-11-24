@@ -512,6 +512,21 @@ void main() {
     expect(html, isNot(contains('<div id="cmdbone"></div>')));
   });
 
+  test('前の仕組みの名残を外す（0.7.50・試作 v67）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // ゴブリンが倒れてもゴーストは湧かない・冒険者の亡骸は残さない
+    expect(html, isNot(contains("mkCr('ghost','mag',m.f,m.x,m.y,2);")));
+    expect(html, isNot(contains("else if(e.k!='doll')addCorpse(e);")));
+    // 記憶の棚はゴブリンの形に
+    expect(html, contains("{k:'pool',n:'始めの魂',"));
+    expect(html, contains("{k:'mate',n:'始めの仲間',d:'新しい塔に、はぐれゴブリン ＋1匹',"));
+    expect(html, isNot(contains("{k:'soil',n:'始めの土を選ぶ',")));
+    // 文に前の仕組み（養分・魔法陣・ふん・ドラゴン）を出さない
+    expect(html, isNot(contains('養分の濃い土（白っぽい模様）を探して掘ろう')));
+    expect(html, isNot(contains('魔法陣を試してみて')));
+    expect(html, isNot(contains('魔法陣やふんで足止め')));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
