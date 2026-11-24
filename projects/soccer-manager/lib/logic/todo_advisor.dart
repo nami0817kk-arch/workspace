@@ -5,6 +5,7 @@ import '../models/owner_work.dart';
 import '../state/game_state.dart';
 import 'contract_board_engine.dart';
 import 'contract_engine.dart';
+import 'league_rules.dart';
 import 'economy_scale.dart';
 import 'first_days_guide.dart';
 import 'next_action_advisor.dart';
@@ -77,10 +78,13 @@ class TodoPlaces {
   /// カレンダー(タブなし。中で「月」と「1年の予定」を切り替える)。
   static const calendar = TodoPlace(TodoMenu.calendar);
 
-  // 経営: 概要・お金を作る・方針と投資
+  // 経営: 概要・お金を集める・事業と規則(2026-11-25 の第7段で改めた)
   static const financeOverview = TodoPlace(TodoMenu.finance);
   static const financeFunding = TodoPlace(TodoMenu.finance, tab: 1);
-  static const financeProjects = TodoPlace(TodoMenu.finance, tab: 2);
+  static const financeBusiness = TodoPlace(TodoMenu.finance, tab: 2);
+
+  /// 事業と規則の、財務規則の札(タブの先頭)。
+  static const financeRules = financeBusiness;
 
   // クラブ: スタッフ・施設・ファンと街・ユースチーム・新人発掘
   static const clubStaff = TodoPlace(TodoMenu.club);
@@ -140,6 +144,13 @@ enum TodoKind {
   /// 資金がマイナス。
   budgetNegative,
 
+  /// 国の財務規則に違反している(2026-11-25 の第7段。以前は経営の札の中
+  /// だけで、開かないと気づかなかった)。
+  ruleBreach,
+
+  /// 理事会の給与予算を超えている(新しく獲れない)。
+  wageBudgetOver,
+
   /// サポーターの期待が下がり続けている(低いときは必須、まだ余裕が
   /// あればおすすめ)。
   supporterFalling,
@@ -198,6 +209,9 @@ enum TodoKind {
 
   /// クラブの方針を変えられる(開幕前だけ)。
   clubPolicy,
+
+  /// 今年の予算の配り方を決められる(オフシーズンだけ)。
+  budgetPlan,
 
   /// 監督からの提案(契約更新・ユース昇格)が承認待ち。
   managerProposals,
@@ -619,6 +633,46 @@ class TodoAdvisor {
 
     // ---- どこにも出ていなかったもの ----
 
+    // 財務規則の違反(問題なし・注意・違反のうち、違反だけ)。
+    final breaches =
+        gs.ruleReport.statuses.where((st) => st.level >= 2).toList();
+    if (breaches.isNotEmpty) {
+      final grace = save.league.season <= RulesEngine.graceSeasons;
+      add(TodoItem(
+        kind: TodoKind.ruleBreach,
+        // 最初の季は猶予で罰が無いので、おすすめに留める。
+        level: grace ? TodoLevel.recommended : TodoLevel.must,
+        title: Tr.pick('財務規則に違反しています(${breaches.map((b) => b.label).join('・')})',
+            'You are breaking the financial rules (${breaches.map((b) => b.label).join(', ')})'),
+        note: [
+          for (final b in breaches)
+            if (b.gap != null) b.gap!,
+          if (grace)
+            Tr.pick('今季は猶予で、罰はありません。', 'This season is a grace period.')
+          else
+            Tr.pick('判定: ${gs.ruleSet.checkTiming}。', 'Checked: ${gs.ruleSet.checkTiming}.'),
+        ].join(Tr.pick('。', '. ')),
+        place: TodoPlaces.financeRules,
+        count: breaches.length,
+      ));
+    }
+
+    // 理事会の給与予算を超えている。
+    final wageCap = gs.wageBudgetCap;
+    final wageBill = gs.weeklyWageBill;
+    if (wageCap > 0 && wageBill > wageCap) {
+      add(TodoItem(
+        kind: TodoKind.wageBudgetOver,
+        level: TodoLevel.must,
+        title: Tr.pick('理事会の給与予算を超えています',
+            'You are over the board\'s wage budget'),
+        note: Tr.pick(
+            '年${formatMoney(annualFromWeekly(wageBill - wageCap))}超過。戻るまで新しく獲れません。売るか放出で減らします。',
+            '${formatMoney(annualFromWeekly(wageBill - wageCap))} a year over. No new signings until you are back under: sell or release.'),
+        place: TodoPlaces.financeOverview,
+      ));
+    }
+
     // スタッフの空席。開幕前に限らず、候補がいれば挙げる。
     final vacant = [
       for (final r in StaffRole.values)
@@ -667,6 +721,16 @@ class TodoAdvisor {
         note: Tr.pick('開幕前だけ。入場券の一部を先にまとめて売って、いまお金を入れられます。',
             'Only before the season starts: sell part of your tickets up front for cash now.'),
         place: TodoPlaces.clubCommunity,
+      ));
+    }
+    if (gs.isOffseason) {
+      add(TodoItem(
+        kind: TodoKind.budgetPlan,
+        level: TodoLevel.recommended,
+        title: Tr.pick('今年の予算の配り方を決められます', "You can set this year's budget split"),
+        note: Tr.pick('変えられるのはオフシーズン(季の終わり〜開幕前)だけです。',
+            'Only in the off-season, from the end of the season to kick-off.'),
+        place: TodoPlaces.financeOverview,
       ));
     }
     if (gs.canChangeClubPolicy) {

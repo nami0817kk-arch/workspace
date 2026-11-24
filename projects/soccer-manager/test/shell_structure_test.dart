@@ -36,7 +36,7 @@ import 'package:soccer_manager/widgets/landscape_scale.dart';
 import 'package:soccer_manager/widgets/media_deals_card.dart';
 import 'package:soccer_manager/widgets/owner_career_card.dart';
 import 'package:soccer_manager/widgets/owner_wealth_card.dart';
-import 'package:soccer_manager/widgets/project_card.dart';
+import 'package:soccer_manager/widgets/business_card.dart';
 import 'package:soccer_manager/widgets/proposal_card.dart';
 import 'package:soccer_manager/widgets/reward_funds_card.dart';
 import 'package:soccer_manager/widgets/risk_card.dart';
@@ -121,7 +121,7 @@ void main() {
         ]
       ),
       (
-        '経営 > お金を作る',
+        '経営 > お金を集める',
         TodoPlaces.financeFunding,
         null,
         [
@@ -129,23 +129,25 @@ void main() {
           type(SponsorSlotsCard),
           type(MediaDealsCard),
           text('融資を申し込む'),
-          text('定期預金を組む'),
+          key('funding-summary'),
           type(EquityCard),
           type(OwnerWealthCard),
           key('finance-to-owner-finance-works'),
         ]
       ),
       (
-        '経営 > 方針と投資',
-        TodoPlaces.financeProjects,
+        '経営 > 事業と規則',
+        TodoPlaces.financeBusiness,
         null,
         [
           type(FiveYearPlanCard),
-          type(ProjectCard),
+          type(BusinessCard),
           type(AdvisorCard),
           type(RiskCard),
           type(RulesCard),
           type(EconomyCard),
+          // 定期預金は「お金を集める」から投資の札へ移した(第7段)。
+          text('定期預金を組む'),
         ]
       ),
       ('クラブ > スタッフ', TodoPlaces.clubStaff, null, [text('スタッフ: ')]),
@@ -255,7 +257,7 @@ void main() {
   testWidgets('入口の行を押すと、同じ用件の正の場所へ移る', (tester) async {
     await pumpShell(tester);
     final nav = shellNavOf(tester);
-    // 経営 > お金を作る → オーナーの仕事の「財務・資本」。
+    // 経営 > お金を集める → オーナーの仕事の「財務・資本」。
     nav.go(TodoPlaces.financeFunding);
     await settleShell(tester);
     final link = find.byKey(const ValueKey('finance-to-owner-finance-works'),

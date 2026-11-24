@@ -414,6 +414,23 @@ String formatMoney(int man) {
   return Tr.pick('$sign${_formatJa(v)}', '$sign${_formatEn(v)}');
 }
 
+/// 狭い所(上の帯など)に出す短い金額。日本語は [formatMoney] と同じ。英語は
+/// 「 yen」を付けない(810.8m yen → 810.8m)。単位は見出しの側に書く
+/// (「Funds (yen)」)。上の帯の資金が英語で「810.8m y…」と切れていた
+/// (2026-11-25 の第7段)。円の記号は同梱の字体に無く、箱の字になる。
+String formatMoneyCompact(int man) {
+  final neg = man < 0;
+  final v = man.abs();
+  final sign = neg ? '-' : '';
+  if (v == 0) return Tr.pick(_formatJa(0), '0');
+  final en = v >= 100000
+      ? '${_oneDecimal(v / 100000)}bn'
+      : v >= 100
+          ? '${_oneDecimal(v / 100)}m'
+          : '${v * 10}k';
+  return Tr.pick('$sign${_formatJa(v)}', '$sign$en');
+}
+
 /// 符号付きの表示(+1.2億 / -3,500万)。0 は符号なし。
 String formatMoneySigned(int man) =>
     man > 0 ? '+${formatMoney(man)}' : formatMoney(man);

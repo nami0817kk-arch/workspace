@@ -8,8 +8,15 @@ import '../state/game_state.dart';
 import 'help_button.dart';
 
 /// 枠ごとのスポンサー(袖・背中・練習着)。胸のスポンサーとは別の会社と結ぶ。
+///
+/// [chest] を渡すと、胸のスポンサーを先頭に置いた「スポンサー」の札1枚に
+/// なる(2026-11-25 の第7段。胸と枠ごとが別の札で、同じ話が2か所に
+/// 分かれていた)。
 class SponsorSlotsCard extends StatelessWidget {
-  const SponsorSlotsCard({super.key});
+  const SponsorSlotsCard({super.key, this.chest});
+
+  /// 胸のスポンサーの欄(契約中・提示・なし)。
+  final Widget? chest;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +29,16 @@ class SponsorSlotsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TitleWithHelp(
-              title: Tr.pick('枠ごとのスポンサー', 'Other sponsor slots'),
-              help: Tr.pick('胸のスポンサーとは別の会社と結べます。空いた枠には季の始めに提示が来ます。',
-                  'Each slot can carry a different company from your shirt sponsor. Empty slots get an offer at the start of each season.'),
+              title: chest == null
+                  ? Tr.pick('枠ごとのスポンサー', 'Other sponsor slots')
+                  : Tr.pick('スポンサー契約', 'Sponsorship'),
+              help: Tr.pick('胸のスポンサーが一番大きな契約です。1年の額が大きいほど、契約の期間は短くなります。袖・背中・練習着は、胸とは別の会社と結べます。空いた枠には季の始めに提示が来ます。',
+                  'Your shirt sponsor is the biggest deal. The more it pays a year, the shorter the deal. Sleeve, back and training kit can carry other companies. Empty slots get an offer at the start of each season.'),
             ),
+            if (chest != null) ...[
+              chest!,
+              const Divider(height: 16),
+            ],
             for (final slot in SponsorSlot.values) _SlotRow(slot: slot),
           ],
         ),

@@ -315,13 +315,21 @@ extension GameStateMoneyRules on GameState {
     final s = _save;
     if (s == null) return 99;
     final assets = s.budget + s.reserveFund + totalDepositedFunds;
-    final dueInstallments = s.pendingInstallments.fold<int>(
-        0, (t, i) => t + (i.annual ? i.weeklyAmount : i.outstanding));
-    final liabilities = annualFromWeekly(weeklyWageBill) ~/ 3 +
-        outstandingLoanDebt +
-        dueInstallments;
+    final liabilities = liquidityLiabilities;
     if (liabilities <= 0) return 99;
     return assets / liabilities;
+  }
+
+  /// 流動性の指標の分母: 1年以内に払う額(給与の4か月分・融資の返済の
+  /// 残り・1年以内の分割払い)。財務規則の札が「あといくら」を出すのに使う。
+  int get liquidityLiabilities {
+    final s = _save;
+    if (s == null) return 0;
+    final dueInstallments = s.pendingInstallments.fold<int>(
+        0, (t, i) => t + (i.annual ? i.weeklyAmount : i.outstanding));
+    return annualFromWeekly(weeklyWageBill) ~/ 3 +
+        outstandingLoanDebt +
+        dueInstallments;
   }
 
   // ---- スペイン式: 上限を超えている間は、売った分の一部だけ使える ----
@@ -374,12 +382,29 @@ extension GameStateMoneyRules on GameState {
   void debugObserveSquadCost() => _observeSquadCost();
 
   /// 規則の判定に渡す、いまのお金の様子。
+  /// 自クラブが今季の大陸大会(2つのどちらか)に出ているか。大会そのものは
+  /// 自クラブが出ない季にもある(他国・自国の他のクラブが出る)ので、
+  /// 組に名前があるかで見る。以前は大会があるだけで大陸大会の規則を当て、
+  /// 3部のクラブにも「大陸大会の人件費比率」が出ていた(2026-11-25)。
+  bool get userInContinental {
+    final s = _save;
+    if (s == null) return false;
+    bool inCup(ContinentalCup? c) =>
+        c != null &&
+        (c.groups.any((g) => g.contains(s.userTeamId)) ||
+            c.knockoutRounds.any((r) => r.any(
+                (t) => t.teamAId == s.userTeamId || t.teamBId == s.userTeamId)));
+    return inCup(s.continentalCup) || inCup(s.secondContinentalCup);
+  }
+
   ClubFinanceSnapshot get financeSnapshot => ClubFinanceSnapshot(
         projectedIncome: projectedAnnualIncome,
         squadCost: annualSquadCost,
         equity: clubEquity,
         liquidity: liquidityIndex,
+        dueWithinYear: liquidityLiabilities,
         debt: outstandingLoanDebt + outstandingInstallments,
-        inContinental: _save?.continentalCup != null,
+        inContinental: userInContinental,
+        seasonOver: _save?.league.isSeasonComplete ?? true,
       );
 }

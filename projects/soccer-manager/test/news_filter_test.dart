@@ -51,6 +51,7 @@ void main() {
       ('医療', 'Medical', NewsCategory.people),
       ('放映権', 'TV rights', NewsCategory.money),
       ('投資案件', 'Projects', NewsCategory.money),
+      ('事業', 'Business', NewsCategory.money),
       ('株主総会', "Shareholders' meeting", NewsCategory.board),
       ('他のオーナー', 'Rival owners', NewsCategory.board),
       ('最後通告', 'Final warning', NewsCategory.board),

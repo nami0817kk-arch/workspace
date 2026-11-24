@@ -496,16 +496,22 @@ class _FmTopBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(Tr.pick('資金', 'Funds'),
+                  Text(Tr.pick('資金', 'Funds (yen)'),
                       style: sub.copyWith(fontSize: 11)),
-                  Text(
-                    formatMoney(save.budget),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: save.budget < 0 ? scheme.error : null,
+                  // 切らずに縮める。英語は短い形(¥810.8m)にする。以前は
+                  // 「810.8m y…」と切れていた(2026-11-25 の第7段)。
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      formatMoneyCompact(save.budget),
+                      key: const ValueKey('topbar-funds'),
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: save.budget < 0 ? scheme.error : null,
+                      ),
                     ),
                   ),
                 ],
