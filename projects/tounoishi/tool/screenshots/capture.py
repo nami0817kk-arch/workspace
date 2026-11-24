@@ -64,7 +64,7 @@ function __s(v){return Math.round(v*(__N()-1)/19);}
 function __focus(f,x,y){T.view(f);T.zoom(1,0,0);var L=__N()*18;T.zoom(__N()/20,__s(x)*18+9,__s(y)*18+9);}
 // 冒険者がいればその辺り、いなければ入口の辺り
 function __focusEn(f){var e=T.g().en.filter(function(e){return e.f==f;})[0];if(e){T.view(f);T.zoom(1,0,0);T.zoom(__N()/20,e.x*18+9,e.y*18+9);}else __focus(f,10,15);}
-// (x,y) から (dx,dy) の向きに len マス掘る。nuts[i] があれば、掘る前にその土の養分を入れておく（生まれる魔物が決まる）
+// (x,y) から (dx,dy) の向きに len マス掘る（v61 から掘っても何も生まれない。nuts・mag は使わない）
 function __br(f,x,y,dx,dy,len,nuts,mag){
  x=__s(x);y=__s(y);
  for(var i=1;i<=len;i++){var cx=x+dx*i,cy=y+dy*i,c=T.cell(f,cx,cy);if(!c)break;
@@ -81,8 +81,11 @@ function __near(g,e,d){return g.cr.some(function(m){return m.f==e.f&&Math.abs(m.
 function __heroes(whys){var g=T.g(),seen={},n=0;
  g.cr.filter(function(m){return m.f==0;}).sort(function(a,b){return b.t-a.t;}).forEach(function(m){
   if(n<whys.length&&!seen[m.sp]){seen[m.sp]=1;T.promote(m,whys[n++]);}});}
-function __fin(dp){var g=T.g();g.dp=dp;g.bub=[];}
-// 1階（入口の階）に枝道を掘って、いろいろな魔物を生ませる
+function __fin(dp){var g=T.g();g.dp=dp;g.bub=[];if(g.soul>200)g.soul=27;}
+// v61: 階 f に祭壇を置き（無ければ）、供物の並び ks の順に召喚する（場面のため魂と供物は足しておく）
+function __sum(f,ks){var g=T.g();g.soul=999;g.loot={sw:9,st:9,ho:9,bo:9};var a=g.alt.filter(function(a){return a.f==f;})[0];
+ if(!a){var y=__s(f==0?17:3),x=__s(f==0?10:16);a={f:f,x:x,y:y};g.alt.push(a);}ks.forEach(function(k){T.sumAt(a,k);});}
+// 1階（入口の階）に枝道を掘り、祭壇からいろいろな魔物を呼ぶ
 function __floor0(){
  __br(0,10,15,1,0,5,[1,2,0,3,4]);
  __br(0,3,12,-1,0,2,[5,1]);
@@ -91,6 +94,7 @@ function __floor0(){
  __br(0,12,8,0,-1,4,[2,0,null,3],[null,null,4,null]);
  __br(0,16,4,-1,0,4,[0,8,1,0]);
  __br(0,16,6,1,0,2,[3,1]);
+ __sum(0,['sw','st','ho','bo','sw','st','none','ho']);
 }
 """
 
@@ -109,6 +113,7 @@ __br(f,15,12,1,0,3,[2,0,5]);
 __br(f,15,9,-1,0,4,[1,0,null,2],[null,null,3,null]);
 __br(f,10,4,1,0,4,[0,4,0,1]);
 __br(f,10,2,-1,0,3,[6,0,2]);
+__sum(f,['sw','st','ho']);
 __run(6);T.view(f);__fin(64);
 """, ''),
     # 2. 冒険者と戦っているところ（1階。2つの波を続けて呼び、魔物とぶつかった瞬間で止める）
@@ -121,17 +126,17 @@ __focusEn(0);__fin(52);
     # 3. 主役と勇者（第6波の勇者が主役に迫った所で止める）
     ('03_hero', r"""
 T.reset('normal');__floor0();__run(4);
-__heroes(['kill','eat']);
+__heroes(['kill','kill']);
 var g=T.g();g.wave=5;g.cd=0;T.launch();
 __until(function(g){var y=g.en.filter(function(e){return e.yu&&e.f==0;})[0];return y&&g.cr.some(function(m){return m.hero&&m.f==0&&Math.abs(m.x-y.x)+Math.abs(m.y-y.y)<=3;});},120);
 __focusEn(0);__fin(41);
 """, PAUSE),
-    # 4. 一覧のシート（主役・勇者・系統の強化）
-    ('04_list', r"""
+    # 4. コマンドのシート（召喚・配合）
+    ('04_cmd', r"""
 T.reset('normal');__floor0();__run(4);
-__heroes(['kill','big','eat']);
-__focus(0,10,10);__fin(73);
-""", "document.getElementById('blist').click();var sb=document.querySelector('.sbox');if(sb)sb.scrollTop=0;"),
+__heroes(['kill','kill']);
+__focus(0,10,10);__fin(73);var g=T.g();g.soul=38;g.loot={sw:2,st:1,ho:3,bo:2};
+""", "document.getElementById('bcmd').click();var sb=document.querySelector('.sbox');if(sb)sb.scrollTop=0;"),
     # 5. タイトル
     ('05_title', '', ''),
 ]
