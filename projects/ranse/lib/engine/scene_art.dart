@@ -20,6 +20,8 @@ const kSceneArts = <String>[
   'smith', // 刀鍛冶の仕事場（職人）
   'mountain', // 炭焼きの山（山の民）
   'town', // 泰平の世の城下町（1601年からの暮らし・銭の使い道）
+  'office', // 役所の座敷（泰平の世の勤め・帳面）
+  'dojo', // 剣術の道場（稽古・指南）
 ];
 
 bool _any(String s, List<String> words) => words.any(s.contains);
@@ -42,6 +44,13 @@ String? sceneArtFor(Game g, String? id, String title) {
     return 'battle';
   }
   if (g.isChild) return 'child';
+  // 道場の稽古・指南（どの世でも）。
+  if (_any(t, ['道場', '稽古', '指南', '剣術', '木刀', '槍合わせ'])) return 'dojo';
+  // 泰平の世の勤め・帳面（役方・勘定・奉行所・届け）。
+  if ((i.startsWith('pc_') || i.startsWith('pl_')) &&
+      _any(t, ['役', '勘定', '帳', '奉行', '届け', '留守居', '検地', '改め', '家督', '詰め'])) {
+    return 'office';
+  }
   // 銭と功の使い道（spending.dart の sp_）と、泰平の世の町の暮らし（peace.dart・peace_life.dart）。
   // 寺・田・奥など題で決まるものは、下の決まりに任せる。
   if (i.startsWith('sp_')) return peaceTime(g) ? 'town' : 'market';
