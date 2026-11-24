@@ -78,7 +78,9 @@ void showAcquireSheet(BuildContext context, Player player) {
         await runAcquire(
           context,
           () => gameState.signLoanPlayer(player.id,
-              withBuyOption: option, withObligation: obligation, length: length),
+              withBuyOption: option,
+              withObligation: obligation,
+              length: length),
           player.name,
         );
       }
@@ -196,8 +198,8 @@ Future<LoanLength?> chooseLoanLength(BuildContext context) {
           ),
         SimpleDialogOption(
           onPressed: () => Navigator.pop(ctx, LoanLength.full),
-          child: Text(Tr.pick(
-              '1年(シーズン末の$fullEndまで)', 'Full season (until $fullEnd)')),
+          child: Text(
+              Tr.pick('1年(シーズン末の$fullEndまで)', 'Full season (until $fullEnd)')),
         ),
       ],
     ),

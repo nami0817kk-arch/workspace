@@ -67,7 +67,7 @@ void main() {
     await tester.pump(GameState.persistDebounce);
   });
 
-  testWidgets('他クラブの選手の詳しい画面も開ける(操作は比べるだけ)', (tester) async {
+  testWidgets('他クラブの選手の詳しい画面も開ける(見立てと、獲得の操作)', (tester) async {
     late final GameState game;
     late final SettingsController settings;
     await tester.runAsync(() async {
@@ -98,8 +98,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     expect(find.text(other.name), findsWidgets, reason: '所属のクラブ名');
-    expect(find.textContaining('分からない'), findsWidgets,
-        reason: '他クラブの選手の伸びしろは見えない');
+    // 2026-11-25(第4段): 他クラブの選手は総合・伸びしろを見立て(星と幅)で出す。
+    expect(find.byKey(const ValueKey('detail-estimate')), findsOneWidget);
+    expect(find.text('伸びしろ(見立て)'), findsWidgets,
+        reason: '他クラブの選手の伸びしろは見立てで出す');
     await tester.tap(find.text('経歴'));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('career-table')), findsOneWidget);

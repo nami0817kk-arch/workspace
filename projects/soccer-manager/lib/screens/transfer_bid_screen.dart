@@ -80,8 +80,7 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
     if (p == null) {
       return Scaffold(
         appBar: AppBar(title: Text(Tr.pick('移籍金の提示', 'Make a bid'))),
-        body: Center(
-            child: Text(Tr.pick('この選手は見つかりません', 'Player not found'))),
+        body: Center(child: Text(Tr.pick('この選手は見つかりません', 'Player not found'))),
       );
     }
     final screen = MediaQuery.sizeOf(context);
@@ -101,9 +100,8 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
             columns: wide ? 2 : 1,
             compact: wide,
             splitAt: 3,
-            wantHeader: wide
-                ? Tr.pick('相手', 'Club')
-                : Tr.pick('相手のクラブ', 'Their club'),
+            wantHeader:
+                wide ? Tr.pick('相手', 'Club') : Tr.pick('相手のクラブ', 'Their club'),
           ),
           bottom: (narrow) => _bottom(context, game, p, narrow: narrow),
         ),
@@ -243,8 +241,9 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
             'The cash part. With instalments, 30% is due now.'),
         want: want(t?.stage == TransferTalkStage.countered
             ? formatMoney(t!.fee)
+            // 英語は欄が狭いので額だけ(見出しの「相手」の欄に相場)。
             : Tr.pick('相場 ${formatMoney(p.marketValue)}',
-                'Worth ${formatMoney(p.marketValue)}')),
+                formatMoney(p.marketValue))),
         offer: NegotiationStepper(
           label: formatMoney(_fee),
           color: need > budget ? SemanticColors.negative(context) : null,
@@ -259,8 +258,7 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
       NegotiationRow(
         key: const ValueKey('bid-pay'),
         label: Tr.pick('払い方', 'Payment'),
-        note: Tr.pick(
-            '分割は頭金3割と、残りを毎年の季の締めに。年数が長いほど相手の見る値打ちは下がります(1年あたり3%)。',
+        note: Tr.pick('分割は頭金3割と、残りを毎年の季の締めに。年数が長いほど相手の見る値打ちは下がります(1年あたり3%)。',
             '30% now and the rest at the end of each season. The longer it runs, the less it is worth to them (3% a year).'),
         want: want(t?.stage == TransferTalkStage.countered
             ? (t!.installments && !t.installmentsOk
@@ -300,9 +298,8 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
         label: Tr.pick('売却時の上乗せ', 'Sell-on'),
         note: Tr.pick('将来この選手を売るとき、売値のこの割合を元のクラブへ払う約束。',
             'If you sell him on later, this share of the fee goes back to them.'),
-        want: want(t != null && t.sellOnPercent > 0
-            ? '${t.sellOnPercent}%'
-            : '—'),
+        want: want(
+            t != null && t.sellOnPercent > 0 ? '${t.sellOnPercent}%' : '—'),
         offer: NegotiationChoice<int>(
           value: _sellOn,
           items: TransferTalkEngine.sellOnChoices,
@@ -313,8 +310,7 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
       NegotiationRow(
         key: const ValueKey('bid-exchange'),
         label: Tr.pick('選手との交換', 'Player exchange'),
-        note: Tr.pick(
-            '自クラブの選手を1人付ける。相手はその位置に欲しい選手ほど高く見ます(市場価値の6〜8.5割)。',
+        note: Tr.pick('自クラブの選手を1人付ける。相手はその位置に欲しい選手ほど高く見ます(市場価値の6〜8.5割)。',
             'Add one of your players. They value him at 60-85% of his worth, more if they need his position.'),
         want: want('—'),
         offer: NegotiationChoice<String>(
@@ -344,8 +340,7 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
     final short = need > budget;
     final windowShut = !game.isTransferWindowOpen;
     final ex = _exchangeId;
-    final tooFew =
-        ex != null && game.userTeam.players.length <= minSquadSize;
+    final tooFew = ex != null && game.userTeam.players.length <= minSquadSize;
     final blocked = windowShut
         ? game.transferWindowStatusLabel
         : short
@@ -370,7 +365,9 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
                 'Due now ${formatMoney(need)} (with agent fee)'),
             style: label.copyWith(
                 color: short ? SemanticColors.negative(context) : null)),
-        Text(Tr.pick('資金 ${formatMoney(budget)}', 'Funds ${formatMoney(budget)}'),
+        Text(
+            Tr.pick(
+                '資金 ${formatMoney(budget)}', 'Funds ${formatMoney(budget)}'),
             style: label),
         if (blocked != null)
           DisabledReason(blocked,
@@ -400,7 +397,8 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
     );
   }
 
-  Future<void> _payClause(BuildContext context, GameState game, Player p) async {
+  Future<void> _payClause(
+      BuildContext context, GameState game, Player p) async {
     final paid = await game.triggerReleaseClause(p.id);
     if (!context.mounted) return;
     paid ? FeedbackService.tap() : FeedbackService.error();

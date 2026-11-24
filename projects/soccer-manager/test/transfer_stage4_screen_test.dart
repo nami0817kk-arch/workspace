@@ -70,8 +70,7 @@ void main() {
     final clubText = find.descendant(of: row.first, matching: find.text(club));
     expect(clubText, findsOneWidget);
     expect(tester.widget<Text>(clubText).style!.fontSize, 12);
-    expect(
-        find.ancestor(of: clubText, matching: find.byType(FittedBox)),
+    expect(find.ancestor(of: clubText, matching: find.byType(FittedBox)),
         findsNothing);
     // 見立ては星で出る。
     expect(find.descendant(of: row.first, matching: find.byType(EstimateStars)),
@@ -94,7 +93,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(TransferBidScreen), findsOneWidget);
     // 交換・出来高・上乗せの行がある。
-    for (final k in ['bid-fee', 'bid-pay', 'bid-addon', 'bid-sellon', 'bid-exchange']) {
+    for (final k in [
+      'bid-fee',
+      'bid-pay',
+      'bid-addon',
+      'bid-sellon',
+      'bid-exchange'
+    ]) {
       expect(find.byKey(ValueKey(k)), findsOneWidget, reason: k);
     }
     expect(tester.takeException(), isNull);
@@ -114,8 +119,11 @@ void main() {
     game.save!.budget = 1 << 40;
     await pump(tester, game, settings,
         TransferBidScreen(key: const ValueKey('b'), playerId: p.id));
-    expect(tester.widget<FilledButton>(find.byKey(const ValueKey('bid-submit')))
-        .onPressed, isNotNull);
+    expect(
+        tester
+            .widget<FilledButton>(find.byKey(const ValueKey('bid-submit')))
+            .onPressed,
+        isNotNull);
     expect(tester.takeException(), isNull);
     await tester.pump(GameState.persistDebounce);
   });
@@ -125,7 +133,8 @@ void main() {
     game.save!.today = DateTime(game.today.year, 10, 15);
     expect(game.isTransferWindowOpen, isFalse);
     await pump(tester, game, settings, const TransferScreen());
-    final first = tester.widget<ChoiceChip>(find.byKey(const ValueKey('chip-0')));
+    final first =
+        tester.widget<ChoiceChip>(find.byKey(const ValueKey('chip-0')));
     expect((first.label as Text).data, startsWith('注目'));
     expect(first.selected, isTrue);
     expect(find.byKey(const ValueKey('watch-closed-hint')), findsOneWidget);
