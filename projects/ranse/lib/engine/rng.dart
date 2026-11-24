@@ -7,7 +7,8 @@ class Rng {
 
   /// 自分から新しい種を引き、その種で引き直す（年の初めの保存で使う。種を残せば、同じ年を同じ乱数で流し直せる）。
   int reseed() {
-    final s = _r.nextInt(1 << 32);
+    // 1 << 32 は Web（整数が32ビット）では 0 になって落ちる。どちらでも引ける幅にする。
+    final s = _r.nextInt(0x7fffffff);
     _r = Random(s);
     return s;
   }
