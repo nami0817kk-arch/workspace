@@ -138,7 +138,7 @@ class NegotiationTable extends StatelessWidget {
   // 増減の部品が入る幅を残す。
   int get _termFlex => compact ? 3 : 4;
   int get _wantFlex => compact ? 3 : 4;
-  int get _offerFlex => compact ? 4 : 5;
+  int get _offerFlex => 5;
 
   static Widget _fit(Widget child) => FittedBox(
         fit: BoxFit.scaleDown,

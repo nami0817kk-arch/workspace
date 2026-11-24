@@ -151,8 +151,8 @@ class RulesCard extends StatelessWidget {
             if (report.penalty != null)
               _Alert(
                 inGrace
-                    ? Tr.pick('このまま今季を終えると違反です(${report.penalty!.reason})。今季は猶予で、罰はありません。',
-                        'If the season ended now you would be in breach (${report.penalty!.reason}). This season is a grace period.')
+                    ? Tr.pick('このまま今季を終えると違反です(${report.penalty!.reason})。',
+                        'If the season ended now you would be in breach (${report.penalty!.reason}).')
                     : Tr.pick('このまま今季を終えると: ${report.penalty!.reason}。',
                         'If the season ended now: ${report.penalty!.reason}.'),
                 key: const ValueKey('rules-penalty-preview'),

@@ -163,12 +163,12 @@ void main() {
   });
 
   group('上の帯の資金', () {
-    test('英語は円の記号を前に置いた短い形', () {
+    test('英語は「 yen」を付けない短い形(単位は見出しの側)', () {
       Tr.language = AppLanguage.english;
-      expect(formatMoneyCompact(81080), '¥810.8m');
-      expect(formatMoneyCompact(150000), '¥1.5bn');
-      expect(formatMoneyCompact(-50), '-¥500k');
-      expect(formatMoneyCompact(0), '¥0');
+      expect(formatMoneyCompact(81080), '810.8m');
+      expect(formatMoneyCompact(150000), '1.5bn');
+      expect(formatMoneyCompact(-50), '-500k');
+      expect(formatMoneyCompact(0), '0');
       Tr.language = AppLanguage.japanese;
       expect(formatMoneyCompact(81080), formatMoney(81080));
     });

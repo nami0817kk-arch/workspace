@@ -187,7 +187,8 @@ void main() {
       await pumpScreen(tester, gs, const FinanceScreenHost());
       final md = gs.matchdaysPerSeason;
       final income = gs.projectedMatchdayIncome * md;
-      expect(find.text('人件費・運営費'), findsOneWidget);
+      // 見出しは「支出」(中身は「?」の中。第7段で「人件費・運…」の切れを直した)。
+      expect(find.text('支出'), findsOneWidget);
       expect(find.text('-${formatMoney(gs.annualExpenseForecast)}'),
           findsOneWidget);
       final net = gs.annualNetForecast;

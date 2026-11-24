@@ -496,7 +496,7 @@ class _FmTopBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(Tr.pick('資金', 'Funds'),
+                  Text(Tr.pick('資金', 'Funds (yen)'),
                       style: sub.copyWith(fontSize: 11)),
                   // 切らずに縮める。英語は短い形(¥810.8m)にする。以前は
                   // 「810.8m y…」と切れていた(2026-11-25 の第7段)。
