@@ -33,7 +33,9 @@ void main() {
       // ignore: avoid_print
       print('[grown] ${grownSummary(g)}');
       expect(g.over, isNull);
-      expect(g.biz.length, inInclusiveRange(20, 30));
+      // 1.1.0+29（段4）から宿敵と CPU の会社も同じ決まり（店などの数・借金・稼ぎからの投資）で動き、客の取り合いが厳しくなった。
+      // 16の種のどれも事業20に届かず、いちばん多い種で16〜17になったので、線を15に引き直した
+      expect(g.biz.length, inInclusiveRange(15, 30));
       expect(g.holding, isTrue);
       // 上場（年の利益3億円が条件）は 1.1.0+26 から入らないことがある（店などの数で伸びが遅くなった）。子会社の上場は見る
       expect(g.locals(), isNotEmpty);
@@ -95,6 +97,9 @@ void main() {
         g.calcAll();
         p.where = '子会社のカード';
         await p.tab('stock');
+        // 1.1.0+29 から、子会社の札は株の画面の「他社の株と買収」の面で、左の一覧から選んだ会社の右に出る
+        p.ctl.selectCo(loc.id);
+        await p.pump();
         await p.sweep();
         final card = find.byKey(ValueKey('co-${loc.id}'));
         expect(await p.reveal(card), isTrue);

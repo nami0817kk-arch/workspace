@@ -211,10 +211,10 @@ void main() {
       expect(c.fin!.gw, greaterThan(0));
       expect(c.fin!.integ, greaterThan(0));
       expect(c.fin!.integAll, inInclusiveRange(12, 36));
-      final p0 = c.biz.first.power;
+      final i0 = c.fin!.integ;
       _month(g);
       expect(c.fin!.attr, greaterThan(0));
-      expect(c.biz.first.power, lessThan(p0));
+      expect(c.fin!.integ, i0 - 1);
     });
 
     test('調べずに買うと、隠れた問題（簿外の借金・訴訟）が買ったあとに出る', () {
@@ -301,9 +301,14 @@ void main() {
       expect(txIn(g.ipo(), 'ja'), contains('まだ整っていません'));
       final p = g.corp.ipo!;
       g.cash = 1e14;
-      for (var i = 0; i < p.total; i++) {
-        g.ipoMonthly((_, [_ = '']) {});
+      // 経理・法務に強い人がいなければ、社内の決まりが整うまで予定より延びる（最大で4割ほど）
+      final news = <String>[];
+      for (var i = 0; i < p.total * 1.4 && !g.ipoReady(); i++) {
+        g.ipoMonthly((m, [t = '']) => news.add(txIn(m, 'ja')));
       }
+      expect(g.ipoReady(), isTrue);
+      expect(news.single, contains('準備が整いました'));
+      expect(p.done, inInclusiveRange(p.total, (p.total * 1.4).ceil()));
       expect(p.audit, greaterThanOrEqualTo(24));
       expect(p.ctrl, greaterThanOrEqualTo(.95));
       expect(p.spent, greaterThan(0));
@@ -429,13 +434,18 @@ void main() {
     void top() {
       final l = g.rankList();
       final me = l.indexWhere((r) => r.me) + 1;
-      lines.add('${g.year}年: 上位10社 ${l.take(10).map((r) => '${r.me ? 'あなた ' : r.c?.rival != null ? '宿敵 ' : ''}${yen(r.cap)}').join(' / ')}・自社 $me位（${yen(g.cap)}）');
+      lines.add('${g.year}年: 上位10社 ${l.take(10).map((r) => '${r.me ? 'あなた ' : r.c?.rival != null ? '宿敵 ' : ''}${r.c?.name ?? ''} ${yen(r.cap)}').join(' / ')}・自社 $me位（${yen(g.cap)}）');
     }
 
     top();
     final top0 = g.rankList().first.cap;
-    for (var m = 0; m < 360 && g.over == null; m++) {
+    // 見たいのは世界の大きさなので、自社が倒れても世界はそのまま進める
+    for (var m = 0; m < 360; m++) {
       botMonth(g, units: true, borrow: 'none', focus: true);
+      if (g.over != null) {
+        g.over = null;
+        g.mode = 'endless';
+      }
       if (g.won != null) {
         g.mode = 'endless';
         g.won = null;

@@ -59,6 +59,29 @@ extension GameCorp on Game {
             : 2;
   }
 
+  /// 宿敵の本拠の国（世界の画面の地図に印を出す。名前の国から決まる。戻ってきた一族・独立した元部下はあなたと同じ国）
+  String? rivalHome(Company c) {
+    final r = c.rival;
+    if (r == null) return null;
+    return switch (r.k) {
+      'hale' => 'us',
+      'li' => 'cn',
+      'volkova' => 'ru',
+      'kuroda' || 'makabe' || 'saionji' || 'onizuka' || 'yuki' => 'jp',
+      _ => home,
+    };
+  }
+
+  /// 国ごとの、生きている宿敵の会社（地図の印）
+  Map<String, List<Company>> rivalsByCountry() {
+    final m = <String, List<Company>>{};
+    for (final c in cos) {
+      if (!c.alive || c.rival == null || c.parent == 'player') continue;
+      (m[rivalHome(c)!] ??= []).add(c);
+    }
+    return m;
+  }
+
   /// 国の政府が後ろにいる会社（潰れそうになると助けが入る）
   bool stateBacked(Company c) => c.rival?.type == 'state';
 
@@ -202,22 +225,24 @@ extension GameCorp on Game {
         c.cash -= back;
         f.debt -= back;
       }
-      // 稼ぎの一部で客を増やす（商品・宣伝。自社の責任者と同じ式）
-      final free = c.cash - c.rev * 1.5;
-      if (free > 0) {
+      // 稼ぎの一部で客を増やす（商品・宣伝。自社の責任者と同じ式: 利益の3割（慎重なら15%・攻めるなら6割）を、手元に余裕があるだけ）。
+      // 難しさで割合が変わる
+      final free = c.cash - c.rev * .5;
+      if (free > 0 && c.profit > 0) {
         final rate = f.appetite == 0
             ? .15
             : f.appetite == 2
-                ? .45
+                ? .6
                 : .3;
-        final spend = free * rate * .15;
+        final spend = math.min(free, c.profit * rate * dif.r);
         c.cash -= spend;
         final T = lastT;
         for (final b in c.biz) {
           final tt = T?[b.ind];
           final s = tt != null && tt[c.tier] > 0 ? b.power / tt[c.tier] : 0.0;
           final w = c.rev > 0 ? b.rev / c.rev : 1 / c.biz.length;
-          b.power += spend * w * invEff * math.pow(1 - math.min(s, .95), 2) * .6 * cpuReinv / .12;
+          // 1円あたりの効きは、今までの CPU の再投資（利益の12%を力に）と同じ大きさになるよう合わせた（ふつうの会社で 0.3×0.4＝0.12）
+          b.power += spend * w * invEff * math.pow(1 - math.min(s, .95), 2) * .4;
         }
       }
       // 客が店などを超えていれば開く（1か月に開ける数・お金・借りられる額まで）。客が大きく足りなければ閉める
@@ -227,7 +252,7 @@ extension GameCorp on Game {
         final ur = coUnitRev(b.ind);
         if (ur <= 0) continue;
         if (b.dem > cr * 1.03) {
-          var n = math.min((b.dem - cr) / ur, coOpenMax(b));
+          var n = math.min((b.dem - cr) / ur, coOpenMax(b) * dif.g);
           final ind = indm[b.ind]!;
           final one = coUnitCapex(b.ind) + wageCat(ind.cat) * 1.4 * (KIND_LEAD_MONTHS[kindOf(ind)] ?? 6) / 12 / 4;
           final cashOk = math.max(0.0, c.cash - c.rev * .5);
@@ -499,12 +524,16 @@ extension GameCorp on Game {
     integMonthly(N);
     clientsMonthly(N);
     // 格付けが下がると、仕入れ先が支払いを早めるよう求める（払う前に現金が出ていく）
+    // （条件が戻れば、前倒しで払った分は元の支払いの月に戻るので、手元に戻る）
     final tight = ratingIdx() >= 2 && biz.isNotEmpty;
     if (tight && !corp.tight) {
       final hit = cogsOf.values.fold(0.0, (a, b) => a + b) * .5;
       cash -= hit;
+      corp.tightAmt = hit;
       N(M('格付けが下がり、仕入れ先が支払いを早めるよう求めてきました。{0}を前倒しで払いました', [Y(hit)]), 'bad');
     } else if (!tight && corp.tight) {
+      cash += corp.tightAmt;
+      corp.tightAmt = 0;
       N(M('格付けが戻り、仕入れ先への支払いの条件も元に戻りました'), 'good');
     }
     corp.tight = tight;
@@ -615,6 +644,7 @@ extension GameCorp on Game {
   void ipoMonthly(void Function(String, [String]) N) {
     final p = corp.ipo;
     if (p == null || listed) return;
+    final was = ipoReady();
     final c = ipoMonthCost();
     cash -= c;
     p.spent += c;
@@ -623,7 +653,8 @@ extension GameCorp on Game {
     // 社内の決まりは、経理・法務の腕のある人がいるほど早く整う
     final best = staff.fold(0, (a, x) => math.max(a, (x.sk?['acct'] ?? 0) + (x.sk?['law'] ?? 0)));
     p.ctrl = math.min(1, p.ctrl + (1 / p.total) * (.8 + clampD(best / 200, 0, .6)));
-    if (p.done == p.total) N(M('上場の準備が整いました。主幹事を選んで上場できます'), 'good');
+    // 経理・法務に強い人がいないと、社内の決まりが整うまで予定より数か月延びる
+    if (!was && ipoReady()) N(M('上場の準備が整いました。主幹事を選んで上場できます'), 'good');
   }
 
   /// 上場できるか（監査2期分・社内の決まり・かかる月が済み、利益が出ている）
@@ -915,9 +946,10 @@ extension GameCorp on Game {
         continue;
       }
       // 頼りすぎるほど、取引を切られたときの痛みが大きい（年に約5%の見込みで、次の入札や契約の見直しで切られる）
-      if (rnd() < .004) {
+      if (rnd() < .003) {
         final lost = cl.share;
-        b.power *= 1 - lost * .8;
+        // 切られた客の分のうち、半分ほどはほかの客で埋まる
+        b.power *= 1 - lost * .5;
         final who = cl.co == 0 ? M('役所') : Nm(coById(cl.co)?.name ?? '?');
         N(M('「{0}」の大口の客（{1}）との取引が切られました。売上の約{2}を失います', [I(b.ind), who, pct(lost * 100)]), 'bad');
         corp.clients[b.id] = Client(co: cl.co, share: .1 + rnd() * .15, since: year);

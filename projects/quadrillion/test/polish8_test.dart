@@ -146,7 +146,14 @@ void main() {
       final c = s.locals().single;
       expect(b.jv, isEmpty);
       final ind = indm[c.biz.single.ind]!;
-      expect(c.profit / c.rev, closeTo(ind.mg * c.eff, 1e-9), reason: '組む相手の取り分がない');
+      // 1.1.0+29 から、現地法人も自社と同じ決まり（店などの固定費・借金の利息・本社の経費1.5%）で数える。
+      // 店などが客にちょうど見合い、借金が無い形で、利益率が業種の利益率（組む相手に半分取られていない）になるのを見る
+      final cb = c.biz.single;
+      c.fin!.debt = 0;
+      cb.u = cb.dem / s.coUnitRev(cb.ind);
+      cb.uy = 0;
+      s.calcAll();
+      expect(c.profit / c.rev, closeTo(ind.mg * c.eff - .015, 1e-9), reason: '組む相手の取り分がない');
       // ネットの事業を始めて、中国への出方を見る
       final net = s.inds.firstWhere((i) => i.cat == 'net');
       final nb = Biz(id: s.uid(), ind: net.id, power: 1);

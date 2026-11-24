@@ -735,6 +735,12 @@ List<Widget> worldTab(GameController ctl, double width) {
             Text(tr(l.$2), style: ts(size: 11, color: Pal.mute)),
           ]),
         Text(tr('★ 自社が出ている国'), style: ts(size: 11, color: Pal.mute)),
+        if (s.unitsOn)
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Container(width: 9, height: 9, decoration: BoxDecoration(color: Pal.down.withValues(alpha: .25), shape: BoxShape.circle, border: Border.all(color: Pal.down))),
+            const SizedBox(width: 3),
+            Text(tr('宿敵の本拠'), key: const ValueKey('legend-rival'), style: ts(size: 11, color: Pal.mute)),
+          ]),
       ]),
     ]),
   );
@@ -842,6 +848,8 @@ class WorldPainter extends CustomPainter {
     final ring = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
+    // 宿敵の本拠の印（1.1.0+29。国の円の右上に、宿敵の色の点を並べる）
+    final foes = s.unitsOn ? s.rivalsByCountry() : const <String, List<Company>>{};
     for (final c in CTRY) {
       final o = _pos(c.c, size);
       final r = _r(s, c.c, size);
@@ -857,6 +865,19 @@ class WorldPainter extends CustomPainter {
           textDirection: TextDirection.ltr)
         ..layout();
       tp.paint(canvas, o - Offset(tp.width / 2, tp.height / 2));
+      final fl = foes[c.c] ?? const <Company>[];
+      for (var i = 0; i < fl.length; i++) {
+        final p = o + Offset(r * .75 + i * size.height * .035, -r * .75);
+        final rr = math.max(3.0, size.height * .016);
+        canvas.drawCircle(p, rr, Paint()..color = hexColor(fl[i].rival!.col));
+        canvas.drawCircle(
+            p,
+            rr,
+            Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.2
+              ..color = Pal.down);
+      }
     }
   }
 

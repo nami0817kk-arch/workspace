@@ -221,6 +221,9 @@ class CorpState {
   /// 格付けが下がって、仕入れ先に支払いを早められている
   bool tight;
 
+  /// 前倒しで払った額（条件が戻れば戻る）
+  double tightAmt;
+
   /// 先月の株価を決めた部分（動いた理由を出すため）
   Map<String, double> pp;
 
@@ -238,6 +241,7 @@ class CorpState {
     this.agmY = 0,
     this.demand,
     this.tight = false,
+    this.tightAmt = 0,
     Map<String, double>? pp,
   })  : pp = pp ?? {},
         px = px ?? [],
@@ -259,6 +263,7 @@ class CorpState {
         'agmY': agmY,
         'demand': demand,
         'tight': tight,
+        'tightAmt': tightAmt,
         'pp': pp,
       };
 
@@ -278,6 +283,7 @@ class CorpState {
       agmY: _i(j['agmY']),
       demand: j['demand'] as String?,
       tight: j['tight'] == true,
+      tightAmt: _d(j['tightAmt']),
       pp: {for (final e in (j['pp'] as Map? ?? {}).entries) e.key as String: _d(e.value)},
     );
   }

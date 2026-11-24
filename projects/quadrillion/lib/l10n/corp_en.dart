@@ -191,4 +191,6 @@ const Map<String, String> corpEn = {
   '上場すると大金が入るが、宿敵があなたの株を買えるようになる。準備（監査と社内の決まり）に2〜3年かかります':
       'Going public brings in a lot of money, but rivals can then buy your shares. Preparation (audits and internal controls) takes 2-3 years',
   '{0}〜{1}': '{0}-{1}',
+  '宿敵の本拠': 'Rival HQ',
+  '{0}年{1}月': '{0}/{1}',
 };

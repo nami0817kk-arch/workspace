@@ -83,7 +83,7 @@ Widget _pricePanel(GameController ctl) {
       Text(tr('先月から動いた理由'), style: ts(size: 12.5, bold: true)),
       if (s.corp.why.isEmpty) Muted(tr('大きな動きはありませんでした'), size: 12),
       for (final w in s.corp.why)
-        Padding(padding: const EdgeInsets.only(top: 2), child: Text('・${tx(w)}', style: ts(size: 12.5))),
+        Padding(padding: const EdgeInsets.only(top: 2), child: Text('${L.en ? '• ' : '・'}${tx(w)}', style: ts(size: 12.5))),
       const SizedBox(height: 4),
       Muted(tr('株価は利益・売上の伸び・金利・市場の地合い・うわさで決まります。市場の地合い：{0}', [_mood(s)]), size: 11.5),
     ]),

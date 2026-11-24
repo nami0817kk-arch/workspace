@@ -120,7 +120,8 @@ void main() {
     expect([...maxRuns, ...some].any((r) => r.peakCap > noneOf(r.seed).cap), isTrue, reason: lines);
     // 借金は利益の何倍かで上限が決まる（現金に連動しない）。借りまくっても、利益の十数倍を大きく超えない
     for (final r in maxRuns) {
-      expect(r.peakDebtX, lessThan(40), reason: r.toString());
+      // 1.1.0+29（段4）から、借りたあとに大口の客を失う・仕入れ先に支払いを早められると利益が急に細り、倍率が一時的に跳ねることがある。線を60に引き直した
+      expect(r.peakDebtX, lessThan(60), reason: r.toString());
     }
   }, timeout: const Timeout(Duration(minutes: 20)));
 }
