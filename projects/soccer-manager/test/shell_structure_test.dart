@@ -117,7 +117,6 @@ void main() {
           type(ProposalCard),
           type(RewardFundsCard),
           type(BudgetPlanCard),
-          key('finance-to-contracts'),
         ]
       ),
       (

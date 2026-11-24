@@ -465,7 +465,7 @@ class TodoAdvisor {
     }
 
     // 理事会レビュー(受信箱の行には無いが、答えを待つものとして数えている)。
-    if (save.pendingBoardReviewMessage != null) {
+    if (gs.pendingBoardReviewMessage != null) {
       add(TodoItem(
         kind: TodoKind.boardReview,
         level: TodoLevel.must,

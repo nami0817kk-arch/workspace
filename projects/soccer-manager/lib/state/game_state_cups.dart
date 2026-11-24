@@ -631,6 +631,7 @@ extension GameStateCups on GameState {
             'Season ${s.league.season} Super Cup winners'));
         _addTimeline(Tr.pick('スーパーカップで優勝', 'Won the Super Cup'));
       }
+      lastSuperCupWon = cup.championId == u;
       lastSuperCupNews =
           Tr.pick('$champがスーパーカップを制した。', '$champ won the Super Cup.');
       _logNews(lastSuperCupNews!, context: cup.name);

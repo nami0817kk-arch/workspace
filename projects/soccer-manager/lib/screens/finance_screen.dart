@@ -260,17 +260,9 @@ class FinanceScreen extends StatelessWidget {
                         ),
                       ),
                   ],
-                  // 契約の更新の操作は「選手 > 登録と契約」の1か所。ここには入口だけ
-                  // 置く(以前はここに全員の契約の一覧があった。一覧は資料の
-                  // 「収支の詳しい表」へ)。
-                  PlaceLink(
-                    key: const ValueKey('finance-to-contracts'),
-                    icon: Icons.badge_outlined,
-                    title: Tr.pick('契約状況は「登録と契約」へ', 'Contracts: open Registration & contracts'),
-                    note: Tr.pick('更新の時期の選手・仮契約・登録の人数は、選手のページでまとめて見ます。',
-                        'Renewals, pre-contracts and registration numbers live on the Players page.'),
-                    place: TodoPlaces.squadContracts,
-                  ),
+                  // 契約の更新の操作は「選手 > 登録と契約」の1か所。経営の
+                  // 概要からの入口(「契約状況は『登録と契約』へ」の札)は
+                  // 利用者と決めて外した(2026-11-25「不要」)。
                 ],
               ),
             ),

@@ -31,7 +31,15 @@ extension GameStateFinance on GameState {
           .toList();
 
   /// 表示待ちのシーズン中盤理事会レビュー講評。ない場合はnull。
-  String? get pendingBoardReviewMessage => _save?.pendingBoardReviewMessage;
+  ///
+  /// 自クラブのリーグ戦を全部終えたあと(季の終わり)は出さない。季末の
+  /// 状況に「シーズン中盤 理事会レビュー(現在19位)」が残っていた
+  /// (2026-11-25)。保存の中身は季を越すときに消す。
+  String? get pendingBoardReviewMessage {
+    final s = _save;
+    if (s == null || (isOffseason && !isPreseason)) return null;
+    return s.pendingBoardReviewMessage;
+  }
 
   /// シーズン中盤理事会レビューの内容を確認済みにする。
   Future<void> dismissBoardReview() async {

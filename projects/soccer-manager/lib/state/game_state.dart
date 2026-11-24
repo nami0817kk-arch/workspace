@@ -2168,6 +2168,14 @@ class GameState extends ChangeNotifier {
   /// 直近のstartNextSeasonでの昇格・降格結果メッセージ(なければnull)。
   String? lastDivisionChangeMessage;
 
+  /// [lastDivisionChangeMessage] が良い知らせ(昇格)か。降格・プレーオフ
+  /// 敗退・ライセンス不交付は false。シーズン開始レポートで、悪い知らせに
+  /// 祝いの印を付けないために使う(2026-11-25)。
+  bool lastDivisionChangeIsGood = false;
+
+  /// 直近のスーパーカップで自クラブが勝ったか([lastSuperCupNews] の印)。
+  bool lastSuperCupWon = false;
+
   /// 直近に終えたシーズンの締めくくり。シーズン開始レポートに出す絵を
   /// 決めるために持つ。優勝は昇格より上に置く(優勝すればたいてい昇格も
   /// しているが、見せたいのは優勝のほう)。

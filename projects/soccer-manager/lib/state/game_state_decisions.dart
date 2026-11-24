@@ -128,7 +128,7 @@ extension GameStateDecisions on GameState {
 
   /// 答えを待っている決めごとの数(右の欄の見出し)。
   int get openDecisionCount =>
-      inboxActions.length + (_save?.pendingBoardReviewMessage != null ? 1 : 0);
+      inboxActions.length + (pendingBoardReviewMessage != null ? 1 : 0);
 
   // ---- サポーターの期待の推移 ----
 

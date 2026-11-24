@@ -382,6 +382,9 @@ class _NewClubDialogState extends State<_NewClubDialog> {
     return AlertDialog(
       title: Text(context.l10n.startNewClubIn(widget.slotLabel)),
       content: SingleChildScrollView(
+        // 入力欄の枠の上に乗る見出し(「クラブ名」)が、送る欄の上の端で
+        // 切れていた(上半分が欠ける)。上に少し余白を置く(2026-11-25)。
+        padding: const EdgeInsets.only(top: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -441,6 +444,9 @@ class _NewClubDialogState extends State<_NewClubDialog> {
             ),
             ExpansionTile(
               tilePadding: EdgeInsets.zero,
+              // 開いた中身だけ中央寄せになっていた。ほかの欄と同じ左寄せに。
+              expandedAlignment: Alignment.centerLeft,
+              expandedCrossAxisAlignment: CrossAxisAlignment.start,
               title: Text(Tr.pick('項目ごとに決める', 'Set each item'),
                   style: const TextStyle(fontSize: 14)),
               children: [
