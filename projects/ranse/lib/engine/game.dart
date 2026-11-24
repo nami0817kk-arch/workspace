@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'adult.dart';
+import 'aims.dart';
 import 'ashigaru.dart';
 import 'ashigaru_life.dart';
 import 'birth.dart';
@@ -171,6 +172,7 @@ class Game extends ChangeNotifier {
       ...buildSeasonScenes(),
       ...buildTraitScenes(),
       ...buildSpendingScenes(),
+      ...buildAimScenes(),
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
@@ -596,7 +598,8 @@ class Game extends ChangeNotifier {
           (has('amb') ? .1 : 0) -
           l.fav / 400 +
           (l.chi + l.un) / 600 +
-          (has('loyal') ? -.1 : 0),
+          (has('loyal') ? -.1 : 0) +
+          gkPrepBonus(this), // 謀反の支度（`aims.dart`。2026-11-25）
       .05,
       .8,
     );
@@ -902,6 +905,34 @@ class Game extends ChangeNotifier {
           return '今年は${o.label}。${d.join('・')}';
         }),
     ], after: _adultYearScene);
+    _yearPrompt = prompt;
+  }
+
+  /// 大人の年の初めの問い（「この年の心がけ」）。[atYearStart] が見る。
+  Prompt? _yearPrompt;
+
+  /// 大人の年の初めの問いが出ているか（まだ心がけを選んでいない）。銭と功の使い道を使えるのはこのときだけ（`spending.dart`）。
+  bool get atYearStart =>
+      life != null &&
+      !finished &&
+      !isChild &&
+      prompt != null &&
+      identical(prompt, _yearPrompt);
+
+  /// 年の初めの問いのまま、保存し直す（2026-11-25、銭と功の使い道を年の初めに使ったとき）。
+  ///
+  /// 年の初めの種（[checkpointSeed]）に乱数を戻して、続きから再開したとき（[restore]）と同じ手順で問いを作り直し、
+  /// 保存（`onCheckpoint`）を呼ぶ。保存には使ったあとの暮らしが入り、再開すると同じ問いが出る。
+  /// 選んだ手の記録（[choiceLog]）は空のまま。年の初めでなければ何もしない。
+  void resaveYearStart() {
+    if (!atYearStart) return;
+    final keep = [...lastResults];
+    if (checkpointSeed != null) rng.setSeed(checkpointSeed!);
+    _restoring = true;
+    _beginAdultYear();
+    _restoring = false;
+    lastResults = [...keep, ...lastResults];
+    notifyListeners();
   }
 
   bool _sceneOk(SceneDef s, int a) =>
@@ -976,7 +1007,7 @@ class Game extends ChangeNotifier {
     _runAdultScene(rng.wpick(cand, (e) => e.weight(this)), _endAdultYear);
   }
 
-  /// 重点で決まった岐路のあとに、ふつうの年と同じく岐路を引く（`spending.dart` の使い道。ほかの岐路を押しのけない）。
+  /// 重点で決まった岐路の代わりに、ふつうの年と同じく岐路を引く（`aims.dart` の訪ねる年。ほかの岐路を押しのけない）。
   void usualYearScene() => _adultYearScene();
 
   /// 大人の年に（重点で決まった岐路・史実の岐路がないとき）岐路が起きる確率。
@@ -1049,7 +1080,10 @@ class Game extends ChangeNotifier {
         log('給金が払えず、兵$d人が逃散した。', 'bad');
       }
     }
-    l.hp = l.hp + 4 > l.maxhp ? l.maxhp : l.hp + 4;
+    // 体の戻りは歳で細り、季節の軽い病で寝込むこともある（`illness.dart`。2026-11-25 健康の棒を動かす）。
+    // 飢えている年は前と同じ戻り（飢え死にの出方を変えない）。
+    healthUpkeep(this, hungry: l.rank == 0 && l.gold == 0);
+    if (l.t % 2 == 1) seasonalAilment(this);
     final starving = l.rank == 0 && l.gold == 0 && !hasFlag('priesthood');
     // 幸福の影響
     j((50 - l.joy).sign);

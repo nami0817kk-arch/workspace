@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ranse/engine/adult.dart';
 import 'package:ranse/engine/birth.dart';
 import 'package:ranse/engine/data.dart';
 import 'package:ranse/engine/game.dart';
+import 'package:ranse/engine/life.dart';
 import 'package:ranse/engine/remembrance.dart';
 import 'package:ranse/engine/rng.dart';
 import 'package:ranse/engine/spending.dart';
@@ -13,7 +16,7 @@ final _digits = RegExp('[0-9０-９%％]');
 
 /// 三十歳の [cls] の家に生まれた人（身分・道は消してある）。
 Game _person(String cls, {bool female = false, int seed = 0}) {
-  for (var s = seed;; s++) {
+  for (var s = seed; ; s++) {
     final rng = Rng(s + 900);
     final x = Game(rng: rng);
     final b = rollBirth(rng);
@@ -55,17 +58,32 @@ Game _retainer(int rank, {bool female = false}) {
 List<String> _focusLabels(Game g) =>
     adultFocusOptions(g).map((o) => o.label).toList();
 
-/// 銭・功の使い道の入り口を見つけたら選び、使い道の岐路では見送り以外から選ぶ。ほかはランダムか考えて選ぶ。
-int _spender(Game g, Prompt p, Rng r, bool ambitious) {
-  final cs = p.choices;
-  if (p.title == 'この年の心がけ') {
-    final i = cs.indexWhere((c) => c.label == '蓄えを使う' || c.label.contains('恩賞を願い出る') || c.label == '功を願い出る');
-    if (i >= 0 && r.chance(.8)) return i;
+/// 大人の年の初め（「この年の心がけ」の問いが出ている）まで、ランダムに選んで進めた Game。
+Game _atYearStart(
+  int seed, {
+  bool reseed = false,
+  void Function(Game g)? onCheckpoint,
+}) {
+  for (var s = seed; ; s++) {
+    final rng = Rng(s + 3300);
+    final g = Game(rng: rng, onCheckpoint: onCheckpoint)
+      ..reseedAtCheckpoint = reseed;
+    g.start(rollBirth(rng));
+    final r = Rng(s + 4400);
+    var n = 0;
+    while (!g.finished && n++ < 400 && !(g.atYearStart && g.age >= 18)) {
+      g.choose(r.range(0, g.prompt!.choices.length - 1));
+    }
+    if (g.atYearStart) return g;
   }
-  if (p.title == '蓄えの使い道' || p.title == '恩賞の願い') {
-    return r.range(0, cs.length - 2);
-  }
-  return ambitious ? pickAmbitious(g, p, r) : r.range(0, cs.length - 1);
+}
+
+/// 年の初めなら、見込み [p] で一覧から一つ選んで使う（使ったら true）。
+bool _maybeBuy(Game g, Rng r, double p) {
+  if (!spendingOpen(g) || !r.chance(p)) return false;
+  final m = spendingMenu(g);
+  if (m.isEmpty) return false;
+  return spendingBuy(g, m[r.range(0, m.length - 1)].id) != null;
 }
 
 /// 持ち物の旗と、その使い道の id（持っている間は並ばない）。
@@ -87,7 +105,7 @@ const _owned = <String, String>{
 };
 
 void main() {
-  test('表: 銭の使い道は二十前後・功は十前後で、岐路はどれも一度ずつ登録されている', () {
+  test('表: 銭の使い道は二十前後・功は十前後。続きの岐路は一度ずつ登録され、心がけの入り口と旧い岐路は無い', () {
     expect(kSpendGoldIds.length, inInclusiveRange(18, 24));
     expect(kSpendMeritIds.length, inInclusiveRange(8, 13));
     final all = [...kSpendGoldIds, ...kSpendMeritIds];
@@ -97,13 +115,12 @@ void main() {
     }
     final g = Game(rng: Rng(1));
     final adult = g.adultScenes.map((s) => s.id).toList();
-    for (final id in ['sp_spend', 'sp_boon', ...kSpendEchoIds]) {
+    for (final id in kSpendEchoIds) {
       expect(adult.where((x) => x == id).length, 1, reason: id);
     }
-    for (final s in g.adultScenes.where((s) => s.id == 'sp_spend' || s.id == 'sp_boon')) {
-      expect(s.onlyForced, isTrue);
-      expect(s.repeat, isTrue);
-    }
+    // 2026-11-25: 心がけの「蓄えを使う」「功を願い出る」と、その岐路（sp_spend / sp_boon）は外した。
+    expect(adult, isNot(contains('sp_spend')));
+    expect(adult, isNot(contains('sp_boon')));
     for (final s in g.adultScenes.where((s) => kSpendEchoIds.contains(s.id))) {
       expect(s.onlyForced, isFalse);
       expect(s.repeat, isFalse);
@@ -111,47 +128,180 @@ void main() {
     expect(kSpendEchoGap.keys.toSet(), kSpendEchoIds.toSet());
   });
 
-  test('銭や功が足りないと入り口が出ず、たまると出る。使った年から間をあける', () {
-    final g = _retainer(3);
-    g.l.gold = kSpendGoldMin[spTier(g)] - 1;
-    expect(spendGoldReady(g), isFalse);
+  test('使い道は年の初めにだけ使え、一覧には買えるものが全部並び、値が出る。心がけには入り口が無い', () {
+    var g = _atYearStart(0);
+    for (var k = 1; g.l.female || g.hasFlag('sp_horse'); k++) {
+      g = _atYearStart(k * 10);
+    }
+    g.l
+      ..rank = 3
+      ..maxRank = 3
+      ..lord = _home(g)
+      ..fav = 40
+      ..gold = 5000
+      ..merit = kPromo[4]!.merit + 200;
+    for (final f in ['priesthood', 'retired', 'way_merchant', 'way_outlaw']) {
+      g.l.flags.remove(f);
+    }
+    expect(spendingOpen(g), isTrue);
+    expect(spendingClosedReason(g), isNull);
     expect(_focusLabels(g), isNot(contains('蓄えを使う')));
-    g.l.gold = 2000;
-    expect(spendGoldReady(g), isTrue);
-    expect(_focusLabels(g), contains('蓄えを使う'));
-    g.setFlag('sp_gold@${g.year}');
-    expect(spendGoldReady(g), isFalse, reason: '使った年');
-    g.l.flags.remove('sp_gold@${g.year}');
-    g.setFlag('sp_gold@${g.year - kSpendGap}');
-    expect(spendGoldReady(g), isTrue, reason: '年が空いた');
-
-    // 功: 次の昇進に要る功を、目安より多く越えたときだけ。
-    final need = kPromo[4]!.merit;
-    g.l.merit = need + kMeritSpare - 1;
-    expect(spendMeritReady(g), isFalse);
     expect(_focusLabels(g), isNot(contains('功を願い出る')));
-    g.l.merit = need + 60;
-    expect(spendMeritReady(g), isTrue);
-    expect(_focusLabels(g), contains('功を願い出る'));
-    // 並ぶ使い道は、どれも次の昇進に要る功を割り込まない。
-    expect(spendMeritIds(g), isNotEmpty);
+    final m = spendingMenu(g);
+    expect(m.where((i) => !i.merit).map((i) => i.id).toList(), spendGoldIds(g));
+    expect(m.where((i) => i.merit).map((i) => i.id).toList(), spendMeritIds(g));
+    expect(m.length, greaterThan(5), reason: '全部並ぶ（前は三つから五つ）');
+    for (final i in m) {
+      expect(i.cost, greaterThan(0));
+      expect(i.price, i.merit ? '功${i.cost}' : '${i.cost}貫');
+    }
 
-    // 仕えていない人・隠居・大名には功の入り口が出ない。
+    // 持ち物は一つずつ、何度でも買える物も同じ年には一度だけ。銭と功が減り、見聞録に残る。
+    final gold0 = g.l.gold;
+    final horse = m.firstWhere((i) => i.id == 'sp_horse');
+    expect(spendingBuy(g, 'sp_horse'), isNotNull);
+    expect(g.l.gold, gold0 - horse.cost);
+    expect(g.hasFlag('sp_horse'), isTrue);
+    expect(g.l.log.first.txt, startsWith('【蓄えの使い道】'));
+    expect(spendingMenu(g).map((i) => i.id), isNot(contains('sp_horse')));
+    expect(spendingBuy(g, 'sp_horse'), isNull);
+    expect(spendingBuy(g, 'sp_gift'), isNotNull);
+    expect(
+      spendingMenu(g).map((i) => i.id),
+      isNot(contains('sp_gift')),
+      reason: '献上は一年に一度',
+    );
+    // 買ったあとも、年の初めの問いのまま（心がけを選べる）。
+    expect(g.atYearStart, isTrue);
+    expect(g.prompt!.title, 'この年の心がけ');
+
+    // 功は、次の昇進に要る分を割り込まない。
+    final need = kPromo[4]!.merit;
+    for (final id in spendMeritIds(g)) {
+      expect(
+        g.l.merit - spendingMenu(g).firstWhere((i) => i.id == id).cost,
+        greaterThanOrEqualTo(need),
+      );
+    }
+    final merit0 = g.l.merit;
+    expect(spendingBuy(g, spendMeritIds(g).first), isNotNull);
+    expect(g.l.merit, lessThan(merit0));
+    expect(g.l.merit, greaterThanOrEqualTo(need));
+
+    // 心がけを選ぶと、その年はもう使えない。次の年の初めにはまた使え、献上もまた並ぶ。
+    g.choose(0);
+    var n = 0;
+    while (!g.finished && !g.atYearStart && n++ < 50) {
+      expect(spendingOpen(g), isFalse);
+      expect(spendingMenu(g), isEmpty);
+      expect(spendingBuy(g, 'sp_gift'), isNull);
+      expect(spendingClosedReason(g), isNotNull);
+      g.choose(0);
+    }
+    if (!g.finished &&
+        g.l.rank >= 1 &&
+        g.l.rank < 8 &&
+        g.l.lord != null &&
+        (g.fa[g.l.lord]?.alive ?? false) &&
+        !g.hasFlag('retired')) {
+      g.l.gold = 5000;
+      expect(spendingMenu(g).map((i) => i.id), contains('sp_gift'));
+      expect(spendingMenu(g).map((i) => i.id), isNot(contains('sp_horse')));
+    }
+
+    // 子どものうちは使えない。仕えていない人・隠居・大名には功の使い道が無い。
+    final rng = Rng(77);
+    final c = Game(rng: rng)..start(rollBirth(rng));
+    expect(spendingOpen(c), isFalse);
+    if (!c.finished) expect(spendingClosedReason(c), contains('子ども'));
     final f = _person('farmer');
     f.l.merit = 999;
-    expect(spendMeritReady(f), isFalse);
-    g.setFlag('retired');
-    expect(spendMeritReady(g), isFalse);
-    g.l.flags.remove('retired');
-    g.l.rank = 8;
-    expect(spendMeritReady(g), isFalse);
+    expect(spendMeritIds(f), isEmpty);
+    final r = _retainer(3);
+    r.l.merit = 999;
+    r.setFlag('retired');
+    expect(spendMeritIds(r), isEmpty);
+    r.l.flags.remove('retired');
+    r.l.rank = 8;
+    expect(spendMeritIds(r), isEmpty);
+  });
 
-    // 切り替えを切ると、どちらも出ない（比べるテスト用）。
-    g.l.rank = 3;
-    spendingEnabled = false;
-    expect(spendingFocusOptions(g), isEmpty);
-    spendingEnabled = true;
-    expect(spendingFocusOptions(g), isNotEmpty);
+  test('年の初めに使ったら、その年の保存に入る: 再開すると同じ問いが出て、買った物が残る', () {
+    var checked = 0, bought = 0, mid = 0;
+    for (var s = 0; s < 160; s++) {
+      String? saved;
+      int? seed;
+      final g = _atYearStart(
+        s * 7,
+        reseed: true,
+        onCheckpoint: (g) {
+          if (g.finished) return;
+          saved = jsonEncode({
+            'life': g.l.toJson(),
+            'world': g.fa.values.map((f) => f.toJson()).toList(),
+          });
+          seed = g.checkpointSeed;
+        },
+      );
+      g.l.gold += 3000;
+      final pick = Rng(s + 600);
+      final ids = <String>[];
+      for (var k = 0; k < 2; k++) {
+        final m = spendingMenu(g);
+        if (m.isEmpty) break;
+        final id = m[pick.range(0, m.length - 1)].id;
+        expect(spendingBuy(g, id), isNotNull);
+        ids.add(id);
+      }
+      if (ids.isEmpty) continue;
+      bought++;
+      // 半分は、心がけを選んで年の途中まで進めてから閉じる。
+      if (s.isOdd) {
+        for (var k = 0; k < 2 && !g.finished; k++) {
+          g.choose(pick.range(0, g.prompt!.choices.length - 1));
+        }
+        mid++;
+      }
+      if (g.finished) continue;
+      final p = g.prompt!;
+      final j = jsonDecode(saved!) as Map<String, dynamic>;
+      final g2 = Game(rng: Rng(1))..reseedAtCheckpoint = true;
+      g2.restore(
+        Life.fromJson(j['life'] as Map<String, dynamic>),
+        {
+          for (final e in (j['world'] as List))
+            (e as Map<String, dynamic>)['n'] as String: Faction.fromJson(e),
+        },
+        seed: seed,
+        replay: [...g.choiceLog],
+      );
+      final p2 = g2.prompt!;
+      expect(p2.title, p.title, reason: '種 $s');
+      expect(p2.text, p.text, reason: '種 $s');
+      expect(
+        p2.choices.map((c) => c.label).toList(),
+        p.choices.map((c) => c.label).toList(),
+        reason: '種 $s',
+      );
+      expect(
+        jsonEncode(g2.l.toJson()),
+        jsonEncode(g.l.toJson()),
+        reason: '種 $s',
+      );
+      // 保存に買ったことが入っている。
+      final sl = Life.fromJson(j['life'] as Map<String, dynamic>);
+      for (final id in ids) {
+        expect(
+          sl.flags.any((f) => f.startsWith('spb_$id@')),
+          isTrue,
+          reason: '種 $s $id',
+        );
+      }
+      checked++;
+    }
+    // ignore: avoid_print
+    print('【使い道の再開】使った$bought・確かめた$checked（年の途中まで進めた$mid）');
+    expect(checked, greaterThan(100));
   });
 
   test('身分・暮らしごとに、合う使い道が並ぶ', () {
@@ -160,14 +310,33 @@ void main() {
     f.l.gold = 5000;
     final fi = spendGoldIds(f);
     expect(fi, containsAll(['sp_field', 'sp_genin', 'sp_house', 'sp_alms']));
-    for (final x in ['sp_horse', 'sp_sword', 'sp_kani', 'sp_gift', 'sp_roto', 'sp_shop', 'sp_robe']) {
+    for (final x in [
+      'sp_horse',
+      'sp_sword',
+      'sp_kani',
+      'sp_gift',
+      'sp_roto',
+      'sp_shop',
+      'sp_robe',
+    ]) {
       expect(fi, isNot(contains(x)), reason: '百姓に $x');
     }
     // 城主: 名馬・具足・郎党・官位・献上。田と下人は並ばない。
     final c = _retainer(5);
     c.l.gold = 5000;
     final ci = spendGoldIds(c);
-    expect(ci, containsAll(['sp_horse', 'sp_armor', 'sp_sword', 'sp_roto', 'sp_kani', 'sp_gift', 'sp_chaki']));
+    expect(
+      ci,
+      containsAll([
+        'sp_horse',
+        'sp_armor',
+        'sp_sword',
+        'sp_roto',
+        'sp_kani',
+        'sp_gift',
+        'sp_chaki',
+      ]),
+    );
     for (final x in ['sp_field', 'sp_genin', 'sp_shop', 'sp_robe']) {
       expect(ci, isNot(contains(x)), reason: '城主に $x');
     }
@@ -192,7 +361,13 @@ void main() {
     final pi = spendGoldIds(p);
     expect(pi, contains('sp_temple'));
     expect(spendLabel(p, 'sp_temple'), '寺の堂を繕う');
-    for (final x in ['sp_house', 'sp_armor', 'sp_horse', 'sp_tutor', 'sp_robe']) {
+    for (final x in [
+      'sp_house',
+      'sp_armor',
+      'sp_horse',
+      'sp_tutor',
+      'sp_robe',
+    ]) {
       expect(pi, isNot(contains(x)), reason: '僧に $x');
     }
     // 奥で仕える未婚の女性: 晴れ着。家・武具・郎党は並ばない。
@@ -200,7 +375,14 @@ void main() {
     w.l.gold = 5000;
     final wi = spendGoldIds(w);
     expect(wi, contains('sp_robe'));
-    for (final x in ['sp_house', 'sp_armor', 'sp_horse', 'sp_roto', 'sp_sword', 'sp_gun']) {
+    for (final x in [
+      'sp_house',
+      'sp_armor',
+      'sp_horse',
+      'sp_roto',
+      'sp_sword',
+      'sp_gun',
+    ]) {
       expect(wi, isNot(contains(x)), reason: '奥の女性に $x');
     }
     // 状況: 薬は体の弱ったときだけ、鉄砲は伝来のあとだけ。
@@ -215,7 +397,16 @@ void main() {
       expect(wm, isNot(contains(x)), reason: '奥の女性に $x');
     }
     c.l.merit = 999;
-    expect(spendMeritIds(c), containsAll(['sp_m_chigyo', 'sp_m_suikyo', 'sp_m_henki', 'sp_m_sword', 'sp_m_tea']));
+    expect(
+      spendMeritIds(c),
+      containsAll([
+        'sp_m_chigyo',
+        'sp_m_suikyo',
+        'sp_m_henki',
+        'sp_m_sword',
+        'sp_m_tea',
+      ]),
+    );
   });
 
   test('持っている物は二度並ばない', () {
@@ -234,10 +425,19 @@ void main() {
     final f = _person('farmer');
     f.l.gold = 9999;
     for (final e in _owned.entries) {
-      final g = [c, m, w, f].firstWhere((x) => spendGoldIds(x).contains(e.value), orElse: () => c);
+      final g = [
+        c,
+        m,
+        w,
+        f,
+      ].firstWhere((x) => spendGoldIds(x).contains(e.value), orElse: () => c);
       expect(spendGoldIds(g), contains(e.value), reason: '${e.key} を持つ前');
       g.setFlag(e.key);
-      expect(spendGoldIds(g), isNot(contains(e.value)), reason: '${e.key} を持ったあと');
+      expect(
+        spendGoldIds(g),
+        isNot(contains(e.value)),
+        reason: '${e.key} を持ったあと',
+      );
     }
     // 段のある物（田・店）は段が尽きると並ばない。
     for (final fl in ['sp_field_1', 'sp_field_2', 'sp_field_3']) {
@@ -355,9 +555,9 @@ void main() {
     expect(withArmor / livesA, lessThan(without / livesB));
   });
 
-  test('ふつうの人生を流しても例外がなく、入り口が出て使われ、選択肢に匂わせがあり数字が無い', () {
-    var adults = 0, goldShown = 0, meritShown = 0, spent = 0, boons = 0;
-    final kinds = <String, int>{};
+  test('ふつうの人生で年の初めに使っても例外がなく、持っている物は並ばず、続きの岐路は持ち物があるときだけ', () {
+    var adults = 0, menuShown = 0, spent = 0, boons = 0;
+    final uses = <String>{};
     final echoes = <String, int>{};
     final seen = <String, List<Choice>>{};
     for (var seed = 0; seed < 900; seed++) {
@@ -365,28 +565,40 @@ void main() {
       final g = Game(rng: rng);
       g.start(rollBirth(rng));
       final r = Rng(seed + 91000);
-      final mode = seed % 3; // 0 ランダム・1 考えて選ぶ・2 使い道を選ぶ
-      var n = 0, sawGold = false, sawMerit = false;
+      final mode = seed % 3; // 0 ランダム・1 考えて選ぶ・2 使い道をよく使う
+      var n = 0, sawMenu = false;
       var known = g.l.flags.where((f) => f.startsWith('scene:sp_e_')).toSet();
       while (!g.finished && n++ < 5000) {
-        final p = g.prompt;
-        expect(p, isNotNull, reason: '人生の途中なのに選択肢が出ていない（${g.age}歳）');
-        if (p!.title == 'この年の心がけ') {
-          for (final c in p.choices) {
-            if (c.label == '蓄えを使う') sawGold = true;
-            if (c.label == '功を願い出る' || c.label.contains('恩賞を願い出る')) sawMerit = true;
-            if (c.label == '蓄えを使う' || c.label == '功を願い出る') {
-              expect(_digits.hasMatch(c.hint!), isFalse);
-            }
-          }
-        }
-        if (p.title == '蓄えの使い道' || p.title == '恩賞の願い') {
-          expect(p.choices.length, inInclusiveRange(4, 6), reason: p.title);
-          seen[p.title] = [...?seen[p.title], ...p.choices];
-          // 持っている物は並ばない。
+        expect(g.prompt, isNotNull, reason: '人生の途中なのに選択肢が出ていない（${g.age}歳）');
+        if (spendingOpen(g)) {
+          final m = spendingMenu(g);
+          if (m.isNotEmpty) sawMenu = true;
           for (final e in _owned.entries) {
             if (g.hasFlag(e.key)) {
-              expect(p.choices.map((c) => c.label), isNot(contains(spendLabel(g, e.value))), reason: e.key);
+              expect(
+                m.map((i) => i.id),
+                isNot(contains(e.value)),
+                reason: e.key,
+              );
+            }
+          }
+          for (final i in m) {
+            expect(i.hint.isNotEmpty, isTrue);
+            expect(_digits.hasMatch(i.label), isFalse, reason: i.label);
+            expect(_digits.hasMatch(i.hint), isFalse, reason: i.hint);
+          }
+          final m0 = g.l.merit;
+          final before = {...g.l.flags};
+          if (_maybeBuy(g, r, mode == 2 ? .6 : .15)) {
+            if (g.l.merit < m0) {
+              boons++;
+            } else {
+              spent++;
+            }
+            for (final f in g.l.flags.difference(before)) {
+              if (f.startsWith('spb_')) {
+                uses.add(f.substring(4, f.indexOf('@')));
+              }
             }
           }
         }
@@ -394,59 +606,52 @@ void main() {
         for (final f in now.difference(known)) {
           final id = f.substring(6);
           echoes[id] = (echoes[id] ?? 0) + 1;
-          seen[id] = p.choices;
+          seen[id] = g.prompt!.choices;
           final (flag, _) = kSpendEchoGap[id]!;
           expect(g.hasFlag(flag), isTrue, reason: '$id が持ち物なしに出た');
         }
         known = now;
-        final before = {...g.l.flags};
-        final i = mode == 2
-            ? _spender(g, p, r, seed.isEven)
-            : (mode == 0 ? r.range(0, p.choices.length - 1) : pickAmbitious(g, p, r));
-        g.choose(i);
-        if (p.title == '蓄えの使い道' || p.title == '恩賞の願い') {
-          if (p.title == '蓄えの使い道') {
-            spent++;
-          } else {
-            boons++;
-          }
-          for (final f in g.l.flags.difference(before)) {
-            if (f.startsWith('sp_') && !f.contains('@')) kinds[f] = (kinds[f] ?? 0) + 1;
-          }
-          for (final f in g.l.flags.where((f) => f.contains('@'))) {
-            final k = f.substring(0, f.indexOf('@'));
-            if (!before.contains(f) && k != 'sp_gold' && k != 'sp_merit') kinds['use:$k'] = (kinds['use:$k'] ?? 0) + 1;
-          }
-        }
+        final q = g.prompt!;
+        g.choose(
+          mode == 1 ? pickAmbitious(g, q, r) : r.range(0, q.choices.length - 1),
+        );
         expect(g.l.merit, greaterThanOrEqualTo(0));
         expect(g.l.gold, greaterThanOrEqualTo(0));
       }
       expect(g.finished, isTrue);
       if (g.age >= 20) {
         adults++;
-        if (sawGold) goldShown++;
-        if (sawMerit) meritShown++;
+        if (sawMenu) menuShown++;
       }
     }
-    final uses = kinds.keys.where((k) => k.startsWith('use:')).map((k) => k.substring(4)).toSet();
     // ignore: avoid_print
-    print('【使い道】二十歳を越えた$adults人生: 蓄えの入り口 $goldShown・功の入り口 $meritShown／'
-        '使った 銭$spent回・功$boons回・使い道${uses.length}種／続きの岐路 ${echoes.length}種 $echoes');
-    expect(goldShown / adults, greaterThan(.3));
-    expect(meritShown, greaterThan(20));
+    print(
+      '【使い道】二十歳を越えた$adults人生: 一覧に使い道が並んだ $menuShown／'
+      '使った 銭$spent回・功$boons回・使い道${uses.length}種／続きの岐路 ${echoes.length}種 $echoes',
+    );
+    expect(menuShown / adults, greaterThan(.5));
+    expect(boons, greaterThan(20));
     expect(uses.length, greaterThanOrEqualTo(24));
     expect(echoes.length, greaterThanOrEqualTo(6));
     for (final e in seen.entries) {
       for (final c in e.value) {
         expect(c.hint, isNotNull, reason: '${e.key}: ${c.label}');
         expect(c.hint!.isNotEmpty, isTrue);
-        expect(_digits.hasMatch(c.label), isFalse, reason: '${e.key}: ${c.label}');
-        expect(_digits.hasMatch(c.hint!), isFalse, reason: '${e.key}: ${c.hint}');
+        expect(
+          _digits.hasMatch(c.label),
+          isFalse,
+          reason: '${e.key}: ${c.label}',
+        );
+        expect(
+          _digits.hasMatch(c.hint!),
+          isFalse,
+          reason: '${e.key}: ${c.hint}',
+        );
       }
     }
   });
 
-  test('足す前と比べて、城主以上に届く割合と銭の貯まり方が大きく変わらない', () {
+  test('使わない人生と比べて、城主以上に届く割合と銭の貯まり方が大きく変わらない', () {
     (double, double, int) run(bool on) {
       spendingEnabled = on;
       var adults = 0, castle = 0;
@@ -456,10 +661,17 @@ void main() {
         final g = Game(rng: rng);
         g.start(rollBirth(rng));
         final r = Rng(seed);
+        final buy = Rng(seed + 777);
         var n = 0, g40 = -1;
         while (!g.finished && n++ < 4000) {
           if (g.age == 40 && g40 < 0) g40 = g.l.gold;
-          g.choose(seed.isEven ? pickAmbitious(g, g.prompt!, r) : r.range(0, g.prompt!.choices.length - 1));
+          // 前の「蓄えを使う」は二年に一度・数ある心がけの一つだったので、年の初めに一割あまりの見込みで使う人に見立てる。
+          _maybeBuy(g, buy, .12);
+          g.choose(
+            seed.isEven
+                ? pickAmbitious(g, g.prompt!, r)
+                : r.range(0, g.prompt!.choices.length - 1),
+          );
         }
         if (g.age < 15) continue;
         adults++;
@@ -474,8 +686,10 @@ void main() {
     final (c0, g0, a0) = run(false);
     final (c1, g1, a1) = run(true);
     // ignore: avoid_print
-    print('【使い道】城主以上 足す前 ${(c0 * 100).toStringAsFixed(1)}%（$a0）→ 足した後 ${(c1 * 100).toStringAsFixed(1)}%（$a1）'
-        '／四十歳の銭の中央 $g0 → $g1');
+    print(
+      '【使い道】城主以上 使わない ${(c0 * 100).toStringAsFixed(1)}%（$a0）→ 使う ${(c1 * 100).toStringAsFixed(1)}%（$a1）'
+      '／四十歳の銭の中央 $g0 → $g1',
+    );
     expect((c1 - c0).abs(), lessThan(.06));
     expect(g1, greaterThan(g0 * .5));
   });
@@ -483,7 +697,13 @@ void main() {
   test('遺されたもの: 銭と功の使い道の行が出る', () {
     final g = _retainer(5);
     g.l.t = 50 * 2;
-    for (final f in ['sp_m_henki', 'sp_kani', 'sp_kani_proved', 'sp_horse_fine', 'sp_armor_saved']) {
+    for (final f in [
+      'sp_m_henki',
+      'sp_kani',
+      'sp_kani_proved',
+      'sp_horse_fine',
+      'sp_armor_saved',
+    ]) {
       g.setFlag(f);
     }
     final ids = rememberedEntries(g).map((e) => e.id).toList();
@@ -494,7 +714,16 @@ void main() {
     for (final s in lines) {
       expect(_digits.hasMatch(s), isFalse, reason: s);
     }
-    const mine = ['sp_horse_fine', 'sp_armor_saved', 'sp_chaki', 'sp_house', 'sp_field_1', 'sp_kani', 'sp_m_henki', 'sp_tutor'];
+    const mine = [
+      'sp_horse_fine',
+      'sp_armor_saved',
+      'sp_chaki',
+      'sp_house',
+      'sp_field_1',
+      'sp_kani',
+      'sp_m_henki',
+      'sp_tutor',
+    ];
     final have = kRemembrances.map((r) => r.id).toSet();
     for (final id in mine) {
       expect(have, contains(id));

@@ -14,6 +14,7 @@ import '../engine/scene_art.dart';
 import '../engine/spending.dart';
 import 'end_screen.dart';
 import 'rank_guide.dart';
+import 'spend_sheet.dart';
 import 'standing_card.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -117,6 +118,8 @@ class _PlayScreenState extends State<PlayScreen> {
     toolbarHeight: 52,
     titleSpacing: 16,
     actions: [
+      // 銭と功の使い道（年の初めにだけ開ける。`spend_sheet.dart`、2026-11-25）。
+      SpendButton(g),
       IconButton(
         icon: const Icon(Icons.home_outlined, color: Pal.muted),
         tooltip: 'タイトルへ',

@@ -10,7 +10,7 @@ import 'pastimes.dart';
 import 'peace.dart';
 import 'peace_life.dart';
 import 'rng.dart';
-import 'spending.dart';
+import 'aims.dart';
 import 'temple.dart';
 import 'trait_scenes.dart';
 import 'variety.dart';
@@ -52,8 +52,9 @@ List<FocusDef> adultFocusOptions(Game g) => [
   ...womanLifeFocusOptions(g),
   // 泰平の世の暮らしの重点（`peace_life.dart`。一六〇一年からの、戦の絶えた世にだけ出る）。
   ...peaceLifeFocusOptions(g),
-  // 銭と功の使い道の入り口（`spending.dart`。たまったときだけ出る）。
-  ...spendingFocusOptions(g),
+  // 謀反の支度・縁のある人を訪ねる・よその家に仕え直す道を探る（`aims.dart`、2026-11-25）。
+  ...aimFocusOptions(g),
+  // 銭と功の使い道は、心がけではなく画面の上の帯の「使い道」から（`spending.dart`、2026-11-25）。
 ];
 
 List<FocusDef> _baseFocusOptions(Game g) {
@@ -504,7 +505,8 @@ List<SceneDef> buildAdultScenes() {
       'gekokujo',
       20,
       70,
-      (g) => .5 + (g.has('amb') ? .7 : 0) + (g.l.fav < 30 ? .6 : 0),
+      // 謀反の支度（`aims.dart`）が積もるほど、誘いが来やすい。
+      (g) => .5 + (g.has('amb') ? .7 : 0) + (g.l.fav < 30 ? .6 : 0) + gkInviteWeight(g),
       (g) =>
           g.l.rank >= 5 &&
           g.l.rank < 8 &&
@@ -515,6 +517,7 @@ List<SceneDef> buildAdultScenes() {
         final p = g.betrayChance();
         g.ask('下剋上の誘い', '家中の不満を抱える者たちが、あなたを担ごうとしている。主家を討つか。', [
           Choice.h('兵を挙げる', _betrayHint(p), () {
+            gkClear(g);
             final r = g.doBetray(p);
             if (g.l.rank == 8) g.mark('主家を討ち、${houseName(g, g.l.lord)}家を乗っ取った');
             return r;
