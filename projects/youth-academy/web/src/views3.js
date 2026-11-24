@@ -127,7 +127,7 @@
     const app = U().app;
     const store = U().store;
     // 1本の長い画面だったので4つに分ける（2026-11-18 ユーザビリティ16）
-    const ST = [['disp', '表示と音'], ['notice', 'お知らせ'], ['name', '名前'], ['save', 'セーブ・ショップ']];
+    const ST = [['disp', '表示と音'], ['notice', 'お知らせ'], ['name', '名前'], ['save', 'セーブ']]; // ショップは 2026-11-25 に「ほか」の小タブへ
     app.st = ST.some((x) => x[0] === app.st) ? app.st : 'disp';
     body.append(h('div', { class: 'row', style: 'gap:6px' }, h('div', { class: 'h' }, '設定'), h('div', { class: 'tabs settabs', style: 'flex:1;min-width:0' }, ST.map(([k, n]) => h('button', { class: 'btn sm' + (app.st === k ? ' on' : ''), onclick: () => { app.st = k; rerender(); } }, n)))));
     if (app.st === 'notice') { fontAndNotices(body, 'notice'); return; }
@@ -146,8 +146,7 @@
   function saveShop(body) {
     const app = U().app;
     const store = U().store;
-    if (YA.shopBlock) YA.shopBlock(body);
-    // セーブ枠
+    // セーブ枠（ショップは 2026-11-25 に「ほか」→ ショップへ移した）
     YA.slotBlock(body);
     // 最後に保存できた時刻（保存に失敗し続けていないかを見られるように）
     const ss = YA.saveState || {};

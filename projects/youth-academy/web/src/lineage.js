@@ -368,15 +368,29 @@
     if (!YA.confirmBox) return go();
     YA.confirmBox(`育成基金から${YA.yen(u.cost)}を「${u.name}」に使いますか`, go, { yes: '使う', note: `${u.note}　使うと残りは${YA.yen((w.fund || 0) - u.cost)}です。` });
   }
+  // 監督の経歴（2026-11-25）：年ごとの評価と順位・指導者の力・流儀
+  function careerTab(body, w) {
+    const c = w.club;
+    body.append(h('div', { class: 'h' }, '監督の経歴'), h('div', { class: 'note', style: 'color:var(--ink)' }, `${w.coach && w.coach.name ? w.coach.name + '　' : ''}指導者 ${YA.licenseOf ? YA.licenseOf(w) : ''}（教える${w.coach.teach}・見る目${w.coach.eye}・話す${w.coach.talk}・戦術${w.coach.tactic}）`));
+    if (YA.styleOf) { const st = YA.styleOf(w); if (st) body.append(h('div', { class: 'note', style: 'color:var(--ink)' }, '流儀：' + (st.name || st))); }
+    body.append(h('div', { class: 'note', style: 'color:var(--ink)' }, `いまのクラブ：${w.clubName}（${YA.TIER_NAME[c.tier]}・${w.year}年目）`));
+    body.append(h('div', { class: 'h', style: 'margin-top:8px' }, '年ごとの評価'));
+    const ev = (c.eval || []).slice().reverse();
+    body.append(ev.length ? h('div', { class: 'plist' }, ev.map((e) => h('div', { class: 'pitem', style: 'cursor:default;gap:6px' }, h('span', { class: 'chip ' + (e.letter <= 'A' ? 'trait' : 'gray'), style: 'font-size:13px;min-width:26px;justify-content:center' }, e.letter), h('span', { class: 'sub', style: 'width:52px' }, `${e.year}年目`), h('span', { class: 'grow', style: 'font-size:11.5px' }, e.goals.map((g) => `${g.label}${g.ok ? '○' : g.score ? '△' : '×'}`).join(' ')), h('span', { class: 'sub' }, `${e.rank}位`)))) : h('div', { class: 'note' }, 'まだ評価はありません（年度末に出ます）'));
+    const al = (w.alumni || []).length;
+    body.append(h('div', { class: 'note', style: 'margin-top:6px;color:var(--ink)' }, `送り出した卒業生 ${al}人` + (al ? `（プロ ${(w.alumni || []).filter((a) => a.pro || a.club).length}人）` : '')));
+  }
   function viewLineage(main) {
     const w = U().app.w;
     const ui = U().app;
     // 系譜図は 2026-11-21「系譜の画面はいらない」で外した。タブの名前は「記録」、開くと卒業生名鑑
     ui.lt = ui.lt || 'alumni';
     const EXTRA = YA.lineageExtraTabs || [];
-    const TABS = [['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['ach', '実績'], ['dex', '図鑑'], ['chron', '年表'], ['fund', '育成基金']].concat(EXTRA.map((x) => [x[0], x[1]]));
+    // 2026-11-25 画面の構成の作り直し（ユーザー決定・FM 寄り）：卒業生／クラブの歴史（年表・クラブ史・実績・図鑑・育成基金）／監督（監督の経歴・ライバル・移籍）。
+    // 「監督の注文」はクラブ → トップと重なるので外し、「ほか」のクラブ史をここへ移した。実績の上に「次の実績」（ホームから移した）
+    const TABS = [['alumni', '卒業生名鑑'], ['hall', '殿堂'], ['chron', '年表'], ['hist', 'クラブ史'], ['ach', '実績'], ['dex', '図鑑'], ['fund', '育成基金'], ['career', '監督の経歴']].concat(EXTRA.filter((x) => x[0] !== 'top').map((x) => [x[0], x[1]]));
     // 小タブが12個で2行に折れていたので、3つの群に分けて1行に（2026-11-18 ユーザビリティ7）。群ごとに最後に見た小タブを覚える
-    const GRP = [['alumni', '卒業生', ['alumni', 'hall', 'letters', 'clubs']], ['rec', '実績・年表', ['ach', 'dex', 'chron', 'fund']], ['coach', '監督', ['rival', 'top', 'move']]];
+    const GRP = [['alumni', '卒業生', ['alumni', 'hall', 'letters', 'clubs']], ['rec', 'クラブの歴史', ['chron', 'hist', 'ach', 'dex', 'fund']], ['coach', '監督', ['career', 'rival', 'move']]];
     const grpOf = (k) => (GRP.find((g) => g[2].indexOf(k) >= 0) || GRP[1])[0];
     if (!TABS.some((x) => x[0] === ui.lt)) ui.lt = 'alumni';
     const g0 = grpOf(ui.lt);
@@ -388,7 +402,9 @@
       ...TABS.filter(([k]) => grpOf(k) === g0).map(([k, n]) => h('button', { class: 'btn' + (ui.lt === k ? ' on' : ''), onclick: () => { ui.lt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0;display:flex;flex-direction:column' });
     if (ui.lt === 'hall') hallTab(body, w);
-    else if (ui.lt === 'ach') achTab(body, w);
+    else if (ui.lt === 'ach') { if (YA.lineageMiniCard) body.append(YA.lineageMiniCard(w)); achTab(body, w); }
+    else if (ui.lt === 'hist') { const mt0 = ui.mt; ui.mt = 'rec'; const inner = h('div', { style: 'flex:1;min-height:0;display:flex;flex-direction:column' }); YA.views.more(inner); ui.mt = mt0; const c2 = inner.querySelector('.card'); body.append(c2 || inner); }
+    else if (ui.lt === 'career') careerTab(body, w);
     else if (ui.lt === 'dex') dexTab(body, w);
     else if (ui.lt === 'chron') chronTab(body, w);
     else if (ui.lt === 'fund') fundTab(body, w);

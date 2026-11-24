@@ -295,4 +295,6 @@
     for (const m of mv) body.append(h('div', { class: 'note', style: 'margin-top:3px' }, `${m.y}年目：${m.from} → ${m.to}`));
   }
   YA.lineageExtraTabs.push(['rival', 'ライバル', rivalTab], ['top', '監督の注文', topTab], ['move', '移籍', moveTab]);
+  // 監督の注文は 2026-11-25 にクラブ → トップの画面へ移した（記録の小タブからは外した）
+  YA.topCoachEl = topTab;
 })();
