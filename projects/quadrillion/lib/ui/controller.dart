@@ -88,7 +88,18 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
 
   Game? game;
   String tab = 'town';
-  String bizFilter = 'can';
+
+  /// 「新しい事業」の一覧の分類の絞り込み（'all' か分類の鍵）
+  String bizFilter = 'all';
+
+  /// 今の資金で始められるものだけにするか
+  bool bizCan = true;
+
+  /// 並べ替え（'cheap' 元手の安い順・'mkt' 市場の大きい順・'new' 生まれたばかり順・'margin' 利益率の高い順）
+  String bizSort = 'cheap';
+
+  /// 名前で絞る検索の言葉
+  final bizSearch = TextEditingController();
 
   /// 「事業」タブで詳しく開いている事業の id（事業が3つ以上のとき。開けるのは1つだけ）
   int? openBiz;
@@ -308,6 +319,12 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   void setTab(String t) {
     tab = t;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    bizSearch.dispose();
+    super.dispose();
   }
 }
 
