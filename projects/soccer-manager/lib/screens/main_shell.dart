@@ -35,12 +35,18 @@ import 'transfer_screen.dart';
 import 'youth_screen.dart';
 import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
+import '../logic/todo_advisor.dart';
+import '../widgets/shell_nav.dart';
+import '../widgets/todo_list.dart';
 
 /// 画面の行き先。横画面は左のメニューに全部を並べ(FM風)、縦画面は下の5タブにまとめる。
 ///
 /// 横画面は7項目: 状況・財務・クラブ・選手・移籍・リーグ・オーナー室。
 /// 縦画面は下の5タブ(状況・財務・補強・選手・リーグ)。
-enum _Page { status, finance, club, squad, transfer, league, ownerRoom }
+///
+/// 項目の並びは [TodoMenu]。「やること」の行き先([TodoPlace])と同じ型を
+/// 使い、行き先へ移る口を [ShellNav.go] の1つにしてある。
+typedef _Page = TodoMenu;
 
 /// 状況/経営/補強/チーム/リーグのシェル。
 ///
@@ -55,8 +61,30 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
-  _Page _page = _Page.status;
+  /// いま開いている場所(左メニューの項目と、その下のタブ)。「やること」の
+  /// 行や知らせの札は、画面を重ねずにここを切り替える。
+  final ShellNav _nav = ShellNav();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  _Page get _page => _nav.menu;
+
+  @override
+  void initState() {
+    super.initState();
+    _nav.addListener(_onNav);
+  }
+
+  void _onNav() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _nav
+      ..removeListener(_onNav)
+      ..dispose();
+    super.dispose();
+  }
 
   // 縦画面の5タブ(チームは選手/先発を切り替える)。
   static const _narrowPages = [
@@ -90,6 +118,7 @@ class _MainShellState extends State<MainShell> {
         const HomeScreen(),
         const FinanceScreen(embedded: true),
         GroupPage(
+          menu: TodoMenu.club,
           title: Tr.pick('クラブ', 'Club'),
           tabs: [
             GroupTab(Tr.pick('スタッフ', 'Staff'),
@@ -103,6 +132,7 @@ class _MainShellState extends State<MainShell> {
           ],
         ),
         GroupPage(
+          menu: TodoMenu.squad,
           title: Tr.pick('選手', 'Players'),
           tabs: [
             GroupTab(Tr.pick('スカッド', 'Squad'), (_) => const SquadScreen()),
@@ -112,6 +142,7 @@ class _MainShellState extends State<MainShell> {
         ),
         const TransferScreen(embedded: true),
         GroupPage(
+          menu: TodoMenu.league,
           title: Tr.pick('リーグ', 'League'),
           tabs: [
             GroupTab(Tr.pick('順位・日程', 'Table & fixtures'),
@@ -123,6 +154,7 @@ class _MainShellState extends State<MainShell> {
           ],
         ),
         GroupPage(
+          menu: TodoMenu.ownerRoom,
           title: Tr.pick('オーナー室', 'Owner\'s office'),
           tabs: [
             GroupTab(Tr.pick('オーナーの仕事', 'Owner\'s work'),
@@ -168,13 +200,6 @@ class _MainShellState extends State<MainShell> {
         ),
       ];
 
-  int _pendingHomeActionCount(GameState gameState) {
-    var count = 0;
-    count += gameState.pendingYouthIntake.length;
-    count += gameState.incomingOffers.length;
-    return count;
-  }
-
   int _narrowIndex() {
     final i = _narrowPages.indexOf(_page);
     return i < 0 ? 0 : i; // 横画面でだけある項目のとき、縦画面では状況に戻す。
@@ -182,13 +207,16 @@ class _MainShellState extends State<MainShell> {
 
   void _go(_Page p) {
     FeedbackService.tap();
-    setState(() => _page = p);
+    _nav.select(p);
   }
 
   @override
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
-    final homeBadgeCount = _pendingHomeActionCount(gameState);
+    // 「やること」の一覧。印(左メニュー・タブ・進むボタン)と状況の一覧は、
+    // 全部この1つを見る(以前は場所ごとに別の条件で数えていた)。
+    final todos = TodoAdvisor.build(gameState);
+    final homeBadgeCount = todos.mustAt(TodoMenu.status);
 
     Widget homeIcon(bool selected) {
       final icon = Icon(selected ? Icons.home : Icons.home_outlined);
@@ -198,6 +226,7 @@ class _MainShellState extends State<MainShell> {
 
     final size = MediaQuery.sizeOf(context);
     final wide = size.width > size.height;
+    _nav.wide = wide;
 
     final items = [
       (
@@ -227,13 +256,17 @@ class _MainShellState extends State<MainShell> {
       ),
     ];
 
-    return PopScope(
+    return ShellNavScope(
+      nav: _nav,
+      child: TodoScope(
+        items: todos,
+        child: PopScope(
       // 状況以外の画面で戻る操作をしたら、まず状況へ戻す。状況で戻る操作を
       // したときだけ、この画面を閉じる(=タイトルへ戻る)。
       canPop: _page == _Page.status,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        setState(() => _page = _Page.status);
+        _nav.select(_Page.status);
       },
       child: Scaffold(
         key: _scaffoldKey,
@@ -245,6 +278,8 @@ class _MainShellState extends State<MainShell> {
                     bottom: false,
                     child: _FmTopBar(
                       gameState: gameState,
+                      mustCount: todos.mustCount,
+                      onTodo: () => _nav.go(TodoPlaces.status),
                       onMore: () => _scaffoldKey.currentState?.openDrawer(),
                     ),
                   ),
@@ -257,15 +292,10 @@ class _MainShellState extends State<MainShell> {
                           right: false,
                           child: _FmSidebar(
                             page: _page,
-                            // 判断待ちがある項目に件数の印を付ける。
-                            // 状況: ユース受け入れ・売却オファー、
-                            // 移籍: 売却オファー、オーナー室: 事件の判断。
-                            badges: {
-                              _Page.status: homeBadgeCount,
-                              _Page.transfer: gameState.incomingOffers.length,
-                              _Page.ownerRoom:
-                                  gameState.pendingOwnerEvent == null ? 0 : 1,
-                            },
+                            // 印は「やること」の一覧から付ける。その項目を
+                            // 開けば、必ずその用件が見つかる(事件の札は
+                            // 状況に出るのに、印はオーナー室に付いていた)。
+                            todos: todos,
                             onSelect: _go,
                           ),
                         ),
@@ -307,6 +337,8 @@ class _MainShellState extends State<MainShell> {
                     ),
                 ],
               ),
+          ),
+        ),
       ),
     );
   }
@@ -315,9 +347,20 @@ class _MainShellState extends State<MainShell> {
 /// 横画面の上バー(バスケGM と同じ作り)。クラブの印と、2行(クラブ名/季・節・部)、
 /// 資金、試合を進めるボタン。高さは 52 で固定。
 class _FmTopBar extends StatelessWidget {
-  const _FmTopBar({required this.gameState, required this.onMore});
+  const _FmTopBar({
+    required this.gameState,
+    required this.onMore,
+    required this.mustCount,
+    required this.onTodo,
+  });
 
   final GameState gameState;
+
+  /// 必ず決めることの件数。残っていれば、進むボタンの左に出す。
+  final int mustCount;
+
+  /// 「やること」の一覧(状況)を開く。
+  final VoidCallback onTodo;
 
   /// 設定・用語集・ガイドを開く(左のメニューに入りきらないので帯の左端に置く)。
   final VoidCallback onMore;
@@ -433,23 +476,98 @@ class _FmTopBar extends StatelessWidget {
             const ExpectationMeters(compact: true),
             const SizedBox(width: 12),
             if (next != null && gameState.saleReason == null)
-              FilledButton.icon(
-                key: const ValueKey('advance-button'),
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size(0, 44),
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                ),
-                // 次の予定がある日まで進む。行き先の日付と中身をボタンに
-                // 書く(2026-11-22)。
-                onPressed:
-                    gameState.isBusy ? null : () => advanceToNextStop(context),
-                icon: Icon(advanceButtonIcon(gameState), size: 18),
-                label: Text(advanceButtonLabel(gameState) ??
-                    Tr.pick('次の節へ', 'Next matchday')),
+              AdvanceButton(
+                gameState: gameState,
+                mustCount: mustCount,
+                onTodo: onTodo,
               ),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 上の帯の進むボタン。どこまで進むかを動詞つきで書き(「次の試合へ 9/5(土)」)、
+/// 必ず決めることが残っていれば、左に赤い札で件数を出す。
+///
+/// 札は知らせるだけで、進むのは止めない(期限が来れば自動で片付く)。札を
+/// 押すと「やること」の一覧(状況)へ移る。
+class AdvanceButton extends StatelessWidget {
+  const AdvanceButton({
+    super.key,
+    required this.gameState,
+    required this.mustCount,
+    required this.onTodo,
+  });
+
+  final GameState gameState;
+  final int mustCount;
+  final VoidCallback onTodo;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final button = FilledButton.icon(
+      key: const ValueKey('advance-button'),
+      style: FilledButton.styleFrom(
+        minimumSize: const Size(0, 44),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        // 札が付くときは、札と1つのボタンに見えるよう左の角を落とす。
+        shape: mustCount > 0
+            ? const RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.horizontal(right: Radius.circular(8)))
+            : null,
+      ),
+      // 次の予定がある日まで進む。行き先の日付と中身をボタンに
+      // 書く(2026-11-22)。
+      onPressed: gameState.isBusy ? null : () => advanceToNextStop(context),
+      icon: Icon(advanceButtonIcon(gameState), size: 18),
+      label: Text(
+        advanceButtonLabel(gameState) ?? Tr.pick('次の節へ', 'Next matchday'),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+    if (mustCount == 0) return button;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          color: scheme.error,
+          borderRadius:
+              const BorderRadius.horizontal(left: Radius.circular(8)),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            key: const ValueKey('advance-todo'),
+            onTap: onTodo,
+            child: Container(
+              height: 44,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.checklist, size: 16, color: scheme.onError),
+                  const SizedBox(width: 4),
+                  Text(
+                    Tr.pick('やること $mustCount件', 'To do: $mustCount'),
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: scheme.onError,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 1),
+        Flexible(child: button),
+      ],
     );
   }
 }
@@ -459,12 +577,14 @@ class _FmTopBar extends StatelessWidget {
 class _FmSidebar extends StatelessWidget {
   const _FmSidebar({
     required this.page,
-    required this.badges,
+    required this.todos,
     required this.onSelect,
   });
 
   final _Page page;
-  final Map<_Page, int> badges;
+
+  /// 「やること」の一覧。項目ごとの印を付ける。
+  final List<TodoItem> todos;
   final void Function(_Page) onSelect;
 
   // 7項目が、横画面の低い高さに収まり、指で押せる高さ(44pt 以上)。
@@ -581,8 +701,26 @@ class _FmSidebar extends StatelessWidget {
                                 ? scheme.onPrimary
                                 : scheme.onSurfaceVariant,
                           );
-                          final n = badges[p] ?? 0;
-                          return n > 0 ? Badge(label: Text('$n'), child: i) : i;
+                          final must = todos.mustAt(p);
+                          final rec = todos.recommendedAt(p);
+                          if (must == 0 && rec == 0) return i;
+                          // 必須は赤い数字、おすすめだけなら青い点。
+                          return Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              i,
+                              Positioned(
+                                key: ValueKey('menu-mark-${p.name}'),
+                                top: must > 0 ? -5 : -2,
+                                left: must > 0 ? 14 : 18,
+                                child: TodoMark(
+                                  must: must,
+                                  recommended: rec,
+                                  onPrimary: page == p,
+                                ),
+                              ),
+                            ],
+                          );
                         }(),
                       ),
                   ],

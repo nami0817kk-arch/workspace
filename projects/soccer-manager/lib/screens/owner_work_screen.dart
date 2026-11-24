@@ -9,6 +9,8 @@ import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/undoable.dart';
+import '../logic/todo_advisor.dart';
+import '../widgets/shell_nav.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/responsive_body.dart';
 import '../logic/economy_scale.dart';
@@ -17,7 +19,10 @@ import '../logic/economy_scale.dart';
 /// 広報・ファンの手は月に1回(どれか1つ)、ほかの手は1シーズンに1回。
 /// 何かを得て何かを払う。
 class OwnerWorkScreen extends StatefulWidget {
-  const OwnerWorkScreen({super.key});
+  const OwnerWorkScreen({super.key, this.initialCard});
+
+  /// 最初に開く分野の札([TodoPlaces.cardFans] など)。単独で開くとき用。
+  final String? initialCard;
 
   @override
   State<OwnerWorkScreen> createState() => _OwnerWorkScreenState();
@@ -27,6 +32,70 @@ class OwnerWorkScreen extends StatefulWidget {
 /// 延々とスクロールしていた。0 は試合日のイベントと提携、1以降は分野。
 class _OwnerWorkScreenState extends State<OwnerWorkScreen> {
   int _tab = 0;
+  ShellNav? _nav;
+  int _seenSerial = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    final card = widget.initialCard;
+    if (card != null) _tab = _tabFor(card, context.read<GameState>());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final nav = ShellNav.maybeOf(context);
+    if (nav != _nav) {
+      _nav?.removeListener(_fromNav);
+      _nav = nav?..addListener(_fromNav);
+      _applyNav();
+    }
+  }
+
+  @override
+  void dispose() {
+    _nav?.removeListener(_fromNav);
+    super.dispose();
+  }
+
+  /// 「やること」の行から、分野の札を選ばれた。
+  void _fromNav() {
+    if (!mounted) return;
+    final before = _tab;
+    _applyNav();
+    if (before != _tab) setState(() {});
+  }
+
+  void _applyNav() {
+    final nav = _nav;
+    if (nav == null || nav.cardSerial == _seenSerial) return;
+    _seenSerial = nav.cardSerial;
+    final card = nav.card;
+    if (card == null || nav.menu != TodoMenu.ownerRoom) return;
+    _tab = _tabFor(card, context.read<GameState>());
+  }
+
+  /// 札の名前から、分野の札の番号を引く(0 は試合日と提携)。
+  static int _tabFor(String card, GameState game) {
+    int of(OwnerWorkCategory c) => OwnerWorkCategory.values.indexOf(c) + 1;
+    switch (card) {
+      case TodoPlaces.cardFans:
+        return of(OwnerWorkCategory.fans);
+      case TodoPlaces.cardWorks:
+        // いま打てる手がある最初の分野(広報は月に1回で別扱い)。
+        for (final c in OwnerWorkCategory.values) {
+          if (c == OwnerWorkCategory.fans) continue;
+          if (ownerWorks
+              .any((w) => w.category == c && game.canDoOwnerWork(w))) {
+            return of(c);
+          }
+        }
+        return of(OwnerWorkCategory.sales);
+      default:
+        return 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +122,7 @@ class _OwnerWorkScreenState extends State<OwnerWorkScreen> {
                     children: [
                       for (var i = 0; i <= OwnerWorkCategory.values.length; i++)
                         ChoiceChip(
+                          key: ValueKey('owner-work-chip-$i'),
                           label: Text(i == 0
                               ? Tr.pick('試合日と提携', 'Matchdays & partners')
                               : OwnerWorkCategory.values[i - 1].label),

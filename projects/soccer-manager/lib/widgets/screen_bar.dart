@@ -41,7 +41,25 @@ PreferredSizeWidget screenBar(
   bool scrollable = false,
   Widget? leading,
   List<Widget> actions = const [],
+  List<Widget?> tabMarks = const [],
 }) {
+  // タブの字の右に、「やること」の印(赤い数字・青い点)を付ける。
+  Tab tab(int i, {double? height}) {
+    final mark = i < tabMarks.length ? tabMarks[i] : null;
+    if (mark == null) return Tab(height: height, text: tabs[i]);
+    return Tab(
+      height: height,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(tabs[i]),
+          const SizedBox(width: 5),
+          KeyedSubtree(key: ValueKey('tab-mark-$i'), child: mark),
+        ],
+      ),
+    );
+  }
+
   if (HideScreenBar.of(context)) {
     // 見出しは出さない。タブか操作ボタンがあるときだけ、細い帯にして残す。
     if (tabs.isEmpty && actions.isEmpty) {
@@ -61,7 +79,7 @@ PreferredSizeWidget screenBar(
               tabAlignment: TabAlignment.start,
               dividerColor: Colors.transparent,
               labelPadding: const EdgeInsets.symmetric(horizontal: 14),
-              tabs: [for (final t in tabs) Tab(height: 48, text: t)],
+              tabs: [for (var i = 0; i < tabs.length; i++) tab(i, height: 48)],
             ),
       actions: actions,
     );
@@ -114,7 +132,7 @@ PreferredSizeWidget screenBar(
                       tabAlignment: TabAlignment.start,
                       dividerColor: Colors.transparent,
                       labelPadding: const EdgeInsets.symmetric(horizontal: 14),
-                      tabs: [for (final t in tabs) Tab(height: 48, text: t)],
+                      tabs: [for (var i = 0; i < tabs.length; i++) tab(i, height: 48)],
                     ),
                   ),
                 ),
@@ -135,7 +153,7 @@ PreferredSizeWidget screenBar(
         : TabBar(
             controller: controller,
             isScrollable: scrollable,
-            tabs: [for (final t in tabs) Tab(text: t)],
+            tabs: [for (var i = 0; i < tabs.length; i++) tab(i)],
           ),
   );
 }

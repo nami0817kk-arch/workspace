@@ -18,6 +18,9 @@ import '../widgets/player_face_avatar.dart';
 import 'contract_offer_screen.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
+import '../logic/todo_advisor.dart';
+import '../widgets/shell_nav.dart';
+import '../widgets/todo_list.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/transfer_table.dart';
@@ -111,12 +114,20 @@ class _TransferScreenState extends State<TransferScreen>
     // 同じ部の選手(最初から少し見えている)。見え方を何度も測るので1回だけ集める。
     final same = gameState.sameLeaguePlayerIds();
 
-    return Scaffold(
+    // 左メニューの中にあるときは、「やること」の行き先からタブを選べる。
+    return ShellTabSync(
+      menu: TodoMenu.transfer,
+      controller: _tabController,
+      enabled: widget.embedded,
+      child: Scaffold(
       appBar: screenBar(
         context,
         title: Tr.pick('移籍市場', 'Transfers'),
         leading: widget.embedded ? null : const BackButton(),
         controller: _tabController,
+        tabMarks: widget.embedded
+            ? todoTabMarks(context, TodoMenu.transfer, 7)
+            : const [],
         tabs: [
           // 候補を挙げるのは SD がいてもいなくても監督(SigningProposalEngine)。
           // SD がいるときだけ「SDの案」と出していたが、中身は同じ監督の
@@ -155,6 +166,7 @@ class _TransferScreenState extends State<TransferScreen>
             _buildScoutTab(context, gameState, save),
           ],
         ),
+      ),
       ),
     );
   }

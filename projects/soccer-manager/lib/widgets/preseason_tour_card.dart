@@ -12,11 +12,7 @@ class PreseasonTourCard extends StatelessWidget {
   const PreseasonTourCard({super.key});
 
   /// カードを出すか: 開幕前(まだリーグ戦が1つも済んでいない)で、未決のとき。
-  static bool visible(GameState gs) {
-    final s = gs.save;
-    if (s == null || !s.preseasonCampPending) return false;
-    return s.league.fixtures.every((f) => f.result == null);
-  }
+  static bool visible(GameState gs) => gs.preseasonTourPending;
 
   @override
   Widget build(BuildContext context) {

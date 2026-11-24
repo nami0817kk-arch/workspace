@@ -115,8 +115,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('進むボタン(日付で進む)', 'The advance button'),
             description: Tr.pick(
-                '右上のボタンは、次に予定がある日まで進みます(試合・カップ戦・給料日・放映権の入金・移籍の窓の開閉と締切など。何もない日は飛ばします)。行き先はボタンに「9/5(土) 第8節」のように出ます。試合には直接関わらず、数秒のダイジェストで結果と2つの期待の動きが出ます。日付を押すとカレンダーが開きます。',
-                'The button at the top right moves to the next day with something on: a match, a cup tie, payday, TV money, a transfer window opening or closing. Empty days are skipped, and the button shows where it is going, such as "Sat 5 Sep MD 8". You do not touch the match itself; a short digest shows the result and how both expectations moved. Tap the date to open the calendar.'),
+                '右上のボタンは、次に予定がある日まで進みます(試合・カップ戦・給料日・放映権の入金・移籍の窓の開閉と締切など。何もない日は飛ばします)。どこまで進むかはボタンに「次の試合へ 9/5(土)」「給料日まで進む 7/31(金)」のように出ます。必ず決めることが残っていると、ボタンの左に赤い札で「やること 2件」と出ます(押すと一覧へ移ります。進むのは止めません)。試合には直接関わらず、数秒のダイジェストで結果と2つの期待の動きが出ます。日付を押すとカレンダーが開きます。',
+                'The button at the top right moves to the next day with something on: a match, a cup tie, payday, TV money, a transfer window opening or closing. Empty days are skipped, and the button says where it is going, such as "Next match • Sat 5 Sep" or "Advance: Payday • Fri 31 Jul". While something still needs your answer, a red "To do: 2" tag sits to its left (tap it to open the list; it never blocks you from advancing). You do not touch the match itself; a short digest shows the result and how both expectations moved. Tap the date to open the calendar.'),
           ),
           GuideTopic(
             title: Tr.pick('監督からの報告・経営診断', "Manager's report and health check"),
@@ -125,10 +125,10 @@ List<GuideSection> get guideSections => [
                 "The status page opens with the manager's note, the table position and the books. The health check grades you A to E from both expectations, the wage ratio and your funds."),
           ),
           GuideTopic(
-            title: Tr.pick('今週の決断', "This week's decision"),
+            title: Tr.pick('やること(必須とおすすめ)', 'To do: must-do and suggested'),
             description: Tr.pick(
-                '補強の候補や売却のオファーなど、いま決めることを1件ずつ出します。',
-                'One thing to decide at a time, such as signing candidates or an offer for a player.'),
+                '状況ページの右に、いま決めることを1つの一覧で出します。「必須」は答えを待つもの・期限で自動に決まるもの・放っておくと損が出るもの、「おすすめ」はいま実行できる得な手(今月の広報、監督からの提案、開幕前だけの決めごとなど)です。行を押すと、その場所(左メニューの項目とタブ)へ移ります。左メニューとタブの赤い数字は必須、青い点はおすすめがそこにある印です。',
+                'The right side of the status page lists everything that needs you. "Must-do" items are waiting for an answer, will be decided for you at a deadline, or cost you if ignored. "Suggested" items are worthwhile moves you can make right now, such as this month\'s PR move, your manager\'s proposals or pre-season choices. Tap a row to jump to the right menu and tab. On the menu and tabs, a red number marks must-do items and a blue dot marks suggestions.'),
           ),
           GuideTopic(
             title: Tr.pick('年の予算と効きの時間差', 'The budget and its delays'),
