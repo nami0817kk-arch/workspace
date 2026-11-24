@@ -88,9 +88,10 @@ class TodoPlaces {
   static const clubCommunity = TodoPlace(TodoMenu.club, tab: 2);
   static const clubYouth = TodoPlace(TodoMenu.club, tab: 3);
 
-  // 選手: スカッド・登録と契約
+  // 選手: スカッド・登録と契約・登録ルール
   static const squadList = TodoPlace(TodoMenu.squad);
   static const squadContracts = TodoPlace(TodoMenu.squad, tab: 1);
+  static const squadRules = TodoPlace(TodoMenu.squad, tab: 2);
 
   // リーグ: 順位と日程・カップ戦
   static const leagueCups = TodoPlace(TodoMenu.league, tab: 1);

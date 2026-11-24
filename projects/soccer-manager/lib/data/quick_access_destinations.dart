@@ -6,6 +6,7 @@ import '../screens/best_eleven_screen.dart';
 import '../screens/reference_screens.dart';
 import '../screens/club_screen.dart';
 import '../screens/contract_board_screen.dart';
+import '../screens/registration_rules_screen.dart';
 import '../screens/analysis_screen.dart';
 import '../screens/cup_screen.dart';
 import '../screens/finance_screen.dart';
@@ -88,6 +89,13 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('登録と契約', 'Registration & contracts'),
         color: Colors.brown.shade600,
         builder: (_) => const ContractBoardScreen(),
+      ),
+      // 国の登録の決まり(2026-11-25)。横画面では「選手」の3つ目のタブ。
+      QuickAccessDestination(
+        icon: Icons.rule,
+        label: Tr.pick('登録ルール', 'Registration rules'),
+        color: Colors.brown.shade400,
+        builder: (_) => const RegistrationRulesScreen(),
       ),
       QuickAccessDestination(
         icon: Icons.work_outline,
