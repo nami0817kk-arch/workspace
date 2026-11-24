@@ -511,4 +511,21 @@ const START = `S=newGame('m','normal',null);var c=S.tr.slice();S.sel=c.slice(0,S
   ok(x.run("FORMATS.xmas.fat>0&&FORMATS.xmas.hype===3&&SHOW_IN.xmas.length>=5"), 'クリスマス公演は盛り上がりが最大で、疲れる。本番の入りの文がある');
 }
 
+// エンドロールの最後から結果へ進める（2026-11-25 レビュー「シェア以外反応しない」）
+{
+  const r = boot({ adFree: false, store: {}, owned: {} });
+  r.run(START);
+  const FIN = `var B=alive(S),res=S.stage.res;B.sort(function(a,b){return res[b.id].sc-res[a.id].sc;}).slice(0,Math.min(6,S.caps.finMax,B.length)).forEach(function(t){S.pass[t.id]=true;});decide(S);`;
+  for (let i = 1; i <= 4; i++) { r.run(PLAY_ROUND); r.press('nextround'); if (r.run('S.phase') === 'rank') r.press('rankok'); }
+  r.run(PLAY_ROUND.replace(/var B=alive[\s\S]*$/, '') + FIN);
+  r.press('toprep');
+  r.run("S.prep.color=2;S.prep.song=1;S.prep.leader=S.tr.filter(function(t){return t.status==='debut';})[0].id;startMonth(S);finishMonth(S);");
+  const ve = r.run("vEnding()");
+  const last = ve.slice(ve.indexOf('ecard last'));
+  ok(/data-a="endok"/.test(last) && /data-a="share"/.test(last), 'エンドロールの最後の札に「結果を見る」と「シェア」がある');
+  ok(/\.ending>\.ebar\{[^}]*z-index:3/.test(require('fs').readFileSync(require('path').join(__dirname, '..', 'prototype', 'game.html'), 'utf8')), '上の帯は流れる部分より上に重ねる');
+  r.press('endok');
+  ok(r.run('S.ending') === false && r.run('S.phase') === 'result', '最後の札の「結果を見る」で結果の画面へ進む');
+}
+
 if (fails) { console.error(fails + '件 外れ'); process.exitCode = 1; } else console.log('すべて通った');
