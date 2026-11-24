@@ -182,12 +182,23 @@ void main() {
       expect(
           jan.where((c) => domesticIn(LeagueTheme.england.name, c)), isEmpty);
       expect(jan.where((c) => domesticIn(LeagueTheme.italy.name, c)), isEmpty);
-      expect(
-          jan.any((c) =>
-              domesticIn(LeagueTheme.spain.name, c) ||
-              domesticIn(LeagueTheme.germany.name, c) ||
-              domesticIn(LeagueTheme.france.name, c)),
-          isTrue,
+      // 結ぶかどうかは乱数で決まるので、1月2日の時点で1件も無い回がある
+      // (CI で一度落ちた)。1月のうちに国内同士が出ることを確かめる。
+      bool otherDomestic(Iterable<PreContract> cs) => cs.any((c) =>
+          domesticIn(LeagueTheme.spain.name, c) ||
+          domesticIn(LeagueTheme.germany.name, c) ||
+          domesticIn(LeagueTheme.france.name, c));
+      if (!otherDomestic(jan)) {
+        jumpTo(DateTime(y, 1, 2), DateTime(y, 1, 30));
+        expect(
+            gs.preContracts
+                .where((c) => domesticIn(LeagueTheme.england.name, c)),
+            isEmpty);
+        expect(
+            gs.preContracts.where((c) => domesticIn(LeagueTheme.italy.name, c)),
+            isEmpty);
+      }
+      expect(otherDomestic(gs.preContracts), isTrue,
           reason: 'ほかの国は1月1日から国内同士でも結ぶ');
       // 自クラブの選手に声をかけたのは、6月までは他の国のクラブだけ。
       expect(
