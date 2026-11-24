@@ -1684,24 +1684,29 @@ extension GameStateFinance on GameState {
 
   /// [category] の配分を [share]% にする。残りの配り先は比率に応じて
   /// 分け直され、合計は100のまま。
-  Future<void> setBudgetShare(BudgetCategory category, int share) async {
-    if (_save == null) return;
+  ///
+  /// オフシーズン(季の終わり〜開幕前)だけ。シーズン中は何もせず false。
+  Future<bool> setBudgetShare(BudgetCategory category, int share) async {
+    if (_save == null || !isOffseason) return false;
     _save!.budgetPlan = _save!.budgetPlan.withShare(category, share);
     _notify();
     await _persist();
+    return true;
   }
 
   /// 5つの配分をまとめて保存する。画面で配り直して「決定」を押したとき用。
   /// 1つずつ [setBudgetShare] で入れると、途中で他の配り先が比率で動く。
   /// 配り切っていない(合計が100でない)配分は [ArgumentError]。
-  Future<void> setBudgetPlan(BudgetPlan plan) async {
+  /// オフシーズン(季の終わり〜開幕前)だけ。シーズン中は何もせず false。
+  Future<bool> setBudgetPlan(BudgetPlan plan) async {
     if (!plan.isComplete) {
       throw ArgumentError.value(plan.shares, 'plan', 'total is not 100');
     }
-    if (_save == null) return;
+    if (_save == null || !isOffseason) return false;
     _save!.budgetPlan = BudgetPlan.draft(plan.shares);
     _notify();
     await _persist();
+    return true;
   }
 
   /// このクラブのいる国の財務規則。
@@ -2346,18 +2351,41 @@ extension GameStateFinance on GameState {
   /// オーナーが選んだクラブの方針。
   ClubPolicy get clubPolicy => _save?.clubPolicy ?? ClubPolicy.balanced;
 
-  /// 方針を変えられるか。今シーズンの試合が1つも行われていない間だけ。
-  /// 途中で変えられると、シーズン末の採点に合わせて直前に選べてしまう。
-  bool get canChangeClubPolicy =>
-      _save != null && _save!.league.fixtures.every((f) => f.result == null);
+  /// 方針を変えられるか。オフシーズン(季の終わり〜開幕前)だけ
+  /// (予算・見た目・チケットと同じ。2026-11-25)。シーズン中に変えられると、
+  /// 季末の採点に合わせて直前に選べてしまう。
+  bool get canChangeClubPolicy => _save != null && isOffseason;
+
+  /// 来季に使う方針(季の終わりに選んだもの。無ければ今の方針)。
+  ClubPolicy get nextClubPolicy =>
+      _save?.pendingClubPolicy ?? clubPolicy;
 
   /// 方針を選ぶ。変えられないときは何もせず false。
+  ///
+  /// 季の終わり(最終節のあと)に選んだ方針は、来季の方針として持ち、
+  /// 今季の採点が済んで季を越すときに入れ替える(採点の前に結果を見て
+  /// 選び直せないように)。開幕前はすぐに入れ替える。
   Future<bool> setClubPolicy(ClubPolicy policy) async {
-    if (_save == null || !canChangeClubPolicy) return false;
-    _save!.clubPolicy = policy;
+    final s = _save;
+    if (s == null || !canChangeClubPolicy) return false;
+    if (isPreseason) {
+      s.clubPolicy = policy;
+      s.pendingClubPolicy = null;
+    } else {
+      s.pendingClubPolicy = policy == s.clubPolicy ? null : policy;
+    }
     _notify();
     await _persist();
     return true;
+  }
+
+  /// 季を越すとき(採点のあと)、季の終わりに選んだ方針に入れ替える。
+  void _applyPendingClubPolicy() {
+    final s = _save!;
+    final next = s.pendingClubPolicy;
+    if (next == null) return;
+    s.clubPolicy = next;
+    s.pendingClubPolicy = null;
   }
 
   /// シーズン末に方針を採点し、2つの期待を動かす。

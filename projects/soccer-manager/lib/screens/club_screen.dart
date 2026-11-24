@@ -34,6 +34,7 @@ import '../logic/economy_scale.dart';
 import '../widgets/help_button.dart';
 import '../widgets/screen_bar.dart';
 import '../widgets/disabled_reason.dart';
+import '../widgets/offseason_lock_note.dart';
 
 part 'club_screen_staff.dart';
 
@@ -340,6 +341,7 @@ class ClubScreen extends StatelessWidget {
               const SizedBox(height: 8),
               _TicketPricingCard(
                 current: save.ticketPricing,
+                locked: !gameState.isOffseason,
                 onSelect: (p) => gameState.setTicketPricing(p),
               ),
               const SizedBox(height: 8),
@@ -369,10 +371,31 @@ class _TicketPricingCard extends StatelessWidget {
   final TicketPricing current;
   final ValueChanged<TicketPricing> onSelect;
 
-  const _TicketPricingCard({required this.current, required this.onSelect});
+  /// シーズン中か(変えられるのはオフシーズンだけ。2026-11-25)。
+  final bool locked;
+
+  const _TicketPricingCard(
+      {required this.current, required this.onSelect, required this.locked});
 
   @override
   Widget build(BuildContext context) {
+    if (locked) {
+      return Card(
+        key: const ValueKey('ticket-locked'),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(Tr.pick('チケットの値段', 'Ticket pricing'),
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 6),
+              OffseasonLockNote(current.label),
+            ],
+          ),
+        ),
+      );
+    }
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(14),

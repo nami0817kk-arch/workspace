@@ -211,6 +211,21 @@ extension GameStateDecisions on GameState {
         (f) => f.result != null && (f.homeTeamId == id || f.awayTeamId == id));
   }
 
+  /// オフシーズンか。季の終わり(自クラブのリーグ戦の最終節のあと)から、
+  /// 次の季の開幕前(自クラブのリーグ戦がまだ1つも終わっていない)まで。
+  ///
+  /// 予算の配り方・クラブの見た目・チケットの値段・クラブの方針は、この間
+  /// だけ変えられる(2026-11-25)。シーズン中は「今季: ○○」と見せるだけ。
+  bool get isOffseason {
+    final s = _save;
+    if (s == null) return false;
+    if (isPreseason) return true;
+    final id = s.userTeamId;
+    final mine = s.league.fixtures
+        .where((f) => f.homeTeamId == id || f.awayTeamId == id);
+    return mine.isNotEmpty && mine.every((f) => f.result != null);
+  }
+
   /// 開幕前の海外ツアーに出るかを、まだ決めていないか(開幕前で未決)。
   /// 状況の札と「やること」の一覧が同じ判定を使う。
   bool get preseasonTourPending {

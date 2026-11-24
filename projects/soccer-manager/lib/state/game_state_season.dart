@@ -1318,6 +1318,7 @@ extension GameStateSeason on GameState {
     _save!.declinedProposalIds.clear();
     _recordClubValue();
     _scoreClubPolicy(finalRank: finalRank);
+    _applyPendingClubPolicy();
     _advanceEconomy();
 
     // オーナーは雇われる立場ではないので、理事会との契約(満了で解任)は

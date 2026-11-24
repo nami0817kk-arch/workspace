@@ -6,10 +6,14 @@ import '../models/club_look.dart';
 import '../state/game_state.dart';
 import 'club_emblem.dart';
 import 'disabled_reason.dart';
+import 'offseason_lock_note.dart';
 
 /// クラブの見た目の札。今のエンブレムと「見た目を変える」だけを出し、
 /// 色・形・模様を選ぶ欄は別の画面([ClubLookEditor])へ移した。タブの中に
 /// 広げていたときは画面2つ分を使っていた(2026-11-21)。
+///
+/// 変えられるのはオフシーズン(季の終わり〜開幕前)だけ。シーズン中は
+/// 「見た目を変える」を出さず、1行で見せる(2026-11-25)。
 class ClubLookCard extends StatelessWidget {
   const ClubLookCard({super.key});
 
@@ -35,18 +39,29 @@ class ClubLookCard extends StatelessWidget {
                 children: [
                   Text(Tr.pick('クラブの見た目', 'Club look'),
                       style: Theme.of(context).textTheme.titleMedium),
-                  Text(
+                  if (!gs.isOffseason)
+                    OffseasonLockNote(
+                        Tr.pick('このエンブレムと色', 'this crest and colours'))
+                  else if (gs.clubLookChangedThisOffseason)
+                    Text(
+                      Tr.pick('このオフシーズンはもう変えました(1回まで)',
+                          'Already changed this off-season (once only)'),
+                      style: const TextStyle(fontSize: 12),
+                    )
+                  else
+                    Text(
                     gs.clubLookChangeCosts
                         ? Tr.pick(
-                            '1季に1回まで(変えると期待-${GameStateClubLook.changePenalty})',
-                            'Once a season (supporter expectation -${GameStateClubLook.changePenalty})')
-                        : Tr.pick('最初の季は何度でも変えられます',
-                            'Free to change in your first season'),
+                            'オフシーズンに1回まで(変えると期待-${GameStateClubLook.changePenalty})',
+                            'Once per off-season (supporter expectation -${GameStateClubLook.changePenalty})')
+                        : Tr.pick('最初の季のオフシーズンは何度でも変えられます',
+                            'Free to change in your first off-season'),
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],
               ),
             ),
+            if (gs.canChangeClubLook)
             OutlinedButton(
               onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => Scaffold(
@@ -157,10 +172,10 @@ class _ClubLookEditorState extends State<ClubLookEditor> {
             Text(
                 gs.clubLookChangeCosts
                     ? Tr.pick(
-                        '色とエンブレムを決めます。2季目からは1季に1回までで、変えると古いサポーターが戸惑います(期待-${GameStateClubLook.changePenalty})。',
-                        'Choose colours and crest. From your second season you can change it once a season, and long-time fans will be unsettled (supporter expectation -${GameStateClubLook.changePenalty}).')
-                    : Tr.pick('色とエンブレムを決めます。最初の季のうちは何度でも変えられます。',
-                        'Choose colours and crest. You can change them freely during your first season.'),
+                        '色とエンブレムを決めます。変えられるのはオフシーズン(季の終わり〜開幕前)に1回までで、変えると古いサポーターが戸惑います(期待-${GameStateClubLook.changePenalty})。',
+                        'Choose colours and crest. You can change them once per off-season (end of season to kick-off), and long-time fans will be unsettled (supporter expectation -${GameStateClubLook.changePenalty}).')
+                    : Tr.pick('色とエンブレムを決めます。最初の季のオフシーズン(開幕前)は何度でも変えられます。',
+                        'Choose colours and crest. You can change them freely in your first off-season (before kick-off).'),
                 style: const TextStyle(fontSize: 12)),
             const SizedBox(height: 10),
             Center(
@@ -206,7 +221,11 @@ class _ClubLookEditorState extends State<ClubLookEditor> {
                     : null,
                 child: Text(gs.canChangeClubLook
                     ? Tr.pick('この見た目にする', 'Use this look')
-                    : Tr.pick('今季はもう変えられません', 'Already changed this season')),
+                    : gs.isOffseason
+                        ? Tr.pick('このオフシーズンはもう変えられません',
+                            'Already changed this off-season')
+                        : Tr.pick('来季の開幕前に変えられます',
+                            'You can change it before next season starts')),
               ),
             ),
             // まだ何も変えていないときも押せない(今季済みはボタンの字に出る)。

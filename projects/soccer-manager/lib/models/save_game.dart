@@ -221,8 +221,14 @@ class SaveGame {
   int marketIndex;
   EconomyPhase economyNext;
 
-  /// オーナーが選んだクラブの方針。シーズンの開幕前にだけ変えられる。
+  /// オーナーが選んだクラブの方針。オフシーズン(季の終わり〜開幕前)に
+  /// だけ変えられる。
   ClubPolicy clubPolicy;
+
+  /// 季の終わり(最終節のあと)に選んだ来季の方針。今季の方針は季末に
+  /// 採点されるので、採点が済むまでは今季の方針のまま持ち、季を越すときに
+  /// 入れ替える(2026-11-25)。無ければ null。
+  ClubPolicy? pendingClubPolicy;
 
   /// シーズンごとのクラブ価値(万円)。シーズン終了時に記録する。
   Map<int, int> clubValueHistory;
@@ -983,6 +989,7 @@ class SaveGame {
     this.marketIndex = 100,
     this.economyNext = EconomyPhase.normal,
     this.clubPolicy = ClubPolicy.balanced,
+    this.pendingClubPolicy,
     Map<int, int>? clubValueHistory,
     this.ownerGoalStartValue = 0,
     this.clubValueVersion = currentClubValueVersion,
@@ -1401,6 +1408,8 @@ class SaveGame {
         if (marketIndex != 100) 'marketIndex': marketIndex,
         'economyNext': economyNext.name,
         'clubPolicy': clubPolicy.name,
+        if (pendingClubPolicy != null)
+          'pendingClubPolicy': pendingClubPolicy!.name,
         'clubValueHistory': clubValueHistory.map((k, v) => MapEntry('$k', v)),
         'ownerGoalStartValue': ownerGoalStartValue,
         'clubValueVersion': clubValueVersion,
@@ -1793,6 +1802,9 @@ class SaveGame {
                 .where((p) => p.name == json['clubPolicy'])
                 .firstOrNull ??
             ClubPolicy.balanced,
+        pendingClubPolicy: ClubPolicy.values
+            .where((p) => p.name == json['pendingClubPolicy'])
+            .firstOrNull,
         // 版が書かれていないのは、桁を変える前のセーブ。
         economyVersion: json['economyVersion'] as int? ?? 1,
         // 版が書かれていないのは、国籍を部で変える前のセーブ。

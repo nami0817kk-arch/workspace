@@ -437,11 +437,13 @@ extension GameStateSquad on GameState {
   }
 
   /// チケット価格戦略を切り替える(観客動員率と1人あたり収入のトレードオフ)。
-  Future<void> setTicketPricing(TicketPricing pricing) async {
-    if (_save == null) return;
+  /// オフシーズン(季の終わり〜開幕前)だけ。シーズン中は何もせず false。
+  Future<bool> setTicketPricing(TicketPricing pricing) async {
+    if (_save == null || !isOffseason) return false;
     _save!.ticketPricing = pricing;
     _notify();
     await _persist();
+    return true;
   }
 
   void setPressing(int value) {

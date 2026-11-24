@@ -657,8 +657,8 @@ class TodoAdvisor {
         kind: TodoKind.clubPolicy,
         level: TodoLevel.recommended,
         title: Tr.pick('クラブの方針を選べます', 'You can set the club policy'),
-        note: Tr.pick('変えられるのは開幕前だけ(いまは「${gs.clubPolicy.label}」)。季末に採点されます。',
-            'Only before the season starts (now: ${gs.clubPolicy.label}). Scored at the end.'),
+        note: Tr.pick('変えられるのはオフシーズン(季の終わり〜開幕前)だけ(いまは「${gs.nextClubPolicy.label}」)。季末に採点されます。',
+            'Only in the off-season, from the end of the season to kick-off (now: ${gs.nextClubPolicy.label}). Scored at the end.'),
         place: TodoPlaces.financeProjects,
       ));
     }
