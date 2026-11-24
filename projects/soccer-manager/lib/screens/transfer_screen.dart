@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/disabled_reason.dart';
 import '../logic/scout_knowledge.dart';
 import '../logic/signing_proposal_engine.dart';
 import '../logic/squad_registration_engine.dart';
@@ -18,6 +19,9 @@ import '../widgets/player_face_avatar.dart';
 import 'contract_offer_screen.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
+import '../logic/todo_advisor.dart';
+import '../widgets/shell_nav.dart';
+import '../widgets/todo_list.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/transfer_table.dart';
@@ -111,12 +115,20 @@ class _TransferScreenState extends State<TransferScreen>
     // 同じ部の選手(最初から少し見えている)。見え方を何度も測るので1回だけ集める。
     final same = gameState.sameLeaguePlayerIds();
 
-    return Scaffold(
+    // 左メニューの中にあるときは、「やること」の行き先からタブを選べる。
+    return ShellTabSync(
+      menu: TodoMenu.transfer,
+      controller: _tabController,
+      enabled: widget.embedded,
+      child: Scaffold(
       appBar: screenBar(
         context,
         title: Tr.pick('移籍市場', 'Transfers'),
         leading: widget.embedded ? null : const BackButton(),
         controller: _tabController,
+        tabMarks: widget.embedded
+            ? todoTabMarks(context, TodoMenu.transfer, 7)
+            : const [],
         tabs: [
           // 候補を挙げるのは SD がいてもいなくても監督(SigningProposalEngine)。
           // SD がいるときだけ「SDの案」と出していたが、中身は同じ監督の
@@ -155,6 +167,7 @@ class _TransferScreenState extends State<TransferScreen>
             _buildScoutTab(context, gameState, save),
           ],
         ),
+      ),
       ),
     );
   }
@@ -403,10 +416,27 @@ class _TransferScreenState extends State<TransferScreen>
     bool squadFull,
     Set<String> same, {
     Widget? footer,
+    bool windowBannerAbove = false,
   }) {
     final scheme = Theme.of(context).colorScheme;
     final budget = gameState.save!.budget;
     final canSignNow = (gameState.isTransferWindowOpen) && !squadFull;
+    // 「獲得」が全部の行で押せない理由。行ごとに出すと表の高さが倍になる
+    // ので、表の上に1回だけ出す。窓の状態は、上に帯がある画面(探す)では
+    // 帯に任せる。
+    final String? blocked = squadFull
+        ? Tr.pick(
+            'スカッドが上限($maxSquadSize人)です。誰かを手放すと獲得できます',
+            'Your squad is full ($maxSquadSize). Move someone on before you sign anyone')
+        : gameState.isGoalkeeperEmergency
+            // 窓の外でも GK だけは押せる(緊急の特例)。
+            ? Tr.pick('移籍の窓が閉じています。いまは特例で GK だけ獲得できます',
+                'The window is shut. Only a goalkeeper can be signed, under the emergency rule')
+            : (!gameState.isTransferWindowOpen && !windowBannerAbove)
+                ? Tr.pick(
+                    '${gameState.transferWindowStatusLabel}。獲得はそれまで押せません',
+                    '${gameState.transferWindowStatusLabel}. You cannot sign anyone until then')
+                : null;
     final head = TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.bold,
@@ -499,7 +529,11 @@ class _TransferScreenState extends State<TransferScreen>
       }
 
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          DisabledReason(blocked,
+              key: const ValueKey('target-table-blocked'),
+              padding: const EdgeInsets.fromLTRB(12, 2, 12, 2)),
           header,
           Expanded(
             child: ListView.builder(
@@ -627,6 +661,7 @@ class _TransferScreenState extends State<TransferScreen>
             shown,
             squadFull,
             same,
+            windowBannerAbove: true,
             footer: found.length > shown.length
                 ? TextButton(
                     onPressed: () => setState(() => _searchLimit += 40),
@@ -1096,6 +1131,11 @@ class _TransferScreenState extends State<TransferScreen>
           children: [
             Text(Tr.pick('買い戻せる選手', 'Buy-back options'),
                 style: Theme.of(context).textTheme.titleSmall),
+            // 窓が閉じているあいだは「買い戻す」が押せない。行ごとではなく
+            // 見出しの下に1回だけ出す。
+            if (!gameState.isTransferWindowOpen)
+              DisabledReason(gameState.transferWindowStatusLabel,
+                  key: const ValueKey('buy-back-blocked')),
             for (final p in players)
               ListTile(
                 contentPadding: EdgeInsets.zero,
@@ -1218,6 +1258,19 @@ class _TransferScreenState extends State<TransferScreen>
                   children: buttons,
                 ),
               ),
+            // 提示の回数を使い切ると「出し直す」が押せない。
+            if (t.stage == TransferTalkStage.countered &&
+                t.round >= TransferTalkEngine.maxRounds)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                child: DisabledReason(
+                  Tr.pick(
+                      '提示は${TransferTalkEngine.maxRounds}回までです。対案をのむか、取り下げてください',
+                      'You have used all ${TransferTalkEngine.maxRounds} bids. Accept their terms or withdraw'),
+                  alignEnd: true,
+                  padding: EdgeInsets.zero,
+                ),
+              ),
           ],
         ),
       ),
@@ -1234,6 +1287,19 @@ class _TransferScreenState extends State<TransferScreen>
     final buyOptionFee = (total * GameState.loanBuyOptionRatio).round();
     // 窓の外で開けるのは GK の緊急の特例だけ。そのときは期限付き(ローン)のみ。
     final permanentAllowed = gameState.isTransferWindowOpen;
+    final obligationFee =
+        (loanFee * GameStateForms.obligationLoanFeeFactor).round();
+    // 選べない選び方には、説明の下に理由を出す(灰色になるだけだった)。
+    final windowShut = Tr.pick('移籍の窓が閉じているあいだは選べません',
+        'Not available while the transfer window is shut');
+    Widget sub(String text, String? reason) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(text),
+            DisabledReason(reason, padding: const EdgeInsets.only(top: 2)),
+          ],
+        );
 
     // 横画面は縦が短く、4つの選び方の下が切れていた。中でスクロールでき、
     // 横画面では2列に並べる。
@@ -1267,12 +1333,16 @@ class _TransferScreenState extends State<TransferScreen>
                     cell(ListTile(
                       leading: const Icon(Icons.handshake),
                       title: Text(Tr.pick('移籍金を提示する', 'Make a bid')),
-                      subtitle: Text(talk != null
-                          ? Tr.pick('もう交渉しています(「交渉」のタブで続きを)',
-                              'Talks are already under way (see the Talks tab)')
-                          : Tr.pick(
-                              '相手のクラブと交渉します。返事は${TransferTalkEngine.replyDays}日ほどで来ます(別に代理人手数料${formatMoney(agentFee)}ほど)',
-                              'Open talks with his club. They reply in about ${TransferTalkEngine.replyDays} days (plus about ${formatMoney(agentFee)} in agent fees)')),
+                      subtitle: sub(
+                          talk != null
+                              ? Tr.pick('もう交渉しています(「交渉」のタブで続きを)',
+                                  'Talks are already under way (see the Talks tab)')
+                              : Tr.pick(
+                                  '相手のクラブと交渉します。返事は${TransferTalkEngine.replyDays}日ほどで来ます(別に代理人手数料${formatMoney(agentFee)}ほど)',
+                                  'Open talks with his club. They reply in about ${TransferTalkEngine.replyDays} days (plus about ${formatMoney(agentFee)} in agent fees)'),
+                          talk == null && !permanentAllowed
+                              ? windowShut
+                              : null),
                       enabled: permanentAllowed && talk == null,
                       onTap: () {
                         Navigator.pop(ctx);
@@ -1282,10 +1352,13 @@ class _TransferScreenState extends State<TransferScreen>
                     cell(ListTile(
                       leading: const Icon(Icons.swap_horiz),
                       title: Text(Tr.pick('ローンで獲得', 'Take him on loan')),
-                      subtitle: Text(
+                      subtitle: sub(
                         Tr.pick(
                             '契約金${formatMoney(loanFee)}・給与の6割を負担・期間は半年(冬の窓まで)か1年(シーズン末まで)',
                             '${formatMoney(loanFee)} fee, 60% of his wages, for half a season (to the winter window) or the full season'),
+                        save.budget >= loanFee
+                            ? null
+                            : fundsShortReason(loanFee - save.budget),
                       ),
                       enabled: save.budget >= loanFee,
                       onTap: () async {
@@ -1304,10 +1377,13 @@ class _TransferScreenState extends State<TransferScreen>
                       leading: const Icon(Icons.request_quote),
                       title: Text(Tr.pick(
                           '買取オプション付きローンで獲得', 'Loan with an option to buy')),
-                      subtitle: Text(
+                      subtitle: sub(
                         Tr.pick(
                             '契約金${formatMoney(loanFee)}・給与の6割を負担・ローン期間中いつでも${formatMoney(buyOptionFee)}で完全移籍化可能',
                             '${formatMoney(loanFee)} fee, 60% of his wages, and you can make it permanent for ${formatMoney(buyOptionFee)} at any point'),
+                        save.budget >= loanFee
+                            ? null
+                            : fundsShortReason(loanFee - save.budget),
                       ),
                       enabled: save.budget >= loanFee,
                       onTap: () async {
@@ -1329,15 +1405,18 @@ class _TransferScreenState extends State<TransferScreen>
                       leading: const Icon(Icons.gavel),
                       title: Text(Tr.pick(
                           '買取義務付きローンで獲得', 'Loan with an obligation to buy')),
-                      subtitle: Text(
+                      subtitle: sub(
                         Tr.pick(
-                            '契約金${formatMoney((loanFee * GameStateForms.obligationLoanFeeFactor).round())}(ふつうの半分)・給与の6割を負担・満了したら必ず${formatMoney(buyOptionFee)}で買い取る',
-                            '${formatMoney((loanFee * GameStateForms.obligationLoanFeeFactor).round())} fee (half the usual), 60% of his wages, and you must buy him for ${formatMoney(buyOptionFee)} when it ends'),
+                            '契約金${formatMoney(obligationFee)}(ふつうの半分)・給与の6割を負担・満了したら必ず${formatMoney(buyOptionFee)}で買い取る',
+                            '${formatMoney(obligationFee)} fee (half the usual), 60% of his wages, and you must buy him for ${formatMoney(buyOptionFee)} when it ends'),
+                        !permanentAllowed
+                            ? windowShut
+                            : save.budget >= obligationFee
+                                ? null
+                                : fundsShortReason(obligationFee - save.budget),
                       ),
-                      enabled: permanentAllowed &&
-                          save.budget >=
-                              (loanFee * GameStateForms.obligationLoanFeeFactor)
-                                  .round(),
+                      enabled:
+                          permanentAllowed && save.budget >= obligationFee,
                       onTap: () async {
                         Navigator.pop(ctx);
                         final length = await _chooseLoanLength(context);

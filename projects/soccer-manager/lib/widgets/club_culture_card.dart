@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/club_culture.dart';
 import '../state/game_state.dart';
 import 'help_button.dart';
+import 'disabled_reason.dart';
 import '../theme/semantic_colors.dart';
 
 /// クラブの文化を選ぶ(1季に1回まで)。
@@ -46,6 +47,13 @@ class ClubCultureCard extends StatelessWidget {
                   ),
               ],
             ),
+            // 変えられるのは1季に1回。今季もう変えたあとは札が全部押せない。
+            if (!canChange)
+              DisabledReason(
+                Tr.pick('今季はもう変えました。次に変えられるのは来季です',
+                    'Already changed this season. You can change it again next season'),
+                key: const ValueKey('culture-blocked'),
+              ),
           ],
         ),
       ),

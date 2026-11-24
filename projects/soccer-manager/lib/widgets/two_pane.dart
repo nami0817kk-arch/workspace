@@ -41,7 +41,9 @@ class TwoPane extends StatelessWidget {
         Expanded(
           flex: 6,
           child: ListView(
-              padding: padding, children: children.sublist(split + 1)),
+              key: const ValueKey('two-pane-right'),
+              padding: padding,
+              children: children.sublist(split + 1)),
         ),
       ],
     );

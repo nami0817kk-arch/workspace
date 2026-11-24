@@ -141,7 +141,11 @@ extension GameStateRivals on GameState {
   }
 
   /// オーナーの答えを待っているもの(1行ずつ)。
-  List<String> get inboxActions {
+  List<String> get inboxActions => [for (final e in inboxEntries) e.text];
+
+  /// オーナーの答えを待っているもの。種類と件数つき(「やること」の一覧
+  /// todo_advisor.dart が、種類ごとに行き先を決めるのに使う)。
+  List<InboxEntry> get inboxEntries {
     final s = _save;
     if (s == null) return const [];
     final talks = s.transferTalks;
@@ -151,30 +155,51 @@ extension GameStateRivals on GameState {
         talks.where((t) => t.stage == TransferTalkStage.agreed).length;
     return [
       if (pendingOwnerEvent != null)
-        Tr.pick('オーナーの判断を待つ出来事があります', 'An owner decision is waiting'),
+        InboxEntry(InboxKind.ownerEvent,
+            Tr.pick('オーナーの判断を待つ出来事があります', 'An owner decision is waiting')),
       if (s.pendingRumor != null)
-        Tr.pick('${s.pendingRumor![1]}の噂に、記者会見で答えていません',
-            'Answer the ${s.pendingRumor![1]} rumour at the press conference'),
+        InboxEntry(
+            InboxKind.rumor,
+            Tr.pick('${s.pendingRumor![1]}の噂に、記者会見で答えていません',
+                'Answer the ${s.pendingRumor![1]} rumour at the press conference')),
       // 手術か保存療法かも、答えを待つもの(以前は数えておらず、決めずに
       // 何節でも進められた)。
       for (final p in playersAwaitingSurgeryDecision)
-        Tr.pick('${p.name}の治療(手術か保存療法か)を決めていません',
-            "Decide ${p.name}'s treatment: surgery or rest"),
+        InboxEntry(
+            InboxKind.surgery,
+            Tr.pick('${p.name}の治療(手術か保存療法か)を決めていません',
+                "Decide ${p.name}'s treatment: surgery or rest"),
+            ref: p.id),
       if (s.agmDemand != null)
-        Tr.pick('株主の要求に答えていません', 'The shareholders want an answer'),
+        InboxEntry(InboxKind.agmDemand,
+            Tr.pick('株主の要求に答えていません', 'The shareholders want an answer')),
       if (s.incomingOffers.isNotEmpty)
-        Tr.pick('自分の選手へのオファーが${s.incomingOffers.length}件',
-            '${Tr.plural(s.incomingOffers.length, 'offer')} for your players'),
+        InboxEntry(
+            InboxKind.incomingOffers,
+            Tr.pick('自分の選手へのオファーが${s.incomingOffers.length}件',
+                '${Tr.plural(s.incomingOffers.length, 'offer')} for your players'),
+            count: s.incomingOffers.length),
       if (countered > 0)
-        Tr.pick('相手のクラブから対案が$countered件', '${Tr.plural(countered, 'counter-offer')} from clubs'),
+        InboxEntry(
+            InboxKind.counterOffers,
+            Tr.pick('相手のクラブから対案が$countered件',
+                '${Tr.plural(countered, 'counter-offer')} from clubs'),
+            count: countered),
       if (agreed > 0)
-        Tr.pick('クラブと合意し、選手と話す交渉が$agreed件',
-            '${Tr.plural(agreed, 'deal')} agreed with clubs: talk to the player'),
+        InboxEntry(
+            InboxKind.agreedTalks,
+            Tr.pick('クラブと合意し、選手と話す交渉が$agreed件',
+                '${Tr.plural(agreed, 'deal')} agreed with clubs: talk to the player'),
+            count: agreed),
       if (s.staffOffers.isNotEmpty)
-        Tr.pick('スタッフの引き抜きの話が${s.staffOffers.length}件',
-            '${Tr.plural(s.staffOffers.length, 'approach', 'approaches')} for your staff'),
+        InboxEntry(
+            InboxKind.staffOffers,
+            Tr.pick('スタッフの引き抜きの話が${s.staffOffers.length}件',
+                '${Tr.plural(s.staffOffers.length, 'approach', 'approaches')} for your staff'),
+            count: s.staffOffers.length),
       if (s.pendingSponsorOffers.isNotEmpty)
-        Tr.pick('スポンサーを選んでいません', 'Pick a sponsor'),
+        InboxEntry(InboxKind.sponsor,
+            Tr.pick('スポンサーを選んでいません', 'Pick a sponsor')),
     ];
   }
 
@@ -200,4 +225,31 @@ extension GameStateRivals on GameState {
         }
         return out;
       });
+}
+
+/// 受信箱の「答えを待つもの」の種類。
+enum InboxKind {
+  ownerEvent,
+  rumor,
+  surgery,
+  agmDemand,
+  incomingOffers,
+  counterOffers,
+  agreedTalks,
+  staffOffers,
+  sponsor,
+}
+
+/// 答えを待つもの1件(1行の字と、種類・件数)。
+class InboxEntry {
+  const InboxEntry(this.kind, this.text, {this.count = 1, this.ref});
+
+  final InboxKind kind;
+  final String text;
+
+  /// まとめて1行にしている件数(オファー3件なら3)。
+  final int count;
+
+  /// 選手ごとに1行のもの(手術)の、選手の id。
+  final String? ref;
 }

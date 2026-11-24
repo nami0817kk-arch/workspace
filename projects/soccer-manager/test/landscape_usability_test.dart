@@ -182,8 +182,16 @@ void main() {
                   .evaluate())
                 (t.widget as Text).data ?? '',
             ],
+          // 「やること」の印が付いたタブは、字を child に持つ(2026-11-24)。
           for (final e in find.byType(Tab).hitTestable().evaluate())
-            (e.widget as Tab).text ?? '',
+            (e.widget as Tab).text ??
+                find
+                    .descendant(
+                        of: find.byWidget(e.widget),
+                        matching: find.byType(Text))
+                    .evaluate()
+                    .map((t) => (t.widget as Text).data ?? '')
+                    .firstWhere((s) => s.isNotEmpty, orElse: () => ''),
         ]..removeWhere((s) => s.isEmpty);
         for (final l in labels) {
           where = '$p/$l';

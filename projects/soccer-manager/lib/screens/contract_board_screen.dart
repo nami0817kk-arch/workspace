@@ -13,6 +13,7 @@ import 'contract_offer_screen.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/responsive_body.dart';
 import '../logic/economy_scale.dart';
+import '../widgets/disabled_reason.dart';
 
 /// 登録と契約。登録人数・週給の合計・契約の残り年数と、更新の時期の選手。
 /// 契約が切れた選手は無償で去るので、主力は早めに更新する。
@@ -45,6 +46,15 @@ class ContractBoardScreen extends StatelessWidget {
     int cost(Player p) =>
         ContractEngine.renewalCost(p) + ContractEngine.signingBonusFor(p);
     const small = TextStyle(fontSize: 12);
+    // 更新が押せない理由(押せるなら null)。ボタンの有効・無効もこれで決める
+    // (条件を2か所に持たない)。
+    String? renewBlock(Player p) {
+      final block = game.renewalBlockReason(p);
+      if (block != null) return block;
+      final short = cost(p) - game.save!.budget;
+      return short > 0 ? fundsShortReason(short) : null;
+    }
+
     return ListView(
       padding: const EdgeInsets.all(10),
       children: [
@@ -162,7 +172,12 @@ class ContractBoardScreen extends StatelessWidget {
                                 color: theme.colorScheme.outlineVariant),
                           ),
                         ),
-                        child: Row(
+                        // 更新が押せない行だけ、行の下に理由を出す(応じない
+                        // 選手・資金不足)。理由は選手ごとに違うので行ごと。
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                        Row(
                           children: [
                             Expanded(
                               flex: 4,
@@ -208,8 +223,8 @@ class ContractBoardScreen extends StatelessWidget {
                               const SizedBox(width: 4),
                             ],
                             FilledButton(
-                              onPressed: game.save!.budget >= cost(p) &&
-                                      game.renewalBlockReason(p) == null
+                              key: ValueKey('board-renew-${p.id}'),
+                              onPressed: renewBlock(p) == null
                                   ? () {
                                       FeedbackService.tap();
                                       openContractOffer(context,
@@ -220,6 +235,11 @@ class ContractBoardScreen extends StatelessWidget {
                               child: Text(Tr.pick('更新 ${formatMoney(cost(p))}',
                                   'Renew ${formatMoney(cost(p))}')),
                             ),
+                          ],
+                        ),
+                            DisabledReason(renewBlock(p),
+                                alignEnd: true,
+                                padding: const EdgeInsets.only(bottom: 2)),
                           ],
                         ),
                       ),

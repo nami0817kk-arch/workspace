@@ -19,6 +19,7 @@ import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../logic/economy_scale.dart';
+import '../widgets/disabled_reason.dart';
 
 /// 潜在能力と現在能力の差がこの値以上なら、伸びしろの大きい「有望株」として強調する。
 const int _wonderkidGap = 15;
@@ -175,6 +176,39 @@ class _YouthScreenState extends State<YouthScreen> {
                 ],
               ),
             ),
+            // 更新(右上の丸い矢印)と「獲得」が押せない理由。候補の札ごとに
+            // 出すと同じ文が並ぶので、一覧の上に1回だけ出す。
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!canRefresh)
+                    DisabledReason(
+                      Tr.pick(
+                          '候補の更新(${formatMoney(refreshCost)})には資金が足りません(あと ${formatMoney(refreshCost - save.budget)})',
+                          'Not enough funds to refresh the shortlist (${formatMoney(refreshCost)}): ${formatMoney(refreshCost - save.budget)} short'),
+                      key: const ValueKey('youth-refresh-blocked'),
+                      padding: const EdgeInsets.only(bottom: 4),
+                    ),
+                  DisabledReason(
+                    // 埋もれた即戦力(移籍で取る)しか並んでいないときは出さない。
+                    canScout ||
+                            !candidates.any((p) => !gameState.isScoutedPro(p))
+                        ? null
+                        : save.youthProspects.length >= maxProspects
+                            ? Tr.pick(
+                                '昇格候補の枠がいっぱいです(${save.youthProspects.length}/$maxProspects)。昇格か解雇で空けると獲得できます',
+                                'Your academy is full (${save.youthProspects.length}/$maxProspects). Promote or release someone to sign another')
+                            : Tr.pick(
+                                '獲得(1人 ${formatMoney(scoutCost)})には資金が足りません(あと ${formatMoney(scoutCost - save.budget)})',
+                                'Not enough funds to sign a prospect (${formatMoney(scoutCost)} each): ${formatMoney(scoutCost - save.budget)} short'),
+                    key: const ValueKey('youth-scout-blocked'),
+                    padding: const EdgeInsets.only(bottom: 4),
+                  ),
+                ],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: TextField(
@@ -286,14 +320,35 @@ class _YouthScreenState extends State<YouthScreen> {
                               ],
                             ],
                           ),
-                          subtitle: Text(
-                            pro
-                                ? Tr.pick(
-                                    '埋もれた即戦力 / $proClub所属 / ${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2} / 移籍金 ${formatMoney(proFee)}',
-                                    'Hidden gem at $proClub / age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2} / fee ${formatMoney(proFee)}')
-                                : Tr.pick(
-                                    '${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2} / 成長 ${p.growthType.label}',
-                                    'Age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2} / ${p.growthType.label}'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                pro
+                                    ? Tr.pick(
+                                        '埋もれた即戦力 / $proClub所属 / ${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2} / 移籍金 ${formatMoney(proFee)}',
+                                        'Hidden gem at $proClub / age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2} / fee ${formatMoney(proFee)}')
+                                    : Tr.pick(
+                                        '${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在(推定) ${range.$1}〜${range.$2} / 成長 ${p.growthType.label}',
+                                        'Age ${p.age} / ${p.position.label} / overall ${p.overall} / potential (est.) ${range.$1}-${range.$2} / ${p.growthType.label}'),
+                              ),
+                              // 埋もれた即戦力は移籍で取るので、押せない理由が
+                              // ほかの候補と違う(窓・スカッドの上限・移籍金)。
+                              // この札にだけ出す。
+                              if (pro && !canSign)
+                                DisabledReason(
+                                  !gameState.isTransferWindowOpen
+                                      ? gameState.transferWindowStatusLabel
+                                      : squadFull
+                                          ? Tr.pick(
+                                              'スカッドが上限($maxSquadSize人)です。誰かを手放すと獲得できます',
+                                              'Your squad is full ($maxSquadSize). Move someone on before you sign anyone')
+                                          : fundsShortReason(
+                                              proFee - save.budget),
+                                  padding: const EdgeInsets.only(top: 2),
+                                ),
+                            ],
                           ),
                           trailing: FilledButton(
                             onPressed:
@@ -393,6 +448,18 @@ class _YouthScreenState extends State<YouthScreen> {
               ),
             ],
             const SizedBox(height: 8),
+            // スカッドが上限だと「昇格」が全員押せない。一覧の上に1回だけ出す。
+            if (squadFull && prospects.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: DisabledReason(
+                  Tr.pick(
+                      'スカッドが上限($maxSquadSize人)のため昇格できません。誰かを手放すと昇格できます',
+                      'Your squad is full ($maxSquadSize), so nobody can be promoted. Move someone on first'),
+                  key: const ValueKey('youth-promote-blocked'),
+                  padding: const EdgeInsets.only(bottom: 4),
+                ),
+              ),
             if (prospects.isEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -621,6 +688,12 @@ class _YouthScreenState extends State<YouthScreen> {
                 title: Text(Tr.pick('クラブ側の1年延長オプションを付ける(年俸+5%)',
                     'Add a 1-year club option (salary +5%)')),
               ),
+              // いちばん長い年数を選ぶと、オプションは付けられない。
+              if (years >= ContractEngine.capYears(prospect.age))
+                DisabledReason(
+                    Tr.pick('最長の期間なので付けられません',
+                        'Not available at the longest length'),
+                    padding: EdgeInsets.zero),
               const SizedBox(height: 8),
               Text(
                 Tr.pick('昇格直後は一軍の強度に慣れておらず、実戦感覚が低い状態から始まります。出番を作ると戻ります。',

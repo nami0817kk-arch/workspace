@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../models/club_look.dart';
 import '../state/game_state.dart';
 import 'club_emblem.dart';
+import 'disabled_reason.dart';
 
 /// クラブの見た目の札。今のエンブレムと「見た目を変える」だけを出し、
 /// 色・形・模様を選ぶ欄は別の画面([ClubLookEditor])へ移した。タブの中に
@@ -208,6 +209,15 @@ class _ClubLookEditorState extends State<ClubLookEditor> {
                     : Tr.pick('今季はもう変えられません', 'Already changed this season')),
               ),
             ),
+            // まだ何も変えていないときも押せない(今季済みはボタンの字に出る)。
+            if (!changed && gs.canChangeClubLook)
+              Align(
+                alignment: Alignment.centerRight,
+                child: DisabledReason(
+                    Tr.pick('色・形・模様・頭文字のどれかを変えると決められます',
+                        'Change a colour, the shape, the pattern or the initials to save'),
+                    alignEnd: true),
+              ),
           ],
         ),
       ),

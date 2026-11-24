@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
 import '../state/game_state.dart';
 import 'help_button.dart';
+import 'disabled_reason.dart';
 
 /// オーナー個人の財布。クラブへ出資する・貸す・返してもらう。
 class OwnerWealthCard extends StatelessWidget {
@@ -112,6 +113,20 @@ class OwnerWealthCard extends StatelessWidget {
                 ),
               ],
             ),
+            // 押せない理由(個人資産が無い・クラブに返す資金が無い)。
+            // 貸付が無いときの「返してもらう」は、上の「貸付 なし」で分かる。
+            if (wealth <= 0)
+              DisabledReason(
+                Tr.pick('個人資産がないので、出資も貸付もできません',
+                    'You have no personal wealth to invest or lend'),
+                key: const ValueKey('wealth-blocked'),
+              ),
+            if (owed > 0 && save.budget <= 0)
+              DisabledReason(
+                Tr.pick('クラブに資金がないので、いまは返してもらえません',
+                    'The club has no funds to repay you right now'),
+                key: const ValueKey('repay-blocked'),
+              ),
           ],
         ),
       ),

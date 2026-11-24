@@ -18,11 +18,32 @@ class NextAction {
   /// 放っておくと損が出るものは true。見た目を分けて、順番を追い越す。
   final bool urgent;
 
+  /// 何の知らせか。「やること」の一覧(todo_advisor.dart)が、種類ごとに
+  /// 題・重さ・行き先を決めるのに使う。
+  final NextActionKind kind;
+
   const NextAction({
+    required this.kind,
     required this.message,
     required this.target,
     this.urgent = false,
   });
+}
+
+/// 知らせの種類([NextActionAdvisor.all] が挙げる順)。
+enum NextActionKind {
+  ultimatum,
+  staffVacant,
+  sponsor,
+  ownerGoal,
+  rolloverShortfall,
+  supporterFalling,
+  transferDeadline,
+  signingProposals,
+  incomingOffer,
+  budgetNegative,
+  youthAtRisk,
+  contractExpiring,
 }
 
 /// 行き先。画面そのものを持たせると、このファイルが UI に依存してしまう。
@@ -82,6 +103,7 @@ class NextActionAdvisor {
     final ultimatum = supporterUltimatumDaysLeft;
     if (ultimatum != null) {
       actions.add(NextAction(
+        kind: NextActionKind.ultimatum,
         message: Tr.pick(
             '最後通告: 残り$ultimatum日でサポーターの期待を10以上に戻さないと、クラブを手放します(いま${save.confidence})。広報・ファンの手、安いチケット、地域活動で支えましょう。',
             'Final warning: get supporter expectation back to 10 within ${Tr.plural(ultimatum, 'day')} or sell the club (now ${save.confidence}). Use a PR or fan move, cheaper tickets and community work.'),
@@ -102,6 +124,7 @@ class NextActionAdvisor {
           .length;
       if (hired == 0 || (preseason && hired < roles)) {
         actions.add(NextAction(
+        kind: NextActionKind.staffVacant,
           message: Tr.pick('スタッフが空席です($roles役中$hired人)。まず監督とコーチを雇いましょう。',
               'Staff posts are empty ($hired of $roles filled). Start by hiring a manager and coaches.'),
           target: NextActionTarget.staff,
@@ -109,6 +132,7 @@ class NextActionAdvisor {
       }
       if (save.sponsorDeal == null && save.pendingSponsorOffers.isNotEmpty) {
         actions.add(NextAction(
+        kind: NextActionKind.sponsor,
           message: Tr.pick('スポンサーが未契約です。結ぶと毎節の収入が増えます。',
               'You have no sponsor. Signing one adds income every matchday.'),
           target: NextActionTarget.finance,
@@ -116,6 +140,7 @@ class NextActionAdvisor {
       }
       if (save.ownerGoal == null && preseason) {
         actions.add(NextAction(
+        kind: NextActionKind.ownerGoal,
           message: Tr.pick('オーナーの目標が未設定です。決めると達成が殿堂に残ります。',
               'You have not set an owner goal. Achieving one puts it in the hall of fame.'),
           target: NextActionTarget.ownerGoal,
@@ -128,6 +153,7 @@ class NextActionAdvisor {
     final shortfall = rolloverShortfall;
     if (shortfall != null && shortfall > 0) {
       actions.add(NextAction(
+        kind: NextActionKind.rolloverShortfall,
         message: Tr.pick('季の切り替えで6月までの給与が引かれ、資金が${formatMoney(shortfall)}足りなくなります。売却や借入で備えてください。',
             'Wages up to the end of June will leave you ${formatMoney(shortfall)} short at the changeover. Sell or borrow to cover it.'),
         target: NextActionTarget.finance,
@@ -140,6 +166,7 @@ class NextActionAdvisor {
     final trend = supporterTrend;
     if (trend != null && trend <= -supporterDropAlert) {
       actions.add(NextAction(
+        kind: NextActionKind.supporterFalling,
         message: Tr.pick(
             'サポーターの期待が下がっています(直近で$trend、いま${save.confidence})。オーナー室の広報・ファン向けの手や、試合日のイベントで支えましょう。',
             'Supporter expectation is falling ($trend lately, now ${save.confidence}). Use PR and fan moves or a matchday event in the owner\'s office.'),
@@ -153,6 +180,7 @@ class NextActionAdvisor {
     if (left != null &&
         (left <= deadlineWarningDays || transferDeadlineBeforeNextMatch)) {
       actions.add(NextAction(
+        kind: NextActionKind.transferDeadline,
         message: left <= 0
             ? Tr.pick('今日が移籍の締切日です。', 'Today is transfer deadline day.')
             : transferDeadlineBeforeNextMatch
@@ -167,6 +195,7 @@ class NextActionAdvisor {
     // 監督から補強の候補が届いている。買うか見送るかを決める。
     if (hasSigningProposals) {
       actions.add(NextAction(
+        kind: NextActionKind.signingProposals,
         message: Tr.pick('監督から補強の候補が届いています。買うか見送るかを決めてください。',
             'Your manager has picked out signing candidates. Sign them or pass.'),
         target: NextActionTarget.transfer,
@@ -176,6 +205,7 @@ class NextActionAdvisor {
     // 他クラブから売却のオファーが届いている。承認するか断るかを決める。
     if (save.incomingOffers.isNotEmpty) {
       actions.add(NextAction(
+        kind: NextActionKind.incomingOffer,
         message: Tr.pick(
             '${save.incomingOffers.first.playerName}に売却のオファーが届いています。承認するか断るかを決めてください。',
             'An offer for ${save.incomingOffers.first.playerName} has arrived. Accept or turn it down.'),
@@ -186,6 +216,7 @@ class NextActionAdvisor {
     // 資金がマイナス。放置すると株主の期待が削られていく。
     if (save.budget < 0) {
       actions.add(NextAction(
+        kind: NextActionKind.budgetNegative,
         message: Tr.pick('資金がマイナスです。放っておくと株主の期待が下がります。',
             'You are in the red. Shareholder expectation will fall if it stays that way.'),
         target: NextActionTarget.finance,
@@ -199,6 +230,7 @@ class NextActionAdvisor {
         .toList();
     if (atRisk.isNotEmpty) {
       actions.add(NextAction(
+        kind: NextActionKind.youthAtRisk,
         message: Tr.pick(
             'ユースの${atRisk.first.name}(${atRisk.first.age}歳)が出場機会を求めています。昇格させるか、ユース施設を上げて引き止めてください。',
             '${atRisk.first.name} (${atRisk.first.age}) wants first-team football. Promote him, or improve the academy to keep him.'),
@@ -210,6 +242,7 @@ class NextActionAdvisor {
     final key = _expiringKeyPlayer(team);
     if (key != null) {
       actions.add(NextAction(
+        kind: NextActionKind.contractExpiring,
         message: Tr.pick('${key.name}の契約は${ContractEngine.untilLabel(key.contractEndYear)}です。更新しないと無償で失います。',
             "${key.name}'s contract runs ${ContractEngine.untilLabel(key.contractEndYear)}. Renew it or lose him for nothing."),
         target: NextActionTarget.squad,

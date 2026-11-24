@@ -148,8 +148,14 @@ void main() {
           pending?.attacker?.id,
           pending?.defender?.id,
         };
+        // 前半の中で本当に退場した選手は外す。外さないと、乱数でその選手を
+        // 引いた回に「下げられる」はずの交代が断られて落ちていた(2026-11-24 CI)。
+        final alreadyOff = MatchEngine.sentOffIds(state.events);
         final free = state.homeLineup
-            .where((p) => p.position != Position.gk && !involved.contains(p.id))
+            .where((p) =>
+                p.position != Position.gk &&
+                !involved.contains(p.id) &&
+                !alreadyOff.contains(p.id))
             .toList();
         final onPitch = state.homeLineup.map((p) => p.id).toSet();
         final bench = home.players

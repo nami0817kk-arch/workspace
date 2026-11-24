@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../logic/todo_advisor.dart';
 import 'fm_panel.dart';
 import 'screen_bar.dart';
+import 'shell_nav.dart';
+import 'todo_list.dart';
 
 /// グループの中の1つのページ(見出しの文字と、画面を作る関数)。
 class GroupTab {
@@ -17,9 +20,18 @@ class GroupTab {
 /// 左メニュー内の項目に近い)。中の画面は自分の見出しを出さず、帯の下に
 /// そのまま並ぶ。切り替えても各画面の状態(スクロール・選択)は残る。
 class GroupPage extends StatefulWidget {
-  const GroupPage({super.key, required this.title, required this.tabs});
+  const GroupPage({
+    super.key,
+    required this.title,
+    required this.tabs,
+    this.menu,
+  });
 
   final String title;
+
+  /// 左メニューのどの項目か。渡すと、「やること」の行き先([ShellNav])から
+  /// タブを選べるようになり、タブに件数の印が付く。
+  final TodoMenu? menu;
   final List<GroupTab> tabs;
 
   @override
@@ -32,11 +44,48 @@ class _GroupPageState extends State<GroupPage> {
   /// 一度でも開いたページ。開くまでは作らない(最初から全部を描かない)。
   final Set<int> _opened = {0};
 
+  ShellNav? _nav;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final nav = widget.menu == null ? null : ShellNav.maybeOf(context);
+    if (nav != _nav) {
+      _nav?.removeListener(_fromNav);
+      _nav = nav?..addListener(_fromNav);
+      _syncFromNav();
+    }
+  }
+
+  @override
+  void dispose() {
+    _nav?.removeListener(_fromNav);
+    super.dispose();
+  }
+
+  /// 外(「やること」の行など)からタブを選ばれた。
+  void _fromNav() {
+    if (!mounted) return;
+    final before = _index;
+    _syncFromNav();
+    if (before != _index) setState(() {});
+  }
+
+  void _syncFromNav() {
+    final nav = _nav, menu = widget.menu;
+    if (nav == null || menu == null) return;
+    final want = nav.tabOf(menu).clamp(0, widget.tabs.length - 1);
+    _index = want;
+    _opened.add(want);
+  }
+
   void _select(int i) {
     setState(() {
       _index = i;
       _opened.add(i);
     });
+    final menu = widget.menu;
+    if (menu != null) _nav?.setTab(menu, i);
   }
 
   @override
@@ -87,17 +136,32 @@ class _GroupPageState extends State<GroupPage> {
                                 ),
                               ),
                             ),
-                            child: Text(
-                              widget.tabs[i].label,
-                              style: TextStyle(
-                                fontSize: 12.5,
-                                fontWeight: i == _index
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: i == _index
-                                    ? scheme.primary
-                                    : scheme.onSurfaceVariant,
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  widget.tabs[i].label,
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: i == _index
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    color: i == _index
+                                        ? scheme.primary
+                                        : scheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                // 「やること」がこのタブにあれば印を付ける。
+                                if (widget.menu != null)
+                                  if (todoMarkFor(context, widget.menu!, tab: i)
+                                      case final mark?)
+                                    Padding(
+                                      key: ValueKey(
+                                          'tab-mark-${widget.menu!.name}-$i'),
+                                      padding: const EdgeInsets.only(left: 5),
+                                      child: mark,
+                                    ),
+                              ],
                             ),
                           ),
                         ),

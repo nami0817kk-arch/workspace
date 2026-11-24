@@ -6,6 +6,7 @@ import '../logic/equity_engine.dart';
 import '../state/game_state.dart';
 import '../logic/economy_scale.dart';
 import 'help_button.dart';
+import 'disabled_reason.dart';
 
 /// オーナーの持分。外部の株主へ株式を売って資金を得る(増資)。売った分は
 /// 毎季の配当で出ていく。買い戻すにはプレミアが要る。
@@ -58,6 +59,19 @@ class EquityCard extends StatelessWidget {
                 ),
               ],
             ),
+            // 売る・買い戻すが押せない理由(持分の下限・外部の株主がいない)。
+            if (!canSell)
+              DisabledReason(
+                Tr.pick('持分は${EquityEngine.minOwnerShare}%を割れないので、これ以上は売れません',
+                    'You must keep ${EquityEngine.minOwnerShare}%, so you cannot sell any more'),
+                key: const ValueKey('equity-sell-blocked'),
+              ),
+            if (!canBuy)
+              DisabledReason(
+                Tr.pick('外部の株主がいないので、買い戻す株がありません',
+                    'There are no outside holders, so there is nothing to buy back'),
+                key: const ValueKey('equity-buy-blocked'),
+              ),
           ],
         ),
       ),

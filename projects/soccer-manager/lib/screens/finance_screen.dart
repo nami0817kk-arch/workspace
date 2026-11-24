@@ -28,6 +28,9 @@ import '../widgets/media_deals_card.dart';
 import '../widgets/project_card.dart';
 import '../widgets/proposal_card.dart';
 import '../widgets/risk_card.dart';
+import '../logic/todo_advisor.dart';
+import '../widgets/shell_nav.dart';
+import '../widgets/todo_list.dart';
 import '../widgets/rival_card.dart';
 import '../widgets/rules_card.dart';
 import '../widgets/reward_funds_card.dart';
@@ -38,9 +41,13 @@ import '../widgets/screen_bar.dart';
 import '../widgets/sponsor_slots_card.dart';
 import '../widgets/help_button.dart';
 import '../logic/economy_scale.dart';
+import '../widgets/disabled_reason.dart';
 
 class FinanceScreen extends StatelessWidget {
-  const FinanceScreen({super.key, this.embedded = false});
+  const FinanceScreen({super.key, this.embedded = false, this.initialTab = 0});
+
+  /// 最初に開くタブ(単独で開くとき)。番号は [TodoPlaces] と同じ。
+  final int initialTab;
 
   /// 下タブの一員として表示するか。true なら戻るボタンを出さない。
   final bool embedded;
@@ -71,13 +78,20 @@ class FinanceScreen extends StatelessWidget {
 
     return DefaultTabController(
       length: 5,
-      child: Scaffold(
+      initialIndex: initialTab.clamp(0, 4),
+      // 左メニューの中にあるときは、「やること」の行き先からタブを選べる。
+      child: ShellTabSync(
+        menu: TodoMenu.finance,
+        enabled: embedded,
+        child: Scaffold(
         appBar: screenBar(
           context,
           title: Tr.pick('クラブ経営', 'Club finances'),
           leading: embedded ? null : const BackButton(),
           actions: const [QuickAccessMenuButton()],
           scrollable: true,
+          tabMarks:
+              embedded ? todoTabMarks(context, TodoMenu.finance, 5) : const [],
           tabs: [
             Tr.pick('概要', 'Overview'),
             Tr.pick('収支・契約', 'Accounts'),
@@ -93,6 +107,11 @@ class FinanceScreen extends StatelessWidget {
               // 広い画面(iPad の横向きなど)では2列に並べる。
               child: AutoColumns(
                 children: [
+                  // 監督からの提案(承認待ち)は先頭に。「やること」の行や
+                  // タブの印からここへ来たとき、開いてすぐ見つかるように
+                  // (以前はお金の暦の下で、スクロールしないと見えなかった)。
+                  // 提案が無ければ何も出ない。
+                  const ProposalCard(),
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16),
@@ -196,7 +215,6 @@ class FinanceScreen extends StatelessWidget {
                     ),
                   ),
                   const _MoneyCalendarCard(),
-                  const ProposalCard(),
                   const RewardFundsCard(),
                   const BudgetPlanCard(),
                 ],
@@ -384,6 +402,7 @@ class FinanceScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );
@@ -656,6 +675,17 @@ class _LoanSection extends StatelessWidget {
                   child: Text(Tr.pick('融資を申し込む', 'Apply for a loan')),
                 ),
               ),
+              // 借りられる額が0のとき。枠は借入の残りを引いた額なので、
+              // 返すと戻ることまで書く。
+              if (maxAmount <= 0)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  child: DisabledReason(
+                    Tr.pick('いまは借りられる枠がありません。返済が進むと、また借りられます',
+                        'You have no borrowing room right now. It comes back as you repay'),
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
             ],
           ),
         ),
@@ -823,6 +853,14 @@ class _InvestmentSection extends StatelessWidget {
             leading: const Icon(Icons.account_balance_outlined),
             title: Text(Tr.pick('運用可能な資金: ${formatMoney(available)}',
                 'Available to invest: ${formatMoney(available)}')),
+            // 資金が0以下のときは預けられない。
+            subtitle: available <= 0
+                ? DisabledReason(
+                    Tr.pick('預けられる資金がありません',
+                        'You have no funds to deposit'),
+                    padding: EdgeInsets.zero,
+                  )
+                : null,
             trailing: FilledButton(
               onPressed:
                   available <= 0 ? null : () => _showDepositSheet(context),
