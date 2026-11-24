@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/achievement_highlights.dart';
+import '../logic/calendar_engine.dart';
 import '../models/achievement.dart';
 import '../state/game_state.dart';
 import '../widgets/quick_access_drawer.dart';
@@ -222,15 +223,31 @@ class _AchievementTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final unlocked = gameState.isAchievementUnlocked(achievement.id);
     final season = gameState.achievementUnlockedSeason(achievement.id);
+    final date = gameState.achievementUnlockedDate(achievement.id);
     // 未達成の閾値型実績には「現在値/目標」のプログレスバーを添えて、
     // あとどれくらいで達成できるのかを一目で分かるようにする。
     (int, int)? progress;
     if (!unlocked && achievement.progress != null && gameState.save != null) {
       progress = achievement.progress!(gameState.save!, gameState.userTeam);
     }
+    // 達成済みは金の色を敷き、左に太い印を付けて一目で分かるように
+    // (2026-11-25。以前は未達成の灰色との差が薄かった)。
+    final gold = SemanticColors.ink(context, Colors.amber.shade700);
     return Card(
+      key: ValueKey(
+          'achievement-${achievement.id}-${unlocked ? 'done' : 'open'}'),
       margin: const EdgeInsets.only(bottom: 8),
-      color: unlocked ? null : Theme.of(context).colorScheme.surfaceContainer,
+      clipBehavior: Clip.antiAlias,
+      shape: unlocked
+          ? RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(color: gold, width: 1.5),
+            )
+          : null,
+      color: unlocked
+          ? Color.alphaBlend(gold.withValues(alpha: 0.14),
+              Theme.of(context).colorScheme.surface)
+          : Theme.of(context).colorScheme.surfaceContainer,
       child: ListTile(
         leading: AchievementBadge(
           achievement: achievement,
@@ -240,23 +257,48 @@ class _AchievementTile extends StatelessWidget {
           achievement.name,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: unlocked ? null : SemanticColors.ink(context, Colors.grey.shade600),
+            color: unlocked
+                ? null
+                : SemanticColors.ink(context, Colors.grey.shade600),
           ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              unlocked && season != null
-                  ? Tr.pick('${achievement.description}(シーズン$season達成)',
-                      '${achievement.description} (unlocked in season $season)')
-                  : achievement.description,
+              achievement.description,
               style: TextStyle(
                 color: unlocked
                     ? SemanticColors.ink(context, Colors.grey.shade700)
                     : SemanticColors.subtleText(context),
               ),
             ),
+            if (unlocked)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Row(
+                  children: [
+                    Icon(Icons.check_circle, size: 14, color: gold),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        date != null
+                            ? Tr.pick(
+                                '達成 ${CalendarEngine.formatDate(date)}${season != null ? '(第$season季)' : ''}',
+                                'Unlocked ${CalendarEngine.formatDate(date)}${season != null ? ' (season $season)' : ''}')
+                            : season != null
+                                ? Tr.pick('達成(第$season季)',
+                                    'Unlocked (season $season)')
+                                : Tr.pick('達成', 'Unlocked'),
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: gold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             if (progress != null) ...[
               const SizedBox(height: 6),
               Row(

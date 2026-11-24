@@ -24,18 +24,26 @@ class QuickAccessDrawer extends StatelessWidget {
     return Drawer(
       child: SafeArea(
         child: ListView(
+          // 開くたびに上から(画面の一覧の送り位置を引き継がない)。
+          primary: false,
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  clubName,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+            // 上の帯は細く(2026-11-25)。以前の大きな見出し(約160)は、
+            // 横画面の低い高さの半分近くを使い、資料が2つしか見えなかった。
+            Container(
+              key: const ValueKey('drawer-header'),
+              height: 44,
+              color: Theme.of(context).colorScheme.primaryContainer,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                clubName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
             // 見出しで「資料」「設定とヘルプ」に分ける。横画面では、操作する

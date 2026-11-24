@@ -25,11 +25,13 @@ void main() {
   QuickAccessDestination byLabel(String label) =>
       quickAccessDestinations.firstWhere((d) => d.label == label);
 
-  test('始めた直後は、シーズンをまたぐ4画面が未開放になる', () async {
+  // 個人タイトルとベストイレブンは、リーグの「個人成績」へ移した
+  // (2026-11-25)。引き出しに残るのはシーズン成績と殿堂。
+  test('始めた直後は、シーズンをまたぐ2画面が未開放になる', () async {
     final game = GameState();
     await game.startNewGame('テストFC');
 
-    for (final label in const ['個人タイトル', 'シーズン成績', 'ベストイレブン', '殿堂']) {
+    for (final label in const ['シーズン成績', '殿堂']) {
       final reason = byLabel(label).lockedReason?.call(game);
       expect(reason, isNotNull, reason: '$label に開放条件が出ていない');
       expect(reason, isNotEmpty);
@@ -46,7 +48,7 @@ void main() {
     expect(reason, contains('${game.remainingMatchdaysThisSeason}節'));
   });
 
-  test('シーズンを終えると3画面が開き、殿堂は引退者が出るまで閉じたまま', () async {
+  test('シーズンを終えるとシーズン成績が開き、殿堂は引退者が出るまで閉じたまま', () async {
     final game = GameState();
     await game.startNewGame('テストFC');
 
@@ -66,7 +68,7 @@ void main() {
       goalsAgainst: 40,
     ));
 
-    for (final label in const ['個人タイトル', 'シーズン成績', 'ベストイレブン']) {
+    for (final label in const ['シーズン成績']) {
       expect(byLabel(label).lockedReason?.call(game), isNull,
           reason: '$label がシーズン終了後も開いていない');
     }
@@ -79,9 +81,9 @@ void main() {
     final game = GameState();
     await game.startNewGame('テストFC');
 
-    // クラブニュースは1節進めば埋まる。開始直後こそ空だが、画面自身が
-    // 「節を進めると記録されます」と案内しており、閉じる意味がない。
-    for (final label in const ['移籍市場', 'クラブニュース']) {
+    // クラブニュースは受信箱へ一本化した(2026-11-25)。収支の詳しい表は
+    // 試合が無いうちは画面自身が「まだ試合がありません」と案内する。
+    for (final label in const ['移籍市場', '収支の詳しい表']) {
       expect(byLabel(label).lockedReason?.call(game), isNull,
           reason: '$label は常に開けるべき');
     }

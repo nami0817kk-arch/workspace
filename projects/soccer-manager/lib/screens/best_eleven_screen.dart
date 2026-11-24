@@ -6,15 +6,15 @@ import '../models/player.dart';
 import '../state/game_state.dart';
 import '../widgets/position_colors.dart';
 import '../widgets/position_filter_bar.dart';
-import '../widgets/quick_access_drawer.dart';
-import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 
-/// シーズンごとに選出されたベストイレブン(GK1・DF4・MF4・FW2)の履歴を表示する画面。
-class BestElevenScreen extends StatelessWidget {
-  const BestElevenScreen({super.key});
+/// シーズンごとに選出されたベストイレブン(GK1・DF4・MF4・FW2)の履歴。
+/// リーグの「個人成績」の中に出す(2026-11-25 に資料から移した。個人
+/// タイトルと同じ、季ごとの表彰なので)。
+class BestElevenHistory extends StatelessWidget {
+  const BestElevenHistory({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +23,7 @@ class BestElevenScreen extends StatelessWidget {
     final clubName = gameState.userTeam.name;
     final userTeamId = gameState.save!.userTeamId;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(Tr.pick('シーズンベストイレブン', 'Team of the season')),
-        leading: const BackButton(),
-        actions: const [QuickAccessMenuButton()],
-      ),
-      drawer: const QuickAccessDrawer(),
-      body: ResponsiveBody(
-        child: history.isEmpty
+    return history.isEmpty
             ? Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
@@ -57,9 +49,7 @@ class BestElevenScreen extends StatelessWidget {
                   clubName: clubName,
                   userTeamId: userTeamId,
                 ),
-              ),
-      ),
-    );
+              );
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../services/feedback_service.dart';
 import '../logic/calendar_engine.dart';
 import '../state/game_state.dart';
+import '../widgets/big_moment_overlay.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/manager_report_card.dart';
@@ -16,6 +17,7 @@ import 'registration_rules_screen.dart';
 import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'fixtures_screen.dart';
+import 'league_stats_screen.dart';
 import 'home_screen.dart';
 import 'advance_flow.dart';
 import 'reference_screens.dart';
@@ -144,10 +146,13 @@ class _MainShellState extends State<MainShell> {
           menu: TodoMenu.league,
           title: Tr.pick('リーグ', 'League'),
           tabs: [
-            GroupTab(Tr.pick('順位・日程', 'Table & fixtures'),
-                (_) => const FixturesScreen()),
+            // 日程はカレンダーにあるので、ここは順位表だけ(2026-11-25)。
+            GroupTab(Tr.pick('順位表', 'Table'), (_) => const FixturesScreen()),
             GroupTab(Tr.pick('カップ戦', 'Cups'), (_) => const CupScreen()),
-            // ランキングと個人タイトルは見るだけなので、≡ の「資料」へ。
+            // 得点・アシスト・採点のランキングと個人タイトル(2026-11-25 に
+            // 資料から戻した)。
+            GroupTab(Tr.pick('個人成績', 'Player stats'),
+                (_) => const LeagueStatsScreen()),
           ],
         ),
         GroupPage(
@@ -238,95 +243,105 @@ class _MainShellState extends State<MainShell> {
       child: TodoScope(
         items: todos,
         child: PopScope(
-      // 状況以外の画面で戻る操作をしたら、まず状況へ戻す。状況で戻る操作を
-      // したときだけ、この画面を閉じる(=タイトルへ戻る)。
-      canPop: _page == _Page.status,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        _nav.select(_Page.status);
-      },
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: wide ? const QuickAccessDrawer(onlyOthers: true) : null,
-        body: wide
-            // 左メニューは画面の上から下までの高さを使い、上の帯はその右に
-            // 置く(2026-11-24)。カレンダーを足して8項目になり、上の帯の下に
-            // 置いたままでは iPhone 横の高さに 48 の項目が入らなかった
-            // (帯の分を除くと約366で、8項目には384要る)。
-            ? Row(
-                children: [
-                  lockable(SafeArea(
-                    right: false,
-                    child: _FmSidebar(
-                      page: _page,
-                      // 印は「やること」の一覧から付ける。その項目を
-                      // 開けば、必ずその用件が見つかる(事件の札は
-                      // 状況に出るのに、印はオーナー室に付いていた)。
-                      todos: todos,
-                      onSelect: _go,
-                    ),
-                  )),
-                  const VerticalDivider(width: 1),
-                  Expanded(
-                    child: Column(
+          // 状況以外の画面で戻る操作をしたら、まず状況へ戻す。状況で戻る操作を
+          // したときだけ、この画面を閉じる(=タイトルへ戻る)。
+          canPop: _page == _Page.status,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            _nav.select(_Page.status);
+          },
+          child: Scaffold(
+            key: _scaffoldKey,
+            drawer: wide ? const QuickAccessDrawer(onlyOthers: true) : null,
+            // まだ見せていない大事な場面(優勝・昇格・締切日など)は、シェルが
+            // 必ず出す(2026-11-25)。以前は状況の画面の下のほう(たたんだ数字の
+            // 下)に置いていて、一覧は見えている所しか作らないので、下へ送る
+            // まで出なかった。
+            body: Stack(fit: StackFit.expand, children: [
+              wide
+                  // 左メニューは画面の上から下までの高さを使い、上の帯はその右に
+                  // 置く(2026-11-24)。カレンダーを足して8項目になり、上の帯の下に
+                  // 置いたままでは iPhone 横の高さに 48 の項目が入らなかった
+                  // (帯の分を除くと約366で、8項目には384要る)。
+                  ? Row(
                       children: [
                         lockable(SafeArea(
-                          bottom: false,
-                          left: false,
-                          child: _FmTopBar(
-                            gameState: gameState,
-                            mustCount: todos.mustCount,
-                            onTodo: () => _nav.go(TodoPlaces.status),
-                            onMore: () =>
-                                _scaffoldKey.currentState?.openDrawer(),
-                            // 日付を押すと、左メニューのカレンダーに切り替える
-                            // (以前は画面を重ねて開いていた)。
-                            onCalendar: () {
-                              FeedbackService.tap();
-                              _nav.go(TodoPlaces.calendar);
-                            },
+                          right: false,
+                          child: _FmSidebar(
+                            page: _page,
+                            // 印は「やること」の一覧から付ける。その項目を
+                            // 開けば、必ずその用件が見つかる(事件の札は
+                            // 状況に出るのに、印はオーナー室に付いていた)。
+                            todos: todos,
+                            onSelect: _go,
                           ),
                         )),
-                        const Divider(height: 1),
+                        const VerticalDivider(width: 1),
                         Expanded(
-                          // 上のバーがあるので、各画面の見出しの帯は低くする。
-                          child: Theme(
-                            // 密な FM 風の見た目は main.dart の FmThemeScope が当てる。
-                            data: Theme.of(context).copyWith(
-                              appBarTheme: Theme.of(context)
-                                  .appBarTheme
-                                  .copyWith(toolbarHeight: 40),
-                            ),
-                            child: EmbeddedInShell(
-                              child: IndexedStack(
-                                // 手放す画面は状況にあるので、状況を出す。
-                                index: selling ? 0 : _widePages.indexOf(_page),
-                                children: _wideTabs,
+                          child: Column(
+                            children: [
+                              lockable(SafeArea(
+                                bottom: false,
+                                left: false,
+                                child: _FmTopBar(
+                                  gameState: gameState,
+                                  mustCount: todos.mustCount,
+                                  onTodo: () => _nav.go(TodoPlaces.status),
+                                  onMore: () =>
+                                      _scaffoldKey.currentState?.openDrawer(),
+                                  // 日付を押すと、左メニューのカレンダーに切り替える
+                                  // (以前は画面を重ねて開いていた)。
+                                  onCalendar: () {
+                                    FeedbackService.tap();
+                                    _nav.go(TodoPlaces.calendar);
+                                  },
+                                ),
+                              )),
+                              const Divider(height: 1),
+                              Expanded(
+                                // 上のバーがあるので、各画面の見出しの帯は低くする。
+                                child: Theme(
+                                  // 密な FM 風の見た目は main.dart の FmThemeScope が当てる。
+                                  data: Theme.of(context).copyWith(
+                                    appBarTheme: Theme.of(context)
+                                        .appBarTheme
+                                        .copyWith(toolbarHeight: 40),
+                                  ),
+                                  child: EmbeddedInShell(
+                                    child: IndexedStack(
+                                      // 手放す画面は状況にあるので、状況を出す。
+                                      index: selling
+                                          ? 0
+                                          : _widePages.indexOf(_page),
+                                      children: _wideTabs,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              )
-            : IndexedStack(
-                index: selling ? 0 : _narrowIndex(), children: _narrowTabs),
-        bottomNavigationBar: wide
-            ? null
-            : lockable(NavigationBar(
-                selectedIndex: _narrowIndex(),
-                onDestinationSelected: (i) => _go(_narrowPages[i]),
-                destinations: [
-                  for (final d in items)
-                    NavigationDestination(
-                      icon: d.icon,
-                      selectedIcon: d.selectedIcon,
-                      label: d.label,
-                    ),
-                ],
-              )),
+                    )
+                  : IndexedStack(
+                      index: selling ? 0 : _narrowIndex(),
+                      children: _narrowTabs),
+              const BigMomentPresenter(),
+            ]),
+            bottomNavigationBar: wide
+                ? null
+                : lockable(NavigationBar(
+                    selectedIndex: _narrowIndex(),
+                    onDestinationSelected: (i) => _go(_narrowPages[i]),
+                    destinations: [
+                      for (final d in items)
+                        NavigationDestination(
+                          icon: d.icon,
+                          selectedIcon: d.selectedIcon,
+                          label: d.label,
+                        ),
+                    ],
+                  )),
           ),
         ),
       ),
@@ -438,34 +453,35 @@ class _FmTopBar extends StatelessWidget {
                     // 帯には日付と節だけを出す。部と季は外した(部は状況の
                     // 順位の札にある)。「9/5(土) 第7節・.」と切れていた
                     // (2026-11-25)。日付と節は1つの文にし、切らずに縮める。
-                    LayoutBuilder(builder: (context, box) => Row(
-                      children: [
-                        Icon(Icons.calendar_month,
-                            key: const ValueKey('topbar-calendar-icon'),
-                            size: 13,
-                            color: scheme.primary),
-                        const SizedBox(width: 3),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxWidth: (box.maxWidth - 16)
-                                  .clamp(0.0, double.infinity)),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              matchday > 0
-                                  ? Tr.pick(
-                                      '${_shortToday(gameState.today)} 第$matchday節',
-                                      '${_shortToday(gameState.today)} • MD $matchday')
-                                  : _shortToday(gameState.today),
-                              key: const ValueKey('topbar-date'),
-                              maxLines: 1,
-                              style: sub,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
+                    LayoutBuilder(
+                        builder: (context, box) => Row(
+                              children: [
+                                Icon(Icons.calendar_month,
+                                    key: const ValueKey('topbar-calendar-icon'),
+                                    size: 13,
+                                    color: scheme.primary),
+                                const SizedBox(width: 3),
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                      maxWidth: (box.maxWidth - 16)
+                                          .clamp(0.0, double.infinity)),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      matchday > 0
+                                          ? Tr.pick(
+                                              '${_shortToday(gameState.today)} 第$matchday節',
+                                              '${_shortToday(gameState.today)} • MD $matchday')
+                                          : _shortToday(gameState.today),
+                                      key: const ValueKey('topbar-date'),
+                                      maxLines: 1,
+                                      style: sub,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )),
                   ],
                 ),
               ),
@@ -557,6 +573,12 @@ class AdvanceButton extends StatelessWidget {
       // 次の予定がある日まで進む。行き先の日付と中身をボタンに
       // 書く(2026-11-22)。
       onPressed: gameState.isBusy ? null : () => advanceToNextStop(context),
+      // 長押しで「まとめて進む」(何節先まで・季の終わりまで)。リーグの
+      // 画面の右上にあったボタンを移した(2026-11-25)。
+      onLongPress:
+          gameState.isBusy || (gameState.save?.league.isSeasonComplete ?? true)
+              ? null
+              : () => showSimAheadDialog(context),
       icon: Icon(advanceButtonIcon(gameState), size: 18),
       label: Text(
         advanceButtonLabel(gameState) ?? Tr.pick('次の節へ', 'Next matchday'),
@@ -564,14 +586,18 @@ class AdvanceButton extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
     );
-    if (mustCount == 0) return button;
+    // 長押しできることは、読み上げにも伝える。
+    final withTip = Semantics(
+      onLongPressHint: Tr.pick('まとめて進む', 'Sim ahead'),
+      child: button,
+    );
+    if (mustCount == 0) return withTip;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Material(
           color: scheme.error,
-          borderRadius:
-              const BorderRadius.horizontal(left: Radius.circular(8)),
+          borderRadius: const BorderRadius.horizontal(left: Radius.circular(8)),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             key: const ValueKey('advance-todo'),
@@ -589,8 +615,8 @@ class AdvanceButton extends StatelessWidget {
                     compact
                         ? Tr.pick('$mustCount件', '$mustCount')
                         : Tr.pick('やること $mustCount件', 'To do: $mustCount'),
-                    semanticsLabel: Tr.pick(
-                        'やること $mustCount件', 'To do: $mustCount'),
+                    semanticsLabel:
+                        Tr.pick('やること $mustCount件', 'To do: $mustCount'),
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 12,
@@ -604,7 +630,7 @@ class AdvanceButton extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 1),
-        Flexible(child: button),
+        Flexible(child: withTip),
       ],
     );
   }
@@ -745,48 +771,48 @@ class _FmSidebar extends StatelessWidget {
               child: LayoutBuilder(builder: (context, box) {
                 final h = itemHeightFor(box.maxHeight, entries.length);
                 return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    for (final (p, icon, selectedIcon, label) in entries)
-                      item(
-                        key: ValueKey('menu-item-${p.name}'),
-                        height: h,
-                        on: page == p,
-                        label: label,
-                        onTap: () => onSelect(p),
-                        icon: () {
-                          final i = Icon(
-                            page == p ? selectedIcon : icon,
-                            size: h < _itemHeight ? 20 : 22,
-                            color: page == p
-                                ? scheme.onPrimary
-                                : scheme.onSurfaceVariant,
-                          );
-                          final must = todos.mustAt(p);
-                          final rec = todos.recommendedAt(p);
-                          if (must == 0 && rec == 0) return i;
-                          // 必須は赤い数字、おすすめだけなら青い点。
-                          return Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              i,
-                              Positioned(
-                                key: ValueKey('menu-mark-${p.name}'),
-                                top: must > 0 ? -5 : -2,
-                                left: must > 0 ? 14 : 18,
-                                child: TodoMark(
-                                  must: must,
-                                  recommended: rec,
-                                  onPrimary: page == p,
+                  child: Column(
+                    children: [
+                      for (final (p, icon, selectedIcon, label) in entries)
+                        item(
+                          key: ValueKey('menu-item-${p.name}'),
+                          height: h,
+                          on: page == p,
+                          label: label,
+                          onTap: () => onSelect(p),
+                          icon: () {
+                            final i = Icon(
+                              page == p ? selectedIcon : icon,
+                              size: h < _itemHeight ? 20 : 22,
+                              color: page == p
+                                  ? scheme.onPrimary
+                                  : scheme.onSurfaceVariant,
+                            );
+                            final must = todos.mustAt(p);
+                            final rec = todos.recommendedAt(p);
+                            if (must == 0 && rec == 0) return i;
+                            // 必須は赤い数字、おすすめだけなら青い点。
+                            return Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                i,
+                                Positioned(
+                                  key: ValueKey('menu-mark-${p.name}'),
+                                  top: must > 0 ? -5 : -2,
+                                  left: must > 0 ? 14 : 18,
+                                  child: TodoMark(
+                                    must: must,
+                                    recommended: rec,
+                                    onPrimary: page == p,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          );
-                        }(),
-                      ),
-                  ],
-                ),
-              );
+                              ],
+                            );
+                          }(),
+                        ),
+                    ],
+                  ),
+                );
               }),
             ),
           ],

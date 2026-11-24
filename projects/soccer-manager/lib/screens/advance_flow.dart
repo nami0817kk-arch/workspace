@@ -258,3 +258,118 @@ Future<void> _playFriendly(
     play: () => gs.playFriendly(index),
   );
 }
+
+/// 何節かまとめて進める(進むボタンの長押し。2026-11-25 にリーグの画面の
+/// 「まとめてシミュレーション」のボタンから移した)。
+Future<void> showSimAheadDialog(BuildContext context) async {
+  final gameState = context.read<GameState>();
+  if (gameState.save?.league.isSeasonComplete ?? true) return;
+  final remainingMatchdays = gameState.save!.league.fixtures
+      .where((f) => f.result == null)
+      .map((f) => f.matchday)
+      .toSet()
+      .length;
+
+  final choice = await showDialog<int>(
+    context: context,
+    builder: (dialogContext) => SimpleDialog(
+      title: Text(Tr.pick('まとめてシミュレーション', 'Sim ahead')),
+      children: [
+        for (final n in [1, 3, 5])
+          if (n < remainingMatchdays)
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(dialogContext, n),
+              child: Text(Tr.pick('$n節先まで進める', 'Play $n matchdays')),
+            ),
+        SimpleDialogOption(
+          onPressed: () => Navigator.pop(dialogContext, remainingMatchdays),
+          child:
+              Text(Tr.pick('シーズン終了まで進める', 'Play to the end of the season')),
+        ),
+        SimpleDialogOption(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: Text(Tr.pick('キャンセル', 'Cancel')),
+        ),
+      ],
+    ),
+  );
+  if (choice == null || choice <= 0 || !context.mounted) return;
+
+  FeedbackService.tap();
+  showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => Center(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Text(Tr.pick('$choice節分をシミュレーションしています…',
+                  'Simulating $choice matchdays…')),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+  // 閉じる手段の無い進行中ダイアログを出しているので、**何があっても
+  // 必ず閉じる**。途中で例外が出ると、ぐるぐる回る円だけが残って操作が
+  // 一切できなくなる(アプリを再起動するしかない)。
+  final List<MatchResult> results;
+  try {
+    results = await gameState.simulateAheadMatchdays(choice);
+  } finally {
+    if (context.mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+  }
+  if (!context.mounted) return;
+
+  final league = gameState.save!.league;
+  final userTeamId = gameState.userTeam.id;
+  await showDialog<void>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(Tr.pick('シミュレーション結果', 'Simulation results')),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: results.isEmpty
+            ? Text(
+                Tr.pick('進行できる試合がありませんでした', 'There were no matches to play'))
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: results.length,
+                itemBuilder: (context, i) {
+                  final r = results[i];
+                  final isHome = r.homeTeamId == userTeamId;
+                  final opponentId = isHome ? r.awayTeamId : r.homeTeamId;
+                  final opponentName =
+                      league.teams.firstWhere((t) => t.id == opponentId).name;
+                  final userGoals = isHome ? r.homeGoals : r.awayGoals;
+                  final oppGoals = isHome ? r.awayGoals : r.homeGoals;
+                  return ListTile(
+                    dense: true,
+                    title: Text(Tr.pick('第${r.matchday}節 vs $opponentName',
+                        'Matchday ${r.matchday} vs $opponentName')),
+                    trailing: Text(
+                      '$userGoals - $oppGoals',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  );
+                },
+              ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: Text(Tr.pick('閉じる', 'Close')),
+        ),
+      ],
+    ),
+  );
+  if (context.mounted) showAchievementUnlockNotification(context, gameState);
+}

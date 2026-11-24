@@ -48,7 +48,6 @@ import '../logic/board_target_progress.dart';
 import '../models/club_vision.dart';
 import '../l10n/tr.dart';
 import '../widgets/screen_bar.dart';
-import '../widgets/big_moment_overlay.dart';
 import '../widgets/rumor_card.dart';
 import '../logic/economy_scale.dart';
 
@@ -697,6 +696,8 @@ class HomeScreen extends StatelessWidget {
                           FilledButton(
                             key: const ValueKey('advance-button'),
                             onPressed: () => advanceToNextStop(context),
+                            // 長押しでまとめて進む(上の帯の進むボタンと同じ)。
+                            onLongPress: () => showSimAheadDialog(context),
                             child: Text(advanceButtonLabel(gameState) ??
                                 Tr.pick('次の節へ', 'Next matchday')),
                           ),
@@ -767,8 +768,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              // まだ見せていない大事な場面があれば、画面いっぱいの1枚で出す。
-              const BigMomentPresenter(),
               if (gameState.save?.frontPageHeadline != null)
                 const FrontPageCard(),
               // 横画面では、どの画面も左メニューの項目から開ける。同じ入口を
@@ -1014,7 +1013,7 @@ class HomeScreen extends StatelessWidget {
     BuildContext context,
     GameState gameState,
   ) async {
-    final messages = <(String text, _ReportTone tone)>[];
+    final messages = <(String text, _ReportTone tone, _ReportPart part)>[];
 
     // 節目の絵。昇格と優勝のときだけ出す。毎シーズン出すと、節目が
     // 節目でなくなる。
@@ -1036,25 +1035,24 @@ class HomeScreen extends StatelessWidget {
           message,
           gameState.lastDivisionChangeIsGood
               ? _ReportTone.good
-              : _ReportTone.bad));
+              : _ReportTone.bad, _ReportPart.results));
       gameState.lastDivisionChangeMessage = null;
     }
     final boardBonus = gameState.lastBoardBonusNote;
     if (boardBonus != null) {
-      messages.add((boardBonus, _ReportTone.good));
+      messages.add((boardBonus, _ReportTone.good, _ReportPart.money));
       gameState.lastBoardBonusNote = null;
     }
     final contractNote = gameState.lastManagerContractNote;
     if (contractNote != null) {
-      messages.add((contractNote, _ReportTone.neutral));
+      messages.add((contractNote, _ReportTone.neutral, _ReportPart.squad));
       gameState.lastManagerContractNote = null;
     }
     if (gameState.lastSeasonManagerAwardWon) {
       messages.add((
         Tr.pick(
             'クラブの監督が年間最優秀監督賞を受賞しました！', 'Your manager won Manager of the Year.'),
-        _ReportTone.good
-      ));
+        _ReportTone.good, _ReportPart.results));
       gameState.lastSeasonManagerAwardWon = false;
     }
     final superCupNews = gameState.lastSuperCupNews;
@@ -1063,15 +1061,14 @@ class HomeScreen extends StatelessWidget {
           superCupNews,
           gameState.lastSuperCupWon
               ? _ReportTone.good
-              : _ReportTone.neutral));
+              : _ReportTone.neutral, _ReportPart.results));
       gameState.lastSuperCupNews = null;
     }
     final retirees = gameState.lastRetirements;
     if (retirees.isNotEmpty) {
       messages.add((
         Tr.pick('引退: ${retirees.join('、')}', "Retired: ${retirees.join(', ')}"),
-        _ReportTone.neutral
-      ));
+        _ReportTone.neutral, _ReportPart.squad));
       gameState.lastRetirements = [];
     }
     final contractExpired = gameState.lastContractExpirations;
@@ -1079,8 +1076,7 @@ class HomeScreen extends StatelessWidget {
       messages.add((
         Tr.pick('契約満了で退団: ${contractExpired.join('、')}',
             "Left on a free at the end of their contract: ${contractExpired.join(', ')}"),
-        _ReportTone.neutral
-      ));
+        _ReportTone.neutral, _ReportPart.squad));
       gameState.lastContractExpirations = [];
     }
     // 借りていた選手は契約満了ではなく、ローン期間満了で貸し元へ戻る。
@@ -1089,8 +1085,7 @@ class HomeScreen extends StatelessWidget {
       messages.add((
         Tr.pick('ローン期間満了で貸し元へ復帰: ${loanEndings.join('、')}',
             "Loan spells ended, returned to their parent clubs: ${loanEndings.join(', ')}"),
-        _ReportTone.neutral
-      ));
+        _ReportTone.neutral, _ReportPart.squad));
       gameState.lastLoanEndings = [];
     }
     final contractWarnings = gameState.lastContractWarnings;
@@ -1098,8 +1093,7 @@ class HomeScreen extends StatelessWidget {
       messages.add((
         Tr.pick('契約最終年に突入: ${contractWarnings.join('、')}',
             "Into the final year of their contract: ${contractWarnings.join(', ')}"),
-        _ReportTone.neutral
-      ));
+        _ReportTone.neutral, _ReportPart.squad));
       gameState.lastContractWarnings = [];
     }
     final emergencySignings = gameState.lastEmergencySignings;
@@ -1107,8 +1101,7 @@ class HomeScreen extends StatelessWidget {
       messages.add((
         Tr.pick('緊急補強: ${emergencySignings.join('、')}',
             "Emergency signings: ${emergencySignings.join(', ')}"),
-        _ReportTone.neutral
-      ));
+        _ReportTone.neutral, _ReportPart.squad));
       gameState.lastEmergencySignings = [];
     }
 
@@ -1127,7 +1120,23 @@ class HomeScreen extends StatelessWidget {
     // 横画面(高さ375など)では、絵を縦に積むと結果が欄に収まらず、
     // スクロールできることも分からなかった。横画面では絵を左・結果を右の
     // 2列にし、上下の余白を詰め、スクロールの手掛かり(つまみ)を常に出す。
-    final reportScroll = ScrollController();
+    // 成績・お金・出入りの3つに分ける(2026-11-25 FM の季の始まりの報告)。
+    // 以前は全部を1本の一覧に並べていて、順位とお金と退団者が混ざっていた。
+    bool isMoneyLine(String l) =>
+        l.contains(Tr.pick('資金の増減', 'Funds over')) ||
+        l.contains(Tr.pick('給与', 'Wages up'));
+    final parts = <_ReportPart, (List<String>, List<(String, _ReportTone)>)>{
+      for (final p in _ReportPart.values)
+        p: (<String>[], <(String, _ReportTone)>[]),
+    };
+    for (final line in summary) {
+      parts[isMoneyLine(line) ? _ReportPart.money : _ReportPart.results]!
+          .$1
+          .add(line);
+    }
+    for (final (text, tone, part) in messages) {
+      parts[part]!.$2.add((text, tone));
+    }
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {
@@ -1140,22 +1149,31 @@ class HomeScreen extends StatelessWidget {
                 child: Image.asset(path, fit: BoxFit.cover),
               ),
             );
-        final list = Scrollbar(
-          controller: reportScroll,
-          thumbVisibility: true,
-          child: ListView(
-            controller: reportScroll,
-            shrinkWrap: true,
-            padding: const EdgeInsets.only(right: 10),
+        Widget partList(_ReportPart part) {
+          final (lines, notes) = parts[part]!;
+          if (lines.isEmpty && notes.isEmpty) {
+            return Center(
+              child: Text(
+                Tr.pick('知らせはありません', 'Nothing to report'),
+                style:
+                    TextStyle(color: SemanticColors.subtleText(dialogContext)),
+              ),
+            );
+          }
+          return ListView(
+            key: ValueKey('season-report-${part.name}'),
+            padding: const EdgeInsets.only(top: 8, right: 6),
             children: [
-              if (art != null && !landscape)
+              if (part == _ReportPart.results && art != null && !landscape)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 14),
+                  padding: const EdgeInsets.only(bottom: 10),
                   child: artImage(art),
                 ),
-              if (summary.isNotEmpty)
+              if (lines.isNotEmpty)
                 Container(
-                  key: const ValueKey('season-result-summary'),
+                  key: part == _ReportPart.results
+                      ? const ValueKey('season-result-summary')
+                      : null,
                   margin: const EdgeInsets.only(bottom: 8),
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
@@ -1167,20 +1185,20 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(summary.first,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      for (final line in summary.skip(1))
+                      for (final (i, line) in lines.indexed)
                         Padding(
-                          padding: const EdgeInsets.only(top: 3),
-                          child:
-                              Text(line, style: const TextStyle(fontSize: 13)),
+                          padding: EdgeInsets.only(top: i == 0 ? 0 : 3),
+                          child: Text(line,
+                              style: i == 0 && part == _ReportPart.results
+                                  ? const TextStyle(fontWeight: FontWeight.bold)
+                                  : const TextStyle(fontSize: 13)),
                         ),
                     ],
                   ),
                 ),
               // 良い知らせ・悪い知らせ・ふつうで印を分ける。悪い知らせ
               // (降格・プレーオフ敗退)に祝いの印が付いていた(2026-11-25)。
-              for (final (text, tone) in messages)
+              for (final (text, tone) in notes)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
@@ -1208,16 +1226,46 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
             ],
+          );
+        }
+
+        int count(_ReportPart p) => parts[p]!.$1.length + parts[p]!.$2.length;
+        final tabs = DefaultTabController(
+          length: _ReportPart.values.length,
+          child: Column(
+            children: [
+              TabBar(
+                tabs: [
+                  for (final p in _ReportPart.values)
+                    Tab(
+                      key: ValueKey('season-report-tab-${p.name}'),
+                      height: 36,
+                      text: count(p) == 0 ? p.label : '${p.label} ${count(p)}',
+                    ),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    for (final p in _ReportPart.values) partList(p),
+                  ],
+                ),
+              ),
+            ],
           ),
         );
+        // 横画面は縦が短い。高さを画面に合わせて決め、タブの中だけ送る。
+        final height =
+            (size.height - (landscape ? 150 : 260)).clamp(180.0, 420.0);
         return AlertDialog(
+          key: const ValueKey('season-start-report'),
           insetPadding: landscape
               ? const EdgeInsets.symmetric(horizontal: 40, vertical: 8)
               : const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
           titlePadding:
               landscape ? const EdgeInsets.fromLTRB(24, 14, 24, 0) : null,
           contentPadding:
-              landscape ? const EdgeInsets.fromLTRB(24, 10, 14, 0) : null,
+              landscape ? const EdgeInsets.fromLTRB(24, 6, 14, 0) : null,
           actionsPadding:
               landscape ? const EdgeInsets.fromLTRB(24, 0, 24, 8) : null,
           title: Text(switch (finale) {
@@ -1226,17 +1274,18 @@ class HomeScreen extends StatelessWidget {
             SeasonFinale.none => Tr.pick('シーズン開始レポート', 'Pre-season report'),
           }),
           content: SizedBox(
-            width: double.maxFinite,
+            width: landscape ? 640 : double.maxFinite,
+            height: height,
             child: art != null && landscape
                 ? Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(width: 180, child: artImage(art)),
                       const SizedBox(width: 14),
-                      Expanded(child: list),
+                      Expanded(child: tabs),
                     ],
                   )
-                : list,
+                : tabs,
           ),
           actions: [
             // 昇格・優勝のときだけ、評価への道を添える。**押させない。**
@@ -1257,7 +1306,6 @@ class HomeScreen extends StatelessWidget {
         );
       },
     );
-    reportScroll.dispose();
   }
 
   Future<void> _startNextSeason(BuildContext context) async {
@@ -2092,6 +2140,19 @@ class _BandPill extends StatelessWidget {
       ),
     );
   }
+}
+
+/// シーズン開始レポートの分け方(成績・お金・出入り)。
+enum _ReportPart {
+  results,
+  money,
+  squad;
+
+  String get label => switch (this) {
+        _ReportPart.results => Tr.pick('成績', 'Results'),
+        _ReportPart.money => Tr.pick('お金', 'Money'),
+        _ReportPart.squad => Tr.pick('出入り', 'Comings & goings'),
+      };
 }
 
 /// シーズン開始レポートの1行の調子(印の出し分け)。

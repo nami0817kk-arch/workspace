@@ -191,6 +191,11 @@ extension GameStateSupporters on GameState {
     while (s.supporterMonthEnds.length > 12) {
       s.supporterMonthEnds.removeAt(0);
     }
+    // 月末の資金(収支の詳しい表の月ごとの推移。2026-11-25)。
+    s.fundsMonthEnds.add([key, s.budget]);
+    while (s.fundsMonthEnds.length > 120) {
+      s.fundsMonthEnds.removeAt(0);
+    }
     final line = lastMonthSupporterLine;
     if (line != null) {
       _logNews(line, context: Tr.pick('サポーター', 'Supporters'));

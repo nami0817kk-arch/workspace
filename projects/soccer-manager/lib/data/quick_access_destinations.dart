@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../screens/achievements_screen.dart';
-import '../screens/awards_screen.dart';
-import '../screens/best_eleven_screen.dart';
 import '../screens/reference_screens.dart';
 import '../screens/club_screen.dart';
 import '../screens/contract_board_screen.dart';
@@ -13,8 +11,6 @@ import '../screens/finance_screen.dart';
 import '../screens/glossary_screen.dart';
 import '../screens/guide_screen.dart';
 import '../screens/hall_of_fame_screen.dart';
-import '../screens/league_ranking_screen.dart';
-import '../screens/news_screen.dart';
 import '../screens/owner_work_screen.dart';
 import '../screens/season_history_screen.dart';
 import '../screens/settings_screen.dart';
@@ -131,23 +127,9 @@ List<QuickAccessDestination> get quickAccessDestinations => [
       ),
       QuickAccessDestination(
         icon: Icons.shield_outlined,
-        label: Tr.pick('クラブの記録', 'Club records'),
+        label: Tr.pick('クラブとオーナーの記録', 'Club & owner records'),
         color: Colors.blueGrey.shade600,
         builder: (_) => const ClubRecordsScreen(),
-        group: QuickAccessGroup.reference,
-      ),
-      QuickAccessDestination(
-        icon: Icons.person_outline,
-        label: Tr.pick('オーナーの記録', 'Owner records'),
-        color: Colors.indigo.shade400,
-        builder: (_) => const OwnerRecordsScreen(),
-        group: QuickAccessGroup.reference,
-      ),
-      QuickAccessDestination(
-        icon: Icons.newspaper,
-        label: Tr.pick('クラブニュース', 'Club news'),
-        color: Colors.deepPurple.shade400,
-        builder: (_) => const NewsScreen(),
         group: QuickAccessGroup.reference,
       ),
       QuickAccessDestination(
@@ -170,21 +152,6 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         builder: (_) => const CupScreen(),
       ),
       QuickAccessDestination(
-        icon: Icons.military_tech,
-        label: Tr.pick('個人タイトル', 'Individual awards'),
-        color: Colors.amber.shade700,
-        builder: (_) => const AwardsScreen(),
-        group: QuickAccessGroup.reference,
-        lockedReason: _needsFirstSeason,
-      ),
-      QuickAccessDestination(
-        icon: Icons.format_list_numbered,
-        label: Tr.pick('リーグランキング', 'League rankings'),
-        color: Colors.green.shade700,
-        builder: (_) => const LeagueRankingScreen(),
-        group: QuickAccessGroup.reference,
-      ),
-      QuickAccessDestination(
         icon: Icons.settings,
         label: Tr.pick('設定', 'Settings'),
         color: Colors.blueGrey.shade700,
@@ -196,14 +163,6 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('シーズン成績', 'Season archive'),
         color: Colors.teal.shade700,
         builder: (_) => const SeasonHistoryScreen(),
-        group: QuickAccessGroup.reference,
-        lockedReason: _needsFirstSeason,
-      ),
-      QuickAccessDestination(
-        icon: Icons.groups,
-        label: Tr.pick('ベストイレブン', 'Team of the season'),
-        color: Colors.orange.shade700,
-        builder: (_) => const BestElevenScreen(),
         group: QuickAccessGroup.reference,
         lockedReason: _needsFirstSeason,
       ),

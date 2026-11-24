@@ -5,7 +5,8 @@ import '../logic/season_analysis_engine.dart';
 import '../state/game_state.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
-import '../widgets/auto_columns.dart';
+import '../logic/league_stats.dart';
+import 'player_detail_screen.dart';
 import '../widgets/responsive_body.dart';
 
 /// 今シーズンの傾向を見る画面。
@@ -52,6 +53,8 @@ class AnalysisScreen extends StatelessWidget {
       );
     }
 
+    final shapes = SeasonAnalysisEngine.goalShapes(league, teamId);
+    final bands = SeasonAnalysisEngine.recordByOpponentRank(league, teamId);
     final home = SeasonAnalysisEngine.record(league, teamId, home: true);
     final away = SeasonAnalysisEngine.record(league, teamId, home: false);
     final periods = SeasonAnalysisEngine.goalsByPeriod(league, teamId);
@@ -63,69 +66,128 @@ class AnalysisScreen extends StatelessWidget {
         Tr.pick('${r.won}勝${r.drawn}分${r.lost}敗 / 得点${r.gf} 失点${r.ga}',
             '${r.won}W ${r.drawn}D ${r.lost}L / ${r.gf} for, ${r.ga} against');
 
+    final sections = <Widget>[
+      _Section(
+        title: Tr.pick('ホームとアウェイ', 'Home and away'),
+        rows: [
+          AnalysisRow(label: Tr.pick('通算', 'Overall'), value: recordLabel(all)),
+          AnalysisRow(label: Tr.pick('ホーム', 'Home'), value: recordLabel(home)),
+          AnalysisRow(label: Tr.pick('アウェイ', 'Away'), value: recordLabel(away)),
+        ],
+        note: home.played > 0 && away.played > 0
+            ? _homeAwayNote(home, away)
+            : null,
+      ),
+      // 相手の順位別(2026-11-25)。上位に勝てているか、下位に取りこぼして
+      // いないか。
+      _Section(
+        title: Tr.pick('相手の順位別', 'By opponent position'),
+        rows: [
+          for (final b in OpponentBand.values)
+            AnalysisRow(
+              label: switch (b) {
+                OpponentBand.top => Tr.pick('上位(上の3分の1)', 'Top third'),
+                OpponentBand.middle => Tr.pick('中位', 'Middle third'),
+                OpponentBand.bottom => Tr.pick('下位(下の3分の1)', 'Bottom third'),
+              },
+              value: bands[b]!.played == 0
+                  ? Tr.pick('まだ対戦なし', 'Not played yet')
+                  : recordLabel(bands[b]!),
+            ),
+        ],
+        note: _bandNote(bands),
+      ),
+      // 得点と失点の形(2026-11-25)。
+      _Section(
+        title: Tr.pick('得点と失点の形', 'How the goals came'),
+        rows: [
+          for (final g in GoalShape.values)
+            AnalysisRow(
+              label: switch (g) {
+                GoalShape.assisted =>
+                  Tr.pick('崩し(アシストあり)', 'Team moves (assisted)'),
+                GoalShape.solo => Tr.pick('個人技・こぼれ球', 'Solo or loose balls'),
+                GoalShape.penalty => Tr.pick('PK', 'Penalties'),
+                GoalShape.freeKick => Tr.pick('直接フリーキック', 'Direct free kicks'),
+              },
+              value: Tr.pick('得点${shapes[g]!.$1} / 失点${shapes[g]!.$2}',
+                  '${shapes[g]!.$1} for / ${shapes[g]!.$2} against'),
+            ),
+        ],
+      ),
+      _Section(
+        title: Tr.pick('時間帯', 'When the goals come'),
+        rows: [
+          AnalysisRow(
+            label: Tr.pick('前半', 'First half'),
+            value: Tr.pick('得点${periods.firstFor} / 失点${periods.firstAgainst}',
+                '${periods.firstFor} for / ${periods.firstAgainst} against'),
+          ),
+          AnalysisRow(
+            label: Tr.pick('後半', 'Second half'),
+            value: Tr.pick(
+                '得点${periods.secondFor} / 失点${periods.secondAgainst}',
+                '${periods.secondFor} for / ${periods.secondAgainst} against'),
+          ),
+          AnalysisRow(
+            label: Tr.pick('うち終盤(75分以降)', 'of which late (75+)'),
+            value: Tr.pick('得点${periods.lateFor} / 失点${periods.lateAgainst}',
+                '${periods.lateFor} for / ${periods.lateAgainst} against'),
+          ),
+        ],
+        note: _periodNote(periods),
+      ),
+      _Section(
+        title: Tr.pick('落とし方', 'How you lose'),
+        rows: [
+          AnalysisRow(
+            label: Tr.pick('先制しながら負けた試合', 'Lost after scoring first'),
+            value: Tr.pick('$lostFromAhead試合', '$lostFromAhead'),
+          ),
+        ],
+        note: lostFromAhead >= 2
+            ? Tr.pick('先制しても守り切れていません。終盤の疲労と、リードしたときの姿勢を見直す価値があります。',
+                'You are not holding on to leads. Look at late fatigue and how you set up in front.')
+            : null,
+      ),
+    ];
     return Scaffold(
       appBar: AppBar(title: Text(Tr.pick('シーズン分析', 'Season analysis'))),
-      // 横画面では札を左右2列に(1列だと右半分が空いていた。2026-11-21)。
+      // いちばん上に選手ごとの成績表(全幅)、その下に傾向の札を横画面では
+      // 2列で(2026-11-25 FM のチームの成績)。
       body: ResponsiveBody(
-        child: AutoColumns(
-          // 札は3つ。左にホームとアウェイ・落とし方、右に時間帯。
-          minChildren: 2,
-          children: [
-            _Section(
-              title: Tr.pick('ホームとアウェイ', 'Home and away'),
-              rows: [
-                AnalysisRow(
-                    label: Tr.pick('通算', 'Overall'), value: recordLabel(all)),
-                AnalysisRow(
-                    label: Tr.pick('ホーム', 'Home'), value: recordLabel(home)),
-                AnalysisRow(
-                    label: Tr.pick('アウェイ', 'Away'), value: recordLabel(away)),
-              ],
-              note: home.played > 0 && away.played > 0
-                  ? _homeAwayNote(home, away)
-                  : null,
-            ),
-            _Section(
-              title: Tr.pick('落とし方', 'How you lose'),
-              rows: [
-                AnalysisRow(
-                  label: Tr.pick('先制しながら負けた試合', 'Lost after scoring first'),
-                  value: Tr.pick('$lostFromAhead試合', '$lostFromAhead'),
-                ),
-              ],
-              note: lostFromAhead >= 2
-                  ? Tr.pick('先制しても守り切れていません。終盤の疲労と、リードしたときの姿勢を見直す価値があります。',
-                      'You are not holding on to leads. Look at late fatigue and how you set up in front.')
-                  : null,
-            ),
-            _Section(
-              title: Tr.pick('時間帯', 'When the goals come'),
-              rows: [
-                AnalysisRow(
-                  label: Tr.pick('前半', 'First half'),
-                  value: Tr.pick(
-                      '得点${periods.firstFor} / 失点${periods.firstAgainst}',
-                      '${periods.firstFor} for / ${periods.firstAgainst} against'),
-                ),
-                AnalysisRow(
-                  label: Tr.pick('後半', 'Second half'),
-                  value: Tr.pick(
-                      '得点${periods.secondFor} / 失点${periods.secondAgainst}',
-                      '${periods.secondFor} for / ${periods.secondAgainst} against'),
-                ),
-                AnalysisRow(
-                  label: Tr.pick('うち終盤(75分以降)', 'of which late (75+)'),
-                  value: Tr.pick(
-                      '得点${periods.lateFor} / 失点${periods.lateAgainst}',
-                      '${periods.lateFor} for / ${periods.lateAgainst} against'),
-                ),
-              ],
-              note: _periodNote(periods),
-            ),
-          ],
-        ),
+        child: LayoutBuilder(builder: (context, c) {
+          final textScale = MediaQuery.textScalerOf(context).scale(1);
+          final cols = c.maxWidth / textScale >= 640 ? 2 : 1;
+          final w = (c.maxWidth - 32 - (cols - 1) * 12) / cols;
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              _PlayerTable(teamId: teamId),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 12,
+                children: [
+                  for (final sec in sections) SizedBox(width: w, child: sec),
+                ],
+              ),
+            ],
+          );
+        }),
       ),
     );
+  }
+
+  static String? _bandNote(
+      Map<OpponentBand,
+              ({int played, int won, int drawn, int lost, int gf, int ga})>
+          bands) {
+    final bottom = bands[OpponentBand.bottom]!;
+    if (bottom.played >= 3 && bottom.won * 2 < bottom.played) {
+      return Tr.pick('下位のクラブに取りこぼしています。',
+          'You are dropping points against the bottom clubs.');
+    }
+    return null;
   }
 
   static String? _homeAwayNote(
@@ -220,6 +282,105 @@ class _Section extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// 選手ごとの今季のリーグ戦の成績表(出場・得点・アシスト・平均採点・
+/// 警告・退場・マン・オブ・ザ・マッチ)。名前を押すと選手の詳細。
+class _PlayerTable extends StatelessWidget {
+  const _PlayerTable({required this.teamId});
+
+  final String teamId;
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final lines = LeagueStats.compute(gs.save!.league).ofTeam(teamId);
+    final scheme = Theme.of(context).colorScheme;
+    final subtle = SemanticColors.subtleText(context);
+    final heads = [
+      (Tr.pick('出', 'Apps'), 34.0),
+      (Tr.pick('得', 'Gls'), 30.0),
+      (Tr.pick('ア', 'Ast'), 30.0),
+      (Tr.pick('採点', 'Avg'), 40.0),
+      (Tr.pick('警', 'Yel'), 28.0),
+      (Tr.pick('退', 'Red'), 28.0),
+      ('MOM', 38.0),
+    ];
+    const num0 =
+        TextStyle(fontSize: 12, fontFeatures: [FontFeature.tabularFigures()]);
+    return Card(
+      key: const ValueKey('analysis-player-table'),
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            color: scheme.surfaceContainerHighest,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(Tr.pick('選手ごとの成績(リーグ戦)', 'Players (league)'),
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                for (final (h, w) in heads)
+                  SizedBox(
+                    width: w,
+                    child: Text(h,
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: subtle)),
+                  ),
+              ],
+            ),
+          ),
+          if (lines.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(Tr.pick('まだ出場した選手がいません', 'Nobody has played yet'),
+                  style: TextStyle(fontSize: 12, color: subtle)),
+            ),
+          for (final (i, l) in lines.indexed)
+            InkWell(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+                  builder: (_) => PlayerDetailScreen(playerId: l.playerId))),
+              child: Container(
+                height: 30,
+                color: i.isOdd ? scheme.surfaceContainerLow : null,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(l.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w600)),
+                    ),
+                    for (final (v, w) in [
+                      ('${l.apps}', 34.0),
+                      ('${l.goals}', 30.0),
+                      ('${l.assists}', 30.0),
+                      (l.avgRating.toStringAsFixed(2), 40.0),
+                      ('${l.yellows}', 28.0),
+                      ('${l.reds}', 28.0),
+                      ('${l.motm}', 38.0),
+                    ])
+                      SizedBox(
+                        width: w,
+                        child: Text(v, textAlign: TextAlign.right, style: num0),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

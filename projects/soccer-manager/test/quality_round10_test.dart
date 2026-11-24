@@ -431,6 +431,16 @@ void main() {
             if (tf.evaluate().isEmpty) continue;
             await tester.tap(tf.first, warnIfMissed: false);
             await tester.pump(const Duration(milliseconds: 300));
+            // 字の中には、押すと別の画面を重ねて開くもの(リーグの個人成績の
+            // クラブ名・選手名。2026-11-25 の第5段から)がある。ここで見るのは
+            // タブだけなので、重なった画面は閉じて左メニューに戻る。閉じないと
+            // 次のページの左メニューが隠れて「not reachable」になっていた。
+            final navigator =
+                tester.state<NavigatorState>(find.byType(Navigator).first);
+            if (navigator.canPop()) {
+              navigator.pop();
+              await tester.pump(const Duration(milliseconds: 600));
+            }
           }
         }
         FlutterError.onError = old;

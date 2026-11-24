@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../screens/inbox_screen.dart';
 import '../state/game_state.dart';
+import 'shell_nav.dart';
 
 /// 受信箱の入口。状況には**件数の1行だけ**を出し、押すと受信箱の画面が開く。
 ///
@@ -27,7 +28,8 @@ class InboxCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const InboxScreen()),
+          MaterialPageRoute<void>(
+              builder: (_) => InboxScreen(nav: ShellNav.maybeOf(context))),
         ),
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 52),

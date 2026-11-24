@@ -200,6 +200,15 @@ void main() {
           await tester.tap(tf.first, warnIfMissed: false);
           await tester.pump(const Duration(milliseconds: 300));
           checkLength(where);
+          // 字の中には、押すと別の画面を重ねて開くもの(リーグの個人成績の
+          // クラブ名・選手名など)もある。ここで見るのはタブだけなので、
+          // 重なった画面は閉じて左メニューに戻る(2026-11-25)。
+          final navigator =
+              tester.state<NavigatorState>(find.byType(Navigator).first);
+          if (navigator.canPop()) {
+            navigator.pop();
+            await tester.pump(const Duration(milliseconds: 600));
+          }
         }
       }
 
