@@ -13,6 +13,7 @@ import 'endings_young.dart';
 import 'game.dart';
 import 'history_lines.dart';
 import 'life.dart';
+import 'peace.dart';
 import 'rng.dart';
 import 'ways.dart';
 
@@ -369,6 +370,52 @@ String _eraDeathTail(Game g, String kind) => kind == 'tenju'
     ? 'それからほどなく、${g.l.name}は静かに息を引き取った。'
     : 'それからほどなく、${g.l.name}は病の床に就き、世を去った。';
 
+// ---------------------------------------------------------------------
+// 泰平の世で亡くなった人には、戦の世の言葉の最期より、泰平の最期を先に出す（2026-11-24）
+// ---------------------------------------------------------------------
+// 既存の最期（約千本）は戦国の言葉で書かれていて、細かさ `spec` が3以上のものは泰平の受け皿より先に出る。
+// 一六三〇年代に畳の上で亡くなった人に「陣から戻るたびに」「敵の槍が」と出るのを避けるため、
+// **元和偃武のあと（[kPeaceYieldFrom]）に、戦の絶えた世で亡くなった人**に限って、選ばれた最期が
+// 「戦の世の言い回し（[kWarWords]）を含む、泰平の側でない最期」なら、泰平の側の最期（`endings_peace.dart` と、
+// 年の合う「乱世を生き抜いた」最期）の中で選び直す。泰平の側に候補がなければ、そのまま出す。
+// - 家族・信仰・商いなど、戦に触れない既存の最期は押しのけない（これまでどおり細かさで競う）。
+// - 幻の最期（歴史を変えた人生など）は押しのけない。
+// - 自ら戦を起こして討死した人（泰平の世でも大名は攻め込める）の戦死の最期は押しのけない
+//   （大坂の陣・島原の死には、泰平の側に死因で出る最期がある）。
+// 最期の文・条件・細かさは一本も変えていない。
+
+/// 泰平の最期へ譲るのは、この年からに亡くなった人（元和偃武の翌年）。
+const kPeaceYieldFrom = 1616;
+
+/// 戦の世の言い回し（称号と本文の、差し込み前の文字で見る。名に入る「兵衛」などに当たらないように）。
+final kWarWords = RegExp(
+  '戦|陣|討死|討ち死に|籠城|落城|乱世|敵|軍勢|雑兵|乱取り|首級|首実検|兵|砦|鉄砲|国盗り|下剋上',
+);
+
+final _peaceIds = {for (final e in kPeaceEndings) e.id};
+
+/// 泰平の世の最期（`endings_peace.dart`）か。
+bool isPeaceEnding(EndingDef e) => _peaceIds.contains(e.id);
+
+/// 泰平の側の最期か（泰平の最期と、死に方 [kind] の人に読み替えで出る「乱世を生き抜いた」最期）。
+bool isPeaceSideEnding(EndingDef e, String kind) =>
+    isPeaceEnding(e) ||
+    (e.kinds != null && e.kinds!.contains('era') && !e.kinds!.contains(kind));
+
+/// 最期の称号と本文に、戦の世の言い回しがあるか。
+bool hasWarWords(EndingDef e) => kWarWords.hasMatch('${e.title}${e.text}');
+
+/// 選ばれた最期 [e] を、泰平の側の最期に譲るか。
+bool yieldsToPeace(Game g, EndingDef e, String kind) {
+  final l = g.l;
+  if (l.dead == null || l.victory) return false;
+  if (g.year < kPeaceYieldFrom || !peaceTime(g)) return false;
+  if (e.tier == Tier.phantom || isPeaceSideEnding(e, kind)) return false;
+  // 自ら起こした戦での討死（大坂・島原のほか）は、戦の言葉のままでよい。
+  if (kind == 'senshi' && !RegExp('大坂|島原').hasMatch(l.dead!)) return false;
+  return hasWarWords(e);
+}
+
 /// 手書きの最期がそろっている道（この道の人生には必ず手書きの最期が付く）。
 const kHandWays = {
   'young',
@@ -389,13 +436,28 @@ Ending buildEnding(Game g) {
   final kind = l.victory
       ? 'victory'
       : (l.end == 'era' ? 'era' : (l.deathKind ?? 'byo'));
-  final hand = findHandEnding(
+  var hand = findHandEnding(
     g,
     way,
     kind,
     kHandEndings,
     eraFits: (e) => eraEndingFits(g, e),
   );
+  // 泰平の世（一六一六年から）で亡くなった人に、戦の世の言葉の最期が当たったら、泰平の側の最期へ譲る。
+  if (hand != null && yieldsToPeace(g, hand, kind)) {
+    hand =
+        findHandEnding(
+          g,
+          way,
+          kind,
+          [
+            for (final e in kHandEndings)
+              if (isPeaceSideEnding(e, kind)) e,
+          ],
+          eraFits: (e) => eraEndingFits(g, e),
+        ) ??
+        hand;
+  }
   if (hand != null) {
     // era の最期が、亡くなった人に出たとき（古い保存の `end == 'era'` では kind も era なので添えない）。
     final viaEra =
