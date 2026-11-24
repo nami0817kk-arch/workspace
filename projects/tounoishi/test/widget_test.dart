@@ -269,7 +269,6 @@ void main() {
     final html = File(gameAsset).readAsStringSync();
     for (final s in [
       'if(g.cr.length>=CAP&&!(opt&&opt.force))return null;', // 上限は自然に増えるときだけ
-      'var m=mkCr(spc,env,f,x,y,amt,{force:1});', // 掘った土から生まれる
       "mkCr('guardian','sp',f,cx,cy,0,{force:1})", // 守護獣
     ]) {
       expect(html, contains(s), reason: s);
@@ -279,8 +278,6 @@ void main() {
   test('空っぽ・吸われていた土を掘ったときの知らせ（0.7.34・試作 v50）', () {
     final html = File(gameAsset).readAsStringSync();
     for (final s in [
-      "fxNum(f,x,y,'吸われていた',", // 吸われて0になっていた土
-      "fxNum(f,x,y,'空っぽ',", // もとから空っぽの土
       'sc.nut--;sc.sk=1;', // モンスターが吸った土に印
       'c.nut-=t;c.sk=1;', // 錬金術師が吸った土に印
       'if(a[7])c.sk=1;', // 保存から戻しても印が残る
@@ -336,9 +333,8 @@ void main() {
     final html = File(gameAsset).readAsStringSync();
     for (final s in [
       'function breedChild(a,b)', // 生まれる種の決め方
-      "if(A.line!=B.line)return {sp:'chimera',env:'sp'};", // 養分と魔分はキメラ
       'if(g.breed&&breedTap(', // 相手をタップして選ぶ
-      'var BREED_COST=10,BREED_CD=30,BREED_T=20;', // 養分10・30秒休む・20秒で卵
+      'var BREED_COST=3,BREED_CD=30,BREED_T=20;', // v61 から魂3・30秒休む・20秒で卵
       '<div id="expd"></div>', // 一覧の遠征の欄
       'function expChance(ms,d)', // 見込み
       'if(g.exp)expBack();', // 波を守り切ると帰る
@@ -352,7 +348,7 @@ void main() {
     final html = File(gameAsset).readAsStringSync();
     for (final s in [
       '<small id="res2" class="res2">', // 掘る力の下に魂と骨
-      'var sg=e.yu?10:(e.boss||e.title)?3:1;g.soul=(g.soul||0)+sg;g.bone=(g.bone||0)+(e.yu?5:1);', // 倒すと魂と骨（v58 から骨は1、勇者5）
+      'var sg=e.yu?10:(e.boss||e.title)?3:2;g.soul=(g.soul||0)+sg;g.bone=(g.bone||0)+(e.yu?5:1);', // 倒すと魂と骨（v58 から骨は1、勇者5・v61 から魂2）
       'var EVO2_XP=12,EVO2_SOUL=5,REV_SOUL=15,HATCH_SOUL=2;', // 魂の使い道
       'function revive(id)', // 倒れた主役を1回よみがえらせる
       'var BONE_S=5,BONE_L=12,BONE_T=3,BONE_K=8;', // 骨の使い道
@@ -365,7 +361,7 @@ void main() {
 
   test('長押しのヒントが今のメニューに合っている（0.7.40・試作 v57）', () {
     final html = File(gameAsset).readAsStringSync();
-    expect(html, contains('モンスター＝食べさせる・進化・掛け合わせ'));
+    expect(html, contains('モンスター＝進化・配合'));
     expect(html, isNot(contains('肥料・埋め戻す・ここに集まれ・主役への命令のメニューが開く')));
     // v58: 骨はモンスターが倒れても出さない（自動プレイで4周目に400〜2000本たまった）
     expect(html, isNot(contains("g.bone=(g.bone||0)+1;")));
@@ -389,7 +385,7 @@ void main() {
     expect(html, contains('<button data-x="boned"'));
     expect(html, contains('(m.rng||S.range)?g.en.filter('));
     // 図鑑の掛け合わせ表と、見つけた組み合わせの記録
-    expect(html, contains('<h3 class="dexh">掛け合わせ表</h3>'));
+    expect(html, contains('<h3 class="dexh">配合と特性</h3>'));
     expect(html, contains('brdAdd(a.sp,b.sp,ch.sp);'));
     expect(html, contains("kvSet('tou-brd',"));
   });
@@ -407,6 +403,33 @@ void main() {
     expect(html, contains("boneAct(k,f,p[0],p[1]);"));
     // 卵をすぐかえす
     expect(html, contains("if(e)boneAct('hatch',e.f,e.x,e.y);"));
+  });
+
+  test('芯の作り直し: 掘っても生まれない・召喚・配合と特性・コアの体力（0.7.44・試作 v61）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // 掘る＝通路を広げるだけ。土に養分・魔分を持たせない
+    expect(html, contains('// v61: 掘っても何も生まれない。通路を広げるだけ'));
+    expect(html, contains("a.push({env:envAt(f,x,y),nut:0,mag:0,open:false,dt:-1,chest:false});"));
+    expect(html, isNot(contains('// 各階で、掘った広さに応じて下の段が土から少しずつ湧く')));
+    // モンスターは食べ合わず、自分で増えない
+    expect(html, contains('  abil(m);'));
+    expect(html, isNot(contains('if(S.t==1)feed1(m,S);else eat(m,S);')));
+    // 召喚: 祭壇・魂・供物（倒した冒険者の持ち物）
+    expect(html, contains('function summonAt(a,k){'));
+    expect(html, contains("var LOOT={sw:{n:'剣',"));
+    expect(html, contains('<div id="cmdsum"></div>'));
+    expect(html, contains('<button data-x="altar"'));
+    // 配合: 子は親のどちらか、特性を3つまで受け継ぐ
+    expect(html, contains('function breedTraits(a,b){'));
+    expect(html, contains('layEgg(ch.sp,ch.env,a.f,a.x,a.y,BREED_T,{tr:trs});'));
+    expect(html, contains('var TR={doku:'));
+    expect(html, isNot(contains("if(A.line!=B.line)return {sp:'chimera',env:'sp'};")));
+    // コアに体力。殴られて0で負け、運び出しは無い
+    expect(html, contains('function hitCore(e){'));
+    expect(html, contains('<div class="stat">コアの体力<b id="core">-</b></div>'));
+    expect(html, isNot(contains("say(enName(e)+'がコアを奪った！")));
+    // タイトルからストーリー・VS・チャレンジを外した（元の仕組みで作った面のため）
+    expect(html, isNot(contains('id="tstory"')));
   });
 
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
