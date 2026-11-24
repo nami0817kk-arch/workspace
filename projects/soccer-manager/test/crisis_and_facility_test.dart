@@ -10,11 +10,12 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   group('経営危機の手', () {
-    test('危機の手は3件で、資金がマイナスのときだけ打てる', () async {
+    test('危機の手は2件で、資金がマイナスのときだけ打てる', () async {
       final game = GameState();
       await game.startNewGame('危機FC');
       final crisis = ownerWorks.where((w) => w.onlyInRed).toList();
-      expect(crisis.length, 3);
+      // 2026-11-25 に資産の投げ売りを外した(緊急融資・再建計画と同じ向き)。
+      expect(crisis.length, 2);
 
       game.save!.budget = 5000;
       for (final w in crisis) {

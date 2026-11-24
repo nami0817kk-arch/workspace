@@ -14,9 +14,10 @@ void main() {
     return game;
   }
 
-  test('8種類あり、IDが重複せず、名前と説明が全部ある', () {
-    expect(matchdayPromos.length, 8);
-    expect(matchdayPromos.map((p) => p.id).toSet().length, 8);
+  test('4種類あり、IDが重複せず、名前と説明が全部ある', () {
+    // 2026-11-25 に8種類から減らし、「続ける」の設定にした。
+    expect(matchdayPromos.length, 4);
+    expect(matchdayPromos.map((p) => p.id).toSet().length, 4);
     for (final p in matchdayPromos) {
       expect(p.title, isNotEmpty, reason: p.id);
       expect(p.description, isNotEmpty, reason: p.id);
@@ -50,7 +51,7 @@ void main() {
   test('資金が足りない・知らないIDは決められない', () async {
     final game = await newGame();
     game.save!.budget = 10;
-    expect(await game.setMatchdayPromo('vip_hospitality'), isFalse);
+    expect(await game.setMatchdayPromo('light_up'), isFalse);
     expect(await game.setMatchdayPromo('nothing'), isFalse);
     expect(game.save!.budget, 10);
     expect(game.activeMatchdayPromo, isNull);
@@ -104,5 +105,53 @@ void main() {
     final old =
         SaveGame.fromJson(game.save!.toJson()..remove('matchdayPromoId'));
     expect(old.matchdayPromoId, isNull);
+  });
+  test('「続ける」に決めると、節を終えるたびに同じイベントが決まる', () async {
+    // 節ごとに選び直す手間を無くした(2026-11-25)。
+    final game = await newGame();
+    final save = game.save!;
+    save.budget = 500000;
+    expect(await game.setMatchdayPromoKeep('family_day'), isTrue);
+    expect(game.activeMatchdayPromo?.id, 'family_day');
+    expect(save.budget, 500000 - game.scaledMoney(80));
+
+    game.debugConsumeMatchdayPromo();
+    expect(game.activeMatchdayPromo?.id, 'family_day', reason: '次の節も続ける');
+    expect(save.budget, 500000 - 2 * game.scaledMoney(80));
+
+    // 別のものに替えると、決めてあった次の節のぶんは費用が戻る。
+    expect(await game.setMatchdayPromoKeep('light_up'), isTrue);
+    expect(game.activeMatchdayPromo?.id, 'light_up');
+    expect(save.budget,
+        500000 - 2 * game.scaledMoney(80) + game.scaledMoney(80) - game.scaledMoney(150));
+
+    // やめると、決めてある次の節のぶんは残り、その次からは決まらない。
+    expect(await game.setMatchdayPromoKeep(null), isTrue);
+    game.debugConsumeMatchdayPromo();
+    expect(game.activeMatchdayPromo, isNull);
+  });
+
+  test('「続ける」でも、資金が足りない節は打たず、設定は残る', () async {
+    final game = await newGame();
+    final save = game.save!;
+    save.budget = 0;
+    expect(await game.setMatchdayPromoKeep('light_up'), isTrue);
+    expect(game.activeMatchdayPromo, isNull);
+    expect(game.matchdayPromoKeep?.id, 'light_up');
+    expect(save.budget, 0);
+    save.budget = 500000;
+    game.debugConsumeMatchdayPromo();
+    expect(game.activeMatchdayPromo?.id, 'light_up', reason: '資金が戻れば打つ');
+  });
+
+  test('「続ける」の設定は保存して読み戻せ、無い旧セーブは何も無い', () async {
+    final game = await newGame();
+    game.save!.budget = 5000;
+    await game.setMatchdayPromoKeep('discount_day');
+    final restored = SaveGame.fromJson(game.save!.toJson());
+    expect(restored.matchdayPromoKeepId, 'discount_day');
+    final old = SaveGame.fromJson(
+        game.save!.toJson()..remove('matchdayPromoKeepId'));
+    expect(old.matchdayPromoKeepId, isNull);
   });
 }

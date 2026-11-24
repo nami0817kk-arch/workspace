@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
 import '../logic/injury_care.dart';
 import '../state/game_state.dart';
+import 'decision_card.dart';
 
 /// 大きな怪我をした選手の、手術か保存療法かの判断。
 class SurgeryDecisionCard extends StatelessWidget {
@@ -15,52 +16,33 @@ class SurgeryDecisionCard extends StatelessWidget {
     final gs = context.watch<GameState>();
     final players = gs.playersAwaitingSurgeryDecision;
     if (players.isEmpty) return const SizedBox.shrink();
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(Tr.pick('手術か、保存療法か', 'Surgery or rest?'),
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(
-              Tr.pick(
-                  '手術は${formatMoney(gs.surgeryCost)}かかり、離脱が${InjuryCare.surgeryExtraWeeks}週延びますが、再発しません。保存療法は離脱が${InjuryCare.restSavedWeeks}週縮みますが、治ったときに${(InjuryCare.setbackChance * 100).round()}%で再発し、${InjuryCare.setbackWeeks}週休みます。',
-                  'Surgery costs ${formatMoney(gs.surgeryCost)} and adds ${InjuryCare.surgeryExtraWeeks} weeks, but there is no setback. Rest saves ${InjuryCare.restSavedWeeks} weeks, but there is a ${(InjuryCare.setbackChance * 100).round()}% chance of a ${InjuryCare.setbackWeeks}-week setback.'),
-              style: const TextStyle(fontSize: 12),
-            ),
-            for (final p in players) ...[
-              const SizedBox(height: 8),
-              Text(Tr.pick('${p.name}: ${InjuryCare.describe(p)}(あと${p.injuryWeeks}週)',
-                  '${p.name}: ${InjuryCare.describe(p)} (${Tr.plural(p.injuryWeeks, 'week')})')),
-              // 医療スタッフのおすすめと締切。過ぎたらおすすめで片付く
-              // (2026-11-23。決めないまま何節でも残っていた)。
-              Text(
-                Tr.pick(
-                    '医療スタッフのおすすめ: ${gs.recommendsSurgery(p) ? '手術' : '保存療法'}。あと${gs.decisionMatchdaysLeft('surgery:${p.id}')}節決めないと、おすすめで決まります。',
-                    "Medical staff advise: ${gs.recommendsSurgery(p) ? 'surgery' : 'rest'}. Undecided after ${Tr.plural(gs.decisionMatchdaysLeft('surgery:${p.id}'), 'matchday')}, their advice is followed."),
-                style: TextStyle(
-                    fontSize: 11,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant),
-              ),
-              Wrap(
-                spacing: 8,
-                children: [
-                  FilledButton(
-                    onPressed: () => gs.decideSurgery(p.id, surgery: true),
-                    child: Text(Tr.pick('手術する', 'Operate')),
-                  ),
-                  OutlinedButton(
-                    onPressed: () => gs.decideSurgery(p.id, surgery: false),
-                    child: Text(Tr.pick('保存療法', 'Rest it')),
-                  ),
-                ],
-              ),
+    // 選手ごとに1枚。題と答えだけを出し、説明は押すと開く(2026-11-25)。
+    return Column(
+      children: [
+        for (final p in players)
+          DecisionCard(
+            key: ValueKey('surgery-${p.id}'),
+            icon: Icons.healing,
+            title: Tr.pick(
+                '手術か保存療法か: ${p.name}(あと${p.injuryWeeks}週)',
+                'Surgery or rest: ${p.name} (${Tr.plural(p.injuryWeeks, 'week')})'),
+            // 医療スタッフのおすすめと締切。過ぎたらおすすめで片付く
+            // (2026-11-23。決めないまま何節でも残っていた)。
+            deadline: Tr.pick(
+                '医療スタッフのおすすめ: ${gs.recommendsSurgery(p) ? '手術' : '保存療法'}。あと${gs.decisionMatchdaysLeft('surgery:${p.id}')}節決めないと、おすすめで決まります。',
+                "Medical staff advise: ${gs.recommendsSurgery(p) ? 'surgery' : 'rest'}. Undecided after ${Tr.plural(gs.decisionMatchdaysLeft('surgery:${p.id}'), 'matchday')}, their advice is followed."),
+            detail: Tr.pick(
+                '${InjuryCare.describe(p)}。手術は${formatMoney(gs.surgeryCost)}かかり、離脱が${InjuryCare.surgeryExtraWeeks}週延びますが、再発しません。保存療法は離脱が${InjuryCare.restSavedWeeks}週縮みますが、治ったときに${(InjuryCare.setbackChance * 100).round()}%で再発し、${InjuryCare.setbackWeeks}週休みます。',
+                '${InjuryCare.describe(p)}. Surgery costs ${formatMoney(gs.surgeryCost)} and adds ${InjuryCare.surgeryExtraWeeks} weeks, but there is no setback. Rest saves ${InjuryCare.restSavedWeeks} weeks, but there is a ${(InjuryCare.setbackChance * 100).round()}% chance of a ${InjuryCare.setbackWeeks}-week setback.'),
+            choices: [
+              DecisionChoice(Tr.pick('手術する', 'Operate'),
+                  () => gs.decideSurgery(p.id, surgery: true)),
+              DecisionChoice(Tr.pick('保存療法', 'Rest it'),
+                  () => gs.decideSurgery(p.id, surgery: false),
+                  primary: false),
             ],
-          ],
-        ),
-      ),
+          ),
+      ],
     );
   }
 }

@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Soccer Club Manager';
 
   @override
-  String get startTagline => 'Take charge of a club and chase the title';
+  String get startTagline => 'Own a club and build it from Tier 3 to the top';
 
   @override
   String startSlotLabel(int number) {
@@ -28,7 +28,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get startCreateClub => 'New club';
+  String get startCreateClub => 'New game';
 
   @override
   String startNewClubIn(int number) {

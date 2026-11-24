@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
+import '../logic/first_days_guide.dart';
 import '../logic/todo_advisor.dart';
 import '../screens/todo_navigation.dart';
 import '../state/game_state.dart';
@@ -123,6 +124,7 @@ IconData todoIcon(TodoKind kind) => switch (kind) {
       TodoKind.counterOffers => Icons.reply,
       TodoKind.agreedTalks => Icons.draw_outlined,
       TodoKind.staffOffers => Icons.person_remove_outlined,
+      TodoKind.firstSteps => Icons.school_outlined,
       TodoKind.transferDeadline => Icons.timer_outlined,
       TodoKind.staffVacant => Icons.person_add_alt,
       TodoKind.ownerGoal => Icons.flag_outlined,
@@ -294,7 +296,13 @@ class TodoRow extends StatelessWidget {
         borderRadius: BorderRadius.circular(fmRadius(context, 12)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => openTodoPlace(context, item.place),
+          onTap: () {
+            // 最初の数日の案内は、押したら次の段に替える。
+            if (item.kind == TodoKind.firstSteps && item.tag != null) {
+              FirstDaysGuide.markSeen(context.read<GameState>(), item.tag!);
+            }
+            openTodoPlace(context, item.place);
+          },
           child: ConstrainedBox(
             // 横画面は全体を約0.93倍で描く。52 なら実寸で48pt を超える。
             constraints: const BoxConstraints(minHeight: 52),
@@ -323,8 +331,10 @@ class TodoRow extends StatelessWidget {
                           if (item.note.isNotEmpty)
                             Text(
                               item.note,
-                              // 必須は読み切れるように長めに出す。
-                              maxLines: item.isMust ? 4 : 2,
+                              // 必須は読み切れるように長めに出す。おすすめは
+                              // 1行(状況を開いたときに上位が見えるように。
+                              // 2026-11-25)。
+                              maxLines: item.isMust ? 4 : 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 12,

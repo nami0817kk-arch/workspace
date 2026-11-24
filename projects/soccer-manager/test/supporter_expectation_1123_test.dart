@@ -238,7 +238,7 @@ void main() {
       s.confidence = 50;
       s.supporterMonth.clear();
       final dinner = ownerWorks.firstWhere((w) => w.id == 'supporter_dinner');
-      final clinic = ownerWorks.firstWhere((w) => w.id == 'kids_clinic');
+      final clinic = ownerWorks.firstWhere((w) => w.id == 'fan_thanks');
       expect(dinner.monthly, isTrue);
       expect(await gs.doOwnerWork(dinner.id), isTrue);
       expect(s.confidence, 50 + dinner.supporters);

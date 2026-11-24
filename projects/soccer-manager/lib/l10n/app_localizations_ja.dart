@@ -12,7 +12,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appTitle => 'サッカー経営マネージャー';
 
   @override
-  String get startTagline => 'クラブを率いてリーグ優勝を目指そう';
+  String get startTagline => 'クラブのオーナーになり、3部から頂点まで育てよう';
 
   @override
   String startSlotLabel(int number) {
@@ -28,7 +28,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get startCreateClub => '新規クラブ作成';
+  String get startCreateClub => '新しく始める';
 
   @override
   String startNewClubIn(int number) {

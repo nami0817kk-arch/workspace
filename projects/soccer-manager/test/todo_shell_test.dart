@@ -25,7 +25,7 @@ import 'package:soccer_manager/screens/owner_work_screen.dart';
 import 'package:soccer_manager/screens/youth_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
-import 'package:soccer_manager/widgets/club_policy_card.dart';
+import 'package:soccer_manager/widgets/owner_career_card.dart';
 import 'package:soccer_manager/widgets/disabled_reason.dart';
 import 'package:soccer_manager/widgets/fm_panel.dart';
 import 'package:soccer_manager/widgets/landscape_scale.dart';
@@ -261,7 +261,9 @@ void main() {
     final checks = <(TodoPlace, Finder)>[
       (TodoPlaces.financeOverview, find.byType(ProposalCard)),
       (TodoPlaces.financeFunding, find.text('スポンサー契約')),
-      (TodoPlaces.financeProjects, find.byType(ClubPolicyCard)),
+      (TodoPlaces.financeProjects, find.byType(FiveYearPlanCard)),
+      // 方針はオーナー室の「文化と方針」の札の中(2026-11-25)。
+      (TodoPlaces.ownerWorld, find.byKey(const ValueKey('club-direction-card'))),
       (TodoPlaces.clubStaff, find.textContaining('スタッフ: ')),
       (TodoPlaces.clubFacilities, find.text('施設')),
       (TodoPlaces.clubCommunity, find.byType(SeasonTicketsCard)),
@@ -287,16 +289,12 @@ void main() {
       expect(finder.hitTestable(), findsWidgets, reason: '$place');
       expectNothingPushed(tester);
     }
-    // オーナーの仕事の「打てる手」は、広報以外の分野の札を開く。
+    // オーナーの仕事の「打てる手」は、先頭の「いま打てる手」を見せる
+    // (2026-11-25 に分野の札をやめ、打てる手を上に並べた)。
     nav.go(TodoPlaces.ownerWorks);
     await settle(tester);
-    final fans = OwnerWorkCategory.values.indexOf(OwnerWorkCategory.fans) + 1;
-    final chips = tester
-        .widgetList<ChoiceChip>(find.byType(ChoiceChip).hitTestable())
-        .toList();
-    final selected = chips.indexWhere((c) => c.selected);
-    expect(selected, greaterThan(0));
-    expect(selected, isNot(fans));
+    expect(find.byKey(const ValueKey('owner-work-open')).hitTestable(),
+        findsOneWidget);
     expect(gs.save, isNotNull);
   });
 

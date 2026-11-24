@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/agm_engine.dart';
 import '../logic/economy_scale.dart';
 import '../state/game_state.dart';
+import 'decision_card.dart';
 
 /// 株主総会で出された要求。受けるか断るかを選ぶ。
 class AgmDemandCard extends StatelessWidget {
@@ -26,34 +27,26 @@ class AgmDemandCard extends StatelessWidget {
           '監督の立場は${save.managerStanding}です。受けると、すぐに解任します(違約金は残りの契約の全額)。',
           'The manager\'s standing is ${save.managerStanding}. Accept and he is sacked at once (the rest of his contract is paid in full).'),
     };
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(d.title, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text(detail, style: const TextStyle(fontSize: 12)),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              children: [
-                FilledButton(
-                  onPressed: () => gs.answerAgmDemand(accept: true),
-                  child: Text(Tr.pick('${d.acceptLabel}(期待+${d.acceptDelta})',
-                      '${d.acceptLabel} (shareholder expectation +${d.acceptDelta})')),
-                ),
-                OutlinedButton(
-                  onPressed: () => gs.answerAgmDemand(accept: false),
-                  child: Text('${d.rejectLabel} ${d.rejectDelta}'),
-                ),
-              ],
-            ),
-          ],
+    // 題と答えだけ。説明と効き目は押すと開く(2026-11-25)。
+    return DecisionCard(
+      icon: Icons.groups_2_outlined,
+      title: d.title,
+      detail: detail,
+      choices: [
+        DecisionChoice(
+          d.acceptLabel,
+          () => gs.answerAgmDemand(accept: true),
+          effect: Tr.pick('株主の期待+${d.acceptDelta}',
+              'Shareholder expectation +${d.acceptDelta}'),
         ),
-      ),
+        DecisionChoice(
+          d.rejectLabel,
+          () => gs.answerAgmDemand(accept: false),
+          effect: Tr.pick('株主の期待${d.rejectDelta}',
+              'Shareholder expectation ${d.rejectDelta}'),
+          primary: false,
+        ),
+      ],
     );
   }
 }

@@ -139,7 +139,6 @@ void main() {
         TodoPlaces.financeProjects,
         null,
         [
-          type(ClubPolicyCard),
           type(FiveYearPlanCard),
           type(ProjectCard),
           type(AdvisorCard),
@@ -208,7 +207,7 @@ void main() {
         'オーナー室 > オーナーの仕事',
         TodoPlaces.ownerMatchday,
         null,
-        [type(OwnerWorkScreen), text('試合日のイベント'), key('owner-work-chip-5')]
+        [type(OwnerWorkScreen), text('試合日のイベント'), key('owner-work-open')]
       ),
       (
         'オーナー室 > オーナーと世界',
@@ -216,7 +215,9 @@ void main() {
         null,
         [
           type(OwnerWorldScreen),
+          type(ClubDirectionCard),
           type(ClubCultureCard),
+          type(ClubPolicyCard),
           type(RivalOwnersCard),
           type(EraCard),
         ]

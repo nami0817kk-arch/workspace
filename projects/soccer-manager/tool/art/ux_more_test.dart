@@ -188,7 +188,7 @@ void main() {
     await tester.pumpWidget(wrap(const StartScreen()));
     await settle(5);
     await snap('start');
-    if (await tapText('新規クラブ作成')) {
+    if (await tapText('新しく始める')) {
       await snap('new_club_form');
       // 入力欄の縦の長さ
       for (final e in find.byType(Scrollable).evaluate()) {

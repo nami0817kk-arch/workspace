@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'services/feedback_service.dart';
 import 'state/game_state.dart';
 import 'state/settings_controller.dart';
-import 'screens/onboarding_screen.dart';
 import 'screens/start_screen.dart';
 import 'widgets/fm_panel.dart';
 import 'widgets/landscape_scale.dart';
@@ -270,8 +269,7 @@ class SoccerManagerApp extends StatelessWidget {
   }
 }
 
-/// 設定・セーブデータの初期化が終わるまで待ち、初回起動ならチュートリアルを挟んでから
-/// 通常のスタート画面へ進む。
+/// 設定・セーブデータの初期化が終わるまで待ってから、スタート画面へ進む。
 class _RootScreen extends StatelessWidget {
   const _RootScreen();
 
@@ -283,11 +281,8 @@ class _RootScreen extends StatelessWidget {
     if (!settings.initialized || !gameState.initialized) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    if (!settings.hasSeenOnboarding) {
-      return OnboardingScreen(
-        onDone: () => settings.setHasSeenOnboarding(true),
-      );
-    }
+    // 初回の5枚の説明は 2026-11-25 にやめた。最初の数日は、状況の
+    // 「やること」で1つずつ案内する(logic/first_days_guide.dart)。
     return const StartScreen();
   }
 }

@@ -187,6 +187,19 @@ class _MainShellState extends State<MainShell> {
     final size = MediaQuery.sizeOf(context);
     final wide = size.width > size.height;
     _nav.wide = wide;
+    // クラブを手放すと決まったら、左メニューと上の帯は押せなくする
+    // (2026-11-25)。手放す画面(状況)から、別のクラブを買い直して続ける
+    // 流れだけを残す。以前は手放したあとも他の画面を開けて、進むボタン以外は
+    // 何でも押せた。
+    final selling = gameState.saleReason != null;
+    Widget lockable(Widget child) => selling
+        ? ExcludeSemantics(
+            child: IgnorePointer(
+              key: const ValueKey('shell-locked'),
+              child: Opacity(opacity: 0.38, child: child),
+            ),
+          )
+        : child;
 
     final items = [
       (
@@ -238,7 +251,7 @@ class _MainShellState extends State<MainShell> {
             // (帯の分を除くと約366で、8項目には384要る)。
             ? Row(
                 children: [
-                  SafeArea(
+                  lockable(SafeArea(
                     right: false,
                     child: _FmSidebar(
                       page: _page,
@@ -248,12 +261,12 @@ class _MainShellState extends State<MainShell> {
                       todos: todos,
                       onSelect: _go,
                     ),
-                  ),
+                  )),
                   const VerticalDivider(width: 1),
                   Expanded(
                     child: Column(
                       children: [
-                        SafeArea(
+                        lockable(SafeArea(
                           bottom: false,
                           left: false,
                           child: _FmTopBar(
@@ -269,7 +282,7 @@ class _MainShellState extends State<MainShell> {
                               _nav.go(TodoPlaces.calendar);
                             },
                           ),
-                        ),
+                        )),
                         const Divider(height: 1),
                         Expanded(
                           // 上のバーがあるので、各画面の見出しの帯は低くする。
@@ -282,7 +295,8 @@ class _MainShellState extends State<MainShell> {
                             ),
                             child: EmbeddedInShell(
                               child: IndexedStack(
-                                index: _widePages.indexOf(_page),
+                                // 手放す画面は状況にあるので、状況を出す。
+                                index: selling ? 0 : _widePages.indexOf(_page),
                                 children: _wideTabs,
                               ),
                             ),
@@ -293,10 +307,11 @@ class _MainShellState extends State<MainShell> {
                   ),
                 ],
               )
-            : IndexedStack(index: _narrowIndex(), children: _narrowTabs),
+            : IndexedStack(
+                index: selling ? 0 : _narrowIndex(), children: _narrowTabs),
         bottomNavigationBar: wide
             ? null
-            : NavigationBar(
+            : lockable(NavigationBar(
                 selectedIndex: _narrowIndex(),
                 onDestinationSelected: (i) => _go(_narrowPages[i]),
                 destinations: [
@@ -307,7 +322,7 @@ class _MainShellState extends State<MainShell> {
                       label: d.label,
                     ),
                 ],
-              ),
+              )),
           ),
         ),
       ),

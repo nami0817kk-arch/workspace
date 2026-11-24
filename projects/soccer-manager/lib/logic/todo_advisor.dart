@@ -6,6 +6,7 @@ import '../state/game_state.dart';
 import 'contract_board_engine.dart';
 import 'contract_engine.dart';
 import 'economy_scale.dart';
+import 'first_days_guide.dart';
 import 'next_action_advisor.dart';
 import 'signing_proposal_engine.dart';
 import 'sponsor_slots.dart';
@@ -173,6 +174,9 @@ enum TodoKind {
   staffOffers,
 
   // ---- おすすめ ----
+  /// 最初の数日の案内(はじめに 1/5 …)。おすすめの先頭に出す。
+  firstSteps,
+
   /// 移籍の締切が近い。
   transferDeadline,
 
@@ -229,8 +233,12 @@ class TodoItem {
     required this.place,
     this.count = 1,
     this.inline = false,
+    this.tag,
     bool? marked,
   }) : marked = marked ?? level == TodoLevel.must;
+
+  /// 種類の中の印(最初の案内の段の名前など)。無ければ null。
+  final String? tag;
 
   final TodoKind kind;
   final TodoLevel level;
@@ -324,6 +332,7 @@ class TodoAdvisor {
   /// おすすめのうち、左メニューとタブに青い点を付ける種類。期限や時期が
   /// あって今だけのもの。スタッフの空席は開幕前だけ([build] の中で見る)。
   static const Set<TodoKind> markedKinds = {
+    TodoKind.firstSteps,
     TodoKind.supporterFalling,
     TodoKind.transferDeadline,
     TodoKind.seasonTickets,
@@ -353,6 +362,7 @@ class TodoAdvisor {
           place: t.place,
           count: t.count,
           inline: t.inline,
+          tag: t.tag,
           marked: t.isMust ||
               markedKinds.contains(t.kind) ||
               (t.kind == TodoKind.staffVacant && preseason),
@@ -659,7 +669,8 @@ class TodoAdvisor {
         title: Tr.pick('クラブの方針を選べます', 'You can set the club policy'),
         note: Tr.pick('変えられるのはオフシーズン(季の終わり〜開幕前)だけ(いまは「${gs.nextClubPolicy.label}」)。季末に採点されます。',
             'Only in the off-season, from the end of the season to kick-off (now: ${gs.nextClubPolicy.label}). Scored at the end.'),
-        place: TodoPlaces.financeProjects,
+        // 方針はオーナー室の「文化と方針」にある(2026-11-25)。
+        place: TodoPlaces.ownerWorld,
       ));
     }
 
@@ -744,16 +755,18 @@ class TodoAdvisor {
     // 次の節の試合日のイベント。資金が足りるものがあるときだけ。
     final seasonOn = !save.league.isSeasonComplete &&
         save.league.nextUnplayedFixture != null;
+    // 「続ける」に決めてあれば出さない(資金が足りない節は打たないだけ)。
     if (seasonOn &&
         gs.activeMatchdayPromo == null &&
+        gs.matchdayPromoKeep == null &&
         matchdayPromos.any((p) => gs.scaledMoney(p.cost) <= save.budget)) {
       add(TodoItem(
         kind: TodoKind.matchdayEvent,
         level: TodoLevel.recommended,
-        title: Tr.pick('次の節の試合日のイベントを決めていません',
-            'No matchday event is set for the next game'),
-        note: Tr.pick('観客収入かサポーターの期待を動かせます。節ごとに1つ。',
-            'Moves gate income or supporter expectation. One per matchday.'),
+        title: Tr.pick('試合日のイベントを決めていません',
+            'No matchday event is set'),
+        note: Tr.pick('観客収入かサポーターの期待を動かせます。一度決めると毎節続けます。',
+            'Moves gate income or supporter expectation. Set it once and it runs every game.'),
         place: TodoPlaces.ownerMatchday,
       ));
     }
@@ -808,6 +821,20 @@ class TodoAdvisor {
             'Moves that shift funds and the two expectations. Once a season each.'),
         place: TodoPlaces.ownerWorks,
         count: works,
+      ));
+    }
+
+    // 最初の数日の案内。5枚の説明をやめ、ここで1つずつ案内する
+    // (2026-11-25)。押すと行き先へ移り、次の段に替わる。
+    final step = FirstDaysGuide.current(gs);
+    if (step != null) {
+      add(TodoItem(
+        kind: TodoKind.firstSteps,
+        level: TodoLevel.recommended,
+        title: step.title,
+        note: step.note,
+        place: step.place,
+        tag: step.id,
       ));
     }
 
