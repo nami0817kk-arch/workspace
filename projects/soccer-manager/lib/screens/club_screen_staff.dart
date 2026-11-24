@@ -11,7 +11,6 @@ class _StaffTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gs = context.watch<GameState>();
     final scheme = Theme.of(context).colorScheme;
     final head = TextStyle(
         fontSize: 11,
@@ -21,9 +20,14 @@ class _StaffTable extends StatelessWidget {
       key: const ValueKey('staff-table'),
       title: Tr.pick('スタッフ', 'Staff'),
       padding: EdgeInsets.zero,
-      child: Column(
+      // 狭いとき(縦画面・2列に割ったとき)は、列をやめて1人を2段で出す。
+      child: LayoutBuilder(builder: (context, c) {
+        final wide = c.maxWidth / MediaQuery.textScalerOf(context).scale(1) >=
+            _StaffCols.wideWidth;
+        return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (wide)
           Container(
             color: scheme.surfaceContainerHighest,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -37,7 +41,8 @@ class _StaffTable extends StatelessWidget {
               ],
             ),
           ),
-          for (final role in StaffRole.values) _StaffRoleBlock(role: role),
+          for (final role in StaffRole.values)
+            _StaffRoleBlock(role: role, wide: wide),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 6, 10, 8),
             child: Text(
@@ -48,15 +53,17 @@ class _StaffTable extends StatelessWidget {
                   fontSize: 11, color: SemanticColors.subtleText(context)),
             ),
           ),
-          if (gs.save == null) const SizedBox.shrink(),
         ],
-      ),
+      );
+      }),
     );
   }
 }
 
 /// 表の列の幅。
 class _StaffCols {
+  /// これより狭ければ、列をやめて2段にする。
+  static const double wideWidth = 600;
   static const double ability = 56;
   static const double wage = 84;
   static const double contract = 84;
@@ -84,8 +91,9 @@ Color _abilityColor(BuildContext context, double a) => a >= 15
 
 /// 役職1つぶん: 見出しの行と、雇っている人の行。
 class _StaffRoleBlock extends StatelessWidget {
-  const _StaffRoleBlock({required this.role});
+  const _StaffRoleBlock({required this.role, required this.wide});
   final StaffRole role;
+  final bool wide;
 
   @override
   Widget build(BuildContext context) {
@@ -110,46 +118,40 @@ class _StaffRoleBlock extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 4, 4, 4),
             child: Row(
               children: [
-                Flexible(
-                  child: Tooltip(
-                    message: role.description,
-                    triggerMode: TooltipTriggerMode.tap,
-                    child: Text(role.label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold)),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  Tr.pick('${members.length}/$max人', '${members.length}/$max'),
-                  key: ValueKey('staff-count-${role.name}'),
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: members.isEmpty
-                          ? SemanticColors.ink(context, Colors.orange.shade700)
-                          : subtle),
-                ),
-                const SizedBox(width: 8),
-                Text(Tr.pick('質 Lv$level', 'Level $level'),
-                    style: TextStyle(fontSize: 12, color: subtle)),
-                const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    _staffEffectLabel(role, level,
-                        member: members.firstOrNull,
-                        tier: gs.currentDivisionTier),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 11, color: subtle),
+                  child: Wrap(
+                    spacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(role.label,
+                          style: const TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.bold)),
+                      Text(
+                        Tr.pick('${members.length}/$max人',
+                            '${members.length}/$max'),
+                        key: ValueKey('staff-count-${role.name}'),
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: members.isEmpty
+                                ? SemanticColors.ink(
+                                    context, Colors.orange.shade700)
+                                : subtle),
+                      ),
+                      Text(Tr.pick('質 Lv$level', 'Level $level'),
+                          style: TextStyle(fontSize: 12, color: subtle)),
+                      Text(
+                        _staffEffectLabel(role, level,
+                            member: members.firstOrNull,
+                            tier: gs.currentDivisionTier),
+                        style: TextStyle(fontSize: 11, color: subtle),
+                      ),
+                    ],
                   ),
                 ),
                 TextButton(
                   key: ValueKey('staff-candidates-${role.name}'),
                   style: TextButton.styleFrom(
-                      visualDensity: VisualDensity.compact,
                       padding: const EdgeInsets.symmetric(horizontal: 8)),
                   onPressed: candidates.isEmpty
                       ? null
@@ -178,7 +180,9 @@ class _StaffRoleBlock extends StatelessWidget {
                     color: SemanticColors.ink(context, Colors.orange.shade700)),
               ),
             ),
-          for (final (i, m) in members.indexed) _StaffMemberRow(staff: m, lead: i == 0 && members.length > 1),
+          for (final (i, m) in members.indexed)
+            _StaffMemberRow(
+                staff: m, lead: i == 0 && members.length > 1, wide: wide),
           if (role == StaffRole.manager && members.isNotEmpty)
             const Padding(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 6),
@@ -197,8 +201,10 @@ class _StaffRoleBlock extends StatelessWidget {
 
 /// 雇っている人の1行。
 class _StaffMemberRow extends StatelessWidget {
-  const _StaffMemberRow({required this.staff, required this.lead});
+  const _StaffMemberRow(
+      {required this.staff, required this.lead, required this.wide});
   final StaffMember staff;
+  final bool wide;
 
   /// 何人かいる役職の主任か(札を付ける)。
   final bool lead;
@@ -212,16 +218,43 @@ class _StaffMemberRow extends StatelessWidget {
     final endYear = Player.contractClockYear + staff.contractYears - 1;
     final expiring = staff.contractYears <= 1;
     final severance = gs.staffSeveranceFor(staff);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 2, 4, 2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                flex: 5,
-                child: Text.rich(
+    final abilityStyle = TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.bold,
+        color: _abilityColor(context, ability));
+    final contractText =
+        Tr.pick('$endYear/6($weeks週)', '6/$endYear ($weeks wk)');
+    final contractStyle = TextStyle(
+        fontSize: 12,
+        color: expiring
+            ? SemanticColors.ink(context, Colors.orange.shade800)
+            : null);
+    final wage = formatMoney(annualFromWeekly(gs.scaledMoney(staff.wage)));
+    final actions = Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        TextButton(
+          key: ValueKey('staff-renew-${staff.id}'),
+          style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 6)),
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) =>
+                  StaffNegotiationScreen(staff: staff, renewal: true))),
+          child: Text(Tr.pick('契約', 'Contract'),
+              style: const TextStyle(fontSize: 12)),
+        ),
+        TextButton(
+          key: ValueKey('staff-dismiss-${staff.id}'),
+          style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 6)),
+          onPressed: () => _confirmDismiss(context, staff, severance),
+          child: Text(Tr.pick('解任', 'Dismiss'),
+              style: const TextStyle(fontSize: 12)),
+        ),
+      ],
+    );
+    final name = Text.rich(
                   TextSpan(children: [
                     TextSpan(
                         text: '${staff.name} (${staff.age})',
@@ -244,56 +277,45 @@ class _StaffMemberRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 12.5),
+                );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 2, 4, 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (wide)
+            Row(
+              children: [
+                Expanded(flex: 5, child: name),
+                _cell(ability.toStringAsFixed(0), _StaffCols.ability,
+                    abilityStyle),
+                _cell(wage, _StaffCols.wage, const TextStyle(fontSize: 12)),
+                _cell(contractText, _StaffCols.contract, contractStyle),
+                SizedBox(width: _StaffCols.actions, child: actions),
+              ],
+            )
+          else ...[
+            name,
+            Row(
+              children: [
+                Expanded(
+                  child: Wrap(
+                    spacing: 12,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                          Tr.pick('能力 ${ability.toStringAsFixed(0)}',
+                              'Ability ${ability.toStringAsFixed(0)}'),
+                          style: abilityStyle),
+                      Text(wage, style: const TextStyle(fontSize: 12)),
+                      Text(contractText, style: contractStyle),
+                    ],
+                  ),
                 ),
-              ),
-              _cell(
-                  ability.toStringAsFixed(0),
-                  _StaffCols.ability,
-                  TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: _abilityColor(context, ability))),
-              _cell(formatMoney(annualFromWeekly(gs.scaledMoney(staff.wage))),
-                  _StaffCols.wage, const TextStyle(fontSize: 12)),
-              _cell(
-                  Tr.pick('$endYear/6($weeks週)', '6/$endYear ($weeks wk)'),
-                  _StaffCols.contract,
-                  TextStyle(
-                      fontSize: 12,
-                      color: expiring
-                          ? SemanticColors.ink(context, Colors.orange.shade800)
-                          : null)),
-              SizedBox(
-                width: _StaffCols.actions,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      key: ValueKey('staff-renew-${staff.id}'),
-                      style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                          padding: const EdgeInsets.symmetric(horizontal: 6)),
-                      onPressed: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (_) => StaffNegotiationScreen(
-                                  staff: staff, renewal: true))),
-                      child: Text(Tr.pick('契約', 'Contract'),
-                          style: const TextStyle(fontSize: 12)),
-                    ),
-                    TextButton(
-                      key: ValueKey('staff-dismiss-${staff.id}'),
-                      style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                          padding: const EdgeInsets.symmetric(horizontal: 6)),
-                      onPressed: () => _confirmDismiss(context, staff, severance),
-                      child: Text(Tr.pick('解任', 'Dismiss'),
-                          style: const TextStyle(fontSize: 12)),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+                actions,
+              ],
+            ),
+          ],
           if (staff.manager != null) _ManagerProfileLines(staff: staff),
         ],
       ),
@@ -501,7 +523,11 @@ class _StaffDelegationPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SwitchListTile(
+          // 札(FmPanel)の地の上なので、ListTile の地と波紋が隠れないよう
+          // 透明な Material を挟む。
+          Material(
+            type: MaterialType.transparency,
+            child: SwitchListTile(
             key: const ValueKey('staff-delegate-switch'),
             contentPadding: EdgeInsets.zero,
             dense: true,
@@ -522,6 +548,7 @@ class _StaffDelegationPanel extends StatelessWidget {
               style: TextStyle(fontSize: 11, color: subtle),
             ),
           ),
+          ),
           Row(
             children: [
               Expanded(
@@ -530,16 +557,31 @@ class _StaffDelegationPanel extends StatelessWidget {
                   style: const TextStyle(fontSize: 12.5),
                 ),
               ),
-              NegotiationStepper(
-                key: const ValueKey('staff-delegate-cap'),
-                label: cap <= 0
-                    ? Tr.pick('給与予算の中で', 'Within the wage budget')
-                    : annual(cap),
-                onMinus: cap <= 0
+              // 押せる広さ 48x48 を保つため、交渉の表の小さな増減は使わない。
+              IconButton(
+                key: const ValueKey('staff-delegate-cap-down'),
+                tooltip: Tr.pick('下げる', 'Lower'),
+                icon: const Icon(Icons.remove_circle_outline, size: 20),
+                onPressed: cap <= 0
                     ? null
                     : () => gs.setStaffDelegation(
                         weeklyCap: cap - step < total ~/ 2 ? 0 : cap - step),
-                onPlus: () => gs.setStaffDelegation(
+              ),
+              Flexible(
+                child: Text(
+                  cap <= 0
+                      ? Tr.pick('給与予算の中で', 'Within the wage budget')
+                      : annual(cap),
+                  key: const ValueKey('staff-delegate-cap'),
+                  style: const TextStyle(
+                      fontSize: 13.5, fontWeight: FontWeight.bold),
+                ),
+              ),
+              IconButton(
+                key: const ValueKey('staff-delegate-cap-up'),
+                tooltip: Tr.pick('上げる', 'Raise'),
+                icon: const Icon(Icons.add_circle_outline, size: 20),
+                onPressed: () => gs.setStaffDelegation(
                     weeklyCap: cap <= 0 ? total + step : cap + step),
               ),
             ],
@@ -636,7 +678,6 @@ class _ManagerTargetPanel extends StatelessWidget {
               ),
               IconButton(
                 tooltip: Tr.pick('目標を上げる', 'Raise the target'),
-                visualDensity: VisualDensity.compact,
                 onPressed: target > 1
                     ? () => gameState.setManagerTarget(target - 1)
                     : null,
@@ -644,7 +685,6 @@ class _ManagerTargetPanel extends StatelessWidget {
               ),
               IconButton(
                 tooltip: Tr.pick('目標を下げる', 'Lower the target'),
-                visualDensity: VisualDensity.compact,
                 onPressed: target < teams
                     ? () => gameState.setManagerTarget(target + 1)
                     : null,

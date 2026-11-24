@@ -102,9 +102,14 @@ class _FacilityTable extends StatelessWidget {
                   fontSize: 12,
                   color: SemanticColors.ink(context, Colors.orange.shade800))),
       padding: EdgeInsets.zero,
-      child: Column(
+      // 狭いとき(縦画面・2列に割ったとき)は、列をやめて1つの施設を数段で。
+      child: LayoutBuilder(builder: (context, c) {
+        final wide = c.maxWidth / MediaQuery.textScalerOf(context).scale(1) >=
+            _StaffCols.wideWidth;
+        return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (wide)
           Container(
             color: scheme.surfaceContainerHighest,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -119,16 +124,19 @@ class _FacilityTable extends StatelessWidget {
               ],
             ),
           ),
-          for (final type in FacilityType.values) _FacilityRow(type: type),
+          for (final type in FacilityType.values)
+            _FacilityRow(type: type, wide: wide),
         ],
-      ),
+      );
+      }),
     );
   }
 }
 
 class _FacilityRow extends StatelessWidget {
-  const _FacilityRow({required this.type});
+  const _FacilityRow({required this.type, required this.wide});
   final FacilityType type;
+  final bool wide;
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +158,62 @@ class _FacilityRow extends StatelessWidget {
         ? Tr.pick('来季の開幕に完成', 'Ready next season')
         : Tr.pick('工期${ClubInfrastructure.buildMonths}か月',
             '${ClubInfrastructure.buildMonths} months');
+    final nextText = isMax
+        ? Tr.pick('最大です', 'Fully upgraded')
+        : building
+            ? Tr.pick('完成すると: ${fx.next}', 'When ready: ${fx.next}')
+            : fx.next ?? '-';
+    final nextStyle =
+        small.copyWith(color: isMax ? subtle : SemanticColors.positive(context));
+    final costText = isMax ? '-' : '${formatMoney(cost)}\n$time';
+    final button = FilledButton(
+      style: FilledButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 10)),
+      onPressed: isMax || building || !canAfford
+          ? null
+          : () async {
+              final ok = await runUndoable(
+                context,
+                action: () => gs.upgradeFacility(type),
+                done: Tr.pick(
+                    '「${type.label}」の増築に着工しました', 'Work has begun: ${type.label}'),
+              );
+              ok ? FeedbackService.success() : FeedbackService.error();
+            },
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          building
+              ? Tr.pick(
+                  '工事中(${TransferWindowCalendar.formatYearMonth(readyOn)}完成)',
+                  'Building (ready ${TransferWindowCalendar.formatYearMonth(readyOn)})')
+              : isMax
+                  ? Tr.pick('最大レベル', 'Fully upgraded')
+                  : Tr.pick('${formatMoney(cost)}で増築',
+                      'Upgrade for ${formatMoney(cost)}'),
+          maxLines: 1,
+        ),
+      ),
+    );
+    final levelCell = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Lv$level/${ClubInfrastructure.maxLevel}',
+            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold)),
+        SizedBox(
+          width: 60,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: LinearProgressIndicator(
+              value: level / ClubInfrastructure.maxLevel,
+              minHeight: 5,
+            ),
+          ),
+        ),
+      ],
+    );
+    final title = Text(type.label,
+        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold));
     // 行ごとに Card にする(押せない理由をその行の中に出すため)。見た目は
     // 表の1行(角を立て、影と余白を消す)。
     return Card(
@@ -164,98 +228,37 @@ class _FacilityRow extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Tooltip(
-                    message: type.description,
-                    triggerMode: TooltipTriggerMode.tap,
-                    child: Text(type.label,
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold)),
+            if (wide)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(flex: 3, child: title),
+                  SizedBox(width: _FacilityTable._levelW, child: levelCell),
+                  Expanded(flex: 4, child: Text(fx.now, style: small)),
+                  Expanded(flex: 3, child: Text(nextText, style: nextStyle)),
+                  Expanded(flex: 3, child: Text(costText, style: small)),
+                  SizedBox(
+                    width: _FacilityTable._actionW,
+                    child: Align(alignment: Alignment.centerRight, child: button),
                   ),
-                ),
-                SizedBox(
-                  width: _FacilityTable._levelW,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Lv$level/${ClubInfrastructure.maxLevel}',
-                          style: const TextStyle(
-                              fontSize: 12.5, fontWeight: FontWeight.bold)),
-                      SizedBox(
-                        width: 60,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(3),
-                          child: LinearProgressIndicator(
-                            value: level / ClubInfrastructure.maxLevel,
-                            minHeight: 5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(flex: 4, child: Text(fx.now, style: small)),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                      isMax
-                          ? Tr.pick('最大です', 'Fully upgraded')
-                          : building
-                              ? Tr.pick('完成すると: ${fx.next}', 'When ready: ${fx.next}')
-                              : fx.next ?? '-',
-                      style: small.copyWith(
-                          color: isMax ? subtle : SemanticColors.positive(context))),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                      isMax ? '-' : '${formatMoney(cost)}\n$time',
-                      style: small),
-                ),
-                SizedBox(
-                  width: _FacilityTable._actionW,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: FilledButton(
-                      style: FilledButton.styleFrom(
-                          visualDensity: VisualDensity.compact,
-                          padding: const EdgeInsets.symmetric(horizontal: 10)),
-                      onPressed: isMax || building || !canAfford
-                          ? null
-                          : () async {
-                              final ok = await runUndoable(
-                                context,
-                                action: () => gs.upgradeFacility(type),
-                                done: Tr.pick('「${type.label}」の増築に着工しました',
-                                    'Work has begun: ${type.label}'),
-                              );
-                              ok
-                                  ? FeedbackService.success()
-                                  : FeedbackService.error();
-                            },
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          building
-                              ? Tr.pick(
-                                  '工事中(${TransferWindowCalendar.formatYearMonth(readyOn)}完成)',
-                                  'Building (ready ${TransferWindowCalendar.formatYearMonth(readyOn)})')
-                              : isMax
-                                  ? Tr.pick('最大レベル', 'Fully upgraded')
-                                  : Tr.pick('${formatMoney(cost)}で増築',
-                                      'Upgrade for ${formatMoney(cost)}'),
-                          maxLines: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                ],
+              )
+            else ...[
+              Row(
+                children: [
+                  Expanded(child: title),
+                  levelCell,
+                ],
+              ),
+              Text(Tr.pick('いま: ${fx.now}', 'Now: ${fx.now}'), style: small),
+              if (!isMax)
+                Text(Tr.pick('次の段で: $nextText', 'Next level: $nextText'),
+                    style: nextStyle),
+              if (!isMax)
+                Text(Tr.pick('費用: ${formatMoney(cost)}・$time',
+                    'Cost: ${formatMoney(cost)}, $time'), style: small),
+              Align(alignment: Alignment.centerRight, child: button),
+            ],
             if (fx.note != null || type == FacilityType.stadium && !isMax && !building)
               Padding(
                 padding: const EdgeInsets.only(top: 2),
