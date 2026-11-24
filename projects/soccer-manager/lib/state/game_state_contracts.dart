@@ -15,6 +15,20 @@ extension GameStateContracts on GameState {
     ContractEngine.adultContractYearsCap = ContractEngine.adultCapFor(theme);
     // 年俸の水準も国・部で違う(economy_scale.dart の wageCountryFactor)。
     setHomeWageLevel(theme, s.currentDivisionTier);
+    _normalizeFreeAgentWages(s);
+  }
+
+  /// 所属なしの選手の求める年俸を、自クラブのリーグ・選手の評判・時期に
+  /// そろえる(FreeAgentEngine.askingWeekly)。話を進めている選手は動かさない。
+  void _normalizeFreeAgentWages([SaveGame? save]) {
+    final s = save ?? _save;
+    if (s == null) return;
+    FreeAgentEngine.normalizeWages(
+        s.freeAgents, s.today ?? SeasonCalendar.preseasonDate(s.league.season),
+        keep: {
+      for (final t in s.transferTalks)
+        if (t.freeAgent) t.playerId,
+    });
   }
 
   /// [t]のいる国・部の年俸の水準([wageCountryFactor])。他国のクラブは

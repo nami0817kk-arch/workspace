@@ -296,6 +296,10 @@ class SaveGame {
   /// 売却額のこの割合を元のクラブへ払う。
   Map<String, int> sellOnClauses;
 
+  /// 買った選手の出来高(選手のID → [額, 加入したときの通算出場, 要る出場数])。
+  /// 加入後の出場が要る数に届いたら、元のクラブへ額を払う(2026-11-25)。
+  Map<String, List<int>> addOnClauses;
+
   /// 提携しているクラブのID。いなければ null。
   String? partnerClubId;
 
@@ -390,6 +394,10 @@ class SaveGame {
 
   /// スカウトを送っている地域('home:<部>' か 'foreign:<国>')。
   List<String> scoutRegionKeys;
+
+  /// スカウトに個別に見させている選手(他のクラブの選手のID。2026-11-25)。
+  /// 地域と同じ速さで見えてくる。
+  List<String> scoutPlayerIds;
 
   /// オーナーが監督に伝えた今季の目標の順位。0 は「戦力どおり」(自動)。
   int managerTargetRank;
@@ -1010,6 +1018,7 @@ class SaveGame {
     this.insured = false,
     Map<String, int>? ownerWorkDoneSeason,
     Map<String, int>? sellOnClauses,
+    Map<String, List<int>>? addOnClauses,
     this.partnerClubId,
     this.youthMomentum = 1.0,
     this.facilityMomentum = 1.0,
@@ -1035,6 +1044,7 @@ class SaveGame {
     List<String>? watchlistPlayerIds,
     Map<String, int>? scoutKnowledge,
     List<String>? scoutRegionKeys,
+    List<String>? scoutPlayerIds,
     List<String>? firstRunStepsSeen,
     this.firstRunGuideDismissed = false,
     this.ticketPricing = TicketPricing.standard,
@@ -1160,6 +1170,7 @@ class SaveGame {
         watchlistPlayerIds = watchlistPlayerIds ?? [],
         scoutKnowledge = scoutKnowledge ?? {},
         scoutRegionKeys = scoutRegionKeys ?? [],
+        scoutPlayerIds = scoutPlayerIds ?? [],
         firstRunStepsSeen = firstRunStepsSeen ?? [],
         infrastructure = infrastructure ?? ClubInfrastructure(),
         cups = cups ?? [],
@@ -1177,6 +1188,7 @@ class SaveGame {
         declinedProposalIds = declinedProposalIds ?? [],
         ownerWorkDoneSeason = ownerWorkDoneSeason ?? {},
         sellOnClauses = sellOnClauses ?? {},
+        addOnClauses = addOnClauses ?? {},
         cpuNonEuSignings = cpuNonEuSignings ?? {},
         pendingInstallments = pendingInstallments ?? [],
         friendlies = friendlies ?? [],
@@ -1429,6 +1441,7 @@ class SaveGame {
         'insured': insured,
         'ownerWorkDoneSeason': ownerWorkDoneSeason,
         'sellOnClauses': sellOnClauses,
+        if (addOnClauses.isNotEmpty) 'addOnClauses': addOnClauses,
         'partnerClubId': partnerClubId,
         'youthMomentum': youthMomentum,
         'facilityMomentum': facilityMomentum,
@@ -1456,6 +1469,7 @@ class SaveGame {
         'watchlistPlayerIds': watchlistPlayerIds,
         if (scoutKnowledge.isNotEmpty) 'scoutKnowledge': scoutKnowledge,
         if (scoutRegionKeys.isNotEmpty) 'scoutRegionKeys': scoutRegionKeys,
+        if (scoutPlayerIds.isNotEmpty) 'scoutPlayerIds': scoutPlayerIds,
         'firstRunStepsSeen': firstRunStepsSeen,
         'firstRunGuideDismissed': firstRunGuideDismissed,
         'ticketPricing': ticketPricing.name,
@@ -1804,6 +1818,10 @@ class SaveGame {
         sellOnClauses: (json['sellOnClauses'] as Map?)?.map(
           (k, v) => MapEntry(k as String, v as int),
         ),
+        addOnClauses: (json['addOnClauses'] as Map?)?.map(
+          (k, v) => MapEntry(k as String,
+              [for (final x in (v as List? ?? const [])) (x as num).toInt()]),
+        ),
         partnerClubId: json['partnerClubId'] as String?,
         youthMomentum: (json['youthMomentum'] as num?)?.toDouble() ?? 1.0,
         facilityMomentum: (json['facilityMomentum'] as num?)?.toDouble() ?? 1.0,
@@ -1887,6 +1905,9 @@ class SaveGame {
           (k, v) => MapEntry(k as String, v as int),
         ),
         scoutRegionKeys: (json['scoutRegionKeys'] as List?)
+            ?.map((e) => e as String)
+            .toList(),
+        scoutPlayerIds: (json['scoutPlayerIds'] as List?)
             ?.map((e) => e as String)
             .toList(),
         watchlistPlayerIds: (json['watchlistPlayerIds'] as List?)

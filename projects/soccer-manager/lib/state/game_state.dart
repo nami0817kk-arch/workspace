@@ -1802,6 +1802,7 @@ class GameState extends ChangeNotifier {
     _refreshStaffCandidates();
     _assignRivalOwners();
     FreeAgentEngine.topUp(_save!.freeAgents);
+    _normalizeFreeAgentWages();
     // 自クラブの選手にも、CPU と同じ国・部の割合で外国籍を混ぜる
     // (名前を国籍に合わせる前に)。
     _assignUserNationalitiesAtStart(userStartTier);
