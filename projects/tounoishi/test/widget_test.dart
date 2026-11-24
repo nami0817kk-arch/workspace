@@ -394,6 +394,21 @@ void main() {
     expect(html, contains("kvSet('tou-brd',"));
   });
 
+  test('掛け合わせ・骨の兵・卵をコマンドの一覧から選べる（0.7.43・試作 v60）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains('<button class="btn" id="bcmd">コマンド</button>'));
+    expect(html, contains('<div id="spane-cmd" hidden>'));
+    // 掛け合わせの本体は盤のタップとコマンドで共通
+    expect(html, contains('function breedDo(a,b){'));
+    expect(html, contains('return breedDo(a,b);}'));
+    expect(html, contains('data-cbrgo="1"'));
+    // 骨の兵は階と種類を選び、コアに近い通路に出す
+    expect(html, contains('function cmdBoneSpot(f){'));
+    expect(html, contains("boneAct(k,f,p[0],p[1]);"));
+    // 卵をすぐかえす
+    expect(html, contains("if(e)boneAct('hatch',e.f,e.x,e.y);"));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
