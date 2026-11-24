@@ -346,7 +346,8 @@ class _TransferScreenState extends State<TransferScreen>
           leading: widget.embedded ? null : const BackButton(),
           controller: _tabController,
           tabMarks: widget.embedded
-              ? todoTabMarks(context, TodoMenu.transfer, TransferScreen.tabCount)
+              ? todoTabMarks(
+                  context, TodoMenu.transfer, TransferScreen.tabCount)
               : const [],
           tabs: [
             // 7つあったタブを、用件ごとの3つにまとめた(2026-11-24)。
@@ -402,8 +403,8 @@ class _TransferScreenState extends State<TransferScreen>
                   (
                     // 選手の貸し借りの相手(2026-11-25 にクラブの施設から移した)。
                     Tr.pick('系列クラブ', 'Feeder club'),
-                    (context) => _buildAffiliateTab(
-                        context, gameState, squadFull, same)
+                    (context) =>
+                        _buildAffiliateTab(context, gameState, squadFull, same)
                   ),
                 ],
               ),
@@ -617,54 +618,60 @@ class _TransferScreenState extends State<TransferScreen>
               child: InkWell(
                 key: ValueKey('proposal-row-${p.id}'),
                 onTap: () => openPlayerDetail(context, p.id),
-                child: Row(
-                  children: [
-                    PlayerFaceAvatar(
-                        playerId: p.id, position: p.position, size: 32),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(p.name,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 48),
+                  child: Row(
+                    children: [
+                      PlayerFaceAvatar(
+                          playerId: p.id, position: p.position, size: 32),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(p.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              wide
+                                  ? Tr.pick(
+                                      '${p.position.label}・${p.age}歳・$club',
+                                      '${p.position.label} • ${p.age} • $club')
+                                  : Tr.pick(
+                                      '${p.position.label}・${p.age}歳・総合 ${ScoutKnowledge.label(range)}・$fee',
+                                      '${p.position.label} • ${p.age} • OVR ${ScoutKnowledge.label(range)} • $fee'),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                          Text(
-                            wide
-                                ? Tr.pick('${p.position.label}・${p.age}歳・$club',
-                                    '${p.position.label} • ${p.age} • $club')
-                                : Tr.pick(
-                                    '${p.position.label}・${p.age}歳・総合 ${ScoutKnowledge.label(range)}・$fee',
-                                    '${p.position.label} • ${p.age} • OVR ${ScoutKnowledge.label(range)} • $fee'),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 12, color: subtle),
-                          ),
-                        ],
+                              style: TextStyle(fontSize: 12, color: subtle),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    if (wide) ...[
-                      value(
-                          Tr.pick('総合(見立て)', 'OVR (est.)'),
-                          EstimateStars(
-                              range: range,
-                              reference: ref,
-                              size: 12,
-                              showNumbers: true)),
-                      value(
-                          Tr.pick('移籍金', 'Fee'),
-                          Text(fee,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: affordable
-                                      ? null
-                                      : Theme.of(context).colorScheme.error))),
+                      if (wide) ...[
+                        value(
+                            Tr.pick('総合(見立て)', 'OVR (est.)'),
+                            EstimateStars(
+                                range: range,
+                                reference: ref,
+                                size: 12,
+                                showNumbers: true)),
+                        value(
+                            Tr.pick('移籍金', 'Fee'),
+                            Text(fee,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: affordable
+                                        ? null
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .error))),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -710,8 +717,7 @@ class _TransferScreenState extends State<TransferScreen>
     // ので、表の上に1回だけ出す。窓の状態は、上に帯がある画面(探す)では
     // 帯に任せる。
     final String? blocked = squadFull
-        ? Tr.pick(
-            'スカッドが上限($maxSquadSize人)です。誰かを手放すと獲得できます',
+        ? Tr.pick('スカッドが上限($maxSquadSize人)です。誰かを手放すと獲得できます',
             'Your squad is full ($maxSquadSize). Move someone on before you sign anyone')
         : free
             ? null
@@ -760,16 +766,18 @@ class _TransferScreenState extends State<TransferScreen>
             Expanded(child: Text(Tr.pick('名前', 'Name'), style: head)),
             if (showClub)
               SizedBox(
-                  width: 116,
-                  child: Text(Tr.pick('所属', 'Club'), style: head)),
+                  width: 116, child: Text(Tr.pick('所属', 'Club'), style: head)),
             cell(Tr.pick('年', 'Age'), 28, base: head),
             cell(Tr.pick('位置', 'Pos'), 40, base: head),
             cell(Tr.pick('総合(見立て)', 'OVR (est.)'), 76, base: head),
-            if (showPot) cell(Tr.pick('伸びしろ(見立て)', 'POT (est.)'), 76, base: head),
+            if (showPot)
+              cell(Tr.pick('伸びしろ(見立て)', 'POT (est.)'), 76, base: head),
             cell(free ? Tr.pick('年俸', 'Salary') : Tr.pick('市場価値', 'Value'), 60,
                 base: head),
-            if (showMore && !free) cell(Tr.pick('年俸', 'Salary'), 60, base: head),
-            if (showMore && !free) cell(Tr.pick('契約', 'Contract'), 44, base: head),
+            if (showMore && !free)
+              cell(Tr.pick('年俸', 'Salary'), 60, base: head),
+            if (showMore && !free)
+              cell(Tr.pick('契約', 'Contract'), 44, base: head),
             if (showMore) cell(Tr.pick('見え', 'Known'), 40, base: head),
             const SizedBox(width: 92),
           ],
@@ -810,7 +818,8 @@ class _TransferScreenState extends State<TransferScreen>
                                       fontWeight: FontWeight.w700)),
                             ),
                             if (listed)
-                              tag(Tr.pick('売', 'TL'),
+                              tag(
+                                  Tr.pick('売', 'TL'),
                                   SemanticColors.ink(
                                       context, Colors.green.shade700)),
                             if (affiliate)
@@ -872,9 +881,11 @@ class _TransferScreenState extends State<TransferScreen>
                               ? null
                               : scheme.error)),
                   if (showMore && !free)
-                    cell(formatMoney(annualFromWeekly(p.wage)), 60, base: small),
+                    cell(formatMoney(annualFromWeekly(p.wage)), 60,
+                        base: small),
                   if (showMore && !free)
-                    cell(ContractEngine.untilTinyLabel(p.contractEndYear), 44, base: small),
+                    cell(ContractEngine.untilTinyLabel(p.contractEndYear), 44,
+                        base: small),
                   if (showMore)
                     cell('$k%', 40,
                         base: small.copyWith(
@@ -921,7 +932,8 @@ class _TransferScreenState extends State<TransferScreen>
                 : ListView.builder(
                     itemCount: players.length + (footer == null ? 0 : 1),
                     itemBuilder: (context, i) => i < players.length
-                        ? SizedBox(height: showClub ? 42 : 48, child: row(i))
+                        // 行全体が押す的なので 48 以上(アクセシビリティ)。
+                        ? SizedBox(height: 48, child: row(i))
                         : footer!,
                   ),
           ),
@@ -1055,7 +1067,8 @@ class _TransferScreenState extends State<TransferScreen>
         ),
       if (f.minOverallStars > 0)
         (
-          Tr.pick('総合 星${f.minOverallStars}以上', 'OVR ${f.minOverallStars}+ stars'),
+          Tr.pick(
+              '総合 星${f.minOverallStars}以上', 'OVR ${f.minOverallStars}+ stars'),
           (x) => x.minOverallStars = 0
         ),
       if (f.minPotentialStars > 0)
@@ -1232,8 +1245,10 @@ class _TransferScreenState extends State<TransferScreen>
                                 stars, (v) => f.minOverallStars = v)),
                         item(
                             Tr.pick('伸びしろ(見立て)', 'POT (est.)'),
-                            drop<int>(f.minPotentialStars,
-                                const [0, 2, 3, 4, 5], stars,
+                            drop<int>(
+                                f.minPotentialStars,
+                                const [0, 2, 3, 4, 5],
+                                stars,
                                 (v) => f.minPotentialStars = v)),
                         item(
                             Tr.pick('市場価値', 'Value'),
@@ -1241,8 +1256,8 @@ class _TransferScreenState extends State<TransferScreen>
                                 _valueCapLabel, (v) => f.valueCap = v)),
                         item(
                             Tr.pick('年俸', 'Salary'),
-                            drop<int>(f.wageCap, const [0, 1, 2],
-                                _wageCapLabel, (v) => f.wageCap = v)),
+                            drop<int>(f.wageCap, const [0, 1, 2], _wageCapLabel,
+                                (v) => f.wageCap = v)),
                         item(
                             Tr.pick('契約の残り', 'Contract'),
                             drop<int>(f.contractMax, const [0, 1, 2],
@@ -1259,8 +1274,8 @@ class _TransferScreenState extends State<TransferScreen>
                                         .label,
                                 (v) => f.region = v.isEmpty ? null : v)),
                         toggle(
-                            Tr.pick('移籍リスト入り(売りに出ている)だけ',
-                                'Transfer-listed only'),
+                            Tr.pick(
+                                '移籍リスト入り(売りに出ている)だけ', 'Transfer-listed only'),
                             f.listedOnly,
                             (v) => f.listedOnly = v),
                         toggle(
@@ -1268,10 +1283,8 @@ class _TransferScreenState extends State<TransferScreen>
                                 'Available for loan (non-starters) only'),
                             f.loanOnly,
                             (v) => f.loanOnly = v),
-                        toggle(
-                            Tr.pick('スカウトが見ている選手だけ', 'Scouted players only'),
-                            f.knownOnly,
-                            (v) => f.knownOnly = v),
+                        toggle(Tr.pick('スカウトが見ている選手だけ', 'Scouted players only'),
+                            f.knownOnly, (v) => f.knownOnly = v),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -1544,8 +1557,7 @@ class _TransferScreenState extends State<TransferScreen>
       for (final r in game.scoutRegions)
         if (game.isScoutRegionActive(r.key)) r
     ];
-    final label =
-        game.scoutRegions.firstWhere((r) => r.key == newKey).label;
+    final label = game.scoutRegions.firstWhere((r) => r.key == newKey).label;
     final old = await showDialog<String>(
       context: context,
       builder: (ctx) => SimpleDialog(
@@ -1640,7 +1652,8 @@ class _TransferScreenState extends State<TransferScreen>
       };
 
   static String _sortLabel(TransferSortOption o) => switch (o) {
-        TransferSortOption.overall => Tr.pick('総合(見立て)が高い順', 'Best overall (est.)'),
+        TransferSortOption.overall =>
+          Tr.pick('総合(見立て)が高い順', 'Best overall (est.)'),
         TransferSortOption.potential =>
           Tr.pick('伸びしろ(見立て)の順', 'Best potential (est.)'),
         TransferSortOption.marketValue => Tr.pick('安い順', 'Cheapest'),
@@ -1836,7 +1849,8 @@ class _TransferScreenState extends State<TransferScreen>
                 key: const ValueKey('talks-empty-listed'),
                 onPressed: () => _goSearch((f) => f.listedOnly = true),
                 icon: const Icon(Icons.sell_outlined, size: 18),
-                label: Text(Tr.pick('移籍リスト入りの選手を見る', 'See transfer-listed players')),
+                label: Text(
+                    Tr.pick('移籍リスト入りの選手を見る', 'See transfer-listed players')),
               ),
               OutlinedButton.icon(
                 key: const ValueKey('talks-empty-search'),
@@ -1911,7 +1925,8 @@ class _TransferScreenState extends State<TransferScreen>
         d == null ? '-' : TransferWindowCalendar.formatMonthDay(d);
     final pay = t.installments && t.installmentsOk
         ? (t.installmentYears > 0
-            ? Tr.pick('分割${t.installmentYears}年', '${t.installmentYears}-year instalments')
+            ? Tr.pick('分割${t.installmentYears}年',
+                '${t.installmentYears}-year instalments')
             : Tr.pick('分割', 'instalments'))
         : Tr.pick('一括', 'up front');
     // こちらが付けた中身(出来高・上乗せ・交換)。

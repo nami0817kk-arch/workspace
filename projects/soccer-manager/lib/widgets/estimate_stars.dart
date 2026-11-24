@@ -70,8 +70,8 @@ class EstimateStars extends StatelessWidget {
     final r = range;
     final subtle = SemanticColors.subtleText(context);
     if (r == null) {
-      return Tooltip(
-        message: describe(null, reference),
+      return Semantics(
+        label: describe(null, reference),
         child: Text('?',
             style: TextStyle(
                 fontSize: size, fontWeight: FontWeight.bold, color: subtle)),
@@ -108,8 +108,9 @@ class EstimateStars extends StatelessWidget {
     );
     return Semantics(
       label: describe(r, reference),
-      child: Tooltip(
-        message: describe(r, reference),
+      // 押す的を作らない(表の行を押すと選手の画面が開く)ので、説明は
+      // 読み上げにだけ持たせる。
+      child: ExcludeSemantics(
         child: showNumbers
             ? Column(
                 mainAxisSize: MainAxisSize.min,

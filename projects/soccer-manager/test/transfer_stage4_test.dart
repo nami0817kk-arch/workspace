@@ -226,8 +226,8 @@ void main() {
       final regions = gs.scoutRegions;
       expect(regions.length, greaterThan(1));
       await gs.toggleScoutRegion(regions[0].key);
-      expect(await gs.replaceScoutRegion(regions[0].key, regions[1].key),
-          isTrue);
+      expect(
+          await gs.replaceScoutRegion(regions[0].key, regions[1].key), isTrue);
       expect(gs.isScoutRegionActive(regions[0].key), isFalse);
       expect(gs.isScoutRegionActive(regions[1].key), isTrue);
       expect(gs.regionSize(regions[1].key).clubs, greaterThan(0));
@@ -235,8 +235,7 @@ void main() {
 
     test('他のクラブが売りに出している選手は、言い値が1割安い', () async {
       final gs = await fresh();
-      final listed =
-          gs.transferTargets.where(gs.isListedByClub).toList();
+      final listed = gs.transferTargets.where(gs.isListedByClub).toList();
       expect(listed, isNotEmpty);
       // 売りに出しているのは先発でない選手か、移籍を望む選手。
       for (final p in listed) {

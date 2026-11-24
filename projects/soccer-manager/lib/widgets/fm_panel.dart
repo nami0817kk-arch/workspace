@@ -95,11 +95,17 @@ class FmRow extends StatelessWidget {
             child: Text(label,
                 style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
           ),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: valueColor ?? scheme.onSurface)),
+          // 長い値(他クラブの選手の所属など)は折り返す。はみ出していた
+          // (2026-11-25)。
+          Flexible(
+            flex: 2,
+            child: Text(value,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: valueColor ?? scheme.onSurface)),
+          ),
         ],
       ),
     );
