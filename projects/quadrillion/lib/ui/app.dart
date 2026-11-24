@@ -378,7 +378,7 @@ class MainScreen extends StatelessWidget {
       final center = LayoutBuilder(builder: (context, cb) {
         final w = cb.maxWidth - 16;
         final body = switch (ctl.tab) {
-          'biz' => bizTab(ctl),
+          'biz' => bizTab(ctl, width: w),
           'people' => peopleTab(ctl),
           'stock' => stockTab(ctl),
           'money' => moneyTab(ctl),

@@ -125,12 +125,13 @@ extension GameDeleg on Game {
     if (b.price == 'cut' && b.share >= .12 && t != 'gambler') return 'normal';
     if (b.price == 'normal' && b.share >= .2 && (t == 'careful' || t == 'frugal' || t == 'tech')) return 'premium';
     if (b.price == 'premium' && b.share < .05) return 'normal';
-    if (b.price == 'normal' && p.amb > 75 && b.share < .08 && t != 'charm' && t != 'careful') return 'cut';
+    // 店などが売り切れているときは、値下げしても客を入れる場所が無い（1.1.0+26）
+    if (b.price == 'normal' && p.amb > 75 && b.share < .08 && t != 'charm' && t != 'careful' && !(unitsOn && (capKOf[b.id] ?? 1) < .97)) return 'cut';
     return null;
   }
 
   /// 店・工場か商品の仕掛かりがあるか（責任者は、それが出来上がるまで次を始めない）
-  bool _delegBusy(Biz b) => b.pipe.any((x) => x.k == 'build' || x.k == 'dev');
+  bool _delegBusy(Biz b) => b.pipe.any((x) => x.k == 'build' || x.k == 'dev' || x.k == 'hub');
 
   /// 責任者が今月選べる手（月の枠と手元のお金に収まるものだけ）
   List<_DelegOpt> _delegOpts(Biz b, Person p, double room) {
@@ -163,8 +164,21 @@ extension GameDeleg on Game {
                   : steady || rnd() < .4
                       ? 1
                       : 0));
-      // 店・工場を増やす（慎重な人は増やさない）。払えなければ今あるものを広げる
-      if (!steady) {
+      // 店・工場を増やす（慎重な人は増やさない）。払えなければ今あるものを広げる。
+      // 1.1.0+26 から、店などの数の決まり（責任者・本部・拠点・物件・上限）に沿って、今いちばん要る手を打つ
+      if (!steady && unitsOn) {
+        final go = growOpt(b, room, want: bold ? 10 : 3);
+        if (go != null) {
+          out.add(_DelegOpt('build', go.cost, go.run));
+        } else if (extendCost(b) <= room && b.upg < upgMax - 1e-9 && unitTotal(b) > 0) {
+          final c = extendCost(b);
+          out.add(_DelegOpt('ext', c, () {
+            cash -= c;
+            b.pipe.add(Pipe(k: 'build', cost: c, left: 1, ext: true));
+            return M('今ある{0}を広げ始めました（{1}）', [uw(b), Y(c)]);
+          }));
+        }
+      } else if (!steady) {
         final top = [2, 1, 0].where((i) => buildCost(b, buildUnits[i]) <= room).firstOrNull;
         final bi = top == null ? null : size(top);
         if (bi != null) {
@@ -239,7 +253,7 @@ extension GameDeleg on Game {
       o = pick(opts);
     } else {
       // 1. 人が足りなければ雇う　2. 値付けを直す　3. 伸ばす（商品か店・工場）　4. 広告
-      final short = b.model != 'fc' && b.power > 0 && crewEff(b) < b.power * .95;
+      final short = b.model != 'fc' && b.power > 0 && crewEff(b) < crewWant(b) * .95;
       if (short) o = by('crew');
       o ??= by('price');
       if (o == null) {

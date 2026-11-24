@@ -148,10 +148,26 @@ class Pipe {
 
   /// 「今ある店・工場を広げる」で始めた仕掛かりか（1.0.0+18。種類は build のままで、見せ方と知らせだけを「増やす」と分ける。古いセーブには無い → false）
   bool ext;
-  Pipe({required this.k, this.c, this.mode, required this.cost, this.pw, required this.left, this.by, this.sz, this.ext = false});
-  Map<String, dynamic> toJson() =>
-      {'k': k, 'c': c, 'mode': mode, 'cost': cost, 'pw': pw, 'left': left, 'by': by, if (sz != null) 'sz': sz, if (ext) 'ext': true};
+
+  /// 店などを開く仕掛かり（k = open）の、物件の売上の倍と家賃の倍（1.1.0+26）
+  double? mul, rent;
+  Pipe({required this.k, this.c, this.mode, required this.cost, this.pw, required this.left, this.by, this.sz, this.ext = false, this.mul, this.rent});
+  Map<String, dynamic> toJson() => {
+        'k': k,
+        'c': c,
+        'mode': mode,
+        'cost': cost,
+        'pw': pw,
+        'left': left,
+        'by': by,
+        if (sz != null) 'sz': sz,
+        if (ext) 'ext': true,
+        if (mul != null) 'mul': mul,
+        if (rent != null) 'rent': rent
+      };
   factory Pipe.fromJson(Map<String, dynamic> j) => Pipe(
+      mul: _dn(j['mul']),
+      rent: _dn(j['rent']),
       k: j['k'] as String,
       c: j['c'] as String?,
       mode: j['mode'] as String?,
@@ -196,6 +212,34 @@ class Biz {
   /// 任せた責任者が今月やったことの1行（包んだ文。何もしなかった月は理由。任せていなければ null）
   String? did;
 
+  // ===== 店・ライン・拠点の数（1.1.0+26 から。game_units.dart） =====
+  /// 立地（国/都市の番号/都心・郊外・地方）ごとの、育ちきった単位の数と平均の売上の倍・家賃の倍
+  Map<String, Site> sites;
+
+  /// 開いてまだ育ちきっていない単位（立地・数・開いてからの月）
+  List<Cohort> young;
+
+  /// 手の空いている責任者（店長・工場長・支店長）の数・本部で見る人（指導員など）の数
+  int leads, sv;
+
+  /// 物流の拠点のある地域（国/都市の番号）
+  List<String> hubs;
+
+  /// 許可が下りるまでの残りの月（許認可型だけ。0 は下りている）
+  int lic;
+
+  /// 今月出ている物件（店舗型など。月ごとに入れ替わる。保存する）
+  List<Offer> offers;
+
+  /// 改装で上げた1単位の売上の倍（1〜1.3）
+  double upg;
+
+  /// 今月開き始めた単位の数（月ごとの上限に使う）
+  int opened;
+
+  /// 直近13か月の売上（古い順。前年比に使う）
+  List<double> rh;
+
   Biz({
     required this.id,
     required this.ind,
@@ -223,7 +267,22 @@ class Biz {
     this.deleg = false,
     this.budget = 1,
     this.did,
-  }) : pipe = pipe ?? [];
+    Map<String, Site>? sites,
+    List<Cohort>? young,
+    this.leads = 0,
+    this.sv = 0,
+    List<String>? hubs,
+    this.lic = 0,
+    List<Offer>? offers,
+    this.upg = 1,
+    this.opened = 0,
+    List<double>? rh,
+  })  : pipe = pipe ?? [],
+        rh = rh ?? [],
+        sites = sites ?? {},
+        young = young ?? [],
+        hubs = hubs ?? [],
+        offers = offers ?? [];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -252,6 +311,16 @@ class Biz {
         if (deleg) 'deleg': true,
         if (budget != 1) 'budget': budget,
         if (did != null) 'did': did,
+        'sites': {for (final e in sites.entries) e.key: e.value.toJson()},
+        'young': young.map((e) => e.toJson()).toList(),
+        'leads': leads,
+        'sv': sv,
+        'hubs': hubs,
+        'lic': lic,
+        'offers': offers.map((e) => e.toJson()).toList(),
+        'upg': upg,
+        'opened': opened,
+        'rh': rh,
       };
 
   factory Biz.fromJson(Map<String, dynamic> j) => Biz(
@@ -281,7 +350,49 @@ class Biz {
         deleg: j['deleg'] == true,
         budget: _i(j['budget'], 1).clamp(0, 3),
         did: j['did'] as String?,
+        sites: {for (final e in (j['sites'] as Map? ?? {}).entries) e.key as String: Site.fromJson(e.value as Map<String, dynamic>)},
+        young: (j['young'] as List? ?? []).map((e) => Cohort.fromJson(e as Map<String, dynamic>)).toList(),
+        leads: _i(j['leads']),
+        sv: _i(j['sv']),
+        hubs: _sl(j['hubs']),
+        lic: _i(j['lic']),
+        offers: (j['offers'] as List? ?? []).map((e) => Offer.fromJson(e as Map<String, dynamic>)).toList(),
+        upg: _d(j['upg'], 1),
+        opened: _i(j['opened']),
+        rh: (j['rh'] as List? ?? []).map((e) => _d(e)).toList(),
       );
+}
+
+/// 1つの立地の、育ちきった単位（数は小数も持つ。ネットの利用者や作品は少しずつ減るため）
+class Site {
+  double n;
+
+  /// 平均の売上の倍（物件の良し悪し・当たり外れ）・家賃の倍
+  double mul, rent;
+  Site({this.n = 0, this.mul = 1, this.rent = 1});
+  Map<String, dynamic> toJson() => {'n': n, 'mul': mul, 'rent': rent};
+  factory Site.fromJson(Map<String, dynamic> j) => Site(n: _d(j['n']), mul: _d(j['mul'], 1), rent: _d(j['rent'], 1));
+}
+
+/// 開いてまだ育ちきっていない単位のまとまり
+class Cohort {
+  String s;
+  double n;
+  int age;
+  double mul, rent;
+  Cohort({required this.s, required this.n, this.age = 0, this.mul = 1, this.rent = 1});
+  Map<String, dynamic> toJson() => {'s': s, 'n': n, 'age': age, 'mul': mul, 'rent': rent};
+  factory Cohort.fromJson(Map<String, dynamic> j) => Cohort(s: j['s'] as String, n: _d(j['n']), age: _i(j['age']), mul: _d(j['mul'], 1), rent: _d(j['rent'], 1));
+}
+
+/// 今月出ている物件1件（立地・家賃の倍・売上の倍・狙っている他社の数）
+class Offer {
+  String s;
+  double rent, mul;
+  int riv;
+  Offer({required this.s, this.rent = 1, this.mul = 1, this.riv = 0});
+  Map<String, dynamic> toJson() => {'s': s, 'rent': rent, 'mul': mul, 'riv': riv};
+  factory Offer.fromJson(Map<String, dynamic> j) => Offer(s: j['s'] as String, rent: _d(j['rent'], 1), mul: _d(j['mul'], 1), riv: _i(j['riv']));
 }
 
 /// CPU の会社の事業

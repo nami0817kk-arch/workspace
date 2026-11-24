@@ -21,7 +21,10 @@ extension GameActions on Game {
     var p = c * newPow;
     if (hasT('genius')) p *= .5 + rnd() * 1.7;
     final early = yr() - ind.b < 3;
-    biz.add(Biz(id: uid(), ind: id, early: early ? turn + 60 : 0, model: model ?? 'direct', power: p, crew: p * 1.2));
+    final nb = Biz(id: uid(), ind: id, early: early ? turn + 60 : 0, model: model ?? 'direct', power: p, crew: p * 1.2);
+    biz.add(nb);
+    // 元手で買える分の店・ラインなどを置く（許認可型は許可を待つ。1.1.0+26）
+    initUnits(nb, c);
     if (free) chron('first_biz', M('{0}「{1}」を始めた', [M(serial > 0 ? '新しい会社で' : '最初の事業として'), I(id)]));
     calcAll();
     return M('「{0}」を{1}で始めました（元手 {2}）', [I(id), D(MODELN.ja[model ?? 'direct']!), Y(c)]);
@@ -88,6 +91,11 @@ extension GameActions on Game {
     }
     b.power += pw;
     b.crew = crewOf(b) + pw;
+    // 出た国にも店・ラインなどを置く（出るのに使ったお金の分。海外の作り込みは後の段。1.1.0+26）
+    if (unitsOn) {
+      final u = unitRevNow(b);
+      if (u > 0) seedUnits(b, c, math.max(1, (pw / 3 / u * .6).round()));
+    }
   }
 
   String enterCountry(Biz b, String c, String mode) {
@@ -127,6 +135,15 @@ extension GameActions on Game {
   }
 
   String uw(Biz b) {
+    // 1.1.0+26 から、稼ぎの型があれば型で呼ぶ（冷凍食品は工場型なので「工場」。分類の食だからと「店」にしない）
+    if (unitsOn) {
+      return M(switch (kindB(b)) {
+        'shop' => '店',
+        'factory' => '工場',
+        'people' || 'license' => '拠点',
+        _ => '設備',
+      });
+    }
     final c = indm[b.ind]!.cat;
     return M(c == 'food' || c == 'live' || c == 'fun'
         ? '店'
@@ -172,6 +189,11 @@ extension GameActions on Game {
   String build(Biz b, double frac) {
     final cost = cash * frac;
     if (cost <= 0) return M('お金がありません');
+    // 1.1.0+26 から、お金の割合では店を増やせない。今いちばん要る伸ばす手（責任者・本部・拠点・開く）を、その額まで打つ
+    if (unitsOn) {
+      final o = growOpt(b, cost, want: 10, time: true);
+      return o == null ? M('今は店などを増やせません（上限・責任者・物件のどれかが足りません）') : o.run();
+    }
     final nt = needT('build');
     if (nt != null) return nt;
     cash -= cost;
@@ -198,9 +220,11 @@ extension GameActions on Game {
   }
 
   /// 店・工場をn個増やす値段（1つがその業種の元手）
-  double buildCost(Biz b, int n) => capexOf(indm[b.ind]!) * n;
+  double buildCost(Biz b, int n) => unitsOn ? unitCapexAvg(b) * n : capexOf(indm[b.ind]!) * n;
 
   String buildN(Biz b, int n) {
+    // 1.1.0+26 から、いちばん良い立地から n まで開く（物件・責任者・上限の分だけ）
+    if (unitsOn) return openBest(b, n);
     final cost = buildCost(b, n);
     if (cash < cost) return M('お金が足りません');
     final nt = needT('build');
@@ -215,11 +239,12 @@ extension GameActions on Game {
 
   /// 今ある店・工場を広げる値段（1.0.0+17。その業種の元手の [extendMult] 倍の固定額）。
   /// 最初の事業を始めた直後は、店を1つ（＝元手）増やせるお金がたまるまで数か月、事業に打てる手が無かったので、小さい単位を足した
-  double extendCost(Biz b) => capexOf(indm[b.ind]!) * extendMult;
+  double extendCost(Biz b) => unitsOn ? renovateCost(b) : capexOf(indm[b.ind]!) * extendMult;
 
   /// 今ある店・工場を広げる。仕組みは店・工場を増やすのと同じ（払った額が仕掛かりに入り、開いたときに同じ式で伸びる）
   String extendN(Biz b) {
     final cost = extendCost(b);
+    if (unitsOn && b.upg >= upgMax - 1e-9) return M('これ以上は改装しても売上が伸びません');
     if (cash < cost) return M('お金が足りません');
     final nt = needT('extend');
     if (nt != null) return nt;
@@ -270,8 +295,15 @@ extension GameActions on Game {
   int crewNeedPeople(Biz b) {
     if (b.model == 'fc' || b.power <= 0) return 0;
     final have = crewEff(b);
-    if (have >= b.power) return 0;
-    return ((b.power - have) / (crewMult(b) * crewPerHead(b)) - 1e-9).ceil();
+    final want = crewWant(b);
+    if (have >= want) return 0;
+    return ((want - have) / (crewMult(b) * crewPerHead(b)) - 1e-9).ceil();
+  }
+
+  /// 現場の人で回したい力。店などの数で売上が頭打ちのときは、売れる分を回せるだけでよい（1.1.0+26）
+  double crewWant(Biz b) {
+    final k = unitsOn ? (capKOf[b.id] ?? 1) : 1.0;
+    return k < .999 ? math.min(b.power, usedPow(b) * k * 1.02) : b.power;
   }
 
   /// 現場の人をn人雇う
@@ -299,7 +331,7 @@ extension GameActions on Game {
 
   // ===== まとめての手（1.0.0+18。事業が20〜30ある会社で、同じ手を事業の数だけ繰り返さずに済むように） =====
   /// 現場の人が足りない事業（足りない割合の大きい順）
-  List<Biz> crewShort() => biz.where((b) => crewNeedPeople(b) > 0).toList()..ssort((a, b) => (crewEff(a) / a.power).compareTo(crewEff(b) / b.power));
+  List<Biz> crewShort() => biz.where((b) => crewNeedPeople(b) > 0).toList()..ssort((a, b) => (crewEff(a) / crewWant(a)).compareTo(crewEff(b) / crewWant(b)));
 
   /// [crewShort] のうち、今の手とお金で足りない分を雇える事業（先頭から。払えない事業は飛ばす）
   List<Biz> crewShortDoable() {
@@ -485,6 +517,16 @@ extension GameActions on Game {
     b.pipe = [];
     b.ind = id;
     b.power = keep;
+    // 店などは新しい業態のものに置き直す（客の数から見積もる。1.1.0+26）
+    b.sites = {};
+    b.young = [];
+    b.offers = [];
+    b.hubs = [];
+    b.leads = 0;
+    b.sv = 0;
+    b.upg = 1;
+    b.lic = 0;
+    ensureUnits(b);
     b.age = 0;
     b.price = 'normal';
     b.war = 0;
@@ -1401,8 +1443,12 @@ extension GameActions on Game {
       if (ex != null) {
         ex.power += b.power;
         ex.crew = crewOf(ex) + b.power * 1.2;
+        // 買った会社の店なども引き継ぐ（1.1.0+26）
+        if (unitsOn && unitRevNow(ex) > 0) seedUnits(ex, home, math.max(1, (b.rev / unitRevNow(ex)).round()));
       } else {
-        biz.add(Biz(id: uid(), ind: b.ind, power: b.power, crew: b.power * 1.2));
+        final nb = Biz(id: uid(), ind: b.ind, power: b.power, crew: b.power * 1.2);
+        biz.add(nb);
+        ensureUnits(nb);
       }
     }
     if (cultureOf(c) != culture) {

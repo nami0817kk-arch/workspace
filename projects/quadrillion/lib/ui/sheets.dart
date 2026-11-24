@@ -321,6 +321,10 @@ String hNote(Game s, String k) => tr('社長の時間を{0}時間使います。
 void openBuild(GameController ctl, Biz b) {
   final s = ctl.game!;
   final ind = indm[b.ind]!;
+  if (s.unitsOn) {
+    _openGrow(ctl, b);
+    return;
+  }
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の{1}を増やす', [ind.name, s.uw(b)]), top: true),
         _note('${hNote(s, 'build')}${tr('1つの値段はこの業種の元手（{0}）です。1〜2か月後に開き、そのぶん維持費がかかります。手元 {1}', [yen(s.capexOf(ind)), yen(s.cash)])}'),
@@ -334,6 +338,57 @@ void openBuild(GameController ctl, Biz b) {
             tr('{0}　維持費 +{1}／月', [yen(s.buildCost(b, n)), yen(s.buildCost(b, n) * .006)]),
           ]),
         if (b.model != 'fc') Muted(tr('増やした店や工場を回すには、現場の人が要ります。'), size: 12),
+        _cancel(ctl),
+      ]));
+}
+
+/// 店などを増やす小窓（1.1.0+26）。上限・責任者・本部・物流・物件の状態と、いま打てる手（開く・育てる・本部・拠点・改装）
+void _openGrow(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final k = s.kindB(b);
+  final unit = tr(KIND_UNIT_JA[k]!);
+  final lead = KIND_LEAD_JA[k];
+  final sites = s.openSites(b, 3).take(3).toList();
+  final svN = s.svNeed(b);
+  final hw = s.hubWanted(b);
+  ctl.showSheet((_) => _col([
+        H2(tr('「{0}」の{1}を増やす', [ind.name, unit]), top: true),
+        _note('${hNote(s, 'build')}${tr('今 {0}／上限 約{1}。開くまで{2}〜{3}か月、育ちきるまで1〜2年。1つの初期投資 約{4}。手元 {5}', [
+              s.unitCount(b, s.unitTotal(b)),
+              s.unitCount(b, s.capUnits(b)),
+              s.prof(b).open.$1,
+              s.prof(b).open.$2,
+              yen(s.unitCapexAvg(b)),
+              yen(s.cash)
+            ])}'),
+        if (b.lic > 0) Muted(tr('許可が下りるまで あと{0}か月。下りるまでは開けません', [b.lic]), size: 12.5),
+        if (s.limitOf(b) != 'cap' && b.lic == 0) Muted(tr('今は客が足りず、今の{0}も売れ残っています。増やすと1つあたりの売上が減ります', [unit]), size: 12.5),
+        for (final x in sites)
+          _unitChoice(ctl, tr('{0}に1つ開く', [s.siteName(x)]), s.unitCapexAt(b, x), () => s.openUnits(b, x, 1), [
+            tr('{0}　{1}', [yen(s.unitCapexAt(b, x)), k == 'shop' ? tr('物件 {0}件', [s.offersAt(b, x)]) : tr('上限まで あと{0}', [jsRound(s.siteCap(b, x) - s.unitsAt(b, x))])]),
+          ]),
+        if (sites.isNotEmpty)
+          _unitChoice(ctl, tr('いちばん良い立地にまとめて開く（最大10）'), s.unitCapexAt(b, sites.first), () => s.openBest(b, 10), [
+            tr('物件・{0}・お金の分だけ', [lead != null ? tr(lead) : tr('上限')]),
+          ]),
+        if (sites.isEmpty && b.lic == 0) Muted(tx(s.openBlock(b, s.siteKeys(s.home, k).first, 1) ?? M('今月は開ける立地がありません')), size: 12.5),
+        if (lead != null)
+          _unitChoice(ctl, tr('{0}を育てる（1人）', [tr(lead)]), s.leadCost(b), () => s.trainLeads(b, 1), [
+            tr('{0}　{1}か月で育つ・手の空き {2}人・育成中 {3}人（同時に{4}人まで）', [yen(s.leadCost(b)), KIND_LEAD_MONTHS[k] ?? 6, b.leads, s.trainees(b), s.trainSlots(b)]),
+          ], k: 'crew'),
+        if (svN > b.sv)
+          _unitChoice(ctl, tr('{0}を{1}人置く', [tr(KIND_SV_JA[k]!), svN - b.sv]), k == 'shop' ? 0 : s.svHireCost(b) * (svN - b.sv), () => s.placeSV(b, svN - b.sv), [
+            k == 'shop' ? tr('育った店長から上げる・毎月 {0}', [yen(s.svPayOne(b) * (svN - b.sv))]) : tr('毎月 {0}', [yen(s.svPayOne(b) * (svN - b.sv))]),
+          ], k: 'hire'),
+        if (hw.isNotEmpty)
+          _unitChoice(ctl, tr('{0}に配送の拠点を作る', [s.areaName(hw.first)]), s.hubCost(b), () => s.buildHub(b, hw.first), [
+            tr('{0}　6〜9か月・300店まで回せる。無いと原価が4%上がる', [yen(s.hubCost(b))]),
+          ]),
+        if (s.unitTotal(b) > 0 && b.upg < upgMax - 1e-9)
+          _unitChoice(ctl, tr('今ある{0}を改装する', [unit]), s.extendCost(b), () => s.extendN(b), [
+            tr('{0}　1つあたりの売上 +5%（今 {1}倍・上限 {2}倍）', [yen(s.extendCost(b)), b.upg.toStringAsFixed(2), upgMax.toStringAsFixed(2)]),
+          ], k: 'extend'),
         _cancel(ctl),
       ]));
 }
@@ -360,7 +415,7 @@ void openCrew(GameController ctl, Biz b) {
   final s = ctl.game!;
   final ind = indm[b.ind]!;
   final need = s.crewNeedPeople(b);
-  final r = b.power > 0 ? s.crewEff(b) / b.power : 1.0;
+  final r = b.power > 0 && s.crewWant(b) > 0 ? s.crewEff(b) / s.crewWant(b) : 1.0;
   Widget row(String label, int n) => _unitChoice(ctl, label, s.hireCost(b, n), () => s.hireN(b, n), [
         tr('採用の費用 {0}　毎月の人件費 +{1}', [yen(s.hireCost(b, n)), yen(s.payPerMonth(b, n))]),
       ], k: 'crew');
@@ -575,13 +630,15 @@ void showHelp(GameController ctl) {
 
 // ===== 仕掛かり =====
 /// 仕掛かりの種類の名前（開発中・進出準備・建設中）
-String pipeKindName(String k) => tr(k == 'dev'
-    ? '開発中'
-    : k == 'enter'
-        ? '進出準備'
-        : k == 'ext'
-            ? '拡張中'
-            : '建設中');
+String pipeKindName(String k) => tr(switch (k) {
+      'dev' => '開発中',
+      'enter' => '進出準備',
+      'ext' => '拡張中',
+      'open' => '開く準備',
+      'train' => '育成中',
+      'hub' => '拠点の建設',
+      _ => '建設中',
+    });
 
 /// 仕掛かりの見せ方の種類。「今ある店・工場を広げる」は、仕組みの上では建設（build）だが、札と行を「増やす」と分ける（1.0.0+18）
 String pipeKind(Pipe x) => x.ext ? 'ext' : x.k;
@@ -592,9 +649,15 @@ String pipeText(Game s, Biz b, Pipe x) => tr('{0}（{1}）あと{2}か月', [
           ? (x.sz != null ? tx(s.devName(x.sz!)) : tr('新商品'))
           : x.k == 'enter'
               ? tr('{0}（{1}）', [cm[x.c]!.n, ENTRYN[x.mode]])
-              : x.ext
-                  ? tr('今ある{0}を広げる', [s.uw(b)])
-                  : tx(s.uw(b)),
+              : x.k == 'open'
+                  ? tr('{0}に{1}', [s.siteName(x.c!), s.unitCount(b, x.pw ?? 1)])
+                  : x.k == 'train'
+                      ? tr('{0} {1}人', [tr(KIND_LEAD_JA[s.kindB(b)] ?? '店長'), (x.pw ?? 1).round()])
+                      : x.k == 'hub'
+                          ? tr('{0}の配送の拠点', [s.areaName(x.c!)])
+                          : x.ext
+                              ? tr('今ある{0}を広げる', [s.uw(b)])
+                              : tx(s.uw(b)),
       yen(x.cost),
       x.left
     ]);

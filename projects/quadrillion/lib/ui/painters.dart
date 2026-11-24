@@ -14,7 +14,25 @@ class TownPainter extends CustomPainter {
 
   /// 絵の横の幅（高さは180）。横向きの画面では横に広い 480（1.1.0+25）
   final double W;
-  TownPainter(this.s, {this.W = 320}) : stamp = Object.hash(s.turn, s.rev, s.cap, s.biz.length, s.subs().length, s.home, s.wealth, L.lang);
+
+  /// 見ている都市圏（自分の国の都市の番号）と、そこにある自社の店などの数（1.1.0+26。看板の数になる）
+  final int city;
+  final double shops;
+  TownPainter(this.s, {this.W = 320, this.city = 0})
+      : shops = _cityUnits(s, city),
+        stamp = Object.hash(s.turn, s.rev, s.cap, s.biz.length, s.subs().length, s.home, s.wealth, L.lang, city);
+
+  static double _cityUnits(Game s, int city) {
+    if (!s.unitsOn) return 0;
+    var n = 0.0;
+    for (final b in s.biz) {
+      for (final k in s.siteKeys(s.home, s.kindB(b))) {
+        final p = k.split('/');
+        if (p[1] == '$city' || (city == 0 && p[1] == '-' && p[2] == 'n')) n += s.unitsAt(b, k);
+      }
+    }
+    return n;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -64,7 +82,9 @@ class TownPainter extends CustomPainter {
     for (final c in order) {
       final hh = jsRound(24 + 96 * (math.log(math.max(c.cap, 1)) / math.ln10 - lmin) / math.max(.3, lmax - lmin));
       final w = 10 + (sr() * 8).floorToDouble();
-      rect(x, H - 22 - hh, w, hh, const Color(0xFFA9B6CF));
+      // 宿敵のビルは、その宿敵の色で塗る（1.1.0+26）
+      final rv = c.c?.rival;
+      rect(x, H - 22 - hh, w, hh, rv != null ? Color.lerp(_hex(rv.col), const Color(0xFFA9B6CF), .35)! : const Color(0xFFA9B6CF));
       for (var yy = H - 20 - hh; yy < H - 26; yy += 5) {
         for (var xx = x + 2; xx < x + w - 2; xx += 3) {
           if (sr() < .35) rect(xx, yy, 1, 2, const Color(0xFFC9D3E6));
@@ -101,8 +121,20 @@ class TownPainter extends CustomPainter {
         if (x > W - 10) break;
       }
     }
+    // 店の看板（その都市圏にある自社の店などの数。多いほど並ぶ。1.1.0+26）
+    if (shops > 0) {
+      final n = math.min(38, shops <= 18 ? shops.ceil() : (18 + math.log(shops / 18) / math.ln2 * 5).round());
+      for (var i = 0; i < n; i++) {
+        final sx = 6.0 + i * (W - 12) / math.max(n, 1);
+        rect(sx, H - 15, 9, 9, const Color(0xFFF3EBDD));
+        rect(sx - 1, H - 17, 11, 3, Pal.gold);
+        rect(sx + 3, H - 11, 3, 5, const Color(0xFF6A5A48));
+      }
+    }
+    final cities = s.cityList(s.home);
+    final cityName = city < cities.length ? (L.en ? cities[city].en : cities[city].ja) : cm[s.home]!.city;
     final tp = TextPainter(
-        text: TextSpan(text: cm[s.home]!.city, style: const TextStyle(fontSize: 10, color: Color(0xFF2B3550), fontFamily: fontFamily)),
+        text: TextSpan(text: cityName, style: const TextStyle(fontSize: 10, color: Color(0xFF2B3550), fontFamily: fontFamily)),
         textDirection: TextDirection.ltr)
       ..layout();
     tp.paint(canvas, Offset(6, 14 - tp.height * .8));
@@ -113,6 +145,9 @@ class TownPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant TownPainter oldDelegate) => oldDelegate.s != s || oldDelegate.stamp != stamp || oldDelegate.W != W;
 }
+
+/// 「#9fb3ff」の色
+Color _hex(String h) => Color(int.parse('FF${h.replaceAll('#', '')}', radix: 16));
 
 /// 試作の drawSpark（時価総額の推移・対数の目盛り）
 class SparkPainter extends CustomPainter {

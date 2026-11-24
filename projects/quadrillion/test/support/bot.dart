@@ -55,7 +55,10 @@ void resolveEvents(Game s) {
 /// [mine] を渡すと、事業を伸ばす手（人・店や工場・商品）は、それが true の事業にだけ打つ（責任者に任せた事業は責任者が打つので、社長は打たない。1.0.0+20）
 ///
 /// [borrow] は借金の打ち方（1.1.0+25）: 'none' 借りない（つなぎの融資は自動で入る）/ 'max' 毎月、借りられるだけ借りる / 'some' 現金が元手に足りないときだけ半分まで
-void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borrow = 'none'}) {
+///
+/// [focus]（1.1.0+26）を立てると、今の事業を伸ばせるあいだは新しい事業に手を広げず、1単位あたりの稼ぎが良い事業に開くお金を貯める
+/// （借金の釣り合いを見る自動プレイ用。立てなければ、今までどおり手元の8割まで新しい事業に広げる。画面のテストの育った会社はこちら）
+void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borrow = 'none', bool focus = false}) {
   int tot(Person p) => Game.totOf(p);
   resolveEvents(s);
   // 会議で社長の時間が埋まってきたら、責任者のいる事業を任せる（1.1.0+25。人が遊ぶときと同じ）
@@ -94,20 +97,34 @@ void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borr
       }
     }
   }
-  final cand = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.capexOf(i) < s.cash * .8).toList()
+  // 1.1.0+26 から、focus のときは、今の事業を伸ばせる（客が来ていて、責任者・物件・上限が足りている）あいだは新しい事業に手を広げない。
+  // 伸ばせなければ手元の4割まで。focus でなければ今までどおり手元の8割まで広げる
+  final canGrow = focus && s.unitsOn && s.biz.any((b) => s.growOpt(b, s.cash * .8) != null);
+  final cand = s.liveInds().where((i) => !s.biz.any((b) => b.ind == i.id) && s.capexOf(i) < s.cash * (focus && s.unitsOn ? (canGrow ? 0 : .4) : .8)).toList()
     ..ssort((a, b) => (b.mg * b.size).compareTo(a.mg * a.size));
   if (cand.isNotEmpty && s.ap > 0 && s.biz.length < 12) s.startBiz(cand[0].id);
   // 事業を伸ばす手は月に3つまで（時間が残っていても。人の手で遊ぶ速さに近づける）
   for (var k = 0; k < 3 && s.ap > 0; k++) {
     double score(Biz y) => (y.profit / (y.rev + 1)) * (1 - y.share);
-    final b = ((mine == null ? s.biz.toList() : s.biz.where(mine).toList())..ssort((x, y) => score(y).compareTo(score(x)))).firstOrNull;
+    final list = ((mine == null ? s.biz.toList() : s.biz.where(mine).toList())..ssort((x, y) => score(y).compareTo(score(x))));
+    var b = list.firstOrNull;
     if (b == null) break;
+    // 1.1.0+26 から、1手目は、客が余っている（店などが売り切れている）事業のうち、1単位あたりの稼ぎがいちばん良いものへ。
+    // そこへ開くお金が足りなければ、ほかへ散らさずに貯める
+    if (focus && units && k == 0 && s.unitsOn) {
+      final full = list.where((y) => (s.capKOf[y.id] ?? 1) < .97 && y.lic == 0).toList()..ssort((x, y) => s.unitRoi(y).compareTo(s.unitRoi(x)));
+      if (full.isNotEmpty) {
+        final go = s.growOpt(full.first, s.cash * .8, want: 10, time: true);
+        if (go != null) go.run();
+        continue;
+      }
+    }
     if (units) {
       if (!_unitMove(s, b, k)) break;
       continue;
     }
     if (s.cash > s.capexOf(indm[b.ind]!) * .3) {
-      if (s.crewEff(b) < b.power * 1.05) {
+      if (s.crewEff(b) < s.crewWant(b) * 1.05) {
         s.addCrew(b, .2);
       } else if (k == 0) {
         s.build(b, .4);
@@ -141,7 +158,15 @@ bool _unitMove(Game s, Biz b, int k) {
     s.hireN(b, need);
     return true;
   }
-  if (k == 0) {
+  // 1.1.0+26 から、店などを増やすのは「今いちばん要る伸ばす手」（責任者を育てる・本部・物流の拠点・物件に開く）。
+  // 打てなければ（上限・責任者・物件が足りない）商品へ回る
+  if (k == 0 && s.unitsOn) {
+    final go = s.growOpt(b, s.cash * .8, want: 10, time: true);
+    if (go != null) {
+      go.run();
+      return true;
+    }
+  } else if (k == 0) {
     final n = buildUnits.reversed.where((n) => s.buildCost(b, n) <= s.cash * .4).firstOrNull;
     if (n == null) return false;
     s.buildN(b, n);

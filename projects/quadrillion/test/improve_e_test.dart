@@ -26,6 +26,11 @@ Game _mid() {
       botMonth(s);
     }
     resolveEvents(s);
+    // 1.1.0+26 から伸びが遅くなり、部下を雇えていないことがある。人の画面と忠誠の線を見るために、候補と同じ作り方の部下を足す
+    while (s.staff.length < 4) {
+      s.staff.add(s.mkPerson(0));
+    }
+    s.ensureFaces();
     s.calcAll();
     _midJson = jsonEncode(s.toJson());
   }
@@ -353,7 +358,8 @@ void main() {
         openBuild(p.ctl, b);
         await p.pump();
         await shot(tester, key, 'e_build_sheet_$n');
-        expect(find.textContaining(tr('今ある{0}を広げる（元手の1/4）', [g.uw(b)])), findsOneWidget);
+        // 1.1.0+26 から、増やす小窓は「開く・責任者・本部・物流・改装」。今の数と上限の注意書きが出る
+        expect(find.textContaining(tr('今 {0}／上限 約{1}', [g.unitCount(b, g.unitTotal(b)), g.unitCount(b, g.capUnits(b))]).split('。').first), findsOneWidget);
         expect(p.found, isEmpty, reason: p.found.join('\n'));
       });
     }

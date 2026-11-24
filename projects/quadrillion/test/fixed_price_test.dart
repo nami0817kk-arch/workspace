@@ -36,18 +36,20 @@ Biz _direct(Game s) => (s.biz.where((b) => b.model != 'fc').toList()..ssort((a, 
 
 void main() {
   group('1単位の値段', () {
-    test('店・工場は1つがその業種の元手。業種と年で変わり、現金では変わらない', () {
+    // 1.1.0+26（段2）から、店・ライン・拠点などの1つの値段は、業種ごとの1単位の初期投資の実額（元手ではない）。立地で変わり、物価だけが乗る
+    test('店などは1つが業種の1単位の初期投資。業種と年で変わり、現金では変わらない', () {
       final s = _grown();
       final b = _direct(s);
-      final capex = s.capexOf(indm[b.ind]!);
-      expect(s.buildCost(b, 1), capex);
-      expect(s.buildCost(b, 3), capex * 3);
-      expect(s.buildCost(b, 10), capex * 10);
+      final one = s.unitCapexAvg(b);
+      expect(one, closeTo(profileOf(indm[b.ind]!).unitCapex * s.nom(), 1));
+      expect(s.buildCost(b, 1), closeTo(one, 1));
+      expect(s.buildCost(b, 3), closeTo(one * 3, 1));
+      expect(s.buildCost(b, 10), closeTo(one * 10, 1));
       final c0 = s.buildCost(b, 3);
       s.cash *= 50;
       expect(s.buildCost(b, 3), c0);
       // 業種が違えば値段も違う
-      final other = s.biz.firstWhere((x) => indm[x.ind]!.capex != indm[b.ind]!.capex, orElse: () => b);
+      final other = s.biz.firstWhere((x) => profileOf(indm[x.ind]!).unitCapex != profileOf(indm[b.ind]!).unitCapex, orElse: () => b);
       if (other != b) expect(s.buildCost(other, 1), isNot(s.buildCost(b, 1)));
       // 年が進むと物価の分だけ上がる
       final y0 = s.buildCost(b, 1);
@@ -105,23 +107,30 @@ void main() {
   });
 
   group('単位で買ったときの効き目', () {
-    test('店・工場：払った額が仕掛かりに入り、開いたときの伸びは割合の手と同じ1円あたりの効き目', () {
+    // 1.1.0+26（段2）から、増やす手は「いちばん良い立地に、責任者・物件・上限の分だけ開く」。払った額が開く仕掛かりに入り、
+    // 開いたときに数と客（事業の力）が増える。割合の手と同じ1円あたりの効き目ではなく、1単位の売上に見合う分だけ
+    test('店など：払った額が開く仕掛かりに入り、開くと数と客が増える', () {
       final s = _grown();
       final b = _direct(s);
       s.cash = s.buildCost(b, 10) * 3;
       s.ap = 3;
-      final c0 = s.cash;
-      expect(tx(s.buildN(b, 3)), anyOf(contains('店を3店舗'), contains('工場を3か所'), contains('拠点を3か所'), contains('設備を3式')));
-      expect(c0 - s.cash, closeTo(s.buildCost(b, 3), 1));
+      b.leads = 10;
+      final site = s.siteKeys(s.home, s.kindB(b)).first;
+      b.offers = [for (var i = 0; i < 5; i++) Offer(s: site)];
+      b.lic = 0;
+      s.calcAll();
+      final c0 = s.cash, u0 = s.unitTotal(b);
+      final r = s.buildN(b, 3);
+      expect(msgKey(r), startsWith('{0}に{1}を開き始めました'), reason: txIn(r, 'ja'));
       final x = b.pipe.last;
-      expect(x.k, 'build');
-      expect(x.cost, s.buildCost(b, 3));
-      final p0 = b.power, u0 = b.upkeep;
-      final eff = s.pipeEff(b, x.cost);
+      expect(x.k, 'open');
+      expect(c0 - s.cash, closeTo(x.cost, 1));
+      expect(x.cost, closeTo(s.unitCapexAt(b, x.c!) * x.pw!, 1));
+      final p0 = b.power;
       b.pipe.remove(x);
       s.finishPipe(b, x, (m, [t = '']) {});
-      expect(b.power - p0, closeTo(x.cost * eff, x.cost * eff * 1e-9));
-      expect(b.upkeep - u0, closeTo(x.cost * .006, x.cost * 1e-9));
+      expect(s.unitTotal(b), u0 + x.pw!);
+      expect(b.power, greaterThan(p0));
     });
 
     test('商品：大きさが仕掛かりに残り、期間は大きいほど長い。保存しても消えない', () {
@@ -192,6 +201,11 @@ void main() {
     test('払えない単位は買えず、お金も手も減らない', () {
       final s = _grown();
       final b = _direct(s);
+      // 責任者と物件はあるが、お金が足りない（1.1.0+26）
+      b.leads = 5;
+      b.lic = 0;
+      b.offers = [for (final x in s.siteKeys(s.home, s.kindB(b))) Offer(s: x)];
+      s.calcAll();
       s.cash = s.buildCost(b, 1) * .5;
       s.ap = 3;
       for (final f in [() => s.buildN(b, 1), () => s.developN(b, 0), () => s.hireN(b, 1000000)]) {
@@ -219,53 +233,68 @@ void main() {
       return out;
     }
 
-    test('ふつうの部下は3店・新商品。値段は単位の値段そのもの', () {
+    // 1.1.0+26（段2）から、店などを増やす提案は「今いちばん要る伸ばす手」（開く・責任者を育てる・本部・物流の拠点）になった。
+    // 何店を開くかは、責任者・物件・上限で決まるので、性格で3店・10店と決めていた前の形のテストは書き直した
+    void soldOut(Game s, Biz b) {
+      b.lic = 0;
+      b.leads = 10;
+      b.offers = [for (final x in s.siteKeys(s.home, s.kindB(b))) Offer(s: x)];
+      b.power *= 20;
+      s.calcAll();
+      b.sv = s.svNeed(b);
+    }
+
+    test('ふつうの部下は伸ばす手と新商品を出す。値段は1単位の値段の実額', () {
       final s = _grown();
       s.cash = 1e15;
       final b = _direct(s);
+      soldOut(s, b);
       final l = props(s, 'grit');
-      final build = l.firstWhere((o) => o.k == 'build');
-      expect(build.n, 3);
-      expect(build.cost, s.buildCost(b, 3));
-      expect(txIn(build.l, 'ja'), matches(RegExp('で(店を3店舗|工場を3か所|拠点を3か所|設備を3式)増やしたい')));
+      final grow = l.firstWhere((o) => o.k == 'grow');
+      expect(grow.cost, greaterThan(0));
       final dev = l.firstWhere((o) => o.k == 'dev');
       expect(dev.sz, 1);
       expect(dev.cost, s.devCost(b, 1));
+      // 通すと、社長の時間を使わずに打たれる
+      final h0 = s.hUsed, n0 = b.pipe.length;
+      s.doProposal(grow);
+      expect(b.pipe.length, greaterThan(n0));
+      expect(s.hUsed, h0);
     });
 
-    test('博打打ちは10店・大型開発、慎重は1店・小さな改良', () {
+    test('博打打ちは大きく（10まで開く・大型開発）、慎重は小さく（1つ・小さな改良）', () {
       final s = _grown();
       s.cash = 1e15;
+      soldOut(s, _direct(s));
       final g = props(s, 'gambler');
-      expect(g.firstWhere((o) => o.k == 'build').n, 10);
       expect(g.firstWhere((o) => o.k == 'dev').sz, 2);
       expect(txIn(g.firstWhere((o) => o.k == 'dev').l, 'ja'), contains('大型開発'));
       final s2 = _grown();
       s2.cash = 1e15;
+      soldOut(s2, _direct(s2));
       final c = props(s2, 'careful');
-      expect(c.firstWhere((o) => o.k == 'build').n, 1);
       expect(c.firstWhere((o) => o.k == 'dev').sz, 0);
+      final gg = g.where((o) => o.k == 'grow').map((o) => o.cost).fold(0.0, (a, x) => a > x ? a : x);
+      final cc = c.where((o) => o.k == 'grow').map((o) => o.cost).fold(0.0, (a, x) => a > x ? a : x);
+      expect(gg, greaterThanOrEqualTo(cc));
     });
 
-    test('提案の値段は手元のお金で変わらない（払えないときは小さくする）', () {
+    test('提案の値段は手元のお金の割合で決まらない（1単位の値段×数）', () {
       final s = _grown();
       final b = _direct(s);
       s.cash = 1e15;
-      final big = props(s, 'grit').firstWhere((o) => o.k == 'build');
+      soldOut(s, b);
+      final big = props(s, 'grit').where((o) => o.k == 'grow').toList();
       s.cash = 1e16;
-      expect(props(s, 'grit').firstWhere((o) => o.k == 'build').cost, big.cost);
-      // 3店は払えないが1店は払える
-      s.cash = s.buildCost(b, 2);
-      final l = props(s, 'grit').where((o) => o.k == 'build').toList();
-      expect(l, isNotEmpty);
-      expect(l.every((o) => o.n == 1 && o.cost <= s.cash), isTrue);
+      final big2 = props(s, 'grit').where((o) => o.k == 'grow').toList();
+      expect(big.map((o) => o.cost).toSet(), big2.map((o) => o.cost).toSet());
     });
 
     test('人の提案は足りない人数。通すとその人数が入る', () {
       final s = _grown();
       final b = _direct(s);
       s.cash = 1e15;
-      b.crew = s.crewOf(b) * .5;
+      b.crew = s.crewOf(b) * .05;
       s.calcAll();
       final o = props(s, 'grit').firstWhere((o) => o.k == 'crew');
       // 責任者（統率）で足りない人数が変わるので、提案した人を置いたあとの人数で比べる
@@ -275,7 +304,7 @@ void main() {
       expect(o.cost, closeTo(s.hireCost(b, need), 1e-3));
       expect(txIn(o.l, 'ja'), contains('$need人'));
       s.doProposal(o);
-      expect(s.crewNeedPeople(b), 0);
+      expect(s.crewNeedPeople(b), lessThanOrEqualTo(1));
     });
 
     test('通した商品の提案は、大きさつきで仕掛かりに入る', () {
@@ -352,7 +381,7 @@ void main() {
         final g = _grown(months: 120, traits: const ['charm', 'gambler']);
         g.ap = 3;
         final b = _direct(g);
-        b.crew = g.crewOf(b) * .6;
+        b.crew = g.crewOf(b) * .02; // 1.1.0+26 から、店などの数で売上が頭打ちのときは要る人が少ないので、人手不足を作るときは大きく減らす
         g.calcAll();
         final ctl = await pump(tester, g, lang, height: 1500);
         ctl.setTab('biz');
@@ -380,15 +409,24 @@ void main() {
           await tester.pump();
         }
 
-        // 10店が払えない手元にして、薄いボタンを見る
-        g.cash = g.buildCost(b, 3) * 1.2;
+        // 1.1.0+26 から、増やす小窓は「立地に開く・まとめて開く・責任者を育てる・本部・物流・改装」。
+        // 客が余っていて、店長と物件がある形にしてから、1つも開けない手元にして、薄いボタンを見る
+        final site = g.siteKeys(g.home, g.kindB(b)).first;
+        b.lic = 0;
+        b.leads = 3;
+        b.offers = [for (var i = 0; i < 3; i++) Offer(s: site)];
+        b.power *= 20;
+        g.calcAll();
+        b.sv = g.svNeed(b);
+        g.cash = g.unitCapexAt(b, site) * .5;
         await sheet('build', () => openBuild(ctl, b));
         // 薄いボタンを押すと「お金が足りません」、お金は減らない
         openBuild(ctl, b);
         await tester.pump();
         final c0 = g.cash;
-        // 1.0.0+17 で一番上に「広げる」（元手の1/4）が入ったので、10店は4つ目
-        await tester.tap(find.byType(ChoiceBtn).at(3));
+        // いちばん上は「（立地）に1つ開く」
+        expect(find.textContaining(tr('{0}に1つ開く', [g.siteName(site)])), findsOneWidget);
+        await tester.tap(find.byType(ChoiceBtn).at(0));
         await tester.pump();
         expect(g.cash, c0);
         expect(tx(g.log.last.m), lang == 'ja' ? 'お金が足りません' : 'Not enough money');

@@ -135,7 +135,7 @@ void main() {
       // lib/game の日本語の文字列は、仕組みの判定に使うものを除いて英語の表に載っていること
       const notShown = {'バブル景気|バブル崩壊', '・', '。', 'グループ', 'ネクスト'};
       final missing = <String>[];
-      for (final f in ['game', 'game_turn', 'game_actions', 'game_view', 'game_story', 'game_local', 'game_mid']) {
+      for (final f in ['game', 'game_turn', 'game_actions', 'game_view', 'game_story', 'game_local', 'game_mid', 'game_units', 'ind_profile']) {
         final src = File('lib/game/$f.dart').readAsStringSync();
         for (final m in RegExp(r"'((?:[^'\\\n]|\\.)*)'").allMatches(src)) {
           final k = m.group(1)!;
@@ -287,7 +287,7 @@ void main() {
         await tester.pump();
       }
       // 月の報告と出来事（いろいろな出来事を積む）
-      final p = s.staff.isNotEmpty ? s.staff.first : (s.mkPerson(0)..name = '山田 太郎');
+      final p = s.staff.isNotEmpty ? s.staff.first : (s.mkPerson(0)..name = '山田 健一');
       s.events.addAll([
         s.evPoach(foe, p),
         s.evAlliance(foe),

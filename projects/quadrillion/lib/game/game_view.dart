@@ -228,7 +228,7 @@ extension GameView on Game {
     // 同じ文が何か月も出続けないようにする（1.0.0+18。育った会社では「沈み始めています」「人が足りず」が毎月同じ事業の名前で出ていた）:
     // ・名前を挙げる事業は、いちばん困っているもの（人手）か、月ごとに順番に（沈む市場・新しい市場）
     // ・急がない勧めは、起きてすぐ（1〜2年）は毎月、そのあとは数か月に1度だけ出す
-    final shorts = biz.where((b) => b.model != 'fc' && b.power > 0 && crewEff(b) < b.power * .9).toList()
+    final shorts = biz.where((b) => b.model != 'fc' && b.power > 0 && crewEff(b) < crewWant(b) * .9).toList()
       ..ssort((p, q) => (crewEff(p) / p.power).compareTo(crewEff(q) / q.power));
     if (shorts.length >= 2 && extras) {
       add(

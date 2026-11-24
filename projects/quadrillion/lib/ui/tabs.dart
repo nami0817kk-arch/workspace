@@ -453,8 +453,12 @@ void openCatPick(GameController ctl) {
       ]));
 }
 
-List<Widget> bizTab(GameController ctl) {
+/// 2列（左に事業の一覧・右に中身）にする真ん中の幅（1.1.0+26。企画書「事業の画面（決定）」）
+const bizSplitMin = 520.0;
+
+List<Widget> bizTab(GameController ctl, {double width = 0}) {
   final s = ctl.game!;
+  if (width >= bizSplitMin) return bizSplit(ctl, width);
   // 事業が多い会社（[bizManyMin] 以上）は、見出しを押すと一覧ごとたためる（下の「新しい事業」「銀行」へすぐ行ける）。
   // 並べ替えと、まとめての手（足りない人をまとめて雇う・空いている部下を責任者に置く）も出す（1.0.0+18）
   final many = s.biz.length >= bizManyMin;
@@ -465,7 +469,6 @@ List<Widget> bizTab(GameController ctl) {
         : H2(tr('自社の事業')),
   ];
   if (s.biz.isEmpty) out.add(Panel(child: Muted(tr('まだ事業がありません。下の「新しい事業」から始めましょう。'), size: 14)));
-  final y = s.yr();
   void pick(VoidCallback f) {
     f();
     ctl.render();
@@ -497,6 +500,20 @@ List<Widget> bizTab(GameController ctl) {
               : _bizRow(ctl, b));
     }
   }
+  out.addAll(_newBizSection(ctl));
+  return out;
+}
+
+/// 新しい事業の一覧（検索・並べ替え・絞り込み・業種の行・近く生まれる市場・銀行の1行）
+List<Widget> _newBizSection(GameController ctl) {
+  final s = ctl.game!;
+  final y = s.yr();
+  void pick(VoidCallback f) {
+    f();
+    ctl.render();
+  }
+
+  final out = <Widget>[];
   out.add(KeyedSubtree(key: ctl.newBizKey, child: H2(tr('新しい事業'))));
   // 検索の欄・並べ替え・絞り込みを上に並べる
 
@@ -568,7 +585,7 @@ List<Widget> bizTab(GameController ctl) {
               else if (i.f != 0 && y > i.f)
                 Tag(tr('沈み中'), kind: TagKind.bad),
             ]),
-            Muted(tr('利益率{0}・{1}', [_pct0(i.mg), ABN[i.key]]), size: 11.5),
+            Muted(s.unitsOn ? tr('{0}・利益率{1}・{2}', [profileOf(i).kindName, _pct0(i.mg), ABN[i.key]]) : tr('利益率{0}・{1}', [_pct0(i.mg), ABN[i.key]]), size: 11.5),
             if (narrow) Muted(tr('市場（国内・月） {0}', [yen(s.mkt(i) / 3)]), key: ValueKey('newbiz-mkt-${i.id}'), size: 11.5),
           ]),
         ),
@@ -699,7 +716,7 @@ Widget? _bizAttention(GameController ctl) {
 List<String> bizWarnings(Game s, Biz b) {
   final ind = indm[b.ind]!;
   return [
-    if (b.model != 'fc' && b.power > 0 && s.crewEff(b) / b.power < .9) tr('人手不足'),
+    if (b.model != 'fc' && b.power > 0 && s.crewWant(b) > 0 && s.crewEff(b) / s.crewWant(b) < .9) tr('人手不足'),
     if (b.war > 0) tr('値下げ合戦中'),
     if (ind.f != 0 && s.yr() > ind.f) tr('沈む市場'),
   ];
@@ -782,7 +799,7 @@ Widget _pipeGroupRow(GameController ctl, Biz b, PipeGroup g) => Padding(
       ),
     );
 
-Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
+Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold, bool bare = false}) {
   final s = ctl.game!;
   final ind = indm[b.ind]!;
   final p = s.staffById(b.mgr);
@@ -793,7 +810,7 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
   if (b.model == 'fc') {
     crewLine = Muted('${tr('現場の人は加盟店が集めます')}${b.upkeep > 0 ? tr('　維持費 {0}／月', [yen(b.upkeep)]) : ''}');
   } else {
-    final r = b.power > 0 ? s.crewEff(b) / b.power : 1.0;
+    final r = b.power > 0 && s.crewWant(b) > 0 ? s.crewEff(b) / s.crewWant(b) : 1.0;
     crewLine = Text.rich(TextSpan(style: ts(size: 12.5), children: [
       TextSpan(text: tr('現場の力 '), style: ts(size: 12.5, color: Pal.mute)),
       TextSpan(text: '${jsNum(jsRound(r * 100))}%', style: ts(size: 12.5, bold: true, color: r < .9 ? Pal.down : Pal.up)),
@@ -821,6 +838,22 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
     key: ValueKey('biz-card-${b.id}'),
     border: onFold != null ? Pal.gold : Pal.line,
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      // 2列の画面では、名前と数字は右の上（_bizHead）に出すので、ここでは札の行だけを出す
+      if (bare)
+        Row(children: [
+          Expanded(
+            child: Wrap(spacing: 4, runSpacing: 4, children: [
+              if (deleg) Tag(tr('任せ中'), key: ValueKey('deleg-tag-${b.id}'), kind: TagKind.good),
+              if (b.war > 0) Tag(tr('値下げ合戦中'), kind: TagKind.bad),
+              if (b.ad > 0) Tag(tr('広告中'), kind: TagKind.good),
+              if (b.early > s.turn) Tooltip(message: tr('業種が生まれてすぐ始めたので、打ち手がよく効く'), child: Tag(tr('先行者'), kind: TagKind.good)),
+              Tag(MODELN[b.model]!, kind: TagKind.gold),
+              Tag(CATN[ind.cat]!),
+            ]),
+          ),
+          Info(ctl, [if (b.early > s.turn) 'early', 'model']),
+        ]),
+      if (!bare) ...[
       Row(children: [
         Expanded(
             child: onFold == null
@@ -869,7 +902,10 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
         Kv(tr('利益'), colored(yen(b.profit), b.profit >= 0 ? Pal.up : Pal.down)),
         Kv(tr('効く能力'), ABN[ind.key]!),
       ]),
+      // 店などの数の1行（1つの列の画面だけ。2列の画面では右に表で出す）
+      if (s.unitsOn) Padding(padding: const EdgeInsets.only(top: 4), child: _unitsLine(ctl, b)),
       _gap(),
+      ],
       cs.isEmpty
           ? Muted(tr('名のある競争相手はいません'))
           : Text.rich(TextSpan(style: ts(size: 12.5), children: [
@@ -1976,4 +2012,359 @@ List<Widget> zukanSyns(GameController ctl) {
     ])));
   }
   return out;
+}
+
+// ===== 事業の画面（2列。1.1.0+26。企画書「事業の画面（決定）」） =====
+// 左に持っている事業の一覧（数と注意の印）、右に選んだ事業の中身。右の上は売上・利益・利益率・前年比と特性の札3〜4個。
+// 真ん中は稼ぎの型で変わる表、下は足りないもの（店長・指導員・物流）と今月出ている物件、いちばん下によく使う手（残りは「ほかの手」）
+
+/// 2列の事業の画面
+List<Widget> bizSplit(GameController ctl, double width) {
+  final s = ctl.game!;
+  final list = myBizList(s, 'rev');
+  final showNew = ctl.bizNew || list.isEmpty;
+  final sel = showNew ? null : (list.where((b) => b.id == ctl.openBiz).firstOrNull ?? list.first);
+  final leftW = clampD(width * .3, 158, 240);
+  final bar = _delegBar(ctl);
+  // 人が足りない事業・責任者に置ける部下があれば、まとめての手（足りない人をまとめて雇う・空いている部下を置く）も左に出す
+  final attn = list.isEmpty ? null : _bizAttention(ctl);
+  final left = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+    Padding(
+      padding: const EdgeInsets.only(top: 6, bottom: 4),
+      child: Row(children: [
+        Expanded(child: Text(tr('自社の事業（{0}）', [list.length]), style: ts(size: 13, bold: true))),
+        if (list.isNotEmpty) Info(ctl, const ['deleg']),
+      ]),
+    ),
+    for (final b in list) _bizPick(ctl, b, b == sel),
+    const SizedBox(height: 6),
+    Btn(tr('＋ 新しい事業'), () => ctl.showNewBiz(), key: const ValueKey('biz-new'), small: true, primary: showNew),
+    const SizedBox(height: 6),
+    ?bar,
+    ?attn,
+    Panel(
+      padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Text(tr('借金 {0}・格付け {1}', [yen(s.debt), s.rating()]), style: ts(size: 12)),
+        Text(tr('あと{0}借りられる', [yen(s.borrowRoom())]), style: ts(size: 12, color: Pal.mute)),
+        Align(alignment: Alignment.centerLeft, child: Btn(tr('「お金」を開く'), () => ctl.setTab('money'), small: true, more: true)),
+      ]),
+    ),
+  ]);
+  final right = Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: sel == null
+        ? _newBizSection(ctl)
+        : [
+            _bizHead(ctl, sel),
+            if (s.unitsOn) bizUnitsPanel(ctl, sel),
+            if (s.unitsOn) bizNeedsPanel(ctl, sel),
+            _bizCard(ctl, sel, bare: true),
+          ],
+  );
+  return [
+    Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(width: leftW, child: left),
+      const SizedBox(width: 8),
+      Expanded(child: right),
+    ]),
+  ];
+}
+
+/// 左の一覧の1行（名前・数・注意の印）。押すと右に中身を出す
+Widget _bizPick(GameController ctl, Biz b, bool on) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final warn = [...bizWarnings(s, b), ...unitWarnings(s, b)];
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 4),
+    child: TapCard(
+      border: on ? Pal.gold : (warn.isNotEmpty ? Pal.down : Pal.line),
+      color: on ? Pal.onBg : Pal.panel,
+      inkKey: ValueKey('biz-row-${b.id}'),
+      onTap: () => ctl.selectBiz(b.id),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: minTap),
+        padding: const EdgeInsets.fromLTRB(8, 5, 6, 5),
+        child: Row(children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(ind.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: ts(size: 13, bold: true)),
+              Wrap(spacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
+                Text(
+                    s.unitsOn
+                        ? (b.lic > 0 ? tr('許可待ち あと{0}か月', [b.lic]) : s.unitCount(b, s.unitTotal(b)))
+                        : tr('シェア {0}', [pct(b.share * 100)]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: ts(size: 11.5, color: Pal.mute)),
+                if (s.delegated(b)) Tag(tr('任せ中'), kind: TagKind.good),
+              ]),
+            ]),
+          ),
+          if (warn.isNotEmpty) Tooltip(message: warn.join(tr('・')), child: const Icon(Icons.error_outline, size: 16, color: Pal.down)),
+        ]),
+      ),
+    ),
+  );
+}
+
+/// 店などの数の注意（本部が足りない・物流の拠点が無い・売れ残り）
+List<String> unitWarnings(Game s, Biz b) {
+  if (!s.unitsOn || b.lic > 0) return const [];
+  final k = s.kindB(b);
+  return [
+    if (s.svNeed(b) > b.sv) tr('{0}が足りない', [tr(KIND_SV_JA[k]!)]),
+    if (s.hubShort(b).isNotEmpty) tr('物流の拠点が無い'),
+    if (b.profit < 0 && s.utilization(b) < .8 && s.unitTotal(b) > 0) tr('売れ残り'),
+  ];
+}
+
+/// 右の上：名前・型・売上・利益・利益率・前年比・特性の札
+Widget _bizHead(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final p = s.prof(b);
+  final yy = s.yoy(b);
+  final mgn = b.rev > 0 ? b.profit / b.rev : 0.0;
+  return Panel(
+    key: ValueKey('biz-head-${b.id}'),
+    border: Pal.gold,
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      Wrap(spacing: 6, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
+        Text(ind.name, style: ts(size: 15, bold: true)),
+        Tag(p.kindName, kind: TagKind.gold),
+        Info(ctl, const ['share']),
+      ]),
+      const SizedBox(height: 4),
+      Wrap(spacing: 14, runSpacing: 2, children: [
+        _kpi(tr('シェア'), pct(b.share * 100)),
+        _kpi(tr('売上（月）'), yen(b.rev)),
+        _kpi(tr('利益'), yen(b.profit), b.profit >= 0 ? Pal.up : Pal.down),
+        _kpi(tr('利益率'), '${pctD(mgn * 100)}%', mgn >= 0 ? Pal.ink : Pal.down),
+        _kpi(tr('前年比'), yy == null ? '―' : '${yy >= 0 ? '+' : ''}${pctD(yy * 100)}%', yy == null ? Pal.mute : (yy >= 0 ? Pal.up : Pal.down)),
+      ]),
+      const SizedBox(height: 4),
+      Wrap(spacing: 4, runSpacing: 4, children: [
+        for (final t in profileTags(p)) Tag(tr(t.$1), kind: t.$2 ? TagKind.good : TagKind.bad),
+      ]),
+    ]),
+  );
+}
+
+Widget _kpi(String k, String v, [Color c = Pal.ink]) => Text.rich(TextSpan(children: [
+      TextSpan(text: '$k ', style: ts(size: 11.5, color: Pal.mute)),
+      TextSpan(text: v, style: ts(size: 14, bold: true, color: c)),
+    ]));
+
+/// 表の1つの升（入りきらなければ字を縮める）
+Widget _tc(String t, {double? w, bool bold = false, Color c = Pal.ink, bool left = false}) {
+  final txt = FittedBox(
+    fit: BoxFit.scaleDown,
+    alignment: left ? Alignment.centerLeft : Alignment.centerRight,
+    child: Text(t, maxLines: 1, softWrap: false, style: ts(size: 12, bold: bold, color: c)),
+  );
+  return w != null ? SizedBox(width: w, child: txt) : Expanded(child: txt);
+}
+
+/// 1つの列の画面で、事業カードに出す店などの1行
+Widget _unitsLine(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  if (b.lic > 0) return Text(tr('許可が下りるまで あと{0}か月', [b.lic]), style: ts(size: 12.5, color: Pal.warn));
+  final lead = KIND_LEAD_JA[s.kindB(b)];
+  final cap = s.limitOf(b) == 'cap';
+  return Text.rich(
+      key: ValueKey('units-line-${b.id}'),
+      TextSpan(style: ts(size: 12.5), children: [
+        TextSpan(text: tr('{0}／上限 約{1}', [s.unitCount(b, s.unitTotal(b)), s.unitCount(b, s.capUnits(b))])),
+        if (s.pendingUnits(b) > 0) TextSpan(text: tr('（開く準備 {0}）', [s.unitCount(b, s.pendingUnits(b))]), style: ts(size: 12.5, color: Pal.mute)),
+        if (lead != null) TextSpan(text: tr('・{0} {1}人', [tr(lead), b.leads]), style: ts(size: 12.5, color: Pal.mute)),
+        TextSpan(text: cap ? tr('・売り切れ') : tr('・売れ残り'), style: ts(size: 12.5, color: cap ? Pal.up : Pal.warn)),
+      ]));
+}
+
+/// 右の真ん中：稼ぎの型で変わる表（店舗型は立地ごとの店数・上限・日販・1店の利益、工場型はラインの稼働率と原価、ネット型は利用者数・課金率・解約率）
+Widget bizUnitsPanel(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final k = s.kindB(b);
+  final p = s.prof(b);
+  final rows = <Widget>[];
+  final keys = <String>[
+    for (final c in s.ctryOf(b))
+      for (final x in s.siteKeys(c, k))
+        if (s.unitsAt(b, x) > 0 || s.pendingUnits(b, s: x) > 0) x,
+  ];
+  final util = s.utilization(b);
+  final title = switch (k) {
+    'shop' => tr('店の数'),
+    'factory' => tr('ラインと稼働率'),
+    'net' => tr('利用者'),
+    'people' => tr('人と稼働率'),
+    'license' => tr('拠点と許可'),
+    'hit' => tr('作品'),
+    _ => tr('設備と稼働率'),
+  };
+  Widget head(List<Widget> c) => Container(padding: const EdgeInsets.only(bottom: 2), decoration: Ui.rowLine, child: Row(children: c));
+  Widget row(List<Widget> c, String key) => Container(key: ValueKey(key), padding: const EdgeInsets.symmetric(vertical: 3), decoration: Ui.rowLine, child: Row(children: c));
+  final nameW = Ui.sw(112);
+  if (KIND_ZONED.contains(k)) {
+    final unitN = tr(KIND_UNIT_JA[k]!);
+    rows.add(head([
+      _tc(tr('立地'), w: nameW, left: true, c: Pal.mute),
+      _tc(unitN, c: Pal.mute),
+      if (k == 'shop' || k == 'license') _tc(tr('上限'), c: Pal.mute) else _tc(tr('稼働率'), c: Pal.mute),
+      _tc(k == 'shop' ? tr('日販') : (k == 'license' ? tr('1拠点の売上') : tr('原価率')), c: Pal.mute),
+      _tc(tr('1{0}の利益', [unitN]), c: Pal.mute),
+    ]));
+    for (final x in keys) {
+      final n = s.unitsAt(b, x), pend = s.pendingUnits(b, s: x);
+      final sales = s.siteUnitSales(b, x), pr = s.siteUnitProfit(b, x);
+      final cr = b.rev > 0 ? (s.cogsOf[b.id] ?? 0) / b.rev + s.areaPenaltyAt(b, x) : 0.0;
+      rows.add(row([
+        _tc(s.siteName(x), w: nameW, left: true),
+        _tc(pend > 0 ? '${commas(n)}+${commas(pend)}' : commas(n), bold: true),
+        if (k == 'shop' || k == 'license') _tc(commas(s.siteCap(b, x)), c: Pal.mute) else _tc('${jsRound(util * 100)}%', c: util < .8 ? Pal.down : Pal.ink),
+        _tc(k == 'shop' ? yen(sales / 30) : (k == 'license' ? yen(sales) : '${pctD(cr * 100)}%')),
+        _tc(n > 0 ? yen(pr) : '―', c: pr >= 0 ? Pal.up : Pal.down),
+      ], 'unit-row-$x'));
+    }
+  } else if (k == 'net') {
+    final users = s.unitTotal(b) * 1e5;
+    rows.add(head([_tc(tr('利用者数'), c: Pal.mute), _tc(tr('課金率'), c: Pal.mute), _tc(tr('解約率（月）'), c: Pal.mute), _tc(tr('1人の月の売上'), c: Pal.mute)]));
+    rows.add(row([
+      _tc(tr('{0}万人', [jsNum(jsRound(users / 1e4))]), bold: true),
+      _tc('${pctD(s.payRate(b) * 100)}%'),
+      _tc('${pctD(p.churn * 100)}%'),
+      _tc(users > 0 ? yen(b.rev / users) : '―'),
+    ], 'unit-row-net'));
+  } else if (k == 'people') {
+    final n = s.unitTotal(b);
+    rows.add(head([_tc(tr('人数'), c: Pal.mute), _tc(tr('稼働率'), c: Pal.mute), _tc(tr('1人の月の単価'), c: Pal.mute), _tc(tr(KIND_SV_JA[k]!), c: Pal.mute)]));
+    rows.add(row([
+      _tc(tr('{0}人', [jsNum(jsRound(n))]), bold: true),
+      _tc('${jsRound(util * 100)}%', c: util < .8 ? Pal.down : Pal.ink),
+      _tc(n > 0 ? yen(b.rev / n) : '―'),
+      _tc(tr('{0}／{1}人', [b.sv, s.svNeed(b)])),
+    ], 'unit-row-people'));
+  } else {
+    // 当たり外れ型
+    final n = s.unitTotal(b);
+    final tot = b.sites.values.fold(0.0, (a, x) => a + x.n);
+    final avg = tot <= 0 ? 1.0 : b.sites.values.fold(0.0, (a, x) => a + x.mul * x.n) / tot;
+    rows.add(head([_tc(tr('出した作品'), c: Pal.mute), _tc(tr('当たりの平均'), c: Pal.mute), _tc(tr('制作中'), c: Pal.mute), _tc(tr('1作品の月の売上'), c: Pal.mute)]));
+    rows.add(row([
+      _tc(tr('{0}作品', [jsNum(jsRound(n))]), bold: true),
+      _tc(tr('{0}倍', [avg.toStringAsFixed(1)]), c: avg >= 1 ? Pal.up : Pal.down),
+      _tc(jsNum(jsRound(s.pendingUnits(b)))),
+      _tc(n > 0 ? yen(b.rev / n) : '―'),
+    ], 'unit-row-hit'));
+  }
+  final cap = s.capUnits(b);
+  final full = s.limitOf(b) == 'cap';
+  return Panel(
+    key: ValueKey('biz-units-${b.id}'),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      CardTitle(title),
+      if (b.lic > 0)
+        Text(tr('許可が下りるまで あと{0}か月。下りるまでは営業できません', [b.lic]), style: ts(size: 12.5, color: Pal.warn))
+      else
+        Text.rich(
+            key: ValueKey('units-sum-${b.id}'),
+            TextSpan(style: ts(size: 13), children: [
+              TextSpan(text: tr('国内 {0}', [s.unitCount(b, s.unitsIn(b, s.home))]), style: ts(size: 13, bold: true)),
+              TextSpan(text: tr('／上限 約{0}', [s.unitCount(b, cap)])),
+              if (s.unitTotal(b) > s.unitsIn(b, s.home) + .5)
+                TextSpan(text: tr('・海外 {0}', [s.unitCount(b, s.unitTotal(b) - s.unitsIn(b, s.home))]), style: ts(size: 13, color: Pal.mute)),
+            ])),
+      const SizedBox(height: 2),
+      if (b.lic == 0)
+        Text(
+            full
+                ? tr('客は余っています。{0}が足りず、売り切れています（稼働率 {1}%）', [tr(KIND_UNIT_JA[k]!), jsRound(util * 100)])
+                : tr('{0}は足りています。客が足りず、稼働率は{1}%です', [tr(KIND_UNIT_JA[k]!), jsRound(util * 100)]),
+            key: ValueKey('units-limit-${b.id}'),
+            style: ts(size: 12, color: full ? Pal.up : Pal.warn)),
+      const SizedBox(height: 4),
+      ...rows,
+    ]),
+  );
+}
+
+/// 右の下：足りないもの（店長・指導員・物流・許可）と、今月出ている物件。伸ばす手をその場で打てる
+Widget bizNeedsPanel(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final k = s.kindB(b);
+  final lead = KIND_LEAD_JA[k];
+  final svN = s.svNeed(b);
+  final items = <Widget>[];
+  Widget line(String label, String val, {bool bad = false, Widget? btn, Key? key}) => Container(
+        key: key,
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(children: [
+          Expanded(
+            child: Text.rich(TextSpan(children: [
+              TextSpan(text: '$label　', style: ts(size: 12.5, color: Pal.mute)),
+              TextSpan(text: val, style: ts(size: 12.5, bold: true, color: bad ? Pal.down : Pal.ink)),
+            ])),
+          ),
+          ?btn,
+        ]),
+      );
+  if (b.lic > 0) items.add(line(tr('許可'), tr('あと{0}か月', [b.lic]), bad: true));
+  if (lead != null) {
+    final slot = s.trainSlots(b) - s.trainees(b);
+    items.add(line(tr(lead), tr('手の空き {0}人・育成中 {1}人', [b.leads, s.trainees(b)]),
+        bad: b.leads == 0,
+        key: ValueKey('need-lead-${b.id}'),
+        btn: _apBtn(ctl, tr('育てる（{0}）', [yen(s.leadCost(b))]), () => ctl.act(() => s.trainLeads(b, 1), mark: 'act'), k: 'crew', enabled: slot > 0 && b.lic == 0)));
+  }
+  items.add(line(tr(KIND_SV_JA[k]!), tr('{0}人／要る{1}人', [b.sv, svN]),
+      bad: b.sv < svN,
+      key: ValueKey('need-sv-${b.id}'),
+      btn: b.sv < svN ? _apBtn(ctl, tr('置く'), () => ctl.act(() => s.placeSV(b, svN - b.sv), mark: 'act'), k: 'hire') : null));
+  if (k == 'shop') {
+    final short = s.hubShort(b), want = s.hubWanted(b);
+    items.add(line(
+        tr('物流'),
+        short.isEmpty ? tr('拠点 {0}か所', [b.hubs.length]) : tr('拠点の無い店 {0}（原価 +4%）', [s.unitCount(b, short.values.fold(0.0, (a, x) => a + x))]),
+        bad: short.isNotEmpty,
+        key: ValueKey('need-hub-${b.id}'),
+        btn: want.isNotEmpty ? _apBtn(ctl, tr('{0}に拠点', [s.areaName(want.first)]), () => ctl.act(() => s.buildHub(b, want.first), mark: 'act'), k: 'build') : null));
+  }
+  final offers = k == 'shop' ? (b.offers.toList()..ssort((x, y) => (y.mul / y.rent).compareTo(x.mul / x.rent))).take(4).toList() : const <Offer>[];
+  return Panel(
+    key: ValueKey('biz-needs-${b.id}'),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      CardTitle(tr('足りないもの')),
+      ...items,
+      if (k == 'shop') ...[
+        const SizedBox(height: 6),
+        CardTitle(tr('今月出ている物件（{0}件）', [b.offers.length])),
+        if (offers.isEmpty) Muted(tr('今月は出ていません'), size: 12),
+        for (var i = 0; i < offers.length; i++)
+          Container(
+            key: ValueKey('offer-$i'),
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(children: [
+              Expanded(
+                child: Text.rich(TextSpan(style: ts(size: 12.5), children: [
+                  TextSpan(text: s.siteName(offers[i].s), style: ts(size: 12.5, bold: true)),
+                  TextSpan(text: tr('　家賃 {0}倍・売上 {1}倍', [offers[i].rent.toStringAsFixed(2), offers[i].mul.toStringAsFixed(2)]), style: ts(size: 12, color: Pal.mute)),
+                  if (offers[i].riv > 0) TextSpan(text: tr('・他社{0}社も狙う', [offers[i].riv]), style: ts(size: 12, color: Pal.warn)),
+                ])),
+              ),
+              _apBtn(ctl, tr('出す（{0}）', [yen(s.unitCapexAt(b, offers[i].s))]), () => ctl.act(() => s.openUnits(b, offers[i].s, 1), mark: 'act'), k: 'build'),
+            ]),
+          ),
+      ] else if (b.lic == 0)
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: _apBtn(ctl, tr('{0}を開く（1つ {1}）', [tr(KIND_UNIT_JA[k]!), yen(s.unitCapexAvg(b))]), () => ctl.act(() => s.openBest(b, 1), mark: 'act'), k: 'build'),
+          ),
+        ),
+      Muted(tr('開くまで{0}〜{1}か月。開いてから1〜2年は売上が育つ途中で、固定費は丸ごとかかります', [s.prof(b).open.$1, s.prof(b).open.$2]), size: 11.5),
+    ]),
+  );
 }

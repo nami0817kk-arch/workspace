@@ -63,7 +63,7 @@ const List<int> loanTerms = [12, 60, 120];
 const List<String> ratings = ['A', 'B', 'C', 'D'];
 
 /// 経費の内訳の鍵（お金の画面で先月と比べる）
-const List<String> expKeys = ['crew', 'staff', 'hq', 'ad', 'int', 'tax'];
+const List<String> expKeys = ['labor', 'rent', 'cogs', 'util', 'logi', 'ad', 'insur', 'repair', 'hq', 'int', 'tax'];
 
 /// 統計が無いときの、日本だけの小さなデータ（アプリが統計を読めなかったとき・仕組みだけのテスト用の最後の砦）
 const String _econFallback =
@@ -177,13 +177,16 @@ extension GameReal on Game {
 
   /// 時間が足りないときの文（足りれば null）
   String? needT(String k) {
+    if (freeTime) return null;
     if (down > 0) return M('社長は倒れて休んでいます（あと{0}か月）', [down]);
     if (hLeft() < hrs(k)) return M('今月の社長の時間が足りません（{0}時間かかります・残り{1}時間）', [jsRound(hrs(k)), jsRound(hLeft())]);
     return null;
   }
 
   /// 時間を使う
-  void useT(String k) => hUsed += hrs(k);
+  void useT(String k) {
+    if (!freeTime) hUsed += hrs(k);
+  }
 
   /// 時間が足りなければ文を返し、足りれば使って null を返す
   String? spendT(String k) {
@@ -252,7 +255,8 @@ extension GameReal on Game {
   }
 
   /// 担保の値打ち（店・工場・土地。現金は入れない）
-  double collateral() => biz.fold(0.0, (s, b) => s + math.min(b.power * .6, sellValue(b))) + land;
+  /// 1.1.0+26 から、店・ライン・設備などは、持っている数×初期投資の6割（建物と設備の値打ち）で見る
+  double collateral() => biz.fold(0.0, (s, b) => s + math.min(unitsOn ? unitTotal(b) * unitCapexAvg(b) * .6 : b.power * .6, sellValue(b))) + land;
 
   /// 借金が年の利益の何倍か（利益が無ければ大きな数）
   double debtMultiple() {
@@ -283,8 +287,10 @@ extension GameReal on Game {
   /// 借りられる上限（稼ぐ力×倍率＋担保の半分＋小さな会社でも借りられる分）。現金は入れない
   double borrowLimit() {
     final a = math.max(0.0, annualProfit());
-    final mult = 3.0 * (econ > 1.05 ? 1.25 : econ < .95 ? .8 : 1) * (1 + .1 * net) * (culture == 'steady' ? 1.1 : 1) * (hasT('noble') ? 1.5 : 1) * (cooked > 0 ? 1.3 : 1);
-    final base = 2e7 * nom() * (1 + .2 * net) * (hasT('noble') ? 2 : 1);
+    // 1.1.0+26 から、店などの数で利益の伸びが遅くなったので、稼ぐ力の倍率を3倍から2.5倍にした（5年で返す借金が利益を超えないように）
+    final mult = (unitsOn ? 2.5 : 3.0) * (econ > 1.05 ? 1.25 : econ < .95 ? .8 : 1) * (1 + .1 * net) * (culture == 'steady' ? 1.1 : 1) * (hasT('noble') ? 1.5 : 1) * (cooked > 0 ? 1.3 : 1);
+    // 事業がまだ1つも無い会社には、決まった枠では貸さない（1.1.0+26。何もしていない会社に貸す銀行は無い）
+    final base = unitsOn && biz.isEmpty ? 0.0 : 2e7 * nom() * (1 + .2 * net) * (hasT('noble') ? 2 : 1);
     return a * mult + collateral() * .4 + base;
   }
 
@@ -478,15 +484,35 @@ extension GameReal on Game {
   }
 
   // ===== 経費の内訳 =====
-  /// 今月の経費の内訳（現場の人件費・部下の給料・本社・広告・利息・税金）
-  Map<String, double> expenses() => {
-        'crew': biz.fold(0.0, (s, b) => s + b.upkeep),
-        'staff': salaries(),
-        'hq': hq,
-        'ad': biz.fold(0.0, (s, b) => s + (b.ad > 0 ? b.adCost : 0)),
-        'int': interest,
-        'tax': math.max(0.0, lastTax),
-      };
+  /// 今月の経費の内訳（11種。1.1.0+26 から）：人件費（現場・部下・本部）・家賃・原価・光熱費・物流費・広告費・保険料・修繕と更新・本社・利息・税金
+  Map<String, double> expenses() {
+    final f = List<double>.filled(5, 0);
+    var cogs = 0.0, labor = salaries();
+    for (final b in biz) {
+      labor += b.upkeep;
+      if (unitsOn) labor += b.sv * svPayOne(b);
+      cogs += cogsOf[b.id] ?? math.max(0.0, b.rev - b.profit - b.upkeep);
+      final x = fixOf[b.id];
+      if (x != null) {
+        for (var i = 0; i < 5; i++) {
+          f[i] += x[i];
+        }
+      }
+    }
+    return {
+      'labor': labor,
+      'rent': f[0],
+      'cogs': cogs,
+      'util': f[1],
+      'logi': f[2],
+      'ad': biz.fold(0.0, (s, b) => s + (b.ad > 0 ? b.adCost : 0)),
+      'insur': f[3],
+      'repair': f[4],
+      'hq': hq,
+      'int': interest,
+      'tax': math.max(0.0, lastTax),
+    };
+  }
 
   /// この先6か月の資金繰りの見込み（入る・出る・残り）。今の月の売上と経費が続き、返済の予定どおりに返すとして数える
   List<({double inflow, double out, double cash})> cashPlan([int n = 6]) {

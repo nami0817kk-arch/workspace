@@ -150,6 +150,32 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 「事業」タブで詳しく開いている事業の id（事業が3つ以上のとき。開けるのは1つだけ）
   int? openBiz;
 
+  /// 2列の事業の画面で、右に「新しい事業」を出しているか（1.1.0+26）
+  bool bizNew = false;
+
+  /// 2列の事業の画面で、右に出す事業を選ぶ
+  void selectBiz(int id) {
+    openBiz = id;
+    bizNew = false;
+    moreBiz = null;
+    pinBiz = null;
+    notifyListeners();
+  }
+
+  /// 2列の事業の画面で、右に「新しい事業」を出す
+  void showNewBiz() {
+    bizNew = true;
+    notifyListeners();
+  }
+
+  /// 街の画面で見ている都市圏（自分の国の都市の番号。1.1.0+26）
+  int townCity = 0;
+
+  void setTownCity(int i) {
+    townCity = i;
+    notifyListeners();
+  }
+
   /// 事業カードを開く（開いているものを押したら閉じる）
   void toggleBiz(int id) {
     openBiz = openBiz == id ? null : id;
@@ -190,6 +216,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 「事業」の画面で、その事業のカードを開いて、一覧のいちばん上に出す
   void openBizCard(int id) {
     tab = 'biz';
+    bizNew = false;
     openBiz = id;
     pinBiz = id;
     moreBiz = null;
@@ -202,6 +229,8 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 「事業」の画面の「新しい事業」で、その名前の業種を探す
   void goNewInd(String name) {
     tab = 'biz';
+    // 2列の事業の画面では、右に「新しい事業」の一覧を出す（1.1.0+26）
+    bizNew = true;
     bizFilter = 'all';
     bizSearch.text = name;
     // 事業が多いときは自社の一覧をたたんで、「新しい事業」をすぐ下に出す（ほかの画面へ移ったら、開いた形に戻す）

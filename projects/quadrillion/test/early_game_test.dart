@@ -23,44 +23,47 @@ void main() {
         expect(b.noGrow, lessThanOrEqualTo(4), reason: '$year $diff');
         expect(b.worst, lessThanOrEqualTo(4), reason: '$year $diff');
         expect(b.noMove, 0, reason: '$year $diff');
-        expect(b.noBuy, lessThanOrEqualTo(a.noBuy), reason: '$year $diff');
+        // 1.1.0+26 から「広げる」は改装（今ある数×初期投資の8%）。打つと乱数の流れが分かれるので、何も買えない月の比べは12回の平均で0.5か月まで差を許す
+        expect(b.noBuy, lessThanOrEqualTo(a.noBuy + .5), reason: '$year $diff');
         expect(b.over, 0, reason: '$year $diff');
       }
     }
   });
 
-  test('「広げる」は元手の4分の1の固定額で、現金では変わらない。効き目は店を増やすのと同じ式', () {
+  // 1.1.0+26（段2）から「今ある店・工場を広げる」は改装になった（今ある単位の数×初期投資の8%。1か月で、1単位の売上の倍が5%上がる。上限1.25倍）。
+  // 元手の4分の1の固定額で力が増える前の形のテストは、この形に書き直した
+  test('「広げる」（改装）は今ある数×初期投資の8%の固定額で、現金では変わらない。1か月で1単位の売上が5%上がる', () {
     final s = Game.newGame(SetupConfig(mode: 'endless', year: 1990, traits: const []), rng: ParkMiller(5));
     s.startBiz((s.liveInds().where((i) => s.capexOf(i) <= s.cash).toList()..ssort((a, b) => b.mg.compareTo(a.mg))).first.id);
     final b = s.biz.first;
-    final capex = s.capexOf(indm[b.ind]!);
-    expect(s.extendCost(b), capex * extendMult);
-    expect(extendMult, .25);
+    expect(s.extendCost(b), closeTo(s.unitCapexAvg(b) * s.unitTotal(b).clamp(1, 1e9) * .08, 1));
     final c0 = s.extendCost(b);
     s.cash *= 50;
     expect(s.extendCost(b), c0, reason: '現金が増えても値段は同じ');
-    // 払えなければ、お金も手も減らない
+    // 払えなければ、お金も時間も減らない
     s.cash = c0 * .9;
     final ap0 = s.ap;
     expect(txIn(s.extendN(b), 'ja'), 'お金が足りません');
     expect(s.cash, c0 * .9);
     expect(s.ap, ap0);
-    // 払えば、その額が仕掛かりに入り、手を1つ使い、1か月で開く
+    // 払えば、その額が仕掛かりに入り、1か月で終わって売上の倍が上がる
     s.cash = c0 * 3;
     s.extendN(b);
     expect(s.cash, closeTo(c0 * 2, 1e-6));
-    expect(s.ap, ap0 - 1);
     expect(b.pipe.single.k, 'build');
-    expect(b.pipe.single.cost, c0);
+    expect(b.pipe.single.ext, isTrue);
     expect(b.pipe.single.left, 1);
-    final p0 = b.power, up0 = b.upkeep;
+    final u0 = b.upg;
     s.nextQuarter();
     expect(b.pipe, isEmpty);
-    expect(b.power, greaterThan(p0));
-    expect(b.upkeep, greaterThan(up0));
-    // 英語の文がある
+    expect(b.upg, closeTo(u0 + upgStep, 1e-9));
+    // 上限まで上げると、それ以上は打てない
+    b.upg = upgMax;
     s.cash = c0 * 3;
     s.ap = 3;
+    expect(txIn(s.extendN(b), 'ja'), 'これ以上は改装しても売上が伸びません');
+    // 英語の文がある
+    b.upg = 1;
     expect(RegExp('[぀-ヿ㐀-鿿]').hasMatch(txIn(s.extendN(b), 'en')), isFalse);
   });
 }
