@@ -180,7 +180,8 @@ extension GameUnits on Game {
     final cc = c ?? home;
     final k = kindB(b);
     var v = satUnits(b, cc) * maxShareOf(b);
-    if (k == 'net') v = math.min(v, ctryPop(cc) * .6 / 1e5);
+    // 1.1.0+28 から、ネットを使う人が少ない国では利用者の上限も小さい（game_trade.dart）
+    if (k == 'net') v = math.min(v, ctryPop(cc) * .6 / 1e5 * (tradeOn ? math.min(1, teleOf(cc) / .7) : 1));
     if (k == 'people') v = math.min(v, ctryPop(cc) * .01);
     return math.max(unitsIn(b, cc), v.floorToDouble());
   }
@@ -189,7 +190,8 @@ extension GameUnits on Game {
   double _siteW(Biz b, String s) {
     final z = siteZone(s);
     final d = z < 0 ? 1.0 : (KIND_ZONE_DENSITY[kindB(b)]?[z] ?? 1);
-    return sitePop(s) * d;
+    // 1.1.0+28 から、道路の網が広い国ほど郊外と地方に客が広がる（game_trade.dart）
+    return sitePop(s) * d * zoneReachF(siteCtry(s), z);
   }
 
   /// 立地の上限（国の上限を人口で分ける）
@@ -237,7 +239,8 @@ extension GameUnits on Game {
     for (final y in b.young) {
       if (y.s == s) u += y.n * y.mul * rampF(b, y.age);
     }
-    return u * unitRevNow(b) * siteSalesF(b, s);
+    // 1.1.0+28 から、災害・仕入れの止まり・インフラで売れる量が落ちる（game_trade.dart）
+    return u * unitRevNow(b) * siteSalesF(b, s) * siteTradeF(b, s);
   }
 
   /// 全部の立地を足した、月の売上の上限（本部の目が行き届かないと下がる）
