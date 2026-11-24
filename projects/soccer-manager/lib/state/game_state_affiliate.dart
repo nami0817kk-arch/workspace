@@ -181,6 +181,10 @@ extension GameStateAffiliate on GameState {
         context: Tr.pick('系列クラブ', 'Affiliate'));
   }
 
+  /// テスト用: 季の切り替えの提携費の処理。
+  @visibleForTesting
+  void debugRollAffiliate() => _rollAffiliate();
+
   /// 季の切り替え: 提携費を払う(子なら受け取る)。期間が終われば切れる。
   /// 親で払えなければ切れる。
   void _rollAffiliate() {

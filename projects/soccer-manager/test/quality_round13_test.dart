@@ -165,8 +165,9 @@ void main() {
       game.save!.staffCandidates.clear();
       await pump(
           tester, game, settings, const ClubScreen(section: ClubSection.staff));
-      expect(find.widgetWithText(Chip, '攻撃'), findsNothing);
-      expect(find.widgetWithText(Chip, 'フィジカル'), findsOneWidget);
+      // スタッフは表になった(2026-11-25)。得意分野は名前の横の字。
+      expect(find.textContaining('攻撃', findRichText: true), findsNothing);
+      expect(find.textContaining('フィジカル', findRichText: true), findsOneWidget);
       await tester.pump(GameState.persistDebounce);
     });
   });

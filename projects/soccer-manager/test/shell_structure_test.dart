@@ -68,7 +68,7 @@ void main() {
     return find.byType(Tab).hitTestable().evaluate().length;
   }
 
-  testWidgets('左メニューは8項目、タブは 0・0・3・4・3・3・3・2、合計18(選手に登録ルール・リーグに個人成績)', (tester) async {
+  testWidgets('左メニューは8項目、タブは 0・0・3・5・3・3・3・2、合計19(選手に登録ルール・リーグに個人成績・ユースを2つに)', (tester) async {
     await pumpShell(tester);
     final nav = shellNavOf(tester);
     expect(TodoMenu.values.length, 8);
@@ -76,7 +76,8 @@ void main() {
       TodoMenu.status: 0,
       TodoMenu.calendar: 0,
       TodoMenu.finance: 3,
-      TodoMenu.club: 4,
+      // ユースをユースチーム/新人発掘に分けた(2026-11-25)。
+      TodoMenu.club: 5,
       TodoMenu.squad: 3,
       TodoMenu.transfer: 3,
       TodoMenu.league: 3,
@@ -90,7 +91,7 @@ void main() {
       expect(n, want[menu], reason: '${menu.name} のタブの数');
       total += n;
     }
-    expect(total, 18);
+    expect(total, 19);
     expect(FinanceScreen.tabCount, 3);
     expect(TransferScreen.tabCount, 3);
   });

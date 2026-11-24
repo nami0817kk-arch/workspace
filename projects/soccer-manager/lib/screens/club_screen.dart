@@ -36,7 +36,6 @@ import '../widgets/screen_bar.dart';
 import '../widgets/disabled_reason.dart';
 import '../widgets/offseason_lock_note.dart';
 import '../widgets/fm_panel.dart';
-import '../widgets/negotiation_table.dart';
 import 'staff_negotiation_screen.dart';
 
 part 'club_screen_staff.dart';
@@ -338,7 +337,6 @@ class _TicketPricingCard extends StatelessWidget {
             SegmentedButton<TicketPricing>(
               showSelectedIcon: false,
               style: const ButtonStyle(
-                visualDensity: VisualDensity.compact,
                 padding: WidgetStatePropertyAll(
                     EdgeInsets.symmetric(horizontal: 10)),
               ),

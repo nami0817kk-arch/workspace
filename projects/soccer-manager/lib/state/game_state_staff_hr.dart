@@ -190,6 +190,12 @@ extension GameStateStaffHr on GameState {
   /// 役職も)。
   static const _delegateSkips = {StaffRole.manager, StaffRole.sportingDirector};
 
+  /// テスト用: 任せた人事の月の処理と、季の終わりの更新の判断。
+  @visibleForTesting
+  void debugRunStaffDelegation() => _runStaffDelegation();
+  @visibleForTesting
+  void debugDelegatedStaffRenewals() => _delegatedStaffRenewals();
+
   /// 任せていれば、空いた役職(主任)を候補から埋める。いちばん能力の高い
   /// 人から、上限と給与予算に収まる人を要求どおりの条件で雇う。
   void _runStaffDelegation() {

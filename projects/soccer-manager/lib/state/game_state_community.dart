@@ -60,6 +60,10 @@ extension GameStateCommunity on GameState {
     s.fanDemand = (s.fanDemand * (100 + a.demandPercent) / 100).round();
   }
 
+  /// テスト用: 季の切り替えの地域活動の処理。
+  @visibleForTesting
+  void debugRollCommunity() => _rollCommunity();
+
   /// 季の切り替え: 前の季の結果を残し、続ける活動の次の季の費用を払う。
   void _rollCommunity() {
     final s = _save!;

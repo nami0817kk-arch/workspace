@@ -140,7 +140,6 @@ class _ActivityRow extends StatelessWidget {
                       : FilledButton.tonal(
                           key: ValueKey('community-start-${activity.name}'),
                           style: FilledButton.styleFrom(
-                              visualDensity: VisualDensity.compact,
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10)),
                           onPressed: canAfford
