@@ -155,7 +155,11 @@ class ClubScreen extends StatelessWidget {
         // 横画面では札を2列に並べ、縦の長さを半分にする。
         child: AutoColumns(
           // スタッフは候補の行が横に長いので1列のまま。
-          twoColumnWidth: section == ClubSection.staff ? double.infinity : 640,
+          // 施設も表なので1列で横いっぱいに(2026-11-25)。
+          twoColumnWidth:
+              section == ClubSection.staff || section == ClubSection.facilities
+                  ? double.infinity
+                  : 640,
           children: [
             // 上の札は細い1行に。資金は上の段に出ているので、横画面では
             // 出さない(2026-11-21)。充実度とスタッフの年俸はスタッフの
@@ -235,25 +239,31 @@ class ClubScreen extends StatelessWidget {
               // 移した。2026-11-25)。
               const AnalyticsDepartmentCard(),
             ],
-            if (show(ClubSection.facilities)) ...[
+            if (show(ClubSection.facilities))
               // 施設は表にした(2026-11-25): 水準・いま・次の段で・費用と
-              // 期間・工事中が1行ずつ並ぶ。
-              const _FacilityTable(),
-              const SizedBox(height: 8),
-              const ClubLicenseCard(),
-              const SizedBox(height: 8),
-              // 系列クラブ(選手の貸し借り)は移籍の話なので、移籍の「探す」へ
-              // 移した(2026-11-25)。ここには入口だけを置く。
-              PlaceLink(
-                key: const ValueKey('club-to-affiliate'),
-                icon: Icons.handshake_outlined,
-                title: Tr.pick('系列クラブは「移籍 > 探す」へ',
-                    'Feeder club: open Transfers > Search'),
-                note: Tr.pick('親子の関係・貸し出し・育成先・優先交渉権・売却時の取り分を決めて結びます。',
-                    'Set the parent club, loans, development, first refusal and sell-on share.'),
-                place: TodoPlaces.transferAffiliate,
+              // 期間・工事中が1行ずつ並ぶ。下の札とまとめて1つの塊にする
+              // (一覧が大きな表1つの高さから全体の長さを見積もり、実際の
+              // 4倍近い長さに見せていた)。
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _FacilityTable(),
+                  const SizedBox(height: 8),
+                  const ClubLicenseCard(),
+                  const SizedBox(height: 8),
+                  // 系列クラブ(選手の貸し借り)は移籍の話なので、移籍の「探す」へ
+                  // 移した(2026-11-25)。ここには入口だけを置く。
+                  PlaceLink(
+                    key: const ValueKey('club-to-affiliate'),
+                    icon: Icons.handshake_outlined,
+                    title: Tr.pick('系列クラブは「移籍 > 探す」へ',
+                        'Feeder club: open Transfers > Search'),
+                    note: Tr.pick('親子の関係・貸し出し・育成先・優先交渉権・売却時の取り分を決めて結びます。',
+                        'Set the parent club, loans, development, first refusal and sell-on share.'),
+                    place: TodoPlaces.transferAffiliate,
+                  ),
+                ],
               ),
-            ],
             if (show(ClubSection.community)) ...[
               // 上に数字とオフシーズンの決まり、その下に操作(チケット・
               // 季席・見た目・地域活動)、最後に客層の内訳(2026-11-25)。

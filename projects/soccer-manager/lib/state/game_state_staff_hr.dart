@@ -18,9 +18,8 @@ extension GameStateStaffHr on GameState {
       _save?.infrastructure.membersFor(role) ?? const [];
 
   /// 雇っている人を id で探す。
-  StaffMember? staffById(String id) => _save?.infrastructure.allStaff
-      .where((s) => s.id == id)
-      .firstOrNull;
+  StaffMember? staffById(String id) =>
+      _save?.infrastructure.allStaff.where((s) => s.id == id).firstOrNull;
 
   /// [role] の仕事の質(1-8。何人かいればまとめた値)。
   int staffRoleLevel(StaffRole role) =>
@@ -83,7 +82,8 @@ extension GameStateStaffHr on GameState {
           : lead
               ? Tr.pick('${hired.name}が${hired.role.label}に就任しました。',
                   '${hired.name} joins as ${hired.role.label}.')
-              : Tr.pick('${hired.name}が${hired.role.label}に加わりました(${s.infrastructure.headcount(hired.role)}人目)。',
+              : Tr.pick(
+                  '${hired.name}が${hired.role.label}に加わりました(${s.infrastructure.headcount(hired.role)}人目)。',
                   '${hired.name} joins the ${hired.role.label}s (number ${s.infrastructure.headcount(hired.role)}).'),
       context: Tr.pick('スタッフ', 'Staff'),
     );
@@ -102,8 +102,7 @@ extension GameStateStaffHr on GameState {
     if (st == null) return false;
     final bonus = scaledMoney(terms.signingBonus);
     if (bonus > s.budget) {
-      lastSigningBlockReason = Tr.pick(
-          "サイン料${formatMoney(bonus)}に資金が足りません。",
+      lastSigningBlockReason = Tr.pick("サイン料${formatMoney(bonus)}に資金が足りません。",
           "You cannot afford the signing fee (${formatMoney(bonus)}).");
       _notify();
       return false;
@@ -211,8 +210,8 @@ extension GameStateStaffHr on GameState {
       for (final c in pool) {
         if (!_delegateCapAllows(c.wage)) continue;
         final saved = lastSigningBlockReason;
-        final ok = _wageBudgetAllowsSigning(scaledMoney(c.wage),
-            isPlayer: false);
+        final ok =
+            _wageBudgetAllowsSigning(scaledMoney(c.wage), isPlayer: false);
         lastSigningBlockReason = saved;
         if (!ok) continue;
         c.hiredOn = SeasonCalendar.dateOnly(today);
@@ -242,9 +241,11 @@ extension GameStateStaffHr on GameState {
       if (st.contractYears != 1) continue;
       if (_delegateSkips.contains(st.role) || st.id == delegate.id) continue;
       final ask = StaffTermsEngine.asking(st, renewal: true);
-      if (st.roleAbility < par || !_delegateCapAllows(ask.weeklyWage - st.wage)) {
+      if (st.roleAbility < par ||
+          !_delegateCapAllows(ask.weeklyWage - st.wage)) {
         _logNews(
-          Tr.pick('${delegate.name}は${st.name}(${st.role.label})の契約を延ばさなかった。季の終わりで去る。',
+          Tr.pick(
+              '${delegate.name}は${st.name}(${st.role.label})の契約を延ばさなかった。季の終わりで去る。',
               '${delegate.name} chose not to renew ${st.name} (${st.role.label}). He leaves at the end of the season.'),
           context: Tr.pick('スタッフ', 'Staff'),
         );

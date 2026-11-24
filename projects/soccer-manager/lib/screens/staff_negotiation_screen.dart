@@ -87,7 +87,8 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
             rows: _rows(context, gs),
             columns: wide ? 2 : 1,
             compact: wide,
-            wantHeader: wide ? Tr.pick('要求', 'Wants') : Tr.pick('相手の要求', 'He wants'),
+            wantHeader:
+                wide ? Tr.pick('要求', 'Wants') : Tr.pick('相手の要求', 'He wants'),
           ),
           bottom: (narrow) => _bottom(context, gs, narrow),
         ),
@@ -106,10 +107,12 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
           child: Row(
             children: [
               Expanded(child: Text(k, style: small.copyWith(color: subtle))),
-              Flexible(
-                  child: Text(v,
-                      textAlign: TextAlign.right,
-                      style: small.copyWith(fontWeight: FontWeight.bold))),
+              // 値は短い(数字・役職)ので幅を取らせず、項目の名前に回す
+              // (英語の「Physiotherapy」が割れていた)。
+              const SizedBox(width: 6),
+              Text(v,
+                  textAlign: TextAlign.right,
+                  style: small.copyWith(fontWeight: FontWeight.bold)),
             ],
           ),
         );
@@ -122,7 +125,8 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
         Text(
             widget.renewal
                 ? Tr.pick('いまの役職: ${s.role.label}', 'Now: ${s.role.label}')
-                : Tr.pick('希望の役職: ${s.role.label}', 'Applied as: ${s.role.label}'),
+                : Tr.pick(
+                    '希望の役職: ${s.role.label}', 'Applied as: ${s.role.label}'),
             style: small.copyWith(color: subtle)),
         const SizedBox(height: 6),
         for (final a in StaffAttribute.values) kv(a.label, '${s.attribute(a)}'),
@@ -155,8 +159,8 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
   }
 
   List<NegotiationRow> _rows(BuildContext context, GameState gs) {
-    final want = TextStyle(
-        fontSize: 12.5, color: SemanticColors.subtleText(context));
+    final want =
+        TextStyle(fontSize: 12.5, color: SemanticColors.subtleText(context));
     final roles = widget.renewal ? [s.role] : StaffTermsEngine.rolesFor(s);
     final perRoleCount = Map.fromEntries([
       for (final r in roles)
@@ -181,19 +185,19 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
       NegotiationRow(
         key: const ValueKey('staff-term-wage'),
         label: Tr.pick('年俸', 'Salary'),
-        note: Tr.pick('要求の9割を割ると断られます。',
-            'Below 90% of what he asks, he says no.'),
+        note: Tr.pick(
+            '要求の9割を割ると断られます。', 'Below 90% of what he asks, he says no.'),
         want: Text(_annual(gs, _ask.weeklyWage), style: want),
         offer: NegotiationStepper(
           label: _annual(gs, _offer.weeklyWage),
           onMinus: _over || _offer.weeklyWage <= _wageStep
               ? null
-              : () => setState(() => _offer = _offer.copyWith(
-                  weeklyWage: _offer.weeklyWage - _wageStep)),
+              : () => setState(() => _offer =
+                  _offer.copyWith(weeklyWage: _offer.weeklyWage - _wageStep)),
           onPlus: _over
               ? null
-              : () => setState(() => _offer = _offer.copyWith(
-                  weeklyWage: _offer.weeklyWage + _wageStep)),
+              : () => setState(() => _offer =
+                  _offer.copyWith(weeklyWage: _offer.weeklyWage + _wageStep)),
         ),
       ),
       NegotiationRow(
@@ -237,18 +241,24 @@ class _StaffNegotiationScreenState extends State<StaffNegotiationScreen> {
 
   Widget _bottom(BuildContext context, GameState gs, bool narrow) {
     const small = TextStyle(fontSize: 12);
-    final total = annualFromWeekly(gs.scaledMoney(_offer.weeklyWage)) *
-            _offer.years +
-        gs.scaledMoney(_offer.signingBonus);
+    final total =
+        annualFromWeekly(gs.scaledMoney(_offer.weeklyWage)) * _offer.years +
+            gs.scaledMoney(_offer.signingBonus);
     return NegotiationBottomBar(
       narrow: narrow,
       info: [
-        Text(Tr.pick('年俸 ${_annual(gs, _offer.weeklyWage)}',
-            'Salary ${_annual(gs, _offer.weeklyWage)}'), style: small),
-        Text(Tr.pick('総額 ${formatMoney(total)}(${_offer.years}年)',
-            'Total ${formatMoney(total)} (${Tr.plural(_offer.years, 'year')})'), style: small),
-        Text(Tr.pick('資金 ${formatMoney(gs.save?.budget ?? 0)}',
-            'Funds ${formatMoney(gs.save?.budget ?? 0)}'), style: small),
+        Text(
+            Tr.pick('年俸 ${_annual(gs, _offer.weeklyWage)}',
+                'Salary ${_annual(gs, _offer.weeklyWage)}'),
+            style: small),
+        Text(
+            Tr.pick('総額 ${formatMoney(total)}(${_offer.years}年)',
+                'Total ${formatMoney(total)} (${Tr.plural(_offer.years, 'year')})'),
+            style: small),
+        Text(
+            Tr.pick('資金 ${formatMoney(gs.save?.budget ?? 0)}',
+                'Funds ${formatMoney(gs.save?.budget ?? 0)}'),
+            style: small),
       ],
       buttons: [
         TextButton(

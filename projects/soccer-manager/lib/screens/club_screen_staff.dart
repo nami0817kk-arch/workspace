@@ -25,36 +25,40 @@ class _StaffTable extends StatelessWidget {
         final wide = c.maxWidth / MediaQuery.textScalerOf(context).scale(1) >=
             _StaffCols.wideWidth;
         return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (wide)
-          Container(
-            color: scheme.surfaceContainerHighest,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            child: Row(
-              children: [
-                Expanded(flex: 5, child: Text(Tr.pick('名前', 'Name'), style: head)),
-                _cell(Tr.pick('能力', 'Ability'), _StaffCols.ability, head),
-                _cell(Tr.pick('年俸', 'Salary'), _StaffCols.wage, head),
-                _cell(Tr.pick('契約の残り', 'Contract'), _StaffCols.contract, head),
-                const SizedBox(width: _StaffCols.actions),
-              ],
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (wide)
+              Container(
+                color: scheme.surfaceContainerHighest,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 5,
+                        child: Text(Tr.pick('名前', 'Name'), style: head)),
+                    _cell(Tr.pick('能力', 'Ability'), _StaffCols.ability, head),
+                    _cell(Tr.pick('年俸', 'Salary'), _StaffCols.wage, head),
+                    _cell(Tr.pick('契約の残り', 'Contract'), _StaffCols.contract,
+                        head),
+                    const SizedBox(width: _StaffCols.actions),
+                  ],
+                ),
+              ),
+            for (final role in StaffRole.values)
+              _StaffRoleBlock(role: role, wide: wide),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 6, 10, 8),
+              child: Text(
+                Tr.pick(
+                    '能力はその役職に効く能力のまとめ(1〜20)。スカウト・フィジオ・ユースコーチ・フィットネスコーチは何人か雇え、2人目からは逓減して上乗せされます(人数の上限は部と施設で増えます)。',
+                    'Ability is the blend of what matters for the role (1-20). You can hire several scouts, physios, youth coaches and fitness coaches; each extra one adds less than the last (the limit grows with your division and facilities).'),
+                style: TextStyle(
+                    fontSize: 11, color: SemanticColors.subtleText(context)),
+              ),
             ),
-          ),
-          for (final role in StaffRole.values)
-            _StaffRoleBlock(role: role, wide: wide),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 6, 10, 8),
-            child: Text(
-              Tr.pick(
-                  '能力はその役職に効く能力のまとめ(1〜20)。スカウト・フィジオ・ユースコーチ・フィットネスコーチは何人か雇え、2人目からは逓減して上乗せされます(人数の上限は部と施設で増えます)。',
-                  'Ability is the blend of what matters for the role (1-20). You can hire several scouts, physios, youth coaches and fitness coaches; each extra one adds less than the last (the limit grows with your division and facilities).'),
-              style: TextStyle(
-                  fontSize: 11, color: SemanticColors.subtleText(context)),
-            ),
-          ),
-        ],
-      );
+          ],
+        );
       }),
     );
   }
@@ -70,7 +74,8 @@ class _StaffCols {
   static const double actions = 132;
 }
 
-Widget _cell(String s, double w, TextStyle st, {Alignment align = Alignment.center}) =>
+Widget _cell(String s, double w, TextStyle st,
+        {Alignment align = Alignment.center}) =>
     SizedBox(
       width: w,
       child: Align(
@@ -255,29 +260,28 @@ class _StaffMemberRow extends StatelessWidget {
       ],
     );
     final name = Text.rich(
-                  TextSpan(children: [
-                    TextSpan(
-                        text: '${staff.name} (${staff.age})',
-                        style: const TextStyle(fontWeight: FontWeight.w600)),
-                    if (lead)
-                      TextSpan(
-                          text: Tr.pick('  主任', '  Head'),
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: Theme.of(context).colorScheme.primary)),
-                    if (staff.shownSpecialty != StaffSpecialty.balanced)
-                      TextSpan(
-                          text: '  ${staff.shownSpecialty.label}',
-                          style: TextStyle(fontSize: 11, color: subtle)),
-                    if (staff.formerPlayerId != null)
-                      TextSpan(
-                          text: Tr.pick('  うちのOB', '  One of ours'),
-                          style: TextStyle(fontSize: 11, color: subtle)),
-                  ]),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12.5),
-                );
+      TextSpan(children: [
+        TextSpan(
+            text: '${staff.name} (${staff.age})',
+            style: const TextStyle(fontWeight: FontWeight.w600)),
+        if (lead)
+          TextSpan(
+              text: Tr.pick('  主任', '  Head'),
+              style: TextStyle(
+                  fontSize: 11, color: Theme.of(context).colorScheme.primary)),
+        if (staff.shownSpecialty != StaffSpecialty.balanced)
+          TextSpan(
+              text: '  ${staff.shownSpecialty.label}',
+              style: TextStyle(fontSize: 11, color: subtle)),
+        if (staff.formerPlayerId != null)
+          TextSpan(
+              text: Tr.pick('  うちのOB', '  One of ours'),
+              style: TextStyle(fontSize: 11, color: subtle)),
+      ]),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(fontSize: 12.5),
+    );
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 2, 4, 2),
       child: Column(
@@ -379,8 +383,8 @@ class _CandidateSheet extends StatelessWidget {
     const small = TextStyle(fontSize: 12);
     return SafeArea(
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-            maxHeight: MediaQuery.sizeOf(context).height * 0.85),
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.85),
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
           child: Column(
@@ -393,7 +397,8 @@ class _CandidateSheet extends StatelessWidget {
                     ? Tr.pick(
                         'まだ枠があります(${gs.staffMembersFor(role).length}/${gs.maxStaffFor(role)}人)。雇うと加わります。',
                         'There is room (${gs.staffMembersFor(role).length}/${gs.maxStaffFor(role)}). A new hire joins the department.')
-                    : Tr.pick('枠がいっぱいです。雇うと${replaced.name}と入れ替わります(違約金${formatMoney(gs.staffSeveranceFor(replaced))})。',
+                    : Tr.pick(
+                        '枠がいっぱいです。雇うと${replaced.name}と入れ替わります(違約金${formatMoney(gs.staffSeveranceFor(replaced))})。',
                         'The department is full. A new hire replaces ${replaced.name} (severance ${formatMoney(gs.staffSeveranceFor(replaced))}).'),
                 style: TextStyle(
                     fontSize: 12, color: SemanticColors.subtleText(context)),
@@ -456,7 +461,8 @@ class _CandidateSheet extends StatelessWidget {
                               52,
                               small.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: _abilityColor(context, c.roleAbility))),
+                                  color:
+                                      _abilityColor(context, c.roleAbility))),
                           _cell(
                               formatMoney(
                                   annualFromWeekly(gs.scaledMoney(c.wage))),
@@ -528,26 +534,26 @@ class _StaffDelegationPanel extends StatelessWidget {
           Material(
             type: MaterialType.transparency,
             child: SwitchListTile(
-            key: const ValueKey('staff-delegate-switch'),
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            value: on,
-            onChanged: delegate == null
-                ? null
-                : (v) => gs.setStaffDelegation(on: v),
-            title: Text(delegate == null
-                ? Tr.pick('人事を任せる', 'Delegate staff hiring')
-                : Tr.pick('人事を${delegate.name}(${delegate.role.label})に任せる',
-                    'Leave staff hiring to ${delegate.name} (${delegate.role.label})')),
-            subtitle: Text(
-              delegate == null
-                  ? Tr.pick('スポーツディレクターか監督を雇うと任せられます。',
-                      'Hire a director of football or a manager to delegate.')
-                  : Tr.pick('任せると、空いた役職を毎月埋め、満了する人の更新も判断します(監督・SD はオーナーが決めます)。',
-                      'He fills vacant posts each month and decides on renewals (you still choose the manager and director).'),
-              style: TextStyle(fontSize: 11, color: subtle),
+              key: const ValueKey('staff-delegate-switch'),
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              value: on,
+              onChanged:
+                  delegate == null ? null : (v) => gs.setStaffDelegation(on: v),
+              title: Text(delegate == null
+                  ? Tr.pick('人事を任せる', 'Delegate staff hiring')
+                  : Tr.pick('人事を${delegate.name}(${delegate.role.label})に任せる',
+                      'Leave staff hiring to ${delegate.name} (${delegate.role.label})')),
+              subtitle: Text(
+                delegate == null
+                    ? Tr.pick('スポーツディレクターか監督を雇うと任せられます。',
+                        'Hire a director of football or a manager to delegate.')
+                    : Tr.pick(
+                        '任せると、空いた役職を毎月埋め、満了する人の更新も判断します(監督・SD はオーナーが決めます)。',
+                        'He fills vacant posts each month and decides on renewals (you still choose the manager and director).'),
+                style: TextStyle(fontSize: 11, color: subtle),
+              ),
             ),
-          ),
           ),
           Row(
             children: [
@@ -691,9 +697,7 @@ class _ManagerTargetPanel extends StatelessWidget {
                 icon: const Icon(Icons.arrow_downward, size: 18),
               ),
               const SizedBox(width: 8),
-              Text(
-                  Tr.pick('監督の立場 $standing/100',
-                      'Standing $standing/100'),
+              Text(Tr.pick('監督の立場 $standing/100', 'Standing $standing/100'),
                   style: const TextStyle(fontSize: 12.5)),
               const SizedBox(width: 8),
               SizedBox(

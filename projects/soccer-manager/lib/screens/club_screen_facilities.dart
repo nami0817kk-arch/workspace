@@ -20,7 +20,8 @@ part of 'club_screen.dart';
         now: Tr.pick('練習の伸び${_pct(g)}・疲労回復+$f',
             'Training growth ${_pct(g)}, recovery +$f'),
         next: hasNext
-            ? Tr.pick('伸び${_pct(ng)}・回復+$nf', 'Growth ${_pct(ng)}, recovery +$nf')
+            ? Tr.pick(
+                '伸び${_pct(ng)}・回復+$nf', 'Growth ${_pct(ng)}, recovery +$nf')
             : null,
         note: null,
       );
@@ -43,8 +44,8 @@ part of 'club_screen.dart';
       return (
         now: Tr.pick('昇格候補の枠$cur人', '$cur academy places'),
         next: hasNext ? Tr.pick('枠$next人', '$next places') : null,
-        note: Tr.pick('ユースコーチを雇える人数にも効きます',
-            'Also lets you employ more youth coaches'),
+        note: Tr.pick(
+            'ユースコーチを雇える人数にも効きます', 'Also lets you employ more youth coaches'),
       );
     case FacilityType.commercialFacility:
       final cur = ClubInfrastructure.commercialRevenueMultiplier(level);
@@ -53,7 +54,8 @@ part of 'club_screen.dart';
       return (
         now: Tr.pick('スポンサー・グッズ収入${_pct(cur)}',
             'Sponsorship and merchandise ${_pct(cur)}'),
-        next: hasNext ? Tr.pick('収入${_pct(next)}', 'Income ${_pct(next)}') : null,
+        next:
+            hasNext ? Tr.pick('収入${_pct(next)}', 'Income ${_pct(next)}') : null,
         note: gateAtCap
             ? Tr.pick('観客収入は上限(入る人数×1人の単価)に届いているので増えません',
                 'Gate receipts are already at their ceiling (crowd x revenue per head), so they will not rise')
@@ -107,27 +109,40 @@ class _FacilityTable extends StatelessWidget {
         final wide = c.maxWidth / MediaQuery.textScalerOf(context).scale(1) >=
             _StaffCols.wideWidth;
         return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (wide)
-          Container(
-            color: scheme.surfaceContainerHighest,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            child: Row(
-              children: [
-                Expanded(flex: 3, child: Text(Tr.pick('施設', 'Facility'), style: head)),
-                SizedBox(width: _levelW, child: Text(Tr.pick('水準', 'Level'), style: head)),
-                Expanded(flex: 4, child: Text(Tr.pick('いま', 'Now'), style: head)),
-                Expanded(flex: 3, child: Text(Tr.pick('次の段で', 'Next level'), style: head)),
-                Expanded(flex: 3, child: Text(Tr.pick('費用・期間', 'Cost and time'), style: head)),
-                const SizedBox(width: _actionW),
-              ],
-            ),
-          ),
-          for (final type in FacilityType.values)
-            _FacilityRow(type: type, wide: wide),
-        ],
-      );
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (wide)
+              Container(
+                color: scheme.surfaceContainerHighest,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 3,
+                        child: Text(Tr.pick('施設', 'Facility'), style: head)),
+                    SizedBox(
+                        width: _levelW,
+                        child: Text(Tr.pick('水準', 'Level'), style: head)),
+                    Expanded(
+                        flex: 4,
+                        child: Text(Tr.pick('いま', 'Now'), style: head)),
+                    Expanded(
+                        flex: 3,
+                        child:
+                            Text(Tr.pick('次の段で', 'Next level'), style: head)),
+                    Expanded(
+                        flex: 3,
+                        child: Text(Tr.pick('費用・期間', 'Cost and time'),
+                            style: head)),
+                    const SizedBox(width: _actionW),
+                  ],
+                ),
+              ),
+            for (final type in FacilityType.values)
+              _FacilityRow(type: type, wide: wide),
+          ],
+        );
       }),
     );
   }
@@ -163,8 +178,8 @@ class _FacilityRow extends StatelessWidget {
         : building
             ? Tr.pick('完成すると: ${fx.next}', 'When ready: ${fx.next}')
             : fx.next ?? '-';
-    final nextStyle =
-        small.copyWith(color: isMax ? subtle : SemanticColors.positive(context));
+    final nextStyle = small.copyWith(
+        color: isMax ? subtle : SemanticColors.positive(context));
     final costText = isMax ? '-' : '${formatMoney(cost)}\n$time';
     final button = FilledButton(
       style: FilledButton.styleFrom(
@@ -175,8 +190,8 @@ class _FacilityRow extends StatelessWidget {
               final ok = await runUndoable(
                 context,
                 action: () => gs.upgradeFacility(type),
-                done: Tr.pick(
-                    '「${type.label}」の増築に着工しました', 'Work has begun: ${type.label}'),
+                done: Tr.pick('「${type.label}」の増築に着工しました',
+                    'Work has begun: ${type.label}'),
               );
               ok ? FeedbackService.success() : FeedbackService.error();
             },
@@ -199,7 +214,8 @@ class _FacilityRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Lv$level/${ClubInfrastructure.maxLevel}',
-            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold)),
+            style:
+                const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold)),
         SizedBox(
           width: 60,
           child: ClipRRect(
@@ -239,7 +255,8 @@ class _FacilityRow extends StatelessWidget {
                   Expanded(flex: 3, child: Text(costText, style: small)),
                   SizedBox(
                     width: _FacilityTable._actionW,
-                    child: Align(alignment: Alignment.centerRight, child: button),
+                    child:
+                        Align(alignment: Alignment.centerRight, child: button),
                   ),
                 ],
               )
@@ -255,11 +272,14 @@ class _FacilityRow extends StatelessWidget {
                 Text(Tr.pick('次の段で: $nextText', 'Next level: $nextText'),
                     style: nextStyle),
               if (!isMax)
-                Text(Tr.pick('費用: ${formatMoney(cost)}・$time',
-                    'Cost: ${formatMoney(cost)}, $time'), style: small),
+                Text(
+                    Tr.pick('費用: ${formatMoney(cost)}・$time',
+                        'Cost: ${formatMoney(cost)}, $time'),
+                    style: small),
               Align(alignment: Alignment.centerRight, child: button),
             ],
-            if (fx.note != null || type == FacilityType.stadium && !isMax && !building)
+            if (fx.note != null ||
+                type == FacilityType.stadium && !isMax && !building)
               Padding(
                 padding: const EdgeInsets.only(top: 2),
                 child: Text(

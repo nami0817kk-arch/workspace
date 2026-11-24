@@ -26,7 +26,9 @@ class CommunityCard extends StatelessWidget {
     final subtle = SemanticColors.subtleText(context);
     final scheme = Theme.of(context).colorScheme;
     final head = TextStyle(
-        fontSize: 11, fontWeight: FontWeight.bold, color: scheme.onSurfaceVariant);
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        color: scheme.onSurfaceVariant);
     final report = save.lastCommunityReport;
     return FmPanel(
       key: const ValueKey('community-activities'),
@@ -54,12 +56,13 @@ class CommunityCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             child: Row(
               children: [
-                Expanded(flex: 4, child: Text(Tr.pick('活動', 'Activity'), style: head)),
+                Expanded(
+                    child: Text(Tr.pick('活動と効き目', 'Activity and effect'),
+                        style: head)),
                 SizedBox(
-                    width: 72,
+                    width: 76,
                     child: Text(Tr.pick('1季の費用', 'Per season'), style: head)),
-                Expanded(flex: 4, child: Text(Tr.pick('効き目', 'Effect'), style: head)),
-                const SizedBox(width: 84),
+                const SizedBox(width: 92),
               ],
             ),
           ),
@@ -98,10 +101,14 @@ class _ActivityRow extends StatelessWidget {
       key: ValueKey('community-${activity.name}'),
       decoration: BoxDecoration(
         color: active
-            ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.35)
+            ? Theme.of(context)
+                .colorScheme
+                .primaryContainer
+                .withValues(alpha: 0.35)
             : null,
         border: Border(
-            top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
+            top: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant)),
       ),
       padding: const EdgeInsets.fromLTRB(10, 2, 6, 2),
       child: Column(
@@ -109,8 +116,8 @@ class _ActivityRow extends StatelessWidget {
         children: [
           Row(
             children: [
+              // 活動の名前の下に効き目(半分の幅でも名前が割れないように)。
               Expanded(
-                flex: 4,
                 child: Row(
                   children: [
                     Icon(active ? Icons.check_circle : Icons.circle_outlined,
@@ -120,16 +127,25 @@ class _ActivityRow extends StatelessWidget {
                             : SemanticColors.subtleText(context)),
                     const SizedBox(width: 6),
                     Flexible(
-                      child: Text(activity.label,
-                          style: small.copyWith(fontWeight: FontWeight.w600)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(activity.label,
+                              style:
+                                  small.copyWith(fontWeight: FontWeight.w600)),
+                          Text(activity.effectLabel,
+                              style: TextStyle(
+                                  fontSize: 11.5,
+                                  color: SemanticColors.subtleText(context))),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(width: 72, child: Text(formatMoney(cost), style: small)),
-              Expanded(flex: 4, child: Text(activity.effectLabel, style: small)),
+              SizedBox(width: 76, child: Text(formatMoney(cost), style: small)),
               SizedBox(
-                width: 84,
+                width: 92,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: active

@@ -39,7 +39,10 @@ extension GameStateAffiliate on GameState {
   /// 貸し出しを系列クラブへ出場機会付きで送るか。
   bool get affiliateTakesLoans {
     final d = affiliateDeal;
-    return d != null && d.weAreParent && d.loanPriority && affiliateClub != null;
+    return d != null &&
+        d.weAreParent &&
+        d.loanPriority &&
+        affiliateClub != null;
   }
 
   /// [teamId] のいる部(わからなければ null)。
