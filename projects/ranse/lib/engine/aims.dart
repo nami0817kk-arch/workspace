@@ -29,7 +29,7 @@ import 'rng.dart';
 const kGkReady = 4;
 
 /// 自分から兵を挙げるときに、成功の見込みに掛ける倍率。
-const kGkSelfRise = .7;
+const kGkSelfRise = .2;
 
 /// 積もった支度（選んだ年の数。露見・挙兵・解いたら0に戻る）。
 int gkPrep(Game g) {
@@ -60,16 +60,16 @@ bool gkCan(Game g) {
 }
 
 /// 支度で上がる下剋上の成功の見込み（`Game.betrayChance` に足す）。四つまで積もる。
-/// 自分から兵を挙げられるようにした分、一つあたりは小さくした（測って決めた。CLAUDE.md の「自分から下剋上を狙う」）。
+/// 2026-11-25 にユーザー「さげる」で下げた（大名に届く割合 18.8% → 4.4%。CLAUDE.md の「自分から下剋上を狙う」）。
 double gkPrepBonus(Game g) {
   final n = gkPrep(g);
-  return (n > 4 ? 4 : n) * .02;
+  return (n > 4 ? 4 : n) * .01;
 }
 
 /// 支度で上がる「下剋上の誘い」の来やすさ（`gekokujo` の重みに足す）。
 double gkInviteWeight(Game g) {
   final n = gkPrep(g);
-  return (n > 5 ? 5 : n) * .4;
+  return (n > 5 ? 5 : n) * .15;
 }
 
 /// 支度が露見する見込み（支度の年ごと）。積もるほど、主君の信頼が低いほど露見しやすい。
@@ -155,7 +155,7 @@ void _gkExposed(Game g, void Function() next) {
   final n = gkPrep(g);
   gkClear(g);
   g.setFlag('gk_exposed');
-  final p = g.betrayChance() * .7;
+  final p = g.betrayChance() * .3;
   g.ask('謀反の露見', '支度の噂が、$house家の主君の耳に入った。評定の間に呼び出され、詰問を受ける。', [
     Choice.h('申し開きをする', '言葉ひとつで首がつながるかもしれない。しくじれば、腹を切らされる', () {
       final ok = g.rng.chance(
