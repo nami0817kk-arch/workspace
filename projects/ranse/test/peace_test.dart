@@ -188,6 +188,11 @@ void _shape(Game g, int k) {
 
 void main() {
   test('年号は元和・寛永・明暦まで続き、豊臣の家は豊臣と呼ぶ', () {
+    // 生まれは一五二五年から（天文より前を「天文-2年」にしない）。
+    expect(gengo(1525), '大永5年');
+    expect(gengo(1528), '享禄元年');
+    expect(gengo(1529), '享禄2年');
+    expect(gengo(1532), '天文元年');
     expect(gengo(1614), '慶長19年');
     expect(gengo(1615), '元和元年');
     expect(gengo(1624), '寛永元年');
