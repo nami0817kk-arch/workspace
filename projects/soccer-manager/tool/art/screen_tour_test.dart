@@ -352,18 +352,69 @@ void main() {
             await tester.pump(const Duration(milliseconds: 600));
             await shoot('$p-detail-open');
             for (final t in _en
-                ? const [
-                    'Overview',
-                    'Attributes',
-                    'Contract',
-                    'Character & history'
-                  ]
-                : const ['概要', '能力', '契約', '人柄・経歴']) {
+                ? const ['Overview', 'Attributes', 'History', 'Character']
+                : const ['概要', '能力', '経歴', '人柄']) {
               final tf = find.text(t).hitTestable();
               if (tf.evaluate().isEmpty) continue;
               await tester.tap(tf.first);
               await tester.pump(const Duration(milliseconds: 400));
               await shoot('$p-detail-$t');
+            }
+            // 上の「操作」の一覧と、そこから開く契約の交渉。
+            final actions =
+                find.byKey(const ValueKey('player-actions')).hitTestable();
+            if (actions.evaluate().isNotEmpty) {
+              await tester.tap(actions.first);
+              await tester.pump(const Duration(milliseconds: 600));
+              await shoot('$p-detail-actions');
+              final renew =
+                  find.byKey(const ValueKey('action-renew')).hitTestable();
+              if (renew.evaluate().isNotEmpty &&
+                  tester.widget<ListTile>(renew).enabled) {
+                await tester.tap(renew.first);
+                await tester.pump(const Duration(milliseconds: 800));
+                await shoot('$p-detail-negotiation');
+                await tester
+                    .state<NavigatorState>(find.byType(Navigator).first)
+                    .maybePop();
+                await tester.pump(const Duration(milliseconds: 600));
+              } else {
+                await tester.tapAt(const Offset(400, 20));
+                await tester.pump(const Duration(milliseconds: 600));
+              }
+            }
+            await tester
+                .state<NavigatorState>(find.byType(Navigator).first)
+                .maybePop();
+            await tester.pump(const Duration(milliseconds: 600));
+          }
+          // 表の行の「…」から比較に2人入れて、比較の画面を開く。
+          final menus = find.byWidgetPredicate((w) =>
+              w.key is ValueKey<String> &&
+              (w.key as ValueKey<String>).value.startsWith('squad-table-menu-'));
+          if (menus.hitTestable().evaluate().length >= 2) {
+            final firstKey =
+                (menus.hitTestable().evaluate().first.widget.key as ValueKey<String>)
+                    .value
+                    .substring('squad-table-menu-'.length);
+            await tester.tap(menus.hitTestable().first);
+            await tester.pump(const Duration(milliseconds: 600));
+            await shoot('$p-$l-row-actions');
+            final add =
+                find.byKey(const ValueKey('action-compare')).hitTestable();
+            if (add.evaluate().isNotEmpty) {
+              await tester.tap(add.first);
+              await tester.pump(const Duration(milliseconds: 800));
+              // 比較の選び方の中で、もう1人の行を押す(すぐ比較の画面が開く)。
+              for (final q in game.userTeam.players) {
+                if (q.id == firstKey) continue;
+                final row = find.text(q.name).hitTestable();
+                if (row.evaluate().isEmpty) continue;
+                await tester.tap(row.first);
+                break;
+              }
+              await tester.pump(const Duration(milliseconds: 800));
+              await shoot('$p-compare');
             }
             await tester
                 .state<NavigatorState>(find.byType(Navigator).first)

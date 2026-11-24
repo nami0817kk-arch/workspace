@@ -490,16 +490,17 @@ class _SquadScreenState extends State<SquadScreen> {
                 onChanged: (g) => setState(() => _filterGroup = g),
               ),
             ),
-            Padding(
+            // 絞り込みが8つに増えたので、折り返さず横に送る(縦画面の
+            // 一覧の高さを食わないように)。
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  children: [
-                    for (final f in SquadStatusFilter.values)
-                      ChoiceChip(
+              child: Row(
+                children: [
+                  for (final f in SquadStatusFilter.values)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: ChoiceChip(
                         label: Text(
                           f == SquadStatusFilter.needsAttention
                               ? '${f.label} '
@@ -512,8 +513,8 @@ class _SquadScreenState extends State<SquadScreen> {
                         selected: _statusFilter == f,
                         onSelected: (_) => setState(() => _statusFilter = f),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
             Padding(
