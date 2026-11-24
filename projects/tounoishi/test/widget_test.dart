@@ -435,6 +435,22 @@ void main() {
     expect(html, isNot(contains('id="tstory"')));
   });
 
+  test('チャレンジを今の仕組みで作り直してタイトルに戻す（0.7.45・試作 v62）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains('id="tchal"'));
+    expect(html, contains("{n:'魂30',"));
+    expect(html, contains("{n:'三つの特性',"));
+    expect(html, contains("{n:'コアを守り抜く',"));
+    expect(html, contains("{n:'掘る力20',"));
+    expect(html, contains("{n:'骨の軍団',"));
+    // 前のチャレンジ（掘ると生まれる前提）の記録は引き継がない
+    expect(html, contains("kvGet('tou-chal2')"));
+    expect(html, isNot(contains("{n:'花の守り',")));
+    // 次の波が来るまでコアが無事なら守ったとみなす
+    expect(html, contains('function chalWaves(n){return g.wave>n||'));
+    expect(html, contains('if(g.noSum){'));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
