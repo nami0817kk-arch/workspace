@@ -511,9 +511,12 @@ class Pilot {
     String hk;
     switch (go.k) {
       case 'build':
-        final site = s.openSites(b, 3).first;
-        // 他社と取り合う物件は、取られるとお金が動かず確かめにくいので、取り合いの無い物件のときだけ打つ
-        if (k == 'shop' && s.bestOffers(b, site).first.riv > 0) return;
+        // 他社と取り合う物件は、取られるとお金が動かず確かめにくいので、取り合いの無い物件のときだけ打つ。
+        // 1.1.0+28 から、小窓に並ぶ3つの立地のうち、いちばん良い物件が取り合いでない立地を選ぶ（段5で乱数の使い方が変わり、
+        // 先頭の立地だけを見ると4年のあいだ一度も打てない種があった）
+        final listed = s.openSites(b, 3).take(3).toList();
+        final site = k == 'shop' ? listed.where((x) => s.bestOffers(b, x).first.riv == 0).firstOrNull : listed.first;
+        if (site == null) return;
         label = tr('{0}に1つ開く', [s.siteName(site)]);
         cost = s.unitCapexAt(b, site);
         hk = 'build';

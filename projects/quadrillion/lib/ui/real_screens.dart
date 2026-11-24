@@ -13,6 +13,7 @@ import 'painters.dart';
 import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
+import 'world_screen.dart';
 
 /// 左の切り替え（id・名前・印）
 const railTabs = [
@@ -750,6 +751,8 @@ List<Widget> worldTab(GameController ctl, double width) {
         _cell(tr('物価'), c: Pal.mute),
         _cell(tr('市場'), c: Pal.mute),
         _cell(tr('最低賃金'), c: Pal.mute),
+        _cell(tr('関税'), c: Pal.mute),
+        _cell(tr('物流'), c: Pal.mute),
       ]),
       for (final c in open.toList()..ssort((a, b) => cw(b.c, s.yr()).compareTo(cw(a.c, s.yr()))))
         InkWell(
@@ -766,12 +769,15 @@ List<Widget> worldTab(GameController ctl, double width) {
               _cell('${pctD(s.inflOf(c.c))}%'),
               _cell('×${(cw(c.c, s.yr()) / math.max(cw(s.home, s.yr()), 1e-9)).toStringAsFixed(2)}'),
               _cell(yen(s.minWageYen(c.c) / 12)),
+              _cell(worldTariffCell(s, c.c)),
+              _cell(worldRoadCell(s, c.c)),
             ]),
           ),
         ),
     ]),
   );
-  final detail = _countryDetail(ctl, sel);
+  // 1.1.0+28 から、関税・物流・政治・伸びている業種・仕入れの網・視察を足した（world_screen.dart）
+  final detail = worldDetail(ctl, sel);
   if (width >= 620) {
     return [
       Padding(
@@ -788,36 +794,6 @@ List<Widget> worldTab(GameController ctl, double width) {
 }
 
 String _inMark(Game s, String c) => s.biz.any((b) => s.ctryOf(b).contains(c)) ? '★' : '';
-
-Widget _countryDetail(GameController ctl, String c) {
-  final s = ctl.game!;
-  final mine = s.biz.where((b) => s.ctryOf(b).contains(c)).toList();
-  final cities = econData.cities(c);
-  return Column(key: const ValueKey('world-detail'), crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-    countryPanel(ctl, c, title: '${cm[c]!.n}${c == s.home ? tr('（本拠）') : ''}'),
-    Panel(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Grid2([
-          Kv(tr('人口'), L.en ? '${(s.ev(c, 'pop') / 1e6).toStringAsFixed(1)}M' : tr('{0}万人', [jsNum(jsRound(s.ev(c, 'pop') / 1e4))])),
-          Kv(tr('失業率'), '${pctD(s.ev(c, 'unemp'))}%'),
-          Kv(tr('市場の大きさ'), tr('{0}の{1}倍', [cm[s.home]!.n, (cw(c, s.yr()) / math.max(cw(s.home, s.yr()), 1e-9)).toStringAsFixed(2)])),
-          Kv(tr('平均賃金'), tr('{0}／年', [yen(s.ev(c, 'wage_usd') * s.usdJpy())])),
-        ]),
-        if (cities.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 4), child: Muted(tr('主な都市：{0}', [cities.take(4).map((x) => L.en ? x.en : x.ja).join(tr('・'))]), size: 12)),
-        const SizedBox(height: 6),
-        CardTitle(tr('自社の出方')),
-        const SizedBox(height: 2),
-        if (!s.ctryOpen(c))
-          Muted(tr('この年はまだ入れません'))
-        else if (mine.isEmpty)
-          Muted(tr('まだ出ていません。「事業」の「海外に出る」から出られます'))
-        else
-          for (final b in mine)
-            Text('${tr('・@@bullet')}${indm[b.ind]!.name}${(b.jv ?? []).contains(c) ? tr('（組んで）') : ''}', style: ts(size: 12.5)),
-      ]),
-    ),
-  ]);
-}
 
 /// 世界地図（国を丸で置く。色＝その年の成長率、大きさ＝市場の大きさ、★＝自社が出ている国）
 class WorldPainter extends CustomPainter {

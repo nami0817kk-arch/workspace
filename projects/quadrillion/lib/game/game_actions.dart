@@ -68,7 +68,8 @@ extension GameActions on Game {
     // 中国に現地法人があれば、ネットと金融も組む相手なしで入れる（地元の規制の緩み。game_local.dart）
     if (c == 'cn' && (cat == 'net' || cat == 'money')) return extras && hasLocal('cn') ? ['solo', 'jv', 'buy'] : ['jv'];
     if (c == 'ru' && yr() >= 2022.5) return [];
-    return ['solo', 'jv', 'buy'];
+    // 1.1.0+28 から、電気・ネットが足りない国と、外資の決まりのある国（game_trade.dart）
+    return tradeModes(b, c) ?? ['solo', 'jv', 'buy'];
   }
 
   double entryCost(Biz b, String c, String mode) {
@@ -86,7 +87,10 @@ extension GameActions on Game {
       chron('abroad', M('{0}に進出した（「{1}」・{2}）', [C(c), I(b.ind), D(ENTRYN.ja[mode]!)]));
     }
     b.ctry = ctryOf(b).toList();
-    if (!b.ctry!.contains(c)) b.ctry!.add(c);
+    if (!b.ctry!.contains(c)) {
+      b.ctry!.add(c);
+      tradeEntered(b, c, mode);
+    }
     if (mode == 'jv') {
       b.jv ??= [];
       if (!b.jv!.contains(c)) b.jv!.add(c);
@@ -117,7 +121,8 @@ extension GameActions on Game {
       calcAll();
       return M('{0}の地元の会社を買い、すぐに「{1}」を始めました', [C(c), I(b.ind)]);
     }
-    final left = mode == 'jv' ? 3 : 6;
+    // 1.1.0+28 から、立ち上げの月は国と年で変わる（会社を作る日数と許可。game_trade.dart）
+    final left = tradeOn ? setupMonths(c, mode) : (mode == 'jv' ? 3 : 6);
     b.pipe.add(Pipe(k: 'enter', c: c, mode: mode, cost: cost, pw: pw, left: left));
     calcAll();
     return M('{0}に出る準備を始めました（{1}）。{2}か月後に始まります', [C(c), D(ENTRYN.ja[mode]!), left]);

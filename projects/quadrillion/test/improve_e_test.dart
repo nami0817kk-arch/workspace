@@ -310,6 +310,9 @@ void main() {
               ..loy = loy;
             if (x.real) x.salary = s.mktPay(x);
           }
+          // 1.1.0+28（段5）で乱数の使い方が変わり、この盤面の会社が数か月で倒れるようになった（倒れると数えられない）。
+          // 見たいのは忠誠の線なので、お金が尽きないようにしておく
+          if (s.cash < 1e8) s.cash = 1e8;
           s.nextQuarter();
         }
         return n;

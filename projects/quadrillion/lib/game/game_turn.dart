@@ -228,6 +228,8 @@ extension GameTurn on Game {
     }
     // 店などの育ち・解約・許可・物件（1.1.0+26）
     monthUnits(N);
+    // 関税・輸送・海外の難しさ・供給の網（1.1.0+28）
+    monthTrade(N);
     // 仕掛かり中の打ち手
     for (final b in biz.toList()) {
       if (b.pipe.isNotEmpty) {
@@ -1628,8 +1630,11 @@ extension GameTurn on Game {
                   return M('{0}を訴えました', [Nm(foe.name)]);
                 }),
                 Choice(M('やり返す'), M('こちらも相手の中身を盗む（社長の時間は使わない）'), () {
-                  hUsed -= hrs('dirty');
-                  return doDirty('spy', foe);
+                  // 1.1.0+28：使った分だけを戻す（先に引くと、手が打てなかったときに時間がマイナスになっていた）
+                  final h0 = hUsed;
+                  final r = doDirty('spy', foe);
+                  hUsed = h0;
+                  return r;
                 }),
                 Choice(M('黙って次の商品で勝負する'), M('評判は守られる'), () {
                   rep = rep + 3;
