@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/proposal_engine.dart';
 import '../l10n/tr.dart';
 import '../logic/contract_board_engine.dart';
 import '../logic/contract_engine.dart';
@@ -46,6 +47,8 @@ class ContractBoardScreen extends StatelessWidget {
     int cost(Player p) =>
         ContractEngine.renewalCost(p) + ContractEngine.signingBonusFor(p);
     const small = TextStyle(fontSize: 12);
+    bool proposed(Player p) => game.save!.proposals
+        .any((x) => x.kind == ProposalKind.renew && x.playerId == p.id);
     // 更新が押せない理由(押せるなら null)。ボタンの有効・無効もこれで決める
     // (条件を2か所に持たない)。
     String? renewBlock(Player p) {
@@ -58,6 +61,112 @@ class ContractBoardScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(10),
       children: [
+        // 更新の時期の選手を先頭に(2026-11-24)。「やること」の行やタブの印から
+        // 来たとき、開いてすぐ見えるように。以前は登録の表と仮契約の下だった。
+        FmPanel(
+          title: Tr.pick('更新の時期の選手(${expiring.length})',
+              'Due for renewal (${expiring.length})'),
+          padding: EdgeInsets.zero,
+          child: expiring.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                      Tr.pick('いま更新が要る選手はいません。',
+                          'No one needs renewing right now.'),
+                      style: theme.textTheme.bodySmall),
+                )
+              : Column(
+                  children: [
+                    for (final p in expiring)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                                color: theme.colorScheme.outlineVariant),
+                          ),
+                        ),
+                        // 更新が押せない行だけ、行の下に理由を出す(応じない
+                        // 選手・資金不足)。理由は選手ごとに違うので行ごと。
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 4,
+                              child: Text(
+                                // 経営の概要の「監督からの提案」に同じ選手が出て
+                                // いるときは、ここにもそう書く(別の用件に見えない
+                                // ように)。
+                                Tr.pick(
+                                    '${p.name}(${p.position.label}・${p.age}歳)${proposed(p) ? '・監督が更新を提案中' : ''}',
+                                    '${p.name} (${p.position.label}, ${p.age})${proposed(p) ? ' • manager proposes renewal' : ''}'),
+                                style: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.bold),
+                                // 「監督が更新を提案中」が切れないよう、2行まで。
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                  Tr.pick(
+                                      '総合 ${p.overall}', 'OVR ${p.overall}'),
+                                  style: small),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Text(ContractEngine.contractLabel(p),
+                                  style: small),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                  Tr.pick(
+                                      '年俸 ${formatMoney(annualFromWeekly(p.wage))}',
+                                      'Salary ${formatMoney(annualFromWeekly(p.wage))}'),
+                                  style: small),
+                            ),
+                            if (game.canExerciseContractOption(p.id)) ...[
+                              OutlinedButton(
+                                onPressed: () async {
+                                  FeedbackService.tap();
+                                  await context
+                                      .read<GameState>()
+                                      .exerciseContractOption(p.id);
+                                },
+                                child: Text(Tr.pick('オプション行使', 'Take option')),
+                              ),
+                              const SizedBox(width: 4),
+                            ],
+                            FilledButton(
+                              key: ValueKey('board-renew-${p.id}'),
+                              onPressed: renewBlock(p) == null
+                                  ? () {
+                                      FeedbackService.tap();
+                                      openContractOffer(context,
+                                          player: p,
+                                          kind: ContractKind.renewal);
+                                    }
+                                  : null,
+                              child: Text(Tr.pick('更新 ${formatMoney(cost(p))}',
+                                  'Renew ${formatMoney(cost(p))}')),
+                            ),
+                          ],
+                        ),
+                            DisabledReason(renewBlock(p),
+                                alignEnd: true,
+                                padding: const EdgeInsets.only(bottom: 2)),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+        ),
+        _preContractPanel(context, game),
         FmPanel(
           title: Tr.pick('登録と契約', 'Registration & contracts'),
           child: Column(
@@ -146,105 +255,6 @@ class ContractBoardScreen extends StatelessWidget {
                   value: '${byYears[3]}'),
             ],
           ),
-        ),
-        _preContractPanel(context, game),
-        FmPanel(
-          title: Tr.pick('更新の時期の選手(${expiring.length})',
-              'Due for renewal (${expiring.length})'),
-          padding: EdgeInsets.zero,
-          child: expiring.isEmpty
-              ? Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text(
-                      Tr.pick('いま更新が要る選手はいません。',
-                          'No one needs renewing right now.'),
-                      style: theme.textTheme.bodySmall),
-                )
-              : Column(
-                  children: [
-                    for (final p in expiring)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                                color: theme.colorScheme.outlineVariant),
-                          ),
-                        ),
-                        // 更新が押せない行だけ、行の下に理由を出す(応じない
-                        // 選手・資金不足)。理由は選手ごとに違うので行ごと。
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                Tr.pick(
-                                    '${p.name}(${p.position.label}・${p.age}歳)',
-                                    '${p.name} (${p.position.label}, ${p.age})'),
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                  Tr.pick(
-                                      '総合 ${p.overall}', 'OVR ${p.overall}'),
-                                  style: small),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Text(ContractEngine.contractLabel(p),
-                                  style: small),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                  Tr.pick(
-                                      '年俸 ${formatMoney(annualFromWeekly(p.wage))}',
-                                      'Salary ${formatMoney(annualFromWeekly(p.wage))}'),
-                                  style: small),
-                            ),
-                            if (game.canExerciseContractOption(p.id)) ...[
-                              OutlinedButton(
-                                onPressed: () async {
-                                  FeedbackService.tap();
-                                  await context
-                                      .read<GameState>()
-                                      .exerciseContractOption(p.id);
-                                },
-                                child: Text(Tr.pick('オプション行使', 'Take option')),
-                              ),
-                              const SizedBox(width: 4),
-                            ],
-                            FilledButton(
-                              key: ValueKey('board-renew-${p.id}'),
-                              onPressed: renewBlock(p) == null
-                                  ? () {
-                                      FeedbackService.tap();
-                                      openContractOffer(context,
-                                          player: p,
-                                          kind: ContractKind.renewal);
-                                    }
-                                  : null,
-                              child: Text(Tr.pick('更新 ${formatMoney(cost(p))}',
-                                  'Renew ${formatMoney(cost(p))}')),
-                            ),
-                          ],
-                        ),
-                            DisabledReason(renewBlock(p),
-                                alignEnd: true,
-                                padding: const EdgeInsets.only(bottom: 2)),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
         ),
       ],
     );

@@ -466,8 +466,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('選手検索', 'Player search'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '移籍の画面の「探す」タブ。自国の全部と、他の4か国の1部のクラブの選手を、ポジション・年齢の上限で絞り、総合力・伸びしろ・安さ・若さの順に並べられる。総合力と伸びしろはスカウトの見立ての幅で出る。気になる選手は星で注目に入れ、申し込みは同じ画面から行う。',
-            "The Search tab on the transfer screen. It covers every club at home and the top flights of the other four countries; filter by position and an age limit, and sort by overall, potential, price or age. Overall and potential are your scouts' estimated ranges. Star a player to watch him, and bid for him from the same screen."),
+            '移籍の画面の「探す」タブの「選手を探す」。自国の全部と、他の4か国の1部のクラブの選手を、ポジション・年齢の上限で絞り、総合力・伸びしろ・安さ・若さの順に並べられる。総合力と伸びしろはスカウトの見立ての幅で出る。気になる選手は星で注目に入れ、申し込みは同じ画面から行う。',
+            "Find players, under the Search tab on the transfer screen. It covers every club at home and the top flights of the other four countries; filter by position and an age limit, and sort by overall, potential, price or age. Overall and potential are your scouts' estimated ranges. Star a player to watch him, and bid for him from the same screen."),
       ),
       GlossaryEntry(
         term: Tr.pick('武者修行(ローン育成)', 'Development loans'),
@@ -515,8 +515,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('ウォッチリスト', 'Watchlist'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '気になる選手に星印をつけて追いかけるリスト。移籍の画面の監督の案や「探す」で星を押すと入り、「注目」タブで一覧できる。注目している選手は、どの地域でもスカウトの見え方が毎週少しずつ上がる。注目している選手が得点するとクラブニュースに届く。',
-            'Star a player to keep an eye on him. Tap the star in Manager\'s picks or Search on the transfer screen, and the Watchlist tab shows them all. Your scouts get a little clearer on a watched player every week, wherever he plays, and when one of them scores it reaches your club news.'),
+            '気になる選手に星印をつけて追いかけるリスト。移籍の画面の「候補」の監督の補強案や「探す」で星を押すと入り、「候補」の「注目」で一覧できる。注目している選手は、どの地域でもスカウトの見え方が毎週少しずつ上がる。注目している選手が得点するとクラブニュースに届く。',
+            'Star a player to keep an eye on him. Tap the star in the manager\'s signing picks or in Search on the transfer screen, and Watchlist under Shortlist shows them all. Your scouts get a little clearer on a watched player every week, wherever he plays, and when one of them scores it reaches your club news.'),
       ),
       GlossaryEntry(
         term: Tr.pick('試合中の交代', 'Substitutions'),

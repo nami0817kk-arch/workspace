@@ -22,6 +22,7 @@ import '../widgets/responsive_body.dart';
 import '../logic/todo_advisor.dart';
 import '../widgets/shell_nav.dart';
 import '../widgets/todo_list.dart';
+import '../widgets/chip_switcher.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/transfer_table.dart';
@@ -40,7 +41,10 @@ class TransferScreen extends StatefulWidget {
   final int initialTab;
 
   /// 「届いたオファー」のタブの位置。状況の判断カードからここへ飛ぶ。
-  static const offersTab = 3;
+  static const offersTab = 2;
+
+  /// タブの数(候補・探す・交渉とオファー)。
+  static const int tabCount = 3;
 
   /// フィルタ・検索・並び替えを適用した移籍市場選手リストを返す。UIから切り離してテスト可能にしてある。
   static List<Player> filterAndSort(
@@ -96,7 +100,9 @@ class _TransferScreenState extends State<TransferScreen>
   void initState() {
     super.initState();
     _tabController = TabController(
-        length: 7, vsync: this, initialIndex: widget.initialTab.clamp(0, 6));
+        length: TransferScreen.tabCount,
+        vsync: this,
+        initialIndex: widget.initialTab.clamp(0, TransferScreen.tabCount - 1));
   }
 
   @override
@@ -127,26 +133,18 @@ class _TransferScreenState extends State<TransferScreen>
         leading: widget.embedded ? null : const BackButton(),
         controller: _tabController,
         tabMarks: widget.embedded
-            ? todoTabMarks(context, TodoMenu.transfer, 7)
+            ? todoTabMarks(context, TodoMenu.transfer, TransferScreen.tabCount)
             : const [],
         tabs: [
-          // 候補を挙げるのは SD がいてもいなくても監督(SigningProposalEngine)。
-          // SD がいるときだけ「SDの案」と出していたが、中身は同じ監督の
-          // 候補で、状況ページの「監督から補強の候補」と食い違っていた
-          // (2026-11-23)。SD は下の方針のカードで任せる別の役目。
-          Tr.pick('監督の案', "Manager's picks"),
+          // 7つあったタブを、用件ごとの3つにまとめた(2026-11-24)。
+          // 候補 = 監督の補強案と注目リスト、探す = 他クラブの選手・フリー・
+          // スカウトを送る地域、交渉とオファー = 進んでいる話の全部。
+          Tr.pick('候補', 'Shortlist'),
           Tr.pick('探す', 'Search'),
-          Tr.pick('交渉 (${gameState.transferTalks.length})',
-              'Talks (${gameState.transferTalks.length})'),
-          // 自分の選手に届いたオファーと、移籍リストに載せている選手。
-          // 左の「移籍」の印の件数と同じ数を出す。
-          Tr.pick('オファー (${gameState.incomingOffers.length})',
-              'Offers (${gameState.incomingOffers.length})'),
-          Tr.pick('注目 (${save.watchlistPlayerIds.length})',
-              'Watchlist (${save.watchlistPlayerIds.length})'),
-          Tr.pick('フリーエージェント (${gameState.freeAgents.length})',
-              'Free agents (${gameState.freeAgents.length})'),
-          Tr.pick('スカウト', 'Scouting'),
+          // 進んでいる交渉と届いたオファーの数。左の「移籍」の印と合う。
+          Tr.pick(
+              '交渉とオファー (${gameState.transferTalks.length + gameState.incomingOffers.length})',
+              'Talks & offers (${gameState.transferTalks.length + gameState.incomingOffers.length})'),
         ],
         actions: [
           const QuickAccessMenuButton(),
@@ -157,14 +155,66 @@ class _TransferScreenState extends State<TransferScreen>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildProposalTab(
-                context, gameState, save, squadFull, targets, same),
-            _buildSearchTab(context, gameState, squadFull, targets, same),
-            _buildTalksTab(context, gameState),
-            _buildOffersTab(context, gameState),
-            _buildWatchTab(context, gameState, save, squadFull, targets, same),
-            _buildFreeAgentTab(context, gameState, squadFull),
-            _buildScoutTab(context, gameState, save),
+            // 候補: 監督が挙げた補強の案と、自分で星を付けた注目の選手。
+            // 候補を挙げるのは SD がいてもいなくても監督
+            // (SigningProposalEngine)。SD は方針のカードで任せる別の役目。
+            ChipSwitcher(
+              key: const ValueKey('transfer-shortlist-chips'),
+              items: [
+                (
+                  Tr.pick('監督の補強案', "Manager's signing picks"),
+                  (context) => _buildProposalTab(
+                      context, gameState, save, squadFull, targets, same)
+                ),
+                (
+                  Tr.pick('注目 (${save.watchlistPlayerIds.length})',
+                      'Watchlist (${save.watchlistPlayerIds.length})'),
+                  (context) => _buildWatchTab(
+                      context, gameState, save, squadFull, targets, same)
+                ),
+              ],
+            ),
+            // 探す: 他のクラブの選手・所属のない選手・スカウトを送る地域。
+            ChipSwitcher(
+              key: const ValueKey('transfer-search-chips'),
+              items: [
+                (
+                  Tr.pick('選手を探す', 'Find players'),
+                  (context) => _buildSearchTab(
+                      context, gameState, squadFull, targets, same)
+                ),
+                (
+                  Tr.pick('フリー (${gameState.freeAgents.length})',
+                      'Free agents (${gameState.freeAgents.length})'),
+                  (context) =>
+                      _buildFreeAgentTab(context, gameState, squadFull)
+                ),
+                (
+                  // クラブの「ユース・新人発掘」(自前の育成)とは別。こちらは
+                  // 他のクラブの選手を見に行く先。
+                  Tr.pick('スカウトの地域', 'Scouting regions'),
+                  (context) => _buildScoutTab(context, gameState, save)
+                ),
+              ],
+            ),
+            // 交渉とオファー: 届いたオファー・移籍リストの選手・進んでいる
+            // 交渉・買い戻せる選手を、1つの一覧で。
+            ListView(
+              key: const ValueKey('transfer-deals-tab'),
+              children: [
+                _buildOffersTab(context, gameState, nested: true),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                  child: Text(
+                    Tr.pick('進んでいる交渉 (${gameState.transferTalks.length})',
+                        'Talks under way (${gameState.transferTalks.length})'),
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                _buildTalksTab(context, gameState, nested: true),
+              ],
+            ),
           ],
         ),
       ),
@@ -694,8 +744,8 @@ class _TransferScreenState extends State<TransferScreen>
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Text(
-            Tr.pick('注目している選手はいません。監督の案や「探す」で星を押すと入ります。',
-                "You are not watching anyone. Tap the star in Manager's picks or Search to add one."),
+            Tr.pick('注目している選手はいません。監督の補強案や「探す」で星を押すと入ります。',
+                "You are not watching anyone. Tap the star in the manager's signing picks or in Search to add one."),
             textAlign: TextAlign.center,
           ),
         ),
@@ -995,7 +1045,8 @@ class _TransferScreenState extends State<TransferScreen>
   /// 交渉: クラブとの移籍金の交渉の一覧。
   /// 自分の選手に届いたオファーと、移籍リストに載せている選手(2026-11-23)。
   /// 以前はオファーが状況(ホーム)にしか出ず、移籍の画面を開いても見つからなかった。
-  Widget _buildOffersTab(BuildContext context, GameState gameState) {
+  Widget _buildOffersTab(BuildContext context, GameState gameState,
+      {bool nested = false}) {
     final small =
         TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
     final listed = [
@@ -1009,6 +1060,9 @@ class _TransferScreenState extends State<TransferScreen>
                   const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
         );
     return ListView(
+      // 「交渉とオファー」の一覧の中に並べるときは、外の一覧と一緒に送る。
+      shrinkWrap: nested,
+      physics: nested ? const NeverScrollableScrollPhysics() : null,
       key: const ValueKey('transfer-offers-tab'),
       padding: const EdgeInsets.all(12),
       children: [
@@ -1081,13 +1135,17 @@ class _TransferScreenState extends State<TransferScreen>
     );
   }
 
-  Widget _buildTalksTab(BuildContext context, GameState gameState) {
+  Widget _buildTalksTab(BuildContext context, GameState gameState,
+      {bool nested = false}) {
     final talks = gameState.transferTalks;
     final small =
         TextStyle(fontSize: 12, color: SemanticColors.subtleText(context));
     final buyBacks = gameState.buyBackCandidates;
     if (talks.isEmpty && buyBacks.isNotEmpty) {
       return ListView(
+      // 「交渉とオファー」の一覧の中に並べるときは、外の一覧と一緒に送る。
+      shrinkWrap: nested,
+      physics: nested ? const NeverScrollableScrollPhysics() : null,
         padding: const EdgeInsets.all(12),
         children: [_buyBackCard(context, gameState, buyBacks)],
       );
@@ -1105,6 +1163,9 @@ class _TransferScreenState extends State<TransferScreen>
       );
     }
     return ListView(
+      // 「交渉とオファー」の一覧の中に並べるときは、外の一覧と一緒に送る。
+      shrinkWrap: nested,
+      physics: nested ? const NeverScrollableScrollPhysics() : null,
       padding: const EdgeInsets.all(12),
       children: [
         Text(

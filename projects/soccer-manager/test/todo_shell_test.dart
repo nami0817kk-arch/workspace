@@ -268,8 +268,12 @@ void main() {
       (TodoPlaces.clubYouth, find.byType(YouthScreen)),
       (TodoPlaces.squadContracts, find.byType(ContractBoardScreen)),
       (TodoPlaces.transferPicks, find.textContaining('スカッド ')),
-      (TodoPlaces.transferTalks, find.textContaining('交渉')),
-      (TodoPlaces.transferOffers, find.textContaining('オファー')),
+      (
+        TodoPlaces.transferSearch,
+        find.widgetWithText(ChoiceChip, '選手を探す')
+      ),
+      (TodoPlaces.transferTalks, find.textContaining('進んでいる交渉')),
+      (TodoPlaces.transferOffers, find.textContaining('届いたオファー')),
       (TodoPlaces.leagueCups, find.byType(CupScreen)),
       (TodoPlaces.ownerMatchday, find.textContaining('試合日のイベント')),
       (TodoPlaces.ownerFans, find.text('ファン感謝祭')),
@@ -319,7 +323,8 @@ void main() {
     expect(items.mustAt(TodoMenu.transfer, TodoPlaces.transferOffers.tab), 2);
     nav.go(TodoPlaces.transferOffers);
     await settle(tester);
-    expect(find.textContaining('オファー (2)').hitTestable(), findsOneWidget);
+    expect(find.textContaining('交渉とオファー (2)').hitTestable(), findsOneWidget);
+    expect(find.text('届いたオファー').hitTestable(), findsOneWidget);
     expectNothingPushed(tester);
   });
 
@@ -363,12 +368,12 @@ void main() {
         expect(find.byKey(ValueKey(key)), findsNothing, reason: key);
       }
     }
-    // タブの印: 移籍のオファーのタブ(3番目)に赤い2。
+    // タブの印: 移籍の「交渉とオファー」のタブ(2番目)に赤い2。
     navOf(tester).go(TodoPlaces.transferPicks);
     await settle(tester);
     expect(
         numberIn(find.descendant(
-            of: find.byKey(const ValueKey('tab-mark-3')).hitTestable(),
+            of: find.byKey(const ValueKey('tab-mark-2')).hitTestable(),
             matching: find.byKey(const ValueKey('todo-mark-must')))),
         '2');
     // タブの印: クラブのスタッフ(0番目)に、空席のおすすめの青い点。

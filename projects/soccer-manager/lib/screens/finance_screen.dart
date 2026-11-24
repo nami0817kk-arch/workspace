@@ -12,26 +12,21 @@ import '../theme/semantic_colors.dart';
 import '../widgets/amount_nudger.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/budget_plan_card.dart';
-import '../widgets/ledger_card.dart';
 import '../widgets/economy_card.dart';
 import '../widgets/club_policy_card.dart';
 import '../widgets/advisor_card.dart';
-import '../widgets/club_ranking_card.dart';
-import '../widgets/club_timeline_card.dart';
-import '../widgets/club_value_card.dart';
 import '../widgets/auto_columns.dart';
 import '../widgets/owner_career_card.dart';
-import '../widgets/trend_chart.dart';
-import '../widgets/projection_card.dart';
 import '../widgets/equity_card.dart';
 import '../widgets/media_deals_card.dart';
 import '../widgets/project_card.dart';
 import '../widgets/proposal_card.dart';
 import '../widgets/risk_card.dart';
+import '../widgets/place_link.dart';
+import '../widgets/owner_wealth_card.dart';
 import '../logic/todo_advisor.dart';
 import '../widgets/shell_nav.dart';
 import '../widgets/todo_list.dart';
-import '../widgets/rival_card.dart';
 import '../widgets/rules_card.dart';
 import '../widgets/reward_funds_card.dart';
 import '../widgets/responsive_body.dart';
@@ -45,6 +40,9 @@ import '../widgets/disabled_reason.dart';
 
 class FinanceScreen extends StatelessWidget {
   const FinanceScreen({super.key, this.embedded = false, this.initialTab = 0});
+
+  /// タブの数(概要・お金を作る・方針と投資)。
+  static const int tabCount = 3;
 
   /// 最初に開くタブ(単独で開くとき)。番号は [TodoPlaces] と同じ。
   final int initialTab;
@@ -70,15 +68,11 @@ class FinanceScreen extends StatelessWidget {
     final expenses = gameState.annualExpenseForecast;
     final net = gameState.annualNetForecast;
 
-    final sortedByExpiry = team.players.where((p) => !p.isLoan).toList()
-      ..sort(
-        (a, b) => a.contractYearsRemaining.compareTo(b.contractYearsRemaining),
-      );
     final loanPlayers = team.players.where((p) => p.isLoan).toList();
 
     return DefaultTabController(
-      length: 5,
-      initialIndex: initialTab.clamp(0, 4),
+      length: tabCount,
+      initialIndex: initialTab.clamp(0, tabCount - 1),
       // 左メニューの中にあるときは、「やること」の行き先からタブを選べる。
       child: ShellTabSync(
         menu: TodoMenu.finance,
@@ -91,13 +85,13 @@ class FinanceScreen extends StatelessWidget {
           actions: const [QuickAccessMenuButton()],
           scrollable: true,
           tabMarks:
-              embedded ? todoTabMarks(context, TodoMenu.finance, 5) : const [],
+              embedded
+                  ? todoTabMarks(context, TodoMenu.finance, tabCount)
+                  : const [],
           tabs: [
             Tr.pick('概要', 'Overview'),
-            Tr.pick('収支・契約', 'Accounts'),
-            Tr.pick('資金・取引', 'Funding'),
-            Tr.pick('投資・規則', 'Projects'),
-            Tr.pick('記録', 'Records'),
+            Tr.pick('お金を作る', 'Raise money'),
+            Tr.pick('方針と投資', 'Policy & projects'),
           ],
         ),
         drawer: const QuickAccessDrawer(),
@@ -217,16 +211,6 @@ class FinanceScreen extends StatelessWidget {
                   const _MoneyCalendarCard(),
                   const RewardFundsCard(),
                   const BudgetPlanCard(),
-                ],
-              ),
-            ),
-            ResponsiveBody(
-              // 広い画面(iPad の横向きなど)では2列に並べる。
-              child: AutoColumns(
-                children: [
-                  const LedgerCard(),
-                  const ProjectionCard(),
-                  const TrendsCard(),
                   if (save.pendingInstallments.isNotEmpty) ...[
                     const SizedBox(height: 16),
                     Text(Tr.pick('分割払い残金', 'Instalments outstanding'),
@@ -276,80 +260,34 @@ class FinanceScreen extends StatelessWidget {
                         ),
                       ),
                   ],
-                  const SizedBox(height: 16),
-                  Text(
-                    Tr.pick('契約状況（残り年数が少ない順）',
-                        'Contracts, shortest remaining first'),
-                    style: Theme.of(context).textTheme.titleMedium,
+                  // 契約の更新の操作は「選手 > 登録と契約」の1か所。ここには入口だけ
+                  // 置く(以前はここに全員の契約の一覧があった。一覧は資料の
+                  // 「収支の詳しい表」へ)。
+                  PlaceLink(
+                    key: const ValueKey('finance-to-contracts'),
+                    icon: Icons.badge_outlined,
+                    title: Tr.pick('契約状況は「登録と契約」へ', 'Contracts: open Registration & contracts'),
+                    note: Tr.pick('更新の時期の選手・仮契約・登録の人数は、選手のページでまとめて見ます。',
+                        'Renewals, pre-contracts and registration numbers live on the Players page.'),
+                    place: TodoPlaces.squadContracts,
                   ),
-                  const SizedBox(height: 8),
-                  for (final (i, p) in sortedByExpiry.indexed)
-                    InkWell(
-                      onTap: () => _openPlayer(context, p.id),
-                      child: Container(
-                        height: 40,
-                        color: i.isOdd
-                            ? Theme.of(context).colorScheme.surfaceContainerLow
-                            : null,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(p.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600)),
-                            ),
-                            SizedBox(
-                              width: 44,
-                              child: Text(p.position.label,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 12)),
-                            ),
-                            // 英語の「1.2m yen」が2行に折れていた(2026-11-23)。
-                            SizedBox(
-                              width: 84,
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                    formatMoney(annualFromWeekly(p.wage)),
-                                    maxLines: 1,
-                                    textAlign: TextAlign.right,
-                                    style: const TextStyle(fontSize: 12)),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 64,
-                              child: Text(
-                                ContractEngine.untilShortLabel(
-                                    p.contractEndYear),
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: p.contractYearsRemaining <= 1
-                                      ? SemanticColors.negative(context)
-                                      : null,
-                                  fontWeight: p.contractYearsRemaining <= 1
-                                      ? FontWeight.bold
-                                      : null,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),
+            // お金を作る: 外から入るお金(スポンサー・命名権と放映権)を先に、
+            // 借りる・預ける・資本の手を後に。答えを待つ話(スポンサーの
+            // 候補・枠ごとの提示・命名権)が、開いてすぐ見える位置に来る。
             ResponsiveBody(
-              // 広い画面(iPad の横向きなど)では2列に並べる。
               child: AutoColumns(
                 children: [
-                  const SizedBox(height: 16),
-                  // 説明文は見出しの「?」の中へ(2026-11-21)。
+                  TitleWithHelp(
+                    title: Tr.pick('スポンサー契約', 'Sponsorship'),
+                    help: Tr.pick('1年の額が大きいほど、契約の期間は短くなります。契約する候補を1つ選んでください。',
+                        'The more it pays a year, the shorter the deal. Choose which offer to take.'),
+                  ),
+                  _SponsorSection(gameState: gameState),
+                  const SponsorSlotsCard(),
+                  const MediaDealsCard(),
                   TitleWithHelp(
                     title: Tr.pick('資金調達（銀行融資）', 'Raise money (bank loan)'),
                     help: Tr.pick('スタジアムの規模・オーナーの評判が高いほど、借りられる上限が上がります。',
@@ -363,41 +301,33 @@ class FinanceScreen extends StatelessWidget {
                         'Locked away until it matures, and pays a lump of interest when it does.'),
                   ),
                   _InvestmentSection(gameState: gameState),
-                  const SizedBox(height: 12),
-                  TitleWithHelp(
-                    title: Tr.pick('スポンサー契約', 'Sponsorship'),
-                    help: Tr.pick('1年の額が大きいほど、契約の期間は短くなります。契約する候補を1つ選んでください。',
-                        'The more it pays a year, the shorter the deal. Choose which offer to take.'),
-                  ),
-                  _SponsorSection(gameState: gameState),
-                  const SponsorSlotsCard(),
                   const EquityCard(),
-                  const FiveYearPlanCard(),
-                  const MediaDealsCard(),
+                  // オーナーの財布(出資・貸す/返してもらう)。以前は
+                  // 「オーナー室 > オーナーと世界」にあった。
+                  const OwnerWealthCard(),
+                  PlaceLink(
+                    key: const ValueKey('finance-to-owner-finance-works'),
+                    icon: Icons.work_outline,
+                    title: Tr.pick('社債・配当・資産の売却は「オーナーの仕事」へ',
+                        "Bonds, dividends and asset sales: open Owner's work"),
+                    note: Tr.pick('財務・資本の手(1シーズンに1回ずつ)は、オーナー室にまとめてあります。',
+                        "Finance & capital moves (once a season each) are in the owner's office."),
+                    place: TodoPlaces.ownerFinanceWorks,
+                  ),
                 ],
               ),
             ),
+            // 方針と投資: 季をまたいで効く決めごと。
             ResponsiveBody(
-              // 広い画面(iPad の横向きなど)では2列に並べる。
               child: AutoColumns(
                 children: [
-                  const RulesCard(),
                   const ClubPolicyCard(),
-                  const EconomyCard(),
+                  const FiveYearPlanCard(),
                   const ProjectCard(),
                   const AdvisorCard(),
                   const RiskCard(),
-                ],
-              ),
-            ),
-            ResponsiveBody(
-              // 広い画面(iPad の横向きなど)では2列に並べる。
-              child: AutoColumns(
-                children: [
-                  const ClubValueCard(),
-                  const ClubRankingCard(),
-                  const RivalCard(),
-                  const ClubTimelineCard(),
+                  const RulesCard(),
+                  const EconomyCard(),
                 ],
               ),
             ),

@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/auto_columns.dart';
-import '../widgets/club_comparison_card.dart';
 import '../widgets/club_culture_card.dart';
-import '../widgets/country_coefficient_card.dart';
 import '../widgets/era_group_card.dart';
-import '../widgets/former_clubs_card.dart';
-import '../widgets/owner_career_card.dart';
-import '../widgets/owner_wealth_card.dart';
 import '../widgets/responsive_body.dart';
 import '../widgets/rival_owners_card.dart';
 
@@ -22,14 +17,11 @@ class OwnerWorldScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const ResponsiveBody(
       child: AutoColumns(
+        // 札が3枚でも、横画面では2列に並べる。
+        minChildren: 3,
         children: [
-          OwnerWealthCard(),
-          OwnerCareerCard(),
           ClubCultureCard(),
           RivalOwnersCard(),
-          ClubComparisonCard(),
-          FormerClubsCard(),
-          CountryCoefficientCard(),
           EraGroupCard(),
         ],
       ),

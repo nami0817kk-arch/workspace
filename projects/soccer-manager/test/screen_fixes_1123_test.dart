@@ -77,7 +77,8 @@ void main() {
           const TransferScreen(initialTab: TransferScreen.offersTab));
 
       // 左の「移籍」の印(incomingOffers の件数)と同じ数がタブに出る。
-      expect(find.text('オファー (1)'), findsOneWidget);
+      // オファーは「交渉とオファー」のタブにまとめた(2026-11-24)。
+      expect(find.text('交渉とオファー (1)'), findsOneWidget);
       expect(find.byKey(const ValueKey('transfer-offers-tab')), findsOneWidget);
       expect(find.textContaining('北風シティが${a.name}に'), findsOneWidget);
       expect(find.text('拒否'), findsOneWidget);
@@ -95,7 +96,7 @@ void main() {
       await tester.tap(find.text('拒否'));
       await tester.pumpAndSettle();
       expect(game.incomingOffers, isEmpty);
-      expect(find.text('オファー (0)'), findsOneWidget);
+      expect(find.text('交渉とオファー (0)'), findsOneWidget);
       await tester.pump(GameState.persistDebounce);
     });
 

@@ -71,13 +71,15 @@ void main() {
   }
 
   group('1. 補強の候補を出すのは監督(SD がいても)', () {
-    testWidgets('SD を雇っていても、移籍の最初のタブは「監督の案」', (tester) async {
+    testWidgets('SD を雇っていても、移籍の最初の札は「監督の補強案」', (tester) async {
       final (game, settings) = await start(tester);
       game.save!.infrastructure.staff[StaffRole.sportingDirector] =
           staff('sd', StaffRole.sportingDirector, StaffSpecialty.balanced);
       expect(game.currentSd, isNotNull);
       await pump(tester, game, settings, const TransferScreen());
-      expect(find.text('監督の案'), findsOneWidget);
+      // 2026-11-24 に、タブを「候補」にまとめ、中の札を「監督の補強案」にした
+      // (経営の「監督からの提案」と紛れない名前)。
+      expect(find.text('監督の補強案'), findsOneWidget);
       expect(find.text('SDの案'), findsNothing);
       // SD の方針のカードは残る(任せるのは別の役目)。
       expect(find.textContaining('SD(担当sd)に補強を任せる'), findsOneWidget);
@@ -90,7 +92,7 @@ void main() {
       game.save!.infrastructure.staff[StaffRole.sportingDirector] =
           staff('sd', StaffRole.sportingDirector, StaffSpecialty.balanced);
       await pump(tester, game, settings, const TransferScreen());
-      expect(find.text("Manager's picks"), findsOneWidget);
+      expect(find.text("Manager's signing picks"), findsOneWidget);
       expect(find.text('DoF shortlist'), findsNothing);
       expect(find.text('Proposals'), findsNothing);
       await tester.pump(GameState.persistDebounce);

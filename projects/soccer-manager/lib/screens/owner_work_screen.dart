@@ -83,6 +83,10 @@ class _OwnerWorkScreenState extends State<OwnerWorkScreen> {
     switch (card) {
       case TodoPlaces.cardFans:
         return of(OwnerWorkCategory.fans);
+      case TodoPlaces.cardFinanceWorks:
+        return of(OwnerWorkCategory.finance);
+      case TodoPlaces.cardCommunityWorks:
+        return of(OwnerWorkCategory.community);
       case TodoPlaces.cardWorks:
         // いま打てる手がある最初の分野(広報は月に1回で別扱い)。
         for (final c in OwnerWorkCategory.values) {
@@ -249,7 +253,8 @@ class _PartnerCard extends StatelessWidget {
     final game = context.watch<GameState>();
     final partner = game.partnerClub;
     return FmPanel(
-      title: Tr.pick('提携クラブ', 'Partner club'),
+      // クラブ > 施設の「系列クラブ」(選手の貸し借り)と紛れない名前に。
+      title: Tr.pick('友好提携クラブ: 2つの期待が上がる', 'Friendship partner: lifts both expectations'),
       margin: const EdgeInsets.only(top: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

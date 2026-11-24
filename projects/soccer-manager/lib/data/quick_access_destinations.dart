@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/achievements_screen.dart';
 import '../screens/awards_screen.dart';
 import '../screens/best_eleven_screen.dart';
-import '../screens/club_calendar_screen.dart';
+import '../screens/reference_screens.dart';
 import '../screens/club_screen.dart';
 import '../screens/contract_board_screen.dart';
 import '../screens/analysis_screen.dart';
@@ -25,6 +25,14 @@ import '../state/game_state.dart';
 /// ホーム画面の「クラブ運営」タイルと、各メインタブのクイックアクセス
 /// ドロワーの両方から参照する遷移先の一覧。1箇所で管理することで、
 /// 新しい管理画面を追加したときにどちらか一方だけ更新し忘れる事故を防ぐ。
+/// 引き出しの中のまとまり。
+///
+/// - [manage]: 操作する画面。横画面では左メニューにあるので、引き出しには
+///   出さない。
+/// - [reference]: 見るだけの画面(資料)。横画面では、ここが唯一の入口。
+/// - [help]: 設定・用語集・ガイド。
+enum QuickAccessGroup { manage, reference, help }
+
 class QuickAccessDestination {
   final IconData icon;
   final String label;
@@ -40,12 +48,16 @@ class QuickAccessDestination {
   /// いつ開くかを見せて目標として機能させる。
   final String? Function(GameState)? lockedReason;
 
+  /// 引き出しの中のまとまり。
+  final QuickAccessGroup group;
+
   const QuickAccessDestination({
     required this.icon,
     required this.label,
     required this.color,
     required this.builder,
     this.lockedReason,
+    this.group = QuickAccessGroup.manage,
   });
 }
 
@@ -63,11 +75,12 @@ String? _needsFirstSeason(GameState game) {
 
 // 同上。final だと最初のアクセス時の言語でラベルが固定される。
 List<QuickAccessDestination> get quickAccessDestinations => [
+      // カレンダー(月のマス目と1年の予定)。横画面では上の帯の日付から開く。
       QuickAccessDestination(
         icon: Icons.event_note,
-        label: Tr.pick('クラブの年間予定', 'Club calendar'),
+        label: Tr.pick('カレンダー', 'Calendar'),
         color: Colors.teal.shade600,
-        builder: (_) => const ClubCalendarScreen(),
+        builder: (_) => const CalendarHubScreen(),
       ),
       QuickAccessDestination(
         icon: Icons.badge_outlined,
@@ -89,7 +102,7 @@ List<QuickAccessDestination> get quickAccessDestinations => [
       ),
       QuickAccessDestination(
         icon: Icons.emoji_people,
-        label: Tr.pick('ユース・スカウト', 'Youth & scouting'),
+        label: Tr.pick('ユース・新人発掘', 'Youth & intake'),
         color: Colors.teal.shade400,
         builder: (_) => const YouthScreen(),
       ),
@@ -99,11 +112,34 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         color: Colors.brown.shade400,
         builder: (_) => const FinanceScreen(),
       ),
+      // ---- 資料(見るだけ)。経営・オーナー室のタブから移した ----
+      QuickAccessDestination(
+        icon: Icons.table_chart_outlined,
+        label: Tr.pick('収支の詳しい表', 'Accounts in detail'),
+        color: Colors.brown.shade500,
+        builder: (_) => const FinanceReportScreen(),
+        group: QuickAccessGroup.reference,
+      ),
+      QuickAccessDestination(
+        icon: Icons.shield_outlined,
+        label: Tr.pick('クラブの記録', 'Club records'),
+        color: Colors.blueGrey.shade600,
+        builder: (_) => const ClubRecordsScreen(),
+        group: QuickAccessGroup.reference,
+      ),
+      QuickAccessDestination(
+        icon: Icons.person_outline,
+        label: Tr.pick('オーナーの記録', 'Owner records'),
+        color: Colors.indigo.shade400,
+        builder: (_) => const OwnerRecordsScreen(),
+        group: QuickAccessGroup.reference,
+      ),
       QuickAccessDestination(
         icon: Icons.newspaper,
         label: Tr.pick('クラブニュース', 'Club news'),
         color: Colors.deepPurple.shade400,
         builder: (_) => const NewsScreen(),
+        group: QuickAccessGroup.reference,
       ),
       QuickAccessDestination(
         icon: Icons.apartment,
@@ -116,6 +152,7 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('シーズン分析', 'Season analysis'),
         color: Colors.teal.shade400,
         builder: (_) => const AnalysisScreen(),
+        group: QuickAccessGroup.reference,
       ),
       QuickAccessDestination(
         icon: Icons.emoji_events,
@@ -128,6 +165,7 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('個人タイトル', 'Individual awards'),
         color: Colors.amber.shade700,
         builder: (_) => const AwardsScreen(),
+        group: QuickAccessGroup.reference,
         lockedReason: _needsFirstSeason,
       ),
       QuickAccessDestination(
@@ -135,18 +173,21 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('リーグランキング', 'League rankings'),
         color: Colors.green.shade700,
         builder: (_) => const LeagueRankingScreen(),
+        group: QuickAccessGroup.reference,
       ),
       QuickAccessDestination(
         icon: Icons.settings,
         label: Tr.pick('設定', 'Settings'),
         color: Colors.blueGrey.shade700,
         builder: (_) => const SettingsScreen(),
+        group: QuickAccessGroup.help,
       ),
       QuickAccessDestination(
         icon: Icons.history,
         label: Tr.pick('シーズン成績', 'Season archive'),
         color: Colors.teal.shade700,
         builder: (_) => const SeasonHistoryScreen(),
+        group: QuickAccessGroup.reference,
         lockedReason: _needsFirstSeason,
       ),
       QuickAccessDestination(
@@ -154,6 +195,7 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('ベストイレブン', 'Team of the season'),
         color: Colors.orange.shade700,
         builder: (_) => const BestElevenScreen(),
+        group: QuickAccessGroup.reference,
         lockedReason: _needsFirstSeason,
       ),
       QuickAccessDestination(
@@ -161,6 +203,7 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('殿堂', 'Hall of fame'),
         color: Colors.brown.shade700,
         builder: (_) => const HallOfFameScreen(),
+        group: QuickAccessGroup.reference,
         // 殿堂はシーズンを終えるだけでは埋まらない。引退した選手が出て
         // 初めて中身ができるので、条件を分けてある。
         lockedReason: (game) => game.save?.retiredLegends.isNotEmpty ?? false
@@ -173,17 +216,20 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('用語集', 'Glossary'),
         color: Colors.cyan.shade700,
         builder: (_) => const GlossaryScreen(),
+        group: QuickAccessGroup.help,
       ),
       QuickAccessDestination(
         icon: Icons.help_outline,
         label: Tr.pick('ガイド', 'Guide'),
         color: Colors.lightGreen.shade700,
         builder: (_) => const GuideScreen(),
+        group: QuickAccessGroup.help,
       ),
       QuickAccessDestination(
         icon: Icons.emoji_events,
         label: Tr.pick('実績', 'Achievements'),
         color: Colors.amber.shade700,
         builder: (_) => const AchievementsScreen(),
+        group: QuickAccessGroup.reference,
       ),
     ];

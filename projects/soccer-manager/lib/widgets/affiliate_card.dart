@@ -35,8 +35,9 @@ class _AffiliateCardState extends State<AffiliateCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TitleWithHelp(
-              title: Tr.pick('系列クラブ(年会費${formatMoney(fee)})',
-                  'Affiliate club (${formatMoney(fee)} a year)'),
+              // オーナーの仕事の「友好提携」(期待が上がるだけ)と紛れない名前に。
+              title: Tr.pick('系列クラブ: 選手の貸し借り(年会費${formatMoney(fee)})',
+                  'Feeder club: loans & discounts (${formatMoney(fee)} a year)'),
               help: Tr.pick(
                   '自クラブより弱いクラブと提携します(年会費${formatMoney(fee)})。提携先の選手は2割引で取れ、貸し出しは提携先へ出場機会付きで送ります。',
                   'Partner a weaker club (${formatMoney(fee)} a year). Their players come 20% cheaper, and your loans go there with playing time guaranteed.'),

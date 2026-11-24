@@ -12,15 +12,9 @@ import '../l10n/tr.dart';
 class QuickAccessDrawer extends StatelessWidget {
   const QuickAccessDrawer({super.key, this.onlyOthers = false});
 
-  /// 横画面の左メニューの「その他」から開くとき。主な画面は左メニューの
-  /// 項目の中にまとまっているので、設定・用語集・ガイドだけを出す。
+  /// 横画面の上の帯の ≡ から開くとき。操作する画面は左メニューの項目の
+  /// 中にまとまっているので、「資料」と「設定とヘルプ」だけを出す。
   final bool onlyOthers;
-
-  static List<String> get _otherLabels => [
-        Tr.pick('設定', 'Settings'),
-        Tr.pick('用語集', 'Glossary'),
-        Tr.pick('ガイド', 'Guide'),
-      ];
 
   @override
   Widget build(BuildContext context) {
@@ -44,41 +38,71 @@ class QuickAccessDrawer extends StatelessWidget {
                 ),
               ),
             ),
-            for (final dest in quickAccessDestinations)
-              if (!onlyOthers || _otherLabels.contains(dest.label))
-                Builder(builder: (context) {
-                  // まだ中身が空になる画面は、開く前にその旨を見せる。
-                  // 隠さずに残すのは、機能の存在と到達条件を伝えるため。
-                  final locked =
-                      dest.lockedReason?.call(context.watch<GameState>());
-                  return ListTile(
-                    enabled: locked == null,
-                    leading: CircleAvatar(
-                      backgroundColor: locked == null
-                          ? dest.color
-                          : dest.color.withValues(alpha: 0.35),
-                      child: Icon(
-                        locked == null ? dest.icon : Icons.lock_outline,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+            // 見出しで「資料」「設定とヘルプ」に分ける。横画面では、操作する
+            // 画面は左メニューにあるので出さない(2026-11-24)。
+            for (final group in QuickAccessGroup.values)
+              if (!onlyOthers || group != QuickAccessGroup.manage) ...[
+                Padding(
+                  key: ValueKey('drawer-group-${group.name}'),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                  child: Text(
+                    switch (group) {
+                      QuickAccessGroup.manage =>
+                        Tr.pick('クラブ運営', 'Running the club'),
+                      QuickAccessGroup.reference =>
+                        Tr.pick('資料(見るだけ)', 'Reference (view only)'),
+                      QuickAccessGroup.help =>
+                        Tr.pick('設定とヘルプ', 'Settings & help'),
+                    },
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
-                    title: Text(dest.label),
-                    subtitle: locked == null ? null : Text(locked),
-                    // 押しても開けないので、無反応にせず理由を出す。
-                    onTap: locked != null
-                        ? null
-                        : () {
-                            FeedbackService.tap();
-                            Navigator.of(context).pop();
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: dest.builder));
-                          },
-                  );
-                }),
+                  ),
+                ),
+                for (final dest in quickAccessDestinations)
+                  if (dest.group == group) _DestinationTile(dest: dest),
+              ],
           ],
         ),
       ),
+    );
+  }
+}
+
+class _DestinationTile extends StatelessWidget {
+  const _DestinationTile({required this.dest});
+
+  final QuickAccessDestination dest;
+
+  @override
+  Widget build(BuildContext context) {
+    // まだ中身が空になる画面は、開く前にその旨を見せる。
+    // 隠さずに残すのは、機能の存在と到達条件を伝えるため。
+    final locked = dest.lockedReason?.call(context.watch<GameState>());
+    return ListTile(
+      enabled: locked == null,
+      leading: CircleAvatar(
+        backgroundColor:
+            locked == null ? dest.color : dest.color.withValues(alpha: 0.35),
+        child: Icon(
+          locked == null ? dest.icon : Icons.lock_outline,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+      title: Text(dest.label),
+      subtitle: locked == null ? null : Text(locked),
+      // 押しても開けないので、無反応にせず理由を出す。
+      onTap: locked != null
+          ? null
+          : () {
+              FeedbackService.tap();
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: dest.builder));
+            },
     );
   }
 }

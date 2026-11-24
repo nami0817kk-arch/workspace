@@ -48,10 +48,16 @@ class ClubComparisonCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 3),
                 child: Row(
                   children: [
-                    Expanded(child: Text(label)),
-                    Text(Tr.pick(
+                    Text(label),
+                    const SizedBox(width: 8),
+                    // 値は残りの幅で折り返す(狭い幅・大きい文字で右に
+                    // はみ出していた)。
+                    Expanded(
+                        child: Text(
+                            textAlign: TextAlign.end,
+                            Tr.pick(
                         '${money ? formatMoney(r.mine) : r.mine}(${r.clubs}クラブ中${r.rank}位・真ん中${money ? formatMoney(r.median) : r.median})',
-                        '${money ? formatMoney(r.mine) : r.mine} (#${r.rank} of ${r.clubs}, median ${money ? formatMoney(r.median) : r.median})')),
+                        '${money ? formatMoney(r.mine) : r.mine} (#${r.rank} of ${r.clubs}, median ${money ? formatMoney(r.median) : r.median})'))),
                   ],
                 ),
               ),

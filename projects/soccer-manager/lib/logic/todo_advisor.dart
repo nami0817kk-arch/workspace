@@ -61,10 +61,10 @@ class TodoPlaces {
   /// 状況の、オーナーの目標を選ぶ一覧(下から出る)。
   static const ownerGoal = TodoPlace(TodoMenu.status, card: cardOwnerGoal);
 
-  // 経営: 概要・収支と契約・資金と取引・投資と規則・記録
+  // 経営: 概要・お金を作る・方針と投資
   static const financeOverview = TodoPlace(TodoMenu.finance);
-  static const financeFunding = TodoPlace(TodoMenu.finance, tab: 2);
-  static const financeProjects = TodoPlace(TodoMenu.finance, tab: 3);
+  static const financeFunding = TodoPlace(TodoMenu.finance, tab: 1);
+  static const financeProjects = TodoPlace(TodoMenu.finance, tab: 2);
 
   // クラブ: スタッフ・施設・ファンと街・ユースとスカウト
   static const clubStaff = TodoPlace(TodoMenu.club);
@@ -76,24 +76,33 @@ class TodoPlaces {
   static const squadList = TodoPlace(TodoMenu.squad);
   static const squadContracts = TodoPlace(TodoMenu.squad, tab: 1);
 
-  // リーグ: 順位と日程・カップ戦・ランキング・個人タイトル
+  // リーグ: 順位と日程・カップ戦
   static const leagueCups = TodoPlace(TodoMenu.league, tab: 1);
 
-  // 移籍: 監督の案・探す・交渉・オファー・注目・フリーエージェント・スカウト
+  // 移籍: 候補(監督の補強案・注目)・探す(選手・フリー・スカウトの地域)・
+  // 交渉とオファー
   static const transferPicks = TodoPlace(TodoMenu.transfer);
+  static const transferSearch = TodoPlace(TodoMenu.transfer, tab: 1);
   static const transferTalks = TodoPlace(TodoMenu.transfer, tab: 2);
-  static const transferOffers = TodoPlace(TodoMenu.transfer, tab: 3);
+  static const transferOffers = TodoPlace(TodoMenu.transfer, tab: 2);
 
-  // オーナー室: オーナーの仕事(分野の札)・オーナーと世界・…
+  // オーナー室: オーナーの仕事(分野の札)・オーナーと世界
   static const ownerMatchday =
       TodoPlace(TodoMenu.ownerRoom, card: cardMatchday);
   static const ownerFans = TodoPlace(TodoMenu.ownerRoom, card: cardFans);
   static const ownerWorks = TodoPlace(TodoMenu.ownerRoom, card: cardWorks);
+  static const ownerFinanceWorks =
+      TodoPlace(TodoMenu.ownerRoom, card: cardFinanceWorks);
+  static const ownerCommunityWorks =
+      TodoPlace(TodoMenu.ownerRoom, card: cardCommunityWorks);
+  static const ownerWorld = TodoPlace(TodoMenu.ownerRoom, tab: 1);
 
   static const String cardOwnerGoal = 'ownerGoal';
   static const String cardMatchday = 'matchday';
   static const String cardFans = 'fans';
   static const String cardWorks = 'works';
+  static const String cardFinanceWorks = 'financeWorks';
+  static const String cardCommunityWorks = 'communityWorks';
 }
 
 /// 「やること」の種類。上から、一覧に並べる順。
@@ -646,7 +655,8 @@ class TodoAdvisor {
         kind: TodoKind.managerProposals,
         level: TodoLevel.recommended,
         title: Tr.pick(
-            '監督からの提案が$n件', "${Tr.plural(n, 'proposal')} from your manager"),
+            '監督からの提案(契約更新・昇格)が$n件',
+            "${Tr.plural(n, 'proposal')} from your manager (renewals & promotions)"),
         note: Tr.pick(
             '${save.proposals.map((p) => '${p.kind.label}: ${p.playerName}').join('、')}。承認か却下を決めます。',
             '${save.proposals.map((p) => '${p.kind.label}: ${p.playerName}').join(', ')}. Approve or decline.'),

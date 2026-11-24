@@ -444,7 +444,8 @@ void main() {
       // 届いたオファーは、状況の札と移籍>オファーの両方で答えられる。
       expect(items.mustAt(TodoMenu.transfer), 2);
       expect(items.mustAt(TodoMenu.transfer, TodoPlaces.transferOffers.tab), 2);
-      expect(items.mustAt(TodoMenu.transfer, TodoPlaces.transferTalks.tab), 0);
+      // 交渉とオファーは同じタブ(2026-11-24 にまとめた)。候補のタブには付かない。
+      expect(items.mustAt(TodoMenu.transfer, TodoPlaces.transferPicks.tab), 0);
       // スポンサーは経営の「資金・取引」。
       expect(items.mustAt(TodoMenu.finance), 1);
       expect(items.mustAt(TodoMenu.finance, TodoPlaces.financeFunding.tab), 1);

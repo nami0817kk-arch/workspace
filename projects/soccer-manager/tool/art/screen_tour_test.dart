@@ -214,8 +214,15 @@ void main() {
                   of: find.byWidget(e.widget), matching: find.byType(Text))
               .evaluate())
             (t.widget as Text).data ?? '',
+        // 「やること」の印が付いたタブは、字を child に持つ。
         for (final e in find.byType(Tab).hitTestable().evaluate())
-          (e.widget as Tab).text ?? '',
+          (e.widget as Tab).text ??
+              find
+                  .descendant(
+                      of: find.byWidget(e.widget), matching: find.byType(Text))
+                  .evaluate()
+                  .map((t) => (t.widget as Text).data ?? '')
+                  .firstWhere((s) => s.isNotEmpty, orElse: () => ''),
       ]..removeWhere((s) =>
           s.isEmpty ||
           // リーグの順位表などの数字(押すと別の画面が開く)はタブではない。
@@ -244,6 +251,14 @@ void main() {
         await tester.tap(f.first, warnIfMissed: false);
         await tester.pump(const Duration(milliseconds: 300));
         await shoot('$p-$l');
+        // タブの中の札(移籍の「候補」「探す」)も、1つずつ開いて撮る。
+        for (var k = 1; k < 4; k++) {
+          final chip = find.byKey(ValueKey('chip-$k')).hitTestable();
+          if (chip.evaluate().isEmpty) break;
+          await tester.tap(chip.first, warnIfMissed: false);
+          await tester.pump(const Duration(milliseconds: 400));
+          await shoot('$p-$l-chip$k');
+        }
         // スタッフの候補の表を開いたところも撮る。
         if (p == _t('クラブ', 'Club') && l == _t('スタッフ', 'Staff')) {
           final open =
