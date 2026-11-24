@@ -467,6 +467,14 @@ void main() {
     expect(html, contains("kvGet('tou-story2')"));
   });
 
+  test('召喚できない理由をコマンドの画面に出す（0.7.47・試作 v64）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains('function sumWhy(k){'));
+    expect(html, contains("'<button class=\"btn go\" data-csgo=\"1\"'+(sumWhy(k)?' disabled':'')"));
+    // 盤の下の知らせはシートに隠れるので、コマンドの画面の一番上にも出す
+    expect(html, contains('<div class="cmsg2" id="cmdmsg"></div>'));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
