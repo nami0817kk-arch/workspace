@@ -8,6 +8,7 @@ import '../engine/game.dart';
 import '../engine/history_lines.dart';
 import '../engine/peace.dart';
 import '../engine/rng.dart';
+import '../engine/scene_art.dart';
 import '../engine/spending.dart';
 import 'end_screen.dart';
 import 'rank_guide.dart';
@@ -149,8 +150,8 @@ class _PlayScreenState extends State<PlayScreen> {
 
 const _pad = EdgeInsets.fromLTRB(14, 12, 14, 20);
 
-/// 場面の絵の置き場所（`kSceneArts` の名前から）。
-String sceneArtPath(String art) => 'assets/images/scene_$art.jpg';
+/// 場面の絵の置き場所（`kSceneArts` の名前、または大事件の `event_<名>` から）。
+String sceneArtPath(String art) => artAssetPath(art);
 
 class _ChoiceTab extends StatelessWidget {
   const _ChoiceTab(this.g);
@@ -375,8 +376,17 @@ class _ArtBanner extends StatelessWidget {
               sceneArtPath(art),
               fit: BoxFit.cover,
               filterQuality: FilterQuality.medium,
-              errorBuilder: (context, error, stack) =>
-                  const ColoredBox(color: Pal.panel2),
+              // 大事件の絵がまだ無ければ、いつもの場面の絵に落とす（`artFallback`）。
+              errorBuilder: (context, error, stack) => switch (artFallback(art)) {
+                final fb? => Image.asset(
+                  sceneArtPath(fb),
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.medium,
+                  errorBuilder: (context, error, stack) =>
+                      const ColoredBox(color: Pal.panel2),
+                ),
+                null => const ColoredBox(color: Pal.panel2),
+              },
             ),
             const DecoratedBox(
               decoration: BoxDecoration(

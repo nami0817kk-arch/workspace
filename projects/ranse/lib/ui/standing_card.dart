@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../engine/game.dart';
 import '../engine/history_lines.dart';
+import '../engine/off_ladder.dart';
+import '../engine/scene_art.dart';
 import '../engine/ways.dart';
 import 'theme.dart';
 
@@ -25,6 +27,7 @@ class StandingCard extends StatelessWidget {
         ? '$houseの当主'
         : '${l.region}国に暮らす・主家なし';
     final way = g.isChild ? '幼少期' : (kWays[lifeWay(l)]?.$1 ?? '');
+    final off = offLadder(g);
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       decoration: BoxDecoration(
@@ -36,28 +39,46 @@ class StandingCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Flexible(
-                child: Text(
-                  l.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                  ),
+              // 今の住まいの小さな絵（身分と道で選ぶ。絵が無ければ地の色だけ）。
+              _HomeArt(homeArtFor(g)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            l.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${g.age}歳・${l.female ? '女' : '男'}',
+                          style: const TextStyle(
+                            color: Pal.muted,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    _Chip(way),
+                  ],
                 ),
               ),
-              const SizedBox(width: 8),
-              Text(
-                '${g.age}歳・${l.female ? '女' : '男'}',
-                style: const TextStyle(color: Pal.muted, fontSize: 13),
-              ),
-              const Spacer(),
-              _Chip(way),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text.rich(
             TextSpan(
               children: [
@@ -70,6 +91,15 @@ class StandingCard extends StatelessWidget {
                     letterSpacing: 1,
                   ),
                 ),
+                if (off != null)
+                  TextSpan(
+                    text: '（${off.name}）',
+                    style: const TextStyle(
+                      color: Pal.accent,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 TextSpan(
                   text: '　$sub',
                   style: const TextStyle(color: Pal.ink, fontSize: 13.5),
@@ -81,13 +111,25 @@ class StandingCard extends StatelessWidget {
           _Ladder(g),
           const SizedBox(height: 8),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.flag_outlined, size: 15, color: Pal.gold),
+              const Padding(
+                padding: EdgeInsets.only(top: 1),
+                child: Icon(Icons.flag_outlined, size: 15, color: Pal.gold),
+              ),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  '次の目当て　${_goalHead(g)}${g.nextPromo()}',
-                  style: const TextStyle(fontSize: 12.5, color: Pal.ink),
+                  off != null
+                      ? (off.nextName == null
+                            ? off.guide
+                            : '次の目当て　${off.nextName}まで　${off.guide}')
+                      : '次の目当て　${_goalHead(g)}${g.nextPromo()}',
+                  style: const TextStyle(
+                    fontSize: 12.5,
+                    color: Pal.ink,
+                    height: 1.45,
+                  ),
                 ),
               ),
             ],
@@ -141,13 +183,24 @@ class _Ladder extends StatelessWidget {
         right: '十五',
       );
     }
-    final offLadder =
+    // 商人・僧・忍び・流れ者・村の暮らしは、その暮らしの段（`offLadder`）を出す。
+    if (offLadder(g) case final off?) {
+      final d = off.def;
+      return _Steps(
+        count: d.steps.length,
+        filled: off.step + 1,
+        caption: '${d.title}　${off.step + 1} ／ ${d.steps.length}',
+        left: d.steps.first,
+        right: d.steps.last,
+      );
+    }
+    final outside =
         l.rank == 0 &&
         (g.hasFlag('priesthood') ||
             g.hasFlag('way_merchant') ||
             g.hasFlag('way_outlaw') ||
             g.hasFlag('retired'));
-    if (offLadder) {
+    if (outside) {
       return Text(
         '身分の段の外を歩んでいる（${g.rankName()}）',
         style: const TextStyle(color: Pal.muted, fontSize: 12),
@@ -223,6 +276,28 @@ class _Steps extends StatelessWidget {
   }
 }
 
+/// 今の住まいの小さな絵（`homeArtFor`）。絵がまだ置かれていなければ地の色の箱だけ出す。
+class _HomeArt extends StatelessWidget {
+  const _HomeArt(this.home);
+  final String home;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+    borderRadius: BorderRadius.circular(6),
+    child: SizedBox(
+      width: 64,
+      height: 48,
+      child: Image.asset(
+        homeArtPath(home),
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.medium,
+        errorBuilder: (context, error, stack) =>
+            const ColoredBox(color: Pal.panel2),
+      ),
+    ),
+  );
+}
+
 class _Chip extends StatelessWidget {
   const _Chip(this.text);
   final String text;
@@ -258,7 +333,9 @@ class StandingStrip extends StatelessWidget {
     final where = g.isChild
         ? '${l.region}国'
         : (house == null ? '主家なし' : (l.rank >= 8 ? '$houseの当主' : house));
+    final off = offLadder(g);
     final onLadder =
+        off == null &&
         !g.isChild &&
         !(l.rank == 0 &&
             (g.hasFlag('priesthood') ||
@@ -294,6 +371,11 @@ class StandingStrip extends StatelessWidget {
           if (onLadder)
             Text(
               '段 ${l.rank + 1}／${g.rk.length}',
+              style: const TextStyle(fontSize: 12, color: Pal.gold),
+            )
+          else if (off != null)
+            Text(
+              '段 ${off.step + 1}／${off.def.steps.length}',
               style: const TextStyle(fontSize: 12, color: Pal.gold),
             ),
           const SizedBox(width: 6),

@@ -1,3 +1,4 @@
+import 'craft_life.dart';
 import 'game.dart';
 import 'peace.dart';
 
@@ -26,10 +27,65 @@ const kSceneArts = <String>[
 
 bool _any(String s, List<String> words) => words.any(s.contains);
 
+/// 歴史の大事件の専用の絵（2026-11-25、項目26。assets/images/event_<名>.jpg）。
+/// 事件の名 → その事件を描く岐路の id（大人・子ども・噂・庶民の分岐点）。
+const kEventScenes = <String, List<String>>{
+  'okehazama': ['okehazama', 'h_c_okehazama', 'h_r_okehazama', 'h_x_okehazama_warn'],
+  'kawanakajima': ['h_kawanakajima', 'h_c_kawanakajima'],
+  'nagashino': ['h_nagashino', 'h_c_nagashino', 'h_r_nagashino'],
+  'honnoji': ['honnoji', 'h_c_honnoji', 'h_r_honnoji', 'h_x_honnoji_warn'],
+  'sekigahara': ['h_sekigahara'],
+  'osaka': ['pc_osaka_ronin', 'pc_osaka_jin', 'pc_osaka_toyotomi', 'pc_osaka_natsu'],
+  'hiei': ['hiei', 'h_c_hiei', 'h_r_hiei'],
+  'shimabara': ['pc_shimabara'],
+};
+
+/// 大事件の絵がまだ置かれていないときに代わりに出す場面の絵（`kSceneArts` の名）。
+const kEventArtFallback = <String, String>{
+  'okehazama': 'battle',
+  'kawanakajima': 'battle',
+  'nagashino': 'battle',
+  'honnoji': 'battle',
+  'sekigahara': 'battle',
+  'osaka': 'battle',
+  'hiei': 'temple',
+  'shimabara': 'battle',
+};
+
+/// 大事件の絵の名に付ける頭。`Prompt.art` が `event_` で始まれば大事件の絵。
+const kEventArtHead = 'event_';
+
+final Map<String, String> _eventById = {
+  for (final e in kEventScenes.entries)
+    for (final id in e.value) id: e.key,
+};
+
+/// 場面の id が大事件のものなら、その事件の名（`kEventScenes` の鍵）。
+String? eventOfScene(String? id) => id == null ? null : _eventById[id];
+
+/// 絵の名（`Prompt.art`）から置き場所を返す。大事件の絵は event_、ほかは scene_。
+String artAssetPath(String art) => art.startsWith(kEventArtHead)
+    ? 'assets/images/$art.jpg'
+    : 'assets/images/scene_$art.jpg';
+
+/// 大事件の絵が無いときに代わりに出す絵の名（大事件でなければ null）。
+String? artFallback(String art) => art.startsWith(kEventArtHead)
+    ? kEventArtFallback[art.substring(kEventArtHead.length)]
+    : null;
+
 /// [id] は場面の id（`SceneDef.id`）、[title] は岐路の題。どの絵を添えるかを返す。
 /// 「この年の心がけ」（場面でない問い）には絵を添えない（null）。
+/// 歴史の大事件の岐路には、その事件の専用の絵（`event_<名>`）を返す。絵が置かれていない間は、
+/// 画面が [artFallback] の絵に落とす。
 String? sceneArtFor(Game g, String? id, String title) {
   if (id == null) return null;
+  final ev = _eventById[id];
+  if (ev != null) return '$kEventArtHead$ev';
+  return sceneArtBase(g, id, title);
+}
+
+/// 大事件の専用の絵を見ない、場面の絵の選び方（`kSceneArts` のどれか）。
+String sceneArtBase(Game g, String id, String title) {
   final i = id;
   final t = title;
   // 災い・飢え・病は、どの道でも冬の村。
@@ -134,5 +190,53 @@ String? sceneArtFor(Game g, String? id, String title) {
   if (l.rank >= 5) return 'council';
   if (l.female && l.rank >= 1) return 'oku';
   if (l.rank >= 1) return 'camp';
+  return 'farm';
+}
+
+/// 立ち位置のカードに添える、今の住まいの絵（2026-11-25、項目22。assets/images/home_<名>.jpg）。
+const kHomeArts = <String>[
+  'farm', // 百姓家（村・浜）
+  'town', // 町家・店（商人・職人・浪人）
+  'samurai', // 侍屋敷（主家に仕える侍）
+  'castle', // 城・天守（城主より上・奥に仕える女性）
+  'temple', // 寺（仏門）
+  'wild', // 山里の小屋（忍び・流れ者・野盗・山の民・河原の者）
+];
+
+/// 住まいの絵の置き場所。
+String homeArtPath(String home) => 'assets/images/home_$home.jpg';
+
+/// 今の住まいの絵（`kHomeArts` のどれか）。身分と歩んでいる道で選ぶ。乱数は使わない。
+String homeArtFor(Game g) {
+  final l = g.l;
+  final cls = l.cls.id;
+  if (g.isChild) {
+    return switch (cls) {
+      'daimyo' || 'kokujin' => 'castle',
+      'samurai' || 'lowsamurai' || 'ashigaru' => 'samurai',
+      'merchant' || 'ronin' => 'town',
+      'priest' => 'temple',
+      'ninja' || 'beggar' => 'wild',
+      'fisher' => crMountainFolk(g) ? 'wild' : 'farm',
+      _ => 'farm',
+    };
+  }
+  if (g.hasFlag('priesthood')) return 'temple';
+  if (l.rank >= 5) return 'castle';
+  if (l.rank >= 1) return l.female ? 'castle' : 'samurai';
+  if (g.hasFlag('way_merchant')) return 'town';
+  if (g.hasFlag('way_outlaw') || g.hasFlag('nukenin') || cls == 'ninja') {
+    return 'wild';
+  }
+  if (g.hasFlag('cr_craft') || g.hasFlag('craftsman') || cls == 'merchant') {
+    return 'town';
+  }
+  if (l.ronin) return 'town';
+  if (cls == 'beggar') return 'wild';
+  if (cls == 'fisher' && crMountainFolk(g)) return 'wild';
+  // 武家に生まれ、位を失った人は屋敷に住み続ける。
+  if (const ['samurai', 'lowsamurai', 'kokujin', 'daimyo'].contains(cls)) {
+    return l.maxRank >= 5 ? 'castle' : 'samurai';
+  }
   return 'farm';
 }

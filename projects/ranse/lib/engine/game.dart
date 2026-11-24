@@ -25,6 +25,7 @@ import 'history_rumor.dart';
 import 'history_west.dart';
 import 'life.dart';
 import 'lords.dart';
+import 'off_ladder.dart';
 import 'oku_life.dart';
 import 'old_age.dart';
 import 'pastimes.dart';
@@ -160,6 +161,7 @@ class Game extends ChangeNotifier {
       ...buildVillageScenes(),
       ...buildTradeFarmScenes(),
       ...buildShadowLifeScenes(),
+      ...buildOffLadderScenes(),
       ...buildTalentScenes(),
       ...buildPastimeScenes(),
       ...buildOldAgeScenes(),
