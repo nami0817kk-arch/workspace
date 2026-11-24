@@ -468,9 +468,11 @@
     const w = W();
     const ui = U().app;
     // 卒業生名鑑と実績は系譜タブにまとめた（2026-11-18 ユーザビリティ7：2つのタブに同じ画面があった）。名鑑は系譜タブがここを借りて出す
-    ui.mt = ui.mt || 'rec';
-    if (U().app.tab === 'more' && ui.mt === 'alumni' && !(w && w.retired)) ui.mt = 'rec';
-    const tabs = h('div', { class: 'tabs' }, [['rec', 'クラブ史'], ['bteam', 'Bチーム'], ['ach', '引退'], ['howto', '遊び方'], ['help', '用語集'], ['set', '設定']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
+    // 2026-11-25 画面の構成の作り直し（ユーザー決定）：ショップ・設定・遊び方（用語集も）・引退。
+    // クラブ史は記録 → クラブの歴史へ、Bチームは試合前の A／B の切り替えへ移した（記録がクラブ史を借りて出すので 'rec' の中身は残す）
+    if (U().app.tab === 'more' && (!ui.mt || ['rec', 'bteam', 'help'].indexOf(ui.mt) >= 0 || (ui.mt === 'alumni' && !(w && w.retired)))) ui.mt = ui.mt === 'help' ? 'howto' : 'set';
+    ui.mt = ui.mt || 'set';
+    const tabs = h('div', { class: 'tabs' }, [['shop', 'ショップ'], ['set', '設定'], ['howto', '遊び方'], ['ach', '引退']].map(([k, n]) => h('button', { class: 'btn' + (ui.mt === k ? ' on' : ''), onclick: () => { ui.mt = k; rerender(); } }, n)));
     const body = h('div', { class: 'card pbody', style: 'flex:1;min-height:0' });
     if (ui.mt === 'alumni') {
       // 絞り込み：全員・プロ・海外・代表・タイトル
@@ -504,8 +506,11 @@
       body.append(title('リーグの履歴'), ...((w.leagueHist || []).slice().reverse().map((x) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:54px' }, `${x.year}年目`), h('span', { class: 'nm grow' }, YA.levelNames(w)[x.level - 1]), h('b', {}, `${x.rank}位（勝点${x.pts}）`)))));
       body.append(title('最近の試合'), ...w.results.slice(-10).reverse().map((r) => h('div', { class: 'pitem', style: 'cursor:default' }, h('span', { class: 'sub', style: 'width:104px;flex:none' }, YA.ywName(r.year, r.week)), h('span', { class: 'nm grow' }, (r.kind ? r.kind + ' ' : '') + r.opp), h('b', { style: `color:${r.gf > r.ga ? '#1a9d57' : r.gf < r.ga ? '#d63a3a' : 'inherit'}` }, `${r.gf}-${r.ga}`))));
       if (YA.recordBookEl) body.append(YA.recordBookEl(w));
+    } else if (ui.mt === 'shop') {
+      if (YA.shopBlock) YA.shopBlock(body);
     } else if (ui.mt === 'howto') {
       if (YA.howtoEl) body.append(YA.howtoEl());
+      if (YA.glossaryEl) body.append(h('div', { class: 'h', style: 'margin-top:10px' }, '用語集'), YA.glossaryEl());
     } else if (ui.mt === 'help') {
       if (YA.glossaryEl) body.append(YA.glossaryEl());
     } else if (ui.mt === 'bteam') {

@@ -82,6 +82,7 @@
   - **試合前**：小タブ 戦術（選手の入れ替え＝先発・ベンチ・控え外と、続けて戦い方の型・相性・つまみ・攻める方向・クロス。`tacticPanel` の `combined`）・選手の指示（役割と任務）・セットプレー（キッカー3つと PK 戦の順番 `.pkrow`＝`YA.pkToggle`）・相手。上に「Aチーム／Bチーム」の切り替え（`app.preB`。B は `YA.bBlock`＝Bチームの指揮）。試合中の小タブ（交代・布陣と役割・戦い方・指示・声かけ）は前のまま（戦い方にキッカーも残る）
   - **クラブ**：小タブを3つの群に（views2.js の `CGRP`。群のボタンは `.grp`）。クラブ（概要＝トップの順位もここ・予算と施設・トップ）／人（スタッフ・スカウト・内部昇格・セレクション）／大会（順位表・日程と結果＝次の試合と A・B の今年の結果）。やり残しの赤い点は、開いていない群のボタンにも付く。最初に開くのは概要
   - **記録**：群は 卒業生（名鑑・殿堂・便り・移籍先クラブ）／クラブの歴史（年表・クラブ史＝「ほか」から移した・実績＝上に次の実績 `YA.lineageMiniCard`・図鑑・育成基金）／監督（監督の経歴 `careerTab`＝指導者の力・流儀・年ごとの評価・送り出した卒業生、ライバル、移籍）。「監督の注文」はクラブ → トップの画面の下へ移した（`YA.topCoachEl`）
+  - **ほか**：小タブ ショップ（`YA.shopBlock`＝商品5つ・ご褒美の動画・購入の復元）／設定（表示と音・お知らせ・名前・セーブ。前の「セーブ・ショップ」からショップを外した）／遊び方（9章の下に用語集）／引退。クラブ史は記録へ、Bチームは試合前へ移した（`ui.mt` の rec・bteam・help は開いたときに set・howto へ寄せる。記録がクラブ史の中身を借りるので 'rec' の描き方は残す）
 - 画面を直したら、ブラウザで絵にして目で確かめる（`node web/tool/build.js web/dist/index.html` → `python -m http.server` → 844×390）。
 - リリース: `youth-academy-ios-release.yml`（workflow_dispatch、`upload_to_testflight=true`）。Secret は `YOUTH_ACADEMY_IOS_PROVISIONING_PROFILE_BASE64` のみ新規。
   Bundle ID `com.namiki.youthacademy`、App Store Connect の Apple ID 6828073461。ビルド番号は `app/pubspec.yaml` の `+N`。

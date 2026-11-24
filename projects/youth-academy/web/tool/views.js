@@ -393,8 +393,8 @@ async function clearEvents() {
     ok(cells.filter((c) => c.classList.contains('short')).every((c) => c.textContent.includes('不足')), '足りない位置は色だけでなく「不足」');
   }
   rail('ほか');
-  btn('クラブ史', d.getElementById('main')).click();
-  ok(txt().includes('主な記録') && txt().includes('リーグの履歴'), '記録の画面');
+  // 2026-11-25 ほかは ショップ・設定・遊び方・引退（クラブ史は記録へ、Bチームは試合前へ）
+  ok(['ショップ', '設定', '遊び方', '引退'].every((n) => !!btn(n, d.querySelector('#main .tabs'))) && !btn('クラブ史', d.querySelector('#main .tabs')) && !btn('Bチーム', d.querySelector('#main .tabs')), 'ほかの小タブ4つ');
   btn('設定', d.getElementById('main')).click();
   ok(!btn('卒業生名鑑', d.querySelector('#main .tabs')), 'ほかに卒業生名鑑の重複が無い（系譜にまとめた）');
 
@@ -651,7 +651,7 @@ async function clearEvents() {
     rail('ほか');
     btn('設定', d.getElementById('main')).click();
     // 設定は4つの小タブ（2026-11-18）
-    ok(['表示と音', 'お知らせ', '名前', 'セーブ・ショップ'].every((x) => !!btn(x, d.querySelector('.settabs'))), '設定は4つの小タブ');
+    ok(['表示と音', 'お知らせ', '名前', 'セーブ'].every((x) => !!btn(x, d.querySelector('.settabs'))), '設定は4つの小タブ');
     btn('表示と音', d.querySelector('.settabs')).click();
     ok(txt().includes('効果音') && txt().includes('文字の大きさ') && !txt().includes('セーブ枠（'), '設定の表示と音');
     {
@@ -660,7 +660,7 @@ async function clearEvents() {
       ab.click();
       ok(w.YA._ui.store.get('ask.skipmatch', true) === true && d.querySelector('[data-ask="skipmatch"]').textContent === '出す', '設定で「結果まで」の確認を出すに戻せる');
     }
-    btn('セーブ・ショップ', d.querySelector('.settabs')).click();
+    btn('セーブ', d.querySelector('.settabs')).click();
     ok(txt().includes('セーブ枠') && !!btn('書き出す') && !!btn('復元する'), '設定の画面');
     ok(txt().includes('点検用：新しい世界でシミュレーション') && !!btn('実行') && !!btn('10年'), '点検用シミュレーションの設定');
     const before = JSON.stringify(A.w.year) + A.w.clubName;
@@ -713,11 +713,12 @@ async function clearEvents() {
     { const b = [...d.querySelectorAll('#main .ttabs button')].find((x) => x.textContent.trim() === '予定'); if (b) b.click(); }
     ok(txt().includes('先週と同じ') && txt().includes('おまかせ') && txt().includes('疲れの高い子'), '練習に一括ボタン');
     ok(!!A.w.lastPlan && !!btn('先週と同じ'), '週を進めたあとは「先週と同じ」を押せる');
-    rail('ほか');
-    btn('Bチーム').click();
-    ok(txt().includes('Bチームの指揮') && txt().includes('起用方針'), 'Bチームの指揮の画面');
+    rail('試合');
+    btn('Bチーム', d.querySelector('#main .abtog')).click();
+    ok(txt().includes('Bチームの指揮') && txt().includes('起用方針'), 'Bチームの指揮は試合前の A／B の切り替え');
     btn('下級生を優先').click();
     ok(A.w.bCtl && A.w.bCtl.policy === 'young', 'Bの起用方針を選べる');
+    btn('Aチーム', d.querySelector('#main .abtog')).click();
     rail('ほか');
     btn('引退', d.querySelector('#main .tabs')).click();
     ok(txt().includes('実績') && txt().includes('引退する') && !txt().includes('リーグ優勝を1回'), '引退の画面（実績の一覧は系譜へ）');
@@ -936,7 +937,7 @@ async function clearEvents() {
     ok(txt().includes('総合力') && txt().includes('別の子と比べる'), '2人の比較が出る');
     if (btn('閉じる')) btn('閉じる').click();
     rail('ほか');
-    if (btn('用語集')) { btn('用語集').click(); ok(txt().includes('覚醒の鍵') && txt().includes('連帯貢献金'), '用語集'); }
+    btn('遊び方', d.querySelector('#main .tabs')).click(); ok(txt().includes('用語集') && txt().includes('覚醒の鍵') && txt().includes('連帯貢献金'), '遊び方に用語集');
     // ---------- ガイド（2026-11-19「各操作や画面のガイドを充実させて」） ----------
     {
       const Y = w.YA;
@@ -986,10 +987,13 @@ async function clearEvents() {
       Y.shopPrices = {};
       rail('ほか');
       btn('設定', d.getElementById('main')).click();
-      btn('セーブ・ショップ', d.querySelector('.settabs')).click();
+      btn('セーブ', d.querySelector('.settabs')).click();
       await sleep(10);
       ok(/セーブ枠（いま\d枠・無料は1枠）/.test(txt()), '課金: セーブ枠の見出しは「いまN枠・無料は1枠」');
       ok(/最後に保存できた時刻|まだ保存していません/.test(txt()), '課金: 設定に最後に保存できた時刻');
+      btn('ショップ', d.querySelector('#main .tabs')).click();
+      await sleep(10);
+      ok(txt().includes('ご褒美の動画'), 'ほか → ショップにご褒美の動画（ホームから移した）');
       const buyBtn = d.querySelector('button[data-pid="youth_remove_ads"]');
       ok(buyBtn && buyBtn.disabled && /ストアに接続中/.test(buyBtn.dataset.why || '') && !/円/.test(buyBtn.textContent), '課金: 価格が取れていない商品は値段を出さず押せない（理由つき）');
       ok(posted.some((m) => m.cmd === 'prices'), '課金: ショップを開いたら価格を取り直す');
@@ -1080,6 +1084,7 @@ async function clearEvents() {
       ok(pl.fat === 28, '課金: 同じ動画の特典は二度渡らない');
       // 空き枠で新しく始めたら、前の枠に戻れる
       const slotNow = A.slot || 0;
+      if (A.tab !== 'more' || A.mt !== 'set') { A.tab = 'more'; A.mt = 'set'; A.st = 'save'; Y._ui.render(); }
       const empty = [...d.querySelectorAll('#main button')].find((b) => b.textContent === '新しく始める');
       if (empty) {
         empty.click();
