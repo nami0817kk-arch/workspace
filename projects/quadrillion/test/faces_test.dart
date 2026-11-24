@@ -743,16 +743,20 @@ void main() {
         expect(rf.rival, isTrue);
         await p.tab('people');
         // 横向きの画面は低いので、社長のカードが見える所まで送る（1.1.0+25）
-        expect(await p.reveal(find.byWidgetPredicate((w) => w is Face && w.ring && w.col == '#f2c14e')), isTrue);
-        final pf = tester.widget<Face>(find.byWidgetPredicate((w) => w is Face && w.ring && w.col == '#f2c14e').first);
+        // 1.1.0+27 から人の画面は2列（左の一覧の社長は小さな顔、右の社長の中身は大きな顔）
+        expect(await p.reveal(find.byWidgetPredicate((w) => w is Face && w.ring && w.col == '#f2c14e' && w.size == faceBig)), isTrue);
+        final pf = tester.widget<Face>(find.byWidgetPredicate((w) => w is Face && w.ring && w.col == '#f2c14e' && w.size == faceBig).first);
         expect(pf.img, g.pres.face);
         expect(pf.size, faceBig);
         await p.reveal(find.byKey(const ValueKey('face-legend')));
         final legend = find.descendant(of: find.byKey(const ValueKey('face-legend')), matching: find.byType(RichText));
         expect(tester.widget<RichText>(legend.first).text.toPlainText(), contains(tr('顔の縁の色はいちばん高い能力')));
         final s0 = g.staff.first;
-        await p.reveal(find.byKey(ValueKey('staff-row-${s0.id}')));
-        final sf = tester.widget<Face>(find.descendant(of: find.byKey(ValueKey('staff-row-${s0.id}')), matching: find.byType(Face)));
+        // 左の一覧は区分ごと（事業を任せている人は「責任者」）
+        p.ctl.setPeopleSeg(g.biz.any((b) => b.mgr == s0.id) ? 'mgr' : 'exec');
+        await tester.pump();
+        await p.reveal(find.byKey(ValueKey('person-row-${s0.id}')));
+        final sf = tester.widget<Face>(find.descendant(of: find.byKey(ValueKey('person-row-${s0.id}')), matching: find.byType(Face)));
         expect(sf.img, s0.face);
         expect(sf.col, abFaceCols[topAbility(g, s0)]);
         // 会議: 話す部下・相棒の吹き出しに、その人の顔

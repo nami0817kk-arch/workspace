@@ -7,8 +7,10 @@ import 'package:quadrillion/game/game.dart';
 
 import 'support/bot.dart';
 
-Game _g({int year = 1990, String home = 'jp', int seed = 5}) =>
-    Game.newGame(SetupConfig(year: year, home: home, traits: const ['charm', 'careful']), rng: ParkMiller(seed));
+Game _g({int year = 1990, String home = 'jp', int seed = 5}) => Game.newGame(
+  SetupConfig(year: year, home: home, traits: const ['charm', 'careful']),
+  rng: ParkMiller(seed),
+);
 
 /// 月を進める（出来事は片付け、社長の時間は毎月まっさらにする）
 void _month(Game g) {
@@ -113,7 +115,7 @@ void main() {
       p.salary = g.mktPay(p) * .7;
       p.loy = 70;
       p.tenure = 30;
-      p.partner = true; // 転職で辞めないようにして、やる気の動きだけを見る
+      p.amb = 20; // 引き抜きの的になりにくい慎重な人で、やる気の動きを見る（相棒は株を持つので給料の低さでは下がらない）
       g.staff.add(p);
       for (var i = 0; i < 6; i++) {
         p.health = 90;

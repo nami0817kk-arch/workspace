@@ -26,8 +26,13 @@ extension GamePeople on Game {
     final g = NORM_GROUP[c ?? home] ?? 'em';
     final t = NORM_TABLE[g]!;
     final y = yr();
-    WorkNorm mix(WorkNorm a, WorkNorm b, double f) => WorkNorm(a.life + (b.life - a.life) * f, a.hop + (b.hop - a.hop) * f, a.senior + (b.senior - a.senior) * f,
-        a.union + (b.union - a.union) * f, (a.retire + (b.retire - a.retire) * f).round());
+    WorkNorm mix(WorkNorm a, WorkNorm b, double f) => WorkNorm(
+      a.life + (b.life - a.life) * f,
+      a.hop + (b.hop - a.hop) * f,
+      a.senior + (b.senior - a.senior) * f,
+      a.union + (b.union - a.union) * f,
+      (a.retire + (b.retire - a.retire) * f).round(),
+    );
     if (y <= 1980) return t[0];
     if (y <= 2000) return mix(t[0], t[1], (y - 1980) / 20);
     if (y <= 2025) return mix(t[1], t[2], (y - 2000) / 25);
@@ -71,12 +76,12 @@ extension GamePeople on Game {
     p.edu = r < (1 - uni) * .55
         ? 0
         : r < 1 - uni
-            ? 1
-            : r < 1 - uni * .3
-                ? 2
-                : r < 1 - uni * .08
-                    ? 3
-                    : 4;
+        ? 1
+        : r < 1 - uni * .3
+        ? 2
+        : r < 1 - uni * .08
+        ? 3
+        : 4;
     p.major = p.edu >= 1 ? pick(MAJOR_JA.keys.toList()) : null;
     // 細かい能力（4つの能力から散らし、専攻で伸ばす）
     final sk = <String, int>{};
@@ -113,8 +118,8 @@ extension GamePeople on Game {
       final role = ageThen >= 45 && rnd() < .35
           ? 2
           : ageThen >= 33 && rnd() < .55
-              ? 1
-              : 0;
+          ? 1
+          : 0;
       p.jobs.add(Job(cat: rnd() < .65 ? cat0 : pick(CATN.ja.keys.toList()), size: ri(0, 2), role: role, years: y));
       yrs -= y;
       nj--;
@@ -209,12 +214,12 @@ extension GamePeople on Game {
     final n = normOf();
     final base = avgWageYen() / 12;
     final q = topSkill(p);
-    var skillF = .7 + 1.6 * math.pow(q / 100, 2).toDouble();
+    var skillF = .7 + 1.4 * math.pow(q / 100, 2).toDouble();
     skillF = 1 + (skillF - 1) * (1 - .5 * n.senior);
     final ageF = 1 + n.senior * clampD((p.age - 25) / 30, 0, 1) * .6;
     final licF = p.lic.fold(1.0, (a, l) => math.max(a, LIC_PAY[l] ?? 1));
     final fameF = .9 + p.fame / 250;
-    return base * 1.1 * skillF * ageF * licF * fameF;
+    return base * .95 * skillF * ageF * licF * fameF;
   }
 
   /// 今の給料が相場の何倍か（1 なら相場どおり）
@@ -225,13 +230,16 @@ extension GamePeople on Game {
 
   // ===== 注意 =====
   /// 引き抜かれそうか（挑戦好きでやる気が下がっている・給料が相場より低い）
-  bool poachRisk(Person p) => p.real && ((p.amb > 60 && p.loy < 60) || (payRatio(p) < payLowRatio && p.loy < 70));
+  bool poachRisk(Person p) => p.real && ((p.amb > 60 && p.loy < 60) || (underpaid(p) && p.loy < 70));
+
+  /// 給料が相場より低くて不満のもとになっているか（相棒は株を持っているので、給料の低さでは不満を持たない）
+  bool underpaid(Person p) => p.real && !p.partner && payRatio(p) < payLowRatio;
 
   /// 体を壊しそうか
   bool healthRisk(Person p) => p.real && p.away == 0 && p.health < healthWarn;
 
   /// 不満がたまっているか
-  bool unhappy(Person p) => p.loy < 50 || (p.real && payRatio(p) < payLowRatio);
+  bool unhappy(Person p) => p.loy < 50 || underpaid(p);
 
   /// 海外に赴任させると断りがちか（学校に通う子どもがいる・親の介護をしている）
   bool refusesPosting(Person p) => p.real && (p.care || p.kidsAge.any((a) => a >= 6 && a <= 15));
@@ -255,10 +263,10 @@ extension GamePeople on Game {
     final nm = q % 12 + 1;
     final grad = g == 'jp' || g == 'kr'
         ? (nm == 4
-            ? 3 + (rp / 35).floor()
-            : nm == 10
-                ? 1
-                : 0)
+              ? 3 + (rp / 35).floor()
+              : nm == 10
+              ? 1
+              : 0)
         : (rnd() < .5 ? 1 : 0);
     final mid = clampI((1.5 + n.hop * 14 + (un - 4) * .3 + rp / 50).round(), 2, 6);
     final rivals = cos.where((c) => c.alive && c.parent != 'player').length;
@@ -299,11 +307,21 @@ extension GamePeople on Game {
     if (rnd() < .35) {
       final l = pick(const ['doctor', 'doctor', 'pilot', 'lawyer', 'cpa']);
       final p = mkPerson(m.q)..src = 'mid';
-      if (!p.lic.contains(l)) p.lic.add(l);
-      if (l == 'doctor') {
-        p.major = 'med';
-        p.tf = 'med';
-        p.edu = math.max(p.edu, 2);
+      // 資格は1つにし、学歴と能力を資格に合わせる
+      p.lic = [l];
+      switch (l) {
+        case 'doctor':
+          p.major = 'med';
+          p.tf = 'med';
+          p.edu = math.max(p.edu, 2);
+        case 'lawyer':
+          p.major = 'law';
+          p.edu = math.max(p.edu, 2);
+          p.sk!['law'] = math.max(p.sk!['law']!, 70);
+        case 'cpa':
+          p.edu = math.max(p.edu, 2);
+          p.major ??= 'econ';
+          p.sk!['acct'] = math.max(p.sk!['acct']!, 65);
       }
       p.salary = jsRound(mktPay(p)).toDouble();
       out.add(p);
@@ -387,8 +405,8 @@ extension GamePeople on Game {
         N(M('{0}が体を壊して休みに入りました（{1}か月）。そのあいだ責任者の仕事はできません', [Nm(p.name), p.away]), 'bad');
         continue;
       }
-      // 給料が相場より低いとやる気が下がる。高ければ少し上がる
-      final pr = payRatio(p);
+      // 給料が相場より低いとやる気が下がる。高ければ少し上がる（相棒は株を持っているので下がらない）
+      final pr = p.partner ? 1.0 : payRatio(p);
       if (pr < payLowRatio) {
         p.loy -= (payLowRatio - pr) * 6;
       } else if (pr > 1.1) {
@@ -454,18 +472,19 @@ extension GamePeople on Game {
     var g = p.age < 30
         ? 2.2
         : p.age < 40
-            ? 1.5
-            : p.age < 50
-                ? .8
-                : p.age < 56
-                    ? .3
-                    : 0.0;
-    g *= p.pot *
+        ? 1.5
+        : p.age < 50
+        ? .8
+        : p.age < 56
+        ? .3
+        : 0.0;
+    g *=
+        p.pot *
         (culture == 'merit'
             ? 1.2
             : culture == 'family'
-                ? .8
-                : 1);
+            ? .8
+            : 1);
     for (final k in skKeys) {
       if (rnd() < .5) sk[k] = math.min(99, sk[k]! + (g * rnd() * 2).round());
     }
@@ -494,9 +513,8 @@ extension GamePeople on Game {
     // 毎年の給料の見直し: 世の中の賃金の伸び（統計）に合わせ、年功の強い国と時代は年の分も上がる
     // （相場より15%以上高い人は据え置く。出来事で上げた分が年ごとに積み上がらないように）
     final m = mktPay(p);
-    if (p.salary < m * 1.15) p.salary *= wageGrowth() * (p.age < 55 ? 1 + normOf().senior * .015 : 1);
-    // 定期の昇給: 腕が上がって相場より低くなった分は、年に3割だけ追いつく（残りは社長が「昇給」で埋める）
-    if (p.salary < m) p.salary += (m - p.salary) * .3;
+    // 腕が上がって相場より低くなった分は自動では上がらない（社長が「昇給」で埋める。埋めないと、やる気が下がり引き抜かれる）
+    if (p.salary < m * 1.15) p.salary *= wageGrowth() * (p.age < 55 ? 1 + normOf().senior * .01 : 1);
   }
 
   /// 去年から今年への平均賃金（円）の伸び（年の給料の見直しに使う。為替で円の額が跳ねる年があるので、-10%〜+12% に抑える）
@@ -536,7 +554,11 @@ extension GamePeople on Game {
       if (k != null) {
         p.known.add(k);
         if (k == 'amb') p.ambKnown = true;
-        parts.add(M('{0}が分かりました', [D(const {'amb': '挑戦好きか慎重か', 'hon': '誠実さ', 'fam': '家族のこと', 'str': 'ストレスへの強さ', 'coop': '協調性', 'health': '体の調子'}[k]!)]));
+        parts.add(
+          M('{0}が分かりました', [
+            D(const {'amb': '挑戦好きか慎重か', 'hon': '誠実さ', 'fam': '家族のこと', 'str': 'ストレスへの強さ', 'coop': '協調性', 'health': '体の調子'}[k]!),
+          ]),
+        );
       }
       p.w = math.max(0, p.w - 4);
       if (p.loy < 70) p.loy += 2;
@@ -557,7 +579,14 @@ extension GamePeople on Game {
       p.w = math.max(0, p.w - 4);
       parts.add(M('「今の仕事に満足しています」'));
     }
-    return Cat([M('{0}と話しました', [Nm(p.name)]), ...parts], ja: '。', en: '. ');
+    return Cat(
+      [
+        M('{0}と話しました', [Nm(p.name)]),
+        ...parts,
+      ],
+      ja: '。',
+      en: '. ',
+    );
   }
 
   /// 研修の費用（分野1つ・1か月）・留学の費用（1年）
@@ -576,9 +605,7 @@ extension GamePeople on Game {
     p.away = g < 0 ? 12 : 1;
     p.awayWhy = g < 0 ? 'abroad' : 'course:$g';
     calcAll();
-    return g < 0
-        ? M('{0}を1年の留学に出しました（{1}）。戻ると語学と経営の力が伸びます', [Nm(p.name), Y(cost)])
-        : M('{0}を{1}の研修に出しました（{2}・1か月）', [Nm(p.name), D(SK_GROUPS[g].$1), Y(cost)]);
+    return g < 0 ? M('{0}を1年の留学に出しました（{1}）。戻ると語学と経営の力が伸びます', [Nm(p.name), Y(cost)]) : M('{0}を{1}の研修に出しました（{2}・1か月）', [Nm(p.name), D(SK_GROUPS[g].$1), Y(cost)]);
   }
 
   /// 社外の人（前に辞めた人）を呼び戻す
@@ -615,10 +642,29 @@ extension GamePeople on Game {
   // ===== 店長・指導員（段2の人数を、人の仕組みにつなぐ） =====
   /// 店長などの腕が売上に効く倍（腕が平均の50なら1。責任者のいない単位は売上が3割落ちる）
   double leadQF(Biz b) {
-    if (!peopleOn || KIND_LEAD_JA[kindB(b)] == null) return 1;
+    if (!peopleOn) return 1;
+    final m = headQF(b);
+    if (KIND_LEAD_JA[kindB(b)] == null) return m;
     final u = unitTotal(b);
     final v = u > 0 ? clampD(b.vac / u, 0, 1) : 0.0;
-    return (1 - .3 * v) * (.92 + b.lq / 625);
+    return m * (1 - .3 * v) * (.92 + b.lq / 625);
+  }
+
+  /// 事業の責任者の現場の腕（店舗運営・統率・生産管理のうち、その型に効くもの）が、店などの売れる量に効く倍（0.9〜1.1。腕50で1）。
+  /// 責任者のいない事業は 1（客の数の側で、今までどおり弱くなる）
+  double headQF(Biz b) {
+    final p = mgrOf(b);
+    if (p != null && p.real) {
+      final k = kindB(b);
+      final v = switch (k) {
+        'shop' || 'license' => (p.sk!['ops']! + p.sk!['lead']!) / 2,
+        'factory' || 'infra' => (p.sk!['prod']! + p.sk!['lead']!) / 2,
+        'net' || 'hit' => (p.sk!['tech']! + p.sk!['mkt']!) / 2,
+        _ => (p.sk!['lead']! + p.sk!['hr']!) / 2,
+      };
+      return 1 + (clampD(v, 0, 100) - 50) / 500;
+    }
+    return 1;
   }
 
   /// 中途で店長などを1か月に雇える数（転職の多い国・時代、失業の多い時、評判の良い会社ほど多い）

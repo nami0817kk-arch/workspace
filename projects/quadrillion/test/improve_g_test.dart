@@ -501,7 +501,8 @@ void main() {
       // 1.1.0+26（段2）で会社の伸びが遅くなり、中盤の大きな出来事（上場・乗っ取り・大きな買収）が減って、何も起きない月が増えた（18.5% → 約39%）。
       // 店が開く・責任者が育つ知らせは数えていない。出来事を足す後の段（人・宿敵・海外）で見直すまで、線を22%から45%に引き直す
       expect(st.quietPct, lessThan(45));
-      expect(st.crowdedPct, lessThan(12));
+      // 1.1.0+27（段3：人）で、給料が相場より低い人も引き抜きの誘いの的になり、選ぶ出来事が重なる月が少し増えた（13〜16%）。線を12%から18%に引き直す
+      expect(st.crowdedPct, lessThan(18));
       expect(st.scenes, greaterThan(12));
       expect((st.proposals['店・工場'] ?? 0) / tot, lessThan(.4));
       expect(st.proposals.keys.toSet().intersection({'広告', '海外', '値付け', '稼ぎ方', '撤退', '社風'}).length, greaterThanOrEqualTo(3));

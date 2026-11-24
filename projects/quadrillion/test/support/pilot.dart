@@ -449,7 +449,8 @@ class Pilot {
   }
 
   /// 事業の画面が2列（左に一覧・右に中身。1.1.0+26）か
-  bool get _split => _has(find.byKey(const ValueKey('biz-new')));
+  // （1.1.0+27：事業が多いと左の一覧が長く、「新しい事業」のボタンが画面の下に隠れることがある。木にあるかで見る）
+  bool get _split => find.byKey(const ValueKey('biz-new')).evaluate().isNotEmpty;
 
   /// 2列の画面で、右に「新しい事業」の一覧を出す（1つの列の画面では何もしない）
   Future<void> _newList() async {
@@ -519,6 +520,11 @@ class Pilot {
       case 'train':
         label = tr('{0}を育てる（1人）', [tr(KIND_LEAD_JA[k]!)]);
         cost = s.leadCost(b);
+        hk = 'crew';
+      // 1.1.0+27 から、辞めて空いた店に中途で店長を雇う
+      case 'leads':
+        label = tr('{0}を中途で雇う（1人）', [tr(KIND_LEAD_JA[k]!)]);
+        cost = s.midLeadCost(b);
         hk = 'crew';
       case 'hub':
         final a = s.hubWanted(b).first;
@@ -651,22 +657,33 @@ class Pilot {
   /// 採用の候補を雇う
   Future<void> hire() async {
     if (s.ap < 1 || s.cands.isEmpty) return;
-    final p = s.cands.first;
-    // 月の利益で給料を払えるときだけ雇う
-    if (p.salary * 6 > s.cash || s.pre < p.salary * 3) return;
+    // 月の利益で給料を払え、雇う費用（1.1.0+27 から採用の道で違う）が手元の半分までの候補だけ
+    final p = s.cands.where((x) => s.hireFeeOf(x) <= s.cash * .5 && s.pre >= x.salary * 3 && x.salary * 6 <= s.cash).firstOrNull;
+    if (p == null) return;
     where = '雇う';
     await tab('people');
     final n = s.staff.length;
-    await reveal(find.text(tr('採用の候補')));
+    // 1.1.0+27 から人の画面は2列。左の区分で「採用の候補」を選び、候補の行を押して、右の「雇う」を押す
+    if (find.byKey(const ValueKey('pseg-cand')).evaluate().isNotEmpty) {
+      await press(find.byKey(const ValueKey('pseg-cand')), '採用の候補');
+      await press(find.byKey(ValueKey('person-row-${p.id}')), '候補の行');
+    } else {
+      await reveal(find.text(tr('採用の候補')));
+    }
     final c0 = s.cash;
-    await pressText(tr('雇う'));
+    final fee = s.hireFeeOf(p);
+    if (find.byKey(ValueKey('p-hire-${p.id}')).evaluate().isNotEmpty) {
+      await press(find.byKey(ValueKey('p-hire-${p.id}')), '雇う');
+    } else {
+      await pressText(tr('雇う'));
+    }
     await drain();
     if (s.staff.length != n + 1) {
       note('雇えない');
     } else {
-      // 雇ったのは押した行の人（並びの先頭とは限らない）。その人の支度金（給料の2か月分）だけ減る
+      // 雇ったのは押した行の人。その人の雇う費用だけ減る
       final got = s.staff.last;
-      if ((c0 - s.cash - got.salary * 2).abs() > 1) note('値段の食い違い 支度金: ${yen(got.salary * 2)} / 実際 ${yen(c0 - s.cash)}');
+      if (got == p && (c0 - s.cash - fee).abs() > 1) note('値段の食い違い 雇う費用: ${yen(fee)} / 実際 ${yen(c0 - s.cash)}');
     }
     mark('雇う');
   }
@@ -1007,6 +1024,8 @@ class Pilot {
       mark('まとめて任せる');
     }
     // 事業が多い会社：自社の事業の並べ替えと、見出しでたたむ・開く（1つの列の画面だけ。2列の画面は左に一覧がいつも出る）
+    // （任せる帯の小窓などで別の画面に移っていることがあるので、事業の画面に戻してから見る。1.1.0+27）
+    if (ctl.tab != 'biz') await tab('biz');
     if (s.biz.length >= bizManyMin && !_split) {
       for (final o in myBizSorts) {
         await pressKey('mysort-${o.$1}');
@@ -1107,6 +1126,28 @@ class Pilot {
     where = 'ひと回り（人）';
     await tab('people');
     await sweep();
+    // 1.1.0+27 から、横に広い人の画面は2列（左の一覧で人を押すと右に中身）。区分（幹部・責任者）を選んで押し、右の解雇を開いてやめる
+    if (find.byKey(const ValueKey('pseg-exec')).evaluate().isNotEmpty) {
+      for (final p in {if (s.staff.isNotEmpty) s.staff.first, if (s.staff.isNotEmpty) s.staff.last}) {
+        await pressKey(s.biz.any((b) => b.mgr == p.id) ? 'pseg-mgr' : 'pseg-exec');
+        await pressKey('person-row-${p.id}');
+        if (p == s.staff.last) {
+          final n = s.staff.length;
+          final fire = find.byKey(ValueKey('p-fire-${p.id}'));
+          if (await reveal(fire)) await _peek(fire.last, '解雇の確認');
+          if (s.staff.length != n) note('解雇をやめたのに部下が減った');
+        }
+      }
+      await pressKey('pseg-exec');
+      await successor();
+    } else {
+      await _peopleNarrow();
+    }
+    await _afterPeople();
+  }
+
+  /// 狭い人の画面（縦に並べる）のひと回り
+  Future<void> _peopleNarrow() async {
     if (s.staff.length >= staffFoldMin) {
       final p = s.staff.first;
       if (ctl.openStaff != p.id) await pressKey('staff-row-${p.id}');
@@ -1121,6 +1162,10 @@ class Pilot {
       if (s.staff.length != n) note('解雇をやめたのに部下が減った');
     }
     await successor();
+  }
+
+  /// 人のあとのひと回り（株から）
+  Future<void> _afterPeople() async {
     where = 'ひと回り（株）';
     await tab('stock');
     await sweep();

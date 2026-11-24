@@ -60,13 +60,7 @@ const Map<String, List<String>> MAJOR_SK = {
 const Map<String, String> LIC_JA = {'doctor': '医師', 'lawyer': '弁護士', 'cpa': '会計士', 'pilot': 'パイロット'};
 
 /// 資格が無いと始められない業種（業種の id → 要る資格）
-const Map<String, String> IND_LIC = {
-  'hospital': 'doctor',
-  'clinic': 'doctor',
-  'dental': 'doctor',
-  'telemed': 'doctor',
-  'airline': 'pilot',
-};
+const Map<String, String> IND_LIC = {'hospital': 'doctor', 'clinic': 'doctor', 'dental': 'doctor', 'telemed': 'doctor', 'airline': 'pilot'};
 
 /// 資格のある人の給料の相場の倍
 const Map<String, double> LIC_PAY = {'doctor': 2.0, 'lawyer': 1.7, 'cpa': 1.35, 'pilot': 1.9};

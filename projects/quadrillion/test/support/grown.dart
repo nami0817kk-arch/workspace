@@ -6,17 +6,27 @@ import 'bot.dart';
 /// 数字を書き込んで作るのではなく、毎月ふつうの手（始める・分社・現地法人・上場・組む・持株会社）を打って月を進める。
 /// 手の数・お金・条件はどれも本物の手のまま（足りなければ、その月は打てない）。
 ///
-/// できあがる盤面の目安（seed 2024・1985年から25年）: 事業20〜30・子会社・現地法人・持株会社・子会社の上場・提携・投資家の出資
-Game grownGame({int seed = 2024, int year = 1985, int years = 25, int bizTarget = 26, String home = 'jp', List<String> traits = const ['charm', 'careful']}) {
-  final g = Game.newGame(SetupConfig(mode: 'endless', year: year, traits: traits, home: home), rng: ParkMiller(seed));
-  for (var m = 0; m < years * 12 && g.over == null; m++) {
-    growMonth(g, bizTarget: bizTarget);
+/// できあがる盤面の目安（1985年から25年）: 事業20〜30・子会社・現地法人・持株会社・子会社の上場・提携・投資家の出資
+/// （1.1.0+27 で人の仕組みが入り、人件費・転職・定年で伸び方が種ごとに大きくばらつくようになった。
+/// [search] のときは、[seed] から順に種を替えて、上の盤面（事業20以上・子会社・現地法人）になる最初の種を使う。どれもならなければ事業がいちばん多いもの）
+Game grownGame(
+    {int seed = 2024, int year = 1985, int years = 25, int bizTarget = 26, String home = 'jp', List<String> traits = const ['charm', 'careful'], bool? search}) {
+  Game? best;
+  // 種を探すのは日本の25年の盤面だけ（ほかの国の盤面は顔の割り当てを見るだけ、ほかの年数は途中の盤面を見るだけで、大きさは問わない）
+  final sr = search ?? (home == 'jp' && years == 25);
+  for (var s = seed; s < seed + (sr ? 16 : 1); s++) {
+    final g = Game.newGame(SetupConfig(mode: 'endless', year: year, traits: traits, home: home), rng: ParkMiller(s));
+    for (var m = 0; m < years * 12 && g.over == null; m++) {
+      growMonth(g, bizTarget: bizTarget);
+    }
+    resolveEvents(g);
+    // 任せた事業は戻して渡す（受け取ったテストが自分で任せ方を決める）
+    g.undelegAll();
+    g.calcAll();
+    if (best == null || (g.over == null && g.biz.length > best.biz.length)) best = g;
+    if (g.over == null && g.biz.length >= 20 && g.subs().any((c) => c.loc == null) && g.locals().isNotEmpty) return g;
   }
-  resolveEvents(g);
-  // 任せた事業は戻して渡す（受け取ったテストが自分で任せ方を決める）
-  g.undelegAll();
-  g.calcAll();
-  return g;
+  return best!;
 }
 
 /// 1か月ぶん：会社の形を育てる手を1つ打ってから、いつもの自動プレイ（1単位の手）で月を進める
@@ -29,7 +39,9 @@ void growMonth(Game g, {int bizTarget = 26}) {
   // 1.1.0+25 から、事業が増えると会議に社長の時間を取られる。責任者のいる事業は任せて、会議の時間を減らす（人が遊ぶときと同じ）
   if (g.hNormalLeft() < 60) g.delegAll();
   _shape(g, bizTarget);
-  botMonth(g, units: true);
+  // 1.1.0+27 から人件費（毎年の見直し・辞めた人の穴埋め）が重くなり、借りずに回すと20〜30の事業まで育たない。
+  // 元手が足りないときだけ借りる打ち方（'some'）で育てる
+  botMonth(g, units: true, borrow: 'some');
 }
 
 void _shape(Game g, int bizTarget) {
@@ -42,11 +54,18 @@ void _shape(Game g, int bizTarget) {
     return;
   }
   // 部下を足す（責任者・子会社の社長になる人）
-  // （1.1.0+27 から、雇う費用は採用の道で違う。払える候補の先頭を雇う）
-  final c0 = g.cands.where((p) => g.hireFeeOf(p) <= g.cash * .5).firstOrNull;
-  if (g.staff.length < 6 && c0 != null && g.pre > c0.salary * 4 && g.turn % 3 == 0) {
-    g.hire(c0);
-    return;
+  // （1.1.0+27 から、雇う費用は採用の道で違う。払える候補の先頭を雇う。払える候補がいなければ、手の空いた店長を引き上げる）
+  if (g.staff.length < 6 && g.turn % 3 == 0) {
+    final c0 = g.cands.where((p) => g.hireFeeOf(p) <= g.cash * .5).firstOrNull;
+    if (c0 != null && g.pre > c0.salary * 4) {
+      g.hire(c0);
+      return;
+    }
+    final lb = g.biz.where((b) => b.leads >= 2).firstOrNull;
+    if (lb != null && g.pre > 0) {
+      g.promoteLead(lb);
+      return;
+    }
   }
   // 分社（責任者のいる事業を2つまで）
   final plain = g.subs().where((c) => c.loc == null).length;

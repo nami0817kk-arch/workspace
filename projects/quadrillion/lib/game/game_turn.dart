@@ -610,7 +610,7 @@ extension GameTurn on Game {
       // 引き抜き
       // （1.1.0+27 から、給料が相場より低い人も狙われる。休んでいる人は狙われない）
       final tgt = staff
-          .where((p) => ((p.amb > 60 && p.loy < 55) || (p.real && p.amb > 45 && p.loy < 65 && payRatio(p) < payLowRatio)) && p.away == 0 && !events.any((e) => e.poach == p.id))
+          .where((p) => ((p.amb > 60 && p.loy < 55) || (underpaid(p) && p.amb > 45 && p.loy < 65)) && p.away == 0 && !events.any((e) => e.poach == p.id))
           .toList();
       if (tgt.isNotEmpty && rnd() < .027) {
         final p = pick(tgt);

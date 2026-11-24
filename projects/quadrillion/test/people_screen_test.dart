@@ -9,6 +9,7 @@ import 'package:quadrillion/game/game.dart';
 import 'package:quadrillion/ui/app.dart';
 import 'package:quadrillion/ui/controller.dart';
 import 'package:quadrillion/ui/people_screen.dart';
+import 'package:quadrillion/ui/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'support/bot.dart';
@@ -21,7 +22,10 @@ String? _json;
 /// 1990年から8年回した会社に、注意の印が出る人・休んでいる人・社外の人をそろえる
 Game _mid() {
   if (_json == null) {
-    final g = Game.newGame(SetupConfig(mode: 'world', year: 1990, traits: const ['charm', 'careful']), rng: ParkMiller(7));
+    final g = Game.newGame(
+      SetupConfig(mode: 'world', year: 1990, traits: const ['charm', 'careful']),
+      rng: ParkMiller(7),
+    );
     for (var m = 0; m < 96 && g.over == null; m++) {
       botMonth(g, units: true, focus: true);
     }
@@ -42,6 +46,18 @@ Game _mid() {
       s[2].away = 3;
       s[2].awayWhy = 'sick';
     }
+    // 採用の候補を新卒・中途・引き抜きのどれも並ぶようにそろえる（日本の新卒は4月だけなので、3月の終わりの市場で作る）
+    final q0 = g.q;
+    g.q = 3;
+    final all = <Person>[];
+    for (var i = 0; i < 8 && !const ['grad', 'mid', 'poach'].every((x) => all.any((p) => p.src == x)); i++) {
+      all.addAll(g.rollCands());
+    }
+    g.q = q0;
+    g.cands = [
+      for (final x in const ['grad', 'mid', 'poach']) ...all.where((p) => p.src == x).take(3),
+    ];
+    g.ensureFaces();
     // 社外の人
     final out = g.mkPerson(0);
     g.staff.add(out);
@@ -67,7 +83,12 @@ Future<void> _walk(WidgetTester tester, Size size, String lang, {bool shoot = fa
   addTearDown(tester.view.reset);
   addTearDown(() => L.lang = 'ja');
   final key = GlobalKey();
-  await tester.pumpWidget(RepaintBoundary(key: key, child: QuadrillionApp(controller: ctl)));
+  await tester.pumpWidget(
+    RepaintBoundary(
+      key: key,
+      child: QuadrillionApp(controller: ctl),
+    ),
+  );
   await tester.pump();
   ctl.setTab('people');
   final g = ctl.game!;
@@ -132,15 +153,16 @@ void main() {
     expect(find.byKey(ValueKey('pwarn-${low.id}-${Icons.directions_run.codePoint}')), findsOneWidget);
     expect(find.byKey(ValueKey('payratio-${low.id}')), findsOneWidget);
     g.hUsed = 0;
-    await tester.tap(find.byKey(ValueKey('p-raise-${low.id}')));
+    // （押したあとの知らせが画面の下に重なるので、ボタンの押す動きを直接呼ぶ）
+    tester.widget<Btn>(find.byKey(ValueKey('p-raise-${low.id}'))).onTap!();
     await tester.pump();
     expect(g.payRatio(low), greaterThanOrEqualTo(1));
     final k0 = low.known.length;
-    await tester.tap(find.byKey(ValueKey('p-talk-${low.id}')));
+    tester.widget<Btn>(find.byKey(ValueKey('p-talk-${low.id}'))).onTap!();
     await tester.pump();
     expect(low.known.length, greaterThanOrEqualTo(k0));
     // 採用の「中途」を押すと、中途の候補が並ぶ
-    await tester.tap(find.byKey(const ValueKey('hire-mid')));
+    tester.widget<Btn>(find.byKey(const ValueKey('hire-mid'))).onTap!();
     await tester.pump();
     expect(ctl.peopleSeg, 'cand');
     expect(ctl.candSrc, 'mid');

@@ -112,8 +112,10 @@ void main() {
     expect(maxRuns.where((r) => r.broke || r.bank).length, greaterThanOrEqualTo(1), reason: lines);
     // 借りまくるが30年勝ち続ける（倒れずに、借りないより大きく終わる）のは、6回のうち全部ではない
     expect(maxRuns.where((r) => !r.broke && r.cap > noneOf(r.seed).cap).length, lessThan(6), reason: lines);
-    // 借りないと、ほとんど倒れない
-    expect(none.where((r) => r.broke).length, lessThanOrEqualTo(2), reason: lines);
+    // 借りないと、ほとんど倒れない。
+    // 1.1.0+27（段3：人）から、給料が世の中の賃金と腕に合わせて毎年上がり、店長や部下が辞めるので、
+    // 人件費を見直さない自動プレイは、稼ぎ頭の業種が沈んだあと（20年目過ぎ）に倒れることがある。線を半分までに引き直した
+    expect(none.where((r) => r.broke).length, lessThanOrEqualTo(3), reason: lines);
     // 借りると速く大きくなれることがある（どこかの種で、借りた会社の時価の最高が、借りない会社の最後の時価を超える）
     expect([...maxRuns, ...some].any((r) => r.peakCap > noneOf(r.seed).cap), isTrue, reason: lines);
     // 借金は利益の何倍かで上限が決まる（現金に連動しない）。借りまくっても、利益の十数倍を大きく超えない

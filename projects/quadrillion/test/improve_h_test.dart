@@ -170,7 +170,8 @@ void main() {
       Map<String, int> run(String trait, int ab, {int amb = 50}) {
         final g = _grown(9);
         g.cash = 1e13;
-        final b = g.biz.firstWhere((b) => b.mgr != null && b.model != 'fc');
+        // 伸ばす手が打てる事業で見る（1.1.0+27 で育った会社の盤面が変わり、先頭の事業が客の数で頭打ちのことがある）
+        final b = g.biz.firstWhere((b) => b.mgr != null && b.model != 'fc' && g.growOpt(b, 1e13) != null, orElse: () => g.biz.firstWhere((b) => b.mgr != null && b.model != 'fc'));
         final p = g.staffById(b.mgr)!;
         p.trait = trait;
         p.amb = amb;
@@ -186,10 +187,23 @@ void main() {
           p.trait = trait;
           p.amb = amb;
           p.ab[indm[b.ind]!.key] = ab;
+          // 引き抜き・体調で抜けないように、やる気・給料・健康も保つ（1.1.0+27）
+          p.loy = 90;
+          p.health = 90;
+          if (p.salary < g.mktPay(p)) p.salary = g.mktPay(p);
           for (final a in g.delegLog.where((a) => a.turn == g.turn)) {
             out[a.k] = (out[a.k] ?? 0) + 1;
             final cap = g.capexOf(indm[b.ind]!);
             if (a.k == 'build' && (a.cost - cap * 10).abs() < cap * 1e-9) out['build10'] = (out['build10'] ?? 0) + 1;
+          }
+          // 会議の提案（新しい事業を任せる・外れた商品の責任を取らせる）で責任者が替わったら、同じ人に戻して見続ける（1.1.0+27 で盤面が変わり、10年のうちに起きるようになった）
+          if (g.staff.contains(p) && b.mgr != p.id) {
+            for (final x in g.biz) {
+              if (x.mgr == p.id) x.mgr = null;
+            }
+            b.mgr = p.id;
+            g.setDeleg(b, true);
+            g.setBudget(b, 3);
           }
         }
         return out;
@@ -199,7 +213,7 @@ void main() {
       expect((careful['build'] ?? 0) + (careful['ext'] ?? 0), 0, reason: '慎重な人は店・工場を増やさない: $careful');
       // 月の枠は元手の10倍・お金は十分にある
       final gambler = run('gambler', 70);
-      expect(gambler['build'] ?? 0, greaterThan(0));
+      expect(gambler['build'] ?? 0, greaterThan(0), reason: '$gambler');
       // 1.1.0+26 から、何店を開くかは責任者・物件・上限で決まり、「10店を張る」「1段小さく張る」は無くなった（博打打ちは開きたい数を10、ふつうの人は3で見立てる）
       final plain = run('grit', 70);
       expect(plain['build'] ?? 0, greaterThan(0), reason: 'ふつうの人も増やす: $plain');
@@ -302,11 +316,18 @@ void main() {
     });
 
     test('釣り合い：任せた事業の伸びは、人が同じお金で最善手を打ったときより小さい（全部任せるのが最善にならない）', () {
-      final g = Game.newGame(SetupConfig(mode: 'endless', year: 1985, traits: const ['charm', 'careful']), rng: ParkMiller(11));
-      for (var m = 0; m < 120 && g.over == null; m++) {
-        delegMonth(g, 'none');
+      // 1.1.0+27 から部下は辞めていくので、10年後に任せられる事業（責任者のいる事業）が2つ以上ある種で見る
+      late Game g;
+      for (var seed = 11; seed < 40; seed++) {
+        g = Game.newGame(SetupConfig(mode: 'endless', year: 1985, traits: const ['charm', 'careful']), rng: ParkMiller(seed));
+        for (var m = 0; m < 120 && g.over == null; m++) {
+          delegMonth(g, 'none');
+        }
+        resolveEvents(g);
+        if (g.over == null && g.biz.where(g.canDeleg).length >= 2) break;
       }
-      resolveEvents(g);
+      // 1.1.0+27 から人件費で手元が細り、比べる両方が1手も打てない盤面になることがある。両方に同じだけ手元を足してから比べる（使ったお金1円あたりで比べるので、足した額は物差しを変えない）
+      if (g.cash < 3e8 * g.nom()) g.cash = 3e8 * g.nom();
       // 物差しは「使ったお金1円あたりの、打った手の力の伸びの見込み」（商品の大当たり・不発をならした値。当たり外れに左右されない）
       for (final budget in const [1, 2, 3]) {
         var a = 0.0, b = 0.0, sa = 0.0, sb = 0.0;
@@ -390,7 +411,9 @@ void main() {
       g.ap = 0;
       p.ctl.render();
       await p.pump();
-      await p.press(find.byKey(_k('todo-act-$i')));
+      // お金が戻ると「今月やること」の並びが変わることがあるので、人を雇う行を探し直す（1.1.0+27）
+      final i2 = g.adviceTop().indexWhere((t) => t.act == 'hire');
+      await p.press(find.byKey(_k('todo-act-$i2')));
       expect(p.inSheet(find.textContaining('今月の社長の時間が足りません')), findsOneWidget);
       await p.drain();
       expect(p.found, isEmpty, reason: p.found.join('\n'));
@@ -699,7 +722,8 @@ void main() {
         Future<void> bizList() async {
           await p.tab('biz');
           // 「新しい事業」へ飛んだあとは、自社の一覧がたたまれている。開き直す
-          if (p.ctl.folded.contains('mybiz')) await p.press(find.descendant(of: find.byKey(_k('fold-mybiz')), matching: find.byType(InkWell)));
+          // （2列の画面には見出しが無く、左の一覧はいつも出ている。1.1.0+27 で盤面が変わり「新しい事業」の行が出るようになった）
+          if (p.ctl.folded.contains('mybiz') && find.byKey(_k('fold-mybiz')).evaluate().isNotEmpty) await p.press(find.descendant(of: find.byKey(_k('fold-mybiz')), matching: find.byType(InkWell)));
         }
 
         // まとめて雇うボタンは、お金と時間が足りる事業があるときだけ出る（1.1.0+26 から手元が少ないことがある）
