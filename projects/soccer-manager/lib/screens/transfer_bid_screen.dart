@@ -245,7 +245,7 @@ class _TransferBidScreenState extends State<TransferBidScreen> {
             : Tr.pick('相場 ${formatMoney(p.marketValue)}',
                 formatMoney(p.marketValue))),
         offer: NegotiationStepper(
-          label: formatMoney(_fee),
+          label: formatMoneyCompact(_fee),
           color: need > budget ? SemanticColors.negative(context) : null,
           onMinus: _fee > _min
               ? () => setState(() => _fee = max(_min, _fee - _step))

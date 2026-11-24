@@ -136,7 +136,7 @@ class NegotiationTable extends StatelessWidget {
   // 欄の幅の割合。要求の欄が狭く、英語の「to Jun 2029」「Welcome」が
   // 縮んだり語の途中で折れたりしていた(2026-11-25 の第7段)。提示の欄は
   // 増減の部品が入る幅を残す。
-  int get _termFlex => compact ? 3 : 4;
+  int get _termFlex => 4;
   int get _wantFlex => compact ? 3 : 4;
   int get _offerFlex => 5;
 
@@ -259,6 +259,10 @@ class NegotiationTable extends StatelessWidget {
 }
 
 /// [-] 値 [+]。
+///
+/// 金額の値は formatMoneyCompact で渡す(英語は「 yen」を付けない)。欄が
+/// 狭く、英語の「155.5m yen」が半分ほどに縮んでいた(2026-11-25 の第7段)。
+/// 単位は隣の「要求」の欄に出ている。
 class NegotiationStepper extends StatelessWidget {
   const NegotiationStepper({
     super.key,
