@@ -150,7 +150,7 @@ void main() {
         final s = _midGame()..ap = 3;
         final b = (s.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first;
         final ctl = await _pump(tester, game: s, lang: lang);
-        ctl.openBiz = b.id;
+        ctl.openBiz = ctl.moreBiz = ctl.pinBiz = b.id;
         ctl.setTab('biz');
         await tester.pump();
         final grow = _key('grp-grow-${b.id}'), fight = _key('grp-fight-${b.id}'), shape = _key('grp-shape-${b.id}'), sell = _key('biz-sell-${b.id}');
@@ -191,7 +191,7 @@ void main() {
       final s = _midGame()..ap = 3;
       final b = (s.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first;
       final ctl = await _pump(tester, game: s);
-      ctl.openBiz = b.id;
+      ctl.openBiz = ctl.moreBiz = ctl.pinBiz = b.id;
       ctl.setTab('biz');
       await tester.pump();
       final sellBtn = find.descendant(of: _key('biz-sell-${b.id}'), matching: find.byType(Btn));
@@ -229,7 +229,7 @@ void main() {
         final s = _midGame()..ap = 3;
         final b = (s.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first;
         final ctl = await _pump(tester, game: s, lang: lang);
-        ctl.openBiz = b.id;
+        ctl.openBiz = ctl.moreBiz = ctl.pinBiz = b.id;
         ctl.setTab('biz');
         await tester.pump();
         expect(_key('info-share'), findsWidgets);
@@ -261,7 +261,7 @@ void main() {
         for (final lang in ['ja', 'en']) {
           final s = _midGame()..ap = 3;
           final ctl = await _pump(tester, game: s, lang: lang, size: size);
-          ctl.openBiz = s.biz.first.id;
+          ctl.openBiz = ctl.moreBiz = s.biz.first.id;
           final seen = <String>{};
           for (final t in ['town', 'biz', 'stock', 'num', 'zukan']) {
             ctl.setTab(t);
@@ -787,7 +787,7 @@ void main() {
         for (final lang in ['ja', 'en']) {
           final s = _midGame()..ap = 3;
           final ctl = await _pump(tester, game: s, lang: lang, size: size);
-          ctl.openBiz = s.biz.first.id;
+          ctl.openBiz = ctl.moreBiz = s.biz.first.id;
           for (final t in ['biz', 'zukan']) {
             ctl.setTab(t);
             await tester.pump();
@@ -815,7 +815,7 @@ void main() {
         s.seen[s.inds.firstWhere((i) => i.b > s.yr()).id] = 1;
         s.ach['partner'] = 0;
         final ctl = await _pump(tester, game: s, lang: 'en', size: size);
-        ctl.openBiz = s.biz.first.id;
+        ctl.openBiz = ctl.moreBiz = s.biz.first.id;
         for (final t in ['town', 'biz', 'num']) {
           ctl.setTab(t);
           await tester.pump();
@@ -855,7 +855,7 @@ void main() {
       await tester.drag(find.byType(Scrollable).first, const Offset(0, -420));
       await tester.pump();
       await _shot(tester, 'c0_town_actions_$tag');
-      ctl.openBiz = b.id;
+      ctl.openBiz = ctl.moreBiz = ctl.pinBiz = b.id;
       ctl.setTab('biz');
       await tester.pump();
       await _shot(tester, 'c1_biz_card_top_$tag');

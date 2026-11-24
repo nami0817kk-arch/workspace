@@ -157,7 +157,7 @@ Future<void> _eachKvScreen(WidgetTester tester, GameController ctl, Future<void>
   final g = ctl.game!;
   for (final t in ['town', 'biz', 'people', 'stock']) {
     ctl.setTab(t);
-    if (t == 'biz') ctl.openBiz = (g.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first.id;
+    if (t == 'biz') ctl.openBiz = ctl.moreBiz = (g.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first.id;
     await tester.pump();
     await f(t);
   }

@@ -46,6 +46,24 @@ String relWord(int rel) => M(rel > 25
                 ? '警戒'
                 : 'ふつう@@rel');
 
+/// 番頭のひとこと1つ（文と、その場で打てる手・飛ぶ先）。1.0.0+20
+class Tip {
+  final int pri;
+
+  /// 包んだ文
+  final String m;
+
+  /// 「今月やること」の行に付けるボタンの種類（null なら付けない）:
+  /// start 最初の事業を決める / stock「株」へ / people「人」へ / staff その部下へ / bizTab「事業」へ / biz その事業のカードへ /
+  /// newInd 新しい事業の一覧でその業種を探す / hire その事業の足りない人を雇う / hireAll 足りない人をまとめて雇う /
+  /// place 空いている部下を責任者に置く / holding 持株会社にする / deleg 責任者のいる事業をまとめて任せる
+  final String? act;
+
+  /// 手の相手（事業 [Biz]・部下 [Person]・業種の id）
+  final Object? ref;
+  const Tip(this.pri, this.m, [this.act, this.ref]);
+}
+
 /// 画面に出す言葉を組み立てる（試作の画面側にあった、状態から文を作る関数）
 extension GameView on Game {
   String officeName() {
@@ -134,17 +152,17 @@ extension GameView on Game {
 
   /// 中盤からの勧め（1.0.0+18）。育った会社で使える仕組み（現地法人・子会社の上場・相性の分かった組み合わせ）と、
   /// 放っておくと痛い目にあうこと（忠誠・現地法人の株の買い集め）を、今ある仕組みのまま言葉にする。数字は何も動かさない
-  void _midAdvice(void Function(int, String, [List<Object?>]) add) {
+  void _midAdvice(void Function(int, String, [List<Object?>, String?, Object?]) add) {
     // 現地法人の株を宿敵が買い集めている（10%で場面が出る。その手前から知らせる）
     final hit = (locals().where((c) => c.locRivPct >= 5 && coById(c.locRiv) != null).toList()..ssort((a, b) => b.locRivPct.compareTo(a.locRivPct))).firstOrNull;
     if (hit != null) {
       // 25%（口を出される線）が近づいたら急ぎ。その手前と、越えたあとは、ほかの勧めと同じ並びに置く
       add(hit.locRivPct >= 15 && hit.locRivPct < 25 ? 88 : 55, hit.locRivPct >= 25 ? '現地法人{0}の株を、{1}が{2}握っています。「株」で買い戻せます（{3}）' : '現地法人{0}の株を、{1}が{2}まで買い集めています。25%で経営に口を出されます。「株」で買い戻せます（{3}）',
-          [Nm(hit.name), Nm(coById(hit.locRiv)!.name), pct(hit.locRivPct), Y(localBuybackCost(hit))]);
+          [Nm(hit.name), Nm(coById(hit.locRiv)!.name), pct(hit.locRivPct), Y(localBuybackCost(hit))], 'stock');
     }
     // 忠誠が引き抜きの線（野心60超・忠誠55未満）を割った部下
     final low = (staff.where((p) => p.loy < 55 && (!p.ambKnown || p.amb > 60)).toList()..ssort((a, b) => a.loy.compareTo(b.loy))).firstOrNull;
-    if (low != null) add(78, '{0}の忠誠が下がっています。宿敵の引き抜きの的になります。経営会議で{0}の提案を通すと、忠誠が上がります', [Nm(low.name)]);
+    if (low != null) add(78, '{0}の忠誠が下がっています。宿敵の引き抜きの的になります。経営会議で{0}の提案を通すと、忠誠が上がります', [Nm(low.name)], 'staff', low);
     // 相性がよさそうと分かっている組み合わせの、片方だけを持っている（事業の種探しで分かったもの）
     final own = <String>{for (final b in biz) b.ind, for (final c in subs()) for (final b in c.biz) b.ind};
     final live = <String>{for (final i in liveInds()) i.id};
@@ -152,21 +170,21 @@ extension GameView on Game {
     if (half.isNotEmpty) {
       final s = half[(turn ~/ 3) % half.length];
       final (have, need) = own.contains(s.a) ? (s.a, s.b) : (s.b, s.a);
-      add(58, '「{0}」と「{1}」は相性がよさそうだと分かっています。「{1}」も始めれば、シナジーが見つかるかもしれません', [I(have), I(need)]);
+      add(58, '「{0}」と「{1}」は相性がよさそうだと分かっています。「{1}」も始めれば、シナジーが見つかるかもしれません', [I(have), I(need)], 'newInd', need);
     }
     // 子会社の上場（まだ1社も上場させていないとき）
     final sb = subs();
     if (!sb.any((c) => c.listed)) {
       final c = (sb.where((c) => pctOf(c) >= 60).toList()..ssort((a, b) => b.cap.compareTo(a.cap))).firstOrNull;
       if (c != null && c.cap * .3 * .95 >= 1e8 * nom()) {
-        add(48, '子会社の{0}は上場させられます。株を30%売って約{1}が入り、70%は持ったままです（「株」の子会社のカードから）', [Nm(c.name), Y(c.cap * .3 * .95)]);
+        add(48, '子会社の{0}は上場させられます。株を30%売って約{1}が入り、70%は持ったままです（「株」の子会社のカードから）', [Nm(c.name), Y(c.cap * .3 * .95)], 'stock');
       }
     }
     // 現地法人（まだ1つも作っていないとき。海外の分がいちばん大きい事業）
     if (locals().isEmpty && biz.length + sb.length >= 5) {
       final b = (biz.where((b) => localCountries(b).isNotEmpty && b.profit > 0).toList()..ssort((a, b) => b.rev.compareTo(a.rev))).firstOrNull;
       if (b != null) {
-        add(46, '「{0}」は{1}に出ています。「分社・独立」からその国の分を現地法人に分けると、地元の規制が少し緩み、現地の社長が自分で動かします', [I(b.ind), C(localCountries(b).first)]);
+        add(46, '「{0}」は{1}に出ています。「分社・独立」からその国の分を現地法人に分けると、地元の規制が少し緩み、現地の社長が自分で動かします', [I(b.ind), C(localCountries(b).first)], 'biz', b);
       }
     }
   }
@@ -176,23 +194,37 @@ extension GameView on Game {
   /// 候補が4つ以上あるときは、いちばん大事な1つを先頭に置いたまま、2つ目と3つ目を月ごとに順ぐりに回す（1.0.0+18）。
   /// 画面の「今月やること」に出るのは3つまでなので、上の3つが片付かないかぎり下の候補はいつまでも出ず、毎月同じ3つの文が並んでいた
   /// （10〜30年目の自動プレイで、先月と同じ文の月が 99.6%）。全部を大事な順に読むのは [adviceAll]（小窓「番頭のひとこと」）
-  List<String> advice() {
-    final all = adviceAll();
+  List<String> advice() => [for (final t in adviceTop()) t.m];
+
+  /// [advice] と同じ選び方で、その場で打てる手・飛ぶ先も付けて返す（「今月やること」の行のボタンに使う）
+  List<Tip> adviceTop() {
+    final all = adviceTips();
     if (!extras || all.length <= 3) return all.take(3).toList();
     final n = all.length - 1;
-    return [all[0], all[1 + turn % n], all[1 + (turn + 1) % n]];
+    final a = all[1 + turn % n], b = all[1 + (turn + 1) % n];
+    // その場で打てる用事（足りない人を雇う・空いている部下を責任者に置く）が候補にあれば、片付くまで2つ目に出し続ける（1.0.0+20。
+    // 「今月やること」から1回で打てるように。3つ目は今までどおり月ごとに回るので、ほかの候補も順に全部出る）
+    final plan = all.any((t) => t.act == 'place') && managerPlan().isNotEmpty;
+    final doable = all.skip(1).where((t) => t.act == 'hire' || t.act == 'hireAll' || (t.act == 'place' && plan)).firstOrNull;
+    if (doable == null || doable == a || doable == b) return [all[0], a, b];
+    return [all[0], doable, b];
   }
 
   /// 番頭のひとことの候補を、大事な順にすべて並べる
-  List<String> adviceAll() {
-    final a = <(int, String)>[];
-    void add(int pri, String m, [List<Object?> args = const []]) => a.add((pri, M(m, args)));
+  List<String> adviceAll() => [for (final t in adviceTips()) t.m];
+
+  /// 番頭のひとことの候補を、大事な順にすべて（その場で打てる手・飛ぶ先つき）
+  List<Tip> adviceTips() {
+    final a = <Tip>[];
+    void add(int pri, String m, [List<Object?> args = const [], String? act, Object? ref]) => a.add(Tip(pri, M(m, args), act, ref));
     final riv = sh.rivMax;
     final y = yr();
-    if (biz.isEmpty) add(100, 'まだ事業がありません。相棒を探すか、「最初の事業を決める」から始めましょう');
-    if (riv >= 20) add(95, '宿敵にあなたの株を{0}握られています。「株」でホワイトナイトや自社株買いを考えましょう', [pct(riv)]);
+    if (biz.isEmpty) add(100, 'まだ事業がありません。相棒を探すか、「最初の事業を決める」から始めましょう', const [], 'start');
+    if (riv >= 20) add(95, '宿敵にあなたの株を{0}握られています。「株」でホワイトナイトや自社株買いを考えましょう', [pct(riv)], 'stock');
     final run = biz.where((b) => b.mgr == null).length;
-    if (run > presCap()) add(90, '社長が直接見られる事業は{0}つまでです。{1}つの事業が放置されて弱っています。「人」で採用して責任者に置きましょう', [presCap(), run - presCap()]);
+    if (run > presCap()) {
+      add(90, '社長が直接見られる事業は{0}つまでです。{1}つの事業が放置されて弱っています。「人」で採用して責任者に置きましょう', [presCap(), run - presCap()], 'place');
+    }
     // 同じ文が何か月も出続けないようにする（1.0.0+18。育った会社では「沈み始めています」「人が足りず」が毎月同じ事業の名前で出ていた）:
     // ・名前を挙げる事業は、いちばん困っているもの（人手）か、月ごとに順番に（沈む市場・新しい市場）
     // ・急がない勧めは、起きてすぐ（1〜2年）は毎月、そのあとは数か月に1度だけ出す
@@ -204,12 +236,13 @@ extension GameView on Game {
           biz.length >= bizManyMin
               ? '「{0}」など{1}つの事業で現場の人が足りず、{2}の一部が止まっています。「事業」の「まとめての手」から、まとめて雇えます'
               : '「{0}」など{1}つの事業で現場の人が足りず、{2}の一部が止まっています。「事業」の「現場の人を増やす」で雇いましょう',
-          [I(shorts[0].ind), shorts.length, uw(shorts[0])]);
+          [I(shorts[0].ind), shorts.length, uw(shorts[0])],
+          'hireAll');
     } else if (shorts.isNotEmpty) {
-      add(85, '「{0}」は現場の人が足りず、{1}の一部が止まっています。「現場の人を増やす」か、統率の強い責任者を置きましょう', [I(shorts[0].ind), uw(shorts[0])]);
+      add(85, '「{0}」は現場の人が足りず、{1}の一部が止まっています。「現場の人を増やす」か、統率の強い責任者を置きましょう', [I(shorts[0].ind), uw(shorts[0])], extras ? 'hire' : null, shorts[0]);
     }
-    if (pres.age >= 60 && succ == null) add(80, '社長が60歳を超えました。「人」で後継ぎを決めておかないと、急死したとき会社が混乱します');
-    if (canIPO()) add(75, '上場の条件を満たしました。大金が入りますが、宿敵があなたの株を買えるようになります');
+    if (pres.age >= 60 && succ == null) add(80, '社長が60歳を超えました。「人」で後継ぎを決めておかないと、急死したとき会社が混乱します', const [], 'people');
+    if (canIPO()) add(75, '上場の条件を満たしました。大金が入りますが、宿敵があなたの株を買えるようになります', const [], 'stock');
     final decs = biz.where((b) {
       final i = indm[b.ind]!;
       return i.f != 0 && y > i.f;
@@ -220,10 +253,10 @@ extension GameView on Game {
       // 沈み始めて1年以内のものは毎月。それより古いものは半年に1度、順番に名前を挙げる
       final fresh = decs.where((b) => y - indm[b.ind]!.f < 1).firstOrNull;
       if (fresh != null) {
-        add(70, '「{0}」は市場が沈み始めています。売るなら早めに', [I(fresh.ind)]);
+        add(70, '「{0}」は市場が沈み始めています。売るなら早めに', [I(fresh.ind)], 'biz', fresh);
       } else if (decs.isNotEmpty && turn % 6 == 0) {
         final b = decs[(turn ~/ 6) % decs.length];
-        add(70, pivotTargets(b).isNotEmpty ? '「{0}」は沈む市場に残ったままです。売るか、「業態を変える」で近い業種に移れます' : '「{0}」は沈む市場に残ったままです。売れるうちに売るのも手です', [I(b.ind)]);
+        add(70, pivotTargets(b).isNotEmpty ? '「{0}」は沈む市場に残ったままです。売るか、「業態を変える」で近い業種に移れます' : '「{0}」は沈む市場に残ったままです。売れるうちに売るのも手です', [I(b.ind)], 'biz', b);
       }
     }
     final hots = inds.where((i) => y - i.b >= 0 && y - i.b < 6 && i.size >= 1.5e12 && !biz.any((b) => b.ind == i.id)).toList()
@@ -234,18 +267,23 @@ extension GameView on Game {
       // 生まれて2年以内は毎月。そのあとは4か月に1度、順番に
       final fresh = hots.where((i) => y - i.b < 2).firstOrNull;
       if (fresh != null) {
-        add(65, '生まれたばかりの「{0}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります', [I(fresh.id)]);
+        add(65, '生まれたばかりの「{0}」は、これから世界で大きく育つ市場です。早く入って世界に出た会社が、時代の覇者になります', [I(fresh.id)], 'newInd', fresh.id);
       } else if (turn % 4 == 1) {
-        add(65, '「{0}」は生まれて{1}年、まだ伸びている市場です。入るなら、大きな会社が固まる前に', [I(hots[(turn ~/ 4) % hots.length].id), (y - hots[(turn ~/ 4) % hots.length].b).floor()]);
+        final h = hots[(turn ~/ 4) % hots.length];
+        add(65, '「{0}」は生まれて{1}年、まだ伸びている市場です。入るなら、大きな会社が固まる前に', [I(h.id), (y - h.b).floor()], 'newInd', h.id);
       }
     }
     if (extras) _midAdvice(add);
+    // 責任者のいる事業が3つ以上あって、まだ1つも任せていない（1.0.0+20。半年に1度だけ言う）
+    if (extras && turn % 6 == 2 && !biz.any((b) => b.deleg) && delegable().length >= 3) {
+      add(57, '責任者のいる事業が{0}つあります。「任せる」にすると、毎月、責任者が自分で人を雇い、店や商品を増やします（社長の手は使いません）', [delegable().length], 'deleg');
+    }
     // あと1か国で規模の利益（5か国から利益率が上がる）
     bool entering(Biz b) => b.pipe.any((x) => x.k == 'enter');
     final four = biz.where((b) => ctryOf(b).length == 4 && !entering(b)).firstOrNull;
-    if (four != null) add(62, '「{0}」は4か国に出ています。あと1か国で規模の利益が効き、利益率が上がります', [I(four.ind)]);
+    if (four != null) add(62, '「{0}」は4か国に出ています。あと1か国で規模の利益が効き、利益率が上がります', [I(four.ind)], 'biz', four);
     final idle = staff.where((p) => !biz.any((b) => b.mgr == p.id)).toList();
-    if (idle.isNotEmpty && run > 0) add(60, '{0}が担当なしです。「事業」で責任者に置けます', [Nm(idle[0].name)]);
+    if (idle.isNotEmpty && run > 0) add(60, '{0}が担当なしです。「事業」で責任者に置けます', [Nm(idle[0].name)], 'place');
     // 株式交換（上場していて、自分より小さい同業の会社がある）
     if (listed && riv < 33.4) {
       final mine = <String>{for (final b in biz) b.ind};
@@ -254,9 +292,11 @@ extension GameView on Game {
               .toList()
             ..ssort((p, q) => q.cap.compareTo(p.cap)))
           .firstOrNull;
-      if (tg != null) add(56, '上場した今なら、自分より小さい同業の{0}を「株式交換」で丸ごと買えます。現金を使わずに大きくなれます（「株」の買える会社から）', [Nm(tg.name)]);
+      if (tg != null) add(56, '上場した今なら、自分より小さい同業の{0}を「株式交換」で丸ごと買えます。現金を使わずに大きくなれます（「株」の買える会社から）', [Nm(tg.name)], 'stock');
     }
-    if (!holding && biz.length + subs().length >= 5) add(54, '事業と子会社が5つを超えました。「株」の会社の形から持株会社にすると、社長が直接見られる事業の上限がなくなります');
+    if (!holding && biz.length + subs().length >= 5) {
+      add(54, '事業と子会社が5つを超えました。「株」の会社の形から持株会社にすると、社長が直接見られる事業の上限がなくなります', const [], 'holding');
+    }
     // 海外（伸びている事業がまだ1か国だけ）
     final grow = (biz.where((b) => ctryOf(b).length == 1 && !entering(b) && b.prevRev > 0 && b.rev > b.prevRev && b.profit > 0).toList()
           ..ssort((p, q) => q.rev.compareTo(p.rev)))
@@ -265,10 +305,12 @@ extension GameView on Game {
       final cs = CTRY.where((x) => x.c != home && entryModes(grow, x.c).isNotEmpty).toList()
         ..ssort((p, q) => cw(q.c, y).compareTo(cw(p.c, y)));
       final c = cs.where((x) => cash >= entryCost(grow, x.c, entryModes(grow, x.c).contains('jv') ? 'jv' : entryModes(grow, x.c).first)).firstOrNull;
-      if (c != null) add(52, '「{0}」が伸びています。まだ{1}だけなので、「海外に出る」で{2}などに広げれば市場が何倍にもなります', [I(grow.ind), C(home), C(c.c)]);
+      if (c != null) add(52, '「{0}」が伸びています。まだ{1}だけなので、「海外に出る」で{2}などに広げれば市場が何倍にもなります', [I(grow.ind), C(home), C(c.c)], 'biz', grow);
     }
-    if (biz.isNotEmpty && cash > biz.map((b) => b.rev).reduce(math.max) * .5 && ap > 0) add(50, '現金が余っています。伸びている事業に投資するか、新しい事業を始めましょう');
-    a.ssort((p, q) => q.$1 - p.$1);
-    return [for (final x in a) x.$2];
+    if (biz.isNotEmpty && cash > biz.map((b) => b.rev).reduce(math.max) * .5 && ap > 0) {
+      add(50, '現金が余っています。伸びている事業に投資するか、新しい事業を始めましょう', const [], 'bizTab');
+    }
+    a.ssort((p, q) => q.pri - p.pri);
+    return a;
   }
 }

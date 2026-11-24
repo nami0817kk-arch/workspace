@@ -449,7 +449,7 @@ void main() {
       g.buildN(b, 3);
       final p = await Pilot.launch(tester, game: g);
       await p.tab('biz');
-      p.ctl.openBiz = b.id;
+      p.ctl.openBiz = p.ctl.moreBiz = b.id;
       p.ctl.render();
       await p.pump();
       final card = find.ancestor(of: find.byKey(ValueKey('grp-grow-${b.id}')), matching: find.byType(Panel)).first;
@@ -675,7 +675,7 @@ void main() {
           await p.pump();
           await shot(tester, key, 'f_biz_folded_$tag', pixelRatio: 1.5);
           p.ctl.toggleFold('mybiz');
-          p.ctl.openBiz = top.id;
+          p.ctl.openBiz = p.ctl.moreBiz = top.id;
           p.ctl.render();
           await p.pump();
           await p.sweep();

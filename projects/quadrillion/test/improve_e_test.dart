@@ -345,7 +345,7 @@ void main() {
         await shot(tester, key, 'e_stock_bottom_$n');
         await p.tab('biz');
         final b = g.biz.first;
-        p.ctl.openBiz = b.id;
+        p.ctl.openBiz = p.ctl.moreBiz = b.id;
         p.ctl.render();
         await p.pump();
         await p.reveal(find.byKey(ValueKey('grp-grow-${b.id}')));
@@ -393,7 +393,7 @@ void main() {
             await p.sweep();
             final opens = <VoidCallback>[
               if (t == 'biz')
-                for (final b in g.biz.take(4)) () => p.ctl.openBiz = b.id,
+                for (final b in g.biz.take(4)) () => p.ctl.openBiz = p.ctl.moreBiz = b.id,
               if (t == 'town')
                 for (final c in g.cos.where((c) => c.rival != null && c.alive).take(3)) () => p.ctl.openRival = c.id,
               if (t == 'people')

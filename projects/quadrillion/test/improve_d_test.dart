@@ -193,6 +193,8 @@ void main() {
         // シェアの棒：割合を言葉で
         final b = (s.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first;
         ctl.toggleBiz(b.id);
+        // ボタンの組は「ほかの手」の中（1.0.0+20）
+        ctl.toggleMore(b.id);
         await tester.pump();
         // （カードの中の字は1つにまとめて読まれるので、その中に入っていることを見る）
         expect(find.bySemanticsLabel(RegExp('^${RegExp.escape(tr('シェア {0}', [pct(b.share * 100)]))}\$', multiLine: true)), findsWidgets);
@@ -373,7 +375,7 @@ void main() {
       }
       ctl.setTab('biz');
       final b = (s.biz.toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first;
-      ctl.openBiz = b.id;
+      ctl.openBiz = ctl.moreBiz = b.id;
       await tester.pump();
       await shot(tester, key, '${name}_biz_open', pixelRatio: 1.5);
       ctl.setTab('num');

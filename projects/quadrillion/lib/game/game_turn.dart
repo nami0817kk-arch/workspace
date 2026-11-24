@@ -387,6 +387,8 @@ extension GameTurn on Game {
     localMonthly(N);
     countryMonthly(N);
     crisisMonthly();
+    // 任せた事業の責任者が、新しい月の手を打つ（任せた事業が無ければ乱数も使わない）
+    if (over == null) delegMonthly();
     if (noncomp != null && turn >= noncomp!.until) {
       noncomp = null;
       N(M('売ったときの「同じ業種に入らない」約束の期限が切れました'));
@@ -1108,7 +1110,10 @@ extension GameTurn on Game {
             ? 0
             : 1;
     final opts = <Proposal>[];
-    final need = crewNeedPeople(b);
+    // 任せた事業の責任者は、自分で打てる手（人・店や工場・商品・広告・値付け）を会議に持ってこない（毎月、自分で打つ。1.0.0+20）。
+    // 社長が決めること（海外・稼ぎ方・撤退・社風・新しい事業・維持費を削る）だけを提案する
+    final self = delegated(b);
+    final need = self ? 0 : crewNeedPeople(b);
     if (need > 0) {
       var n = t == 'gambler' ? math.max(need, crewUnits.last) : need;
       if (hireCost(b, n) > cash) n = need;
@@ -1122,13 +1127,13 @@ extension GameTurn on Game {
           ..n = n);
       }
     }
-    final bi = [for (var i = bigI; i >= 0; i--) i].where((i) => buildCost(b, buildUnits[i]) <= cash).firstOrNull;
+    final bi = self ? null : [for (var i = bigI; i >= 0; i--) i].where((i) => buildCost(b, buildUnits[i]) <= cash).firstOrNull;
     if (bi != null) {
       final n = buildUnits[bi];
       opts.add(Proposal(k: 'build', w: t == 'careful' ? 1 : 2, cost: buildCost(b, n), l: M('「{0}」で{1}増やしたい', [I(ind.id), unitsOf(b, n)]), d: M('客は来ています。広げれば確実に伸びます'))
         ..n = n);
     }
-    final di = [for (var i = bigI; i >= 0; i--) i].where((i) => devCost(b, i) <= cash).firstOrNull;
+    final di = self ? null : [for (var i = bigI; i >= 0; i--) i].where((i) => devCost(b, i) <= cash).firstOrNull;
     if (di != null) {
       opts.add(Proposal(
           k: 'dev',
@@ -1148,7 +1153,7 @@ extension GameTurn on Game {
                   : '当たれば大きい。外れるかもしれません'))
         ..sz = di);
     }
-    if ((p.amb > 65 || t == 'gambler') && b.price != 'cut') {
+    if (!self && (p.amb > 65 || t == 'gambler') && b.price != 'cut') {
       opts.add(Proposal(k: 'cut', w: 2, cost: 0, l: M('「{0}」で値下げして客を奪いたい', [I(ind.id)]), d: M('利益は薄くなりますが、シェアを取りに行きます')));
     }
     if (t == 'frugal' && b.upkeep > 0) opts.add(Proposal(k: 'trim', w: 3, cost: 0, l: M('「{0}」の維持費を削りたい', [I(ind.id)]), d: M('維持費が2割減ります。現場は少し弱ります')));
@@ -1163,7 +1168,7 @@ extension GameTurn on Game {
     // どれも画面にある手と同じ値段・同じ効き目で、手を使わないだけ
     // 広告（打っていないとき）
     final adC = invBase(b) * .25;
-    if (b.ad == 0 && adC <= cash) {
+    if (!self && b.ad == 0 && adC <= cash) {
       opts.add(Proposal(k: 'ad', w: t == 'charm' ? 2 : 1, cost: adC, l: M('「{0}」で広告を打ちたい', [I(ind.id)]), d: M('6か月のあいだ客が増えます。終われば元に戻ります')));
     }
     // 海外（始めた国だけの事業の、最初の1か国だけ。払える中で市場がいちばん大きい国）
@@ -1188,7 +1193,9 @@ extension GameTurn on Game {
       }
     }
     // 値付けの見直し（値下げを続けて客が付いたら戻す・客をしっかりつかんでいるなら高くする）
-    if (b.price == 'cut' && b.war == 0 && b.share >= .12 && t != 'gambler') {
+    if (self) {
+      // 値付けは責任者が自分で直す
+    } else if (b.price == 'cut' && b.war == 0 && b.share >= .12 && t != 'gambler') {
       opts.add(Proposal(k: 'price', w: 2, cost: 0, l: M('「{0}」の値下げをやめたい', [I(ind.id)]), d: M('客は付きました。値段をふつうに戻して利益を取ります'))..ind = 'normal');
     } else if (b.price == 'normal' && b.share >= .2 && (t == 'careful' || t == 'frugal' || t == 'tech')) {
       opts.add(Proposal(k: 'price', w: 1, cost: 0, l: M('「{0}」の値段を高くしたい', [I(ind.id)]), d: M('利益は厚くなりますが、客は少し減ります'))..ind = 'premium');

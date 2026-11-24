@@ -31,7 +31,9 @@ void resolveEvents(Game s) {
 
 /// tool/trace.js の1か月ぶんの手（試作の sim.js の素直な版）。
 /// [units] を立てると、打ち手を現金の割合ではなく1単位の手（店をn個・商品の大きさ・人をn人）で打つ（1.0.0+12 の画面と同じ遊び方）
-void botMonth(Game s, {bool units = false}) {
+///
+/// [mine] を渡すと、事業を伸ばす手（人・店や工場・商品）は、それが true の事業にだけ打つ（責任者に任せた事業は責任者が打つので、社長は打たない。1.0.0+20）
+void botMonth(Game s, {bool units = false, bool Function(Biz)? mine}) {
   int tot(Person p) => Game.totOf(p);
   resolveEvents(s);
   if (s.biz.isEmpty) {
@@ -68,7 +70,7 @@ void botMonth(Game s, {bool units = false}) {
   if (cand.isNotEmpty && s.ap > 0 && s.biz.length < 12) s.startBiz(cand[0].id);
   for (var k = 0; k < 3 && s.ap > 0; k++) {
     double score(Biz y) => (y.profit / (y.rev + 1)) * (1 - y.share);
-    final b = (s.biz.toList()..ssort((x, y) => score(y).compareTo(score(x)))).firstOrNull;
+    final b = ((mine == null ? s.biz.toList() : s.biz.where(mine).toList())..ssort((x, y) => score(y).compareTo(score(x)))).firstOrNull;
     if (b == null) break;
     if (units) {
       if (!_unitMove(s, b, k)) break;

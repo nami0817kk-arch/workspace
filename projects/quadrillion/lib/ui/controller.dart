@@ -125,6 +125,82 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 事業カードを開く（開いているものを押したら閉じる）
   void toggleBiz(int id) {
     openBiz = openBiz == id ? null : id;
+    moreBiz = null;
+    pinBiz = null;
+    notifyListeners();
+  }
+
+  /// 事業カードで「ほかの手」を開いている事業の id（1.0.0+20。開いたカードには、今いちばん要りそうな手だけを出し、残りはここを押すと出る）
+  int? moreBiz;
+
+  void toggleMore(int id) {
+    moreBiz = moreBiz == id ? null : id;
+    notifyListeners();
+  }
+
+  /// 「今月やること」から飛んできた事業の id（その事業のカードを、一覧のいちばん上に開いて出す）
+  int? pinBiz;
+
+  /// 「事業」の一覧の位置（「今月やること」から飛んだときに、いちばん上へ戻すため）
+  final ScrollController bizScroll = ScrollController();
+
+  /// 「新しい事業」の見出しの場所（「今月やること」から業種を探しに飛ぶ先）
+  final GlobalKey newBizKey = GlobalKey();
+
+  /// 描き終わったあとに [f] を動かす（画面の無いところでは何もしない）
+  void _afterFrame(VoidCallback f) {
+    try {
+      WidgetsBinding.instance.addPostFrameCallback((_) => f());
+      WidgetsBinding.instance.ensureVisualUpdate();
+    } catch (_) {}
+  }
+
+  void _bizTop() {
+    if (bizScroll.hasClients) bizScroll.jumpTo(0);
+  }
+
+  /// 「事業」の画面で、その事業のカードを開いて、一覧のいちばん上に出す
+  void openBizCard(int id) {
+    tab = 'biz';
+    openBiz = id;
+    pinBiz = id;
+    moreBiz = null;
+    folded.remove('mybiz');
+    _autoFold = false;
+    notifyListeners();
+    _afterFrame(_bizTop);
+  }
+
+  /// 「事業」の画面の「新しい事業」で、その名前の業種を探す
+  void goNewInd(String name) {
+    tab = 'biz';
+    bizFilter = 'all';
+    bizSearch.text = name;
+    // 事業が多いときは自社の一覧をたたんで、「新しい事業」をすぐ下に出す（ほかの画面へ移ったら、開いた形に戻す）
+    if ((game?.biz.length ?? 0) >= bizManyMin && folded.add('mybiz')) _autoFold = true;
+    notifyListeners();
+    _afterFrame(() {
+      _bizTop();
+      _afterFrame(() {
+        final c = newBizKey.currentContext;
+        if (c != null) Scrollable.ensureVisible(c);
+      });
+    });
+  }
+
+  /// [goNewInd] が自社の事業の一覧をたたんだままか（ほかの画面へ移ったら開き直す）
+  bool _autoFold = false;
+
+  void _unfoldAuto() {
+    if (_autoFold) folded.remove('mybiz');
+    _autoFold = false;
+  }
+
+  /// 「人」の画面で、その部下を開く
+  void goStaff(int id) {
+    _unfoldAuto();
+    tab = 'people';
+    openStaff = id;
     notifyListeners();
   }
 
@@ -133,6 +209,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
 
   /// 欄をたたむ・開く
   void toggleFold(String id) {
+    if (id == 'mybiz') _autoFold = false;
     if (!folded.remove(id)) folded.add(id);
     notifyListeners();
   }
@@ -156,6 +233,8 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 開いているもの・たたんでいるものを最初の形に戻す（別の会社を読み込んだとき）
   void _resetOpen() {
     openBiz = null;
+    moreBiz = null;
+    pinBiz = null;
     openRival = null;
     openStaff = null;
     folded.clear();
@@ -404,6 +483,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   @override
   void dispose() {
     _saveTimer?.cancel();
+    bizScroll.dispose();
     super.dispose();
   }
 
@@ -465,6 +545,7 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   void setTab(String t) {
+    if (t != 'biz') _unfoldAuto();
     tab = t;
     notifyListeners();
   }
