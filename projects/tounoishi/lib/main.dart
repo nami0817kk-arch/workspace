@@ -50,6 +50,7 @@ const storeKeys = [
   'tou-meta',
   'tou-brd',
   'tou-combo',
+  'tou-chron',
 ];
 
 Future<void> main() async {

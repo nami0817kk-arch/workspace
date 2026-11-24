@@ -97,7 +97,6 @@ void main() {
       'o.flT=now+160', // 点滅の値がツボミの養分を上書きしない
       "g.title=true;showTitle();", // メニューでタイトルに戻ると止まる
       "function saveKey(", // ストーリー・VS は別の保存枠
-      "id=\"tcontm\"", // その続きから
       "g.winSave=1;saveGame();", // 勝った直後も保存
       "(?:_(moss|water|rock|ice|lava|mag))", // 氷・溶岩の層の絵
       "if(g.cr.length>=CAP){eg.hatch=g.t+5;continue;}", // 塔がいっぱいなら卵は待つ
@@ -366,7 +365,7 @@ void main() {
     // v58: 骨はモンスターが倒れても出さない（自動プレイで4周目に400〜2000本たまった）
     expect(html, isNot(contains("g.bone=(g.bone||0)+1;")));
     // 掲載画像の道具がメニューを開けるように
-    expect(html, contains('window.__t={pop:openPop,'));
+    expect(html, contains('pop:openPop,'));
     // 掲載画像の道具は 28×28 の座標に引き伸ばす
     final cap = File('tool/screenshots/capture.py').readAsStringSync();
     expect(cap, contains('function __s(v){return Math.round(v*(__N()-1)/19);}'));
@@ -452,7 +451,8 @@ void main() {
 
   test('ストーリーを今の仕組みで作り直してタイトルに戻す（0.7.46・試作 v63）', () {
     final html = File(gameAsset).readAsStringSync();
-    expect(html, contains('id="tstory"'));
+    // v68: タイトルは年代記とチャレンジに。ストーリーはタイトルから外した
+    expect(html, isNot(contains('id="tstory"')));
     // 面ごとの手当て（魂・供物）とコアの全快
     expect(html, contains('var SGIFT=[[24,1],'));
     expect(html, contains('function stageGift(st){'));
@@ -525,6 +525,50 @@ void main() {
     expect(html, isNot(contains('養分の濃い土（白っぽい模様）を探して掘ろう')));
     expect(html, isNot(contains('魔法陣を試してみて')));
     expect(html, isNot(contains('魔法陣やふんで足止め')));
+  });
+
+  test('一族の年代記: 始祖・寿命5波・子ども・10波ごとの節目・巣荒らし・閉じた記録（0.7.51・試作 v68）', () {
+    final html = File(gameAsset).readAsStringSync();
+    // タイトルは年代記（難しさ3つ）と閉じた年代記・チャレンジ
+    expect(html, contains('<p class="lbl">新しい年代記を始める</p>'));
+    expect(html, contains('id="trec"'));
+    expect(html, contains("bt.onclick=function(){chStart(bt.getAttribute('data-d'));};"));
+    // 始祖の夫婦を3組から選ぶ
+    expect(html, contains('<h2>始祖を選ぶ</h2>'));
+    expect(html, contains("C.fd='始祖'+p[0].nm+'と'+p[1].nm;"));
+    // 寿命5波・卵は次の波でかえって子ども（半分の力）・その次で大人
+    expect(html, contains('var LIFE=5,'));
+    expect(html, contains('function mkKid(m){m.kid=1;m.mhp*=0.5;m.hp=m.mhp;m.atkk*=0.5;}'));
+    expect(html, contains('if(m.kid&&g.wave-m.bw>=2){growUp(m);grown++;}'));
+    expect(html, contains('if(g.wave-m.bw>LIFE)died.push(m);'));
+    expect(html, contains("if(m.kid)return '子どものうちは配合できない';"));
+    expect(html, contains('eg.chw=1;eg.bw=g.wave;eg.hatch=1e12;'));
+    // 終わりなし・10波ごとの節目（くじ・5波前に知らせ）
+    expect(html, contains('function nW(){return g&&g.party?1:g&&g.chron?1e9:WAVES.length;}'));
+    expect(html, contains("EVN={yu:'伝承の勇者',clan:'よその一族の襲来',plague:'はやり病'}"));
+    expect(html, contains('if(g.wave%10==5){var ks=Object.keys(EVN);C.ev=ks[rnd(ks.length)];C.evW=g.wave+5;'));
+    // 節目を越えると洞窟が広がる（階は増やさない）
+    expect(html, contains('if(C.reach<COREX){C.reach++;'));
+    expect(html, contains('||!!(g&&g.chron&&Math.abs(x-COREX)>g.chron.reach);}'));
+    expect(html, contains('F=CHNEW?1:3;'));
+    // よその一族の戦士は捕まえると薄い血に
+    expect(html, contains('if(e.clan&&g.chron&&Math.random()<0.5)chCapture(e);'));
+    // コアが壊されても一族の半分を失って続く・0匹で閉じる
+    expect(html, contains('if(g.chron){chCoreLost();return;}'));
+    expect(html, contains("var gs=shuffle(g.cr.filter(function(m){return m.gob;})),n=Math.floor(gs.length/2);"));
+    expect(html, contains("&&!g.cr.some(function(m){return m.gob;})&&!g.eggs.length)chClose();"));
+    expect(html, contains("kvSet('tou-chron',JSON.stringify(A));"));
+  });
+
+  test('ゴブリンのすみかの見た目: 暗い岩肌・松明・暮らしの跡（0.7.51・試作 v69）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains("if(g.chron){ctx.drawImage(chTile(bedrock(f,x,y)?'bed':c.open?'floor':'rock',v),px,py);continue;}"));
+    expect(html, contains("lx.fillStyle=g.chron?'rgba(5,3,8,0.42)':'rgba(6,4,14,0.14)';"));
+    expect(html, contains("chTorch(4);chDeco('straw');chDeco('straw');"));
+    expect(html, contains("if(g.chron)chDeco('helm');"));
+    expect(html, contains("var DECOS=['straw','pot','rack'];"));
+    // 年代記では前の養分を土に戻さない（黄色・紫の玉が出ていた）
+    expect(html, contains('if(n<=0||(g&&g.chron))return;'));
   });
 
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
