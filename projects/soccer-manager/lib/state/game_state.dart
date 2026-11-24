@@ -852,6 +852,10 @@ class GameState extends ChangeNotifier {
     save.today ??= _rebuiltToday();
     _migrateLoanDates(save);
     _dropInternationalMinorsFromMarket(save);
+    // 年俸の移行(_migrateWageLevelIfNeeded)は所属なしの選手も能力だけの額に
+    // 作り直すので、移行と日付がそろったあとで求める額にそろえ直す。
+    // しないと、次に読んだときにまた額が動く(読み直しで変わらないこと)。
+    _normalizeFreeAgentWages(save);
   }
 
   /// お金の桁を部ごとに変える前(版1)のセーブを、一度だけ新しい桁に直す。
@@ -1802,6 +1806,7 @@ class GameState extends ChangeNotifier {
     _refreshStaffCandidates();
     _assignRivalOwners();
     FreeAgentEngine.topUp(_save!.freeAgents);
+    _normalizeFreeAgentWages();
     // 自クラブの選手にも、CPU と同じ国・部の割合で外国籍を混ぜる
     // (名前を国籍に合わせる前に)。
     _assignUserNationalitiesAtStart(userStartTier);

@@ -34,6 +34,7 @@ import 'package:soccer_manager/monetization/funds_pack.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
 import 'package:soccer_manager/screens/main_shell.dart';
+import 'package:soccer_manager/screens/transfer_bid_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
 import 'package:soccer_manager/widgets/fm_panel.dart';
@@ -301,6 +302,55 @@ void main() {
           await tester.tap(chip.first, warnIfMissed: false);
           await tester.pump(const Duration(milliseconds: 400));
           await shoot('$p-$l-chip$k');
+        }
+        // 移籍の「探す」: 絞り込み・行から開く選手の画面・操作・入札の画面。
+        if (p == _t('移籍', 'Transfers') && l == _t('探す', 'Search')) {
+          await tester.tap(find.byKey(const ValueKey('chip-0')).hitTestable().first);
+          await tester.pump(const Duration(milliseconds: 400));
+          final filter =
+              find.byKey(const ValueKey('search-filter-open')).hitTestable();
+          if (filter.evaluate().isNotEmpty) {
+            await tester.tap(filter.first);
+            await tester.pump(const Duration(milliseconds: 600));
+            await shoot('$p-$l-filters');
+            await tester.tapAt(const Offset(400, 20));
+            await tester.pump(const Duration(milliseconds: 600));
+          }
+          final row = find.byWidgetPredicate((w) =>
+              w.key is ValueKey<String> &&
+              (w.key as ValueKey<String>).value.startsWith('target-row-'));
+          if (row.hitTestable().evaluate().isNotEmpty) {
+            final id = (row.hitTestable().evaluate().first.widget.key
+                    as ValueKey<String>)
+                .value
+                .substring('target-row-'.length);
+            await tester.tap(row.hitTestable().first);
+            await tester.pump(const Duration(milliseconds: 800));
+            await shoot('$p-other-detail');
+            final attrs = find.text(_t('能力', 'Attributes')).hitTestable();
+            if (attrs.evaluate().isNotEmpty) {
+              await tester.tap(attrs.first);
+              await tester.pump(const Duration(milliseconds: 400));
+              await shoot('$p-other-detail-attributes');
+            }
+            await tester
+                .tap(find.byKey(const ValueKey('player-actions')).hitTestable().first);
+            await tester.pump(const Duration(milliseconds: 600));
+            await shoot('$p-other-actions');
+            // 操作の一覧を閉じ、入札の画面を開く(窓が閉じていても、押せない
+            // 理由つきで見える)。
+            final nav = tester.state<NavigatorState>(find.byType(Navigator).first);
+            nav.pop();
+            await tester.pump(const Duration(milliseconds: 600));
+            nav.push(MaterialPageRoute<void>(
+                builder: (_) => TransferBidScreen(playerId: id)));
+            await tester.pump(const Duration(milliseconds: 800));
+            await shoot('$p-bid');
+            for (var i = 0; i < 3 && nav.canPop(); i++) {
+              nav.pop();
+              await tester.pump(const Duration(seconds: 1));
+            }
+          }
         }
         // スタッフの候補の表を開いたところも撮る。
         if (p == _t('クラブ', 'Club') && l == _t('スタッフ', 'Staff')) {

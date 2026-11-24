@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import '../models/player.dart';
+import 'economy_scale.dart';
 import 'player_generator.dart';
+import 'player_popularity.dart';
 
 /// 移籍金なし(週俸のみ)で獲得できるフリーエージェントのプールを管理する。
 class FreeAgentEngine {
@@ -52,6 +54,44 @@ class FreeAgentEngine {
     final gone = candidates.take(leave).toList();
     pool.removeWhere(gone.contains);
     return gone;
+  }
+
+  /// 所属なしの選手が求める週俸(万円)。
+  ///
+  /// 前のクラブの週俸は持ち越さない。他国の1部で大きな年俸をもらっていた
+  /// 選手が、契約が切れて所属なしになっても同じ額(年30億を超える額)を
+  /// 求め、誰も取れなかった(2026-11-24 の撮影で見つかった)。
+  ///
+  /// - リーグ: 能力と経験から見合う額([Player.fairWeeklyWage])を、
+  ///   自クラブのいる国・部の水準([level]。省くと今の水準)で
+  /// - 評判: 名の知れた選手ほど強気(人気0で ×0.9、100で ×1.15)
+  /// - 市場: 夏はまだ強気、季が進んで行き先が決まらないほど下げる
+  ///   ([marketFactor])
+  static int askingWeekly(Player p, DateTime date, {double? level}) {
+    final pop = PlayerPopularityEngine.popularity(p);
+    final reputation = 0.9 + 0.25 * pop / 100;
+    final wage =
+        p.fairWeeklyWage(level) * reputation * marketFactor(date);
+    return max(minWeeklyWage, wage.round());
+  }
+
+  /// 時期ごとの、所属なしの選手の強気さ。夏(7〜8月)は1、秋は0.9、
+  /// 冬は0.8、春(2〜6月)は0.75。
+  static double marketFactor(DateTime date) => switch (date.month) {
+        7 || 8 => 1.0,
+        9 || 10 => 0.9,
+        11 || 12 || 1 => 0.8,
+        _ => 0.75,
+      };
+
+  /// プールの全員の週俸を、求める額([askingWeekly])にそろえる。
+  /// [keep]の選手(話を進めている選手)は動かさない。
+  static void normalizeWages(List<Player> pool, DateTime date,
+      {Set<String> keep = const {}}) {
+    for (final p in pool) {
+      if (keep.contains(p.id)) continue;
+      p.wage = askingWeekly(p, date);
+    }
   }
 
   /// シーズン終了時に生成する、所属なしの選手。契約の切れた選手なので、

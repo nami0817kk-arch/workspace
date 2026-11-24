@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/contract_engine.dart';
 import '../logic/economy_scale.dart';
+import '../logic/transfer_talk_engine.dart';
 import '../logic/transfer_window.dart';
 import '../models/player.dart';
+import '../models/transfer_talk.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
@@ -13,6 +15,7 @@ import '../widgets/disabled_reason.dart';
 import 'contract_offer_screen.dart';
 import 'player_compare_screen.dart';
 import 'player_detail_screen.dart';
+import 'transfer_actions.dart';
 
 /// 選手1人への操作の一覧(FM の選手の「操作」ボタン)。
 ///
@@ -277,6 +280,8 @@ class _PlayerActionsSheet extends StatelessWidget {
       );
     }
 
+    if (!mine) _otherClubActions(context, game, p, add);
+
     add(
       key: const ValueKey('action-compare'),
       icon: Icons.compare_arrows,
@@ -309,6 +314,147 @@ class _PlayerActionsSheet extends StatelessWidget {
     );
   }
 }
+
+/// 他のクラブ・所属なしの選手への操作(2026-11-25): 移籍金の提示・
+/// ローン・注目・スカウトに見させる。移籍の一覧から詳しい画面を開き、
+/// そのまま入札まで進めるように。
+void _otherClubActions(
+  BuildContext context,
+  GameState game,
+  Player p,
+  void Function({
+    required IconData icon,
+    required String label,
+    String? note,
+    String? blocked,
+    Key? key,
+    required VoidCallback onTap,
+  }) add,
+) {
+  final host = context;
+  final squadFull = game.userTeam.players.length >= maxSquadSize;
+  final full = squadFull
+      ? Tr.pick('スカッドが上限($maxSquadSize人)です。誰かを手放すと獲得できます',
+          'Your squad is full ($maxSquadSize). Move someone on first')
+      : null;
+  final isFree = game.freeAgents.any((q) => q.id == p.id);
+  final talk = game.talkFor(p.id);
+  if (isFree) {
+    add(
+      key: const ValueKey('action-free-terms'),
+      icon: Icons.handshake_outlined,
+      label: Tr.pick('条件を話す(所属なし・移籍金なし)', 'Talk terms (free agent, no fee)'),
+      note: Tr.pick(
+          '求める年俸 ${formatMoney(annualFromWeekly(p.wage))}。窓の外でも取れます',
+          'Wants ${formatMoney(annualFromWeekly(p.wage))} a year. You can sign him outside the window'),
+      blocked: full,
+      onTap: () => openPersonalTerms(host, p),
+    );
+  } else if (game.sellingClubOf(p.id) != null ||
+      game.transferMarket.any((q) => q.id == p.id)) {
+    final approachable = game.transferTargets.any((q) => q.id == p.id);
+    if (talk != null) {
+      final (label, blocked, onTap) = switch (talk.stage) {
+        TransferTalkStage.waiting => (
+            Tr.pick('返事を待っている', 'Waiting for their reply'),
+            Tr.pick('相手の返事を待っています(「交渉とオファー」に届きます)',
+                'The reply will arrive under Talks & offers'),
+            () {}
+          ),
+        TransferTalkStage.countered => (
+            Tr.pick('対案に出し直す(${formatMoney(talk.fee)})',
+                'Answer their terms (${formatMoney(talk.fee)})'),
+            talk.round >= TransferTalkEngine.maxRounds
+                ? Tr.pick('提示は使い切りました。「交渉とオファー」で対案をのむか取り下げます',
+                    'No bids left. Accept or withdraw under Talks & offers')
+                : null,
+            () => openTransferBid(host, p, talk: talk)
+          ),
+        TransferTalkStage.agreed => (
+            Tr.pick('選手と条件を話す(クラブと合意済み)', 'Agree personal terms (clubs agreed)'),
+            full,
+            () => openPersonalTerms(host, p)
+          ),
+        TransferTalkStage.collapsed => (
+            Tr.pick('交渉は決裂しました', 'Talks broke down'),
+            Tr.pick('この窓のあいだは申し込めません', 'No more bids this window'),
+            () {}
+          ),
+      };
+      add(
+          key: const ValueKey('action-talk'),
+          icon: Icons.forum_outlined,
+          label: label,
+          blocked: blocked,
+          onTap: onTap);
+    } else {
+      add(
+        key: const ValueKey('action-bid'),
+        icon: Icons.gavel,
+        label: Tr.pick('移籍金を提示する', 'Make a bid'),
+        note: Tr.pick('相場 ${formatMoney(p.marketValue)}・分割・出来高・交換も組めます',
+            'Worth ${formatMoney(p.marketValue)}. Instalments, add-ons and swaps available'),
+        blocked: !approachable
+            ? Tr.pick('いまは申し込めない選手です(相手の人数が足りない・ほかと仮契約済みなど)',
+                'He cannot be approached right now (thin squad, pre-contract elsewhere and so on)')
+            : !game.isTransferWindowOpen
+                ? game.transferWindowStatusLabel
+                : full,
+        onTap: () => openTransferBid(host, p),
+      );
+      add(
+        key: const ValueKey('action-loan'),
+        icon: Icons.swap_horiz,
+        label: Tr.pick('ローンで借りる', 'Take him on loan'),
+        note: game.isLoanAvailable(p)
+            ? Tr.pick('先発ではないので、貸し出しに出してもらいやすい選手です',
+                'Not a starter, so his club may well let him go on loan')
+            : null,
+        blocked: !approachable
+            ? Tr.pick('いまは申し込めない選手です', 'He cannot be approached right now')
+            : full,
+        onTap: () => showAcquireSheet(host, p),
+      );
+    }
+  }
+  final watched = game.isWatched(p.id);
+  add(
+    key: const ValueKey('action-watch'),
+    icon: watched ? Icons.star : Icons.star_border,
+    label: watched
+        ? Tr.pick('注目から外す', 'Remove from shortlist')
+        : Tr.pick('注目に入れる', 'Add to shortlist'),
+    note: Tr.pick('注目の選手は、どこにいても毎週少しずつ見えてきます',
+        'Shortlisted players become a little clearer every week'),
+    onTap: () {
+      FeedbackService.tap();
+      game.toggleWatched(p.id);
+    },
+  );
+  final scouting = game.isScoutingPlayer(p.id);
+  final known = game.knowledgeOf(p);
+  add(
+    key: const ValueKey('action-scout'),
+    icon: Icons.travel_explore,
+    label: scouting
+        ? Tr.pick('スカウトに見させるのをやめる', 'Stop scouting him')
+        : Tr.pick('スカウトに見させる', 'Have him scouted'),
+    note: Tr.pick(
+        'いま$known%見えている。見させると毎週${game.scoutWeeklyGain}%ずつ見えてくる(個別は${GameStateTransfer.scoutPlayerSlots}人まで)',
+        '$known% known. Scouting adds ${game.scoutWeeklyGain}% a week (${GameStateTransfer.scoutPlayerSlots} at a time)'),
+    blocked: !scouting && known >= 100
+        ? Tr.pick('もう全部見えています', 'You already know everything about him')
+        : (!scouting && game.scoutedPlayers.length >= GameStateTransfer.scoutPlayerSlots
+            ? Tr.pick('個別に見させる枠がいっぱいです(移籍の「スカウトの地域」で外せます)',
+                'All scouting slots are in use (free one under Scouting regions)')
+            : null),
+    onTap: () async {
+      final ok = await game.toggleScoutPlayer(p.id);
+      ok ? FeedbackService.tap() : FeedbackService.error();
+    },
+  );
+}
+
 
 /// 合意解除の確認。払う額を見せてから決めさせる。
 Future<void> confirmMutualTermination(

@@ -103,6 +103,10 @@ class TodoPlaces {
   static const transferTalks = TodoPlace(TodoMenu.transfer, tab: 2);
   static const transferOffers = TodoPlace(TodoMenu.transfer, tab: 2);
 
+  /// 探す > 系列クラブ(2026-11-25 にクラブの施設から移した)。
+  static const transferAffiliate =
+      TodoPlace(TodoMenu.transfer, tab: 1, card: cardAffiliate);
+
   // オーナー室: オーナーの仕事(分野の札)・オーナーと世界
   static const ownerMatchday =
       TodoPlace(TodoMenu.ownerRoom, card: cardMatchday);
@@ -115,6 +119,7 @@ class TodoPlaces {
   static const ownerWorld = TodoPlace(TodoMenu.ownerRoom, tab: 1);
 
   static const String cardOwnerGoal = 'ownerGoal';
+  static const String cardAffiliate = 'affiliate';
   static const String cardMatchday = 'matchday';
   static const String cardFans = 'fans';
   static const String cardWorks = 'works';

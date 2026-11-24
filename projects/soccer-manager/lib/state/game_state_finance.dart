@@ -895,6 +895,8 @@ extension GameStateFinance on GameState {
     // 前のクラブが結んだ支払い・条項は、そのクラブに残る。
     save.pendingInstallments = [];
     save.sellOnClauses = {};
+    save.addOnClauses = {};
+    save.scoutPlayerIds = [];
     save.buyBacks = {};
     save.incomingOffers = [];
     save.stadiumSubsidyPct = 0;

@@ -20,7 +20,9 @@ import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import 'glossary_screen.dart';
 import 'player_actions.dart';
+import '../logic/scout_knowledge.dart';
 import '../widgets/attribute_radar.dart';
+import '../widgets/estimate_stars.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/growth_sparkline.dart';
 import '../widgets/player_face_avatar.dart';
@@ -40,8 +42,9 @@ import '../logic/economy_scale.dart';
 /// - 経歴: 季ごとの成績の表と移籍の歴
 /// - 人柄: 性格を数字ではなく言葉で(FM と同じく、細かい値は隠す)
 ///
-/// 自クラブの選手だけでなく、他クラブ・市場・所属なしの選手も開ける
-/// (操作は「比べる」だけになる)。
+/// 自クラブの選手だけでなく、他クラブ・市場・所属なしの選手も開ける。
+/// そのときの「操作」は、移籍金の提示・ローン・注目・スカウトに見させる・
+/// 比べる(2026-11-25)。総合力と伸びしろは見立て(星と幅)で出す。
 class PlayerDetailScreen extends StatelessWidget {
   final String playerId;
 
@@ -378,7 +381,18 @@ class _OverviewTab extends StatelessWidget {
     final right = <Widget>[
       _OverallBlock(player: p),
       const SizedBox(height: 4),
-      Center(child: AttributeRadar(player: p, size: 170)),
+      // 他のクラブの選手は、見え60%までは能力の形を出さない(見立て)。
+      if (mine || game.knowledgeOf(p) >= 60)
+        Center(child: AttributeRadar(player: p, size: 170))
+      else
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(
+            Tr.pick('能力の形は、スカウトの見えが60%を超えると出ます。',
+                'The attribute shape shows once your scouts know him 60% or more.'),
+            style: TextStyle(fontSize: 12, color: subtle),
+          ),
+        ),
       FmPanel(
         title: Tr.pick('今季の成績(リーグ戦)', 'This season (league)'),
         child: Column(
@@ -541,6 +555,46 @@ class _OverallBlock extends StatelessWidget {
     }
     final seasonStart = game.save?.seasonStartOverallByPlayerId[p.id];
     final seasonDelta = seasonStart != null ? p.overall - seasonStart : null;
+    // 他のクラブ・所属なしの選手は、本当の値ではなくスカウトの見立てを
+    // 星と幅で出す(2026-11-25。FM と同じく見えている分だけ)。
+    if (!game.isMyPlayer(p.id)) {
+      final known = game.knowledgeOf(p);
+      final ref = EstimateStars.referenceOf(game.userTeam);
+      Widget line(String caption, (int, int)? r) => Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child: Row(
+              children: [
+                SizedBox(
+                    width: 120,
+                    child: Text(caption,
+                        style: TextStyle(fontSize: 12, color: subtle))),
+                EstimateStars(range: r, reference: ref, size: 16),
+                const SizedBox(width: 6),
+                Text(ScoutKnowledge.label(r),
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          );
+      return Column(
+        key: const ValueKey('detail-estimate'),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          line(Tr.pick('総合(見立て)', 'OVR (est.)'), game.overallEstimate(p)),
+          line(Tr.pick('伸びしろ(見立て)', 'POT (est.)'),
+              game.potentialEstimate(p)),
+          Text(
+            known >= 100
+                ? Tr.pick('スカウトの報告が揃っています(見え100%)',
+                    'Fully scouted (100% known)')
+                : Tr.pick(
+                    '見え$known%: 星の薄い所が、まだ見えていない幅です。星3つが自クラブの先発の平均。${game.isScoutingPlayer(p.id) ? 'スカウトが見ています。' : '「操作」からスカウトに見させると狭まります。'}',
+                    '$known% known: the faint stars are what your scouts cannot see yet. Three stars is your starters\' average. ${game.isScoutingPlayer(p.id) ? 'Your scouts are on him.' : 'Have him scouted (Actions) to narrow it.'}'),
+            style: TextStyle(fontSize: 11, color: subtle),
+          ),
+        ],
+      );
+    }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -634,7 +688,11 @@ class _AttributesTab extends StatelessWidget {
     final seasonStart = game.save?.seasonStartOverallByPlayerId[p.id];
 
     final left = <Widget>[
-      _AttributeGrid(player: p, categories: categories, keys: keys),
+      _AttributeGrid(
+          player: p,
+          categories: categories,
+          keys: keys,
+          knowledge: game.isMyPlayer(p.id) ? 100 : game.knowledgeOf(p)),
       _KeyAttributesCard(player: p),
     ];
     final right = <Widget>[
@@ -1311,11 +1369,27 @@ class _AttributeGrid extends StatelessWidget {
   final Player player;
   final List<AttributeCategory> categories;
   final Set<String> keys;
+
+  /// どれだけ見えているか(%)。100 未満なら値は見立ての幅で出す
+  /// (他のクラブの選手。2026-11-25)。
+  final int knowledge;
   const _AttributeGrid({
     required this.player,
     required this.categories,
     required this.keys,
+    this.knowledge = 100,
   });
+
+  /// 能力[k]の表示と、色を決める値。
+  (String, int) _shown(String k) {
+    final v = player.attributeValue(k);
+    if (knowledge >= 100) return ('$v', v);
+    final salt = 10 + k.codeUnits.fold<int>(0, (a, c) => a + c);
+    final r = ScoutKnowledge.range(v, knowledge, player.id, salt);
+    if (r == null) return ('?', 50);
+    if (r.$1 == r.$2) return ('${r.$1}', r.$1);
+    return ('${r.$1}-${r.$2}', (r.$1 + r.$2) ~/ 2);
+  }
 
   static Color colorFor(BuildContext context, int v) {
     if (v >= 80) return Colors.green.shade700;
@@ -1364,12 +1438,11 @@ class _AttributeGrid extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${player.attributeValue(k)}',
+                                  _shown(k).$1,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: colorFor(
-                                        context, player.attributeValue(k)),
+                                    color: colorFor(context, _shown(k).$2),
                                   ),
                                 ),
                               ],
@@ -1385,6 +1458,12 @@ class _AttributeGrid extends StatelessWidget {
                 Tr.pick('色: 80以上 濃い緑・65以上 緑・45未満 橙・30未満 赤。★はこの選手で効いている能力。',
                     'Colours: 80+ dark green, 65+ green, under 45 orange, under 30 red. * marks the attributes that matter for him.'),
                 style: small),
+            if (knowledge < 100)
+              Text(
+                  Tr.pick('見え$knowledge%: 数字はスカウトの見立ての幅です(「?」はまだ見えていない)。',
+                      '$knowledge% known: the numbers are your scouts\' estimated ranges ("?" means not seen yet).'),
+                  key: const ValueKey('attribute-estimate-note'),
+                  style: small),
           ],
         ),
       ),

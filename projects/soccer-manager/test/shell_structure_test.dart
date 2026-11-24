@@ -152,7 +152,8 @@ void main() {
         'クラブ > 施設',
         TodoPlaces.clubFacilities,
         null,
-        [type(ClubLicenseCard), type(AffiliateCard), text('で増築')]
+        // 系列クラブは移籍の「探す」へ移した(2026-11-25)。ここは入口だけ。
+        [type(ClubLicenseCard), key('club-to-affiliate'), text('で増築')]
       ),
       (
         'クラブ > ファンと街',
@@ -185,6 +186,7 @@ void main() {
         2,
         [type(SwitchListTile)]
       ),
+      ('移籍 > 探す > 系列クラブ', TodoPlaces.transferSearch, 3, [type(AffiliateCard)]),
       (
         '移籍 > 交渉とオファー',
         TodoPlaces.transferTalks,

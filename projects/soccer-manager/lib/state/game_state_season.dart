@@ -170,6 +170,8 @@ extension GameStateSeason on GameState {
     _advanceScouting(before, d);
     // 移籍の交渉の返事・期限、窓が閉じたら流す。
     _advanceTransferTalks(before, d);
+    // 所属なしの選手の求める年俸を、時期・リーグにそろえる。
+    _normalizeFreeAgentWages();
     // スタッフの引き抜きの話・候補の月ごとの入れ替え。
     _advanceStaffMoves(before, d);
     // 選手の私生活の出来事(月ごと)。
@@ -1775,6 +1777,7 @@ extension GameStateSeason on GameState {
     });
     // 夏は契約の切れた選手が数十人単位で所属なしになる。
     FreeAgentEngine.topUp(_save!.freeAgents);
+    _normalizeFreeAgentWages();
 
     _rollNamingRights();
     // 時代が変わったら知らせる。

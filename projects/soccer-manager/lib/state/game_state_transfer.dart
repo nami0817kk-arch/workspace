@@ -192,6 +192,32 @@ extension GameStateTransfer on GameState {
           .map((p) => p.originClubName)
           .firstOrNull;
 
+  /// 画面に出す、その選手の所属クラブ(他のクラブだけ。自クラブ・所属なし・
+  /// 作り物の市場なら null)。
+  Team? sellingClubOf(String playerId) => _sellingClubOf(playerId);
+
+  /// 他のクラブが移籍リストに載せている(売りに出している)選手か
+  /// (2026-11-25)。移籍を望んでいる選手と、先発でなく、24歳以上で、
+  /// クラブの平均より力の落ちる選手。言い値が1割安い([askingPriceFor])。
+  bool isListedByClub(Player p) {
+    final club = _sellingClubOf(p.id);
+    if (club == null || club.players.isEmpty) return false;
+    if (p.wantsTransfer) return true;
+    if (club.startingXI.contains(p.id) || p.age < 24) return false;
+    final avg = club.players.fold<int>(0, (a, q) => a + q.overall) /
+        club.players.length;
+    return p.overall < avg;
+  }
+
+  /// 他のクラブが貸し出しに出してくれそうな選手か(先発でない選手)。
+  bool isLoanAvailable(Player p) {
+    final club = _sellingClubOf(p.id);
+    return club != null && !club.startingXI.contains(p.id);
+  }
+
+  /// 移籍リストに載った選手の言い値の割引。
+  static const double listedPriceFactor = 0.9;
+
   /// 獲得の相手。作り物の市場(テスト・旧セーブの名残)にいればそこ、
   /// いなければ他のクラブの選手から探す。申し込めない選手なら null。
   ({Player player, Team? club})? _acquisitionTarget(String playerId) {
@@ -310,7 +336,11 @@ extension GameStateTransfer on GameState {
     if (transferMarket.contains(p)) return 100;
     final stored = _save!.scoutKnowledge[p.id] ?? 0;
     final same = sameLeagueIds ?? sameLeaguePlayerIds();
-    final base = same.contains(p.id) ? ScoutKnowledge.sameLeagueBase : 0;
+    // 所属なしの選手は練習に呼んで見られるので、半分は見えている
+    // (2026-11-25。移籍の一覧を見立てでそろえたため)。
+    final base = same.contains(p.id)
+        ? ScoutKnowledge.sameLeagueBase
+        : (_save!.freeAgents.contains(p) ? ScoutKnowledge.freeAgentBase : 0);
     return max(stored, base).clamp(0, 100);
   }
 
@@ -351,6 +381,87 @@ extension GameStateTransfer on GameState {
       if (keys.length >= scoutSlots) return false;
       if (!scoutRegions.any((r) => r.key == key)) return false;
       keys.add(key);
+    }
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 送っている地域[oldKey]を引き上げ、[newKey]へ替える(2026-11-25)。
+  Future<bool> replaceScoutRegion(String oldKey, String newKey) async {
+    if (_save == null) return false;
+    final keys = _save!.scoutRegionKeys;
+    if (!keys.contains(oldKey) || keys.contains(newKey)) return false;
+    if (!scoutRegions.any((r) => r.key == newKey)) return false;
+    keys[keys.indexOf(oldKey)] = newKey;
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 地域で見えてきた選手の数(監督が案に挙げられるくらい見えている、
+  /// [ScoutKnowledge.proposalMinimum]%以上)。
+  int regionFoundCount(String key) {
+    final region = scoutRegions.where((r) => r.key == key).firstOrNull;
+    if (region == null) return 0;
+    final same = sameLeaguePlayerIds();
+    var n = 0;
+    for (final t in region.teams) {
+      if (t.id == _save!.userTeamId) continue;
+      for (final p in t.players) {
+        if (knowledgeOf(p, sameLeagueIds: same) >=
+            ScoutKnowledge.proposalMinimum) {
+          n++;
+        }
+      }
+    }
+    return n;
+  }
+
+  /// 地域のクラブの数と選手の数。
+  ({int clubs, int players}) regionSize(String key) {
+    final region = scoutRegions.where((r) => r.key == key).firstOrNull;
+    if (region == null) return (clubs: 0, players: 0);
+    var clubs = 0;
+    var players = 0;
+    for (final t in region.teams) {
+      if (t.id == _save!.userTeamId) continue;
+      clubs++;
+      players += t.players.length;
+    }
+    return (clubs: clubs, players: players);
+  }
+
+  /// スカウトに個別に見させられる選手の数。
+  static const int scoutPlayerSlots = 3;
+
+  /// スカウトに個別に見させている選手か。
+  bool isScoutingPlayer(String playerId) =>
+      _save?.scoutPlayerIds.contains(playerId) ?? false;
+
+  /// スカウトに個別に見させている選手(まだいる他のクラブの選手)。
+  List<Player> get scoutedPlayers => [
+        for (final id in _save?.scoutPlayerIds ?? const <String>[])
+          if (anyPlayerById(id) case final p?) p,
+      ];
+
+  /// 選手をスカウトに見させる・やめる。枠がいっぱいなら見させない
+  /// (false。理由は[lastSigningBlockReason])。見させた選手は、送った地域の
+  /// 選手と同じ速さで見えてくる(1か所の出張費の半分がかかる)。
+  Future<bool> toggleScoutPlayer(String playerId) async {
+    if (_save == null) return false;
+    lastSigningBlockReason = null;
+    final ids = _save!.scoutPlayerIds;
+    if (!ids.remove(playerId)) {
+      if (isMyPlayer(playerId)) return false;
+      if (ids.length >= scoutPlayerSlots) {
+        lastSigningBlockReason = Tr.pick(
+            '個別に見させられるのは$scoutPlayerSlots人までです。誰かを外してください。',
+            'Your scouts can follow $scoutPlayerSlots players at most. Drop someone first.');
+        _notify();
+        return false;
+      }
+      ids.add(playerId);
     }
     _notify();
     await _persist();
@@ -402,6 +513,31 @@ extension GameStateTransfer on GameState {
       final cost = (scoutTripCostPerWeek * active.length * weeks).round();
       if (cost > 0) _book(LedgerCategory.facilities, -cost);
     }
+    // 個別に見させている選手(地域と同じ速さ・出張費は1か所の半分)。
+    final singles = _save!.scoutPlayerIds;
+    if (singles.isNotEmpty && gain > 0) {
+      final mine = {for (final p in userTeam.players) p.id};
+      for (final id in [...singles]) {
+        if (mine.contains(id)) {
+          singles.remove(id);
+          continue;
+        }
+        raise(id, gain);
+        if ((k[id] ?? 0) >= 100) {
+          singles.remove(id);
+          final name = anyPlayerById(id)?.name;
+          if (name != null) {
+            _logNews(
+                Tr.pick('スカウトが$nameの報告を書き終えた。もう全部見えている。',
+                    'Your scouts have finished their report on $name.'),
+                context: Tr.pick('スカウト', 'Scouting'));
+          }
+        }
+      }
+      final cost =
+          (scoutTripCostPerWeek * singles.length * weeks / 2).round();
+      if (cost > 0) _book(LedgerCategory.facilities, -cost);
+    }
     final watchGain = (ScoutKnowledge.watchWeeklyGain * weeks).round();
     if (watchGain > 0) {
       final mine = {for (final p in userTeam.players) p.id};
@@ -414,8 +550,9 @@ extension GameStateTransfer on GameState {
   /// もういない選手(引退・作り直し)の見え方を捨てる。7月1日に呼ぶ。
   void _pruneScoutKnowledge() {
     final k = _save!.scoutKnowledge;
-    if (k.isEmpty) return;
     final alive = {for (final p in _save!.allPlayers) p.id};
+    _save!.scoutPlayerIds.removeWhere((id) => !alive.contains(id));
+    if (k.isEmpty) return;
     k.removeWhere((id, _) => !alive.contains(id));
   }
 
