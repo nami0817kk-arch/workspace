@@ -92,6 +92,17 @@ class StandingCard extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 4),
+          const Row(
+            children: [
+              Icon(Icons.help_outline, size: 14, color: Pal.muted),
+              SizedBox(width: 4),
+              Text(
+                '押すと、位の解説を開く',
+                style: TextStyle(fontSize: 11.5, color: Pal.muted),
+              ),
+            ],
+          ),
           if (!g.isChild) ...[
             const SizedBox(height: 6),
             Wrap(
@@ -285,6 +296,8 @@ class StandingStrip extends StatelessWidget {
               '段 ${l.rank + 1}／${g.rk.length}',
               style: const TextStyle(fontSize: 12, color: Pal.gold),
             ),
+          const SizedBox(width: 6),
+          const Icon(Icons.help_outline, size: 15, color: Pal.muted),
         ],
       ),
     );

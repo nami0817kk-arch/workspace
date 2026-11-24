@@ -10,6 +10,7 @@ import '../engine/peace.dart';
 import '../engine/rng.dart';
 import '../engine/spending.dart';
 import 'end_screen.dart';
+import 'rank_guide.dart';
 import 'standing_card.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -131,12 +132,12 @@ class _ChoiceTab extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
       children: [
         if (p != null) ...[
-          StandingStrip(g),
+          _RankTap(g, child: StandingStrip(g)),
           const SizedBox(height: 6),
           _PromptCard(g, p),
           const SizedBox(height: 12),
         ],
-        StandingCard(g),
+        _RankTap(g, child: StandingCard(g)),
         const SizedBox(height: 12),
         Panel(
           child: Column(
@@ -370,7 +371,9 @@ class _ArtBanner extends StatelessWidget {
                         fontSize: 18,
                         letterSpacing: 2,
                         fontWeight: FontWeight.w700,
-                        shadows: [Shadow(color: Color(0xCC000000), blurRadius: 4)],
+                        shadows: [
+                          Shadow(color: Color(0xCC000000), blurRadius: 4),
+                        ],
                       ),
                     ),
                   ),
@@ -768,5 +771,19 @@ class _FamilyRow extends StatelessWidget {
         ),
       ],
     ),
+  );
+}
+
+/// 立ち位置を押すと、位の解説を開く。
+class _RankTap extends StatelessWidget {
+  const _RankTap(this.g, {required this.child});
+  final Game g;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    onTap: () => showRankGuide(context, g),
+    child: child,
   );
 }

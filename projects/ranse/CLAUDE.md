@@ -1963,3 +1963,11 @@ CI の Web 版で画面を見る仕組み。
 - 手元の確かめ（flutter コマンドは使っていない）: `dart analyze lib test` は No issues。engine を写した純 Dart（スクラッチパッドの `pe_setup.sh`＝`pl_setup.sh` に `peace_endings_test` を足した写し）で、
   **既存のテスト225と新しいテスト4の229すべてが通った**（最後の直しのあとに全体を回した。既存のテストは一つも直していない。線も下げていない。`dex_test` は本数を `kHandEndings.length` で見ているので直す所がなかった）。
   画面のテスト（`dex_test`・`app_smoke_test` ほか）は手元で回せないので CI で見る。
+
+## 位の解説（2026-11-24、ユーザー「位がよくわからない時がある。解説ページ作れる？」）
+
+- `lib/ui/rank_guide.dart` の `showRankGuide(context, g)`: 下から出る解説。その人の性別の位10段を上から並べ、位ごとの一言（`kRankNotesM`／`kRankNotesF`）と、
+  その位に上がるのに要るもの（`kPromo` の功・信頼・兵。表にない位は道筋を言葉で）を出し、いまの位に朱の印と「← いまここ」。
+  続けて「位を上げるもの」（功・信頼・兵の意味）と「段の外の暮らし」（僧・商人・野の者・隠居）。
+- 開き方: 岐路のタブの立ち位置（上の一行 `StandingStrip` と、くわしい `StandingCard`）を押す（`play_screen.dart` の `_RankTap`）。一行には「？」の印、カードには「押すと、位の解説を開く」。
+- 位の名（`kRanksM`／`kRanksF`）を変えたら、一言の表も合わせる（`test/rank_guide_test.dart` が数を見る）。
