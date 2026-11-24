@@ -553,9 +553,6 @@ class SaveGame {
   /// (2026-11-23)。旧セーブは null(今日までは済んだものとして数える)。
   DateTime? personalDatesThrough;
 
-  /// 持っているほかのクラブ(クラブ id → 買った値段)。
-  Map<String, int> groupClubs;
-
   /// 最新の新聞の一面の見出しと、監督の試合後の一言(無ければ null)。
   String? frontPageHeadline;
   String? frontPageQuote;
@@ -948,7 +945,6 @@ class SaveGame {
     this.lastUserMatchDate,
     this.lastWeeklyTickDate,
     this.personalDatesThrough,
-    Map<String, int>? groupClubs,
     this.frontPageHeadline,
     Map<String, List<int>>? buyBacks,
     this.frontPageQuote,
@@ -1118,7 +1114,6 @@ class SaveGame {
         lifeEvents = lifeEvents ?? {},
         difficultyItems = difficultyItems ?? {},
         playerBook = playerBook ?? {},
-        groupClubs = groupClubs ?? {},
         countryCoefficients = countryCoefficients ?? {},
         pendingMoments = pendingMoments ?? [],
         momentKeys = momentKeys ?? [],
@@ -1369,7 +1364,6 @@ class SaveGame {
           'lastWeeklyTickDate': formatSaveDate(lastWeeklyTickDate!),
         if (personalDatesThrough != null)
           'personalDatesThrough': formatSaveDate(personalDatesThrough!),
-        if (groupClubs.isNotEmpty) 'groupClubs': groupClubs,
         if (frontPageHeadline != null) 'frontPageHeadline': frontPageHeadline,
         if (buyBacks.isNotEmpty) 'buyBacks': buyBacks,
         if (frontPageQuote != null) 'frontPageQuote': frontPageQuote,
@@ -1560,6 +1554,20 @@ class SaveGame {
   /// 読み込む前に、契約の残り年数を数える基準の年をこのセーブのシーズンに
   /// 合わせる。旧セーブの残り年数を満了の年に直すときに使う
   /// ([Player.contractEndYearFromYears])。
+  /// 私財。ほかのクラブを持つ機能は外した(2026-11-25)。古いセーブで
+  /// 持っていたクラブ('groupClubs': クラブ id → 買った値段)は、買った値段で
+  /// 私財に戻して読み、項目は読み捨てる(次に保存するときには書かない)。
+  static int _ownerWealthWithGroupRefund(Map<String, dynamic> json) {
+    final wealth = json['ownerWealth'] as int? ?? -1;
+    final groups = json['groupClubs'];
+    if (groups is! Map || groups.isEmpty || wealth < 0) return wealth;
+    var refund = 0;
+    for (final v in groups.values) {
+      if (v is num) refund += v.toInt();
+    }
+    return wealth + refund;
+  }
+
   factory SaveGame.fromJson(Map<String, dynamic> json) {
     final season = (json['league'] as Map?)?['season'] as int? ?? 1;
     Player.contractClockYear = Player.seasonEndYearOf(season);
@@ -1594,7 +1602,7 @@ class SaveGame {
             ? SdBrief.fromJson((json['sdBrief'] as Map).cast<String, dynamic>())
             : null,
         sdSignedThisWindow: json['sdSignedThisWindow'] as int? ?? 0,
-        ownerWealth: json['ownerWealth'] as int? ?? -1,
+        ownerWealth: _ownerWealthWithGroupRefund(json),
         ownerLoanBalance: json['ownerLoanBalance'] as int? ?? 0,
         ownerInjectionSeason: json['ownerInjectionSeason'] as int? ?? 0,
         agmDemand: json['agmDemand'] as String?,
@@ -1686,9 +1694,6 @@ class SaveGame {
         lastUserMatchDate: parseSaveDate(json['lastUserMatchDate']),
         lastWeeklyTickDate: parseSaveDate(json['lastWeeklyTickDate']),
         personalDatesThrough: parseSaveDate(json['personalDatesThrough']),
-        groupClubs: (json['groupClubs'] as Map?)?.map(
-          (k, v) => MapEntry(k as String, v as int),
-        ),
         frontPageHeadline: json['frontPageHeadline'] as String?,
         buyBacks: (json['buyBacks'] as Map?)?.map(
           (k, v) =>

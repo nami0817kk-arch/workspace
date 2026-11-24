@@ -1155,8 +1155,6 @@ extension GameStateSeason on GameState {
         .map((r) => league.teams.firstWhere((t) => t.id == r.teamId))
         .toList();
     final playedTier = _save!.currentDivisionTier;
-    // 持っているほかのクラブの損益(他国の1部の今季の順位で)。
-    _settleGroupClubs();
     // 他国の1部の上位を控え(大陸大会の相手)、国の係数に今季を足す。
     _rememberForeignTop();
     _updateCountryCoefficients();

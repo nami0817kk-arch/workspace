@@ -33,20 +33,21 @@ void main() {
     expect(gs.askingPriceFor(p), greaterThan(price));
   });
 
-  test('私財でほかのクラブを買い、季の損益が入り、売れる。その選手は半額',
+  test('ほかのクラブを持つ機能は外した。古いセーブの持ち分は買値で私財に戻して読む',
       () async {
     final gs = GameState();
     await gs.startNewGame('グループFC');
-    final s = gs.save!..ownerWealth = 1 << 30;
-    final (club, price) = gs.groupClubCandidates.first;
-    final p = club.players.first;
-    final before = gs.askingPriceFor(p);
-    expect(await gs.buyGroupClub(club.id), isTrue);
-    expect(s.ownerWealth, (1 << 30) - price);
-    expect(gs.askingPriceFor(p), (before * 0.5).round());
-    gs.debugSettleGroupClubs();
-    expect(SaveGame.fromJson(s.toJson()).groupClubs[club.id], price);
-    expect(await gs.sellGroupClub(club.id), isTrue);
-    expect(gs.groupClubsOwned, isEmpty);
+    final s = gs.save!..ownerWealth = 1000;
+    final json = s.toJson();
+    expect(json.containsKey('groupClubs'), isFalse);
+    final other = s.foreignLeagues.values.first.teams.first;
+    json['groupClubs'] = {other.id: 300, 'gone-club': 200};
+    final back = SaveGame.fromJson(json);
+    expect(back.ownerWealth, 1500);
+    expect(back.toJson().containsKey('groupClubs'), isFalse,
+        reason: '読み捨てて、次の保存では書かない');
+    // 私財がまだ決まっていない(-1)古いセーブはそのまま。
+    json['ownerWealth'] = -1;
+    expect(SaveGame.fromJson(json).ownerWealth, -1);
   });
 }

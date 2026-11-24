@@ -14,7 +14,7 @@ import 'support/shell_harness.dart';
 /// 試合の始め方と見せ方を、全大会で揃えた(2026-11-24)。
 /// - どの大会の試合も、進むボタンがその日に止まって行う
 /// - 試合のあとは、どの大会も同じダイジェスト(大会名の見出し・期待の動き・
-///   賞金・「試合経過を見る」)
+///   賞金。試合経過の画面は 2026-11-25 に外した)
 /// - 状況の札・カップ戦の画面から試合をするボタンは無い
 void main() {
   setUpAll(loadAppFonts);
@@ -67,10 +67,10 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.byKey(const ValueKey('match-digest')), findsOneWidget,
         reason: '試合のあとに結果のダイジェストが出ていない');
-    // 期待の動きと、試合経過への入口(どの大会も同じ部品)。
+    // 期待の動き(どの大会も同じ部品)。試合経過の画面への入口は無い。
     expect(find.text('サポーター '), findsOneWidget);
-    expect(find.byKey(const ValueKey('match-digest-watch')), findsOneWidget);
-    expect(find.text('試合経過を見る'), findsOneWidget);
+    expect(find.byKey(const ValueKey('match-digest-watch')), findsNothing);
+    expect(find.text('試合経過を見る'), findsNothing);
     final title = tester
         .widget<Text>(find.byKey(const ValueKey('match-digest-competition')))
         .data!;

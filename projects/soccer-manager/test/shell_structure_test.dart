@@ -28,7 +28,7 @@ import 'package:soccer_manager/widgets/club_value_card.dart';
 import 'package:soccer_manager/widgets/community_card.dart';
 import 'package:soccer_manager/widgets/economy_card.dart';
 import 'package:soccer_manager/widgets/equity_card.dart';
-import 'package:soccer_manager/widgets/era_group_card.dart';
+import 'package:soccer_manager/widgets/era_card.dart';
 import 'package:soccer_manager/widgets/fan_segments_card.dart';
 import 'package:soccer_manager/widgets/group_page.dart';
 import 'package:soccer_manager/widgets/landscape_scale.dart';
@@ -219,7 +219,7 @@ void main() {
           type(OwnerWorldScreen),
           type(ClubCultureCard),
           type(RivalOwnersCard),
-          type(EraGroupCard),
+          type(EraCard),
         ]
       ),
     ];
