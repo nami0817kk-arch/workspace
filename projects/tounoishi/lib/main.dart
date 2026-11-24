@@ -43,11 +43,12 @@ const storeKeys = [
   'tou-dex',
   'tou-srank',
   'tou-story',
-  'tou-chal',
+  'tou-chal2',
   'tou-tut',
   'tou-snd',
   'tou-vs',
   'tou-meta',
+  'tou-brd',
 ];
 
 Future<void> main() async {
