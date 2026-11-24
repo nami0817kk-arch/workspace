@@ -231,12 +231,14 @@ extension GameStateTalks on GameState {
     required int endYear,
     int signingBonus = 0,
     SquadStatus promise = SquadStatus.regular,
+    ContractTerms? clauses,
   }) async {
     final out = _termsCore(playerId,
         weeklyWage: weeklyWage,
         endYear: endYear,
         signingBonus: signingBonus,
-        promise: promise);
+        promise: promise,
+        clauses: clauses);
     if (out != TermsOutcome.blocked) {
       _notify();
       await _persist();
@@ -250,6 +252,7 @@ extension GameStateTalks on GameState {
     required int endYear,
     int signingBonus = 0,
     SquadStatus promise = SquadStatus.regular,
+    ContractTerms? clauses,
   }) {
     if (_save == null) return TermsOutcome.blocked;
     lastSigningBlockReason = null;
@@ -358,10 +361,31 @@ extension GameStateTalks on GameState {
               toTier: toTier));
     }
     final years = max(1, endYear - Player.contractClockYear + 1);
+    // 出来高・昇給・リリース条項・降格/昇格の条項の値打ち(2026-11-25)。
+    // [clauses]の年俸以外の項目だけを見る。
+    var clauseValue = 0;
+    if (clauses != null) {
+      int value(ContractTerms x) => ContractTermsEngine.extrasWeekly(player, x,
+          requiredBonus: 0,
+          defaultRelegationCutPct: defaultRelegationCutPct,
+          years: years);
+      final base = ContractTerms(wage: weeklyWage, endYear: endYear);
+      clauseValue = value(ContractTerms(
+            wage: weeklyWage,
+            endYear: endYear,
+            goalBonus: clauses.goalBonus,
+            raisePct: clauses.raisePct,
+            releaseClause: clauses.releaseClause,
+            relegationCutPct: clauses.relegationCutPct,
+            promotionRisePct: clauses.promotionRisePct,
+          )) -
+          value(base);
+    }
     final effective = PlayerTermsEngine.effectiveWeekly(
-        weeklyWage: weeklyWage,
-        years: years,
-        signingBonus: max(0, signingBonus - requiredBonus));
+            weeklyWage: weeklyWage,
+            years: years,
+            signingBonus: max(0, signingBonus - requiredBonus)) +
+        clauseValue;
     t.termsRound += 1;
     switch (PlayerTermsEngine.judge(
         effective: effective,
@@ -412,6 +436,13 @@ extension GameStateTalks on GameState {
     // 移籍金は契約の年数で償却する(簿価)。
     player.wage = weeklyWage;
     ContractEngine.renewContract(player, endYear: endYear);
+    if (clauses != null) {
+      player.goalBonus = max(0, clauses.goalBonus);
+      player.raisePct = max(0, clauses.raisePct);
+      player.releaseClause = clauses.releaseClause;
+      player.relegationCutPct = clauses.relegationCutPct;
+      player.promotionRisePct = max(0, clauses.promotionRisePct);
+    }
     _recordPlayerBook(player, fee, agentFee: agentFee);
     // 約束した序列と、加入したときの機嫌(順応の高い選手ほど良い)。
     player.squadStatus = promise;
@@ -423,6 +454,11 @@ extension GameStateTalks on GameState {
     player.promiseBroken = false;
     player.happiness = player.traits.arrivalHappiness;
     _supportersOnSigning(player);
+    _logMove(player,
+        from: fa != null ? Tr.pick('所属なし', 'Free agent') : t.clubName,
+        to: userTeam.name,
+        kind: fa != null ? PlayerMoveKind.free : PlayerMoveKind.transfer,
+        fee: fa != null ? 0 : fee);
     userTeam.players.add(player);
     _save!.transferTalks.remove(t);
     _logNews(

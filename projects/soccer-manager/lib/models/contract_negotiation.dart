@@ -1,3 +1,5 @@
+import 'player.dart';
+
 /// 契約交渉1回分の提示・対案のやり取りを表す。
 class ContractNegotiation {
   final String playerId;
@@ -12,6 +14,9 @@ class ContractNegotiation {
   /// クラブ側の1年延長オプションを付けるか。
   bool option;
 
+  /// 約束する序列(null は今の序列のまま)。上の立場ほど高い週俸を求める。
+  SquadStatus? promise;
+
   ContractNegotiation({
     required this.playerId,
     required this.initialWage,
@@ -20,6 +25,7 @@ class ContractNegotiation {
     this.roundsUsed = 0,
     this.endYear,
     this.option = false,
+    this.promise,
   });
 
   Map<String, dynamic> toJson() => {
@@ -30,6 +36,7 @@ class ContractNegotiation {
         'roundsUsed': roundsUsed,
         if (endYear != null) 'endYear': endYear,
         if (option) 'option': true,
+        if (promise != null) 'promise': promise!.name,
       };
 
   factory ContractNegotiation.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +48,10 @@ class ContractNegotiation {
         roundsUsed: json['roundsUsed'] as int? ?? 0,
         endYear: json['endYear'] as int?,
         option: json['option'] as bool? ?? false,
+        // 2026-11-25 より前のセーブには無い(今の序列のまま)。
+        promise: SquadStatus.values
+            .where((s) => s.name == json['promise'])
+            .firstOrNull,
       );
 }
 

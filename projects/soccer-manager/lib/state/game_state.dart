@@ -116,6 +116,7 @@ import '../logic/offscreen_development.dart';
 import '../logic/shareholder_engine.dart';
 import '../logic/squad_registration_engine.dart';
 import '../logic/contract_engine.dart';
+import '../logic/contract_terms.dart';
 import '../logic/continental_cup_engine.dart';
 import '../logic/dynamics_engine.dart';
 import '../logic/tactics_ai.dart';
@@ -136,6 +137,7 @@ import '../logic/lineup_utils.dart';
 import '../logic/match_engine.dart';
 import '../logic/scout_knowledge.dart';
 import '../logic/scouting_engine.dart';
+import '../logic/rating_words.dart';
 import '../logic/season_projection_engine.dart';
 import '../logic/sponsor_engine.dart';
 import '../logic/era_engine.dart';
@@ -219,6 +221,7 @@ part 'game_state_cups.dart';
 part 'game_state_cup_days.dart';
 part 'game_state_supporters.dart';
 part 'game_state_decisions.dart';
+part 'game_state_player_view.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }

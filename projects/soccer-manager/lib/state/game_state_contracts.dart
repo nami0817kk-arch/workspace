@@ -426,6 +426,10 @@ extension GameStateContracts on GameState {
     lastContractExpirations =
         contractResult.expired.map((p) => p.name).toList();
     for (final p in contractResult.expired) {
+      _logMove(p,
+          from: userTeam.name,
+          to: Tr.pick('所属なし(契約満了)', 'Free agent (contract expired)'),
+          kind: PlayerMoveKind.free);
       _clearPlayerRoleReferences(userTeam, p.id);
       userTeam.players.remove(p);
       userTeam.startingXI.remove(p.id);
@@ -733,6 +737,10 @@ extension GameStateContracts on GameState {
     }
     final p = userTeam.players.firstWhere((p) => p.id == playerId);
     _book(LedgerCategory.playerWages, -cost);
+    _logMove(p,
+        from: userTeam.name,
+        to: Tr.pick('所属なし', 'Free agent'),
+        kind: PlayerMoveKind.release);
     _clearPlayerRoleReferences(userTeam, p.id);
     userTeam.players.remove(p);
     userTeam.startingXI.remove(p.id);
