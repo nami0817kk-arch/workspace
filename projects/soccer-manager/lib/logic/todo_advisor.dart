@@ -6,6 +6,7 @@ import '../state/game_state.dart';
 import 'contract_board_engine.dart';
 import 'contract_engine.dart';
 import 'economy_scale.dart';
+import 'first_days_guide.dart';
 import 'next_action_advisor.dart';
 import 'signing_proposal_engine.dart';
 import 'sponsor_slots.dart';
@@ -173,6 +174,9 @@ enum TodoKind {
   staffOffers,
 
   // ---- おすすめ ----
+  /// 最初の数日の案内(はじめに 1/5 …)。おすすめの先頭に出す。
+  firstSteps,
+
   /// 移籍の締切が近い。
   transferDeadline,
 
@@ -229,8 +233,12 @@ class TodoItem {
     required this.place,
     this.count = 1,
     this.inline = false,
+    this.tag,
     bool? marked,
   }) : marked = marked ?? level == TodoLevel.must;
+
+  /// 種類の中の印(最初の案内の段の名前など)。無ければ null。
+  final String? tag;
 
   final TodoKind kind;
   final TodoLevel level;
@@ -324,6 +332,7 @@ class TodoAdvisor {
   /// おすすめのうち、左メニューとタブに青い点を付ける種類。期限や時期が
   /// あって今だけのもの。スタッフの空席は開幕前だけ([build] の中で見る)。
   static const Set<TodoKind> markedKinds = {
+    TodoKind.firstSteps,
     TodoKind.supporterFalling,
     TodoKind.transferDeadline,
     TodoKind.seasonTickets,
@@ -353,6 +362,7 @@ class TodoAdvisor {
           place: t.place,
           count: t.count,
           inline: t.inline,
+          tag: t.tag,
           marked: t.isMust ||
               markedKinds.contains(t.kind) ||
               (t.kind == TodoKind.staffVacant && preseason),
@@ -811,6 +821,20 @@ class TodoAdvisor {
             'Moves that shift funds and the two expectations. Once a season each.'),
         place: TodoPlaces.ownerWorks,
         count: works,
+      ));
+    }
+
+    // 最初の数日の案内。5枚の説明をやめ、ここで1つずつ案内する
+    // (2026-11-25)。押すと行き先へ移り、次の段に替わる。
+    final step = FirstDaysGuide.current(gs);
+    if (step != null) {
+      add(TodoItem(
+        kind: TodoKind.firstSteps,
+        level: TodoLevel.recommended,
+        title: step.title,
+        note: step.note,
+        place: step.place,
+        tag: step.id,
       ));
     }
 

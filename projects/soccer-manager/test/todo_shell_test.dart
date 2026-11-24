@@ -25,7 +25,6 @@ import 'package:soccer_manager/screens/owner_work_screen.dart';
 import 'package:soccer_manager/screens/youth_screen.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
-import 'package:soccer_manager/widgets/club_policy_card.dart';
 import 'package:soccer_manager/widgets/owner_career_card.dart';
 import 'package:soccer_manager/widgets/disabled_reason.dart';
 import 'package:soccer_manager/widgets/fm_panel.dart';
@@ -263,7 +262,8 @@ void main() {
       (TodoPlaces.financeOverview, find.byType(ProposalCard)),
       (TodoPlaces.financeFunding, find.text('スポンサー契約')),
       (TodoPlaces.financeProjects, find.byType(FiveYearPlanCard)),
-      (TodoPlaces.ownerWorld, find.byType(ClubPolicyCard)),
+      // 方針はオーナー室の「文化と方針」の札の中(2026-11-25)。
+      (TodoPlaces.ownerWorld, find.byKey(const ValueKey('club-direction-card'))),
       (TodoPlaces.clubStaff, find.textContaining('スタッフ: ')),
       (TodoPlaces.clubFacilities, find.text('施設')),
       (TodoPlaces.clubCommunity, find.byType(SeasonTicketsCard)),

@@ -13,8 +13,8 @@ flutter test tool/art/face_preview_test.dart --update-goldens
 生え際の抜きが顔の外へはみ出す——どれも実際に起きた）。
 
 ほかに `emblem_preview_test.dart`（クラブエンブレム）、
-`badge_preview_test.dart`（実績の記章 33件）、
-`onboarding_preview_test.dart`（初回チュートリアルの挿絵 5枚）がある。
+`badge_preview_test.dart`（実績の記章 33件）がある
+（初回チュートリアルの挿絵は、チュートリアルごと 2026-11-25 に外した）。
 書き出し先はいずれもプロジェクト直下の `_*.png`（git には入れない）。
 
 見本を出す側は、**アプリ本体のテーマ（`SoccerManagerApp.buildTheme`）を使い、

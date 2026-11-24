@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/economy_scale.dart';
+import '../logic/squad_registration_engine.dart';
+import '../models/league.dart';
 import '../models/league_theme.dart';
 import '../models/save_game.dart';
 import '../models/start_scenario.dart';
@@ -136,21 +139,13 @@ class _StartScreenState extends State<StartScreen> {
                                     child: CircularProgressIndicator(),
                                   );
                                 }
-                                return Column(
-                                  children: [
-                                    for (final slot in slots) ...[
-                                      _SlotCard(
-                                        slot: slot,
-                                        onContinue: () =>
-                                            _continueSlot(context, slot),
-                                        onCreate: () =>
-                                            _createInSlot(context, slot),
-                                        onDelete: () =>
-                                            _confirmDeleteSlot(context, slot),
-                                      ),
-                                      const SizedBox(height: 12),
-                                    ],
-                                  ],
+                                return _StartActions(
+                                  slots: slots,
+                                  lastSlot: gameState.currentSlot,
+                                  onContinue: (slot) =>
+                                      _continueSlot(context, slot),
+                                  onNewGame: () => _newGame(context, slots),
+                                  onManage: () => _openSlots(context, slots),
                                 );
                               },
                             ),
@@ -163,6 +158,63 @@ class _StartScreenState extends State<StartScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// 「新しく始める」。空いている枠があれば、最初の空き枠に作る。無ければ
+  /// セーブ枠の一覧を開く(どれかを消してから作る)。
+  Future<void> _newGame(
+      BuildContext context, List<SaveSlotSummary> slots) async {
+    final empty = slots.where((s) => !s.hasSave).firstOrNull;
+    if (empty != null) {
+      await _createInSlot(context, empty);
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(Tr.pick('空いているセーブ枠がありません。使わない枠を消してから始めてください。',
+            'No free save slot. Delete one you no longer need, then start.'))));
+    await _openSlots(context, slots);
+  }
+
+  /// セーブ枠の一覧(続ける・消す・この枠で始める)。
+  Future<void> _openSlots(
+      BuildContext context, List<SaveSlotSummary> slots) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      constraints: const BoxConstraints(maxWidth: 640),
+      builder: (ctx) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(Tr.pick('セーブ枠', 'Save slots'),
+                  style: Theme.of(ctx).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              for (final slot in slots) ...[
+                _SlotCard(
+                  slot: slot,
+                  onContinue: () {
+                    Navigator.pop(ctx);
+                    _continueSlot(context, slot);
+                  },
+                  onCreate: () {
+                    Navigator.pop(ctx);
+                    _createInSlot(context, slot);
+                  },
+                  onDelete: () {
+                    Navigator.pop(ctx);
+                    _confirmDeleteSlot(context, slot);
+                  },
+                ),
+                const SizedBox(height: 8),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -241,6 +293,121 @@ class _StartScreenState extends State<StartScreen> {
               if (mounted) _refreshSlots();
             },
             child: Text(Tr.pick('削除する', 'Delete')),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// タイトルの操作。「続きから」を大きく1つ、その下に「新しく始める」と
+/// 「セーブ枠」(2026-11-25)。
+///
+/// 以前は3つのセーブ枠を同じ大きさの札で並べていて、毎回いちばん押す
+/// 「続ける」が小さなボタンの1つだった。
+class _StartActions extends StatelessWidget {
+  const _StartActions({
+    required this.slots,
+    required this.lastSlot,
+    required this.onContinue,
+    required this.onNewGame,
+    required this.onManage,
+  });
+
+  final List<SaveSlotSummary> slots;
+
+  /// 最後に遊んだ枠。
+  final int lastSlot;
+  final void Function(SaveSlotSummary) onContinue;
+  final VoidCallback onNewGame;
+  final VoidCallback onManage;
+
+  @override
+  Widget build(BuildContext context) {
+    final saved = slots.where((s) => s.hasSave).toList();
+    final last = saved.where((s) => s.slot == lastSlot).firstOrNull ??
+        saved.firstOrNull;
+    final scheme = Theme.of(context).colorScheme;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 440),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (last != null)
+            FilledButton(
+              key: const ValueKey('start-continue'),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size(0, 64),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              onPressed: () => onContinue(last),
+              child: Row(
+                children: [
+                  const Icon(Icons.play_arrow, size: 28),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(Tr.pick('続きから', 'Continue'),
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(
+                          Tr.pick(
+                              '${last.clubName} ・ 第${last.season ?? 1}季${last.divisionTier != null ? ' ・ ${last.divisionTier}部' : ''}',
+                              "${last.clubName} • Season ${last.season ?? 1}${last.divisionTier != null ? ' • Tier ${last.divisionTier}' : ''}"),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (last != null) const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: last == null
+                    // まだ1つもセーブが無いときは、新しく始めるが主役。
+                    ? FilledButton.icon(
+                        key: const ValueKey('start-new'),
+                        style: FilledButton.styleFrom(
+                            minimumSize: const Size(0, 56)),
+                        onPressed: onNewGame,
+                        icon: const Icon(Icons.add),
+                        label: Text(context.l10n.startCreateClub),
+                      )
+                    : OutlinedButton.icon(
+                        key: const ValueKey('start-new'),
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(0, 48),
+                          backgroundColor:
+                              scheme.surface.withValues(alpha: 0.92),
+                        ),
+                        onPressed: onNewGame,
+                        icon: const Icon(Icons.add),
+                        label: Text(context.l10n.startCreateClub),
+                      ),
+              ),
+              if (saved.isNotEmpty) ...[
+                const SizedBox(width: 8),
+                OutlinedButton.icon(
+                  key: const ValueKey('start-slots'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(0, 48),
+                    backgroundColor: scheme.surface.withValues(alpha: 0.92),
+                  ),
+                  onPressed: onManage,
+                  icon: const Icon(Icons.folder_open_outlined),
+                  label: Text(Tr.pick('セーブ枠', 'Save slots')),
+                ),
+              ],
+            ],
           ),
         ],
       ),
@@ -401,21 +568,14 @@ class _NewClubDialogState extends State<_NewClubDialog> {
             Text(context.l10n.startLeagueLabel,
                 style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: LeagueTheme.values
-                  .map(
-                    (theme) => ChoiceChip(
-                      label: Text(Tr.pick(
-                          '${theme.label}（${theme.flavorLabel}）',
-                          '${theme.label} (${theme.flavorLabel})')),
-                      selected: _theme == theme,
-                      onSelected: (_) => setState(() => _theme = theme),
-                    ),
-                  )
-                  .toList(),
-            ),
+            // リーグごとに、始めの予算・登録の決まり・難しさを1行で
+            // (2026-11-25。名前だけでは違いが分からなかった)。
+            for (final theme in LeagueTheme.values)
+              _LeagueOption(
+                theme: theme,
+                selected: _theme == theme,
+                onTap: () => setState(() => _theme = theme),
+              ),
             const SizedBox(height: 16),
             Text(context.l10n.startDifficultyLabel,
                 style: Theme.of(context).textTheme.titleSmall),
@@ -517,6 +677,111 @@ class _NewClubDialogState extends State<_NewClubDialog> {
           child: Text(context.l10n.startCreate),
         ),
       ],
+    );
+  }
+}
+
+/// 新しく始めるの、リーグの1行。名前の下に、始めの予算・登録の決まり・
+/// 難しさを並べる。
+class _LeagueOption extends StatelessWidget {
+  const _LeagueOption({
+    required this.theme,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final LeagueTheme theme;
+  final bool selected;
+  final VoidCallback onTap;
+
+  /// 登録の決まりを短く(「国内育成8人・EU外4人まで」)。
+  static String registrationLine(LeagueTheme t) {
+    final r = RegistrationRules.forCountry(t);
+    final parts = <String>[
+      if (r.homegrownQuota > 0)
+        Tr.pick('国内育成${r.homegrownQuota}人', '${r.homegrownQuota} home-grown'),
+      if (r.clubTrainedQuota > 0)
+        Tr.pick('うちクラブ育ち${r.clubTrainedQuota}人',
+            '${r.clubTrainedQuota} club-trained'),
+      if (r.nonEuLimit case final n?) Tr.pick('EU外$n人まで', 'max $n non-EU'),
+      if (r.nonEuSigningsPerSeason case final n?)
+        Tr.pick('EU外の獲得は1季$n人', '$n non-EU signings a season'),
+      if (r.minNationals case final n?)
+        Tr.pick('自国籍$n人以上', 'at least $n nationals'),
+    ];
+    return parts.join(Tr.pick('・', ', '));
+  }
+
+  /// 難しさ。財務規則の罰の重さで決めた(league_rules.dart の表)。
+  /// イングランド・ドイツは勝ち点の減点、スペインは新加入を登録できない、
+  /// イタリアは獲得できない、フランスは降格処分まである。
+  static String difficultyLabel(LeagueTheme t) => switch (t) {
+        LeagueTheme.england ||
+        LeagueTheme.germany =>
+          Tr.pick('ふつう', 'normal'),
+        LeagueTheme.spain || LeagueTheme.italy => Tr.pick('やや難しい', 'harder'),
+        LeagueTheme.france => Tr.pick('難しい', 'hard'),
+      };
+
+  /// 1行: 「予算 2.5億・登録 国内育成8人・難しさ ふつう」。
+  static String line(LeagueTheme t) {
+    final budget =
+        formatMoney(GameState.initialBudgetFor(totalDivisionTiers, t));
+    return Tr.pick(
+        '予算 $budget・登録 ${registrationLine(t)}・難しさ ${difficultyLabel(t)}',
+        'Budget $budget • squad: ${registrationLine(t)} • ${difficultyLabel(t)}');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      key: ValueKey('league-option-${theme.name}'),
+      color: selected
+          ? scheme.primaryContainer.withValues(alpha: 0.6)
+          : Colors.transparent,
+      borderRadius: BorderRadius.circular(8),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+            child: Row(
+              children: [
+                Icon(
+                  selected
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
+                  size: 20,
+                  color: selected ? scheme.primary : scheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        Tr.pick('${theme.label}（${theme.flavorLabel}）',
+                            '${theme.label} (${theme.flavorLabel})'),
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        line(theme),
+                        style: TextStyle(
+                            fontSize: 12, color: scheme.onSurfaceVariant),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

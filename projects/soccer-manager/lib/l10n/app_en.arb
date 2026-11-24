@@ -3,11 +3,11 @@
 
   "appTitle": "Soccer Club Manager",
 
-  "startTagline": "Take charge of a club and chase the title",
+  "startTagline": "Own a club and build it from Tier 3 to the top",
   "startSlotLabel": "Slot {number}",
   "startEmptySlot": "Empty slot",
   "startDeleteSlot": "Delete slot {number}?",
-  "startCreateClub": "New club",
+  "startCreateClub": "New game",
   "startNewClubIn": "Create a new club in slot {number}",
   "startClubNameLabel": "Club name",
   "startLeagueLabel": "League",

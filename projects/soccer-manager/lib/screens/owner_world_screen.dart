@@ -47,10 +47,12 @@ class ClubDirectionCard extends StatelessWidget {
       title: Tr.pick('文化と方針', 'Identity & policy'),
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        // 方針を先に(季の中は1行。オフシーズンに「やること」から来る)。
         children: [
-          ClubCultureCard(embedded: true),
-          Divider(height: 1),
           ClubPolicyCard(embedded: true),
+          Divider(height: 1),
+          SizedBox(height: 8),
+          ClubCultureCard(embedded: true),
         ],
       ),
     );

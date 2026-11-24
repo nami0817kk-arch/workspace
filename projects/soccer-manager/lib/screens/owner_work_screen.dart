@@ -44,6 +44,7 @@ class _OwnerWorkScreenState extends State<OwnerWorkScreen> {
     for (final c in OwnerWorkCategory.values) c: GlobalKey(),
   };
   final _matchdayKey = GlobalKey();
+  final _openKey = GlobalKey();
 
   @override
   void initState() {
@@ -84,6 +85,8 @@ class _OwnerWorkScreenState extends State<OwnerWorkScreen> {
   void _reveal(String card) {
     final key = switch (card) {
       TodoPlaces.cardMatchday => _matchdayKey,
+      // 「打てる手」の行からは、先頭の「いま打てる手」へ戻す。
+      TodoPlaces.cardWorks => _openKey,
       TodoPlaces.cardFans => _categoryKeys[OwnerWorkCategory.fans],
       TodoPlaces.cardFinanceWorks => _categoryKeys[OwnerWorkCategory.finance],
       TodoPlaces.cardCommunityWorks =>
@@ -140,10 +143,13 @@ class _OwnerWorkScreenState extends State<OwnerWorkScreen> {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 6),
-                  _SectionTitle(
+                  KeyedSubtree(
+                    key: _openKey,
+                    child: _SectionTitle(
                     key: const ValueKey('owner-work-open'),
                     text: Tr.pick('いま打てる手 ${open.length}件',
                         'Moves you can make now: ${open.length}'),
+                  ),
                   ),
                   if (open.isEmpty)
                     Padding(

@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @startTagline.
   ///
   /// In ja, this message translates to:
-  /// **'クラブを率いてリーグ優勝を目指そう'**
+  /// **'クラブのオーナーになり、3部から頂点まで育てよう'**
   String get startTagline;
 
   /// No description provided for @startSlotLabel.
@@ -131,7 +131,7 @@ abstract class AppLocalizations {
   /// No description provided for @startCreateClub.
   ///
   /// In ja, this message translates to:
-  /// **'新規クラブ作成'**
+  /// **'新しく始める'**
   String get startCreateClub;
 
   /// No description provided for @startNewClubIn.
