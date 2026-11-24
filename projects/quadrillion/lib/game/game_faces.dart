@@ -8,7 +8,7 @@ extension GameFaces on Game {
   static const kidFaceAge = 16;
 
   /// 自分の会社の人（社長は別）。同じ人を2度数えない
-  Set<Person> _facePeople() => <Person>{...staff, ...kids, ?meet, ...cands};
+  Set<Person> _facePeople() => <Person>{...staff, ...kids, ?meet, ...cands, ...alumni};
 
   /// 顔の重なりの重さ。社長と部下は人タブの同じ画面に並ぶので重く数え、重ねるときは子ども・候補の顔を先に重ねる
   int _faceWeight(Person? p) => p == null || staff.contains(p) ? 2 : 1;

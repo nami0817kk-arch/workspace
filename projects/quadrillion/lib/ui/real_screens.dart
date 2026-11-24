@@ -314,8 +314,8 @@ List<Widget> townTabL(GameController ctl, double width) {
           decoration: const BoxDecoration(border: Border(top: BorderSide(color: Pal.line))),
           child: Text(
               s.cap >= rival.cap
-                  ? tr('宿敵 {0} の時価総額は{1}。あなたが{2}倍', [nmL(rival.name), yen(rival.cap), (s.cap / math.max(rival.cap, 1)).toStringAsFixed(1)])
-                  : tr('宿敵 {0} の時価総額は{1}。あなたの{2}倍', [nmL(rival.name), yen(rival.cap), (rival.cap / math.max(s.cap, 1)).toStringAsFixed(1)]),
+                  ? tr('宿敵 {0} の時価総額は{1}。あなたが{2}倍', [nmL(rival.name), yen(rival.cap), timesL(s.cap / math.max(rival.cap, 1))])
+                  : tr('宿敵 {0} の時価総額は{1}。あなたの{2}倍', [nmL(rival.name), yen(rival.cap), timesL(rival.cap / math.max(s.cap, 1))]),
               style: ts(size: 12.5)),
         ),
       Container(

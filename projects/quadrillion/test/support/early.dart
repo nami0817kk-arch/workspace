@@ -80,7 +80,7 @@ EarlyStat playEarly(Game s, {int months = 36, bool small = true}) {
     if (s.ap <= 0) st.noMove++;
     var grown = 0;
     if (s.biz.isEmpty) {
-      final l = s.liveInds().where((i) => s.capexOf(i) <= s.cash).toList()..ssort((a, b) => b.mg.compareTo(a.mg));
+      final l = s.liveInds().where((i) => s.capexOf(i) <= s.cash && s.licMissing(i.id) == null).toList()..ssort((a, b) => b.mg.compareTo(a.mg));
       if (l.isNotEmpty) {
         s.startBiz(l[0].id);
         startedAt = t;

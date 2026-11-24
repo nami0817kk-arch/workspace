@@ -303,10 +303,12 @@ void main() {
           n += s.events.where((e) => e.poach != null).length;
           resolveEvents(s);
           // 忠誠は、出来事を片付けたあとに固定する（1.0.0+19 から、国の事件や宿敵の場面の選び方で忠誠が動く）
+          // 1.1.0+27 から、給料が相場より低い人は忠誠が高めでも狙われるので、給料は相場どおりにして忠誠の線だけを見る
           for (final x in s.staff) {
             x
               ..amb = 90
               ..loy = loy;
+            if (x.real) x.salary = s.mktPay(x);
           }
           s.nextQuarter();
         }

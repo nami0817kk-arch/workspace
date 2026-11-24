@@ -377,6 +377,11 @@ void _openGrow(GameController ctl, Biz b) {
           _unitChoice(ctl, tr('{0}を育てる（1人）', [tr(lead)]), s.leadCost(b), () => s.trainLeads(b, 1), [
             tr('{0}　{1}か月で育つ・手の空き {2}人・育成中 {3}人（同時に{4}人まで）', [yen(s.leadCost(b)), KIND_LEAD_MONTHS[k] ?? 6, b.leads, s.trainees(b), s.trainSlots(b)]),
           ], k: 'crew'),
+        // 中途で雇う（1.1.0+27。1か月に雇える数は、国と時代の転職の多さ・失業・会社の評判で決まる）
+        if (lead != null && s.peopleOn)
+          _unitChoice(ctl, tr('{0}を中途で雇う（1人）', [tr(lead)]), s.midLeadCost(b), () => s.hireLeads(b, 1), [
+            tr('{0}　来月から任せられる・今月あと{1}人', [yen(s.midLeadCost(b)), s.midLeadLeft(b)]),
+          ], k: 'crew'),
         if (svN > b.sv)
           _unitChoice(ctl, tr('{0}を{1}人置く', [tr(KIND_SV_JA[k]!), svN - b.sv]), k == 'shop' ? 0 : s.svHireCost(b) * (svN - b.sv), () => s.placeSV(b, svN - b.sv), [
             k == 'shop' ? tr('育った店長から上げる・毎月 {0}', [yen(s.svPayOne(b) * (svN - b.sv))]) : tr('毎月 {0}', [yen(s.svPayOne(b) * (svN - b.sv))]),

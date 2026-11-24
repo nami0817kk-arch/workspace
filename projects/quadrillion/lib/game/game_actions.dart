@@ -10,6 +10,8 @@ extension GameActions on Game {
     final nt = needT('start');
     if (nt != null) return nt;
     if (biz.any((b) => b.ind == id)) return M('すでにその業種にいます');
+    final lm = licMissing(id);
+    if (lm != null) return lm;
     if (bankCtl > 0 && biz.isNotEmpty) return M('銀行が経営に口を出している間は、新しい事業を始められません');
     if (noncomp != null && turn < noncomp!.until && noncomp!.inds.contains(id) && !noncomp!.broken) {
       return M('会社を売ったときの約束で、この業種にはまだ入れません（「株」の画面で約束を破ることもできます）');
@@ -557,8 +559,9 @@ extension GameActions on Game {
   String hire(Person p) {
     final nt = needT('hire');
     if (nt != null) return nt;
-    final sign = p.salary * 2;
-    if (cash < sign) return M('支度金が足りません');
+    // 経歴を持つ人は、採用の道で費用が違う（新卒は採用の費用・中途は紹介の手数料・引き抜きは高い手数料。1.1.0+27）
+    final sign = hireFeeOf(p);
+    if (cash < sign) return M(p.real ? '採用の費用が足りません' : '支度金が足りません');
     cash -= sign;
     useT('hire');
     cands.remove(p);
@@ -587,12 +590,24 @@ extension GameActions on Game {
 
   String dismiss(Person p) {
     if (p.partner) return partnerOut(p);
-    fire(p);
+    // 経歴を持つ人を解雇すると、国と時代の慣習で決まる手当を払い、終身雇用が強いほどほかの部下のやる気も下がる（1.1.0+27）
+    if (p.real && extras) {
+      final pay = p.salary * severanceMonths();
+      cash -= pay;
+      fire(p, 'fired');
+      final hit = normOf().life * 8;
+      for (final o in staff) {
+        o.loy -= hit;
+      }
+      return M('{0}を解雇しました（解雇の手当 {1}）', [Nm(p.name), Y(pay)]);
+    }
+    fire(p, 'fired');
     return M('{0}を解雇しました', [Nm(p.name)]);
   }
 
   String kidJoin(Person k) {
     kids.remove(k);
+    freshGrad(k);
     k.kid = false;
     k.tenure = 0;
     k.salary = jsRound(3e6 * nom() / 12);

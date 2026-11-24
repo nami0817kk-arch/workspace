@@ -168,6 +168,36 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     notifyListeners();
   }
 
+  // ===== 人の画面（1.1.0+27） =====
+  /// 左の一覧の区分（exec 幹部・mgr 責任者・cand 採用の候補・out 社外）
+  String peopleSeg = 'exec';
+
+  /// 並べ替え（ab 能力・pay 給料・mood 不満）
+  String peopleSort = 'ab';
+
+  /// 採用の候補の絞り込み（all / grad 新卒 / mid 中途 / poach 引き抜き）
+  String candSrc = 'all';
+
+  /// 右に出している人（0 は社長。null は区分の先頭）
+  int? openPerson;
+
+  void setPeopleSeg(String s, {String src = 'all'}) {
+    peopleSeg = s;
+    candSrc = src;
+    openPerson = null;
+    notifyListeners();
+  }
+
+  void setPeopleSort(String s) {
+    peopleSort = s;
+    notifyListeners();
+  }
+
+  void selectPerson(int id) {
+    openPerson = id;
+    notifyListeners();
+  }
+
   /// 街の画面で見ている都市圏（自分の国の都市の番号。1.1.0+26）
   int townCity = 0;
 

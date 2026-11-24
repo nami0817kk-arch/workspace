@@ -1,6 +1,8 @@
 /// 動く状態（人・事業・会社など）。どれも JSON に出し入れできる。
 library;
 
+import 'dart:collection';
+
 double _d(dynamic x, [double def = 0]) => x == null ? def : (x as num).toDouble();
 double? _dn(dynamic x) => x == null ? null : (x as num).toDouble();
 int _i(dynamic x, [int def = 0]) => x == null ? def : (x as num).round();
@@ -12,6 +14,77 @@ const abKeys = ['tou', 'kai', 'ei', 'zai'];
 Map<String, int> _abFrom(dynamic x) {
   final m = x as Map;
   return {for (final k in abKeys) k: _i(m[k])};
+}
+
+/// 細かい能力（1.1.0+27。企画書「人を現実の人材に寄せる」）。経営・稼ぐ・作る・管理・外との5つの分野に分ける
+const skKeys = ['lead', 'judge', 'nego', 'sales', 'mkt', 'ops', 'tech', 'prod', 'fin', 'acct', 'hr', 'law', 'lang', 'nInd', 'nPol', 'nBank'];
+
+/// 今までの4つの能力（統率・開発・営業・財務）が、どの細かい能力から出るか（重み）。
+/// 仕組みの多くは今も4つの能力で動くので、細かい能力を持つ人の4つは、ここから求める
+const Map<String, Map<String, int>> abFromSk = {
+  'tou': {'lead': 2, 'judge': 1, 'hr': 1, 'ops': 1},
+  'kai': {'tech': 3, 'prod': 1},
+  'ei': {'sales': 2, 'mkt': 1, 'nego': 1},
+  'zai': {'fin': 2, 'acct': 1, 'nBank': 1},
+};
+
+/// 細かい能力から求めた4つの能力の見え方。書き込むと、その差を元の細かい能力に配る
+/// （今までの仕組み（出来事・相棒の作り方・年の衰え）が4つの能力を直接動かしても、細かい能力が一緒に動く）
+class AbView extends MapBase<String, int> {
+  final Map<String, int> sk;
+  AbView(this.sk);
+
+  static int calc(Map<String, int> sk, String k) {
+    final w = abFromSk[k];
+    if (w == null) return 0;
+    var s = 0, n = 0;
+    for (final e in w.entries) {
+      s += (sk[e.key] ?? 0) * e.value;
+      n += e.value;
+    }
+    return (s / n).round().clamp(1, 99);
+  }
+
+  @override
+  int? operator [](Object? key) => abFromSk.containsKey(key) ? calc(sk, key as String) : null;
+
+  @override
+  void operator []=(String key, int value) {
+    final w = abFromSk[key];
+    if (w == null) return;
+    final d = value - calc(sk, key);
+    if (d == 0) return;
+    for (final k in w.keys) {
+      sk[k] = ((sk[k] ?? 0) + d).clamp(1, 99);
+    }
+  }
+
+  @override
+  void clear() {}
+
+  @override
+  Iterable<String> get keys => abKeys;
+
+  @override
+  int? remove(Object? key) => null;
+}
+
+/// 前に勤めた会社1つ（業種の分類・会社の大きさ・役職・年数・会社の名前）
+class Job {
+  /// 業種の分類（food など）・業種（分かれば）
+  String cat;
+  String? ind;
+
+  /// 会社の大きさ（0 小さな会社・1 中くらい・2 大手）・役職（0 担当・1 管理職・2 役員）
+  int size, role;
+  int years;
+
+  /// 自社で店長などを務めた記録なら true
+  bool own;
+  Job({required this.cat, this.ind, this.size = 1, this.role = 0, this.years = 1, this.own = false});
+  Map<String, dynamic> toJson() => {'cat': cat, if (ind != null) 'ind': ind, 'size': size, 'role': role, 'years': years, if (own) 'own': true};
+  factory Job.fromJson(Map<String, dynamic> j) =>
+      Job(cat: (j['cat'] as String?) ?? 'live', ind: j['ind'] as String?, size: _i(j['size'], 1), role: _i(j['role']), years: _i(j['years'], 1), own: j['own'] == true);
 }
 
 class Person {
@@ -41,6 +114,52 @@ class Person {
   /// 顔を決めたときの年齢（1.0.0+22 までは年代 0〜2 を入れていた）。記録だけで、選び直すかは本人と絵の年の差で決める（faces.dart の faceStale）
   int? fb;
 
+  // ===== 経歴・細かい能力・人柄・暮らし（1.1.0+27。試作との一致を見る遊び（extras を切る）では持たない） =====
+  /// 細かい能力（[skKeys]）。持つ人の [ab] は、ここから求めた見え方（[AbView]）になる
+  Map<String, int>? sk;
+
+  /// 学歴（0 高校・1 専門と短大・2 大学・3 名門大学・4 大学院）・専攻（econ law eng sci med lit biz info）
+  int edu;
+  String? major;
+
+  /// 職歴（古い順）
+  List<Job> jobs;
+
+  /// 資格（doctor 医師・lawyer 弁護士・cpa 会計士・pilot パイロット）
+  List<String> lic;
+
+  /// 技術の分野（soft mech elec chem med civil）・話せる外国語（名前の言葉の鍵。無ければ null）
+  String? tf, lg;
+
+  /// 人柄: 誠実さ・ストレスへの強さ・協調性（0〜100）。挑戦好きか慎重かは [amb]（今までの野心）を使う
+  int hon, str, coop;
+
+  /// 伸びしろ（能力が年に伸びる速さの倍。0.5〜1.5）
+  double pot;
+
+  /// 暮らし: 結婚しているか・子どもの年齢・親の介護をしているか
+  bool married, care;
+  List<int> kidsAge;
+
+  /// 健康（0〜100。働かせすぎると下がり、低いと燃え尽きる）
+  double health;
+
+  /// 休んでいる・研修や留学で外に出ている残りの月と、その理由（sick 病気 / baby 育児 / care 介護 / course 研修 / abroad 留学）
+  int away;
+  String? awayWhy;
+
+  /// 業界での評判（0〜100。相場の給料に効く）
+  int fame;
+
+  /// 分かっていること（hon str coop amb fam health の鍵。話を聞くと増える）
+  List<String> known;
+
+  /// 採用の候補になった道（grad 新卒 / mid 中途 / poach 引き抜き / lead 自社の店長から / back 出戻り）
+  String? src;
+
+  /// 社外の人なら、今どこにいるか（辞めた理由: quit 辞めた / poached 引き抜かれた / fired 解雇 / retired 引退）
+  String? left;
+
   Person({
     required this.id,
     required this.name,
@@ -64,13 +183,70 @@ class Person {
     this.rej = 0,
     this.face,
     this.fb,
-  }) : off = off ?? {};
+    this.sk,
+    this.edu = 2,
+    this.major,
+    List<Job>? jobs,
+    List<String>? lic,
+    this.tf,
+    this.lg,
+    this.hon = 60,
+    this.str = 50,
+    this.coop = 50,
+    this.pot = 1,
+    this.married = false,
+    this.care = false,
+    List<int>? kidsAge,
+    this.health = 80,
+    this.away = 0,
+    this.awayWhy,
+    this.fame = 30,
+    List<String>? known,
+    this.src,
+    this.left,
+  })  : off = off ?? {},
+        jobs = jobs ?? [],
+        lic = lic ?? [],
+        kidsAge = kidsAge ?? [],
+        known = known ?? [];
+
+  /// 細かい能力を持つか（持つ人は経歴・人柄・暮らしも持つ）
+  bool get real => sk != null;
+
+  /// 細かい能力を付ける（4つの能力は、これから求める見え方になる）
+  void setSk(Map<String, int> m) {
+    sk = m;
+    ab = AbView(m);
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
         'age': age,
-        'ab': ab,
+        'ab': {for (final k in abKeys) k: ab[k]},
+        if (sk != null) ...{
+          'sk': sk,
+          'edu': edu,
+          'major': major,
+          'jobs': jobs.map((e) => e.toJson()).toList(),
+          'lic': lic,
+          'tf': tf,
+          'lg': lg,
+          'hon': hon,
+          'str': str,
+          'coop': coop,
+          'pot': pot,
+          'married': married,
+          'care': care,
+          'kidsAge': kidsAge,
+          'health': health,
+          'away': away,
+          'awayWhy': awayWhy,
+          'fame': fame,
+          'known': known,
+        },
+        if (src != null) 'src': src,
+        if (left != null) 'left': left,
         'trait': trait,
         'amb': amb,
         'loy': loy,
@@ -91,7 +267,38 @@ class Person {
         if (fb != null) 'fb': fb,
       };
 
-  factory Person.fromJson(Map<String, dynamic> j) => Person(
+  factory Person.fromJson(Map<String, dynamic> j) {
+    final p = Person._fromJson(j);
+    final sk = j['sk'] as Map?;
+    if (sk != null) {
+      p.setSk({for (final k in skKeys) k: _i(sk[k], 40)});
+      p
+        ..edu = _i(j['edu'], 2)
+        ..major = j['major'] as String?
+        ..jobs = (j['jobs'] as List? ?? []).map((e) => Job.fromJson(e as Map<String, dynamic>)).toList()
+        ..lic = _sl(j['lic'])
+        ..tf = j['tf'] as String?
+        ..lg = j['lg'] as String?
+        ..hon = _i(j['hon'], 60)
+        ..str = _i(j['str'], 50)
+        ..coop = _i(j['coop'], 50)
+        ..pot = _d(j['pot'], 1)
+        ..married = j['married'] == true
+        ..care = j['care'] == true
+        ..kidsAge = (j['kidsAge'] as List? ?? []).map((e) => _i(e)).toList()
+        ..health = _d(j['health'], 80)
+        ..away = _i(j['away'])
+        ..awayWhy = j['awayWhy'] as String?
+        ..fame = _i(j['fame'], 30)
+        ..known = _sl(j['known']);
+    }
+    p
+      ..src = j['src'] as String?
+      ..left = j['left'] as String?;
+    return p;
+  }
+
+  factory Person._fromJson(Map<String, dynamic> j) => Person(
         id: _i(j['id']),
         name: j['name'] as String,
         age: _i(j['age']),
@@ -237,6 +444,12 @@ class Biz {
   /// 今月開き始めた単位の数（月ごとの上限に使う）
   int opened;
 
+  /// 店長など（責任者・本部の人）の腕の平均（0〜100。1.1.0+27。採用の市場の質と、育てる人の腕で決まる）
+  double lq;
+
+  /// 店長などが辞めて、責任者のいない単位の数（1.1.0+27。手の空いた店長がいれば翌月に埋まる）
+  double vac;
+
   /// 直近13か月の売上（古い順。前年比に使う）
   List<double> rh;
 
@@ -276,6 +489,8 @@ class Biz {
     List<Offer>? offers,
     this.upg = 1,
     this.opened = 0,
+    this.lq = 50,
+    this.vac = 0,
     List<double>? rh,
   })  : pipe = pipe ?? [],
         rh = rh ?? [],
@@ -320,6 +535,8 @@ class Biz {
         'offers': offers.map((e) => e.toJson()).toList(),
         'upg': upg,
         'opened': opened,
+        'lq': lq,
+        'vac': vac,
         'rh': rh,
       };
 
@@ -359,6 +576,8 @@ class Biz {
         offers: (j['offers'] as List? ?? []).map((e) => Offer.fromJson(e as Map<String, dynamic>)).toList(),
         upg: _d(j['upg'], 1),
         opened: _i(j['opened']),
+        lq: _d(j['lq'], 50),
+        vac: _d(j['vac']),
         rh: (j['rh'] as List? ?? []).map((e) => _d(e)).toList(),
       );
 }

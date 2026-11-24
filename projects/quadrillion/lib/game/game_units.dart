@@ -248,7 +248,7 @@ extension GameUnits on Game {
     for (final s in keys) {
       v += siteCapRev(b, s);
     }
-    return v * (.75 + .25 * svQ(b));
+    return v * (.75 + .25 * svQ(b)) * leadQF(b);
   }
 
   /// 季節の波（月ごとの売上の倍。季節の強い業種ほど大きく揺れる）
@@ -488,8 +488,10 @@ extension GameUnits on Game {
     final nt = spendT('crew');
     if (nt != null) return nt;
     cash -= cost;
-    final mo = KIND_LEAD_MONTHS[kindB(b)] ?? 6;
-    b.pipe.add(Pipe(k: 'train', cost: cost, pw: n.toDouble(), left: mo));
+    // 育つまでの月と腕は、育てる人（責任者・いなければ社長）の人事と統率の腕で変わる（1.1.0+27）
+    final q = peopleOn ? trainLeadQ(b) : 50.0;
+    final mo = math.max(3, ((KIND_LEAD_MONTHS[kindB(b)] ?? 6) * (1 - (q - 50) / 150)).round());
+    b.pipe.add(Pipe(k: 'train', cost: cost, pw: n.toDouble(), left: mo, mul: q));
     calcAll();
     return M('{0}を{1}人育て始めました（{2}）。{3}か月後に店を任せられます', [D(lead), n, Y(cost), mo]);
   }
@@ -573,6 +575,7 @@ extension GameUnits on Game {
         return true;
       case 'train':
         final n = (x.pw ?? 1).round();
+        if (peopleOn) mixLeadQ(b, n, x.mul ?? 50);
         b.leads += n;
         N(M('「{0}」の{1}が{2}人育ちました', [name, D(KIND_LEAD_JA[kindB(b)] ?? '店長'), n]), 'good');
         return true;
@@ -691,6 +694,8 @@ extension GameUnits on Game {
           }
         }
       }
+      // 店長など・本部の人が辞める（国と時代の慣習。1.1.0+27）
+      monthLeads(b, N);
       // 本部の目が行き届かないと、不祥事や客離れ
       final q0 = svQ(b);
       if (q0 < .8 && rnd() < (1 - q0) * .06) {
@@ -724,6 +729,23 @@ extension GameUnits on Game {
       }
       if (k != 'shop' && svHireCost(b) * n <= room) {
         return (k: 'sv', cost: svHireCost(b) * n, l: M('「{0}」の本部を強くしたい', [I(b.ind)]), run: () => _noTime(time, () => placeSV(b, n)));
+      }
+    }
+    // 1.5 店長などが辞めて空いた単位を埋める（中途で雇えればそれで、雇えなければ育てる。1.1.0+27）
+    final lead0 = KIND_LEAD_JA[k];
+    if (peopleOn && lead0 != null && b.vac >= 1) {
+      final need = (b.vac - b.leads).ceil() - trainees(b);
+      if (need > 0) {
+        final ml = midLeadLeft(b);
+        final mc = midLeadCost(b);
+        final nm = math.min(need, math.min(ml, (room / mc).floor()));
+        if (nm > 0) {
+          return (k: 'leads', cost: mc * nm, l: M('「{0}」の空いた店に{1}を中途で雇いたい', [I(b.ind), D(lead0)]), run: () => _noTime(time, () => hireLeads(b, nm)));
+        }
+        final nt = math.min(need, math.min(trainSlots(b) - trainees(b), (room / leadCost(b)).floor()));
+        if (nt > 0) {
+          return (k: 'train', cost: leadCost(b) * nt, l: M('「{0}」の{1}を{2}人育てたい', [I(b.ind), D(lead0), nt]), run: () => _noTime(time, () => trainLeads(b, nt)));
+        }
       }
     }
     // 2. 物流の拠点
@@ -786,7 +808,7 @@ extension GameUnits on Game {
     final n = unitsAt(b, s);
     final cr = capRev(b);
     if (n <= 0 || cr <= 0 || !cr.isFinite) return 0;
-    return b.rev * siteCapRev(b, s) * (.75 + .25 * svQ(b)) / cr / n;
+    return b.rev * siteCapRev(b, s) * (.75 + .25 * svQ(b)) * leadQF(b) / cr / n;
   }
 
   /// 立地ごとの1単位の月の利益（売上×粗利 − 固定費 − 人件費・本部の分け前）

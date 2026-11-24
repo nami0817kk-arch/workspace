@@ -136,6 +136,8 @@ void main() {
       final g = Game.newGame(SetupConfig(year: 2020, traits: ['charm', 'gambler']), rng: ParkMiller(9));
       g.cash = 1e13;
       g.ap = 99;
+      // 診療所・オンライン診療は医師がいないと始められない（1.1.0+27）
+      g.staff.add(g.mkPerson(0)..lic = ['doctor']);
       g.startBiz('clinic');
       g.startBiz('pharmacy');
       expect(g.synMult()['clinic'], closeTo(1.2, 1e-9));
