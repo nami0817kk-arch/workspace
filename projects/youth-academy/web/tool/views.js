@@ -500,6 +500,8 @@ async function clearEvents() {
   ok(!d.querySelector('.stage canvas') && !!d.querySelector('.feed') && !!d.querySelector('.mstat') && !!d.querySelector('.scoreboard'), '試合の画面（図は出さず、実況の流れと数字）');
   ok(txt().includes('止める') && txt().includes('自動停止') && txt().includes('結果まで'), '止めるボタン・自動停止・結果まで');
   ok(!!d.querySelector('.feed .fl') && txt().includes('ボール保持'), '実況の流れに開始の1行・右に試合の数字');
+  ok(d.querySelectorAll('.mrate .rrow').length === 11 && /^\d+\.\d$/.test(d.querySelector('.mrate .rrow b').textContent), '試合中に選手ごとの採点が11人ぶん出る');
+  { const bs = () => d.querySelectorAll('.mrate .rtabs button'); bs()[1].click(); ok(d.querySelectorAll('.mrate .rrow').length === 11 && bs()[1].classList.contains('on'), '採点は相手チームにも切り替えられる'); bs()[0].click(); }
   btn('見どころ').click();
   btn('止める').click();
   let n = 0;

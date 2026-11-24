@@ -1107,9 +1107,12 @@
     const textMode = !!m.live;
     const feed = h('div', { class: 'feed' });
     const mstat = h('div', { class: 'mstat' });
+    // 選手ごとの採点（2026-11-24「選手個々の評価も見れる」）。試合中に動く。上のボタンで自分と相手を切り替える
+    const mrate = h('div', { class: 'mrate' });
+    let rateSide = 'home';
     if (textMode) {
       stage.classList.add('text');
-      stage.append(feed, mstat);
+      stage.append(feed, mrate, mstat);
     } else stage.append(cv, sceneHead, ctl, bannerBox);
     const commMin = h('span', { class: 'min' }, "0'");
     // 開始の文は実際に蹴る側（2026-11-17：前はいつもこちらの攻撃と出ていた）
@@ -1175,6 +1178,15 @@
         if (l.scene != null || !l.text) continue;
         feedAdd(h('div', { class: 'fl' + (l.kind === 'flow' ? '' : ' key') }, h('b', {}, (l.ml || l.minute) + "'"), h('span', {}, l.text)));
       }
+      const rt = rateSide === 'home' ? m.home : m.away;
+      const rcls = (v) => (v >= 7 ? ' hi' : v < 5.5 ? ' lo' : '');
+      mrate.replaceChildren(
+        h('div', { class: 'rtabs' }, [['home', m.home.short], ['away', m.away.short]].map(([k, n]) => h('button', { class: rateSide === k ? 'on' : '', onclick: () => { rateSide = k; updText(); } }, n))),
+        ...rt.lineup.map((sl) => rt.players[sl.pid]).filter(Boolean).map((p) => {
+          const v = Math.max(3, Math.min(10, p.st.rating));
+          return h('div', { class: 'rrow' }, h('i', {}, String(p.num)), h('span', {}, surname(p)), p.st.goals ? h('em', {}, '⚽' + (p.st.goals > 1 ? p.st.goals : '')) : null, h('b', { class: rcls(v).trim() }, v.toFixed(1)));
+        })
+      );
       const ps = m.live.poss;
       const tot = ps.home + ps.away;
       const hp = tot > 0 ? Math.round((ps.home / tot) * 100) : 50;

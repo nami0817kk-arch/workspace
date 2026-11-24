@@ -121,7 +121,18 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .fcard .tagrow{flex-direction:row;flex-wrap:wrap;gap:4px}
 .fcard .tag{animation:none;opacity:1;background:#fff;border:1px solid var(--line);box-shadow:none;color:var(--navy)}
 .fcard .tag small{color:#5a6a84}
-.mstat{flex:none;width:210px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-s);padding:8px 10px;display:flex;flex-direction:column;gap:6px;overflow:auto}
+.mrate{flex:none;width:170px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-s);padding:6px 8px;display:flex;flex-direction:column;gap:1px;overflow:auto}
+.mrate .rtabs{flex:none;display:flex;gap:4px;margin-bottom:3px}
+.mrate .rtabs button{flex:1;min-width:0;min-height:28px;border-radius:8px;border:1px solid var(--line);background:#f2f5fa;color:#5a6a84;font-weight:800;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrate .rtabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.mrate .rrow{flex:none;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--navy);padding:2px 0;border-bottom:1px dashed var(--line)}
+.mrate .rrow i{flex:none;width:20px;text-align:right;font-style:normal;font-size:11px;color:#8090a8;font-variant-numeric:tabular-nums}
+.mrate .rrow span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+.mrate .rrow em{flex:none;font-style:normal;font-size:11px}
+.mrate .rrow b{flex:none;width:30px;text-align:right;font-variant-numeric:tabular-nums}
+.mrate .rrow b.hi{color:#1a8a4a}
+.mrate .rrow b.lo{color:#c8402f}
+.mstat{flex:none;width:180px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-s);padding:8px 10px;display:flex;flex-direction:column;gap:6px;overflow:auto}
 .mstat .shead{display:flex;justify-content:space-between;font-weight:900;font-size:12px;color:var(--navy)}
 .mstat .sbar{flex:none;height:8px;border-radius:5px;background:#c8402f;overflow:hidden}
 .mstat .sbar i{display:block;height:100%;background:#1f6feb;transition:width .6s}
