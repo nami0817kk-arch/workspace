@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/models/attributes.dart';
 import 'package:soccer_manager/models/club_infrastructure.dart';
+import 'package:soccer_manager/models/community_activity.dart';
 import 'package:soccer_manager/models/league.dart';
 import 'package:soccer_manager/models/formation.dart';
 import 'package:soccer_manager/models/ledger.dart';
@@ -206,7 +207,10 @@ void main() {
       final oldId = s.userTeamId;
       gs.userTeam.holdLeadLate = true;
       s.pendingOwnerEvent = OwnerEventKind.transferDemand;
-      s.communityLevel = 3;
+      s.communityActivities = [
+        CommunityActivity.visits,
+        CommunityActivity.cleanup,
+      ];
       final st = gs.staffFor(StaffRole.manager) ?? coach('m');
       s.staffOffers.add(offerFor(gs, st));
       s

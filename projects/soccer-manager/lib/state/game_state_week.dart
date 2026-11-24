@@ -323,7 +323,16 @@ extension GameStateWeek on GameState {
     final returnsBefore = lastLoanReturns.length;
     for (final p in userTeam.players.where((p) => p.isLoanedOut).toList()) {
       // 武者修行: 貸出先で毎週実戦に出て成長する(若手ほど効果大)。
-      TrainingEngine.applyLoanDevelopment(p, weekScale: weekScale);
+      // 系列クラブが育成先なら、21歳以下はさらに伸びる(2026-11-25)。
+      final dev = affiliateDeal;
+      final atNursery = dev != null &&
+          dev.weAreParent &&
+          dev.youthDevelopment &&
+          p.age <= 21 &&
+          p.loanedOutToClubName == affiliateClub?.name;
+      TrainingEngine.applyLoanDevelopment(p,
+          weekScale: weekScale *
+              (atNursery ? GameStateAffiliate.youthDevelopmentGrowth : 1.0));
       final until = p.loanedOutUntil;
       if (until != null) {
         // 日付で持つ貸し出しは、戻る日に届いたら戻す。

@@ -164,11 +164,15 @@ void main() {
           type(ClubLookCard),
           type(SeasonTicketsCard),
           type(CommunityCard),
-          key('community-upgrade'),
+          // 地域貢献は Lv ではなく季ごとの活動(2026-11-25)。
+          key('community-activities'),
           key('club-to-community-works'),
         ]
       ),
-      ('クラブ > ユース', TodoPlaces.clubYouth, null, [type(YouthScreen)]),
+      // ユースは2つに分けた(2026-11-25)。U18・U21 はユースチームへ。
+      ('クラブ > ユースチーム', TodoPlaces.clubYouth, null,
+          [type(YouthScreen), key('youth-squads-card')]),
+      ('クラブ > 新人発掘', TodoPlaces.clubIntake, null, [text('スカウト網')]),
       ('選手 > スカッド', TodoPlaces.squadList, null, [type(SquadScreen)]),
       (
         '選手 > 登録と契約',

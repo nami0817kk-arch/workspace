@@ -128,7 +128,7 @@ void main() {
       expect(gs.isGateAtCap, isTrue);
       await pumpScreen(
           tester, gs, const ClubScreen(section: ClubSection.facilities));
-      expect(find.textContaining('いま: スポンサー・グッズ収入'), findsOneWidget);
+      expect(find.textContaining('スポンサー・グッズ収入'), findsOneWidget);
       expect(
           find.textContaining('上限(入る人数×1人の単価)に届いているので増えません'), findsOneWidget);
       // 以前の「観客・スポンサー収入+X%」は出さない。
