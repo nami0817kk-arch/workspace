@@ -257,7 +257,7 @@ void main() {
       expect(
           find(items, TodoKind.seasonTickets)?.place, TodoPlaces.clubCommunity);
       expect(
-          find(items, TodoKind.clubPolicy)?.place, TodoPlaces.financeProjects);
+          find(items, TodoKind.clubPolicy)?.place, TodoPlaces.ownerWorld);
       await gs.playNextMatchdayQuickSim();
       items = build(gs);
       expect(find(items, TodoKind.seasonTickets), isNull);

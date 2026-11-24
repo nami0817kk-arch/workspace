@@ -5,8 +5,12 @@ import '../l10n/tr.dart';
 import '../models/owner_event.dart';
 import '../state/game_state.dart';
 import '../logic/economy_scale.dart';
+import 'decision_card.dart';
 
 /// オーナーの判断を迫る事件のカード。答えを選ぶまで残る。
+///
+/// 題と答えのボタンだけを出し、説明と答えごとの効き目は押すと開く
+/// (2026-11-25。[DecisionCard])。
 class OwnerEventCard extends StatelessWidget {
   const OwnerEventCard({super.key});
 
@@ -15,60 +19,36 @@ class OwnerEventCard extends StatelessWidget {
     final gameState = context.watch<GameState>();
     final kind = gameState.pendingOwnerEvent;
     if (kind == null) return const SizedBox.shrink();
-    final theme = Theme.of(context);
+    final scheme = Theme.of(context).colorScheme;
     final options = kind.options;
 
     String signed(int v) => v > 0 ? '+$v' : '$v';
 
-    return Card(
-      color: theme.colorScheme.errorContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.warning_amber_rounded),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(kind.title, style: theme.textTheme.titleSmall),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(kind.body),
-            const SizedBox(height: 10),
-            for (var i = 0; i < options.length; i++) ...[
-              // どれも「決める」操作なので塗りのボタン。灰色の細い枠では
-              // 押せる所に見えなかった(2026-11-24)。
-              FilledButton(
-                onPressed: () => context.read<GameState>().resolveOwnerEvent(i),
-                child: Text(options[i].label, textAlign: TextAlign.center),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 2, bottom: 8),
-                child: Text(
-                  [
-                    // 答えが実際に起こすこと(エースの売却など)。
-                    if (gameState.ownerEventOptionEffect(kind, i)
-                        case final effect?)
-                      effect,
-                    if (options[i].fundsDelta != 0)
-                      Tr.pick(
-                          '資金${formatMoneySigned(context.read<GameState>().scaledMoney(options[i].fundsDelta))}',
-                          'Funds ${formatMoneySigned(context.read<GameState>().scaledMoney(options[i].fundsDelta))}'),
-                    Tr.pick(
-                        'サポーター${signed(options[i].supportersDelta)} / 株主${signed(options[i].shareholdersDelta)}',
-                        'Supporters ${signed(options[i].supportersDelta)} / Shareholders ${signed(options[i].shareholdersDelta)}'),
-                  ].join(' / '),
-                  style: theme.textTheme.bodySmall,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
+    return DecisionCard(
+      icon: Icons.warning_amber_rounded,
+      title: kind.title,
+      detail: kind.body,
+      color: scheme.errorContainer,
+      onColor: scheme.onErrorContainer,
+      choices: [
+        for (var i = 0; i < options.length; i++)
+          DecisionChoice(
+            options[i].label,
+            () => context.read<GameState>().resolveOwnerEvent(i),
+            effect: [
+              // 答えが実際に起こすこと(エースの売却など)。
+              if (gameState.ownerEventOptionEffect(kind, i) case final effect?)
+                effect,
+              if (options[i].fundsDelta != 0)
+                Tr.pick(
+                    '資金${formatMoneySigned(gameState.scaledMoney(options[i].fundsDelta))}',
+                    'Funds ${formatMoneySigned(gameState.scaledMoney(options[i].fundsDelta))}'),
+              Tr.pick(
+                  'サポーター${signed(options[i].supportersDelta)} / 株主${signed(options[i].shareholdersDelta)}',
+                  'Supporters ${signed(options[i].supportersDelta)} / Shareholders ${signed(options[i].shareholdersDelta)}'),
+            ].join(' / '),
+          ),
+      ],
     );
   }
 }

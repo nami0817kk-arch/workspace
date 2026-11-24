@@ -1,14 +1,14 @@
 import '../l10n/tr.dart';
 
 /// オーナーの仕事の分野。
-enum OwnerWorkCategory { sales, finance, fans, org, community }
+/// 組織・人事の分野は 2026-11-25 に外した(スタッフ・経営アドバイザーと重なる)。
+enum OwnerWorkCategory { sales, finance, fans, community }
 
 extension OwnerWorkCategoryInfo on OwnerWorkCategory {
   String get label => switch (this) {
         OwnerWorkCategory.sales => Tr.pick('営業・収入', 'Sales & revenue'),
         OwnerWorkCategory.finance => Tr.pick('財務・資本', 'Finance & capital'),
         OwnerWorkCategory.fans => Tr.pick('広報・ファン', 'Fans & PR'),
-        OwnerWorkCategory.org => Tr.pick('組織・人事', 'People & organisation'),
         OwnerWorkCategory.community => Tr.pick('地域・社会', 'Community'),
       };
 }
@@ -229,47 +229,32 @@ Map<String, (String, String)> get ownerWorkTexts => {
       ),
     };
 
-/// 全33件(30件の通常の手と、資金がマイナスのときだけの危機の手3件)。表示は分野ごとにまとめて出す。
+/// 全12件(10件の通常の手と、資金がマイナスのときだけの危機の手2件)。
+///
+/// 2026-11-25 に33件から減らした(「オーナーの仕事が多くて分かりにくい」)。
+/// ほかの画面と重なる手(年間チケットの早割=年間シート、アジアツアー=開幕前の
+/// 海外ツアー、命名権の打診=スポンサー枠、財務アドバイザー=経営アドバイザー)と、
+/// 同じ向きで効き目だけ違う手(配当の見送り・資産の売却=社債の発行、など)を外した。
+/// 外した手の名前と説明は [ownerWorkTexts] に残す(古いセーブの「今季やった」
+/// 記録やニュースの文を読めるように)。
 const List<OwnerWork> ownerWorks = [
   // 営業・収入
-  OwnerWork(id: 'merch_drive', category: OwnerWorkCategory.sales, funds: -150, supporters: 1, shareholders: 3),
-  OwnerWork(id: 'stadium_food', category: OwnerWorkCategory.sales, funds: -300, supporters: 3, shareholders: 3),
-  OwnerWork(id: 'season_ticket_promo', category: OwnerWorkCategory.sales, funds: 400, supporters: -2, shareholders: 2),
   OwnerWork(id: 'sponsor_roadshow', category: OwnerWorkCategory.sales, funds: -100, supporters: 0, shareholders: 5),
-  OwnerWork(id: 'asia_tour', category: OwnerWorkCategory.sales, funds: -800, supporters: 2, shareholders: 4),
-  OwnerWork(id: 'naming_survey', category: OwnerWorkCategory.sales, funds: 0, supporters: -1, shareholders: 3),
-  OwnerWork(id: 'digital_content', category: OwnerWorkCategory.sales, funds: -200, supporters: 2, shareholders: 3),
+  OwnerWork(id: 'merch_drive', category: OwnerWorkCategory.sales, funds: -150, supporters: 1, shareholders: 3),
   // 財務・資本
   OwnerWork(id: 'bond_issue', category: OwnerWorkCategory.finance, funds: 1500, supporters: 0, shareholders: -6),
   OwnerWork(id: 'cost_review', category: OwnerWorkCategory.finance, funds: 300, supporters: -3, shareholders: 5),
-  OwnerWork(id: 'dividend_cut', category: OwnerWorkCategory.finance, funds: 500, supporters: 1, shareholders: -6),
   OwnerWork(id: 'dividend_bonus', category: OwnerWorkCategory.finance, funds: -600, supporters: -1, shareholders: 8),
-  OwnerWork(id: 'asset_sale', category: OwnerWorkCategory.finance, funds: 1000, supporters: -2, shareholders: 2),
-  OwnerWork(id: 'credit_talk', category: OwnerWorkCategory.finance, funds: -100, supporters: 0, shareholders: 3),
-  OwnerWork(id: 'auditor', category: OwnerWorkCategory.finance, funds: -150, supporters: 0, shareholders: 5),
-  // 広報・ファン(月に1回、どれか1つ。サポーターの期待 +3〜6)
+  // 広報・ファン(月に1回、どれか1つ。サポーターの期待 +2〜6)
   OwnerWork(id: 'fan_thanks', category: OwnerWorkCategory.fans, funds: -400, supporters: 6, shareholders: -2),
   OwnerWork(id: 'supporter_dinner', category: OwnerWorkCategory.fans, funds: -50, supporters: 4, shareholders: 0),
   // 資金0で打てるぶん、効き目は小さく、同じ季に続けて打つと1ずつ減る
   // (GameState.ownerWorkSupporters。2026-11-23)。
   OwnerWork(id: 'vision_press', category: OwnerWorkCategory.fans, funds: 0, supporters: 2, shareholders: -1),
-  OwnerWork(id: 'legend_match', category: OwnerWorkCategory.fans, funds: -350, supporters: 5, shareholders: 1),
-  OwnerWork(id: 'kids_clinic', category: OwnerWorkCategory.fans, funds: -200, supporters: 4, shareholders: 1),
-  OwnerWork(id: 'fan_survey', category: OwnerWorkCategory.fans, funds: -80, supporters: 3, shareholders: 1),
-  OwnerWork(id: 'chant_contest', category: OwnerWorkCategory.fans, funds: -120, supporters: 4, shareholders: 0),
-  // 組織・人事
-  OwnerWork(id: 'hire_analyst', category: OwnerWorkCategory.org, funds: -300, supporters: 0, shareholders: 4),
-  OwnerWork(id: 'manager_dinner', category: OwnerWorkCategory.org, funds: -60, supporters: 1, shareholders: 0),
-  OwnerWork(id: 'staff_bonus', category: OwnerWorkCategory.org, funds: -250, supporters: 2, shareholders: -2),
-  OwnerWork(id: 'exec_retreat', category: OwnerWorkCategory.org, funds: -400, supporters: 0, shareholders: 5),
-  OwnerWork(id: 'finance_advisor', category: OwnerWorkCategory.org, funds: -200, supporters: 0, shareholders: 6),
   // 地域・社会
   OwnerWork(id: 'charity_match', category: OwnerWorkCategory.community, funds: -300, supporters: 5, shareholders: 0),
   OwnerWork(id: 'school_visit', category: OwnerWorkCategory.community, funds: -80, supporters: 3, shareholders: 0),
-  OwnerWork(id: 'eco_stadium', category: OwnerWorkCategory.community, funds: -350, supporters: 2, shareholders: 3),
   // 経営危機(資金がマイナスのときだけ)
-  OwnerWork(id: 'restructuring', category: OwnerWorkCategory.finance, funds: 1500, supporters: -6, shareholders: 4, onlyInRed: true),
   OwnerWork(id: 'emergency_loan', category: OwnerWorkCategory.finance, funds: 2500, supporters: 0, shareholders: -5, onlyInRed: true),
-  OwnerWork(id: 'fire_sale', category: OwnerWorkCategory.finance, funds: 800, supporters: -3, shareholders: 0, onlyInRed: true),
-  OwnerWork(id: 'town_festival', category: OwnerWorkCategory.community, funds: -150, supporters: 3, shareholders: 1),
+  OwnerWork(id: 'restructuring', category: OwnerWorkCategory.finance, funds: 1500, supporters: -6, shareholders: 4, onlyInRed: true),
 ];

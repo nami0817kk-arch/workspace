@@ -13,7 +13,6 @@ import '../widgets/amount_nudger.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/budget_plan_card.dart';
 import '../widgets/economy_card.dart';
-import '../widgets/club_policy_card.dart';
 import '../widgets/advisor_card.dart';
 import '../widgets/auto_columns.dart';
 import '../widgets/owner_career_card.dart';
@@ -300,8 +299,8 @@ class FinanceScreen extends StatelessWidget {
                   PlaceLink(
                     key: const ValueKey('finance-to-owner-finance-works'),
                     icon: Icons.work_outline,
-                    title: Tr.pick('社債・配当・資産の売却は「オーナーの仕事」へ',
-                        "Bonds, dividends and asset sales: open Owner's work"),
+                    title: Tr.pick('社債・特別配当・経費の見直しは「オーナーの仕事」へ',
+                        "Bonds, special dividends and cost reviews: open Owner's work"),
                     note: Tr.pick('財務・資本の手(1シーズンに1回ずつ)は、オーナー室にまとめてあります。',
                         "Finance & capital moves (once a season each) are in the owner's office."),
                     place: TodoPlaces.ownerFinanceWorks,
@@ -313,7 +312,8 @@ class FinanceScreen extends StatelessWidget {
             ResponsiveBody(
               child: AutoColumns(
                 children: [
-                  const ClubPolicyCard(),
+                  // クラブの方針は、オーナー室の「文化と方針」へ移した
+                  // (2026-11-25。文化と方針を1枚に)。
                   const FiveYearPlanCard(),
                   const ProjectCard(),
                   const AdvisorCard(),

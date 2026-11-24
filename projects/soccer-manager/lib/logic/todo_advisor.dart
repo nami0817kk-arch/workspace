@@ -659,7 +659,8 @@ class TodoAdvisor {
         title: Tr.pick('クラブの方針を選べます', 'You can set the club policy'),
         note: Tr.pick('変えられるのはオフシーズン(季の終わり〜開幕前)だけ(いまは「${gs.nextClubPolicy.label}」)。季末に採点されます。',
             'Only in the off-season, from the end of the season to kick-off (now: ${gs.nextClubPolicy.label}). Scored at the end.'),
-        place: TodoPlaces.financeProjects,
+        // 方針はオーナー室の「文化と方針」にある(2026-11-25)。
+        place: TodoPlaces.ownerWorld,
       ));
     }
 
@@ -744,16 +745,18 @@ class TodoAdvisor {
     // 次の節の試合日のイベント。資金が足りるものがあるときだけ。
     final seasonOn = !save.league.isSeasonComplete &&
         save.league.nextUnplayedFixture != null;
+    // 「続ける」に決めてあれば出さない(資金が足りない節は打たないだけ)。
     if (seasonOn &&
         gs.activeMatchdayPromo == null &&
+        gs.matchdayPromoKeep == null &&
         matchdayPromos.any((p) => gs.scaledMoney(p.cost) <= save.budget)) {
       add(TodoItem(
         kind: TodoKind.matchdayEvent,
         level: TodoLevel.recommended,
-        title: Tr.pick('次の節の試合日のイベントを決めていません',
-            'No matchday event is set for the next game'),
-        note: Tr.pick('観客収入かサポーターの期待を動かせます。節ごとに1つ。',
-            'Moves gate income or supporter expectation. One per matchday.'),
+        title: Tr.pick('試合日のイベントを決めていません',
+            'No matchday event is set'),
+        note: Tr.pick('観客収入かサポーターの期待を動かせます。一度決めると毎節続けます。',
+            'Moves gate income or supporter expectation. Set it once and it runs every game.'),
         place: TodoPlaces.ownerMatchday,
       ));
     }

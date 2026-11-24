@@ -308,6 +308,11 @@ class SaveGame {
   /// 次の節に打つ試合日のイベントのID。無ければ null。節を終えると消える。
   String? matchdayPromoId;
 
+  /// 毎節続けて打つ試合日のイベントのID(「続ける」の設定)。無ければ null。
+  /// 節を終えるたびに、資金が足りれば次の節にも同じイベントを決める
+  /// (2026-11-25。節ごとに選び直す手間を無くした)。
+  String? matchdayPromoKeepId;
+
   int reserveFund;
   int communityLevel;
 
@@ -1009,6 +1014,7 @@ class SaveGame {
     this.youthMomentum = 1.0,
     this.facilityMomentum = 1.0,
     this.matchdayPromoId,
+    this.matchdayPromoKeepId,
     this.reserveFund = 0,
     this.communityLevel = 0,
     this.transferBanSeasons = 0,
@@ -1427,6 +1433,7 @@ class SaveGame {
         'youthMomentum': youthMomentum,
         'facilityMomentum': facilityMomentum,
         'matchdayPromoId': matchdayPromoId,
+        'matchdayPromoKeepId': matchdayPromoKeepId,
         'reserveFund': reserveFund,
         'communityLevel': communityLevel,
         'transferBanSeasons': transferBanSeasons,
@@ -1801,6 +1808,7 @@ class SaveGame {
         youthMomentum: (json['youthMomentum'] as num?)?.toDouble() ?? 1.0,
         facilityMomentum: (json['facilityMomentum'] as num?)?.toDouble() ?? 1.0,
         matchdayPromoId: json['matchdayPromoId'] as String?,
+        matchdayPromoKeepId: json['matchdayPromoKeepId'] as String?,
         reserveFund: json['reserveFund'] as int? ?? 0,
         communityLevel: json['communityLevel'] as int? ?? 0,
         clubPolicy: ClubPolicy.values
