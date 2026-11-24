@@ -248,7 +248,7 @@ class Frame extends StatelessWidget {
       );
 }
 
-/// 手を使う数の小さな札（「1手」）
+/// 社長の時間を使う手の、かかる時間の小さな札（「8時間」。1.1.0+25 までは手の数だった）
 class ApTag extends StatelessWidget {
   final int n;
   const ApTag(this.n, {super.key});
@@ -256,7 +256,7 @@ class ApTag extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(color: Pal.panel, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(99)),
-        child: Text(n == 1 ? tr('1手') : tr('{0}手', [n]), maxLines: 1, softWrap: false, style: ts(size: 10.5, color: Pal.goldtx, bold: true, height: 1.5)),
+        child: Text(tr('{0}時間', [n]), maxLines: 1, softWrap: false, style: ts(size: 10.5, color: Pal.goldtx, bold: true, height: 1.5)),
       );
 }
 
@@ -801,6 +801,8 @@ class Btn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final on = enabled && onTap != null;
+    // 幅の狭い右の帯の中では、字を縮めずに折り返す（縮めると豆粒になる。1.1.0+25）
+    final shrink = this.shrink && !NoShrink.on(context);
     final text = Text(tx(label),
         maxLines: shrink ? 1 : null, style: ts(size: small ? 12.5 : 14, bold: primary, color: primary ? const Color(0xFF1A1300) : Pal.ink));
     return TapArea(
@@ -827,14 +829,22 @@ class Btn extends StatelessWidget {
                     if (ap > 0) Padding(padding: const EdgeInsets.only(left: 5), child: ApTag(ap)),
                     if (more) Icon(Icons.chevron_right, size: small ? 16 : 18, color: Pal.mute),
                   ])
-                : text),
+                : text, shrink),
           ),
         ),
       )),
     ));
   }
 
-  Widget _fit(Widget t) => shrink ? FittedBox(fit: BoxFit.scaleDown, child: t) : t;
+  Widget _fit(Widget t, bool shrink) => shrink ? FittedBox(fit: BoxFit.scaleDown, child: t) : t;
+}
+
+/// この下のボタンは、字を縮めずに折り返す（幅の狭い右の帯）
+class NoShrink extends InheritedWidget {
+  const NoShrink({super.key, required super.child});
+  static bool on(BuildContext context) => context.dependOnInheritedWidgetOfExactType<NoShrink>() != null;
+  @override
+  bool updateShouldNotify(NoShrink oldWidget) => false;
 }
 
 /// 取り返しのつかない操作のボタン（赤）

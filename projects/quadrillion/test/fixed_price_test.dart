@@ -34,12 +34,6 @@ Game _grown({int seed = 11, int months = 60, int year = 1990, List<String> trait
 
 Biz _direct(Game s) => (s.biz.where((b) => b.model != 'fc').toList()..ssort((a, b) => b.rev.compareTo(a.rev))).first;
 
-double _median(List<num> xs) {
-  final l = xs.map((e) => e.toDouble()).toList()..sort();
-  final n = l.length;
-  return n.isOdd ? l[n ~/ 2] : (l[n ~/ 2 - 1] + l[n ~/ 2]) / 2;
-}
-
 void main() {
   group('1単位の値段', () {
     test('店・工場は1つがその業種の元手。業種と年で変わり、現金では変わらない', () {
@@ -66,7 +60,8 @@ void main() {
       final b = _direct(s);
       final capex = s.capexOf(indm[b.ind]!);
       expect([for (var i = 0; i < 3; i++) s.devCost(b, i)], [capex, capex * 3, capex * 10]);
-      expect(s.wageOf(b), wageByCat[indm[b.ind]!.cat]! * s.nom());
+      // 1.1.0+25 から、人件費はその国の賃金（と店の仕事は最低賃金）の統計で動く
+      expect(s.wageOf(b), s.wageCat(indm[b.ind]!.cat));
       expect(s.hireCost(b, 10), closeTo(s.wageOf(b) * hireFee * 10, 1e-3));
       expect(s.payPerMonth(b, 50), closeTo(s.wageOf(b) / 12 * 50, 1e-3));
       final d = s.devCost(b, 1), h = s.hireCost(b, 10);
@@ -305,37 +300,7 @@ void main() {
     });
   });
 
-  group('自動プレイの比べ', () {
-    // 割合の手の自動プレイは毎月、現金の4割で店を、2割ずつで商品と人を買い続けるので、維持費（店は1円あたり毎月0.6%）が積み上がって
-    // 利益を食い、現金がほとんど残らない（30年後の維持費は単位の手の数十倍）。単位の手は1手で使える額に上限があり、余った現金で海外に出て、
-    // 現金も時価総額に入るので、順位は良いほうに寄る（実測: 割合243位・単位132位）。1円あたりの効き目は同じにしてあるので、事業の力は近い
-    // 1.0.0+19（国ごとの事件・宿敵の場面・提案に広告と最初の1か国だけの海外など）の前後（9通りの中央値）:
-    //   順位 割合 243位→232位・単位 132位→155位／事業の力 割合 4.62兆→7.93兆・単位 7.28兆→6.09兆
-    //   乱数の流れは変わったが、線（半分〜2倍）は引き直さずに通る
-    test('単位の手で遊んでも、2000年から30年の順位の中央値と事業の力の中央値が、割合の手の半分〜2倍に収まる', () {
-      final old = <int>[], unit = <int>[];
-      final pOld = <double>[], pUnit = <double>[];
-      final lines = <String>[];
-      for (var seed = 1; seed <= 9; seed++) {
-        for (final u in [false, true]) {
-          final s = Game.newGame(SetupConfig(mode: 'endless', year: 2000, traits: ['charm', 'noble']), rng: ParkMiller(seed * 7919));
-          for (var t = 0; t < 12 * 30 && s.over == null; t++) {
-            botMonth(s, units: u);
-          }
-          final pw = s.biz.fold(0.0, (a, b) => a + b.power);
-          (u ? unit : old).add(s.rank);
-          (u ? pUnit : pOld).add(pw);
-          lines.add('seed$seed ${u ? '単位' : '割合'} 順位${s.rank} 時価総額${yen(s.cap)} 現金${yen(s.cash)} 事業の力${yen(pw)} 維持費${yen(s.biz.fold(0.0, (a, b) => a + b.upkeep))}/月');
-        }
-      }
-      final mo = _median(old), mu = _median(unit), po = _median(pOld), pu = _median(pUnit);
-      // ignore: avoid_print
-      print('[bot] 割合の手 順位 $old 中央値 $mo / 単位の手 順位 $unit 中央値 $mu\n'
-          '[bot] 事業の力の中央値 割合 ${yen(po)} / 単位 ${yen(pu)}\n[bot] ${lines.join('\n[bot] ')}');
-      expect(mu, inInclusiveRange(mo / 2, mo * 2));
-      expect(pu, inInclusiveRange(po / 2, po * 2));
-    }, timeout: const Timeout(Duration(minutes: 10)));
-  });
+  // 「自動プレイの比べ（割合の手と単位の手）」は 1.1.0+25 で外した（割合の手は試作の古い道。作り直しで比べる意味が無くなった）
 
   group('画面', () {
     setUpAll(() async {

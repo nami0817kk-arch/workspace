@@ -63,10 +63,13 @@ void main() {
     for (var i = 0; i < want.length; i++) {
       expect(era[i], closeTo(want[i], 1e-12));
     }
+    // 国の市場は 1.1.0+25 から統計の名目GDP（ドル）の、同じ年の日本との比（試作の曲線ではない）
     expect(cw('jp', 2000), closeTo(1, 1e-12));
-    expect(cw('us', 2010), closeTo(4.75, 1e-12));
-    expect(cw('cn', 1990), closeTo(0.3523500545797774, 1e-12));
-    expect(cw('in', 2040), closeTo(2.225448706454414, 1e-12));
+    final d = EconData.current!;
+    expect(cw('us', 2010), closeTo(d.year('us', 2010).gdpUsd! / d.year('jp', 2010).gdpUsd!, 1e-9));
+    expect(cw('us', 2010), inInclusiveRange(2, 4));
+    expect(cw('cn', 1990), inInclusiveRange(.05, .3));
+    expect(cw('in', 2040), greaterThan(0));
   });
 
   test('定義の数（試作の業種112・シナジー98・大シナジー10に足して、業種200・国24）', () {
@@ -96,7 +99,10 @@ void main() {
     expect(s.pres.age, 22);
     expect(s.cos.where((c) => c.rival != null).length, 4);
     expect(s.cands.length, 3);
-    expect(s.ap, 3);
+    // 社長の時間（1.1.0+25）: 会議を引いて、ふつうに使える残りから始まる。体力は満タン
+    expect(s.hUsed, 0);
+    expect(s.stamina, 100);
+    expect(s.hNormalLeft(), hoursNormal - s.hMeet());
     expect(s.culture, 'family'); // 人たらし → 家族的
     final noble = Game.newGame(SetupConfig(year: 2000, traits: ['noble', 'careful']), rng: ParkMiller(1));
     expect(noble.cash, closeTo(4e7 * nomOf(2000) * 4, 1e-3));
@@ -104,19 +110,18 @@ void main() {
     expect(noble.cands.length, 3);
   });
 
-  test('最初の事業は手を使わず、力は元手の1.5倍', () {
+  test('事業の立ち上げは社長の時間を使い（最初の1つも）、力は元手の1.5倍', () {
     final s = Game.newGame(SetupConfig(year: 1980, traits: ['charm', 'careful']), rng: ParkMiller(3));
     final ind = indm['yatai']!;
     final c = s.capexOf(ind);
     final cash0 = s.cash;
     s.startBiz('yatai');
-    expect(s.ap, 3);
+    expect(s.hUsed, hoursOf['start']);
     expect(s.cash, closeTo(cash0 - c, 1e-6));
     expect(s.biz.single.power, closeTo(c * 1.5, 1e-6));
     expect(s.biz.single.crew, closeTo(c * 1.5 * 1.2, 1e-6));
-    // 2つ目からは手を1つ使う
     final next = s.liveInds().firstWhere((i) => i.id != 'yatai' && s.capexOf(i) <= s.cash);
     s.startBiz(next.id);
-    expect(s.ap, 2);
+    expect(s.hUsed, hoursOf['start']! * 2);
   });
 }

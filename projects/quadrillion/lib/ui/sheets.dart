@@ -150,18 +150,19 @@ void openIntro(GameController ctl) {
             face: presFace(s, size: faceBig),
             who: tr('{0}（{1}歳）', [nmL(s.pres.name), 22]),
             text: tr('大学を出たばかり。手元には{0}。会社の名前だけは登記した。最初の事業を決める前に、一緒にやる相棒を探そうか。', [yen(s.cash)])),
-        _note(tr('毎月「手」の数だけ動けます。街の「社長の行動」から、相棒探し・日銭稼ぎ・腕磨き・人脈作り・事業の種探しができます。最初の事業を始めるのは手を使いません。')),
+        _note(tr('社長が1か月に使える時間はふつう200時間、無理をすれば300時間です。行動ごとに時間がかかり、無理が続くと体力が減って倒れます。会社が大きくなるほど会議に時間を取られます。右の帯の「社長の行動」から、相棒探し・日銭稼ぎ・腕磨き・人脈作り・事業の種探し・休みが選べます。')),
         const SizedBox(height: 4),
-        ChoiceBtn(tr('相棒を探しに行く'), () => openSeek(ctl), subs: [tr('行き先で出会う人の型が変わる')]),
-        ChoiceBtn(tr('先に最初の事業を決める'), () => openStart(ctl), subs: [tr('手を使わない')]),
+        ChoiceBtn(tr('相棒を探しに行く'), () => openSeek(ctl), ap: hrS(s, 'seek'), subs: [tr('行き先で出会う人の型が変わる')]),
+        ChoiceBtn(tr('先に最初の事業を決める'), () => openStart(ctl), ap: hrS(s, 'start'), subs: [tr('立ち上げには社長の時間がかかる')]),
         ChoiceBtn(tr('街を見てから考える'), ctl.closeSheet),
       ]));
 }
 
 void openSeek(GameController ctl) {
   final s = ctl.game!;
-  if (!s.canAP(1)) {
-    ctl.toast(M('今月の手が残っていません'));
+  final nt = s.needT('seek');
+  if (nt != null) {
+    ctl.toast(nt);
     return;
   }
   if (s.partners().length >= 2) {
@@ -170,7 +171,7 @@ void openSeek(GameController ctl) {
   }
   ctl.showSheet((_) => _col([
         H2(tr('相棒を探す'), top: true),
-        _note(tr('手を1つ使います。相棒には給料ではなく株を渡して口説きます。今の相棒 {0}/2人', [s.partners().length])),
+        _note('${hNote(s, 'seek')}${tr('相棒には給料ではなく株を渡して口説きます。今の相棒 {0}/2人', [s.partners().length])}'),
         for (final pl in PLACES)
           ChoiceBtn(tx(s.placeName(pl.id)), () {
             final m = s.presAct('seek', pl.id);
@@ -181,7 +182,7 @@ void openSeek(GameController ctl) {
             markGuide(s, 'partner');
             ctl.save();
             openMeet(ctl);
-          }, ap: 1, subs: [pl.s]),
+          }, ap: hrS(s, 'seek'), subs: [pl.s]),
         _cancel(ctl),
       ]));
 }
@@ -220,14 +221,15 @@ void openMeet(GameController ctl) {
 
 void openTrain(GameController ctl) {
   final s = ctl.game!;
-  if (!s.canAP(1)) {
-    ctl.toast(M('今月の手が残っていません'));
+  final nt = s.needT('train');
+  if (nt != null) {
+    ctl.toast(nt);
     return;
   }
   ctl.showSheet((_) => _col([
         H2(tr('腕を磨く'), top: true),
-        _note(tr('手を1つ使い、社長の能力を1つ {0} 伸ばします。若いほどよく伸びます。', [s.trainGain()])),
-        for (final k in abKeys) ChoiceBtn(tr('{0}（今 {1}）', [ABN[k], s.pres.ab[k]]), () => ctl.act(() => s.presAct('train', k)), ap: 1, subs: [trainDesc[k]!]),
+        _note('${hNote(s, 'train')}${tr('社長の能力を1つ {0} 伸ばします。若いほどよく伸びます。', [s.trainGain()])}'),
+        for (final k in abKeys) ChoiceBtn(tr('{0}（今 {1}）', [ABN[k], s.pres.ab[k]]), () => ctl.act(() => s.presAct('train', k)), ap: hrS(s, 'train'), subs: [trainDesc[k]!]),
         _cancel(ctl),
       ]));
 }
@@ -277,7 +279,9 @@ void openModel(GameController ctl, String id, [Biz? b]) {
   final ms = s.modelsFor(id);
   ctl.showSheet((_) => _col([
         H2(b != null ? tr('「{0}」の稼ぎ方を変える', [ind.name]) : tr('「{0}」をどう稼ぐか', [ind.name]), top: true),
-        _note(b != null ? tr('切り替えると、混乱で力が1割5分落ちます。手を1つ使います。') : tr('元手 {0}。稼ぎ方は、あとから手を使って変えられます。', [yen(s.capexOf(ind))])),
+        _note(b != null
+            ? '${tr('切り替えると、混乱で力が1割5分落ちます。')}${hNote(s, 'model')}'
+            : '${tr('元手 {0}。稼ぎ方は、あとから変えられます。', [yen(s.capexOf(ind))])}${hNote(s, 'start')}'),
         for (final m in ms)
           ChoiceBtn('${MODELN[m]}${b != null && b.model == m ? tr('（今）') : ''}', () => ctl.act(() => b != null ? s.changeModel(b, m) : s.startBiz(id, m)),
               enabled: !(b != null && b.model == m), subs: [MODELD[m]!]),
@@ -291,9 +295,9 @@ void openPivot(GameController ctl, Biz b) {
   final list = s.pivotTargets(b)..ssort((x, y) => s.capexOf(x).compareTo(s.capexOf(y)));
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の業態を変える', [from.name]), top: true),
-        _note(tr('同じ分類の業種に乗り換えます。今の事業の力の半分を引き継ぎ、新しい業種の元手がかかります。手を1つ使います。')),
+        _note('${tr('同じ分類の業種に乗り換えます。今の事業の力の半分を引き継ぎ、新しい業種の元手がかかります。')}${hNote(s, 'pivot')}'),
         for (final i in list)
-          ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)), enabled: s.cash >= s.capexOf(i), ap: 1, subs: [
+          ChoiceBtn(tr('{0}（元手 {1}）', [i.name, yen(s.capexOf(i))]), () => ctl.act(() => s.pivot(b, i.id)), enabled: s.cash >= s.capexOf(i), ap: hrS(s, 'pivot'), subs: [
             tr('利益率{0}%・{1}', [jsNum(jsRound(i.mg * 100)), s.yr() - i.b < 10 ? tr('生まれたばかり') : i.f != 0 && s.yr() > i.f ? tr('沈み中') : tr('市場 {0}', [yen(s.mkt(i) / 3)])])
           ]),
         _cancel(ctl),
@@ -301,11 +305,17 @@ void openPivot(GameController ctl, Biz b) {
 }
 
 /// 1単位の手の選び肢。払えないものは薄く見せ、押すと「お金が足りません」と出す
-Widget _unitChoice(GameController ctl, String label, double cost, String Function() fn, List<String> subs) {
+Widget _unitChoice(GameController ctl, String label, double cost, String Function() fn, List<String> subs, {String k = 'build'}) {
   final s = ctl.game!;
   final short = s.cash < cost;
-  return ChoiceBtn(label, () => short ? ctl.toast(M('お金が足りません')) : ctl.act(fn, mark: 'act'), dim: short, ap: 1, subs: subs);
+  return ChoiceBtn(label, () => short ? ctl.toast(M('お金が足りません')) : ctl.act(fn, mark: 'act'), dim: short || !s.canT(k), ap: hrS(s, k), subs: subs);
 }
+
+/// 行動にかかる社長の時間（札に出す整数）
+int hrS(Game s, String k) => s.hrs(k).round();
+
+/// 「社長の時間を8時間使います。」の文（小窓の注意書きの頭に付ける）
+String hNote(Game s, String k) => tr('社長の時間を{0}時間使います。', [hrS(s, k)]);
 
 /// 店・工場を増やす（1つ・3つ・10。1つの値段はその業種の元手）
 void openBuild(GameController ctl, Biz b) {
@@ -313,12 +323,12 @@ void openBuild(GameController ctl, Biz b) {
   final ind = indm[b.ind]!;
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の{1}を増やす', [ind.name, s.uw(b)]), top: true),
-        _note(tr('手を1つ使います。1つの値段はこの業種の元手（{0}）です。1〜2か月後に開き、そのぶん維持費がかかります。手元 {1}', [yen(s.capexOf(ind)), yen(s.cash)])),
+        _note('${hNote(s, 'build')}${tr('1つの値段はこの業種の元手（{0}）です。1〜2か月後に開き、そのぶん維持費がかかります。手元 {1}', [yen(s.capexOf(ind)), yen(s.cash)])}'),
         // いちばん小さい単位（元手の4分の1）。始めたばかりで店1つぶんのお金が無いときにも打てる
         _unitChoice(ctl, tr('今ある{0}を広げる（元手の1/4）', [s.uw(b)]), s.extendCost(b), () => s.extendN(b), [
           tr('{0}　維持費 +{1}／月', [yen(s.extendCost(b)), yen(s.extendCost(b) * .006)]),
           tr('来月から使える。伸びは小さい'),
-        ]),
+        ], k: 'extend'),
         for (final n in buildUnits)
           _unitChoice(ctl, tr('{0}増やす', [s.unitsOf(b, n)]), s.buildCost(b, n), () => s.buildN(b, n), [
             tr('{0}　維持費 +{1}／月', [yen(s.buildCost(b, n)), yen(s.buildCost(b, n) * .006)]),
@@ -335,12 +345,12 @@ void openDevelop(GameController ctl, Biz b) {
   const desc = ['早く出せる。当たっても伸びは控えめ', '当たれば大きい。外れることもある', '時間はかかるが、当たると伸びがいちばん大きい'];
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」で商品を作る', [ind.name]), top: true),
-        _note(tr('手を1つ使います。値段はこの業種の元手（{0}）の何倍かで決まります。当たるか外れるかは出てみるまで分かりません。手元 {1}', [yen(s.capexOf(ind)), yen(s.cash)])),
+        _note('${hNote(s, 'dev')}${tr('値段はこの業種の元手（{0}）の何倍かで決まります。当たるか外れるかは出てみるまで分かりません。手元 {1}', [yen(s.capexOf(ind)), yen(s.cash)])}'),
         for (var sz = 0; sz < devMults.length; sz++)
           _unitChoice(ctl, tr('{0}（元手の{1}倍）', [s.devName(sz), devMults[sz]]), s.devCost(b, sz), () => s.developN(b, sz), [
             tr('{0}　{1}〜{2}か月後に出る', [yen(s.devCost(b, sz)), devMonths[sz].$1, devMonths[sz].$2]),
             tr(desc[sz]),
-          ]),
+          ], k: 'dev'),
         _cancel(ctl),
       ]));
 }
@@ -353,11 +363,11 @@ void openCrew(GameController ctl, Biz b) {
   final r = b.power > 0 ? s.crewEff(b) / b.power : 1.0;
   Widget row(String label, int n) => _unitChoice(ctl, label, s.hireCost(b, n), () => s.hireN(b, n), [
         tr('採用の費用 {0}　毎月の人件費 +{1}', [yen(s.hireCost(b, n)), yen(s.payPerMonth(b, n))]),
-      ]);
+      ], k: 'crew');
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の現場の人を増やす', [ind.name]), top: true),
-        _note(tr('手を1つ使います。{0}の1人の年の人件費は{1}。雇うときに採用の費用（年の人件費の{2}割）を払い、そのあとは毎月の維持費に人数分の月給が乗ります。',
-            [CATN[ind.cat], yen(s.wageOf(b)), jsNum(jsRound(hireFee * 10))])),
+        _note('${hNote(s, 'crew')}${tr('{0}の1人の年の人件費は{1}（その国の賃金と最低賃金で毎年変わる）。雇うときに採用の費用（年の人件費の{2}割）を払い、そのあとは毎月の維持費に人数分の月給が乗ります。',
+            [CATN[ind.cat], yen(s.wageOf(b)), jsNum(jsRound(hireFee * 10))])}'),
         _note(need > 0 ? tr('現場の力 {0}%。あと{1}人いれば、止まっている{2}が全部動きます。', [jsNum(jsRound(r * 100)), need, s.uw(b)]) : tr('現場の力 {0}%。今は人が足りています。', [jsNum(jsRound(r * 100))])),
         if (need > 0) row(tr('足りない分（{0}人）を雇う', [need]), need),
         for (final n in crewUnits) row(tr('{0}人雇う', [n]), n),
@@ -369,7 +379,7 @@ void openDirty(GameController ctl, Company c) {
   final s = ctl.game!;
   ctl.showSheet((_) => _col([
         H2(tr('{0}への裏の手', [nmL(c.name)]), top: true),
-        _note(tr('手を1つ使います。値段は手ごとに決まっています。使うほど、ばれやすくなります。')),
+        _note('${hNote(s, 'dirty')}${tr('値段は手ごとに決まっています。使うほど、ばれやすくなります。')}'),
         for (final k in DIRTYN.keys)
           ChoiceBtn(
               tr('{0}（{1}・ばれる見込み {2}%）', [DIRTYN[k], yen(s.dirtyCost(k)), jsNum(jsRound(s.dirtyRisk(k, c) * 100))]),
@@ -379,9 +389,8 @@ void openDirty(GameController ctl, Company c) {
                       ? actConfirmed(ctl, DIRTYN[k]!, tr(s.listed ? '決算の数字を飾ります。ばれる見込みは{0}%。ばれると上場廃止になり、信用は2年のあいだ地に落ちます。' : '決算の数字を飾ります。ばれる見込みは{0}%。ばれると信用は2年のあいだ地に落ちます。', [jsNum(jsRound(s.dirtyRisk(k, c) * 100))]),
                           tr('粉飾する'), () => s.doDirty(k, c))
                       : ctl.act(() => s.doDirty(k, c)),
-              enabled: s.ap >= 1,
-              dim: s.cash < s.dirtyCost(k),
-              ap: 1,
+              dim: s.cash < s.dirtyCost(k) || !s.canT('dirty'),
+              ap: hrS(s, 'dirty'),
               subs: ['${DIRTYD[k]}${k == 'cartel' && s.cartelBiz(c) != null ? tr('。対象は「{0}」', [indm[s.cartelBiz(c)!.ind]!.name]) : ''}']),
         _cancel(ctl),
       ]));
@@ -393,7 +402,7 @@ void openSplit(GameController ctl) {
   final cats = <String>{for (final b in s.biz) indm[b.ind]!.cat};
   ctl.showSheet((_) => _col([
         H2(tr('会社を2つに割る'), top: true),
-        _note(tr('手を1つ使います。選んだ分類の事業を別の会社として切り離し、別に上場させます。あなたは新しい会社の株を{0}持ちます。元には戻せません。', [pct(jsRound(s.sh.own).toDouble())])),
+        _note('${hNote(s, 'split')}${tr('選んだ分類の事業を別の会社として切り離し、別に上場させます。あなたは新しい会社の株を{0}持ちます。元には戻せません。', [pct(jsRound(s.sh.own).toDouble())])}'),
         for (final cat in cats)
           Builder(builder: (_) {
             final bs = s.biz.where((b) => indm[b.ind]!.cat == cat).toList();
@@ -401,7 +410,7 @@ void openSplit(GameController ctl) {
                 key: ValueKey('split-$cat'),
                 // 全部の事業が同じ分類なら、切り離せない
                 enabled: bs.length < s.biz.length,
-                ap: 1,
+                ap: hrS(s, 'split'),
                 subs: [
                   tr('{0}つの事業・月の売上 {1}', [bs.length, yen(bs.fold(0.0, (a, b) => a + b.rev))]),
                   bs.map((b) => indm[b.ind]!.name).take(4).join(tr('・')) + (bs.length > 4 ? tr(' ほか') : ''),
@@ -446,10 +455,10 @@ void openDeal(GameController ctl, Company c) {
   final s = ctl.game!;
   ctl.showSheet((_) => _col([
         H2(tr('{0}と組む', [nmL(c.name)]), top: true),
-        _note(tr('手を1つ使います。関係が悪すぎる相手とは組めません。')),
+        _note('${hNote(s, 'deal')}${tr('関係が悪すぎる相手とは組めません。')}'),
         for (final t in const ['sales', 'codev', 'outsrc'])
           ChoiceBtn(DEALN[t]!, () => ctl.act(() => s.makeDeal(c, t)),
-              enabled: s.dealOk(c, t).isEmpty, ap: 1, subs: [s.dealOk(c, t).isNotEmpty ? s.dealOk(c, t) : DEALD[t]!]),
+              enabled: s.dealOk(c, t).isEmpty, ap: hrS(s, 'deal'), subs: [s.dealOk(c, t).isNotEmpty ? s.dealOk(c, t) : DEALD[t]!]),
         _cancel(ctl),
       ]));
 }
@@ -460,7 +469,7 @@ void openShape(GameController ctl, Biz b) {
   final p = s.staffById(b.mgr);
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の形を変える', [ind.name]), top: true),
-        _note(p != null ? tr('責任者は{0}です。手を1つ使います。', [nmL(p.name)]) : tr('先に責任者を置いてください。その人が社長になります。')),
+        _note(p != null ? '${tr('責任者は{0}です。', [nmL(p.name)])}${hNote(s, 'spin')}' : tr('先に責任者を置いてください。その人が社長になります。')),
         ChoiceBtn(tr('分社する'), () => ctl.act(() => s.spinOff(b)), enabled: p != null, subs: [tr('子会社にして、責任者を社長にする。株は100%持ったまま。社長は自分の判断で動く')]),
         ChoiceBtn(tr('渡して独立させる'), () => ctl.act(() => s.releaseBiz(b)), enabled: p != null, subs: [tr('責任者に事業ごと渡す。株を10%だけ持つ。相手との関係がとても良くなる')]),
         if (s.extras) ...[
@@ -482,12 +491,12 @@ void openLocal(GameController ctl, Biz b, String c) {
   final ind = indm[b.ind]!;
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」の{1}の現地法人', [ind.name, cm[c]!.n]), top: true),
-        _note(tr('手を1つ使います。社長を部下から選ぶか、現地で雇います（相棒は本社に残ります）。')),
+        _note('${hNote(s, 'local')}${tr('社長を部下から選ぶか、現地で雇います（相棒は本社に残ります）。')}'),
         for (final p in s.localPresCands().take(6))
           ChoiceBtn(tr('{0}を社長にする', [nmL(p.name)]), () => ctl.act(() => s.makeLocal(b, c, p.id)),
-              enabled: s.ap > 0,
+              enabled: s.canT('local'),
               subs: [[tr('{0}歳', [p.age]), for (final k in abKeys) '${ABN[k]} ${s.showAb(p, k)}'].join('　')]),
-        ChoiceBtn(tr('現地で社長を雇う'), () => ctl.act(() => s.makeLocal(b, c)), enabled: s.ap > 0, subs: [tr('その国の人を雇う。腕と特性は働かせてみるまで分からない')]),
+        ChoiceBtn(tr('現地で社長を雇う'), () => ctl.act(() => s.makeLocal(b, c)), enabled: s.canT('local'), subs: [tr('その国の人を雇う。腕と特性は働かせてみるまで分からない')]),
         _cancel(ctl),
       ]));
 }
@@ -500,7 +509,8 @@ void openEnter(GameController ctl, Biz b) {
   final list = CTRY.where((x) => !s.ctryOf(b).contains(x.c)).toList()..ssort((p, q) => cw(q.c, y).compareTo(cw(p.c, y)));
   ctl.showSheet((_) => _col([
         H2(tr('「{0}」を海外に出す', [ind.name]), top: true),
-        _note(tr('手を1つ使います。市場の大きさは{0}を1としたときの比べ。単独は6か月、組むは3か月かかり、組むとその国の利益は半分になります。買うとすぐ始められます。', [cm[s.home]!.n])),
+        _note(hNote(s, 'enter')),
+        _note(tr('市場の大きさは{0}を1としたときの比べ。単独は6か月、組むは3か月かかり、組むとその国の利益は半分になります。買うとすぐ始められます。', [cm[s.home]!.n])),
         for (final x in list)
           Builder(builder: (_) {
             final ms = s.entryModes(b, x.c);
@@ -516,7 +526,7 @@ void openEnter(GameController ctl, Biz b) {
                   Wrap(spacing: 6, runSpacing: 6, children: [
                     for (final m in ms)
                       Btn('${ENTRYN[m]} ${yen(s.entryCost(b, x.c, m))}', () => ctl.act(() => s.enterCountry(b, x.c, m)),
-                          small: true, enabled: !(s.cash < s.entryCost(b, x.c, m) || s.ap < 1)),
+                          small: true, enabled: !(s.cash < s.entryCost(b, x.c, m) || !s.canT('enter'))),
                   ])
                 else
                   Muted(tr('今は入れません')),

@@ -295,8 +295,9 @@ void main() {
       resolveEvents(g);
       g.calcAll();
       ctl.game = g;
-      ctl.tab = 'num';
-      tester.view.physicalSize = const Size(390, 5000);
+      // 「数字」は 1.1.0+25 から「お金」の「決算と記録」
+      ctl.setTab('num');
+      tester.view.physicalSize = centerAs(const Size(390, 5000));
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(QuadrillionApp(controller: ctl));

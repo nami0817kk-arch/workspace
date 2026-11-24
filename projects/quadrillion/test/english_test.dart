@@ -24,7 +24,7 @@ Future<GameController> _pump(WidgetTester tester, {Size size = const Size(390, 8
   final prefs = await SharedPreferences.getInstance();
   final ctl = GameController(prefs: prefs, newRandom: () => ParkMiller(77), lang: lang);
   ctl.game = game;
-  tester.view.physicalSize = size;
+  tester.view.physicalSize = centerAs(size);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(QuadrillionApp(controller: ctl));

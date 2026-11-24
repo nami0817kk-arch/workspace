@@ -106,7 +106,8 @@ void main() {
         // 買い戻す・全部売るのボタンは、画面の幅に収まっていて押せる
         final back = find.descendant(of: card, matching: find.text(tr('宿敵の持ち分を買い戻す（{0}）', [yen(g.localBuybackCost(loc))])));
         expect(await p.reveal(back), isTrue);
-        expect(tester.getRect(back).right, lessThanOrEqualTo(320));
+        // 1.1.0+25 から横向き（844×390）。真ん中の欄（右の帯210の手前）に収まる
+        expect(tester.getRect(back).right, lessThanOrEqualTo(844 - 210));
         final cash0 = g.cash;
         final cost = g.localBuybackCost(loc);
         await p.press(back, '買い戻す');
@@ -184,31 +185,32 @@ void main() {
           x.crew = g.crewOf(x) * .6;
         }
         g.calcAll();
-        g.ap = 2;
+        // 社長の時間を、人を雇う2回ぶんだけ残す（1.1.0+25 から手ではなく時間）
+        g.hUsed = hoursMax - g.hMeet() - 2 * g.hrs('crew');
         g.cash = 1e14;
       }
       expect(a.crewShort().length, greaterThanOrEqualTo(3));
-      // 手は2つなので、足りない割合の大きい2つだけ
+      // 時間は2回ぶんなので、足りない割合の大きい2つだけ
       final plan = a.crewShortDoable();
       expect(plan.length, 2);
       final ids = plan.map((x) => x.id).toList();
       final cost = plan.fold(0.0, (s, x) => s + a.hireCost(x, a.crewNeedPeople(x)));
       final cashA = a.cash;
       a.hireShortAll();
-      expect(a.ap, 0);
+      expect(a.hLeft(), 0);
       expect(cashA - a.cash, closeTo(cost, cost * 1e-9));
       for (final id in ids) {
         final x = b.biz.firstWhere((x) => x.id == id);
         b.hireN(x, b.crewNeedPeople(x));
       }
-      expect(b.ap, 0);
+      expect(b.hLeft(), 0);
       expect(b.cash, closeTo(a.cash, a.cash.abs() * 1e-12));
       for (final id in ids) {
         expect(a.crewNeedPeople(a.biz.firstWhere((x) => x.id == id)), 0);
         expect(a.biz.firstWhere((x) => x.id == id).crew, closeTo(b.biz.firstWhere((x) => x.id == id).crew!, 1e-3));
       }
       // 手が無ければ何もしないで、わけを言う
-      expect(txIn(a.hireShortAll(), 'ja'), '今月の手が残っていません');
+      expect(txIn(a.hireShortAll(), 'ja'), startsWith('今月の社長の時間が足りません'));
       a.ap = 1;
       a.cash = 0;
       expect(txIn(a.hireShortAll(), 'ja'), 'お金が足りません');
@@ -259,10 +261,11 @@ void main() {
       final n = g.crewShortDoable().length;
       final short = g.crewShort().length;
       expect(n, greaterThanOrEqualTo(2));
-      final ap = g.ap;
+      final h0 = g.hUsed;
       await p.pressKey('hire-short-all');
       await p.drain();
-      expect(g.ap, ap - n);
+      // 1つの事業につき、人を雇う時間（1.1.0+25 から手ではなく時間）
+      expect(g.hUsed - h0, g.hrs('crew') * n);
       expect(g.crewShort().length, short - n);
       // たたむ
       await p.press(find.descendant(of: find.byKey(const ValueKey('fold-mybiz')), matching: find.byType(InkWell)), '自社の事業の見出し');
@@ -271,7 +274,8 @@ void main() {
       expect(find.text(tr('新しい事業')), findsOneWidget);
       expect(tester.getTopLeft(find.text(tr('新しい事業'))).dy, lessThan(400));
       await p.press(find.descendant(of: find.byKey(const ValueKey('fold-mybiz')), matching: find.byType(InkWell)), '自社の事業の見出し');
-      expect(find.byKey(ValueKey('biz-row-${first.id}')), findsOneWidget);
+      // 横向きの画面は低いので、一覧のその行まで送って確かめる（1.1.0+25）
+      expect(await p.reveal(find.byKey(ValueKey('biz-row-${first.id}'))), isTrue);
       expect(p.found, isEmpty, reason: p.found.join('\n'));
     });
 

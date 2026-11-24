@@ -11,11 +11,15 @@ class TownPainter extends CustomPainter {
 
   /// 描く中身が変わったかの目印（月・売上・時価総額・事業の数・拠点・言語）。同じなら描き直さない
   final int stamp;
-  TownPainter(this.s) : stamp = Object.hash(s.turn, s.rev, s.cap, s.biz.length, s.subs().length, s.home, s.wealth, L.lang);
+
+  /// 絵の横の幅（高さは180）。横向きの画面では横に広い 480（1.1.0+25）
+  final double W;
+  TownPainter(this.s, {this.W = 320}) : stamp = Object.hash(s.turn, s.rev, s.cap, s.biz.length, s.subs().length, s.home, s.wealth, L.lang);
 
   @override
   void paint(Canvas canvas, Size size) {
-    const W = 320.0, H = 180.0;
+    const H = 180.0;
+    final W = this.W;
     canvas.save();
     canvas.scale(size.width / W, size.height / H);
     final p = Paint()..isAntiAlias = false;
@@ -26,8 +30,8 @@ class TownPainter extends CustomPainter {
 
     final sky = Paint()
       ..shader = const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF8CCAF5), Color(0xFFE4F3FF)])
-          .createShader(const Rect.fromLTWH(0, 0, W, H));
-    canvas.drawRect(const Rect.fromLTWH(0, 0, W, H), sky);
+          .createShader(Rect.fromLTWH(0, 0, W, H));
+    canvas.drawRect(Rect.fromLTWH(0, 0, W, H), sky);
     var seed = 7;
     double sr() {
       seed = (seed * 16807) % 2147483647;
@@ -43,10 +47,10 @@ class TownPainter extends CustomPainter {
     const r = 9;
     for (var yy = -r; yy <= r; yy++) {
       final w = jsRound(math.sqrt(r * r - yy * yy));
-      rect(274 - w, 24.0 + yy, w * 2, 1, const Color(0xFFFFD75E));
+      rect(W - 46 - w, 24.0 + yy, w * 2, 1, const Color(0xFFFFD75E));
     }
     // 遠くの CPU のビル
-    final top = s.rankList().where((x) => !x.me).take(16).toList();
+    final top = s.rankList().where((x) => !x.me).take(W > 320 ? 24 : 16).toList();
     var x = 4.0;
     final lmax = math.log(math.max(top.isNotEmpty ? top.first.cap : 1, 1)) / math.ln10;
     final lmin = math.log(math.max(top.isNotEmpty ? top.last.cap : 1, 1)) / math.ln10;
@@ -107,7 +111,7 @@ class TownPainter extends CustomPainter {
 
   /// 900社の並べ替えを伴うので、中身が変わったときだけ描き直す（上の帯の数字が光るあいだも描き直さない）
   @override
-  bool shouldRepaint(covariant TownPainter oldDelegate) => oldDelegate.s != s || oldDelegate.stamp != stamp;
+  bool shouldRepaint(covariant TownPainter oldDelegate) => oldDelegate.s != s || oldDelegate.stamp != stamp || oldDelegate.W != W;
 }
 
 /// 試作の drawSpark（時価総額の推移・対数の目盛り）

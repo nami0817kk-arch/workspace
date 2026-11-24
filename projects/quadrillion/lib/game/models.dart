@@ -548,6 +548,48 @@ class Company {
       );
 }
 
+/// 借りたお金の1口（1.1.0+25 から）。借りるたびに1口ずつ増え、毎月少しずつ返す
+class Loan {
+  int id;
+
+  /// 相手（main メインバンク / second 二番手の銀行 / local 地元の信用金庫 / bridge つなぎの融資 / bond 社債）
+  String lender;
+
+  /// 残り・借りたときの額
+  double amt, orig;
+
+  /// 年の金利（0.05 = 5%）。借りたときに決まり、返し終わるまで変わらない
+  double rate;
+
+  /// 返し終わるまでの月数（残り）・借りたときの月数
+  int left, term;
+
+  /// 社債は最後にまとめて返す（それまでは利息だけ）
+  bool bullet;
+
+  /// 借りた月（turn）
+  int at;
+  Loan({required this.id, required this.lender, required this.amt, required this.orig, required this.rate, required this.left, required this.term, this.bullet = false, this.at = 0});
+
+  /// 今月返す元本（社債は最後の月にまとめて）
+  double get principal => bullet ? (left <= 1 ? amt : 0) : (left <= 1 ? amt : amt / left);
+
+  /// 今月の利息
+  double get interest => amt * rate / 12;
+
+  Map<String, dynamic> toJson() => {'id': id, 'lender': lender, 'amt': amt, 'orig': orig, 'rate': rate, 'left': left, 'term': term, if (bullet) 'bullet': true, 'at': at};
+  factory Loan.fromJson(Map<String, dynamic> j) => Loan(
+      id: _i(j['id']),
+      lender: (j['lender'] as String?) ?? 'main',
+      amt: _d(j['amt']),
+      orig: _d(j['orig']),
+      rate: _d(j['rate']),
+      left: _i(j['left'], 1),
+      term: _i(j['term'], 1),
+      bullet: j['bullet'] == true,
+      at: _i(j['at']));
+}
+
 /// 時代の大事件
 class Cycle {
   String name, news;

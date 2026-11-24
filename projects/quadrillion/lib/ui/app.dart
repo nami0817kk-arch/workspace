@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../game/game.dart';
 import 'controller.dart';
+import 'real_screens.dart';
 import 'sheets.dart';
 import 'tabs.dart';
 import 'widgets.dart';
@@ -247,7 +248,8 @@ class SetupScreen extends StatelessWidget {
           ]),
           H2(tr('始める国')),
           _opt([
-            for (final x in CTRY)
+            // 統計がまだ無い年の国は選べない（ロシアは1991年まで。1.1.0+25）
+            for (final x in CTRY.where((x) => st.year >= econData.availableFrom(x.c)))
               ChoiceBtn(x.n, () => set(() => st.home = x.c),
                   on: st.home == x.c, subs: [tr('{0}・市場 ×{1}', [x.city, (cw(x.c, y) / cw('jp', y)).toStringAsFixed(2)])]),
           ]),
@@ -344,225 +346,99 @@ class MainScreen extends StatelessWidget {
   final GameController ctl;
   const MainScreen({super.key, required this.ctl});
 
-  static const tabs = [('town', '街@@tab'), ('biz', '事業@@tab'), ('people', '人@@tab'), ('stock', '株@@tab'), ('num', '数字@@tab'), ('zukan', '図鑑@@tab')];
+  /// 「次の月へ」のボタンに残りの時間まで書く、ボタンの欄の最小の幅（字の倍率で割った幅。これより狭いと「次の月へ」だけ）
+  static const nextLongMin = 220.0;
 
-  /// 「次の月へ」のボタンに残りの手の数まで書く、ボタンの欄の最小の幅（字の倍率で割った幅。これより狭いと「次の月へ」だけ）
-  static const nextLongMin = 160.0;
-
-  /// 下のタブのアイコン
-  static const tabIcons = <String, IconData>{
-    'town': Icons.location_city,
-    'biz': Icons.work,
-    'people': Icons.people,
-    'stock': Icons.pie_chart,
-    'num': Icons.bar_chart,
-    'zukan': Icons.menu_book,
-  };
+  /// 左の切り替え（id・名前）
+  static List<(String, String)> get tabs => [for (final t in railTabs) (t.$1, t.$2)];
 
   @override
   Widget build(BuildContext context) {
     final s = ctl.game!;
-    final rk = s.rank != 0 ? s.rank : s.rankList().indexWhere((x) => x.me) + 1;
-    final body = switch (ctl.tab) {
-      'biz' => bizTab(ctl),
-      'people' => peopleTab(ctl),
-      'stock' => stockTab(ctl),
-      'num' => numTab(ctl),
-      'zukan' => zukanTab(ctl),
-      _ => townTab(ctl),
-    };
-    final header = Container(
-      decoration: const BoxDecoration(color: Pal.sky, border: Border(bottom: BorderSide(color: Pal.line))),
-      child: Wide(
-          child: Padding(
-      padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          // 年月の下に社長の名前と年齢。代は札にして、幅が足りなければ次の行へ回す（名前は切らない）
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-              Text(ym(s.year, s.q, sp: true), style: ts(size: 18, color: Pal.goldtx, bold: true, height: 1.25)),
-              // 名前・年齢・代の札は、入りきらなければ区切りごとに次の行へ回る（長い外国の名前でも切らない）
-              Wrap(runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(nmL(s.pres.name), key: const ValueKey('pres-name'), maxLines: 1, softWrap: false, style: ts(size: 12.5, color: Pal.mute)),
-                ),
-                Text(tr('・{0}歳', [s.pres.age]), key: const ValueKey('pres-age'), maxLines: 1, softWrap: false, style: ts(size: 12.5, color: Pal.mute)),
-                if (s.gen > 1)
-                  Padding(padding: const EdgeInsets.only(left: 6), child: Tag(tr('{0}代目', [s.gen]), key: const ValueKey('pres-gen'))),
+    return LayoutBuilder(builder: (context, box) {
+      final side = box.maxWidth >= sidePanelMin;
+      final result = s.won != null || s.over != null
+          ? Panel(
+              border: s.won != null ? Pal.gold : Pal.down,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                H2(tr(s.won != null ? '達成！' : 'ゲームオーバー'), top: true),
+                Text(tx(s.won ?? s.over), style: ts()),
+                const SizedBox(height: 8),
+                Wrap(spacing: 8, runSpacing: 8, children: [
+                  if (s.won != null && s.over == null) Btn(tr('このまま続ける'), () => continueAfterWin(ctl)),
+                  Btn(tr('まとめを見る'), () {
+                    ctl.endHidden = false;
+                    ctl.render();
+                  }),
+                  Btn(tr('はじめから'), () => s.over != null ? ctl.backToSetup() : confirmRestart(ctl)),
+                ]),
               ]),
-            ]),
-          ),
-          const SizedBox(width: 8),
-          // 読み上げでは「？」ではなく「遊び方」と読む
-          Semantics(
-              label: tr('遊び方'),
-              button: true,
-              excludeSemantics: true,
-              onTap: () => showHelp(ctl),
-              child: Btn(tr('？'), () => showHelp(ctl), key: const ValueKey('help'), small: true)),
-          const SizedBox(width: 6),
-          Semantics(
-            label: tr('設定'),
-            button: true,
-            child: TapArea(
-              key: const ValueKey('settings-tap'),
-              onTap: () => openSettings(ctl),
-              child: Material(
-              color: Pal.panel2,
-              shape: btnShape(Pal.line),
-              child: InkWell(
-                key: const ValueKey('settings'),
-                borderRadius: BorderRadius.circular(Ui.rBtn),
-                onTap: () => openSettings(ctl),
-                child: const Padding(padding: EdgeInsets.all(5), child: Icon(Icons.settings, size: 18, color: Pal.ink)),
-              ),
-            )),
-          ),
-        ]),
-        const SizedBox(height: 4),
-        Wrap(spacing: 14, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
-          FlashStat(tr('現金 '), yen(s.cash), value: s.cash, turn: s.turn),
-          if (s.debt > 0) _stat(tr('借金 '), yen(s.debt), Pal.down),
-          FlashStat(tr('時価総額 '), yen(s.cap), value: s.cap, turn: s.turn, color: Pal.goldtx),
-          if (s.wealth > 0) _stat(tr('財産 '), yen(s.wealth)),
-          FlashStat(tr('世界 '), tr('{0}位', [rk]), value: rk.toDouble(), turn: s.turn, higherIsBetter: false),
-          // 今月の残りの手。金の四角に、数字（残り/全部）も添える
-          Semantics(
-            label: tr('手 残り{0}／{1}', [s.ap, s.apMax]),
-            excludeSemantics: true,
-            child: Row(key: const ValueKey('ap'), mainAxisSize: MainAxisSize.min, children: [
-              Text(tr('手 '), style: ts(size: 12.5, color: Pal.mute)),
-              for (var i = 0; i < s.apMax; i++)
-                Container(
-                  width: 10,
-                  height: 10,
-                  margin: const EdgeInsets.only(right: 3),
-                  decoration: BoxDecoration(color: i < s.ap ? Pal.gold : Pal.line, borderRadius: BorderRadius.circular(2)),
-                ),
-              const SizedBox(width: 2),
-              Text('${s.ap}/${s.apMax}', key: const ValueKey('ap-count'), style: ts(size: 12.5, color: s.ap > 0 ? Pal.goldtx : Pal.mute, bold: true)),
-            ]),
-          ),
-        ]),
-      ]),
-      )),
-    );
-    final result = s.won != null || s.over != null
-        ? Panel(
-            border: s.won != null ? Pal.gold : Pal.down,
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              H2(tr(s.won != null ? '達成！' : 'ゲームオーバー'), top: true),
-              Text(tx(s.won ?? s.over), style: ts()),
-              const SizedBox(height: 8),
-              Wrap(spacing: 8, runSpacing: 8, children: [
-                if (s.won != null && s.over == null) Btn(tr('このまま続ける'), () => continueAfterWin(ctl)),
-                Btn(tr('まとめを見る'), () {
-                  ctl.endHidden = false;
-                  ctl.render();
-                }),
-                Btn(tr('はじめから'), () => s.over != null ? ctl.backToSetup() : confirmRestart(ctl)),
-              ]),
-            ]),
-          )
-        : null;
-    return Column(children: [
-      header,
-      Expanded(
-        // 幅の広い画面では、一覧は端から端まで動かせるまま、中身だけを中央の幅に収める（左右は余白）
-        child: LayoutBuilder(builder: (context, box) {
-          final side = 12 + Ui.sideGap(box.maxWidth);
-          return ListView(
-            key: PageStorageKey('tab-${ctl.tab}'),
-            // 「事業」だけ、位置を外から動かせるようにする（「今月やること」から事業のカードへ飛ぶ）
-            controller: ctl.tab == 'biz' ? ctl.bizScroll : null,
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: EdgeInsets.fromLTRB(side, 0, side, 16),
-            children: [?result, ...body],
-          );
-        }),
-      ),
-      if (s.over == null)
-        Container(
-          color: Pal.sky,
-          // 出来事が起きたらそこで止まる
-          child: Wide(
-              child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-          child: Row(children: [
-            // まとめて進めるのは1つのボタンにまとめ、押すと長さ（何か起きるまで・3か月・1年）を選ぶ小窓が開く
-            Btn(tr('まとめて進める'), () => openAdvance(ctl), key: const ValueKey('advance-menu'), small: true, more: true),
-            const SizedBox(width: 6),
-            Expanded(
-              // 幅が足りないときは字だけ縮める（押せる高さは 44pt のまま）
-              child: Align(
-                alignment: Alignment.centerRight,
-                // 幅が狭い・字が大きいときは、残りの手の数を省く（上の帯の「手」に出ている。入れると字が豆粒になる）
-                child: LayoutBuilder(
-                    builder: (context, c) => Btn(
-                        s.ap > 0 && c.maxWidth / Ui.textScale >= nextLongMin ? tr('次の月へ（手が{0}残っています）', [s.ap]) : tr('次の月へ'), () => doNext(ctl),
-                        key: const ValueKey('next'), primary: true, shrink: true)),
-              ),
-            ),
-          ]),
-          )),
-        ),
-      Container(
-        decoration: const BoxDecoration(color: Pal.panel, border: Border(top: BorderSide(color: Pal.line))),
-        child: SafeArea(
-          top: false,
-          child: Wide(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Row(children: [
-              for (final t in tabs)
+            )
+          : null;
+      final center = LayoutBuilder(builder: (context, cb) {
+        final w = cb.maxWidth - 16;
+        final body = switch (ctl.tab) {
+          'biz' => bizTab(ctl),
+          'people' => peopleTab(ctl),
+          'stock' => stockTab(ctl),
+          'money' => moneyTab(ctl),
+          'world' => worldTab(ctl, w),
+          'zukan' => zukanTab(ctl),
+          _ => townTabL(ctl, w),
+        };
+        return ListView(
+          key: PageStorageKey('tab-${ctl.tab}'),
+          // 「事業」だけ、位置を外から動かせるようにする（「今月やること」から事業のカードへ飛ぶ）
+          controller: ctl.tab == 'biz' ? ctl.bizScroll : null,
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+          children: [?result, ...body],
+        );
+      });
+      final bottom = s.over == null
+          ? Container(
+              decoration: const BoxDecoration(color: Pal.panel, border: Border(top: BorderSide(color: Pal.line))),
+              padding: const EdgeInsets.fromLTRB(8, 3, 8, 3),
+              child: Row(children: [
+                // まとめて進めるのは1つのボタンにまとめ、押すと長さ（何か起きるまで・3か月・1年）を選ぶ小窓が開く
+                Btn(tr('まとめて進める'), () => openAdvance(ctl), key: const ValueKey('advance-menu'), small: true, more: true),
+                const SizedBox(width: 6),
+                // 社長の行動（相棒探し・日銭・腕磨き・人脈・種探し・休む）は、いつでも押せるよう下の帯に置く
+                Btn(tr('社長の行動'), () => openPresSheet(ctl), key: const ValueKey('pres-open'), small: true, more: true),
+                const SizedBox(width: 6),
                 Expanded(
-                  child: Semantics(
-                    button: true,
-                    selected: ctl.tab == t.$1,
-                    child: InkWell(
-                      key: ValueKey('tab-${t.$1}'),
-                      borderRadius: BorderRadius.circular(Ui.rBtn),
-                      onTap: () => ctl.setTab(t.$1),
-                      child: Container(
-                        constraints: const BoxConstraints(minHeight: minTap),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Column(mainAxisSize: MainAxisSize.min, children: [
-                          // 選んでいるタブは、アイコンの後ろに金の丸い帯を敷く
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 150),
-                            width: 46,
-                            height: 26,
-                            decoration: BoxDecoration(color: ctl.tab == t.$1 ? Pal.gold : Pal.gold.withValues(alpha: 0), borderRadius: BorderRadius.circular(13)),
-                            child: Icon(tabIcons[t.$1], size: 20, color: ctl.tab == t.$1 ? const Color(0xFF1A1300) : Pal.mute),
-                          ),
-                          const SizedBox(height: 2),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(tr(t.$2),
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                style: ts(size: 11.5, color: ctl.tab == t.$1 ? Pal.goldtx : Pal.mute, bold: ctl.tab == t.$1, height: 1.3)),
-                          ),
-                        ]),
-                      ),
-                    ),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: LayoutBuilder(
+                        builder: (context, c) => Btn(
+                            s.hNormalLeft() > 0 && c.maxWidth / Ui.textScale >= nextLongMin ? tr('次の月へ（社長の時間があと{0}時間）', [jsRound(s.hNormalLeft())]) : tr('次の月へ'),
+                            () => doNext(ctl),
+                            key: const ValueKey('next'),
+                            primary: true,
+                            shrink: true)),
                   ),
                 ),
-            ]),
-          )),
+              ]),
+            )
+          : null;
+      return Column(children: [
+        topBar(ctl, side: side),
+        Expanded(
+          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            leftRail(ctl),
+            Expanded(child: center),
+            if (side)
+              Container(
+                width: sideW,
+                decoration: const BoxDecoration(color: Pal.sky, border: Border(left: BorderSide(color: Pal.line))),
+                child: NoShrink(child: ListView(key: const ValueKey('side'), padding: const EdgeInsets.fromLTRB(6, 2, 6, 10), children: sideItems(ctl))),
+              ),
+          ]),
         ),
-      ),
-    ]);
+        ?bottom,
+      ]);
+    });
   }
-
-  Widget _stat(String k, String v, [Color c = Pal.ink]) => Text.rich(TextSpan(children: [
-        TextSpan(text: tx(k), style: ts(size: 12.5, color: Pal.mute)),
-        TextSpan(text: v, style: ts(size: 12.5, color: c, bold: true)),
-      ]));
 }
 
 /// 勝ったあと、終わりなしのモードで続ける

@@ -52,7 +52,7 @@ Future<GameController> _pump(WidgetTester tester, {Game? game, String lang = 'ja
   final ctl = GameController(prefs: prefs, newRandom: () => ParkMiller(77), lang: lang);
   ctl.game = game;
   addTearDown(() => L.lang = 'ja');
-  tester.view.physicalSize = size;
+  tester.view.physicalSize = centerAs(size);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(RepaintBoundary(key: _shotKey, child: QuadrillionApp(controller: ctl)));
@@ -256,8 +256,9 @@ void main() {
       });
     }
 
-    testWidgets('どのタブの「i」も、押せる範囲が 44pt 四方以上（幅390・320）', (tester) async {
-      for (final size in const [Size(390, 844), Size(320, 568)]) {
+    testWidgets('どのタブの「i」も、押せる範囲が 44pt 四方以上（横向き 844×390・667×375）', (tester) async {
+      // 1.1.0+25 から横向き。社長の時間の「i」は右の帯・社長の行動の小窓にあるので、辞書の全部がそろう確かめは右の帯の出る幅で
+      for (final size in const [Size(844, 390), Size(1194, 834)]) {
         for (final lang in ['ja', 'en']) {
           final s = _midGame()..ap = 3;
           final ctl = await _pump(tester, game: s, lang: lang, size: size);
@@ -276,6 +277,15 @@ void main() {
               }
             });
             expect(tester.takeException(), isNull, reason: '$t $lang $size');
+          }
+          // 右の帯（社長の予定）の「i」も数える（1.1.0+25）。帯は「今月やること」の下にあるので、下まで送る
+          await tester.drag(find.byKey(const ValueKey('side')), const Offset(0, -800));
+          await tester.pump();
+          for (final e in find.descendant(of: find.byKey(const ValueKey('side')), matching: find.byType(Info)).evaluate()) {
+            final w = e.widget as Info;
+            final r = tester.getRect(find.byWidget(w));
+            expect(r.width, greaterThanOrEqualTo(minTap - .01), reason: 'side ${w.terms}');
+            seen.addAll(w.terms);
           }
           // 辞書の用語は、どれも画面のどこかに「i」がある（先行者は、先行者の事業があるときだけ）
           expect(seen, containsAll(glossary.keys.where((k) => k != 'early')), reason: '$lang $size');

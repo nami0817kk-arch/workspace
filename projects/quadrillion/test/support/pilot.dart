@@ -35,7 +35,9 @@ class Pilot {
   Game get s => ctl.game!;
 
   /// アプリを立ち上げる（はじめの画面）
-  static Future<Pilot> launch(WidgetTester t, {String lang = 'ja', Size size = const Size(390, 844), double textScale = 1, int seed = 77, Game? game, Key? boundary}) async {
+  static Future<Pilot> launch(WidgetTester t, {String lang = 'ja', Size size = const Size(844, 390), double textScale = 1, int seed = 77, Game? game, Key? boundary}) async {
+    // 1.1.0+25 から横向きの画面。縦の大きさ（幅320・390）を渡されたら、iPhone の横（844×390）で見る
+    if (size.width < size.height) size = const Size(844, 390);
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     final ctl = GameController(prefs: prefs, newRandom: () => ParkMiller(seed), lang: lang);
@@ -90,6 +92,8 @@ class Pilot {
   void _collectWraps() {
     for (final e in find.byType(Btn).evaluate()) {
       final btn = e.widget as Btn;
+      // 幅の狭い右の帯（1.1.0+25）のボタンは、字を縮めずに折り返す作り（NoShrink）なので数えない
+      if (e.findAncestorWidgetOfExactType<NoShrink>() != null) continue;
       void visit(Element c) {
         final ro = c.renderObject;
         if (c.widget is RichText && ro is RenderParagraph && ro.hasSize) {
@@ -125,7 +129,7 @@ class Pilot {
       for (final v in [g.cash, g.cap, g.rev, g.pre, g.debt, g.wealth, g.sh.own]) {
         if (!v.isFinite) note('盤面の数字が壊れた: $v');
       }
-      if (g.ap < 0 || g.ap > g.apMax) note('手の数がおかしい: ${g.ap}/${g.apMax}');
+      if (g.hUsed < 0 || g.hLeft() < 0 || g.stamina > 100) note('社長の時間・体力がおかしい: ${g.hUsed}/${g.hLeft()}/${g.stamina}');
       if (g.sh.own < -.01 || g.sh.own > 100.01) note('持ち株がおかしい: ${g.sh.own}');
       final sum = g.sh.own + g.sh.pt + g.sh.vc + g.sh.ally + g.sh.float + g.sh.rivSum;
       final neg = [g.sh.pt, g.sh.vc, g.sh.ally, g.sh.float, ...g.sh.riv.values].any((v) => v < -.05);
@@ -228,7 +232,8 @@ class Pilot {
           note('一覧の終わりまで送れない（${sc.position.pixels} / ${sc.position.maxScrollExtent}）');
           break;
         }
-        sc.position.jumpTo((sc.position.pixels + 450).clamp(0, sc.position.maxScrollExtent).toDouble());
+        // 横向きの画面は一覧の見える高さが低い（約280）ので、送る幅も小さく（1.1.0+25 で 450 → 200）
+        sc.position.jumpTo((sc.position.pixels + 200).clamp(0, sc.position.maxScrollExtent).toDouble());
         await pump();
       }
       if (!_has(f)) return false;
@@ -406,16 +411,17 @@ class Pilot {
     // はじめの小窓 → 相棒を探す → 出会う → 株を渡して誘う
     where = '創業';
     await pressText(tr('相棒を探しに行く'));
-    final apBefore = s.ap;
+    final h0 = s.hUsed;
     await press(inSheet(find.byType(ChoiceBtn)).first, '相棒を探す行き先');
-    if (s.ap != apBefore - 1) note('相棒探しの手の数: 札は1手、実際は${apBefore - s.ap}');
+    if (s.hUsed - h0 != s.hrs('seek')) note('相棒探しの時間: 札は${s.hrs('seek')}時間、実際は${s.hUsed - h0}');
     if (s.meet != null) {
       await pressText(tr('株を{0}%渡して誘う', [10]));
       mark('相棒を誘う');
     }
     await drain();
-    // 最初の事業（手を使わない）
-    final ap1 = s.ap;
+    // 最初の事業（社長の時間を使う。1.1.0+25 から、社長の行動は右の帯の「社長の行動」の小窓）
+    final h1 = s.hUsed;
+    await pressKey('pres-open');
     await pressText(tr('最初の事業を決める'));
     final first = s.liveInds().where((i) => s.capexOf(i) <= s.cash).toList()..ssort((a, b) => s.capexOf(a).compareTo(s.capexOf(b)));
     final ind = first.first;
@@ -425,12 +431,18 @@ class Pilot {
       await drain();
     });
     if (s.biz.length != 1) note('最初の事業が始まらない');
-    if (s.ap != ap1) note('最初の事業で手が減った');
+    if (s.hUsed - h1 != s.hrs('start')) note('最初の事業の時間: 札は${s.hrs('start')}時間、実際は${s.hUsed - h1}');
     mark('最初の事業');
   }
 
   // ===== 画面の行き来 =====
   Future<void> tab(String id) async {
+    // 「数字」のタブは 1.1.0+25 から「お金」の「決算と記録」
+    if (id == 'num') {
+      await tab('money');
+      if (ctl.moneyView != 'book') await pressKey('money-book');
+      return;
+    }
     if (ctl.tab == id) return;
     await pressKey('tab-$id');
     if (ctl.tab != id) note('タブ $id に替わらない');
@@ -485,12 +497,12 @@ class Pilot {
     } else if (!await _bizBtn(b, 'grow', tr('{0}を増やす', [s.uw(b)]))) {
       return;
     }
-    final ap = s.ap;
+    final h0 = s.hUsed;
     await money('増やす', -s.buildCost(b, n), () async {
       await pressText(tr('{0}増やす', [s.unitsOf(b, n)]));
       await drain();
     });
-    if (s.ap != ap - 1) note('増やすの手の数: 札は1手、実際は${ap - s.ap}');
+    if (s.hUsed - h0 != s.hrs('build')) note('増やすの時間: 札は${s.hrs('build')}時間、実際は${s.hUsed - h0}');
     mark('店・工場を増やす');
   }
 
@@ -601,11 +613,16 @@ class Pilot {
     await tab('people');
     final n = s.staff.length;
     await reveal(find.text(tr('採用の候補')));
-    await money('支度金', -p.salary * 2, () async {
-      await pressText(tr('雇う'));
-      await drain();
-    });
-    if (s.staff.length != n + 1) note('雇えない');
+    final c0 = s.cash;
+    await pressText(tr('雇う'));
+    await drain();
+    if (s.staff.length != n + 1) {
+      note('雇えない');
+    } else {
+      // 雇ったのは押した行の人（並びの先頭とは限らない）。その人の支度金（給料の2か月分）だけ減る
+      final got = s.staff.last;
+      if ((c0 - s.cash - got.salary * 2).abs() > 1) note('値段の食い違い 支度金: ${yen(got.salary * 2)} / 実際 ${yen(c0 - s.cash)}');
+    }
     mark('雇う');
   }
 
@@ -671,7 +688,9 @@ class Pilot {
     if (s.ap < 1) return;
     where = '社長の行動 $kind';
     await tab('town');
-    final ap = s.ap;
+    final h0 = s.hUsed;
+    // 社長の行動は右の帯の「社長の行動」の小窓から（1.1.0+25）
+    await pressKey('pres-open');
     switch (kind) {
       case 'work':
         await money('日銭', s.workIncome(), () async {
@@ -683,14 +702,17 @@ class Pilot {
         await press(inSheet(find.byType(ChoiceBtn)).at(_pick++ % 4), '磨く能力');
         await drain();
       case 'net':
-        if (s.net >= 5) return;
+        if (s.net >= 5) {
+          await drain();
+          return;
+        }
         await pressText(tr('人脈を作る'));
         await drain();
       case 'scout':
         await pressText(tr('事業の種を探す'));
         await drain();
     }
-    if (s.ap != ap - 1) note('社長の行動 $kind の手の数: 札は1手、実際は${ap - s.ap}');
+    if (s.hUsed - h0 != s.hrs(kind)) note('社長の行動 $kind の時間: 札は${s.hrs(kind)}時間、実際は${s.hUsed - h0}');
     mark('社長の行動');
   }
 
@@ -862,6 +884,14 @@ class Pilot {
     if (s.succ != p.id) note('後継ぎが選べない');
     await press(pick, '後継ぎの欄');
     await t.pump(const Duration(milliseconds: 400));
+    // 横向きの低い画面では、選ぶ欄の一覧が流れていて「まだ決めていない」が上に隠れていることがある。見える所まで送る
+    final none = find.text(tr('まだ決めていない')).last;
+    if (!_has(none.hitTestable())) {
+      try {
+        await t.dragUntilVisible(none, find.byType(Scrollable).last, const Offset(0, 120), maxIteration: 20);
+        await t.pump();
+      } catch (_) {}
+    }
     await t.tap(find.text(tr('まだ決めていない')).last, warnIfMissed: false);
     await t.pump();
     await t.pump(const Duration(milliseconds: 400));
@@ -1013,14 +1043,17 @@ class Pilot {
     }
     // 銀行：借りて、返す
     where = 'ひと回り（銀行）';
-    final a = (s.borrowLimit() - s.debt) * .25;
-    if (a >= 1e5 && s.debt == 0) {
+    // 1.1.0+25 から「お金」の「借金と銀行」で、借りるには社長の時間（銀行に会う）がかかる
+    final a = s.borrowRoom() * .25;
+    if (a >= 1e5 && s.debt == 0 && s.canT('bank')) {
+      await tab('money');
+      await pressKey('money-bank');
       await money('借りる', a, () async {
-        await pressText(tr('{0} 借りる', [yen(a)]));
+        await pressKey('borrow-0.25');
         await drain();
       });
       await money('返す', -a, () async {
-        await pressText(tr('全部返す'));
+        await pressKey('repay-all');
         await drain();
       });
       mark('銀行');
@@ -1158,11 +1191,12 @@ class Pilot {
       final b = s.biz.where((b) => s.canDeleg(b) && !b.deleg).firstOrNull;
       if (b != null) {
         where = '任せる';
-        final ap = s.ap;
+        final h0 = s.hUsed;
         await card(b);
         await pressKey('deleg-on-${b.id}');
         if (!s.delegated(b)) note('任せられない');
-        if (s.ap != ap) note('任せるのに手を使った');
+        // 任せるのに社長の時間は使わない（任せると会議の時間が減る。1.1.0+25）
+        if (s.hUsed != h0) note('任せるのに時間を使った');
         mark('任せる');
       }
     }

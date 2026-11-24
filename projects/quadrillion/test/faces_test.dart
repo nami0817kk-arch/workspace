@@ -734,6 +734,8 @@ void main() {
         expect(rf.img, rv.pf);
         expect(rf.rival, isTrue);
         await p.tab('people');
+        // 横向きの画面は低いので、社長のカードが見える所まで送る（1.1.0+25）
+        expect(await p.reveal(find.byWidgetPredicate((w) => w is Face && w.ring && w.col == '#f2c14e')), isTrue);
         final pf = tester.widget<Face>(find.byWidgetPredicate((w) => w is Face && w.ring && w.col == '#f2c14e').first);
         expect(pf.img, g.pres.face);
         expect(pf.size, faceBig);

@@ -86,8 +86,9 @@ void main() {
       final p = _staff(s);
       b.mgr = p.id;
       final pow0 = b.power, frac = cw('us', s.yr()) / s.reachOf(b);
+      final h0 = s.hUsed;
       final msg = s.makeLocal(b, 'us', p.id);
-      expect(msgKey(msg), isNot('今月の手が残っていません'));
+      expect(msgKey(msg), isNot(startsWith('今月の社長の時間が足りません')));
       final c = s.locals().single;
       expect(c.loc, 'us');
       expect(c.parent, 'player');
@@ -100,7 +101,7 @@ void main() {
       expect(b.power, closeTo(pow0 * (1 - frac), pow0 * 1e-9));
       expect(c.biz.single.power, closeTo(pow0 * frac, pow0 * 1e-9));
       expect(c.rev, greaterThan(0));
-      expect(s.ap, 2);
+      expect(s.hUsed - h0, hoursOf['local'], reason: '現地法人を作るのに社長の時間を使う（1.1.0+25）');
       expect(s.history.last.k, 'local');
       expect(txIn(msg, 'ja'), contains('現地法人'));
       // 同じ国にはもう出られない（現地法人が出ている）
@@ -127,7 +128,7 @@ void main() {
       expect(msgKey(s.makeLocal(b, 'us', pt.id)), startsWith('相棒は本社に残します'));
       expect(s.localPresCands().contains(pt), isFalse);
       s.ap = 0;
-      expect(msgKey(s.makeLocal(b, 'us')), '今月の手が残っていません');
+      expect(msgKey(s.makeLocal(b, 'us')), startsWith('今月の社長の時間が足りません'));
       s.ap = 3;
       s.makeLocal(b, 'us');
       b.ctry = [s.home, 'us'];

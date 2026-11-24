@@ -307,7 +307,7 @@ extension GameView on Game {
       final c = cs.where((x) => cash >= entryCost(grow, x.c, entryModes(grow, x.c).contains('jv') ? 'jv' : entryModes(grow, x.c).first)).firstOrNull;
       if (c != null) add(52, '「{0}」が伸びています。まだ{1}だけなので、「海外に出る」で{2}などに広げれば市場が何倍にもなります', [I(grow.ind), C(home), C(c.c)], 'biz', grow);
     }
-    if (biz.isNotEmpty && cash > biz.map((b) => b.rev).reduce(math.max) * .5 && ap > 0) {
+    if (biz.isNotEmpty && cash > biz.map((b) => b.rev).reduce(math.max) * .5 && canT('invest')) {
       add(50, '現金が余っています。伸びている事業に投資するか、新しい事業を始めましょう', const [], 'bizTab');
     }
     a.ssort((p, q) => q.pri - p.pri);
