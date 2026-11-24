@@ -374,9 +374,17 @@ void main() {
                 await tester.tap(renew.first);
                 await tester.pump(const Duration(milliseconds: 800));
                 await shoot('$p-detail-negotiation');
-                await tester
-                    .state<NavigatorState>(find.byType(Navigator).first)
-                    .maybePop();
+                // 交渉は「やめる」で閉じる(開いたままだと、やることの印が
+                // 増えて後のタブの撮影が変わる)。
+                final walk =
+                    find.text(_t('交渉をやめる', 'Walk away')).hitTestable();
+                if (walk.evaluate().isNotEmpty) {
+                  await tester.tap(walk.first);
+                } else {
+                  await tester
+                      .state<NavigatorState>(find.byType(Navigator).first)
+                      .maybePop();
+                }
                 await tester.pump(const Duration(milliseconds: 600));
               } else {
                 await tester.tapAt(const Offset(400, 20));
@@ -419,7 +427,11 @@ void main() {
             await tester
                 .state<NavigatorState>(find.byType(Navigator).first)
                 .maybePop();
-            await tester.pump(const Duration(milliseconds: 600));
+            // 比較の画面を閉じる動きが終わるまで待つ(600ms では、まだ上の
+            // タブが押せなかった)。
+            for (var i = 0; i < 4; i++) {
+              await tester.pump(const Duration(seconds: 1));
+            }
           }
         }
       }

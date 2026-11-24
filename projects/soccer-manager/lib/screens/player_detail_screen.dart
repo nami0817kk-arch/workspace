@@ -87,7 +87,7 @@ class PlayerDetailScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: wide ? 52 : null,
-          titleSpacing: wide ? 0 : null,
+          titleSpacing: wide && Navigator.of(context).canPop() ? 0 : null,
           title: wide
               ? Row(
                   children: [
@@ -660,16 +660,19 @@ class _AttributesTab extends StatelessWidget {
                     'Season start $seasonStart → now ${p.overall}'),
                 style: TextStyle(fontSize: 12, color: subtle),
               ),
-            if (p.overallHistory.length >= 2 &&
-                p.overallHistory.toSet().length > 1) ...[
+            if (p.overallHistory.length >= 2) ...[
               const SizedBox(height: 4),
               Text(
-                Tr.pick(
-                    '直近${p.overallHistory.length}節: ${p.overallHistory.first} → ${p.overallHistory.last}',
-                    'Last ${p.overallHistory.length} matchdays: ${p.overallHistory.first} → ${p.overallHistory.last}'),
+                p.overallHistory.toSet().length > 1
+                    ? Tr.pick(
+                        '直近${p.overallHistory.length}節: ${p.overallHistory.first} → ${p.overallHistory.last}',
+                        'Last ${p.overallHistory.length} matchdays: ${p.overallHistory.first} → ${p.overallHistory.last}')
+                    : Tr.pick('直近${p.overallHistory.length}節は${p.overallHistory.last}のまま',
+                        'Unchanged at ${p.overallHistory.last} over the last ${p.overallHistory.length} matchdays'),
                 style: TextStyle(fontSize: 11, color: subtle),
               ),
-              GrowthSparkline(history: p.overallHistory, height: 44),
+              if (p.overallHistory.toSet().length > 1)
+                GrowthSparkline(history: p.overallHistory, height: 44),
             ] else
               Text(
                 Tr.pick('まだ伸びの記録がありません(試合の節ごとに付きます)。',
@@ -734,7 +737,8 @@ class _AttributesTab extends StatelessWidget {
               ),
       ),
     ];
-    return _TwoPane(left: left, right: right, leftFlex: 5);
+    // 能力の表は4つの分類を横に並べるので、左を広くする。
+    return _TwoPane(left: left, right: right, leftFlex: 6);
   }
 }
 

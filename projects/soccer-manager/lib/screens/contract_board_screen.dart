@@ -182,7 +182,8 @@ class ContractBoardScreen extends StatelessWidget {
                   ],
                 ),
         ),
-        _allContracts(context, game, team),
+        _allContracts(context, game, team,
+            skip: {for (final p in expiring) p.id}),
         _preContractPanel(context, game),
         Padding(
           padding: const EdgeInsets.only(top: 2, bottom: 8),
@@ -275,11 +276,20 @@ class ContractBoardScreen extends StatelessWidget {
     );
   }
 
-  /// 全員の契約を、残りの短い順に。行を押すと選手の詳しい画面、「…」で操作。
-  Widget _allContracts(BuildContext context, GameState game, Team team) {
+  /// ほかの選手の契約を、残りの短い順に(更新の時期の選手は上の札に出して
+  /// いるので除く)。行を押すと選手の詳しい画面、「…」で操作。
+  Widget _allContracts(BuildContext context, GameState game, Team team,
+      {Set<String> skip = const {}}) {
     final theme = Theme.of(context);
     final subtle = SemanticColors.subtleText(context);
-    final list = [...team.players]..sort((a, b) {
+    final size = MediaQuery.sizeOf(context);
+    // 横画面は行を少し低く(全員を並べても縦に長くなりすぎないように)。
+    final wide = size.width > size.height;
+    final rowHeight = wide ? 34.0 : 48.0;
+    final list = [
+      for (final p in team.players)
+        if (!skip.contains(p.id)) p
+    ]..sort((a, b) {
         // 借りている選手は契約がこちらに無いので最後に回す。
         if (a.isLoan != b.isLoan) return a.isLoan ? 1 : -1;
         final c = a.contractEndYear.compareTo(b.contractEndYear);
@@ -301,7 +311,7 @@ class ContractBoardScreen extends StatelessWidget {
     }
 
     return FmPanel(
-      title: Tr.pick('全員の契約(残りの短い順)', 'All contracts (soonest first)'),
+      title: Tr.pick('そのほかの契約(残りの短い順)', 'Other contracts (soonest first)'),
       padding: EdgeInsets.zero,
       child: Column(
         children: [
@@ -333,8 +343,8 @@ class ContractBoardScreen extends StatelessWidget {
               key: ValueKey('board-row-${p.id}'),
               onTap: () => openPlayerDetail(context, p.id),
               child: Container(
-                // 押せる行は指の大きさ(48)にそろえる。
-                constraints: const BoxConstraints(minHeight: 48),
+                // 押せる行は指の大きさにそろえる。
+                constraints: BoxConstraints(minHeight: rowHeight),
                 padding: const EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
                   border: Border(
@@ -379,7 +389,7 @@ class ContractBoardScreen extends StatelessWidget {
                     flex: 5,
                     child: Text(clauseSummary(game, p),
                         style: TextStyle(fontSize: 11, color: subtle),
-                        maxLines: 2,
+                        maxLines: wide ? 1 : 2,
                         overflow: TextOverflow.ellipsis),
                   ),
                   Expanded(
@@ -396,6 +406,8 @@ class ContractBoardScreen extends StatelessWidget {
                     width: 48,
                     child: IconButton(
                       key: ValueKey('board-menu-${p.id}'),
+                      visualDensity:
+                          wide ? VisualDensity.compact : VisualDensity.standard,
                       iconSize: 18,
                       tooltip: Tr.pick('操作', 'Actions'),
                       icon: const Icon(Icons.more_horiz),
@@ -458,10 +470,14 @@ class ContractBoardScreen extends StatelessWidget {
           if (others.isNotEmpty) ...[
             line(Tr.pick('他のクラブ同士', 'Between other clubs'),
                 color: theme.colorScheme.secondary),
-            for (final c in others.take(30))
+            // 他のクラブ同士は参考なので10件まで(縦に長くしない)。
+            for (final c in others.take(10))
               line(Tr.pick(
                   '${c.playerName}: ${c.fromClubName} → ${c.toClubName}',
                   '${c.playerName}: ${c.fromClubName} to ${c.toClubName}')),
+            if (others.length > 10)
+              line(Tr.pick('ほか${others.length - 10}件',
+                  '${others.length - 10} more')),
           ],
           if (!open)
             line(Tr.pick('いまは仮契約を結べる時期ではありません(1月1日〜6月30日)。',
@@ -473,7 +489,8 @@ class ContractBoardScreen extends StatelessWidget {
                 color: theme.colorScheme.primary),
             if (targets.isEmpty)
               line(Tr.pick('いま結べる選手はいません。', 'No one is available right now.')),
-            for (final t in targets)
+            // 結べる相手は12人まで(総合力の高い順に並んでいる)。
+            for (final t in targets.take(12))
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -504,6 +521,9 @@ class ContractBoardScreen extends StatelessWidget {
                 ),
               ),
           ],
+          if (open && targets.length > 12)
+            line(Tr.pick('ほか${targets.length - 12}人(総合力の高い順に12人まで)',
+                '${targets.length - 12} more (top 12 by overall shown)')),
           const SizedBox(height: 6),
         ],
       ),
