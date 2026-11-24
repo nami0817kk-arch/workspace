@@ -49,7 +49,83 @@ class BudgetPlan {
         BudgetCategory.dividend: 20,
       });
 
+  /// 補強に寄せた型。給与の上限 +10%。育成は少し薄く、施設と配当を削る
+  /// (増築費 +5%、株主の期待 毎年 -2)。営業は初期のままで収入は減らさない。
+  factory BudgetPlan.signingFocus() => const BudgetPlan._({
+        BudgetCategory.signing: 50,
+        BudgetCategory.youth: 15,
+        BudgetCategory.facilities: 10,
+        BudgetCategory.marketing: 15,
+        BudgetCategory.dividend: 10,
+      });
+
+  /// 育成に寄せた型。育成は初期の2倍(蓄積の上限に届く量)。補強と配当を
+  /// 削る(給与の上限 -5%、株主の期待 毎年 -2)。施設と営業は初期のまま。
+  factory BudgetPlan.youthFocus() => const BudgetPlan._({
+        BudgetCategory.signing: 20,
+        BudgetCategory.youth: 40,
+        BudgetCategory.facilities: 15,
+        BudgetCategory.marketing: 15,
+        BudgetCategory.dividend: 10,
+      });
+
+  /// 画面で配り直している途中の配分。合計が100に届いていなくてもよい
+  /// (足りない分が「残り」)。保存できるのは [isComplete] のものだけ。
+  /// どれかが0〜100の外、または合計が100を超えるなら [ArgumentError]。
+  factory BudgetPlan.draft(Map<BudgetCategory, int> shares) {
+    final copy = <BudgetCategory, int>{};
+    for (final c in BudgetCategory.values) {
+      final v = shares[c];
+      if (v == null || v < 0 || v > 100) {
+        throw ArgumentError.value(shares, 'shares', 'out of 0..100');
+      }
+      copy[c] = v;
+    }
+    final plan = BudgetPlan._(copy);
+    if (plan.total > 100) {
+      throw ArgumentError.value(shares, 'shares', 'total over 100');
+    }
+    return plan;
+  }
+
+  /// −／＋ボタンの刻み(%)。
+  static const int step = 5;
+
   int share(BudgetCategory category) => shares[category]!;
+
+  /// 5つの合計。保存されている配分では常に100。
+  int get total => shares.values.fold<int>(0, (t, v) => t + v);
+
+  /// まだどこにも配っていない分(%)。
+  int get remaining => 100 - total;
+
+  /// 配り切っているか。保存できるのはこのときだけ。
+  bool get isComplete => remaining == 0;
+
+  bool sameAs(BudgetPlan other) =>
+      BudgetCategory.values.every((c) => share(c) == other.share(c));
+
+  /// [category] を1刻み減らす。他の配り先は動かさず、減らした分は
+  /// [remaining] に回る。5の倍数でない値(旧い保存の 33% など)からは、
+  /// すぐ下の5の倍数(30%)へ寄せる。
+  BudgetPlan stepDown(BudgetCategory category) {
+    final v = share(category);
+    if (v <= 0) return this;
+    final next = v % step == 0 ? v - step : v - v % step;
+    return BudgetPlan._({...shares, category: next});
+  }
+
+  /// [category] を1刻み増やす。増やせるのは [remaining] の分まで。
+  /// 5の倍数でない値からは、すぐ上の5の倍数へ寄せる。残りが1刻みに
+  /// 足りないとき(残り3%など)は残りを全部足すので、必ず配り切れる。
+  BudgetPlan stepUp(BudgetCategory category) {
+    final v = share(category);
+    final room = remaining;
+    if (room <= 0 || v >= 100) return this;
+    final wanted = step - v % step;
+    final add = wanted < room ? wanted : room;
+    return BudgetPlan._({...shares, category: v + add});
+  }
 
   /// [category] の比率を [share](0〜100)にし、残りの4つは今の比率の
   /// 大きさに応じて分け直す。合計は100のまま。端数は比率の大きい配り先へ
