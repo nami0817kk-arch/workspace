@@ -168,16 +168,22 @@ async function clearEvents() {
     dom.window.YA_DEV = true;
     ok(Y.devOn() === true, '開発用の道具は有効にすると出る');
   }
-  ok(txt().includes('今週気にかけたい子') && txt().includes('お知らせ'), 'ホームの欄');
+  ok(txt().includes('今週気にかけたい子') && txt().includes('お知らせ') && txt().includes('やり残し') && txt().includes('今週の試合'), 'ホームの欄');
+  // 2026-11-25 ホームは「今週やること」に絞る：お知らせは上の1行、押すと一覧の窓。次の実績・今週の伸び・ご褒美の動画はホームに出さない
+  ok(!!d.querySelector('#main .nbar') && !txt().includes('次の実績') && !txt().includes('今週の伸び') && !txt().includes('ご褒美の動画'), 'ホームはお知らせを1行・外したものは出ない');
   // 2026-11-17 画面の直し：お知らせの重要度は札で、選手につながるものは「›」、「すべてのお知らせ」
   {
     A.w.inbox.push({ year: A.w.year, week: A.w.week, text: 'てすと：選手につながる知らせ', pid: Object.keys(A.w.players)[0], tier: 1 });
     w.YA._ui.render();
-    const tags = [...d.querySelectorAll('#main .ntag')].map((e) => e.textContent);
+    ok(d.querySelector('#main .nbar').textContent.includes('新しい'), 'お知らせの1行に新しい件数');
+    d.querySelector('#main .nbar').click();
+    ok(!!d.querySelector('.noticewin'), 'お知らせの1行を押すと一覧の窓');
+    const tags = [...d.querySelectorAll('.noticewin .ntag')].map((e) => e.textContent);
     ok(tags.length > 0 && tags.every((t) => ['大事', '通常', '記録'].includes(t)), 'お知らせの重要度に札（色だけにしない） ' + tags.slice(0, 3).join(','));
     const it = [...d.querySelectorAll('#main .pitem')].find((e) => e.textContent.includes('てすと：選手につながる知らせ'));
     ok(!!it && !!it.querySelector('.goarrow') && it.textContent.includes('大事'), '選手につながるお知らせに「›」');
     ok(!!btn('すべてのお知らせ') && !txt().includes('記録も見る'), 'お知らせを広げるボタンは「すべてのお知らせ」');
+    btn('閉じる', d.querySelector('.noticewin')).click();
     A.w.inbox.pop();
     w.YA._ui.render();
   }
@@ -798,7 +804,7 @@ async function clearEvents() {
       { const g = [...d.querySelectorAll('#main .scroll')].find((e) => e.style.display === 'grid'); ok(!!g && g.children.length === 80 && g.style.gridTemplateColumns.includes('repeat(4'), '図鑑は4列の札・80種（2026-11-20）'); }
       ltab('実績');
       rail('ホーム');
-      ok(!txt().includes('系譜図') && !d.querySelector('.lin-svg') && txt().includes('次の実績'), 'ホームに次の実績（系譜の小窓は無い）');
+      ok(!txt().includes('系譜図') && !d.querySelector('.lin-svg') && !txt().includes('次の実績'), 'ホームに系譜の小窓も次の実績も無い（2026-11-25 次の実績は記録へ）');
       rail('ほか');
       ok(txt().includes('設定') || txt().includes('実績と引退'), '歯車から設定へ');
     }

@@ -513,15 +513,14 @@
     return card;
   };
   YA.views = YA.views || {};
-  const homeBase = YA.views.home;
-  if (homeBase && !homeBase._shop) {
-    const home3 = function (main) {
-      homeBase(main);
-      const right = main.querySelector('.card.pbody[style*="210px"]');
-      if (right && U().app.w) right.append(YA.rewardCard(U().app.w));
+  // ご褒美の動画は 2026-11-25 にホームからショップの画面へ移した（ホームは「今週やること」に絞る）
+  const shopBase = YA.shopBlock;
+  if (shopBase && !shopBase._rw) {
+    YA.shopBlock = function (body) {
+      shopBase(body);
+      if (U().app.w) body.append(YA.rewardCard(U().app.w));
     };
-    home3._shop = true;
-    YA.views.home = home3;
+    YA.shopBlock._rw = true;
   }
   // 候補の画面：動画で見立てを詳しく
   YA.boostButton = function (w, c, rerenderFn) {

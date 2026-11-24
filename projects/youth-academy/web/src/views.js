@@ -86,113 +86,143 @@
   YA.noticeTagText = (et) => (NOTICE_TAG[et] || NOTICE_TAG[3])[0];
 
   // ---------- ホーム ----------
+  // 2026-11-25「各画面の構成について会話したい」→ ホームは「今週やること」に絞る（ユーザー決定）。
+  //   上：お知らせを1行だけ（大事な知らせ＋新しい件数）。押すと一覧の窓
+  //   左：週の表示と大きなボタン、今週の試合　真ん中：やり残し　右：今週気にかけたい子
+  //   外したもの：次の実績（→記録）・今週の伸び（→選手）・トップの順位（→クラブ）・ご褒美の動画（→ほかのショップ）
+  const nkey = (n) => `${n.year || 0}-${n.week || 0}-${String(n.text).slice(0, 24)}`;
+  const nNew = (w, n) => ((n.year || 0) * 100 + (n.week || 0)) > (w.readAt || 0) && YA.noticeTier(w, n) <= 2;
+  // お知らせの一覧（窓の中身）
+  function noticeList(w, close) {
+    const showLog = !!U().app.showLog;
+    const box = h('div', { style: 'display:flex;flex-direction:column;min-height:0;flex:1' });
+    const list = h('div', { class: 'plist scroll', style: 'margin-top:4px;flex:1;min-height:0;overflow:auto' });
+    w.pins = (w.pins || []).filter((k) => w.inbox.some((n) => nkey(n) === k));
+    const pinned = w.inbox.filter((n) => w.pins.indexOf(nkey(n)) >= 0);
+    const redraw = () => { close(); openNotices(); };
+    for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:11px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text), h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); redraw(); } }, '外す')));
+    const items = w.inbox.filter((n) => (showLog || YA.noticeTier(w, n) <= 2) && w.pins.indexOf(nkey(n)) < 0).slice(-40).reverse();
+    for (const n of items) {
+      const et = YA.noticeTier(w, n);
+      const isNew = nNew(w, n);
+      // 重要度は色の点だけでなく短い札で（2026-11-17 点検）。選手につながるお知らせには「›」
+      const go = n.pid && w.players[n.pid];
+      // 留めるのは行の長押しで（2026-11-18 ユーザビリティ17）
+      const row = h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:' + (go ? 'pointer' : 'default') + (isNew ? ';font-weight:700' : '') }, noticeTag(et), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:12px;line-height:1.45' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text, go ? h('b', { class: 'goarrow', style: 'color:var(--blue-d);margin-left:4px;font-size:13px' }, '›') : null));
+      let lp = null, held = false;
+      if (et <= 2) {
+        row.addEventListener('pointerdown', () => { held = false; lp = setTimeout(() => { held = true; w.pins = (w.pins || []).concat([nkey(n)]).slice(-5); YA.saveWorld(); if (YA.toast) YA.toast('上に留めました（外すときは「外す」）'); redraw(); }, 550); });
+        for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) row.addEventListener(ev, () => clearTimeout(lp));
+      }
+      row.addEventListener('click', () => { if (held) return; if (go) { close(); U().app.pSel = n.pid; U().app.tab = 'players'; rerender(); } });
+      list.append(row);
+    }
+    if (!items.length && !pinned.length) list.append(h('div', { class: 'note' }, 'お知らせはありません'));
+    const unread = w.inbox.filter((n) => nNew(w, n)).length;
+    box.append(list, h('div', { class: 'note', style: 'margin-top:3px' }, '大事・通常のお知らせは、長押しで上に留められます（5件まで）'), h('div', { class: 'row', style: 'gap:5px;margin-top:5px' }, h('button', { class: 'btn sm', onclick: () => { U().app.showLog = !showLog; redraw(); } }, showLog ? '記録だけのものを隠す' : 'すべてのお知らせ'), unread ? h('button', { class: 'btn sm', onclick: () => { w.readAt = w.year * 100 + w.week; YA.saveWorld(); close(); rerender(); } }, 'すべて読んだ') : null));
+    return box;
+  }
+  function openNotices() {
+    const w = W();
+    modal((close) => h('div', { class: 'sheet-in noticewin', style: 'flex:none;align-self:center;margin:auto;width:min(680px,96%);max-height:92%;padding:10px 12px;display:flex;flex-direction:column' },
+      h('div', { class: 'row', style: 'gap:6px' }, h('div', { class: 'h grow' }, 'お知らせ'), h('button', { class: 'btn sm', onclick: () => { close(); rerender(); } }, '閉じる')),
+      noticeList(w, close)));
+  }
+  YA.openNotices = openNotices;
+  // 今週気にかけたい子：理由を短く添える。★の子は鍵の進みも
+  function careList(w, S) {
+    const why = new Map();
+    const add = (p, t) => { if (!why.has(p)) why.set(p, t); };
+    for (const p of S.injured) add(p, '怪我 ' + p.inj + '週');
+    for (const p of Object.values(w.players)) if (p.unrest >= 3) add(p, '不満');
+    for (const p of S.tired) add(p, '疲れ ' + Math.round(p.fat));
+    for (const p of S.lowconf) add(p, '自信なし');
+    for (const p of Object.values(w.players)) {
+      if (!p.star || !p.keys) continue;
+      const k = p.keys.filter((x) => !x.done && x.need > 0).sort((a, b) => b.have / b.need - a.have / a.need)[0];
+      if (k && k.h >= 2 && k.need - k.have <= Math.max(1, k.need * 0.25)) add(p, '鍵まであと少し');
+      else if (k && k.due && k.due <= w.year * 100 + w.week + 4) add(p, '鍵の期限が近い');
+    }
+    for (const p of S.hot) add(p, p.spurt > 0 ? '成長期' : '好調');
+    return [...why.entries()];
+  }
   function viewHome(main) {
     const w = W();
     const cal = YA.calendar(w.week);
     const opp = YA.matchOf(w) ? YA.opponentOf(w) : null;
-    const wrap = h('div', { class: 'home' });
-    // 左：今週
-    const left = h('div', { class: 'card home-left', style: 'width:34%;min-width:250px;padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;overflow-x:hidden' });
-    const tn = w.top ? YA.topNow(w) : null;
+    // ホームを開いたら、その週より前のお知らせは既読にする（2026-11-16 案A）。数は今週の分だけ
+    w.readAt = Math.max(w.readAt || 0, w.year * 100 + w.week - 1);
+    const page = h('div', { class: 'home', style: 'flex:1;min-height:0;display:flex;flex-direction:column;gap:6px' });
+    // 上：お知らせを1行
+    const unread = w.inbox.filter((n) => nNew(w, n));
+    const top = unread.filter((n) => YA.noticeTier(w, n) === 1).pop() || unread.pop() || w.inbox.filter((n) => YA.noticeTier(w, n) <= 2).slice(-1)[0];
+    // 行全体を押せるようにするが、button にはしない（中の文がほかのボタン探しに紛れないように）
+    page.append(h('div', { class: 'card nbar', role: 'button', tabindex: '0', style: 'flex:none;display:flex;align-items:center;gap:7px;padding:5px 10px;min-height:36px;text-align:left;cursor:pointer;border:1px solid var(--line)', onclick: openNotices },
+      h('b', { style: 'flex:none;font-size:12px;color:var(--navy)' }, 'お知らせ'),
+      unread.length ? h('span', { class: 'nbadge', style: 'flex:none;background:#d63a3a;color:#fff;border-radius:9px;padding:0 7px;font-size:11px;font-weight:800;line-height:18px' }, '新しい' + unread.length + '件') : null,
+      top ? noticeTag(YA.noticeTier(w, top)) : null,
+      h('span', { class: 'grow', style: 'min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px' }, top ? (top.week ? `${YA.wkName(top.week)} ` : '') + top.text : 'お知らせはありません'),
+      h('b', { style: 'flex:none;color:var(--blue-d)' }, '一覧 ›')));
+    const wrap = h('div', { style: 'flex:1;min-height:0;display:flex;gap:8px' });
+    // 左：週と大きなボタン、今週の試合
+    const left = h('div', { class: 'card home-left', style: 'width:36%;min-width:250px;padding:10px;display:flex;flex-direction:column;gap:6px;overflow-y:auto;overflow-x:hidden' });
     const prom = (w.promises || []).filter((x) => w.players[x.pid]);
     left.append(h('div', { class: 'row', style: 'gap:6px' }, YA.emblemEl(w, w.clubName, 24), h('div', { class: 'sub' }, w.clubName)),
-      tn ? h('button', { class: 'chip gray', style: 'align-self:flex-start;border:none;cursor:pointer;min-height:34px;padding:4px 12px;white-space:normal;text-align:left;max-width:100%', onclick: () => { U().app.tab = 'club'; U().app.ct = 'top'; rerender(); } }, `トップ：${w.top.name}（${tn.league} 第${tn.round}節 ${tn.rank}位）`) : null,
-      ...prom.map((x) => h('div', { class: 'fit bad', style: 'align-self:flex-start' }, `約束：${x.name.split(' ')[0]}を${x.why.replace('保護者に、', '')}（あと${Math.max(0, x.until - w.week + 1)}週）`)), h('div', { class: 'h', style: 'font-size:19px' }, `${w.year}年目  ${cal.month}第${cal.nth}週`), h('div', { class: 'note' }, `${YA.weekLabel(w) || '育成の週'} ／ ${YA.levelNames(w)[w.league.level - 1]} ${YA.myRank(w)}位 ／ ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`));
-    // 今週の試合は「次の週へ」のすぐ下に（2026-11-18 ユーザビリティ6：左の列の下に隠れていた）
-    const matchEl = h('div', { class: 'card', style: 'padding:5px 8px;background:#f5f8fd;box-shadow:none;flex:none' }, opp ? h('div', { class: 'row', style: 'gap:5px' }, h('span', { class: 'chip ' + (opp.home ? 'pers' : 'gray'), style: 'flex:none' }, opp.home ? 'ホーム' : 'アウェイ'), h('b', { style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `今週 vs ${opp.name}`)) : h('div', { class: 'sub' }, '今週は試合なし。育成に集中できます'), opp && opp.desc ? h('div', { class: 'note', style: 'display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden' }, opp.desc) : null);
-    const S = YA.summaryOf(w);
-    left.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:4px' }, S.injured.length ? h('span', { class: 'fit bad' }, '怪我 ' + S.injured.length + '人') : null, S.tired.length ? h('span', { class: 'fit bad' }, '疲れ ' + S.tired.length + '人') : null, S.lowconf.length ? h('span', { class: 'fit bad' }, '自信なし ' + S.lowconf.length + '人') : null, S.hot.length ? h('span', { class: 'fit good' }, '好調・成長期 ' + S.hot.length + '人') : null));
-    left.append(h('div', { class: 'grow' }));
+      h('div', { class: 'h', style: 'font-size:19px' }, `${w.year}年目  ${cal.month}第${cal.nth}週`),
+      h('div', { class: 'note' }, `${YA.weekLabel(w) || '育成の週'} ／ ${YA.levelNames(w)[w.league.level - 1]} ${YA.myRank(w)}位 ／ ${w.rec.w}勝${w.rec.d}分${w.rec.l}敗`));
     const ex = YA.homeExtra();
-    if (ex) left.append(ex);
     const act = h('div', { style: 'display:flex;flex-direction:column;gap:5px' });
     if (w.phase === 'plan') {
       // 練習は月に1回組めばよい。同じ月の残りの週は、組んだメニューのまま1タップで進める
       const mk = w.year * 100 + YA.monthIdx(w.week);
       const set = w.planMonth === mk;
-      const hint = YA.scoutHint(w);
-      // ボタンは短く（2026-11-16 画面の点検：3行に折れていた）。担当スカウトの癖などの添え書きは、ボタンの下に小さく
-      if (hint) {
-        const m = String(hint).match(/^(.*?）)(（.*）)$/);
-        act.append(h('button', { class: 'btn', onclick: () => { const wn = YA.scoutWindow(w); U().app.tab = 'club'; U().app.ct = wn.int ? 'int' : wn.sel ? 'sel' : 'scout'; rerender(); } }, m ? m[1] : hint));
-        if (m) act.append(h('div', { class: 'note', style: 'margin-top:-3px' }, m[2].slice(1, -1)));
-      }
-      act.append(h('button', { class: 'btn', onclick: () => { U().app.tab = 'train'; rerender(); } }, set ? '今月の練習を組み直す' : `練習を組む（${cal.month}のメニュー）`));
-      // 「週を進める」は練習の画面と同じ言葉・同じ大きさ（2026-11-17 点検：3つの言い方があった）。今月の練習のままかは下に小さく
+      // 「週を進める」は練習の画面と同じ言葉・同じ大きさ（2026-11-17 点検）
       act.append(h('button', { class: 'btn pri', style: WEEK_GO_STYLE, onclick: () => { runWeek(); } }, WEEK_GO));
       act.append(h('div', { class: 'note', style: 'margin-top:-3px' }, set ? `${cal.month}に組んだ練習のまま進みます` : 'いまの練習で確定して進みます'));
+      act.append(h('button', { class: 'btn', onclick: () => { U().app.tab = 'train'; rerender(); } }, set ? '今月の練習を組み直す' : `練習を組む（${cal.month}のメニュー）`));
     } else if (w.phase === 'event') {
       act.append(h('button', { class: 'btn pri', style: 'min-height:42px', onclick: () => rerender() }, '出来事を確認する'));
     } else if (w.phase === 'match') {
       act.append(h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => { U().app.tab = 'match'; U().app.free = false; U().app.view = 'pre'; rerender(); } }, '試合へ（布陣と戦い方を決める）'));
     } else {
-      // 同じ月のうちは「次の週へ」1回で、練習はそのまま出来事・試合まで進む（2026-11-18 ユーザビリティ9：毎週4回押していた）。
-      // 月が替わる週・年度の終わりは、これまでどおり週のはじめで止まって練習を組む
+      // 同じ月のうちは「次の週へ」1回で、練習はそのまま出来事・試合まで進む（2026-11-18 ユーザビリティ9）
       const chain = YA.weekChainable(w);
       act.append(h('div', { class: 'note' }, w.matchDone ? '試合が終わりました。Bチームの試合も済んでいます。' : '今週はここまで。'), h('button', { class: 'btn pri', style: 'min-height:42px;font-size:14px', onclick: () => endWeek(chain) }, w.week >= YA.WEEKS ? '卒業式へ' : chain ? '次の週へ ▶' : '次の週へ（練習を組む）'));
       if (chain) act.append(h('div', { class: 'note', style: 'margin-top:-3px' }, `${cal.month}の練習のまま進みます`), h('button', { class: 'btn sm', onclick: () => endWeek(false) }, '練習やスカウトを見てから進む'));
     }
+    left.append(act);
+    // 今週の試合：相手・大会・相手の型
+    const S = YA.summaryOf(w);
+    left.append(h('div', { class: 'card hmatch', style: 'padding:6px 9px;background:#f5f8fd;box-shadow:none;flex:none' },
+      h('div', { class: 'sub', style: 'font-size:11px;font-weight:800' }, '今週の試合'),
+      opp ? h('div', { class: 'row', style: 'gap:5px;margin-top:2px' }, h('span', { class: 'chip ' + (opp.home ? 'pers' : 'gray'), style: 'flex:none' }, opp.home ? 'ホーム' : 'アウェイ'), h('b', { style: 'min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap' }, `vs ${opp.name}`)) : h('div', { class: 'sub' }, '今週は試合なし。育成に集中できます'),
+      opp ? h('div', { class: 'note' }, YA.weekLabel(w) || 'リーグ戦') : null,
+      opp && opp.desc ? h('div', { class: 'note', style: 'display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden' }, opp.desc) : null));
+    for (const x of prom) left.append(h('div', { class: 'fit bad', style: 'align-self:flex-start' }, `約束：${x.name.split(' ')[0]}を${x.why.replace('保護者に、', '')}（あと${Math.max(0, x.until - w.week + 1)}週）`));
+    if (ex) left.append(ex);
     const simc = YA.simCard();
     if (simc) left.append(simc);
-    // 主な操作は週の見出しのすぐ下に置き、スクロールしなくても押せるように。その下に今週の試合
-    const wkHead = [...left.children].find((c) => c.classList && c.classList.contains('h'));
-    const after = wkHead && wkHead.nextSibling ? wkHead.nextSibling.nextSibling : left.children[3];
-    left.insertBefore(act, after || null);
-    // やり残し（期限のある操作）は「次の週へ」のすぐ下に（2026-11-18「操作を忘れることとかある」。上に置くと進むボタンが画面の外に押し出された）
-    const todo = YA.todoCard ? YA.todoCard(w) : null;
-    left.insertBefore(matchEl, act.nextSibling);
-    if (todo) left.insertBefore(todo, matchEl);
-    // 中：お知らせ＋先週の伸び
-    const mid = h('div', { class: 'card pbody', style: 'flex:1;min-width:0' });
-    mid.append(h('div', { class: 'h' }, 'お知らせ'));
-    const list = h('div', { class: 'plist', style: 'margin-top:4px' });
-    const showLog = !!U().app.showLog;
-    const nkey = (n) => `${n.year || 0}-${n.week || 0}-${String(n.text).slice(0, 24)}`;
-    w.pins = (w.pins || []).filter((k) => w.inbox.some((n) => nkey(n) === k));
-    const pinned = w.inbox.filter((n) => w.pins.indexOf(nkey(n)) >= 0);
-    // ホームを開いたら、その週より前のお知らせは既読にする（2026-11-16 案A：「新しい193件」と溜まり続けていた）。数は今週の分だけ
-    w.readAt = Math.max(w.readAt || 0, w.year * 100 + w.week - 1);
-    const readAt = w.readAt;
-    const unread = w.inbox.filter((n) => YA.noticeTier(w, n) <= 2 && ((n.year || 0) * 100 + (n.week || 0)) > readAt).length;
-    mid.querySelector('.h').textContent = unread ? `お知らせ（新しい${unread}件）` : 'お知らせ';
-    for (const n of pinned) list.append(h('div', { class: 'pitem', style: 'cursor:default;align-items:flex-start;background:#fff8e1' }, h('b', { style: 'font-size:11px;color:#a37b00;flex:none' }, '留'), h('span', { class: 'grow', style: 'font-size:11.5px;line-height:1.4' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text), h('button', { class: 'btn sm', style: 'min-height:32px;padding:0 9px', onclick: () => { w.pins = w.pins.filter((k) => k !== nkey(n)); YA.saveWorld(); rerender(); } }, '外す')));
-    const items = w.inbox.filter((n) => (showLog || YA.noticeTier(w, n) <= 2) && w.pins.indexOf(nkey(n)) < 0).slice(-14).reverse();
-    for (const n of items) {
-      const et = YA.noticeTier(w, n);
-      const isNew = ((n.year || 0) * 100 + (n.week || 0)) > readAt && et <= 2;
-      // 重要度は色の点だけでなく短い札で（2026-11-17 点検）。選手につながるお知らせには「›」
-      const go = n.pid && w.players[n.pid];
-      // 留めるのは行の長押しで（2026-11-18 ユーザビリティ17：行ごとの📌が本文の幅を取っていた）
-      const row = h('div', { class: 'pitem', style: 'align-items:flex-start;cursor:' + (go ? 'pointer' : 'default') + (isNew ? ';font-weight:700' : '') }, noticeTag(et), h('span', { class: 'grow ' + (et === 3 ? 'sub' : ''), style: 'font-size:12px;line-height:1.45' }, (n.week ? `${YA.wkName(n.week)} ` : '') + n.text, go ? h('b', { class: 'goarrow', style: 'color:var(--blue-d);margin-left:4px;font-size:13px' }, '›') : null));
-      let lp = null, held = false;
-      if (et <= 2) {
-        row.addEventListener('pointerdown', () => { held = false; lp = setTimeout(() => { held = true; w.pins = (w.pins || []).concat([nkey(n)]).slice(-5); YA.saveWorld(); if (YA.toast) YA.toast('上に留めました（外すときは「外す」）'); rerender(); }, 550); });
-        for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) row.addEventListener(ev, () => clearTimeout(lp));
-      }
-      row.addEventListener('click', () => { if (held) return; if (go) { U().app.pSel = n.pid; U().app.tab = 'players'; rerender(); } });
-      list.append(row);
+    // 真ん中：やり残し（期限の近い順。全部）
+    const mid = h('div', { class: 'card pbody home-mid', style: 'flex:1;min-width:0' });
+    mid.append(h('div', { class: 'row', style: 'gap:6px' }, h('div', { class: 'h' }, 'やり残し'), h('span', { class: 'sub', style: 'font-size:11px' }, '期限の近い順。押すとその画面へ')));
+    const hint = w.phase === 'plan' ? YA.scoutHint(w) : null;
+    const todo = YA.todoCard ? YA.todoCard(w, 20, true) : null;
+    if (todo) mid.append(todo);
+    if (hint) {
+      const m = String(hint).match(/^(.*?）)(（.*）)$/);
+      mid.append(h('button', { class: 'pitem', style: 'margin-top:5px;min-height:36px', onclick: () => { const wn = YA.scoutWindow(w); U().app.tab = 'club'; U().app.ct = wn.int ? 'int' : wn.sel ? 'sel' : 'scout'; rerender(); } }, h('span', { class: 'grow', style: 'font-size:12px;text-align:left' }, m ? m[1] : hint, m ? h('div', { class: 'sub', style: 'font-size:11px' }, m[2].slice(1, -1)) : null), h('b', { style: 'color:#7a8aa6' }, '›')));
     }
-    mid.append(list, h('div', { class: 'note', style: 'margin-top:3px' }, '大事・通常のお知らせは、長押しで上に留められます（5件まで）'), h('div', { class: 'row', style: 'gap:5px;margin-top:5px' }, h('button', { class: 'btn sm', onclick: () => { U().app.showLog = !showLog; rerender(); } }, showLog ? '記録だけのものを隠す' : 'すべてのお知らせ'), unread ? h('button', { class: 'btn sm', onclick: () => { w.readAt = w.year * 100 + w.week; YA.saveWorld(); rerender(); } }, 'すべて読んだ') : null));
-    // 右：気にかけたい子
-    const right = h('div', { class: 'card pbody home-right', style: 'width:210px;flex:none' });
+    if (!todo && !hint) mid.append(h('div', { class: 'note' }, 'いま決めることはありません。「この週で行く」で進めます'));
+    // 右：今週気にかけたい子
+    const right = h('div', { class: 'card pbody home-right', style: 'width:230px;flex:none' });
     right.append(h('div', { class: 'h' }, '今週気にかけたい子'));
-    const pick = [];
-    for (const p of S.injured.concat(S.tired, S.lowconf, Object.values(w.players).filter((q) => q.unrest >= 3), S.hot)) if (pick.indexOf(p) < 0) pick.push(p);
-    right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, pick.slice(0, 6).map((p) => h('button', { class: 'pitem', onclick: () => { U().app.pSel = p.id; U().app.tab = 'players'; rerender(); } }, posc(p), h('span', { class: 'nm grow' }, p.name.split(' ')[0]), flags(p), h('b', { style: 'color:#7a8aa6;flex:none', 'aria-hidden': 'true' }, '›')))));
-    if (!pick.length) right.append(h('div', { class: 'note' }, '大きな心配はありません'));
-    // 今週の伸び（決定90）：★の子は数字まで、ほかは矢印。コーチの一言を添える
-    const G = w.growth && w.growth.y === w.year && w.week - w.growth.w <= 1 ? w.growth : null;
-    right.append(h('div', { class: 'h', style: 'margin-top:10px' }, '今週の伸び'));
-    if (G && G.coach) right.append(h('div', { class: 'card', style: 'padding:5px 8px;margin:3px 0;background:#f5f8fd;font-size:11.5px' }, h('b', {}, 'コーチ：'), `「${G.coach}」`));
-    const go = (id) => () => { U().app.pSel = id; U().app.tab = 'players'; rerender(); };
-    if (G) right.append(h('div', { class: 'plist', style: 'margin-top:2px' },
-      ...G.star.filter((x) => w.players[x.id]).map((x) => h('button', { class: 'pitem', style: 'align-items:flex-start', onclick: go(x.id) }, h('span', { style: 'color:#e6a800' }, '★'), h('span', { class: 'grow', style: 'font-size:11.5px' }, h('b', {}, w.players[x.id].name.split(' ')[0]), ' ', x.items.map(([a, f0, t]) => `${a} ${f0}→${t}`).join('、')))),
-      ...G.others.filter((x) => w.players[x.id]).map((x) => h('button', { class: 'pitem', onclick: go(x.id) }, h('span', { class: 'grow', style: 'font-size:11.5px' }, w.players[x.id].name.split(' ')[0] + ' ', h('span', { style: 'color:#1e6b37;font-weight:800' }, '↑'.repeat(Math.min(3, x.n))), h('span', { class: 'sub' }, ' ' + x.abs.slice(0, 2).join('・'))))),
-      G.more ? h('div', { class: 'sub', style: 'font-size:11px' }, `ほか${G.more}人が伸びた`) : null));
-    if (!G || (!G.star.length && !G.others.length)) right.append(h('div', { class: 'note' }, '今週はまだ伸びた子はいません（練習のあとに出ます）'));
+    const care = careList(w, S);
+    right.append(h('div', { class: 'plist', style: 'margin-top:4px' }, care.slice(0, 8).map(([p, t]) => h('button', { class: 'pitem', onclick: () => { U().app.pSel = p.id; U().app.tab = 'players'; rerender(); } }, posc(p), h('span', { class: 'nm grow' }, (p.star ? '★' : '') + p.name.split(' ')[0]), h('span', { class: 'sub', style: 'font-size:11px;flex:none' }, t), h('b', { style: 'color:#7a8aa6;flex:none', 'aria-hidden': 'true' }, '›')))));
+    if (!care.length) right.append(h('div', { class: 'note' }, '大きな心配はありません'));
+    if (care.length > 8) right.append(h('div', { class: 'sub', style: 'font-size:11px' }, `ほか${care.length - 8}人`));
     wrap.append(left, mid, right);
-    wrap.style.cssText = 'flex:1;min-height:0;display:flex;gap:8px';
-    main.append(wrap);
+    page.append(wrap);
+    main.append(page);
     if (w.phase === 'event' && w.events.length) showEvent();
     else if (!U().app.holdPrompts) YA.promptsFor();
   }
