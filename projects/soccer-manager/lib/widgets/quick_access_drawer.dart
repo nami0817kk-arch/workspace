@@ -24,6 +24,8 @@ class QuickAccessDrawer extends StatelessWidget {
     return Drawer(
       child: SafeArea(
         child: ListView(
+          // 開くたびに上から(画面の一覧の送り位置を引き継がない)。
+          primary: false,
           padding: EdgeInsets.zero,
           children: [
             // 上の帯は細く(2026-11-25)。以前の大きな見出し(約160)は、

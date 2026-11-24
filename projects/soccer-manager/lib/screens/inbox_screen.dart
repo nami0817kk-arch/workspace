@@ -460,21 +460,17 @@ class _InboxDetail extends StatelessWidget {
             Text(c.label,
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: c.color(context))),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                [
-                  if (item.date != null) CalendarEngine.formatDate(item.date!),
-                  Tr.pick('第${item.season}季', 'Season ${item.season}'),
-                  item.context,
-                ].join(' • '),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.subtleText(context)),
-              ),
-            ),
           ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          [
+            if (item.date != null) CalendarEngine.formatDate(item.date!),
+            Tr.pick('第${item.season}季', 'Season ${item.season}'),
+            item.context,
+          ].join(' • '),
+          style: TextStyle(
+              fontSize: 12, color: SemanticColors.subtleText(context)),
         ),
         const Divider(height: 20),
         SelectableText(item.text,

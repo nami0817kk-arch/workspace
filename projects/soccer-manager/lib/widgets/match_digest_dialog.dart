@@ -355,7 +355,13 @@ class _OverviewTab extends StatelessWidget {
                 Expanded(child: column(r.homeTeamId, right: false)),
                 Container(
                   width: 1,
-                  height: 18.0 * (events.length.clamp(1, 12)),
+                  // 線の長さは、出来事の多いほうの側に合わせる。
+                  height: 18.0 *
+                      [
+                        events.where((e) => e.teamId == r.homeTeamId).length,
+                        events.where((e) => e.teamId == r.awayTeamId).length,
+                        1,
+                      ].reduce((a, b) => a > b ? a : b),
                   margin: const EdgeInsets.symmetric(horizontal: 12),
                   color: Theme.of(context).colorScheme.outlineVariant,
                 ),
@@ -452,11 +458,14 @@ class _EventLine extends StatelessWidget {
           style: TextStyle(
               fontSize: 11, color: SemanticColors.subtleText(context))),
     );
+    // 長い名前(アシストつき)は切らずに縮める。
     final label = Flexible(
-      child: Text(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: right ? Alignment.centerLeft : Alignment.centerRight,
+        child: Text(
         text,
         maxLines: 1,
-        overflow: TextOverflow.ellipsis,
         textAlign: right ? TextAlign.left : TextAlign.right,
         style: TextStyle(
           fontSize: 12,
@@ -466,6 +475,7 @@ class _EventLine extends StatelessWidget {
               ? SemanticColors.subtleText(context)
               : null,
         ),
+      ),
       ),
     );
     return SizedBox(

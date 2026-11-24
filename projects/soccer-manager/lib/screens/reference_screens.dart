@@ -65,10 +65,11 @@ class FinanceReportScreen extends StatelessWidget {
               )
             : const AutoColumns(
                 minChildren: 2,
+                // 横画面は左に月ごとの資金と5年の見込み、右に長い帳簿。
                 children: [
-                  LedgerCard(),
                   MonthlyFundsCard(),
                   ProjectionCard(),
+                  LedgerCard(),
                 ],
               ),
       ),
