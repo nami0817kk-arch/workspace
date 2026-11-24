@@ -70,7 +70,7 @@ class OwnerGoalCard extends StatelessWidget {
     );
   }
 
-  /// 目標を選ぶ画面(下から出る一覧)。今週の決断のカードからも開く。
+  /// 目標を選ぶ画面(下から出る一覧)。「やること」の行からも開く。
   static Future<void> choose(BuildContext context) async {
     final game = context.read<GameState>();
     final picked = await showModalBottomSheet<OwnerGoal>(

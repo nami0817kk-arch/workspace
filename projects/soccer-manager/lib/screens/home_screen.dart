@@ -32,13 +32,14 @@ import '../widgets/inbox_card.dart';
 import '../widgets/incoming_offers_card.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/manager_report_card.dart';
-import '../widgets/next_action_card.dart';
+import '../widgets/todo_list.dart';
+import '../logic/todo_advisor.dart';
+import 'todo_navigation.dart';
+import '../widgets/disabled_reason.dart';
 import '../widgets/season_review_card.dart';
 import '../widgets/supporter_month_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
-import 'cup_screen.dart';
-import 'finance_screen.dart';
 import 'glossary_screen.dart';
 import 'match_screen.dart';
 import 'matchday_notices.dart';
@@ -348,37 +349,22 @@ class HomeScreen extends StatelessWidget {
               ManagerReportCard(weeklyNet: net),
               // 前の月のサポーターの期待の内訳。
               const SupporterMonthCard(),
-              // いま手を付けるべきこと。画面が30以上あり、どこから見れば
-              // よいか分からない状態だった。出すのは常に1件だけ。
-              const NextActionCard(),
+              // 「今週の決断」(いま手を付けること1件)は、右の欄の「やること」の
+              // 一覧に入れた(2026-11-24)。1件だけだと、ほかの用件が隠れた。
               // 直近のお知らせ。FMの受信箱のように、状況を開いたらまず目に入る。
               const InboxCard(),
               // オーナーの目標。決めるまで選択肢を出し、決めたら残りを見せる。
               const OwnerGoalCard(),
               // 横画面では、ここまでが左、これ以降が右。縦長では何も出ない。
               const PaneBreak(divider: false),
-              // 右の欄の先頭は「決めること」。以前は数字のタイルや今週の予定の
-              // 下にばらばらに並び、溜まっていくのに気づけなかった(2026-11-23)。
-              if (gameState.openDecisionCount > 0)
-                Padding(
-                  key: const ValueKey('decisions-header'),
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      Icon(Icons.how_to_vote_outlined,
-                          size: 18, color: scheme.primary),
-                      const SizedBox(width: 6),
-                      Text(
-                        Tr.pick('決めること ${gameState.openDecisionCount}件',
-                            'To decide: ${gameState.openDecisionCount}'),
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
+              // 右の欄の先頭は「やること」の一覧(2026-11-24)。以前は左メニューの
+              // 印・「決めること」・「今週の決断」が別々に数えていて、どこにも
+              // 出ない用件があった。源は TodoAdvisor の1つ。
+              //
+              // 上から、必須のうち行き先で片付けるもの(行)、必須のうちその場で
+              // 答えるもの(札)、おすすめ(行。多ければたたむ)。
+              const TodoHeader(),
+              const TodoMustRows(),
               if (gameState.pendingBoardReviewMessage != null)
                 // 地と文字はテーマの組で塗る。以前は地が indigo.shade50 の
                 // 固定で、暗い見た目では白い文字が薄い地に載って読めなかった。
@@ -433,26 +419,9 @@ class HomeScreen extends StatelessWidget {
               if (gameState.playersAwaitingSurgeryDecision.isNotEmpty)
                 const SurgeryDecisionCard(),
               const IncomingOffersCard(),
-              // スポンサー未契約のまま気づかず収入を取りこぼすことが多いため、
-              // オファーが届いている間はホームに警告カードを常設する。
-              if (save.sponsorDeal == null &&
-                  save.pendingSponsorOffers.isNotEmpty)
-                Card(
-                  color: scheme.tertiaryContainer,
-                  child: ListTile(
-                    leading: const Icon(Icons.handshake),
-                    title: Text(Tr.pick('スポンサー未契約', 'No sponsor')),
-                    subtitle: Text(
-                      Tr.pick(
-                          'スポンサーオファーが${save.pendingSponsorOffers.length}件届いています。契約すると毎節の収入が増えます。${gameState.isPreseason ? '' : 'あと${gameState.decisionMatchdaysLeft('sponsor')}節選ばないと、収入がいちばん多い話を自動で結びます。'}',
-                          'Waiting: ${Tr.plural(save.pendingSponsorOffers.length, 'sponsorship offer')}. Signing one raises your income every matchday.${gameState.isPreseason ? '' : ' If you have not chosen within ${Tr.plural(gameState.decisionMatchdaysLeft('sponsor'), 'matchday')}, the best-paying one is signed for you.'}'),
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const FinanceScreen()),
-                    ),
-                  ),
-                ),
+              // スポンサー未契約の知らせは、上の必須の行に入れた(押すと経営の
+              // 「資金・取引」へ移る。以前はここに別の札があり、画面を重ねて
+              // 開いていた)。
               if (gameState.pendingYouthIntake.isNotEmpty)
                 Card(
                   color: scheme.secondaryContainer,
@@ -476,6 +445,11 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              // 開幕前の海外ツアーも、答えを待つ札としてここに並べる(以前は
+              // 数字のタイルの下にあり、決めごとに数えていなかった)。
+              if (PreseasonTourCard.visible(gameState))
+                const PreseasonTourCard(),
+              const TodoRecommendedList(),
               const SizedBox(height: 4),
               LayoutBuilder(
                 builder: (context, constraints) => GridView.count(
@@ -579,8 +553,6 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 12),
               // まだ見せていない大事な場面があれば、画面いっぱいの1枚で出す。
               const BigMomentPresenter(),
-              if (PreseasonTourCard.visible(gameState))
-                const PreseasonTourCard(),
               if (gameState.save?.frontPageHeadline != null)
                 const FrontPageCard(),
               if (gameState.pendingSuperCup != null)
@@ -600,10 +572,8 @@ class HomeScreen extends StatelessWidget {
                       'Your tie is on ${CalendarEngine.formatShortDate(gameState.userDomesticCupDate!)}'),
                   button: FilledButton(
                     onPressed: () {
-                      FeedbackService.tap();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const CupScreen()),
-                      );
+                      // 横画面では、リーグのカップ戦のタブへ移る(重ねない)。
+                      openTodoPlace(context, TodoPlaces.leagueCups);
                     },
                     child: Text(Tr.pick('カップ戦へ', 'Go to the cup')),
                   ),
@@ -851,21 +821,32 @@ class HomeScreen extends StatelessWidget {
                         // いま何が結果に効いているか。戦術・習熟度・指示と
                         // 効く要素が増えたのに、それを見る場所が無かった。
                         const SizedBox(height: 12),
-                        FilledButton(
-                          key: const ValueKey('advance-button'),
-                          onPressed: () => advanceToNextStop(context),
-                          child: Text(advanceButtonLabel(gameState) ??
-                              Tr.pick('次の節へ', 'Next matchday')),
-                        ),
-                        const SizedBox(height: 4),
+                        // 横画面では、上の帯に同じ進むボタンが常にある。同じ
+                        // ボタンを2つ並べないよう、こちらは上の帯が無い
+                        // 縦画面のときだけ出す(2026-11-24)。
+                        if (!EmbeddedInShell.of(context)) ...[
+                          FilledButton(
+                            key: const ValueKey('advance-button'),
+                            onPressed: () => advanceToNextStop(context),
+                            child: Text(advanceButtonLabel(gameState) ??
+                                Tr.pick('次の節へ', 'Next matchday')),
+                          ),
+                          const SizedBox(height: 4),
+                        ],
                         // 何も決めることが無い週を続けて進める。
                         OutlinedButton(
+                          key: const ValueKey('advance-to-decision'),
                           onPressed: gameState.inboxActions.isEmpty
                               ? () => _advanceToDecision(context)
                               : null,
                           child: Text(Tr.pick('決めることが出るまで進む',
                               'Play on until a decision is needed')),
                         ),
+                        // 押せないときは、理由をそばに出す。
+                        if (gameState.inboxActions.isNotEmpty)
+                          DisabledReason(Tr.pick(
+                              '答えを待つものがあります。先に上の「やること」の必須に答えてください。',
+                              'Something is waiting for your answer. Deal with the must-do items above first.')),
                         // 「結果だけ見る」は「次の節へ」と同じ動きになり、
                         // 偵察レポートは監督の仕事なので、どちらも置かない。
                       ],

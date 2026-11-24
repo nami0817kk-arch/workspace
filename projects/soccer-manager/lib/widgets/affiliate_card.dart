@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
 import '../state/game_state.dart';
 import 'help_button.dart';
+import 'disabled_reason.dart';
 
 /// 系列クラブ。提携先の選手は2割引で取れ、貸し出しは提携先へ出場機会付きで送る。
 class AffiliateCard extends StatefulWidget {
@@ -56,6 +57,16 @@ class _AffiliateCardState extends State<AffiliateCard> {
               if (candidates.isEmpty)
                 Text(Tr.pick('提携できるクラブがありません', 'No club to partner with yet'))
               else ...[
+                // 年会費が払えないと「提携する」が全部押せない。行ごとではなく
+                // 一覧の上に1回だけ出す。
+                if (gs.save!.budget < fee)
+                  DisabledReason(
+                    Tr.pick(
+                        '年会費に資金が足りません(あと ${formatMoney(fee - gs.save!.budget)})',
+                        'Not enough funds for the yearly fee (${formatMoney(fee - gs.save!.budget)} short)'),
+                    key: const ValueKey('affiliate-blocked'),
+                    padding: const EdgeInsets.only(bottom: 4),
+                  ),
                 for (final t in visible)
                   Row(
                     children: [

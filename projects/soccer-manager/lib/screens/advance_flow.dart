@@ -11,12 +11,27 @@ import 'cup_screen.dart';
 import 'home_screen.dart';
 import 'match_screen.dart';
 
-/// 進むボタンの字。「9/5(土) 第8節」「9/1(火) 移籍の締切」。
-/// 次の予定が無い(季の終わり)ときは null。
+/// 進むボタンの字。どこまで進むかを動詞つきで書く。
+/// 「次の試合へ 9/5(土)」「カップ戦へ 9/9(水)」「給料日まで進む 7/31(金)」。
+/// 以前は「9/5(土) 第8節」と行き先だけで、押すと何が起きるのかが字から
+/// 読めなかった。次の予定が無い(季の終わり)ときは null。
 String? advanceButtonLabel(GameState gs) {
   final stop = gs.nextStop;
   if (stop == null) return null;
-  return '${CalendarEngine.formatShortDate(stop.date)} ${stop.buttonLabel}';
+  final full = CalendarEngine.formatShortDate(stop.date);
+  // 英語は字が長いので、曜日を落として「31 Jul」だけにする(帯の幅に収める)。
+  final date = Tr.pick(full, full.substring(full.indexOf(' ') + 1));
+  return switch (stop.kind) {
+    DayEventKind.leagueMatch =>
+      Tr.pick('次の試合へ $date', 'Next match • $date'),
+    DayEventKind.cupMatch ||
+    DayEventKind.superCup ||
+    DayEventKind.friendly =>
+      Tr.pick('${stop.buttonLabel}へ $date', '${stop.buttonLabel} • $date'),
+    // 試合でない日(給料日・放映権・移籍の窓・契約の期日)は、その名前。
+    _ => Tr.pick(
+        '${stop.buttonLabel}まで進む $date', 'Skip to ${stop.buttonLabel} • $date'),
+  };
 }
 
 /// 進むボタンのアイコン。試合の日は再生、それ以外は暦。

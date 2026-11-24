@@ -211,6 +211,14 @@ extension GameStateDecisions on GameState {
         (f) => f.result != null && (f.homeTeamId == id || f.awayTeamId == id));
   }
 
+  /// 開幕前の海外ツアーに出るかを、まだ決めていないか(開幕前で未決)。
+  /// 状況の札と「やること」の一覧が同じ判定を使う。
+  bool get preseasonTourPending {
+    final s = _save;
+    if (s == null || !s.preseasonCampPending) return false;
+    return s.league.fixtures.every((f) => f.result == null);
+  }
+
   // ---- 季末の見通し ----
 
   /// 季を締めたときのサポーターの期待の増減(順位による分だけ)。季の

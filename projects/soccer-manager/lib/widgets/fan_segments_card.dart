@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../l10n/tr.dart';
 import '../logic/fan_segments.dart';
 import '../state/game_state.dart';
+import 'disabled_reason.dart';
 
 /// ファンの層と、自治体のスタジアムの補助。
 class FanSegmentsCard extends StatelessWidget {
@@ -73,6 +74,22 @@ class FanSegmentsCard extends StatelessWidget {
                   child: Text(Tr.pick('自治体に補助を頼む', 'Ask the council')),
                 ),
               ),
+              // 頼めるのは数季に1回。前に頼んでから間が空くまで押せない。
+              if (!gs.canAskMunicipality)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Builder(builder: (context) {
+                    final wait = save.municipalityAskSeason +
+                        GameStateFans.subsidyCooldown -
+                        save.league.season;
+                    return DisabledReason(
+                      Tr.pick('前に頼んだばかりです。あと$wait季たつと、また頼めます',
+                          'You asked recently. You can ask again in ${Tr.plural(wait, 'season')}'),
+                      key: const ValueKey('council-blocked'),
+                      alignEnd: true,
+                    );
+                  }),
+                ),
             ],
           ],
         ),

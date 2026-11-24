@@ -5,6 +5,7 @@ import '../l10n/tr.dart';
 import '../logic/analytics_engine.dart';
 import '../logic/economy_scale.dart';
 import '../state/game_state.dart';
+import 'disabled_reason.dart';
 
 /// U18/U21 と分析部門。
 class YouthAnalyticsCard extends StatelessWidget {
@@ -55,6 +56,13 @@ class YouthAnalyticsCard extends StatelessWidget {
                           : null,
                       child: Text(Tr.pick('分析部門を置く', 'Set it up'))),
             ),
+            // 年会費が払えないと「置く」が押せない。足りない額を出す。
+            if (!save.hasAnalytics && save.budget < fee)
+              Align(
+                alignment: Alignment.centerRight,
+                child: DisabledReason(fundsShortReason(fee - save.budget),
+                    key: const ValueKey('analytics-blocked'), alignEnd: true),
+              ),
             if (save.hasAnalytics) ...[
               Text(Tr.pick('隠れた逸材', 'Hidden gems'),
                   style: const TextStyle(fontWeight: FontWeight.bold)),

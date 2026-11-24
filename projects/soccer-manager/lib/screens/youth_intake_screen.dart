@@ -8,6 +8,7 @@ import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
+import '../widgets/disabled_reason.dart';
 
 /// シーズン終了時に一括生成されたユースインテーク候補を選抜する画面。
 class YouthIntakeScreen extends StatelessWidget {
@@ -28,12 +29,26 @@ class YouthIntakeScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                Tr.pick(
-                    '今季のアカデミーから${candidates.length}名の新人が入団を希望しています。引き取る選手を選んでください(残り枠: ${slotsLeft.clamp(0, 999)})。',
-                    "${candidates.length} youngsters from this year's academy intake want to join. Choose who you take on (places left: ${slotsLeft.clamp(0, 999)})."),
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.subtleText(context)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Tr.pick(
+                        '今季のアカデミーから${candidates.length}名の新人が入団を希望しています。引き取る選手を選んでください(残り枠: ${slotsLeft.clamp(0, 999)})。',
+                        "${candidates.length} youngsters from this year's academy intake want to join. Choose who you take on (places left: ${slotsLeft.clamp(0, 999)})."),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.subtleText(context)),
+                  ),
+                  // 枠が無いと「引き取る」が全員押せない。一覧の上に1回だけ出す。
+                  if (slotsLeft <= 0 && candidates.isNotEmpty)
+                    DisabledReason(
+                      Tr.pick(
+                          '昇格候補の枠がいっぱいです(${gameState.maxYouthProspects}人)。これ以上は引き取れません',
+                          'Your academy is full (${gameState.maxYouthProspects}). You cannot take on anyone else'),
+                      key: const ValueKey('intake-blocked'),
+                    ),
+                ],
               ),
             ),
           ),

@@ -8411,7 +8411,8 @@ void main() {
     final ownerTitles = owner.topics.map((t) => t.title).join();
     expect(ownerTitles, contains('2つの期待'));
     expect(ownerTitles, contains('進むボタン'));
-    expect(ownerTitles, contains('今週の決断'));
+    // 「今週の決断」(1件だけ)は「やること」の一覧に入れた(2026-11-24)。
+    expect(ownerTitles, contains('やること'));
     expect(ownerTitles, contains('売却と買い直し'));
 
     final transfer = guideSections.firstWhere((s) => s.title == '移籍市場画面');

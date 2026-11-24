@@ -31,6 +31,7 @@ import '../widgets/contract_style_card.dart';
 import '../l10n/tr.dart';
 import '../widgets/player_stat_chips.dart';
 import '../logic/economy_scale.dart';
+import '../widgets/disabled_reason.dart';
 
 class PlayerDetailScreen extends StatelessWidget {
   final String playerId;
@@ -657,6 +658,10 @@ class PlayerDetailScreen extends StatelessWidget {
                                 '買取オプションを行使する（${formatMoney(p.loanBuyOptionFee!)}）',
                                 'Trigger the buy option (${formatMoney(p.loanBuyOptionFee!)})')),
                           ),
+                          // 資金が足りないときは、足りない額を出す。
+                          if (gameState.save!.budget < p.loanBuyOptionFee!)
+                            DisabledReason(fundsShortReason(
+                                p.loanBuyOptionFee! - gameState.save!.budget)),
                         ],
                       ],
                     ),
@@ -697,6 +702,11 @@ class PlayerDetailScreen extends StatelessWidget {
                             label: Text(Tr.pick(
                                 '冬の窓で呼び戻す', 'Recall him in the winter window')),
                           ),
+                          // 冬の窓が開いている間しか押せない。
+                          if (!gameState.canRecallLoanedOutPlayer(p))
+                            DisabledReason(Tr.pick(
+                                '冬の移籍の窓が開いているあいだだけ呼び戻せます',
+                                'You can recall him only while the winter window is open')),
                         ],
                       ],
                     ),
@@ -750,6 +760,11 @@ class PlayerDetailScreen extends StatelessWidget {
                       style: const TextStyle(fontSize: 12),
                     ),
                     const SizedBox(height: 4),
+                    // ボタンと押せない理由は1つの塊にする(AutoColumns が
+                    // 2列に割るとき、間で分かれないように)。
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
                     OutlinedButton.icon(
                       icon: const Icon(Icons.event_repeat),
                       onPressed: gameState.canExerciseContractOption(playerId)
@@ -763,6 +778,18 @@ class PlayerDetailScreen extends StatelessWidget {
                           : null,
                       label: Text(
                           Tr.pick('延長オプションを行使する', 'Take up the 1-year option')),
+                    ),
+                    // 行使できるのは満了の年だけ・期限まで。どちらで押せない
+                    // のかを出す(条件は ContractEngine.canExerciseOption と同じ)。
+                    if (!gameState.canExerciseContractOption(playerId))
+                      DisabledReason(
+                          p.contractEndYear != Player.contractClockYear
+                              ? Tr.pick(
+                                  '行使できるのは、契約が切れるシーズン(${ContractEngine.untilLabel(p.contractEndYear)})に入ってからです',
+                                  'You can take it up only in the season his deal ends (${ContractEngine.untilLabel(p.contractEndYear)})')
+                              : Tr.pick('行使の期限を過ぎました',
+                                  'The deadline to take it up has passed')),
+                      ],
                     ),
                     const SizedBox(height: 8),
                   ],
@@ -825,6 +852,11 @@ class PlayerDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   // 合意して契約を解除する(窓の外でもできる。選手は自由契約になる)。
+                  // ボタンと押せない理由は1つの塊にする(AutoColumns が2列に
+                  // 割るとき、間で分かれないように)。
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
                   OutlinedButton.icon(
                     icon: const Icon(Icons.assignment_return_outlined),
                     onPressed: team.players.length <= minSquadSize ||
@@ -833,6 +865,16 @@ class PlayerDetailScreen extends StatelessWidget {
                         : () => _confirmMutualTermination(context),
                     label: Text(
                         Tr.pick('合意して契約を解除する', 'Terminate by mutual consent')),
+                  ),
+                  // 人数が下限のときは、解除もローン放出もできない。
+                  if (team.players.length <= minSquadSize)
+                    DisabledReason(
+                      Tr.pick(
+                          'スカッドが下限の$minSquadSize人なので、これ以上減らせません(解除・ローン放出)',
+                          'Your squad is at the minimum of $minSquadSize, so you cannot terminate or loan anyone out'),
+                      key: const ValueKey('squad-min-reason'),
+                    ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   OutlinedButton.icon(
@@ -1092,9 +1134,19 @@ class PlayerDetailScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(Tr.pick('合意して契約を解除する', 'Terminate by mutual consent')),
-        content: Text(Tr.pick(
-            '${p.name}の契約(${ContractEngine.untilLabel(p.contractEndYear)})を解除します。残りの年俸${formatMoney(remaining)}のうち${formatMoney(cost)}を払い、${p.name}は自由契約になります。',
-            "${p.name}'s contract (${ContractEngine.untilLabel(p.contractEndYear)}) will be cancelled. You pay ${formatMoney(cost)} of the ${formatMoney(remaining)} left on it, and he becomes a free agent.")),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick(
+                '${p.name}の契約(${ContractEngine.untilLabel(p.contractEndYear)})を解除します。残りの年俸${formatMoney(remaining)}のうち${formatMoney(cost)}を払い、${p.name}は自由契約になります。',
+                "${p.name}'s contract (${ContractEngine.untilLabel(p.contractEndYear)}) will be cancelled. You pay ${formatMoney(cost)} of the ${formatMoney(remaining)} left on it, and he becomes a free agent.")),
+            // 払えないときは「払って解除する」が灰色になる。足りない額を出す。
+            if (gameState.save!.budget < cost)
+              DisabledReason(fundsShortReason(cost - gameState.save!.budget),
+                  padding: const EdgeInsets.only(top: 8)),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
