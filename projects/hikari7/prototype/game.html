@@ -932,6 +932,11 @@ body.reduce .castin,body.reduce .newu,body.reduce .cand.on .chk{animation:none}
 /* 21. エンドロールの写真がゆっくり寄る */
 .ending::before{content:'';position:absolute;inset:-6%;background:var(--bgi-cg_debut,none) center/cover;opacity:.22;animation:kenburns 40s ease-in-out infinite alternate;pointer-events:none}
 .ending>*{position:relative}
+/* 2026-11-25：iPhone で流れ終わったあと上の帯が押せなかった（レビュー）。帯は流れる部分より必ず上に重ね、最後の札にも「結果を見る」 */
+.ending>.ebar{position:absolute;top:0;bottom:auto;z-index:3;transform:translateZ(0);padding-top:calc(12px + env(safe-area-inset-top,0px))}
+.ending>.roll{z-index:1}
+.ecard.last .eacts{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px}
+.ecard.last .eacts .btn{min-width:200px}
 @keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.12) translateY(-2%)}}
 /* 22. 合格にした行 */
 .jrow{transition:background .25s;border-radius:10px}
@@ -5982,7 +5987,7 @@ function vEnding(){var F=S.future,E=finalEval(S),others=S.tr.filter(function(t){
     ((E.combos||[]).length?'<div><small>コンビ</small>'+E.combos.map(function(c){return esc(c.n)+'（'+esc(S.tr[c.a].giv)+'・'+esc(S.tr[c.b].giv)+'）';}).join('<br>')+'</div>':'')+
     '<div><small>声</small>'+VOICE_NAMES.map(function(n){return 'VOICEVOX:'+esc(n);}).join('<br>')+'</div><div><small>音楽</small>つるはし社</div>'+'<div><small>番組の平均視聴率</small>'+E.avgR.toFixed(1)+'%</div><div><small>プロデューサー</small>あなた</div></div>';
   var EK=F.end?endOf(F.end):null;
-  h+='<div class="ecard last"><div class="esub">ひかりの指名</div>'+(EK?'<div class="eend">— 結末：'+esc(EK.n)+' —</div><div class="small">'+esc(EK.d)+'</div>'+(S.endNew?'<div class="enew">新しい結末を解放しました</div>':''):'')+'<div class="etitle">おしまい</div><div class="small">見守ってくれて、ありがとう。</div>'+'<button class="btn-s shareend" data-a="share">結果をシェア</button></div>';
+  h+='<div class="ecard last"><div class="esub">ひかりの指名</div>'+(EK?'<div class="eend">— 結末：'+esc(EK.n)+' —</div><div class="small">'+esc(EK.d)+'</div>'+(S.endNew?'<div class="enew">新しい結末を解放しました</div>':''):'')+'<div class="etitle">おしまい</div><div class="small">見守ってくれて、ありがとう。</div>'+'<div class="eacts"><button class="btn shareend2" data-a="endok">結果を見る</button><button class="btn-s shareend" data-a="share">結果をシェア</button></div></div>';
   h+='</div><div class="ebar"><button class="btn-s" data-a="endpause">'+(ui.endPause?'再生':'止める')+'</button><button class="btn-s" data-a="endfast">'+(ui.endFast?'ふつうの速さ':'早送り')+'</button><button class="btn-s" data-a="endok">結果を見る</button></div></div>';
   return h;}
 function futureBox(){var F=S.future;if(!F)return '';
