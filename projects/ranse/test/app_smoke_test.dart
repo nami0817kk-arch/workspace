@@ -100,6 +100,28 @@ void main() {
     await tester.tap(find.byIcon(Icons.menu_book_outlined));
     await tester.pump();
     expect(find.text('見聞録'), findsNWidgets(2)); // 画面の見出しが加わる
+
+    // 上の帯からタイトルへ戻れる。確かめで「続ける」を押せば、そのまま遊べる。
+    await tester.tap(find.byIcon(Icons.home_outlined));
+    await _settle(tester);
+    expect(find.text('タイトルに戻りますか？'), findsOneWidget);
+    await tester.tap(find.text('続ける'));
+    await _settle(tester);
+    expect(c.screen, AppScreen.play);
+    await tester.tap(find.byIcon(Icons.home_outlined));
+    await _settle(tester);
+    await tester.tap(find.text('タイトルへ'));
+    await _settle(tester);
+    expect(c.screen, AppScreen.title);
+    expect(find.text('乱世下剋上'), findsOneWidget);
+    // 年の初めに保存してあるので、「続きから」で戻れる。
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('続きから'), findsOneWidget);
+    await tester.ensureVisible(find.text('続きから'));
+    await tester.tap(find.text('続きから'));
+    await _settle(tester);
+    expect(c.screen, AppScreen.play);
+    expect(c.game.prompt, isNotNull);
   });
 }
 
@@ -107,4 +129,10 @@ void main() {
 Future<void> _center(WidgetTester tester, Finder f) async {
   await Scrollable.ensureVisible(tester.element(f.first), alignment: .5);
   await tester.pump();
+}
+
+/// 画面の切り替えと確かめの窓が出るのを待つ（タイトルの絵や演出が動き続けても止まらないよう、時間で進める）。
+Future<void> _settle(WidgetTester tester) async {
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 400));
 }

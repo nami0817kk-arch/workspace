@@ -82,10 +82,44 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 
+  /// タイトルへ戻る前に確かめる（2026-11-24、ユーザー「タイトルに戻るがない」）。
+  /// 保存は年の初めにしているので、戻ると、その年に選んだことはやり直しになる。
+  Future<void> _confirmTitle() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Pal.bg,
+        title: const Text('タイトルに戻りますか？'),
+        content: const Text(
+          'この年の初めまでの歩みは残してあります。タイトルの「続きから」で、この年の初めから再開できます。',
+          style: TextStyle(fontSize: 14, height: 1.6),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('続ける'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('タイトルへ', style: TextStyle(color: Pal.accent)),
+          ),
+        ],
+      ),
+    );
+    if (ok == true && mounted) widget.c.toTitle();
+  }
+
   PreferredSizeWidget _header() => AppBar(
     backgroundColor: Pal.panel,
     toolbarHeight: 52,
     titleSpacing: 16,
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.home_outlined, color: Pal.muted),
+        tooltip: 'タイトルへ',
+        onPressed: _confirmTitle,
+      ),
+    ],
     title: Row(
       children: [
         Expanded(
