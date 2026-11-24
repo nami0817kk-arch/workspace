@@ -9959,8 +9959,17 @@ void main() {
         BoardEngine.estimateTargetRank(league, gameState.userTeam.id);
 
     expect(BoardEngine.targetRankCushion, greaterThan(0));
-    expect(target, greaterThan(strengthRank),
-        reason: '目標$target位が戦力順位$strengthRank位ちょうど以上に厳しい');
+    // 目標には下限がある(いちばん下の部は下位4分の1の上まで)。戦力が
+    // その下限より下のクラブに当たると、目標は下限で止まり戦力順位より
+    // 上になる。乱数で戦力20位を引いた回に落ちていた(2026-11-24 CI)。
+    final floor = BoardEngine.targetRankFloor(
+        teamCount: league.teams.length, relegationZone: 0);
+    if (strengthRank < floor) {
+      expect(target, greaterThan(strengthRank),
+          reason: '目標$target位が戦力順位$strengthRank位ちょうど以上に厳しい');
+    } else {
+      expect(target, floor);
+    }
     expect(target, lessThanOrEqualTo(league.teams.length));
   });
 
