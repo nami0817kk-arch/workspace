@@ -360,6 +360,9 @@ class Game extends ChangeNotifier {
       cause: sceneCauseFor(_sceneId),
       major: isMajorScene(_sceneId),
     );
+    // 場面の id は一つの問いにだけ使う。問いを出さずに終わった場面の id が残ると、
+    // 次の年の「この年の心がけ」に絵や印が付いてしまう（2026-11-25 の取り込みで CI が見つけた）。
+    _sceneId = null;
     notifyListeners();
   }
 
