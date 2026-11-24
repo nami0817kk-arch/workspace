@@ -350,10 +350,10 @@ void main() {
         final btn = find.byKey(_k('todo-act-$i'));
         expect(find.descendant(of: btn, matching: find.text(tr('足りない人を雇う（{0}人・{1}）', [need, yen(cost)]))), findsOneWidget);
         expect(find.descendant(of: btn, matching: find.text(tr('{0}時間', [g.hrs('crew').round()]))), findsOneWidget, reason: 'かかる社長の時間を書く（1.1.0+25）');
-        final ap = g.ap, cash = g.cash;
+        final h0 = g.hUsed, cash = g.cash;
         await p.press(btn);
         expect(g.crewNeedPeople(b), 0);
-        expect(g.ap, ap - 1);
+        expect(g.hUsed - h0, g.hrs('crew'));
         expect(g.cash, closeTo(cash - cost, 1));
         await p.drain();
         expect(g.adviceTop().any((t) => t.act == 'hire'), isFalse);
@@ -581,10 +581,12 @@ void main() {
       final b = g.biz.firstWhere((b) => b.mgr != null);
       final p = await Pilot.launch(tester, game: g);
       final card = await p.card(b);
-      final ap = g.ap;
+      final h0 = g.hUsed, meet0 = g.hMeet();
       await p.pressKey('deleg-on-${b.id}');
       expect(g.delegated(b), isTrue);
-      expect(g.ap, ap);
+      // 任せるのに時間は使わず、会議の時間が減る（1.1.0+25）
+      expect(g.hUsed, h0);
+      expect(g.hMeet(), lessThan(meet0));
       expect(find.descendant(of: card, matching: find.text('任せ中')), findsOneWidget);
       expect(find.byKey(_k('deleg-budget-${b.id}')), findsOneWidget);
       expect(find.byKey(_k('deleg-did-${b.id}')), findsOneWidget);
@@ -715,8 +717,9 @@ void main() {
       final dg = await run(true);
       // ignore: avoid_print
       print('押す回数：前 $beforeTaps → 今（自分で） ${self.$1}［${self.$2}］ → 今（任せて） ${dg.$1}［${dg.$2}］');
-      // 1.1.0+25 から手の数ではなく社長の時間なので、月に打てる手が少し増えた。そのぶん（4回）だけ線を上げる
-      expect(self.$1, lessThanOrEqualTo(beforeTaps + 4), reason: '自分で全部動かしても、前とほぼ同じ');
+      // 1.1.0+25 から手の数ではなく社長の時間なので、月に打てる「伸ばす手」が3つ→最大12ほどに増え（8時間ずつ）、そのぶん押す回数が増える。
+      // 段1では線を 18→30 に引き直す（手1つあたりの押す回数は変わらない。月に打てる数の釣り合いは後の段で見直す）
+      expect(self.$1, lessThanOrEqualTo(30), reason: '自分で全部動かしても、手1つあたりの押す回数は前と同じ');
       expect(dg.$1, lessThanOrEqualTo(beforeTaps * 2 ~/ 3), reason: '任せれば3分の2以下');
     }, timeout: const Timeout(Duration(minutes: 5)));
   });

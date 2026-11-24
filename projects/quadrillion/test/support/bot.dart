@@ -124,8 +124,9 @@ void botMonth(Game s, {bool units = false, bool Function(Biz)? mine, String borr
         .firstOrNull;
     if (tg != null) s.tob(tg, 50.1);
   }
+  // 合併するのは買った会社だけ（自分で分社した子会社は戻さない。1.1.0+25 で月に打てる手が増え、分社した子会社をすぐ戻していた）
   for (final c in s.subs()) {
-    if (s.canMerge(c) && s.ap > 0) s.merge(c);
+    if (c.fromStaff == null && s.canMerge(c) && s.ap > 0) s.merge(c);
   }
   if (s.sh.rivMax > 20 && s.ap > 0) s.doWhiteKnight();
   s.nextQuarter();

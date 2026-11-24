@@ -232,7 +232,8 @@ class Pilot {
           note('一覧の終わりまで送れない（${sc.position.pixels} / ${sc.position.maxScrollExtent}）');
           break;
         }
-        sc.position.jumpTo((sc.position.pixels + 450).clamp(0, sc.position.maxScrollExtent).toDouble());
+        // 横向きの画面は一覧の見える高さが低い（約280）ので、送る幅も小さく（1.1.0+25 で 450 → 200）
+        sc.position.jumpTo((sc.position.pixels + 200).clamp(0, sc.position.maxScrollExtent).toDouble());
         await pump();
       }
       if (!_has(f)) return false;
@@ -883,6 +884,14 @@ class Pilot {
     if (s.succ != p.id) note('後継ぎが選べない');
     await press(pick, '後継ぎの欄');
     await t.pump(const Duration(milliseconds: 400));
+    // 横向きの低い画面では、選ぶ欄の一覧が流れていて「まだ決めていない」が上に隠れていることがある。見える所まで送る
+    final none = find.text(tr('まだ決めていない')).last;
+    if (!_has(none.hitTestable())) {
+      try {
+        await t.dragUntilVisible(none, find.byType(Scrollable).last, const Offset(0, 120), maxIteration: 20);
+        await t.pump();
+      } catch (_) {}
+    }
     await t.tap(find.text(tr('まだ決めていない')).last, warnIfMissed: false);
     await t.pump();
     await t.pump(const Duration(milliseconds: 400));

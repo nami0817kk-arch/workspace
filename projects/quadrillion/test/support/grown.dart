@@ -33,7 +33,8 @@ void growMonth(Game g, {int bizTarget = 26}) {
 }
 
 void _shape(Game g, int bizTarget) {
-  if (g.biz.isEmpty || g.ap < 1) return;
+  // 会社の形を変える手は時間が長い（16〜24時間）。無理をして使える時間まで見る（1.1.0+25）
+  if (g.biz.isEmpty || g.hLeft() < 30) return;
   final n = g.biz.length + g.subs().length;
   // 持株会社（5つ以上で）
   if (!g.holding && n >= 5) {

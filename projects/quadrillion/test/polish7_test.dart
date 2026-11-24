@@ -184,7 +184,10 @@ void main() {
             if ((s.indM[i.id] ?? 0) > 0) born.add(i.id);
           }
         }
-        expect(born.length, greaterThan(70), reason: '$seed');
+        // 1.1.0+25 から、自動プレイが途中で乗っ取られて終わることがある（借金と時間の仕組みで動きが変わった）。
+        // 終わった年までに生まれているはずの足した業種が、ほぼ全部生まれていることを見る
+        final due = IND_MORE.where((i) => i.b < s.year).length;
+        expect(born.length, greaterThanOrEqualTo((due * .9).floor()), reason: '$seed ${s.year}年 ${s.over}');
         expect(s.cos.where((c) => c.alive).length, lessThan(5000));
       }
     }, timeout: const Timeout(Duration(minutes: 5)));
