@@ -84,6 +84,17 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 試しに遊ぶ生まれ（`BirthSpec`）で、生まれの画面へ進む（2026-11-24、テスト用）。
+  /// 画面はふつうの籤と同じ生まれの画面で、「この人生を生きる」で始まる。
+  void drawCustom(BirthSpec spec) {
+    _timer?.cancel();
+    redraws = 0;
+    rolling = false;
+    birth = customBirth(rng, spec);
+    screen = AppScreen.birth;
+    notifyListeners();
+  }
+
   void begin() {
     final b = birth;
     if (b == null) return;

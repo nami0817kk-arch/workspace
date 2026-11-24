@@ -152,6 +152,129 @@ Birth rollBirth(Rng r, {bool? asFemale}) {
   );
 }
 
+/// 試しに遊ぶための生まれの指定（2026-11-24、ユーザー「テスト用に、自分で諸々生まれ方を決められるようにして」）。
+/// null の項目は籤に任せる。ふつうの遊びには出さない（タイトルの題字を長押しした先だけ）。
+class BirthSpec {
+  const BirthSpec({
+    this.clsId,
+    this.region,
+    this.faction,
+    this.startYear,
+    this.female,
+    this.order,
+    this.traitIds,
+    this.stats,
+  });
+
+  final String? clsId, region, faction;
+  final int? startYear, order;
+  final bool? female;
+
+  /// 持たせる特性（多くて [kMaxTraits]）。null なら籤のまま、空なら特性なし。
+  final List<String>? traitIds;
+
+  /// 能力（武・知・政・魅・運）。null なら籤と身分・特性の上げ下げのまま。指定すればこの値そのもの。
+  final List<int>? stats;
+}
+
+/// 指定した生まれを作る。まず籤を引き、指定した項目だけを置き換える（名・特性の効き・身分の名は合わせて作り直す）。
+Birth customBirth(Rng r, BirthSpec s) {
+  final b = rollBirth(r, asFemale: s.female);
+  final cls = s.clsId == null
+      ? b.cls
+      : kClasses.firstWhere((c) => c.id == s.clsId, orElse: () => b.cls);
+  final reg = s.region == null
+      ? b.region
+      : kRegions.firstWhere((x) => x.n == s.region, orElse: () => b.region);
+  final fac = s.faction != null && reg.f.contains(s.faction)
+      ? s.faction!
+      : (reg.f.contains(b.faction) ? b.faction : reg.f.first);
+  final female = s.female ?? b.female;
+  final order = clampInt(s.order ?? b.order, 1, 3);
+  final traits = s.traitIds == null
+      ? b.traits
+      : [
+          for (final id in s.traitIds!.take(kMaxTraits))
+            ...kTraits.where((t) => t.id == id),
+        ];
+
+  // 能力: 指定があればその値。無ければ籤の値を、身分・性別・特性の上げ下げごと作り直す
+  // （籤の身分の上げ下げを外し、指定した身分の上げ下げを掛け直す）。
+  final Abil a;
+  if (s.stats != null && s.stats!.length == 5) {
+    final v = [for (final x in s.stats!) clampInt(x, 3, 99)];
+    a = Abil(v[0], v[1], v[2], v[3], v[4], b.stats.maxhp);
+  } else {
+    final v = {
+      'bu': b.stats.bu,
+      'chi': b.stats.chi,
+      'sei': b.stats.sei,
+      'mi': b.stats.mi,
+      'un': b.stats.un,
+    };
+    if (cls != b.cls) {
+      b.cls.mod.forEach((k, d) => v[k] = v[k]! - d);
+      cls.mod.forEach((k, d) => v[k] = v[k]! + d);
+    }
+    if (b.female != female) {
+      v['bu'] = v['bu']! + (female ? -4 : 4);
+      v['mi'] = v['mi']! + (female ? 3 : -3);
+    }
+    a = Abil(
+      v['bu']!,
+      v['chi']!,
+      v['sei']!,
+      v['mi']!,
+      v['un']!,
+      b.stats.maxhp,
+    );
+    // 籤で付いていなかった特性の上げ下げだけを掛ける（籤の特性の分は、もう能力に入っている）。
+    for (final t in traits) {
+      if (!b.traits.contains(t)) t.fx(a);
+    }
+    a
+      ..bu = clampInt(a.bu, 3, 99)
+      ..chi = clampInt(a.chi, 3, 99)
+      ..sei = clampInt(a.sei, 3, 99)
+      ..mi = clampInt(a.mi, 3, 99)
+      ..un = clampInt(a.un, 3, 99)
+      ..maxhp = clampInt(a.maxhp, 50, 130);
+  }
+
+  final changedName =
+      cls != b.cls || reg != b.region || fac != b.faction || female != b.female;
+  final String name;
+  if (!changedName) {
+    name = b.name;
+  } else if (cls.id == 'daimyo') {
+    name = '$fac家 ${female ? r.pick(kHimeNames) : r.pick(kHeirNames)}';
+  } else if (cls.rank >= 1) {
+    name = '${r.pick(kSurnames)} ${female ? r.pick(kGivenF) : r.pick(kGivenM)}';
+  } else {
+    name = '${reg.n}の${female ? r.pick(kGivenF) : r.pick(kGivenM)}';
+  }
+
+  final totalC = kClasses.fold<double>(0, (s, c) => s + c.w);
+  return Birth(
+    cls: cls,
+    region: reg,
+    faction: fac,
+    startYear: clampInt(s.startYear ?? b.startYear, 1525, 1568),
+    month: b.month,
+    day: b.day,
+    female: female,
+    order: order,
+    stats: a,
+    traits: traits,
+    // 指定した生まれは、珍しさを数えない（籤で引いたものではないので）。
+    rarity: 1,
+    name: name,
+    label: clsLabel(cls, female, order),
+    sameClass: kPopulation * cls.w / totalC,
+    birthRank: calcBirthRank(cls, female, order),
+  );
+}
+
 /// 一人が持つ特性の数の上限。
 const kMaxTraits = 3;
 

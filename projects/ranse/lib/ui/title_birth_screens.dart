@@ -6,6 +6,7 @@ import '../engine/data.dart';
 import '../engine/ending.dart';
 import '../engine/rng.dart';
 import 'pixel_castle.dart';
+import 'test_birth_screen.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
@@ -36,12 +37,20 @@ class TitleScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 20),
-              const Text(
-                '乱世下剋上',
-                style: TextStyle(
-                  fontSize: 38,
-                  letterSpacing: 10,
-                  fontWeight: FontWeight.w700,
+              // 題字を長押しすると、試験用の生まれの画面（`TestBirthScreen`）が開く。ふつうに遊ぶ人には見せない。
+              GestureDetector(
+                onLongPress: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => TestBirthScreen(c),
+                  ),
+                ),
+                child: const Text(
+                  '乱世下剋上',
+                  style: TextStyle(
+                    fontSize: 38,
+                    letterSpacing: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               const SizedBox(height: 18),
