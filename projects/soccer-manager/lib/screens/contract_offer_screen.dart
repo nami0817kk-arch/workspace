@@ -413,12 +413,22 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
         child: NegotiationLayout(
           side: _sidePanel(context, game),
           banner: NegotiationReplyBanner(text: _reply ?? '', tone: _tone),
-          table: (wide) => NegotiationTable(
-            rows: _rows(context, game),
-            columns: wide ? 2 : 1,
-            compact: wide,
-            wantHeader: Tr.pick('選手の要求', 'He wants'),
-          ),
+          table: (wide) {
+            final rows = _rows(context, game);
+            // 右の列は出来高から(左に年俸・期間・序列・サイン料・延長)。
+            final split =
+                rows.indexWhere((r) => r.key == const ValueKey('term-goal-bonus'));
+            return NegotiationTable(
+              rows: rows,
+              columns: wide ? 2 : 1,
+              compact: wide,
+              splitAt: split > 0 ? split : null,
+              // 横画面の2列では欄が狭いので短く。
+              wantHeader: wide
+                  ? Tr.pick('要求', 'Wants')
+                  : Tr.pick('選手の要求', 'He wants'),
+            );
+          },
           bottom: (narrow) => _bottomBar(context, game, narrow: narrow),
         ),
       ),
@@ -565,8 +575,14 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
     final subtle = SemanticColors.subtleText(context);
     final rows = <NegotiationRow>[];
     final open = !_closed;
-    Text t(String s, {TextStyle? style}) =>
-        Text(s, style: style ?? cell, overflow: TextOverflow.ellipsis);
+    // 満了の年(6月30日まで)。表の欄に収まる短い形。
+    String endLabel(int y) => Tr.pick('$y年6月まで', 'to Jun $y');
+    // 要求の欄は狭いので、入りきらない字は縮める(切らない)。
+    Widget t(String s, {TextStyle? style}) => FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(s, style: style ?? cell, maxLines: 1),
+        );
     Text hint(String s) => Text(s,
         style: TextStyle(fontSize: 11, color: subtle),
         maxLines: 2,
@@ -624,17 +640,17 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
     final choices = _endChoices();
     rows.add(NegotiationRow(
       label: Tr.pick('契約の期間', 'Contract length'),
-      want: t(ContractEngine.untilLabel(kind == ContractKind.preContract
+      want: t(endLabel(kind == ContractKind.preContract
           ? PreContractEngine.defaultEndYear(p)
           : (kind == ContractKind.renewal
               ? ContractEngine.defaultRenewalEndYear(p)
               : _endYear))),
       offer: choices.length <= 1 || !open
-          ? t(ContractEngine.untilLabel(_endYear))
+          ? t(endLabel(_endYear))
           : NegotiationChoice<int>(
               value: choices.contains(_endYear) ? _endYear : choices.last,
               items: choices,
-              labelOf: ContractEngine.untilLabel,
+              labelOf: endLabel,
               onChanged: (y) {
                 setState(() {
                   _endYear = y;
@@ -715,7 +731,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
     if (kind != ContractKind.signing) {
       final can = _canOption();
       rows.add(NegotiationRow(
-        label: Tr.pick('1年の延長オプション', '1-year club option'),
+        label: Tr.pick('延長オプション', '1-year option'),
         want: t(Tr.pick('年俸 +5%', 'Salary +5%')),
         offer: Align(
           alignment: Alignment.centerLeft,
@@ -746,7 +762,7 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
       final goalMax = max(goalStep * 12, _wage * 3);
       rows.add(NegotiationRow(
         key: const ValueKey('term-goal-bonus'),
-        label: Tr.pick('出来高(1点ごと)', 'Goal bonus'),
+        label: Tr.pick('出来高', 'Goal bonus'),
         want: hint(_worth(game, base.copyWith(goalBonus: _goalBonus)) ??
             Tr.pick('あれば喜ぶ', 'Welcome')),
         offer: NegotiationStepper(
@@ -762,8 +778,8 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
               : null,
         ),
         note: Tr.pick(
-            '見込み 1季${ContractTermsEngine.expectedGoals(p).round()}点',
-            'About ${ContractTermsEngine.expectedGoals(p).round()} goals a season'),
+            'リーグ戦の1点ごとに払う。見込み 1季${ContractTermsEngine.expectedGoals(p).round()}点',
+            'Paid per league goal; about ${ContractTermsEngine.expectedGoals(p).round()} goals a season'),
       ));
       // 年ごとの昇給
       rows.add(NegotiationRow(
@@ -820,7 +836,9 @@ class _ContractOfferScreenState extends State<ContractOfferScreen> {
           value: _relegationCut,
           items: [null, ...ContractTermsEngine.relegationChoices],
           labelOf: (v) => v == null
-              ? Tr.pick('既定(年俸$def%減)', 'Default (-$def%)')
+              ? (def == 0
+                  ? Tr.pick('既定(下げない)', 'Default (none)')
+                  : Tr.pick('既定(-$def%)', 'Default (-$def%)'))
               : (v == 0
                   ? Tr.pick('下げない', 'No cut')
                   : Tr.pick('年俸$v%減', '-$v%')),

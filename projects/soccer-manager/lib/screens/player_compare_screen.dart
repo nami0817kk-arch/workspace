@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../logic/contract_engine.dart';
 import '../models/attributes.dart';
 import '../models/player.dart';
 import '../models/player_season_stats.dart';
@@ -105,8 +104,8 @@ class PlayerCompareScreen extends StatelessWidget {
         ),
         _TextRow(
           label: Tr.pick('契約', 'Contract'),
-          left: a.isLoan ? Tr.pick('ローン', 'Loan') : ContractEngine.untilLabel(a.contractEndYear),
-          right: b.isLoan ? Tr.pick('ローン', 'Loan') : ContractEngine.untilLabel(b.contractEndYear),
+          left: a.isLoan ? Tr.pick('ローン', 'Loan') : Tr.pick('${a.contractEndYear}年6月', 'Jun ${a.contractEndYear}'),
+          right: b.isLoan ? Tr.pick('ローン', 'Loan') : Tr.pick('${b.contractEndYear}年6月', 'Jun ${b.contractEndYear}'),
         ),
         _NumRow(
           label: Tr.pick('市場価値', 'Value'),

@@ -239,7 +239,8 @@ void main() {
     expect(RatingWords.growthRoomLevel(88, 90), 0);
     expect(RatingWords.form(null), '—');
     expect(RatingWords.form(7.5), '絶好調');
-    expect(RatingWords.form(5.9), '不調');
+    expect(RatingWords.form(6.0), 'ふつう');
+    expect(RatingWords.form(5.5), '不調');
   });
 
   test('他クラブの選手も探せ、伸びしろは見えない', () async {

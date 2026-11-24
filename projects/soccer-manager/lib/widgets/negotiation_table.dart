@@ -89,6 +89,7 @@ class NegotiationTable extends StatelessWidget {
     this.wantHeader,
     this.offerHeader,
     this.compact = false,
+    this.splitAt,
   });
 
   final List<NegotiationRow> rows;
@@ -96,21 +97,38 @@ class NegotiationTable extends StatelessWidget {
   final String? wantHeader;
   final String? offerHeader;
 
-  /// 行を低くする(横画面で1画面に収めるとき)。
+  /// 行を低くする(横画面で1画面に収めるとき)。説明は項目を長押しで出す。
   final bool compact;
+
+  /// 2列に割るとき、右の列の先頭にする行の番号(省くと半分で割る)。
+  final int? splitAt;
 
   @override
   Widget build(BuildContext context) {
     if (columns <= 1 || rows.length < 2) {
       return _column(context, rows);
     }
-    final half = (rows.length / 2).ceil();
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final half = (splitAt ?? (rows.length / 2).ceil()).clamp(1, rows.length);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(child: _column(context, rows.sublist(0, half))),
-        const SizedBox(width: 6),
-        Expanded(child: _column(context, rows.sublist(half))),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: _column(context, rows.sublist(0, half))),
+            const SizedBox(width: 6),
+            Expanded(child: _column(context, rows.sublist(half))),
+          ],
+        ),
+        if (compact && rows.any((r) => r.note != null))
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              Tr.pick('項目の名前を押すと説明が出ます。', 'Tap a term for an explanation.'),
+              style: TextStyle(
+                  fontSize: 10.5, color: SemanticColors.subtleText(context)),
+            ),
+          ),
       ],
     );
   }
@@ -135,11 +153,17 @@ class NegotiationTable extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                    flex: 4, child: Text(Tr.pick('項目', 'Term'), style: head)),
+                    flex: compact ? 3 : 4,
+                    child: Text(Tr.pick('項目', 'Term'), style: head)),
                 Expanded(
-                    flex: 3,
-                    child: Text(wantHeader ?? Tr.pick('相手の要求', 'They want'),
-                        style: head)),
+                    flex: compact ? 2 : 3,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 6),
+                      child: Text(wantHeader ?? Tr.pick('相手の要求', 'They want'),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: head),
+                    )),
                 Expanded(
                     flex: 5,
                     child: Text(offerHeader ?? Tr.pick('こちらの提示', 'Your offer'),
@@ -150,7 +174,7 @@ class NegotiationTable extends StatelessWidget {
           for (final r in rows)
             Container(
               key: r.key,
-              constraints: BoxConstraints(minHeight: compact ? 38 : 46),
+              constraints: BoxConstraints(minHeight: compact ? 36 : 46),
               padding: const EdgeInsets.symmetric(horizontal: 8),
               decoration: BoxDecoration(
                 border: Border(
@@ -158,20 +182,33 @@ class NegotiationTable extends StatelessWidget {
                         BorderSide(color: theme.colorScheme.outlineVariant)),
               ),
               child: LayoutBuilder(builder: (context, c) {
-                final name = Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(r.label,
-                        style: const TextStyle(
-                            fontSize: 12.5, fontWeight: FontWeight.bold)),
-                    if (r.note != null)
-                      Text(r.note!,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 10, color: subtle)),
-                  ],
-                );
+                final label = Text(r.label,
+                    maxLines: 2,
+                    style: TextStyle(
+                        fontSize: compact ? 12 : 12.5,
+                        fontWeight: FontWeight.bold));
+                // 横画面(1画面に収める)では説明を出さず、項目を押すと出す
+                // (表の下に一言で案内する)。
+                final name = compact
+                    ? (r.note == null
+                        ? label
+                        : Tooltip(
+                            message: r.note!,
+                            triggerMode: TooltipTriggerMode.tap,
+                            child: label,
+                          ))
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          label,
+                          if (r.note != null)
+                            Text(r.note!,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 10, color: subtle)),
+                        ],
+                      );
                 // 狭いとき(縦画面)は、提示の欄を下の段に回す。
                 if (c.maxWidth < 250) {
                   return Column(
@@ -187,8 +224,12 @@ class NegotiationTable extends StatelessWidget {
                 }
                 return Row(
                   children: [
-                    Expanded(flex: 4, child: name),
-                    Expanded(flex: 3, child: r.want),
+                    Expanded(flex: compact ? 3 : 4, child: name),
+                    Expanded(
+                        flex: compact ? 2 : 3,
+                        child: Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: r.want)),
                     Expanded(flex: 5, child: r.offer),
                   ],
                 );
@@ -363,18 +404,21 @@ class NegotiationLayout extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // 横長では返事の帯を左の列の上に置き、表に高さを回す
+                  // (iPhone の横向きで表を1画面に収める)。
                   SizedBox(
-                      width: 200,
+                      width: 180,
                       child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(8), child: side)),
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [banner, const SizedBox(height: 8), side],
+                          ))),
                   const VerticalDivider(width: 1),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [banner, const SizedBox(height: 6), table(true)],
-                      ),
+                      child: table(true),
                     ),
                   ),
                 ],

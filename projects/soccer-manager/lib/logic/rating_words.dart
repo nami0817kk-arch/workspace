@@ -52,11 +52,12 @@ class RatingWords {
       };
 
   /// 調子の段(0〜3)。直近の採点の平均から。出ていなければ null。
+  /// 採点は 6.0 が基準で、勝ち負けで ±0.4、得点で +1(MatchEngine)。
   static int? formLevel(double? avg) {
     if (avg == null) return null;
-    if (avg >= 7.3) return 3;
-    if (avg >= 6.8) return 2;
-    if (avg >= 6.2) return 1;
+    if (avg >= 7.0) return 3;
+    if (avg >= 6.4) return 2;
+    if (avg >= 5.8) return 1;
     return 0;
   }
 
