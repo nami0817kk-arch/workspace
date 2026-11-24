@@ -494,8 +494,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('ユース練習試合', 'Youth matches'),
         category: GlossaryCategory.club,
         description: Tr.pick(
-            '昇格候補たちが毎週こなす近隣クラブのユースとの練習試合。全員に出場数・得点・評点が記録され、活躍(高評点)した候補は能力がさらに伸びる。戦績はユース画面で確認でき、昇格させるタイミングの判断材料になる。大活躍はクラブニュースにも届く。',
-            "Your prospects play a nearby club's academy each week. Appearances, goals and ratings are recorded for all of them, and those who play well improve faster. The youth screen shows the record, which helps you judge when to promote someone. A standout performance makes the club news."),
+            '昇格候補たちが毎週こなす近隣クラブのユースとの練習試合。全員に出場数・得点・評点が記録され、活躍(高評点)した候補は能力がさらに伸びる。戦績はユース画面で確認でき、昇格させるタイミングの判断材料になる。大活躍は受信箱にも届く。',
+            "Your prospects play a nearby club's academy each week. Appearances, goals and ratings are recorded for all of them, and those who play well improve faster. The youth screen shows the record, which helps you judge when to promote someone. A standout performance reaches your inbox."),
       ),
       GlossaryEntry(
         term: Tr.pick('監督の契約', "The manager's contract"),
@@ -515,8 +515,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('ウォッチリスト', 'Watchlist'),
         category: GlossaryCategory.contractTransfer,
         description: Tr.pick(
-            '気になる選手に星印をつけて追いかけるリスト。移籍の画面の「候補」の監督の補強案や「探す」で星を押すと入り、「候補」の「注目」で一覧できる。注目している選手は、どの地域でもスカウトの見え方が毎週少しずつ上がる。注目している選手が得点するとクラブニュースに届く。',
-            'Star a player to keep an eye on him. Tap the star in the manager\'s signing picks or in Search on the transfer screen, and Watchlist under Shortlist shows them all. Your scouts get a little clearer on a watched player every week, wherever he plays, and when one of them scores it reaches your club news.'),
+            '気になる選手に星印をつけて追いかけるリスト。移籍の画面の「候補」の監督の補強案や「探す」で星を押すと入り、「候補」の「注目」で一覧できる。注目している選手は、どの地域でもスカウトの見え方が毎週少しずつ上がる。注目している選手が得点すると受信箱に届く。',
+            'Star a player to keep an eye on him. Tap the star in the manager\'s signing picks or in Search on the transfer screen, and Watchlist under Shortlist shows them all. Your scouts get a little clearer on a watched player every week, wherever he plays, and when one of them scores it reaches your inbox.'),
       ),
       GlossaryEntry(
         term: Tr.pick('試合中の交代', 'Substitutions'),

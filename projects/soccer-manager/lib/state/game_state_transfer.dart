@@ -692,6 +692,8 @@ extension GameStateTransfer on GameState {
             Tr.pick('第$_currentLeagueMatchdayMarker節',
                 'Matchday $_currentLeagueMatchdayMarker'),
         text: text,
+        // 受信箱に日付を出す(2026-11-25)。
+        date: SeasonCalendar.dateOnly(today),
       ),
     );
     if (_save!.newsLog.length > GameState.newsLogLimit) {
