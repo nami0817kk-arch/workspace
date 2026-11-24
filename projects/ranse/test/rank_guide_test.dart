@@ -52,7 +52,7 @@ void main() {
       // 下まで送っても崩れず、位の名がすべて出る。
       final names = female ? kRanksF : kRanksM;
       for (final name in names) {
-        await tester.scrollUntilVisible(find.text(name).first, 200);
+        await tester.scrollUntilVisible(find.text(name), 200);
         expect(find.text(name), findsWidgets, reason: name);
       }
       await tester.scrollUntilVisible(find.text('段の外の暮らし'), 300);
