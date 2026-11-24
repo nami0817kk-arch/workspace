@@ -6,16 +6,49 @@ import '../engine/ending.dart';
 import '../engine/game.dart';
 import '../engine/remembrance.dart';
 import '../engine/rng.dart';
+import 'share.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
 /// 一生の終わり。人生の振り返りを見せる。
-class EndScreen extends StatelessWidget {
+class EndScreen extends StatefulWidget {
   const EndScreen(this.c, {super.key});
   final AppController c;
 
   @override
+  State<EndScreen> createState() => _EndScreenState();
+}
+
+class _EndScreenState extends State<EndScreen> {
+  /// 結果カードを画像にするための鍵。
+  final _cardKey = GlobalKey();
+  bool _sharing = false;
+
+  /// 結果をシェアする（2026-11-24、ユーザー「シェアボタンにする」）。結果カードを画像にして、
+  /// 文と一緒に共有シートで送る。共有シートの無い所（Web 版）では、前どおり文を写す。
+  Future<void> _share(BuildContext button, String text) async {
+    if (_sharing) return;
+    if (!canShare) {
+      await Clipboard.setData(ClipboardData(text: text));
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('結果を写した。SNS に貼り付けられる。')),
+      );
+      return;
+    }
+    setState(() => _sharing = true);
+    final box = button.findRenderObject() as RenderBox?;
+    final origin = box == null
+        ? null
+        : box.localToGlobal(Offset.zero) & box.size;
+    final png = await captureCard(_cardKey);
+    await shareResult(text: text, image: png, origin: origin);
+    if (mounted) setState(() => _sharing = false);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final c = widget.c;
     final g = c.game;
     final l = g.l;
     final child = g.age < 15;
@@ -38,7 +71,14 @@ class EndScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            _ResultCard(g: g, e: e),
+            // 画像にして送る範囲。地の色を敷いて、透けないようにする。
+            RepaintBoundary(
+              key: _cardKey,
+              child: ColoredBox(
+                color: Pal.bg,
+                child: _ResultCard(g: g, e: e),
+              ),
+            ),
             if (c.newEnding)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -50,15 +90,22 @@ class EndScreen extends StatelessWidget {
               ),
             const SizedBox(height: 8),
             Align(
-              child: TextButton.icon(
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: shareText(g, e)));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('結果を写した。SNS に貼り付けられる。')),
-                  );
-                },
-                icon: const Icon(Icons.copy, size: 18, color: Pal.gold),
-                label: const Text('結果を写す', style: TextStyle(color: Pal.gold)),
+              child: Builder(
+                builder: (button) => OutlinedButton.icon(
+                  onPressed: _sharing
+                      ? null
+                      : () => _share(button, shareText(g, e)),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Pal.gold,
+                    side: const BorderSide(color: Pal.gold),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 10,
+                    ),
+                  ),
+                  icon: const Icon(Icons.ios_share, size: 18),
+                  label: const Text('結果をシェア'),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -107,7 +154,7 @@ class EndScreen extends StatelessWidget {
                 ),
               ),
             ],
-            // 人々が覚えていたこと（`remembrance.dart`）。何もなければ出さない。結果を写す文には入れない。
+            // 人々が覚えていたこと（`remembrance.dart`）。何もなければ出さない。結果をシェアする文には入れない。
             if (remembered.isNotEmpty) ...[
               const SizedBox(height: 14),
               Panel(

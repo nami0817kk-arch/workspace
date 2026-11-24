@@ -562,6 +562,7 @@ String shareText(Game g, Ending e) {
     '結末：${e.title}（${g.age}歳）',
     // よくある最期は書かない。珍しいほど、共有したくなる一行になる。
     if (e.tier != null && e.tier != Tier.common) '― ${e.tierName} ―',
+    '#乱世下剋上',
   ].join('\n');
 }
 

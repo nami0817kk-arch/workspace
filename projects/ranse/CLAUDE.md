@@ -2164,3 +2164,12 @@ CI の Web 版で画面を見る仕組み。
   - 再開（`Game.restore` の `seed`・`replay`）は、同じ種でその年を流し直し、残した手を順に選び直す。手の名が食い違ったら、そこで止める（その年の残りは選び直し）。種の無い古い保存は、前どおり年の初めから。
   - テスト `test/resume_test.dart`: 600人生のうち年の途中で閉じた180人生（二手以上62）で、戻した Game の問い・手・暮らし（`Life.toJson`）が閉じた時と一致。手元で engine を写した純 Dart で確かめた。
 - 泰平の世の最期の言葉（挙げた3つめ）は、同じ日の「気がかりの直し」で既に手当て済みだった（`yieldsToPeace`）。直していない。
+
+## 結果をシェアする（2026-11-24、ユーザー「シェアボタンにする」）
+
+- 終わりの画面の「結果を写す」（文をクリップボードへ）を、**「結果をシェア」**の釦にした（`end_screen.dart`、`lib/ui/share.dart`）。
+  結果カード（`_ResultCard`）を `RepaintBoundary` で PNG（3倍）にし、`shareText` の文と一緒に iOS の共有シートで送る。
+  書き方は soccer-career の `share_service.dart` と同じ（`share_plus` 13.3.1・`Directory.systemTemp` に書く・iPad は押した釦の位置から出す・送れなくても遊びは止めない）。
+- 共有シートの無い所（Web 版・テスト）では、前どおり文をクリップボードへ写す（`canShare`）。
+- 送る文の最後に `#乱世下剋上` を足した。ストアの住所は、まだ公開していないので入れていない（公開したら足す）。
+- 依存に `share_plus` を足した（iOS は Podfile なしの作りで、basketball-career・baseball-manager と同じ）。
