@@ -536,8 +536,8 @@ List<GlossaryEntry> get glossaryEntries => [
         term: Tr.pick('クイック消化', 'Simming a match'),
         category: GlossaryCategory.liveMatch,
         description: Tr.pick(
-            '試合の進め方。オーナーは試合の中に手を出さず、監督に任せて結果だけを確定させる。リーグ戦は短いまとめで、カップ戦は試合の出来事を順に見せる。疲労・負傷・警告の累積・出場記録などの試合後の効果は、どの大会でも同じように付く。',
-            'How every match is played: the manager takes charge and the result is settled without you stepping in. League matches end in a short digest; cup ties play back the moments of the match. Fatigue, injuries, cards and appearances follow in every competition.'),
+            '試合の進め方。オーナーは試合の中に手を出さず、監督に任せて結果だけを確定させる。どの大会の試合も進むボタンがその日に止まって行い、同じ短いまとめ(結果・2つの期待の動き・賞金)を出す。出来事を順に見たいときは、まとめの「試合経過を見る」から。疲労・負傷・警告の累積・出場記録などの試合後の効果は、どの大会でも同じように付く。',
+            'How every match is played: the manager takes charge and the result is settled without you stepping in. Every competition is played from the advance button on the day, and ends in the same short digest (result, both expectations, prize money); open Match timeline from it to replay the moments. Fatigue, injuries, cards and appearances follow in every competition.'),
       ),
       GlossaryEntry(
         term: Tr.pick('値切り交渉', 'Haggling'),

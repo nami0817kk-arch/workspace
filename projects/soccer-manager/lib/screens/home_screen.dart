@@ -17,7 +17,6 @@ import '../models/league.dart';
 import '../models/league_theme.dart';
 import '../models/owner_legacy.dart';
 import '../models/match_result.dart';
-import '../models/team.dart';
 import '../monetization/monetization_controller.dart';
 import '../services/review_prompt.dart';
 import '../state/game_state.dart';
@@ -27,7 +26,7 @@ import '../theme/semantic_colors.dart';
 import '../widgets/achievement_unlock_notifier.dart';
 import '../widgets/busy_overlay.dart';
 import '../widgets/club_emblem.dart';
-import '../widgets/match_widgets.dart';
+import '../widgets/match_digest_dialog.dart';
 import '../widgets/inbox_card.dart';
 import '../widgets/incoming_offers_card.dart';
 import '../widgets/fm_panel.dart';
@@ -41,9 +40,7 @@ import '../widgets/supporter_month_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import 'glossary_screen.dart';
-import 'match_screen.dart';
 import 'matchday_notices.dart';
-import 'player_detail_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/board_target_progress.dart';
@@ -614,6 +611,21 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              // 季の後に自クラブのカップ戦が残っていれば、進むボタンで行う
+              // (カップ戦の画面の「次の試合をする」は外した。2026-11-24)。
+              // 横画面は上の帯に同じボタンがある。
+              if (seasonComplete &&
+                  gameState.nextStop != null &&
+                  !EmbeddedInShell.of(context))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: FilledButton(
+                    key: const ValueKey('advance-button'),
+                    onPressed: () => advanceToNextStop(context),
+                    child: Text(advanceButtonLabel(gameState) ??
+                        Tr.pick('次の試合へ', 'Next match')),
+                  ),
+                ),
               if (seasonComplete)
                 _NoticeCard(
                   key: const ValueKey('season-over-card'),
@@ -960,11 +972,7 @@ class HomeScreen extends StatelessWidget {
     FeedbackService.kickOff();
     final gameState = context.read<GameState>();
     final userTeamId = gameState.userTeam.id;
-    final isHome = next.homeTeamId == userTeamId;
-    final opponentId = isHome ? next.awayTeamId : next.homeTeamId;
     final teams = gameState.save!.league.teams;
-    final opponentName = teams.firstWhere((t) => t.id == opponentId).name;
-    final userTeamName = gameState.userTeam.name;
 
     final supportBefore = gameState.save!.confidence;
     final shareBefore = gameState.save!.shareholderExpectation;
@@ -977,13 +985,13 @@ class HomeScreen extends StatelessWidget {
     }
     if (!context.mounted || result == null) return;
 
-    await _showQuickSimResultDialog(
+    await showMatchDigestDialog(
       context,
       result: result,
       userTeamId: userTeamId,
-      userTeamName: userTeamName,
-      opponentName: opponentName,
       teams: teams,
+      competition: Tr.pick('リーグ戦 第${next.matchday}節',
+          'League • Matchday ${next.matchday}'),
       supportDelta:
           (gameState.save?.confidence ?? supportBefore) - supportBefore,
       shareDelta:
@@ -1008,239 +1016,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// クイックシム結果を、スコアだけでなく得点者・MVPまで含めたダイアログで表示する。
-  Future<void> _showQuickSimResultDialog(
-    BuildContext context, {
-    required MatchResult result,
-    required String userTeamId,
-    required String userTeamName,
-    required String opponentName,
-    required List<Team> teams,
-    int supportDelta = 0,
-    int shareDelta = 0,
-  }) async {
-    final isHome = result.homeTeamId == userTeamId;
-    final userGoals = isHome ? result.homeGoals : result.awayGoals;
-    final oppGoals = isHome ? result.awayGoals : result.homeGoals;
-    final resultLabel = userGoals > oppGoals
-        ? Tr.pick('勝利', 'Win')
-        : userGoals < oppGoals
-            ? Tr.pick('敗北', 'Defeat')
-            : Tr.pick('引き分け', 'Draw');
-    String teamNameOf(String teamId) =>
-        teamId == userTeamId ? userTeamName : opponentName;
-    String? scorerNameOf(String? playerId) {
-      if (playerId == null) return null;
-      for (final t in teams) {
-        for (final p in t.players) {
-          if (p.id == playerId) return p.name;
-        }
-      }
-      return null;
-    }
-
-    /// 自クラブの選手がまだ在籍している場合のみ、選手詳細へ遷移可能なIDを返す。
-    String? ownPlayerIdOf(String? playerId) {
-      if (playerId == null) return null;
-      final userTeam = teams.firstWhere(
-        (t) => t.id == userTeamId,
-        orElse: () => teams.first,
-      );
-      for (final p in userTeam.players) {
-        if (p.id == playerId) return p.id;
-      }
-      return null;
-    }
-
-    final goals = result.events
-        .where((e) => e.type == MatchEventType.goal)
-        .toList()
-      ..sort((a, b) => a.minute.compareTo(b.minute));
-    final motmName = scorerNameOf(result.manOfTheMatchId);
-    final motmOwnPlayerId = ownPlayerIdOf(result.manOfTheMatchId);
-
-    // 終わりの笛と、勝敗に合わせた歓声。
-    FeedbackService.matchResult(
-        won: userGoals > oppGoals, drew: userGoals == oppGoals);
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        final resultColor = userGoals > oppGoals
-            ? SemanticColors.positive(dialogContext)
-            : userGoals < oppGoals
-                ? SemanticColors.negative(dialogContext)
-                : SemanticColors.neutral(dialogContext);
-        final head = <Widget>[
-          Text(
-            '$userTeamName $userGoals - $oppGoals $opponentName',
-            style: Theme.of(dialogContext).textTheme.titleMedium?.copyWith(
-                  color: resultColor,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          // 分析部門があれば、xG(期待得点)も出す。
-          if (context.read<GameState>().xgOf(result) case final xg?)
-            Text(Tr.pick(
-                'xG ${xg.$1.toStringAsFixed(1)} - ${xg.$2.toStringAsFixed(1)}',
-                'xG ${xg.$1.toStringAsFixed(1)} - ${xg.$2.toStringAsFixed(1)}')),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: _MeterDelta(
-                    label: Tr.pick('サポーター', 'Fans'), delta: supportDelta),
-              ),
-              Expanded(
-                child: _MeterDelta(
-                    label: Tr.pick('株主', 'Shareholders'), delta: shareDelta),
-              ),
-            ],
-          ),
-        ];
-        final scorers = <Widget>[
-          if (goals.isEmpty)
-            Text(
-              Tr.pick('得点者はいませんでした', 'Nobody scored'),
-              style: TextStyle(color: SemanticColors.subtleText(context)),
-            )
-          else ...[
-            Text(
-              Tr.pick('得点者', 'Scorers'),
-              style: Theme.of(dialogContext).textTheme.titleSmall,
-            ),
-            const SizedBox(height: 4),
-            for (final g in goals)
-              _buildGoalRow(
-                context,
-                dialogContext,
-                g,
-                ownPlayerIdOf(g.scorerId),
-                teamNameOf,
-              ),
-          ],
-          if (motmName != null) ...[
-            const SizedBox(height: 8),
-            InkWell(
-              onTap: motmOwnPlayerId == null
-                  ? null
-                  : () {
-                      Navigator.pop(dialogContext);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => PlayerDetailScreen(
-                            playerId: motmOwnPlayerId,
-                          ),
-                        ),
-                      );
-                    },
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 44),
-                child: Row(
-                  children: [
-                    Icon(Icons.star,
-                        color:
-                            SemanticColors.ink(context, Colors.amber, min: 3),
-                        size: 18),
-                    const SizedBox(width: 4),
-                    Expanded(
-                        child: Text(Tr.pick('マン・オブ・ザ・マッチ: $motmName',
-                            'Man of the match: $motmName'))),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ];
-        final stats = MatchStatsBar(
-          result: result,
-          homeTeamName: teamNameOf(result.homeTeamId),
-          awayTeamName: teamNameOf(result.awayTeamId),
-        );
-        final size = MediaQuery.sizeOf(dialogContext);
-        // 横画面は縦が短い。得点者は左、数字は右の2列にし、それでも
-        // 収まらなければ中でスクロールする(下が切れて「閉じる」が隠れていた)。
-        final wide = size.width > size.height;
-        return AlertDialog(
-          insetPadding: wide
-              ? const EdgeInsets.symmetric(horizontal: 32, vertical: 12)
-              : const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-          title: Text(Tr.pick('結果: $resultLabel', 'Result: $resultLabel')),
-          content: SizedBox(
-            width: wide ? 680 : double.maxFinite,
-            child: SingleChildScrollView(
-              child: wide
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...head,
-                              const SizedBox(height: 8),
-                              ...scorers
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(child: stats),
-                      ],
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...head,
-                        const SizedBox(height: 12),
-                        ...scorers,
-                        const SizedBox(height: 8),
-                        stats,
-                      ],
-                    ),
-            ),
-          ),
-          actions: [
-            FilledButton(
-              style: FilledButton.styleFrom(minimumSize: const Size(120, 48)),
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(Tr.pick('閉じる', 'Close')),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// クイックシム結果ダイアログ内の得点者1行。自クラブ選手が在籍中の場合のみ
-  /// タップして選手詳細へ遷移できる。
-  Widget _buildGoalRow(
-    BuildContext context,
-    BuildContext dialogContext,
-    MatchEvent g,
-    String? playerId,
-    String Function(String) teamNameOf,
-  ) {
-    return InkWell(
-      onTap: playerId == null
-          ? null
-          : () {
-              Navigator.pop(dialogContext);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => PlayerDetailScreen(playerId: playerId),
-                ),
-              );
-            },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 2),
-        child: Text(
-          Tr.pick(
-              '${g.minute}\' ${g.scorerName ?? '不明'}${g.assistName != null ? '（アシスト: ${g.assistName}）' : ''}（${teamNameOf(g.teamId)}）',
-              "${g.minute}' ${g.scorerName ?? 'Unknown'}${g.assistName != null ? ' (assist: ${g.assistName})' : ''} (${teamNameOf(g.teamId)})"),
-        ),
-      ),
-    );
-  }
 
   /// 節送り時に発生しうる複数の通知(契約満了・リリース条項発動・代表召集・
   /// ローン復帰・CPU移籍ニュース・資金危機警告)をまとめて表示する。1件だけ
@@ -1685,7 +1460,12 @@ class _SuperCupCard extends StatelessWidget {
     final opponentId =
         match.homeTeamId == userId ? match.awayTeamId : match.homeTeamId;
     final opponentName = teams.firstWhere((t) => t.id == opponentId).name;
+    final date = CalendarEngine.formatShortDate(
+        gameState.seasonCalendar.superCupDate);
+    // 試合は進むボタンから行う(2026-11-24。以前はここに「クイック消化」が
+    // あり、大会ごとに試合の入口が違った)。この札は日付の案内だけ。
     return Card(
+      key: const ValueKey('super-cup-card'),
       color: Theme.of(context).colorScheme.tertiaryContainer,
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -1695,38 +1475,11 @@ class _SuperCupCard extends StatelessWidget {
             Text(Tr.pick('スーパーカップ', 'Super Cup'),
                 style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 4),
-            Text(Tr.pick('開幕前特別マッチ: $opponentNameと対戦します',
-                'The curtain-raiser: you face $opponentName')),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Wrap(
-                spacing: 8,
-                children: [
-                  OutlinedButton(
-                    onPressed: () => _play(context),
-                    child: Text(Tr.pick('クイック消化', 'Sim it')),
-                  ),
-                ],
-              ),
-            ),
+            Text(Tr.pick(
+                '開幕前特別マッチ: $dateに$opponentNameと対戦します。進むボタンがその日に止まります。',
+                'The curtain-raiser: you face $opponentName on $date. The advance button stops on that day.')),
           ],
         ),
-      ),
-    );
-  }
-
-  Future<void> _play(BuildContext context) async {
-    FeedbackService.tap();
-    final teams = gameState.save!.allTeams;
-    final result = await gameState.playSuperCup();
-    if (!context.mounted || result == null) return;
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => MatchScreen(
-            result: result,
-            teams: teams,
-            title: Tr.pick('スーパーカップ', 'Super Cup')),
       ),
     );
   }
@@ -2338,28 +2091,3 @@ class _BandPill extends StatelessWidget {
   }
 }
 
-/// 見守った試合で、期待のメーターがどれだけ動いたか。
-class _MeterDelta extends StatelessWidget {
-  const _MeterDelta({required this.label, required this.delta});
-
-  final String label;
-  final int delta;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = delta > 0
-        ? SemanticColors.positive(context)
-        : delta < 0
-            ? SemanticColors.negative(context)
-            : SemanticColors.neutral(context);
-    final text = delta > 0 ? '+$delta' : '$delta';
-    return Row(
-      children: [
-        Text('$label ', style: const TextStyle(fontSize: 13)),
-        Text(text,
-            style: TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: color)),
-      ],
-    );
-  }
-}

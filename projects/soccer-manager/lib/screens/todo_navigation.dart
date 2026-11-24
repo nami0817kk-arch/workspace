@@ -10,6 +10,7 @@ import 'cup_screen.dart';
 import 'finance_screen.dart';
 import 'fixtures_screen.dart';
 import 'owner_work_screen.dart';
+import 'reference_screens.dart';
 import 'squad_screen.dart';
 import 'transfer_screen.dart';
 import 'youth_screen.dart';
@@ -51,6 +52,7 @@ Widget standaloneScreenFor(TodoPlace place) => switch (place.menu) {
       TodoMenu.league =>
         place.tab == 1 ? const CupScreen() : const FixturesScreen(),
       TodoMenu.ownerRoom => OwnerWorkScreen(initialCard: place.card),
+      TodoMenu.calendar => const CalendarHubScreen(),
       // 状況は重ねて開かない(openTodoPlace が先に切り替える)。
       TodoMenu.status => const SizedBox.shrink(),
     };

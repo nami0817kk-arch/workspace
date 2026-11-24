@@ -75,7 +75,8 @@ String? _needsFirstSeason(GameState game) {
 
 // 同上。final だと最初のアクセス時の言語でラベルが固定される。
 List<QuickAccessDestination> get quickAccessDestinations => [
-      // カレンダー(月のマス目と1年の予定)。横画面では上の帯の日付から開く。
+      // カレンダー(月のマス目と1年の予定)。縦画面はここから開く。
+      // 横画面では左メニューの項目(状況のすぐ下)。上の帯の日付からも移る。
       QuickAccessDestination(
         icon: Icons.event_note,
         label: Tr.pick('カレンダー', 'Calendar'),

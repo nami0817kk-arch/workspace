@@ -10,6 +10,7 @@ import 'package:soccer_manager/screens/contract_board_screen.dart';
 import 'package:soccer_manager/screens/cup_screen.dart';
 import 'package:soccer_manager/screens/finance_screen.dart';
 import 'package:soccer_manager/screens/fixtures_screen.dart';
+import 'package:soccer_manager/screens/main_shell.dart';
 import 'package:soccer_manager/screens/owner_work_screen.dart';
 import 'package:soccer_manager/screens/owner_world_screen.dart';
 import 'package:soccer_manager/screens/reference_screens.dart';
@@ -30,6 +31,7 @@ import 'package:soccer_manager/widgets/equity_card.dart';
 import 'package:soccer_manager/widgets/era_group_card.dart';
 import 'package:soccer_manager/widgets/fan_segments_card.dart';
 import 'package:soccer_manager/widgets/group_page.dart';
+import 'package:soccer_manager/widgets/landscape_scale.dart';
 import 'package:soccer_manager/widgets/ledger_card.dart';
 import 'package:soccer_manager/widgets/media_deals_card.dart';
 import 'package:soccer_manager/widgets/owner_career_card.dart';
@@ -66,11 +68,13 @@ void main() {
     return find.byType(Tab).hitTestable().evaluate().length;
   }
 
-  testWidgets('タブは左メニューごとに 0・3・4・2・3・2・2、合計16', (tester) async {
+  testWidgets('左メニューは8項目、タブは 0・0・3・4・2・3・2・2、合計16', (tester) async {
     await pumpShell(tester);
     final nav = shellNavOf(tester);
+    expect(TodoMenu.values.length, 8);
     const want = {
       TodoMenu.status: 0,
+      TodoMenu.calendar: 0,
       TodoMenu.finance: 3,
       TodoMenu.club: 4,
       TodoMenu.squad: 2,
@@ -320,22 +324,63 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('カレンダーは上の帯の日付から開く(月と1年の予定を切り替えられる)', (tester) async {
+  testWidgets('カレンダーは左メニューの2番目。上の帯の日付を押すと切り替わる(重ねない)',
+      (tester) async {
     await pumpShell(tester);
+    final nav = shellNavOf(tester);
+    // 状況のすぐ下に「カレンダー」がある。
+    final status = tester.getRect(find.byKey(const ValueKey('menu-item-status')));
+    final cal = tester.getRect(find.byKey(const ValueKey('menu-item-calendar')));
+    expect(cal.top, closeTo(status.bottom, 0.5));
+    expect(find.descendant(
+            of: find.byKey(const ValueKey('menu-item-calendar')),
+            matching: find.text('カレンダー')),
+        findsOneWidget);
+    // 上の帯の日付から: 左メニューの項目が切り替わり、画面は重ならない。
     expect(find.byKey(const ValueKey('topbar-calendar-icon')), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('topbar-date')));
     await settleShell(tester);
-    expect(find.byType(CalendarHubScreen), findsOneWidget);
-    expect(find.text('月'), findsWidgets);
-    await tester.tap(find.text('1年の予定'));
+    expect(nav.menu, TodoMenu.calendar);
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    expect(navigator.canPop(), isFalse, reason: '重ねて開いていない');
+    expect(find.byType(CalendarHubScreen).hitTestable(), findsOneWidget);
+    // 見出しの帯(戻るボタン)は出さない。
+    expect(find.byType(BackButton).hitTestable(), findsNothing);
+    expect(find.text('月').hitTestable(), findsWidgets);
+    await tester.tap(find.text('1年の予定').hitTestable());
     await settleShell(tester);
     expect(tester.takeException(), isNull);
-    // オーナー室のタブには、もう無い。
-    tester.state<NavigatorState>(find.byType(Navigator)).pop();
+    // リーグのタブは今のまま2つ(カレンダーはリーグに入れない)。
+    nav.go(const TodoPlace(TodoMenu.league));
     await settleShell(tester);
-    shellNavOf(tester).go(TodoPlaces.ownerMatchday);
-    await settleShell(tester);
-    expect(find.text('カレンダー').hitTestable(), findsNothing);
+    expect(find.text('カレンダー').hitTestable(), findsOneWidget,
+        reason: '左メニューの項目だけ');
+  });
+
+  testWidgets('左メニューの8項目は iPhone 横の高さに 48 のままスクロールなしで入る', (tester) async {
+    for (final size in [shellPhone, const Size(667, 375), const Size(1180, 820)]) {
+      await pumpShell(tester, size: size);
+      final items = [
+        for (final m in TodoMenu.values)
+          tester.getRect(find.byKey(ValueKey('menu-item-${m.name}'))),
+      ];
+      // 組むときの大きさ(画面全体は LandscapeScale で縮めて描く)。
+      final h = items.first.height / LandscapeScale.scaleFor(size);
+      // 押せる高さ 48。左メニューは画面の上から下までを使うので、iPhone 横
+      // でも詰めずに入る(上の帯の下に置いていたときは約366しかなかった)。
+      expect(h, closeTo(48, 0.01), reason: '$size');
+      // 最後の項目まで画面の中にある(スクロールしなくても届く)。
+      final screen = tester.getRect(find.byType(MainShell));
+      expect(items.last.bottom, lessThanOrEqualTo(screen.bottom + 0.5),
+          reason: '$size');
+      for (final m in TodoMenu.values) {
+        expect(find.byKey(ValueKey('menu-item-${m.name}')).hitTestable(),
+            findsOneWidget,
+            reason: '$size ${m.name}');
+      }
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    }
   });
 
   testWidgets('上の帯: 日付は切れない(日本語・英語)', (tester) async {

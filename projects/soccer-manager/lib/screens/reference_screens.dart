@@ -174,28 +174,38 @@ class OwnerRecordsScreen extends StatelessWidget {
       );
 }
 
-/// カレンダー(月のマス目と、1年の予定)。上の帯の日付から開く。
+/// カレンダー(月のマス目と、1年の予定)。
+///
+/// 横画面では左メニューの項目(状況のすぐ下)として [embedded] で出し、
+/// 上の帯の日付を押してもこの項目に切り替わる(重ねて開かない)。縦画面では
+/// ≡ の引き出しから単独の画面として開く。
 class CalendarHubScreen extends StatelessWidget {
-  const CalendarHubScreen({super.key});
+  const CalendarHubScreen({super.key, this.embedded = false});
+
+  /// 左メニューの項目として埋め込まれているか。見出しの帯と戻るボタンを
+  /// 出さない(上の帯と左メニューで、どこにいるかは分かる)。
+  final bool embedded;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // 中の2つの画面は自分の見出しを持つので、ここでは隠す(見出しが
+    // 2段にならないように)。
+    final body = HideScreenBar(
+      child: Theme(
+        data: theme.copyWith(
+          appBarTheme: theme.appBarTheme.copyWith(toolbarHeight: 0),
+        ),
+        child: ChipSwitcher(items: [
+          (Tr.pick('月', 'Month'), (_) => const CalendarScreen()),
+          (Tr.pick('1年の予定', 'The year'), (_) => const ClubCalendarScreen()),
+        ]),
+      ),
+    );
+    if (embedded) return body;
     return Scaffold(
       appBar: AppBar(title: Text(Tr.pick('カレンダー', 'Calendar'))),
-      // 中の2つの画面は自分の見出しを持つので、ここでは隠す(見出しが
-      // 2段にならないように)。
-      body: HideScreenBar(
-        child: Theme(
-          data: theme.copyWith(
-            appBarTheme: theme.appBarTheme.copyWith(toolbarHeight: 0),
-          ),
-          child: ChipSwitcher(items: [
-            (Tr.pick('月', 'Month'), (_) => const CalendarScreen()),
-            (Tr.pick('1年の予定', 'The year'), (_) => const ClubCalendarScreen()),
-          ]),
-        ),
-      ),
+      body: body,
     );
   }
 }

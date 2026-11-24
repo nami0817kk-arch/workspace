@@ -10,18 +10,7 @@ import '../state/game_state.dart';
 import '../theme/semantic_colors.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
-import 'match_screen.dart';
 import '../l10n/tr.dart';
-
-/// カップ戦のクイック消化後に、自クラブが賞金を獲得していればSnackBarで
-/// 知らせる(表示した通知は消費してnullへ戻す)。ライブ観戦はフルタイム
-/// 画面側で表示するため、こちらはクイック消化の各導線から呼ぶ。
-void showCupPrizeSnackBar(BuildContext context, GameState gameState) {
-  final note = gameState.lastCupPrizeNote;
-  if (note == null) return;
-  gameState.lastCupPrizeNote = null;
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(note)));
-}
 
 class CupScreen extends StatelessWidget {
   const CupScreen({super.key});
@@ -85,7 +74,6 @@ class _DomesticCupTab extends StatelessWidget {
     // 作るときに決まった回戦の数を使う。
     final totalRounds = cup.totalRounds;
     final nextMatch = cup.nextUnplayedMatch;
-    final inSeason = gameState.save!.league.nextUnplayedFixture != null;
     final userEliminated = cup.isEliminated(userId);
 
     return ListView(
@@ -130,35 +118,9 @@ class _DomesticCupTab extends StatelessWidget {
                   '他クラブの結果は引き続き更新されます', 'The other results keep coming in')),
             ),
           ),
-        if (nextMatch != null && inSeason) const _CupByDateNote(),
-        if (nextMatch != null && !inSeason)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: gameState.canPlayNextDomesticCupMatch
-                        ? () => _playNext(context)
-                        : null,
-                    child: Text(Tr.pick('次の試合をする', 'Play the next tie')),
-                  ),
-                ),
-                if (!gameState.canPlayNextDomesticCupMatch)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      Tr.pick('リーグ戦を1節進めると、次の試合ができます',
-                          'Play one more league matchday and you can take the next tie'),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: SemanticColors.subtleText(context)),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+        // 試合は全部、上の進むボタンから行う(2026-11-24。季の後も、ここの
+        // 「次の試合をする」ではなく進むボタンがその日に止まる)。
+        if (nextMatch != null && !userEliminated) const _CupByDateNote(),
         for (final round in cup.rounds) ...[
           _RoundSection(
             title: CupEngine.roundLabel(round.first.round, totalRounds),
@@ -179,27 +141,6 @@ class _DomesticCupTab extends StatelessWidget {
     );
   }
 
-  Future<void> _playNext(BuildContext context) async {
-    final gameState = context.read<GameState>();
-    final userId = gameState.userTeam.id;
-    final List<Team> teams = gameState.allTeamsForCups;
-    final match = gameState.domesticCup?.nextUnplayedMatch;
-    final isUserMatch = match != null &&
-        (match.homeTeamId == userId || match.awayTeamId == userId);
-    final result = await gameState.playNextCupMatch();
-    if (!context.mounted) return;
-    showCupPrizeSnackBar(context, gameState);
-    if (result != null && isUserMatch) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => MatchScreen(
-              result: result,
-              teams: teams,
-              title: Tr.pick('国内カップ', 'Domestic Cup')),
-        ),
-      );
-    }
-  }
 }
 
 /// 出場のしかたの説明(チャンピオンズカップとヨーロッパカップ)。
@@ -253,7 +194,6 @@ class _ContinentalCupTabState extends State<_ContinentalCupTab> {
       knockoutTotal = cup.knockoutRounds.length;
     }
     final userEliminated = userInCup && cup.isEliminated(userId);
-    final inSeason = gameState.save!.league.nextUnplayedFixture != null;
     final groupStageDone = cup.isGroupStageComplete;
     final nextGroupMatch = ContinentalCupEngine.nextGroupMatch(cup);
     final knockoutPending = cup.knockoutRounds.isNotEmpty &&
@@ -311,68 +251,10 @@ class _ContinentalCupTabState extends State<_ContinentalCupTab> {
                   '他クラブの結果は引き続き更新されます', 'The other results keep coming in')),
             ),
           ),
-        if (!userInCup)
-          const SizedBox.shrink()
-        else if ((nextGroupMatch != null || knockoutPending) && inSeason)
-          const _CupByDateNote()
-        else if (nextGroupMatch != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: gameState.canPlayNextContinentalMatch
-                        ? () => _playNextGroup(context)
-                        : null,
-                    child: Text(Tr.pick(
-                        'グループステージの次の試合をする', 'Play the next group match')),
-                  ),
-                ),
-                if (!gameState.canPlayNextContinentalMatch)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      Tr.pick('リーグ戦を1節進めると、次の試合ができます',
-                          'Play one more league matchday and you can take the next tie'),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: SemanticColors.subtleText(context)),
-                    ),
-                  ),
-              ],
-            ),
-          )
-        else if (knockoutPending)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: gameState.canPlayNextContinentalMatch
-                        ? () => _playNextKnockoutLeg(context)
-                        : null,
-                    child: Text(Tr.pick(
-                        '決勝トーナメントの次の試合をする', 'Play the next knockout leg')),
-                  ),
-                ),
-                if (!gameState.canPlayNextContinentalMatch)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      Tr.pick('リーグ戦を1節進めると、次の試合ができます',
-                          'Play one more league matchday and you can take the next tie'),
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: SemanticColors.subtleText(context)),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+        if (userInCup &&
+            !userEliminated &&
+            (nextGroupMatch != null || knockoutPending))
+          const _CupByDateNote(),
         _RoundSection(
           title: Tr.pick('グループステージ', 'Group stage'),
           initiallyExpanded: !groupStageDone,
@@ -405,56 +287,6 @@ class _ContinentalCupTabState extends State<_ContinentalCupTab> {
     );
   }
 
-  Future<void> _playNextGroup(BuildContext context) async {
-    final gameState = context.read<GameState>();
-    final userId = gameState.userTeam.id;
-    final List<Team> teams = gameState.allTeamsForCups;
-    final match = ContinentalCupEngine.nextGroupMatch(
-      gameState.continentalCup!,
-    );
-    final isUserMatch = match != null &&
-        (match.homeTeamId == userId || match.awayTeamId == userId);
-    final result = await gameState.playNextContinentalGroupMatch();
-    if (!context.mounted) return;
-    showCupPrizeSnackBar(context, gameState);
-    if (result != null && isUserMatch) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => MatchScreen(
-            result: result,
-            teams: teams,
-            title: Tr.pick('大陸カップ グループステージ', 'Continental Cup group stage'),
-          ),
-        ),
-      );
-    }
-  }
-
-  Future<void> _playNextKnockoutLeg(BuildContext context) async {
-    final gameState = context.read<GameState>();
-    final userId = gameState.userTeam.id;
-    final List<Team> teams = gameState.allTeamsForCups;
-    final round = gameState.continentalCup!.knockoutRounds.last;
-    final tie = round.firstWhere(
-      (t) => !t.isComplete,
-      orElse: () => round.first,
-    );
-    final isUserTie = tie.teamAId == userId || tie.teamBId == userId;
-    final result = await gameState.playNextContinentalKnockoutLeg();
-    if (!context.mounted) return;
-    showCupPrizeSnackBar(context, gameState);
-    if (result != null && isUserTie) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => MatchScreen(
-            result: result,
-            teams: teams,
-            title: Tr.pick('大陸カップ 決勝トーナメント', 'Continental Cup knockout stage'),
-          ),
-        ),
-      );
-    }
-  }
 }
 
 /// 国内カップの1試合分カード。自クラブの試合は背景色に加えて、
@@ -815,8 +647,7 @@ class _LeagueCupCard extends StatelessWidget {
 
 /// 4クラブのスーパーカップ(スペイン・イタリア。1月ごろ。準決勝と決勝)。
 /// 自クラブの試合は、ほかのカップ戦と同じく進むボタンがその日に止まって
-/// 行う。日が来ていれば、ここからクイック消化もできる(開幕前の1試合の
-/// スーパーカップと同じ)。延長は無く、並べばPK戦。
+/// 行う。延長は無く、並べばPK戦。
 class _FourClubSuperCupSection extends StatelessWidget {
   const _FourClubSuperCupSection();
 
@@ -843,7 +674,6 @@ class _FourClubSuperCupSection extends StatelessWidget {
       status = Tr.pick('次は${CupEngine.roundLabel(round, 2)}',
           'Next: ${CupEngine.roundLabel(round, 2)}');
     }
-    final canPlay = gs.canPlayNextFourClubSuperCupMatch;
     return Card(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
@@ -859,16 +689,7 @@ class _FourClubSuperCupSection extends StatelessWidget {
                   '$status. The top two in the league and the two cup finalists meet in January: semi-finals, then the final (no extra time; level games go to penalties).')),
             ),
             if (involved && !cup.isComplete && !cup.isEliminated(userId)) ...[
-              if (gs.save!.league.nextUnplayedFixture != null)
-                const _CupByDateNote(),
-              if (canPlay)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: OutlinedButton(
-                    onPressed: () => _play(context),
-                    child: Text(Tr.pick('クイック消化', 'Sim it')),
-                  ),
-                ),
+              const _CupByDateNote(),
             ],
             for (final round in cup.rounds)
               _RoundSection(
@@ -885,23 +706,10 @@ class _FourClubSuperCupSection extends StatelessWidget {
     );
   }
 
-  Future<void> _play(BuildContext context) async {
-    final gs = context.read<GameState>();
-    final List<Team> teams = gs.allTeamsForCups;
-    final result = await gs.playNextFourClubSuperCupMatch();
-    if (!context.mounted || result == null) return;
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => MatchScreen(
-            result: result,
-            teams: teams,
-            title: Tr.pick('スーパーカップ', 'Super Cup')),
-      ),
-    );
-  }
 }
 
-/// 季の途中のカップ戦は、進むボタンがその日に止まって行う(2026-11-22)。
+/// カップ戦の試合は、進むボタンがその日に止まって行う(2026-11-22)。
+/// 季の後のカップ戦も同じ(2026-11-24。ここにあった「次の試合をする」は外した)。
 class _CupByDateNote extends StatelessWidget {
   const _CupByDateNote();
 

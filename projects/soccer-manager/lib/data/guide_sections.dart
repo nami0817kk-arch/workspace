@@ -94,8 +94,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('スーパーカップ', 'Super Cup'),
             description: Tr.pick(
-                'リーグ優勝クラブとカップ優勝クラブが開幕前に戦う単発の一戦。開催条件を満たすとホーム画面に専用カードが表示される。スペイン・イタリアは、リーグの1・2位とカップの優勝・準優勝の4クラブが1月ごろに準決勝と決勝を行い、カップ戦の画面に出る(延長は無く、並べばPK戦)。',
-                'A one-off match between the league champions and the cup winners before the season starts. When it is on, a card for it appears on the home screen. In Spain and Italy, the top two in the league and the two cup finalists play semi-finals and a final in January instead; it appears on the Cups screen (no extra time; level games go to penalties).'),
+                'リーグ優勝クラブとカップ優勝クラブが開幕前に戦う単発の一戦。開催条件を満たすと状況の画面に日付の案内が出て、進むボタンがその日に止まって行う。スペイン・イタリアは、リーグの1・2位とカップの優勝・準優勝の4クラブが1月ごろに準決勝と決勝を行い、カップ戦の画面に出る(延長は無く、並べばPK戦)。',
+                'A one-off match between the league champions and the cup winners before the season starts. When it is on, the status page tells you the date and the advance button stops on that day to play it. In Spain and Italy, the top two in the league and the two cup finalists play semi-finals and a final in January instead; it appears on the Cups screen (no extra time; level games go to penalties).'),
           ),
         ],
       ),
@@ -115,8 +115,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('進むボタン(日付で進む)', 'The advance button'),
             description: Tr.pick(
-                '右上のボタンは、次に予定がある日まで進みます(試合・カップ戦・給料日・放映権の入金・移籍の窓の開閉と締切など。何もない日は飛ばします)。どこまで進むかはボタンに「次の試合へ 9/5(土)」「給料日まで進む 7/31(金)」のように出ます。必ず決めることが残っていると、ボタンの左に赤い札で「やること 2件」と出ます(押すと一覧へ移ります。進むのは止めません)。試合には直接関わらず、数秒のダイジェストで結果と2つの期待の動きが出ます。日付を押すとカレンダーが開きます。',
-                'The button at the top right moves to the next day with something on: a match, a cup tie, payday, TV money, a transfer window opening or closing. Empty days are skipped, and the button says where it is going, such as "Next match • 5 Sep" or "Skip to Payday • 31 Jul". While something still needs your answer, a red "To do: 2" tag sits to its left (tap it to open the list; it never blocks you from advancing). You do not touch the match itself; a short digest shows the result and how both expectations moved. Tap the date to open the calendar.'),
+                '右上のボタンは、次に予定がある日まで進みます(リーグ戦・カップ戦・スーパーカップ・親善試合・給料日・放映権の入金・移籍の窓の開閉と締切など。何もない日は飛ばします。試合はどの大会もこのボタンから行います)。どこまで進むかはボタンに「次の試合へ 9/5(土)」「給料日まで進む 7/31(金)」のように出ます。必ず決めることが残っていると、ボタンの左に赤い札で「やること 2件」と出ます(押すと一覧へ移ります。進むのは止めません)。試合には直接関わらず、どの大会でも同じダイジェストで結果・2つの期待の動き・賞金が出ます(「試合経過を見る」で出来事を順に見られます)。日付を押すと、左メニューのカレンダーに移ります。',
+                'The button at the top right moves to the next day with something on: a league match, a cup tie, a super cup, a friendly, payday, TV money, a transfer window opening or closing. Empty days are skipped, every match in every competition is played from here, and the button says where it is going, such as "Next match • 5 Sep" or "Skip to Payday • 31 Jul". While something still needs your answer, a red "To do: 2" tag sits to its left (tap it to open the list; it never blocks you from advancing). You do not touch the match itself; the same digest for every competition shows the result, how both expectations moved and any prize money (open Match timeline to replay the moments). Tap the date to jump to the Calendar in the left menu.'),
           ),
           GuideTopic(
             title: Tr.pick('監督からの報告・経営診断', "Manager's report and health check"),
@@ -145,8 +145,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('オーナー室', "Owner's office"),
             description: Tr.pick(
-                'オーナーの仕事(1シーズンに1回ずつ打てる手・月に1回の広報)、試合日のイベント、友好提携クラブと、「オーナーと世界」(クラブの文化・他のオーナー・クラブの買収)をまとめています。ニュース・シーズン分析・記録・ランキングなどの見るだけの画面は、左上のメニュー(三本線)の「資料」にあります。カレンダーは上の帯の日付を押すと開きます。',
-                "Moves you can make once a season (and one PR move a month), matchday events, a friendship partner, plus Owner & world (club culture, rival owners, buying another club). View-only screens such as news, season analysis, records and rankings are under Reference in the top-left menu. Tap the date in the top bar to open the calendar."),
+                'オーナーの仕事(1シーズンに1回ずつ打てる手・月に1回の広報)、試合日のイベント、友好提携クラブと、「オーナーと世界」(クラブの文化・他のオーナー・クラブの買収)をまとめています。ニュース・シーズン分析・記録・ランキングなどの見るだけの画面は、左上のメニュー(三本線)の「資料」にあります。カレンダーは左メニューの「カレンダー」(状況のすぐ下)にあります。',
+                "Moves you can make once a season (and one PR move a month), matchday events, a friendship partner, plus Owner & world (club culture, rival owners, buying another club). View-only screens such as news, season analysis, records and rankings are under Reference in the top-left menu. The calendar has its own item in the left menu, just below Status."),
           ),
           GuideTopic(
             title: Tr.pick('事件と目標', 'Incidents and goals'),
@@ -404,8 +404,8 @@ List<GuideSection> get guideSections => [
           GuideTopic(
             title: Tr.pick('カレンダー', 'Calendar'),
             description: Tr.pick(
-                '上の帯の日付を押すと開く。リーグ戦・カップ戦の実際の日付を、月のマス目と1年の予定の2通りで一覧できる。試合が詰まる週の見通しを立てるのに使う。',
-                'Tap the date in the top bar to open it. It shows the actual dates of league and cup matches, as a month grid or a year list. Use it to see a congested run coming.'),
+                '左メニューの「カレンダー」(状況のすぐ下)。上の帯の日付を押しても移る(縦画面では左上の三本線から)。リーグ戦・国内カップ・大陸カップ・スーパーカップ・親善試合の日付を、月のマス目と1年の予定の2通りで一覧できる。月のマス目では、試合の日に相手の名前・H(ホーム)/A(アウェイ)/N(中立地)・終わった試合の結果が出て、大会ごとに色が違う(リーグ戦は主役の色・カップ戦は金・大陸カップは紫・親善試合は灰青)。今日は色の枠、次の試合は金の太い枠。日を押すとその日の予定が出て、カップ戦の日はそこからカップ戦の画面へ移れる。試合が詰まる週の見通しを立てるのに使う。',
+                'Calendar in the left menu, just below Status; tapping the date in the top bar takes you there too (in portrait, open it from the top-left menu). It shows the dates of league games, domestic and continental cup ties, super cups and friendlies, as a month grid or a year list. On the month grid, match days show the opponent, H (home), A (away) or N (neutral), and the score once played, coloured by competition (league in the main colour, cups in gold, continental cups in purple, friendlies in blue-grey). Today has a coloured frame and the next match a thick gold one. Tap a day to see what is on; on a cup day you can jump straight to the Cups screen. Use it to see a congested run coming.'),
           ),
         ],
       ),

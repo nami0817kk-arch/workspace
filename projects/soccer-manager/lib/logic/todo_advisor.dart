@@ -19,7 +19,19 @@ import 'sponsor_slots.dart';
 enum TodoLevel { must, recommended }
 
 /// 左メニューの項目(横画面の並びと同じ順)。
-enum TodoMenu { status, finance, club, squad, transfer, league, ownerRoom }
+///
+/// カレンダーは状況のすぐ下(2026-11-24)。試合日が分かる画面が欲しいという
+/// 声で、上の帯の日付から開くだけだったものを、項目にした。
+enum TodoMenu {
+  status,
+  calendar,
+  finance,
+  club,
+  squad,
+  transfer,
+  league,
+  ownerRoom,
+}
 
 /// 行き先。左メニューの項目と、その中のタブ(左から0始まり)と、必要なら
 /// 中の札の名前。
@@ -60,6 +72,9 @@ class TodoPlaces {
 
   /// 状況の、オーナーの目標を選ぶ一覧(下から出る)。
   static const ownerGoal = TodoPlace(TodoMenu.status, card: cardOwnerGoal);
+
+  /// カレンダー(タブなし。中で「月」と「1年の予定」を切り替える)。
+  static const calendar = TodoPlace(TodoMenu.calendar);
 
   // 経営: 概要・お金を作る・方針と投資
   static const financeOverview = TodoPlace(TodoMenu.finance);

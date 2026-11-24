@@ -400,8 +400,13 @@ void main() {
               find.descendant(of: button, matching: find.byType(Text)))
           .data!;
       final stop = gs.nextStop!;
-      if (stop.kind.isMatch) {
+      if (stop.kind == DayEventKind.leagueMatch) {
         expect(label, startsWith(en ? 'Next match' : '次の試合へ'));
+      } else if (stop.kind.isMatch) {
+        // 開幕前の親善試合・スーパーカップにも止まる(2026-11-24。試合は全部
+        // 進むボタンから)。字は「親善試合へ 7/18(土)」の形。
+        expect(label,
+            startsWith(en ? stop.buttonLabel : '${stop.buttonLabel}へ'));
       } else {
         expect(label,
             en ? startsWith('Skip to ') : contains('${stop.buttonLabel}まで進む'));

@@ -31,7 +31,7 @@ import '../widgets/todo_list.dart';
 
 /// 画面の行き先。横画面は左のメニューに全部を並べ(FM風)、縦画面は下の5タブにまとめる。
 ///
-/// 横画面は7項目: 状況・財務・クラブ・選手・移籍・リーグ・オーナー室。
+/// 横画面は8項目: 状況・カレンダー・財務・クラブ・選手・移籍・リーグ・オーナー室。
 /// 縦画面は下の5タブ(状況・財務・補強・選手・リーグ)。
 ///
 /// 項目の並びは [TodoMenu]。「やること」の行き先([TodoPlace])と同じ型を
@@ -92,10 +92,11 @@ class _MainShellState extends State<MainShell> {
     FixturesScreen(),
   ];
 
-  // 横画面の7項目(左メニューの並びと同じ)。関連する画面は、1つの項目の中に
+  // 横画面の8項目(左メニューの並びと同じ)。関連する画面は、1つの項目の中に
   // サブページとしてまとめる(GroupPage)。
   static const _widePages = [
     _Page.status,
+    _Page.calendar,
     _Page.finance,
     _Page.club,
     _Page.squad,
@@ -106,6 +107,8 @@ class _MainShellState extends State<MainShell> {
 
   List<Widget> get _wideTabs => [
         const HomeScreen(),
+        // カレンダーはタブなしの1画面(中で月と1年の予定を切り替える)。
+        const CalendarHubScreen(embedded: true),
         const FinanceScreen(embedded: true),
         GroupPage(
           menu: TodoMenu.club,
@@ -151,7 +154,7 @@ class _MainShellState extends State<MainShell> {
                 (_) => const OwnerWorkScreen()),
             GroupTab(Tr.pick('オーナーと世界', 'Owner & world'),
                 (_) => const OwnerWorldScreen()),
-            // カレンダーは上の帯の日付から開く。ニュース・シーズン分析・記録は
+            // カレンダーは左メニューの項目へ。ニュース・シーズン分析・記録は
             // 見るだけなので、≡ の「資料」へ(タブが6つあった。2026-11-24)。
           ],
         ),
@@ -229,34 +232,45 @@ class _MainShellState extends State<MainShell> {
         key: _scaffoldKey,
         drawer: wide ? const QuickAccessDrawer(onlyOthers: true) : null,
         body: wide
-            ? Column(
+            // 左メニューは画面の上から下までの高さを使い、上の帯はその右に
+            // 置く(2026-11-24)。カレンダーを足して8項目になり、上の帯の下に
+            // 置いたままでは iPhone 横の高さに 48 の項目が入らなかった
+            // (帯の分を除くと約366で、8項目には384要る)。
+            ? Row(
                 children: [
                   SafeArea(
-                    bottom: false,
-                    child: _FmTopBar(
-                      gameState: gameState,
-                      mustCount: todos.mustCount,
-                      onTodo: () => _nav.go(TodoPlaces.status),
-                      onMore: () => _scaffoldKey.currentState?.openDrawer(),
+                    right: false,
+                    child: _FmSidebar(
+                      page: _page,
+                      // 印は「やること」の一覧から付ける。その項目を
+                      // 開けば、必ずその用件が見つかる(事件の札は
+                      // 状況に出るのに、印はオーナー室に付いていた)。
+                      todos: todos,
+                      onSelect: _go,
                     ),
                   ),
-                  const Divider(height: 1),
+                  const VerticalDivider(width: 1),
                   Expanded(
-                    child: Row(
+                    child: Column(
                       children: [
                         SafeArea(
-                          top: false,
-                          right: false,
-                          child: _FmSidebar(
-                            page: _page,
-                            // 印は「やること」の一覧から付ける。その項目を
-                            // 開けば、必ずその用件が見つかる(事件の札は
-                            // 状況に出るのに、印はオーナー室に付いていた)。
-                            todos: todos,
-                            onSelect: _go,
+                          bottom: false,
+                          left: false,
+                          child: _FmTopBar(
+                            gameState: gameState,
+                            mustCount: todos.mustCount,
+                            onTodo: () => _nav.go(TodoPlaces.status),
+                            onMore: () =>
+                                _scaffoldKey.currentState?.openDrawer(),
+                            // 日付を押すと、左メニューのカレンダーに切り替える
+                            // (以前は画面を重ねて開いていた)。
+                            onCalendar: () {
+                              FeedbackService.tap();
+                              _nav.go(TodoPlaces.calendar);
+                            },
                           ),
                         ),
-                        const VerticalDivider(width: 1),
+                        const Divider(height: 1),
                         Expanded(
                           // 上のバーがあるので、各画面の見出しの帯は低くする。
                           child: Theme(
@@ -309,9 +323,13 @@ class _FmTopBar extends StatelessWidget {
     required this.onMore,
     required this.mustCount,
     required this.onTodo,
+    required this.onCalendar,
   });
 
   final GameState gameState;
+
+  /// カレンダーを開く(上の帯の日付を押したとき)。
+  final VoidCallback onCalendar;
 
   /// 必ず決めることの件数。残っていれば、進むボタンの左に出す。
   final int mustCount;
@@ -344,7 +362,9 @@ class _FmTopBar extends StatelessWidget {
     final sub = TextStyle(fontSize: 12, color: scheme.onSurfaceVariant);
     // 帯の高さは決まっているので、文字の大きさの設定は少しだけ効かせる
     // (1.3倍だと「サポーター」が2行になり、メーターがはみ出していた)。
-    final barWidth = MediaQuery.sizeOf(context).width;
+    // 帯は左メニュー(幅88＋区切り1)の右にある(2026-11-24)。ボタンの幅の
+    // 上限は、画面ではなく帯の幅から決める。
+    final barWidth = MediaQuery.sizeOf(context).width - 89;
     return MediaQuery.withClampedTextScaling(
       maxScaleFactor: 1.1,
       child: Container(
@@ -371,8 +391,7 @@ class _FmTopBar extends StatelessWidget {
               flex: 3,
               // 日付を押すとカレンダーを開く(2026-11-22)。
               child: InkWell(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const CalendarHubScreen())),
+                onTap: onCalendar,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,18 +412,30 @@ class _FmTopBar extends StatelessWidget {
                     // 右端の季から(2026-11-24)。英語は曜日を落として短くする。
                     // 小さなカレンダーの印で、押すとカレンダーが開くと分かる
                     // ようにする。
-                    Row(
+                    // 帯がとても狭いとき(左メニューの右に置いたので、小さな
+                    // 横画面では約60しか残らないことがある)は、日付を切らずに
+                    // 字を少し縮めて収める。
+                    LayoutBuilder(builder: (context, box) => Row(
                       children: [
                         Icon(Icons.calendar_month,
                             key: const ValueKey('topbar-calendar-icon'),
                             size: 13,
                             color: scheme.primary),
                         const SizedBox(width: 3),
-                        Text(
-                          _shortToday(gameState.today),
-                          key: const ValueKey('topbar-date'),
-                          maxLines: 1,
-                          style: sub,
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxWidth: (box.maxWidth - 16)
+                                  .clamp(0.0, double.infinity)),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _shortToday(gameState.today),
+                              key: const ValueKey('topbar-date'),
+                              maxLines: 1,
+                              style: sub,
+                            ),
+                          ),
                         ),
                         Flexible(
                           child: Text(
@@ -419,7 +450,7 @@ class _FmTopBar extends StatelessWidget {
                           ),
                         ),
                       ],
-                    ),
+                    )),
                   ],
                 ),
               ),
@@ -449,7 +480,10 @@ class _FmTopBar extends StatelessWidget {
             const SizedBox(width: 12),
             const ExpectationMeters(compact: true),
             const SizedBox(width: 12),
-            if (next != null && gameState.saleReason == null)
+            // リーグ戦を終えた後でも、自クラブのカップ戦が残っていれば出す
+            // (試合は全部ここから行う。2026-11-24)。
+            if ((next != null || gameState.nextStop != null) &&
+                gameState.saleReason == null)
               // 帯が狭いとき(小さな端末・大きい文字)は、件数の札を数字だけに
               // し、それでも入らなければボタンの字を「…」で切る(はみ出さない)。
               ConstrainedBox(
@@ -459,7 +493,7 @@ class _FmTopBar extends StatelessWidget {
                   mustCount: mustCount,
                   onTodo: onTodo,
                   // スマホの幅では、日付と節の字を残すために数字だけにする。
-                  compact: barWidth < 1000,
+                  compact: barWidth < 911,
                 ),
               ),
           ],
@@ -576,14 +610,29 @@ class _FmSidebar extends StatelessWidget {
   final List<TodoItem> todos;
   final void Function(_Page) onSelect;
 
-  // 7項目が、横画面の低い高さに収まり、指で押せる高さ(44pt 以上)。
+  // 項目の高さ。指で押せる 48 を基本にする(左メニューは画面の上から下
+  // までを使うので、iPhone 横でも8項目が 48 で入る)。それでも入らない
+  // 低い画面のときだけ、均等に詰める(アイコンと字を少し小さくして間を保つ)。
   // 「その他」は上の帯の左端へ移した。
   static const double _itemHeight = 48;
+
+  /// 詰めてもこれより低くはしない(これで入らなければスクロールする)。
+  static const double _minItemHeight = 42;
+
+  /// [height] の高さに [count] 項目を並べるときの、1項目の高さ。
+  static double itemHeightFor(double height, int count) =>
+      (height / count).floorToDouble().clamp(_minItemHeight, _itemHeight);
 
   @override
   Widget build(BuildContext context) {
     final entries = <(_Page, IconData, IconData, String)>[
       (_Page.status, Icons.home_outlined, Icons.home, Tr.pick('状況', 'Status')),
+      (
+        _Page.calendar,
+        Icons.calendar_month_outlined,
+        Icons.calendar_month,
+        Tr.pick('カレンダー', 'Calendar')
+      ),
       (
         _Page.finance,
         Icons.account_balance_outlined,
@@ -628,8 +677,11 @@ class _FmSidebar extends StatelessWidget {
       required String label,
       required bool on,
       required VoidCallback onTap,
+      required double height,
+      Key? key,
     }) =>
         Padding(
+          key: key,
           // 選んでいる項目は、主役の色で塗った札にする。以前は左の細い印と
           // 12%の下地だけで、どこを開いているか一目で分からなかった。
           padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -640,19 +692,20 @@ class _FmSidebar extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               onTap: onTap,
               child: SizedBox(
-                height: _itemHeight,
+                height: height,
                 width: double.infinity,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     icon,
-                    const SizedBox(height: 2),
+                    SizedBox(height: height < _itemHeight ? 1 : 2),
                     Text(
                       label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: height < _itemHeight ? 10.5 : 11,
+                        height: height < _itemHeight ? 1.1 : null,
                         fontWeight: FontWeight.bold,
                         color: on ? scheme.onPrimary : scheme.onSurfaceVariant,
                       ),
@@ -674,18 +727,22 @@ class _FmSidebar extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
+              child: LayoutBuilder(builder: (context, box) {
+                final h = itemHeightFor(box.maxHeight, entries.length);
+                return SingleChildScrollView(
                 child: Column(
                   children: [
                     for (final (p, icon, selectedIcon, label) in entries)
                       item(
+                        key: ValueKey('menu-item-${p.name}'),
+                        height: h,
                         on: page == p,
                         label: label,
                         onTap: () => onSelect(p),
                         icon: () {
                           final i = Icon(
                             page == p ? selectedIcon : icon,
-                            size: 22,
+                            size: h < _itemHeight ? 20 : 22,
                             color: page == p
                                 ? scheme.onPrimary
                                 : scheme.onSurfaceVariant,
@@ -714,7 +771,8 @@ class _FmSidebar extends StatelessWidget {
                       ),
                   ],
                 ),
-              ),
+              );
+              }),
             ),
           ],
         ),
