@@ -144,27 +144,39 @@ class FinanceScreen extends StatelessWidget {
               child: AutoColumns(
                 children: [
                   const _FundingSummary(),
-                  _GroupHeading(
-                      Tr.pick('稼ぐ: スポンサーと命名権', 'Earn: sponsors and naming rights')),
-                  SponsorSlotsCard(
-                      chest: _SponsorSection(gameState: gameState)),
-                  const MediaDealsCard(),
-                  _GroupHeading(Tr.pick('借りる: 銀行の融資', 'Borrow: bank loans')),
-                  _LoanSection(gameState: gameState),
-                  _GroupHeading(
-                      Tr.pick('出資を受ける: オーナーと株主', 'Bring in capital: you and shareholders')),
-                  // オーナーの財布(出資・貸す/返してもらう)。以前は
-                  // 「オーナー室 > オーナーと世界」にあった。
-                  const OwnerWealthCard(),
-                  const EquityCard(),
-                  PlaceLink(
+                  // 見出しと札は1つの塊にする(2列に割るとき、見出しだけが
+                  // 別の列に残らないように)。
+                  _FundingGroup(
+                    title: Tr.pick('稼ぐ: スポンサーと命名権',
+                        'Earn: sponsors and naming rights'),
+                    children: [
+                      SponsorSlotsCard(
+                          chest: _SponsorSection(gameState: gameState)),
+                      const MediaDealsCard(),
+                    ],
+                  ),
+                  _FundingGroup(
+                    title: Tr.pick('借りる: 銀行の融資', 'Borrow: bank loans'),
+                    children: [_LoanSection(gameState: gameState)],
+                  ),
+                  _FundingGroup(
+                    title: Tr.pick('出資を受ける: オーナーと株主',
+                        'Bring in capital: you and shareholders'),
+                    children: [
+                      // オーナーの財布(出資・貸す/返してもらう)。以前は
+                      // 「オーナー室 > オーナーと世界」にあった。
+                      const OwnerWealthCard(),
+                      const EquityCard(),
+                      PlaceLink(
                     key: const ValueKey('finance-to-owner-finance-works'),
                     icon: Icons.work_outline,
                     title: Tr.pick('社債・特別配当・経費の見直しは「オーナーの仕事」へ',
                         "Bonds, special dividends and cost reviews: open Owner's work"),
                     note: Tr.pick('財務・資本の手(1シーズンに1回ずつ)は、オーナー室にまとめてあります。',
                         "Finance & capital moves (once a season each) are in the owner's office."),
-                    place: TodoPlaces.ownerFinanceWorks,
+                        place: TodoPlaces.ownerFinanceWorks,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -174,9 +186,10 @@ class FinanceScreen extends StatelessWidget {
             ResponsiveBody(
               child: AutoColumns(
                 children: [
+                  // 2列のときは 左: 規則・事業・投資、右: 顧問・備え・景気・
+                  // 5か年計画(数で半分に割るので、備えと景気は1つの塊)。
                   const RulesCard(),
                   const BusinessCard(),
-                  const AdvisorCard(),
                   Card(
                     key: const ValueKey('finance-investments'),
                     child: Padding(
@@ -194,8 +207,11 @@ class FinanceScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const RiskCard(),
-                  const EconomyCard(),
+                  const AdvisorCard(),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [RiskCard(), EconomyCard()],
+                  ),
                   const FiveYearPlanCard(),
                 ],
               ),
@@ -214,19 +230,26 @@ class FinanceScreen extends StatelessWidget {
   }
 }
 
-/// 「お金を集める」の手のまとまりの見出し。
-class _GroupHeading extends StatelessWidget {
-  const _GroupHeading(this.text);
-  final String text;
+/// 「お金を集める」の手のまとまり(見出しと札)。
+class _FundingGroup extends StatelessWidget {
+  const _FundingGroup({required this.title, required this.children});
+  final String title;
+  final List<Widget> children;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(4, 12, 4, 2),
-        child: Text(text,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall
-                ?.copyWith(fontWeight: FontWeight.bold)),
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 12, 4, 2),
+            child: Text(title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(fontWeight: FontWeight.bold)),
+          ),
+          ...children,
+        ],
       );
 }
 
@@ -259,16 +282,16 @@ class _FundingSummary extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _BigFigure(
-                  label: Tr.pick('返事を待つ契約', 'Offers waiting'),
+                  label: Tr.pick('契約の提示', 'Offers'),
                   value: Tr.pick('$offers件', '$offers'),
                   color: offers > 0 ? SemanticColors.positive(context) : null,
                 ),
                 _BigFigure(
-                  label: Tr.pick('借りられる額', 'You can borrow'),
+                  label: Tr.pick('借入枠', 'Can borrow'),
                   value: formatMoney(gs.maxLoanAmount),
                 ),
                 _BigFigure(
-                  label: Tr.pick('オーナーの個人資産', 'Your own wealth'),
+                  label: Tr.pick('個人資産', 'Your wealth'),
                   value: formatMoney(gs.ownerWealth),
                 ),
               ],
@@ -317,10 +340,10 @@ class _PolicyLine extends StatelessWidget {
       key: const ValueKey('finance-policy-line'),
       icon: gs.canChangeClubPolicy ? Icons.tune : Icons.lock_clock_outlined,
       title: gs.canChangeClubPolicy
-          ? Tr.pick('方針: ${gs.nextClubPolicy.label}(開幕前まで変えられます)',
-              'Policy: ${gs.nextClubPolicy.label} (can change until kick-off)')
-          : Tr.pick('方針: ${gs.clubPolicy.label}(変えられるのは来季の開幕前)',
-              'Policy: ${gs.clubPolicy.label} (can change before next season)'),
+          ? Tr.pick('方針: ${gs.nextClubPolicy.label}(開幕まで変えられる)',
+              'Policy: ${gs.nextClubPolicy.label} (open until kick-off)')
+          : Tr.pick('方針: ${gs.clubPolicy.label}(今季は固定)',
+              'Policy: ${gs.clubPolicy.label} (fixed this season)'),
       note: '',
       place: TodoPlaces.ownerWorld,
     );
@@ -341,7 +364,6 @@ class _YearMoneyCard extends StatelessWidget {
     // 放映権は今の順位での配分式の見込み、運営費も引く(記帳と同じ額)。
     final income = gameState.projectedMatchdayIncome * md;
     final weeklyBill = gameState.weeklyWageBill;
-    final hasLoan = gameState.bankLoans.isNotEmpty;
     // 支出は人件費・運営費・返済の合計。以前は真ん中の列に人件費と返済
     // だけを出し、収支からは運営費も引いていたので、収入−支出が収支と
     // 合わなかった(2026-11-23)。
@@ -392,9 +414,9 @@ class _YearMoneyCard extends StatelessWidget {
                 ),
                 _BigFigure(
                   key: const ValueKey('finance-expenses'),
-                  label: hasLoan
-                      ? Tr.pick('人件費・運営費・返済', 'Wages, costs & loan')
-                      : Tr.pick('人件費・運営費', 'Wages & costs'),
+                  // 中身(人件費・運営費・返済)は「?」の中。見出しは短く
+                  // (「人件費・運…」と切れていた。2026-11-25)。
+                  label: Tr.pick('支出', 'Spending'),
                   value: '-${formatMoney(expenses)}',
                 ),
                 _BigFigure(

@@ -74,7 +74,8 @@ class _BusinessRow extends StatelessWidget {
         );
 
     final status = switch (left) {
-      null => Tr.pick('未着手', 'Not started'),
+      null => Tr.pick('未着手(開業まで${p.buildSeasons}季)',
+          'Not started (opens after ${Tr.plural(p.buildSeasons, 'season')})'),
       0 => Tr.pick('営業中', 'Open'),
       _ => Tr.pick('建設中(あと$left季)', 'Building (${Tr.plural(left, 'season')} left)'),
     };
@@ -104,7 +105,11 @@ class _BusinessRow extends StatelessWidget {
           ),
           Text(p.summary, style: TextStyle(fontSize: 12, color: subtle)),
           const SizedBox(height: 2),
-          Wrap(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Wrap(
             runSpacing: 2,
             children: [
               stat(Tr.pick('始める費用', 'Cost to start'), formatMoney(cost)),
@@ -118,19 +123,17 @@ class _BusinessRow extends StatelessWidget {
                       ? '—'
                       : Tr.pick('約$paybackか月',
                           'about ${Tr.plural(payback, 'month')}')),
-              stat(Tr.pick('開業まで', 'Opens after'),
-                  Tr.pick('${p.buildSeasons}季', Tr.plural(p.buildSeasons, 'season'))),
+            ],
+                ),
+              ),
+              if (left == null)
+                FilledButton.tonal(
+                  key: ValueKey('business-${p.name}-start'),
+                  onPressed: short ? null : () => gs.startProject(p),
+                  child: Text(Tr.pick('始める', 'Start')),
+                ),
             ],
           ),
-          if (left == null)
-            Align(
-              alignment: Alignment.centerRight,
-              child: FilledButton.tonal(
-                key: ValueKey('business-${p.name}-start'),
-                onPressed: short ? null : () => gs.startProject(p),
-                child: Text(Tr.pick('始める', 'Start')),
-              ),
-            ),
           if (short)
             Align(
               alignment: Alignment.centerRight,

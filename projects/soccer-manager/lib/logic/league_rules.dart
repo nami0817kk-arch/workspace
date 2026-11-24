@@ -426,8 +426,8 @@ class RulesEngine {
     final limit = lossLimitForTier(tier);
     final level = loss > limit ? 2 : (loss > limit * 0.8 ? 1 : 0);
     final status = RuleStatus(
-      label: Tr.pick(
-          '直近${window.length}季の損失の合計', 'Losses over ${window.length} seasons'),
+      label: Tr.pick('直近${window.length}季の損失の合計',
+          'Losses over ${Tr.plural(window.length, 'season')}'),
       detail: Tr.pick('${formatMoney(loss)} / 上限${formatMoney(limit)}',
           '${formatMoney(loss)} / limit ${formatMoney(limit)}'),
       level: level,
