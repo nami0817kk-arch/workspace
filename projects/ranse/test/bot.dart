@@ -4,7 +4,7 @@ import 'package:ranse/engine/rng.dart';
 /// 出世を狙うが、無謀は避ける選び方。
 int pickAmbitious(Game g, Prompt p, Rng r) {
   final cs = p.choices;
-  if (p.title == '今年の重点') {
+  if (p.title == 'この年の心がけ') {
     final pref = g.l.rank == 0
         ? ['仕官の口を探す', '奉公先を探す', '武芸を磨く', '学問に励む']
         : (g.l.rank >= 8
@@ -50,7 +50,7 @@ int pickAmbitious(Game g, Prompt p, Rng r) {
 /// なければ [pickAmbitious]。能力ごとの手の強さを比べる物差し（2026-11-24「気がかりの直し」）。
 /// 二つの能力のどちらかで出る手（`知魅` など）は、どちらの字でも当たる。特性・持ち物の名の印は当たらない。
 int pickVia(Game g, Prompt p, Rng r, String vias) {
-  if (p.title != '今年の重点') {
+  if (p.title != 'この年の心がけ') {
     for (var i = 0; i < p.choices.length; i++) {
       final v = p.choices[i].via;
       if (v == null || !viaIsAbility(v)) continue;

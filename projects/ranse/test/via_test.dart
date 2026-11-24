@@ -20,7 +20,7 @@ class _Seen {
   /// via の語 → 出た数。
   final via = <String, int>{};
 
-  /// 岐路の手の数（「今年の重点」を除く）。
+  /// 岐路の手の数（「この年の心がけ」を除く）。
   var choices = 0;
 
   /// 場面が起きた訳（`Prompt.cause`）の語 → 出た数。
@@ -66,9 +66,9 @@ void _life(
         ..mi = stat
         ..un = stat;
     }
-    // 「今年の重点」には、場面の訳は付かない。
-    if (p!.title == '今年の重点') expect(p.cause, isNull);
-    if (p.title != '今年の重点' && (stat == null || n > 1)) {
+    // 「この年の心がけ」には、場面の訳は付かない。
+    if (p!.title == 'この年の心がけ') expect(p.cause, isNull);
+    if (p.title != 'この年の心がけ' && (stat == null || n > 1)) {
       // 場面が起きた訳（能力で起きる岐路は能力の字、特性の場面は特性の名）。
       final pc = p.cause;
       if (pc == null) {

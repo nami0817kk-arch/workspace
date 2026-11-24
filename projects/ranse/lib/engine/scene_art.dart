@@ -27,7 +27,7 @@ const kSceneArts = <String>[
 bool _any(String s, List<String> words) => words.any(s.contains);
 
 /// [id] は場面の id（`SceneDef.id`）、[title] は岐路の題。どの絵を添えるかを返す。
-/// 「今年の重点」（場面でない問い）には絵を添えない（null）。
+/// 「この年の心がけ」（場面でない問い）には絵を添えない（null）。
 String? sceneArtFor(Game g, String? id, String title) {
   if (id == null) return null;
   final i = id;

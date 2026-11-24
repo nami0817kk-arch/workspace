@@ -118,7 +118,7 @@ Game? _lateBorn(int seed) {
 /// 岐路は危うさを匂わせる手を避ける。
 int _pickCareful(Game g, Prompt p, Rng r) {
   final cs = p.choices;
-  if (p.title == '今年の重点') {
+  if (p.title == 'この年の心がけ') {
     for (final w in ['体を休める', '主君に尽くす', '奥向きに尽くす', '学問に励む']) {
       final i = cs.indexWhere((c) => c.label.contains(w));
       if (i >= 0 && r.chance(.5)) return i;
@@ -397,7 +397,7 @@ void main() {
           // 史実どおりの世の戦の絶えた年には、出陣の岐路も「戦に備える」も出ない。
           if (peaceTime(g) && g.l.rank < 8) {
             if (p.title == '出陣' || p.title == '初陣') warAfter++;
-            if (p.title == '今年の重点') {
+            if (p.title == 'この年の心がけ') {
               expect(p.choices.any((c) => c.label == '戦に備える'), isFalse);
             }
           }

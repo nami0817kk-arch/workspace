@@ -29,7 +29,7 @@ import 'women_life.dart';
 /// 泰平の世の暮らしが出はじめる年。
 const kPeaceLifeFrom = 1601;
 
-/// 1年に「今年の重点」に足す、泰平の世の重点の数の上限。
+/// 1年に「この年の心がけ」に足す、泰平の世の重点の数の上限。
 const kPeaceLifePerYear = 2;
 
 int _c(int v) => clampInt(v, 0, 99);

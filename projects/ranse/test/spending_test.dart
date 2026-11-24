@@ -58,7 +58,7 @@ List<String> _focusLabels(Game g) =>
 /// 銭・功の使い道の入り口を見つけたら選び、使い道の岐路では見送り以外から選ぶ。ほかはランダムか考えて選ぶ。
 int _spender(Game g, Prompt p, Rng r, bool ambitious) {
   final cs = p.choices;
-  if (p.title == '今年の重点') {
+  if (p.title == 'この年の心がけ') {
     final i = cs.indexWhere((c) => c.label == '蓄えを使う' || c.label.contains('恩賞を願い出る') || c.label == '功を願い出る');
     if (i >= 0 && r.chance(.8)) return i;
   }
@@ -371,7 +371,7 @@ void main() {
       while (!g.finished && n++ < 5000) {
         final p = g.prompt;
         expect(p, isNotNull, reason: '人生の途中なのに選択肢が出ていない（${g.age}歳）');
-        if (p!.title == '今年の重点') {
+        if (p!.title == 'この年の心がけ') {
           for (final c in p.choices) {
             if (c.label == '蓄えを使う') sawGold = true;
             if (c.label == '功を願い出る' || c.label.contains('恩賞を願い出る')) sawMerit = true;

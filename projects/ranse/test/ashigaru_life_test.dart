@@ -62,7 +62,7 @@ _Run _play(Game g, int Function(Game g, Prompt p) pick, {int limit = 3000}) {
   while (!g.finished && n++ < limit) {
     final p = g.prompt;
     expect(p, isNotNull, reason: '人生の途中なのに選択肢が出ていない（${g.age}歳）');
-    if (p!.title == '今年の重点' && !g.isChild && alServing(g)) out.ashigaruYears++;
+    if (p!.title == 'この年の心がけ' && !g.isChild && alServing(g)) out.ashigaruYears++;
     final now = g.l.flags.where((f) => f.startsWith('scene:al_')).toSet();
     for (final f in now.difference(known)) {
       final id = f.substring(6);

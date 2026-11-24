@@ -145,7 +145,7 @@ class _ChoiceTab extends StatelessWidget {
             children: [
               Gauge('健康', l.hp / l.maxhp * 100, color: Pal.good),
               Gauge('幸福', l.joy.toDouble(), color: Pal.gold),
-              Gauge('人間関係', l.net.toDouble(), color: Pal.purple),
+              Gauge('縁', l.net.toDouble(), color: Pal.purple),
               if (!g.isChild) ...[
                 const SizedBox(height: 6),
                 Text(
@@ -249,7 +249,7 @@ class _PromptCard extends StatelessWidget {
               ),
             const Divider(color: Pal.line, height: 12),
           ],
-          // 場面の絵（Gemini で作ったドット絵）に題を重ねる。「今年の重点」には絵を添えない。
+          // 場面の絵（Gemini で作ったドット絵）に題を重ねる。「この年の心がけ」には絵を添えない。
           if (p.art case final art?)
             _ArtBanner(art: art, title: p.title, cause: p.cause)
           else
@@ -552,10 +552,10 @@ class _PersonTab extends StatelessWidget {
               const SizedBox(height: 10),
               Gauge('健康', l.hp / l.maxhp * 100, color: Pal.good),
               Gauge('幸福', l.joy.toDouble(), color: Pal.gold),
-              Gauge('人間関係', l.net.toDouble(), color: Pal.purple),
+              Gauge('縁', l.net.toDouble(), color: Pal.purple),
               const Divider(color: Pal.line, height: 20),
               Gauge('武', l.bu.toDouble()),
-              Gauge('知識', l.chi.toDouble()),
+              Gauge('学び', l.chi.toDouble()),
               Gauge('政', l.sei.toDouble()),
               Gauge('魅', l.mi.toDouble()),
               Gauge('運', l.un.toDouble()),

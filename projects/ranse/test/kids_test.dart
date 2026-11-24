@@ -47,7 +47,7 @@ Game _born(int seed) {
   return g;
 }
 
-/// 元服・裳着まで生きた人生（大人の最初の「今年の重点」が出ているところ）。
+/// 元服・裳着まで生きた人生（大人の最初の「この年の心がけ」が出ているところ）。
 Game? _adult(int seed) {
   final g = _born(seed);
   final r = Rng(seed + 5);
@@ -58,10 +58,10 @@ Game? _adult(int seed) {
     g.choose(r.range(0, p.choices.length - 1));
   }
   n = 0;
-  while (!g.finished && g.prompt?.title != '今年の重点' && n++ < 20) {
+  while (!g.finished && g.prompt?.title != 'この年の心がけ' && n++ < 20) {
     g.choose(0);
   }
-  return g.finished || g.prompt?.title != '今年の重点' ? null : g;
+  return g.finished || g.prompt?.title != 'この年の心がけ' ? null : g;
 }
 
 /// [seed] から先で、最初に大人になれた人生。

@@ -30,7 +30,7 @@ void main() {
       while (!c.game.finished && n++ < 3000) {
         if (stopAtAge != null &&
             c.game.age >= stopAtAge &&
-            c.game.prompt?.title == '今年の重点') {
+            c.game.prompt?.title == 'この年の心がけ') {
           break;
         }
         c.game.choose(pick.range(0, c.game.prompt!.choices.length - 1));

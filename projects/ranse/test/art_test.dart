@@ -31,7 +31,7 @@ void main() {
     }
   });
 
-  test('岐路には場面の絵が付き、今年の重点には付かない。絵は場面に合わせて散らばる', () {
+  test('岐路には場面の絵が付き、この年の心がけには付かない。絵は場面に合わせて散らばる', () {
     final seen = <String, int>{};
     var scenes = 0, withArt = 0;
     for (var i = 0; i < 300; i++) {
@@ -42,7 +42,7 @@ void main() {
       var n = 0;
       while (!g.finished && n++ < 1500) {
         final p = g.prompt!;
-        if (p.title == '今年の重点') {
+        if (p.title == 'この年の心がけ') {
           expect(p.art, isNull);
         } else {
           scenes++;

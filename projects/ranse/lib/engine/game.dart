@@ -301,8 +301,8 @@ class Game extends ChangeNotifier {
       return;
     }
     final res = c.f?.call();
-    // 岐路の結果には場面の名前を付ける（「今年の重点」は文の中に「今年は…」とあるので付けない）。
-    if (res != null) log(p.title == '今年の重点' ? res : '【${p.title}】$res');
+    // 岐路の結果には場面の名前を付ける（「この年の心がけ」は文の中に「今年は…」とあるので付けない）。
+    if (res != null) log(p.title == 'この年の心がけ' ? res : '【${p.title}】$res');
     p.after();
   }
 
@@ -631,9 +631,9 @@ class Game extends ChangeNotifier {
   }
 
   // ---------- 幼少期（5〜14歳） ----------
-  // 1年ごとに「今年の重点」を選ぶ。選んだ年の途中で、岐路が起きることがある。
+  // 1年ごとに「この年の心がけ」を選ぶ。選んだ年の途中で、岐路が起きることがある。
 
-  /// 年の始まり。保存はここで行い、「今年の重点」を聞く。
+  /// 年の始まり。保存はここで行い、「この年の心がけ」を聞く。
   void _beginYear() {
     prompt = null;
     final a = age;
@@ -647,7 +647,7 @@ class Game extends ChangeNotifier {
       rng.chance(.5) ? opts[3] : opts[4],
       ...opts.sublist(5),
     ];
-    ask('今年の重点', childYearText(this), [
+    ask('この年の心がけ', childYearText(this), [
       for (final o in shown)
         Choice.h(o.label, o.hint, () {
           final before = (l.bu, l.chi, l.net, l.gold);
@@ -657,7 +657,7 @@ class Game extends ChangeNotifier {
           final d = <String>[];
           if (l.bu > before.$1) d.add('武+${l.bu - before.$1}');
           if (l.chi > before.$2) d.add('知+${l.chi - before.$2}');
-          if (l.net > before.$3) d.add('人間関係+${l.net - before.$3}');
+          if (l.net > before.$3) d.add('縁+${l.net - before.$3}');
           if (l.gold > before.$4) d.add('銭+${l.gold - before.$4}');
           return '今年は${o.label}。${d.isEmpty ? '' : d.join('・')}';
         }),
@@ -781,18 +781,18 @@ class Game extends ChangeNotifier {
   }
 
   // ---------- 大人（15歳〜） ----------
-  // 幼少期と同じく、1年ごとに「今年の重点」を選ぶ。重点によっては、その年に必ず岐路が起きる。
+  // 幼少期と同じく、1年ごとに「この年の心がけ」を選ぶ。重点によっては、その年に必ず岐路が起きる。
 
   String? _forced;
 
-  /// 年の始まり。保存はここで行い、「今年の重点」を聞く。
+  /// 年の始まり。保存はここで行い、「この年の心がけ」を聞く。
   void _beginAdultYear() {
     prompt = null;
     l.t = age * 2;
     _chapter();
     onCheckpoint?.call(this);
     final opts = adultFocusOptions(this);
-    ask('今年の重点', adultYearText(this), [
+    ask('この年の心がけ', adultYearText(this), [
       for (final o in opts)
         Choice.h(o.label, o.hint, () {
           final lordF = l.lord == null ? null : fa[l.lord];
@@ -804,7 +804,7 @@ class Game extends ChangeNotifier {
           final d = <String>[];
           if (l.bu > b.$1) d.add('武+${l.bu - b.$1}');
           if (l.chi > b.$2) d.add('知+${l.chi - b.$2}');
-          if (l.net > b.$3) d.add('人間関係+${l.net - b.$3}');
+          if (l.net > b.$3) d.add('縁+${l.net - b.$3}');
           if (l.gold > b.$4) d.add('銭+${l.gold - b.$4}');
           if (l.merit > b.$5) d.add('功+${l.merit - b.$5}');
           if (l.fav > b.$6) d.add('信頼+${l.fav - b.$6}');

@@ -312,7 +312,7 @@ class LogList extends StatelessWidget {
   );
 }
 
-/// 人生の軌跡。健康・幸福・知識・人間関係の4本。
+/// 人生の軌跡。健康・幸福・学び・縁の4本。
 class LifeChart extends StatelessWidget {
   const LifeChart(this.hist, {super.key});
   final List<HistPoint> hist;
@@ -330,8 +330,8 @@ class LifeChart extends StatelessWidget {
         children: [
           _Legend('健康', Pal.good),
           _Legend('幸福', Pal.gold),
-          _Legend('知識', Pal.blue),
-          _Legend('人間関係', Pal.purple),
+          _Legend('学び', Pal.blue),
+          _Legend('縁', Pal.purple),
         ],
       ),
     ],

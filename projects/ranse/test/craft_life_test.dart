@@ -58,7 +58,7 @@ _Run _play(Game g, int Function(Game g, Prompt p) pick, {int limit = 3000}) {
   while (!g.finished && n++ < limit) {
     final p = g.prompt;
     expect(p, isNotNull, reason: '人生の途中なのに選択肢が出ていない（${g.age}歳）');
-    if (p!.title == '今年の重点' && !g.isChild) {
+    if (p!.title == 'この年の心がけ' && !g.isChild) {
       for (final e in _who.entries) {
         if (e.value(g)) out.years[e.key] = (out.years[e.key] ?? 0) + 1;
       }
@@ -118,7 +118,7 @@ int _randomPick(Rng r, Prompt p) => r.range(0, p.choices.length - 1);
 
 /// 生業に留まる選び方: 重点では仕官・奉公を探さず、岐路は無作為。
 int _stayPick(Game g, Prompt p, Rng r) {
-  if (p.title == '今年の重点') {
+  if (p.title == 'この年の心がけ') {
     final ok = [
       for (var i = 0; i < p.choices.length; i++)
         if (!p.choices[i].label.contains('仕官') && !p.choices[i].label.contains('奉公')) i,

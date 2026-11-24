@@ -25,7 +25,7 @@ final _plFocus = RegExp('詰める|城の番を勤める|役方|道場|手習い
 /// 命を落としにくい選び方（泰平の世まで生きる人生を増やす）。
 int _pickCareful(Game g, Prompt p, Rng r) {
   final cs = p.choices;
-  if (p.title == '今年の重点') {
+  if (p.title == 'この年の心がけ') {
     // 泰平の世の暮らしの重点（勤め・道場・手習い所・新田・廻船・俳諧・講・家訓・縁組）を、三割ほどの年に選ぶ。
     final life = [
       for (var i = 0; i < cs.length; i++)
@@ -127,7 +127,7 @@ Game? _life(int seed, int mode) {
       0 => r.range(0, p.choices.length - 1),
       // 重点は用心深く、岐路はランダム（危うい手も選ぶので、泰平の岐路の死に方が出る）。
       3 =>
-        p.title == '今年の重点'
+        p.title == 'この年の心がけ'
             ? _pickCareful(g, p, r)
             : r.range(0, p.choices.length - 1),
       1 => pickAmbitious(g, p, r),

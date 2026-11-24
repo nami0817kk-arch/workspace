@@ -81,7 +81,7 @@ int _randomPick(Rng r, Prompt p) => r.range(0, p.choices.length - 1);
 
 /// 村に留まる選び方: 重点では仕官・奉公を探さず、岐路は無作為。
 int _stayPick(Game g, Prompt p, Rng r) {
-  if (p.title == '今年の重点') {
+  if (p.title == 'この年の心がけ') {
     final ok = [
       for (var i = 0; i < p.choices.length; i++)
         if (!p.choices[i].label.contains('仕官') && !p.choices[i].label.contains('奉公')) i,

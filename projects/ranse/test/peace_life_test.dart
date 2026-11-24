@@ -152,7 +152,7 @@ void _checkScene(Game g, String id, Prompt p) {
   }
 }
 
-/// 「今年の重点」に並んだ泰平の世の重点を確かめる（一六〇一年より前・戦の絶えない世には出ない。上限まで）。
+/// 「この年の心がけ」に並んだ泰平の世の重点を確かめる（一六〇一年より前・戦の絶えない世には出ない。上限まで）。
 void _checkFocus(Game g, Prompt p) {
   final mine = [
     for (final c in p.choices)
@@ -216,7 +216,7 @@ List<String> _play(
       pending = null;
     }
     final i = pick(g, p!);
-    if (p.title == '今年の重点') {
+    if (p.title == 'この年の心がけ') {
       _checkFocus(g, p);
       final label = p.choices[i].label;
       if (_plFocus.hasMatch(label)) {
@@ -263,7 +263,7 @@ Game? _lateBorn(int seed) {
 /// 命を落としにくい選び方。泰平の世の重点が並んでいれば、[focusRate] の割合でそれを選ぶ。
 int _pickCareful(Game g, Prompt p, Rng r, {double focusRate = 0}) {
   final cs = p.choices;
-  if (p.title == '今年の重点') {
+  if (p.title == 'この年の心がけ') {
     final mine = [
       for (var i = 0; i < cs.length; i++)
         if (_plFocus.hasMatch(cs[i].label)) i,

@@ -60,7 +60,7 @@ _Run _play(Game g, int Function(Game g, Prompt p) pick, {int limit = 3000}) {
   while (!g.finished && n++ < limit) {
     final p = g.prompt;
     expect(p, isNotNull, reason: '人生の途中なのに選択肢が出ていない（${g.age}歳）');
-    if (p!.title == '今年の重点' && !g.isChild && dmLife(g)) out.years++;
+    if (p!.title == 'この年の心がけ' && !g.isChild && dmLife(g)) out.years++;
     final now = g.l.flags.where((f) => f.startsWith('scene:dm_')).toSet();
     for (final f in now.difference(known)) {
       final id = f.substring(6);
@@ -139,7 +139,7 @@ int _randomPick(Rng r, Prompt p) => r.range(0, p.choices.length - 1);
     while (!g.finished && k++ < 3000) {
       final p = g.prompt!;
       var i = -1;
-      if (p.title == '今年の重点') {
+      if (p.title == 'この年の心がけ') {
         i = p.choices.indexWhere((c) => c.label == '版図を広げる');
         if (g.l.gold < 30 || r.chance(.25)) {
           i = p.choices.indexWhere((c) => c.label == '軍備を整える');

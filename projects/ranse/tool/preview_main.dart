@@ -1,7 +1,7 @@
 // 画面確認用の入り口（アプリには入らない）。CI の web_preview が、写しの lib/main.dart をこれに差し替えて Web 版を作る。
 // 何も付けなければ普段どおり。
 // ?auto=<種> で、その種の人生を最後まで自動で選んで終わりの画面を出す。
-// ?auto=<種>&stop=<歳> で、その歳の「今年の重点」で止める（遊ぶ画面を見る用）。
+// ?auto=<種>&stop=<歳> で、その歳の「この年の心がけ」で止める（遊ぶ画面を見る用）。
 // ?auto=<seed> で、その種の人生を最後まで自動で選んで終わりの画面を出す。
 // ?minage=15 で、15歳を超えて生きた人生が出るまで引き直す。
 import 'package:flutter/material.dart';
@@ -30,7 +30,7 @@ void main() {
     while (!c.game.finished && n++ < 3000) {
       if (stop != null &&
           c.game.age >= stop &&
-          c.game.prompt?.title == '今年の重点') {
+          c.game.prompt?.title == 'この年の心がけ') {
         break;
       }
       c.game.choose(pick.range(0, c.game.prompt!.choices.length - 1));

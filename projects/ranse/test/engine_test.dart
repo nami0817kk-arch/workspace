@@ -36,7 +36,7 @@ Game startSurvivor(int seed) {
 }
 
 /// 選択肢をランダムに選び、人生の終わりまで進める。
-/// どの年も、選択肢（今年の重点か岐路）が必ず出ていること。
+/// どの年も、選択肢（この年の心がけか岐路）が必ず出ていること。
 void playOut(
   Game g,
   Rng pickRng, {
@@ -164,7 +164,7 @@ void main() {
       g.start(rollBirth(rng));
       if (g.finished || g.l.cls.id == 'priest') continue;
       final p = g.prompt!;
-      if (p.title != '今年の重点') continue;
+      if (p.title != 'この年の心がけ') continue;
       final i = p.choices.indexWhere((c) => c.label == '寺へ手習いに通う');
       expect(i, isNonNegative, reason: g.l.cls.id);
       g.choose(i);
@@ -190,7 +190,7 @@ void main() {
       // 8歳を過ぎるまで進めて、重点の選択肢を見る。
       while (!g.finished && n++ < 200) {
         final p = g.prompt!;
-        if (p.title == '今年の重点' && g.age >= 8) {
+        if (p.title == 'この年の心がけ' && g.age >= 8) {
           final labels = p.choices.map((c) => c.label).toList();
           if (b.cls.id == 'merchant') {
             expect(labels, contains('算盤と商いを習う'));
@@ -251,7 +251,7 @@ void main() {
         final perLife = <String, int>{};
         while (!g.finished && c < 3000) {
           final p = g.prompt!;
-          if (p.title != '今年の重点') {
+          if (p.title != 'この年の心がけ') {
             s++;
             perLife[p.title] = (perLife[p.title] ?? 0) + 1;
           }
@@ -448,7 +448,7 @@ void main() {
         final p = g.prompt!;
         if (g.l.rank == 8 && g.share > best) best = g.share;
         var i = -1;
-        if (p.title == '今年の重点') {
+        if (p.title == 'この年の心がけ') {
           i = p.choices.indexWhere((c) => c.label == '版図を広げる');
           if (g.l.gold < 30 || r.chance(.25)) {
             i = p.choices.indexWhere((c) => c.label == '軍備を整える');
@@ -624,7 +624,7 @@ void main() {
   });
 
   group('幼少期', () {
-    test('毎年「今年の重点」を選び、その途中で岐路が起きる', () {
+    test('毎年「この年の心がけ」を選び、その途中で岐路が起きる', () {
       var checked = 0, scenes = 0;
       for (var seed = 0; seed < 200; seed++) {
         final rng = Rng(seed);
@@ -636,11 +636,11 @@ void main() {
         if (g.l.dead != null) continue;
         checked++;
         expect(
-          titles.where((t) => t == '今年の重点').length,
+          titles.where((t) => t == 'この年の心がけ').length,
           10,
           reason: 'seed=$seed',
         );
-        final n = titles.where((t) => t != '今年の重点').length;
+        final n = titles.where((t) => t != 'この年の心がけ').length;
         // 季節の行事（`seasons.dart`、`sn_c_`）は岐路の起きなかった年にだけ出る別枠なので、岐路の数の目安には数えない。
         scenes += n - g.l.flags.where((f) => f.startsWith('scene:sn_c_')).length;
         // 1年に1つまで。史実の岐路はその年に必ず出るので、10年すべてで出ることもある。
@@ -715,14 +715,14 @@ void main() {
       final (life, world) = fromJson(saved.last);
       final g2 = Game(rng: Rng(99));
       g2.restore(life, world);
-      expect(g2.prompt?.title, '今年の重点');
+      expect(g2.prompt?.title, 'この年の心がけ');
       expect(g2.l.name, g.l.name);
       expect(g2.age, inInclusiveRange(5, 14));
     });
   });
 
   group('大人（15歳〜）', () {
-    test('元服のあとも毎年「今年の重点」が一度ずつ出る', () {
+    test('元服のあとも毎年「この年の心がけ」が一度ずつ出る', () {
       var checked = 0;
       for (var seed = 0; seed < 150; seed++) {
         final g = startSurvivor(seed);
@@ -735,7 +735,7 @@ void main() {
           g,
           Rng(seed + 3),
           onPrompt: (p) {
-            if (p.title == '今年の重点') years.add(g.age);
+            if (p.title == 'この年の心がけ') years.add(g.age);
           },
         );
         if (years.isEmpty) continue;
@@ -759,7 +759,7 @@ void main() {
         var n = 0;
         while (!g.finished && n++ < 30) {
           final p = g.prompt!;
-          if (p.title != '今年の重点') {
+          if (p.title != 'この年の心がけ') {
             g.choose(0);
             continue;
           }
@@ -798,7 +798,7 @@ void main() {
         var n = 0;
         while (!g.finished && n++ < 40) {
           final p = g.prompt!;
-          if (p.title == '今年の重点' && p.choices.any((c) => c.label == '戦に備える')) {
+          if (p.title == 'この年の心がけ' && p.choices.any((c) => c.label == '戦に備える')) {
             final had = g.hasFlag('first_battle');
             g.choose(p.choices.indexWhere((c) => c.label == '戦に備える'));
             if (g.finished) break;
@@ -880,7 +880,7 @@ void main() {
         playChildhood(g, Rng(1));
       } while (g.finished && guard++ < 50);
       g.choose(0); // 元服 → 15歳の年の始まりで保存される
-      expect(g.prompt?.title, '今年の重点');
+      expect(g.prompt?.title, 'この年の心がけ');
       final last = saved.last;
       final (life, world) = fromJson(last);
       expect(jsonEncode(life.toJson()), jsonEncode(g.l.toJson()));
@@ -890,7 +890,7 @@ void main() {
       expect(life.focus, g.l.focus);
       final g2 = Game(rng: Rng(42));
       g2.restore(life, world);
-      expect(g2.prompt?.title, '今年の重点');
+      expect(g2.prompt?.title, 'この年の心がけ');
       expect(g2.age, 15);
       expect(world.length, g.fa.length);
     });
@@ -1155,7 +1155,7 @@ void main() {
         // 途中（31歳を過ぎた年の始まり）まで進める。
         var n = 0;
         while (!g.finished && n++ < 2000) {
-          if (g.age >= 31 && g.prompt?.title == '今年の重点') break;
+          if (g.age >= 31 && g.prompt?.title == 'この年の心がけ') break;
           g.choose(Rng(seed + n).range(0, g.prompt!.choices.length - 1));
         }
         if (g.finished) continue;
@@ -1166,7 +1166,7 @@ void main() {
         final (life, world) = fromJson(jsonOf(g));
         final g2 = Game(rng: Rng(seed));
         g2.restore(life, world);
-        expect(g2.prompt?.title, '今年の重点');
+        expect(g2.prompt?.title, 'この年の心がけ');
         expect(g2.lastResults.first.txt, contains('前回までのあらすじ'));
         // あらすじは見聞録には残らず、章の区切りも増えない。
         expect(g2.l.log.where((e) => e.txt.contains('あらすじ')), isEmpty);
@@ -2115,7 +2115,7 @@ void main() {
               );
             }
           }
-          if (p.title == '今年の重点' && !g.isChild) {
+          if (p.title == 'この年の心がけ' && !g.isChild) {
             final mine = [
               for (var i = 0; i < p.choices.length; i++)
                 if (labels.containsKey(p.choices[i].label)) i,
@@ -2211,10 +2211,10 @@ void main() {
         g.start(rollBirth(rng));
         playChildhood(g, Rng(seed));
         if (g.finished) continue;
-        // 大人の年の始まり（今年の重点）で、家族を持たせる。
-        if (g.prompt?.title != '今年の重点') {
+        // 大人の年の始まり（この年の心がけ）で、家族を持たせる。
+        if (g.prompt?.title != 'この年の心がけ') {
           g.choose(0);
-          if (g.finished || g.prompt?.title != '今年の重点') continue;
+          if (g.finished || g.prompt?.title != 'この年の心がけ') continue;
         }
         makeFamily(g, seed);
         var count = g.l.flags.where((f) => f.startsWith('scene:fa_')).length;
@@ -2424,9 +2424,9 @@ void main() {
         g.start(rollBirth(rng));
         playChildhood(g, Rng(seed));
         if (g.finished) continue;
-        if (g.prompt?.title != '今年の重点') {
+        if (g.prompt?.title != 'この年の心がけ') {
           g.choose(0);
-          if (g.finished || g.prompt?.title != '今年の重点') continue;
+          if (g.finished || g.prompt?.title != 'この年の心がけ') continue;
         }
         final l = g.l;
         if (!l.female && !g.hasFlag('priesthood') && !g.hasFlag('way_outlaw')) {
@@ -2615,7 +2615,7 @@ void main() {
       var n = 0;
       while (!g.finished && n++ < 3000) {
         final p = g.prompt!;
-        if (p.title == '今年の重点') {
+        if (p.title == 'この年の心がけ') {
           final labels = p.choices.map((c) => c.label).toList();
           final i = [
             '戦に備える',
@@ -2700,7 +2700,7 @@ void main() {
             expect(recentBattles(back), before);
             return;
           }
-          if (p.title == '今年の重点') {
+          if (p.title == 'この年の心がけ') {
             final i = p.choices.indexWhere((c) => c.label == '戦に備える');
             g.choose(i >= 0 ? i : pickAmbitious(g, p, r));
             continue;
@@ -2894,7 +2894,7 @@ void main() {
               expect(c.label, isNot(contains(digits)), reason: c.label);
             }
           }
-          if (p.title == '今年の重点' && !g.isChild) {
+          if (p.title == 'この年の心がけ' && !g.isChild) {
             final mine = [
               for (var i = 0; i < p.choices.length; i++)
                 if (focusLabels.containsKey(p.choices[i].label)) i,
@@ -3104,7 +3104,7 @@ void main() {
               expect(c.label, isNot(contains(digits)), reason: c.label);
             }
           }
-          if (p.title == '今年の重点' && !g.isChild) {
+          if (p.title == 'この年の心がけ' && !g.isChild) {
             final mine = [
               for (var i = 0; i < p.choices.length; i++)
                 if (focusLabels.containsKey(p.choices[i].label)) i,

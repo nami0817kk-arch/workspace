@@ -6,7 +6,7 @@ import 'rng.dart';
 
 /// 銭と功の使い道（2026-11-24、ユーザー「稼いだお金でできることも増やそう。功とかも」）。
 ///
-/// - **入り口**: 大人の「今年の重点」に「蓄えを使う」（銭）と「功を願い出る」（功）を足す
+/// - **入り口**: 大人の「この年の心がけ」に「蓄えを使う」（銭）と「功を願い出る」（功）を足す
 ///   （`adultFocusOptions` が、暮らしと嗜み・晩年・仏門・女性の重点のうしろに足す）。
 ///   銭は身分の段（[spTier]）ごとの目安（[kSpendGoldMin]）を越え、功は次の昇進に要る分を
 ///   [kMeritSpare] 以上越えたときだけ出る。使った年から [kSpendGap] 年は出ない。
@@ -846,7 +846,7 @@ bool spendingEnabled = true;
 String spendLabel(Game g, String id) =>
     [..._goldUses, ..._meritUses].firstWhere((u) => u.id == id).label(g);
 
-/// 大人の「今年の重点」に足す、銭と功の使い道の入り口。
+/// 大人の「この年の心がけ」に足す、銭と功の使い道の入り口。
 List<FocusDef> spendingFocusOptions(Game g) => [
   if (spendingEnabled && spendGoldReady(g))
     FocusDef(

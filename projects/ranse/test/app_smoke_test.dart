@@ -52,7 +52,7 @@ void main() {
     expect(c.game.finished, isFalse, reason: '12回引いても生き延びなかった');
 
     // 幼少期は、毎年の重点の選択から始まる。選択肢には匂わせの一言が付く。
-    expect(find.text('今年の重点'), findsOneWidget);
+    expect(find.text('この年の心がけ'), findsOneWidget);
     expect(find.text('家の手伝いに励む'), findsOneWidget);
     expect(find.text('暮らしの足しになる。遊ぶ暇は減る'), findsOneWidget);
 
@@ -77,7 +77,7 @@ void main() {
     await _center(tester, find.text('乱世へ歩み出す'));
     await tester.tap(find.text('乱世へ歩み出す'));
     await tester.pump();
-    expect(find.text('今年の重点'), findsOneWidget);
+    expect(find.text('この年の心がけ'), findsOneWidget);
     expect(find.text('学問に励む'), findsOneWidget);
     expect(find.textContaining('15歳。'), findsOneWidget);
 

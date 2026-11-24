@@ -110,7 +110,7 @@ _Run _play(
     if (childOnly && !g.isChild) break;
     final p = g.prompt;
     expect(p, isNotNull, reason: '選択肢が出ていない（${g.age}歳）');
-    if (!adultDone && !g.isChild && p!.title == '今年の重点') {
+    if (!adultDone && !g.isChild && p!.title == 'この年の心がけ') {
       adultDone = true;
       atAdult?.call(g);
       known = g.l.flags.where((f) => f.startsWith('scene:')).toSet();
@@ -218,7 +218,7 @@ void main() {
           );
           final r = Rng(s + 77);
           final run = _play(g, (g, p) {
-            if (p.title == '今年の重点' && g.isChild && r.chance(share)) {
+            if (p.title == 'この年の心がけ' && g.isChild && r.chance(share)) {
               final i = p.choices.indexWhere((c) => c.label == _labels[tag]);
               if (i >= 0) return i;
             }
@@ -340,7 +340,7 @@ void main() {
         final g = _kid(s + 9000, fit.$1, female: fit.$2, order: fit.$3);
         final r = Rng(s);
         _play(g, (g, p) {
-          if (p.title == '今年の重点' && g.isChild) {
+          if (p.title == 'この年の心がけ' && g.isChild) {
             final i = p.choices.indexWhere((c) => c.label == _labels[tag]);
             if (i >= 0) return i;
           }
