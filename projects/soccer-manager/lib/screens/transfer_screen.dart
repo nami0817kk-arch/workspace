@@ -1614,8 +1614,10 @@ class _TransferScreenState extends State<TransferScreen>
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 6, 12, 2),
                   child: Text(
-                    Tr.pick('${club.name}の選手(言い値2割引)',
-                        '${club.name} players (20% off)'),
+                    gameState.affiliateDiscountApplies(club.id)
+                        ? Tr.pick('${club.name}の選手(優先交渉権で言い値2割引)',
+                            '${club.name} players (20% off, first refusal)')
+                        : Tr.pick('${club.name}の選手', '${club.name} players'),
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ),
@@ -1628,7 +1630,7 @@ class _TransferScreenState extends State<TransferScreen>
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(width: 300, child: card),
+            SizedBox(width: 360, child: card),
             const VerticalDivider(width: 1),
             Expanded(child: list),
           ],

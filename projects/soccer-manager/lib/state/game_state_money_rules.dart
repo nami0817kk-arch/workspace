@@ -98,6 +98,8 @@ extension GameStateMoneyRules on GameState {
     final s = _save!;
     // クラブ史上最高額の売却なら、画面いっぱいの1枚で見せる。
     _checkRecordSale(player, salePrice);
+    // こちらが系列クラブ(子)なら、親へ取り分を渡す。
+    _payAffiliateSellOn(player, salePrice);
     // 記者会見で「売らない」と言った季に売ると、サポーターが怒る。
     _checkBrokenRumorPromise(player);
     {

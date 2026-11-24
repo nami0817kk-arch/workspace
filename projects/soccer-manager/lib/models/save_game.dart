@@ -35,6 +35,8 @@ import '../logic/league_rules.dart';
 import '../logic/proposal_engine.dart';
 import '../logic/policy_engine.dart';
 import 'staff_member.dart';
+import 'affiliate_deal.dart';
+import 'community_activity.dart';
 import 'team.dart';
 import '../l10n/tr.dart';
 
@@ -318,7 +320,40 @@ class SaveGame {
   String? matchdayPromoKeepId;
 
   int reserveFund;
-  int communityLevel;
+  /// 地域貢献の強さ(不祥事の傷を浅くする量)。以前は買い上げる Lv だった
+  /// が、2026-11-25 から今季の活動([communityActivities])の合計。
+  int get communityLevel =>
+      communityActivities.fold(0, (s, a) => s + a.scandalCushion);
+
+  /// 今季の地域活動(季ごとに選ぶ。2026-11-25)。
+  List<CommunityActivity> communityActivities = [];
+
+  /// 今季、地域活動で上がったサポーターの期待の合計(前の季の結果に使う)。
+  int communitySeasonGain = 0;
+
+  /// 今季の地域活動に払った費用の合計(万円)。
+  int communitySeasonSpent = 0;
+
+  /// 前の季の地域活動の結果。
+  CommunityReport? lastCommunityReport;
+
+  /// 地域活動を空にする(別のクラブを買い直したとき)。
+  void resetCommunity() {
+    communityActivities = [];
+    communitySeasonGain = 0;
+    communitySeasonSpent = 0;
+    lastCommunityReport = null;
+  }
+
+  /// 系列クラブとの提携の中身(相手の id は[affiliateClubId]と同じ)。
+  AffiliateDeal? affiliateDeal;
+
+  /// スタッフの人事を任せているか(SD、いなければ監督に。2026-11-25)。
+  bool staffDelegated = false;
+
+  /// 人事を任せるときの、スタッフの週俸の総額の上限(5部の物差しの万円)。
+  /// 0 なら上限なし(給与予算の中で)。
+  int staffDelegateWeeklyCap = 0;
 
   /// 補強が禁止されている残りのシーズン数(規則違反の罰)。
   int transferBanSeasons;
@@ -1034,7 +1069,7 @@ class SaveGame {
     this.matchdayPromoId,
     this.matchdayPromoKeepId,
     this.reserveFund = 0,
-    this.communityLevel = 0,
+
     this.transferBanSeasons = 0,
     this.pendingPointsDeduction = 0,
     this.pendingOwnerEvent,
@@ -1461,7 +1496,7 @@ class SaveGame {
         'matchdayPromoId': matchdayPromoId,
         'matchdayPromoKeepId': matchdayPromoKeepId,
         'reserveFund': reserveFund,
-        'communityLevel': communityLevel,
+
         'transferBanSeasons': transferBanSeasons,
         'pendingPointsDeduction': pendingPointsDeduction,
         'pendingOwnerEvent': pendingOwnerEvent?.name,
@@ -1584,6 +1619,17 @@ class SaveGame {
         'preContractOpenedSeason': preContractOpenedSeason,
         'optionDeadlineSeason': optionDeadlineSeason,
         if (unpaidWagesNoticeGiven) 'unpaidWagesNoticeGiven': true,
+        // 第6段(2026-11-25)の項目。
+        'communityActivities': [for (final a in communityActivities) a.name],
+        if (communitySeasonGain != 0) 'communitySeasonGain': communitySeasonGain,
+        if (communitySeasonSpent != 0)
+          'communitySeasonSpent': communitySeasonSpent,
+        if (lastCommunityReport != null)
+          'lastCommunityReport': lastCommunityReport!.toJson(),
+        if (affiliateDeal != null) 'affiliateDeal': affiliateDeal!.toJson(),
+        if (staffDelegated) 'staffDelegated': true,
+        if (staffDelegateWeeklyCap > 0)
+          'staffDelegateWeeklyCap': staffDelegateWeeklyCap,
       };
 
   /// 読み込む前に、契約の残り年数を数える基準の年をこのセーブのシーズンに
@@ -1608,7 +1654,42 @@ class SaveGame {
     Player.contractClockYear = Player.seasonEndYearOf(season);
     return SaveGame._fromJson(json)
       .._fitToTierCount()
-      .._archiveOtherResults();
+      .._archiveOtherResults()
+      .._readStage6(json);
+  }
+
+  /// 第6段(2026-11-25)で足した項目を読む。古いセーブにも効くよう、
+  /// 無い項目は前の形から移す(何度読んでも同じ値になる)。
+  void _readStage6(Map<String, dynamic> json) {
+    // 地域貢献: 古いセーブは Lv だけ。同じ数の活動を、決まった順に置く。
+    final acts = json['communityActivities'];
+    if (acts is List) {
+      communityActivities = [
+        for (final n in acts)
+          if (CommunityActivity.values.where((a) => a.name == n).firstOrNull
+              case final CommunityActivity a)
+            a,
+      ];
+    } else {
+      communityActivities = [
+        ...CommunityActivityInfo.fromLegacyLevel(
+            json['communityLevel'] as int? ?? 0),
+      ];
+    }
+    communitySeasonGain = json['communitySeasonGain'] as int? ?? 0;
+    communitySeasonSpent = json['communitySeasonSpent'] as int? ?? 0;
+    lastCommunityReport =
+        CommunityReport.fromJson(json['lastCommunityReport']);
+    // 系列クラブ: 古いセーブは相手の id だけ。以前の決まりの提携にする。
+    affiliateDeal = AffiliateDeal.fromJson(json['affiliateDeal']);
+    final id = affiliateClubId;
+    if (id == null) {
+      affiliateDeal = null;
+    } else if (affiliateDeal?.clubId != id) {
+      affiliateDeal = AffiliateDeal.legacy(id);
+    }
+    staffDelegated = json['staffDelegated'] as bool? ?? false;
+    staffDelegateWeeklyCap = json['staffDelegateWeeklyCap'] as int? ?? 0;
   }
 
   /// 前の形のセーブは他のクラブの試合の出来事(決定機・交代)も全部持って
@@ -1847,7 +1928,7 @@ class SaveGame {
         matchdayPromoId: json['matchdayPromoId'] as String?,
         matchdayPromoKeepId: json['matchdayPromoKeepId'] as String?,
         reserveFund: json['reserveFund'] as int? ?? 0,
-        communityLevel: json['communityLevel'] as int? ?? 0,
+
         clubPolicy: ClubPolicy.values
                 .where((p) => p.name == json['clubPolicy'])
                 .firstOrNull ??

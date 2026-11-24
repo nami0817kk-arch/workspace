@@ -203,7 +203,8 @@ void main() {
             const ClubScreen(section: ClubSection.facilities));
         final cap = ClubInfrastructure.stadiumCapacity(
             game.save!.infrastructure.facilityLevel(FacilityType.stadium));
-        final label = Tr.isEnglish ? 'holds ' : 'いま: ';
+        // 施設は表になった(2026-11-25)。「いま」の欄は「12,000人入る」。
+        final label = Tr.isEnglish ? 'Holds ' : '人入る';
         final text = tester
             .widgetList<Text>(find.textContaining(label))
             .map((t) => t.data ?? '')

@@ -238,8 +238,7 @@ extension GameStateSquad on GameState {
       // 候補は月ごとに入れ替わる。id が前の月と重ならないよう月を混ぜる。
       seed: _save!.careerSeasons * 100 + today.month,
       avoidNames: {
-        for (final s in _save!.infrastructure.staff.values)
-          if (s != null) s.name,
+        for (final s in _save!.infrastructure.allStaff) s.name,
       },
     );
     _addManagerCandidates();

@@ -760,6 +760,8 @@ extension GameStateTransfer on GameState {
     for (final m in moves) {
       _moveAiClubCash(m.to, -m.fee);
       _moveAiClubCash(m.from, m.fee);
+      // 系列クラブ(こちらが親)が売ったら、取り分が入る。
+      _receiveAffiliateSellOn(m);
     }
     final headlines = moves.where((m) => m.headline).toList()
       ..sort((a, b) => b.fee.compareTo(a.fee));
@@ -1159,11 +1161,19 @@ extension GameStateTransfer on GameState {
     if (!_registrationAllows(player)) return false;
     // 買取義務付きは、借り賃が半分(満了したら必ず買い取る)。
     // 貸し出すときに受け取るレンタル料([standardLoanFeePercent])と同じ決まり。
-    final fee = (player.marketValue *
-            GameState.loanFeeRatioPercent /
-            100 *
-            (withObligation ? GameStateForms.obligationLoanFeeFactor : 1))
-        .round();
+    // こちらが子で「貸し出しの優先」があれば、親の選手は借り賃なし。
+    final deal = affiliateDeal;
+    final fromParent = deal != null &&
+        !deal.weAreParent &&
+        deal.loanPriority &&
+        target.club?.id == deal.clubId;
+    final fee = fromParent
+        ? 0
+        : (player.marketValue *
+                GameState.loanFeeRatioPercent /
+                100 *
+                (withObligation ? GameStateForms.obligationLoanFeeFactor : 1))
+            .round();
     if (_save!.budget < fee) return false;
     lastSigningBlockReason = null;
     if (!_wageBudgetAllowsSigning((player.wage * 0.6).round())) return false;
@@ -1648,7 +1658,7 @@ extension GameStateTransfer on GameState {
   /// [p]を貸し出したときに受け取るレンタル料。出場機会を約束させると0。
   /// 系列クラブへの貸し出しは必ず約束付きになる([loanOutPlayer])。
   int loanOutFeeFor(Player p, {bool guaranteePlayingTime = false}) {
-    final percent = guaranteePlayingTime || affiliateClub != null
+    final percent = guaranteePlayingTime || affiliateTakesLoans
         ? developmentLoanFeePercent
         : standardLoanFeePercent;
     return (p.marketValue * percent / 100).round();
@@ -1689,7 +1699,8 @@ extension GameStateTransfer on GameState {
         _save!.league.teams.where((t) => t.id != _save!.userTeamId).toList();
     if (candidates.isEmpty) return false;
     // 系列クラブがあれば、そこへ出場機会付きで送る。
-    final affiliate = affiliateClub;
+    // 提携の中身に「貸し出しの優先」があるときだけ(2026-11-25)。
+    final affiliate = affiliateTakesLoans ? affiliateClub : null;
     final destination =
         affiliate ?? candidates[Random().nextInt(candidates.length)];
     if (affiliate != null) guaranteePlayingTime = true;

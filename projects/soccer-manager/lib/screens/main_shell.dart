@@ -123,10 +123,13 @@ class _MainShellState extends State<MainShell> {
                 (_) => const ClubScreen(section: ClubSection.facilities)),
             GroupTab(Tr.pick('ファンと街', 'Fans & city'),
                 (_) => const ClubScreen(section: ClubSection.community)),
-            // 移籍の「スカウトの地域」(他クラブの選手を見に行く先)と紛れない
-            // 名前にする。こちらは自前の育成と新人の発掘。
-            GroupTab(Tr.pick('ユース・新人発掘', 'Youth & intake'),
-                (_) => const YouthScreen()),
+            // ユースは2つに分けた(2026-11-25): 自前の育成(ユースチーム)と、
+            // 新人の発掘(スカウト網の候補)。移籍の「スカウトの地域」(他
+            // クラブの選手を見に行く先)とは別。
+            GroupTab(Tr.pick('ユースチーム', 'Youth team'),
+                (_) => const YouthScreen(section: YouthSection.team)),
+            GroupTab(Tr.pick('新人発掘', 'Talent scouting'),
+                (_) => const YouthScreen(section: YouthSection.intake)),
           ],
         ),
         GroupPage(

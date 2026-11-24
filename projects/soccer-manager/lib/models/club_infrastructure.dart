@@ -124,8 +124,15 @@ extension FacilityTypeInfo on FacilityType {
 class ClubInfrastructure {
   static const int maxLevel = 8;
 
-  /// 役職ごとに雇っているスタッフ。空席なら null。
+  /// 役職ごとに雇っているスタッフ(その役職の主任)。空席なら null。
   final Map<StaffRole, StaffMember?> staff;
+
+  /// 主任の下に雇っている人(複数人雇える役職だけ。2026-11-25 の第6段)。
+  ///
+  /// FM のように、スカウト・フィジオ・ユースコーチ・フィットネスコーチは
+  /// 何人か雇える。監督・SD・ヘッドコーチは1人。人数の上限はクラブの部と
+  /// 施設で決まる([maxStaffFor])。効き目は人数で逓減する([combinedAbility])。
+  final Map<StaffRole, List<StaffMember>> assistants;
   final Map<FacilityType, int> facilityLevels;
 
   /// 工事中の施設と、完成する日。完成するまでレベルは上がらない(効き目も
@@ -134,9 +141,11 @@ class ClubInfrastructure {
 
   ClubInfrastructure({
     Map<StaffRole, StaffMember?>? staff,
+    Map<StaffRole, List<StaffMember>>? assistants,
     Map<FacilityType, int>? facilityLevels,
     Map<FacilityType, DateTime>? construction,
   })  : staff = staff ?? {for (final r in StaffRole.values) r: null},
+        assistants = assistants ?? {},
         facilityLevels =
             facilityLevels ?? {for (final f in FacilityType.values) f: 1},
         construction = construction ?? {};
@@ -148,18 +157,149 @@ class ClubInfrastructure {
 
   StaffMember? staffFor(StaffRole role) => staff[role];
 
+  /// 複数人を雇える役職か。監督・SD・ヘッドコーチは1人だけ。
+  static bool roleAllowsMany(StaffRole role) => switch (role) {
+        StaffRole.scout ||
+        StaffRole.physio ||
+        StaffRole.youthCoach ||
+        StaffRole.fitnessCoach =>
+          true,
+        StaffRole.headCoach ||
+        StaffRole.manager ||
+        StaffRole.sportingDirector =>
+          false,
+      };
+
+  /// 1つの役職に雇える人数の上限。
+  static const int maxPerRole = 4;
+
+  /// [role] に雇える人数の上限。クラブの部([divisionTier]、1が最上)と、
+  /// その役職の仕事場になる施設のレベルで増える(スカウトは施設が要らない
+  /// ので、施設の分は1人ぶん付けておく)。
+  int maxStaffFor(StaffRole role, {required int divisionTier}) {
+    if (!roleAllowsMany(role)) return 1;
+    final tierBonus = divisionTier <= 1
+        ? 2
+        : divisionTier <= 3
+            ? 1
+            : 0;
+    final facility = switch (role) {
+      StaffRole.physio => facilityLevel(FacilityType.medicalCenter),
+      StaffRole.youthCoach => facilityLevel(FacilityType.youthFacility),
+      StaffRole.fitnessCoach => facilityLevel(FacilityType.trainingGround),
+      _ => 3,
+    };
+    final facilityBonus = facility >= 6
+        ? 2
+        : facility >= 3
+            ? 1
+            : 0;
+    return (1 + tierBonus + facilityBonus).clamp(1, maxPerRole);
+  }
+
+  /// [role] に就いている全員(主任が先)。
+  List<StaffMember> membersFor(StaffRole role) => [
+        if (staff[role] != null) staff[role]!,
+        ...?assistants[role],
+      ];
+
+  /// [role] の人数。
+  int headcount(StaffRole role) => membersFor(role).length;
+
+  /// 雇っている全員。
+  Iterable<StaffMember> get allStaff sync* {
+    for (final r in StaffRole.values) {
+      yield* membersFor(r);
+    }
+  }
+
+  /// 2人目からの上乗せの割合。2人目は能力の3割、3人目はその半分…と逓減する。
+  static const double extraStaffShare = 0.3;
+
+  /// 同じ役職の何人かの能力(1-20)をまとめた、役職としての仕事の質(1-20)。
+  /// いちばん高い人の能力に、2人目からを逓減して足す(上限20)。
+  ///
+  /// 「良い人が来ない部でも人数で補える。ただし1人の名手には及ばない」を
+  /// 数字にしたもの(FM のスタッフの人数と同じ考え)。
+  static double combinedAbility(Iterable<double> abilities) {
+    final list = abilities.toList()..sort((a, b) => b.compareTo(a));
+    if (list.isEmpty) return 1;
+    var total = list.first;
+    var share = extraStaffShare;
+    for (final a in list.skip(1)) {
+      total += a * share;
+      share /= 2;
+    }
+    return total.clamp(1, 20).toDouble();
+  }
+
   /// その役職の仕事の質(1-8)。空席なら1(=最低限、下部リーグの兼任扱い)。
   ///
   /// トレーニング効率・負傷率・スカウトの質などは以前からこの数値を見て
   /// 決まっている。人に置き換えても、そこから先の計算は変わらない。
-  int staffLevel(StaffRole role) => staff[role]?.effectiveLevel ?? 1;
+  /// 複数人いるときは[combinedAbility]でまとめる(1人なら以前と同じ値)。
+  int staffLevel(StaffRole role) {
+    final members = membersFor(role);
+    if (members.isEmpty) return 1;
+    if (members.length == 1) return members.first.effectiveLevel;
+    return StaffMember.levelFromAbility(
+        combinedAbility(members.map((m) => m.roleAbility)));
+  }
 
   /// その役職に就いている人の、能力1つぶんのレベル(1-8)。空席なら1。
   ///
   /// 役職の総合力ではなく特定の能力だけを見る仕事に使う(ユースコーチの
   /// 見極め=見立ての精度、指導=育成の伸び、など)。
-  int staffAttributeLevel(StaffRole role, StaffAttribute a) =>
-      staff[role]?.levelOf(a) ?? 1;
+  int staffAttributeLevel(StaffRole role, StaffAttribute a) {
+    final members = membersFor(role);
+    if (members.isEmpty) return 1;
+    if (members.length == 1) return members.first.levelOf(a);
+    return StaffMember.levelFromAbility(
+        combinedAbility(members.map((m) => m.attribute(a).toDouble())));
+  }
+
+  /// [m] を加える。主任が空いていれば主任に、いれば部下に。
+  void addMember(StaffMember m) {
+    if (staff[m.role] == null) {
+      staff[m.role] = m;
+    } else {
+      (assistants[m.role] ??= []).add(m);
+    }
+  }
+
+  /// id が [staffId] の人を外す。主任が抜けたら、部下のうち能力の高い人が
+  /// 主任に上がる。外した人を返す(いなければ null)。
+  StaffMember? removeMember(String staffId) {
+    for (final r in StaffRole.values) {
+      if (staff[r]?.id == staffId) {
+        final gone = staff[r];
+        staff[r] = null;
+        promoteAssistants();
+        return gone;
+      }
+      final list = assistants[r];
+      if (list == null) continue;
+      final i = list.indexWhere((m) => m.id == staffId);
+      if (i >= 0) {
+        final gone = list.removeAt(i);
+        if (list.isEmpty) assistants.remove(r);
+        return gone;
+      }
+    }
+    return null;
+  }
+
+  /// 主任が空いた役職に、部下のうち能力の高い人を上げる。
+  void promoteAssistants() {
+    for (final r in StaffRole.values) {
+      if (staff[r] != null) continue;
+      final list = assistants[r];
+      if (list == null || list.isEmpty) continue;
+      list.sort((a, b) => b.roleAbility.compareTo(a.roleAbility));
+      staff[r] = list.removeAt(0);
+      if (list.isEmpty) assistants.remove(r);
+    }
+  }
   int facilityLevel(FacilityType type) => facilityLevels[type] ?? 1;
 
   /// 役職を空けたまま置いたときの週俸(=0)との比較用に残している、
@@ -238,7 +378,7 @@ class ClubInfrastructure {
       1 + (level - 1) * commercialStep;
 
   int get totalStaffWeeklyWage =>
-      staff.values.fold<int>(0, (s, m) => s + (m?.wage ?? 0));
+      allStaff.fold<int>(0, (s, m) => s + m.wage);
 
   bool upgradeFacility(FacilityType type) {
     final lvl = facilityLevel(type);
@@ -270,10 +410,13 @@ class ClubInfrastructure {
     return done;
   }
 
+  /// セーブには役職ごとの全員を並べて書く('staffTeams'。主任が先)。
+  /// 1人ずつの形('staff')は 2026-11-25 より前のセーブにだけある。
   Map<String, dynamic> toJson() => {
-        'staff': {
-          for (final e in staff.entries)
-            if (e.value != null) e.key.name: e.value!.toJson(),
+        'staffTeams': {
+          for (final r in StaffRole.values)
+            if (membersFor(r).isNotEmpty)
+              r.name: [for (final m in membersFor(r)) m.toJson()],
         },
         'facilityLevels': facilityLevels.map((k, v) => MapEntry(k.name, v)),
         if (construction.isNotEmpty)
@@ -284,6 +427,16 @@ class ClubInfrastructure {
   factory ClubInfrastructure.fromJson(Map<String, dynamic>? json) {
     if (json == null) return ClubInfrastructure();
     final staffJson = json['staff'] as Map<String, dynamic>?;
+    // 複数人の形(2026-11-25 から)。あればこちらが正。古いセーブは1人ずつの
+    // 'staff' を読み、主任だけ・部下なしの形にする(書くときは新しい形)。
+    final teamsJson = json['staffTeams'] as Map<String, dynamic>?;
+    final teams = {
+      for (final r in StaffRole.values)
+        r: [
+          for (final m in (teamsJson?[r.name] as List?) ?? const [])
+            if (m is Map) StaffMember.fromJson(m.cast<String, dynamic>()),
+        ],
+    };
     // 旧セーブはレベル数値しか持っていない。そのまま読むと全役職が空席に
     // なり、トレーニング効率も負傷率も一斉に最低へ落ちる。同じ働きをする
     // 人物を置いて続きから遊べるようにする(StaffMarket.fromLegacyLevel)。
@@ -299,12 +452,18 @@ class ClubInfrastructure {
       },
       staff: {
         for (final r in StaffRole.values)
-          r: switch ((staffJson?[r.name], legacyLevels?[r.name])) {
-            (final Map<String, dynamic> m, _) => StaffMember.fromJson(m),
-            (_, final int lvl) when lvl > 1 =>
-              StaffMarket.fromLegacyLevel(r, lvl),
-            _ => null,
-          },
+          r: teamsJson != null
+              ? teams[r]!.firstOrNull
+              : switch ((staffJson?[r.name], legacyLevels?[r.name])) {
+                  (final Map<String, dynamic> m, _) => StaffMember.fromJson(m),
+                  (_, final int lvl) when lvl > 1 =>
+                    StaffMarket.fromLegacyLevel(r, lvl),
+                  _ => null,
+                },
+      },
+      assistants: {
+        for (final r in StaffRole.values)
+          if (teams[r]!.length > 1) r: teams[r]!.sublist(1),
       },
       facilityLevels: {
         for (final f in FacilityType.values)

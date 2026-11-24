@@ -177,9 +177,12 @@ extension GameStateSupporters on GameState {
       final t = BoardEngine.ticketMonthlyDelta(s.ticketPricing);
       if (t != 0) _changeSupporters(t, SupporterReason.tickets);
     }
-    if (s.communityLevel > 0) {
-      _changeSupporters(
-          BoardEngine.communityMonthlyDelta, SupporterReason.community);
+    // 地域活動(季ごとに選ぶ。2026-11-25)。子どもの教室・施設の訪問が
+    // それぞれ毎月+1(合わせて+2まで)。
+    final community = communityMonthlyDelta;
+    if (community > 0) {
+      s.communitySeasonGain +=
+          _changeSupporters(community, SupporterReason.community);
     }
     final key = monthKeyOf(end);
     s.supporterLastMonth = Map.of(s.supporterMonth);

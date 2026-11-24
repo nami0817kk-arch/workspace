@@ -963,7 +963,7 @@ extension GameStateFinance on GameState {
     save.proposals = [];
     save.declinedProposalIds = [];
     save.staffOffers = [];
-    save.communityLevel = 0;
+    save.resetCommunity();
     // 途中で止まった試合の経過は前のクラブの試合のもの。節と季だけで
     // 照らし合わせるので、残すと同じ節の新しいクラブの試合が前のクラブの
     // 得点・交代の数から始まった(2026-11-23)。
@@ -1202,7 +1202,7 @@ extension GameStateFinance on GameState {
     save.youthProspects = [];
     save.projects = {};
     save.advisors = {};
-    save.communityLevel = 0;
+    save.resetCommunity();
     save.reserveFund = 0;
     save.insured = false;
     save.retiredLegends.clear();
@@ -2033,21 +2033,6 @@ extension GameStateFinance on GameState {
     if (amount < 0 && -amount > save.reserveFund) return false;
     save.reserveFund += amount;
     _book(LedgerCategory.financing, -amount);
-    _notify();
-    await _persist();
-    return true;
-  }
-
-  /// 地域貢献を1段上げる。
-  Future<bool> upgradeCommunity() async {
-    final save = _save;
-    if (save == null || save.communityLevel >= RiskEngine.maxCommunityLevel) {
-      return false;
-    }
-    final cost = scaledMoney(RiskEngine.communityCost(save.communityLevel + 1));
-    if (cost > save.budget) return false;
-    _book(LedgerCategory.other, -cost);
-    save.communityLevel += 1;
     _notify();
     await _persist();
     return true;

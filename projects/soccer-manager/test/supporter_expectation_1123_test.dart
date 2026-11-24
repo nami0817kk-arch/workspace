@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/models/club_infrastructure.dart';
+import 'package:soccer_manager/models/community_activity.dart';
 import 'package:soccer_manager/models/owner_legacy.dart';
 import 'package:soccer_manager/models/owner_work.dart';
 import 'package:soccer_manager/models/save_game.dart';
@@ -117,7 +118,7 @@ void main() {
       final gs = await newGame();
       final s = gs.save!;
       s.confidence = 50;
-      s.communityLevel = 0;
+      s.communityActivities = [];
       s.supporterMonth
         ..clear()
         ..addAll({'pr': 3, 'results': -2, 'tickets': -1});
@@ -139,7 +140,7 @@ void main() {
     test('英語でも内訳が出る', () async {
       final gs = await newGame();
       final s = gs.save!;
-      s.communityLevel = 0;
+      s.communityActivities = [];
       s.supporterMonth
         ..clear()
         ..addAll({'pr': 4, 'results': -2});
@@ -157,7 +158,7 @@ void main() {
       final gs = await newGame();
       final s = gs.save!;
       s.confidence = 50;
-      s.communityLevel = 0;
+      s.communityActivities = [];
       s.ticketPricing = TicketPricing.standard;
       s.supporterMonthGames = 4;
       s.supporterMonthPoints = 0;
@@ -182,7 +183,7 @@ void main() {
         final gs = await newGame();
         final s = gs.save!;
         s.confidence = 50;
-        s.communityLevel = 0;
+        s.communityActivities = [];
         s.ticketPricing = pricing;
         // 勝点1/試合・目標ちょうどの辺りでも、結果の分は別に積まれる。
         s.supporterMonthGames = 3;
@@ -194,7 +195,7 @@ void main() {
       final gs = await newGame();
       gs.save!
         ..ticketPricing = TicketPricing.budget
-        ..communityLevel = 0
+        ..communityActivities = []
         ..supporterMonthGames = 0;
       gs.debugCloseSupporterMonth(DateTime(2026, 7, 31));
       expect(gs.save!.supporterLastMonth, isEmpty);
@@ -204,12 +205,12 @@ void main() {
       final gs = await newGame();
       final s = gs.save!;
       s.confidence = 50;
-      s.communityLevel = 1;
+      s.communityActivities = [CommunityActivity.visits];
       s.supporterMonthGames = 0;
       gs.debugCloseSupporterMonth(DateTime(2026, 7, 31));
       expect(s.confidence, 51);
       expect(s.supporterLastMonth, {'community': 1});
-      s.communityLevel = 0;
+      s.communityActivities = [];
       gs.debugCloseSupporterMonth(DateTime(2026, 8, 31));
       expect(s.confidence, 51);
     });
@@ -217,7 +218,7 @@ void main() {
     test('日付を進めると、またいだ月末ごとに締める', () async {
       final gs = await newGame();
       final s = gs.save!;
-      s.communityLevel = 1;
+      s.communityActivities = [CommunityActivity.visits];
       final start = gs.today;
       final before = s.confidence;
       gs.debugAdvanceTodayTo(DateTime(start.year, start.month + 2, 15));
@@ -329,7 +330,7 @@ void main() {
       final gs = await newGame();
       final s = gs.save!;
       s.confidence = 50;
-      s.communityLevel = 0;
+      s.communityActivities = [];
       final t = gs.today;
       s.infrastructure.construction[FacilityType.stadium] =
           t.add(const Duration(days: 1));
@@ -343,7 +344,7 @@ void main() {
       final gs = await newGame();
       final s = gs.save!;
       s.confidence = 15;
-      s.communityLevel = 0;
+      s.communityActivities = [];
       gs.debugChangeSupporters(-8, SupporterReason.results);
       expect(s.confidence, 7);
       expect(gs.isUnderSupporterUltimatum, isTrue);
@@ -366,7 +367,7 @@ void main() {
       final gs = await newGame();
       final s = gs.save!;
       s.confidence = 12;
-      s.communityLevel = 0;
+      s.communityActivities = [];
       gs.debugChangeSupporters(-6, SupporterReason.results);
       final t = gs.today;
       gs.debugAdvanceTodayTo(t.add(const Duration(days: 60)));
@@ -437,7 +438,7 @@ void main() {
 
       // 0〜9 のまま読んだセーブも、すぐには手放さない。月末に最後通告が付く。
       expect(gs.saleReason, isNull);
-      s.communityLevel = 0;
+      s.communityActivities = [];
       s.supporterUltimatumUntil = null;
       gs.debugCloseSupporterMonth(DateTime(2026, 7, 31));
       expect(gs.isUnderSupporterUltimatum, isTrue);

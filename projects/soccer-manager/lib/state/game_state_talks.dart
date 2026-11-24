@@ -43,7 +43,7 @@ extension GameStateTalks on GameState {
     final level =
         _save!.difficultyOf(DifficultyItem.transferPrices).transferPriceFactor;
     final affiliate =
-        isAffiliateClub(club.id) ? GameStateAffiliate.priceDiscount : 1.0;
+        affiliateDiscountApplies(club.id) ? GameStateAffiliate.priceDiscount : 1.0;
     // 売りに出している選手は、少し安く手放す。
     final listed =
         isListedByClub(p) ? GameStateTransfer.listedPriceFactor : 1.0;

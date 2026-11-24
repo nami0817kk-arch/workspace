@@ -76,6 +76,8 @@ import '../models/press_question.dart';
 import '../models/news_item.dart';
 import '../models/youth_league.dart';
 import '../models/save_game.dart';
+import '../models/affiliate_deal.dart';
+import '../models/community_activity.dart';
 import '../models/season_award.dart';
 import '../models/season_record.dart';
 import '../models/sponsor.dart';
@@ -176,6 +178,7 @@ import '../models/opposition_plan.dart';
 import '../models/player_instruction.dart';
 import '../models/staff_member.dart';
 import '../logic/economy_scale.dart';
+import '../logic/staff_terms.dart';
 
 part 'game_state_squad.dart';
 part 'game_state_transfer.dart';
@@ -222,6 +225,8 @@ part 'game_state_cup_days.dart';
 part 'game_state_supporters.dart';
 part 'game_state_decisions.dart';
 part 'game_state_player_view.dart';
+part 'game_state_community.dart';
+part 'game_state_staff_hr.dart';
 
 /// 終えたシーズンの締めくくり。シーズン開始レポートに出す絵を決める。
 enum SeasonFinale { none, promoted, champion }
@@ -977,7 +982,7 @@ class GameState extends ChangeNotifier {
   void _migrateStaffWageIfNeeded(SaveGame save) {
     if (save.staffWageVersion >= SaveGame.currentStaffWageVersion) return;
     for (final st in [
-      ...save.infrastructure.staff.values.whereType<StaffMember>(),
+      ...save.infrastructure.allStaff,
       ...save.staffCandidates,
     ]) {
       if (st.id.startsWith('staff-legacy-')) continue;
