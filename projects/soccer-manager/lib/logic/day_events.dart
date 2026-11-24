@@ -50,10 +50,14 @@ class DayEvent {
     required this.label,
     this.shortLabel,
     this.matchday,
+    this.match,
   });
 
   final DateTime date;
   final DayEventKind kind;
+
+  /// 試合なら、相手・ホームかアウェイか・大会・結果(カレンダーのマスに出す)。
+  final MatchFacts? match;
 
   /// カレンダーの日の欄・一覧に出す字(例「第8節 vs 北風シティ(H)」)。
   final String label;
@@ -65,6 +69,57 @@ class DayEvent {
   final int? matchday;
 
   String get buttonLabel => shortLabel ?? label;
+}
+
+/// 試合の大会の分け方(カレンダーのマスの色)。
+enum MatchCompetition { league, cup, continental, friendly }
+
+/// カレンダーのマスに出す、1試合の中身。
+class MatchFacts {
+  const MatchFacts({
+    required this.opponent,
+    required this.competition,
+    required this.competitionName,
+    this.home,
+    this.goalsFor,
+    this.goalsAgainst,
+  });
+
+  /// 相手の名前(そのまま)。
+  final String opponent;
+  final MatchCompetition competition;
+
+  /// 大会の名前(「リーグ戦」「○○カップ」など)。
+  final String competitionName;
+
+  /// 自分がホームか。中立地・未定なら null。
+  final bool? home;
+
+  /// 終わった試合の自分の得点・失点。まだなら null。
+  final int? goalsFor;
+  final int? goalsAgainst;
+
+  bool get played => goalsFor != null && goalsAgainst != null;
+
+  /// 勝ちなら 1、分けなら 0、負けなら -1。まだなら null。
+  int? get outcome => !played ? null : (goalsFor! - goalsAgainst!).sign;
+
+  /// マス目に入れる相手の短い名前。クラブ名は「町 愛称」の形なので、
+  /// 見分けのつく愛称(最後の語)を使う(ロンドンやマンチェスターは
+  /// 同じ町のクラブがいくつもある)。収まらない分は画面が「…」で切る。
+  static String shortName(String name) {
+    final words =
+        name.trim().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+    if (words.length < 2) return name.trim();
+    final last = words.last;
+    // 「FC」「SC」のような短い印だけが残るときは、その前の語を使う。
+    if (last.length <= 3 && last.toUpperCase() == last) {
+      return words[words.length - 2];
+    }
+    return last;
+  }
+
+  String get opponentShort => shortName(opponent);
 }
 
 /// 試合以外の、日付で決まっている出来事(給料日・放映権の入金・移籍の窓・

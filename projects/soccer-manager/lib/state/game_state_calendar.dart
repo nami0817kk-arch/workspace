@@ -37,7 +37,18 @@ extension GameStateCalendar on GameState {
         label: Tr.pick('第${f.matchday}節 vs $opp(${home ? 'H' : 'A'})$score',
             'MD ${f.matchday} vs $opp (${home ? 'H' : 'A'})$score'),
         shortLabel: Tr.pick('第${f.matchday}節', 'MD ${f.matchday}'),
+        match: MatchFacts(
+          opponent: opp,
+          competition: MatchCompetition.league,
+          competitionName: Tr.pick('リーグ戦', 'League'),
+          home: home,
+          goalsFor: r == null ? null : (home ? r.homeGoals : r.awayGoals),
+          goalsAgainst: r == null ? null : (home ? r.awayGoals : r.homeGoals),
+        ),
       ));
+    }
+    for (final c in _playedUserDomesticCupMatches()) {
+      if (inRange(c.date)) out.add(c);
     }
     for (final c in _nextUserCupMatches()) {
       if (inRange(c.date)) out.add(c);
@@ -55,21 +66,42 @@ extension GameStateCalendar on GameState {
           label: Tr.pick(
               'スーパーカップ vs ${nameOf(opp)}', 'Super Cup vs ${nameOf(opp)}'),
           shortLabel: Tr.pick('スーパーカップ', 'Super Cup'),
+          match: MatchFacts(
+            opponent: nameOf(opp),
+            competition: MatchCompetition.cup,
+            competitionName: Tr.pick('スーパーカップ', 'Super Cup'),
+          ),
         ));
       }
     }
     for (var i = 0; i < s.friendlies.length; i++) {
       final f = s.friendlies[i];
-      if (f.result != null) continue;
       final d =
           SeasonCalendar.dateOnly(cal.friendlyDate(i, s.friendlies.length));
+      // 終わった親善試合は、その日が来ていれば結果を載せる(状況の札から
+      // 先に済ませた試合が、まだ来ない日に結果つきで載らないように)。
+      final r = f.result;
+      if (r != null && d.isAfter(today)) continue;
       if (!inRange(d)) continue;
-      final opp = f.homeTeamId == userId ? f.awayTeamId : f.homeTeamId;
+      final home = f.homeTeamId == userId;
+      final opp = home ? f.awayTeamId : f.homeTeamId;
+      final score = r == null
+          ? ''
+          : ' ${home ? r.homeGoals : r.awayGoals}-${home ? r.awayGoals : r.homeGoals}';
       out.add(DayEvent(
         date: d,
         kind: DayEventKind.friendly,
-        label: Tr.pick('親善試合 vs ${nameOf(opp)}', 'Friendly vs ${nameOf(opp)}'),
+        label: Tr.pick('親善試合 vs ${nameOf(opp)}$score',
+            'Friendly vs ${nameOf(opp)}$score'),
         shortLabel: Tr.pick('親善試合', 'Friendly'),
+        match: MatchFacts(
+          opponent: nameOf(opp),
+          competition: MatchCompetition.friendly,
+          competitionName: Tr.pick('親善試合', 'Friendly'),
+          home: home,
+          goalsFor: r == null ? null : (home ? r.homeGoals : r.awayGoals),
+          goalsAgainst: r == null ? null : (home ? r.awayGoals : r.homeGoals),
+        ),
       ));
     }
     out.addAll(DayEvents.calendarEvents(
@@ -137,6 +169,12 @@ extension GameStateCalendar on GameState {
             '${dom.name} vs ${_teamById(opp)?.name ?? '-'}(${m.nextHomeId == userId ? 'H' : 'A'})',
             '${dom.name} vs ${_teamById(opp)?.name ?? '-'} (${m.nextHomeId == userId ? 'H' : 'A'})'),
         shortLabel: Tr.pick('カップ戦', 'Cup tie'),
+        match: MatchFacts(
+          opponent: _teamById(opp)?.name ?? '-',
+          competition: MatchCompetition.cup,
+          competitionName: dom.name,
+          home: dom.isNeutral(m) ? null : m.nextHomeId == userId,
+        ),
       ));
     }
     // 4クラブのスーパーカップ(スペイン・イタリア。1月ごろ)。
@@ -153,6 +191,12 @@ extension GameStateCalendar on GameState {
             '${sc.name} vs ${_teamById(opp)?.name ?? '-'}(${home ? 'H' : 'A'})',
             '${sc.name} vs ${_teamById(opp)?.name ?? '-'} (${home ? 'H' : 'A'})'),
         shortLabel: Tr.pick('スーパーカップ', 'Super Cup'),
+        match: MatchFacts(
+          opponent: _teamById(opp)?.name ?? '-',
+          competition: MatchCompetition.cup,
+          competitionName: sc.name,
+          home: sc.isNeutral(scm) ? null : home,
+        ),
       ));
     }
     final cont = continentalCup;
@@ -180,7 +224,64 @@ extension GameStateCalendar on GameState {
               '${cont.name} vs ${_teamById(opp)?.name ?? '-'}(${home == userId ? 'H' : 'A'})',
               '${cont.name} vs ${_teamById(opp)?.name ?? '-'} (${home == userId ? 'H' : 'A'})'),
           shortLabel: Tr.pick('大陸カップ', 'Continental'),
+          match: MatchFacts(
+            opponent: _teamById(opp)?.name ?? '-',
+            competition: MatchCompetition.continental,
+            competitionName: cont.name,
+            home: home == userId,
+          ),
         ));
+      }
+    }
+    return out;
+  }
+
+  /// 自クラブの、終わった国内カップの試合(回戦ごとに日が決まっている
+  /// 新しい形のカップだけ)。日は、その回戦を消化できるようになる節の前の
+  /// 平日(進むボタンが止まった日と同じ決め方)。今日より後の日には載せない。
+  List<DayEvent> _playedUserDomesticCupMatches() {
+    final s = _save!;
+    final userId = s.userTeamId;
+    final dom = domesticCup;
+    if (dom == null || dom.roundDue == null) return const [];
+    final out = <DayEvent>[];
+    for (final round in dom.rounds) {
+      for (final m in round) {
+        if (m.isBye || (m.homeTeamId != userId && m.awayTeamId != userId)) {
+          continue;
+        }
+        final base = dom.dueMatchdayFor(m.round);
+        if (base == null) continue;
+        final legs = <(MatchResult, int)>[
+          if (m.twoLegged && m.firstLeg != null) (m.firstLeg!, base),
+          if (m.result != null)
+            (m.result!, m.twoLegged ? base + Cup.secondLegGap : base),
+        ];
+        for (final (r, due) in legs) {
+          final d = SeasonCalendar.dateOnly(
+              seasonCalendar.cupDateBefore(due, continental: false));
+          if (d.isAfter(today)) continue;
+          final home = r.homeTeamId == userId;
+          final opp = home ? r.awayTeamId : r.homeTeamId;
+          final gf = home ? r.homeGoals : r.awayGoals;
+          final ga = home ? r.awayGoals : r.homeGoals;
+          out.add(DayEvent(
+            date: d,
+            kind: DayEventKind.cupMatch,
+            label: Tr.pick(
+                '${dom.name} vs ${_teamById(opp)?.name ?? '-'}(${home ? 'H' : 'A'}) $gf-$ga',
+                '${dom.name} vs ${_teamById(opp)?.name ?? '-'} (${home ? 'H' : 'A'}) $gf-$ga'),
+            shortLabel: Tr.pick('カップ戦', 'Cup tie'),
+            match: MatchFacts(
+              opponent: _teamById(opp)?.name ?? '-',
+              competition: MatchCompetition.cup,
+              competitionName: dom.name,
+              home: dom.isNeutral(m) ? null : home,
+              goalsFor: gf,
+              goalsAgainst: ga,
+            ),
+          ));
+        }
       }
     }
     return out;
@@ -224,7 +325,8 @@ extension GameStateCalendar on GameState {
           return e.matchday == next.matchday;
         }
         // 親善試合とスーパーカップは、今まで通り状況の画面の札から行う。
-        return e.kind == DayEventKind.cupMatch;
+        // 終わったカップ戦(結果つきで載せている)では止まらない。
+        return e.kind == DayEventKind.cupMatch && e.match?.played != true;
       }
       return e.date.isAfter(today);
     }).toList();

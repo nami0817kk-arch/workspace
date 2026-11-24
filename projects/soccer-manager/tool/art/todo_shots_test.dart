@@ -21,6 +21,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/app_localizations.dart';
 import 'package:soccer_manager/l10n/tr.dart';
+import 'package:soccer_manager/logic/day_events.dart';
 import 'package:soccer_manager/logic/proposal_engine.dart';
 import 'package:soccer_manager/logic/todo_advisor.dart';
 import 'package:soccer_manager/main.dart';
@@ -230,11 +231,87 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
       await tester.pump(const Duration(milliseconds: 400));
-      await tester.tap(find.byKey(const ValueKey('topbar-date')));
-      await shoot('6_calendar');
-      final year = find.byKey(const ValueKey('chip-1')).hitTestable();
-      await tester.tap(year.first);
-      await shoot('7_calendar_year');
+    });
+  });
+
+  // カレンダー(左メニューの2番目): 開幕前・試合の並ぶ月・結果の入った月。
+  Future<void> calendarShots(
+      WidgetTester tester, ShellNav nav, Future<void> Function(String) shoot,
+      {required int months, required String prefix, bool prev = false}) async {
+    // 上の帯の日付から移る(重ねて開かない)。
+    await tester.tap(find.byKey(const ValueKey('topbar-date')));
+    await shoot('${prefix}1_month');
+    final next = find.byTooltip(_en ? 'Next month' : '次の月');
+    for (var i = 0; i < months; i++) {
+      await tester.tap(next);
+      await tester.pump(const Duration(milliseconds: 200));
+      await shoot('$prefix${i + 2}_month');
+    }
+    if (prev) {
+      // 前の月(結果が並ぶ)。
+      await tester.tap(find.byTooltip(_en ? 'Previous month' : '前の月'));
+      await tester.pump(const Duration(milliseconds: 200));
+      await shoot('${prefix}2_prev_month');
+    }
+    // 試合の日を押す(その日の予定)。
+    final cell = find.byWidgetPredicate((w) =>
+        w.key is ValueKey<String> &&
+        (w.key as ValueKey<String>).value.startsWith('cal-opp-'));
+    if (cell.evaluate().isNotEmpty) {
+      final k = (tester.widget(cell.first).key as ValueKey<String>)
+          .value
+          .substring('cal-opp-'.length);
+      await tester.tap(find.byKey(ValueKey('cal-day-$k')));
+      await shoot('${prefix}9_day');
+    }
+    final year = find.byKey(const ValueKey('chip-1')).hitTestable();
+    await tester.tap(year.first);
+    await shoot('${prefix}9_year');
+  }
+
+  testWidgets('カレンダー: 開幕前', (tester) async {
+    await run(tester, 'e_calendar_pre', shots: (nav, shoot) async {
+      await calendarShots(tester, nav, shoot, months: 2, prefix: '');
+    });
+  });
+
+  testWidgets('カレンダー: シーズン中(結果の入った月)', (tester) async {
+    await run(tester, 'f_calendar_season', arrange: (gs) async {
+      // 進むボタンと同じ順に、リーグ戦を8節まで進める。
+      var guard = 0;
+      while (gs.save!.league.fixtures
+                  .where((f) => f.result != null)
+                  .map((f) => f.matchday)
+                  .toSet()
+                  .length <
+              8 &&
+          guard++ < 200) {
+        final first = gs.nextStop;
+        if (first == null) break;
+        await gs.playBackgroundCupMatchesBefore(first);
+        final stop = gs.nextStop!;
+        switch (stop.kind) {
+          case DayEventKind.leagueMatch:
+            await gs.playNextMatchdayQuickSim();
+          case DayEventKind.cupMatch:
+            final dom = gs.domesticCup?.nextUnplayedMatch;
+            final uid = gs.userTeam.id;
+            if (dom != null &&
+                gs.canPlayNextDomesticCupMatch &&
+                (dom.homeTeamId == uid || dom.awayTeamId == uid)) {
+              await gs.playNextCupMatch();
+            } else if (gs.continentalCup!.isGroupStageComplete) {
+              await gs.playNextContinentalKnockoutLeg();
+            } else {
+              await gs.playNextContinentalGroupMatch();
+            }
+          default:
+            await gs.advanceToDateStop(stop);
+        }
+      }
+    }, shots: (nav, shoot) async {
+      await calendarShots(tester, nav, shoot,
+          months: 0, prefix: '', prev: true);
     });
   });
 
