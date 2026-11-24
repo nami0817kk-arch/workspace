@@ -251,6 +251,7 @@
     right.append(card(title('ユースの上位とトップの差'), ...tops.map((p) => { const k = YA.topRankFor(w, p); return h('div', { class: 'row', style: 'padding:2px 0;gap:5px' }, h('span', { class: 'pos ' + p.pos }, YA.POS_LABEL[p.main] || p.pos), h('span', { class: 'grow' }, `${p.name}（高${p.grade}）`), h('b', {}, YA.rating(p)), h('span', { class: 'sub', style: 'white-space:nowrap' }, `トップの${k.n}番手`)); }),
       h('div', { class: 'note', style: 'margin-top:3px' }, `トップの主力と並ぶ力（総合力${YA.earlyProLine(w)}ほど）になると、卒業を待たずにプロ契約の打診が来ます。`)));
     body.append(h('div', { style: 'display:flex;gap:8px;align-items:flex-start' }, left, right));
+    if (YA.topCoachEl) { const tc = h('div', { class: 'card', style: 'padding:6px 9px;margin-top:6px;display:flex;flex-direction:column' }); YA.topCoachEl(tc, w); body.append(tc); }
   }
 
   // ---------- スカウト ----------

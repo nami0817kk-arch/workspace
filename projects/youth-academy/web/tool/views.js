@@ -88,7 +88,7 @@ const btn = (t, scope) => [...(scope || d).querySelectorAll('button')].find((b) 
 // 記録タブ（旧 系譜）の小タブは3つの群（卒業生・実績・年表・監督）に分かれている（2026-11-18）。群を切り替えながら探して押す
 const ltab = (label) => {
   const find = () => [...d.querySelectorAll('#main .tabs button:not(.grp)')].find((b) => b.textContent.trim() === label);
-  for (const g of ['卒業生', '実績・年表', '監督']) {
+  for (const g of ['卒業生', 'クラブの歴史', '監督']) {
     if (find()) break;
     const gb = [...d.querySelectorAll('#main .tabs button.grp')].find((x) => x.textContent.trim() === g);
     if (gb) gb.click();
@@ -734,15 +734,17 @@ async function clearEvents() {
     // 2段目その1：系譜タブ（決定139）
     {
       rail('記録');
-      ok(A.tab === 'lineage' && ['卒業生名鑑', '殿堂'].every((x) => txt().includes(x)) && ['卒業生', '実績・年表', '監督'].every((x) => !!btn(x, d.querySelector('#main .tabs'))), '記録タブは3つの群（卒業生・実績・年表・監督）');
-      ok(ltab('実績') && /実績 \d+\/\d+/.test(txt()) && ltab('年表') && ltab('育成基金'), '実績・年表の群に実績・年表・育成基金');
+      ok(A.tab === 'lineage' && ['卒業生名鑑', '殿堂'].every((x) => txt().includes(x)) && ['卒業生', 'クラブの歴史', '監督'].every((x) => !!btn(x, d.querySelector('#main .tabs'))), '記録タブは3つの群（卒業生・クラブの歴史・監督。2026-11-25）');
+      ok(ltab('実績') && /実績 \d+\/\d+/.test(txt()) && txt().includes('次の実績') && ltab('年表') && ltab('育成基金'), 'クラブの歴史の群に実績（上に次の実績）・年表・育成基金');
+      ok(ltab('クラブ史') && txt().includes('主な記録') && txt().includes('リーグの履歴'), 'クラブの歴史にクラブ史（「ほか」から移した）');
+      ok(ltab('監督の経歴') && txt().includes('年ごとの評価') && txt().includes('指導者'), '監督の群に監督の経歴');
       // 2026-11-21「系譜の画面はいらない」：系譜図の小タブとホームの系譜の小窓を外した
       ok(!ltab('系譜図') && !d.querySelector('.lin-svg') && ![...d.querySelectorAll('#rail button')].some((b) => b.textContent.includes('系譜')), '系譜図が無く、左の帯は「記録」');
       // 2026-11-17：系譜の小タブは「監督の注文」「移籍先クラブ」（クラブ＞トップ・左の帯のクラブと中身が違うので）
       const ltabs = [];
-      for (const g of ['卒業生', '実績・年表', '監督']) { btn(g, d.querySelector('#main .tabs')).click(); ltabs.push(...[...d.querySelectorAll('#main .tabs button:not(.grp)')].map((b) => b.textContent.trim())); }
-      ok(ltabs.includes('監督の注文') && ltabs.includes('移籍先クラブ') && !ltabs.includes('トップ') && !ltabs.includes('クラブ'), '記録の小タブの名前が、ほかのトップ・クラブと重ならない ' + ltabs.join('・'));
-      for (const n of ['ライバル', 'トップ', '移籍', 'クラブ']) {
+      for (const g of ['卒業生', 'クラブの歴史', '監督']) { btn(g, d.querySelector('#main .tabs')).click(); ltabs.push(...[...d.querySelectorAll('#main .tabs button:not(.grp)')].map((b) => b.textContent.trim())); }
+      ok(!ltabs.includes('監督の注文') && ltabs.includes('移籍先クラブ') && !ltabs.includes('トップ') && !ltabs.includes('クラブ'), '記録の小タブ：監督の注文はクラブ → トップへまとめた。名前がほかと重ならない ' + ltabs.join('・'));
+      for (const n of ['ライバル', '移籍', 'クラブ']) {
         const label = { トップ: '監督の注文', クラブ: '移籍先クラブ' }[n] || n;
         ltab(label);
         ok(errors.length === 0, n + 'の画面で例外なし: ' + errors.slice(0, 2).join('|'));
