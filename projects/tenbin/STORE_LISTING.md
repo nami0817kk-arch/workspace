@@ -9,11 +9,14 @@
 | 項目 | 日本語 | English (US) |
 |---|---|---|
 | 名前（30字まで） | もじつみ：ひらがな積み上げ ことばパズル（20字） | Moji Stack: Hiragana Tower（26字） |
-| サブタイトル（30字まで） | くっつけて言葉を作る脳トレ バランスゲーム（21字） | Stack letters, make words |
-| キーワード（100字まで） | 積み木,タワー,物理,文字,単語,言葉遊び,しりとり,脳トレ,暇つぶし,てんびん,バランス,知育,語彙,日本語,オフライン | japanese,hiragana,kana,word,puzzle,stack,tower,physics,balance,learn,vocabulary,offline |
+| サブタイトル（30字まで） | くっつけて言葉を作る脳トレ バランスゲーム（21字） | Learn Japanese by stacking（26字） |
+| キーワード（100字まで） | 積み木,タワー,物理,文字,単語,言葉遊び,しりとり,脳トレ,暇つぶし,てんびん,バランス,知育,語彙,日本語,オフライン | japanese,kana,romaji,vocabulary,word,puzzle,game,study,language,learning,physics,balance,offline（96字） |
 | ホーム画面の名前 | もじつみ | Moji Stack |
 
 - 英語の名前は、2026-10-04 に決めた「Moji Stack: Hiragana Word Tower」が31字で30字を超えるため、「Word」を外した（「Word」はサブタイトルとキーワードで拾う）
+- **2026-11-25 英語の欄を「日本語を学ぶ人向け」に書き直した**（ゲームに英語・ローマ字・ことばの英語の意味を入れたため）。
+  英語のサブタイトルとキーワードは、ひらがなを読めない人が探す語（learn japanese・romaji・vocabulary・study）に寄せた。
+  名前の Hiragana は「ひらがなを学びたい人」の検索語でもあるので残す
 - 名前とサブタイトルに入れた語は、キーワード欄に重ねない（Apple は名前・サブタイトル・キーワードを組み合わせて検索に当てる）
 - 「しりとり」は遊びが違うので、入れるかどうかは測ってから決める（似た遊びを探す人には当たるが、期待と違うと評価が下がる）
 
@@ -45,14 +48,19 @@
 
 ## Description (English)
 
-Stack hiragana letters one by one and make Japanese words with the letters that touch.
+Learn hiragana and Japanese words by stacking them.
 
-- Drag to move a letter, release to drop it. Rotate before dropping.
-- Touching letters that read as a word — in any direction — score points. Longer words score more.
-- Six stages with their own Japanese scenery: a garden, a shrine with a seesaw, a tea field, a river, the sea and a snowy mountain.
-- Collect over 2,000 words in your word book to unlock new stages and letter colors.
+Hiragana letters drop one at a time. Stack them on the stage, and when touching letters spell a Japanese word, you score — and see its reading and meaning.
+
+- Every letter shows its romaji, so you can play before you can read kana.
+- Make a word and it pops up with romaji and English: ねこ — neko — cat.
+- Touching letters count in any direction: top to bottom, left to right, even backwards.
+- Over 2,000 everyday words — animals, food, nature, verbs and adjectives — with kanji and English meanings, from the JMdict dictionary.
+- Your word book keeps every word you find, with kanji and meaning. Collect more to unlock new stages and letter colors.
+- Six stages with Japanese scenery: a garden, a shrine with a seesaw, a tea field, a river, the sea and a snowy mountain.
+- Turn romaji off when you can read the letters yourself.
 - Optional items: glue, board, undo and freeze.
-- Works offline. The game is in Japanese.
+- Works offline. English and Japanese.
 - "Remove Ads" (one-time purchase) removes full-screen ads and unlocks the rewarded features without videos.
 
 ## 掲載画像（`marketing/screenshots/`、`node tool/screenshots.js`）
@@ -66,7 +74,7 @@ Stack hiragana letters one by one and make Japanese words with the letters that 
 | 5 | 集めたことばで 台と字の色が ひらく | ことば帳 |
 
 検索結果に出るのは先頭3枚なので、はじめの画面・起動画面は撮らない（docs/app-pitfalls.md 4番）。
-英語版の掲載画像は日本語のまま（ゲームが日本語のため）。
+英語版の掲載画像は、**英語の画面（ローマ字と意味つき）で撮り直す**（2026-11-25 にゲームを英語に対応させた。まだ撮っていない）。
 
 ## 課金アイテム
 
@@ -85,6 +93,6 @@ Stack hiragana letters one by one and make Japanese words with the letters that 
 | プライバシーポリシー URL | https://mojitsumi.pages.dev/privacy.html |
 | 年齢区分 | ユーザーが答える（広告「あり」。ほかは無し。4+ の見込み） |
 | 価格 | 無料（課金アイテムの値段はユーザーが決める） |
-| 配信地域 | すべて（ゲームは日本語。英語の説明文にそう書いてある） |
+| 配信地域 | すべて（日本語と英語。英語は日本語を学ぶ人向け） |
 | バージョン | 1.0（ビルドは app/pubspec.yaml の 1.0.0+1） |
 | 審査メモ | docs/RELEASE.md の「審査に出すときに書くこと」をそのまま |

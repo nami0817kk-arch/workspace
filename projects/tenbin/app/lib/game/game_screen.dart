@@ -24,6 +24,10 @@ class _GameScreenState extends State<GameScreen> {
   late final WebViewController _web;
   late final GameBridge _bridge;
   bool _loaded = false;
+
+  /// 端末の言語。ゲームの言語の始まりと、起動画面・お知らせの言語に使う
+  String get _deviceLang => WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+  bool get _ja => _deviceLang == 'ja';
   AppLifecycleListener? _life;
 
   @override
@@ -63,7 +67,12 @@ class _GameScreenState extends State<GameScreen> {
       openUrl: (u) async {
         await launchUrl(u, mode: LaunchMode.externalApplication);
       },
-      showLicenses: () => showLicensePage(context: context, applicationName: 'もじつみ', applicationLegalese: '© つるはし社'),
+      deviceLang: _deviceLang,
+      showLicenses: () => showLicensePage(
+        context: context,
+        applicationName: _bridge.lang == 'en' ? 'Moji Stack' : 'もじつみ',
+        applicationLegalese: _bridge.lang == 'en' ? '© Tsuruhashi-sha' : '© つるはし社',
+      ),
       haptic: (k) => switch (k) {
         'success' => HapticFeedback.mediumImpact(),
         'warn' => HapticFeedback.heavyImpact(),
@@ -99,7 +108,7 @@ class _GameScreenState extends State<GameScreen> {
 
   Future<void> _load() async {
     final html = await rootBundle.loadString('assets/web/index.html');
-    final boot = <String, Object?>{'store': widget.store.snapshot(), 'adFree': widget.money.adFree};
+    final boot = <String, Object?>{'store': widget.store.snapshot(), 'adFree': widget.money.adFree, 'lang': _deviceLang};
     await _web.loadHtmlString(injectBoot(html, boot));
   }
 
@@ -127,14 +136,14 @@ class _GameScreenState extends State<GameScreen> {
                 Container(
                   color: bg,
                   alignment: Alignment.center,
-                  child: const Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('もじつみ', style: TextStyle(color: Color(0xFF3B2F24), fontSize: 40, fontWeight: FontWeight.w900, letterSpacing: 4)),
-                      SizedBox(height: 6),
-                      Text('ひらがな積み上げ ことばパズル', style: TextStyle(color: Color(0xFF8A7663), fontSize: 13, fontWeight: FontWeight.w700)),
-                      SizedBox(height: 28),
-                      SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: Color(0xFFD9472F))),
+                      Text(_ja ? 'もじつみ' : 'Moji Stack', style: const TextStyle(color: Color(0xFF3B2F24), fontSize: 40, fontWeight: FontWeight.w900, letterSpacing: 4)),
+                      const SizedBox(height: 6),
+                      Text(_ja ? 'ひらがな積み上げ ことばパズル' : 'Stack hiragana, learn Japanese words', style: const TextStyle(color: Color(0xFF8A7663), fontSize: 13, fontWeight: FontWeight.w700)),
+                      const SizedBox(height: 28),
+                      const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4, color: Color(0xFFD9472F))),
                     ],
                   ),
                 ),
