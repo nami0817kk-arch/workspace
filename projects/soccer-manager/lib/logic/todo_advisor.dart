@@ -463,7 +463,6 @@ class TodoAdvisor {
     );
     NextAction? contractAction;
     NextAction? staffAction;
-    NextAction? goalAction;
     for (final a in actions) {
       switch (a.kind) {
         case NextActionKind.ultimatum:
@@ -532,9 +531,9 @@ class TodoAdvisor {
           contractAction = a;
         case NextActionKind.staffVacant:
           staffAction = a;
+        // 受信箱の行と同じ用件は上で挙げてある。オーナーの目標は、開幕前に
+        // 限らず下で挙げる。
         case NextActionKind.ownerGoal:
-          goalAction = a;
-        // 受信箱の行と同じ用件。上で挙げてある。
         case NextActionKind.incomingOffer:
         case NextActionKind.sponsor:
           break;
@@ -559,8 +558,11 @@ class TodoAdvisor {
             vacant.length == 1
                 ? 'A staff post is empty'
                 : 'Staff posts are empty'),
-        note: staffAction?.message ??
-            Tr.pick('${vacant.map((r) => r.label).join('・')}が空いています。候補から雇えます。',
+        // 題と同じことを繰り返さないよう、空いている役の名前を出す。
+        note: vacant.isEmpty
+            ? (staffAction?.message ?? '')
+            : Tr.pick(
+                '空いている役: ${vacant.map((r) => r.label).join('・')}。候補から雇えます。',
                 'Empty: ${vacant.map((r) => r.label).join(', ')}. Candidates are waiting.'),
         place: TodoPlaces.clubStaff,
         count: vacant.isEmpty ? 1 : vacant.length,
@@ -573,9 +575,8 @@ class TodoAdvisor {
         kind: TodoKind.ownerGoal,
         level: TodoLevel.recommended,
         title: Tr.pick('オーナーの目標が未設定です', 'No owner goal is set'),
-        note: goalAction?.message ??
-            Tr.pick('決めると、達成が殿堂に残ります。',
-                'Achieving one puts it in the hall of fame.'),
+        note: Tr.pick('決めると、達成が殿堂に残ります(売却後も消えません)。',
+            'Achieving one puts it in the hall of fame, even after a sale.'),
         place: TodoPlaces.ownerGoal,
       ));
     }

@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/tr.dart';
+import '../logic/economy_scale.dart';
+
+/// 「資金が足りません(あと いくら)」。あちこちの押せないボタンで同じ文を
+/// 使うので、1か所で作る。[shortBy] は足りない額(必要な額 - 手元の資金)。
+String fundsShortReason(int shortBy) => Tr.pick(
+    '資金が足りません(あと ${formatMoney(shortBy)})',
+    'Not enough funds (${formatMoney(shortBy)} short)');
+
 /// 押せないボタンのそばに出す理由(1行)。
 ///
 /// 灰色のボタンだけでは、なぜ押せないのか(資金が足りない・今季は実行済み・

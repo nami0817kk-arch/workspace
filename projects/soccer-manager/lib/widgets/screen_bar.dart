@@ -153,7 +153,8 @@ PreferredSizeWidget screenBar(
         : TabBar(
             controller: controller,
             isScrollable: scrollable,
-            tabs: [for (var i = 0; i < tabs.length; i++) tab(i)],
+            // 縦画面のタブは幅を等分するので、印は付けない(字が入らなくなる)。
+            tabs: [for (final t in tabs) Tab(text: t)],
           ),
   );
 }

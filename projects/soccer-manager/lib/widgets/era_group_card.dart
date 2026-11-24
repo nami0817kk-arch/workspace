@@ -6,6 +6,7 @@ import '../logic/economy_scale.dart';
 import '../logic/era_engine.dart';
 import '../state/game_state.dart';
 import 'help_button.dart';
+import 'disabled_reason.dart';
 
 /// 時代の変化と、持っているほかのクラブ。
 class EraGroupCard extends StatelessWidget {
@@ -56,6 +57,15 @@ class EraGroupCard extends StatelessWidget {
                 ],
               ),
             const SizedBox(height: 6),
+            // 私財より高いクラブは「買う」が押せない。行ごとではなく、
+            // 候補の上に1回だけ出す。
+            if (candidates.take(4).any((c) => gs.ownerWealth < c.$2))
+              DisabledReason(
+                Tr.pick('私財(${formatMoney(gs.ownerWealth)})より高いクラブは買えません',
+                    'You cannot buy a club that costs more than your own money (${formatMoney(gs.ownerWealth)})'),
+                key: const ValueKey('group-club-blocked'),
+                padding: const EdgeInsets.only(bottom: 4),
+              ),
             for (final (t, price) in candidates.take(4))
               Row(
                 children: [

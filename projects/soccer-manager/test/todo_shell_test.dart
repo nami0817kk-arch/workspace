@@ -397,7 +397,7 @@ void main() {
         expect(label, startsWith(en ? 'Next match' : '次の試合へ'));
       } else {
         expect(label,
-            en ? startsWith('Advance: ') : contains('${stop.buttonLabel}まで進む'));
+            en ? startsWith('Skip to ') : contains('${stop.buttonLabel}まで進む'));
       }
       // 以前の「7/31(金) 給料日」の形(日付が先・動詞なし)ではない。
       expect(label, isNot(startsWith('7/')));
@@ -412,9 +412,10 @@ void main() {
       expect(
           find.descendant(
               of: tag,
-              matching: find.text(en
-                  ? 'To do: ${items.mustCount}'
-                  : 'やること ${items.mustCount}件')),
+              // スマホの幅では数字だけ(日付と節の字を残すため)。読み上げと
+              // 広い画面では「やること N件」。
+              matching:
+                  find.text(en ? '${items.mustCount}' : '${items.mustCount}件')),
           findsOneWidget);
       expect(tester.widget<FilledButton>(button).onPressed, isNotNull);
       // 札を押すと、どのページからでも一覧(状況)へ戻る。

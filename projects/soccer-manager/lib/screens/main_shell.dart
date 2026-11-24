@@ -381,6 +381,7 @@ class _FmTopBar extends StatelessWidget {
     final sub = TextStyle(fontSize: 12, color: scheme.onSurfaceVariant);
     // 帯の高さは決まっているので、文字の大きさの設定は少しだけ効かせる
     // (1.3倍だと「サポーター」が2行になり、メーターがはみ出していた)。
+    final barWidth = MediaQuery.sizeOf(context).width;
     return MediaQuery.withClampedTextScaling(
       maxScaleFactor: 1.1,
       child: Container(
@@ -476,10 +477,17 @@ class _FmTopBar extends StatelessWidget {
             const ExpectationMeters(compact: true),
             const SizedBox(width: 12),
             if (next != null && gameState.saleReason == null)
-              AdvanceButton(
-                gameState: gameState,
-                mustCount: mustCount,
-                onTodo: onTodo,
+              // 帯が狭いとき(小さな端末・大きい文字)は、件数の札を数字だけに
+              // し、それでも入らなければボタンの字を「…」で切る(はみ出さない)。
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: barWidth * 0.42),
+                child: AdvanceButton(
+                  gameState: gameState,
+                  mustCount: mustCount,
+                  onTodo: onTodo,
+                  // スマホの幅では、日付と節の字を残すために数字だけにする。
+                  compact: barWidth < 1000,
+                ),
               ),
           ],
         ),
@@ -499,11 +507,15 @@ class AdvanceButton extends StatelessWidget {
     required this.gameState,
     required this.mustCount,
     required this.onTodo,
+    this.compact = false,
   });
 
   final GameState gameState;
   final int mustCount;
   final VoidCallback onTodo;
+
+  /// 帯が狭いとき。件数の札を数字だけにする。
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -552,7 +564,11 @@ class AdvanceButton extends StatelessWidget {
                   Icon(Icons.checklist, size: 16, color: scheme.onError),
                   const SizedBox(width: 4),
                   Text(
-                    Tr.pick('やること $mustCount件', 'To do: $mustCount'),
+                    compact
+                        ? Tr.pick('$mustCount件', '$mustCount')
+                        : Tr.pick('やること $mustCount件', 'To do: $mustCount'),
+                    semanticsLabel: Tr.pick(
+                        'やること $mustCount件', 'To do: $mustCount'),
                     maxLines: 1,
                     style: TextStyle(
                       fontSize: 12,

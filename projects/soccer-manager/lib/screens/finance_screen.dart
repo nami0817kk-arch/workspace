@@ -41,6 +41,7 @@ import '../widgets/screen_bar.dart';
 import '../widgets/sponsor_slots_card.dart';
 import '../widgets/help_button.dart';
 import '../logic/economy_scale.dart';
+import '../widgets/disabled_reason.dart';
 
 class FinanceScreen extends StatelessWidget {
   const FinanceScreen({super.key, this.embedded = false, this.initialTab = 0});
@@ -674,6 +675,17 @@ class _LoanSection extends StatelessWidget {
                   child: Text(Tr.pick('融資を申し込む', 'Apply for a loan')),
                 ),
               ),
+              // 借りられる額が0のとき。枠は借入の残りを引いた額なので、
+              // 返すと戻ることまで書く。
+              if (maxAmount <= 0)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  child: DisabledReason(
+                    Tr.pick('いまは借りられる枠がありません。返済が進むと、また借りられます',
+                        'You have no borrowing room right now. It comes back as you repay'),
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
             ],
           ),
         ),
@@ -841,6 +853,14 @@ class _InvestmentSection extends StatelessWidget {
             leading: const Icon(Icons.account_balance_outlined),
             title: Text(Tr.pick('運用可能な資金: ${formatMoney(available)}',
                 'Available to invest: ${formatMoney(available)}')),
+            // 資金が0以下のときは預けられない。
+            subtitle: available <= 0
+                ? DisabledReason(
+                    Tr.pick('預けられる資金がありません',
+                        'You have no funds to deposit'),
+                    padding: EdgeInsets.zero,
+                  )
+                : null,
             trailing: FilledButton(
               onPressed:
                   available <= 0 ? null : () => _showDepositSheet(context),

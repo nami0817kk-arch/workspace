@@ -116,7 +116,7 @@ List<GuideSection> get guideSections => [
             title: Tr.pick('進むボタン(日付で進む)', 'The advance button'),
             description: Tr.pick(
                 '右上のボタンは、次に予定がある日まで進みます(試合・カップ戦・給料日・放映権の入金・移籍の窓の開閉と締切など。何もない日は飛ばします)。どこまで進むかはボタンに「次の試合へ 9/5(土)」「給料日まで進む 7/31(金)」のように出ます。必ず決めることが残っていると、ボタンの左に赤い札で「やること 2件」と出ます(押すと一覧へ移ります。進むのは止めません)。試合には直接関わらず、数秒のダイジェストで結果と2つの期待の動きが出ます。日付を押すとカレンダーが開きます。',
-                'The button at the top right moves to the next day with something on: a match, a cup tie, payday, TV money, a transfer window opening or closing. Empty days are skipped, and the button says where it is going, such as "Next match • Sat 5 Sep" or "Advance: Payday • Fri 31 Jul". While something still needs your answer, a red "To do: 2" tag sits to its left (tap it to open the list; it never blocks you from advancing). You do not touch the match itself; a short digest shows the result and how both expectations moved. Tap the date to open the calendar.'),
+                'The button at the top right moves to the next day with something on: a match, a cup tie, payday, TV money, a transfer window opening or closing. Empty days are skipped, and the button says where it is going, such as "Next match • 5 Sep" or "Skip to Payday • 31 Jul". While something still needs your answer, a red "To do: 2" tag sits to its left (tap it to open the list; it never blocks you from advancing). You do not touch the match itself; a short digest shows the result and how both expectations moved. Tap the date to open the calendar.'),
           ),
           GuideTopic(
             title: Tr.pick('監督からの報告・経営診断', "Manager's report and health check"),

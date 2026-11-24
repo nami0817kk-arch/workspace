@@ -14,6 +14,7 @@ import '../widgets/shell_nav.dart';
 import '../widgets/fm_panel.dart';
 import '../widgets/responsive_body.dart';
 import '../logic/economy_scale.dart';
+import '../widgets/disabled_reason.dart';
 
 /// オーナーの仕事。資金と2つの期待を動かす手を、分野ごとに並べる。
 /// 広報・ファンの手は月に1回(どれか1つ)、ほかの手は1シーズンに1回。
@@ -167,10 +168,20 @@ class _WorkTile extends StatelessWidget {
     final can = game.canDoOwnerWork(work);
     // 額は5部の規模で書いてあり、今の部の規模に直して見せる(実際に動く額)。
     final funds = game.scaledMoney(work.funds);
+    // 押せない理由。済み・赤字のときだけ、はボタンの字に出ているので、
+    // 字が「実行」のまま灰色になる資金不足だけを下に出す。
+    final short = game.scaledMoney(work.cost) - (game.save?.budget ?? 0);
+    final String? blocked =
+        !can && !done && !(work.onlyInRed && (game.save?.budget ?? 0) >= 0)
+            ? (short > 0 ? fundsShortReason(short) : null)
+            : null;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+        Row(
           children: [
             Expanded(
               child: Column(
@@ -198,6 +209,7 @@ class _WorkTile extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             FilledButton(
+              key: ValueKey('owner-work-do-${work.id}'),
               onPressed: can
                   ? () async {
                       FeedbackService.tap();
@@ -218,6 +230,9 @@ class _WorkTile extends StatelessWidget {
                       ? Tr.pick('赤字のとき', 'When in the red')
                       : Tr.pick('実行', 'Do it')),
             ),
+          ],
+        ),
+            DisabledReason(blocked, alignEnd: true),
           ],
         ),
       ),
@@ -360,7 +375,14 @@ class _PromoCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
+                    // 資金が足りないときは、ボタンの下に足りない額を出す
+                    // (ボタンの字は費用のままで、なぜ灰色かが分からなかった)。
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                     FilledButton(
+                      key: ValueKey('promo-set-${p.id}'),
                       onPressed: game.scaledMoney(p.cost) > budget
                           ? null
                           : () => runUndoable(
@@ -379,6 +401,16 @@ class _PromoCard extends StatelessWidget {
                           : Tr.pick(
                               '決める(${formatMoney(game.scaledMoney(p.cost))})',
                               'Set (${formatMoney(game.scaledMoney(p.cost))})')),
+                    ),
+                        if (game.scaledMoney(p.cost) > budget)
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 200),
+                            child: DisabledReason(
+                                fundsShortReason(
+                                    game.scaledMoney(p.cost) - budget),
+                                alignEnd: true),
+                          ),
+                      ],
                     ),
                   ],
                 ),

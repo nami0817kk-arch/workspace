@@ -18,7 +18,9 @@ import 'match_screen.dart';
 String? advanceButtonLabel(GameState gs) {
   final stop = gs.nextStop;
   if (stop == null) return null;
-  final date = CalendarEngine.formatShortDate(stop.date);
+  final full = CalendarEngine.formatShortDate(stop.date);
+  // 英語は字が長いので、曜日を落として「31 Jul」だけにする(帯の幅に収める)。
+  final date = Tr.pick(full, full.substring(full.indexOf(' ') + 1));
   return switch (stop.kind) {
     DayEventKind.leagueMatch =>
       Tr.pick('次の試合へ $date', 'Next match • $date'),
@@ -28,7 +30,7 @@ String? advanceButtonLabel(GameState gs) {
       Tr.pick('${stop.buttonLabel}へ $date', '${stop.buttonLabel} • $date'),
     // 試合でない日(給料日・放映権・移籍の窓・契約の期日)は、その名前。
     _ => Tr.pick(
-        '${stop.buttonLabel}まで進む $date', 'Advance: ${stop.buttonLabel} • $date'),
+        '${stop.buttonLabel}まで進む $date', 'Skip to ${stop.buttonLabel} • $date'),
   };
 }
 

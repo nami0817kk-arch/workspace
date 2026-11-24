@@ -30,6 +30,7 @@ import '../widgets/season_tickets_card.dart';
 import '../logic/economy_scale.dart';
 import '../widgets/help_button.dart';
 import '../widgets/screen_bar.dart';
+import '../widgets/disabled_reason.dart';
 
 part 'club_screen_staff.dart';
 
@@ -536,6 +537,14 @@ class _UpgradeCard extends StatelessWidget {
                             'Upgrade for ${formatMoney(cost)}')),
               ),
             ),
+            // 工事中・最大はボタンの字で分かる。資金が足りないときだけ、字が
+            // 「…で増築」のまま灰色になるので、足りない額を下に出す。
+            if (!isMax && !building && !canAfford)
+              DisabledReason(
+                fundsShortReason(
+                    cost - (context.watch<GameState>().save?.budget ?? 0)),
+                key: const ValueKey('upgrade-blocked'),
+              ),
           ],
         ),
       ),
