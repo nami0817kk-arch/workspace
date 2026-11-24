@@ -383,7 +383,9 @@ extension GameTurn on Game {
     dirtyMonthly(N);
     rivalReturns(N);
     storyMonthly(N);
+    rivalScenes(N);
     localMonthly(N);
+    countryMonthly(N);
     crisisMonthly();
     if (noncomp != null && turn >= noncomp!.until) {
       noncomp = null;
@@ -576,13 +578,15 @@ extension GameTurn on Game {
         final my = biz.where((x) => x.ind == b.ind).firstOrNull;
         return my != null && my.war == 0 && !inAssoc(b.ind) && my.share >= (r.type == 'peer' ? .005 : .02);
       }).toList();
+      // 恨みが多いと仕掛けてきやすく、恩が多いと控える（張り合う段だけ。extras を切ると 1 をかけるだけ）
       if (warable.isNotEmpty &&
           rnd() <
               (r.type == 'peer'
-                  ? .06
-                  : r.type == 'zaibatsu'
-                      ? .017
-                      : .027)) {
+                      ? .06
+                      : r.type == 'zaibatsu'
+                          ? .017
+                          : .027) *
+                  tieMood(r)) {
         final b = pick(warable);
         final my = biz.firstWhere((x) => x.ind == b.ind);
         b.power *= 1.15;
@@ -621,7 +625,7 @@ extension GameTurn on Game {
         N(M('{0}の{1}が引退し、息子・娘の{2}が継ぎました。代替わりで隙ができています', [Nm(c.name), Nm(old), Nm(c.presName)]), 'big');
       }
       // 提携の申し出
-      if (c.rel > 25 && rnd() < .02) events.add(evAlliance(c));
+      if (c.rel > 25 && rnd() < .02 * tieWarm(r)) events.add(evAlliance(c));
     }
     // ファンドは株価が上がると売り抜ける
     for (final id in sh.riv.keys.toList()) {
@@ -1149,12 +1153,63 @@ extension GameTurn on Game {
     }
     if (t == 'frugal' && b.upkeep > 0) opts.add(Proposal(k: 'trim', w: 3, cost: 0, l: M('「{0}」の維持費を削りたい', [I(ind.id)]), d: M('維持費が2割減ります。現場は少し弱ります')));
     if (p.partner) opts.add(Proposal(k: 'newbiz', w: 2, cost: 0, l: M('新しい事業を始めたい'), d: M('自分で立ち上げて、責任者をやります')));
-    // 提案の種類は増やしていない（1.0.0+18 で試して見送った）。中盤の経営会議は提案の半分が「店・工場を増やしたい」
-    // （10〜30年目・3本で 51件中25件）なので、画面にある手から「広告を打ちたい」「海外に出したい」を足す形を試したが、
-    // ・海外（どの国にも）: 単位の手の自動プレイで、30年後の事業の力の中央値が 7.3兆→18〜19.9兆 に跳ねる
+    // 提案の種類を足した（1.0.0+19）。中盤の経営会議は提案の半分が「店・工場を増やしたい」（10〜30年目・3本で 51件中25件）だった。
+    // 1.0.0+18 で試したときの経緯:
+    // ・海外（どの国にも）: 単位の手の自動プレイで、30年後の事業の力の中央値が 7.3兆→18〜19.9兆 に跳ねる → 強すぎるので入れない
     // ・海外（自国だけの事業の最初の1か国だけ）・広告: 単位の手の力は変わらない（7.0〜9.0兆）が、乱数の流れが変わって、
-    //   自動プレイの中央値で測っている線（test/fixed_price_test.dart「自動プレイの比べ」・test/polish3_test.dart「難しさ」）のどちらかを外れる
-    // ので、線を引き直す判断が要る。ここは前のまま
+    //   自動プレイの中央値で測っている線（test/fixed_price_test.dart「自動プレイの比べ」・test/polish3_test.dart「難しさ」）のどちらかを外れた
+    // 今回は強すぎない方（最初の1か国だけ）で入れた。国ごとの事件・宿敵の場面と合わせて測ると、2本の線はどちらも引き直さずに通った
+    // （単位の手の順位の中央値 132位→155位・事業の力 7.28兆→6.09兆、難しさ ふつう 123位→179位。前後の数字は、それぞれのテストの注釈にある）。
+    // どれも画面にある手と同じ値段・同じ効き目で、手を使わないだけ
+    // 広告（打っていないとき）
+    final adC = invBase(b) * .25;
+    if (b.ad == 0 && adC <= cash) {
+      opts.add(Proposal(k: 'ad', w: t == 'charm' ? 2 : 1, cost: adC, l: M('「{0}」で広告を打ちたい', [I(ind.id)]), d: M('6か月のあいだ客が増えます。終われば元に戻ります')));
+    }
+    // 海外（始めた国だけの事業の、最初の1か国だけ。払える中で市場がいちばん大きい国）
+    if (ctryOf(b).length == 1 && ctryOf(b).first == home && !b.pipe.any((x) => x.k == 'enter')) {
+      String? modeOf(String c) {
+        final ms = entryModes(b, c);
+        return ms.contains('solo') ? 'solo' : ms.firstOrNull;
+      }
+
+      final cs = CTRY.where((x) => x.c != home && modeOf(x.c) != null && !hasLocal(x.c, b.ind) && entryCost(b, x.c, modeOf(x.c)!) <= cash).toList()
+        ..ssort((p, q) => cw(q.c, yr()).compareTo(cw(p.c, yr())));
+      if (cs.isNotEmpty) {
+        final c = cs.first.c;
+        opts.add(Proposal(
+            k: 'abroad',
+            w: 2,
+            cost: entryCost(b, c, modeOf(c)!),
+            l: M('「{0}」を{1}に出したい', [I(ind.id), C(c)]),
+            d: M('初めての海外です。{0}で、準備に何か月かかかります', [D(ENTRYN.ja[modeOf(c)!]!)]))
+          ..c = c
+          ..mode = modeOf(c));
+      }
+    }
+    // 値付けの見直し（値下げを続けて客が付いたら戻す・客をしっかりつかんでいるなら高くする）
+    if (b.price == 'cut' && b.war == 0 && b.share >= .12 && t != 'gambler') {
+      opts.add(Proposal(k: 'price', w: 2, cost: 0, l: M('「{0}」の値下げをやめたい', [I(ind.id)]), d: M('客は付きました。値段をふつうに戻して利益を取ります'))..ind = 'normal');
+    } else if (b.price == 'normal' && b.share >= .2 && (t == 'careful' || t == 'frugal' || t == 'tech')) {
+      opts.add(Proposal(k: 'price', w: 1, cost: 0, l: M('「{0}」の値段を高くしたい', [I(ind.id)]), d: M('利益は厚くなりますが、客は少し減ります'))..ind = 'premium');
+    }
+    // 稼ぎ方の変更（3年たっても直営のままで、ほかの稼ぎ方ができる業種）
+    final alt = modelsFor(ind.id).where((m) => m != b.model).toList();
+    if (b.model == 'direct' && b.age >= 36 && alt.isNotEmpty && (t == 'genius' || t == 'gambler' || p.amb > 70)) {
+      final m = alt.first;
+      opts.add(Proposal(k: 'model', w: 1, cost: 0, l: M('「{0}」を{1}に切り替えたい', [I(ind.id), D(MODELN.ja[m]!)]), d: M('切り替えの混乱で、力が1割5分落ちます。{0}', [D(MODELD.ja[m]!)]))
+        ..ind = m);
+    }
+    // 撤退（3年たっても赤字で、シェアも小さい）
+    if (b.profit < 0 && b.age >= 36 && b.share < .03 && biz.length > 1 && b.pipe.isEmpty) {
+      opts.add(Proposal(k: 'exit', w: 3, cost: 0, l: M('「{0}」から手を引きたい', [I(ind.id)]), d: M('3年たっても赤字です。{0}で売って、ほかに回しましょう', [Y(sellValue(b))])));
+    }
+    // 社風（長く勤めた人が、自分に合う社風を言い出す。10年に一度まで）
+    final cu = GameActions._cultOfTrait(t);
+    if (cultLeft == 0 && cu != culture && p.tenure >= 36 && turn - (crisis['pc'] ?? -999) >= 120) {
+      opts.add(Proposal(k: 'culture', w: 1, cost: 0, l: M('社風を「{0}」に変えたい', [D(CULT[cu]!.nJa)]), d: M('変わるまで2年かかり、その間は人が辞めやすくなります。{0}', [D(CULT[cu]!.gJa)]))
+        ..ind = cu);
+    }
     if (opts.isEmpty) return null;
     final tot = opts.fold(0, (s, o) => s + o.w);
     var r = rnd() * tot;
@@ -1203,6 +1258,30 @@ extension GameTurn on Game {
     } else if (o.k == 'trim') {
       b.upkeep *= .8;
       b.crew = crewOf(b) * .93;
+    } else if (o.k == 'ad') {
+      cash -= o.cost;
+      b.ad = 6;
+      b.adCost = 0;
+    } else if (o.k == 'abroad') {
+      final c = o.c!, mode = o.mode!;
+      if (ctryOf(b).contains(c) || b.pipe.any((x) => x.k == 'enter') || !entryModes(b, c).contains(mode)) return M('その提案はもう意味がなくなっていました');
+      cash -= o.cost;
+      b.pipe.add(Pipe(k: 'enter', c: c, mode: mode, cost: o.cost, pw: o.cost * 1.1 + b.power * cw(c, yr()) / reachOf(b) * .5, left: mode == 'jv' ? 3 : 6));
+    } else if (o.k == 'price') {
+      b.price = o.ind!;
+    } else if (o.k == 'model') {
+      if (b.model == o.ind) return M('その提案はもう意味がなくなっていました');
+      b.model = o.ind!;
+      b.power *= .85;
+    } else if (o.k == 'exit') {
+      if (biz.length < 2) return M('その提案はもう意味がなくなっていました');
+      cash += sellValue(b);
+      biz.remove(b);
+    } else if (o.k == 'culture') {
+      if (cultLeft > 0 || culture == o.ind) return M('その提案はもう意味がなくなっていました');
+      cultNext = o.ind;
+      cultLeft = 24;
+      crisis['pc'] = turn;
     } else if (o.k == 'newbiz') {
       if (biz.any((x) => x.ind == o.ind)) return M('その業種にはもう入っていました');
       cash -= o.cost;

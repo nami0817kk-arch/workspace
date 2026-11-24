@@ -77,6 +77,8 @@ void main() {
 
     for (final lang in const ['ja', 'en']) {
       testWidgets('幅320でも名前と札が折り返して並び、子会社を売るのは確認を挟む（$lang）', (tester) async {
+        // 本物のフォントで測る（テスト用のフォントは1字が字の大きさの正方形で、英語の「Local sub (South Africa)」のような長い札が、本物では収まるのに折れる）
+        await loadRealFonts();
         final g = _grown();
         final p = await Pilot.launch(tester, lang: lang, size: const Size(320, 844), game: g);
         final loc = g.locals().first;
@@ -301,7 +303,8 @@ void main() {
       expect(st.sameAdvicePct, lessThan(30));
       expect(st.longestSame, lessThan(12));
       expect(st.monoPct, lessThan(10));
-      // 月の進み方（乱数の流れ・出来事・提案）は 1.0.0+17 のまま（手元の実測: 3本で544か月・何も起きない月142・経営会議の提案51件のうち店・工場25件）
+      // 1.0.0+18 までは月の進み方（乱数の流れ・出来事・提案）は 1.0.0+17 のまま（3本で544か月・何も起きない月142・経営会議の提案51件のうち店・工場25件）。
+      // 1.0.0+19 で国ごとの事件・宿敵の場面・提案の種類を足した（数え方と前後の数字は test/improve_g_test.dart「中盤を数える」）
       expect(st.months, greaterThan(400));
     }, timeout: const Timeout(Duration(minutes: 5)));
 

@@ -295,13 +295,14 @@ void main() {
         final s = _mid();
         var n = 0;
         for (var i = 0; i < 600 && s.over == null; i++) {
+          n += s.events.where((e) => e.poach != null).length;
+          resolveEvents(s);
+          // 忠誠は、出来事を片付けたあとに固定する（1.0.0+19 から、国の事件や宿敵の場面の選び方で忠誠が動く）
           for (final x in s.staff) {
             x
               ..amb = 90
               ..loy = loy;
           }
-          n += s.events.where((e) => e.poach != null).length;
-          resolveEvents(s);
           s.nextQuarter();
         }
         return n;

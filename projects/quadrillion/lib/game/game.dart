@@ -23,6 +23,7 @@ part 'game_view.dart';
 part 'game_story.dart';
 part 'game_local.dart';
 part 'game_achieve.dart';
+part 'game_mid.dart';
 
 // ===== データ =====
 const double invEff = .9, newPow = 1.5, cpuReinv = .12;
@@ -153,9 +154,14 @@ class Proposal {
 
   /// 単位の商品の提案の大きさ（0 小さな改良・1 新商品・2 大型開発）
   int? sz;
+
+  /// 海外の提案の国と出方（1.0.0+19）
+  String? c, mode;
   Proposal({required this.k, required this.w, required this.cost, required this.l, required this.d});
   Proposal copy() => Proposal(k: k, w: w, cost: cost, l: l, d: d)
     ..ind = ind
+    ..c = c
+    ..mode = mode
     ..by = by
     ..bid = bid
     ..n = n
