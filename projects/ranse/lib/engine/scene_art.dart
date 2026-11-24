@@ -1,4 +1,5 @@
 import 'game.dart';
+import 'peace.dart';
 
 /// 岐路の場面に添える絵（Gemini で作ったドット絵、assets/images/scene_<名>.jpg）。
 /// 画面に依存しないよう、ここでは絵の名前だけを決める（パスは UI 側の `sceneArtPath`）。
@@ -18,6 +19,7 @@ const kSceneArts = <String>[
   'sea', // 漁村の浜（漁民）
   'smith', // 刀鍛冶の仕事場（職人）
   'mountain', // 炭焼きの山（山の民）
+  'town', // 泰平の世の城下町（1601年からの暮らし・銭の使い道）
 ];
 
 bool _any(String s, List<String> words) => words.any(s.contains);
@@ -40,6 +42,28 @@ String? sceneArtFor(Game g, String? id, String title) {
     return 'battle';
   }
   if (g.isChild) return 'child';
+  // 銭と功の使い道（spending.dart の sp_）と、泰平の世の町の暮らし（peace.dart・peace_life.dart）。
+  // 寺・田・奥など題で決まるものは、下の決まりに任せる。
+  if (i.startsWith('sp_')) return peaceTime(g) ? 'town' : 'market';
+  if ((i.startsWith('pc_') || i.startsWith('pl_')) &&
+      _any(t, [
+        '町',
+        '店',
+        '商',
+        '芝居',
+        '飛脚',
+        '相場',
+        '株',
+        '府',
+        '江戸',
+        '参勤',
+        '屋敷',
+        '普請',
+        '牢人',
+        '道場',
+      ])) {
+    return 'town';
+  }
   // 庶民の生業（craft_life.dart の cr_）。町人は市の絵。
   if (i.startsWith('cr_u_') || _any(t, ['浜', '網元', '寄り鯨', '塩浜', '沖'])) {
     return 'sea';
@@ -97,7 +121,7 @@ String? sceneArtFor(Game g, String? id, String title) {
   final l = g.l;
   if (g.hasFlag('priesthood')) return 'temple';
   if (g.hasFlag('way_outlaw') || g.hasFlag('nukenin')) return 'ninja';
-  if (g.hasFlag('way_merchant')) return 'market';
+  if (g.hasFlag('way_merchant')) return peaceTime(g) ? 'town' : 'market';
   if (l.rank >= 5) return 'council';
   if (l.female && l.rank >= 1) return 'oku';
   if (l.rank >= 1) return 'camp';
