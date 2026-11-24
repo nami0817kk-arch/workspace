@@ -6,7 +6,9 @@ import '../engine/birth.dart';
 import '../engine/data.dart';
 import '../engine/game.dart';
 import '../engine/history_lines.dart';
+import '../engine/history_shift.dart';
 import '../engine/peace.dart';
+import '../engine/play_views.dart';
 import '../engine/rng.dart';
 import '../engine/spending.dart';
 import 'end_screen.dart';
@@ -165,6 +167,10 @@ class _ChoiceTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
       children: [
+        if (g.historyShift case final s?) ...[
+          _HistoryShiftCard(g, s),
+          const SizedBox(height: 8),
+        ],
         if (p != null) ...[
           _RankTap(g, child: StandingStrip(g)),
           const SizedBox(height: 6),
@@ -236,10 +242,22 @@ class _PromptCard extends StatelessWidget {
     final twoCol = n >= kTwoColumnChoices;
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+      // 大きな分かれ道（`Prompt.major`）は、朱の太い枠にして題の上に印を出す。
       decoration: BoxDecoration(
         color: Pal.panel,
-        border: Border.all(color: Pal.gold),
+        border: Border.all(
+          color: p.major ? Pal.accent : Pal.gold,
+          width: p.major ? 2.2 : 1,
+        ),
         borderRadius: BorderRadius.circular(10),
+        boxShadow: p.major
+            ? [
+                BoxShadow(
+                  color: Pal.accent.withValues(alpha: .18),
+                  blurRadius: 10,
+                ),
+              ]
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,6 +301,7 @@ class _PromptCard extends StatelessWidget {
               ),
             const Divider(color: Pal.line, height: 12),
           ],
+          if (p.major) const _MajorMark(),
           // 場面の絵（Gemini で作ったドット絵）に題を重ねる。「この年の心がけ」には絵を添えない。
           if (p.art case final art?)
             _ArtBanner(art: art, title: p.title, cause: p.cause)
@@ -348,6 +367,117 @@ class _PromptCard extends StatelessWidget {
                 ),
               ),
         ],
+      ),
+    );
+  }
+}
+
+/// 大きな分かれ道の印（2026-11-25、`major_scenes.dart`）。数字は出さない。
+class _MajorMark extends StatelessWidget {
+  const _MajorMark();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          decoration: BoxDecoration(
+            color: Pal.accent,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: const Text(
+            '大きな分かれ道',
+            style: TextStyle(
+              color: Pal.onAccent,
+              fontSize: 12,
+              letterSpacing: 2,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        const Expanded(
+          child: Text(
+            'ここでの選択は、この先を大きく変えうる',
+            style: TextStyle(color: Pal.accent, fontSize: 11.5),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// 歴史が動いた知らせ（2026-11-25、`history_shift.dart`）。選んだ手で世が変わった直後に、岐路のタブの先頭に一度だけ出す。
+/// 窓で覆わず、選択肢も押せるままにする（次の手を選ぶか「心に留める」で消える）。
+class _HistoryShiftCard extends StatelessWidget {
+  const _HistoryShiftCard(this.g, this.s);
+  final Game g;
+  final HistoryShift s;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.easeOut,
+      builder: (context, t, child) => Opacity(opacity: t, child: child),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 6),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF3A2A1C), Color(0xFF241A12)],
+          ),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Pal.gold, width: 1.6),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '歴史が動いた',
+              style: TextStyle(
+                color: Color(0xFFE8C46A),
+                fontSize: 20,
+                letterSpacing: 6,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              s.title,
+              style: const TextStyle(
+                color: Color(0xFFFFF4DC),
+                fontSize: 15.5,
+                fontWeight: FontWeight.w700,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              s.text,
+              style: const TextStyle(
+                color: Color(0xFFEADFCB),
+                fontSize: 13.5,
+                height: 1.6,
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: g.dismissHistoryShift,
+                child: const Text(
+                  '心に留める',
+                  style: TextStyle(color: Color(0xFFE8C46A)),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -646,7 +776,8 @@ class _PersonTab extends StatelessWidget {
                         ? '${p.name}（故人）'
                         : (p.role == '伴侶' && !l.married
                               ? '${p.name}（いまは共にいない）'
-                              : '${p.name}（絆 ${p.bond}）'),
+                              // 絆は数字でなく言葉で（2026-11-25。`play_views.dart` の `bondWord`）。
+                              : '${p.name}（${bondWord(p.bond)}）'),
                   ),
               ],
             ),
@@ -763,15 +894,61 @@ class _WorldTab extends StatelessWidget {
   }
 }
 
-class _LogTab extends StatelessWidget {
+/// 見聞録。「すべて／自分のこと／世の動き／縁のある人」で絞り込める（2026-11-25。`play_views.dart` の `filterLog`）。
+class _LogTab extends StatefulWidget {
   const _LogTab(this.g);
   final Game g;
 
   @override
-  Widget build(BuildContext context) => ListView(
-    padding: _pad,
-    children: [Panel(title: '見聞録', child: LogList(g.l.log.take(80).toList()))],
-  );
+  State<_LogTab> createState() => _LogTabState();
+}
+
+class _LogTabState extends State<_LogTab> {
+  LogFilter filter = LogFilter.all;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = widget.g.l;
+    final rows = filterLog(filter, l.log, l).take(80).toList();
+    return ListView(
+      padding: _pad,
+      children: [
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            for (final f in LogFilter.values)
+              ChoiceChip(
+                key: ValueKey('log-filter-${f.name}'),
+                label: Text(f.label, style: const TextStyle(fontSize: 13)),
+                selected: filter == f,
+                showCheckmark: false,
+                selectedColor: Pal.accent.withValues(alpha: .14),
+                backgroundColor: Pal.panel,
+                side: BorderSide(color: filter == f ? Pal.accent : Pal.line),
+                labelStyle: TextStyle(
+                  color: filter == f ? Pal.accent : Pal.ink,
+                ),
+                visualDensity: VisualDensity.compact,
+                onSelected: (_) => setState(() => filter = f),
+              ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Panel(
+          title: '見聞録',
+          child: rows.isEmpty
+              ? Text(switch (filter) {
+                  LogFilter.people =>
+                    l.people.isEmpty ? 'まだ縁のある人がいない。' : '縁のある人の名が出る記録は、まだない。',
+                  LogFilter.world => '世の動きの記録は、まだない。',
+                  _ => 'まだ記録がない。',
+                }, style: const TextStyle(color: Pal.muted, height: 1.7))
+              : LogList(rows),
+        ),
+      ],
+    );
+  }
 }
 
 /// 家族の欄の一行（呼び名を左に、名・歳・行き先を右に。長ければ折り返す）。

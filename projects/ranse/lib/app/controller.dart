@@ -5,14 +5,17 @@ import 'package:flutter/foundation.dart';
 import '../engine/birth.dart';
 import '../engine/data.dart';
 import '../engine/game.dart';
+import '../engine/life_record.dart';
 import '../engine/rng.dart';
 import 'save.dart';
 
-enum AppScreen { title, birth, play, dex }
+enum AppScreen { title, birth, play, dex, guide, lives }
 
 /// 画面の切り替えと、保存・最高点の管理。
 class AppController extends ChangeNotifier {
-  AppController({SaveStore? store, Rng? rng})
+  /// [autoGuide] が真なら、初めて開いたとき（遊び方をまだ見ていなければ）に遊び方を一度だけ出す。
+  /// アプリ（`RanseApp` が自分で作るとき）だけ真。テストで作る既定は偽（既存の画面のテストを止めない）。
+  AppController({SaveStore? store, Rng? rng, this.autoGuide = false})
     : store = store ?? SaveStore(),
       rng = rng ?? Rng() {
     game = Game(
@@ -54,10 +57,46 @@ class AppController extends ChangeNotifier {
   bool _scored = false;
   Timer? _timer;
 
+  final bool autoGuide;
+  bool _guideChecked = false;
+
+  /// これまでの人生（新しい順）と、その件数。
+  List<LifeRecord> lives = [];
+  int lifeCount = 0;
+
   Future<void> init() async {
     hasSave = await store.hasSave();
     dexEntries = await store.dex();
     dexCount = dexEntries.length;
+    lives = await store.lives();
+    lifeCount = lives.length;
+    if (autoGuide && !_guideChecked) {
+      _guideChecked = true;
+      if (screen == AppScreen.title && !await store.guideSeen()) {
+        screen = AppScreen.guide;
+      }
+    }
+    notifyListeners();
+  }
+
+  /// 遊び方を開く（タイトルの「遊び方」から）。
+  void openGuide() {
+    screen = AppScreen.guide;
+    notifyListeners();
+  }
+
+  /// 遊び方を閉じてタイトルへ。一度見たことを残す。
+  void closeGuide() {
+    unawaited(store.markGuideSeen());
+    screen = AppScreen.title;
+    notifyListeners();
+  }
+
+  /// これまでの人生の一覧を開く。
+  Future<void> openLives() async {
+    lives = await store.lives();
+    lifeCount = lives.length;
+    screen = AppScreen.lives;
     notifyListeners();
   }
 
@@ -133,6 +172,15 @@ class AppController extends ChangeNotifier {
     unawaited(store.save(g));
     if (g.finished && !_scored) {
       _scored = true;
+      // これまでの人生に一件記す（図鑑と同じ区切りで、終わった人生ごとに一度だけ）。
+      // 保存を読むあいだに次の人生が始まることがあるので、記録は先にここで作る。
+      final rec = LifeRecord.of(g);
+      unawaited(
+        store.recordLife(rec).then((n) {
+          lifeCount = n;
+          notifyListeners();
+        }),
+      );
       unawaited(
         store.recordEnding(g).then((isNew) {
           newEnding = isNew;
