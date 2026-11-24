@@ -90,6 +90,10 @@ FACE_SHEETS = [
     # 14枚目とほぼ同じ顔（15-01・15-02）と、髪に網の模様が出たもの（15-09）も外した
     ('faces_sheet14.png', None, [i for i in range(24) if i != 18]),
     ('faces_sheet15.png', None, [i for i in range(24) if i not in (1, 2, 9)]),
+    # 16・17枚目：同じ日に「個性的な見た目も増やして」。そばかす・ほくろ・絆創膏・眉の切り込み・八重歯・瞳の色・バンダナ・一房だけ色の違う前髪など。
+    # 外したもの：髪に網の模様（16-05）、とがった耳（16-13）、肩までの長い髪で女の子に見える顔（17-04）
+    ('faces_sheet16.png', None, [i for i in range(24) if i not in (5, 13)]),
+    ('faces_sheet17.png', None, [i for i in range(24) if i != 4]),
 ]
 
 
