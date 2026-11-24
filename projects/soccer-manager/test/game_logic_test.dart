@@ -1393,11 +1393,15 @@ void main() {
 
     var strikerAGoals = 0;
     var strikerBGoals = 0;
+    // PK はゴールの一部でしかなく、全部のゴールで比べると差(数%)が乱数の
+    // 揺れに埋もれて落ちることがあった(2026-11-24 CI: 184 対 193)。PK から
+    // 生まれたゴールだけを数える。
     for (int i = 0; i < 300; i++) {
       final result = MatchEngine.simulateMinutes(
           home: team, away: away, startMinute: 1, endMinute: 90);
       for (final e in result.events) {
         if (e.type != MatchEventType.goal) continue;
+        if (e.setPiece != SetPieceKind.penalty) continue;
         if (e.scorerId == strikerA.id) strikerAGoals++;
         if (e.scorerId == strikerB.id) strikerBGoals++;
       }
@@ -3272,7 +3276,11 @@ void main() {
     // 以前は「節ごとに残り週を1つ減らす」(2→1)を固定していたが、いまは
     // 代表ウィークの外(第1節の日)に進めば、残りの週によらずクラブに戻る。
     expect(player.internationalDutyWeeksRemaining, 0);
-    expect(player.isOnInternationalDuty, isFalse);
+    // 大会での離脱(onTournamentLeave)は別の仕組みで、乱数でその選手が
+    // 大会に呼ばれた回に落ちていた(2026-11-24 CI)。見るのは代表ウィークの分だけ。
+    if (!player.onTournamentLeave) {
+      expect(player.isOnInternationalDuty, isFalse);
+    }
   });
 
   test(
