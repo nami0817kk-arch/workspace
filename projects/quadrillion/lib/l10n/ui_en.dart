@@ -62,6 +62,7 @@ const Map<String, String> uiEn = {
   '図鑑@@tab': 'Codex',
   '{0}・{1}歳{2}': '{0}, {1}{2}',
   '（{0}代目）': ' (gen {0})',
+  '{0}代目': 'Gen {0}',
   '遊び方': 'How to Play',
   '設定': 'Settings',
   '現金 ': 'Cash ',
