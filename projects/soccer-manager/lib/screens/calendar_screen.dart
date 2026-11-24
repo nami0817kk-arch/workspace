@@ -739,33 +739,30 @@ class _DayList extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: [
-                    m.competitionName,
-                    if (e.matchday != null)
-                      Tr.pick('第${e.matchday}節', 'MD ${e.matchday}'),
-                    sideWord,
-                  ].join(Tr.pick('・', ' • ')),
-                  style: TextStyle(
-                    color: _competitionColor(context, comp!, min: 4.5),
-                  ),
-                ),
-                if (result != null)
-                  TextSpan(
-                    text: '  ${result.$1}',
-                    style: TextStyle(
-                      color: result.$2,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              ],
+          // 結果は1行に分けて、必ず読めるように(大会名の後ろに続けると、
+          // 狭い列では「勝 …」と切れていた)。
+          if (result != null)
+            Text(
+              result.$1,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: result.$2,
+              ),
             ),
+          Text(
+            [
+              m.competitionName,
+              if (e.matchday != null)
+                Tr.pick('第${e.matchday}節', 'MD ${e.matchday}'),
+              sideWord,
+            ].join(Tr.pick('・', ' • ')),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 11.5),
+            style: TextStyle(
+              fontSize: 11.5,
+              color: _competitionColor(context, comp!, min: 4.5),
+            ),
           ),
         ],
       );
@@ -809,7 +806,8 @@ class _DayList extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           SizedBox(
-            width: 62,
+            // 英語の「Sat 15 Aug」は日本語の「8/15(土)」より長い。
+            width: Tr.isEnglish ? 76 : 62,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
