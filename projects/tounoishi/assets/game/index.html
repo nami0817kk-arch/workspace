@@ -181,7 +181,7 @@ canvas{-webkit-user-select:none;user-select:none}
 </div>
 </div></div>
 <div class="wrap">
-<h1><span>塔の意志 <small id="ver">試作 v62</small></span><button class="snd" id="bsnd">音 ON</button></h1>
+<h1><span>塔の意志 <small id="ver">試作 v63</small></span><button class="snd" id="bsnd">音 ON</button></h1>
 <div class="bar">
  <div class="stat">波<b id="wave">-</b></div>
  <div class="stat">次の波<b id="cd">-</b></div>
@@ -699,10 +699,11 @@ var SUMG={none:{1:['purupuru','ant','wisp','mush','magma','pixie']},
  ho:{2:['frost','shidemushi'],3:['kame','gargoyle'],4:['golem']},
  bo:{2:['hachi'],3:['bat','fukurou'],4:['umihebi']}};
 var SUM_K=2,SUM_SOUL=3,SUM_SOUL2=4,ALT_MAX=4,ALT_DP=20;
-function sumK(){return SUM_K*(1+0.2*((g.round||1)-1));}
+function sumLv(){return (g.round||1)+(g.party&&g.st?(g.st-1)*0.7:0);}
+function sumK(){return SUM_K*(1+0.2*(sumLv()-1));}
 function sumGroupOf(sp){var r=null;Object.keys(SUMG).forEach(function(k){Object.keys(SUMG[k]).forEach(function(t){if(SUMG[k][t].indexOf(sp)>=0)r=k;});});return r;}
 function sumHint(k){var gk=sumGroupOf(k);if(!gk)return SPEC[k].line=='sp'?'特別な種':'配合で出会える';return gk=='none'?'供物なしの召喚で呼べる':'供物「'+LOOT[gk].n+'」で呼べる';}
-function sumTier(){var r=g.round||1,p4=Math.min(0.35,0.05+0.05*(r-1)),p3=Math.min(0.55,0.3+0.1*(r-1)),q=Math.random();return q<p4?4:q<p4+p3?3:2;}
+function sumTier(){var r=sumLv(),p4=Math.min(0.35,0.05+0.05*(r-1)),p3=Math.min(0.55,0.3+0.1*(r-1)),q=Math.random();return q<p4?4:q<p4+p3?3:2;}
 function sumPick(k){var G=SUMG[k];if(k=='none'){if(Math.random()<0.35)return G[1][rnd(G[1].length)];var ks=['sw','st','ho','bo'],q=SUMG[ks[rnd(4)]][2];return q[rnd(q.length)];}var t=sumTier();while(t>2&&!G[t])t--;var L=G[t];return L[rnd(L.length)];}
 function altInit(){g.alt=[];altAdd(g.core.f);}
 function altAdd(f){var p=cmdBoneSpot(f);if(!p)return null;var C=g.core;var a={f:f,x:p[0],y:p[1]};g.alt.push(a);return a;}
@@ -1418,16 +1419,16 @@ function alertBadge(){
 document.getElementById('alertb').onclick=function(){var f=+this.dataset.f;if(f>=0){g.view=f;ui();draw();}};
 function saveLabel(k){try{var o=JSON.parse(kvGet(k||'tou-save')),q=o.g;if(q.mode=='story'||q.mode=='ura')return (q.mode=='ura'?'裏ストーリー':'ストーリー')+' 第'+q.st+'面';if(q.mode=='vs')return 'VS';return (DIFF[q.diff||'normal'].n)+'の塔 · '+o.F+'階 · '+q.round+'周目';}catch(_){return '';}}
 function showTitle(){
- var el=document.getElementById('title'),has=!!kvGet('tou-save'),hasM=false,b=bests();
+ var el=document.getElementById('title'),has=!!kvGet('tou-save'),hasM=!!kvGet('tou-save-m')&&(function(){try{var o=JSON.parse(kvGet('tou-save-m'));return o&&o.g&&o.g.alt;}catch(_){return false;}})(),b=bests();
  el.innerHTML='<div class="tbox"><h2>塔の意志</h2><p class="sub">迷宮を掘り、モンスターを呼んで配合し、塔のコアを守ろう。</p>'+
   (has?'<button class="btn go" id="tcont">続きから<small style="color:inherit;opacity:.85">'+saveLabel()+'</small></button>':'')+(hasM?'<button class="btn'+(has?'':' go')+'" id="tcontm">続きから<small style="color:inherit;opacity:.85">'+saveLabel('tou-save-m')+'</small></button>':'')+
   '<p class="lbl">新しい塔を始める</p><div class="drow">'+Object.keys(DIFF).map(function(k){return '<button class="btn" data-d="'+k+'">'+DIFF[k].n+'<small>'+(b[k]?'最高 '+b[k].toLocaleString():'記録なし')+'</small></button>';}).join('')+'</div>'+'<button class="btn" id="tshelf">記憶の棚<small>塔の記憶 '+meta().pts+' · '+shelfDone()+'段</small></button>'+
-  '<p class="lbl">ほかに</p><div class="row2"><button class="btn" id="tchal">チャレンジ<small>'+Object.keys(chalDone()).length+'/'+CHALS.length+' クリア</small></button><button class="btn" id="tdex">図鑑<small>'+DEXORD.filter(function(k){return DEX[k]&&DEX[k].seen;}).length+'/'+DEXORD.length+'</small></button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><p class="links" style="margin-top:-4px;opacity:.75">© 2026 つるはし社</p><div class="tshop" id="tshop"></div></div>';
+  '<p class="lbl">ほかの遊び方</p><div class="row2"><button class="btn" id="tstory">ストーリー<small>'+rankSummary('story')+'</small></button>'+(storyDone()?'<button class="btn" id="tura">裏ストーリー<small>手ごわい8面</small></button>':'<button class="btn" disabled>裏ストーリー<small>ストーリーを全部クリアで</small></button>')+'</div><div class="row2"><button class="btn" id="tchal">チャレンジ<small>'+Object.keys(chalDone()).length+'/'+CHALS.length+' クリア</small></button><button class="btn" id="tdex">図鑑<small>'+DEXORD.filter(function(k){return DEX[k]&&DEX[k].seen;}).length+'/'+DEXORD.length+'</small></button></div><p class="links"><a href="https://tounoishi.pages.dev/privacy.html" target="_blank" rel="noopener">プライバシーポリシー</a> · <a href="https://tounoishi.pages.dev/support.html" target="_blank" rel="noopener">サポート・広告の報告</a> · <a href="https://tounoishi.pages.dev/terms.html" target="_blank" rel="noopener">利用規約</a></p><p class="links" style="margin-top:-4px;opacity:.75">© 2026 つるはし社</p><div class="tshop" id="tshop"></div></div>';
  el.hidden=false;renderShop();
  if(has)document.getElementById('tcont').onclick=function(){if(!loadGame())showTitle();};
  if(hasM)document.getElementById('tcontm').onclick=function(){if(!loadGame('tou-save-m'))showTitle();};
  el.querySelectorAll('[data-d]').forEach(function(bt){bt.onclick=function(){if(has)kvSet('tou-save',null);newGame(bt.getAttribute('data-d'));applyMeta();hideTitle();};});
- document.getElementById('tdex').onclick=showDex;document.getElementById('tshelf').onclick=showShelf;document.getElementById('tchal').onclick=showChals;
+ document.getElementById('tdex').onclick=showDex;document.getElementById('tshelf').onclick=showShelf;document.getElementById('tchal').onclick=showChals;document.getElementById('tstory').onclick=function(){storyMenu('story');};var tu2=document.getElementById('tura');if(tu2)tu2.onclick=function(){storyMenu('ura');};
 }
 function hideTitle(){document.getElementById('title').hidden=true;appPrep();}
 
@@ -1990,7 +1991,7 @@ function ui(){
  document.getElementById('cd').textContent=g.wave<nW()?Math.ceil(g.cd)+' 秒'+(speed==0&&!over?' ⏸':''):(g.en.length?'迎撃中':'-');
  var cte=document.getElementById('core'),ctt=Math.ceil(g.core.hp||0)+' / '+Math.round(g.core.mhp||0);if(cte.textContent!=ctt)cte.textContent=ctt;cte.classList.toggle('low',(g.core.hp||0)<(g.core.mhp||1)*0.5);
  document.getElementById('msg').textContent=g.msg;
- document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v62 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
+ document.getElementById('ver').textContent=(inApp()||window.__shot?'':'試作 v63 · ')+'塔'+F+'階 · '+g.round+'周目 · '+phase();
  if(g.party&&g.wave==0)document.getElementById('wave').textContent=(g.mode=='vs'?'VS':(g.mode=='ura'?'裏':'')+g.st+'面');
  if(g.chal){document.getElementById('cd').textContent='残り '+Math.max(0,Math.ceil(CHALS[g.chal.i].lim-g.t))+' 秒';document.getElementById('wave').textContent=CHALS[g.chal.i].pg();}
  var wl=document.getElementById('wave').parentNode.firstChild,wlt=g.chal?'目標':'波';if(wl.nodeValue!=wlt)wl.nodeValue=wlt;
@@ -2125,15 +2126,15 @@ var STORY=[
  {t:75,dp:60,party:[{k:'kis',nm:'エルド',lv:46,ti:'伝承の勇者',skl:['fire','warcry','hpget'],boss:1,line:'この塔、見せてもらおう'}]}
 ];
 // 面が始まるときに、ある階のまだ掘っていない土の一部が別の層の土に変わる
-function applyLand(st){var L=STORY[st-1]&&STORY[st-1].land;if(!L||L.f>=F)return 0;var n=0;
+function applyLand(st){return 0;var L=STORY[st-1]&&STORY[st-1].land;if(!L||L.f>=F)return 0;var n=0;
  for(var y=0;y<N;y++)for(var x=0;x<N;x++){var c=cellAt(L.f,x,y);if(!c||c.open||bedrock(L.f,x,y))continue;if(hs(x>>1,y>>1,st*7+L.f)<0.55){c.env=L.env;n++;if(!c.nut&&!c.mag&&Math.random()<0.15)c.nut=1+rnd(6);}}
  TK.key='';return n;}
-function landNote(st){var L=STORY[st-1]&&STORY[st-1].land;if(!L||L.f>=F)return '';return (L.f+1)+'階のまだ掘っていない土の一部が、'+ENV[L.env].n+'の層に変わった。'+ENV[L.env].n+'の層では、ほかでは生まれない種が生まれる。';}
-function storyDone(){return kvGet('tou-story')=='1';}
+function landNote(st){return '';var L=STORY[st-1]&&STORY[st-1].land;if(!L||L.f>=F)return '';return (L.f+1)+'階のまだ掘っていない土の一部が、'+ENV[L.env].n+'の層に変わった。'+ENV[L.env].n+'の層では、ほかでは生まれない種が生まれる。';}
+function storyDone(){return kvGet('tou-story2')=='1';}
 function partyOf(st,mode){var P=STORY[st-1].party.map(function(p){var q=JSON.parse(JSON.stringify(p));if(mode=='ura'){q.lv=Math.round(q.lv*1.3)+4;q.ura=1;}return q;});
  if(mode=='ura')while(P.length<3)P.push({k:['tou','mah','sou'][P.length],nm:['ジル','ノア','キキ'][P.length],lv:P[0].lv,ti:'助っ人',skl:[]});return P;}
 function startStory(mode,st){
- st=st||1;newGame('normal');g.mode=mode;g.st=st;g.st0=st;g.party=partyOf(st,mode);g.cd=STORY[st-1].t;g.dp=STORY[st-1].dp+60*(st-1);g.stages=[];g.roundT0=g.t;g.armyStart=0;
+ st=st||1;newGame('normal');g.mode=mode;g.st=st;g.st0=st;g.party=partyOf(st,mode);g.cd=STORY[st-1].t;g.dp=STORY[st-1].dp+60*(st-1);g.stages=[];g.soul=10*(st-1);g.loot={sw:0,st:0,ho:0,bo:0};lootAdd(st-1);g.gift=stageGift(st);g.core.mhp=CORE_HP+80*(st-1);g.core.hp=g.core.mhp;g.roundT0=g.t;g.armyStart=0;
  for(var ls=1;ls<=st;ls++)applyLand(ls);
  stageIntro();say((mode=='ura'?'裏ストーリー':'ストーリー')+' 第'+st+'面。'+STORY[st-1].t+'秒後に冒険者が来る（「今すぐ迎える」で早めると得点が増える）。');ui();
 }
@@ -2143,11 +2144,11 @@ function storyMenu(mode){
  if(!top){startStory(mode,1);return;}
  var el=document.getElementById('title'),n=Math.min(8,top+1),h='';
  for(var i=1;i<=n;i++)h+='<button class="btn" data-st="'+i+'">第'+i+'面 '+STITLE[i-1]+(r[i]?' <span class="rank">'+r[i]+'</span>':'')+'</button>';
- el.innerHTML='<div class="tbox"><h2>'+(mode=='ura'?'裏ストーリー':'ストーリー')+'</h2><p class="sub">クリアした面の次まで選べます。途中の面から始めると、塔は新しく掘り直し、掘る力を多めに渡します。</p><div class="chl">'+h+'</div><button class="btn go" id="tback">もどる</button></div>';
+ el.innerHTML='<div class="tbox"><h2>'+(mode=='ura'?'裏ストーリー':'ストーリー')+'</h2><p class="sub">クリアした面の次まで選べます。途中の面から始めると、塔は新しく掘り直し、掘る力と魂を多めに渡します。</p><div class="chl">'+h+'</div><button class="btn go" id="tback">もどる</button></div>';
  el.hidden=false;el.querySelectorAll('[data-st]').forEach(function(b){b.onclick=function(){startStory(mode,+b.getAttribute('data-st'));};});document.getElementById('tback').onclick=showTitle;
 }
 function applyParty(e,p){
- var M=p.boss?2.4:1,lk=1+p.lv/10,ak=1+p.lv/18;if(p.ura){lk*=1.5;ak*=1.3;}
+ var M=p.boss?1.8:1,lk=1+p.lv/10,ak=1+p.lv/18;if(p.ura){lk*=1.5;ak*=1.3;}
  e.nm=p.nm;e.lv=p.lv;e.title=p.ti;if(p.boss){e.spr='yuu';e.boss=1;}e.mhp=e.hp=EN[e.k].hp*lk*M*szH();e.atk=EN[e.k].atk*ak*M*szA();e.skl=(p.skl||[]).slice();e.mmp=e.mp=Math.round((MMP[e.k]||10)*(1+p.lv/15)*M);
  if(p.line)showBub(e,p.line);
  if(!g.msgLock)say(enFull(e)+'が入ってきた。');
@@ -2156,18 +2157,20 @@ function showBub(e,s2){g.bub.push({e:e,s:s2,until:performance.now()+3500});if(g.
 function stageScore(){var el=g.t-(g.roundT0||0),tb=Math.max(0,100*g.st+160-2*el);return Math.round(g.dp*10+armyPower()+tb*5);}
 function rankOf(sc,th){return sc>=th[0]?'S':sc>=th[1]?'A':sc>=th[2]?'B':sc>=th[3]?'C':'D';}
 function stageTh(st){return [1500+400*st,1000+300*st,600+200*st,300+100*st];}
+var SGIFT=[[24,1],[12,1],[14,2],[14,2],[18,2],[16,2],[22,3],[50,6]];
+function stageGift(st){var G=SGIFT[st-1]||[12,1];g.soul=(g.soul||0)+G[0];var got=lootAdd(G[1]);return '魂+'+G[0]+(got.length?'・供物（'+got.join('・')+'）':'');}
 var STITLE=['はじまりの一歩','力くらべ','ふたり旅','いのしし兄弟','三つの剣と杖','老いと恋','もう一度だけ','伝承の勇者'];
 function partyInfo(){var es=g.en.filter(function(e){return e.title;});if(es.length)return es.map(function(e){return '<div class="empty"><b style="color:var(--ink)">'+esc(e.nm)+'</b> '+(e.f+1)+'階 · 体力'+Math.max(0,Math.round(e.hp))+'/'+Math.round(e.mhp)+'</div>';}).join('');return '<div class="empty">'+g.party.map(function(p){return esc(p.nm);}).join('・')+(g.wave?'':'が'+Math.ceil(g.cd)+'秒後に来る')+'</div>';}
 var RORD='DCBAS';
-function ranks(){try{return JSON.parse(kvGet('tou-srank')||'{}')||{};}catch(_){return {};}}
+function ranks(){try{return JSON.parse(kvGet('tou-srank2')||'{}')||{};}catch(_){return {};}}
 function bestRank(m,st){var r=ranks()[m];return r&&r[st]||'';}
-function saveRank(m,st,rk){if(!rk||(m!='story'&&m!='ura'))return;var r=ranks();r[m]=r[m]||{};if(RORD.indexOf(rk)>RORD.indexOf(r[m][st]||'')){r[m][st]=rk;kvSet('tou-srank',JSON.stringify(r));}}
+function saveRank(m,st,rk){if(!rk||(m!='story'&&m!='ura'))return;var r=ranks();r[m]=r[m]||{};if(RORD.indexOf(rk)>RORD.indexOf(r[m][st]||'')){r[m][st]=rk;kvSet('tou-srank2',JSON.stringify(r));}}
 function rankSummary(m){var r=ranks()[m]||{},ks=Object.keys(r);if(!ks.length)return '全8面';var top=Math.max.apply(null,ks.map(Number)),ns=ks.filter(function(k){return r[k]=='S';}).length;return '第'+top+'面まで · S×'+ns;}
 function stageIntro(){
  var el=document.getElementById('title'),P=g.party;
  el.innerHTML='<div class="tbox"><h2><small>'+(g.mode=='ura'?'裏ストーリー ':'')+'第'+g.st+'面</small><br>'+STITLE[g.st-1]+'</h2>'+
   '<ul class="sc">'+P.map(function(p){return '<li><b>'+esc(p.nm)+'</b>（Lv'+(p.ura?Math.round(p.lv):p.lv)+'・'+esc(p.ti)+'）'+(p.skl&&p.skl.length?'<br><small>技：'+p.skl.map(function(k){return HSKN[k];}).join('・')+'</small>':'')+(p.line?'<br><small>「'+esc(p.line)+'」</small>':'')+'</li>';}).join('')+'</ul>'+
-  (bestRank(g.mode,g.st)?'<p class="sub">この面の最高ランク：<span class="rank">'+bestRank(g.mode,g.st)+'</span></p>':'')+(landNote(g.st)?'<p class="sub"><b>'+landNote(g.st)+'</b></p>':'')+'<p class="sub">'+Math.ceil(g.cd)+'秒後に入口から来る。掘る力は'+g.dp+'。準備の間は時間が止まっている。</p>'+
+  (bestRank(g.mode,g.st)?'<p class="sub">この面の最高ランク：<span class="rank">'+bestRank(g.mode,g.st)+'</span></p>':'')+(landNote(g.st)?'<p class="sub"><b>'+landNote(g.st)+'</b></p>':'')+'<p class="sub">'+Math.ceil(g.cd)+'秒後に入口から来る。掘る力は'+g.dp+'、魂は'+(g.soul||0)+'。'+(g.gift?'この面の手当て：'+esc(g.gift)+'。':'')+'準備の間は時間が止まっている。「コマンド」の召喚で守りを固めよう。</p>'+
   '<button class="btn go" id="tgo">準備を始める</button></div>';
  el.hidden=false;document.getElementById('tgo').onclick=function(){hideTitle();};
 }
@@ -2179,12 +2182,12 @@ function stageClear(){
  var D=DIFF.normal,dig=Math.floor(g.dp*0.2),ab=Math.min(60,Math.max(0,Math.round((armyPower()-(g.armyStart||0))*0.03))),tb=Math.max(0,Math.round(60-(g.t-(g.roundT0||0))/6)),nx=(STORY[g.st]?STORY[g.st].dp:0)+dig+ab+tb;
  var last=g.st>=8;
  el.innerHTML='<div class="tbox"><h2>第'+g.st+'面 クリア <span class="rank">'+rk+'</span></h2><p class="big">'+sc.toLocaleString()+' 点</p>'+
-  (last?'<p class="sub">'+(g.mode=='ura'?'裏ストーリー':'ストーリー')+'を全部クリアした！'+(totalRank()?' 総合ランク <span class="rank">'+totalRank()+'</span>':'（総合ランクは第1面から通したときに出ます）')+'</p>':'<ul class="sc"><li>次の掘る力：'+nx+'（基本'+(STORY[g.st].dp)+'＋残り×0.2='+dig+'＋軍の増加='+ab+'＋早さ='+tb+'）</li><li>次の面：'+STORY[g.st].party.length+'人・'+STORY[g.st].t+'秒後に来る</li></ul>')+
+  (last?'<p class="sub">'+(g.mode=='ura'?'裏ストーリー':'ストーリー')+'を全部クリアした！'+(totalRank()?' 総合ランク <span class="rank">'+totalRank()+'</span>':'（総合ランクは第1面から通したときに出ます）')+'</p>':'<ul class="sc"><li>次の掘る力：'+nx+'（基本'+(STORY[g.st].dp)+'＋残り×0.2='+dig+'＋軍の増加='+ab+'＋早さ='+tb+'）</li><li>次の面の手当て：魂+'+SGIFT[g.st][0]+'・供物'+SGIFT[g.st][1]+'つ。コアは全快</li><li>次の面：'+STORY[g.st].party.length+'人・'+STORY[g.st].t+'秒後に来る</li></ul>')+
   '<button class="btn go" id="tnext">'+(last?'タイトルへ':'第'+(g.st+1)+'面へ')+'</button></div>';
  el.hidden=false;
  document.getElementById('tnext').onclick=function(){
-  if(last){if(g.mode=='story')kvSet('tou-story','1');kvSet('tou-save-m',null);g.mode=null;g.winSave=0;showTitle();return;}
-  g.st++;g.party=partyOf(g.st,g.mode);g.wave=0;g.cd=STORY[g.st-1].t;g.dp=nx;g.done=false;g.winSave=0;over=false;g.spawnQ=[];var C=g.core;if(C.carrier||!C.home){C.carrier=null;C.home=true;C.dropT=0;C.f=F-1;C.x=C.hx==null?COREX:C.hx;C.y=C.hy==null?COREY:C.hy;}g.roundT0=g.t;g.armyStart=armyPower();applyLand(g.st);
+  if(last){if(g.mode=='story')kvSet('tou-story2','1');kvSet('tou-save-m',null);g.mode=null;g.winSave=0;showTitle();return;}
+  g.st++;g.party=partyOf(g.st,g.mode);g.wave=0;g.cd=STORY[g.st-1].t;g.dp=nx;g.gift=stageGift(g.st);g.core.mhp=CORE_HP+80*(g.st-1);g.core.hp=g.core.mhp;g.core.warned=0;g.done=false;g.winSave=0;over=false;g.spawnQ=[];var C=g.core;if(C.carrier||!C.home){C.carrier=null;C.home=true;C.dropT=0;C.f=F-1;C.x=C.hx==null?COREX:C.hx;C.y=C.hy==null?COREY:C.hy;}g.roundT0=g.t;g.armyStart=armyPower();applyLand(g.st);
   resetGo();stageIntro();say('第'+g.st+'面。'+g.cd+'秒後に'+g.party.length+'人が来る。掘った道もモンスターもそのまま。');ui();
  };
 }
@@ -2762,7 +2765,7 @@ document.getElementById('sp0').onclick=function(){setSpeed(0);};
 document.getElementById('sp1').onclick=function(){setSpeed(1);};
 document.getElementById('blight').onclick=coreLight;
 document.getElementById('sp2').onclick=function(){setSpeed(2);};
-window.__t={pop:openPop,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
+window.__t={pop:openPop,story:startStory,chal:startChal,chals:function(){return CHALS;},sumAt:summonAt,brDo:breedDo,boneGo:function(k,f){g.cmdBf=f;cmdBoneGo(k);},core:function(){return g.core;},cmd:function(){openSheet('cmd');},bone:boneAct,expChance:expChance,expBack:expBack,spName:spName,brdAdd:brdAdd,brd:function(){return BRD;},showDex:showDex,g:function(){return g;},step:function(d){step(d);},dig:digAt,promote:promote,hall:function(){return HALL;},PROMO:PROMO,view:function(f){g.view=f;},over:function(){return over;},launch:launch,reset:function(d){newGame(d||'normal');hideTitle();},save:saveGame,load:loadGame,dex:function(){return DEX;},cell:cellAt,grow:grow,F:function(){return F;},fx:function(){return fx.length;},tap:tapOpen,story:startStory,vs:startVs,stageClear:stageClear,train:train,carry:carryStep,rebirth:rebirth,army:armyPower,summon:summon,circles:function(){return g.circles;},chal:startChal,plant:plantStep,touches:touchesOpen,calm:calmTick,coreSay:coreSay,draw:function(){draw();},fxn:function(){return fx.length;},zoom:function(z,x,y){if(z===undefined)return [ZM,OX,OY];setZoom(z,x,y);},path:function(){return path;}};
 document.getElementById('bdex').onclick=function(){holdTime();showDex();};document.getElementById('bmenu').onclick=function(){saveGame();setSpeed(0);heldSpeed=0;g.title=true;showTitle();};
 newGame('normal');g.title=true;showTitle();draw();ui();requestAnimationFrame(function(t){last=t;requestAnimationFrame(loop);});
 })();

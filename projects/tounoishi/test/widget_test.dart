@@ -451,6 +451,22 @@ void main() {
     expect(html, contains('if(g.noSum){'));
   });
 
+  test('ストーリーを今の仕組みで作り直してタイトルに戻す（0.7.46・試作 v63）', () {
+    final html = File(gameAsset).readAsStringSync();
+    expect(html, contains('id="tstory"'));
+    // 面ごとの手当て（魂・供物）とコアの全快
+    expect(html, contains('var SGIFT=[[24,1],'));
+    expect(html, contains('function stageGift(st){'));
+    expect(html, contains('g.core.mhp=CORE_HP+80*(g.st-1);'));
+    // 面の土を別の層に変える仕組みは外した（生まれる種が変わらないため）
+    expect(html, contains('function applyLand(st){return 0;'));
+    // ストーリーでは面の進み具合で呼べる種が強くなる
+    expect(html, contains('function sumLv(){'));
+    // 記録は作り直した面で取り直す
+    expect(html, contains("kvGet('tou-srank2')"));
+    expect(html, contains("kvGet('tou-story2')"));
+  });
+
   test('法務ページへのリンクがあり、外のブラウザで開く', () {
     final html = File(gameAsset).readAsStringSync();
     // Apple 5.1.1: アプリの中からプライバシーポリシーとサポート（広告の報告）を開けること
