@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 /// 人の顔の絵（assets/faces/）と、その割り当て方（1.0.0+21。1.0.0+22 で160枚に増やした。
-/// 1.0.0+23 で、本人と絵の年の差を12歳までにし、見た目の地域と年を直した）。
+/// 1.0.0+23 で、本人と絵の年の差を12歳までにし、見た目の地域と年を直した。1.0.0+24 で220枚に増やした）。
 /// Flutter に依存しない。ゲームの乱数は使わず、名前と年齢と「すでに使われている顔」だけで決まる。
 library;
 
@@ -23,7 +23,7 @@ class FacePic {
   const FacePic(this.id, this.region, this.sex, this.age);
 }
 
-/// 顔の絵の一覧（素材の faces.json と同じ。全部で160枚）
+/// 顔の絵の一覧（素材の faces.json と同じ。ただし見た目に合わせて直した札はこちらが正。全部で220枚）
 const List<FacePic> FACES = [
   FacePic('ea_0', 'ea', 'm', 25), FacePic('ea_1', 'ea', 'm', 45), FacePic('ea_2', 'ea', 'm', 65),
   FacePic('ea_3', 'ea', 'f', 25), FacePic('ea_4', 'ea', 'f', 45), FacePic('ea_5', 'ea', 'f', 65),
@@ -86,6 +86,29 @@ const List<FacePic> FACES = [
   FacePic('af3_0', 'af', 'm', 32), FacePic('af3_1', 'af', 'm', 40), FacePic('af3_2', 'af', 'm', 46),
   FacePic('af3_3', 'af', 'm', 52), FacePic('af3_4', 'af', 'f', 33), FacePic('af3_5', 'af', 'f', 55),
   FacePic('af3_6', 'af', 'm', 58), FacePic('af3_7', 'af', 'f', 62),
+  // 1.0.0+24 で足した60枚（saf_0・sam_7・saf2_6 は素材から外した）。どの組も年齢の違う別の人の並び。
+  // 見た目に合わせて直した札: me4_0 はアフリカの女・mix4_6 は南アジアの男で42歳前後・sam_3 は50代・saf2_3 は白髪の無い30代後半
+  FacePic('saf_1', 'sa', 'f', 30), FacePic('saf_2', 'sa', 'f', 36), FacePic('saf_3', 'sa', 'f', 42),
+  FacePic('saf_4', 'sa', 'f', 50), FacePic('saf_5', 'sa', 'f', 55), FacePic('saf_6', 'sa', 'f', 60),
+  FacePic('saf_7', 'sa', 'f', 70), FacePic('saf_8', 'sa', 'f', 78),
+  FacePic('sam_0', 'sa', 'm', 24), FacePic('sam_1', 'sa', 'm', 31), FacePic('sam_2', 'sa', 'm', 37),
+  FacePic('sam_3', 'sa', 'm', 52), FacePic('sam_4', 'sa', 'm', 48), FacePic('sam_5', 'sa', 'm', 53),
+  FacePic('sam_6', 'sa', 'm', 60), FacePic('sam_8', 'sa', 'm', 75),
+  FacePic('saf2_0', 'sa', 'f', 32), FacePic('saf2_1', 'sa', 'f', 42), FacePic('saf2_2', 'sa', 'f', 52),
+  FacePic('saf2_3', 'sa', 'f', 38), FacePic('saf2_4', 'sa', 'f', 58), FacePic('saf2_5', 'sa', 'f', 61),
+  FacePic('saf2_7', 'sa', 'f', 72), FacePic('saf2_8', 'sa', 'f', 80),
+  FacePic('mix4_0', 'sa', 'm', 38), FacePic('mix4_1', 'sa', 'm', 55), FacePic('mix4_2', 'sa', 'm', 66),
+  FacePic('mix4_3', 'sea', 'f', 33), FacePic('mix4_4', 'sea', 'f', 57), FacePic('mix4_5', 'sea', 'f', 75),
+  FacePic('mix4_6', 'sa', 'm', 42), FacePic('mix4_7', 'sea', 'm', 75), FacePic('mix4_8', 'la', 'f', 53),
+  FacePic('la4_0', 'la', 'f', 23), FacePic('la4_1', 'la', 'f', 34), FacePic('la4_2', 'la', 'f', 47),
+  FacePic('la4_3', 'la', 'f', 58), FacePic('la4_4', 'la', 'f', 72), FacePic('la4_5', 'la', 'm', 28),
+  FacePic('la4_6', 'la', 'm', 37), FacePic('la4_7', 'la', 'm', 49), FacePic('la4_8', 'la', 'm', 75),
+  FacePic('aff_0', 'af', 'f', 24), FacePic('aff_1', 'af', 'f', 29), FacePic('aff_2', 'af', 'f', 36),
+  FacePic('aff_3', 'af', 'f', 43), FacePic('aff_4', 'af', 'f', 50), FacePic('aff_5', 'af', 'f', 57),
+  FacePic('aff_6', 'af', 'f', 66), FacePic('aff_7', 'af', 'f', 73), FacePic('aff_8', 'af', 'f', 82),
+  FacePic('me4_0', 'af', 'f', 25), FacePic('me4_1', 'me', 'f', 38), FacePic('me4_2', 'me', 'f', 50),
+  FacePic('me4_3', 'me', 'f', 62), FacePic('me4_4', 'me', 'f', 75), FacePic('me4_5', 'me', 'm', 28),
+  FacePic('me4_6', 'me', 'm', 47), FacePic('me4_7', 'me', 'm', 58), FacePic('me4_8', 'me', 'm', 78),
 ];
 
 final Map<String, FacePic> faceById = {for (final f in FACES) f.id: f};
@@ -248,7 +271,7 @@ double faceGapLimit(String region, String sex, num age) {
 }
 
 /// 年齢の違う別の人を並べた組（0→1→2 が同じ人ではない）
-const _ladderSets = {'eaf', 'eam', 'wef', 'wem', 'af3'};
+const _ladderSets = {'eaf', 'eam', 'wef', 'wem', 'af3', 'saf', 'sam', 'saf2', 'mix4', 'la4', 'aff', 'me4'};
 
 /// 同じ人が年代をまたいだときの続きの絵（同じ組の 0→1→2・3→4→5 は、同じ人が年をとった絵として描かれている）。
 /// 地域・性別が同じものだけ（we_4・we_5 は東アジアに直したので、we_3 の続きにはしない）
