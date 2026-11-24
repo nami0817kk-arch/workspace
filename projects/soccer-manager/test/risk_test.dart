@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/risk_engine.dart';
+import 'package:soccer_manager/models/community_activity.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/state/game_state.dart';
 
@@ -62,16 +63,20 @@ void main() {
       expect(await gs.depositReserveFund(-200), isFalse);
     });
 
-    test('地域貢献を上げるには費用が要り、最大で止まる', () async {
+    // 地域貢献は 2026-11-25 から、Lv ではなく季ごとに選ぶ活動。
+    test('地域活動は選ぶとその季の費用を払い、重ねて選べない', () async {
       final gs = GameState();
       await gs.startNewGame('テストFC');
       final save = gs.save!;
       save.budget = 100000;
-      for (var i = 0; i < RiskEngine.maxCommunityLevel; i++) {
-        expect(await gs.upgradeCommunity(), isTrue);
-      }
-      expect(save.communityLevel, RiskEngine.maxCommunityLevel);
-      expect(await gs.upgradeCommunity(), isFalse);
+      final cost = gs.communityCostOf(CommunityActivity.cleanup);
+      expect(await gs.startCommunityActivity(CommunityActivity.cleanup), isTrue);
+      expect(save.budget, 100000 - cost);
+      expect(save.communityLevel, CommunityActivity.cleanup.scandalCushion);
+      expect(
+          await gs.startCommunityActivity(CommunityActivity.cleanup), isFalse);
+      expect(await gs.stopCommunityActivity(CommunityActivity.cleanup), isTrue);
+      expect(save.communityLevel, 0);
     });
 
     test('出来事が起きると、基金から払われニュースに残る', () async {
@@ -93,16 +98,16 @@ void main() {
       gs.save!
         ..insured = true
         ..reserveFund = 300
-        ..communityLevel = 2;
+        ..communityActivities = [CommunityActivity.cleanup];
       final json = gs.save!.toJson();
       final back = SaveGame.fromJson(json);
       expect(back.insured, isTrue);
       expect(back.reserveFund, 300);
-      expect(back.communityLevel, 2);
+      expect(back.communityActivities, [CommunityActivity.cleanup]);
       json
         ..remove('insured')
         ..remove('reserveFund')
-        ..remove('communityLevel');
+        ..remove('communityActivities');
       final old = SaveGame.fromJson(json);
       expect(old.insured, isFalse);
       expect(old.reserveFund, 0);

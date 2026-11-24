@@ -20,6 +20,7 @@ import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 import '../logic/economy_scale.dart';
 import '../widgets/disabled_reason.dart';
+import '../widgets/youth_analytics_card.dart';
 
 /// 潜在能力と現在能力の差がこの値以上なら、伸びしろの大きい「有望株」として強調する。
 const int _wonderkidGap = 15;
@@ -36,8 +37,16 @@ extension on YouthSortOption {
       };
 }
 
+/// ユースの画面のどちらを出すか(2026-11-25 に2つに分けた)。
+/// [team] はユースチーム(アカデミー・U18/U21・昇格候補)、[intake] は
+/// 新人発掘(スカウト網の候補)。
+enum YouthSection { team, intake }
+
 class YouthScreen extends StatefulWidget {
-  const YouthScreen({super.key});
+  const YouthScreen({super.key, this.section});
+
+  /// null なら両方(ひとつの画面として開いたとき)。
+  final YouthSection? section;
 
   /// フィルタ・検索・並び替えを適用した選手リストを返す。UIから切り離してテスト可能にしてある。
   static List<Player> filterAndSort(
@@ -118,9 +127,65 @@ class _YouthScreenState extends State<YouthScreen> {
       sort: _sort,
     );
 
+    final showTeam = widget.section != YouthSection.intake;
+    final showIntake = widget.section != YouthSection.team;
+    final searchAndFilter = [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: TextField(
+          controller: _searchController,
+          onChanged: (v) => setState(() => _query = v),
+          decoration: InputDecoration(
+            hintText: Tr.pick('選手名で検索', 'Search by name'),
+            prefixIcon: const Icon(Icons.search),
+            isDense: true,
+            suffixIcon: _query.isEmpty
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.clear),
+                    tooltip: Tr.pick('検索をクリア', 'Clear the search'),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() => _query = '');
+                    },
+                  ),
+          ),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            Expanded(
+              child: PositionFilterBar(
+                value: _filter,
+                onChanged: (v) => setState(() => _filter = v),
+              ),
+            ),
+            PopupMenuButton<YouthSortOption>(
+              icon: const Icon(Icons.sort),
+              tooltip: Tr.pick('並び替え', 'Sort'),
+              initialValue: _sort,
+              onSelected: (v) => setState(() => _sort = v),
+              itemBuilder: (context) => [
+                for (final option in YouthSortOption.values)
+                  PopupMenuItem(value: option, child: Text(option.label)),
+              ],
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 8),
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(Tr.pick('ユース・新人発掘', 'Youth & intake')),
+        title: Text(switch (widget.section) {
+          YouthSection.team => Tr.pick('ユースチーム', 'Youth team'),
+          YouthSection.intake => Tr.pick('新人発掘', 'Talent scouting'),
+          null => Tr.pick('ユース・新人発掘', 'Youth & intake'),
+        }),
         leading: const BackButton(),
         actions: const [QuickAccessMenuButton()],
       ),
@@ -128,7 +193,11 @@ class _YouthScreenState extends State<YouthScreen> {
       body: ResponsiveBody(
         child: ListView(
           children: [
+            if (showTeam) ...[
             const _AcademyCard(),
+            // U18・U21 はスタッフのタブから移した(2026-11-25)。
+            const YouthSquadsCard(),
+            ],
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -146,7 +215,7 @@ class _YouthScreenState extends State<YouthScreen> {
                   Flexible(
                     child: Text(
                       Tr.pick(
-                          '昇格枠: ${save.youthProspects.length}/$maxProspects',
+                          '昇格候補の枠: ${save.youthProspects.length}/$maxProspects',
                           'Academy places: ${save.youthProspects.length}/$maxProspects'),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -154,6 +223,7 @@ class _YouthScreenState extends State<YouthScreen> {
                 ],
               ),
             ),
+            if (showIntake) ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -209,53 +279,7 @@ class _YouthScreenState extends State<YouthScreen> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (v) => setState(() => _query = v),
-                decoration: InputDecoration(
-                  hintText: Tr.pick('選手名で検索', 'Search by name'),
-                  prefixIcon: const Icon(Icons.search),
-                  isDense: true,
-                  suffixIcon: _query.isEmpty
-                      ? null
-                      : IconButton(
-                          icon: const Icon(Icons.clear),
-                          tooltip: Tr.pick('検索をクリア', 'Clear the search'),
-                          onPressed: () {
-                            _searchController.clear();
-                            setState(() => _query = '');
-                          },
-                        ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: PositionFilterBar(
-                      value: _filter,
-                      onChanged: (v) => setState(() => _filter = v),
-                    ),
-                  ),
-                  PopupMenuButton<YouthSortOption>(
-                    icon: const Icon(Icons.sort),
-                    tooltip: Tr.pick('並び替え', 'Sort'),
-                    initialValue: _sort,
-                    onSelected: (v) => setState(() => _sort = v),
-                    itemBuilder: (context) => [
-                      for (final option in YouthSortOption.values)
-                        PopupMenuItem(value: option, child: Text(option.label)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
+            ...searchAndFilter,
             if (candidates.isEmpty)
               Padding(
                 padding:
@@ -362,7 +386,9 @@ class _YouthScreenState extends State<YouthScreen> {
                     );
                   },
                 ),
-            const Divider(height: 32),
+            ],
+            if (showTeam) ...[
+            if (showIntake) const Divider(height: 32) else const SizedBox(height: 8),
             // 説明は「?」の中へ(2026-11-21)。
             Padding(
               padding: const EdgeInsets.only(left: 16, right: 4),
@@ -448,6 +474,8 @@ class _YouthScreenState extends State<YouthScreen> {
               ),
             ],
             const SizedBox(height: 8),
+            // 新人発掘を分けた画面では、検索と絞り込みを昇格候補の上に出す。
+            if (!showIntake) ...searchAndFilter,
             // スカッドが上限だと「昇格」が全員押せない。一覧の上に1回だけ出す。
             if (squadFull && prospects.isNotEmpty)
               Padding(
@@ -563,6 +591,7 @@ class _YouthScreenState extends State<YouthScreen> {
                     ),
                   ),
                 ),
+            ],
             const SizedBox(height: 16),
           ],
         ),

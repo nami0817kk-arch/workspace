@@ -68,7 +68,7 @@ void main() {
     return find.byType(Tab).hitTestable().evaluate().length;
   }
 
-  testWidgets('左メニューは8項目、タブは 0・0・3・4・3・3・3・2、合計18(選手に登録ルール・リーグに個人成績)', (tester) async {
+  testWidgets('左メニューは8項目、タブは 0・0・3・5・3・3・3・2、合計19(選手に登録ルール・リーグに個人成績・ユースを2つに)', (tester) async {
     await pumpShell(tester);
     final nav = shellNavOf(tester);
     expect(TodoMenu.values.length, 8);
@@ -76,7 +76,8 @@ void main() {
       TodoMenu.status: 0,
       TodoMenu.calendar: 0,
       TodoMenu.finance: 3,
-      TodoMenu.club: 4,
+      // ユースをユースチーム/新人発掘に分けた(2026-11-25)。
+      TodoMenu.club: 5,
       TodoMenu.squad: 3,
       TodoMenu.transfer: 3,
       TodoMenu.league: 3,
@@ -90,7 +91,7 @@ void main() {
       expect(n, want[menu], reason: '${menu.name} のタブの数');
       total += n;
     }
-    expect(total, 18);
+    expect(total, 19);
     expect(FinanceScreen.tabCount, 3);
     expect(TransferScreen.tabCount, 3);
   });
@@ -164,11 +165,15 @@ void main() {
           type(ClubLookCard),
           type(SeasonTicketsCard),
           type(CommunityCard),
-          key('community-upgrade'),
+          // 地域貢献は Lv ではなく季ごとの活動(2026-11-25)。
+          key('community-activities'),
           key('club-to-community-works'),
         ]
       ),
-      ('クラブ > ユース', TodoPlaces.clubYouth, null, [type(YouthScreen)]),
+      // ユースは2つに分けた(2026-11-25)。U18・U21 はユースチームへ。
+      ('クラブ > ユースチーム', TodoPlaces.clubYouth, null,
+          [type(YouthScreen), key('youth-squads-card')]),
+      ('クラブ > 新人発掘', TodoPlaces.clubIntake, null, [text('スカウト網')]),
       ('選手 > スカッド', TodoPlaces.squadList, null, [type(SquadScreen)]),
       (
         '選手 > 登録と契約',

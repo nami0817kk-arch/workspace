@@ -1788,6 +1788,8 @@ extension GameStateSeason on GameState {
     _applySteppedRaises();
     // 系列クラブの年会費。
     _rollAffiliate();
+    // 地域活動: 前の季の結果を残し、続ける活動の費用を払う。
+    _rollCommunity();
     // 袖・背中・練習着のスポンサーも1年進め、空いた枠に提示を出す。
     _rollSlotSponsors();
     // スポンサー契約(年単位)はシーズン境界で1年分消化する。
@@ -1809,15 +1811,37 @@ extension GameStateSeason on GameState {
 
     // スタッフの契約消化と、候補の入れ替え。良いスタッフはクラブの規模を
     // 見て来るかどうかを決めるので、昇格するほど顔ぶれが良くなる。
+    // 人事を任せていれば、満了する人の更新を先に判断させる。
+    _delegatedStaffRenewals();
+    // 部下(複数人雇える役職の2人目から)の契約も同じように進める。
+    for (final s in [
+      for (final role in StaffRole.values)
+        ...?_save!.infrastructure.assistants[role],
+    ]) {
+      s.contractYears -= 1;
+      if (s.contractYears <= 0) {
+        _save!.infrastructure.removeMember(s.id);
+        _logNews(
+          Tr.pick('${s.name}(${s.role.label})との契約が満了し、クラブを去りました。',
+              "${s.name}'s contract (${s.role.label}) has expired and he has left."),
+          context: Tr.pick('スタッフ', 'Staff'),
+        );
+      }
+    }
     for (final role in StaffRole.values) {
       final s = _save!.infrastructure.staffFor(role);
       if (s == null) continue;
       s.contractYears -= 1;
       if (s.contractYears <= 0) {
-        _save!.infrastructure.staff[role] = null;
+        // 部下がいれば、能力の高い人が主任に上がる。
+        _save!.infrastructure.removeMember(s.id);
         _logNews(
-          Tr.pick('${s.name}との契約が満了し、${role.label}が空席になりました。',
-              "${s.name}'s contract has expired, leaving the ${role.label} post vacant."),
+          _save!.infrastructure.staffFor(role) == null
+              ? Tr.pick('${s.name}との契約が満了し、${role.label}が空席になりました。',
+                  "${s.name}'s contract has expired, leaving the ${role.label} post vacant.")
+              : Tr.pick(
+                  '${s.name}との契約が満了しました。${role.label}の主任は${_save!.infrastructure.staffFor(role)!.name}が引き継ぎます。',
+                  "${s.name}'s contract has expired. ${_save!.infrastructure.staffFor(role)!.name} steps up to lead the ${role.label}s."),
           context: Tr.pick('スタッフ', 'Staff'),
         );
       }

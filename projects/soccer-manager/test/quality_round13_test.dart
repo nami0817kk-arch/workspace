@@ -165,8 +165,9 @@ void main() {
       game.save!.staffCandidates.clear();
       await pump(
           tester, game, settings, const ClubScreen(section: ClubSection.staff));
-      expect(find.widgetWithText(Chip, '攻撃'), findsNothing);
-      expect(find.widgetWithText(Chip, 'フィジカル'), findsOneWidget);
+      // スタッフは表になった(2026-11-25)。得意分野は名前の横の字。
+      expect(find.textContaining('攻撃', findRichText: true), findsNothing);
+      expect(find.textContaining('フィジカル', findRichText: true), findsOneWidget);
       await tester.pump(GameState.persistDebounce);
     });
   });
@@ -203,7 +204,8 @@ void main() {
             const ClubScreen(section: ClubSection.facilities));
         final cap = ClubInfrastructure.stadiumCapacity(
             game.save!.infrastructure.facilityLevel(FacilityType.stadium));
-        final label = Tr.isEnglish ? 'holds ' : 'いま: ';
+        // 施設は表になった(2026-11-25)。「いま」の欄は「12,000人入る」。
+        final label = Tr.isEnglish ? 'Holds ' : '人入る';
         final text = tester
             .widgetList<Text>(find.textContaining(label))
             .map((t) => t.data ?? '')

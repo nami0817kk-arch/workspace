@@ -31,7 +31,6 @@ import 'package:soccer_manager/widgets/fm_panel.dart';
 import 'package:soccer_manager/widgets/landscape_scale.dart';
 import 'package:soccer_manager/widgets/owner_event_card.dart';
 import 'package:soccer_manager/widgets/proposal_card.dart';
-import 'package:soccer_manager/widgets/season_tickets_card.dart';
 import 'package:soccer_manager/widgets/shell_nav.dart';
 import 'package:soccer_manager/widgets/todo_list.dart';
 
@@ -266,7 +265,9 @@ void main() {
       (TodoPlaces.ownerWorld, find.byKey(const ValueKey('club-direction-card'))),
       (TodoPlaces.clubStaff, find.textContaining('スタッフ: ')),
       (TodoPlaces.clubFacilities, find.text('施設')),
-      (TodoPlaces.clubCommunity, find.byType(SeasonTicketsCard)),
+      (TodoPlaces.clubCommunity,
+          find.byKey(const ValueKey('fans-city-overview'))),
+      (TodoPlaces.clubIntake, find.textContaining('スカウト網')),
       (TodoPlaces.clubYouth, find.byType(YouthScreen)),
       (TodoPlaces.squadContracts, find.byType(ContractBoardScreen)),
       (TodoPlaces.transferPicks, find.textContaining('スカッド ')),

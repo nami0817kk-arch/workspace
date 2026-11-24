@@ -11,7 +11,10 @@ void main() {
     final gs = GameState();
     await gs.startNewGame('系列FC');
     final s = gs.save!..budget = 99999999;
-    final candidates = gs.affiliateCandidates();
+    // 強いクラブ(こちらが子になる)も候補に並ぶようになった(2026-11-25)。
+    // ここでは、こちらが親になる弱いクラブだけを見る。
+    final candidates =
+        gs.affiliateCandidates().where(gs.weAreParentWith).toList();
     expect(candidates, isNotEmpty);
     for (final t in candidates) {
       expect(t.overallRating, lessThan(gs.userTeam.overallRating));
@@ -31,13 +34,21 @@ void main() {
     expect(gs.affiliateClub, isNull);
   });
 
-  test('自クラブより強いクラブとは提携できない', () async {
+  // 2026-11-25 から、強いクラブとは子として提携できる(FM の提携と同じ)。
+  // 割引(優先交渉権)は親だけのもの。
+  test('自クラブより強いクラブとは子として提携し、割引は付かない', () async {
     final gs = GameState();
     await gs.startNewGame('格上FC');
     gs.save!.budget = 99999999;
-    final stronger = gs.save!.foreignLeagues.values
-        .expand((l) => l.teams)
-        .firstWhere((t) => t.overallRating > gs.userTeam.overallRating);
-    expect(await gs.setAffiliateClub(stronger.id), isFalse);
+    final stronger = gs
+        .affiliateCandidates()
+        .where((t) => !gs.weAreParentWith(t))
+        .firstOrNull;
+    if (stronger == null) return;
+    final p = stronger.players.first;
+    final before = gs.askingPriceFor(p);
+    expect(await gs.setAffiliateClub(stronger.id), isTrue);
+    expect(gs.affiliateDeal!.weAreParent, isFalse);
+    expect(gs.askingPriceFor(p), before);
   });
 }

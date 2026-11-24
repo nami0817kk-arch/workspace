@@ -147,6 +147,22 @@ class StaffMember {
 
   int attribute(StaffAttribute a) => attributes[a] ?? 1;
 
+  /// 役職・週俸・契約年数を変えた写し(交渉で決めた条件で雇うとき)。
+  StaffMember copyWith({StaffRole? role, int? wage, int? contractYears}) =>
+      StaffMember(
+        id: id,
+        name: name,
+        age: age,
+        role: role ?? this.role,
+        attributes: attributes,
+        wage: wage ?? this.wage,
+        contractYears: contractYears ?? this.contractYears,
+        specialty: specialty,
+        manager: manager,
+        formerPlayerId: formerPlayerId,
+        hiredOn: hiredOn,
+      );
+
   /// 得意分野が仕事に効く役職か。いまはユースコーチだけ(有望株の伸びる
   /// 能力を決める。TrainingEngine.specialtyKeys)。ほかの役職では効かない。
   static bool roleUsesSpecialty(StaffRole role) => role == StaffRole.youthCoach;

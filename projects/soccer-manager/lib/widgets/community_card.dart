@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/tr.dart';
-import '../logic/board_engine.dart';
 import '../logic/economy_scale.dart';
-import '../logic/risk_engine.dart';
+import '../models/community_activity.dart';
 import '../state/game_state.dart';
-import 'help_button.dart';
+import '../theme/semantic_colors.dart';
+import 'disabled_reason.dart';
+import 'fm_panel.dart';
 
-/// 地域貢献のレベル。続けている間は毎月サポーターの期待が上がり、不祥事の
-/// 傷も浅くなる。
+/// 地域貢献の活動(2026-11-25 の第6段)。
 ///
-/// 以前は経営の「備えと地域貢献」の札の下半分にあった。地域の用件は
-/// 「クラブ > ファンと街」に寄せる(2026-11-24)。中身と効き目は同じ。
+/// 以前は「地域貢献 Lv1〜5」を上げる札だった。地域の取り組みは毎年の
+/// 活動なので、季ごとに活動を選ぶ表にした(活動・費用・効き目・選ぶ/
+/// やめる)。選んだ活動は次の季も続け、季の切り替えで次の季の費用を払う。
+/// 下に前の季の結果を出す。
 class CommunityCard extends StatelessWidget {
   const CommunityCard({super.key});
 
@@ -21,47 +23,156 @@ class CommunityCard extends StatelessWidget {
     final gs = context.watch<GameState>();
     final save = gs.save;
     if (save == null) return const SizedBox.shrink();
-    final level = save.communityLevel;
-    final next = level + 1;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TitleWithHelp(
-              title: Tr.pick('地域貢献 Lv$level / ${RiskEngine.maxCommunityLevel}',
-                  'Community Lv$level / ${RiskEngine.maxCommunityLevel}'),
-              help: Tr.pick(
-                  '地域貢献(Lv1以上)を続けている間は、毎月サポーターの期待が+${BoardEngine.communityMonthlyDelta}。レベルを上げるほど、シーズンの終わりに起きうる不祥事の傷が浅くなります。',
-                  'While you keep up community work (Lv1 or higher), supporter expectation rises by ${BoardEngine.communityMonthlyDelta} every month. Higher levels soften any scandal at season end.'),
+    final subtle = SemanticColors.subtleText(context);
+    final scheme = Theme.of(context).colorScheme;
+    final head = TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        color: scheme.onSurfaceVariant);
+    final report = save.lastCommunityReport;
+    return FmPanel(
+      key: const ValueKey('community-activities'),
+      title: Tr.pick('地域貢献(今季の活動)', 'Community work this season'),
+      trailing: Text(
+        Tr.pick('今季 ${formatMoney(save.communitySeasonSpent)}',
+            'Spent ${formatMoney(save.communitySeasonSpent)}'),
+        style: TextStyle(fontSize: 12, color: subtle),
+      ),
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 6, 10, 4),
+            child: Text(
+              Tr.pick(
+                  '季ごとに選ぶ活動です。選ぶとその季の費用を払い、次の季も続けます(季の切り替えで費用を払います。資金が足りなければ止まります)。',
+                  'Pick the work you do each season. You pay for the season when you start it, and it carries on next season (paid at the changeover; it stops if funds run short).'),
+              style: TextStyle(fontSize: 11.5, color: subtle),
             ),
-            // Lv0 では「期待が0上がる」と出ていた。今の効き目があれば
-            // それを、まだ無ければ次のレベルで何が起きるかを出す。
-            Text(
-              level == 0
-                  ? Tr.pick(
-                      'Lv1にすると地域活動が始まり、毎月サポーターの期待が+${BoardEngine.communityMonthlyDelta}されます。',
-                      'At Lv1 community work begins, and supporter expectation rises by ${BoardEngine.communityMonthlyDelta} every month.')
+          ),
+          Container(
+            color: scheme.surfaceContainerHighest,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Text(Tr.pick('活動と効き目', 'Activity and effect'),
+                        style: head)),
+                SizedBox(
+                    width: 76,
+                    child: Text(Tr.pick('1季の費用', 'Per season'), style: head)),
+                const SizedBox(width: 92),
+              ],
+            ),
+          ),
+          for (final a in CommunityActivity.values) _ActivityRow(activity: a),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 6, 10, 8),
+            child: Text(
+              report == null
+                  ? Tr.pick('前の季の結果: まだありません', 'Last season: nothing yet')
                   : Tr.pick(
-                      '地域活動を続けています。毎月サポーターの期待が+${BoardEngine.communityMonthlyDelta}されます。',
-                      'Community work is ongoing: supporter expectation rises by ${BoardEngine.communityMonthlyDelta} every month.'),
+                      '前の季の結果: ${report.activities.isEmpty ? '活動なし' : report.activities.map((a) => a.label).join('・')}。費用${formatMoney(report.spent)}・サポーターの期待+${report.supporterGain}${report.backing > 0 ? '・地元の協賛${formatMoney(report.backing)}' : ''}',
+                      'Last season: ${report.activities.isEmpty ? 'no community work' : report.activities.map((a) => a.label).join(', ')}. Cost ${formatMoney(report.spent)}, supporter expectation +${report.supporterGain}${report.backing > 0 ? ', local backing ${formatMoney(report.backing)}' : ''}'),
+              key: const ValueKey('community-last-season'),
               style: const TextStyle(fontSize: 12),
             ),
-            const SizedBox(height: 4),
-            FilledButton(
-              key: const ValueKey('community-upgrade'),
-              onPressed: level < RiskEngine.maxCommunityLevel
-                  ? () => gs.upgradeCommunity()
-                  : null,
-              child: Text(level < RiskEngine.maxCommunityLevel
-                  ? Tr.pick(
-                      'Lv$nextにする(${formatMoney(gs.scaledMoney(RiskEngine.communityCost(next)))})',
-                      'Raise to Lv$next (${formatMoney(gs.scaledMoney(RiskEngine.communityCost(next)))})')
-                  : Tr.pick('最大です', 'Maxed')),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ActivityRow extends StatelessWidget {
+  const _ActivityRow({required this.activity});
+  final CommunityActivity activity;
+
+  @override
+  Widget build(BuildContext context) {
+    final gs = context.watch<GameState>();
+    final save = gs.save!;
+    final active = gs.isCommunityActive(activity);
+    final cost = gs.communityCostOf(activity);
+    final canAfford = save.budget >= cost;
+    const small = TextStyle(fontSize: 12);
+    return Container(
+      key: ValueKey('community-${activity.name}'),
+      decoration: BoxDecoration(
+        color: active
+            ? Theme.of(context)
+                .colorScheme
+                .primaryContainer
+                .withValues(alpha: 0.35)
+            : null,
+        border: Border(
+            top: BorderSide(
+                color: Theme.of(context).colorScheme.outlineVariant)),
+      ),
+      padding: const EdgeInsets.fromLTRB(10, 2, 6, 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              // 活動の名前の下に効き目(半分の幅でも名前が割れないように)。
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(active ? Icons.check_circle : Icons.circle_outlined,
+                        size: 16,
+                        color: active
+                            ? SemanticColors.positive(context)
+                            : SemanticColors.subtleText(context)),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(activity.label,
+                              style:
+                                  small.copyWith(fontWeight: FontWeight.w600)),
+                          Text(activity.effectLabel,
+                              style: TextStyle(
+                                  fontSize: 11.5,
+                                  color: SemanticColors.subtleText(context))),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 76, child: Text(formatMoney(cost), style: small)),
+              SizedBox(
+                width: 92,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: active
+                      ? TextButton(
+                          key: ValueKey('community-stop-${activity.name}'),
+                          onPressed: () => gs.stopCommunityActivity(activity),
+                          child: Text(Tr.pick('やめる', 'Stop')))
+                      : FilledButton.tonal(
+                          key: ValueKey('community-start-${activity.name}'),
+                          style: FilledButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10)),
+                          onPressed: canAfford
+                              ? () => gs.startCommunityActivity(activity)
+                              : null,
+                          child: Text(Tr.pick('始める', 'Start'))),
+                ),
+              ),
+            ],
+          ),
+          if (!active && !canAfford)
+            Align(
+              alignment: Alignment.centerRight,
+              child: DisabledReason(fundsShortReason(cost - save.budget),
+                  alignEnd: true),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

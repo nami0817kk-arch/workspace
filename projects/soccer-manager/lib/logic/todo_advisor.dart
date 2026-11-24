@@ -82,11 +82,12 @@ class TodoPlaces {
   static const financeFunding = TodoPlace(TodoMenu.finance, tab: 1);
   static const financeProjects = TodoPlace(TodoMenu.finance, tab: 2);
 
-  // クラブ: スタッフ・施設・ファンと街・ユースとスカウト
+  // クラブ: スタッフ・施設・ファンと街・ユースチーム・新人発掘
   static const clubStaff = TodoPlace(TodoMenu.club);
   static const clubFacilities = TodoPlace(TodoMenu.club, tab: 1);
   static const clubCommunity = TodoPlace(TodoMenu.club, tab: 2);
   static const clubYouth = TodoPlace(TodoMenu.club, tab: 3);
+  static const clubIntake = TodoPlace(TodoMenu.club, tab: 4);
 
   // 選手: スカッド・登録と契約・登録ルール
   static const squadList = TodoPlace(TodoMenu.squad);

@@ -75,6 +75,8 @@ extension GameStateStaffMoves on GameState {
         before.year != after.year || before.month != after.month;
     if (!monthChanged) return;
     _refreshStaffCandidates();
+    // 人事を任せていれば、空いた役職を新しい候補から埋める(月に1回)。
+    _runStaffDelegation();
     if (s.staffOffers.isNotEmpty) return; // 一度に1件まで
     final rng = GameState._offerRng;
     for (final role in StaffRole.values) {
@@ -134,7 +136,8 @@ extension GameStateStaffMoves on GameState {
     s.staffOffers.remove(o);
     final st = s.infrastructure.staffFor(o.role);
     if (st == null || st.id != o.staffId) return;
-    s.infrastructure.staff[o.role] = null;
+    // 主任が抜けたら、部下のうち能力の高い人が上がる。
+    s.infrastructure.removeMember(st.id);
     final comp = scaledMoney(o.compensation);
     if (comp > 0) _book(LedgerCategory.other, comp);
     _logNews(
@@ -182,8 +185,8 @@ extension GameStateStaffMoves on GameState {
   void _addFormerPlayerCandidates() {
     final s = _save!;
     final hired = {
-      for (final st in s.infrastructure.staff.values)
-        if (st?.formerPlayerId != null) st!.formerPlayerId!,
+      for (final st in s.infrastructure.allStaff)
+        if (st.formerPlayerId != null) st.formerPlayerId!,
     };
     final pool = [
       for (final p in s.retiredLegends.reversed)

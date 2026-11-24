@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +25,6 @@ import '../widgets/place_link.dart';
 import '../l10n/tr.dart';
 import '../models/staff_member.dart';
 import '../theme/semantic_colors.dart';
-import '../widgets/player_stat_chips.dart';
 import '../widgets/youth_analytics_card.dart';
 import '../widgets/fan_segments_card.dart';
 import '../widgets/club_look_card.dart';
@@ -34,8 +35,12 @@ import '../widgets/help_button.dart';
 import '../widgets/screen_bar.dart';
 import '../widgets/disabled_reason.dart';
 import '../widgets/offseason_lock_note.dart';
+import '../widgets/fm_panel.dart';
+import 'staff_negotiation_screen.dart';
 
 part 'club_screen_staff.dart';
+part 'club_screen_facilities.dart';
+part 'club_screen_community.dart';
 
 /// スタッフ・施設の現在レベル(と最大未満なら次レベル)の具体的な効果を1行にまとめる。
 String _staffEffectLabel(StaffRole role, int level,
@@ -116,75 +121,6 @@ String _pct(double m) {
   return d >= 0 ? '+$d%' : '$d%';
 }
 
-/// 施設の効き目。式(x1.00 → 次Lv: x1.10)ではなく、「いま」と
-/// 「次のLvで」を言葉と%で出す(2026-11-21)。
-String _facilityEffectLabel(
-  FacilityType type,
-  int level,
-  int expectedAttendance,
-  int fanDemand, {
-  bool gateAtCap = false,
-}) {
-  const maxLevel = ClubInfrastructure.maxLevel;
-  final hasNext = level < maxLevel;
-  switch (type) {
-    case FacilityType.trainingGround:
-      final g = ClubInfrastructure.trainingGrowthMultiplier(1, level);
-      final f = ClubInfrastructure.fatigueRecoveryBonus(level);
-      final ng = hasNext
-          ? ClubInfrastructure.trainingGrowthMultiplier(1, level + 1)
-          : g;
-      final nf =
-          hasNext ? ClubInfrastructure.fatigueRecoveryBonus(level + 1) : f;
-      return Tr.pick(
-          'いま: 成長${_pct(g)}・疲労回復+$f${hasNext ? '\n次のLvで: 成長${_pct(ng)}・疲労回復+$nf' : ''}',
-          "Now: growth ${_pct(g)}, recovery +$f${hasNext ? '\nNext level: growth ${_pct(ng)}, recovery +$nf' : ''}");
-    case FacilityType.stadium:
-      final cur = ClubInfrastructure.stadiumCapacity(level);
-      final next =
-          hasNext ? ClubInfrastructure.stadiumCapacity(level + 1) : cur;
-      // 人数は3桁で区切る(「12000人」が読みにくかった。2026-11-23)。
-      final c = formatCount(cur);
-      final n = formatCount(next);
-      final usual = formatCount(expectedAttendance);
-      final demand = formatCount(fanDemand);
-      return Tr.pick(
-          'いま: $c人入る(ふだんの入り$usual人・来たいファン$demand人)${hasNext ? '\n次のLvで: $n人' : ''}',
-          "Now: holds $c (usual crowd $usual, fans wanting to come $demand)${hasNext ? '\nNext level: $n' : ''}");
-    case FacilityType.youthFacility:
-      final cur = ScoutingEngine.maxProspectsFor(level);
-      final next = hasNext ? ScoutingEngine.maxProspectsFor(level + 1) : cur;
-      return Tr.pick('いま: 受け入れ$cur人${hasNext ? '\n次のLvで: $next人' : ''}',
-          "Now: $cur academy places${hasNext ? '\nNext level: $next' : ''}");
-    case FacilityType.commercialFacility:
-      final cur = ClubInfrastructure.commercialRevenueMultiplier(level);
-      final next = hasNext
-          ? ClubInfrastructure.commercialRevenueMultiplier(level + 1)
-          : cur;
-      // 観客収入は、入る人数 × 1人の単価の上限で頭打ちになる。上限に
-      // 届いているクラブでは、商業施設を上げても観客収入は増えない
-      // (以前は「観客・スポンサー収入+X%」とだけ出ていた。グッズにも
-      // 掛かっているのに書いていなかった。2026-11-23)。
-      return Tr.pick(
-          'いま: スポンサー・グッズ収入${_pct(cur)}${hasNext ? '\n次のLvで: ${_pct(next)}' : ''}\n'
-              '${gateAtCap ? '観客収入は上限(入る人数×1人の単価)に届いているので増えません' : '観客収入にも同じだけ効きます(入る人数×1人の単価の上限まで)'}',
-          "Now: sponsorship and merchandise ${_pct(cur)}${hasNext ? '\nNext level: ${_pct(next)}' : ''}\n"
-              "${gateAtCap ? 'Gate receipts are already at their ceiling (crowd x revenue per head), so they will not rise' : 'Gate receipts rise by the same, up to their ceiling (crowd x revenue per head)'}");
-    case FacilityType.medicalCenter:
-      final cur =
-          ((1 - ClubInfrastructure.medicalCenterInjuryFactor(level)) * 100)
-              .round();
-      final next = hasNext
-          ? ((1 - ClubInfrastructure.medicalCenterInjuryFactor(level + 1)) *
-                  100)
-              .round()
-          : cur;
-      return Tr.pick(
-          'いま: 負傷リスク-$cur%(フィジオの分に上乗せ)${hasNext ? '\n次のLvで: -$next%' : ''}',
-          "Now: injury risk -$cur% (on top of your physio)${hasNext ? '\nNext level: -$next%' : ''}");
-  }
-}
-
 /// クラブの画面のどの部分を出すか。横画面ではタブで分け、1ページを短くする
 /// (全部を1列に並べると縦に12画面分あった)。null なら全部。
 enum ClubSection { staff, facilities, community }
@@ -219,7 +155,11 @@ class ClubScreen extends StatelessWidget {
         // 横画面では札を2列に並べ、縦の長さを半分にする。
         child: AutoColumns(
           // スタッフは候補の行が横に長いので1列のまま。
-          twoColumnWidth: section == ClubSection.staff ? double.infinity : 640,
+          // 施設も表なので1列で横いっぱいに(2026-11-25)。
+          twoColumnWidth:
+              section == ClubSection.staff || section == ClubSection.facilities
+                  ? double.infinity
+                  : 640,
           children: [
             // 上の札は細い1行に。資金は上の段に出ているので、横画面では
             // 出さない(2026-11-21)。充実度とスタッフの年俸はスタッフの
@@ -286,68 +226,48 @@ class ClubScreen extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
                   child: Text(
                     Tr.pick(
-                        'スタッフ: ${StaffRole.values.length}役のうち$filled人を雇っています',
-                        'Staff: $filled of ${StaffRole.values.length} posts filled'),
+                        'スタッフ: ${StaffRole.values.length}役のうち$filled役が埋まっています(${infra.allStaff.length}人)',
+                        'Staff: $filled of ${StaffRole.values.length} posts filled (${infra.allStaff.length} people)'),
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 );
               }),
-              for (final role in StaffRole.values) _StaffCard(role: role),
-              const SizedBox(height: 8),
-              const YouthAnalyticsCard(),
+              // 人事の委託を上に(任せると下の表は見るだけで済む)。
+              const _StaffDelegationPanel(),
+              const _StaffTable(),
+              // 分析部門はスタッフの一部門として残す(U18・U21 はユースへ
+              // 移した。2026-11-25)。
+              const AnalyticsDepartmentCard(),
             ],
-            if (show(ClubSection.facilities)) ...[
-              const Divider(height: 32),
-              Text(Tr.pick('施設', 'Facilities'),
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              for (final type in FacilityType.values)
-                _UpgradeCard(
-                  title: type.label,
-                  description: type.description,
-                  level: infra.facilityLevel(type),
-                  cost: gameState.facilityUpgradeCostFor(type),
-                  costLabel: Tr.pick('建設費', 'Build cost'),
-                  extraLabel: _facilityEffectLabel(
-                    type,
-                    infra.facilityLevel(type),
-                    gameState.expectedAttendance,
-                    gameState.fanDemand,
-                    gateAtCap: gameState.isGateAtCap,
+            if (show(ClubSection.facilities))
+              // 施設は表にした(2026-11-25): 水準・いま・次の段で・費用と
+              // 期間・工事中が1行ずつ並ぶ。下の札とまとめて1つの塊にする
+              // (一覧が大きな表1つの高さから全体の長さを見積もり、実際の
+              // 4倍近い長さに見せていた)。
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _FacilityTable(),
+                  const SizedBox(height: 8),
+                  const ClubLicenseCard(),
+                  const SizedBox(height: 8),
+                  // 系列クラブ(選手の貸し借り)は移籍の話なので、移籍の「探す」へ
+                  // 移した(2026-11-25)。ここには入口だけを置く。
+                  PlaceLink(
+                    key: const ValueKey('club-to-affiliate'),
+                    icon: Icons.handshake_outlined,
+                    title: Tr.pick('系列クラブは「移籍 > 探す」へ',
+                        'Feeder club: open Transfers > Search'),
+                    note: Tr.pick('親子の関係・貸し出し・育成先・優先交渉権・売却時の取り分を決めて結びます。',
+                        'Set the parent club, loans, development, first refusal and sell-on share.'),
+                    place: TodoPlaces.transferAffiliate,
                   ),
-                  canAfford:
-                      save.budget >= gameState.facilityUpgradeCostFor(type),
-                  readyOn: infra.constructionReadyOn(type),
-                  buildNote: type == FacilityType.stadium
-                      ? Tr.pick(
-                          '${formatCount(ClubInfrastructure.stadiumSeatsPerLevel)}席 × 1席${formatMoney(gameState.stadiumSeatCostNow)}。来季の開幕に完成します',
-                          '${formatCount(ClubInfrastructure.stadiumSeatsPerLevel)} seats at ${formatMoney(gameState.stadiumSeatCostNow)} each. Ready for the start of next season')
-                      : Tr.pick(
-                          '工期${ClubInfrastructure.buildMonths}か月。完成までは効き目が出ません',
-                          'Takes ${ClubInfrastructure.buildMonths} months. No effect until it is finished'),
-                  onUpgrade: () => gameState.upgradeFacility(type),
-                ),
-              const SizedBox(height: 8),
-              const ClubLicenseCard(),
-              const SizedBox(height: 8),
-              // 系列クラブ(選手の貸し借り)は移籍の話なので、移籍の「探す」へ
-              // 移した(2026-11-25)。ここには入口だけを置く。
-              PlaceLink(
-                key: const ValueKey('club-to-affiliate'),
-                icon: Icons.handshake_outlined,
-                title: Tr.pick('系列クラブは「移籍 > 探す」へ',
-                    'Feeder club: open Transfers > Search'),
-                note: Tr.pick('提携先の選手は2割引で取れ、貸し出しの相手にもなります。',
-                    'Their players come 20% cheaper, and your loans can go there.'),
-                place: TodoPlaces.transferAffiliate,
+                ],
               ),
-            ],
             if (show(ClubSection.community)) ...[
-              const SizedBox(height: 8),
-              const FanSegmentsCard(),
-              const SizedBox(height: 8),
-              const ClubLookCard(),
-              const SizedBox(height: 8),
+              // 上に数字とオフシーズンの決まり、その下に操作(チケット・
+              // 季席・見た目・地域活動)、最後に客層の内訳(2026-11-25)。
+              const _FansCityOverview(),
               _TicketPricingCard(
                 current: save.ticketPricing,
                 locked: !gameState.isOffseason,
@@ -355,6 +275,8 @@ class ClubScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const SeasonTicketsCard(),
+              const SizedBox(height: 8),
+              const ClubLookCard(),
               const SizedBox(height: 8),
               // 地域の用件はここに寄せる(地域貢献は、以前は経営の
               // 「備えと地域貢献」にあった)。
@@ -364,10 +286,12 @@ class ClubScreen extends StatelessWidget {
                 icon: Icons.work_outline,
                 title: Tr.pick('チャリティー・学校訪問は「オーナーの仕事」へ',
                     "Charity and school visits: open Owner's work"),
-                note: Tr.pick('地域・社会の手(1シーズンに1回ずつ)は、オーナー室にまとめてあります。',
-                    "Community moves (once a season each) are in the owner's office."),
+                note: Tr.pick('オーナーが自分で出向く手(1シーズンに1回ずつ)は、オーナー室にまとめてあります。',
+                    "Things you do in person (once a season each) are in the owner's office."),
                 place: TodoPlaces.ownerCommunityWorks,
               ),
+              const SizedBox(height: 8),
+              const FanSegmentsCard(),
             ],
           ],
         ),
@@ -423,7 +347,6 @@ class _TicketPricingCard extends StatelessWidget {
             SegmentedButton<TicketPricing>(
               showSelectedIcon: false,
               style: const ButtonStyle(
-                visualDensity: VisualDensity.compact,
                 padding: WidgetStatePropertyAll(
                     EdgeInsets.symmetric(horizontal: 10)),
               ),
@@ -462,137 +385,6 @@ class _TicketPricingCard extends StatelessWidget {
                             : SemanticColors.subtleText(context)),
               );
             }),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _UpgradeCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final int level;
-  final int cost;
-  final String costLabel;
-  final String? extraLabel;
-  final bool canAfford;
-
-  /// 工事中なら完成する日。工事中は重ねて増築できない。
-  final DateTime? readyOn;
-
-  /// 工事費の内訳と工期(1行)。
-  final String? buildNote;
-  final Future<bool> Function() onUpgrade;
-
-  const _UpgradeCard({
-    required this.title,
-    required this.description,
-    required this.level,
-    required this.cost,
-    required this.costLabel,
-    this.extraLabel,
-    required this.canAfford,
-    this.readyOn,
-    this.buildNote,
-    required this.onUpgrade,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    const maxLevel = ClubInfrastructure.maxLevel;
-    final isMax = level >= maxLevel;
-    final building = readyOn != null;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 10),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleSmall,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Row(
-                  children: List.generate(
-                    maxLevel,
-                    (i) => Icon(
-                      i < level ? Icons.star : Icons.star_border,
-                      size: 16,
-                      color: SemanticColors.ink(context, Colors.amber, min: 3),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              description,
-              style: TextStyle(
-                  fontSize: 12, color: SemanticColors.subtleText(context)),
-            ),
-            if (extraLabel != null) ...[
-              const SizedBox(height: 2),
-              Text(
-                extraLabel!,
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.subtleText(context)),
-              ),
-            ],
-            if (!isMax && !building && buildNote != null) ...[
-              const SizedBox(height: 2),
-              Text(
-                buildNote!,
-                style: TextStyle(
-                    fontSize: 12, color: SemanticColors.subtleText(context)),
-              ),
-            ],
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              // この箱の主な操作なので塗りのボタン。
-              child: FilledButton(
-                onPressed: isMax || building || !canAfford
-                    ? null
-                    : () async {
-                        final ok = await runUndoable(
-                          context,
-                          action: onUpgrade,
-                          done: Tr.pick(
-                              '「$title」の増築に着工しました', 'Work has begun: $title'),
-                        );
-                        ok
-                            ? FeedbackService.success()
-                            : FeedbackService.error();
-                      },
-                child: Text(building
-                    ? Tr.pick(
-                        '工事中(${TransferWindowCalendar.formatYearMonth(readyOn!)}完成)',
-                        'Under construction (ready ${TransferWindowCalendar.formatYearMonth(readyOn!)})')
-                    : isMax
-                        ? Tr.pick('最大レベル', 'Fully upgraded')
-                        // 英語は「Upgrade for 150m yen (Build cost)」と
-                        // 札を括弧で後ろに付けていて不自然だった(2026-11-23)。
-                        : Tr.pick('$costLabel ${formatMoney(cost)}で増築',
-                            'Upgrade for ${formatMoney(cost)}')),
-              ),
-            ),
-            // 工事中・最大はボタンの字で分かる。資金が足りないときだけ、字が
-            // 「…で増築」のまま灰色になるので、足りない額を下に出す。
-            if (!isMax && !building && !canAfford)
-              DisabledReason(
-                fundsShortReason(
-                    cost - (context.watch<GameState>().save?.budget ?? 0)),
-                key: const ValueKey('upgrade-blocked'),
-              ),
           ],
         ),
       ),
