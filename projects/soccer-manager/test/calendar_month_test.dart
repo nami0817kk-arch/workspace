@@ -7,6 +7,7 @@ import 'package:soccer_manager/logic/day_events.dart';
 import 'package:soccer_manager/logic/todo_advisor.dart';
 import 'package:soccer_manager/models/match_result.dart';
 import 'package:soccer_manager/state/game_state.dart';
+import 'package:soccer_manager/widgets/landscape_scale.dart';
 
 import 'support/app_fonts.dart';
 import 'support/shell_harness.dart';
@@ -108,6 +109,44 @@ void main() {
       await tester.tap(find.byKey(ValueKey('cal-day-${key(played)}')));
       await settleShell(tester);
       expect(find.textContaining(first.match!.opponent), findsWidgets);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  for (final en in [false, true]) {
+    testWidgets(
+        '横画面: 6週ある月も送らずに収まり、マスは48以上、相手の名前は切れない (${en ? 'en' : 'ja'})',
+        (tester) async {
+      final game = await pumpShell(tester, en: en);
+      shellNavOf(tester).go(TodoPlaces.calendar);
+      await settleShell(tester);
+      // 右の「○月の予定」の一覧は出さない。
+      expect(find.textContaining('月の予定'), findsNothing);
+      // 2026年11月は日曜始まりで6週ある。
+      final target = DateTime(2026, 11);
+      var m = DateTime(game.today.year, game.today.month);
+      while (m.isBefore(target)) {
+        await tester.tap(find.byTooltip(en ? 'Next month' : '次の月'));
+        await settleShell(tester);
+        m = DateTime(m.year, m.month + 1);
+      }
+      final screen = tester.getRect(find.byType(MaterialApp));
+      final last = tester.getRect(find.byKey(const ValueKey('cal-day-2026-11-30')));
+      expect(last.bottom, lessThanOrEqualTo(screen.bottom + 0.5),
+          reason: '6週目の行が画面の中にある');
+      final scale = LandscapeScale.scaleFor(shellPhone);
+      expect(last.height / scale, greaterThanOrEqualTo(47.99));
+      // 相手の名前はどのマスでも「…」で切れない。
+      final opps = find.byWidgetPredicate((w) =>
+          w.key is ValueKey<String> &&
+          (w.key as ValueKey<String>).value.startsWith('cal-opp-'));
+      expect(opps, findsWidgets);
+      for (final e in opps.evaluate()) {
+        final para = tester.renderObject<RenderParagraph>(find.descendant(
+            of: find.byWidget(e.widget), matching: find.byType(RichText)));
+        expect(para.didExceedMaxLines, isFalse,
+            reason: (e.widget as Text).data);
+      }
       expect(tester.takeException(), isNull);
     });
   }

@@ -180,6 +180,7 @@ void main() {
     for (final p in _en
         ? const [
             'Status',
+            'Calendar',
             'Finance',
             'Club',
             'Players',
@@ -187,7 +188,7 @@ void main() {
             'League',
             'Office'
           ]
-        : const ['状況', '経営', 'クラブ', '選手', '移籍', 'リーグ', 'オーナー室']) {
+        : const ['状況', 'カレンダー', '経営', 'クラブ', '選手', '移籍', 'リーグ', 'オーナー室']) {
       if (only.isNotEmpty && !only.split(',').contains(p)) continue;
       // 前のページで別の画面(用語集など)が開いたままなら閉じる。
       for (var i = 0; i < 4; i++) {
@@ -229,6 +230,48 @@ void main() {
           RegExp(r'^[\d\-+]').hasMatch(s));
       if (labels.isEmpty) {
         await shoot(p);
+        // カレンダーは、次の試合のマスを押したところと「1年の予定」も撮る。
+        if (p == _t('カレンダー', 'Calendar')) {
+          final opp = find.byWidgetPredicate((w) =>
+              w.key is ValueKey<String> &&
+              (w.key as ValueKey<String>).value.startsWith('cal-opp-'));
+          if (opp.evaluate().isNotEmpty) {
+            final k = (opp.evaluate().last.widget.key as ValueKey<String>)
+                .value
+                .substring('cal-opp-'.length);
+            await tester.tap(find.byKey(ValueKey('cal-day-$k')));
+            await tester.pump(const Duration(milliseconds: 600));
+            await shoot('$p-day');
+            await tester.tapAt(const Offset(400, 20));
+            await tester.pump(const Duration(milliseconds: 600));
+          }
+          final legend =
+              find.byKey(const ValueKey('calendar-legend-button')).hitTestable();
+          if (legend.evaluate().isNotEmpty) {
+            await tester.tap(legend.first);
+            await tester.pump(const Duration(milliseconds: 300));
+            await shoot('$p-legend');
+            await tester.tap(legend.first);
+            await tester.pump(const Duration(milliseconds: 300));
+          }
+          // 6週ある月(2026年11月)も、送らずに収まるか。
+          for (var i = 0; i < 2; i++) {
+            await tester.tap(
+                find.byTooltip(_t('次の月', 'Next month')).hitTestable().first);
+            await tester.pump(const Duration(milliseconds: 300));
+          }
+          await shoot('$p-6weeks');
+          await tester.tap(find.text(_t('今日へ', 'Today')).hitTestable().first);
+          await tester.pump(const Duration(milliseconds: 300));
+          final year = find.byKey(const ValueKey('chip-1')).hitTestable();
+          if (year.evaluate().isNotEmpty) {
+            await tester.tap(year.first);
+            await tester.pump(const Duration(milliseconds: 400));
+            await shoot('$p-year');
+            await tester.tap(find.byKey(const ValueKey('chip-0')).first);
+            await tester.pump(const Duration(milliseconds: 400));
+          }
+        }
         // 状況は全部を見たいので、左右の欄を下へ送りながら撮る。
         if (p == _t('状況', 'Status')) {
           for (var i = 1; i <= 8; i++) {

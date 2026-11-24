@@ -7,7 +7,19 @@ import 'summer_tournament.dart';
 import 'transfer_window.dart';
 
 /// 年間予定の種類。
-enum ClubEventKind { window, budget, incident, season, contract, money, tournament }
+enum ClubEventKind {
+  window,
+  budget,
+  incident,
+  season,
+  contract,
+  money,
+  tournament,
+
+  /// 大きな試合(カップ戦の準決勝・決勝、スーパーカップ、大陸カップ)。
+  /// 日付はゲームの状態から決まるので、GameState.bigMatchEvents が作る。
+  bigMatch,
+}
 
 /// クラブ運営の年間予定の1件。
 class ClubEvent {

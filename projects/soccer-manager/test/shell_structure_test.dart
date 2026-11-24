@@ -390,11 +390,15 @@ void main() {
       final para = tester.renderObject<RenderParagraph>(
           find.descendant(of: date, matching: find.byType(RichText)));
       expect(para.didExceedMaxLines, isFalse);
-      expect(tester.widget<Text>(date).data, isNot(contains('…')));
-      // 節と部も、切れずに入っている。
-      final division =
-          tester.getSize(find.byKey(const ValueKey('topbar-division')));
-      expect(division.width, greaterThan(60), reason: en ? 'en' : 'ja');
+      final text = tester.widget<Text>(date).data!;
+      expect(text, isNot(contains('…')));
+      // 帯は日付と節だけ。部と季は出さない(部は状況の順位の札にある)。
+      expect(text, en ? contains('MD ') : contains('節'));
+      expect(text, en ? isNot(contains('Tier')) : isNot(contains('部')));
+      expect(text, en ? isNot(contains('S1')) : isNot(contains('季')));
+      // 縮めすぎて読めない大きさになっていない。
+      expect(tester.getRect(date).width, greaterThan(60),
+          reason: en ? 'en' : 'ja');
       await tester.pumpWidget(const SizedBox());
     }
   });

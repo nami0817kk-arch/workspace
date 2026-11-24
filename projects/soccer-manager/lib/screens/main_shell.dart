@@ -315,7 +315,7 @@ class _MainShellState extends State<MainShell> {
   }
 }
 
-/// 横画面の上バー(バスケGM と同じ作り)。クラブの印と、2行(クラブ名/季・節・部)、
+/// 横画面の上バー(バスケGM と同じ作り)。クラブの印と、2行(クラブ名/日付・節)、
 /// 資金、試合を進めるボタン。高さは 52 で固定。
 class _FmTopBar extends StatelessWidget {
   const _FmTopBar({
@@ -415,6 +415,10 @@ class _FmTopBar extends StatelessWidget {
                     // 帯がとても狭いとき(左メニューの右に置いたので、小さな
                     // 横画面では約60しか残らないことがある)は、日付を切らずに
                     // 字を少し縮めて収める。
+                    //
+                    // 帯には日付と節だけを出す。部と季は外した(部は状況の
+                    // 順位の札にある)。「9/5(土) 第7節・.」と切れていた
+                    // (2026-11-25)。日付と節は1つの文にし、切らずに縮める。
                     LayoutBuilder(builder: (context, box) => Row(
                       children: [
                         Icon(Icons.calendar_month,
@@ -430,23 +434,15 @@ class _FmTopBar extends StatelessWidget {
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              _shortToday(gameState.today),
+                              matchday > 0
+                                  ? Tr.pick(
+                                      '${_shortToday(gameState.today)} 第$matchday節',
+                                      '${_shortToday(gameState.today)} • MD $matchday')
+                                  : _shortToday(gameState.today),
                               key: const ValueKey('topbar-date'),
                               maxLines: 1,
                               style: sub,
                             ),
-                          ),
-                        ),
-                        Flexible(
-                          child: Text(
-                            Tr.pick(
-                                ' 第$matchday節・${save.currentDivisionTier}部 第${league.season}季',
-                                ' • MD $matchday • Tier ${save.currentDivisionTier} • S${league.season}'),
-                            key: const ValueKey('topbar-division'),
-                            maxLines: 1,
-                            overflow: TextOverflow.clip,
-                            softWrap: false,
-                            style: sub,
                           ),
                         ),
                       ],

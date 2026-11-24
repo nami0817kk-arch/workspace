@@ -91,6 +91,7 @@ import '../logic/achievement_engine.dart';
 import '../logic/ai_transfer_engine.dart';
 import '../logic/money_calendar.dart';
 import '../logic/calendar_engine.dart';
+import '../logic/club_calendar_engine.dart';
 import '../logic/season_calendar.dart';
 import '../logic/day_events.dart';
 import '../logic/summer_tournament.dart';
