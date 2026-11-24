@@ -1,4 +1,5 @@
 
+import 'player_career.dart';
 import 'player_instruction.dart';
 import 'player_traits.dart';
 import 'attributes.dart';
@@ -6,6 +7,8 @@ import 'card_rules.dart';
 import 'enum_json.dart';
 import '../l10n/tr.dart';
 import '../logic/economy_scale.dart';
+
+export 'player_career.dart';
 
 /// Football Manager風の詳細ポジション（14種類）。
 enum Position { gk, dr, dc, dl, wbr, wbl, dm, mr, mc, ml, amr, amc, aml, st }
@@ -1312,6 +1315,19 @@ class Player {
   /// 段階昇給: 季が変わるたびに週給を上げる割合(%。0なら無し)。
   int raisePct;
 
+  /// 降格の条項: 降格したら年俸を下げる割合(%)。null は国の既定
+  /// (RelegationClause)。契約の交渉で決める(2026-11-25)。
+  int? relegationCutPct;
+
+  /// 昇格の条項: 昇格したら年俸を上げる割合(%。0なら無し)。
+  int promotionRisePct;
+
+  /// 経歴(季ごとのリーグ戦の成績。2026-11-25 から季の終わりに書き足す)。
+  List<PlayerCareerLine> careerLog;
+
+  /// 移籍の歴(2026-11-25 から書き足す)。
+  List<PlayerMoveLine> moveLog;
+
   /// プレースタイル(ロール)。デューティとは別に、活躍する能力値の傾向を表す。
   PlayerRole role;
 
@@ -1485,6 +1501,10 @@ class Player {
     this.appearanceFee = 0,
     this.goalBonus = 0,
     this.raisePct = 0,
+    this.relegationCutPct,
+    this.promotionRisePct = 0,
+    List<PlayerCareerLine>? careerLog,
+    List<PlayerMoveLine>? moveLog,
     this.role = PlayerRole.standard,
     this.instruction,
     this.injuryProneness = 10,
@@ -1507,7 +1527,9 @@ class Player {
         attributes = attributes ?? {for (final k in AttributeKeys.all) k: 50},
         positionFamiliarity = positionFamiliarity ?? {},
         injuryHistoryCounts = injuryHistoryCounts ?? {},
-        overallHistory = overallHistory ?? [];
+        overallHistory = overallHistory ?? [],
+        careerLog = careerLog ?? [],
+        moveLog = moveLog ?? [];
 
   /// このポジション（主・副とも）を無理なくこなせるか。
   bool canPlay(Position pos) =>
@@ -1811,6 +1833,10 @@ class Player {
     put('appearanceFee', appearanceFee, 0);
     put('goalBonus', goalBonus, 0);
     put('raisePct', raisePct, 0);
+    put('relegationCutPct', relegationCutPct, null);
+    put('promotionRisePct', promotionRisePct, 0);
+    put('careerLog', [for (final l in careerLog) l.toJson()], null);
+    put('moveLog', [for (final m in moveLog) m.toJson()], null);
     put('role', role.name, PlayerRole.standard.name);
     put('instruction', instruction?.name, null);
     put('injuryProneness', injuryProneness, 10);
@@ -1968,6 +1994,17 @@ class Player {
       appearanceFee: json['appearanceFee'] as int? ?? 0,
       goalBonus: json['goalBonus'] as int? ?? 0,
       raisePct: json['raisePct'] as int? ?? 0,
+      // 2026-11-25 より前のセーブには無い(既定のまま読む)。
+      relegationCutPct: json['relegationCutPct'] as int?,
+      promotionRisePct: json['promotionRisePct'] as int? ?? 0,
+      careerLog: [
+        for (final e in (json['careerLog'] as List? ?? const []))
+          PlayerCareerLine.fromJson(Map<String, dynamic>.from(e as Map)),
+      ],
+      moveLog: [
+        for (final e in (json['moveLog'] as List? ?? const []))
+          PlayerMoveLine.fromJson(Map<String, dynamic>.from(e as Map)),
+      ],
       role: enumFromName(
         PlayerRole.values,
         json['role'] as String?,
