@@ -68,8 +68,8 @@ extension GameLocal on Game {
       if (p == null) return M('その人はもういません');
       if (p.partner) return M('相棒は本社に残します。ほかの部下か、現地で雇う人を選んでください');
     }
-    if (!canAP(1)) return M('今月の手が残っていません');
-    useAP(1);
+    final nt = spendT('local');
+    if (nt != null) return nt;
     final ind = indm[b.ind]!;
     final frac = clampD(cw(c, yr()) / math.max(reachOf(b), 1e-9), 0, .95);
     final pw = b.power * frac;
@@ -408,10 +408,10 @@ extension GameLocal on Game {
         say: M('今は手元のお金が命です。借りられるだけ借りておきましょう'),
         d: M('{0}まで借りる。会議で話をつけたので、いつもより2割多く借りられる', [Y(want)]),
         f: () {
-          final room = math.max(0.0, borrowLimit() * 1.2 - debt);
+          final room = borrowRoom() * 1.2;
           final a = math.min(want, room);
           if (a <= 0) return M('銀行はこれ以上貸してくれませんでした');
-          debt += a;
+          loanFromEvent(a);
           cash += a;
           return M('銀行から{0}を借りました', [Y(a)]);
         },

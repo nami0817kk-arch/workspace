@@ -7,6 +7,7 @@ import 'dart:math' as math;
 
 import '../l10n/l10n.dart';
 import 'data.dart';
+import 'econ.dart';
 import 'faces.dart';
 import 'format.dart';
 import 'models.dart';
@@ -14,6 +15,7 @@ import 'models_static.dart';
 
 export '../l10n/l10n.dart';
 export 'data.dart';
+export 'econ.dart';
 export 'faces.dart';
 export 'format.dart';
 export 'models.dart';
@@ -28,6 +30,15 @@ part 'game_achieve.dart';
 part 'game_mid.dart';
 part 'game_deleg.dart';
 part 'game_faces.dart';
+part 'game_real.dart';
+
+/// セーブの形の版（1.1.0+25 で 2。作り直しのため、1 のセーブは読めない）
+const int saveVersion = 2;
+
+/// 古い版のセーブを読もうとした
+class OldSaveError implements Exception {
+  const OldSaveError();
+}
 
 // ===== データ =====
 const double invEff = .9, newPow = 1.5, cpuReinv = .12;
@@ -87,7 +98,12 @@ extension StableSort<T> on List<T> {
 
 double clampD(double v, double a, double b) => math.max(a, math.min(b, v));
 int clampI(int v, int a, int b) => math.max(a, math.min(b, v));
-double nomOf(double y) => math.pow(1.015, y - 2020).toDouble();
+/// 物価の倍率（2020年を1とした日本の物価。1.1.0+25 から統計の物価で動く）。お金の額は円で持ち、時代の物価だけを乗せる
+double nomOf(double y) {
+  final d = econData;
+  final b = d.at('jp', 2020, 'cpi');
+  return b > 0 ? d.at('jp', y, 'cpi') / b : math.pow(1.015, y - 2020).toDouble();
+}
 
 List<double> regFor(double y) => [1, 3 + 3 * clampD((y - 1990) / 35, 0, 1), 10 + 15 * clampD((y - 1995) / 30, 0, 1)];
 
@@ -102,8 +118,15 @@ double eraF(Industry ind, double y) {
   return f;
 }
 
-/// 国の市場の大きさ（日本を1とした比べの元）
+/// 国の市場の大きさ（同じ年の日本を1とした比べ。1.1.0+25 から統計の名目GDP（ドル）の比。円が強くなると外国の市場は円で見て小さくなる）
 double cw(String c, double y) {
+  final d = econData;
+  final j = d.at('jp', y, 'gdp_usd');
+  return j > 0 ? d.at(c, y, 'gdp_usd') / j : cwShape(c, y);
+}
+
+/// 国の大きさの曲線（試作の式。統計に無い国を作るときの形にだけ使う）
+double cwShape(String c, double y) {
   final C = cm[c]!;
   return C.a + (C.b - C.a) / (1 + math.exp(-(y - C.m) / C.k));
 }
@@ -210,7 +233,35 @@ class Game {
   String diff = 'normal';
   Difficulty get dif => diffOf(diff);
   int startYear = 1980, year = 1980, q = 1;
-  double cash = 0, debt = 0;
+  double cash = 0;
+
+  // ===== 現実に寄せた仕組み（1.1.0+25 から） =====
+  /// 借りたお金（1口ずつ。借金の合計は [GameReal.debt]）
+  List<Loan> loans = [];
+  int loanSeq = 0;
+
+  /// 2026年より先の経済の予測の種（遊びごとに決まる）
+  int fcSeed = 1;
+
+  /// 社長の体力（0〜100。0 になると倒れる）・今月使った時間（会議を除く）・倒れて休んでいる残りの月・先月使った時間（会議を含む）
+  double stamina = 100, hUsed = 0, lastHours = 0;
+  int down = 0;
+
+  /// 銀行が経営に口を出している残りの月・一度口を出されたか・返済が遅れた印（残りの月。格付けを1つ下げる）
+  int bankCtl = 0, missed = 0;
+  bool bankDone = false;
+
+  /// 今年の利益の積み上げと、払った税金（年の初めに戻す）
+  double ytdPre = 0, ytdTax = 0;
+
+  /// 先月返した元本
+  double lastPrincipal = 0;
+
+  /// 業種の分類ごとの、先月の現場の人1人の人件費（人件費を賃金の動きに合わせるため）
+  Map<String, double> wiLast = {};
+
+  /// 先月の経費の内訳（お金の画面で今月と比べる）
+  Map<String, double> expLast = {};
   bool listed = false;
   int region = 0;
   Shares sh = Shares();
@@ -221,7 +272,6 @@ class Game {
   List<HistEntry> hist = [];
   List<Company> cos = [];
   double econ = 1, perMul = 1, techBoom = 1;
-  int ap = 3, apMax = 3;
   String? over, won;
   int turn = 0;
   List<GameEvent> events = [];
@@ -240,8 +290,7 @@ class Game {
   String? cultNext;
   int cultLeft = 0;
   double pre = 0, interest = 0, hq = 0, subP = 0, rev = 0, cap = 1, g = 0, lastTax = 0;
-  double wealth = 0, land = 0, bond = 0;
-  int bondDue = 0;
+  double wealth = 0, land = 0;
   bool holding = false;
   int cooked = 0, dirty = 0, rep = 0, rest = 0, gen = 1, serial = 0;
   int? lastOffer;
@@ -458,37 +507,29 @@ class Game {
       pres.ab['ei'] = pres.ab['ei']! - 10;
       pres.ab['zai'] = pres.ab['zai']! - 10;
     }
+    // 2026年より先の経済の予測の種（同じ遊びなら同じ未来になる）
+    fcSeed = ri(1, 1 << 30);
+    econData.fcSeed = fcSeed;
     cash = 4e7 * nomOf(cfg.year.toDouble()) * (hasT('noble') ? 4 : 1);
-    // 時代の大事件（史実をもとにぶれる）
-    int j(int a) => a + ri(-2, 2);
+    // 景気・金利・物価・為替は統計で動く（1.1.0+25）。大きな出来事は統計の出来事から作り、技術の波（ネット・スマホ・AI）だけをここで足す
+    eventCycles(cfg.year);
+    int j(int a) => a + ri(-1, 1);
     double m() => .6 + rnd() * .8;
-    void add(String name, int s, int e, double ec, double per, double tech, String news) {
-      // 名前と知らせは「鍵と引数」で持つ（見せるときに言語を選ぶ）
-      var nw = M(news);
-      if (home != 'jp' && RegExp('バブル景気|バブル崩壊').hasMatch(name)) {
-        ec = 1 + (ec - 1) * .3;
-        per = 1 + (per - 1) * .3;
-        nw = M('日本の{0}', [nw]);
-      }
-      if (e >= cfg.year) cycles.add(Cycle(name: M(name), s: s, e: e, econ: ec, per: per, tech: tech, news: nw, shown: s < cfg.year));
+    void add(String name, int s, int e, double per, double tech, String news) {
+      if (e >= cfg.year) cycles.add(Cycle(name: M(name), s: s, e: e, econ: 1, per: per, tech: tech, news: M(news), shown: s < cfg.year));
     }
 
-    final b0 = j(1986);
-    add('バブル景気', b0, b0 + ri(3, 5), 1 + .25 * m(), 1 + .9 * m(), 1, '土地と株が上がり続けています。銀行がいくらでも貸してくれる時代です');
-    final bc = b0 + ri(4, 6);
-    add('バブル崩壊', bc, bc + ri(3, 6), 1 - .2 * m(), 1 - .35 * m(), 1, '株と土地の値段が崩れ始めました。借金の多い会社から倒れていきます');
     final n0 = j(1996);
-    add('インターネットの到来', n0, n0 + ri(3, 5), 1, 1 + .3 * m(), 1 + .6 * m(), 'ネットの会社に投資家のお金が殺到しています');
-    final nc = n0 + ri(4, 5);
-    add('ネットバブル崩壊', nc, nc + ri(1, 3), .95, 1 - .25 * m(), 1 - .3 * m(), 'ネットの会社の株が暴落しています');
-    final fc = j(2008);
-    add('世界金融危機', fc, fc + ri(1, 3), 1 - .2 * m(), 1 - .35 * m(), .9, '世界中で銀行が傾き、株が暴落しています');
+    add('インターネットの到来', n0, n0 + ri(3, 4), 1 + .3 * m(), 1 + .6 * m(), 'ネットの会社に投資家のお金が殺到しています');
     final sm = j(2009);
-    add('スマホの時代', sm, sm + ri(5, 8), 1, 1.05, 1 + .25 * m(), 'スマホが一気に広まり、アプリの会社が急成長しています');
+    add('スマホの時代', sm, sm + ri(5, 8), 1.05, 1 + .25 * m(), 'スマホが一気に広まり、アプリの会社が急成長しています');
     final ai = j(2023);
-    add('AIブーム', ai, ai + ri(4, 8), 1.03, 1 + .3 * m(), 1 + .5 * m(), 'AIに世界中のお金が集まっています');
-    final fu = j(2034);
-    add('未来の不況', fu, fu + ri(2, 3), 1 - .15 * m(), 1 - .3 * m(), .9, '景気が急に冷え込みました');
+    add('AIブーム', ai, ai + ri(4, 8), 1 + .3 * m(), 1 + .5 * m(), 'AIに世界中のお金が集まっています');
+    econ = econOf(home);
+    stamina = 100;
+    for (final cat in wageByCat.keys) {
+      wiLast[cat] = wageCat(cat);
+    }
     // CPU の会社をつくる
     final live = liveInds();
     for (final ind in live) {
@@ -722,10 +763,13 @@ class Game {
   }
 
   void calcAll() {
+    econData.fcSeed = fcSeed;
+    perK = clampD(1 - (rateOf(home) - 3) * .03, .7, 1.15);
     final tt = totals();
     final T = tt.T, sm = tt.sm;
     lastT = T;
     final y = yr();
+    final fxCost = clampD(1 - .12 * (fxMove(home) - 1), .9, 1.06);
     for (final b in biz) {
       final ind = indm[b.ind]!;
       final r = reachOf(b), x = rEff(b);
@@ -759,6 +803,8 @@ class Game {
       }
       if (b.war > 0) mg *= .8;
       if (b.attack > 0) mg *= .7;
+      // 原料を外から買う業種は、自国の通貨が安くなると原価が上がる（3年前と比べた為替。1.1.0+25）
+      if (ind.cat == 'make' || ind.cat == 'ene' || ind.cat == 'food') mg *= fxCost;
       b.profit = b.rev * mg - (b.ad > 0 ? b.adCost : 0) - b.upkeep * (['make', 'food'].contains(ind.cat) && hasDeal('outsrc') ? .7 : 1);
     }
     // 業種の市場の大きさは、この計算のあいだは変わらないので1回ずつだけ求める（会社が900社あると、会社ごとに求めると重い）
@@ -791,7 +837,11 @@ class Game {
     groupCalc();
   }
 
-  double per(double gg) => clampD(15 * perMul * (1 + clampD(gg, -.3, .5)), 5, 70);
+  /// 株価の倍率（PER）。金利が高い時代は低く、低い時代は高い（1.1.0+25）
+  double per(double gg) => clampD(15 * perMul * (1 + clampD(gg, -.3, .5)) * perK, 5, 70);
+
+  /// 金利による株価の倍率（計算のたびに1回だけ求める）
+  double perK = 1;
   double salaries() => staff.fold(0.0, (s, p) => s + p.salary) * (hasT('frugal') ? .7 : 1);
   double pctOf(Company c) => c.stakePlayer;
 
@@ -799,7 +849,7 @@ class Game {
     final own = biz.fold(0.0, (s, b) => s + b.profit);
     final sb = subs();
     final sp = sb.fold(0.0, (s, c) => s + c.profit * pctOf(c) / 100);
-    final it = debt * (hasT('careful') ? .002 : .0033) + bond * .0025;
+    final it = loanInterest();
     final h0 = (biz.length * 1e5 + 3.3e4) * nom() * (holding ? 1.5 : 1);
     final p = own + sp - salaries() - it - h0;
     pre = p;
@@ -846,7 +896,7 @@ class Game {
   // ===== 保存 =====
   /// 試作の save と同じく、選ぶ出来事（関数を持つ）は保存しない
   Map<String, dynamic> toJson() => {
-        'v': 1,
+        'v': saveVersion,
         'uid': uidCounter,
         'mode': mode,
         'diff': diff,
@@ -854,7 +904,21 @@ class Game {
         'year': year,
         'q': q,
         'cash': cash,
-        'debt': debt,
+        'loans': loans.map((e) => e.toJson()).toList(),
+        'loanSeq': loanSeq,
+        'fcSeed': fcSeed,
+        'stamina': stamina,
+        'hUsed': hUsed,
+        'lastHours': lastHours,
+        'down': down,
+        'bankCtl': bankCtl,
+        'bankDone': bankDone,
+        'missed': missed,
+        'ytdPre': ytdPre,
+        'ytdTax': ytdTax,
+        'lastPrincipal': lastPrincipal,
+        'wiLast': wiLast,
+        'expLast': expLast,
         'listed': listed,
         'region': region,
         'sh': sh.toJson(),
@@ -870,8 +934,6 @@ class Game {
         'econ': econ,
         'perMul': perMul,
         'techBoom': techBoom,
-        'ap': ap,
-        'apMax': apMax,
         'over': over,
         'won': won,
         'turn': turn,
@@ -894,8 +956,6 @@ class Game {
         'lastTax': lastTax,
         'wealth': wealth,
         'land': land,
-        'bond': bond,
-        'bondDue': bondDue,
         'holding': holding,
         'cooked': cooked,
         'dirty': dirty,
@@ -933,6 +993,8 @@ class Game {
     Map<String, int> mi(String k) => {for (final e in (j[k] as Map? ?? {}).entries) e.key as String: (e.value as num).round()};
     Map<String, double>? md(String k) => j[k] == null ? null : {for (final e in (j[k] as Map).entries) e.key as String: (e.value as num).toDouble()};
     List<T> l<T>(String k, T Function(Map<String, dynamic>) f) => (j[k] as List? ?? []).map((e) => f(e as Map<String, dynamic>)).toList();
+    // 1.1.0+25 で作り直したので、それより前のセーブは読まない（画面は「新しい版では続きから遊べません」と出す）
+    if (i('v', 1) < saveVersion) throw const OldSaveError();
     final s = Game(rng ?? math.Random())
       ..uidCounter = i('uid', 1)
       ..mode = j['mode'] as String
@@ -941,7 +1003,21 @@ class Game {
       ..year = i('year')
       ..q = i('q', 1)
       ..cash = d('cash')
-      ..debt = d('debt')
+      ..loans = l('loans', Loan.fromJson)
+      ..loanSeq = i('loanSeq')
+      ..fcSeed = i('fcSeed', 1)
+      ..stamina = d('stamina', 100)
+      ..hUsed = d('hUsed')
+      ..lastHours = d('lastHours')
+      ..down = i('down')
+      ..bankCtl = i('bankCtl')
+      ..bankDone = j['bankDone'] == true
+      ..missed = i('missed')
+      ..ytdPre = d('ytdPre')
+      ..ytdTax = d('ytdTax')
+      ..lastPrincipal = d('lastPrincipal')
+      ..wiLast = md('wiLast') ?? {}
+      ..expLast = md('expLast') ?? {}
       ..listed = j['listed'] == true
       ..region = i('region')
       ..sh = Shares.fromJson(j['sh'] as Map<String, dynamic>)
@@ -957,8 +1033,6 @@ class Game {
       ..econ = d('econ', 1)
       ..perMul = d('perMul', 1)
       ..techBoom = d('techBoom', 1)
-      ..ap = i('ap')
-      ..apMax = i('apMax', 3)
       ..over = j['over'] as String?
       ..won = j['won'] as String?
       ..turn = i('turn')
@@ -981,8 +1055,6 @@ class Game {
       ..lastTax = d('lastTax')
       ..wealth = d('wealth')
       ..land = d('land')
-      ..bond = d('bond')
-      ..bondDue = i('bondDue')
       ..holding = j['holding'] == true
       ..cooked = i('cooked')
       ..dirty = i('dirty')

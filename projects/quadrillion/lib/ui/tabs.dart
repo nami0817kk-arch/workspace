@@ -15,15 +15,18 @@ import 'widgets.dart';
 // ボタンは押せる範囲が 44pt あるので、行のあいだは空けない（見た目の隙間はその余白で足りる）
 Widget _wrap(List<Widget> c) => Wrap(spacing: 6, runSpacing: 0, children: c);
 
-/// 手を使うボタン。使う数の札（「1手」）を付け、手が足りなければ薄くして、押すと「今月の手が残っていません」を出す
-Widget _apBtn(GameController ctl, String label, VoidCallback onTap, {int ap = 1, bool enabled = true, bool primary = false, bool more = false}) {
-  final short = !ctl.game!.canAP(ap);
+/// 社長の時間を使うボタン。かかる時間の札（「8時間」）を付け、時間が足りなければ薄くして、押すと足りない理由を出す（[k] は行動の種類。game_real.dart の hoursOf）
+Widget _apBtn(GameController ctl, String label, VoidCallback onTap, {String k = 'act', bool enabled = true, bool primary = false, bool more = false}) {
+  final short = !ctl.game!.canT(k);
   return Btn(label, () {
-    if (!ctl.noAp(ap)) onTap();
+    if (!ctl.noAp(k)) onTap();
     // 1行に収め、入りきらないときは字だけを詰める。英語は語の途中で折れず2行になりやすく、
     // 日本語も幅320では「TOBで50.1%（…・成功率…）」のような長いものが2行に折れていた（1.0.0+17）
-  }, small: true, ap: ap, dim: short, enabled: enabled, primary: primary, more: more, shrink: true);
+  }, small: true, ap: hr(ctl.game!, k), dim: short, enabled: enabled, primary: primary, more: more, shrink: true);
 }
+
+/// 行動にかかる社長の時間（札に出す整数）
+int hr(Game s, String k) => s.hrs(k).round();
 Widget _gap([double h = 8]) => SizedBox(height: h);
 String _pct0(double v) => '${jsNum(jsRound(v * 100))}%';
 
@@ -82,8 +85,23 @@ List<Widget> townTab(GameController ctl) {
         border: Pal.down,
         child: Text(tr('取締役会との約束：{0}年1月までに、年の利益を{1}まで戻す', [vow['y']!.round(), yen(vow['target']!)]), style: ts(size: 13))));
   }
-  out.add(_presPanel(ctl));
-  // 宿敵：見出しを押すとたためる。1人1行の要約で、押すと因縁と「裏の手」が開く
+  out.add(presPanel(ctl));
+  out.addAll(townRivalsOf(ctl));
+  final newsOpen = !ctl.folded.contains('news');
+  final recent = s.log.reversed.take(8).toList();
+  out.add(FoldHead(tr('最近のできごと'), key: const ValueKey('fold-news'), open: newsOpen, onTap: () => ctl.toggleFold('news'), note: tr('{0}件', [recent.length])));
+  if (newsOpen) {
+    for (final n in recent) {
+      out.add(NewsLine(n.m, n.t, prefix: n.y != null ? '${yearL(n.y!)} ' : null, icon: newsIcon(s, n)));
+    }
+  }
+  return out;
+}
+
+/// 宿敵：見出しを押すとたためる。1人1行の要約で、押すと因縁と「裏の手」が開く
+List<Widget> townRivalsOf(GameController ctl) {
+  final s = ctl.game!;
+  final out = <Widget>[];
   final rivals = s.cos.where((c) => c.rival != null && c.alive).toList();
   final rivOpen = !ctl.folded.contains('rivals');
   out.add(FoldHead(tr('宿敵'), key: const ValueKey('fold-rivals'), open: rivOpen, onTap: () => ctl.toggleFold('rivals'), note: tr('{0}社', [rivals.length])));
@@ -91,14 +109,6 @@ List<Widget> townTab(GameController ctl) {
     if (rivals.isEmpty) out.add(Muted(tr('まだ宿敵はいません。同じ業種でぶつかると現れます。')));
     for (final c in rivals) {
       out.add(ctl.openRival == c.id ? _rivalCard(ctl, c) : _rivalRow(ctl, c));
-    }
-  }
-  final newsOpen = !ctl.folded.contains('news');
-  final recent = s.log.reversed.take(8).toList();
-  out.add(FoldHead(tr('最近のできごと'), key: const ValueKey('fold-news'), open: newsOpen, onTap: () => ctl.toggleFold('news'), note: tr('{0}件', [recent.length])));
-  if (newsOpen) {
-    for (final n in recent) {
-      out.add(NewsLine(n.m, n.t, prefix: n.y != null ? '${yearL(n.y!)} ' : null, icon: newsIcon(s, n)));
     }
   }
   return out;
@@ -192,14 +202,14 @@ Widget? tipBtn(GameController ctl, Tip t, int i, {bool sheet = false}) {
       if (n <= 0) return go(tr('「{0}」を開く', [indm[ref.ind]!.name]), () => ctl.openBizCard(ref.id));
       final cost = s.hireCost(ref, n);
       return Btn(tr('足りない人を雇う（{0}人・{1}）', [n, yen(cost)]), () => ctl.act(() => s.addCrewNeeded(ref), mark: 'act'),
-          key: key, small: true, shrink: true, ap: 1, dim: s.cash < cost || !s.canAP(1));
+          key: key, small: true, shrink: true, ap: hr(s, 'crew'), dim: s.cash < cost || !s.canT('crew'));
     case 'hireAll':
       final can = s.crewShortDoable();
       if (s.crewShort().isEmpty) return go(tr('「事業」を開く'), () => ctl.setTab('biz'));
-      if (can.isEmpty) return Btn(tr('足りない人をまとめて雇う'), () => ctl.toast(s.hireShortAll()), key: key, small: true, shrink: true, ap: 1, dim: true);
+      if (can.isEmpty) return Btn(tr('足りない人をまとめて雇う'), () => ctl.toast(s.hireShortAll()), key: key, small: true, shrink: true, ap: hr(s, 'crew'), dim: true);
       final cost = can.fold(0.0, (a, b) => a + s.hireCost(b, s.crewNeedPeople(b)));
       return Btn(tr('足りない人をまとめて雇う（{0}つ・{1}）', [can.length, yen(cost)]), () => ctl.act(s.hireShortAll, mark: 'act'),
-          key: key, small: true, shrink: true, ap: can.length);
+          key: key, small: true, shrink: true, ap: hr(s, 'crew') * can.length);
     case 'place':
       final plan = s.managerPlan();
       if (plan.isEmpty) {
@@ -213,8 +223,8 @@ Widget? tipBtn(GameController ctl, Tip t, int i, {bool sheet = false}) {
       }, key: key, small: true, shrink: true);
     case 'holding':
       return Btn(tr('持株会社にする'), () {
-        if (!ctl.noAp()) ctl.act(s.makeHolding);
-      }, key: key, small: true, shrink: true, ap: 1, dim: !s.canAP(1));
+        if (!ctl.noAp('holding')) ctl.act(s.makeHolding);
+      }, key: key, small: true, shrink: true, ap: hr(s, 'holding'), dim: !s.canT('holding'));
     case 'deleg':
       return Btn(tr('まとめて任せる（{0}つ）', [s.delegable().length]), () {
         final m = s.delegAll();
@@ -325,14 +335,18 @@ Widget _rivalCard(GameController ctl, Company c) {
   );
 }
 
-Widget _presPanel(GameController ctl) {
+/// 社長の行動（1.1.0+25 から、どれも社長の時間を使う。右の帯の「社長の行動」から小窓で開く）
+Widget presPanel(GameController ctl, {bool sheet = false}) {
   final s = ctl.game!;
   final n = s.partners().length;
-  final noAp = s.ap < 1;
-  // 手が残っていないときは薄く見せ、押すと「今月の手が残っていません」を出す
-  VoidCallback go(VoidCallback f) => () {
-        if (!ctl.noAp()) f();
+  // 時間が足りないときは薄く見せ、押すと足りない理由を出す
+  VoidCallback go(String k, VoidCallback f) => () {
+        if (ctl.noAp(k)) return;
+        if (sheet) ctl.hideSheet();
+        f();
       };
+  ChoiceBtn one(String k, String label, VoidCallback f, String sub, {bool enabled = true}) =>
+      ChoiceBtn(label, go(k, f), enabled: enabled, dim: !s.canT(k), ap: hr(s, k), subs: [sub]);
   return Panel(
     key: const ValueKey('town-pres'),
     border: Pal.gold,
@@ -341,15 +355,16 @@ Widget _presPanel(GameController ctl) {
         // 見出しは切らず、右の注意書きは残りの幅に収める（入りきらなければ折り返す。「i」は押せる所に残る）
         CardTitle(tr('社長の行動'), gold: true),
         const SizedBox(width: 8),
-        Expanded(child: Text(tr('どれも手を1つ使う'), textAlign: TextAlign.right, style: ts(size: 12, color: Pal.mute))),
+        Expanded(child: Text(tr('残り{0}時間・体力{1}', [jsRound(s.hLeft()), jsRound(s.stamina)]), textAlign: TextAlign.right, style: ts(size: 12, color: Pal.mute))),
         Info(ctl, const ['ap']),
       ]),
-      if (s.biz.isEmpty) ChoiceBtn(tr('最初の事業を決める'), () => openStart(ctl), primary: true, subs: [tr('最初の1つは手を使わない')]),
-      ChoiceBtn(tr('相棒を探す'), go(() => openSeek(ctl)), enabled: n < 2, dim: noAp, ap: 1, subs: [tr('株を分けて口説く。今の相棒 {0}/2人', [n])]),
-      ChoiceBtn(tr('日銭を稼ぐ'), go(() => ctl.act(() => s.presAct('work'))), dim: noAp, ap: 1, subs: [tr('受託の仕事を受ける。約{0}', [yen(s.workIncome())])]),
-      ChoiceBtn(tr('腕を磨く'), go(() => openTrain(ctl)), dim: noAp, ap: 1, subs: [tr('社長の能力を1つ伸ばす。若いほど伸びる')]),
-      ChoiceBtn(tr('人脈を作る'), go(() => ctl.act(() => s.presAct('net'))), enabled: s.net < 5, dim: noAp, ap: 1, subs: [tr('借りられる額と採用の質が上がる（{0}/5）', [s.net])]),
-      ChoiceBtn(tr('事業の種を探す'), go(() => ctl.act(() => s.presAct('scout'))), dim: noAp, ap: 1, subs: [tr('これから生まれる市場や、相性のよい組み合わせが分かる')]),
+      if (s.biz.isEmpty) ChoiceBtn(tr('最初の事業を決める'), go('start', () => openStart(ctl)), primary: true, ap: hr(s, 'start'), subs: [tr('立ち上げには社長の時間がかかる')]),
+      one('seek', tr('相棒を探す'), () => openSeek(ctl), tr('株を分けて口説く。今の相棒 {0}/2人', [n]), enabled: n < 2),
+      one('work', tr('日銭を稼ぐ'), () => ctl.act(() => s.presAct('work')), tr('受託の仕事を受ける。約{0}', [yen(s.workIncome())])),
+      one('train', tr('腕を磨く'), () => openTrain(ctl), tr('社長の能力を1つ伸ばす。若いほど伸びる')),
+      one('net', tr('人脈を作る'), () => ctl.act(() => s.presAct('net')), tr('借りられる額と採用の質が上がる（{0}/5）', [s.net]), enabled: s.net < 5),
+      one('scout', tr('事業の種を探す'), () => ctl.act(() => s.presAct('scout')), tr('これから生まれる市場や、相性のよい組み合わせが分かる')),
+      one('rest', tr('休む'), () => ctl.act(() => s.presAct('rest')), tr('体力が25戻る（今 {0}）', [jsRound(s.stamina)])),
     ]),
   );
 }
@@ -495,7 +510,6 @@ List<Widget> bizTab(GameController ctl) {
   ]));
   final q = ctl.bizSearch.text.trim();
   final list = newBizList(s, filter: f, sort: ctl.bizSort, query: q);
-  final firstFree = s.biz.isEmpty && !s.everBiz;
   if (list.isEmpty) {
     out.add(Panel(
         key: const ValueKey('biz-empty'),
@@ -561,11 +575,11 @@ List<Widget> bizTab(GameController ctl) {
             width: _startW,
             child: Align(
                 alignment: Alignment.centerRight,
-                // 最初の1つは手を使わない。2つ目からは1手
+                // 立ち上げには社長の時間がかかる（最初の1つも。1.1.0+25）
                 child: Btn(tr('始める'), () {
-                  if (!firstFree && ctl.noAp()) return;
+                  if (ctl.noAp('start')) return;
                   s.modelsFor(i.id).length > 1 ? openModel(ctl, i.id) : ctl.act(() => s.startBiz(i.id));
-                }, small: true, enabled: s.cash >= c, ap: firstFree ? 0 : 1, apBelow: true, dim: !firstFree && !s.canAP(1)))),
+                }, small: true, enabled: s.cash >= c, ap: hr(s, 'start'), apBelow: true, dim: !s.canT('start')))),
       ]);
       }),
     ));
@@ -578,25 +592,11 @@ List<Widget> bizTab(GameController ctl) {
       TextSpan(text: soon.map((i) => tr('{0}（{1}年ごろ）', [i.name, i.b])).join(tr('・')), style: ts(size: 12.5)),
     ]))));
   }
-  out.add(H2(tr('銀行@@h')));
-  final room = math.max(0.0, s.borrowLimit() - s.debt);
+  // 銀行は「お金」の画面へ移した（1.1.0+25）
   out.add(Panel(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text(tr('借金 {0}／借りられる上限 {1}／利息 毎月{2}%', [yen(s.debt), yen(room), s.hasT('careful') ? '0.2' : '0.33']), style: ts(size: 13)),
-    _gap(),
-    _wrap([
-      for (final k in const [.25, 1.0])
-        Builder(builder: (_) {
-          final a = math.max(0.0, (s.borrowLimit() - s.debt) * k);
-          return Btn(tr('{0} 借りる', [yen(a)]), () => ctl.act(() => s.borrow(a)), small: true, enabled: a >= 1e5);
-        }),
-      Btn(tr('全部返す'), () => ctl.act(() => s.repay(s.debt)), small: true, enabled: s.debt > 0),
-      if (s.bond > 0)
-        Muted(tr('社債 {0}（{1}年に返す）', [yen(s.bond), s.year + ((s.bondDue - s.turn + s.q - 1) / 12).floor()]))
-      else
-        _apBtn(ctl, tr('社債を出す'), () => ctl.act(s.issueBond), enabled: s.canBond()),
-      if (s.land > 0) Btn(tr('土地を売る（今の値 {0}）', [yen(s.land)]), () => ctl.act(s.sellLand), small: true, shrink: true),
-    ]),
+      child: Row(children: [
+    Expanded(child: Text(tr('借金 {0}・格付け {1}・あと{2}借りられる', [yen(s.debt), s.rating(), yen(s.borrowRoom())]), style: ts(size: 13))),
+    Btn(tr('「お金」を開く'), () => ctl.setTab('money'), small: true, more: true),
   ])));
   return out;
 }
@@ -670,9 +670,9 @@ Widget? _bizAttention(GameController ctl) {
           alignment: Alignment.centerLeft,
           child: can.isEmpty
               // 手かお金が足りないときも押せて、理由を言う
-              ? Btn(tr('足りない人をまとめて雇う'), () => ctl.toast(s.hireShortAll()), small: true, shrink: true, ap: 1, dim: true)
+              ? Btn(tr('足りない人をまとめて雇う'), () => ctl.toast(s.hireShortAll()), small: true, shrink: true, ap: hr(s, 'crew'), dim: true)
               : Btn(tr('足りない人をまとめて雇う（{0}つ・{1}）', [can.length, yen(cost)]), () => ctl.act(s.hireShortAll, mark: 'act'),
-                  key: const ValueKey('hire-short-all'), small: true, shrink: true, ap: can.length),
+                  key: const ValueKey('hire-short-all'), small: true, shrink: true, ap: hr(s, 'crew') * can.length),
         ),
         if (can.isNotEmpty && can.length < short.length) Muted(tr('手かお金が足りる{0}つだけ雇います（足りない割合の大きい順）', [can.length]), size: 12),
       ],
@@ -972,7 +972,7 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
         _apBtn(ctl, tr('商品を作る'), () => openDevelop(ctl, b), more: true),
         if (b.model != 'fc')
           _apBtn(ctl, s.crewNeedPeople(b) > 0 ? tr('現場の人を増やす（{0}人足りない）', [s.crewNeedPeople(b)]) : tr('現場の人を増やす'), () => openCrew(ctl, b), more: true),
-        _apBtn(ctl, tr('広告 {0}', [yen(s.invBase(b) * .25)]), () => ctl.act(() => s.adv(b), mark: 'act')),
+        _apBtn(ctl, tr('広告 {0}', [yen(s.invBase(b) * .25)]), () => ctl.act(() => s.adv(b), mark: 'act'), k: 'ad'),
         _apBtn(ctl, tr('海外に出る'), () => openEnter(ctl, b), more: true),
       ]),
       _grpHead(tr('戦う@@grp'), Icons.flash_on),
@@ -996,7 +996,7 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
           _wrap([
             b.attack > 0
                 ? Btn(tr('値下げ合戦中（あと{0}期）', [b.attack]), null, small: true, enabled: false)
-                : _apBtn(ctl, tr('値下げ合戦を仕掛ける（相手：{0}）', [nmL(cs[0].c.name)]), () => ctl.act(() => s.priceWar(b), mark: 'act')),
+                : _apBtn(ctl, tr('値下げ合戦を仕掛ける（相手：{0}）', [nmL(cs[0].c.name)]), () => ctl.act(() => s.priceWar(b), mark: 'act'), k: 'war'),
             if (!s.inAssoc(b.ind)) Btn(tr('業界団体に入る'), () => ctl.act(() => s.joinAssoc(b), mark: 'act'), small: true),
           ]),
       ]),
@@ -1021,7 +1021,7 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
           ]),
           _apBtn(ctl, tr('売る（約{0}）', [yen(s.sellValue(b))]),
               () => actConfirmed(ctl, tr('「{0}」を売る', [ind.name]), tr('「{0}」を約{1}で手放します。育てた力は戻りません。', [ind.name, yen(s.sellValue(b))]), tr('売る'), () => s.sellBiz(b)),
-              ap: s.hasT('charm') ? 2 : 1),
+              k: 'sell'),
         ]),
       ),
       ],
@@ -1043,7 +1043,7 @@ List<Widget> _bizTopMoves(GameController ctl, Biz b) {
   if (need > 0) {
     final cost = s.hireCost(b, need);
     out.add(Btn(tr('足りない人を雇う（{0}人・{1}）', [need, yen(cost)]), () => ctl.act(() => s.addCrewNeeded(b), mark: 'act'),
-        key: ValueKey('top-hire-${b.id}'), small: true, shrink: true, ap: 1, dim: s.cash < cost || !s.canAP(1)));
+        key: ValueKey('top-hire-${b.id}'), small: true, shrink: true, ap: hr(s, 'crew'), dim: s.cash < cost || !s.canT('crew')));
   }
   if (b.mgr == null) {
     final free = s.staff.where((x) => !s.biz.any((y) => y.mgr == x.id)).toList()..ssort((x, y) => y.ab[ind.key]!.compareTo(x.ab[ind.key]!));
@@ -1059,7 +1059,7 @@ List<Widget> _bizTopMoves(GameController ctl, Biz b) {
   final grow = <Widget>[
     _apBtn(ctl, tr('{0}を増やす', [s.uw(b)]), () => openBuild(ctl, b), more: true),
     _apBtn(ctl, tr('商品を作る'), () => openDevelop(ctl, b), more: true),
-    if (b.ad == 0) _apBtn(ctl, tr('広告 {0}', [yen(s.invBase(b) * .25)]), () => ctl.act(() => s.adv(b), mark: 'act')),
+    if (b.ad == 0) _apBtn(ctl, tr('広告 {0}', [yen(s.invBase(b) * .25)]), () => ctl.act(() => s.adv(b), mark: 'act'), k: 'ad'),
     _apBtn(ctl, tr('海外に出る'), () => openEnter(ctl, b), more: true),
   ];
   for (final w in grow) {
@@ -1123,7 +1123,7 @@ List<Widget> peopleTab(GameController ctl) {
     else
       _wrap([
         for (final k in CULT.keys.where((k) => k != s.culture))
-          Tooltip(message: '${tr('＋')}${CULT[k]!.g}${tr('／')}${tr('－')}${CULT[k]!.b}', child: _apBtn(ctl, tr('{0}にする', [CULT[k]!.n]), () => ctl.act(() => s.changeCulture(k)))),
+          Tooltip(message: '${tr('＋')}${CULT[k]!.g}${tr('／')}${tr('－')}${CULT[k]!.b}', child: _apBtn(ctl, tr('{0}にする', [CULT[k]!.n]), () => ctl.act(() => s.changeCulture(k)), k: 'culture')),
       ]),
   ])));
   final succs = [...s.staff, ...s.kids.where((k) => k.age >= 18)];
@@ -1187,7 +1187,7 @@ List<Widget> peopleTab(GameController ctl) {
         const SizedBox(height: 6),
         Row(children: [
           Expanded(child: Muted(tr('給料 {0}／月・支度金 {1}', [yen(p.salary), yen(p.salary * 2)]))),
-          _apBtn(ctl, tr('雇う'), () => ctl.act(() => s.hire(p))),
+          _apBtn(ctl, tr('雇う'), () => ctl.act(() => s.hire(p)), k: 'hire'),
         ]),
       ])),
     ])));
@@ -1416,9 +1416,9 @@ List<Widget> stockTab(GameController ctl) {
             CardTitle(tr('上場済み')),
             Padding(padding: const EdgeInsets.symmetric(vertical: 6), child: Muted(tr('誰でもあなたの株を買えます。乗っ取りに注意。'))),
             _wrap([
-              _apBtn(ctl, tr('増資で集める（{0}・全員の割合−9%）', [yen(s.cap * .095)]), () => ctl.act(s.publicOffer)),
-              _apBtn(ctl, tr('自社株買い 5%（約{0}）', [yen(s.cap * .0575)]), () => ctl.act(s.buybackAct), enabled: sh.float >= 1),
-              _apBtn(ctl, tr('ホワイトナイトを頼む'), () => ctl.act(s.whiteKnightAct)),
+              _apBtn(ctl, tr('増資で集める（{0}・全員の割合−9%）', [yen(s.cap * .095)]), () => ctl.act(s.publicOffer), k: 'offer'),
+              _apBtn(ctl, tr('自社株買い 5%（約{0}）', [yen(s.cap * .0575)]), () => ctl.act(s.buybackAct), enabled: sh.float >= 1, k: 'buyback'),
+              _apBtn(ctl, tr('ホワイトナイトを頼む'), () => ctl.act(s.whiteKnightAct), k: 'knight'),
             ]),
           ])
         : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -1427,8 +1427,8 @@ List<Widget> stockTab(GameController ctl) {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Muted(tr('上場すると大金が入るが、宿敵があなたの株を買えるようになる。条件：年の利益 {0} 以上・創業2年以上', [yen(3e8 * s.nom())]))),
             _wrap([
-              _apBtn(ctl, tr('投資家から集める（{0}・持ち株−10%）', [yen(s.cap * .1)]), () => ctl.act(s.vcRaise)),
-              _apBtn(ctl, tr('上場する'), () => ctl.act(s.ipo), enabled: s.canIPO()),
+              _apBtn(ctl, tr('投資家から集める（{0}・持ち株−10%）', [yen(s.cap * .1)]), () => ctl.act(s.vcRaise), k: 'vc'),
+              _apBtn(ctl, tr('上場する'), () => ctl.act(s.ipo), enabled: s.canIPO(), k: 'ipo'),
             ]),
           ]),
   ));
@@ -1463,7 +1463,7 @@ List<Widget> stockTab(GameController ctl) {
               if (!s.holding)
                 ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: c.maxWidth * .7),
-                    child: _apBtn(ctl, tr('持株会社にする'), () => ctl.act(s.makeHolding), enabled: s.biz.length + s.subs().length >= 5)),
+                    child: _apBtn(ctl, tr('持株会社にする'), () => ctl.act(s.makeHolding), k: 'holding', enabled: s.biz.length + s.subs().length >= 5)),
             ])),
     Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
@@ -1478,7 +1478,7 @@ List<Widget> stockTab(GameController ctl) {
     const SizedBox(height: 6),
     _wrap([
       if (s.listed) Btn(tr('持ち株を5%売る（約{0}）', [yen(s.cap * .045)]), () => ctl.act(() => s.sellOwn(5)), small: true, shrink: true),
-      if (s.listed) _apBtn(ctl, tr('非上場に戻す（MBO）'), () => ctl.act(s.goPrivate)),
+      if (s.listed) _apBtn(ctl, tr('非上場に戻す（MBO）'), () => ctl.act(s.goPrivate), k: 'private'),
       _apBtn(ctl, tr('会社を丸ごと売る'), () => openSell(ctl), enabled: s.biz.isNotEmpty && s.buyers().isNotEmpty, more: true),
       if (s.noncomp != null && !s.noncomp!.broken)
         Tooltip(message: tr('2年後に裁判で賠償を求められる'), child: Btn(tr('同じ業種に入らない約束を破る'), () => ctl.act(s.breakNoncomp), small: true, shrink: true)),
@@ -1548,18 +1548,18 @@ Widget _coCard(GameController ctl, Company c) {
     _wrap([
       // 自分の子会社で、市場に株が出ていないときは「市場で買う」を出さない（押せないボタンが並ぶだけになる）
       if (!(mine && s.floatOf(c) <= 0))
-        _apBtn(ctl, tr('市場で5%買う（{0}）', [yen(c.cap * .0525)]), () => ctl.act(() => s.buyStake(c, 5)), enabled: s.floatOf(c) > 0),
+        _apBtn(ctl, tr('市場で5%買う（{0}）', [yen(c.cap * .0525)]), () => ctl.act(() => s.buyStake(c, 5)), k: 'own', enabled: s.floatOf(c) > 0),
       if (own < 50.1)
-        _apBtn(ctl, tr('TOBで{0}%（{1}・成功率{2}）', ['50.1', yen(s.tobCost(c, 50.1)), _pct0(s.tobChance(c, 50.1))]), () => ctl.act(() => s.tob(c, 50.1))),
+        _apBtn(ctl, tr('TOBで{0}%（{1}・成功率{2}）', ['50.1', yen(s.tobCost(c, 50.1)), _pct0(s.tobChance(c, 50.1))]), () => ctl.act(() => s.tob(c, 50.1)), k: 'tob'),
       if (own > 50 && own < 66.7)
-        _apBtn(ctl, tr('TOBで{0}%（{1}・成功率{2}）', ['66.7', yen(s.tobCost(c, 66.7)), _pct0(s.tobChance(c, 66.7))]), () => ctl.act(() => s.tob(c, 66.7))),
-      if (s.canMerge(c)) _apBtn(ctl, tr('合併する（株を渡して払う）'), () => ctl.act(() => s.merge(c)), primary: true),
+        _apBtn(ctl, tr('TOBで{0}%（{1}・成功率{2}）', ['66.7', yen(s.tobCost(c, 66.7)), _pct0(s.tobChance(c, 66.7))]), () => ctl.act(() => s.tob(c, 66.7)), k: 'tob'),
+      if (s.canMerge(c)) _apBtn(ctl, tr('合併する（株を渡して払う）'), () => ctl.act(() => s.merge(c)), primary: true, k: 'merge'),
       if (c.parent != 'player') _apBtn(ctl, tr('組む'), () => openDeal(ctl, c), more: true),
       if (swap)
         Tooltip(
           message: tr('現金の代わりに自社の株を渡して丸ごと買う。あなたの持ち株は薄まる'),
           // ボタンの字は短くして、持ち株がどう薄まるかは下の行に出す（1行に詰めると、幅320では字が読めない大きさまで縮んでいた。1.0.0+18）
-          child: _apBtn(ctl, tr('株式交換で丸ごと買う（成功率{0}）', [_pct0(s.swapChance(c))]), () => ctl.act(() => s.shareSwap(c))),
+          child: _apBtn(ctl, tr('株式交換で丸ごと買う（成功率{0}）', [_pct0(s.swapChance(c))]), () => ctl.act(() => s.shareSwap(c)), k: 'merge'),
         ),
       if (mine && !c.listed && own >= 60)
         _apBtn(ctl, c.loc != null ? tr('{0}の市場に上場させる（30%売る・約{1}）', [cm[c.loc!]!.n, yen(c.cap * .3 * .95)]) : tr('子会社を上場させる（30%売る・約{0}）', [yen(c.cap * .3 * .95)]),

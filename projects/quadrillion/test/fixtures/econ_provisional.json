@@ -1,0 +1,13 @@
+{
+  "meta": {"provisional": true, "note": "仮（テスト用の小さなデータ。物価は指数で持つ形）"},
+  "countries": {
+    "jp": {"currency": "JPY", "cities": [{"name_ja": "東京", "name_en": "Tokyo", "pop": 37000000}], "years": {
+      "1980": {"pop": 117000000, "gdp_growth": 2.8, "gdp_usd": 1.1e12, "cpi": 77.6, "rate": 7.25, "fx_usd": 226.7, "wage_usd": 13200, "min_wage": 55000, "corp_tax": 52, "unemp": 2.0},
+      "2000": {"pop": 126900000, "gdp_growth": 2.8, "gdp_usd": 4.97e12, "cpi": 99.6, "rate": 0.25, "fx_usd": 107.8, "wage_usd": 42700, "min_wage": null, "corp_tax": null, "unemp": 4.7},
+      "2024": {"pop": 124000000, "gdp_growth": 0.1, "gdp_usd": 4.03e12, "cpi": 108.5, "rate": 0.25, "fx_usd": 151.4, "wage_usd": 30400, "min_wage": 180000, "corp_tax": 29.7, "unemp": 2.5}}},
+    "us": {"currency": "USD", "cities": [], "years": {
+      "1980": {"pop": 227000000, "gdp_growth": -0.3, "gdp_usd": 2.86e12, "cpi": 31.8, "rate": 13.4, "fx_usd": 1, "wage_usd": 12500, "min_wage": 540, "corp_tax": 46, "unemp": 7.2},
+      "2024": {"pop": 340000000, "gdp_growth": 2.8, "gdp_usd": 2.92e13, "cpi": 120.0, "rate": 5.1, "fx_usd": 1, "wage_usd": 66600, "min_wage": 1260, "corp_tax": 21, "unemp": 4.0}}}
+  },
+  "events": [{"year": 2008, "month": 9, "countries": ["ALL"], "kind": "crisis", "name_ja": "世界金融危機", "name_en": "Global financial crisis", "gdp_hit": -3.0}]
+}

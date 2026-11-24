@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:quadrillion/game/game.dart';
 import 'package:quadrillion/l10n/lang.dart';
 import 'package:quadrillion/ui/controller.dart';
 import 'package:quadrillion/ui/widgets.dart';
@@ -17,5 +19,7 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   Ui.sheetMotion = Duration.zero;
   // 保存は、もとからあるテストでは待たずに次の描き終わりでその場で（待つ・別 Isolate の道は test/improve_e_test.dart が確かめる）
   GameController.saveDelay = Duration.zero;
+  // 本物の経済の統計（アプリは起動時に rootBundle から読む。1.1.0+25）
+  EconData.current = loadEcon(File('assets/econ/econ.json').readAsStringSync());
   await testMain();
 }

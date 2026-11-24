@@ -248,7 +248,7 @@ class Frame extends StatelessWidget {
       );
 }
 
-/// 手を使う数の小さな札（「1手」）
+/// 社長の時間を使う手の、かかる時間の小さな札（「8時間」。1.1.0+25 までは手の数だった）
 class ApTag extends StatelessWidget {
   final int n;
   const ApTag(this.n, {super.key});
@@ -256,7 +256,7 @@ class ApTag extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(color: Pal.panel, border: Border.all(color: Pal.gold), borderRadius: BorderRadius.circular(99)),
-        child: Text(n == 1 ? tr('1手') : tr('{0}手', [n]), maxLines: 1, softWrap: false, style: ts(size: 10.5, color: Pal.goldtx, bold: true, height: 1.5)),
+        child: Text(tr('{0}時間', [n]), maxLines: 1, softWrap: false, style: ts(size: 10.5, color: Pal.goldtx, bold: true, height: 1.5)),
       );
 }
 

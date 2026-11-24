@@ -17,6 +17,9 @@ const legacySaveKey = 'quad-save-m';
 /// セーブ枠の数
 const slotCount = 3;
 
+/// 前の版のセーブを読もうとしたときの知らせ（1.1.0+25 で作り直した）
+const oldSaveMsg = 'この枠は前の版のセーブです。新しい版では続きから遊べません。新しく会社を立ち上げてください';
+
 /// 枠ごとのセーブの鍵と、一覧に出す見出しの鍵（中身を全部読まずに一覧を出すため）
 String slotKey(int slot) => 'quad-save-$slot';
 String slotMetaKey(int slot) => 'quad-meta-$slot';
@@ -111,11 +114,36 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
     notifyListeners();
   }
 
-  /// 手が足りないとき true を返し、「今月の手が残っていません」を出す
-  bool noAp([int need = 1]) {
+  /// お金の画面で見ているもの（cash 資金繰り・bank 借金と銀行・cost 経費・tax 税金・book 決算と記録）
+  String moneyView = 'cash';
+
+  void setMoney(String v) {
+    moneyView = v;
+    notifyListeners();
+  }
+
+  /// 世界の画面で選んでいる国（null なら自分の国）
+  String? worldSel;
+
+  void setWorld(String c) {
+    worldSel = c;
+    notifyListeners();
+  }
+
+  /// 借りるときに選んでいる返す期限（月）
+  int loanTerm = 60;
+
+  void setLoanTerm(int m) {
+    loanTerm = m;
+    notifyListeners();
+  }
+
+  /// 社長の時間が足りないとき true を返し、足りない理由を出す（[k] は行動の種類）
+  bool noAp([String k = 'act']) {
     final g = game;
-    if (g == null || g.canAP(need)) return false;
-    toast(M(g.ap > 0 ? '今月の手が足りません' : '今月の手が残っていません'));
+    final m = g?.needT(k);
+    if (m == null) return false;
+    toast(m);
     return true;
   }
 
@@ -313,11 +341,11 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
   /// 手を打つ（結果の文があれば見せる）。[mark] を渡すと、手を使えたときに案内のその段を済みにする
   void act(String? Function() fn, {String? mark}) {
     hideSheet();
-    final apBefore = game?.ap;
+    final hBefore = game?.hUsed;
     final before = snap();
     final m = fn();
     buzzAfter(before, [if (m != null) LogEntry(m)]);
-    if (mark != null && apBefore != null && game != null && game!.ap < apBefore) markGuide(game, mark);
+    if (mark != null && hBefore != null && game != null && game!.hUsed > hBefore) markGuide(game, mark);
     // 始めた・買った業種を、図鑑の「手がけた業種」に控える
     game?.noteInds();
     // 手のたびの保存も、手が止まってから裏で（1.0.0+17。それまでは結果を見せる前にその場で書いていた）
@@ -500,6 +528,12 @@ class GameController extends ChangeNotifier with WidgetsBindingObserver {
       endHidden = false;
       _resetOpen();
       return true;
+    } on OldSaveError {
+      // 1.1.0+25 で作り直したので、前の版のセーブは読めない。枠を空けて、新しく始めてもらう
+      prefs?.remove(slotKey(k));
+      prefs?.remove(slotMetaKey(k));
+      showSheet((_) => ToastBody(msg: M(oldSaveMsg), onOk: closeSheet));
+      return false;
     } catch (_) {
       return false;
     }

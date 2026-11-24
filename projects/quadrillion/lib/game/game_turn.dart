@@ -8,8 +8,9 @@ extension GameTurn on Game {
     final news = <LogEntry>[];
     void N(String m, [String t = '']) => news.add(LogEntry(m, t));
     final over0 = over, won0 = won, peak0 = peakRank;
-    // 時代
-    econ = 1;
+    // 時代（景気は統計の成長率から。株価と技術の波は出来事から）
+    econData.fcSeed = fcSeed;
+    monthEcon(N);
     perMul = 1;
     techBoom = 1;
     final y = yr();
@@ -322,37 +323,19 @@ extension GameTurn on Game {
     }
     calcAll();
     final p0 = pre;
-    final tax = p0 > 0 ? p0 * .3 : 0.0;
+    // 税金は国と年の法人税率で、今年の利益の積み上げにかける（赤字の月は今年払った分から戻る。1.1.0+25）
+    final tax = monthTax(p0);
     cash += p0 - tax;
     lastTax = tax;
     for (final c in subs()) {
       if (c.profit > 0) cash += c.profit * .4 * pctOf(c) / 100;
     }
     if (scandal > 0) scandal--;
-    if (cash < 0) {
-      final lim = borrowLimit() - debt;
-      if (lim > -cash) {
-        debt += -cash;
-        N(M('資金が足りず、銀行から{0}を借りてしのぎました', [Y(-cash)]), 'bad');
-        cash = 0;
-      } else {
-        if (biz.length > 1) {
-          final w = (biz.toList()..ssort((a, b) => a.profit.compareTo(b.profit)))[0];
-          final v = sellValue(w);
-          cash += v;
-          biz.remove(w);
-          N(M('資金が尽き、「{0}」を{1}で手放しました', [I(w.ind), Y(v)]), 'bad');
-        }
-        if (cash < 0) {
-          if (mode == 'endless') {
-            N(M('会社は倒産しました。残った人脈で、もう一度ゼロから始めます'), 'bad');
-            rebirth();
-          } else {
-            over = M('資金が尽きて、会社は倒産しました');
-          }
-        }
-      }
-    }
+    // 借金の元本を返す・不況の貸しはがし・足りない分の手当て（1.1.0+25）
+    expLast = expenses();
+    monthLoans(N);
+    recessionCall(N);
+    coverShort(N);
     // 引き抜きなどの出来事
     rollEvents(N);
     // 候補者
@@ -396,8 +379,8 @@ extension GameTurn on Game {
     calcAll();
     hist.add(HistEntry(t: '$year-$q', cap: cap, rev: rev, cash: cash, pre: pre));
     if (hist.length > 1200) hist.removeAt(0);
-    apMax = 3 + (biz.length >= 3 ? 1 : 0) + (biz.length + subs().length >= 10 ? 1 : 0);
-    ap = rest != 0 ? 1 : apMax;
+    // 社長の時間と体力（使った時間で体力が動き、新しい月の時間に戻る）
+    monthHours(N);
     rest = 0;
     for (final k in kids) {
       if (k.age < 22 && q == 1) {
@@ -471,7 +454,10 @@ extension GameTurn on Game {
     biz = [];
     staff = [];
     cash = 1e7 * nom();
-    debt = 0;
+    loans = [];
+    bankCtl = 0;
+    missed = 0;
+    bankDone = false;
     listed = false;
     sh = Shares();
     region = 0;
@@ -527,15 +513,6 @@ extension GameTurn on Game {
   }
 
   double smallBonus(Biz b) => 1 + 1.4 * math.exp(-b.rev * 3 / (8e7 * nom()));
-  double borrowLimit() {
-    final annual = math.max(0, pre) * 12;
-    return (math.max(math.max(cash * .5, annual * 3), 3e7 * nom()) + biz.fold(0.0, (s, b) => s + b.rev * .5)) *
-        (hasT('noble') ? 2 : 1) *
-        (econ > 1.1 ? 1.6 : 1) *
-        (1 + .15 * net) *
-        (culture == 'steady' ? 1.2 : 1) *
-        (cooked > 0 ? 1.3 : 1);
-  }
 
   double sellValue(Biz b) {
     final held = b.age >= 24;
@@ -889,11 +866,11 @@ extension GameTurn on Game {
     // 社長の病気
     if (pres.age > 50 && rnd() < .01) {
       events.add(GameEvent(title: M('社長の体調'), text: M('{0}が倒れました。医者は「しばらく休むように」と言っています。', [Nm(pres.name)]), choices: [
-        Choice(M('休む'), M('来月は手が1つしか使えない'), () {
+        Choice(M('休む'), M('来月は社長の時間が半分になる'), () {
           rest = 1;
           return M('しばらく休むことにしました');
         }),
-        Choice(M('働き続ける'), M('手は減らない。3割の確率で能力が大きく落ちる'), () {
+        Choice(M('働き続ける'), M('時間は減らない。3割の確率で能力が大きく落ちる'), () {
           if (rnd() < .3) {
             for (final k in abKeys) {
               pres.ab[k] = math.max(5, pres.ab[k]! - 10);
@@ -954,7 +931,7 @@ extension GameTurn on Game {
       events.add(GameEvent(title: M('銀行からの儲け話'), text: M('取引のある銀行が「土地を買えば必ず上がります。お金はいくらでも貸します」と言っています。'), choices: [
         Choice(M('借りて土地を買う'), M('{0}を借りて土地に回す。景気が続けば大きく増え、崩れれば借金だけが残る', [Y(cash)]), () {
           final a = math.max(cash, 1e7);
-          debt += a;
+          loanFromEvent(a);
           land = land + a;
           return M('土地を買いました');
         }),
@@ -1380,18 +1357,6 @@ extension GameTurn on Game {
         N(M('社風が「{0}」に変わりました', [D(CULT[culture]!.nJa)]), 'good');
       }
     }
-    if (bond > 0 && turn >= bondDue) {
-      if (cash >= bond) {
-        cash -= bond;
-        N(M('社債の{0}を返しました', [Y(bond)]));
-      } else {
-        final lack = bond - cash;
-        cash = 0;
-        debt += lack;
-        N(M('社債を返すお金が足りず、{0}を銀行から借りて返しました', [Y(lack)]), 'bad');
-      }
-      bond = 0;
-    }
     if (!listed && vcDeadline != 0 && turn >= vcDeadline && sh.vc > 0 && !events.any((e) => e.vc)) {
       final cost = cap * sh.vc / 100 * 1.2;
       events.add(GameEvent(vc: true, title: M('投資家が上場を迫る'), text: M('「3年以内に上場する」という約束の期限が来ました。投資家は株{0}を持っています。', [pct(sh.vc)]), choices: [
@@ -1621,8 +1586,8 @@ extension GameTurn on Game {
                   tieRec(foe, 'g', M('情報を盗まれて訴えた'));
                   return M('{0}を訴えました', [Nm(foe.name)]);
                 }),
-                Choice(M('やり返す'), M('こちらも相手の中身を盗む（手は使わない）'), () {
-                  ap++;
+                Choice(M('やり返す'), M('こちらも相手の中身を盗む（社長の時間は使わない）'), () {
+                  hUsed -= hrs('dirty');
                   return doDirty('spy', foe);
                 }),
                 Choice(M('黙って次の商品で勝負する'), M('評判は守られる'), () {
