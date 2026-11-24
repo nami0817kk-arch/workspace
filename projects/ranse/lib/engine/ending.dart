@@ -533,3 +533,17 @@ String shareText(Game g, Ending e) {
     if (e.tier != null && e.tier != Tier.common) '― ${e.tierName} ―',
   ].join('\n');
 }
+
+/// 終わりの画面に必ず出す、いつ・何歳で・なぜ亡くなったかの一行
+/// （2026-11-24 ユーザー「死んだ理由がないことがある」。手書きの最期の文は死因に触れないものがあるため）。
+String deathLine(Game g) {
+  final l = g.l;
+  final head = '${g.year}年（${gengo(g.year)}）、${g.age}歳。';
+  if (l.victory) return '$head天下を統一した。';
+  final cause = l.dead;
+  if (cause != null && cause.isNotEmpty) {
+    return '$head$cause${cause.endsWith('。') ? '' : '。'}';
+  }
+  // 古い保存の「乱世を生き抜いた」終わりなど、死因のない終わり。
+  return '$head${kDeathKinds[l.deathKind] ?? '世を去った'}。';
+}

@@ -237,6 +237,20 @@ class _ResultCard extends StatelessWidget {
             '${e.wayName}・${e.kindName}${e.tierName == null ? '' : '　${e.tierName}'}',
             style: const TextStyle(color: Pal.muted, fontSize: 12),
           ),
+          const SizedBox(height: 10),
+          // いつ・何歳で・なぜ亡くなったか。最期の文が死因に触れないことがあるので、必ず出す。
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: Pal.panel2,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(
+              deathLine(g),
+              style: const TextStyle(fontSize: 13.5, height: 1.5),
+            ),
+          ),
           const SizedBox(height: 12),
           Text(e.text, style: const TextStyle(fontSize: 14, height: 1.8)),
         ],
