@@ -10,7 +10,8 @@ extension GameStateCommunity on GameState {
   int get communityMonthlyDelta {
     final s = _save;
     if (s == null) return 0;
-    return min(2, s.communityActivities.fold<int>(0, (t, a) => t + a.supporterMonthly));
+    return min(2,
+        s.communityActivities.fold<int>(0, (t, a) => t + a.supporterMonthly));
   }
 
   /// [a] の今の部での1季の費用。
@@ -21,7 +22,8 @@ extension GameStateCommunity on GameState {
 
   /// 今季の地域活動の費用の合計(次の季も続けるときの額)。
   int get communitySeasonCost => [
-        for (final a in _save?.communityActivities ?? const <CommunityActivity>[])
+        for (final a
+            in _save?.communityActivities ?? const <CommunityActivity>[])
           communityCostOf(a),
       ].fold(0, (s, c) => s + c);
 

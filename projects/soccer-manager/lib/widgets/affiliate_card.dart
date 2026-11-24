@@ -48,7 +48,9 @@ class _AffiliateCardState extends State<AffiliateCard> {
 
   String _tierLabel(GameState gs, Team t) {
     final tier = gs.affiliateTierOf(t.id);
-    return tier == null ? Tr.pick('他国', 'Abroad') : Tr.pick('$tier部', 'Tier $tier');
+    return tier == null
+        ? Tr.pick('他国', 'Abroad')
+        : Tr.pick('$tier部', 'Tier $tier');
   }
 
   Widget _current(
@@ -74,21 +76,27 @@ class _AffiliateCardState extends State<AffiliateCard> {
       children: [
         Text(club.name,
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-        kv(Tr.pick('関係', 'Relationship'),
+        kv(
+            Tr.pick('関係', 'Relationship'),
             d.weAreParent
                 ? Tr.pick('こちらが親(相手が系列)', 'We are the parent club')
                 : Tr.pick('相手が親(こちらが系列)', 'They are our parent club')),
-        kv(Tr.pick('相手の部・強さ', 'Their level'),
-            Tr.pick('${_tierLabel(gs, club)}・力${club.overallRating}(こちら${gs.userTeam.overallRating})',
+        kv(
+            Tr.pick('相手の部・強さ', 'Their level'),
+            Tr.pick(
+                '${_tierLabel(gs, club)}・力${club.overallRating}(こちら${gs.userTeam.overallRating})',
                 '${_tierLabel(gs, club)}, strength ${club.overallRating} (ours ${gs.userTeam.overallRating})')),
-        kv(Tr.pick('期間', 'Until'),
+        kv(
+            Tr.pick('期間', 'Until'),
             d.untilSeason == null
                 ? Tr.pick('1季ごとに続く', 'Rolls on each season')
                 : d.untilSeason! <= gs.save!.league.season
                     ? Tr.pick('今季の終わりまで', 'End of this season')
-                    : Tr.pick('あと${d.untilSeason! - gs.save!.league.season + 1}季',
+                    : Tr.pick(
+                        'あと${d.untilSeason! - gs.save!.league.season + 1}季',
                         '${d.untilSeason! - gs.save!.league.season + 1} more seasons')),
-        kv(Tr.pick('提携費', 'Fee'),
+        kv(
+            Tr.pick('提携費', 'Fee'),
             d.weAreParent
                 ? Tr.pick('毎季 $fee を払う', 'We pay $fee a season')
                 : Tr.pick('毎季 $fee を受け取る', 'We receive $fee a season')),
@@ -98,7 +106,8 @@ class _AffiliateCardState extends State<AffiliateCard> {
         for (final t in d.termLabels())
           Text(Tr.pick('・$t', '- $t'), style: small),
         if (d.termLabels().isEmpty)
-          Text(Tr.pick('(項目なし)', '(none)'), style: small.copyWith(color: subtle)),
+          Text(Tr.pick('(項目なし)', '(none)'),
+              style: small.copyWith(color: subtle)),
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
@@ -115,7 +124,9 @@ class _AffiliateCardState extends State<AffiliateCard> {
     final list = gs.affiliateCandidates();
     final scheme = Theme.of(context).colorScheme;
     final head = TextStyle(
-        fontSize: 11, fontWeight: FontWeight.bold, color: scheme.onSurfaceVariant);
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        color: scheme.onSurfaceVariant);
     const small = TextStyle(fontSize: 12);
     if (list.isEmpty) {
       return Text(Tr.pick('提携できるクラブがありません', 'No club to partner with yet'));
@@ -128,10 +139,14 @@ class _AffiliateCardState extends State<AffiliateCard> {
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
           child: Row(
             children: [
-              Expanded(flex: 4, child: Text(Tr.pick('クラブ', 'Club'), style: head)),
-              SizedBox(width: 44, child: Text(Tr.pick('部', 'Tier'), style: head)),
-              SizedBox(width: 36, child: Text(Tr.pick('力', 'Str'), style: head)),
-              Expanded(flex: 3, child: Text(Tr.pick('関係', 'Role'), style: head)),
+              Expanded(
+                  flex: 4, child: Text(Tr.pick('クラブ', 'Club'), style: head)),
+              SizedBox(
+                  width: 44, child: Text(Tr.pick('部', 'Tier'), style: head)),
+              SizedBox(
+                  width: 36, child: Text(Tr.pick('力', 'Str'), style: head)),
+              Expanded(
+                  flex: 3, child: Text(Tr.pick('関係', 'Role'), style: head)),
               const SizedBox(width: 70),
             ],
           ),
@@ -144,9 +159,13 @@ class _AffiliateCardState extends State<AffiliateCard> {
                 Expanded(
                     flex: 4,
                     child: Text(t.name,
-                        maxLines: 1, overflow: TextOverflow.ellipsis, style: small)),
-                SizedBox(width: 44, child: Text(_tierLabel(gs, t), style: small)),
-                SizedBox(width: 36, child: Text('${t.overallRating}', style: small)),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: small)),
+                SizedBox(
+                    width: 44, child: Text(_tierLabel(gs, t), style: small)),
+                SizedBox(
+                    width: 36, child: Text('${t.overallRating}', style: small)),
                 Expanded(
                     flex: 3,
                     child: Text(
@@ -253,8 +272,8 @@ class _AffiliateTermsDialogState extends State<_AffiliateTermsDialog> {
                     (v) => setState(() => _youth = v)),
                 sw(
                     Tr.pick('移籍の優先交渉権', 'First refusal'),
-                    Tr.pick('相手の選手の言い値が2割引になります',
-                        'Their players cost us 20% less'),
+                    Tr.pick(
+                        '相手の選手の言い値が2割引になります', 'Their players cost us 20% less'),
                     _first,
                     (v) => setState(() => _first = v)),
               ],
@@ -291,7 +310,8 @@ class _AffiliateTermsDialogState extends State<_AffiliateTermsDialog> {
                       for (final y in AffiliateDeal.yearChoices)
                         DropdownMenuItem(
                             value: y,
-                            child: Text(Tr.pick('$y季', Tr.plural(y, 'season')))),
+                            child:
+                                Text(Tr.pick('$y季', Tr.plural(y, 'season')))),
                     ],
                     onChanged: (v) => setState(() => _years = v ?? 1),
                   ),

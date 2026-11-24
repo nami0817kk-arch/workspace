@@ -44,15 +44,15 @@ void main() {
     test('1人の役職と複数の役職。2人目からは逓減して上乗せ', () {
       expect(ClubInfrastructure.roleAllowsMany(StaffRole.manager), isFalse);
       expect(ClubInfrastructure.roleAllowsMany(StaffRole.headCoach), isFalse);
-      expect(
-          ClubInfrastructure.roleAllowsMany(StaffRole.sportingDirector), isFalse);
+      expect(ClubInfrastructure.roleAllowsMany(StaffRole.sportingDirector),
+          isFalse);
       expect(ClubInfrastructure.roleAllowsMany(StaffRole.scout), isTrue);
       // 1人ならその人の能力のまま。
       expect(ClubInfrastructure.combinedAbility([10]), 10);
       // 2人目は3割、3人目はその半分。
       expect(ClubInfrastructure.combinedAbility([10, 10]), closeTo(13, 1e-9));
-      expect(
-          ClubInfrastructure.combinedAbility([10, 10, 10]), closeTo(14.5, 1e-9));
+      expect(ClubInfrastructure.combinedAbility([10, 10, 10]),
+          closeTo(14.5, 1e-9));
       // 1人の名手には人数で届きにくい。
       expect(ClubInfrastructure.combinedAbility([8, 8, 8, 8]),
           lessThan(ClubInfrastructure.combinedAbility([14])));
@@ -85,7 +85,8 @@ void main() {
       final infra = ClubInfrastructure();
       infra.addMember(person('a', StaffRole.physio));
       infra.addMember(person('b', StaffRole.physio, ability: 6));
-      final json = jsonDecode(jsonEncode(infra.toJson())) as Map<String, dynamic>;
+      final json =
+          jsonDecode(jsonEncode(infra.toJson())) as Map<String, dynamic>;
       expect(json.containsKey('staffTeams'), isTrue);
       expect(json.containsKey('staff'), isFalse);
       final back = ClubInfrastructure.fromJson(json);
@@ -115,8 +116,7 @@ void main() {
       final s = person('c', StaffRole.scout, wage: 20, years: 2);
       final ask = StaffTermsEngine.asking(s);
       expect(StaffTermsEngine.reply(ask, ask).accepted, isTrue);
-      expect(
-          StaffTermsEngine.reply(ask, ask.copyWith(weeklyWage: 17)).kind,
+      expect(StaffTermsEngine.reply(ask, ask.copyWith(weeklyWage: 17)).kind,
           StaffReplyKind.wageLow);
       expect(StaffTermsEngine.reply(ask, ask.copyWith(years: 4)).kind,
           StaffReplyKind.yearsOff);
@@ -284,8 +284,8 @@ void main() {
     test('弱い相手なら親で提携費を払い、強い相手なら子で受け取る', () async {
       final gs = await newGame();
       final s = gs.save!;
-      final weaker = gs.affiliateCandidates()
-          .firstWhere((t) => gs.weAreParentWith(t));
+      final weaker =
+          gs.affiliateCandidates().firstWhere((t) => gs.weAreParentWith(t));
       final before = s.budget;
       expect(
           await gs.signAffiliate(weaker.id,
@@ -300,7 +300,8 @@ void main() {
       expect(gs.affiliateDiscountApplies(weaker.id), isTrue);
       expect(gs.affiliateTakesLoans, isTrue);
 
-      final stronger = gs.affiliateCandidates()
+      final stronger = gs
+          .affiliateCandidates()
           .where((t) => !gs.weAreParentWith(t))
           .firstOrNull;
       if (stronger == null) return; // 最強のクラブなら強い相手がいない。

@@ -101,7 +101,8 @@ class StaffTermsEngine {
     final need = _perWeek(ask) * (1 + 0.05 * gap);
     final have = _perWeek(offer);
     if (have + 1e-9 < need) {
-      return StaffReply(gap > 0 ? StaffReplyKind.yearsOff : StaffReplyKind.valueLow,
+      return StaffReply(
+          gap > 0 ? StaffReplyKind.yearsOff : StaffReplyKind.valueLow,
           shortWeekly: (need - have).ceil());
     }
     return const StaffReply(StaffReplyKind.accept);

@@ -25,10 +25,14 @@ enum CommunityActivity {
 
 extension CommunityActivityInfo on CommunityActivity {
   String get label => switch (this) {
-        CommunityActivity.clinics => Tr.pick('子どものサッカー教室', 'Kids\' coaching clinics'),
-        CommunityActivity.cleanup => Tr.pick('地域の清掃・募金', 'Clean-ups and fundraising'),
-        CommunityActivity.invitation => Tr.pick('地元の招待デー', 'Local invitation days'),
-        CommunityActivity.visits => Tr.pick('病院・施設の訪問', 'Hospital and care-home visits'),
+        CommunityActivity.clinics =>
+          Tr.pick('子どものサッカー教室', 'Kids\' coaching clinics'),
+        CommunityActivity.cleanup =>
+          Tr.pick('地域の清掃・募金', 'Clean-ups and fundraising'),
+        CommunityActivity.invitation =>
+          Tr.pick('地元の招待デー', 'Local invitation days'),
+        CommunityActivity.visits =>
+          Tr.pick('病院・施設の訪問', 'Hospital and care-home visits'),
         CommunityActivity.localBusiness =>
           Tr.pick('商店街・地元企業との連携', 'Ties with local shops and firms'),
       };
@@ -74,21 +78,23 @@ extension CommunityActivityInfo on CommunityActivity {
   String get effectLabel {
     final parts = <String>[
       if (supporterMonthly > 0)
-        Tr.pick('期待 毎月+$supporterMonthly', 'Expectation +$supporterMonthly a month'),
+        Tr.pick('期待 毎月+$supporterMonthly',
+            'Expectation +$supporterMonthly a month'),
       if (demandPercent > 0)
-        Tr.pick('来たいファン+$demandPercent%', 'Fans wanting to come +$demandPercent%'),
+        Tr.pick(
+            '来たいファン+$demandPercent%', 'Fans wanting to come +$demandPercent%'),
       if (scandalCushion > 0)
         Tr.pick('不祥事の傷-$scandalCushion', 'Scandal damage -$scandalCushion'),
       if (sponsorBackPercent > 0)
-        Tr.pick('地元の協賛(費用の$sponsorBackPercent%)', 'Local backing ($sponsorBackPercent% of cost)'),
+        Tr.pick('地元の協賛(費用の$sponsorBackPercent%)',
+            'Local backing ($sponsorBackPercent% of cost)'),
     ];
     return parts.join(Tr.pick('・', ', '));
   }
 
   /// 旧セーブの「地域貢献 Lv」を活動へ移す。以前の効き目(Lv1以上で毎月
   /// +1・Lv の数だけ不祥事の傷が浅い)にできるだけ合わせる。
-  static List<CommunityActivity> fromLegacyLevel(int level) =>
-      switch (level) {
+  static List<CommunityActivity> fromLegacyLevel(int level) => switch (level) {
         <= 0 => const [],
         1 => const [CommunityActivity.visits],
         2 => const [CommunityActivity.visits, CommunityActivity.localBusiness],

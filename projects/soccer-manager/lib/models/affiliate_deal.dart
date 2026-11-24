@@ -92,16 +92,21 @@ class AffiliateDeal {
   List<String> termLabels() => [
         if (loanPriority)
           weAreParent
-              ? Tr.pick('貸し出しの優先(出場機会付き)', 'Loans go there first (with playing time)')
-              : Tr.pick('親の若手を契約金なしで借りる', 'Borrow their youngsters with no loan fee'),
+              ? Tr.pick(
+                  '貸し出しの優先(出場機会付き)', 'Loans go there first (with playing time)')
+              : Tr.pick(
+                  '親の若手を契約金なしで借りる', 'Borrow their youngsters with no loan fee'),
         if (youthDevelopment && weAreParent)
-          Tr.pick('若手の育成先(21歳以下の伸び+)', 'Development club (more growth for 21 and under)'),
+          Tr.pick('若手の育成先(21歳以下の伸び+)',
+              'Development club (more growth for 21 and under)'),
         if (firstRefusal && weAreParent)
           Tr.pick('優先交渉権(相手の選手が2割引)', 'First refusal (their players 20% off)'),
         if (sellOnPercent > 0)
           weAreParent
-              ? Tr.pick('相手が選手を売ると$sellOnPercent%が入る', '$sellOnPercent% of their player sales')
-              : Tr.pick('こちらが選手を売ると$sellOnPercent%を渡す', 'They take $sellOnPercent% of our player sales'),
+              ? Tr.pick('相手が選手を売ると$sellOnPercent%が入る',
+                  '$sellOnPercent% of their player sales')
+              : Tr.pick('こちらが選手を売ると$sellOnPercent%を渡す',
+                  'They take $sellOnPercent% of our player sales'),
       ];
 
   Map<String, dynamic> toJson() => {
