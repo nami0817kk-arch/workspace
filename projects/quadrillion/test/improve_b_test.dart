@@ -726,7 +726,7 @@ void main() {
         final bad = <String>[];
         var seen = 0;
         for (final t in MainScreen.tabs) {
-          ctl.openBiz = s.biz.first.id;
+          ctl.openBiz = ctl.moreBiz = s.biz.first.id;
           ctl.openStaff = s.staff.first.id;
           ctl.openRival = _rivals(s).first.id;
           ctl.setTab(t.$1);
@@ -791,7 +791,7 @@ void main() {
           await tester.pump();
           await _shot(tester, 'b_town_$tag');
           ctl.setTab('biz');
-          ctl.openBiz = null;
+          ctl.openBiz = ctl.moreBiz = null;
           await tester.pump();
           await tester.drag(find.byType(Scrollable).first, const Offset(0, -700));
           await tester.pump();

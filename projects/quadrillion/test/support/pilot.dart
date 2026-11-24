@@ -291,9 +291,13 @@ class Pilot {
       return false;
     }
     await t.tap(hit.first, warnIfMissed: false);
+    taps++;
     await pump();
     return true;
   }
+
+  /// 押した回数（[press] で押せた数。押す回数を比べる点検で使う）
+  int taps = 0;
 
   Future<bool> pressText(String label) => press(find.text(label), '「$label」');
   Future<bool> pressKey(String key) => press(find.byKey(ValueKey(key)), key);
@@ -438,9 +442,28 @@ class Pilot {
     if (s.biz.length >= 3 && ctl.openBiz != b.id) {
       await pressKey('biz-row-${b.id}');
     }
+    // ボタンの3つの組は「ほかの手」の中（1.0.0+20）。たたまれていれば開く
+    if (ctl.moreBiz != b.id) await pressKey('biz-more-${b.id}');
     final g = find.byKey(ValueKey('grp-$grp-${b.id}'));
     await reveal(g);
     return g;
+  }
+
+  /// [f] を一覧のいちばん上に寄せる（目で見る確認の書き出し用）
+  Future<void> alignTop(Finder f) async {
+    if (!await reveal(f)) return;
+    await Scrollable.ensureVisible(t.element(f.first));
+    await pump();
+  }
+
+  /// 事業のカードを開いて（「ほかの手」はたたんだまま）、カードを返す
+  Future<Finder> card(Biz b) async {
+    await tab('biz');
+    if (s.biz.length >= 3 && ctl.openBiz != b.id) await pressKey('biz-row-${b.id}');
+    if (ctl.moreBiz == b.id) await pressKey('biz-more-${b.id}');
+    final c = find.byKey(ValueKey('biz-card-${b.id}'));
+    await reveal(c);
+    return c;
   }
 
   Future<bool> _bizBtn(Biz b, String grp, String label) async {
@@ -453,7 +476,15 @@ class Pilot {
     final n = buildUnits.reversed.where((n) => s.buildCost(b, n) <= s.cash * .4).firstOrNull;
     if (n == null || s.ap < 1) return;
     where = '店・工場を増やす';
-    if (!await _bizBtn(b, 'grow', tr('{0}を増やす', [s.uw(b)]))) return;
+    // 開いたカードに出ていれば、そこから（1.0.0+20）。出ていなければ「ほかの手」の中から
+    await card(b);
+    final quick = find.descendant(of: find.byKey(ValueKey('biz-top-${b.id}')), matching: find.textContaining(tr('{0}を増やす', [s.uw(b)])));
+    if (_has(quick)) {
+      if (!await press(quick, '事業の「増やす」（上の手）')) return;
+      mark('上の手から');
+    } else if (!await _bizBtn(b, 'grow', tr('{0}を増やす', [s.uw(b)]))) {
+      return;
+    }
     final ap = s.ap;
     await money('増やす', -s.buildCost(b, n), () async {
       await pressText(tr('{0}増やす', [s.unitsOf(b, n)]));
@@ -479,11 +510,21 @@ class Pilot {
     final need = s.crewNeedPeople(b);
     if (need <= 0 || s.ap < 1 || s.hireCost(b, need) > s.cash * .6) return;
     where = '現場の人を増やす';
-    if (!await _bizBtn(b, 'grow', tr('現場の人を増やす（{0}人足りない）', [need]))) return;
-    await money('現場の人', -s.hireCost(b, need), () async {
-      await pressText(tr('足りない分（{0}人）を雇う', [need]));
-      await drain();
-    });
+    // 1つおきに、開いたカードの「足りない人を雇う」（小窓を開かずに雇う。1.0.0+20）と、「ほかの手」の中の小窓から
+    if (_pick++ % 2 == 0) {
+      await card(b);
+      await money('現場の人（上の手）', -s.hireCost(b, need), () async {
+        await pressKey('top-hire-${b.id}');
+        await drain();
+      });
+      mark('足りない人を雇う（上の手）');
+    } else {
+      if (!await _bizBtn(b, 'grow', tr('現場の人を増やす（{0}人足りない）', [need]))) return;
+      await money('現場の人', -s.hireCost(b, need), () async {
+        await pressText(tr('足りない分（{0}人）を雇う', [need]));
+        await drain();
+      });
+    }
     if (s.crewNeedPeople(b) > 0) note('足りない分を雇ったのに、まだ${s.crewNeedPeople(b)}人足りない');
     mark('現場の人');
   }
@@ -502,7 +543,8 @@ class Pilot {
   Future<void> enter(Biz b) async {
     if (s.ap < 1) return;
     final y = s.yr();
-    final cs = CTRY.where((x) => !s.ctryOf(b).contains(x.c) && !b.pipe.any((p) => p.k == 'enter' && p.c == x.c)).toList()
+    // 現地法人が出ている国は選ばない（押すと「その国には現地法人が出ています」と断られ、お金は動かない）
+    final cs = CTRY.where((x) => !s.ctryOf(b).contains(x.c) && !b.pipe.any((p) => p.k == 'enter' && p.c == x.c) && !s.hasLocal(x.c, b.ind)).toList()
       ..ssort((p, q) => cw(q.c, y).compareTo(cw(p.c, y)));
     for (final x in cs.take(4)) {
       final ms = s.entryModes(b, x.c);
@@ -843,6 +885,18 @@ class Pilot {
     await drain();
     if (ctl.game == null) note('やめたのに、はじめの画面に戻った');
     await _peek(find.byKey(const ValueKey('todo-all')), '番頭のひとこと');
+    // 「今月やること」の行のボタン（その場で打つ・該当の場所へ飛ぶ。1.0.0+20）
+    for (var i = 0; i < todoMax; i++) {
+      await tab('town');
+      final sc = _scroller();
+      if (sc != null) await _top(sc);
+      final f = find.byKey(ValueKey('todo-act-$i'));
+      if (!_has(f)) continue;
+      await press(f, '今月やることのボタン');
+      await drain();
+      mark('今月やることのボタン');
+    }
+    await tab('town');
     await _peek(find.byKey(const ValueKey('info-ap')), '用語（手）');
     for (final k in ['fold-rivals', 'fold-news']) {
       if (await reveal(find.byKey(ValueKey(k)))) {
@@ -860,6 +914,23 @@ class Pilot {
     where = 'ひと回り（事業）';
     await tab('biz');
     await sweep();
+    // 責任者に任せる：まとめて任せる・まとめて戻す（1つも任せていなかったときだけ戻す。任せてあれば、任せたまま遊び続ける）
+    if (s.biz.any(s.canDeleg) && await reveal(find.byKey(const ValueKey('deleg-bar')))) {
+      final had = s.delegatedBiz().length;
+      await _peek(find.byKey(const ValueKey('info-deleg')), '用語（任せる）');
+      if (s.delegable().isNotEmpty) {
+        await pressKey('deleg-all');
+        await drain();
+        if (s.delegable().isNotEmpty) note('まとめて任せたのに、任せていない事業が残った');
+      }
+      if (had == 0) {
+        await reveal(find.byKey(const ValueKey('deleg-bar')));
+        await pressKey('undeleg-all');
+        await drain();
+        if (s.biz.any((b) => b.deleg)) note('まとめて戻したのに、任せた事業が残った');
+      }
+      mark('まとめて任せる');
+    }
     // 事業が多い会社：自社の事業の並べ替えと、見出しでたたむ・開く
     if (s.biz.length >= bizManyMin) {
       for (final o in myBizSorts) {
@@ -1082,6 +1153,19 @@ class Pilot {
       if (b.mgr == null && s.biz.where((x) => x.mgr == null).length > (s.staff.isEmpty ? 99 : 1)) await manager(b);
     }
     await stock();
+    // 年に1度、責任者のいる事業を1つ任せる（カードの「任せる」。手は使わない）
+    if (m % 12 == 4) {
+      final b = s.biz.where((b) => s.canDeleg(b) && !b.deleg).firstOrNull;
+      if (b != null) {
+        where = '任せる';
+        final ap = s.ap;
+        await card(b);
+        await pressKey('deleg-on-${b.id}');
+        if (!s.delegated(b)) note('任せられない');
+        if (s.ap != ap) note('任せるのに手を使った');
+        mark('任せる');
+      }
+    }
     if (m % 6 == 3) await newBiz();
     double score(Biz y) => (y.profit / (y.rev + 1)) * (1 - y.share);
     final top = (s.biz.toList()..ssort((x, y) => score(y).compareTo(score(x)))).firstOrNull;

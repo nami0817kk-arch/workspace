@@ -509,7 +509,14 @@ extension GameActions on Game {
 
   /// 責任者を決める（手は使わない）
   void setManager(Biz b, int? id) {
+    // 責任者を外したら、任せるのもやめる（人を替えただけなら、任せたまま引き継ぐ）。
+    // 任せていた責任者が辞めたあとに新しい人を置いたときも、任せ直すまでは自分で動かす
+    final was = delegated(b);
     b.mgr = id;
+    if (id == null || !was) {
+      b.deleg = false;
+      b.did = null;
+    }
     calcAll();
   }
 

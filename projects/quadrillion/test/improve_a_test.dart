@@ -510,7 +510,7 @@ void main() {
     testWidgets('全部の画面のカードが、同じ角の丸み・枠・薄い影・余白になっている', (tester) async {
       final s = _midGame();
       final ctl = await _pump(tester, game: s, size: const Size(390, 12000));
-      ctl.openBiz = s.biz.first.id;
+      ctl.openBiz = ctl.moreBiz = s.biz.first.id;
       var seen = 0;
       for (final t in MainScreen.tabs) {
         ctl.setTab(t.$1);
@@ -592,7 +592,7 @@ void main() {
           expect(tester.widget<ChoiceBtn>(btn).dim, isFalse, reason: name);
         }
         // 事業：打ち手のボタン（手を使わない「業界団体に入る」や責任者の欄には付かない）
-        ctl.openBiz = s.biz.first.id;
+        ctl.openBiz = ctl.moreBiz = s.biz.first.id;
         ctl.setTab('biz');
         await tester.pump();
         Finder btnOf(String label) => find.ancestor(of: find.text(label), matching: find.byType(Btn));
@@ -692,7 +692,7 @@ void main() {
       testWidgets('札・検索の欄・タブ・手の札つきのボタン（$lang）', (tester) async {
         final s = _midGame();
         final ctl = await _pump(tester, game: s, lang: lang, size: const Size(390, 12000));
-        ctl.openBiz = s.biz.first.id;
+        ctl.openBiz = ctl.moreBiz = s.biz.first.id;
         for (final t in MainScreen.tabs) {
           ctl.setTab(t.$1);
           await tester.pump();
@@ -733,7 +733,7 @@ void main() {
       await tester.pump();
       await _shot(tester, 'a3_town_noap_$lang');
       s.ap = 3;
-      ctl.openBiz = s.biz.first.id;
+      ctl.openBiz = ctl.moreBiz = s.biz.first.id;
       ctl.setTab('biz');
       await tester.pump();
       await _shot(tester, 'a4_biz_$lang');

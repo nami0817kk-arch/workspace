@@ -4,7 +4,7 @@ import '../game/game.dart';
 import '../version.dart';
 import 'controller.dart';
 import 'guide.dart';
-import 'tabs.dart' show topAbility;
+import 'tabs.dart' show topAbility, tipBtn;
 import 'widgets.dart';
 
 /// 小窓（試作の openXxx / showReport / nextEvent / showHelp）
@@ -61,16 +61,22 @@ Widget abGrid(Game s, Person p) => Grid2([
 
 /// 番頭のひとことを全部（大事な順に、切らずに）読む小窓
 void openAdvice(GameController ctl) {
-  final tips = ctl.game!.adviceAll();
+  final tips = ctl.game!.adviceTips();
   ctl.showSheet((_) => _col([
         H2(tr('番頭のひとこと'), top: true),
         if (tips.isEmpty) _note(tr('いま言うことはありません。')),
-        for (final x in tips)
+        for (var i = 0; i < tips.length; i++)
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Padding(padding: EdgeInsets.only(top: 3, right: 6), child: Icon(Icons.lightbulb_outline, size: 16, color: Pal.goldtx)),
-              Expanded(child: Text(tx(x), style: ts(size: 14, height: 1.5))),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(tx(tips[i].m), style: ts(size: 14, height: 1.5)),
+                  // 「今月やること」と同じボタン（その場で打つ・該当の場所へ飛ぶ）
+                  ?tipBtn(ctl, tips[i], i, sheet: true),
+                ]),
+              ),
             ]),
           ),
         _cancel(ctl, '閉じる'),
@@ -516,6 +522,7 @@ void showHelp(GameController ctl) {
     ('海外', '事業ごとに「海外に出る」から、24か国に出られます。単独で出る（6か月）、地元の会社と組む（3か月・その国の利益は半分）、地元の会社を買う（すぐ・高い）の3つ。国の市場は年とともに変わり、中国は2000年代、インドは2030年代に大きくなります。中国のネットと金融は、組まないと入れません。'),
     ('稼ぎ方', '業種によって、直営・フランチャイズ・下請け・場をつくる、から稼ぎ方を選べます。フランチャイズは速く広がるが取り分が薄い。下請けは安定するが薄く、切られることがある。場をつくるは小さいうちは赤字で、大きくなると一人勝ちしやすい。'),
     ('経営会議', '1月・4月・7月・10月は経営会議です。責任者を任せた部下や相棒が、提案を持ってきます。承認も却下も手を使いません。却下が続くと不満がたまります。二人の意見がぶつかったら、どちらかを選びます。「全部まかせる」にすると、その人の提案は自動で通ります。'),
+    ('責任者に任せる', '責任者のいる事業は、事業のカードの「任せる」で責任者に任せられます。任せた事業は、毎月、責任者が自分で手を1つ打ちます（人を雇う・店や工場を増やす・商品を作る・広告・値付け）。社長の手は使いません。使えるお金は事業ごとの「月の枠」までです。腕と性格で良し悪しが出て、外れることもあります。海外・売る・分社・稼ぎ方の変更・値下げ合戦は社長が決めます。いつでも自分で動かすように戻せます。'),
     ('組み合わせる', '2つの業種を同時に持つと、隠れたシナジーが見つかることがあります。見つけると両方の力が2割上がります。「図鑑」で確かめられます。'),
     ('戦う', '宿敵は値下げ合戦を仕掛け、あなたの株を買い集め、部下を引き抜きます。上場すると大金が入りますが、株を買われるようになります。50%を超えて握られると社長を追われます。'),
     ('宿敵の物語', '宿敵とは、同じ業種で初めてぶつかったときに出会います。値下げ合戦・株の買い集め・引き抜き・裏の手でぶつかるたびに、恨み（あなたがしたこと）と恩（助けた・組んだ）が「街」の宿敵の欄に因縁として残ります。買収する・買収される・友好のまま3年で和解・提携が5年続く、のどれかで決着がつきます。倒した宿敵の一族は、恨みを覚えて戻ってきます。'),
@@ -660,10 +667,13 @@ class ReportBase {
 
   /// まとめて進めたのを途中で止めたときの理由（止まらなかったら null）
   String? stop;
-  ReportBase(this.cap, this.cash, [this.label, this.rev, this.pre, this.rank]);
+
+  /// 進める前の月（これより後に任せた責任者が打った手を、報告にまとめる。控えていなければ出さない）
+  final int? turn;
+  ReportBase(this.cap, this.cash, [this.label, this.rev, this.pre, this.rank, this.turn]);
 
   /// 今の盤面を控える
-  factory ReportBase.of(Game s, [String? label]) => ReportBase(s.cap, s.cash, label, s.rev, s.pre, rankNow(s));
+  factory ReportBase.of(Game s, [String? label]) => ReportBase(s.cap, s.cash, label, s.rev, s.pre, rankNow(s), s.turn);
 }
 
 /// 今の世界の順位（月を進める前でまだ数えていないときは、その場で数える）
@@ -868,6 +878,8 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
   // 表とニュースは開いたときの値で固める（小窓は描き直されることがある）
   final rows = reportRows(s, before);
   final sorted = [for (final n in sortNews(news)) (n, newsIcon(s, n))];
+  // 任せた事業で責任者がやったこと（1〜3行にまとめる。事業ごとには並べない）
+  final deleg = before.turn == null ? const <String>[] : s.delegSummary(before.turn!);
   ctl.showSheet((_) => _col([
         if (before.stop != null)
           Container(
@@ -880,6 +892,17 @@ void showReport(GameController ctl, List<LogEntry> news, ReportBase before) {
         H2(head, top: true),
         if (before.label != null) Padding(padding: const EdgeInsets.only(bottom: 4), child: Muted(tr('{0}まとめて進めました', [before.label]))),
         ReportTable(rows, key: const ValueKey('report-table'), beforeHead: tr(before.label != null ? '進める前' : '前月'), nowHead: tr(before.label != null ? '今' : '今月')),
+        if (deleg.isNotEmpty)
+          Container(
+            key: const ValueKey('report-deleg'),
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: boxDeco(color: Pal.panel2, border: Pal.line),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(tr('任せた事業でやったこと'), style: ts(size: 12.5, bold: true, color: Pal.goldtx)),
+              for (final m in deleg) Padding(padding: const EdgeInsets.only(top: 2), child: Text(tx(m), key: const ValueKey('report-deleg-line'), style: ts(size: 13, height: 1.4))),
+            ]),
+          ),
         ...lines,
         if (sorted.isNotEmpty) ...[H3(tr('ニュース')), for (final n in sorted) NewsLine(n.$1.m, n.$1.t, icon: n.$2)],
         const SizedBox(height: 12),

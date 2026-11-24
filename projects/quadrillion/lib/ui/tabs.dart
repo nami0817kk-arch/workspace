@@ -109,8 +109,9 @@ List<Widget> townTab(GameController ctl) {
 Widget? todoCard(GameController ctl) {
   final s = ctl.game!;
   final step = currentGuide(s);
-  final tips = s.advice().take(step != null ? todoMax - 1 : todoMax).toList();
+  final tips = s.adviceTop().take(step != null ? todoMax - 1 : todoMax).toList();
   if (step == null && tips.isEmpty) return null;
+  final acts = [for (var i = 0; i < tips.length; i++) tipBtn(ctl, tips[i], i)];
   return Panel(
     key: const ValueKey('todo'),
     border: Pal.gold,
@@ -136,16 +137,92 @@ Widget? todoCard(GameController ctl) {
           const SizedBox(height: minTap),
       ]),
       if (step != null) GuideBar(ctl: ctl, step: step),
-      for (final x in tips)
+      for (var i = 0; i < tips.length; i++)
         Padding(
           padding: const EdgeInsets.only(top: 3, right: 8),
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Padding(padding: EdgeInsets.only(top: 3, right: 6), child: Icon(Icons.lightbulb_outline, size: 15, color: Pal.goldtx)),
-            Expanded(child: Text(tx(x), key: const ValueKey('todo-tip'), maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(size: 13, height: 1.4))),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(tx(tips[i].m), key: const ValueKey('todo-tip'), maxLines: 2, overflow: TextOverflow.ellipsis, style: ts(size: 13, height: 1.4)),
+                // その場で打てる手は実行のボタン（値段と手の数つき）、打てないものは該当の場所へ飛ぶボタン
+                ?acts[i],
+              ]),
+            ),
           ]),
         ),
     ]),
   );
+}
+
+/// 「今月やること」の1行に付けるボタン（1.0.0+20）。その場で打てる手はここで打ち、打てないものは該当の場所へ飛ぶ。
+/// 打ったあとは、その行の勧めが当てはまらなくなって消える。お金や手が足りないときは薄くなり、押すと理由を言う
+///
+/// 小窓「番頭のひとこと」の行にも同じボタンを付ける（[sheet]。飛ぶ前に小窓を閉じる）
+Widget? tipBtn(GameController ctl, Tip t, int i, {bool sheet = false}) {
+  final s = ctl.game!;
+  final key = ValueKey('${sheet ? 'advice' : 'todo'}-act-$i');
+  Widget go(String label, VoidCallback f) => Btn(label, () {
+        if (sheet) ctl.hideSheet();
+        f();
+      }, key: key, small: true, shrink: true, more: true);
+  final ref = t.ref;
+  switch (t.act) {
+    case 'start':
+      return go(tr('事業を選ぶ'), () => openStart(ctl));
+    case 'stock':
+      return go(tr('「株」を開く'), () => ctl.setTab('stock'));
+    case 'people':
+      return go(tr('「人」を開く'), () => ctl.setTab('people'));
+    case 'bizTab':
+      return go(tr('「事業」を開く'), () => ctl.setTab('biz'));
+    case 'staff':
+      if (ref is! Person) return null;
+      return go(tr('{0}を見る', [nmL(ref.name)]), () => ctl.goStaff(ref.id));
+    case 'biz':
+      if (ref is! Biz) return null;
+      return go(tr('「{0}」を開く', [indm[ref.ind]!.name]), () => ctl.openBizCard(ref.id));
+    case 'newInd':
+      final ind = indm[ref];
+      if (ind == null) return null;
+      return go(tr('「{0}」を探す', [ind.name]), () => ctl.goNewInd(ind.name));
+    case 'hire':
+      if (ref is! Biz) return null;
+      final n = s.crewNeedPeople(ref);
+      if (n <= 0) return go(tr('「{0}」を開く', [indm[ref.ind]!.name]), () => ctl.openBizCard(ref.id));
+      final cost = s.hireCost(ref, n);
+      return Btn(tr('足りない人を雇う（{0}人・{1}）', [n, yen(cost)]), () => ctl.act(() => s.addCrewNeeded(ref), mark: 'act'),
+          key: key, small: true, shrink: true, ap: 1, dim: s.cash < cost || !s.canAP(1));
+    case 'hireAll':
+      final can = s.crewShortDoable();
+      if (s.crewShort().isEmpty) return go(tr('「事業」を開く'), () => ctl.setTab('biz'));
+      if (can.isEmpty) return Btn(tr('足りない人をまとめて雇う'), () => ctl.toast(s.hireShortAll()), key: key, small: true, shrink: true, ap: 1, dim: true);
+      final cost = can.fold(0.0, (a, b) => a + s.hireCost(b, s.crewNeedPeople(b)));
+      return Btn(tr('足りない人をまとめて雇う（{0}つ・{1}）', [can.length, yen(cost)]), () => ctl.act(s.hireShortAll, mark: 'act'),
+          key: key, small: true, shrink: true, ap: can.length);
+    case 'place':
+      final plan = s.managerPlan();
+      if (plan.isEmpty) {
+        // 置ける部下がいなければ、採用の候補へ
+        return s.staff.any((p) => !s.biz.any((b) => b.mgr == p.id)) ? go(tr('「事業」を開く'), () => ctl.setTab('biz')) : go(tr('「人」を開く'), () => ctl.setTab('people'));
+      }
+      return Btn(tr('責任者に置く（{0}人）', [plan.length]), () {
+        final m = s.placeManagers();
+        ctl.save();
+        ctl.toast(m);
+      }, key: key, small: true, shrink: true);
+    case 'holding':
+      return Btn(tr('持株会社にする'), () {
+        if (!ctl.noAp()) ctl.act(s.makeHolding);
+      }, key: key, small: true, shrink: true, ap: 1, dim: !s.canAP(1));
+    case 'deleg':
+      return Btn(tr('まとめて任せる（{0}つ）', [s.delegable().length]), () {
+        final m = s.delegAll();
+        ctl.save();
+        ctl.toast(m);
+      }, key: key, small: true, shrink: true);
+  }
+  return null;
 }
 
 /// 「今月やること」に並べる数の上限（案内とひとことを合わせて）
@@ -376,6 +453,15 @@ List<Widget> bizTab(GameController ctl) {
     ctl.render();
   }
 
+  // 3つ以上は1行ずつにたたみ、押した1つだけを詳しく開く
+  final fold = s.biz.length >= 3;
+  // 「今月やること」から飛んできた事業は、開いたカードを一覧のいちばん上に出す
+  final pin = fold && myOpen && ctl.pinBiz != null && ctl.openBiz == ctl.pinBiz ? s.biz.where((b) => b.id == ctl.pinBiz).firstOrNull : null;
+  if (pin != null) out.add(_bizCard(ctl, pin, onFold: () => ctl.toggleBiz(pin.id)));
+  if (myOpen) {
+    final bar = _delegBar(ctl);
+    if (bar != null) out.add(bar);
+  }
   if (many && myOpen) {
     final attn = _bizAttention(ctl);
     if (attn != null) out.add(attn);
@@ -383,10 +469,9 @@ List<Widget> bizTab(GameController ctl) {
       for (final o in myBizSorts) PickChip(tr(o.$2), key: ValueKey('mysort-${o.$1}'), on: ctl.myBizSort == o.$1, onTap: () => pick(() => ctl.myBizSort = o.$1)),
     ]));
   }
-  // 3つ以上は1行ずつにたたみ、押した1つだけを詳しく開く
-  final fold = s.biz.length >= 3;
   if (myOpen) {
     for (final b in myBizList(s, many ? ctl.myBizSort : 'rev')) {
+      if (b == pin) continue;
       out.add(!fold
           ? _bizCard(ctl, b)
           : ctl.openBiz == b.id
@@ -394,7 +479,7 @@ List<Widget> bizTab(GameController ctl) {
               : _bizRow(ctl, b));
     }
   }
-  out.add(H2(tr('新しい事業')));
+  out.add(KeyedSubtree(key: ctl.newBizKey, child: H2(tr('新しい事業'))));
   // 検索の欄・並べ替え・絞り込みを上に並べる
 
   out.add(SearchBox(key: const ValueKey('biz-search'), controller: ctl.bizSearch, hint: tr('業種の名前で探す'), onChanged: (_) => ctl.render()));
@@ -534,6 +619,36 @@ List<Biz> myBizList(Game s, String sort) {
   return list;
 }
 
+/// 「責任者に任せる」のまとめての切り替え（1.0.0+20）。責任者のいる事業が1つも無ければ null。手は使わない・いつでも戻せる
+Widget? _delegBar(GameController ctl) {
+  final s = ctl.game!;
+  final can = s.biz.where(s.canDeleg).length;
+  if (can == 0) return null;
+  final on = s.delegatedBiz().length;
+  void run(String Function() f) {
+    final m = f();
+    ctl.save();
+    ctl.toast(m);
+  }
+
+  // 1行に収める（幅が足りなければ、ボタンが次の行へ回る）
+  return Panel(
+    key: const ValueKey('deleg-bar'),
+    padding: const EdgeInsets.fromLTRB(Ui.pad, 0, 4, 0),
+    child: Wrap(spacing: 6, runSpacing: 0, crossAxisAlignment: WrapCrossAlignment.center, alignment: WrapAlignment.spaceBetween, children: [
+      Row(mainAxisSize: MainAxisSize.min, children: [
+        Flexible(child: Text(tr('任せ中 {0}／{1}', [on, can]), style: ts(size: 12.5, bold: true, color: on > 0 ? Pal.goldtx : Pal.ink))),
+        Info(ctl, const ['deleg']),
+      ]),
+      Row(mainAxisSize: MainAxisSize.min, children: [
+        Flexible(child: Btn(tr('まとめて任せる'), () => run(s.delegAll), key: const ValueKey('deleg-all'), small: true, shrink: true, enabled: on < can)),
+        const SizedBox(width: 6),
+        Flexible(child: Btn(tr('まとめて戻す'), () => run(s.undelegAll), key: const ValueKey('undeleg-all'), small: true, shrink: true, enabled: on > 0)),
+      ]),
+    ]),
+  );
+}
+
 /// 事業が多い会社の「まとめての手」の欄。人が足りない事業・責任者に置ける部下がいなければ null
 Widget? _bizAttention(GameController ctl) {
   final s = ctl.game!;
@@ -606,6 +721,7 @@ Widget _bizRow(GameController ctl, Biz b) {
                 Wrap(spacing: 4, runSpacing: 2, crossAxisAlignment: WrapCrossAlignment.center, children: [
                   Text(ind.name, style: ts(size: 14, bold: true)),
                   Tag(MODELN[b.model]!, kind: TagKind.gold),
+                  if (s.delegated(b)) Tag(tr('任せ中'), key: ValueKey('deleg-tag-${b.id}'), kind: TagKind.good),
                   for (final w in warn) Tag(w, kind: TagKind.bad),
                   if (b.pipe.isNotEmpty) Tag(tr('仕掛かり {0}件', [b.pipe.length])),
                 ]),
@@ -689,7 +805,17 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
     (0, tr('社長が直接')),
     for (final x in [?p, ...free]) (x.id, tr('{0}（{1} {2}）', [nmL(x.name), ABN[ind.key], s.showAb(x, ind.key)])),
   ];
+  final deleg = s.delegated(b);
+  // 開いたカードに常に出すのは、今いちばん要りそうな手2〜3個だけ。残りは「ほかの手」を押すと、今までの3つの組がそのまま出る（1.0.0+20）
+  final more = ctl.moreBiz == b.id;
+  void toggleDeleg(bool on) {
+    s.setDeleg(b, on);
+    ctl.save();
+    ctl.render();
+  }
+
   return Panel(
+    key: ValueKey('biz-card-${b.id}'),
     border: onFold != null ? Pal.gold : Pal.line,
     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Row(children: [
@@ -711,6 +837,7 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
                   )),
         Flexible(
           child: Wrap(alignment: WrapAlignment.end, spacing: 4, runSpacing: 4, children: [
+            if (deleg) Tag(tr('任せ中'), key: ValueKey('deleg-tag-${b.id}'), kind: TagKind.good),
             if (b.war > 0) Tag(tr('値下げ合戦中'), kind: TagKind.bad),
             if (b.ad > 0) Tag(tr('広告中'), kind: TagKind.good),
             if (b.early > s.turn) Tooltip(message: tr('業種が生まれてすぐ始めたので、打ち手がよく効く'), child: Tag(tr('先行者'), kind: TagKind.good)),
@@ -773,21 +900,71 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
       // 仕掛かりは種類ごとに1行。1件だけの種類は今までどおりその場で取り下げられる
       for (final g in pipeGroups(b)) g.count == 1 ? _pipeRow(ctl, b, g.idx.first) : _pipeGroupRow(ctl, b, g),
       _gap(),
-      Row(children: [
-        Muted(tr('責任者')),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Pick<int>(
-            value: b.mgr ?? 0,
-            items: mgrItems,
-            onChanged: (v) {
-              s.setManager(b, v == 0 ? null : v);
-              ctl.save();
-              ctl.render();
-            },
+      LayoutBuilder(builder: (context, box) {
+        // 責任者がいれば、任せる／自分で動かす をここで切り替える（手は使わない。いつでも戻せる）
+        final Widget? dBtn = !s.canDeleg(b)
+            ? null
+            : deleg
+                ? Btn(tr('自分に戻す'), () => toggleDeleg(false), key: ValueKey('deleg-off-${b.id}'), small: true, shrink: true)
+                : Btn(tr('任せる@@btn'), () => toggleDeleg(true), key: ValueKey('deleg-on-${b.id}'), small: true, shrink: true);
+        // 幅が狭い・字が大きいときは、ボタンを選ぶ欄の下の行に回す（横に並べると、選ぶ欄がつぶれる）
+        final inline = box.maxWidth / Ui.textScale >= 300;
+        final row = Row(children: [
+          Muted(tr('責任者')),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Pick<int>(
+              value: b.mgr ?? 0,
+              items: mgrItems,
+              onChanged: (v) {
+                s.setManager(b, v == 0 ? null : v);
+                ctl.save();
+                ctl.render();
+              },
+            ),
           ),
-        ),
-      ]),
+          if (dBtn != null && inline) ...[const SizedBox(width: 6), dBtn],
+        ]);
+        return dBtn == null || inline ? row : Column(crossAxisAlignment: CrossAxisAlignment.end, children: [row, dBtn]);
+      }),
+      if (deleg) ...[
+        Row(children: [
+          Muted(tr('月の枠')),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Pick<int>(
+              key: ValueKey('deleg-budget-${b.id}'),
+              value: b.budget,
+              items: [
+                (0, tr('お金は使わせない')),
+                for (var i = 1; i < delegMults.length; i++) (i, tr('{0}まで（元手の{1}倍）', [yen(s.delegBudgetAt(b, i)), delegMults[i]])),
+              ],
+              onChanged: (v) {
+                s.setBudget(b, v);
+                ctl.save();
+                ctl.render();
+              },
+            ),
+          ),
+          Info(ctl, const ['deleg']),
+        ]),
+        Text.rich(
+            key: ValueKey('deleg-did-${b.id}'),
+            TextSpan(style: ts(size: 12.5), children: [
+              TextSpan(text: tr('今月の責任者　'), style: ts(size: 12.5, color: Pal.mute)),
+              TextSpan(text: b.did != null ? tx(b.did) : tr('来月から、責任者が自分で手を打ちます')),
+            ])),
+      ],
+      if (!more) ...[
+        const SizedBox(height: 4),
+        Wrap(key: ValueKey('biz-top-${b.id}'), spacing: 6, runSpacing: 0, children: [
+          ..._bizTopMoves(ctl, b),
+          Btn(tr('ほかの手'), () => ctl.toggleMore(b.id), key: ValueKey('biz-more-${b.id}'), small: true, more: true),
+        ]),
+      ] else ...[
+      Align(
+          alignment: Alignment.centerLeft,
+          child: Btn(tr('手をたたむ'), () => ctl.toggleMore(b.id), key: ValueKey('biz-more-${b.id}'), small: true)),
       // ボタンは「伸ばす」「戦う」「形を変える」の3つの組に分けて並べる
       _grpHead(tr('伸ばす'), Icons.trending_up),
       Wrap(key: ValueKey('grp-grow-${b.id}'), spacing: 6, runSpacing: 0, children: [
@@ -847,8 +1024,49 @@ Widget _bizCard(GameController ctl, Biz b, {VoidCallback? onFold}) {
               ap: s.hasT('charm') ? 2 : 1),
         ]),
       ),
+      ],
     ]),
   );
+}
+
+/// 開いた事業カードに常に出す手（今いちばん要りそうなものを上から最大3つ。状況で入れ替わる）。1.0.0+20
+///
+/// 1. 人が足りなければ「足りない人を雇う」（小窓を開かず、その場で雇う）
+/// 2. 責任者がいなくて、空いている部下がいれば「責任者に置く」（その業種に効く能力がいちばん高い人）
+/// 3. 沈む市場なら「業態を変える」
+/// 4. あとは伸ばす手（店・工場を増やす → 商品を作る → 広告 → 海外）
+List<Widget> _bizTopMoves(GameController ctl, Biz b) {
+  final s = ctl.game!;
+  final ind = indm[b.ind]!;
+  final out = <Widget>[];
+  final need = s.crewNeedPeople(b);
+  if (need > 0) {
+    final cost = s.hireCost(b, need);
+    out.add(Btn(tr('足りない人を雇う（{0}人・{1}）', [need, yen(cost)]), () => ctl.act(() => s.addCrewNeeded(b), mark: 'act'),
+        key: ValueKey('top-hire-${b.id}'), small: true, shrink: true, ap: 1, dim: s.cash < cost || !s.canAP(1)));
+  }
+  if (b.mgr == null) {
+    final free = s.staff.where((x) => !s.biz.any((y) => y.mgr == x.id)).toList()..ssort((x, y) => y.ab[ind.key]!.compareTo(x.ab[ind.key]!));
+    if (free.isNotEmpty) {
+      out.add(Btn(tr('{0}を責任者に置く', [nmL(free.first.name)]), () {
+        s.setManager(b, free.first.id);
+        ctl.save();
+        ctl.render();
+      }, key: ValueKey('top-mgr-${b.id}'), small: true, shrink: true));
+    }
+  }
+  if (ind.f != 0 && s.yr() > ind.f && s.pivotTargets(b).isNotEmpty) out.add(_apBtn(ctl, tr('業態を変える'), () => openPivot(ctl, b), more: true));
+  final grow = <Widget>[
+    _apBtn(ctl, tr('{0}を増やす', [s.uw(b)]), () => openBuild(ctl, b), more: true),
+    _apBtn(ctl, tr('商品を作る'), () => openDevelop(ctl, b), more: true),
+    if (b.ad == 0) _apBtn(ctl, tr('広告 {0}', [yen(s.invBase(b) * .25)]), () => ctl.act(() => s.adv(b), mark: 'act')),
+    _apBtn(ctl, tr('海外に出る'), () => openEnter(ctl, b), more: true),
+  ];
+  for (final w in grow) {
+    if (out.length >= 3) break;
+    out.add(w);
+  }
+  return out.take(3).toList();
 }
 
 /// 事業カードのボタンの組の小見出し（アイコン・名前・右へ伸びる細い線）

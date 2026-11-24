@@ -24,6 +24,7 @@ part 'game_story.dart';
 part 'game_local.dart';
 part 'game_achieve.dart';
 part 'game_mid.dart';
+part 'game_deleg.dart';
 
 // ===== データ =====
 const double invEff = .9, newPow = 1.5, cpuReinv = .12;
@@ -286,6 +287,9 @@ class Game {
 
   /// これまでの時価総額と財産の最大（終わったときのまとめに使う）
   double maxCap = 0, maxWealth = 0;
+
+  /// 任せた責任者が打った手の控え（月の報告のまとめ用。保存しない。新しいものを後ろに、最大600）
+  List<DelegAct> delegLog = [];
 
   /// 社史に1行足す（乱数を使わない）
   void chron(String k, String m) {

@@ -476,6 +476,8 @@ class MainScreen extends StatelessWidget {
           final side = 12 + Ui.sideGap(box.maxWidth);
           return ListView(
             key: PageStorageKey('tab-${ctl.tab}'),
+            // 「事業」だけ、位置を外から動かせるようにする（「今月やること」から事業のカードへ飛ぶ）
+            controller: ctl.tab == 'biz' ? ctl.bizScroll : null,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             padding: EdgeInsets.fromLTRB(side, 0, side, 16),
             children: [?result, ...body],

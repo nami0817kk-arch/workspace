@@ -391,7 +391,7 @@ void main() {
         g.calcAll();
         final ctl = await pump(tester, g, lang, height: 1500);
         ctl.setTab('biz');
-        ctl.openBiz = b.id;
+        ctl.openBiz = ctl.moreBiz = b.id;
         ctl.render();
         await tester.pump();
         // 割合の手のボタンは無く、単位を選ぶ小窓へのボタンがある

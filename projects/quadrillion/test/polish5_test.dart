@@ -97,7 +97,7 @@ void main() {
       final s = _bigGame();
       final b = _top(s);
       final ctl = await _pump(tester, game: s);
-      ctl.openBiz = b.id;
+      ctl.openBiz = ctl.moreBiz = b.id;
       ctl.setTab('biz');
       await tester.pump();
       // 開発中7件は1行、建設中2件も1行、進出準備1件は今までどおり
@@ -146,24 +146,24 @@ void main() {
       for (final b in s.biz) {
         expect(find.byKey(ValueKey('biz-row-${b.id}')), findsOneWidget);
       }
-      expect(find.text('値付け'), findsNothing, reason: 'たたんでいるので詳しいカードは無い');
+      expect(find.text('責任者'), findsNothing, reason: 'たたんでいるので詳しいカードは無い');
       final a = s.biz[3], c = s.biz[5];
       await tester.tap(find.byKey(ValueKey('biz-row-${a.id}')));
       await tester.pump();
       expect(ctl.openBiz, a.id);
-      expect(find.text('値付け'), findsOneWidget);
+      expect(find.text('責任者'), findsOneWidget);
       expect(find.byKey(ValueKey('biz-row-${a.id}')), findsNothing);
       // 別の事業を押すと、前のは閉じる
       await tester.tap(find.byKey(ValueKey('biz-row-${c.id}')));
       await tester.pump();
       expect(ctl.openBiz, c.id);
-      expect(find.text('値付け'), findsOneWidget);
+      expect(find.text('責任者'), findsOneWidget);
       expect(find.byKey(ValueKey('biz-row-${a.id}')), findsOneWidget);
       // 名前の行を押すとたたむ
       await tester.tap(find.byKey(ValueKey('biz-fold-${c.id}')));
       await tester.pump();
       expect(ctl.openBiz, isNull);
-      expect(find.text('値付け'), findsNothing);
+      expect(find.text('責任者'), findsNothing);
       expect(tester.takeException(), isNull);
     });
 
@@ -198,14 +198,14 @@ void main() {
       final ctl = await _pump(tester, game: s);
       ctl.setTab('biz');
       await tester.pump();
-      expect(find.text('値付け'), findsNWidgets(2));
+      expect(find.text('責任者'), findsNWidgets(2));
       expect(find.byWidgetPredicate((w) => w.key is ValueKey && '${(w.key as ValueKey).value}'.startsWith('biz-row-')), findsNothing);
     });
 
     testWidgets('英語でもたたんだ行と開いたカードに日本語が残らない', (tester) async {
       final s = _bigGame();
       final ctl = await _pump(tester, game: s, lang: 'en');
-      ctl.openBiz = _top(s).id;
+      ctl.openBiz = ctl.moreBiz = _top(s).id;
       ctl.setTab('biz');
       await tester.pump();
       final cjk = RegExp('[　-ヿ㐀-鿿＀-￯]');
@@ -296,7 +296,7 @@ void main() {
       testWidgets('主な画面のボタンと選択の部品（$lang）', (tester) async {
         final s = _bigGame();
         final ctl = await _pump(tester, game: s, lang: lang);
-        ctl.openBiz = _top(s).id;
+        ctl.openBiz = ctl.moreBiz = _top(s).id;
         for (final t in const ['town', 'biz', 'people', 'stock', 'num', 'zukan']) {
           ctl.setTab(t);
           await tester.pump();

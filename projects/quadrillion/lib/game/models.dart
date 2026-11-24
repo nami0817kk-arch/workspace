@@ -168,6 +168,16 @@ class Biz {
   int? target;
   int cartel;
 
+  // ===== 責任者に任せる（1.0.0+20 から。古いセーブでは「自分で動かす」・枠は元手の1倍） =====
+  /// 責任者に任せているか（任せると、毎月、責任者が自分で手を打つ。社長の手は使わない）
+  bool deleg;
+
+  /// 任せたときに責任者が月に使えるお金の段（delegMults の番号。0 は使わせない）
+  int budget;
+
+  /// 任せた責任者が今月やったことの1行（包んだ文。何もしなかった月は理由。任せていなければ null）
+  String? did;
+
   Biz({
     required this.id,
     required this.ind,
@@ -192,6 +202,9 @@ class Biz {
     this.attack = 0,
     this.target,
     this.cartel = 0,
+    this.deleg = false,
+    this.budget = 1,
+    this.did,
   }) : pipe = pipe ?? [];
 
   Map<String, dynamic> toJson() => {
@@ -218,6 +231,9 @@ class Biz {
         'attack': attack,
         'target': target,
         'cartel': cartel,
+        if (deleg) 'deleg': true,
+        if (budget != 1) 'budget': budget,
+        if (did != null) 'did': did,
       };
 
   factory Biz.fromJson(Map<String, dynamic> j) => Biz(
@@ -244,6 +260,9 @@ class Biz {
         attack: _i(j['attack']),
         target: _in(j['target']),
         cartel: _i(j['cartel']),
+        deleg: j['deleg'] == true,
+        budget: _i(j['budget'], 1).clamp(0, 3),
+        did: j['did'] as String?,
       );
 }
 
