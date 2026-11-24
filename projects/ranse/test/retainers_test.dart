@@ -57,7 +57,7 @@ void main() {
       if (g == null) continue;
       lives++;
       jumpTo(g, 24);
-      serveAt(g, s % 4 == 0 ? 8 : 6);
+      serveAt(g, s % 4 < 2 ? 8 : 6);
       g.choose(0);
       playWatch(
         g,
