@@ -577,10 +577,15 @@ async function clearEvents() {
   }
   btn('結果まで進める').click();
   ok(w.YA._ui.store.get('ask.skipmatch', true) === false, '「次回から聞かない」を選ぶと覚える');
-  ok(txt().includes('見どころ') && txt().includes('気づき') && txt().includes('採点'), '試合後の画面');
+  ok(['概要', '選手', 'チーム', '流れ'].every((n) => [...d.querySelectorAll('#main .rtabs2 button')].some((b) => b.textContent.trim() === n)) && txt().includes('気づき') && txt().includes('採点') && txt().includes('得点'), '試合後の画面（概要・選手・チーム・流れ）');
   // 気づき：効いた特性は子ごとに1行（同じ子が2行に出ない）。不満などの指摘が先（2026-11-21 品質）
   { const ip = [...d.querySelectorAll('[data-insight-player] b')].map((e) => e.textContent); ok(new Set(ip).size === ip.length && !/回効いた/.test(txt()), '気づきは子ごとに1行 ' + ip.join('/'));
     const all = [...d.querySelectorAll('.insight')], fb = all.findIndex((e) => e.classList.contains('bad')), fp = all.findIndex((e) => e.hasAttribute('data-insight-player')); ok(fb < 0 || fp < 0 || fb < fp, '気づき：大事な指摘が上'); }
+  { const rt = (n) => [...d.querySelectorAll('#main .rtabs2 button')].find((b) => b.textContent.trim() === n).click();
+    rt('選手'); ok(d.querySelectorAll('#main .plist .pitem').length >= 11 && txt().includes('タックル') && txt().includes('セーブ'), '試合後の選手：全員の採点と数字');
+    rt('チーム'); ok(['ボール保持', 'パス成功率', 'CK', 'ファウル', 'イエロー'].every((x) => txt().includes(x)) && !d.querySelector('#main svg'), '試合後のチーム：数字の比較（図は出さない）');
+    rt('流れ'); ok(txt().includes('見どころ') && txt().includes('実況'), '試合後の流れ：見どころと実況');
+    rt('概要'); }
   ok(A.w.phase === 'after' && A.w.rec.w + A.w.rec.d + A.w.rec.l === 1, '試合の結果が名簿の世界に入る');
   btn('ホームへ（次の週へ）').click();
   ok(txt().includes('次の週へ') && txt().includes('試合が終わりました'), '試合後のホーム');
