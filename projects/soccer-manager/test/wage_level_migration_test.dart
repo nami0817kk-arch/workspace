@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:soccer_manager/logic/contract_engine.dart';
 import 'package:soccer_manager/logic/economy_scale.dart';
+import 'package:soccer_manager/logic/free_agent_engine.dart';
 import 'package:soccer_manager/models/contract_negotiation.dart';
 import 'package:soccer_manager/models/league_theme.dart';
 import 'package:soccer_manager/models/save_game.dart';
@@ -85,7 +86,11 @@ void main() {
     );
     if (freeAgentId != null) {
       final fa = ls.freeAgents.where((p) => p.id == freeAgentId).firstOrNull;
-      if (fa != null) expect(fa.wage, fa.fairWeeklyWage(home));
+      // 所属なしの選手は、移行のあとで求める額(評判・時期を掛けたもの)に
+      // そろえ直す(第4段 #1412)。能力だけの額のままにはならない。
+      if (fa != null) {
+        expect(fa.wage, FreeAgentEngine.askingWeekly(fa, ls.today!));
+      }
     }
 
     // 交渉中の週俸も自クラブの係数でそろえる。
